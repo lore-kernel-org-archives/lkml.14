@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7C914830B;
-	Sun, 24 Mar 2024 23:15:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5526014600E;
+	Sun, 24 Mar 2024 23:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322107; cv=none; b=tNSHWiKSFcLtpXrjBBS3fv5DWcHUc0ANHL22xUFZVJ9fZWDNB4XElY1TdfOxWJ1ov1lG96hu47k4CET5cAFcSFNAAdwVlCdFo7KbsnykxTAG/Wz/2uOriEI3M4oOkbshyHRfE51mJcGa5S2ULx0D2xpnbmMlZQSw8GCqO8z2jdE=
+	t=1711322073; cv=none; b=HpkfZgXCz870WNbLNNd3z45hvulGxkB74v+HJE7p+BLj2UoNGJwZHkrKXFD+VmkMsKLDaxI+v4lh3J6V4IpIFAqPZx9g7uSruBOLmCfMs+d2aVw+M6aJUKCohGw3PRKNvW4ZtLiSHobc7QcgMDWw0f73ykL/yfQsFJ1up5JqbOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322107; c=relaxed/simple;
-	bh=LwtYyCcaXx0HjQaLxL+6mDvVXrCjkIkao6cHiaHS30A=;
+	s=arc-20240116; t=1711322073; c=relaxed/simple;
+	bh=pqFFvai7kxc1nzCfzfG4gtc9Mis/EYc5Y4T1cAKn1AE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mgUpwzuNKKJrgbxW5KMfWrxaV48pWI3vkxCxINZ5mpRQWEjNC7h/wV2ecBj3wMuYIctPlQZ6lVodtHheS28qc4yZ8oRnD8sGE1t2zMb/hPndFOu/LuAVn7uLlOfV3L+GIfZWxxslzr1J8mUa9T3ms3+r+HedwQtsleF3U00Z2FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ebWiMeE5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=iOYy4jLP0Nf9j4REjLqkegdTolwXiHRB4zPFPWV4jWpp333I/zhoKrRz+MkaVakEOcd6RKhq4IifqerYVED44GB/6WXOThkSw72MFZLPZ14CmSH7C74GK4KxEo2SNklQWWJ25CnTIkYvg26sxFUbjPLRfyFVYXnwMWWPDBAGfZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZetCEDGV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ebWiMeE5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9939FC43394;
-	Sun, 24 Mar 2024 23:15:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZetCEDGV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D86BC43390;
+	Sun, 24 Mar 2024 23:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322106;
-	bh=LwtYyCcaXx0HjQaLxL+6mDvVXrCjkIkao6cHiaHS30A=;
+	s=k20201202; t=1711322073;
+	bh=pqFFvai7kxc1nzCfzfG4gtc9Mis/EYc5Y4T1cAKn1AE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ebWiMeE5Ufn+5WZzyvL/ppKqhMu+WK5FJjoL/IaRKFOFRRiuxnnwDIgywhIvwuXTC
-	 KDD4z1RzdQkkXmt+duuKNLzwBliWBLxrF+pbuXYl42CUlgGXyCl0B4XHGh1lVKXYeT
-	 EHw5QfYxEHGqKZXU1SkfIMLdZj4LJTh2tR7l8+88jj6laKp6by1TWjTF6XQUHwC4EC
-	 uWzDyS0Ld0BcHOR5SAc448dlnOg2DNdJrVG6eOARpflVJLf0s3RFhZGpSHopzAbe8c
-	 uOEM+BSiifvKwiUsaGQELk98rjFbn7qCwR0kpdC52owz5ALOWUlx2DjbgKIoMjZXur
-	 a4HsejV2YZ25g==
+	b=ZetCEDGVRJq35NdrjErUe7DeUbfRQauqaRvNIn8phcM06TkePrXlcLD6r8jYwFDjY
+	 3quH5arAEeziGpm07D6JIy9KNFydT2HLRa0iuwwyPddC1rozcKAE6nc2Hlra+i8zxU
+	 1EV5+ZvvAqIF2YjLVJrtKB7Y6cvSiJGsvggV6CK8CITMu4dpCyLrP0wyfuO0nhiuGO
+	 yz4TekRee8AIJ6w1f3wus5FFDGr1pr25RVOP6pAhUmO+rshsyTg+7PUZs05j7DJFP1
+	 Tks5oQfMdkJ72ng3o4SA6Bq3WyiF11glvm9M4KYdWPIrJlrRXnqa1WJmTe4zo0qW7h
+	 1MsfVD3GSO21g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Alexey I. Froloff" <raorn@raorn.name>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 181/451] ACPI: resource: Do IRQ override on Lunnen Ground laptops
-Date: Sun, 24 Mar 2024 19:07:37 -0400
-Message-ID: <20240324231207.1351418-182-sashal@kernel.org>
+Subject: [PATCH 6.1 146/451] arm64: dts: mediatek: mt7622: add missing "device_type" to memory nodes
+Date: Sun, 24 Mar 2024 19:07:02 -0400
+Message-ID: <20240324231207.1351418-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,53 +45,56 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: "Alexey I. Froloff" <raorn@raorn.name>
+From: Rafał Miłecki <rafal@milecki.pl>
 
-[ Upstream commit e23ad54fef186aa66007895be1382c88f1ee2bf7 ]
+[ Upstream commit 99d100e00144bc01b49a697f4bc4398f2f7e7ce4 ]
 
-The Lunnen Ground 15 and 16 needs IRQ overriding for the keyboard to
-work.
+This fixes:
+arch/arm64/boot/dts/mediatek/mt7622-rfb1.dtb: /: memory@40000000: 'device_type' is a required property
+        from schema $id: http://devicetree.org/schemas/memory.yaml#
+arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dtb: /: memory@40000000: 'device_type' is a required property
+        from schema $id: http://devicetree.org/schemas/memory.yaml#
 
-Adding an entries for these laptops to the override_table makes the
-internal keyboard functional.
-
-Signed-off-by: Alexey I. Froloff <raorn@raorn.name>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Stable-dep-of: 021a67d09615 ("ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override")
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://lore.kernel.org/r/20240122132357.31264-1-zajec5@gmail.com
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/resource.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts | 1 +
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts             | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index 35a98a5916f63..8420d97287f86 100644
---- a/drivers/acpi/resource.c
-+++ b/drivers/acpi/resource.c
-@@ -555,6 +555,20 @@ static const struct dmi_system_id lg_laptop[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "GM5RGEE0016COM"),
- 		},
- 	},
-+	{
-+		/* Lunnen Ground 15 / AMD Ryzen 5 5500U */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Lunnen"),
-+			DMI_MATCH(DMI_BOARD_NAME, "LLL5DAW"),
-+		},
-+	},
-+	{
-+		/* Lunnen Ground 16 / AMD Ryzen 7 5800U */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Lunnen"),
-+			DMI_MATCH(DMI_BOARD_NAME, "LL6FA"),
-+		},
-+	},
- 	{ }
- };
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+index 2c35ed0734a47..b1ddc491d2936 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+@@ -74,6 +74,7 @@ led-1 {
  
+ 	memory@40000000 {
+ 		reg = <0 0x40000000 0 0x40000000>;
++		device_type = "memory";
+ 	};
+ 
+ 	reg_1p8v: regulator-1p8v {
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+index f9313b697ac12..527dcb279ba52 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -56,6 +56,7 @@ key-wps {
+ 
+ 	memory@40000000 {
+ 		reg = <0 0x40000000 0 0x20000000>;
++		device_type = "memory";
+ 	};
+ 
+ 	reg_1p8v: regulator-1p8v {
 -- 
 2.43.0
 
