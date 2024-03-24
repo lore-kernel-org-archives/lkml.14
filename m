@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51B8201270;
-	Sun, 24 Mar 2024 23:03:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE88C4D133;
+	Sun, 24 Mar 2024 23:03:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321406; cv=none; b=ErVLzjSqGVss9Tl+0H7ZIuMxgZ2cD9A57q1BBxM3HdfH6AX+41rGwBWw4bo5GcVKVpxZnNsaVC5LonaT7JZxRsgRSiFNbHlFTwWVDlbo7294Xw0oTB66P7z5l8RfozynnuMGBsgoOC5cq29n0XyTH1TsqcU34PdRzjrYaCu3EH0=
+	t=1711321408; cv=none; b=mwEq6zctVTnsJ2JvUcRAvUgVgYlp6R0T8N8454l/9dDZtdllxxa9YJRM5nbHlE6EJ/BOqhN+i4QrXrtgzTBAK8ofdNsZeOPuS6qVLpYlPJqFBOoN2YevXF4H8tNeBQR/t9O3q2LTP9Nk7Zp2kKTak1bin+lg6dURrl59PwwwaLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321406; c=relaxed/simple;
-	bh=nMkkF7C7OnGxkOs0i6pXO9kc1dDogKXge1E9x2XVfRY=;
+	s=arc-20240116; t=1711321408; c=relaxed/simple;
+	bh=RiNJz9zlSFXEx8zYJSB1a4ND7aEOOQrZQdR/XEnpxN4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q/LMHJfA13K/36yxH5w09XktpnivgnmdcDTMZPf0Wis0TBYV0sxwkj1Tc8e+d4leXQXospAqTQ9Lwalj6ZuwEL+rcYkpeC74MMTIyrO3Jy5xyRjhpDUnbK5HcQdMeEQKUMv+UKckNtLQmU3O1JOy1Ch7qMkhdTA3uhV4qVUH3I0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KSFKoOna; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YiL4D2K0MU9r1L/YUWkynLncQDVglOKh2HRTBxijNCYYYVPSq8eOhh5LoZHFA2AQgejqH0X1bc57NhT6rzioJMCmjVEbJFB3gAlkajV/uo2gTF/KeA/lup2gkCP4c/Cs6K0PjFa5I4hbb3Hc43elNCxPP9RArISVBuSOflTIsUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NR/M3K02; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KSFKoOna"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22BDAC43399;
-	Sun, 24 Mar 2024 23:03:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NR/M3K02"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1467C433A6;
+	Sun, 24 Mar 2024 23:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321405;
-	bh=nMkkF7C7OnGxkOs0i6pXO9kc1dDogKXge1E9x2XVfRY=;
+	s=k20201202; t=1711321407;
+	bh=RiNJz9zlSFXEx8zYJSB1a4ND7aEOOQrZQdR/XEnpxN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KSFKoOnaO2IX1Iw7W7O3BUBhjK3Pn9fxbV4eyFkShEwzTjU2MGZbWo3PBLn03swcE
-	 zkVCtR7YAPNDBxVyY+StnI4AeLSYY17dq2VWEQKSihBanDbMTSW8ZW60Tz72OAg+o1
-	 U4bW+sth4zr2wbIXXEey4nVuKqzR7B0ezEc5JKAwcOH+KnphwLjgI2UNlILNlj0E24
-	 4JHOEt8v/3Nq0Zb0if1JtJkRcgPDHtMPc1wke32nRFyl3KTvTYr3yWHrQiUOSr5Smw
-	 6jI2xQl7iE+mbi4Ti60yDRDgVFWeTUTqKv2kIGT2P/wmfEcpyLP17mvTVQoV2TZODs
-	 nRQl7BZPuUr4Q==
+	b=NR/M3K022ROrNduZk6O1o2BSTvFVMp7IfX6iqH0tQMpzxgB7AmaC/BCSUpAV6m9GC
+	 p6UmugQHv/8HA3h353k71Kl+XgXU1fbYIYRwj2XyTvb5RmPOtrXD1QVeTSj5Ly7hp8
+	 nBgr7rTNYMHOUR+ftUboG0E02/3hXX15PCjlYqhRfJnX7DehmwjQRtYQZs0hF/v0SC
+	 rbUnw2+Z6jGQe14pv4uaeTBSynacO1Xl2634+FeqrJKnBhQ1CcO82+LnEnyXvtdffZ
+	 NtRrFkVRtpfIdIINBjhr/uieSY4vyKMEfTczbiUNRZvBbzJKs7DasrjzVpMPgvHiNC
+	 H9Iqr5Comt0gw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 130/638] arm64: dts: qcom: sc8180x: Require LOW_SVS vote for MMCX if DISPCC is on
-Date: Sun, 24 Mar 2024 18:52:47 -0400
-Message-ID: <20240324230116.1348576-131-sashal@kernel.org>
+Subject: [PATCH 6.6 132/638] cpufreq: brcmstb-avs-cpufreq: add check for cpufreq_cpu_get's return value
+Date: Sun, 24 Mar 2024 18:52:49 -0400
+Message-ID: <20240324230116.1348576-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,34 +48,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
+From: Anastasia Belova <abelova@astralinux.ru>
 
-[ Upstream commit 6d9fb9e4c473cdfd2adca019b46d8e482105cae7 ]
+[ Upstream commit f661017e6d326ee187db24194cabb013d81bc2a6 ]
 
-To ensure the PLLs are getting enough power, cast a vote with DISPCC so
-that MMCX is at least at LOW_SVS.
+cpufreq_cpu_get may return NULL. To avoid NULL-dereference check it
+and return 0 in case of error.
 
-Fixes: 494dec9b6f54 ("arm64: dts: qcom: sc8180x: Add display and gpu nodes")
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20231230-topic-8180_more_fixes-v1-7-93b5c107ed43@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sc8180x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-index 5ef7500004896..de53541858420 100644
---- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-@@ -3218,6 +3218,7 @@ dispcc: clock-controller@af00000 {
- 				      "edp_phy_pll_link_clk",
- 				      "edp_phy_pll_vco_div_clk";
- 			power-domains = <&rpmhpd SC8180X_MMCX>;
-+			required-opps = <&rpmhpd_opp_low_svs>;
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index 35fb3a559ea97..1a1857b0a6f48 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -481,6 +481,8 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
+ static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
+ {
+ 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
++	if (!policy)
++		return 0;
+ 	struct private_data *priv = policy->driver_data;
+ 
+ 	cpufreq_cpu_put(policy);
 -- 
 2.43.0
 
