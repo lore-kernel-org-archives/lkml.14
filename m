@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F102114AF;
-	Sun, 24 Mar 2024 23:08:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172CB13AA49;
+	Sun, 24 Mar 2024 23:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321709; cv=none; b=L9RtCccy5nO2zx+q0s3Mm0PME4aKdc7/RZBzTmfV0Xw/n6tcqBgp3ho0YvuyXFPQjD/rD/s2YGZ/hm3yBTXTxiCYmiN5MqxieqrVhHNL5ShtwjVy0woi3h0lGtfwsAD+5Vyzw1opIi9NMwZhPzKiLDxe35IYeso05NyTol+LqPQ=
+	t=1711321705; cv=none; b=Mp7EJcKUC9DMDP2eaKdbr6umehxrfe0gX1O7LaqakOZGrZgTusK49POe9hHwRPOLqztaCAdbsFx9iPcMgVv7QbaSGdH1bMdzikPXgcYbzOhjp1rqdFzBxy6ffqDRcToUxNz0gbgizV8+6K7d6JRuAVxnp1xXiWDatzlnbi8rUko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321709; c=relaxed/simple;
-	bh=1csZ9x4MyVNb8NfT0+Ah6w2V60OsIm+IajesknxVD8Y=;
+	s=arc-20240116; t=1711321705; c=relaxed/simple;
+	bh=0jeLzV7xh9um03QKzMZKQCMNMFblAXkgO2KjG9Ao6Bk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WRBEc331rSoqC4cVLu00ZJ+DfV5B595A/3cv0o4I0F02oiN7IeS89qY8UqvdViwwxTLIGQIur9/vsgaLbAk9n6UKih+IluwZYcIQVQRpxZl110JuAr4RZIDfkgDvFmIib/iBxUVu0uzbagraodEMZDAoKf4xv+soScJDWGklEOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vdtr7kTW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JLSYBqMJ6bTD54VbK4iP01UJW+ZwNF8sSJfpDnrWMi61PME3dkORBCd+7voU3CeFkizunQxjwpV0bxs2CWoOowweF2uGeYPT+Bl429werukEgnhDj8D6HI552Xj5ibeQEevhB19RN+rrpG/w54OvLT15Jk8j6kjhm+6QFYRAazE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmjyN00k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vdtr7kTW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C04A9C433C7;
-	Sun, 24 Mar 2024 23:08:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmjyN00k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CEF6C43390;
+	Sun, 24 Mar 2024 23:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321709;
-	bh=1csZ9x4MyVNb8NfT0+Ah6w2V60OsIm+IajesknxVD8Y=;
+	s=k20201202; t=1711321703;
+	bh=0jeLzV7xh9um03QKzMZKQCMNMFblAXkgO2KjG9Ao6Bk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vdtr7kTW93/LbiAGHMbzdW2j5FhKFkANWpBodOKetIgCBjCfkDCf6ZK/Ik5nzRCnF
-	 Xj01aGpAW3SHbgZobXwC7/hhjzKrckZUcTpXrpoXEtQg/0GMXS/+yzuoiwasgeFLKT
-	 Rh/0SJo2fAWt0SIo/6+0f9Xf7QnNfPH9KTlfBAKeHMu7tKrLKzP61rUDhP7Xycs0qI
-	 1cS3y8Zwar2eueXUwq0/nQeOtc+GNnWVqtMRZ1GL+f+AWxyl07Y3k/rieIs36BQd5k
-	 P11GpUBjj/T0OuF46eF/chn8admmxtRGXy874uxtqW/PhkQKYOlsnI82Sqn7Z/ndoM
-	 IZuJ6cVG/UPJw==
+	b=CmjyN00k/LBQnrNYXIYnGCXmgv0VRYDNRWlLS8OYKmF9UehcEWriBClXWrDaV19S6
+	 dJ+9bF6jYVznstPrwryl24aot0IDtx/Z8Ve/vOR/r2AnorXeDKTryYvwrPZy5aXUfN
+	 QUwUNA5jvbKKZNSa9U/TmQHo91TbranixyX8MrIQJsoNM2rO6wv0wCw1asCMvGpOfp
+	 BvPpeRkKejV+y5ua0OIMcHAfBCc7m4I/pV98IEsXn3MbmtBoLZg/IWHP6vDqU7Sac4
+	 R1si/35pFBrjygNzRRoZl7+Aa2rntTumv6mewigcEar62K85ie1Bz8iMOXzv63eQAT
+	 d2LhF48glTYqA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 438/638] drm/tegra: put drm_gem_object ref on error in tegra_fb_create
-Date: Sun, 24 Mar 2024 18:57:55 -0400
-Message-ID: <20240324230116.1348576-439-sashal@kernel.org>
+Subject: [PATCH 6.6 432/638] clk: hisilicon: hi3519: Release the correct number of gates in hi3519_clk_unregister()
+Date: Sun, 24 Mar 2024 18:57:49 -0400
+Message-ID: <20240324230116.1348576-433-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,38 +48,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Fedor Pchelkin <pchelkin@ispras.ru>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 32e5a120a5105bce01561978ee55aee8e40ac0dc ]
+[ Upstream commit 74e39f526d95c0c119ada1874871ee328c59fbee ]
 
-Inside tegra_fb_create(), drm_gem_object_lookup() increments ref count of
-the found object. But if the following size check fails then the last
-found object's ref count should be put there as the unreferencing loop
-can't detect this situation.
+The gates are stored in 'hi3519_gate_clks', not 'hi3519_mux_clks'.
+This is also in line with how hisi_clk_register_gate() is called in the
+probe.
 
-Found by Linux Verification Center (linuxtesting.org).
-
-Fixes: de2ba664c30f ("gpu: host1x: drm: Add memory manager and fb")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231215093356.12067-1-pchelkin@ispras.ru
+Fixes: 224b3b262c52 ("clk: hisilicon: hi3519: add driver remove path and fix some issues")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/c3f1877c9a0886fa35c949c8f0ef25547f284f18.1704912510.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/fb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/hisilicon/clk-hi3519.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-index a719af1dc9a57..46170753699dc 100644
---- a/drivers/gpu/drm/tegra/fb.c
-+++ b/drivers/gpu/drm/tegra/fb.c
-@@ -159,6 +159,7 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
+diff --git a/drivers/clk/hisilicon/clk-hi3519.c b/drivers/clk/hisilicon/clk-hi3519.c
+index b871872d9960d..141b727ff60d6 100644
+--- a/drivers/clk/hisilicon/clk-hi3519.c
++++ b/drivers/clk/hisilicon/clk-hi3519.c
+@@ -130,7 +130,7 @@ static void hi3519_clk_unregister(struct platform_device *pdev)
+ 	of_clk_del_provider(pdev->dev.of_node);
  
- 		if (gem->size < size) {
- 			err = -EINVAL;
-+			drm_gem_object_put(gem);
- 			goto unreference;
- 		}
- 
+ 	hisi_clk_unregister_gate(hi3519_gate_clks,
+-				ARRAY_SIZE(hi3519_mux_clks),
++				ARRAY_SIZE(hi3519_gate_clks),
+ 				crg->clk_data);
+ 	hisi_clk_unregister_mux(hi3519_mux_clks,
+ 				ARRAY_SIZE(hi3519_mux_clks),
 -- 
 2.43.0
 
