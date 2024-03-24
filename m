@@ -1,110 +1,130 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625E517655F;
-	Sun, 24 Mar 2024 23:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F173E176555;
+	Sun, 24 Mar 2024 23:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323442; cv=none; b=Jlxgk4E1Qku1bGgd74VfbM+L6hBkmXyvNs91o4zo38hRfEFxZsV8xbPpbpabWl1dA+imQZFCRqXIql3aqhPJR5dOE0trT/f2gn5+UKUTXP0RtOBDK4msNvfKz6qIRnjD++MIDKte4sMhEKNHV0KzIuTLuhE5DCSkmRWOEM3D8BQ=
+	t=1711323438; cv=none; b=KVENwkwNu1gQvP9f14BBhYXOXf71GkxBWgpdfIu5sJ8ZiqEseWmCrR9k70QewhfWq/M82i3o6vPG1EYn9SdRtkIC88oD+l5aARLCX6fd2j79BpsmUiLhTKLIgiQHVZ88M1kDXGdk0y3cvBtjG9u7QD17u9HjPn+0coPRYLS9FK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323442; c=relaxed/simple;
-	bh=FiUcIHSFBZBxALtmt61YlYMiFB6wlrdxR2XHmKr2s7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=favyb5F3OrEMpateG3M8MGMcWkZIo9rCV6PvgS//O9ZNBakKo5XN5ArKg2zLulzc/LPsjpBOyTEZ2cbmNo7CYzua0WbDr33B0EatD5xtf7pizIXQ6uvmchtW/smN7grOv2vOTEnXX5D4N3l22aGcat2qonzwZvl/0h2CW7zl/lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Rn3ZXEup; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1711323438; c=relaxed/simple;
+	bh=kJjdOHZSQ3JQSc876NAE7w9DAZ6WFWU9xIDvGyUZ0t8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=s/BSnDSYbSyXN5sfHWKCf5R3uVh685FUoJl+yuNm+trVoUH9vgPQUIeABgRId5vdHSBs7DhQ7uyY1CgMg3pM2482EQAzcgvSxx/xYOp281Az0hIkzCBA0Gjx1b8PfV9IHUrWSx5MnbjTN8IKmTuJGJgQxv8g/UkmekKlFXwX2Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jXC0Zhcg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Rn3ZXEup"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=FiUcIHSFBZBxALtmt61YlYMiFB6wlrdxR2XHmKr2s7U=; b=Rn3ZXEupjlK9s8ygJnhwVpaGLT
-	dYBT49gIZK2OasO7sRPbhGvozmqTWhWXakl0JdzZ5cKLRDR+c36ME7FaSO3vP+vc0ab55QyF/Tbnm
-	VR7AcUA32IstZO1srXhjDa7+/jYt21mfVP/hFgBA0du80/ImT2KAK+oV3TS9s3xBjbeYDQ0epZRT9
-	GWvOmvyJ3hc5FwMK5EXCGJeM7XPDrx8s13MBRdQZ+diEbvQ1lBI8OFOgmdCv5v+duYq9iPYpNvFOW
-	CEk3k5Zos95tElXC8siQdd3gLpPlZrUQyJ+KwVU69saNmVUOftUpZrECpAe7ts+UYRmTnl4jGiUGq
-	G4f556uA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1roXOo-0000000DuZF-2Stz;
-	Sun, 24 Mar 2024 23:37:15 +0000
-Date: Sun, 24 Mar 2024 16:37:10 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	David Ahern <dsahern@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Yunsheng Lin <linyunsheng@huawei.com>,
-	Shailend Chand <shailend@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Shakeel Butt <shakeelb@google.com>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
- custom page providers
-Message-ID: <ZgC5JoSiWAYf3IgX@infradead.org>
-References: <20240305020153.2787423-1-almasrymina@google.com>
- <20240305020153.2787423-3-almasrymina@google.com>
- <ZfegzB341oNc_Ocz@infradead.org>
- <CAHS8izOUi6qGp=LSQb_o5oph-EnhNOuhLkPSfbQRU3eniZvbdA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jXC0Zhcg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26783C43394;
+	Sun, 24 Mar 2024 23:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711323436;
+	bh=kJjdOHZSQ3JQSc876NAE7w9DAZ6WFWU9xIDvGyUZ0t8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jXC0Zhcg2xjGrs32LFD6akvsKGe8Y1CLrGhTq/wR/6YSPlp7xUGVs0iuxsxkGQh4g
+	 TBnFbSBHU+KeNLgTQKHlHTQnIgSwDwysotv+9QoVNlGtDnXhh1CkLmjiEaqM85CpBg
+	 k14a5/prpKrk5pGVyW8/u8zpeFft530+df3d+FB/givWmxW+zdStrxsFSlBuY/N+Rc
+	 Vr1njL9jEbihRjioh5xF/dHToIfOBWQfwtkVKQWakIvus3u4GAAiYAbtJ2k03wIyUW
+	 jM/fr9Jt6bIFQ2nh5CJ93b8N/fDeS+r8odNObBsoiF+NiRZHjhUgGpt0bR9HxgSXlk
+	 8wLEeH+N88dwA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Yonglong Liu <liuyonglong@huawei.com>,
+	Jijie Shao <shaojijie@huawei.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.15 139/317] net: hns3: fix kernel crash when 1588 is received on HIP08 devices
+Date: Sun, 24 Mar 2024 19:31:59 -0400
+Message-ID: <20240324233458.1352854-140-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
+References: <20240324233458.1352854-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHS8izOUi6qGp=LSQb_o5oph-EnhNOuhLkPSfbQRU3eniZvbdA@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 22, 2024 at 10:54:54AM -0700, Mina Almasry wrote:
-> Sorry I don't mean to argue but as David mentioned, there are some
-> plans in the works and ones not in the works to extend this to other
-> memory types. David mentioned io_uring & Jakub's huge page use cases
-> which may want to re-use this design. I have an additional one in
-> mind, which is extending devmem TCP for storage devices. Currently
-> storage devices do not support dmabuf and my understanding is that
-> it's very hard to do so, and NVMe uses pci_p2pdma instead. I wonder if
-> it's possible to extend devmem TCP in the future to support pci_p2pdma
-> to support nvme devices in the future.
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-The block layer needs to suppotr dmabuf for this kind of I/O.
-Any special netdev to block side channel will be NAKed before you can
-even send it out.
+[ Upstream commit 0fbcf2366ba9888cf02eda23e35fde7f7fcc07c3 ]
+
+The HIP08 devices does not register the ptp devices, so the
+hdev->ptp is NULL, but the hardware can receive 1588 messages,
+and set the HNS3_RXD_TS_VLD_B bit, so, if match this case, the
+access of hdev->ptp->flags will cause a kernel crash:
+
+[ 5888.946472] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000018
+[ 5888.946475] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000018
+...
+[ 5889.266118] pc : hclge_ptp_get_rx_hwts+0x40/0x170 [hclge]
+[ 5889.272612] lr : hclge_ptp_get_rx_hwts+0x34/0x170 [hclge]
+[ 5889.279101] sp : ffff800012c3bc50
+[ 5889.283516] x29: ffff800012c3bc50 x28: ffff2040002be040
+[ 5889.289927] x27: ffff800009116484 x26: 0000000080007500
+[ 5889.296333] x25: 0000000000000000 x24: ffff204001c6f000
+[ 5889.302738] x23: ffff204144f53c00 x22: 0000000000000000
+[ 5889.309134] x21: 0000000000000000 x20: ffff204004220080
+[ 5889.315520] x19: ffff204144f53c00 x18: 0000000000000000
+[ 5889.321897] x17: 0000000000000000 x16: 0000000000000000
+[ 5889.328263] x15: 0000004000140ec8 x14: 0000000000000000
+[ 5889.334617] x13: 0000000000000000 x12: 00000000010011df
+[ 5889.340965] x11: bbfeff4d22000000 x10: 0000000000000000
+[ 5889.347303] x9 : ffff800009402124 x8 : 0200f78811dfbb4d
+[ 5889.353637] x7 : 2200000000191b01 x6 : ffff208002a7d480
+[ 5889.359959] x5 : 0000000000000000 x4 : 0000000000000000
+[ 5889.366271] x3 : 0000000000000000 x2 : 0000000000000000
+[ 5889.372567] x1 : 0000000000000000 x0 : ffff20400095c080
+[ 5889.378857] Call trace:
+[ 5889.382285] hclge_ptp_get_rx_hwts+0x40/0x170 [hclge]
+[ 5889.388304] hns3_handle_bdinfo+0x324/0x410 [hns3]
+[ 5889.394055] hns3_handle_rx_bd+0x60/0x150 [hns3]
+[ 5889.399624] hns3_clean_rx_ring+0x84/0x170 [hns3]
+[ 5889.405270] hns3_nic_common_poll+0xa8/0x220 [hns3]
+[ 5889.411084] napi_poll+0xcc/0x264
+[ 5889.415329] net_rx_action+0xd4/0x21c
+[ 5889.419911] __do_softirq+0x130/0x358
+[ 5889.424484] irq_exit+0x134/0x154
+[ 5889.428700] __handle_domain_irq+0x88/0xf0
+[ 5889.433684] gic_handle_irq+0x78/0x2c0
+[ 5889.438319] el1_irq+0xb8/0x140
+[ 5889.442354] arch_cpu_idle+0x18/0x40
+[ 5889.446816] default_idle_call+0x5c/0x1c0
+[ 5889.451714] cpuidle_idle_call+0x174/0x1b0
+[ 5889.456692] do_idle+0xc8/0x160
+[ 5889.460717] cpu_startup_entry+0x30/0xfc
+[ 5889.465523] secondary_start_kernel+0x158/0x1ec
+[ 5889.470936] Code: 97ffab78 f9411c14 91408294 f9457284 (f9400c80)
+[ 5889.477950] SMP: stopping secondary CPUs
+[ 5890.514626] SMP: failed to stop secondary CPUs 0-69,71-95
+[ 5890.522951] Starting crashdump kernel...
+
+Fixes: 0bf5eb788512 ("net: hns3: add support for PTP")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
+index befa9bcc2f2f2..dd0750f6daa6c 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
+@@ -120,7 +120,7 @@ void hclge_ptp_get_rx_hwts(struct hnae3_handle *handle, struct sk_buff *skb,
+ 	u64 ns = nsec;
+ 	u32 sec_h;
+ 
+-	if (!test_bit(HCLGE_PTP_FLAG_RX_EN, &hdev->ptp->flags))
++	if (!hdev->ptp || !test_bit(HCLGE_PTP_FLAG_RX_EN, &hdev->ptp->flags))
+ 		return;
+ 
+ 	/* Since the BD does not have enough space for the higher 16 bits of
+-- 
+2.43.0
+
