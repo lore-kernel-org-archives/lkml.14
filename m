@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCAE20C02E;
-	Sun, 24 Mar 2024 23:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C405C20C031;
+	Sun, 24 Mar 2024 23:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321623; cv=none; b=K8UjYCSUINhZ1EhtGVrZDR4mTC0kf8iOYKstQdeoKfydIFlLKtsVk++9z1K0huLHCtX7PWntFPfwrmeDWLlngTDSbaM0fHlKQR/H9ezZNW1zNcfqsWWumHdLpYCH0VtA2uCjmaU/1lWuaVxkwdHsBvFDqupKe9x0AcGivSZjpOE=
+	t=1711321627; cv=none; b=qV0QGHD7YWVAjdKnFjlwx3prCz1nbpXJsxmpkts6lUv9JqWugb2y7DlWelGcoYUUuspWpUXujOsQ3m8LuOPezB4VIiaJ9W1o4SvcosriGPaC5y3Eca5xlGnxw7c7oG6eCjEEdMxlKVdOW7xMOk7dA54qB6vy/y1yRxLCLvsgZK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321623; c=relaxed/simple;
-	bh=qgWoNH854Qu3UszLlD0IS5mUljLWw9/aZEUoPzuQfUA=;
+	s=arc-20240116; t=1711321627; c=relaxed/simple;
+	bh=O945Y65RtR8IS6CkelHaCAjziwhmZ9c1i9x5V/q+Yf4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cKIV+uDwGa0MzNBwX1vGREAIyGEkmrTCJMg3plcnEU8As8VYYY1f22ThgB4IknDaRNosywdGyPhz1R5wkZJRIItLV+SFiX9NzTMAHprJHHSUXhp3eUbHAguTEdVyJKRiD+wGhtYm1gNuxuS20btVKcgykoQgYFWdzTuvKiZ7KtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s7jPkEa9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uDUx73LjB2wLmElmjfzn2YoMxePkLxrya4XhpwKxzFj8n4uPY3E7GxkfAGdoSLYNGyKFlNzNXFsokSCOTDtIVm7XKKRtxEfcE9AuXKD0JF/aiC4t+8KmSioiLoW8ZGHus8Y0vSCIe9oVaY9HoP6xVV8FnvCv2z6BMt/GnpYyfLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gaZIOW0F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s7jPkEa9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F4FC433F1;
-	Sun, 24 Mar 2024 23:07:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gaZIOW0F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1111CC433F1;
+	Sun, 24 Mar 2024 23:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321621;
-	bh=qgWoNH854Qu3UszLlD0IS5mUljLWw9/aZEUoPzuQfUA=;
+	s=k20201202; t=1711321626;
+	bh=O945Y65RtR8IS6CkelHaCAjziwhmZ9c1i9x5V/q+Yf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s7jPkEa9qwpqtNtAkVgWkiNwT9bupJTwYd6XBWEiN/LxUXAgOPIg2zhqfOV09ysDx
-	 V2xDTfMPHlBgtnImyf4Dj6b+r0p0A3iWP/iYBroZPxsR806vSCTJJg9dYNTJ38901Z
-	 +KB73lcEzT6RoaZSGMDOnqUBaJ6YY+e3eJ8ICQzpdA6rcVH9djpkq8H1C3W/NirnAS
-	 hrA1A9KMCTVTMyal5S+wmoqxpR84AYCuTVSeBWR4mUp7WCYFzdvFeJYFlqroaK/oZD
-	 KPRUH7wtWIGczcaZNpcOlSlN7hU+HNpCYJuyP/mI/jmm3n62y6mA3pTbgw7quUGPph
-	 83fj9rGAMUWNA==
+	b=gaZIOW0FJc/oNrfCqK0ldN3RiJGXmvNCMYimad5ltKqKbYoYrbAepg7L+wJGVNEkQ
+	 y5pUZ80DTtIkmzz52RX28PbiA0dSWjN/nEPf5T2wcQnYmNb0GTKTsjN8nKJUrHtfON
+	 AtKumhYGD0VAB802qGp8nvsiEcL4UmggfX78cp0JIIvL4u7zqF+hozE3SKLSWbt/z2
+	 OpuDsgwoNe1wiaawDeWDnH6txOG5Jj9+dXSrG6ktWxkokmutcwO3QUD4SFZXabAC8i
+	 ZfStxXVjGHSDs5dHRbV3QKywJDW510YXb00TL+Kn5Ji4Gt5iC7VpN1gqmWgLvNUH9E
+	 qSQYDY2befhkw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Harry Wentland <harry.wentland@amd.com>,
-	Simon Ser <contact@emersion.fr>,
-	Melissa Wen <mwen@igalia.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>,
+	Douglas Anderson <dianders@chromium.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 352/638] drm: Don't treat 0 as -1 in drm_fixp2int_ceil
-Date: Sun, 24 Mar 2024 18:56:29 -0400
-Message-ID: <20240324230116.1348576-353-sashal@kernel.org>
+Subject: [PATCH 6.6 357/638] drm/panel-edp: use put_sync in unprepare
+Date: Sun, 24 Mar 2024 18:56:34 -0400
+Message-ID: <20240324230116.1348576-358-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,39 +48,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Harry Wentland <harry.wentland@amd.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit cf8837d7204481026335461629b84ac7f4538fa5 ]
+[ Upstream commit 49ddab089611ae5ddd0201ddbbf633da75bfcc25 ]
 
-Unit testing this in VKMS shows that passing 0 into
-this function returns -1, which is highly counter-
-intuitive. Fix it by checking whether the input is
->= 0 instead of > 0.
+Some edp panel requires T10 (Delay from end of valid video data transmitted
+by the Source device to power-off) less than 500ms. Using autosuspend with
+delay set as 1000 violates this requirement.
 
-Fixes: 64566b5e767f ("drm: Add drm_fixp_from_fraction and drm_fixp2int_ceil")
-Signed-off-by: Harry Wentland <harry.wentland@amd.com>
-Reviewed-by: Simon Ser <contact@emersion.fr>
-Reviewed-by: Melissa Wen <mwen@igalia.com>
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231108163647.106853-2-harry.wentland@amd.com
+Use put_sync_suspend in unprepare to meet the spec. For other cases (such
+as getting EDID), it still uses autosuspend.
+
+Suggested-by: Douglas Anderson <dianders@chromium.org>
+Fixes: 3235b0f20a0a ("drm/panel: panel-simple: Use runtime pm to avoid excessive unprepare / prepare")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231220221418.2610185-1-hsinyi@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_fixed.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/panel/panel-edp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
-index 6ea339d5de088..0c9f917a4d4be 100644
---- a/include/drm/drm_fixed.h
-+++ b/include/drm/drm_fixed.h
-@@ -95,7 +95,7 @@ static inline int drm_fixp2int_round(s64 a)
+diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+index cba5a93e60822..70feee7876114 100644
+--- a/drivers/gpu/drm/panel/panel-edp.c
++++ b/drivers/gpu/drm/panel/panel-edp.c
+@@ -413,8 +413,7 @@ static int panel_edp_unprepare(struct drm_panel *panel)
+ 	if (!p->prepared)
+ 		return 0;
  
- static inline int drm_fixp2int_ceil(s64 a)
- {
--	if (a > 0)
-+	if (a >= 0)
- 		return drm_fixp2int(a + DRM_FIXED_ALMOST_ONE);
- 	else
- 		return drm_fixp2int(a - DRM_FIXED_ALMOST_ONE);
+-	pm_runtime_mark_last_busy(panel->dev);
+-	ret = pm_runtime_put_autosuspend(panel->dev);
++	ret = pm_runtime_put_sync_suspend(panel->dev);
+ 	if (ret < 0)
+ 		return ret;
+ 	p->prepared = false;
 -- 
 2.43.0
 
