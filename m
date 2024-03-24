@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5651EBD5D;
-	Sun, 24 Mar 2024 22:55:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7DC1EC649;
+	Sun, 24 Mar 2024 22:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320939; cv=none; b=Fj3F7kgcQg5x6CLV2isEgngAtasHZvJNTGPGxRXCA1GmYai/acEpuK37mQwQ5Eii1UK15OCKtndkkODfBXMcJjDUIVLSQC8P/Is8JEmrvvSVfI0Afv4540RK58U5TpII+R3zBKK9BzD5EZgx7PstpGYbitH4GZttL2RScbZ0i1M=
+	t=1711320952; cv=none; b=VFxaOLUml/27Q8UIAufrUYVML/NDB85RKIU48uG4CenlQaGk/fyj7MTLjwms/Db1tJfFudfw/P0wrkcCkoj0qLagAMXKy05LfxV52iM/ZJQJFOmH7oCw1DH56BzvGFGUYWk/5J3Ulwhk7Q0tRIiFGySxy12PP9fOSQG55kB+vvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320939; c=relaxed/simple;
-	bh=6U5Xrb0s90JnDdGWdSIaci7y6uJqRFUxnTGE2SLegaw=;
+	s=arc-20240116; t=1711320952; c=relaxed/simple;
+	bh=Fh4E4z39r7oA0cEzec0Z79XrPswQA0teNAo3fCt4Zg4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uQraTSrIgBDyB/zWuKiHvYs8D0OPBwJIwyhw9okcmajVU4x90jp96Mf+LHmGJY+r2/Qhxuwh1a0gxSnaUFxOUfbzpZFARPWsIP+7e+Kp0XbZb5HIUTNeORGTM3MyUvHIFe4IiBHJtMocJpnettpPfj++8lC0w5fJt7lkeg1/K+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EoEKy7bI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KeJqJfid/UhoD1rUFrBOQSEK3zcfSALipanmDwagtlCwt/w1MiWmk2QBDeARYxV5IJQS1KiDSEQmxTmCW2y++qfOAn0U+yLeb8dZnAYbFWJOcsgSECy8woZ+NmsUVZ33SFJwr3dy97TOUTZ5LgTcSZPrfyyOTv75qglQpEaxrVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n5Z9nU22; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EoEKy7bI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40B2EC43394;
-	Sun, 24 Mar 2024 22:55:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n5Z9nU22"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1684C433F1;
+	Sun, 24 Mar 2024 22:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320938;
-	bh=6U5Xrb0s90JnDdGWdSIaci7y6uJqRFUxnTGE2SLegaw=;
+	s=k20201202; t=1711320951;
+	bh=Fh4E4z39r7oA0cEzec0Z79XrPswQA0teNAo3fCt4Zg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EoEKy7bIguMww0TvqT11sHrN1uvBPGDWZUT1magQ8P7NkbeFyj95WPHoZhI8VlqYr
-	 xq/4YnEp4nrt1x4T9iVR9pkwH5Fy60FzchtBJxxKTfOZlO07eTEShCJovYQEpdNEEM
-	 G7oF9uhJsmrpfqGFSbUQO/tFo5cuaGepLHd4CjIrIHlhXiJCapi+eg081DpEgFAAiZ
-	 9HJV1hdQZW/nlE2BD5gsTlZkdhwnZ/GUCChkBdjegSKr4v7//TL/nubumQOSwTc9Zp
-	 q+JI8LTDsZZzvqLsW0HOaYSo2SftG/nUY2wQUtaL+7cEhMucXs+yg2BLKRULHN2Bxo
-	 mL80FXj06Mfww==
+	b=n5Z9nU22MGN1ISNOwgRwY65zg9gFx/o1Rnmau110n6UFiyaDCvTISr/jJPhnynpli
+	 JVThTvW4yCh91I8YtEJ1cmid0Awk+4YwSOokDVb9VOcICDalZlxWbGEEKuTdcYOpcL
+	 f/O585Knh+QSP41yS+OxqJhtkqaN1Ocru9R/1DBsX4rHAF73Q0bd9SxuHpjIjPoR/B
+	 hPz8t7gdjw5ydSHBDjnyJypvJQGRVIuMhLCLRYAdUtamuJyl10Q/LAuRqjg4tf+/Nh
+	 chMNYpJQA+HN43jT3urI6Ljvuf9zvn0yzS6ZgshTdKSSbK40nQDiZce8//NbemNEYX
+	 94KWv0KO3R6dw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Adam Guerin <adam.guerin@intel.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+	Akshata MukundShetty <akshata.mukundshetty@amd.com>,
+	Jiri Kosina <jkosina@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 501/713] crypto: qat - remove double initialization of value
-Date: Sun, 24 Mar 2024 18:43:47 -0400
-Message-ID: <20240324224720.1345309-502-sashal@kernel.org>
+Subject: [PATCH 6.7 515/713] HID: amd_sfh: Avoid disabling the interrupt
+Date: Sun, 24 Mar 2024 18:44:01 -0400
+Message-ID: <20240324224720.1345309-516-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,54 +49,101 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Adam Guerin <adam.guerin@intel.com>
+From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 
-[ Upstream commit a66cf93ab33853f17b8cc33a99263dd0a383a1a1 ]
+[ Upstream commit c1db0073212ef39d5a46c2aea5e49bf884375ce4 ]
 
-Remove double initialization of the reg variable.
+HP ProBook x360 435 G7 using older version of firmware which doesn't
+support disabling the interrupt for all commands. Hence avoid disabling
+the interrupt for that particular model.
 
-This is to fix the following warning when compiling the QAT driver
-using clang scan-build:
-    drivers/crypto/intel/qat/qat_common/adf_gen4_ras.c:1010:6: warning: Value stored to 'reg' during its initialization is never read [deadcode.DeadStores]
-     1010 |         u32 reg = ADF_CSR_RD(csr, ADF_GEN4_SSMCPPERR);
-          |             ^~~   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    drivers/crypto/intel/qat/qat_common/adf_gen4_ras.c:1109:6: warning: Value stored to 'reg' during its initialization is never read [deadcode.DeadStores]
-     1109 |         u32 reg = ADF_CSR_RD(csr, ADF_GEN4_SER_ERR_SSMSH);
-          |             ^~~   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Fixes: 99b1c9826e48 ("crypto: qat - count QAT GEN4 errors")
-Signed-off-by: Adam Guerin <adam.guerin@intel.com>
-Reviewed-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218104
+Fixes: b300667b33b2 ("HID: amd_sfh: Disable the interrupt for all command")
+Co-developed-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
+Signed-off-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
+Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/intel/qat/qat_common/adf_gen4_ras.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/hid/amd-sfh-hid/amd_sfh_pcie.c | 30 +++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/intel/qat/qat_common/adf_gen4_ras.c b/drivers/crypto/intel/qat/qat_common/adf_gen4_ras.c
-index 048c246079390..2dd3772bf58a6 100644
---- a/drivers/crypto/intel/qat/qat_common/adf_gen4_ras.c
-+++ b/drivers/crypto/intel/qat/qat_common/adf_gen4_ras.c
-@@ -1007,8 +1007,7 @@ static bool adf_handle_spppar_err(struct adf_accel_dev *accel_dev,
- static bool adf_handle_ssmcpppar_err(struct adf_accel_dev *accel_dev,
- 				     void __iomem *csr, u32 iastatssm)
+diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
+index 2530fa98b568b..ce449da08e9ba 100644
+--- a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
++++ b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
+@@ -35,6 +35,8 @@ static int sensor_mask_override = -1;
+ module_param_named(sensor_mask, sensor_mask_override, int, 0444);
+ MODULE_PARM_DESC(sensor_mask, "override the detected sensors mask");
+ 
++static bool intr_disable = true;
++
+ static int amd_sfh_wait_response_v2(struct amd_mp2_dev *mp2, u8 sid, u32 sensor_sts)
  {
--	u32 reg = ADF_CSR_RD(csr, ADF_GEN4_SSMCPPERR);
--	u32 bits_num = BITS_PER_REG(reg);
-+	u32 reg, bits_num = BITS_PER_REG(reg);
- 	bool reset_required = false;
- 	unsigned long errs_bits;
- 	u32 bit_iterator;
-@@ -1106,8 +1105,7 @@ static bool adf_handle_rf_parr_err(struct adf_accel_dev *accel_dev,
- static bool adf_handle_ser_err_ssmsh(struct adf_accel_dev *accel_dev,
- 				     void __iomem *csr, u32 iastatssm)
- {
--	u32 reg = ADF_CSR_RD(csr, ADF_GEN4_SER_ERR_SSMSH);
--	u32 bits_num = BITS_PER_REG(reg);
-+	u32 reg, bits_num = BITS_PER_REG(reg);
- 	bool reset_required = false;
- 	unsigned long errs_bits;
- 	u32 bit_iterator;
+ 	union cmd_response cmd_resp;
+@@ -55,7 +57,7 @@ static void amd_start_sensor_v2(struct amd_mp2_dev *privdata, struct amd_mp2_sen
+ 
+ 	cmd_base.ul = 0;
+ 	cmd_base.cmd_v2.cmd_id = ENABLE_SENSOR;
+-	cmd_base.cmd_v2.intr_disable = 1;
++	cmd_base.cmd_v2.intr_disable = intr_disable;
+ 	cmd_base.cmd_v2.period = info.period;
+ 	cmd_base.cmd_v2.sensor_id = info.sensor_idx;
+ 	cmd_base.cmd_v2.length = 16;
+@@ -73,7 +75,7 @@ static void amd_stop_sensor_v2(struct amd_mp2_dev *privdata, u16 sensor_idx)
+ 
+ 	cmd_base.ul = 0;
+ 	cmd_base.cmd_v2.cmd_id = DISABLE_SENSOR;
+-	cmd_base.cmd_v2.intr_disable = 1;
++	cmd_base.cmd_v2.intr_disable = intr_disable;
+ 	cmd_base.cmd_v2.period = 0;
+ 	cmd_base.cmd_v2.sensor_id = sensor_idx;
+ 	cmd_base.cmd_v2.length  = 16;
+@@ -87,7 +89,7 @@ static void amd_stop_all_sensor_v2(struct amd_mp2_dev *privdata)
+ 	union sfh_cmd_base cmd_base;
+ 
+ 	cmd_base.cmd_v2.cmd_id = STOP_ALL_SENSORS;
+-	cmd_base.cmd_v2.intr_disable = 1;
++	cmd_base.cmd_v2.intr_disable = intr_disable;
+ 	cmd_base.cmd_v2.period = 0;
+ 	cmd_base.cmd_v2.sensor_id = 0;
+ 
+@@ -292,6 +294,26 @@ int amd_sfh_irq_init(struct amd_mp2_dev *privdata)
+ 	return 0;
+ }
+ 
++static int mp2_disable_intr(const struct dmi_system_id *id)
++{
++	intr_disable = false;
++	return 0;
++}
++
++static const struct dmi_system_id dmi_sfh_table[] = {
++	{
++		/*
++		 * https://bugzilla.kernel.org/show_bug.cgi?id=218104
++		 */
++		.callback = mp2_disable_intr,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP ProBook x360 435 G7"),
++		},
++	},
++	{}
++};
++
+ static const struct dmi_system_id dmi_nodevs[] = {
+ 	{
+ 		/*
+@@ -315,6 +337,8 @@ static int amd_mp2_pci_probe(struct pci_dev *pdev, const struct pci_device_id *i
+ 	if (dmi_first_match(dmi_nodevs))
+ 		return -ENODEV;
+ 
++	dmi_check_system(dmi_sfh_table);
++
+ 	privdata = devm_kzalloc(&pdev->dev, sizeof(*privdata), GFP_KERNEL);
+ 	if (!privdata)
+ 		return -ENOMEM;
 -- 
 2.43.0
 
