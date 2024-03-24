@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFD612D76B;
-	Sun, 24 Mar 2024 22:59:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB74F12D77B;
+	Sun, 24 Mar 2024 22:59:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321142; cv=none; b=U5dHuFA4TZlw3difVDuRnG5rjA3QQvAIypuw/9ac3/tAaGZNLpl3BnL2AuGQ9T80FL9pnjv8FvaSHLF+IlfG9eD9AUOEboJ/aWT9Erd1cTMl2wsm+HipdgwVoH9e5+ouHpWXJis8HmslJyWcP0IYXWolTWYGRqaR+HUJwIp1JWU=
+	t=1711321144; cv=none; b=W6mrwaLD/CdJi+tmy5le0l5FLe6MwVuAYCmRvIs++jfZDLGAFbowPG0KI8HADa1WZXARDkjK9J/qVGFU1xo0qUVlX/4EDr005cUnfLmCUtJ547rFr4hKYYBttnGfyfM6unNOojdC1e7YJbC2SH6algA0AApuzJWIpCSwOGZU/7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321142; c=relaxed/simple;
-	bh=3V3Y8Z3T/2ffOncnPPsWGzqaz/UacQ7HKa0i63JPH1g=;
+	s=arc-20240116; t=1711321144; c=relaxed/simple;
+	bh=N31omVZd97UQiQbjKJexFx66JX16bowjHtmJcLEmGtg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DTkw4tsSvtB0uFR/yDmTG6o9y2FKM6Zx4niJHFWwZKx8sYv0Oguq1AyEPmtBTgzW2/SxguHkMSLqRHicUotRzPj/unZ//qaiqeWA00r2Fij4mGQ8kYfyg5g15paFQI3d8+PC3SURknx83ERCFmVjWI4rqOrDQyVEOX9e9DPxaeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1day8qD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jj9p668Qy7CxQUTSojRQi6glyXijVhbMBff2j2n4bPcvX1EMtUKI8Yn3qSecB/qfLUNZa8TCzBOs7WxDN9Nc15EMl5wFvRom9g2y3jU1Ix2KcR2Xw4eEki2jlvG46MOXazkXWUzqnTGHWdfWpeHztRJKC0FKxA2xm/65E8svuIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FibJrN1F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1day8qD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA447C43394;
-	Sun, 24 Mar 2024 22:59:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FibJrN1F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5D48C43394;
+	Sun, 24 Mar 2024 22:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321141;
-	bh=3V3Y8Z3T/2ffOncnPPsWGzqaz/UacQ7HKa0i63JPH1g=;
+	s=k20201202; t=1711321144;
+	bh=N31omVZd97UQiQbjKJexFx66JX16bowjHtmJcLEmGtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n1day8qDctDTKFY8AC1sAQFp0mUJuQJ+v8O96An+qppz2morNXbraRaKw8gND2eWN
-	 zhe5tJKFugqA4fUMgKyfRilt69QLrNyuTjEfayX8c0bhflyoritTD6VEIgCqkTLFBj
-	 onI59iNEqBxvq19jKzaSxT0xiFzj27Cs2bbO1Nieeofen2Ax60qNNfvJ4Gq7/JD9y+
-	 +Fye3UE/H5z0igsMxWQ0rb8wVjk1OeUTfLxl5EcaccM0Y6nFBBdcS0GFMeh75AyLuv
-	 rdsAH//5bEY9EbVjl5vlp58aL20+v33eREtCFi3kYmm+AJYZe3oMucqOuCzeAT5pPW
-	 MZHKUuZNpFKNQ==
+	b=FibJrN1FK6LoX7Mi37hUiVbUH9xhhZo2WglOHVVtX9MUW6X+Bcy+5XtO0O4Zxrzdn
+	 QdUFS+8uUh4RpcOmsaeIRFi8xpzGvf2h3Ola7LVMq0134syI7Q5E14M+9JZb/k4WT/
+	 UV7BYSjmWhJ6rm5mjyN0SGIaiUsohHQS0oG0yorqt9SAn0ANjUAozyOHXpWP4ZiXIB
+	 zfSI1wRpeqT3ANwfcZb7v3AltF8xrbCQZFuYiRgyTNXUV5L8JBPk5OTpCA96BiLhsF
+	 riYAV/wOVMCWb/uTjD7KcPQ0u3/Bnyrhb0AFTcN0Ea4m9DCHUMgxBDIabIe6LtJDlL
+	 +q8EFAMV7UT2A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yan Zhai <yan@cloudflare.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Quan Tian <tianquan23@gmail.com>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 703/713] bpf: report RCU QS in cpumap kthread
-Date: Sun, 24 Mar 2024 18:47:09 -0400
-Message-ID: <20240324224720.1345309-704-sashal@kernel.org>
+Subject: [PATCH 6.7 706/713] netfilter: nf_tables: Fix a memory leak in nf_tables_updchain
+Date: Sun, 24 Mar 2024 18:47:12 -0400
+Message-ID: <20240324224720.1345309-707-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,53 +48,69 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yan Zhai <yan@cloudflare.com>
+From: Quan Tian <tianquan23@gmail.com>
 
-[ Upstream commit 00bf63122459e87193ee7f1bc6161c83a525569f ]
+[ Upstream commit 7eaf837a4eb5f74561e2486972e7f5184b613f6e ]
 
-When there are heavy load, cpumap kernel threads can be busy polling
-packets from redirect queues and block out RCU tasks from reaching
-quiescent states. It is insufficient to just call cond_resched() in such
-context. Periodically raise a consolidated RCU QS before cond_resched
-fixes the problem.
+If nft_netdev_register_hooks() fails, the memory associated with
+nft_stats is not freed, causing a memory leak.
 
-Fixes: 6710e1126934 ("bpf: introduce new bpf cpu map type BPF_MAP_TYPE_CPUMAP")
-Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Signed-off-by: Yan Zhai <yan@cloudflare.com>
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Link: https://lore.kernel.org/r/c17b9f1517e19d813da3ede5ed33ee18496bb5d8.1710877680.git.yan@cloudflare.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+This patch fixes it by moving nft_stats_alloc() down after
+nft_netdev_register_hooks() succeeds.
+
+Fixes: b9703ed44ffb ("netfilter: nf_tables: support for adding new devices to an existing netdev chain")
+Signed-off-by: Quan Tian <tianquan23@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/cpumap.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/netfilter/nf_tables_api.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-index ef82ffc90cbe9..8f1d390bcbdeb 100644
---- a/kernel/bpf/cpumap.c
-+++ b/kernel/bpf/cpumap.c
-@@ -262,6 +262,7 @@ static int cpu_map_bpf_prog_run(struct bpf_cpu_map_entry *rcpu, void **frames,
- static int cpu_map_kthread_run(void *data)
- {
- 	struct bpf_cpu_map_entry *rcpu = data;
-+	unsigned long last_qs = jiffies;
- 
- 	complete(&rcpu->kthread_running);
- 	set_current_state(TASK_INTERRUPTIBLE);
-@@ -287,10 +288,12 @@ static int cpu_map_kthread_run(void *data)
- 			if (__ptr_ring_empty(rcpu->queue)) {
- 				schedule();
- 				sched = 1;
-+				last_qs = jiffies;
- 			} else {
- 				__set_current_state(TASK_RUNNING);
- 			}
- 		} else {
-+			rcu_softirq_qs_periodic(last_qs);
- 			sched = cond_resched();
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 85d9e1394330c..0130c2782cdc7 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -2619,19 +2619,6 @@ static int nf_tables_updchain(struct nft_ctx *ctx, u8 genmask, u8 policy,
  		}
+ 	}
  
+-	if (nla[NFTA_CHAIN_COUNTERS]) {
+-		if (!nft_is_base_chain(chain)) {
+-			err = -EOPNOTSUPP;
+-			goto err_hooks;
+-		}
+-
+-		stats = nft_stats_alloc(nla[NFTA_CHAIN_COUNTERS]);
+-		if (IS_ERR(stats)) {
+-			err = PTR_ERR(stats);
+-			goto err_hooks;
+-		}
+-	}
+-
+ 	if (!(table->flags & NFT_TABLE_F_DORMANT) &&
+ 	    nft_is_base_chain(chain) &&
+ 	    !list_empty(&hook.list)) {
+@@ -2646,6 +2633,20 @@ static int nf_tables_updchain(struct nft_ctx *ctx, u8 genmask, u8 policy,
+ 	}
+ 
+ 	unregister = true;
++
++	if (nla[NFTA_CHAIN_COUNTERS]) {
++		if (!nft_is_base_chain(chain)) {
++			err = -EOPNOTSUPP;
++			goto err_hooks;
++		}
++
++		stats = nft_stats_alloc(nla[NFTA_CHAIN_COUNTERS]);
++		if (IS_ERR(stats)) {
++			err = PTR_ERR(stats);
++			goto err_hooks;
++		}
++	}
++
+ 	err = -ENOMEM;
+ 	trans = nft_trans_alloc(ctx, NFT_MSG_NEWCHAIN,
+ 				sizeof(struct nft_trans_chain));
 -- 
 2.43.0
 
