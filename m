@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D2D1494CD;
-	Sun, 24 Mar 2024 22:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCF012B17E;
+	Sun, 24 Mar 2024 22:56:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320975; cv=none; b=fonVaOrJxB6+u0m2yYrNUndi45NwksLa0V0noZTIPP7qnHv6H41sLnbq1xs/MZfm1uccGp5XdCzlgjFTXE6dQjHtMfBDA1xyw5nNvwiVeNk91oi6sWpAnuAgM4g16L/2cPYMvr32Oisr4whUG92IqG+5AzzkeY9PTRY2FEQ2ZeQ=
+	t=1711320981; cv=none; b=hL7FDCbupCUzWZ6MKvhBc/JaOATOuGfuIUuDRkvAK0vTF7ien+8RR3vxjS69iLRJ7hHKtyjXA8N6E5OllimDF/S6rEoYrSA3hwoxUz7nEMeC3mZd/wyy379+Y5ot6k/hR7yEXBazZIsJFQC4cMzueDLRj3j5KTAkgKyxE8rw7BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320975; c=relaxed/simple;
-	bh=eG1J2GmODm9lK0Ww4aBd5mp6oXQImbe3u0gUs1eIvrk=;
+	s=arc-20240116; t=1711320981; c=relaxed/simple;
+	bh=ZvvuP1gdaEvy16AYadR6zQ+/sr0t4GLSEw8KeAIDwLk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b8jx7GQPS3XEFhB9Q/IR9e4Hi1ZezDy+muV8EryEmuBFYJDNEBrm6af7hcKQJlhGcxXeDvp2O5c5bMsuDBkB8/Ksz6D3jusudDg9mXnoVtiYw1BGbHJm7hhwOXKBgAZFBrhKE5HgNAfXlGcjukpt2wcWjkTTE3vnQbGLp5TkTmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ig1DL+DI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RGyLQvlZRRdlvTgrwhLANVgbdVuFIuwzmYFF+taDpB0LeuMdq43ExpP9yxfGGHyjRREMk1y1oHj7tPTVfOuqIQZahTimP/HVKntVnMqnVtZgAXMnIBgZDP+xixTQTN+2BPC5uPYbWCSVNf6Vv/+XqJ4hlxcOcmgLxOIPf1lGKhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i/5q7Fre; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ig1DL+DI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC499C433F1;
-	Sun, 24 Mar 2024 22:56:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i/5q7Fre"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44AFAC43390;
+	Sun, 24 Mar 2024 22:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320974;
-	bh=eG1J2GmODm9lK0Ww4aBd5mp6oXQImbe3u0gUs1eIvrk=;
+	s=k20201202; t=1711320980;
+	bh=ZvvuP1gdaEvy16AYadR6zQ+/sr0t4GLSEw8KeAIDwLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ig1DL+DIJ/WNChNr4WucATddPDx4sWlvULlgmtPzzHCq4DD/cNbPnAMOc/JNF9RUM
-	 mMbLvFTin5qbZx3F2XON0af2jfiOfEjpIMBDu26dmlUf9WML8i1WRiScwNvMPdg9G5
-	 bjV2BJDOriU80pD9birUvgbj4P9p29x2XEB+8hBuTre22NN0Tok7P2iGe9GWFMQbv9
-	 RBmHR4pR++paLlavaIXSyG2rftmhFYsim/4G3Hvt5w2MhTZxNRdCQIh0eG8E/Ujip7
-	 er8ZJDqet0SSEU+0Bys8G7WuY5hDSqCBCtPP6F5GbRHmq4lFIzb2kdxNz/IhgPFFh9
-	 HtJ4ObYf9A7wA==
+	b=i/5q7Fre5DY3BAUnv0CwvxomqULgIdH/fJ0JUiYsT/F0ZiRHT0PQwv8YM7GTEChpa
+	 bqHhS3n3a2Syh8YKdce9rt6keb05i3oVmdcx+swr1+LOVN+N1sY6ozHNh6OGX3+EXg
+	 l4GkYw5guIjtYVQajIziwbZgP/bv3hYeKdFfKYQsJDTWEsh5nkeramA9YmK9mrAaaT
+	 68NNLEJ4k02w+4leTvVSEQmYfRZJg+2bItdIQYTnyZiqXzp9riewGh390y24heDFnq
+	 0AuZfVfbz3ahdVhusuSVBF3DhosV8XVygqvzHRQhdIawtLmkX87Hf6/OD46E4EV1zk
+	 CZv1BtVVzPaRg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
+Cc: Luca Weiss <luca@z3ntu.xyz>,
+	Daniel Thompson <daniel.thompson@linaro.org>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 537/713] power: supply: mm8013: fix "not charging" detection
-Date: Sun, 24 Mar 2024 18:44:23 -0400
-Message-ID: <20240324224720.1345309-538-sashal@kernel.org>
+Subject: [PATCH 6.7 543/713] backlight: lm3630a: Don't set bl->props.brightness in get_brightness
+Date: Sun, 24 Mar 2024 18:44:29 -0400
+Message-ID: <20240324224720.1345309-544-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,78 +45,79 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Thomas Weißschuh <linux@weissschuh.net>
+From: Luca Weiss <luca@z3ntu.xyz>
 
-[ Upstream commit cd38a0acca734a1117663d6f0da579d3965b6c93 ]
+[ Upstream commit 4bf7ddd2d2f0f8826f25f74c7eba4e2c323a1446 ]
 
-The charge_behaviours property is meant as a control-knob that can be
-changed by the user.
+There's no need to set bl->props.brightness, the get_brightness function
+is just supposed to return the current brightness and not touch the
+struct.
 
-Page 23 of [0] which documents the flag CHG_INH as follows:
+With that done we can also remove the 'goto out' and just return the
+value.
 
-  CHG_INH : Charge Inhibit      When the current is more than or equal to charge
-                                threshold current,
-                                charge inhibit temperature (upper/lower limit) ：1
-                                charge permission temperature or the current is
-                                less than charge threshold current ：0
-
-So this is pure read-only information which is better represented as
-POWER_SUPPLY_STATUS_NOT_CHARGING.
-
-[0] https://product.minebeamitsumi.com/en/product/category/ics/battery/fuel_gauge/parts/download/__icsFiles/afieldfile/2023/07/12/1_download_01_12.pdf
-
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-Link: https://lore.kernel.org/r/20240303-power_supply-charge_behaviour_prop-v2-1-8ebb0a7c2409@weissschuh.net
-Fixes: e39257cde7e8 ("power: supply: mm8013: Add more properties")
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Fixes: 0c2a665a648e ("backlight: add Backlight driver for lm3630 chip")
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20240220-lm3630a-fixups-v1-2-9ca62f7e4a33@z3ntu.xyz
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/mm8013.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ drivers/video/backlight/lm3630a_bl.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/power/supply/mm8013.c b/drivers/power/supply/mm8013.c
-index caa272b035649..20c1651ca38e0 100644
---- a/drivers/power/supply/mm8013.c
-+++ b/drivers/power/supply/mm8013.c
-@@ -71,7 +71,6 @@ static int mm8013_checkdevice(struct mm8013_chip *chip)
+diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+index 2e2240b278482..7115d7bb2a141 100644
+--- a/drivers/video/backlight/lm3630a_bl.c
++++ b/drivers/video/backlight/lm3630a_bl.c
+@@ -233,7 +233,7 @@ static int lm3630a_bank_a_get_brightness(struct backlight_device *bl)
+ 		if (rval < 0)
+ 			goto out_i2c_err;
+ 		brightness |= rval;
+-		goto out;
++		return brightness;
+ 	}
  
- static enum power_supply_property mm8013_battery_props[] = {
- 	POWER_SUPPLY_PROP_CAPACITY,
--	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
- 	POWER_SUPPLY_PROP_CHARGE_FULL,
- 	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
- 	POWER_SUPPLY_PROP_CHARGE_NOW,
-@@ -103,16 +102,6 @@ static int mm8013_get_property(struct power_supply *psy,
+ 	/* disable sleep */
+@@ -244,11 +244,8 @@ static int lm3630a_bank_a_get_brightness(struct backlight_device *bl)
+ 	rval = lm3630a_read(pchip, REG_BRT_A);
+ 	if (rval < 0)
+ 		goto out_i2c_err;
+-	brightness = rval;
++	return rval;
  
- 		val->intval = regval;
- 		break;
--	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
--		ret = regmap_read(chip->regmap, REG_FLAGS, &regval);
--		if (ret < 0)
--			return ret;
--
--		if (regval & MM8013_FLAG_CHG_INH)
--			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
--		else
--			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
--		break;
- 	case POWER_SUPPLY_PROP_CHARGE_FULL:
- 		ret = regmap_read(chip->regmap, REG_FULL_CHARGE_CAPACITY, &regval);
- 		if (ret < 0)
-@@ -187,6 +176,8 @@ static int mm8013_get_property(struct power_supply *psy,
+-out:
+-	bl->props.brightness = brightness;
+-	return bl->props.brightness;
+ out_i2c_err:
+ 	dev_err(pchip->dev, "i2c failed to access register\n");
+ 	return 0;
+@@ -310,7 +307,7 @@ static int lm3630a_bank_b_get_brightness(struct backlight_device *bl)
+ 		if (rval < 0)
+ 			goto out_i2c_err;
+ 		brightness |= rval;
+-		goto out;
++		return brightness;
+ 	}
  
- 		if (regval & MM8013_FLAG_DSG)
- 			val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
-+		else if (regval & MM8013_FLAG_CHG_INH)
-+			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
- 		else if (regval & MM8013_FLAG_CHG)
- 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
- 		else if (regval & MM8013_FLAG_FC)
+ 	/* disable sleep */
+@@ -321,11 +318,8 @@ static int lm3630a_bank_b_get_brightness(struct backlight_device *bl)
+ 	rval = lm3630a_read(pchip, REG_BRT_B);
+ 	if (rval < 0)
+ 		goto out_i2c_err;
+-	brightness = rval;
++	return rval;
+ 
+-out:
+-	bl->props.brightness = brightness;
+-	return bl->props.brightness;
+ out_i2c_err:
+ 	dev_err(pchip->dev, "i2c failed to access register\n");
+ 	return 0;
 -- 
 2.43.0
 
