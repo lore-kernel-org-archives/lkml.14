@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214C21E9F8D;
-	Sun, 24 Mar 2024 22:55:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54791DCC89;
+	Sun, 24 Mar 2024 22:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320906; cv=none; b=n/V0DHc7ydY6mnSVoFXSuLCrn7Jvs/fCQ+b2soWfDnylipxwNYL6hqCL7bJnuTRVYc8rwMB2PoqFqvNPo27YjNs1yKU3eK/VneSb+JVFfqgDcp/c1Qzord/C+ImaovVefuWdrmEw40n/t+juN7ii/pWPCJUqhDBtVN4OWqoRipg=
+	t=1711320909; cv=none; b=GDrPYQY0t5G1nhr1id91pRcOmCwOODF6gqbTMcnFbOFexhQzbmQD0+bLNO1WNKeJ+pxGDP71rsEcClBEfxQL44PCHLOFqB0lcNZag0paDjWEngYTxKiW5Lfz1MijS/hlDRle8kzRBJJ7kfrvj049Gvg9ZweFPdGTdUpXw3OkUg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320906; c=relaxed/simple;
-	bh=Gd32IM3+MPoIdKqaSx0pqzYfX7z6P6j7xfsNndqjB/8=;
+	s=arc-20240116; t=1711320909; c=relaxed/simple;
+	bh=bZsBnUnfKdFw2VCk5QyKwh671+Xs8KoP7fsGfnZBPpw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iM0a/WCtvp1pEJBMuCzrvVA8Chbi2h+JEcfp/9BTDF/mOmmU3fP64Qxm0z6Z7uYGbK4viJHuCtLjcdw7n/ZTuk92YBzjQTE+/uA077Lmhcfm/hLL4r/ifGT8oqjDBfsPK5bwS4BuUzpPiRoYCPgAouK1incV1YO3Ap3X6pnBiHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPQpMLkz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qpI3F164/dQGveCzIj+dIXK9MV26/i6hpU5H6yW22kMq9SpHJZTGHoX611WDg6a40+0eIUfsEaOidCOHmNyLFkwCytFKrxIo3+8OUTuF1R/ay0hpHMgYECyzD8xJsWx0lfHII5Dofp7dkag4lypOA2E8ycjJzRpA3aJ2FNoqY50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXZXmfwV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPQpMLkz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A29BC433C7;
-	Sun, 24 Mar 2024 22:55:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXZXmfwV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEF18C43399;
+	Sun, 24 Mar 2024 22:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320906;
-	bh=Gd32IM3+MPoIdKqaSx0pqzYfX7z6P6j7xfsNndqjB/8=;
+	s=k20201202; t=1711320909;
+	bh=bZsBnUnfKdFw2VCk5QyKwh671+Xs8KoP7fsGfnZBPpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EPQpMLkzCTuutXGG29xsupB0WDgjoaScYvQB/Fd7SMdPAKSwQjscs/Ch5nQWGJzb0
-	 ZIk75clLm74i/K9ncZVDh/aF5RdhkSSrUcEOYkzcDYCZqxAAebzsOiECEvk3/4Kjiq
-	 xV24vlNFnze9Vs0dciKXzKgO1FstwW+M97mx98HsVoPOdlbE+MASw3xVk3j3rE/odU
-	 w+i7F6i9kMjkHMQAYBzUa289/DLwR4sePQfi/cha+rdBNEwAAAec9jyftsiEWyzaVc
-	 FD38rBDxh9/BIh2eLDboVBHX/fy4izxLPEAlHN8M7NzKvQGxWIIy8DrjXOKRUqMz30
-	 XZ8N9hPolZO+Q==
+	b=mXZXmfwV//5APRBorvLbe3VRfjYYDWmaLbVtnGEbZN2qADWRCae/B8qkVOhpw1HKP
+	 C2hMGTyk69QjlbczPSXNwOsaT6cR51nN0Vsslsc78Xt+7fNbeeXGLnyOgSiBrN31Xj
+	 xBJtHu+lWa1DAbWu0tyT7djBh0jmiuXwJo5LS3pMDoXX5j/fDc+/2tmeMv8nW6xenj
+	 X2Zdk9TRkHI2xT2OgmZHld83RzJqDkLF/QdCAX0OUPpmwmUoNu7QBu60O0cGfrZjzb
+	 oOIKlL6AGAVSzWf/deqLvAeV8fFRAXUWXlTIm/RI+9r6FwRJiGXoB4LrSOj9IWRFao
+	 Vl1UwRhMFE7KQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Lucas Stach <l.stach@pengutronix.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Caleb Connolly <caleb.connolly@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 469/713] media: imx: csc/scaler: fix v4l2_ctrl_handler memory leak
-Date: Sun, 24 Mar 2024 18:43:15 -0400
-Message-ID: <20240324224720.1345309-470-sashal@kernel.org>
+Subject: [PATCH 6.7 473/713] clk: qcom: dispcc-sdm845: Adjust internal GDSC wait times
+Date: Sun, 24 Mar 2024 18:43:19 -0400
+Message-ID: <20240324224720.1345309-474-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,33 +49,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-[ Upstream commit 4797a3dd46f220e6d83daf54d70c5b33db6deb01 ]
+[ Upstream commit 117e7dc697c2739d754db8fe0c1e2d4f1f5d5f82 ]
 
-Free the memory allocated in v4l2_ctrl_handler_init on release.
+SDM845 downstream uses non-default values for GDSC internal waits.
+Program them accordingly to avoid surprises.
 
-Fixes: a8ef0488cc59 ("media: imx: add csc/scaler mem2mem device")
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: 81351776c9fb ("clk: qcom: Add display clock controller driver for SDM845")
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Tested-by: Caleb Connolly <caleb.connolly@linaro.org> # OnePlus 6
+Link: https://lore.kernel.org/r/20240103-topic-845gdsc-v1-1-368efbe1a61d@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx-media-csc-scaler.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/qcom/dispcc-sdm845.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/staging/media/imx/imx-media-csc-scaler.c b/drivers/staging/media/imx/imx-media-csc-scaler.c
-index 1fd39a2fca98a..95cca281e8a37 100644
---- a/drivers/staging/media/imx/imx-media-csc-scaler.c
-+++ b/drivers/staging/media/imx/imx-media-csc-scaler.c
-@@ -803,6 +803,7 @@ static int ipu_csc_scaler_release(struct file *file)
+diff --git a/drivers/clk/qcom/dispcc-sdm845.c b/drivers/clk/qcom/dispcc-sdm845.c
+index 735adfefc3798..e792e0b130d33 100644
+--- a/drivers/clk/qcom/dispcc-sdm845.c
++++ b/drivers/clk/qcom/dispcc-sdm845.c
+@@ -759,6 +759,8 @@ static struct clk_branch disp_cc_mdss_vsync_clk = {
  
- 	dev_dbg(priv->dev, "Releasing instance %p\n", ctx);
- 
-+	v4l2_ctrl_handler_free(&ctx->ctrl_hdlr);
- 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
- 	v4l2_fh_del(&ctx->fh);
- 	v4l2_fh_exit(&ctx->fh);
+ static struct gdsc mdss_gdsc = {
+ 	.gdscr = 0x3000,
++	.en_few_wait_val = 0x6,
++	.en_rest_wait_val = 0x5,
+ 	.pd = {
+ 		.name = "mdss_gdsc",
+ 	},
 -- 
 2.43.0
 
