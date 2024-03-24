@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E5F17A379;
-	Sun, 24 Mar 2024 23:40:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9B517A36C;
+	Sun, 24 Mar 2024 23:40:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323654; cv=none; b=HOjXOvV2BSZiaeyZJ2W8LrXY/H1iDJxgznuV0CwLl9cLCAGfToWNYqwcNNPV3f95vrh4/YCieD78NlbcmPu2PGQlm1ZTYCqjgHj6F/aEjFabhu10v00+hT+Nq4TfPJQ5AlWvpYrM4TxLf/eNY/2xHdDBo+H5brrycx2p+slY7PI=
+	t=1711323652; cv=none; b=NX3vIaXQzQPl1+Z/lp48wkNvvYa1BbbbYkjXpMZ22u/dxUujAj3d7m+o0yuq7Y0ThzbJMmz2O5wIzdqKCbLNW56jkFDawY9ZXYra8yd/yfs2hb/44p1skjzs9xdWRRrYuAE78FDxbVZN1wUSI4igCtVSaOe7zZoV1U/u9WxQ0lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323654; c=relaxed/simple;
-	bh=Gp9IO464KiE0GU2Yx/UvzMNFMfeX7usV3cGwqZ/sgbY=;
+	s=arc-20240116; t=1711323652; c=relaxed/simple;
+	bh=coEL8lDz0ZfUwW77qKN9jj5CS3Zu6IpXoXG/Xg5cYHM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fWdJaW1sabZph0gC/RDJLdIUaPo2F4XGxVEjW7fxm2LDt4h3g2xyxrqGCK7ZezmuOjtNg0bQJe6Ll1IRoC9ahmtt+rpgbXgGcMVjSAFzbrQs9sa1tMfBufAsRdVBuI0e3vR48Mm6rFNb8UUrC3R2VUbJtX9zgeMhn2SvmCDMMuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJ84GMna; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=iY8KaHjsIZH0GrN8lo5i/irLYaDpHTIQ2Lhz3Dof0S67b8ku+XAabIqZLMI2lwikOUNUra95RcuX9zzgrlGNkpze/40UVMU9qrRpS42bZ4nkoSsGbbiNjbsx2fWqCgztj8++GBWlsP3wp0954ZC2WXXISQxvzqlArSaLbpLWhYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okIQzQYK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJ84GMna"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBE46C43390;
-	Sun, 24 Mar 2024 23:40:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okIQzQYK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D18DAC433F1;
+	Sun, 24 Mar 2024 23:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323653;
-	bh=Gp9IO464KiE0GU2Yx/UvzMNFMfeX7usV3cGwqZ/sgbY=;
+	s=k20201202; t=1711323651;
+	bh=coEL8lDz0ZfUwW77qKN9jj5CS3Zu6IpXoXG/Xg5cYHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RJ84GMnaEsRdo6kw+J5yOj5MnK/Qp7TFhGjVVfgSv7gll09zXX1HPWEnysEzzE1qX
-	 zWTWUqt54gdwGdBiBJLmkeDliSIOp31da03RddQa7tbYRtlT0WhpkAm+j6Dyo19zBk
-	 sx/GSEN7aSU6ql/zRJErPaHUnW2X1t8Sf3L5ilzWuxB3nKsIhGc27kK9VBwL6V+0fW
-	 26mVxWMJ4NACcFbMgPA2Y8haqwkPVQ07si8L8TL5DBSrDKN0fdhSHfag8xb1GS5WHm
-	 nk7sz8oeLaTwS1GnPiwjqgwKXKEG5qyxBONe/uKn+oE+hr3sMO1iYBoOJwqDr2q7r8
-	 uBFPJhqbNq7Vg==
+	b=okIQzQYKpRxkvVhPTLDn9fGeaXSEX7CfXkoXATQOZhSDxLS6YuKqs+43c/ssRRqbq
+	 TeyDSW80zsdj8R/yPdm1AwjEB4uyWnwVDk1b0kokMSb9oEe88g8z6vD5XCltpbYWhU
+	 sk81pTE9gOXN2SFW5x8ZRtK+1YwdOD5+9wdG7LOsIKJdflfwfFn88Nlhgy+wzv4bRl
+	 JcZYc206OflDyMKCfdmXIqWkmITBe3NU0e+/rHdhBs4KOq8UkcER1a2t0FW8o3kqKC
+	 3wBvQ3JvDEThfp0bIMZ38hpNjEplreaA05MV8/kh8uFZjhPEbSwVFeZncUHqkZNaaq
+	 EUTBfZa8izIFw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
+Cc: =?UTF-8?q?Alban=20Boy=C3=A9?= <alban.boye@protonmail.com>,
+	Cezary Rojewski <cezary.rojewski@intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
 	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 025/238] ASoC: wm8962: Enable oscillator if selecting WM8962_FLL_OSC
-Date: Sun, 24 Mar 2024 19:36:53 -0400
-Message-ID: <20240324234027.1354210-26-sashal@kernel.org>
+Subject: [PATCH 5.10 023/238] ASoC: Intel: bytcr_rt5640: Add an extra entry for the Chuwi Vi8 tablet
+Date: Sun, 24 Mar 2024 19:36:51 -0400
+Message-ID: <20240324234027.1354210-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -44,39 +46,51 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stuart Henderson <stuarth@opensource.cirrus.com>
+From: Alban Boyé <alban.boye@protonmail.com>
 
-[ Upstream commit 03c7874106ca5032a312626b927b1c35f07b1f35 ]
+[ Upstream commit f8b0127aca8c60826e7354e504a12d4a46b1c3bb ]
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-Link: https://msgid.link/r/20240306161439.1385643-1-stuarth@opensource.cirrus.com
+The bios version can differ depending if it is a dual-boot variant of the tablet.
+Therefore another DMI match is required.
+
+Signed-off-by: Alban Boyé <alban.boye@protonmail.com>
+Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://msgid.link/r/20240228192807.15130-1-alban.boye@protonmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index 57aeded978c28..d6efc85f966b0 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2898,8 +2898,12 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
- 	switch (fll_id) {
- 	case WM8962_FLL_MCLK:
- 	case WM8962_FLL_BCLK:
-+		fll1 |= (fll_id - 1) << WM8962_FLL_REFCLK_SRC_SHIFT;
-+		break;
- 	case WM8962_FLL_OSC:
- 		fll1 |= (fll_id - 1) << WM8962_FLL_REFCLK_SRC_SHIFT;
-+		snd_soc_component_update_bits(component, WM8962_PLL2,
-+					      WM8962_OSC_ENA, WM8962_OSC_ENA);
- 		break;
- 	case WM8962_FLL_INT:
- 		snd_soc_component_update_bits(component, WM8962_FLL_CONTROL_1,
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index f5b1b3b876980..1d049685e7075 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -529,6 +529,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_SSP0_AIF1 |
+ 					BYT_RT5640_MCLK_EN),
+ 	},
++	{	/* Chuwi Vi8 dual-boot (CWI506) */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "i86"),
++			/* The above are too generic, also match BIOS info */
++			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI2.D86JHBNR02"),
++		},
++		.driver_data = (void *)(BYTCR_INPUT_DEFAULTS |
++					BYT_RT5640_MONO_SPEAKER |
++					BYT_RT5640_SSP0_AIF1 |
++					BYT_RT5640_MCLK_EN),
++	},
+ 	{
+ 		/* Chuwi Vi10 (CWI505) */
+ 		.matches = {
 -- 
 2.43.0
 
