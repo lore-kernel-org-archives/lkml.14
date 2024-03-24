@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446541474A1;
-	Sun, 24 Mar 2024 23:14:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C0E148315;
+	Sun, 24 Mar 2024 23:15:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322078; cv=none; b=S1bHT+x0NabxeiNnY5+oLkMf8NcVPPIPDQARL8JrdeazNsNwUuVfRifbzvQ5ht+5S57tmnNdZCT80Kq0fuNGksk/D8ayMvgUAAxxxLUgMFugrZczDPE1huslxMrpyXzPl83rkQYBGCqTbA5Yw/wte0khEWGoAsRfcqWop0g4S10=
+	t=1711322108; cv=none; b=L5+blqR2FnnGnFyXtsUK1h74TTC1inEuvrjKZ9v++KoCtc8qK79jvbUXttPejT2ToLfbT2e/ZsDQxPGaphA0PPeRh2To2UvtOHYTMJKfI4KP/40AzuKp+y4GPBDLo1Y6iYENs/lwOlND9TRPEAb9b2d2Jq7y3fwHrNaoU2oxtXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322078; c=relaxed/simple;
-	bh=MkHeuYPfm8H1z1LvwOuNlx605FgXwk1O8AIFLcsCsuM=;
+	s=arc-20240116; t=1711322108; c=relaxed/simple;
+	bh=s34dqxsBVuJEo+Uhd4PDQPvUNDoBzlzGIbyFisqBYbU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eQgogpIyrg3xLq5KjP31pR2uajUhS6BDkijvJBcHhG7rEXwADm0Aq2NI1L0q9Y3+8mmU/pIx18QodhdrCgTmsp27I7fWRGuZfvCMqSNz/vilg0HNQwRiUfSPBH4uVb/w7dW92mIbLgOakgjWkb67yj28RZ36il6KIL9txVbHXGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSSGIo/f; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GbW8gTZqZMzKk0c/wpbHejmLdbBiDczBIly+ct8HKNFsEncDZjhv1sJodYMVY+MTFzNV2w1NY+gGXsEzp7wAPXq/zoT345o5OMMEpFrrEnTZlH5ApqEEPtaOlxuWm+vJlJ150htpE96HlIzUr8Qj1A8Gk50nzaTv324Pt6U6lqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwzKdkiS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSSGIo/f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51885C433F1;
-	Sun, 24 Mar 2024 23:14:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwzKdkiS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89E6DC433C7;
+	Sun, 24 Mar 2024 23:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322078;
-	bh=MkHeuYPfm8H1z1LvwOuNlx605FgXwk1O8AIFLcsCsuM=;
+	s=k20201202; t=1711322108;
+	bh=s34dqxsBVuJEo+Uhd4PDQPvUNDoBzlzGIbyFisqBYbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aSSGIo/fNbSWi5Q5v5m6LjctZWqedFZCa8GbfvUi3auo0m/7bgmXqYDAbnLEBaSbC
-	 NuBkH2wjk0hOFQNqFrjrkAcd5UyEG4zhCXAANx7KfYoHS9hqGgEdXfqouUMtDDXfaT
-	 cQz2oy0eVGQcQqU6xHeUHX4xKFmRjVuvBnFfQJ4pVy9yw+8LLXUl++popXe8EISjxg
-	 dQNfmC8F1a6b3uq4vqCRu+JHUQ16AWYPiy7HN/rEH0/Gw0oZcbvP9u/31OFoaf+nsK
-	 xqz0S49flUtrl4BwXcZ9okRXMk9jdaVeQkme46oBQsRYFbJQl0pg8tGCMv0eDuZefT
-	 AqPryWvVKVOaA==
+	b=UwzKdkiSWpYYGaofCtGKQIKs0Rjud+GfGz4pOK15LWP2dOE738BSzMW45bKn1xbMX
+	 yt4sduZtNuEmqOqu1RNFD4MnskVDHjtpWAct6biyXGN1YGcQCTkxvUs/nLObdACtsw
+	 wExaL51nFO3q7Hz1ZnEGQg1cf5vsXlVXfH3aept9jIH/wqetSL+H63vTC+xd1UFMiz
+	 GWzbgjA9WDdsu1WDO8ebs3yD0SKgci7HFkOFyCOovMwYBUgPn+Dggg21+rRzW/+KLy
+	 ka3eQ2gZQP63pjjS4XbxSeUjOmimscA+ImhSloPTCLjBvP1JwYpz5dyIQgOvzrXWKC
+	 rpVLejDRCTdsw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Craig Tatlor <ctatlor97@gmail.com>,
-	Luca Weiss <luca@z3ntu.xyz>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 151/451] ARM: dts: qcom: msm8974: correct qfprom node size
-Date: Sun, 24 Mar 2024 19:07:07 -0400
-Message-ID: <20240324231207.1351418-152-sashal@kernel.org>
+Subject: [PATCH 6.1 183/451] ACPI: scan: Fix device check notification handling
+Date: Sun, 24 Mar 2024 19:07:39 -0400
+Message-ID: <20240324231207.1351418-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,44 +48,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Craig Tatlor <ctatlor97@gmail.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 724c4bf0e4bf81dba77736afb93964c986c3c123 ]
+[ Upstream commit 793551c965116d9dfaf0550dacae1396a20efa69 ]
 
-The qfprom actually is bigger than 0x1000, so adjust the reg.
+It is generally invalid to fail a Device Check notification if the scan
+handler has not been attached to the given device after a bus rescan,
+because there may be valid reasons for the scan handler to refuse
+attaching to the device (for example, the device is not ready).
 
-Note that the non-ECC-corrected qfprom can be found at 0xfc4b8000
-(-0x4000). The current reg points to the ECC-corrected qfprom block
-which should have equivalent values at all offsets compared to the
-non-corrected version.
+For this reason, modify acpi_scan_device_check() to return 0 in that
+case without printing a warning.
 
-[luca@z3ntu.xyz: extract to standalone patch and adjust for review
-comments]
+While at it, reduce the log level of the "already enumerated" message
+in the same function, because it is only interesting when debugging
+notification handling
 
-Fixes: c59ffb519357 ("arm: dts: msm8974: Add thermal zones, tsens and qfprom nodes")
-Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20240210-msm8974-qfprom-v3-1-26c424160334@z3ntu.xyz
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Fixes: 443fc8202272 ("ACPI / hotplug: Rework generic code to handle suprise removals")
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/qcom-msm8974.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/scan.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index c4b2e9ac24940..5ea45e486ed54 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -1134,7 +1134,7 @@ restart@fc4ab000 {
- 
- 		qfprom: qfprom@fc4bc000 {
- 			compatible = "qcom,msm8974-qfprom", "qcom,qfprom";
--			reg = <0xfc4bc000 0x1000>;
-+			reg = <0xfc4bc000 0x2100>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			tsens_calib: calib@d0 {
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 94154a849a3ea..293cdf486fd81 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -315,18 +315,14 @@ static int acpi_scan_device_check(struct acpi_device *adev)
+ 		 * again).
+ 		 */
+ 		if (adev->handler) {
+-			dev_warn(&adev->dev, "Already enumerated\n");
+-			return -EALREADY;
++			dev_dbg(&adev->dev, "Already enumerated\n");
++			return 0;
+ 		}
+ 		error = acpi_bus_scan(adev->handle);
+ 		if (error) {
+ 			dev_warn(&adev->dev, "Namespace scan failure\n");
+ 			return error;
+ 		}
+-		if (!adev->handler) {
+-			dev_warn(&adev->dev, "Enumeration failure\n");
+-			error = -ENODEV;
+-		}
+ 	} else {
+ 		error = acpi_scan_device_not_present(adev);
+ 	}
 -- 
 2.43.0
 
