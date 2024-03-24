@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6421EC655;
-	Sun, 24 Mar 2024 22:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9041D12B156;
+	Sun, 24 Mar 2024 22:56:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320955; cv=none; b=Vvy2B/taEmCN60s90xnrw1zkFdGvNsKzHP6XgZy78MkZvcFfzxUCCGNhAgAd0yfnQYBQgzBi7V3/zAwl4TMSrwLklSGPtADFlIK6Za8bCAg3BEBGpnvDyeAxowCIL0PaI6otvtytjduJqTmFbrwc60Aixq/TW1avumQbjD8NLf4=
+	t=1711320961; cv=none; b=C3819rMPDB3IGJ0OmUBqAa/kes+OCthpViY3zwZDJG+u+N2Xi8lJL3HVZhxqMBuWP3Hni7HlM6vv9vIHw7T4SKBNF7BzaioWMUPvb3lLKuDnEqtctw/sFA2qAC/Z1jM4LONL645BhBPHR8/CAroMTy1ZvcgEHYbmIQXJ6YhVFao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320955; c=relaxed/simple;
-	bh=wsCttE/8/Ku+Vjtz6C9C/qBhYMSWFBBeJX3HQY8qfyg=;
+	s=arc-20240116; t=1711320961; c=relaxed/simple;
+	bh=3hJv1C7S8XE7V4wMtaiW0cPgyCupiCP1W5fbV7VJQjY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=byxcRr2AjroPU6jkqlWebfsvJbnLk93KtHXuMrmeRaxF9DtBH837jt5t0QdFgztPqwVqRRoRmlzZfuxOtEHIlfmfk8lzVM6qp+r7PePMqySi3cxcqrGNzxx+z4f1U5YmwFZwTJwhkagvZrDQ5dWMUHyCPLfH/mb3+t+dxw19+SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gcNigbsM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=dvOoF+pCWsyPs7VzI7a3I+ciah3qnZYGg6fqMEm7YUqJLE+FS75BcW+pE2AGHLS+QF7fvqO2ta+IoBytusqyh8CgmQQemGEAo5kZz4JJwQk8XPQJeKSCQ80KebEGunTibchUVQ6JSV4dDJpMU5EbNXI7RRq5hTIplox6g13l1Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGMKJkhp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gcNigbsM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25D38C433B1;
-	Sun, 24 Mar 2024 22:55:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGMKJkhp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC5EAC43394;
+	Sun, 24 Mar 2024 22:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320955;
-	bh=wsCttE/8/Ku+Vjtz6C9C/qBhYMSWFBBeJX3HQY8qfyg=;
+	s=k20201202; t=1711320960;
+	bh=3hJv1C7S8XE7V4wMtaiW0cPgyCupiCP1W5fbV7VJQjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gcNigbsMn/Y78XMVfCcwI6wlRJC4iw8EO7BtbmQptaChtA+lp1y+3sx7suu2mybRn
-	 rlYK8oPpyccMJ7rAf19UZyoKMLByLAynbtOfkTfUGH49gMjNzx5q7X/I3a6bf2nR/f
-	 q/CaARyFAapU58sOLGAjmh+gaJ1+KNsXDGYaZ5HR77swGa+oBty1WAqoJBLcj/sQxM
-	 SDP7tQY60Sfu+4i8q3C7QA7nhz/DfdEzzd8GncCaIdcTVzztRamiy0XMKQHH8laEAV
-	 mOyjimX1gYNaGfUAoH/YbVxKCnJOVqWlAw+ZT5hHYOAWnptJRIzh9H467TOBbhQr73
-	 I2DGjjJ1vIoUw==
+	b=eGMKJkhpF+UIl7U8Ox++e345iqO7efEFnCH4QS//H8TXsR16PE/qm5AXDBAjqmV6E
+	 IQeV8GSMWJpOE7uWJQO7b1GuqITj28RcGhoGMTY9pFa8TPG2UqFpX+WkX2dVn9c9Hq
+	 ZCWW+iWjg97RpgQc2f14ehfBly0kaTqOUzm5opJoteg/DpWE9awl7T552fxrkzG5M6
+	 DNQotSjjEd9Vt9+Sofq9diUqCbSzLQ5ooPEVxbgUmnF/jDtcTq4V6lMRfxoJDm1S4y
+	 ViIhwe7ThBMJa3Atbaeoa2Qh/Ckh6HeJB53sREYyBnGdjXZzkq4lLDQmP/8ucRf9+L
+	 RW+gxaKLdQqEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Justin Stitt <justinstitt@google.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Maxime Ripard <mripard@kernel.org>,
+	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 518/713] media: dvb-frontends: avoid stack overflow warnings with clang
-Date: Sun, 24 Mar 2024 18:44:04 -0400
-Message-ID: <20240324224720.1345309-519-sashal@kernel.org>
+Subject: [PATCH 6.7 523/713] drm/tests: helpers: Include missing drm_drv header
+Date: Sun, 24 Mar 2024 18:44:09 -0400
+Message-ID: <20240324224720.1345309-524-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,97 +44,44 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Maxime Ripard <mripard@kernel.org>
 
-[ Upstream commit 7a4cf27d1f0538f779bf31b8c99eda394e277119 ]
+[ Upstream commit 73984daf07a1a89ace8f0db6dd2d640654ebbbee ]
 
-A previous patch worked around a KASAN issue in stv0367, now a similar
-problem showed up with clang:
+We have a few functions declared in our kunit helpers header, some of
+them dereferencing the struct drm_driver.
 
-drivers/media/dvb-frontends/stv0367.c:1222:12: error: stack frame size (3624) exceeds limit (2048) in 'stv0367ter_set_frontend' [-Werror,-Wframe-larger-than]
- 1214 | static int stv0367ter_set_frontend(struct dvb_frontend *fe)
+However, we don't include the drm_drv.h header file defining that
+structure, leading to compilation errors if we don't include both
+headers.
 
-Rework the stv0367_writereg() function to be simpler and mark both
-register access functions as noinline_for_stack so the temporary
-i2c_msg structures do not get duplicated on the stack when KASAN_STACK
-is enabled.
-
-Fixes: 3cd890dbe2a4 ("media: dvb-frontends: fix i2c access helpers for KASAN")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: d98780310719 ("drm/tests: helpers: Allow to pass a custom drm_driver")
+Reviewed-by: Maíra Canal <mcanal@igalia.com>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20240222-kms-hdmi-connector-state-v7-1-8f4af575fce2@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-frontends/stv0367.c | 34 +++++++--------------------
- 1 file changed, 8 insertions(+), 26 deletions(-)
+ include/drm/drm_kunit_helpers.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/dvb-frontends/stv0367.c b/drivers/media/dvb-frontends/stv0367.c
-index 48326434488c4..72540ef4e5f88 100644
---- a/drivers/media/dvb-frontends/stv0367.c
-+++ b/drivers/media/dvb-frontends/stv0367.c
-@@ -118,50 +118,32 @@ static const s32 stv0367cab_RF_LookUp2[RF_LOOKUP_TABLE2_SIZE][RF_LOOKUP_TABLE2_S
- 	}
- };
+diff --git a/include/drm/drm_kunit_helpers.h b/include/drm/drm_kunit_helpers.h
+index ba483c87f0e7b..3ae19892229db 100644
+--- a/include/drm/drm_kunit_helpers.h
++++ b/include/drm/drm_kunit_helpers.h
+@@ -3,6 +3,8 @@
+ #ifndef DRM_KUNIT_HELPERS_H_
+ #define DRM_KUNIT_HELPERS_H_
  
--static
--int stv0367_writeregs(struct stv0367_state *state, u16 reg, u8 *data, int len)
-+static noinline_for_stack
-+int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
- {
--	u8 buf[MAX_XFER_SIZE];
-+	u8 buf[3] = { MSB(reg), LSB(reg), data };
- 	struct i2c_msg msg = {
- 		.addr = state->config->demod_address,
- 		.flags = 0,
- 		.buf = buf,
--		.len = len + 2
-+		.len = 3,
- 	};
- 	int ret;
++#include <drm/drm_drv.h>
++
+ #include <linux/device.h>
  
--	if (2 + len > sizeof(buf)) {
--		printk(KERN_WARNING
--		       "%s: i2c wr reg=%04x: len=%d is too big!\n",
--		       KBUILD_MODNAME, reg, len);
--		return -EINVAL;
--	}
--
--
--	buf[0] = MSB(reg);
--	buf[1] = LSB(reg);
--	memcpy(buf + 2, data, len);
--
- 	if (i2cdebug)
- 		printk(KERN_DEBUG "%s: [%02x] %02x: %02x\n", __func__,
--			state->config->demod_address, reg, buf[2]);
-+			state->config->demod_address, reg, data);
- 
- 	ret = i2c_transfer(state->i2c, &msg, 1);
- 	if (ret != 1)
- 		printk(KERN_ERR "%s: i2c write error! ([%02x] %02x: %02x)\n",
--			__func__, state->config->demod_address, reg, buf[2]);
-+			__func__, state->config->demod_address, reg, data);
- 
- 	return (ret != 1) ? -EREMOTEIO : 0;
- }
- 
--static int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
--{
--	u8 tmp = data; /* see gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
--
--	return stv0367_writeregs(state, reg, &tmp, 1);
--}
--
--static u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
-+static noinline_for_stack
-+u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
- {
- 	u8 b0[] = { 0, 0 };
- 	u8 b1[] = { 0 };
+ #include <kunit/test.h>
 -- 
 2.43.0
 
