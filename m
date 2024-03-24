@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F87621C19C;
-	Sun, 24 Mar 2024 23:10:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE62B21D126;
+	Sun, 24 Mar 2024 23:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321840; cv=none; b=SuuiTjtOOWV1Kz0eg/FhLOyUkzEKzjBj8nT5+tMJ11U0OgpFdUDJhZ4b21yC5o6ZJyfST5+0B4WkZi8Zsb0zow7gpsP4o1b2Dn9+AqljAke2FXGdg6pPiBLGhgZlMeWKwHPl8gjn+rhG3pms6ZVAPkTTd/smJhJqbGSEXV+Quc8=
+	t=1711321851; cv=none; b=ujrxpM42xdleIoC8DYjUyb/gW3jCT1WR+udutY7prmSARpTs4J86f+kpvYSp5bs6yMM2GFwo3X9dPwg/M7vq1FjnXbdCUXdfQEXXHL4mUvHeKAHlM3KwcVnpCfDsrzE4NDcgnfYi3IG3RAh5Ta0oMVYLRHwY2V2zTlKQZszakdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321840; c=relaxed/simple;
-	bh=9UOR8yfN7Io1/nGO1CWtAhcJh70F2yuivoI9uxE5Q4c=;
+	s=arc-20240116; t=1711321851; c=relaxed/simple;
+	bh=etuvMnhU1Yw1AqFeBdAgKEHh4IM1KJV2ySH1nskxOcI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fDZnfaxbF4LeDq8CI3+uXKS7iSo6e43gZWjoF2PuiTP4PENeGGXSCLeiqzu5BWw+MhVwMXIhD5rgEhwdCkiH8gw125AkbKSbjURqcSbW9bNxdrNUp9mz+qyjh+iQC4XC3WFiI/5eKtj0LmJDJUSXCbC8yWKS4y+CUbP+QBU7DE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+BS5Fpi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fGmlOD4NBimliByjho1bB3BvPm8krxKxyi8uItc+PgzMQ42fjJ4ZQqu0y5/HD3X1y87H5CCOu54eQSaxGrMc5i/HA/X8XoSDcApTvpzCVKEUQVgY8NRg2tKKyW9ttjKhWYlpRpflhGsyf2KO0zAqbv3YVvDRH+w9/F7dhkktzjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l8fckjyQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+BS5Fpi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64939C43394;
-	Sun, 24 Mar 2024 23:10:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l8fckjyQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C426C43390;
+	Sun, 24 Mar 2024 23:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321839;
-	bh=9UOR8yfN7Io1/nGO1CWtAhcJh70F2yuivoI9uxE5Q4c=;
+	s=k20201202; t=1711321849;
+	bh=etuvMnhU1Yw1AqFeBdAgKEHh4IM1KJV2ySH1nskxOcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z+BS5FpiG3jsgJH1fRz4ABWCJ3KYXmw8NE7rnYCeHkl8We1ZDzryC/vDVLb14Q76M
-	 M4xudgAn1OsjFau3fi2w6p06APvHcPuIjFsBuABIOgfqXM1Y00nSEwiGMIDXCm0I/e
-	 sfKd9Kt14XVbhclMDoQjyL9hksF5oLKlqRaZGnr5OAt5nmaG3wSefKf8WjBq6WyNSq
-	 L6uBIaQ/tqjWF1b8U0vreMH1uK+l5WW5wvgt1XLZrv2teFm4d7WZJLNFZ/7uWqJbmH
-	 MlhrnH6JYfEKe7o5UHYlD2xt6p/rxZrmmeIXPOnszae3SsY3puymzFJ0GU7W1Kw7s9
-	 yoXs8CMLtkl9Q==
+	b=l8fckjyQwH01C78nvGfGNQxoy8XS4n7ZZZNb+1NTWc7U1TXApwcy2vSn39bTp+3nV
+	 7l/56cpfO7yi2t9cuQ43PlnQV3K5jTa0kdLakqf2fJsY7CyA2PkyWicEqkTLDxja3T
+	 IT1qAL0hOHl5W2ShYinFICETknfOJtjPLfrhdEh2PgHk0EL7J3WrNqptTeV4VOBrGp
+	 Lal5jLNQU1KzFIgJy5nNnMg831OKjnGNNt6N80+ILTP8vBv/59VImSlMEknghPIY4p
+	 3Z03gvpUVerQFQzS7IKxHp68/Q7pBxVsgh1yqMWLCzuCCrELwYvQtinha+EdNqmy3g
+	 s94wz/TcfivnA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yang Jihong <yangjihong1@huawei.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
+Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 568/638] hwtracing: hisi_ptt: Move type check to the beginning of hisi_ptt_pmu_event_init()
-Date: Sun, 24 Mar 2024 19:00:05 -0400
-Message-ID: <20240324230116.1348576-569-sashal@kernel.org>
+Subject: [PATCH 6.6 578/638] spi: lpspi: Avoid potential use-after-free in probe()
+Date: Sun, 24 Mar 2024 19:00:15 -0400
+Message-ID: <20240324230116.1348576-579-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,52 +48,72 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yang Jihong <yangjihong1@huawei.com>
+From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 
-[ Upstream commit 06226d120a28f146abd3637799958a4dc4dbb7a1 ]
+[ Upstream commit 2ae0ab0143fcc06190713ed81a6486ed0ad3c861 ]
 
-When perf_init_event() calls perf_try_init_event() to init pmu driver,
-searches for the next pmu driver only when the return value is -ENOENT.
-Therefore, hisi_ptt_pmu_event_init() needs to check the type at the
-beginning of the function.
-Otherwise, in the case of perf-task mode, perf_try_init_event() returns
--EOPNOTSUPP and skips subsequent pmu drivers, causes perf_init_event() to
-fail.
+fsl_lpspi_probe() is allocating/disposing memory manually with
+spi_alloc_host()/spi_alloc_target(), but uses
+devm_spi_register_controller(). In case of error after the latter call the
+memory will be explicitly freed in the probe function by
+spi_controller_put() call, but used afterwards by "devm" management outside
+probe() (spi_unregister_controller() <- devm_spi_unregister() below).
 
-Fixes: ff0de066b463 ("hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe Tune and Trace device")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Link: https://lore.kernel.org/r/20240108121906.3514820-1-yangjihong1@huawei.com
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000070
+...
+Call trace:
+ kernfs_find_ns
+ kernfs_find_and_get_ns
+ sysfs_remove_group
+ sysfs_remove_groups
+ device_remove_attrs
+ device_del
+ spi_unregister_controller
+ devm_spi_unregister
+ release_nodes
+ devres_release_all
+ really_probe
+ driver_probe_device
+ __device_attach_driver
+ bus_for_each_drv
+ __device_attach
+ device_initial_probe
+ bus_probe_device
+ deferred_probe_work_func
+ process_one_work
+ worker_thread
+ kthread
+ ret_from_fork
+
+Fixes: 5314987de5e5 ("spi: imx: add lpspi bus driver")
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+Link: https://msgid.link/r/20240312112050.2503643-1-alexander.sverdlin@siemens.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/ptt/hisi_ptt.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/spi/spi-fsl-lpspi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
-index a991ecb7515a3..24a1f7797aeb6 100644
---- a/drivers/hwtracing/ptt/hisi_ptt.c
-+++ b/drivers/hwtracing/ptt/hisi_ptt.c
-@@ -995,6 +995,9 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
- 	int ret;
- 	u32 val;
+diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
+index 11991eb126364..079035db7dd85 100644
+--- a/drivers/spi/spi-fsl-lpspi.c
++++ b/drivers/spi/spi-fsl-lpspi.c
+@@ -830,11 +830,11 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
  
-+	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
-+		return -ENOENT;
-+
- 	if (event->cpu < 0) {
- 		dev_dbg(event->pmu->dev, "Per-task mode not supported\n");
- 		return -EOPNOTSUPP;
-@@ -1003,9 +1006,6 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
- 	if (event->attach_state & PERF_ATTACH_TASK)
- 		return -EOPNOTSUPP;
+ 	is_target = of_property_read_bool((&pdev->dev)->of_node, "spi-slave");
+ 	if (is_target)
+-		controller = spi_alloc_target(&pdev->dev,
+-					      sizeof(struct fsl_lpspi_data));
++		controller = devm_spi_alloc_target(&pdev->dev,
++						   sizeof(struct fsl_lpspi_data));
+ 	else
+-		controller = spi_alloc_host(&pdev->dev,
+-					    sizeof(struct fsl_lpspi_data));
++		controller = devm_spi_alloc_host(&pdev->dev,
++						 sizeof(struct fsl_lpspi_data));
  
--	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
--		return -ENOENT;
--
- 	ret = hisi_ptt_trace_valid_filter(hisi_ptt, event->attr.config);
- 	if (ret < 0)
- 		return ret;
+ 	if (!controller)
+ 		return -ENOMEM;
 -- 
 2.43.0
 
