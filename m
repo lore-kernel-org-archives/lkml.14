@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6F61D6977;
-	Sun, 24 Mar 2024 22:49:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27098142E64;
+	Sun, 24 Mar 2024 22:49:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320581; cv=none; b=h9MaJaJLsm+0JZYhOxvNhOR7YcuFDWo5nEkHu/ssJZ4qXF0PCtEXr48QzKjnsAT3darCbpXqe3keF/hTnwBPmX765R79D25P24vooSjiQIT5rYFUnoBPy9kv3mEjeLS8afNWpl4ZbNugGoaOtjdneadElumEUiLhNg8yCSm9TMg=
+	t=1711320584; cv=none; b=tVbI9aMpTbr2oeS/aKUnv4Afca49IlX5xAAGC4nedlY9vaTif7frVESJn7jA/XSDwJ/vMnvPxrYiWGHnyKHOX7H9Xto6OqBsZEnvnmP/hlApIZ75Ia9tzOC5AeqDzHA3s1rRZT0uFZ+0F43+6/RS2UavScUh5DxbVuVfd150K5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320581; c=relaxed/simple;
-	bh=60vo75mBcZsaaWRfia1pLHWloNQ83WhNjty4gGNM0pg=;
+	s=arc-20240116; t=1711320584; c=relaxed/simple;
+	bh=YpNz7k0bZJf6FZIogUl5rE4t51Gl1H2vSO5ig7uR1Jo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oHbQjoShkZM04O4f5k0wWHG94ey/6A946gWmvntbiNd1ENMuJ3wHV7jFnTdtv7kV/2dIHgbznXtELn3ELdihgygzjud9vH7tvnD3rkh1EstWx3iTqzoGQ/24nKjUI+0NuNHYYsmwjcJFxBygUVpsH0ku+K5Qob//nKQMfkQZvCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tv0lCSew; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RnnxTUoS33yaJ+PLd6Qx9+UO+oypk2cQPtkEYsNQK961FF/9sl9lvPVej0MstbAkkq2GhFfSzof5etTQygDlN05mcqmnLkMuThbsuSD5OLG/dK6x1RwL4Ma6IzHrU5vDbBZRluZl/3hnxC1PKD+w3ViDHoniy927J0f4US+Qeqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6B+xpqj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tv0lCSew"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D0D4C43394;
-	Sun, 24 Mar 2024 22:49:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6B+xpqj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 673D1C433F1;
+	Sun, 24 Mar 2024 22:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320580;
-	bh=60vo75mBcZsaaWRfia1pLHWloNQ83WhNjty4gGNM0pg=;
+	s=k20201202; t=1711320583;
+	bh=YpNz7k0bZJf6FZIogUl5rE4t51Gl1H2vSO5ig7uR1Jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tv0lCSewDMEEwtfPiNMYNKCA5SJOxJayngE/4tsZMb5mW7nPzTVnehNtJMNrZ34Up
-	 Jm1VGNjp7PYyXkwya+TLHgeah8BRMwQO+sKWGshNk/rFWIGuznurwG8yzr6JHIRUNW
-	 A6rTUXb+V+RNajruwS4K+sGqKUpXB2ZL5++XzQfIlxM1YZsPMcIIXgmgT6P/metmfb
-	 ncYo/gqeS4aTzm+eMINLgzLtvV0NZ7R5hcG2d62uUCzu9DQQLfqCPEUmqVVEfWwufh
-	 bhgjywZDEpdpeUkWqqFCTWsAnMGmQ/W09b1wjtZv2akpK8+t4Y8ZHxIBZJ50MoZDfp
-	 1VtHpJkAPzm7Q==
+	b=K6B+xpqj4siV5pLv2+z02Sm6XGFc9mpjL49xmuh1qnNne8ArFjQMGxk75V6BD9rgS
+	 JINIORXYLiLtPHXI/ju/TVKDNQ4TIQk5HOvmfv1jaaLV6lUgv7P3YIBReTmZuP6FBB
+	 LNGMo6JegUU+nPhxrJinipiOv2F1fLsna1RmJ9S/cdGxmXQPLIoyDlrYDESOVHPF33
+	 88gtAUiQWUuW23pWMHGdcLG8LKZD5Bo+KykMsl5b5CBIkv4Mtr0vWnAbAaqDhT2wa3
+	 EAoAurq959BTU9VYyNYldZvq1+gbkB2wxFxVLtsojSGlta0likAEhezPf02pXUD8jq
+	 nn4W4RnDl6tlg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 141/713] wifi: mwifiex: debugfs: Drop unnecessary error check for debugfs_create_dir()
-Date: Sun, 24 Mar 2024 18:37:47 -0400
-Message-ID: <20240324224720.1345309-142-sashal@kernel.org>
+Subject: [PATCH 6.7 144/713] arm64: dts: qcom: sc8180x: Fix up big CPU idle state entry latency
+Date: Sun, 24 Mar 2024 18:37:50 -0400
+Message-ID: <20240324224720.1345309-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,43 +48,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jinjie Ruan <ruanjinjie@huawei.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-[ Upstream commit 50180c7f8e3de7c2d87f619131776598fcb1478d ]
+[ Upstream commit 266a3a92044b89c392b3e9cfcc328d4167c18294 ]
 
-debugfs_create_dir() returns ERR_PTR and never return NULL.
+The entry latency was oddly low.. Turns out somebody forgot about a
+second '1'! Fix it.
 
-As Russell suggested, this patch removes the error checking for
-debugfs_create_dir(). This is because the DebugFS kernel API is developed
-in a way that the caller can safely ignore the errors that occur during
-the creation of DebugFS nodes. The debugfs APIs have a IS_ERR() judge in
-start_creating() which can handle it gracefully. So these checks are
-unnecessary.
-
-Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20230903030216.1509013-3-ruanjinjie@huawei.com
+Fixes: 8575f197b077 ("arm64: dts: qcom: Introduce the SC8180x platform")
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20231230-topic-8180_more_fixes-v1-3-93b5c107ed43@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/debugfs.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/arm64/boot/dts/qcom/sc8180x.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/debugfs.c b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-index f9c9fec7c792a..d14a0f4c1b6d7 100644
---- a/drivers/net/wireless/marvell/mwifiex/debugfs.c
-+++ b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-@@ -970,9 +970,6 @@ mwifiex_dev_debugfs_init(struct mwifiex_private *priv)
- 	priv->dfs_dev_dir = debugfs_create_dir(priv->netdev->name,
- 					       mwifiex_dfs_dir);
- 
--	if (!priv->dfs_dev_dir)
--		return;
--
- 	MWIFIEX_DFS_ADD_FILE(info);
- 	MWIFIEX_DFS_ADD_FILE(debug);
- 	MWIFIEX_DFS_ADD_FILE(getlog);
+diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+index b1d9853419415..f2eedbdc025c3 100644
+--- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+@@ -289,7 +289,7 @@ LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
+ 			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
+ 				compatible = "arm,idle-state";
+ 				arm,psci-suspend-param = <0x40000004>;
+-				entry-latency-us = <241>;
++				entry-latency-us = <2411>;
+ 				exit-latency-us = <1461>;
+ 				min-residency-us = <4488>;
+ 				local-timer-stop;
 -- 
 2.43.0
 
