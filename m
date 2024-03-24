@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE4D1FEC72;
-	Sun, 24 Mar 2024 23:02:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E0A1FF5D7;
+	Sun, 24 Mar 2024 23:02:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321360; cv=none; b=R/67ZbPzXpmFzwlLUOmpLyQ8Ffld2mYhvZK8jzHP2ob6dZLjVjYl//XAHLUAv1qJZ6Pz1ZuESMX/8a19ehudDqUOoahRKckZxAJ8eSZoBy9L5DXnvuJ1xrwX3NFUOxl1W7QNmhIYhsndV5ywvNxV6/647ZK1fcnU0EGZyNmX9qg=
+	t=1711321375; cv=none; b=Q4luDohRkrKwqrgASi3oezfvX3eGyy0rR69lSg1aGm0HeSvBG2yccN7yv4YXF1TnKqWw5LsuAhtsw+4hSvR4QQqs+HaYxd++evFim6JPJzK6/wvexJgjYQ/3bLiLHRXlT7bNInAOWHl6s7KgKaXue4pZSQGKnrX1Z6Uf43f9UPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321360; c=relaxed/simple;
-	bh=07OLBcZWNFpd2dvobb1dW1Ge/9r10M08MOnow2/sVFo=;
+	s=arc-20240116; t=1711321375; c=relaxed/simple;
+	bh=5C+htp1cj21cUDOBsDFxDwPW3yx1GRI9GjuFvV4teBA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bXPdwBV+0PkTsidDDESMyUPYlY16LNh58r638gaDX2RWd5ID3tZ0wqoBhPKwAqS0M4Fi1PkKBmSTRK7dfgR5xymBH3ZdHBsxcaiBuhwJJXl/nB553yHU8ABwvgphKLEGmtf9FE7fxQHAM3GZqaTZMS9O0HEiJ7Od5v4f4upd9nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFyXFX1E; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bqLjy8DH4uPUCFGePpbUB07dC25sVJFvpwoM2NyeTknbR1iYucYzgbNmkZUzb6+fH5EijDyY32jFT2tVuClbbB4drK1uqWEndBBkQdiakRZMFi3ESlLBI9Z06A+uVKHmJL3d2WFu9gD7yX3dPcWYrBEjVsolVsE+Lb00h8+/iaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BmR48/hy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFyXFX1E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF0AAC43399;
-	Sun, 24 Mar 2024 23:02:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BmR48/hy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8946CC433F1;
+	Sun, 24 Mar 2024 23:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321359;
-	bh=07OLBcZWNFpd2dvobb1dW1Ge/9r10M08MOnow2/sVFo=;
+	s=k20201202; t=1711321374;
+	bh=5C+htp1cj21cUDOBsDFxDwPW3yx1GRI9GjuFvV4teBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HFyXFX1ESLIrgEVQBuZByfxl47MlcKh8P99mK0TARAmDrds1MNhcwaBLuGM/1DRf3
-	 F7OpDEKXRRspkWql2pHm2BFL9hKmzwsddM3ieS8lm041T2w3CDOU51JQ67V3w81vyl
-	 Oq/MLNQ02Gebn7RCWs63z7R/tttuu61qok5xt2Rz1aUdvHuxL2dG8DaD77DIq9ebt9
-	 r/NwLTe64QeUUT9UvFkodKyCVj2IUEGFYMUko9JBzOfmuJXGTe/EGjsJrPguLMSQ4R
-	 ymFmtI/h+2a7HN4FjLgWo//lWfjdHPJvDgGkKXfcUgzmt8a8nG5HttoOOTwGedAH1n
-	 RSr/SiS99Pgjw==
+	b=BmR48/hyUebQR3tds3kNVqqQruJ5xjEjtPneg2K6euUZJ8diRf8g29PDvAaIZ4dWn
+	 WDF3McGGRXHKcKyBZmNSfRsorN2Ge+rIfh5YVgbXW70+OXcRREweQguYGQYIroS9rj
+	 djXJp35vvGf4WpxsIAqZAo4rGXBvugs3MPchy9Eq2DzCLzKUVfAcjoYZXMpGrpSE8v
+	 XHO0J5foj7W7OzDbZbt77XJEynE1ISpTnKKtruUr3okqSiMRouRljmAH2eAB/qRQlq
+	 J2hf4XMvNmzwavgKUnC9phEkODYxX4Em+UO8pJ0Otd/b4OZmZOdkakFDcFwmindI6b
+	 leuIy+iUoh8QQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Kalesh Singh <kaleshsingh@google.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
+Cc: David Gow <davidgow@google.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Justin Stitt <justinstitt@google.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 084/638] rcu/exp: Fix RCU expedited parallel grace period kworker allocation failure recovery
-Date: Sun, 24 Mar 2024 18:52:01 -0400
-Message-ID: <20240324230116.1348576-85-sashal@kernel.org>
+Subject: [PATCH 6.6 098/638] rtc: test: Fix invalid format specifier.
+Date: Sun, 24 Mar 2024 18:52:15 -0400
+Message-ID: <20240324230116.1348576-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,43 +51,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: David Gow <davidgow@google.com>
 
-[ Upstream commit a636c5e6f8fc34be520277e69c7c6ee1d4fc1d17 ]
+[ Upstream commit 8a904a3caa88118744062e872ae90f37748a8fd8 ]
 
-Under CONFIG_RCU_EXP_KTHREAD=y, the nodes initialization for expedited
-grace periods is queued to a kworker. However if the allocation of that
-kworker failed, the nodes initialization is performed synchronously by
-the caller instead.
+'days' is a s64 (from div_s64), and so should use a %lld specifier.
 
-Now the check for kworker initialization failure relies on the kworker
-pointer to be NULL while its value might actually encapsulate an
-allocation failure error.
+This was found by extending KUnit's assertion macros to use gcc's
+__printf attribute.
 
-Make sure to handle this case.
-
-Reviewed-by: Kalesh Singh <kaleshsingh@google.com>
-Fixes: 9621fbee44df ("rcu: Move expedited grace period (GP) work to RT kthread_worker")
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Fixes: 1d1bb12a8b18 ("rtc: Improve performance of rtc_time64_to_tm(). Add tests.")
+Signed-off-by: David Gow <davidgow@google.com>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/tree.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/rtc/lib_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 4fe47ed95eebc..2e8d4572e8620 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -4677,6 +4677,7 @@ static void __init rcu_start_exp_gp_kworkers(void)
- 	rcu_exp_par_gp_kworker = kthread_create_worker(0, par_gp_kworker_name);
- 	if (IS_ERR_OR_NULL(rcu_exp_par_gp_kworker)) {
- 		pr_err("Failed to create %s!\n", par_gp_kworker_name);
-+		rcu_exp_par_gp_kworker = NULL;
- 		kthread_destroy_worker(rcu_exp_gp_kworker);
- 		return;
- 	}
+diff --git a/drivers/rtc/lib_test.c b/drivers/rtc/lib_test.c
+index d5caf36c56cdc..225c859d6da55 100644
+--- a/drivers/rtc/lib_test.c
++++ b/drivers/rtc/lib_test.c
+@@ -54,7 +54,7 @@ static void rtc_time64_to_tm_test_date_range(struct kunit *test)
+ 
+ 		days = div_s64(secs, 86400);
+ 
+-		#define FAIL_MSG "%d/%02d/%02d (%2d) : %ld", \
++		#define FAIL_MSG "%d/%02d/%02d (%2d) : %lld", \
+ 			year, month, mday, yday, days
+ 
+ 		KUNIT_ASSERT_EQ_MSG(test, year - 1900, result.tm_year, FAIL_MSG);
 -- 
 2.43.0
 
