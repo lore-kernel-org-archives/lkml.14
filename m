@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581C612D219;
-	Sun, 24 Mar 2024 22:58:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A31C14BF96;
+	Sun, 24 Mar 2024 22:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321116; cv=none; b=gOVupQPydGQWWlXS5J7O5yk7CbPwFi9rRcMxZJJ39JaXjyQIuE+33wmx7G7mAINmujHjomOK93HLdhLoonpJrXBi92dgeMGDEYaNwPuEr9A8DPs/B67vMepOhvTdNCkW/Yl951shn6Phb2EoRErg6q5bKJdLkvLsvRXaJ5i0c7A=
+	t=1711321136; cv=none; b=kxOpfloBSZsuHtTSaWGuTEQsFY5ZOF8aCYKECA/9EsngXTe7rfKwVloDT0lCdYVXoEHsix46+Ce2p77gkQw9+sYOQdMFEwc6BUXNJt89toCTeDCjQhfHOADgsOt82+7kXgtqxvYsMS3g6oYEK64hwfj9b3/YOsHv+747icATnwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321116; c=relaxed/simple;
-	bh=+3gwlDMFRgQgCGds7eNxqdW02deBnkNTGEUfDpFo1d4=;
+	s=arc-20240116; t=1711321136; c=relaxed/simple;
+	bh=+gfGD22mjnzhNRULgZth3y7IpdDh67/7ZzicS4dW69c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oH0EuU3jgYulXP6jtDdnvMMb38QbZjNErnleHp27qjQhlbxD+64Pd+25qox4eenxmBsPBuBOAe33rw8CCAPQYPQcLfuSWEGa43+wKVOOrfqvuwgBbH2DyMdccFcCFwG41qD/1v5wHdbcFzm0/SB/S9krJH6c7IePmkXkpmartVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fd9iOJD9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GzWcl6Pv1o85u7Jv/ExENzhQCs8ADOEFeNKrRms0RrPye714LNzYTb15skXkhCH8YcB2LkK9IvE0CHAUIlEWvWiRmwnHtglOjIIvfHsjp4EKELGJ63HwGMiCfAq2kamF31pfhyrkQEukpi1+NyKEJk/NAMj+yNkqZw4xikDewTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+7gY8xI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fd9iOJD9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6757AC43394;
-	Sun, 24 Mar 2024 22:58:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+7gY8xI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21763C433C7;
+	Sun, 24 Mar 2024 22:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321115;
-	bh=+3gwlDMFRgQgCGds7eNxqdW02deBnkNTGEUfDpFo1d4=;
+	s=k20201202; t=1711321134;
+	bh=+gfGD22mjnzhNRULgZth3y7IpdDh67/7ZzicS4dW69c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fd9iOJD9Qab1oaaPAUcISc76nMWxXB2AC63m+6PEcpjMstHrfPWsvgS3yuPuCCxe9
-	 ZUu3r5tgeR9CNSvCLMG15JEv3NRGCry5R3uh04cwkn4Np6RFsa2+/M4tPbProOJc4o
-	 5GYoBSk8wIAbYzQP0Iz6g71+xGGQnMtSY06H3GmJvBvDizhovu8Aq1Vluy/VPH21qd
-	 U6lxMH8/rTV9TU0a9RKelvD2Fmh7HpPblA1MUzrDCFPQTSOfRoW4BF1hf1XrHbuVG7
-	 UYNdnQolss9Z63Jio5jCCZcjOstHSQSffiOREQedvQJTEEIYJ1ls8JZzMuPd4tqIIC
-	 ozk0fgQmI/viA==
+	b=U+7gY8xIjopcNEOze+3/knubEcOUIGYjqQirAFOGkxksDsRMjpln8WyKnPs3Exbmz
+	 BHdUm09z/CSbSm09DscAzN8GeR8Gv5ViTsCsmRVAbyCh5QPefkCXCCLOd+9BpttAUj
+	 uHVJutiAnkjAkEMm3Dcx6uu/t3rrSeq1Uc+E1EZm2ZvLu2twFLLxKL6BHkhsOoTIe0
+	 1jbcDRSHiRsKdyOiLDNMfeamaxaQ+3YEOnV8lnn0ogSJFhXVILxwsyR/Rj8aBw5VK+
+	 dMA3jEIcaSOsynZCq8EH3cPUyup46QfrlWgOIOc+tU2HZm/jWQOWj3nhkWSKPDNY+D
+	 Fd+2Dl19N4J7Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Steve Sistare <steven.sistare@oracle.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>,
+Cc: Lang Yu <Lang.Yu@amd.com>,
+	Yifan Zhang <yifan1.zhang@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 677/713] vdpa_sim: reset must not run
-Date: Sun, 24 Mar 2024 18:46:43 -0400
-Message-ID: <20240324224720.1345309-678-sashal@kernel.org>
+Subject: [PATCH 6.7 696/713] drm/amdgpu: fix mmhub client id out-of-bounds access
+Date: Sun, 24 Mar 2024 18:47:02 -0400
+Message-ID: <20240324224720.1345309-697-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -46,52 +45,49 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Steve Sistare <steven.sistare@oracle.com>
+From: Lang Yu <Lang.Yu@amd.com>
 
-[ Upstream commit 9588e7fc511f9c55b9835f14916e90ab940061b7 ]
+[ Upstream commit 6540ff6482c1a5a6890ae44b23d0852ba1986d9e ]
 
-vdpasim_do_reset sets running to true, which is wrong, as it allows
-vdpasim_kick_vq to post work requests before the device has been
-configured.  To fix, do not set running until VIRTIO_CONFIG_S_DRIVER_OK
-is set.
+Properly handle cid 0x140.
 
-Fixes: 0c89e2a3a9d0 ("vdpa_sim: Implement suspend vdpa op")
-Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
-Reviewed-by: Eugenio Pérez <eperezma@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Message-Id: <1707517807-137331-1-git-send-email-steven.sistare@oracle.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Fixes: aba2be41470a ("drm/amdgpu: add mmhub 3.3.0 support")
+Signed-off-by: Lang Yu <Lang.Yu@amd.com>
+Reviewed-by: Yifan Zhang <yifan1.zhang@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/mmhub_v3_3.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-index be2925d0d2836..18584ce70bf07 100644
---- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-+++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-@@ -160,7 +160,7 @@ static void vdpasim_do_reset(struct vdpasim *vdpasim, u32 flags)
- 		}
+diff --git a/drivers/gpu/drm/amd/amdgpu/mmhub_v3_3.c b/drivers/gpu/drm/amd/amdgpu/mmhub_v3_3.c
+index b3961968c10c4..238ea40c24500 100644
+--- a/drivers/gpu/drm/amd/amdgpu/mmhub_v3_3.c
++++ b/drivers/gpu/drm/amd/amdgpu/mmhub_v3_3.c
+@@ -99,16 +99,15 @@ mmhub_v3_3_print_l2_protection_fault_status(struct amdgpu_device *adev,
+ 	switch (amdgpu_ip_version(adev, MMHUB_HWIP, 0)) {
+ 	case IP_VERSION(3, 3, 0):
+ 	case IP_VERSION(3, 3, 1):
+-		mmhub_cid = mmhub_client_ids_v3_3[cid][rw];
++		mmhub_cid = cid < ARRAY_SIZE(mmhub_client_ids_v3_3) ?
++			    mmhub_client_ids_v3_3[cid][rw] :
++			    cid == 0x140 ? "UMSCH" : NULL;
+ 		break;
+ 	default:
+ 		mmhub_cid = NULL;
+ 		break;
  	}
  
--	vdpasim->running = true;
-+	vdpasim->running = false;
- 	spin_unlock(&vdpasim->iommu_lock);
- 
- 	vdpasim->features = 0;
-@@ -483,6 +483,7 @@ static void vdpasim_set_status(struct vdpa_device *vdpa, u8 status)
- 
- 	mutex_lock(&vdpasim->mutex);
- 	vdpasim->status = status;
-+	vdpasim->running = (status & VIRTIO_CONFIG_S_DRIVER_OK) != 0;
- 	mutex_unlock(&vdpasim->mutex);
- }
- 
+-	if (!mmhub_cid && cid == 0x140)
+-		mmhub_cid = "UMSCH";
+-
+ 	dev_err(adev->dev, "\t Faulty UTCL2 client ID: %s (0x%x)\n",
+ 		mmhub_cid ? mmhub_cid : "unknown", cid);
+ 	dev_err(adev->dev, "\t MORE_FAULTS: 0x%lx\n",
 -- 
 2.43.0
 
