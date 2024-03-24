@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A80917AF91;
-	Sun, 24 Mar 2024 23:41:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1990117B4F2;
+	Sun, 24 Mar 2024 23:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323715; cv=none; b=JBLqJZW3Bt/UUJ54oYIv0gS3BnBBVXBBUlvOokNJaChgLqOvJbAH0oV/tyq5zyGb4Kl8CKKmRHwOOH60EmpYxnRL/ZKbPERVB5IvAE/YIpTjUDZFdTtdlTkl3Hp78fre/1xo65vJZ5K81wIsWd1dvoeZt4+6Xud4WT5F+Ki/l+U=
+	t=1711323720; cv=none; b=a4YvQcqHZRelowLXjJvAeZnfOCFsRG5JobvU9L3ccCHuQ97C5CCoxzhMyEY57QE0p7SuZFvQKrRRryK+/m3hJT8bW1NXqMKwQ5Z8ZHpjPfNIEmWKeuE4iiPxEre2DpCgyfIQB3nOFJhO3CGcf5X3R2Qm9e/DyHGgq2JuCrfNz0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323715; c=relaxed/simple;
-	bh=ExZL3/MFyzI92yOqyU4pBDdIcGauhn5Ds3d+UzfIZ/A=;
+	s=arc-20240116; t=1711323720; c=relaxed/simple;
+	bh=M5igGWHTOyNDupa/8vuugdNBXY6bKFjuOK6U+k+WEVw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ckTXINsKbfYb51B5AgEhQhq7X2j2S7Cfq5TDCGYhgq5flPav4Fz1So5i5Z1KkofoxrctmFFUTFaKnbG7PuFqxV+FYX+jpgmAIyZRu7tr7BQig7MmYgn4aqtoaNCIfA8dgDPfbjFa8kYdqxZJwgx4nFvxEcqzFLdzSMci9Nvl0NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJB+J5lc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NGLMASRq0suxidL9WUg4AkJmTA4RYekAYurHI/z+7gB9P1ZNW/gl8MD69DF65Gpl0LNaJZEED3ShbR3zvlmpJYPC9AHxKE86VAzPcmNHBKRnlVgKD5oRLKOnaY0PInGyuLS7NCBztJwdSvMSb5gxnCFu/0HG/vEJD0KD641k1M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JaD5+qBa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJB+J5lc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46C71C43390;
-	Sun, 24 Mar 2024 23:41:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JaD5+qBa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E88C41674;
+	Sun, 24 Mar 2024 23:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323715;
-	bh=ExZL3/MFyzI92yOqyU4pBDdIcGauhn5Ds3d+UzfIZ/A=;
+	s=k20201202; t=1711323720;
+	bh=M5igGWHTOyNDupa/8vuugdNBXY6bKFjuOK6U+k+WEVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HJB+J5lcu0PX/5vhbWjMP9E11fiXPAdWGxDLTGBmSsTl+f65Va8J6/D8NTQxEOuny
-	 GORZFeCxz8S3WwVoD+ZZTAt/1XC1ygda5rXEvwDRJ3fmAsVHxGrsPL9BMx3I5xCPKQ
-	 aarQxGX2hIfRg4RQd61woEbuh4CGwQM32LwuG/fPd1txaJvuvcLTSRcGGgUCGlgzqP
-	 72KzeTiXpHeIexSJdmEe7xoR8kqgtxi7jDTAdM2J112QTE9xvuDlC7ZkPEIOMIpzmW
-	 Fat3HHtimXV6WlkHkmyG5svVswiyIQBGu9m9DPb5zX43Tm+GOlTzq7UgPXhOFtbUwl
-	 mmDTrjjDTNAUw==
+	b=JaD5+qBaVb3Fv1wvS7UXsEfr/qEHDjBRYXlHJkae7wb1KKIHo33+ueDn0uFvGhLWf
+	 AdtAqzjjKXOxL3xErrDW3bpzDQV7csDpifcj6zYrad5WFNZJy8NFLs3Yaqo7oCaWuu
+	 S0YwyPwO1/ybVxrfnrRuQINiLpFbKc6hsYf0gRP6EU3WJSLh5w25DYgH88SmzUl/X4
+	 u2FYeWQNz+NQfuwBA8wSr2xoliF8/zk5fBWBeBdhg0SzO4odcOO/GXU7VbgKK3lFnG
+	 KL7tmsJOLoXsxeTzWG641M+pbyw1Yp8afbK0kbJwaPIn+99KBCFF9YOSHYrcVAktmz
+	 V4A1/GyhzUkSA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chen Ni <nichen@iscas.ac.cn>,
-	Simon Horman <horms@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Shiming Cheng <shiming.cheng@mediatek.com>,
+	Lena Wang <lena.wang@mediatek.com>,
+	David Ahern <dsahern@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 088/238] sr9800: Add check for usbnet_get_endpoints
-Date: Sun, 24 Mar 2024 19:37:56 -0400
-Message-ID: <20240324234027.1354210-89-sashal@kernel.org>
+Subject: [PATCH 5.10 093/238] ipv6: fib6_rules: flush route cache when rule is changed
+Date: Sun, 24 Mar 2024 19:38:01 -0400
+Message-ID: <20240324234027.1354210-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,38 +50,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chen Ni <nichen@iscas.ac.cn>
+From: Shiming Cheng <shiming.cheng@mediatek.com>
 
-[ Upstream commit 07161b2416f740a2cb87faa5566873f401440a61 ]
+[ Upstream commit c4386ab4f6c600f75fdfd21143f89bac3e625d0d ]
 
-Add check for usbnet_get_endpoints() and return the error if it fails
-in order to transfer the error.
+When rule policy is changed, ipv6 socket cache is not refreshed.
+The sock's skb still uses a outdated route cache and was sent to
+a wrong interface.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Fixes: 19a38d8e0aa3 ("USB2NET : SR9800 : One chip USB2.0 USB2NET SR9800 Device Driver Support")
-Link: https://lore.kernel.org/r/20240305075927.261284-1-nichen@iscas.ac.cn
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+To avoid this error we should update fib node's version when
+rule is changed. Then skb's route will be reroute checked as
+route cache version is already different with fib node version.
+The route cache is refreshed to match the latest rule.
+
+Fixes: 101367c2f8c4 ("[IPV6]: Policy Routing Rules")
+Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+Signed-off-by: Lena Wang <lena.wang@mediatek.com>
+Reviewed-by: David Ahern <dsahern@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/sr9800.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ipv6/fib6_rules.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
-index 681e0def6356b..a5332e99102a5 100644
---- a/drivers/net/usb/sr9800.c
-+++ b/drivers/net/usb/sr9800.c
-@@ -736,7 +736,9 @@ static int sr9800_bind(struct usbnet *dev, struct usb_interface *intf)
+diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
+index 3e4c87b29b115..55cd23b7a9357 100644
+--- a/net/ipv6/fib6_rules.c
++++ b/net/ipv6/fib6_rules.c
+@@ -446,6 +446,11 @@ static size_t fib6_rule_nlmsg_payload(struct fib_rule *rule)
+ 	       + nla_total_size(16); /* src */
+ }
  
- 	data->eeprom_len = SR9800_EEPROM_LEN;
- 
--	usbnet_get_endpoints(dev, intf);
-+	ret = usbnet_get_endpoints(dev, intf);
-+	if (ret)
-+		goto out;
- 
- 	/* LED Setting Rule :
- 	 * AABB:CCDD
++static void fib6_rule_flush_cache(struct fib_rules_ops *ops)
++{
++	rt_genid_bump_ipv6(ops->fro_net);
++}
++
+ static const struct fib_rules_ops __net_initconst fib6_rules_ops_template = {
+ 	.family			= AF_INET6,
+ 	.rule_size		= sizeof(struct fib6_rule),
+@@ -458,6 +463,7 @@ static const struct fib_rules_ops __net_initconst fib6_rules_ops_template = {
+ 	.compare		= fib6_rule_compare,
+ 	.fill			= fib6_rule_fill,
+ 	.nlmsg_payload		= fib6_rule_nlmsg_payload,
++	.flush_cache		= fib6_rule_flush_cache,
+ 	.nlgroup		= RTNLGRP_IPV6_RULE,
+ 	.policy			= fib6_rule_policy,
+ 	.owner			= THIS_MODULE,
 -- 
 2.43.0
 
