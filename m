@@ -1,40 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4AF14EC61;
-	Sun, 24 Mar 2024 23:02:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327321FC10D;
+	Sun, 24 Mar 2024 23:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321322; cv=none; b=EGsj+mls+2/eDhjwOmKzsh/0QSJU7Tlws0BRKoJD+pGDvTQH+OJf9wqKMwdQl6WQhWfsBuFqdV3fdpwJs5JctuHHFOYPIXsKKTQMFUf+ThpTYBljrX3mQ19ERw46JK6zRwg72GHiFpL1Y36H0+A2Cw62/BAFfoaIuMzaVcZ77Fc=
+	t=1711321316; cv=none; b=DhOsX60xQnvIbEYw6Jkr0jHmPWTqQK4Y1CiTpTI0mwcs2NdLdiB6arPoxcx4KQL9f1gUlTPsVjHAdj/4PHCngXCw2XUO2V2ByPeoAcOowABV3HI2KILZFihIc+1kkt5jTstT6KX8FErs++GvsoCXBkG/SF9CtQevEcimN6t+0aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321322; c=relaxed/simple;
-	bh=qOGeOiK4ClElyfszjmQKYlD69NhrO+v312Y/ZK8a4Iw=;
+	s=arc-20240116; t=1711321316; c=relaxed/simple;
+	bh=v72yR9TvJL75rbdEOwqmwC5IEhpmO5X238jNeAFXJaU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I68SFyICkKeQmbAim8UA9VXFineSq/fmFVN20AKvGyiZx1twbgHj4z/prqhvmeDIKtTwzh6TZcccpLlrfYhre/PG+iVyXVlTAPAaSi5tOtPTLWc7f8knVF9VtAO19lkAiGuUtwGFxVCa2086t//vVR50FcpkMcnDfYMF87ZK3Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wmv+j9mc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OYeHMrjbHahSpRnUBIvaKPGFHM76OPe79/Qi5DK4xHYrCa5H97+EFAWbI6sAQcOmy418K8KgDe4LqPtyOvB1tAe+yVOyoICE8FRaB6zwQ7pNExa04vIwbF5/q7TyDAf6okeURSSi0OhbT2k07dJsRqSmyqZ0iwv2nGN63sp18Ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UfzpfU6X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wmv+j9mc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE7FAC43390;
-	Sun, 24 Mar 2024 23:02:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UfzpfU6X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EABCEC43399;
+	Sun, 24 Mar 2024 23:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321321;
-	bh=qOGeOiK4ClElyfszjmQKYlD69NhrO+v312Y/ZK8a4Iw=;
+	s=k20201202; t=1711321316;
+	bh=v72yR9TvJL75rbdEOwqmwC5IEhpmO5X238jNeAFXJaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wmv+j9mcfncsXhnXz+bByTQ+O3E/Ap0ImwzLs+iMLumOZdvpefvBtTLv/MaHkQGIQ
-	 38x+/S9N36xs1Mh77c6CXKSPlCliaG56fEs/OSVMMfDei5GfUY+kluSWadVpmjP45w
-	 N6X7Hnkoibuy2n7IS6y8PtBVhVkpJsaO7kTLrYNNysxlFMTcwvTxvHOCGqZVlN9zLV
-	 O6xMB2FMEBmHqnTpug4OvlPeKLiAZehZ5wappXmoW2uailwa49F1V2B4ZVPlZRoi58
-	 rohCi6XF6Y4nlp91Ad9OVJ3PYUwOosBT6rqbHZBOKaH91WMd2x4uq+uJP25ZfhiEaI
-	 GPJjKZd2U/TCQ==
+	b=UfzpfU6X/39amirxvLfVsz+n+qjkr3BHvx4bjndZPe1kHR7ivJ3ddnnN3TV8dSEOT
+	 J9LCSg63+/CB8ESQ2OvPfct7LT1CUT6dUfXCS0NPeCYHKAhaSw+I5Ql7GXx+gBpQlC
+	 TzJzJQ4N+LXpEaYFSnHwy60Zhv6rfURqBta9SmI7ZAnY3opnA1bKHcKX5bcFmNxQ+B
+	 ZvcZXfSvu/V3+03f7RB0xAR8ZblyZ6Is7CJaEKkOrxIWnN7USRfGou+bSgtDDdaieX
+	 WV/3uURN4pRdylr1+uvB+cx9dQNmLOKJXGNTPYLd46odTxtu+wDPxsYsQ15uAo0Ca7
+	 i13uUtaWO0Cyg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Filipe Manana <fdmanana@suse.com>,
-	David Sterba <dsterba@suse.com>,
+Cc: Rob Herring <robh@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Chanho Min <chanho.min@lge.com>,
+	Arnd Bergmann <arnd@arndb.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 044/638] btrfs: fix data race at btrfs_use_block_rsv() when accessing block reserve
-Date: Sun, 24 Mar 2024 18:51:21 -0400
-Message-ID: <20240324230116.1348576-45-sashal@kernel.org>
+Subject: [PATCH 6.6 038/638] arm64: dts: Fix dtc interrupt_provider warnings
+Date: Sun, 24 Mar 2024 18:51:15 -0400
+Message-ID: <20240324230116.1348576-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,101 +52,166 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit c7bb26b847e5b97814f522686068c5628e2b3646 ]
+[ Upstream commit 91adecf911e5df78ea3e8f866e69db2c33416a5c ]
 
-At btrfs_use_block_rsv() we read the size of a block reserve without
-locking its spinlock, which makes KCSAN complain because the size of a
-block reserve is always updated while holding its spinlock. The report
-from KCSAN is the following:
+The dtc interrupt_provider warning is off by default. Fix all the warnings
+so it can be enabled.
 
-  [653.313148] BUG: KCSAN: data-race in btrfs_update_delayed_refs_rsv [btrfs] / btrfs_use_block_rsv [btrfs]
-
-  [653.314755] read to 0x000000017f5871b8 of 8 bytes by task 7519 on cpu 0:
-  [653.314779]  btrfs_use_block_rsv+0xe4/0x2f8 [btrfs]
-  [653.315606]  btrfs_alloc_tree_block+0xdc/0x998 [btrfs]
-  [653.316421]  btrfs_force_cow_block+0x220/0xe38 [btrfs]
-  [653.317242]  btrfs_cow_block+0x1ac/0x568 [btrfs]
-  [653.318060]  btrfs_search_slot+0xda2/0x19b8 [btrfs]
-  [653.318879]  btrfs_del_csums+0x1dc/0x798 [btrfs]
-  [653.319702]  __btrfs_free_extent.isra.0+0xc24/0x2028 [btrfs]
-  [653.320538]  __btrfs_run_delayed_refs+0xd3c/0x2390 [btrfs]
-  [653.321340]  btrfs_run_delayed_refs+0xae/0x290 [btrfs]
-  [653.322140]  flush_space+0x5e4/0x718 [btrfs]
-  [653.322958]  btrfs_preempt_reclaim_metadata_space+0x102/0x2f8 [btrfs]
-  [653.323781]  process_one_work+0x3b6/0x838
-  [653.323800]  worker_thread+0x75e/0xb10
-  [653.323817]  kthread+0x21a/0x230
-  [653.323836]  __ret_from_fork+0x6c/0xb8
-  [653.323855]  ret_from_fork+0xa/0x30
-
-  [653.323887] write to 0x000000017f5871b8 of 8 bytes by task 576 on cpu 3:
-  [653.323906]  btrfs_update_delayed_refs_rsv+0x1a4/0x250 [btrfs]
-  [653.324699]  btrfs_add_delayed_data_ref+0x468/0x6d8 [btrfs]
-  [653.325494]  btrfs_free_extent+0x76/0x120 [btrfs]
-  [653.326280]  __btrfs_mod_ref+0x6a8/0x6b8 [btrfs]
-  [653.327064]  btrfs_dec_ref+0x50/0x70 [btrfs]
-  [653.327849]  walk_up_proc+0x236/0xa50 [btrfs]
-  [653.328633]  walk_up_tree+0x21c/0x448 [btrfs]
-  [653.329418]  btrfs_drop_snapshot+0x802/0x1328 [btrfs]
-  [653.330205]  btrfs_clean_one_deleted_snapshot+0x184/0x238 [btrfs]
-  [653.330995]  cleaner_kthread+0x2b0/0x2f0 [btrfs]
-  [653.331781]  kthread+0x21a/0x230
-  [653.331800]  __ret_from_fork+0x6c/0xb8
-  [653.331818]  ret_from_fork+0xa/0x30
-
-So add a helper to get the size of a block reserve while holding the lock.
-Reading the field while holding the lock instead of using the data_race()
-annotation is used in order to prevent load tearing.
-
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-By: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> #
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Florian Fainelli <florian.fainelli@broadcom.com> #Broadcom
+Acked-by: Chanho Min <chanho.min@lge.com>
+Link: https://lore.kernel.org/r/20240213-arm-dt-cleanups-v1-3-f2dee1292525@kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/block-rsv.c |  2 +-
- fs/btrfs/block-rsv.h | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/amazon/alpine-v2.dtsi           | 1 -
+ arch/arm64/boot/dts/amazon/alpine-v3.dtsi           | 1 -
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi    | 1 +
+ arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi | 1 +
+ arch/arm64/boot/dts/lg/lg1312.dtsi                  | 1 -
+ arch/arm64/boot/dts/lg/lg1313.dtsi                  | 1 -
+ arch/arm64/boot/dts/marvell/armada-ap80x.dtsi       | 1 -
+ arch/arm64/boot/dts/mediatek/mt8195-demo.dts        | 1 +
+ arch/arm64/boot/dts/renesas/ulcb-kf.dtsi            | 4 ++++
+ 9 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/fs/btrfs/block-rsv.c b/fs/btrfs/block-rsv.c
-index 77684c5e0c8ba..db8da4e7b2289 100644
---- a/fs/btrfs/block-rsv.c
-+++ b/fs/btrfs/block-rsv.c
-@@ -486,7 +486,7 @@ struct btrfs_block_rsv *btrfs_use_block_rsv(struct btrfs_trans_handle *trans,
+diff --git a/arch/arm64/boot/dts/amazon/alpine-v2.dtsi b/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
+index dccbba6e7f98e..dbf2dce8d1d68 100644
+--- a/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
++++ b/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
+@@ -145,7 +145,6 @@ pci@fbc00000 {
+ 		msix: msix@fbe00000 {
+ 			compatible = "al,alpine-msix";
+ 			reg = <0x0 0xfbe00000 0x0 0x100000>;
+-			interrupt-controller;
+ 			msi-controller;
+ 			al,msi-base-spi = <160>;
+ 			al,msi-num-spis = <160>;
+diff --git a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
+index 39481d7fd7d4d..3ea178acdddfe 100644
+--- a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
++++ b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
+@@ -355,7 +355,6 @@ pcie@fbd00000 {
+ 		msix: msix@fbe00000 {
+ 			compatible = "al,alpine-msix";
+ 			reg = <0x0 0xfbe00000 0x0 0x100000>;
+-			interrupt-controller;
+ 			msi-controller;
+ 			al,msi-base-spi = <336>;
+ 			al,msi-num-spis = <959>;
+diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
+index 9dcd25ec2c041..896d1f33b5b61 100644
+--- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
+@@ -586,6 +586,7 @@ gpio_g: gpio@660a0000 {
+ 			#gpio-cells = <2>;
+ 			gpio-controller;
+ 			interrupt-controller;
++			#interrupt-cells = <2>;
+ 			interrupts = <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  
- 	block_rsv = get_block_rsv(trans, root);
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+index f049687d6b96d..d8516ec0dae74 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+@@ -450,6 +450,7 @@ gpio_hsls: gpio@d0000 {
+ 			#gpio-cells = <2>;
+ 			gpio-controller;
+ 			interrupt-controller;
++			#interrupt-cells = <2>;
+ 			interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-ranges = <&pinmux 0 0 16>,
+ 					<&pinmux 16 71 2>,
+diff --git a/arch/arm64/boot/dts/lg/lg1312.dtsi b/arch/arm64/boot/dts/lg/lg1312.dtsi
+index 48ec4ebec0a83..b864ffa74ea8b 100644
+--- a/arch/arm64/boot/dts/lg/lg1312.dtsi
++++ b/arch/arm64/boot/dts/lg/lg1312.dtsi
+@@ -126,7 +126,6 @@ eth0: ethernet@c1b00000 {
+ 	amba {
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
+-		#interrupt-cells = <3>;
  
--	if (unlikely(block_rsv->size == 0))
-+	if (unlikely(btrfs_block_rsv_size(block_rsv) == 0))
- 		goto try_reserve;
- again:
- 	ret = btrfs_block_rsv_use_bytes(block_rsv, blocksize);
-diff --git a/fs/btrfs/block-rsv.h b/fs/btrfs/block-rsv.h
-index fb440a074700a..43a9a6b5a79f4 100644
---- a/fs/btrfs/block-rsv.h
-+++ b/fs/btrfs/block-rsv.h
-@@ -117,4 +117,20 @@ static inline u64 btrfs_block_rsv_reserved(struct btrfs_block_rsv *rsv)
- 	return ret;
- }
+ 		compatible = "simple-bus";
+ 		interrupt-parent = <&gic>;
+diff --git a/arch/arm64/boot/dts/lg/lg1313.dtsi b/arch/arm64/boot/dts/lg/lg1313.dtsi
+index 3869460aa5dcb..996fb39bb50c1 100644
+--- a/arch/arm64/boot/dts/lg/lg1313.dtsi
++++ b/arch/arm64/boot/dts/lg/lg1313.dtsi
+@@ -126,7 +126,6 @@ eth0: ethernet@c3700000 {
+ 	amba {
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
+-		#interrupt-cells = <3>;
  
-+/*
-+ * Get the size of a block reserve in a context where getting a stale value is
-+ * acceptable, instead of accessing it directly and trigger data race warning
-+ * from KCSAN.
-+ */
-+static inline u64 btrfs_block_rsv_size(struct btrfs_block_rsv *rsv)
-+{
-+	u64 ret;
-+
-+	spin_lock(&rsv->lock);
-+	ret = rsv->size;
-+	spin_unlock(&rsv->lock);
-+
-+	return ret;
-+}
-+
- #endif /* BTRFS_BLOCK_RSV_H */
+ 		compatible = "simple-bus";
+ 		interrupt-parent = <&gic>;
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
+index 2c920e22cec2b..7ec7c789d87ef 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
+@@ -138,7 +138,6 @@ pmu {
+ 
+ 			odmi: odmi@300000 {
+ 				compatible = "marvell,odmi-controller";
+-				interrupt-controller;
+ 				msi-controller;
+ 				marvell,odmi-frames = <4>;
+ 				reg = <0x300000 0x4000>,
+diff --git a/arch/arm64/boot/dts/mediatek/mt8195-demo.dts b/arch/arm64/boot/dts/mediatek/mt8195-demo.dts
+index 5d635085fe3fd..9079e48aea23e 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8195-demo.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8195-demo.dts
+@@ -128,6 +128,7 @@ mt6360: pmic@34 {
+ 		compatible = "mediatek,mt6360";
+ 		reg = <0x34>;
+ 		interrupt-controller;
++		#interrupt-cells = <1>;
+ 		interrupts-extended = <&pio 101 IRQ_TYPE_EDGE_FALLING>;
+ 		interrupt-names = "IRQB";
+ 
+diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+index 3885ef3454ff6..50de17e4fb3f2 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+@@ -234,6 +234,7 @@ gpio_exp_74: gpio@74 {
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-controller;
++		#interrupt-cells = <2>;
+ 		interrupt-parent = <&gpio6>;
+ 		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
+ 
+@@ -294,6 +295,7 @@ gpio_exp_75: gpio@75 {
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-controller;
++		#interrupt-cells = <2>;
+ 		interrupt-parent = <&gpio6>;
+ 		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+ 	};
+@@ -314,6 +316,7 @@ gpio_exp_76: gpio@76 {
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-controller;
++		#interrupt-cells = <2>;
+ 		interrupt-parent = <&gpio7>;
+ 		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
+ 	};
+@@ -324,6 +327,7 @@ gpio_exp_77: gpio@77 {
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-controller;
++		#interrupt-cells = <2>;
+ 		interrupt-parent = <&gpio5>;
+ 		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
+ 	};
 -- 
 2.43.0
 
