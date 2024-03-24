@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF37175C8E;
-	Sun, 24 Mar 2024 23:36:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F4C276C52;
+	Sun, 24 Mar 2024 23:36:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323390; cv=none; b=cGwnlPKLvBdatKG4nf6IHhzb0SYRfIznWj6EN5GBSWlUDa8Ul1kV1HUHykptxylG1Mb0W0WM8gC6w3S8MNCuwhsgnGnJX77VrnTg3afTsv6baxwXjUbtYaq8pjCNwR+aLqEH+OqNEw5A0eLVOTN4RkO3XxiF91tcgSnG8qn8pBs=
+	t=1711323395; cv=none; b=OddUsV1bHiJvVTXwkHUSQxRmJRMeaEIXXDNUc+09J4ksZfLg+ZPpHcJoRwFb26NS7KUMD9xIQ4zjJ4qhfAq1x/GYDhy7c5YL2/2G+yFMIo5vTLLzaxVBD8EV4zw05hBEnuVi1uftIDV+2q5DQQwh7As8VOQmPvZkOPldRJdBTaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323390; c=relaxed/simple;
-	bh=uyYm/hTPynukJH3N+FZgPpV/0Ja5FnJGYAm2qYYs7Qo=;
+	s=arc-20240116; t=1711323395; c=relaxed/simple;
+	bh=zWlzrrm/5wQhSozp+1bHo/83+epwrXZElVWrst8o21k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hhd68pIQpx1hAmmGz/mSrKBi/q0egW9SPlJXbhbS+d/QKaKl2IY/CQ36pa9BKREvGMcozFSDXfKa3kkY67jg9dRRMSA828vr29P0r9BHP+6wHvljljwl+vPaA34Kjqdw63FOe8QlTf338BGpGExnojJz2rKuf9Sgfm3Ps2LzP54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8/O3aTR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cQnh+YOgMH6ec0Lx9PI7mc3c0O8mVppaO/5rQfjXjHpQAHXsg0rolXdZMEZrScycdl0E6TP8jpVGg5d4S3fIEtBX1SNI3LFb8PQFwxoZ0YzuRX3hJ4WNkykwRQ+rvxHPEYtgSRO0wpZqkDvFcGrMG4/sTOu0yZjqG2Y9RzkJ3hM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d6D15jeP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8/O3aTR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55CCEC43390;
-	Sun, 24 Mar 2024 23:36:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d6D15jeP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3A98C433F1;
+	Sun, 24 Mar 2024 23:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323390;
-	bh=uyYm/hTPynukJH3N+FZgPpV/0Ja5FnJGYAm2qYYs7Qo=;
+	s=k20201202; t=1711323395;
+	bh=zWlzrrm/5wQhSozp+1bHo/83+epwrXZElVWrst8o21k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B8/O3aTRSkKRi9YNVzlYRQGwm71/oUb8nrEZ9pilMtJqKQJEjEwre5ojmILFv6LeN
-	 qXUrZmercaIa4ClnMBS1KrQYY5RlVF8G1VYNDti/+qRNRNCrmaLNY2TPOzn+IVuXT0
-	 TBJyXZT3w4Opl5yT1+4kNHkf1fph/Ht0C/5Fr8/5q7AoUrHFaQI4DaDiUYTucutSW6
-	 kWLxt16PrjCs/P3a22PNnQc3c663z0sOSOvXELSRQ3p3kKFnuCq7eJxIQdA6bsL+no
-	 BcFZDgv9lA7qs+7LT5jyKFPwxgLPlFufYNGLHfzqvd+8ZlIO2TDMx2pQ6uSxCCE2LA
-	 m5BBeDdKmMvUg==
+	b=d6D15jePQjHcjKyHOqEK9QdipMOL0uYc8UBeHY6GACXglxvJv02XDephX7eZ7yfyD
+	 FMX2tQqbGVm90Q3XUWfBSCpG6z+1/KwZg+eiH8Jum09x3lfaLaZIfHixA3W/xqzVD2
+	 3KgMceYiiS2s0eEqqAoROM6vWAwDln58lu4lV1XropV+VhFulFg/rDItxVegqHmjVb
+	 gQhmNkUp3OFhCwus8HL0mxcjo4kg78LHymXOMMHrXkRXhFtlQ+LnjTIoJnEeocEQGE
+	 ISitSVrME6zS+SDbZA/jz+xSZBouT5hvBEVHcDVD/9VAvt0tVWp5dWLJTHemc3V2Mi
+	 tQE4aaxmp+95g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	Taehee Yoo <ap420073@gmail.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	David Ahern <dsahern@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 090/317] printk: Add panic_in_progress helper
-Date: Sun, 24 Mar 2024 19:31:10 -0400
-Message-ID: <20240324233458.1352854-91-sashal@kernel.org>
+Subject: [PATCH 5.15 096/317] ipv6: mcast: remove one synchronize_net() barrier in ipv6_mc_down()
+Date: Sun, 24 Mar 2024 19:31:16 -0400
+Message-ID: <20240324233458.1352854-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,44 +51,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stephen Brennan <stephen.s.brennan@oracle.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 77498617857f68496b360081dde1a492d40c28b2 ]
+[ Upstream commit 17ef8efc00b34918b966388b2af0993811895a8c ]
 
-This will be used help avoid deadlocks during panics. Although it would
-be better to include this in linux/panic.h, it would require that header
-to include linux/atomic.h as well. On some architectures, this results
-in a circular dependency as well. So instead add the helper directly to
-printk.c.
+As discussed in the past (commit 2d3916f31891 ("ipv6: fix skb drops
+in igmp6_event_query() and igmp6_event_report()")) I think the
+synchronize_net() call in ipv6_mc_down() is not needed.
 
-Suggested-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Link: https://lore.kernel.org/r/20220202171821.179394-2-stephen.s.brennan@oracle.com
-Stable-dep-of: d04d5882cd67 ("printk: Disable passing console lock owner completely during panic()")
+Under load, synchronize_net() can last between 200 usec and 5 ms.
+
+KASAN seems to agree as well.
+
+Fixes: f185de28d9ae ("mld: add new workqueues for process mld events")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Taehee Yoo <ap420073@gmail.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: David Ahern <dsahern@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/ipv6/mcast.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 8b110b245d92c..de44ccf9743c1 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -258,6 +258,11 @@ static void __up_console_sem(unsigned long ip)
- }
- #define up_console_sem() __up_console_sem(_RET_IP_)
+diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
+index 0ea7d97cdc025..6e5d1ade48a89 100644
+--- a/net/ipv6/mcast.c
++++ b/net/ipv6/mcast.c
+@@ -2722,7 +2722,6 @@ void ipv6_mc_down(struct inet6_dev *idev)
+ 	/* Should stop work after group drop. or we will
+ 	 * start work again in mld_ifc_event()
+ 	 */
+-	synchronize_net();
+ 	mld_query_stop_work(idev);
+ 	mld_report_stop_work(idev);
  
-+static bool panic_in_progress(void)
-+{
-+	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
-+}
-+
- /*
-  * This is used for debugging the mess that is the VT code by
-  * keeping track if we have the console semaphore held. It's
 -- 
 2.43.0
 
