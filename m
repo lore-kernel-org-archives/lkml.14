@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27098142E64;
-	Sun, 24 Mar 2024 22:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FB782C7E;
+	Sun, 24 Mar 2024 22:49:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320584; cv=none; b=tVbI9aMpTbr2oeS/aKUnv4Afca49IlX5xAAGC4nedlY9vaTif7frVESJn7jA/XSDwJ/vMnvPxrYiWGHnyKHOX7H9Xto6OqBsZEnvnmP/hlApIZ75Ia9tzOC5AeqDzHA3s1rRZT0uFZ+0F43+6/RS2UavScUh5DxbVuVfd150K5w=
+	t=1711320586; cv=none; b=KhraUa2dV22tvAwOmJU/7QQccUziH9csANMUlyZ2kaBsxdNiu01CH6OGjGZToKLQLfbI6uK3avLdlEEkOgCm9kKbnssO2jjfP8gFmtG5U9vx1gvaCbCfos0+9TK4Klh1vFxoHSbeUOIiGjVCizYypBh8rtdlqnr+Sa7F2IFBgbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320584; c=relaxed/simple;
-	bh=YpNz7k0bZJf6FZIogUl5rE4t51Gl1H2vSO5ig7uR1Jo=;
+	s=arc-20240116; t=1711320586; c=relaxed/simple;
+	bh=PcFvhoYZE+ee2vGKAy5yCnMiJVxLRzXZE4mdK5yBUrA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RnnxTUoS33yaJ+PLd6Qx9+UO+oypk2cQPtkEYsNQK961FF/9sl9lvPVej0MstbAkkq2GhFfSzof5etTQygDlN05mcqmnLkMuThbsuSD5OLG/dK6x1RwL4Ma6IzHrU5vDbBZRluZl/3hnxC1PKD+w3ViDHoniy927J0f4US+Qeqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6B+xpqj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qLpSrfZcHDlQxjwJ8Gh0Pz3NWA2lLLocGd1wQDsbH6JlHdYC7BL5iImAKXnsDRj4Jy6FgUgF/9+50c+15gO61HqNgoiaSLBUYv14OYF5yDF3odhsO1Cg4VKvsxCAExRAlOq5nxGoTLC6S0D+kAEyOCm7/yjtcb7r4hJZE+buaao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QqcRYOs0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6B+xpqj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 673D1C433F1;
-	Sun, 24 Mar 2024 22:49:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QqcRYOs0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33420C43399;
+	Sun, 24 Mar 2024 22:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320583;
-	bh=YpNz7k0bZJf6FZIogUl5rE4t51Gl1H2vSO5ig7uR1Jo=;
+	s=k20201202; t=1711320584;
+	bh=PcFvhoYZE+ee2vGKAy5yCnMiJVxLRzXZE4mdK5yBUrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K6B+xpqj4siV5pLv2+z02Sm6XGFc9mpjL49xmuh1qnNne8ArFjQMGxk75V6BD9rgS
-	 JINIORXYLiLtPHXI/ju/TVKDNQ4TIQk5HOvmfv1jaaLV6lUgv7P3YIBReTmZuP6FBB
-	 LNGMo6JegUU+nPhxrJinipiOv2F1fLsna1RmJ9S/cdGxmXQPLIoyDlrYDESOVHPF33
-	 88gtAUiQWUuW23pWMHGdcLG8LKZD5Bo+KykMsl5b5CBIkv4Mtr0vWnAbAaqDhT2wa3
-	 EAoAurq959BTU9VYyNYldZvq1+gbkB2wxFxVLtsojSGlta0likAEhezPf02pXUD8jq
-	 nn4W4RnDl6tlg==
+	b=QqcRYOs0eZNU93e1pvfgwRdryz8KMbTpfL+JuiH/Z4a8h3DXQ6Tu6k15KgTRNV20n
+	 54cdfT/27qhT6uUS89LJfrYiv3JkZwjSmR5P8ICf6Fc/+aAKoRjQ1ZRUMiPmvuOjw1
+	 /bF0bAWCSFQA0QAnAkTMB3Yroo6qP9x/Ry/tOEYYL6RriDVNUo/k9nq4b9mO+Hyvg7
+	 KHkrM6RAZgp6kVdUcqOkoX5dsOfBlPdFjwt0mVeOhSVJHjYUXaCQDcrPzJ/1LmEiqs
+	 wS22cVdfmuCVtEp0/Ft88IxynU2bPaq986do/YZPwcR/0OfDN0ddy6tqXmGWXIKIZB
+	 tREUtyIOoe95g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 144/713] arm64: dts: qcom: sc8180x: Fix up big CPU idle state entry latency
-Date: Sun, 24 Mar 2024 18:37:50 -0400
-Message-ID: <20240324224720.1345309-145-sashal@kernel.org>
+Subject: [PATCH 6.7 146/713] arm64: dts: qcom: sc8180x: Fix eDP PHY power-domains
+Date: Sun, 24 Mar 2024 18:37:52 -0400
+Message-ID: <20240324224720.1345309-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,14 +50,14 @@ Content-Transfer-Encoding: 8bit
 
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-[ Upstream commit 266a3a92044b89c392b3e9cfcc328d4167c18294 ]
+[ Upstream commit 24e98cb3d5e2c86565680e00008a794b4eac0040 ]
 
-The entry latency was oddly low.. Turns out somebody forgot about a
-second '1'! Fix it.
+The (e)DP PHYs are powered by the MX line, not through the MDSS GDSC.
+Fix that up.
 
-Fixes: 8575f197b077 ("arm64: dts: qcom: Introduce the SC8180x platform")
+Fixes: 494dec9b6f54 ("arm64: dts: qcom: sc8180x: Add display and gpu nodes")
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20231230-topic-8180_more_fixes-v1-3-93b5c107ed43@linaro.org
+Link: https://lore.kernel.org/r/20231230-topic-8180_more_fixes-v1-5-93b5c107ed43@linaro.org
 Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
@@ -65,18 +65,18 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-index b1d9853419415..f2eedbdc025c3 100644
+index a7acaa8ca6055..df40157f2ec63 100644
 --- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-@@ -289,7 +289,7 @@ LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
- 			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
- 				compatible = "arm,idle-state";
- 				arm,psci-suspend-param = <0x40000004>;
--				entry-latency-us = <241>;
-+				entry-latency-us = <2411>;
- 				exit-latency-us = <1461>;
- 				min-residency-us = <4488>;
- 				local-timer-stop;
+@@ -3186,7 +3186,7 @@ edp_phy: phy@aec2a00 {
+ 				 <&dispcc DISP_CC_MDSS_AHB_CLK>;
+ 			clock-names = "aux", "cfg_ahb";
+ 
+-			power-domains = <&dispcc MDSS_GDSC>;
++			power-domains = <&rpmhpd SC8180X_MX>;
+ 
+ 			#clock-cells = <1>;
+ 			#phy-cells = <0>;
 -- 
 2.43.0
 
