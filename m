@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A892720F8;
-	Sun, 24 Mar 2024 23:35:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B458272973;
+	Sun, 24 Mar 2024 23:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323306; cv=none; b=rxlHktep2/V8BTCC8t+l0FqqjnZwK/1Mpyyid1h5Oy0isVDsjXFRf5HTg0MLYoBaKOXKKQ94uwMSuV6DKT3YtMTBr4Nlzt5AgPQ/3N4qDKygAtTVflTLlSkZwPsbCT+spzHvGkI9lN0IFXah9MS/JYgGuc+TtH6jbGLdJiM+Oe4=
+	t=1711323311; cv=none; b=aaTQoZ3Iq9zujildyatln7a4pd18IoVDvl3qSYtk0p80y0WedjlvNWXJJ4UZLYk4C39+BYHd7DJ0c/ILZnGhVUdC3cOKbxVPYLhJAUx92iQIHu7kVZ6ejwi2aE8dP+OOapXgwlqMk+SKUUH8AsVu08z4s5A4y+JJRp8v1lgYqhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323306; c=relaxed/simple;
-	bh=jyUcNQ9GntSGfERNYUd4qRk75zDk8r3yKu0X3vCk3eo=;
+	s=arc-20240116; t=1711323311; c=relaxed/simple;
+	bh=69LnKLUw/CQjKGQSReO/Q4FoKZ4LF/t7TUj6z3/ixkw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VKTUWszvMzkTz+gd292Y2Do9QRj86IxaWP8a/w+YUID4XvJqa7O7trDFSX/OR6qrKWDPAjSfebV7laEp8sF9u8bjkXQLbcTLxdu8fFuDseananRgmrU2lUHY78FIj+qx2x3F42Jby2shzsILB+CokbCHrxSxffHVj4ZmhZzGatA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Po35YmbI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pl8QKkmQo4ymUJcmLUK+P01vS+rZ0KA6RzGIZ8pmplET6t1488gB+2YbGE7+DS1ZJO2sVpZT+j7UIu/1JOGJ42tNVMQ2rPPI6d8e2n3xI43fcsstfWaWZmVeUBQGuufUDIRnkxB5ZhpF0Xd09GUx+HCUetiofF9tfInB1AWLCGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PODXOJQ2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Po35YmbI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C66EC43390;
-	Sun, 24 Mar 2024 23:35:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PODXOJQ2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 825B4C433C7;
+	Sun, 24 Mar 2024 23:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323305;
-	bh=jyUcNQ9GntSGfERNYUd4qRk75zDk8r3yKu0X3vCk3eo=;
+	s=k20201202; t=1711323311;
+	bh=69LnKLUw/CQjKGQSReO/Q4FoKZ4LF/t7TUj6z3/ixkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Po35YmbI1RBBrl3w7JjcGXsa0lPOaHsn4XeLGYlyq2ePr7TKba+Mr/KiicCc3K8OF
-	 DfmLNP5/Mm20FZgmkQJolz3uYAaq3Kn7uX5Lq/qHuNXPA8dofUx3eLDX+T8t1JgWQu
-	 twVmEkB21AfMPGKH8DHk7MsW+x6SwXPVx+IRjSx+gP9bw6f84nUpAVjKpkcwVlqrl4
-	 1BI7zpShvW4k9KBpYt22Bmp3WLHIoepijp/KpFufGeCtBsW1+qi4CgnCJ5yst9DQ5o
-	 YwtqqVxNKi6udVk/SQDg1oMl5+6jD6wbQiaGhFzrCcS0LQiia9ruc1STOTb3n+hYI7
-	 la6mTH5rCIUhw==
+	b=PODXOJQ27NQFlUkWzhP2zdv+ujxYdrbQGcUHGjPBslHrjqc8Agk4FFuihu6FZ2idb
+	 hTIJutnzqgFZXokRMVU2i+0UM7y51fCfJsbWFGFjTe2ZqBoS8/eKrBeh2tG/VnovOT
+	 BhlfdlmrFny9qpijpoksM1pUWgK9BW/zCtpjFxil9/ZpmKtRKcuYJpi8PUFXYwaPyl
+	 nldESaGaPCm6NBwI2ES4ciFdcup3s6Nbxotawsk9vbuAPcGbLkateioiKH7MKbqbzb
+	 5C1lvFPNzF9/EqzYzL3654BoEXdz9MMNJQi45HJTDLIgZElK4eAtcFQA+Sxno2vSfU
+	 FeDN8jshF3sBw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Filipe Manana <fdmanana@suse.com>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Boris Burkov <boris@bur.io>,
-	David Sterba <dsterba@suse.com>,
+Cc: Andrew Ballance <andrewjballance@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 005/317] btrfs: add and use helper to check if block group is used
-Date: Sun, 24 Mar 2024 19:29:45 -0400
-Message-ID: <20240324233458.1352854-6-sashal@kernel.org>
+Subject: [PATCH 5.15 011/317] gen_compile_commands: fix invalid escape sequence warning
+Date: Sun, 24 Mar 2024 19:29:51 -0400
+Message-ID: <20240324233458.1352854-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -51,58 +49,34 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Andrew Ballance <andrewjballance@gmail.com>
 
-[ Upstream commit 1693d5442c458ae8d5b0d58463b873cd879569ed ]
+[ Upstream commit dae4a0171e25884787da32823b3081b4c2acebb2 ]
 
-Add a helper function to determine if a block group is being used and make
-use of it at btrfs_delete_unused_bgs(). This helper will also be used in
-future code changes.
+With python 3.12, '\#' results in this warning
+    SyntaxWarning: invalid escape sequence '\#'
 
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Boris Burkov <boris@bur.io>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/block-group.c | 3 +--
- fs/btrfs/block-group.h | 7 +++++++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ scripts/clang-tools/gen_compile_commands.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index 4ca6828586af5..a2bac7196d18b 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -1330,8 +1330,7 @@ void btrfs_delete_unused_bgs(struct btrfs_fs_info *fs_info)
- 		}
+diff --git a/scripts/clang-tools/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+index 1d1bde1fd45eb..3ac949b64b309 100755
+--- a/scripts/clang-tools/gen_compile_commands.py
++++ b/scripts/clang-tools/gen_compile_commands.py
+@@ -184,7 +184,7 @@ def process_line(root_directory, command_prefix, file_path):
+     # escape the pound sign '#', either as '\#' or '$(pound)' (depending on the
+     # kernel version). The compile_commands.json file is not interepreted
+     # by Make, so this code replaces the escaped version with '#'.
+-    prefix = command_prefix.replace('\#', '#').replace('$(pound)', '#')
++    prefix = command_prefix.replace(r'\#', '#').replace('$(pound)', '#')
  
- 		spin_lock(&block_group->lock);
--		if (block_group->reserved || block_group->pinned ||
--		    block_group->used || block_group->ro ||
-+		if (btrfs_is_block_group_used(block_group) || block_group->ro ||
- 		    list_is_singular(&block_group->list)) {
- 			/*
- 			 * We want to bail if we made new allocations or have
-diff --git a/fs/btrfs/block-group.h b/fs/btrfs/block-group.h
-index a15868d607a92..f042c1c85a255 100644
---- a/fs/btrfs/block-group.h
-+++ b/fs/btrfs/block-group.h
-@@ -211,6 +211,13 @@ static inline u64 btrfs_block_group_end(struct btrfs_block_group *block_group)
- 	return (block_group->start + block_group->length);
- }
- 
-+static inline bool btrfs_is_block_group_used(const struct btrfs_block_group *bg)
-+{
-+	lockdep_assert_held(&bg->lock);
-+
-+	return (bg->used > 0 || bg->reserved > 0 || bg->pinned > 0);
-+}
-+
- static inline bool btrfs_is_block_group_data_only(
- 					struct btrfs_block_group *block_group)
- {
+     # Use os.path.abspath() to normalize the path resolving '.' and '..' .
+     abs_path = os.path.abspath(os.path.join(root_directory, file_path))
 -- 
 2.43.0
 
