@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383AD27BBCA;
-	Sun, 24 Mar 2024 23:38:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8642B27BBC6;
+	Sun, 24 Mar 2024 23:38:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323524; cv=none; b=dhUsRCdWDiSKouVHMZf9rxn319GhIUNwUwcpZAMjzZshtksF0ZMLKdaFhIpdycaGEy+kGLUdX9A2dJghpb4wrI2RUgbl/dsDi8ODRcUrQwS3t9nFuURy17RO11fjKdDXVQrsWZFfQtDxVozcr2ZIwdextsQfbianq5t6dgQ7w8k=
+	t=1711323523; cv=none; b=XMrnjGzGt2I89WX0qtKnvJ+Mj7HLBjebbf2HLqaH259yygmkJ+vXBDJZ/iz49y7TbQqnYCaC31ZUQD4ta0gQq3UbVAFWeTZcxVj0/kjoqm9ucmTjgLMQ7LGpdP3MId6gTFf7I+tb4OZ90g8D0ZYq2RjUw4QmUN6yA+J6xb7O6T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323524; c=relaxed/simple;
-	bh=EpkfoWx72jhMfIWXfpdojzGNUtDam6OnAiKzo5ntHS0=;
+	s=arc-20240116; t=1711323523; c=relaxed/simple;
+	bh=WyKhuThbrHQZpL/P0WvBojbfkzb5nPMDLRDieLgx1i0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hSTGPGnz8gmNRRQ+EkuZhoFPrAe+L3SOcMPruwZp/ul6MRBdLGUnBD8iw17gWZtTJ7CxAcVtBt3uSC8aRK+KcscvmkDs5D7j7Xxm4olL4VAGsuQF3DL5gE6C1JnhzB0EsM+vIguJWyh4pqWNMK2c1S04K8BeV8yme+QZEOXF4lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hm+NwM3A; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qFiUeGlQh8tCzCN0DyW69ghOQkYMOldQgbLm5s9/S9ffBVk/PWnBHRRDz4ZHW/9O+Lc7n8o0Up9t36ZQWslr3+UrR/rEk3Ee01Liuy9h0nzbyFFEc3ntvpljn7XRKD2I4No3cpuv6K/czmp2AOE/AuUEJGqH7dDSsN1Cs7EOg4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQrjZT5V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hm+NwM3A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66B29C43390;
-	Sun, 24 Mar 2024 23:38:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQrjZT5V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DA83C433C7;
+	Sun, 24 Mar 2024 23:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323524;
-	bh=EpkfoWx72jhMfIWXfpdojzGNUtDam6OnAiKzo5ntHS0=;
+	s=k20201202; t=1711323521;
+	bh=WyKhuThbrHQZpL/P0WvBojbfkzb5nPMDLRDieLgx1i0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hm+NwM3ASR3JVD4fqTAhOpGANT21PzsliRtRxt6YRf9qKQ2PB/rKUJBIKFm3yx7rk
-	 udlxUK9uehYtkKsUCqqik9FBrNTRRpyldrnUC+wmJ0UosCInLncOJsSCiYRa8Jw6eV
-	 VW/dwriE7NjNn+2Au/Uun0xmTnWqMzx5IDFBmSE1ugHFJwLIbWDUhgan245wOev2Fx
-	 Glas4MCqw6cfTgF48BN5boQ2lFktX4Q2RjFQfautPkw9k3IJf9E24lDuIzXkHvKQa1
-	 uoKaY8jN6frbRJhQfaTSbFn8nJqnN82QHprmn1BHrgTe5mXGGnXRtNDq1+2JvtcgNt
-	 +Gxa1qM3f1ObA==
+	b=NQrjZT5VgYLNStFIe0clzgj5Zqu6jTnADOPN35y5dQ5ZaUxK8u2SbLeZQwaP/Hti+
+	 kCVR5hLZsrZJcNnRczHyNw/nwZhwTpVnl0grGRQKt0m8YlcSYnggNsifNDg7aBSnK+
+	 IRaYNVHmHJJ7Y4I1zv6WkHRoRgeNERPOg7v1h5DUCrdNFzM72pv2G6/Wq6SCkjnHnl
+	 SStiUkUdC+f8sHSI/rG/oh7gsgcKm5onvfXWAsMSUhljouKPKFtjOmA8w2c/l0ycL4
+	 rrfRJ2+XBwXfQa2gk+zqzned1QB0/ni8wCdKCywgwvcvBPRJ8soKru54LM2ISbVkxv
+	 Cep/ePtBzQlfQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Justin Stitt <justinstitt@google.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+	Akshata MukundShetty <akshata.mukundshetty@amd.com>,
+	Jiri Kosina <jkosina@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 231/317] media: dvb-frontends: avoid stack overflow warnings with clang
-Date: Sun, 24 Mar 2024 19:33:31 -0400
-Message-ID: <20240324233458.1352854-232-sashal@kernel.org>
+Subject: [PATCH 5.15 228/317] HID: amd_sfh: Update HPD sensor structure elements
+Date: Sun, 24 Mar 2024 19:33:28 -0400
+Message-ID: <20240324233458.1352854-229-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,93 +49,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 
-[ Upstream commit 7a4cf27d1f0538f779bf31b8c99eda394e277119 ]
+[ Upstream commit bbf0dec30696638b8bdc28cb2f5bf23f8d760b52 ]
 
-A previous patch worked around a KASAN issue in stv0367, now a similar
-problem showed up with clang:
+HPD sensor data is not populating properly because of wrong order of HPD
+sensor structure elements. So update the order of structure elements to
+match the HPD sensor data received from the firmware.
 
-drivers/media/dvb-frontends/stv0367.c:1222:12: error: stack frame size (3624) exceeds limit (2048) in 'stv0367ter_set_frontend' [-Werror,-Wframe-larger-than]
- 1214 | static int stv0367ter_set_frontend(struct dvb_frontend *fe)
-
-Rework the stv0367_writereg() function to be simpler and mark both
-register access functions as noinline_for_stack so the temporary
-i2c_msg structures do not get duplicated on the stack when KASAN_STACK
-is enabled.
-
-Fixes: 3cd890dbe2a4 ("media: dvb-frontends: fix i2c access helpers for KASAN")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: 24a31ea94922 ("HID: amd_sfh: Add initial support for HPD sensor")
+Co-developed-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
+Signed-off-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
+Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-frontends/stv0367.c | 34 +++++++--------------------
- 1 file changed, 8 insertions(+), 26 deletions(-)
+ drivers/hid/amd-sfh-hid/amd_sfh_pcie.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/dvb-frontends/stv0367.c b/drivers/media/dvb-frontends/stv0367.c
-index 0bfca1174e9e7..8cbae8235b174 100644
---- a/drivers/media/dvb-frontends/stv0367.c
-+++ b/drivers/media/dvb-frontends/stv0367.c
-@@ -118,50 +118,32 @@ static const s32 stv0367cab_RF_LookUp2[RF_LOOKUP_TABLE2_SIZE][RF_LOOKUP_TABLE2_S
- 	}
- };
- 
--static
--int stv0367_writeregs(struct stv0367_state *state, u16 reg, u8 *data, int len)
-+static noinline_for_stack
-+int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
- {
--	u8 buf[MAX_XFER_SIZE];
-+	u8 buf[3] = { MSB(reg), LSB(reg), data };
- 	struct i2c_msg msg = {
- 		.addr = state->config->demod_address,
- 		.flags = 0,
- 		.buf = buf,
--		.len = len + 2
-+		.len = 3,
+diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
+index 2d3203d3daeb3..90f39bfe8050e 100644
+--- a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
++++ b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
+@@ -119,10 +119,10 @@ enum mem_use_type {
+ struct hpd_status {
+ 	union {
+ 		struct {
+-			u32 human_presence_report : 4;
+-			u32 human_presence_actual : 4;
+-			u32 probablity		  : 8;
+ 			u32 object_distance       : 16;
++			u32 probablity		  : 8;
++			u32 human_presence_actual : 4;
++			u32 human_presence_report : 4;
+ 		} shpd;
+ 		u32 val;
  	};
- 	int ret;
- 
--	if (2 + len > sizeof(buf)) {
--		printk(KERN_WARNING
--		       "%s: i2c wr reg=%04x: len=%d is too big!\n",
--		       KBUILD_MODNAME, reg, len);
--		return -EINVAL;
--	}
--
--
--	buf[0] = MSB(reg);
--	buf[1] = LSB(reg);
--	memcpy(buf + 2, data, len);
--
- 	if (i2cdebug)
- 		printk(KERN_DEBUG "%s: [%02x] %02x: %02x\n", __func__,
--			state->config->demod_address, reg, buf[2]);
-+			state->config->demod_address, reg, data);
- 
- 	ret = i2c_transfer(state->i2c, &msg, 1);
- 	if (ret != 1)
- 		printk(KERN_ERR "%s: i2c write error! ([%02x] %02x: %02x)\n",
--			__func__, state->config->demod_address, reg, buf[2]);
-+			__func__, state->config->demod_address, reg, data);
- 
- 	return (ret != 1) ? -EREMOTEIO : 0;
- }
- 
--static int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
--{
--	u8 tmp = data; /* see gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
--
--	return stv0367_writeregs(state, reg, &tmp, 1);
--}
--
--static u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
-+static noinline_for_stack
-+u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
- {
- 	u8 b0[] = { 0, 0 };
- 	u8 b1[] = { 0 };
 -- 
 2.43.0
 
