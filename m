@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8ACE13443B;
-	Sun, 24 Mar 2024 23:04:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54732135A53;
+	Sun, 24 Mar 2024 23:04:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321466; cv=none; b=GCFCjlSXBoulcywsbVpsuvo7zia7eiSaBpzIBNGw/63Xon7KnkacFVKJJ1pgxCTEtl3Akds1CXewoXMBZPQmC+ra4FUoxjZKKoWnd4QvvnnoAHgTlCIRIPSdR6mAmadgHwgaaIiLVBUOi7fKKNxhaRxNQpXPReOuJvlOv6Eb+ss=
+	t=1711321483; cv=none; b=SBUlFn5I4eubFpgVsPTXowG+QbPpltGUSPYKJZulQ2spVDx9fKMIzkqOFS0pn8F1iAudqzkbJxw/riDECQJ3lOfmD6m4e1016PUgOtedOYkaqcyr2/ZsFwiZg+QE6azXenol3lGLDrDaza6Cw5oO9EcpdaU10iI/uqYPUYm9ifs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321466; c=relaxed/simple;
-	bh=ihf/gRh8V3eyFigSVCgEiwUDfiQkJZ0pUrLWekgm6JU=;
+	s=arc-20240116; t=1711321483; c=relaxed/simple;
+	bh=dX+p9aq8ZTnlef2Gmg+V8hnuIMD3+xTYM25f1+TPgKM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GMPAg4E/jYbV+VvtO6p6zAy0bjUGYzN68vDzRWHjgUhosR6obiZJIceFqeLlR+vJXCX80MjRLEv5UEjmlDjjx8do29pANnzMyt5+LPvBGjFwi23OaNu+s4pbksENWw8r6H9CrcCWqc3R8J/jjgr9Nq08MH349Slp9fQH828eeQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dMxkfvMG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Z49Mbs3uzpQFR9r9dQWYD54SVuhrgFgXqgCOS/Rf7gCbAFwQTUT/rPP5SRHECmRQ4ZLuuoiGPqQJpH6eeZA6RKtM22+u24cB6OcEYT73Nk5j1ZoObUK3PskrEmYJ1mui498UdzqGdRdmD56I1KxahpaFSaqScLiAwv8K4H6wr2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8PUPWWI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dMxkfvMG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19F00C43394;
-	Sun, 24 Mar 2024 23:04:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8PUPWWI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AFEAC43394;
+	Sun, 24 Mar 2024 23:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321464;
-	bh=ihf/gRh8V3eyFigSVCgEiwUDfiQkJZ0pUrLWekgm6JU=;
+	s=k20201202; t=1711321482;
+	bh=dX+p9aq8ZTnlef2Gmg+V8hnuIMD3+xTYM25f1+TPgKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dMxkfvMG95zJPuBKeTV8Jmuc/SIi1dliw78lmhfAQt+l/k2E7W1RYrneaYqM0lTQA
-	 2gsWa4jyPg5GqLHK2acT8nO8WEfh7MqprwBpQAHAJ1RF9tQ/BWH6M7K+k0tfD5UuJQ
-	 E+C9YjPrI534HdvULd7Jh67V6eHTPd1O4Xyq9wc4a1OkPpQ7sqskrL+RhOt4KlPk5j
-	 /EWebOWoSsXNL00AQVDoDLx5rjjO+325QjuvqGj26utjPyowFiGxT9QczvAcJDajJI
-	 3JgbRWDjW89mbiN1mtOko5PI941xVECb8EykhBcw1ymBUZU2Q55gkAWMx7f/Q4L6Xv
-	 UDdJn9dtX+WCg==
+	b=m8PUPWWIxxlGcJJ76Zrc2KJfcaewwYfgdrISopj1VjOQTzUI/n4Yd82noVX89PaU2
+	 5Q9Z2NehmqDaII7rRqF+Z8wQULSDrAyBgsEsNIk7a9tTgP8EgcwES+1mX1Ma2HaLG2
+	 uDNjM1fMC/wYXhz8KxAVniT9Yv2/v8g0fmGXsRiBA/Qzv4v5gGrHtDvI0e8IAA3+6l
+	 epE2iB/bpltykSqLiBFznk76PyWp1JHbKTP63nHWF7WoHDxhv0pFe/vDQuDRT+WRTu
+	 Y7q27rciwAERXzd4PI65W1cKlmreduaiZtTbJGIrn5rpYtO4Kp/x88pe40YgbgtbYQ
+	 i7Fwd3nNgzG5g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 189/638] arm64: dts: qcom: sm6115: declare VLS CLAMP register for USB3 PHY
-Date: Sun, 24 Mar 2024 18:53:46 -0400
-Message-ID: <20240324230116.1348576-190-sashal@kernel.org>
+Subject: [PATCH 6.6 207/638] arm64: dts: mediatek: mt7986: fix SPI bus width properties
+Date: Sun, 24 Mar 2024 18:54:04 -0400
+Message-ID: <20240324230116.1348576-208-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -45,52 +45,62 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+From: Rafał Miłecki <rafal@milecki.pl>
 
-[ Upstream commit 95d739ed962c9aaa17d77b739606dbdf31879f6e ]
+[ Upstream commit 4e7dc18a753cec130b06f1ddbae10ea9dcfb1723 ]
 
-The USB3 PHY on the SM6115 platform doesn't have built-in
-PCS_MISC_CLAMP_ENABLE register. Instead clamping is handled separately
-via the register in the TCSR space. Declare corresponding register.
+This fixes SPI setup and resolves following validation errors:
+arch/arm64/boot/dts/mediatek/mt7986a-rfb.dtb: spi_nand@0: Unevaluated properties are not allowed ('spi-rx-buswidth', 'spi-tx-buswidth' were unexpected)
+        from schema $id: http://devicetree.org/schemas/mtd/spi-nand.yaml#
+arch/arm64/boot/dts/mediatek/mt7986b-rfb.dtb: spi_nand@0: Unevaluated properties are not allowed ('spi-rx-buswidth', 'spi-tx-buswidth' were unexpected)
+        from schema $id: http://devicetree.org/schemas/mtd/spi-nand.yaml#
 
-Fixes: 9dd5f6dba729 ("arm64: dts: qcom: sm6115: Add USB SS qmp phy node")
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20240117-usbc-phy-vls-clamp-v2-6-a950c223f10f@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Fixes: 885e153ed7c1 ("arm64: dts: mt7986: add spi related device nodes")
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://lore.kernel.org/r/20231116130952.5099-1-zajec5@gmail.com
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm6115.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts | 4 ++--
+ arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm6115.dtsi b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-index 839c603512403..87cbc4e8b1ed5 100644
---- a/arch/arm64/boot/dts/qcom/sm6115.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-@@ -591,6 +591,11 @@ tcsr_mutex: hwlock@340000 {
- 			#hwlock-cells = <1>;
- 		};
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+index 3ef371ca254e8..bcb3ebb85d708 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+@@ -241,8 +241,8 @@ spi_nand: spi_nand@0 {
+ 		compatible = "spi-nand";
+ 		reg = <0>;
+ 		spi-max-frequency = <10000000>;
+-		spi-tx-buswidth = <4>;
+-		spi-rx-buswidth = <4>;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
+ 	};
+ };
  
-+		tcsr_regs: syscon@3c0000 {
-+			compatible = "qcom,sm6115-tcsr", "syscon";
-+			reg = <0x0 0x003c0000 0x0 0x40000>;
-+		};
-+
- 		tlmm: pinctrl@500000 {
- 			compatible = "qcom,sm6115-tlmm";
- 			reg = <0x0 0x00500000 0x0 0x400000>,
-@@ -856,6 +861,8 @@ usb_qmpphy: phy@1615000 {
- 
- 			#phy-cells = <0>;
- 
-+			qcom,tcsr-reg = <&tcsr_regs 0xb244>;
-+
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
+index dde190442e386..48fe50e671779 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
+@@ -156,8 +156,8 @@ spi_nand: spi_nand@0 {
+ 		compatible = "spi-nand";
+ 		reg = <0>;
+ 		spi-max-frequency = <10000000>;
+-		spi-tx-buswidth = <4>;
+-		spi-rx-buswidth = <4>;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
+ 	};
+ };
  
 -- 
 2.43.0
