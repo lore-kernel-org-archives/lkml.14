@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02381F23D1;
-	Sun, 24 Mar 2024 22:58:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E353B1F23EF;
+	Sun, 24 Mar 2024 22:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321100; cv=none; b=iMJh2VPc+IxiqqW8EiD23ha2tyCAh/TkPq0a5NqLzvtb4dDWHg1yN4ec5GQJswb79eCUpg36BaAtDn5aetbWUGPzrqN8WB+kafbKj9k3f+fdnQIHBjQCr8oZnBGkb0Ojb6D9HS7ljfGH/4jWnzLBVs6qkXdW89gZztuxqUHrJyg=
+	t=1711321108; cv=none; b=u8se+M1a8VAMTGMG+INUaglb4/ZFcDP03BDSAqGvHARsEXuooMeJ1eS8ylH0XTyLcG/Su0j10t9t0tqj+9O3fvwLLOg/NVrmh0qLt7VcdD4XjH9hRN+u56ra3Ic39mL3+EHE1jh1+bhBJfenRL7coNwR7MW4scXTOxfnvqsxlLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321100; c=relaxed/simple;
-	bh=ZjUelpK2MlEkhA8wIrH2eTQ/w8hCnT9RUn9ispmQ7Cs=;
+	s=arc-20240116; t=1711321108; c=relaxed/simple;
+	bh=9yc9RzzNYFFCXj9TA2BrTsYbnJHVTSRf/XwLJhzcGW8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Dk8OCPxv2Izt5pqLJOdHKIXWm4+QymXWgJz0RPLdMxFJLgV3mzkJQ3q4L4LcdpukmDURsOIpELCKKEXFogq5Hvp1mqJcDRGQ/ymOnfPBifSSfnATMURk3XS1GW3LRwGzmW/4b/kU84Y5+eCw2JyQOVha4o3elR67dx3RAppDHXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M9s6otck; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=t2rWOzegf2To3wGDlh2cJdkWh7AZCO4wfoW0NMlKqQyZrEFkWeZpZm1n4+ebYQ+eg4jtQtQtauZqsXJYdtl42HtnNDoRVJmR1Jd93RFnwFL4eZNAPVeA3nYLLse2hZtnUvMYR1MgSaDgsS77xePkl1fpNaPpgEXJYQ4lZU1Emy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlzCmjPL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M9s6otck"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22258C43390;
-	Sun, 24 Mar 2024 22:58:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlzCmjPL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C916C43399;
+	Sun, 24 Mar 2024 22:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321099;
-	bh=ZjUelpK2MlEkhA8wIrH2eTQ/w8hCnT9RUn9ispmQ7Cs=;
+	s=k20201202; t=1711321107;
+	bh=9yc9RzzNYFFCXj9TA2BrTsYbnJHVTSRf/XwLJhzcGW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M9s6otckyoiG66kUp3RkjJt8TfGKshn+1eIgO0OTLCMso1f5Y6jga8mhsL/7FsqNq
-	 KysJ7wQ/S+ush3orMiu+8jhDeWefjXVsGnowuXzC1jI0tYCFV09Z3+Mu+N/OAuhvjc
-	 ectZWUJVC8mihPoIqPbpsI55FSNsPq7QiZwarxvdll8cGfwyi7EdiGE9ewbXsoj5KM
-	 rqJbtMxAaljv9aejx2cbr9xX8rHupwGpgDMURqdOHef/Wsf6pJ2hemzijNDSmiOPHi
-	 w40IHkvIWiOmsujuVeLkSgj3AJbfy3Y0SEXq/OGH54+kG6ZvEgwOLbSqWpE5VYHPYK
-	 XkxipDDfvxesw==
+	b=jlzCmjPLsBHQLSwrHQEEi/j4FH0maDyvrWBBt+KnPZm6GJgTroilHuuN3OjYNAeId
+	 ktyeNQIZnP5YeBjx8CnoRHpHVfVlBHftM4fYz6T2EewKReBoVWN3h2N9aeSppo9mI3
+	 UMf94b17/JmjhQ1rw/YyGCLSjQS/PXesjRMnX7oA2yWSvAdL4kaA5oxLrC5W9PVjkG
+	 U0lUW4fYzVQHA05v5k/RsUXxHZfB2g6vf4Xvtw6ddNmUgjqLp5xAfyLmkOUQXIwZDd
+	 Jgw1bpP4VloFC3I3pX1+CCi6IbA7ngcgpkRBRDejV0hIb3Q0cMfciqbbJvsFTfPB9z
+	 AnZvACrPK/Qxg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shigeru Yoshida <syoshida@redhat.com>,
-	syzbot+2ef3a8ce8e91b5a50098@syzkaller.appspotmail.com,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Juergen Gross <jgross@suse.com>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 662/713] hsr: Fix uninit-value access in hsr_get_node()
-Date: Sun, 24 Mar 2024 18:46:28 -0400
-Message-ID: <20240324224720.1345309-663-sashal@kernel.org>
+Subject: [PATCH 6.7 670/713] xen/events: increment refcnt only if event channel is refcounted
+Date: Sun, 24 Mar 2024 18:46:36 -0400
+Message-ID: <20240324224720.1345309-671-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,96 +48,113 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Shigeru Yoshida <syoshida@redhat.com>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit ddbec99f58571301679addbc022256970ca3eac6 ]
+[ Upstream commit d277f9d82802223f242cd9b60c988cfdda1d6be0 ]
 
-KMSAN reported the following uninit-value access issue [1]:
+In bind_evtchn_to_irq_chip() don't increment the refcnt of the event
+channel blindly. In case the event channel is NOT refcounted, issue a
+warning instead.
 
-=====================================================
-BUG: KMSAN: uninit-value in hsr_get_node+0xa2e/0xa40 net/hsr/hsr_framereg.c:246
- hsr_get_node+0xa2e/0xa40 net/hsr/hsr_framereg.c:246
- fill_frame_info net/hsr/hsr_forward.c:577 [inline]
- hsr_forward_skb+0xe12/0x30e0 net/hsr/hsr_forward.c:615
- hsr_dev_xmit+0x1a1/0x270 net/hsr/hsr_device.c:223
- __netdev_start_xmit include/linux/netdevice.h:4940 [inline]
- netdev_start_xmit include/linux/netdevice.h:4954 [inline]
- xmit_one net/core/dev.c:3548 [inline]
- dev_hard_start_xmit+0x247/0xa10 net/core/dev.c:3564
- __dev_queue_xmit+0x33b8/0x5130 net/core/dev.c:4349
- dev_queue_xmit include/linux/netdevice.h:3134 [inline]
- packet_xmit+0x9c/0x6b0 net/packet/af_packet.c:276
- packet_snd net/packet/af_packet.c:3087 [inline]
- packet_sendmsg+0x8b1d/0x9f30 net/packet/af_packet.c:3119
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- __sys_sendto+0x735/0xa10 net/socket.c:2191
- __do_sys_sendto net/socket.c:2203 [inline]
- __se_sys_sendto net/socket.c:2199 [inline]
- __x64_sys_sendto+0x125/0x1c0 net/socket.c:2199
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
+Add an additional safety net by doing the refcnt increment only if the
+caller has specified IRQF_SHARED in the irqflags parameter.
 
-Uninit was created at:
- slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
- slab_alloc_node mm/slub.c:3478 [inline]
- kmem_cache_alloc_node+0x5e9/0xb10 mm/slub.c:3523
- kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:560
- __alloc_skb+0x318/0x740 net/core/skbuff.c:651
- alloc_skb include/linux/skbuff.h:1286 [inline]
- alloc_skb_with_frags+0xc8/0xbd0 net/core/skbuff.c:6334
- sock_alloc_send_pskb+0xa80/0xbf0 net/core/sock.c:2787
- packet_alloc_skb net/packet/af_packet.c:2936 [inline]
- packet_snd net/packet/af_packet.c:3030 [inline]
- packet_sendmsg+0x70e8/0x9f30 net/packet/af_packet.c:3119
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- __sys_sendto+0x735/0xa10 net/socket.c:2191
- __do_sys_sendto net/socket.c:2203 [inline]
- __se_sys_sendto net/socket.c:2199 [inline]
- __x64_sys_sendto+0x125/0x1c0 net/socket.c:2199
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-CPU: 1 PID: 5033 Comm: syz-executor334 Not tainted 6.7.0-syzkaller-00562-g9f8413c4a66f #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-=====================================================
-
-If the packet type ID field in the Ethernet header is either ETH_P_PRP or
-ETH_P_HSR, but it is not followed by an HSR tag, hsr_get_skb_sequence_nr()
-reads an invalid value as a sequence number. This causes the above issue.
-
-This patch fixes the issue by returning NULL if the Ethernet header is not
-followed by an HSR tag.
-
-Fixes: f266a683a480 ("net/hsr: Better frame dispatch")
-Reported-and-tested-by: syzbot+2ef3a8ce8e91b5a50098@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=2ef3a8ce8e91b5a50098 [1]
-Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
-Link: https://lore.kernel.org/r/20240312152719.724530-1-syoshida@redhat.com
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: 9e90e58c11b7 ("xen: evtchn: Allow shared registration of IRQ handers")
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Link: https://lore.kernel.org/r/20240313071409.25913-3-jgross@suse.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/hsr/hsr_framereg.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/xen/events/events_base.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
-index 6d14d935ee828..26329db09210b 100644
---- a/net/hsr/hsr_framereg.c
-+++ b/net/hsr/hsr_framereg.c
-@@ -228,6 +228,10 @@ struct hsr_node *hsr_get_node(struct hsr_port *port, struct list_head *node_db,
- 	 */
- 	if (ethhdr->h_proto == htons(ETH_P_PRP) ||
- 	    ethhdr->h_proto == htons(ETH_P_HSR)) {
-+		/* Check if skb contains hsr_ethhdr */
-+		if (skb->mac_len < sizeof(struct hsr_ethhdr))
-+			return NULL;
-+
- 		/* Use the existing sequence_nr from the tag as starting point
- 		 * for filtering duplicate frames.
+diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+index 3b9f080109d7e..27553673e46bc 100644
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -1190,7 +1190,7 @@ int xen_pirq_from_irq(unsigned irq)
+ EXPORT_SYMBOL_GPL(xen_pirq_from_irq);
+ 
+ static int bind_evtchn_to_irq_chip(evtchn_port_t evtchn, struct irq_chip *chip,
+-				   struct xenbus_device *dev)
++				   struct xenbus_device *dev, bool shared)
+ {
+ 	int ret = -ENOMEM;
+ 	struct irq_info *info;
+@@ -1224,7 +1224,8 @@ static int bind_evtchn_to_irq_chip(evtchn_port_t evtchn, struct irq_chip *chip,
  		 */
+ 		bind_evtchn_to_cpu(info, 0, false);
+ 	} else if (!WARN_ON(info->type != IRQT_EVTCHN)) {
+-		info->refcnt++;
++		if (shared && !WARN_ON(info->refcnt < 0))
++			info->refcnt++;
+ 	}
+ 
+ 	ret = info->irq;
+@@ -1237,13 +1238,13 @@ static int bind_evtchn_to_irq_chip(evtchn_port_t evtchn, struct irq_chip *chip,
+ 
+ int bind_evtchn_to_irq(evtchn_port_t evtchn)
+ {
+-	return bind_evtchn_to_irq_chip(evtchn, &xen_dynamic_chip, NULL);
++	return bind_evtchn_to_irq_chip(evtchn, &xen_dynamic_chip, NULL, false);
+ }
+ EXPORT_SYMBOL_GPL(bind_evtchn_to_irq);
+ 
+ int bind_evtchn_to_irq_lateeoi(evtchn_port_t evtchn)
+ {
+-	return bind_evtchn_to_irq_chip(evtchn, &xen_lateeoi_chip, NULL);
++	return bind_evtchn_to_irq_chip(evtchn, &xen_lateeoi_chip, NULL, false);
+ }
+ EXPORT_SYMBOL_GPL(bind_evtchn_to_irq_lateeoi);
+ 
+@@ -1295,7 +1296,8 @@ static int bind_ipi_to_irq(unsigned int ipi, unsigned int cpu)
+ 
+ static int bind_interdomain_evtchn_to_irq_chip(struct xenbus_device *dev,
+ 					       evtchn_port_t remote_port,
+-					       struct irq_chip *chip)
++					       struct irq_chip *chip,
++					       bool shared)
+ {
+ 	struct evtchn_bind_interdomain bind_interdomain;
+ 	int err;
+@@ -1307,14 +1309,14 @@ static int bind_interdomain_evtchn_to_irq_chip(struct xenbus_device *dev,
+ 					  &bind_interdomain);
+ 
+ 	return err ? : bind_evtchn_to_irq_chip(bind_interdomain.local_port,
+-					       chip, dev);
++					       chip, dev, shared);
+ }
+ 
+ int bind_interdomain_evtchn_to_irq_lateeoi(struct xenbus_device *dev,
+ 					   evtchn_port_t remote_port)
+ {
+ 	return bind_interdomain_evtchn_to_irq_chip(dev, remote_port,
+-						   &xen_lateeoi_chip);
++						   &xen_lateeoi_chip, false);
+ }
+ EXPORT_SYMBOL_GPL(bind_interdomain_evtchn_to_irq_lateeoi);
+ 
+@@ -1430,7 +1432,8 @@ static int bind_evtchn_to_irqhandler_chip(evtchn_port_t evtchn,
+ {
+ 	int irq, retval;
+ 
+-	irq = bind_evtchn_to_irq_chip(evtchn, chip, NULL);
++	irq = bind_evtchn_to_irq_chip(evtchn, chip, NULL,
++				      irqflags & IRQF_SHARED);
+ 	if (irq < 0)
+ 		return irq;
+ 	retval = request_irq(irq, handler, irqflags, devname, dev_id);
+@@ -1471,7 +1474,8 @@ static int bind_interdomain_evtchn_to_irqhandler_chip(
+ {
+ 	int irq, retval;
+ 
+-	irq = bind_interdomain_evtchn_to_irq_chip(dev, remote_port, chip);
++	irq = bind_interdomain_evtchn_to_irq_chip(dev, remote_port, chip,
++						  irqflags & IRQF_SHARED);
+ 	if (irq < 0)
+ 		return irq;
+ 
 -- 
 2.43.0
 
