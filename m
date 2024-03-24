@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BD18002D;
-	Sun, 24 Mar 2024 22:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2617FBDC;
+	Sun, 24 Mar 2024 22:48:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320507; cv=none; b=eUdQZ9Tuv4fpjh9Irm0zIU7KlAU0wwYTpKNkBeHR9KdUd4d9OPMsu93ulY3Y2Buu0FLpMvcyO7Xcg7G+/Ljnobe0xh8VKtOck3p3MC5Ajmyb+skaRjNbGuArJdpQr7jg/rwrkXknTfh0SgLVo8K9UgIwueVCqi8abC6m09wDrxQ=
+	t=1711320501; cv=none; b=smNlBQRUSndkz94EWwzVzdKpBVQcz0PfZJgthK2RuNGAUCwtBKoPzks63lvcYpCl1+yP2f23Wh0YMSRvejzH0FqNBv+8n5cUR07vN8eeT4krgXWf1xWDJ4f4Zjy7KO6zWjXU17WfYFDau0FlbRrUcIAFhyiy5yNoQo53WVf1gIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320507; c=relaxed/simple;
-	bh=CIckCfCvElbP7qNZyEFS868bjqgWhDCd+IzI7ldl7Hg=;
+	s=arc-20240116; t=1711320501; c=relaxed/simple;
+	bh=qExPU8C2HXd+ID3W+ZzNQdWxRTKsDvz5q7M7trnFqHc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tSUHL9v/FHK13MY88jZIt1u5ZItYQlRb0Mu5QakCtJPugCTMlR0yMgbxZ8oFLg6B2Ue+QZtgjucFcDcGk5orRwQLxy+gG1fUUVOxx7aK9Y+B/Q5Z1RGac+yTj3TXH5IzIMShfC2OmZzt3+rV2wMKWPGeYHd3RGbllvs85oRZJkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1qsPxTe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CAHx175tClX4ET0TP4l3VLkDnsSPu1pME5kmREQIgeKRn30XwyH7qZXzl0y/Ni1TN+jtskiSwb71mjT4Woj4bN0qCJiY4AUhbxvEZXvlXC0EsXutTgwOkpBe8yk3nHaobdmsVw+eehe1pp4Gh1rY0W5Di7UkHLXv6Ip02kL4lmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BA02QO19; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1qsPxTe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A5C2C433C7;
-	Sun, 24 Mar 2024 22:48:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BA02QO19"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E43F2C43390;
+	Sun, 24 Mar 2024 22:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320507;
-	bh=CIckCfCvElbP7qNZyEFS868bjqgWhDCd+IzI7ldl7Hg=;
+	s=k20201202; t=1711320501;
+	bh=qExPU8C2HXd+ID3W+ZzNQdWxRTKsDvz5q7M7trnFqHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u1qsPxTeJdpdTOr57F4JhGP3GGhQbE7SJCQ/zIys+dN0O2Z7jsDJCkefo81fmI/h2
-	 AbIC5NTO9eaJ3pKsBQnzlqFu6dvWcd4fdVp/fAUmKJefyg7hK/1LhpmAjIt+LYh8Ee
-	 Ff6yM6PDbg3YWDcEdNboGjrRO7uqaZuiMtse/+En1mvMQ62jdInoLwj6QYONZqr3U6
-	 Wo3wtj0ueXkWzhS6UCli0itKXL/7qPv+Sdc6EUSx/oOmHCIzrVtGXypnte+NCktnwE
-	 JLQ1VFFXqFNOlDd6HxAvJXpFEyIsincNgrenoJQraz8n1+UxirlGld8FJFfHGixrM+
-	 brNRnHyUwNm0w==
+	b=BA02QO19CQDpfwbE9OLKCDWQHOhyvsiuEAyfORKGQZMaV6/0bIbj9rrZtiTlB+rF6
+	 owVGF+s3zOAxeXV+Uz1EFrZgXKAqhaocTkZriti0M8rQ8ud0r1blEFkrvzb1usAhgA
+	 L+UwtP8jI1nfs1dgwWxhI3pEyDpwmkq6JUEP7FrSTm80tVmheBT5+TPUyZdaSf608i
+	 xWaSWQxS1t+v6bLrKGYdFEtImuVthB6NKd5AUE/EOgR26WSK7IViBhJbGfom6kN7wB
+	 D+HA1ruUuLDx9GQRDwlhPXlEdpSuGTIlfWrpEWzvAIAPYMxq2OaFYGvCPVO0zTuKj8
+	 GVoHAFBoZF8Dw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Adam Goldman <adamg@pobox.com>,
+Cc: Kailang Yang <kailang@realtek.com>,
+	Takashi Iwai <tiwai@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 067/713] firewire: core: use long bus reset on gap count error
-Date: Sun, 24 Mar 2024 18:36:33 -0400
-Message-ID: <20240324224720.1345309-68-sashal@kernel.org>
+Subject: [PATCH 6.7 061/713] ALSA: hda/realtek - ALC285 reduce pop noise from Headphone port
+Date: Sun, 24 Mar 2024 18:36:27 -0400
+Message-ID: <20240324224720.1345309-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,63 +48,33 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Kailang Yang <kailang@realtek.com>
 
-[ Upstream commit d0b06dc48fb15902d7da09c5c0861e7f042a9381 ]
+[ Upstream commit b34bf65838f7c6e785f62681605a538b73c2808c ]
 
-When resetting the bus after a gap count error, use a long rather than
-short bus reset.
+It had pop noise from Headphone port when system reboot state.
+If NID 58h Index 0x0 to fill default value, it will reduce pop noise.
 
-IEEE 1394-1995 uses only long bus resets. IEEE 1394a adds the option of
-short bus resets. When video or audio transmission is in progress and a
-device is hot-plugged elsewhere on the bus, the resulting bus reset can
-cause video frame drops or audio dropouts. Short bus resets reduce or
-eliminate this problem. Accordingly, short bus resets are almost always
-preferred.
-
-However, on a mixed 1394/1394a bus, a short bus reset can trigger an
-immediate additional bus reset. This double bus reset can be interpreted
-differently by different nodes on the bus, resulting in an inconsistent gap
-count after the bus reset. An inconsistent gap count will cause another bus
-reset, leading to a neverending bus reset loop. This only happens for some
-bus topologies, not for all mixed 1394/1394a buses.
-
-By instead sending a long bus reset after a gap count inconsistency, we
-avoid the doubled bus reset, restoring the bus to normal operation.
-
-Signed-off-by: Adam Goldman <adamg@pobox.com>
-Link: https://sourceforge.net/p/linux1394/mailman/message/58741624/
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Link: https://lore.kernel.org/r/7493e207919a4fb3a0599324fd010e3e@realtek.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firewire/core-card.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firewire/core-card.c b/drivers/firewire/core-card.c
-index 8aaa7fcb2630d..401a77e3b5fa8 100644
---- a/drivers/firewire/core-card.c
-+++ b/drivers/firewire/core-card.c
-@@ -500,7 +500,19 @@ static void bm_work(struct work_struct *work)
- 		fw_notice(card, "phy config: new root=%x, gap_count=%d\n",
- 			  new_root_id, gap_count);
- 		fw_send_phy_config(card, new_root_id, generation, gap_count);
--		reset_bus(card, true);
-+		/*
-+		 * Where possible, use a short bus reset to minimize
-+		 * disruption to isochronous transfers. But in the event
-+		 * of a gap count inconsistency, use a long bus reset.
-+		 *
-+		 * As noted in 1394a 8.4.6.2, nodes on a mixed 1394/1394a bus
-+		 * may set different gap counts after a bus reset. On a mixed
-+		 * 1394/1394a bus, a short bus reset can get doubled. Some
-+		 * nodes may treat the double reset as one bus reset and others
-+		 * may treat it as two, causing a gap count inconsistency
-+		 * again. Using a long bus reset prevents this.
-+		 */
-+		reset_bus(card, card->gap_count != 0);
- 		/* Will allocate broadcast channel after the reset. */
- 		goto out;
- 	}
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index eb45e5c3db8c6..ebde2ea8fa812 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -3684,6 +3684,7 @@ static void alc285_hp_init(struct hda_codec *codec)
+ 	int i, val;
+ 	int coef38, coef0d, coef36;
+ 
++	alc_write_coefex_idx(codec, 0x58, 0x00, 0x1888); /* write default value */
+ 	alc_update_coef_idx(codec, 0x4a, 1<<15, 1<<15); /* Reset HP JD */
+ 	coef38 = alc_read_coef_idx(codec, 0x38); /* Amp control */
+ 	coef0d = alc_read_coef_idx(codec, 0x0d); /* Digital Misc control */
 -- 
 2.43.0
 
