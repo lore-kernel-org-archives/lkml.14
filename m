@@ -1,45 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556DE1FD5BF;
-	Sun, 24 Mar 2024 23:16:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C59A22F8D5;
+	Sun, 24 Mar 2024 23:16:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322209; cv=none; b=CqpP853XPfcSQGH7/kKBjtVooK+nMe2nfTcxGLvr0tf7LHbrERxmYhOYpT4u0AkRkgw952sB/2wdWBe/1jmD1vFJ9guA9L3UPf5j4srOcc7UQCchvPVD4iBYD8dYfk6PW5h+aXqQqctKSIB2TNRIgruBRuw7hnS7MFlO1QUxoUM=
+	t=1711322215; cv=none; b=UTAF1AnmosptfNQMwuAX7EMvk+0KwxIHEkJpUOYaJkariJ+dFV91jigVL5R1FdYSKXTeKknWIIgu5O7dAMsL3eKHUOM6z75vRllW/GitFTki09CwITWhjaM6zknE2WA5HlW/ubANz7SgoyJH2MjwnQZQxeype2ba8rBNqk4lSGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322209; c=relaxed/simple;
-	bh=3Jooysg2d7dUW3AZXTUrMFQ11QszUv+fKMskEuERJz0=;
+	s=arc-20240116; t=1711322215; c=relaxed/simple;
+	bh=6/TKhYAWFLjY1q5mVhCWhWF3ca2KGgT9UOud7UTcL94=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p0xigfLXJOnhCkiML5XqiDQ5+qBaeZopzx/6rD6Y15ys6GFvwsR0kw+Q7gO5JuGeckX7BuP7q3UmqKgkm2qshSooom69F4w4cBC7t5JhmUfULLyWuiNg3HvMmi8XuWbodAZGYoBMW4SMRVqlhcKgLl8LvsXJqQ9751xPCnEWWmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QI1TASP/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OLfMxX5WKQ6EVy7Eo+NeYsAtb1LqJ7q6M3beQ26hflzV9bMGBafCKSoOuT2Wp7RlKbuvCbioFQvTe8CylaFrTAEky+hgmgm0CpUmqHUR9v/NrasNposCg31ACbjUgxHqdb6D0RM1o8UQPZnbYCX8S88Cw13Dk7FX4frU4ReDDWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JgBwFWEF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QI1TASP/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2097AC433C7;
-	Sun, 24 Mar 2024 23:16:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JgBwFWEF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9400C433C7;
+	Sun, 24 Mar 2024 23:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322208;
-	bh=3Jooysg2d7dUW3AZXTUrMFQ11QszUv+fKMskEuERJz0=;
+	s=k20201202; t=1711322214;
+	bh=6/TKhYAWFLjY1q5mVhCWhWF3ca2KGgT9UOud7UTcL94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QI1TASP/iQbggKpA912jHpjwP05ZmVQt7h0n6S+jl7wKEEzAerBb/M3oqCIn4Qcbn
-	 Dp0TObQCD0qTFx+DeRX2528u7Rzdcay+R8jaU4N6XApwGsWFiMSfDJpv7bwiBMgPWd
-	 qv3WN0IB6Zr8mi4o/GdZ4he2mSidZIUxVQjS3r4uMD7ORMeeZcuVhsN7ddimHILGMq
-	 3+yEth31oqyiMU3I+oRYwKFZhc4UP2kQBCOR4Cp7qYVBtqJ6sxCOgCNCpfTckdSn1o
-	 0FK4ChtDtwc5UvSX2p91WoLKaNkPCbldKrmx0JsTHs/eeo/1+fCZrfP2UBySpC9PwB
-	 J0GhbrwoRVrSQ==
+	b=JgBwFWEFtQ7I58mLgmVHeoSRUP+uoUe6NTypo1I1l56zslx5yUFPfPOxPhtkjSvwF
+	 0jFarhfgenYH5xKF3DUsCWarcOuvIUk8dedCZQWQ2gMMMq9k5ATQuGBZNyM3C7g3Ba
+	 9fqhxh7eVRzHjI9ZpCL/EhuQxOvZUiCxc0VfGGvvpfUkWyDEn0lo6KF/p/GC6JuHtT
+	 lcIr35ARIbtbdolNN15oBXBs/UiNc/A/FakJKTGeXJiKQiJ9d2PY5IlUiloH5Dd78U
+	 Zbyt4i5FFl8glWqHNJp4C+dTlWLmiJNmxbpLPavFEjH6kBseQZAxcRkOeshs3bFGtC
+	 t9N0NxZXtn8Cw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	James Clark <james.clark@arm.com>,
-	Kaige Ye <ye@kaige.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: ruanjinjie <ruanjinjie@huawei.com>,
+	Jon Mason <jdmason@kudzu.us>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 288/451] perf stat: Avoid metric-only segv
-Date: Sun, 24 Mar 2024 19:09:24 -0400
-Message-ID: <20240324231207.1351418-289-sashal@kernel.org>
+Subject: [PATCH 6.1 294/451] NTB: EPF: fix possible memory leak in pci_vntb_probe()
+Date: Sun, 24 Mar 2024 19:09:30 -0400
+Message-ID: <20240324231207.1351418-295-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -53,39 +48,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ian Rogers <irogers@google.com>
+From: ruanjinjie <ruanjinjie@huawei.com>
 
-[ Upstream commit 2543947c77e0e224bda86b4e7220c2f6714da463 ]
+[ Upstream commit 956578e3d397e00d6254dc7b5194d28587f98518 ]
 
-Cycles is recognized as part of a hard coded metric in stat-shadow.c,
-it may call print_metric_only with a NULL fmt string leading to a
-segfault. Handle the NULL fmt explicitly.
+As ntb_register_device() don't handle error of device_register(),
+if ntb_register_device() returns error in pci_vntb_probe(), name of kobject
+which is allocated in dev_set_name() called in device_add() is leaked.
 
-Fixes: 088519f318be ("perf stat: Move the display functions to stat-display.c")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Kaige Ye <ye@kaige.org>
-Cc: John Garry <john.g.garry@oracle.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240209204947.3873294-4-irogers@google.com
+As comment of device_add() says, it should call put_device() to drop the
+reference count that was set in device_initialize()
+when it fails, so the name can be freed in kobject_cleanup().
+
+Signed-off-by: ruanjinjie <ruanjinjie@huawei.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Stable-dep-of: aebfdfe39b93 ("NTB: fix possible name leak in ntb_register_device()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/stat-display.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index bc866d18973e4..ef9a3df459657 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -366,7 +366,7 @@ static void print_metric_only(struct perf_stat_config *config,
- 	if (color)
- 		mlen += strlen(color) + sizeof(PERF_COLOR_RESET) - 1;
+diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+index 8c6931210ac4d..cd985a41c8d65 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+@@ -1288,6 +1288,7 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
  
--	color_snprintf(str, sizeof(str), color ?: "", fmt, val);
-+	color_snprintf(str, sizeof(str), color ?: "", fmt ?: "", val);
- 	fprintf(out, "%*s ", mlen, str);
+ err_register_dev:
++	put_device(&ndev->ntb.dev);
+ 	return -EINVAL;
  }
  
 -- 
