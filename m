@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A830C14534E;
-	Sun, 24 Mar 2024 23:13:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DF4145B06;
+	Sun, 24 Mar 2024 23:13:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321995; cv=none; b=t2tqqTTTq9z2O3AtwTYhlC0wMP1yJ0L4UIjQNT2jyKnaC0gLkEmEfCmD/ZblkxGEuv/p36eYla5SRlMFKKRWFsYhlJAeyfJKTybh9MhUvySxMmgVukz6vM1P1LGK1n9ze5niuI2TM97fGHcUe4KyyloHPNJqeaOYB3TI5nx8UZ4=
+	t=1711321998; cv=none; b=LovQtAl38V0xC9FzJ68ENpeVCqU+WZmAL9JkVKTDbnTrj6f+P7Kb2mufvTW5IzHJItsnOs/pLS4xzPbco+Yc7bzCeQR/mz5mtNeb5coK9hpkt43B8TZWvPO2vdMlwcjaNhSkeLHQ/LwaB24mDoKq8Ex42KkYx6SgFP5InUAlGP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321995; c=relaxed/simple;
-	bh=c/8ThzkfXePMKSUnih7WKsu2s/C2H5smRXIfTXnLdnc=;
+	s=arc-20240116; t=1711321998; c=relaxed/simple;
+	bh=aRaLv0aWTnLotsxN5UN9UBm7Px06ZsdF21YYz4MEXPA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Du9e7vv4gmsyGdmBZUd2TZJeBzBlYCMPbDvWt9sMZRXFYTGGWCY3fu7EbW5Ww8VEXi0Qkufuf7i/pxObH15tmmp/NiMUJQmdkWTLJbrMN1opG8CqQ36xuN6t1FbQE7zVdmxE5+JOMVnRcdp7n1SeMNdjxxoAB7NySuEFe1ndxIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cvfg0FNf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RRcRscCIAnD5DTylEAn+0eeo07a0ACy43XFCJfEBlUj1/OL2cTLIXXLmxYuqclmu144JL82tIZk11wXsa4FAPb+hR30rVcEwEjNYwDdzkCCOPVVni/K8wuADG7Z2byti1FtSuvGPU39KMtBkLxjfMQ/QfJbRa4knQlchfjbCjgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=deb9pJ1b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cvfg0FNf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CCB2C43394;
-	Sun, 24 Mar 2024 23:13:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="deb9pJ1b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E46C9C433F1;
+	Sun, 24 Mar 2024 23:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321994;
-	bh=c/8ThzkfXePMKSUnih7WKsu2s/C2H5smRXIfTXnLdnc=;
+	s=k20201202; t=1711321997;
+	bh=aRaLv0aWTnLotsxN5UN9UBm7Px06ZsdF21YYz4MEXPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Cvfg0FNfl+qKRvLQDwVj+hw+wjl4O4hLzxanav+ekWMH84oz4hHd98P3LUYHZ9TQo
-	 dRLdScsejb0xMHbO/bDqu1VTIIvvVXASOUp5Foam8bsJ9DM9l7ORylf0bPw+Gsnz8C
-	 yBuSK4l08UGUcKNkiXcyI7Zl7rLJmm3G57zcA2LJYLHiX1mGg9KWyuOZG/wSrym7TV
-	 PduSKoeUDGFOBG/jnTKuhYOuJAc+tOovK0CB5pFvj+3CQCR3i/PuDjmNthaXZofYhs
-	 N+NEq0er58IBUrNSLmlTMp9BHc28G6q0F6LDUJaMANz+yJefftm6JsJytO19KVjNbm
-	 o9X4UBl8zYHzw==
+	b=deb9pJ1bxjwbAuVo3MJgaXIo3V45jKv0H+PHPrd4l+v0FwW1rEgP+6flG9hJmD1kq
+	 yfuXTOxy8ES7FtdSJ3bOUpUx71k3OLRdPWh1/Se4uG3XZOruRRiqYycRv02xDBQAuo
+	 huvLTKnkWWZqR2ReXgLum7tMWiaMYSYHZlsElzueFq05RFQL5zpPtns+pz0T73h+3x
+	 km/r0VS7dESDN8RdR/DPnp/mHvQ4moEsUmEQPFdM8gbaMQsXDez5Ibhln971RlfDVU
+	 /NQJM3G4d79C6KANIlSVdvltlejZ81x/561h7YOkpk163QsoUmSF2WwIyAPNvU3Pg4
+	 E+Do4LSOA/fQg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Kees Cook <keescook@chromium.org>,
-	Andi Kleen <ak@linux.intel.com>,
-	Jan Kara <jack@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: David Gow <davidgow@google.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Justin Stitt <justinstitt@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 066/451] fs/select: rework stack allocation hack for clang
-Date: Sun, 24 Mar 2024 19:05:42 -0400
-Message-ID: <20240324231207.1351418-67-sashal@kernel.org>
+Subject: [PATCH 6.1 069/451] lib: memcpy_kunit: Fix an invalid format specifier in an assertion msg
+Date: Sun, 24 Mar 2024 19:05:45 -0400
+Message-ID: <20240324231207.1351418-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -51,65 +50,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: David Gow <davidgow@google.com>
 
-[ Upstream commit ddb9fd7a544088ed70eccbb9f85e9cc9952131c1 ]
+[ Upstream commit 0a549ed22c3c7cc6da5c5f5918efd019944489a5 ]
 
-A while ago, we changed the way that select() and poll() preallocate
-a temporary buffer just under the size of the static warning limit of
-1024 bytes, as clang was frequently going slightly above that limit.
+The 'i' passed as an assertion message is a size_t, so should use '%zu',
+not '%d'.
 
-The warnings have recently returned and I took another look. As it turns
-out, clang is not actually inherently worse at reserving stack space,
-it just happens to inline do_select() into core_sys_select(), while gcc
-never inlines it.
+This was found by annotating the _MSG() variants of KUnit's assertions
+to let gcc validate the format strings.
 
-Annotate do_select() to never be inlined and in turn remove the special
-case for the allocation size. This should give the same behavior for
-both clang and gcc all the time and once more avoids those warnings.
-
-Fixes: ad312f95d41c ("fs/select: avoid clang stack usage warning")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20240216202352.2492798-1-arnd@kernel.org
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Fixes: bb95ebbe89a7 ("lib: Introduce CONFIG_MEMCPY_KUNIT_TEST")
+Signed-off-by: David Gow <davidgow@google.com>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/select.c          | 2 +-
- include/linux/poll.h | 4 ----
- 2 files changed, 1 insertion(+), 5 deletions(-)
+ lib/memcpy_kunit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/select.c b/fs/select.c
-index 0ee55af1a55c2..d4d881d439dcd 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -476,7 +476,7 @@ static inline void wait_key_set(poll_table *wait, unsigned long in,
- 		wait->_key |= POLLOUT_SET;
- }
- 
--static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
-+static noinline_for_stack int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
- {
- 	ktime_t expire, *to = NULL;
- 	struct poll_wqueues table;
-diff --git a/include/linux/poll.h b/include/linux/poll.h
-index a9e0e1c2d1f2f..d1ea4f3714a84 100644
---- a/include/linux/poll.h
-+++ b/include/linux/poll.h
-@@ -14,11 +14,7 @@
- 
- /* ~832 bytes of stack space used max in sys_select/sys_poll before allocating
-    additional memory. */
--#ifdef __clang__
--#define MAX_STACK_ALLOC 768
--#else
- #define MAX_STACK_ALLOC 832
--#endif
- #define FRONTEND_STACK_ALLOC	256
- #define SELECT_STACK_ALLOC	FRONTEND_STACK_ALLOC
- #define POLL_STACK_ALLOC	FRONTEND_STACK_ALLOC
+diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+index 2b5cc70ac53fc..dbedd99aa6163 100644
+--- a/lib/memcpy_kunit.c
++++ b/lib/memcpy_kunit.c
+@@ -32,7 +32,7 @@ struct some_bytes {
+ 	BUILD_BUG_ON(sizeof(instance.data) != 32);	\
+ 	for (size_t i = 0; i < sizeof(instance.data); i++) {	\
+ 		KUNIT_ASSERT_EQ_MSG(test, instance.data[i], v, \
+-			"line %d: '%s' not initialized to 0x%02x @ %d (saw 0x%02x)\n", \
++			"line %d: '%s' not initialized to 0x%02x @ %zu (saw 0x%02x)\n", \
+ 			__LINE__, #instance, v, i, instance.data[i]);	\
+ 	}	\
+ } while (0)
+@@ -41,7 +41,7 @@ struct some_bytes {
+ 	BUILD_BUG_ON(sizeof(one) != sizeof(two)); \
+ 	for (size_t i = 0; i < sizeof(one); i++) {	\
+ 		KUNIT_EXPECT_EQ_MSG(test, one.data[i], two.data[i], \
+-			"line %d: %s.data[%d] (0x%02x) != %s.data[%d] (0x%02x)\n", \
++			"line %d: %s.data[%zu] (0x%02x) != %s.data[%zu] (0x%02x)\n", \
+ 			__LINE__, #one, i, one.data[i], #two, i, two.data[i]); \
+ 	}	\
+ 	kunit_info(test, "ok: " TEST_OP "() " name "\n");	\
 -- 
 2.43.0
 
