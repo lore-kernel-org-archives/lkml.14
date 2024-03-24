@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C371EE6AD;
-	Sun, 24 Mar 2024 22:56:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FCF14A625;
+	Sun, 24 Mar 2024 22:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321017; cv=none; b=jNRW7JlTseLWy/Tf8Vcu+2xvSLTuZCbXeMRt6QquDZ2IT+i0UHeyxFC9HnYVXeloQcX/80xfdTAXdgaXmAxzwKv1Ha2ELadP86dnya7+41Z17PFyf7r3c1ZWnpcrZrkd+yfZQmsfIrXPo3gDJOpvrOVAXx26jETG1F8XbwgGEZQ=
+	t=1711321026; cv=none; b=QQyXFvqE9tjZTHoyDIrPTvQwqD0zygSVMSUvC4O9JHWY3x0gHamkwwA4KuPMKrEo/QR/Nm3ptsXMQbDX3j061viRK9dKq6+YAGI+GR0N+TpYhQ73UNAZ7LjHUSX+iV34jeohVOxezX64yEbwLgbQM7NbR0H1GJ5YSIoqlBE0snM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321017; c=relaxed/simple;
-	bh=VMTd483AtVhJY1yg3JO6CqehvFQ36/l32rlPNuPTpN0=;
+	s=arc-20240116; t=1711321026; c=relaxed/simple;
+	bh=dhKFxGipNUYb7+OZCcYXRa1jL6XDpWTD56tS1MNSVQM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=suThxcvW54cvCvrnhfSZie+ryuVscINvzIbQHzue9u8yhfyVV6Ge9lFifjnlOcixhKFmIk/PHTEkIf2S1gcr3HFsM3Gptl0Hyk9WKzRryhZOequ3ZhNrKU3lR7/FjaNGTPwQgxhsu7p3Jac1WuwgmPpm2VYO9wovr5E8RxGjYqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CqsNvCjW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nGeIC3G5x0Ogbf8VJjmb+Q4CSXvjVy79PFepbHcqZSe4+g0ZE/wKVN1TYf8iwrb06hTZ/lTRUsH7rB2wCZcyAnVRULqjGctVPnvH9XpQzxSUz/erBc2lkfmACWGOXcs1lme5rl7X2VnWdX7LzTy9mFVQuzL+q8yIFOOTlmSf63g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GH+D0EJU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CqsNvCjW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D83BC433B1;
-	Sun, 24 Mar 2024 22:56:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GH+D0EJU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96662C433F1;
+	Sun, 24 Mar 2024 22:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321016;
-	bh=VMTd483AtVhJY1yg3JO6CqehvFQ36/l32rlPNuPTpN0=;
+	s=k20201202; t=1711321025;
+	bh=dhKFxGipNUYb7+OZCcYXRa1jL6XDpWTD56tS1MNSVQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CqsNvCjWtOeyn6Xa9Tq4pCwJA+I8FAVG0hHEljjWPF2+OAegLvK7ekBgYB/5XdqAu
-	 qxPlI302C/qshJGXMa+Ab2vo1X7yjaEx10QW8Ne7Vl5VlFUOW6B2d3vFuWHcY8XMxD
-	 M68AwDy9WxF/g9c5SdLRBrNKWYLBorBCk0bNp6lIUFzkQOpfkQzQLp/p4V+MR6D1HB
-	 2dZtgDMH6gdwMrK/xEquMncKnZxNpBPtoVcKjMlfr1wI9aHj69vIHqVtQg0qZdAWkj
-	 8kGy41+uZMLwSx3LULX5xq7iQSkw9UXUS502enfN+azunysTpE6PecQZ7L/4yjtWDu
-	 KfQfMmwRSaJBA==
+	b=GH+D0EJUBXDx+LxlF+VBo86W5jbRDyz450YDXQhuSySnii2kBmjRlIyoytt5hvCBH
+	 FVhjuNAjBs8LA9XhI08vhTcOv6JAd/YYw1h83bPo6qEFoBWYhUT/88+hR8vX7VrSIQ
+	 xSj7lgKnPvPdbWAFJqY4NcVdrYf4rRI5EtuBAge3zHJ7WKMvzfRVwURpiUlVitzyh5
+	 13z0SHta77fBa0kZVb3XApaf6pqdYrTPJgJSMjs6Ki31UkHSJ7qPW+pDC/AT1sFfoX
+	 aY4dYI5n5smbrRW1HQX50AKQw0OF4P/ZnWD8jwiMerzegDilD8ZQElAFMZFDkIabFV
+	 3KpAtGinDKWoQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Zhiguo Niu <zhiguo.niu@unisoc.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 579/713] f2fs: fix to avoid potential panic during recovery
-Date: Sun, 24 Mar 2024 18:45:05 -0400
-Message-ID: <20240324224720.1345309-580-sashal@kernel.org>
+Subject: [PATCH 6.7 588/713] net: sunrpc: Fix an off by one in rpc_sockaddr2uaddr()
+Date: Sun, 24 Mar 2024 18:45:14 -0400
+Message-ID: <20240324224720.1345309-589-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,107 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 21ec68234826b1b54ab980a8df6e33c74cfbee58 ]
+[ Upstream commit d6f4de70f73a106986ee315d7d512539f2f3303a ]
 
-During recovery, if FAULT_BLOCK is on, it is possible that
-f2fs_reserve_new_block() will return -ENOSPC during recovery,
-then it may trigger panic.
+The intent is to check if the strings' are truncated or not. So, >= should
+be used instead of >, because strlcat() and snprintf() return the length of
+the output, excluding the trailing NULL.
 
-Also, if fault injection rate is 1 and only FAULT_BLOCK fault
-type is on, it may encounter deadloop in loop of block reservation.
-
-Let's change as below to fix these issues:
-- remove bug_on() to avoid panic.
-- limit the loop count of block reservation to avoid potential
-deadloop.
-
-Fixes: 956fa1ddc132 ("f2fs: fix to check return value of f2fs_reserve_new_block()")
-Reported-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: a02d69261134 ("SUNRPC: Provide functions for managing universal addresses")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h     |  5 +++++
- fs/f2fs/recovery.c | 33 ++++++++++++++++-----------------
- 2 files changed, 21 insertions(+), 17 deletions(-)
+ net/sunrpc/addr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 3bd67d4fcb1d4..007f39ff99b20 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -75,6 +75,11 @@ struct f2fs_fault_info {
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index d435bffc61999..97ff11973c493 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -284,10 +284,10 @@ char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
+ 	}
  
- extern const char *f2fs_fault_name[FAULT_MAX];
- #define IS_FAULT_SET(fi, type) ((fi)->inject_type & BIT(type))
-+
-+/* maximum retry count for injected failure */
-+#define DEFAULT_FAILURE_RETRY_COUNT		8
-+#else
-+#define DEFAULT_FAILURE_RETRY_COUNT		1
- #endif
+ 	if (snprintf(portbuf, sizeof(portbuf),
+-		     ".%u.%u", port >> 8, port & 0xff) > (int)sizeof(portbuf))
++		     ".%u.%u", port >> 8, port & 0xff) >= (int)sizeof(portbuf))
+ 		return NULL;
  
- /*
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index d0f24ccbd1ac6..aad1d1a9b3d64 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -611,6 +611,19 @@ static int check_index_in_prev_nodes(struct f2fs_sb_info *sbi,
- 	return 0;
- }
+-	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) > sizeof(addrbuf))
++	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) >= sizeof(addrbuf))
+ 		return NULL;
  
-+static int f2fs_reserve_new_block_retry(struct dnode_of_data *dn)
-+{
-+	int i, err = 0;
-+
-+	for (i = DEFAULT_FAILURE_RETRY_COUNT; i > 0; i--) {
-+		err = f2fs_reserve_new_block(dn);
-+		if (!err)
-+			break;
-+	}
-+
-+	return err;
-+}
-+
- static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 					struct page *page)
- {
-@@ -712,14 +725,8 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 		 */
- 		if (dest == NEW_ADDR) {
- 			f2fs_truncate_data_blocks_range(&dn, 1);
--			do {
--				err = f2fs_reserve_new_block(&dn);
--				if (err == -ENOSPC) {
--					f2fs_bug_on(sbi, 1);
--					break;
--				}
--			} while (err &&
--				IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION));
-+
-+			err = f2fs_reserve_new_block_retry(&dn);
- 			if (err)
- 				goto err;
- 			continue;
-@@ -727,16 +734,8 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 
- 		/* dest is valid block, try to recover from src to dest */
- 		if (f2fs_is_valid_blkaddr(sbi, dest, META_POR)) {
--
- 			if (src == NULL_ADDR) {
--				do {
--					err = f2fs_reserve_new_block(&dn);
--					if (err == -ENOSPC) {
--						f2fs_bug_on(sbi, 1);
--						break;
--					}
--				} while (err &&
--					IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION));
-+				err = f2fs_reserve_new_block_retry(&dn);
- 				if (err)
- 					goto err;
- 			}
+ 	return kstrdup(addrbuf, gfp_flags);
 -- 
 2.43.0
 
