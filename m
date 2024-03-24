@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E122779D7;
-	Sun, 24 Mar 2024 23:36:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7488D2779E3;
+	Sun, 24 Mar 2024 23:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323412; cv=none; b=Fj6mT6MCiVJhbVKkFS5iAQsLKwkoqHOTi/i8WWlxNQX56d4oOCfaBS54LnJNbev0SYvx98+AXzDjJnsnY/jIaHWsaGkMMdI759X7zrPWYkVvT10QAz86V7vVNleUClz2DgpCn+7P5tBd4lsL2LWoP4Y1GOydDRiSr8vLcbqrsYs=
+	t=1711323415; cv=none; b=GGc+5rIw+Ol7G6XVDJx3kRmj3ux1T7SSlUeNnbcfSYI3f5rK14FFnPW6SNim48U1tE80J4TjSm568UrjbnYaPMMg6PAU6aVbi1JG6VjRpissXwS9204avNW69uHotZjzXO8ObxjnGP6h/2qt9HbdpNuKf13LQ2rFItimvxZYmvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323412; c=relaxed/simple;
-	bh=vI7cyIplM0mY+XAcjngitzBuY6u1HBmAHntcvWfZL/s=;
+	s=arc-20240116; t=1711323415; c=relaxed/simple;
+	bh=mzT4Q+z9FiXg3S/XaF8ChxTrhgd0KtXLW1G73ipIrx4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cJQd8pytrDq+AWIf5QenA2I46YHqwm+CbJb+Yf8IiIB6ERu2VpRQF/GuThE6HYMi5c34z3av7wI8ygEz7jJ/crPYwDBFeFdidLYUeVcSn9x+75YA3PgVFcIX/WRt2WPfFk1NvNesh/cRpyJRqV9dZfMYk10G9n0AeJKr6fnD3LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h0ZA34m4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Gksnb0HbdXUxLDqUbC9HxxVjT5TYrJmvHG8JmMKKnHF410+gK6ZOmb3JNFolIV7UTuZ3sHvlDsb2zh0ZlcGLAbEK/7BJQhfuWv0DxnWnFMzef+L/NHhB4J2U8PIW2VltmNE8DZVZfLY6fPH5Ftpe2tNKi+cip+8SiW5wLu5pyaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNQUopKQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h0ZA34m4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11E4EC43390;
-	Sun, 24 Mar 2024 23:36:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNQUopKQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B415BC433C7;
+	Sun, 24 Mar 2024 23:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323412;
-	bh=vI7cyIplM0mY+XAcjngitzBuY6u1HBmAHntcvWfZL/s=;
+	s=k20201202; t=1711323415;
+	bh=mzT4Q+z9FiXg3S/XaF8ChxTrhgd0KtXLW1G73ipIrx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h0ZA34m4kQaaa6vEwKbk03l4mhH3UrzsPdwhHMr497TmUZ3HcYMq2jBYxhuPWzN1J
-	 jk5lJ0mofWNLlKaobn5yTkhAIanqUMWMvfhH7XUe92EqoCXq38jts7P2TARRqvEGNI
-	 TcP1US1I1vdLu3gw1YS7blP5fTaE7nOVBBtkSsL188UrBvpWvqmKGwlPzo1dAb0XHN
-	 zpedBr6ug4CdZqsFvmcy4d5gQiiCYWIFeUcxTxEzlTgeZRJc8QXXgtNhW9u81sduFI
-	 YtRnOn/JnPf9qGQkepeXlNjONGPza3zVLvjhB+Y1PF5HUKn2uopGfn/IthIEUh/8io
-	 rV8fzme05Zdew==
+	b=RNQUopKQOVemT4um65Qa3fugQL8fhq97zUcFqZs05gIBv563VLoMcH2VuUviaEQvg
+	 t54Ha0+vF787EShQrAdkYOF51ay8dgUcT8dog0bv9OXWbfbJ149/2uWbDhFmRqwKFg
+	 R5kzB0Bsu8VGsQEsvulN/Ytvo0pkzApHK6f86yfgduzIlWeBa75WSn9tBcc4b7XxWA
+	 oiq+0UPsPMc+nRj0ZUnzAAZQp1VLntQcwkaXtNTFj2OAk5x4cDz7SWadNb4BIOH3kF
+	 d9lKLNnLU2M4XwGXMmrNOAASuIO0Z9TuemQ8tnYwIp4H8r4V7pqO2PHSkcmUF0jyW1
+	 Ro5TIgmvhTRqw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: "Alexey I. Froloff" <raorn@raorn.name>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 114/317] ARM: dts: imx6dl-yapp4: Move the internal switch PHYs under the switch node
-Date: Sun, 24 Mar 2024 19:31:34 -0400
-Message-ID: <20240324233458.1352854-115-sashal@kernel.org>
+Subject: [PATCH 5.15 117/317] ACPI: resource: Do IRQ override on Lunnen Ground laptops
+Date: Sun, 24 Mar 2024 19:31:37 -0400
+Message-ID: <20240324233458.1352854-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -44,97 +44,53 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: "Alexey I. Froloff" <raorn@raorn.name>
 
-[ Upstream commit 79978bff2e4b8e05ebdf5fc3ee6b794002393484 ]
+[ Upstream commit e23ad54fef186aa66007895be1382c88f1ee2bf7 ]
 
-We identified that the PHYs actually do not work since commit 7da7b84fee58
-("ARM: dts: imx6dl-yapp4: Move phy reset into switch node") as
-a coincidence of several circumstances.
+The Lunnen Ground 15 and 16 needs IRQ overriding for the keyboard to
+work.
 
-The reset signal is kept asserted by a pull-down resistor on the board
-unless it is deasserted by GPIO from the SoC. This is to keep the switch
-dead until it is configured properly by the kernel and user space.
+Adding an entries for these laptops to the override_table makes the
+internal keyboard functional.
 
-Prior to the referenced commit the switch was reset by the FEC driver
-and the reset GPIO was actively deasserted. The mdio-bus was scanned
-and the attached switch and its PHYs were found and configured.
-
-With the referenced commit the switch is reset by the qca8k driver.
-Because of another bug in the qca8k driver, functionality of the reset
-pin depends on its pre-kernel configuration. See commit c44fc98f0a8f
-("net: dsa: qca8k: fix illegal usage of GPIO")
-
-The problem did not appear until we removed support for the switch
-and configuration of its reset pin from the bootloader.
-
-To fix that, properly describe the internal mdio-bus configuration of
-the qca8334 switch. The PHYs are internal to the switch and sit on its
-internal mdio-bus.
-
-Fixes: 7da7b84fee58 ("ARM: dts: imx6dl-yapp4: Move phy reset into switch node")
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Alexey I. Froloff <raorn@raorn.name>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Stable-dep-of: 021a67d09615 ("ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 23 ++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ drivers/acpi/resource.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index 76da90e858045..69ad1f198fa71 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -117,14 +117,6 @@ mdio {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		phy_port2: phy@1 {
--			reg = <1>;
--		};
--
--		phy_port3: phy@2 {
--			reg = <2>;
--		};
--
- 		switch@10 {
- 			compatible = "qca,qca8334";
- 			reg = <0x10>;
-@@ -149,15 +141,30 @@ fixed-link {
- 				eth2: port@2 {
- 					reg = <2>;
- 					label = "eth2";
-+					phy-mode = "internal";
- 					phy-handle = <&phy_port2>;
- 				};
- 
- 				eth1: port@3 {
- 					reg = <3>;
- 					label = "eth1";
-+					phy-mode = "internal";
- 					phy-handle = <&phy_port3>;
- 				};
- 			};
-+
-+			mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				phy_port2: ethernet-phy@1 {
-+					reg = <1>;
-+				};
-+
-+				phy_port3: ethernet-phy@2 {
-+					reg = <2>;
-+				};
-+			};
- 		};
- 	};
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index 16a18654f6879..a46e0bf0e1dc4 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -558,6 +558,20 @@ static const struct dmi_system_id lg_laptop[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "GM5RGEE0016COM"),
+ 		},
+ 	},
++	{
++		/* Lunnen Ground 15 / AMD Ryzen 5 5500U */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Lunnen"),
++			DMI_MATCH(DMI_BOARD_NAME, "LLL5DAW"),
++		},
++	},
++	{
++		/* Lunnen Ground 16 / AMD Ryzen 7 5800U */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Lunnen"),
++			DMI_MATCH(DMI_BOARD_NAME, "LL6FA"),
++		},
++	},
+ 	{ }
  };
+ 
 -- 
 2.43.0
 
