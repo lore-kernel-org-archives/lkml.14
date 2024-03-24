@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8287F2944B6;
-	Sun, 24 Mar 2024 23:51:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464B922C66B;
+	Sun, 24 Mar 2024 23:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324287; cv=none; b=h/QZIHp5mVEiwsiO4j1s7z1uNeTpuldCS0b+pHx2FnOHPO+sIH3NMepZF6S1kyD4SvvDkFKMOi5NmurCDOX3OxOoajx3Y+V6p+VlJv7O3SZxfHrUa2Z3xQLUKFSzvmSEgS3rpN3pts4AQy9H4rsyA9B9QmzDWitd1G52uiDFqs8=
+	t=1711324292; cv=none; b=puw8+IgLeLloLSn7OebjhtgK35p1zGNhz+v97PWYy4k2Qc8/YXFM5WhLJmB05xFQxFq8SpOV9+t4B7I83rYApcAkbrskUw+/y28I+dmGqtI60pADHTUM4FCuj1H4crPfmol6pHDPiiJwV6+j4TErSuykGanl7xNWW175TSG5U5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324287; c=relaxed/simple;
-	bh=FaKGe9dFoSMlkOYS7BvtaFwqewWRRVHkf5kCa79y7HY=;
+	s=arc-20240116; t=1711324292; c=relaxed/simple;
+	bh=G0c+udVpKFOi8AWsLyHdaHk+W6Sar4vDtf+9xm8Am3I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uDgMh2o5NPsHS0kde8/c2gy5xbOnv8WdakEAvdXCQqfXis1iMLWfGumVnJIHD+VxaA33HsrMrGRhdDxdy+XLQ1JRXjXcfcshXCaDPq0l0Cz8+ijPC7bEn4HVfN1yxZT0eCiyShPjst5+FbtfmGfORwNFTh/e1eqd72k/chaFTx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PJ9qgCw8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dQK6jU8w/f6Waxbdo+W22YuHeqPXJNT+bq+1X6TnsaRVIc31LRdVPe3hF5+iZpNdSv1uFt+qMEBcItDcmi8jNvs1KGuwM5D4fWMuP15ww0xr//Ce+Gd7BOAYvaEs7/V2NW68HfpjrdzXwNt2j/09J9Jy4EWJwB80b7px+Z0IYk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VzlHvUHU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJ9qgCw8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A07E2C433C7;
-	Sun, 24 Mar 2024 23:51:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VzlHvUHU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 871DEC433B2;
+	Sun, 24 Mar 2024 23:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324287;
-	bh=FaKGe9dFoSMlkOYS7BvtaFwqewWRRVHkf5kCa79y7HY=;
+	s=k20201202; t=1711324291;
+	bh=G0c+udVpKFOi8AWsLyHdaHk+W6Sar4vDtf+9xm8Am3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PJ9qgCw8W2F6RUJbfcsC2YOohzv53IaSmLfO3dQ/pxIAv2bc0BhYhbizIgi4crN4h
-	 JZNWjeD8ItqvTAFUa4ez/x2XyPDKQdGXz72CWRvP1H0FOaig9zdxWAYUmFUbtDuB/Q
-	 k507i7kWUkAosubrNCP8fniQhkMcUJWzPLbhAcQiEVqU9vN5+BEc9SQEWPnnQbgJl1
-	 6clpw7Hoik9F2lfWPvvAsnctpFMuvxgVk+jAhyFGOPx9PCGQJ6uSMzL8fivdsJJHLg
-	 3+WbYHtqWgLNzv6P36NNgcElq+pNptAMGi2HkYLOLnLNHDQL1oGafaGE9PV3IufqG4
-	 IWFvt5aY4Wx+w==
+	b=VzlHvUHU4dKSgWpp/6v5CHvqJM4OXUV8ebiMb63ua1ApddmN9tN0OeS3JZxHPDb7+
+	 ft12kJW0Z7trBfpQ3TsKtsYwmJ9ja8GL6LrRAF00ueRTrYKZGhF9gI6vre7e0R+CaE
+	 vJCxFfV79RCX5vRpuz92QL9WI/izdqxedm3mYUfG45qywe7VE0xyNyExMyl6UHWh2+
+	 sl0nBW7qzxXMQV7Lk8rg9bwU1f6TwIJgwpY3yZngQHjotwg15MA6EkH0pYkmOJ/T2c
+	 rXuP/jUc351CH0Kyeo4kHf4I0AaY3v4jYXl+wOY7ACoNNVwoYKR0JRn5Xu18E/6b/x
+	 quKmteOK+KLEQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Duoming Zhou <duoming@zju.edu.cn>,
-	Louis Peens <louis.peens@corigine.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Sowjanya Komatineni <skomatineni@nvidia.com>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/148] nfp: flower: handle acti_netdevs allocation failure
-Date: Sun, 24 Mar 2024 19:48:47 -0400
-Message-ID: <20240324235012.1356413-64-sashal@kernel.org>
+Subject: [PATCH 4.19 067/148] gpu: host1x: mipi: Update tegra_mipi_request() to be node based
+Date: Sun, 24 Mar 2024 19:48:51 -0400
+Message-ID: <20240324235012.1356413-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -49,43 +48,71 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Duoming Zhou <duoming@zju.edu.cn>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 84e95149bd341705f0eca6a7fcb955c548805002 ]
+[ Upstream commit 767598d447aa46411289c5808b0e45e20a1823b4 ]
 
-The kmalloc_array() in nfp_fl_lag_do_work() will return null, if
-the physical memory has run out. As a result, if we dereference
-the acti_netdevs, the null pointer dereference bugs will happen.
+Tegra CSI driver need a separate MIPI device for each channel as
+calibration of corresponding MIPI pads for each channel should
+happen independently.
 
-This patch adds a check to judge whether allocation failure occurs.
-If it happens, the delayed work will be rescheduled and try again.
+So, this patch updates tegra_mipi_request() API to add a device_node
+pointer argument to allow creating mipi device for specific device
+node rather than a device.
 
-Fixes: bb9a8d031140 ("nfp: flower: monitor and offload LAG groups")
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
-Reviewed-by: Louis Peens <louis.peens@corigine.com>
-Link: https://lore.kernel.org/r/20240308142540.9674-1-duoming@zju.edu.cn
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Stable-dep-of: 830c1ded3563 ("drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/lag_conf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpu/drm/tegra/dsi.c | 2 +-
+ drivers/gpu/host1x/mipi.c   | 4 ++--
+ include/linux/host1x.h      | 3 ++-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c b/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
-index bf10598f66ae0..1b5e0cef97713 100644
---- a/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
-@@ -336,6 +336,11 @@ static void nfp_fl_lag_do_work(struct work_struct *work)
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index 70cc960d3ff58..7033ab28f7716 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -1543,7 +1543,7 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dsi->regs))
+ 		return PTR_ERR(dsi->regs);
  
- 		acti_netdevs = kmalloc_array(entry->slave_cnt,
- 					     sizeof(*acti_netdevs), GFP_KERNEL);
-+		if (!acti_netdevs) {
-+			schedule_delayed_work(&lag->work,
-+					      NFP_FL_LAG_DELAY);
-+			continue;
-+		}
+-	dsi->mipi = tegra_mipi_request(&pdev->dev);
++	dsi->mipi = tegra_mipi_request(&pdev->dev, pdev->dev.of_node);
+ 	if (IS_ERR(dsi->mipi))
+ 		return PTR_ERR(dsi->mipi);
  
- 		/* Include sanity check in the loop. It may be that a bond has
- 		 * changed between processing the last notification and the
+diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+index e00809d996a29..762d349ad00f1 100644
+--- a/drivers/gpu/host1x/mipi.c
++++ b/drivers/gpu/host1x/mipi.c
+@@ -206,9 +206,9 @@ static int tegra_mipi_power_down(struct tegra_mipi *mipi)
+ 	return 0;
+ }
+ 
+-struct tegra_mipi_device *tegra_mipi_request(struct device *device)
++struct tegra_mipi_device *tegra_mipi_request(struct device *device,
++					     struct device_node *np)
+ {
+-	struct device_node *np = device->of_node;
+ 	struct tegra_mipi_device *dev;
+ 	struct of_phandle_args args;
+ 	int err;
+diff --git a/include/linux/host1x.h b/include/linux/host1x.h
+index aef6e2f738027..903c0ec204442 100644
+--- a/include/linux/host1x.h
++++ b/include/linux/host1x.h
+@@ -327,7 +327,8 @@ int host1x_client_unregister(struct host1x_client *client);
+ 
+ struct tegra_mipi_device;
+ 
+-struct tegra_mipi_device *tegra_mipi_request(struct device *device);
++struct tegra_mipi_device *tegra_mipi_request(struct device *device,
++					     struct device_node *np);
+ void tegra_mipi_free(struct tegra_mipi_device *device);
+ int tegra_mipi_enable(struct tegra_mipi_device *device);
+ int tegra_mipi_disable(struct tegra_mipi_device *device);
 -- 
 2.43.0
 
