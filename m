@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729C3148820;
-	Sun, 24 Mar 2024 22:55:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A051EBD3D;
+	Sun, 24 Mar 2024 22:55:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320924; cv=none; b=IuEJNLZj8eggXRSk5t48MiRb9aQJocQnwOe0DHgnjYBkfP4XEaHuISO69TnPpgU9Q5jlEqJt56/Ob+K19BJbSQHG9K6or1WJiElIE1Q/fiHVm31UzHkgjXXFsmPPtFo6PN24Cy+xs9gHEBpnE71WW5hZAqUIU6zi8dptaPZBhP4=
+	t=1711320934; cv=none; b=Cmf0uU6MBcrv6LSXgCvl4eddmW+iv+u9M+wDOa4gTE5Mn8xYSsHDUhezaJzJqVI/aPASTOwdfqbx00OTUJwQX9EOn9Wy9YFB/iUHV6GcUJUOpLKmoF/XhYk+cBxvjRbOINiWqFZeE0ZNRHSu9VO1W8xCaQRdYXAyQUUtm+linfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320924; c=relaxed/simple;
-	bh=9EArykFpEIy/MTPK8XwsMVYLwhLAw0osXCOlEx433lU=;
+	s=arc-20240116; t=1711320934; c=relaxed/simple;
+	bh=tkufBR9raGvxU8c3aH3i6ldwN0hrm/x4DjtThUr85q8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AW3UD9dUtv47oNOHCsJ3rlIXqusrX8+mhysjZzAENitI3cpeLP/k1EQZqNC4ynEB3CP8dUtS2Mg2u+J1/7rZsPl2gUJsDsJ64dxXlzc497k7ryON2qOPi3KR5CDDcRghF+Uyiaa9eKxeD0z/Z3s0gUXVJvJI5QwBeezEe56yoAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVyC9U24; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qhLrQADmAwy4fEMUZKxXzFpMOa10oeg7f0LwYt0i2v8Wq9bbbrEBubgeprB2dF0odQlmCTUbMN1EEuJqqhd9RJLpIfQOhnXF6rhApJ3nDeBo6aaA5xLeK234ss70ZPmVfUH8nne7wGSOJm9vHzR2hgYzjyzCyWBcMND1H9euCD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfLAqZdf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVyC9U24"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99BF7C433C7;
-	Sun, 24 Mar 2024 22:55:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfLAqZdf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C953C43394;
+	Sun, 24 Mar 2024 22:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320924;
-	bh=9EArykFpEIy/MTPK8XwsMVYLwhLAw0osXCOlEx433lU=;
+	s=k20201202; t=1711320933;
+	bh=tkufBR9raGvxU8c3aH3i6ldwN0hrm/x4DjtThUr85q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iVyC9U24Vdz3uKA3lkEjHxvliTr0xJ7YNdJ3vZbiJOE3CXPaXuiA+69xGNJ8Dr7gs
-	 3L0R/CupuQm1bW6WqeRUJ+UZoof6BDZ+TMt3Eh8bTcG3/YZGRUgdxDsB2Adt1iqsEo
-	 E5NCXWJWWJbdfoLRwjQxbKSZabpUA68EGj65sssddRmO+cxPXucgTaFFsAIcsbfaJQ
-	 06xZD89KvS1pHwgLfOM6CDl6sePLf3da0PeuyX0Iywsqof2Rb/m9a1O7nnXD/Tqcg9
-	 uaasfXDrwgEcGjdbOu4+4KhWeeR1yZInKUfrNI3vjQblWCnZ0B9SDAL0mI+lhPRNUy
-	 7cMnDRxlAIeNQ==
+	b=WfLAqZdflfgXAQFazefS4bR0E4p4TJdi8M1EAwKqHRNfrGwYjUMqH+59KV48vBUpI
+	 /MVku3SDO6RDadxzekplxgRFC1TulDikhsD6GsB/YOb9ladKo9DzjcoNH26AYKvOOW
+	 4XeKZhZ3T3bfTdlRzMS9yjYsembXZbVToiFB3eYQvBQJ/mffszTbBzBf3FO5UrjcTP
+	 QWpqImwGxlTTlHBwgGEE5bKCfI42XvEp3EMmasiQov3w+tJ3WO6XPy0uy/w1q7BRTL
+	 Z++Ce/cYQIJ9KQA5eXDyU8hdwqxCMZQYYK3dZruoB7z4g9RA+W3inyDSPoCns5o/x6
+	 j58/IHGTV5S7A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Stephen Boyd <sboyd@kernel.org>,
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Tim Van Patten <timvp@google.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 488/713] clk: mediatek: mt8183: Correct parent of CLK_INFRA_SSPM_32K_SELF
-Date: Sun, 24 Mar 2024 18:43:34 -0400
-Message-ID: <20240324224720.1345309-489-sashal@kernel.org>
+Subject: [PATCH 6.7 497/713] crypto: ccp - Avoid discarding errors in psp_send_platform_access_msg()
+Date: Sun, 24 Mar 2024 18:43:43 -0400
+Message-ID: <20240324224720.1345309-498-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,40 +49,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chen-Yu Tsai <wenst@chromium.org>
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-[ Upstream commit a65083fa663a335008e34f65e184041174a9dc7e ]
+[ Upstream commit 0e8fca2f12ceb77c3a6b6f210135031f264aa612 ]
 
-CLK_INFRA_SSPM_32K_SELF has the "f_f26m_ck" clock assigned as its parent.
-This is inconsistent as the clock is part of a group that are all gates
-without dividers, and this makes the kernel think it runs at 26 MHz.
+Errors can potentially occur in the "processing" of PSP commands or
+commands can be processed successfully but still return an error code in
+the header.
 
-After clarification from MediaTek engineers, the correct parent is
-actually the system 32 KHz clock.
+This second case was being discarded because PSP communication worked but
+the command returned an error code in the payload header.
 
-Fixes: 1eb8d61ac5c9 ("clk: mediatek: mt8183: Add back SSPM related clocks")
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-Link: https://lore.kernel.org/r/20240219105125.956278-1-wenst@chromium.org
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Capture both cases and return them to the caller as -EIO for the caller
+to investigate. The caller can detect the latter by looking at
+`req->header->status`.
+
+Reported-and-tested-by: Tim Van Patten <timvp@google.com>
+Fixes: 7ccc4f4e2e50 ("crypto: ccp - Add support for an interface for platform features")
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mediatek/clk-mt8183.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/ccp/platform-access.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
-index 6e23461a04559..934d5a15acfc5 100644
---- a/drivers/clk/mediatek/clk-mt8183.c
-+++ b/drivers/clk/mediatek/clk-mt8183.c
-@@ -790,7 +790,7 @@ static const struct mtk_gate infra_clks[] = {
- 	/* infra_sspm_26m_self is main clock in co-processor, should not be closed in Linux. */
- 	GATE_INFRA3_FLAGS(CLK_INFRA_SSPM_26M_SELF, "infra_sspm_26m_self", "f_f26m_ck", 3, CLK_IS_CRITICAL),
- 	/* infra_sspm_32k_self is main clock in co-processor, should not be closed in Linux. */
--	GATE_INFRA3_FLAGS(CLK_INFRA_SSPM_32K_SELF, "infra_sspm_32k_self", "f_f26m_ck", 4, CLK_IS_CRITICAL),
-+	GATE_INFRA3_FLAGS(CLK_INFRA_SSPM_32K_SELF, "infra_sspm_32k_self", "clk32k", 4, CLK_IS_CRITICAL),
- 	GATE_INFRA3(CLK_INFRA_UFS_AXI, "infra_ufs_axi", "axi_sel", 5),
- 	GATE_INFRA3(CLK_INFRA_I2C6, "infra_i2c6", "i2c_sel", 6),
- 	GATE_INFRA3(CLK_INFRA_AP_MSDC0, "infra_ap_msdc0", "msdc50_hclk_sel", 7),
+diff --git a/drivers/crypto/ccp/platform-access.c b/drivers/crypto/ccp/platform-access.c
+index 94367bc49e35b..1b8ed33897332 100644
+--- a/drivers/crypto/ccp/platform-access.c
++++ b/drivers/crypto/ccp/platform-access.c
+@@ -118,9 +118,16 @@ int psp_send_platform_access_msg(enum psp_platform_access_msg msg,
+ 		goto unlock;
+ 	}
+ 
+-	/* Store the status in request header for caller to investigate */
++	/*
++	 * Read status from PSP. If status is non-zero, it indicates an error
++	 * occurred during "processing" of the command.
++	 * If status is zero, it indicates the command was "processed"
++	 * successfully, but the result of the command is in the payload.
++	 * Return both cases to the caller as -EIO to investigate.
++	 */
+ 	cmd_reg = ioread32(cmd);
+-	req->header.status = FIELD_GET(PSP_CMDRESP_STS, cmd_reg);
++	if (FIELD_GET(PSP_CMDRESP_STS, cmd_reg))
++		req->header.status = FIELD_GET(PSP_CMDRESP_STS, cmd_reg);
+ 	if (req->header.status) {
+ 		ret = -EIO;
+ 		goto unlock;
 -- 
 2.43.0
 
