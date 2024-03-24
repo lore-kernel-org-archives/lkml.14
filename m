@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C0B1E9638;
-	Sun, 24 Mar 2024 22:54:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7540112A159;
+	Sun, 24 Mar 2024 22:55:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320896; cv=none; b=Isw03EkZDZeuYyLWvrISrNJhLNAX2K0EjSsZErZzyrSbohJFv0sBvDIVQAyDHJZij7PzyKbjAn2UWaHb6IKBFVuZzKebKje8t2DUkaTPrST9yiWvosiENv04Ol2Im6wcw+Mo5j6uHQe8mPc41IXQkjRVALCyf+QNSCvuU1I+o0g=
+	t=1711320901; cv=none; b=uUGkEBbg9HukLob860TWEE1HoO0cv7WUEy07zJYqQGFdJPvCoQXU+PETkgNIiai29X3zA6BR1kzD1rgsTDQ9uu1lw2bP5Qi+TdYT5kkxFLdqkbE+UUo17Qm6O0JQZY/TKl6qfj6A2khrlTlp2keblmrE4Tj5SpHCn2hzUbhKngU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320896; c=relaxed/simple;
-	bh=WpXy2LNVlErVoZaptWzqLxI6KmqPSeSQU3Pgz6DJJ3k=;
+	s=arc-20240116; t=1711320901; c=relaxed/simple;
+	bh=oqhLPo+DOeJ4q8k2R1Tcqp5ocx3a9IJ+GYd3/R2/ZIM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QWaw62wQ4fhVjJYDmxW6TU0XMslgG/mxldhW4B+0SiWw5tC4HZu1chNSzdOYaocjEEB6Sp35QtHlGP5w/CIvkSWhdCJtRYVq51akYoGuARH8m8oriE+g5AlgCWrZA8fPOBOTNu54RIuv/nh6iDWqf9b462Gmbv8BTfZJILIzCeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IxoX868M; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ONe36ANDJ60PiGpkGmTK1/e8jVcS3Umry1RXqT0mtFjaCI2wdYe0TUdEAudUyc96B/QYXwBmgTawI6E0Q/bm+Tpw/0Cm0eDnl/v3SFU42qiYeA0TKwaBIq+yEi09FLCR1fpdFyYx3Gj2e3OAvVDOmjtizpKSmuCUYhYSntyc29w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UrRF7hQC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IxoX868M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 296A1C433B1;
-	Sun, 24 Mar 2024 22:54:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UrRF7hQC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87414C433F1;
+	Sun, 24 Mar 2024 22:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320895;
-	bh=WpXy2LNVlErVoZaptWzqLxI6KmqPSeSQU3Pgz6DJJ3k=;
+	s=k20201202; t=1711320901;
+	bh=oqhLPo+DOeJ4q8k2R1Tcqp5ocx3a9IJ+GYd3/R2/ZIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IxoX868MdWqXBhCLh5qvLEvP+FsuuHcaSF7s5qH7SBiHisVm2y8VCO+S0ZO0/z56N
-	 M3LMkW529w/U7Oauk+3xaJwKw/X4U/BozlPmsY0JAM8BTix2okGB3+zynAGIm+o1ck
-	 DDqobxulQyg0AJahjr/Adv64wv8bpBM3w5l2JXwpeGBgXtMAEsFrbGCSFuzC/vyqYC
-	 JvAuSWRTiMyHqlPY1XUi1ihSsLfGv9Jf3L5ZYRsIwJ83WP1CImuOHDE3Fsm8ADycwV
-	 Gyaj8D2kPHKpK7HnYej1rqJeP2wLKMaFbC05Q0lISHiuE0VJA6JDmLgrcejVoc4uKu
-	 S0+WlGQIKOd+A==
+	b=UrRF7hQCRcZSucTI10dV9vSrvqmxssRni6xg+Cbla5QaCcciMvhlQMk9+tjZoBx+i
+	 AyDEsLDzsOcEoDSiOCUCUqlcoKKHvnkAeLDuM6QT2nGr1c0c9giPqQ9uwLPtGdffs8
+	 aQPCLOfjBK+QQ2fr4bn8x35o2m78KltxLGQEVFU1zm2HqiPZxAuY2q9wkqcDhUSnOb
+	 rdPR7qs+RV/xbAZVH7HZvBiu/JD8Q1IdrlVBgnwUgiCUVDEqxbD2KYXQ5lhnhdSIjk
+	 iGUajLTkovkRPdQwABGUxHZkvr7m88FKjVONqqBVaxTqrmNXF9rSzsRXAp6DOFwj6+
+	 9m0loPAnX5+lw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	James Clark <james.clark@arm.com>,
-	Kaige Ye <ye@kaige.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Yang Yingliang <yangyingliang@huawei.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Dave Jiang <dave.jiang@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 458/713] perf metric: Don't remove scale from counts
-Date: Sun, 24 Mar 2024 18:43:04 -0400
-Message-ID: <20240324224720.1345309-459-sashal@kernel.org>
+Subject: [PATCH 6.7 464/713] NTB: fix possible name leak in ntb_register_device()
+Date: Sun, 24 Mar 2024 18:43:10 -0400
+Message-ID: <20240324224720.1345309-465-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,53 +46,85 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ian Rogers <irogers@google.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit 6d6be5eb45b423a37d746d3ee0fd0c78f76ead9f ]
+[ Upstream commit aebfdfe39b9327a3077d0df8db3beb3160c9bdd0 ]
 
-Counts were switched from the scaled saved value form to the
-aggregated count to avoid double accounting. When this happened the
-removing of scaling for a count should have been removed, however, it
-wasn't and this wasn't observed as it normally doesn't matter because
-a counter's scale is 1. A problem was observed with RAPL events that
-are scaled.
+If device_register() fails in ntb_register_device(), the device name
+allocated by dev_set_name() should be freed. As per the comment in
+device_register(), callers should use put_device() to give up the
+reference in the error path. So fix this by calling put_device() in the
+error path so that the name can be freed in kobject_cleanup().
 
-Fixes: 37cc8ad77cf8 ("perf metric: Directly use counts rather than saved_value")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Kaige Ye <ye@kaige.org>
-Cc: John Garry <john.g.garry@oracle.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240209204947.3873294-5-irogers@google.com
+As a result of this, put_device() in the error path of
+ntb_register_device() is removed and the actual error is returned.
+
+Fixes: a1bd3baeb2f1 ("NTB: Add NTB hardware abstraction layer")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/20231201033057.1399131-1-yangyingliang@huaweicloud.com
+[mani: reworded commit message]
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/stat-shadow.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/ntb/core.c                            | 8 +++++++-
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 6 +-----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index e31426167852a..cf573ff3fa84f 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -414,12 +414,7 @@ static int prepare_metric(struct evsel **metric_events,
- 				val = NAN;
- 				source_count = 0;
- 			} else {
--				/*
--				 * If an event was scaled during stat gathering,
--				 * reverse the scale before computing the
--				 * metric.
--				 */
--				val = aggr->counts.val * (1.0 / metric_events[i]->scale);
-+				val = aggr->counts.val;
- 				source_count = evsel__source_count(metric_events[i]);
- 			}
- 		}
+diff --git a/drivers/ntb/core.c b/drivers/ntb/core.c
+index 27dd93deff6e5..d702bee780826 100644
+--- a/drivers/ntb/core.c
++++ b/drivers/ntb/core.c
+@@ -100,6 +100,8 @@ EXPORT_SYMBOL(ntb_unregister_client);
+ 
+ int ntb_register_device(struct ntb_dev *ntb)
+ {
++	int ret;
++
+ 	if (!ntb)
+ 		return -EINVAL;
+ 	if (!ntb->pdev)
+@@ -120,7 +122,11 @@ int ntb_register_device(struct ntb_dev *ntb)
+ 	ntb->ctx_ops = NULL;
+ 	spin_lock_init(&ntb->ctx_lock);
+ 
+-	return device_register(&ntb->dev);
++	ret = device_register(&ntb->dev);
++	if (ret)
++		put_device(&ntb->dev);
++
++	return ret;
+ }
+ EXPORT_SYMBOL(ntb_register_device);
+ 
+diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+index 3f60128560ed0..2b7bc5a731dd6 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+@@ -1278,15 +1278,11 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	ret = ntb_register_device(&ndev->ntb);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to register NTB device\n");
+-		goto err_register_dev;
++		return ret;
+ 	}
+ 
+ 	dev_dbg(dev, "PCI Virtual NTB driver loaded\n");
+ 	return 0;
+-
+-err_register_dev:
+-	put_device(&ndev->ntb.dev);
+-	return -EINVAL;
+ }
+ 
+ static struct pci_device_id pci_vntb_table[] = {
 -- 
 2.43.0
 
