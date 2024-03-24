@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C9B17D23C;
-	Sun, 24 Mar 2024 23:43:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5455C8EC;
+	Sun, 24 Mar 2024 23:43:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323821; cv=none; b=FowizFsJZ7cb/9TnQ/bIwUtZ/iqfyqd5Do0j9kBfYNGTla6G5mA1maKvrawVlEdhaaqdpCE5KHlb22fzbmJA9AwGofHnq5jBcstqOssGLw1yAa9UMT4H12WjsIgFyKvNVEI7PSkNGrK2raNgSEe46S6xVY6Lrrt3+Q8JaZZXBUc=
+	t=1711323815; cv=none; b=WYlt9WmCVuthVCl8b51DUBLC7RJVi2Dx7fm5t9SAV9TULDb6rrj1ZcAKTUt2PTR4f/ajatkSs+fdDgHQzEu4lKFFOmRzoWaGUBhwPhHsJ9bAmjS/yvy6HqpVtDBDFC9vboQ5gfIt2mwjF1fftA/LPEFIacDNx10YX9YKKhz7Hp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323821; c=relaxed/simple;
-	bh=OEpuwg0q9vOOoCyK9mvaQjRn/3FyP2kLhLivgjOMeNw=;
+	s=arc-20240116; t=1711323815; c=relaxed/simple;
+	bh=lWPRf6moaMYWz9EKtqw8AWmfhvGPBVr8HEaPz5qWn1s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qeqG99JqUzAnZ5KJQ42UXtVV1xuX949TQu6CLUfxddpqi+Qs8Xccmv4lBLfmrUmzUPaB6j10uzkwyzlvvYqSu7GqEwerhDw3QjfiMmEd0J14GONSAi12bYGL9QBfHCeJDrpmy1aq/CSX8QdFDxwbLGA3BcjVfG7Ayln4cBFZQLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxVpAA1g; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZZE9nudWYpaYaEUOCx9j5prnR+7oMOuPlNn9W96+j/W+od2EHu4E7/+nV/l0Rn+trcpJvn/Wh5A83G6VLqvjx3pcYOI8V0O0G1cWTcUt+knQz1NVuYUvS3ReFKid4cUvvQUzvFApjP3XlvGrs/OvNiXfDH2kYgU/VReCRilaMRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RDv/P/6p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxVpAA1g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4B5C433C7;
-	Sun, 24 Mar 2024 23:43:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RDv/P/6p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2AD1C433A6;
+	Sun, 24 Mar 2024 23:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323820;
-	bh=OEpuwg0q9vOOoCyK9mvaQjRn/3FyP2kLhLivgjOMeNw=;
+	s=k20201202; t=1711323815;
+	bh=lWPRf6moaMYWz9EKtqw8AWmfhvGPBVr8HEaPz5qWn1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KxVpAA1gdQ5fZjWDGVYmk/lMcVsPdvRGv8lrplZCe3uWTwXnafXmq8o/QEW402BJz
-	 FfH2aJ1oiV9FXx25C6ITsXvs9Hu7rByJ3IAErX93F7JseTgECAi7mw7zHeF3yYDTrS
-	 Cnbf7X6qDw9E/iAphiR+lGpZ5BnMIeQXxGZ9ix5UHKtUULK52eBc++/oCeChKvzJcu
-	 2XVCaS5osYglLk32ndFoO91/d3bdMHwYdhC6x3GiSDqdslZOhC92vXyacgbbSb3Av9
-	 rkKTP2bw8KB4Ta36c68ITBASQu0F78Y6zyb4xy2XvgdXnJcdcyfr5J+GLAGodA8WZ4
-	 EyqfdzKvsrQSA==
+	b=RDv/P/6prcxRUx+On7caPpCexDyJm63gcd+38FeIr1P26tFUUp2R7n6WOLyyRJFeN
+	 bmsmh9GtYB/wZVVhh4XqD4rYLuAoS6cJE7Bj/x6nEVezc4gfOB8I+YtYoKGR0Li+Xx
+	 otBjOMEK7GkOcpoYpzBg7kieYCD04TqZjryJcAo4SEM12Aifp4EIRVUF5xJ6peumDn
+	 uHy1cy3IeaL85Fyfi60t+VwGSQM6GeQgADkuCcmKWLW5u7Q6Lrv29nNDmS9qbrjeEh
+	 OQHz8+LFF0751b4EUBSJt17KHB3cz1zWWYKOrAO9+cFJz2U3Abcly4hC/Ygd+RanqF
+	 qvKUcDMVgzbpg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jorge Mora <jmora1300@gmail.com>,
-	Jorge Mora <mora@netapp.com>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc: Sheng Yong <shengyong@oppo.com>,
+	Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 199/238] NFSv4.2: fix nfs4_listxattr kernel BUG at mm/usercopy.c:102
-Date: Sun, 24 Mar 2024 19:39:47 -0400
-Message-ID: <20240324234027.1354210-200-sashal@kernel.org>
+Subject: [PATCH 5.10 194/238] f2fs: compress: fix to check unreleased compressed cluster
+Date: Sun, 24 Mar 2024 19:39:42 -0400
+Message-ID: <20240324234027.1354210-195-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -50,97 +49,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jorge Mora <jmora1300@gmail.com>
+From: Sheng Yong <shengyong@oppo.com>
 
-[ Upstream commit 251a658bbfceafb4d58c76b77682c8bf7bcfad65 ]
+[ Upstream commit eb8fbaa53374e0a2d4381190abfe708481517bbb ]
 
-A call to listxattr() with a buffer size = 0 returns the actual
-size of the buffer needed for a subsequent call. When size > 0,
-nfs4_listxattr() does not return an error because either
-generic_listxattr() or nfs4_listxattr_nfs4_label() consumes
-exactly all the bytes then size is 0 when calling
-nfs4_listxattr_nfs4_user() which then triggers the following
-kernel BUG:
+Compressed cluster may not be released due to we can fail in
+release_compress_blocks(), fix to handle reserved compressed
+cluster correctly in reserve_compress_blocks().
 
-  [   99.403778] kernel BUG at mm/usercopy.c:102!
-  [   99.404063] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
-  [   99.408463] CPU: 0 PID: 3310 Comm: python3 Not tainted 6.6.0-61.fc40.aarch64 #1
-  [   99.415827] Call trace:
-  [   99.415985]  usercopy_abort+0x70/0xa0
-  [   99.416227]  __check_heap_object+0x134/0x158
-  [   99.416505]  check_heap_object+0x150/0x188
-  [   99.416696]  __check_object_size.part.0+0x78/0x168
-  [   99.416886]  __check_object_size+0x28/0x40
-  [   99.417078]  listxattr+0x8c/0x120
-  [   99.417252]  path_listxattr+0x78/0xe0
-  [   99.417476]  __arm64_sys_listxattr+0x28/0x40
-  [   99.417723]  invoke_syscall+0x78/0x100
-  [   99.417929]  el0_svc_common.constprop.0+0x48/0xf0
-  [   99.418186]  do_el0_svc+0x24/0x38
-  [   99.418376]  el0_svc+0x3c/0x110
-  [   99.418554]  el0t_64_sync_handler+0x120/0x130
-  [   99.418788]  el0t_64_sync+0x194/0x198
-  [   99.418994] Code: aa0003e3 d000a3e0 91310000 97f49bdb (d4210000)
-
-Issue is reproduced when generic_listxattr() returns 'system.nfs4_acl',
-thus calling lisxattr() with size = 16 will trigger the bug.
-
-Add check on nfs4_listxattr() to return ERANGE error when it is
-called with size > 0 and the return value is greater than size.
-
-Fixes: 012a211abd5d ("NFSv4.2: hook in the user extended attribute handlers")
-Signed-off-by: Jorge Mora <mora@netapp.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+Signed-off-by: Sheng Yong <shengyong@oppo.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ fs/f2fs/file.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 7c3c96ed60853..8e546e6a56198 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -10370,29 +10370,33 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
- static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
- {
- 	ssize_t error, error2, error3;
-+	size_t left = size;
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 55818bd510fb0..40e805014f719 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3663,7 +3663,13 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
+ 				goto next;
+ 			}
  
--	error = generic_listxattr(dentry, list, size);
-+	error = generic_listxattr(dentry, list, left);
- 	if (error < 0)
- 		return error;
- 	if (list) {
- 		list += error;
--		size -= error;
-+		left -= error;
- 	}
+-			if (__is_valid_data_blkaddr(blkaddr)) {
++			/*
++			 * compressed cluster was not released due to it
++			 * fails in release_compress_blocks(), so NEW_ADDR
++			 * is a possible case.
++			 */
++			if (blkaddr == NEW_ADDR ||
++				__is_valid_data_blkaddr(blkaddr)) {
+ 				compr_blocks++;
+ 				continue;
+ 			}
+@@ -3673,6 +3679,11 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
+ 		}
  
--	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, size);
-+	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, left);
- 	if (error2 < 0)
- 		return error2;
- 
- 	if (list) {
- 		list += error2;
--		size -= error2;
-+		left -= error2;
- 	}
- 
--	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, size);
-+	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
- 	if (error3 < 0)
- 		return error3;
- 
--	return error + error2 + error3;
-+	error += error2 + error3;
-+	if (size && error > size)
-+		return -ERANGE;
-+	return error;
- }
- 
- static void nfs4_enable_swap(struct inode *inode)
+ 		reserved = cluster_size - compr_blocks;
++
++		/* for the case all blocks in cluster were reserved */
++		if (reserved == 1)
++			goto next;
++
+ 		ret = inc_valid_block_count(sbi, dn->inode, &reserved);
+ 		if (ret)
+ 			return ret;
 -- 
 2.43.0
 
