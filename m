@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD121DBF5F;
-	Sun, 24 Mar 2024 22:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C151DC7E1;
+	Sun, 24 Mar 2024 22:51:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320705; cv=none; b=clpeIK3DcUOSHg+sXm8Px0zGgZhGtbKBX8/xsv4re/1snk6y5HLJbJ8brZcMsKUb3SILCJpoE/ZH54dRb++Wxu38uOiVhoQvD7LXZuvB4IketvoE7qrByE5LxePd+ZKbdHfIMlySBMq/BoSbB9op5djgiTodSPSik7RTSaJMP/k=
+	t=1711320708; cv=none; b=XXUedLfU19EW2UihBo+51u0WfzkWYaMPXaQmvLyB9Vj0tUwcOk4TStU8Cj2BP0tWH9WXq8bsejWePP+fvPe+fDUdzDh/2wIGOy3Glc0itfzNexX5GSnZNfPWmGSf/4ODuEAmSuyNSzYioCjFP76GDu7NnPiDJakFlGqLfCD9bqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320705; c=relaxed/simple;
-	bh=98j6jLoLgdzCjoiivLq8/nnY3kT0E7I8/IbXH8EktOE=;
+	s=arc-20240116; t=1711320708; c=relaxed/simple;
+	bh=b3EGla1ceGQDu3kI0qNL7DjBL1cafs8iz7Jsl5WCx38=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XocehRnZxS1NEAPSE7PoyjEEU3NwdWmbDhNa91N/8sXAoAgOktTuanof7B/S3PySans7DZpGAv+TIUcbHnk3Wdg3V68sQX4g9T67AYFBTmYbQMzC6NPGd02LmQn5ILms1APeag335Tkqd5BWPUGCDqsxLt9JGucQj0UvygApM5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YbudiNPf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Jx7phthA/+qtAmZdmTiEqYVAB+aEK3PC/6kUvo/bwLLwfAv9+ETrlzGh1UBbujBjFEGDz6IXlIErxY5XqA88pjA2K5VDPaPY890t8ppeO/FRdkk1Qd5qcDbhDeT+bvYX8wyU4peNfxZq2VadjFie3T4OkYMRLfM7tNc2EIq0t8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U124BHBx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YbudiNPf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E246C433F1;
-	Sun, 24 Mar 2024 22:51:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U124BHBx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1F1C433F1;
+	Sun, 24 Mar 2024 22:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320704;
-	bh=98j6jLoLgdzCjoiivLq8/nnY3kT0E7I8/IbXH8EktOE=;
+	s=k20201202; t=1711320706;
+	bh=b3EGla1ceGQDu3kI0qNL7DjBL1cafs8iz7Jsl5WCx38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YbudiNPfYKbowusO9sTJIcMpxM+6s2D0IWoE88DejySLspnxK3IP3KELrZFlusjwd
-	 NlPZAe66ei+6kpltWe3V4pmHXLpC/De7t7UjjgidPEYLJs/nNCr+DInc6y9YRedydA
-	 9wQNYm1ocbtRK+npEE1/vK1nVjegjgiKeziaUCd9IbBZdv/0K+CRs5nspia+6L/2gD
-	 gxc+7vIklCs7/6d0QdS32CPVFQ5UXrUHroeyZdABueEaLxYePpiPvJYUT1JCT/4rd/
-	 eFDAvJ6ESUA9puS69gJoousIwlxlZ/clU2d0KudZecCBXE9jLyW6qM0S6+IQdr1kmS
-	 ZkRgqy3XznpXQ==
+	b=U124BHBxrspiNow0F5WVpFTlhzyfVVbmgzoh+109Ew+YOV9TJzO6kNLFo7kLT4oVe
+	 fiwyPJzHnf0a833MHLiZpIZktoQYCPJBbK5kGvbTleYitzSmqwMmZYiBUDLsJzGjb4
+	 tZ0kjxT5sq21cfgiKqtLWiW4gQ6ha+ZFx13dXZbW/2zIlPl6Ev1gcvdbAhQ+Ja87jr
+	 Gl58cpuRJX2Z+z1wSDMdMggugrcvC/rIkT1cRfGEcmsiCk9frCI9XzlotDyGsNpDpt
+	 X23qNn1cIwcgEbotJ0c52yJQmWQ0Q+3pkKI6N23XTRcBxz4sMV5OG8FG6w+AYvYvBo
+	 i1o9Sku7TfNCg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Bhavya Kapoor <b-kapoor@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 266/713] arm64: dts: qcom: sm8150: correct PCIe wake-gpios
-Date: Sun, 24 Mar 2024 18:39:52 -0400
-Message-ID: <20240324224720.1345309-267-sashal@kernel.org>
+Subject: [PATCH 6.7 269/713] arm64: dts: ti: k3-j7200-common-proc-board: Modify Pinmux for wkup_uart0 and mcu_uart0
+Date: Sun, 24 Mar 2024 18:39:55 -0400
+Message-ID: <20240324224720.1345309-270-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,38 +48,61 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+From: Bhavya Kapoor <b-kapoor@ti.com>
 
-[ Upstream commit 7c38989d0f7a35c83e7c4781271d42662903fa8d ]
+[ Upstream commit 566feddd2ba5e29d9ccab36d6508592ae563f275 ]
 
-Bindings allow a "wake", not "enable", GPIO.  Schematics also use WAKE
-name for the pin:
+WKUP_PADCONFIG registers for wkup_uart0 and mcu_uart0 lies
+under wkup_pmx2 for J7200. Thus, modify pinmux for both
+of them.
 
-  sa8155p-adp.dtb: pcie@1c00000: Unevaluated properties are not allowed ('enable-gpio' was unexpected)
-
-Fixes: a1c86c680533 ("arm64: dts: qcom: sm8150: Add PCIe nodes")
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20240108131216.53867-2-krzysztof.kozlowski@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Fixes: 3709ea7f960e ("arm64: dts: ti: k3-j7200-common-proc-board: Add uart pinmux")
+Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
+Link: https://lore.kernel.org/r/20240214105846.1096733-2-b-kapoor@ti.com
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../boot/dts/ti/k3-j7200-common-proc-board.dts  | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index a662f09fdbe19..2678eac1ec794 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -1879,7 +1879,7 @@ pcie0: pci@1c00000 {
- 			phy-names = "pciephy";
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
+index cee2b4b0eb87d..53594c5fb8e8f 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
+@@ -91,24 +91,25 @@ vdd_sd_dv: gpio-regulator-TLV71033 {
+ };
  
- 			perst-gpios = <&tlmm 35 GPIO_ACTIVE_HIGH>;
--			enable-gpio = <&tlmm 37 GPIO_ACTIVE_HIGH>;
-+			wake-gpios = <&tlmm 37 GPIO_ACTIVE_HIGH>;
+ &wkup_pmx0 {
++};
++
++&wkup_pmx2 {
+ 	mcu_uart0_pins_default: mcu-uart0-default-pins {
+ 		pinctrl-single,pins = <
+-			J721E_WKUP_IOPAD(0xf4, PIN_INPUT, 0) /* (D20) MCU_UART0_RXD */
+-			J721E_WKUP_IOPAD(0xf0, PIN_OUTPUT, 0) /* (D19) MCU_UART0_TXD */
+-			J721E_WKUP_IOPAD(0xf8, PIN_INPUT, 0) /* (E20) MCU_UART0_CTSn */
+-			J721E_WKUP_IOPAD(0xfc, PIN_OUTPUT, 0) /* (E21) MCU_UART0_RTSn */
++			J721E_WKUP_IOPAD(0x90, PIN_INPUT, 0) /* (E20) MCU_UART0_CTSn */
++			J721E_WKUP_IOPAD(0x94, PIN_OUTPUT, 0) /* (E21) MCU_UART0_RTSn */
++			J721E_WKUP_IOPAD(0x8c, PIN_INPUT, 0) /* (D20) MCU_UART0_RXD */
++			J721E_WKUP_IOPAD(0x88, PIN_OUTPUT, 0) /* (D19) MCU_UART0_TXD */
+ 		>;
+ 	};
  
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pcie0_default_state>;
+ 	wkup_uart0_pins_default: wkup-uart0-default-pins {
+ 		pinctrl-single,pins = <
+-			J721E_WKUP_IOPAD(0xb0, PIN_INPUT, 0) /* (B14) WKUP_UART0_RXD */
+-			J721E_WKUP_IOPAD(0xb4, PIN_OUTPUT, 0) /* (A14) WKUP_UART0_TXD */
++			J721E_WKUP_IOPAD(0x48, PIN_INPUT, 0) /* (B14) WKUP_UART0_RXD */
++			J721E_WKUP_IOPAD(0x4c, PIN_OUTPUT, 0) /* (A14) WKUP_UART0_TXD */
+ 		>;
+ 	};
+-};
+ 
+-&wkup_pmx2 {
+ 	mcu_cpsw_pins_default: mcu-cpsw-default-pins {
+ 		pinctrl-single,pins = <
+ 			J721E_WKUP_IOPAD(0x0000, PIN_OUTPUT, 0) /* MCU_RGMII1_TX_CTL */
 -- 
 2.43.0
 
