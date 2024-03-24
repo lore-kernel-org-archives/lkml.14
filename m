@@ -1,45 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7A320FA88;
-	Sun, 24 Mar 2024 23:08:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DAA210840;
+	Sun, 24 Mar 2024 23:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321681; cv=none; b=GcKk8pWnIxsrz2SRdeBVnjZbazlgZ01l156qw5cc4tL6mGvSSJcT4y+Q3Hng0ZkAU4XQoBZ+R94pdXlzIFs/iJ+Uyl+bQMdhZUE7sBJ49UT9AYID7PfgvMf3+a1uLfHS3SvXbaWmNjGLULyPV3SqpbxTZ10C39pG7tpv4nHrC9U=
+	t=1711321694; cv=none; b=bs1yw72CPLXMXCnXD3QHzphwDZVLBe2oBjCVbRNGQBhrqOqYNo+zRhP1f4OnfNDZvYFcfR8i7BdUNX36vQGOfiI97Fqeh/Z05ddK5/WGuO55sQB3LxzXJcL3KfMZY9D0bgy1eCCxA1rbmNpLVCkbnl9ncxx88oQfBUacTRhPG0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321681; c=relaxed/simple;
-	bh=GAnoAn7uiepYlDBYHoial6Tx6Aoa33HVjdMC4Xd30z0=;
+	s=arc-20240116; t=1711321694; c=relaxed/simple;
+	bh=BApVoZr1HWgG77uIAlP5say5xUHr6e9CzMP/GXvg8hE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E5Hk/vuZ5tb4Ru9G2W97H6VOc6xbMkN0tkR5e2hmAaFAsDWESOpyiJMkQ6Cgtw8Ls2zaFcMCikcVkpDddyy5v94XM0e1jqHS7eHL9l1ynLPnJ0tz+cQ4LuHaSVOT/fsE0avwTjpu5v1KjvH2TrHflCZ9KGUXf8Y4FeXpq7x+yPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TdOBSyyx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iq/D/5zF6xKGfohMKd6U0ZhDY3kiloSRZ7scaC0sHUCigU+Sxh0AeNj6MX/Vv4P/AzoN7v8dIUtRqtMn5yeDYjPbqbK0+EUvaK8u2+qGE43oCOBUR7bDiq2zMS2EACXTdscLXqhYHMuOGW/HwHlPh1jAeNJiDms6WOwoXFgnwuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kioQo2xL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TdOBSyyx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C42C43330;
-	Sun, 24 Mar 2024 23:07:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kioQo2xL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F3FC43399;
+	Sun, 24 Mar 2024 23:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321680;
-	bh=GAnoAn7uiepYlDBYHoial6Tx6Aoa33HVjdMC4Xd30z0=;
+	s=k20201202; t=1711321693;
+	bh=BApVoZr1HWgG77uIAlP5say5xUHr6e9CzMP/GXvg8hE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TdOBSyyxpGUhVlX7ChkddqjRCo9rcx03/zCegVh0bULvDo9UVHf/lvUTGRZPBE21n
-	 OQR8dFV2kmQsbHuJPQB8O0X+csHVM1H+CLJknLx97+25rZxIaaayr0zjjXQFmlEg72
-	 +EsyIqnHGm7ytzU44H1noY4SQLSDGfJsmQEL2nSScA90fS0R8wI4YuBOSDNSzuZ4i+
-	 AiF9a58lUtlRuaNhAcu7zBG2PyOi7LsKbz71XowKKeyTV4aQTMoCik75jKuY5Wh4kZ
-	 VZfllAaf/h2/dp2+ln8QNyka/2vVjPLwu9gStXXzkAlgGsdgDtIT8j7TM+GZaTNryI
-	 Zh4SDe0U6aLMw==
+	b=kioQo2xLJhfzScD//eGYOlJbWd5y6b9k7y5x0dcrsa1xFmfcYsY185JZnBRSDrqJI
+	 DD7rg9XSvsTXCD8GgWd1/7m5yMFbnEVDl7jklXHymTmd8YZz30HuclGuzYLX/mrhWi
+	 FH6vP7yIAXlUbho/EAwAXoz7UdiDRZerBJnzn4THcVooro1zO22DQZNy84yODCcEof
+	 YmjHOzYcdmE2bzSTS4a4n7/AQZ7OBWxh0LRDgONpA2uCAX+0r2GwlgLXls7+n4v25r
+	 a4bVsS1Xn1us/7AkcnVXq2Nafx/Cvn9Jc/1B+CUYyh805PW+OecuubLZwbWdvEkkGt
+	 /zrNg2Z7j67RQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	James Clark <james.clark@arm.com>,
-	Kaige Ye <ye@kaige.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Daniil Dulov <d.dulov@aladdin.ru>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 409/638] perf stat: Avoid metric-only segv
-Date: Sun, 24 Mar 2024 18:57:26 -0400
-Message-ID: <20240324230116.1348576-410-sashal@kernel.org>
+Subject: [PATCH 6.6 422/638] media: go7007: add check of return value of go7007_read_addr()
+Date: Sun, 24 Mar 2024 18:57:39 -0400
+Message-ID: <20240324230116.1348576-423-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -53,41 +48,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ian Rogers <irogers@google.com>
+From: Daniil Dulov <d.dulov@aladdin.ru>
 
-[ Upstream commit 2543947c77e0e224bda86b4e7220c2f6714da463 ]
+[ Upstream commit 0b70530ee740861f4776ff724fcc25023df1799a ]
 
-Cycles is recognized as part of a hard coded metric in stat-shadow.c,
-it may call print_metric_only with a NULL fmt string leading to a
-segfault. Handle the NULL fmt explicitly.
+If go7007_read_addr() returns error channel is not assigned a value.
+In this case go to allocfail.
 
-Fixes: 088519f318be ("perf stat: Move the display functions to stat-display.c")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Kaige Ye <ye@kaige.org>
-Cc: John Garry <john.g.garry@oracle.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240209204947.3873294-4-irogers@google.com
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: 866b8695d67e ("Staging: add the go7007 video driver")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/stat-display.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/usb/go7007/go7007-usb.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index afe6db8e7bf4f..969ce40096330 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -560,7 +560,7 @@ static void print_metric_only(struct perf_stat_config *config,
- 	if (color)
- 		mlen += strlen(color) + sizeof(PERF_COLOR_RESET) - 1;
+diff --git a/drivers/media/usb/go7007/go7007-usb.c b/drivers/media/usb/go7007/go7007-usb.c
+index eeb85981e02b6..762c13e49bfa5 100644
+--- a/drivers/media/usb/go7007/go7007-usb.c
++++ b/drivers/media/usb/go7007/go7007-usb.c
+@@ -1201,7 +1201,9 @@ static int go7007_usb_probe(struct usb_interface *intf,
+ 				u16 channel;
  
--	color_snprintf(str, sizeof(str), color ?: "", fmt, val);
-+	color_snprintf(str, sizeof(str), color ?: "", fmt ?: "", val);
- 	fprintf(out, "%*s ", mlen, str);
- 	os->first = false;
- }
+ 				/* read channel number from GPIO[1:0] */
+-				go7007_read_addr(go, 0x3c81, &channel);
++				if (go7007_read_addr(go, 0x3c81, &channel))
++					goto allocfail;
++
+ 				channel &= 0x3;
+ 				go->board_id = GO7007_BOARDID_ADLINK_MPG24;
+ 				usb->board = board = &board_adlink_mpg24;
 -- 
 2.43.0
 
