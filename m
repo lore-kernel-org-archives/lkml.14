@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9792A146004;
-	Sun, 24 Mar 2024 23:14:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC4A535AB;
+	Sun, 24 Mar 2024 23:13:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322067; cv=none; b=bFQdzwi4ORaNih4c6SlgivkxC01wKsvHvcixi8WXlEMfYrWiTAEzebYVnfY98nCr4qVTbeAgrvEOjygAD3UHEIrw2WfdQZEH+XiTl+ZhNgLMDAp31+qslc1bq6jebwoc37xwwgPbVEH7Y0KMeV26R+BWraZ0Pqc6l+O7bw+r3q4=
+	t=1711322021; cv=none; b=o45T4uPXs6cuqXhE4VH/hyvrrjq4s3hUwzvMtRM9Ulb8EsRcwobTWLOB3NII/otaX4NTNFoYpeDwaF3NAisQRqgOL0/KAjopqOFLoKMarKmCTjOtnjbGB9W8Zsh7CsW5Cf6l8/WlrOmd/JGE6rIAh1l5BDlZIIe/+Jf6p31yvb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322067; c=relaxed/simple;
-	bh=jubhwmrQUsrVgFdJLK6lEL3+DBrHBzq3x+JNYFWCb2c=;
+	s=arc-20240116; t=1711322021; c=relaxed/simple;
+	bh=aQivHdRDzH/uaTKCJGoM2Wbuj+eFNqRsoXYaBwP44/w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oNmU5dBe1viFt7uzrOu1VZLNwB/Tzi2NCsx/7d2B34MxTB4Nx5vtzYA9efgCeX8AyaoEey3fOdtWH5acqnNjfz523KvN/jcRHYXaet4OEIBZgKdNkpOifSuTcqeEk568BcAB7gu05PVEcvUjjsBJg5t7usRwFbBC31IE9aZ1nh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BvjhK9sg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HFVRWYFsFKuc/gZJGwNZ9/KVmTRPPoooJfarljzSV8ytzJ67X82m2ku+9PHvsT/U/7fIO+ro/yHfkAjMhvetNxHJM8hWRkTIHoigvQbNiR7frB6drPUFN1F1bq2xkNPK4L1rR3zFJIlhCnjvQtYZmtYF+eJ2S/P8Uyd1ghlHkXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LgfDWIlB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvjhK9sg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92613C43394;
-	Sun, 24 Mar 2024 23:14:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LgfDWIlB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 650D6C433A6;
+	Sun, 24 Mar 2024 23:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322067;
-	bh=jubhwmrQUsrVgFdJLK6lEL3+DBrHBzq3x+JNYFWCb2c=;
+	s=k20201202; t=1711322021;
+	bh=aQivHdRDzH/uaTKCJGoM2Wbuj+eFNqRsoXYaBwP44/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BvjhK9sgmVNzJjOPD/T1jSIzwi/vEgMulMzArYwGMDECXCY50ZUKdGZgsadccEQKM
-	 BRlPVOPtqjDBBSfuazn1TNLeUPRUV6TrLKebCnEv8qqEtBBnN+C3xJ81IN9GwbQGhF
-	 DJp3w380H6ZwWblxx/s743Ecjn2S2X87x1RHR7kv3qBZ0z+yN1CH04WzG0EHA3mB7n
-	 jBIKHgq9dKRxushHLF+lbv1Zyu8MNkF23gLAqNHl2V6K7S2xI0tq8+1QhSdXxV5cGH
-	 5moRPE3QrqatfdPxOaO880gptXe9rrPhO6Y0wd28M2uXbQ6jCCSmpzxNw/EqywQWIl
-	 ge+Ek4gBsprXg==
+	b=LgfDWIlBEQiqjKnAf+Lfv0hqt38CUIxFzIj9EmPY0sPflW2vhl/KfUjoCUc/9z/ig
+	 ku+uSl1e8T8OREXfQ+YBH/iQdqoWbT9k64NW7RGanC8Y5cqN+S33qahodAFdFUumKZ
+	 6CiswVRiNEElzoNqk3wQeA+Pr470mx4swV0UVlcbckLIHVCisAQuonPRmHGR/Em3UY
+	 YRlsIVvGNZxvwyB/zVjqjoRyTaBCaRZAy61gn0ENuxx2g2+uIq6koN3dj3qpOBcu5K
+	 ph4eNRNcu6US2jvZ6DdfaUTvdjeXGaLJ7tZoIW3q5ZI2drXEfr92SaIzXK4mEghoMO
+	 sTu9qXGFEqAXw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Taehee Yoo <ap420073@gmail.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	David Ahern <dsahern@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 140/451] ipv6: mcast: remove one synchronize_net() barrier in ipv6_mc_down()
-Date: Sun, 24 Mar 2024 19:06:56 -0400
-Message-ID: <20240324231207.1351418-141-sashal@kernel.org>
+Subject: [PATCH 6.1 093/451] wifi: mwifiex: debugfs: Drop unnecessary error check for debugfs_create_dir()
+Date: Sun, 24 Mar 2024 19:06:09 -0400
+Message-ID: <20240324231207.1351418-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -51,41 +49,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
 
-[ Upstream commit 17ef8efc00b34918b966388b2af0993811895a8c ]
+[ Upstream commit 50180c7f8e3de7c2d87f619131776598fcb1478d ]
 
-As discussed in the past (commit 2d3916f31891 ("ipv6: fix skb drops
-in igmp6_event_query() and igmp6_event_report()")) I think the
-synchronize_net() call in ipv6_mc_down() is not needed.
+debugfs_create_dir() returns ERR_PTR and never return NULL.
 
-Under load, synchronize_net() can last between 200 usec and 5 ms.
+As Russell suggested, this patch removes the error checking for
+debugfs_create_dir(). This is because the DebugFS kernel API is developed
+in a way that the caller can safely ignore the errors that occur during
+the creation of DebugFS nodes. The debugfs APIs have a IS_ERR() judge in
+start_creating() which can handle it gracefully. So these checks are
+unnecessary.
 
-KASAN seems to agree as well.
-
-Fixes: f185de28d9ae ("mld: add new workqueues for process mld events")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Taehee Yoo <ap420073@gmail.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: David Ahern <dsahern@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20230903030216.1509013-3-ruanjinjie@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/mcast.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/debugfs.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index 566f3b7b957e9..a777695389403 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -2722,7 +2722,6 @@ void ipv6_mc_down(struct inet6_dev *idev)
- 	/* Should stop work after group drop. or we will
- 	 * start work again in mld_ifc_event()
- 	 */
--	synchronize_net();
- 	mld_query_stop_work(idev);
- 	mld_report_stop_work(idev);
+diff --git a/drivers/net/wireless/marvell/mwifiex/debugfs.c b/drivers/net/wireless/marvell/mwifiex/debugfs.c
+index 63f232c723374..55ca5b287fe7f 100644
+--- a/drivers/net/wireless/marvell/mwifiex/debugfs.c
++++ b/drivers/net/wireless/marvell/mwifiex/debugfs.c
+@@ -964,9 +964,6 @@ mwifiex_dev_debugfs_init(struct mwifiex_private *priv)
+ 	priv->dfs_dev_dir = debugfs_create_dir(priv->netdev->name,
+ 					       mwifiex_dfs_dir);
  
+-	if (!priv->dfs_dev_dir)
+-		return;
+-
+ 	MWIFIEX_DFS_ADD_FILE(info);
+ 	MWIFIEX_DFS_ADD_FILE(debug);
+ 	MWIFIEX_DFS_ADD_FILE(getlog);
 -- 
 2.43.0
 
