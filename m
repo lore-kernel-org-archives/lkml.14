@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B86212C80D;
-	Sun, 24 Mar 2024 22:57:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F97314B09B;
+	Sun, 24 Mar 2024 22:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321057; cv=none; b=P34ttgSBqTucGQkJPpDEIeFu/AgrSxW4xEaJaz+lPNUJ3Fh38/+DXoYkhZn/LHyrCqH2UObSz1duCbpXKbbfn3wkApVk7UM0FjU+ZebUTkP6U8ASZ351mFSFUcJSIzkwFKJRiBfscX6xPrrYiYNErtPo9CMQiNx36+RQoxK+AEk=
+	t=1711321066; cv=none; b=aWOSkUGoxU+o7qmPfiHEkmokY1Dr3vSG5d8n8pA/YL57Xyrzh84BeBU+kjcylSBXib4fiu7yPf76xeptDg8pCShJ6ft3WtyzU5u1YaDjurEtgBgR8HKtCsmc5TvQrEGnEFrTMZe4PYINSHPka/QJwy3TtCATp30sCxwm/I9F9Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321057; c=relaxed/simple;
-	bh=YKSk4417jnkaegNrpdi4LwpmOOlK3FepNJNTBW4pIRU=;
+	s=arc-20240116; t=1711321066; c=relaxed/simple;
+	bh=pRFSzQtLhCFk2XS/KpLm33y704/cqDGYsr0aJwn7PQY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L7C1IVFEBiJHlJikcfmgQ/sTAotzCtNvGmekoEAxTmKbFLtV5ggekV51RlS5mlx8vbHx7m4YF1QEMIqYtUmXauseoP1DmPaA18e239uzr1YdszvgYqVFM7Cjvx+eX+3Zz4p9Val9TNFlxXDJ3M4Igl57+JaHj5541DcwCZamCX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lr32Hr7T; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Nj85jMsoi8s0Uer94mYV6yvHeEZDHmLakcjZJn4gdic+7Vx/YkuWHRa8CNxC49TaWy3RLmXYRY560qD0wkvS6WwhiknveVc2uEJoO2sEkmf2OifLYo8aWRq8Hy5kiDclCuyRHif1HvwqH45dFQ8WpXsACHO7psanhUf0sXgHfDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SEKXJkz6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lr32Hr7T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93348C43399;
-	Sun, 24 Mar 2024 22:57:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SEKXJkz6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60266C43390;
+	Sun, 24 Mar 2024 22:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321057;
-	bh=YKSk4417jnkaegNrpdi4LwpmOOlK3FepNJNTBW4pIRU=;
+	s=k20201202; t=1711321066;
+	bh=pRFSzQtLhCFk2XS/KpLm33y704/cqDGYsr0aJwn7PQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lr32Hr7TW3AgQ+wNMPKRodTT3sLBnebF0OU8adrU8vbajaJa48D3BRnGpiXosgjX5
-	 srHuOMGyiHk9uKkSCqBrkB/CnYhzRVoPt+KqfkhL1vhNQtsK9TU/w+aw2D8316LpCJ
-	 2jmTg6S0Y1Y17nBPsetph10xhmoeKudCZHVv/jXs++eGWDd0tFFOIWhDYFBo4CMmSH
-	 fvuU8lZFAJ4hD3JDePMMMumJFu5ZjwWKg3RLhn8exu+5lQBzkb99Yd7P0xxirgCanc
-	 wKHDn5N65UCcN2xHhoiNN8EJM3D+DrzpzYBgjUaCvxQwFXDGnxE8CDQu/FFXFjwfDo
-	 0WUDcRZLSjjjA==
+	b=SEKXJkz6pUmHiX3nrW5HBp3QXuEBvw6NOYu7AV5ea/K/HIOhGbOYekjmO3in0imTt
+	 4+LeTRypHCASI43RH4oe3BtZCrWbvWCHbAgnFRW3iY2bFkzvfmpr+S8SCuGFhMhEJK
+	 fLzNuYBM805lD+TUMti+IhV/GwQdGibW70oeoqemHvTVscWzQnNu/BFTr+c+EDyn8y
+	 W2ABM9A1AI7sOLMMGHt0nhdMg4XMqy5bVagxZ9YIKPd1dMokHtBL1U6lz0jR8CoTVr
+	 1nN3mRauKGH2TMcBVurwtf7s69HksBVQICgkU2o8Zy2JbOkm2V1qb37O1jeik2vJ2T
+	 5t/47gLW9IkFg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Petre Rodan <petre.rodan@subdimension.ro>,
-	Andreas Klinger <ak@it-klinger.de>,
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 621/713] iio: pressure: mprls0025pa fix off-by-one enum
-Date: Sun, 24 Mar 2024 18:45:47 -0400
-Message-ID: <20240324224720.1345309-622-sashal@kernel.org>
+Subject: [PATCH 6.7 630/713] iio: gts-helper: Fix division loop
+Date: Sun, 24 Mar 2024 18:45:56 -0400
+Message-ID: <20240324224720.1345309-631-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,50 +49,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Petre Rodan <petre.rodan@subdimension.ro>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
 
-[ Upstream commit 9e65506ca9c7ff716c8441a33417820ad61d3a16 ]
+[ Upstream commit bb76cc45dcdfcd962a5994b8fe19ab74fc6c3c3a ]
 
-Fix off-by-one error in transfer-function property.
-The honeywell,transfer-function property takes values between 1-3 so
-make sure the proper enum gets used.
+The loop based 64bit division may run for a long time when dividend is a
+lot bigger than the divider. Replace the division loop by the
+div64_u64() which implementation may be significantly faster.
 
-Fixes: 713337d9143ed ("iio: pressure: Honeywell mprls0025pa pressure sensor")
-Co-developed-by: Andreas Klinger <ak@it-klinger.de>
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
-Link: https://lore.kernel.org/r/20231229092445.30180-5-petre.rodan@subdimension.ro
+Tested-by: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+Fixes: 38416c28e168 ("iio: light: Add gain-time-scale helpers")
+Link: https://lore.kernel.org/r/Zcn-6e-0-nh2WcfU@drtxq0yyyyyyyyyyyyyby-3.rev.dnainternet.fi
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/pressure/mprls0025pa.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iio/industrialio-gts-helper.c | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
 
-diff --git a/drivers/iio/pressure/mprls0025pa.c b/drivers/iio/pressure/mprls0025pa.c
-index 30fb2de368210..e3f0de020a40c 100644
---- a/drivers/iio/pressure/mprls0025pa.c
-+++ b/drivers/iio/pressure/mprls0025pa.c
-@@ -323,6 +323,7 @@ static int mpr_probe(struct i2c_client *client)
- 	struct iio_dev *indio_dev;
- 	struct device *dev = &client->dev;
- 	s64 scale, offset;
-+	u32 func;
+diff --git a/drivers/iio/industrialio-gts-helper.c b/drivers/iio/industrialio-gts-helper.c
+index 7653261d2dc2b..b51eb6cb766f3 100644
+--- a/drivers/iio/industrialio-gts-helper.c
++++ b/drivers/iio/industrialio-gts-helper.c
+@@ -34,24 +34,11 @@
+ static int iio_gts_get_gain(const u64 max, const u64 scale)
+ {
+ 	u64 full = max;
+-	int tmp = 1;
  
- 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_READ_BYTE))
- 		return dev_err_probe(dev, -EOPNOTSUPP,
-@@ -362,10 +363,11 @@ static int mpr_probe(struct i2c_client *client)
- 			return dev_err_probe(dev, ret,
- 				"honeywell,pmax-pascal could not be read\n");
- 		ret = device_property_read_u32(dev,
--				"honeywell,transfer-function", &data->function);
-+				"honeywell,transfer-function", &func);
- 		if (ret)
- 			return dev_err_probe(dev, ret,
- 				"honeywell,transfer-function could not be read\n");
-+		data->function = func - 1;
- 		if (data->function > MPR_FUNCTION_C)
- 			return dev_err_probe(dev, -EINVAL,
- 				"honeywell,transfer-function %d invalid\n",
+ 	if (scale > full || !scale)
+ 		return -EINVAL;
+ 
+-	if (U64_MAX - full < scale) {
+-		/* Risk of overflow */
+-		if (full - scale < scale)
+-			return 1;
+-
+-		full -= scale;
+-		tmp++;
+-	}
+-
+-	while (full > scale * (u64)tmp)
+-		tmp++;
+-
+-	return tmp;
++	return div64_u64(full, scale);
+ }
+ 
+ /**
 -- 
 2.43.0
 
