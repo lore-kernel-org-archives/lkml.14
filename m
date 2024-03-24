@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343901826F1;
-	Sun, 24 Mar 2024 23:49:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EFE181CEB;
+	Sun, 24 Mar 2024 23:48:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324153; cv=none; b=AzKuzL8embqCfkreIPFRVJZxT+Sfnt9hIPlYUtbSPrJNJzgxpqf01FHlOzIqOTxzc/S+lAgc0BkhisomrjFRJ8lnJ19fyP8eHqSRjPma+z6V5I3pAHyc07t3ohhyioX3gtjbUg6Jz+DsuxVRi/kzb8ytPsYW7UKNKyqYRd9NPc8=
+	t=1711324128; cv=none; b=HIhKuZUqJzYtldrjkUld+CpBlQut45L+Kr3AqS8SHcDxsT0QgXarZ6EH6oP4eOX3UYfmwnj2e+z7BYCb+V0WEGM71++Wt7vug8ALOTwP/QMXnUYTVud5DPNAxCMIQZpiKmOeZJruScQe8Cyg5ILywdKaOQUVdNlktssH2zWI+5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324153; c=relaxed/simple;
-	bh=LYhPIjMpKEPwiaOA5bQCN6S1WNeGsEIjM6B9l315d1c=;
+	s=arc-20240116; t=1711324128; c=relaxed/simple;
+	bh=rNDijfEyC5ir0j9HjxxEwdGbtVG4058Sq8QzGTqaCdg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qth4g4EOZA10Dp+ZFx35ly4RWA96Fa6GkL/ELX2pd4EoMzGTNp3vG+JtVpF7Rv2MJHq5qrZHSLEQMAtNofIYBjO29cNhcgdPEm+tIxN2l4DU2AVAVDUaJ1lLBZnTt408LTGAL+AzRt2aH5zLh4sL2SxtEqpj1ZfM3rd7cWKw8Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOoiTx5M; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IPl3Gtvnv/PbLz9a8CwUQ2Yj3Vw6cnnfzM+k96SxuxEnW2KL4rnE7us57aDbpAQcKwHV09f5kcOYD6Kygmm8KtSJVJ+ffpMiw+HmIB04Rca3zyNjfZWz9MV5xRCCu7QHg9yRDZp/6b60y6GIitkzPVccUvRiJWt61S2BSsr5p9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQMfnODo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOoiTx5M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E5A0C43390;
-	Sun, 24 Mar 2024 23:49:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQMfnODo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CF3EC433A6;
+	Sun, 24 Mar 2024 23:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324152;
-	bh=LYhPIjMpKEPwiaOA5bQCN6S1WNeGsEIjM6B9l315d1c=;
+	s=k20201202; t=1711324126;
+	bh=rNDijfEyC5ir0j9HjxxEwdGbtVG4058Sq8QzGTqaCdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WOoiTx5MO5C/CIAfm3VkqlyzcauSIV+3E2Gwy9NxBzE+qo7FEDLfqFeXdBoIhk+Ni
-	 5Yz+goY7xUgsNCl7r/DThSa7+MC0VDAZyGXUdWNqjJtl1cpU0Qgs5lIHhBqKTwgZ39
-	 zWmDvauqAkS1CXRN6lRM20c8B4fSiGlEDVEa6miUuQUGlzRj0iTrFxRxdTc0nAPwUH
-	 juvgks7Rsmu+VQvE2p+l5WQytyRpQOhhahMyKLzeBFBQZ3j/WcymYGUlXuz/ZCOSrG
-	 PiRdO6eiZogpU2z3akM2Skb202zlYFdfg5NrFuubAAJm4rn3Uav39tctQ83cKD3VGE
-	 rLeCHzNqpgBtw==
+	b=OQMfnODouKKGm3PoNNdfMoj6WpwesBz3J7cgRvosAa00naiyqdzGZibXPnVwZc5XL
+	 md6egDitQ3DHyXQqVGzqNMmXjmZ+btvdGITPQiiw7IvQxw4QCy7aBjBKZBj2G6PHiM
+	 YznR8g1lSiIy77EyAhgxBZ74BZmpudwLPx0QbfFFsAZzBusqnbSRskx5o5fAlEpd9h
+	 PvtQZ9QTw1twPHlP1F4ChFmD68t2/WveHFJM1fXo4PrqzNXK1mHAXDC18FoKXp728v
+	 w0qflEPwY3wLHZQk7MKjDNgNqY9BH1XJIeJ7aC+pSpUKM1xjPXPkY/Dnhe/J5VYuPU
+	 EmC18hbCi9osQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Thompson <daniel.thompson@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 148/183] backlight: lp8788: Fully initialize backlight_properties during probe
-Date: Sun, 24 Mar 2024 19:46:01 -0400
-Message-ID: <20240324234638.1355609-149-sashal@kernel.org>
+Subject: [PATCH 5.4 124/183] clk: hisilicon: hi3519: Release the correct number of gates in hi3519_clk_unregister()
+Date: Sun, 24 Mar 2024 19:45:37 -0400
+Message-ID: <20240324234638.1355609-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,35 +48,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Thompson <daniel.thompson@linaro.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 392346827fbe8a7fd573dfb145170d7949f639a6 ]
+[ Upstream commit 74e39f526d95c0c119ada1874871ee328c59fbee ]
 
-props is stack allocated and the fields that are not explcitly set
-by the probe function need to be zeroed or we'll get undefined behaviour
-(especially so power/blank states)!
+The gates are stored in 'hi3519_gate_clks', not 'hi3519_mux_clks'.
+This is also in line with how hisi_clk_register_gate() is called in the
+probe.
 
-Fixes: c5a51053cf3b ("backlight: add new lp8788 backlight driver")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240220153532.76613-4-daniel.thompson@linaro.org
-Signed-off-by: Lee Jones <lee@kernel.org>
+Fixes: 224b3b262c52 ("clk: hisilicon: hi3519: add driver remove path and fix some issues")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/c3f1877c9a0886fa35c949c8f0ef25547f284f18.1704912510.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lp8788_bl.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/hisilicon/clk-hi3519.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/lp8788_bl.c b/drivers/video/backlight/lp8788_bl.c
-index ba42f3fe0c739..d9b95dbd40d30 100644
---- a/drivers/video/backlight/lp8788_bl.c
-+++ b/drivers/video/backlight/lp8788_bl.c
-@@ -191,6 +191,7 @@ static int lp8788_backlight_register(struct lp8788_bl *bl)
- 	int init_brt;
- 	char *name;
+diff --git a/drivers/clk/hisilicon/clk-hi3519.c b/drivers/clk/hisilicon/clk-hi3519.c
+index ad0c7f350cf03..60d8a27a90824 100644
+--- a/drivers/clk/hisilicon/clk-hi3519.c
++++ b/drivers/clk/hisilicon/clk-hi3519.c
+@@ -130,7 +130,7 @@ static void hi3519_clk_unregister(struct platform_device *pdev)
+ 	of_clk_del_provider(pdev->dev.of_node);
  
-+	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_PLATFORM;
- 	props.max_brightness = MAX_BRIGHTNESS;
- 
+ 	hisi_clk_unregister_gate(hi3519_gate_clks,
+-				ARRAY_SIZE(hi3519_mux_clks),
++				ARRAY_SIZE(hi3519_gate_clks),
+ 				crg->clk_data);
+ 	hisi_clk_unregister_mux(hi3519_mux_clks,
+ 				ARRAY_SIZE(hi3519_mux_clks),
 -- 
 2.43.0
 
