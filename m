@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A928827986B;
-	Sun, 24 Mar 2024 23:37:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEFE17653B;
+	Sun, 24 Mar 2024 23:37:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323472; cv=none; b=PT5UiXe7QU7SVOoNJyBuBzcfrRKzclgKcQgfmFsdbHuIis8iCtA9L3meKRVLxwhojr6Ycvif0x3ZyJzlWc6DrxISOyUBby4llliQA1thl10OsGl+okV5Qt5emZENRJKBJ0Hh4HtvGvkFPlVshqZiNtEWFNc+5kM4oyrrh7H2hFM=
+	t=1711323470; cv=none; b=ffy+8JmqnvHQw73/5nyhSoXsAYf+oj3mKX8gqvLeF5tbFg8qRQ8afIFLAeDY0/mW8lbTU/6sYmgq/vGJd1GJeYEmugNJV5g3ofmJuCaADMKKXN9uBF6I69GBctzVOwXCWhQpT/0Hy0HuTWvEK2dzcV3FUNHXEvQycils67PNfXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323472; c=relaxed/simple;
-	bh=FcV2LyNeS5NvwWQZ7eNEJWAEk+UQUWpI6/3m2Ohd3jc=;
+	s=arc-20240116; t=1711323470; c=relaxed/simple;
+	bh=YQYjx84VF8Ytr/8x1QtpeDDlDyUAUDgeseEHLG2KJkc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hRSogJQtmqPIU7Uqw7080RV+YjGWvhqzQw8DSblGKMD4Ro4tDFn0Zyj9QzbwMExLLoKztU9xPYf0jRLXFQcJ0gGSsnyt5l8I+Zj//13nqbUF0WhwyFmbt/w38doxwRp6YSTZ+zhNiE87Z3nkdKO/zYRyDKmVYxlPF7KGeiKueuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X85ew9iV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eDIcc1Rc/vpy+rp5sszDTFMV0YQUmgzn2hYKfef+qu0RFInk4PoKgVlPun++o18GIewgcQEOSqwmMzA6VG0vEkuwUkpRCk5PuDyKYa/luwcDAb9U0oi28tmrJHplvUs5VFeKDqqvotLwSTiZ8xa5LkRfEhukc8/3Vgj6U4KV5Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dps6SYB7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X85ew9iV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7AFEC433C7;
-	Sun, 24 Mar 2024 23:37:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dps6SYB7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27A44C43390;
+	Sun, 24 Mar 2024 23:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323471;
-	bh=FcV2LyNeS5NvwWQZ7eNEJWAEk+UQUWpI6/3m2Ohd3jc=;
+	s=k20201202; t=1711323469;
+	bh=YQYjx84VF8Ytr/8x1QtpeDDlDyUAUDgeseEHLG2KJkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X85ew9iVlj8+LxYB/HrSmDrJcmjH3CUN9iyQpTFd2EBepWH9YzwCEqsFEHsiZigQy
-	 lL+zTJcRU4hmfZDF38ykO9aUslx4+URLP5mtKzWTtDOJwAPR+UA9S40HB8D4t/+fni
-	 UGQ2AULXPxKEgVM8vxvHDllA3o6D2ZFvet8II0StDO+IHr1E7BXCtouUZ0Ufnjk8oU
-	 rZD7i4wt1sNLGXs0ZUICj4mmzVUXb/jpCSsMQDJ7ErOTlBVQtAsj+RklKVqLSlE+Vf
-	 FeazBJhU0wPUvZCx94CqRBsPGEKrBxkHOCHGnx5cfD0SGkaGKOqmRMtWtoPScIG16z
-	 PhptrTAqaKBCw==
+	b=Dps6SYB7MzXBll5ZfPH2Os65ikZ7sMAWUUCOgE9oai8uL663QDj8dUykz+T1ThUeP
+	 1GkMFlyxNwOKJ4A2VyEWiVOROmtGTS2UuSSlYQjopoXz5ldGMf4s7F4TMHzuSy4IRK
+	 BMJxnr4m6MCjjwx8ZV5WJXrwW3mtykOcDy4wMEcJ62fklSoivQLzvx81SvewJZywfY
+	 2H6kFTIx/tqpznkyNMxmEBHwwJoGXfIF3m6Y2SwakItEFcVojVjtD6vENpI5smdzZx
+	 CBYjYaFNLXCaPyMSjEeLYHv8kVOOGLYoMEKdrvbRbn8A0zKCW9qB8cYZJTpN5tupOF
+	 UrBf9nJ0Gcmrw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yang Jihong <yangjihong1@huawei.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Robert Foss <rfoss@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 176/317] perf record: Fix possible incorrect free in record__switch_output()
-Date: Sun, 24 Mar 2024 19:32:36 -0400
-Message-ID: <20240324233458.1352854-177-sashal@kernel.org>
+Subject: [PATCH 5.15 174/317] media: tc358743: register v4l2 async device only after successful setup
+Date: Sun, 24 Mar 2024 19:32:34 -0400
+Message-ID: <20240324233458.1352854-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,38 +48,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yang Jihong <yangjihong1@huawei.com>
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-[ Upstream commit aff10a165201f6f60cff225083ce301ad3f5d8f1 ]
+[ Upstream commit 87399f1ff92203d65f1febf5919429f4bb613a02 ]
 
-perf_data__switch() may not assign a legal value to 'new_filename'.
-In this case, 'new_filename' uses the on-stack value, which may cause a
-incorrect free and unexpected result.
+Ensure the device has been setup correctly before registering the v4l2
+async device, thus allowing userspace to access.
 
-Fixes: 03724b2e9c45 ("perf record: Allow to limit number of reported perf.data files")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240119040304.3708522-2-yangjihong1@huawei.com
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Reviewed-by: Robert Foss <rfoss@kernel.org>
+Fixes: 4c5211a10039 ("[media] tc358743: register v4l2 asynchronous subdevice")
+Signed-off-by: Robert Foss <rfoss@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20240110090111.458115-1-alexander.stein@ew.tq-group.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-record.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/tc358743.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index b3509d9d20cc2..b92c26f6aa1d7 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1277,8 +1277,8 @@ static int
- record__switch_output(struct record *rec, bool at_exit)
- {
- 	struct perf_data *data = &rec->data;
-+	char *new_filename = NULL;
- 	int fd, err;
--	char *new_filename;
+diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
+index 3205cd8298dd8..4c6852dc40a90 100644
+--- a/drivers/media/i2c/tc358743.c
++++ b/drivers/media/i2c/tc358743.c
+@@ -2108,9 +2108,6 @@ static int tc358743_probe(struct i2c_client *client)
+ 	state->mbus_fmt_code = MEDIA_BUS_FMT_RGB888_1X24;
  
- 	/* Same Size:      "2015122520103046"*/
- 	char timestamp[] = "InvalidTimestamp";
+ 	sd->dev = &client->dev;
+-	err = v4l2_async_register_subdev(sd);
+-	if (err < 0)
+-		goto err_hdl;
+ 
+ 	mutex_init(&state->confctl_mutex);
+ 
+@@ -2168,6 +2165,10 @@ static int tc358743_probe(struct i2c_client *client)
+ 	if (err)
+ 		goto err_work_queues;
+ 
++	err = v4l2_async_register_subdev(sd);
++	if (err < 0)
++		goto err_work_queues;
++
+ 	v4l2_info(sd, "%s found @ 0x%x (%s)\n", client->name,
+ 		  client->addr << 1, client->adapter->name);
+ 
 -- 
 2.43.0
 
