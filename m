@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D716210857;
-	Sun, 24 Mar 2024 23:08:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE3E153570;
+	Sun, 24 Mar 2024 23:08:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321696; cv=none; b=q5z8HgciT0NrK2beIOaD5D31RnhkOhqyHKajVh05aPYTzJ5TndI7MsjLs7yzhXpdUX08G1TEbVUwghFK+lkOP3E9ZdY+ue5BUCygrpxozhwYiDuLoWWMnvwtaXRlYLznPcCE4Dr3icGZfwTyeBUfFaDAQ/xurFjEgZfMb86mowU=
+	t=1711321689; cv=none; b=ZD7cc/P8wOIT2FEcI+bUzdmgaCDKquRJqfOtsRQKJV8+k346y3geFJBPGkKWcPDjTtLpdqws0jTPLB/y5KE5+FPlca/Kwmbv0FvbnSab3tg6r9nF6nldrwUGN2bj/p7c3Ca4Xkxd9s87xUmyqy9Od1VdhdNTKdCcp//0rEZ0wzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321696; c=relaxed/simple;
-	bh=yYTK3GBeBJ6pb6nFTxDchYYPTvh21mQVFBwD5goDuPQ=;
+	s=arc-20240116; t=1711321689; c=relaxed/simple;
+	bh=oqhLPo+DOeJ4q8k2R1Tcqp5ocx3a9IJ+GYd3/R2/ZIM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JBPwzbnXBqvFXWwJyGzSuwkB4nvd2Cq/iE7Xz2eW1Y/Y/oRfPrQeq16MFDwgeUyD56FPTJaL4e+UT3HQO+r/3KBnT+oQNBIcCs0fxcMm2ZR57KxGBkUA39/iz+DDH4gvxzYRy4J0t51N5LdwcfvvRVUDalMwA6c7eRXYooFeivU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cvIHdFuX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=f6l2plq1ncdIxEdSKi5QSK/0npLde8UhyhTzrDIliB/op5XvdNcnLlx3zDIaDZZ2jD3g0rL3/atPa4FB+I/fi7RLIT2mfaEHH7FS4MqKv0VC5pYoIJLb7DFlZhhwom3yokAcTlj0AE/5yAluNn55Gdn//NJ2ozbLv7KisDFcXkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VuVJH+Zy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cvIHdFuX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE9B3C43390;
-	Sun, 24 Mar 2024 23:08:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VuVJH+Zy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E883C43394;
+	Sun, 24 Mar 2024 23:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321695;
-	bh=yYTK3GBeBJ6pb6nFTxDchYYPTvh21mQVFBwD5goDuPQ=;
+	s=k20201202; t=1711321688;
+	bh=oqhLPo+DOeJ4q8k2R1Tcqp5ocx3a9IJ+GYd3/R2/ZIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cvIHdFuXHNOsoEi29tkma+heOFRlIgOfa+YD4M/ujitmc9owWDNam/ngkI/zperbw
-	 4/QVcBCGCZEMNWb5XbgE4XDCcBA3snPS+2BJLKGs+3o1RuZ0+5n74xwgwQsNQhd2rx
-	 bfi23QwO8FQA1P20PZz5JZSB5PmwX5c+4F5v94c3/WKBtTJg1ArmQ+u5IJiBUiAmyZ
-	 LWWWxbirp+VfLWZ1liw1oF/sUT6b2fdgZP2t/IQSeXXkhkEOrPTRt1vcVKXPqT8kwM
-	 JLYKTz1mNAmW7sQSVn8q1haEvMu69kfpqQ4AwNmw4wLYHyzeHsrtHRv74U+hbHvHZv
-	 QeBW0e0oBsQLw==
+	b=VuVJH+ZyBux8zduCBtepjJNd6xTdurIjAuSwbJEAwo4TxpjVB2mzajGBl6xUIihdd
+	 buVPCmbg5JJFhZKJRqvTptdn8oRtHvoTES8X1ICIlbDWieCvB3/+NmqHVOke/kKD6f
+	 lXhojDdn/yJnu3U2WXd9hGyospqcqfvowKXkdJQTqzEEmEfDnVPkPg4Ky0rATQM4xI
+	 0uB2SnD7SZEZk/n9UDnaClI02zW03Ky0BbkUbsqiFud/RROZBHnxZAw2wo9DTBHmoB
+	 PHKSoKme0zBkIJl1ENQTR2ZZAn2wFD4zbAKznkSCCILI4vmnSwSP31WC0g5UFwCkex
+	 n/k4U1+X8pLnA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Yang Yingliang <yangyingliang@huawei.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Dave Jiang <dave.jiang@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 424/638] media: pvrusb2: fix pvr2_stream_callback casts
-Date: Sun, 24 Mar 2024 18:57:41 -0400
-Message-ID: <20240324230116.1348576-425-sashal@kernel.org>
+Subject: [PATCH 6.6 416/638] NTB: fix possible name leak in ntb_register_device()
+Date: Sun, 24 Mar 2024 18:57:33 -0400
+Message-ID: <20240324230116.1348576-417-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,117 +46,85 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit 30baa4a96b23add91a87305baaeba82c4e109e1f ]
+[ Upstream commit aebfdfe39b9327a3077d0df8db3beb3160c9bdd0 ]
 
-clang-16 complains about a control flow integrity (KCFI) issue in pvrusb2,
-which casts three different prototypes into pvr2_stream_callback:
+If device_register() fails in ntb_register_device(), the device name
+allocated by dev_set_name() should be freed. As per the comment in
+device_register(), callers should use put_device() to give up the
+reference in the error path. So fix this by calling put_device() in the
+error path so that the name can be freed in kobject_cleanup().
 
-drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:1070:30: error: cast from 'void (*)(struct pvr2_v4l2_fh *)' to 'pvr2_stream_callback' (aka 'void (*)(void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1070 |         pvr2_stream_set_callback(sp,(pvr2_stream_callback)pvr2_v4l2_notify,fh);
-      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/media/usb/pvrusb2/pvrusb2-context.c:110:6: error: cast from 'void (*)(struct pvr2_context *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-  110 |                                         (void (*)(void *))pvr2_context_notify,
-      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/media/usb/pvrusb2/pvrusb2-dvb.c:152:6: error: cast from 'void (*)(struct pvr2_dvb_adapter *)' to 'pvr2_stream_callback' (aka 'void (*)(void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-  152 |                                  (pvr2_stream_callback) pvr2_dvb_notify, adap);
-      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+As a result of this, put_device() in the error path of
+ntb_register_device() is removed and the actual error is returned.
 
-Change the functions to actually take a void* argument so the cast is no longer
-needed.
-
-Fixes: bb8ce9d9143c ("V4L/DVB (7682): pvrusb2-dvb: finish up stream & buffer handling")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: a1bd3baeb2f1 ("NTB: Add NTB hardware abstraction layer")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/20231201033057.1399131-1-yangyingliang@huaweicloud.com
+[mani: reworded commit message]
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-context.c | 8 ++++----
- drivers/media/usb/pvrusb2/pvrusb2-dvb.c     | 6 ++++--
- drivers/media/usb/pvrusb2/pvrusb2-v4l2.c    | 6 ++++--
- 3 files changed, 12 insertions(+), 8 deletions(-)
+ drivers/ntb/core.c                            | 8 +++++++-
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 6 +-----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-index 1764674de98bc..58f2f3ff10ee2 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-@@ -90,8 +90,10 @@ static void pvr2_context_destroy(struct pvr2_context *mp)
- }
+diff --git a/drivers/ntb/core.c b/drivers/ntb/core.c
+index 27dd93deff6e5..d702bee780826 100644
+--- a/drivers/ntb/core.c
++++ b/drivers/ntb/core.c
+@@ -100,6 +100,8 @@ EXPORT_SYMBOL(ntb_unregister_client);
  
- 
--static void pvr2_context_notify(struct pvr2_context *mp)
-+static void pvr2_context_notify(void *ptr)
+ int ntb_register_device(struct ntb_dev *ntb)
  {
-+	struct pvr2_context *mp = ptr;
++	int ret;
 +
- 	pvr2_context_set_notify(mp,!0);
- }
+ 	if (!ntb)
+ 		return -EINVAL;
+ 	if (!ntb->pdev)
+@@ -120,7 +122,11 @@ int ntb_register_device(struct ntb_dev *ntb)
+ 	ntb->ctx_ops = NULL;
+ 	spin_lock_init(&ntb->ctx_lock);
  
-@@ -106,9 +108,7 @@ static void pvr2_context_check(struct pvr2_context *mp)
- 		pvr2_trace(PVR2_TRACE_CTXT,
- 			   "pvr2_context %p (initialize)", mp);
- 		/* Finish hardware initialization */
--		if (pvr2_hdw_initialize(mp->hdw,
--					(void (*)(void *))pvr2_context_notify,
--					mp)) {
-+		if (pvr2_hdw_initialize(mp->hdw, pvr2_context_notify, mp)) {
- 			mp->video_stream.stream =
- 				pvr2_hdw_get_video_stream(mp->hdw);
- 			/* Trigger interface initialization.  By doing this
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-dvb.c b/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
-index 26811efe0fb58..9a9bae21c6147 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
-@@ -88,8 +88,10 @@ static int pvr2_dvb_feed_thread(void *data)
- 	return stat;
- }
- 
--static void pvr2_dvb_notify(struct pvr2_dvb_adapter *adap)
-+static void pvr2_dvb_notify(void *ptr)
- {
-+	struct pvr2_dvb_adapter *adap = ptr;
+-	return device_register(&ntb->dev);
++	ret = device_register(&ntb->dev);
++	if (ret)
++		put_device(&ntb->dev);
 +
- 	wake_up(&adap->buffer_wait_data);
++	return ret;
  }
+ EXPORT_SYMBOL(ntb_register_device);
  
-@@ -149,7 +151,7 @@ static int pvr2_dvb_stream_do_start(struct pvr2_dvb_adapter *adap)
+diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+index 3f60128560ed0..2b7bc5a731dd6 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+@@ -1278,15 +1278,11 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	ret = ntb_register_device(&ndev->ntb);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to register NTB device\n");
+-		goto err_register_dev;
++		return ret;
  	}
  
- 	pvr2_stream_set_callback(pvr->video_stream.stream,
--				 (pvr2_stream_callback) pvr2_dvb_notify, adap);
-+				 pvr2_dvb_notify, adap);
- 
- 	ret = pvr2_stream_set_buffer_count(stream, PVR2_DVB_BUFFER_COUNT);
- 	if (ret < 0) return ret;
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-index d195bd6a2248b..d608b793fa847 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-@@ -1033,8 +1033,10 @@ static int pvr2_v4l2_open(struct file *file)
+ 	dev_dbg(dev, "PCI Virtual NTB driver loaded\n");
+ 	return 0;
+-
+-err_register_dev:
+-	put_device(&ndev->ntb.dev);
+-	return -EINVAL;
  }
  
- 
--static void pvr2_v4l2_notify(struct pvr2_v4l2_fh *fhp)
-+static void pvr2_v4l2_notify(void *ptr)
- {
-+	struct pvr2_v4l2_fh *fhp = ptr;
-+
- 	wake_up(&fhp->wait_data);
- }
- 
-@@ -1067,7 +1069,7 @@ static int pvr2_v4l2_iosetup(struct pvr2_v4l2_fh *fh)
- 
- 	hdw = fh->channel.mc_head->hdw;
- 	sp = fh->pdi->stream->stream;
--	pvr2_stream_set_callback(sp,(pvr2_stream_callback)pvr2_v4l2_notify,fh);
-+	pvr2_stream_set_callback(sp, pvr2_v4l2_notify, fh);
- 	pvr2_hdw_set_stream_type(hdw,fh->pdi->config);
- 	if ((ret = pvr2_hdw_set_streaming(hdw,!0)) < 0) return ret;
- 	return pvr2_ioread_set_enabled(fh->rhp,!0);
+ static struct pci_device_id pci_vntb_table[] = {
 -- 
 2.43.0
 
