@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F79917CF61;
-	Sun, 24 Mar 2024 23:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F246817CF65;
+	Sun, 24 Mar 2024 23:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323809; cv=none; b=UVg4K/hBX+gTZxON6jPvGiDYI1zXXKExMBR8M/VIxkKloD35eJib0spXDjJ2VRF/u2TOc+ohn+BAtPZ8qiOqkEfLMc+sHMjtVpnSJtQ13HddROIe5RPuXI/BebMfrmHmd9Ej6pygqEBXDsdG95+vbERgeGLnp/YnOGiFvbHZzhw=
+	t=1711323810; cv=none; b=C4ZyWrbMQ/q72dcCeOlGpR3Nf/AK8L4VJz+Ow8MciNEu6B63IMfnb/vjHNAW+W4q/nYfn3GHlL+pgBy7DLMIBpJQP63LdBou9VfINC/CsktFl1KedRl4Q7WKIPKr7HWPTEiBqK1Jv7bIwTqZq73TLW/ECf1wdmezwEPGY2re9+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323809; c=relaxed/simple;
-	bh=sEYKigNfaix1DXTkbduGtVqUs9Nej6EnPx1x34vReh0=;
+	s=arc-20240116; t=1711323810; c=relaxed/simple;
+	bh=jmfwr9b4WGqYyhKL2RJ0GcThkXvWGfJ4utHVDz5KbWM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CkCrNO2JyAAvA6EfHTuUFEJ0svS0MgkiF19bzbqcldzlnvXFqSysKZWPv0EJjY9b7KC9iZ8AG5JCyn8hhTFdWREIEtjjDDUmoWGrkaH2C9Jr+4+4dUu5WEaJWFZnkyQyO/GuipfC3dijUw8y1XVyF7GWiD/CrfDZEP29kV0zxvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Au8W/fLx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sqz6xAblajpYU0CZagMmnmMyd7nQ9bECKlPoZ0Z8kXdWuNdTWOBYirIhPRZRMMoqm9LJegaaISDLXbEOPUOU3wz8b3jKKn5hgmgbuglVzaRKSI4XGURcKw+YC6y+UCF/JizK0nFYM9NFNtBgjkf9H+hwv9HpOnUMUfiksc2C1zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IAxfDj0L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Au8W/fLx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D47FC433C7;
-	Sun, 24 Mar 2024 23:43:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IAxfDj0L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 258B4C43390;
+	Sun, 24 Mar 2024 23:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323808;
-	bh=sEYKigNfaix1DXTkbduGtVqUs9Nej6EnPx1x34vReh0=;
+	s=k20201202; t=1711323809;
+	bh=jmfwr9b4WGqYyhKL2RJ0GcThkXvWGfJ4utHVDz5KbWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Au8W/fLxPcg6Wp5lvaQrL4K9BwNpW66nobnKL42lGBSGIhfEzGMIOWebXkYrLCdSf
-	 QfhXp9EEb03LuOj0C7j3ib8oT8tNHQdy+uoM/CnJat8jY4sbLwypltkz9dxdYsTV62
-	 5fdvGlrx+8KYIepNpFgMLTO+OSX1JPoiOhmoA3XJ82EtWq2RXA3ei8oWw7aQa8QnnI
-	 EomQECbVbnkNhM8DJ8AHkW9MMoLsx6qX1ton+nkvmP9z9WeYK4QpNqHAiU6R+vMI2j
-	 APx8HLg23L9tIpdO1YuFH2jWkK4nQCU8hArXROmUWLXgbrDPg9qxzAfQrb6FhNqXxd
-	 DmnNeq+i3IOEg==
+	b=IAxfDj0Lw9zUYXselNFbt/IAo6PnzDmfUZjlah7yCpt6eC/c4OIF/Z17SVWnUyI6V
+	 AJ5MnvVkYPPlMBXDAJJb755nM/9bQ6WZ/gSr4oyglgtLjDQsuEFaJBTl03d9Qb1U+E
+	 KZB40zYrIcmexaGJTa8HQG3pAnHtAZ19pa+26NHU21BoAd/ThhacLlQau+rARb59id
+	 Jy1cmCcevfcDUC4UoHdvWeu6ebAjU8fnGJXwkOjC0YcKxboD+z4JvMti5dMiV23YD2
+	 4/ZnobaoRD5cZOsjIM5akDFTcn/EN1psHsXCHXoCsGIohenBOk0oBV3XNM1p0r0ED7
+	 2bI68kQiWtlmw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Thompson <daniel.thompson@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 186/238] backlight: lm3639: Fully initialize backlight_properties during probe
-Date: Sun, 24 Mar 2024 19:39:34 -0400
-Message-ID: <20240324234027.1354210-187-sashal@kernel.org>
+Subject: [PATCH 5.10 188/238] arch/powerpc: Remove <linux/fb.h> from backlight code
+Date: Sun, 24 Mar 2024 19:39:36 -0400
+Message-ID: <20240324234027.1354210-189-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,35 +49,96 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Thompson <daniel.thompson@linaro.org>
+From: Thomas Zimmermann <tzimmermann@suse.de>
 
-[ Upstream commit abb5a5d951fbea3feb5c4ba179b89bb96a1d3462 ]
+[ Upstream commit 838f865802b9f26135ea7df4e30f89ac2f50c23e ]
 
-props is stack allocated and the fields that are not explcitly set
-by the probe function need to be zeroed or we'll get undefined behaviour
-(especially so power/blank states)!
+Replace <linux/fb.h> with a forward declaration in <asm/backlight.h> to
+resolve an unnecessary dependency. Remove pmac_backlight_curve_lookup()
+and struct fb_info from source and header files. The function and the
+framebuffer struct are unused. No functional changes.
 
-Fixes: 0f59858d5119 ("backlight: add new lm3639 backlight driver")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240220153532.76613-3-daniel.thompson@linaro.org
-Signed-off-by: Lee Jones <lee@kernel.org>
+v3:
+	* Add Fixes tag (Christophe)
+	* fix typos in commit message (Jani)
+
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Fixes: d565dd3b0824 ("[PATCH] powerpc: More via-pmu backlight fixes")
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> # (powerpc)
+Link: https://patchwork.freedesktop.org/patch/msgid/20240306122935.10626-4-tzimmermann@suse.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lm3639_bl.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/include/asm/backlight.h        |  5 ++--
+ arch/powerpc/platforms/powermac/backlight.c | 26 ---------------------
+ 2 files changed, 2 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/video/backlight/lm3639_bl.c b/drivers/video/backlight/lm3639_bl.c
-index 48c04155a5f9d..bb617f4673e94 100644
---- a/drivers/video/backlight/lm3639_bl.c
-+++ b/drivers/video/backlight/lm3639_bl.c
-@@ -339,6 +339,7 @@ static int lm3639_probe(struct i2c_client *client,
- 	}
+diff --git a/arch/powerpc/include/asm/backlight.h b/arch/powerpc/include/asm/backlight.h
+index 1b5eab62ed047..061a910d74929 100644
+--- a/arch/powerpc/include/asm/backlight.h
++++ b/arch/powerpc/include/asm/backlight.h
+@@ -10,15 +10,14 @@
+ #define __ASM_POWERPC_BACKLIGHT_H
+ #ifdef __KERNEL__
  
- 	/* backlight */
-+	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW;
- 	props.brightness = pdata->init_brt_led;
- 	props.max_brightness = pdata->max_brt_led;
+-#include <linux/fb.h>
+ #include <linux/mutex.h>
+ 
++struct backlight_device;
++
+ /* For locking instructions, see the implementation file */
+ extern struct backlight_device *pmac_backlight;
+ extern struct mutex pmac_backlight_mutex;
+ 
+-extern int pmac_backlight_curve_lookup(struct fb_info *info, int value);
+-
+ extern int pmac_has_backlight_type(const char *type);
+ 
+ extern void pmac_backlight_key(int direction);
+diff --git a/arch/powerpc/platforms/powermac/backlight.c b/arch/powerpc/platforms/powermac/backlight.c
+index 32224cb489d75..eab339d2059d5 100644
+--- a/arch/powerpc/platforms/powermac/backlight.c
++++ b/arch/powerpc/platforms/powermac/backlight.c
+@@ -9,7 +9,6 @@
+  */
+ 
+ #include <linux/kernel.h>
+-#include <linux/fb.h>
+ #include <linux/backlight.h>
+ #include <linux/adb.h>
+ #include <linux/pmu.h>
+@@ -73,31 +72,6 @@ int pmac_has_backlight_type(const char *type)
+ 	return 0;
+ }
+ 
+-int pmac_backlight_curve_lookup(struct fb_info *info, int value)
+-{
+-	int level = (FB_BACKLIGHT_LEVELS - 1);
+-
+-	if (info && info->bl_dev) {
+-		int i, max = 0;
+-
+-		/* Look for biggest value */
+-		for (i = 0; i < FB_BACKLIGHT_LEVELS; i++)
+-			max = max((int)info->bl_curve[i], max);
+-
+-		/* Look for nearest value */
+-		for (i = 0; i < FB_BACKLIGHT_LEVELS; i++) {
+-			int diff = abs(info->bl_curve[i] - value);
+-			if (diff < max) {
+-				max = diff;
+-				level = i;
+-			}
+-		}
+-
+-	}
+-
+-	return level;
+-}
+-
+ static void pmac_backlight_key_worker(struct work_struct *work)
+ {
+ 	if (atomic_read(&kernel_backlight_disabled))
 -- 
 2.43.0
 
