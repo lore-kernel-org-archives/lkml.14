@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E744F1F5;
-	Sun, 24 Mar 2024 23:06:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A26E139562;
+	Sun, 24 Mar 2024 23:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321619; cv=none; b=JRu6rrxkZn/yixS1ogjsnBTqkNwWSnIkU8c7s8Rj9FflYke3HsiRKc76PFvkqTuOkdm3HvVASvw9qXg8abrMPLImbM13eGZQiT13HA6XqwpvgGwI++CAYN/0hIfBda+jxsXwaTLkCYC52ziyej2mJHS56MNp3CRPuFW+f0kYnhc=
+	t=1711321621; cv=none; b=j38r5GboUN8JU0cZaFqWzJ4wFI5k+ClTVwEsTkO7tw3zOKlK70ijUMyNRvsTV5lONjsds3BV8YxoB/UXkXzEh9yF8Fq4Ah5hxBxRYIwXJ40h6huDu01wJFfRfC6NcGIiAe3UBU7Avg6f6Sw6FZ8bM22AQZcVzB9ZamPmPZw6RyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321619; c=relaxed/simple;
-	bh=9YW6LdzWNOFesOTNdVc3BEUt3zTKv6VZsEl6iMh03C8=;
+	s=arc-20240116; t=1711321621; c=relaxed/simple;
+	bh=OJJPol7J7fIrfaytG9VmHCkxp+IgzNXZBKdiEqSucJQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=McE5pacMC+nC2tJ+e0arzzPUvDQCzRUYMHOI3JBZPTnBBYZ7LHaT/gs3g9d4VYOlwsGnQXCtTYfcjiYjNmlle7amybhgti3/An90wzR2eUbPGrlazjJU0RFas5tI1Bc8/1AClA2+wVOBjC1zqE89CpObqYhvBh4kzHW+6La3KsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XEdweW3U; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tOl3y1DnEk+Hsip6Rga+BdNvFLvHpmVj+5iHJVJ743A/E48Fmcl2kSjNDO1nm8hCJy8KcKxWqL7zs6UuwsIwwwkbG0OPHkCEKWDD9te751uJ4gE9HnGL1cL4FxdjxbCwqpFz4xGmrTP1juCGbg3w2k8r8344OAp0h2dz7TQ9bYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSD4+lcP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XEdweW3U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57003C43394;
-	Sun, 24 Mar 2024 23:06:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSD4+lcP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A237C43394;
+	Sun, 24 Mar 2024 23:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321618;
-	bh=9YW6LdzWNOFesOTNdVc3BEUt3zTKv6VZsEl6iMh03C8=;
+	s=k20201202; t=1711321620;
+	bh=OJJPol7J7fIrfaytG9VmHCkxp+IgzNXZBKdiEqSucJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XEdweW3UpFOoTBx9YqVL1Kzs+88BONlRygs9XedxYkcQHaValvaRvXp7vKLE/dKgl
-	 2/w0DkCo6hxrIAOd540XwRB05BuANGZ+4wanwd0X0L3CXyO1Y80va+goS2thsB61Eo
-	 +SoVWEfm+OiqIRyOaOzmXbZAuerqEQm5oBum6T0nIAMoREJ5vSShoRwPo44SMeF7LA
-	 Sl3iVIwnKCf9QCRufGrjcsB0Aa3qQF/fEjNcmojbWbhz4ojW7c+AHClh6T/eKO2AAT
-	 +WHt70ilQOphlrb9lKQD7mhcZNXRRcIaEgvDvb8iV4ap2a7vJ+DkqTG0bVsp0Hznp/
-	 nU7Uc9trD1W8w==
+	b=dSD4+lcPovoVQ4oVmQBXuoICt9ApNLbm3msukLXtcWLgpsGqMT8tiLhfFavNcuYvT
+	 QVvXXZPv62Tyr3rxPwgRfD1XGNUAmF9ifl6y1tpVnXxt3RiYLVAsZ03Ugq9giUl+uZ
+	 oAMCH+oXQltxDY1brS0w1Mgag0GiYCWSGUHIBjT4sSSbqgJraVeDH6RLNrW7oekgs0
+	 rYKLJn8B5wcZ1ARe50yJu52RncG/1kNXvf5dA2mjGZXRmDUzlF8B8uRnkPqj+5em8e
+	 RvIB7966/hozk41zeoUCe9LObn+mavwUWDWc5bgbMe10kEmVQHkb4z2B9bDXB1ZjPA
+	 i/j0dOpjNwhTA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Alex Bee <knaerzche@gmail.com>,
+	Zheng Yang <zhengyang@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 348/638] drm/tegra: rgb: Fix some error handling paths in tegra_dc_rgb_probe()
-Date: Sun, 24 Mar 2024 18:56:25 -0400
-Message-ID: <20240324230116.1348576-349-sashal@kernel.org>
+Subject: [PATCH 6.6 351/638] drm/rockchip: inno_hdmi: Fix video timing
+Date: Sun, 24 Mar 2024 18:56:28 -0400
+Message-ID: <20240324230116.1348576-352-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,79 +49,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Alex Bee <knaerzche@gmail.com>
 
-[ Upstream commit bc456b5d93dbfdbd89f2a036f4f3d8026595f9e4 ]
+[ Upstream commit 47a145c03484d33e65d773169d5ca1b9fe2a492e ]
 
-If an error occurs after calling tegra_output_probe(),
-tegra_output_remove() should be called as already done in the remove
-function.
+The controller wants the difference between *total and *sync_start in the
+HDMI_VIDEO_EXT_*DELAY registers. Otherwise the signal is very unstable for
+certain non-VIC modes. See downstream commit [0].
 
-Fixes: 59d29c0ec93f ("drm/tegra: Allocate resources at probe time")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/0001f61eb89048bc36241629b564195689cf54b6.1693667005.git.christophe.jaillet@wanadoo.fr
+[0] https://github.com/rockchip-linux/kernel/commit/8eb559f2502c
+
+Fixes: 412d4ae6b7a5 ("drm/rockchip: hdmi: add Innosilicon HDMI support")
+Co-developed-by: Zheng Yang <zhengyang@rock-chips.com>
+Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231222174220.55249-4-knaerzche@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/rgb.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/rockchip/inno_hdmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
-index 79566c9ea8ff2..dc138945f3b25 100644
---- a/drivers/gpu/drm/tegra/rgb.c
-+++ b/drivers/gpu/drm/tegra/rgb.c
-@@ -215,26 +215,28 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
- 	rgb->clk = devm_clk_get(dc->dev, NULL);
- 	if (IS_ERR(rgb->clk)) {
- 		dev_err(dc->dev, "failed to get clock\n");
--		return PTR_ERR(rgb->clk);
-+		err = PTR_ERR(rgb->clk);
-+		goto remove;
- 	}
+diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
+index 6e5b922a121e2..345253e033c53 100644
+--- a/drivers/gpu/drm/rockchip/inno_hdmi.c
++++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
+@@ -412,7 +412,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_L, value & 0xFF);
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_H, (value >> 8) & 0xFF);
  
- 	rgb->clk_parent = devm_clk_get(dc->dev, "parent");
- 	if (IS_ERR(rgb->clk_parent)) {
- 		dev_err(dc->dev, "failed to get parent clock\n");
--		return PTR_ERR(rgb->clk_parent);
-+		err = PTR_ERR(rgb->clk_parent);
-+		goto remove;
- 	}
+-	value = mode->hsync_start - mode->hdisplay;
++	value = mode->htotal - mode->hsync_start;
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_L, value & 0xFF);
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_H, (value >> 8) & 0xFF);
  
- 	err = clk_set_parent(rgb->clk, rgb->clk_parent);
- 	if (err < 0) {
- 		dev_err(dc->dev, "failed to set parent clock: %d\n", err);
--		return err;
-+		goto remove;
- 	}
+@@ -427,7 +427,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
+ 	value = mode->vtotal - mode->vdisplay;
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VBLANK, value & 0xFF);
  
- 	rgb->pll_d_out0 = clk_get_sys(NULL, "pll_d_out0");
- 	if (IS_ERR(rgb->pll_d_out0)) {
- 		err = PTR_ERR(rgb->pll_d_out0);
- 		dev_err(dc->dev, "failed to get pll_d_out0: %d\n", err);
--		return err;
-+		goto remove;
- 	}
+-	value = mode->vsync_start - mode->vdisplay;
++	value = mode->vtotal - mode->vsync_start;
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VDELAY, value & 0xFF);
  
- 	if (dc->soc->has_pll_d2_out0) {
-@@ -242,13 +244,17 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
- 		if (IS_ERR(rgb->pll_d2_out0)) {
- 			err = PTR_ERR(rgb->pll_d2_out0);
- 			dev_err(dc->dev, "failed to get pll_d2_out0: %d\n", err);
--			return err;
-+			goto remove;
- 		}
- 	}
- 
- 	dc->rgb = &rgb->output;
- 
- 	return 0;
-+
-+remove:
-+	tegra_output_remove(&rgb->output);
-+	return err;
- }
- 
- void tegra_dc_rgb_remove(struct tegra_dc *dc)
+ 	value = mode->vsync_end - mode->vsync_start;
 -- 
 2.43.0
 
