@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9AB21086B;
-	Sun, 24 Mar 2024 23:08:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B2E21149A;
+	Sun, 24 Mar 2024 23:08:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321698; cv=none; b=YrpHM1VjtBGHqUaf5cETJVwmRkkMaKNWcXXe/uFLGOLV+nm5i/7zlcufiMWMN4TnuMCvf3Y5Ir7rA735S2mVdcyR637FGmfgpDGy/PzdLUnBS1uoonZB9W6Gp2Im/kSxiidUpo0fuA1RfitBwP015gZdHmXH7TIDufQLheYE/P8=
+	t=1711321707; cv=none; b=K/P17w5+6TbVAuEhGoA5mabiQ9HA2gJ0OapzZZP4I31Xt/z7FyQ8zOivkbyVwBgl6S0PoZ/5E25HjVgB7J1rEvAERmDeJ39yqcH8l6cXb27mBZlpTFgbQQVXv1lwCnH6a6iWyLeLkSmPp7DJzB25oD9RWkL2JORFI5ZJtBS49ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321698; c=relaxed/simple;
-	bh=bZsBnUnfKdFw2VCk5QyKwh671+Xs8KoP7fsGfnZBPpw=;
+	s=arc-20240116; t=1711321707; c=relaxed/simple;
+	bh=aoaVGp9uRd7q1yvISqaBgafhKrn8LdUJODoUaqJwLec=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H18Jf2o/p2XzKekb1MCYBpbVEQzQqOuIK9Bvrk7Gn3tW4ziAQC9yPx/vMFFI2WEyIKLtpyHLJWIAz2d1qVyTdguX1BZyQJ+U7xyFndMi/odOSVc4awY79mTs+j7B5Q+uvJC1G6sFSCNiwk9AUARzVUy7GVBDBrxOcB7+aApB6NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRefgYcX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XsAUy/OOztqNOjjBn1BEluDJt8xfmIqFw2QkIsd61+IyF4KQgwW8mHxmGibQKl8+4bdPCHDDEYcuuxFcmTOJPPKYVhdQz6G3ScsMIMAboSmP8bwyz/Nu0h8sqJhsxFYi4TRVLEwfNRtfKMcYvA4JhdZbcfIl0b8XrdtJV+q5lZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ap8FaGYI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRefgYcX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1271C433C7;
-	Sun, 24 Mar 2024 23:08:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ap8FaGYI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3CD6C433F1;
+	Sun, 24 Mar 2024 23:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321696;
-	bh=bZsBnUnfKdFw2VCk5QyKwh671+Xs8KoP7fsGfnZBPpw=;
+	s=k20201202; t=1711321706;
+	bh=aoaVGp9uRd7q1yvISqaBgafhKrn8LdUJODoUaqJwLec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TRefgYcX6FJ4MQC0Xn9NhrRz8VlfB0GHcs7buPEiWIpjgLOEkVOzCIhoTeuTQ7hRT
-	 gR6O+CQ/SItwaw6sFsAJKR27TogrpXc6mluBoNMiSt2KBuJ/d86rIyxiIasW0IR1ly
-	 vHyEwBRellu9OkNAXuEKKeGzNNjMcw+GVS/2JJVc7sE8pErqGtdXTT6mNrDZC99SOf
-	 WRy52AYyaMJ53lC986ieZ9+Jr9xDN6GRHusDCqDgSnmA0nKE4ii5KXsaaJxGSAYtM6
-	 ChNZmRkm3+7Jg12nycJPj/JJlCBkDIDpEskyUap7czkcqq7/4ltz/2x8cXqVLcikoj
-	 x+PoYcOSFmmFA==
+	b=Ap8FaGYIpceEQwIZnG/0FIzkjN4zE72WQFNqUQlco5M2VOfgRf/1rqidcanUs3WFV
+	 h2mLc9ro5VQrZvx6xYdLyKEshMT8tl2MmwC880NZJFqdw2D/1wYK/vXHTtoWxJaE+5
+	 TId765TimwUECaWZxZvKPATXSDxcoT/nGaJ2bvDAAmjsJtP4UEx5QDZ5hEvRjxqIL+
+	 z1kxIBB3F/1TOo9Vq0WrM8tsnQM7NXVhFdDxkNz9J2BXXqDEtIW1PMnIrymMFQi99K
+	 iXYu5psa7Q+FWDFhrhuy6V6mR4wjpYW9+/sBvCxlJ+iRsZwIV1g0OkqmLNebhDBl0L
+	 D1ea2gAM2Rq6g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Caleb Connolly <caleb.connolly@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 425/638] clk: qcom: dispcc-sdm845: Adjust internal GDSC wait times
-Date: Sun, 24 Mar 2024 18:57:42 -0400
-Message-ID: <20240324230116.1348576-426-sashal@kernel.org>
+Subject: [PATCH 6.6 435/638] clk: mediatek: mt7622-apmixedsys: Fix an error handling path in clk_mt8135_apmixed_probe()
+Date: Sun, 24 Mar 2024 18:57:52 -0400
+Message-ID: <20240324230116.1348576-436-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,36 +49,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 117e7dc697c2739d754db8fe0c1e2d4f1f5d5f82 ]
+[ Upstream commit a32e88f2b20259f5fe4f8eed598bbc85dc4879ed ]
 
-SDM845 downstream uses non-default values for GDSC internal waits.
-Program them accordingly to avoid surprises.
+'clk_data' is allocated with mtk_devm_alloc_clk_data(). So calling
+mtk_free_clk_data() explicitly in the remove function would lead to a
+double-free.
 
-Fixes: 81351776c9fb ("clk: qcom: Add display clock controller driver for SDM845")
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Tested-by: Caleb Connolly <caleb.connolly@linaro.org> # OnePlus 6
-Link: https://lore.kernel.org/r/20240103-topic-845gdsc-v1-1-368efbe1a61d@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Remove the redundant call.
+
+Fixes: c50e2ea6507b ("clk: mediatek: mt7622-apmixedsys: Add .remove() callback for module build")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/2c553c2a5077757e4f7af0bb895acc43881cf62c.1704616152.git.christophe.jaillet@wanadoo.fr
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/dispcc-sdm845.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/mediatek/clk-mt7622-apmixedsys.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/dispcc-sdm845.c b/drivers/clk/qcom/dispcc-sdm845.c
-index 735adfefc3798..e792e0b130d33 100644
---- a/drivers/clk/qcom/dispcc-sdm845.c
-+++ b/drivers/clk/qcom/dispcc-sdm845.c
-@@ -759,6 +759,8 @@ static struct clk_branch disp_cc_mdss_vsync_clk = {
+diff --git a/drivers/clk/mediatek/clk-mt7622-apmixedsys.c b/drivers/clk/mediatek/clk-mt7622-apmixedsys.c
+index 9cffd278e9a43..1b8f859b6b6cc 100644
+--- a/drivers/clk/mediatek/clk-mt7622-apmixedsys.c
++++ b/drivers/clk/mediatek/clk-mt7622-apmixedsys.c
+@@ -127,7 +127,6 @@ static void clk_mt7622_apmixed_remove(struct platform_device *pdev)
+ 	of_clk_del_provider(node);
+ 	mtk_clk_unregister_gates(apmixed_clks, ARRAY_SIZE(apmixed_clks), clk_data);
+ 	mtk_clk_unregister_plls(plls, ARRAY_SIZE(plls), clk_data);
+-	mtk_free_clk_data(clk_data);
+ }
  
- static struct gdsc mdss_gdsc = {
- 	.gdscr = 0x3000,
-+	.en_few_wait_val = 0x6,
-+	.en_rest_wait_val = 0x5,
- 	.pd = {
- 		.name = "mdss_gdsc",
- 	},
+ static const struct of_device_id of_match_clk_mt7622_apmixed[] = {
 -- 
 2.43.0
 
