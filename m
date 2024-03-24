@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86D21FC0E0;
-	Sun, 24 Mar 2024 23:01:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426161FC0F1;
+	Sun, 24 Mar 2024 23:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321311; cv=none; b=An2BMUhYvB4S+Ji1ZRhZN1wZXsSk35iaFR7PMlWX2LJAewMNmNM6trLWNLAOKQsNe5rOXdvaKj1TyFQg7v1p4JCj2g+bKLmUig5L+zA+nGlCft+utSWZJBy21jlF2PDsbivDAu9wbawKk4bzjElkI3uhaCgy06ih5OPc4BGi35g=
+	t=1711321313; cv=none; b=tvCFThWY7uFBvu9CbdM/aRjDZXadkfL8rVn7SmsMDjoqy5H6nTcudOt+WPNx39HQ4A6ZbSAdsGJgkzmP4uAecOiz4i5VfK2LNR0ijzNMS8xynsFG+E668aS8UlZuzLnmvm2m+6JqOcyRpWblGKOy/cDZlUlnHuJcte+4HB5QLCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321311; c=relaxed/simple;
-	bh=z7qh1e8vbDVQ4yzcCgshluBRHXqVwd2S32PdSJRIBvw=;
+	s=arc-20240116; t=1711321313; c=relaxed/simple;
+	bh=NkYNaqC8gUpfieNnjfBQsil8TTp5PmLuCYEYfbeDJzw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iSioLnOVqUHDC1KX2zy6tmegAzwzXvT3LTZyG219vB/0OW8Qi++xCLcCIWwFyJMek0WIvREwd3jArEouudv4ypwc4Rb5yreTSr5Dsq7ongcah5kou4ADTjOPqJhKM+6kPurO4YTpwpY45Sj4DYBlQHFWa3Qe/ko8R349QC2Vzvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDZBTvsn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RQFBEoX8SQwdX0AU723GS8MUvDRxHgRCxm9S+G994KoAAbKYmGB/GF53e6mk+NOgEfj7G3cNMeDPWVEaafZb76Ew5NdWXSkmQq/E0NKOBnblKeorCZPpkG12ujYyF6Ht851E28yGqniU7rsf7qbdcXy2mzL0midv/Maiy/O65c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e/6rv8jU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDZBTvsn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99BDDC43394;
-	Sun, 24 Mar 2024 23:01:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e/6rv8jU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95E4BC433F1;
+	Sun, 24 Mar 2024 23:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321310;
-	bh=z7qh1e8vbDVQ4yzcCgshluBRHXqVwd2S32PdSJRIBvw=;
+	s=k20201202; t=1711321312;
+	bh=NkYNaqC8gUpfieNnjfBQsil8TTp5PmLuCYEYfbeDJzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aDZBTvsnf0rVlsKX/E7BvYYTYBMEtdkCAP3ITHiVM1mAjPTmYuy82n/QygRV49ERV
-	 FK1qJsMxst496z1tlgEuVRmCCmCdwijXgYTSanLYoJxhA0yolGpkTrkvT7xX/2Jb7W
-	 KMdsa3W1IrTcsMKeaVfBDeE0Iomv0dOF+8ltA+UhIhrISntp6LJOkk5Q2SL1ElD6FG
-	 71X0/54hlFUChmZBXTMUgRdB8JATNfghlStslu4enCcPPJb3uUHSFxQGbWA6ergb1H
-	 jqHK6PqdgcIzdnp0sPL5C4iUy+WU7m8JF0/32+JXg4v55L2qmWw4W4myuBpQ+VEKgq
-	 a1pKPE+0rjQRQ==
+	b=e/6rv8jULjhbJOd0oc9FmSoqf+5dQSbn6wkcIkzNqxDQw6V0sy+yjLqt4m9UrmWKF
+	 BhsCbjzgE/lWHCFt7/P7cWcyggXwqybK2HdOYXMwjwcVPtEbazYaSZFu2wZ0NpwP3N
+	 rF6vxrk4/jr5CV8dBGBJ5TLkIMzpCoDWV26QzMFc6U/orw3I68tIEaH1K9jX2JGOcE
+	 2oLpo4ptt41jJt6QE6K0sJ/boJuV/xCYsYRwR7Zy09K+PBnZfEFNFF/+pdYqFiv0I+
+	 xMwJxtrtx0r/GZUuyIeBXQTZbRq8vjXVZDgy+/CEXnW5myE4t6MU3OwkdRbCG5jSOr
+	 a6vnrgBAj7Axg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Wonjae Lee <wj28.lee@samsung.com>,
-	Dan Williams <dan.j.williams@intel.com>,
+Cc: Hans de Goede <hdegoede@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 033/638] cxl/region: Allow out of order assembly of autodiscovered regions
-Date: Sun, 24 Mar 2024 18:51:10 -0400
-Message-ID: <20240324230116.1348576-34-sashal@kernel.org>
+Subject: [PATCH 6.6 035/638] platform/x86: x86-android-tablets: Fix acer_b1_750_goodix_gpios name
+Date: Sun, 24 Mar 2024 18:51:12 -0400
+Message-ID: <20240324230116.1348576-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,113 +47,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alison Schofield <alison.schofield@intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit cb66b1d60c283bb340a2fc19deff7de8acea74b1 ]
+[ Upstream commit 8215ca518164d35f10c0b5545c8bb80f538638b8 ]
 
-Autodiscovered regions can fail to assemble if they are not discovered
-in HPA decode order. The user will see failure messages like:
+The Acer B1 750 tablet used a Novatek NVT-ts touchscreen,
+not a Goodix touchscreen.
 
-[] cxl region0: endpoint5: HPA order violation region1
-[] cxl region0: endpoint5: failed to allocate region reference
+Rename acer_b1_750_goodix_gpios to acer_b1_750_nvt_ts_gpios
+to correctly reflect this.
 
-The check that is causing the failure helps the CXL driver enforce
-a CXL spec mandate that decoders be committed in HPA order. The
-check is needless for autodiscovered regions since their decoders
-are already programmed. Trying to enforce order in the assembly of
-these regions is useless because they are assembled once all their
-member endpoints arrive, and there is no guarantee on the order in
-which endpoints are discovered during probe.
-
-Keep the existing check, but for autodiscovered regions, allow the
-out of order assembly after a sanity check that the lesser numbered
-decoder has the lesser HPA starting address.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Tested-by: Wonjae Lee <wj28.lee@samsung.com>
-Link: https://lore.kernel.org/r/3dec69ee97524ab229a20c6739272c3000b18408.1706736863.git.alison.schofield@intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20240216201721.239791-5-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cxl/core/region.c | 48 +++++++++++++++++++++++++++++++--------
- 1 file changed, 38 insertions(+), 10 deletions(-)
+ drivers/platform/x86/x86-android-tablets/other.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index a3d82ef5599e8..e2a82ee4ff0cf 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -757,8 +757,31 @@ cxl_region_find_decoder(struct cxl_port *port,
- 	return to_cxl_decoder(dev);
- }
+diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+index e79549c6aae17..fe5f68fa7bca7 100644
+--- a/drivers/platform/x86/x86-android-tablets/other.c
++++ b/drivers/platform/x86/x86-android-tablets/other.c
+@@ -66,7 +66,7 @@ static const struct x86_i2c_client_info acer_b1_750_i2c_clients[] __initconst =
+ 	},
+ };
  
--static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
--					       struct cxl_region *cxlr)
-+static bool auto_order_ok(struct cxl_port *port, struct cxl_region *cxlr_iter,
-+			  struct cxl_decoder *cxld)
-+{
-+	struct cxl_region_ref *rr = cxl_rr_load(port, cxlr_iter);
-+	struct cxl_decoder *cxld_iter = rr->decoder;
-+
-+	/*
-+	 * Allow the out of order assembly of auto-discovered regions.
-+	 * Per CXL Spec 3.1 8.2.4.20.12 software must commit decoders
-+	 * in HPA order. Confirm that the decoder with the lesser HPA
-+	 * starting address has the lesser id.
-+	 */
-+	dev_dbg(&cxld->dev, "check for HPA violation %s:%d < %s:%d\n",
-+		dev_name(&cxld->dev), cxld->id,
-+		dev_name(&cxld_iter->dev), cxld_iter->id);
-+
-+	if (cxld_iter->id > cxld->id)
-+		return true;
-+
-+	return false;
-+}
-+
-+static struct cxl_region_ref *
-+alloc_region_ref(struct cxl_port *port, struct cxl_region *cxlr,
-+		 struct cxl_endpoint_decoder *cxled)
- {
- 	struct cxl_region_params *p = &cxlr->params;
- 	struct cxl_region_ref *cxl_rr, *iter;
-@@ -768,16 +791,21 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
- 	xa_for_each(&port->regions, index, iter) {
- 		struct cxl_region_params *ip = &iter->region->params;
+-static struct gpiod_lookup_table acer_b1_750_goodix_gpios = {
++static struct gpiod_lookup_table acer_b1_750_nvt_ts_gpios = {
+ 	.dev_id = "i2c-NVT-ts",
+ 	.table = {
+ 		GPIO_LOOKUP("INT33FC:01", 26, "reset", GPIO_ACTIVE_LOW),
+@@ -75,7 +75,7 @@ static struct gpiod_lookup_table acer_b1_750_goodix_gpios = {
+ };
  
--		if (!ip->res)
-+		if (!ip->res || ip->res->start < p->res->start)
- 			continue;
- 
--		if (ip->res->start > p->res->start) {
--			dev_dbg(&cxlr->dev,
--				"%s: HPA order violation %s:%pr vs %pr\n",
--				dev_name(&port->dev),
--				dev_name(&iter->region->dev), ip->res, p->res);
--			return ERR_PTR(-EBUSY);
-+		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-+			struct cxl_decoder *cxld;
-+
-+			cxld = cxl_region_find_decoder(port, cxled, cxlr);
-+			if (auto_order_ok(port, iter->region, cxld))
-+				continue;
- 		}
-+		dev_dbg(&cxlr->dev, "%s: HPA order violation %s:%pr vs %pr\n",
-+			dev_name(&port->dev),
-+			dev_name(&iter->region->dev), ip->res, p->res);
-+
-+		return ERR_PTR(-EBUSY);
- 	}
- 
- 	cxl_rr = kzalloc(sizeof(*cxl_rr), GFP_KERNEL);
-@@ -954,7 +982,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
- 			nr_targets_inc = true;
- 		}
- 	} else {
--		cxl_rr = alloc_region_ref(port, cxlr);
-+		cxl_rr = alloc_region_ref(port, cxlr, cxled);
- 		if (IS_ERR(cxl_rr)) {
- 			dev_dbg(&cxlr->dev,
- 				"%s: failed to allocate region reference\n",
+ static struct gpiod_lookup_table * const acer_b1_750_gpios[] = {
+-	&acer_b1_750_goodix_gpios,
++	&acer_b1_750_nvt_ts_gpios,
+ 	&int3496_reference_gpios,
+ 	NULL
+ };
 -- 
 2.43.0
 
