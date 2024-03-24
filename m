@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026C32987A3;
-	Sun, 24 Mar 2024 23:52:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F958185F10;
+	Sun, 24 Mar 2024 23:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324357; cv=none; b=kPD1067vGItL8NxWUb8adLr2QBTlAIa7okvf5Y2WJohMK72ML3zYDIW0h1XGPICfKNWrXChI4rh7eSp2tArBzMxRMFw4AQbQeLIwAkKTxAx+md28U6Fc3MdbpO4tIY9aHAE/xc5jCUempiR7cL9qDH+IawG9vH7ZZc+9Cw45oN4=
+	t=1711324383; cv=none; b=Pmg0melOPeG6DzoHY3qctiAD3sRloqts0dQP0C2p9H5WNX+zNVPhj1NFmhLmJkw/lR59684cw66CgAw3gm0OryH+oJ00hF1DvP7lsqJ0DUtJLhGO6GO4FXhbHJTqTvFMmA9Rgf6fvFslFluIzUTra4YdKkp/V26fM7iVeegNE0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324357; c=relaxed/simple;
-	bh=0RYRcER2L99FYnTEc7JLAZOU2F2QK6UDRlV34NIjQKc=;
+	s=arc-20240116; t=1711324383; c=relaxed/simple;
+	bh=gBjRgf2c4ckdFBsCgqHjXuNR2hYxP1M+DsSB92YDHhc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=opbm7vUQRD41DQQj9ofN3G9gYt4NPvDtwlxHg2pFEKEO2DhyD41JZoZIrJlSzZ6Th7HXdNf5HKIKNovOqcA3sw3/EumvyvLoSSDzDCJWbA5POLRBm+rC2kFRP9wYk023jIxwlfZ5Gm8Kdsza5skrZmc74mF50/N4iZEvWfRA4qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8gNrxcV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qANxfTb+QB1zzK6UAhyVzZHBc2wpOgunfPbiIqqoMN77/oJujOT3oxKsjRCJ/EmtnvjyfGM25QCQRdxFgGcLR51cLdLN7quX8p+6BdR5jKUR4UXkWDLC3zS1iDIVFNGgZBkq1zZHnh1DW21vyGYn09F8e4k8t3MxFe+fSWFhDpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJu2Wiic; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8gNrxcV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0435C433C7;
-	Sun, 24 Mar 2024 23:52:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJu2Wiic"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F0DC433C7;
+	Sun, 24 Mar 2024 23:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324355;
-	bh=0RYRcER2L99FYnTEc7JLAZOU2F2QK6UDRlV34NIjQKc=;
+	s=k20201202; t=1711324382;
+	bh=gBjRgf2c4ckdFBsCgqHjXuNR2hYxP1M+DsSB92YDHhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H8gNrxcVL3WIx4NVIQ4G3PgG3eB5ZzCvL6Ekd9k6NF6lzyOEmBJfFGQfTH8Ihn/Es
-	 fW4p+a/u97Ja/gut0Gjhh88ZbqAgZrSd59WWexKssCT0klSWGMufesTjJdG5H/PjvD
-	 QOVo9duA/5rnfDQ+SbK0dckRbpi1E99D0Kv+FY70AOeHA5EVX09gUQMiTmbnezn6nU
-	 0wG5LpGpwNMt72qSoA6pOudSQd5G6QKNlKZ3Yx0C7e6h6+yMX45MscDdyHhyDlX5RP
-	 e1w9g4245VhHCH+35o1MBWMi5ywoNqyRFpXC8wdwRoe9KKt6xczpjvKeQ/EwQM84Sa
-	 uIlhROvLhL+nA==
+	b=RJu2Wiic0cbWEUrP1Hb3hGpHlLAFX1OEEmVpRr9KtKxS2BsZQRl9wdgZ4vM3N0QGn
+	 ayZSer3rA30jCFWwn+3TsAtUevLWhB1vDeo1q4x0Utsi+Z7tqrBnKM+XLUoL1+rMt/
+	 vH4HMWa+BZCxvUzi8MQhG/O/2saQQSATi5/uD2zavrgIMAtAc246hWzAr2iYa2nJtD
+	 oZqhCitNL3YP9aHJYqLDUD2Yhd0/hnw+M93KHmhAldEj8Jq6+GBmlXGV9SWweIvzHm
+	 hqAcAy+V8ILDhadxTrDIVTSgA0S9Iol+ltL/x9QGib5W36sN2qNDp8TieIO96rXRB3
+	 zYNQEbdVj5iww==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Thompson <daniel.thompson@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Fei Shao <fshao@chromium.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 123/148] backlight: da9052: Fully initialize backlight_properties during probe
-Date: Sun, 24 Mar 2024 19:49:47 -0400
-Message-ID: <20240324235012.1356413-124-sashal@kernel.org>
+Subject: [PATCH 4.19 147/148] spi: spi-mt65xx: Fix NULL pointer access in interrupt handler
+Date: Sun, 24 Mar 2024 19:50:11 -0400
+Message-ID: <20240324235012.1356413-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,35 +49,59 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Thompson <daniel.thompson@linaro.org>
+From: Fei Shao <fshao@chromium.org>
 
-[ Upstream commit 0285e9efaee8276305db5c52a59baf84e9731556 ]
+[ Upstream commit a20ad45008a7c82f1184dc6dee280096009ece55 ]
 
-props is stack allocated and the fields that are not explcitly set
-by the probe function need to be zeroed or we'll get undefined behaviour
-(especially so power/blank states)!
+The TX buffer in spi_transfer can be a NULL pointer, so the interrupt
+handler may end up writing to the invalid memory and cause crashes.
 
-Fixes: 6ede3d832aaa ("backlight: add driver for DA9052/53 PMIC v1")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240220153532.76613-2-daniel.thompson@linaro.org
-Signed-off-by: Lee Jones <lee@kernel.org>
+Add a check to trans->tx_buf before using it.
+
+Fixes: 1ce24864bff4 ("spi: mediatek: Only do dma for 4-byte aligned buffers")
+Signed-off-by: Fei Shao <fshao@chromium.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://msgid.link/r/20240321070942.1587146-2-fshao@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/da9052_bl.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/spi-mt65xx.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/video/backlight/da9052_bl.c b/drivers/video/backlight/da9052_bl.c
-index 49035c12739a1..d48513eb3bc5f 100644
---- a/drivers/video/backlight/da9052_bl.c
-+++ b/drivers/video/backlight/da9052_bl.c
-@@ -122,6 +122,7 @@ static int da9052_backlight_probe(struct platform_device *pdev)
- 	wleds->led_reg = platform_get_device_id(pdev)->driver_data;
- 	wleds->state = DA9052_WLEDS_OFF;
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index faca2ab758992..89ec119215371 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -524,17 +524,19 @@ static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
+ 		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, len);
+ 		mtk_spi_setup_packet(master);
  
-+	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW;
- 	props.max_brightness = DA9052_MAX_BRIGHTNESS;
+-		cnt = mdata->xfer_len / 4;
+-		iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
+-				trans->tx_buf + mdata->num_xfered, cnt);
++		if (trans->tx_buf) {
++			cnt = mdata->xfer_len / 4;
++			iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
++					trans->tx_buf + mdata->num_xfered, cnt);
  
+-		remainder = mdata->xfer_len % 4;
+-		if (remainder > 0) {
+-			reg_val = 0;
+-			memcpy(&reg_val,
+-				trans->tx_buf + (cnt * 4) + mdata->num_xfered,
+-				remainder);
+-			writel(reg_val, mdata->base + SPI_TX_DATA_REG);
++			remainder = mdata->xfer_len % 4;
++			if (remainder > 0) {
++				reg_val = 0;
++				memcpy(&reg_val,
++					trans->tx_buf + (cnt * 4) + mdata->num_xfered,
++					remainder);
++				writel(reg_val, mdata->base + SPI_TX_DATA_REG);
++			}
+ 		}
+ 
+ 		mtk_spi_enable_transfer(master);
 -- 
 2.43.0
 
