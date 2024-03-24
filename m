@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074C82892D1;
-	Sun, 24 Mar 2024 23:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD272892DF;
+	Sun, 24 Mar 2024 23:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324043; cv=none; b=iYs0HWY/9P2lERCQHjc+OC5kxUkW9ZDFOty3jXBGqq8ZdJQc60mpgHfY79HNEWNJdiitMFWa9w6hB8kY1sJGMP56eN8wki1O1exOfy7EjNArWVBPFD3BVdq5UMUrJaArXmOy0r2NLtxcAy9Aw95wfdFe5v86T+0qlsSpyTFWDdw=
+	t=1711324045; cv=none; b=fN/Fli4E286v3tfd7OgKsmNnLVUX90UzyrW8naTkn/G9d9lwQBaJ3n4OZQWmzCkM52Upxic+mePXBQlTFaEcX/aofIOf6eDuOghWaJHbD2mLY9vNC8WwpBQFEPqWh/1JlOyZftbJCb+mLMFtSlptsvjaNWBUW+k0GLSQgjy2B+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324043; c=relaxed/simple;
-	bh=PAMZMwA6ckum7R7Mm0LbM8DTdW/7ofn9I96UXMzIw1g=;
+	s=arc-20240116; t=1711324045; c=relaxed/simple;
+	bh=eTI9IOKkvtOB8T26gH1qSqbthfn8ohH424sihv1I7Fk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EX7yJ/s98G/NpzDLkPEmJ+sPr544ANtYPQrI4UR85x3qxdND+wtZCjv1uIOmm3rqXONhX9C1TBUI8KG24KwNm0MBXmFwYf7e0dTcng+TeihkWBqu5KOzuL7jLnwyus1qAzNiZL0zz8FB8wUYS6vc90eqge9WlbZ9D46LfwXGPmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2etgfK/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lrhKFPfnSQ4oMLN7s/28Gq49mzLAIGCfNcJX/FBuGbSCRA6gSvbRuUZMorRKyzW/qkO5uCPO32W77ZKUtmsIxAxv3oV/5bSR+g+rjp/isXhKysYKqJyl27e0Z2qEKmoQ0CcT2lv427WX4TfXCi9zIprI1nljUCdjjOVtZvtGhkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtxIqAr2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2etgfK/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B68C43394;
-	Sun, 24 Mar 2024 23:47:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtxIqAr2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77C2C433F1;
+	Sun, 24 Mar 2024 23:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324041;
-	bh=PAMZMwA6ckum7R7Mm0LbM8DTdW/7ofn9I96UXMzIw1g=;
+	s=k20201202; t=1711324043;
+	bh=eTI9IOKkvtOB8T26gH1qSqbthfn8ohH424sihv1I7Fk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h2etgfK/uff7gM1K/ZjdwHYjS4NWLF8sGNo43CD0ABbrC3eeTy+1SPgv4oRM4ORaS
-	 D9H+xoeiPUjhdHIMNJ52lc+08TaCoSeRcZ/A2rdVr6laxT4Qb2iQsm/eM/e5bW5VAg
-	 6H8+aqEc8oxkV4c4ejO9VSUdByTb4TvcvmE/ZkgHTqgxYKZcsKCJ+bU2MBDebYOX4a
-	 556XY6by7lLTg5HXoE/VwjXX6y87c/DwUOs1p/5J8Ho+bz+1dAuFHCnTaJefoPlhwJ
-	 ebG+3UifYBgELcoCm7j36mqmu8FFgkTRML0jt0w223sAtTGu7EtaqVKCmrp4ZSjLgd
-	 10qDP1zLr37gA==
+	b=RtxIqAr29iPGypJhjvbrgTTLsgVfRK7ks53JQCAI0FzRRDx9ustsImkckwIihwjDt
+	 fx6RY5MKJfu8pXKpSGRqVG4Gy+8BJKNHla2bZ1k/oYCPAxPAxIRd1wDAsZwRe2FPp4
+	 QYFi6aFniqqA4LVzq3RBYeUOwycREV3U5yqYEtQTtxNHLBK4l4iELyU1Mw4Bd7sgC/
+	 UbZ1RbYfrB4Md6AiEngy0R0LTGisy3xK51ZuuNgCVSY3C9uue4FK7RlyiXDXPeLz9+
+	 1R+tWo4NQ3oZKb3iU42y4LXN6tjszSDL4i8grYQxjZLndDMuomOPK6f1Ddd26pmLHG
+	 RTHfceNWIjF0Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 042/183] af_unix: Annotate data-race of gc_in_progress in wait_for_unix_gc().
-Date: Sun, 24 Mar 2024 19:44:15 -0400
-Message-ID: <20240324234638.1355609-43-sashal@kernel.org>
+Subject: [PATCH 5.4 044/183] wifi: libertas: fix some memleaks in lbs_allocate_cmd_buffer()
+Date: Sun, 24 Mar 2024 19:44:17 -0400
+Message-ID: <20240324234638.1355609-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,37 +48,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 31e03207119a535d0b0e3b3a7f91983aeb2cb14d ]
+[ Upstream commit 5f0e4aede01cb01fa633171f0533affd25328c3a ]
 
-gc_in_progress is changed under spin_lock(&unix_gc_lock),
-but wait_for_unix_gc() reads it locklessly.
+In the for statement of lbs_allocate_cmd_buffer(), if the allocation of
+cmdarray[i].cmdbuf fails, both cmdarray and cmdarray[i].cmdbuf needs to
+be freed. Otherwise, there will be memleaks in lbs_allocate_cmd_buffer().
 
-Let's use READ_ONCE().
-
-Fixes: 5f23b734963e ("net: Fix soft lockups/OOM issues w/ unix garbage collector")
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Link: https://lore.kernel.org/r/20240123170856.41348-2-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 876c9d3aeb98 ("[PATCH] Marvell Libertas 8388 802.11b/g USB driver")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240126075336.2825608-1-alexious@zju.edu.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/unix/garbage.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/libertas/cmd.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/net/unix/garbage.c b/net/unix/garbage.c
-index dc27635403932..9121a4d5436d5 100644
---- a/net/unix/garbage.c
-+++ b/net/unix/garbage.c
-@@ -198,7 +198,7 @@ void wait_for_unix_gc(void)
- 	if (READ_ONCE(unix_tot_inflight) > UNIX_INFLIGHT_TRIGGER_GC &&
- 	    !READ_ONCE(gc_in_progress))
- 		unix_gc();
--	wait_event(unix_gc_wait, gc_in_progress == false);
-+	wait_event(unix_gc_wait, !READ_ONCE(gc_in_progress));
- }
+diff --git a/drivers/net/wireless/marvell/libertas/cmd.c b/drivers/net/wireless/marvell/libertas/cmd.c
+index a4d9dd73b2588..db9a852fa58a3 100644
+--- a/drivers/net/wireless/marvell/libertas/cmd.c
++++ b/drivers/net/wireless/marvell/libertas/cmd.c
+@@ -1133,7 +1133,7 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
+ 		if (!cmdarray[i].cmdbuf) {
+ 			lbs_deb_host("ALLOC_CMD_BUF: ptempvirtualaddr is NULL\n");
+ 			ret = -1;
+-			goto done;
++			goto free_cmd_array;
+ 		}
+ 	}
  
- /* The external entry point: unix_gc() */
+@@ -1141,8 +1141,17 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
+ 		init_waitqueue_head(&cmdarray[i].cmdwait_q);
+ 		lbs_cleanup_and_insert_cmd(priv, &cmdarray[i]);
+ 	}
+-	ret = 0;
++	return 0;
+ 
++free_cmd_array:
++	for (i = 0; i < LBS_NUM_CMD_BUFFERS; i++) {
++		if (cmdarray[i].cmdbuf) {
++			kfree(cmdarray[i].cmdbuf);
++			cmdarray[i].cmdbuf = NULL;
++		}
++	}
++	kfree(priv->cmd_array);
++	priv->cmd_array = NULL;
+ done:
+ 	return ret;
+ }
 -- 
 2.43.0
 
