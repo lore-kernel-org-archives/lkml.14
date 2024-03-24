@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CB6279862;
-	Sun, 24 Mar 2024 23:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4063C279888;
+	Sun, 24 Mar 2024 23:37:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323471; cv=none; b=FYjYZcHk0rPSvfh8xx+f2gOYmkUSjhl9SymStdBJ7I5cLCjsJdqzi0FL/665nXyc4GRo9J03Si3d+ALHE6NdRWyrGiPCk0aLIr9whQIS4yjTVD4scNHqsK4Dg31E6OquOBiUvHKMaPhDQa4eurL4Q6JWFj6oIc19QtutNQqN4b0=
+	t=1711323475; cv=none; b=U4//GtsamgHA1mEgoUO5Vc/m/HCm7Upl1ZVchjfJBlGKK5VT2oVOUXlMiGeqXhwCXzKC1gT006wqx+zM9s95C72GHa2tQdiu8AJv7LvefMjvjK7pb3p4BhMZ3SPVcOyvmw4CXj6YXCGHP+WRz3ZJ013/dEa/O1GOEyXlhEm3NC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323471; c=relaxed/simple;
-	bh=BEDj/bZZ8ydWaXAwhh7YWirDihFEP8hae+QSA1Zd6Mk=;
+	s=arc-20240116; t=1711323475; c=relaxed/simple;
+	bh=gOm8QUKYEAL5SWFQcl/aDpAeWskFHl4skoIU8sTcPuQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rTGaIVzuERSUWkne6V2oUwbBBkLXE0qHX8w+gyjm3W+xug6wJs6eKqpv5ho5EGhP/MLNt9pFusC7rPPz8qgRQYGDUl4aK1vzRSa4fD8Y9+1uVkKLiraNEEJj4sDwlrlMUA8f/Bf/YROq6SRBWV1Z576aHxB6O5pq8EL4SUQ2Yjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZLCoUU21; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mM7O6tooQIXszIuGOA2n8zcOIs4X6EuNmgvO1yTPE09k9H8YdNuVS2bcPEFm3S9zOpUFT7FWEVXMadOSpgKD5w6iKRRVy5ggZipQHezd0lUGwYTytfo5ezaeBJRP90fg/qIOr1f5Q02Mx/ZETJtNeSQqZF7OBJACEHNvQbog2CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wwzdg64J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZLCoUU21"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B2F9C433F1;
-	Sun, 24 Mar 2024 23:37:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wwzdg64J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5A06C433F1;
+	Sun, 24 Mar 2024 23:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323470;
-	bh=BEDj/bZZ8ydWaXAwhh7YWirDihFEP8hae+QSA1Zd6Mk=;
+	s=k20201202; t=1711323473;
+	bh=gOm8QUKYEAL5SWFQcl/aDpAeWskFHl4skoIU8sTcPuQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZLCoUU215JGBe5tzmEJZ7AfKDKHCjEUx2ATcvgl7F63MUm98SMrZxE2XQS6shuDr0
-	 eax7235RxOgUqzHPZyF74CuCyMISRxSIOBrr1R9qs6H4RU4syVpIeFiETgp+IGNbgT
-	 kvUwOEY+5JJgF7nlDRQyUZfwB3h+ji5CyCwELWruKaleM1D9UyiSpG3zbqPPO5Y9TS
-	 c/Xw5k3wUPELS1zJqbK8ouDvH+m31psO6ARRg7c4GgFgJjzLOagRJ6k+lS+dhgChMS
-	 RVlvJV03enagsxpL47b0KZ7kyYOKiF02DUogwaFbpsqXnlyZOI5C9FeLT4ffJKIDY8
-	 l52DEHtqj0NRw==
+	b=Wwzdg64J+nz9Q1wBrBZSRXDkYzCWMZhLcbW0VmLIynRCZTaSCX8SHJoJZ12l94WdC
+	 cyarzKOGwG8GM/W+lYOqgwZ7BqroR1u0f01E6aEeb5UG7dzhGvlzquJkG0xvxunEHB
+	 hZqnhvb3y5qwsvfF8flsslWBunL++1HXSL3//GJ6PW+ruNlra1EYO/2Aa/gUiqWhhB
+	 slae4MwxwlYjktil4/uDV/P56DJcGk2Ipkfwa67XHnGfGNCgAKwgBCeb40X5b4r1Gz
+	 G6eZElQs2lCIoZpPtU1PYzMmqYyXHgtT8XBoaz9PW2p05zgccr5XR+JRD2jmfaVOTF
+	 VgNBAQlxbm0hQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Qingqing Zhuo <qingqing.zhuo@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 175/317] PCI/DPC: Print all TLP Prefixes, not just the first
-Date: Sun, 24 Mar 2024 19:32:35 -0400
-Message-ID: <20240324233458.1352854-176-sashal@kernel.org>
+Subject: [PATCH 5.15 178/317] drm/amd/display: Fix a potential buffer overflow in 'dp_dsc_clock_en_read()'
+Date: Sun, 24 Mar 2024 19:32:38 -0400
+Message-ID: <20240324233458.1352854-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -44,45 +49,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit 6568d82512b0a64809acff3d7a747362fa4288c8 ]
+[ Upstream commit 4b09715f1504f1b6e8dff0e9643630610bc05141 ]
 
-The TLP Prefix Log Register consists of multiple DWORDs (PCIe r6.1 sec
-7.9.14.13) but the loop in dpc_process_rp_pio_error() keeps reading from
-the first DWORD, so we print only the first PIO TLP Prefix (duplicated
-several times), and we never print the second, third, etc., Prefixes.
+Tell snprintf() to store at most 10 bytes in the output buffer
+instead of 30.
 
-Add the iteration count based offset calculation into the config read.
+Fixes the below:
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_debugfs.c:1508 dp_dsc_clock_en_read() error: snprintf() is printing too much 30 vs 10
 
-Fixes: f20c4ea49ec4 ("PCI/DPC: Add eDPC support")
-Link: https://lore.kernel.org/r/20240118110815.3867-1-ilpo.jarvinen@linux.intel.com
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-[bhelgaas: add user-visible details to commit log]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: c06e09b76639 ("drm/amd/display: Add DSC parameters logging to debugfs")
+Cc: Alex Hung <alex.hung@amd.com>
+Cc: Qingqing Zhuo <qingqing.zhuo@amd.com>
+Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/dpc.c | 2 +-
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index f21d64ae4ffcc..cf0d4ba2e157a 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -231,7 +231,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+index 6d694cea24201..ed2f6802b0e20 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+@@ -1304,7 +1304,7 @@ static ssize_t dp_dsc_clock_en_read(struct file *f, char __user *buf,
+ 	const uint32_t rd_buf_size = 10;
+ 	struct pipe_ctx *pipe_ctx;
+ 	ssize_t result = 0;
+-	int i, r, str_len = 30;
++	int i, r, str_len = 10;
  
- 	for (i = 0; i < pdev->dpc_rp_log_size - 5; i++) {
- 		pci_read_config_dword(pdev,
--			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
-+			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG + i * 4, &prefix);
- 		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
- 	}
-  clear_status:
+ 	rd_buf = kcalloc(rd_buf_size, sizeof(char), GFP_KERNEL);
+ 
 -- 
 2.43.0
 
