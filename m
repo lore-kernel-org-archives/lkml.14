@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37635232118;
-	Sun, 24 Mar 2024 23:17:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6952310CB;
+	Sun, 24 Mar 2024 23:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322257; cv=none; b=qql5cpAwM/4ecmw4An15LLmJ++AXyV/ImmEpPLYghsZl2N7BB6EvUU5ZbNEilKll5xf5nhY2gfs1+U3GrQLZsPfq6F5i9byKMyGAt1RUkT7FIcmiGx3wfGucLmIMtxnfafn7r92TM+AxP5aEz/6Z9p8xHJ2v+CzE1HOeYEqmIMs=
+	t=1711322238; cv=none; b=RxdfzkMbb8ld5mi+vOcMxauUjhQmb31e7zE5tCQOqyEpSGeTWVpjR2c3QHfmXhRVsb9FpDr4l6G2J2s8ObC9+fFK77f8wwBKSpgRFJrSF8lfbFUG24nnQ+ZR6VrW981eWED+G5voZUmlZ6rz45Z3AVM3eNDuv8la0boPJS1tyVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322257; c=relaxed/simple;
-	bh=mA/FdB/ILepXOKnaZRIA8fPzJ15qQPq8YcnleMPrszk=;
+	s=arc-20240116; t=1711322238; c=relaxed/simple;
+	bh=a404h3DZ8kzeJTl67XyP9R7Nn6wjyD0ElQOcRCs+PRQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C4Io1bj0pQRaXIOh+Ql59B5NBwgOkCB4UGXoTeVh5iA2HUeNeUtRTyD8CXnIleFvh66U7SeUqjMbMdhU3exduabsE5P7dyk2nmdRPQj9fsVur2lUcJpkeMvd4T+f409l3RLCSJgf0McON4UxZrBve6Fo/sq2+8rdPXdyBtwT0ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7mR1G2W; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iRID7zy39zl9eFDLHTu/wUyXm1qyUGMUWbnryuGApBTp7x6kYtQcUwnPnFlE1JWdCOcUc+mpDkQT8nvt6teNzDoBqC0pTCSOYNeEl+3vZfMlg6cr28rw/KxAyXrjRgXPJwMcn7F/CeyIpEibZJbsUZ9iY3LrudlOvOmgkX469Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NGocbP2t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7mR1G2W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E516C43390;
-	Sun, 24 Mar 2024 23:17:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NGocbP2t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BDC8C433C7;
+	Sun, 24 Mar 2024 23:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322256;
-	bh=mA/FdB/ILepXOKnaZRIA8fPzJ15qQPq8YcnleMPrszk=;
+	s=k20201202; t=1711322237;
+	bh=a404h3DZ8kzeJTl67XyP9R7Nn6wjyD0ElQOcRCs+PRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F7mR1G2WIGxhl4D6xn0w4BCtur3SUp2hwKeh4FFlN3PKtS0pzz4cPMmMwrr2Q0v/u
-	 lDMr0N4NFe2GHX4/S4yA2zitTuXNq6KCwUFzmjBrkuWPYl3Qa6dvIl6bnTD8JqwuV7
-	 0ziV0nMLk8dz8RWUbdfXK4oe6bP4EkQ4cUljcCzk8jYVkE0BVquyqz3/OnqKfQiEP6
-	 9tNTOtNYPdGNuxKA6do7JKLFiEEr34HNPwA+pDZ1/UDP+0n40q1Pdftge0Ogawd+ZK
-	 V/Lk6L/JNeX2GBOVBS2g6X1o+ApN1ZHLlsm73NeHbcUbPH9x4pJ2lw0jjqotsQnkE1
-	 tgkPJlnXq2d6g==
+	b=NGocbP2tZdI4qbsBILnY3LSSTeQmMu7QJYcqSNsQB1UX2fKRd8bmQmEevYwmr3WqV
+	 vcYoajKsiXrm4QPYIm8X3xQx3pzijvRVrsjTysZusAncbZOlrT33spTGrpCksZOfG4
+	 at1CsQe1kN4lOYyxbXqb1L25GacVY/yTKGHOx8aixJCThGAboNrnimvy3ssCngMPCJ
+	 JFIHGu27t2VN3af1BuTQXoEc5Fy2aq8L75c2TEGLHKNjH9IV8ZHehTiBT46nLdH/zV
+	 zgyErwObcpFtfGDz6SIPL4L47D8BC29YVG8ctsmgCedIKTCqC580JssKVCZkjsLALS
+	 1c1Ri6kbldw1g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Luca Weiss <luca@z3ntu.xyz>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 338/451] backlight: lm3630a: Initialize backlight_properties on init
-Date: Sun, 24 Mar 2024 19:10:14 -0400
-Message-ID: <20240324231207.1351418-339-sashal@kernel.org>
+Subject: [PATCH 6.1 318/451] mtd: rawnand: lpc32xx_mlc: fix irq handler prototype
+Date: Sun, 24 Mar 2024 19:09:54 -0400
+Message-ID: <20240324231207.1351418-319-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,35 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Luca Weiss <luca@z3ntu.xyz>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit ad9aeb0e3aa90ebdad5fabf9c21783740eb95907 ]
+[ Upstream commit 347b828882e6334690e7003ce5e2fe5f233dc508 ]
 
-The backlight_properties struct should be initialized to zero before
-using, otherwise there will be some random values in the struct.
+clang-16 warns about mismatched function prototypes:
 
-Fixes: 0c2a665a648e ("backlight: add Backlight driver for lm3630 chip")
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240220-lm3630a-fixups-v1-1-9ca62f7e4a33@z3ntu.xyz
-Signed-off-by: Lee Jones <lee@kernel.org>
+drivers/mtd/nand/raw/lpc32xx_mlc.c:783:29: error: cast from 'irqreturn_t (*)(int, struct lpc32xx_nand_host *)' (aka 'enum irqreturn (*)(int, struct lpc32xx_nand_host *)') to 'irq_handler_t' (aka 'enum irqreturn (*)(int, void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+
+Change the interrupt handler to the normal way of just passing
+a void* pointer and converting it inside the function..
+
+Fixes: 70f7cb78ec53 ("mtd: add LPC32xx MLC NAND driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20240213100146.455811-1-arnd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lm3630a_bl.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mtd/nand/raw/lpc32xx_mlc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 475f35635bf67..855c275754578 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -339,6 +339,7 @@ static int lm3630a_backlight_register(struct lm3630a_chip *pchip)
- 	struct backlight_properties props;
- 	const char *label;
+diff --git a/drivers/mtd/nand/raw/lpc32xx_mlc.c b/drivers/mtd/nand/raw/lpc32xx_mlc.c
+index 452ecaf7775ac..1cfe3dd0bad4d 100644
+--- a/drivers/mtd/nand/raw/lpc32xx_mlc.c
++++ b/drivers/mtd/nand/raw/lpc32xx_mlc.c
+@@ -303,8 +303,9 @@ static int lpc32xx_nand_device_ready(struct nand_chip *nand_chip)
+ 	return 0;
+ }
  
-+	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW;
- 	if (pdata->leda_ctrl != LM3630A_LEDA_DISABLE) {
- 		props.brightness = pdata->leda_init_brt;
+-static irqreturn_t lpc3xxx_nand_irq(int irq, struct lpc32xx_nand_host *host)
++static irqreturn_t lpc3xxx_nand_irq(int irq, void *data)
+ {
++	struct lpc32xx_nand_host *host = data;
+ 	uint8_t sr;
+ 
+ 	/* Clear interrupt flag by reading status */
+@@ -779,7 +780,7 @@ static int lpc32xx_nand_probe(struct platform_device *pdev)
+ 		goto release_dma_chan;
+ 	}
+ 
+-	if (request_irq(host->irq, (irq_handler_t)&lpc3xxx_nand_irq,
++	if (request_irq(host->irq, &lpc3xxx_nand_irq,
+ 			IRQF_TRIGGER_HIGH, DRV_NAME, host)) {
+ 		dev_err(&pdev->dev, "Error requesting NAND IRQ\n");
+ 		res = -ENXIO;
 -- 
 2.43.0
 
