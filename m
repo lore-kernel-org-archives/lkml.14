@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942B1184413;
-	Sun, 24 Mar 2024 23:51:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D55F294E0B;
+	Sun, 24 Mar 2024 23:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324271; cv=none; b=ZPu1ECxOm0wPJa6HO3l7F6B1DzZRR2/4zXLbNgmSq9rANdAeRV9nuo7rl8OVOercB9Zk2tnlv/p1iU6VmBwOuOZWCrjSxSDCWx7S8JR4dfTSHwEMp66l7/ajsV0VmOTkE+8GC6jA+4X6JKAe2X26N3Z6fo868r5u0KvqJMu5FPg=
+	t=1711324293; cv=none; b=lw0IVc2T5v1K1+zKVcaFx77vZ6OnpNrBmd5tmToZgT8nVCsNcpPWsjn/SfUyhBVr3Cqe7TtJ4uwzlCNEJ9cabAsnACspigYUdnC5Rj7q/jdano5XgmYct2qXS64kOYP29l/btbd6kPRb6ROs/Q/icjdHBRNT2cJJ4wn+FPz0Afc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324271; c=relaxed/simple;
-	bh=l485m+fXhDkUqfuTzwl2ig3RmXGGE0NcaQlA0aG6S9M=;
+	s=arc-20240116; t=1711324293; c=relaxed/simple;
+	bh=jlytCQnOmqtIWrua3+DJqrL72f/zZ/tYkRgyQ7+DaiA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y6N28gBUEXVL6Jnv8d3zV9fwLvu6Kl1Yx2Faz8fHxcvyOIMmalAOoFSJeuLgW4ry/J/8QJpThcbWNy6JUGjpGql5RDohr9Zi80lupKHxtTXI0R5i0peile7nJUh9x+J5DScgqZ9/0dJqohXcYjsVQwIi3OFWKxpqVeaOjuS5Z7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tb3Qejsa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SkXu4fISPIIGzo8iEzTT9vEPpXbyppe41K12eTLHV/jYDUDQ+9vzpKTf62B8vYw8D8BCUdax2+fnBeFGcvmO+cpod/i0bAr7KkzI2kq02Fej+d3oH+0huoP6PK50Oza3vOqlqZr8ioOi7j0ti6S/ebGubPC5LfUtWXhnv9mdrnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FK+tQPKs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tb3Qejsa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 246E4C433F1;
-	Sun, 24 Mar 2024 23:51:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FK+tQPKs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D8F7C43390;
+	Sun, 24 Mar 2024 23:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324270;
-	bh=l485m+fXhDkUqfuTzwl2ig3RmXGGE0NcaQlA0aG6S9M=;
+	s=k20201202; t=1711324292;
+	bh=jlytCQnOmqtIWrua3+DJqrL72f/zZ/tYkRgyQ7+DaiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tb3Qejsa95dADAMb10dLLs1zfAa59nc7MXJT/ooUOIuxFKHZF+wgnb0VMsQP4AdvT
-	 4W+Y+r2imPhIzA5cFyEWLQvu4D9ymGM7hreWP5Opv5eBfq0IOnT1h3sV0g9UNrX04P
-	 kZvmtmcAUtzFgGZ1ACQqA1QHg0qS0myUcPvpiwamX/RT9X4cyjB8/QXNHs3eVGNtpc
-	 Ru3EHZD1IONGG/FsIWSTKNEnVfpT+dRiqRrjrM7zZDkm3WMYeUEwC1yVnfzsuI7qnB
-	 fQXV7GLk7anmVtq8s7qxI+r/xd1HN+Sy4yv0macp/Al4ZqfAeLRdtCyrSxVbuhiUN+
-	 Ne94rP3dRz5Bg==
+	b=FK+tQPKsKD7D+CXdF67tN+LjUnrJ+rz+1/8lBzOzwuqVZCYlWKfXWZAiRMyXfZ9C0
+	 aDFHRplqqoKLYNAs0lV/3A7RMivQW9vUjFmHxygAKTUX0PWwAPr9TjPqL11fyGx2fw
+	 AVLbt4+haPCGLzuZNMlH46cCep+KwIAdyyY9ArMkbr+r4EXSNZ0ihWzlQW+41Jc5Au
+	 NN1hegginnbCC3W2FDkuk+Gj6no7RjE22zGo4LYn3hfKJqzbXnfbbypndZsUOL0kRK
+	 qy3axjMzmXFdVaWPwA7v3zWvtogcD7gOtM5xVl3ZC2b5AaDqKhLWYBjQ/mdBiccGBW
+	 2VsgOKXCn+NBA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
+Cc: Cai Huoqing <caihuoqing@baidu.com>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/148] mmc: wmt-sdmmc: remove an incorrect release_mem_region() call in the .remove function
-Date: Sun, 24 Mar 2024 19:48:33 -0400
-Message-ID: <20240324235012.1356413-50-sashal@kernel.org>
+Subject: [PATCH 4.19 068/148] drm/tegra: dsi: Make use of the helper function dev_err_probe()
+Date: Sun, 24 Mar 2024 19:48:52 -0400
+Message-ID: <20240324235012.1356413-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,47 +48,69 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Cai Huoqing <caihuoqing@baidu.com>
 
-[ Upstream commit ae5004a40a262d329039b99b62bd3fe7645b66ad ]
+[ Upstream commit fc75e4fcbd1e4252a0481ebb23cd4516c127a8e2 ]
 
-This looks strange to call release_mem_region() in a remove function
-without any request_mem_region() in the probe or "struct resource"
-somewhere.
+When possible use dev_err_probe help to properly deal with the
+PROBE_DEFER error, the benefit is that DEFER issue will be logged
+in the devices_deferred debugfs file.
+And using dev_err_probe() can reduce code size, the error value
+gets printed.
 
-So remove the corresponding code.
-
-Fixes: 3a96dff0f828 ("mmc: SD/MMC Host Controller for Wondermedia WM8505/WM8650")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/bb0bb1ed1e18de55e8c0547625bde271e64b8c31.1708983064.git.christophe.jaillet@wanadoo.fr
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Stable-dep-of: 830c1ded3563 ("drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/wmt-sdmmc.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/gpu/drm/tegra/dsi.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/mmc/host/wmt-sdmmc.c b/drivers/mmc/host/wmt-sdmmc.c
-index a132bc822b5c6..b6369bfd64fd5 100644
---- a/drivers/mmc/host/wmt-sdmmc.c
-+++ b/drivers/mmc/host/wmt-sdmmc.c
-@@ -893,7 +893,6 @@ static int wmt_mci_remove(struct platform_device *pdev)
- {
- 	struct mmc_host *mmc;
- 	struct wmt_mci_priv *priv;
--	struct resource *res;
- 	u32 reg_tmp;
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index 7033ab28f7716..04bf4c89d870e 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -1509,28 +1509,24 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+ 	}
  
- 	mmc = platform_get_drvdata(pdev);
-@@ -921,9 +920,6 @@ static int wmt_mci_remove(struct platform_device *pdev)
- 	clk_disable_unprepare(priv->clk_sdmmc);
- 	clk_put(priv->clk_sdmmc);
+ 	dsi->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(dsi->clk)) {
+-		dev_err(&pdev->dev, "cannot get DSI clock\n");
+-		return PTR_ERR(dsi->clk);
+-	}
++	if (IS_ERR(dsi->clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
++				     "cannot get DSI clock\n");
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	release_mem_region(res->start, resource_size(res));
--
- 	mmc_free_host(mmc);
+ 	dsi->clk_lp = devm_clk_get(&pdev->dev, "lp");
+-	if (IS_ERR(dsi->clk_lp)) {
+-		dev_err(&pdev->dev, "cannot get low-power clock\n");
+-		return PTR_ERR(dsi->clk_lp);
+-	}
++	if (IS_ERR(dsi->clk_lp))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
++				     "cannot get low-power clock\n");
  
- 	dev_info(&pdev->dev, "WMT MCI device removed\n");
+ 	dsi->clk_parent = devm_clk_get(&pdev->dev, "parent");
+-	if (IS_ERR(dsi->clk_parent)) {
+-		dev_err(&pdev->dev, "cannot get parent clock\n");
+-		return PTR_ERR(dsi->clk_parent);
+-	}
++	if (IS_ERR(dsi->clk_parent))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
++				     "cannot get parent clock\n");
+ 
+ 	dsi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
+-	if (IS_ERR(dsi->vdd)) {
+-		dev_err(&pdev->dev, "cannot get VDD supply\n");
+-		return PTR_ERR(dsi->vdd);
+-	}
++	if (IS_ERR(dsi->vdd))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
++				     "cannot get VDD supply\n");
+ 
+ 	err = tegra_dsi_setup_clocks(dsi);
+ 	if (err < 0) {
 -- 
 2.43.0
 
