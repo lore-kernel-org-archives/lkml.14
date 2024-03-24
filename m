@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360D417967F;
-	Sun, 24 Mar 2024 23:40:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12C2178CD9;
+	Sun, 24 Mar 2024 23:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323645; cv=none; b=MjVvE0LmlC2s/ELXjOJhWXletWlqJszKbOrM1rvtVSxaagshspANU9+osKo1VNRcS4WxRg2xzSPuKzfeLMdFhZCKZD+UuCtSm95Xr5oiWauRdAoCQ0UoQmGJGa59XRSQvvJXrZ6wmZLWJsX8fWBa0LLPTlvHkBSWX5+bCtCtaEs=
+	t=1711323643; cv=none; b=XQrVe1FrkgOnnpKecKVxe4bc3BsVuAxmA4Fa3jJYpA6fCy0CFrJn2q855KuNORIdM8oVttkuUcGoVVWmm7UkcVNd891LrkCDJzmBY6OKb+UeVuYMTNVWVV9D97bKNuPY8VmYD7Mbu4spZ3rYhO+VOx+q2AU0+Sse2eeloJ1DaVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323645; c=relaxed/simple;
-	bh=/+JbcQspYtn1cfE7npVm5z6VSjqlZ5+MhDIb1KgxOJY=;
+	s=arc-20240116; t=1711323643; c=relaxed/simple;
+	bh=HwmkPfGefzMCAlIIte66Zo11gpIVH+oat9lMPqJVMGA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YTTkv0vLVUvNA4e7riS7lbuv2kRdff9lEvhRRQcW8pllVHAV2RAhxmrz3mVxADi0jzAqxzFLhvVdStaXIUkEud6n9BKKGj05cHkmJ8unCKxpiorVcwZXy8PMwGD7dDlPLOLHnvKP3vcKO1CRLoq9iKA3yU2FxTKkqLzp4Lu1ecQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XVvXBWys; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=f8dINjZ0f4rl6OGFuzF9ofwRkxQPqq+yKgCkehZOkokUd3ebKnykRBQKtPOgIm1oONLG5cQB5WNF/HBSaaZtgDbqCYfGc+T4priileseZmBrR+nlmPwk8J3aVviBYIOrZEeq11fFwu4l7bobl9c/dSk+5/n+y0At7bK+d53iFNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/9nmAoR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XVvXBWys"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D17C43399;
-	Sun, 24 Mar 2024 23:40:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/9nmAoR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 131E9C433C7;
+	Sun, 24 Mar 2024 23:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323645;
-	bh=/+JbcQspYtn1cfE7npVm5z6VSjqlZ5+MhDIb1KgxOJY=;
+	s=k20201202; t=1711323642;
+	bh=HwmkPfGefzMCAlIIte66Zo11gpIVH+oat9lMPqJVMGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XVvXBWysHVCmnjORrhPtsPlGZ5e4DgWatojRcitez5bo9f9XKIuNfmgHOmFevTIK3
-	 bzfrfGeEOFdPx0XrRquGRiPuFu04BKb+CHqS5u2bmXaiuDZ23GlfzG+LTGv08jzzxM
-	 OcwQxcoeoHeSfEtRVo6CR1pq5vqaHk4qH2QhoTX3jnsQF3S1KAyIZ/SgArvg6h5bjW
-	 xBQQ2RJ+dMOIILg9XZz+FL6Ca4Ws/Hsf/5JA5oNOySKQWxbsHIyjuVGTE5/8cT2IlK
-	 6m9wavPD//Vi95oXQ1NvDYTYhRg/fwOJYuYFiYKttorOdhcyG1ZC0VSJAWNwHKvFTJ
-	 FICoFq97AXC6Q==
+	b=d/9nmAoRmZZz0xnhLEIoXXe2ZF0YaKZqimfWD0aCfd7tTsdVHrxW5beCQytTKJDbo
+	 EkBX3EVNBh8GqPfepUQZnqD6s5CeRyz5Qs69LxrPECWrq4SPCfm/wG2uLENxMMlBQ9
+	 Ub1HeKR6sZYxqp6WEN7urjhgNWE5ZBPQ9uFJMyFEePKzAwNLt3Ty6mR+0HjXd6dCkK
+	 q03/AuHhAoWoUgecDw4z6sjeskPGCD556k0g4zLWlb8ewrkgZ7QdoNokidJeQsV01T
+	 rRuJ626++4bh6NjYB7iPgddini5vXbW7galFwOspzwihL/VkbRSxtN9E+vKC2i9vcy
+	 E43k3mu3W+6kg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-	Alexandra Winter <wintera@linux.ibm.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Hou Tao <houtao1@huawei.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 016/238] net/iucv: fix the allocation size of iucv_path_table array
-Date: Sun, 24 Mar 2024 19:36:44 -0400
-Message-ID: <20240324234027.1354210-17-sashal@kernel.org>
+Subject: [PATCH 5.10 014/238] x86/mm: Move is_vsyscall_vaddr() into asm/vsyscall.h
+Date: Sun, 24 Mar 2024 19:36:42 -0400
+Message-ID: <20240324234027.1354210-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,44 +49,69 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexander Gordeev <agordeev@linux.ibm.com>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit b4ea9b6a18ebf7f9f3a7a60f82e925186978cfcf ]
+[ Upstream commit ee0e39a63b78849f8abbef268b13e4838569f646 ]
 
-iucv_path_table is a dynamically allocated array of pointers to
-struct iucv_path items. Yet, its size is calculated as if it was
-an array of struct iucv_path items.
+Move is_vsyscall_vaddr() into asm/vsyscall.h to make it available for
+copy_from_kernel_nofault_allowed() in arch/x86/mm/maccess.c.
 
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Link: https://lore.kernel.org/r/20240202103935.3154011-2-houtao@huaweicloud.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/iucv/iucv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/vsyscall.h | 10 ++++++++++
+ arch/x86/mm/fault.c             |  9 ---------
+ 2 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
-index 6f84978a77265..ed0dbdbba4d94 100644
---- a/net/iucv/iucv.c
-+++ b/net/iucv/iucv.c
-@@ -156,7 +156,7 @@ static char iucv_error_pathid[16] = "INVALID PATHID";
- static LIST_HEAD(iucv_handler_list);
+diff --git a/arch/x86/include/asm/vsyscall.h b/arch/x86/include/asm/vsyscall.h
+index ab60a71a8dcb9..472f0263dbc61 100644
+--- a/arch/x86/include/asm/vsyscall.h
++++ b/arch/x86/include/asm/vsyscall.h
+@@ -4,6 +4,7 @@
  
- /*
-- * iucv_path_table: an array of iucv_path structures.
-+ * iucv_path_table: array of pointers to iucv_path structures.
-  */
- static struct iucv_path **iucv_path_table;
- static unsigned long iucv_max_pathid;
-@@ -542,7 +542,7 @@ static int iucv_enable(void)
+ #include <linux/seqlock.h>
+ #include <uapi/asm/vsyscall.h>
++#include <asm/page_types.h>
  
- 	get_online_cpus();
- 	rc = -ENOMEM;
--	alloc_size = iucv_max_pathid * sizeof(struct iucv_path);
-+	alloc_size = iucv_max_pathid * sizeof(*iucv_path_table);
- 	iucv_path_table = kzalloc(alloc_size, GFP_KERNEL);
- 	if (!iucv_path_table)
- 		goto out;
+ #ifdef CONFIG_X86_VSYSCALL_EMULATION
+ extern void map_vsyscall(void);
+@@ -24,4 +25,13 @@ static inline bool emulate_vsyscall(unsigned long error_code,
+ }
+ #endif
+ 
++/*
++ * The (legacy) vsyscall page is the long page in the kernel portion
++ * of the address space that has user-accessible permissions.
++ */
++static inline bool is_vsyscall_vaddr(unsigned long vaddr)
++{
++	return unlikely((vaddr & PAGE_MASK) == VSYSCALL_ADDR);
++}
++
+ #endif /* _ASM_X86_VSYSCALL_H */
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 9c1545c376e9b..cdb337cf92bae 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -781,15 +781,6 @@ show_signal_msg(struct pt_regs *regs, unsigned long error_code,
+ 	show_opcodes(regs, loglvl);
+ }
+ 
+-/*
+- * The (legacy) vsyscall page is the long page in the kernel portion
+- * of the address space that has user-accessible permissions.
+- */
+-static bool is_vsyscall_vaddr(unsigned long vaddr)
+-{
+-	return unlikely((vaddr & PAGE_MASK) == VSYSCALL_ADDR);
+-}
+-
+ static void
+ __bad_area_nosemaphore(struct pt_regs *regs, unsigned long error_code,
+ 		       unsigned long address, u32 pkey, int si_code)
 -- 
 2.43.0
 
