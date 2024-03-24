@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37191D5F92;
-	Sun, 24 Mar 2024 22:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03D6823DF;
+	Sun, 24 Mar 2024 22:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320573; cv=none; b=E6i6yQSEicdjZHM9xpbdNYQjYLWg10/OZrk611+cl/oUG17MsS0Vq5AdQOsieVsmz4x9b7gptisNXxOfhQEFAeTqXN+L2ObK4DP3Q0gE9jdoCjmPVRIJhYNsSzK5jUvx8LySEfP8exbiNCZjVQy0LJTp1U+sIjMEJzuHE3h1uKQ=
+	t=1711320562; cv=none; b=dxkGzc0d8kzx8uze/nLhVAuhCKM9mcLikS0ggLurebv294CZn2eN7u34RCSjLCI1YawbyWb4UISbvy9VKhkNbCtVp1jlrZvniIARacdP6aHxaGNhTg0PDHW9ZxUoTqk8CE526ZhK+T5rlyFigGCHPi03ze6TFN6E0KZuiVjG49k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320573; c=relaxed/simple;
-	bh=T+ReKdZ9roAuzU/DfsquugIpMTaDIpDuv/0TiIsOPPI=;
+	s=arc-20240116; t=1711320562; c=relaxed/simple;
+	bh=Bo9STP/2YMxC8WX0+B/N7gU8gl/AULgfdFnHDucbbc8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=daSC1jqnndeVeX0k71A2c3a7oyJJoRlBmcn8M5byuLIAw/AnK5+9RmRhVeMzszVweCbVb9RwSIA//siOioxC4vJOLibkC28yr1d05YLfx3Is8wEVbJfKeGf8q7/Un9IjNYuN2GVljHZDVAqYTapEedVOYJ/vmXwEG7Wxm/SatCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0zlSFO1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QqfEgB3s03FyYoyppFAQnM7OLrAunPZ7bIa5J1Eb5xa3nEcCz5IT6Xg/eKIve1XoeGaixCQk0GRglfyPqI78VhhwzJYujolR+yTlyvPDN8nS8dy7tZjfD+nqf9IKmjq7aUSuxhEdcaFf30iNO1YZ1airijaAmKimf4TXHrFP5eI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hc8zobks; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0zlSFO1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC750C43390;
-	Sun, 24 Mar 2024 22:49:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hc8zobks"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1211C43390;
+	Sun, 24 Mar 2024 22:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320573;
-	bh=T+ReKdZ9roAuzU/DfsquugIpMTaDIpDuv/0TiIsOPPI=;
+	s=k20201202; t=1711320561;
+	bh=Bo9STP/2YMxC8WX0+B/N7gU8gl/AULgfdFnHDucbbc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l0zlSFO1SXnRV9a3zmbYS+2qsqd+ud/o0knNgw4IYsjpRHOMT5p01YA526A2bySky
-	 JCPsua4/uiwMooZKM1+FOPggZa4eK9gLii+SpKttfaua6OLJwENJcKw+YBdztVzfHV
-	 EH+0L0YPShfa1RABjE4/di7RBlPkSXc5+5yKRguC0GUpUgxYvyw7eYFCPUIUjVTQCQ
-	 GIqq9K+2LGwskoOdvuYXeN56ZKHcWXAUU6ZzjWYrnP/msLoTQZZdalGffvmhKflmeu
-	 nU/w7S9Kry1FtJg2fFLU/oey1zF5TKVVxBBcrsdsR5GlQ11vq0i+x7rwiLB4ETf867
-	 9eqkMsLtcXARA==
+	b=Hc8zobksOf+h+K84dWFBHNGRElKD9yVBdoASKgWraywwToeDoQAytIqVx0vyh5fpA
+	 tempXsq9yeIoNeesvYo4IdtsHAnN02x2cs9D8AMm/6HwTIz6PX/Vjk9cRE7LdURGHi
+	 F5ytxvCGhlyHWkhsZfp7qIjAk8IAQz96YPCgX9MXR+Lq4GSHN8lDMeD/0/gXQaFTJS
+	 H3NG6Qav1GtPXQb/X+Ov8/RKgrvEmuu0wOXKunxJNpV0H9pWDPsLwp7VwWn0Bo7HFW
+	 Guz9LIILyLwPlLcE4TqC5Zje41VisiKTQuW+Itv5mR2DOPMZGW9pmo6sRcCrLCMxAg
+	 R6miGU2xvTPJg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
-	Julian Calaby <julian.calaby@gmail.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Babu Moger <babu.moger@amd.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Reinette Chatre <reinette.chatre@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 134/713] wifi: b43: Stop correct queue in DMA worker when QoS is disabled
-Date: Sun, 24 Mar 2024 18:37:40 -0400
-Message-ID: <20240324224720.1345309-135-sashal@kernel.org>
+Subject: [PATCH 6.7 122/713] x86/resctrl: Remove hard-coded memory bandwidth limit
+Date: Sun, 24 Mar 2024 18:37:28 -0400
+Message-ID: <20240324224720.1345309-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,64 +49,77 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+From: Babu Moger <babu.moger@amd.com>
 
-[ Upstream commit 581c8967d66c4961076dbbee356834e9c6777184 ]
+[ Upstream commit 0976783bb123f30981bc1e7a14d9626a6f63aeac ]
 
-When QoS is disabled, the queue priority value will not map to the correct
-ieee80211 queue since there is only one queue. Stop queue 0 when QoS is
-disabled to prevent trying to stop a non-existent queue and failing to stop
-the actual queue instantiated.
+The QOS Memory Bandwidth Enforcement Limit is reported by
+CPUID_Fn80000020_EAX_x01 and CPUID_Fn80000020_EAX_x02:
 
-Fixes: bad691946966 ("b43: avoid packet losses in the dma worker code.")
-Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20231231050300.122806-4-sergeantsagara@protonmail.com
+  Bits	 Description
+  31:0	 BW_LEN: Size of the QOS Memory Bandwidth Enforcement Limit.
+
+Newer processors can support higher bandwidth limit than the current
+hard-coded value. Remove latter and detect using CPUID instead. Also,
+update the register variables eax and edx to match the AMD CPUID
+definition.
+
+The CPUID details are documented in the Processor Programming Reference
+(PPR) Vol 1.1 for AMD Family 19h Model 11h B1 - 55901 Rev 0.25 in the
+Link tag below.
+
+Fixes: 4d05bf71f157 ("x86/resctrl: Introduce AMD QOS feature")
+Signed-off-by: Babu Moger <babu.moger@amd.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+Link: https://lore.kernel.org/r/c26a8ca79d399ed076cf8bf2e9fbc58048808289.1705359148.git.babu.moger@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43/main.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c     | 10 ++++------
+ arch/x86/kernel/cpu/resctrl/internal.h |  1 -
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
-index 92ca0b2ca286d..97d8bdeaa06cb 100644
---- a/drivers/net/wireless/broadcom/b43/main.c
-+++ b/drivers/net/wireless/broadcom/b43/main.c
-@@ -3603,7 +3603,7 @@ static void b43_tx_work(struct work_struct *work)
- 				err = b43_dma_tx(dev, skb);
- 			if (err == -ENOSPC) {
- 				wl->tx_queue_stopped[queue_num] = true;
--				ieee80211_stop_queue(wl->hw, queue_num);
-+				b43_stop_queue(dev, queue_num);
- 				skb_queue_head(&wl->tx_queue[queue_num], skb);
- 				break;
- 			}
-@@ -3627,6 +3627,7 @@ static void b43_op_tx(struct ieee80211_hw *hw,
- 		      struct sk_buff *skb)
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 19e0681f04356..d04371e851b4c 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -231,9 +231,7 @@ static bool __get_mem_config_intel(struct rdt_resource *r)
+ static bool __rdt_get_mem_config_amd(struct rdt_resource *r)
  {
- 	struct b43_wl *wl = hw_to_b43_wl(hw);
-+	u16 skb_queue_mapping;
+ 	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
+-	union cpuid_0x10_3_eax eax;
+-	union cpuid_0x10_x_edx edx;
+-	u32 ebx, ecx, subleaf;
++	u32 eax, ebx, ecx, edx, subleaf;
  
- 	if (unlikely(skb->len < 2 + 2 + 6)) {
- 		/* Too short, this can't be a valid frame. */
-@@ -3635,12 +3636,12 @@ static void b43_op_tx(struct ieee80211_hw *hw,
- 	}
- 	B43_WARN_ON(skb_shinfo(skb)->nr_frags);
+ 	/*
+ 	 * Query CPUID_Fn80000020_EDX_x01 for MBA and
+@@ -241,9 +239,9 @@ static bool __rdt_get_mem_config_amd(struct rdt_resource *r)
+ 	 */
+ 	subleaf = (r->rid == RDT_RESOURCE_SMBA) ? 2 :  1;
  
--	skb_queue_tail(&wl->tx_queue[skb->queue_mapping], skb);
--	if (!wl->tx_queue_stopped[skb->queue_mapping]) {
-+	skb_queue_mapping = skb_get_queue_mapping(skb);
-+	skb_queue_tail(&wl->tx_queue[skb_queue_mapping], skb);
-+	if (!wl->tx_queue_stopped[skb_queue_mapping])
- 		ieee80211_queue_work(wl->hw, &wl->tx_work);
--	} else {
--		ieee80211_stop_queue(wl->hw, skb->queue_mapping);
--	}
-+	else
-+		b43_stop_queue(wl->current_dev, skb_queue_mapping);
- }
+-	cpuid_count(0x80000020, subleaf, &eax.full, &ebx, &ecx, &edx.full);
+-	hw_res->num_closid = edx.split.cos_max + 1;
+-	r->default_ctrl = MAX_MBA_BW_AMD;
++	cpuid_count(0x80000020, subleaf, &eax, &ebx, &ecx, &edx);
++	hw_res->num_closid = edx + 1;
++	r->default_ctrl = 1 << eax;
  
- static void b43_qos_params_upload(struct b43_wldev *dev,
+ 	/* AMD does not use delay */
+ 	r->membw.delay_linear = false;
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index a4f1aa15f0a2a..d2979748fae47 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -18,7 +18,6 @@
+ #define MBM_OVERFLOW_INTERVAL		1000
+ #define MAX_MBA_BW			100u
+ #define MBA_IS_LINEAR			0x4
+-#define MAX_MBA_BW_AMD			0x800
+ #define MBM_CNTR_WIDTH_OFFSET_AMD	20
+ 
+ #define RMID_VAL_ERROR			BIT_ULL(63)
 -- 
 2.43.0
 
