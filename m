@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EB2284559;
-	Sun, 24 Mar 2024 23:43:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1152C17C180;
+	Sun, 24 Mar 2024 23:42:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323794; cv=none; b=ATQV469mmbaoG+p65/UIAdBo/R01WzQa2DIfGdV1JoBNruGf3VIgnw5lKXKecmn7fx9cSzmfHdKW//7HFGJESWpOwlUCUYV6zvgUObrZHgvSNX/xG3NgWrMJoifF/RzKTtxRM0nSlD59Lf9lVYqcHKKB/OdYn0e5ctxam7/f2L4=
+	t=1711323756; cv=none; b=LKwELuS530vjDxTYPVxJE/tdh9e2JPSU8Ja7uLnCr+iVT+2FRZp2dQoLac5QIazaAxYsof6WyZkf/pQkjLkVnThPb8c4Fsb+gOpVQ3PaOfFvVSejvTtYKVaKBMUFtUsoT37rs8VsQuAp+yHt+4Vl6rmfKM/WQTTKiv8ETET19ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323794; c=relaxed/simple;
-	bh=MN8aMj40GuMp0oDJC2Acpjv/qU1lXE28W5v93tDW/l8=;
+	s=arc-20240116; t=1711323756; c=relaxed/simple;
+	bh=2rcsvd97JtGVplEBrVhPiZV3D81CDlfHGkt6mfZmiLY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=llyMG6Wrzpdq89ggBOb9yqrZdLY4XsIJxOzQyvE5Pe+vTY9QdH1ZffPRiwV6xw1IL/UGLrtfVfCw9dvenko/amdpYWO1Jw148ZfwxMUE+2BmZqDA0yVxlm9jr7B7Ahx/N4hZGdHbkiyNZAxq72nw6XEWp6Eu5UaVBBLqIu8fHoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UMTVi+/8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IJ6WATWvJDUcw4LITAqtCmHd5OU6sZPt3TndB1OvdYmnRHimh8aIY+n4viKmzkPh1vKF3QqqW6rvugMzzL1Aq80OSgfrJDKxigU89oz1rnGrJyAxFbbvQCxSRm1uKhu6k10FSJs65NfcB1rf8faaRQgHNLWohEbg8DyUOioe638=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUKQh40o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UMTVi+/8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 292D4C433C7;
-	Sun, 24 Mar 2024 23:43:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUKQh40o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF057C433C7;
+	Sun, 24 Mar 2024 23:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323794;
-	bh=MN8aMj40GuMp0oDJC2Acpjv/qU1lXE28W5v93tDW/l8=;
+	s=k20201202; t=1711323754;
+	bh=2rcsvd97JtGVplEBrVhPiZV3D81CDlfHGkt6mfZmiLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UMTVi+/81ONudUIouHbbWjKW1AvjyzQ6ymzdMUjHkpJEGk1u/S9SOzWedWXuXXOA8
-	 HWyzuEeoKF5fDeSfeibuq/UADiBULPU+6q7RPOsE9AWzmvslvK/7Vz/RZlB4rx+xiX
-	 jsw4x/7T5UHMIY82CX3x4VsLUYwD/kfK0pTAQbzSFiV2wL+pf7caU6ZFBIVV+MOLcF
-	 c9IxdMnhlwXPJg0raYeX5E+GiEZMxhQLQ1SbRpoRDe9VIIwI1ySXV3hbHJfwo8wAKx
-	 772pmTT2tSQSiBKkPHyHpvJ0ChufipfJU0nMPDSQFzV8rsTEA98JsevIzkOplZXeoW
-	 RH/2H9s9mG1Hw==
+	b=oUKQh40oaAJj75CyMDmD3YbyMEY2uBTTX1pa2b3LP1jpjRxS9KPPL6VVIfQyYLeVs
+	 RweeysyaTkub11SQhq3YjOvUvqbI9151dbbHzX5GgNUc38kddfSYTzrtdDUvkvEyyI
+	 AtS3oxxpLM4tGn7dtADRjkHo9NWlTEwzgAW6cZGr1FXWXRYMujZmiLeSPt3Dr4Rb2k
+	 PwRWWg89jX3js3RycTVJI+JthYsnqF6x9XCLIp4qtp9ODUTt1HC/IHARWXTBxBbIhg
+	 N20q7bvLljT4R0sltP07sXhckCrxM+yjSsbtHSYWrESCDIUCj6+eykRmyvst6JbSge
+	 6MYzUeS2+d45w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Jammy Zhou <Jammy.Zhou@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Wyatt Wood <wyatt.wood@amd.com>,
+	Anthony Koo <Anthony.Koo@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 171/238] drm/amdgpu: Fix missing break in ATOM_ARG_IMM Case of atom_get_src_int()
-Date: Sun, 24 Mar 2024 19:39:19 -0400
-Message-ID: <20240324234027.1354210-172-sashal@kernel.org>
+Subject: [PATCH 5.10 129/238] drm/amd/display: Fix potential NULL pointer dereferences in 'dcn10_set_output_transfer_func()'
+Date: Sun, 24 Mar 2024 19:38:37 -0400
+Message-ID: <20240324234027.1354210-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -46,47 +48,58 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
 From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit 7cf1ad2fe10634238b38442a851d89514cb14ea2 ]
+[ Upstream commit 9ccfe80d022df7c595f1925afb31de2232900656 ]
 
-Missing break statement in the ATOM_ARG_IMM case of a switch statement,
-adds the missing break statement, ensuring that the program's control
-flow is as intended.
+The 'stream' pointer is used in dcn10_set_output_transfer_func() before
+the check if 'stream' is NULL.
 
 Fixes the below:
-drivers/gpu/drm/amd/amdgpu/atom.c:323 atom_get_src_int() warn: ignoring unreachable code.
+drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:1892 dcn10_set_output_transfer_func() warn: variable dereferenced before check 'stream' (see line 1875)
 
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Cc: Jammy Zhou <Jammy.Zhou@amd.com>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
+Fixes: ddef02de0d71 ("drm/amd/display: add null checks before logging")
+Cc: Wyatt Wood <wyatt.wood@amd.com>
+Cc: Anthony Koo <Anthony.Koo@amd.com>
+Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
 Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/atom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atom.c b/drivers/gpu/drm/amd/amdgpu/atom.c
-index 4cfc786699c7f..c1841fa873f56 100644
---- a/drivers/gpu/drm/amd/amdgpu/atom.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atom.c
-@@ -310,7 +310,7 @@ static uint32_t atom_get_src_int(atom_exec_context *ctx, uint8_t attr,
- 				DEBUG("IMM 0x%02X\n", val);
- 			return val;
- 		}
--		return 0;
-+		break;
- 	case ATOM_ARG_PLL:
- 		idx = U8(*ptr);
- 		(*ptr)++;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 1c669f115dd80..8cf6e307ae36e 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -1669,6 +1669,9 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
+ {
+ 	struct dpp *dpp = pipe_ctx->plane_res.dpp;
+ 
++	if (!stream)
++		return false;
++
+ 	if (dpp == NULL)
+ 		return false;
+ 
+@@ -1691,8 +1694,8 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
+ 	} else
+ 		dpp->funcs->dpp_program_regamma_pwl(dpp, NULL, OPP_REGAMMA_BYPASS);
+ 
+-	if (stream != NULL && stream->ctx != NULL &&
+-			stream->out_transfer_func != NULL) {
++	if (stream->ctx &&
++	    stream->out_transfer_func) {
+ 		log_tf(stream->ctx,
+ 				stream->out_transfer_func,
+ 				dpp->regamma_params.hw_points_num);
 -- 
 2.43.0
 
