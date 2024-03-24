@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB4E181CEE;
-	Sun, 24 Mar 2024 23:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343901826F1;
+	Sun, 24 Mar 2024 23:49:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324126; cv=none; b=TVIQ3i7LuEYKP6+asWE+a5DoTo/IPEaCl/05r/0BP7DYiewz9g5OCdHZw0vJFRfrQXeiJGsKISt8PykpfvK8gGgjV1ija3uZ/FqjWRwqDb9OTGW8J1aq4JQv5gS5sckSvDTufpdffYC887v2iooPxpEGR9Y/jHMxl+1Ngwij248=
+	t=1711324153; cv=none; b=AzKuzL8embqCfkreIPFRVJZxT+Sfnt9hIPlYUtbSPrJNJzgxpqf01FHlOzIqOTxzc/S+lAgc0BkhisomrjFRJ8lnJ19fyP8eHqSRjPma+z6V5I3pAHyc07t3ohhyioX3gtjbUg6Jz+DsuxVRi/kzb8ytPsYW7UKNKyqYRd9NPc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324126; c=relaxed/simple;
-	bh=ZwoDu9NJw8zKoFbb6Bko5Csdq349fZXE97KwHAXSHU4=;
+	s=arc-20240116; t=1711324153; c=relaxed/simple;
+	bh=LYhPIjMpKEPwiaOA5bQCN6S1WNeGsEIjM6B9l315d1c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vnpp0vDr+ZS0P/a7jS1Oy7q/GOgZylqaTKi940MPyH3FqK8m3jgB9wGGV50iW7d59MLbgMmXSdUGe0PZo0BkL4ENLP6BdQqEC78lCwhkNLF6Ol/BGL8MwOwuXkCoi3zNYpdOwI9VPKKNycKhUYUenmfXrh5sR3DFm+YwdFybiGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LxJPRFop; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Qth4g4EOZA10Dp+ZFx35ly4RWA96Fa6GkL/ELX2pd4EoMzGTNp3vG+JtVpF7Rv2MJHq5qrZHSLEQMAtNofIYBjO29cNhcgdPEm+tIxN2l4DU2AVAVDUaJ1lLBZnTt408LTGAL+AzRt2aH5zLh4sL2SxtEqpj1ZfM3rd7cWKw8Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOoiTx5M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LxJPRFop"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A55BC433C7;
-	Sun, 24 Mar 2024 23:48:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOoiTx5M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E5A0C43390;
+	Sun, 24 Mar 2024 23:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324125;
-	bh=ZwoDu9NJw8zKoFbb6Bko5Csdq349fZXE97KwHAXSHU4=;
+	s=k20201202; t=1711324152;
+	bh=LYhPIjMpKEPwiaOA5bQCN6S1WNeGsEIjM6B9l315d1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LxJPRFop57awjhExFgBB25DvMuofhjHTCJOx35Huv8t99VSgy2qAAge0W+8zxaQhM
-	 mVwNvZzLyggiTAZl0epTrHFrRyu6s33Ke2v5gXJKYrgqSGZDcIGknqeFeC5nL7EceD
-	 QgdtL4LBQspaV+eKgYFdGXLl7WFgAefu92wUhJlzY6u7De5IKgpBdyLmLReDqLLVw5
-	 9cP1sLcXA3jQd8w9NDCJJRcUG3ssTATViN/+Pqa4XG/1+Sj+MVXYUsZVk2f5DihvJG
-	 DZf64sAAUdM/SgeQftQzkTuO6KaGsFzSm4xRYA+18Jsj2At8yiI/rsWB2VLTsOPPBH
-	 R7QV68VwDLniQ==
+	b=WOoiTx5MO5C/CIAfm3VkqlyzcauSIV+3E2Gwy9NxBzE+qo7FEDLfqFeXdBoIhk+Ni
+	 5Yz+goY7xUgsNCl7r/DThSa7+MC0VDAZyGXUdWNqjJtl1cpU0Qgs5lIHhBqKTwgZ39
+	 zWmDvauqAkS1CXRN6lRM20c8B4fSiGlEDVEa6miUuQUGlzRj0iTrFxRxdTc0nAPwUH
+	 juvgks7Rsmu+VQvE2p+l5WQytyRpQOhhahMyKLzeBFBQZ3j/WcymYGUlXuz/ZCOSrG
+	 PiRdO6eiZogpU2z3akM2Skb202zlYFdfg5NrFuubAAJm4rn3Uav39tctQ83cKD3VGE
+	 rLeCHzNqpgBtw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Alexandre Mergnat <amergnat@baylibre.com>,
-	CK Hu <ck.hu@mediatek.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+Cc: Daniel Thompson <daniel.thompson@linaro.org>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 122/183] drm/mediatek: dsi: Fix DSI RGB666 formats and definitions
-Date: Sun, 24 Mar 2024 19:45:35 -0400
-Message-ID: <20240324234638.1355609-123-sashal@kernel.org>
+Subject: [PATCH 5.4 148/183] backlight: lp8788: Fully initialize backlight_properties during probe
+Date: Sun, 24 Mar 2024 19:46:01 -0400
+Message-ID: <20240324234638.1355609-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -50,76 +48,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
 
-[ Upstream commit fae6f815505301b92d9113764f4d76d0bfe45607 ]
+[ Upstream commit 392346827fbe8a7fd573dfb145170d7949f639a6 ]
 
-The register bits definitions for RGB666 formats are wrong in multiple
-ways: first, in the DSI_PS_SEL bits region, the Packed 18-bits RGB666
-format is selected with bit 1, while the Loosely Packed one is bit 2,
-and second - the definition name "LOOSELY_PS_18BIT_RGB666" is wrong
-because the loosely packed format is 24 bits instead!
+props is stack allocated and the fields that are not explcitly set
+by the probe function need to be zeroed or we'll get undefined behaviour
+(especially so power/blank states)!
 
-Either way, functions mtk_dsi_ps_control_vact() and mtk_dsi_ps_control()
-do not even agree on the DSI_PS_SEL bit to set in DSI_PSCTRL: one sets
-loosely packed (24) on RGB666, the other sets packed (18), and the other
-way around for RGB666_PACKED.
-
-Fixing this entire stack of issues is done in one go:
- - Use the correct bit for the Loosely Packed RGB666 definition
- - Rename LOOSELY_PS_18BIT_RGB666 to LOOSELY_PS_24BIT_RGB666
- - Change ps_bpp_mode in mtk_dsi_ps_control_vact() to set:
-    - Loosely Packed, 24-bits for MIPI_DSI_FMT_RGB666
-    - Packed, 18-bits for MIPI_DSI_FMT_RGB666_PACKED
-
-Fixes: 2e54c14e310f ("drm/mediatek: Add DSI sub driver")
-Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://patchwork.kernel.org/project/dri-devel/patch/20240215085316.56835-3-angelogioacchino.delregno@collabora.com/
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Fixes: c5a51053cf3b ("backlight: add new lp8788 backlight driver")
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20240220153532.76613-4-daniel.thompson@linaro.org
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/video/backlight/lp8788_bl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index e82705a33acfd..9af900076dee4 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -64,8 +64,8 @@
- #define DSI_PS_WC			0x3fff
- #define DSI_PS_SEL			(3 << 16)
- #define PACKED_PS_16BIT_RGB565		(0 << 16)
--#define LOOSELY_PS_18BIT_RGB666		(1 << 16)
--#define PACKED_PS_18BIT_RGB666		(2 << 16)
-+#define PACKED_PS_18BIT_RGB666		(1 << 16)
-+#define LOOSELY_PS_24BIT_RGB666		(2 << 16)
- #define PACKED_PS_24BIT_RGB888		(3 << 16)
+diff --git a/drivers/video/backlight/lp8788_bl.c b/drivers/video/backlight/lp8788_bl.c
+index ba42f3fe0c739..d9b95dbd40d30 100644
+--- a/drivers/video/backlight/lp8788_bl.c
++++ b/drivers/video/backlight/lp8788_bl.c
+@@ -191,6 +191,7 @@ static int lp8788_backlight_register(struct lp8788_bl *bl)
+ 	int init_brt;
+ 	char *name;
  
- #define DSI_VSA_NL		0x20
-@@ -321,10 +321,10 @@ static void mtk_dsi_ps_control_vact(struct mtk_dsi *dsi)
- 		ps_bpp_mode |= PACKED_PS_24BIT_RGB888;
- 		break;
- 	case MIPI_DSI_FMT_RGB666:
--		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
-+		ps_bpp_mode |= LOOSELY_PS_24BIT_RGB666;
- 		break;
- 	case MIPI_DSI_FMT_RGB666_PACKED:
--		ps_bpp_mode |= LOOSELY_PS_18BIT_RGB666;
-+		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
- 		break;
- 	case MIPI_DSI_FMT_RGB565:
- 		ps_bpp_mode |= PACKED_PS_16BIT_RGB565;
-@@ -375,7 +375,7 @@ static void mtk_dsi_ps_control(struct mtk_dsi *dsi)
- 		dsi_tmp_buf_bpp = 3;
- 		break;
- 	case MIPI_DSI_FMT_RGB666:
--		tmp_reg = LOOSELY_PS_18BIT_RGB666;
-+		tmp_reg = LOOSELY_PS_24BIT_RGB666;
- 		dsi_tmp_buf_bpp = 3;
- 		break;
- 	case MIPI_DSI_FMT_RGB666_PACKED:
++	memset(&props, 0, sizeof(struct backlight_properties));
+ 	props.type = BACKLIGHT_PLATFORM;
+ 	props.max_brightness = MAX_BRIGHTNESS;
+ 
 -- 
 2.43.0
 
