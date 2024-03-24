@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D714182EFF;
-	Sun, 24 Mar 2024 23:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ED118277F;
+	Sun, 24 Mar 2024 23:49:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324184; cv=none; b=Yfb4wS0aX3A2tocqCCp2h/ijZdG1O4AZuyhOLYFXa2moA8DPMB4/HaYwbhQgrOOBSGcOlhhMZ6ToEMAD2aW6lq7exaxCvZ0NVgo0GAq9MQZm1yKVXJo7zre4CVcw9uFZmcIXQMbsPtIXJynb5na0NM53xe3uI/0KungO2KMx0mQ=
+	t=1711324194; cv=none; b=Fv2pNjOjxuJqPXIglG+bdmM7k3nTszndIqreSTmHMi+fdYIZzJueMw7UpNqfF0GvuC0KvCoKInQ2u9VSauge9NaID2OcH756jtId36M3PvBLs/TBpSE8Pq1ey68zi6JjluYwi9n74NRiw4PCLH69fs1hFDcDQHWDOmKPGbaLgtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324184; c=relaxed/simple;
-	bh=Zx4FbCVNw5xSF8GjY5g+ReLvwcTy3T4vitIDT4pNMlI=;
+	s=arc-20240116; t=1711324194; c=relaxed/simple;
+	bh=0Rc2g67sGLQFqzeHM5BrRlftSLE3u77pUTGIFlbaCNY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n3gTukPpGakY4ngEt38+rt/8/dRAAp318qfQoh66i5pIZpVkQY4Jbjc01EfM867doqG1KqwesnKgu1PomtxZKvsDbxMkP+Efm/ioGzl1oQ897LridtfyCmYxND8+A94tzPYATft6wWVlJXisdOWA2tzGT0HmJmC8lkVQIo+Mi5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwSVE3Xr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=R6Iipa0xJENRoMNnMVO2kau2Jkhef2tHYlfQvqiASAk/akdl5P1nePtH2JHRr9UeY+Onr0LSPapGAFthqToFR99A9fULB/PV3K//dbDKoT1Uxit4Pyayiz73cZzjdFoSxZ7SDLESHhDFI9jXR/lIHAae6Fr/E2lrJ9pgvy4EnzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MglDmZVi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwSVE3Xr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F02FC433C7;
-	Sun, 24 Mar 2024 23:49:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MglDmZVi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 243D9C43390;
+	Sun, 24 Mar 2024 23:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324183;
-	bh=Zx4FbCVNw5xSF8GjY5g+ReLvwcTy3T4vitIDT4pNMlI=;
+	s=k20201202; t=1711324192;
+	bh=0Rc2g67sGLQFqzeHM5BrRlftSLE3u77pUTGIFlbaCNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bwSVE3XrRFpG4d6I1yrlrBS9WTOB8eG7wfSVOpJGwQu9qtrVT9jH5OJzkyDyCxawK
-	 cB0o2aGjWW/FdnUCDm4aKegX2SKu915dnarIPuOxophpvvvG99BCMYnKMD3Vi6gGgS
-	 qFnuGkdRLXFnWQTehBdZL6JMIp7eTMrKAp0a6oCjRuiXehrpUJ1JbTd3zXQ8gcVgXr
-	 hAcvKOY/JU8egphOthe4vHsmnwC6vhcyndnGnVAW9A9GwkALQFDtK4dyfe+JrKxtZ/
-	 nw3aWfbR92cdMn2hz8dhM1PUCUjjNc2nWlXIQebImn/6ug/66xX2zTazKDjR4v+Ju5
-	 ppkmubFm12NdQ==
+	b=MglDmZViqDPqxaAYDZEnx9XpYzlM63NkkPRPO3YxLHBAMSBhQSt6cO28j5k+rumEs
+	 ydTEekpBNL7y7/8cOnDc1w+D+TQug5Ca325VramY7uZ1ss7tlP9OMKF8vvYFRZ5Ds3
+	 46essnqNnMNU2ZQrZLSNvu3ZPj11gWY2jjiuSHHaWs81MjDSMgNnn3oZOSmS9XhbVs
+	 h7BFOBIO3NI1VYVPXajRWKmxBiz4Ix0O9u3QWBEk0hsy3GNkKKDfAKIc5VfUuGyU3q
+	 N9K3k4Ea1iIMrIASiSxBG0bKLyzhBpYZl4iBxViKLrquvq2WD+UoK6/JBTXhMvKSEP
+	 jQijVLHeq3p1w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yewon Choi <woni9911@gmail.com>,
-	Michal Kubiak <michal.kubiak@intel.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Fei Shao <fshao@chromium.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 173/183] rds: introduce acquire/release ordering in acquire/release_in_xmit()
-Date: Sun, 24 Mar 2024 19:46:26 -0400
-Message-ID: <20240324234638.1355609-174-sashal@kernel.org>
+Subject: [PATCH 5.4 181/183] spi: spi-mt65xx: Fix NULL pointer access in interrupt handler
+Date: Sun, 24 Mar 2024 19:46:34 -0400
+Message-ID: <20240324234638.1355609-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,49 +49,59 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yewon Choi <woni9911@gmail.com>
+From: Fei Shao <fshao@chromium.org>
 
-[ Upstream commit 1422f28826d2a0c11e5240b3e951c9e214d8656e ]
+[ Upstream commit a20ad45008a7c82f1184dc6dee280096009ece55 ]
 
-acquire/release_in_xmit() work as bit lock in rds_send_xmit(), so they
-are expected to ensure acquire/release memory ordering semantics.
-However, test_and_set_bit/clear_bit() don't imply such semantics, on
-top of this, following smp_mb__after_atomic() does not guarantee release
-ordering (memory barrier actually should be placed before clear_bit()).
+The TX buffer in spi_transfer can be a NULL pointer, so the interrupt
+handler may end up writing to the invalid memory and cause crashes.
 
-Instead, we use clear_bit_unlock/test_and_set_bit_lock() here.
+Add a check to trans->tx_buf before using it.
 
-Fixes: 0f4b1c7e89e6 ("rds: fix rds_send_xmit() serialization")
-Fixes: 1f9ecd7eacfd ("RDS: Pass rds_conn_path to rds_send_xmit()")
-Signed-off-by: Yewon Choi <woni9911@gmail.com>
-Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
-Link: https://lore.kernel.org/r/ZfQUxnNTO9AJmzwc@libra05
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: 1ce24864bff4 ("spi: mediatek: Only do dma for 4-byte aligned buffers")
+Signed-off-by: Fei Shao <fshao@chromium.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://msgid.link/r/20240321070942.1587146-2-fshao@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rds/send.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/spi/spi-mt65xx.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/net/rds/send.c b/net/rds/send.c
-index 6c2c5667e3a39..c0cebf4b4fe56 100644
---- a/net/rds/send.c
-+++ b/net/rds/send.c
-@@ -103,13 +103,12 @@ EXPORT_SYMBOL_GPL(rds_send_path_reset);
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 29d44f5d5212c..8105b458d12f7 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -559,17 +559,19 @@ static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
+ 		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, len);
+ 		mtk_spi_setup_packet(master);
  
- static int acquire_in_xmit(struct rds_conn_path *cp)
- {
--	return test_and_set_bit(RDS_IN_XMIT, &cp->cp_flags) == 0;
-+	return test_and_set_bit_lock(RDS_IN_XMIT, &cp->cp_flags) == 0;
- }
+-		cnt = mdata->xfer_len / 4;
+-		iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
+-				trans->tx_buf + mdata->num_xfered, cnt);
++		if (trans->tx_buf) {
++			cnt = mdata->xfer_len / 4;
++			iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
++					trans->tx_buf + mdata->num_xfered, cnt);
  
- static void release_in_xmit(struct rds_conn_path *cp)
- {
--	clear_bit(RDS_IN_XMIT, &cp->cp_flags);
--	smp_mb__after_atomic();
-+	clear_bit_unlock(RDS_IN_XMIT, &cp->cp_flags);
- 	/*
- 	 * We don't use wait_on_bit()/wake_up_bit() because our waking is in a
- 	 * hot path and finding waiters is very rare.  We don't want to walk
+-		remainder = mdata->xfer_len % 4;
+-		if (remainder > 0) {
+-			reg_val = 0;
+-			memcpy(&reg_val,
+-				trans->tx_buf + (cnt * 4) + mdata->num_xfered,
+-				remainder);
+-			writel(reg_val, mdata->base + SPI_TX_DATA_REG);
++			remainder = mdata->xfer_len % 4;
++			if (remainder > 0) {
++				reg_val = 0;
++				memcpy(&reg_val,
++					trans->tx_buf + (cnt * 4) + mdata->num_xfered,
++					remainder);
++				writel(reg_val, mdata->base + SPI_TX_DATA_REG);
++			}
+ 		}
+ 
+ 		mtk_spi_enable_transfer(master);
 -- 
 2.43.0
 
