@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC108131E20;
-	Sun, 24 Mar 2024 23:03:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22DB202384;
+	Sun, 24 Mar 2024 23:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321420; cv=none; b=e8Xd5I2F2JQSjDeD1iB6rcGFGELuzIgdesq3TPL/SMFJfGO2EfCeMtY1Z8YJfkM4JrYDfUvN4TDfoqnArzTU/yI5Ah1bYJlkDyZRbdKVbJcAKgPK5LbuyTv+xnZQwIKBVx3qauHPCjCO1PfNgXGkhiNTf0VwMha4BW96F2VoHRU=
+	t=1711321425; cv=none; b=oGQHTOUyvI96odsa8w1LS1CEFLDNuZqJrnAsaEb5G2zq1sgoLh7hB3Dsc1baqmAy7iEDr9+de7PVrK1Zb6+a5umreGsmeHh0F4Crh64tHxE/4okwfNCM+Vc/bF8xeVJx+dTRWT8EQ7XjPqLBNk9Z1do8KspXOSD2uIvdHi3kDFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321420; c=relaxed/simple;
-	bh=0VAmgdQ1t/uj+NHVK29vS+oFQU05fhWw7epz4GYuTD8=;
+	s=arc-20240116; t=1711321425; c=relaxed/simple;
+	bh=2jaq6Nv6r4YCmGhbPVeZlY0UKTMbM3LoqcudLDvUkVM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uZ7Mw5s0mKkW4GwaOLNOCxLn1BqiYX/99WorhD7vHB7WA4+24Ej/bR3C6+sbuZjXU1K4occklGYUgFKQJz6jN27BNC3I42ttujcYs7fyv1j59iBrX+LOVjvtqG3rtTxw/JWohsx+V6EmoRJuPwvdbV0B6WIe7BgwfxTEhUAqvLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssppzhsP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=hL1xh5UwbrDY9yl++PZbBu+9wtcUdpHzMN1/1Im6jm2qavfQO8sAg8O7SsXqfhwMHe6EVHcQAWxIf6txcAKS5DRPZ6I7fxDGWjGrfkp/2gV0Z+pB48boSl/1UrLa4tZFR9zkmUYFu1J5cEocgrXgFMoEepp3P8r/mZbEcIj5OuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIU9p3PQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssppzhsP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05F44C433F1;
-	Sun, 24 Mar 2024 23:03:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIU9p3PQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1A25C433C7;
+	Sun, 24 Mar 2024 23:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321418;
-	bh=0VAmgdQ1t/uj+NHVK29vS+oFQU05fhWw7epz4GYuTD8=;
+	s=k20201202; t=1711321425;
+	bh=2jaq6Nv6r4YCmGhbPVeZlY0UKTMbM3LoqcudLDvUkVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ssppzhsPLEVctpmNVwbNP6qpoHSoCV/mWh7TFOY2JBMdxDEcQpJc658d4R3DrWjtz
-	 yszeLEn4c7kfEBofuviskJJvCBuWLeLEcTJ1ydIpF/xKBGa0OqLSA1iXSCR+ElqK4C
-	 BPFpAHPVEWj6iF3jz/x1KXBu0v0m59BGDMtpnegkGh7nN8Np7MT/vvFCdfgfvWtHSx
-	 YR+2oRoiV4Uxsnh9G2v/SvAuMj4KwAYW64RFIl36LYonz1ZSKJ2QQukLRc85Eg4Mec
-	 yVi06jIItzWQCXtTK39BZQN7IeWw1qMdXwWpwd1xCEr+98lZDK1DW7aplN6KLR4G6q
-	 tyt9R5uYYO/CQ==
+	b=rIU9p3PQWXD3WWlwExVfQK1u5ZTI0KfUljV1+qNH0lInbr5Npu33Y+yR1H6oWfUNr
+	 6itCZSHiyUc+QLfMbQQf9pnbRppnjT+Njvocl2u9AVklMH7bCd6RSX3z0PYiwPucXq
+	 +X5QvLChBdeyUMC0x9J+FKX/NXV723QblShPDt6K4Q/M5AWmilafGhW5vjOqN2t6od
+	 TpxJ7WSVshpsEIkYI/7+pO1D1Zgaeipas9wr/hBYWo0533vm/NcheSRKjyi2xpCyh7
+	 jn91K9WVxE2CTTwY2e+oBJA2v/4q87w87dj8U9S8U+xYfZXToFm+JP86V79pSuEoDi
+	 UkinF8P6eeFww==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Borkmann <daniel@iogearbox.net>,
-	Stanislav Fomichev <sdf@google.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
+Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	"kernelci . org bot" <bot@kernelci.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 142/638] selftests/bpf: Add netkit to tc_redirect selftest
-Date: Sun, 24 Mar 2024 18:52:59 -0400
-Message-ID: <20240324230116.1348576-143-sashal@kernel.org>
+Subject: [PATCH 6.6 149/638] cpufreq: mediatek-hw: Don't error out if supply is not found
+Date: Sun, 24 Mar 2024 18:53:06 -0400
+Message-ID: <20240324230116.1348576-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -46,125 +46,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-[ Upstream commit adfeae2d243d9e5b83d094af481d189156b11779 ]
+[ Upstream commit eaffb10b51bf74415c9252fd8fb4dd77122501ee ]
 
-Extend the existing tc_redirect selftest to also cover netkit devices
-for exercising the bpf_redirect_peer() code paths, so that we have both
-veth as well as netkit covered, all tests still pass after this change.
+devm_regulator_get_optional() returns -ENODEV if no supply can be found.
+By introducing its usage, commit 788715b5f21c ("cpufreq: mediatek-hw:
+Wait for CPU supplies before probing") caused the driver to fail probe
+if no supply was present in any of the CPU DT nodes.
 
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Stanislav Fomichev <sdf@google.com>
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
-Link: https://lore.kernel.org/r/20231114004220.6495-9-daniel@iogearbox.net
-Signed-off-by: Martin KaFai Lau <martin.lau@kernel.org>
-Stable-dep-of: 177f1d083a19 ("selftests/bpf: Fix the flaky tc_redirect_dtime test")
+Use devm_regulator_get() instead since the CPUs do require supplies
+even if not described in the DT. It will gracefully return a dummy
+regulator if none is found in the DT node, allowing probe to succeed.
+
+Fixes: 788715b5f21c ("cpufreq: mediatek-hw: Wait for CPU supplies before probing")
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Closes: https://linux.kernelci.org/test/case/id/65b0b169710edea22852a3fa/
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/bpf/prog_tests/tc_redirect.c    | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ drivers/cpufreq/mediatek-cpufreq-hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/tc_redirect.c b/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
-index 407ff4e9bc788..518f143c5b0fe 100644
---- a/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
-+++ b/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
-@@ -24,6 +24,7 @@
+diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
+index a1aa9385980ae..8d097dcddda47 100644
+--- a/drivers/cpufreq/mediatek-cpufreq-hw.c
++++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
+@@ -312,7 +312,7 @@ static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
+ 			return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
+ 					     "Failed to get cpu%d device\n", cpu);
  
- #include "test_progs.h"
- #include "network_helpers.h"
-+#include "netlink_helpers.h"
- #include "test_tc_neigh_fib.skel.h"
- #include "test_tc_neigh.skel.h"
- #include "test_tc_peer.skel.h"
-@@ -112,6 +113,7 @@ static void netns_setup_namespaces_nofail(const char *verb)
- 
- enum dev_mode {
- 	MODE_VETH,
-+	MODE_NETKIT,
- };
- 
- struct netns_setup_result {
-@@ -142,10 +144,51 @@ static int get_ifaddr(const char *name, char *ifaddr)
- 	return 0;
- }
- 
-+static int create_netkit(int mode, char *prim, char *peer)
-+{
-+	struct rtattr *linkinfo, *data, *peer_info;
-+	struct rtnl_handle rth = { .fd = -1 };
-+	const char *type = "netkit";
-+	struct {
-+		struct nlmsghdr n;
-+		struct ifinfomsg i;
-+		char buf[1024];
-+	} req = {};
-+	int err;
-+
-+	err = rtnl_open(&rth, 0);
-+	if (!ASSERT_OK(err, "open_rtnetlink"))
-+		return err;
-+
-+	memset(&req, 0, sizeof(req));
-+	req.n.nlmsg_len = NLMSG_LENGTH(sizeof(struct ifinfomsg));
-+	req.n.nlmsg_flags = NLM_F_REQUEST | NLM_F_CREATE | NLM_F_EXCL;
-+	req.n.nlmsg_type = RTM_NEWLINK;
-+	req.i.ifi_family = AF_UNSPEC;
-+
-+	addattr_l(&req.n, sizeof(req), IFLA_IFNAME, prim, strlen(prim));
-+	linkinfo = addattr_nest(&req.n, sizeof(req), IFLA_LINKINFO);
-+	addattr_l(&req.n, sizeof(req), IFLA_INFO_KIND, type, strlen(type));
-+	data = addattr_nest(&req.n, sizeof(req), IFLA_INFO_DATA);
-+	addattr32(&req.n, sizeof(req), IFLA_NETKIT_MODE, mode);
-+	peer_info = addattr_nest(&req.n, sizeof(req), IFLA_NETKIT_PEER_INFO);
-+	req.n.nlmsg_len += sizeof(struct ifinfomsg);
-+	addattr_l(&req.n, sizeof(req), IFLA_IFNAME, peer, strlen(peer));
-+	addattr_nest_end(&req.n, peer_info);
-+	addattr_nest_end(&req.n, data);
-+	addattr_nest_end(&req.n, linkinfo);
-+
-+	err = rtnl_talk(&rth, &req.n, NULL);
-+	ASSERT_OK(err, "talk_rtnetlink");
-+	rtnl_close(&rth);
-+	return err;
-+}
-+
- static int netns_setup_links_and_routes(struct netns_setup_result *result)
- {
- 	struct nstoken *nstoken = NULL;
- 	char src_fwd_addr[IFADDR_STR_LEN+1] = {};
-+	int err;
- 
- 	if (result->dev_mode == MODE_VETH) {
- 		SYS(fail, "ip link add src type veth peer name src_fwd");
-@@ -153,6 +196,13 @@ static int netns_setup_links_and_routes(struct netns_setup_result *result)
- 
- 		SYS(fail, "ip link set dst_fwd address " MAC_DST_FWD);
- 		SYS(fail, "ip link set dst address " MAC_DST);
-+	} else if (result->dev_mode == MODE_NETKIT) {
-+		err = create_netkit(NETKIT_L3, "src", "src_fwd");
-+		if (!ASSERT_OK(err, "create_ifindex_src"))
-+			goto fail;
-+		err = create_netkit(NETKIT_L3, "dst", "dst_fwd");
-+		if (!ASSERT_OK(err, "create_ifindex_dst"))
-+			goto fail;
- 	}
- 
- 	if (get_ifaddr("src_fwd", src_fwd_addr))
-@@ -1134,7 +1184,9 @@ static void *test_tc_redirect_run_tests(void *arg)
- 	netns_setup_namespaces_nofail("delete");
- 
- 	RUN_TEST(tc_redirect_peer, MODE_VETH);
-+	RUN_TEST(tc_redirect_peer, MODE_NETKIT);
- 	RUN_TEST(tc_redirect_peer_l3, MODE_VETH);
-+	RUN_TEST(tc_redirect_peer_l3, MODE_NETKIT);
- 	RUN_TEST(tc_redirect_neigh, MODE_VETH);
- 	RUN_TEST(tc_redirect_neigh_fib, MODE_VETH);
- 	RUN_TEST(tc_redirect_dtime, MODE_VETH);
+-		cpu_reg = devm_regulator_get_optional(cpu_dev, "cpu");
++		cpu_reg = devm_regulator_get(cpu_dev, "cpu");
+ 		if (IS_ERR(cpu_reg))
+ 			return dev_err_probe(&pdev->dev, PTR_ERR(cpu_reg),
+ 					     "CPU%d regulator get failed\n", cpu);
 -- 
 2.43.0
 
