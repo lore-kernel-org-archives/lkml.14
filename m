@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F531494A1;
-	Sun, 24 Mar 2024 22:56:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D2D1494CD;
+	Sun, 24 Mar 2024 22:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320969; cv=none; b=tQgrS2/OKrUH5tHdQsgY2q2OHacE5zwAUhA/INbjxikFLHykEb8NofNXpYDswFp/3LgEB3wRPOXYK32W9JDd3il+17SzRA6AseCSz+kReL66oDGGSzebVUMafMMCuoUNDju9MZTO2VbfpllGXhPDb1itrDJyolpknDnQa3IQt+k=
+	t=1711320975; cv=none; b=fonVaOrJxB6+u0m2yYrNUndi45NwksLa0V0noZTIPP7qnHv6H41sLnbq1xs/MZfm1uccGp5XdCzlgjFTXE6dQjHtMfBDA1xyw5nNvwiVeNk91oi6sWpAnuAgM4g16L/2cPYMvr32Oisr4whUG92IqG+5AzzkeY9PTRY2FEQ2ZeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320969; c=relaxed/simple;
-	bh=uudrhNqYTKl+5oPWr560nyF2+A8KIYZ0yK+KN9k+7a4=;
+	s=arc-20240116; t=1711320975; c=relaxed/simple;
+	bh=eG1J2GmODm9lK0Ww4aBd5mp6oXQImbe3u0gUs1eIvrk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LscNZvpc24VLFC5g9pVZx8CsjLovaxgEN3wiR67kqParOmuN33Dx4tem18xCCpCYRj22a+EfuWkibq3Lj4ZGxNV7kztkK9K18vlDHlPZz4TFIiOHL6o73YXC1Y3GhwReft1TwNQMPIl6kWdIVXbxXzxrYewzelqRR2ylsw5sRQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EdzbubYJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=b8jx7GQPS3XEFhB9Q/IR9e4Hi1ZezDy+muV8EryEmuBFYJDNEBrm6af7hcKQJlhGcxXeDvp2O5c5bMsuDBkB8/Ksz6D3jusudDg9mXnoVtiYw1BGbHJm7hhwOXKBgAZFBrhKE5HgNAfXlGcjukpt2wcWjkTTE3vnQbGLp5TkTmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ig1DL+DI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EdzbubYJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77806C43390;
-	Sun, 24 Mar 2024 22:56:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ig1DL+DI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC499C433F1;
+	Sun, 24 Mar 2024 22:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320969;
-	bh=uudrhNqYTKl+5oPWr560nyF2+A8KIYZ0yK+KN9k+7a4=;
+	s=k20201202; t=1711320974;
+	bh=eG1J2GmODm9lK0Ww4aBd5mp6oXQImbe3u0gUs1eIvrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EdzbubYJk3T6kZr398JSBb7FuGdK7Gy58w/+7++M57W9QYWgjiaYjUKETze7qpj62
-	 4vWbwJnICV+ZKcIXaxxO1+NP/Q1qVT1u4FauHzk0CMqVg3/cum74XsJAR924A8eP4d
-	 rSQxzPortBh4H1ItGpTxfl4Dm++TwNSg4hoOsEtGZBIFnuZ/9dAvuxTr+AKbxCHTuE
-	 h3AcTwkIMW9wxYp1Sk6yLmLRE9FFrDQHtlDkd1+BEuPz98Bg3JOGOYouXidnTWSJ0g
-	 jxdGvv7596SkzcX4Z0HGk37I8pKXxXEfaxDozPj4y9wAYJrIl7anQSudUvOvFstKVa
-	 MrOp3aggtI8kA==
+	b=Ig1DL+DIJ/WNChNr4WucATddPDx4sWlvULlgmtPzzHCq4DD/cNbPnAMOc/JNF9RUM
+	 mMbLvFTin5qbZx3F2XON0af2jfiOfEjpIMBDu26dmlUf9WML8i1WRiScwNvMPdg9G5
+	 bjV2BJDOriU80pD9birUvgbj4P9p29x2XEB+8hBuTre22NN0Tok7P2iGe9GWFMQbv9
+	 RBmHR4pR++paLlavaIXSyG2rftmhFYsim/4G3Hvt5w2MhTZxNRdCQIh0eG8E/Ujip7
+	 er8ZJDqet0SSEU+0Bys8G7WuY5hDSqCBCtPP6F5GbRHmq4lFIzb2kdxNz/IhgPFFh9
+	 HtJ4ObYf9A7wA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gabor Juhos <j4g8y7@gmail.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 532/713] clk: qcom: gcc-ipq5018: fix 'halt_reg' offset of 'gcc_pcie1_pipe_clk'
-Date: Sun, 24 Mar 2024 18:44:18 -0400
-Message-ID: <20240324224720.1345309-533-sashal@kernel.org>
+Subject: [PATCH 6.7 537/713] power: supply: mm8013: fix "not charging" detection
+Date: Sun, 24 Mar 2024 18:44:23 -0400
+Message-ID: <20240324224720.1345309-538-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -46,72 +44,78 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gabor Juhos <j4g8y7@gmail.com>
+From: Thomas Weißschuh <linux@weissschuh.net>
 
-[ Upstream commit 11b752ac5a07cbfd95592fac5237a02f45662926 ]
+[ Upstream commit cd38a0acca734a1117663d6f0da579d3965b6c93 ]
 
-The following table shows the values of the 'halt_reg' and the
-'enable_reg' fields from the pcie clocks defined in the current
-driver:
+The charge_behaviours property is meant as a control-knob that can be
+changed by the user.
 
-  clock                        halt_reg    enable_reg
+Page 23 of [0] which documents the flag CHG_INH as follows:
 
-  gcc_pcie0_ahb_clk            0x75010     0x75010
-  gcc_pcie0_aux_clk            0x75014     0x75014
-  gcc_pcie0_axi_m_clk          0x75008     0x75008
-  gcc_pcie0_axi_s_bridge_clk   0x75048     0x75048
-  gcc_pcie0_axi_s_clk          0x7500c     0x7500c
-  gcc_pcie0_pipe_clk           0x75018     0x75018
+  CHG_INH : Charge Inhibit      When the current is more than or equal to charge
+                                threshold current,
+                                charge inhibit temperature (upper/lower limit) ：1
+                                charge permission temperature or the current is
+                                less than charge threshold current ：0
 
-  gcc_pcie1_ahb_clk            0x76010     0x76010
-  gcc_pcie1_aux_clk            0x76014     0x76014
-  gcc_pcie1_axi_m_clk          0x76008     0x76008
-  gcc_pcie1_axi_s_bridge_clk   0x76048     0x76048
-  gcc_pcie1_axi_s_clk          0x7600c     0x7600c
-  gcc_pcie1_pipe_clk                 8*    0x76018
+So this is pure read-only information which is better represented as
+POWER_SUPPLY_STATUS_NOT_CHARGING.
 
-Based on the table, it is quite likely that the pcie0 and the pci1
-clocks are using the same register layout, however it seems that
-the value of the 'halt_reg' field in the 'gcc_pcie1_pipe_clk' clock
-is wrong.
+[0] https://product.minebeamitsumi.com/en/product/category/ics/battery/fuel_gauge/parts/download/__icsFiles/afieldfile/2023/07/12/1_download_01_12.pdf
 
-In the downstream driver [1], the same '0x76018' value is used for
-both the 'halt_reg' and for the 'enable_reg' fields of the
-'gcc_pcie1_pipe_clk' clock.
-
-Update the current driver to use the same value used downstream as
-probably that is the correct value.
-
-1. https://git.codelinaro.org/clo/qsdk/oss/kernel/linux-ipq-5.4/-/blob/NHSS.QSDK.12.4.r4/drivers/clk/qcom/gcc-ipq5018.c?ref_type=heads#L2316
-
-Fixes: e3fdbef1bab8 ("clk: qcom: Add Global Clock controller (GCC) driver for IPQ5018")
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-Link: https://lore.kernel.org/r/20240225-gcc-ipq5018-register-fixes-v1-2-3c191404d9f0@gmail.com
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Link: https://lore.kernel.org/r/20240303-power_supply-charge_behaviour_prop-v2-1-8ebb0a7c2409@weissschuh.net
+Fixes: e39257cde7e8 ("power: supply: mm8013: Add more properties")
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-ipq5018.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/power/supply/mm8013.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq5018.c
-index cef9a1e7c9fdb..5e81cfa77293a 100644
---- a/drivers/clk/qcom/gcc-ipq5018.c
-+++ b/drivers/clk/qcom/gcc-ipq5018.c
-@@ -2180,7 +2180,7 @@ static struct clk_branch gcc_pcie1_axi_s_clk = {
- };
+diff --git a/drivers/power/supply/mm8013.c b/drivers/power/supply/mm8013.c
+index caa272b035649..20c1651ca38e0 100644
+--- a/drivers/power/supply/mm8013.c
++++ b/drivers/power/supply/mm8013.c
+@@ -71,7 +71,6 @@ static int mm8013_checkdevice(struct mm8013_chip *chip)
  
- static struct clk_branch gcc_pcie1_pipe_clk = {
--	.halt_reg = 8,
-+	.halt_reg = 0x76018,
- 	.halt_check = BRANCH_HALT_DELAY,
- 	.halt_bit = 31,
- 	.clkr = {
+ static enum power_supply_property mm8013_battery_props[] = {
+ 	POWER_SUPPLY_PROP_CAPACITY,
+-	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
+ 	POWER_SUPPLY_PROP_CHARGE_FULL,
+ 	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
+ 	POWER_SUPPLY_PROP_CHARGE_NOW,
+@@ -103,16 +102,6 @@ static int mm8013_get_property(struct power_supply *psy,
+ 
+ 		val->intval = regval;
+ 		break;
+-	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
+-		ret = regmap_read(chip->regmap, REG_FLAGS, &regval);
+-		if (ret < 0)
+-			return ret;
+-
+-		if (regval & MM8013_FLAG_CHG_INH)
+-			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
+-		else
+-			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
+-		break;
+ 	case POWER_SUPPLY_PROP_CHARGE_FULL:
+ 		ret = regmap_read(chip->regmap, REG_FULL_CHARGE_CAPACITY, &regval);
+ 		if (ret < 0)
+@@ -187,6 +176,8 @@ static int mm8013_get_property(struct power_supply *psy,
+ 
+ 		if (regval & MM8013_FLAG_DSG)
+ 			val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
++		else if (regval & MM8013_FLAG_CHG_INH)
++			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
+ 		else if (regval & MM8013_FLAG_CHG)
+ 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
+ 		else if (regval & MM8013_FLAG_FC)
 -- 
 2.43.0
 
