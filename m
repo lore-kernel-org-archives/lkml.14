@@ -1,184 +1,133 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19791A28C
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 20:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AFDD2FA;
+	Sun, 24 Mar 2024 20:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711310746; cv=none; b=lXntgL8gRXpHyN+88Wr+v4iC/AjwIUmFO5f2O8ntmeqqxop5Th6JR/mlY9yMcJY/ueeamR/2c/VL2PW6RBQ5BwhkM+QlVDVYW2wU0Xkab+waBV8ltofUpRr+e6qhy7D6ETEM1vokt5iAmicW7sw78+FH7iLJ4GK9S/DuFXcHrnE=
+	t=1711310890; cv=none; b=j9nS+kiD8oGCrEK5acPYfKetegRTa8YOmwF9df6kUNrOXY7QvdhkSYIyAoNWxOOU3xVdjUwVp/+xvyhFCdlYRW/h/MfPFRXlWHRAifBwba2L8LwAMX5mSLFNEnjC4+TKk8pmOgYMMsoaQN8YnjHI8dVAukob2QyX/e1TJKF9dR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711310746; c=relaxed/simple;
-	bh=cW+YU1XlZ5vYFaTFF3vKz0kL8bnQjxLtI410MCC6MUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qHGqWsxW5K2uH2AVGI/7TsPe/rtwZ0g02p1xdHStuIj3QVqsHtZWfEYCTvupoWDcBZU1T6oIP2ZVDNl92PDXnZKtvWkovOLtZZjL0+1QjzKvW8v3/uLu8kahTb5XK1ohSe0OhguHiYlMR5klgs+i86IBeqi9vNu7JcTyMDX2zxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=BjMfNKjc; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1711310890; c=relaxed/simple;
+	bh=96pBEhq+UMIcGdJgoSW6NpmKLHH1fy9LSh6o40sLCNI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZiqAwsiNw5Q2HBODWHsMbRduX7zAjSZjGEcuy+demXFi+4p2AT2qc1PPUZQIg2t0kUc6otxHl9nxgarv/vMO/uWEztk1tYz7W3VSfoaN8PXa/hik4oSbQyMMyFj+009qac0quEmdyEfbk8+VprxhByZkJEuqOgN1UJfePDtltCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D6o2WGmj; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="BjMfNKjc"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6B46740E016C;
-	Sun, 24 Mar 2024 20:05:40 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id GKOOIudFRk0j; Sun, 24 Mar 2024 20:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1711310736; bh=82hqTK4pWEYKzLLuwyP+q3ZaxSRcGvFQDLUeU9hdfYM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BjMfNKjcLm/kw/p+0bt0FqVm3Nh/bAaBp0b/Sr3dDxuxDuguYfM4cwONFncL60vGm
-	 LpnOdjFSFib5Ai8WU7R1ANtWj/GHwIaOpXPPkc1Ij46/IHC+47m6Tc3bcaFbBfIdQl
-	 AEdRImE/rNRFs9B1Z/e4fdQhd44tScLGeY7k9FYciqqtoePFk63q51YP4ZWMAkhDlc
-	 C/0HlAm2ceagO6VwGVUHwtNEPNqLbUQcztHBVvTg3iW7DzD9YDGBHuVbvEVE7gdcaB
-	 AtVOMLiNkEA6g4TnlHbulSdaxAqp8byne6dCygvHEy/AzHHsn7zkgRQR6MCLzHWrAl
-	 sdSNVGHw7jBg4XrnP79JaK2EHSXnFilT3ynLVDHlkHLUPti+eSrrtu+96hpKCRYxq0
-	 lHBneDlnI7KXm97VmH78fKZGdJzzhq4J9M7zeYynybOta5Y+FkvzOsJaEwj0MNw3HR
-	 Xb335bG5wNXnYwR0yxj4qd55puvatnlaADG4XtMltlXzDTIZipogQlrjBRKljMavka
-	 z86DgEc85W1I4URx5bHdOg86c1yVEe3eAeGng8c8pipGQ7PXUJXzXS/XIeqI4moEeX
-	 CBAkxZcf7WjuscoH3ujctJgvXMDzwW3wcGHbr1BgqDswEh9PWS+D2TaeXXqr2TiUzW
-	 E+GRU1kSnOCWdPJUsfpHPW8c=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 33E8140E01A0;
-	Sun, 24 Mar 2024 20:05:32 +0000 (UTC)
-Date: Sun, 24 Mar 2024 21:05:25 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	X86 ML <x86@kernel.org>
-Subject: [PATCH -v2] x86/CPU/AMD: Improve the erratum 1386 workaround
-Message-ID: <20240324200525.GBZgCHhYFsBj12PrKv@fat_crate.local>
-References: <20240321120548.22687-1-bp@alien8.de>
- <20240321120548.22687-2-bp@alien8.de>
- <79125c93-285c-43f8-ac05-87c34c99e6bb@maciej.szmigiero.name>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6o2WGmj"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a47385a4379so326453266b.0;
+        Sun, 24 Mar 2024 13:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711310887; x=1711915687; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UmJuo1f1enZJCrEBjhO66Mb9UFer5++BcZ4gFBXYotU=;
+        b=D6o2WGmj4O7IqhZzdyMvwp50iAvaq0Ml9c3qigWddT9AqewskPJlbDRLFFuxwOdOYX
+         Oa8A4Z3kPhDhBztSNuPmq7LZcCYjHj4Ms7N4jEMiKcu5GW3CDTrjVGeMTJ9AhB7eEDI6
+         oB+3tkAItCYdL9wlQErEkBFUMdqd5/8yZcq+2p0kBZbtwd+acdoZNvzLEYHsnWNm/xvi
+         oHXSVVFPCRbJb0BEh13PkqgIO8vcX2j/sSdcboPqAs+KojsBXHeVEGZlSQh1QowaOpUq
+         NlwoqaytmC2XZqn5XRl+pFiO2pJDANGXczOU3ehJUJJpmTzcXwXPPccUwrbvS96SeLW6
+         OqCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711310887; x=1711915687;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UmJuo1f1enZJCrEBjhO66Mb9UFer5++BcZ4gFBXYotU=;
+        b=RLbN3cCZmylTzc1LmFGYvv6/XnDalSsvFywSoU5nAnloBRVhYyttahRNdSb1Xp7Yup
+         zoohaerbZwcPRPzTIjcIuJQ7X8eklMIPuJ/NUNPKe/KKXJgbNOWh20bax1ap9KxoOTc4
+         1GsQd9+8lBJDJhn2ks6ALpcvbr+z3yfaY7XdlLRp+5fXiSmgXa1cso/2uFiqndC2Zzwi
+         /G8v69ZegDdIdwDetzIeQkGrZgR/AO6XZANTOQY9FcOc4h4/YxI1KA3m4JpjOY8/YNTR
+         qaUjz4SWz6fDWGzJyKICHmCi71gRk2PPBcHdriNPWeO4QYHiCNx0Kma/RSELv5rB5tYH
+         CfIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPQbnc83ikRzz04/qGpyn3dajISsN25kIPllLZWABM6pcMEKAl2hSYTJEGzwUNQ5230CiIQFzEGJrLaFT8R/x3c3YxtNTeAO/8J6SaTbB+n2NEBNCFUxSfOqqqvlgknOrklUfDpkAZ+s7eLmrm20WP1xRMKwJRPL3IMbalON8U8fy6QWMAaF8BewX3BoPdQepKx5/NFRrHtJixj+zVqYtEBecGT4ctQg==
+X-Gm-Message-State: AOJu0YxhQFXo9/7sdO4zLv3o7qlh8jYkODSxVTPAUlacFbsnNjkOzr0G
+	DlNh8T8v+zx2F+3tCTp3TpK3lFf1tf3PnEl0q1gy9S1moc893pCw1swd1U4s8cor1FIigtU/I2p
+	0X4+NnjFQXvC2ScjkLadhuiIlbk4=
+X-Google-Smtp-Source: AGHT+IGnHV9dklcqVjCC1K2N4WzMD7czh4HdYnDtDZE91j3Ir4r4I4Of+bw2uITII3fwJ5TLUOHvwIlNRDLusYb9N2M=
+X-Received: by 2002:a17:907:bb92:b0:a4a:378a:a8db with SMTP id
+ xo18-20020a170907bb9200b00a4a378aa8dbmr315442ejc.15.1711310886695; Sun, 24
+ Mar 2024 13:08:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <79125c93-285c-43f8-ac05-87c34c99e6bb@maciej.szmigiero.name>
+References: <20240324150107.976025-1-hpa@redhat.com> <20240324150107.976025-4-hpa@redhat.com>
+In-Reply-To: <20240324150107.976025-4-hpa@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 24 Mar 2024 22:07:30 +0200
+Message-ID: <CAHp75Vcu69i4zk=Feewz89BCGvHKn295m1nwm94-eJ3+BSSdAw@mail.gmail.com>
+Subject: Re: [PATCH v5 RESEND 3/6] leds: core: Add led_mc_set_brightness() function
+To: Kate Hsuan <hpa@redhat.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 21, 2024 at 04:21:39PM +0100, Maciej S. Szmigiero wrote:
-> On 21.03.2024 13:05, Borislav Petkov wrote:
-> > From: "Borislav Petkov (AMD)" <bp@alien8.de>
-> > 
-> > Disable XSAVES only on machines which haven't loaded the microcode
-> > revision containing the erratum fix.
-> > 
-> > This will come in handy when running archaic OSes as guests. OSes whose
-> > brilliant programmers thought that CPUID is overrated and one should not
-> > query it but use features directly, ala shoot first, ask questions
-> > later... but only if you're alive after the shooting.
-> > 
-> > Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> > Cc: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
-> > ---
-> 
-> Tested-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
+On Sun, Mar 24, 2024 at 5:02=E2=80=AFPM Kate Hsuan <hpa@redhat.com> wrote:
+>
+> From: Hans de Goede <hdegoede@redhat.com>
+>
+> Add a new led_mc_set_brightness() function for in kernel color/brightness
+> changing of multi-color LEDs.
+>
+> led-class-multicolor can be build as a module and led_mc_set_brightness()
+> will have builtin callers, so put led_mc_set_brightness() inside led-core
 
-Yeah, thanks but still not good enough. Turns out we already have the
-min microcode revision testing functionality so there's no need for me
-to reinvent the wheel.
+the builtin
 
-No harm no foul, tho, the stuff in those two previous patches I will use
-in the microcode loader soon for simplifying the loading.
+> instead, just like how led_set_brightness() is part of the core and not
+> of the led-class object.
+>
+> This also adds a new LED_MULTI_COLOR led_classdev flag to allow
+> led_mc_set_brightness() to verify that it is operating on a multi-color
+> LED classdev, avoiding casting the passed in LED classdev to a multi-colo=
+r
+> LED classdev, when it actually is not a multi-color LED.
 
-Here's one *final* variant, I promise! :-)
+...
 
-Sorry about that.
+> +/*
+> + * This is a led-core function because just like led_set_brightness()
+> + * it is used in kernel by e.g. triggers.
 
----
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
-Date: Sun, 24 Mar 2024 20:51:35 +0100
-Subject: [PATCH -v2] x86/CPU/AMD: Improve the erratum 1386 workaround
+in the kernel
 
-Disable XSAVES only on machines which haven't loaded the microcode
-revision containing the erratum fix.
+> + */
 
-This will come in handy when running archaic OSes as guests. OSes whose
-brilliant programmers thought that CPUID is overrated and one should not
-query it but use features directly, ala shoot first, ask questions
-later... but only if you're alive after the shooting.
+...
 
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
----
- arch/x86/include/asm/cpu_device_id.h |  8 ++++++++
- arch/x86/kernel/cpu/amd.c            | 12 ++++++++++++
- 2 files changed, 20 insertions(+)
+> +       if (!(led_cdev->flags & LED_MULTI_COLOR)) {
+> +               dev_err_once(led_cdev->dev, "%s: error not a multi-color =
+LED\n",  __func__);
 
-diff --git a/arch/x86/include/asm/cpu_device_id.h b/arch/x86/include/asm/cpu_device_id.h
-index eb8fcede9e3b..bf4e065cf1e2 100644
---- a/arch/x86/include/asm/cpu_device_id.h
-+++ b/arch/x86/include/asm/cpu_device_id.h
-@@ -190,6 +190,14 @@ struct x86_cpu_desc {
- 	.x86_microcode_rev	= (revision),			\
- }
- 
-+#define AMD_CPU_DESC(fam, model, stepping, revision) {		\
-+	.x86_family		= (fam),			\
-+	.x86_vendor		= X86_VENDOR_AMD,		\
-+	.x86_model		= (model),			\
-+	.x86_stepping		= (stepping),			\
-+	.x86_microcode_rev	= (revision),			\
-+}
-+
- extern const struct x86_cpu_id *x86_match_cpu(const struct x86_cpu_id *match);
- extern bool x86_cpu_has_min_microcode_rev(const struct x86_cpu_desc *table);
- 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 6d8677e80ddb..873f0fdc2ef8 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -13,6 +13,7 @@
- #include <asm/apic.h>
- #include <asm/cacheinfo.h>
- #include <asm/cpu.h>
-+#include <asm/cpu_device_id.h>
- #include <asm/spec-ctrl.h>
- #include <asm/smp.h>
- #include <asm/numa.h>
-@@ -802,6 +803,11 @@ static void init_amd_bd(struct cpuinfo_x86 *c)
- 	clear_rdrand_cpuid_bit(c);
- }
- 
-+static const struct x86_cpu_desc erratum_1386_microcode[] = {
-+	AMD_CPU_DESC(0x17,  0x1, 0x2, 0x0800126e),
-+	AMD_CPU_DESC(0x17, 0x31, 0x0, 0x08301052),
-+};
-+
- static void fix_erratum_1386(struct cpuinfo_x86 *c)
- {
- 	/*
-@@ -811,7 +817,13 @@ static void fix_erratum_1386(struct cpuinfo_x86 *c)
- 	 *
- 	 * Affected parts all have no supervisor XSAVE states, meaning that
- 	 * the XSAVEC instruction (which works fine) is equivalent.
-+	 *
-+	 * Clear the feature flag only on microcode revisions which
-+	 * don't have the fix.
- 	 */
-+	if (x86_cpu_has_min_microcode_rev(erratum_1386_microcode))
-+		return;
-+
- 	clear_cpu_cap(c, X86_FEATURE_XSAVES);
- }
- 
--- 
-2.43.0
+Not sure how __func__ helps here.
 
--- 
-Regards/Gruss,
-    Boris.
+> +               return;
+> +       }
+> +
+> +       mcled_cdev =3D lcdev_to_mccdev(led_cdev);
+> +       if (num_colors !=3D mcled_cdev->num_colors) {
+> +               dev_err_once(led_cdev->dev, "%s: error num_colors mismatc=
+h %d !=3D %d\n",
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Should be '...%u !=3D %u...'.
+
+> +                            __func__, num_colors, mcled_cdev->num_colors=
+);
+
+Ditto about __func__.
+
+> +               return;
+> +       }
+
+--=20
+With Best Regards,
+Andy Shevchenko
