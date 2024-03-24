@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D176513EFE9;
-	Sun, 24 Mar 2024 23:09:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82FDD13F426;
+	Sun, 24 Mar 2024 23:10:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321794; cv=none; b=Y5RfUoT4ycYCzEHgu/bdoB7R/E/eXbYl5kkcR3GnkX+HcOrVH0IToRPGQKFpYBOL61H8ya6O6tJxDaGAvNPPiNpNvgCm1gOJio6AnoH7CjSnzYNm0Z+EEv50sRsObOZ9qE7eDOhcuunHnkKVOjEogPdMzfuUCi4iKjcsoomehlE=
+	t=1711321805; cv=none; b=OwTftL2Z3+fYpL9bt8kUUT0FI3tDR3POVc3smbU7AEip1QNiszoDZx/Ni2V7PCYo/lfJoga4GGcvC9kenICo5XVPnZYKofPEohN1zcvv4hyYC0VDRRN/FeiV70U3CY3Li/Hwag9RYCcZOOCVbvZLOY5cEwrLvnbAXNtREcsqAzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321794; c=relaxed/simple;
-	bh=wmrlvE/L6C5hK39oJ2Jr9GXuLZqVCB/arPW5jiT+93k=;
+	s=arc-20240116; t=1711321805; c=relaxed/simple;
+	bh=g1ekMzSm4txgtotmTsA3S1y1NJqyvLL1l8D4Mk/0VZ0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q//Xn2IE/s39F3jTHkN+dx7Coe53xATI2hokgkVGF+ZMG6ulhU7LND6Z6SF2nbUXfjpKx8KWwSguc1RcUkFppUazRgyqgjLZzcZ8a3Of3dhTlUtSmrL7Qec82tTO2nVWYLu5kRb7dCtpduVGFGewtElgG2b6F6yov4QsdW+1SQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FrwHkFqb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MOLGKQBsy3UHbsxxNfWu/5e/rMtS0qeJuPeEcvLksVAseXcWsF6rgtZUmql8jhVr0hyR032DhhlUsDnpx/SpVDHtDyra6UXaF7wzophlBQ3R2NDP2FEZ008w+wARYjMHFfVYk1lOoLoiTc75AzDeETyXzLgUlCYnV0QnHf4OaOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cv++eqOe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FrwHkFqb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0206BC433C7;
-	Sun, 24 Mar 2024 23:09:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cv++eqOe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93EEBC43390;
+	Sun, 24 Mar 2024 23:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321793;
-	bh=wmrlvE/L6C5hK39oJ2Jr9GXuLZqVCB/arPW5jiT+93k=;
+	s=k20201202; t=1711321804;
+	bh=g1ekMzSm4txgtotmTsA3S1y1NJqyvLL1l8D4Mk/0VZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FrwHkFqbfoPNqxhFGYMxSYKzom1MfJs/5Qg95CXkr3TyPSnLJoMW30SPA9sHzx86T
-	 n3TDr7NQa/d/E8YmMmlMpixqyj41O9g4VCL1LwjvrcWy473ic824EOTT30fblfZvKC
-	 CpSvhXdxVw6OnP2l2Yl6T2YVVPfGH0IffJs87jS2qFOE7erg079y2HRQ9b1kO0RjF2
-	 R5r0y7ZFPVelwgYk3duCD/JqGFbtlHsMqJk1DcGDmJtxKkbRpgG5k7K/fQKDdBc1NH
-	 FSloOwFYbFWG1DJzuBFXNf1RpMqGVA2dvP+5OIwT8g6RYBHmMUkvIkQf6KiAPRP7Gc
-	 EFqcDCgUvh7dw==
+	b=Cv++eqOefZVbCieB+kFo7c6m5Rd/MNI2qx2dzj2zVLCY1+odL7oPn/0Swu0Vk5N/l
+	 jpeqStrqJrFefoOXklAkf7nC9jUiqY9e/Fh38dOfDomd+IdmMUA+VI4aZ6kEOmJZ/B
+	 iMQehtdIn4LbhXiH/jTnzaacwRcsKBaoFRCRnf2Z32mS4neQ74C2Q7azfI88CcVsx1
+	 a4zL7CZgDXqffHtrtFGjsE4nlsQCD3n39u8mVTYas72Rrm7lEiwXsa1cY4+IiF0TgA
+	 u2GdOG6swdZvX/yzO2+8L+kEW4FgUos2WXVfLoWX/Xyu5RIxk/wSwHsSGgntjgRSuG
+	 Ra2TfqSlg6obw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Zhiguo Niu <zhiguo.niu@unisoc.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Jorge Mora <jmora1300@gmail.com>,
+	Jorge Mora <mora@netapp.com>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 521/638] f2fs: fix to avoid potential panic during recovery
-Date: Sun, 24 Mar 2024 18:59:18 -0400
-Message-ID: <20240324230116.1348576-522-sashal@kernel.org>
+Subject: [PATCH 6.6 532/638] NFSv4.2: fix listxattr maximum XDR buffer size
+Date: Sun, 24 Mar 2024 18:59:29 -0400
+Message-ID: <20240324230116.1348576-533-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,107 +50,58 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Jorge Mora <jmora1300@gmail.com>
 
-[ Upstream commit 21ec68234826b1b54ab980a8df6e33c74cfbee58 ]
+[ Upstream commit bcac8bff90a6ee1629f90669cdb9d28fb86049b0 ]
 
-During recovery, if FAULT_BLOCK is on, it is possible that
-f2fs_reserve_new_block() will return -ENOSPC during recovery,
-then it may trigger panic.
+Switch order of operations to avoid creating a short XDR buffer:
+e.g., buflen = 12, old xdrlen = 12, new xdrlen = 20.
 
-Also, if fault injection rate is 1 and only FAULT_BLOCK fault
-type is on, it may encounter deadloop in loop of block reservation.
+Having a short XDR buffer leads to lxa_maxcount be a few bytes
+less than what is needed to retrieve the whole list when using
+a buflen as returned by a call with size = 0:
+    buflen = listxattr(path, NULL, 0);
+    buf = malloc(buflen);
+    buflen = listxattr(path, buf, buflen);
 
-Let's change as below to fix these issues:
-- remove bug_on() to avoid panic.
-- limit the loop count of block reservation to avoid potential
-deadloop.
+For a file with one attribute (name = '123456'), the first call
+with size = 0 will return buflen = 12 ('user.123456\x00').
+The second call with size = 12, sends LISTXATTRS with
+lxa_maxcount = 12 + 8 (cookie) + 4 (array count) = 24. The
+XDR buffer needs 8 (cookie) + 4 (array count) + 4 (name count)
++ 6 (name len) + 2 (padding) + 4 (eof) = 28 which is 4 bytes
+shorter than the lxa_maxcount provided in the call.
 
-Fixes: 956fa1ddc132 ("f2fs: fix to check return value of f2fs_reserve_new_block()")
-Reported-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 04a5da690e8f ("NFSv4.2: define limits and sizes for user xattr handling")
+Signed-off-by: Jorge Mora <mora@netapp.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h     |  5 +++++
- fs/f2fs/recovery.c | 33 ++++++++++++++++-----------------
- 2 files changed, 21 insertions(+), 17 deletions(-)
+ fs/nfs/nfs42.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 95fa1f7a89707..a518fe31ec9e1 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -75,6 +75,11 @@ struct f2fs_fault_info {
- 
- extern const char *f2fs_fault_name[FAULT_MAX];
- #define IS_FAULT_SET(fi, type) ((fi)->inject_type & BIT(type))
-+
-+/* maximum retry count for injected failure */
-+#define DEFAULT_FAILURE_RETRY_COUNT		8
-+#else
-+#define DEFAULT_FAILURE_RETRY_COUNT		1
- #endif
- 
- /*
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index c8ba9f1551b62..23077cdfde367 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -611,6 +611,19 @@ static int check_index_in_prev_nodes(struct f2fs_sb_info *sbi,
- 	return 0;
- }
- 
-+static int f2fs_reserve_new_block_retry(struct dnode_of_data *dn)
-+{
-+	int i, err = 0;
-+
-+	for (i = DEFAULT_FAILURE_RETRY_COUNT; i > 0; i--) {
-+		err = f2fs_reserve_new_block(dn);
-+		if (!err)
-+			break;
-+	}
-+
-+	return err;
-+}
-+
- static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 					struct page *page)
+diff --git a/fs/nfs/nfs42.h b/fs/nfs/nfs42.h
+index b59876b01a1e3..0282d93c8bccb 100644
+--- a/fs/nfs/nfs42.h
++++ b/fs/nfs/nfs42.h
+@@ -55,11 +55,14 @@ int nfs42_proc_removexattr(struct inode *inode, const char *name);
+  * They would be 7 bytes long in the eventual buffer ("user.x\0"), and
+  * 8 bytes long XDR-encoded.
+  *
+- * Include the trailing eof word as well.
++ * Include the trailing eof word as well and make the result a multiple
++ * of 4 bytes.
+  */
+ static inline u32 nfs42_listxattr_xdrsize(u32 buflen)
  {
-@@ -712,14 +725,8 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 		 */
- 		if (dest == NEW_ADDR) {
- 			f2fs_truncate_data_blocks_range(&dn, 1);
--			do {
--				err = f2fs_reserve_new_block(&dn);
--				if (err == -ENOSPC) {
--					f2fs_bug_on(sbi, 1);
--					break;
--				}
--			} while (err &&
--				IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION));
+-	return ((buflen / (XATTR_USER_PREFIX_LEN + 2)) * 8) + 4;
++	u32 size = 8 * buflen / (XATTR_USER_PREFIX_LEN + 2) + 4;
 +
-+			err = f2fs_reserve_new_block_retry(&dn);
- 			if (err)
- 				goto err;
- 			continue;
-@@ -727,16 +734,8 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 
- 		/* dest is valid block, try to recover from src to dest */
- 		if (f2fs_is_valid_blkaddr(sbi, dest, META_POR)) {
--
- 			if (src == NULL_ADDR) {
--				do {
--					err = f2fs_reserve_new_block(&dn);
--					if (err == -ENOSPC) {
--						f2fs_bug_on(sbi, 1);
--						break;
--					}
--				} while (err &&
--					IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION));
-+				err = f2fs_reserve_new_block_retry(&dn);
- 				if (err)
- 					goto err;
- 			}
++	return (size + 3) & ~3;
+ }
+ #endif /* CONFIG_NFS_V4_2 */
+ #endif /* __LINUX_FS_NFS_NFS4_2_H */
 -- 
 2.43.0
 
