@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE12209E01;
-	Sun, 24 Mar 2024 23:06:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C264E209E12;
+	Sun, 24 Mar 2024 23:06:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321577; cv=none; b=lBK8Qcnp+Ic/jVzOahmhVt6weywOAGxF4F6TM/wyylzgHlEQchuJH18NU1Dlq19CKlCgk5fmKyr+LQy1KvvqJ4P143V0LrXB+DS1KWpwuMKPdXMP5qswuy3oguJ9MnXxHhDm+Zx5zt+WyLNs7PSmqvebHNssQgniblkvoqKvWwQ=
+	t=1711321582; cv=none; b=dLuj0EdLz7ucbQkhY0tzXwixPMEhafKNgTwzILOwVTSFIrW5EK/u/cNgTu230h0pnfy+QKDUQIhmbmmyELBPTTzZa8hmw3TtVUXoy8DfEXT1CHJQG/oD5SyHkbTxt1ZMLDIjiB8NfCxe1I3PaABL2CJEVpvPgz17upFORbSxUPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321577; c=relaxed/simple;
-	bh=eJhlv2tetrciK7hb38iISK4mWU499/URLQNPHeN8B7M=;
+	s=arc-20240116; t=1711321582; c=relaxed/simple;
+	bh=8Mq+y2b4QoasCHiS9C0t/oVV7yRpu9gPxY4aigJk7HQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rs6DWwLFzl0zMnRUyWOdmytbU099FEMLYRy1ji5pvNDMvll3dmYxro3Ot9bf3WEnk+KrMHI45RL5MQ5Q/RzlPhRWsJEwj1v1BlzKsIz/TGV4HWbwGO4B2hrHFrRRGlgaBCIyD7R4uwCYZL96BlW0a9A2FGfESNmVY8MWVoXn4JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gaAWktH+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=i/DaWvg1FwxLohheunpB6N0v546+mkJwMR36QzXXWNpDyRks/6Nw1If8SSu9qa6OzT13oCb4Q+OXbe2D5CdMK4uueIpVj8g085sVMfasaJ6Z9J5ZpYscmRUnQYFYjlli1RtfirDvx+Za2f8mKhlx7uA7u3iG7PrTlsStzO5Chek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tdikQQJW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gaAWktH+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4339AC43390;
-	Sun, 24 Mar 2024 23:06:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdikQQJW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20746C43390;
+	Sun, 24 Mar 2024 23:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321576;
-	bh=eJhlv2tetrciK7hb38iISK4mWU499/URLQNPHeN8B7M=;
+	s=k20201202; t=1711321582;
+	bh=8Mq+y2b4QoasCHiS9C0t/oVV7yRpu9gPxY4aigJk7HQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gaAWktH+0fw6B7ABoh4dMnd2GgUlqszz4sWAocXqFmdwEHPjVDBdNUA7KdZV7nqxe
-	 YTwBUAZBJM6T2QubOs1xkAeFqh+ya5CnvVjHZbzujPyQeWIFOEBwczECuZj6pnEsHc
-	 1o2I2fVSj7jYux3p90NGFq9YWPR0qNNQg6Wz+NRsTP0Xzk/RbPdb0JCFkoCmJ8cviF
-	 INzwH4oKK4OZpFpREOIytezl9YPkqDUPNLec//LLm3Lw9pvshfjG0cSXPXe4uAevqH
-	 YXa3VnZ+cVnTpHN5BRTWKbC0OL8bGQj0VckIRY05rDOLSfNerghuFA4Xvn0pbKgRhh
-	 /gv8wCBdqwUVg==
+	b=tdikQQJWQp9xy6d75sHuXuWGMnZOdatrTmAbf93Nf5lkWhqJT21cE4EQTt2e0FhMg
+	 t3Md6FPUMxM9FCISLSW0PXFLzc6NzVz1vHItJXoXbRSaknOWUQkIlXTT1p+N9hIVbt
+	 LTCZOYEI0dAoH5YsGS4q+2zVY+o+0U/GqokgIvWXoq02ECEECz/6iZjm5g92dRxWuR
+	 CDb9QM1WZ4+3oBATM65uullmtkZz4cqvb7ddYMmmmsL14yPMXqpcQpetemgUst9o3B
+	 Jytu0FthSXHClyI+B2/uEJ8mP1ycGbUMlQtiQoDMFkMTqqOw0jGT7NqPqJbnCpBfCS
+	 SvBp8djl4rGbw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 305/638] Bluetooth: hci_sync: Fix overwriting request callback
-Date: Sun, 24 Mar 2024 18:55:42 -0400
-Message-ID: <20240324230116.1348576-306-sashal@kernel.org>
+Subject: [PATCH 6.6 312/638] Bluetooth: af_bluetooth: Fix deadlock
+Date: Sun, 24 Mar 2024 18:55:49 -0400
+Message-ID: <20240324230116.1348576-313-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,252 +49,85 @@ Content-Transfer-Encoding: 8bit
 
 From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit 2615fd9a7c2507eb3be3fbe49dcec88a2f56454a ]
+[ Upstream commit f7b94bdc1ec107c92262716b073b3e816d4784fb ]
 
-In a few cases the stack may generate commands as responses to events
-which would happen to overwrite the sent_cmd, so this attempts to store
-the request in req_skb so even if sent_cmd is replaced with a new
-command the pending request will remain in stored in req_skb.
+Attemting to do sock_lock on .recvmsg may cause a deadlock as shown
+bellow, so instead of using sock_sock this uses sk_receive_queue.lock
+on bt_sock_ioctl to avoid the UAF:
 
-Fixes: 6a98e3836fa2 ("Bluetooth: Add helper for serialized HCI command execution")
+INFO: task kworker/u9:1:121 blocked for more than 30 seconds.
+      Not tainted 6.7.6-lemon #183
+Workqueue: hci0 hci_rx_work
+Call Trace:
+ <TASK>
+ __schedule+0x37d/0xa00
+ schedule+0x32/0xe0
+ __lock_sock+0x68/0xa0
+ ? __pfx_autoremove_wake_function+0x10/0x10
+ lock_sock_nested+0x43/0x50
+ l2cap_sock_recv_cb+0x21/0xa0
+ l2cap_recv_frame+0x55b/0x30a0
+ ? psi_task_switch+0xeb/0x270
+ ? finish_task_switch.isra.0+0x93/0x2a0
+ hci_rx_work+0x33a/0x3f0
+ process_one_work+0x13a/0x2f0
+ worker_thread+0x2f0/0x410
+ ? __pfx_worker_thread+0x10/0x10
+ kthread+0xe0/0x110
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x2c/0x50
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1b/0x30
+ </TASK>
+
+Fixes: 2e07e8348ea4 ("Bluetooth: af_bluetooth: Fix Use-After-Free in bt_sock_recvmsg")
 Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/bluetooth/hci_core.h |  1 +
- net/bluetooth/hci_conn.c         |  2 +-
- net/bluetooth/hci_core.c         | 46 ++++++++++++++++++++++----------
- net/bluetooth/hci_event.c        | 18 ++++++-------
- net/bluetooth/hci_sync.c         | 21 ++++++++++++---
- 5 files changed, 61 insertions(+), 27 deletions(-)
+ net/bluetooth/af_bluetooth.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index b83cfcf666648..103b290d6efb0 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -553,6 +553,7 @@ struct hci_dev {
- 	__u32			req_status;
- 	__u32			req_result;
- 	struct sk_buff		*req_skb;
-+	struct sk_buff		*req_rsp;
+diff --git a/net/bluetooth/af_bluetooth.c b/net/bluetooth/af_bluetooth.c
+index b93464ac3517f..67604ccec2f42 100644
+--- a/net/bluetooth/af_bluetooth.c
++++ b/net/bluetooth/af_bluetooth.c
+@@ -309,14 +309,11 @@ int bt_sock_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 	if (flags & MSG_OOB)
+ 		return -EOPNOTSUPP;
  
- 	void			*smp_data;
- 	void			*smp_bredr_data;
-diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
-index 6cdd2d2af2d95..1f8c8d65350c8 100644
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -2936,7 +2936,7 @@ int hci_abort_conn(struct hci_conn *conn, u8 reason)
- 		case HCI_EV_LE_CONN_COMPLETE:
- 		case HCI_EV_LE_ENHANCED_CONN_COMPLETE:
- 		case HCI_EVT_LE_CIS_ESTABLISHED:
--			hci_cmd_sync_cancel(hdev, -ECANCELED);
-+			hci_cmd_sync_cancel(hdev, ECANCELED);
- 			break;
- 		}
+-	lock_sock(sk);
+-
+ 	skb = skb_recv_datagram(sk, flags, &err);
+ 	if (!skb) {
+ 		if (sk->sk_shutdown & RCV_SHUTDOWN)
+ 			err = 0;
+ 
+-		release_sock(sk);
+ 		return err;
  	}
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 539305b9a0e27..96707deef296b 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -1491,8 +1491,8 @@ static void hci_cmd_timeout(struct work_struct *work)
- 	struct hci_dev *hdev = container_of(work, struct hci_dev,
- 					    cmd_timer.work);
  
--	if (hdev->sent_cmd) {
--		u16 opcode = hci_skb_opcode(hdev->sent_cmd);
-+	if (hdev->req_skb) {
-+		u16 opcode = hci_skb_opcode(hdev->req_skb);
+@@ -346,8 +343,6 @@ int bt_sock_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
  
- 		bt_dev_err(hdev, "command 0x%4.4x tx timeout", opcode);
+ 	skb_free_datagram(sk, skb);
  
-@@ -2796,6 +2796,7 @@ void hci_release_dev(struct hci_dev *hdev)
- 	ida_destroy(&hdev->unset_handle_ida);
- 	ida_simple_remove(&hci_index_ida, hdev->id);
- 	kfree_skb(hdev->sent_cmd);
-+	kfree_skb(hdev->req_skb);
- 	kfree_skb(hdev->recv_event);
- 	kfree(hdev);
- }
-@@ -3125,21 +3126,33 @@ int __hci_cmd_send(struct hci_dev *hdev, u16 opcode, u32 plen,
- EXPORT_SYMBOL(__hci_cmd_send);
+-	release_sock(sk);
+-
+ 	if (flags & MSG_TRUNC)
+ 		copied = skblen;
  
- /* Get data from the previously sent command */
--void *hci_sent_cmd_data(struct hci_dev *hdev, __u16 opcode)
-+static void *hci_cmd_data(struct sk_buff *skb, __u16 opcode)
- {
- 	struct hci_command_hdr *hdr;
+@@ -570,10 +565,11 @@ int bt_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 		if (sk->sk_state == BT_LISTEN)
+ 			return -EINVAL;
  
--	if (!hdev->sent_cmd)
-+	if (!skb || skb->len < HCI_COMMAND_HDR_SIZE)
- 		return NULL;
- 
--	hdr = (void *) hdev->sent_cmd->data;
-+	hdr = (void *)skb->data;
- 
- 	if (hdr->opcode != cpu_to_le16(opcode))
- 		return NULL;
- 
--	BT_DBG("%s opcode 0x%4.4x", hdev->name, opcode);
-+	return skb->data + HCI_COMMAND_HDR_SIZE;
-+}
- 
--	return hdev->sent_cmd->data + HCI_COMMAND_HDR_SIZE;
-+/* Get data from the previously sent command */
-+void *hci_sent_cmd_data(struct hci_dev *hdev, __u16 opcode)
-+{
-+	void *data;
+-		lock_sock(sk);
++		spin_lock(&sk->sk_receive_queue.lock);
+ 		skb = skb_peek(&sk->sk_receive_queue);
+ 		amount = skb ? skb->len : 0;
+-		release_sock(sk);
++		spin_unlock(&sk->sk_receive_queue.lock);
 +
-+	/* Check if opcode matches last sent command */
-+	data = hci_cmd_data(hdev->sent_cmd, opcode);
-+	if (!data)
-+		/* Check if opcode matches last request */
-+		data = hci_cmd_data(hdev->req_skb, opcode);
-+
-+	return data;
- }
- 
- /* Get data from last received event */
-@@ -4040,17 +4053,19 @@ void hci_req_cmd_complete(struct hci_dev *hdev, u16 opcode, u8 status,
- 	if (!status && !hci_req_is_complete(hdev))
- 		return;
- 
-+	skb = hdev->req_skb;
-+
- 	/* If this was the last command in a request the complete
--	 * callback would be found in hdev->sent_cmd instead of the
-+	 * callback would be found in hdev->req_skb instead of the
- 	 * command queue (hdev->cmd_q).
- 	 */
--	if (bt_cb(hdev->sent_cmd)->hci.req_flags & HCI_REQ_SKB) {
--		*req_complete_skb = bt_cb(hdev->sent_cmd)->hci.req_complete_skb;
-+	if (skb && bt_cb(skb)->hci.req_flags & HCI_REQ_SKB) {
-+		*req_complete_skb = bt_cb(skb)->hci.req_complete_skb;
- 		return;
- 	}
- 
--	if (bt_cb(hdev->sent_cmd)->hci.req_complete) {
--		*req_complete = bt_cb(hdev->sent_cmd)->hci.req_complete;
-+	if (skb && bt_cb(skb)->hci.req_complete) {
-+		*req_complete = bt_cb(skb)->hci.req_complete;
- 		return;
- 	}
- 
-@@ -4167,8 +4182,11 @@ static void hci_send_cmd_sync(struct hci_dev *hdev, struct sk_buff *skb)
- 		return;
- 	}
- 
--	if (hci_req_status_pend(hdev))
--		hci_dev_set_flag(hdev, HCI_CMD_PENDING);
-+	if (hci_req_status_pend(hdev) &&
-+	    !hci_dev_test_and_set_flag(hdev, HCI_CMD_PENDING)) {
-+		kfree_skb(hdev->req_skb);
-+		hdev->req_skb = skb_clone(skb, GFP_KERNEL);
-+	}
- 
- 	atomic_dec(&hdev->cmd_cnt);
- }
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 2bfc852283394..2bb8ab9302a97 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -4381,7 +4381,7 @@ static void hci_cmd_status_evt(struct hci_dev *hdev, void *data,
- 	 * (since for this kind of commands there will not be a command
- 	 * complete event).
- 	 */
--	if (ev->status || (hdev->sent_cmd && !hci_skb_event(hdev->sent_cmd))) {
-+	if (ev->status || (hdev->req_skb && !hci_skb_event(hdev->req_skb))) {
- 		hci_req_cmd_complete(hdev, *opcode, ev->status, req_complete,
- 				     req_complete_skb);
- 		if (hci_dev_test_flag(hdev, HCI_CMD_PENDING)) {
-@@ -7337,10 +7337,10 @@ static void hci_le_meta_evt(struct hci_dev *hdev, void *data,
- 	bt_dev_dbg(hdev, "subevent 0x%2.2x", ev->subevent);
- 
- 	/* Only match event if command OGF is for LE */
--	if (hdev->sent_cmd &&
--	    hci_opcode_ogf(hci_skb_opcode(hdev->sent_cmd)) == 0x08 &&
--	    hci_skb_event(hdev->sent_cmd) == ev->subevent) {
--		*opcode = hci_skb_opcode(hdev->sent_cmd);
-+	if (hdev->req_skb &&
-+	    hci_opcode_ogf(hci_skb_opcode(hdev->req_skb)) == 0x08 &&
-+	    hci_skb_event(hdev->req_skb) == ev->subevent) {
-+		*opcode = hci_skb_opcode(hdev->req_skb);
- 		hci_req_cmd_complete(hdev, *opcode, 0x00, req_complete,
- 				     req_complete_skb);
- 	}
-@@ -7727,10 +7727,10 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
- 	}
- 
- 	/* Only match event if command OGF is not for LE */
--	if (hdev->sent_cmd &&
--	    hci_opcode_ogf(hci_skb_opcode(hdev->sent_cmd)) != 0x08 &&
--	    hci_skb_event(hdev->sent_cmd) == event) {
--		hci_req_cmd_complete(hdev, hci_skb_opcode(hdev->sent_cmd),
-+	if (hdev->req_skb &&
-+	    hci_opcode_ogf(hci_skb_opcode(hdev->req_skb)) != 0x08 &&
-+	    hci_skb_event(hdev->req_skb) == event) {
-+		hci_req_cmd_complete(hdev, hci_skb_opcode(hdev->req_skb),
- 				     status, &req_complete, &req_complete_skb);
- 		req_evt = event;
- 	}
-diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-index 3979c1cccb9fb..7da7f8f2026b0 100644
---- a/net/bluetooth/hci_sync.c
-+++ b/net/bluetooth/hci_sync.c
-@@ -32,6 +32,10 @@ static void hci_cmd_sync_complete(struct hci_dev *hdev, u8 result, u16 opcode,
- 	hdev->req_result = result;
- 	hdev->req_status = HCI_REQ_DONE;
- 
-+	/* Free the request command so it is not used as response */
-+	kfree_skb(hdev->req_skb);
-+	hdev->req_skb = NULL;
-+
- 	if (skb) {
- 		struct sock *sk = hci_skb_sk(skb);
- 
-@@ -39,7 +43,7 @@ static void hci_cmd_sync_complete(struct hci_dev *hdev, u8 result, u16 opcode,
- 		if (sk)
- 			sock_put(sk);
- 
--		hdev->req_skb = skb_get(skb);
-+		hdev->req_rsp = skb_get(skb);
- 	}
- 
- 	wake_up_interruptible(&hdev->req_wait_q);
-@@ -187,8 +191,8 @@ struct sk_buff *__hci_cmd_sync_sk(struct hci_dev *hdev, u16 opcode, u32 plen,
- 
- 	hdev->req_status = 0;
- 	hdev->req_result = 0;
--	skb = hdev->req_skb;
--	hdev->req_skb = NULL;
-+	skb = hdev->req_rsp;
-+	hdev->req_rsp = NULL;
- 
- 	bt_dev_dbg(hdev, "end: err %d", err);
- 
-@@ -4904,6 +4908,11 @@ int hci_dev_open_sync(struct hci_dev *hdev)
- 			hdev->sent_cmd = NULL;
- 		}
- 
-+		if (hdev->req_skb) {
-+			kfree_skb(hdev->req_skb);
-+			hdev->req_skb = NULL;
-+		}
-+
- 		clear_bit(HCI_RUNNING, &hdev->flags);
- 		hci_sock_dev_event(hdev, HCI_DEV_CLOSE);
- 
-@@ -5065,6 +5074,12 @@ int hci_dev_close_sync(struct hci_dev *hdev)
- 		hdev->sent_cmd = NULL;
- 	}
- 
-+	/* Drop last request */
-+	if (hdev->req_skb) {
-+		kfree_skb(hdev->req_skb);
-+		hdev->req_skb = NULL;
-+	}
-+
- 	clear_bit(HCI_RUNNING, &hdev->flags);
- 	hci_sock_dev_event(hdev, HCI_DEV_CLOSE);
+ 		err = put_user(amount, (int __user *)arg);
+ 		break;
  
 -- 
 2.43.0
