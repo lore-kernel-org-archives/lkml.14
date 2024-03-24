@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB52811F9;
-	Sun, 24 Mar 2024 22:49:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7391D4C5E;
+	Sun, 24 Mar 2024 22:49:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320553; cv=none; b=LPgsodBVg2oePqS4P5oeXEoeUKArgyKsXfy+1l3eZOkyJD1tcOpl6MEGzd4XWI3DBzEM+77Ssy9ZS/4a4Qyh7vj7MmdHb8TKhAsb3jBPj7tSb5BI/7ZVepL6EMadqXz72i88RZwJO8QTNErQr4dzj+eDDcIK3fEMKCx9GncSaRY=
+	t=1711320560; cv=none; b=QG3sN8h3ZqJye4PoZcF6vgi0Jczqd/+xw3w5pASYR6lwaV/4V0No0kOLBAbIq3AKD2N0HX/xMHea+l+bLNCN100rfRWH46uZ0amifnaoyMf7dL+t7wFB8y9veet17+tfZjXo7q2EVQplDW+DLTmry8Jps06u6LKJktqnC38aQwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320553; c=relaxed/simple;
-	bh=yVUsKV4jgxvtvm1H6E8T9TK0qKFypGddsw3+FQLzm+g=;
+	s=arc-20240116; t=1711320560; c=relaxed/simple;
+	bh=oR6kvkBMYS2cpiqZLlshxpoI6c+KY4+ToxoVOXN4ufk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hefjqB7FEQx7fTqHJdAHQRjm6QtSRnOHeEpdZPej91q5FfFyc/MAbctupzJKO/3sJdC1kf3pzCWHk1JIYLIgZ1JmQLz3TSD78PawqAA6AUnVEMBEjdoJ0QrCVFZzIaVpilD9hyA0TMbPPXo938IljOQarEuZnVXaSm4ImezncwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ChUnC/Ho; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QOhXfLq2EuZF1YaeJp3I2dIxC2WXChPWYS+Z0lfbrEveLIMtXaQAxEc69BYUVT5TuLflvQtEERkKWhDRhw+oAMLJioENupefREWR7rWbhuAaxNDTpzs6fX+S7DmCjNUC0Kd2vc0Uwocm+cTKOS+nwX309Yk+61e+QgBiWimrqQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9KpIqcx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ChUnC/Ho"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10787C43394;
-	Sun, 24 Mar 2024 22:49:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9KpIqcx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B668C433F1;
+	Sun, 24 Mar 2024 22:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320551;
-	bh=yVUsKV4jgxvtvm1H6E8T9TK0qKFypGddsw3+FQLzm+g=;
+	s=k20201202; t=1711320558;
+	bh=oR6kvkBMYS2cpiqZLlshxpoI6c+KY4+ToxoVOXN4ufk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ChUnC/HoTmVmlLpQW1vULMR1Mi9Xfx3yxf1TgY5gjkPyMqIpcUaZ3QpysZiLf3bn4
-	 7JSLvLKzb1by3tipCi0I7M3/JVT5VBUMPAHUdTcLW8FdtaffAweCMJrmo18g+mg6D9
-	 E3vi/iJrwWQp9CZ7veQNNsiBOJnLxDIYNFWhY8Xw2QQu9u4p72smatfiZXhiMFUpdE
-	 pjRJ3G1gJMsWuNrA3uZwKrAPCeH1X3se0fWYbFT6jraqaXXpPhUEMKsl91sPP/wkOl
-	 X4Iou8EO930RK229U5ZyeH1ZlT1MJYRR/Th8Ato1fd+oAl4njrKp6Fa02K5cXyHUYy
-	 pWqHPCIkdP+cQ==
+	b=h9KpIqcxayb0YFekncOauZQEclhksMQp5bhpGnL8rLJO8SikyIkASTez0gO3sS26w
+	 N9Ufixfm62VZe6rzzbWF5AWkGtqgSsFRBTu7wcuk4XaRSCHtjUA4Ip1np1LlyVg07y
+	 Oz5OItkLpOXELAtap5hcrBJ5K04vT55cRN5nH8F67nwlef47Mmi7/w1BscwYMp3kV+
+	 IgZOBmozHKcg76tg2COcwFdJsIHVQu1IVcDxjyOpxdbZBLbUxc9uFr2aLcmvMlghsC
+	 oUg8q7vMVBqvfMX6ARs3OsGFlexemvUQ36LfgLo5Va/NIfdG/IvVzBoI4sY90kF6Ju
+	 LTmqyoNT/9kFA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yu Kuai <yukuai3@huawei.com>,
-	Song Liu <song@kernel.org>,
+Cc: Chun-Yi Lee <jlee@suse.com>,
+	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 112/713] md: remove flag RemoveSynchronized
-Date: Sun, 24 Mar 2024 18:37:18 -0400
-Message-ID: <20240324224720.1345309-113-sashal@kernel.org>
+Subject: [PATCH 6.7 120/713] aoe: fix the potential use-after-free problem in aoecmd_cfg_pkts
+Date: Sun, 24 Mar 2024 18:37:26 -0400
+Message-ID: <20240324224720.1345309-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,214 +48,86 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Chun-Yi Lee <jlee@suse.com>
 
-[ Upstream commit c891f1fd90e66e584bb1353e1859cef7c9eb36f8 ]
+[ Upstream commit f98364e926626c678fb4b9004b75cacf92ff0662 ]
 
-rcu is not used correctly here, because synchronize_rcu() is called
-before replacing old value, for example:
+This patch is against CVE-2023-6270. The description of cve is:
 
-remove_and_add_spares   // other path
- synchronize_rcu
- // called before replacing old value
- set_bit(RemoveSynchronized)
-                        rcu_read_lock()
-                        rdev = conf->mirros[].rdev
- pers->hot_remove_disk
-  conf->mirros[].rdev = NULL;
-  if (!test_bit(RemoveSynchronized))
-   synchronize_rcu
-   /*
-    * won't be called, and won't wait
-    * for concurrent readers to be done.
-    */
-                        // access rdev after remove_and_add_spares()
-                        rcu_read_unlock()
+  A flaw was found in the ATA over Ethernet (AoE) driver in the Linux
+  kernel. The aoecmd_cfg_pkts() function improperly updates the refcnt on
+  `struct net_device`, and a use-after-free can be triggered by racing
+  between the free on the struct and the access through the `skbtxq`
+  global queue. This could lead to a denial of service condition or
+  potential code execution.
 
-Fortunately, there is a separate rcu protection to prevent such rdev
-to be freed:
+In aoecmd_cfg_pkts(), it always calls dev_put(ifp) when skb initial
+code is finished. But the net_device ifp will still be used in
+later tx()->dev_queue_xmit() in kthread. Which means that the
+dev_put(ifp) should NOT be called in the success path of skb
+initial code in aoecmd_cfg_pkts(). Otherwise tx() may run into
+use-after-free because the net_device is freed.
 
-md_kick_rdev_from_array		//other path
-				rcu_read_lock()
-				rdev = conf->mirros[].rdev
-list_del_rcu(&rdev->same_set)
+This patch removed the dev_put(ifp) in the success path in
+aoecmd_cfg_pkts(), and added dev_put() after skb xmit in tx().
 
-				rcu_read_unlock()
-				/*
-				 * rdev can be removed from conf, but
-				 * rdev won't be freed.
-				 */
-synchronize_rcu()
-free rdev
-
-Hence remove this useless flag and prepare to remove rcu protection to
-access rdev from 'conf'.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Song Liu <song@kernel.org>
-Link: https://lore.kernel.org/r/20231125081604.3939938-2-yukuai1@huaweicloud.com
-Stable-dep-of: 257ac239ffcf ("md/raid1: fix choose next idle in read_balance()")
+Link: https://nvd.nist.gov/vuln/detail/CVE-2023-6270
+Fixes: 7562f876cd93 ("[NET]: Rework dev_base via list_head (v3)")
+Signed-off-by: Chun-Yi Lee <jlee@suse.com>
+Link: https://lore.kernel.org/r/20240305082048.25526-1-jlee@suse.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md-multipath.c |  9 ---------
- drivers/md/md.c           | 37 ++++++-------------------------------
- drivers/md/md.h           |  5 -----
- drivers/md/raid1.c        |  9 ---------
- drivers/md/raid10.c       |  9 ---------
- drivers/md/raid5.c        |  9 ---------
- 6 files changed, 6 insertions(+), 72 deletions(-)
+ drivers/block/aoe/aoecmd.c | 12 ++++++------
+ drivers/block/aoe/aoenet.c |  1 +
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/md-multipath.c b/drivers/md/md-multipath.c
-index d22276870283d..aa77133f31887 100644
---- a/drivers/md/md-multipath.c
-+++ b/drivers/md/md-multipath.c
-@@ -258,15 +258,6 @@ static int multipath_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
- 			goto abort;
+diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
+index d7317425be510..cc9077b588d7e 100644
+--- a/drivers/block/aoe/aoecmd.c
++++ b/drivers/block/aoe/aoecmd.c
+@@ -419,13 +419,16 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
+ 	rcu_read_lock();
+ 	for_each_netdev_rcu(&init_net, ifp) {
+ 		dev_hold(ifp);
+-		if (!is_aoe_netif(ifp))
+-			goto cont;
++		if (!is_aoe_netif(ifp)) {
++			dev_put(ifp);
++			continue;
++		}
+ 
+ 		skb = new_skb(sizeof *h + sizeof *ch);
+ 		if (skb == NULL) {
+ 			printk(KERN_INFO "aoe: skb alloc failure\n");
+-			goto cont;
++			dev_put(ifp);
++			continue;
  		}
- 		p->rdev = NULL;
--		if (!test_bit(RemoveSynchronized, &rdev->flags)) {
--			synchronize_rcu();
--			if (atomic_read(&rdev->nr_pending)) {
--				/* lost the race, try later */
--				err = -EBUSY;
--				p->rdev = rdev;
--				goto abort;
--			}
--		}
- 		err = md_integrity_register(mddev);
- 	}
- abort:
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index b2f27ac51bfb6..99b60d37114c4 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -9314,44 +9314,19 @@ static int remove_and_add_spares(struct mddev *mddev,
- 	struct md_rdev *rdev;
- 	int spares = 0;
- 	int removed = 0;
--	bool remove_some = false;
- 
- 	if (this && test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
- 		/* Mustn't remove devices when resync thread is running */
- 		return 0;
- 
- 	rdev_for_each(rdev, mddev) {
--		if ((this == NULL || rdev == this) &&
--		    rdev->raid_disk >= 0 &&
--		    !test_bit(Blocked, &rdev->flags) &&
--		    test_bit(Faulty, &rdev->flags) &&
--		    atomic_read(&rdev->nr_pending)==0) {
--			/* Faulty non-Blocked devices with nr_pending == 0
--			 * never get nr_pending incremented,
--			 * never get Faulty cleared, and never get Blocked set.
--			 * So we can synchronize_rcu now rather than once per device
--			 */
--			remove_some = true;
--			set_bit(RemoveSynchronized, &rdev->flags);
--		}
--	}
+ 		skb_put(skb, sizeof *h + sizeof *ch);
+ 		skb->dev = ifp;
+@@ -440,9 +443,6 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
+ 		h->major = cpu_to_be16(aoemajor);
+ 		h->minor = aoeminor;
+ 		h->cmd = AOECMD_CFG;
 -
--	if (remove_some)
--		synchronize_rcu();
--	rdev_for_each(rdev, mddev) {
--		if ((this == NULL || rdev == this) &&
--		    (test_bit(RemoveSynchronized, &rdev->flags) ||
--		     rdev_removeable(rdev))) {
--			if (mddev->pers->hot_remove_disk(
--				    mddev, rdev) == 0) {
--				sysfs_unlink_rdev(mddev, rdev);
--				rdev->saved_raid_disk = rdev->raid_disk;
--				rdev->raid_disk = -1;
--				removed++;
--			}
-+		if ((this == NULL || rdev == this) && rdev_removeable(rdev) &&
-+		    !mddev->pers->hot_remove_disk(mddev, rdev)) {
-+			sysfs_unlink_rdev(mddev, rdev);
-+			rdev->saved_raid_disk = rdev->raid_disk;
-+			rdev->raid_disk = -1;
-+			removed++;
- 		}
--		if (remove_some && test_bit(RemoveSynchronized, &rdev->flags))
--			clear_bit(RemoveSynchronized, &rdev->flags);
+-cont:
+-		dev_put(ifp);
  	}
- 
- 	if (removed && mddev->kobj.sd)
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index ade83af123a22..8d881cc597992 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -190,11 +190,6 @@ enum flag_bits {
- 				 * than other devices in the array
- 				 */
- 	ClusterRemove,
--	RemoveSynchronized,	/* synchronize_rcu() was called after
--				 * this device was known to be faulty,
--				 * so it is safe to remove without
--				 * another synchronize_rcu() call.
--				 */
- 	ExternalBbl,            /* External metadata provides bad
- 				 * block management for a disk
- 				 */
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index e138922d51292..6bd42ccbea9c4 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1863,15 +1863,6 @@ static int raid1_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
- 			goto abort;
- 		}
- 		p->rdev = NULL;
--		if (!test_bit(RemoveSynchronized, &rdev->flags)) {
--			synchronize_rcu();
--			if (atomic_read(&rdev->nr_pending)) {
--				/* lost the race, try later */
--				err = -EBUSY;
--				p->rdev = rdev;
--				goto abort;
--			}
--		}
- 		if (conf->mirrors[conf->raid_disks + number].rdev) {
- 			/* We just removed a device that is being replaced.
- 			 * Move down the replacement.  We drain all IO before
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index b7b0a573e7f8b..6e828a6aa0b0a 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -2247,15 +2247,6 @@ static int raid10_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
- 		goto abort;
+ 	rcu_read_unlock();
+ }
+diff --git a/drivers/block/aoe/aoenet.c b/drivers/block/aoe/aoenet.c
+index c51ea95bc2ce4..923a134fd7665 100644
+--- a/drivers/block/aoe/aoenet.c
++++ b/drivers/block/aoe/aoenet.c
+@@ -63,6 +63,7 @@ tx(int id) __must_hold(&txlock)
+ 			pr_warn("aoe: packet could not be sent on %s.  %s\n",
+ 				ifp ? ifp->name : "netif",
+ 				"consider increasing tx_queue_len");
++		dev_put(ifp);
+ 		spin_lock_irq(&txlock);
  	}
- 	*rdevp = NULL;
--	if (!test_bit(RemoveSynchronized, &rdev->flags)) {
--		synchronize_rcu();
--		if (atomic_read(&rdev->nr_pending)) {
--			/* lost the race, try later */
--			err = -EBUSY;
--			*rdevp = rdev;
--			goto abort;
--		}
--	}
- 	if (p->replacement) {
- 		/* We must have just cleared 'rdev' */
- 		p->rdev = p->replacement;
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 6fe334bb954ab..f03e4231bec11 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -8241,15 +8241,6 @@ static int raid5_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
- 		goto abort;
- 	}
- 	*rdevp = NULL;
--	if (!test_bit(RemoveSynchronized, &rdev->flags)) {
--		lockdep_assert_held(&mddev->reconfig_mutex);
--		synchronize_rcu();
--		if (atomic_read(&rdev->nr_pending)) {
--			/* lost the race, try later */
--			err = -EBUSY;
--			rcu_assign_pointer(*rdevp, rdev);
--		}
--	}
- 	if (!err) {
- 		err = log_modify(conf, rdev, false);
- 		if (err)
+ 	return 0;
 -- 
 2.43.0
 
