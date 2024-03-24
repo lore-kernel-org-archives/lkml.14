@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48572733D0;
-	Sun, 24 Mar 2024 23:35:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53C8273DB6;
+	Sun, 24 Mar 2024 23:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323319; cv=none; b=KdMJyuqE8S6pSEAaSw1YYOpUF+3PJGSYy+jckIBSFu4Anplr0k9gn3GV5wHdnt+FNauXDh7pe0SNv0LT/AvqXjWhMa4Cw++RH20z0tDhk6tjyHr4WvWq5aWVNZaolGTYbUspx/TTtdwOY28MntNB+eGatd545Y5/KcdyWXwxK+8=
+	t=1711323332; cv=none; b=KHL7Ra1mCEUe32317uUg0w7OHukA1Q29YfyL1gLxWIT9ccLFcj0aCraYAGImjeWvl/CWKYbI7d2jV2zZbxwAmvEd1kXSs6v6mETNGI4e/xqI2jJz6DlTQ3votTP8LZAazmiewEsbAfR1ywYK654fnfD6Hd3eI+2I7tlUIoSArwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323319; c=relaxed/simple;
-	bh=3VU3H4kuIe/rQdv1ZeQ5FiFnpIIR4BQFW/7JsgHKPno=;
+	s=arc-20240116; t=1711323332; c=relaxed/simple;
+	bh=eUZICQioZQV/iRn1btSkWf+yBXugr7Vk+ogZZoY/RBQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QvkVoe/8ppC71TPvLd03XZ8L/aVhaia2OdVR75kAt9/Q+pR4qqu2iGyANA143ATSj6II87xdUZsPm8+AXolaAYC4Go0c6ncbAr0Afu63JmNpJzChSpwaPahOqBRcGLoPgRR/ZsJwbZKRFH6b3naolO1hd+VN787+GM4yJg40yyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjLpoGUQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IdGm5dDcrqpcjhZAPc3LgY17ntJOKlarlMGxmsevO+WL7dZifKtIou9Pk/qDOdmU6z0N7sp5M+z8RTS6YYYj9Mr78iT3jLyQb5mCl8ewSVdfwOPs5AzMy02LWtanQqWE+ViAMa4yGEzTwA/wgKmdaP18GzsI3fuevghS6Lgc1bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDnV4c3N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjLpoGUQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98C67C43399;
-	Sun, 24 Mar 2024 23:35:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDnV4c3N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C1EEC433C7;
+	Sun, 24 Mar 2024 23:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323318;
-	bh=3VU3H4kuIe/rQdv1ZeQ5FiFnpIIR4BQFW/7JsgHKPno=;
+	s=k20201202; t=1711323331;
+	bh=eUZICQioZQV/iRn1btSkWf+yBXugr7Vk+ogZZoY/RBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QjLpoGUQFduNqC/Nogp/vQhns1Tg9rBX+Wu+b4k1f0lC4MXRotmWiIkpl5O2xAhS7
-	 fVDZISlttTs6ul3SMwDPEA8ynTRZZ2r9LdEthAVBmUgEUnoMhIYF++NPOfzliVqoMK
-	 EOp+NeLFnHa3vPWBQhFuKBAQrUX7VvM7xvRsE/kHJKgKaETfD5g7VarD+y/sPnm+wN
-	 T4LhO4qpzgwg93vkFhLv7T+6GRlrvxTVwJu2L9Mmkk3+1h7gWJoyPtj99XvLWqVaVP
-	 AnskGh9FuZ1ag24aYe5V/mNNC9AW6Zc0CAuRlrkCAsdtiFFxU+/BE038wtsX9zZxP5
-	 pK4IqPoTAM/tg==
+	b=MDnV4c3N1TYaadDC5v9kzxvEZjq1K/NLksmOvG9xKek440c2KGc7DlWe1GGyWGn2b
+	 Dooc89APsPuUI66RmycPTgk9V8czdAX8ExwjxHmFcdUi3NViX3EIGmsNWGX7NRGMRT
+	 Gs74x8CJNsyIxEQDEVaKH7u+bGPDTC6UhFa2qwdFbLudvENUHMMHec2woEJ2eVcAEY
+	 A7aSNNC0ZgV0ZbIM934EHrGM5XvIc+B9Q1/3SADKX8ncNeE/phyjoBUNZY8C2iyShg
+	 ddHQ6/sil/M3WwWXut+DeY9TgM0/uCw1NjCyZVueOHW/yfCujmbCYP3I5WwcWGgW3+
+	 Yq5raFLFkXSBw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>,
-	Helge Deller <deller@gmx.de>,
+Cc: Eric Biggers <ebiggers@google.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 018/317] parisc/ftrace: add missing CONFIG_DYNAMIC_FTRACE check
-Date: Sun, 24 Mar 2024 19:29:58 -0400
-Message-ID: <20240324233458.1352854-19-sashal@kernel.org>
+Subject: [PATCH 5.15 032/317] f2fs: implement iomap operations
+Date: Sun, 24 Mar 2024 19:30:12 -0400
+Message-ID: <20240324233458.1352854-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,40 +48,121 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Max Kellermann <max.kellermann@ionos.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 250f5402e636a5cec9e0e95df252c3d54307210f ]
+[ Upstream commit 1517c1a7a4456f080fabc4ac9853930e4b880d14 ]
 
-Fixes a bug revealed by -Wmissing-prototypes when
-CONFIG_FUNCTION_GRAPH_TRACER is enabled but not CONFIG_DYNAMIC_FTRACE:
+Implement 'struct iomap_ops' for f2fs, in preparation for making f2fs
+use iomap for direct I/O.
 
- arch/parisc/kernel/ftrace.c:82:5: error: no previous prototype for 'ftrace_enable_ftrace_graph_caller' [-Werror=missing-prototypes]
-    82 | int ftrace_enable_ftrace_graph_caller(void)
-       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- arch/parisc/kernel/ftrace.c:88:5: error: no previous prototype for 'ftrace_disable_ftrace_graph_caller' [-Werror=missing-prototypes]
-    88 | int ftrace_disable_ftrace_graph_caller(void)
-       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Note that this may be used for other things besides direct I/O in the
+future; however, for now I've only tested it for direct I/O.
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Stable-dep-of: ec16b147a55b ("fs: Fix rw_hint validation")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/kernel/ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/Kconfig |  1 +
+ fs/f2fs/data.c  | 56 +++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/f2fs/f2fs.h  |  1 +
+ 3 files changed, 58 insertions(+)
 
-diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-index 0a1e75af5382d..44d70fc30aae5 100644
---- a/arch/parisc/kernel/ftrace.c
-+++ b/arch/parisc/kernel/ftrace.c
-@@ -81,7 +81,7 @@ void notrace __hot ftrace_function_trampoline(unsigned long parent,
- #endif
- }
+diff --git a/fs/f2fs/Kconfig b/fs/f2fs/Kconfig
+index 7eea3cfd894d1..f46a7339d6cf7 100644
+--- a/fs/f2fs/Kconfig
++++ b/fs/f2fs/Kconfig
+@@ -7,6 +7,7 @@ config F2FS_FS
+ 	select CRYPTO_CRC32
+ 	select F2FS_FS_XATTR if FS_ENCRYPTION
+ 	select FS_ENCRYPTION_ALGS if FS_ENCRYPTION
++	select FS_IOMAP
+ 	select LZ4_COMPRESS if F2FS_FS_LZ4
+ 	select LZ4_DECOMPRESS if F2FS_FS_LZ4
+ 	select LZ4HC_COMPRESS if F2FS_FS_LZ4HC
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 73a7906a49b1e..5766a9f0773b1 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -21,6 +21,7 @@
+ #include <linux/cleancache.h>
+ #include <linux/sched/signal.h>
+ #include <linux/fiemap.h>
++#include <linux/iomap.h>
  
--#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+#if defined(CONFIG_DYNAMIC_FTRACE) && defined(CONFIG_FUNCTION_GRAPH_TRACER)
- int ftrace_enable_ftrace_graph_caller(void)
+ #include "f2fs.h"
+ #include "node.h"
+@@ -4242,3 +4243,58 @@ void f2fs_destroy_bio_entry_cache(void)
  {
- 	return 0;
+ 	kmem_cache_destroy(bio_entry_slab);
+ }
++
++static int f2fs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
++			    unsigned int flags, struct iomap *iomap,
++			    struct iomap *srcmap)
++{
++	struct f2fs_map_blocks map = {};
++	pgoff_t next_pgofs = 0;
++	int err;
++
++	map.m_lblk = bytes_to_blks(inode, offset);
++	map.m_len = bytes_to_blks(inode, offset + length - 1) - map.m_lblk + 1;
++	map.m_next_pgofs = &next_pgofs;
++	map.m_seg_type = f2fs_rw_hint_to_seg_type(inode->i_write_hint);
++	if (flags & IOMAP_WRITE)
++		map.m_may_create = true;
++
++	err = f2fs_map_blocks(inode, &map, flags & IOMAP_WRITE,
++			      F2FS_GET_BLOCK_DIO);
++	if (err)
++		return err;
++
++	iomap->offset = blks_to_bytes(inode, map.m_lblk);
++
++	if (map.m_flags & (F2FS_MAP_MAPPED | F2FS_MAP_UNWRITTEN)) {
++		iomap->length = blks_to_bytes(inode, map.m_len);
++		if (map.m_flags & F2FS_MAP_MAPPED) {
++			iomap->type = IOMAP_MAPPED;
++			iomap->flags |= IOMAP_F_MERGED;
++		} else {
++			iomap->type = IOMAP_UNWRITTEN;
++		}
++		if (WARN_ON_ONCE(!__is_valid_data_blkaddr(map.m_pblk)))
++			return -EINVAL;
++
++		iomap->bdev = map.m_bdev;
++		iomap->addr = blks_to_bytes(inode, map.m_pblk);
++	} else {
++		iomap->length = blks_to_bytes(inode, next_pgofs) -
++				iomap->offset;
++		iomap->type = IOMAP_HOLE;
++		iomap->addr = IOMAP_NULL_ADDR;
++	}
++
++	if (map.m_flags & F2FS_MAP_NEW)
++		iomap->flags |= IOMAP_F_NEW;
++	if ((inode->i_state & I_DIRTY_DATASYNC) ||
++	    offset + length > i_size_read(inode))
++		iomap->flags |= IOMAP_F_DIRTY;
++
++	return 0;
++}
++
++const struct iomap_ops f2fs_iomap_ops = {
++	.iomap_begin	= f2fs_iomap_begin,
++};
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 835ef98643bd4..4cabc37c20b90 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3650,6 +3650,7 @@ int f2fs_init_post_read_processing(void);
+ void f2fs_destroy_post_read_processing(void);
+ int f2fs_init_post_read_wq(struct f2fs_sb_info *sbi);
+ void f2fs_destroy_post_read_wq(struct f2fs_sb_info *sbi);
++extern const struct iomap_ops f2fs_iomap_ops;
+ 
+ /*
+  * gc.c
 -- 
 2.43.0
 
