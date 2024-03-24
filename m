@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE4820630F;
-	Sun, 24 Mar 2024 23:05:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172D2137752;
+	Sun, 24 Mar 2024 23:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321502; cv=none; b=s9x9XzClt4JNhEs/QoZsAKbgv7pcJkJxSdkCWFI50TYtKUKlknykxMoPiBaS9KmfGNTUfue0PB61oJ2Fre1OwfPHX9dbzHm78t+bowWpHLxom1DPH7Zk6NTpI4nKuoWEYvSGVJuGfRxyUJ0aDf7zvDcf5XnvscnSnCuenH8nIOo=
+	t=1711321519; cv=none; b=XeeVYDxH/ljKgsHglqNbu37myZe4KVRLZu2XZnZ+YcMwPIu56r2+b17eBH1YJsYJWNZ8lWDXWBQCTDd9jFM+8YUUyL+EXU5T7qSyZOZJ/0sbm6EuybinxR18+jufDprj17LJvDsmlAYLCNuUHr4Lm76tShuZEaSIC+rL+pxv72Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321502; c=relaxed/simple;
-	bh=nfu/1bifCRzhzUwuYeSYF4B5jVHi/FobrLmXrxCk7CI=;
+	s=arc-20240116; t=1711321519; c=relaxed/simple;
+	bh=NWPrkaaaSy9kKYxmurUP9GafqEG7VJh8Z50d+eN03o8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fOrxwUN4H4LAeEXMzq4OfMcniz91zttRE13vl+2nFLvS71ANAcVB3ovP2kSgClcCX+ybTXKTsy8Pn3PhPQnIXWmBA0JYZbEqrrPsR8ABV++wXHipN84ZVtOg/HjD4nT6IBtPq1pcm2fbQPcpTjKMLvHAx9o39WCTTzVAEcMe380=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PIsKoPI0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mt950TA1cernzW4eyG7+IPN/fYaBhLa8bLDx9pB7pCLxYAwVEFT7IeOtaaVhjFIeGKcKdaNB1gvcXUw0D58jNlr4xWDth8REliG6vznJD8VHmM1/K/Ps5j83fgX5pixcYb+hVTNE1RVhuE7a25rNtX5lo0Ic3B/hn5yDkWXqoV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tOUyccBv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PIsKoPI0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36673C43394;
-	Sun, 24 Mar 2024 23:05:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tOUyccBv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A7BC433F1;
+	Sun, 24 Mar 2024 23:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321501;
-	bh=nfu/1bifCRzhzUwuYeSYF4B5jVHi/FobrLmXrxCk7CI=;
+	s=k20201202; t=1711321517;
+	bh=NWPrkaaaSy9kKYxmurUP9GafqEG7VJh8Z50d+eN03o8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PIsKoPI0oNGnH/S8OSF0+g26akx9F08M0211d6wc03wxRdkQepzYIKyxM09Ct4mYD
-	 Wg7Xsfr0zhSKJGW7GnD0urCBc0dGuPqsubtBUIOA1S1R650Bc6K+O9egmfa0W+VbBo
-	 AUIl75DoVmv2v2i97BUuZ5rVqoD0al3yPWkuEGSvxikJYwRDkA+1qKfKkKQS4eoBeB
-	 LZyzJoi6z9Xhr8d0tceU3+GKB1SynOGvQANouk9tRabwE2sjr4Pc703FzJ43lR7l+J
-	 3I+sPNG7Wf8V9RVn5h0uanSJT3+s7g2/W6TDIzQOy19sbFkkdySzwcAAoNub4Fs+CX
-	 AvlH0DNWR5dVw==
+	b=tOUyccBv/eqIXQOkY6cpHm4pGaJjTWyvlNaRoaj5lv4bFFMhcpho0Va1SFOPcKDA3
+	 Z92wmN5DQQMMDrlne3G8CzyMkUr1ygxBn+natT8j1/v0hWQ669pJNO7FAd4+mYepuO
+	 dunL/iJemjI1Okki4acgDP38tZI0v9aYiyYi6j3vgTNYwlSOEnf3rsdaBraRuVYeay
+	 b6o0M48nSSDZcMDr7vew0Kt3AJsylnV2if5/XOBu5R/Fvg4FhsOg/cYaAEtRx1R+Zt
+	 p1YKuAwaJS9lSFx5d2B7T2Yjb0+uZnVfJlkt2ZfO8JDj0PFFbZ48d8jHgGM23eJ2/h
+	 xSI2beqt1VYmg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: Hsin-Te Yuan <yuanhsinte@google.com>,
+	Hsin-Te Yuan <yuanhsinte@chromium.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 227/638] ACPI: processor_idle: Fix memory leak in acpi_processor_power_exit()
-Date: Sun, 24 Mar 2024 18:54:24 -0400
-Message-ID: <20240324230116.1348576-228-sashal@kernel.org>
+Subject: [PATCH 6.6 244/638] arm64: dts: mt8195-cherry-tomato: change watchdog reset boot flow
+Date: Sun, 24 Mar 2024 18:54:41 -0400
+Message-ID: <20240324230116.1348576-245-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,59 +49,64 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Armin Wolf <W_Armin@gmx.de>
+From: Hsin-Te Yuan <yuanhsinte@google.com>
 
-[ Upstream commit e18afcb7b2a12b635ac10081f943fcf84ddacc51 ]
+[ Upstream commit ef569d5db50e7edd709e482157769a5b3c367e22 ]
 
-After unregistering the CPU idle device, the memory associated with
-it is not freed, leading to a memory leak:
+The external output reset signal was originally disabled and sent from
+firmware. However, an unfixed bug in the firmware on tomato prevents
+the signal from being sent, causing the device to fail to boot. To fix
+this, enable external output reset signal to allow the device to reboot
+normally.
 
-unreferenced object 0xffff896282f6c000 (size 1024):
-  comm "swapper/0", pid 1, jiffies 4294893170
-  hex dump (first 32 bytes):
-    00 00 00 00 0b 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace (crc 8836a742):
-    [<ffffffff993495ed>] kmalloc_trace+0x29d/0x340
-    [<ffffffff9972f3b3>] acpi_processor_power_init+0xf3/0x1c0
-    [<ffffffff9972d263>] __acpi_processor_start+0xd3/0xf0
-    [<ffffffff9972d2bc>] acpi_processor_start+0x2c/0x50
-    [<ffffffff99805872>] really_probe+0xe2/0x480
-    [<ffffffff99805c98>] __driver_probe_device+0x78/0x160
-    [<ffffffff99805daf>] driver_probe_device+0x1f/0x90
-    [<ffffffff9980601e>] __driver_attach+0xce/0x1c0
-    [<ffffffff99803170>] bus_for_each_dev+0x70/0xc0
-    [<ffffffff99804822>] bus_add_driver+0x112/0x210
-    [<ffffffff99807245>] driver_register+0x55/0x100
-    [<ffffffff9aee4acb>] acpi_processor_driver_init+0x3b/0xc0
-    [<ffffffff990012d1>] do_one_initcall+0x41/0x300
-    [<ffffffff9ae7c4b0>] kernel_init_freeable+0x320/0x470
-    [<ffffffff99b231f6>] kernel_init+0x16/0x1b0
-    [<ffffffff99042e6d>] ret_from_fork+0x2d/0x50
-
-Fix this by freeing the CPU idle device after unregistering it.
-
-Fixes: 3d339dcbb56d ("cpuidle / ACPI : move cpuidle_device field out of the acpi_processor_power structure")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 5eb2e303ec6b ("arm64: dts: mediatek: Introduce MT8195 Cherry platform's Tomato")
+Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://lore.kernel.org/r/20240124-send-upstream-v3-1-5097c9862a73@chromium.org
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/processor_idle.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts | 4 ++++
+ arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts | 4 ++++
+ arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts | 4 ++++
+ 3 files changed, 12 insertions(+)
 
-diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index 55437f5e0c3ae..bd6a7857ce058 100644
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -1430,6 +1430,8 @@ int acpi_processor_power_exit(struct acpi_processor *pr)
- 		acpi_processor_registered--;
- 		if (acpi_processor_registered == 0)
- 			cpuidle_unregister_driver(&acpi_idle_driver);
+diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
+index 2d5e8f371b6de..a82d716f10d44 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
+@@ -23,3 +23,7 @@ &sound {
+ &ts_10 {
+ 	status = "okay";
+ };
 +
-+		kfree(dev);
- 	}
- 
- 	pr->flags.power_setup_done = 0;
++&watchdog {
++	/delete-property/ mediatek,disable-extrst;
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
+index 2586c32ce6e6f..2fe20e0dad836 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
+@@ -43,3 +43,7 @@ &sound {
+ &ts_10 {
+ 	status = "okay";
+ };
++
++&watchdog {
++	/delete-property/ mediatek,disable-extrst;
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
+index f54f9477b99da..dd294ca98194c 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
+@@ -44,3 +44,7 @@ &sound {
+ &ts_10 {
+ 	status = "okay";
+ };
++
++&watchdog {
++	/delete-property/ mediatek,disable-extrst;
++};
 -- 
 2.43.0
 
