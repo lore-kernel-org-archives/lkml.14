@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7CE182747;
-	Sun, 24 Mar 2024 23:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DE328ECAE;
+	Sun, 24 Mar 2024 23:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324162; cv=none; b=FZv+RngouE8gMYsL9g2tWEJekaOY9Qgqvmj9K/0uy5P7sTHRvQNO0WbmLNiIQg00VuEy3h35BsgLdYeUS/y7uHKncPx+ViCC0WzqAv7TKxVm5+62RfiR9OMcnoEImnIzgl1NJ/o2DlxeVWmwxlEMY1z0my9kuweO/20TbXTWtFo=
+	t=1711324167; cv=none; b=rxWEFAG0AazdQlSf9YDdSTG06LDdQNxs6O0XvteHKBunQell+jp8NCtQbL6s9NVJxXsDZJ5N4PkPaeRR7XBH59S7URpS9hbzZjhR8GwTQb7Ijnqut67xymQPw8cXYIImXvgsjPGZF6Yy2RTMzGmQBaesbee2oAOrPJ7ShJbC9Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324162; c=relaxed/simple;
-	bh=pP09BQR5vGUKD4rX+sTintaCEvicXfwuzCjxTMxtbw8=;
+	s=arc-20240116; t=1711324167; c=relaxed/simple;
+	bh=juqHyoMLptHEf1o3mC3pCq+KguM+yQrH8hvj9AyFJUc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=patv23yqtj8R37DUdubo7eW5OxFZYPvSZrdgd21PBqWb3qppahvcAVsqQ/EGLekysxxesTkb5pmTAXOZv6kLz5VYNoGOKBOTsJ9jWD9dEvZ02VmJyM6iEJSgKOJqK/FvXtNOSMwDLrbr4oKHd/1HDi6HsjDuJwawZYeZiPj+W/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVEazqfl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Nx8qSCfzHz6DSmrk4wLOBz/3Tgct/IQJ0B+cfH9xJ1vnTlDmxIRnR8g57ED84AkHxk9Issi+6+db9yVEA5ZP1V8hgErbvvMB+edWsDH1Jbu4bwtMy1x+q+nVgeP3XtKLJ4EtmfJVUu9HCTazzdtA4JvYuMkxit7jTeuF3NuM7y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lUQd9zwo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVEazqfl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB693C433C7;
-	Sun, 24 Mar 2024 23:49:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lUQd9zwo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CFF6C433F1;
+	Sun, 24 Mar 2024 23:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324161;
-	bh=pP09BQR5vGUKD4rX+sTintaCEvicXfwuzCjxTMxtbw8=;
+	s=k20201202; t=1711324165;
+	bh=juqHyoMLptHEf1o3mC3pCq+KguM+yQrH8hvj9AyFJUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CVEazqflDcVyh31Wk1pKFKwC4o7ja4ux4QCoOH85y2HfbV/fRQnZq7l7QOHv6GiMl
-	 d7oR8fMkv25UTVJ+8RphTJlGST7aUL608+ghgk7cv/efPccX7iqv9nhyBWjdqij7Vm
-	 OK6slo9ngj3bJV30QSHr4HtoG6eLxQdIfYUeI8ElnWOe8ZMVCbEAYJVC3uuKg2UGMR
-	 t/DNESetryKemoctEMeMsCDQONLrC8jhXrcP7Tw4IZ37MNVHNFIQC3QUYM2KcLqFkl
-	 JkCsfJgwhYYgGr6eV3OcueVJKMvNi/kodyu7ebpuw8jDLkhE5gSvUrTlqy8pBvjZHB
-	 BPPY5xDMtchvg==
+	b=lUQd9zwoCIccnMdqcUsEDcrcCjyDgn9Qz5bi4h42OEdA8A2SezXCVT0oCpL0VB3+r
+	 hIKMrCDVmZnvloIM0zulf1j8vrfPSHXq5hXz2/OUEIRp0dPWf9K08BAtKIqbQJ+Vsn
+	 64zOcxHOuV3JPSo/JerzLiKQuHEia0ELJItfZarsnfcXv71L60LNfbJZjatYTTkSDh
+	 xdJ2y2tgcL0bACua3lyqInUSi0vOFUOixhabBuV9hIz/eKYvoFdqw1OBlqABstvQJL
+	 VPZKirF2Mu7qOWhiKQnuvC+yRBlmULFiuckgWNddM5RWP+JAhkS6/Ddi4Ibi3e49s6
+	 Ya6Lrkdtmkdug==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc: David Howells <dhowells@redhat.com>,
+	Markus Suvanto <markus.suvanto@gmail.com>,
+	Jeffrey E Altman <jaltman@auristor.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	linux-afs@lists.infradead.org,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 156/183] net: sunrpc: Fix an off by one in rpc_sockaddr2uaddr()
-Date: Sun, 24 Mar 2024 19:46:09 -0400
-Message-ID: <20240324234638.1355609-157-sashal@kernel.org>
+Subject: [PATCH 5.4 159/183] afs: Revert "afs: Hide silly-rename files from userspace"
+Date: Sun, 24 Mar 2024 19:46:12 -0400
+Message-ID: <20240324234638.1355609-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,40 +52,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit d6f4de70f73a106986ee315d7d512539f2f3303a ]
+[ Upstream commit 0aec3847d044273733285dcff90afda89ad461d2 ]
 
-The intent is to check if the strings' are truncated or not. So, >= should
-be used instead of >, because strlcat() and snprintf() return the length of
-the output, excluding the trailing NULL.
+This reverts commit 57e9d49c54528c49b8bffe6d99d782ea051ea534.
 
-Fixes: a02d69261134 ("SUNRPC: Provide functions for managing universal addresses")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+This undoes the hiding of .__afsXXXX silly-rename files.  The problem with
+hiding them is that rm can't then manually delete them.
+
+This also reverts commit 5f7a07646655fb4108da527565dcdc80124b14c4 ("afs: Fix
+endless loop in directory parsing") as that's a bugfix for the above.
+
+Fixes: 57e9d49c5452 ("afs: Hide silly-rename files from userspace")
+Reported-by: Markus Suvanto <markus.suvanto@gmail.com>
+Link: https://lists.infradead.org/pipermail/linux-afs/2024-February/008102.html
+Signed-off-by: David Howells <dhowells@redhat.com>
+Link: https://lore.kernel.org/r/3085695.1710328121@warthog.procyon.org.uk
+Reviewed-by: Jeffrey E Altman <jaltman@auristor.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/addr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/afs/dir.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-index 0d4a2bb09589c..be2fc88f5bde1 100644
---- a/net/sunrpc/addr.c
-+++ b/net/sunrpc/addr.c
-@@ -288,10 +288,10 @@ char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
- 	}
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index 1ada9b9cb21ec..43f5b972fcead 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -421,16 +421,6 @@ static int afs_dir_iterate_block(struct afs_vnode *dvnode,
+ 			continue;
+ 		}
  
- 	if (snprintf(portbuf, sizeof(portbuf),
--		     ".%u.%u", port >> 8, port & 0xff) > (int)sizeof(portbuf))
-+		     ".%u.%u", port >> 8, port & 0xff) >= (int)sizeof(portbuf))
- 		return NULL;
- 
--	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) > sizeof(addrbuf))
-+	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) >= sizeof(addrbuf))
- 		return NULL;
- 
- 	return kstrdup(addrbuf, gfp_flags);
+-		/* Don't expose silly rename entries to userspace. */
+-		if (nlen > 6 &&
+-		    dire->u.name[0] == '.' &&
+-		    ctx->actor != afs_lookup_filldir &&
+-		    ctx->actor != afs_lookup_one_filldir &&
+-		    memcmp(dire->u.name, ".__afs", 6) == 0) {
+-			ctx->pos = blkoff + next * sizeof(union afs_xdr_dirent);
+-			continue;
+-		}
+-
+ 		/* found the next entry */
+ 		if (!dir_emit(ctx, dire->u.name, nlen,
+ 			      ntohl(dire->u.vnode),
 -- 
 2.43.0
 
