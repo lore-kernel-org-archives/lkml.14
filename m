@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A721514EC;
-	Sun, 24 Mar 2024 23:05:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850621514FF;
+	Sun, 24 Mar 2024 23:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321531; cv=none; b=Ywkjx08B6lBBKfnaL8J+/y/fKgL7yXVjO7OBeVwxIRXIwChs9I41WKmSLMe88WsgWEb3yXm347SRiGBpt70QH1SI75bYCTDK9WQ5x/8ltwnUnaOvUvVMEWbND1+Pce4pQfRHHqDhHxMVE++wEt62dyoDmXjhBzygh/lCTYAWueE=
+	t=1711321533; cv=none; b=E8DmeohTFBvd29Q389UOubsc5kKFXDVHCU0TKIEMeUU82YKpwGgIEm6UCtxibO6scKoGKLAdiOQy4FeQtsp0b7/Tuuf9k9FdLLYXe+AOO4wVLbmqY5ELitmPeaEsfoYuZyt8I+NOTGtKfUBHBnKhbdsjVNPznJF5HxhqovIcVAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321531; c=relaxed/simple;
-	bh=rUzDKGth/ccwZ7iKH6Jz+5Q6eJnmE3TflhykP87e3wI=;
+	s=arc-20240116; t=1711321533; c=relaxed/simple;
+	bh=UJVecGRcsJMrble1axSJMuG0b3FUpXz2QsuhpnXy+d0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fuqRodHJHEFyOw2hpqSDMgB0Kcdrgucl/Tj0rW5MDjP/WZOdiQhVe+w4C+FimUsP9JgHyrnzMHVqM8SQ7BPGzczkP293KVZCACTQRZ1FMhsPYLh7qiV5lhL5lwMU2URYLjC4VHk7f91Bja/Q886KV6t8dbolMAYYjW13G1SSaS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuMjR+Zw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jlWwuwl3kLvYeQM1UJZLfrqAn1OJ5TfnKlAc1l54+BZJBWT7fRFE+l3oDuW+UNPE26K95NeYYEDSpc3OeVJMkYrzzzhtaZg58AlKMKMVyx3YxnLA7Gzfq8JXs4dwjPEmiKw7vCh6MQPjcquMYEz80J6wfs85tvVNMhhs845bGMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGBcZMO4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuMjR+Zw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3DB7C43399;
-	Sun, 24 Mar 2024 23:05:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGBcZMO4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B00B1C433C7;
+	Sun, 24 Mar 2024 23:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321530;
-	bh=rUzDKGth/ccwZ7iKH6Jz+5Q6eJnmE3TflhykP87e3wI=;
+	s=k20201202; t=1711321532;
+	bh=UJVecGRcsJMrble1axSJMuG0b3FUpXz2QsuhpnXy+d0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TuMjR+ZwUSpp8VqduA/RBSi3o7wuWxEz7JrQOP8p0BOviHWLRCrbqNh1NgfjfhZJt
-	 dClBkyTPU1ZLbr2BLapNdDs6IbKJE7YlA+Ik6LwwVX/eyO+esLf7AR0ms8bAMk49KB
-	 tpm8lVWp3IQxMS3LXVdpBPGNUNyBr5w2nL17aHWzPuaIOF7UwTm34fuwFD6p+THwIy
-	 xMRGqmTJ9wMKIWShRNHoVVOljDUDWtKBicVXcHdUN/3yVGqmYvPoEcpNDsw8o6Oj8K
-	 8Smru3UQE34kruNQHoJUE/pAbye3pHQ1qqARg7xku5oxjamv5huom7PuZO3A0LoH0I
-	 s297kbsYC9ksw==
+	b=GGBcZMO4FXacUp6mMS8G9NG4weGxl9KQL1/1ECP3i68rfFGGRMY4FvYleCNQRyTGk
+	 3WqW081654j/7W+DTg2BkJDvh4EZZTkAHn+Hg5dssTQf+UF3IALd/XngSX9aqVpRsS
+	 K6CapOzC0Y4Ha7H3eKRMfMCzQH22YM/nUq+sCD6E3GSorKKOjnKlaCeAEzBDkeAmT4
+	 xjzgimexRfsrxHtVYFFnNtaXCeAB4+SfFfQ8H67rCYJrBnOA8lRSdy+RE4OEcipJm0
+	 ZH6RXj1oNKZirX01LZwV3fVtZQTzGBhvg7nl+5Znbjs+gCQErDzhq7s35ePcb6wR3l
+	 KHmB/VMPpWeYw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gen Xu <genxu6@gmail.com>,
+Cc: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,
+	Leon Yen <leon.yen@mediatek.com>,
 	Felix Fietkau <nbd@nbd.name>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 257/638] wifi: mt76: mt792x: fix ethtool warning
-Date: Sun, 24 Mar 2024 18:54:54 -0400
-Message-ID: <20240324230116.1348576-258-sashal@kernel.org>
+Subject: [PATCH 6.6 259/638] wifi: mt76: mt792x: fix a potential loading failure of the 6Ghz channel config from ACPI
+Date: Sun, 24 Mar 2024 18:54:56 -0400
+Message-ID: <20240324230116.1348576-260-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,33 +49,80 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gen Xu <genxu6@gmail.com>
+From: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
 
-[ Upstream commit 7b4f9cd6a5fc221895b1d9be83ee3c13c00d09ab ]
+[ Upstream commit 07ce1d46372489d90f9cccebb3277d1af801c4b9 ]
 
-Add a missing EHT related field to fix the following ethtool warning:
-[98179.287352] mt7921e 0003:01:00.0: ei: 74  SSTATS_LEN: 73
+In some case, the MTCL table will exist, but MTDS table will not.
+So the SAR will init fail. This patch make MTCL and MTDS can exist
+with no dependence.
 
-Fixes: c74df1c067f2 ("wifi: mt76: mt792x: introduce mt792x-lib module")
-Signed-off-by: Gen Xu <genxu6@gmail.com>
+Fixes: f965333e491e ("mt76: mt7921: introduce ACPI SAR support")
+Signed-off-by: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
+Signed-off-by: Leon Yen <leon.yen@mediatek.com>
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt792x_core.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../wireless/mediatek/mt76/mt792x_acpi_sar.c  | 26 ++++++++++---------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_core.c b/drivers/net/wireless/mediatek/mt76/mt792x_core.c
-index f111c47fdca56..2fb1141e5fa96 100644
---- a/drivers/net/wireless/mediatek/mt76/mt792x_core.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt792x_core.c
-@@ -332,6 +332,7 @@ static const char mt792x_gstrings_stats[][ETH_GSTRING_LEN] = {
- 	"v_tx_bw_40",
- 	"v_tx_bw_80",
- 	"v_tx_bw_160",
-+	"v_tx_bw_320",
- 	"v_tx_mcs_0",
- 	"v_tx_mcs_1",
- 	"v_tx_mcs_2",
+diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
+index 303c0f5c9c662..c4e3bfcc519e2 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
++++ b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
+@@ -66,13 +66,15 @@ mt792x_acpi_read(struct mt792x_dev *dev, u8 *method, u8 **tbl, u32 *len)
+ }
+ 
+ /* MTCL : Country List Table for 6G band */
+-static void
++static int
+ mt792x_asar_acpi_read_mtcl(struct mt792x_dev *dev, u8 **table, u8 *version)
+ {
+-	if (mt792x_acpi_read(dev, MT792x_ACPI_MTCL, table, NULL) < 0)
+-		*version = 1;
+-	else
+-		*version = 2;
++	int ret;
++
++	*version = ((ret = mt792x_acpi_read(dev, MT792x_ACPI_MTCL, table, NULL)) < 0)
++		   ? 1 : 2;
++
++	return ret;
+ }
+ 
+ /* MTDS : Dynamic SAR Power Table */
+@@ -166,16 +168,16 @@ int mt792x_init_acpi_sar(struct mt792x_dev *dev)
+ 	if (!asar)
+ 		return -ENOMEM;
+ 
+-	mt792x_asar_acpi_read_mtcl(dev, (u8 **)&asar->countrylist, &asar->ver);
++	ret = mt792x_asar_acpi_read_mtcl(dev, (u8 **)&asar->countrylist, &asar->ver);
++	if (ret) {
++		devm_kfree(dev->mt76.dev, asar->countrylist);
++		asar->countrylist = NULL;
++	}
+ 
+-	/* MTDS is mandatory. Return error if table is invalid */
+ 	ret = mt792x_asar_acpi_read_mtds(dev, (u8 **)&asar->dyn, asar->ver);
+ 	if (ret) {
+ 		devm_kfree(dev->mt76.dev, asar->dyn);
+-		devm_kfree(dev->mt76.dev, asar->countrylist);
+-		devm_kfree(dev->mt76.dev, asar);
+-
+-		return ret;
++		asar->dyn = NULL;
+ 	}
+ 
+ 	/* MTGS is optional */
+@@ -290,7 +292,7 @@ int mt792x_init_acpi_sar_power(struct mt792x_phy *phy, bool set_default)
+ 	const struct cfg80211_sar_capa *capa = phy->mt76->hw->wiphy->sar_capa;
+ 	int i;
+ 
+-	if (!phy->acpisar)
++	if (!phy->acpisar || !((struct mt792x_acpi_sar *)phy->acpisar)->dyn)
+ 		return 0;
+ 
+ 	/* When ACPI SAR enabled in HW, we should apply rules for .frp
 -- 
 2.43.0
 
