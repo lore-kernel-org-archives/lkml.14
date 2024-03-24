@@ -1,40 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3205915B570;
-	Sun, 24 Mar 2024 23:16:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F96822C676;
+	Sun, 24 Mar 2024 23:16:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322165; cv=none; b=noHklylFeR7dvazbZuIWbkruGuhegrJZnaVsexba/4D1MvBkKNNQO2/E9+/7R+tj+KkdG0NOF83wsgOri5yy95VaXIghh2m+UJJe3vhYN5wcJC4YePf3TCvcqXulK9lkvOYhfJQdnryg4IdfWPNbUvrWkhjSMKUPDhKsloitSrg=
+	t=1711322181; cv=none; b=b48WGhZft+8cipylFkpHyG/fkGaUbiIKVK++LMynxYCFL2N7IJUykERKvMxqQyT8ZFDoK7eUtkiMWoKu6OtMKg5eGVOsjXSA+XugoxyvBSF6H0SuXn/g2FoPNsH1mFCAOt7x0lN8wYS5zkFAf9fVtGPO9Sxtwpav1uOCreteLIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322165; c=relaxed/simple;
-	bh=/hySMTje0KdM8jrGPtDtH45UETmUw/LTri087z+nxv0=;
+	s=arc-20240116; t=1711322181; c=relaxed/simple;
+	bh=IRmiRuxaCVe79WWds/IFxgcx0pw2UqYBA9WRsE0KnHQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l77xH00lLU18zA368GEy9vVwiZWJXxLcd6ObeX6lOig10BsaZvp9hIIieMHoWnFDXBweiMnteRbs+1oKbtFU6IWSLWN/CBOyFEn7/7Lc1PagT03MctdO9O45d29u9RGVumMDd1E6Zh6Bhf8ZOBAi07bzS8qUBpLEM+cv0YOetRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fi3tue/m; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WAsxuRzHkIYWPog99BPAAm/dcI3cHwFM/zhf4KygXAPjDJdHpINoLuvjtMxjaY66XW3alOp5oRPBSpasdmo/fd6M9ZPrCXk+qccKV2mSB8jbdLU/DRrR40UotHIKUCviDe1u8jMNiKv9AudOYtxi8cFTuBHDRZYde/bi1EaK3FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AQmInFfZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fi3tue/m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D3D7C43390;
-	Sun, 24 Mar 2024 23:16:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQmInFfZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 095CEC43390;
+	Sun, 24 Mar 2024 23:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322164;
-	bh=/hySMTje0KdM8jrGPtDtH45UETmUw/LTri087z+nxv0=;
+	s=k20201202; t=1711322180;
+	bh=IRmiRuxaCVe79WWds/IFxgcx0pw2UqYBA9WRsE0KnHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Fi3tue/mVMBI+vuBw+f/vkyb6+ANVNt5+GLOP+Ja+CxPkNmZErQozsexuio5Mm3hS
-	 oySFa8ocUqWLCezTsVlW1jXvUXx9C01DOLvF0F7O8Q86Ckh0kLhwpWsDTTwytgy3Cf
-	 sff3bRGwk7lM3f1k7vq2p1s5k1gXZZ6gb9HuucPnFrHQ+27aMetrjvqKoqKqn/sG09
-	 9aOs2cLtf8OqNuJOdJ1wV2T2xs2oiM//TlQkFV+LWUvEC806gsOHixfiLk32ehM9L7
-	 7VrdDiNOHrvCGFTXO4KRg15cOaSeH+rTWz78+JbF+aCjxfxobDnCcAKNOZPxyUh3+U
-	 tE/tzl8HLhl4w==
+	b=AQmInFfZUDAoriUei/Xylg8/8s8K7VnYJzsXiXI/agNYSHsfjR/rgZ76bVcbsehvE
+	 4mFuVJdUJ6Hi2y35AXwgdsExvO2yEekS65rL0H/dGPNB8mp3YoGpKJmSrWTtDhrGG2
+	 pib353gVsWMrohqw9oLAzRSgUGWIMfscAr8XYfwG1HuNwg+Y6iCk5BO1oX4ceEti5G
+	 HrZ0cItmEZ7W04CYqMxjMeBtERZQVQ4/O5Xqu0hJnovht/CK/f/99uwoGo6Y/UCEO2
+	 L05IlwbF8aT5BKAJqdwOPKbwkMyQoJvklpLt3n2BDip30Un4ptDt7aKaPQexeKM8WL
+	 IPK11yYEHnmFA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Wyatt Wood <wyatt.wood@amd.com>,
+	Anthony Koo <Anthony.Koo@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 242/451] drm/tegra: rgb: Fix missing clk_put() in the error handling paths of tegra_dc_rgb_probe()
-Date: Sun, 24 Mar 2024 19:08:38 -0400
-Message-ID: <20240324231207.1351418-243-sashal@kernel.org>
+Subject: [PATCH 6.1 258/451] drm/amd/display: Fix potential NULL pointer dereferences in 'dcn10_set_output_transfer_func()'
+Date: Sun, 24 Mar 2024 19:08:54 -0400
+Message-ID: <20240324231207.1351418-259-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,47 +52,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit 45c8034db47842b25a3ab6139d71e13b4e67b9b3 ]
+[ Upstream commit 9ccfe80d022df7c595f1925afb31de2232900656 ]
 
-If clk_get_sys(..., "pll_d2_out0") fails, the clk_get_sys() call must be
-undone.
+The 'stream' pointer is used in dcn10_set_output_transfer_func() before
+the check if 'stream' is NULL.
 
-Add the missing clk_put and a new 'put_pll_d_out0' label in the error
-handling path, and use it.
+Fixes the below:
+drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:1892 dcn10_set_output_transfer_func() warn: variable dereferenced before check 'stream' (see line 1875)
 
-Fixes: 0c921b6d4ba0 ("drm/tegra: dc: rgb: Allow changing PLLD rate on Tegra30+")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/0182895ead4e4730426616b0d9995954c960b634.1693667005.git.christophe.jaillet@wanadoo.fr
+Fixes: ddef02de0d71 ("drm/amd/display: add null checks before logging")
+Cc: Wyatt Wood <wyatt.wood@amd.com>
+Cc: Anthony Koo <Anthony.Koo@amd.com>
+Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/rgb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
-index 5e95943021887..86e55e5d12b39 100644
---- a/drivers/gpu/drm/tegra/rgb.c
-+++ b/drivers/gpu/drm/tegra/rgb.c
-@@ -243,7 +243,7 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
- 		if (IS_ERR(rgb->pll_d2_out0)) {
- 			err = PTR_ERR(rgb->pll_d2_out0);
- 			dev_err(dc->dev, "failed to get pll_d2_out0: %d\n", err);
--			goto remove;
-+			goto put_pll;
- 		}
- 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 009b5861a3fec..d6c5d48c878ec 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -1854,6 +1854,9 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
+ {
+ 	struct dpp *dpp = pipe_ctx->plane_res.dpp;
  
-@@ -251,6 +251,8 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
++	if (!stream)
++		return false;
++
+ 	if (dpp == NULL)
+ 		return false;
  
- 	return 0;
+@@ -1876,8 +1879,8 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
+ 	} else
+ 		dpp->funcs->dpp_program_regamma_pwl(dpp, NULL, OPP_REGAMMA_BYPASS);
  
-+put_pll:
-+	clk_put(rgb->pll_d_out0);
- remove:
- 	tegra_output_remove(&rgb->output);
- 	return err;
+-	if (stream != NULL && stream->ctx != NULL &&
+-			stream->out_transfer_func != NULL) {
++	if (stream->ctx &&
++	    stream->out_transfer_func) {
+ 		log_tf(stream->ctx,
+ 				stream->out_transfer_func,
+ 				dpp->regamma_params.hw_points_num);
 -- 
 2.43.0
 
