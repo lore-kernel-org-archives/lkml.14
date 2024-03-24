@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDAD215951;
-	Sun, 24 Mar 2024 23:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4766214874;
+	Sun, 24 Mar 2024 23:09:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321753; cv=none; b=mUgDrD152HRh8FLEgm8kPNoWn3ITge8QTJ7TL85hRG23V4dvCetKcgG8f8GOzCJHii2bvTpbjnpIFdt8u/OXlPH4H4BDtFrKwq7t/7f5rcoNDIIi0LL9DD+VpcHq0UcpiTSn4yH9GYnF8uf86ElF7tuEAbDSdMm0RPYdo4iXTo8=
+	t=1711321741; cv=none; b=tGpy5WBdzf0d+Kj1BY6VuHOrBeFBdFcyW3Yd+7MFUbo2wHwpFOeC/kiun1F82bntHJv9LYTPQIiCfhS2gRXpNvjgSzluRJOVNSLwd9guefCJmzPmZsmEzWZJBbEZYjhgT+NAqriQ+NhHW4unu+wUWQImHYgWeuj6yWnUl7B43b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321753; c=relaxed/simple;
-	bh=VRyHqkwnrWOxKYONL7l3ggEL9OY/Mc3b+ogGjCd+mZA=;
+	s=arc-20240116; t=1711321741; c=relaxed/simple;
+	bh=psJ3irOLYH25g8K1Sd101K+gyJfjpXuJRvWkmQfSqCg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b1oPEGwwLaocp0rbMvEpjd+sPypMWEmPhABZpQn3JHltP9tudFWCiRV/DSZWPbkpkAx7wz8uqzS9hhWlTs3cNRYNIaBU0X9/oc3KLTvqq5kFyjATWdx9GUQQNDZh6N7kRBgIOgK734ZuMK3QsWzFlj/tG/gKjAJOiW3mat/PCBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hsfR1RPi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XJ7IIgbn0NU5aujslbg5WkRZpfbGjAf69QCm9v7pcc7xuZPJEO84stxHETO0UY7pbfZnKicpZuFD6SbfamX52dORfNsuR5G/j0ynJz88sYUCFQ4RIp9UurPdb6SihG+4V9Wt1Wqe3JzJkPTgvn3sobTOkByGaCZ5qsm8T+Yhw1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pLGzaQ05; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hsfR1RPi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB3B5C43390;
-	Sun, 24 Mar 2024 23:09:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLGzaQ05"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8231C433F1;
+	Sun, 24 Mar 2024 23:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321751;
-	bh=VRyHqkwnrWOxKYONL7l3ggEL9OY/Mc3b+ogGjCd+mZA=;
+	s=k20201202; t=1711321741;
+	bh=psJ3irOLYH25g8K1Sd101K+gyJfjpXuJRvWkmQfSqCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hsfR1RPiHZR6Lws37b/kSpgaZ2cXCRWWS85WADj1gs9eYSZcRvtg+AZpwNfVx7LFB
-	 P8yRzErdLIanlbpt4btrkoNB3pWqb+XTprZqWYJsQm/r9Q451rzxH2UVpYnYWEc56j
-	 /V0Aqi770PE8F8rGGKQs5Yn+6aAk2snVfcesRVQHMKFF7Zcx0AbjnY+pfvZwWDmzMK
-	 O3NW2RIALloZtbrlCG6DhYIUSKbhAvKc3QJ8N6ByEZ55wb+7AJmT0jAttHrUY8U5vv
-	 d+dOuhQawRhWnqbXzGloYrmoL7h/HUxPIE7eyLWTqMr5UuFSiutNdrKTH3/h6EKfLc
-	 d/OTRsNVyONQg==
+	b=pLGzaQ05M3tM0EWCS32H+/1HUz+iUgKLfUhQlwI2kO0F131u8Z/AIJYNYKLpbTgq8
+	 ud/jpBV7i+M+86wgsGPRvyMyi+EY29HjOmh8v6c9IXz/JiUS8z7CPD1VCm698etJmI
+	 Y0yu8hPkdBFz1z5nuVjI2XTwbUe4X3ziBKsWS5BsUgqIK3WC6nfi5+eXJTIqzckorw
+	 Asxfwgp71Jaln7m6naiFb7mqTb0hECCnGfp5h02GcmuJInABAhzGhXHSeTeuPbNcHB
+	 oeyb7Wm28Re+lK3Li1x/5PnX7vBB3Xh7YwdUYCSw/KLcEPc5AVbzzZ1wQj5tnuHZk1
+	 tkVeS+Q3iDjkw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Changbin Du <changbin.du@huawei.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Xiaoyi Su <suxiaoyi@huawei.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
+Cc: Asad Kamal <asad.kamal@amd.com>,
+	Lijo Lazar <lijo.lazar@amd.com>,
+	Le Ma <le.ma@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 479/638] modules: wait do_free_init correctly
-Date: Sun, 24 Mar 2024 18:58:36 -0400
-Message-ID: <20240324230116.1348576-480-sashal@kernel.org>
+Subject: [PATCH 6.6 469/638] drm/amd/pm: Fix esm reg mask use to get pcie speed
+Date: Sun, 24 Mar 2024 18:58:26 -0400
+Message-ID: <20240324230116.1348576-470-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -51,123 +50,72 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Changbin Du <changbin.du@huawei.com>
+From: Asad Kamal <asad.kamal@amd.com>
 
-[ Upstream commit 8f8cd6c0a43ed637e620bbe45a8d0e0c2f4d5130 ]
+[ Upstream commit b485b899e5b8f83723833feca30a1a1e3df778df ]
 
-The synchronization here is to ensure the ordering of freeing of a module
-init so that it happens before W+X checking.  It is worth noting it is not
-that the freeing was not happening, it is just that our sanity checkers
-raced against the permission checkers which assume init memory is already
-gone.
+Fix mask used for esm ctrl register to get pcie link
+speed on smu_v11_0_3, smu_v13_0_2 & smu_v13_0_6
 
-Commit 1a7b7d922081 ("modules: Use vmalloc special flag") moved calling
-do_free_init() into a global workqueue instead of relying on it being
-called through call_rcu(..., do_free_init), which used to allowed us call
-do_free_init() asynchronously after the end of a subsequent grace period.
-The move to a global workqueue broke the gaurantees for code which needed
-to be sure the do_free_init() would complete with rcu_barrier().  To fix
-this callers which used to rely on rcu_barrier() must now instead use
-flush_work(&init_free_wq).
-
-Without this fix, we still could encounter false positive reports in W+X
-checking since the rcu_barrier() here can not ensure the ordering now.
-
-Even worse, the rcu_barrier() can introduce significant delay.  Eric
-Chanudet reported that the rcu_barrier introduces ~0.1s delay on a
-PREEMPT_RT kernel.
-
-  [    0.291444] Freeing unused kernel memory: 5568K
-  [    0.402442] Run /sbin/init as init process
-
-With this fix, the above delay can be eliminated.
-
-Link: https://lkml.kernel.org/r/20240227023546.2490667-1-changbin.du@huawei.com
-Fixes: 1a7b7d922081 ("modules: Use vmalloc special flag")
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
-Tested-by: Eric Chanudet <echanude@redhat.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Xiaoyi Su <suxiaoyi@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Fixes: 511a95552ec8 ("drm/amd/pm: Add SMU 13.0.6 support")
+Fixes: c05d1c401572 ("drm/amd/swsmu: add aldebaran smu13 ip support (v3)")
+Fixes: f1c378593153 ("drm/amd/powerplay: add Arcturus support for gpu metrics export")
+Signed-off-by: Asad Kamal <asad.kamal@amd.com>
+Reviewed-by: Lijo Lazar <lijo.lazar@amd.com>
+Reviewed-by: Le Ma <le.ma@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/moduleloader.h | 8 ++++++++
- init/main.c                  | 5 +++--
- kernel/module/main.c         | 9 +++++++--
- 3 files changed, 18 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c    | 4 ++--
+ drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c   | 4 ++--
+ drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/moduleloader.h b/include/linux/moduleloader.h
-index 001b2ce83832e..89b1e0ed98114 100644
---- a/include/linux/moduleloader.h
-+++ b/include/linux/moduleloader.h
-@@ -115,6 +115,14 @@ int module_finalize(const Elf_Ehdr *hdr,
- 		    const Elf_Shdr *sechdrs,
- 		    struct module *mod);
+diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c
+index 704a2b577a0e2..4c58c2cd26d88 100644
+--- a/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c
++++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c
+@@ -2356,8 +2356,8 @@ static uint16_t arcturus_get_current_pcie_link_speed(struct smu_context *smu)
  
-+#ifdef CONFIG_MODULES
-+void flush_module_init_free_work(void);
-+#else
-+static inline void flush_module_init_free_work(void)
-+{
-+}
-+#endif
-+
- /* Any cleanup needed when module leaves. */
- void module_arch_cleanup(struct module *mod);
+ 	/* TODO: confirm this on real target */
+ 	esm_ctrl = RREG32_PCIE(smnPCIE_ESM_CTRL);
+-	if ((esm_ctrl >> 15) & 0x1FFFF)
+-		return (uint16_t)(((esm_ctrl >> 8) & 0x3F) + 128);
++	if ((esm_ctrl >> 15) & 0x1)
++		return (uint16_t)(((esm_ctrl >> 8) & 0x7F) + 128);
  
-diff --git a/init/main.c b/init/main.c
-index e24b0780fdff7..9e6ab6d593bd8 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -88,6 +88,7 @@
- #include <linux/sched/task_stack.h>
- #include <linux/context_tracking.h>
- #include <linux/random.h>
-+#include <linux/moduleloader.h>
- #include <linux/list.h>
- #include <linux/integrity.h>
- #include <linux/proc_ns.h>
-@@ -1402,11 +1403,11 @@ static void mark_readonly(void)
- 	if (rodata_enabled) {
- 		/*
- 		 * load_module() results in W+X mappings, which are cleaned
--		 * up with call_rcu().  Let's make sure that queued work is
-+		 * up with init_free_wq. Let's make sure that queued work is
- 		 * flushed so that we don't hit false positives looking for
- 		 * insecure pages which are W+X.
- 		 */
--		rcu_barrier();
-+		flush_module_init_free_work();
- 		mark_rodata_ro();
- 		rodata_test();
- 	} else
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 98fedfdb8db52..34d9e718c2c7d 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -2486,6 +2486,11 @@ static void do_free_init(struct work_struct *w)
- 	}
+ 	return smu_v11_0_get_current_pcie_link_speed(smu);
  }
+diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
+index 08fff9600bd29..5afd03e42bbfc 100644
+--- a/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
++++ b/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
+@@ -1720,8 +1720,8 @@ static int aldebaran_get_current_pcie_link_speed(struct smu_context *smu)
  
-+void flush_module_init_free_work(void)
-+{
-+	flush_work(&init_free_wq);
-+}
-+
- #undef MODULE_PARAM_PREFIX
- #define MODULE_PARAM_PREFIX "module."
- /* Default value for module->async_probe_requested */
-@@ -2590,8 +2595,8 @@ static noinline int do_init_module(struct module *mod)
- 	 * Note that module_alloc() on most architectures creates W+X page
- 	 * mappings which won't be cleaned up until do_free_init() runs.  Any
- 	 * code such as mark_rodata_ro() which depends on those mappings to
--	 * be cleaned up needs to sync with the queued work - ie
--	 * rcu_barrier()
-+	 * be cleaned up needs to sync with the queued work by invoking
-+	 * flush_module_init_free_work().
- 	 */
- 	if (llist_add(&freeinit->node, &init_free_list))
- 		schedule_work(&init_free_wq);
+ 	/* TODO: confirm this on real target */
+ 	esm_ctrl = RREG32_PCIE(smnPCIE_ESM_CTRL);
+-	if ((esm_ctrl >> 15) & 0x1FFFF)
+-		return (((esm_ctrl >> 8) & 0x3F) + 128);
++	if ((esm_ctrl >> 15) & 0x1)
++		return (((esm_ctrl >> 8) & 0x7F) + 128);
+ 
+ 	return smu_v13_0_get_current_pcie_link_speed(smu);
+ }
+diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c
+index 24d6811438c5c..6a28f8d5bff7d 100644
+--- a/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c
++++ b/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c
+@@ -1941,8 +1941,8 @@ static int smu_v13_0_6_get_current_pcie_link_speed(struct smu_context *smu)
+ 
+ 	/* TODO: confirm this on real target */
+ 	esm_ctrl = RREG32_PCIE(smnPCIE_ESM_CTRL);
+-	if ((esm_ctrl >> 15) & 0x1FFFF)
+-		return (((esm_ctrl >> 8) & 0x3F) + 128);
++	if ((esm_ctrl >> 15) & 0x1)
++		return (((esm_ctrl >> 8) & 0x7F) + 128);
+ 
+ 	speed_level = (RREG32_PCIE(smnPCIE_LC_SPEED_CNTL) &
+ 		PCIE_LC_SPEED_CNTL__LC_CURRENT_DATA_RATE_MASK)
 -- 
 2.43.0
 
