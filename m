@@ -1,42 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B187178CDC;
-	Sun, 24 Mar 2024 23:39:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB373178CE4;
+	Sun, 24 Mar 2024 23:39:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323579; cv=none; b=lzgBWUS7ncQssMK2Jl/x/lSYP2gO3umjXVITqRPgPQ8UDtKB759Quro9p2mcNpVdvgkZ/Xt0zDTzNIrB6WlysWCMT93BUy4qC+g0uaqdt2jl5iMFz/jv9VbFxZ2wsr4Vxhv8byYtuZmcL4z57OJl0XIKPXWc4+L5vMhb0DsCDpg=
+	t=1711323581; cv=none; b=go9SMRN9Qgt8fjEDonSfzxvBA/fXT29kKw0qq2xfmY5Abch9/9sE/ynR833hyXHH2raGnBaUEXkwp1utwc/jg38TZddcKVH156Oes+m0STkjHhjjKJiTx+QkSMUZGj+CxWMdnJ0A4RZZOwpm5Ho50JlWldFAu9pbOq7i3ALXBd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323579; c=relaxed/simple;
-	bh=8ZKUgi6Zm68D4WzC4t+cU2OxTpDWbRbA9/z+ZTeTjWQ=;
+	s=arc-20240116; t=1711323581; c=relaxed/simple;
+	bh=8sKYSQluEn4/6PGtEguJVZQDs38YzlkO6eJZQg/af0c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PGk1NnY0tLm9sTi0bFMoLcq9dEuwjNBmgrRGWEAORdPml+st+pSt1ETKhso+gFS0ySMhVayuEI+qTT1maYyABo3oNlKXzeRp2e5pJ2uuUyWBWvMri9FNQBigUPSHbgUkeJpffDkPLVMrHhdahNZ09GAygp/aO6Pe8KECqmjzb4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkGn5Fc+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BHWVuZWxm6+we4gQaW+fv12fnlgD2rkIanH8DSidfnXX/3/bFeWfO/TVJeogRHkkQYmh1PTt5sGJhfEXfqOi0NHOaZmY3G8aIodIY+qjoDfEsCJE9nA46ClByvO9M8paLTdA9X1A1fzlNs3C7KEssokXlXU2U3MpWDmoE/g1/4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHaydREE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkGn5Fc+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FE1FC43390;
-	Sun, 24 Mar 2024 23:39:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHaydREE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C2FDC433F1;
+	Sun, 24 Mar 2024 23:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323579;
-	bh=8ZKUgi6Zm68D4WzC4t+cU2OxTpDWbRbA9/z+ZTeTjWQ=;
+	s=k20201202; t=1711323580;
+	bh=8sKYSQluEn4/6PGtEguJVZQDs38YzlkO6eJZQg/af0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dkGn5Fc+/RBxXR8DBGprckP5kxVjYKQY5Pvb7cEehL3i2PM1z4OnWL4bHqT5WV/bJ
-	 Nyv3JXJgEQMRT34QLwS10+EL48ydnjxzdPcaKcSS6s4Y31/CPm0nY8b8p8w9K2CFGI
-	 nP7V76wIcjVCxC5/dC4Lzn0tV11p6J1FPyMGt6H5huth3MVFUu7WG/7ZCBUByYIrqA
-	 jnLPQAPAW6NqXNTzeOFQSjxCrWn6G56i3n5RLZ0P6cmHS/eSOZocH8wikS+j2bjXEA
-	 tWRoEHi4QYOfa2MWD4ONIAYAv+yua4oWXVp3DDxzmrwEXa1ElFavNRaLbNT8DZuIOS
-	 Iyfy3xGFSk5ZQ==
+	b=UHaydREEwD2atOaSHpCTaHZfodCdsj0dNkV62a6m1nBHNfcRbL3/VmJ2/Ki+AYoFF
+	 CrUQCMmU9THywIl33G4KoR61mALzZ0gHw3uc/1K0IpQSn6LG55IjNU08t7S/GIxzLA
+	 84KelNdKovLabCV2gCE92LENSgqgpE2B29tUckpE0GDQ3FEcinp3hbeVahSWBSlurX
+	 0LDU8wuXcuJFyV+3GUHScMzT5a3G0IO/PSq7zCVaI6SE0OSt99lfNE/2EUFMsEl+tK
+	 9O5F8mP0ETceOwjbIlbuH71fYajwYebvskeRpNoRj1J7wEl44tUIHYfHa6+T5SDW2c
+	 YkMs0sxzgOynw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Alex Elder <elder@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 285/317] staging: greybus: fix get_channel_from_mode() failure path
-Date: Sun, 24 Mar 2024 19:34:25 -0400
-Message-ID: <20240324233458.1352854-286-sashal@kernel.org>
+Subject: [PATCH 5.15 287/317] io_uring: don't save/restore iowait state
+Date: Sun, 24 Mar 2024 19:34:27 -0400
+Message-ID: <20240324233458.1352854-288-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,52 +47,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dan Carpenter <dan.carpenter@linaro.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 34164202a5827f60a203ca9acaf2d9f7d432aac8 ]
+[ Upstream commit 6f0974eccbf78baead1735722c4f1ee3eb9422cd ]
 
-The get_channel_from_mode() function is supposed to return the channel
-which matches the mode.  But it has a bug where if it doesn't find a
-matching channel then it returns the last channel.  It should return
-NULL instead.
+This kind of state is per-syscall, and since we're doing the waiting off
+entering the io_uring_enter(2) syscall, there's no way that iowait can
+already be set for this case. Simplify it by setting it if we need to,
+and always clearing it to 0 when done.
 
-Also remove an unnecessary NULL check on "channel".
-
-Fixes: 2870b52bae4c ("greybus: lights: add lights implementation")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Reviewed-by: Alex Elder <elder@linaro.org>
-Link: https://lore.kernel.org/r/379c0cb4-39e0-4293-8a18-c7b1298e5420@moroto.mountain
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 7b72d661f1f2 ("io_uring: gate iowait schedule on having pending requests")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/greybus/light.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ io_uring/io_uring.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
-index 87d36948c6106..c6bd86a5335ab 100644
---- a/drivers/staging/greybus/light.c
-+++ b/drivers/staging/greybus/light.c
-@@ -100,15 +100,15 @@ static struct led_classdev *get_channel_cdev(struct gb_channel *channel)
- static struct gb_channel *get_channel_from_mode(struct gb_light *light,
- 						u32 mode)
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index 386b32e6fd9a8..a51429c0342e0 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -7815,7 +7815,7 @@ static inline int io_cqring_wait_schedule(struct io_ring_ctx *ctx,
+ 					  struct io_wait_queue *iowq,
+ 					  ktime_t *timeout)
  {
--	struct gb_channel *channel = NULL;
-+	struct gb_channel *channel;
- 	int i;
+-	int io_wait, ret;
++	int ret;
  
- 	for (i = 0; i < light->channels_count; i++) {
- 		channel = &light->channels[i];
--		if (channel && channel->mode == mode)
--			break;
-+		if (channel->mode == mode)
-+			return channel;
- 	}
--	return channel;
-+	return NULL;
+ 	/* make sure we run task_work before checking for signals */
+ 	ret = io_run_task_work_sig();
+@@ -7830,13 +7830,12 @@ static inline int io_cqring_wait_schedule(struct io_ring_ctx *ctx,
+ 	 * can take into account that the task is waiting for IO - turns out
+ 	 * to be important for low QD IO.
+ 	 */
+-	io_wait = current->in_iowait;
+ 	if (current_pending_io())
+ 		current->in_iowait = 1;
+ 	ret = 1;
+ 	if (!schedule_hrtimeout(timeout, HRTIMER_MODE_ABS))
+ 		ret = -ETIME;
+-	current->in_iowait = io_wait;
++	current->in_iowait = 0;
+ 	return ret;
  }
  
- static int __gb_lights_flash_intensity_set(struct gb_channel *channel,
 -- 
 2.43.0
 
