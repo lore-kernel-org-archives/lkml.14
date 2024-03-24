@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9545121854C;
-	Sun, 24 Mar 2024 23:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8223A218538;
+	Sun, 24 Mar 2024 23:09:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321795; cv=none; b=AvdyeCLfxjt7SJAkYeVktjkC7jPfe3zNlnO+TRDsI2tbQkLnPY4CEtW1isbViKp5ZRtOp/KxdjrKsycpKHeMob4DCrmeKYjPRYjdoU1uL87cLHi9WpuL9nRzNTuNvwYJ0W6mhsZCli9bcLG8ocTzHSy72e/8xgVKFtoaTIv67uk=
+	t=1711321789; cv=none; b=CGTQWzO0rXcN6iIPN6oUy5oQGBzXdrytLdNAquMGmAn/gkEKubBe6AqN0MzTdNNAHl957+VXvcUta8BN2QGYIb44etozaZWzwjCHRB05ZjK8mz682VDZ4LkAEZ5lArMSnXlUDNO8ykrSdx6/pWlKqs1FtWlbsEE7qqDfd9K/yug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321795; c=relaxed/simple;
-	bh=61ig6KY+3rHTaiDAJSpLkvKKNyy/0dKRoB4HO5zjqVo=;
+	s=arc-20240116; t=1711321789; c=relaxed/simple;
+	bh=9VqlHXKMnFlXG02wYOr54FZmu6yF+7WTnK+ViQ0gdOM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tDR9zPoKL5wdmZFwU+Ehj3AcsxM0coVN1stvLKAknoPIDgM97ZfzKAexaG8AO3qPmkD6vKHFTRkWSZx+U778rWsdA0bP2hYt6V1j6BxVbrA6jWInFfi/8/W5Z+nTTdgSfuSVL2GeAtCLy5njDAmrG4ai5FDe6lWt2V29xvVjdFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLuGYgPN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jppXNIaeZSUY/9fpPBrQ+vOtRcujvgbwJLY0p5r+OjUr8Zjsj3mYoKp0nkLQX8FG/1BcjGeEDeoWc/elj9z2oAKTu14OXlLn8fNjHnx9WsRFMcuLVNW9AP2f3hdq5Isf9rPvJ/26XVDi7eoBpzVHbFgBfFcSegJRDXGG8YwxtQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJw427EJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLuGYgPN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E52C433F1;
-	Sun, 24 Mar 2024 23:09:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJw427EJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7B32C43394;
+	Sun, 24 Mar 2024 23:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321795;
-	bh=61ig6KY+3rHTaiDAJSpLkvKKNyy/0dKRoB4HO5zjqVo=;
+	s=k20201202; t=1711321789;
+	bh=9VqlHXKMnFlXG02wYOr54FZmu6yF+7WTnK+ViQ0gdOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sLuGYgPN2QrPtPoq8NzgvhLq8n+BX7Mtzq6HNL1dH3RlbkuFgf9Z81vq6uZOWvOHl
-	 IYo0smqp6rWwzlj/twCWfW1QGa/GZSjx/2xjrVCDaUZ7Ok1CL40jPj/yVmHjueU53Z
-	 +KI8AHlKya0RmOwhlMLr4kX+G+eMCZ+B9ia4NwFVq150AmaFRs4cRpescGCfXILmvG
-	 1ZLNwxj4GO9yo9u/R1xzoXzGsD1gBHZZwFSkAFT9fMtejtPJNDkSFSB+QN3RUs0OWN
-	 qKHeHKCA0PQR0sacMaoeEqZtYajEIN5/+AuuH2+uAQmf4vwGS+GypTmDFAP5FEZ9cE
-	 XLgUnzrTarPNQ==
+	b=SJw427EJ/cSxKEzJSQfuQwMnvdzDsQDUDU8sfmFEzz3Z/pYUZS4F+Z8yE+oo04+WL
+	 3EsL9VuQvhvVVQrmagsf8IPJMasDpCLf+fbaDCLJfeDX1HmGvbMrjG68Mj6PxFDnbR
+	 Tlx4Zj35t5XCF/5t+SpEv3cOFnIYkl0MFK5dpWeMptfJ8/mbhQ1s8Sx9CebnU9Xq1T
+	 CfFBYEPRA1K+a/SNUtVx7Gn7mEg52Pm/7jS3A2CG/+n5JeukRxqxMv8finJJJB6uPZ
+	 REmU7dfS+Ab1+z27q8NEtGYhnZssj+qxVxtf0FI9T/3ydl+Pb6PmTfjVbKEcdM962m
+	 EWYDkYmCSdyIw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dylan Hung <dylan_hung@aspeedtech.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Cc: Chao Yu <chao@kernel.org>,
+	Daeho Jeong <daehojeong@google.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 523/638] i3c: dw: Disable IBI IRQ depends on hot-join and SIR enabling
-Date: Sun, 24 Mar 2024 18:59:20 -0400
-Message-ID: <20240324230116.1348576-524-sashal@kernel.org>
+Subject: [PATCH 6.6 517/638] f2fs: fix to remove unnecessary f2fs_bug_on() to avoid panic
+Date: Sun, 24 Mar 2024 18:59:14 -0400
+Message-ID: <20240324230116.1348576-518-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,39 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dylan Hung <dylan_hung@aspeedtech.com>
+From: Chao Yu <chao@kernel.org>
 
-[ Upstream commit 10201396ef6455a68ac671fa0163205d327ebb70 ]
+[ Upstream commit b896e302f79678451a94769ddd9e52e954c64fbb ]
 
-Disable IBI IRQ signal and status only when hot-join and SIR enabling of
-all target devices attached to the bus are disabled.
+verify_blkaddr() will trigger panic once we inject fault into
+f2fs_is_valid_blkaddr(), fix to remove this unnecessary f2fs_bug_on().
 
-Fixes: e389b1d72a62 ("i3c: dw: Add support for in-band interrupts")
-
-Signed-off-by: Dylan Hung <dylan_hung@aspeedtech.com>
-Link: https://lore.kernel.org/r/20240119054547.983693-1-dylan_hung@aspeedtech.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 18792e64c86d ("f2fs: support fault injection for f2fs_is_valid_blkaddr()")
+Reviewed-by: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i3c/master/dw-i3c-master.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/f2fs/f2fs.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
-index 9332ae5f64190..235235613c1b9 100644
---- a/drivers/i3c/master/dw-i3c-master.c
-+++ b/drivers/i3c/master/dw-i3c-master.c
-@@ -1163,8 +1163,10 @@ static void dw_i3c_master_set_sir_enabled(struct dw_i3c_master *master,
- 		global = reg == 0xffffffff;
- 		reg &= ~BIT(idx);
- 	} else {
--		global = reg == 0;
-+		bool hj_rejected = !!(readl(master->regs + DEVICE_CTRL) & DEV_CTRL_HOT_JOIN_NACK);
-+
- 		reg |= BIT(idx);
-+		global = (reg == 0xffffffff) && hj_rejected;
- 	}
- 	writel(reg, master->regs + IBI_SIR_REQ_REJECT);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 8e5df06e9bb2c..2e2792a49de0f 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3460,11 +3460,9 @@ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
+ static inline void verify_blkaddr(struct f2fs_sb_info *sbi,
+ 					block_t blkaddr, int type)
+ {
+-	if (!f2fs_is_valid_blkaddr(sbi, blkaddr, type)) {
++	if (!f2fs_is_valid_blkaddr(sbi, blkaddr, type))
+ 		f2fs_err(sbi, "invalid blkaddr: %u, type: %d, run fsck to fix.",
+ 			 blkaddr, type);
+-		f2fs_bug_on(sbi, 1);
+-	}
+ }
  
+ static inline bool __is_valid_data_blkaddr(block_t blkaddr)
 -- 
 2.43.0
 
