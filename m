@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE132853C4;
-	Sun, 24 Mar 2024 23:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4372853D5;
+	Sun, 24 Mar 2024 23:43:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323822; cv=none; b=jctRRdfpI6WXnrvOENVIfj2ydE1/+c1ZjcydrN93R2Bn5UKGNh+d8ru+26fheQfUdxFoCnMpbGBFIlyX95Lrrfr1s+6L2P6Vv17pNiCW6yv7pLegloCLvUrwdQJ0qdRAgUiHzJElmBbQNsGw9iX9NnbDfL5oYMeufGmcrmESbWI=
+	t=1711323825; cv=none; b=tkVVlwvOhJrMnzv8UsHiq3LHCoeFfKqq4LsL/ijvQ0hDQ0ILtyS2IeXM1eE5I1oQ42AvlUiFrek0Kw5cfBmNHGd2sippjH4hqYViDJV0DKXo0A4gT8i/T4F4zlOER8qduNWpefGoZRSGUbaXiqU58urZ9325UweQRxOR8e5Mang=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323822; c=relaxed/simple;
-	bh=1HX/XtXY9tKoIkbNvy21lYq1+GU7W/u60Q5A+0A38Ok=;
+	s=arc-20240116; t=1711323825; c=relaxed/simple;
+	bh=FsAsu3Rw+37tte4cZ220/4DO2pAOdj6r1oAecyz+6cA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GZpsqlX24YL/1MaKpFxhPvSsm2DBOAmzFeWzqe/853/BcySUv9tvzG6uvHuoX63N6raFnZxowKYVSP3IY2CHvaMR/hdaH9zt0vyXqWc172DgW2CpH4u+hvt3QCAXS4BkaAFEDHbEYg1dS0I5UvmZoJC0fU3y9UB3SMIYWKSXtNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAb0BSop; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=np6suZsfFOSJxqsGyN6WKjiPqWQP69goGc18XQ+bHsIU7rF1Q8U5cgig1MyT3FLKzu7d+NqdwzPlJnmrfV3O/klR40F0TVTtfZ6xk8k6Hoe1QuSu2GDcLEsPj0F7yU9oWFQkOxM8yKyurPv4un1ZPLpUs1DFc69NzkYuscIFgww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnEPUnxW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAb0BSop"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D35CFC433C7;
-	Sun, 24 Mar 2024 23:43:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnEPUnxW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CECF2C43394;
+	Sun, 24 Mar 2024 23:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323822;
-	bh=1HX/XtXY9tKoIkbNvy21lYq1+GU7W/u60Q5A+0A38Ok=;
+	s=k20201202; t=1711323824;
+	bh=FsAsu3Rw+37tte4cZ220/4DO2pAOdj6r1oAecyz+6cA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uAb0BSopGYh8f+pI3MyPiuEndSKCtiluacQKI5FA28HDthvTCjlthv3nOQr0OeeDo
-	 0J5ZSrH6lKELxMQM7dETjv3NgYhT7d0dd+b9zylNIqFsbffkDdV87nYxXtItDqZmoe
-	 FDr+y0G890M/PlDg4R/S9KvBfhnNkdPUs6BN0Fg+x8rZD3lLD8OqIEEkxu9x8AGcxR
-	 5eJEauHUCX9dhSwH1YSlxriQ0oJWTRuelCNFd2e3PASUGWCTTFQtUgAtKF8MZ21jCo
-	 lugU8peUCnnONbrULMtj3NW/0iyPuCrfxwAY/egSnvUFqirG65IAcj15YDO6d+ijed
-	 vcLVPtmMVGejg==
+	b=BnEPUnxWpGMoHlEjuHXNchEqgDtqcJp9c6DBl2Gj9KD/LqmoA6zZ5AjIJ0WrmInQ/
+	 z9Fc/7YK610BEhHVGueScvySyEzSv6MSY8smiig0Xs73UEMEFoht87T6eo2sIiKC8/
+	 IrCjiBdyLwIWBjwR2ZKMUcvyLa1pBAhi4VWK82kR9utaM9HTY7Bif8dkMdEvKV3LAo
+	 fd3vkE9pA4ltjDQX7chnhteFxVNkwn+G/6StcvXWdkSgxxsZd1zAvGOzSDRgQ5/HX1
+	 S1irvyr5lsQj5H1+/O/XbvKgZ4VNBrYsbvQ0YKcGGGWjq6qYxOrIRKme1kx+om2/E5
+	 Ngla5p8Xgk0Kw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ben Wolsieffer <ben.wolsieffer@hefring.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
+Cc: David Howells <dhowells@redhat.com>,
+	Markus Suvanto <markus.suvanto@gmail.com>,
+	Jeffrey E Altman <jaltman@auristor.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	linux-afs@lists.infradead.org,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 201/238] watchdog: stm32_iwdg: initialize default timeout
-Date: Sun, 24 Mar 2024 19:39:49 -0400
-Message-ID: <20240324234027.1354210-202-sashal@kernel.org>
+Subject: [PATCH 5.10 203/238] afs: Revert "afs: Hide silly-rename files from userspace"
+Date: Sun, 24 Mar 2024 19:39:51 -0400
+Message-ID: <20240324234027.1354210-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,57 +52,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ben Wolsieffer <ben.wolsieffer@hefring.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit dbd7c0088b7f44aa0b9276ed3449df075a7b5b54 ]
+[ Upstream commit 0aec3847d044273733285dcff90afda89ad461d2 ]
 
-The driver never sets a default timeout value, therefore it is
-initialized to zero. When CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is
-enabled, the watchdog is started during probe. The kernel is supposed to
-automatically ping the watchdog from this point until userspace takes
-over, but this does not happen if the configured timeout is zero. A zero
-timeout causes watchdog_need_worker() to return false, so the heartbeat
-worker does not run and the system therefore resets soon after the
-driver is probed.
+This reverts commit 57e9d49c54528c49b8bffe6d99d782ea051ea534.
 
-This patch fixes this by setting an arbitrary non-zero default timeout.
-The default could be read from the hardware instead, but I didn't see
-any reason to add this complexity.
+This undoes the hiding of .__afsXXXX silly-rename files.  The problem with
+hiding them is that rm can't then manually delete them.
 
-This has been tested on an STM32F746.
+This also reverts commit 5f7a07646655fb4108da527565dcdc80124b14c4 ("afs: Fix
+endless loop in directory parsing") as that's a bugfix for the above.
 
-Fixes: 85fdc63fe256 ("drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at probe")
-Signed-off-by: Ben Wolsieffer <ben.wolsieffer@hefring.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20240228182723.12855-1-ben.wolsieffer@hefring.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fixes: 57e9d49c5452 ("afs: Hide silly-rename files from userspace")
+Reported-by: Markus Suvanto <markus.suvanto@gmail.com>
+Link: https://lists.infradead.org/pipermail/linux-afs/2024-February/008102.html
+Signed-off-by: David Howells <dhowells@redhat.com>
+Link: https://lore.kernel.org/r/3085695.1710328121@warthog.procyon.org.uk
+Reviewed-by: Jeffrey E Altman <jaltman@auristor.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/stm32_iwdg.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/afs/dir.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-index 25188d6bbe152..16dd1aab7c676 100644
---- a/drivers/watchdog/stm32_iwdg.c
-+++ b/drivers/watchdog/stm32_iwdg.c
-@@ -21,6 +21,8 @@
- #include <linux/platform_device.h>
- #include <linux/watchdog.h>
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index 88f0e719c6ac0..a59d6293a32b2 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -418,16 +418,6 @@ static int afs_dir_iterate_block(struct afs_vnode *dvnode,
+ 			continue;
+ 		}
  
-+#define DEFAULT_TIMEOUT 10
-+
- /* IWDG registers */
- #define IWDG_KR		0x00 /* Key register */
- #define IWDG_PR		0x04 /* Prescaler Register */
-@@ -254,6 +256,7 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
- 	wdd->parent = dev;
- 	wdd->info = &stm32_iwdg_info;
- 	wdd->ops = &stm32_iwdg_ops;
-+	wdd->timeout = DEFAULT_TIMEOUT;
- 	wdd->min_timeout = DIV_ROUND_UP((RLR_MIN + 1) * PR_MIN, wdt->rate);
- 	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * wdt->data->max_prescaler *
- 				    1000) / wdt->rate;
+-		/* Don't expose silly rename entries to userspace. */
+-		if (nlen > 6 &&
+-		    dire->u.name[0] == '.' &&
+-		    ctx->actor != afs_lookup_filldir &&
+-		    ctx->actor != afs_lookup_one_filldir &&
+-		    memcmp(dire->u.name, ".__afs", 6) == 0) {
+-			ctx->pos = blkoff + next * sizeof(union afs_xdr_dirent);
+-			continue;
+-		}
+-
+ 		/* found the next entry */
+ 		if (!dir_emit(ctx, dire->u.name, nlen,
+ 			      ntohl(dire->u.vnode),
 -- 
 2.43.0
 
