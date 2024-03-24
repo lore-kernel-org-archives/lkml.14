@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F84204FAA;
-	Sun, 24 Mar 2024 23:04:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6C1204FA2;
+	Sun, 24 Mar 2024 23:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321475; cv=none; b=GSGWEW6azvu+HqUANcaz/nOtv6+5gt+F7IUm35CpbrEESKed7gXhB/ugSVOy/V4zwxD3QK26kQ5LAF2Ez5XbJtSlAmxJe0CWnHIf2RAE1an8LX8Jvxg93jD3itU52miC1I4rorOUwKMECvP1w9W1942QahSMn2w25BYLbYDO3sE=
+	t=1711321477; cv=none; b=RkeIvsp99bhk/gzm6wA/FoGsZ0tlsuY7bwxEqj+zJirgHf7kVHvqdbk+QqeRmiTqd5EWZ3PuTzlU/p37jJz19NQN4NsMjCRiqQWHSsISRdugNO0P7pcrXUCU/8dO6WCuFotTc+0p8aB7Ln3oU81nrwBXM+lcSk8fs5/xjkTonZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321475; c=relaxed/simple;
-	bh=16ZbOH+aD2Acv/vWezeIe7AruriuvaPWKR+oVUm46m8=;
+	s=arc-20240116; t=1711321477; c=relaxed/simple;
+	bh=of02US8bUUeHmltBhwO0q0jgCHO9nnXXigQFqbU83BU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ojZ8E02zksO2Y+9vfIK0xWQRC3u5PG+RxIVKrVfvLAit+RPGE2fCX2waaJTuJ1pyjnNzWoHl9+4qz6bVoO8SLxnVMoEY6f9YbgEcVcrdi0HP8eqrVEvO7WgsgLX3n9k7GloUKEzppJsbjupNc0hdC3duCXEdKOJi2AmhUxORJqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rtiZA/QL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tahdsGNy2gYWWBVeF17boEv0eXKyA50GCEMm3FE9qqKJ476KSVkc2+tKE0bm6XLG6RgrtVZEAGzB+mrrCW4pz7PsB9zUeLSo4TxbXpNjAHivP0i2pMU1fulE9YdHtzCJfPFWlli9UnaJUvQzmfz1aHkDXoXfcLKQdhNw+EszDgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rej8Uvbg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rtiZA/QL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F89C433C7;
-	Sun, 24 Mar 2024 23:04:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rej8Uvbg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AC56C433F1;
+	Sun, 24 Mar 2024 23:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321474;
-	bh=16ZbOH+aD2Acv/vWezeIe7AruriuvaPWKR+oVUm46m8=;
+	s=k20201202; t=1711321475;
+	bh=of02US8bUUeHmltBhwO0q0jgCHO9nnXXigQFqbU83BU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rtiZA/QLBIf6oT36LZiCuih9qgw8lxmF1mBw+5fN95mkQdi9UJtmGsWZGYU9lom1P
-	 65/1pMxH2BCm6NvsG18PLsgl53zQ8rE3FLtstzRgG8j5gmHwam9LQ0adIqr3cVXX/B
-	 tqXnNlzJa+0qQ5OZb/Bbnrw6UDlHEWmzsPXxbmPe3473uOI7262wmVhLnrFrxJQkJY
-	 CTf+wCi6f3ZFj1Vbi8VFkthm5tUi5qJwi4l6T7IN2SlPo/+7A0IdrqcQZgxP8H8lzH
-	 Pm1W0paD2r6+MUDhBX1NfUD1k2a+xAqKOqMewI7u+n8dHfGg3BzxNu4jbZoPp6+8l0
-	 FsJ+yFdfSSGBQ==
+	b=Rej8UvbgwW/JVhS1jMst/WIQpKE86KlUD/b8DRDJu/R72uu/gCnWBbILiOOZSvhZO
+	 XRf9bE9QURobD6FqGH6n7QXPi/phb6xa5oqJlTr7k9txZaelzFUU48V1t/xWReB8Oh
+	 bCthv7iTwzCUm5PyfMfss6BNLJGlD39zWyIerfrgZetPKOb+IX4WVq0yOlms3cCqM/
+	 biYqebNesvil+M+jnpefmqlHTzj6qp+PGBtJJNOPmqmjwA/Qnc360pkvLZ92KqtDku
+	 d9H+MorJLObas/Q6UT0NE5R7pdmIFwvrycTcHuoNbaLuVj5O+Y8jlIGb8u1uGv2BUo
+	 pV3s34hgZ2NbQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Thomas Richter <tmricht@linux.ibm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
+Cc: Petr Machata <petrm@nvidia.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 199/638] s390/pai: fix attr_event_free upper limit for pai device drivers
-Date: Sun, 24 Mar 2024 18:53:56 -0400
-Message-ID: <20240324230116.1348576-200-sashal@kernel.org>
+Subject: [PATCH 6.6 201/638] selftests: forwarding: Add missing config entries
+Date: Sun, 24 Mar 2024 18:53:58 -0400
+Message-ID: <20240324230116.1348576-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,56 +48,81 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Petr Machata <petrm@nvidia.com>
 
-[ Upstream commit 225d09d6e5f3870560665a1829d2db79330b4c58 ]
+[ Upstream commit 4acf4e62cd572b0c806035046b3698f5585ab821 ]
 
-When the device drivers are initialized, a sysfs directory
-is created. This contains many attributes which are allocated with
-kzalloc(). Should it fail, the memory for the attributes already
-created is freed in attr_event_free(). Its second parameter is number
-of attribute elements to delete. This parameter is off by one.
-When i. e. the 10th attribute fails to get created, attributes
-numbered 0 to 9 should be deleted. Currently only attributes
-numbered 0 to 8 are deleted.
+The config file contains a partial kernel configuration to be used by
+`virtme-configkernel --custom'. The presumption is that the config file
+contains all Kconfig options needed by the selftests from the directory.
 
-Fixes: 39d62336f5c1 ("s390/pai: add support for cryptography counters")
-Reported-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+In net/forwarding/config, many are missing, which manifests as spurious
+failures when running the selftests, with messages about unknown device
+types, qdisc kinds or classifier actions. Add the missing configurations.
+
+Tested the resulting configuration using virtme-ng as follows:
+
+ # vng -b -f tools/testing/selftests/net/forwarding/config
+ # vng --user root
+ (within the VM:)
+ # make -C tools/testing/selftests TARGETS=net/forwarding run_tests
+
+Signed-off-by: Petr Machata <petrm@nvidia.com>
+Link: https://lore.kernel.org/r/025abded7ff9cea5874a7fe35dcd3fd41bf5e6ac.1706286755.git.petrm@nvidia.com
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Stable-dep-of: f0ddf15f0a74 ("selftests: forwarding: Add missing multicast routing config entries")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_pai_crypto.c | 2 +-
- arch/s390/kernel/perf_pai_ext.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/forwarding/config | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/arch/s390/kernel/perf_pai_crypto.c b/arch/s390/kernel/perf_pai_crypto.c
-index fe7d1774ded18..4a4e914c283c8 100644
---- a/arch/s390/kernel/perf_pai_crypto.c
-+++ b/arch/s390/kernel/perf_pai_crypto.c
-@@ -646,7 +646,7 @@ static int __init attr_event_init(void)
- 	for (i = 0; i < ARRAY_SIZE(paicrypt_ctrnames); i++) {
- 		ret = attr_event_init_one(attrs, i);
- 		if (ret) {
--			attr_event_free(attrs, i - 1);
-+			attr_event_free(attrs, i);
- 			return ret;
- 		}
- 	}
-diff --git a/arch/s390/kernel/perf_pai_ext.c b/arch/s390/kernel/perf_pai_ext.c
-index c57c1a203256f..b5febe22d0546 100644
---- a/arch/s390/kernel/perf_pai_ext.c
-+++ b/arch/s390/kernel/perf_pai_ext.c
-@@ -607,7 +607,7 @@ static int __init attr_event_init(void)
- 	for (i = 0; i < ARRAY_SIZE(paiext_ctrnames); i++) {
- 		ret = attr_event_init_one(attrs, i);
- 		if (ret) {
--			attr_event_free(attrs, i - 1);
-+			attr_event_free(attrs, i);
- 			return ret;
- 		}
- 	}
+diff --git a/tools/testing/selftests/net/forwarding/config b/tools/testing/selftests/net/forwarding/config
+index 697994a9278bb..ba23435145827 100644
+--- a/tools/testing/selftests/net/forwarding/config
++++ b/tools/testing/selftests/net/forwarding/config
+@@ -6,14 +6,42 @@ CONFIG_IPV6_MULTIPLE_TABLES=y
+ CONFIG_NET_VRF=m
+ CONFIG_BPF_SYSCALL=y
+ CONFIG_CGROUP_BPF=y
++CONFIG_DUMMY=m
++CONFIG_IPV6=y
++CONFIG_IPV6_GRE=m
++CONFIG_MACVLAN=m
+ CONFIG_NET_ACT_CT=m
+ CONFIG_NET_ACT_MIRRED=m
+ CONFIG_NET_ACT_MPLS=m
++CONFIG_NET_ACT_PEDIT=m
++CONFIG_NET_ACT_POLICE=m
++CONFIG_NET_ACT_SAMPLE=m
++CONFIG_NET_ACT_SKBEDIT=m
++CONFIG_NET_ACT_TUNNEL_KEY=m
+ CONFIG_NET_ACT_VLAN=m
+ CONFIG_NET_CLS_FLOWER=m
+ CONFIG_NET_CLS_MATCHALL=m
++CONFIG_NET_CLS_BASIC=m
++CONFIG_NET_EMATCH=y
++CONFIG_NET_EMATCH_META=m
++CONFIG_NET_IPGRE=m
++CONFIG_NET_IPGRE_DEMUX=m
++CONFIG_NET_IPIP=m
++CONFIG_NET_SCH_ETS=m
+ CONFIG_NET_SCH_INGRESS=m
+ CONFIG_NET_ACT_GACT=m
++CONFIG_NET_SCH_PRIO=m
++CONFIG_NET_SCH_RED=m
++CONFIG_NET_SCH_TBF=m
++CONFIG_NET_TC_SKB_EXT=y
++CONFIG_NET_TEAM=y
++CONFIG_NET_TEAM_MODE_LOADBALANCE=y
++CONFIG_NETFILTER=y
++CONFIG_NF_CONNTRACK=m
++CONFIG_NF_FLOW_TABLE=m
++CONFIG_NF_TABLES=m
+ CONFIG_VETH=m
+ CONFIG_NAMESPACES=y
+ CONFIG_NET_NS=y
++CONFIG_VXLAN=m
++CONFIG_XFRM_USER=m
 -- 
 2.43.0
 
