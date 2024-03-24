@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67384839EC;
-	Sun, 24 Mar 2024 22:50:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645061D7907;
+	Sun, 24 Mar 2024 22:50:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320614; cv=none; b=FKueekBddnsY6qaNaPKdimLOgud5Q1OPA1jUpijx5iVRBtaBmC3agtVzGeR+tJLXDoEwnrgngmHRXMB9bQKiVinDOyKVebXTrcnuHXpkdR3xUFmPuWzeBgl+mOdkCQRRk0l6ogPj1sJ0pUzZUlkF47v8Y+4sSFNUr0lfNcjl/3E=
+	t=1711320601; cv=none; b=D/N8YmfDMXY6VmCL91nYuI84Vd8we1wGTbxE/jfZ6x68gO345fSd8k9OVBmSChk9QYN+gJtxC8jYddTr3Ph4VgFTQj9f18g3fZaJx6upGMvk+/jHxe4Kx0L6nR1IDkf7twvqJUkTA2nObrGZ/a51WbJAAAKpW2t4n6YNtH3xGQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320614; c=relaxed/simple;
-	bh=ze5NvR4EfcKhR0fNuwbdLlByKeSoQS9yq6vaY4x24bQ=;
+	s=arc-20240116; t=1711320601; c=relaxed/simple;
+	bh=X7TKjqsL4zk+BSxoRctPiFstPwVin85Sm/10EgBHCfY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PHL/ajKFLFPCPlMANuJ8ZRa2a8ETPVdHoR/FSXm2Oy6d+t1+Zx+ND1URF446DgQ6PcQAWjhDw8I/AxrD8AIkjuacPC/PzF27jQRg1HIrDKWakTi6Az2r0zOVzunSEui8/+nJr3sWa80JUqLM7VRvkh13BPkf7/BpbZguHy9/B64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2WtA+Fu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=r+fMurVoMby3mcGT9prq5nYp77rmR+vn0DI2EcHtThJq4v5HlD0lRxbq5YvCCOYiKGxYGSeWzd3fvZZ1P44PWpOoXxzX8/8PGEGTgzhrvktEkPye5HJ8XkpGUySXbkQ3I67/oHr4qhRQL1Ve5h8WOn1DspMbVhu/Esi0IVwH2Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWk8FhZk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2WtA+Fu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A19BAC43390;
-	Sun, 24 Mar 2024 22:50:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWk8FhZk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77358C433B2;
+	Sun, 24 Mar 2024 22:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320613;
-	bh=ze5NvR4EfcKhR0fNuwbdLlByKeSoQS9yq6vaY4x24bQ=;
+	s=k20201202; t=1711320600;
+	bh=X7TKjqsL4zk+BSxoRctPiFstPwVin85Sm/10EgBHCfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m2WtA+Fuwp82tmvPLNnnu8g72bJQZejJWJuhGaIrf9a6Y8ZRmiJgap+cYOyxt4TbP
-	 ZHpk3HtmDfu2ZnJrsphuvs8ftsABJ8oy03n4lnhUm37idWHAIuJ1j8CwHnS3optNZG
-	 0cBHYvRIuclwaPrYA33kO0TNl1B8s2aQEKgCJOMaFdm/DvxH2n3uaZlyWmWS5Stfe8
-	 K1K0siG3ILxHv4ieIU3XPA74aU94pMkR4x/GPwtwB/m0F7JKJ2NnZXIMIsC0GuGyte
-	 cEhxXKoWtYNMMj+NtV7PmJvj7wyZSG27E/4RgroemiXDtb2VjHJ2NemPI0/qNUQ+1X
-	 1+kUPjJd/AJgw==
+	b=SWk8FhZkzbTZZmMcEJ2fjrcuYconAvVyHZo5Y0dcFVnHEjPmJwaBdvDZxzkwX+RFo
+	 +aJ6Iy4QtmIJnTRMUNdTdYICnWI4S2wEpN/RJ+1/L3/n2UxShskv91NuhP7ZoraRvm
+	 9RwYdvDdyt6Xt6oCr55LjAO0eUahGop8v9n+7incIplPZqpHym1AAUQoPrxaggvFzS
+	 oD84+jNsFI2RJftdORlGabQeEUgjKGj2hTjf5ygUyPWF3GfvqpAaGcfLinYSTbdD8m
+	 IBphZKE7uyHtmE4ou9+3qWlKhGxfjoS8YFaAX2QSwYuk6mb/SNd12txT/xzGFd9Cil
+	 N3Jqx/e25oNoA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Benjamin Berg <benjamin.berg@intel.com>,
+	Ilan Peer <ilan.peer@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 174/713] arm64: dts: imx8mm-kontron: Disable pullups for I2C signals on OSM-S i.MX8MM
-Date: Sun, 24 Mar 2024 18:38:20 -0400
-Message-ID: <20240324224720.1345309-175-sashal@kernel.org>
+Subject: [PATCH 6.7 161/713] wifi: mac80211: use deflink and fix typo in link ID check
+Date: Sun, 24 Mar 2024 18:38:07 -0400
+Message-ID: <20240324224720.1345309-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,53 +50,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Benjamin Berg <benjamin.berg@intel.com>
 
-[ Upstream commit 96293af54f6aa859015d8ca40a1437d3115ad50c ]
+[ Upstream commit e10322810ce0d0d4a5a319458c4e1e052c6fe9be ]
 
-There are external pullup resistors on the board and due to silicon
-errata ERR050080 let's disable the internal ones to prevent any
-unwanted behavior in case they wear out.
+This does not change anything effectively, but it is closer to what the
+code is trying to achieve here. i.e. select the link data if it is an
+MLD and fall back to using the deflink otherwise.
 
-Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 0f99f0878350 ("wifi: mac80211: Print local link address during authentication")
+Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
+Reviewed-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://msgid.link/20240111181514.4c4b1c40eb3c.I2771621dee328c618536596b7e56232df42a79c8@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts | 4 ++--
- arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi   | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ net/mac80211/mlme.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-index 8b16bd68576c0..0730c22e5b6b9 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-@@ -294,8 +294,8 @@ MX8MM_IOMUXC_SAI3_MCLK_GPIO5_IO2		0x19
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index 241e615189244..6cfc07aaa1b6c 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -7502,10 +7502,10 @@ int ieee80211_mgd_auth(struct ieee80211_sub_if_data *sdata,
+ 	if (err)
+ 		goto err_clear;
  
- 	pinctrl_i2c4: i2c4grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL			0x400001c3
--			MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA			0x400001c3
-+			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL			0x40000083
-+			MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA			0x40000083
- 		>;
- 	};
+-	if (req->link_id > 0)
++	if (req->link_id >= 0)
+ 		link = sdata_dereference(sdata->link[req->link_id], sdata);
+ 	else
+-		link = sdata_dereference(sdata->link[0], sdata);
++		link = &sdata->deflink;
  
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
-index 6e75ab879bf59..3e7db968f7e64 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
-@@ -252,8 +252,8 @@ MX8MM_IOMUXC_ECSPI1_SS0_GPIO5_IO9		0x19
- 
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL			0x400001c3
--			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA			0x400001c3
-+			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL			0x40000083
-+			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA			0x40000083
- 		>;
- 	};
- 
+ 	if (WARN_ON(!link)) {
+ 		err = -ENOLINK;
 -- 
 2.43.0
 
