@@ -1,42 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B251FEC6B;
-	Sun, 24 Mar 2024 23:02:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A621FEC57;
+	Sun, 24 Mar 2024 23:02:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321359; cv=none; b=lbAEBNF1biCCV7ACM72SlQHhoN6aXXWk4jy9Vq2grYPSsb1IpAwlvCe20BrsBHZFSc8fb+AG5MNvDdFasleZdGjP1E8170K/GOUybKPhmjSKFAhh3LOjZ/PYzOcrdx0TtbYk7bYL/Q9AFLCGmOhZ8HoYXsTcX76eGHN9wBz+ErA=
+	t=1711321357; cv=none; b=BT0jtAUN/DHjlUlNQasVLS3JQxTH+9GZm7v2KE6kSYaEhwr7Gvrq7KaTe19unsy0GCVI2jxkWsfS0PMIbYlb/MD5zq7DrvihfJS/CM1jjJXwN2I+KKisvm1Va1tSkhM8HKerQ2eCoRGVZWD/rfOuCgM0CRChEZwaA5vZP7VxSvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321359; c=relaxed/simple;
-	bh=aArt0ecVKv1x3uKidFVlDH6gZHaPAKnhEVj+hI42SJU=;
+	s=arc-20240116; t=1711321357; c=relaxed/simple;
+	bh=d27Wlxo7LW/OPlWiQL7BRxlIURlkj4LhLWUZy3m8rOE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BS7cyl9k4uk/l+FbT5dqlrvKlPtkOJEIzXX10b4xj9Y/BMNfRi+DHODdYiVCVBGRXuzZxgVk3JKRC+83uGo1+zgn9bLnWgiNnhhjjXrngnWjUhNV0HTKhpm6limviRUE92dGzRCAqgBICFGGkZHN8PndKA+POcTO2SM7fELfqvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=desb2Z4D; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dMUN8mRsF/5XuqsyZ7Y66HQPtmAtTH3wFQVLnEdnWbO2XN7Tj3jTdhOQISE3QIkzdVq75K+dNc1rPgn0AHq0ttdDTNTHFYEkKa1uGTb8qNCf2CjbkSGFtyvDLC84r5TjJJkCD0VkAoHT2/HWrKi8+MlTpzVfjflaVvgNwjEu780=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7yrMtyz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="desb2Z4D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB2E2C433F1;
-	Sun, 24 Mar 2024 23:02:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7yrMtyz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDAB5C433F1;
+	Sun, 24 Mar 2024 23:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321358;
-	bh=aArt0ecVKv1x3uKidFVlDH6gZHaPAKnhEVj+hI42SJU=;
+	s=k20201202; t=1711321356;
+	bh=d27Wlxo7LW/OPlWiQL7BRxlIURlkj4LhLWUZy3m8rOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=desb2Z4D+n08KZ5yEuE49wRBZ3D0d4ic1zW8srWRoc1JLog0+qDcip6LDpNaQ2Tso
-	 pgvxuVCgWzr1gLUJ/kai6jBRFbSrcL7qUvtw8OVhx+uJbAM4KduWtcZgdLdNOblDHq
-	 AKMqMra1Mw9CaevsnRaPiAHzMzqH+oNvLVn0rCeoba3THQudkiLpy16Nn5DV0lHgA4
-	 DLiwXkSfLwJtlgIQ+sFWvQ8Px9WBSfR4TcukH6MhhTK1Blf0di2ae/VEAyCgeQvxNc
-	 lDEPABvonfFj1FAnuOtX2JrO9/PlyoNLu7U7ErGo86XwBN6cncKga2LX62nFX2yre6
-	 lGUYwDIkxRnSA==
+	b=j7yrMtyzXMT6rYsP/bwgx720MOMjUq2h6nbUvdtDQ/q+Q+6jRzqkPJQ6WWzOwlM30
+	 GuAr1d7WRp4apED2DUUpCJcrxS/jEVOhJZXlfgef1R4YxjeI+VjaKgONEXMaZD/ukr
+	 HkxdQrFE0AwL0c3Lu63oTitpk5BBlm7EabakqGkV94hDNAZI5fL5oMeUNxQ73xz9Mc
+	 MWLxu10KE67OgC/0MnHNiwHutFUh6jGMCqpzvw1Wm/Fg2MOeBwpyhCHAlf+xA0V2eW
+	 JPJ3/BDktO67Jn+rvZtnohGnoj650pmOQyfxeNWN1HbMbek2+oIyfCMWx2yrh50+6t
+	 tt1DjTANo/dJA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Miroslav Franc <mfranc@suse.cz>,
-	=?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
-	Stefan Haberland <sth@linux.ibm.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 083/638] s390/dasd: fix double module refcount decrement
-Date: Sun, 24 Mar 2024 18:52:00 -0400
-Message-ID: <20240324230116.1348576-84-sashal@kernel.org>
+Subject: [PATCH 6.6 081/638] io_uring: remove unconditional looping in local task_work handling
+Date: Sun, 24 Mar 2024 18:51:58 -0400
+Message-ID: <20240324230116.1348576-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -46,57 +43,166 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Miroslav Franc <mfranc@suse.cz>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit c3116e62ddeff79cae342147753ce596f01fcf06 ]
+[ Upstream commit 9fe3eaea4a3530ca34a8d8ff00b1848c528789ca ]
 
-Once the discipline is associated with the device, deleting the device
-takes care of decrementing the module's refcount.  Doing it manually on
-this error path causes refcount to artificially decrease on each error
-while it should just stay the same.
+If we have a ton of notifications coming in, we can be looping in here
+for a long time. This can be problematic for various reasons, mostly
+because we can starve userspace. If the application is waiting on N
+events, then only re-run if we need more events.
 
-Fixes: c020d722b110 ("s390/dasd: fix panic during offline processing")
-Signed-off-by: Miroslav Franc <mfranc@suse.cz>
-Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Link: https://lore.kernel.org/r/20240209124522.3697827-3-sth@linux.ibm.com
+Fixes: c0e0d6ba25f1 ("io_uring: add IORING_SETUP_DEFER_TASKRUN")
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ io_uring/io_uring.c | 44 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 29 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
-index 96f4c94865846..6f97456798917 100644
---- a/drivers/s390/block/dasd.c
-+++ b/drivers/s390/block/dasd.c
-@@ -3528,12 +3528,11 @@ int dasd_generic_set_online(struct ccw_device *cdev,
- 		dasd_delete_device(device);
- 		return -EINVAL;
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index e22f6bf837f9d..049a163d0fdd0 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -1363,7 +1363,20 @@ static void __cold io_move_task_work_from_local(struct io_ring_ctx *ctx)
  	}
-+	device->base_discipline = base_discipline;
- 	if (!try_module_get(discipline->owner)) {
--		module_put(base_discipline->owner);
- 		dasd_delete_device(device);
- 		return -EINVAL;
- 	}
--	device->base_discipline = base_discipline;
- 	device->discipline = discipline;
+ }
  
- 	/* check_device will allocate block device if necessary */
-@@ -3541,8 +3540,6 @@ int dasd_generic_set_online(struct ccw_device *cdev,
- 	if (rc) {
- 		dev_warn(dev, "Setting the DASD online with discipline %s failed with rc=%i\n",
- 			 discipline->name, rc);
--		module_put(discipline->owner);
--		module_put(base_discipline->owner);
- 		dasd_delete_device(device);
- 		return rc;
+-static int __io_run_local_work(struct io_ring_ctx *ctx, struct io_tw_state *ts)
++static bool io_run_local_work_continue(struct io_ring_ctx *ctx, int events,
++				       int min_events)
++{
++	if (llist_empty(&ctx->work_llist))
++		return false;
++	if (events < min_events)
++		return true;
++	if (ctx->flags & IORING_SETUP_TASKRUN_FLAG)
++		atomic_or(IORING_SQ_TASKRUN, &ctx->rings->sq_flags);
++	return false;
++}
++
++static int __io_run_local_work(struct io_ring_ctx *ctx, struct io_tw_state *ts,
++			       int min_events)
+ {
+ 	struct llist_node *node;
+ 	unsigned int loops = 0;
+@@ -1392,18 +1405,20 @@ static int __io_run_local_work(struct io_ring_ctx *ctx, struct io_tw_state *ts)
+ 	}
+ 	loops++;
+ 
+-	if (!llist_empty(&ctx->work_llist))
++	if (io_run_local_work_continue(ctx, ret, min_events))
+ 		goto again;
+ 	if (ts->locked) {
+ 		io_submit_flush_completions(ctx);
+-		if (!llist_empty(&ctx->work_llist))
++		if (io_run_local_work_continue(ctx, ret, min_events))
+ 			goto again;
+ 	}
++
+ 	trace_io_uring_local_work_run(ctx, ret, loops);
+ 	return ret;
+ }
+ 
+-static inline int io_run_local_work_locked(struct io_ring_ctx *ctx)
++static inline int io_run_local_work_locked(struct io_ring_ctx *ctx,
++					   int min_events)
+ {
+ 	struct io_tw_state ts = { .locked = true, };
+ 	int ret;
+@@ -1411,20 +1426,20 @@ static inline int io_run_local_work_locked(struct io_ring_ctx *ctx)
+ 	if (llist_empty(&ctx->work_llist))
+ 		return 0;
+ 
+-	ret = __io_run_local_work(ctx, &ts);
++	ret = __io_run_local_work(ctx, &ts, min_events);
+ 	/* shouldn't happen! */
+ 	if (WARN_ON_ONCE(!ts.locked))
+ 		mutex_lock(&ctx->uring_lock);
+ 	return ret;
+ }
+ 
+-static int io_run_local_work(struct io_ring_ctx *ctx)
++static int io_run_local_work(struct io_ring_ctx *ctx, int min_events)
+ {
+ 	struct io_tw_state ts = {};
+ 	int ret;
+ 
+ 	ts.locked = mutex_trylock(&ctx->uring_lock);
+-	ret = __io_run_local_work(ctx, &ts);
++	ret = __io_run_local_work(ctx, &ts, min_events);
+ 	if (ts.locked)
+ 		mutex_unlock(&ctx->uring_lock);
+ 
+@@ -1620,7 +1635,7 @@ static int io_iopoll_check(struct io_ring_ctx *ctx, long min)
+ 		    io_task_work_pending(ctx)) {
+ 			u32 tail = ctx->cached_cq_tail;
+ 
+-			(void) io_run_local_work_locked(ctx);
++			(void) io_run_local_work_locked(ctx, min);
+ 
+ 			if (task_work_pending(current) ||
+ 			    wq_list_empty(&ctx->iopoll_list)) {
+@@ -2463,7 +2478,7 @@ int io_run_task_work_sig(struct io_ring_ctx *ctx)
+ {
+ 	if (!llist_empty(&ctx->work_llist)) {
+ 		__set_current_state(TASK_RUNNING);
+-		if (io_run_local_work(ctx) > 0)
++		if (io_run_local_work(ctx, INT_MAX) > 0)
+ 			return 0;
+ 	}
+ 	if (io_run_task_work() > 0)
+@@ -2531,7 +2546,7 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 	if (!io_allowed_run_tw(ctx))
+ 		return -EEXIST;
+ 	if (!llist_empty(&ctx->work_llist))
+-		io_run_local_work(ctx);
++		io_run_local_work(ctx, min_events);
+ 	io_run_task_work();
+ 	io_cqring_overflow_flush(ctx);
+ 	/* if user messes with these they will just get an early return */
+@@ -2569,11 +2584,10 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 
+ 	trace_io_uring_cqring_wait(ctx, min_events);
+ 	do {
++		int nr_wait = (int) iowq.cq_tail - READ_ONCE(ctx->rings->cq.tail);
+ 		unsigned long check_cq;
+ 
+ 		if (ctx->flags & IORING_SETUP_DEFER_TASKRUN) {
+-			int nr_wait = (int) iowq.cq_tail - READ_ONCE(ctx->rings->cq.tail);
+-
+ 			atomic_set(&ctx->cq_wait_nr, nr_wait);
+ 			set_current_state(TASK_INTERRUPTIBLE);
+ 		} else {
+@@ -2592,7 +2606,7 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 		 */
+ 		io_run_task_work();
+ 		if (!llist_empty(&ctx->work_llist))
+-			io_run_local_work(ctx);
++			io_run_local_work(ctx, nr_wait);
+ 
+ 		/*
+ 		 * Non-local task_work will be run on exit to userspace, but
+@@ -3283,7 +3297,7 @@ static __cold bool io_uring_try_cancel_requests(struct io_ring_ctx *ctx,
+ 
+ 	if ((ctx->flags & IORING_SETUP_DEFER_TASKRUN) &&
+ 	    io_allowed_defer_tw_run(ctx))
+-		ret |= io_run_local_work(ctx) > 0;
++		ret |= io_run_local_work(ctx, INT_MAX) > 0;
+ 	ret |= io_cancel_defer_files(ctx, task, cancel_all);
+ 	mutex_lock(&ctx->uring_lock);
+ 	ret |= io_poll_remove_all(ctx, task, cancel_all);
+@@ -3642,7 +3656,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ 			 * it should handle ownership problems if any.
+ 			 */
+ 			if (ctx->flags & IORING_SETUP_DEFER_TASKRUN)
+-				(void)io_run_local_work_locked(ctx);
++				(void)io_run_local_work_locked(ctx, min_complete);
+ 		}
+ 		mutex_unlock(&ctx->uring_lock);
  	}
 -- 
 2.43.0
