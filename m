@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A4E27DE17;
-	Sun, 24 Mar 2024 23:39:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3420178CE2;
+	Sun, 24 Mar 2024 23:39:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323575; cv=none; b=U+F6ZW9nUPrQQv4OQajoz5Ee35/Yhgji35Lt/XzbRoh+CI4NZvf1arqkZiKzpt+3VpU8Jr92R2qIh8DFuhiR+uZ0B9shRMRSOAlCiKiSIKSTwE+EU03pzrISD0CvwW9bj0jC26UddaOCmjLDk3nkCzUPTp/4j/Rp4h6UgjECGAc=
+	t=1711323581; cv=none; b=FaQll4Hl1NxcjUf0ernzXlpvRPpxu95UO2pgrcXO13zZ002Zv1h4CUnttgh6RVOtSJ9F3td+RGUwlYIkFMArGJR4Q6EExVRO1tw53VuAquIcs5rfwhrq72yqx8jQC3RuddXwlVOF8cq77K1UnaVZVq7ofV0BupRSToWolP+gogk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323575; c=relaxed/simple;
-	bh=LTiDB7Xc8SEWG4fUaCdA0xEtUOyMZ07qxEs/UNO3qd0=;
+	s=arc-20240116; t=1711323581; c=relaxed/simple;
+	bh=sH0p05ZdpjB4X2ES+nRdMatQOHiBDZFvuGrQy/45kEk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I3yr8epNCIfp/L5gpNqlYRNxzZkJ0GCGMZrJDVwCZjo/QFNtCY2lWyj5vuRL3R4KtKQ3ZGHj1mh2QxoRRiaJLqcsSkXYnUtg/ao4kDrXJ3x3PfpK/GyRJSiIQ2L+4bauPe14lqOOGGO3ZKtq8xyoARnHO9WXARjP+2rEqWxZ+V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=modGWoZm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=qMfmhL1QqKVPl3ANKk55++EdFZo9v8v7Cn6qs39R/NF0scMJOPZl28OV/RYCE5ul6LOE4KSoWDK7KrUz2/N0kWZ/Kw8rD7B5yxjub/SEjmNoeCIWC0OmjprKXrzc2sVEOBY9fL/5fGMIIuNSlLx79n39PT4QJP6Go6uLqsq+UkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r81inP5M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="modGWoZm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AF5CC433C7;
-	Sun, 24 Mar 2024 23:39:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r81inP5M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AA92C43394;
+	Sun, 24 Mar 2024 23:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323574;
-	bh=LTiDB7Xc8SEWG4fUaCdA0xEtUOyMZ07qxEs/UNO3qd0=;
+	s=k20201202; t=1711323581;
+	bh=sH0p05ZdpjB4X2ES+nRdMatQOHiBDZFvuGrQy/45kEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=modGWoZmcHIDzMeSrGkMxn0r3qEMA2y9P+g/YMc3MmJxu123unATuDAEgu8nqjrD8
-	 3K2jkHeIUIgVhUstRwB3rtFrc87to4QjdVdm3+Vmpt+OZplGU/cCo7dgKIznL7U2qt
-	 qLu1w/98dE6G28j/VWVbC+TQ170UB4Ua2w8z/AnoQBIB0JpODgCyR2quS8O5BMbcjT
-	 qoo0MjC4cTfELlaPieoRc3SuIEqdcX0xlYEFaCRrfqkclCsgY4xvSBxBZBVnkN6Hww
-	 jh1PqPAm6N+ezTryU5Gorl5iHxvh5Qf2k8ghQmZszc7kXDhjoYaJTjGK9n6OgfMDC2
-	 yTTz9C2UPPBAw==
+	b=r81inP5MR1Mo1VWpNX4WfZvIVFQ8A+sHLXyZo5Ol8UZJJY3Icomquq+ZZ2HiqQHtz
+	 LmZJU5MtiwC42RJcwhEJJtlaiCSHbYt7p2oYfW/jaXOubT/RIHO+PuSWhTJBx4w3TX
+	 JwvYK/DbxME6inBHya+0/vudINA4l8GmskJ0WUejw0QHyQIazmbWccRGyFxqZFky20
+	 6cuMWSmAp7SFUoY6tgpdTKv5awIPWG6EWhajcaKLgXQXSGhBtN1d12smjeo3RcPOJw
+	 M/NL+qn13Mku15oxczF1rVKXBVAe2SPxhxgkKoCGg3OAKkfrc0SkJ7bCkRJ2rZyiM8
+	 0Me9UIwJSsH4w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
+Cc: Dave Airlie <airlied@redhat.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Danilo Krummrich <dakr@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 281/317] arm64: dts: broadcom: bcmbca: bcm4908: drop invalid switch cells
-Date: Sun, 24 Mar 2024 19:34:21 -0400
-Message-ID: <20240324233458.1352854-282-sashal@kernel.org>
+Subject: [PATCH 5.15 288/317] nouveau: reset the bo resource bus info after an eviction
+Date: Sun, 24 Mar 2024 19:34:28 -0400
+Message-ID: <20240324233458.1352854-289-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,39 +50,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Dave Airlie <airlied@redhat.com>
 
-[ Upstream commit 27058b95fbb784406ea4c40b20caa3f04937140c ]
+[ Upstream commit f35c9af45ea7a4b1115b193d84858b14d13517fc ]
 
-Ethernet switch does not have addressable subnodes.
+Later attempts to refault the bo won't happen and the whole
+GPU does to lunch. I think Christian's refactoring of this
+code out to the driver broke this not very well tested path.
 
-This fixes:
-arch/arm64/boot/dts/broadcom/bcmbca/bcm4908-asus-gt-ac5300.dtb: ethernet-switch@0: '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-        from schema $id: http://devicetree.org/schemas/net/dsa/brcm,sf2.yaml#
-
-Fixes: 527a3ac9bdf8 ("arm64: dts: broadcom: bcm4908: describe internal switch")
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Link: https://lore.kernel.org/r/20240111115636.12095-1-zajec5@gmail.com
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Fixes: 141b15e59175 ("drm/nouveau: move io_reserve_lru handling into the driver v5")
+Cc: Christian König <christian.koenig@amd.com>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20240311072037.287905-1-airlied@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_bo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-index b7db95ce0bbf2..d8e5796509fc9 100644
---- a/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcmbca/bcm4908.dtsi
-@@ -180,9 +180,6 @@ ethernet-switch@0 {
- 				brcm,num-gphy = <5>;
- 				brcm,num-rgmii-ports = <2>;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_bo.c b/drivers/gpu/drm/nouveau/nouveau_bo.c
+index da58230bcb1fc..2048eac841ddf 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_bo.c
++++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
+@@ -1186,6 +1186,8 @@ nouveau_ttm_io_mem_reserve(struct ttm_device *bdev, struct ttm_resource *reg)
+ 			drm_vma_node_unmap(&nvbo->bo.base.vma_node,
+ 					   bdev->dev_mapping);
+ 			nouveau_ttm_io_mem_free_locked(drm, nvbo->bo.resource);
++			nvbo->bo.resource->bus.offset = 0;
++			nvbo->bo.resource->bus.addr = NULL;
+ 			goto retry;
+ 		}
  
--				#address-cells = <1>;
--				#size-cells = <0>;
--
- 				ports: ports {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
 -- 
 2.43.0
 
