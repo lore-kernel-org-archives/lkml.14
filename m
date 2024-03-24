@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570FF82D82;
-	Sun, 24 Mar 2024 22:49:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D80182D8B;
+	Sun, 24 Mar 2024 22:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320595; cv=none; b=MJ9uwvQXqb622/JvR676ZPQ8gG/6flSFfjh5DaSjnBjdDLHb0O8j8aHBly5gCAzXMWyHoxiPDpNZoY/lzggPydtsgoWQ32FxoHxhe4FHNRz1QnMk4BoE2JIkU0aogqqPnzaTDBpFfCqWnHqRSwlz/PNpCijcRvTV88lZ/c08z+g=
+	t=1711320597; cv=none; b=ACAx2E5wMTdWBRmU0/ikxIwp4xNy/Sg1CZjdwCIfhUH8Y3np/2lIHcsy4xVcu6YJA38yOuJZjvBltPXkQCC+H0VO0BeFoYBIMQ7ZV221I3Ximh6Q43QHIV1KKEkpNOLfiRbsHUS7BAbhRQ2hNz8RiRbEtePEVnLvtlQ8TSgsrjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320595; c=relaxed/simple;
-	bh=IGAPQ3cc2+PmQMYuwOXJr7pg+IhtAnoe76s99Qn4AZM=;
+	s=arc-20240116; t=1711320597; c=relaxed/simple;
+	bh=dXhu3Gxj9j/STkTusaqz4bh9YSL4l8LOfPOtBesofQE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iFBZFW0Ut5yG8tb0nwm3XRRqbg8//3kHhJzCfaBWLoTlW1/c5+Q40Q/HBKZNSrpa9K1dg+T+5CobTlIlxVN9UwTfpIf1BAsQnIDofIPIpcJvkAUenAUQRLuhJWsoHnVUvp1zWA5YvDfxJmioNBtOrwGHTJsSAVg75OEyqh9na/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7q/mr5m; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BFNrluHlEnaHvwF1TmF/B/IfgXWMRkf/xCzFNFp23NZgfjgj9PIXZ7cTZioXROCER5dQx6EHxyrzQJgvR/VforgDdNQuM31w8+zUxNSxtxdnt40wVoeyESRo/Rn+CuuaOna90iplDh00VgYhQwscxLp+/QEOXZcg/XjZ43KXkfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7pa3we+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7q/mr5m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5430AC43601;
-	Sun, 24 Mar 2024 22:49:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7pa3we+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6E8FC433A6;
+	Sun, 24 Mar 2024 22:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320595;
-	bh=IGAPQ3cc2+PmQMYuwOXJr7pg+IhtAnoe76s99Qn4AZM=;
+	s=k20201202; t=1711320597;
+	bh=dXhu3Gxj9j/STkTusaqz4bh9YSL4l8LOfPOtBesofQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X7q/mr5mz+DquukSdEC4r4Yrdj9UUr0Z2/zTW+8wYj75QSJRjVh6JfPKt32r/nTPv
-	 na2qg/uENWGIjfmmNzL0743od9XeVFlf1Jo+PvWeOUEiX3x/fesYFmp9O93eNANIzW
-	 UzZ8wJ8RKpnsnBa4EUQeplQ3+xslg/Cwa52XKp/RTo8G1hpBe02RWmNcYXRQ6RtS9M
-	 SEgvZe636vhlFncHvmunIizaAfvgTmire9fqZ7kkomEn1hVWc562rLEGhFBWRFccou
-	 X7UIvxvX58xeAPVXrRteH3H7FdS+Ouu/9ba8aUBM7Iateqltt9Jwjj9QrZrSHUxz2R
-	 /4yZ4e2RwVHnw==
+	b=X7pa3we+AXGlM23N7t/7HOIxiVJjXiwFRn3llMPs3yB0GY2NaDv24A+onNe7m5QBf
+	 NPnTgTDoL3SrDXUEqq1ZBx1foich/0b4s8b377MjB8CYzUm3UtPJfeGcIraa8DrXlS
+	 25YqX+wvudmJOJwXF2pym0PpW3JSJzr8D6cZgpK1fhmVSs65nxR4pMX5C3LLjJdxIM
+	 aAmv+yi5n4XSQQzC2lkHxp2AZsOm4eEnaS/+GOfqmKb2yroizfNOto1rXJXTcoV7jF
+	 rOWoJnuytCl9VUffgwgUf2fFXhXmbwPMynXFWu0JiBNQtgOw0KVVXNi36wduaMXrgf
+	 cYUg1N1CdkA5g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrey Grafin <conquistador@yandex-team.ru>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Hou Tao <houtao1@huawei.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Sriram R <quic_srirrama@quicinc.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Kalle Valo <quic_kvalo@quicinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 156/713] libbpf: Apply map_set_def_max_entries() for inner_maps on creation
-Date: Sun, 24 Mar 2024 18:38:02 -0400
-Message-ID: <20240324224720.1345309-157-sashal@kernel.org>
+Subject: [PATCH 6.7 158/713] wifi: ath12k: Fix issues in channel list update
+Date: Sun, 24 Mar 2024 18:38:04 -0400
+Message-ID: <20240324224720.1345309-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -51,52 +49,99 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andrey Grafin <conquistador@yandex-team.ru>
+From: Sriram R <quic_srirrama@quicinc.com>
 
-[ Upstream commit f04deb90e516e8e48bf8693397529bc942a9e80b ]
+[ Upstream commit 67a48d937fac917947540c9f89630d472cd61fcb ]
 
-This patch allows to auto create BPF_MAP_TYPE_ARRAY_OF_MAPS and
-BPF_MAP_TYPE_HASH_OF_MAPS with values of BPF_MAP_TYPE_PERF_EVENT_ARRAY
-by bpf_object__load().
+Currently, the logic used to select the 6 GHz band is incorrect,
+which may cause 6 GHz supported channels to not be updated properly.
+This is because the 6 GHz Max frequency supported by the driver is
+being compared to the Max frequency supported on the board. If in
+some cases, the 6 GHz Max frequency supported on the board is less
+than the defined 6 GHz Max frequency, all 6 GHz channels are disabled.
+To address this, compare the max frequency supported by the board to
+the defined 6 GHz Minimum frequency by the driver.
 
-Previous behaviour created a zero filled btf_map_def for inner maps and
-tried to use it for a map creation but the linux kernel forbids to create
-a BPF_MAP_TYPE_PERF_EVENT_ARRAY map with max_entries=0.
+Similarly, when a dual mac card supports both 6 GHz and 5 GHz radios,
+if the 5 GHz radio gets enumerated first before 6 GHz, the checks in
+ath12k_mac_setup_channels_rates() can cause the 5 GHz channels which
+were enabled earlier to get disabled when the 6 GHz channel list is
+updated. This is because the Min 6 GHz frequency defined in the driver
+is 5945 MHz, which should be 5925 MHz since channel 2 is not considered
+currently, but the firmware can pass 5925 MHz as the minimum.
+Hence, update the Min frequency supported by the driver to 5925 MHz.
 
-Fixes: 646f02ffdd49 ("libbpf: Add BTF-defined map-in-map support")
-Signed-off-by: Andrey Grafin <conquistador@yandex-team.ru>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Yonghong Song <yonghong.song@linux.dev>
-Acked-by: Hou Tao <houtao1@huawei.com>
-Link: https://lore.kernel.org/bpf/20240117130619.9403-1-conquistador@yandex-team.ru
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+In addition, ensure that the channel list update to firmware updates
+only the channels that the current radio (ar) supports rather than
+considering the wiphy support. This would be required when multiple pdevs
+are supported in a wiphy and they support different ranges of frequencies
+or bands as in single wiphy support.
+
+Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7 devices")
+
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.0.1-00029-QCAHKSWPL_SILICONZ-1
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.1.1-00188-QCAHKSWPL_SILICONZ-1
+Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+
+Signed-off-by: Sriram R <quic_srirrama@quicinc.com>
+Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+Link: https://msgid.link/20240117062628.8260-1-quic_srirrama@quicinc.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/ath/ath12k/core.h | 2 +-
+ drivers/net/wireless/ath/ath12k/mac.c  | 2 +-
+ drivers/net/wireless/ath/ath12k/reg.c  | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index df1b550f7460a..ca83af916ccb0 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -70,6 +70,7 @@
+diff --git a/drivers/net/wireless/ath/ath12k/core.h b/drivers/net/wireless/ath/ath12k/core.h
+index 68c42ca44fcb5..d67494de44920 100644
+--- a/drivers/net/wireless/ath/ath12k/core.h
++++ b/drivers/net/wireless/ath/ath12k/core.h
+@@ -418,7 +418,7 @@ struct ath12k_sta {
+ };
  
- static struct bpf_map *bpf_object__add_map(struct bpf_object *obj);
- static bool prog_is_subprog(const struct bpf_object *obj, const struct bpf_program *prog);
-+static int map_set_def_max_entries(struct bpf_map *map);
+ #define ATH12K_MIN_5G_FREQ 4150
+-#define ATH12K_MIN_6G_FREQ 5945
++#define ATH12K_MIN_6G_FREQ 5925
+ #define ATH12K_MAX_6G_FREQ 7115
+ #define ATH12K_NUM_CHANS 100
+ #define ATH12K_MAX_5G_CHAN 173
+diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
+index b698e55a5b7bf..075ca1c34986b 100644
+--- a/drivers/net/wireless/ath/ath12k/mac.c
++++ b/drivers/net/wireless/ath/ath12k/mac.c
+@@ -7188,7 +7188,7 @@ static int ath12k_mac_setup_channels_rates(struct ath12k *ar,
+ 	}
  
- static const char * const attach_type_name[] = {
- 	[BPF_CGROUP_INET_INGRESS]	= "cgroup_inet_ingress",
-@@ -5214,6 +5215,9 @@ static int bpf_object__create_map(struct bpf_object *obj, struct bpf_map *map, b
+ 	if (supported_bands & WMI_HOST_WLAN_5G_CAP) {
+-		if (reg_cap->high_5ghz_chan >= ATH12K_MAX_6G_FREQ) {
++		if (reg_cap->high_5ghz_chan >= ATH12K_MIN_6G_FREQ) {
+ 			channels = kmemdup(ath12k_6ghz_channels,
+ 					   sizeof(ath12k_6ghz_channels), GFP_KERNEL);
+ 			if (!channels) {
+diff --git a/drivers/net/wireless/ath/ath12k/reg.c b/drivers/net/wireless/ath/ath12k/reg.c
+index 5c006256c82ad..fcb76f92a7dec 100644
+--- a/drivers/net/wireless/ath/ath12k/reg.c
++++ b/drivers/net/wireless/ath/ath12k/reg.c
+@@ -103,7 +103,7 @@ int ath12k_reg_update_chan_list(struct ath12k *ar)
  
- 	if (bpf_map_type__is_map_in_map(def->type)) {
- 		if (map->inner_map) {
-+			err = map_set_def_max_entries(map->inner_map);
-+			if (err)
-+				return err;
- 			err = bpf_object__create_map(obj, map->inner_map, true);
- 			if (err) {
- 				pr_warn("map '%s': failed to create inner map: %d\n",
+ 	bands = hw->wiphy->bands;
+ 	for (band = 0; band < NUM_NL80211_BANDS; band++) {
+-		if (!bands[band])
++		if (!(ar->mac.sbands[band].channels && bands[band]))
+ 			continue;
+ 
+ 		for (i = 0; i < bands[band]->n_channels; i++) {
+@@ -129,7 +129,7 @@ int ath12k_reg_update_chan_list(struct ath12k *ar)
+ 	ch = arg->channel;
+ 
+ 	for (band = 0; band < NUM_NL80211_BANDS; band++) {
+-		if (!bands[band])
++		if (!(ar->mac.sbands[band].channels && bands[band]))
+ 			continue;
+ 
+ 		for (i = 0; i < bands[band]->n_channels; i++) {
 -- 
 2.43.0
 
