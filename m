@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88B114533D;
-	Sun, 24 Mar 2024 23:13:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533D4145330;
+	Sun, 24 Mar 2024 23:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321981; cv=none; b=SrFDoMbnHNdCNm4/yXb5tvr8Q/pszRR2ZEyZNue1LmGnZFQVIGvw7y9DTIAsWNNnzmkHJxnSPygnzMZRRxpQj53TCTmUsVrCq3IBwCzqQYA5Osvkt92Dcwtad1V/qXe6Bs3H6HM+49r8I1HHfWM8HtrUgZ5Ock5c9u0KKxE7scE=
+	t=1711321974; cv=none; b=R49+OBlXu1DkelOzy8XBzXiiviMO1GZGzeyJa4EFi363BX/J8oEx5i+VPJC++HTNhZfSpg+KhkgWPgSgrLCqnSHUe8qo1mGipVgZS6XlWe4xomWpk0wzZnvLmNWzse7ZcV6L3J+KNozlKYaBPeUO/4TGciiZvzFU3tjEbLbWjFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321981; c=relaxed/simple;
-	bh=h13E3I/67aiIVBnOSCOdgSWe9t1VwoTldhgwrMtJGUA=;
+	s=arc-20240116; t=1711321974; c=relaxed/simple;
+	bh=vko/+J46uPjjVxQ7eGm2PmvehHWRDiGajfhump5oooI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KzI8szPx6BbDmjG6c1NhFfS0glnLzWoYiiEHp/jmmkqoFsrVzMYkniJSzpjzck6gLPXjfBbCwhWyycGPzu6DSaKwPPJf36vQL8iOprR5PBxf7Rnef55Wo+UZUBr4CYVbLq+d+pdxis+8twSY2tdyODicN4MjYOgSaBoN4AuvQ/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNl/NnCD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=apk+dRUfSdzTNfSbd7ZRRV9UapbIvgA2qOoBnylyXLrtOU0Ivnej6bRD3eXC3mAkYmtwmtjPCiolHE3X8+wRKv876KqLmpzEmntmIJS7qTTZldE/FwwV9buERx9EqNTf3LT0/M1PtGillDp5bZiLK3/i/Nieknglgg8GN+/O6Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRIbn3pv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNl/NnCD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C84E7C433F1;
-	Sun, 24 Mar 2024 23:12:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRIbn3pv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93CD9C433F1;
+	Sun, 24 Mar 2024 23:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321980;
-	bh=h13E3I/67aiIVBnOSCOdgSWe9t1VwoTldhgwrMtJGUA=;
+	s=k20201202; t=1711321973;
+	bh=vko/+J46uPjjVxQ7eGm2PmvehHWRDiGajfhump5oooI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mNl/NnCDnbHPL/J8ujT5/D/yqZ4ggD5/7pBmF87kEhIquN9tFaio4Va5qLCQZVoWT
-	 ebOKsyTOaeBkMfa8AXMGBvhp2SSahpnEuFy8psEMEied8ItAB4dD986FPhzitAPk8v
-	 GJQmEqsRDtc02jmCkWvFkmgPCvG1P3ltcNfF8lpyh0JO2s6bYTZbhUGgW8lz66ak21
-	 Hn2CG+EdLBuq6X0pp6ESDSd6pfp8M80TqzWyNKGWCEdR2ft1hz5OYEhmTmmrRnF3Uh
-	 /1DjQ1VhiGirSs/3N58NPi5P11PB/cbTsKwT/dbOYbgBJnop+ktzy6iOHRF7yP5xNm
-	 3nRMiR22JwQeQ==
+	b=dRIbn3pvzprtefFl93j9Nxeoofnyb+muYHmLMo1v2LmkUoqSZxPQTjyU1B5qDastA
+	 oPVtNJ8Ts2aw60o76o+9K3xxLzuW+bocpCCPmGL2rxHANU4BWVSsisRTjIRFCmqleD
+	 JBgr1LTVDKEVIvDToeBFGfwDN0CBrHehp8hIsbuo4bC3CTCvRukd/VXdBqOq5rIlea
+	 lnZpd7bDKNxLx2b7mVOBHw+YbgK/2t//kYdg7arZxqpBthONyQbA5kdGYynU1vz8OD
+	 LEi1XklTFA26Ah+SSGYxar85gyFgWrLgOMOEkBtVPyNYJ/vP9ahTBf08Czlob3R1XS
+	 O2MU9u0MrFlWg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Alban=20Boy=C3=A9?= <alban.boye@protonmail.com>,
-	Cezary Rojewski <cezary.rojewski@intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Ranjan Kumar <ranjan.kumar@broadcom.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 053/451] ASoC: Intel: bytcr_rt5640: Add an extra entry for the Chuwi Vi8 tablet
-Date: Sun, 24 Mar 2024 19:05:29 -0400
-Message-ID: <20240324231207.1351418-54-sashal@kernel.org>
+Subject: [PATCH 6.1 045/451] scsi: mpt3sas: Prevent sending diag_reset when the controller is ready
+Date: Sun, 24 Mar 2024 19:05:21 -0400
+Message-ID: <20240324231207.1351418-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -46,51 +44,45 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alban Boyé <alban.boye@protonmail.com>
+From: Ranjan Kumar <ranjan.kumar@broadcom.com>
 
-[ Upstream commit f8b0127aca8c60826e7354e504a12d4a46b1c3bb ]
+[ Upstream commit ee0017c3ed8a8abfa4d40e42f908fb38c31e7515 ]
 
-The bios version can differ depending if it is a dual-boot variant of the tablet.
-Therefore another DMI match is required.
+If the driver detects that the controller is not ready before sending the
+first IOC facts command, it will wait for a maximum of 10 seconds for it to
+become ready. However, even if the controller becomes ready within 10
+seconds, the driver will still issue a diagnostic reset.
 
-Signed-off-by: Alban Boyé <alban.boye@protonmail.com>
-Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://msgid.link/r/20240228192807.15130-1-alban.boye@protonmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Modify the driver to avoid sending a diag reset if the controller becomes
+ready within the 10-second wait time.
+
+Signed-off-by: Ranjan Kumar <ranjan.kumar@broadcom.com>
+Link: https://lore.kernel.org/r/20240221071724.14986-1-ranjan.kumar@broadcom.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/scsi/mpt3sas/mpt3sas_base.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
-index 797d0a48d6066..094445036c20f 100644
---- a/sound/soc/intel/boards/bytcr_rt5640.c
-+++ b/sound/soc/intel/boards/bytcr_rt5640.c
-@@ -685,6 +685,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
- 					BYT_RT5640_SSP0_AIF1 |
- 					BYT_RT5640_MCLK_EN),
- 	},
-+	{	/* Chuwi Vi8 dual-boot (CWI506) */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Insyde"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "i86"),
-+			/* The above are too generic, also match BIOS info */
-+			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI2.D86JHBNR02"),
-+		},
-+		.driver_data = (void *)(BYTCR_INPUT_DEFAULTS |
-+					BYT_RT5640_MONO_SPEAKER |
-+					BYT_RT5640_SSP0_AIF1 |
-+					BYT_RT5640_MCLK_EN),
-+	},
- 	{
- 		/* Chuwi Vi10 (CWI505) */
- 		.matches = {
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+index 809be43f440dc..8e6ac08e553bb 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -7398,7 +7398,9 @@ _base_wait_for_iocstate(struct MPT3SAS_ADAPTER *ioc, int timeout)
+ 		return -EFAULT;
+ 	}
+ 
+- issue_diag_reset:
++	return 0;
++
++issue_diag_reset:
+ 	rc = _base_diag_reset(ioc);
+ 	return rc;
+ }
 -- 
 2.43.0
 
