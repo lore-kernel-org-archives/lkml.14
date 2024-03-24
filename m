@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF08117CF7D;
-	Sun, 24 Mar 2024 23:43:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C9B17D23C;
+	Sun, 24 Mar 2024 23:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323813; cv=none; b=J78edYiuaxa6Ooly8ChahTQrTV5pPA++l0tVXJT+b2VgpZG2y01EPEXilAS99+6mvLEG/xSdBohWuN13W74P9HXF2SBHwrNkgykk6c5gC+4BQK4L/vX1MZWxmChoZSejJWHp4KK9NDk8xK6JuDdCFALGhVdjB1K5SJaiy3jUKlE=
+	t=1711323821; cv=none; b=FowizFsJZ7cb/9TnQ/bIwUtZ/iqfyqd5Do0j9kBfYNGTla6G5mA1maKvrawVlEdhaaqdpCE5KHlb22fzbmJA9AwGofHnq5jBcstqOssGLw1yAa9UMT4H12WjsIgFyKvNVEI7PSkNGrK2raNgSEe46S6xVY6Lrrt3+Q8JaZZXBUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323813; c=relaxed/simple;
-	bh=jdNPjvbUTVDI5UuZ6uMemDiRpUz7brAsiwoU0tw9pzs=;
+	s=arc-20240116; t=1711323821; c=relaxed/simple;
+	bh=OEpuwg0q9vOOoCyK9mvaQjRn/3FyP2kLhLivgjOMeNw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zny15JG37FtLIhVBo796cMXymyAIM7/0dmtMKuxbfI+8g6KBswXdjJ62gSdilSZAJ9pzRH/+Z5SO5pqUe86cBmWOMz65tH3jpqacFfHg93xVTjtMo82g2IkDIkfSbPrdq7b49BnUHkH07Rp3bRx0HoVz82hcZscfGGGibTcvFeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxTGXDvJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qeqG99JqUzAnZ5KJQ42UXtVV1xuX949TQu6CLUfxddpqi+Qs8Xccmv4lBLfmrUmzUPaB6j10uzkwyzlvvYqSu7GqEwerhDw3QjfiMmEd0J14GONSAi12bYGL9QBfHCeJDrpmy1aq/CSX8QdFDxwbLGA3BcjVfG7Ayln4cBFZQLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxVpAA1g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxTGXDvJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A2D9C433B1;
-	Sun, 24 Mar 2024 23:43:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxVpAA1g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4B5C433C7;
+	Sun, 24 Mar 2024 23:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323812;
-	bh=jdNPjvbUTVDI5UuZ6uMemDiRpUz7brAsiwoU0tw9pzs=;
+	s=k20201202; t=1711323820;
+	bh=OEpuwg0q9vOOoCyK9mvaQjRn/3FyP2kLhLivgjOMeNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AxTGXDvJg6CDNF5N7Rpezqtodd5BslV0pUI4/TViFHcZaHhTd8mOaaALTHxgtU8SV
-	 YRsl5FIflCUFdfc0ONp988YYYaLB5NnLXBHrtpiLGKbpGjFlLJy5UhNQXNSR14xQSl
-	 hk3NffJYt2qKqiPo6yUxA3HPcpbZWcz4pTjaIaDchPmkPCYE8TPhF1iDI2QiVKsDbI
-	 sgh0o+u8T8cO4FokqSfakfmIkblFX+UeB8AEtVzJnt4zGzVWwaoISqytEw4YNqnv5U
-	 kwhgqAlM631jcQ8u8+FhWyjlV2FW8ajZqpuuhmM10ge7kUlB54KQbvutLWMkGmrtbw
-	 L5NMDDeel66iQ==
+	b=KxVpAA1gdQ5fZjWDGVYmk/lMcVsPdvRGv8lrplZCe3uWTwXnafXmq8o/QEW402BJz
+	 FfH2aJ1oiV9FXx25C6ITsXvs9Hu7rByJ3IAErX93F7JseTgECAi7mw7zHeF3yYDTrS
+	 Cnbf7X6qDw9E/iAphiR+lGpZ5BnMIeQXxGZ9ix5UHKtUULK52eBc++/oCeChKvzJcu
+	 2XVCaS5osYglLk32ndFoO91/d3bdMHwYdhC6x3GiSDqdslZOhC92vXyacgbbSb3Av9
+	 rkKTP2bw8KB4Ta36c68ITBASQu0F78Y6zyb4xy2XvgdXnJcdcyfr5J+GLAGodA8WZ4
+	 EyqfdzKvsrQSA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Athaariq Ardhiansyah <foss@athaariq.my.id>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: Jorge Mora <jmora1300@gmail.com>,
+	Jorge Mora <mora@netapp.com>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 191/238] ALSA: hda/realtek: fix ALC285 issues on HP Envy x360 laptops
-Date: Sun, 24 Mar 2024 19:39:39 -0400
-Message-ID: <20240324234027.1354210-192-sashal@kernel.org>
+Subject: [PATCH 5.10 199/238] NFSv4.2: fix nfs4_listxattr kernel BUG at mm/usercopy.c:102
+Date: Sun, 24 Mar 2024 19:39:47 -0400
+Message-ID: <20240324234027.1354210-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,145 +50,97 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Athaariq Ardhiansyah <foss@athaariq.my.id>
+From: Jorge Mora <jmora1300@gmail.com>
 
-[ Upstream commit c062166995c9e57d5cd508b332898f79da319802 ]
+[ Upstream commit 251a658bbfceafb4d58c76b77682c8bf7bcfad65 ]
 
-Realtek codec on HP Envy laptop series are heavily modified by vendor.
-Therefore, need intervention to make it work properly. The patch fixes:
+A call to listxattr() with a buffer size = 0 returns the actual
+size of the buffer needed for a subsequent call. When size > 0,
+nfs4_listxattr() does not return an error because either
+generic_listxattr() or nfs4_listxattr_nfs4_label() consumes
+exactly all the bytes then size is 0 when calling
+nfs4_listxattr_nfs4_user() which then triggers the following
+kernel BUG:
 
-- B&O soundbar speakers (between lid and keyboard) activation
-- Enable LED on mute button
-- Add missing process coefficient which affects the output amplifier
-- Volume control synchronization between B&O soundbar and side speakers
-- Unmute headset output on several HP Envy models
-- Auto-enable headset mic when plugged
+  [   99.403778] kernel BUG at mm/usercopy.c:102!
+  [   99.404063] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
+  [   99.408463] CPU: 0 PID: 3310 Comm: python3 Not tainted 6.6.0-61.fc40.aarch64 #1
+  [   99.415827] Call trace:
+  [   99.415985]  usercopy_abort+0x70/0xa0
+  [   99.416227]  __check_heap_object+0x134/0x158
+  [   99.416505]  check_heap_object+0x150/0x188
+  [   99.416696]  __check_object_size.part.0+0x78/0x168
+  [   99.416886]  __check_object_size+0x28/0x40
+  [   99.417078]  listxattr+0x8c/0x120
+  [   99.417252]  path_listxattr+0x78/0xe0
+  [   99.417476]  __arm64_sys_listxattr+0x28/0x40
+  [   99.417723]  invoke_syscall+0x78/0x100
+  [   99.417929]  el0_svc_common.constprop.0+0x48/0xf0
+  [   99.418186]  do_el0_svc+0x24/0x38
+  [   99.418376]  el0_svc+0x3c/0x110
+  [   99.418554]  el0t_64_sync_handler+0x120/0x130
+  [   99.418788]  el0t_64_sync+0x194/0x198
+  [   99.418994] Code: aa0003e3 d000a3e0 91310000 97f49bdb (d4210000)
 
-This patch was tested on HP Envy x360 13-AR0107AU with Realtek ALC285
+Issue is reproduced when generic_listxattr() returns 'system.nfs4_acl',
+thus calling lisxattr() with size = 16 will trigger the bug.
 
-The only unsolved problem is output amplifier of all built-in speakers
-is too weak, which causes volume of built-in speakers cannot be loud
-as vendor's proprietary driver due to missing _DSD parameter in the
-firmware. The solution is currently on research. Expected to has another
-patch in the future.
+Add check on nfs4_listxattr() to return ERANGE error when it is
+called with size > 0 and the return value is greater than size.
 
-Potential fix to related issues, need test before close those issues:
-
-- https://bugzilla.kernel.org/show_bug.cgi?id=189331
-- https://bugzilla.kernel.org/show_bug.cgi?id=216632
-- https://bugzilla.kernel.org/show_bug.cgi?id=216311
-- https://bugzilla.kernel.org/show_bug.cgi?id=213507
-
-Signed-off-by: Athaariq Ardhiansyah <foss@athaariq.my.id>
-Message-ID: <20240310140249.3695-1-foss@athaariq.my.id>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 012a211abd5d ("NFSv4.2: hook in the user extended attribute handlers")
+Signed-off-by: Jorge Mora <mora@netapp.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 63 +++++++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+ fs/nfs/nfs4proc.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 233449d982370..038837481c27c 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6612,6 +6612,60 @@ static void alc285_fixup_hp_spectre_x360(struct hda_codec *codec,
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 7c3c96ed60853..8e546e6a56198 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -10370,29 +10370,33 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
+ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
+ {
+ 	ssize_t error, error2, error3;
++	size_t left = size;
+ 
+-	error = generic_listxattr(dentry, list, size);
++	error = generic_listxattr(dentry, list, left);
+ 	if (error < 0)
+ 		return error;
+ 	if (list) {
+ 		list += error;
+-		size -= error;
++		left -= error;
  	}
+ 
+-	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, size);
++	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, left);
+ 	if (error2 < 0)
+ 		return error2;
+ 
+ 	if (list) {
+ 		list += error2;
+-		size -= error2;
++		left -= error2;
+ 	}
+ 
+-	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, size);
++	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
+ 	if (error3 < 0)
+ 		return error3;
+ 
+-	return error + error2 + error3;
++	error += error2 + error3;
++	if (size && error > size)
++		return -ERANGE;
++	return error;
  }
  
-+static void alc285_fixup_hp_envy_x360(struct hda_codec *codec,
-+				      const struct hda_fixup *fix,
-+				      int action)
-+{
-+	static const struct coef_fw coefs[] = {
-+		WRITE_COEF(0x08, 0x6a0c), WRITE_COEF(0x0d, 0xa023),
-+		WRITE_COEF(0x10, 0x0320), WRITE_COEF(0x1a, 0x8c03),
-+		WRITE_COEF(0x25, 0x1800), WRITE_COEF(0x26, 0x003a),
-+		WRITE_COEF(0x28, 0x1dfe), WRITE_COEF(0x29, 0xb014),
-+		WRITE_COEF(0x2b, 0x1dfe), WRITE_COEF(0x37, 0xfe15),
-+		WRITE_COEF(0x38, 0x7909), WRITE_COEF(0x45, 0xd489),
-+		WRITE_COEF(0x46, 0x00f4), WRITE_COEF(0x4a, 0x21e0),
-+		WRITE_COEF(0x66, 0x03f0), WRITE_COEF(0x67, 0x1000),
-+		WRITE_COEF(0x6e, 0x1005), { }
-+	};
-+
-+	static const struct hda_pintbl pincfgs[] = {
-+		{ 0x12, 0xb7a60130 },  /* Internal microphone*/
-+		{ 0x14, 0x90170150 },  /* B&O soundbar speakers */
-+		{ 0x17, 0x90170153 },  /* Side speakers */
-+		{ 0x19, 0x03a11040 },  /* Headset microphone */
-+		{ }
-+	};
-+
-+	switch (action) {
-+	case HDA_FIXUP_ACT_PRE_PROBE:
-+		snd_hda_apply_pincfgs(codec, pincfgs);
-+
-+		/* Fixes volume control problem for side speakers */
-+		alc295_fixup_disable_dac3(codec, fix, action);
-+
-+		/* Fixes no sound from headset speaker */
-+		snd_hda_codec_amp_stereo(codec, 0x21, HDA_OUTPUT, 0, -1, 0);
-+
-+		/* Auto-enable headset mic when plugged */
-+		snd_hda_jack_set_gating_jack(codec, 0x19, 0x21);
-+
-+		/* Headset mic volume enhancement */
-+		snd_hda_codec_set_pin_target(codec, 0x19, PIN_VREF50);
-+		break;
-+	case HDA_FIXUP_ACT_INIT:
-+		alc_process_coef_fw(codec, coefs);
-+		break;
-+	case HDA_FIXUP_ACT_BUILD:
-+		rename_ctl(codec, "Bass Speaker Playback Volume",
-+			   "B&O-Tuned Playback Volume");
-+		rename_ctl(codec, "Front Playback Switch",
-+			   "B&O Soundbar Playback Switch");
-+		rename_ctl(codec, "Bass Speaker Playback Switch",
-+			   "Side Speaker Playback Switch");
-+		break;
-+	}
-+}
-+
- /* for hda_fixup_thinkpad_acpi() */
- #include "thinkpad_helper.c"
- 
-@@ -6819,6 +6873,7 @@ enum {
- 	ALC280_FIXUP_HP_9480M,
- 	ALC245_FIXUP_HP_X360_AMP,
- 	ALC285_FIXUP_HP_SPECTRE_X360_EB1,
-+	ALC285_FIXUP_HP_ENVY_X360,
- 	ALC288_FIXUP_DELL_HEADSET_MODE,
- 	ALC288_FIXUP_DELL1_MIC_NO_PRESENCE,
- 	ALC288_FIXUP_DELL_XPS_13,
-@@ -8614,6 +8669,12 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc285_fixup_hp_spectre_x360_eb1
- 	},
-+	[ALC285_FIXUP_HP_ENVY_X360] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc285_fixup_hp_envy_x360,
-+		.chained = true,
-+		.chain_id = ALC285_FIXUP_HP_GPIO_AMP_INIT,
-+	},
- 	[ALC287_FIXUP_IDEAPAD_BASS_SPK_AMP] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc285_fixup_ideapad_s740_coef,
-@@ -9001,6 +9062,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x103c, 0x8519, "HP Spectre x360 15-df0xxx", ALC285_FIXUP_HP_SPECTRE_X360),
- 	SND_PCI_QUIRK(0x103c, 0x8537, "HP ProBook 440 G6", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
-+	SND_PCI_QUIRK(0x103c, 0x85de, "HP Envy x360 13-ar0xxx", ALC285_FIXUP_HP_ENVY_X360),
- 	SND_PCI_QUIRK(0x103c, 0x860f, "HP ZBook 15 G6", ALC285_FIXUP_HP_GPIO_AMP_INIT),
- 	SND_PCI_QUIRK(0x103c, 0x861f, "HP Elite Dragonfly G1", ALC285_FIXUP_HP_GPIO_AMP_INIT),
- 	SND_PCI_QUIRK(0x103c, 0x869d, "HP", ALC236_FIXUP_HP_MUTE_LED),
-@@ -9517,6 +9579,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
- 	{.id = ALC295_FIXUP_HP_OMEN, .name = "alc295-hp-omen"},
- 	{.id = ALC285_FIXUP_HP_SPECTRE_X360, .name = "alc285-hp-spectre-x360"},
- 	{.id = ALC285_FIXUP_HP_SPECTRE_X360_EB1, .name = "alc285-hp-spectre-x360-eb1"},
-+	{.id = ALC285_FIXUP_HP_ENVY_X360, .name = "alc285-hp-envy-x360"},
- 	{.id = ALC287_FIXUP_IDEAPAD_BASS_SPK_AMP, .name = "alc287-ideapad-bass-spk-amp"},
- 	{.id = ALC623_FIXUP_LENOVO_THINKSTATION_P340, .name = "alc623-lenovo-thinkstation-p340"},
- 	{.id = ALC255_FIXUP_ACER_HEADPHONE_AND_MIC, .name = "alc255-acer-headphone-and-mic"},
+ static void nfs4_enable_swap(struct inode *inode)
 -- 
 2.43.0
 
