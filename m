@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC941D1D65;
-	Sun, 24 Mar 2024 22:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FB71D793D;
+	Sun, 24 Mar 2024 22:50:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320583; cv=none; b=cX3Rscp7oLceiuQQUTQqjPLpCsoTaq7KOe+7bXugNnkKGX7ptGYm/EXuQ0j9mFDaC7HfTyQ9QoTuoy5jEobFiOtSCY66obMJRYDBjjTOzAO+vgZe0JktO6d4bZtCApm2ImLKJ1U2ysujXrlus0RFvSWPvH3UhcYG5SKHQGT3/js=
+	t=1711320611; cv=none; b=INxRn4GqxKLsvqtvyg41Pn8n+u/8k7mYlOk19QOLvtbljn+4IU2MuCJq8friBut/kxiUuyrCHspEaI5pKXMI3NuQfKmJU/jMTIc/kgAHKTW39+k51qGdUME2xSZmsHmJr/3nvE7H2J0TE3rhmkPHIlttgifQazpmx8DCR0+8osU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320583; c=relaxed/simple;
-	bh=l6C4Gt3BuSiTVpDszGUvAntoV6yA9mHB2XxgMdcptEw=;
+	s=arc-20240116; t=1711320611; c=relaxed/simple;
+	bh=UcRpu7p1jKQyG+pfEXtk4kRecvA2V6BI+5dODNtRxC4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cVQ1EWCxpsuqtECj6C1NC1Z17s1usPKf/R5YokPg4eTNcFFs1MRDE1U2dvO70/j+vQGHo8dVqOJr3H7WLzteH927iBGy9BYqR45bAFsQRDlFD/iEuX4gA/ya2ixlNKFwNjvkpuUvJEIIHpQOVcxv7RKD6V8CovSWkf0ugH7vk7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBb2dEUx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eUCFAWbce6rk4CkmyYPjB9gd4amxRpnxhIUcMtYo0XheAI9ZzWiIF/kvMPR5WTfqNVRTVCZvitLH6xFz8KVic0CKaXOuIR+hJPgR29Qpdpklszt0AUq4MBqgl19pIptq7uUsQhl0TFrD9jk4CG6Jl9BjMN8O6+huMnEVNKGndH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1yt5nKK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBb2dEUx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83211C43399;
-	Sun, 24 Mar 2024 22:49:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1yt5nKK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14440C43390;
+	Sun, 24 Mar 2024 22:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320582;
-	bh=l6C4Gt3BuSiTVpDszGUvAntoV6yA9mHB2XxgMdcptEw=;
+	s=k20201202; t=1711320609;
+	bh=UcRpu7p1jKQyG+pfEXtk4kRecvA2V6BI+5dODNtRxC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IBb2dEUxRumjl4XWVDNyeDgzFbvOpDkK/7HDWcekMJl4bCtdn2qGXaraP4Vy2B11d
-	 uJZk4nU8pqTWgW9ATMLLWZ6xZAL4ZOwcuXpsnuJ4RcVUljKd90nrSKOoDVvNLQynfr
-	 3Q0PFK4unGzZR6s5Yg8oGr6o0s1QuxidS1IdHKm2T5MtY8kvn8dZuXLG+l33ynefWU
-	 oK+6h6FFwBo3NDvrMAWPDxRb3R8pbk6CrhgzFpONZ8LXeRDCub6iLcd5zUBDk59V6p
-	 Q0QSlIKqvblCyd3hovjcHnyTT+LOJ3gjS/TX+K2wDVEZD0xu0SVc6wKk9nlj0sk1sU
-	 +8DyfnT3MBxOA==
+	b=u1yt5nKKcltx8qKOxuLCkkUPwU+5UKUlk+SS2jQwNK0LG2+jw5I6TOv47BkR0htMf
+	 m9ryvDV20sJDWLq46Q/cCefmBbGo9J/JCnDaQmQ5pau+NwHqXzq39ynJTPWomTvGu3
+	 tfmx3b/RCLUA7AQRQdiPdjIOKAJbhkRgb8VuE/1ZCGjgjcDC9BSBa9QrgqXU2PZCzt
+	 NSDsKesf0Sgd7RvMaBcMYc4oxThzOzbZ8+zuRV2oeeYu7bR2IisAl+JwX2i7olJecc
+	 HlSP48P6toa8Kxu87w0uHGq0fv6QtwTngDiE5GLHwUDIhuxCoXCDPTh8ZO7h9HWRRO
+	 aru/0a2fhKmaw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 143/713] arm64: dts: qcom: sc8180x: Hook up VDD_CX as GCC parent domain
-Date: Sun, 24 Mar 2024 18:37:49 -0400
-Message-ID: <20240324224720.1345309-144-sashal@kernel.org>
+Subject: [PATCH 6.7 170/713] arm64: dts: qcom: sa8540p: Drop gfx.lvl as power-domain for gpucc
+Date: Sun, 24 Mar 2024 18:38:16 -0400
+Message-ID: <20240324224720.1345309-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,34 +50,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-[ Upstream commit 3c58b96df110a80e78fa36ef928f1e6c375008e3 ]
+[ Upstream commit fd5821a1a83c969ed2dcc72fef885f3a82c1d978 ]
 
-Most of GCC is powered by the CX rail. Describe that relationship to
-let the performance state requests trickle up the chain.
+The SA8295P and SA8540P uses an external regulator (max20411), and
+gfx.lvl is not provided by rpmh. Drop the power-domains property of the
+gpucc node to reflect this.
 
-Fixes: 8575f197b077 ("arm64: dts: qcom: Introduce the SC8180x platform")
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20231230-topic-8180_more_fixes-v1-2-93b5c107ed43@linaro.org
+Fixes: eec51ab2fd6f ("arm64: dts: qcom: sc8280xp: Add GPU related nodes")
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+Link: https://lore.kernel.org/r/20240125-sa8295p-gpu-v4-5-7011c2a63037@quicinc.com
 Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sc8180x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/sa8540p.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-index b389d49d3ec8c..b1d9853419415 100644
---- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-@@ -781,6 +781,7 @@ gcc: clock-controller@100000 {
- 			clock-names = "bi_tcxo",
- 				      "bi_tcxo_ao",
- 				      "sleep_clk";
-+			power-domains = <&rpmhpd SC8180X_CX>;
- 		};
+diff --git a/arch/arm64/boot/dts/qcom/sa8540p.dtsi b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
+index 96b2c59ad02b4..23888029cc117 100644
+--- a/arch/arm64/boot/dts/qcom/sa8540p.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
+@@ -168,6 +168,9 @@ opp-2592000000 {
+ };
  
- 		qupv3_id_0: geniqup@8c0000 {
+ &gpucc {
++	/* SA8295P and SA8540P doesn't provide gfx.lvl */
++	/delete-property/ power-domains;
++
+ 	status = "disabled";
+ };
+ 
 -- 
 2.43.0
 
