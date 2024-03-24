@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3081A1EF7DC;
-	Sun, 24 Mar 2024 22:57:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5788C1EF7DF;
+	Sun, 24 Mar 2024 22:57:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321035; cv=none; b=iUAeKeXmPvHXITBraWgfdefrzp+AiTL75qnpIs1GbZR2SX/TsQ57kGiZdy1WGs9WYM4+C+Uox5n993V7ZNQ3j0yfJqbh99ZMogMvDeZglgc3NOFCrK03K9f7I/MgMDOaHCMXDNh6DHdGjSWQjADtUvbO4n1YH9gO0lgNhsL4jjU=
+	t=1711321037; cv=none; b=aUNF32fbzinBt0VfMxAA8lsAvPduKlKbPTklNeHBZw6jHPLQKp+fLE5gmhUhyxfHpTWtaB2KTs978jceT3Ts1LVx28KFmFm1xkJguYiTgajdxxVF5ZCEHS2DITsA5YnPQ4zDMwitvtDJQG8SlR9Zsl3xxLOGvx55fn5Fk5EoNeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321035; c=relaxed/simple;
-	bh=yUS06+jBKCnlD25vjcbgsGFLnvBZQdDnVaI/PR/gXtk=;
+	s=arc-20240116; t=1711321037; c=relaxed/simple;
+	bh=Zkv4uBQK8eMbRPj/TMoLQKTy5qtiJb0tBI+C77mgZrw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hsSkgprLlF6MCZnFlIPt40874sRnz4of1ZuBAYi8+3DOkGsLXJWVQs1lcXPed9kPVcv/I2HKTvHLIT+tQubMPxIM4mtoji169SjylbBu8GgS/D8GWvnUcvAkEInBy6IoMldgwSSb0xLEcpKX40t+WiyngdbxX3IW/PWQnCAHblI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dst1og2e; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RdLGHGFEqcF6+3Tg7Yv5t+NHAkc8x3thKgwwgbg7WvypbTIIh7QgamEUeaQUe/HMtMsNPXh0/ksieUYInGQuhM/IRdu1MwAESuGQ2+BGA/PC7ZTxM4CiWMht7tocoCq1Ig1/b+uZvXD4HUTcoAvHcdmpv8CY8aKjGxKOsDBGOKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVnkPiDU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dst1og2e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B1F5C433A6;
-	Sun, 24 Mar 2024 22:57:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVnkPiDU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DD77C43390;
+	Sun, 24 Mar 2024 22:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321035;
-	bh=yUS06+jBKCnlD25vjcbgsGFLnvBZQdDnVaI/PR/gXtk=;
+	s=k20201202; t=1711321037;
+	bh=Zkv4uBQK8eMbRPj/TMoLQKTy5qtiJb0tBI+C77mgZrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dst1og2ebcPqA/E37s9NjrzsuV46tE8zY1nGulmStIgzi8yJrILX81xot5Eed5T97
-	 hp4KgFVZglgIepLmvWtHZDkwmFNV3eGwrACbv3aAUVGic/c7oKtAB4z3lYLUbMtm4b
-	 yDUP0DhAr9TR47g89wU7BXP5OPSg188LXAWssXFJbZRdd6k1u4aws4CAC96Ong4BZW
-	 So3rcEroGgnrp+YvgbLZWySV+fp5X0de8OoHWCmaZs+4zGnTWoZtytEt5cjgBbl+Xb
-	 SR4gCAxJgO7yoksLF+2nQpMBf7TK04SK/9O7676b3bxUeTwMKizq05fkcrq/m1BJ6a
-	 zlLD4f34AwgJA==
+	b=WVnkPiDUvL+OLpIEypT4j6QoBEYSD6fGJZBZViqLyzvZkNg3+rUMLxBEoUlZgrbXw
+	 DFFk71DFfePz4VvOVkeJr/Etg73VZqQ+Xm13HzQ8oyu3WFxnHnLoklf31JeywWP9K7
+	 m3jdhdO32A+kfwYJ6dfZAsHYpkuE2c2E5x/CmuOMe7qooerATtwEdDRtDZw8QYPTaX
+	 Jou7yRn2aRqWvvDtelcaFfHtjojxzwRcDccP+tGkCISMVVvKNi/pWhZEFwB7LvaZ9E
+	 glsSsmwxK4qySXjCn96jz34wAfoeRYiVed6Y71r/bD9F7CacKZ2qqxBJ04lSllKkSH
+	 hQPb1PUZLouDA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jeff LaBundy <jeff@labundy.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 598/713] Input: iqs7222 - add support for IQS7222D v1.1 and v1.2
-Date: Sun, 24 Mar 2024 18:45:24 -0400
-Message-ID: <20240324224720.1345309-599-sashal@kernel.org>
+Subject: [PATCH 6.7 600/713] NFS: Fix an off by one in root_nfs_cat()
+Date: Sun, 24 Mar 2024 18:45:26 -0400
+Message-ID: <20240324224720.1345309-601-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,145 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jeff LaBundy <jeff@labundy.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 992cf65674778e22436807796b2df927de21bb75 ]
+[ Upstream commit 698ad1a538da0b6bf969cfee630b4e3a026afb87 ]
 
-The vendor has introduced two new revisions with slightly different
-memory maps; update the driver to support them.
+The intent is to check if 'dest' is truncated or not. So, >= should be
+used instead of >, because strlcat() returns the length of 'dest' and 'src'
+excluding the trailing NULL.
 
-Fixes: dd24e202ac72 ("Input: iqs7222 - add support for Azoteq IQS7222D")
-Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-Link: https://lore.kernel.org/r/ZelTRYX3fenMQuhF@nixie71
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 56463e50d1fc ("NFS: Use super.c for NFSROOT mount option parsing")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/misc/iqs7222.c | 112 +++++++++++++++++++++++++++++++++++
- 1 file changed, 112 insertions(+)
+ fs/nfs/nfsroot.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/misc/iqs7222.c b/drivers/input/misc/iqs7222.c
-index 36aeeae776110..9ca5a743f19fe 100644
---- a/drivers/input/misc/iqs7222.c
-+++ b/drivers/input/misc/iqs7222.c
-@@ -620,6 +620,118 @@ static const struct iqs7222_dev_desc iqs7222_devs[] = {
- 			},
- 		},
- 	},
-+	{
-+		.prod_num = IQS7222_PROD_NUM_D,
-+		.fw_major = 1,
-+		.fw_minor = 2,
-+		.touch_link = 1770,
-+		.allow_offset = 9,
-+		.event_offset = 10,
-+		.comms_offset = 11,
-+		.reg_grps = {
-+			[IQS7222_REG_GRP_STAT] = {
-+				.base = IQS7222_SYS_STATUS,
-+				.num_row = 1,
-+				.num_col = 7,
-+			},
-+			[IQS7222_REG_GRP_CYCLE] = {
-+				.base = 0x8000,
-+				.num_row = 7,
-+				.num_col = 2,
-+			},
-+			[IQS7222_REG_GRP_GLBL] = {
-+				.base = 0x8700,
-+				.num_row = 1,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_BTN] = {
-+				.base = 0x9000,
-+				.num_row = 14,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_CHAN] = {
-+				.base = 0xA000,
-+				.num_row = 14,
-+				.num_col = 4,
-+			},
-+			[IQS7222_REG_GRP_FILT] = {
-+				.base = 0xAE00,
-+				.num_row = 1,
-+				.num_col = 2,
-+			},
-+			[IQS7222_REG_GRP_TPAD] = {
-+				.base = 0xB000,
-+				.num_row = 1,
-+				.num_col = 24,
-+			},
-+			[IQS7222_REG_GRP_GPIO] = {
-+				.base = 0xC000,
-+				.num_row = 3,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_SYS] = {
-+				.base = IQS7222_SYS_SETUP,
-+				.num_row = 1,
-+				.num_col = 12,
-+			},
-+		},
-+	},
-+	{
-+		.prod_num = IQS7222_PROD_NUM_D,
-+		.fw_major = 1,
-+		.fw_minor = 1,
-+		.touch_link = 1774,
-+		.allow_offset = 9,
-+		.event_offset = 10,
-+		.comms_offset = 11,
-+		.reg_grps = {
-+			[IQS7222_REG_GRP_STAT] = {
-+				.base = IQS7222_SYS_STATUS,
-+				.num_row = 1,
-+				.num_col = 7,
-+			},
-+			[IQS7222_REG_GRP_CYCLE] = {
-+				.base = 0x8000,
-+				.num_row = 7,
-+				.num_col = 2,
-+			},
-+			[IQS7222_REG_GRP_GLBL] = {
-+				.base = 0x8700,
-+				.num_row = 1,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_BTN] = {
-+				.base = 0x9000,
-+				.num_row = 14,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_CHAN] = {
-+				.base = 0xA000,
-+				.num_row = 14,
-+				.num_col = 4,
-+			},
-+			[IQS7222_REG_GRP_FILT] = {
-+				.base = 0xAE00,
-+				.num_row = 1,
-+				.num_col = 2,
-+			},
-+			[IQS7222_REG_GRP_TPAD] = {
-+				.base = 0xB000,
-+				.num_row = 1,
-+				.num_col = 24,
-+			},
-+			[IQS7222_REG_GRP_GPIO] = {
-+				.base = 0xC000,
-+				.num_row = 3,
-+				.num_col = 3,
-+			},
-+			[IQS7222_REG_GRP_SYS] = {
-+				.base = IQS7222_SYS_SETUP,
-+				.num_row = 1,
-+				.num_col = 12,
-+			},
-+		},
-+	},
- 	{
- 		.prod_num = IQS7222_PROD_NUM_D,
- 		.fw_major = 0,
+diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
+index 7600100ba26f0..432612d224374 100644
+--- a/fs/nfs/nfsroot.c
++++ b/fs/nfs/nfsroot.c
+@@ -175,10 +175,10 @@ static int __init root_nfs_cat(char *dest, const char *src,
+ 	size_t len = strlen(dest);
+ 
+ 	if (len && dest[len - 1] != ',')
+-		if (strlcat(dest, ",", destlen) > destlen)
++		if (strlcat(dest, ",", destlen) >= destlen)
+ 			return -1;
+ 
+-	if (strlcat(dest, src, destlen) > destlen)
++	if (strlcat(dest, src, destlen) >= destlen)
+ 		return -1;
+ 	return 0;
+ }
 -- 
 2.43.0
 
