@@ -1,525 +1,626 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045F615ECF9;
-	Sun, 24 Mar 2024 23:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34DF237B9E;
+	Sun, 24 Mar 2024 23:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322315; cv=none; b=CLMPzDie1jfCxBlPaLeiftWFY0TzsTHlVZYZBZPbyBy+yOUNsr/TyFDG/Pk/cJa7sbqx/PfHxJcK8lHMVd4F9eF1vumpF1bZLhggEQLpfe16A0IXvkAkgCsVL95rmjmUtGwT0buOOo7C74MijhhAwOavTtRqdrLpWMCSSdDxv4o=
+	t=1711322318; cv=none; b=u3Cv2xWmHSuW0UsaBEOTDiekvDy0UuFU1xOzjKJIavWX/Gn0Wm+pMSfjAQfIc0/bdFsLm3PkCFbTNVC3VB7NTHSIf5Pc44qsjMDCAWMrRkF52ky8qSGo+hHTYq72t7svO3ZbOv+zt9fGdI5HLPjDTsF7VdyNWOky2O/O5CqptwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322315; c=relaxed/simple;
-	bh=qNDdcDSP8wEaAJJd7uyKmBgAQscJG7aJdkOstM+hti4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=i6TApecoIvKd4Tz3xQyqO7NpzgDrRpEWlcDzrDHB5ikGn23hwwJZby57BSJTckCJ6gMSb32MBPVHAc/3UTpxsbH6FFLx7fwxYJVHdPgOfJ9eorc776eS//5B94jdXS+JTe9V2FI47ZPy4Vjpn2+7mkQdpuapjw863RZ6Bl5hS1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=baGJvKbb; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711322318; c=relaxed/simple;
+	bh=mhHF4QV6fhi3vnLTgvAEX5QOGJWsjwYK9yceVB69xZg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S0GHVGvAL13ZdccAPwHdFWdV7rzONV/16gycTO0bCBRi4Zcm7nZnwiLaOHV+kD1XF0cGDpypJATPDdWnzcyMUfQny9pcIf9rYEbqIeHDda8b79utRzfowre/yx5jsMdujAPMBFWH0Fh6Qvp0icGSBW6eXIVtvRNaeNLepbfu+dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=onnWQVhK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="baGJvKbb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711322313; x=1742858313;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=qNDdcDSP8wEaAJJd7uyKmBgAQscJG7aJdkOstM+hti4=;
-  b=baGJvKbbKckOK+FR8mNvCMdMcxR11Koj4VuDaT8zl937AGBbasHturg1
-   eYAALQXTdyQMptZ9U1ehNuAHHs5+95PKHrmktuJ4lniLTB7gTnPrkIxFu
-   dkB8R0dLrKFHeTG8BxXV/ysxGcrALRnbE5GVhxsxnsVr5TomEXJhoA6M+
-   ReUa5QG24EJyr7KbYKd7k9D9NKQEow7q4QssjFkTQsBqsWnydbwzlLg8R
-   msXVj+ivgdaE9V9hJLVLWofFTcthI+p/BvUsSxAXXfHKXgJY26+42bJh+
-   dlRBOW0cpD3yv/wM7yBku3hlFLuax5GArjThqsbs+ldUcsdMGffVdH7FH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6431773"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="6431773"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="15464739"
-Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.186.165])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:24 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-Date: Sun, 24 Mar 2024 16:18:27 -0700
-Subject: [PATCH 24/26] tools/testing/cxl: Make event logs dynamic
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="onnWQVhK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E291DC433F1;
+	Sun, 24 Mar 2024 23:18:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711322317;
+	bh=mhHF4QV6fhi3vnLTgvAEX5QOGJWsjwYK9yceVB69xZg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=onnWQVhKcVHpmCxti3BO0M7V7AfmwE72faUDvzX0Aecni3MuB9q3ZjFnCFQtx731T
+	 RfZM4Otl9mrmjIdc7bsLaHqvNI30qQW9twKxUBbIPWTdJvZaR/8PWCtADZ+3Wkp+iT
+	 rwG1HS5MsRlcl0PL8Ee752oDzuF1WYN6BUeM5g/KqKW2IxYMrCXP5JIxmZi/EpZ4TV
+	 qRlViwQAUIA32vIHJVTvVcV8D503ePNEsGOqZvqQRlfDeHAQ5bv8QphZ8L5EfI50HM
+	 pUZS99eJQp25UcXVne6SLBO1HmKxxhQMbpZxso8gmPXp7y88P/6boQhAZxlwdUsx2p
+	 wp+nylDE+kL0A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.1 400/451] ASoC: rockchip: i2s-tdm: Fix inaccurate sampling rates
+Date: Sun, 24 Mar 2024 19:11:16 -0400
+Message-ID: <20240324231207.1351418-401-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
+References: <20240324231207.1351418-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240324-dcd-type2-upstream-v1-24-b7b00d623625@intel.com>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
-In-Reply-To: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Navneet Singh <navneet.singh@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
- Davidlohr Bueso <dave@stgolabs.net>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=15319;
- i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=qNDdcDSP8wEaAJJd7uyKmBgAQscJG7aJdkOstM+hti4=;
- b=x25M1ktIhLuCYWQpdNm/VSic4+qXTwF6HdG8/iGYkv0AARVpR+KWbfbGl/YkaJdqRPvQAqFux
- BLZzYUBV2I5Au34+EkcPb69duZFWTeGoVHs5kxGGj+oFTKqNbFOpJk2
-X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
- pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-The test event logs were created as static arrays as an easy way to mock
-events.  Dynamic Capacity Device (DCD) test support requires events be
-generated dynamically when extents are created or destroyed.
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-Modify the event log storage to be dynamically allocated.  Reuse the
-static event data to create the dynamic events in the new logs without
-inventing complex event injection for the previous tests.  Simplify the
-processing of the logs by using the event log array index as the handle.
-Add a lock to manage concurrency required when user space is allowed to
-control DCD extents
+[ Upstream commit 9e2ab4b18ebd46813fc3459207335af4d368e323 ]
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+The sample rates set by the rockchip_i2s_tdm driver in master mode are
+inaccurate up to 5% in several cases, due to the driver logic to configure
+clocks and a nasty interaction with the Common Clock Framework.
 
+To understand what happens, here is the relevant section of the clock tree
+(slightly simplified), along with the names used in the driver:
+
+       vpll0 _OR_ vpll1               "mclk_root"
+          clk_i2s2_8ch_tx_src         "mclk_parent"
+             clk_i2s2_8ch_tx_mux
+                clk_i2s2_8ch_tx       "mclk" or "mclk_tx"
+
+This is what happens when playing back e.g. at 192 kHz using
+audio-graph-card (when recording the same applies, only s/tx/rx/):
+
+ 0. at probe, rockchip_i2s_tdm_set_sysclk() stores the passed frequency in
+    i2s_tdm->mclk_tx_freq (*) which is 50176000, and that is never modified
+    afterwards
+
+ 1. when playback is started, rockchip_i2s_tdm_hw_params() is called and
+    does the following two calls
+
+ 2. rockchip_i2s_tdm_calibrate_mclk():
+
+    2a. selects mclk_root0 (vpll0) as a parent for mclk_parent
+        (mclk_tx_src), which is OK because the vpll0 rate is a good for
+        192000 (and sumbultiple) rates
+
+    2b. sets the mclk_root frequency based on ppm calibration computations
+
+    2c. sets mclk_tx_src to 49152000 (= 256 * 192000), which is also OK as
+        it is a multiple of the required bit clock
+
+ 3. rockchip_i2s_tdm_set_mclk()
+
+    3a. calls clk_set_rate() to set the rate of mclk_tx (clk_i2s2_8ch_tx)
+        to the value of i2s_tdm->mclk_tx_freq (*), i.e. 50176000 which is
+        not a multiple of the sampling frequency -- this is not OK
+
+        3a1. clk_set_rate() reacts by reparenting clk_i2s2_8ch_tx_src to
+             vpll1 -- this is not OK because the default vpll1 rate can be
+	     divided to get 44.1 kHz and related rates, not 192 kHz
+
+The result is that the driver does a lot of ad-hoc decisions about clocks
+and ends up in using the wrong parent at an unoptimal rate.
+
+Step 0 is one part of the problem: unless the card driver calls set_sysclk
+at each stream start, whatever rate is set in mclk_tx_freq during boot will
+be taken and used until reboot. Moreover the driver does not care if its
+value is not a multiple of any audio frequency.
+
+Another part of the problem is that the whole reparenting and clock rate
+setting logic is conflicting with the CCF algorithms to achieve largely the
+same goal: selecting the best parent and setting the closest clock
+rate. And it turns out that only calling once clk_set_rate() on
+clk_i2s2_8ch_tx picks the correct vpll and sets the correct rate.
+
+The fix is based on removing the custom logic in the driver to select the
+parent and set the various clocks, and just let the Clock Framework do it
+all. As a side effect, the set_sysclk() op becomes useless because we now
+let the CCF compute the appropriate value for the sampling rate.  It also
+implies that the whole calibration logic is now dead code and so it is
+removed along with the "PCM Clock Compensation in PPM" kcontrol, which has
+always been broken anyway. The handling of the 4 optional clocks also
+becomes dead code and is removed.
+
+The actual rates have been tested playing 30 seconds of audio at various
+sampling rates before and after this change using sox:
+
+    time play -r <sample_rate> -n synth 30 sine 950 gain -3
+
+The time reported in the table below is the 'real' value reported by the
+'time' command in the above command line.
+
+     rate        before     after
+   ---------     ------     ------
+     8000 Hz     30.60s     30.63s
+    11025 Hz     30.45s     30.51s
+    16000 Hz     30.47s     30.50s
+    22050 Hz     30.78s     30.41s
+    32000 Hz     31.02s     30.43s
+    44100 Hz     30.78s     30.41s
+    48000 Hz     29.81s     30.45s
+    88200 Hz     30.78s     30.41s
+    96000 Hz     29.79s     30.42s
+   176400 Hz     27.40s     30.41s
+   192000 Hz     29.79s     30.42s
+
+While the tests are running the clock tree confirms that:
+
+ * without the patch, vpll1 is always used and clk_i2s2_8ch_tx always
+   produces 50176000 Hz, which cannot be divided for most audio rates
+   except the slowest ones, generating inaccurate rates
+ * with the patch:
+   - for 192000 Hz vpll0 is used
+   - for 176400 Hz vpll1 is used
+   - clk_i2s2_8ch_tx always produces (256 * <rate>) Hz
+
+Tested on the RK3308 using the internal audio codec.
+
+Fixes: 081068fd6414 ("ASoC: rockchip: add support for i2s-tdm controller")
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Link: https://msgid.link/r/20240305-rk3308-audio-codec-v4-1-312acdbe628f@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes for v1
-[iweiny: Adjust for new event code]
----
- tools/testing/cxl/test/mem.c | 281 ++++++++++++++++++++++++++-----------------
- 1 file changed, 172 insertions(+), 109 deletions(-)
+ sound/soc/rockchip/rockchip_i2s_tdm.c | 352 +-------------------------
+ 1 file changed, 6 insertions(+), 346 deletions(-)
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 35ee41e435ab..d8d62e6eeb18 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -124,18 +124,27 @@ static struct {
+diff --git a/sound/soc/rockchip/rockchip_i2s_tdm.c b/sound/soc/rockchip/rockchip_i2s_tdm.c
+index 2550bd2a5e78c..2e36a97077b99 100644
+--- a/sound/soc/rockchip/rockchip_i2s_tdm.c
++++ b/sound/soc/rockchip/rockchip_i2s_tdm.c
+@@ -27,8 +27,6 @@
+ #define DEFAULT_MCLK_FS				256
+ #define CH_GRP_MAX				4  /* The max channel 8 / 2 */
+ #define MULTIPLEX_CH_MAX			10
+-#define CLK_PPM_MIN				-1000
+-#define CLK_PPM_MAX				1000
  
- #define PASS_TRY_LIMIT 3
- 
--#define CXL_TEST_EVENT_CNT_MAX 15
-+#define CXL_TEST_EVENT_CNT_MAX 17
- 
- /* Set a number of events to return at a time for simulation.  */
- #define CXL_TEST_EVENT_CNT 3
- 
-+/*
-+ * @next_handle: next handle (index) to be stored to
-+ * @cur_handle: current handle (index) to be returned to the user on get_event
-+ * @nr_events: total events in this log
-+ * @nr_overflow: number of events added past the log size
-+ * @lock: protect these state variables
-+ * @events: array of pending events to be returned.
-+ */
- struct mock_event_log {
--	u16 clear_idx;
--	u16 cur_idx;
-+	u16 next_handle;
-+	u16 cur_handle;
- 	u16 nr_events;
- 	u16 nr_overflow;
--	u16 overflow_reset;
--	struct cxl_event_record_raw *events[CXL_TEST_EVENT_CNT_MAX];
-+	rwlock_t lock;
-+	/* 1 extra slot to accommodate that handles can't be 0 */
-+	struct cxl_event_record_raw *events[CXL_TEST_EVENT_CNT_MAX + 1];
- };
- 
- struct mock_event_store {
-@@ -170,64 +179,76 @@ static struct mock_event_log *event_find_log(struct device *dev, int log_type)
- 	return &mdata->mes.mock_logs[log_type];
- }
- 
--static struct cxl_event_record_raw *event_get_current(struct mock_event_log *log)
--{
--	return log->events[log->cur_idx];
--}
--
--static void event_reset_log(struct mock_event_log *log)
--{
--	log->cur_idx = 0;
--	log->clear_idx = 0;
--	log->nr_overflow = log->overflow_reset;
--}
--
- /* Handle can never be 0 use 1 based indexing for handle */
--static u16 event_get_clear_handle(struct mock_event_log *log)
-+static void event_inc_handle(u16 *handle)
- {
--	return log->clear_idx + 1;
-+	*handle = (*handle + 1) % CXL_TEST_EVENT_CNT_MAX;
-+	if (!*handle)
-+		*handle = *handle + 1;
- }
- 
--/* Handle can never be 0 use 1 based indexing for handle */
--static __le16 event_get_cur_event_handle(struct mock_event_log *log)
--{
--	u16 cur_handle = log->cur_idx + 1;
--
--	return cpu_to_le16(cur_handle);
--}
--
--static bool event_log_empty(struct mock_event_log *log)
--{
--	return log->cur_idx == log->nr_events;
--}
--
--static void mes_add_event(struct mock_event_store *mes,
-+/* Add the event or free it on 'overflow' */
-+static void mes_add_event(struct cxl_mockmem_data *mdata,
- 			  enum cxl_event_log_type log_type,
- 			  struct cxl_event_record_raw *event)
- {
-+	struct device *dev = mdata->mds->cxlds.dev;
- 	struct mock_event_log *log;
-+	u16 handle;
- 
- 	if (WARN_ON(log_type >= CXL_EVENT_TYPE_MAX))
- 		return;
- 
--	log = &mes->mock_logs[log_type];
-+	log = &mdata->mes.mock_logs[log_type];
- 
--	if ((log->nr_events + 1) > CXL_TEST_EVENT_CNT_MAX) {
-+	write_lock(&log->lock);
-+
-+	handle = log->next_handle;
-+	if ((handle + 1) == log->cur_handle) {
- 		log->nr_overflow++;
--		log->overflow_reset = log->nr_overflow;
--		return;
-+		dev_dbg(dev, "Overflowing %d\n", log_type);
-+		devm_kfree(dev, event);
-+		goto unlock;
- 	}
- 
--	log->events[log->nr_events] = event;
-+	dev_dbg(dev, "Log %d; handle %u\n", log_type, handle);
-+	event->event.generic.hdr.handle = cpu_to_le16(handle);
-+	log->events[handle] = event;
-+	event_inc_handle(&log->next_handle);
- 	log->nr_events++;
-+
-+unlock:
-+	write_unlock(&log->lock);
-+}
-+
-+static void mes_del_event(struct device *dev,
-+			  struct mock_event_log *log,
-+			  u16 handle)
-+{
-+	struct cxl_event_record_raw *cur;
-+
-+	lockdep_assert(lockdep_is_held(&log->lock));
-+
-+	dev_dbg(dev, "Clearing event %u; cur %u\n", handle, log->cur_handle);
-+	cur = log->events[handle];
-+	if (!cur) {
-+		dev_err(dev, "Mock event index %u empty? nr_events %u",
-+			handle, log->nr_events);
-+		return;
-+	}
-+	log->events[handle] = NULL;
-+
-+	event_inc_handle(&log->cur_handle);
-+	log->nr_events--;
-+	devm_kfree(dev, cur);
- }
- 
- static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
- {
- 	struct cxl_get_event_payload *pl;
- 	struct mock_event_log *log;
--	u16 nr_overflow;
- 	u8 log_type;
-+	u16 handle;
- 	int i;
- 
- 	if (cmd->size_in != sizeof(log_type))
-@@ -240,31 +261,40 @@ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
- 	if (log_type >= CXL_EVENT_TYPE_MAX)
- 		return -EINVAL;
- 
--	memset(cmd->payload_out, 0, cmd->size_out);
--
- 	log = event_find_log(dev, log_type);
--	if (!log || event_log_empty(log))
-+	if (!log)
- 		return 0;
- 
-+	memset(cmd->payload_out, 0, cmd->size_out);
- 	pl = cmd->payload_out;
- 
--	for (i = 0; i < CXL_TEST_EVENT_CNT && !event_log_empty(log); i++) {
--		memcpy(&pl->records[i], event_get_current(log),
--		       sizeof(pl->records[i]));
--		pl->records[i].event.generic.hdr.handle =
--				event_get_cur_event_handle(log);
--		log->cur_idx++;
-+	read_lock(&log->lock);
-+
-+	handle = log->cur_handle;
-+	dev_dbg(dev, "Get log %d handle %u next %u\n",
-+		log_type, handle, log->next_handle);
-+	for (i = 0;
-+	     i < CXL_TEST_EVENT_CNT && handle != log->next_handle;
-+	     i++, event_inc_handle(&handle)) {
-+		struct cxl_event_record_raw *cur;
-+
-+		cur = log->events[handle];
-+		dev_dbg(dev, "Sending event log %d handle %d idx %u\n",
-+			log_type, le16_to_cpu(cur->event.generic.hdr.handle),
-+			handle);
-+		memcpy(&pl->records[i], cur, sizeof(pl->records[i]));
-+		pl->records[i].event.generic.hdr.handle = cpu_to_le16(handle);
- 	}
- 
- 	pl->record_count = cpu_to_le16(i);
--	if (!event_log_empty(log))
-+	if (log->nr_events > i)
- 		pl->flags |= CXL_GET_EVENT_FLAG_MORE_RECORDS;
- 
- 	if (log->nr_overflow) {
- 		u64 ns;
- 
- 		pl->flags |= CXL_GET_EVENT_FLAG_OVERFLOW;
--		pl->overflow_err_count = cpu_to_le16(nr_overflow);
-+		pl->overflow_err_count = cpu_to_le16(log->nr_overflow);
- 		ns = ktime_get_real_ns();
- 		ns -= 5000000000; /* 5s ago */
- 		pl->first_overflow_timestamp = cpu_to_le64(ns);
-@@ -273,16 +303,17 @@ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
- 		pl->last_overflow_timestamp = cpu_to_le64(ns);
- 	}
- 
-+	read_unlock(&log->lock);
- 	return 0;
- }
- 
- static int mock_clear_event(struct device *dev, struct cxl_mbox_cmd *cmd)
- {
- 	struct cxl_mbox_clear_event_payload *pl = cmd->payload_in;
--	struct mock_event_log *log;
- 	u8 log_type = pl->event_log;
-+	struct mock_event_log *log;
-+	int nr, rc = 0;
- 	u16 handle;
--	int nr;
- 
- 	if (log_type >= CXL_EVENT_TYPE_MAX)
- 		return -EINVAL;
-@@ -291,24 +322,23 @@ static int mock_clear_event(struct device *dev, struct cxl_mbox_cmd *cmd)
- 	if (!log)
- 		return 0; /* No mock data in this log */
- 
+ #define TRCM_TXRX 0
+ #define TRCM_TX 1
+@@ -55,20 +53,6 @@ struct rk_i2s_tdm_dev {
+ 	struct clk *hclk;
+ 	struct clk *mclk_tx;
+ 	struct clk *mclk_rx;
+-	/* The mclk_tx_src is parent of mclk_tx */
+-	struct clk *mclk_tx_src;
+-	/* The mclk_rx_src is parent of mclk_rx */
+-	struct clk *mclk_rx_src;
 -	/*
--	 * This check is technically not invalid per the specification AFAICS.
--	 * (The host could 'guess' handles and clear them in order).
--	 * However, this is not good behavior for the host so test it.
+-	 * The mclk_root0 and mclk_root1 are root parent and supplies for
+-	 * the different FS.
+-	 *
+-	 * e.g:
+-	 * mclk_root0 is VPLL0, used for FS=48000Hz
+-	 * mclk_root1 is VPLL1, used for FS=44100Hz
 -	 */
--	if (log->clear_idx + pl->nr_recs > log->cur_idx) {
--		dev_err(dev,
--			"Attempting to clear more events than returned!\n");
--		return -EINVAL;
+-	struct clk *mclk_root0;
+-	struct clk *mclk_root1;
+ 	struct regmap *regmap;
+ 	struct regmap *grf;
+ 	struct snd_dmaengine_dai_dma_data capture_dma_data;
+@@ -78,19 +62,11 @@ struct rk_i2s_tdm_dev {
+ 	struct rk_i2s_soc_data *soc_data;
+ 	bool is_master_mode;
+ 	bool io_multiplex;
+-	bool mclk_calibrate;
+ 	bool tdm_mode;
+-	unsigned int mclk_rx_freq;
+-	unsigned int mclk_tx_freq;
+-	unsigned int mclk_root0_freq;
+-	unsigned int mclk_root1_freq;
+-	unsigned int mclk_root0_initial_freq;
+-	unsigned int mclk_root1_initial_freq;
+ 	unsigned int frame_width;
+ 	unsigned int clk_trcm;
+ 	unsigned int i2s_sdis[CH_GRP_MAX];
+ 	unsigned int i2s_sdos[CH_GRP_MAX];
+-	int clk_ppm;
+ 	int refcount;
+ 	spinlock_t lock; /* xfer lock */
+ 	bool has_playback;
+@@ -116,12 +92,6 @@ static void i2s_tdm_disable_unprepare_mclk(struct rk_i2s_tdm_dev *i2s_tdm)
+ {
+ 	clk_disable_unprepare(i2s_tdm->mclk_tx);
+ 	clk_disable_unprepare(i2s_tdm->mclk_rx);
+-	if (i2s_tdm->mclk_calibrate) {
+-		clk_disable_unprepare(i2s_tdm->mclk_tx_src);
+-		clk_disable_unprepare(i2s_tdm->mclk_rx_src);
+-		clk_disable_unprepare(i2s_tdm->mclk_root0);
+-		clk_disable_unprepare(i2s_tdm->mclk_root1);
 -	}
-+	write_lock(&log->lock);
+ }
  
- 	/* Check handle order prior to clearing events */
--	for (nr = 0, handle = event_get_clear_handle(log);
--	     nr < pl->nr_recs;
--	     nr++, handle++) {
-+	handle = log->cur_handle;
-+	for (nr = 0;
-+	     nr < pl->nr_recs && handle != log->next_handle;
-+	     nr++, event_inc_handle(&handle)) {
-+
-+		dev_dbg(dev, "Checking clear of %d handle %u plhandle %u\n",
-+			log_type, handle,
-+			le16_to_cpu(pl->handles[nr]));
-+
- 		if (handle != le16_to_cpu(pl->handles[nr])) {
--			dev_err(dev, "Clearing events out of order\n");
--			return -EINVAL;
-+			dev_err(dev, "Clearing events out of order %u %u\n",
-+				handle, le16_to_cpu(pl->handles[nr]));
-+			rc = -EINVAL;
-+			goto unlock;
- 		}
- 	}
+ /**
+@@ -144,29 +114,9 @@ static int i2s_tdm_prepare_enable_mclk(struct rk_i2s_tdm_dev *i2s_tdm)
+ 	ret = clk_prepare_enable(i2s_tdm->mclk_rx);
+ 	if (ret)
+ 		goto err_mclk_rx;
+-	if (i2s_tdm->mclk_calibrate) {
+-		ret = clk_prepare_enable(i2s_tdm->mclk_tx_src);
+-		if (ret)
+-			goto err_mclk_rx;
+-		ret = clk_prepare_enable(i2s_tdm->mclk_rx_src);
+-		if (ret)
+-			goto err_mclk_rx_src;
+-		ret = clk_prepare_enable(i2s_tdm->mclk_root0);
+-		if (ret)
+-			goto err_mclk_root0;
+-		ret = clk_prepare_enable(i2s_tdm->mclk_root1);
+-		if (ret)
+-			goto err_mclk_root1;
+-	}
  
-@@ -316,25 +346,12 @@ static int mock_clear_event(struct device *dev, struct cxl_mbox_cmd *cmd)
- 		log->nr_overflow = 0;
+ 	return 0;
  
- 	/* Clear events */
--	log->clear_idx += pl->nr_recs;
+-err_mclk_root1:
+-	clk_disable_unprepare(i2s_tdm->mclk_root0);
+-err_mclk_root0:
+-	clk_disable_unprepare(i2s_tdm->mclk_rx_src);
+-err_mclk_rx_src:
+-	clk_disable_unprepare(i2s_tdm->mclk_tx_src);
+ err_mclk_rx:
+ 	clk_disable_unprepare(i2s_tdm->mclk_tx);
+ err_mclk_tx:
+@@ -566,159 +516,6 @@ static void rockchip_i2s_tdm_xfer_resume(struct snd_pcm_substream *substream,
+ 			   I2S_XFER_RXS_START);
+ }
+ 
+-static int rockchip_i2s_tdm_clk_set_rate(struct rk_i2s_tdm_dev *i2s_tdm,
+-					 struct clk *clk, unsigned long rate,
+-					 int ppm)
+-{
+-	unsigned long rate_target;
+-	int delta, ret;
+-
+-	if (ppm == i2s_tdm->clk_ppm)
+-		return 0;
+-
+-	if (ppm < 0)
+-		delta = -1;
+-	else
+-		delta = 1;
+-
+-	delta *= (int)div64_u64((u64)rate * (u64)abs(ppm) + 500000,
+-				1000000);
+-
+-	rate_target = rate + delta;
+-
+-	if (!rate_target)
+-		return -EINVAL;
+-
+-	ret = clk_set_rate(clk, rate_target);
+-	if (ret)
+-		return ret;
+-
+-	i2s_tdm->clk_ppm = ppm;
+-
 -	return 0;
 -}
-+	for (nr = 0; nr < pl->nr_recs; nr++)
-+		mes_del_event(dev, log, le16_to_cpu(pl->handles[nr]));
- 
--static void cxl_mock_event_trigger(struct device *dev)
+-
+-static int rockchip_i2s_tdm_calibrate_mclk(struct rk_i2s_tdm_dev *i2s_tdm,
+-					   struct snd_pcm_substream *substream,
+-					   unsigned int lrck_freq)
 -{
--	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
--	struct mock_event_store *mes = &mdata->mes;
--	int i;
+-	struct clk *mclk_root;
+-	struct clk *mclk_parent;
+-	unsigned int mclk_root_freq;
+-	unsigned int mclk_root_initial_freq;
+-	unsigned int mclk_parent_freq;
+-	unsigned int div, delta;
+-	u64 ppm;
+-	int ret;
 -
--	for (i = CXL_EVENT_TYPE_INFO; i < CXL_EVENT_TYPE_MAX; i++) {
--		struct mock_event_log *log;
+-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+-		mclk_parent = i2s_tdm->mclk_tx_src;
+-	else
+-		mclk_parent = i2s_tdm->mclk_rx_src;
 -
--		log = event_find_log(dev, i);
--		if (log)
--			event_reset_log(log);
+-	switch (lrck_freq) {
+-	case 8000:
+-	case 16000:
+-	case 24000:
+-	case 32000:
+-	case 48000:
+-	case 64000:
+-	case 96000:
+-	case 192000:
+-		mclk_root = i2s_tdm->mclk_root0;
+-		mclk_root_freq = i2s_tdm->mclk_root0_freq;
+-		mclk_root_initial_freq = i2s_tdm->mclk_root0_initial_freq;
+-		mclk_parent_freq = DEFAULT_MCLK_FS * 192000;
+-		break;
+-	case 11025:
+-	case 22050:
+-	case 44100:
+-	case 88200:
+-	case 176400:
+-		mclk_root = i2s_tdm->mclk_root1;
+-		mclk_root_freq = i2s_tdm->mclk_root1_freq;
+-		mclk_root_initial_freq = i2s_tdm->mclk_root1_initial_freq;
+-		mclk_parent_freq = DEFAULT_MCLK_FS * 176400;
+-		break;
+-	default:
+-		dev_err(i2s_tdm->dev, "Invalid LRCK frequency: %u Hz\n",
+-			lrck_freq);
+-		return -EINVAL;
 -	}
 -
--	cxl_mem_get_event_records(mdata->mds, mes->ev_status);
-+unlock:
-+	write_unlock(&log->lock);
-+	return rc;
- }
+-	ret = clk_set_parent(mclk_parent, mclk_root);
+-	if (ret)
+-		return ret;
+-
+-	ret = rockchip_i2s_tdm_clk_set_rate(i2s_tdm, mclk_root,
+-					    mclk_root_freq, 0);
+-	if (ret)
+-		return ret;
+-
+-	delta = abs(mclk_root_freq % mclk_parent_freq - mclk_parent_freq);
+-	ppm = div64_u64((uint64_t)delta * 1000000, (uint64_t)mclk_root_freq);
+-
+-	if (ppm) {
+-		div = DIV_ROUND_CLOSEST(mclk_root_initial_freq, mclk_parent_freq);
+-		if (!div)
+-			return -EINVAL;
+-
+-		mclk_root_freq = mclk_parent_freq * round_up(div, 2);
+-
+-		ret = clk_set_rate(mclk_root, mclk_root_freq);
+-		if (ret)
+-			return ret;
+-
+-		i2s_tdm->mclk_root0_freq = clk_get_rate(i2s_tdm->mclk_root0);
+-		i2s_tdm->mclk_root1_freq = clk_get_rate(i2s_tdm->mclk_root1);
+-	}
+-
+-	return clk_set_rate(mclk_parent, mclk_parent_freq);
+-}
+-
+-static int rockchip_i2s_tdm_set_mclk(struct rk_i2s_tdm_dev *i2s_tdm,
+-				     struct snd_pcm_substream *substream,
+-				     struct clk **mclk)
+-{
+-	unsigned int mclk_freq;
+-	int ret;
+-
+-	if (i2s_tdm->clk_trcm) {
+-		if (i2s_tdm->mclk_tx_freq != i2s_tdm->mclk_rx_freq) {
+-			dev_err(i2s_tdm->dev,
+-				"clk_trcm, tx: %d and rx: %d should be the same\n",
+-				i2s_tdm->mclk_tx_freq,
+-				i2s_tdm->mclk_rx_freq);
+-			return -EINVAL;
+-		}
+-
+-		ret = clk_set_rate(i2s_tdm->mclk_tx, i2s_tdm->mclk_tx_freq);
+-		if (ret)
+-			return ret;
+-
+-		ret = clk_set_rate(i2s_tdm->mclk_rx, i2s_tdm->mclk_rx_freq);
+-		if (ret)
+-			return ret;
+-
+-		/* mclk_rx is also ok. */
+-		*mclk = i2s_tdm->mclk_tx;
+-	} else {
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+-			*mclk = i2s_tdm->mclk_tx;
+-			mclk_freq = i2s_tdm->mclk_tx_freq;
+-		} else {
+-			*mclk = i2s_tdm->mclk_rx;
+-			mclk_freq = i2s_tdm->mclk_rx_freq;
+-		}
+-
+-		ret = clk_set_rate(*mclk, mclk_freq);
+-		if (ret)
+-			return ret;
+-	}
+-
+-	return 0;
+-}
+-
+ static int rockchip_i2s_ch_to_io(unsigned int ch, bool substream_capture)
+ {
+ 	if (substream_capture) {
+@@ -849,19 +646,17 @@ static int rockchip_i2s_tdm_hw_params(struct snd_pcm_substream *substream,
+ 				      struct snd_soc_dai *dai)
+ {
+ 	struct rk_i2s_tdm_dev *i2s_tdm = to_info(dai);
+-	struct clk *mclk;
+-	int ret = 0;
+ 	unsigned int val = 0;
+ 	unsigned int mclk_rate, bclk_rate, div_bclk = 4, div_lrck = 64;
++	int err;
  
- struct cxl_event_record_raw maint_needed = {
-@@ -459,8 +476,27 @@ static int mock_set_timestamp(struct cxl_dev_state *cxlds,
+ 	if (i2s_tdm->is_master_mode) {
+-		if (i2s_tdm->mclk_calibrate)
+-			rockchip_i2s_tdm_calibrate_mclk(i2s_tdm, substream,
+-							params_rate(params));
++		struct clk *mclk = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
++			i2s_tdm->mclk_tx : i2s_tdm->mclk_rx;
+ 
+-		ret = rockchip_i2s_tdm_set_mclk(i2s_tdm, substream, &mclk);
+-		if (ret)
+-			return ret;
++		err = clk_set_rate(mclk, DEFAULT_MCLK_FS * params_rate(params));
++		if (err)
++			return err;
+ 
+ 		mclk_rate = clk_get_rate(mclk);
+ 		bclk_rate = i2s_tdm->frame_width * params_rate(params);
+@@ -969,96 +764,6 @@ static int rockchip_i2s_tdm_trigger(struct snd_pcm_substream *substream,
  	return 0;
  }
  
--static void cxl_mock_add_event_logs(struct mock_event_store *mes)
-+/* Create a dynamically allocated event out of a statically defined event. */
-+static void add_event_from_static(struct cxl_mockmem_data *mdata,
-+				  enum cxl_event_log_type log_type,
-+				  struct cxl_event_record_raw *raw)
+-static int rockchip_i2s_tdm_set_sysclk(struct snd_soc_dai *cpu_dai, int stream,
+-				       unsigned int freq, int dir)
+-{
+-	struct rk_i2s_tdm_dev *i2s_tdm = to_info(cpu_dai);
+-
+-	/* Put set mclk rate into rockchip_i2s_tdm_set_mclk() */
+-	if (i2s_tdm->clk_trcm) {
+-		i2s_tdm->mclk_tx_freq = freq;
+-		i2s_tdm->mclk_rx_freq = freq;
+-	} else {
+-		if (stream == SNDRV_PCM_STREAM_PLAYBACK)
+-			i2s_tdm->mclk_tx_freq = freq;
+-		else
+-			i2s_tdm->mclk_rx_freq = freq;
+-	}
+-
+-	dev_dbg(i2s_tdm->dev, "The target mclk_%s freq is: %d\n",
+-		stream ? "rx" : "tx", freq);
+-
+-	return 0;
+-}
+-
+-static int rockchip_i2s_tdm_clk_compensation_info(struct snd_kcontrol *kcontrol,
+-						  struct snd_ctl_elem_info *uinfo)
+-{
+-	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
+-	uinfo->count = 1;
+-	uinfo->value.integer.min = CLK_PPM_MIN;
+-	uinfo->value.integer.max = CLK_PPM_MAX;
+-	uinfo->value.integer.step = 1;
+-
+-	return 0;
+-}
+-
+-static int rockchip_i2s_tdm_clk_compensation_get(struct snd_kcontrol *kcontrol,
+-						 struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct snd_soc_dai *dai = snd_kcontrol_chip(kcontrol);
+-	struct rk_i2s_tdm_dev *i2s_tdm = snd_soc_dai_get_drvdata(dai);
+-
+-	ucontrol->value.integer.value[0] = i2s_tdm->clk_ppm;
+-
+-	return 0;
+-}
+-
+-static int rockchip_i2s_tdm_clk_compensation_put(struct snd_kcontrol *kcontrol,
+-						 struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct snd_soc_dai *dai = snd_kcontrol_chip(kcontrol);
+-	struct rk_i2s_tdm_dev *i2s_tdm = snd_soc_dai_get_drvdata(dai);
+-	int ret = 0, ppm = 0;
+-	int changed = 0;
+-	unsigned long old_rate;
+-
+-	if (ucontrol->value.integer.value[0] < CLK_PPM_MIN ||
+-	    ucontrol->value.integer.value[0] > CLK_PPM_MAX)
+-		return -EINVAL;
+-
+-	ppm = ucontrol->value.integer.value[0];
+-
+-	old_rate = clk_get_rate(i2s_tdm->mclk_root0);
+-	ret = rockchip_i2s_tdm_clk_set_rate(i2s_tdm, i2s_tdm->mclk_root0,
+-					    i2s_tdm->mclk_root0_freq, ppm);
+-	if (ret)
+-		return ret;
+-	if (old_rate != clk_get_rate(i2s_tdm->mclk_root0))
+-		changed = 1;
+-
+-	if (clk_is_match(i2s_tdm->mclk_root0, i2s_tdm->mclk_root1))
+-		return changed;
+-
+-	old_rate = clk_get_rate(i2s_tdm->mclk_root1);
+-	ret = rockchip_i2s_tdm_clk_set_rate(i2s_tdm, i2s_tdm->mclk_root1,
+-					    i2s_tdm->mclk_root1_freq, ppm);
+-	if (ret)
+-		return ret;
+-	if (old_rate != clk_get_rate(i2s_tdm->mclk_root1))
+-		changed = 1;
+-
+-	return changed;
+-}
+-
+-static struct snd_kcontrol_new rockchip_i2s_tdm_compensation_control = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_PCM,
+-	.name = "PCM Clock Compensation in PPM",
+-	.info = rockchip_i2s_tdm_clk_compensation_info,
+-	.get = rockchip_i2s_tdm_clk_compensation_get,
+-	.put = rockchip_i2s_tdm_clk_compensation_put,
+-};
+-
+ static int rockchip_i2s_tdm_dai_probe(struct snd_soc_dai *dai)
  {
-+	struct device *dev = mdata->mds->cxlds.dev;
-+	struct cxl_event_record_raw *rec;
-+
-+	rec = devm_kmemdup(dev, raw, sizeof(*rec), GFP_KERNEL);
-+	if (!rec) {
-+		dev_err(dev, "Failed to alloc event for log\n");
-+		return;
-+	}
-+	mes_add_event(mdata, log_type, rec);
-+}
-+
-+static void cxl_mock_add_event_logs(struct cxl_mockmem_data *mdata)
-+{
-+	struct mock_event_store *mes = &mdata->mes;
-+	struct device *dev = mdata->mds->cxlds.dev;
-+
- 	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
- 			   &gen_media.rec.validity_flags);
+ 	struct rk_i2s_tdm_dev *i2s_tdm = snd_soc_dai_get_drvdata(dai);
+@@ -1068,9 +773,6 @@ static int rockchip_i2s_tdm_dai_probe(struct snd_soc_dai *dai)
+ 	if (i2s_tdm->has_playback)
+ 		dai->playback_dma_data = &i2s_tdm->playback_dma_data;
  
-@@ -468,43 +504,60 @@ static void cxl_mock_add_event_logs(struct mock_event_store *mes)
- 			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
- 			   &dram.rec.validity_flags);
- 
--	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
--	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
-+	dev_dbg(dev, "Generating fake event logs %d\n",
-+		CXL_EVENT_TYPE_INFO);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_INFO, &maint_needed);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_INFO,
- 		      (struct cxl_event_record_raw *)&gen_media);
--	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_INFO,
- 		      (struct cxl_event_record_raw *)&mem_module);
- 	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
- 
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &maint_needed);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-+	dev_dbg(dev, "Generating fake event logs %d\n",
-+		CXL_EVENT_TYPE_FAIL);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &maint_needed);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL,
-+		      (struct cxl_event_record_raw *)&mem_module);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL,
- 		      (struct cxl_event_record_raw *)&dram);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL,
- 		      (struct cxl_event_record_raw *)&gen_media);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL,
- 		      (struct cxl_event_record_raw *)&mem_module);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL,
- 		      (struct cxl_event_record_raw *)&dram);
- 	/* Overflow this log */
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
- 	mes->ev_status |= CXLDEV_EVENT_STATUS_FAIL;
- 
--	mes_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
--	mes_add_event(mes, CXL_EVENT_TYPE_FATAL,
-+	dev_dbg(dev, "Generating fake event logs %d\n",
-+		CXL_EVENT_TYPE_FATAL);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FATAL, &hardware_replace);
-+	add_event_from_static(mdata, CXL_EVENT_TYPE_FATAL,
- 		      (struct cxl_event_record_raw *)&dram);
- 	mes->ev_status |= CXLDEV_EVENT_STATUS_FATAL;
+-	if (i2s_tdm->mclk_calibrate)
+-		snd_soc_add_dai_controls(dai, &rockchip_i2s_tdm_compensation_control, 1);
+-
+ 	return 0;
  }
  
-+static void cxl_mock_event_trigger(struct device *dev)
-+{
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
-+	struct mock_event_store *mes = &mdata->mes;
-+
-+	cxl_mock_add_event_logs(mdata);
-+	cxl_mem_get_event_records(mdata->mds, mes->ev_status);
-+}
-+
- static int mock_gsl(struct cxl_mbox_cmd *cmd)
- {
- 	if (cmd->size_out < sizeof(mock_gsl_payload))
-@@ -1438,6 +1491,14 @@ static ssize_t event_trigger_store(struct device *dev,
+@@ -1110,7 +812,6 @@ static int rockchip_i2s_tdm_set_bclk_ratio(struct snd_soc_dai *dai,
+ static const struct snd_soc_dai_ops rockchip_i2s_tdm_dai_ops = {
+ 	.hw_params = rockchip_i2s_tdm_hw_params,
+ 	.set_bclk_ratio	= rockchip_i2s_tdm_set_bclk_ratio,
+-	.set_sysclk = rockchip_i2s_tdm_set_sysclk,
+ 	.set_fmt = rockchip_i2s_tdm_set_fmt,
+ 	.set_tdm_slot = rockchip_dai_tdm_slot,
+ 	.trigger = rockchip_i2s_tdm_trigger,
+@@ -1433,35 +1134,6 @@ static void rockchip_i2s_tdm_path_config(struct rk_i2s_tdm_dev *i2s_tdm,
+ 		rockchip_i2s_tdm_tx_path_config(i2s_tdm, num);
  }
- static DEVICE_ATTR_WO(event_trigger);
  
-+static void init_event_log(struct mock_event_log *log)
-+{
-+	rwlock_init(&log->lock);
-+	/* Handle can never be 0 use 1 based indexing for handle */
-+	log->cur_handle = 1;
-+	log->next_handle = 1;
-+}
-+
- static int cxl_mock_mem_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -1504,7 +1565,9 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
+-static int rockchip_i2s_tdm_get_calibrate_mclks(struct rk_i2s_tdm_dev *i2s_tdm)
+-{
+-	int num_mclks = 0;
+-
+-	i2s_tdm->mclk_tx_src = devm_clk_get(i2s_tdm->dev, "mclk_tx_src");
+-	if (!IS_ERR(i2s_tdm->mclk_tx_src))
+-		num_mclks++;
+-
+-	i2s_tdm->mclk_rx_src = devm_clk_get(i2s_tdm->dev, "mclk_rx_src");
+-	if (!IS_ERR(i2s_tdm->mclk_rx_src))
+-		num_mclks++;
+-
+-	i2s_tdm->mclk_root0 = devm_clk_get(i2s_tdm->dev, "mclk_root0");
+-	if (!IS_ERR(i2s_tdm->mclk_root0))
+-		num_mclks++;
+-
+-	i2s_tdm->mclk_root1 = devm_clk_get(i2s_tdm->dev, "mclk_root1");
+-	if (!IS_ERR(i2s_tdm->mclk_root1))
+-		num_mclks++;
+-
+-	if (num_mclks < 4 && num_mclks != 0)
+-		return -ENOENT;
+-
+-	if (num_mclks == 4)
+-		i2s_tdm->mclk_calibrate = 1;
+-
+-	return 0;
+-}
+-
+ static int rockchip_i2s_tdm_path_prepare(struct rk_i2s_tdm_dev *i2s_tdm,
+ 					 struct device_node *np,
+ 					 bool is_rx_path)
+@@ -1609,11 +1281,6 @@ static int rockchip_i2s_tdm_probe(struct platform_device *pdev)
+ 	i2s_tdm->io_multiplex =
+ 		of_property_read_bool(node, "rockchip,io-multiplex");
  
--	cxl_mock_add_event_logs(&mdata->mes);
-+	for (int i = 0; i < CXL_EVENT_TYPE_MAX; i++)
-+		init_event_log(&mdata->mes.mock_logs[i]);
-+	cxl_mock_add_event_logs(mdata);
+-	ret = rockchip_i2s_tdm_get_calibrate_mclks(i2s_tdm);
+-	if (ret)
+-		return dev_err_probe(i2s_tdm->dev, ret,
+-				     "mclk-calibrate clocks missing");
+-
+ 	regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(regs)) {
+ 		return dev_err_probe(i2s_tdm->dev, PTR_ERR(regs),
+@@ -1666,13 +1333,6 @@ static int rockchip_i2s_tdm_probe(struct platform_device *pdev)
+ 		goto err_disable_hclk;
+ 	}
  
- 	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds);
- 	if (IS_ERR(cxlmd))
-
+-	if (i2s_tdm->mclk_calibrate) {
+-		i2s_tdm->mclk_root0_initial_freq = clk_get_rate(i2s_tdm->mclk_root0);
+-		i2s_tdm->mclk_root1_initial_freq = clk_get_rate(i2s_tdm->mclk_root1);
+-		i2s_tdm->mclk_root0_freq = i2s_tdm->mclk_root0_initial_freq;
+-		i2s_tdm->mclk_root1_freq = i2s_tdm->mclk_root1_initial_freq;
+-	}
+-
+ 	pm_runtime_enable(&pdev->dev);
+ 
+ 	regmap_update_bits(i2s_tdm->regmap, I2S_DMACR, I2S_DMACR_TDL_MASK,
 -- 
-2.44.0
+2.43.0
 
