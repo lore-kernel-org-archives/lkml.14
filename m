@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994C05A0F9;
-	Sun, 24 Mar 2024 23:35:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8A1174EF0;
+	Sun, 24 Mar 2024 23:35:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323355; cv=none; b=qvNHXQ4KY0KjU2+t9Roo40N7IfVJtumM8/UB9pPXDShyoyjd+It6nP0RfzvCSqSmRDecHIgGwyS3pi0nb9zXcdXIWjFg4wmf6p8DQ2Zl0+FZ4o434Dmdka/Tr1lYfYtvBJur0L+8gN15hSt+kJaZYCRXlE2v+nXkk7UkMdfVr30=
+	t=1711323343; cv=none; b=G06Re2bJIR1QM6LOhq9mgW1e71gGF1WbUT0a9gnmbLZKj1/nDp44wMZjYeaea0NO+nl0wjYNpwY8kGgOhrpunu3Uqb+LBIuNpDMUZjdye2JDq1JJt+mbu/PDmF6w/y8TqOzYF3Tk2qsnd3q7EYCoZ19V58uNLoBGqM4pU9b0GfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323355; c=relaxed/simple;
-	bh=iBOOEk9l2OEgdp6ukqQgb0EEB1LDW2y0Jd/ziclTJCQ=;
+	s=arc-20240116; t=1711323343; c=relaxed/simple;
+	bh=n7Nw90Gp/WYZo0MmZIPnH/OngeW6HI544oQSyDnp0Bg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p0j+vm1U7R4Yy32Ij5BkNReOWpNMREzZym8/UrMzBJe7e+p1i3tbPJfZd/jJfqYGSugyKwzaN8ABJXI6/zSh/ahFwjkHt3G/dBuQ10zBN5C5UQZ2sygnYZVe5NS/s8+gize5V139zkeSsrCWyvLGnQEjv2HUfgmI5ILAPDnbg4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFd0t5TR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=T5mw7OsSgt4jV3kYCnItNel9dve1Bk6b4rFdcDGm+hQ0ynzmBS/c3pF6WNxhGj6QPVrsOvvfnwF7PdoBtsvpWBZEFG1+wqZy80DO0qJyHvbJVb7aiSm/M9nEip4C7x0uxWTassyp72IiUmxKb5BOHNxGAAzZDnOwj6lKQmBPrhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhAOVAFK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFd0t5TR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC465C433B2;
-	Sun, 24 Mar 2024 23:35:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhAOVAFK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A9A9C433F1;
+	Sun, 24 Mar 2024 23:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323354;
-	bh=iBOOEk9l2OEgdp6ukqQgb0EEB1LDW2y0Jd/ziclTJCQ=;
+	s=k20201202; t=1711323342;
+	bh=n7Nw90Gp/WYZo0MmZIPnH/OngeW6HI544oQSyDnp0Bg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RFd0t5TRiitn/PKpGLaNq61DsaexvpSdrG9OGMor5HSjOpgkIf/RNmXWt2I5+cqdC
-	 BHbmB192ZgKF+/LQB5Q5qpdcpuj8rzKaN5Np1ak1ICGUTLUZ7H4XkQZ+u0QPQxQGyE
-	 mcYCBbEs7PnRyn2bSD0350vrs4Wzu4eeZkovQCndElnXUPg3IOh5J0wAPkzwPk6k9D
-	 CJh532y9xHjSO3DyWSOz2eyQjiNGGJnIfDumDbJ76rWMNRAbPxgx74h/JrvvfMjGu6
-	 OnJTYN2OS/vhkp7a4vXDOHasoDgXncfgu400WxPsn/NjgCkW3/RVZ/TJ3JgvqmL/Ll
-	 ottXKdRbDXw1A==
+	b=MhAOVAFKFT38GdF2lwEfvSNo3GFyZkPNPfzbF8H0pfGlDvvoxrufP/S7k+DB8Iw7R
+	 E+Ntu++uPkc09zEJVy0HUkIRKXNCJfaoVHkbyfiUC5d1Q7FrHGtfNMdHLInpa7cbY7
+	 7szUEm2/4M2ZgIYSQ7DgAgQ19Kj4bPM08VumCK+SK3MET2m/Itu21WXGOf44xduZDj
+	 BtNYC4vidvX07EPmS2BBsZlhisKCuDnb/3HbuLMko9n8OETmSThKwBtnaUQQQhZgkQ
+	 xfzwRc6e2vAkMPrDjt/qeKzgtSAprdjSzRO3YepvgiwgBFMX6mS6MhNrOYknubDlrK
+	 jpvyge2nxhc/g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
-	Julian Calaby <julian.calaby@gmail.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: David Gow <davidgow@google.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Daniel Latypov <dlatypov@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 054/317] wifi: b43: Disable QoS for bcm4331
-Date: Sun, 24 Mar 2024 19:30:34 -0400
-Message-ID: <20240324233458.1352854-55-sashal@kernel.org>
+Subject: [PATCH 5.15 042/317] lib/cmdline: Fix an invalid format specifier in an assertion msg
+Date: Sun, 24 Mar 2024 19:30:22 -0400
+Message-ID: <20240324233458.1352854-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,66 +50,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+From: David Gow <davidgow@google.com>
 
-[ Upstream commit 09795bded2e725443fe4a4803cae2079cdaf7b26 ]
+[ Upstream commit d2733a026fc7247ba42d7a8e1b737cf14bf1df21 ]
 
-bcm4331 seems to not function correctly with QoS support. This may be due
-to issues with currently available firmware or potentially a device
-specific issue.
+The correct format specifier for p - n (both p and n are pointers) is
+%td, as the type should be ptrdiff_t.
 
-When queues that are not of the default "best effort" priority are
-selected, traffic appears to not transmit out of the hardware while no
-errors are returned. This behavior is present among all the other priority
-queues: video, voice, and background. While this can be worked around by
-setting a kernel parameter, the default behavior is problematic for most
-users and may be difficult to debug. This patch offers a working out-of-box
-experience for bcm4331 users.
+This was discovered by annotating KUnit assertion macros with gcc's
+printf specifier, but note that gcc incorrectly suggested a %d or %ld
+specifier (depending on the pointer size of the architecture being
+built).
 
-Log of the issue (using ssh low-priority traffic as an example):
-    ssh -T -vvvv git@github.com
-    OpenSSH_9.6p1, OpenSSL 3.0.12 24 Oct 2023
-    debug1: Reading configuration data /etc/ssh/ssh_config
-    debug2: checking match for 'host * exec "/nix/store/q1c2flcykgr4wwg5a6h450hxbk4ch589-bash-5.2-p15/bin/bash -c '/nix/store/c015armnkhr6v18za0rypm7sh1i8js8w-gnupg-2.4.1/bin/gpg-connect-agent --quiet updatestartuptty /bye >/dev/null 2>&1'"' host github.com originally github.com
-    debug3: /etc/ssh/ssh_config line 5: matched 'host "github.com"'
-    debug1: Executing command: '/nix/store/q1c2flcykgr4wwg5a6h450hxbk4ch589-bash-5.2-p15/bin/bash -c '/nix/store/c015armnkhr6v18za0rypm7sh1i8js8w-gnupg-2.4.1/bin/gpg-connect-agent --quiet updatestartuptty /bye >/dev/null 2>&1''
-    debug3: command returned status 0
-    debug3: /etc/ssh/ssh_config line 5: matched 'exec "/nix/store/q1c2flcykgr4wwg5a6h450hxbk4ch589-bash-5.2-p15/bin/bash -c '/nix/store/c015armnkhr6v18za0r"'
-    debug2: match found
-    debug1: /etc/ssh/ssh_config line 9: Applying options for *
-    debug3: expanded UserKnownHostsFile '~/.ssh/known_hosts' -> '/home/binary-eater/.ssh/known_hosts'
-    debug3: expanded UserKnownHostsFile '~/.ssh/known_hosts2' -> '/home/binary-eater/.ssh/known_hosts2'
-    debug2: resolving "github.com" port 22
-    debug3: resolve_host: lookup github.com:22
-    debug3: channel_clear_timeouts: clearing
-    debug3: ssh_connect_direct: entering
-    debug1: Connecting to github.com [192.30.255.113] port 22.
-    debug3: set_sock_tos: set socket 3 IP_TOS 0x48
-
-Fixes: e6f5b934fba8 ("b43: Add QOS support")
-Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20231231050300.122806-5-sergeantsagara@protonmail.com
+Fixes: 0ea09083116d ("lib/cmdline: Allow get_options() to take 0 to validate the input")
+Signed-off-by: David Gow <davidgow@google.com>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Daniel Latypov <dlatypov@google.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43/main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/cmdline_kunit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
-index ad38aabfd5972..e6e4a18d817a0 100644
---- a/drivers/net/wireless/broadcom/b43/main.c
-+++ b/drivers/net/wireless/broadcom/b43/main.c
-@@ -2587,7 +2587,8 @@ static void b43_request_firmware(struct work_struct *work)
+diff --git a/lib/cmdline_kunit.c b/lib/cmdline_kunit.c
+index a72a2c16066ef..de7fb7476cb9a 100644
+--- a/lib/cmdline_kunit.c
++++ b/lib/cmdline_kunit.c
+@@ -124,7 +124,7 @@ static void cmdline_do_one_range_test(struct kunit *test, const char *in,
+ 			    n, e[0], r[0]);
  
- start_ieee80211:
- 	wl->hw->queues = B43_QOS_QUEUE_NUM;
--	if (!modparam_qos || dev->fw.opensource)
-+	if (!modparam_qos || dev->fw.opensource ||
-+	    dev->dev->chip_id == BCMA_CHIP_ID_BCM4331)
- 		wl->hw->queues = 1;
+ 	p = memchr_inv(&r[1], 0, sizeof(r) - sizeof(r[0]));
+-	KUNIT_EXPECT_PTR_EQ_MSG(test, p, NULL, "in test %u at %u out of bound", n, p - r);
++	KUNIT_EXPECT_PTR_EQ_MSG(test, p, NULL, "in test %u at %td out of bound", n, p - r);
+ }
  
- 	err = ieee80211_register_hw(wl->hw);
+ static void cmdline_test_range(struct kunit *test)
 -- 
 2.43.0
 
