@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23721474A6;
-	Sun, 24 Mar 2024 23:14:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049D71474A3;
+	Sun, 24 Mar 2024 23:14:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322085; cv=none; b=I0Xsv4jRsrOUqeLmpRzjNAX3WCXjRDZcjCfDUHZWUqL4qJQdGN+S8fTwiuAgOc1lYWPiKdm9Imp8WDq8r7ETRmCA06kspngBKuY0LP4V5FXryKhxhnNnBHqoAKhVLpNkwthii23wx7nM5xUE/DpoqLs2kDdKAz3lzMkNg+s2KoA=
+	t=1711322084; cv=none; b=qP1BEUpLeE4ahWCLaOjZZZBCuO1rHNhwSTMxsj5a/tvB4stBj+4UqZNQUcbOfuytu23sph2CrydpRbqP85VAK0T4Jbx6fQe9YK6Aa7HSjB5FFILvxp1nhJtAJXwmLDG2gsgkYqmtCxIb08PAGjdcPWHTx0+agDU4wsL1OrT7e9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322085; c=relaxed/simple;
-	bh=VNclXew3OYmQdcZ91mzGQyicAkl80ociEU8G6DjugSA=;
+	s=arc-20240116; t=1711322084; c=relaxed/simple;
+	bh=nt4DweudXrWSOOYE0nV/wX2peusxuk3T7M9VaEFEUOQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uOnnjBVvUBwbKf34XRlNMptfrATbkyMmwzO8ccKDcgs/0zuX9pPXsogG+PwsENrzzwUAekWxNE44EKa0GX6Kupt1ufHOgcA+E8Q6tCy4Mb0y7fwkSQC3ZmvMQE0g5zmk8et8LzzN2go7Lj09sWEzQkSTvTaavhMqyv+c29kkhOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnsg/u6h; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=s+y3ifRBn7uqP/jqt+qCWWEiZpUz0x06x2MC1Uksif8BDdkcurdMxsk5ijG+HJ3z2Cpt3OS/5KI075nLAr5hSX/9GKwe9AL1wSbgjEhdstYXv+XHdmRD7NDqdW3e4v8ECw18Hh/fDkzKdw8iBGEyBxriWYXRESU9Y7pnKXRz+wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDGnA/Mo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnsg/u6h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D9C1C43394;
-	Sun, 24 Mar 2024 23:14:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDGnA/Mo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C5E0C433C7;
+	Sun, 24 Mar 2024 23:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322084;
-	bh=VNclXew3OYmQdcZ91mzGQyicAkl80ociEU8G6DjugSA=;
+	s=k20201202; t=1711322082;
+	bh=nt4DweudXrWSOOYE0nV/wX2peusxuk3T7M9VaEFEUOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pnsg/u6hxFDSt7rMKUZ80bOdvgFl8lVkd0LhHqPu1J+NfP0PqNg/GgDW1pray/OQU
-	 smZgFu+TlWHQdFhxu8IpM60Dr8W8h1xb4RjS4hp4VEdG5YnuBQzgX3BrnipJkE6ckN
-	 vwgJBowe62UFzVlWn4gMrYN6BpUxl6r0aD8ez17ES/92BUptqGTEXoFJHs1TrmQn9O
-	 XwiYAK4phKFTij2dOkv5eAFIY8cBejYF2ScWU+foA5rmWCn3jzjOJDeAyHe5T/Bu9T
-	 SZX+Mw7nP8Dc/6dnrVki1yjpIcGNr3D3BReIhqehKvP5NsH2kLtjR0HkxwX6bKMRLy
-	 y7PwOJeQfb5RQ==
+	b=hDGnA/Mo4LMtQPtmH6m5lPJS2USWltfPqGe+foCmnwdGP0zi5t9qGWOTevx9zUgkO
+	 TGvIdoamWqhzJFGz39Mbgm8UaFruT/zCPYEjU8eCar0YgSziw304DVmz579H2eXX6J
+	 3ARwp4AMAT6AhBm3DyUq0LYJH0HgZkYPYnjW/GPGV9DEvps+puZd/pr1+fonFQP9DL
+	 v/AJDcx7emIaRlOaQT+XTWFeMmbeoOHPtRi7HMHK68D/7m94lpJJ2xxVG4zhk96ndO
+	 1LU4c4fM7xsfvZRx5awiXKaS604jCINFmXWW8NVQiMORTabtaf+b2iqUlv69JHivoY
+	 99s+qh1Tpuorw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 158/451] arm64: dts: qcom: sm8150: use 'gpios' suffix for PCI GPIOs
-Date: Sun, 24 Mar 2024 19:07:14 -0400
-Message-ID: <20240324231207.1351418-159-sashal@kernel.org>
+Subject: [PATCH 6.1 156/451] wifi: brcmsmac: avoid function pointer casts
+Date: Sun, 24 Mar 2024 19:07:12 -0400
+Message-ID: <20240324231207.1351418-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,46 +49,79 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit af6f6778d34cb40e60368e288767f674cc0c5f60 ]
+[ Upstream commit e1ea6db35fc3ba5ff063f097385e9f7a88c25356 ]
 
-Linux handles both versions, but bindings expect GPIO properties to
-have 'gpios' suffix instead of 'gpio':
+An old cleanup went a little too far and causes a warning with clang-16
+and higher as it breaks control flow integrity (KCFI) rules:
 
-  sa8155p-adp.dtb: pci@1c00000: Unevaluated properties are not allowed ('perst-gpio' was unexpected)
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c:64:34: error: cast from 'void (*)(struct brcms_phy *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+   64 |                         brcms_init_timer(physhim->wl, (void (*)(void *))fn,
+      |                                                       ^~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Link: https://lore.kernel.org/r/20231111164229.63803-3-krzysztof.kozlowski@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
-Stable-dep-of: 7c38989d0f7a ("arm64: dts: qcom: sm8150: correct PCIe wake-gpios")
+Change this one instance back to passing a void pointer so it can be
+used with the timer callback interface.
+
+Fixes: d89a4c80601d ("staging: brcm80211: removed void * from softmac phy")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240213100548.457854-1-arnd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c   | 3 ++-
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c  | 5 ++---
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h  | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index eb1a9369926d2..b829a9ebc5670 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -1822,7 +1822,7 @@ pcie0: pci@1c00000 {
- 			phys = <&pcie0_lane>;
- 			phy-names = "pciephy";
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
+index ccc621b8ed9f2..4a1fe982a948e 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
+@@ -383,8 +383,9 @@ struct shared_phy *wlc_phy_shared_attach(struct shared_phy_params *shp)
+ 	return sh;
+ }
  
--			perst-gpio = <&tlmm 35 GPIO_ACTIVE_HIGH>;
-+			perst-gpios = <&tlmm 35 GPIO_ACTIVE_HIGH>;
- 			enable-gpio = <&tlmm 37 GPIO_ACTIVE_HIGH>;
+-static void wlc_phy_timercb_phycal(struct brcms_phy *pi)
++static void wlc_phy_timercb_phycal(void *ptr)
+ {
++	struct brcms_phy *pi = ptr;
+ 	uint delay = 5;
  
- 			pinctrl-names = "default";
-@@ -1925,7 +1925,7 @@ pcie1: pci@1c08000 {
- 			phys = <&pcie1_lane>;
- 			phy-names = "pciephy";
+ 	if (PHY_PERICAL_MPHASE_PENDING(pi)) {
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
+index a0de5db0cd646..b723817915365 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
+@@ -57,12 +57,11 @@ void wlc_phy_shim_detach(struct phy_shim_info *physhim)
+ }
  
--			perst-gpio = <&tlmm 102 GPIO_ACTIVE_HIGH>;
-+			perst-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
- 			enable-gpio = <&tlmm 104 GPIO_ACTIVE_HIGH>;
+ struct wlapi_timer *wlapi_init_timer(struct phy_shim_info *physhim,
+-				     void (*fn)(struct brcms_phy *pi),
++				     void (*fn)(void *pi),
+ 				     void *arg, const char *name)
+ {
+ 	return (struct wlapi_timer *)
+-			brcms_init_timer(physhim->wl, (void (*)(void *))fn,
+-					 arg, name);
++			brcms_init_timer(physhim->wl, fn, arg, name);
+ }
  
- 			pinctrl-names = "default";
+ void wlapi_free_timer(struct wlapi_timer *t)
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
+index dd8774717adee..27d0934e600ed 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
+@@ -131,7 +131,7 @@ void wlc_phy_shim_detach(struct phy_shim_info *physhim);
+ 
+ /* PHY to WL utility functions */
+ struct wlapi_timer *wlapi_init_timer(struct phy_shim_info *physhim,
+-				     void (*fn)(struct brcms_phy *pi),
++				     void (*fn)(void *pi),
+ 				     void *arg, const char *name);
+ void wlapi_free_timer(struct wlapi_timer *t);
+ void wlapi_add_timer(struct wlapi_timer *t, uint ms, int periodic);
 -- 
 2.43.0
 
