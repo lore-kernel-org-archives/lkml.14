@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366C314A61C;
-	Sun, 24 Mar 2024 23:09:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5994013BAFB;
+	Sun, 24 Mar 2024 23:09:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321767; cv=none; b=l1otddf/auwJ0G0JrqcoMYOqz3xEEOIHm8M2/Q+QTIWhXPy5T+iSWNUP3XgFPFmzAeg+vDquK3GnbVPeWGusdK8oiW00OworPjHyczWGesjY3nlRFH90BEX+AUQL3n5xDSfGNe22i2JzJJa3aj/Ln1CUyjnE8wUImzhjOa1G+2U=
+	t=1711321775; cv=none; b=jonf90Qj3wFiYRGaQIhIcjiRoIFsj2jqAGP6nd7tGjZFaLTHFHwEGwUEo3k3+euos8Azq6/iiN510hJ8eOV+8wwe4zi6x4S+zlXQqCgHQB/Cv93bnHItgImbGyUH7yk6T7LHTXzgSpt9I5LABdBQzar+FlNooTe3XLUq7stn1w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321767; c=relaxed/simple;
-	bh=F+WnyX1dM7yyvbEYpvwspvjG+I3TNKFtsHAdgv0gaHY=;
+	s=arc-20240116; t=1711321775; c=relaxed/simple;
+	bh=P6vbMeX6o8eJ8sBSv/YPicVYaBwT0SOMHXroJlUJkyg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j/tbzpzJVInIiBSve2r1I2dIfoF6qWrvdzQIYqbm2ypRQga8/4uO2njrR3G/sMGQOTymWo94Bd0gPfDxEaS2u6dGgCm0BbEp5bDsulZBs38FoinK1mlWK6XgCvhq5HWNEqXnova19xqR4iNxHM/3r2IPP3gWdRy11coyvggpciw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZjF2eDVt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SvqLEIQJAWmLeb0/+BfnxR/NFNWWCc07mDPBmWZlKM9Hyx1wNW1QO8EkCS6v2RoUNPhB05SwDA2WaptRUN2VLolHvJadrvTsKjgC4NPLMk45lUSTLK/A6ayVjw3gq7JzhmjHQG4G9H7o4JSzMyZGFhe4Md9KvmFuAlcfWZgtx58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qg56eQaL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZjF2eDVt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4545FC43394;
-	Sun, 24 Mar 2024 23:09:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qg56eQaL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC58C433C7;
+	Sun, 24 Mar 2024 23:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321766;
-	bh=F+WnyX1dM7yyvbEYpvwspvjG+I3TNKFtsHAdgv0gaHY=;
+	s=k20201202; t=1711321774;
+	bh=P6vbMeX6o8eJ8sBSv/YPicVYaBwT0SOMHXroJlUJkyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZjF2eDVt6VTAa6Y4aV4AzChjyllgyx79kIeuWrv5aLBsijmeyee7CLX8KHUccXw4l
-	 KbuWXK/KKqAa7DnJaBAlBpshjd2prPv6l0n3WifF6er19sgsgcI1P5mx80wRvkYHWB
-	 SuwnAZ+AHu7ceTRTZkt8Po8gJr8lAkF9hNZ9+ov4HvIIdj8uPZs2SEgLBbjRwNtc3x
-	 A2+5QxyW65al1onGSZed8hK/BhqHewXPQojfYGCqspW+Cugfp2JUOOn2zufJnIxu9d
-	 rFjUk7dbiHSsfGLFQa70tzOvZ3hx+eClubp4YxNsol2VVKyzVVj6mCSm4l2rGJW+02
-	 2AKO62WLZ3GAg==
+	b=Qg56eQaL8SzR7q3vz1VVrXEYlpDyF24TLbtL0ozQDx/FHgWmwkWt82HqWzjJ9ftGm
+	 7oitGitHY6axN/yKi7HgLgJsCklmUryLAVYJIgvr18ax/Y2vQujG5WJGluWT11CgnE
+	 8bt49NyIU61A3cKxQH6BPJuH+5w4qyWMez9MamT8A+Sg5Lu2q/7iKUK2jTn+iW4pCp
+	 e+EmB+0dPseLuFya+FLOCgLx/qUg+mvjEqYGRPx+Fut/iDz1Qj68++bKUd7xxjnn0W
+	 Z2XJWqLYPzAmSpy9MtYqRKLw08q/ITcbH7PrP5O5bBNIHQjoCsuERSmacZS9sbKF6v
+	 fi9DGQa9hBaGw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jonathan Bell <jonathan@raspberrypi.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
+Cc: Gergo Koteles <soyer@irl.hu>,
+	Takashi Iwai <tiwai@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 494/638] PCI: brcmstb: Fix broken brcm_pcie_mdio_write() polling
-Date: Sun, 24 Mar 2024 18:58:51 -0400
-Message-ID: <20240324230116.1348576-495-sashal@kernel.org>
+Subject: [PATCH 6.6 501/638] ALSA: hda/tas2781: do not reset cur_* values in runtime_suspend
+Date: Sun, 24 Mar 2024 18:58:58 -0400
+Message-ID: <20240324230116.1348576-502-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -46,44 +44,55 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jonathan Bell <jonathan@raspberrypi.com>
+From: Gergo Koteles <soyer@irl.hu>
 
-[ Upstream commit 039741a8d7c9a01c1bc84a5ac5aa770a5e138a30 ]
+[ Upstream commit bec7760a6c5fa59593dac264fa0c628e46815986 ]
 
-The MDIO_WT_DONE() macro tests bit 31, which is always 0 (== done) as
-readw_poll_timeout_atomic() does a 16-bit read. Replace with the readl
-variant.
+The amplifier doesn't loose register state in software shutdown mode, so
+there is no need to reset the cur_* values.
 
-[kwilczynski: commit log]
-Fixes: ca5dcc76314d ("PCI: brcmstb: Replace status loops with read_poll_timeout_atomic()")
-Link: https://lore.kernel.org/linux-pci/20240217133722.14391-1-wahrenst@gmx.net
-Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Without these resets, the amplifier can be turned on after
+runtime_suspend without waiting for the program and
+profile to be restored.
+
+Fixes: 5be27f1e3ec9 ("ALSA: hda/tas2781: Add tas2781 HDA driver")
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Message-ID: <aa27ae084150988bf6a0ead7e3403bc485d790f8.1709918447.git.soyer@irl.hu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/tas2781_hda_i2c.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index f9dd6622fe109..e47a77f943b1e 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -330,7 +330,7 @@ static int brcm_pcie_mdio_write(void __iomem *base, u8 port,
- 	readl(base + PCIE_RC_DL_MDIO_ADDR);
- 	writel(MDIO_DATA_DONE_MASK | wrdata, base + PCIE_RC_DL_MDIO_WR_DATA);
+diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
+index afaa7ee171a7b..5d6083ffa40c3 100644
+--- a/sound/pci/hda/tas2781_hda_i2c.c
++++ b/sound/pci/hda/tas2781_hda_i2c.c
+@@ -740,7 +740,6 @@ static void tas2781_hda_i2c_remove(struct i2c_client *clt)
+ static int tas2781_runtime_suspend(struct device *dev)
+ {
+ 	struct tas2781_hda *tas_hda = dev_get_drvdata(dev);
+-	int i;
  
--	err = readw_poll_timeout_atomic(base + PCIE_RC_DL_MDIO_WR_DATA, data,
-+	err = readl_poll_timeout_atomic(base + PCIE_RC_DL_MDIO_WR_DATA, data,
- 					MDIO_WT_DONE(data), 10, 100);
- 	return err;
- }
+ 	dev_dbg(tas_hda->dev, "Runtime Suspend\n");
+ 
+@@ -751,12 +750,6 @@ static int tas2781_runtime_suspend(struct device *dev)
+ 		tas_hda->priv->playback_started = false;
+ 	}
+ 
+-	for (i = 0; i < tas_hda->priv->ndev; i++) {
+-		tas_hda->priv->tasdevice[i].cur_book = -1;
+-		tas_hda->priv->tasdevice[i].cur_prog = -1;
+-		tas_hda->priv->tasdevice[i].cur_conf = -1;
+-	}
+-
+ 	mutex_unlock(&tas_hda->priv->codec_lock);
+ 
+ 	return 0;
 -- 
 2.43.0
 
