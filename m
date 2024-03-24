@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8642B27BBC6;
-	Sun, 24 Mar 2024 23:38:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A3C5A7AA;
+	Sun, 24 Mar 2024 23:38:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323523; cv=none; b=XMrnjGzGt2I89WX0qtKnvJ+Mj7HLBjebbf2HLqaH259yygmkJ+vXBDJZ/iz49y7TbQqnYCaC31ZUQD4ta0gQq3UbVAFWeTZcxVj0/kjoqm9ucmTjgLMQ7LGpdP3MId6gTFf7I+tb4OZ90g8D0ZYq2RjUw4QmUN6yA+J6xb7O6T0=
+	t=1711323495; cv=none; b=nqNaiKII4e69UHBqGUtKAEz5J251uZQWLHevqgPQSu1tA+z8t2poeNs48QHAnSMxBpncg9pFG/1foVHsPcXZl6PnkdDkRB5J8zmlLuYxVhmBFCNZZ9g0hw47ZkNJSYjotYWW7mRRy+gN5OikMaeNT5MflhNm7UFJIaxontzkmM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323523; c=relaxed/simple;
-	bh=WyKhuThbrHQZpL/P0WvBojbfkzb5nPMDLRDieLgx1i0=;
+	s=arc-20240116; t=1711323495; c=relaxed/simple;
+	bh=FR9iFq0oFXyS9NTUKTwHsIX+vwgMzeAlE3rBx35uoko=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qFiUeGlQh8tCzCN0DyW69ghOQkYMOldQgbLm5s9/S9ffBVk/PWnBHRRDz4ZHW/9O+Lc7n8o0Up9t36ZQWslr3+UrR/rEk3Ee01Liuy9h0nzbyFFEc3ntvpljn7XRKD2I4No3cpuv6K/czmp2AOE/AuUEJGqH7dDSsN1Cs7EOg4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQrjZT5V; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KcSEew5UpFgrTC1yh7/+tWRDcviKq0tZJNO03PjhOXOdt6y99OsQN+qHmXxtmbN9VavO9kCwCDs0eqX87gy1rEhMPoFFU2npgJiDcF5rIy6cVg2sMaWlrQ6LrMGtGcMYkPiYGM6gfnVUPJISgkLbKmiX7Av+2hTyWyHRf1uEHRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fK1KXTAV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQrjZT5V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DA83C433C7;
-	Sun, 24 Mar 2024 23:38:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fK1KXTAV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E584FC433C7;
+	Sun, 24 Mar 2024 23:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323521;
-	bh=WyKhuThbrHQZpL/P0WvBojbfkzb5nPMDLRDieLgx1i0=;
+	s=k20201202; t=1711323494;
+	bh=FR9iFq0oFXyS9NTUKTwHsIX+vwgMzeAlE3rBx35uoko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NQrjZT5VgYLNStFIe0clzgj5Zqu6jTnADOPN35y5dQ5ZaUxK8u2SbLeZQwaP/Hti+
-	 kCVR5hLZsrZJcNnRczHyNw/nwZhwTpVnl0grGRQKt0m8YlcSYnggNsifNDg7aBSnK+
-	 IRaYNVHmHJJ7Y4I1zv6WkHRoRgeNERPOg7v1h5DUCrdNFzM72pv2G6/Wq6SCkjnHnl
-	 SStiUkUdC+f8sHSI/rG/oh7gsgcKm5onvfXWAsMSUhljouKPKFtjOmA8w2c/l0ycL4
-	 rrfRJ2+XBwXfQa2gk+zqzned1QB0/ni8wCdKCywgwvcvBPRJ8soKru54LM2ISbVkxv
-	 Cep/ePtBzQlfQ==
+	b=fK1KXTAVfOvZe8tOom6ZvL6eRytiTBcmy3DtGj8lM5iW7RZ9yoCM2Zyf7xE0cSw/F
+	 S8T5wRjTKAiFVrj+NAAGj0MHZX7M2InGG0AYteylMt/8Q1qwzA3lHKcersUY/CksEF
+	 orGcWoINNiOsJ4oxj4Sw1D7QnizqMO2FR3mVyjR46JHalyKpecETD3S+4KG+/5MM8y
+	 QaTBPFgSFF05H7LK3w/5AF98hJG3d6iXSWBb5bZ0PNyP0ppz6CTkWd3WB4lq2jELfA
+	 XlmS3c9sY8Yb+qDI0fe2iw7/6GB56knBqJ6OI276rDUnE6s5lQfPhkjDEBFjGmJKaP
+	 bWNGH1wbJ8PXA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-	Akshata MukundShetty <akshata.mukundshetty@amd.com>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	James Clark <james.clark@arm.com>,
+	Kaige Ye <ye@kaige.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 228/317] HID: amd_sfh: Update HPD sensor structure elements
-Date: Sun, 24 Mar 2024 19:33:28 -0400
-Message-ID: <20240324233458.1352854-229-sashal@kernel.org>
+Subject: [PATCH 5.15 199/317] perf stat: Avoid metric-only segv
+Date: Sun, 24 Mar 2024 19:32:59 -0400
+Message-ID: <20240324233458.1352854-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,42 +53,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit bbf0dec30696638b8bdc28cb2f5bf23f8d760b52 ]
+[ Upstream commit 2543947c77e0e224bda86b4e7220c2f6714da463 ]
 
-HPD sensor data is not populating properly because of wrong order of HPD
-sensor structure elements. So update the order of structure elements to
-match the HPD sensor data received from the firmware.
+Cycles is recognized as part of a hard coded metric in stat-shadow.c,
+it may call print_metric_only with a NULL fmt string leading to a
+segfault. Handle the NULL fmt explicitly.
 
-Fixes: 24a31ea94922 ("HID: amd_sfh: Add initial support for HPD sensor")
-Co-developed-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
-Signed-off-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
-Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Fixes: 088519f318be ("perf stat: Move the display functions to stat-display.c")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Kaige Ye <ye@kaige.org>
+Cc: John Garry <john.g.garry@oracle.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240209204947.3873294-4-irogers@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/amd-sfh-hid/amd_sfh_pcie.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/stat-display.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
-index 2d3203d3daeb3..90f39bfe8050e 100644
---- a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
-+++ b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
-@@ -119,10 +119,10 @@ enum mem_use_type {
- struct hpd_status {
- 	union {
- 		struct {
--			u32 human_presence_report : 4;
--			u32 human_presence_actual : 4;
--			u32 probablity		  : 8;
- 			u32 object_distance       : 16;
-+			u32 probablity		  : 8;
-+			u32 human_presence_actual : 4;
-+			u32 human_presence_report : 4;
- 		} shpd;
- 		u32 val;
- 	};
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 24e50fabb6c33..5ed20e1e09aef 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -275,7 +275,7 @@ static void print_metric_only(struct perf_stat_config *config,
+ 	if (color)
+ 		mlen += strlen(color) + sizeof(PERF_COLOR_RESET) - 1;
+ 
+-	color_snprintf(str, sizeof(str), color ?: "", fmt, val);
++	color_snprintf(str, sizeof(str), color ?: "", fmt ?: "", val);
+ 	fprintf(out, "%*s ", mlen, str);
+ }
+ 
 -- 
 2.43.0
 
