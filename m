@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E404A157A5C;
-	Sun, 24 Mar 2024 23:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12E9157A65;
+	Sun, 24 Mar 2024 23:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321946; cv=none; b=Mv7G/XPZYfE+uQieYw1kvIYpwIrjWTKXrabpZW0mKEFGKRPqOFJgcZCItFffUTrx4ePYOE0+MOh6sJDU2ZR0ozc9cgXfy5aBKwajQIG6sVfyf/T36+uN7cmu2/0vRSitOas0x7cjRJx4werfR9o6O3IPTLFwhZnZdcSLXjijVfY=
+	t=1711321947; cv=none; b=dACzO7GhmkkvQdNUYbw3QG5qgheT7O70UsWYIfVILLUkrP0T8bfz0aVFTk3XF806YIV1GvKnqqqbUyB16bG8GFMG1btFFJW4SuGcQrXrS3PxgASVsA9mwiXmIf9paMa6jgC2IdG3O1Z5Ftxv+e49RxxSxM/mClEBoJshK71M78E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321946; c=relaxed/simple;
-	bh=GheQLFaUsVo/0Mbc1b3BO9EcJbkijdAQ4AoyCjgmt1M=;
+	s=arc-20240116; t=1711321947; c=relaxed/simple;
+	bh=a0if71l1FNllGDMmeoMnyoNpzH9AzjuGJnJySfgegms=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gkx1DufH9nZE0Gf0IHe6nF1/7d2d1Yb0MABRRYutRyS6LH6T/7Nb46OPKZVQsqa7FNtlO+tNkMgDMg/zJI9fEDa7gf/CQT8AkSCS7E3Jb2z6vccQbDS5qq7tyk6YGtJ6HdgHOTANgHwSbW0eSo97CMzg5lzZmKd0M4/+g08aDr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/GfnSjU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PSVMFQPNgcp+vYR740M7HR3AIn8gPfAXdbDymVqApEwQk4ix3RIATAD+yUWD2RgoEHIqYtcUm6b/SnwMyNEV51v8ilnkDePrcnF51f0b9FwiR616zFZSfVck62YNEcLbaAh92pF7YigHIXdfsGM0jlI0PMp00XqzYHJ4zOLINsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PpIMBjvY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/GfnSjU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A5DC433A6;
-	Sun, 24 Mar 2024 23:12:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PpIMBjvY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A8CC433C7;
+	Sun, 24 Mar 2024 23:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321944;
-	bh=GheQLFaUsVo/0Mbc1b3BO9EcJbkijdAQ4AoyCjgmt1M=;
+	s=k20201202; t=1711321946;
+	bh=a0if71l1FNllGDMmeoMnyoNpzH9AzjuGJnJySfgegms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p/GfnSjU4ZsNgyVC0CnlRsDDDVrhOcLQmXLmJJi2vNDxF+cgiGsFEt2Snpqn0KTu2
-	 /vMkIn5ZQwT09cSqcFr+5N2doEC7/V7q9f4woP+zAsiDPzTkMzrfJyz1w5CWo0uQ/9
-	 d5eAg5egDb4ccig8D0W2rqBV2McWnSimVEgDDZavJsFEYcNjxnEKNCd9GYZ/XTFkQw
-	 BXv0+022qUOMvtGb8cKK8anv1Wt4xd5MuF5K2KFJnArQljIiXsWMurKnUDYiXtC02c
-	 b9+4rQ2OCp6q9Fac8gx/z3zH89+S/+/3VrQ0x+fQg69tMJNGAQvNSy7cqRrPk3accd
-	 7TzudhrHHShWw==
+	b=PpIMBjvYrR8vlNW2MOGrj34Sf6KZjGmgBdNbI+ltMYusX1yEc7jbC9MrYxP6Q5HzR
+	 YwHBCTdnX8tqfIVGTnJ51cUImHBKRZvX2LmpiaCk+YL6zjbNv4tW6ZYnn+zMAwZtJD
+	 1Y47yHlsOGhzpR5UUmg24gDiUdr3hACGwTNfuB4iPBZNU6gLdXUDowUs9+y8xHhkPx
+	 /xcUTm5Geb7KTlJemnzXjIM5zDirg+Wmr/gaMkKmBx+w5LApXeLkGiFDtkuRWLIwrj
+	 7OxAM/3mu6o0+X4jE8/CJRys7u4f4XMw5PMm+IzXOLV8xYfvfh23oFnOc+WOAIz7DH
+	 XSFeUiCryaBvA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dai Ngo <dai.ngo@oracle.com>,
+Cc: Tavian Barnes <tavianator@tavianator.com>,
 	Jeff Layton <jlayton@kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 016/451] NFSD: Fix problem of COMMIT and NFS4ERR_DELAY in infinite loop
-Date: Sun, 24 Mar 2024 19:04:52 -0400
-Message-ID: <20240324231207.1351418-17-sashal@kernel.org>
+Subject: [PATCH 6.1 018/451] nfsd: Fix creation time serialization order
+Date: Sun, 24 Mar 2024 19:04:54 -0400
+Message-ID: <20240324231207.1351418-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,46 +49,62 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dai Ngo <dai.ngo@oracle.com>
+From: Tavian Barnes <tavianator@tavianator.com>
 
-[ Upstream commit 147abcacee33781e75588869e944ddb07528a897 ]
+In nfsd4_encode_fattr(), TIME_CREATE was being written out after all
+other times.  However, they should be written out in an order that
+matches the bit flags in bmval1, which in this case are
 
-The following request sequence to the same file causes the NFS client and
-server getting into an infinite loop with COMMIT and NFS4ERR_DELAY:
+    #define FATTR4_WORD1_TIME_ACCESS        (1UL << 15)
+    #define FATTR4_WORD1_TIME_CREATE        (1UL << 18)
+    #define FATTR4_WORD1_TIME_DELTA         (1UL << 19)
+    #define FATTR4_WORD1_TIME_METADATA      (1UL << 20)
+    #define FATTR4_WORD1_TIME_MODIFY        (1UL << 21)
 
-OPEN
-REMOVE
-WRITE
-COMMIT
+so TIME_CREATE should come second.
 
-Problem reported by recall11, recall12, recall14, recall20, recall22,
-recall40, recall42, recall48, recall50 of nfstest suite.
+I noticed this on a FreeBSD NFSv4.2 client, which supports creation
+times.  On this client, file times were weirdly permuted.  With this
+patch applied on the server, times looked normal on the client.
 
-This patch restores the handling of race condition in nfsd_file_do_acquire
-with unlink to that prior of the regression.
-
-Fixes: ac3a2585f018 ("nfsd: rework refcounting in filecache")
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+Fixes: e377a3e698fb ("nfsd: Add support for the birth time attribute")
+Link: https://unix.stackexchange.com/q/749605/56202
+Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/filecache.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/nfsd/nfs4xdr.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index f40d8f3b35a4c..ee9c923192e08 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -1099,8 +1099,6 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	 * then unhash.
- 	 */
- 	if (status != nfs_ok || inode->i_nlink == 0)
--		status = nfserr_jukebox;
--	if (status != nfs_ok)
- 		nfsd_file_unhash(nf);
- 	clear_and_wake_up_bit(NFSD_FILE_PENDING, &nf->nf_flags);
- 	if (status == nfs_ok)
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 514f4456cf5c6..4ed9fef14adc2 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3364,6 +3364,11 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+ 		if (status)
+ 			goto out;
+ 	}
++	if (bmval1 & FATTR4_WORD1_TIME_CREATE) {
++		status = nfsd4_encode_nfstime4(xdr, &stat.btime);
++		if (status)
++			goto out;
++	}
+ 	if (bmval1 & FATTR4_WORD1_TIME_DELTA) {
+ 		p = xdr_reserve_space(xdr, 12);
+ 		if (!p)
+@@ -3380,11 +3385,6 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+ 		if (status)
+ 			goto out;
+ 	}
+-	if (bmval1 & FATTR4_WORD1_TIME_CREATE) {
+-		status = nfsd4_encode_nfstime4(xdr, &stat.btime);
+-		if (status)
+-			goto out;
+-	}
+ 	if (bmval1 & FATTR4_WORD1_MOUNTED_ON_FILEID) {
+ 		u64 ino = stat.ino;
+ 
 -- 
 2.43.0
 
