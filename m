@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8557B145FFE;
-	Sun, 24 Mar 2024 23:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DF5145B11;
+	Sun, 24 Mar 2024 23:13:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322060; cv=none; b=jo3el2W5hOvfYAFfEhjVpjo0SFoX5em9cUO3P5vd2x7lbtvssH5OpbezM134SuwIGhvkNabGCpttvgX1K8IdGzfi2xV9sVKxKuWAFlontXO3DnHIs4wmcJM25neNmWBxGmoLL9UiV+m338jJdd+MBR0s+NYdxoh46DuyyQIHs+A=
+	t=1711322011; cv=none; b=dB1IEA/NA6tjWJpSTH6LHaV64YJjN8ez97idHQtJQIHQVy8Ap5GboaeX2kAib9cuVjhDJ9OnaK+TCgPnzjABqG18KqUmWIZba5BCw2MoyWSKYF52os/LU2ix+3gPRl7Oqo+RefGSR9vxrbz77qctYzurbGXR26VenNgMs1zxdcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322060; c=relaxed/simple;
-	bh=UpVdNmjTBMvFdIHiv9Cau+i5iASzj/8tzCZjDkliNf0=;
+	s=arc-20240116; t=1711322011; c=relaxed/simple;
+	bh=S9eicRX5Oris5bmASqtF2I7Mldq+1S/Uwwv/mu4+hCI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BDtckgjEOK8mF8XO4tDVQ9A7HYjVXXKoUw68yBRCxGPog1mvdiTkDted2k/hDPjq/ihgt8sO0VZar6INyjFYVsgXGV3li3WaY9PjjUsfep/3VUAOH5EidpnhHZvpgWVt5wG+mDZFWplvQf0SXSJtQsDrA1C/ICD0k4agyyQ4OxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWUdZKRs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Lfl9tlVu+k4PcctrFe36AVd7FSj9j8PfnFinxThY3lJrHfWkO5skUXjYg9h+aiLL3dVkF5M8H5VjJNrbGmNyg+cUPqG6VvwGa8zrJVem5ZEJezfZ0UeEYH/oOo6mFPi91mULrO2HHc5eQC3WvMfbU9DZJI4z2aDBZ6VqWVMDf1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GYqD9Lgo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWUdZKRs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE995C433F1;
-	Sun, 24 Mar 2024 23:14:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GYqD9Lgo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF48BC433F1;
+	Sun, 24 Mar 2024 23:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322060;
-	bh=UpVdNmjTBMvFdIHiv9Cau+i5iASzj/8tzCZjDkliNf0=;
+	s=k20201202; t=1711322011;
+	bh=S9eicRX5Oris5bmASqtF2I7Mldq+1S/Uwwv/mu4+hCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SWUdZKRsm3WxLNO0wdIURMd/i6Lbp1WatcsAY+LcjvdcErN+Fs0mzt/O1KH6onXNs
-	 IU+1SGhjkr9eRyhGiJptgYgShahOWYhmZ+LLUShwZTBp1qbBJVwm7ggGxAWwCSws6R
-	 WFmxGnHKKMwk6SVoHYhYrMDgRtzOwtKNZfr4c5Q4s73KOP4IEH8sC4V2uOlgfcH3Ob
-	 P9xmzm1eccE+bFCUMw7dNKybx3nx+uihPKyhm7Iye+X4ac/CU93fTSYL5O+YcRTxV2
-	 ADUQVrplvj4at3/5JlBvtp+ncsWl85pIZfHiZrMO1MsJBmQUDvyxa6sxeDyu8JBLsW
-	 C7npTeRm0d0qA==
+	b=GYqD9LgoJRoOrqkl9w1zQO7Z9MRj4IP8iQ3cvqnhsDan1GTvUoANiD8IIQtmzRbzp
+	 P9w8NzNUaCxFQ1rONVdSwdPEMl4TBoCTiJLlw5fgPNd8UO9k7ALc7RYb/iWDJ2EJk+
+	 nHw/9KrzmiN41ihFflACP4kCacxT+hFhZCCMgklOfsF2X8HJfU2aNqgXi4TWIbt7JC
+	 GCnhotyVFymvO0y2/ENqUQDqQeEqCCJ9h8eKO+XeGirbuqagH8+DUhB1H/i+Gs6ej3
+	 Vl2lqGJozV9fZ9eYwwImUWmrYG/by1m3pk/nn5lfq+kyDxbzQrFZNHCuCWk7nnJ/Vx
+	 BSSZLx7S3cAbg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Viktor Malik <vmalik@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Xu <dxu@dxuuu.xyz>,
+Cc: Xingyuan Mo <hdthky0@gmail.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Kalle Valo <quic_kvalo@quicinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 133/451] tools/resolve_btfids: Refactor set sorting with types from btf_ids.h
-Date: Sun, 24 Mar 2024 19:06:49 -0400
-Message-ID: <20240324231207.1351418-134-sashal@kernel.org>
+Subject: [PATCH 6.1 083/451] wifi: ath10k: fix NULL pointer dereference in ath10k_wmi_tlv_op_pull_mgmt_tx_compl_ev()
+Date: Sun, 24 Mar 2024 19:05:59 -0400
+Message-ID: <20240324231207.1351418-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,143 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Viktor Malik <vmalik@redhat.com>
+From: Xingyuan Mo <hdthky0@gmail.com>
 
-[ Upstream commit 9707ac4fe2f5bac6406d2403f8b8a64d7b3d8e43 ]
+[ Upstream commit ad25ee36f00172f7d53242dc77c69fff7ced0755 ]
 
-Instead of using magic offsets to access BTF ID set data, leverage types
-from btf_ids.h (btf_id_set and btf_id_set8) which define the actual
-layout of the data. Thanks to this change, set sorting should also
-continue working if the layout changes.
+We should check whether the WMI_TLV_TAG_STRUCT_MGMT_TX_COMPL_EVENT tlv is
+present before accessing it, otherwise a null pointer deference error will
+occur.
 
-This requires to sync the definition of 'struct btf_id_set8' from
-include/linux/btf_ids.h to tools/include/linux/btf_ids.h. We don't sync
-the rest of the file at the moment, b/c that would require to also sync
-multiple dependent headers and we don't need any other defs from
-btf_ids.h.
-
-Signed-off-by: Viktor Malik <vmalik@redhat.com>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Daniel Xu <dxu@dxuuu.xyz>
-Link: https://lore.kernel.org/bpf/ff7f062ddf6a00815fda3087957c4ce667f50532.1707223196.git.vmalik@redhat.com
-Stable-dep-of: 903fad439466 ("tools/resolve_btfids: Fix cross-compilation to non-host endianness")
+Fixes: dc405152bb64 ("ath10k: handle mgmt tx completion event")
+Signed-off-by: Xingyuan Mo <hdthky0@gmail.com>
+Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+Link: https://msgid.link/20231208043433.271449-1-hdthky0@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/resolve_btfids/main.c | 35 ++++++++++++++++++++-------------
- tools/include/linux/btf_ids.h   |  9 +++++++++
- 2 files changed, 30 insertions(+), 14 deletions(-)
+ drivers/net/wireless/ath/ath10k/wmi-tlv.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/bpf/resolve_btfids/main.c b/tools/bpf/resolve_btfids/main.c
-index 77058174082d7..cd42977c6a1f4 100644
---- a/tools/bpf/resolve_btfids/main.c
-+++ b/tools/bpf/resolve_btfids/main.c
-@@ -70,6 +70,7 @@
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <errno.h>
-+#include <linux/btf_ids.h>
- #include <linux/rbtree.h>
- #include <linux/zalloc.h>
- #include <linux/err.h>
-@@ -78,7 +79,7 @@
- #include <subcmd/parse-options.h>
- 
- #define BTF_IDS_SECTION	".BTF_ids"
--#define BTF_ID		"__BTF_ID__"
-+#define BTF_ID_PREFIX	"__BTF_ID__"
- 
- #define BTF_STRUCT	"struct"
- #define BTF_UNION	"union"
-@@ -161,7 +162,7 @@ static int eprintf(int level, int var, const char *fmt, ...)
- 
- static bool is_btf_id(const char *name)
- {
--	return name && !strncmp(name, BTF_ID, sizeof(BTF_ID) - 1);
-+	return name && !strncmp(name, BTF_ID_PREFIX, sizeof(BTF_ID_PREFIX) - 1);
- }
- 
- static struct btf_id *btf_id__find(struct rb_root *root, const char *name)
-@@ -441,7 +442,7 @@ static int symbols_collect(struct object *obj)
- 		 * __BTF_ID__TYPE__vfs_truncate__0
- 		 * prefix =  ^
- 		 */
--		prefix = name + sizeof(BTF_ID) - 1;
-+		prefix = name + sizeof(BTF_ID_PREFIX) - 1;
- 
- 		/* struct */
- 		if (!strncmp(prefix, BTF_STRUCT, sizeof(BTF_STRUCT) - 1)) {
-@@ -649,19 +650,18 @@ static int cmp_id(const void *pa, const void *pb)
- static int sets_patch(struct object *obj)
- {
- 	Elf_Data *data = obj->efile.idlist;
--	int *ptr = data->d_buf;
- 	struct rb_node *next;
- 
- 	next = rb_first(&obj->sets);
- 	while (next) {
--		unsigned long addr, idx;
-+		struct btf_id_set8 *set8;
-+		struct btf_id_set *set;
-+		unsigned long addr, off;
- 		struct btf_id *id;
--		int *base;
--		int cnt;
- 
- 		id   = rb_entry(next, struct btf_id, rb_node);
- 		addr = id->addr[0];
--		idx  = addr - obj->efile.idlist_addr;
-+		off = addr - obj->efile.idlist_addr;
- 
- 		/* sets are unique */
- 		if (id->addr_cnt != 1) {
-@@ -670,14 +670,21 @@ static int sets_patch(struct object *obj)
- 			return -1;
- 		}
- 
--		idx = idx / sizeof(int);
--		base = &ptr[idx] + (id->is_set8 ? 2 : 1);
--		cnt = ptr[idx];
-+		if (id->is_set) {
-+			set = data->d_buf + off;
-+			qsort(set->ids, set->cnt, sizeof(set->ids[0]), cmp_id);
-+		} else {
-+			set8 = data->d_buf + off;
-+			/*
-+			 * Make sure id is at the beginning of the pairs
-+			 * struct, otherwise the below qsort would not work.
-+			 */
-+			BUILD_BUG_ON(set8->pairs != &set8->pairs[0].id);
-+			qsort(set8->pairs, set8->cnt, sizeof(set8->pairs[0]), cmp_id);
-+		}
- 
- 		pr_debug("sorting  addr %5lu: cnt %6d [%s]\n",
--			 (idx + 1) * sizeof(int), cnt, id->name);
--
--		qsort(base, cnt, id->is_set8 ? sizeof(uint64_t) : sizeof(int), cmp_id);
-+			 off, id->is_set ? set->cnt : set8->cnt, id->name);
- 
- 		next = rb_next(next);
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+index 876410a47d1d2..4d5009604eee7 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
++++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+@@ -844,6 +844,10 @@ ath10k_wmi_tlv_op_pull_mgmt_tx_compl_ev(struct ath10k *ar, struct sk_buff *skb,
  	}
-diff --git a/tools/include/linux/btf_ids.h b/tools/include/linux/btf_ids.h
-index 2f882d5cb30f5..72535f00572f6 100644
---- a/tools/include/linux/btf_ids.h
-+++ b/tools/include/linux/btf_ids.h
-@@ -8,6 +8,15 @@ struct btf_id_set {
- 	u32 ids[];
- };
  
-+struct btf_id_set8 {
-+	u32 cnt;
-+	u32 flags;
-+	struct {
-+		u32 id;
-+		u32 flags;
-+	} pairs[];
-+};
-+
- #ifdef CONFIG_DEBUG_INFO_BTF
+ 	ev = tb[WMI_TLV_TAG_STRUCT_MGMT_TX_COMPL_EVENT];
++	if (!ev) {
++		kfree(tb);
++		return -EPROTO;
++	}
  
- #include <linux/compiler.h> /* for __PASTE */
+ 	arg->desc_id = ev->desc_id;
+ 	arg->status = ev->status;
 -- 
 2.43.0
 
