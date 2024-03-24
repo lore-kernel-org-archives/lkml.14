@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2072815FCE9;
-	Sun, 24 Mar 2024 23:19:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7048615FA92;
+	Sun, 24 Mar 2024 23:19:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322364; cv=none; b=u//mkETbscUGBfTcrTXw3DJ2wzFkmiB+4KKvl4rlEua/i8Nsey+wS6qeH6HuOOZPeaRib34Drsl2sfUCAWbxN9L2PZY51xSHX2D9skaiJqn5xery6X13bTMNNEowcl1ZnV7HMVW/vwwCvR+li5j+4R927XMm6u+lOTP5qzXlYsc=
+	t=1711322355; cv=none; b=Crr2JpeURz3oE/aB1K6WQORFM7xhoPmzV3HWuom1JPcoT520YZ0g9Qnou6RVD3S8c30NXSKue3Ao8V1lwl2gK+W/eqT3zbcPzMLFuWjBSgIo3axOja+6r3rok8W2PNoOZtQ3qbeIv3rZHAphw8PewIGU2Pyv4TVQnMvOWI2xuL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322364; c=relaxed/simple;
-	bh=90Uqm9QF4FUxa1GZXRDF0mBH1f1Bbm0BPJYWcT65jps=;
+	s=arc-20240116; t=1711322355; c=relaxed/simple;
+	bh=nm/x47Sv9iDVQn/XHhCqWw8l31ohfCSWKv1uW9t//e4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lHVIpkZ1i63iUEjWtGzFe0+tXaG3njKI0PEbzAayiwEZMrCjwbaA7EuUD3WWvTfdB1Lw17MKBI+1xUKCuMHUMFHN70fl6kVBOEcs0fdp+Pb2xvNQjBIx/gBtOgorgfDkUOvv0dgNlNBjzwSTz1q5Xafdl8QZec//z0YL32Z2rys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuhNIq6/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ldAwF3g8gy1srm27aMyQjXhga6CJ/ctXWyWMFqkCJtfIFAoMplEwlaKpCcaOzYWf3qgi+fSQcbkCLGIRx0XjTXJoJUZrmfFxu/dgoxp55hMNKbMr3DXZWWPiUVHKo5tS/ZjjPo5/gdFgdLl4u3aj21xisb68hAx1dU0FOAcBBpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=toscVocd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuhNIq6/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38118C43394;
-	Sun, 24 Mar 2024 23:19:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="toscVocd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD561C43394;
+	Sun, 24 Mar 2024 23:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322363;
-	bh=90Uqm9QF4FUxa1GZXRDF0mBH1f1Bbm0BPJYWcT65jps=;
+	s=k20201202; t=1711322354;
+	bh=nm/x47Sv9iDVQn/XHhCqWw8l31ohfCSWKv1uW9t//e4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fuhNIq6/PEKQYYYLEdKkP8YdY42HJOat6Tmf1iXZ4jHxSFjV8fhtYdTiWVkireadg
-	 3c/BFcnikLvJ5yG5Mu/3NSLDkYU+qfpWtJ7JPOB/ee1JxEUM8OnrWE2r4wnc92NI1L
-	 Q8/tJ0VTZKjP/sJnHzgQtMSKlhimiBlzcvaRILtwYRo3wIQv1klmIbnBNrswLgOk7W
-	 4wvuo2Q+o90c+tNm9dxPRSFZ+FtKirtmdqj6jgXv1Q2WgsohOaTPWLz4IvUU0+f7cB
-	 +BoVajYmcRmohNWwpIeyhq+xRut0X7YJ0ZPcvctk6RrxghHRzUpiLJvZxdqkSxX9FR
-	 7hcwQVC2/rMtg==
+	b=toscVocdCipl6BBZXfyRsNWveL7ha1KBAHDphjMp11Y2V1vMsD3kEI26i4tuIWT2X
+	 XTwW78w0ukJwd1K9HfzWz1Hi/Er28STYK2FPNi/se7NTvn7edDfiR4tLMYcNl8MCfi
+	 j/w3JPqJIQ+gv2PSCJyNFuKAAp8JxfxDH06Jw/RTxzWslgAu9u2FYgDgrdQ1Zyqjd1
+	 SI3AiPVHHGjI90wb7lJMAHmuvzMPwGwN3uSaPWq+9LvFJfDTRwsRFHWAfuTGJ5bJzc
+	 akYZpBuaRyLNvB0rAZzT6ttHtNniatrjhzE0vwqRCZAFSqOQukaXIb0H4o/v2/6ED3
+	 kHKRHjXp+CIjQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ido Schimmel <idosch@nvidia.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Hangbin Liu <liuhangbin@gmail.com>,
-	Jiri Pirko <jiri@nvidia.com>,
+Cc: Subbaraya Sundeep <sbhatta@marvell.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 445/451] selftests: forwarding: Fix ping failure due to short timeout
-Date: Sun, 24 Mar 2024 19:12:01 -0400
-Message-ID: <20240324231207.1351418-446-sashal@kernel.org>
+Subject: [PATCH 6.1 436/451] octeontx2-af: Use separate handlers for interrupts
+Date: Sun, 24 Mar 2024 19:11:52 -0400
+Message-ID: <20240324231207.1351418-437-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,85 +48,67 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ido Schimmel <idosch@nvidia.com>
+From: Subbaraya Sundeep <sbhatta@marvell.com>
 
-[ Upstream commit e4137851d4863a9bdc6aabc613bcb46c06d91e64 ]
+[ Upstream commit 50e60de381c342008c0956fd762e1c26408f372c ]
 
-The tests send 100 pings in 0.1 second intervals and force a timeout of
-11 seconds, which is borderline (especially on debug kernels), resulting
-in random failures in netdev CI [1].
+For PF to AF interrupt vector and VF to AF vector same
+interrupt handler is registered which is causing race condition.
+When two interrupts are raised to two CPUs at same time
+then two cores serve same event corrupting the data.
 
-Fix by increasing the timeout to 20 seconds. It should not prolong the
-test unless something is wrong, in which case the test will rightfully
-fail.
-
-[1]
- # selftests: net/forwarding: vxlan_bridge_1d_port_8472_ipv6.sh
- # INFO: Running tests with UDP port 8472
- # TEST: ping: local->local                                            [ OK ]
- # TEST: ping: local->remote 1                                         [FAIL]
- # Ping failed
- [...]
-
-Fixes: b07e9957f220 ("selftests: forwarding: Add VxLAN tests with a VLAN-unaware bridge for IPv6")
-Fixes: 728b35259e28 ("selftests: forwarding: Add VxLAN tests with a VLAN-aware bridge for IPv6")
-Reported-by: Paolo Abeni <pabeni@redhat.com>
-Closes: https://lore.kernel.org/netdev/24a7051fdcd1f156c3704bca39e4b3c41dfc7c4b.camel@redhat.com/
-Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-Reviewed-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Link: https://lore.kernel.org/r/20240320065717.4145325-1-idosch@nvidia.com
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: 7304ac4567bc ("octeontx2-af: Add mailbox IRQ and msg handlers")
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../testing/selftests/net/forwarding/vxlan_bridge_1d_ipv6.sh  | 4 ++--
- .../testing/selftests/net/forwarding/vxlan_bridge_1q_ipv6.sh  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/marvell/octeontx2/af/rvu.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d_ipv6.sh b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d_ipv6.sh
-index ac97f07e5ce82..bd3f7d492af2b 100755
---- a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d_ipv6.sh
-+++ b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d_ipv6.sh
-@@ -354,7 +354,7 @@ __ping_ipv4()
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+index a7965b457bee9..a7034b47ed6c9 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+@@ -2528,10 +2528,9 @@ static void rvu_queue_work(struct mbox_wq_info *mw, int first,
+ 	}
+ }
  
- 	# Send 100 packets and verify that at least 100 packets hit the rule,
- 	# to overcome ARP noise.
--	PING_COUNT=100 PING_TIMEOUT=11 ping_do $dev $dst_ip
-+	PING_COUNT=100 PING_TIMEOUT=20 ping_do $dev $dst_ip
- 	check_err $? "Ping failed"
+-static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
++static irqreturn_t rvu_mbox_pf_intr_handler(int irq, void *rvu_irq)
+ {
+ 	struct rvu *rvu = (struct rvu *)rvu_irq;
+-	int vfs = rvu->vfs;
+ 	u64 intr;
  
- 	tc_check_at_least_x_packets "dev $rp1 egress" 101 10 100
-@@ -410,7 +410,7 @@ __ping_ipv6()
+ 	intr = rvu_read64(rvu, BLKADDR_RVUM, RVU_AF_PFAF_MBOX_INT);
+@@ -2545,6 +2544,18 @@ static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
  
- 	# Send 100 packets and verify that at least 100 packets hit the rule,
- 	# to overcome neighbor discovery noise.
--	PING_COUNT=100 PING_TIMEOUT=11 ping6_do $dev $dst_ip
-+	PING_COUNT=100 PING_TIMEOUT=20 ping6_do $dev $dst_ip
- 	check_err $? "Ping failed"
+ 	rvu_queue_work(&rvu->afpf_wq_info, 0, rvu->hw->total_pfs, intr);
  
- 	tc_check_at_least_x_packets "dev $rp1 egress" 101 100
-diff --git a/tools/testing/selftests/net/forwarding/vxlan_bridge_1q_ipv6.sh b/tools/testing/selftests/net/forwarding/vxlan_bridge_1q_ipv6.sh
-index d880df89bc8bd..e83fde79f40d0 100755
---- a/tools/testing/selftests/net/forwarding/vxlan_bridge_1q_ipv6.sh
-+++ b/tools/testing/selftests/net/forwarding/vxlan_bridge_1q_ipv6.sh
-@@ -457,7 +457,7 @@ __ping_ipv4()
- 
- 	# Send 100 packets and verify that at least 100 packets hit the rule,
- 	# to overcome ARP noise.
--	PING_COUNT=100 PING_TIMEOUT=11 ping_do $dev $dst_ip
-+	PING_COUNT=100 PING_TIMEOUT=20 ping_do $dev $dst_ip
- 	check_err $? "Ping failed"
- 
- 	tc_check_at_least_x_packets "dev $rp1 egress" 101 10 100
-@@ -522,7 +522,7 @@ __ping_ipv6()
- 
- 	# Send 100 packets and verify that at least 100 packets hit the rule,
- 	# to overcome neighbor discovery noise.
--	PING_COUNT=100 PING_TIMEOUT=11 ping6_do $dev $dst_ip
-+	PING_COUNT=100 PING_TIMEOUT=20 ping6_do $dev $dst_ip
- 	check_err $? "Ping failed"
- 
- 	tc_check_at_least_x_packets "dev $rp1 egress" 101 100
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
++{
++	struct rvu *rvu = (struct rvu *)rvu_irq;
++	int vfs = rvu->vfs;
++	u64 intr;
++
++	/* Sync with mbox memory region */
++	rmb();
++
+ 	/* Handle VF interrupts */
+ 	if (vfs > 64) {
+ 		intr = rvupf_read64(rvu, RVU_PF_VFPF_MBOX_INTX(1));
+@@ -2881,7 +2892,7 @@ static int rvu_register_interrupts(struct rvu *rvu)
+ 	/* Register mailbox interrupt handler */
+ 	sprintf(&rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], "RVUAF Mbox");
+ 	ret = request_irq(pci_irq_vector(rvu->pdev, RVU_AF_INT_VEC_MBOX),
+-			  rvu_mbox_intr_handler, 0,
++			  rvu_mbox_pf_intr_handler, 0,
+ 			  &rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], rvu);
+ 	if (ret) {
+ 		dev_err(rvu->dev,
 -- 
 2.43.0
 
