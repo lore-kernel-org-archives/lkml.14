@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665A5145B2E;
-	Sun, 24 Mar 2024 23:13:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BBB145334;
+	Sun, 24 Mar 2024 23:12:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322039; cv=none; b=MHqAY6TPNl3sNaTjbSvkW+MeulDfOI1AFsRpVM2Y39BnoVMtq7IGIcU9vxlGLx2MORbg/j/sve3GzXd+xZVzjZCFyLzkeokIeChaJvFYhnLNPQVsYUBtWVTe66A+CD3QW+WqOVadV/MMuF9J1qPhZL4/cIu7+kNcM1iJJeZNwww=
+	t=1711321975; cv=none; b=YCtCoiMVlEy6eprn2xZkvPYNk/FFuDdjOgX4a7zKSQH6/65MrXAm2AIYv1W+SywyA+5+ogG+RkeTcgqe/ueXxC40sJV1Y4eoi5lQiKrekE4cJyD1kqmw/ix43UAJIOGq+fIG2CSnYHSDjbN9uhdgqCyLF0JR1rBYJOt6mpiV5Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322039; c=relaxed/simple;
-	bh=C5+iWgv1WmZKo9V89Vlt5pXL8s+c771eDGwih5584Qk=;
+	s=arc-20240116; t=1711321975; c=relaxed/simple;
+	bh=QJUVeH+AgvcFJfM6dMz3jy0Gjst7gZR+ohiyjAPqPPA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TIkT/V0XFVT7IUouq/q1R6ka9xTDRUSAouTdWS/zMrUkgUYOeG9NK9nSAMMxWy4YhJrzwC9w8qSM09RxnHsKA3z1mlTblPRcUctJkTab0+g/cqidte0CjIgK/W6N5ev3MDObwh0a6UgOtg+tavvPFJE7glKnf2VesL3CC6RmOKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1iCrnYM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DKm6KdDzjGO+pvEMsFZRwfwyHqUkGwjknfPbO+v3OuXU30oRQ6n0TacNuw7IuJuAcVbwPuMVGLhSGMpyueunHI80jLMpsDLI24U4cDdS3AoxufG6fBGCZF99rrE2oYdrNM1km80bzYbY61FD986X28LUrgZ3jKFF+PJkgbjS/dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GxpFwEsj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1iCrnYM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EE65C43394;
-	Sun, 24 Mar 2024 23:13:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GxpFwEsj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 621CEC43394;
+	Sun, 24 Mar 2024 23:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322039;
-	bh=C5+iWgv1WmZKo9V89Vlt5pXL8s+c771eDGwih5584Qk=;
+	s=k20201202; t=1711321975;
+	bh=QJUVeH+AgvcFJfM6dMz3jy0Gjst7gZR+ohiyjAPqPPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t1iCrnYM0SBXcWcmZIuQL+T33+vJ79Y1k/WlXwcOuyr0//PMon/+llWL37r6ml7Zz
-	 wIq/qBO0qTD2PgYuJYoDf65jdlMN8wg2fp/8G7tK8PC5UHosE4Vorbj4HGKGNGLLk3
-	 dTKzhTezMLujD2z1e9Xw5gyjCgqpHUs3C+OZl3x21goQnf8Dq15kjzpiFIo2rhWQ1D
-	 HfxtOk011m3MDh13GL6hDgS/y3v/q0Vl8Pks7M8ZBdDvLJfn248STlhs6S0A6qmchd
-	 tBU5dhclhFjC1ck6ZT1jTO6G6vfnE+8aPzpBbW8GBNZwfTmUUwox9wYpC8Xp01eG43
-	 3eDowkI2XuRGA==
+	b=GxpFwEsjmx/zgvV75KzX1pBxPWWWaD17I2O1O3xxLo1ZnKZHfzxxksuLbDZtnBoW1
+	 otf0Q8RJC0LVe7SSxCCSaL8cteMuE/2uiCGMiaV4jeUSNaY3qSLRQWiUr8LHfJDrwh
+	 pMZeEBhjr5ajMbabaLZfFrDRHhqc1JQmDj3HQE+dQHEJle/VHzsTx5rJUapj3ZEjHX
+	 ZvV15Bru2XashBsIqn7S9e/3HAQncL2BrKymt4+XzjumYr4BH+9Sr5a9Ap41JFK9ei
+	 eUpCfgcPgDM/liM7dsptf/P0DVSN58nsKFe9lcIeBaCauZzV7lCio04QWlnXGuY7CD
+	 Hm3WmvI643QvQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Prike Liang <Prike.Liang@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 111/451] arm64: dts: imx8mm-kontron: Disable pull resistors for SD card signals on BL OSM-S board
-Date: Sun, 24 Mar 2024 19:06:27 -0400
-Message-ID: <20240324231207.1351418-112-sashal@kernel.org>
+Subject: [PATCH 6.1 047/451] drm/amdgpu: Enable gpu reset for S3 abort cases on Raven series
+Date: Sun, 24 Mar 2024 19:05:23 -0400
+Message-ID: <20240324231207.1351418-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,77 +48,88 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Prike Liang <Prike.Liang@amd.com>
 
-[ Upstream commit 5a940ba3e4d7c8710c9073ff5d0ca4644d4da9db ]
+[ Upstream commit c671ec01311b4744b377f98b0b4c6d033fe569b3 ]
 
-Some signals have external pullup resistors on the board and don't need
-the internal ones to be enabled. Due to silicon errata ERR050080 let's
-disable the internal pull resistors whererever possible and prevent
-any unwanted behavior in case they wear out.
+Currently, GPU resets can now be performed successfully on the Raven
+series. While GPU reset is required for the S3 suspend abort case.
+So now can enable gpu reset for S3 abort cases on the Raven series.
 
-Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Prike Liang <Prike.Liang@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/freescale/imx8mm-kontron-bl-osm-s.dts  | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/soc15.c | 45 +++++++++++++++++-------------
+ 1 file changed, 25 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-index 1dd03ef0a7835..d9fa0deea7002 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-@@ -337,40 +337,40 @@ MX8MM_IOMUXC_NAND_CE1_B_GPIO3_IO2		0x19
+diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
+index 489c89465c78b..c373a2a3248eb 100644
+--- a/drivers/gpu/drm/amd/amdgpu/soc15.c
++++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+@@ -584,11 +584,34 @@ soc15_asic_reset_method(struct amdgpu_device *adev)
+ 		return AMD_RESET_METHOD_MODE1;
+ }
  
- 	pinctrl_usdhc2: usdhc2grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x190
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x90
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d0
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d0
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
++static bool soc15_need_reset_on_resume(struct amdgpu_device *adev)
++{
++	u32 sol_reg;
++
++	sol_reg = RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81);
++
++	/* Will reset for the following suspend abort cases.
++	 * 1) Only reset limit on APU side, dGPU hasn't checked yet.
++	 * 2) S3 suspend abort and TOS already launched.
++	 */
++	if (adev->flags & AMD_IS_APU && adev->in_s3 &&
++			!adev->suspend_complete &&
++			sol_reg)
++		return true;
++
++	return false;
++}
++
+ static int soc15_asic_reset(struct amdgpu_device *adev)
+ {
+ 	/* original raven doesn't have full asic reset */
+-	if ((adev->apu_flags & AMD_APU_IS_RAVEN) ||
+-	    (adev->apu_flags & AMD_APU_IS_RAVEN2))
++	/* On the latest Raven, the GPU reset can be performed
++	 * successfully. So now, temporarily enable it for the
++	 * S3 suspend abort case.
++	 */
++	if (((adev->apu_flags & AMD_APU_IS_RAVEN) ||
++	    (adev->apu_flags & AMD_APU_IS_RAVEN2)) &&
++		!soc15_need_reset_on_resume(adev))
+ 		return 0;
  
- 	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x194
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x94
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d4
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d4
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
+ 	switch (soc15_asic_reset_method(adev)) {
+@@ -1285,24 +1308,6 @@ static int soc15_common_suspend(void *handle)
+ 	return soc15_common_hw_fini(adev);
+ }
  
- 	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x196
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x96
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d6
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d6
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
- };
+-static bool soc15_need_reset_on_resume(struct amdgpu_device *adev)
+-{
+-	u32 sol_reg;
+-
+-	sol_reg = RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81);
+-
+-	/* Will reset for the following suspend abort cases.
+-	 * 1) Only reset limit on APU side, dGPU hasn't checked yet.
+-	 * 2) S3 suspend abort and TOS already launched.
+-	 */
+-	if (adev->flags & AMD_IS_APU && adev->in_s3 &&
+-			!adev->suspend_complete &&
+-			sol_reg)
+-		return true;
+-
+-	return false;
+-}
+-
+ static int soc15_common_resume(void *handle)
+ {
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 -- 
 2.43.0
 
