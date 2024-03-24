@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533D4145330;
-	Sun, 24 Mar 2024 23:12:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665A5145B2E;
+	Sun, 24 Mar 2024 23:13:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321974; cv=none; b=R49+OBlXu1DkelOzy8XBzXiiviMO1GZGzeyJa4EFi363BX/J8oEx5i+VPJC++HTNhZfSpg+KhkgWPgSgrLCqnSHUe8qo1mGipVgZS6XlWe4xomWpk0wzZnvLmNWzse7ZcV6L3J+KNozlKYaBPeUO/4TGciiZvzFU3tjEbLbWjFU=
+	t=1711322039; cv=none; b=MHqAY6TPNl3sNaTjbSvkW+MeulDfOI1AFsRpVM2Y39BnoVMtq7IGIcU9vxlGLx2MORbg/j/sve3GzXd+xZVzjZCFyLzkeokIeChaJvFYhnLNPQVsYUBtWVTe66A+CD3QW+WqOVadV/MMuF9J1qPhZL4/cIu7+kNcM1iJJeZNwww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321974; c=relaxed/simple;
-	bh=vko/+J46uPjjVxQ7eGm2PmvehHWRDiGajfhump5oooI=;
+	s=arc-20240116; t=1711322039; c=relaxed/simple;
+	bh=C5+iWgv1WmZKo9V89Vlt5pXL8s+c771eDGwih5584Qk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=apk+dRUfSdzTNfSbd7ZRRV9UapbIvgA2qOoBnylyXLrtOU0Ivnej6bRD3eXC3mAkYmtwmtjPCiolHE3X8+wRKv876KqLmpzEmntmIJS7qTTZldE/FwwV9buERx9EqNTf3LT0/M1PtGillDp5bZiLK3/i/Nieknglgg8GN+/O6Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRIbn3pv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TIkT/V0XFVT7IUouq/q1R6ka9xTDRUSAouTdWS/zMrUkgUYOeG9NK9nSAMMxWy4YhJrzwC9w8qSM09RxnHsKA3z1mlTblPRcUctJkTab0+g/cqidte0CjIgK/W6N5ev3MDObwh0a6UgOtg+tavvPFJE7glKnf2VesL3CC6RmOKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1iCrnYM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRIbn3pv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93CD9C433F1;
-	Sun, 24 Mar 2024 23:12:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1iCrnYM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EE65C43394;
+	Sun, 24 Mar 2024 23:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321973;
-	bh=vko/+J46uPjjVxQ7eGm2PmvehHWRDiGajfhump5oooI=;
+	s=k20201202; t=1711322039;
+	bh=C5+iWgv1WmZKo9V89Vlt5pXL8s+c771eDGwih5584Qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dRIbn3pvzprtefFl93j9Nxeoofnyb+muYHmLMo1v2LmkUoqSZxPQTjyU1B5qDastA
-	 oPVtNJ8Ts2aw60o76o+9K3xxLzuW+bocpCCPmGL2rxHANU4BWVSsisRTjIRFCmqleD
-	 JBgr1LTVDKEVIvDToeBFGfwDN0CBrHehp8hIsbuo4bC3CTCvRukd/VXdBqOq5rIlea
-	 lnZpd7bDKNxLx2b7mVOBHw+YbgK/2t//kYdg7arZxqpBthONyQbA5kdGYynU1vz8OD
-	 LEi1XklTFA26Ah+SSGYxar85gyFgWrLgOMOEkBtVPyNYJ/vP9ahTBf08Czlob3R1XS
-	 O2MU9u0MrFlWg==
+	b=t1iCrnYM0SBXcWcmZIuQL+T33+vJ79Y1k/WlXwcOuyr0//PMon/+llWL37r6ml7Zz
+	 wIq/qBO0qTD2PgYuJYoDf65jdlMN8wg2fp/8G7tK8PC5UHosE4Vorbj4HGKGNGLLk3
+	 dTKzhTezMLujD2z1e9Xw5gyjCgqpHUs3C+OZl3x21goQnf8Dq15kjzpiFIo2rhWQ1D
+	 HfxtOk011m3MDh13GL6hDgS/y3v/q0Vl8Pks7M8ZBdDvLJfn248STlhs6S0A6qmchd
+	 tBU5dhclhFjC1ck6ZT1jTO6G6vfnE+8aPzpBbW8GBNZwfTmUUwox9wYpC8Xp01eG43
+	 3eDowkI2XuRGA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ranjan Kumar <ranjan.kumar@broadcom.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 045/451] scsi: mpt3sas: Prevent sending diag_reset when the controller is ready
-Date: Sun, 24 Mar 2024 19:05:21 -0400
-Message-ID: <20240324231207.1351418-46-sashal@kernel.org>
+Subject: [PATCH 6.1 111/451] arm64: dts: imx8mm-kontron: Disable pull resistors for SD card signals on BL OSM-S board
+Date: Sun, 24 Mar 2024 19:06:27 -0400
+Message-ID: <20240324231207.1351418-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,41 +48,77 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ranjan Kumar <ranjan.kumar@broadcom.com>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-[ Upstream commit ee0017c3ed8a8abfa4d40e42f908fb38c31e7515 ]
+[ Upstream commit 5a940ba3e4d7c8710c9073ff5d0ca4644d4da9db ]
 
-If the driver detects that the controller is not ready before sending the
-first IOC facts command, it will wait for a maximum of 10 seconds for it to
-become ready. However, even if the controller becomes ready within 10
-seconds, the driver will still issue a diagnostic reset.
+Some signals have external pullup resistors on the board and don't need
+the internal ones to be enabled. Due to silicon errata ERR050080 let's
+disable the internal pull resistors whererever possible and prevent
+any unwanted behavior in case they wear out.
 
-Modify the driver to avoid sending a diag reset if the controller becomes
-ready within the 10-second wait time.
-
-Signed-off-by: Ranjan Kumar <ranjan.kumar@broadcom.com>
-Link: https://lore.kernel.org/r/20240221071724.14986-1-ranjan.kumar@broadcom.com
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_base.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../dts/freescale/imx8mm-kontron-bl-osm-s.dts  | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-index 809be43f440dc..8e6ac08e553bb 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -7398,7 +7398,9 @@ _base_wait_for_iocstate(struct MPT3SAS_ADAPTER *ioc, int timeout)
- 		return -EFAULT;
- 	}
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
+index 1dd03ef0a7835..d9fa0deea7002 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
+@@ -337,40 +337,40 @@ MX8MM_IOMUXC_NAND_CE1_B_GPIO3_IO2		0x19
  
-- issue_diag_reset:
-+	return 0;
-+
-+issue_diag_reset:
- 	rc = _base_diag_reset(ioc);
- 	return rc;
- }
+ 	pinctrl_usdhc2: usdhc2grp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x190
++			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x90
+ 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d0
+ 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d0
+ 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d0
+ 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d0
+ 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d0
+-			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
+-			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
++			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
++			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
+ 		>;
+ 	};
+ 
+ 	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x194
++			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x94
+ 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d4
+ 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d4
+ 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d4
+ 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d4
+ 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d4
+-			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
+-			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
++			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
++			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
+ 		>;
+ 	};
+ 
+ 	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x196
++			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x96
+ 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d6
+ 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d6
+ 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d6
+ 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d6
+ 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d6
+-			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
+-			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
++			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
++			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
+ 		>;
+ 	};
+ };
 -- 
 2.43.0
 
