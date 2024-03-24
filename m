@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2CD1E5860;
-	Sun, 24 Mar 2024 22:53:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E0A1E6202;
+	Sun, 24 Mar 2024 22:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320828; cv=none; b=pmwm52FnIrC5aYE/v96DTBdP3mTsU9zjgZ7M0ofDvURveCNiEKyYgChRGkZiYjajCECNNdDI4NmddKV14kg+64EFae+0rq/VE7QBB63kZXGevCvnH7fVvCDdLU64iVSzDsppp4192gnUcW6VQKdL3TQvLuA+plVbGIK+sNWi3Xs=
+	t=1711320839; cv=none; b=GkHtD0YLA2ZiZGlyxkdrAsA4lCtpnDTie0LQ3xn8xr8AhMsQVwygMV4Xa+oQ903bYUm0c+70scRdfvB5a88WCn4A4nqG6hBG8HSRC2aqdd7fIfnpMaty5+2XZ3W6DCWF8akOzuWaUHDZdcOKJ1+f2HIeqqXImKtCBdyTIUyRW+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320828; c=relaxed/simple;
-	bh=H3YOOhBig6iwhtefRcb2o7O5wuSRi1oZdbrtIM+94i4=;
+	s=arc-20240116; t=1711320839; c=relaxed/simple;
+	bh=O945Y65RtR8IS6CkelHaCAjziwhmZ9c1i9x5V/q+Yf4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vDVZsfSH6DxyHyabEov1pIk2h8Qct6Wqq8GaFCwHRomeuuBJ+e5OynCaMbTDma2KkIc+d7nkD2orjVKLGglQXh9FQ6GhQKMF/TQGV5m6nmgxDibJ67io3L6yRakQokip48p5Chf15m2HUn09X0L5Z806LPPMj87IpuSVvjWf/pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iNva8bYp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XmZsa1Fvt42xtgvoud/0+0hfqrnJFm2vJFgOkj5OfRHJMzk2/jkhrQXVXTGXqWLdmwnQCF8Q5zcUFY7NzZemtAa9nuKa5ofB43rpaimycREFAAuHQ/Kymg1mqUjGpfyBP//2BGpUctQ4LHiikl+MtotfwObWJSccYMosBb/sGRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lw2LP5oU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iNva8bYp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF5D3C433C7;
-	Sun, 24 Mar 2024 22:53:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lw2LP5oU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42351C43399;
+	Sun, 24 Mar 2024 22:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320827;
-	bh=H3YOOhBig6iwhtefRcb2o7O5wuSRi1oZdbrtIM+94i4=;
+	s=k20201202; t=1711320837;
+	bh=O945Y65RtR8IS6CkelHaCAjziwhmZ9c1i9x5V/q+Yf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iNva8bYpWhJ9o+6s+vs2FYuGwAGwlRDjFdRcyALaiLOQ0cza54Jk/SKS86rdLqEW0
-	 F6eOshZ/Inc6aZykHoC6nAyX27wYm8lqmUp1fV6dWn9dr0i25IJLssKYKm9ZozgBss
-	 qv6eAoGSdz+ttgKI6IbzCSDnBlWBUVe0dyJqGYHq9kJ8pNtCzJix0cDJJDU+C6Umgu
-	 mBJhoqDAP+YQAZWSBo5iFOL7BFG75youOPfrg+QF60Sq3fBC+MXSw93R+xN+SxX5TU
-	 AL0iG6j71plm2nITgAU8Owsd13IFE6XKmspXyHuKsz0/Kfm2zKeynDg5G3gmRC6KeI
-	 72+xaiHSva2hg==
+	b=lw2LP5oUACyVvilbBXRuQkB0Xk4dQodpsSv84uUe9IHFJSHoCt+kEJYhqI5s6xEYn
+	 88tNcq2AO6SCQ83zUGQiRVm4t/UM3F4CZO4xDez1MX8S3B+hGJ61dQnz6EewaP+TXI
+	 /Ac48PJ+SWiUSc5I36LDZuXN0o5loHRp7xyX/Yie5gx0aoGsRkh3AP3TuAF0Z50/M9
+	 gf9ZgaVJ0V6ArIzcMc8UYihdrhVAXFqkuC96lR3a9YMpukkTRGj5P2l5KulOSAS/ul
+	 0BWARI9zkZn2eUIgVx26DIYLeDXpuEsrX7OQfY/M6TQgFyB2a2FrVWLj9UIQI2/jQj
+	 CHLJNZ9EYgbxw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>,
+	Douglas Anderson <dianders@chromium.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 392/713] drm/tegra: dsi: Fix missing pm_runtime_disable() in the error handling path of tegra_dsi_probe()
-Date: Sun, 24 Mar 2024 18:41:58 -0400
-Message-ID: <20240324224720.1345309-393-sashal@kernel.org>
+Subject: [PATCH 6.7 403/713] drm/panel-edp: use put_sync in unprepare
+Date: Sun, 24 Mar 2024 18:42:09 -0400
+Message-ID: <20240324224720.1345309-404-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,34 +48,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit 5286a9fc280c45b6b307ee1b07f7a997e042252c ]
+[ Upstream commit 49ddab089611ae5ddd0201ddbbf633da75bfcc25 ]
 
-If an error occurs after calling pm_runtime_enable(), pm_runtime_disable()
-should be called as already done in the remove function.
+Some edp panel requires T10 (Delay from end of valid video data transmitted
+by the Source device to power-off) less than 500ms. Using autosuspend with
+delay set as 1000 violates this requirement.
 
-Fixes: ef8187d75265 ("drm/tegra: dsi: Implement runtime PM")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/ee4a15c9cd4b574a55cd67c30d2411239ba2cee9.1693667005.git.christophe.jaillet@wanadoo.fr
+Use put_sync_suspend in unprepare to meet the spec. For other cases (such
+as getting EDID), it still uses autosuspend.
+
+Suggested-by: Douglas Anderson <dianders@chromium.org>
+Fixes: 3235b0f20a0a ("drm/panel: panel-simple: Use runtime pm to avoid excessive unprepare / prepare")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231220221418.2610185-1-hsinyi@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dsi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/panel/panel-edp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 0c8ad8ee5009a..db606e151afc8 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1675,6 +1675,7 @@ static int tegra_dsi_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+index cba5a93e60822..70feee7876114 100644
+--- a/drivers/gpu/drm/panel/panel-edp.c
++++ b/drivers/gpu/drm/panel/panel-edp.c
+@@ -413,8 +413,7 @@ static int panel_edp_unprepare(struct drm_panel *panel)
+ 	if (!p->prepared)
+ 		return 0;
  
- unregister:
-+	pm_runtime_disable(&pdev->dev);
- 	mipi_dsi_host_unregister(&dsi->host);
- mipi_free:
- 	tegra_mipi_free(dsi->mipi);
+-	pm_runtime_mark_last_busy(panel->dev);
+-	ret = pm_runtime_put_autosuspend(panel->dev);
++	ret = pm_runtime_put_sync_suspend(panel->dev);
+ 	if (ret < 0)
+ 		return ret;
+ 	p->prepared = false;
 -- 
 2.43.0
 
