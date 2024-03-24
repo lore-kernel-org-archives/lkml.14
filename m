@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E0B80610;
-	Sun, 24 Mar 2024 22:48:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E327FBD2;
+	Sun, 24 Mar 2024 22:48:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320513; cv=none; b=Q5AYd/ogRhIp9hpgDs86IJRzWgO4DPrfFnzcvPOQp81AV3/NzIkYdlliADQj3556Y195DIK9PRtSV9ULIjwWjEdC6Kg0Eljc0U9t3yGnYr5skYBlytoslM3fWRf8hLQWOLW5nwOcCwYho2KlOuOXrQj94Q8AjPAnvE2wkUT2cBk=
+	t=1711320498; cv=none; b=QLyFLWTe+lnZE2vDY9BwhiFzArPLxUblXQSsWJYJv3El0XhOljrcnFloa30Xe9CsY+Kf293FEspJHPA+kgxYjdiPURiIRUsWNPzohonukMgUl6YtB4MXdn6cbhOtMFI0Vi4vAZS0mtVWIvaxADiafgSlQdBsfpjfp082JvpAeVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320513; c=relaxed/simple;
-	bh=lNQsheyNDdU4fFjsczF/E8ef3yJSjcxsBtth7BKLDKg=;
+	s=arc-20240116; t=1711320498; c=relaxed/simple;
+	bh=S9i6rVDTLrc92ZdyKfg4Ixk7H6eGpB3PH6E05e+MPh0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bpOORBlRYhh9Dxl8LpGIg9gDsRdiXF7X95Pl1uzSA5MtghJaat64WggY7YhWG9g2cgZH3BsAxGEFC95O0NFQyWIg+kKUEnEHWm4P7RUFyH5zPYmT96mpRb/QpMy9mkDv0mf6v1JkByYFfulZIapIzBAO4x75ieBM1JTGRKsh+fE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjkdiMeU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=N++JXEKSteaggI7ej9qVLQvBFBjIAoI9/+Ad8OLlNM91BNs9kKOp35h+3AbP3mBPn4MmNvXk/jWrVGI+/ZM+3xrnRhPx9f6eettgNyYUO8cSzHcsqci5h3k9YdfFzZ/vrzwOFZhZsuaum1WI5f1CVsIEj1nQ/mBk6I1Uc38kArA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A42dBByA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjkdiMeU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44313C433C7;
-	Sun, 24 Mar 2024 22:48:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A42dBByA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DB92C433F1;
+	Sun, 24 Mar 2024 22:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320512;
-	bh=lNQsheyNDdU4fFjsczF/E8ef3yJSjcxsBtth7BKLDKg=;
+	s=k20201202; t=1711320497;
+	bh=S9i6rVDTLrc92ZdyKfg4Ixk7H6eGpB3PH6E05e+MPh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gjkdiMeUkD3TxiNsCG1lU5rX7MwMgrtIaxG3wdwpYXGWOyUuVgLNmpGiXJMHvcErM
-	 5RhnbW5iWG8L3J8c/YQ7vs/IYf2l9f3uEvN4WE1/MhM3CqGKOadfYkKmRHO4Q8zsQz
-	 /Hzq3orBg/esZmGrk1P/C4DuC+0jIRvAcNthV/fvwpQt7qCuvQCMzXOM0oscs2esxs
-	 YyxoXXOBihBzLJI83HqEcrkrw4W/nJZDqaWxCLLMmOVpmhs0jkufNtwzWT4NYASZne
-	 mOAiWh7nkShwpwAVQjEF3nj7ashSbyNjozVVaaKasTBFpy/hexy9ig3eYtr4uKH3fO
-	 CTL/4G7k0EvpA==
+	b=A42dBByAGWn8aDqIx1S5EbWtO1GukNi3nlv+TQOOUKkpWjiO2uBMa5VYKqv7ZyVlz
+	 0YIbZHUXlfM+C7EcNta2DcuUejeJQgWT3MkTiAWe4Y9lNA6X84AyZC+aCkwBSiYi56
+	 fUtLWPIOgxpgzr/WYqhkkwoUpCQHlgoLzId71ztEQVrQ3oVCshuEE6ALUgLMThywhE
+	 xF0viWq+xMb04B7WETuiz1mE2z3CMcqJUb4Jiq5osrJFozz8oQQtm6iypt8pLnjKY8
+	 vVHeVHIsFsz7LnoU2ggqu3kMcqxePLn/jw3wpX9YtJUHymhGU04xyFS1kEf5PUB2Pg
+	 KbWFjGmHyjJEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stefan Binding <sbinding@opensource.cirrus.com>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: Felix Fietkau <nbd@nbd.name>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 073/713] ALSA: hda: cs35l41: Overwrite CS35L41 configuration for ASUS UM5302LA
-Date: Sun, 24 Mar 2024 18:36:39 -0400
-Message-ID: <20240324224720.1345309-74-sashal@kernel.org>
+Subject: [PATCH 6.7 057/713] wifi: mac80211: only call drv_sta_rc_update for uploaded stations
+Date: Sun, 24 Mar 2024 18:36:23 -0400
+Message-ID: <20240324224720.1345309-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,42 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stefan Binding <sbinding@opensource.cirrus.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit b603d95692e47dc6f5f733e93c3841dc0c01e624 ]
+[ Upstream commit 413dafc8170fcb925fb17af8842f06af305f8e0b ]
 
-Whilst this laptop contains _DSD inside the BIOS, there is an error in
-this configuration. Override the _DSD in the BIOS with the correct
-configuration for this laptop.
+When a station has not been uploaded yet, receiving SMPS or channel width
+notification action frames can lead to rate_control_rate_update calling
+drv_sta_rc_update with uninitialized driver private data.
+Fix this by adding a missing check for sta->uploaded.
 
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20240301160154.158398-4-sbinding@opensource.cirrus.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Link: https://msgid.link/20240221140535.16102-1-nbd@nbd.name
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/cs35l41_hda_property.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/mac80211/rate.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
-index 6cf4c02f9effd..5a5f4b499fd94 100644
---- a/sound/pci/hda/cs35l41_hda_property.c
-+++ b/sound/pci/hda/cs35l41_hda_property.c
-@@ -83,6 +83,7 @@ static const struct cs35l41_config cs35l41_config_table[] = {
- 	{ "104317F3", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
- 	{ "10431863", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
- 	{ "104318D3", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
-+	{ "10431A83", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
- 	{ "10431C9F", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
- 	{ "10431CAF", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
- 	{ "10431CCF", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
-@@ -420,6 +421,7 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
- 	{ "CSC3551", "104317F3", generic_dsd_config },
- 	{ "CSC3551", "10431863", generic_dsd_config },
- 	{ "CSC3551", "104318D3", generic_dsd_config },
-+	{ "CSC3551", "10431A83", generic_dsd_config },
- 	{ "CSC3551", "10431C9F", generic_dsd_config },
- 	{ "CSC3551", "10431CAF", generic_dsd_config },
- 	{ "CSC3551", "10431CCF", generic_dsd_config },
+diff --git a/net/mac80211/rate.c b/net/mac80211/rate.c
+index d5ea5f5bcf3a0..9d33fd2377c88 100644
+--- a/net/mac80211/rate.c
++++ b/net/mac80211/rate.c
+@@ -119,7 +119,8 @@ void rate_control_rate_update(struct ieee80211_local *local,
+ 		rcu_read_unlock();
+ 	}
+ 
+-	drv_sta_rc_update(local, sta->sdata, &sta->sta, changed);
++	if (sta->uploaded)
++		drv_sta_rc_update(local, sta->sdata, &sta->sta, changed);
+ }
+ 
+ int ieee80211_rate_control_register(const struct rate_control_ops *ops)
 -- 
 2.43.0
 
