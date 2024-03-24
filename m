@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4820B181806;
-	Sun, 24 Mar 2024 23:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40767181811;
+	Sun, 24 Mar 2024 23:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324091; cv=none; b=c5J7Q1z5hoWkyz+hwq6SmRBaLziBXVC5v3fxbP8Zmn5cA6JgV0gcjx+9EbPJxY2Ky0w5DefvkJ3KHuRiMa7EEbHy0D2JbJydKoHKOL/bPrDsLFtVa0SHyO5sMqFZN/UvJ8RlOe1xu9hrYkTRiYZKV9cPBlKCB/qlOvOxAuxFa6c=
+	t=1711324092; cv=none; b=tlB2CEtOhKbTzDbwJEbgozt1VZW4fiumPRKl6dmT+lAAscAf/TPSeE4qioZvzUwhGZfueArPlneBBkh8SVLTF8gtoKCc8YiPkLNXpcP8PJCqHroBPdJvDlvz1hzQG7LsKjhIJe9jRVoqVG8SrDBGabsFYsGAUK6eCT4cov28pSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324091; c=relaxed/simple;
-	bh=fQ4pDnoEGS24uK7PN4tSU8hDTyazw65f8yIfQ9B9TyQ=;
+	s=arc-20240116; t=1711324092; c=relaxed/simple;
+	bh=gbU2EowSPlHE2x6WXeXSsOfbfUQE1IU/R3YYLu6N2co=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fMXPNAWj5U/ydpFBzlk+M16ZpFZKFyIvsQXxisMcuzrbcMZJGHrh+d6DsPXah5JmoeToIxhd3vHJ9r3zAJgnc8gFKDhvDIgfYV934mI8gnatRzaSuQZ4CX2m5txwp3Jlj8Qm8dhsjmSj4Nq6lb2wyiso+X/sd58DWv3bO4aoSRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oc34BKFn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Kt4e7WDyak0Le/LgmDS3dnG/3Vp/Z+tksAwqM+6loK9tWj75/r5RkqCx4sXSA5SsLvgb7SVfr/XXtNamQlwdttCvYRbtgLbIwZce1NSna+GU57goEmuP8gV+/cYWnvWPpGhCwPNz4P9pHcThkaofyiN0JiiZ1FoIAVoNBgeNgq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHVU64IN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oc34BKFn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29729C433F1;
-	Sun, 24 Mar 2024 23:48:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHVU64IN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05BFEC43394;
+	Sun, 24 Mar 2024 23:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324089;
-	bh=fQ4pDnoEGS24uK7PN4tSU8hDTyazw65f8yIfQ9B9TyQ=;
+	s=k20201202; t=1711324092;
+	bh=gbU2EowSPlHE2x6WXeXSsOfbfUQE1IU/R3YYLu6N2co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Oc34BKFnSNHz0Rmm0Bte+KA3S6ZXU9VzpXtpupiJFCgyLX6hwe72Mk0MYyU4r2Pdv
-	 O78z0zvfvFZeFqltF70VEtf6i5F9wUtjezTsqHtxx2+5QyygjGt5I4gTjEUxLySSdf
-	 mTYPTV4S60CB4No8Flq1vxZ+Vo7VfGJIAJDh2o/gGXaDc/s7kx+IXwbbkoC6jtXVJ0
-	 8McHQKLSB3914naaVwFKrNLpfd9+1QPmdGBuXDUBQloEfLDgm4QucRnQoWHhLdBMA8
-	 xlK2Yr3c1Ysd1IMZ452Nm4ZO5Y38AUnigEuVcwVzUQ99v7SlVcIDoVToEVZkI8bIja
-	 gGj5ndD9gU63w==
+	b=gHVU64INu98LyPY9KAzFasqUatZEqQ70e4kY6XnDLDbIGkp85V6ziraUbTbfLLOdE
+	 VZIFFZMskGpPMQJsdn5v/ifYNE6hA8TmIgFRjINezP3X83L6UO2WhWbjFQUHhQlxry
+	 C4Ydm7dDAfhv2eSioM2rKOV0ifJxsL1u7nKZXha+gQHoQFsbx9ntcq47THXLBHwnuK
+	 U1myQGRJfmiPhPL2dAHtAn2nboqNrWPsTmTuhcjpz/dBFTvZ9Z7HtNifbkWnNh2Dzo
+	 0CJOGX02V5fUh/xq9a5gpVdGSiWe+A2kx4lW1jsGUlWSOqiHFBSlaoTnI+Hn70mBmv
+	 gEJQBS28zd2sg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Harry Wentland <harry.wentland@amd.com>,
+	Simon Ser <contact@emersion.fr>,
+	Melissa Wen <mwen@igalia.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 090/183] drm/tegra: output: Fix missing i2c_put_adapter() in the error handling paths of tegra_output_probe()
-Date: Sun, 24 Mar 2024 19:45:03 -0400
-Message-ID: <20240324234638.1355609-91-sashal@kernel.org>
+Subject: [PATCH 5.4 092/183] drm: Don't treat 0 as -1 in drm_fixp2int_ceil
+Date: Sun, 24 Mar 2024 19:45:05 -0400
+Message-ID: <20240324234638.1355609-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,72 +50,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Harry Wentland <harry.wentland@amd.com>
 
-[ Upstream commit 2db4578ef6ffb2b52115ca0ebf897b60ec559556 ]
+[ Upstream commit cf8837d7204481026335461629b84ac7f4538fa5 ]
 
-If an error occurs after a successful of_get_i2c_adapter_by_node() call, it
-should be undone by a corresponding i2c_put_adapter().
+Unit testing this in VKMS shows that passing 0 into
+this function returns -1, which is highly counter-
+intuitive. Fix it by checking whether the input is
+>= 0 instead of > 0.
 
-Add the missing i2c_put_adapter() call.
-
-Fixes: 9be7d864cf07 ("drm/tegra: Implement panel support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/b38604178991e1f08b2cda219103be266be2d680.1693667005.git.christophe.jaillet@wanadoo.fr
+Fixes: 64566b5e767f ("drm: Add drm_fixp_from_fraction and drm_fixp2int_ceil")
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Reviewed-by: Simon Ser <contact@emersion.fr>
+Reviewed-by: Melissa Wen <mwen@igalia.com>
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231108163647.106853-2-harry.wentland@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/output.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ include/drm/drm_fixed.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-index bdcaa4c7168cf..806249c0b7e85 100644
---- a/drivers/gpu/drm/tegra/output.c
-+++ b/drivers/gpu/drm/tegra/output.c
-@@ -127,8 +127,10 @@ int tegra_output_probe(struct tegra_output *output)
- 						       GPIOD_IN,
- 						       "HDMI hotplug detect");
- 	if (IS_ERR(output->hpd_gpio)) {
--		if (PTR_ERR(output->hpd_gpio) != -ENOENT)
--			return PTR_ERR(output->hpd_gpio);
-+		if (PTR_ERR(output->hpd_gpio) != -ENOENT) {
-+			err = PTR_ERR(output->hpd_gpio);
-+			goto put_i2c;
-+		}
+diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
+index 553210c02ee0f..627efa56e59fb 100644
+--- a/include/drm/drm_fixed.h
++++ b/include/drm/drm_fixed.h
+@@ -88,7 +88,7 @@ static inline int drm_fixp2int(s64 a)
  
- 		output->hpd_gpio = NULL;
- 	}
-@@ -137,7 +139,7 @@ int tegra_output_probe(struct tegra_output *output)
- 		err = gpiod_to_irq(output->hpd_gpio);
- 		if (err < 0) {
- 			dev_err(output->dev, "gpiod_to_irq(): %d\n", err);
--			return err;
-+			goto put_i2c;
- 		}
- 
- 		output->hpd_irq = err;
-@@ -150,7 +152,7 @@ int tegra_output_probe(struct tegra_output *output)
- 		if (err < 0) {
- 			dev_err(output->dev, "failed to request IRQ#%u: %d\n",
- 				output->hpd_irq, err);
--			return err;
-+			goto put_i2c;
- 		}
- 
- 		output->connector.polled = DRM_CONNECTOR_POLL_HPD;
-@@ -168,6 +170,12 @@ int tegra_output_probe(struct tegra_output *output)
- 		return -ENOMEM;
- 
- 	return 0;
-+
-+put_i2c:
-+	if (output->ddc)
-+		i2c_put_adapter(output->ddc);
-+
-+	return err;
- }
- 
- void tegra_output_remove(struct tegra_output *output)
+ static inline int drm_fixp2int_ceil(s64 a)
+ {
+-	if (a > 0)
++	if (a >= 0)
+ 		return drm_fixp2int(a + DRM_FIXED_ALMOST_ONE);
+ 	else
+ 		return drm_fixp2int(a - DRM_FIXED_ALMOST_ONE);
 -- 
 2.43.0
 
