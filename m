@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E697131187;
-	Sun, 24 Mar 2024 23:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD3517A916;
+	Sun, 24 Mar 2024 23:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323683; cv=none; b=WMRSqJgmqmQedxoKeEma6Y6JqT03ihXxKJ5N6aVqVufENmpkSAqHuUqO3LWfjrFKi0lzjsvJBbtWKAX/if6RiFuPRH1JvQnnMKgRuH1yvTYwPKKZ50sETHwvhdAf1pd8n/FprNdf9lmy5f8E7oDfZG5gIVJ6/IZK/ez+fxWbNl8=
+	t=1711323695; cv=none; b=uj8G8fDz55IciFJUUeA6GzMfqpy73onItsnyoMaVYi53RIA/LlW1/b5pIUSCKDLiA0yTvDf1Ul/f+QrJ3QUAe3pcHgx0yRgcJ3/8mPJTuCrlMKwrnJjKJcgwo/Z8Wxqzg4h7L/yyIokgZAaLDQRmYDj6Ry8Fq8EsTPlkCHK5aic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323683; c=relaxed/simple;
-	bh=QyAnXMWYQENBOHd4XUvZKCz+yB+VOQoDw0E4z1GetK0=;
+	s=arc-20240116; t=1711323695; c=relaxed/simple;
+	bh=pWG+b7pauP9/zuCIkVzsof4xZ6Nu4d2N8Fb2XZ+QAJE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k/ZGeu9boezr1TEmy1nA/C88Ek/lcUh/kkePw6YprRInpwgNL3gMqTWRcLM/p0k3c2WTqnPozB17qh5qelGJCQ+IFFDmor3MDi9dakzkVOVGVeyllTFGyLcnzX/dYkBYPR3nLVlV+3IrCxGXK+1HcBl2mzIbvP/XLERYcEp1XsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGID7eUH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=J+2H18SOoBVAo1rrl0mmRBX/I33cn7drlmBcV2RYpsQbn3ozZF53P4uRCjbitdpbX+mSQWSkvwPlUhE5ttHGPtOPfNk0gRq34tsuBy04YOfjz3Dblvk1Nfnb8MssIRKiC9ff9Hy201jpVTEQWKxbnqsTYcN4E6TzsKaI7+DAr74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kXRODp/t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGID7eUH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 678EEC433C7;
-	Sun, 24 Mar 2024 23:41:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kXRODp/t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7CA0C43394;
+	Sun, 24 Mar 2024 23:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323683;
-	bh=QyAnXMWYQENBOHd4XUvZKCz+yB+VOQoDw0E4z1GetK0=;
+	s=k20201202; t=1711323695;
+	bh=pWG+b7pauP9/zuCIkVzsof4xZ6Nu4d2N8Fb2XZ+QAJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KGID7eUHnco+UOMoSmXPPnhGRkFdu1YpN0kNGON5Ixa4y+9Fvk9fgUEpCX5/IK0AZ
-	 7/7H1eu94RdzFLD+eCJHtYjCAUSlhtLg2xwGo4CBqOWi7/GDm4PqSh/jTznx813mmg
-	 mk74kIJf3QlXD1aOgwYWnHm8quTfKYs7cX/8jdV/fctfVkXP0+rD/8LajwqiDNJafA
-	 t8P/h+DIZlnOsZ/PfcNLBbpGx/YlwN6Nd4Dqr6/dGlCOGU16kpU3BJTJJsXq8YdV0t
-	 5mVYcJZD9df19EPX5WdUTkv4qrLugjBYVKfuOZYBhZwMjDuiDlBxPvQ+v5I8aHxMcR
-	 i7vqjPsKkDY0Q==
+	b=kXRODp/tYOHGvlQG5qbGsTDY0cMFxGoa4g06RQv0Aldi1G6ofC/EJ1XB4aEvYqb3A
+	 NetqXe5qRKODxBgNWpldGvLpOVAYWhuKxtwhDtyoFF5UbRPuRrR31Vht3+ww0fej5e
+	 V20+tr1cwpLJlLE9XEolEW6tYNvychFsbVZ+5jdouqGBAWUNyo3OjgIsPwO6Y5uWWO
+	 ZSxztjojtGI+o4tiDIKpGQxslqMTKiNT5Z3Itz5JdNB0IUALMMYabh2EfBV+y9mBL3
+	 fPD98aRD5zWhMlDmTAHsssRtsy9bO8UatuFnhcDgzWcGZhqNQx7IOM30gH0obg4vZQ
+	 P6n6ZUPADdE+w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	Ubisectech Sirius <bugreport@ubisectech.com>,
-	Kalle Valo <quic_kvalo@quicinc.com>,
+Cc: Peter Robinson <pbrobinson@gmail.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 055/238] wifi: ath9k: delay all of ath9k_wmi_event_tasklet() until init is complete
-Date: Sun, 24 Mar 2024 19:37:23 -0400
-Message-ID: <20240324234027.1354210-56-sashal@kernel.org>
+Subject: [PATCH 5.10 068/238] bus: tegra-aconnect: Update dependency to ARCH_TEGRA
+Date: Sun, 24 Mar 2024 19:37:36 -0400
+Message-ID: <20240324234027.1354210-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -45,123 +45,49 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Peter Robinson <pbrobinson@gmail.com>
 
-[ Upstream commit 24355fcb0d4cbcb6ddda262596558e8cfba70f11 ]
+[ Upstream commit 4acd21a45c1446277e2abaece97d7fa7c2e692a9 ]
 
-The ath9k_wmi_event_tasklet() used in ath9k_htc assumes that all the data
-structures have been fully initialised by the time it runs. However, because of
-the order in which things are initialised, this is not guaranteed to be the
-case, because the device is exposed to the USB subsystem before the ath9k driver
-initialisation is completed.
+Update the architecture dependency to be the generic Tegra
+because the driver works on the four latest Tegra generations
+not just Tegra210, if you build a kernel with a specific
+ARCH_TEGRA_xxx_SOC option that excludes Tegra210 you don't get
+this driver.
 
-We already committed a partial fix for this in commit:
-8b3046abc99e ("ath9k_htc: fix NULL pointer dereference at ath9k_htc_tx_get_packet()")
-
-However, that commit only aborted the WMI_TXSTATUS_EVENTID command in the event
-tasklet, pairing it with an "initialisation complete" bit in the TX struct. It
-seems syzbot managed to trigger the race for one of the other commands as well,
-so let's just move the existing synchronisation bit to cover the whole
-tasklet (setting it at the end of ath9k_htc_probe_device() instead of inside
-ath9k_tx_init()).
-
-Link: https://lore.kernel.org/r/ed1d2c66-1193-4c81-9542-d514c29ba8b8.bugreport@ubisectech.com
-Fixes: 8b3046abc99e ("ath9k_htc: fix NULL pointer dereference at ath9k_htc_tx_get_packet()")
-Reported-by: Ubisectech Sirius <bugreport@ubisectech.com>
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
-Link: https://msgid.link/20240126140218.1033443-1-toke@toke.dk
+Fixes: 46a88534afb59 ("bus: Add support for Tegra ACONNECT")
+Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+Cc: Jon Hunter <jonathanh@nvidia.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/htc.h          |  2 +-
- drivers/net/wireless/ath/ath9k/htc_drv_init.c |  4 ++++
- drivers/net/wireless/ath/ath9k/htc_drv_txrx.c |  4 ----
- drivers/net/wireless/ath/ath9k/wmi.c          | 10 ++++++----
- 4 files changed, 11 insertions(+), 9 deletions(-)
+ drivers/bus/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/htc.h b/drivers/net/wireless/ath/ath9k/htc.h
-index 237f4ec2cffd7..6c33e898b3000 100644
---- a/drivers/net/wireless/ath/ath9k/htc.h
-+++ b/drivers/net/wireless/ath/ath9k/htc.h
-@@ -306,7 +306,6 @@ struct ath9k_htc_tx {
- 	DECLARE_BITMAP(tx_slot, MAX_TX_BUF_NUM);
- 	struct timer_list cleanup_timer;
- 	spinlock_t tx_lock;
--	bool initialized;
- };
+diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+index 0c262c2aeaf2f..01f2349dbfaed 100644
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -176,11 +176,12 @@ config SUNXI_RSB
  
- struct ath9k_htc_tx_ctl {
-@@ -515,6 +514,7 @@ struct ath9k_htc_priv {
- 	unsigned long ps_usecount;
- 	bool ps_enabled;
- 	bool ps_idle;
-+	bool initialized;
+ config TEGRA_ACONNECT
+ 	tristate "Tegra ACONNECT Bus Driver"
+-	depends on ARCH_TEGRA_210_SOC
++	depends on ARCH_TEGRA
+ 	depends on OF && PM
+ 	help
+ 	  Driver for the Tegra ACONNECT bus which is used to interface with
+-	  the devices inside the Audio Processing Engine (APE) for Tegra210.
++	  the devices inside the Audio Processing Engine (APE) for
++	  Tegra210 and later.
  
- #ifdef CONFIG_MAC80211_LEDS
- 	enum led_brightness brightness;
-diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_init.c b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-index 96a3185a96d75..b014185373f34 100644
---- a/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-@@ -966,6 +966,10 @@ int ath9k_htc_probe_device(struct htc_target *htc_handle, struct device *dev,
- 
- 	htc_handle->drv_priv = priv;
- 
-+	/* Allow ath9k_wmi_event_tasklet() to operate. */
-+	smp_wmb();
-+	priv->initialized = true;
-+
- 	return 0;
- 
- err_init:
-diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-index 5037142c5a822..95146ec754d5c 100644
---- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-@@ -810,10 +810,6 @@ int ath9k_tx_init(struct ath9k_htc_priv *priv)
- 	skb_queue_head_init(&priv->tx.data_vo_queue);
- 	skb_queue_head_init(&priv->tx.tx_failed);
- 
--	/* Allow ath9k_wmi_event_tasklet(WMI_TXSTATUS_EVENTID) to operate. */
--	smp_wmb();
--	priv->tx.initialized = true;
--
- 	return 0;
- }
- 
-diff --git a/drivers/net/wireless/ath/ath9k/wmi.c b/drivers/net/wireless/ath/ath9k/wmi.c
-index 1476b42b52a91..805ad31edba2b 100644
---- a/drivers/net/wireless/ath/ath9k/wmi.c
-+++ b/drivers/net/wireless/ath/ath9k/wmi.c
-@@ -155,6 +155,12 @@ void ath9k_wmi_event_tasklet(struct tasklet_struct *t)
- 		}
- 		spin_unlock_irqrestore(&wmi->wmi_lock, flags);
- 
-+		/* Check if ath9k_htc_probe_device() completed. */
-+		if (!data_race(priv->initialized)) {
-+			kfree_skb(skb);
-+			continue;
-+		}
-+
- 		hdr = (struct wmi_cmd_hdr *) skb->data;
- 		cmd_id = be16_to_cpu(hdr->command_id);
- 		wmi_event = skb_pull(skb, sizeof(struct wmi_cmd_hdr));
-@@ -169,10 +175,6 @@ void ath9k_wmi_event_tasklet(struct tasklet_struct *t)
- 					     &wmi->drv_priv->fatal_work);
- 			break;
- 		case WMI_TXSTATUS_EVENTID:
--			/* Check if ath9k_tx_init() completed. */
--			if (!data_race(priv->tx.initialized))
--				break;
--
- 			spin_lock_bh(&priv->tx.tx_lock);
- 			if (priv->tx.flags & ATH9K_HTC_OP_TX_DRAIN) {
- 				spin_unlock_bh(&priv->tx.tx_lock);
+ config TEGRA_GMI
+ 	tristate "Tegra Generic Memory Interface bus driver"
 -- 
 2.43.0
 
