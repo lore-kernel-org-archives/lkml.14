@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2918114534B;
-	Sun, 24 Mar 2024 23:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C202E145336;
+	Sun, 24 Mar 2024 23:12:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321988; cv=none; b=s5U5D3Wni7xn6vdJiRSnrULVP+oKkBUOhHiFf8HoXtWrItBD1HI6ZtwDUMO0o4Gn5obcSsIyNSZy38DeK2GhgDuJoGeVoM5nWFOvReEOPc8JuZr7hyrXZnJrOy2xeP6s2Fto4jvmVmyrBzh//Lke/dJfxb65F9xtkwMbFLKZrzk=
+	t=1711321978; cv=none; b=OY3tEZU65hQvUhliAESRqWTtUN02eDH1cKTysrDZa+nzMLdquzIr77H6Nxi/htvMb79mXssBjyiyGTyMwSi0oef32E7IwcOUKeZXK4T6Ga4udyJK5bmq7TcCSX58ogZUbKxtt9G95KrPl1ffN1i2FtuQbEV+bzgPDMKLeI3UZQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321988; c=relaxed/simple;
-	bh=34bApgzD1XsXXwOukHHNmjEwD2ZKLb9YHfbMMVWunV8=;
+	s=arc-20240116; t=1711321978; c=relaxed/simple;
+	bh=CIckCfCvElbP7qNZyEFS868bjqgWhDCd+IzI7ldl7Hg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gF/wSwS15QVfSlpY27t3SzF9U9OPIHGln7btsXt9oI9/7Bi+ye8/1BhsyPu7Zf8DsDIIDUjmTjo3i9A93JVcGsK+5sZ/06rDv9hmZar1U8rZusFHaacg9YHShWYpuxrWKM09Bvlmi8IzxPMpB1mTbbHgk+DPMwhUPUPD/Gr2T/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+/Z+oix; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XsTNA8QaKZtpdbhVEKdv97cmwH4tf+Tip+qZXoKnaPP7caw3GbutZInvEbqvCvxJE84w9N454ycViH1ucAhdfLBOrLS+sUtQH3ocXFUwRLOS845ddAtyosGhSEj3AG6ev8zFBObkKqN62AUVo3zzDbOgOUXsT/c7EvGog9m2p4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nA6uyx+X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+/Z+oix"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A83C433C7;
-	Sun, 24 Mar 2024 23:13:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nA6uyx+X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0004FC43399;
+	Sun, 24 Mar 2024 23:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321988;
-	bh=34bApgzD1XsXXwOukHHNmjEwD2ZKLb9YHfbMMVWunV8=;
+	s=k20201202; t=1711321978;
+	bh=CIckCfCvElbP7qNZyEFS868bjqgWhDCd+IzI7ldl7Hg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e+/Z+oixhuGU5pK/FexurY/sun6A+xkLgYWlGSeuBqdfVXlCXqMgy2aZlxBYemp/T
-	 tq3OjoKGIE4T5bLKjrVK1V5uqgWevlkinzOE5/SIBCgL68T8J/1mKm0ZC4X4Z5fmNJ
-	 IittJKjeaCXVUe8okqNnU6UXCblSmPlMH5KkiQR9Wyd9nqlM8DaRLlMn70NrC9Y23t
-	 Qva3upKRS50SGujDEmMuLW7WGLTk5h3swr35N1Zh+4KF7WSl9sUjaRjWO95ZP/mjOn
-	 g8lcsMBmHhITxc284wP+z+h06i35u137FcWrSdBq/ykBD7SOgim7DqPXHJxI+pXuH7
-	 yJL+DolZ9AKvw==
+	b=nA6uyx+Xfhz9dP92kwr/N7sXw3BLCbxhyvxH9d6ZzyOPW7+O1NH8/t4Twbkpcq17G
+	 aQKsVDKlpaDp2TZOoLtFeeIHBK75q4W9+c40GI+BCIJkvfjgi5xcA3bvWPxrsEucVU
+	 pfYXsvx+prP4+EVd+NhJLSGfi7ap9Fq65wX9E/Y92Tya21I26e8Id+VHsPA/GkUZhJ
+	 dIC6PKqmqsitcHpVFpvswxzxFrrywrsqBs2Yu3Ss0pDNsa02utTpsy3UkquOey+3mY
+	 EGnVTYLz0zHRyEgYy0h35yqc+gskiaANhdOMSHSrY8v5G7bwvHxJ+wyRzcD0JtsVTV
+	 tuqYe3jeC1bqg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stefan Haberland <sth@linux.ibm.com>,
-	Jan Hoeppner <hoeppner@linux.ibm.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Adam Goldman <adamg@pobox.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 060/451] s390/dasd: add autoquiesce feature
-Date: Sun, 24 Mar 2024 19:05:36 -0400
-Message-ID: <20240324231207.1351418-61-sashal@kernel.org>
+Subject: [PATCH 6.1 051/451] firewire: core: use long bus reset on gap count error
+Date: Sun, 24 Mar 2024 19:05:27 -0400
+Message-ID: <20240324231207.1351418-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,214 +48,63 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stefan Haberland <sth@linux.ibm.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit 1cee2975bbabd89df1097c354867192106b058ea ]
+[ Upstream commit d0b06dc48fb15902d7da09c5c0861e7f042a9381 ]
 
-Add the internal logic to check for autoquiesce triggers and handle
-them.
+When resetting the bus after a gap count error, use a long rather than
+short bus reset.
 
-Quiesce and resume are functions that tell Linux to stop/resume
-issuing I/Os to a specific DASD.
-The DASD driver allows a manual quiesce/resume via ioctl.
+IEEE 1394-1995 uses only long bus resets. IEEE 1394a adds the option of
+short bus resets. When video or audio transmission is in progress and a
+device is hot-plugged elsewhere on the bus, the resulting bus reset can
+cause video frame drops or audio dropouts. Short bus resets reduce or
+eliminate this problem. Accordingly, short bus resets are almost always
+preferred.
 
-Autoquiesce will define an amount of triggers that will lead to
-an automatic quiesce if a certain event occurs.
-There is no automatic resume.
+However, on a mixed 1394/1394a bus, a short bus reset can trigger an
+immediate additional bus reset. This double bus reset can be interpreted
+differently by different nodes on the bus, resulting in an inconsistent gap
+count after the bus reset. An inconsistent gap count will cause another bus
+reset, leading to a neverending bus reset loop. This only happens for some
+bus topologies, not for all mixed 1394/1394a buses.
 
-All events will be reported via DASD Extended Error Reporting (EER)
-if configured.
+By instead sending a long bus reset after a gap count inconsistency, we
+avoid the doubled bus reset, restoring the bus to normal operation.
 
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
-Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
-Link: https://lore.kernel.org/r/20230405142017.2446986-3-sth@linux.ibm.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Stable-dep-of: c3116e62ddef ("s390/dasd: fix double module refcount decrement")
+Signed-off-by: Adam Goldman <adamg@pobox.com>
+Link: https://sourceforge.net/p/linux1394/mailman/message/58741624/
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/uapi/asm/dasd.h |  2 ++
- drivers/s390/block/dasd.c         | 60 ++++++++++++++++++++++---------
- drivers/s390/block/dasd_eer.c     |  1 +
- drivers/s390/block/dasd_int.h     |  2 ++
- 4 files changed, 48 insertions(+), 17 deletions(-)
+ drivers/firewire/core-card.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/uapi/asm/dasd.h b/arch/s390/include/uapi/asm/dasd.h
-index 93d1ccd3304c7..9c49c3d67cd56 100644
---- a/arch/s390/include/uapi/asm/dasd.h
-+++ b/arch/s390/include/uapi/asm/dasd.h
-@@ -78,6 +78,7 @@ typedef struct dasd_information2_t {
-  * 0x040: give access to raw eckd data
-  * 0x080: enable discard support
-  * 0x100: enable autodisable for IFCC errors (default)
-+ * 0x200: enable requeue of all requests on autoquiesce
-  */
- #define DASD_FEATURE_READONLY	      0x001
- #define DASD_FEATURE_USEDIAG	      0x002
-@@ -88,6 +89,7 @@ typedef struct dasd_information2_t {
- #define DASD_FEATURE_USERAW	      0x040
- #define DASD_FEATURE_DISCARD	      0x080
- #define DASD_FEATURE_PATH_AUTODISABLE 0x100
-+#define DASD_FEATURE_REQUEUEQUIESCE   0x200
- #define DASD_FEATURE_DEFAULT	      DASD_FEATURE_PATH_AUTODISABLE
- 
- #define DASD_PARTN_BITS 2
-diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
-index f207de4a87a0f..2f6976671496f 100644
---- a/drivers/s390/block/dasd.c
-+++ b/drivers/s390/block/dasd.c
-@@ -73,7 +73,8 @@ static void dasd_profile_init(struct dasd_profile *, struct dentry *);
- static void dasd_profile_exit(struct dasd_profile *);
- static void dasd_hosts_init(struct dentry *, struct dasd_device *);
- static void dasd_hosts_exit(struct dasd_device *);
--
-+static int dasd_handle_autoquiesce(struct dasd_device *, struct dasd_ccw_req *,
-+				   unsigned int);
- /*
-  * SECTION: Operations on the device structure.
-  */
-@@ -2327,7 +2328,7 @@ static int _dasd_sleep_on(struct dasd_ccw_req *maincqr, int interruptible)
- 		/* Non-temporary stop condition will trigger fail fast */
- 		if (device->stopped & ~DASD_STOPPED_PENDING &&
- 		    test_bit(DASD_CQR_FLAGS_FAILFAST, &cqr->flags) &&
--		    (!dasd_eer_enabled(device))) {
-+		    !dasd_eer_enabled(device) && device->aq_mask == 0) {
- 			cqr->status = DASD_CQR_FAILED;
- 			cqr->intrc = -ENOLINK;
- 			continue;
-@@ -2803,20 +2804,18 @@ static void __dasd_process_block_ccw_queue(struct dasd_block *block,
- 			dasd_log_sense(cqr, &cqr->irb);
- 		}
- 
--		/* First of all call extended error reporting. */
--		if (dasd_eer_enabled(base) &&
--		    cqr->status == DASD_CQR_FAILED) {
--			dasd_eer_write(base, cqr, DASD_EER_FATALERROR);
--
--			/* restart request  */
+diff --git a/drivers/firewire/core-card.c b/drivers/firewire/core-card.c
+index 8aaa7fcb2630d..401a77e3b5fa8 100644
+--- a/drivers/firewire/core-card.c
++++ b/drivers/firewire/core-card.c
+@@ -500,7 +500,19 @@ static void bm_work(struct work_struct *work)
+ 		fw_notice(card, "phy config: new root=%x, gap_count=%d\n",
+ 			  new_root_id, gap_count);
+ 		fw_send_phy_config(card, new_root_id, generation, gap_count);
+-		reset_bus(card, true);
 +		/*
-+		 * First call extended error reporting and check for autoquiesce
++		 * Where possible, use a short bus reset to minimize
++		 * disruption to isochronous transfers. But in the event
++		 * of a gap count inconsistency, use a long bus reset.
++		 *
++		 * As noted in 1394a 8.4.6.2, nodes on a mixed 1394/1394a bus
++		 * may set different gap counts after a bus reset. On a mixed
++		 * 1394/1394a bus, a short bus reset can get doubled. Some
++		 * nodes may treat the double reset as one bus reset and others
++		 * may treat it as two, causing a gap count inconsistency
++		 * again. Using a long bus reset prevents this.
 +		 */
-+		spin_lock_irqsave(get_ccwdev_lock(base->cdev), flags);
-+		if (cqr->status == DASD_CQR_FAILED &&
-+		    dasd_handle_autoquiesce(base, cqr, DASD_EER_FATALERROR)) {
- 			cqr->status = DASD_CQR_FILLED;
- 			cqr->retries = 255;
--			spin_lock_irqsave(get_ccwdev_lock(base->cdev), flags);
--			dasd_device_set_stop_bits(base, DASD_STOPPED_QUIESCE);
--			spin_unlock_irqrestore(get_ccwdev_lock(base->cdev),
--					       flags);
-+			spin_unlock_irqrestore(get_ccwdev_lock(base->cdev), flags);
- 			goto restart;
- 		}
-+		spin_unlock_irqrestore(get_ccwdev_lock(base->cdev), flags);
- 
- 		/* Process finished ERP request. */
- 		if (cqr->refers) {
-@@ -2858,7 +2857,7 @@ static void __dasd_block_start_head(struct dasd_block *block)
- 		/* Non-temporary stop condition will trigger fail fast */
- 		if (block->base->stopped & ~DASD_STOPPED_PENDING &&
- 		    test_bit(DASD_CQR_FLAGS_FAILFAST, &cqr->flags) &&
--		    (!dasd_eer_enabled(block->base))) {
-+		    !dasd_eer_enabled(block->base) && block->base->aq_mask == 0) {
- 			cqr->status = DASD_CQR_FAILED;
- 			cqr->intrc = -ENOLINK;
- 			dasd_schedule_block_bh(block);
-@@ -3682,8 +3681,8 @@ int dasd_generic_last_path_gone(struct dasd_device *device)
- 	dev_warn(&device->cdev->dev, "No operational channel path is left "
- 		 "for the device\n");
- 	DBF_DEV_EVENT(DBF_WARNING, device, "%s", "last path gone");
--	/* First of all call extended error reporting. */
--	dasd_eer_write(device, NULL, DASD_EER_NOPATH);
-+	/* First call extended error reporting and check for autoquiesce. */
-+	dasd_handle_autoquiesce(device, NULL, DASD_EER_NOPATH);
- 
- 	if (device->state < DASD_STATE_BASIC)
- 		return 0;
-@@ -3815,7 +3814,8 @@ void dasd_generic_path_event(struct ccw_device *cdev, int *path_event)
- 			 "No verified channel paths remain for the device\n");
- 		DBF_DEV_EVENT(DBF_WARNING, device,
- 			      "%s", "last verified path gone");
--		dasd_eer_write(device, NULL, DASD_EER_NOPATH);
-+		/* First call extended error reporting and check for autoquiesce. */
-+		dasd_handle_autoquiesce(device, NULL, DASD_EER_NOPATH);
- 		dasd_device_set_stop_bits(device,
- 					  DASD_STOPPED_DC_WAIT);
++		reset_bus(card, card->gap_count != 0);
+ 		/* Will allocate broadcast channel after the reset. */
+ 		goto out;
  	}
-@@ -3837,7 +3837,8 @@ EXPORT_SYMBOL_GPL(dasd_generic_verify_path);
- void dasd_generic_space_exhaust(struct dasd_device *device,
- 				struct dasd_ccw_req *cqr)
- {
--	dasd_eer_write(device, NULL, DASD_EER_NOSPC);
-+	/* First call extended error reporting and check for autoquiesce. */
-+	dasd_handle_autoquiesce(device, NULL, DASD_EER_NOSPC);
- 
- 	if (device->state < DASD_STATE_BASIC)
- 		return;
-@@ -3931,6 +3932,31 @@ void dasd_schedule_requeue(struct dasd_device *device)
- }
- EXPORT_SYMBOL(dasd_schedule_requeue);
- 
-+static int dasd_handle_autoquiesce(struct dasd_device *device,
-+				   struct dasd_ccw_req *cqr,
-+				   unsigned int reason)
-+{
-+	/* in any case write eer message with reason */
-+	if (dasd_eer_enabled(device))
-+		dasd_eer_write(device, cqr, reason);
-+
-+	if (!test_bit(reason, &device->aq_mask))
-+		return 0;
-+
-+	/* notify eer about autoquiesce */
-+	if (dasd_eer_enabled(device))
-+		dasd_eer_write(device, NULL, DASD_EER_AUTOQUIESCE);
-+
-+	pr_info("%s: The DASD has been put in the quiesce state\n",
-+		dev_name(&device->cdev->dev));
-+	dasd_device_set_stop_bits(device, DASD_STOPPED_QUIESCE);
-+
-+	if (device->features & DASD_FEATURE_REQUEUEQUIESCE)
-+		dasd_schedule_requeue(device);
-+
-+	return 1;
-+}
-+
- static struct dasd_ccw_req *dasd_generic_build_rdc(struct dasd_device *device,
- 						   int rdc_buffer_size,
- 						   int magic)
-diff --git a/drivers/s390/block/dasd_eer.c b/drivers/s390/block/dasd_eer.c
-index d4d31cd11d261..d16c699b9ac6d 100644
---- a/drivers/s390/block/dasd_eer.c
-+++ b/drivers/s390/block/dasd_eer.c
-@@ -387,6 +387,7 @@ void dasd_eer_write(struct dasd_device *device, struct dasd_ccw_req *cqr,
- 		break;
- 	case DASD_EER_NOPATH:
- 	case DASD_EER_NOSPC:
-+	case DASD_EER_AUTOQUIESCE:
- 		dasd_eer_write_standard_trigger(device, NULL, id);
- 		break;
- 	case DASD_EER_STATECHANGE:
-diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_int.h
-index f50932518f83a..00bcd177264ac 100644
---- a/drivers/s390/block/dasd_int.h
-+++ b/drivers/s390/block/dasd_int.h
-@@ -464,6 +464,7 @@ extern struct dasd_discipline *dasd_diag_discipline_pointer;
- #define DASD_EER_STATECHANGE 3
- #define DASD_EER_PPRCSUSPEND 4
- #define DASD_EER_NOSPC	     5
-+#define DASD_EER_AUTOQUIESCE 31
- 
- /* DASD path handling */
- 
-@@ -641,6 +642,7 @@ struct dasd_device {
- 	struct dasd_format_entry format_entry;
- 	struct kset *paths_info;
- 	struct dasd_copy_relation *copy;
-+	unsigned long aq_mask;
- };
- 
- struct dasd_block {
 -- 
 2.43.0
 
