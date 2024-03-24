@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E98145FE2;
-	Sun, 24 Mar 2024 23:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC30414532C;
+	Sun, 24 Mar 2024 23:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322041; cv=none; b=F6pGCtHi3tcP2aolwaOAXoN24lVK4DYoi+CzHN3761d/2igx5bGzCNISwowvU0TT/ZYvW29ZMsw0LuKMK+GNhP45fq9G6Ju5DS8Q7OaDOsKHPXYMjDF1kYIKYusEDDOe461vhg7Xr+23NeBRR9b2eJ0XNEC/hV3F8j2esyymoPo=
+	t=1711321977; cv=none; b=Et4nBMO7cDAlj/SdNY08YacvfMi2Kjc1asAtXk4wkHiN40G17Rd/wbxeaopUzDRMLLQRCVxREPyjTsg6V9m9hYqWUL+4nOsQ/7NikpPbCjKM4zQBho/AmB1Mz07qGK/6KOBI7UmP11r3K8KYyeYdIIlL4fLLOpbORrfk56WY5TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322041; c=relaxed/simple;
-	bh=rrqFKlqU7n/vOs7ZSC46MMJtC5zYor3a4qf+qKnzuIA=;
+	s=arc-20240116; t=1711321977; c=relaxed/simple;
+	bh=Du80a8081lcmLcIyq1r2JOmgELaCBxEoYXMTEtF6bGQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cYXfTcqkxVvogYSu/gCrKa2eV4TwdyWpm2j/z0jS2tzD+33XWf7QkvVmLa95BxiZvBL55pNKch0ALToueCvfVNqYZD4MPnxy7rCgBznUFYtEl0mEzD9uSgJ85Ng9pqX/U1LLvu53Px+YAdLbjMhJp0lHiu3TO8WF3o65pjofjBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mvqe+XV/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cV/AHK5mCMev5+8lSsYYJKADcERMphzuDor9A1b/XE4y0Jb3fFhjZ+Iq4Z7RqGnCvGI91qN4+VRTnGaAiqLTP9hX2jF/v9kzRu8UDLUwSHHU2VVLXWy/ElGSEkoC+usFOYalXBKaSOnNX6RYz0dg15gNe7R/KlEU+IzQMCAfdRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqSVzmoZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mvqe+XV/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64049C43601;
-	Sun, 24 Mar 2024 23:14:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqSVzmoZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33C15C43390;
+	Sun, 24 Mar 2024 23:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322041;
-	bh=rrqFKlqU7n/vOs7ZSC46MMJtC5zYor3a4qf+qKnzuIA=;
+	s=k20201202; t=1711321976;
+	bh=Du80a8081lcmLcIyq1r2JOmgELaCBxEoYXMTEtF6bGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Mvqe+XV/3zWPN8+AW4ut+UEF6i38kU3NsAvarpBnoAc1VWlO+RXZvwP0bD36aZ+dz
-	 9xAYGi99ZRgTlTa05j2xUonwjCBfnt/9WaP7oKDM0v1i/mENuLdkxm71qQvyquBjbh
-	 c29Ds4t5gkcwVI7tMxNxbKqraQIvd7YEkUuJ/hdq56ZwTo2yKfszdUQySHV0w9E+4I
-	 6sHygY44UEkNBFZz8qPHzpjdDvhnBW8qczcpiJdbPglEWiMw4xkWxNo/GOv7IvRO9f
-	 SrNQH6xGAVcpLKtUrMGYCYpweMMwDoCwP3bSgxklT2raJtS+NCdUHxzwrqDepWiQej
-	 lPxj3HkXxtaaw==
+	b=JqSVzmoZN0I5HGiqp0EDf24LkW0QyWV5eDuMJRbNzJW1qlQF7JAin/icYMtk84n5b
+	 3TkbOrwDhauKVJz9Vy+J0Ynta5g1qjDnMxL3kE4c52GLyWFBoS1Yhx2LiBctKdjy+7
+	 NGvKfweCUgpIZESR5Hk3WGctnLKqzdzygk5xjm5Z68PVR9QDPZosqPJTOwBis+ZO/I
+	 815i36AvhNMKwYGKomfdkSe+9+CXDxSQAVynfNfXjPnExpiQ7j8CGCXwLaAg9tm2Tq
+	 4bX0C+ul/wTb4RrPoVz72wIn9sGzGzzGHJ5X21fygn+x53TOVwsmhJV/Pfofi7Wp+R
+	 nbWkPy6kjgvDA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Yuxuan Hu <20373622@buaa.edu.cn>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 113/451] arm64: dts: imx8mm-kontron: Fix interrupt for RTC on OSM-S i.MX8MM module
-Date: Sun, 24 Mar 2024 19:06:29 -0400
-Message-ID: <20240324231207.1351418-114-sashal@kernel.org>
+Subject: [PATCH 6.1 049/451] Bluetooth: rfcomm: Fix null-ptr-deref in rfcomm_check_security
+Date: Sun, 24 Mar 2024 19:05:25 -0400
+Message-ID: <20240324231207.1351418-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,33 +48,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Yuxuan Hu <20373622@buaa.edu.cn>
 
-[ Upstream commit 8d0f39b7d04d864e89b84063b124fd10aa4b8809 ]
+[ Upstream commit 2535b848fa0f42ddff3e5255cf5e742c9b77bb26 ]
 
-The level of the interrupt signal is active low instead. Fix this.
+During our fuzz testing of the connection and disconnection process at the
+RFCOMM layer, we discovered this bug. By comparing the packets from a
+normal connection and disconnection process with the testcase that
+triggered a KASAN report. We analyzed the cause of this bug as follows:
 
-Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+1. In the packets captured during a normal connection, the host sends a
+`Read Encryption Key Size` type of `HCI_CMD` packet
+(Command Opcode: 0x1408) to the controller to inquire the length of
+encryption key.After receiving this packet, the controller immediately
+replies with a Command Completepacket (Event Code: 0x0e) to return the
+Encryption Key Size.
+
+2. In our fuzz test case, the timing of the controller's response to this
+packet was delayed to an unexpected point: after the RFCOMM and L2CAP
+layers had disconnected but before the HCI layer had disconnected.
+
+3. After receiving the Encryption Key Size Response at the time described
+in point 2, the host still called the rfcomm_check_security function.
+However, by this time `struct l2cap_conn *conn = l2cap_pi(sk)->chan->conn;`
+had already been released, and when the function executed
+`return hci_conn_security(conn->hcon, d->sec_level, auth_type, d->out);`,
+specifically when accessing `conn->hcon`, a null-ptr-deref error occurred.
+
+To fix this bug, check if `sk->sk_state` is BT_CLOSED before calling
+rfcomm_recv_frame in rfcomm_process_rx.
+
+Signed-off-by: Yuxuan Hu <20373622@buaa.edu.cn>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi | 2 +-
+ net/bluetooth/rfcomm/core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
-index 9643d6ed9a7c7..d5199ecb3f6c1 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
-@@ -205,7 +205,7 @@ rtc@52 {
- 		reg = <0x52>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_rtc>;
--		interrupts-extended = <&gpio4 1 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts-extended = <&gpio4 1 IRQ_TYPE_LEVEL_LOW>;
- 		trickle-diode-disable;
- 	};
- };
+diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
+index 8d6fce9005bdd..4f54c7df3a94f 100644
+--- a/net/bluetooth/rfcomm/core.c
++++ b/net/bluetooth/rfcomm/core.c
+@@ -1937,7 +1937,7 @@ static struct rfcomm_session *rfcomm_process_rx(struct rfcomm_session *s)
+ 	/* Get data directly from socket receive queue without copying it. */
+ 	while ((skb = skb_dequeue(&sk->sk_receive_queue))) {
+ 		skb_orphan(skb);
+-		if (!skb_linearize(skb)) {
++		if (!skb_linearize(skb) && sk->sk_state != BT_CLOSED) {
+ 			s = rfcomm_recv_frame(s, skb);
+ 			if (!s)
+ 				break;
 -- 
 2.43.0
 
