@@ -1,38 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFCA131BC2;
-	Sun, 24 Mar 2024 23:44:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6AC131BBD;
+	Sun, 24 Mar 2024 23:44:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323861; cv=none; b=Y92A86oKiJaM5xyr1+hc2Av3toFRdk7PAhEsPYdXBFQjgF5NONDf9cSiUz4lIlV0Dh/LLIbS+2pnbcyU6oldZLtSDjGjjh/5mKm3o2o7euiGWzS5AXtn6tPSEZN7nIlGB63T74ex34RKbnOqHglLDgIuF+zLuT9mAkCG1PLbpMk=
+	t=1711323860; cv=none; b=RVr5AiU1Eq1WrDgzCPcJpj/3MbtIgvWmH3LOKlZ4BYovkAkCXSuSPyqamcisv5/QfRcI1kF5rlNxtpbqRMWgKU6onUcdghw4T6LRm/eNitx2RD+hZBM/vXtkFOTIIId1JdtoXJGTBSnRQfMinCb6DaN+5Pi/4fJ0/q87h6rd5RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323861; c=relaxed/simple;
-	bh=rDm185Bh1EDMtEJsFpi2CDlhDA/68UEtjAVW+yRFrLM=;
+	s=arc-20240116; t=1711323860; c=relaxed/simple;
+	bh=5VQaZ7OnaaW+qUx+jzwOvmGzQYVd+zAXX4Becu7Jxdw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mw+ROW6LJFxrhXYHuCuIUCQiAa3757oXIed/0kcq9DDpFILGDXKk8dHpAyi//dnzXAn2eyCe6XGhxXRSuViPdsh9VQeqZ+/K4U1n5vVMVstTBVQcR1QD4BGt2mVCmOcn6mVxY6fiLeHAahOfHB9zPBMi1xqj32Xh/qtfInnKcxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ikQ7Cyxi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=b6dgKRN2HYIXYM4FgR/8CRiHQqpgOzmQkpCt+6fTqHmztHTWqQygeQIL3DIUaCpEzRPV1VGvk3QDzoE90Ohta50hSznCvyCcdpaVCERoOyrvZjmIcL/q3sJ8iUsmyR8kOZREnHrXL6nEAmAZCBTz+TWpXbICgSTcaIQMx3mfksU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXsab4lX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ikQ7Cyxi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1242C43390;
-	Sun, 24 Mar 2024 23:44:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXsab4lX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B72CC43330;
+	Sun, 24 Mar 2024 23:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323860;
-	bh=rDm185Bh1EDMtEJsFpi2CDlhDA/68UEtjAVW+yRFrLM=;
+	s=k20201202; t=1711323859;
+	bh=5VQaZ7OnaaW+qUx+jzwOvmGzQYVd+zAXX4Becu7Jxdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ikQ7CyxiOU+KslErxGaqVqJ79XJsHMaZ5zlBR1PrmPFyeXmVVWhkFli+iF14w3eJg
-	 7Q+YLIwjTL/ofWx3LHhfp9/x7kp3S+OA+AEWuL1lmlWXz0ArEJtc5uee2PUiuQsbcV
-	 L6w27FkYv23dJ7Y+KlZ+vI1rXbtDNuPBybKqp1q5CTagm6UqtwGahz6YXvXmvKilLP
-	 r91rQN95d59wEfVRs3ytqQsx2IAq/vzz0eEaGOAT26u0wp2Bt6rp+GtBk3txPJVR9K
-	 MaHClbRM4UD5nMGTpIubbz3tcMQ97/yhozq1fuZj8cc1oxwC0GJ1/IkrRh8jUROM1H
-	 WLKX5Pugrl86g==
+	b=ZXsab4lXZad0IX3gC+1oZcneakmm3zbZHfE9MqqaQokh+LvG0wcGCxQhZj/Es1u0P
+	 z/g53cD1YHcSyvRGK0RsrHFliPVyeysixnKC5DYgYFgaHP9fIczRR063tVvk3P0kik
+	 nZRZSA46ooJUfYdFYHzqX6l0erKvLwCpwcEFlOCuvIW/5Tgs17VdhfnQSFsrco4IPK
+	 J0rP+wspa8WlF++vOThwEgVWIRiMWn2WCJzfbyLW6jeshTM0cDSeCCIAjfPzBVBlLA
+	 GC3rHfH+B7u4qowv175Aeq4D4xdt5e1ROViAqrgnWioyX9vc2hbXUZ7FvqPYQO2Mav
+	 ijv1TTvxYn6mw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 238/238] Linux 5.10.214-rc1
-Date: Sun, 24 Mar 2024 19:40:26 -0400
-Message-ID: <20240324234027.1354210-239-sashal@kernel.org>
+Cc: Marek Vasut <marex@denx.de>,
+	kernel test robot <lkp@intel.com>,
+	Dan Carpenter <dan.carpenter@oracle.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.10 237/238] regmap: Add missing map->bus check
+Date: Sun, 24 Mar 2024 19:40:25 -0400
+Message-ID: <20240324234027.1354210-238-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -46,26 +50,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
+From: Marek Vasut <marex@denx.de>
+
+[ Upstream commit 5c422f0b970d287efa864b8390a02face404db5d ]
+
+The map->bus can be NULL here, add the missing NULL pointer check.
+
+Fixes: d77e745613680 ("regmap: Add bulk read/write callbacks into regmap_config")
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Mark Brown <broonie@kernel.org>
+To: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20220509003035.225272-1-marex@denx.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/base/regmap/regmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index b6af62d53d7a6..980bbbcfc2605 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 5
- PATCHLEVEL = 10
--SUBLEVEL = 213
--EXTRAVERSION =
-+SUBLEVEL = 214
-+EXTRAVERSION = -rc1
- NAME = Dare mighty things
- 
- # *DOCUMENTATION*
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 2dfd6aa600450..a3c4086603a60 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1796,7 +1796,7 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
+ 				 map->format.reg_bytes +
+ 				 map->format.pad_bytes +
+ 				 val_len);
+-	else if (map->bus->gather_write)
++	else if (map->bus && map->bus->gather_write)
+ 		ret = map->bus->gather_write(map->bus_context, map->work_buf,
+ 					     map->format.reg_bytes +
+ 					     map->format.pad_bytes,
 -- 
 2.43.0
 
