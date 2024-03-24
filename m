@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BE920124F;
-	Sun, 24 Mar 2024 23:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83523200A29;
+	Sun, 24 Mar 2024 23:03:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321400; cv=none; b=elTN+6gSUOJZTmIyjGvAAEKYrTe4O4A+lvqd1MrLYxyPt0OaOnfYhqlUNfEd5KwLefC4zZbNiwEZyytr2p4K3t1y/kfXKL/kA5gDwuQ7z6Iaz9GFuF1+CW6DOnlI9zDpiokOhurb0Qx8frSlcjDUfZfxMQf4bTNmGSAA4tEcPNA=
+	t=1711321390; cv=none; b=orTQn3qCW8EDCIkv33Lh2rt5562EIVsncNRFWODw01V//3aa71XeHVkA2s1PwUDacELYBDUjAFaD4ttLLtmAyQsOSPRbwLJtA3KRr4kv4ycYrsJOBIw5at5je3jrVksDBfe5Nzbnd4Htu8THKAXbcbQQj1tUDqrd0uEPDJb024M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321400; c=relaxed/simple;
-	bh=60vo75mBcZsaaWRfia1pLHWloNQ83WhNjty4gGNM0pg=;
+	s=arc-20240116; t=1711321390; c=relaxed/simple;
+	bh=oYYvn/6nxGWAVbko5rNqBa3zP6x2dNPOvgw8qbioNx4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RXzWQPWSWg2Ci63wI7Bcgn+ton61QVbpB77eItsdISukwEm+INM3roaAt/246wU+M+P4z2nTGiZwljpm8a8beggSAtFG6SO/c3ub2uU4RXpezF6xFq8xNXNsodIilDobNHZFzWdeFUhKVdbc82r/EPABBtsi+437xwLz/WpR2Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ATCeXs4E; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=os8M25Fu3GTuz8WFxcYdWo9ADb1VPcNRM4YugfxY5JvdG/Ltgc2nGWwmKFkpYKUGHFm0TNUQxOH3iTRYnGaEk9FEiqmc6EvAi98qGT+zyw39RTdzxAVdQhGFHt5vHJ/UnZjb7Ev3ZjvaXGrbII70nRIT2baFWM/BGTzLzle9Rlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mSicI1/l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ATCeXs4E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB6CAC43399;
-	Sun, 24 Mar 2024 23:03:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mSicI1/l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB778C433C7;
+	Sun, 24 Mar 2024 23:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321399;
-	bh=60vo75mBcZsaaWRfia1pLHWloNQ83WhNjty4gGNM0pg=;
+	s=k20201202; t=1711321389;
+	bh=oYYvn/6nxGWAVbko5rNqBa3zP6x2dNPOvgw8qbioNx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ATCeXs4Ea5v5rMysJmtWoRq6DicMVTx7aH564fdAztM3zbV/Sxthve5b4nkgLvw7l
-	 lUyDqYRS5lwkhRe68YmTNyly0qZxxYOn4uxqxS5IpmPGw/MySd3K68LzsiUXkf17cU
-	 qUnsT8IuB0FarveKl1iRkihmvsAwbrQZ829v6uYZ/RatMqCPT7x3u5Sv9gks3yYnmo
-	 qhuiS4pm5i9j2EWUCELs5R4TF272mryhKwwEWBHImrBXBn0NH1pecBIJKpup+gpavH
-	 YmvNvuH+qgEhFWtgFQ6sLXFtkDfk5hvHLaMnv19TaTmGjet6gGwCrXcAQz0ob4szdb
-	 RQyOj0I/85Xdg==
+	b=mSicI1/lBtrDUzUCTrZNI73tYWKXiUUt1bRX2gQodHIljctpmHeAjyzZEneRPcH4l
+	 vLBD76DCdrftZraQMVEmB3ZbdvTxOErK2kX/wnHWhVr+JQ6lx/G6R0IEPdu569j9DR
+	 tGUcufE+CU1HeuST0bNIhMIK/lqkZdwFTi3kElBo262vz/N/QILt98k0WKpnQLGDS1
+	 5jQfVJgjIOBMm66BKi8VhNrhhT8f4iMeboZzxaMgfnp0dStPONbNXBoIBBHKBKtWLM
+	 QnlVzBWL85mixFWxQeg93fM1M44yEMoE6g50quTBGLeq+SRm/Gn69pB24BW7UroAWK
+	 Yg/s8H1hQWEZg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Xingyuan Mo <hdthky0@gmail.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Kalle Valo <quic_kvalo@quicinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 123/638] wifi: mwifiex: debugfs: Drop unnecessary error check for debugfs_create_dir()
-Date: Sun, 24 Mar 2024 18:52:40 -0400
-Message-ID: <20240324230116.1348576-124-sashal@kernel.org>
+Subject: [PATCH 6.6 113/638] wifi: ath10k: fix NULL pointer dereference in ath10k_wmi_tlv_op_pull_mgmt_tx_compl_ev()
+Date: Sun, 24 Mar 2024 18:52:30 -0400
+Message-ID: <20240324230116.1348576-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,43 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jinjie Ruan <ruanjinjie@huawei.com>
+From: Xingyuan Mo <hdthky0@gmail.com>
 
-[ Upstream commit 50180c7f8e3de7c2d87f619131776598fcb1478d ]
+[ Upstream commit ad25ee36f00172f7d53242dc77c69fff7ced0755 ]
 
-debugfs_create_dir() returns ERR_PTR and never return NULL.
+We should check whether the WMI_TLV_TAG_STRUCT_MGMT_TX_COMPL_EVENT tlv is
+present before accessing it, otherwise a null pointer deference error will
+occur.
 
-As Russell suggested, this patch removes the error checking for
-debugfs_create_dir(). This is because the DebugFS kernel API is developed
-in a way that the caller can safely ignore the errors that occur during
-the creation of DebugFS nodes. The debugfs APIs have a IS_ERR() judge in
-start_creating() which can handle it gracefully. So these checks are
-unnecessary.
-
-Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20230903030216.1509013-3-ruanjinjie@huawei.com
+Fixes: dc405152bb64 ("ath10k: handle mgmt tx completion event")
+Signed-off-by: Xingyuan Mo <hdthky0@gmail.com>
+Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+Link: https://msgid.link/20231208043433.271449-1-hdthky0@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/debugfs.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/wireless/ath/ath10k/wmi-tlv.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/debugfs.c b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-index f9c9fec7c792a..d14a0f4c1b6d7 100644
---- a/drivers/net/wireless/marvell/mwifiex/debugfs.c
-+++ b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-@@ -970,9 +970,6 @@ mwifiex_dev_debugfs_init(struct mwifiex_private *priv)
- 	priv->dfs_dev_dir = debugfs_create_dir(priv->netdev->name,
- 					       mwifiex_dfs_dir);
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+index 6b6aa3c367448..0ce08e9a0a3d2 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
++++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+@@ -851,6 +851,10 @@ ath10k_wmi_tlv_op_pull_mgmt_tx_compl_ev(struct ath10k *ar, struct sk_buff *skb,
+ 	}
  
--	if (!priv->dfs_dev_dir)
--		return;
--
- 	MWIFIEX_DFS_ADD_FILE(info);
- 	MWIFIEX_DFS_ADD_FILE(debug);
- 	MWIFIEX_DFS_ADD_FILE(getlog);
+ 	ev = tb[WMI_TLV_TAG_STRUCT_MGMT_TX_COMPL_EVENT];
++	if (!ev) {
++		kfree(tb);
++		return -EPROTO;
++	}
+ 
+ 	arg->desc_id = ev->desc_id;
+ 	arg->status = ev->status;
 -- 
 2.43.0
 
