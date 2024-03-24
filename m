@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5915927B137;
-	Sun, 24 Mar 2024 23:38:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF617177A89;
+	Sun, 24 Mar 2024 23:38:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323511; cv=none; b=T+BhH5Tz7pnC846bLbqLAlqBhEmlcwAlovlMCBlbaIoYybBwo19MrMc3eeh0ECbXt2/u4i/QfFGM9o1sYwlhFkddlwHXSPXaDRV/WHxvKgOIcfOLVD7Z7HCBuzssI/G1L6yLNoUykP20MFKXWkt9ZmaadCPpvIdwTfdCQwO7KkU=
+	t=1711323514; cv=none; b=CGcWjO+R1K9gwxq4Ali1dhb6C1CmS8M2Ao/3+/HEn82wx1MFM6FvsYd0FsUEr42TON931fz0EVAAdiF6eZz+qGfgPH4aO9Z4RmmPr3w1TZ4gx+t8QvLJ7BOjL6ySBJTVQ27bLKewNNKYiqw2Ts1dxF5f1yzMwASI8e3JvFEEeRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323511; c=relaxed/simple;
-	bh=ISOVR7lUtvRg3YD0g46BrpkVoBWzXCBG3j54mlxcGQ0=;
+	s=arc-20240116; t=1711323514; c=relaxed/simple;
+	bh=IV4ylyCe+rLhJ/9f7eLC5kmhrVumZhOvn69bL0YEEUY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J0BAqsUXw9s3F8Osim8w6ytT1eugriqsrT2wu1SavoJFZxvQIkJ7QukI3ef4qOab9Rl7gmsj/T4+3vWE8Ql6MTV2xnam7dHfX5g25/K4rjbkFIjyHLMiKXqjYF9DGNhl8PUmp27tQMG3OczVcYKIdW0mAw6lJMoqYBoZw1MkpAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCmzni6d; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=G2AF70pywm6YaC2AGnqpeBSFyxOzuLBqktF9vCeeQMYNKx8ozd3bQI/ywiYMCTrAMDk18zJtIg4obnwenjLRRPUfyiFB2E67ut9LpSJVLgVXAD8xcFD6dhB9ubn6Rtd34nPCpPt8RpNyk31uDN78b7UP2P3NDJAUPLxwTT6k6oE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3saeYix; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCmzni6d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA06C433C7;
-	Sun, 24 Mar 2024 23:38:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3saeYix"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D680C43390;
+	Sun, 24 Mar 2024 23:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323510;
-	bh=ISOVR7lUtvRg3YD0g46BrpkVoBWzXCBG3j54mlxcGQ0=;
+	s=k20201202; t=1711323513;
+	bh=IV4ylyCe+rLhJ/9f7eLC5kmhrVumZhOvn69bL0YEEUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RCmzni6dkjfuqktUkziYg37jsq8Xgq5BXAASGD3fXISXJUFvbIcfKYBvA9nhzumKV
-	 irafNipPPlHQOhOLo55jI/oZu0ALuSeMKKKAROzZ8KMHcqjfzKVy1ZORGRYgomlwnC
-	 8hHXfff25eVYmAKxlVf1ki9qhI+PEyZFGceqlFalegzLKos014DJHVUt64cDedCLlQ
-	 YhqryynDx25ASfhw+RBGtCS/VixWypuKygiDTw7aQ8hc4dgUaXMghXVLnJy1piry9K
-	 GaKg/5cVMWkTm/5LpvKmaais7IMlzEjz+pRm/vMETQcMgzgrY+CsYBw1H2PL97ZL8a
-	 1PgFimP5ECfIA==
+	b=U3saeYixZdXcpiQoS9aL4XqBS5XXQ5PvuOBjc2OMVbLs93cTni1YfoPonKvtYiaJX
+	 qXlvo2Ws1oih4Z7m+q4vaEif2XpJR5TIHcpnP04hzzbkdTAqVa6mcMukMiNX1bMBkx
+	 j9nmmJqyey+Su4/O8QMyhEXyxcBcXK+vaL5utoicz+bQ2r1SbO2pVhvrxX/BsJW21z
+	 qD2ZgJN9zZAIzana3Le8YWaT1Tq0ouJdnoa4cSQudLPZVmk5NRWMLrbSzDZ2rNIGCS
+	 zTIbovR8RDeT+H9F7hHkP4fDvCidh5buNeNJ+MPJZ0AuOFKg9UYTOmWiCf5JdgSU2g
+	 K7rUTnGQHvcFg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?J=C3=B6rg=20Wedekind?= <joerg@wedekind.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Peter Griffin <peter.griffin@linaro.org>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 216/317] PCI: Mark 3ware-9650SE Root Port Extended Tags as broken
-Date: Sun, 24 Mar 2024 19:33:16 -0400
-Message-ID: <20240324233458.1352854-217-sashal@kernel.org>
+Subject: [PATCH 5.15 220/317] mfd: syscon: Call of_node_put() only when of_parse_phandle() takes a ref
+Date: Sun, 24 Mar 2024 19:33:20 -0400
+Message-ID: <20240324233458.1352854-221-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -44,56 +44,43 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jörg Wedekind <joerg@wedekind.de>
+From: Peter Griffin <peter.griffin@linaro.org>
 
-[ Upstream commit baf67aefbe7d7deafa59ca49612d163f8889934c ]
+[ Upstream commit d2b0680cf3b05490b579e71b0df6e07451977745 ]
 
-Per PCIe r6.1, sec 2.2.6.2 and 7.5.3.4, a Requester may not use 8-bit Tags
-unless its Extended Tag Field Enable is set, but all Receivers/Completers
-must handle 8-bit Tags correctly regardless of their Extended Tag Field
-Enable.
+of_parse_phandle() returns a device_node with refcount incremented, which
+the callee needs to call of_node_put() on when done. We should only call
+of_node_put() when the property argument is provided though as otherwise
+nothing has taken a reference on the node.
 
-Some devices do not handle 8-bit Tags as Completers, so add a quirk for
-them.  If we find such a device, we disable Extended Tags for the entire
-hierarchy to make peer-to-peer DMA possible.
-
-The 3ware 9650SE seems to have issues with handling 8-bit tags. Mark it as
-broken.
-
-This fixes PCI Parity Errors like :
-
-  3w-9xxx: scsi0: ERROR: (0x06:0x000C): PCI Parity Error: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x000D): PCI Abort: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x000E): Controller Queue Error: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x0010): Microcontroller Error: clearing.
-
-Link: https://lore.kernel.org/r/20240219132811.8351-1-joerg@wedekind.de
-Fixes: 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if supported")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=202425
-Signed-off-by: Jörg Wedekind <joerg@wedekind.de>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 45330bb43421 ("mfd: syscon: Allow property as NULL in syscon_regmap_lookup_by_phandle")
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Link: https://lore.kernel.org/r/20240220115012.471689-2-peter.griffin@linaro.org
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/syscon.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index fcdc17bbcc8ee..1b6484c906094 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5390,6 +5390,7 @@ static void quirk_no_ext_tags(struct pci_dev *pdev)
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index 552b1861adad4..75c732ee9ed6e 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -224,7 +224,9 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+ 		return ERR_PTR(-ENODEV);
  
- 	pci_walk_bus(bridge->bus, pci_configure_extended_tags, NULL);
+ 	regmap = syscon_node_to_regmap(syscon_np);
+-	of_node_put(syscon_np);
++
++	if (property)
++		of_node_put(syscon_np);
+ 
+ 	return regmap;
  }
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_3WARE, 0x1004, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0132, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0140, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0141, quirk_no_ext_tags);
 -- 
 2.43.0
 
