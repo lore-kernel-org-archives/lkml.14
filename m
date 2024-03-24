@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEA514F131;
-	Sun, 24 Mar 2024 23:02:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8353D14F11B;
+	Sun, 24 Mar 2024 23:02:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321348; cv=none; b=gqhGjgZ1gD8A9Y6XArYPow+kc/h0Gfc8OkbM1dfcLhQ0p/NNVATBSxBTorrEjo3nBp+iJSWdZc14KWfNsF3XotMbTzZ0NR74yyuoDMv4NgwsqfQr+aVB96r9l7YNxnbZ8kL65B4kgSgLdZ0Ylv9B+VbxC/C/7BQpEAYkmuecSJw=
+	t=1711321345; cv=none; b=ZPQyGcQ1ltS1P2+bhz92cZLJGdksSZ2vJ3B4qWnCcMEmvO5PezpBlJ6o9Eq3XF4RlNw54oBx0oB7EaoF1M7MnrnMhH8ZwUp/0UHa/3YE7EMcBQXOhH3KKUtn6JdKW+WoQHffi/Yscy8XUHgOQzeOVslaemDvXGq7SPWOUaROSCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321348; c=relaxed/simple;
-	bh=EvH3SPEWqAXMvuGevgVNS69+E2/o6n7RXD3FQR983OI=;
+	s=arc-20240116; t=1711321345; c=relaxed/simple;
+	bh=4HzUgQJ1cTA7sevheQM8td4jHmu+l+Xbddni5/4LvTI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SiGpd/XqI2mj8zSwCjLfiVIVZGx1idC7PIAmZV+2k06TssBL15sg09gPDnmxyK+lLtiOgT+b8lK4bvnvBqOm9lBOS2wCrHy5kZm+buewFTmxwRWeWLIk80AgZIdyH0zjiOKIG5NoZrzpp3zxHEaXk1d4I6BLXs/uZwAkhwnf/Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWjh4A7z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sVs0iIhoF465s/tgcIG9S+YyD81oe+QphXNNdYL26N0nxgiYEwACrEmBP5z1DoQUkNYz4anO33lYbwXw6Cd/4x538z/fBnHyeg6AfNtUZiQR7w+Pzlao8jtgJrp9HVsRn4jaXfebqNfdQ/HIv7or4Au6XxZC/x41TigeV1irw9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUH/NSS/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWjh4A7z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B128C43394;
-	Sun, 24 Mar 2024 23:02:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUH/NSS/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1881C43399;
+	Sun, 24 Mar 2024 23:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321347;
-	bh=EvH3SPEWqAXMvuGevgVNS69+E2/o6n7RXD3FQR983OI=;
+	s=k20201202; t=1711321344;
+	bh=4HzUgQJ1cTA7sevheQM8td4jHmu+l+Xbddni5/4LvTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jWjh4A7zkyEisVzWVr0XfLbYsuK611qII6sW/LEPRrZ2HarCZokg2yt3ypB34N0Mc
-	 XCEkkJdo30YOefCES3H+F8EzJleFTV/kROAcwfVGWTVCFSrwMr3BdacBV2K3I6jSr3
-	 EDeylfTjuZ060zBQv9mMBLP6qFxtCDbvG9CpAlG7krc5LjB28gWyAT0er7BHhfIlBS
-	 eETENioOORau5zF1L0TDobSZnNQI72GRN4OHcq0NSJ/2fJSahgju7oKsHr2XQrv2K/
-	 o/CWKVycTRErBV7V0sgZf/6dD/+8D88SfporYuEXAua063lS+yEiXRKs9qrHQEVNkt
-	 o7eCSrNU44l+A==
+	b=JUH/NSS/J7M1j6wpT738vrmCCsbt+PGS6WclrGPeq2R/zWVvll4VTOoTvO1rP9QA2
+	 yalpHsx8yuICilS8mxkJFoCATnYgj22hXQ7n3UxV0QajcKvCdy+ARjjiDX49FtYEK6
+	 zcgWxGweSx9AREG7l3/FisNrRTPjM87UxNmveh2yDuplcm3doBxddVLXpkKyFaHCXL
+	 nSvtWc+uHPKFM542rCrZtve6vRQhxEbfhoz9Ex4vxZI2wxhvCjQcxm6iAumn6EomZ5
+	 UdxwG0lRo3i6hWLwryYFbPZPAyP2oEw0cG8uj8o1g+6N3wYaGxg0IVcI8pN1wR/o5q
+	 K6sR3bMStGpCQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
+Cc: Audra Mitchell <audra@redhat.com>,
+	Tejun Heo <tj@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 071/638] workqueue: Replace pwq_activate_inactive_work() with [__]pwq_activate_work()
-Date: Sun, 24 Mar 2024 18:51:48 -0400
-Message-ID: <20240324230116.1348576-72-sashal@kernel.org>
+Subject: [PATCH 6.6 068/638] workqueue.c: Increase workqueue name length
+Date: Sun, 24 Mar 2024 18:51:45 -0400
+Message-ID: <20240324230116.1348576-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,90 +48,58 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tejun Heo <tj@kernel.org>
+From: Audra Mitchell <audra@redhat.com>
 
-[ Upstream commit 4c6380305d21e36581b451f7337a36c93b64e050 ]
+[ Upstream commit 31c89007285d365aa36f71d8fb0701581c770a27 ]
 
-To prepare for unbound nr_active handling improvements, move work activation
-part of pwq_activate_inactive_work() into __pwq_activate_work() and add
-pwq_activate_work() which tests WORK_STRUCT_INACTIVE and updates nr_active.
+Currently we limit the size of the workqueue name to 24 characters due to
+commit ecf6881ff349 ("workqueue: make workqueue->name[] fixed len")
+Increase the size to 32 characters and print a warning in the event
+the requested name is larger than the limit of 32 characters.
 
-pwq_activate_first_inactive() and try_to_grab_pending() are updated to use
-pwq_activate_work(). The latter conversion is functionally identical. For
-the former, this conversion adds an unnecessary WORK_STRUCT_INACTIVE
-testing. This is temporary and will be removed by the next patch.
-
+Signed-off-by: Audra Mitchell <audra@redhat.com>
 Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
 Stable-dep-of: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/workqueue.c | 31 +++++++++++++++++++++++++------
- 1 file changed, 25 insertions(+), 6 deletions(-)
+ kernel/workqueue.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 3eb0408133ada..3436fd266cde0 100644
+index fd7b84b06d926..e004e65ae987e 100644
 --- a/kernel/workqueue.c
 +++ b/kernel/workqueue.c
-@@ -1455,16 +1455,36 @@ static bool pwq_is_empty(struct pool_workqueue *pwq)
- 	return !pwq->nr_active && list_empty(&pwq->inactive_works);
- }
+@@ -108,7 +108,7 @@ enum {
+ 	RESCUER_NICE_LEVEL	= MIN_NICE,
+ 	HIGHPRI_NICE_LEVEL	= MIN_NICE,
  
--static void pwq_activate_inactive_work(struct work_struct *work)
-+static void __pwq_activate_work(struct pool_workqueue *pwq,
-+				struct work_struct *work)
- {
--	struct pool_workqueue *pwq = get_work_pwq(work);
--
- 	trace_workqueue_activate_work(work);
- 	if (list_empty(&pwq->pool->worklist))
- 		pwq->pool->watchdog_ts = jiffies;
- 	move_linked_works(work, &pwq->pool->worklist, NULL);
- 	__clear_bit(WORK_STRUCT_INACTIVE_BIT, work_data_bits(work));
-+}
+-	WQ_NAME_LEN		= 24,
++	WQ_NAME_LEN		= 32,
+ };
+ 
+ /*
+@@ -4673,6 +4673,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+ 	va_list args;
+ 	struct workqueue_struct *wq;
+ 	struct pool_workqueue *pwq;
++	int len;
+ 
+ 	/*
+ 	 * Unbound && max_active == 1 used to imply ordered, which is no longer
+@@ -4699,9 +4700,12 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+ 	}
+ 
+ 	va_start(args, max_active);
+-	vsnprintf(wq->name, sizeof(wq->name), fmt, args);
++	len = vsnprintf(wq->name, sizeof(wq->name), fmt, args);
+ 	va_end(args);
+ 
++	if (len >= WQ_NAME_LEN)
++		pr_warn_once("workqueue: name exceeds WQ_NAME_LEN. Truncating to: %s\n", wq->name);
 +
-+/**
-+ * pwq_activate_work - Activate a work item if inactive
-+ * @pwq: pool_workqueue @work belongs to
-+ * @work: work item to activate
-+ *
-+ * Returns %true if activated. %false if already active.
-+ */
-+static bool pwq_activate_work(struct pool_workqueue *pwq,
-+			      struct work_struct *work)
-+{
-+	struct worker_pool *pool = pwq->pool;
-+
-+	lockdep_assert_held(&pool->lock);
-+
-+	if (!(*work_data_bits(work) & WORK_STRUCT_INACTIVE))
-+		return false;
-+
- 	pwq->nr_active++;
-+	__pwq_activate_work(pwq, work);
-+	return true;
- }
+ 	max_active = max_active ?: WQ_DFL_ACTIVE;
+ 	max_active = wq_clamp_max_active(max_active, flags, wq->name);
  
- static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
-@@ -1472,7 +1492,7 @@ static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
- 	struct work_struct *work = list_first_entry(&pwq->inactive_works,
- 						    struct work_struct, entry);
- 
--	pwq_activate_inactive_work(work);
-+	pwq_activate_work(pwq, work);
- }
- 
- /**
-@@ -1610,8 +1630,7 @@ static int try_to_grab_pending(struct work_struct *work, bool is_dwork,
- 		 * management later on and cause stall.  Make sure the work
- 		 * item is activated before grabbing.
- 		 */
--		if (*work_data_bits(work) & WORK_STRUCT_INACTIVE)
--			pwq_activate_inactive_work(work);
-+		pwq_activate_work(pwq, work);
- 
- 		list_del_init(&work->entry);
- 		pwq_dec_nr_in_flight(pwq, *work_data_bits(work));
 -- 
 2.43.0
 
