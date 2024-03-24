@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386021487C5;
-	Sun, 24 Mar 2024 23:15:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877A6148301;
+	Sun, 24 Mar 2024 23:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322112; cv=none; b=Ix8AomSfOUDdpo0m6NjHAzktVT+3Yu127izN7PoNZD2IfuYR3yyncaD005lhFS/+fKZJToIiS54r1qfpEiDC7HYQmn8Xuc5ag174F7EdJhWSLHFgVd8h3ZiBVGf2WbcZX4IVHySE7GoRpzInssyTa6iXVqCP0qaRU4uD/83MM/Q=
+	t=1711322105; cv=none; b=tEOoY6i/3r2cSvPtMm590WNYWytgNGGnL1McnfvHbQZfoZreM6HV2aErTscPJpn0RfV0DKHYFf7VLqPt6jv7nayaeZ6f2ovQUV+0SOjiY5elQz3rzIcOgQz25m0fn4/OiRxVKzWL/U+2blwZ4VqyFozKbWRygLAiWXxBUOB05FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322112; c=relaxed/simple;
-	bh=uRoRsaHWAWpKpAmF0MLAb2S1bcEcuSVKZ2mxImqiWlo=;
+	s=arc-20240116; t=1711322105; c=relaxed/simple;
+	bh=5QHypYvv7lO4d7Abg3P4AAedmMuA2mFkZo5AS5AWX+Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O5KhXph0XkfNJfTbSsELgq7G1jVnfvAGRWdKFWY32kBZIvWCv3wwRqJ45W/6SB0e5J14WQDeZTeArdHsoYKoFqXN7qAPrgstXC26kz3ureaRiBd40CrTUHivo7jJWQbF5pgQb1oCcvWcRivtV2JX6SNLc7/Iz6adbT3sUwGPSyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSMoKyOO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Ko5tI5HtFRYubtHHVa2GnnDySr2eluPhgvSEcwqiE00IB+o5l2xCVUnUa+vSkHgHPV/GX+LfPtW8WBnfmZBcPdsl0vMxVf/7N9D7GHhwuo28kuyUQBaP43gJrg3N54Bmhzw/6XWbWMXFTmcO5dQzhaIHwQjo/DoKMa9jGQJYYh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGozU9n4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSMoKyOO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76A80C433C7;
-	Sun, 24 Mar 2024 23:15:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGozU9n4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6493C43390;
+	Sun, 24 Mar 2024 23:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322111;
-	bh=uRoRsaHWAWpKpAmF0MLAb2S1bcEcuSVKZ2mxImqiWlo=;
+	s=k20201202; t=1711322104;
+	bh=5QHypYvv7lO4d7Abg3P4AAedmMuA2mFkZo5AS5AWX+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NSMoKyOOSw26R2vSQRKXUWXNn3aLbSfyUnpm3qCVwXrzqqI7zmPQc4ZnkrpWBXp47
-	 sV5mWHhkKiTbnfQkiXdDKpO5pjCO/4ZiRXo3YHL8KHpauqmhsLwzs+lnE6rt1Yn7U7
-	 sibOorirpvAKIUfSylD5ivxadVsSaltsnh1cSil9ai3gsl1nGFyEO4e6dVrt61aqPK
-	 SkzQQWtSu6eAAFN87QHgxW2RDPe87arOPNKJnCDbOHioByJ/veCjCJwmXxFJUib5b3
-	 0YWutrETKatjn0Ez0d7yZa4rdB1nrTvztGwi6FjpFqZ6GZwyJl5IHMoJXlUHOtF+Rn
-	 0wfSlYY8kFuRQ==
+	b=EGozU9n48TM+uCNC1iHbLEl0s9onPQPgYECA20tud5DXLc9ZbM2P8oOzt2Kz8urJa
+	 JXk1luWf95GX3Cju+PrgmZWwt1MeRI9e0ngb97tz+vKwXGBRdI1QJwjB1fPRLClo5L
+	 zXdbKzRRsAjwNj6vJ7nZ2PodKA+YCRJ7yhSLojPKeqzxSfrQB5/mjbLIixGdaOY8yC
+	 5HCtPCfdY9zgo77jkn3vk/sJmVmThrb8UcoiSMhhq3cWspiaJE1E1e9KsPTBEIGLnu
+	 kYvbgp71URLscy1JFlnPi2qQahMCcnZniWPJndIjfvYM4AWipweosBlrvbtRHly0pW
+	 UgWB3hspfsgKg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Chuck Lever <chuck.lever@oracle.com>,
+Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 186/451] SUNRPC: fix some memleaks in gssx_dec_option_array
-Date: Sun, 24 Mar 2024 19:07:42 -0400
-Message-ID: <20240324231207.1351418-187-sashal@kernel.org>
+Subject: [PATCH 6.1 179/451] arm64: dts: marvell: reorder crypto interrupts on Armada SoCs
+Date: Sun, 24 Mar 2024 19:07:35 -0400
+Message-ID: <20240324231207.1351418-180-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,88 +44,88 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Rafał Miłecki <rafal@milecki.pl>
 
-[ Upstream commit 3cfcfc102a5e57b021b786a755a38935e357797d ]
+[ Upstream commit ec55a22149d64f9ac41845d923b884d4a666bf4d ]
 
-The creds and oa->data need to be freed in the error-handling paths after
-their allocation. So this patch add these deallocations in the
-corresponding paths.
+Match order specified in binding documentation. It says "mem" should be
+the last interrupt.
 
-Fixes: 1d658336b05f ("SUNRPC: Add RPC based upcall mechanism for RPCGSS auth")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+This fixes:
+arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:0: 'ring0' was expected
+        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
+arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:1: 'ring1' was expected
+        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
+arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:2: 'ring2' was expected
+        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
+arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:3: 'ring3' was expected
+        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
+arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:4: 'eip' was expected
+        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
+arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:5: 'mem' was expected
+        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
+
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/auth_gss/gss_rpc_xdr.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi  | 10 +++++-----
+ arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 10 +++++-----
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-index d79f12c2550ac..cb32ab9a83952 100644
---- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
-+++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-@@ -250,8 +250,8 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index df152c72276b8..cd28e1c45b70a 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -426,14 +426,14 @@ xor11 {
+ 			crypto: crypto@90000 {
+ 				compatible = "inside-secure,safexcel-eip97ies";
+ 				reg = <0x90000 0x20000>;
+-				interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
++				interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+-				interrupt-names = "mem", "ring0", "ring1",
+-						  "ring2", "ring3", "eip";
++					     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "ring0", "ring1", "ring2",
++						  "ring3", "eip", "mem";
+ 				clocks = <&nb_periph_clk 15>;
+ 			};
  
- 	creds = kzalloc(sizeof(struct svc_cred), GFP_KERNEL);
- 	if (!creds) {
--		kfree(oa->data);
--		return -ENOMEM;
-+		err = -ENOMEM;
-+		goto free_oa;
- 	}
- 
- 	oa->data[0].option.data = CREDS_VALUE;
-@@ -265,29 +265,40 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
- 
- 		/* option buffer */
- 		p = xdr_inline_decode(xdr, 4);
--		if (unlikely(p == NULL))
--			return -ENOSPC;
-+		if (unlikely(p == NULL)) {
-+			err = -ENOSPC;
-+			goto free_creds;
-+		}
- 
- 		length = be32_to_cpup(p);
- 		p = xdr_inline_decode(xdr, length);
--		if (unlikely(p == NULL))
--			return -ENOSPC;
-+		if (unlikely(p == NULL)) {
-+			err = -ENOSPC;
-+			goto free_creds;
-+		}
- 
- 		if (length == sizeof(CREDS_VALUE) &&
- 		    memcmp(p, CREDS_VALUE, sizeof(CREDS_VALUE)) == 0) {
- 			/* We have creds here. parse them */
- 			err = gssx_dec_linux_creds(xdr, creds);
- 			if (err)
--				return err;
-+				goto free_creds;
- 			oa->data[0].value.len = 1; /* presence */
- 		} else {
- 			/* consume uninteresting buffer */
- 			err = gssx_dec_buffer(xdr, &dummy);
- 			if (err)
--				return err;
-+				goto free_creds;
- 		}
- 	}
- 	return 0;
-+
-+free_creds:
-+	kfree(creds);
-+free_oa:
-+	kfree(oa->data);
-+	oa->data = NULL;
-+	return err;
- }
- 
- static int gssx_dec_status(struct xdr_stream *xdr,
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+index d6c0990a267d9..218c059b16d9c 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+@@ -506,14 +506,14 @@ CP11X_LABEL(sdhci0): mmc@780000 {
+ 		CP11X_LABEL(crypto): crypto@800000 {
+ 			compatible = "inside-secure,safexcel-eip197b";
+ 			reg = <0x800000 0x200000>;
+-			interrupts = <87 IRQ_TYPE_LEVEL_HIGH>,
+-				<88 IRQ_TYPE_LEVEL_HIGH>,
++			interrupts = <88 IRQ_TYPE_LEVEL_HIGH>,
+ 				<89 IRQ_TYPE_LEVEL_HIGH>,
+ 				<90 IRQ_TYPE_LEVEL_HIGH>,
+ 				<91 IRQ_TYPE_LEVEL_HIGH>,
+-				<92 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "mem", "ring0", "ring1",
+-				"ring2", "ring3", "eip";
++				<92 IRQ_TYPE_LEVEL_HIGH>,
++				<87 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "ring0", "ring1", "ring2", "ring3",
++					  "eip", "mem";
+ 			clock-names = "core", "reg";
+ 			clocks = <&CP11X_LABEL(clk) 1 26>,
+ 				 <&CP11X_LABEL(clk) 1 17>;
 -- 
 2.43.0
 
