@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8755E1E16A0;
-	Sun, 24 Mar 2024 22:52:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C951E169B;
+	Sun, 24 Mar 2024 22:52:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320774; cv=none; b=Xb+/9KkHD+4iw7zdQH9CorKB6E9jUsgHcLilV+UbnuUWSIfskSXz8OfedSJ0Bs1SVFU9/xdH/6RJ7fPjPdSu/AAq0dpF2YoSvH9/eZAZ0Z/Z+MXHWj7kZi+wG6U/eZE3CbfPDmlkiVEB+R3s8vAlKXdhxt85nivL+V/ZfSnv/Po=
+	t=1711320773; cv=none; b=myShxvWacQo8LPNOztQQALeBFpNCfgXvL6bUAY+Wsy+b1zVWSMHKfh91pVGaX5vKJO2UX3Ze8UwDmo8y3i4SRZ1d1tR8qOupT3367GAUu1sYX3b1jxKmfCxxIB37DJXwu+hHgJ7QO9DhbAF8UaZbI1GNu52106+vxG75dqXdZ5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320774; c=relaxed/simple;
-	bh=g8KGzfYA/4PhED1+413GJMaRIZogAcuGh0s7OPJeDzw=;
+	s=arc-20240116; t=1711320773; c=relaxed/simple;
+	bh=mZScqgdFbFxEEZ5oStzghiuQovEy8pryA8k/LHb0adw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o2bGlKfPBrCPINy9U8edXvNjZuiaxED1/tldxlmsUdJQWQnRxqtGBKeU/l4km26INRUhhwTKtcxMRXOaQakDsHmYyeAV+G9ycnDHkRyE/nkEn5bZUcdZKg0yHkxJgHY9Xfg0oSzjs+UvVMmqFhLc9qgmtZu5EkAD8CUfwqpAr5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hy4rf5wk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FLCsJhAH+5k+GSR6R+yEdom9bBwyhvdlEVnXWPilj/ojCNfSG82NNtPryt8e+0gRsqBkIOKwCs7ozex18d+WLWrfVaYSiaA0iGHwwH0XBF0bw6AtUNDplYkjv5J9/iJjryTOh4Nq4M1v3NfAuAe+9F6MJl3XyPY9kVzhuN174/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOIWE0RP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hy4rf5wk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 972C5C433B1;
-	Sun, 24 Mar 2024 22:52:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOIWE0RP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99239C43394;
+	Sun, 24 Mar 2024 22:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320773;
-	bh=g8KGzfYA/4PhED1+413GJMaRIZogAcuGh0s7OPJeDzw=;
+	s=k20201202; t=1711320772;
+	bh=mZScqgdFbFxEEZ5oStzghiuQovEy8pryA8k/LHb0adw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hy4rf5wkI5bOYL4vlWGt+IiMgR0j95UurJBut9XENO4laEDvJ6vEJLfxhRT1ImTos
-	 ywoeFU+byzKkxAqvrZY2ZHO9pyItI6cFG8jxx2ux9z/KLjlvo7RpoyiRQdMVsrEGWR
-	 AhsddVTb/z8utyBWfdP6FVAfcTsZ4bEsv6ExGwd/Ep7vxCIok5urSNG9PFLZ68pLkF
-	 aCddcMuoEPz9aGTkbeIb9Qf9yDk7npCDtAx5f+mXDXe+SB9qHIpulNdkmaJE1uTTti
-	 LEg21yCLl5qU8awu3RK2e1F//uAUciBCagAaiRVJhTbhudNxk9FvFctW30WuM47KWN
-	 eIdnkAY+KOFNw==
+	b=jOIWE0RPTQsVb5wnKkTmJupAz6XkgPGTy2NI2VZWJCPPiYClEFjJOKSMVBn9gMTu4
+	 MBHi5RcgT9+V21bQmc7xqwVzec7SJCWtA77uEOimCsx4uacpXQTKSJPTNPhdGFUVtM
+	 tIEG+0FK7zeR2LWbbPUipnkh/eGLNrymwBwH6TQRVvKcKgJOpn7qVS1ZwoNxq/kfWa
+	 bO1i9IlbyrajW/Ft/XnShjmDMSP4ZYUcmN0+2tKF9TcCRh+29ZhhUTAMkLw2l2bQlL
+	 IXENEThF1SMuiPYerfg0Pw1axNHS3uYzpWt/2gKq9yBhqp9/JzfkbImI2u6Sogawrn
+	 COYHbJej3Cubg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Duoming Zhou <duoming@zju.edu.cn>,
-	Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Kees Cook <keescook@chromium.org>,
+Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
 	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 337/713] wifi: brcm80211: handle pmk_op allocation failure
-Date: Sun, 24 Mar 2024 18:41:03 -0400
-Message-ID: <20240324224720.1345309-338-sashal@kernel.org>
+Subject: [PATCH 6.7 336/713] wifi: rtw88: 8821c: Fix false alarm count
+Date: Sun, 24 Mar 2024 18:41:02 -0400
+Message-ID: <20240324224720.1345309-337-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,42 +49,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Duoming Zhou <duoming@zju.edu.cn>
+From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
 
-[ Upstream commit b4152222e04cb8afeeca239c90e3fcaf4c553b42 ]
+[ Upstream commit c238adbc578eeb70cbc8fdd1bef3666b0f585b13 ]
 
-The kzalloc() in brcmf_pmksa_v3_op() will return null if the
-physical memory has run out. As a result, if we dereference
-the null value, the null pointer dereference bug will happen.
+total_fa_cnt is supposed to include cck_fa_cnt and ofdm_fa_cnt, not just
+ofdm_fa_cnt.
 
-Return -ENOMEM from brcmf_pmksa_v3_op() if kzalloc() fails
-for pmk_op.
-
-Fixes: a96202acaea4 ("wifi: brcmfmac: cfg80211: Add support for PMKID_V3 operations")
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Fixes: 960361238b86 ("rtw88: 8821c: add false alarm statistics")
+Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240229103153.18533-1-duoming@zju.edu.cn
+Link: https://msgid.link/f3cb6d17-e4e4-44a7-9c9b-72aed994b5c9@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/realtek/rtw88/rtw8821c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index 44cea18dd20ed..8facd40d713e6 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -4322,6 +4322,9 @@ brcmf_pmksa_v3_op(struct brcmf_if *ifp, struct cfg80211_pmksa *pmksa,
- 	int ret;
+diff --git a/drivers/net/wireless/realtek/rtw88/rtw8821c.c b/drivers/net/wireless/realtek/rtw88/rtw8821c.c
+index 429bb420b0563..fe5d8e1883509 100644
+--- a/drivers/net/wireless/realtek/rtw88/rtw8821c.c
++++ b/drivers/net/wireless/realtek/rtw88/rtw8821c.c
+@@ -773,9 +773,9 @@ static void rtw8821c_false_alarm_statistics(struct rtw_dev *rtwdev)
  
- 	pmk_op = kzalloc(sizeof(*pmk_op), GFP_KERNEL);
-+	if (!pmk_op)
-+		return -ENOMEM;
-+
- 	pmk_op->version = cpu_to_le16(BRCMF_PMKSA_VER_3);
+ 	dm_info->cck_fa_cnt = cck_fa_cnt;
+ 	dm_info->ofdm_fa_cnt = ofdm_fa_cnt;
++	dm_info->total_fa_cnt = ofdm_fa_cnt;
+ 	if (cck_enable)
+ 		dm_info->total_fa_cnt += cck_fa_cnt;
+-	dm_info->total_fa_cnt = ofdm_fa_cnt;
  
- 	if (!pmksa) {
+ 	crc32_cnt = rtw_read32(rtwdev, REG_CRC_CCK);
+ 	dm_info->cck_ok_cnt = FIELD_GET(GENMASK(15, 0), crc32_cnt);
 -- 
 2.43.0
 
