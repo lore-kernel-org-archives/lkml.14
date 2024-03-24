@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDFD15380D;
-	Sun, 24 Mar 2024 23:08:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38938153833;
+	Sun, 24 Mar 2024 23:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321701; cv=none; b=IaLX6/fe4u4g6hl+HeQIS36f1ODjSFO9rD6/8HEdvCyFB9lDuolKJ7F6iDXqLSTujuybrABRwnc7lCkP2pi1bnfiXGYLmNTJ2yOvDCb21vLqvhMOYMLjPp+FDiNRqVwzIZe6Zrl9HZHzV6HvMO4ov37YRk3Qy5HUd/ynJ17Qo3g=
+	t=1711321703; cv=none; b=Cyl2fpDhu+tZWX6XaaC6K7ws5GV7WRpuKHFfCnS2cK6sbxtUONL425URpxsnJXTeqC5/VF9kTcGRejnu3gZTCqWueJzj0K1Vs23KXiFA78OSfekdkiiXdQgwJcbPgUtvBlJqom40c93ux0GKb6+K0gElOnXiKb1VGB3bnsTIJmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321701; c=relaxed/simple;
-	bh=da0v28uYIBgfQoka5OnAj9jwTvwhT7/5iIL5RdHgY+s=;
+	s=arc-20240116; t=1711321703; c=relaxed/simple;
+	bh=HTrrK1pFvDc5N5gNcuLAGS1bbir5cq4s591h36R7SGE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qwzsd4eB6tX8xRRvyfxT2PPc5rKJoyPkByiB2hYSjkZquwEg2R2TGXp5GqmFETCXIqBM98BoEUJU6bBmzrELeaB63P045UCwsR/d5raiaRGtiArA5wwPBSBLurbsh1AvNpyScYFQNgcqPsHvQS9m7jVgO8ZQLODlWKktbjhs/X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jslfhdTy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mUvwEO1p2lgN5rx7QDCPzPfPmGWmPi/NlkQJZS4dUTu6cYm3TmAxAdmOMfMXFexhzUnGS75MurznLxW4Ro8YsJr9+FPlL7LdxFMF1r800tMq8ey0Viw3bNGHUG0r/lgGhxq6bAxL+UTwysS+MeWpX2cBDzuojzu4B6upF9YIgwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qx6gaTIF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jslfhdTy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DD32C43399;
-	Sun, 24 Mar 2024 23:08:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qx6gaTIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2376CC43399;
+	Sun, 24 Mar 2024 23:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321700;
-	bh=da0v28uYIBgfQoka5OnAj9jwTvwhT7/5iIL5RdHgY+s=;
+	s=k20201202; t=1711321702;
+	bh=HTrrK1pFvDc5N5gNcuLAGS1bbir5cq4s591h36R7SGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jslfhdTy5UghOruz09HuuTekAHTw3waSHU/rQaUeFxenoSGwxstZdOIcJDcyXmuB+
-	 0F0faT2sEM2cjL2UtjaZXZjT9HUHkuVCw9VnwewZa3LbsSkpaUIbDyQF+aA1BLcqTL
-	 FNAu/b8wrBjOwP/MT+tWa2cGtlnmvp6Tah7HJNfHn2Q6TCtIs9fWdcOO4+3CNuKuW+
-	 3fl2iti6xP/ixlYLxA5WuL37jbwqjxvbRGADnGVtxHBcxSDfUdjylB0BYs5tA2q2WG
-	 ROtdFUYq1A/jdbROSChhAOOr94zopDMY9f6Lr0qbdGgYZHp8qmdCGSc1Xjo2K5WgES
-	 myfenCU/4QHWA==
+	b=qx6gaTIFHvjWKUnZeP59ndL32UmsBrX6avmWyXjT/Gyq7rTP0htW8M8rPCoseYXcC
+	 eb8Y7yWtF9OwsLC3w6qKgN+84usUJxum3fJEY7v3igu69Fhy5vJRl8CHt96Xc5yML+
+	 z2VcGfIZx5jiWjOrbAbcMzFTbPnBIcMmLKQibGCLo/a4fC/dWTJ93BxOt3QeWB5zde
+	 Q6LmGBl6fAEaLSnkhjZ4RXumyM0MI5eqBBVHOJ50iQkGMSMUHtQdVthNMtW3Lw6f3V
+	 OUx/NgokabcTCml11jBq+aWqrA4XsjBZ31ryuh38KYB/Y8I6o9NBdNbOl6khz7vAoc
+	 wFdZesbqfFdGQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?J=C3=B6rg=20Wedekind?= <joerg@wedekind.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 429/638] PCI: Mark 3ware-9650SE Root Port Extended Tags as broken
-Date: Sun, 24 Mar 2024 18:57:46 -0400
-Message-ID: <20240324230116.1348576-430-sashal@kernel.org>
+Subject: [PATCH 6.6 431/638] pinctrl: renesas: Allow the compiler to optimize away sh_pfc_pm
+Date: Sun, 24 Mar 2024 18:57:48 -0400
+Message-ID: <20240324230116.1348576-432-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,56 +44,55 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jörg Wedekind <joerg@wedekind.de>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit baf67aefbe7d7deafa59ca49612d163f8889934c ]
+[ Upstream commit a6f06b909fee72c679c565adfa7f080f9595e336 ]
 
-Per PCIe r6.1, sec 2.2.6.2 and 7.5.3.4, a Requester may not use 8-bit Tags
-unless its Extended Tag Field Enable is set, but all Receivers/Completers
-must handle 8-bit Tags correctly regardless of their Extended Tag Field
-Enable.
+The conversion to DEFINE_NOIRQ_DEV_PM_OPS() lost the ability of the
+compiler to optimize away the struct dev_pm_ops object when it is not
+needed.
 
-Some devices do not handle 8-bit Tags as Completers, so add a quirk for
-them.  If we find such a device, we disable Extended Tags for the entire
-hierarchy to make peer-to-peer DMA possible.
+Fix this by replacing the use of pm_sleep_ptr() by a custom wrapper.
 
-The 3ware 9650SE seems to have issues with handling 8-bit tags. Mark it as
-broken.
-
-This fixes PCI Parity Errors like :
-
-  3w-9xxx: scsi0: ERROR: (0x06:0x000C): PCI Parity Error: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x000D): PCI Abort: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x000E): Controller Queue Error: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x0010): Microcontroller Error: clearing.
-
-Link: https://lore.kernel.org/r/20240219132811.8351-1-joerg@wedekind.de
-Fixes: 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if supported")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=202425
-Signed-off-by: Jörg Wedekind <joerg@wedekind.de>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 727eb02eb753375e ("pinctrl: renesas: Switch to use DEFINE_NOIRQ_DEV_PM_OPS() helper")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/6238a78e32fa21f0c795406b6cba7bce7af92577.1708513940.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/renesas/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b5b96d2a9f4ba..1739fd54a3106 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5520,6 +5520,7 @@ static void quirk_no_ext_tags(struct pci_dev *pdev)
- 
- 	pci_walk_bus(bridge->bus, pci_configure_extended_tags, NULL);
+diff --git a/drivers/pinctrl/renesas/core.c b/drivers/pinctrl/renesas/core.c
+index 93e51abbf519a..d1e92bbed33ad 100644
+--- a/drivers/pinctrl/renesas/core.c
++++ b/drivers/pinctrl/renesas/core.c
+@@ -731,10 +731,12 @@ static int sh_pfc_resume_noirq(struct device *dev)
+ 		sh_pfc_walk_regs(pfc, sh_pfc_restore_reg);
+ 	return 0;
  }
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_3WARE, 0x1004, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0132, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0140, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0141, quirk_no_ext_tags);
++#define pm_psci_sleep_ptr(_ptr)	pm_sleep_ptr(_ptr)
+ #else
+ static int sh_pfc_suspend_init(struct sh_pfc *pfc) { return 0; }
+ static int sh_pfc_suspend_noirq(struct device *dev) { return 0; }
+ static int sh_pfc_resume_noirq(struct device *dev) { return 0; }
++#define pm_psci_sleep_ptr(_ptr)	PTR_IF(false, (_ptr))
+ #endif	/* CONFIG_ARM_PSCI_FW */
+ 
+ static DEFINE_NOIRQ_DEV_PM_OPS(sh_pfc_pm, sh_pfc_suspend_noirq, sh_pfc_resume_noirq);
+@@ -1415,7 +1417,7 @@ static struct platform_driver sh_pfc_driver = {
+ 	.driver		= {
+ 		.name	= DRV_NAME,
+ 		.of_match_table = of_match_ptr(sh_pfc_of_table),
+-		.pm	= pm_sleep_ptr(&sh_pfc_pm),
++		.pm	= pm_psci_sleep_ptr(&sh_pfc_pm),
+ 	},
+ };
+ 
 -- 
 2.43.0
 
