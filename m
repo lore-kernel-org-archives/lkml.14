@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13B51FA831;
-	Sun, 24 Mar 2024 23:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B0912FB17;
+	Sun, 24 Mar 2024 23:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321290; cv=none; b=rFv0u0KSdkxzpt7FdxtGay1M8lz/H4KX5HekRr7DORNZNXk3YV9ZmEQZVCwEIW0vcoGCsPJ1HZMEoqzCuTJUGfEgNyqK3QiOZ7orQ8pdGQ9wUXKLl+wi/neMSZ2yPnV484rdG+ij3TUoe4BD02DBJ6D5ctdX6bscY1uBYnAMth0=
+	t=1711321300; cv=none; b=RfmgQSM3m4vFsb20woHiky13zV2HSmlQBYFw2Z/cm6vPdbFP9FSd7dl2DJ+BpZi0iowSTh+hn/fKZ239tzfZCbqKkFiS1p/arTbkobxIiErRfW4kZNB8wAMdwSsFSkg1KBVJ5h3r8LahBJMULJ7sE4m5MphSfxKgHeX3ZN7XOpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321290; c=relaxed/simple;
-	bh=3W6dR8PdnATH3wLhgXePo6qAuvBQwrdOzzSzsfx9tTs=;
+	s=arc-20240116; t=1711321300; c=relaxed/simple;
+	bh=FkzDlT8ctDyCauDA5oCuwo7gENN9bz4/MUbxBdnuFjM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aaBvpdU3zVTs4sqg8aIbRe2z800tbkaNVT8Fgv68EVe9y26qBObGvesQO6w4L7uDsNqZgnj4ox+8lOh022dcZBGvwavOKYCqWcEOshkZm7nW9A1B3KJa/lpTf/1AdPeQMSPGvXxF/fJvjq/qDshUWkcT0sNlxXCrZ+4yG1xIsek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=miKevgVu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lo+FA53DnUyhsBR0Wp3dq0tPDt+2CJmHwI95BWtouBfyZV58sqrJoi2j1JdVaCtQi/r5/LeRF4okBAh0CQwLa/hOIMMxLbWAvt6CvqtAyyMuZoCD+UOU9zqZf3tfTs2SSgzZEehWzyAngxcbLHJ8qMhj8q+szT6H10kwrarcO6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6rH/Igy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="miKevgVu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 956D4C433C7;
-	Sun, 24 Mar 2024 23:01:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6rH/Igy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FCFDC433A6;
+	Sun, 24 Mar 2024 23:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321289;
-	bh=3W6dR8PdnATH3wLhgXePo6qAuvBQwrdOzzSzsfx9tTs=;
+	s=k20201202; t=1711321298;
+	bh=FkzDlT8ctDyCauDA5oCuwo7gENN9bz4/MUbxBdnuFjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=miKevgVuEyfBwUihT+bjVCPJp6tNrznuDXKr55d9RliiW0pMQeIb+cKFytiZJ49fW
-	 7Pj5H3f78f7jPyNMilhPpvjVVPlIhXvoOj9zVHaFc0ZQPPKEifvX0zbV0AdNjau7SZ
-	 EcXUDr8WRU3eKYMSrlX4XW1/rBw8swoPAeUOr7n6tbL75K478tynQvU7Y6FJUFqgtA
-	 Zpc8T7UH18p/BbcGPHo9CrhaA2117dpWNcNYl1wl6oeBmAa5oMc7I91PgecGL44Zoc
-	 7XZCVCoFjNK1TvXrEoh2p0O5WjVAg7ALJDT5iKT4Gl/3269pQGqEjIJKNhvS3GTYhH
-	 As7ueUfDIzv6A==
+	b=U6rH/IgyYAtU6ihcspC2Fsp3TS5+2jM7qR8qFXbTMnd8Hw9UN62Q37Q9nTWRVNsYF
+	 8OaSfwuhhuD+L/KHrxZswDYIoQIqlG4IewwEm1MPYI4HaHLPNC0IbQbK98JXS/uglb
+	 JBCpGnIP4oGinzKTyYZemXS+6iNDMawBrAG+zLoYAvGOAceMajHPQRQpG7xJqTOD55
+	 tOUi1+iYvPX3Tf35NMR3HhTDZCY3kCwn+1UW8jH0NepQSe++Iqo2zi0YbXwduHWKMO
+	 inwMaPkqdwb7ykj4Xnr2Z4OBIORx/E/QM7JJT03zitVC8o2gxsuNhhz82b47eH6aka
+	 0qdR42QSwADGA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Conor Dooley <conor.dooley@microchip.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 011/638] ASoC: rt5645: Make LattePanda board DMI match more precise
-Date: Sun, 24 Mar 2024 18:50:48 -0400
-Message-ID: <20240324230116.1348576-12-sashal@kernel.org>
+Subject: [PATCH 6.6 021/638] soc: microchip: Fix POLARFIRE_SOC_SYS_CTRL input prompt
+Date: Sun, 24 Mar 2024 18:50:58 -0400
+Message-ID: <20240324230116.1348576-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,61 +48,31 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 551539a8606e28cb2a130f8ef3e9834235b456c4 ]
+[ Upstream commit 6dd9a236042e305d7b69ee92db7347bf5943e7d3 ]
 
-The DMI strings used for the LattePanda board DMI quirks are very generic.
+The symbol's prompt should be a one-line description, instead of just
+duplicating the symbol name.
 
-Using the dmidecode database from https://linux-hardware.org/ shows
-that the chosen DMI strings also match the following 2 laptops
-which also have a rt5645 codec:
-
-Insignia NS-P11W7100 https://linux-hardware.org/?computer=E092FFF8BA04
-Insignia NS-P10W8100 https://linux-hardware.org/?computer=AFB6C0BF7934
-
-All 4 hw revisions of the LattePanda board have "S70CR" in their BIOS
-version DMI strings:
-
-DF-BI-7-S70CR100-*
-DF-BI-7-S70CR110-*
-DF-BI-7-S70CR200-*
-LP-BS-7-S70CR700-*
-
-See e.g. https://linux-hardware.org/?computer=D98250A817C0
-
-Add a partial (non exact) DMI match on this string to make the LattePanda
-board DMI match more precise to avoid false-positive matches.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://msgid.link/r/20240211212736.179605-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5645.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/soc/microchip/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
-index ea08b7cfc31da..e0da151508309 100644
---- a/sound/soc/codecs/rt5645.c
-+++ b/sound/soc/codecs/rt5645.c
-@@ -3829,6 +3829,16 @@ static const struct dmi_system_id dmi_platform_data[] = {
- 		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
- 		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
- 		  DMI_EXACT_MATCH(DMI_BOARD_VERSION, "Default string"),
-+		  /*
-+		   * Above strings are too generic, LattePanda BIOS versions for
-+		   * all 4 hw revisions are:
-+		   * DF-BI-7-S70CR100-*
-+		   * DF-BI-7-S70CR110-*
-+		   * DF-BI-7-S70CR200-*
-+		   * LP-BS-7-S70CR700-*
-+		   * Do a partial match for S70CR to avoid false positive matches.
-+		   */
-+		  DMI_MATCH(DMI_BIOS_VERSION, "S70CR"),
- 		},
- 		.driver_data = (void *)&lattepanda_board_platform_data,
- 	},
+diff --git a/drivers/soc/microchip/Kconfig b/drivers/soc/microchip/Kconfig
+index eb656b33156ba..f19e74d342aa2 100644
+--- a/drivers/soc/microchip/Kconfig
++++ b/drivers/soc/microchip/Kconfig
+@@ -1,5 +1,5 @@
+ config POLARFIRE_SOC_SYS_CTRL
+-	tristate "POLARFIRE_SOC_SYS_CTRL"
++	tristate "Microchip PolarFire SoC (MPFS) system controller support"
+ 	depends on POLARFIRE_SOC_MAILBOX
+ 	help
+ 	  This driver adds support for the PolarFire SoC (MPFS) system controller.
 -- 
 2.43.0
 
