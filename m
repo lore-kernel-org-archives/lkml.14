@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36BF12A163;
-	Sun, 24 Mar 2024 22:55:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222711EC631;
+	Sun, 24 Mar 2024 22:55:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320946; cv=none; b=pdKkkeTZu86dH/rGyx2bwhDt5kH1ljaZzlhfhtPYJqCyzpOBAFW5eeEJNh2YposVeZE4Gq6xBqgsJwZRn/No1pKV6IdrMiyA8/3E53EC9eR9pT47OktvJqtut1ccajG8rNPwRMrEqZv6j3vlyIe3kJn0tGF5V4AZHbaYcUZ75Ak=
+	t=1711320945; cv=none; b=JCS/UXgi82HbK1Chtg+KuDK7dvd1U7Ovr8siS79wSXWE4JTskNRyC1FA7OSF3SvkeNOVPX7wVVRBlimxAZALW/uRE+Df5hx5cb3gQIIK+6JnRCvwmR7gl42woJ9idWQj4WoTsiVdPR78cFa17WnG1K0HZT/25a+GeS7EUraorCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320946; c=relaxed/simple;
-	bh=88D2h7ESbBu8z6z2H1BIcpBwdPI4hxWEwZy8Q42aC84=;
+	s=arc-20240116; t=1711320945; c=relaxed/simple;
+	bh=7zR0BrWM9FieUe0Q38iXkPk2VIsJeZQPb9NcsHR1SBU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kguz0EnvBp0AQDU9AuhiSrZcHV7qA7KHN/d+T5m4Z0qb5TGTPDZGGTinhUO4kzT4Lx5dmH/MnANlUyfbpMJ5rc6dPtZgngbuq29Uq3gQYCsGVl4XbONKlfGUaR7vyc5MyasC8IvgS9dc+j1FLCF6B3tT6u+eP0PqaWcVBZtCnVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qeBicQWO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jDCh3ouXCiVfuoZp1xn8C9gO7spwcNcVGkfwjIpDVxW9T7XDInW4Dv9bEy628nEOhNa0au7deetEQc+1ln9eiXcg/pBxc2aSwwOkBzh9oJHQESCqiSj0ltSBw3hckhJOSwjxr0ejvzLR5RGJIEdCq4FgNzB8yXR5iLdXHntf6/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtHJftLQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qeBicQWO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DE67C43399;
-	Sun, 24 Mar 2024 22:55:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtHJftLQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61863C433C7;
+	Sun, 24 Mar 2024 22:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320945;
-	bh=88D2h7ESbBu8z6z2H1BIcpBwdPI4hxWEwZy8Q42aC84=;
+	s=k20201202; t=1711320944;
+	bh=7zR0BrWM9FieUe0Q38iXkPk2VIsJeZQPb9NcsHR1SBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qeBicQWOoIzJlzD5YiHgv+l0CiaIjVDKLGKYMCIQnh+VvXcWDp01Ep4vJH1/zTRzz
-	 IT0l1+69WDx2CqQLtS3FJGUqUAfnEqcO/N5bsqFy/+bCDdQwz2snpc2XL2J+/w/fxk
-	 QsrO8dJ90SccvQHxJbO3GHSDokqU0ISeDpP9ctmqkLb7+w4h0S+C3iJNw5K81FHXpi
-	 fvNQM581//M7IWYHF8cn+0NL2dfRgcyWuOZzSmQ74DqHTYbRlEf777GCiJK4Ysn3Px
-	 y7sQI4itVUxj3oGbCZ8lhaX4DayG3yqOp7H95Q+1f7gNLisktJxUs9+dP77zwP7agS
-	 /2pkhirth7cMA==
+	b=jtHJftLQK1IIyGC5by6zLP5+3F3EyWSXdP8tEw3fDNnmQZmogOBm7xDirotFkGpby
+	 Se9799TUAHPf937SJHpvSrlNSetGIkpZhNr2DWZCWCO2FRpsrN9eRahj1siBdQQx76
+	 6AacfiTc75ecmW6O+APOPLVPi1E5KKnFtuhxw5zuAMC092kjuJJizMmwhreQKQmqK7
+	 yFxzRkeJkjIsop3X29nenvaX15wuxS+zRJeXDR2Dq05xnsSF5dm8SiQxvGEbogOR/r
+	 228FWdmUAhIvHWPWapCFFeJtX5hNRI7XoMrBJCq6sZ4GMpA5aPAE3Hlj0h/5Q/mqLl
+	 8tdhy79JeWJ5Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>,
+	Abel Vesa <abel.vesa@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 509/713] mtd: rawnand: lpc32xx_mlc: fix irq handler prototype
-Date: Sun, 24 Mar 2024 18:43:55 -0400
-Message-ID: <20240324224720.1345309-510-sashal@kernel.org>
+Subject: [PATCH 6.7 507/713] clk: imx: imx8mp: Fix SAI_MCLK_SEL definition
+Date: Sun, 24 Mar 2024 18:43:53 -0400
+Message-ID: <20240324224720.1345309-508-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,50 +48,60 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit 347b828882e6334690e7003ce5e2fe5f233dc508 ]
+[ Upstream commit 13269dc6c70444528f0093585e3559cd2f38850a ]
 
-clang-16 warns about mismatched function prototypes:
+There is SAI1, SAI2, SAI3, SAI5, SAI6, SAI7 existing in this block
+control, the order is discontinuous. The definition of SAI_MCLK_SEL(n)
+is not match with the usage of CLK_SAIn(n).
 
-drivers/mtd/nand/raw/lpc32xx_mlc.c:783:29: error: cast from 'irqreturn_t (*)(int, struct lpc32xx_nand_host *)' (aka 'enum irqreturn (*)(int, struct lpc32xx_nand_host *)') to 'irq_handler_t' (aka 'enum irqreturn (*)(int, void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+So define SAI##n##_MCLK_SEL separately to fix the issue.
 
-Change the interrupt handler to the normal way of just passing
-a void* pointer and converting it inside the function..
-
-Fixes: 70f7cb78ec53 ("mtd: add LPC32xx MLC NAND driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20240213100146.455811-1-arnd@kernel.org
+Fixes: 6cd95f7b151c ("clk: imx: imx8mp: Add audiomix block control")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+Link: https://lore.kernel.org/r/1708683351-8504-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/lpc32xx_mlc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/clk/imx/clk-imx8mp-audiomix.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/lpc32xx_mlc.c b/drivers/mtd/nand/raw/lpc32xx_mlc.c
-index 488fd452611a6..677fcb03f9bef 100644
---- a/drivers/mtd/nand/raw/lpc32xx_mlc.c
-+++ b/drivers/mtd/nand/raw/lpc32xx_mlc.c
-@@ -303,8 +303,9 @@ static int lpc32xx_nand_device_ready(struct nand_chip *nand_chip)
- 	return 0;
- }
+diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
+index e4300df88f1ac..55ed211a5e0b1 100644
+--- a/drivers/clk/imx/clk-imx8mp-audiomix.c
++++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+@@ -18,7 +18,12 @@
  
--static irqreturn_t lpc3xxx_nand_irq(int irq, struct lpc32xx_nand_host *host)
-+static irqreturn_t lpc3xxx_nand_irq(int irq, void *data)
- {
-+	struct lpc32xx_nand_host *host = data;
- 	uint8_t sr;
+ #define CLKEN0			0x000
+ #define CLKEN1			0x004
+-#define SAI_MCLK_SEL(n)		(0x300 + 4 * (n))	/* n in 0..5 */
++#define SAI1_MCLK_SEL		0x300
++#define SAI2_MCLK_SEL		0x304
++#define SAI3_MCLK_SEL		0x308
++#define SAI5_MCLK_SEL		0x30C
++#define SAI6_MCLK_SEL		0x310
++#define SAI7_MCLK_SEL		0x314
+ #define PDM_SEL			0x318
+ #define SAI_PLL_GNRL_CTL	0x400
  
- 	/* Clear interrupt flag by reading status */
-@@ -780,7 +781,7 @@ static int lpc32xx_nand_probe(struct platform_device *pdev)
- 		goto release_dma_chan;
- 	}
- 
--	if (request_irq(host->irq, (irq_handler_t)&lpc3xxx_nand_irq,
-+	if (request_irq(host->irq, &lpc3xxx_nand_irq,
- 			IRQF_TRIGGER_HIGH, DRV_NAME, host)) {
- 		dev_err(&pdev->dev, "Error requesting NAND IRQ\n");
- 		res = -ENXIO;
+@@ -95,13 +100,13 @@ static const struct clk_parent_data clk_imx8mp_audiomix_pll_bypass_sels[] = {
+ 		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK1_SEL, {},		\
+ 		clk_imx8mp_audiomix_sai##n##_mclk1_parents,		\
+ 		ARRAY_SIZE(clk_imx8mp_audiomix_sai##n##_mclk1_parents), \
+-		SAI_MCLK_SEL(n), 1, 0					\
++		SAI##n##_MCLK_SEL, 1, 0					\
+ 	}, {								\
+ 		"sai"__stringify(n)"_mclk2_sel",			\
+ 		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK2_SEL, {},		\
+ 		clk_imx8mp_audiomix_sai_mclk2_parents,			\
+ 		ARRAY_SIZE(clk_imx8mp_audiomix_sai_mclk2_parents),	\
+-		SAI_MCLK_SEL(n), 4, 1					\
++		SAI##n##_MCLK_SEL, 4, 1					\
+ 	}, {								\
+ 		"sai"__stringify(n)"_ipg_cg",				\
+ 		IMX8MP_CLK_AUDIOMIX_SAI##n##_IPG,			\
 -- 
 2.43.0
 
