@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6901474A2;
-	Sun, 24 Mar 2024 23:14:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AC31474B5;
+	Sun, 24 Mar 2024 23:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322088; cv=none; b=MbJ5Gq2uOJXlxJYRXMOBMWUN+H4CkGnLDIufBH3QNyet2zNATW3YTAkjGAWinTjbMUjKp0qiIkRikeLwxMceWKkqubM0qXkMqxmsJI6v8YTQWNQnhktlhdcZ2md+mMxqA4cKviE40+Hg9DcKSYcRUUqmYz3p7xa8gPl1nzp5f4s=
+	t=1711322091; cv=none; b=qy5D90shr7RriKZr0u0SoUyyZlh6OyznDYs8NZue0tc+IRCRrCbH0vQWwf1J9LwXSAb5Zed3gXVy1vxb9YIsPP0sWlj/Plx5hl2XNpSlVHUoOwYPH3ZtgFzQ9HgGhpf/DQakyzl2aNeFk+eSPsXmWGV9D/T1jEyXHEnB7j4cepY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322088; c=relaxed/simple;
-	bh=lthKCzVmzbEZRonMzWJu28LZfwWlrNRNz5JWSujoI/8=;
+	s=arc-20240116; t=1711322091; c=relaxed/simple;
+	bh=7F/UjZRPimn47pyAhv9BpU7s+7ntBT5NTeJBjjqzCc4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VhuxqywtMMB9MI6Md+Z+0t+2obXsnf3UJX/ps8iBluG7zziRpP4Dude+d/jFEdEk0y7505AaRgRCenfDNcmcLmvwWS4xW7Qua1NMYsqEMjkx6PJ3sPcWdmouyFk867N8nqH9PVRKNcHl3BSHhzXrnQDyiWivKcdI8A/HQLYuqt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzeOKG3q; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=oxqoxw+CaG+EB5bOFik/w9esdrIlruj9MFxCAnNFXACniZUbnyQGvtp1Jac2A1Dd0Wx1+17WYxbE5wk9xnCCqRjB1t8eOQT/sZ/yY2ixnLpXmuM1qtF2CcG5X5zMoTCqcBP0doiAOUeuwLji3gkASCl8iU9LFBIBjO4PkA4ljZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXBlnfIO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZzeOKG3q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4861C433F1;
-	Sun, 24 Mar 2024 23:14:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXBlnfIO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E223AC433C7;
+	Sun, 24 Mar 2024 23:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322088;
-	bh=lthKCzVmzbEZRonMzWJu28LZfwWlrNRNz5JWSujoI/8=;
+	s=k20201202; t=1711322090;
+	bh=7F/UjZRPimn47pyAhv9BpU7s+7ntBT5NTeJBjjqzCc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZzeOKG3qtNdFtTdynHrqbUsfmtwfW1VOrLDFDIJHPo2Xj7ou1KzXyEWJQjwyK6UV/
-	 55cxfbTN073jnZ8GdZPzFpc8RVPiB3JsbD+HFJkSEPV5M0dmtQOL1hPGbJrt3JpNWv
-	 lkEfahGHvt7RMNfEuI9SHpYcaxzi4bUZbXhUPVsEuEvov+4q6MEOEW3zxtDCEI0g6k
-	 VyTn0PytJ1nqyPD9KKe6T3QwRy0HNQtHIr2C3RPaQOziUy8WutkbbxUzO6hR+pRg5L
-	 Vrn2AC8gd+j7IsVWuARdBOCMvTjHmywyH5wJ2j4JMIyvYVwxsCaP6NIPD8aQQhfcwV
-	 pnd1iIUJ82z+w==
+	b=QXBlnfIOrv0blmOnP7ATSaJdLiqdxsfGlzu5w8FaJjIXgRcxGDqs0G+MqBdDgTk+0
+	 yJ8qG9m5JdG5DP0rX43wbl5yl55YlTamm4F56xu+er8vs6ojC5br6oFtwtOClNPDUz
+	 yoyx7LBQ6Z8x/M/X/ws5Us76WJ3x5c3FzBK4+XTkZe7zFbCWlUec7yCU5XIbSVi+L5
+	 LL4HHXLvzdcBxVZSuXCzkomtDgC9l1BOMX+3LjSSyC99CMNKizsH5WG75QPdCvkrPd
+	 c7/CJqzugRRNNtuzqoft4UBtKvvN2fdoDPfoFj9Jy+v8CJDn6Uj9WcZeihIo9L9Lc+
+	 U9ByHphjeuFjQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hsin-Te Yuan <yuanhsinte@google.com>,
-	Hsin-Te Yuan <yuanhsinte@chromium.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Ajay Singh <ajay.kathat@microchip.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 162/451] arm64: dts: mt8195-cherry-tomato: change watchdog reset boot flow
-Date: Sun, 24 Mar 2024 19:07:18 -0400
-Message-ID: <20240324231207.1351418-163-sashal@kernel.org>
+Subject: [PATCH 6.1 164/451] wifi: wilc1000: revert reset line logic flip
+Date: Sun, 24 Mar 2024 19:07:20 -0400
+Message-ID: <20240324231207.1351418-165-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,68 +46,70 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hsin-Te Yuan <yuanhsinte@google.com>
+From: Alexis Lothoré <alexis.lothore@bootlin.com>
 
-[ Upstream commit ef569d5db50e7edd709e482157769a5b3c367e22 ]
+[ Upstream commit f3ec643947634bed41b97bd56b248f7c78498eab ]
 
-The external output reset signal was originally disabled and sent from
-firmware. However, an unfixed bug in the firmware on tomato prevents
-the signal from being sent, causing the device to fail to boot. To fix
-this, enable external output reset signal to allow the device to reboot
-normally.
+This reverts commit fcf690b0b47494df51d214db5c5a714a400b0257.
 
-Fixes: 5eb2e303ec6b ("arm64: dts: mediatek: Introduce MT8195 Cherry platform's Tomato")
-Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://lore.kernel.org/r/20240124-send-upstream-v3-1-5097c9862a73@chromium.org
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+When using a wilc1000 chip over a spi bus, users can optionally define a
+reset gpio and a chip enable gpio. The reset line of wilc1000 is active
+low, so to hold the chip in reset, a low (physical) value must be applied.
+
+The corresponding device tree binding documentation was introduced by
+commit f31ee3c0a555 ("wilc1000: Document enable-gpios and reset-gpios
+properties") and correctly indicates that the reset line is an active-low
+signal. The corresponding driver part, brought by commit ec031ac4792c
+("wilc1000: Add reset/enable GPIO support to SPI driver") was applying the
+correct logic. But commit fcf690b0b474 ("wifi: wilc1000: use correct
+sequence of RESET for chip Power-UP/Down") eventually flipped this logic
+and started misusing the gpiod APIs, applying an inverted logic when
+powering up/down the chip (for example, setting the reset line to a logic
+"1" during power up, which in fact asserts the reset line when device tree
+describes the reset line as GPIO_ACTIVE_LOW). As a consequence, any
+platform currently using the driver in SPI mode must use a faulty reset
+line description in device tree, or else chip will be maintained in reset
+and will not even allow to bring up the chip.
+
+Fix reset line usage by inverting back the gpiod APIs usage, setting the
+reset line to the logic value "0" when powering the chip, and the logic
+value "1" when powering off the chip.
+
+Fixes: fcf690b0b474 ("wifi: wilc1000: use correct sequence of RESET for chip Power-UP/Down")
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Acked-by: Ajay Singh <ajay.kathat@microchip.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240217-wilc_1000_reset_line-v2-1-b216f433d7d5@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts | 4 ++++
- arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts | 4 ++++
- arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts | 4 ++++
- 3 files changed, 12 insertions(+)
+ drivers/net/wireless/microchip/wilc1000/spi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-index 3348ba69ff6cf..d86d193e5a75e 100644
---- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-@@ -13,3 +13,7 @@ / {
- &ts_10 {
- 	status = "okay";
- };
-+
-+&watchdog {
-+	/delete-property/ mediatek,disable-extrst;
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-index 4669e9d917f8c..5356f53308e24 100644
---- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-@@ -33,3 +33,7 @@ pins-low-power-pcie0-disable {
- &ts_10 {
- 	status = "okay";
- };
-+
-+&watchdog {
-+	/delete-property/ mediatek,disable-extrst;
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-index 5021edd02f7c1..fca3606cb951e 100644
---- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-@@ -34,3 +34,7 @@ pins-low-power-pcie0-disable {
- &ts_10 {
- 	status = "okay";
- };
-+
-+&watchdog {
-+	/delete-property/ mediatek,disable-extrst;
-+};
+diff --git a/drivers/net/wireless/microchip/wilc1000/spi.c b/drivers/net/wireless/microchip/wilc1000/spi.c
+index b0fc5e68feeca..5877e2c1fa0fc 100644
+--- a/drivers/net/wireless/microchip/wilc1000/spi.c
++++ b/drivers/net/wireless/microchip/wilc1000/spi.c
+@@ -191,11 +191,11 @@ static void wilc_wlan_power(struct wilc *wilc, bool on)
+ 		/* assert ENABLE: */
+ 		gpiod_set_value(gpios->enable, 1);
+ 		mdelay(5);
+-		/* assert RESET: */
+-		gpiod_set_value(gpios->reset, 1);
+-	} else {
+ 		/* deassert RESET: */
+ 		gpiod_set_value(gpios->reset, 0);
++	} else {
++		/* assert RESET: */
++		gpiod_set_value(gpios->reset, 1);
+ 		/* deassert ENABLE: */
+ 		gpiod_set_value(gpios->enable, 0);
+ 	}
 -- 
 2.43.0
 
