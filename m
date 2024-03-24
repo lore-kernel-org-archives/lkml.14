@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E6617CF5E;
-	Sun, 24 Mar 2024 23:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172AB17CF66;
+	Sun, 24 Mar 2024 23:43:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323809; cv=none; b=iVyykKCy7RfbWt+t7qRQD3VMA9xlWHhfm0sFnkmYdygrhW6v6GJbzl0C0OoIdFaAd35Fp4eBHzKl9Nwc/0H+utXCa4he0Vw1BPOB9Hz+cu4Ots7VkPGQIuijeSs7IoDVdJV3X/Hm7dRGpbYWl6FaSllEEkm3QFzAw7/HCoILiXg=
+	t=1711323812; cv=none; b=USgOp7aIzIoziSObBooXnS/F7a4Tb9EpXu3rck+hWaY1cdpBj9xWRAql9NbxafPnn/trYyqU3ItzyGDm1rZJr7kvdqTnoO2T1uQTwbt5LMpHVbHuh/5YW2NIdyMD+W6gcbZJI8hnzvpdM6OgdwrD9MDOVhD0bLdxsNLF2JIgq5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323809; c=relaxed/simple;
-	bh=LYhPIjMpKEPwiaOA5bQCN6S1WNeGsEIjM6B9l315d1c=;
+	s=arc-20240116; t=1711323812; c=relaxed/simple;
+	bh=qUsKLSR4/2S+QJrOFojeB/hmcUgRxhpYTpV7hOoNmWw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F/xWZqu+xajfOxLtEJws7q5a9unvqFplwY87VIfslLCG2Pp7U2yhpXuxiEK/XfGG4T3CeuXWcftj1KTavF/BAKMYLp3d08EE8kkBq6oodiZ/itAaZmV1giecP+hINsI6lnfvGS0EW/d+w7LmzB8cDbIxeRe80ghudidQyEizdvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BgGadleE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SkJMFTR7cZZpnDDeA8SowVvZBHHTX2JsZ5RnVZL4vCTSOYSI3IO0mqmxIf3r/Thn0uWBrbKeZTw1u28rB8dHlpgH/lhoaa7sBtWb5DAPcAU4ixiD1IfoUP3P3B1njn9p+1ovaMDzsqlMRoXXMnhyW43IVfv1Ef+Ll4YXoNcVMWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWspW62/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BgGadleE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43B86C433F1;
-	Sun, 24 Mar 2024 23:43:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWspW62/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20E20C433F1;
+	Sun, 24 Mar 2024 23:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323808;
-	bh=LYhPIjMpKEPwiaOA5bQCN6S1WNeGsEIjM6B9l315d1c=;
+	s=k20201202; t=1711323810;
+	bh=qUsKLSR4/2S+QJrOFojeB/hmcUgRxhpYTpV7hOoNmWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BgGadleEUqV1I8C9HRERFC9+BcsS5f3quA4iIZjfNTnmgMQPQECN2SAOix/yU2/fL
-	 zNw99L1cpvbfaSxBIIT/Vc8SkgUYfyZTVbEXQ7g/B/2VPtcotEeT4iH1S8WZoU7cbY
-	 kwzIKbiGYKeuxbvryHJA6K/bQmVF1qFUh8CuqwocP3GjOdJ4rHOPnEltZbBb2ZJsSv
-	 5OZGExUATYEBd1Oi93Myn2OhGs0OLNHnxtL0jDDKHP5wO8rk0f0keWL3LMcU8vIXdg
-	 rx2lO/DriFAPHEcraQKwC7I9NFTm7Y6flisfnR4wlUq2BWppupPw8Ik1J1t/QMM6dT
-	 In1dPzNqLIB/g==
+	b=BWspW62/9jPKmLFR/Fj6OUBNLQnDyiJv6UAQZmwK126v1B05LF/lPAYSmoh3RfF3F
+	 GvZhUV4ZhpT1LFHh1m7OQlwcFCCrILIhmmWdfUu4GxQeNc6A1e7PS7iePowmqN3ExA
+	 Swvaesx3K2AMutIcW7HpzA1QoGD8Ot4l7OX1JYXLJTkrdaWGKnNWdRJw7deNnQgwrr
+	 HWaF4oNBbCY7xH9uAceJHW3TWO4xw+v44iJXCKt+t9mPZLN6vds4tgstySEKYrw1Zn
+	 BziYX2ORZ0hDs1dtGkZ0NXcLIjjdUvEl9BmALUpky/PfKp6UMIb/AVLNGJXjmu/lkq
+	 ykQBJ/zChg6rQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Thompson <daniel.thompson@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Sam Ravnborg <sam@ravnborg.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 187/238] backlight: lp8788: Fully initialize backlight_properties during probe
-Date: Sun, 24 Mar 2024 19:39:35 -0400
-Message-ID: <20240324234027.1354210-188-sashal@kernel.org>
+Subject: [PATCH 5.10 189/238] sparc32: Fix section mismatch in leon_pci_grpci
+Date: Sun, 24 Mar 2024 19:39:37 -0400
+Message-ID: <20240324234027.1354210-190-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,35 +50,60 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Thompson <daniel.thompson@linaro.org>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-[ Upstream commit 392346827fbe8a7fd573dfb145170d7949f639a6 ]
+[ Upstream commit 24338a6ae13cb743ced77da1b3a12c83f08a0c96 ]
 
-props is stack allocated and the fields that are not explcitly set
-by the probe function need to be zeroed or we'll get undefined behaviour
-(especially so power/blank states)!
+Passing a datastructre marked _initconst to platform_driver_register()
+is wrong. Drop the __initconst notation.
 
-Fixes: c5a51053cf3b ("backlight: add new lp8788 backlight driver")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240220153532.76613-4-daniel.thompson@linaro.org
-Signed-off-by: Lee Jones <lee@kernel.org>
+This fixes the following warnings:
+
+WARNING: modpost: vmlinux: section mismatch in reference: grpci1_of_driver+0x30 (section: .data) -> grpci1_of_match (section: .init.rodata)
+WARNING: modpost: vmlinux: section mismatch in reference: grpci2_of_driver+0x30 (section: .data) -> grpci2_of_match (section: .init.rodata)
+
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Andreas Larsson <andreas@gaisler.com>
+Fixes: 4154bb821f0b ("sparc: leon: grpci1: constify of_device_id")
+Fixes: 03949b1cb9f1 ("sparc: leon: grpci2: constify of_device_id")
+Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Reviewed-by: Andreas Larsson <andreas@gaisler.com>
+Tested-by: Andreas Larsson <andreas@gaisler.com>
+Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+Link: https://lore.kernel.org/r/20240224-sam-fix-sparc32-all-builds-v2-7-1f186603c5c4@ravnborg.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lp8788_bl.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/sparc/kernel/leon_pci_grpci1.c | 2 +-
+ arch/sparc/kernel/leon_pci_grpci2.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/backlight/lp8788_bl.c b/drivers/video/backlight/lp8788_bl.c
-index ba42f3fe0c739..d9b95dbd40d30 100644
---- a/drivers/video/backlight/lp8788_bl.c
-+++ b/drivers/video/backlight/lp8788_bl.c
-@@ -191,6 +191,7 @@ static int lp8788_backlight_register(struct lp8788_bl *bl)
- 	int init_brt;
- 	char *name;
+diff --git a/arch/sparc/kernel/leon_pci_grpci1.c b/arch/sparc/kernel/leon_pci_grpci1.c
+index e6935d0ac1ec9..c32590bdd3120 100644
+--- a/arch/sparc/kernel/leon_pci_grpci1.c
++++ b/arch/sparc/kernel/leon_pci_grpci1.c
+@@ -696,7 +696,7 @@ static int grpci1_of_probe(struct platform_device *ofdev)
+ 	return err;
+ }
  
-+	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_PLATFORM;
- 	props.max_brightness = MAX_BRIGHTNESS;
+-static const struct of_device_id grpci1_of_match[] __initconst = {
++static const struct of_device_id grpci1_of_match[] = {
+ 	{
+ 	 .name = "GAISLER_PCIFBRG",
+ 	 },
+diff --git a/arch/sparc/kernel/leon_pci_grpci2.c b/arch/sparc/kernel/leon_pci_grpci2.c
+index ca22f93d90454..dd06abc61657f 100644
+--- a/arch/sparc/kernel/leon_pci_grpci2.c
++++ b/arch/sparc/kernel/leon_pci_grpci2.c
+@@ -887,7 +887,7 @@ static int grpci2_of_probe(struct platform_device *ofdev)
+ 	return err;
+ }
  
+-static const struct of_device_id grpci2_of_match[] __initconst = {
++static const struct of_device_id grpci2_of_match[] = {
+ 	{
+ 	 .name = "GAISLER_GRPCI2",
+ 	 },
 -- 
 2.43.0
 
