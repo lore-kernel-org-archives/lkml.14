@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582014CB36;
-	Sun, 24 Mar 2024 23:04:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80D72057E3;
+	Sun, 24 Mar 2024 23:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321482; cv=none; b=aakg9CgJQE5IGX0qizmiZGeiDHebfVk66kFmV3rKwTupx1LsxpGzV+SlZsAgNESScmeNO0tnVoSpgI+NpNP4Rg8TcNvf7+D2dTEd42IMSYnNYCVErPST8UY6bDNwLKzPdDw3PHpCzut1OsVdyA99tfR7/8iWpsj1xDMzpk5wmaQ=
+	t=1711321487; cv=none; b=A5BShMPSSjy0NDAMi7hy2TNZv0Eb/K6S2xF7tb68B3xX8H/1W11H4vtQqYFGFJx36eMvf7sLF2Bm/GhoNGbrVKkG2RsDNS4XBGZk+yxSbF6GJVTYb6Vea1jdAprRCUfCR5WK/85O63l7ouFlKOCbCenfiEBuJZXqF6bRk+UJyVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321482; c=relaxed/simple;
-	bh=/Cgj1l+Rb/KLXPOO1028JhYLxPr473Y7ZEhHjRqRylU=;
+	s=arc-20240116; t=1711321487; c=relaxed/simple;
+	bh=Fake0jZr2FyKfmP62QvL90r7SBLoesR2rcIVqlQGsqE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AizfpSBMv41uI7ziiKcXkDqCdyLJ91q84iaDhmnbaLkZY0KyAyP3DBKOyCG0VV/lIQ6VwCs20839LvqEMbm279/jp1t69eucOcI5tD9EKAUJTxMpTT8tHH4q/OmyjqdEG5Rhb9xeXjqV8sbqkQmoueFcKV+9DOd1iliCM+Lk8SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hApdMVMI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=FFb7DbJ78b+guxzYNRm8+oHdaXb7rkzUBiF/Ch7ztR3UTQxOhOiWtEHT2Ai7TrL7U2N+z/kg1qLvtDNwzUlxV9GMTjZO/FRLaCtOR/UA0pq/+x0u9dn8mwHpM+14lYs0Dw+aIssyZlsv20ruz2OMKi2hkP56cjjLR/yQxkNW0Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8O+rken; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hApdMVMI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C333C433F1;
-	Sun, 24 Mar 2024 23:04:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8O+rken"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12AAC433C7;
+	Sun, 24 Mar 2024 23:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321481;
-	bh=/Cgj1l+Rb/KLXPOO1028JhYLxPr473Y7ZEhHjRqRylU=;
+	s=k20201202; t=1711321486;
+	bh=Fake0jZr2FyKfmP62QvL90r7SBLoesR2rcIVqlQGsqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hApdMVMIB9bcKRcYee1WQbmt3HG5HGmDAh/TLf2H0kouhgZ5vXcQn3YLG/Jef/Gzy
-	 DQuaJX6bZVWnrYiwlmlQRfl6yvkarkzee197u4PWaUHyKk3Eq9OQca6KvQ9vJ8sr3w
-	 P7+qcSO7d8wbBguJmCqDOsl5dGQGM9gz0bHdWC1FQzj/4ekuwW0iAVc/l8bLQHHYMF
-	 4CUXCpDEMDiYz8zdZf6JNX+qpA0wTbNLAEg9TRTSxb3BPdEmp7L7Xmbt1soDHSP/8V
-	 D3ROUqLRO1Pp0qqZFBc6BgPjHYO6CJrGVwuuX86oF5S3WLy6k8kL9amlnnDOQlDigh
-	 BgQrCbfdLSVDg==
+	b=r8O+rken1jXOVSRCG3uv1J1iivRKB5EDa8srJLMzmWAiLTw+1g2XuPmSyv5WcLs7x
+	 BRaS4o/WnjGCdaGYqv9ze9J97lH0029/YPSmzLNgmYkfpK7Ndvxn7QEi8JaIGBLenE
+	 j8LUEffaIE7s230lVr+rU85VToxIt1t369k09LTNpRRTplNDmZ/oXwTG/qcMVmExI3
+	 2+WtKZ/ctijN7Vvh93Og/DMylCRhp7ITlK2Sb6EdCxySN30AA6KLThdB/TXgxDaTyC
+	 lB6ZozFDgiezMYilhUGe9P6Xi2SphJaf6edmzwY71uxpCz92UtFU1y2Iy+YeeYlv6M
+	 JxVoGTGP1FrWw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Sam Shih <sam.shih@mediatek.com>,
+Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 206/638] arm64: dts: mediatek: mt7986: drop crypto's unneeded/invalid clock name
-Date: Sun, 24 Mar 2024 18:54:03 -0400
-Message-ID: <20240324230116.1348576-207-sashal@kernel.org>
+Subject: [PATCH 6.6 211/638] arm64: dts: mediatek: mt8192-asurada: Remove CrosEC base detection node
+Date: Sun, 24 Mar 2024 18:54:08 -0400
+Message-ID: <20240324230116.1348576-212-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -51,40 +49,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-[ Upstream commit bb69d19c649669f700149df309245cd925612f7c ]
+[ Upstream commit 9b49cabe631b0a25aaf8fc2ba81b5b9ea6ff01b7 ]
 
-According to the "inside-secure,safexcel-eip97" binding "clock-names" is
-required only if there are two clocks specified. If present the first
-name must by "core".
+The commit adding the ChromeOS EC to the Asurada Devicetree mistakenly
+added a base detection node. While tablet mode detection is supported by
+CrosEC and used by Hayato, it is done through the cros-ec-keyb driver.
+The base detection node, which is handled by the hid-google-hammer
+driver, also provides tablet mode detection but by checking base
+attachment status on the CrosEC, which is not supported for Asurada.
 
-Name "infra_eip97_ck" is invalid and was probably just a typo. Drop it.
+Hence, remove the unused CrosEC base detection node for Asurada.
 
-Fixes: ecc5287cfe53 ("arm64: dts: mt7986: add crypto related device nodes")
-Cc: Sam Shih <sam.shih@mediatek.com>
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://lore.kernel.org/r/20231116132411.7665-1-zajec5@gmail.com
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Fixes: eb188a2aaa82 ("arm64: dts: mediatek: asurada: Add ChromeOS EC")
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Link: https://lore.kernel.org/r/20240207-mt8192-asurada-cbas-remove-v1-1-04cb65951975@collabora.com
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7986a.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-index fc751e049953c..a7d9c3246a875 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-@@ -234,7 +234,6 @@ crypto: crypto@10320000 {
- 				     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "ring0", "ring1", "ring2", "ring3";
- 			clocks = <&infracfg CLK_INFRA_EIP97_CK>;
--			clock-names = "infra_eip97_ck";
- 			assigned-clocks = <&topckgen CLK_TOP_EIP_B_SEL>;
- 			assigned-clock-parents = <&apmixedsys CLK_APMIXED_NET2PLL>;
- 			status = "disabled";
+diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
+index 0e8b341170907..4bd1494b354c0 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
+@@ -1308,10 +1308,6 @@ cros_ec: ec@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		base_detection: cbas {
+-			compatible = "google,cros-cbas";
+-		};
+-
+ 		cros_ec_pwm: pwm {
+ 			compatible = "google,cros-ec-pwm";
+ 			#pwm-cells = <1>;
 -- 
 2.43.0
 
