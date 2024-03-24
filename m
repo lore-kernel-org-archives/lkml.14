@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CC51DB082;
-	Sun, 24 Mar 2024 22:54:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718041DB087;
+	Sun, 24 Mar 2024 22:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320849; cv=none; b=fvHA5VAtECnYILmZeqakU4KqGa34Jk3V4ga9vre47T2IXM5tckccZKU5N537nBRqXm/Xc88mp3nHi2gScPbSDXpzzI04CeYKKDLkmtU6TUqgLYMj8i0+i+nlz6l5G9OqooarakZpy0ZDvCS645ebShLCF3PLZiw0tOFD/pWLpts=
+	t=1711320851; cv=none; b=QDzazybxYoqn8Ge/FGIkcSP/1+KdbTOkWp/69NmxotKL1vsLfFUZUliCWudNkq2xaccP2VIgMQXRhOv/XDj5XdF0iW+evuXbhlbgjrd57OtFxE38NyetR0Gvbbikd5RLxqihnlVTGmK9o/P8T3E+DcoYExq3MucGp1jwkRcSxXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320849; c=relaxed/simple;
-	bh=5+ECUaLZ+MoXu77/a9hjEoo4afKWWLYY3fUE4SSgu74=;
+	s=arc-20240116; t=1711320851; c=relaxed/simple;
+	bh=2xVeTehfVDyxoTKFCXcy33KAjVDc4xn38/mSPSwJRCY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Htu2thTqycmoYKncLxtF/usbCik5dagcGlBksa89I50ZWhoMmaa+ngha2NxrECzgsA3XmbesXhQORMypcAHRm7txU7RAnDc5+ZU345R1ibl5kfbz9QSaI/gEF5HCKl3w3uHZhC6uGdJjpECy7Gvp3onBVR4znLbic4w9AWSxUrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DEOqvpE/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qS5DGfHJUqQYP50G/QJi1+8/6Dt05fcQE35Lsxy336ogd8RODGJFq50Wq1d8zp0DTWgMYQV8PkYwXxE297DV0tvHSyxV0UeIY57MbL/VqG2FOfu9QcsFZhTMrC5aULFIp+4+aIxS7K+cl/ySx2e7poznQhxNY5MrP/HdWIq3AUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ep47OYaA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DEOqvpE/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D58AC43399;
-	Sun, 24 Mar 2024 22:54:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ep47OYaA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AE32C43390;
+	Sun, 24 Mar 2024 22:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320848;
-	bh=5+ECUaLZ+MoXu77/a9hjEoo4afKWWLYY3fUE4SSgu74=;
+	s=k20201202; t=1711320850;
+	bh=2xVeTehfVDyxoTKFCXcy33KAjVDc4xn38/mSPSwJRCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DEOqvpE/FmSaVtsFgG+mwO7XE4yPxfskpGiO3JC5pIGnz9+gDWKEH9E3bJ/KEGIQE
-	 avcaZzHXCvgPkoaiNvmLqhuE0QZ4GJ9ZkuK827JfwJE9tOwgUwAf8/4hMG8OpYyHkv
-	 0q4R2lONAi7VHjRmkNS8d/VpywsCAvLI/E4tAj4QtaBUhiXLofGZpcKeYElV7ERFLI
-	 D4PvJ7axn6c2d2VuNvgyLTF6HWwBoFZFh8HJB2/F9MTiGyXHTfTqOjn1dvmtscj3W9
-	 eT6enpoefX2A27d5Ph+r0UrFwqE5kJEyCCPWis6PHwZC4zrtLjjKSHlxfL0l0IDJ4Z
-	 hNs44TQ+7hU3w==
+	b=Ep47OYaAw8Nhn56BU+Tj38OdznWK67HERrrZRa4xTHtNZ+cHcsVxh1DJCIUDUvcA6
+	 lrgxJdfPc6M3Nd/fRnzDDyddSht3xWbeWjrjc2dQfy+xvW7R3CdBpD0kniXO44X/F7
+	 FcvHwuGRL11s/l8ZJvWTVYkq6d7EQqGjyOiKHT/rEX+tqfxMvEeuag2ZRq1yHlr29k
+	 Q8RwEmIuaLgw/tnZ3xswJJRbErzWkYdXbMn2ny7qTmU+VUAdW9Q2vaimRfDqXZF1rM
+	 qBrQGvffCQjPRrplD5BTDBn4gkR/Fn3FUV7LHEdBD3U9z8XBa8D0eIdGgNE/5QsoVk
+	 oJBv3EEpC7Z+A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yang Jihong <yangjihong1@huawei.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Qingqing Zhuo <qingqing.zhuo@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 413/713] perf record: Check conflict between '--timestamp-filename' option and pipe mode before recording
-Date: Sun, 24 Mar 2024 18:42:19 -0400
-Message-ID: <20240324224720.1345309-414-sashal@kernel.org>
+Subject: [PATCH 6.7 415/713] drm/amd/display: Fix a potential buffer overflow in 'dp_dsc_clock_en_read()'
+Date: Sun, 24 Mar 2024 18:42:21 -0400
+Message-ID: <20240324224720.1345309-416-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,99 +53,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yang Jihong <yangjihong1@huawei.com>
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit 02f9b50e04812782fd006ed21c6da1c5e3e373da ]
+[ Upstream commit 4b09715f1504f1b6e8dff0e9643630610bc05141 ]
 
-In pipe mode, no need to switch perf data output, therefore,
-'--timestamp-filename' option should not take effect.
-Check the conflict before recording and output WARNING.
-In this case, the check pipe mode in perf_data__switch() can be removed.
+Tell snprintf() to store at most 10 bytes in the output buffer
+instead of 30.
 
-Before:
+Fixes the below:
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_debugfs.c:1508 dp_dsc_clock_en_read() error: snprintf() is printing too much 30 vs 10
 
-  # perf record --timestamp-filename -o- perf test -w noploop | perf report -i- --percent-limit=1
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Dump -.2024011812110182 ]
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 4K of event 'cycles:P'
-  # Event count (approx.): 2176784359
-  #
-  # Overhead  Command  Shared Object         Symbol
-  # ........  .......  ....................  ......................................
-  #
-      97.83%  perf     perf                  [.] noploop
-
-  #
-  # (Tip: Print event counts in CSV format with: perf stat -x,)
-  #
-
-After:
-
-  # perf record --timestamp-filename -o- perf test -w noploop | perf report -i- --percent-limit=1
-  WARNING: --timestamp-filename option is not available in pipe mode.
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.000 MB - ]
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 4K of event 'cycles:P'
-  # Event count (approx.): 2185575421
-  #
-  # Overhead  Command  Shared Object          Symbol
-  # ........  .......  .....................  .............................................
-  #
-      97.75%  perf     perf                   [.] noploop
-
-  #
-  # (Tip: Profiling branch (mis)predictions with: perf record -b / perf report)
-  #
-
-Fixes: ecfd7a9c044e ("perf record: Add '--timestamp-filename' option to append timestamp to output file name")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240119040304.3708522-3-yangjihong1@huawei.com
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Fixes: c06e09b76639 ("drm/amd/display: Add DSC parameters logging to debugfs")
+Cc: Alex Hung <alex.hung@amd.com>
+Cc: Qingqing Zhuo <qingqing.zhuo@amd.com>
+Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-record.c | 5 +++++
- tools/perf/util/data.c      | 2 --
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index b7f8c94d052d0..5d86aa5ff5367 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -2449,6 +2449,11 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	if (data->is_pipe && rec->evlist->core.nr_entries == 1)
- 		rec->opts.sample_id = true;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+index 45c972f2630d8..417c9cb47b89e 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+@@ -1483,7 +1483,7 @@ static ssize_t dp_dsc_clock_en_read(struct file *f, char __user *buf,
+ 	const uint32_t rd_buf_size = 10;
+ 	struct pipe_ctx *pipe_ctx;
+ 	ssize_t result = 0;
+-	int i, r, str_len = 30;
++	int i, r, str_len = 10;
  
-+	if (rec->timestamp_filename && perf_data__is_pipe(data)) {
-+		rec->timestamp_filename = false;
-+		pr_warning("WARNING: --timestamp-filename option is not available in pipe mode.\n");
-+	}
-+
- 	evlist__uniquify_name(rec->evlist);
- 
- 	/* Debug message used by test scripts */
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index c29d8a382b196..550675ce0b787 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -430,8 +430,6 @@ int perf_data__switch(struct perf_data *data,
- {
- 	int ret;
- 
--	if (check_pipe(data))
--		return -EINVAL;
- 	if (perf_data__is_read(data))
- 		return -EINVAL;
+ 	rd_buf = kcalloc(rd_buf_size, sizeof(char), GFP_KERNEL);
  
 -- 
 2.43.0
