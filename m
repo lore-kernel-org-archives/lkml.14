@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9600296179;
-	Sun, 24 Mar 2024 23:51:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578C4296169;
+	Sun, 24 Mar 2024 23:51:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324315; cv=none; b=au3RKugZPvUwCwYWXHi7MG8pCUkjD2KfOhXPjAS4ZlUs3SIOTC9mc2TiCXNqTBOITdPZQmZ0ZxOBqSfTtk06VGc/ZEXSk9k1Dwq/tnzGPUYkUoNrxLJgr9xZ70Oqpz4kXqf7tXtaU4qpTBEGhSZgoRlNLmenYBFjJSTh9b2SJfM=
+	t=1711324317; cv=none; b=U9K/yQS3CbJw2sXZ3XLFQ3xKOBeXW4yu54T2QxI6izNZS4REPrlwRiIlR0PtRYq5YQ2CU5BmIU/NQgBmDNDRSv+oqRo6FbThy4uGk2W7sP7zrVVtJi638NvIr5f2HhjkcEfMa7WoHBKHQ8b3AOACp8qdeyBb0XY0TfKuUh/akFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324315; c=relaxed/simple;
-	bh=VZsBu+Ttvi19cA8CEXfjnmf7ujuFCHpyubcJGasIOGY=;
+	s=arc-20240116; t=1711324317; c=relaxed/simple;
+	bh=YSgfR+iwNZXq5JgYJ4A2KR4Tqnl/88XavKHKucwJQ+w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mk4j9xg8tdftPXWqCXcW6miwbLVRSabpQs3Cbl594jXWt4S+5zRNFrkUWmvqVhPC9tp2PHOwcB1acirqlf4uYDCy527CgBQn+XxuHf4dFkWSpoqfYrYcloV05q2hngTD+RX7mhmnLoR2R9dChQN9M+FSPwjP5OAo3cJ2arR8Nak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOKw251n; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KcMnQVmNyr7taGiWOAMRCNzsJJTMIfdZV+3i3kQlAi+HyKjHeVyvrxiMoVoyew5xZ/s/nUZyOYK9R4xFU1Ur6qcbNIX+EDLXmmxdg0AFS0Jx1LjSMnLc+fXiyBcaUrU9Hjud5o3rzn8F06+Ol/GkpUXFQN2EhFDzU7LNXvlqMbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbGdeduh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOKw251n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AEC0C433C7;
-	Sun, 24 Mar 2024 23:51:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbGdeduh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90FD8C433C7;
+	Sun, 24 Mar 2024 23:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324313;
-	bh=VZsBu+Ttvi19cA8CEXfjnmf7ujuFCHpyubcJGasIOGY=;
+	s=k20201202; t=1711324317;
+	bh=YSgfR+iwNZXq5JgYJ4A2KR4Tqnl/88XavKHKucwJQ+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MOKw251nRLFNpD6o1huTBcELobLN1/O5zsvyF2zjHbslyYGSGwKXvYjLqw6x39f+w
-	 SMzOAr1+QLjVayGpsN20yDcP7Jp9BT9UkNmm94eR2lr7yWDHHfDOFyIjoiZq02Vpl3
-	 FckXOdLSoZNwwygPwZRDI7X+Tq0Wa1g9deJRZy8g4Tu4iHEDSy5C/bOBRD18J7CIey
-	 K4jcVqayrkob4S5nS4Uqtmw716KbjavKa9NuT3cGujOxY5dP7lud4L1/oZaRmN5kS4
-	 YIGEF9ytIQ9PXzzo1MZVjK5G3Z5rh2PZMmdaHSGgeMjk6c1HSzFC+Ci7XCGRuhBgdP
-	 3eXtqJ6raS1QQ==
+	b=RbGdeduhp1aXbeoqrbyAXoYwV1OoOz1QJu4jLISI3pikO4yQbBFbVR7glFUpLsURN
+	 PADvZXAKgZElldv5DI0zgp8/RKn9RzTnpJc7wrrk36REYfgNws7tlHxkDRWtx+oHoS
+	 xAlOQHDrfPe2n959F4Jct9kaouOi6bqx1BkcWFuzfWhVLFNmi9ld7a60Ah2dE1Ots5
+	 ik5bV78FoF6/53vSNlI91W04DMnPUUD25OrEaM7npb+7hwTmvuop43UAY/Uq69LS5/
+	 CwzaqbQwc4gyl6ya1dg9ctz5mvWrp0kzxYdspI01BzkJNzsHZpXL0ArwCFj2S+TtUw
+	 vG0Zwy2w6oSUg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+Cc: Stephan Gerhold <stephan.gerhold@kernkonzept.com>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 085/148] media: dvbdev: fix error logic at dvb_register_device()
-Date: Sun, 24 Mar 2024 19:49:09 -0400
-Message-ID: <20240324235012.1356413-86-sashal@kernel.org>
+Subject: [PATCH 4.19 088/148] clk: qcom: reset: Allow specifying custom reset delay
+Date: Sun, 24 Mar 2024 19:49:12 -0400
+Message-ID: <20240324235012.1356413-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -47,54 +48,65 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+From: Stephan Gerhold <stephan.gerhold@kernkonzept.com>
 
-[ Upstream commit 1fec2ecc252301110e4149e6183fa70460d29674 ]
+[ Upstream commit 2cb8a39b6781ea23accd1fa93b3ad000d0948aec ]
 
-As reported by smatch:
+The amount of time required between asserting and deasserting the reset
+signal can vary depending on the involved hardware component. Sometimes
+1 us might not be enough and a larger delay is necessary to conform to
+the specifications.
 
-	drivers/media/dvb-core/dvbdev.c: drivers/media/dvb-core/dvbdev.c:510 dvb_register_device() warn: '&dvbdev->list_head' not removed from list
-	drivers/media/dvb-core/dvbdev.c: drivers/media/dvb-core/dvbdev.c:530 dvb_register_device() warn: '&dvbdev->list_head' not removed from list
-	drivers/media/dvb-core/dvbdev.c: drivers/media/dvb-core/dvbdev.c:545 dvb_register_device() warn: '&dvbdev->list_head' not removed from list
+Usually this is worked around in the consuming drivers, by replacing
+reset_control_reset() with a sequence of reset_control_assert(), waiting
+for a custom delay, followed by reset_control_deassert().
 
-The error logic inside dvb_register_device() doesn't remove
-devices from the dvb_adapter_list in case of errors.
+However, in some cases the driver making use of the reset is generic and
+can be used with different reset controllers. In this case the reset
+time requirement is better handled directly by the reset controller
+driver.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Stable-dep-of: 8c64f4cdf4e6 ("media: edia: dvbdev: fix a use-after-free")
+Make this possible by adding an "udelay" field to the qcom_reset_map
+that allows setting a different reset delay (in microseconds).
+
+Signed-off-by: Stephan Gerhold <stephan.gerhold@kernkonzept.com>
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Link: https://lore.kernel.org/r/20220706134132.3623415-4-stephan.gerhold@kernkonzept.com
+Stable-dep-of: 2f8cf2c3f3e3 ("clk: qcom: reset: Ensure write completion on reset de/assertion")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-core/dvbdev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/clk/qcom/reset.c | 4 +++-
+ drivers/clk/qcom/reset.h | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index 8273c969358e6..cf0c428f5776b 100644
---- a/drivers/media/dvb-core/dvbdev.c
-+++ b/drivers/media/dvb-core/dvbdev.c
-@@ -513,6 +513,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 			break;
+diff --git a/drivers/clk/qcom/reset.c b/drivers/clk/qcom/reset.c
+index 0324d8daab9bc..fc68c8fa30ac7 100644
+--- a/drivers/clk/qcom/reset.c
++++ b/drivers/clk/qcom/reset.c
+@@ -21,8 +21,10 @@
  
- 	if (minor == MAX_DVB_MINORS) {
-+		list_del (&dvbdev->list_head);
- 		kfree(dvbdevfops);
- 		kfree(dvbdev);
- 		up_write(&minor_rwsem);
-@@ -533,6 +534,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		      __func__);
+ static int qcom_reset(struct reset_controller_dev *rcdev, unsigned long id)
+ {
++	struct qcom_reset_controller *rst = to_qcom_reset_controller(rcdev);
++
+ 	rcdev->ops->assert(rcdev, id);
+-	udelay(1);
++	udelay(rst->reset_map[id].udelay ?: 1); /* use 1 us as default */
+ 	rcdev->ops->deassert(rcdev, id);
+ 	return 0;
+ }
+diff --git a/drivers/clk/qcom/reset.h b/drivers/clk/qcom/reset.h
+index cda877927d43a..3e30f6724c7a4 100644
+--- a/drivers/clk/qcom/reset.h
++++ b/drivers/clk/qcom/reset.h
+@@ -19,6 +19,7 @@
+ struct qcom_reset_map {
+ 	unsigned int reg;
+ 	u8 bit;
++	u8 udelay;
+ };
  
- 		dvb_media_device_free(dvbdev);
-+		list_del (&dvbdev->list_head);
- 		kfree(dvbdevfops);
- 		kfree(dvbdev);
- 		mutex_unlock(&dvbdev_register_lock);
-@@ -548,6 +550,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		pr_err("%s: failed to create device dvb%d.%s%d (%ld)\n",
- 		       __func__, adap->num, dnames[type], id, PTR_ERR(clsdev));
- 		dvb_media_device_free(dvbdev);
-+		list_del (&dvbdev->list_head);
- 		kfree(dvbdevfops);
- 		kfree(dvbdev);
- 		return PTR_ERR(clsdev);
+ struct regmap;
 -- 
 2.43.0
 
