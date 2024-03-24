@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8246627551F;
-	Sun, 24 Mar 2024 23:36:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7374F175571;
+	Sun, 24 Mar 2024 23:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323364; cv=none; b=MW2LbJ5345mhzJHjYH2iitPS6GJIywj1TcWx3BIh6bTyrdlESxkrmvXHYsEAdypTtCn9H84tZSiZOepZp7c/rHn/QOoF90OWAB6uLW6HfLBo1FDJWULkFp8BP6dU96b+V8iWUvz5eijQ5LPAh22+4GbeXgk/tXgth/S+PpKiLiM=
+	t=1711323371; cv=none; b=mgqhy7DKu8d20iG9bnwjsHqWvlhmeUOR7eODYoXW10gr1O2TeUQIsDhXZaAcIdpRp4amkFSl3jNRk+khXpjh4PwPBhXrBAp5rdEEvHcK1btZV5j/iqko8mQWR0tAj/SrSseuo0F1trSyJ1g2z+qHZ106Zu3NuamQ96lPU4ChCDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323364; c=relaxed/simple;
-	bh=75RTwF1RiKRiyBcXXdqr/7omHTpdRTEVzn66ZABF4OM=;
+	s=arc-20240116; t=1711323371; c=relaxed/simple;
+	bh=8adNvIanyHu+32HxJ6+7giaA7jD4PnxuKvBVPt8OA2Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kId1d7G+HBqYuVIVLiEXUNgmIKnDe1ltPACFPfmXd7e75oEkmYJyg4FH/coLt4vZN3dEScTd+anO2sgCgvYIirGqaMSh4r+6FylgSb+yts6lLLe0+w40N112czEcs9lSTMQvF7wUshrRHbrV8r244bS7XyVuOfn4P5hm5LjoKyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVrqHy0R; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=pi2VylxvmRCfp3l7E/VJo91AG2LOefEaZG01semVKeDuq9ZGAIeWd722DA9eHsoNlKROsnrOBGF6FX7sJpRvJq1Ivze91MlQARV9UEzLXR9XMtoTm3LmH5NIqHW6xhuowAL8Z9mlKVETwKGnmHKc5qZG44uJ1fPZ2lueOS6YqdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V6bHWngr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVrqHy0R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C7FEC433C7;
-	Sun, 24 Mar 2024 23:36:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V6bHWngr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33733C43390;
+	Sun, 24 Mar 2024 23:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323364;
-	bh=75RTwF1RiKRiyBcXXdqr/7omHTpdRTEVzn66ZABF4OM=;
+	s=k20201202; t=1711323371;
+	bh=8adNvIanyHu+32HxJ6+7giaA7jD4PnxuKvBVPt8OA2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EVrqHy0R+6tplrob/zlwb5yG3T+Gx9ZGC+Jjr6jzY2nHHT9sJpDiwhcBpLyLA/jNf
-	 SsR1lNRNNBDoYZrYgKxS7NtKcGEkol1WsUHAzP8y/tsT6IPpcAIqnuNBFcW9BWqrFw
-	 w1a/xMzn5CaVKwlwjYtgvZC6cp1uw96bHZVx703d3vZsemx4sQ3BuReiNJmSJFWVxi
-	 Doz1i7tWxFJc3tkDCLd71dGTnm1SQ1DSq1oRedwRF8kPHp0z+qbIs0vUSckYM9b5Bo
-	 zbLEuYhxx3vBfJRza8niw1mnsY1oFiXV/LltEosXz+BPK19zIxsmUcAZpnQ/xjpOAo
-	 +UJ4lqBE+Y5YA==
+	b=V6bHWngrn7caz5s5erWj1TDTnw3nYcQH24Zdt6bnRPKLSpzaR/2TB9bhc0MBFisp8
+	 nuWj7n3Ocijt8gVzWu4z+TSObJu4iEyjuOKq7PyXRD+tgvQ9SByXgnUvMWLHeF3A4j
+	 81EP4DCOmUVO+gd+nzRsg4MExxd5OMJSL4qI+PLOAJJaaTVE5Jgjs8xCPk0UMQ38Wz
+	 G8N4icNVA44bU8cKGVvszczokv/hGZO6Cv4HoPA2V38bgoI6gZ9GaX5D7AVvx2Wm6K
+	 N7ehRHa0rPyS82dHEdVOkEzI4DkYEaAtqhmvgtpAc43poDrqMv/us0ttgDcNKuvZN9
+	 D4i8XB2SdPdRw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Guillaume Nault <gnault@redhat.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	"kernelci . org bot" <bot@kernelci.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 064/317] sock_diag: annotate data-races around sock_diag_handlers[family]
-Date: Sun, 24 Mar 2024 19:30:44 -0400
-Message-ID: <20240324233458.1352854-65-sashal@kernel.org>
+Subject: [PATCH 5.15 070/317] cpufreq: mediatek-hw: Don't error out if supply is not found
+Date: Sun, 24 Mar 2024 19:30:50 -0400
+Message-ID: <20240324233458.1352854-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -47,76 +46,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-[ Upstream commit efd402537673f9951992aea4ef0f5ff51d858f4b ]
+[ Upstream commit eaffb10b51bf74415c9252fd8fb4dd77122501ee ]
 
-__sock_diag_cmd() and sock_diag_bind() read sock_diag_handlers[family]
-without a lock held.
+devm_regulator_get_optional() returns -ENODEV if no supply can be found.
+By introducing its usage, commit 788715b5f21c ("cpufreq: mediatek-hw:
+Wait for CPU supplies before probing") caused the driver to fail probe
+if no supply was present in any of the CPU DT nodes.
 
-Use READ_ONCE()/WRITE_ONCE() annotations to avoid potential issues.
+Use devm_regulator_get() instead since the CPUs do require supplies
+even if not described in the DT. It will gracefully return a dummy
+regulator if none is found in the DT node, allowing probe to succeed.
 
-Fixes: 8ef874bfc729 ("sock_diag: Move the sock_ code to net/core/")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: 788715b5f21c ("cpufreq: mediatek-hw: Wait for CPU supplies before probing")
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Closes: https://linux.kernelci.org/test/case/id/65b0b169710edea22852a3fa/
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/sock_diag.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/cpufreq/mediatek-cpufreq-hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/sock_diag.c b/net/core/sock_diag.c
-index c9c45b935f990..bce65b519ee80 100644
---- a/net/core/sock_diag.c
-+++ b/net/core/sock_diag.c
-@@ -189,7 +189,7 @@ int sock_diag_register(const struct sock_diag_handler *hndl)
- 	if (sock_diag_handlers[hndl->family])
- 		err = -EBUSY;
- 	else
--		sock_diag_handlers[hndl->family] = hndl;
-+		WRITE_ONCE(sock_diag_handlers[hndl->family], hndl);
- 	mutex_unlock(&sock_diag_table_mutex);
+diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
+index 4a7478a91fb61..314c1cb6e8f4d 100644
+--- a/drivers/cpufreq/mediatek-cpufreq-hw.c
++++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
+@@ -280,7 +280,7 @@ static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
+ 			return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
+ 					     "Failed to get cpu%d device\n", cpu);
  
- 	return err;
-@@ -205,7 +205,7 @@ void sock_diag_unregister(const struct sock_diag_handler *hnld)
- 
- 	mutex_lock(&sock_diag_table_mutex);
- 	BUG_ON(sock_diag_handlers[family] != hnld);
--	sock_diag_handlers[family] = NULL;
-+	WRITE_ONCE(sock_diag_handlers[family], NULL);
- 	mutex_unlock(&sock_diag_table_mutex);
- }
- EXPORT_SYMBOL_GPL(sock_diag_unregister);
-@@ -223,7 +223,7 @@ static int __sock_diag_cmd(struct sk_buff *skb, struct nlmsghdr *nlh)
- 		return -EINVAL;
- 	req->sdiag_family = array_index_nospec(req->sdiag_family, AF_MAX);
- 
--	if (sock_diag_handlers[req->sdiag_family] == NULL)
-+	if (READ_ONCE(sock_diag_handlers[req->sdiag_family]) == NULL)
- 		sock_load_diag_module(req->sdiag_family, 0);
- 
- 	mutex_lock(&sock_diag_table_mutex);
-@@ -282,12 +282,12 @@ static int sock_diag_bind(struct net *net, int group)
- 	switch (group) {
- 	case SKNLGRP_INET_TCP_DESTROY:
- 	case SKNLGRP_INET_UDP_DESTROY:
--		if (!sock_diag_handlers[AF_INET])
-+		if (!READ_ONCE(sock_diag_handlers[AF_INET]))
- 			sock_load_diag_module(AF_INET, 0);
- 		break;
- 	case SKNLGRP_INET6_TCP_DESTROY:
- 	case SKNLGRP_INET6_UDP_DESTROY:
--		if (!sock_diag_handlers[AF_INET6])
-+		if (!READ_ONCE(sock_diag_handlers[AF_INET6]))
- 			sock_load_diag_module(AF_INET6, 0);
- 		break;
- 	}
+-		cpu_reg = devm_regulator_get_optional(cpu_dev, "cpu");
++		cpu_reg = devm_regulator_get(cpu_dev, "cpu");
+ 		if (IS_ERR(cpu_reg))
+ 			return dev_err_probe(&pdev->dev, PTR_ERR(cpu_reg),
+ 					     "CPU%d regulator get failed\n", cpu);
 -- 
 2.43.0
 
