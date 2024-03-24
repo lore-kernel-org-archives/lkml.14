@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E2D1EF7C7;
-	Sun, 24 Mar 2024 22:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3081A1EF7DC;
+	Sun, 24 Mar 2024 22:57:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321032; cv=none; b=CWOnmMW1Novyz2J/YWEJIHuKBEjt6WSkGDeWqmFtuqR7VoLBFauPYkKmIy+s0iUM2caN+MkmPuI0XyjigdjpUL4k4RE9pSxWIrRQGJh70l1AxIQyuOxYWw6F0OaZoxl8kHQVYKSIlBLYW2Ax05MN+aG8VBFS3tBOggBO4TnObUI=
+	t=1711321035; cv=none; b=iUAeKeXmPvHXITBraWgfdefrzp+AiTL75qnpIs1GbZR2SX/TsQ57kGiZdy1WGs9WYM4+C+Uox5n993V7ZNQ3j0yfJqbh99ZMogMvDeZglgc3NOFCrK03K9f7I/MgMDOaHCMXDNh6DHdGjSWQjADtUvbO4n1YH9gO0lgNhsL4jjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321032; c=relaxed/simple;
-	bh=lBPcE1Ic6z1sS/Iye+yuDhIyA+ugd+Zw7quz6IQHgDs=;
+	s=arc-20240116; t=1711321035; c=relaxed/simple;
+	bh=yUS06+jBKCnlD25vjcbgsGFLnvBZQdDnVaI/PR/gXtk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h+1NIe+MfNbKlVc6kqHOD2goQjM4i4FLXydGfHrfwRodh7KRIiOAjnBGpTbIrgQF4dDXTVxEV1SzYpJpTQ0NO/mCPgBxxqVWEmc97wfc3sm+NZanN5C9dZsdm7hv429Xh9yg7hEHtnINgvT6BpYJ5oEv/R0VPFJXeBF7sOVZfjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTfd0efA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hsSkgprLlF6MCZnFlIPt40874sRnz4of1ZuBAYi8+3DOkGsLXJWVQs1lcXPed9kPVcv/I2HKTvHLIT+tQubMPxIM4mtoji169SjylbBu8GgS/D8GWvnUcvAkEInBy6IoMldgwSSb0xLEcpKX40t+WiyngdbxX3IW/PWQnCAHblI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dst1og2e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTfd0efA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8330C433C7;
-	Sun, 24 Mar 2024 22:57:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dst1og2e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B1F5C433A6;
+	Sun, 24 Mar 2024 22:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321032;
-	bh=lBPcE1Ic6z1sS/Iye+yuDhIyA+ugd+Zw7quz6IQHgDs=;
+	s=k20201202; t=1711321035;
+	bh=yUS06+jBKCnlD25vjcbgsGFLnvBZQdDnVaI/PR/gXtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uTfd0efAUlbUqk0Pz/M1a2BmAb+8wfvWPeKJQJygsP6cyigDIqHrZoQHYv872towh
-	 IV0wKF8zh4MN/zdrygcWMFuLpLrq0cXEHdDp+d4pbmRB8ewKjJTM2ilJNNijLCwbBC
-	 S4ElwgfBm7rGQZV8XHfF6ywe2fiRiCQdISfuytmTjEwo6Uq4tA0dXym/7Crr2sXyYE
-	 +cY1/XPQiXI4wKJQgV942H2+qMfLmrgjA0DtZ8BwZu9wh1lvGO5SOPLi81ggeHB8HV
-	 NDWYkLu9PJTlFIXfGbKdcyM7QKSg1nkMU/0fWYbmBek4N6AzZG7DSAT3y6glGvTrgw
-	 EaCDuI8qKgSAA==
+	b=dst1og2ebcPqA/E37s9NjrzsuV46tE8zY1nGulmStIgzi8yJrILX81xot5Eed5T97
+	 hp4KgFVZglgIepLmvWtHZDkwmFNV3eGwrACbv3aAUVGic/c7oKtAB4z3lYLUbMtm4b
+	 yDUP0DhAr9TR47g89wU7BXP5OPSg188LXAWssXFJbZRdd6k1u4aws4CAC96Ong4BZW
+	 So3rcEroGgnrp+YvgbLZWySV+fp5X0de8OoHWCmaZs+4zGnTWoZtytEt5cjgBbl+Xb
+	 SR4gCAxJgO7yoksLF+2nQpMBf7TK04SK/9O7676b3bxUeTwMKizq05fkcrq/m1BJ6a
+	 zlLD4f34AwgJA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Jeff LaBundy <jeff@labundy.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 595/713] f2fs: fix to use correct segment type in f2fs_allocate_data_block()
-Date: Sun, 24 Mar 2024 18:45:21 -0400
-Message-ID: <20240324224720.1345309-596-sashal@kernel.org>
+Subject: [PATCH 6.7 598/713] Input: iqs7222 - add support for IQS7222D v1.1 and v1.2
+Date: Sun, 24 Mar 2024 18:45:24 -0400
+Message-ID: <20240324224720.1345309-599-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,42 +48,145 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Jeff LaBundy <jeff@labundy.com>
 
-[ Upstream commit 7324858237829733dec9c670170df2377c5ca6e2 ]
+[ Upstream commit 992cf65674778e22436807796b2df927de21bb75 ]
 
-@type in f2fs_allocate_data_block() indicates log header's type, it
-can be CURSEG_COLD_DATA_PINNED or CURSEG_ALL_DATA_ATGC, rather than
-type of data/node, however IS_DATASEG()/IS_NODESEG() only accept later
-one, fix it.
+The vendor has introduced two new revisions with slightly different
+memory maps; update the driver to support them.
 
-Fixes: 093749e296e2 ("f2fs: support age threshold based garbage collection")
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: dd24e202ac72 ("Input: iqs7222 - add support for Azoteq IQS7222D")
+Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+Link: https://lore.kernel.org/r/ZelTRYX3fenMQuhF@nixie71
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/misc/iqs7222.c | 112 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index cb49b2d15c59d..7b7ed2dac16b8 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3490,12 +3490,12 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 	locate_dirty_segment(sbi, GET_SEGNO(sbi, old_blkaddr));
- 	locate_dirty_segment(sbi, GET_SEGNO(sbi, *new_blkaddr));
- 
--	if (IS_DATASEG(type))
-+	if (IS_DATASEG(curseg->seg_type))
- 		atomic64_inc(&sbi->allocated_data_blocks);
- 
- 	up_write(&sit_i->sentry_lock);
- 
--	if (page && IS_NODESEG(type)) {
-+	if (page && IS_NODESEG(curseg->seg_type)) {
- 		fill_node_footer_blkaddr(page, NEXT_FREE_BLKADDR(sbi, curseg));
- 
- 		f2fs_inode_chksum_set(sbi, page);
+diff --git a/drivers/input/misc/iqs7222.c b/drivers/input/misc/iqs7222.c
+index 36aeeae776110..9ca5a743f19fe 100644
+--- a/drivers/input/misc/iqs7222.c
++++ b/drivers/input/misc/iqs7222.c
+@@ -620,6 +620,118 @@ static const struct iqs7222_dev_desc iqs7222_devs[] = {
+ 			},
+ 		},
+ 	},
++	{
++		.prod_num = IQS7222_PROD_NUM_D,
++		.fw_major = 1,
++		.fw_minor = 2,
++		.touch_link = 1770,
++		.allow_offset = 9,
++		.event_offset = 10,
++		.comms_offset = 11,
++		.reg_grps = {
++			[IQS7222_REG_GRP_STAT] = {
++				.base = IQS7222_SYS_STATUS,
++				.num_row = 1,
++				.num_col = 7,
++			},
++			[IQS7222_REG_GRP_CYCLE] = {
++				.base = 0x8000,
++				.num_row = 7,
++				.num_col = 2,
++			},
++			[IQS7222_REG_GRP_GLBL] = {
++				.base = 0x8700,
++				.num_row = 1,
++				.num_col = 3,
++			},
++			[IQS7222_REG_GRP_BTN] = {
++				.base = 0x9000,
++				.num_row = 14,
++				.num_col = 3,
++			},
++			[IQS7222_REG_GRP_CHAN] = {
++				.base = 0xA000,
++				.num_row = 14,
++				.num_col = 4,
++			},
++			[IQS7222_REG_GRP_FILT] = {
++				.base = 0xAE00,
++				.num_row = 1,
++				.num_col = 2,
++			},
++			[IQS7222_REG_GRP_TPAD] = {
++				.base = 0xB000,
++				.num_row = 1,
++				.num_col = 24,
++			},
++			[IQS7222_REG_GRP_GPIO] = {
++				.base = 0xC000,
++				.num_row = 3,
++				.num_col = 3,
++			},
++			[IQS7222_REG_GRP_SYS] = {
++				.base = IQS7222_SYS_SETUP,
++				.num_row = 1,
++				.num_col = 12,
++			},
++		},
++	},
++	{
++		.prod_num = IQS7222_PROD_NUM_D,
++		.fw_major = 1,
++		.fw_minor = 1,
++		.touch_link = 1774,
++		.allow_offset = 9,
++		.event_offset = 10,
++		.comms_offset = 11,
++		.reg_grps = {
++			[IQS7222_REG_GRP_STAT] = {
++				.base = IQS7222_SYS_STATUS,
++				.num_row = 1,
++				.num_col = 7,
++			},
++			[IQS7222_REG_GRP_CYCLE] = {
++				.base = 0x8000,
++				.num_row = 7,
++				.num_col = 2,
++			},
++			[IQS7222_REG_GRP_GLBL] = {
++				.base = 0x8700,
++				.num_row = 1,
++				.num_col = 3,
++			},
++			[IQS7222_REG_GRP_BTN] = {
++				.base = 0x9000,
++				.num_row = 14,
++				.num_col = 3,
++			},
++			[IQS7222_REG_GRP_CHAN] = {
++				.base = 0xA000,
++				.num_row = 14,
++				.num_col = 4,
++			},
++			[IQS7222_REG_GRP_FILT] = {
++				.base = 0xAE00,
++				.num_row = 1,
++				.num_col = 2,
++			},
++			[IQS7222_REG_GRP_TPAD] = {
++				.base = 0xB000,
++				.num_row = 1,
++				.num_col = 24,
++			},
++			[IQS7222_REG_GRP_GPIO] = {
++				.base = 0xC000,
++				.num_row = 3,
++				.num_col = 3,
++			},
++			[IQS7222_REG_GRP_SYS] = {
++				.base = IQS7222_SYS_SETUP,
++				.num_row = 1,
++				.num_col = 12,
++			},
++		},
++	},
+ 	{
+ 		.prod_num = IQS7222_PROD_NUM_D,
+ 		.fw_major = 0,
 -- 
 2.43.0
 
