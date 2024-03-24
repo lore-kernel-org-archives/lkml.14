@@ -1,116 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D95015FD1A;
-	Sun, 24 Mar 2024 23:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC35924A899;
+	Sun, 24 Mar 2024 23:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322367; cv=none; b=sMi21V34REgSf9z3KguQvgYHOYPGM5ndRFHPKQpzsOE0gZlNKxMPinf33cfoiZUTgm6lQWqg6wbZBQ/FJnTNNkHIcJYhpFBBrjcMVmj0nevFVjmsoriIYc1fXyVggEGOXLzegxvD7Q/ZHdVExNHm5wYRRtgTfn/4RPbb2SlEyOg=
+	t=1711322547; cv=none; b=Agsj4QlORW1UWFl/bSqBJXKOcGM49TeKqTsbvn5zg3jzx6j6YE0+fz+vUyi+WziMBkdoGFKts+mNUCbxInhkW4rF2MNs8aRxVgkfmuOGAKiBKEakH2pP7qRKXlOyaKWbcbNpSvtPTObZclvXeyIG7pcjP/8V1AoyPKwbRXeUgms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322367; c=relaxed/simple;
-	bh=R27CTNliboiG9ez/iXBakzPHknya3eT60HpHVzU5DHg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BmITuE/kxP9pCN4eBJ5/sT7ooDTlNd5OH+V8heqjuO6Tlkja9+mawMxopB70bzhdCpa323ZUWl0KbdyVlzLvUt3p9ktPjdSn4wSwUKRh48+EMDe2HNlmk5AgmQbqRiZQ1zuJqTblNz52B9tiFLOvUXDNG+Mm9sJfTS31py76yvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QbR/x1kK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QbR/x1kK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44D08C43394;
-	Sun, 24 Mar 2024 23:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322367;
-	bh=R27CTNliboiG9ez/iXBakzPHknya3eT60HpHVzU5DHg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QbR/x1kKOHAEgW057aN9Jxyqj/1UEPV9DGUDCreVqr+eAhJmyinrx36fr8JLF+07H
-	 aZPfIW3xbl3xjVVB7KsSGjI8d0NqZan8zTf9rXBYk+sHAvCgR/Ze4S7WkDMCCpjuGd
-	 y2yhPMSZq/qojzeEXDcOgJhKmp+WASMabPeTBMxMCs5VC65pBB0Gl7mtahPpol2wbu
-	 3Bsbst4qBUKdEFot+LRjafIA63PnxvSo2JSDJjviIAC3H3+LFGTZhGAE6Rk/GrilVr
-	 vLgrRXXEcyyJ+kP7cOcUPcqqiBVJmhjmjJRHWVQPV1h33D49i5KH5OjTqwXKqcd+Eg
-	 WimPs74JhI5tg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	stable@kernel.org,
-	Radek Podgorny <radek@podgorny.cz>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 449/451] x86/efistub: Clear decompressor BSS in native EFI entrypoint
-Date: Sun, 24 Mar 2024 19:12:05 -0400
-Message-ID: <20240324231207.1351418-450-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
-References: <20240324231207.1351418-1-sashal@kernel.org>
+	s=arc-20240116; t=1711322547; c=relaxed/simple;
+	bh=QD2J7s+PbQMl/4TLX0Q9/+FJg4j9efgCpQRUHwRCQyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ysn1E/vkAvIpQQdhL/buj0v+IHKqkpgM6yHYp1jGB5CPiljkxWOEFqZT8cv6LIXCuc1R8xyUwEq7TxJo9Xgq9Yx882MCZLashOUeInZZHj/4F8SdUmK33jqUKxbkyjE2SbbE6SbQ9qXDIHPRSJbf655mYinhN+SfSHsvwKo6fa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 08B4F68D0F; Mon, 25 Mar 2024 00:22:16 +0100 (CET)
+Date: Mon, 25 Mar 2024 00:22:15 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Bart Van Assche <bvanassche@acm.org>,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	"josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"jack@suse.com" <jack@suse.com>, Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: Re: [RFC RESEND 00/16] Split IOMMU DMA mapping operation to two
+ steps
+Message-ID: <20240324232215.GC20765@lst.de>
+References: <20240306221400.GA8663@lst.de> <20240307000036.GP9225@ziepe.ca> <20240307150505.GA28978@lst.de> <20240307210116.GQ9225@ziepe.ca> <20240308164920.GA17991@lst.de> <20240308202342.GZ9225@ziepe.ca> <20240309161418.GA27113@lst.de> <20240319153620.GB66976@ziepe.ca> <20240321223910.GA22663@lst.de> <20240322184330.GL66976@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240322184330.GL66976@ziepe.ca>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On Fri, Mar 22, 2024 at 03:43:30PM -0300, Jason Gunthorpe wrote:
+> If we are going to make caller provided uniformity a requirement, lets
+> imagine a formal memory type idea to help keep this a little
+> abstracted?
+> 
+>  DMA_MEMORY_TYPE_NORMAL
+>  DMA_MEMORY_TYPE_P2P_NOT_ACS
+>  DMA_MEMORY_TYPE_ENCRYPTED
+>  DMA_MEMORY_TYPE_BOUNCE_BUFFER  // ??
+> 
+> Then maybe the driver flow looks like:
+> 
+> 	if (transaction.memory_type == DMA_MEMORY_TYPE_NORMAL && dma_api_has_iommu(dev)) {
 
-[ Upstream commit b3810c5a2cc4a6665f7a65bed5393c75ce3f3aa2 ]
+Add a nice helper to make this somewhat readable, but yes.
 
-The EFI stub on x86 no longer invokes the decompressor as a subsequent
-boot stage, but calls into the decompression code directly while running
-in the context of the EFI boot services.
+> 	} else if (transaction.memory_type == DMA_MEMORY_TYPE_P2P_NOT_ACS) {
+> 		num_hwsgls = transcation.num_sgls;
+> 		for_each_range(transaction, range) {
+> 			hwsgl[i].addr = dma_api_p2p_not_acs_map(range.start_physical, range.length, p2p_memory_provider);
+> 			hwsgl[i].len = range.size;
+> 		}
+> 	} else {
+> 		/* Must be DMA_MEMORY_TYPE_NORMAL, DMA_MEMORY_TYPE_ENCRYPTED, DMA_MEMORY_TYPE_BOUNCE_BUFFER? */
+> 		num_hwsgls = transcation.num_sgls;
+> 		for_each_range(transaction, range) {
+> 			hwsgl[i].addr = dma_api_map_cpu_page(range.start_page, range.length);
+> 			hwsgl[i].len = range.size;
+> 		}
+>
 
-This means that when using the native EFI entrypoint (as opposed to the
-EFI handover protocol, which clears BSS explicitly), the firmware PE
-image loader is being relied upon to ensure that BSS is zeroed before
-the EFI stub is entered from the firmware.
+And these two are really the same except that we call a different map
+helper underneath.  So I think as far as the driver is concerned
+they should be the same, the DMA API just needs to key off the
+memory tap.
 
-As Radek's report proves, this is a bad idea. Not all loaders do this
-correctly, which means some global variables that should be statically
-initialized to 0x0 may have junk in them.
+> And the hmm_range_fault case is sort of like:
+> 
+> 		struct dma_api_iommu_state state;
+> 		dma_api_iommu_start(&state, mr.num_pages);
+> 
+> 		[..]
+> 		hmm_range_fault(...)
+> 		if (present)
+> 			dma_link_page(&state, faulting_address_offset, page);
+> 		else
+> 			dma_unlink_page(&state, faulting_address_offset, page);
+> 
+> Is this looking closer?
 
-So clear BSS explicitly when entering via efi_pe_entry(). Note that
-zeroing BSS from C code is not generally safe, but in this case, the
-following assignment and dereference of a global pointer variable
-ensures that the memset() cannot be deferred or reordered.
+Yes.
 
-Cc: <stable@kernel.org> # v6.1+
-Reported-by: Radek Podgorny <radek@podgorny.cz>
-Closes: https://lore.kernel.org/all/a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/firmware/efi/libstub/x86-stub.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> > > So I take it as a requirement that RDMA MUST make single MR's out of a
+> > > hodgepodge of page types. RDMA MRs cannot be split. Multiple MR's are
+> > > not a functional replacement for a single MR.
+> > 
+> > But MRs consolidate multiple dma addresses anyway.
+> 
+> I'm not sure I understand this?
 
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 784e1b2ae5ccd..aa07051459f52 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -21,6 +21,8 @@
- #include "efistub.h"
- #include "x86-stub.h"
- 
-+extern char _bss[], _ebss[];
-+
- const efi_system_table_t *efi_system_table;
- const efi_dxe_services_table_t *efi_dxe_table;
- static efi_loaded_image_t *image = NULL;
-@@ -432,6 +434,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- 	efi_status_t status;
- 	char *cmdline_ptr;
- 
-+	memset(_bss, 0, _ebss - _bss);
-+
- 	efi_system_table = sys_table_arg;
- 
- 	/* Check if we were booted by the EFI firmware */
-@@ -950,8 +954,6 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
- void efi_handover_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg,
- 			struct boot_params *boot_params)
- {
--	extern char _bss[], _ebss[];
--
- 	memset(_bss, 0, _ebss - _bss);
- 	efi_stub_entry(handle, sys_table_arg, boot_params);
- }
--- 
-2.43.0
+The RDMA MRs take a a list of PFNish address, (or SGLs with the
+enhanced MRs from Mellanox) and give you back a single rkey/lkey.
 
+> To go back to my main thesis - I would like a high performance low
+> level DMA API that is capable enough that it could implement
+> scatterlist dma_map_sg() and thus also implement any future
+> scatterlist_v2, bio, hmm_range_fault or any other thing we come up
+> with on top of it. This is broadly what I thought we agreed to at LSF
+> last year.
+
+I think the biggest underlying problem of the scatterlist based
+DMA implementation for IOMMUs is that it's trying to handle to much,
+that is magic coalescing even if the segments boundaries don't align
+with the IOMMU page size.  If we can get rid of that misfeature I
+think we'd greatly simply the API and implementation.
