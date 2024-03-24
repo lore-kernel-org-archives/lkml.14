@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C7721592C;
-	Sun, 24 Mar 2024 23:09:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A542713BAD2;
+	Sun, 24 Mar 2024 23:09:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321750; cv=none; b=ht3IoAM5rUSTEcRgl7IPdDw130WEZe/T/zW/85o4AJp1fzDXXfrcB6vK33a2rud8Yw0JYm17v5MAyYUlqQRSdxPI8JEUnAwjvi6ZQXrNxuTyhHUuOrgyJSV8WE/BY6NzKWe5z7SIDOlNsxmqdOocStTcQowp2s0NzZerrlRBSq4=
+	t=1711321754; cv=none; b=AVc/QEG7sLjGq37pokUjiPOtfbV+YMpoi4DuVk43zma9kdY9AosVtYanRYntvQ0dUrheo3Z1vm9XVleclORmYS1QNI3nIpvefNJ2egcSC6G1MAUGlGmEpv6YRLbDV+7K7mClN5xDRIphXYo/mBS5D7sgD5A/wXS3W+dIiTfVSNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321750; c=relaxed/simple;
-	bh=XBZH04MyonTga9mdAf67jwkN7tm6Zud8jwE7ugfw8/M=;
+	s=arc-20240116; t=1711321754; c=relaxed/simple;
+	bh=BVxqDOGkjiqVTfeT64Ga21KsBYVD4zSSNx+FiG8WTA4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sRQ4br77cmugxmKO/J3kFXRyLy7Kl1+BBlSdLb0yL5AMkpmG7Y3MTkvdz8hybpjX6sGgZv809OLHCL2Yr/+CQ9XWGmq8CxJzf3dlITLTTnx6eX7d5G6vlq3/NN817EKfM6H0iGluE3km9EHa2ZdByRMO3w6KO9cwAVHAAvfXdQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKt708X/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HLm3hRD/mkFk1deUyrOGYpEuxWfXHttHyrzn6oMXwroYeezZ2mcgliatufsXefxu6vguhF51ByYXADHUsfIogrVBXgPauZKNc8/vZFnfqReV/1d1aNIuZzG2DLoBSfgn7OlpuSBMr0FbYV3kk5oXrNbMLsfhCbiFLB7ibuuI5O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNm31Frj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKt708X/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00141C43394;
-	Sun, 24 Mar 2024 23:09:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNm31Frj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F8CC433F1;
+	Sun, 24 Mar 2024 23:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321750;
-	bh=XBZH04MyonTga9mdAf67jwkN7tm6Zud8jwE7ugfw8/M=;
+	s=k20201202; t=1711321753;
+	bh=BVxqDOGkjiqVTfeT64Ga21KsBYVD4zSSNx+FiG8WTA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iKt708X/A7BbZtOmqQy37KAggg8msPvrCNr43O/NrwGWn/QoSbtArpb4g/cHxUSyQ
-	 MaCWBx0Wu1m4KKnbckRTETeHEReM0a8V9e6yGhUZkKF9w9Obf+xem6D1ki0zAU/mtB
-	 RC52PpxQ8sd13B9u/aV4YzGWlQKOxr1/7wYDp+f6YAhxHHhmlK68MVtSRFl39XKpb1
-	 XFkbZNqChkolBJv0GqFoBk+VZKGNNmH1K9nsxU0oqwhExpVwpby2tZyT8CPkRI8if4
-	 3Vj9kD7/F+lLEpTsNcrd7RZYtJLgtSjWXhLV4JKSmVH+EeYV3MyzfJZV+qkVRCEyu7
-	 OOEHSAV4/guFw==
+	b=eNm31FrjpJU7GCSwvfFRt0pQGydgtQbZeAFjVpxuLmIXcUSBt2yyi3PWNBiRhSoRO
+	 abI+jjdDeqcY5ShrulntMcsSqfG4/VHTqwUyX8Y4JSnalp6GYj+On7AIp/NzHZvhRD
+	 SZYQUHIubDxmW5P24uW+fM8colwqi9UbB4EkXRh600ytyzPcvjlCp1APSqwqSQ54Go
+	 eW4K3R3oghRzPzGSBADkMQF2dmsQ7tE7R99M1B355RL4IK2ChU2xZeAZqbdhWz6iow
+	 0o4BVomQE0TJSX7im0hO9r1rpgTAUm4eN7GUVCnxyRQKjW3vWCUGXBbfNt1j1RPF9B
+	 0jU24dhCf5wBQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Paloma Arellano <quic_parellan@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 478/638] drm/msm/dpu: add division of drm_display_mode's hskew parameter
-Date: Sun, 24 Mar 2024 18:58:35 -0400
-Message-ID: <20240324230116.1348576-479-sashal@kernel.org>
+Subject: [PATCH 6.6 481/638] powerpc/embedded6xx: Fix no previous prototype for avr_uart_send() etc.
+Date: Sun, 24 Mar 2024 18:58:38 -0400
+Message-ID: <20240324230116.1348576-482-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,47 +47,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Paloma Arellano <quic_parellan@quicinc.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 551ee0f210991d25f336bc27262353bfe99d3eed ]
+[ Upstream commit 20933531be0577cdd782216858c26150dbc7936f ]
 
-Setting up the timing engine when the physical encoder has a split role
-neglects dividing the drm_display_mode's hskew parameter. Let's fix this
-since this must also be done in preparation for implementing YUV420 over
-DP.
+Move the prototypes into mpc10x.h which is included by all the relevant
+C files, fixes:
 
-Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-Signed-off-by: Paloma Arellano <quic_parellan@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Patchwork: https://patchwork.freedesktop.org/patch/579605/
-Link: https://lore.kernel.org/r/20240222194025.25329-3-quic_parellan@quicinc.com
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+  arch/powerpc/platforms/embedded6xx/ls_uart.c:59:6: error: no previous prototype for 'avr_uart_configure'
+  arch/powerpc/platforms/embedded6xx/ls_uart.c:82:6: error: no previous prototype for 'avr_uart_send'
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20240305123410.3306253-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/embedded6xx/linkstation.c | 3 ---
+ arch/powerpc/platforms/embedded6xx/mpc10x.h      | 3 +++
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-index 97c31d03d5520..2141b81397824 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-@@ -258,12 +258,14 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
- 		mode.htotal >>= 1;
- 		mode.hsync_start >>= 1;
- 		mode.hsync_end >>= 1;
-+		mode.hskew >>= 1;
+diff --git a/arch/powerpc/platforms/embedded6xx/linkstation.c b/arch/powerpc/platforms/embedded6xx/linkstation.c
+index 9c10aac40c7b1..e265f026eee2a 100644
+--- a/arch/powerpc/platforms/embedded6xx/linkstation.c
++++ b/arch/powerpc/platforms/embedded6xx/linkstation.c
+@@ -99,9 +99,6 @@ static void __init linkstation_init_IRQ(void)
+ 	mpic_init(mpic);
+ }
  
- 		DPU_DEBUG_VIDENC(phys_enc,
--			"split_role %d, halve horizontal %d %d %d %d\n",
-+			"split_role %d, halve horizontal %d %d %d %d %d\n",
- 			phys_enc->split_role,
- 			mode.hdisplay, mode.htotal,
--			mode.hsync_start, mode.hsync_end);
-+			mode.hsync_start, mode.hsync_end,
-+			mode.hskew);
- 	}
+-extern void avr_uart_configure(void);
+-extern void avr_uart_send(const char);
+-
+ static void __noreturn linkstation_restart(char *cmd)
+ {
+ 	local_irq_disable();
+diff --git a/arch/powerpc/platforms/embedded6xx/mpc10x.h b/arch/powerpc/platforms/embedded6xx/mpc10x.h
+index 5ad12023e5628..ebc258fa4858d 100644
+--- a/arch/powerpc/platforms/embedded6xx/mpc10x.h
++++ b/arch/powerpc/platforms/embedded6xx/mpc10x.h
+@@ -156,4 +156,7 @@ int mpc10x_disable_store_gathering(struct pci_controller *hose);
+ /* For MPC107 boards that use the built-in openpic */
+ void mpc10x_set_openpic(void);
  
- 	drm_mode_to_intf_timing_params(phys_enc, &mode, &timing_params);
++void avr_uart_configure(void);
++void avr_uart_send(const char c);
++
+ #endif	/* __PPC_KERNEL_MPC10X_H */
 -- 
 2.43.0
 
