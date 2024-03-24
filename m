@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2A617A387;
-	Sun, 24 Mar 2024 23:40:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B363117A39C;
+	Sun, 24 Mar 2024 23:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323657; cv=none; b=Ar9TDigdg/Gp40/A4/RlDX1XMl/wuEaKXHJgCfMrqz+bCA05b1xUR/+Uk1kWx7S58oGs8Epx5bLY0jYVH6ahn/ADfkho9G8Y1Wpn9XzyKkWO0G2WLz2LxZ0i221KvLzZ7GWdBDedq8BOr0s6Or6mMhuZkl4KhYaL7YFODoK2KxM=
+	t=1711323662; cv=none; b=jcqYJ+9USgUZueEQjvbgLw8RDz3FuRwhP6Yy0/RtyZv/+IgvIZF/MHXKh54o1HQPIRorcssjmXrEgFUtdUGggYjBS25OpwGlk4jMxvwzsmNrhdY9zT0cxeTwhcWQB42qFwYOPn+mFw0S9GSeGFS6QZ6uP71xkTIB9jXIaQ2uuXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323657; c=relaxed/simple;
-	bh=h4lItqMeOzYnNgZPMXZ1qCGx/yc3jP4yGmrQlDOCSYw=;
+	s=arc-20240116; t=1711323662; c=relaxed/simple;
+	bh=4o61d4k2DAVEjGzNj9t2LcUukFfJ64pIJLJSjHvQuns=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rn6cGF/EkGtwQMi8qYvtSNF4CMkqFs3M+3hAwSnPsCD7Rzgc7fhN4bm6eKyMbgep4Z1zNeJZ9ncLuxGoU0mS387Kfj6Pu1sH3mu9mYBDHSVCdqxb5RDgqjKKK6xHXG+ifcD8NQ4O1RhxlGIA7zj13JB+rZ2TVmVW3G3UNPLORxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=goxU7WUm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=D67iMu8niAMl4FVXGV2JU8Scgmc8TAJ5XEEarPble3v9OZpfF1RHqTDbuPYDD8cTrpk2SVslUqw0O89+k7kgjyirLMfUH00OnQ6AZlP6nrbJFp62AZPI0lIuJyh4qRV6wkqwfKGejNlTfxSTwrE4r8WdP7khBFOG+Y37UX8TKcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=shcQElUQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="goxU7WUm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FAC1C433F1;
-	Sun, 24 Mar 2024 23:40:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="shcQElUQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD0E5C43390;
+	Sun, 24 Mar 2024 23:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323656;
-	bh=h4lItqMeOzYnNgZPMXZ1qCGx/yc3jP4yGmrQlDOCSYw=;
+	s=k20201202; t=1711323662;
+	bh=4o61d4k2DAVEjGzNj9t2LcUukFfJ64pIJLJSjHvQuns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=goxU7WUmE17Xr0I9m+si5NqF0ckHae5ATLZocolopuZz7YzcHlkB+rUZXY6ICTlKu
-	 0I5octrrZQIK5h9xe65x/41R/GTG49CekkGVf3NggzOsWR3vQg1uaiLaE3ONA1O/Hl
-	 v73Jit3D2KHgFCteslR54FY8e8y6ceVLQjLB6HZUyezild/uDEu7lcpSy2eSleAlg+
-	 p9o+VPuoQmolSEGGNeMFI5VcBe/pxhSPytQI5Tl4mhj2dIiDD4AVFzBSyoRZuXpIUs
-	 TRAB6FpBjXzjN5rgHGUjN4kqIG7Kj6Am1F8tRivx1Y1nbedkts6k0y/3/keH7NSZJa
-	 r7xZghNk40K8w==
+	b=shcQElUQ5B8JyoHzaf0hl7h8Hr8vrw5jNsx3qyna1C0yjQfq1vnykpfUg7TJ6l0vf
+	 dOBzeH9SHPFUFkudWqsBoEEVMbLzWa4ch5KMWJb9yxSaPUHnpj4Gg0dOFGNrduV1af
+	 +/20zTAycIojx+TvJvfwh3FQyOZ4zZNxbwoLSMW8pENUfiw0a0URobeTs1gNTmZDoO
+	 TV+8kI83VHJlzqz6OZ3sGyBGKIsLNBaZtXGxiaTL5yQao0hmmR1kR7ZzikARLSe7ZH
+	 z0ExatI2wEgRuZVHaiB0dDgb3S+Hzc+Ulv3Zt4J5BMUl5snTQysHizvuQukcg4eVdl
+	 9SOKbQqNMt4bg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Borislav Petkov (AMD)" <bp@alien8.de>,
-	Omar Sandoval <osandov@osandov.com>,
+Cc: Li Nan <linan122@huawei.com>,
+	Yu Kuai <yukuai3@huawei.com>,
+	Song Liu <song@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 028/238] x86/paravirt: Fix build due to __text_gen_insn() backport
-Date: Sun, 24 Mar 2024 19:36:56 -0400
-Message-ID: <20240324234027.1354210-29-sashal@kernel.org>
+Subject: [PATCH 5.10 034/238] md: Don't clear MD_CLOSING when the raid is about to stop
+Date: Sun, 24 Mar 2024 19:37:02 -0400
+Message-ID: <20240324234027.1354210-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,40 +49,71 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
+From: Li Nan <linan122@huawei.com>
 
-The Link tag has all the details but basically due to missing upstream
-commits, the header which contains __text_gen_insn() is not in the
-includes in paravirt.c, leading to:
+[ Upstream commit 9674f54e41fffaf06f6a60202e1fa4cc13de3cf5 ]
 
-  arch/x86/kernel/paravirt.c: In function 'paravirt_patch_call':
-  arch/x86/kernel/paravirt.c:65:9: error: implicit declaration of function '__text_gen_insn' \
-  [-Werror=implicit-function-declaration]
-   65 |         __text_gen_insn(insn_buff, CALL_INSN_OPCODE,
-      |         ^~~~~~~~~~~~~~~
+The raid should not be opened anymore when it is about to be stopped.
+However, other processes can open it again if the flag MD_CLOSING is
+cleared before exiting. From now on, this flag will not be cleared when
+the raid will be stopped.
 
-Add the missing include.
-
-Reported-by: Omar Sandoval <osandov@osandov.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/ZeYXvd1-rVkPGvvW@telecaster
+Fixes: 065e519e71b2 ("md: MD_CLOSING needs to be cleared after called md_set_readonly or do_md_stop")
+Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Song Liu <song@kernel.org>
+Link: https://lore.kernel.org/r/20240226031444.3606764-6-linan666@huaweicloud.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/paravirt.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/md.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 5bea8d93883a2..f0e4ad8595ca7 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -31,6 +31,7 @@
- #include <asm/special_insns.h>
- #include <asm/tlb.h>
- #include <asm/io_bitmap.h>
-+#include <asm/text-patching.h>
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index d6f12338cb989..09c7f52156f3f 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -6243,7 +6243,15 @@ static void md_clean(struct mddev *mddev)
+ 	mddev->persistent = 0;
+ 	mddev->level = LEVEL_NONE;
+ 	mddev->clevel[0] = 0;
+-	mddev->flags = 0;
++	/*
++	 * Don't clear MD_CLOSING, or mddev can be opened again.
++	 * 'hold_active != 0' means mddev is still in the creation
++	 * process and will be used later.
++	 */
++	if (mddev->hold_active)
++		mddev->flags = 0;
++	else
++		mddev->flags &= BIT_ULL_MASK(MD_CLOSING);
+ 	mddev->sb_flags = 0;
+ 	mddev->ro = 0;
+ 	mddev->metadata_type[0] = 0;
+@@ -7562,7 +7570,6 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 	int err = 0;
+ 	void __user *argp = (void __user *)arg;
+ 	struct mddev *mddev = NULL;
+-	bool did_set_md_closing = false;
  
- /*
-  * nop stub, which must not clobber anything *including the stack* to
+ 	if (!md_ioctl_valid(cmd))
+ 		return -ENOTTY;
+@@ -7649,7 +7656,6 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 			err = -EBUSY;
+ 			goto out;
+ 		}
+-		did_set_md_closing = true;
+ 		mutex_unlock(&mddev->open_mutex);
+ 		sync_blockdev(bdev);
+ 	}
+@@ -7813,7 +7819,7 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 		mddev->hold_active = 0;
+ 	mddev_unlock(mddev);
+ out:
+-	if(did_set_md_closing)
++	if (cmd == STOP_ARRAY_RO || (err && cmd == STOP_ARRAY))
+ 		clear_bit(MD_CLOSING, &mddev->flags);
+ 	return err;
+ }
 -- 
 2.43.0
 
