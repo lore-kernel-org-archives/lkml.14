@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212FF27CBF3;
-	Sun, 24 Mar 2024 23:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8FC5B209;
+	Sun, 24 Mar 2024 23:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323547; cv=none; b=dsWYAGN0pmXNe/iLhsUhbUSvm6LKbwnkVda5GE1TJKHPhYrj2KIkucUelOSNIaE/DKvAXDtLd2ZqEj21PLl+cWnCLVWYiyvu2ZfM6j6yytcSH77GvzMxEzOutwqnyRGgTItyEGXrTChOT7Y3gkGtDtgB4B9/vTISUTytftt4+FE=
+	t=1711323563; cv=none; b=mudgdZqnPnHSrf8QpQ6iDyuYJzkSsIGsfzZU7XID325/fatdbPZo/MFVNK0T8LYd6pzba/FUaof0FJ4J5onIVQHUfaCC98FJeWCXcMiW3RLzOJ/6EEq+71Ko9wXzbaWEZBqmPEUNF7Pq4TdwkbG9FmVDWh2x6CI8mOm3KMa0ysc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323547; c=relaxed/simple;
-	bh=fjM6vof3XjpYnzJ3HZjB4SSWGQ7zcn+LI18Tle961iA=;
+	s=arc-20240116; t=1711323563; c=relaxed/simple;
+	bh=LYazFtegKbUQmWF4+002xX2Q9D4Jt0jQN6fweMdHyiQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M2JZn1+zDCuwzXHpODdCZttzxEDr9PeaVBaX1Y8xVtghBnAv1oFfuU7oh13xFMmf7JPfoUAw70XbSxBSXrDyD76e1GaKRQV7JRnEAr0AXHO9XoTOA1mEOIgroKZ8hIUH9kLDslHgoLbB1lFRoYGvnl+dkC0ECOM/IdtnxTH2t6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BFzJQPgI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=g60ce+g9CAqiIc9Z03QvdIg4Oc4IBazI9H/01Q5FxvcQiUcU1I5C3NOSRUI9Aog+ZLmmSFwt5NduGKS+uF8Z0NMv8VcNfedfR/ixCxIug5zaWixgocvgG6E+byT8sJpXcd0LOAzfoYMv7RJVLoLHKDkSqJCu9B/By1EBEjRafNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNANmy3T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BFzJQPgI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A17FC43390;
-	Sun, 24 Mar 2024 23:39:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNANmy3T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8219EC43390;
+	Sun, 24 Mar 2024 23:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323546;
-	bh=fjM6vof3XjpYnzJ3HZjB4SSWGQ7zcn+LI18Tle961iA=;
+	s=k20201202; t=1711323562;
+	bh=LYazFtegKbUQmWF4+002xX2Q9D4Jt0jQN6fweMdHyiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BFzJQPgIEZ1vuq40rdgxNZ3xGzRUPjYTaQpBcxSnBpZXqb9Q5VN96Y7qNR0jgPoRF
-	 g96eOCvMANBsAWlW/h9MpMrkAyOffm0Q3Fa15hRGKLzoMY+btNXP+5kyA3NHtniOOS
-	 p7VFbaGXRlBwbfY4VSc6Fu3hfJdAqvSgs/khPSxN/OWWzWaYVF96LNk88UM8ePWlXG
-	 XYNy7/+0GWsl3yXRHGaVxXufyRjIH7sOAzaZkWfWeohOGH0t/z2txtzFg+3ls+jNcm
-	 PEnu6a3vurpw3JZC13rcBFqHBjsuVryia0+T5WDhl91oJ8hj/Y/2X5Yero0wbc2reS
-	 Ooglz27b4YCjQ==
+	b=WNANmy3TUkpRh4XtGUDffHoiZC+7PHLK9AUvT4gUXkYmUUsyLlGzbVJj7P5Yk96M7
+	 UymxQ0n2TtM6oKGR8eUaiW3mpuY3T0jmSFrVpeu+g/EopBbZo+LWvtIypC9CwASILb
+	 czWF1jnJND8RW8QFz/tuNrHAU7nkF0vWtgd4kNWTv5nFT7frfJx8wQWhRfAGfZccCA
+	 2Z5xMVWF/UCQVSq0gykn2cllnNxw5tDFD1oEH5pN2YITSTunocmd9Q4LCNY7uuuEuT
+	 yfdTeEgDJyniDPjgEOZHKaU9BYQjbp2NepwY1rRpjqVBJC0lNOJYPbeeY7apG6cthi
+	 xQb7pzHqHBXUA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: William Kucharski <william.kucharski@oracle.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Leon Romanovsky <leon@kernel.org>,
+Cc: Jorge Mora <jmora1300@gmail.com>,
+	Jorge Mora <mora@netapp.com>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 254/317] RDMA/srpt: Do not register event handler until srpt device is fully setup
-Date: Sun, 24 Mar 2024 19:33:54 -0400
-Message-ID: <20240324233458.1352854-255-sashal@kernel.org>
+Subject: [PATCH 5.15 269/317] NFSv4.2: fix listxattr maximum XDR buffer size
+Date: Sun, 24 Mar 2024 19:34:09 -0400
+Message-ID: <20240324233458.1352854-270-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,58 +50,58 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: William Kucharski <william.kucharski@oracle.com>
+From: Jorge Mora <jmora1300@gmail.com>
 
-[ Upstream commit c21a8870c98611e8f892511825c9607f1e2cd456 ]
+[ Upstream commit bcac8bff90a6ee1629f90669cdb9d28fb86049b0 ]
 
-Upon rare occasions, KASAN reports a use-after-free Write
-in srpt_refresh_port().
+Switch order of operations to avoid creating a short XDR buffer:
+e.g., buflen = 12, old xdrlen = 12, new xdrlen = 20.
 
-This seems to be because an event handler is registered before the
-srpt device is fully setup and a race condition upon error may leave a
-partially setup event handler in place.
+Having a short XDR buffer leads to lxa_maxcount be a few bytes
+less than what is needed to retrieve the whole list when using
+a buflen as returned by a call with size = 0:
+    buflen = listxattr(path, NULL, 0);
+    buf = malloc(buflen);
+    buflen = listxattr(path, buf, buflen);
 
-Instead, only register the event handler after srpt device initialization
-is complete.
+For a file with one attribute (name = '123456'), the first call
+with size = 0 will return buflen = 12 ('user.123456\x00').
+The second call with size = 12, sends LISTXATTRS with
+lxa_maxcount = 12 + 8 (cookie) + 4 (array count) = 24. The
+XDR buffer needs 8 (cookie) + 4 (array count) + 4 (name count)
++ 6 (name len) + 2 (padding) + 4 (eof) = 28 which is 4 bytes
+shorter than the lxa_maxcount provided in the call.
 
-Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
-Signed-off-by: William Kucharski <william.kucharski@oracle.com>
-Link: https://lore.kernel.org/r/20240202091549.991784-2-william.kucharski@oracle.com
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Fixes: 04a5da690e8f ("NFSv4.2: define limits and sizes for user xattr handling")
+Signed-off-by: Jorge Mora <mora@netapp.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/srpt/ib_srpt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/nfs/nfs42.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
-index 60f9c612eb3c3..1b44ce0ac991c 100644
---- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-+++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-@@ -3209,7 +3209,6 @@ static int srpt_add_one(struct ib_device *device)
- 
- 	INIT_IB_EVENT_HANDLER(&sdev->event_handler, sdev->device,
- 			      srpt_event_handler);
--	ib_register_event_handler(&sdev->event_handler);
- 
- 	for (i = 1; i <= sdev->device->phys_port_cnt; i++) {
- 		sport = &sdev->port[i - 1];
-@@ -3232,6 +3231,7 @@ static int srpt_add_one(struct ib_device *device)
- 		}
- 	}
- 
-+	ib_register_event_handler(&sdev->event_handler);
- 	spin_lock(&srpt_dev_lock);
- 	list_add_tail(&sdev->list, &srpt_dev_list);
- 	spin_unlock(&srpt_dev_lock);
-@@ -3242,7 +3242,6 @@ static int srpt_add_one(struct ib_device *device)
- 
- err_port:
- 	srpt_unregister_mad_agent(sdev, i);
--	ib_unregister_event_handler(&sdev->event_handler);
- err_cm:
- 	if (sdev->cm_id)
- 		ib_destroy_cm_id(sdev->cm_id);
+diff --git a/fs/nfs/nfs42.h b/fs/nfs/nfs42.h
+index 0fe5aacbcfdf1..e7192d0eea3de 100644
+--- a/fs/nfs/nfs42.h
++++ b/fs/nfs/nfs42.h
+@@ -54,11 +54,14 @@ int nfs42_proc_removexattr(struct inode *inode, const char *name);
+  * They would be 7 bytes long in the eventual buffer ("user.x\0"), and
+  * 8 bytes long XDR-encoded.
+  *
+- * Include the trailing eof word as well.
++ * Include the trailing eof word as well and make the result a multiple
++ * of 4 bytes.
+  */
+ static inline u32 nfs42_listxattr_xdrsize(u32 buflen)
+ {
+-	return ((buflen / (XATTR_USER_PREFIX_LEN + 2)) * 8) + 4;
++	u32 size = 8 * buflen / (XATTR_USER_PREFIX_LEN + 2) + 4;
++
++	return (size + 3) & ~3;
+ }
+ #endif /* CONFIG_NFS_V4_2 */
+ #endif /* __LINUX_FS_NFS_NFS4_2_H */
 -- 
 2.43.0
 
