@@ -1,131 +1,161 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513F1F9EC
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 19:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3B4D2F0;
+	Sun, 24 Mar 2024 19:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711307154; cv=none; b=rPsCHi8iuH/CWqZ9mA5MUP8exEFvzixW6UPKvNwVlmwsLiYqrCxbd8jpuIs26fBfZfZWFVYZQ93uCBSpT7LLt0H5V9DnFPwVri/vmIDEs+7pJYl5Rr9M33cJieUXJ8rCZRNNzG1pP9MpWxI6Mgdpv+S+onrbq+xCE64lLwzjBto=
+	t=1711307250; cv=none; b=f8XLz3aDe/HZFnFEnsYJ3cOanRPl3pAIDb40mPZi7rd1ImKIy0uusznU/y78EYsNS8ahpoN3KvkX9u1fmKCg93rziguVCLvjU5CPD0zoEqSy0QKwlabdnG+xkled8OjX/GOjvxJGJEwgI5DP4P2Vp7l7H3kKcnOTbWOkbiy0AJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711307154; c=relaxed/simple;
-	bh=tgO22Q9yqEl4xTkxs57KMZtwHtF8TrCvj8tYkyXVw8c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NxSVjNdowb7xH605XpUtUD1raGvhFspas9Gv0jnWLk9elbXlyw9FVFAwifMozTDe3rSqWMPZtvQ+90Cv5x9V8XTdlaq4HbssrR0slAoZvAKxv7GyLqk35z8d2Bp7TACXUAVfMSqwOcu7enLE1kuKXk0srVwrmXK/2SAxvgeuPuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=AKP17Gxe; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1711307250; c=relaxed/simple;
+	bh=s6mc64AQ4pZX9KA5bgUlOT5O37aYYHT6vyIdf1+N8kU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VqUAc/Ku6wSOw1LFX817TDh8un0W3IwlUW4afSpMDXo7yd9s+Echc/kKMFcVyOQd0rAJAjYIiuI8+L7CD4R+zZ+t4B4hBKTrlz+79+aiePV4SbA8nABkbUIboE5yYhVs80WE0HnuMKxJhg+vuoC2vVfTYrdye7PvDVKkkNRSSyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXZeu3ou; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="AKP17Gxe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1711307149;
-	bh=tgO22Q9yqEl4xTkxs57KMZtwHtF8TrCvj8tYkyXVw8c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=AKP17Gxev8kIv2QPAtTKDDY/7PdBAJFi4w0M5rnuVnJ35USratbY+r+APk8uhAN+Q
-	 K/cVpo597rKAy3f15H7loTEy1UaUHTqi5vHar7FDv1JEBBeL09OXxwyy7I+bv990q8
-	 lEpJqgneeesqNuTp2FoZinE4FQq7FSU0YAIwqBTg=
-Received: from stargazer.. (unknown [IPv6:240e:358:11fe:a000:dc73:854d:832e:8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id EA8A0668E6;
-	Sun, 24 Mar 2024 15:05:44 -0400 (EDT)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v2] x86/mm: Don't disable INVLPG if "incomplete Global INVLPG flushes" is fixed by microcode
-Date: Mon, 25 Mar 2024 03:05:03 +0800
-Message-ID: <20240324190503.116160-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXZeu3ou"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcc80d6004bso3588165276.0;
+        Sun, 24 Mar 2024 12:07:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711307248; x=1711912048; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pkEn4VNOIHeB/qPZaUAJWBjKMI7bAGuebMQs8wKwK+M=;
+        b=NXZeu3ouHjIhlQt1SmM8stiROVb0+COKoygrwKh8KbBqfaL6qvjOh3cblNoA5y2Jzl
+         2tAzv0HSG5RjaBMPzNY30A0vuevR+1mIj+1J0GLbi28VTEQWsqnFPWb6qdUlFtqNCKU9
+         PYSP+sz0vQkLcMdANTFkAeJsKXFqc3l+jJ5DuISkPNIAk/U/CxFLp4+ppZ2hrLr2EqP4
+         A5CM1zeKadSglCugBRjqGknFHHw7mPPkQiAazNpOOm990ds1d85dHCR/18fDMCinNo0i
+         kNSZIf99Cn8Gst3EJuJJRwRKqio+HTXXvLKkn6HnERqZvuOjU3mmNMlShUMN4SYpGuI3
+         ubpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711307248; x=1711912048;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pkEn4VNOIHeB/qPZaUAJWBjKMI7bAGuebMQs8wKwK+M=;
+        b=QQz13kwjcxCDnVXtlc5i0lgolIccxcTcoV5/JbP5VrvUrlp4mYJ1npo79+AEdTJJDh
+         5vimT3gm7OJLllUmB9l+9i98tWGWcEAUIhtOWVverugp52PYE+lOypsyc6PPQB3x/Iq3
+         yfZY+bTWASV60bpFKoayFckzuN041jHeCvTDBJ4g9/GtTfsqMWHEGN3m29uwNbEeyiG7
+         OJkPgDV4KFE7OLytUXuS3AP2T3gKg/ye9FCGu1kC9LpAFsqxuHfkBvQapdEUn3tlM0Lx
+         mVZH5XQ81T1ycEAlfVRgK3re4z9kV/61un0BEbPKmeToEXfqC8P+0B8MnZkBBoZeH3sr
+         ImHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPeZkAQ4vpUfi5nEd24dD7lBOI7rohO6QhoCV4ehYtmoplVBGE1WDfaEbzFud02rGJB9BBTvCH3tSOGWPueNsk5wRBs4AYbXWp3oZhNsfLefhojRZ49i7oJZKnhQ6h5z4Zege8OUlJ0Ke+xQNNfdp4yTn1xEvSUbHN01sLgVI+nBO+cw==
+X-Gm-Message-State: AOJu0Yzlmj5t0Iu0MZAKlwZ5BMgv0XikaelvtwkvRPzNxWpVuCnfZF/g
+	EOiIFJRSdJAxNzPWjUaW76R4S0befGFGplkOfRyiYBkDVLBNHAWcUHCNfllzTa4VzeTaL0MUOtb
+	0bflDsFp1jyn390yX8Fqscyxf7hI=
+X-Google-Smtp-Source: AGHT+IFjU8gjABr+Q04WOyL7Grl2TalTDJK9DKBiTp98ZXgPk3IpiSzIM9zHyhjGDStr/psWu7GTXZKN4XhCF8QV8ZI=
+X-Received: by 2002:a25:870c:0:b0:dcf:56c3:336e with SMTP id
+ a12-20020a25870c000000b00dcf56c3336emr3502881ybl.35.1711307247798; Sun, 24
+ Mar 2024 12:07:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240323122030.21800-1-l.rubusch@gmail.com> <20240323122030.21800-5-l.rubusch@gmail.com>
+ <20240324133536.01067770@jic23-huawei>
+In-Reply-To: <20240324133536.01067770@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Sun, 24 Mar 2024 20:06:51 +0100
+Message-ID: <CAFXKEHZWArvErzeoaO+jMrrA7AuQ4izJioNW_wWTza-bLXV22A@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] iio: accel: adxl345: Remove single info instances
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, eraretuya@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Per the "Processor Specification Update" documentations referred by the
-intel-microcode-20240312 release note, this microcode release has fixed
-the issue for all affected models.
+On Sun, Mar 24, 2024 at 2:35=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Sat, 23 Mar 2024 12:20:28 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > Add a common array adxl3x5_chip_info and an enum for
+> > indexing. This allows to remove local redundantly
+> > initialized code in the bus specific modules.
+> >
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > ---
+> >  drivers/iio/accel/adxl345.h      |  7 +++++++
+> >  drivers/iio/accel/adxl345_core.c | 12 ++++++++++++
+> >  drivers/iio/accel/adxl345_i2c.c  | 20 +++++---------------
+> >  drivers/iio/accel/adxl345_spi.c  | 20 +++++---------------
+> >  4 files changed, 29 insertions(+), 30 deletions(-)
+> >
+> > diff --git a/drivers/iio/accel/adxl345.h b/drivers/iio/accel/adxl345.h
+> > index 6b84a2cee..de6b1767d 100644
+> > --- a/drivers/iio/accel/adxl345.h
+> > +++ b/drivers/iio/accel/adxl345.h
+> > @@ -26,11 +26,18 @@
+> >   */
+> >  #define ADXL375_USCALE       480000
+> >
+> > +enum adxl345_device_type {
+> > +     ADXL345,
+> > +     ADXL375,
+> > +};
+> > +
+> >  struct adxl345_chip_info {
+> >       const char *name;
+> >       int uscale;
+> >  };
+> >
+> > +extern const struct adxl345_chip_info adxl3x5_chip_info[];
+> > +
+> >  int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+> >                      int (*setup)(struct device*, struct regmap*));
+> >
+> > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl3=
+45_core.c
+> > index 33424edca..e3718d0dd 100644
+> > --- a/drivers/iio/accel/adxl345_core.c
+> > +++ b/drivers/iio/accel/adxl345_core.c
+> > @@ -62,6 +62,18 @@ struct adxl345_data {
+> >               BIT(IIO_CHAN_INFO_SAMP_FREQ),                           \
+> >  }
+> >
+> > +const struct adxl345_chip_info adxl3x5_chip_info[] =3D {
+> > +     [ADXL345] =3D {
+> > +             .name =3D "adxl345",
+> > +             .uscale =3D ADXL345_USCALE,
+> > +     },
+> > +     [ADXL375] =3D {
+> > +             .name =3D "adxl375",
+> > +             .uscale =3D ADXL375_USCALE,
+> > +     },
+> > +};
+> > +EXPORT_SYMBOL_NS_GPL(adxl3x5_chip_info, IIO_ADXL345);
+>
+> There is little advantage here form using an array.  I'd just have
+> two exported structures.   Then the name alone is enough in the
+> id tables.  And probably no need for the enum definition.
+>
+> This use of arrays is an old pattern that makes little sense if the
+> IDs have no actual meaning and you aren't supporting lots of different
+> parts.  For 2 parts I'd argue definitely not worth it.
+>
 
-So don't disable INVLPG if the microcode is new enough.
+Agree. I see your point. I drop the info array enum patch.
 
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/all/168436059559.404.13934972543631851306.tip-bot2@tip-bot2/
-Link: https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files/releases/tag/microcode-20240312
-Link: https://cdrdv2.intel.com/v1/dl/getContent/740518 # RPL042, rev. 13
-Link: https://cdrdv2.intel.com/v1/dl/getContent/682436 # ADL063, rev. 24
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
- arch/x86/mm/init.c | 32 ++++++++++++++++++++------------
- 1 file changed, 20 insertions(+), 12 deletions(-)
+(...)
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 679893ea5e68..c52be4e66e44 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -261,33 +261,41 @@ static void __init probe_page_size_mask(void)
- 	}
- }
- 
--#define INTEL_MATCH(_model) { .vendor  = X86_VENDOR_INTEL,	\
--			      .family  = 6,			\
--			      .model = _model,			\
--			    }
-+#define INTEL_MATCH(_model, _fixed_microcode)	\
-+    { .vendor		= X86_VENDOR_INTEL,	\
-+      .family		= 6,			\
-+      .model		= _model,		\
-+      .driver_data	= _fixed_microcode,	\
-+    }
-+
- /*
-  * INVLPG may not properly flush Global entries
-- * on these CPUs when PCIDs are enabled.
-+ * on these CPUs when PCIDs are enabled and the
-+ * microcode is not updated to fix the issue.
-  */
- static const struct x86_cpu_id invlpg_miss_ids[] = {
--	INTEL_MATCH(INTEL_FAM6_ALDERLAKE   ),
--	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L ),
--	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT ),
--	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE  ),
--	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P),
--	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S),
-+	INTEL_MATCH(INTEL_FAM6_ALDERLAKE,	0x34),
-+	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L,	0x432),
-+	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT,	0x15),
-+	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE,	0x122),
-+	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P,	0x4121),
-+	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S,	0x34),
- 	{}
- };
- 
- static void setup_pcid(void)
- {
-+	const struct x86_cpu_id *invlpg_miss_match;
-+
- 	if (!IS_ENABLED(CONFIG_X86_64))
- 		return;
- 
- 	if (!boot_cpu_has(X86_FEATURE_PCID))
- 		return;
- 
--	if (x86_match_cpu(invlpg_miss_ids)) {
-+	invlpg_miss_match = x86_match_cpu(invlpg_miss_ids);
-+	if (invlpg_miss_match &&
-+	    invlpg_miss_match->driver_data > boot_cpu_data.microcode) {
- 		pr_info("Incomplete global flushes, disabling PCID");
- 		setup_clear_cpu_cap(X86_FEATURE_PCID);
- 		return;
--- 
-2.44.0
-
+Btw. may I ask another question: The adxl345/75 driver is doing the
+configuration
+inside the probe(). Other Analog drivers moved that out into a
+xxx_setup() and call
+this function in the probe(). In general, is it better to keep all
+inside  the probe() or
+separate? I mean, the probe is still quite short, and reading through
+severl call
+hierarchies feels a bit "sparghetti". On the other side I can see a
+certain idea of
+separation of functionality: dedicated chip configuration. Would you
+mind to give
+me a small statement/opinion on this please?
