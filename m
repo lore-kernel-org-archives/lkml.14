@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB8312CD94;
-	Sun, 24 Mar 2024 22:57:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469641F1AFF;
+	Sun, 24 Mar 2024 22:58:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321076; cv=none; b=QQdEon+8QVHby1QM/tfFSB3aC9qTkW7TdD4yI8Nb9GRa8RGjeSFriM2gHMilz8tWVQgrU6yCnP2bKG29Z0qWrf+88jV/4F+CdTLKbHlT88VP50+8bIzJ050L4OiLldDXWSTg+5V/BnpW6RMJFmitU7BBF6+7bNfrfhapoA59+/U=
+	t=1711321090; cv=none; b=XdK9vqt8MnuVlXs1ZfBXE3gIrX/+ccfczWcOGvpAFBNx8i39o4h/Fn0tww6owwh9e+MBWD9lxEQfxc87oRzG5RGvqowL4Gz+PI250Gl/x0dxph66Sj1d55NXx3W/XEN9iSm9TFahcdmr2usdJ0DaEdt7r9hNDkp860P6FsQXgOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321076; c=relaxed/simple;
-	bh=uquEdJtuigaZvFIpAaO4VKrtKjcu/o4l9cyrRi+kE6c=;
+	s=arc-20240116; t=1711321090; c=relaxed/simple;
+	bh=vy7UsS1PrW8icE6oUS1QRfi8u0CM63LE02Vv4zxirYE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WRL7t1gPRHegcmyE8wVMPMUtC6U6ytGOAoJogOYvN54Wa37GZVCpGv8tNrjse9xcFBi17sBqNxTE3Vy6GiuVV+zO7EjqPN67P54C1bdXbZt3g1US93zTgAdtivZroypTr/O+02nhMEKg5WbRq474QtrqWeSo13yOKTBtXaH4ZIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LdcWuVrF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=knXQoYuLfrsIHKTLlzRZVpWYlgnOdYBu0wTZMfi5ZQ26au1wux/r63wMET+ZLYFV/rnHRSt8h7++nlYtfoNFp9Wvj9arxBFT5to/tCBoRUc9OUdQoG7/jdNa8L6ug1MhIKpfq0cjdYiw4nUF/dhoJRJe3NEuL30hpWIZzHEKRTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XbE+IXMS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LdcWuVrF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33F0CC433A6;
-	Sun, 24 Mar 2024 22:57:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XbE+IXMS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F22BC433F1;
+	Sun, 24 Mar 2024 22:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321074;
-	bh=uquEdJtuigaZvFIpAaO4VKrtKjcu/o4l9cyrRi+kE6c=;
+	s=k20201202; t=1711321090;
+	bh=vy7UsS1PrW8icE6oUS1QRfi8u0CM63LE02Vv4zxirYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LdcWuVrFjnZkcEooCMX5CN/tS3NInd8QT9u33XiabUj6eZOEaW/xjzK8Q5+2eIR0W
-	 56WL3VMVMKJfmtM7q7Hzp5fLZzymvrKHJb2+JDyCEjWJf81PFL6bVm6KJv7d5vSINi
-	 w/ZJmCqIMAxbPSdGfeeMPz7I4VaePmjLRBrk0r4jLgwt78QgFRNoa2E/1TZi+ZkFp3
-	 89OHeMw7WL+DD1dBsWvkwYYXkMZDnx+5EaDBCpBL93S0o1B3aASsThYTcL0Z/H8FEC
-	 +MDz4m8iLjgxOk+K3WY9Qo6o5ezXDcQ0U97GIVadIUbnypzZ8GHQRZ9531v0/aU7i7
-	 MXHo5Vd7EKmJQ==
+	b=XbE+IXMSEsax2fD3tN6C2UmMyAQ4bD8/ELS3dz2lipKAQlBLEOPnJobSzP0ire9aN
+	 5Iw+kr8BVyRsJy/tAHJ42RtzDEZa2qrbSTFO5qdnhCuRPtEg6vWQM8Ojf29dR/CYKQ
+	 bMVNynq2KDvisEbXKvvbFuE/S4wUe34a1y06yjW8jsGDHdjRSRwm76WFaEXqeRwTo9
+	 bQ536P0uwuc+rdKHUZN/+uakb6znIS+awR0NIcT3bjVdN3P6BuYqqFJp/d02tF+/SP
+	 sjb2KJ5dShN5s/VqndiRkPB4YhvQEW1Lho0Wi7V2hXDIsUOpXyuiqFEKXo/MhPXYuR
+	 ryd2mtb1p/JQA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Wei Liu <wei.liu@kernel.org>,
+Cc: Ido Schimmel <idosch@nvidia.com>,
+	Jiri Pirko <jiri@nvidia.com>,
+	Petr Machata <petrm@nvidia.com>,
+	Simon Horman <horms@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 638/713] x86/hyperv: Use per cpu initial stack for vtl context
-Date: Sun, 24 Mar 2024 18:46:04 -0400
-Message-ID: <20240324224720.1345309-639-sashal@kernel.org>
+Subject: [PATCH 6.7 653/713] devlink: Enable the use of private flags in post_doit operations
+Date: Sun, 24 Mar 2024 18:46:19 -0400
+Message-ID: <20240324224720.1345309-654-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,100 +51,60 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Saurabh Sengar <ssengar@linux.microsoft.com>
+From: Ido Schimmel <idosch@nvidia.com>
 
-[ Upstream commit 2b4b90e053a29057fb05ba81acce26bddce8d404 ]
+[ Upstream commit c8d0a7d6152bec970552786b77626f4b4c562f4d ]
 
-Currently, the secondary CPUs in Hyper-V VTL context lack support for
-parallel startup. Therefore, relying on the single initial_stack fetched
-from the current task structure suffices for all vCPUs.
+Currently, private flags (e.g., 'DEVLINK_NL_FLAG_NEED_PORT') are only
+used in pre_doit operations, but a subsequent patch will need to
+conditionally lock and unlock the device lock in pre and post doit
+operations, respectively.
 
-However, common initial_stack risks stack corruption when parallel startup
-is enabled. In order to facilitate parallel startup, use the initial_stack
-from the per CPU idle thread instead of the current task.
+As a preparation, enable the use of private flags in post_doit
+operations in a similar fashion to how it is done for pre_doit
+operations.
 
-Fixes: 3be1bc2fe9d2 ("x86/hyperv: VTL support for Hyper-V")
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Link: https://lore.kernel.org/r/1709452896-13342-1-git-send-email-ssengar@linux.microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Message-ID: <1709452896-13342-1-git-send-email-ssengar@linux.microsoft.com>
+No functional changes intended.
+
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Signed-off-by: Petr Machata <petrm@nvidia.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Stable-dep-of: d7d75124965a ("devlink: Fix devlink parallel commands processing")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/hyperv/hv_vtl.c | 19 +++++++++++++++----
- drivers/hv/Kconfig       |  1 +
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ net/devlink/netlink.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index cf1b78cb2d043..c8062975a5316 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -12,6 +12,7 @@
- #include <asm/i8259.h>
- #include <asm/mshyperv.h>
- #include <asm/realmode.h>
-+#include <../kernel/smpboot.h>
- 
- extern struct boot_params boot_params;
- static struct real_mode_header hv_vtl_real_mode_header;
-@@ -64,7 +65,7 @@ static void hv_vtl_ap_entry(void)
- 	((secondary_startup_64_fn)secondary_startup_64)(&boot_params, &boot_params);
+diff --git a/net/devlink/netlink.c b/net/devlink/netlink.c
+index 7350138c8bb44..5bb6624f3288e 100644
+--- a/net/devlink/netlink.c
++++ b/net/devlink/netlink.c
+@@ -141,8 +141,8 @@ int devlink_nl_pre_doit_port_optional(const struct genl_split_ops *ops,
+ 	return __devlink_nl_pre_doit(skb, info, DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT);
  }
  
--static int hv_vtl_bringup_vcpu(u32 target_vp_index, u64 eip_ignored)
-+static int hv_vtl_bringup_vcpu(u32 target_vp_index, int cpu, u64 eip_ignored)
+-void devlink_nl_post_doit(const struct genl_split_ops *ops,
+-			  struct sk_buff *skb, struct genl_info *info)
++static void __devlink_nl_post_doit(struct sk_buff *skb, struct genl_info *info,
++				   u8 flags)
  {
- 	u64 status;
- 	int ret = 0;
-@@ -78,7 +79,9 @@ static int hv_vtl_bringup_vcpu(u32 target_vp_index, u64 eip_ignored)
- 	struct ldttss_desc *ldt;
- 	struct desc_struct *gdt;
+ 	struct devlink *devlink;
  
--	u64 rsp = current->thread.sp;
-+	struct task_struct *idle = idle_thread_get(cpu);
-+	u64 rsp = (unsigned long)idle->thread.sp;
-+
- 	u64 rip = (u64)&hv_vtl_ap_entry;
- 
- 	native_store_gdt(&gdt_ptr);
-@@ -205,7 +208,15 @@ static int hv_vtl_apicid_to_vp_id(u32 apic_id)
- 
- static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
- {
--	int vp_id;
-+	int vp_id, cpu;
-+
-+	/* Find the logical CPU for the APIC ID */
-+	for_each_present_cpu(cpu) {
-+		if (arch_match_cpu_phys_id(cpu, apicid))
-+			break;
-+	}
-+	if (cpu >= nr_cpu_ids)
-+		return -EINVAL;
- 
- 	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
- 	vp_id = hv_vtl_apicid_to_vp_id(apicid);
-@@ -219,7 +230,7 @@ static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
- 		return -EINVAL;
- 	}
- 
--	return hv_vtl_bringup_vcpu(vp_id, start_eip);
-+	return hv_vtl_bringup_vcpu(vp_id, cpu, start_eip);
+@@ -151,6 +151,12 @@ void devlink_nl_post_doit(const struct genl_split_ops *ops,
+ 	devlink_put(devlink);
  }
  
- int __init hv_vtl_early_init(void)
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 00242107d62e0..862c47b191afe 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -16,6 +16,7 @@ config HYPERV
- config HYPERV_VTL_MODE
- 	bool "Enable Linux to boot in VTL context"
- 	depends on X86_64 && HYPERV
-+	depends on SMP
- 	default n
- 	help
- 	  Virtual Secure Mode (VSM) is a set of hypervisor capabilities and
++void devlink_nl_post_doit(const struct genl_split_ops *ops,
++			  struct sk_buff *skb, struct genl_info *info)
++{
++	__devlink_nl_post_doit(skb, info, 0);
++}
++
+ static int devlink_nl_inst_single_dumpit(struct sk_buff *msg,
+ 					 struct netlink_callback *cb, int flags,
+ 					 devlink_nl_dump_one_func_t *dump_one,
 -- 
 2.43.0
 
