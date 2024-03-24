@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C976315250B;
-	Sun, 24 Mar 2024 23:06:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD521386D4;
+	Sun, 24 Mar 2024 23:06:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321611; cv=none; b=s3PMZhz+l/YI/hL4QkZ5qXjMi1u5xqacjR1Fc6bTA218mbZCnrdDUpi41bhOU2YJhYEjVis21ZaXh3iXu2oMBX99WndKpJG8jXBykEogP+Z7yqWlJuMr0RGCEuAwnoWIsh8nZKgbwIBqkqTA2LLtaa5Jrt3+cGL3Uk7ATNFsWF8=
+	t=1711321618; cv=none; b=WxFbO3p7ZxL2fTfBnFkDme22wQyd9fk6AzfWgaSkbBKGFiSUWq9jtzYfxp/r/9l9SvwuKGdlLmbnSLyOBRwoBwtSYy5Hny0nQSu8eHtFULyHs2XSr+KkkfTFvBJm1ear9UjZkgJo6jlzoTgP4sivwwRX06eZpwitDYf2FzUfF90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321611; c=relaxed/simple;
-	bh=UGaxFGHhiCU1ABKGD20RSDZbKphjf0z3i99sFcOZKJI=;
+	s=arc-20240116; t=1711321618; c=relaxed/simple;
+	bh=6vNVaI39IZK+aSzy951/QxKLTuPpdBE8AQvbGcKncCM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TI/APd8QriOVz5PDrdqihvZueLb4jfju+D0f+YK1/XfD4eqOl0bE2yr4l9GKlp06YTwGCgyxnxAYeaeVX4C2YLKi6AmngA/W1htWODK21c/36zrjfwg2HGEHJi+On8qNMKVvUl3tdW+xiwv9PqZ/gsqprVq4y6l4cOsPPMb46lM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGZs9ssf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=vAZKM/bpYGMRj7O6NV/MXebyNNrj4MJlbeF/pXrafNti9TAg6C+QsqlAWUSaFgTDwnncQZaM+4yqNNSA9UgcK89/6ZH1ARD9X1crWdnlFabp7F1eurIejIEwEAvajK2cdOmQNCtrrm4Sbr+vGfJJpaAtsAOaKkb8djyXp4EZO4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j6TpWP+r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGZs9ssf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF901C433A6;
-	Sun, 24 Mar 2024 23:06:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j6TpWP+r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EBECC43390;
+	Sun, 24 Mar 2024 23:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321611;
-	bh=UGaxFGHhiCU1ABKGD20RSDZbKphjf0z3i99sFcOZKJI=;
+	s=k20201202; t=1711321617;
+	bh=6vNVaI39IZK+aSzy951/QxKLTuPpdBE8AQvbGcKncCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oGZs9ssfUc/r3dp1d4jhbILpdJh8blJ9kQjuTAF/vQ8Ub1vUzbtE1213WZZrnFCWw
-	 Co3rv/HEDNud4/syIdWcKq6JaTAhja9f9GuB6ojzsE+7q9S56BiXWXXfRcdl4E6lxq
-	 vBDtd/G8p2rc8lurXnKXZ7inXEF7+mhMvvGlAxmgQ/9JKZJ6yPEXhGFY3CtCEDc25P
-	 KPGi9RpJsrd+VTpocmfOPaKx69ShWXm8QaQG559CKfCYTC2U2cJpad43IPmCIuZH8/
-	 qRgfN6Zc3RDiLss04zBlvDAKgiswdXdGghtmNT9g5yEQV1VfkPUu6aFKASeUOMCRoG
-	 Va45Q8uZhvuAQ==
+	b=j6TpWP+ros9ylQvzswfldaoynOXZYv7EAtK7LMrGavjzmzWSQnoncRPRfER9NALtJ
+	 33cWGy/6F/QPXU49r1+GR9BLISBJc/rwvTqaizAuX6NeGYD3ycyVNPa+gY40a1wxwQ
+	 DvyPv8UvDUHJ/lqSQcgzJQRXmOXzRd4d4HGxL6yO7S2DhdC6UOSkhJFhbitr7T4Brt
+	 ZWIo0mAoD10fJjV/y5ENOg6ElAR9Z1Bl/1Y3q04JA9/tRdpwFxwbrM2nulW+pAtx2e
+	 HNGaf+ojZ0HckTwpbBbGdw7/t+NYcEXot9stKzPGVQn80rSKrjoeYJnY8Inh5+y6/s
+	 XuXJhhRpkNW4g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ming Lei <ming.lei@redhat.com>,
-	Patrick Plenefisch <simonpatp@gmail.com>,
-	Mike Snitzer <snitzer@kernel.org>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 341/638] dm raid: fix false positive for requeue needed during reshape
-Date: Sun, 24 Mar 2024 18:56:18 -0400
-Message-ID: <20240324230116.1348576-342-sashal@kernel.org>
+Subject: [PATCH 6.6 347/638] drm/tegra: hdmi: Fix some error handling paths in tegra_hdmi_probe()
+Date: Sun, 24 Mar 2024 18:56:24 -0400
+Message-ID: <20240324230116.1348576-348-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,44 +48,83 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit b25b8f4b8ecef0f48c05f0c3572daeabefe16526 ]
+[ Upstream commit 643ae131b8598fb2940c92c7d23fe62823a119c8 ]
 
-An empty flush doesn't have a payload, so it should never be looked at
-when considering to possibly requeue a bio for the case when a reshape
-is in progress.
+If an error occurs after calling tegra_output_probe(),
+tegra_output_remove() should be called as already done in the remove
+function.
 
-Fixes: 9dbd1aa3a81c ("dm raid: add reshaping support to the target")
-Reported-by: Patrick Plenefisch <simonpatp@gmail.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+Fixes: 59d29c0ec93f ("drm/tegra: Allocate resources at probe time")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/9b7c564eb71977678b20abd73ee52001a51cf327.1693667005.git.christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-raid.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/tegra/hdmi.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-index 5f9991765f270..3d8ee9eb59ea6 100644
---- a/drivers/md/dm-raid.c
-+++ b/drivers/md/dm-raid.c
-@@ -3322,14 +3322,14 @@ static int raid_map(struct dm_target *ti, struct bio *bio)
- 	struct mddev *mddev = &rs->md;
+diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdmi.c
+index 80c760986d9e9..58c2ba94e7dd6 100644
+--- a/drivers/gpu/drm/tegra/hdmi.c
++++ b/drivers/gpu/drm/tegra/hdmi.c
+@@ -1854,12 +1854,14 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
+ 		return err;
  
- 	/*
--	 * If we're reshaping to add disk(s)), ti->len and
-+	 * If we're reshaping to add disk(s), ti->len and
- 	 * mddev->array_sectors will differ during the process
- 	 * (ti->len > mddev->array_sectors), so we have to requeue
- 	 * bios with addresses > mddev->array_sectors here or
- 	 * there will occur accesses past EOD of the component
- 	 * data images thus erroring the raid set.
- 	 */
--	if (unlikely(bio_end_sector(bio) > mddev->array_sectors))
-+	if (unlikely(bio_has_data(bio) && bio_end_sector(bio) > mddev->array_sectors))
- 		return DM_MAPIO_REQUEUE;
+ 	hdmi->regs = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(hdmi->regs))
+-		return PTR_ERR(hdmi->regs);
++	if (IS_ERR(hdmi->regs)) {
++		err = PTR_ERR(hdmi->regs);
++		goto remove;
++	}
  
- 	md_handle_request(mddev, bio);
+ 	err = platform_get_irq(pdev, 0);
+ 	if (err < 0)
+-		return err;
++		goto remove;
+ 
+ 	hdmi->irq = err;
+ 
+@@ -1868,18 +1870,18 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to request IRQ#%u: %d\n",
+ 			hdmi->irq, err);
+-		return err;
++		goto remove;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, hdmi);
+ 
+ 	err = devm_pm_runtime_enable(&pdev->dev);
+ 	if (err)
+-		return err;
++		goto remove;
+ 
+ 	err = devm_tegra_core_dev_init_opp_table_common(&pdev->dev);
+ 	if (err)
+-		return err;
++		goto remove;
+ 
+ 	INIT_LIST_HEAD(&hdmi->client.list);
+ 	hdmi->client.ops = &hdmi_client_ops;
+@@ -1889,10 +1891,14 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to register host1x client: %d\n",
+ 			err);
+-		return err;
++		goto remove;
+ 	}
+ 
+ 	return 0;
++
++remove:
++	tegra_output_remove(&hdmi->output);
++	return err;
+ }
+ 
+ static void tegra_hdmi_remove(struct platform_device *pdev)
 -- 
 2.43.0
 
