@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D97E27DDFA;
-	Sun, 24 Mar 2024 23:39:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387D2178CF6;
+	Sun, 24 Mar 2024 23:39:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323571; cv=none; b=uJus7QkyzB7TxkhZm3m+BI2mI/IDL9gnj9R/y06afZg/kDkbdYlqWiYG4YUq8Flz224ki586bdKRa9kSKImPc0v/ESPzW/piJvz7B6XneuwFLo5OtWpwooUddwFvTcqafQcK0OeV0ylzhxmcqNcECNyAst373vP70THx/XoIDEw=
+	t=1711323596; cv=none; b=dGm+ZzWzPIXlsCZHvUjwoeaj619/yoqRcYHA7jusVLycmlqVkcwfI+c3Xv5ev0J+VSP9sBVC0VaUfrIrRbMz3Hm0WWzO/0vS56CwVZnVKsktsOqIdF9gfqpQOMg8h+WWCms/YaQ3q1cXSnadC6xhtP8dGcSVJAtBmVIv5LJ0vKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323571; c=relaxed/simple;
-	bh=GUrn/8keUU0zm210yU0iU05Z5ixZFkbqpYgv4ZfIFLc=;
+	s=arc-20240116; t=1711323596; c=relaxed/simple;
+	bh=0/rB4dEKVbHsJHxiBJ1SGLJ9LMrWWDxyHf0NDmPfMeI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iEHDpX9BGViGVMqSqpNyR7TT2CNV3uV67xW9WrvHXSArY9oQ4g71ItGJqV4w6AI68GuX2FbN0a4LymrmPBT9tB24x2ncz6G+Z1iXjiYUHohXC8zlybUcR8yd1f0RQ1fdDR7e+67Oxtl/4ufYdyZnYaK5PCZvbv3gmcIOcGuGNI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOJ9Zesq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=K0gcGydBxq7icmt63abl1EMT8uO24NmlTdpzoKgYnHmKEdIauWUHbZ0vutppgedKl4ghrT/v524weuRAcMf7TFvGvMMUMGXHpIDEMuEz5gP8KLxDIH9AEfYNzYGezFhORd+v8oqUkb5JZHfWkt0ichI/t+naQhfrn30KktRiM88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mns3ab+c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOJ9Zesq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACB8DC43330;
-	Sun, 24 Mar 2024 23:39:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mns3ab+c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55951C43394;
+	Sun, 24 Mar 2024 23:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323570;
-	bh=GUrn/8keUU0zm210yU0iU05Z5ixZFkbqpYgv4ZfIFLc=;
+	s=k20201202; t=1711323595;
+	bh=0/rB4dEKVbHsJHxiBJ1SGLJ9LMrWWDxyHf0NDmPfMeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DOJ9ZesqnyKPPBr7PYPAQW70mq5Jswl/QyNGlqCanQlem8LXFJwx9PL40zNrbEWVZ
-	 6qebsh5JWdLIA+ZNs3F3Y6riQh0yrycIjzuhGcudXQWjuskvQe1funq+FpHrnwQ6I4
-	 Su8ZkNeOSe6Xk/I0cH5UyXG1iGvsl8pVkECn/0SOCUOXEYNIF7ycxs0+kgP1RZE1F2
-	 wNkI2qzPHkvQR9sSSStDzQXcN2bUFdWVElB8EW0I4WuANeTGKZXJfWoecSin77z9V2
-	 YFDfKj3m6EtXq4isnxEnZkIvwmRGvUCHOFPxQmh09InEtRIybw7Oc65YsH7YtPtrlT
-	 GPPPFPcCl3O7A==
+	b=Mns3ab+cjOMkffS/4E/pRYKNp9KyzrWHs5b9VE6VYAkbUUKbrl6FKB4wevhoZF+Vb
+	 OvHgAjZJ3OzzE6oqk4d4u1nGXb4v4wEkAa393Z7E0wy5CyIw8zlxxvRXQv00Idw0hR
+	 niGKBt0YFWfvNdlr1L4djV2HZ7xJZihnmThEbRhYvtTHYct4ZnKWpHflXkWzuszCwt
+	 lsEj4X4OtGx3Bftx14dYY0W/0UhcS2vjuiRwd4SCM4ZGioID+kipvC0HkxT0rRo4HU
+	 TTGckESAXMxoQVqEVjSMF+ka02JUDopSRoVf3nsh6AtkBzqIcDwrzQ9Sj81aZLiDrr
+	 pItEmRaEyP03Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
+Cc: Yewon Choi <woni9911@gmail.com>,
+	Michal Kubiak <michal.kubiak@intel.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 277/317] remoteproc: stm32: Fix incorrect type assignment returned by stm32_rproc_get_loaded_rsc_tablef
-Date: Sun, 24 Mar 2024 19:34:17 -0400
-Message-ID: <20240324233458.1352854-278-sashal@kernel.org>
+Subject: [PATCH 5.15 301/317] rds: introduce acquire/release ordering in acquire/release_in_xmit()
+Date: Sun, 24 Mar 2024 19:34:41 -0400
+Message-ID: <20240324233458.1352854-302-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,41 +49,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+From: Yewon Choi <woni9911@gmail.com>
 
-[ Upstream commit c77b35ce66af25bdd6fde60b62e35b9b316ea5c2 ]
+[ Upstream commit 1422f28826d2a0c11e5240b3e951c9e214d8656e ]
 
-The sparse tool complains about the remove of the _iomem attribute.
+acquire/release_in_xmit() work as bit lock in rds_send_xmit(), so they
+are expected to ensure acquire/release memory ordering semantics.
+However, test_and_set_bit/clear_bit() don't imply such semantics, on
+top of this, following smp_mb__after_atomic() does not guarantee release
+ordering (memory barrier actually should be placed before clear_bit()).
 
-stm32_rproc.c:660:17: warning: cast removes address space '__iomem' of expression
+Instead, we use clear_bit_unlock/test_and_set_bit_lock() here.
 
-Add '__force' to explicitly specify that the cast is intentional.
-This conversion is necessary to cast to addresses pointer,
-which are then managed by the remoteproc core as a pointer to a
-resource_table structure.
-
-Fixes: 8a471396d21c ("remoteproc: stm32: Move resource table setup to rproc_ops")
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Link: https://lore.kernel.org/r/20240117135312.3381936-3-arnaud.pouliquen@foss.st.com
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Fixes: 0f4b1c7e89e6 ("rds: fix rds_send_xmit() serialization")
+Fixes: 1f9ecd7eacfd ("RDS: Pass rds_conn_path to rds_send_xmit()")
+Signed-off-by: Yewon Choi <woni9911@gmail.com>
+Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
+Link: https://lore.kernel.org/r/ZfQUxnNTO9AJmzwc@libra05
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/stm32_rproc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/rds/send.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index e48dce98936ad..4db63e07e1cff 100644
---- a/drivers/remoteproc/stm32_rproc.c
-+++ b/drivers/remoteproc/stm32_rproc.c
-@@ -641,7 +641,7 @@ stm32_rproc_get_loaded_rsc_table(struct rproc *rproc, size_t *table_sz)
- 	 * entire area by overwriting it with the initial values stored in rproc->clean_table.
- 	 */
- 	*table_sz = RSC_TBL_SIZE;
--	return (struct resource_table *)ddata->rsc_va;
-+	return (__force struct resource_table *)ddata->rsc_va;
+diff --git a/net/rds/send.c b/net/rds/send.c
+index d6462d1471c14..85c27d9aa33a3 100644
+--- a/net/rds/send.c
++++ b/net/rds/send.c
+@@ -103,13 +103,12 @@ EXPORT_SYMBOL_GPL(rds_send_path_reset);
+ 
+ static int acquire_in_xmit(struct rds_conn_path *cp)
+ {
+-	return test_and_set_bit(RDS_IN_XMIT, &cp->cp_flags) == 0;
++	return test_and_set_bit_lock(RDS_IN_XMIT, &cp->cp_flags) == 0;
  }
  
- static const struct rproc_ops st_rproc_ops = {
+ static void release_in_xmit(struct rds_conn_path *cp)
+ {
+-	clear_bit(RDS_IN_XMIT, &cp->cp_flags);
+-	smp_mb__after_atomic();
++	clear_bit_unlock(RDS_IN_XMIT, &cp->cp_flags);
+ 	/*
+ 	 * We don't use wait_on_bit()/wake_up_bit() because our waking is in a
+ 	 * hot path and finding waiters is very rare.  We don't want to walk
 -- 
 2.43.0
 
