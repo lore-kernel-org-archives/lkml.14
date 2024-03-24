@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3891D5F97;
-	Sun, 24 Mar 2024 22:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D1A1D5F85;
+	Sun, 24 Mar 2024 22:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320574; cv=none; b=EGzk6+H1VUKbZ4vg0dOJ9Aap34QH8JwXiSuRpzqhZsGbApQVEdPDMX6PewdvtfCUntmKLF5sgU8RBvo5B+km/w1b+p6y5eb/Z+5lI1EwjmSwoMy1ElxV0QdslLY6/7P9Qpmd1uIwz0NjCQGeD03hvq8Q8jhd6VBmnXY/zpL1sd0=
+	t=1711320572; cv=none; b=m92xW0rw0AjuWAKTD6ZSDopxdzt4OVYBfuXlBsNMygIqMHnoVbO71eJJ3gCNT6EIpGvEt8JgPRVOlMq2R/yOk8Y8vtMXy9JElgVntyZGVzll4kmixAtcStU2xc24IJJ0C3jmJqpLjLsn2xS7XRfStSeDxpf9UkvkGjgsoteZlrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320574; c=relaxed/simple;
-	bh=5WtQM2tX+LYOhsFO7UKkhfKkpfG6hezjSSD2zr4H3Qo=;
+	s=arc-20240116; t=1711320572; c=relaxed/simple;
+	bh=oYYvn/6nxGWAVbko5rNqBa3zP6x2dNPOvgw8qbioNx4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mr917uXp9V4HnxQFI/PiXkVI4LAJuTG+R7Y0xns7BKg5cXDD+Btq7w9W/ql+zQzuTYVrx3wxOwpzLFtGqkquH78d9aTL3PFLKexnTrFogpfYKQujqvFLV8yJugZcKMnQsiroPhUT4NknrOToD4v2Vdm+KD71Ok+k7kq5v6xAuME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1HB7jlP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dMRkSwr4WqvlS3hhfXPIQKTbguVhbs3kkwU4CEXX4KwAgA2DDU0X9ENhc4ti8wREwzdyfxp+OJ1OQPh7AWrFrzHHcrWPxb9ecp4mf7nU6SMcDe1f2dN4keA+qjVf9aoxLFdrABQI4YFIVbBeBJK2KULoHTq+iOYiOoBv98lwYc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLTeUYrj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1HB7jlP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A78C43394;
-	Sun, 24 Mar 2024 22:49:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLTeUYrj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E88C1C433C7;
+	Sun, 24 Mar 2024 22:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320572;
-	bh=5WtQM2tX+LYOhsFO7UKkhfKkpfG6hezjSSD2zr4H3Qo=;
+	s=k20201202; t=1711320570;
+	bh=oYYvn/6nxGWAVbko5rNqBa3zP6x2dNPOvgw8qbioNx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t1HB7jlPsbKBZMyHM4GtGdBOEIQxGx6n6rLMu/iynKuFJwyffeJembVfsp4eifgI0
-	 m7ipX+fkSeFIp5eO8LeCkxA3PUv4GwlJ4YTaaKjc9zNKREF5Bp0oHA2vzQ5G0Hvy3a
-	 SqxHL4fvcB63cnnwg3yE03Sacz6n+/WMpBr6q0v0Gcb5rgIBctqRtTcYMPNB9CmQwQ
-	 20ZVLOfF1ofIAtsWRi9eBJY5zoglQUHgbGe3a3ZNCylNoQWv2W503zRJYGY7mRmeFy
-	 UrRcLEKdPXFJnNy4RT021hh/IDhZSXweI01iWeQOJ6JyzCPRb3iBvgOBLqScvjnEUv
-	 +mlSJ6HI1dV1g==
+	b=LLTeUYrjQSWbyOQIHgvLsD9+UtPBDnThyndGZ3H0qaFfNU6Q7rYXtoGrMMvZqQP80
+	 wJ1NzWff6pmdTDxruaFvDGel2dIU2k+tyMtapvdvAfBbLpkVLfVZiW8FTBPCS4vpVe
+	 c7u5p0PcVB86H9UHgJoexZ4iUniD35a+DXCNcAaAopeH1QfAiuJZTtcNJauTNur36A
+	 Ub/lQHzen1V3iQ5Q6myITo4essSMRRxbNWf61Ass65D7eMmHDWy60/OkqDf4pM/N/e
+	 ypBg0gKiiPBg++6gEV9XVktrJYnAR4M6TKDiSWtW1yJLOspC8joL37m+CPyavj0lPB
+	 5Z/tWd2AxvrmQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
-	Julian Calaby <julian.calaby@gmail.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Xingyuan Mo <hdthky0@gmail.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Kalle Valo <quic_kvalo@quicinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 133/713] wifi: b43: Stop/wake correct queue in PIO Tx path when QoS is disabled
-Date: Sun, 24 Mar 2024 18:37:39 -0400
-Message-ID: <20240324224720.1345309-134-sashal@kernel.org>
+Subject: [PATCH 6.7 131/713] wifi: ath10k: fix NULL pointer dereference in ath10k_wmi_tlv_op_pull_mgmt_tx_compl_ev()
+Date: Sun, 24 Mar 2024 18:37:37 -0400
+Message-ID: <20240324224720.1345309-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,56 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+From: Xingyuan Mo <hdthky0@gmail.com>
 
-[ Upstream commit 77135a38f6c2f950d2306ac3d37cbb407e6243f2 ]
+[ Upstream commit ad25ee36f00172f7d53242dc77c69fff7ced0755 ]
 
-When QoS is disabled, the queue priority value will not map to the correct
-ieee80211 queue since there is only one queue. Stop/wake queue 0 when QoS
-is disabled to prevent trying to stop/wake a non-existent queue and failing
-to stop/wake the actual queue instantiated.
+We should check whether the WMI_TLV_TAG_STRUCT_MGMT_TX_COMPL_EVENT tlv is
+present before accessing it, otherwise a null pointer deference error will
+occur.
 
-Fixes: 5100d5ac81b9 ("b43: Add PIO support for PCMCIA devices")
-Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20231231050300.122806-3-sergeantsagara@protonmail.com
+Fixes: dc405152bb64 ("ath10k: handle mgmt tx completion event")
+Signed-off-by: Xingyuan Mo <hdthky0@gmail.com>
+Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+Link: https://msgid.link/20231208043433.271449-1-hdthky0@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43/pio.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath10k/wmi-tlv.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/b43/pio.c b/drivers/net/wireless/broadcom/b43/pio.c
-index 0cf70fdb60a6a..e41f2f5b4c266 100644
---- a/drivers/net/wireless/broadcom/b43/pio.c
-+++ b/drivers/net/wireless/broadcom/b43/pio.c
-@@ -525,7 +525,7 @@ int b43_pio_tx(struct b43_wldev *dev, struct sk_buff *skb)
- 	if (total_len > (q->buffer_size - q->buffer_used)) {
- 		/* Not enough memory on the queue. */
- 		err = -EBUSY;
--		ieee80211_stop_queue(dev->wl->hw, skb_get_queue_mapping(skb));
-+		b43_stop_queue(dev, skb_get_queue_mapping(skb));
- 		q->stopped = true;
- 		goto out;
- 	}
-@@ -552,7 +552,7 @@ int b43_pio_tx(struct b43_wldev *dev, struct sk_buff *skb)
- 	if (((q->buffer_size - q->buffer_used) < roundup(2 + 2 + 6, 4)) ||
- 	    (q->free_packet_slots == 0)) {
- 		/* The queue is full. */
--		ieee80211_stop_queue(dev->wl->hw, skb_get_queue_mapping(skb));
-+		b43_stop_queue(dev, skb_get_queue_mapping(skb));
- 		q->stopped = true;
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+index 6b6aa3c367448..0ce08e9a0a3d2 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
++++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+@@ -851,6 +851,10 @@ ath10k_wmi_tlv_op_pull_mgmt_tx_compl_ev(struct ath10k *ar, struct sk_buff *skb,
  	}
  
-@@ -587,7 +587,7 @@ void b43_pio_handle_txstatus(struct b43_wldev *dev,
- 	list_add(&pack->list, &q->packets_list);
+ 	ev = tb[WMI_TLV_TAG_STRUCT_MGMT_TX_COMPL_EVENT];
++	if (!ev) {
++		kfree(tb);
++		return -EPROTO;
++	}
  
- 	if (q->stopped) {
--		ieee80211_wake_queue(dev->wl->hw, q->queue_prio);
-+		b43_wake_queue(dev, q->queue_prio);
- 		q->stopped = false;
- 	}
- }
+ 	arg->desc_id = ev->desc_id;
+ 	arg->status = ev->status;
 -- 
 2.43.0
 
