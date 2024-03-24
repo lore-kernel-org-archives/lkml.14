@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0364E1F30A1;
-	Sun, 24 Mar 2024 22:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F561F30B5;
+	Sun, 24 Mar 2024 22:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321118; cv=none; b=BctExuRT/XVQ4N/9oUhIfNqHk9hU9SV9PtbpdoWFw6WjF1QfHzKqM24TdzS2X3m7x5pmWU9aUoiLmVJHFoNr4N4FO5sbuRMAjcJ/Txa4Jl8q4qQLvxQFj1SrFMn/ZFTz3m6cCLhoO7DJ9jdU+q3JONBV+t4KMI1+tBQkbldxOIw=
+	t=1711321121; cv=none; b=sstXY0GKE+jmotb3ltRqIqo5FsjpR6sY28qon9MPteSUL9lshXD4hKw1br/I26/0CJXqTG/ptSx1uLpvIs0frrLsw6GOBl2irl7qNYn60EqIxhqlrjIMRkj54goL5lTxXKfGyLAcNPkCT6u6lIijWAz4+y74EYsVkDOWgvZNB2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321118; c=relaxed/simple;
-	bh=8XzqLeiFcOKmwXfmSkRrnmW1w/T117hHKhhGH5WdNRY=;
+	s=arc-20240116; t=1711321121; c=relaxed/simple;
+	bh=sfT9wSuVWuPB4Vz7YsLj6pSlsKLmBKXhzCbIHB8bj9I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fZ4AAVKw8eGukpk0VWsMrpe2xB8JDJH5qCqPJrzEQKrTglhIVpfTGhX7gyuY7ZeZ8d6I0rmHmVCHz+WQOFtGLf9LhqEMa1mLopvhstAMBgHr11dnPsIQmaJXV4YxtkNFkn/1VuXjVudCP3hWZuQHUhpdvQBExjbn5f+hsTYK4mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5i50yAy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kC5oWaC8gmC298zatmLnp6huoTPfGAfmaIgD2ctdRMfx420Wn2nvyVE9wyh33EuDV8HQSAlif833OXp3JdqszN3pTq8X+CCsW/22qzxrzvCXb07L/YuRFPaMYfuxIEElLlPnBi7Dg869hx3qr/RP9IUqh5g5jde57YXp5zOogDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ieNdrLtt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5i50yAy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D6F4C433F1;
-	Sun, 24 Mar 2024 22:58:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ieNdrLtt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AB42C43390;
+	Sun, 24 Mar 2024 22:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321116;
-	bh=8XzqLeiFcOKmwXfmSkRrnmW1w/T117hHKhhGH5WdNRY=;
+	s=k20201202; t=1711321121;
+	bh=sfT9wSuVWuPB4Vz7YsLj6pSlsKLmBKXhzCbIHB8bj9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D5i50yAyrgMCZBhTl8ytIoWvav7nTrZG9F8A1OzMeM9NKX0K6TMpXj4C8y1mbGJsX
-	 3745ZzQbdddIPAsARlSEbI/G0hEbEh3FMJhJ0/miQP4jOxYSGyzSqYSB9x/NBNs1pb
-	 JArk3XxmTy3nPK0Y5srXQIapSMjOIO12kor2YvQvaRbz5zsMkKjy6ZGzBJVo1dW/G9
-	 Th/6j4xNsZ11S0gPP38l75XCMmaFtQXZhPL4G83j0TgSIXDX9PVT6VznXAnZjpA75X
-	 ly63ssBCGKWXh2zvd3QHrTA2QeyqcykoDxfCgxWa7mal7iMQVMJYY1aGDdyXfADKxx
-	 IJLaRR5CE239g==
+	b=ieNdrLttv6t6BJX8Rnr197qKCOHPCaruZ4gKE6Wd0oUxs6i/6bn6u7i8WxR9Dbk0a
+	 L9p0sbslzsMMNsZ6Rpl1vpQLJAOogX64VU+iNgi72SMA4jEbxJnhXqgxwG228ReG6w
+	 yQunV+ftzjLVIxm/2JJomc7KwAdH8z9u/u5uIZlUV7jIOOOkPPzKDsUC1vrFEvoew6
+	 VtQDvjiNSo98sDprv+UiPGqjohfYbo6+j3/1t+tDsmYjNPrKU+8NkzOudDvfSfIUEe
+	 EZVrJeDY+HanAyXAsk7eLynlm7BMhxx5xtBky924Pl7R8+R0OyP2lVK9g7/9pbxe3J
+	 UPwRcQCmk/NVw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jonah Palmer <jonah.palmer@oracle.com>,
-	Dragos Tatulea <dtatulea@nvidia.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>,
-	Lei Yang <leiyang@redhat.com>,
+Cc: Felix Maurer <fmaurer@redhat.com>,
+	Shigeru Yoshida <syoshida@redhat.com>,
+	Breno Leitao <leitao@debian.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 678/713] vdpa/mlx5: Allow CVQ size changes
-Date: Sun, 24 Mar 2024 18:46:44 -0400
-Message-ID: <20240324224720.1345309-679-sashal@kernel.org>
+Subject: [PATCH 6.7 682/713] hsr: Handle failures in module init
+Date: Sun, 24 Mar 2024 18:46:48 -0400
+Message-ID: <20240324224720.1345309-683-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -47,83 +46,63 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jonah Palmer <jonah.palmer@oracle.com>
+From: Felix Maurer <fmaurer@redhat.com>
 
-[ Upstream commit 749a4016839270163efc36ecddddd01de491a16b ]
+[ Upstream commit 3cf28cd492308e5f63ed00b29ea03ca016264376 ]
 
-The MLX driver was not updating its control virtqueue size at set_vq_num
-and instead always initialized to MLX5_CVQ_MAX_ENT (16) at
-setup_cvq_vring.
+A failure during registration of the netdev notifier was not handled at
+all. A failure during netlink initialization did not unregister the netdev
+notifier.
 
-Qemu would try to set the size to 64 by default, however, because the
-CVQ size always was initialized to 16, an error would be thrown when
-sending >16 control messages (as used-ring entry 17 is initialized to 0).
-For example, starting a guest with x-svq=on and then executing the
-following command would produce the error below:
+Handle failures of netdev notifier registration and netlink initialization.
+Both functions should only return negative values on failure and thereby
+lead to the hsr module not being loaded.
 
- # for i in {1..20}; do ifconfig eth0 hw ether XX:xx:XX:xx:XX:XX; done
-
- qemu-system-x86_64: Insufficient written data (0)
- [  435.331223] virtio_net virtio0: Failed to set mac address by vq command.
- SIOCSIFHWADDR: Invalid argument
-
-Acked-by: Dragos Tatulea <dtatulea@nvidia.com>
-Acked-by: Eugenio Pérez <eperezma@redhat.com>
-Signed-off-by: Jonah Palmer <jonah.palmer@oracle.com>
-Message-Id: <20240216142502.78095-1-jonah.palmer@oracle.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Tested-by: Lei Yang <leiyang@redhat.com>
-Fixes: 5262912ef3cf ("vdpa/mlx5: Add support for control VQ and MAC setting")
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Felix Maurer <fmaurer@redhat.com>
+Reviewed-by: Shigeru Yoshida <syoshida@redhat.com>
+Reviewed-by: Breno Leitao <leitao@debian.org>
+Link: https://lore.kernel.org/r/3ce097c15e3f7ace98fc7fd9bcbf299f092e63d1.1710504184.git.fmaurer@redhat.com
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vdpa/mlx5/net/mlx5_vnet.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ net/hsr/hsr_main.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-index 26ba7da6b4106..7795d2b7fcd1c 100644
---- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-+++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-@@ -145,8 +145,6 @@ static void teardown_driver(struct mlx5_vdpa_net *ndev);
+diff --git a/net/hsr/hsr_main.c b/net/hsr/hsr_main.c
+index b099c31501509..257b50124cee5 100644
+--- a/net/hsr/hsr_main.c
++++ b/net/hsr/hsr_main.c
+@@ -148,14 +148,21 @@ static struct notifier_block hsr_nb = {
  
- static bool mlx5_vdpa_debug;
+ static int __init hsr_init(void)
+ {
+-	int res;
++	int err;
  
--#define MLX5_CVQ_MAX_ENT 16
--
- #define MLX5_LOG_VIO_FLAG(_feature)                                                                \
- 	do {                                                                                       \
- 		if (features & BIT_ULL(_feature))                                                  \
-@@ -2147,9 +2145,16 @@ static void mlx5_vdpa_set_vq_num(struct vdpa_device *vdev, u16 idx, u32 num)
- 	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
- 	struct mlx5_vdpa_virtqueue *mvq;
+ 	BUILD_BUG_ON(sizeof(struct hsr_tag) != HSR_HLEN);
  
--	if (!is_index_valid(mvdev, idx) || is_ctrl_vq_idx(mvdev, idx))
-+	if (!is_index_valid(mvdev, idx))
- 		return;
- 
-+        if (is_ctrl_vq_idx(mvdev, idx)) {
-+                struct mlx5_control_vq *cvq = &mvdev->cvq;
+-	register_netdevice_notifier(&hsr_nb);
+-	res = hsr_netlink_init();
++	err = register_netdevice_notifier(&hsr_nb);
++	if (err)
++		return err;
 +
-+                cvq->vring.vring.num = num;
-+                return;
-+        }
-+
- 	mvq = &ndev->vqs[idx];
- 	mvq->num_ent = num;
++	err = hsr_netlink_init();
++	if (err) {
++		unregister_netdevice_notifier(&hsr_nb);
++		return err;
++	}
+ 
+-	return res;
++	return 0;
  }
-@@ -2819,7 +2824,7 @@ static int setup_cvq_vring(struct mlx5_vdpa_dev *mvdev)
- 		u16 idx = cvq->vring.last_avail_idx;
  
- 		err = vringh_init_iotlb(&cvq->vring, mvdev->actual_features,
--					MLX5_CVQ_MAX_ENT, false,
-+					cvq->vring.vring.num, false,
- 					(struct vring_desc *)(uintptr_t)cvq->desc_addr,
- 					(struct vring_avail *)(uintptr_t)cvq->driver_addr,
- 					(struct vring_used *)(uintptr_t)cvq->device_addr);
+ static void __exit hsr_exit(void)
 -- 
 2.43.0
 
