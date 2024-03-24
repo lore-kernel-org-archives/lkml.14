@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FC427CBDB;
-	Sun, 24 Mar 2024 23:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F22F1782FC;
+	Sun, 24 Mar 2024 23:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323544; cv=none; b=ls+ib/7aHMNKSRiBiAZDDy5HJ2EllWwrDEqb1qAOHCaoQQnN+btbFywkBWuCjPDNiTJTpptITbD9E+6Hb4rIdUAqoFlZFQUGlouQ3rycZsrISU547tbH2ntyr929ctuu1t6yB1CqeQQmnORHcSIrMUesbnFuRbsfXHjYXmzsThA=
+	t=1711323549; cv=none; b=VWZoz2oEHGUk6Yjz7UE6DxISwv75BMMcRO6A96NO+QhcBAaXPg9/m766+mUnW8LC/I1z5IipZR6SoiX746184HKVzbqUOLeuG7f74MIyzYojVh49GE17EZRKIjKWBWwh0GKCx91FTVGOqmRX8i9kFoAfFznoZRDAjXYZHJRBth0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323544; c=relaxed/simple;
-	bh=g+iXto7AHXZNgAVEpyZIVVX511SjCH0GxfL/4Zm4pKE=;
+	s=arc-20240116; t=1711323549; c=relaxed/simple;
+	bh=8/0jLhDjPtorYrmIR3Yy6n8JS/uhDpyE+yyZiYhj6VQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dBCE+5cRaZXxY++Ipg1Xk90kkHQBcwQIRqB0FxiFAyfOGEUxnAIth/+j0zfZKIlKJRCgClAtYBKFV+vx/bpXtC6qho5HJ/FZbomhkHvWomsqV+qg2sKmKSVqQHL8AAc0PAHfehOShLKWplk/hDVwkF5CqZwgEf70nemg9G8f0xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4/1G+fq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nX6gTaWFNRjIWTBOP/IMlgqW3F4novTwhR49kgfelgHL62l3afcavOU/5vPu7Bqw2139gp/aYrN4w9t3EC1McTDNNlWsn7rDz4hKcZqJBHY51LIIZaG+CUkNZt7/9UFRE06A7ew2dbmTfTbL2+w3KtQbDNAqbGz48AhWWwDwZLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOc3OLQe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4/1G+fq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800CEC433C7;
-	Sun, 24 Mar 2024 23:39:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOc3OLQe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E4C1C433A6;
+	Sun, 24 Mar 2024 23:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323544;
-	bh=g+iXto7AHXZNgAVEpyZIVVX511SjCH0GxfL/4Zm4pKE=;
+	s=k20201202; t=1711323547;
+	bh=8/0jLhDjPtorYrmIR3Yy6n8JS/uhDpyE+yyZiYhj6VQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X4/1G+fqqGTgIWRjqH02h34gdaWKL91YCAwOp5teLuOezbyh3B1rsiG8I6VtISmv8
-	 mj7/6pqpQiLlNoNKX8o36Lcx11XJxv/I5UPgTrMrtMKd+9Cyq+ywccolD1D7uuA0Fc
-	 5u/D8fwQiavS5lYYEhF7cDUpnDnH1X7vawYLKeUBW9Q5XndQrSYHO5MZsHHQCegJW+
-	 86mdAqy7TUkJTrKKtQB9DbzUDQoyJaJpwodBFL5S7uHnTapqR6JfQAYDqi2MXsKMEC
-	 TMdSvjRbvadXjJ7Lxp8pY46we/WSFuu+K53NwsV7YD5FctsgiIUDiSkoEOtHGtCeL+
-	 oRTMJ7yM/xcNA==
+	b=hOc3OLQeoVcJocon90MIZKPsgGvZ7iO6EsktDwe0WAaStGoP8/CRtbMKKZINigzi1
+	 fEmyHkg2GDTT+DnC7mkZWU34urRlN6Dg2M2iGGPSMERKTBqf6rL/FlmckwhsGKtM74
+	 eKTRznswtNcvFhfKQjPrllKT1pATmIj0BoFkTW6O06WA9Lj8VmDA7usCBNvZ5BisGw
+	 LJde8LWdq3oMvSqMPFif3ewl3N07si1uhfSVBR8c0U+uT4IzUF+manUKaOZvZq/q8d
+	 1z8bYPe7t+7hJNj111q1BwFJkLcqUqFivtq/GZcyV+hoA7/hCcM5ZmUjcGC5rjNkKo
+	 tXGFR2SDzwqtw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Athaariq Ardhiansyah <foss@athaariq.my.id>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: Hyeong-Jun Kim <hj514.kim@samsung.com>,
+	Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 252/317] ALSA: hda/realtek: fix ALC285 issues on HP Envy x360 laptops
-Date: Sun, 24 Mar 2024 19:33:52 -0400
-Message-ID: <20240324233458.1352854-253-sashal@kernel.org>
+Subject: [PATCH 5.15 256/317] f2fs: invalidate META_MAPPING before IPU/DIO write
+Date: Sun, 24 Mar 2024 19:33:56 -0400
+Message-ID: <20240324233458.1352854-257-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,145 +49,78 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Athaariq Ardhiansyah <foss@athaariq.my.id>
+From: Hyeong-Jun Kim <hj514.kim@samsung.com>
 
-[ Upstream commit c062166995c9e57d5cd508b332898f79da319802 ]
+[ Upstream commit e3b49ea36802053f312013fd4ccb6e59920a9f76 ]
 
-Realtek codec on HP Envy laptop series are heavily modified by vendor.
-Therefore, need intervention to make it work properly. The patch fixes:
+Encrypted pages during GC are read and cached in META_MAPPING.
+However, due to cached pages in META_MAPPING, there is an issue where
+newly written pages are lost by IPU or DIO writes.
 
-- B&O soundbar speakers (between lid and keyboard) activation
-- Enable LED on mute button
-- Add missing process coefficient which affects the output amplifier
-- Volume control synchronization between B&O soundbar and side speakers
-- Unmute headset output on several HP Envy models
-- Auto-enable headset mic when plugged
+Thread A - f2fs_gc()            Thread B
+/* phase 3 */
+down_write(i_gc_rwsem)
+ra_data_block()       ---- (a)
+up_write(i_gc_rwsem)
+                                f2fs_direct_IO() :
+                                 - down_read(i_gc_rwsem)
+                                 - __blockdev_direct_io()
+                                 - get_data_block_dio_write()
+                                 - f2fs_dio_submit_bio()  ---- (b)
+                                 - up_read(i_gc_rwsem)
+/* phase 4 */
+down_write(i_gc_rwsem)
+move_data_block()     ---- (c)
+up_write(i_gc_rwsem)
 
-This patch was tested on HP Envy x360 13-AR0107AU with Realtek ALC285
+(a) In phase 3 of f2fs_gc(), up-to-date page is read from storage and
+    cached in META_MAPPING.
+(b) In thread B, writing new data by IPU or DIO write on same blkaddr as
+    read in (a). cached page in META_MAPPING become out-dated.
+(c) In phase 4 of f2fs_gc(), out-dated page in META_MAPPING is copied to
+    new blkaddr. In conclusion, the newly written data in (b) is lost.
 
-The only unsolved problem is output amplifier of all built-in speakers
-is too weak, which causes volume of built-in speakers cannot be loud
-as vendor's proprietary driver due to missing _DSD parameter in the
-firmware. The solution is currently on research. Expected to has another
-patch in the future.
+To address this issue, invalidating pages in META_MAPPING before IPU or
+DIO write.
 
-Potential fix to related issues, need test before close those issues:
-
-- https://bugzilla.kernel.org/show_bug.cgi?id=189331
-- https://bugzilla.kernel.org/show_bug.cgi?id=216632
-- https://bugzilla.kernel.org/show_bug.cgi?id=216311
-- https://bugzilla.kernel.org/show_bug.cgi?id=213507
-
-Signed-off-by: Athaariq Ardhiansyah <foss@athaariq.my.id>
-Message-ID: <20240310140249.3695-1-foss@athaariq.my.id>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 6aa58d8ad20a ("f2fs: readahead encrypted block during GC")
+Signed-off-by: Hyeong-Jun Kim <hj514.kim@samsung.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Stable-dep-of: fd244524c2cf ("f2fs: compress: fix to cover normal cluster write with cp_rwsem")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 63 +++++++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+ fs/f2fs/data.c    | 2 ++
+ fs/f2fs/segment.c | 3 +++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 3a86f0fd78278..200d0b953d3b2 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6670,6 +6670,60 @@ static void alc285_fixup_hp_spectre_x360(struct hda_codec *codec,
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index e005f97fd273e..25dafd1261d71 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1711,6 +1711,8 @@ int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map,
+ 		 */
+ 		f2fs_wait_on_block_writeback_range(inode,
+ 						map->m_pblk, map->m_len);
++		invalidate_mapping_pages(META_MAPPING(sbi),
++						map->m_pblk, map->m_pblk);
+ 
+ 		if (map->m_multidev_dio) {
+ 			block_t blk_addr = map->m_pblk;
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 25d53617a50e6..5eca50e50e16b 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3622,6 +3622,9 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+ 		goto drop_bio;
  	}
- }
  
-+static void alc285_fixup_hp_envy_x360(struct hda_codec *codec,
-+				      const struct hda_fixup *fix,
-+				      int action)
-+{
-+	static const struct coef_fw coefs[] = {
-+		WRITE_COEF(0x08, 0x6a0c), WRITE_COEF(0x0d, 0xa023),
-+		WRITE_COEF(0x10, 0x0320), WRITE_COEF(0x1a, 0x8c03),
-+		WRITE_COEF(0x25, 0x1800), WRITE_COEF(0x26, 0x003a),
-+		WRITE_COEF(0x28, 0x1dfe), WRITE_COEF(0x29, 0xb014),
-+		WRITE_COEF(0x2b, 0x1dfe), WRITE_COEF(0x37, 0xfe15),
-+		WRITE_COEF(0x38, 0x7909), WRITE_COEF(0x45, 0xd489),
-+		WRITE_COEF(0x46, 0x00f4), WRITE_COEF(0x4a, 0x21e0),
-+		WRITE_COEF(0x66, 0x03f0), WRITE_COEF(0x67, 0x1000),
-+		WRITE_COEF(0x6e, 0x1005), { }
-+	};
++	invalidate_mapping_pages(META_MAPPING(sbi),
++				fio->new_blkaddr, fio->new_blkaddr);
 +
-+	static const struct hda_pintbl pincfgs[] = {
-+		{ 0x12, 0xb7a60130 },  /* Internal microphone*/
-+		{ 0x14, 0x90170150 },  /* B&O soundbar speakers */
-+		{ 0x17, 0x90170153 },  /* Side speakers */
-+		{ 0x19, 0x03a11040 },  /* Headset microphone */
-+		{ }
-+	};
-+
-+	switch (action) {
-+	case HDA_FIXUP_ACT_PRE_PROBE:
-+		snd_hda_apply_pincfgs(codec, pincfgs);
-+
-+		/* Fixes volume control problem for side speakers */
-+		alc295_fixup_disable_dac3(codec, fix, action);
-+
-+		/* Fixes no sound from headset speaker */
-+		snd_hda_codec_amp_stereo(codec, 0x21, HDA_OUTPUT, 0, -1, 0);
-+
-+		/* Auto-enable headset mic when plugged */
-+		snd_hda_jack_set_gating_jack(codec, 0x19, 0x21);
-+
-+		/* Headset mic volume enhancement */
-+		snd_hda_codec_set_pin_target(codec, 0x19, PIN_VREF50);
-+		break;
-+	case HDA_FIXUP_ACT_INIT:
-+		alc_process_coef_fw(codec, coefs);
-+		break;
-+	case HDA_FIXUP_ACT_BUILD:
-+		rename_ctl(codec, "Bass Speaker Playback Volume",
-+			   "B&O-Tuned Playback Volume");
-+		rename_ctl(codec, "Front Playback Switch",
-+			   "B&O Soundbar Playback Switch");
-+		rename_ctl(codec, "Bass Speaker Playback Switch",
-+			   "Side Speaker Playback Switch");
-+		break;
-+	}
-+}
-+
- /* for hda_fixup_thinkpad_acpi() */
- #include "thinkpad_helper.c"
+ 	stat_inc_inplace_blocks(fio->sbi);
  
-@@ -6877,6 +6931,7 @@ enum {
- 	ALC280_FIXUP_HP_9480M,
- 	ALC245_FIXUP_HP_X360_AMP,
- 	ALC285_FIXUP_HP_SPECTRE_X360_EB1,
-+	ALC285_FIXUP_HP_ENVY_X360,
- 	ALC288_FIXUP_DELL_HEADSET_MODE,
- 	ALC288_FIXUP_DELL1_MIC_NO_PRESENCE,
- 	ALC288_FIXUP_DELL_XPS_13,
-@@ -8679,6 +8734,12 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc285_fixup_hp_spectre_x360_eb1
- 	},
-+	[ALC285_FIXUP_HP_ENVY_X360] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc285_fixup_hp_envy_x360,
-+		.chained = true,
-+		.chain_id = ALC285_FIXUP_HP_GPIO_AMP_INIT,
-+	},
- 	[ALC287_FIXUP_IDEAPAD_BASS_SPK_AMP] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc285_fixup_ideapad_s740_coef,
-@@ -9066,6 +9127,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x103c, 0x8519, "HP Spectre x360 15-df0xxx", ALC285_FIXUP_HP_SPECTRE_X360),
- 	SND_PCI_QUIRK(0x103c, 0x8537, "HP ProBook 440 G6", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
-+	SND_PCI_QUIRK(0x103c, 0x85de, "HP Envy x360 13-ar0xxx", ALC285_FIXUP_HP_ENVY_X360),
- 	SND_PCI_QUIRK(0x103c, 0x860f, "HP ZBook 15 G6", ALC285_FIXUP_HP_GPIO_AMP_INIT),
- 	SND_PCI_QUIRK(0x103c, 0x861f, "HP Elite Dragonfly G1", ALC285_FIXUP_HP_GPIO_AMP_INIT),
- 	SND_PCI_QUIRK(0x103c, 0x869d, "HP", ALC236_FIXUP_HP_MUTE_LED),
-@@ -9600,6 +9662,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
- 	{.id = ALC295_FIXUP_HP_OMEN, .name = "alc295-hp-omen"},
- 	{.id = ALC285_FIXUP_HP_SPECTRE_X360, .name = "alc285-hp-spectre-x360"},
- 	{.id = ALC285_FIXUP_HP_SPECTRE_X360_EB1, .name = "alc285-hp-spectre-x360-eb1"},
-+	{.id = ALC285_FIXUP_HP_ENVY_X360, .name = "alc285-hp-envy-x360"},
- 	{.id = ALC287_FIXUP_IDEAPAD_BASS_SPK_AMP, .name = "alc287-ideapad-bass-spk-amp"},
- 	{.id = ALC623_FIXUP_LENOVO_THINKSTATION_P340, .name = "alc623-lenovo-thinkstation-p340"},
- 	{.id = ALC255_FIXUP_ACER_HEADPHONE_AND_MIC, .name = "alc255-acer-headphone-and-mic"},
+ 	if (fio->bio && !(SM_I(sbi)->ipu_policy & (1 << F2FS_IPU_NOCACHE)))
 -- 
 2.43.0
 
