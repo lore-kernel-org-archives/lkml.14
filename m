@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB4914600F;
-	Sun, 24 Mar 2024 23:14:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7C914830B;
+	Sun, 24 Mar 2024 23:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322069; cv=none; b=o12DNz7GEoKl9YQaJ+4IlCZmijFce3YhHH6bYSdWusWh/3XJioKuBwVvEcNJZgaQPoIm5wqmL3aM4e6uSCoLeTJi8QTxun+aFX5fPmQkg8pWBMP6PR8nn7R+zPACrXyzkN35ncITwdx3hQ75y5qTGHIi3GcObdsnRu0VFQ6o4Uw=
+	t=1711322107; cv=none; b=tNSHWiKSFcLtpXrjBBS3fv5DWcHUc0ANHL22xUFZVJ9fZWDNB4XElY1TdfOxWJ1ov1lG96hu47k4CET5cAFcSFNAAdwVlCdFo7KbsnykxTAG/Wz/2uOriEI3M4oOkbshyHRfE51mJcGa5S2ULx0D2xpnbmMlZQSw8GCqO8z2jdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322069; c=relaxed/simple;
-	bh=LJoL7FVENAJIiFqx9+N2Qkpe7UbQUGUTth5EZ2C6PEE=;
+	s=arc-20240116; t=1711322107; c=relaxed/simple;
+	bh=LwtYyCcaXx0HjQaLxL+6mDvVXrCjkIkao6cHiaHS30A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dqd4VeZdBauffwdy8MrISdWqv8XLF4PTvhf206yosW7zbkYKUSlM+eIRbwje2MLz0Wj7TFOksNOsV87JlrZWQsSn+e2F8DlQYO3ce+sWUSC1elDCFSlfq8ljI3ycx/IV0k29tvMord89mLBypbmiJpmleHR31d7sCIwop7Ff8Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=livUQaFR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mgUpwzuNKKJrgbxW5KMfWrxaV48pWI3vkxCxINZ5mpRQWEjNC7h/wV2ecBj3wMuYIctPlQZ6lVodtHheS28qc4yZ8oRnD8sGE1t2zMb/hPndFOu/LuAVn7uLlOfV3L+GIfZWxxslzr1J8mUa9T3ms3+r+HedwQtsleF3U00Z2FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ebWiMeE5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="livUQaFR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23DFC43390;
-	Sun, 24 Mar 2024 23:14:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ebWiMeE5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9939FC43394;
+	Sun, 24 Mar 2024 23:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322069;
-	bh=LJoL7FVENAJIiFqx9+N2Qkpe7UbQUGUTth5EZ2C6PEE=;
+	s=k20201202; t=1711322106;
+	bh=LwtYyCcaXx0HjQaLxL+6mDvVXrCjkIkao6cHiaHS30A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=livUQaFR3Ks+0WR3jUvt62hYxEp3vCfBiDiJgYwlbQFgWA03dtz7v7ocFmEiltdWj
-	 2KqYR2Gx+E6as01SxPF0alyVIk8l9BLP81f0J5oSqJZ4coJ/jm5arNypU7m52pF/Za
-	 J7dgOnsnyRrQzL+pVGEN5CMPvHqLwYNex6aVRM/KTC4rzD0WEBmPIbyGxANLptCr/T
-	 eO35Bfbxqjzbsgz16r9VDDOT9iRQ6qN8h+RbBY5sA0fTkk0m09ORaz3xeOlJzfUofg
-	 +Fp8esk7lohtiILF1aPY5aDRC7hhnqkdvB2yrBcBilZ0xxAb1QRLcXqBzGYrSnSHoN
-	 UeyCg3LBd4jgQ==
+	b=ebWiMeE5Ufn+5WZzyvL/ppKqhMu+WK5FJjoL/IaRKFOFRRiuxnnwDIgywhIvwuXTC
+	 KDD4z1RzdQkkXmt+duuKNLzwBliWBLxrF+pbuXYl42CUlgGXyCl0B4XHGh1lVKXYeT
+	 EHw5QfYxEHGqKZXU1SkfIMLdZj4LJTh2tR7l8+88jj6laKp6by1TWjTF6XQUHwC4EC
+	 uWzDyS0Ld0BcHOR5SAc448dlnOg2DNdJrVG6eOARpflVJLf0s3RFhZGpSHopzAbe8c
+	 uOEM+BSiifvKwiUsaGQELk98rjFbn7qCwR0kpdC52owz5ALOWUlx2DjbgKIoMjZXur
+	 a4HsejV2YZ25g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
+Cc: "Alexey I. Froloff" <raorn@raorn.name>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 142/451] arm64: dts: mt8183: Move CrosEC base detection node to kukui-based DTs
-Date: Sun, 24 Mar 2024 19:06:58 -0400
-Message-ID: <20240324231207.1351418-143-sashal@kernel.org>
+Subject: [PATCH 6.1 181/451] ACPI: resource: Do IRQ override on Lunnen Ground laptops
+Date: Sun, 24 Mar 2024 19:07:37 -0400
+Message-ID: <20240324231207.1351418-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,105 +44,53 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+From: "Alexey I. Froloff" <raorn@raorn.name>
 
-[ Upstream commit 04bd6411f506357fd1faedc2b2156e7ef206aa9a ]
+[ Upstream commit e23ad54fef186aa66007895be1382c88f1ee2bf7 ]
 
-The cbas node is used to describe base detection functionality in the
-ChromeOS EC, which is used for units that have a detachable keyboard and
-thus rely on this functionality to switch between tablet and laptop
-mode.
+The Lunnen Ground 15 and 16 needs IRQ overriding for the keyboard to
+work.
 
-Despite the original commit having added the cbas node to the
-mt8183-kukui.dtsi, not all machines that include it are detachables. In
-fact all machines that include from mt8183-kukui-jacuzzi.dtsi are either
-clamshells (ie normal laptops) or convertibles, meaning the keyboard can
-be flipped but not detached. The detection for the keyboard getting
-flipped is handled by the driver bound to the keyboard-controller node
-in the EC.
+Adding an entries for these laptops to the override_table makes the
+internal keyboard functional.
 
-Move the base detection node from the base kukui dtsi to the dtsis where
-all machines are detachables, and thus actually make use of the node.
-
-Fixes: 4fa8492d1e5b ("arm64: dts: mt8183: add cbas node under cros_ec")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://lore.kernel.org/r/20240116-mt8183-kukui-cbas-remove-v3-1-055e21406e86@collabora.com
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Alexey I. Froloff <raorn@raorn.name>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Stable-dep-of: 021a67d09615 ("ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi | 4 ++++
- arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi | 4 ++++
- arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi  | 4 ++++
- arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi        | 4 ----
- 4 files changed, 12 insertions(+), 4 deletions(-)
+ drivers/acpi/resource.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-index a11adeb29b1f2..0d3c7b8162ff0 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-@@ -373,6 +373,10 @@ pen_eject {
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index 35a98a5916f63..8420d97287f86 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -555,6 +555,20 @@ static const struct dmi_system_id lg_laptop[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "GM5RGEE0016COM"),
+ 		},
+ 	},
++	{
++		/* Lunnen Ground 15 / AMD Ryzen 5 5500U */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Lunnen"),
++			DMI_MATCH(DMI_BOARD_NAME, "LLL5DAW"),
++		},
++	},
++	{
++		/* Lunnen Ground 16 / AMD Ryzen 7 5800U */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Lunnen"),
++			DMI_MATCH(DMI_BOARD_NAME, "LL6FA"),
++		},
++	},
+ 	{ }
  };
  
- &cros_ec {
-+	cbas {
-+		compatible = "google,cros-cbas";
-+	};
-+
- 	keyboard-controller {
- 		compatible = "google,cros-ec-keyb-switches";
- 	};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-index 4864c39e53a4f..e73113cb51f53 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-@@ -340,6 +340,10 @@ touch_pin_reset: pin_reset {
- };
- 
- &cros_ec {
-+	cbas {
-+		compatible = "google,cros-cbas";
-+	};
-+
- 	keyboard-controller {
- 		compatible = "google,cros-ec-keyb-switches";
- 	};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-index d5f41c6c98814..181da69d18f46 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-@@ -344,6 +344,10 @@ rst_pin {
- };
- 
- &cros_ec {
-+	cbas {
-+		compatible = "google,cros-cbas";
-+	};
-+
- 	keyboard-controller {
- 		compatible = "google,cros-ec-keyb-switches";
- 	};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-index de610874a9125..1db97d94658b9 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-@@ -896,10 +896,6 @@ usbc_extcon: extcon0 {
- 			google,usb-port-id = <0>;
- 		};
- 
--		cbas {
--			compatible = "google,cros-cbas";
--		};
--
- 		typec {
- 			compatible = "google,cros-ec-typec";
- 			#address-cells = <1>;
 -- 
 2.43.0
 
