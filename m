@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA47517C638;
-	Sun, 24 Mar 2024 23:42:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23ECD17C6A8;
+	Sun, 24 Mar 2024 23:43:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323773; cv=none; b=dN0fYrL4HUrTx1OdiIctt01hvemwTpmhurJ+Z2bInVSjujScRDgOgf43E4ffOUeDibwwJr87na5Jqd+eboF1iM27N8jDXX2XE5Fcfz9Ms9qR0nm9Ll2h3EeGx/RFWKsHOVqJvtcelPJAwUC5UY/0lM+8wygiuZrQs85ISZ8t7EM=
+	t=1711323781; cv=none; b=CC9FLcBpJ78ZM+5AlHt7xd7hifaSAJDPACI4Y2xmbx1WxUY/vkn2Yvkoq+ScA6Nn29VUC5QwJA/MMwqo9jCsNiX8Z2loYXxXv/hdQ339gGvD06pxp5rb8nPrDahjeHVYkBWqfSUOYwwq69zxGbPhYaBMTr9hfvXBlzEBaNLLyPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323773; c=relaxed/simple;
-	bh=BAZzIM9JpzWbgzhrY9OZLIrNdLPXeXZI5MUQmeGqK7I=;
+	s=arc-20240116; t=1711323781; c=relaxed/simple;
+	bh=5F+W2XVBb8jBoA1hXh/onNUbYNMRYXAAcVlmlGC3wtQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=plUysMRRlz/nz0beqWT2RP4xdC2fpfavxUgk9aVH+N8cZnp9m9ifvTWZGMgCD64nGuVogfYKuilHqb4zdwjvL6TDh+QpbGOSTSTTrjOhVpGBNAlKKwDH3JK2TBDcflpcBG5ZdSsk3AYapEm4uLy+zr7tW022eOz9+IxcRGE6zBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyN32Nmf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=g4aPI3hTBiggCksP7jqnPmGUJjJuljgAQhD7FuavmrTtf8NiqGLEMk6IXBwpePHJwTJ6Gn+e4xNcrMQHwAYjZucJ/d4NnUKg0ZleGTRp4+yLEkBKUcf/IUQ0wnUDwE2XW7AKvD14TRveGdPCdmBpJ+qF8TCz9U9ufEMFbrkZx70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YD+UT+tY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyN32Nmf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10F5C433A6;
-	Sun, 24 Mar 2024 23:42:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YD+UT+tY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630A0C43394;
+	Sun, 24 Mar 2024 23:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323773;
-	bh=BAZzIM9JpzWbgzhrY9OZLIrNdLPXeXZI5MUQmeGqK7I=;
+	s=k20201202; t=1711323781;
+	bh=5F+W2XVBb8jBoA1hXh/onNUbYNMRYXAAcVlmlGC3wtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tyN32NmfxW8nyC4FbOmlwy7HSF9MGjczFcJaQ2ol6BNu9lt+bBQjV1FwcPs3+8KKt
-	 tPnTt7fLaNC0IIQcN9KnNzul7qqUr++F76Mbgjq/hqhudSHCe1zGTHe7VOoU3gD3CI
-	 EygCaYiQOgkSnnNZjNPZEFmz2ijJ48LAx848QmmmSlNI+WNaOi2YRa4Ps/bUt9AZFz
-	 VngJHB+Z5iJizc0JifPFkzbuickCYJLYuhEFTv/MP20spTIo1sOu1Px9d1Hsl6XmW3
-	 A/e9iBTzi+wp5CTxR8Zqdgla3a0fy5+LSXMdC3xoY7CtNbTJUiBIWIXI9R65S14Vij
-	 9AzcnCuRWXXnQ==
+	b=YD+UT+tYSLsSjlMMV7Stg/4/4kNWpYPTaVQ8BITOZSXF1mQXlam59yGSoTlaYXZi8
+	 uWY8FIwHEmJRr1qYKMk4dFGGIw7Ht2KgHdBzFO0BUYmiB9VVhdrFSCI4BpAAK1qwB6
+	 F0H4f46qxykznYPVgO1FvElxalFl52Lstr8pjQMDR7wMmhTmxe9R1PLGVD/4ihnNd/
+	 HFnlLPZ7eAfDJfUFJube+cd1KuO4D5B0+oYCl60oFqWjXwXcDtQSZjUzM9ukZ82RGf
+	 /FjD1Em+cq24G/5KvH2tlgyEcljqAzbA/Ow2LDyVVc20xRwGqmVmYJtDFPpauzqOx7
+	 gTqFQqhr+hyhA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Justin Stitt <justinstitt@google.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 149/238] ASoC: meson: aiu: fix function pointer type mismatch
-Date: Sun, 24 Mar 2024 19:38:57 -0400
-Message-ID: <20240324234027.1354210-150-sashal@kernel.org>
+Subject: [PATCH 5.10 157/238] media: pvrusb2: fix pvr2_stream_callback casts
+Date: Sun, 24 Mar 2024 19:39:05 -0400
+Message-ID: <20240324234027.1354210-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -50,83 +48,113 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 98ac85a00f31d2e9d5452b825a9ed0153d934043 ]
+[ Upstream commit 30baa4a96b23add91a87305baaeba82c4e109e1f ]
 
-clang-16 warns about casting functions to incompatible types, as is done
-here to call clk_disable_unprepare:
+clang-16 complains about a control flow integrity (KCFI) issue in pvrusb2,
+which casts three different prototypes into pvr2_stream_callback:
 
-sound/soc/meson/aiu.c:243:12: error: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-  243 |                                        (void(*)(void *))clk_disable_unprepare,
+drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:1070:30: error: cast from 'void (*)(struct pvr2_v4l2_fh *)' to 'pvr2_stream_callback' (aka 'void (*)(void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1070 |         pvr2_stream_set_callback(sp,(pvr2_stream_callback)pvr2_v4l2_notify,fh);
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/media/usb/pvrusb2/pvrusb2-context.c:110:6: error: cast from 'void (*)(struct pvr2_context *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  110 |                                         (void (*)(void *))pvr2_context_notify,
+      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/media/usb/pvrusb2/pvrusb2-dvb.c:152:6: error: cast from 'void (*)(struct pvr2_dvb_adapter *)' to 'pvr2_stream_callback' (aka 'void (*)(void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  152 |                                  (pvr2_stream_callback) pvr2_dvb_notify, adap);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The pattern of getting, enabling and setting a disable callback for a
-clock can be replaced with devm_clk_get_enabled(), which also fixes
-this warning.
+Change the functions to actually take a void* argument so the cast is no longer
+needed.
 
-Fixes: 6ae9ca9ce986 ("ASoC: meson: aiu: add i2s and spdif support")
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-Link: https://msgid.link/r/20240213215807.3326688-2-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: bb8ce9d9143c ("V4L/DVB (7682): pvrusb2-dvb: finish up stream & buffer handling")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/aiu.c | 19 ++++---------------
- sound/soc/meson/aiu.h |  1 -
- 2 files changed, 4 insertions(+), 16 deletions(-)
+ drivers/media/usb/pvrusb2/pvrusb2-context.c | 8 ++++----
+ drivers/media/usb/pvrusb2/pvrusb2-dvb.c     | 6 ++++--
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c    | 6 ++++--
+ 3 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
-index 386a31a044700..03bc3e5b6cab5 100644
---- a/sound/soc/meson/aiu.c
-+++ b/sound/soc/meson/aiu.c
-@@ -215,11 +215,12 @@ static const char * const aiu_spdif_ids[] = {
- static int aiu_clk_get(struct device *dev)
- {
- 	struct aiu *aiu = dev_get_drvdata(dev);
-+	struct clk *pclk;
- 	int ret;
- 
--	aiu->pclk = devm_clk_get(dev, "pclk");
--	if (IS_ERR(aiu->pclk))
--		return dev_err_probe(dev, PTR_ERR(aiu->pclk), "Can't get the aiu pclk\n");
-+	pclk = devm_clk_get_enabled(dev, "pclk");
-+	if (IS_ERR(pclk))
-+		return dev_err_probe(dev, PTR_ERR(pclk), "Can't get the aiu pclk\n");
- 
- 	aiu->spdif_mclk = devm_clk_get(dev, "spdif_mclk");
- 	if (IS_ERR(aiu->spdif_mclk))
-@@ -236,18 +237,6 @@ static int aiu_clk_get(struct device *dev)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Can't get the spdif clocks\n");
- 
--	ret = clk_prepare_enable(aiu->pclk);
--	if (ret) {
--		dev_err(dev, "peripheral clock enable failed\n");
--		return ret;
--	}
--
--	ret = devm_add_action_or_reset(dev,
--				       (void(*)(void *))clk_disable_unprepare,
--				       aiu->pclk);
--	if (ret)
--		dev_err(dev, "failed to add reset action on pclk");
--
- 	return ret;
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+index 1764674de98bc..58f2f3ff10ee2 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+@@ -90,8 +90,10 @@ static void pvr2_context_destroy(struct pvr2_context *mp)
  }
  
-diff --git a/sound/soc/meson/aiu.h b/sound/soc/meson/aiu.h
-index 87aa19ac4af3a..44f8c213d35a0 100644
---- a/sound/soc/meson/aiu.h
-+++ b/sound/soc/meson/aiu.h
-@@ -33,7 +33,6 @@ struct aiu_platform_data {
- };
  
- struct aiu {
--	struct clk *pclk;
- 	struct clk *spdif_mclk;
- 	struct aiu_interface i2s;
- 	struct aiu_interface spdif;
+-static void pvr2_context_notify(struct pvr2_context *mp)
++static void pvr2_context_notify(void *ptr)
+ {
++	struct pvr2_context *mp = ptr;
++
+ 	pvr2_context_set_notify(mp,!0);
+ }
+ 
+@@ -106,9 +108,7 @@ static void pvr2_context_check(struct pvr2_context *mp)
+ 		pvr2_trace(PVR2_TRACE_CTXT,
+ 			   "pvr2_context %p (initialize)", mp);
+ 		/* Finish hardware initialization */
+-		if (pvr2_hdw_initialize(mp->hdw,
+-					(void (*)(void *))pvr2_context_notify,
+-					mp)) {
++		if (pvr2_hdw_initialize(mp->hdw, pvr2_context_notify, mp)) {
+ 			mp->video_stream.stream =
+ 				pvr2_hdw_get_video_stream(mp->hdw);
+ 			/* Trigger interface initialization.  By doing this
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-dvb.c b/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
+index 6954584526a32..1b768e7466721 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
+@@ -88,8 +88,10 @@ static int pvr2_dvb_feed_thread(void *data)
+ 	return stat;
+ }
+ 
+-static void pvr2_dvb_notify(struct pvr2_dvb_adapter *adap)
++static void pvr2_dvb_notify(void *ptr)
+ {
++	struct pvr2_dvb_adapter *adap = ptr;
++
+ 	wake_up(&adap->buffer_wait_data);
+ }
+ 
+@@ -149,7 +151,7 @@ static int pvr2_dvb_stream_do_start(struct pvr2_dvb_adapter *adap)
+ 	}
+ 
+ 	pvr2_stream_set_callback(pvr->video_stream.stream,
+-				 (pvr2_stream_callback) pvr2_dvb_notify, adap);
++				 pvr2_dvb_notify, adap);
+ 
+ 	ret = pvr2_stream_set_buffer_count(stream, PVR2_DVB_BUFFER_COUNT);
+ 	if (ret < 0) return ret;
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index c872868becbdc..29f2e767f236f 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -1037,8 +1037,10 @@ static int pvr2_v4l2_open(struct file *file)
+ }
+ 
+ 
+-static void pvr2_v4l2_notify(struct pvr2_v4l2_fh *fhp)
++static void pvr2_v4l2_notify(void *ptr)
+ {
++	struct pvr2_v4l2_fh *fhp = ptr;
++
+ 	wake_up(&fhp->wait_data);
+ }
+ 
+@@ -1071,7 +1073,7 @@ static int pvr2_v4l2_iosetup(struct pvr2_v4l2_fh *fh)
+ 
+ 	hdw = fh->channel.mc_head->hdw;
+ 	sp = fh->pdi->stream->stream;
+-	pvr2_stream_set_callback(sp,(pvr2_stream_callback)pvr2_v4l2_notify,fh);
++	pvr2_stream_set_callback(sp, pvr2_v4l2_notify, fh);
+ 	pvr2_hdw_set_stream_type(hdw,fh->pdi->config);
+ 	if ((ret = pvr2_hdw_set_streaming(hdw,!0)) < 0) return ret;
+ 	return pvr2_ioread_set_enabled(fh->rhp,!0);
 -- 
 2.43.0
 
