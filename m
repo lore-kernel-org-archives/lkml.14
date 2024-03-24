@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF833238F1C;
-	Sun, 24 Mar 2024 23:18:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A451F238F26;
+	Sun, 24 Mar 2024 23:18:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322330; cv=none; b=NnIJx5u7S8ofqDt3YZ28Zzj++WLpR5USdBGN7z+o7ptMpAUg9iH9yFvcwpMCWhy/tuOSqIn59h2WvFvQ87uVnUeCEDXtU/RTy9FrCeY1cgt85mmq7jqmOeIHuJDQffJDYY5meXDsm15P+YUpEOU0UaYeI1HgrVxrux7vBgr04kw=
+	t=1711322329; cv=none; b=l2wDnJ7OHMLOb7Y1ld6CUq58Xa2nU5inJitXUNUKLXLLI+1WNv2IqohiF+pgmmPTiNkr5yauis6ei2jpvSEhq3NjBZjIJ8nQYbvrjHzhpgS5rp9F1j6hKiwQ2/qBDVavxyrfSwbuKNj+cRkhORAfd2+CrptMWFkMdmfraIKAibo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322330; c=relaxed/simple;
-	bh=ZFgXoB+8n6Zrm64r3QBen7eSSIdqIg53Ge4PVdKtACA=;
+	s=arc-20240116; t=1711322329; c=relaxed/simple;
+	bh=Tf/BdClWZkjm4ty8prHKaV6TYXiJjuqx+5eyai5/hKM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RBjSFSlG1BTHRhffnut/ShjalukJgKhM1jJSFMKM8TEUeDQukeEEFTECuyKfMoF4k/21aDVQDydqY1sJw+9SgLL4siVAtW2m++2lXW9WC5qHepl34szFianVWp/sfkxBvT0rlg63KzrYGvbkWFS7aPsg7zneh3H94EUypasRTLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMzuknSK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VLFCcyqh4uOs/pcDipYLkLmUF7SXcxiMGbH3dRCR+42u9g7JKArRT7xpNpWq5hTGhJxClMDUXqM4skZO4t9HAIeOwJiqYW8P7khhORkEDtz+Cf1v0K8yy4tSVcgjKyMjim5A0SVjPlPZ9Veq1N8g35CVDUA0UBoCUglRkmb5RX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTT2pFn1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMzuknSK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD40C433A6;
-	Sun, 24 Mar 2024 23:18:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTT2pFn1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE14AC43601;
+	Sun, 24 Mar 2024 23:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322330;
-	bh=ZFgXoB+8n6Zrm64r3QBen7eSSIdqIg53Ge4PVdKtACA=;
+	s=k20201202; t=1711322328;
+	bh=Tf/BdClWZkjm4ty8prHKaV6TYXiJjuqx+5eyai5/hKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JMzuknSKL+j+E6IpgSkaI8DOeNL/++6eu1Hpng/NDWKbENKALeBxCHDqlDF9RIlu8
-	 dZmdRX12O5kkAxW5R7ooAYYHNav0LOdl+5KedkV2jx7i3cqaPFM10umkOeJLC+Orjb
-	 STuqUIdjWewR2xe6kndM+sKoUf8Ff6B14A0pOx69+7v7W/e1eCV0zFKVFm9zwAkgIh
-	 vUlaNlhwnqgHu8YT4AMfk6y4LjX2y+7JAtpORNrQpxM75j7As6AJKvAYkRyt+maxUo
-	 /C+QQWqins5j+EtXryksxZ6wPxJUuRyntu6UXUsAalYQI4/Luim77oiY7e+4YfkLp2
-	 aSQ7BYF84go/w==
+	b=VTT2pFn1Mbq+QeJx75kiW6mJgk+wLjqsQfMqnOwV1NRyPH9zzuz/HVVoidiA8+Yi8
+	 24VbSMVfX5F7im9RlRxs02dPIU5mHTsc50EessSzSjgm1huION8MRy2FN02BtWhBn0
+	 PcsDH8kSzBK1saAqD7Q1Mgzg5AjEFIL9ZtRjzCk6b/DYpjak0DZysQRvCEQpJpoVXE
+	 ht1Fs+9IgYe07FH4/JmSFg1dzom9mabHFy07gjfjNU+oRyE+pbvMF8YwpKdtkEWwDJ
+	 zq0CelgzQ2nasbzr1TN8RowcDg2IxyFLybZzQPBJUrrItVObi4W7mlOoEkBOUECvz0
+	 orKKLKZE1gHPg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Golle <daniel@makrotopia.org>,
-	Mason-cw Chang <Mason-cw.Chang@mediatek.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 413/451] net: mediatek: mtk_eth_soc: clear MAC_MCR_FORCE_LINK only when MAC is up
-Date: Sun, 24 Mar 2024 19:11:29 -0400
-Message-ID: <20240324231207.1351418-414-sashal@kernel.org>
+Subject: [PATCH 6.1 411/451] nvme: add the Apple shared tag workaround to nvme_alloc_io_tag_set
+Date: Sun, 24 Mar 2024 19:11:27 -0400
+Message-ID: <20240324231207.1351418-412-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,57 +49,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Golle <daniel@makrotopia.org>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit f1b85ef15a99f06ed48871ce933d591127d2dcc0 ]
+[ Upstream commit 93b24f579c392bac2e491fee79ad5ce5a131992e ]
 
-Clearing bit MAC_MCR_FORCE_LINK which forces the link down too early
-can result in MAC ending up in a broken/blocked state.
+Add the apple shared tag workaround to nvme_alloc_io_tag_set to prepare
+for using that helper in the PCIe driver.
 
-Fix this by handling this bit in the .mac_link_up and .mac_link_down
-calls instead of in .mac_finish.
-
-Fixes: b8fc9f30821e ("net: ethernet: mediatek: Add basic PHYLINK support")
-Suggested-by: Mason-cw Chang <Mason-cw.Chang@mediatek.com>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+Stable-dep-of: de105068fead ("nvme: fix reconnection fail due to reserved tag allocation")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/nvme/host/core.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 17e6ac4445afc..fecf3dd22dfaa 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -561,8 +561,7 @@ static int mtk_mac_finish(struct phylink_config *config, unsigned int mode,
- 	mcr_cur = mtk_r32(mac->hw, MTK_MAC_MCR(mac->id));
- 	mcr_new = mcr_cur;
- 	mcr_new |= MAC_MCR_IPG_CFG | MAC_MCR_FORCE_MODE |
--		   MAC_MCR_BACKOFF_EN | MAC_MCR_BACKPR_EN | MAC_MCR_FORCE_LINK |
--		   MAC_MCR_RX_FIFO_CLR_DIS;
-+		   MAC_MCR_BACKOFF_EN | MAC_MCR_BACKPR_EN | MAC_MCR_RX_FIFO_CLR_DIS;
- 
- 	/* Only update control register when needed! */
- 	if (mcr_new != mcr_cur)
-@@ -610,7 +609,7 @@ static void mtk_mac_link_down(struct phylink_config *config, unsigned int mode,
- 					   phylink_config);
- 	u32 mcr = mtk_r32(mac->hw, MTK_MAC_MCR(mac->id));
- 
--	mcr &= ~(MAC_MCR_TX_EN | MAC_MCR_RX_EN);
-+	mcr &= ~(MAC_MCR_TX_EN | MAC_MCR_RX_EN | MAC_MCR_FORCE_LINK);
- 	mtk_w32(mac->hw, mcr, MTK_MAC_MCR(mac->id));
- }
- 
-@@ -649,7 +648,7 @@ static void mtk_mac_link_up(struct phylink_config *config,
- 	if (rx_pause)
- 		mcr |= MAC_MCR_FORCE_RX_FC;
- 
--	mcr |= MAC_MCR_TX_EN | MAC_MCR_RX_EN;
-+	mcr |= MAC_MCR_TX_EN | MAC_MCR_RX_EN | MAC_MCR_FORCE_LINK;
- 	mtk_w32(mac->hw, mcr, MTK_MAC_MCR(mac->id));
- }
- 
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 98a8d90feb37d..951c8946701aa 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -5029,7 +5029,13 @@ int nvme_alloc_io_tag_set(struct nvme_ctrl *ctrl, struct blk_mq_tag_set *set,
+ 	memset(set, 0, sizeof(*set));
+ 	set->ops = ops;
+ 	set->queue_depth = ctrl->sqsize + 1;
+-	if (ctrl->ops->flags & NVME_F_FABRICS)
++	/*
++	 * Some Apple controllers requires tags to be unique across admin and
++	 * the (only) I/O queue, so reserve the first 32 tags of the I/O queue.
++	 */
++	if (ctrl->quirks & NVME_QUIRK_SHARED_TAGS)
++		set->reserved_tags = NVME_AQ_DEPTH;
++	else if (ctrl->ops->flags & NVME_F_FABRICS)
+ 		set->reserved_tags = NVMF_RESERVED_TAGS;
+ 	set->numa_node = ctrl->numa_node;
+ 	set->flags = BLK_MQ_F_SHOULD_MERGE;
 -- 
 2.43.0
 
