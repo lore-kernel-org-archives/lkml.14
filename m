@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460AA22E165;
-	Sun, 24 Mar 2024 23:16:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE46C1FC99E;
+	Sun, 24 Mar 2024 23:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322198; cv=none; b=iL4fzYXA1qeAqiDodHS/rOmxqvouYPU3vDnwHS6qWNUG6Dzwz1ydu7IJ25lQAvX4RvFVVHCQPfvxoie0/jA1ZhcHFkoIOTaH4m6xtnL6PqIIMUkiQt3opKr9Ok7B7k5RCGc4pKpjBsZF2I1iACh2JGXYPjO6hpGGcQpcBdjtT/M=
+	t=1711322187; cv=none; b=lstYZxbe5J9qVp6F0mr9HUohfMZfZMQwzziv7brE1DwqTapTsUARLqEF/owZktME710gTjdZMl4SO+iJCjLS1ZipX5JzCfv5BFD+15h0WO6kKRGEWUy/nhMXezxh8MlU/c7rcGluHKXlffGoX71DimkekmGwDzuCW35PqkWv004=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322198; c=relaxed/simple;
-	bh=u9V+WyAANI9l04UH2rsHq7yZipBH/zr5JZGM795s4MI=;
+	s=arc-20240116; t=1711322187; c=relaxed/simple;
+	bh=CwWwXVhHyKnLQ10moKJIyAHUeLsBYRK/aKO6LwRtc0U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KIH0NSIkCDZ2feS7JxxkBaNi1/ecezLVjkNH3SnhvU6EUejG0R4BXGfdkuMrz1hDUosdvzUajQthSAlb1/p6favT4X5JP29J0zyTAQzIHwMAF9yz+Rs7pn+DCsCbZ9EA2WFQPCX37P2WatPwOlXkrV9XC7kq9RWh1kuso+yzP98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRceyeT7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=e6hXsHZqSkvds9lMb8fq+ghSwFoL7OZrM3qK+prGcAHEEcQfI5n7BmfDv/eve9be2+hpWYPVvSHKJkKVG6+W5I76XXnwRCQcA/yhwwG0lNjNasMdNNAYcJWNvQsWih6peMSJ0EbJx+C+kEdu006YsqsAC+pFXbuLoSr2hhutbIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IsBzCO/G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRceyeT7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 839D9C43399;
-	Sun, 24 Mar 2024 23:16:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IsBzCO/G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4148C433A6;
+	Sun, 24 Mar 2024 23:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322197;
-	bh=u9V+WyAANI9l04UH2rsHq7yZipBH/zr5JZGM795s4MI=;
+	s=k20201202; t=1711322186;
+	bh=CwWwXVhHyKnLQ10moKJIyAHUeLsBYRK/aKO6LwRtc0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dRceyeT7O23LeciVxCuXR0xKygcSgz+cOcDOxkqAnPq7J5XWOYh+lad/YIzyzMSE1
-	 dW+OBiM5AstuYII9NvAjBp46lEQ9JKzFpqOV+hr+4VVJNeln1cJAx7DuCmAMhQeWMB
-	 X1AnRiYrgFoyyy2qO5DO3OUKu2uGqGkOvL4ZkEhtma+gom22YCZYBF2OsttFjMr1/f
-	 QY3XsLZNaGttqSs51G1rZpdPXuzQBAzfFoxP5sU1MN+dJkdlruJR/RxwLoxES/eGQo
-	 VqEfYaIn1fmeuQcLQppqh40kG8WYBxZxDr5USyyXwbTqJ5X6mPhFnYf3eQmDfEvo/w
-	 RRRfMfT/Z9Mgw==
+	b=IsBzCO/GYnkCY9U/SDgvnivtAroLNV1SsdTzvK+15+gOa8naqgQrt3biuRGHvvXCT
+	 8ICq9TYwIJqD/qGx3zhvM7uFSiS/VHnKuA+zzZV9wErBzU7b+RfwYKr8Ge3N30OPOj
+	 Gtr6J5sy4sCArD4VgUXFoKOwJa0QBf8TJCjxH7xW7Ibk4DGa5ykzfxXafNKKoyw0HW
+	 GGFXzkHPMppBbdknEOW6qfYuJ7oYGmt8Sd/GYKsK/gWCnp3dUr9dw+dfRp+kRTaijK
+	 5hb+JselbRb6GcX5vqXhZpB29LUkU2ACZNGpMPOOX5q+YaqoFVkrWoAf9Rf+OZ6s6j
+	 /aBrSclmvc7VQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 276/451] PCI: switchtec: Fix an error handling path in switchtec_pci_probe()
-Date: Sun, 24 Mar 2024 19:09:12 -0400
-Message-ID: <20240324231207.1351418-277-sashal@kernel.org>
+Subject: [PATCH 6.1 265/451] media: em28xx: annotate unchecked call to media_device_register()
+Date: Sun, 24 Mar 2024 19:09:01 -0400
+Message-ID: <20240324231207.1351418-266-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,49 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-[ Upstream commit dec529b0b0572b32f9eb91c882dd1f08ca657efb ]
+[ Upstream commit fd61d77a3d28444b2635f0c8b5a2ecd6a4d94026 ]
 
-The commit in Fixes changed the logic on how resources are released and
-introduced a new switchtec_exit_pci() that need to be called explicitly in
-order to undo a corresponding switchtec_init_pci().
+Static analyzers generate alerts for an unchecked call to
+`media_device_register()`. However, in this case, the device will work
+reliably without the media controller API.
 
-This was done in the remove function, but not in the probe.
+Add a comment above the call to prevent future unnecessary changes.
 
-Fix the probe now.
-
-Fixes: df25461119d9 ("PCI: switchtec: Fix stdev_release() crash after surprise hot remove")
-Link: https://lore.kernel.org/r/01446d2ccb91a578239915812f2b7dfbeb2882af.1703428183.git.christophe.jaillet@wanadoo.fr
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: 37ecc7b1278f ("[media] em28xx: add media controller support")
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/usb/em28xx/em28xx-cards.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 3f3320d0a4f8f..d05a482639e3c 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -1674,7 +1674,7 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
- 	rc = switchtec_init_isr(stdev);
- 	if (rc) {
- 		dev_err(&stdev->dev, "failed to init isr.\n");
--		goto err_put;
-+		goto err_exit_pci;
- 	}
+diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
+index 4d037c92af7c5..bae76023cf71d 100644
+--- a/drivers/media/usb/em28xx/em28xx-cards.c
++++ b/drivers/media/usb/em28xx/em28xx-cards.c
+@@ -4094,6 +4094,10 @@ static int em28xx_usb_probe(struct usb_interface *intf,
+ 	 * topology will likely change after the load of the em28xx subdrivers.
+ 	 */
+ #ifdef CONFIG_MEDIA_CONTROLLER
++	/*
++	 * No need to check the return value, the device will still be
++	 * usable without media controller API.
++	 */
+ 	retval = media_device_register(dev->media_dev);
+ #endif
  
- 	iowrite32(SWITCHTEC_EVENT_CLEAR |
-@@ -1695,6 +1695,8 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
- 
- err_devadd:
- 	stdev_kill(stdev);
-+err_exit_pci:
-+	switchtec_exit_pci(stdev);
- err_put:
- 	ida_free(&switchtec_minor_ida, MINOR(stdev->dev.devt));
- 	put_device(&stdev->dev);
 -- 
 2.43.0
 
