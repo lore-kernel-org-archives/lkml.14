@@ -1,39 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E539B82D9F;
-	Sun, 24 Mar 2024 22:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E288C1D7931;
+	Sun, 24 Mar 2024 22:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320613; cv=none; b=Oey1wfh4hO82mEs6VGo7CvXRSEfQVcdTrNxWzVsd7ToYs7U85Lq/lQZo7bGoSMHofCyFT5vIZc6JtH9+0Gtud35mhHo3KFZAuuyaF3tUWIy/AddsMWTtkOTNQ0eCDsD9ZnMZNdNL9LuY5aF89VByfaZBu3vOZ7lbTdhEOqeqPzQ=
+	t=1711320610; cv=none; b=F9eVcVimAfEMwPKR93fhaQhRCYpfip9+whDNZzp50X9JcZF9MDxwSpFmyebHM9XZZYa3B1CxFve+ZtqiyYAigXr3aBv9utZqTHo55I+/7dBmMVOMW7scJZSww+zIpJ14g5QCoWCZAqhjaiIhby9WZjhNj59+yH6IAF6sOFEGcB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320613; c=relaxed/simple;
-	bh=9Qq1iVEdw0G3vZVt9MiiXBeQOuukWCru2oMuL3av5NQ=;
+	s=arc-20240116; t=1711320610; c=relaxed/simple;
+	bh=iD2tP2w5qBXFxh/WQCe5efjp671Yj3yfU9cw0LsYFyI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W4N4LEFhV9ZwGCvjuLxPGgJ2DpjXPJQOtZLL3f2DtYqRq5J/B0sEmiTOG+J2utOn3dppadAWqrBT1EAFxjRVxEb/SVBgij4W2kiQnlFGvpvm2NvRGQ4U9YW6NoOnmy+tP8Df9900Ke1AWWhkiAPr/yNA1uC0hOlazpLfBzNVe0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t+ed9qYt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AuoZV5pVicYi1O8QFqRurUSjx47DdqgstYdsdtQoV9utuHLJw3FIG++7neS+ad5RNTx8fUCC6wBHVikHz1Ee0jfWJ6N7QTi5gpVa/LsSqOT7pLCZvIo2BEOxptvbpciwv8McbzBUyrlyjwHR8S+ZFzj6nAtzPkXC9mrHIrbBzSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBtCzUPN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t+ed9qYt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB230C43394;
-	Sun, 24 Mar 2024 22:50:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBtCzUPN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01D01C433C7;
+	Sun, 24 Mar 2024 22:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320611;
-	bh=9Qq1iVEdw0G3vZVt9MiiXBeQOuukWCru2oMuL3av5NQ=;
+	s=k20201202; t=1711320608;
+	bh=iD2tP2w5qBXFxh/WQCe5efjp671Yj3yfU9cw0LsYFyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t+ed9qYt4x8gmmB42I/VcWjzOpyGLat5RUt3jXGlneEhfQHfoZqpQeG2qs6cZty81
-	 ffN8F24ILeAhKB8z9nP14HgUS1dz3UxQFaaOXLYkwfGO+2nq7gwrpqU02clgnUJpOQ
-	 M5fDZkiTUfGqlSav5Uh1ms6HDwzpnHGL+CCDhi/MLlhU39h77CBaS1Xtrak9YE4PLi
-	 ls09PBz5IVsbFCa7/u2T2/re7uQelFOQnArQtr5T0AGfnJkLQiSP9OXqhPzdxofeek
-	 HmFO6byZ1NhS1BQOSCjEw45MQTXxB0cMAHv2hUe1E487Fy13ApxhP4GSCdrvb8+R3v
-	 TSTHtoqcoWOwA==
+	b=bBtCzUPNYdneLOpN6ziQXnS3ocR7T6+g2PaVOgSEJUhvFgpWD80Qx8C4f3PiULLnQ
+	 zxThtLpDqcXuwt3PoyPyiziGcBF0wXxcQ5SF7TyURUPqiJ7MGjuRMz2j7fOiP0YBD+
+	 HyZ4teVbTqWl+PP39kFyiJthMjYd7FSCSdCd1oMyvx0JsaRVFJPxDrsUNYjyPKetFZ
+	 IYBmC6heuQjELNNUed3ndr3K/nxLSlXdgmM0TIcVIyImsZBGnLfAbHo/T8uawooHH4
+	 JSjtHGu2S239ogHEqOd82+/YswBaCgCtM28/S6qR410UnGtCTLHXjSym0JSyiv6pWe
+	 GYJ1xP/nrfpZA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 172/713] arm64: dts: renesas: r8a779g0: Add missing SCIF_CLK2
-Date: Sun, 24 Mar 2024 18:38:18 -0400
-Message-ID: <20240324224720.1345309-173-sashal@kernel.org>
+Subject: [PATCH 6.7 169/713] pmdomain: qcom: rpmhpd: Drop SA8540P gfx.lvl
+Date: Sun, 24 Mar 2024 18:38:15 -0400
+Message-ID: <20240324224720.1345309-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -47,65 +50,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-[ Upstream commit 08e799f6bce80dd63c174d8d0fc61d1a6149960b ]
+[ Upstream commit 883957bee580b723fd87d49ac73e0c84fc03a446 ]
 
-R-Car V4H actually has two SCIF_CLK pins.
-The second pin provides the SCIF_CLK signal for HSCIF2 and SCIF4.
+On SA8295P and SA8540P gfx.lvl is not provdied by rpmh, but rather is
+handled by an external regulator (max20411). Drop gfx.lvl from the list
+of power-domains exposed on this platform.
 
-Fixes: a4c31c56d2d35641 ("arm64: dts: renesas: r8a779g0: Add SCIF nodes")
-Fixes: 39d9dfc6fbe1860e ("arm64: dts: renesas: r8a779g0: Add remaining HSCIF nodes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/72f20c1bf32187bd30a963cafe27252907d661f9.1705589612.git.geert+renesas@glider.be
+Fixes: f68f1cb3437d ("soc: qcom: rpmhpd: add sc8280xp & sa8540p rpmh power-domains")
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20240125-sa8295p-gpu-v4-4-7011c2a63037@quicinc.com
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a779g0.dtsi | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/pmdomain/qcom/rpmhpd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-index 3be1159982b20..0c83940b3d8a1 100644
---- a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-@@ -185,13 +185,19 @@ psci {
- 		method = "smc";
- 	};
- 
--	/* External SCIF clock - to be overridden by boards that provide it */
-+	/* External SCIF clocks - to be overridden by boards that provide them */
- 	scif_clk: scif {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <0>;
- 	};
- 
-+	scif_clk2: scif2 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
- 	soc: soc {
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
-@@ -681,7 +687,7 @@ hscif2: serial@e6560000 {
- 			interrupts = <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 516>,
- 				 <&cpg CPG_CORE R8A779G0_CLK_SASYNCPERD1>,
--				 <&scif_clk>;
-+				 <&scif_clk2>;
- 			clock-names = "fck", "brg_int", "scif_clk";
- 			dmas = <&dmac0 0x35>, <&dmac0 0x34>,
- 			       <&dmac1 0x35>, <&dmac1 0x34>;
-@@ -1057,7 +1063,7 @@ scif4: serial@e6c40000 {
- 			interrupts = <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 705>,
- 				 <&cpg CPG_CORE R8A779G0_CLK_SASYNCPERD1>,
--				 <&scif_clk>;
-+				 <&scif_clk2>;
- 			clock-names = "fck", "brg_int", "scif_clk";
- 			dmas = <&dmac0 0x59>, <&dmac0 0x58>,
- 			       <&dmac1 0x59>, <&dmac1 0x58>;
+diff --git a/drivers/pmdomain/qcom/rpmhpd.c b/drivers/pmdomain/qcom/rpmhpd.c
+index 0f0943e3efe50..e4d5afab7b3b2 100644
+--- a/drivers/pmdomain/qcom/rpmhpd.c
++++ b/drivers/pmdomain/qcom/rpmhpd.c
+@@ -217,7 +217,6 @@ static struct rpmhpd *sa8540p_rpmhpds[] = {
+ 	[SC8280XP_CX] = &cx,
+ 	[SC8280XP_CX_AO] = &cx_ao,
+ 	[SC8280XP_EBI] = &ebi,
+-	[SC8280XP_GFX] = &gfx,
+ 	[SC8280XP_LCX] = &lcx,
+ 	[SC8280XP_LMX] = &lmx,
+ 	[SC8280XP_MMCX] = &mmcx,
 -- 
 2.43.0
 
