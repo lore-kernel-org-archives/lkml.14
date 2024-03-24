@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D05012FB04;
-	Sun, 24 Mar 2024 23:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5E41E5F57;
+	Sun, 24 Mar 2024 23:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321291; cv=none; b=EHXN7cZZrcajYGeO/Cq7+JxqtMP+ZrdX5kmbu4/9y5FBO1Sezug/DKOUSN7HeJTDTHYHDPe2SMWMME06f+AzXHzDl1ZE8+TwPDviG3F2AeY8x/rxBSfWiBQ+vtsva/+PDscKBAsnHBnw8rzGxqlc55vzKYc2LdbZifEIivMSgBY=
+	t=1711321295; cv=none; b=ch7bE/Den6lGgJG/kLQoI+cKMQVlypR598q9MOX1mRZyXcNkuIDKVlueMtvecjbqG+vWqv14gHKruDRd4FaMQF0Rk+n7AgZuz9C3Y2kayaW9qb+R7Ssxsvea51OIADApOWotBT2kc0YQFtQGX29YpluNEWDiFjKbyrKVBlQV4sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321291; c=relaxed/simple;
-	bh=W4RwcyHV3K6Low51NVIhVtApOG+DXghL1IwfkGZklV4=;
+	s=arc-20240116; t=1711321295; c=relaxed/simple;
+	bh=h7vZhE/3zNxbW/raux5GMr5zWcoQY2up1hIwKwdJiis=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZMKI3l8gKqSV+0cebrrPGqYuXrgrhppamNtkAJIPGWf7s8dYVrQlJIkjjxY2LpOLQwMjNUvrkdgycJhVVASrp8s0pqWiqrnTI5nRMMm7T1UeLERB/j+hBRXP0508tmry4NMnMSnB8Uxbt2U7C+7j+A5XnxT5y0G5u1dFO1apzEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=goDebecm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XkHVXY4HcozmC77dD0GO2qI3fMRAqabDs4KNAXnc6wNMSKxRPa6WZ/ojN35cC3hDj9/UL+gpQ6T1mW7hzg2gMyfr16ZjAI0Is4KW5qbJN2mFKC40exUp6VwQH/YBjdProBMkbCBwz9yDWU+ItwunbIk4bpVUmnH2AWvzNo6Dlog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfaAVWgV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="goDebecm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79EF0C43390;
-	Sun, 24 Mar 2024 23:01:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfaAVWgV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1571AC43390;
+	Sun, 24 Mar 2024 23:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321290;
-	bh=W4RwcyHV3K6Low51NVIhVtApOG+DXghL1IwfkGZklV4=;
+	s=k20201202; t=1711321294;
+	bh=h7vZhE/3zNxbW/raux5GMr5zWcoQY2up1hIwKwdJiis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=goDebecmuMH7Upr1ZillyK6ZRXQHR6Fdw0O9ol084MpvkGCB5J51woHUfV0yZX0PJ
-	 Yd544YCTlkgo1evh1Ef8wZYk9dcCXtU/c075KVUy3i9vrOPUsXS8x7vb9O9+uddBfU
-	 QiPkeFj0eIf5mYbzIit+ZBr3mJaGIT3YcbF7UTOm3NQTTk0iZa5GL5nysFYyod1ORe
-	 grk08+KpBvbVZosyEO9Aq9+JlUQp++cr2neyq5fqFxrUQkYeWBmeBd6EK0DNfG4XOq
-	 DU2fWzKm33g0AKYjcFMNnnj37OoF1gJKuEnJ6/VQGHNIMcQUdEV8+supQVXG29MjV5
-	 agnDbpcywKWZg==
+	b=ZfaAVWgV/klIaQKULmM65NGqaANg8vq6TAC/L3XkbrdgZG8oq7f9fnijcv3GlzvIx
+	 Dkf5ULEwUhj+hv2KtPxJeBla54XSLGolmqpw3VazHxrcrFFf437kae01fmNbEMQCxT
+	 YVEGmJCBVMob0qA3BvcpbQ2V6M9CsCBx+AMDllTdyEBD7jLHfw9tv8E1yTNZv7Z/7+
+	 mghGceDNQZbUmxHCfrbcpPW7/5tK9rpihpsFQhQ66+940ymQWzp78aw63bU7uvRtxv
+	 O7GLQmMiTPHymLnxXZySKMfO1U3K+72G+T/o9wyUO3mss90txTBO1+puOZfRge9GvY
+	 Q9IuKrC7IoeLQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Manuel Fombuena <fombuena@outlook.com>,
+	Jiri Kosina <jkosina@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 012/638] spi: intel-pci: Add support for Lunar Lake-M SPI serial flash
-Date: Sun, 24 Mar 2024 18:50:49 -0400
-Message-ID: <20240324230116.1348576-13-sashal@kernel.org>
+Subject: [PATCH 6.6 017/638] HID: multitouch: Add required quirk for Synaptics 0xcddc device
+Date: Sun, 24 Mar 2024 18:50:54 -0400
+Message-ID: <20240324230116.1348576-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,33 +48,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Manuel Fombuena <fombuena@outlook.com>
 
-[ Upstream commit 8f44e3808200c1434c26ef459722f88f48b306df ]
+[ Upstream commit 1741a8269e1c51fa08d4bfdf34667387a6eb10ec ]
 
-Add Intel Lunar Lake-M PCI ID to the driver list of supported devices.
-This is the same controller found in previous generations.
+Add support for the pointing stick (Accupoint) and 2 mouse buttons.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Link: https://msgid.link/r/20240212082027.2462849-1-mika.westerberg@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Present on some Toshiba/dynabook Portege X30 and X40 laptops.
+
+It should close https://bugzilla.kernel.org/show_bug.cgi?id=205817
+
+Signed-off-by: Manuel Fombuena <fombuena@outlook.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-intel-pci.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/hid-multitouch.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/spi/spi-intel-pci.c b/drivers/spi/spi-intel-pci.c
-index 07d20ca1164c3..4337ca51d7aa2 100644
---- a/drivers/spi/spi-intel-pci.c
-+++ b/drivers/spi/spi-intel-pci.c
-@@ -85,6 +85,7 @@ static const struct pci_device_id intel_spi_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0xa2a4), (unsigned long)&cnl_info },
- 	{ PCI_VDEVICE(INTEL, 0xa324), (unsigned long)&cnl_info },
- 	{ PCI_VDEVICE(INTEL, 0xa3a4), (unsigned long)&cnl_info },
-+	{ PCI_VDEVICE(INTEL, 0xa823), (unsigned long)&cnl_info },
- 	{ },
- };
- MODULE_DEVICE_TABLE(pci, intel_spi_pci_ids);
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 5ec1f174127a3..3816fd06bc953 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -2153,6 +2153,10 @@ static const struct hid_device_id mt_devices[] = {
+ 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+ 			USB_VENDOR_ID_SYNAPTICS, 0xcd7e) },
+ 
++	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
++		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
++			USB_VENDOR_ID_SYNAPTICS, 0xcddc) },
++
+ 	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
+ 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+ 			USB_VENDOR_ID_SYNAPTICS, 0xce08) },
 -- 
 2.43.0
 
