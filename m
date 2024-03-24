@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C151DC7E1;
-	Sun, 24 Mar 2024 22:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222B186AD0;
+	Sun, 24 Mar 2024 22:51:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320708; cv=none; b=XXUedLfU19EW2UihBo+51u0WfzkWYaMPXaQmvLyB9Vj0tUwcOk4TStU8Cj2BP0tWH9WXq8bsejWePP+fvPe+fDUdzDh/2wIGOy3Glc0itfzNexX5GSnZNfPWmGSf/4ODuEAmSuyNSzYioCjFP76GDu7NnPiDJakFlGqLfCD9bqo=
+	t=1711320706; cv=none; b=Mq0srs3zuUmGgnuHrU6cE9I1TgjnoBr++3KSXKYS7tur950vGcG/4CaIQqJ/Dm7K7IItR2LMx/SbIRqigPqjKssOyvVb3rtjDSS0eoOGxA7UaswD86V5dPkrYtmVcfFc6V9H5CDBQAeE6oEzI1W354Cj6b2ylQavPTSCUPD62T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320708; c=relaxed/simple;
-	bh=b3EGla1ceGQDu3kI0qNL7DjBL1cafs8iz7Jsl5WCx38=;
+	s=arc-20240116; t=1711320706; c=relaxed/simple;
+	bh=OC6s1nGnzvG27cdhEV9v+152Ge649GD6EUnGf7Ba9Jc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jx7phthA/+qtAmZdmTiEqYVAB+aEK3PC/6kUvo/bwLLwfAv9+ETrlzGh1UBbujBjFEGDz6IXlIErxY5XqA88pjA2K5VDPaPY890t8ppeO/FRdkk1Qd5qcDbhDeT+bvYX8wyU4peNfxZq2VadjFie3T4OkYMRLfM7tNc2EIq0t8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U124BHBx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dPKtxHZWOrRjxNNYfB/V4FHCSSkPDJZRGkq188OWydI+1QKLIvKEMTeggjqIVkUa9nEDSlxAcT+QqDMiexLVyXwcV8GJ8bw/l1SOjgiN+sEKVpbr677K1DFPtlalQzWfomSMj6u8RVf7jJRK5ZgxuK++HJH9iM68NHrKe7Ajdxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+5NUZsE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U124BHBx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1F1C433F1;
-	Sun, 24 Mar 2024 22:51:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+5NUZsE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D987C433C7;
+	Sun, 24 Mar 2024 22:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320706;
-	bh=b3EGla1ceGQDu3kI0qNL7DjBL1cafs8iz7Jsl5WCx38=;
+	s=k20201202; t=1711320705;
+	bh=OC6s1nGnzvG27cdhEV9v+152Ge649GD6EUnGf7Ba9Jc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U124BHBxrspiNow0F5WVpFTlhzyfVVbmgzoh+109Ew+YOV9TJzO6kNLFo7kLT4oVe
-	 fiwyPJzHnf0a833MHLiZpIZktoQYCPJBbK5kGvbTleYitzSmqwMmZYiBUDLsJzGjb4
-	 tZ0kjxT5sq21cfgiKqtLWiW4gQ6ha+ZFx13dXZbW/2zIlPl6Ev1gcvdbAhQ+Ja87jr
-	 Gl58cpuRJX2Z+z1wSDMdMggugrcvC/rIkT1cRfGEcmsiCk9frCI9XzlotDyGsNpDpt
-	 X23qNn1cIwcgEbotJ0c52yJQmWQ0Q+3pkKI6N23XTRcBxz4sMV5OG8FG6w+AYvYvBo
-	 i1o9Sku7TfNCg==
+	b=d+5NUZsELkUpUeje0JT2uO037NFH6IaR6UE/3QjRV13CQn8hos38U+J3KQ90QzNDp
+	 HxFhIsPv5Eg0ACu8kPLFfjsjgNIPUiR6X5gAmtKIItDB6mUy/PtzWgJpDioH3SqDi0
+	 px+MGKX3rh1e5MkYRHHg8L4b2Ar6rDCM3wvg+eXLQVIlM0iUvlcTG5k7Ginq59qoNC
+	 J57kOOic/p7v9T8Owsf5MEVQ+dOZo4yRuk6wixoVDfD1YJwV/UHuoarVhRzmMseg6r
+	 ZjB7cD2aWHTWLgd8f889yiccbQTVp6ynniyGpGJOEPlF+tbZgKLYJxITrddE5bjzIK
+	 7MDKF6DyD2kmg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bhavya Kapoor <b-kapoor@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 269/713] arm64: dts: ti: k3-j7200-common-proc-board: Modify Pinmux for wkup_uart0 and mcu_uart0
-Date: Sun, 24 Mar 2024 18:39:55 -0400
-Message-ID: <20240324224720.1345309-270-sashal@kernel.org>
+Subject: [PATCH 6.7 267/713] powercap: dtpm_cpu: Fix error check against freq_qos_add_request()
+Date: Sun, 24 Mar 2024 18:39:53 -0400
+Message-ID: <20240324224720.1345309-268-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,61 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bhavya Kapoor <b-kapoor@ti.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-[ Upstream commit 566feddd2ba5e29d9ccab36d6508592ae563f275 ]
+[ Upstream commit b50155cb0d609437236c88201206267835c6f965 ]
 
-WKUP_PADCONFIG registers for wkup_uart0 and mcu_uart0 lies
-under wkup_pmx2 for J7200. Thus, modify pinmux for both
-of them.
+The caller of the function freq_qos_add_request() checks again a non
+zero value but freq_qos_add_request() can return '1' if the request
+already exists. Therefore, the setup function fails while the QoS
+request actually did not failed.
 
-Fixes: 3709ea7f960e ("arm64: dts: ti: k3-j7200-common-proc-board: Add uart pinmux")
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
-Link: https://lore.kernel.org/r/20240214105846.1096733-2-b-kapoor@ti.com
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Fix that by changing the check against a negative value like all the
+other callers of the function.
+
+Fixes: 0e8f68d7f0485 ("Add CPU energy model based support")
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/ti/k3-j7200-common-proc-board.dts  | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/powercap/dtpm_cpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-index cee2b4b0eb87d..53594c5fb8e8f 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-@@ -91,24 +91,25 @@ vdd_sd_dv: gpio-regulator-TLV71033 {
- };
+diff --git a/drivers/powercap/dtpm_cpu.c b/drivers/powercap/dtpm_cpu.c
+index 9193c3b8edebe..ae7ee611978ba 100644
+--- a/drivers/powercap/dtpm_cpu.c
++++ b/drivers/powercap/dtpm_cpu.c
+@@ -219,7 +219,7 @@ static int __dtpm_cpu_setup(int cpu, struct dtpm *parent)
+ 	ret = freq_qos_add_request(&policy->constraints,
+ 				   &dtpm_cpu->qos_req, FREQ_QOS_MAX,
+ 				   pd->table[pd->nr_perf_states - 1].frequency);
+-	if (ret)
++	if (ret < 0)
+ 		goto out_dtpm_unregister;
  
- &wkup_pmx0 {
-+};
-+
-+&wkup_pmx2 {
- 	mcu_uart0_pins_default: mcu-uart0-default-pins {
- 		pinctrl-single,pins = <
--			J721E_WKUP_IOPAD(0xf4, PIN_INPUT, 0) /* (D20) MCU_UART0_RXD */
--			J721E_WKUP_IOPAD(0xf0, PIN_OUTPUT, 0) /* (D19) MCU_UART0_TXD */
--			J721E_WKUP_IOPAD(0xf8, PIN_INPUT, 0) /* (E20) MCU_UART0_CTSn */
--			J721E_WKUP_IOPAD(0xfc, PIN_OUTPUT, 0) /* (E21) MCU_UART0_RTSn */
-+			J721E_WKUP_IOPAD(0x90, PIN_INPUT, 0) /* (E20) MCU_UART0_CTSn */
-+			J721E_WKUP_IOPAD(0x94, PIN_OUTPUT, 0) /* (E21) MCU_UART0_RTSn */
-+			J721E_WKUP_IOPAD(0x8c, PIN_INPUT, 0) /* (D20) MCU_UART0_RXD */
-+			J721E_WKUP_IOPAD(0x88, PIN_OUTPUT, 0) /* (D19) MCU_UART0_TXD */
- 		>;
- 	};
- 
- 	wkup_uart0_pins_default: wkup-uart0-default-pins {
- 		pinctrl-single,pins = <
--			J721E_WKUP_IOPAD(0xb0, PIN_INPUT, 0) /* (B14) WKUP_UART0_RXD */
--			J721E_WKUP_IOPAD(0xb4, PIN_OUTPUT, 0) /* (A14) WKUP_UART0_TXD */
-+			J721E_WKUP_IOPAD(0x48, PIN_INPUT, 0) /* (B14) WKUP_UART0_RXD */
-+			J721E_WKUP_IOPAD(0x4c, PIN_OUTPUT, 0) /* (A14) WKUP_UART0_TXD */
- 		>;
- 	};
--};
- 
--&wkup_pmx2 {
- 	mcu_cpsw_pins_default: mcu-cpsw-default-pins {
- 		pinctrl-single,pins = <
- 			J721E_WKUP_IOPAD(0x0000, PIN_OUTPUT, 0) /* MCU_RGMII1_TX_CTL */
+ 	cpufreq_cpu_put(policy);
 -- 
 2.43.0
 
