@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241AC1D4C4F;
-	Sun, 24 Mar 2024 22:49:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB52811F9;
+	Sun, 24 Mar 2024 22:49:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320559; cv=none; b=slkts+7j9JAFXzq0ZMDsCL3ZrnR4DQzlTWnaAcxN+BW0jjomGIZqRWiEMhh0c0VBqvZFmhjVy6OX/6lDZsJ4dckSpH7uI5SpInAZYxZSn9rukVLbWsVLglYO5UNcML8HwIpo9YJ2H+aSoetUGaoM9R39fMrhMD+SWJ3yE54TXfM=
+	t=1711320553; cv=none; b=LPgsodBVg2oePqS4P5oeXEoeUKArgyKsXfy+1l3eZOkyJD1tcOpl6MEGzd4XWI3DBzEM+77Ssy9ZS/4a4Qyh7vj7MmdHb8TKhAsb3jBPj7tSb5BI/7ZVepL6EMadqXz72i88RZwJO8QTNErQr4dzj+eDDcIK3fEMKCx9GncSaRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320559; c=relaxed/simple;
-	bh=+mRypTj2AN+uFrmsMst73xXavbGCXAj069qIzrAjzZE=;
+	s=arc-20240116; t=1711320553; c=relaxed/simple;
+	bh=yVUsKV4jgxvtvm1H6E8T9TK0qKFypGddsw3+FQLzm+g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pPKgdKQ9OB1jXxDbtTf+7VMGn6bPTo1YhV/yv35utsjEUZvfxiX9eFVgxITd9IK3iujO1kLmnM+/ehj+csqbmjcN0a+mLc+TEjdvi8toXUNyfOjVE0DhtGX0zlESyA1B4v0uZOvv+ku6J5YAC5TkKABQERSzEwVbvIC8n16tL7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5oqHkhH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hefjqB7FEQx7fTqHJdAHQRjm6QtSRnOHeEpdZPej91q5FfFyc/MAbctupzJKO/3sJdC1kf3pzCWHk1JIYLIgZ1JmQLz3TSD78PawqAA6AUnVEMBEjdoJ0QrCVFZzIaVpilD9hyA0TMbPPXo938IljOQarEuZnVXaSm4ImezncwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ChUnC/Ho; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5oqHkhH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65A8BC43399;
-	Sun, 24 Mar 2024 22:49:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ChUnC/Ho"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10787C43394;
+	Sun, 24 Mar 2024 22:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320558;
-	bh=+mRypTj2AN+uFrmsMst73xXavbGCXAj069qIzrAjzZE=;
+	s=k20201202; t=1711320551;
+	bh=yVUsKV4jgxvtvm1H6E8T9TK0qKFypGddsw3+FQLzm+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h5oqHkhHzqpEzalmSV2L/2/UrEEHfrVzgUCMrD214a7xumiqKkbpAkxzOcPQHlpIv
-	 kJx12VoiC/m0/qMD+Cgl5vQSJ6Wvtkfa+1zqj3abjuL0AIG5kXLSj6elMcuqhx5Xns
-	 /NwpCBtfsa5Kzfyik5HI/+orDCsauA50/WMSOoMBwrcdtCLvXXefMYsMC5KvtprmAD
-	 BoCWF4o2Bw/qFnzHbHNJallWGyUH8tppEImA6r/cC9LHvhwc+AXdPfPjh79JA3DdlC
-	 wvOIQ9sUZ0V7kgpXDq1MBqJqen9l/N4ru6a8mGSSEjPgy/tqNlk2E5s/AmcaJVZ1UW
-	 Ww7v7xJIa92cA==
+	b=ChUnC/HoTmVmlLpQW1vULMR1Mi9Xfx3yxf1TgY5gjkPyMqIpcUaZ3QpysZiLf3bn4
+	 7JSLvLKzb1by3tipCi0I7M3/JVT5VBUMPAHUdTcLW8FdtaffAweCMJrmo18g+mg6D9
+	 E3vi/iJrwWQp9CZ7veQNNsiBOJnLxDIYNFWhY8Xw2QQu9u4p72smatfiZXhiMFUpdE
+	 pjRJ3G1gJMsWuNrA3uZwKrAPCeH1X3se0fWYbFT6jraqaXXpPhUEMKsl91sPP/wkOl
+	 X4Iou8EO930RK229U5ZyeH1ZlT1MJYRR/Th8Ato1fd+oAl4njrKp6Fa02K5cXyHUYy
+	 pWqHPCIkdP+cQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Yu Kuai <yukuai3@huawei.com>,
+	Song Liu <song@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 119/713] io_uring/net: fix overflow check in io_recvmsg_mshot_prep()
-Date: Sun, 24 Mar 2024 18:37:25 -0400
-Message-ID: <20240324224720.1345309-120-sashal@kernel.org>
+Subject: [PATCH 6.7 112/713] md: remove flag RemoveSynchronized
+Date: Sun, 24 Mar 2024 18:37:18 -0400
+Message-ID: <20240324224720.1345309-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,52 +48,214 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dan Carpenter <dan.carpenter@linaro.org>
+From: Yu Kuai <yukuai3@huawei.com>
 
-[ Upstream commit 8ede3db5061bb1fe28e2c9683329aafa89d2b1b4 ]
+[ Upstream commit c891f1fd90e66e584bb1353e1859cef7c9eb36f8 ]
 
-The "controllen" variable is type size_t (unsigned long).  Casting it
-to int could lead to an integer underflow.
+rcu is not used correctly here, because synchronize_rcu() is called
+before replacing old value, for example:
 
-The check_add_overflow() function considers the type of the destination
-which is type int.  If we add two positive values and the result cannot
-fit in an integer then that's counted as an overflow.
+remove_and_add_spares   // other path
+ synchronize_rcu
+ // called before replacing old value
+ set_bit(RemoveSynchronized)
+                        rcu_read_lock()
+                        rdev = conf->mirros[].rdev
+ pers->hot_remove_disk
+  conf->mirros[].rdev = NULL;
+  if (!test_bit(RemoveSynchronized))
+   synchronize_rcu
+   /*
+    * won't be called, and won't wait
+    * for concurrent readers to be done.
+    */
+                        // access rdev after remove_and_add_spares()
+                        rcu_read_unlock()
 
-However, if we cast "controllen" to an int and it turns negative, then
-negative values *can* fit into an int type so there is no overflow.
+Fortunately, there is a separate rcu protection to prevent such rdev
+to be freed:
 
-Good: 100 + (unsigned long)-4 = 96  <-- overflow
- Bad: 100 + (int)-4 = 96 <-- no overflow
+md_kick_rdev_from_array		//other path
+				rcu_read_lock()
+				rdev = conf->mirros[].rdev
+list_del_rcu(&rdev->same_set)
 
-I deleted the cast of the sizeof() as well.  That's not a bug but the
-cast is unnecessary.
+				rcu_read_unlock()
+				/*
+				 * rdev can be removed from conf, but
+				 * rdev won't be freed.
+				 */
+synchronize_rcu()
+free rdev
 
-Fixes: 9b0fc3c054ff ("io_uring: fix types in io_recvmsg_multishot_overflow")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-Link: https://lore.kernel.org/r/138bd2e2-ede8-4bcc-aa7b-f3d9de167a37@moroto.mountain
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Hence remove this useless flag and prepare to remove rcu protection to
+access rdev from 'conf'.
+
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Song Liu <song@kernel.org>
+Link: https://lore.kernel.org/r/20231125081604.3939938-2-yukuai1@huaweicloud.com
+Stable-dep-of: 257ac239ffcf ("md/raid1: fix choose next idle in read_balance()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- io_uring/net.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/md-multipath.c |  9 ---------
+ drivers/md/md.c           | 37 ++++++-------------------------------
+ drivers/md/md.h           |  5 -----
+ drivers/md/raid1.c        |  9 ---------
+ drivers/md/raid10.c       |  9 ---------
+ drivers/md/raid5.c        |  9 ---------
+ 6 files changed, 6 insertions(+), 72 deletions(-)
 
-diff --git a/io_uring/net.c b/io_uring/net.c
-index 1d9bfde71809a..058e04ea68c04 100644
---- a/io_uring/net.c
-+++ b/io_uring/net.c
-@@ -544,10 +544,10 @@ static int io_recvmsg_mshot_prep(struct io_kiocb *req,
+diff --git a/drivers/md/md-multipath.c b/drivers/md/md-multipath.c
+index d22276870283d..aa77133f31887 100644
+--- a/drivers/md/md-multipath.c
++++ b/drivers/md/md-multipath.c
+@@ -258,15 +258,6 @@ static int multipath_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
+ 			goto abort;
+ 		}
+ 		p->rdev = NULL;
+-		if (!test_bit(RemoveSynchronized, &rdev->flags)) {
+-			synchronize_rcu();
+-			if (atomic_read(&rdev->nr_pending)) {
+-				/* lost the race, try later */
+-				err = -EBUSY;
+-				p->rdev = rdev;
+-				goto abort;
+-			}
+-		}
+ 		err = md_integrity_register(mddev);
+ 	}
+ abort:
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index b2f27ac51bfb6..99b60d37114c4 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -9314,44 +9314,19 @@ static int remove_and_add_spares(struct mddev *mddev,
+ 	struct md_rdev *rdev;
+ 	int spares = 0;
+ 	int removed = 0;
+-	bool remove_some = false;
  
- 		if (unlikely(namelen < 0))
- 			return -EOVERFLOW;
--		if (check_add_overflow((int)sizeof(struct io_uring_recvmsg_out),
-+		if (check_add_overflow(sizeof(struct io_uring_recvmsg_out),
- 					namelen, &hdr))
- 			return -EOVERFLOW;
--		if (check_add_overflow(hdr, (int)controllen, &hdr))
-+		if (check_add_overflow(hdr, controllen, &hdr))
- 			return -EOVERFLOW;
+ 	if (this && test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
+ 		/* Mustn't remove devices when resync thread is running */
+ 		return 0;
  
- 		iomsg->namelen = namelen;
+ 	rdev_for_each(rdev, mddev) {
+-		if ((this == NULL || rdev == this) &&
+-		    rdev->raid_disk >= 0 &&
+-		    !test_bit(Blocked, &rdev->flags) &&
+-		    test_bit(Faulty, &rdev->flags) &&
+-		    atomic_read(&rdev->nr_pending)==0) {
+-			/* Faulty non-Blocked devices with nr_pending == 0
+-			 * never get nr_pending incremented,
+-			 * never get Faulty cleared, and never get Blocked set.
+-			 * So we can synchronize_rcu now rather than once per device
+-			 */
+-			remove_some = true;
+-			set_bit(RemoveSynchronized, &rdev->flags);
+-		}
+-	}
+-
+-	if (remove_some)
+-		synchronize_rcu();
+-	rdev_for_each(rdev, mddev) {
+-		if ((this == NULL || rdev == this) &&
+-		    (test_bit(RemoveSynchronized, &rdev->flags) ||
+-		     rdev_removeable(rdev))) {
+-			if (mddev->pers->hot_remove_disk(
+-				    mddev, rdev) == 0) {
+-				sysfs_unlink_rdev(mddev, rdev);
+-				rdev->saved_raid_disk = rdev->raid_disk;
+-				rdev->raid_disk = -1;
+-				removed++;
+-			}
++		if ((this == NULL || rdev == this) && rdev_removeable(rdev) &&
++		    !mddev->pers->hot_remove_disk(mddev, rdev)) {
++			sysfs_unlink_rdev(mddev, rdev);
++			rdev->saved_raid_disk = rdev->raid_disk;
++			rdev->raid_disk = -1;
++			removed++;
+ 		}
+-		if (remove_some && test_bit(RemoveSynchronized, &rdev->flags))
+-			clear_bit(RemoveSynchronized, &rdev->flags);
+ 	}
+ 
+ 	if (removed && mddev->kobj.sd)
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index ade83af123a22..8d881cc597992 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -190,11 +190,6 @@ enum flag_bits {
+ 				 * than other devices in the array
+ 				 */
+ 	ClusterRemove,
+-	RemoveSynchronized,	/* synchronize_rcu() was called after
+-				 * this device was known to be faulty,
+-				 * so it is safe to remove without
+-				 * another synchronize_rcu() call.
+-				 */
+ 	ExternalBbl,            /* External metadata provides bad
+ 				 * block management for a disk
+ 				 */
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index e138922d51292..6bd42ccbea9c4 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -1863,15 +1863,6 @@ static int raid1_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
+ 			goto abort;
+ 		}
+ 		p->rdev = NULL;
+-		if (!test_bit(RemoveSynchronized, &rdev->flags)) {
+-			synchronize_rcu();
+-			if (atomic_read(&rdev->nr_pending)) {
+-				/* lost the race, try later */
+-				err = -EBUSY;
+-				p->rdev = rdev;
+-				goto abort;
+-			}
+-		}
+ 		if (conf->mirrors[conf->raid_disks + number].rdev) {
+ 			/* We just removed a device that is being replaced.
+ 			 * Move down the replacement.  We drain all IO before
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index b7b0a573e7f8b..6e828a6aa0b0a 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -2247,15 +2247,6 @@ static int raid10_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
+ 		goto abort;
+ 	}
+ 	*rdevp = NULL;
+-	if (!test_bit(RemoveSynchronized, &rdev->flags)) {
+-		synchronize_rcu();
+-		if (atomic_read(&rdev->nr_pending)) {
+-			/* lost the race, try later */
+-			err = -EBUSY;
+-			*rdevp = rdev;
+-			goto abort;
+-		}
+-	}
+ 	if (p->replacement) {
+ 		/* We must have just cleared 'rdev' */
+ 		p->rdev = p->replacement;
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 6fe334bb954ab..f03e4231bec11 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -8241,15 +8241,6 @@ static int raid5_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
+ 		goto abort;
+ 	}
+ 	*rdevp = NULL;
+-	if (!test_bit(RemoveSynchronized, &rdev->flags)) {
+-		lockdep_assert_held(&mddev->reconfig_mutex);
+-		synchronize_rcu();
+-		if (atomic_read(&rdev->nr_pending)) {
+-			/* lost the race, try later */
+-			err = -EBUSY;
+-			rcu_assign_pointer(*rdevp, rdev);
+-		}
+-	}
+ 	if (!err) {
+ 		err = log_modify(conf, rdev, false);
+ 		if (err)
 -- 
 2.43.0
 
