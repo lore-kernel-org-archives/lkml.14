@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D0054725;
-	Sun, 24 Mar 2024 23:16:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6E622E173;
+	Sun, 24 Mar 2024 23:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322201; cv=none; b=RMRn0DkzgLh88BcgK4fYw8WFZM4EGCB4IONzZxYkTv3sIVODountr4wzZ7RgGsDj+bJ5xPGkONbOpg4kqVNAAoi2vghpRlw7KkhrFWf4+nzBy75CjyoX2Sst1DxjQtAZ/mdTpgfecWkj4INc4EAsxNYamDWg9WJV+EEA4Y+Hh44=
+	t=1711322199; cv=none; b=oeMchY8TYy0ek+fZdhmdbpA84EJvfxdBca5jzxZbZHpLdXS1yUenRSVUjZ/+sc622nxVqbtTuDlbKueVIhR+l7yJlzOMZLboJ01Am+QbCfdypysmlr09e5aObCRqOIzL5YtrqXanJpwGJCWh3tkZRgsYmWxGEqEgdfP5AgFSSH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322201; c=relaxed/simple;
-	bh=+ViMB1xwBnGP47Rzl089a3Kxnes9ANAMHekwXP/wl+4=;
+	s=arc-20240116; t=1711322199; c=relaxed/simple;
+	bh=T9fqgdc0Zuf66eYIIK+NU8AboiJdLsdVvvdMTpz4FUY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L2ZBPgt2lkw56kv7I0TRYbpH9FX3wwZ2wpyjDz5yYORlqNTlkI3XF2PJEjSYvzk8sZV+07USfjiq6kzu+SJ3KDMhsczMON+pqQJwaA+xNR4CVyDEt4/5Wmel7N99Dqi7QYNkaxctRaM1GLVoTai5uoZM/t2lbYIHs5qsJckEqSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iXSzL7VE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Yjv3Exb1NCsXS3WQiNKbqlEdOr6/t53mgJuYW6mMiVc71Jq9Fg4VB71F2p3jaNd7EXmfzSA/m8SuRaxmhl7ZffeDe2vLNhahw7qYC5MGZCf9lTglEWfRJIwSzruLvuCHYLpgi5Ei4it5cA2L7iTaCmIR8D49UhZ/yxqBb92xeH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ur/Wu4ea; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iXSzL7VE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F914C43399;
-	Sun, 24 Mar 2024 23:16:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ur/Wu4ea"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6965AC433C7;
+	Sun, 24 Mar 2024 23:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322200;
-	bh=+ViMB1xwBnGP47Rzl089a3Kxnes9ANAMHekwXP/wl+4=;
+	s=k20201202; t=1711322198;
+	bh=T9fqgdc0Zuf66eYIIK+NU8AboiJdLsdVvvdMTpz4FUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iXSzL7VEHVDl4LQ9p9B8yCR/wd73ErTu3BbhpU8clxI7YnAt4CCLwvSOsK4Q4yVCB
-	 YNgaqCGkw0EELdI4ddue95+7onSBkfOwfg70sWruWB41Ls1YYtRc31BAuQSDFNCXOB
-	 LVDJs+dXyn97IvTO/5Lhrhz0mCnGOxNJSnuU3z+MqF4XxFY8Ca1i2znVmDk4PYzotM
-	 UM5hBxWhR6P8mWs91EgPQ0kqHBWWdr9TM4rdHgwqUTn1GBrIckqv+GWZWcTlPRnziJ
-	 Xx9ivpALeVvP/PNOA9ulUl+hOvubF2WCSgI+3ZCxtASVTPj+Da01TlSRTWc4Cg29C9
-	 byP3O2e4LtD7A==
+	b=Ur/Wu4eaVePp6fbRYtadR6JQvHeLJ+85G/lKXxFX8bu5qu29DKohD+W9g3s/bIUxA
+	 aOtxQKQeqxXJoLNQ8dozsacaAE6Ftt3vWGcBpxuWhAmK8CAGGyCvJM2EnYKsK9gFuI
+	 UlbrbljBjmqUW2N8UKPMW1+AWQu6BnhYhHni7HcLHs4IW/S3xTnX48VPKVE4u55F/y
+	 1Z12Z3YOPwvR0dGlduzkZBtFINhdUF2x7JHKiGiuCJsxdKeQLNX1YJ7SirPhIkmKG6
+	 FhgTolpnnYhsm61GvalUoZC7mhbC/4IxYBhJ8PxzSa+fAVkQWKUfwWfuk/sK4HIglq
+	 WJ8uxmd1rl89Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Quanyang Wang <quanyang.wang@windriver.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 280/451] drm/msm/dpu: Only enable DSC_MODE_MULTIPLEX if dsc_merge is enabled
-Date: Sun, 24 Mar 2024 19:09:16 -0400
-Message-ID: <20240324231207.1351418-281-sashal@kernel.org>
+Subject: [PATCH 6.1 277/451] crypto: xilinx - call finalize with bh disabled
+Date: Sun, 24 Mar 2024 19:09:13 -0400
+Message-ID: <20240324231207.1351418-278-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,43 +48,69 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Marijn Suijten <marijn.suijten@somainline.org>
+From: Quanyang Wang <quanyang.wang@windriver.com>
 
-[ Upstream commit 06267d22f9ee6fd34150b6dcdb2fa6983e1a85bc ]
+[ Upstream commit a853450bf4c752e664abab0b2fad395b7ad7701c ]
 
-When the topology calls for two interfaces on the current fixed topology
-of 2 DSC blocks, or uses 1 DSC block for a single interface (e.g. SC7280
-with only one DSC block), there should be no merging of DSC output.
+When calling crypto_finalize_request, BH should be disabled to avoid
+triggering the following calltrace:
 
-This is already represented by the return value of
-dpu_encoder_use_dsc_merge(), but not yet used to correctly configure
-this flag.
+    ------------[ cut here ]------------
+    WARNING: CPU: 2 PID: 74 at crypto/crypto_engine.c:58 crypto_finalize_request+0xa0/0x118
+    Modules linked in: cryptodev(O)
+    CPU: 2 PID: 74 Comm: firmware:zynqmp Tainted: G           O       6.8.0-rc1-yocto-standard #323
+    Hardware name: ZynqMP ZCU102 Rev1.0 (DT)
+    pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+    pc : crypto_finalize_request+0xa0/0x118
+    lr : crypto_finalize_request+0x104/0x118
+    sp : ffffffc085353ce0
+    x29: ffffffc085353ce0 x28: 0000000000000000 x27: ffffff8808ea8688
+    x26: ffffffc081715038 x25: 0000000000000000 x24: ffffff880100db00
+    x23: ffffff880100da80 x22: 0000000000000000 x21: 0000000000000000
+    x20: ffffff8805b14000 x19: ffffff880100da80 x18: 0000000000010450
+    x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+    x14: 0000000000000003 x13: 0000000000000000 x12: ffffff880100dad0
+    x11: 0000000000000000 x10: ffffffc0832dcd08 x9 : ffffffc0812416d8
+    x8 : 00000000000001f4 x7 : ffffffc0830d2830 x6 : 0000000000000001
+    x5 : ffffffc082091000 x4 : ffffffc082091658 x3 : 0000000000000000
+    x2 : ffffffc7f9653000 x1 : 0000000000000000 x0 : ffffff8802d20000
+    Call trace:
+     crypto_finalize_request+0xa0/0x118
+     crypto_finalize_aead_request+0x18/0x30
+     zynqmp_handle_aes_req+0xcc/0x388
+     crypto_pump_work+0x168/0x2d8
+     kthread_worker_fn+0xfc/0x3a0
+     kthread+0x118/0x138
+     ret_from_fork+0x10/0x20
+    irq event stamp: 40
+    hardirqs last  enabled at (39): [<ffffffc0812416f8>] _raw_spin_unlock_irqrestore+0x70/0xb0
+    hardirqs last disabled at (40): [<ffffffc08122d208>] el1_dbg+0x28/0x90
+    softirqs last  enabled at (36): [<ffffffc080017dec>] kernel_neon_begin+0x8c/0xf0
+    softirqs last disabled at (34): [<ffffffc080017dc0>] kernel_neon_begin+0x60/0xf0
+    ---[ end trace 0000000000000000 ]---
 
-Fixes: 58dca9810749 ("drm/msm/disp/dpu1: Add support for DSC in encoder")
-Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Patchwork: https://patchwork.freedesktop.org/patch/577067/
-Link: https://lore.kernel.org/r/20240204-dpu-dsc-multiplex-v1-1-080963233c52@somainline.org
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Fixes: 4d96f7d48131 ("crypto: xilinx - Add Xilinx AES driver")
+Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/crypto/xilinx/zynqmp-aes-gcm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 4bdde5cb23aae..3632f0768aa9e 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -1871,7 +1871,9 @@ static void dpu_encoder_prep_dsc(struct dpu_encoder_virt *dpu_enc,
- 	dsc_common_mode = 0;
- 	pic_width = dsc->pic_width;
+diff --git a/drivers/crypto/xilinx/zynqmp-aes-gcm.c b/drivers/crypto/xilinx/zynqmp-aes-gcm.c
+index bf1f421e05f25..74bd3eb63734d 100644
+--- a/drivers/crypto/xilinx/zynqmp-aes-gcm.c
++++ b/drivers/crypto/xilinx/zynqmp-aes-gcm.c
+@@ -231,7 +231,10 @@ static int zynqmp_handle_aes_req(struct crypto_engine *engine,
+ 		err = zynqmp_aes_aead_cipher(areq);
+ 	}
  
--	dsc_common_mode = DSC_MODE_MULTIPLEX | DSC_MODE_SPLIT_PANEL;
-+	dsc_common_mode = DSC_MODE_SPLIT_PANEL;
-+	if (dpu_encoder_use_dsc_merge(enc_master->parent))
-+		dsc_common_mode |= DSC_MODE_MULTIPLEX;
- 	if (enc_master->intf_mode == INTF_MODE_VIDEO)
- 		dsc_common_mode |= DSC_MODE_VIDEO;
++	local_bh_disable();
+ 	crypto_finalize_aead_request(engine, areq, err);
++	local_bh_enable();
++
+ 	return 0;
+ }
  
 -- 
 2.43.0
