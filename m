@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0172E144D1F;
-	Sun, 24 Mar 2024 22:51:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199B91DB412;
+	Sun, 24 Mar 2024 22:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320684; cv=none; b=AfdVGiXHxLKZB3I2B3rcQPISKBqprold2pV41MDnIx4uhCN2yOEtHD5R6nsG4AnLfjHJdKpzF17PKzFbmtTh8t34mPnj7gKNrKWhtpotNT4IKgf9CkebCZo9cHQ89Z8WwTyUaGrPPGKTLIyIAlGH0s48e3rN13DMPnLiiALr2oA=
+	t=1711320692; cv=none; b=qGCh8xN/8nq8B6Rzgz3//cT5aAiJo/7NfMFhvtnjsowU059h4R0I+sZ8idmnzRUqmAY9LyVvc1tdrD+XlwG0ymsA715Poh69xes1kPa+zsqLpNUW9pzaBxi9TvOlYL5fcEh/SdBmb0/mhw+sR1rgFuk83ELXw9cWZEsdOh3pxVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320684; c=relaxed/simple;
-	bh=xxrcHK3u9+N9bxYZFwHB6zkQtYX/lIuKUvyAgZsqUQs=;
+	s=arc-20240116; t=1711320692; c=relaxed/simple;
+	bh=bcI9wS3VFYaaH9yiTWy3phxmoJ2vvyOCNAo5/8GBxgA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FtSPs0z8MDdPbXwIhCu3tezXJospLMQWByPUJ1FddyYZQexhjPhH7uK0mcqIehCA3ZqSJ1bA48D4d4SVqmqbdmvXs3NjioFEnGWTbAbduGMq65QQdrSRT1ev38H/WLZJs5aex26cWXlrb7+n9V5nOvVA7HFW2DDR5hRVVi4nQng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VqqfrSvl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=d7QTnmykbEpeIx3g2r4V+tOpTEHcNFk02L1HsgDUnAUBa1qfeKr/tjGxoyFrZiQ2LVNM4vt4bEux2J0j2Eeay4fC9aVGjOMmGT9YkYN0Zk7Y3no4r0Ndmb8e+HGFNzh5rKluEH/tPFx2T8kIwIPmDEaZBcKdEPLU3K76MG+fHHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qjZEowzU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VqqfrSvl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22540C43390;
-	Sun, 24 Mar 2024 22:51:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qjZEowzU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2249FC433F1;
+	Sun, 24 Mar 2024 22:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320683;
-	bh=xxrcHK3u9+N9bxYZFwHB6zkQtYX/lIuKUvyAgZsqUQs=;
+	s=k20201202; t=1711320691;
+	bh=bcI9wS3VFYaaH9yiTWy3phxmoJ2vvyOCNAo5/8GBxgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VqqfrSvl48C5+kLT4lYUqmBwoKrG+6LY/VOULt/NLuENB8SHQsaUrlzLqrtUHjFGd
-	 wR5RyCd/xfZaOLTfdMYAugB2r81v/1Dp3ndkvuZ7o0AcaXgIGR14+GuBZp4tHTvk29
-	 ufTt4ZUymlarS7B4G3X+9I6+0rPbyEAHT9AAwdtIHjn7OZdoTJOvpj2FK5Zrf+vrmU
-	 tzkA3wkShx+bfyO7mMXtcsy3E0A+JwKy8mb+il+ZIhBhvLzDiVr3+Kh8ICrQoNUDwH
-	 bg5IxlRIJQOzPopPnu7g4m1uBKZt0DScHsDW6WczzEwWyRTjoKyQDZgDSloVa5z8N/
-	 PmzVd1mAYIpZQ==
+	b=qjZEowzUoRzK1rN+1UCKiVL2mKbzY0AYwkvDUOgJGnwSB0BpKNNukauTRsN2vXu6V
+	 ZGk1CDFBpSMftwyAF1jWyh+jJ67+VvORg5gja5rEFMkSzhz+pDoQ9RXCIPRIagmsBQ
+	 SucG1GbFOletbpmsccMdlPRIlbUO9+VRLAQZkSirJ21efU32iO9U0YxDbRDtb5ckCq
+	 pV4ZnPxP/XbtzE2XUUn2PytVhwIYWCay9kHvEvhShnvx0DoVrsLXpH9ilRyeJqWBLX
+	 6jhpRve6t2ICZd1Q7xBknYxvfqC6//wzmuAziVwdNBFodm4caoKgpjuxGbzKe6UB7E
+	 7e6F6JaxUVJKw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: Craig Tatlor <ctatlor97@gmail.com>,
+	Luca Weiss <luca@z3ntu.xyz>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 246/713] arm64: dts: mediatek: mt7622: add missing "device_type" to memory nodes
-Date: Sun, 24 Mar 2024 18:39:32 -0400
-Message-ID: <20240324224720.1345309-247-sashal@kernel.org>
+Subject: [PATCH 6.7 253/713] ARM: dts: qcom: msm8974: correct qfprom node size
+Date: Sun, 24 Mar 2024 18:39:39 -0400
+Message-ID: <20240324224720.1345309-254-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,56 +46,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Craig Tatlor <ctatlor97@gmail.com>
 
-[ Upstream commit 99d100e00144bc01b49a697f4bc4398f2f7e7ce4 ]
+[ Upstream commit 724c4bf0e4bf81dba77736afb93964c986c3c123 ]
 
-This fixes:
-arch/arm64/boot/dts/mediatek/mt7622-rfb1.dtb: /: memory@40000000: 'device_type' is a required property
-        from schema $id: http://devicetree.org/schemas/memory.yaml#
-arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dtb: /: memory@40000000: 'device_type' is a required property
-        from schema $id: http://devicetree.org/schemas/memory.yaml#
+The qfprom actually is bigger than 0x1000, so adjust the reg.
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://lore.kernel.org/r/20240122132357.31264-1-zajec5@gmail.com
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Note that the non-ECC-corrected qfprom can be found at 0xfc4b8000
+(-0x4000). The current reg points to the ECC-corrected qfprom block
+which should have equivalent values at all offsets compared to the
+non-corrected version.
+
+[luca@z3ntu.xyz: extract to standalone patch and adjust for review
+comments]
+
+Fixes: c59ffb519357 ("arm: dts: msm8974: Add thermal zones, tsens and qfprom nodes")
+Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20240210-msm8974-qfprom-v3-1-26c424160334@z3ntu.xyz
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts | 1 +
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts             | 1 +
- 2 files changed, 2 insertions(+)
+ arch/arm/boot/dts/qcom/qcom-msm8974.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-index c46682150e502..26cb3268ccbaa 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-@@ -75,6 +75,7 @@ led-1 {
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
+index 0bc2e66d15b15..f41cc4b4b518b 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
+@@ -1226,7 +1226,7 @@ restart@fc4ab000 {
  
- 	memory@40000000 {
- 		reg = <0 0x40000000 0 0x40000000>;
-+		device_type = "memory";
- 	};
+ 		qfprom: qfprom@fc4bc000 {
+ 			compatible = "qcom,msm8974-qfprom", "qcom,qfprom";
+-			reg = <0xfc4bc000 0x1000>;
++			reg = <0xfc4bc000 0x2100>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
  
- 	reg_1p8v: regulator-1p8v {
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-index 2dc1bdc74e212..5c26021fc4cf1 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -57,6 +57,7 @@ key-wps {
- 
- 	memory@40000000 {
- 		reg = <0 0x40000000 0 0x20000000>;
-+		device_type = "memory";
- 	};
- 
- 	reg_1p8v: regulator-1p8v {
 -- 
 2.43.0
 
