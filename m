@@ -1,314 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013512002DB;
-	Sun, 24 Mar 2024 23:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E91E2002DD;
+	Sun, 24 Mar 2024 23:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322300; cv=none; b=md+NEWTZHDMqiyGQSQ7LYErFAXvesn3fjaPQxAamF9kklLCgdjZ0uN0mdrSVjjKuFHGhFCdAAy8UKzjhAfsvgbtrxDFcqGqBJyshoMM7mjRkDwJvNhEq2mVO4sG53RkcV1NW+P51RuQBMtv2bj7ouQGUhklauVs/unkP2AJqcAI=
+	t=1711322298; cv=none; b=Io5gK9mx/+5kaoxdaFpy1JYFxLQ99zH+2gvEDvLBE4MlUe/Qu3tx2if8KgX073BRooDg/OzErXH3MXi/6BcmEDlBi8xdUM3QwKnm9JrvxhydtCZqKXlsHFt6ayuVlNPczWTEfYHhyUI/+hg/XlUKXsu0225yPVuD/DKiL420cOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322300; c=relaxed/simple;
-	bh=LU3mMInKh8CA4wuJytrcoR1TJCTXH8qvdHqcPiWRSYc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aUrHR51a8/67c4/hUkFrZmPGMmIy5Dg9CTrHocBrdp+ivbgvRfKTtToB9+HSFbEIzQlqbbRdeyT1HAA+u1Atnf2Y8Zdsdn6EbGCOmP3+Vk+uiNITBCoop/jT4voWZCqxVmsoh/HMsPYVkEQhI9M/oWn/b4xEESzbUxoPC+uh5EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hZFUAwJ6; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711322298; c=relaxed/simple;
+	bh=/bXkY6dK5NCiDQ0gc7WTqr8VejKapTB/nJwPlB62Ets=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VbjA0TscumuSCcq81GENopdEvKKW2Gs9w0BY9mbU6giUfGtggR8ZCLQf6JXAmjnoTRdw5640agTf09Tcs8u94daE139X4F6qyXJTCAhH6VgdZH1iBwBZBtShwm+/A7GaqB/k375WPB+Av+4MKv1HtyXW3ICl4n8Xmk6AmdzXBhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qJQCEJYh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hZFUAwJ6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711322298; x=1742858298;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=LU3mMInKh8CA4wuJytrcoR1TJCTXH8qvdHqcPiWRSYc=;
-  b=hZFUAwJ6Q2bo04pS8Zm5jngomqyBbSCaSOV8jJzjSs9fyIdQkXy1C3Dc
-   18r4Knn04i9R9B77w/BGYwfoIynP/nrSBDqqdrqRO5Yd8U256giJGMazQ
-   Lz/jYhUM06U8m3WfAJ716O/pJX9bbO4aNIITNuIM16aFVy8Ks8bM1Rkek
-   i1EGs++PvZLYzQFTtcvncZ6no66SdqaINDa0bAJji5y3aCIDdqUoKXWc3
-   s8yz9GN61vuJR9tldzKtZpCu1FASZYIiSLcWANxQp+BJuCqIAr6bFE4c+
-   YiTad9/HNCF20LbFGafPdm4wKp+9qZNcGMAU0oaIelLTstNwflEOk/LAu
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6431709"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="6431709"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="15464682"
-Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.186.165])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:16 -0700
-From: ira.weiny@intel.com
-Date: Sun, 24 Mar 2024 16:18:12 -0700
-Subject: [PATCH 09/26] cxl/region: Add Dynamic Capacity CXL region support
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJQCEJYh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C02DC433A6;
+	Sun, 24 Mar 2024 23:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711322297;
+	bh=/bXkY6dK5NCiDQ0gc7WTqr8VejKapTB/nJwPlB62Ets=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qJQCEJYhdrae5R/v7UWP4yfqHso0fN6vwBpTEXeA7Tl7vlNcqy+wV/kcqqdIH9ueo
+	 jBmQ8Yz2ylBrMi/3YpWKDiG4jb0qVYaI1qy7XvgYnLY4TrevihOK9Rg+eHx2USIaON
+	 CBnbh1hI1jGKkkDCK1FZA8bAc0rHo9pfZ0DvKLmZhtnG1A2sMl0ONR1CPFE0FwuBce
+	 EGde/HgDqND5ghlyU3MDz+yfj2UD4L8dZXzUiN8SLh3j404hjHKQs25AnK+vUjEYvB
+	 v8nEmkJ9sAkkyRzwt9Sfu4sZt3YKtCq+VoNgBaZ75cfNR8hUA8Yz/2n5234x9J37Ul
+	 hNI7vaQMy3I1w==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Xiuhong Wang <xiuhong.wang@unisoc.com>,
+	Zhiguo Niu <zhiguo.niu@unisoc.com>,
+	Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.1 380/451] f2fs: compress: fix reserve_cblocks counting error when out of space
+Date: Sun, 24 Mar 2024 19:10:56 -0400
+Message-ID: <20240324231207.1351418-381-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
+References: <20240324231207.1351418-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240324-dcd-type2-upstream-v1-9-b7b00d623625@intel.com>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
-In-Reply-To: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Navneet Singh <navneet.singh@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
- Davidlohr Bueso <dave@stgolabs.net>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=8897;
- i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=+w44ZaRnnuSgyXxYYZ37HJrVw/1eUidIfwSam5HwsWQ=;
- b=I6krxIl+DxVHMk247UcvYhObxjCvUUasSgFqtxiAN9orUhOHzPVLzRdzGl+IMtUkxHAVY6ZwA
- 4Ll8mzfGHTtC4nmGDNaZ7tYLrBdfb2DiNAhF34CWK+5JJMNBj9Okpf+
-X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
- pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-From: Navneet Singh <navneet.singh@intel.com>
+From: Xiuhong Wang <xiuhong.wang@unisoc.com>
 
-CXL devices optionally support dynamic capacity.  CXL Regions must be
-configured correctly to access this capacity.  Similar to ram and pmem
-partitions, DC Regions, as they are called in CXL 3.1, represent
-different partitions of the DPA space.
+[ Upstream commit 2f6d721e14b69d6e1251f69fa238b48e8374e25f ]
 
-Introduce the concept of a sparse DAX region.  Add the create_dc_region
-sysfs entry to create sparse DC DAX regions.  Special case DC capable
-regions to create a 0 sized seed DAX device to maintain backwards
-compatibility with older software which needs a default DAX device to
-hold the region reference.
+When a file only needs one direct_node, performing the following
+operations will cause the file to be unrepairable:
 
-Flag sparse DAX regions to indicate 0 capacity available until such time
-as DC capacity is added.
+unisoc # ./f2fs_io compress test.apk
+unisoc #df -h | grep dm-48
+/dev/block/dm-48 112G 112G 1.2M 100% /data
 
-Interleaving is deferred in this series.  Add an early check.
+unisoc # ./f2fs_io release_cblocks test.apk
+924
+unisoc # df -h | grep dm-48
+/dev/block/dm-48 112G 112G 4.8M 100% /data
 
-Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+unisoc # dd if=/dev/random of=file4 bs=1M count=3
+3145728 bytes (3.0 M) copied, 0.025 s, 120 M/s
+unisoc # df -h | grep dm-48
+/dev/block/dm-48 112G 112G 1.8M 100% /data
 
+unisoc # ./f2fs_io reserve_cblocks test.apk
+F2FS_IOC_RESERVE_COMPRESS_BLOCKS failed: No space left on device
+
+adb reboot
+unisoc # df -h  | grep dm-48
+/dev/block/dm-48             112G 112G   11M 100% /data
+unisoc # ./f2fs_io reserve_cblocks test.apk
+0
+
+This is because the file has only one direct_node. After returning
+to -ENOSPC, reserved_blocks += ret will not be executed. As a result,
+the reserved_blocks at this time is still 0, which is not the real
+number of reserved blocks. Therefore, fsck cannot be set to repair
+the file.
+
+After this patch, the fsck flag will be set to fix this problem.
+
+unisoc # df -h | grep dm-48
+/dev/block/dm-48             112G 112G  1.8M 100% /data
+unisoc # ./f2fs_io reserve_cblocks test.apk
+F2FS_IOC_RESERVE_COMPRESS_BLOCKS failed: No space left on device
+
+adb reboot then fsck will be executed
+unisoc # df -h  | grep dm-48
+/dev/block/dm-48             112G 112G   11M 100% /data
+unisoc # ./f2fs_io reserve_cblocks test.apk
+924
+
+Fixes: c75488fb4d82 ("f2fs: introduce F2FS_IOC_RESERVE_COMPRESS_BLOCKS")
+Signed-off-by: Xiuhong Wang <xiuhong.wang@unisoc.com>
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes for v1:
-[djiang: mark sysfs entries to be in 6.10 kernel including date]
-[djbw: change dax region typing to be 'sparse' rather than 'dynamic']
-[iweiny: rebase changes to master instead of type2 patches]
----
- Documentation/ABI/testing/sysfs-bus-cxl | 22 +++++++++++-----------
- drivers/cxl/core/core.h                 |  1 +
- drivers/cxl/core/port.c                 |  1 +
- drivers/cxl/core/region.c               | 33 +++++++++++++++++++++++++++++++++
- drivers/dax/bus.c                       |  8 ++++++++
- drivers/dax/bus.h                       |  1 +
- drivers/dax/cxl.c                       | 15 +++++++++++++--
- 7 files changed, 68 insertions(+), 13 deletions(-)
+ fs/f2fs/file.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 8a4f572c8498..f0cf52fff9fa 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -411,20 +411,20 @@ Description:
- 		interleave_granularity).
- 
- 
--What:		/sys/bus/cxl/devices/decoderX.Y/create_{pmem,ram}_region
--Date:		May, 2022, January, 2023
--KernelVersion:	v6.0 (pmem), v6.3 (ram)
-+What:		/sys/bus/cxl/devices/decoderX.Y/create_{pmem,ram,dc}_region
-+Date:		May, 2022, January, 2023, June 2024
-+KernelVersion:	v6.0 (pmem), v6.3 (ram), v6.10 (dc)
- Contact:	linux-cxl@vger.kernel.org
- Description:
- 		(RW) Write a string in the form 'regionZ' to start the process
--		of defining a new persistent, or volatile memory region
--		(interleave-set) within the decode range bounded by root decoder
--		'decoderX.Y'. The value written must match the current value
--		returned from reading this attribute. An atomic compare exchange
--		operation is done on write to assign the requested id to a
--		region and allocate the region-id for the next creation attempt.
--		EBUSY is returned if the region name written does not match the
--		current cached value.
-+		of defining a new persistent, volatile, or Dynamic Capacity
-+		(DC) memory region (interleave-set) within the decode range
-+		bounded by root decoder 'decoderX.Y'. The value written must
-+		match the current value returned from reading this attribute.
-+		An atomic compare exchange operation is done on write to assign
-+		the requested id to a region and allocate the region-id for the
-+		next creation attempt.  EBUSY is returned if the region name
-+		written does not match the current cached value.
- 
- 
- What:		/sys/bus/cxl/devices/decoderX.Y/delete_region
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 3b64fb1b9ed0..91abeffbe985 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -13,6 +13,7 @@ extern struct attribute_group cxl_base_attribute_group;
- #ifdef CONFIG_CXL_REGION
- extern struct device_attribute dev_attr_create_pmem_region;
- extern struct device_attribute dev_attr_create_ram_region;
-+extern struct device_attribute dev_attr_create_dc_region;
- extern struct device_attribute dev_attr_delete_region;
- extern struct device_attribute dev_attr_region;
- extern const struct device_type cxl_pmem_region_type;
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 036b61cb3007..661177b575f7 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -335,6 +335,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
- 	&dev_attr_qos_class.attr,
- 	SET_CXL_REGION_ATTR(create_pmem_region)
- 	SET_CXL_REGION_ATTR(create_ram_region)
-+	SET_CXL_REGION_ATTR(create_dc_region)
- 	SET_CXL_REGION_ATTR(delete_region)
- 	NULL,
- };
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index ec3b8c6948e9..0d7b09a49dcf 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2205,6 +2205,7 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
- 	switch (mode) {
- 	case CXL_REGION_RAM:
- 	case CXL_REGION_PMEM:
-+	case CXL_REGION_DC:
- 		break;
- 	default:
- 		dev_err(&cxlrd->cxlsd.cxld.dev, "unsupported mode %s\n",
-@@ -2314,6 +2315,32 @@ static ssize_t create_ram_region_store(struct device *dev,
- }
- DEVICE_ATTR_RW(create_ram_region);
- 
-+static ssize_t create_dc_region_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	return __create_region_show(to_cxl_root_decoder(dev), buf);
-+}
-+
-+static ssize_t create_dc_region_store(struct device *dev,
-+				      struct device_attribute *attr,
-+				      const char *buf, size_t len)
-+{
-+	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
-+	struct cxl_region *cxlr;
-+	int rc, id;
-+
-+	rc = sscanf(buf, "region%d\n", &id);
-+	if (rc != 1)
-+		return -EINVAL;
-+
-+	cxlr = __create_region(cxlrd, CXL_REGION_DC, id);
-+	if (IS_ERR(cxlr))
-+		return PTR_ERR(cxlr);
-+
-+	return len;
-+}
-+DEVICE_ATTR_RW(create_dc_region);
-+
- static ssize_t region_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
- {
-@@ -2759,6 +2786,11 @@ static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
- 	struct device *dev;
- 	int rc;
- 
-+	if (cxlr->mode == CXL_REGION_DC && cxlr->params.interleave_ways != 1) {
-+		dev_err(&cxlr->dev, "Interleaving DC not supported\n");
-+		return -EINVAL;
-+	}
-+
- 	cxlr_dax = cxl_dax_region_alloc(cxlr);
- 	if (IS_ERR(cxlr_dax))
- 		return PTR_ERR(cxlr_dax);
-@@ -3040,6 +3072,7 @@ static int cxl_region_probe(struct device *dev)
- 	case CXL_REGION_PMEM:
- 		return devm_cxl_add_pmem_region(cxlr);
- 	case CXL_REGION_RAM:
-+	case CXL_REGION_DC:
- 		/*
- 		 * The region can not be manged by CXL if any portion of
- 		 * it is already online as 'System RAM'
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index cb148f74ceda..903566aff5eb 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -181,6 +181,11 @@ static bool is_static(struct dax_region *dax_region)
- 	return (dax_region->res.flags & IORESOURCE_DAX_STATIC) != 0;
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 5dbd874ba3d8d..2fbc8d89c600b 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3561,10 +3561,10 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+ 	return ret;
  }
  
-+static bool is_sparse(struct dax_region *dax_region)
-+{
-+	return (dax_region->res.flags & IORESOURCE_DAX_SPARSE_CAP) != 0;
-+}
-+
- bool static_dev_dax(struct dev_dax *dev_dax)
+-static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
++static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count,
++		unsigned int *reserved_blocks)
  {
- 	return is_static(dev_dax->region);
-@@ -304,6 +309,9 @@ static unsigned long long dax_region_avail_size(struct dax_region *dax_region)
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
+-	unsigned int reserved_blocks = 0;
+ 	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+ 	block_t blkaddr;
+ 	int i;
+@@ -3628,12 +3628,12 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
  
- 	WARN_ON_ONCE(!rwsem_is_locked(&dax_region_rwsem));
+ 		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, true);
  
-+	if (is_sparse(dax_region))
-+		return 0;
-+
- 	for_each_dax_region_resource(dax_region, res)
- 		size -= resource_size(res);
- 	return size;
-diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
-index cbbf64443098..783bfeef42cc 100644
---- a/drivers/dax/bus.h
-+++ b/drivers/dax/bus.h
-@@ -13,6 +13,7 @@ struct dax_region;
- /* dax bus specific ioresource flags */
- #define IORESOURCE_DAX_STATIC BIT(0)
- #define IORESOURCE_DAX_KMEM BIT(1)
-+#define IORESOURCE_DAX_SPARSE_CAP BIT(2)
+-		reserved_blocks += reserved;
++		*reserved_blocks += reserved;
+ next:
+ 		count -= cluster_size;
+ 	}
  
- struct dax_region *alloc_dax_region(struct device *parent, int region_id,
- 		struct range *range, int target_node, unsigned int align,
-diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-index c696837ab23c..415d03fbf9b6 100644
---- a/drivers/dax/cxl.c
-+++ b/drivers/dax/cxl.c
-@@ -13,19 +13,30 @@ static int cxl_dax_region_probe(struct device *dev)
- 	struct cxl_region *cxlr = cxlr_dax->cxlr;
- 	struct dax_region *dax_region;
- 	struct dev_dax_data data;
-+	resource_size_t dev_size;
-+	unsigned long flags;
+-	return reserved_blocks;
++	return 0;
+ }
  
- 	if (nid == NUMA_NO_NODE)
- 		nid = memory_add_physaddr_to_nid(cxlr_dax->hpa_range.start);
+ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+@@ -3694,7 +3694,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
+ 		count = round_up(count, F2FS_I(inode)->i_cluster_size);
  
-+	flags = IORESOURCE_DAX_KMEM;
-+	if (cxlr->mode == CXL_REGION_DC)
-+		flags |= IORESOURCE_DAX_SPARSE_CAP;
-+
- 	dax_region = alloc_dax_region(dev, cxlr->id, &cxlr_dax->hpa_range, nid,
--				      PMD_SIZE, IORESOURCE_DAX_KMEM);
-+				      PMD_SIZE, flags);
- 	if (!dax_region)
- 		return -ENOMEM;
+-		ret = reserve_compress_blocks(&dn, count);
++		ret = reserve_compress_blocks(&dn, count, &reserved_blocks);
  
-+	dev_size = range_len(&cxlr_dax->hpa_range);
-+	/* Add empty seed dax device */
-+	if (cxlr->mode == CXL_REGION_DC)
-+		dev_size = 0;
-+
- 	data = (struct dev_dax_data) {
- 		.dax_region = dax_region,
- 		.id = -1,
--		.size = range_len(&cxlr_dax->hpa_range),
-+		.size = dev_size,
- 		.memmap_on_memory = true,
- 	};
+ 		f2fs_put_dnode(&dn);
  
-
+@@ -3702,13 +3702,12 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 			break;
+ 
+ 		page_idx += count;
+-		reserved_blocks += ret;
+ 	}
+ 
+ 	filemap_invalidate_unlock(inode->i_mapping);
+ 	f2fs_up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+ 
+-	if (ret >= 0) {
++	if (!ret) {
+ 		clear_inode_flag(inode, FI_COMPRESS_RELEASED);
+ 		inode->i_ctime = current_time(inode);
+ 		f2fs_mark_inode_dirty_sync(inode, true);
+@@ -3717,7 +3716,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 	inode_unlock(inode);
+ 	mnt_drop_write_file(filp);
+ 
+-	if (ret >= 0) {
++	if (!ret) {
+ 		ret = put_user(reserved_blocks, (u64 __user *)arg);
+ 	} else if (reserved_blocks &&
+ 			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
 -- 
-2.44.0
+2.43.0
 
