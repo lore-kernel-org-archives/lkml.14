@@ -1,45 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533A31E8E58;
-	Sun, 24 Mar 2024 22:54:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A611D6840;
+	Sun, 24 Mar 2024 22:55:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320893; cv=none; b=eCkUO6nyFP3wrg6nkJeNngaROwGrnZO99oajUBi0vXTBjVZlMFWJGm74MNnG+NxfgT7ZuUkYgZ/FCN8br1lHWu00P3QRcGHGzL3ciDMRPj31tCeDVMpbYdDixMb1xnEG5CyrcGSgkgGVv0WIlHOfoNPJTH3bagtQ6RRv7Q1i2+g=
+	t=1711320916; cv=none; b=PkcNdrwHK6ds92cPuQ4iTlmYO1nnygcH40xVDzuE9L5VcxCnGm3YmTQMBVtYd5rSjuBzuhmrX3x3hF81vUTJlrthA7EaaAS+mRSnxC7eaxX4NAGLdFUvwVufJnHQkEw2+QiPkD8baRD5ag619jgz6Oug/mtL3Xi9ABChtSqBagg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320893; c=relaxed/simple;
-	bh=V4NVh05WyemHL5wZcJ0nlItQbZj2IaY9CQKDxk9qkGg=;
+	s=arc-20240116; t=1711320916; c=relaxed/simple;
+	bh=95CPx9HrRfWrp5uEMaV8rR1GScFadCJmOfAb/CH3ZXY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AAKIUpj3gi1xGc81HSqIoKfkXN7x6K7dgX1jbe2HuEd+O/ZmBhSwb0yKIiYKccVxJuVOOd3ANwEYs9JC3UdWFLc6rxs8FAAhAfJOXGeNJjhwsFUYVzOroudX7MFt3G/T9TiMPPhC4q4Ly0FlpTZ04cQq80Snl6guHxwShl+pzkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mQuUhfXK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=M84xncUP9K+MvhnOUN9f1eWBlWuY2goCqOsP3NC2J7GJ3oVLwvFbcFbcwYyw8IicTV5UtspYbALCg8pgEzGHIymYnwWv9yOpajASfw0q5pMGH9wCJaesI9uG/wi+4to0N3zGh+HIR1qR0P6Fi6gLia4vnzgykGmbI7z5JmqgfwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ia+sKFsn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mQuUhfXK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0555AC43399;
-	Sun, 24 Mar 2024 22:54:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ia+sKFsn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17685C43390;
+	Sun, 24 Mar 2024 22:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320892;
-	bh=V4NVh05WyemHL5wZcJ0nlItQbZj2IaY9CQKDxk9qkGg=;
+	s=k20201202; t=1711320914;
+	bh=95CPx9HrRfWrp5uEMaV8rR1GScFadCJmOfAb/CH3ZXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mQuUhfXKlk9cX9FuU/puVWBAuw6WLSNeD9u5M4SKPO8C8TgHafQ2/w3khGTX81Eny
-	 JFMTclhj39GAnnOybZ+5HZwwEX3vgPefDMjlUBtPfS+AA5mR3PWXqI67sih2FZz5ha
-	 mjEmM5EaTKShHx2xBDrbw+APr6AW5baayN2dubjZajzpE4oVZ9qOYrARQEvNmgMx4/
-	 TioKlVS4qHHnHsj+b81lnPmqhUMtAajwZVRNdRW5UuLnK8eExUIOI552XBB+BFDC8O
-	 o4JHoxLbilJwjj2rL+fdxzCf/HlQ12JvBa9dsyyMIZ6UkL3MAhQX5CcgyWuX58uIhk
-	 12NQ/dC0bOlNA==
+	b=ia+sKFsnnMA1lcytcBQ+9SYbe/iM2ZKxD2xfVTzLTeyomGKu/8UCey2dTmX2tqLPr
+	 alm7BoS+AlPK3bBDdibVg8h9GBQjQMVut67NSutF6k205Aa81yxrNyzzJx9TRN75fp
+	 7MAW4U15XQAlCa4sz05EO1O84drSyZxDSwrFUrssGDcf4hg7G90TU8J432CT2C85WL
+	 iu2PlCfUxo3obq9E2Uyu2gFhFqvU0vo21cOSU8tNpRsj5b0W8wkG7HM8fu6Mo4391A
+	 mVd/sqJKdloUSWcBu/xYhNnUHwAAAiDVjLXfaC3JiV/tB+vGTJFrECbSKIv6FyWQOp
+	 UAfB9Yp8DR1Eg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	James Clark <james.clark@arm.com>,
-	Kaige Ye <ye@kaige.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 456/713] perf expr: Fix "has_event" function for metric style events
-Date: Sun, 24 Mar 2024 18:43:02 -0400
-Message-ID: <20240324224720.1345309-457-sashal@kernel.org>
+Subject: [PATCH 6.7 478/713] drm/msm/dpu: finalise global state object
+Date: Sun, 24 Mar 2024 18:43:24 -0400
+Message-ID: <20240324224720.1345309-479-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -53,60 +48,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ian Rogers <irogers@google.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-[ Upstream commit 6dd76680b925228312756c13b9b983661b552a64 ]
+[ Upstream commit 49e27d3c9cd67fd5851f8b5518645b9bf3d2c6c0 ]
 
-Events in metrics cannot use '/' as a separator, it would be
-recognized as a divide, so they use '@'. The '@' is recognized in the
-metricgroups code and changed to '/', do the same in the has_event
-function so that the parsing is only tried without the @s.
+Add calls to finalise global state object and corresponding lock.
 
-Fixes: 4a4a9bf9075f ("perf expr: Add has_event function")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Kaige Ye <ye@kaige.org>
-Cc: John Garry <john.g.garry@oracle.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240209204947.3873294-3-irogers@google.com
+Fixes: de3916c70a24 ("drm/msm/dpu: Track resources in global state")
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Patchwork: https://patchwork.freedesktop.org/patch/570175/
+Link: https://lore.kernel.org/r/20231203000532.1290480-3-dmitry.baryshkov@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/expr.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 7be23b3ac0821..b8875aac8f870 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -500,7 +500,25 @@ double expr__has_event(const struct expr_parse_ctx *ctx, bool compute_ids, const
- 	tmp = evlist__new();
- 	if (!tmp)
- 		return NAN;
--	ret = parse_event(tmp, id) ? 0 : 1;
-+
-+	if (strchr(id, '@')) {
-+		char *tmp_id, *p;
-+
-+		tmp_id = strdup(id);
-+		if (!tmp_id) {
-+			ret = NAN;
-+			goto out;
-+		}
-+		p = strchr(tmp_id, '@');
-+		*p = '/';
-+		p = strrchr(tmp_id, '@');
-+		*p = '/';
-+		ret = parse_event(tmp, tmp_id) ? 0 : 1;
-+		free(tmp_id);
-+	} else {
-+		ret = parse_event(tmp, id) ? 0 : 1;
-+	}
-+out:
- 	evlist__delete(tmp);
- 	return ret;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index 797099e5e53d9..81acbebaceadb 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -385,6 +385,12 @@ static int dpu_kms_global_obj_init(struct dpu_kms *dpu_kms)
+ 	return 0;
  }
+ 
++static void dpu_kms_global_obj_fini(struct dpu_kms *dpu_kms)
++{
++	drm_atomic_private_obj_fini(&dpu_kms->global_state);
++	drm_modeset_lock_fini(&dpu_kms->global_state_lock);
++}
++
+ static int dpu_kms_parse_data_bus_icc_path(struct dpu_kms *dpu_kms)
+ {
+ 	struct icc_path *path0;
+@@ -822,6 +828,8 @@ static void _dpu_kms_hw_destroy(struct dpu_kms *dpu_kms)
+ 		}
+ 	}
+ 
++	dpu_kms_global_obj_fini(dpu_kms);
++
+ 	dpu_kms->catalog = NULL;
+ 
+ 	dpu_kms->hw_mdp = NULL;
 -- 
 2.43.0
 
