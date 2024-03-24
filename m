@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2431311B2;
-	Sun, 24 Mar 2024 23:41:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2341311B9;
+	Sun, 24 Mar 2024 23:41:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323705; cv=none; b=Jcyv4RhA7XSOrkjC+jSTFV2TuYCR0lX2KOdq54N3jhcdsEcZbzj321pxZjjgWAwSqH7uVdN9Y6CHoOKWq7ph/emysxerbSE0OxKzih9X7zxUAmGyAU/NZLMUxfpC6Mh7j+QLHIFIQtanpHNziFQdKnZhnDbOHVue7lpWdlPlFlM=
+	t=1711323707; cv=none; b=NpmpFqxn3lqwOaGs4eob1A4n9yp9mp6inATDJ1F3DKPELgFfese5Nj3TJr60bw6ooHtbpGw8bX+bf642+u1oUpgPp6scuGOYKOr/OMSxYtLkNLSLWlbruHpgIHPm4XgRdoFejGB4HJ5mKIUOWW/WE2zY3aC8JIQdXz4J72P4RIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323705; c=relaxed/simple;
-	bh=aM8xageqbvxvKZ6EsJxxHf29jpzZD3ilwWZwqVMSnUc=;
+	s=arc-20240116; t=1711323707; c=relaxed/simple;
+	bh=+bjCDMRwadsGgRz/Ka4YYjHtGlwmEY4ooDUpXQ3MzME=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=POCVKFAjbdLmQ//jwlwb6sm4dUs6wPJ1hozTQeZ8nhRMsSOVCQyZucWVdtQtguBX7b4yO3Omp1v2k44N6gSuFw9vcOfNZ0LGv+o40w3HqZFOlNnPpFDeMO2TeNwzJeJDBhZGNzT7Inb+P4hbAdLldrCZWfUEs0zlVw7/l2edo9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGgnTX04; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kybDXeYzFTgByPy5L4MMuYI+DVSoZP+wKoMHcap1+JgEBGy3xS+mGg1ukwnzLJ9GhgYKvcd4jp8E7csWinETQUt6rF//IgDbXiimOpS1no700EH/4gjWIJk7x0JhIDNRtaBLmtmy6y4jLACaJ0ESg0GOoocYxsi9tBlQEyFnRSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQ7WVZf0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGgnTX04"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B1C3C433C7;
-	Sun, 24 Mar 2024 23:41:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQ7WVZf0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49188C43399;
+	Sun, 24 Mar 2024 23:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323704;
-	bh=aM8xageqbvxvKZ6EsJxxHf29jpzZD3ilwWZwqVMSnUc=;
+	s=k20201202; t=1711323705;
+	bh=+bjCDMRwadsGgRz/Ka4YYjHtGlwmEY4ooDUpXQ3MzME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oGgnTX04J0nFN8Fnn4sG+xkTnpqaVdLey6A5CvZP8ne9BUWeFaN9X1TPFv4M8DQ6w
-	 VWX/f3Dx20W5NBztwLrjLEU24AA2uMaBLDrQ4TUmY5fL/KuL4bEDdrQaKkC+gMvL6J
-	 p30iSB49PLMyd97Q265gyp2RbZ3DK/wtoHsqhgj09jjOEdMcMcr/UgaPR2ikVrW5ZA
-	 Ru52KBh8r1oyf/SpU6Wt5ctwggDpWxuAyNahI9GyPdZgqRzXQuGxHnfIq0RNzW81mm
-	 8EQDX89iQyLkSPQLpsfOG+0rw9FZCJSANZM7/spW3ktp0qW/VBBJ9EXyu/uobX0MLe
-	 QQ0NgdwnPMD0w==
+	b=iQ7WVZf0VQDU8cAUzQLyHKAYbDY1QVs9IjoEr7aQpIgs+KHsMq060CgyiGSCVeV1o
+	 PUdHeenBdRv5kIzsA7Id9zYcbqExUS/Fh8S+knVaBwVxUZQgtvGmrRARkMsBpcN+DJ
+	 8zvUSz+IZ8uY4z8cLAh05cP5YuQVG7p48HGzOb6f3XJiGh5xio9aIOOX5s24390qQg
+	 cW8GFDDZclHobJ9Mu8gjmlMXv8sPU+BJ5FDx/7ksfz+08/9J5D4iUonCSQPD6OyMZk
+	 XfOdd4sUSIm4QniXN7/hlnqXHkAsHa44k6MuPvK4K2jBaIbXsGcTR9IdhTbshracMK
+	 GBwvRrkyvWP5Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 077/238] ACPI: scan: Fix device check notification handling
-Date: Sun, 24 Mar 2024 19:37:45 -0400
-Message-ID: <20240324234027.1354210-78-sashal@kernel.org>
+Subject: [PATCH 5.10 079/238] SUNRPC: fix some memleaks in gssx_dec_option_array
+Date: Sun, 24 Mar 2024 19:37:47 -0400
+Message-ID: <20240324234027.1354210-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,55 +48,84 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 793551c965116d9dfaf0550dacae1396a20efa69 ]
+[ Upstream commit 3cfcfc102a5e57b021b786a755a38935e357797d ]
 
-It is generally invalid to fail a Device Check notification if the scan
-handler has not been attached to the given device after a bus rescan,
-because there may be valid reasons for the scan handler to refuse
-attaching to the device (for example, the device is not ready).
+The creds and oa->data need to be freed in the error-handling paths after
+their allocation. So this patch add these deallocations in the
+corresponding paths.
 
-For this reason, modify acpi_scan_device_check() to return 0 in that
-case without printing a warning.
-
-While at it, reduce the log level of the "already enumerated" message
-in the same function, because it is only interesting when debugging
-notification handling
-
-Fixes: 443fc8202272 ("ACPI / hotplug: Rework generic code to handle suprise removals")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 1d658336b05f ("SUNRPC: Add RPC based upcall mechanism for RPCGSS auth")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/scan.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ net/sunrpc/auth_gss/gss_rpc_xdr.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 67a5ee2fedfd3..f17f48bc13bc0 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -321,18 +321,14 @@ static int acpi_scan_device_check(struct acpi_device *adev)
- 		 * again).
- 		 */
- 		if (adev->handler) {
--			dev_warn(&adev->dev, "Already enumerated\n");
--			return -EALREADY;
-+			dev_dbg(&adev->dev, "Already enumerated\n");
-+			return 0;
- 		}
- 		error = acpi_bus_scan(adev->handle);
- 		if (error) {
- 			dev_warn(&adev->dev, "Namespace scan failure\n");
- 			return error;
- 		}
--		if (!adev->handler) {
--			dev_warn(&adev->dev, "Enumeration failure\n");
--			error = -ENODEV;
--		}
- 	} else {
- 		error = acpi_scan_device_not_present(adev);
+diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+index 2ff7b7083ebab..e265b8d38aa14 100644
+--- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
++++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+@@ -250,8 +250,8 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
+ 
+ 	creds = kzalloc(sizeof(struct svc_cred), GFP_KERNEL);
+ 	if (!creds) {
+-		kfree(oa->data);
+-		return -ENOMEM;
++		err = -ENOMEM;
++		goto free_oa;
  	}
+ 
+ 	oa->data[0].option.data = CREDS_VALUE;
+@@ -265,29 +265,40 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
+ 
+ 		/* option buffer */
+ 		p = xdr_inline_decode(xdr, 4);
+-		if (unlikely(p == NULL))
+-			return -ENOSPC;
++		if (unlikely(p == NULL)) {
++			err = -ENOSPC;
++			goto free_creds;
++		}
+ 
+ 		length = be32_to_cpup(p);
+ 		p = xdr_inline_decode(xdr, length);
+-		if (unlikely(p == NULL))
+-			return -ENOSPC;
++		if (unlikely(p == NULL)) {
++			err = -ENOSPC;
++			goto free_creds;
++		}
+ 
+ 		if (length == sizeof(CREDS_VALUE) &&
+ 		    memcmp(p, CREDS_VALUE, sizeof(CREDS_VALUE)) == 0) {
+ 			/* We have creds here. parse them */
+ 			err = gssx_dec_linux_creds(xdr, creds);
+ 			if (err)
+-				return err;
++				goto free_creds;
+ 			oa->data[0].value.len = 1; /* presence */
+ 		} else {
+ 			/* consume uninteresting buffer */
+ 			err = gssx_dec_buffer(xdr, &dummy);
+ 			if (err)
+-				return err;
++				goto free_creds;
+ 		}
+ 	}
+ 	return 0;
++
++free_creds:
++	kfree(creds);
++free_oa:
++	kfree(oa->data);
++	oa->data = NULL;
++	return err;
+ }
+ 
+ static int gssx_dec_status(struct xdr_stream *xdr,
 -- 
 2.43.0
 
