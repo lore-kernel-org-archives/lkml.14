@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9FF181D16;
-	Sun, 24 Mar 2024 23:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0B6229C11;
+	Sun, 24 Mar 2024 23:48:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324147; cv=none; b=dnO5MdBGYlJ06MqvEg5n1ADYWGFAsUg4CRjm4fSd7kFlTYI4QXtgiLN9YkJ5PdA0FTAnUjvbFb2d0kj8FQim7slAZpTp6f8vXnGadQJdgAslm3De7fweKk06PTY4FfF6TMx14+jOt1mPQ5A8Se5PH08CEiMFx0FOgMGViW/xTJU=
+	t=1711324136; cv=none; b=Ki244qSZ8kvlLyxYNieuhBD69h9ec5AWJB1lzqpLRVqoIWyK5/O1Ejk/7g2bm8pZUYjZ7HpeN34SXVfzoxqfowK+6Y6Mk/H/RQ8liJsW/QYpHEgVL1WX0SrN1Kim61Azci8ylrztXwznIXPvW39H56eB/FPOj7HvvQRJNxVkGeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324147; c=relaxed/simple;
-	bh=GasxbuW90lsjKa6WhOQETR31tGoaeHe/4jBfXK0euBo=;
+	s=arc-20240116; t=1711324136; c=relaxed/simple;
+	bh=4z44WqP148c/NqMRodDAXC6Z65nxiKYR7xAvPBfIzd4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Al3GCg4/4Y7rFXZdTlp2yiL9V5QlZHiitjU30x87LIH/wMFaV3IqHjlbL4gWamQtSU+yO3G3d2r+3gRteJKTkX+un7SJcvKYprZjciRfmIOPgUEeX6pTHix4NLk9x2kvMvppjPYJVrHgADCgnT7cZZ2y7y7SHJ3W+JK3HqNjaqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iP6AXD2r; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=vDEIrYHBPEIrFevPPmjjFIdQGBgHWhiCOYgTDNVvmKcI/icp5lle/AfEqHuTAZxgcKbXPHjWllqyUrGO/KN9rxKDWZUPc0JyJF98XMOqBIbaArFXVzb0/cEeVHQ/qfK7FBqEp4eenaHFY/IbvlwvtgNf+Gz6jobWuYhb7f9HQ+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNN8d617; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iP6AXD2r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C25E0C433B1;
-	Sun, 24 Mar 2024 23:49:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNN8d617"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 418D7C433F1;
+	Sun, 24 Mar 2024 23:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324146;
-	bh=GasxbuW90lsjKa6WhOQETR31tGoaeHe/4jBfXK0euBo=;
+	s=k20201202; t=1711324135;
+	bh=4z44WqP148c/NqMRodDAXC6Z65nxiKYR7xAvPBfIzd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iP6AXD2rsttIVqdE/5Qq4NuGdb3Id++3eK9ob+JZGX9Ynd5rZYuM9/uJUVHlDYVkl
-	 3mIdxHjN5l60XL6rTwoKCphKUnSrh5FFXijukLRt1OOBifiA99YRiH0FiERkjY8q99
-	 RD9QQhYsZDePNqn7CF28sEst2cAr5nLRD6bFsANWiIaGNU1czCCtQ3K8aL2ZbrRo6J
-	 OQ+h0vJMADaJpiKW+Qo+C7VtJVaPWJvSXnSOHkYfDoZvRe6XbSNrXGkBqnXZBwao1B
-	 3MDDV6vanxGpU/9ayccH17wrOF4uC95Q9lyX5slN6BTnF5F65l8O7vgKCwnGA3j3uu
-	 RLE1dxj8lDslg==
+	b=oNN8d617ZhkCTMQ/u7mevgnwyZhywZGJGtKuCGUW2Jo3v3aDOYMwYtcJeAgBBXoWf
+	 xlBY/SAF/rCfq3ORN59rB9a0AAWJzDY5mj+yi4G/V6N+W8L1HBS/ciseozUppfeUrm
+	 czIg+tukaxph3rk3Bi38J2x6Zui3YXwg5mIYUTx0Hujd/YIP7WLQ7SE93a/5Wav15V
+	 zSk+z8EQpIvo8/fKBoT99sGOlbT73ot3FJ2pesIis+9VX4BcDO6K13BAqaRzF8udiZ
+	 1vSyKMQuNIwHcAyzvC7ZGHepPBkSKHvLH4O9rCG/ssxQICNxC964fFtdOiquRwRheZ
+	 Zw186atTxqTEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Paloma Arellano <quic_parellan@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Jammy Zhou <Jammy.Zhou@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 142/183] drm/msm/dpu: add division of drm_display_mode's hskew parameter
-Date: Sun, 24 Mar 2024 19:45:55 -0400
-Message-ID: <20240324234638.1355609-143-sashal@kernel.org>
+Subject: [PATCH 5.4 132/183] drm/amdgpu: Fix missing break in ATOM_ARG_IMM Case of atom_get_src_int()
+Date: Sun, 24 Mar 2024 19:45:45 -0400
+Message-ID: <20240324234638.1355609-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -44,51 +46,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Paloma Arellano <quic_parellan@quicinc.com>
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit 551ee0f210991d25f336bc27262353bfe99d3eed ]
+[ Upstream commit 7cf1ad2fe10634238b38442a851d89514cb14ea2 ]
 
-Setting up the timing engine when the physical encoder has a split role
-neglects dividing the drm_display_mode's hskew parameter. Let's fix this
-since this must also be done in preparation for implementing YUV420 over
-DP.
+Missing break statement in the ATOM_ARG_IMM case of a switch statement,
+adds the missing break statement, ensuring that the program's control
+flow is as intended.
 
-Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-Signed-off-by: Paloma Arellano <quic_parellan@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Patchwork: https://patchwork.freedesktop.org/patch/579605/
-Link: https://lore.kernel.org/r/20240222194025.25329-3-quic_parellan@quicinc.com
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Fixes the below:
+drivers/gpu/drm/amd/amdgpu/atom.c:323 atom_get_src_int() warn: ignoring unreachable code.
+
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Cc: Jammy Zhou <Jammy.Zhou@amd.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/atom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-index b9c84fb4d4a1f..311863a05a6fa 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-@@ -258,12 +258,14 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
- 		mode.htotal >>= 1;
- 		mode.hsync_start >>= 1;
- 		mode.hsync_end >>= 1;
-+		mode.hskew >>= 1;
- 
- 		DPU_DEBUG_VIDENC(phys_enc,
--			"split_role %d, halve horizontal %d %d %d %d\n",
-+			"split_role %d, halve horizontal %d %d %d %d %d\n",
- 			phys_enc->split_role,
- 			mode.hdisplay, mode.htotal,
--			mode.hsync_start, mode.hsync_end);
-+			mode.hsync_start, mode.hsync_end,
-+			mode.hskew);
- 	}
- 
- 	drm_mode_to_intf_timing_params(phys_enc, &mode, &timing_params);
+diff --git a/drivers/gpu/drm/amd/amdgpu/atom.c b/drivers/gpu/drm/amd/amdgpu/atom.c
+index cae426c7c0863..e1503b52519a0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atom.c
++++ b/drivers/gpu/drm/amd/amdgpu/atom.c
+@@ -308,7 +308,7 @@ static uint32_t atom_get_src_int(atom_exec_context *ctx, uint8_t attr,
+ 				DEBUG("IMM 0x%02X\n", val);
+ 			return val;
+ 		}
+-		return 0;
++		break;
+ 	case ATOM_ARG_PLL:
+ 		idx = U8(*ptr);
+ 		(*ptr)++;
 -- 
 2.43.0
 
