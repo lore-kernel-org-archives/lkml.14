@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34A1145B1B;
-	Sun, 24 Mar 2024 23:14:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E79B53381;
+	Sun, 24 Mar 2024 23:13:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322049; cv=none; b=MI56wPembiLKvAL+hDyc+l+v9qWCBcIsY78P+IqqENSS2Nq0tv//qUzOwPw+72LEcTcNuBendFVJFKYRnOIAafi87GT4J97mSJlknsTwX3W2Xx7l6n0gyYQ6m+PQVwDC1nm+lJHjlnIwrwZ+Z53/onSraw1M167OiQ/OFZSt4L8=
+	t=1711321991; cv=none; b=qKCRjLchNdHqb++CbLy7bdetluMgLZwI91L/OfwFf4935yYT65gCnKA+7CsMn0RNVlFYVVNzvN83akl90VzDPQGvKFb5GWgBxXP/42CWbCwRgVs8Lxk/zyojci3pETnhUa2q0HJxUBq4Sc4DkXmxKrICTzfzNqc9cEX9jmzCQcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322049; c=relaxed/simple;
-	bh=QoO5Sp3xDDn2Bel5GdHMW9VjYekzmEIYKOXYEG2rCNs=;
+	s=arc-20240116; t=1711321991; c=relaxed/simple;
+	bh=zQqdpurwLB2EgsGZIeSezaN1OoSb/wsrwDE1e5WoJXQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cawQseDi5A+FbBSfEyxewvQl+MSXi5kZ7AjUF2Q+lCw9ijUuZVNTVLx9Mv13BQ9MN9NxnJQ9sQxFF1KuwJBT0GcI7ZxJKlV9FojVd1/jSLXOqf4cf/FpMwj9uCCIT61Q3EpqkS9ewgAcyIIt4FSK2A653M9RXTXaYytOLi+TVm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSdK34xJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=NJYlsby7yZirpLopzY36eyyw7IfdCWIUnu4csl9JMM3LuHCc46H0xYSVIA3ixXGhsdOEXHKHnY0RiVjqzS0M5kjDGYbyGavVHvsduk8zYq5sj+ZWvEDgzS1tG8cklkoyiUZs0rmFiRUSRAORbLJL0PDnoSOBBlkrMCTnxWyBn7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJwlEguC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSdK34xJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B6AC43399;
-	Sun, 24 Mar 2024 23:14:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJwlEguC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 486D4C433F1;
+	Sun, 24 Mar 2024 23:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322048;
-	bh=QoO5Sp3xDDn2Bel5GdHMW9VjYekzmEIYKOXYEG2rCNs=;
+	s=k20201202; t=1711321990;
+	bh=zQqdpurwLB2EgsGZIeSezaN1OoSb/wsrwDE1e5WoJXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XSdK34xJfZ8FtQBFKAHvTyWSWJI7HBvckqEc3cZ3Ynq0plpT968BT18F0WDBPLEYD
-	 YYXl9aDtELMjImfB5LvIxsHV8qsYId5mv2wEb9/3jAaIVszIFxfNnM55maKAF+/FMg
-	 yGtsHR13IFQ1e9XYL4p3ELPcIxxttBI5K9YxQriAhYBazT/SNZjRFPaoIE3svcMQpY
-	 Vi2SShpsf5Ai/JMGGgHZ64FAzV4Txi/s91ZUIP19fv33ipdC+8BGloW3+OijBq5WBO
-	 RLc1ANgLNElMJjCloo7l/rqL768q7J422sF0vh6qwfO1YCwxYqhR8ygTSXd5lGquDv
-	 XJA4NmSk2dNrw==
+	b=gJwlEguCPiWbo0NdVG6idd2rlJyQxrZCT5XuZSdK7yq4v4nyFkJpMuPJ/lbK7x0mQ
+	 BtMGDEpkjWVgmKCXMbpq1I86lgUu2JdeyHvGL5sceb6mxzeJbYXz/6Daa/AgbcqxxF
+	 x03ZiYNMWuwPn0l+dr4UwD/pHqsHgyidQXVr9/SMZ7AKsA38MSlmqo9icDs8HtdlnA
+	 Zof2269ZhY0zATQjsLVViIUSFq4SflfZYLHR9ArVRky/fFMh8aOm1DwkMKISrMLFKC
+	 /dpeQ2uOujkc2lEE+zffXCGL94J1JnxUt7CMCVOivS1bt7MDFsEE+LW5LulrNVxtv5
+	 YE1DDLxz85Nfg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Claudiu Beznea <claudiu.beznea@microchip.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
+Cc: Miroslav Franc <mfranc@suse.cz>,
+	=?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
+	Stefan Haberland <sth@linux.ibm.com>,
+	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 121/451] pwm: atmel-hlcdc: Convert to platform remove callback returning void
-Date: Sun, 24 Mar 2024 19:06:37 -0400
-Message-ID: <20240324231207.1351418-122-sashal@kernel.org>
+Subject: [PATCH 6.1 062/451] s390/dasd: fix double module refcount decrement
+Date: Sun, 24 Mar 2024 19:05:38 -0400
+Message-ID: <20240324231207.1351418-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,60 +51,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Miroslav Franc <mfranc@suse.cz>
 
-[ Upstream commit 5fce94170ad8a67b839f3dd8e8e8a87039ba0251 ]
+[ Upstream commit c3116e62ddeff79cae342147753ce596f01fcf06 ]
 
-The .remove() callback for a platform driver returns an int which makes
-many driver authors wrongly assume it's possible to do error handling by
-returning an error code. However the value returned is (mostly) ignored
-and this typically results in resource leaks. To improve here there is a
-quest to make the remove callback return void. In the first step of this
-quest all drivers are converted to .remove_new() which already returns
-void.
+Once the discipline is associated with the device, deleting the device
+takes care of decrementing the module's refcount.  Doing it manually on
+this error path causes refcount to artificially decrease on each error
+while it should just stay the same.
 
-Trivially convert this driver from always returning zero in the remove
-callback to the void returning variant.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Stable-dep-of: e25ac87d3f83 ("pwm: atmel-hlcdc: Fix clock imbalance related to suspend support")
+Fixes: c020d722b110 ("s390/dasd: fix panic during offline processing")
+Signed-off-by: Miroslav Franc <mfranc@suse.cz>
+Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Link: https://lore.kernel.org/r/20240209124522.3697827-3-sth@linux.ibm.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-atmel-hlcdc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/s390/block/dasd.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
-index a43b2babc8093..96a709a9d49a8 100644
---- a/drivers/pwm/pwm-atmel-hlcdc.c
-+++ b/drivers/pwm/pwm-atmel-hlcdc.c
-@@ -278,15 +278,13 @@ static int atmel_hlcdc_pwm_probe(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
+index 029bb9e15ad90..341d65acd715d 100644
+--- a/drivers/s390/block/dasd.c
++++ b/drivers/s390/block/dasd.c
+@@ -3512,12 +3512,11 @@ int dasd_generic_set_online(struct ccw_device *cdev,
+ 		dasd_delete_device(device);
+ 		return -EINVAL;
+ 	}
++	device->base_discipline = base_discipline;
+ 	if (!try_module_get(discipline->owner)) {
+-		module_put(base_discipline->owner);
+ 		dasd_delete_device(device);
+ 		return -EINVAL;
+ 	}
+-	device->base_discipline = base_discipline;
+ 	device->discipline = discipline;
  
--static int atmel_hlcdc_pwm_remove(struct platform_device *pdev)
-+static void atmel_hlcdc_pwm_remove(struct platform_device *pdev)
- {
- 	struct atmel_hlcdc_pwm *chip = platform_get_drvdata(pdev);
- 
- 	pwmchip_remove(&chip->chip);
- 
- 	clk_disable_unprepare(chip->hlcdc->periph_clk);
--
--	return 0;
- }
- 
- static const struct of_device_id atmel_hlcdc_pwm_dt_ids[] = {
-@@ -301,7 +299,7 @@ static struct platform_driver atmel_hlcdc_pwm_driver = {
- 		.pm = &atmel_hlcdc_pwm_pm_ops,
- 	},
- 	.probe = atmel_hlcdc_pwm_probe,
--	.remove = atmel_hlcdc_pwm_remove,
-+	.remove_new = atmel_hlcdc_pwm_remove,
- };
- module_platform_driver(atmel_hlcdc_pwm_driver);
- 
+ 	/* check_device will allocate block device if necessary */
+@@ -3525,8 +3524,6 @@ int dasd_generic_set_online(struct ccw_device *cdev,
+ 	if (rc) {
+ 		dev_warn(dev, "Setting the DASD online with discipline %s failed with rc=%i\n",
+ 			 discipline->name, rc);
+-		module_put(discipline->owner);
+-		module_put(base_discipline->owner);
+ 		dasd_delete_device(device);
+ 		return rc;
+ 	}
 -- 
 2.43.0
 
