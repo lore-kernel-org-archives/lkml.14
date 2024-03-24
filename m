@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A84918441B;
-	Sun, 24 Mar 2024 23:51:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CE0184436;
+	Sun, 24 Mar 2024 23:51:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324272; cv=none; b=KE2yaO3xEOCdLoabgdygaVHyz2tRHQ6Z8uNahwE+XbRkDrCdoB5A8tu1dBJzQ49TpvWy5sQVFqRx/St/Sl6SZmlPTPu2J3Pf+Sp0FCQpr3+LTVsdQynrIIqbLX7XlLKkYg5BtSmit7qM+dUedIfTZ9RkH1ZF7SxgmvH8hZqCOfM=
+	t=1711324275; cv=none; b=C1Cb8qJZBIvM3oZ+FciaS5tzA+yk8TdDa8+/s1K3ePxNOZpQQ9mhTiEFCmFuZrisHV/iIxG3u/O+DaDi8Bnx0tA9MQbZggXMWQ8H+4cnU8cyDwTuF8JODjYUf2pOe7Vv7nuFgay9n073ewW91E6vhccm2BnxyUvzBN4tE5Wkf+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324272; c=relaxed/simple;
-	bh=mIw4xy5YW1KbmrbCjGSqusqwOOX5O8qIg1Zb5Hszfto=;
+	s=arc-20240116; t=1711324275; c=relaxed/simple;
+	bh=RlpN8v+SpRk98+w7H3gbi89e8+2REgiqFkpTpNGHH7E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MWyqKwS32W/9BZ7z3kEMiaq3dvFoGWUoAP1eB+NISNeb4NGwoICyWLpd9bVWYVSYrkpuN/nrlRIEjCtZhmBlFcRT6PGX2bW81DQ8+lM2aXy5hm8HwUiAvemoowgdZH7AnAL9YoutSKGjixhexIHo2DpZqlVOMfjryM8YwVTaBYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlXNqVbQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pwxqvzKLPUAnruOmdAisMyLn5LBD2Kn34DqqbxFgIiLPw98w1scnhvpsBduWTAg6g2YuEpRjGPA5Qwk4GtlGNG/8KGByd8fjvc3UoIxxmRf2cSxhr4jIeUKY6Ru6mrCL2xXFuCp2XCZYMHqqbUwwoX/+plWD/fNFADsmxDX4Pp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o8azG9SF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlXNqVbQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5947EC43390;
-	Sun, 24 Mar 2024 23:51:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o8azG9SF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCA6EC433A6;
+	Sun, 24 Mar 2024 23:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324271;
-	bh=mIw4xy5YW1KbmrbCjGSqusqwOOX5O8qIg1Zb5Hszfto=;
+	s=k20201202; t=1711324275;
+	bh=RlpN8v+SpRk98+w7H3gbi89e8+2REgiqFkpTpNGHH7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WlXNqVbQJ4nsichSKeOOcdS5S98UmvtfdESbyxCWBYmnFiRSgzydnvVOhVXXcOOO2
-	 StFr7qauxtwHpAZiyrlVuetP88fCfdJoUGfQYIPxO97j8hmsNU94N/YDgW1T0in0Pi
-	 0cM9TS/zAk9Fjj/c8O7otJo9yg6re6+NR/ePCzGRFqm1vSNIhnsna/CxqndhlrHDeY
-	 78UmEfFa92D5W7wdanPhZHnUJrHHROUpAADgqYDznglobuqdD4BQtoes81Bzfqt/pc
-	 +EcaMMjFRdh/H0cvM4vccWfqHbrCaGxgYW1EaFei88QMQI1kD6pDT+xj5XJVkMRcde
-	 3qSoY6NeOoNDQ==
+	b=o8azG9SFh1c6klOLrgZI5bD+O5Me98wp8WKXBvEa7A0eAqKCf18CrvvT95YOLwLgO
+	 bZUWxOiXd5sRTbHKSGo6s1sFJltqjfpijFz3eEnAHUNJy7pGNClenBY9yO8kDtcFHV
+	 rL2AkknqD4jiobHnUdq0o2Ha1l+zO+6sOtUPYrgfSyy8PW3Pk2Zt5kwBZY0aYQodXN
+	 zAC4JQKQzR9eGA/gaFIhTRDGcnqbEV4glxmHJ0RPJ6TujAtDZIM4WvTIsEHoIuyHhg
+	 ppnk1MhZlupp9NhmxbeGzZhVlBm0Xrc7Z4ob4P/mhPWHpQX6XSaKRTzV8EOE1PUXPc
+	 GYPk+SkvFb/xw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ruud Bos <kernel.hbk@gmail.com>,
-	Gurucharan G <gurucharanx.g@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
+Cc: Chen Ni <nichen@iscas.ac.cn>,
+	Simon Horman <horms@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 050/148] igb: move PEROUT and EXTTS isr logic to separate functions
-Date: Sun, 24 Mar 2024 19:48:34 -0400
-Message-ID: <20240324235012.1356413-51-sashal@kernel.org>
+Subject: [PATCH 4.19 054/148] sr9800: Add check for usbnet_get_endpoints
+Date: Sun, 24 Mar 2024 19:48:38 -0400
+Message-ID: <20240324235012.1356413-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -49,139 +49,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ruud Bos <kernel.hbk@gmail.com>
+From: Chen Ni <nichen@iscas.ac.cn>
 
-[ Upstream commit cf99c1dd7b7729091043374b90807c7a5f9fd9b1 ]
+[ Upstream commit 07161b2416f740a2cb87faa5566873f401440a61 ]
 
-Remove code duplication in the tsync interrupt handler function by moving
-this logic to separate functions. This keeps the interrupt handler readable
-and allows the new functions to be extended for adapter types other than
-i210.
+Add check for usbnet_get_endpoints() and return the error if it fails
+in order to transfer the error.
 
-Signed-off-by: Ruud Bos <kernel.hbk@gmail.com>
-Tested-by: Gurucharan G <gurucharanx.g@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Stable-dep-of: ee14cc9ea19b ("igb: Fix missing time sync events")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Fixes: 19a38d8e0aa3 ("USB2NET : SR9800 : One chip USB2.0 USB2NET SR9800 Device Driver Support")
+Link: https://lore.kernel.org/r/20240305075927.261284-1-nichen@iscas.ac.cn
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_main.c | 81 +++++++++++++----------
- 1 file changed, 46 insertions(+), 35 deletions(-)
+ drivers/net/usb/sr9800.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 00d8f1e8177e7..c0e2323e50c6e 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -6511,12 +6511,52 @@ void igb_update_stats(struct igb_adapter *adapter)
- 	}
- }
+diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
+index 8f8c9ede88c26..a5ff7df10505b 100644
+--- a/drivers/net/usb/sr9800.c
++++ b/drivers/net/usb/sr9800.c
+@@ -737,7 +737,9 @@ static int sr9800_bind(struct usbnet *dev, struct usb_interface *intf)
  
-+static void igb_perout(struct igb_adapter *adapter, int tsintr_tt)
-+{
-+	int pin = ptp_find_pin(adapter->ptp_clock, PTP_PF_PEROUT, tsintr_tt);
-+	struct e1000_hw *hw = &adapter->hw;
-+	struct timespec64 ts;
-+	u32 tsauxc;
-+
-+	if (pin < 0 || pin >= IGB_N_PEROUT)
-+		return;
-+
-+	spin_lock(&adapter->tmreg_lock);
-+	ts = timespec64_add(adapter->perout[pin].start,
-+			    adapter->perout[pin].period);
-+	/* u32 conversion of tv_sec is safe until y2106 */
-+	wr32((tsintr_tt == 1) ? E1000_TRGTTIML1 : E1000_TRGTTIML0, ts.tv_nsec);
-+	wr32((tsintr_tt == 1) ? E1000_TRGTTIMH1 : E1000_TRGTTIMH0, (u32)ts.tv_sec);
-+	tsauxc = rd32(E1000_TSAUXC);
-+	tsauxc |= TSAUXC_EN_TT0;
-+	wr32(E1000_TSAUXC, tsauxc);
-+	adapter->perout[pin].start = ts;
-+	spin_unlock(&adapter->tmreg_lock);
-+}
-+
-+static void igb_extts(struct igb_adapter *adapter, int tsintr_tt)
-+{
-+	int pin = ptp_find_pin(adapter->ptp_clock, PTP_PF_EXTTS, tsintr_tt);
-+	struct e1000_hw *hw = &adapter->hw;
-+	struct ptp_clock_event event;
-+	u32 sec, nsec;
-+
-+	if (pin < 0 || pin >= IGB_N_EXTTS)
-+		return;
-+
-+	nsec = rd32((tsintr_tt == 1) ? E1000_AUXSTMPL1 : E1000_AUXSTMPL0);
-+	sec  = rd32((tsintr_tt == 1) ? E1000_AUXSTMPH1 : E1000_AUXSTMPH0);
-+	event.type = PTP_CLOCK_EXTTS;
-+	event.index = tsintr_tt;
-+	event.timestamp = sec * 1000000000ULL + nsec;
-+	ptp_clock_event(adapter->ptp_clock, &event);
-+}
-+
- static void igb_tsync_interrupt(struct igb_adapter *adapter)
- {
- 	struct e1000_hw *hw = &adapter->hw;
-+	u32 ack = 0, tsicr = rd32(E1000_TSICR);
- 	struct ptp_clock_event event;
--	struct timespec64 ts;
--	u32 ack = 0, tsauxc, sec, nsec, tsicr = rd32(E1000_TSICR);
+ 	data->eeprom_len = SR9800_EEPROM_LEN;
  
- 	if (tsicr & TSINTR_SYS_WRAP) {
- 		event.type = PTP_CLOCK_PPS;
-@@ -6532,51 +6572,22 @@ static void igb_tsync_interrupt(struct igb_adapter *adapter)
- 	}
+-	usbnet_get_endpoints(dev, intf);
++	ret = usbnet_get_endpoints(dev, intf);
++	if (ret)
++		goto out;
  
- 	if (tsicr & TSINTR_TT0) {
--		spin_lock(&adapter->tmreg_lock);
--		ts = timespec64_add(adapter->perout[0].start,
--				    adapter->perout[0].period);
--		/* u32 conversion of tv_sec is safe until y2106 */
--		wr32(E1000_TRGTTIML0, ts.tv_nsec);
--		wr32(E1000_TRGTTIMH0, (u32)ts.tv_sec);
--		tsauxc = rd32(E1000_TSAUXC);
--		tsauxc |= TSAUXC_EN_TT0;
--		wr32(E1000_TSAUXC, tsauxc);
--		adapter->perout[0].start = ts;
--		spin_unlock(&adapter->tmreg_lock);
-+		igb_perout(adapter, 0);
- 		ack |= TSINTR_TT0;
- 	}
- 
- 	if (tsicr & TSINTR_TT1) {
--		spin_lock(&adapter->tmreg_lock);
--		ts = timespec64_add(adapter->perout[1].start,
--				    adapter->perout[1].period);
--		wr32(E1000_TRGTTIML1, ts.tv_nsec);
--		wr32(E1000_TRGTTIMH1, (u32)ts.tv_sec);
--		tsauxc = rd32(E1000_TSAUXC);
--		tsauxc |= TSAUXC_EN_TT1;
--		wr32(E1000_TSAUXC, tsauxc);
--		adapter->perout[1].start = ts;
--		spin_unlock(&adapter->tmreg_lock);
-+		igb_perout(adapter, 1);
- 		ack |= TSINTR_TT1;
- 	}
- 
- 	if (tsicr & TSINTR_AUTT0) {
--		nsec = rd32(E1000_AUXSTMPL0);
--		sec  = rd32(E1000_AUXSTMPH0);
--		event.type = PTP_CLOCK_EXTTS;
--		event.index = 0;
--		event.timestamp = sec * 1000000000ULL + nsec;
--		ptp_clock_event(adapter->ptp_clock, &event);
-+		igb_extts(adapter, 0);
- 		ack |= TSINTR_AUTT0;
- 	}
- 
- 	if (tsicr & TSINTR_AUTT1) {
--		nsec = rd32(E1000_AUXSTMPL1);
--		sec  = rd32(E1000_AUXSTMPH1);
--		event.type = PTP_CLOCK_EXTTS;
--		event.index = 1;
--		event.timestamp = sec * 1000000000ULL + nsec;
--		ptp_clock_event(adapter->ptp_clock, &event);
-+		igb_extts(adapter, 1);
- 		ack |= TSINTR_AUTT1;
- 	}
- 
+ 	/* LED Setting Rule :
+ 	 * AABB:CCDD
 -- 
 2.43.0
 
