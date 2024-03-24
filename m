@@ -1,73 +1,86 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8B322C67A;
-	Sun, 24 Mar 2024 23:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5917314A09D;
+	Sun, 24 Mar 2024 23:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322183; cv=none; b=X4pk5lmunbzPoVLepS9OineUMiLnm3zpXuUC8JN3gWIJNW+v5+hn/3nSmZxb2jwWO0Wf5EWIxP2ZToRAbgxuYTRxjGHWUsaa9iKP0CQhoEzsIK21m55lJh7Jz1sr/mXYIFgOXt1pvWcTADLPyo1M01LVG4DeRjSd/aOWkY1zCfI=
+	t=1711322169; cv=none; b=ulY9FPK1T6rrrFHON5FsclM0Vn2AUlkwwj6tmGYtAockmGHINsktFIo03e22NDaYqif5xiF4zSy/xoEf1dbGuXd6iVjMK0FSZJ5dv6xycZ+c1Oe03iS18LW4QzI1a760Pw03k855xRnI7pwHkHEu/GaxCPJ7f3euUKX/GNxqD24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322183; c=relaxed/simple;
-	bh=Y+++sfCOOqMd/jN8jYmvU8/LoJkxzD+F97Ejdpsn/YE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WwxPxILKIWVA2R1Af8w4R6k3ZMRwx3nHwKdX5oSl6h81dA6Fbg6Ops6MmakhhCwpIMH2zvWRZGM2DFebVlvKm6sPR+PJEat/CCS1jkuq8saX8RvgAPdC80ZZ6KiImXBomssTKTVAHc1rB3PoiRCsnrgzcrlE5UREMC/6MiGMJTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 38CAF68D13; Mon, 25 Mar 2024 00:16:12 +0100 (CET)
-Date: Mon, 25 Mar 2024 00:16:11 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"jack@suse.com" <jack@suse.com>, Zhu Yanjun <zyjzyj2000@gmail.com>
-Subject: Re: [RFC RESEND 00/16] Split IOMMU DMA mapping operation to two
- steps
-Message-ID: <20240324231611.GB20765@lst.de>
-References: <20240307000036.GP9225@ziepe.ca> <20240307150505.GA28978@lst.de> <20240307210116.GQ9225@ziepe.ca> <20240308164920.GA17991@lst.de> <20240308202342.GZ9225@ziepe.ca> <20240309161418.GA27113@lst.de> <20240319153620.GB66976@ziepe.ca> <20240320085536.GA14887@unreal> <20240321224013.GB22663@lst.de> <20240322174617.GD14887@unreal>
+	s=arc-20240116; t=1711322169; c=relaxed/simple;
+	bh=YvAHdfBYNVMUAWyXxI/Q1L63eWCD+RlQtf3uzCgBk+0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N26oLre7vYfrDXGL8/kZ3W00B92KRgqHq8EGeXEHkTwvBgvtpDaNX/nON1SjC1Ts4YjrYGu9M+NzbTuXvUaKH9UPurs2LNlxpuXppdfwpaEbQuQKZ2wPEXczmsR9b5OsMRAjq9E7wWL7ZUwdGi2FTdQv963UB23sbjQF5CxImBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eJurXDGZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eJurXDGZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F4FC43394;
+	Sun, 24 Mar 2024 23:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711322167;
+	bh=YvAHdfBYNVMUAWyXxI/Q1L63eWCD+RlQtf3uzCgBk+0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=eJurXDGZhi9f1g6wvxe9+9eofFz0LytlmkM6orw8cVVv7vBziOGl59Xr66Xmi8W5t
+	 KWGCblMSYQ8LBVx+CaMhrtqOSX4w2XErdVR+Jsk+u4k2zIMZjA392OXuItURBXYhUY
+	 rGki4tiTRj3R5PmTc387PVjt0flnFvkISYsivuw900osh34xVj3oqk3b3Kl9JH9CPv
+	 UL/EUxc8bpl8vkiDK0iXnQrWZ+exQZzNjfSc2rgxL9W3yPQuT7DMC8b6CHOfgCHW3E
+	 ZLwYuuqnb6eJV1I/4yyqATpVLFoigTt0x7bjKF+9Ijf4iFQhzEMG3beRyAJI3nNK5H
+	 xdjfE1Z30b9nQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Zack Rusin <zack.rusin@broadcom.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.1 246/451] drm/vmwgfx: fix a memleak in vmw_gmrid_man_get_node
+Date: Sun, 24 Mar 2024 19:08:42 -0400
+Message-ID: <20240324231207.1351418-247-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
+References: <20240324231207.1351418-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240322174617.GD14887@unreal>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 22, 2024 at 07:46:17PM +0200, Leon Romanovsky wrote:
-> > As far as I can tell it totally misses the point.  Which is not to never
-> > return non-P2P if the flag is set, but to return either all P2P or non-P2
-> > P and not create a boundary in the single call.
-> 
-> You are treating FOLL_PCI_P2PDMA as a hint, but in iov_iter_extract_user_pages()
-> you set it only for p2p queues. I was under impression that you want only p2p pages
-> in these queues.
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-FOLL_PCI_P2PDMA is an indicator that the caller can cope with P2P
-pages.  Most callers simply can't.
+[ Upstream commit 89709105a6091948ffb6ec2427954cbfe45358ce ]
+
+When ida_alloc_max fails, resources allocated before should be freed,
+including *res allocated by kmalloc and ttm_resource_init.
+
+Fixes: d3bcb4b02fe9 ("drm/vmwgfx: switch the TTM backends to self alloc")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231204091416.3308430-1-alexious@zju.edu.cn
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c b/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c
+index 60e3cc537f365..b9e5c8cd31001 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c
+@@ -65,8 +65,11 @@ static int vmw_gmrid_man_get_node(struct ttm_resource_manager *man,
+ 	ttm_resource_init(bo, place, *res);
+ 
+ 	id = ida_alloc_max(&gman->gmr_ida, gman->max_gmr_ids - 1, GFP_KERNEL);
+-	if (id < 0)
++	if (id < 0) {
++		ttm_resource_fini(man, *res);
++		kfree(*res);
+ 		return id;
++	}
+ 
+ 	spin_lock(&gman->lock);
+ 
+-- 
+2.43.0
 
