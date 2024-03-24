@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFB6179943;
-	Sun, 24 Mar 2024 23:40:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9B527F0A0;
+	Sun, 24 Mar 2024 23:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323611; cv=none; b=XGVVjgRRjcrNKzO0Czf3aRQ0C9OkLhFhIYd+u2umcPG59oSYp7u8hmy5X502RdTe2WxJukrgtOWQv/M8XgXZGSZKa7xRZehcBWN9Suz7ZnEkl1Ve/e+pPjXtDmNCyEmzWYEKxsb84ofO44XMSzXGEGfAji/5el+uHTNKeRH30iw=
+	t=1711323604; cv=none; b=JttY4WAmVX6S2ELOjyA9JxwnRfwlndZRu/EhWjJg9j/ybpcVG0BpT7xdrI8MUF0JQkcyvvzB0CpGWR4amwuWK8A0zrW7f8TGDoiMl5RO4E/q6aRUbb2OoQPhWily98X7VZzAHcgrSmFtJynGQahK3Y0ytcv0Ac8zbhXpr3RxCVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323611; c=relaxed/simple;
-	bh=N9J+Q87Gpl6PopGY52TYfWuXItc8bHDolFg3pSYC4uA=;
+	s=arc-20240116; t=1711323604; c=relaxed/simple;
+	bh=34NgVSaXwpxNu1Y2kRUvJtxcbAIMn1pKbBU9bE04Kn4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=inT4Yw9coeBbtDxnN1LwoodY2zzF6vUB6SNYeShbsdeQA7+O6zXq+sfcKUGa41kT7jt8tedP8TmsvrV0r7hIGsvhwKUatV7R8Ka5Xc/0kHQFdlpQS8C2fz1Rae84x53xfZn1IvKeCQhkmGEWZ0kaDcG2yGoBuJQYvs64dc3IiZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nIejtj2H; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pDAEVw0438cLrgegVCd2VZg9oPfm6nYK62cjFJbxhqcFwQwldaOAvW62/izrWb8rDn4bQcTrpg4x9jUuqivoywajPK5aIdAUbGUBlxW0qkhyQ5UVROiyioLYbgs9rtVBmZ14MWV+i7RZPzDtvCDjPee4RKnrEj+3JAUEvsIb7Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jzg21le6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nIejtj2H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C9A9C43394;
-	Sun, 24 Mar 2024 23:40:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jzg21le6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06069C433B1;
+	Sun, 24 Mar 2024 23:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323609;
-	bh=N9J+Q87Gpl6PopGY52TYfWuXItc8bHDolFg3pSYC4uA=;
+	s=k20201202; t=1711323603;
+	bh=34NgVSaXwpxNu1Y2kRUvJtxcbAIMn1pKbBU9bE04Kn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nIejtj2HxIOzRyS2XObCvb4sku/uec0wHOtXq4fGuXjeFqMdS2E2EbMq6GeDyTt4V
-	 4qy7XgTfWFv7NCTGdgfZYL5sQwy+EtfqAmL1hsz00JbL7lvX8+AG6WVaHwb9TKOEu2
-	 /MvVBfcvkZ81EJydFxS3ea+ar+dPVfO7bMnSj4m562WrXGcbnLn9dNebinmQdXkSTh
-	 jfYVxl31hLxLsXfQAnP8QIu41iIm2QnwKcRVMwAsyIwPwWSWq+0YKh2hoXXmp1w6ab
-	 viYVUMt9REXhP8EP1/dZpmpMTES3yYvHKaJp+EBu/TivophXyYI71GWYpmCxT6JzJR
-	 VyaOYMIdK1/RQ==
+	b=jzg21le62SAyB1977WdYY3dL4j7nl+MVH0oDegAHn5Hs/lplq0dR4Mbn41LMo/L+k
+	 OmpaeHtRQc6uuAv4jG+IcMyE0M+3o72tkiIz6NxsnkksEMc29dRXig1/KGYbIbiftP
+	 gwNtzL1M8LdnUoBlqtymHt1jQ5cS1vkEyM91NS/n/t0J4nnI/ffli1DXWf5ybj2V5l
+	 W1CRLnNiClWTPDc/23IP+s1YgpQIrIZT8FdBFGJMidD2zyIX5zTYLsBwakqFeuZT2e
+	 sR0m7ZSq0W4t1r1zd2ArRbMOQMkTzUEUo4lQ/nWCtyYHMFDYR1rjUUsqRE0ocRPSom
+	 JFvubEwiGRoUQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Marek Vasut <marex@denx.de>,
-	kernel test robot <lkp@intel.com>,
-	Dan Carpenter <dan.carpenter@oracle.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Yan Zhai <yan@cloudflare.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 316/317] regmap: Add missing map->bus check
-Date: Sun, 24 Mar 2024 19:34:56 -0400
-Message-ID: <20240324233458.1352854-317-sashal@kernel.org>
+Subject: [PATCH 5.15 310/317] bpf: report RCU QS in cpumap kthread
+Date: Sun, 24 Mar 2024 19:34:50 -0400
+Message-ID: <20240324233458.1352854-311-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,39 +50,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Marek Vasut <marex@denx.de>
+From: Yan Zhai <yan@cloudflare.com>
 
-[ Upstream commit 5c422f0b970d287efa864b8390a02face404db5d ]
+[ Upstream commit 00bf63122459e87193ee7f1bc6161c83a525569f ]
 
-The map->bus can be NULL here, add the missing NULL pointer check.
+When there are heavy load, cpumap kernel threads can be busy polling
+packets from redirect queues and block out RCU tasks from reaching
+quiescent states. It is insufficient to just call cond_resched() in such
+context. Periodically raise a consolidated RCU QS before cond_resched
+fixes the problem.
 
-Fixes: d77e745613680 ("regmap: Add bulk read/write callbacks into regmap_config")
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Mark Brown <broonie@kernel.org>
-To: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20220509003035.225272-1-marex@denx.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 6710e1126934 ("bpf: introduce new bpf cpu map type BPF_MAP_TYPE_CPUMAP")
+Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
+Signed-off-by: Yan Zhai <yan@cloudflare.com>
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+Link: https://lore.kernel.org/r/c17b9f1517e19d813da3ede5ed33ee18496bb5d8.1710877680.git.yan@cloudflare.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/bpf/cpumap.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 6adb345866610..893b0615935e9 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1836,7 +1836,7 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
- 				 map->format.reg_bytes +
- 				 map->format.pad_bytes +
- 				 val_len);
--	else if (map->bus->gather_write)
-+	else if (map->bus && map->bus->gather_write)
- 		ret = map->bus->gather_write(map->bus_context, map->work_buf,
- 					     map->format.reg_bytes +
- 					     map->format.pad_bytes,
+diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
+index f7de5b313cc5b..a8429cfb4ae8c 100644
+--- a/kernel/bpf/cpumap.c
++++ b/kernel/bpf/cpumap.c
+@@ -305,6 +305,7 @@ static int cpu_map_bpf_prog_run(struct bpf_cpu_map_entry *rcpu, void **frames,
+ static int cpu_map_kthread_run(void *data)
+ {
+ 	struct bpf_cpu_map_entry *rcpu = data;
++	unsigned long last_qs = jiffies;
+ 
+ 	complete(&rcpu->kthread_running);
+ 	set_current_state(TASK_INTERRUPTIBLE);
+@@ -330,10 +331,12 @@ static int cpu_map_kthread_run(void *data)
+ 			if (__ptr_ring_empty(rcpu->queue)) {
+ 				schedule();
+ 				sched = 1;
++				last_qs = jiffies;
+ 			} else {
+ 				__set_current_state(TASK_RUNNING);
+ 			}
+ 		} else {
++			rcu_softirq_qs_periodic(last_qs);
+ 			sched = cond_resched();
+ 		}
+ 
 -- 
 2.43.0
 
