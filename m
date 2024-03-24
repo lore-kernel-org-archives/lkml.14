@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53E61802AD;
-	Sun, 24 Mar 2024 23:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7882888EB;
+	Sun, 24 Mar 2024 23:47:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324023; cv=none; b=ogA5eJAv1wrZPgxALVEVOU+sbxWNJZuBkCG/yCb/Z6cWaWIj+oEGCmRReRmjymxsD5poyswCkAJSBLJZcGh63f6eqjVGDC8k1+OHYYYUZo//VTsG/MAya1Ubj0Yv9G4xs2JjKELTxzxSdP5N0fWi9Cw6Vn67lIXjfWO//qCe4U8=
+	t=1711324028; cv=none; b=MSkTa+O/KeCflATOV7yI3Qm9NJXnJFYZosxsrAcnZTrlTYhvW/9hvkKjfUgxDIer1AvLEUGtGu+NNdxcmrQbXRzZYAtDPIPBG4YA9gd8KnTCypG6Kf28sbFG8c1UtRykyNzvfjOZ2ch+veytt/zIr+0S11P8SrKX4XXbOSCE+rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324023; c=relaxed/simple;
-	bh=FJ7fTfbr0MetlnQpTrBJURTUL1X9wGEpmm5HLaUebVc=;
+	s=arc-20240116; t=1711324028; c=relaxed/simple;
+	bh=5b7W79Vlv/Kmt5tTngf7pb5Y3IdZqI9FDgkRFlz9aSI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zjr0z4VxN3Oiw61Nk5fFg7jaLMcog+Zq0ys6aG8RWyKshRBbhWJL3880SnjHqKBt+6cFdrM0vrTzgwaQGEwUs3VE1pv3WmyMt5NrHvqYOVf5KIIPaJy6v8UpT15rE1uOmJQ+5kJcLHAG9021VkmFVKIXW2bBxUfSjYNTwf2GT+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AotkNofG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qnfg5KwyJ9ANIVheiZwdkUJpqr8ENQbqF9++mQRh/BDGxD5Cd2GYZnC0TmjMBliB74nVAjLQ0vfSWfpwh4+9x72RHmjwKtuRyMWM8jgNJdv7U1pyAHP2aqJwV3gpGGQ02XOPWSU1BPcPqq1GGGec/QwBbR0V3m6lAJp1Wo05BcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rTpmuhKD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AotkNofG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1361C433C7;
-	Sun, 24 Mar 2024 23:47:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rTpmuhKD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA44C43399;
+	Sun, 24 Mar 2024 23:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324023;
-	bh=FJ7fTfbr0MetlnQpTrBJURTUL1X9wGEpmm5HLaUebVc=;
+	s=k20201202; t=1711324027;
+	bh=5b7W79Vlv/Kmt5tTngf7pb5Y3IdZqI9FDgkRFlz9aSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AotkNofG5faXbQ5TUEvk/EsMLnQcyE8utDW9oH8BFApjCAEnANHbXR8iEKR7zG4Rh
-	 9+hVHehApmXOTErC4+1YW1QojsbU+6gNHn+8reADLOykneaNK5NKlwVI0xW+TicwbL
-	 cPS79PmkbTZO6tYFFYHAbcaU2zrGCkfTbPTNXi7JsVudC2MpnUmUp1XfD3W6rY/CTm
-	 OotSpERb1biJJBSYZY2dLBbSvtthyI296VvVUbXWVAxNgcq0jqTR9nujTkCchueLYz
-	 y5D/9y//XvLMKN/4ODWdIssapQ40eb8D/wQ5qgzse/iONiZYflULJRX03ifzPOhKU1
-	 k7dR8MRK2xAMQ==
+	b=rTpmuhKDH2im9LMRfu/j2BOuO/vfUg8EBikqrkHiR0Dv2OHM81v5gu6YihCLCY8x8
+	 aRP+ZIaPCbXfPC8JSPB9O2kcNGBNo6PUi3MotXN3JNXLXH/mCm2QtaLinQ+FuyDkZG
+	 FP4GnSsQ8ftppunGxLAJBDK+bhyOlUFZtETR3EHdNLyb6uE0ZmeKGN9XvWl3EWvds/
+	 Xr/q1jSwEMsxsCK0tQel1bJS2k/7D/cf56zVAGMTS6L8QLFvXWrhoujMYSPKsXcOUR
+	 +hbEmelVGld/FzjApVapLCBFBd5qXocl+Wddpfu0sFCma4fs6eWmpSakvgCWfh/OQJ
+	 79mA9Cc/jnpWA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Kees Cook <keescook@chromium.org>,
-	Andi Kleen <ak@linux.intel.com>,
-	Jan Kara <jack@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: Peter Hilber <peter.hilber@opensynergy.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Stultz <jstultz@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 024/183] fs/select: rework stack allocation hack for clang
-Date: Sun, 24 Mar 2024 19:43:57 -0400
-Message-ID: <20240324234638.1355609-25-sashal@kernel.org>
+Subject: [PATCH 5.4 028/183] timekeeping: Fix cross-timestamp interpolation for non-x86
+Date: Sun, 24 Mar 2024 19:44:01 -0400
+Message-ID: <20240324234638.1355609-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -51,65 +49,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Peter Hilber <peter.hilber@opensynergy.com>
 
-[ Upstream commit ddb9fd7a544088ed70eccbb9f85e9cc9952131c1 ]
+[ Upstream commit 14274d0bd31b4debf28284604589f596ad2e99f2 ]
 
-A while ago, we changed the way that select() and poll() preallocate
-a temporary buffer just under the size of the static warning limit of
-1024 bytes, as clang was frequently going slightly above that limit.
+So far, get_device_system_crosststamp() unconditionally passes
+system_counterval.cycles to timekeeping_cycles_to_ns(). But when
+interpolating system time (do_interp == true), system_counterval.cycles is
+before tkr_mono.cycle_last, contrary to the timekeeping_cycles_to_ns()
+expectations.
 
-The warnings have recently returned and I took another look. As it turns
-out, clang is not actually inherently worse at reserving stack space,
-it just happens to inline do_select() into core_sys_select(), while gcc
-never inlines it.
+On x86, CONFIG_CLOCKSOURCE_VALIDATE_LAST_CYCLE will mitigate on
+interpolating, setting delta to 0. With delta == 0, xtstamp->sys_monoraw
+and xtstamp->sys_realtime are then set to the last update time, as
+implicitly expected by adjust_historical_crosststamp(). On other
+architectures, the resulting nonsense xtstamp->sys_monoraw and
+xtstamp->sys_realtime corrupt the xtstamp (ts) adjustment in
+adjust_historical_crosststamp().
 
-Annotate do_select() to never be inlined and in turn remove the special
-case for the allocation size. This should give the same behavior for
-both clang and gcc all the time and once more avoids those warnings.
+Fix this by deriving xtstamp->sys_monoraw and xtstamp->sys_realtime from
+the last update time when interpolating, by using the local variable
+"cycles". The local variable already has the right value when
+interpolating, unlike system_counterval.cycles.
 
-Fixes: ad312f95d41c ("fs/select: avoid clang stack usage warning")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20240216202352.2492798-1-arnd@kernel.org
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Fixes: 2c756feb18d9 ("time: Add history to cross timestamp interface supporting slower devices")
+Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: John Stultz <jstultz@google.com>
+Link: https://lore.kernel.org/r/20231218073849.35294-4-peter.hilber@opensynergy.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/select.c          | 2 +-
- include/linux/poll.h | 4 ----
- 2 files changed, 1 insertion(+), 5 deletions(-)
+ kernel/time/timekeeping.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/select.c b/fs/select.c
-index 7716d9d5be1e8..f405dc5adf3ca 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -475,7 +475,7 @@ static inline void wait_key_set(poll_table *wait, unsigned long in,
- 		wait->_key |= POLLOUT_SET;
- }
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 2a43c26e913e9..c202dbd87860c 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1174,10 +1174,8 @@ int get_device_system_crosststamp(int (*get_time_fn)
+ 				      tk_core.timekeeper.offs_real);
+ 		base_raw = tk->tkr_raw.base;
  
--static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
-+static noinline_for_stack int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
- {
- 	ktime_t expire, *to = NULL;
- 	struct poll_wqueues table;
-diff --git a/include/linux/poll.h b/include/linux/poll.h
-index 1cdc32b1f1b08..7e0fdcf905d2e 100644
---- a/include/linux/poll.h
-+++ b/include/linux/poll.h
-@@ -16,11 +16,7 @@
- extern struct ctl_table epoll_table[]; /* for sysctl */
- /* ~832 bytes of stack space used max in sys_select/sys_poll before allocating
-    additional memory. */
--#ifdef __clang__
--#define MAX_STACK_ALLOC 768
--#else
- #define MAX_STACK_ALLOC 832
--#endif
- #define FRONTEND_STACK_ALLOC	256
- #define SELECT_STACK_ALLOC	FRONTEND_STACK_ALLOC
- #define POLL_STACK_ALLOC	FRONTEND_STACK_ALLOC
+-		nsec_real = timekeeping_cycles_to_ns(&tk->tkr_mono,
+-						     system_counterval.cycles);
+-		nsec_raw = timekeeping_cycles_to_ns(&tk->tkr_raw,
+-						    system_counterval.cycles);
++		nsec_real = timekeeping_cycles_to_ns(&tk->tkr_mono, cycles);
++		nsec_raw = timekeeping_cycles_to_ns(&tk->tkr_raw, cycles);
+ 	} while (read_seqcount_retry(&tk_core.seq, seq));
+ 
+ 	xtstamp->sys_realtime = ktime_add_ns(base_real, nsec_real);
 -- 
 2.43.0
 
