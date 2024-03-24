@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD17917C19E;
-	Sun, 24 Mar 2024 23:42:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECC917BB3E;
+	Sun, 24 Mar 2024 23:42:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323759; cv=none; b=lUZblm7ApVArkYTiJnFdhUDSBv0afq7/gpZPpF09I10SQysEGNOTrVh8WM8YEmQrD8L3XflP2Nh1mXCW9aydptBRWhw7CJpL7eAJe/72kjNQLTn+s4begbjpDR6oVq4u23I8eoG37IE132NrEi2LidVC+xOoHZpJh4JsFmRdZUw=
+	t=1711323769; cv=none; b=urAnbmAGkmI6Yp/+OmHJJdyF/mNNWxT7dB+IgMuZ+ZKJPP1WQAfuNDoavZLzNRtK62jUyfhyFMR2M9Q8di37vLN2IeX+y+9ft9Kz8C9gmTqZTNLno4KiWTRpoHoNjSD8ENNZxXFtIEUWqVvkRGguiiokXflyOXBxfDin0iVEsNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323759; c=relaxed/simple;
-	bh=lZi2nF932yfaJDHA0T9yEuil3WiBHFu4xjhRzOjRwU8=;
+	s=arc-20240116; t=1711323769; c=relaxed/simple;
+	bh=1oNMrC29GJrki16Dt7/08qwNYkt2iDuH7FPUMAoc8NQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AmOeGBALKhMdlVxFxRaK/1ZVFGUf99vIe5e/08kaiDYedlgKIbc5SramDyLI9f8eMHrg9+7tk2j6ihFC7TKUz/CTqtf1usOcOzfmJ7GhkYaU7sgYUiacHJDIObWTw0hYYXX7R2DzX9Vmhi7TFaHuT6uxLN8nVc16jrpJ48DrYBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkFhEpyQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TwE0JCClOZLUqJUn4g4o1WN3UHmKp9nyHkT3L9jZd4dvc2Z0EigLxCC9IRys7KNgv3G/8wQxMCz8V5G9+24FSqIgNF3OfUm3yh/BtrEvJ80DxdUi6yJJdoFfpNyNWfThdynicLTRgDg7TvaYcslG7Gk/KJaEnrn3iisDBBHnnZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ds4e/Ix4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkFhEpyQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE6EEC433F1;
-	Sun, 24 Mar 2024 23:42:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ds4e/Ix4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE301C43390;
+	Sun, 24 Mar 2024 23:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323759;
-	bh=lZi2nF932yfaJDHA0T9yEuil3WiBHFu4xjhRzOjRwU8=;
+	s=k20201202; t=1711323769;
+	bh=1oNMrC29GJrki16Dt7/08qwNYkt2iDuH7FPUMAoc8NQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AkFhEpyQjyvXmptwbBiY3LolvGtAUB+H+GaQBeCpNc7IM2UR6czMK8fU1DwOQhCxq
-	 jkMdj9w5+vPdhfiFZOKBhE5X1CUPphbjK0KA38IluD/eLPQAcnL4ZWlKRu0B+haLgU
-	 sz1PYf8VgQPmm/FoEi6rLE14xofwueEV6Wh3rLXUhlah0V+Ho485i3YbWwPBdMKVG+
-	 7Pd5+CZSBUuDev3GmjeV0EhXau52aLs3AYt+y3Z+cfbARYj5AjnGQkOJ4JPZKjgVDS
-	 MJwetYFLFtury08UXaBITIKE76IaLNIihMQmju/SOosg8icvSKYI9mTXQLH2Rl+ykO
-	 5cmj75ePg/kGw==
+	b=ds4e/Ix4jgLJN6AhCxP6xSnakEGH2YoYJnWq4iDndoUE9YZ2DY/56D8fQPrE0Nu70
+	 VCkCVYvPHJzDc1Tfh/TuH/ZULUeYhvzH8x6p1/2EVdbMZbACy+hPGSSk2/R9Hf2do4
+	 Bvo09gmW/I/sXMYGDLZ9BVvqlNB6D/xazjI1YTn5Fi4romIdbBtTEWpFaZdmkapZnB
+	 30gr2y+pjmXIcrxkBxPibB20UBls5F5LygwCmp2yEIZ3+jaB4DJoR3AXKJ0PSkNoaO
+	 J6wpPYnyCcmiFo8Jg15QOcMlZjMbrPjlzHvJnLura7wTQENjGSn0EBUxVWsYg5C9x9
+	 fp2YsrODOcuqQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 134/238] media: v4l2-mem2mem: fix a memleak in v4l2_m2m_register_entity
-Date: Sun, 24 Mar 2024 19:38:42 -0400
-Message-ID: <20240324234027.1354210-135-sashal@kernel.org>
+Subject: [PATCH 5.10 145/238] drm/radeon/ni: Fix wrong firmware size logging in ni_init_microcode()
+Date: Sun, 24 Mar 2024 19:38:53 -0400
+Message-ID: <20240324234027.1354210-146-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,46 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-[ Upstream commit 8f94b49a5b5d386c038e355bef6347298aabd211 ]
+[ Upstream commit c4891d979c7668b195a0a75787967ec95a24ecef ]
 
-The entity->name (i.e. name) is allocated in v4l2_m2m_register_entity
-but isn't freed in its following error-handling paths. This patch
-adds such deallocation to prevent memleak of entity->name.
+Clean up a typo in pr_err() erroneously printing NI MC 'rdev->mc_fw->size'
+during SMC firmware load. Log 'rdev->smc_fw->size' instead.
 
-Fixes: be2fff656322 ("media: add helpers for memory-to-memory media controller")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Found by Linux Verification Center (linuxtesting.org) with static
+analysis tool SVACE.
+
+Fixes: 6596afd48af4 ("drm/radeon/kms: add dpm support for btc (v3)")
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/v4l2-core/v4l2-mem2mem.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/radeon/ni.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
-index ad14d52141067..56d320b1a1ca7 100644
---- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-+++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-@@ -1053,11 +1053,17 @@ static int v4l2_m2m_register_entity(struct media_device *mdev,
- 	entity->function = function;
- 
- 	ret = media_entity_pads_init(entity, num_pads, pads);
--	if (ret)
-+	if (ret) {
-+		kfree(entity->name);
-+		entity->name = NULL;
- 		return ret;
-+	}
- 	ret = media_device_register_entity(mdev, entity);
--	if (ret)
-+	if (ret) {
-+		kfree(entity->name);
-+		entity->name = NULL;
- 		return ret;
-+	}
- 
- 	return 0;
- }
+diff --git a/drivers/gpu/drm/radeon/ni.c b/drivers/gpu/drm/radeon/ni.c
+index 02feb0801fd30..50c7430f8cd33 100644
+--- a/drivers/gpu/drm/radeon/ni.c
++++ b/drivers/gpu/drm/radeon/ni.c
+@@ -826,7 +826,7 @@ int ni_init_microcode(struct radeon_device *rdev)
+ 			err = 0;
+ 		} else if (rdev->smc_fw->size != smc_req_size) {
+ 			pr_err("ni_mc: Bogus length %zu in firmware \"%s\"\n",
+-			       rdev->mc_fw->size, fw_name);
++			       rdev->smc_fw->size, fw_name);
+ 			err = -EINVAL;
+ 		}
+ 	}
 -- 
 2.43.0
 
