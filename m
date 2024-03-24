@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F001474CE;
-	Sun, 24 Mar 2024 23:14:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFAD1474C1;
+	Sun, 24 Mar 2024 23:14:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322097; cv=none; b=Fq+F2S9BV5gUsVMWtHmVcN1deoTLZ47hQ+o5++dkl8UYG4jGV2WHiv/H+CDSjPatBvYB5N4HxxRwW4Ek1GDIVJUi/HzKSxlZLPsZXNSzGOgnjL1zhyaIY1LzKFnvogV9hio3nSvnLVy/w/gSZrrYzuVFFJWFCVsT+vxrZgIGJlI=
+	t=1711322097; cv=none; b=ovUXWrv1UHi5+xaLYXCD0+lRVBFUQ60KhNszhmsVToAgnjlWQ1Yfgpok1hz3OBGAgKXmeipXAVKj9Z0jS9YMHhwFqGGh6+9LAFXMs7lhXRMOXPB59CXXfkhn/5WqA4yamkibJ6h52pke+u0SMOOYtpjSEdZabAaDkEtPHA75BpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711322097; c=relaxed/simple;
-	bh=L8+OyzxkHOvk3tcBoqBAuAXpIEzLwMUIv9/BEeN180I=;
+	bh=Y0faMlYlXglp2v24nSVm66zY6wL/DOGxRb/RKeaWVZI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aq4J9RzgkWmhEMBETg6CnNpXFlFDbCUbtDXsYIHVZC5FbkPBpVyXnI99syt/uY9PdzkL88BAinpPlEZzKj6tNVymWq85F7sVYnxJaNR4q3+xiXzPYCE/uKhkil+VCzQ2ewiDVosQVs8TiVA3SPcfoLr/atFyE5jKCN3t9mtxR5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FpvolXkl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CdfLLZg7IJ7zW/zncFLbVQRM2qKh2IBLSkAW4H+zVaLj6T5ZW2XDuVEfThLY8YS6hkHNak2dMqfwH4P3c7oGqAwwfln3TGITqVrvjXkRrKixLb7Gv7NP9ypj2ka5H5Th0/jo1usjtx4Ewc/lZ5TNdNSnHcBSUAX58KRtWglH9zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=elIej62i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FpvolXkl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0589DC43394;
-	Sun, 24 Mar 2024 23:14:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="elIej62i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B46C433F1;
+	Sun, 24 Mar 2024 23:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322097;
-	bh=L8+OyzxkHOvk3tcBoqBAuAXpIEzLwMUIv9/BEeN180I=;
+	s=k20201202; t=1711322095;
+	bh=Y0faMlYlXglp2v24nSVm66zY6wL/DOGxRb/RKeaWVZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FpvolXklESfNLxMOFDPO0JSbjy5nK27Tl/iGcyjP6MkenQzesTxaLB4JoCgdDmmb5
-	 k4GKLgNmyJ05DUijS9EoMw1xE67ecT4QF9k1sUVpFRrMHNdaIXquBn+O5vRjXd26/F
-	 l14bK8X1ZN8eHdFEo7Q6gpaIEuXb/hEYMjV0DCjVUOZZ2Fr4AKEMzj6u6xxMX2aQ0a
-	 AWYdSPU6bhQ+CX3qLGX8C9bCnCxN70s+e2evyVKdrpy5iK98/Zm7QCLqCjBY7ZOOE/
-	 3Bfz78iBAYg7GqjK6TECIBBuhNIfRV4gMczQhVt8+UGcOS/MgP2HrG9oCWFL0HWiYL
-	 6ywKE25cB8sOg==
+	b=elIej62iRjNQ2M3Tp+M4uu1PcQX6pA+mHYdDSwVJ2k78eM/9cHXq413+ROEARbQZq
+	 4lE/Sse6RMcDBlv3EYFWuI4fwYj1cKAfGw76LjvCheP8glH9UqSvkw+q6VH5pfVm1Y
+	 oGRALCAFrS5BwxHuAGUe7vtrD4NeK3gHT8gvGEijT1bhR22W4D1ot9obGSWxlLiAwH
+	 3LkYiPCyKt4OqiYEww3DGg+t9ot6JIsu6uaTIkXj9dJIewBiqpdPnlIN+nBJ19eTl3
+	 KVOZlZz+TXYfR4tHY15zKIXw3nfvR1lMeEs4tvCKqa021YVMSBaABeCPIpi+qCd0eC
+	 EVRndN/b16BJg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jeremy Kerr <jk@codeconstruct.com.au>,
-	Jian Zhang <zhangjian.3032@bytedance.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 172/451] net: mctp: copy skb ext data when fragmenting
-Date: Sun, 24 Mar 2024 19:07:28 -0400
-Message-ID: <20240324231207.1351418-173-sashal@kernel.org>
+Subject: [PATCH 6.1 170/451] arm64: dts: renesas: r8a779a0: Correct avb[01] reg sizes
+Date: Sun, 24 Mar 2024 19:07:26 -0400
+Message-ID: <20240324231207.1351418-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,60 +47,46 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jeremy Kerr <jk@codeconstruct.com.au>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 1394c1dec1c619a46867ed32791a29695372bff8 ]
+[ Upstream commit 0c51912331f8ba5ce5fb52f46e340945160672a3 ]
 
-If we're fragmenting on local output, the original packet may contain
-ext data for the MCTP flows. We'll want this in the resulting fragment
-skbs too.
+All Ethernet AVB instances on R-Car V3U have registers related to UDP/IP
+support, but the declared register blocks for the first two instances
+are too small to cover them.
 
-So, do a skb_ext_copy() in the fragmentation path, and implement the
-MCTP-specific parts of an ext copy operation.
+Fix this by extending the register block sizes.
 
-Fixes: 67737c457281 ("mctp: Pass flow data & flow release events to drivers")
-Reported-by: Jian Zhang <zhangjian.3032@bytedance.com>
-Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: 5a633320f08b8c9b ("arm64: dts: renesas: r8a779a0: Add Ethernet-AVB support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/ce6ce3c4b1495e02e7c1803fca810a7178a84500.1707660323.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/skbuff.c | 8 ++++++++
- net/mctp/route.c  | 3 +++
- 2 files changed, 11 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a779a0.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index d4bd10f8723df..e38a4c7449f62 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -6500,6 +6500,14 @@ static struct skb_ext *skb_ext_maybe_cow(struct skb_ext *old,
- 		for (i = 0; i < sp->len; i++)
- 			xfrm_state_hold(sp->xvec[i]);
- 	}
-+#endif
-+#ifdef CONFIG_MCTP_FLOWS
-+	if (old_active & (1 << SKB_EXT_MCTP)) {
-+		struct mctp_flow *flow = skb_ext_get_ptr(old, SKB_EXT_MCTP);
-+
-+		if (flow->key)
-+			refcount_inc(&flow->key->refs);
-+	}
- #endif
- 	__skb_ext_put(old);
- 	return new;
-diff --git a/net/mctp/route.c b/net/mctp/route.c
-index 0144d8ebdaefb..05ab4fddc82e9 100644
---- a/net/mctp/route.c
-+++ b/net/mctp/route.c
-@@ -843,6 +843,9 @@ static int mctp_do_fragment_route(struct mctp_route *rt, struct sk_buff *skb,
- 		/* copy message payload */
- 		skb_copy_bits(skb, pos, skb_transport_header(skb2), size);
- 
-+		/* we need to copy the extensions, for MCTP flow data */
-+		skb_ext_copy(skb2, skb);
-+
- 		/* do route */
- 		rc = rt->output(rt, skb2);
- 		if (rc)
+diff --git a/arch/arm64/boot/dts/renesas/r8a779a0.dtsi b/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
+index 41fbb9998cf82..b677ef6705d94 100644
+--- a/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
+@@ -657,7 +657,7 @@ channel7 {
+ 		avb0: ethernet@e6800000 {
+ 			compatible = "renesas,etheravb-r8a779a0",
+ 				     "renesas,etheravb-rcar-gen4";
+-			reg = <0 0xe6800000 0 0x800>;
++			reg = <0 0xe6800000 0 0x1000>;
+ 			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>,
+@@ -705,7 +705,7 @@ avb0: ethernet@e6800000 {
+ 		avb1: ethernet@e6810000 {
+ 			compatible = "renesas,etheravb-r8a779a0",
+ 				     "renesas,etheravb-rcar-gen4";
+-			reg = <0 0xe6810000 0 0x800>;
++			reg = <0 0xe6810000 0 0x1000>;
+ 			interrupts = <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
 -- 
 2.43.0
 
