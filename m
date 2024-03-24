@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC4C178316;
-	Sun, 24 Mar 2024 23:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0697C178CE5;
+	Sun, 24 Mar 2024 23:39:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323565; cv=none; b=F7ay+wpfJFJbgQbkN/xnpezw2+EuVQP5MUyOF+lw346enqzOH7NgWeQhzc96fBSVyES2P8F2jyfh5ndUAz0/XdaUN9+30g7NaWN2TEbrqbPrsmtppWjsm+u7b+lNAylETLF4nL/b+gQheG7KK5EI/RuJ2wzCNrEspTWRkA/te2Y=
+	t=1711323594; cv=none; b=MV2qvIEJwbceZ83/pfjCj78cHLaB0CCe0NtHdFEUdTo8ZV7z4/x7ZKuH2kqyq5BsaqZP7NAQrIJbvlGaBMK3YZfH8bOs4XWXgNcQBXrNgj9Fqar+U8/l7h4LRr9aV0I/cT1FfwMbYCSttP9jW6kVAIOput7AWqWO9lS44fyuasg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323565; c=relaxed/simple;
-	bh=I2BjWtvx6AFPfxpOlCiBSytmvjLTvgt8uh8aR+FqAmc=;
+	s=arc-20240116; t=1711323594; c=relaxed/simple;
+	bh=9vpMZPAtBm6cIMVe/t5RJO0lOHsCbr811yyFXdRrKiw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nb4Bu2RjkqyoItzJI+hUEmK1nFcYHSiGlOMKi/jcmiNaxtllW0pAVudoMCCYN+H0y4Z4VCvUH8kijmt5FHmlTh0nF3dLMFOgty5t89cnUcxwpRp5Yig0lNBmkgLb/M6e3HtV0wBfcK7EmBRpZzPMHw0EJzaslnZQPASctRj6mHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TXb7H9eX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=RayenayCvGbH6Q6g3sgr2+esQR4FpFgxdWSX0LU/e/CF+TLFh4NNaaKdDMwA9neQZXWzmheBVmJK+VBzGyvrPl8qEAGBVfhSO9kvUJ4EXJeyHlVTaUF5EjqmNjY0y50NHnEdylGosKAxMxQN38yfsnhA60+VVSIC7OxBQSoYb6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxGLghep; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TXb7H9eX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83154C43394;
-	Sun, 24 Mar 2024 23:39:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxGLghep"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02DB3C43399;
+	Sun, 24 Mar 2024 23:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323565;
-	bh=I2BjWtvx6AFPfxpOlCiBSytmvjLTvgt8uh8aR+FqAmc=;
+	s=k20201202; t=1711323592;
+	bh=9vpMZPAtBm6cIMVe/t5RJO0lOHsCbr811yyFXdRrKiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TXb7H9eXr7+W5JBWo9H2dWPXpDZALKBa/EPcAP8RhRlGZvOIeNuS7Xzxiap6EsNYW
-	 YDZ8clOckItp+zq8eImm6JgDarzNVzGqIUaNZg6g4JlWBe3d9lmeqnWl/r0lgWb6/w
-	 McjMCoY34o1YPjfBizmxj59DfwmxfaG+Recz+Pf03xUynz2pvKdqQJnAKMHhvHG3+O
-	 28UvG613fI0oRQMQCiF9PG31Gaqv8oW8OGFMmAUlPwUXaYYqEA9yHloIWysWb9aEyD
-	 E52wtsgIxPAAY8hqQhpWOPBCTztduF3slksQdcFhPydVfi925uoxtxrrIXMzRAHteY
-	 u3KmPqwjEoh+A==
+	b=OxGLghepnxylKfpAc6Hl9HK+x2lMEu4aDYsygWzyJKE6bdEX+gffnJ9tDbXxRFtzr
+	 Ska4R0kFuPjeOe3ovQBOJVP7hU3vuUOCVFrcBxSkD5XAHZLjfNIWlzgVrqTHxrYCwr
+	 A5g+P3QCRL2GXcUEHC0V6AI0t6CKsfPFm+CBSV4kGsPYtYbuyleBPXgFBeCXh0z0C2
+	 Lx1g2COE3D8JJJ7/tliOdFq19l7FFTp62SMS9OROu1QeY5EbUj1OM6uKEZWih+UI20
+	 9g+FSmPPgf3fARcUqMuuVptgSkIqdkW0aYs7WmrId145oDYzCD9YfUCDLFtCcPcZ6F
+	 tzFGg5Nc1dNjA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Xiuhong Wang <xiuhong.wang@unisoc.com>,
-	Zhiguo Niu <zhiguo.niu@unisoc.com>,
-	Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Jonah Palmer <jonah.palmer@oracle.com>,
+	Dragos Tatulea <dtatulea@nvidia.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	"Michael S . Tsirkin" <mst@redhat.com>,
+	Lei Yang <leiyang@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 272/317] f2fs: compress: fix reserve_cblocks counting error when out of space
-Date: Sun, 24 Mar 2024 19:34:12 -0400
-Message-ID: <20240324233458.1352854-273-sashal@kernel.org>
+Subject: [PATCH 5.15 299/317] vdpa/mlx5: Allow CVQ size changes
+Date: Sun, 24 Mar 2024 19:34:39 -0400
+Message-ID: <20240324233458.1352854-300-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -46,134 +47,83 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Xiuhong Wang <xiuhong.wang@unisoc.com>
+From: Jonah Palmer <jonah.palmer@oracle.com>
 
-[ Upstream commit 2f6d721e14b69d6e1251f69fa238b48e8374e25f ]
+[ Upstream commit 749a4016839270163efc36ecddddd01de491a16b ]
 
-When a file only needs one direct_node, performing the following
-operations will cause the file to be unrepairable:
+The MLX driver was not updating its control virtqueue size at set_vq_num
+and instead always initialized to MLX5_CVQ_MAX_ENT (16) at
+setup_cvq_vring.
 
-unisoc # ./f2fs_io compress test.apk
-unisoc #df -h | grep dm-48
-/dev/block/dm-48 112G 112G 1.2M 100% /data
+Qemu would try to set the size to 64 by default, however, because the
+CVQ size always was initialized to 16, an error would be thrown when
+sending >16 control messages (as used-ring entry 17 is initialized to 0).
+For example, starting a guest with x-svq=on and then executing the
+following command would produce the error below:
 
-unisoc # ./f2fs_io release_cblocks test.apk
-924
-unisoc # df -h | grep dm-48
-/dev/block/dm-48 112G 112G 4.8M 100% /data
+ # for i in {1..20}; do ifconfig eth0 hw ether XX:xx:XX:xx:XX:XX; done
 
-unisoc # dd if=/dev/random of=file4 bs=1M count=3
-3145728 bytes (3.0 M) copied, 0.025 s, 120 M/s
-unisoc # df -h | grep dm-48
-/dev/block/dm-48 112G 112G 1.8M 100% /data
+ qemu-system-x86_64: Insufficient written data (0)
+ [  435.331223] virtio_net virtio0: Failed to set mac address by vq command.
+ SIOCSIFHWADDR: Invalid argument
 
-unisoc # ./f2fs_io reserve_cblocks test.apk
-F2FS_IOC_RESERVE_COMPRESS_BLOCKS failed: No space left on device
-
-adb reboot
-unisoc # df -h  | grep dm-48
-/dev/block/dm-48             112G 112G   11M 100% /data
-unisoc # ./f2fs_io reserve_cblocks test.apk
-0
-
-This is because the file has only one direct_node. After returning
-to -ENOSPC, reserved_blocks += ret will not be executed. As a result,
-the reserved_blocks at this time is still 0, which is not the real
-number of reserved blocks. Therefore, fsck cannot be set to repair
-the file.
-
-After this patch, the fsck flag will be set to fix this problem.
-
-unisoc # df -h | grep dm-48
-/dev/block/dm-48             112G 112G  1.8M 100% /data
-unisoc # ./f2fs_io reserve_cblocks test.apk
-F2FS_IOC_RESERVE_COMPRESS_BLOCKS failed: No space left on device
-
-adb reboot then fsck will be executed
-unisoc # df -h  | grep dm-48
-/dev/block/dm-48             112G 112G   11M 100% /data
-unisoc # ./f2fs_io reserve_cblocks test.apk
-924
-
-Fixes: c75488fb4d82 ("f2fs: introduce F2FS_IOC_RESERVE_COMPRESS_BLOCKS")
-Signed-off-by: Xiuhong Wang <xiuhong.wang@unisoc.com>
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Acked-by: Dragos Tatulea <dtatulea@nvidia.com>
+Acked-by: Eugenio Pérez <eperezma@redhat.com>
+Signed-off-by: Jonah Palmer <jonah.palmer@oracle.com>
+Message-Id: <20240216142502.78095-1-jonah.palmer@oracle.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Tested-by: Lei Yang <leiyang@redhat.com>
+Fixes: 5262912ef3cf ("vdpa/mlx5: Add support for control VQ and MAC setting")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/vdpa/mlx5/net/mlx5_vnet.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index bab83ce4fe091..378ab6bd1b8d8 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -3532,10 +3532,10 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
- 	return ret;
+diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+index 46c72e6d3a29b..d9e4a949129a0 100644
+--- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
++++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+@@ -173,8 +173,6 @@ static void teardown_driver(struct mlx5_vdpa_net *ndev);
+ 
+ static bool mlx5_vdpa_debug;
+ 
+-#define MLX5_CVQ_MAX_ENT 16
+-
+ #define MLX5_LOG_VIO_FLAG(_feature)                                                                \
+ 	do {                                                                                       \
+ 		if (features & BIT_ULL(_feature))                                                  \
+@@ -1685,9 +1683,16 @@ static void mlx5_vdpa_set_vq_num(struct vdpa_device *vdev, u16 idx, u32 num)
+ 	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
+ 	struct mlx5_vdpa_virtqueue *mvq;
+ 
+-	if (!is_index_valid(mvdev, idx) || is_ctrl_vq_idx(mvdev, idx))
++	if (!is_index_valid(mvdev, idx))
+ 		return;
+ 
++        if (is_ctrl_vq_idx(mvdev, idx)) {
++                struct mlx5_control_vq *cvq = &mvdev->cvq;
++
++                cvq->vring.vring.num = num;
++                return;
++        }
++
+ 	mvq = &ndev->vqs[idx];
+ 	mvq->num_ent = num;
  }
+@@ -2182,7 +2187,7 @@ static int setup_cvq_vring(struct mlx5_vdpa_dev *mvdev)
+ 		u16 idx = cvq->vring.last_avail_idx;
  
--static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
-+static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count,
-+		unsigned int *reserved_blocks)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
--	unsigned int reserved_blocks = 0;
- 	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
- 	block_t blkaddr;
- 	int i;
-@@ -3596,12 +3596,12 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
- 
- 		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, true);
- 
--		reserved_blocks += reserved;
-+		*reserved_blocks += reserved;
- next:
- 		count -= cluster_size;
- 	}
- 
--	return reserved_blocks;
-+	return 0;
- }
- 
- static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
-@@ -3662,7 +3662,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
- 		count = round_up(count, F2FS_I(inode)->i_cluster_size);
- 
--		ret = reserve_compress_blocks(&dn, count);
-+		ret = reserve_compress_blocks(&dn, count, &reserved_blocks);
- 
- 		f2fs_put_dnode(&dn);
- 
-@@ -3670,13 +3670,12 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 			break;
- 
- 		page_idx += count;
--		reserved_blocks += ret;
- 	}
- 
- 	filemap_invalidate_unlock(inode->i_mapping);
- 	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
- 
--	if (ret >= 0) {
-+	if (!ret) {
- 		clear_inode_flag(inode, FI_COMPRESS_RELEASED);
- 		inode->i_ctime = current_time(inode);
- 		f2fs_mark_inode_dirty_sync(inode, true);
-@@ -3686,7 +3685,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- out:
- 	mnt_drop_write_file(filp);
- 
--	if (ret >= 0) {
-+	if (!ret) {
- 		ret = put_user(reserved_blocks, (u64 __user *)arg);
- 	} else if (reserved_blocks &&
- 			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
+ 		err = vringh_init_iotlb(&cvq->vring, mvdev->actual_features,
+-					MLX5_CVQ_MAX_ENT, false,
++					cvq->vring.vring.num, false,
+ 					(struct vring_desc *)(uintptr_t)cvq->desc_addr,
+ 					(struct vring_avail *)(uintptr_t)cvq->driver_addr,
+ 					(struct vring_used *)(uintptr_t)cvq->device_addr);
 -- 
 2.43.0
 
