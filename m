@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9106E157A6E;
-	Sun, 24 Mar 2024 23:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4820B181806;
+	Sun, 24 Mar 2024 23:48:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324088; cv=none; b=fdAwFSlUT2Bi3DQu/IwBLjOC6F+/GdxMD1eWCdiw2EYKwT3QagN/UXauwQXwbHyCj7Wp4zw+ORRT8oVGi/+L0tc2iI/+r2izTGSR7hOn6dbOURXsLLr1NsRVlxHWmiLYKjWdAwj1+HkjDo+FOyVbHiVAFuCC5MU5BedZ/iPY+14=
+	t=1711324091; cv=none; b=c5J7Q1z5hoWkyz+hwq6SmRBaLziBXVC5v3fxbP8Zmn5cA6JgV0gcjx+9EbPJxY2Ky0w5DefvkJ3KHuRiMa7EEbHy0D2JbJydKoHKOL/bPrDsLFtVa0SHyO5sMqFZN/UvJ8RlOe1xu9hrYkTRiYZKV9cPBlKCB/qlOvOxAuxFa6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324088; c=relaxed/simple;
-	bh=R04SaLVTlRY434WAUbzoNoGBvTez5cp8uVBh57bcJec=;
+	s=arc-20240116; t=1711324091; c=relaxed/simple;
+	bh=fQ4pDnoEGS24uK7PN4tSU8hDTyazw65f8yIfQ9B9TyQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EB/YmZ1NHPghH0nvbQNd3p79nN0hAvryKi+BTEWgf3iVN+JnOP/NBsRP1f3auhZTmzCQQvgkhlZFKPXteQoHlt4F0N/02hxsL9IxlnIo9ZFKf9drIm/1MN/xBxyIlAGISOuj+2dEKBmcZeXX0B+D2b4+7W4/bIwN9O1ZRQ6yHUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqY4N6Gd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fMXPNAWj5U/ydpFBzlk+M16ZpFZKFyIvsQXxisMcuzrbcMZJGHrh+d6DsPXah5JmoeToIxhd3vHJ9r3zAJgnc8gFKDhvDIgfYV934mI8gnatRzaSuQZ4CX2m5txwp3Jlj8Qm8dhsjmSj4Nq6lb2wyiso+X/sd58DWv3bO4aoSRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oc34BKFn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqY4N6Gd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F561C43390;
-	Sun, 24 Mar 2024 23:48:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oc34BKFn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29729C433F1;
+	Sun, 24 Mar 2024 23:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324087;
-	bh=R04SaLVTlRY434WAUbzoNoGBvTez5cp8uVBh57bcJec=;
+	s=k20201202; t=1711324089;
+	bh=fQ4pDnoEGS24uK7PN4tSU8hDTyazw65f8yIfQ9B9TyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oqY4N6GdIHQlTWT/UAFqYLVZcrY3Rsl5DL2acJwTmDi05ZIaXclnRpOdG5StxZtC2
-	 9Sy5nzDRv3xmItoU5rhtH5WPqpGaIcwnQqdMvNGDR/RMwPqerJgipfRWGtzW9Pdtde
-	 nDwZrF7FqlKoBR8G2Bwnt2UyPG0QT/YwJxQrsW3hxIStdMXIRXBCJPlYJsaYZ9/uFn
-	 S5z1LDfEAGAQn8eCbe09AbcM1Iqux9VO8TRohAxVrrr4SFUTfoYHDjZtO8qOgb7ugH
-	 TpeN4CguUlrp9cZPeBrtSGdUdMOHvUMAWZ64w4aK4+QI+8G2a2sC0fY4xDjU5JRovA
-	 xd43Yth7Q7Wpg==
+	b=Oc34BKFnSNHz0Rmm0Bte+KA3S6ZXU9VzpXtpupiJFCgyLX6hwe72Mk0MYyU4r2Pdv
+	 O78z0zvfvFZeFqltF70VEtf6i5F9wUtjezTsqHtxx2+5QyygjGt5I4gTjEUxLySSdf
+	 mTYPTV4S60CB4No8Flq1vxZ+Vo7VfGJIAJDh2o/gGXaDc/s7kx+IXwbbkoC6jtXVJ0
+	 8McHQKLSB3914naaVwFKrNLpfd9+1QPmdGBuXDUBQloEfLDgm4QucRnQoWHhLdBMA8
+	 xlK2Yr3c1Ysd1IMZ452Nm4ZO5Y38AUnigEuVcwVzUQ99v7SlVcIDoVToEVZkI8bIja
+	 gGj5ndD9gU63w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Cai Huoqing <caihuoqing@baidu.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 087/183] drm/tegra: dsi: Make use of the helper function dev_err_probe()
-Date: Sun, 24 Mar 2024 19:45:00 -0400
-Message-ID: <20240324234638.1355609-88-sashal@kernel.org>
+Subject: [PATCH 5.4 090/183] drm/tegra: output: Fix missing i2c_put_adapter() in the error handling paths of tegra_output_probe()
+Date: Sun, 24 Mar 2024 19:45:03 -0400
+Message-ID: <20240324234638.1355609-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,69 +48,72 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Cai Huoqing <caihuoqing@baidu.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit fc75e4fcbd1e4252a0481ebb23cd4516c127a8e2 ]
+[ Upstream commit 2db4578ef6ffb2b52115ca0ebf897b60ec559556 ]
 
-When possible use dev_err_probe help to properly deal with the
-PROBE_DEFER error, the benefit is that DEFER issue will be logged
-in the devices_deferred debugfs file.
-And using dev_err_probe() can reduce code size, the error value
-gets printed.
+If an error occurs after a successful of_get_i2c_adapter_by_node() call, it
+should be undone by a corresponding i2c_put_adapter().
 
-Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
+Add the missing i2c_put_adapter() call.
+
+Fixes: 9be7d864cf07 ("drm/tegra: Implement panel support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: Thierry Reding <treding@nvidia.com>
-Stable-dep-of: 830c1ded3563 ("drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()")
+Link: https://patchwork.freedesktop.org/patch/msgid/b38604178991e1f08b2cda219103be266be2d680.1693667005.git.christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dsi.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/tegra/output.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 1cc6dc6167771..cc0ac038a4208 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1508,28 +1508,24 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
+index bdcaa4c7168cf..806249c0b7e85 100644
+--- a/drivers/gpu/drm/tegra/output.c
++++ b/drivers/gpu/drm/tegra/output.c
+@@ -127,8 +127,10 @@ int tegra_output_probe(struct tegra_output *output)
+ 						       GPIOD_IN,
+ 						       "HDMI hotplug detect");
+ 	if (IS_ERR(output->hpd_gpio)) {
+-		if (PTR_ERR(output->hpd_gpio) != -ENOENT)
+-			return PTR_ERR(output->hpd_gpio);
++		if (PTR_ERR(output->hpd_gpio) != -ENOENT) {
++			err = PTR_ERR(output->hpd_gpio);
++			goto put_i2c;
++		}
+ 
+ 		output->hpd_gpio = NULL;
  	}
+@@ -137,7 +139,7 @@ int tegra_output_probe(struct tegra_output *output)
+ 		err = gpiod_to_irq(output->hpd_gpio);
+ 		if (err < 0) {
+ 			dev_err(output->dev, "gpiod_to_irq(): %d\n", err);
+-			return err;
++			goto put_i2c;
+ 		}
  
- 	dsi->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(dsi->clk)) {
--		dev_err(&pdev->dev, "cannot get DSI clock\n");
--		return PTR_ERR(dsi->clk);
--	}
-+	if (IS_ERR(dsi->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
-+				     "cannot get DSI clock\n");
+ 		output->hpd_irq = err;
+@@ -150,7 +152,7 @@ int tegra_output_probe(struct tegra_output *output)
+ 		if (err < 0) {
+ 			dev_err(output->dev, "failed to request IRQ#%u: %d\n",
+ 				output->hpd_irq, err);
+-			return err;
++			goto put_i2c;
+ 		}
  
- 	dsi->clk_lp = devm_clk_get(&pdev->dev, "lp");
--	if (IS_ERR(dsi->clk_lp)) {
--		dev_err(&pdev->dev, "cannot get low-power clock\n");
--		return PTR_ERR(dsi->clk_lp);
--	}
-+	if (IS_ERR(dsi->clk_lp))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
-+				     "cannot get low-power clock\n");
+ 		output->connector.polled = DRM_CONNECTOR_POLL_HPD;
+@@ -168,6 +170,12 @@ int tegra_output_probe(struct tegra_output *output)
+ 		return -ENOMEM;
  
- 	dsi->clk_parent = devm_clk_get(&pdev->dev, "parent");
--	if (IS_ERR(dsi->clk_parent)) {
--		dev_err(&pdev->dev, "cannot get parent clock\n");
--		return PTR_ERR(dsi->clk_parent);
--	}
-+	if (IS_ERR(dsi->clk_parent))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
-+				     "cannot get parent clock\n");
+ 	return 0;
++
++put_i2c:
++	if (output->ddc)
++		i2c_put_adapter(output->ddc);
++
++	return err;
+ }
  
- 	dsi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
--	if (IS_ERR(dsi->vdd)) {
--		dev_err(&pdev->dev, "cannot get VDD supply\n");
--		return PTR_ERR(dsi->vdd);
--	}
-+	if (IS_ERR(dsi->vdd))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
-+				     "cannot get VDD supply\n");
- 
- 	err = tegra_dsi_setup_clocks(dsi);
- 	if (err < 0) {
+ void tegra_output_remove(struct tegra_output *output)
 -- 
 2.43.0
 
