@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8FC229C17;
-	Sun, 24 Mar 2024 23:49:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B049229C14;
+	Sun, 24 Mar 2024 23:48:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324140; cv=none; b=qWwr/KdzprJ5WaU0NvGXnSzmxiGqub5ZqbotmEm98r0NGF6B8CJB3o+oW7T7/TeLas1Cuv2DNNtRa8tdP+muQqtZUYGfUmTJiHY0+LVv3sD7Z37JTa+LLz/a9/amewGJNN7vJwkOLCtslTMqL47fluiMgFbj5P3shIR274z4CcA=
+	t=1711324137; cv=none; b=VtEXlyuXFXwr5aBo5GIz9DgxBP+EIDqVHgsaBxCG3tMlxVPdD5LdxwPwEu3zQ/X1GD947xI6b+Ut4zLkaT9CFwuYJGfpj0PYr9253vkcXaqKDBkwHhPN8BBhW9BevT55EU3L+lRwpqR5bZnRJ+c9AMFZpT1m1e70TxKe2Af0QzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324140; c=relaxed/simple;
-	bh=P2fm8Z2EQMNiv+Y/NQXqm4jPEzogggdVonsyMGAJLTc=;
+	s=arc-20240116; t=1711324137; c=relaxed/simple;
+	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hrkpZaTol5d9RDT/kVp7jf3Rnnn+FDaL1FsVvefMsW64OXzJFGbs0Vd+CgjwWehRx4RWmHu/qS7nOU082MEDEUXdCF4ta708YIkd0kKnulwsfIvoFaSHCfX+c8jqvgKitGKlM0XTmtF2oRspGbk71CdcGNja/CtQ6ADxmlMZIkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MBDHIhxH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PSqa6/wClBHLRzR8NiSB/yQeyT/nW2Er0IQAgxsVjF/n+HQ6U4D6ztO7PayDU+5vs7y3IJGlL5qLiDgvIS+ReOZ/lVhjgNhCAKTA7CnAEbT1UdBGBSKPrl/TtrwbzySHBfp4yADFYFIaAlz7juRDqrjAeIAnrLzb/nVVEWXzeRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNba+4Bc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MBDHIhxH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8757C433C7;
-	Sun, 24 Mar 2024 23:48:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNba+4Bc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FBB8C43394;
+	Sun, 24 Mar 2024 23:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324140;
-	bh=P2fm8Z2EQMNiv+Y/NQXqm4jPEzogggdVonsyMGAJLTc=;
+	s=k20201202; t=1711324136;
+	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MBDHIhxHshcM8H/PcWaAagqGKw28WGKW/L7v6xfArotnQSdA5QGi1+RaMOHkNG4nK
-	 PE0WDuflP1hujkuYbHbGCN+okMF+nVQWyXCiqeXop51FB0IuIQ2R8VsR3Yf5vNfhxR
-	 yYEN9EdmKR3Jnk1zDIi5Ya6Ua67u1Dra5MVuRPyvO2Da5uV4pwC3J+JZkyrZa9X9IJ
-	 DBt48li2d3qtJZ7kWExuuIeWQlawEjiivwFYywmuRZ6+n0H3sALJSj2mrydKRBDF5K
-	 4tgi2ZamD1bPtQFk1oa4wEVxQtSCVH/l6LS8yssUCFn3qEZ0ccXj/8ujJfaWIKcwoJ
-	 n+o/2ZvMw2kTQ==
+	b=tNba+4BcJMtR0RZdKwZiIIToZTyg/iZw5bWCu1NTecXC27OeTs4gjccKdd4fMuSZM
+	 7OzCSCzKL7LvHH4Xnq3PMoe3tSMGoEPVCk6lsBqhXZkIcpPzc0ByJQT9I03PKcNDJJ
+	 VMSoUnCVcUGxWllO0T/L2u/HK/EGRxvwc+jTYG6v9io4vueU9RpGO2XSp2iETB2D91
+	 0U5f0+zzlj2XR4b+YEOZqe5FPacoDFPvxVslhvN47w/1+MZ6/yJxwYyelz6pTU1E8j
+	 4azgU3TRpGIdfeXOLf7dCqY4UXHH8YoC6OSBBJW1I9pYBTC0wkelN4ncLVQdr8LgjJ
+	 sviodx1Z3Qwkg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vandana BN <bnvandana@gmail.com>,
+Cc: Edward Adam Davis <eadavis@qq.com>,
+	syzbot+ce750e124675d4599449@syzkaller.appspotmail.com,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 136/183] media: v4l2-core: correctly validate video and metadata ioctls
-Date: Sun, 24 Mar 2024 19:45:49 -0400
-Message-ID: <20240324234638.1355609-137-sashal@kernel.org>
+Subject: [PATCH 5.4 133/183] media: pvrusb2: fix uaf in pvr2_context_set_notify
+Date: Sun, 24 Mar 2024 19:45:46 -0400
+Message-ID: <20240324234638.1355609-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -50,198 +49,73 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Vandana BN <bnvandana@gmail.com>
+From: Edward Adam Davis <eadavis@qq.com>
 
-[ Upstream commit 96f49c1ac370c23ae55c63c67a0b40d83928bfbd ]
+[ Upstream commit 0a0b79ea55de8514e1750884e5fec77f9fdd01ee ]
 
-If the type is VFL_TYPE_GRABBER, then also check device_caps
-to see if the video device supports video and/or metadata and
-disable unneeded ioctls.
+[Syzbot reported]
+BUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
+Read of size 4 at addr ffff888113aeb0d8 by task kworker/1:1/26
 
-Without this change, format ioctls for both video and metadata devices
-could be called on both device nodes. This is true for other ioctls as
-well, even if the device supports only video or metadata.
+CPU: 1 PID: 26 Comm: kworker/1:1 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc4/0x620 mm/kasan/report.c:488
+ kasan_report+0xda/0x110 mm/kasan/report.c:601
+ pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
+ pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]
+ pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272
 
-Metadata devices act similar to VBI devices w.r.t. which ioctls should
-be enabled. This makes sense since VBI *is* metadata.
+Freed by task 906:
+kasan_save_stack+0x33/0x50 mm/kasan/common.c:47
+kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+kasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640
+poison_slab_object mm/kasan/common.c:241 [inline]
+__kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257
+kasan_slab_free include/linux/kasan.h:184 [inline]
+slab_free_hook mm/slub.c:2121 [inline]
+slab_free mm/slub.c:4299 [inline]
+kfree+0x105/0x340 mm/slub.c:4409
+pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]
+pvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
 
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
-Co-developed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[Analyze]
+Task A set disconnect_flag = !0, which resulted in Task B's condition being met
+and releasing mp, leading to this issue.
+
+[Fix]
+Place the disconnect_flag assignment operation after all code in pvr2_context_disconnect()
+to avoid this issue.
+
+Reported-and-tested-by: syzbot+ce750e124675d4599449@syzkaller.appspotmail.com
+Fixes: e5be15c63804 ("V4L/DVB (7711): pvrusb2: Fix race on module unload")
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Stable-dep-of: d0b07f712bf6 ("media: ttpci: fix two memleaks in budget_av_attach")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/v4l2-core/v4l2-dev.c   | 62 +++++++++++++++++-----------
- drivers/media/v4l2-core/v4l2-ioctl.c | 16 +++++--
- 2 files changed, 52 insertions(+), 26 deletions(-)
+ drivers/media/usb/pvrusb2/pvrusb2-context.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-dev.c b/drivers/media/v4l2-core/v4l2-dev.c
-index 4037689a945a5..1bf543932e4f9 100644
---- a/drivers/media/v4l2-core/v4l2-dev.c
-+++ b/drivers/media/v4l2-core/v4l2-dev.c
-@@ -533,13 +533,23 @@ static int get_index(struct video_device *vdev)
-  */
- static void determine_valid_ioctls(struct video_device *vdev)
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+index 58f2f3ff10ee2..73c95ba2328a4 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+@@ -267,9 +267,9 @@ static void pvr2_context_exit(struct pvr2_context *mp)
+ void pvr2_context_disconnect(struct pvr2_context *mp)
  {
-+	const u32 vid_caps = V4L2_CAP_VIDEO_CAPTURE |
-+			     V4L2_CAP_VIDEO_CAPTURE_MPLANE |
-+			     V4L2_CAP_VIDEO_OUTPUT |
-+			     V4L2_CAP_VIDEO_OUTPUT_MPLANE |
-+			     V4L2_CAP_VIDEO_M2M | V4L2_CAP_VIDEO_M2M_MPLANE;
-+	const u32 meta_caps = V4L2_CAP_META_CAPTURE |
-+			      V4L2_CAP_META_OUTPUT;
- 	DECLARE_BITMAP(valid_ioctls, BASE_VIDIOC_PRIVATE);
- 	const struct v4l2_ioctl_ops *ops = vdev->ioctl_ops;
--	bool is_vid = vdev->vfl_type == VFL_TYPE_GRABBER;
-+	bool is_vid = vdev->vfl_type == VFL_TYPE_GRABBER &&
-+		      (vdev->device_caps & vid_caps);
- 	bool is_vbi = vdev->vfl_type == VFL_TYPE_VBI;
- 	bool is_radio = vdev->vfl_type == VFL_TYPE_RADIO;
- 	bool is_sdr = vdev->vfl_type == VFL_TYPE_SDR;
- 	bool is_tch = vdev->vfl_type == VFL_TYPE_TOUCH;
-+	bool is_meta = vdev->vfl_type == VFL_TYPE_GRABBER &&
-+		       (vdev->device_caps & meta_caps);
- 	bool is_rx = vdev->vfl_dir != VFL_DIR_TX;
- 	bool is_tx = vdev->vfl_dir != VFL_DIR_RX;
+ 	pvr2_hdw_disconnect(mp->hdw);
+-	mp->disconnect_flag = !0;
+ 	if (!pvr2_context_shutok())
+ 		pvr2_context_notify(mp);
++	mp->disconnect_flag = !0;
+ }
  
-@@ -587,39 +597,31 @@ static void determine_valid_ioctls(struct video_device *vdev)
- 		set_bit(_IOC_NR(VIDIOC_ENUM_FREQ_BANDS), valid_ioctls);
  
- 	if (is_vid || is_tch) {
--		/* video and metadata specific ioctls */
-+		/* video and touch specific ioctls */
- 		if ((is_rx && (ops->vidioc_enum_fmt_vid_cap ||
--			       ops->vidioc_enum_fmt_vid_overlay ||
--			       ops->vidioc_enum_fmt_meta_cap)) ||
--		    (is_tx && (ops->vidioc_enum_fmt_vid_out ||
--			       ops->vidioc_enum_fmt_meta_out)))
-+			       ops->vidioc_enum_fmt_vid_overlay)) ||
-+		    (is_tx && ops->vidioc_enum_fmt_vid_out))
- 			set_bit(_IOC_NR(VIDIOC_ENUM_FMT), valid_ioctls);
- 		if ((is_rx && (ops->vidioc_g_fmt_vid_cap ||
- 			       ops->vidioc_g_fmt_vid_cap_mplane ||
--			       ops->vidioc_g_fmt_vid_overlay ||
--			       ops->vidioc_g_fmt_meta_cap)) ||
-+			       ops->vidioc_g_fmt_vid_overlay)) ||
- 		    (is_tx && (ops->vidioc_g_fmt_vid_out ||
- 			       ops->vidioc_g_fmt_vid_out_mplane ||
--			       ops->vidioc_g_fmt_vid_out_overlay ||
--			       ops->vidioc_g_fmt_meta_out)))
-+			       ops->vidioc_g_fmt_vid_out_overlay)))
- 			 set_bit(_IOC_NR(VIDIOC_G_FMT), valid_ioctls);
- 		if ((is_rx && (ops->vidioc_s_fmt_vid_cap ||
- 			       ops->vidioc_s_fmt_vid_cap_mplane ||
--			       ops->vidioc_s_fmt_vid_overlay ||
--			       ops->vidioc_s_fmt_meta_cap)) ||
-+			       ops->vidioc_s_fmt_vid_overlay)) ||
- 		    (is_tx && (ops->vidioc_s_fmt_vid_out ||
- 			       ops->vidioc_s_fmt_vid_out_mplane ||
--			       ops->vidioc_s_fmt_vid_out_overlay ||
--			       ops->vidioc_s_fmt_meta_out)))
-+			       ops->vidioc_s_fmt_vid_out_overlay)))
- 			 set_bit(_IOC_NR(VIDIOC_S_FMT), valid_ioctls);
- 		if ((is_rx && (ops->vidioc_try_fmt_vid_cap ||
- 			       ops->vidioc_try_fmt_vid_cap_mplane ||
--			       ops->vidioc_try_fmt_vid_overlay ||
--			       ops->vidioc_try_fmt_meta_cap)) ||
-+			       ops->vidioc_try_fmt_vid_overlay)) ||
- 		    (is_tx && (ops->vidioc_try_fmt_vid_out ||
- 			       ops->vidioc_try_fmt_vid_out_mplane ||
--			       ops->vidioc_try_fmt_vid_out_overlay ||
--			       ops->vidioc_try_fmt_meta_out)))
-+			       ops->vidioc_try_fmt_vid_out_overlay)))
- 			 set_bit(_IOC_NR(VIDIOC_TRY_FMT), valid_ioctls);
- 		SET_VALID_IOCTL(ops, VIDIOC_OVERLAY, vidioc_overlay);
- 		SET_VALID_IOCTL(ops, VIDIOC_G_FBUF, vidioc_g_fbuf);
-@@ -641,7 +643,21 @@ static void determine_valid_ioctls(struct video_device *vdev)
- 			set_bit(_IOC_NR(VIDIOC_S_CROP), valid_ioctls);
- 		SET_VALID_IOCTL(ops, VIDIOC_G_SELECTION, vidioc_g_selection);
- 		SET_VALID_IOCTL(ops, VIDIOC_S_SELECTION, vidioc_s_selection);
--	} else if (is_vbi) {
-+	}
-+	if (is_meta && is_rx) {
-+		/* metadata capture specific ioctls */
-+		SET_VALID_IOCTL(ops, VIDIOC_ENUM_FMT, vidioc_enum_fmt_meta_cap);
-+		SET_VALID_IOCTL(ops, VIDIOC_G_FMT, vidioc_g_fmt_meta_cap);
-+		SET_VALID_IOCTL(ops, VIDIOC_S_FMT, vidioc_s_fmt_meta_cap);
-+		SET_VALID_IOCTL(ops, VIDIOC_TRY_FMT, vidioc_try_fmt_meta_cap);
-+	} else if (is_meta && is_tx) {
-+		/* metadata output specific ioctls */
-+		SET_VALID_IOCTL(ops, VIDIOC_ENUM_FMT, vidioc_enum_fmt_meta_out);
-+		SET_VALID_IOCTL(ops, VIDIOC_G_FMT, vidioc_g_fmt_meta_out);
-+		SET_VALID_IOCTL(ops, VIDIOC_S_FMT, vidioc_s_fmt_meta_out);
-+		SET_VALID_IOCTL(ops, VIDIOC_TRY_FMT, vidioc_try_fmt_meta_out);
-+	}
-+	if (is_vbi) {
- 		/* vbi specific ioctls */
- 		if ((is_rx && (ops->vidioc_g_fmt_vbi_cap ||
- 			       ops->vidioc_g_fmt_sliced_vbi_cap)) ||
-@@ -681,8 +697,8 @@ static void determine_valid_ioctls(struct video_device *vdev)
- 			set_bit(_IOC_NR(VIDIOC_TRY_FMT), valid_ioctls);
- 	}
- 
--	if (is_vid || is_vbi || is_sdr || is_tch) {
--		/* ioctls valid for video, metadata, vbi or sdr */
-+	if (is_vid || is_vbi || is_sdr || is_tch || is_meta) {
-+		/* ioctls valid for video, vbi, sdr, touch and metadata */
- 		SET_VALID_IOCTL(ops, VIDIOC_REQBUFS, vidioc_reqbufs);
- 		SET_VALID_IOCTL(ops, VIDIOC_QUERYBUF, vidioc_querybuf);
- 		SET_VALID_IOCTL(ops, VIDIOC_QBUF, vidioc_qbuf);
-@@ -694,8 +710,8 @@ static void determine_valid_ioctls(struct video_device *vdev)
- 		SET_VALID_IOCTL(ops, VIDIOC_STREAMOFF, vidioc_streamoff);
- 	}
- 
--	if (is_vid || is_vbi || is_tch) {
--		/* ioctls valid for video or vbi */
-+	if (is_vid || is_vbi || is_tch || is_meta) {
-+		/* ioctls valid for video, vbi, touch and metadata */
- 		if (ops->vidioc_s_std)
- 			set_bit(_IOC_NR(VIDIOC_ENUMSTD), valid_ioctls);
- 		SET_VALID_IOCTL(ops, VIDIOC_S_STD, vidioc_s_std);
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index 3012e8ecffb94..b8edef9160864 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -950,12 +950,22 @@ static bool check_ext_ctrls(struct v4l2_ext_controls *c, unsigned long ioctl)
- 
- static int check_fmt(struct file *file, enum v4l2_buf_type type)
- {
-+	const u32 vid_caps = V4L2_CAP_VIDEO_CAPTURE |
-+			     V4L2_CAP_VIDEO_CAPTURE_MPLANE |
-+			     V4L2_CAP_VIDEO_OUTPUT |
-+			     V4L2_CAP_VIDEO_OUTPUT_MPLANE |
-+			     V4L2_CAP_VIDEO_M2M | V4L2_CAP_VIDEO_M2M_MPLANE;
-+	const u32 meta_caps = V4L2_CAP_META_CAPTURE |
-+			      V4L2_CAP_META_OUTPUT;
- 	struct video_device *vfd = video_devdata(file);
- 	const struct v4l2_ioctl_ops *ops = vfd->ioctl_ops;
--	bool is_vid = vfd->vfl_type == VFL_TYPE_GRABBER;
-+	bool is_vid = vfd->vfl_type == VFL_TYPE_GRABBER &&
-+		      (vfd->device_caps & vid_caps);
- 	bool is_vbi = vfd->vfl_type == VFL_TYPE_VBI;
- 	bool is_sdr = vfd->vfl_type == VFL_TYPE_SDR;
- 	bool is_tch = vfd->vfl_type == VFL_TYPE_TOUCH;
-+	bool is_meta = vfd->vfl_type == VFL_TYPE_GRABBER &&
-+		       (vfd->device_caps & meta_caps);
- 	bool is_rx = vfd->vfl_dir != VFL_DIR_TX;
- 	bool is_tx = vfd->vfl_dir != VFL_DIR_RX;
- 
-@@ -1014,11 +1024,11 @@ static int check_fmt(struct file *file, enum v4l2_buf_type type)
- 			return 0;
- 		break;
- 	case V4L2_BUF_TYPE_META_CAPTURE:
--		if (is_vid && is_rx && ops->vidioc_g_fmt_meta_cap)
-+		if (is_meta && is_rx && ops->vidioc_g_fmt_meta_cap)
- 			return 0;
- 		break;
- 	case V4L2_BUF_TYPE_META_OUTPUT:
--		if (is_vid && is_tx && ops->vidioc_g_fmt_meta_out)
-+		if (is_meta && is_tx && ops->vidioc_g_fmt_meta_out)
- 			return 0;
- 		break;
- 	default:
 -- 
 2.43.0
 
