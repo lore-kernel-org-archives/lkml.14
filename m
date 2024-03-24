@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59CF1411C1;
-	Sun, 24 Mar 2024 22:48:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E091411FF;
+	Sun, 24 Mar 2024 22:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320516; cv=none; b=kXeeCE8gpISWB9hxXHrreHtmGuS6o6RxzCIz+Qi2NvGBa75rDlwVWp8ZjQ5B1iNvEi6+CsF87eF9WQ24/CqTsp/uiHu2rMAwSTggwxpk+JEEtXGtTzS0nzmX5FSpRwilmkdUuZZZTBbsZ6AhEC7aPzMpP0AwLDlUu+pFtMHpLpU=
+	t=1711320522; cv=none; b=oqpuoeaeRveH/hHc52QcIiLq0aGLSFNiHp9BNpaHFBHi3GFdimXnijhQ4LrAmRqGEXDJBdc41P+ht9qIn3TeqHrfp+GFpZhusJ6jMgySR5mNUVX7CgqZjjPL7XscW6lxFu+jgnwIwT6KEP2YEUnS9wkpMy1P9v1QvBB5gjPGHOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320516; c=relaxed/simple;
-	bh=a90TlNcd55CuvJI7AGBcJt7/5SipQJTr/jE8uvYuenY=;
+	s=arc-20240116; t=1711320522; c=relaxed/simple;
+	bh=xyAsRpzrs64a3QghDN5vH5iXt7S6hDMvZ9FQNW5X8ho=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ODrPzWMFq2YBBrbX2P4kkrFI7spPkJe3cFJPTB+pKZOCjkwNCBfoto2tbMU0DZEYG/fza4APDZY2cQ4+OnoyJGdnOU0gwEJk2HCE9p1YcpFK/GZPayZVGVrwLr+XuSN8iMqBD4j5wkogK1q1i6oYuJ4S179KWg/wLhqhyoZfncc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=thuGPc/L; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gM0OzO905yYtj6cIOM9QoQ818DOxXb45ka2msoi957UT3TwB7sOA/xC1rN0jrdsQk3GqHb6SuC83C4U4bAhS7+bJB/ZMN98u1os9LO6g7ah7CR7M5giXQ5cULTlfACr6bcMv3fg5ouZJd3WMVfxgc5YCSpFzxENeISgAbEu7vQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tv10uR4Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="thuGPc/L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3304C433F1;
-	Sun, 24 Mar 2024 22:48:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tv10uR4Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF1B2C433C7;
+	Sun, 24 Mar 2024 22:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320516;
-	bh=a90TlNcd55CuvJI7AGBcJt7/5SipQJTr/jE8uvYuenY=;
+	s=k20201202; t=1711320521;
+	bh=xyAsRpzrs64a3QghDN5vH5iXt7S6hDMvZ9FQNW5X8ho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=thuGPc/LgPv2ux2Hifr2J7PYK6X7/HN1nZtRTMjVbq5yphl7Lq8FCCNA7JSaywFaM
-	 R6RTj35WNAlEIDXCH6SnGKPrj6PbXRcIwRzI4uJMJQezk89PFVeFYM6tvxppPBRIj2
-	 SFY4ce9ndftPtUAiuKWOqUXD/ajFutGNy/XLKjdmKRPaP2wqTqAK7GNneAmONoGcJd
-	 bG61Q1oBlVOaXXyuQRpzOKH8ry0X85Lrs0Cyo/R1424f9lYh+S8DX7cKM1J8F8EnEI
-	 jh6rYQ/mYf3NMBTzUal3ezCThRd69709Dgpp3Uuu4pMoHdEA/lpxzrzmF5lfmje8HJ
-	 r5EMl+Q5Lxm0A==
+	b=tv10uR4YkVg9+FBEToZGo7BlfdQJ1FzfsVyiXNpSRw3jAhVh3KIzRZ6WmrZwqhZmN
+	 5UzG5SWDgxLST8nt+8GNGH2cnnXcJMgDGXtjkiJMsTMr3RH1LhwJ9l2QAiylJXedie
+	 9oWzReN5xc0VbOzhpKpCgk38tGdfM7QhDZ5WgCsyBkJvgG2F9NogTKR9Mb6kJxSNZC
+	 GDCYRIFwOdKFVG4tdtUaG5bSCXK+LZbfhj5Bc3rqowMsCEQ+Wcd3ae07L1MG1vKEF6
+	 ImvGOx9CMzxz2PG4+2Ru0XfVi9SlGB6F74l8/x6Mmi2RtUi5BLz8oo19XnnT3D4+3t
+	 oCQzAV0LkLQjA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Cc: Audra Mitchell <audra@redhat.com>,
+	Tejun Heo <tj@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 077/713] Input: gpio_keys_polled - suppress deferred probe error for gpio
-Date: Sun, 24 Mar 2024 18:36:43 -0400
-Message-ID: <20240324224720.1345309-78-sashal@kernel.org>
+Subject: [PATCH 6.7 082/713] workqueue.c: Increase workqueue name length
+Date: Sun, 24 Mar 2024 18:36:48 -0400
+Message-ID: <20240324224720.1345309-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,55 +44,62 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Audra Mitchell <audra@redhat.com>
 
-[ Upstream commit 963465a33141d0d52338e77f80fe543d2c9dc053 ]
+[ Upstream commit 31c89007285d365aa36f71d8fb0701581c770a27 ]
 
-On a PC Engines APU our admins are faced with:
+Currently we limit the size of the workqueue name to 24 characters due to
+commit ecf6881ff349 ("workqueue: make workqueue->name[] fixed len")
+Increase the size to 32 characters and print a warning in the event
+the requested name is larger than the limit of 32 characters.
 
-	$ dmesg | grep -c "gpio-keys-polled gpio-keys-polled: unable to claim gpio 0, err=-517"
-	261
-
-Such a message always appears when e.g. a new USB device is plugged in.
-
-Suppress this message which considerably clutters the kernel log for
-EPROBE_DEFER (i.e. -517).
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20240305101042.10953-2-u.kleine-koenig@pengutronix.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Audra Mitchell <audra@redhat.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Stable-dep-of: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/gpio_keys_polled.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ kernel/workqueue.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-index ba00ecfbd343b..b41fd1240f431 100644
---- a/drivers/input/keyboard/gpio_keys_polled.c
-+++ b/drivers/input/keyboard/gpio_keys_polled.c
-@@ -315,12 +315,10 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 4f87b1851c74a..1c72a616b9888 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -108,7 +108,7 @@ enum {
+ 	RESCUER_NICE_LEVEL	= MIN_NICE,
+ 	HIGHPRI_NICE_LEVEL	= MIN_NICE,
  
- 			error = devm_gpio_request_one(dev, button->gpio,
- 					flags, button->desc ? : DRV_NAME);
--			if (error) {
--				dev_err(dev,
--					"unable to claim gpio %u, err=%d\n",
--					button->gpio, error);
--				return error;
--			}
-+			if (error)
-+				return dev_err_probe(dev, error,
-+						     "unable to claim gpio %u\n",
-+						     button->gpio);
+-	WQ_NAME_LEN		= 24,
++	WQ_NAME_LEN		= 32,
+ };
  
- 			bdata->gpiod = gpio_to_desc(button->gpio);
- 			if (!bdata->gpiod) {
+ /*
+@@ -4673,6 +4673,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+ 	va_list args;
+ 	struct workqueue_struct *wq;
+ 	struct pool_workqueue *pwq;
++	int len;
+ 
+ 	/*
+ 	 * Unbound && max_active == 1 used to imply ordered, which is no longer
+@@ -4699,9 +4700,12 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+ 	}
+ 
+ 	va_start(args, max_active);
+-	vsnprintf(wq->name, sizeof(wq->name), fmt, args);
++	len = vsnprintf(wq->name, sizeof(wq->name), fmt, args);
+ 	va_end(args);
+ 
++	if (len >= WQ_NAME_LEN)
++		pr_warn_once("workqueue: name exceeds WQ_NAME_LEN. Truncating to: %s\n", wq->name);
++
+ 	max_active = max_active ?: WQ_DFL_ACTIVE;
+ 	max_active = wq_clamp_max_active(max_active, flags, wq->name);
+ 
 -- 
 2.43.0
 
