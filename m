@@ -1,89 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B8B2002F7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E412002F4;
 	Sun, 24 Mar 2024 23:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322299; cv=none; b=JSdfVRI6Q/GNnuJ8dbASPgMCt4iT5n6O6FxUjK1r2z+PdHhHmj/ldrGEbK+FMZ6GtKhyixINk5psHVNlvzd89uaCMHy8SYO5vfdMKzbTx5/2Qi+wFKjOJdQoafh2+r8ZbW8uaKnMEPuCX+VSgxi05KoC1GNRjsGMVsckpeg23Ec=
+	t=1711322300; cv=none; b=RmorVpHmh9MK1orf1li2TqSFLTz7QD6MYh0b6LBEy/OElBmbvKVz4yUWPHxigaQcTjlo+05cCeexLuASWY22ko7NSK/JmC4d6NLcnXyzIx2JMDebK55Ln+iwAJrkjBW/VJ2uiICK1K++j6sZS5ps2m1nCzHkH9/VP1Ks2nHLer8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322299; c=relaxed/simple;
-	bh=mzRXqplfpyLYND4mn3yvzWESgWNu6b3b36zTeDmh2Jw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B+TLiqDujOa9qlBqhemggUKA/K7Hf8Qsagn5hAJtDyiiq9HPtSTlfKcuLMU6qdfFs747Xf9JEUTYXd7b5PNvbWftpsOvOC6Wrn0AOOPaUwYtiUr6sjXzk5OJnbsMI1ANlPHsMbedn9/BHrJNpFuA+kplhInb56Etw63xNZNPYkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nyKrDjIm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711322300; c=relaxed/simple;
+	bh=sHOHAAgo36BLciM/K7n2mRo2mKuGuaXUBGhyzlTFcnU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nbl+lvodsjIrHNRyTghKQE3uqhMs/pKzM3Ms1yx1AGx8DPdcgUQ50961beBkEONa52DP9gePRa4m4Gh8HQL6ymp2QWZysFFsSlpS6JgMc6csoo2jcxE17xXNgTXiI+GoKwz+fYbz47XBe6gnuVRkt4fltaVsNT+VrEjgNnTSEts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kK3WrLdc; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nyKrDjIm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92922C433B1;
-	Sun, 24 Mar 2024 23:18:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322298;
-	bh=mzRXqplfpyLYND4mn3yvzWESgWNu6b3b36zTeDmh2Jw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nyKrDjImR3HgoAI51acHPh8XtR3kRe44cwGN88UGdNvz6h79sUmt4KLJOkOSnmpNq
-	 kWwG+VL08e/WFyFHeaM5PIgyN7DOyMEjRJ4uBhyv2SGEkyl69jjBM80E2KZkm0W/R5
-	 UzhVvMkr/F1ghTSChsrdXmhDwuvhU2/fIdO09lrmYqnRYeC7sGPEt2i11xEGTdoeEh
-	 xuzfzkRV1JSxryBDWUQC+iplU+GWdUn5QX7QDHbEFW3i2Wl6zb/Wed5v2oANuYnW2f
-	 10NlAyjkhoKaRSr0j+fmE0BYpNTs5G8JVtEN2Zr9fTmLA7GdsS6BZbrb0fHaFGWb+4
-	 izmxVFFyDZaYQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Sandipan Das <sandipan.das@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 381/451] perf/x86/amd/core: Avoid register reset when CPU is dead
-Date: Sun, 24 Mar 2024 19:10:57 -0400
-Message-ID: <20240324231207.1351418-382-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
-References: <20240324231207.1351418-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kK3WrLdc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711322299; x=1742858299;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=sHOHAAgo36BLciM/K7n2mRo2mKuGuaXUBGhyzlTFcnU=;
+  b=kK3WrLdclJBucFHlfv03QDJaU7CST7/H608cRd8t00XSzM5YZpGJy9mG
+   uPRjsRJRRqTVCggiBO1tKkRkLnAFxszMKxP4o4ByhpTH70kT/kHeUoMS0
+   Gro0ngCHGc+81SYMmRBgzCVTW5agKTMR4Iq+6VDEBOCmEmVHGHFn/4HtL
+   3gkAQfJhBDKopYene+nv59jsc4BsgCdBqO2OuaWVW/6Ys1otmMmOVFPBR
+   vsfmmgtcCH8NB8IDzVESKDVH4CD3AsFChhI4u24iMPQlhz45hF8s6+9So
+   Kcw7vt/n06kEG4fUGarH+BtFRTEykq65kQKkzagyyeIGkx9PW7ETs+L+s
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6431712"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="6431712"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="15464685"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.186.165])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:16 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+Date: Sun, 24 Mar 2024 16:18:13 -0700
+Subject: [PATCH 10/26] cxl/events: Factor out event msgnum configuration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240324-dcd-type2-upstream-v1-10-b7b00d623625@intel.com>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=2584;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=sHOHAAgo36BLciM/K7n2mRo2mKuGuaXUBGhyzlTFcnU=;
+ b=mOpBBOsOLZaK3hFPvkaJoSljLE6XhFjBl9gLKSZ5STCIrET6lhWbgu36Xtiyq0Ma+PV7zpKbY
+ 95epuu3rURaCGVXEZPqCj74bQDnUUZEUwB7drjn3Mu+bcK2WpQcfZqN
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-From: Sandipan Das <sandipan.das@amd.com>
+Dynamic Capacity Devices (DCD) require events to process extent addition
+or removal.  BIOS may have control over memory event processing.
 
-[ Upstream commit ad8c91282c95f801c37812d59d2d9eba6899b384 ]
+Factor out cxl_event_config_msgnums() in preparation for setting up DCD
+event interrupts separate from memory events.
 
-When bringing a CPU online, some of the PMC and LBR related registers
-are reset. The same is done when a CPU is taken offline although that
-is unnecessary. This currently happens in the "cpu_dead" callback which
-is also incorrect as the callback runs on a control CPU instead of the
-one that is being taken offline. This also affects hibernation and
-suspend to RAM on some platforms as reported in the link below.
-
-Fixes: 21d59e3e2c40 ("perf/x86/amd/core: Detect PerfMonV2 support")
-Reported-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/550a026764342cf7e5812680e3e2b91fe662b5ac.1706526029.git.sandipan.das@amd.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- arch/x86/events/amd/core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/cxl/pci.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 04f4b96dec6df..fd091b9dd7067 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -604,7 +604,6 @@ static void amd_pmu_cpu_dead(int cpu)
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 216881455364..cedd9b05f129 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -698,35 +698,31 @@ static int cxl_event_config_msgnums(struct cxl_memdev_state *mds,
+ 	return cxl_event_get_int_policy(mds, policy);
+ }
  
- 	kfree(cpuhw->lbr_sel);
- 	cpuhw->lbr_sel = NULL;
--	amd_pmu_cpu_reset(cpu);
+-static int cxl_event_irqsetup(struct cxl_memdev_state *mds)
++static int cxl_event_irqsetup(struct cxl_memdev_state *mds,
++			      struct cxl_event_interrupt_policy *policy)
+ {
+ 	struct cxl_dev_state *cxlds = &mds->cxlds;
+-	struct cxl_event_interrupt_policy policy;
+ 	int rc;
  
- 	if (!x86_pmu.amd_nb_constraints)
- 		return;
+-	rc = cxl_event_config_msgnums(mds, &policy);
+-	if (rc)
+-		return rc;
+-
+-	rc = cxl_event_req_irq(cxlds, policy.info_settings);
++	rc = cxl_event_req_irq(cxlds, policy->info_settings);
+ 	if (rc) {
+ 		dev_err(cxlds->dev, "Failed to get interrupt for event Info log\n");
+ 		return rc;
+ 	}
+ 
+-	rc = cxl_event_req_irq(cxlds, policy.warn_settings);
++	rc = cxl_event_req_irq(cxlds, policy->warn_settings);
+ 	if (rc) {
+ 		dev_err(cxlds->dev, "Failed to get interrupt for event Warn log\n");
+ 		return rc;
+ 	}
+ 
+-	rc = cxl_event_req_irq(cxlds, policy.failure_settings);
++	rc = cxl_event_req_irq(cxlds, policy->failure_settings);
+ 	if (rc) {
+ 		dev_err(cxlds->dev, "Failed to get interrupt for event Failure log\n");
+ 		return rc;
+ 	}
+ 
+-	rc = cxl_event_req_irq(cxlds, policy.fatal_settings);
++	rc = cxl_event_req_irq(cxlds, policy->fatal_settings);
+ 	if (rc) {
+ 		dev_err(cxlds->dev, "Failed to get interrupt for event Fatal log\n");
+ 		return rc;
+@@ -745,7 +741,7 @@ static bool cxl_event_int_is_fw(u8 setting)
+ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+ 			    struct cxl_memdev_state *mds, bool irq_avail)
+ {
+-	struct cxl_event_interrupt_policy policy;
++	struct cxl_event_interrupt_policy policy = { 0 };
+ 	int rc;
+ 
+ 	/*
+@@ -777,7 +773,11 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+ 		return -EBUSY;
+ 	}
+ 
+-	rc = cxl_event_irqsetup(mds);
++	rc = cxl_event_config_msgnums(mds, &policy);
++	if (rc)
++		return rc;
++
++	rc = cxl_event_irqsetup(mds, &policy);
+ 	if (rc)
+ 		return rc;
+ 
+
 -- 
-2.43.0
+2.44.0
 
