@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABBB7FBC4;
-	Sun, 24 Mar 2024 22:48:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078247FBD4;
+	Sun, 24 Mar 2024 22:48:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320494; cv=none; b=dq8KyZSnAnlE8WeyyzR2+wrB4qXhIqeuRpSI2RRHN8HXsmiVSq7gfb1NyoBJ3HkKP/YlABEYoQtEycucUU1vIckeq8Spuho5PfJAwzlDpxC4DyQ6xeMMoRmVaXyCg/miI0hlVzJJD5Z3jN66sXApRtJee9mUZar5CZVXKnVG/Ok=
+	t=1711320497; cv=none; b=DA31F9ND8olypBoc9qdu37hxos7Wagn1GrjoP/3HoHCbZ2+36A706nit+5JXXTAgIg82Fdny84k0VeeA9X+ecRufCLAxZC5Zrnz7i3BbfKP4b9+C5mrve5BWtaV8fooRsPYh75aTmyo1Z0MYjZPI5TuS6/GeiU3gg9+vYnazO7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320494; c=relaxed/simple;
-	bh=v/GqwctWlG2sHaK90uHM0kIohRdym6r35L14FSDIhDA=;
+	s=arc-20240116; t=1711320497; c=relaxed/simple;
+	bh=d+U/DMyqrJmz9isk37XQbdH4HzIhR5FvXPZ0QF5sqY0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MXsOwYam8gYirdJgc0OWnmm/MJCTCJKjUQZFj9bS4HWvJnudFkf2zYwbtMo7jupTg6I/2VvT13o6G6IKkq0TzzxBbB6LiVK9ZWyKhDjSdN+QmX8GLnmHu+UQfZ12UWuSC/D9WkfoKkXvWIuEb61AtJ9zr59rkNVlg2DmIH0f2Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMkZqIbM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aZ1lIL484fyrFHAu+JxbjG5jkaR7fBUTPK3tmYzRHDCYJRpo8rf7Ua4ntpgt14bLIHWswnFIaZv3r2RDMF4KcimQqJ6cnQUnANg3BZeC3W+13blLNBVi9eX/GyrWcVChHLXXmRNJ6jI8UjojQEDnSGNmqnM1QyPB1MdBPG6NI8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9WEDvkF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMkZqIbM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 761E3C43394;
-	Sun, 24 Mar 2024 22:48:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9WEDvkF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45641C43394;
+	Sun, 24 Mar 2024 22:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320494;
-	bh=v/GqwctWlG2sHaK90uHM0kIohRdym6r35L14FSDIhDA=;
+	s=k20201202; t=1711320496;
+	bh=d+U/DMyqrJmz9isk37XQbdH4HzIhR5FvXPZ0QF5sqY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nMkZqIbMNJQh4E/78wOl7aL0mysP+GEpCGxy9bKRHIV238aDjPCm7AT4ZVu6X/C6X
-	 pAHMSSiBXf7aew8qJ42JT0QqC4MBzO+RLnFKzteMfgtN+tOFkhCNKlMm3QWyaFInD5
-	 +zcJkwnePTc8jTZg2YtieG4dM2rGu5ibZ0z4qWTsbBBPJ5VoPqyzWoTKtum8hxDxM2
-	 ofOmMkWePTcuypEoXdVTlaX0IrbgLHWUOHBhEoE2UkjMX9i3+vb0X+b5jtJYXkDmXp
-	 9jMmivLUYNnAzHiIaeAkGqEG9637bZuNpWZwkPYDuqU3SvioNw5RG0E1VDCTGehUm8
-	 ra3gvw4DRP1Sg==
+	b=n9WEDvkFgXAwys3Lht6ES1yXnFl/UwOG3Unq1nU0NxcUfJ+8wlNlZv8ud5c9zeuNm
+	 1W2pZfcOhdoO54AlZ1w8qp3/BgfiEOdkx9EBCaRGpEmfT2ZAMCkdU7Sg4oX/1qVFgn
+	 TZh2TxscAmQZMvDtekPdW4x2+KChsPTTIwKwor0D7PwX4NTLut/4hL4QWF11yHAQLX
+	 tAW7OdAUmlvg8M9szuqDPIeqQ2GtLzfAj1Uezqp3qvWCLcEVVH97+S+E5L1urIpDSj
+	 zf41RUnob/iPKwNMA+5whWcqTfkYtZKxDXYbJjcv6X5/LYB9wV/Zsdb+wqkLquM3az
+	 0tywKj4ObgsNQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Filipe Manana <fdmanana@suse.com>,
-	David Sterba <dsterba@suse.com>,
+Cc: Andre Werner <andre.werner@systec-electronic.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 053/713] btrfs: fix data race at btrfs_use_block_rsv() when accessing block reserve
-Date: Sun, 24 Mar 2024 18:36:19 -0400
-Message-ID: <20240324224720.1345309-54-sashal@kernel.org>
+Subject: [PATCH 6.7 056/713] net: smsc95xx: add support for SYS TEC USB-SPEmodule1
+Date: Sun, 24 Mar 2024 18:36:22 -0400
+Message-ID: <20240324224720.1345309-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,101 +48,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Andre Werner <andre.werner@systec-electronic.com>
 
-[ Upstream commit c7bb26b847e5b97814f522686068c5628e2b3646 ]
+[ Upstream commit 45532b21dc2a692444b6ad5f71c253cca53e8103 ]
 
-At btrfs_use_block_rsv() we read the size of a block reserve without
-locking its spinlock, which makes KCSAN complain because the size of a
-block reserve is always updated while holding its spinlock. The report
-from KCSAN is the following:
+This patch adds support for the SYS TEC USB-SPEmodule1 10Base-T1L
+ethernet device to the existing smsc95xx driver by adding the new
+USB VID/PID pair.
 
-  [653.313148] BUG: KCSAN: data-race in btrfs_update_delayed_refs_rsv [btrfs] / btrfs_use_block_rsv [btrfs]
-
-  [653.314755] read to 0x000000017f5871b8 of 8 bytes by task 7519 on cpu 0:
-  [653.314779]  btrfs_use_block_rsv+0xe4/0x2f8 [btrfs]
-  [653.315606]  btrfs_alloc_tree_block+0xdc/0x998 [btrfs]
-  [653.316421]  btrfs_force_cow_block+0x220/0xe38 [btrfs]
-  [653.317242]  btrfs_cow_block+0x1ac/0x568 [btrfs]
-  [653.318060]  btrfs_search_slot+0xda2/0x19b8 [btrfs]
-  [653.318879]  btrfs_del_csums+0x1dc/0x798 [btrfs]
-  [653.319702]  __btrfs_free_extent.isra.0+0xc24/0x2028 [btrfs]
-  [653.320538]  __btrfs_run_delayed_refs+0xd3c/0x2390 [btrfs]
-  [653.321340]  btrfs_run_delayed_refs+0xae/0x290 [btrfs]
-  [653.322140]  flush_space+0x5e4/0x718 [btrfs]
-  [653.322958]  btrfs_preempt_reclaim_metadata_space+0x102/0x2f8 [btrfs]
-  [653.323781]  process_one_work+0x3b6/0x838
-  [653.323800]  worker_thread+0x75e/0xb10
-  [653.323817]  kthread+0x21a/0x230
-  [653.323836]  __ret_from_fork+0x6c/0xb8
-  [653.323855]  ret_from_fork+0xa/0x30
-
-  [653.323887] write to 0x000000017f5871b8 of 8 bytes by task 576 on cpu 3:
-  [653.323906]  btrfs_update_delayed_refs_rsv+0x1a4/0x250 [btrfs]
-  [653.324699]  btrfs_add_delayed_data_ref+0x468/0x6d8 [btrfs]
-  [653.325494]  btrfs_free_extent+0x76/0x120 [btrfs]
-  [653.326280]  __btrfs_mod_ref+0x6a8/0x6b8 [btrfs]
-  [653.327064]  btrfs_dec_ref+0x50/0x70 [btrfs]
-  [653.327849]  walk_up_proc+0x236/0xa50 [btrfs]
-  [653.328633]  walk_up_tree+0x21c/0x448 [btrfs]
-  [653.329418]  btrfs_drop_snapshot+0x802/0x1328 [btrfs]
-  [653.330205]  btrfs_clean_one_deleted_snapshot+0x184/0x238 [btrfs]
-  [653.330995]  cleaner_kthread+0x2b0/0x2f0 [btrfs]
-  [653.331781]  kthread+0x21a/0x230
-  [653.331800]  __ret_from_fork+0x6c/0xb8
-  [653.331818]  ret_from_fork+0xa/0x30
-
-So add a helper to get the size of a block reserve while holding the lock.
-Reading the field while holding the lock instead of using the data_race()
-annotation is used in order to prevent load tearing.
-
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Andre Werner <andre.werner@systec-electronic.com>
+Link: https://lore.kernel.org/r/20240219053413.4732-1-andre.werner@systec-electronic.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/block-rsv.c |  2 +-
- fs/btrfs/block-rsv.h | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/net/usb/smsc95xx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/btrfs/block-rsv.c b/fs/btrfs/block-rsv.c
-index ceb5f586a2d55..1043a8142351b 100644
---- a/fs/btrfs/block-rsv.c
-+++ b/fs/btrfs/block-rsv.c
-@@ -494,7 +494,7 @@ struct btrfs_block_rsv *btrfs_use_block_rsv(struct btrfs_trans_handle *trans,
- 
- 	block_rsv = get_block_rsv(trans, root);
- 
--	if (unlikely(block_rsv->size == 0))
-+	if (unlikely(btrfs_block_rsv_size(block_rsv) == 0))
- 		goto try_reserve;
- again:
- 	ret = btrfs_block_rsv_use_bytes(block_rsv, blocksize);
-diff --git a/fs/btrfs/block-rsv.h b/fs/btrfs/block-rsv.h
-index fb440a074700a..43a9a6b5a79f4 100644
---- a/fs/btrfs/block-rsv.h
-+++ b/fs/btrfs/block-rsv.h
-@@ -117,4 +117,20 @@ static inline u64 btrfs_block_rsv_reserved(struct btrfs_block_rsv *rsv)
- 	return ret;
- }
- 
-+/*
-+ * Get the size of a block reserve in a context where getting a stale value is
-+ * acceptable, instead of accessing it directly and trigger data race warning
-+ * from KCSAN.
-+ */
-+static inline u64 btrfs_block_rsv_size(struct btrfs_block_rsv *rsv)
-+{
-+	u64 ret;
-+
-+	spin_lock(&rsv->lock);
-+	ret = rsv->size;
-+	spin_unlock(&rsv->lock);
-+
-+	return ret;
-+}
-+
- #endif /* BTRFS_BLOCK_RSV_H */
+diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+index a530f20ee2575..2fa46baa589e5 100644
+--- a/drivers/net/usb/smsc95xx.c
++++ b/drivers/net/usb/smsc95xx.c
+@@ -2104,6 +2104,11 @@ static const struct usb_device_id products[] = {
+ 		USB_DEVICE(0x0424, 0x9E08),
+ 		.driver_info = (unsigned long) &smsc95xx_info,
+ 	},
++	{
++		/* SYSTEC USB-SPEmodule1 10BASE-T1L Ethernet Device */
++		USB_DEVICE(0x0878, 0x1400),
++		.driver_info = (unsigned long)&smsc95xx_info,
++	},
+ 	{
+ 		/* Microchip's EVB-LAN8670-USB 10BASE-T1S Ethernet Device */
+ 		USB_DEVICE(0x184F, 0x0051),
 -- 
 2.43.0
 
