@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C9314882B;
-	Sun, 24 Mar 2024 22:55:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B08312AAE2;
+	Sun, 24 Mar 2024 22:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320923; cv=none; b=MEjToMk52EJnx6BbGpGQ58kQXm2HH2m7bEsYWaxDyqzwXx31h6hiyRIugzI4PRRj7jvkd15NXL8K3sJn2r5Sb3A+3DlUgETV3pzPgAv1nIRZ5d+OWUp254Gc3WlaJumjDzM+C6mB6opKWG5TYIy4F+pm/nHegIEbc+5oLo2JCvs=
+	t=1711320940; cv=none; b=WOOlPrGnWD1D8T0n3pz6uhWsAzddXG3j7Vrkar6oUi1XW8/9izgTm7jE+n1rFhIzOlAEZYjCXE5beacp0MTgdd4NNm3nEszZoYOW2pkojETNK/CcfIH8rS+H3NcNwZPjgEEGgNdi32aki9C8Pdmv8EcRDgLAotbNfpjW5+qfB/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320923; c=relaxed/simple;
-	bh=I0ftkpg1auOYnQ2mH1Az1FoRNSu97/FiJb83KHbPwCQ=;
+	s=arc-20240116; t=1711320940; c=relaxed/simple;
+	bh=SK+PLDMOyoD3aBAgoKmN5QhdMdDgTyOmf/l3ra9AFnw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fM707+6q4x/zDNmunyKrM0gI5ivme31NfUd14q/vy7tNs/Y1qxpq+8zy9YdeWjHRa/rPhWoslZxPwfAojNaLauwdswKLd8V0SeQPfEE7K9az30u37XGZfkz15IDBdpfiRaBjNgkux6DsO9E4DA3PxSHgUxCFPyM448UxReCMsaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJNLIM/D; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=M+gJXjjgVXeLh3viOi03yB51pABjxVKw67OnFbh20QbpU1koEx2QbIRoZqK8NvHy+6JehksfGX49wmrK/e7kzrTRNyF2sTPovywggKlQoycEO+7dZXSYFehnZFykmpIi063fvnQJaLrbkoP43wozAXiARMkQWxVcDBDekvjP2Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/Ijg3//; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJNLIM/D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1670C433A6;
-	Sun, 24 Mar 2024 22:55:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/Ijg3//"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EC99C433C7;
+	Sun, 24 Mar 2024 22:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320922;
-	bh=I0ftkpg1auOYnQ2mH1Az1FoRNSu97/FiJb83KHbPwCQ=;
+	s=k20201202; t=1711320940;
+	bh=SK+PLDMOyoD3aBAgoKmN5QhdMdDgTyOmf/l3ra9AFnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oJNLIM/D8BdcYZCp0cUGaxMpDZ3NH0pFYl0eJkLkC6mgPDnBZAUkQZAekGKUQtCnO
-	 lUFT67Mdcc4YreinJwn4oInDXy+I4em+gF4pPAr5QDeDH8cf3xj4TBoTNv0oWugxCX
-	 Ff0sm4Aw8Tx1UL+HMP+PftYvsACaFTjgSTalfQOqE+XkSmyJ6IGSZV5eNJCGw5NOYr
-	 /TZuLsjeKn6aptSSDFgX4fXfvgNcWaFYgBqOgMd4sYtlMIm0x2HR7lGsDFSfmos7vw
-	 FVjtmLnfCKcRm5szcKRCVWKC5wjY+WwenX2qSVqt9OHtoeTzWAG8aNBFRp9TozGdIH
-	 +EiYo2e+cNh3w==
+	b=l/Ijg3//1e2bIPO7UYm4YSFneUHZrVE2pZby/nObBB6Z80Bo5nQ/mYTlUNoT+VGPE
+	 EKnurYSmAC74nNG+w4Vpm2rMkELwbWQwwM/65ElhWmTf/xyrbiCcESlcuz/Ecr7asG
+	 ZkZUMvcRpLOyvnTLwGadhoPQpiu95zNZDnlb6jZWye/RymyavqmgaXOqJpzGm7u6Jo
+	 tpWz+0sQ53KQGQKQ+yzLi7z9mnrc5LR1eF18PgYBux/LwRxSLUIpFXBRMNIqyBCWV5
+	 XSaRbAP+KuoUNio7FdHI5YXTKO0ElwD1kMyKzq16fz63FQMUtEjuYSnfgNPmjLaP6D
+	 ofg+YQ5fSwoHw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Stephen Boyd <sboyd@kernel.org>,
+Cc: Damian Muszynski <damian.muszynski@intel.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 486/713] clk: mediatek: mt8135: Fix an error handling path in clk_mt8135_apmixed_probe()
-Date: Sun, 24 Mar 2024 18:43:32 -0400
-Message-ID: <20240324224720.1345309-487-sashal@kernel.org>
+Subject: [PATCH 6.7 503/713] crypto: qat - fix ring to service map for dcc in 4xxx
+Date: Sun, 24 Mar 2024 18:43:49 -0400
+Message-ID: <20240324224720.1345309-504-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,45 +49,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Damian Muszynski <damian.muszynski@intel.com>
 
-[ Upstream commit 03c1c51eba6be49b42816af9db114553131af6c8 ]
+[ Upstream commit df018f82002a8b4dc407bc9a6f416b9241d14415 ]
 
-If an error occurs after mtk_alloc_clk_data(), mtk_free_clk_data() should
-be called, as already done in the remove function.
+If a device is configured for data compression chaining (dcc), half of the
+engines are loaded with the symmetric crypto image and the rest are loaded
+with the compression image.
+However, in such configuration all rings can handle compression requests.
 
-Fixes: 54b7026f011e ("clk: mediatek: mt8135-apmixedsys: Convert to platform_driver and module")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/6cd6af61e5a91598068227f1f68cfcfde1507453.1704615011.git.christophe.jaillet@wanadoo.fr
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fix the ring to service mapping so that when a device is configured for
+dcc, the ring to service mapping reports that all rings in a bank can
+be used for compression.
+
+Fixes: a238487f7965 ("crypto: qat - fix ring to service map for QAT GEN4")
+Signed-off-by: Damian Muszynski <damian.muszynski@intel.com>
+Reviewed-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mediatek/clk-mt8135-apmixedsys.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/crypto/intel/qat/qat_4xxx/adf_4xxx_hw_data.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/clk/mediatek/clk-mt8135-apmixedsys.c b/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
-index d1239b4b3db74..41bb2d2e2ea74 100644
---- a/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
-+++ b/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
-@@ -59,7 +59,7 @@ static int clk_mt8135_apmixed_probe(struct platform_device *pdev)
+diff --git a/drivers/crypto/intel/qat/qat_4xxx/adf_4xxx_hw_data.c b/drivers/crypto/intel/qat/qat_4xxx/adf_4xxx_hw_data.c
+index 9763402cd486b..b64aaecdd98ba 100644
+--- a/drivers/crypto/intel/qat/qat_4xxx/adf_4xxx_hw_data.c
++++ b/drivers/crypto/intel/qat/qat_4xxx/adf_4xxx_hw_data.c
+@@ -437,6 +437,13 @@ static u16 get_ring_to_svc_map(struct adf_accel_dev *accel_dev)
+ 	if (!fw_config)
+ 		return 0;
  
- 	ret = mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
- 	if (ret)
--		return ret;
-+		goto free_clk_data;
++	/* If dcc, all rings handle compression requests */
++	if (adf_get_service_enabled(accel_dev) == SVC_DCC) {
++		for (i = 0; i < RP_GROUP_COUNT; i++)
++			rps[i] = COMP;
++		goto set_mask;
++	}
++
+ 	for (i = 0; i < RP_GROUP_COUNT; i++) {
+ 		switch (fw_config[i].ae_mask) {
+ 		case ADF_AE_GROUP_0:
+@@ -465,6 +472,7 @@ static u16 get_ring_to_svc_map(struct adf_accel_dev *accel_dev)
+ 		}
+ 	}
  
- 	ret = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
- 	if (ret)
-@@ -69,6 +69,8 @@ static int clk_mt8135_apmixed_probe(struct platform_device *pdev)
- 
- unregister_plls:
- 	mtk_clk_unregister_plls(plls, ARRAY_SIZE(plls), clk_data);
-+free_clk_data:
-+	mtk_free_clk_data(clk_data);
- 
- 	return ret;
- }
++set_mask:
+ 	ring_to_svc_map = rps[RP_GROUP_0] << ADF_CFG_SERV_RING_PAIR_0_SHIFT |
+ 			  rps[RP_GROUP_1] << ADF_CFG_SERV_RING_PAIR_1_SHIFT |
+ 			  rps[RP_GROUP_0] << ADF_CFG_SERV_RING_PAIR_2_SHIFT |
 -- 
 2.43.0
 
