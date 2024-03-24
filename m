@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8068B181BA8;
-	Sun, 24 Mar 2024 23:48:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895B5181BBE;
+	Sun, 24 Mar 2024 23:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324120; cv=none; b=MyuIHUCQqF74UK7tT1g3u3cByseI5UU1iba9HYftd1Fr9weUHCOtWeWmE8yF5md3/plsLJSNXESv4ToCsooPELGxrSCXzSw3qqB3gRo1PHTfc+nXk0fT4JXOeCZ9EagOlFclaPXX2b3udNGFSpOpfcHdso0srt7M8750pbmTEVY=
+	t=1711324121; cv=none; b=GOXOaaYQgHTm2PAb8jKgXqRkuoms3bHusMBBr4vVSR3aPFRLvxrdZheDajxAzsWuOXf6VBtxhytCp08UZDeCoIADxZany0porysN2rpsdZcX/fRrXBylIwTdqKU497qhzUI83jEY6AqKIOQ5B8AkktzfDt2tC6fOksObyR2i3YI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324120; c=relaxed/simple;
-	bh=5hWHSp4Kd21wkJ4cGovNsX1pCsEPFCrHlCOQt2n9Y5Y=;
+	s=arc-20240116; t=1711324121; c=relaxed/simple;
+	bh=F94zCIHM1waXUDSLk5g9afMxrIzvcf1IbqIyFK2zXMI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KQtnZjpI4HJG7gxywqxB7NbI/9+HKfzR649x3RJ+i3MEQ+82TT+JYXlSu+L7spqOt7HjuMHVjbv3Oc8UoYhOWhlbxZ25rRw+iT9vs+aMnuqLvh2j85JHv7a4lST8mqzQ7Q6G+vMiffR9FGBmTd0A4BmmxHaUf7nBQyDMxgVH7HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjURE3il; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CgFPJgXkoDpJkrkkpJ4GID0RcPS7X1e5UzLk718m/VCrwSg2Gd43WYdmSHQq3pbLxgNjqnpK+kkFN65/HLUe3zofrddzrpJjMrT+9+41Ht2HbrZvNeoX+jYyAjg8veACSdh4Uua/ygGCI1SKoOT2/+K6B0OvBj3SrZ3fEXaCoH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dri6hP20; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjURE3il"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9938AC433C7;
-	Sun, 24 Mar 2024 23:48:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dri6hP20"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96D79C43143;
+	Sun, 24 Mar 2024 23:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324119;
-	bh=5hWHSp4Kd21wkJ4cGovNsX1pCsEPFCrHlCOQt2n9Y5Y=;
+	s=k20201202; t=1711324121;
+	bh=F94zCIHM1waXUDSLk5g9afMxrIzvcf1IbqIyFK2zXMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tjURE3ilJb0GHj9nDkWnbzuZnMRZmDLV1L2cmWIZW1kdE5HDXhHh+nhDfHYiU7DKn
-	 BBp++i7htL67IVx1TXf+mGL6UpUzbUCX7YIgt7lHdyqPFz7SBLGxluxXTK8vKs8RYV
-	 XZyWTP75Uhm7zzhvxxE9G4/sZ0d0/WgQj/3vBYxxUUWck56dmBn3GB/hniS/hJ2EUR
-	 yo7LhjT2kfeJcYWZO2AfeaaqFUsXU/vAP/sr+mNlFKCLiPVOikiIBpt4ij8Oi8DFsM
-	 ZQQYZXEit8PRW84qVNHCxYYywJgLF9mkjkm2SCHQvU7yNC5iy7g5RWeoX+EhuMW9YV
-	 W9F0DLNuaabZA==
+	b=Dri6hP20jWUUUv17ddev9mainN6x0HBTArSEQT30vheF6rsulOFUjbhcMzZnEzAs2
+	 /33DyaCQE6KJ9zUTrU9C8kO9p7ijCOtNo8/15c4jcb5O4XIwofKeEzGLzdg84icBAT
+	 qTHZ3YKjgNRXhZv1debbedlXRdWTo4p8TumeMOS04YlonCzetZiRib6kqOetwr5EkL
+	 HlHRvkLRvI+vj+H8DUC2/PPRIFGPCqpfHeASoX6M73S9c2B4APzv7Gl1ImeQYuulXE
+	 aMzNxsXYFJJCzfRsLjtNBP7hihO1/jSBiO+kANJXTiMQxshipLcTxvqkELM+ITDK4J
+	 NJFjP6QZ/lStg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Lucas Stach <l.stach@pengutronix.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
+Cc: Daniil Dulov <d.dulov@aladdin.ru>,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 117/183] media: imx: csc/scaler: fix v4l2_ctrl_handler memory leak
-Date: Sun, 24 Mar 2024 19:45:30 -0400
-Message-ID: <20240324234638.1355609-118-sashal@kernel.org>
+Subject: [PATCH 5.4 119/183] media: pvrusb2: remove redundant NULL check
+Date: Sun, 24 Mar 2024 19:45:32 -0400
+Message-ID: <20240324234638.1355609-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,33 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Daniil Dulov <d.dulov@aladdin.ru>
 
-[ Upstream commit 4797a3dd46f220e6d83daf54d70c5b33db6deb01 ]
+[ Upstream commit 95ac1210fb2753f968ebce0730d4fbc553c2a3dc ]
 
-Free the memory allocated in v4l2_ctrl_handler_init on release.
+Pointer dip->stream cannot be NULL due to a shift, thus remove redundant
+NULL check.
 
-Fixes: a8ef0488cc59 ("media: imx: add csc/scaler mem2mem device")
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: c74e0062684b ("V4L/DVB (5059): Pvrusb2: Be smarter about mode restoration")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx-media-csc-scaler.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/staging/media/imx/imx-media-csc-scaler.c b/drivers/staging/media/imx/imx-media-csc-scaler.c
-index a15d970adb983..135e1e64c2443 100644
---- a/drivers/staging/media/imx/imx-media-csc-scaler.c
-+++ b/drivers/staging/media/imx/imx-media-csc-scaler.c
-@@ -800,6 +800,7 @@ static int ipu_csc_scaler_release(struct file *file)
- 
- 	dev_dbg(priv->dev, "Releasing instance %p\n", ctx);
- 
-+	v4l2_ctrl_handler_free(&ctx->ctrl_hdlr);
- 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
- 	v4l2_fh_del(&ctx->fh);
- 	v4l2_fh_exit(&ctx->fh);
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index eaa08c7999d4f..d79b4083c9d4a 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -1202,11 +1202,6 @@ static void pvr2_v4l2_dev_init(struct pvr2_v4l2_dev *dip,
+ 		dip->minor_type = pvr2_v4l_type_video;
+ 		nr_ptr = video_nr;
+ 		caps |= V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_AUDIO;
+-		if (!dip->stream) {
+-			pr_err(KBUILD_MODNAME
+-				": Failed to set up pvrusb2 v4l video dev due to missing stream instance\n");
+-			return;
+-		}
+ 		break;
+ 	case VFL_TYPE_VBI:
+ 		dip->config = pvr2_config_vbi;
 -- 
 2.43.0
 
