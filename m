@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527E71788A3;
-	Sun, 24 Mar 2024 23:39:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6361788B7;
+	Sun, 24 Mar 2024 23:39:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323558; cv=none; b=GxNaBND5NFzaaOsFKa1aijjIRn9HqOAJuIZ75Zeqorhn9kxXXwcNzSCVXZLho06vx7ZHXrxPpC+RnZjeQIH0KqX3SPhgrO5XsIGAZmY/idp/qQ81R0nAcveEHeGN3FUOUGvIEO84bhONIDEjaDEo5jAsL7nrPxTn8r1MnvYmEEw=
+	t=1711323561; cv=none; b=cK9zmeJnXtMvyC7n4WH2/V8WN84ACkx/xgpZxtLC5dl3gMKzCiG8EXJvxK0/PRw1Hj+MzIQQ8rckLwQV92nuejxWnvxixbQ4dA5CVHCyeRUxL0hyUmAmTMI41QskW4KCva2/XGfYs2GGd6lJqy/JIwrv7CwExAUY0x6dhw41Dtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323558; c=relaxed/simple;
-	bh=FW4rGZt3DNRlT3vaTYKQZ+V+cMEHg6iz456kybMECmI=;
+	s=arc-20240116; t=1711323561; c=relaxed/simple;
+	bh=dhKFxGipNUYb7+OZCcYXRa1jL6XDpWTD56tS1MNSVQM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A4OcrBmM0Zhz3KG6sMqj4Gy83rxuwBrZ3y8CB6DjuyXdW6boaOM1QJW7gVRlG7nGIBSj6ONBXdpB9gtkkJCCHMn8EtI9eGFpqw/20fmbMEpMIHBO3fRwTyxOUYEPVOl3H5edwsAt9cJzBQcwqajTfq773SpJeavTJJy7UmXsAlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2sc5nuc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TlogpsQj31QNSiLyE3HX5xMz3Dikz3/OeipARRtnM38TvYWK/PRV8HeyuE4fEuWfAFxnWCMwQKCtAn4c2ZCvjA6HOXhTJJu8d9JQrSBLqeKiAqtc9bv1x5+qwoAVt8/KQCumSixCFZCT3p+RTRDhvIon0YabTw+E+DR5Bj+5bic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHIzo2F/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2sc5nuc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E8DEC43390;
-	Sun, 24 Mar 2024 23:39:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHIzo2F/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73DBDC433C7;
+	Sun, 24 Mar 2024 23:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323557;
-	bh=FW4rGZt3DNRlT3vaTYKQZ+V+cMEHg6iz456kybMECmI=;
+	s=k20201202; t=1711323560;
+	bh=dhKFxGipNUYb7+OZCcYXRa1jL6XDpWTD56tS1MNSVQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r2sc5nucWrgMMGGAgKjQx2byiCUP6wZYc1FnO9L+LYRPENU6QNKH414AFn1t/Irdf
-	 BlIFpcabZTdVeD5m2kk7oEkyr8YTbrkCVQpR2SDSfOI1wc8tdbgxlWiraJ32bWA+oj
-	 mae8MxEP1AwP+POkhwZbUt1SRw1R7xSuP8xlpgO6Zy3phnYCMcs/tO0x2a3LwpafZu
-	 z6IPh9Mw9SWs9EwPtQ/KgI9UyCRsNIl7GezzEghIYTh27UhmZ9H7xwqD5M/dE+HZQY
-	 uLSvf0l8p3QLCaAkJ5NB72CKvK/I4qfn3glditrR5EmiSgFkziRyB+xG1wsH8+SXoF
-	 mKZXsLJW8ITsg==
+	b=aHIzo2F/X7eAo2ppinkUYgb7SIApXFV/CvRPkLV99CNFuXYkgCI+eIws8K49+5oiJ
+	 +vCX231/B9nSCigNdBDPQ20+OWt9+nNpW3mKnxzY7M/ni/ZFDo8WSW2xqi0a/XpCku
+	 eIDdszMk34bD5OtWZGQUqLSnrcQXodR3oVUzKLNDoMHjnMgxladTkiqil41Q/nt/uo
+	 6r1/9Hn9Y6EZiXnljZ1ZjGw1urb/eGu3CKyGMAz/eY16hhGa8ceHpxRgTZ6moexfps
+	 txjc+ugYLjrPgY3keQ750FEtK1NOGn3HaxUN++Qm4tyAoxwWn+9cNkoU0akk/v1gUS
+	 n7zfipyQDOQrw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shifeng Li <lishifeng@sangfor.com.cn>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jason Gunthorpe <jgg@nvidia.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 264/317] RDMA/device: Fix a race between mad_client and cm_client init
-Date: Sun, 24 Mar 2024 19:34:04 -0400
-Message-ID: <20240324233458.1352854-265-sashal@kernel.org>
+Subject: [PATCH 5.15 267/317] net: sunrpc: Fix an off by one in rpc_sockaddr2uaddr()
+Date: Sun, 24 Mar 2024 19:34:07 -0400
+Message-ID: <20240324233458.1352854-268-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,131 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Shifeng Li <lishifeng@sangfor.com.cn>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 7a8bccd8b29c321ac181369b42b04fecf05f98e2 ]
+[ Upstream commit d6f4de70f73a106986ee315d7d512539f2f3303a ]
 
-The mad_client will be initialized in enable_device_and_get(), while the
-devices_rwsem will be downgraded to a read semaphore. There is a window
-that leads to the failed initialization for cm_client, since it can not
-get matched mad port from ib_mad_port_list, and the matched mad port will
-be added to the list after that.
+The intent is to check if the strings' are truncated or not. So, >= should
+be used instead of >, because strlcat() and snprintf() return the length of
+the output, excluding the trailing NULL.
 
-    mad_client    |                       cm_client
-------------------|--------------------------------------------------------
-ib_register_device|
-enable_device_and_get
-down_write(&devices_rwsem)
-xa_set_mark(&devices, DEVICE_REGISTERED)
-downgrade_write(&devices_rwsem)
-                  |
-                  |ib_cm_init
-                  |ib_register_client(&cm_client)
-                  |down_read(&devices_rwsem)
-                  |xa_for_each_marked (&devices, DEVICE_REGISTERED)
-                  |add_client_context
-                  |cm_add_one
-                  |ib_register_mad_agent
-                  |ib_get_mad_port
-                  |__ib_get_mad_port
-                  |list_for_each_entry(entry, &ib_mad_port_list, port_list)
-                  |return NULL
-                  |up_read(&devices_rwsem)
-                  |
-add_client_context|
-ib_mad_init_device|
-ib_mad_port_open  |
-list_add_tail(&port_priv->port_list, &ib_mad_port_list)
-up_read(&devices_rwsem)
-                  |
-
-Fix it by using down_write(&devices_rwsem) in ib_register_client().
-
-Fixes: d0899892edd0 ("RDMA/device: Provide APIs from the core code to help unregistration")
-Link: https://lore.kernel.org/r/20240203035313.98991-1-lishifeng@sangfor.com.cn
-Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-Signed-off-by: Shifeng Li <lishifeng@sangfor.com.cn>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixes: a02d69261134 ("SUNRPC: Provide functions for managing universal addresses")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/device.c | 37 +++++++++++++++++++-------------
- 1 file changed, 22 insertions(+), 15 deletions(-)
+ net/sunrpc/addr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index 2c2ac63b39c42..725f2719132fb 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -1729,7 +1729,7 @@ static int assign_client_id(struct ib_client *client)
- {
- 	int ret;
- 
--	down_write(&clients_rwsem);
-+	lockdep_assert_held(&clients_rwsem);
- 	/*
- 	 * The add/remove callbacks must be called in FIFO/LIFO order. To
- 	 * achieve this we assign client_ids so they are sorted in
-@@ -1738,14 +1738,11 @@ static int assign_client_id(struct ib_client *client)
- 	client->client_id = highest_client_id;
- 	ret = xa_insert(&clients, client->client_id, client, GFP_KERNEL);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	highest_client_id++;
- 	xa_set_mark(&clients, client->client_id, CLIENT_REGISTERED);
--
--out:
--	up_write(&clients_rwsem);
--	return ret;
-+	return 0;
- }
- 
- static void remove_client_id(struct ib_client *client)
-@@ -1775,25 +1772,35 @@ int ib_register_client(struct ib_client *client)
- {
- 	struct ib_device *device;
- 	unsigned long index;
-+	bool need_unreg = false;
- 	int ret;
- 
- 	refcount_set(&client->uses, 1);
- 	init_completion(&client->uses_zero);
-+
-+	/*
-+	 * The devices_rwsem is held in write mode to ensure that a racing
-+	 * ib_register_device() sees a consisent view of clients and devices.
-+	 */
-+	down_write(&devices_rwsem);
-+	down_write(&clients_rwsem);
- 	ret = assign_client_id(client);
- 	if (ret)
--		return ret;
-+		goto out;
- 
--	down_read(&devices_rwsem);
-+	need_unreg = true;
- 	xa_for_each_marked (&devices, index, device, DEVICE_REGISTERED) {
- 		ret = add_client_context(device, client);
--		if (ret) {
--			up_read(&devices_rwsem);
--			ib_unregister_client(client);
--			return ret;
--		}
-+		if (ret)
-+			goto out;
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index d435bffc61999..97ff11973c493 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -284,10 +284,10 @@ char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
  	}
--	up_read(&devices_rwsem);
--	return 0;
-+	ret = 0;
-+out:
-+	up_write(&clients_rwsem);
-+	up_write(&devices_rwsem);
-+	if (need_unreg && ret)
-+		ib_unregister_client(client);
-+	return ret;
- }
- EXPORT_SYMBOL(ib_register_client);
  
+ 	if (snprintf(portbuf, sizeof(portbuf),
+-		     ".%u.%u", port >> 8, port & 0xff) > (int)sizeof(portbuf))
++		     ".%u.%u", port >> 8, port & 0xff) >= (int)sizeof(portbuf))
+ 		return NULL;
+ 
+-	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) > sizeof(addrbuf))
++	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) >= sizeof(addrbuf))
+ 		return NULL;
+ 
+ 	return kstrdup(addrbuf, gfp_flags);
 -- 
 2.43.0
 
