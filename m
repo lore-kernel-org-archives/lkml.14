@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9805413DBB6;
-	Sun, 24 Mar 2024 23:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4C913DBB1;
+	Sun, 24 Mar 2024 23:09:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321786; cv=none; b=RH6OMEU0tQiC84q0b5ID4gH9KuPptzRnodMCGju6Ve2flj07kEOF7Rzf8SeBJf47bol4UIxY6rQbrzJdSIWYq5/pwY1F/pRzwwpHjNV4QYxV9wmSA1RLuJfj/4E+OE4AvobmtC9xj1uL7P/UhS8+VVfeSY3dOMttknsFwfpNEMA=
+	t=1711321785; cv=none; b=Y6O3O0/mhoCg78RlgexX2bLo8wl4CrCrro2AJ0W/xXsGC1amj0LeW+VGF0SNuPzcFpPVCOpHwFacb7w/saBWdh43kWVlSscUWEw90V9kNYFnbumwUKek39VYkl1MBzqUf4fjP2Qc9CAinAvMoyW2/R6CEjzqHX/WJPzSFyAg0nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321786; c=relaxed/simple;
-	bh=/OP39yM5r4QOS1vn0CDVDoDYwQdaIcTs0I+c23KntS0=;
+	s=arc-20240116; t=1711321785; c=relaxed/simple;
+	bh=uImw4pK84pk3Qq3k0dJ1r/q4nJXq0hjMGvq1rdv3s54=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NntyxIMJd9lG5FuBy7U4tQjN99SF5WfSvHOJ6Yfx3Gj3yKxRqj2AaLW6r3tbzTT4/trGtT2zEXWEfo1EpbLEBp+nNxuilGzrkPTqkyAjQd6Y0OtMd4SJBySgHahFpXd7rhmIYe7c7i70dkCIZ0KpG6eK9psqhCq1NPa5A8nkvkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qg7IcNUF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dtx1yoZ7wao+TAMJCh+MoRGWjhuOENyVq0Syxb108uXrO5+VloKBTjeiIYXtBjI2/4nBPSFz4tA8Jd4mRM5B62yabHWOcdP+uc63uKo1EM8bnMvG3+/AohuFEbjr+L1aIXcxP5TLy5YnNDwZNAe7G11aCaF0e3TkFKS6jVnZVtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3iaU6n4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qg7IcNUF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7345C433C7;
-	Sun, 24 Mar 2024 23:09:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3iaU6n4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 198D3C43390;
+	Sun, 24 Mar 2024 23:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321786;
-	bh=/OP39yM5r4QOS1vn0CDVDoDYwQdaIcTs0I+c23KntS0=;
+	s=k20201202; t=1711321784;
+	bh=uImw4pK84pk3Qq3k0dJ1r/q4nJXq0hjMGvq1rdv3s54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qg7IcNUFeGErp46TH2ziWqIqojs1XS0zfniqZx3YlOO+sN46RcM1pmnzHJ6VMrOtK
-	 +JX+a347W+OBW+/66sNWGdX0DMPL7JuetQK5kUCaN9KfpTmsFeDS08CwHCu6uVvB8L
-	 +2upowzXYk7MjtpRnijK4lcvUEEZPEoMaNhXLAvcqVwIFxj7xLLw4+cmPZXexdG+GF
-	 2bjHuoJjcej/fQwJlmednywQf8SkO6wSRMRREpqo99NaK2AO2vVkVi7welqhANtBwW
-	 oMFiUZUy72lTWBgoDVrw5hz+2ICKPvWBCZmgbYrDR0eETeIfq14a9kn38/2JMu0k6O
-	 cNMtCVzE/0NeQ==
+	b=k3iaU6n4HYCoo3edP/UohI89i/5SyBefmLHu69vya5jiCwqF44U+T900U9tG0vtLy
+	 p7cW5Z5fSJWciXxGlzB+yixwQKALdPp+D3qH/TnoczklBqrrVRv1wWOC01vsRL0iPr
+	 vmt9oUFt96f4L0RQszP//myTpNujSKdBYPnvN+shpLPGFl2R+mSiCJIarCQ70713dJ
+	 Fbx6myrd8yuW0JMZdy57H+F6dE+kamgJmMjOAgTGOYP98qF7t0kvoJVC67DGuJbYp3
+	 IgwCOHtd1w8U/P1Iuxw8x0nQAYMXWWIynZIFmZsQMtYoIYL6Nj7gXAURL45PfJwOoX
+	 qYtErBmBcSyMA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Chao Yu <chao@kernel.org>,
 	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 514/638] f2fs: introduce get_dnode_addr() to clean up codes
-Date: Sun, 24 Mar 2024 18:59:11 -0400
-Message-ID: <20240324230116.1348576-515-sashal@kernel.org>
+Subject: [PATCH 6.6 512/638] f2fs: delete obsolete FI_FIRST_BLOCK_WRITTEN
+Date: Sun, 24 Mar 2024 18:59:09 -0400
+Message-ID: <20240324230116.1348576-513-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,179 +50,159 @@ Content-Transfer-Encoding: 8bit
 
 From: Chao Yu <chao@kernel.org>
 
-[ Upstream commit 2020cd48e41cb8470bb1ca0835033d13d3178425 ]
+[ Upstream commit a53936361330e4c55c0654605178281387d9c761 ]
 
-Just cleanup, no logic changes.
+Commit 3c6c2bebef79 ("f2fs: avoid punch_hole overhead when releasing
+volatile data") introduced FI_FIRST_BLOCK_WRITTEN as below reason:
+
+This patch is to avoid some punch_hole overhead when releasing volatile
+data. If volatile data was not written yet, we just can make the first
+page as zero.
+
+After commit 7bc155fec5b3 ("f2fs: kill volatile write support"), we
+won't support volatile write, but it missed to remove obsolete
+FI_FIRST_BLOCK_WRITTEN, delete it in this patch.
 
 Signed-off-by: Chao Yu <chao@kernel.org>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Stable-dep-of: 54607494875e ("f2fs: compress: fix to avoid inconsistence bewteen i_blocks and dnode")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c  | 11 ++---------
- fs/f2fs/f2fs.h  | 18 +++++++++++++++---
- fs/f2fs/file.c  |  8 +-------
- fs/f2fs/inode.c | 32 ++++++++++++++------------------
- 4 files changed, 32 insertions(+), 37 deletions(-)
+ fs/f2fs/compress.c |  2 --
+ fs/f2fs/data.c     |  2 --
+ fs/f2fs/f2fs.h     |  6 ------
+ fs/f2fs/file.c     |  3 ---
+ fs/f2fs/gc.c       |  2 --
+ fs/f2fs/inode.c    | 25 -------------------------
+ 6 files changed, 40 deletions(-)
 
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 100353355213d..8093d2f2a174f 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1364,8 +1364,6 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 	add_compr_block_stat(inode, cc->valid_nr_cpages);
+ 
+ 	set_inode_flag(cc->inode, FI_APPEND_WRITE);
+-	if (cc->cluster_idx == 0)
+-		set_inode_flag(inode, FI_FIRST_BLOCK_WRITTEN);
+ 
+ 	f2fs_put_dnode(&dn);
+ 	if (quota_inode)
 diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 7bfccb4570a2b..ec5088f814cab 100644
+index 6f673fc44bdbc..fee4c7130edaa 100644
 --- a/fs/f2fs/data.c
 +++ b/fs/f2fs/data.c
-@@ -1182,16 +1182,9 @@ static int f2fs_submit_page_read(struct inode *inode, struct page *page,
- 
- static void __set_data_blkaddr(struct dnode_of_data *dn)
- {
--	struct f2fs_node *rn = F2FS_NODE(dn->node_page);
--	__le32 *addr_array;
--	int base = 0;
-+	__le32 *addr = get_dnode_addr(dn->inode, dn->node_page);
- 
--	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
--		base = get_extra_isize(dn->inode);
--
--	/* Get physical address of data block */
--	addr_array = blkaddr_in_node(rn);
--	addr_array[base + dn->ofs_in_node] = cpu_to_le32(dn->data_blkaddr);
-+	addr[dn->ofs_in_node] = cpu_to_le32(dn->data_blkaddr);
- }
- 
- /*
+@@ -2809,8 +2809,6 @@ int f2fs_do_write_data_page(struct f2fs_io_info *fio)
+ 	f2fs_outplace_write_data(&dn, fio);
+ 	trace_f2fs_do_write_data_page(page, OPU);
+ 	set_inode_flag(inode, FI_APPEND_WRITE);
+-	if (page->index == 0)
+-		set_inode_flag(inode, FI_FIRST_BLOCK_WRITTEN);
+ out_writepage:
+ 	f2fs_put_dnode(&dn);
+ out:
 diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index d64114de07919..1155790892b13 100644
+index e4d2ac1f79c59..7acbc78b864b4 100644
 --- a/fs/f2fs/f2fs.h
 +++ b/fs/f2fs/f2fs.h
-@@ -3270,12 +3270,13 @@ static inline bool f2fs_is_cow_file(struct inode *inode)
+@@ -774,7 +774,6 @@ enum {
+ 	FI_UPDATE_WRITE,	/* inode has in-place-update data */
+ 	FI_NEED_IPU,		/* used for ipu per file */
+ 	FI_ATOMIC_FILE,		/* indicate atomic file */
+-	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
+ 	FI_DROP_CACHE,		/* drop dirty page cache */
+ 	FI_DATA_EXIST,		/* indicate data exists */
+ 	FI_INLINE_DOTS,		/* indicate inline dot dentries */
+@@ -3272,11 +3271,6 @@ static inline bool f2fs_is_cow_file(struct inode *inode)
  	return is_inode_flag_set(inode, FI_COW_FILE);
  }
  
-+static inline __le32 *get_dnode_addr(struct inode *inode,
-+					struct page *node_page);
- static inline void *inline_data_addr(struct inode *inode, struct page *page)
+-static inline bool f2fs_is_first_block_written(struct inode *inode)
+-{
+-	return is_inode_flag_set(inode, FI_FIRST_BLOCK_WRITTEN);
+-}
+-
+ static inline bool f2fs_is_drop_cache(struct inode *inode)
  {
--	struct f2fs_inode *ri = F2FS_INODE(page);
--	int extra_size = get_extra_isize(inode);
-+	__le32 *addr = get_dnode_addr(inode, page);
- 
--	return (void *)&(ri->i_addr[extra_size + DEF_INLINE_RESERVED_SIZE]);
-+	return (void *)(addr + DEF_INLINE_RESERVED_SIZE);
- }
- 
- static inline int f2fs_has_inline_dentry(struct inode *inode)
-@@ -3418,6 +3419,17 @@ static inline int get_inline_xattr_addrs(struct inode *inode)
- 	return F2FS_I(inode)->i_inline_xattr_size;
- }
- 
-+static inline __le32 *get_dnode_addr(struct inode *inode,
-+					struct page *node_page)
-+{
-+	int base = 0;
-+
-+	if (IS_INODE(node_page) && f2fs_has_extra_attr(inode))
-+		base = get_extra_isize(inode);
-+
-+	return blkaddr_in_node(F2FS_NODE(node_page)) + base;
-+}
-+
- #define f2fs_get_inode_mode(i) \
- 	((is_inode_flag_set(i, FI_ACL_MODE)) ? \
- 	 (F2FS_I(i)->i_acl_mode) : ((i)->i_mode))
+ 	return is_inode_flag_set(inode, FI_DROP_CACHE);
 diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index c5ccdd3e58666..9cfb0bce52c4b 100644
+index 436a59d33c923..c5ccdd3e58666 100644
 --- a/fs/f2fs/file.c
 +++ b/fs/f2fs/file.c
-@@ -557,20 +557,14 @@ static int f2fs_file_open(struct inode *inode, struct file *filp)
- void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
--	struct f2fs_node *raw_node;
- 	int nr_free = 0, ofs = dn->ofs_in_node, len = count;
- 	__le32 *addr;
--	int base = 0;
- 	bool compressed_cluster = false;
- 	int cluster_index = 0, valid_blocks = 0;
- 	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
- 	bool released = !atomic_read(&F2FS_I(dn->inode)->i_compr_blocks);
+@@ -599,9 +599,6 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+ 				valid_blocks++;
+ 		}
  
--	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
--		base = get_extra_isize(dn->inode);
+-		if (dn->ofs_in_node == 0 && IS_INODE(dn->node_page))
+-			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
 -
--	raw_node = F2FS_NODE(dn->node_page);
--	addr = blkaddr_in_node(raw_node) + base + ofs;
-+	addr = get_dnode_addr(dn->inode, dn->node_page) + ofs;
+ 		f2fs_invalidate_blocks(sbi, blkaddr);
  
- 	/* Assumption: truncation starts with cluster */
- 	for (; count > 0; count--, addr++, dn->ofs_in_node++, cluster_index++) {
+ 		if (!released || blkaddr != COMPRESS_ADDR)
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index f550cdeaa6638..2fbe16ad726f4 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1405,8 +1405,6 @@ static int move_data_block(struct inode *inode, block_t bidx,
+ 
+ 	f2fs_update_data_blkaddr(&dn, newaddr);
+ 	set_inode_flag(inode, FI_APPEND_WRITE);
+-	if (page->index == 0)
+-		set_inode_flag(inode, FI_FIRST_BLOCK_WRITTEN);
+ put_page_out:
+ 	f2fs_put_page(fio.encrypted_page, 1);
+ recover_block:
 diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 8d8e90152ca87..dd61449f05b85 100644
+index cde243840abd1..8d8e90152ca87 100644
 --- a/fs/f2fs/inode.c
 +++ b/fs/f2fs/inode.c
-@@ -61,35 +61,31 @@ void f2fs_set_inode_flags(struct inode *inode)
- 			S_ENCRYPTED|S_VERITY|S_CASEFOLD);
+@@ -76,20 +76,6 @@ static void __get_inode_rdev(struct inode *inode, struct f2fs_inode *ri)
+ 	}
  }
  
--static void __get_inode_rdev(struct inode *inode, struct f2fs_inode *ri)
-+static void __get_inode_rdev(struct inode *inode, struct page *node_page)
+-static int __written_first_block(struct f2fs_sb_info *sbi,
+-					struct f2fs_inode *ri)
+-{
+-	block_t addr = le32_to_cpu(ri->i_addr[offset_in_addr(ri)]);
+-
+-	if (!__is_valid_data_blkaddr(addr))
+-		return 1;
+-	if (!f2fs_is_valid_blkaddr(sbi, addr, DATA_GENERIC_ENHANCE)) {
+-		f2fs_handle_error(sbi, ERROR_INVALID_BLKADDR);
+-		return -EFSCORRUPTED;
+-	}
+-	return 0;
+-}
+-
+ static void __set_inode_rdev(struct inode *inode, struct f2fs_inode *ri)
  {
--	int extra_size = get_extra_isize(inode);
-+	__le32 *addr = get_dnode_addr(inode, node_page);
+ 	int extra_size = get_extra_isize(inode);
+@@ -398,7 +384,6 @@ static int do_read_inode(struct inode *inode)
+ 	struct page *node_page;
+ 	struct f2fs_inode *ri;
+ 	projid_t i_projid;
+-	int err;
  
- 	if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode) ||
- 			S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
--		if (ri->i_addr[extra_size])
--			inode->i_rdev = old_decode_dev(
--				le32_to_cpu(ri->i_addr[extra_size]));
-+		if (addr[0])
-+			inode->i_rdev = old_decode_dev(le32_to_cpu(addr[0]));
- 		else
--			inode->i_rdev = new_decode_dev(
--				le32_to_cpu(ri->i_addr[extra_size + 1]));
-+			inode->i_rdev = new_decode_dev(le32_to_cpu(addr[1]));
- 	}
- }
- 
--static void __set_inode_rdev(struct inode *inode, struct f2fs_inode *ri)
-+static void __set_inode_rdev(struct inode *inode, struct page *node_page)
- {
--	int extra_size = get_extra_isize(inode);
-+	__le32 *addr = get_dnode_addr(inode, node_page);
- 
- 	if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode)) {
- 		if (old_valid_dev(inode->i_rdev)) {
--			ri->i_addr[extra_size] =
--				cpu_to_le32(old_encode_dev(inode->i_rdev));
--			ri->i_addr[extra_size + 1] = 0;
-+			addr[0] = cpu_to_le32(old_encode_dev(inode->i_rdev));
-+			addr[1] = 0;
- 		} else {
--			ri->i_addr[extra_size] = 0;
--			ri->i_addr[extra_size + 1] =
--				cpu_to_le32(new_encode_dev(inode->i_rdev));
--			ri->i_addr[extra_size + 2] = 0;
-+			addr[0] = 0;
-+			addr[1] = cpu_to_le32(new_encode_dev(inode->i_rdev));
-+			addr[2] = 0;
- 		}
- 	}
- }
-@@ -463,7 +459,7 @@ static int do_read_inode(struct inode *inode)
- 	}
- 
+ 	/* Check if ino is within scope */
+ 	if (f2fs_check_nid_range(sbi, inode->i_ino))
+@@ -480,16 +465,6 @@ static int do_read_inode(struct inode *inode)
  	/* get rdev by using inline_info */
--	__get_inode_rdev(inode, ri);
-+	__get_inode_rdev(inode, node_page);
+ 	__get_inode_rdev(inode, ri);
  
+-	if (S_ISREG(inode->i_mode)) {
+-		err = __written_first_block(sbi, ri);
+-		if (err < 0) {
+-			f2fs_put_page(node_page, 1);
+-			return err;
+-		}
+-		if (!err)
+-			set_inode_flag(inode, FI_FIRST_BLOCK_WRITTEN);
+-	}
+-
  	if (!f2fs_need_inode_block_update(sbi, inode->i_ino))
  		fi->last_disk_size = inode->i_size;
-@@ -736,7 +732,7 @@ void f2fs_update_inode(struct inode *inode, struct page *node_page)
- 		}
- 	}
  
--	__set_inode_rdev(inode, ri);
-+	__set_inode_rdev(inode, node_page);
- 
- 	/* deleted inode */
- 	if (inode->i_nlink == 0)
 -- 
 2.43.0
 
