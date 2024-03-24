@@ -1,48 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AD512B149;
-	Sun, 24 Mar 2024 22:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED7512B14F;
+	Sun, 24 Mar 2024 22:56:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320960; cv=none; b=soUwGek/ITaPcd45Z4D26iC7xJG3Ilc6WKF9PjAQwZ+APC7Ovdx6J9d5XbDE08AdDVBkowh7p39SQYKWXOJfMUhj7GcITWkRkLooQ8ovw1RWsFcoZHbWdtfrb3/wfkNLT031S32Isr8dBKFeMGB4OnEuDi8jOZOGrGY7TDezk7c=
+	t=1711320963; cv=none; b=M98OX2XUcRePB2f+tbhk7UL2cdDqTfdrEVqsYmDxaOsK3w/PQr4Gc7gC8mVcALMS1hq23KoLjSuLvwCUq/OJWwajqB1Sm/JpS9QNFRI5pYVVFPhswnB+Avz1IdnAMeysxDEcrgExcLvswkYjEw3o0WZMC6RnklMV/ubG/jCXev4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320960; c=relaxed/simple;
-	bh=T3a0S8GHT7cG9hx4OybyIirFOKGjhTGdg1Ua7OZ6jOc=;
+	s=arc-20240116; t=1711320963; c=relaxed/simple;
+	bh=rgiZlLUltNQDY4/R2SiXzwENx3XKfYBgoDJHJnEjr6s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DYvlHwHuJ3bydbt1+QUIsIStNa5m920BQYrbE6/UE0h2IGsj/7Co+3t1/3r7vXx2TgAI4ZoKct9SbTjZFa5OhXEeB+y9vx78CBMOiNSzLRnxJCQ0eobJpTkdUlihgcZmdy49Dc3c6bbg/aDL9qQg+8DXyUe/x5/9lWN4b6y/kUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVIIpM4w; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IDsFA12qmrOfxGavu8+qJReHthQ8QEz9/2cxXhPjVJeCuwPlJ0WY/pv40sqErdMgHY54XiQ3BE1PmyD6LQaNiKl/y4B+zI1D+Q8GIZc3NowUTzxB6EoSERxexyEt1hFc6uedWFzvv9mHvitRplVKw74P1+5wn9mwfU5GokUz1Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9pPtA/v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVIIpM4w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3039DC433F1;
-	Sun, 24 Mar 2024 22:55:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9pPtA/v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B34CCC43330;
+	Sun, 24 Mar 2024 22:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320959;
-	bh=T3a0S8GHT7cG9hx4OybyIirFOKGjhTGdg1Ua7OZ6jOc=;
+	s=k20201202; t=1711320963;
+	bh=rgiZlLUltNQDY4/R2SiXzwENx3XKfYBgoDJHJnEjr6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JVIIpM4wPaqWhC3ySWdGxawrCMnTH9u1XgxQDfnnl4EajJtAqRT/fOe73ChU9cw3q
-	 fdNubMNCY5pXkikWmZWvX72U+rQE20cZu+nnrDSD7w8TAVyDJ+bnvtQmCLwtpo9GD2
-	 22C9KxNdWIdBukhDz81ymRcnb0Mrc9dyH5ed8s+/8oqIqfPe+tcnPG/zZEYPP0+M+/
-	 fOF5KTgT0zI6FSnj8h2YoXW7+fQLskTnReHaqf32w1IFsS6WPTjpIOD4tcuCR5oVf0
-	 B3wqOQWaY8cergo8qaRJlzH8AYIU89qw4y6+nZhlCUZ3KErOh/a5hEyszBP/w9jOOr
-	 iD2YQ0fKU8Prg==
+	b=N9pPtA/vxPAXg0sxhpRQ4qqYXl1P/qpd6c9dN30Mra9umTvRE9q5YpBJTXGZuF7BE
+	 JBKYpmd87B4KhhAatWjO4CkQNGbV8gz8jJFL87hMbCngmlAt7oGeSMjKnex+gwHcZK
+	 KV6YeW6ZSnF+mQZD4KEdNEKpEvi3lGyZJ5PCYQN+P5GyjmbqmFDrLdPm5ap+shp/Pv
+	 MAD8uF4FDrY3MsmlL+nDK1QHsz1Gk+LFHAA9LLgLzLW3lULtc1BuRq0Y86/JFXy4Eb
+	 bT0dnkKHb9a27/ZEf4o1fdGthNk1B/BdMbeAE+TDGv2Q2WzKlTfNlDo9Yb9XZRgosY
+	 bALcfJsUNWwYQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stephen Boyd <swboyd@chromium.org>,
-	Jason Ling <jasonling@chromium.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	llvm@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>,
+	CK Hu <ck.hu@mediatek.com>,
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 522/713] arm64: ftrace: Don't forbid CALL_OPS+CC_OPTIMIZE_FOR_SIZE with Clang
-Date: Sun, 24 Mar 2024 18:44:08 -0400
-Message-ID: <20240324224720.1345309-523-sashal@kernel.org>
+Subject: [PATCH 6.7 526/713] drm/mediatek: Fix a null pointer crash in mtk_drm_crtc_finish_page_flip
+Date: Sun, 24 Mar 2024 18:44:12 -0400
+Message-ID: <20240324224720.1345309-527-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -56,50 +49,78 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit a743f26d03a96593c0f3d05dc26b388f45de67c9 ]
+[ Upstream commit c958e86e9cc1b48cac004a6e245154dfba8e163b ]
 
-Per commit b3f11af9b2ce ("arm64: ftrace: forbid CALL_OPS with
-CC_OPTIMIZE_FOR_SIZE"), GCC is silently ignoring `-falign-functions=N`
-when passed `-Os`, causing functions to be improperly aligned. This
-doesn't seem to be a problem with Clang though, where enabling CALL_OPS
-with CC_OPTIMIZE_FOR_SIZE doesn't spit out any warnings at boot about
-misaligned patch-sites. Only forbid CALL_OPS if GCC is used and we're
-optimizing for size so that CALL_OPS can be used with clang optimizing
-for size.
+It's possible that mtk_crtc->event is NULL in
+mtk_drm_crtc_finish_page_flip().
 
-Cc: Jason Ling <jasonling@chromium.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Bill Wendling <morbo@google.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: llvm@lists.linux.dev
-Fixes: b3f11af9b2ce ("arm64: ftrace: forbid CALL_OPS with CC_OPTIMIZE_FOR_SIZE")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Link: https://lore.kernel.org/r/20240223064032.3463229-1-swboyd@chromium.org
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+pending_needs_vblank value is set by mtk_crtc->event, but in
+mtk_drm_crtc_atomic_flush(), it's is not guarded by the same
+lock in mtk_drm_finish_page_flip(), thus a race condition happens.
+
+Consider the following case:
+
+CPU1                              CPU2
+step 1:
+mtk_drm_crtc_atomic_begin()
+mtk_crtc->event is not null,
+                                  step 1:
+                                  mtk_drm_crtc_atomic_flush:
+                                  mtk_drm_crtc_update_config(
+                                      !!mtk_crtc->event)
+step 2:
+mtk_crtc_ddp_irq ->
+mtk_drm_finish_page_flip:
+lock
+mtk_crtc->event set to null,
+pending_needs_vblank set to false
+unlock
+                                  pending_needs_vblank set to true,
+
+                                  step 2:
+                                  mtk_crtc_ddp_irq ->
+                                  mtk_drm_finish_page_flip called again,
+                                  pending_needs_vblank is still true
+                                  //null pointer
+
+Instead of guarding the entire mtk_drm_crtc_atomic_flush(), it's more
+efficient to just check if mtk_crtc->event is null before use.
+
+Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Link: https://patchwork.kernel.org/project/dri-devel/patch/20240223212404.3709690-1-hsinyi@chromium.org/
+Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 456e8680e16ea..77dfbc8ab2d3b 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -196,7 +196,7 @@ config ARM64
- 		if DYNAMIC_FTRACE_WITH_ARGS && DYNAMIC_FTRACE_WITH_CALL_OPS
- 	select HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS \
- 		if (DYNAMIC_FTRACE_WITH_ARGS && !CFI_CLANG && \
--		    !CC_OPTIMIZE_FOR_SIZE)
-+		    (CC_IS_CLANG || !CC_OPTIMIZE_FOR_SIZE))
- 	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
- 		if DYNAMIC_FTRACE_WITH_ARGS
- 	select HAVE_SAMPLE_FTRACE_DIRECT
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index db43f9dff912e..d645b85f97215 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -95,11 +95,13 @@ static void mtk_drm_crtc_finish_page_flip(struct mtk_drm_crtc *mtk_crtc)
+ 	struct drm_crtc *crtc = &mtk_crtc->base;
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&crtc->dev->event_lock, flags);
+-	drm_crtc_send_vblank_event(crtc, mtk_crtc->event);
+-	drm_crtc_vblank_put(crtc);
+-	mtk_crtc->event = NULL;
+-	spin_unlock_irqrestore(&crtc->dev->event_lock, flags);
++	if (mtk_crtc->event) {
++		spin_lock_irqsave(&crtc->dev->event_lock, flags);
++		drm_crtc_send_vblank_event(crtc, mtk_crtc->event);
++		drm_crtc_vblank_put(crtc);
++		mtk_crtc->event = NULL;
++		spin_unlock_irqrestore(&crtc->dev->event_lock, flags);
++	}
+ }
+ 
+ static void mtk_drm_finish_page_flip(struct mtk_drm_crtc *mtk_crtc)
 -- 
 2.43.0
 
