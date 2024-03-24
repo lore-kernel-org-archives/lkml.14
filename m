@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E171A9938;
-	Sun, 24 Mar 2024 22:43:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841D11A9F6B;
+	Sun, 24 Mar 2024 22:43:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320229; cv=none; b=fo2OCfnJHiIPUQGDI8Pgabs1et9UgwC2dCqHmVpAHObLQrzMG4uwsQTcURjC5FZcKYko3nxh+aprk5iNRAuYabsbw+MRxHFeixJ60jIDiGEicajaDJZUsF9Jdw+QNHWR2gFiGV5GS6dw1BCsQocE4QBhPpnpswMQdm1/LNwTGdw=
+	t=1711320232; cv=none; b=MJQUalkJ/krd/O+nez6PhBdbPCfG4rHR4bd0q9s0BmJnQCXBSdVKmDw8x/BsDDF//kUfRXgQ1Nuj4ICkMIpfPMckkkAv9jSJY8piFbyHbHW8PHMoqQgQeRamJpv4ufFYK+fqiQ4uFBY6PgrUbEpGgZWvH5+z0tkGJ3Cs91MujsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320229; c=relaxed/simple;
-	bh=UG2h6+XvryN6gQ9vdCGtSG/zCgIX9zu7saPtncgrqOM=;
+	s=arc-20240116; t=1711320232; c=relaxed/simple;
+	bh=ia4a/I3h8uwAwz/i1lK2oRimsANu4bYTnEspCeVKQ+8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q4FvWCrL9FVOvCOdarDcNthCy+PIzu7QZBsajTxkxsMJYdUzdLrOKQ7NZzMsH4ep6ow5H6JQIoRAr/6DO+o+ro7eBpwB2UYlhMYnGqef2D7/UCCN00xJZVjsRZ41WREDATROC5f9zMOmgPOJN0hDkEXCGOZJIS0pB33GEtF8+M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YDDD6gNE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ThjiUnG16x13wHeJBRmdR6Hhq0ixSxFRSS/QhlvrIvCVicwP7B0oLNe+MX48EQuju+TnpqEcmZ8sjjoDaB1J361puziiqUUozowokDTZwuiEdhJPW/Z0QfSJi/J9GzIDkIuFg9TK4EYLpKt2gHzra+114jCTkw41HfCeAGEqiwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FKdvgGKR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YDDD6gNE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81506C433C7;
-	Sun, 24 Mar 2024 22:43:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FKdvgGKR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE28C43390;
+	Sun, 24 Mar 2024 22:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320229;
-	bh=UG2h6+XvryN6gQ9vdCGtSG/zCgIX9zu7saPtncgrqOM=;
+	s=k20201202; t=1711320232;
+	bh=ia4a/I3h8uwAwz/i1lK2oRimsANu4bYTnEspCeVKQ+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YDDD6gNE1IvR2SFWm/AlFyebtDMaxcb3eQG25fcIhQg8LMORXoPwnJP5pMjJw17tg
-	 x1yuikMr6lXaaleoT3ur7i56Vs4NnHAQhGTokJsvp8LzILg/0ZA1z/lBqsGYl56V0+
-	 8iBOuC60HMKkU+yd9QDJcLRrcWL34a/qyL2tV6nOooyIHeKmSJZbAVCaZxQBSNBo0v
-	 mcSLQG5ZKY5vVb7ZxTOOJKNxBycNxU3V/UH7fN4W3o7YcRkT0+64ulNQnUF0hC9/Cp
-	 MTEXjkcDqaV0CboVwzn7Yd0IwqREJ1+9d+FrqKfpjTTg8ch/cic8+aEk0z8n9DpOVT
-	 OaqbMdskxUT5Q==
+	b=FKdvgGKRoz/K8ihvNNFl3w8oFBKR9OBPPBnHdTr6Ru0DB5OypZ7X6gD3tBEzuzjqE
+	 Srrdz+W9ms/lZgHriU0nFOc66iiF3Dzsi7eIGqFeZ2PSRVWIYs/5M9ibor9SVABEWZ
+	 qODRbewWzchIkIXmfhcyAN7O6HShnR3w/U+PRfTFUM0AoWho89Tn//m5AGYTZQIpbL
+	 3nWuqeC4NL6QtiN1vbPMr1G5LNPXOJr7j7oLoGk43LWrD5wDYXCROXidQRjuMfbshR
+	 0F+rkHXOrfd2qLB0nw/oCKuM/cHYwRnOcO7C0CXUxWXPZlz0pF1QWcW7RC0NLsvRsS
+	 psjzAm/Nm1Ixg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jonathan Bell <jonathan@raspberrypi.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
+Cc: Athaariq Ardhiansyah <foss@athaariq.my.id>,
+	Takashi Iwai <tiwai@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 536/715] PCI: brcmstb: Fix broken brcm_pcie_mdio_write() polling
-Date: Sun, 24 Mar 2024 18:31:55 -0400
-Message-ID: <20240324223455.1342824-537-sashal@kernel.org>
+Subject: [PATCH 6.8 538/715] ALSA: hda/realtek: fix ALC285 issues on HP Envy x360 laptops
+Date: Sun, 24 Mar 2024 18:31:57 -0400
+Message-ID: <20240324223455.1342824-539-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
 References: <20240324223455.1342824-1-sashal@kernel.org>
@@ -46,44 +44,149 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jonathan Bell <jonathan@raspberrypi.com>
+From: Athaariq Ardhiansyah <foss@athaariq.my.id>
 
-[ Upstream commit 039741a8d7c9a01c1bc84a5ac5aa770a5e138a30 ]
+[ Upstream commit c062166995c9e57d5cd508b332898f79da319802 ]
 
-The MDIO_WT_DONE() macro tests bit 31, which is always 0 (== done) as
-readw_poll_timeout_atomic() does a 16-bit read. Replace with the readl
-variant.
+Realtek codec on HP Envy laptop series are heavily modified by vendor.
+Therefore, need intervention to make it work properly. The patch fixes:
 
-[kwilczynski: commit log]
-Fixes: ca5dcc76314d ("PCI: brcmstb: Replace status loops with read_poll_timeout_atomic()")
-Link: https://lore.kernel.org/linux-pci/20240217133722.14391-1-wahrenst@gmx.net
-Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
+- B&O soundbar speakers (between lid and keyboard) activation
+- Enable LED on mute button
+- Add missing process coefficient which affects the output amplifier
+- Volume control synchronization between B&O soundbar and side speakers
+- Unmute headset output on several HP Envy models
+- Auto-enable headset mic when plugged
+
+This patch was tested on HP Envy x360 13-AR0107AU with Realtek ALC285
+
+The only unsolved problem is output amplifier of all built-in speakers
+is too weak, which causes volume of built-in speakers cannot be loud
+as vendor's proprietary driver due to missing _DSD parameter in the
+firmware. The solution is currently on research. Expected to has another
+patch in the future.
+
+Potential fix to related issues, need test before close those issues:
+
+- https://bugzilla.kernel.org/show_bug.cgi?id=189331
+- https://bugzilla.kernel.org/show_bug.cgi?id=216632
+- https://bugzilla.kernel.org/show_bug.cgi?id=216311
+- https://bugzilla.kernel.org/show_bug.cgi?id=213507
+
+Signed-off-by: Athaariq Ardhiansyah <foss@athaariq.my.id>
+Message-ID: <20240310140249.3695-1-foss@athaariq.my.id>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c | 63 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 5b0730c3891b8..c08683febdd40 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -336,7 +336,7 @@ static int brcm_pcie_mdio_write(void __iomem *base, u8 port,
- 	readl(base + PCIE_RC_DL_MDIO_ADDR);
- 	writel(MDIO_DATA_DONE_MASK | wrdata, base + PCIE_RC_DL_MDIO_WR_DATA);
- 
--	err = readw_poll_timeout_atomic(base + PCIE_RC_DL_MDIO_WR_DATA, data,
-+	err = readl_poll_timeout_atomic(base + PCIE_RC_DL_MDIO_WR_DATA, data,
- 					MDIO_WT_DONE(data), 10, 100);
- 	return err;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index a1facdb98d9a0..1dc5eb92ddcad 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6696,6 +6696,60 @@ static void alc285_fixup_hp_spectre_x360(struct hda_codec *codec,
+ 	}
  }
+ 
++static void alc285_fixup_hp_envy_x360(struct hda_codec *codec,
++				      const struct hda_fixup *fix,
++				      int action)
++{
++	static const struct coef_fw coefs[] = {
++		WRITE_COEF(0x08, 0x6a0c), WRITE_COEF(0x0d, 0xa023),
++		WRITE_COEF(0x10, 0x0320), WRITE_COEF(0x1a, 0x8c03),
++		WRITE_COEF(0x25, 0x1800), WRITE_COEF(0x26, 0x003a),
++		WRITE_COEF(0x28, 0x1dfe), WRITE_COEF(0x29, 0xb014),
++		WRITE_COEF(0x2b, 0x1dfe), WRITE_COEF(0x37, 0xfe15),
++		WRITE_COEF(0x38, 0x7909), WRITE_COEF(0x45, 0xd489),
++		WRITE_COEF(0x46, 0x00f4), WRITE_COEF(0x4a, 0x21e0),
++		WRITE_COEF(0x66, 0x03f0), WRITE_COEF(0x67, 0x1000),
++		WRITE_COEF(0x6e, 0x1005), { }
++	};
++
++	static const struct hda_pintbl pincfgs[] = {
++		{ 0x12, 0xb7a60130 },  /* Internal microphone*/
++		{ 0x14, 0x90170150 },  /* B&O soundbar speakers */
++		{ 0x17, 0x90170153 },  /* Side speakers */
++		{ 0x19, 0x03a11040 },  /* Headset microphone */
++		{ }
++	};
++
++	switch (action) {
++	case HDA_FIXUP_ACT_PRE_PROBE:
++		snd_hda_apply_pincfgs(codec, pincfgs);
++
++		/* Fixes volume control problem for side speakers */
++		alc295_fixup_disable_dac3(codec, fix, action);
++
++		/* Fixes no sound from headset speaker */
++		snd_hda_codec_amp_stereo(codec, 0x21, HDA_OUTPUT, 0, -1, 0);
++
++		/* Auto-enable headset mic when plugged */
++		snd_hda_jack_set_gating_jack(codec, 0x19, 0x21);
++
++		/* Headset mic volume enhancement */
++		snd_hda_codec_set_pin_target(codec, 0x19, PIN_VREF50);
++		break;
++	case HDA_FIXUP_ACT_INIT:
++		alc_process_coef_fw(codec, coefs);
++		break;
++	case HDA_FIXUP_ACT_BUILD:
++		rename_ctl(codec, "Bass Speaker Playback Volume",
++			   "B&O-Tuned Playback Volume");
++		rename_ctl(codec, "Front Playback Switch",
++			   "B&O Soundbar Playback Switch");
++		rename_ctl(codec, "Bass Speaker Playback Switch",
++			   "Side Speaker Playback Switch");
++		break;
++	}
++}
++
+ /* for hda_fixup_thinkpad_acpi() */
+ #include "thinkpad_helper.c"
+ 
+@@ -7297,6 +7351,7 @@ enum {
+ 	ALC280_FIXUP_HP_9480M,
+ 	ALC245_FIXUP_HP_X360_AMP,
+ 	ALC285_FIXUP_HP_SPECTRE_X360_EB1,
++	ALC285_FIXUP_HP_ENVY_X360,
+ 	ALC288_FIXUP_DELL_HEADSET_MODE,
+ 	ALC288_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 	ALC288_FIXUP_DELL_XPS_13,
+@@ -9273,6 +9328,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc285_fixup_hp_spectre_x360_eb1
+ 	},
++	[ALC285_FIXUP_HP_ENVY_X360] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc285_fixup_hp_envy_x360,
++		.chained = true,
++		.chain_id = ALC285_FIXUP_HP_GPIO_AMP_INIT,
++	},
+ 	[ALC287_FIXUP_IDEAPAD_BASS_SPK_AMP] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc285_fixup_ideapad_s740_coef,
+@@ -9861,6 +9922,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x8519, "HP Spectre x360 15-df0xxx", ALC285_FIXUP_HP_SPECTRE_X360),
+ 	SND_PCI_QUIRK(0x103c, 0x8537, "HP ProBook 440 G6", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
++	SND_PCI_QUIRK(0x103c, 0x85de, "HP Envy x360 13-ar0xxx", ALC285_FIXUP_HP_ENVY_X360),
+ 	SND_PCI_QUIRK(0x103c, 0x860f, "HP ZBook 15 G6", ALC285_FIXUP_HP_GPIO_AMP_INIT),
+ 	SND_PCI_QUIRK(0x103c, 0x861f, "HP Elite Dragonfly G1", ALC285_FIXUP_HP_GPIO_AMP_INIT),
+ 	SND_PCI_QUIRK(0x103c, 0x869d, "HP", ALC236_FIXUP_HP_MUTE_LED),
+@@ -10559,6 +10621,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC295_FIXUP_HP_OMEN, .name = "alc295-hp-omen"},
+ 	{.id = ALC285_FIXUP_HP_SPECTRE_X360, .name = "alc285-hp-spectre-x360"},
+ 	{.id = ALC285_FIXUP_HP_SPECTRE_X360_EB1, .name = "alc285-hp-spectre-x360-eb1"},
++	{.id = ALC285_FIXUP_HP_ENVY_X360, .name = "alc285-hp-envy-x360"},
+ 	{.id = ALC287_FIXUP_IDEAPAD_BASS_SPK_AMP, .name = "alc287-ideapad-bass-spk-amp"},
+ 	{.id = ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN, .name = "alc287-yoga9-bass-spk-pin"},
+ 	{.id = ALC623_FIXUP_LENOVO_THINKSTATION_P340, .name = "alc623-lenovo-thinkstation-p340"},
 -- 
 2.43.0
 
