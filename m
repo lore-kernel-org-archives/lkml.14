@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0D01E85D9;
-	Sun, 24 Mar 2024 22:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714111E9644;
+	Sun, 24 Mar 2024 22:54:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320884; cv=none; b=JYxjMWWn4VXQIZZCSVfJv/fhUiYpxwXumDRgFMboAXRStdnUOYIz1GN8+UgAgSqc1KzPXki4pAWjKTvZjNd2m6SP71UJsvJ35m/tdkId4iJj9hj/MsEAfUmuzywslpjZrorsDwQdNSCPCo41XJcDSgHGw767FyEK4n5lXxLWBIw=
+	t=1711320897; cv=none; b=S+Iud6keKWpZVgDV3sAmyEwSb+PuwTOCmF8y9sCXoZgQmFNvzw3/K/nH0obuA8Y3Y5IRcIeW7C3vRidlz/YDim0aOt6OMkrnbmE+EMj82xqboOy87UtsQXbyUBT2XqD/1BFOst/Jv8WPs7iSGAVhWHqNTrZ5cNa0qEjVAFkvaFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320884; c=relaxed/simple;
-	bh=dNSXUR4F0PInX+6if0T8q039HcQHl4ObxNFwJQJpwJI=;
+	s=arc-20240116; t=1711320897; c=relaxed/simple;
+	bh=PtAQUABtyxDZgdlJVsykILPS9lA4896XsifrH3VUvDw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=odAQ/Nkcor15pQQwwoppeTbtm9zHpKD+7uce8EYjKAsI/1izqEIrJwxF6OFK5A9fK89+G3Z/lJNVyNvfzlB1SL0i6bPoEPGLK5vq0wSYHELGtrm6KuHnf7zNaeS18ESjp/YcEZeGxRD80V2fw9pJ/G2Le8l0Q0m/rBzYf9RzWmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9jnRJ8D; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Mkdh5S/5ONIyRPM8AP5CSAcHT+g8a2mbX3flcP2DVcVzYIHkQIMsq+aHblgthS8NsFuTuOgQehmxxJwX9vx3Pbvf7+pEpNQKQ6Ppoii/DKPcoKhTkKN/q/wClrg2ER5thQiRFhq9jXp1vgD3+N2JQ5+w8EmB0dv4LQl3JP0e8YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xbd1im59; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9jnRJ8D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02619C43394;
-	Sun, 24 Mar 2024 22:54:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xbd1im59"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83350C433F1;
+	Sun, 24 Mar 2024 22:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320883;
-	bh=dNSXUR4F0PInX+6if0T8q039HcQHl4ObxNFwJQJpwJI=;
+	s=k20201202; t=1711320896;
+	bh=PtAQUABtyxDZgdlJVsykILPS9lA4896XsifrH3VUvDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n9jnRJ8DsMV1fvWG2b3FSek9GpSxKurLN2hsNVbyA9VSictXL7bli5MjS2QugQJzD
-	 jkqsg9okdH8rYqoSA2RIThvkQC8l7GmKPAolMxQpJHCcd08k0VIyB0Qy/ow/gdriai
-	 zYB/GIE8N6Btsx54shpN3sdmwBXmLTFoomHXBERQc/6rBo/Q7ZOei2a9WTykFcp+CX
-	 YdRuyQPM7PGecvwVC7bMtagEakzBSKJ6OK8C7EcLzCjCsw/TnOfgyM1+wk8AgR1DzT
-	 wTcsaj+32B4rLD1DVeOaf5JtX5uCmQlE6Oq5TqsOqd461FxtVIugNakl1oz+yXOxej
-	 PDNLYFpfXUPsg==
+	b=Xbd1im59eSN7cMWc2Xi3Vz4GDgG2/sEoj+Uwryhsrc4/r9VuIY4udLAc766Y0b3Rm
+	 0dhcTHz54HpBTAi5zuLLLaRNzdam8pnkgrrNKhj6Q5ECziT8JV2Y+c5XHodiTNp2Gw
+	 tmnQCt5cpSO9wSvsKi1wcpYPfmDd2vfNEaDafhQUnCwcZKygQvmfQ3Od8KwtSGThia
+	 hXY63aR1EIwoFPbGD6nJl3RQj3xqEmXuriER6nnOv/uc7hSw0Iui5sFgYaCe4Uan0f
+	 XyL63skHKPVWInLUVpgpwHFcsEblp7JhbgfF9Lr0F+L+nFF2RUOKHXaGtvzxwO3DXj
+	 hsVyNsm1bqG1Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Adam Skladowski <a39.skl@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 447/713] dt-bindings: msm: qcom, mdss: Include ommited fam-b compatible
-Date: Sun, 24 Mar 2024 18:42:53 -0400
-Message-ID: <20240324224720.1345309-448-sashal@kernel.org>
+Subject: [PATCH 6.7 459/713] ASoC: meson: aiu: fix function pointer type mismatch
+Date: Sun, 24 Mar 2024 18:43:05 -0400
+Message-ID: <20240324224720.1345309-460-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,35 +50,83 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Adam Skladowski <a39.skl@gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 3b63880de42bd3cb79c2a99949135a8f2441c088 ]
+[ Upstream commit 98ac85a00f31d2e9d5452b825a9ed0153d934043 ]
 
-During conversion 28nm-hpm-fam-b compat got lost, add it.
+clang-16 warns about casting functions to incompatible types, as is done
+here to call clk_disable_unprepare:
 
-Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
-Fixes: f7d46c5efee2 ("dt-bindings: display/msm: split qcom, mdss bindings")
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Patchwork: https://patchwork.freedesktop.org/patch/575290/
-Link: https://lore.kernel.org/r/20240121194221.13513-4-a39.skl@gmail.com
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+sound/soc/meson/aiu.c:243:12: error: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  243 |                                        (void(*)(void *))clk_disable_unprepare,
+
+The pattern of getting, enabling and setting a disable callback for a
+clock can be replaced with devm_clk_get_enabled(), which also fixes
+this warning.
+
+Fixes: 6ae9ca9ce986 ("ASoC: meson: aiu: add i2s and spdif support")
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Link: https://msgid.link/r/20240213215807.3326688-2-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/display/msm/qcom,mdss.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/meson/aiu.c | 19 ++++---------------
+ sound/soc/meson/aiu.h |  1 -
+ 2 files changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/qcom,mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,mdss.yaml
-index 0999ea07f47bb..e4576546bf0db 100644
---- a/Documentation/devicetree/bindings/display/msm/qcom,mdss.yaml
-+++ b/Documentation/devicetree/bindings/display/msm/qcom,mdss.yaml
-@@ -127,6 +127,7 @@ patternProperties:
-           - qcom,dsi-phy-20nm
-           - qcom,dsi-phy-28nm-8226
-           - qcom,dsi-phy-28nm-hpm
-+          - qcom,dsi-phy-28nm-hpm-fam-b
-           - qcom,dsi-phy-28nm-lp
-           - qcom,hdmi-phy-8084
-           - qcom,hdmi-phy-8660
+diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
+index 7109b81cc3d0a..5d1419ed7a62d 100644
+--- a/sound/soc/meson/aiu.c
++++ b/sound/soc/meson/aiu.c
+@@ -212,11 +212,12 @@ static const char * const aiu_spdif_ids[] = {
+ static int aiu_clk_get(struct device *dev)
+ {
+ 	struct aiu *aiu = dev_get_drvdata(dev);
++	struct clk *pclk;
+ 	int ret;
+ 
+-	aiu->pclk = devm_clk_get(dev, "pclk");
+-	if (IS_ERR(aiu->pclk))
+-		return dev_err_probe(dev, PTR_ERR(aiu->pclk), "Can't get the aiu pclk\n");
++	pclk = devm_clk_get_enabled(dev, "pclk");
++	if (IS_ERR(pclk))
++		return dev_err_probe(dev, PTR_ERR(pclk), "Can't get the aiu pclk\n");
+ 
+ 	aiu->spdif_mclk = devm_clk_get(dev, "spdif_mclk");
+ 	if (IS_ERR(aiu->spdif_mclk))
+@@ -233,18 +234,6 @@ static int aiu_clk_get(struct device *dev)
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Can't get the spdif clocks\n");
+ 
+-	ret = clk_prepare_enable(aiu->pclk);
+-	if (ret) {
+-		dev_err(dev, "peripheral clock enable failed\n");
+-		return ret;
+-	}
+-
+-	ret = devm_add_action_or_reset(dev,
+-				       (void(*)(void *))clk_disable_unprepare,
+-				       aiu->pclk);
+-	if (ret)
+-		dev_err(dev, "failed to add reset action on pclk");
+-
+ 	return ret;
+ }
+ 
+diff --git a/sound/soc/meson/aiu.h b/sound/soc/meson/aiu.h
+index 393b6c2307e49..0f94c8bf60818 100644
+--- a/sound/soc/meson/aiu.h
++++ b/sound/soc/meson/aiu.h
+@@ -33,7 +33,6 @@ struct aiu_platform_data {
+ };
+ 
+ struct aiu {
+-	struct clk *pclk;
+ 	struct clk *spdif_mclk;
+ 	struct aiu_interface i2s;
+ 	struct aiu_interface spdif;
 -- 
 2.43.0
 
