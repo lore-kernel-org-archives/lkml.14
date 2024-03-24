@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0641774F3;
-	Sun, 24 Mar 2024 23:38:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6BC27BBB3;
+	Sun, 24 Mar 2024 23:38:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323484; cv=none; b=dtxigUcw3C4iGLrxoe61wOKGdi56qvb24gcbqA+Sl4J0oZfkp0dKVXPixuudnQnOaHoHpt3+TH7ruz8Fgb1hdJprricbdhJJvs/+6lzDVcadj8qx1JBXr2KjMTAMpBVOTB+jvIAywLrjF3cwHT4zfULS/PyPWG/wEhlBb6H0Ktk=
+	t=1711323521; cv=none; b=MzshmxOYDcDvdvg2qTxGHyMXPEy9G581piEM5TW8DtbjljAVZYwCztc6w6tpZzexUtidq69xgGjV/iKcvngOQN8ivPONT2zEIGl1WseVwGZNQPmD0r01d5fRJ8j7nhPUJG9UkwlBq3Ai2oiXq2KKJQQCF1SBMBwZwcGrd32wLcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323484; c=relaxed/simple;
-	bh=uIDSKaGEKevri4m+701P4fwqcj5BZkuhrTLKSp6QbB8=;
+	s=arc-20240116; t=1711323521; c=relaxed/simple;
+	bh=myIllbPmWSYMqa2z/yZAREFiWRKzaKp/8Lpn3zjJYXM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iIJJuBLwHl69AD6ZSPcN6MAOueiX6dDanYXcRDRUg+WS3aYQlZs8X27A/YhYryI/Q9VdqfGppSA9QFYf8URfe1FeaMnilEUlZZqSTG1/9IHs3ecEQRfQcmGLDXwNP2DH04jVx5SaPkVwYjybr27XgIWNzN8vYJn0oTeNmoYecss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0vLHXQG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dx8Kqpq5qIK8e4Rwcm5d71XT9NIbJy6sOtHsKDjFKMPnDq2PJ1rGf6cN7FiWTH/D3+1crimXuHpDJLzEzJVpb41FmUdhryCbRUjDcuaW9wt/T9OWn1yxOhQmCsZzsthURNLSEGpAqPUysCChwzvwTK6mBdoafIvjK16ARulaKd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q+h3rSNz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0vLHXQG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2CA3C433C7;
-	Sun, 24 Mar 2024 23:38:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q+h3rSNz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C89CC43390;
+	Sun, 24 Mar 2024 23:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323483;
-	bh=uIDSKaGEKevri4m+701P4fwqcj5BZkuhrTLKSp6QbB8=;
+	s=k20201202; t=1711323520;
+	bh=myIllbPmWSYMqa2z/yZAREFiWRKzaKp/8Lpn3zjJYXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O0vLHXQGuWUeBJS56iyo53ZKq7h2lJ8E1n2C7tJfHkcMko+ChmOpsGTD/YpcZew+j
-	 Ythf3E4bTELA1MnQ4BaPliQD8SVAaPNbCns+G1iSkqZMptIn7iFuHJgsmjhZymEzD0
-	 Hz9e68pWJbAtl6AmCSNNByL3nGX1hZh6/cYqGncbLxkOEGWUttiWeqrSXZpXwO/CLp
-	 vlSEy2AkHg+XzKAn3pOywaMhdQxP/A+qTyyeHFw394qX3wXrkuSAK+iNigsGyxpMha
-	 deI2mTvkeki4s/3Q8qeEe3K2e+/+cpkDD7A4uVipN3XyCKGUQga3pwhXAt6Rq/Kgub
-	 JFKhXNaL8kB4w==
+	b=Q+h3rSNz6XA6pm4rW4SrEIDmWr3zHMofjeT+VCG9pfMHkp67KhhBGjI7iYgmfEGU2
+	 V427XtxofUave6I6qAAFVm/rYkVQXj07nfUluh+1/Bokl9KsLmWvHvUsOg9wT3EQFk
+	 w2HdwNUoA9DaFXMOscPj9gYsyVMbsdZVQoh4aMorp94WDPOAIda46UHHV25pPxMwBH
+	 R5rxALyA3Y/cr40N6bR+9yX3fzbSuUlF/SP6BYBw1pk6l0NrCpQ3ELEXlKQqgB++lC
+	 QZ1EDyPikvkx5JH8ggMWeIALBNJgkT2MsjYUyQ9g20b7/pgSOTn8pMRaBF4sijoqrE
+	 7ubXaivm9MKLA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 188/317] clk: qcom: reset: Commonize the de/assert functions
-Date: Sun, 24 Mar 2024 19:32:48 -0400
-Message-ID: <20240324233458.1352854-189-sashal@kernel.org>
+Subject: [PATCH 5.15 227/317] ASoC: meson: axg-tdm-interface: add frame rate constraint
+Date: Sun, 24 Mar 2024 19:33:27 -0400
+Message-ID: <20240324233458.1352854-228-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,67 +48,84 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit eda40d9c583e95e0b6ac69d2950eec10f802e0e8 ]
+[ Upstream commit 59c6a3a43b221cc2a211181b1298e43b2c2df782 ]
 
-They do the same thing, except the last argument of the last function
-call differs. Commonize them.
+According to Amlogic datasheets for the SoCs supported by this driver, the
+maximum bit clock rate is 100MHz.
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20240105-topic-venus_reset-v2-2-c37eba13b5ce@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
-Stable-dep-of: 2f8cf2c3f3e3 ("clk: qcom: reset: Ensure write completion on reset de/assertion")
+The tdm interface allows the rates listed by the DAI driver, regardless of
+the number slots or their width. However, these will impact the bit clock
+rate.
+
+Hitting the 100MHz limit is very unlikely for most use cases but it is
+possible.
+
+For example with 32 slots / 32 bits wide, the maximum rate is no longer
+384kHz but ~96kHz.
+
+Add the constraint accordingly if the component is not already active.
+If it is active, the rate is already constrained by the first stream rate.
+
+Fixes: d60e4f1e4be5 ("ASoC: meson: add tdm interface driver")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://msgid.link/r/20240223175116.2005407-3-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/reset.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+ sound/soc/meson/axg-tdm-interface.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/qcom/reset.c b/drivers/clk/qcom/reset.c
-index e45e32804d2c7..20d1d35aaf229 100644
---- a/drivers/clk/qcom/reset.c
-+++ b/drivers/clk/qcom/reset.c
-@@ -22,8 +22,8 @@ static int qcom_reset(struct reset_controller_dev *rcdev, unsigned long id)
- 	return 0;
+diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
+index ac43a7ab7bcf6..60d132ab1ab78 100644
+--- a/sound/soc/meson/axg-tdm-interface.c
++++ b/sound/soc/meson/axg-tdm-interface.c
+@@ -12,6 +12,9 @@
+ 
+ #include "axg-tdm.h"
+ 
++/* Maximum bit clock frequency according the datasheets */
++#define MAX_SCLK 100000000 /* Hz */
++
+ enum {
+ 	TDM_IFACE_PAD,
+ 	TDM_IFACE_LOOPBACK,
+@@ -155,19 +158,27 @@ static int axg_tdm_iface_startup(struct snd_pcm_substream *substream,
+ 		return -EINVAL;
+ 	}
+ 
+-	/* Apply component wide rate symmetry */
+ 	if (snd_soc_component_active(dai->component)) {
++		/* Apply component wide rate symmetry */
+ 		ret = snd_pcm_hw_constraint_single(substream->runtime,
+ 						   SNDRV_PCM_HW_PARAM_RATE,
+ 						   iface->rate);
+-		if (ret < 0) {
+-			dev_err(dai->dev,
+-				"can't set iface rate constraint\n");
+-			return ret;
+-		}
++
++	} else {
++		/* Limit rate according to the slot number and width */
++		unsigned int max_rate =
++			MAX_SCLK / (iface->slots * iface->slot_width);
++		ret = snd_pcm_hw_constraint_minmax(substream->runtime,
++						   SNDRV_PCM_HW_PARAM_RATE,
++						   0, max_rate);
+ 	}
+ 
+-	return 0;
++	if (ret < 0)
++		dev_err(dai->dev, "can't set iface rate constraint\n");
++	else
++		ret = 0;
++
++	return ret;
  }
  
--static int
--qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
-+static int qcom_reset_set_assert(struct reset_controller_dev *rcdev,
-+				 unsigned long id, bool assert)
- {
- 	struct qcom_reset_controller *rst;
- 	const struct qcom_reset_map *map;
-@@ -33,21 +33,17 @@ qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
- 	map = &rst->reset_map[id];
- 	mask = map->bitmask ? map->bitmask : BIT(map->bit);
- 
--	return regmap_update_bits(rst->regmap, map->reg, mask, mask);
-+	return regmap_update_bits(rst->regmap, map->reg, mask, assert ? mask : 0);
- }
- 
--static int
--qcom_reset_deassert(struct reset_controller_dev *rcdev, unsigned long id)
-+static int qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
- {
--	struct qcom_reset_controller *rst;
--	const struct qcom_reset_map *map;
--	u32 mask;
--
--	rst = to_qcom_reset_controller(rcdev);
--	map = &rst->reset_map[id];
--	mask = map->bitmask ? map->bitmask : BIT(map->bit);
-+	return qcom_reset_set_assert(rcdev, id, true);
-+}
- 
--	return regmap_update_bits(rst->regmap, map->reg, mask, 0);
-+static int qcom_reset_deassert(struct reset_controller_dev *rcdev, unsigned long id)
-+{
-+	return qcom_reset_set_assert(rcdev, id, false);
- }
- 
- const struct reset_control_ops qcom_reset_ops = {
+ static int axg_tdm_iface_set_stream(struct snd_pcm_substream *substream,
 -- 
 2.43.0
 
