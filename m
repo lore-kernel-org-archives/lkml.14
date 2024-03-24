@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8353D14F11B;
-	Sun, 24 Mar 2024 23:02:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469EE14F122;
+	Sun, 24 Mar 2024 23:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321345; cv=none; b=ZPQyGcQ1ltS1P2+bhz92cZLJGdksSZ2vJ3B4qWnCcMEmvO5PezpBlJ6o9Eq3XF4RlNw54oBx0oB7EaoF1M7MnrnMhH8ZwUp/0UHa/3YE7EMcBQXOhH3KKUtn6JdKW+WoQHffi/Yscy8XUHgOQzeOVslaemDvXGq7SPWOUaROSCM=
+	t=1711321346; cv=none; b=e10xPxXBbUwTnEg05C7BdgqyNvPJRbUUme85HfYDp5F+/Oz3Fr0GaIXUB+RwNj83/dlE7Lcjis9QRwJsZEC+reTXV+qUn3TUG2O/QxvSgS5SUa3weItRkC0oMrLwht5KSb/G9xGGcCf6eXvRkKaGXsQUtM2seiNcNY0Cl8nfSb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321345; c=relaxed/simple;
-	bh=4HzUgQJ1cTA7sevheQM8td4jHmu+l+Xbddni5/4LvTI=;
+	s=arc-20240116; t=1711321346; c=relaxed/simple;
+	bh=SceaZmCpQTkY+KSCgdHN+OVnB1Mmup/sCz2d/q4qxb8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sVs0iIhoF465s/tgcIG9S+YyD81oe+QphXNNdYL26N0nxgiYEwACrEmBP5z1DoQUkNYz4anO33lYbwXw6Cd/4x538z/fBnHyeg6AfNtUZiQR7w+Pzlao8jtgJrp9HVsRn4jaXfebqNfdQ/HIv7or4Au6XxZC/x41TigeV1irw9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUH/NSS/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=e4nKMaHl2ZaTspqbFe9wXR4jVP1M+2P1hg0Tpn9K29PZ2vBxKJ99SheQW/NWm5GaHAWgcvanEaaSFfDdV/jvNxPPJTVrnCX3+rdctQEcusmTG6Xf/MHSsfFBfh785kco6US0MROXREngyaUVJxWDv3aXFZGjOM9JJ4X9nb8VWjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z76051WE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUH/NSS/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1881C43399;
-	Sun, 24 Mar 2024 23:02:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z76051WE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 871D3C43390;
+	Sun, 24 Mar 2024 23:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321344;
-	bh=4HzUgQJ1cTA7sevheQM8td4jHmu+l+Xbddni5/4LvTI=;
+	s=k20201202; t=1711321346;
+	bh=SceaZmCpQTkY+KSCgdHN+OVnB1Mmup/sCz2d/q4qxb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JUH/NSS/J7M1j6wpT738vrmCCsbt+PGS6WclrGPeq2R/zWVvll4VTOoTvO1rP9QA2
-	 yalpHsx8yuICilS8mxkJFoCATnYgj22hXQ7n3UxV0QajcKvCdy+ARjjiDX49FtYEK6
-	 zcgWxGweSx9AREG7l3/FisNrRTPjM87UxNmveh2yDuplcm3doBxddVLXpkKyFaHCXL
-	 nSvtWc+uHPKFM542rCrZtve6vRQhxEbfhoz9Ex4vxZI2wxhvCjQcxm6iAumn6EomZ5
-	 UdxwG0lRo3i6hWLwryYFbPZPAyP2oEw0cG8uj8o1g+6N3wYaGxg0IVcI8pN1wR/o5q
-	 K6sR3bMStGpCQ==
+	b=Z76051WESXsqAp1J1XjsiYNoQEY1fGhGEksE6LU4a+j2rNa/5B5T30DThhWadBOCV
+	 YmXgudLiihaQCCCnFr7D/A90ZJrXyKajqsGDYNYw8eTkL7mWy9ZWnxW/oQYW2DaSc8
+	 pyQuw1tXtDQ4LkJw5UcObv/OBYRlqszCxw/tRCYU9ccOrz5Ftm21p4897Jt6GOEsSy
+	 b/yGLPx3VWnD/ot8mM4rjxSEQ9mj7rxkvksWNLNaqbDp12km8S9ucdidu2dBqCzrfw
+	 xS9zdpzl5MVoDi4tG4LBKg+2RArFop4WYV7f8hNky9vkG5MvpPtb0c9ItEEXq8/6p/
+	 F0Hyqx6P16upQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Audra Mitchell <audra@redhat.com>,
-	Tejun Heo <tj@kernel.org>,
+Cc: Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 068/638] workqueue.c: Increase workqueue name length
-Date: Sun, 24 Mar 2024 18:51:45 -0400
-Message-ID: <20240324230116.1348576-69-sashal@kernel.org>
+Subject: [PATCH 6.6 070/638] workqueue: Factor out pwq_is_empty()
+Date: Sun, 24 Mar 2024 18:51:47 -0400
+Message-ID: <20240324230116.1348576-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,58 +48,73 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Audra Mitchell <audra@redhat.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 31c89007285d365aa36f71d8fb0701581c770a27 ]
+[ Upstream commit afa87ce85379e2d93863fce595afdb5771a84004 ]
 
-Currently we limit the size of the workqueue name to 24 characters due to
-commit ecf6881ff349 ("workqueue: make workqueue->name[] fixed len")
-Increase the size to 32 characters and print a warning in the event
-the requested name is larger than the limit of 32 characters.
+"!pwq->nr_active && list_empty(&pwq->inactive_works)" test is repeated
+multiple times. Let's factor it out into pwq_is_empty().
 
-Signed-off-by: Audra Mitchell <audra@redhat.com>
 Signed-off-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
 Stable-dep-of: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/workqueue.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/workqueue.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index fd7b84b06d926..e004e65ae987e 100644
+index 3aa48ba8c7175..3eb0408133ada 100644
 --- a/kernel/workqueue.c
 +++ b/kernel/workqueue.c
-@@ -108,7 +108,7 @@ enum {
- 	RESCUER_NICE_LEVEL	= MIN_NICE,
- 	HIGHPRI_NICE_LEVEL	= MIN_NICE,
- 
--	WQ_NAME_LEN		= 24,
-+	WQ_NAME_LEN		= 32,
- };
- 
- /*
-@@ -4673,6 +4673,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 	va_list args;
- 	struct workqueue_struct *wq;
- 	struct pool_workqueue *pwq;
-+	int len;
- 
- 	/*
- 	 * Unbound && max_active == 1 used to imply ordered, which is no longer
-@@ -4699,9 +4700,12 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+@@ -1450,6 +1450,11 @@ static void put_pwq_unlocked(struct pool_workqueue *pwq)
  	}
+ }
  
- 	va_start(args, max_active);
--	vsnprintf(wq->name, sizeof(wq->name), fmt, args);
-+	len = vsnprintf(wq->name, sizeof(wq->name), fmt, args);
- 	va_end(args);
- 
-+	if (len >= WQ_NAME_LEN)
-+		pr_warn_once("workqueue: name exceeds WQ_NAME_LEN. Truncating to: %s\n", wq->name);
++static bool pwq_is_empty(struct pool_workqueue *pwq)
++{
++	return !pwq->nr_active && list_empty(&pwq->inactive_works);
++}
 +
- 	max_active = max_active ?: WQ_DFL_ACTIVE;
- 	max_active = wq_clamp_max_active(max_active, flags, wq->name);
+ static void pwq_activate_inactive_work(struct work_struct *work)
+ {
+ 	struct pool_workqueue *pwq = get_work_pwq(work);
+@@ -3319,7 +3324,7 @@ void drain_workqueue(struct workqueue_struct *wq)
+ 		bool drained;
  
+ 		raw_spin_lock_irq(&pwq->pool->lock);
+-		drained = !pwq->nr_active && list_empty(&pwq->inactive_works);
++		drained = pwq_is_empty(pwq);
+ 		raw_spin_unlock_irq(&pwq->pool->lock);
+ 
+ 		if (drained)
+@@ -4779,7 +4784,7 @@ static bool pwq_busy(struct pool_workqueue *pwq)
+ 
+ 	if ((pwq != pwq->wq->dfl_pwq) && (pwq->refcnt > 1))
+ 		return true;
+-	if (pwq->nr_active || !list_empty(&pwq->inactive_works))
++	if (!pwq_is_empty(pwq))
+ 		return true;
+ 
+ 	return false;
+@@ -5217,7 +5222,7 @@ void show_one_workqueue(struct workqueue_struct *wq)
+ 	unsigned long flags;
+ 
+ 	for_each_pwq(pwq, wq) {
+-		if (pwq->nr_active || !list_empty(&pwq->inactive_works)) {
++		if (!pwq_is_empty(pwq)) {
+ 			idle = false;
+ 			break;
+ 		}
+@@ -5229,7 +5234,7 @@ void show_one_workqueue(struct workqueue_struct *wq)
+ 
+ 	for_each_pwq(pwq, wq) {
+ 		raw_spin_lock_irqsave(&pwq->pool->lock, flags);
+-		if (pwq->nr_active || !list_empty(&pwq->inactive_works)) {
++		if (!pwq_is_empty(pwq)) {
+ 			/*
+ 			 * Defer printing to avoid deadlocks in console
+ 			 * drivers that queue work while holding locks
 -- 
 2.43.0
 
