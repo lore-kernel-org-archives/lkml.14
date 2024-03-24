@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2E013B2A2;
-	Sun, 24 Mar 2024 23:08:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D020212D31;
+	Sun, 24 Mar 2024 23:08:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321724; cv=none; b=VZBO+KYECifnvpw0J1DjsBMrCOEJkdx1aAArE1FBvgJhlcvb4oudSMYLfHUOQFVWJh+zWJE2jtxSfY0KMZtuG/dFOFNN6TFYW3V0bN0AL/DlWc+IuqTqGhjhZWBSsPZDfWR6KbyLRyGe4+ULn0C7qv5zqyEJ/q/pmawaRyeBqbc=
+	t=1711321726; cv=none; b=BC78DUlW93KxjLaPB1wTFmiYz+vPKs+70AYQZxOGHcD+H4A8c6z8UGB4clm2mnu7caW5WX1uA3Th3WPwsWAADJrcH7GIwh6vbBD8ktWlHoc6zN+zzf+y6ywrhOqBnEu4B6UNt4zWWaQT0knbafQo6CFv6j75kq+OLpwVqVmPOuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321724; c=relaxed/simple;
-	bh=3Wzt/MY03JIIh8DBekuR6xPd27GDZod/Rv/dJ5fef9Q=;
+	s=arc-20240116; t=1711321726; c=relaxed/simple;
+	bh=7zR0BrWM9FieUe0Q38iXkPk2VIsJeZQPb9NcsHR1SBU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KAEDWWqdfM6j5oSO5TQEYNCynYGDKLGfRTMMc6iBWHycTGs6zEGSqUKWqMnB82OtwNkoLMzunncJJKhgTIBGZHfKocF1s+NLhEiBtXwLHaT9dMDK96OobMDluOvuOUcoTLcyVjpLaVdc7KX64/zcF9wCNqL/CtwWVJI+75NE5ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HjsXlMZX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jl0nvm7gZanvHnp9nCSSNSuA4rjQNHYEs8PIfVHgsTleHw5p7fYzbKdy0yZPl0lhmcso3cCBZgxLCD/2QF3n0eS6aTec8H3DgpXRyxmSIvqp+6ew1LL82dLoquMyBox3DVRM3bUyK9CdDTvNLeuvxvrJW3wDKkQYzWIQTrDMC6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eTF9YXCG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HjsXlMZX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A75A3C4166C;
-	Sun, 24 Mar 2024 23:08:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eTF9YXCG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74CBAC43394;
+	Sun, 24 Mar 2024 23:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321723;
-	bh=3Wzt/MY03JIIh8DBekuR6xPd27GDZod/Rv/dJ5fef9Q=;
+	s=k20201202; t=1711321725;
+	bh=7zR0BrWM9FieUe0Q38iXkPk2VIsJeZQPb9NcsHR1SBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HjsXlMZXc8RfNAInVPbaunS4tQlQpjhIf2xbyZ3+jDJnFjly/jJwzukMx5YGcYIvH
-	 rDlDixnBBn9a/2eNgx5TkrOl2Ls8LCpz2xSHhGLxxHTZmmdu7FYs2cssh8kCeYyYll
-	 BRfT7SKErVknVWuaQYOJ3cZ3VDPoSk4VjO1nafL61LKZTRGsliIz+997tCRXC/pOAt
-	 n4+9NS3lEHnIbOc+L6034pe7HXVn/NmlZbH+qG8InG3tGs7578tba3n4Qt9otZ4C82
-	 w8FFZa+zeaGDMtJ3lkxWl66NwNr02ub5CRSH7Fs06VIHspQs6TMnxXW2dUySY1EWHP
-	 Qd+bFXlSsPqog==
+	b=eTF9YXCG0NDmHpI1o3ZoPne0cA3sgsZB1UJcY1WKBueheoZMOx77xh1nPvdPGjYgg
+	 iEcisN2dBpnGoJLFgNMovBg7bGXxJAraDfAOK6g/5/OTwE+2mHxGgV4x49zug4VSL9
+	 5nwFxXRatBTPXkgx807LSmPpyIsngGVvQMpfz5vWqSpMB3yaX8wAfJxnyyD3g/eu5y
+	 LzjF53zvwH2U6uDlXljhClDpg8EKhJeVjqBH21iIp9SKAdovRekon9C3CxIphUJkGs
+	 ijn5dWORO7/hZvTABBE/9/2MzrqlqeTDHUn9u2+pIAZY9y8Fq0R+RVNS2Ygo/6RLA2
+	 12Hi9Yw3SfEfA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>,
+	Abel Vesa <abel.vesa@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 451/638] drm/tidss: Fix initial plane zpos values
-Date: Sun, 24 Mar 2024 18:58:08 -0400
-Message-ID: <20240324230116.1348576-452-sashal@kernel.org>
+Subject: [PATCH 6.6 453/638] clk: imx: imx8mp: Fix SAI_MCLK_SEL definition
+Date: Sun, 24 Mar 2024 18:58:10 -0400
+Message-ID: <20240324230116.1348576-454-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,54 +48,60 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit 3ec948ccb2c4b99e8fbfdd950adbe92ea577b395 ]
+[ Upstream commit 13269dc6c70444528f0093585e3559cd2f38850a ]
 
-When the driver sets up the zpos property it sets the default zpos value
-to the HW id of the plane. That is fine as such, but as on many DSS
-versions the driver arranges the DRM planes in a different order than
-the HW planes (to keep the non-scalable planes first), this leads to odd
-initial zpos values. An example is J721e, where the initial zpos values
-for DRM planes are 1, 3, 0, 2.
+There is SAI1, SAI2, SAI3, SAI5, SAI6, SAI7 existing in this block
+control, the order is discontinuous. The definition of SAI_MCLK_SEL(n)
+is not match with the usage of CLK_SAIn(n).
 
-In theory the userspace should configure the zpos values properly when
-using multiple planes, and in that sense the initial zpos values
-shouldn't matter, but there's really no reason not to fix this and help
-the userspace apps which don't handle zpos perfectly. In particular,
-some versions of Weston seem to have issues dealing with the planes
-with the current default zpos values.
+So define SAI##n##_MCLK_SEL separately to fix the issue.
 
-So let's change the zpos values for the DRM planes to 0, 1, 2, 3.
-
-Another option would be to configure the planes marked as primary planes
-to zpos 0. On a two display system this would give us plane zpos values
-of 0, 0, 1, 2. The end result and behavior would be very similar in this
-option, and I'm not aware that this would actually help us in any way.
-So, to keep the code simple, I opted for the 0, 1, 2, 3 values.
-
-Fixes: 32a1795f57ee ("drm/tidss: New driver for TI Keystone platform Display SubSystem")
-Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240213-tidss-fixes-v1-1-d709e8dfa505@ideasonboard.com
+Fixes: 6cd95f7b151c ("clk: imx: imx8mp: Add audiomix block control")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+Link: https://lore.kernel.org/r/1708683351-8504-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tidss/tidss_plane.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/imx/clk-imx8mp-audiomix.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/tidss/tidss_plane.c b/drivers/gpu/drm/tidss/tidss_plane.c
-index e1c0ef0c3894c..68fed531f6a7f 100644
---- a/drivers/gpu/drm/tidss/tidss_plane.c
-+++ b/drivers/gpu/drm/tidss/tidss_plane.c
-@@ -213,7 +213,7 @@ struct tidss_plane *tidss_plane_create(struct tidss_device *tidss,
+diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
+index e4300df88f1ac..55ed211a5e0b1 100644
+--- a/drivers/clk/imx/clk-imx8mp-audiomix.c
++++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+@@ -18,7 +18,12 @@
  
- 	drm_plane_helper_add(&tplane->plane, &tidss_plane_helper_funcs);
+ #define CLKEN0			0x000
+ #define CLKEN1			0x004
+-#define SAI_MCLK_SEL(n)		(0x300 + 4 * (n))	/* n in 0..5 */
++#define SAI1_MCLK_SEL		0x300
++#define SAI2_MCLK_SEL		0x304
++#define SAI3_MCLK_SEL		0x308
++#define SAI5_MCLK_SEL		0x30C
++#define SAI6_MCLK_SEL		0x310
++#define SAI7_MCLK_SEL		0x314
+ #define PDM_SEL			0x318
+ #define SAI_PLL_GNRL_CTL	0x400
  
--	drm_plane_create_zpos_property(&tplane->plane, hw_plane_id, 0,
-+	drm_plane_create_zpos_property(&tplane->plane, tidss->num_planes, 0,
- 				       num_planes - 1);
- 
- 	ret = drm_plane_create_color_properties(&tplane->plane,
+@@ -95,13 +100,13 @@ static const struct clk_parent_data clk_imx8mp_audiomix_pll_bypass_sels[] = {
+ 		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK1_SEL, {},		\
+ 		clk_imx8mp_audiomix_sai##n##_mclk1_parents,		\
+ 		ARRAY_SIZE(clk_imx8mp_audiomix_sai##n##_mclk1_parents), \
+-		SAI_MCLK_SEL(n), 1, 0					\
++		SAI##n##_MCLK_SEL, 1, 0					\
+ 	}, {								\
+ 		"sai"__stringify(n)"_mclk2_sel",			\
+ 		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK2_SEL, {},		\
+ 		clk_imx8mp_audiomix_sai_mclk2_parents,			\
+ 		ARRAY_SIZE(clk_imx8mp_audiomix_sai_mclk2_parents),	\
+-		SAI_MCLK_SEL(n), 4, 1					\
++		SAI##n##_MCLK_SEL, 4, 1					\
+ 	}, {								\
+ 		"sai"__stringify(n)"_ipg_cg",				\
+ 		IMX8MP_CLK_AUDIOMIX_SAI##n##_IPG,			\
 -- 
 2.43.0
 
