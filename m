@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D617E18180F;
-	Sun, 24 Mar 2024 23:48:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF26A181824;
+	Sun, 24 Mar 2024 23:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324091; cv=none; b=MDGvjX/MzfJ4bT0GxcraZ55wUQ5kmpmhWlbYGDH5+uGfQCX2ueyvp62aIWklmFmmiwE+PCF9pGq8MiKWyux1iuG8voglzHys+UVyRngl4EklcXgao8W27CRi+Rk4L9scZjNDHZOWaZY9cTC4XL1XOD980UmyFN5mFKkKZi0RVwo=
+	t=1711324094; cv=none; b=ljLJ87pWENiuihH6ZczNpVqY1TGVCtNaK92qsgjCeF08ooSEzKy5vF483koON4p8HQ6BiERPpaNbY3MgWKn8cd5dmVfuc5L0Ms2kZntV943MHZxzsh+EjNN0CPR3YWl8ZMPW70OTGy+j2bbTuQ+Wpb526g3rQxes+oU4a7Oul0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324091; c=relaxed/simple;
-	bh=GMvWa03Qa7FSPRuDtAM5CuxjChNnwKQlEtknCNEXyko=;
+	s=arc-20240116; t=1711324094; c=relaxed/simple;
+	bh=Q6KOVtDs6oNFjJoLfnzxl1u3QloDpMzBIFFk15tx8As=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tk2GFWFk3fIvfHKK4cArQArp+dbrTbIsvgjAoyo96qZdXBiZTEYzQf2+nx54eQtm9OyrW3QbwLwy0GW2FgSVI7PJ0KsuxAgpm82QnjUR0PBRPfZkjEdzDmMStHRHSl9PZdJGnFezjqXOxSUYdlPWA6JPFE6FKJSLvoC7EdIXpo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BFzzlmyl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jyE0bIJO++6bhV9tluD8mSE2rMJdgDzwUYSeYgcFWMVa4DEVw2tqrpvnehTHmdneBCOR8IYVEylq8EHRphiSfPX123X0RcRG34SrYE2xHd+3rz5wfaQMJEhL40EHRT++xZ86gM1H8uFyRsWBDtGwfWPx35Zo78iyeclpOME5lGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EfK5t66P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BFzzlmyl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D06FC433C7;
-	Sun, 24 Mar 2024 23:48:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EfK5t66P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62FBAC43394;
+	Sun, 24 Mar 2024 23:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324090;
-	bh=GMvWa03Qa7FSPRuDtAM5CuxjChNnwKQlEtknCNEXyko=;
+	s=k20201202; t=1711324094;
+	bh=Q6KOVtDs6oNFjJoLfnzxl1u3QloDpMzBIFFk15tx8As=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BFzzlmylG7B8NxXmXHt5haHAc5w/h4TRI7Lbekarl431HUTdDqta+DCP6CcLZNDkW
-	 p3fwEqC8luPddf7XrsAJWHP0LSXJTXHtVRkbfUjzoUfrn7Qo6DZ6CzLzpr0C3LDBZX
-	 BApJO2Zz5YCk1t1oJZf4RVd/t4KNYirDondxcCBOhUA8j4sPrbU2vTaKEZqNjqDkK1
-	 iDT3cme8gPck9wzVo2TyMJX01d6cOz94emke7hm48A9Mw+wr0Ln2rUQ+WzllHXBl5l
-	 JODUw9kwq/PtRWtdUjyuFUPR5JNr8rYbE8sw4stn9L4AT3734oAnwESAQHy779TWEs
-	 fnK8kI7kZ+I2Q==
+	b=EfK5t66PmXiiHoN0Ee6uvDxQfxFACJ/IdqJK+jwr9XCVC931Z7FjRxDEpiL7bxbDY
+	 iP4pSGeeF1JFzF0ouwDqzHwg34OnFpQ6r1yvMrD0M7l47c49aBQpC3p0TWI+bb87a+
+	 2yjm1/blYlpRVSO5sFZDGrzDD7Fi748h2wHia618CqaajpcewWVHcqzy+/PksGoKIV
+	 F09n2S4s4RlY5Bs8lawiD7jvF01X+NFlBjuA7hmwCMgHyjh7U6GGs0BIUIkYSw+0Us
+	 /RqMJ2XWbP1y8TA5EMwpOWHA9yxWTT2mD8yolgEiaXAnLZ8CvZMCXAyUp3IrjEigZ8
+	 UJTcfxU+9CTzg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alex Bee <knaerzche@gmail.com>,
-	Zheng Yang <zhengyang@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>,
+Cc: Peter Robinson <pbrobinson@gmail.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <treding@nvidia.com>,
+	Sameer Pujar <spujar@nvidia.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Vinod Koul <vkoul@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 091/183] drm/rockchip: inno_hdmi: Fix video timing
-Date: Sun, 24 Mar 2024 19:45:04 -0400
-Message-ID: <20240324234638.1355609-92-sashal@kernel.org>
+Subject: [PATCH 5.4 094/183] dmaengine: tegra210-adma: Update dependency to ARCH_TEGRA
+Date: Sun, 24 Mar 2024 19:45:07 -0400
+Message-ID: <20240324234638.1355609-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,49 +52,58 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alex Bee <knaerzche@gmail.com>
+From: Peter Robinson <pbrobinson@gmail.com>
 
-[ Upstream commit 47a145c03484d33e65d773169d5ca1b9fe2a492e ]
+[ Upstream commit 33b7db45533af240fe44e809f9dc4d604cf82d07 ]
 
-The controller wants the difference between *total and *sync_start in the
-HDMI_VIDEO_EXT_*DELAY registers. Otherwise the signal is very unstable for
-certain non-VIC modes. See downstream commit [0].
+Update the architecture dependency to be the generic Tegra
+because the driver works on the four latest Tegra generations
+not just T210, if you build a kernel with a specific
+ARCH_TEGRA_xxx_SOC option that excludes 210 you don't get
+this driver.
 
-[0] https://github.com/rockchip-linux/kernel/commit/8eb559f2502c
-
-Fixes: 412d4ae6b7a5 ("drm/rockchip: hdmi: add Innosilicon HDMI support")
-Co-developed-by: Zheng Yang <zhengyang@rock-chips.com>
-Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231222174220.55249-4-knaerzche@gmail.com
+Fixes: 433de642a76c9 ("dmaengine: tegra210-adma: add support for Tegra186/Tegra194")
+Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+Cc: Jon Hunter <jonathanh@nvidia.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Sameer Pujar <spujar@nvidia.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20240112093310.329642-2-pbrobinson@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/inno_hdmi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/Kconfig | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
-index f2e2cc66f4897..95888e64bd8bc 100644
---- a/drivers/gpu/drm/rockchip/inno_hdmi.c
-+++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
-@@ -401,7 +401,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_L, value & 0xFF);
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_H, (value >> 8) & 0xFF);
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 66aad9dbd58c5..a7c156ce2c298 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -582,16 +582,16 @@ config TEGRA20_APB_DMA
  
--	value = mode->hsync_start - mode->hdisplay;
-+	value = mode->htotal - mode->hsync_start;
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_L, value & 0xFF);
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_H, (value >> 8) & 0xFF);
+ config TEGRA210_ADMA
+ 	tristate "NVIDIA Tegra210 ADMA support"
+-	depends on (ARCH_TEGRA_210_SOC || COMPILE_TEST)
++	depends on (ARCH_TEGRA || COMPILE_TEST)
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+-	  Support for the NVIDIA Tegra210 ADMA controller driver. The
+-	  DMA controller has multiple DMA channels and is used to service
+-	  various audio clients in the Tegra210 audio processing engine
+-	  (APE). This DMA controller transfers data from memory to
+-	  peripheral and vice versa. It does not support memory to
+-	  memory data transfer.
++	  Support for the NVIDIA Tegra210/Tegra186/Tegra194/Tegra234 ADMA
++	  controller driver. The DMA controller has multiple DMA channels
++	  and is used to service various audio clients in the Tegra210
++	  audio processing engine (APE). This DMA controller transfers
++	  data from memory to peripheral and vice versa. It does not
++	  support memory to memory data transfer.
  
-@@ -416,7 +416,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
- 	value = mode->vtotal - mode->vdisplay;
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VBLANK, value & 0xFF);
- 
--	value = mode->vsync_start - mode->vdisplay;
-+	value = mode->vtotal - mode->vsync_start;
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VDELAY, value & 0xFF);
- 
- 	value = mode->vsync_end - mode->vsync_start;
+ config TIMB_DMA
+ 	tristate "Timberdale FPGA DMA support"
 -- 
 2.43.0
 
