@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E288C1D7931;
-	Sun, 24 Mar 2024 22:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22659142E8B;
+	Sun, 24 Mar 2024 22:49:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320610; cv=none; b=F9eVcVimAfEMwPKR93fhaQhRCYpfip9+whDNZzp50X9JcZF9MDxwSpFmyebHM9XZZYa3B1CxFve+ZtqiyYAigXr3aBv9utZqTHo55I+/7dBmMVOMW7scJZSww+zIpJ14g5QCoWCZAqhjaiIhby9WZjhNj59+yH6IAF6sOFEGcB0=
+	t=1711320593; cv=none; b=NiCeGrDi5rmxpfpnXWbToZjzoDCWNuaObfggEkpzzsti8QgEHDNd9ctqu14qYc5cgF0e9WPGhEdUaF1tS/posf6hKjPWp0X7ChT1lkXx6xMs4Xa7MeQoKnURhL0MAb3zpfLglsag1G9sOVdnnMOePat/sU7vhkfgliu9AB8Ge20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320610; c=relaxed/simple;
-	bh=iD2tP2w5qBXFxh/WQCe5efjp671Yj3yfU9cw0LsYFyI=;
+	s=arc-20240116; t=1711320593; c=relaxed/simple;
+	bh=0+48isTzNvrmKnyqjubuz+hXbpcC9TAg3X50SmYHahw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AuoZV5pVicYi1O8QFqRurUSjx47DdqgstYdsdtQoV9utuHLJw3FIG++7neS+ad5RNTx8fUCC6wBHVikHz1Ee0jfWJ6N7QTi5gpVa/LsSqOT7pLCZvIo2BEOxptvbpciwv8McbzBUyrlyjwHR8S+ZFzj6nAtzPkXC9mrHIrbBzSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBtCzUPN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QayZ1/zyAPfXMWuw2Trnbp8E5HUYfLQGyNH/zTLd9kc9Ihe6CjoJKR5Q9WyoiYJWppJfidV0EMATx1K+FQeMxQIFhGXSlFJ0Y43grtjSJoXheHynCGJrIQdmMgax/lJodJHrSupoetmw9FXtFRgYaj7V49SPCcr/5IDYLoh2RYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BljaAypH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBtCzUPN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01D01C433C7;
-	Sun, 24 Mar 2024 22:50:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BljaAypH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB6EC433F1;
+	Sun, 24 Mar 2024 22:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320608;
-	bh=iD2tP2w5qBXFxh/WQCe5efjp671Yj3yfU9cw0LsYFyI=;
+	s=k20201202; t=1711320591;
+	bh=0+48isTzNvrmKnyqjubuz+hXbpcC9TAg3X50SmYHahw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bBtCzUPNYdneLOpN6ziQXnS3ocR7T6+g2PaVOgSEJUhvFgpWD80Qx8C4f3PiULLnQ
-	 zxThtLpDqcXuwt3PoyPyiziGcBF0wXxcQ5SF7TyURUPqiJ7MGjuRMz2j7fOiP0YBD+
-	 HyZ4teVbTqWl+PP39kFyiJthMjYd7FSCSdCd1oMyvx0JsaRVFJPxDrsUNYjyPKetFZ
-	 IYBmC6heuQjELNNUed3ndr3K/nxLSlXdgmM0TIcVIyImsZBGnLfAbHo/T8uawooHH4
-	 JSjtHGu2S239ogHEqOd82+/YswBaCgCtM28/S6qR410UnGtCTLHXjSym0JSyiv6pWe
-	 GYJ1xP/nrfpZA==
+	b=BljaAypH48eKhFHrIntztfUIYbuX6F0MkO4omcAwqUe8cErRTG/p/EHD13IUzwniO
+	 8nVHFjuVYqdS8NII+hcG+FPI5a8whMyDyoEgTQLPbOUV9cPcFtD6TDBA8JAzdaziJL
+	 GEdmiOmoUIuJw/U5A8U589xQGV0F7banO01K6BIkc+5gC6SZx0ypOmfYi6W9gDe2yk
+	 kYj1bBrrpt55sEDzS7/X1nhhZfj0/LaxLCwULS+0/AOqZvDsQuoutVBeyTJnp7h1Ab
+	 4FyigRLXxU37OSYqgk28J2vh+aIF6Cvo5ZRqLL+deJqdUKabzfZvOnxjkbM8RY5OPX
+	 GpzV+J61uHymQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	Guillaume Nault <gnault@redhat.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 169/713] pmdomain: qcom: rpmhpd: Drop SA8540P gfx.lvl
-Date: Sun, 24 Mar 2024 18:38:15 -0400
-Message-ID: <20240324224720.1345309-170-sashal@kernel.org>
+Subject: [PATCH 6.7 153/713] inet_diag: annotate data-races around inet_diag_table[]
+Date: Sun, 24 Mar 2024 18:37:59 -0400
+Message-ID: <20240324224720.1345309-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,37 +51,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 883957bee580b723fd87d49ac73e0c84fc03a446 ]
+[ Upstream commit e50e10ae5d81ddb41547114bfdc5edc04422f082 ]
 
-On SA8295P and SA8540P gfx.lvl is not provdied by rpmh, but rather is
-handled by an external regulator (max20411). Drop gfx.lvl from the list
-of power-domains exposed on this platform.
+inet_diag_lock_handler() reads inet_diag_table[proto] locklessly.
 
-Fixes: f68f1cb3437d ("soc: qcom: rpmhpd: add sc8280xp & sa8540p rpmh power-domains")
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20240125-sa8295p-gpu-v4-4-7011c2a63037@quicinc.com
-Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+Use READ_ONCE()/WRITE_ONCE() annotations to avoid potential issues.
+
+Fixes: d523a328fb02 ("[INET]: Fix inet_diag dead-lock regression")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pmdomain/qcom/rpmhpd.c | 1 -
- 1 file changed, 1 deletion(-)
+ net/ipv4/inet_diag.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pmdomain/qcom/rpmhpd.c b/drivers/pmdomain/qcom/rpmhpd.c
-index 0f0943e3efe50..e4d5afab7b3b2 100644
---- a/drivers/pmdomain/qcom/rpmhpd.c
-+++ b/drivers/pmdomain/qcom/rpmhpd.c
-@@ -217,7 +217,6 @@ static struct rpmhpd *sa8540p_rpmhpds[] = {
- 	[SC8280XP_CX] = &cx,
- 	[SC8280XP_CX_AO] = &cx_ao,
- 	[SC8280XP_EBI] = &ebi,
--	[SC8280XP_GFX] = &gfx,
- 	[SC8280XP_LCX] = &lcx,
- 	[SC8280XP_LMX] = &lmx,
- 	[SC8280XP_MMCX] = &mmcx,
+diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
+index 7d0e7aaa71e0a..5f7fdbd01cf9b 100644
+--- a/net/ipv4/inet_diag.c
++++ b/net/ipv4/inet_diag.c
+@@ -57,7 +57,7 @@ static const struct inet_diag_handler *inet_diag_lock_handler(int proto)
+ 		return ERR_PTR(-ENOENT);
+ 	}
+ 
+-	if (!inet_diag_table[proto])
++	if (!READ_ONCE(inet_diag_table[proto]))
+ 		sock_load_diag_module(AF_INET, proto);
+ 
+ 	mutex_lock(&inet_diag_table_mutex);
+@@ -1419,7 +1419,7 @@ int inet_diag_register(const struct inet_diag_handler *h)
+ 	mutex_lock(&inet_diag_table_mutex);
+ 	err = -EEXIST;
+ 	if (!inet_diag_table[type]) {
+-		inet_diag_table[type] = h;
++		WRITE_ONCE(inet_diag_table[type], h);
+ 		err = 0;
+ 	}
+ 	mutex_unlock(&inet_diag_table_mutex);
+@@ -1436,7 +1436,7 @@ void inet_diag_unregister(const struct inet_diag_handler *h)
+ 		return;
+ 
+ 	mutex_lock(&inet_diag_table_mutex);
+-	inet_diag_table[type] = NULL;
++	WRITE_ONCE(inet_diag_table[type], NULL);
+ 	mutex_unlock(&inet_diag_table_mutex);
+ }
+ EXPORT_SYMBOL_GPL(inet_diag_unregister);
 -- 
 2.43.0
 
