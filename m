@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0615083A14;
-	Sun, 24 Mar 2024 22:50:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC08784047;
+	Sun, 24 Mar 2024 22:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320633; cv=none; b=grberrzKoTw5cNsVYhxgstXHR0D0lGBbT5Ab/yW1lhnHi/6Pu6Lfx8bcSFNfPuwQOGeP6Bu7wE0blV0UDm4i8+Qf4grLNFtnl0p6Euv/8YheNFKxG5V+E1Wt9NIxvDYIZBHMeMNn0tSVEhjqbx7MCWHzkRKyyzePkY8l2/6T8/o=
+	t=1711320640; cv=none; b=gGHcfEvNYImP0BxpJiae8apxLkqHY/rZmMW/wZ7uUjI9hcrA/b05pMCBxmEtiJahiFQsUy9n/7jgKz/3X92aFmGuTp1NF30ZdCS45PJeNdqPliaQ+0diXdNmTo4PKx0KTb9iHH/NKnLga+XCNpcjshOJQjk/+W1CuYFIjYTbSVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320633; c=relaxed/simple;
-	bh=afXxZDuytKdo2b9kX8f74F3OLY83odqcQkTH0+MIdeY=;
+	s=arc-20240116; t=1711320640; c=relaxed/simple;
+	bh=LvtZg5e0VQtOBT+DmVlIpjevxUc7VebV46SOEb3fPHw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HE4Yh1VdTeK64StQ4EbN/y8t0f7/lueZyHR9c0kvu0HM7huIQRykRLYbeaJkbWxcT14cpXSngS9uty+lUC/9lNUGUbsyPmTwELZ1emnFs2WLohjctxQaWtI4hIzmnG29pilCKpBmJqAPCMnE04JmAmS1+3jAX3wF411fwcxZCEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcCzmNJe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QLycyzcAHw2g+7HBhA2V1TqYkE1CFYFMBZZ2+VmvtkcJkzKLika3pC86tEyFjWiVXWeL/yA9BptKmT3edTxVyXh//xpQeUmaNv/sG55HggYWceJVQlP8Ak2FFzsp72wlaGq2Tbs3RfIK3DATGS3z5whTUHHb0u7PkAnyc0hTfIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6rzQ1jR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcCzmNJe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE6FC43390;
-	Sun, 24 Mar 2024 22:50:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6rzQ1jR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA7CC433B1;
+	Sun, 24 Mar 2024 22:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320632;
-	bh=afXxZDuytKdo2b9kX8f74F3OLY83odqcQkTH0+MIdeY=;
+	s=k20201202; t=1711320639;
+	bh=LvtZg5e0VQtOBT+DmVlIpjevxUc7VebV46SOEb3fPHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rcCzmNJeQSqGrXmOqica05m8Nr6S6aHWIC/G+oEXhRuQ56jD0aHiV55aa3XvkJLqC
-	 LzR8yj8XTpPS2b9GOAvK6nb5SdMuscjHuHgzUqwXWIczxVfxFHMuUBflzYJBlmoobt
-	 QetNKUu6maSnTOm9L75qORiVwFAlup3+uBz6XoSCbJmh/q/hdUkTMhPUhKrdjumaPU
-	 m40mOuTkeuHvEKsOcfQ2ExQffkaMSw2JSngfFz/NUiBjARxOq/o8Z1ZyxtABFOnENz
-	 aIlJD9/Ih30D2CdB1YGazU8yZ2J3SXYGdKUdbWNTnMY4fqrgAiKyoxWH7Eb/UcMGQY
-	 6dtfP1OTWcO9A==
+	b=c6rzQ1jR/j6Vu8Q+oh0JhB39hL4yDo1aSIY6nbM0kQ8x39AS3E8KH7LA8ndcsZaL0
+	 jr//6Y5XWid0P5XjFTNjxAVMdKKinnM9ytLNwU1WyHeurmx5lfb5lrrXGwQorart63
+	 xXrzIUmu7rJcDgw3LscaFi1o8Cd1B8EDgX3kpLOM6R00jS4UjxDrIRb1dhP6uhXE9k
+	 a8mXgDc2BCSw1Yxw6IjSc2vDGW6tOr5yRPE3b/GNnSD6XJANLw4eCATzevNArVXxdZ
+	 lG0oaM+PxHeaL/B8x+Mj3568TtlOYrdAAZRvx4lnv4i5KXrCDggD2LhmwLYIzdXyZN
+	 218peJjY5qAJg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	Mukesh Sisodiya <mukesh.sisodiya@intel.com>,
-	Gregory Greenman <gregory.greenman@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+Cc: Breno Leitao <leitao@debian.org>,
+	Jiri Pirko <jiri@nvidia.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 194/713] wifi: iwlwifi: always have 'uats_enabled'
-Date: Sun, 24 Mar 2024 18:38:40 -0400
-Message-ID: <20240324224720.1345309-195-sashal@kernel.org>
+Subject: [PATCH 6.7 201/713] net: blackhole_dev: fix build warning for ethh set but not used
+Date: Sun, 24 Mar 2024 18:38:47 -0400
+Message-ID: <20240324224720.1345309-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,40 +49,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Breno Leitao <leitao@debian.org>
 
-[ Upstream commit f639602a58e7564dd091c7c0793f61042bad9bb6 ]
+[ Upstream commit 843a8851e89e2e85db04caaf88d8554818319047 ]
 
-We check this in code that'd be complicated to put under
-ifdef (CONFIG_ACPI), so just always have 'uats_enabled'.
+lib/test_blackhole_dev.c sets a variable that is never read, causing
+this following building warning:
 
-Fixes: 4a9bb5b4d949 ("wifi: iwlwifi: fw: Add support for UATS table in UHB")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Reviewed-by: Mukesh Sisodiya <mukesh.sisodiya@intel.com>
-Reviewed-by: Gregory Greenman <gregory.greenman@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://msgid.link/20240129211905.bdc5fb20f00a.I902d801d79873c5c9cd51cef8e8226e2acefe88d@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+	lib/test_blackhole_dev.c:32:17: warning: variable 'ethh' set but not used [-Wunused-but-set-variable]
+
+Remove the variable struct ethhdr *ethh, which is unused.
+
+Fixes: 509e56b37cc3 ("blackhole_dev: add a selftest")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/fw/runtime.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/test_blackhole_dev.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/runtime.h b/drivers/net/wireless/intel/iwlwifi/fw/runtime.h
-index 357727774db90..baabb8e321f8d 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/runtime.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/runtime.h
-@@ -173,9 +173,9 @@ struct iwl_fw_runtime {
- 	struct iwl_sar_offset_mapping_cmd sgom_table;
- 	bool sgom_enabled;
- 	u8 reduced_power_flags;
--	bool uats_enabled;
- 	struct iwl_uats_table_cmd uats_table;
- #endif
-+	bool uats_enabled;
- };
+diff --git a/lib/test_blackhole_dev.c b/lib/test_blackhole_dev.c
+index 4c40580a99a36..f247089d63c08 100644
+--- a/lib/test_blackhole_dev.c
++++ b/lib/test_blackhole_dev.c
+@@ -29,7 +29,6 @@ static int __init test_blackholedev_init(void)
+ {
+ 	struct ipv6hdr *ip6h;
+ 	struct sk_buff *skb;
+-	struct ethhdr *ethh;
+ 	struct udphdr *uh;
+ 	int data_len;
+ 	int ret;
+@@ -61,7 +60,7 @@ static int __init test_blackholedev_init(void)
+ 	ip6h->saddr = in6addr_loopback;
+ 	ip6h->daddr = in6addr_loopback;
+ 	/* Ether */
+-	ethh = (struct ethhdr *)skb_push(skb, sizeof(struct ethhdr));
++	skb_push(skb, sizeof(struct ethhdr));
+ 	skb_set_mac_header(skb, 0);
  
- void iwl_fw_runtime_init(struct iwl_fw_runtime *fwrt, struct iwl_trans *trans,
+ 	skb->protocol = htons(ETH_P_IPV6);
 -- 
 2.43.0
 
