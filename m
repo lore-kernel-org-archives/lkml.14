@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B551E4A0F;
-	Sun, 24 Mar 2024 22:53:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69821E4A3B;
+	Sun, 24 Mar 2024 22:53:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320809; cv=none; b=HKmCa12h6IZ9AI2+eOj5ubJi3S0doeJffLJtuRs8/iD0rw3KlsS5SAtNPXGrS10B83Mmhb685N79cI9e3wP9U79gTVy+sjhn5J26jt/BLSgMkfallySR93UtaBollQe3WyyhzNrKTyvBD3ER3gIcLE1/r93AOYtqMDAxft3SU1I=
+	t=1711320815; cv=none; b=uVwMSXfRACplCusWvI/iqQVkiq4K2YuOdNNMdM4MAy1EEcS7HnStlXEFCOT2V25gHeBX0+Nda8+BN5UZWIFfKCZTOlKQ+KYcou/kYy66IEJOFbnzZlatUY/iOOpAcyCK9obHYSa1XlyzIKuZQL8fgz5WVpBMqMer+PbMCq5zTtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320809; c=relaxed/simple;
-	bh=LHMGvFVwf3Qcf/aIqresdD78FYxbY6AGHTVAdf9r6kw=;
+	s=arc-20240116; t=1711320815; c=relaxed/simple;
+	bh=OQsM+h49KmJCuY/Vc4xjJEjsD2hIGGvvSko+Q3j56jk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p7V/PN0n7cp61PXxV6UvmbhJpGuCIU8/WBzYyxR43xtqiK+i670XT1OPSeyelg4qqeZIr+0/PRyJEp6KNXzPLvMyrX9zYcSEQpqM5/hQuB5gHXx8i+kPiFngRRmIqdUe8FjcKY2omhFzbsnejkUcGmJdpz/GhX+MyDPy1sZjzBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJofyGxH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=InSeFWeJPMhhv3Fb6/ZMbVl9QrzbaTxKbI8IJmZCocKTrtBfklLy98MRDm6LaYvPJYodXo3BqSr2Y+ER+n1fuxMX6qr0qD12HCWY1uLe5e+iMZWGqfSKF2L+5/wXmCS3DE/sYykR7Nk0aNMOkTUn+iSCg034704icNnsV2BMcX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1A8Gm+e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJofyGxH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EBC0C43390;
-	Sun, 24 Mar 2024 22:53:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1A8Gm+e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D439AC433C7;
+	Sun, 24 Mar 2024 22:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320808;
-	bh=LHMGvFVwf3Qcf/aIqresdD78FYxbY6AGHTVAdf9r6kw=;
+	s=k20201202; t=1711320815;
+	bh=OQsM+h49KmJCuY/Vc4xjJEjsD2hIGGvvSko+Q3j56jk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cJofyGxHyqS/k6Om29Ybq66YwhakmwtJbn2Vaj3CHwNA34byrkCfa6roTNgddGg5Q
-	 VX6N4VVFfgJ6rcrvF/Xwhe+AnQNuIPB1MQ7Kdu/FJC4VvQ1/e/W7DEAhACeDBhlnkR
-	 tLjbT6kJx3rveMfSYD4JgSf8osi/1gUZiBkyXXk9nxLkLhVGTG4Oph5XoF+zlzQAh7
-	 VlRnb3P79/A8SUdvqGqKMr6n3+gqUX10Yl2/etP3Q4qzMusmfP47YVWxD7J3thigpi
-	 ArVJufqQ79D9h/tJomqD2nlDDWFth3O1FGWum5jiyuBWjaNHjx3sC77tvyPq+sLwyl
-	 9bYPidXw94hvA==
+	b=D1A8Gm+eCgoHnX43fBs7zSdREZL47udNJhabUfpVTEAfs2SgNfhh7IStahjJ2e+94
+	 MA5LMwLHmmixXOQunNDWa2LNmCzn2jCV2VGMZLODCQp8PsfTwTS9/EbvqGJWQlfUsx
+	 Pc1xAQFlzPMDg7Pcpj5TMYiuryiTGhVecplNM8xIz6DEo+KeKCS8D64nle+ATDJ6RS
+	 ekmXFfXFa2aITM/fh+16LnJfQiE2pzbPfW2mSSu+5qQ8p6oInVjeSJ7LOgYLbKwxrp
+	 kztlllbfinEZd8ziTuqutXvns9D6RUiN+j0jbsIrD+LVUd4XJjaxkQFfhgXZqafLoh
+	 beyBa5QVbAsiA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Danis?= <frederic.danis@collabora.com>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+	Tom Parkin <tparkin@katalix.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 373/713] Bluetooth: Fix eir name length
-Date: Sun, 24 Mar 2024 18:41:39 -0400
-Message-ID: <20240324224720.1345309-374-sashal@kernel.org>
+Subject: [PATCH 6.7 380/713] l2tp: fix incorrect parameter validation in the pppol2tp_getsockopt() function
+Date: Sun, 24 Mar 2024 18:41:46 -0400
+Message-ID: <20240324224720.1345309-381-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,106 +45,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frédéric Danis <frederic.danis@collabora.com>
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit 2ab3e8d67fc1d4a7638b769cf83023ec209fc0a9 ]
+[ Upstream commit 955e9876ba4ee26eeaab1b13517f5b2c88e73d55 ]
 
-According to Section 1.2 of Core Specification Supplement Part A the
-complete or short name strings are defined as utf8s, which should not
-include the trailing NULL for variable length array as defined in Core
-Specification Vol1 Part E Section 2.9.3.
+The 'len' variable can't be negative when assigned the result of
+'min_t' because all 'min_t' parameters are cast to unsigned int,
+and then the minimum one is chosen.
 
-Removing the trailing NULL allows PTS to retrieve the random address based
-on device name, e.g. for SM/PER/KDU/BV-02-C, SM/PER/KDU/BV-08-C or
-GAP/BROB/BCST/BV-03-C.
+To fix the logic, check 'len' as read from 'optlen',
+where the types of relevant variables are (signed) int.
 
-Fixes: f61851f64b17 ("Bluetooth: Fix append max 11 bytes of name to scan rsp data")
-Signed-off-by: Frédéric Danis <frederic.danis@collabora.com>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
+Reviewed-by: Tom Parkin <tparkin@katalix.com>
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/eir.c  | 29 +++++++----------------------
- net/bluetooth/mgmt.c |  2 +-
- 2 files changed, 8 insertions(+), 23 deletions(-)
+ net/l2tp/l2tp_ppp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/bluetooth/eir.c b/net/bluetooth/eir.c
-index 9214189279e80..1bc51e2b05a34 100644
---- a/net/bluetooth/eir.c
-+++ b/net/bluetooth/eir.c
-@@ -13,48 +13,33 @@
+diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
+index f011af6601c9c..6146e4e67bbb5 100644
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -1356,11 +1356,11 @@ static int pppol2tp_getsockopt(struct socket *sock, int level, int optname,
+ 	if (get_user(len, optlen))
+ 		return -EFAULT;
  
- #define PNP_INFO_SVCLASS_ID		0x1200
- 
--static u8 eir_append_name(u8 *eir, u16 eir_len, u8 type, u8 *data, u8 data_len)
--{
--	u8 name[HCI_MAX_SHORT_NAME_LENGTH + 1];
+-	len = min_t(unsigned int, len, sizeof(int));
 -
--	/* If data is already NULL terminated just pass it directly */
--	if (data[data_len - 1] == '\0')
--		return eir_append_data(eir, eir_len, type, data, data_len);
--
--	memcpy(name, data, HCI_MAX_SHORT_NAME_LENGTH);
--	name[HCI_MAX_SHORT_NAME_LENGTH] = '\0';
--
--	return eir_append_data(eir, eir_len, type, name, sizeof(name));
--}
--
- u8 eir_append_local_name(struct hci_dev *hdev, u8 *ptr, u8 ad_len)
- {
- 	size_t short_len;
- 	size_t complete_len;
+ 	if (len < 0)
+ 		return -EINVAL;
  
--	/* no space left for name (+ NULL + type + len) */
--	if ((max_adv_len(hdev) - ad_len) < HCI_MAX_SHORT_NAME_LENGTH + 3)
-+	/* no space left for name (+ type + len) */
-+	if ((max_adv_len(hdev) - ad_len) < HCI_MAX_SHORT_NAME_LENGTH + 2)
- 		return ad_len;
- 
- 	/* use complete name if present and fits */
- 	complete_len = strnlen(hdev->dev_name, sizeof(hdev->dev_name));
- 	if (complete_len && complete_len <= HCI_MAX_SHORT_NAME_LENGTH)
--		return eir_append_name(ptr, ad_len, EIR_NAME_COMPLETE,
--				       hdev->dev_name, complete_len + 1);
-+		return eir_append_data(ptr, ad_len, EIR_NAME_COMPLETE,
-+				       hdev->dev_name, complete_len);
- 
- 	/* use short name if present */
- 	short_len = strnlen(hdev->short_name, sizeof(hdev->short_name));
- 	if (short_len)
--		return eir_append_name(ptr, ad_len, EIR_NAME_SHORT,
-+		return eir_append_data(ptr, ad_len, EIR_NAME_SHORT,
- 				       hdev->short_name,
--				       short_len == HCI_MAX_SHORT_NAME_LENGTH ?
--				       short_len : short_len + 1);
-+				       short_len);
- 
- 	/* use shortened full name if present, we already know that name
- 	 * is longer then HCI_MAX_SHORT_NAME_LENGTH
- 	 */
- 	if (complete_len)
--		return eir_append_name(ptr, ad_len, EIR_NAME_SHORT,
-+		return eir_append_data(ptr, ad_len, EIR_NAME_SHORT,
- 				       hdev->dev_name,
- 				       HCI_MAX_SHORT_NAME_LENGTH);
- 
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 2ffda2ffdbda8..92fd3786bbdff 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -8400,7 +8400,7 @@ static int read_adv_features(struct sock *sk, struct hci_dev *hdev,
- 
- static u8 calculate_name_len(struct hci_dev *hdev)
- {
--	u8 buf[HCI_MAX_SHORT_NAME_LENGTH + 3];
-+	u8 buf[HCI_MAX_SHORT_NAME_LENGTH + 2]; /* len + type + name */
- 
- 	return eir_append_local_name(hdev, buf, 0);
- }
++	len = min_t(unsigned int, len, sizeof(int));
++
+ 	err = -ENOTCONN;
+ 	if (!sk->sk_user_data)
+ 		goto end;
 -- 
 2.43.0
 
