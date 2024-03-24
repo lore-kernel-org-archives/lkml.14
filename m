@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B524D184EF4;
-	Sun, 24 Mar 2024 23:52:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDDD18520B;
+	Sun, 24 Mar 2024 23:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324330; cv=none; b=NbcYOnnFhCkLqgJ7sF6U/EsyU97faAABOmgy/JvWucgL7Tv/jBC/U71TfiFurBrBv+O1l5vuU+YTy79KeAOvehEZ5fWBWCRE1/synCsRwXXLnAcphUkMu8yZ8/Z8BHFs6UsezP5DPUeRnNgSbOHdnxopkIhxSRph8FIIpXQCLyc=
+	t=1711324332; cv=none; b=kWAE+6fpH/fdQhK9r1blQSj+ZoNQcNXgHeU1bAXZFN/VTBpJt192l8pjRqTGdnrNUGT0YRh3D7KeIwVNulJHQif2hxF4BQqErKj+xHKL3E39g2WrMFoGpoeDHGzTo06+T2yuCDYGUvkitT1uUAi0cMgw9y6xkXFVrGqFUeUhrD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324330; c=relaxed/simple;
-	bh=+y0TYPZiAtd+NHd92IK2TWo0iPyidCyhPNGn/a34lRE=;
+	s=arc-20240116; t=1711324332; c=relaxed/simple;
+	bh=5s0pWDmBEPFIOy02KFQp8liTlWUa2O7endpq9tizYYc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ctKdQv7UIg9EfTsYNjWCvTzop6BwdrcBL22Q6eesZyGnndgyvNyefXjewVsW61bDwNEr5EvnHq4B4nBpyaoOptu9uP+JZ/KGwBlXvc7SYziqVm9sFtlfXu14zdZ1L/ZldGL9pnzVy39+9Y3VNPND8Kmdcv5d9HABXHfgRin/duA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qez0EzZj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nHyC2iGJW/p6JrBPAoMqG4msNYRU3+sAG2ZULbVL9J+I1oprsfbxleowX/AOKEbP8bpzBvTZfS9v13swz3/+DsSLJ944nLiHoyD2S7TDWAZjG3THVeqk8+RY88DxE7apWCn3GP73jVRg00CyY5ugpLzQeY2Lf8raQpANqw5/rHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tVb8LdNd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qez0EzZj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE08AC433F1;
-	Sun, 24 Mar 2024 23:52:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tVb8LdNd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7D2DC43399;
+	Sun, 24 Mar 2024 23:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324329;
-	bh=+y0TYPZiAtd+NHd92IK2TWo0iPyidCyhPNGn/a34lRE=;
+	s=k20201202; t=1711324331;
+	bh=5s0pWDmBEPFIOy02KFQp8liTlWUa2O7endpq9tizYYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qez0EzZjjAy37NcmxfsxCH5XH6HbHJfFaNJNvq1FRXoiaLOZ8FWf3IYhEpIf/0TVd
-	 MCYtdxvcS8pXvHl5ktIXJjhuiux0v/s2wiv8W+racL/Q8pNelJ3ljkS0TasZ3LzX32
-	 uDt0kQ/KBdSeTbvfDr3F78eqahKjFbSW/8UOCspTxRLgpffYmmsIG9FEnDMvdwpPUw
-	 7ZICgRP4pvvLRRRACMxdhq/0C3FmF7vI4E82IL/PMm5DSWyn3qHVyu6zYEXa0/xQ9T
-	 Fz1DICsm1wL5czx/xR6E55ybrVR2tJXNcipbHIkbdFQXY0D64sGXcNxKaPPdsL13Eh
-	 SOkiUuX+Gs1cw==
+	b=tVb8LdNdBn0AWBKsCziX53A81poQKGHBDIrX3OzcWcwMnvCYl9ntqCWNfyrNtWjQb
+	 3lcv5qnUcdVdmCKEEQ7c+rRTNsHS8pxOCMm97PNZpidab/KX/kHZZdy1UCj4KhMWf+
+	 CX0yfjR96nFrr4Rne1bMxyWsbPHX/NCZmwKfTGaz1Xp2rRXSAbOG9sdpMtivd/oZki
+	 vNOr7mc2g41PPsou1x60zW7NmiR1YmvKqrOvZ8oOlclvH3bqobRTUdvVgpqUaCVeh/
+	 /GMKpAxcakH5umo+dsFWy+A+DU1mXNkzNVuS8d63XEDDPDDlKpvNj0/X0ZGJZbpYuI
+	 RuQitMXGGJwyA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Arnd Bergmann <arnd@arndb.de>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/148] ALSA: seq: fix function cast warnings
-Date: Sun, 24 Mar 2024 19:49:24 -0400
-Message-ID: <20240324235012.1356413-101-sashal@kernel.org>
+Subject: [PATCH 4.19 102/148] media: pvrusb2: fix pvr2_stream_callback casts
+Date: Sun, 24 Mar 2024 19:49:26 -0400
+Message-ID: <20240324235012.1356413-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,93 +48,113 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit d7bf73809849463f76de42aad62c850305dd6c5d ]
+[ Upstream commit 30baa4a96b23add91a87305baaeba82c4e109e1f ]
 
-clang-16 points out a control flow integrity (kcfi) issue when event
-callbacks get converted to incompatible types:
+clang-16 complains about a control flow integrity (KCFI) issue in pvrusb2,
+which casts three different prototypes into pvr2_stream_callback:
 
-sound/core/seq/seq_midi.c:135:30: error: cast from 'int (*)(struct snd_rawmidi_substream *, const char *, int)' to 'snd_seq_dump_func_t' (aka 'int (*)(void *, void *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-  135 |                 snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)dump_midi, substream);
-      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sound/core/seq/seq_virmidi.c:83:31: error: cast from 'int (*)(struct snd_rawmidi_substream *, const unsigned char *, int)' to 'snd_seq_dump_func_t' (aka 'int (*)(void *, void *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-   83 |                         snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)snd_rawmidi_receive, vmidi->substream);
-      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:1070:30: error: cast from 'void (*)(struct pvr2_v4l2_fh *)' to 'pvr2_stream_callback' (aka 'void (*)(void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1070 |         pvr2_stream_set_callback(sp,(pvr2_stream_callback)pvr2_v4l2_notify,fh);
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/media/usb/pvrusb2/pvrusb2-context.c:110:6: error: cast from 'void (*)(struct pvr2_context *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  110 |                                         (void (*)(void *))pvr2_context_notify,
+      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/media/usb/pvrusb2/pvrusb2-dvb.c:152:6: error: cast from 'void (*)(struct pvr2_dvb_adapter *)' to 'pvr2_stream_callback' (aka 'void (*)(void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  152 |                                  (pvr2_stream_callback) pvr2_dvb_notify, adap);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For addressing those errors, introduce wrapper functions that are used
-for callbacks and bridge to the actual function call with pointer
-cast.
+Change the functions to actually take a void* argument so the cast is no longer
+needed.
 
-The code was originally added with the initial ALSA merge in linux-2.5.4.
-
-[ the patch description shamelessly copied from Arnd's original patch
-  -- tiwai ]
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20240213101020.459183-1-arnd@kernel.org
-Link: https://lore.kernel.org/r/20240213135343.16411-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: bb8ce9d9143c ("V4L/DVB (7682): pvrusb2-dvb: finish up stream & buffer handling")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_midi.c    | 8 +++++++-
- sound/core/seq/seq_virmidi.c | 9 ++++++++-
- 2 files changed, 15 insertions(+), 2 deletions(-)
+ drivers/media/usb/pvrusb2/pvrusb2-context.c | 8 ++++----
+ drivers/media/usb/pvrusb2/pvrusb2-dvb.c     | 6 ++++--
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c    | 6 ++++--
+ 3 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/sound/core/seq/seq_midi.c b/sound/core/seq/seq_midi.c
-index 9e0dabd3ce5f5..2bb6f21ac1964 100644
---- a/sound/core/seq/seq_midi.c
-+++ b/sound/core/seq/seq_midi.c
-@@ -125,6 +125,12 @@ static int dump_midi(struct snd_rawmidi_substream *substream, const char *buf, i
- 	return 0;
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+index 9236463ba269f..28a9cfef8f9f2 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+@@ -99,8 +99,10 @@ static void pvr2_context_destroy(struct pvr2_context *mp)
  }
  
-+/* callback for snd_seq_dump_var_event(), bridging to dump_midi() */
-+static int __dump_midi(void *ptr, void *buf, int count)
-+{
-+	return dump_midi(ptr, buf, count);
-+}
-+
- static int event_process_midi(struct snd_seq_event *ev, int direct,
- 			      void *private_data, int atomic, int hop)
+ 
+-static void pvr2_context_notify(struct pvr2_context *mp)
++static void pvr2_context_notify(void *ptr)
  {
-@@ -144,7 +150,7 @@ static int event_process_midi(struct snd_seq_event *ev, int direct,
- 			pr_debug("ALSA: seq_midi: invalid sysex event flags = 0x%x\n", ev->flags);
- 			return 0;
- 		}
--		snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)dump_midi, substream);
-+		snd_seq_dump_var_event(ev, __dump_midi, substream);
- 		snd_midi_event_reset_decode(msynth->parser);
- 	} else {
- 		if (msynth->parser == NULL)
-diff --git a/sound/core/seq/seq_virmidi.c b/sound/core/seq/seq_virmidi.c
-index af9af89a44d4e..23975b86e1d4b 100644
---- a/sound/core/seq/seq_virmidi.c
-+++ b/sound/core/seq/seq_virmidi.c
-@@ -76,6 +76,13 @@ static void snd_virmidi_init_event(struct snd_virmidi *vmidi,
- /*
-  * decode input event and put to read buffer of each opened file
-  */
++	struct pvr2_context *mp = ptr;
 +
-+/* callback for snd_seq_dump_var_event(), bridging to snd_rawmidi_receive() */
-+static int dump_to_rawmidi(void *ptr, void *buf, int count)
-+{
-+	return snd_rawmidi_receive(ptr, buf, count);
-+}
+ 	pvr2_context_set_notify(mp,!0);
+ }
+ 
+@@ -115,9 +117,7 @@ static void pvr2_context_check(struct pvr2_context *mp)
+ 		pvr2_trace(PVR2_TRACE_CTXT,
+ 			   "pvr2_context %p (initialize)", mp);
+ 		/* Finish hardware initialization */
+-		if (pvr2_hdw_initialize(mp->hdw,
+-					(void (*)(void *))pvr2_context_notify,
+-					mp)) {
++		if (pvr2_hdw_initialize(mp->hdw, pvr2_context_notify, mp)) {
+ 			mp->video_stream.stream =
+ 				pvr2_hdw_get_video_stream(mp->hdw);
+ 			/* Trigger interface initialization.  By doing this
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-dvb.c b/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
+index 4b32b21411695..f326ab9a272e6 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
+@@ -97,8 +97,10 @@ static int pvr2_dvb_feed_thread(void *data)
+ 	return stat;
+ }
+ 
+-static void pvr2_dvb_notify(struct pvr2_dvb_adapter *adap)
++static void pvr2_dvb_notify(void *ptr)
+ {
++	struct pvr2_dvb_adapter *adap = ptr;
 +
- static int snd_virmidi_dev_receive_event(struct snd_virmidi_dev *rdev,
- 					 struct snd_seq_event *ev,
- 					 bool atomic)
-@@ -94,7 +101,7 @@ static int snd_virmidi_dev_receive_event(struct snd_virmidi_dev *rdev,
- 		if (ev->type == SNDRV_SEQ_EVENT_SYSEX) {
- 			if ((ev->flags & SNDRV_SEQ_EVENT_LENGTH_MASK) != SNDRV_SEQ_EVENT_LENGTH_VARIABLE)
- 				continue;
--			snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)snd_rawmidi_receive, vmidi->substream);
-+			snd_seq_dump_var_event(ev, dump_to_rawmidi, vmidi->substream);
- 			snd_midi_event_reset_decode(vmidi->parser);
- 		} else {
- 			len = snd_midi_event_decode(vmidi->parser, msg, sizeof(msg), ev);
+ 	wake_up(&adap->buffer_wait_data);
+ }
+ 
+@@ -158,7 +160,7 @@ static int pvr2_dvb_stream_do_start(struct pvr2_dvb_adapter *adap)
+ 	}
+ 
+ 	pvr2_stream_set_callback(pvr->video_stream.stream,
+-				 (pvr2_stream_callback) pvr2_dvb_notify, adap);
++				 pvr2_dvb_notify, adap);
+ 
+ 	ret = pvr2_stream_set_buffer_count(stream, PVR2_DVB_BUFFER_COUNT);
+ 	if (ret < 0) return ret;
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index 04d334152eae2..5e2c9aa649648 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -1055,8 +1055,10 @@ static int pvr2_v4l2_open(struct file *file)
+ }
+ 
+ 
+-static void pvr2_v4l2_notify(struct pvr2_v4l2_fh *fhp)
++static void pvr2_v4l2_notify(void *ptr)
+ {
++	struct pvr2_v4l2_fh *fhp = ptr;
++
+ 	wake_up(&fhp->wait_data);
+ }
+ 
+@@ -1089,7 +1091,7 @@ static int pvr2_v4l2_iosetup(struct pvr2_v4l2_fh *fh)
+ 
+ 	hdw = fh->channel.mc_head->hdw;
+ 	sp = fh->pdi->stream->stream;
+-	pvr2_stream_set_callback(sp,(pvr2_stream_callback)pvr2_v4l2_notify,fh);
++	pvr2_stream_set_callback(sp, pvr2_v4l2_notify, fh);
+ 	pvr2_hdw_set_stream_type(hdw,fh->pdi->config);
+ 	if ((ret = pvr2_hdw_set_streaming(hdw,!0)) < 0) return ret;
+ 	return pvr2_ioread_set_enabled(fh->rhp,!0);
 -- 
 2.43.0
 
