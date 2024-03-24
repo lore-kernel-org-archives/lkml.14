@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CACD27F089;
-	Sun, 24 Mar 2024 23:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BBE27F0A2;
+	Sun, 24 Mar 2024 23:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323598; cv=none; b=RsrzAO6ujK3XcYql9qSrFTXkqgTHbk0lYr4J0p1HiXs1/c+SxuHl6NooxAWH6FrTs5auouseqrzt5kfPqF3QEVNGyGh7MqxliV4fxGlAntbsa7Lqpwu6HjwSzEU+uT6cSz/oqL+LnHey0G8Km7HjCDIQwCPP3bfmUQTFH3kMFiM=
+	t=1711323601; cv=none; b=PipDXCmQzSlPQEH6men/gxaH0c7yEliy7ZKq7c5l14LLyd+4/OnslHwGsFDWZxBR87ubsewCe0XoXlgdAfAp/pAqRsJ8/UzbdhwmRJzgAjSc2cU2vpaE4D4MjfU+JlT68aKxOmTg5wcuWF1irxUfW7OF4V+/j+mV5dpQrtAgGig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323598; c=relaxed/simple;
-	bh=ImYJx3//S3lb8pzEBjnxmyZSCu8/oqDudWFtAKGWTJA=;
+	s=arc-20240116; t=1711323601; c=relaxed/simple;
+	bh=LR7iGJyYi/cz2ejQNfwXZZ+iJ39IZ1LD1F4qK1nR8C8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sRq5NlVdyDwA3gcAkJA5HAh5KzpOC1k6jJrLkAtkXxsVmeX2jBg7eprkK8t+rzlmbctLgdzhs7lbWslwGRKjHRYgVcO8TKF15szaR5wtU/9sLLaT8L18GPEk7w/FTylUGPkF08aaqyjy/FSk9hrn4Gw2mY5raaMM1JarKaUukng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJ6bwzlm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uV7vk3JTy2B33cdL8C6Hb0Fb3XHLUmMG3nJ7gqPFKHguQggs5171QVNSBkz5DJ8wixYiPGnN0QL+V1d3yp9y9PcFgsuSuoV2swYq2HEZFGe8GGZEgcBzCXNqFJxu+liO/zh816VmK8Kxy6w0Fh7tB8V/t3I8tJahw2ZgQRy6X1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z66d35yJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJ6bwzlm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64D02C43394;
-	Sun, 24 Mar 2024 23:39:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z66d35yJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11886C43394;
+	Sun, 24 Mar 2024 23:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323598;
-	bh=ImYJx3//S3lb8pzEBjnxmyZSCu8/oqDudWFtAKGWTJA=;
+	s=k20201202; t=1711323600;
+	bh=LR7iGJyYi/cz2ejQNfwXZZ+iJ39IZ1LD1F4qK1nR8C8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WJ6bwzlmmF7usvXt4QXKdh8d1MQD7dAzzgk8+oiQhbRr+Q/PX+GZS3zisEGKNMC8h
-	 Zs9uaOdCNIQEM03b1QDzVxa+WClSE7TAknam6UM68s/00eqdxumzSWRL+sCMZ0z7iD
-	 EpxJn8ss90GwDzC9KrzedLZ5dhPjHkLahh6xTQLQbp+XeN6K2NrhnX7512NqXJG5Ck
-	 KcIKKTycmYgaeu9Dw6ahN+9/7pD8AKKjqy6MHRAwUWGPbEHbgM+voP5pDZtY/a3WfS
-	 M4NZnSV+ze7TS/b1n5FVP1zOF/mdzmNvVJAyDF5wYF+/AR9ilnpSAk8svlUhncv80a
-	 GJeu7oEpi93Lw==
+	b=Z66d35yJY5cIKn+D3BkXh0KH0n6lMBAPkwAkFYSMGO0sG0dGFn4kQy481y4P04wdx
+	 mvuKfAFsd71Dhda0EsiDl/SSz+3NLCTRbBch+9lKcl2gTAj14C8aeVEQole2WdU0JH
+	 M320Jh5ML2hSUz70Vvjh2lfCwIJa5Fg9kQcYO0hUZQrFIU5HbSlj0EIVltbptpsCXg
+	 Akdu5qorGvQTliHpPYRJ1jj8UcDHsld4PKjGpugp0gHIXB0V1tAVIcVMpFpG0Hizhm
+	 S0CB6SOpzcYoUaMdQA88Opi+mnHQqz/83zBOee3LycBMd2X7ngXtg/9htLCKgkUsjx
+	 t3IZmceXR7AHw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Thinh Tran <thinhtr@linux.ibm.com>,
-	Jiri Pirko <jiri@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 304/317] net/bnx2x: Prevent access to a freed page in page_pool
-Date: Sun, 24 Mar 2024 19:34:44 -0400
-Message-ID: <20240324233458.1352854-305-sashal@kernel.org>
+Subject: [PATCH 5.15 307/317] netfilter: nf_tables: do not compare internal table flags on updates
+Date: Sun, 24 Mar 2024 19:34:47 -0400
+Message-ID: <20240324233458.1352854-308-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,87 +47,32 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Thinh Tran <thinhtr@linux.ibm.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit d27e2da94a42655861ca4baea30c8cd65546f25d ]
+[ Upstream commit 4a0e7f2decbf9bd72461226f1f5f7dcc4b08f139 ]
 
-Fix race condition leading to system crash during EEH error handling
+Restore skipping transaction if table update does not modify flags.
 
-During EEH error recovery, the bnx2x driver's transmit timeout logic
-could cause a race condition when handling reset tasks. The
-bnx2x_tx_timeout() schedules reset tasks via bnx2x_sp_rtnl_task(),
-which ultimately leads to bnx2x_nic_unload(). In bnx2x_nic_unload()
-SGEs are freed using bnx2x_free_rx_sge_range(). However, this could
-overlap with the EEH driver's attempt to reset the device using
-bnx2x_io_slot_reset(), which also tries to free SGEs. This race
-condition can result in system crashes due to accessing freed memory
-locations in bnx2x_free_rx_sge()
-
-799  static inline void bnx2x_free_rx_sge(struct bnx2x *bp,
-800				struct bnx2x_fastpath *fp, u16 index)
-801  {
-802	struct sw_rx_page *sw_buf = &fp->rx_page_ring[index];
-803     struct page *page = sw_buf->page;
-....
-where sw_buf was set to NULL after the call to dma_unmap_page()
-by the preceding thread.
-
-    EEH: Beginning: 'slot_reset'
-    PCI 0011:01:00.0#10000: EEH: Invoking bnx2x->slot_reset()
-    bnx2x: [bnx2x_io_slot_reset:14228(eth1)]IO slot reset initializing...
-    bnx2x 0011:01:00.0: enabling device (0140 -> 0142)
-    bnx2x: [bnx2x_io_slot_reset:14244(eth1)]IO slot reset --> driver unload
-    Kernel attempted to read user page (0) - exploit attempt? (uid: 0)
-    BUG: Kernel NULL pointer dereference on read at 0x00000000
-    Faulting instruction address: 0xc0080000025065fc
-    Oops: Kernel access of bad area, sig: 11 [#1]
-    .....
-    Call Trace:
-    [c000000003c67a20] [c00800000250658c] bnx2x_io_slot_reset+0x204/0x610 [bnx2x] (unreliable)
-    [c000000003c67af0] [c0000000000518a8] eeh_report_reset+0xb8/0xf0
-    [c000000003c67b60] [c000000000052130] eeh_pe_report+0x180/0x550
-    [c000000003c67c70] [c00000000005318c] eeh_handle_normal_event+0x84c/0xa60
-    [c000000003c67d50] [c000000000053a84] eeh_event_handler+0xf4/0x170
-    [c000000003c67da0] [c000000000194c58] kthread+0x1c8/0x1d0
-    [c000000003c67e10] [c00000000000cf64] ret_from_kernel_thread+0x5c/0x64
-
-To solve this issue, we need to verify page pool allocations before
-freeing.
-
-Fixes: 4cace675d687 ("bnx2x: Alloc 4k fragment for each rx ring buffer element")
-Signed-off-by: Thinh Tran <thinhtr@linux.ibm.com>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Link: https://lore.kernel.org/r/20240315205535.1321-1-thinhtr@linux.ibm.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 179d9ba5559a ("netfilter: nf_tables: fix table flag updates")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/nf_tables_api.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-index d8b1824c334d3..0bc1367fd6492 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-@@ -1002,9 +1002,6 @@ static inline void bnx2x_set_fw_mac_addr(__le16 *fw_hi, __le16 *fw_mid,
- static inline void bnx2x_free_rx_mem_pool(struct bnx2x *bp,
- 					  struct bnx2x_alloc_pool *pool)
- {
--	if (!pool->page)
--		return;
--
- 	put_page(pool->page);
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index a5e1468cac5ed..42bf83a20cb52 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -1152,7 +1152,7 @@ static int nf_tables_updtable(struct nft_ctx *ctx)
+ 	if (flags & ~NFT_TABLE_F_MASK)
+ 		return -EOPNOTSUPP;
  
- 	pool->page = NULL;
-@@ -1015,6 +1012,9 @@ static inline void bnx2x_free_rx_sge_range(struct bnx2x *bp,
- {
- 	int i;
+-	if (flags == ctx->table->flags)
++	if (flags == (ctx->table->flags & NFT_TABLE_F_MASK))
+ 		return 0;
  
-+	if (!fp->page_pool.page)
-+		return;
-+
- 	if (fp->mode == TPA_MODE_DISABLED)
- 		return;
- 
+ 	if ((nft_table_has_owner(ctx->table) &&
 -- 
 2.43.0
 
