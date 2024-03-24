@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B32228CE58;
-	Sun, 24 Mar 2024 23:48:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CFA28CE68;
+	Sun, 24 Mar 2024 23:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324102; cv=none; b=h/Gp8tNxiZgljKWfedcaIPlhJsJA4kpfxFIxe7qXXyAcgDm5VprDbdUFteXy+hYCuJ+e9cmjPZ5ylorZ4C3M29cFodtDI6UAHE8U1hzpPt+shn3KFMVb52Qknpa7M5ITIxM+UBUCebMZaSMdje5Axq+fvzE+8tUz4HIWgLE6Ecc=
+	t=1711324103; cv=none; b=Ukd2c0ZwCC22ZCj5wJDEOBuwys5/mDwF2hGJaJpK+ycRCC3Mpvk/gH/WO7RX6jl+jPt7DsToIP6nqfnGt0+s+9i9jmSaPGPWqSstgTk+0/7gdlmztAM7ffldbkjWF4Tdol8zJkHFOtefeDh+/txkk72DbrBpMh/VLJD9ivEWq90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324102; c=relaxed/simple;
-	bh=DM3144Oh7P+rTj9j/aPXAQpmxvre+5VOHDnvu7WjSos=;
+	s=arc-20240116; t=1711324103; c=relaxed/simple;
+	bh=X25k7Z7+vINRWTsz5TQiny62GTHkXwas2jA9xHC2Df0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tic8dGaTmDdcR+i33Yyr10KI54IAvPYDqC+T92kl/6Sr4Ov9cES+pTayAsW/xd/8yrYR4bRNLPQRt6b65Ty97qvYpMLDyjMAJ3dnWGD92Obbj85ixVHtpR43e2geCl/qZYU3Q3slM8NcL8/eeZVgz8cOjC2Me9bUDqf3tYHo93Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CaP3Ixi3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=io3NU/L95CtNWaYn6kJJohKlXVyAPqCK5L6KVZWu3G0yV/aghbhZgG2lTfloj6pL/ILqY5MQMlbnYDy0HqzhWYFCmBncWq/atyQn7snVn6zq+zuge7fXv67qWBL+iCgHRgQm08qm280Uqkh0XUNgndEHgtvhbS3EwMWq1O9yAzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nd8nnbRl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CaP3Ixi3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD232C433C7;
-	Sun, 24 Mar 2024 23:48:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nd8nnbRl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF218C43399;
+	Sun, 24 Mar 2024 23:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324100;
-	bh=DM3144Oh7P+rTj9j/aPXAQpmxvre+5VOHDnvu7WjSos=;
+	s=k20201202; t=1711324102;
+	bh=X25k7Z7+vINRWTsz5TQiny62GTHkXwas2jA9xHC2Df0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CaP3Ixi3H98OZ1RcpRgEPrUlXb1r/bpt8X7W1fhbzQ+exTFsHMnHBnoBpTdJ92zGs
-	 uE0YAcLvCOQwcCZrhgIfJyCofAUIp0U1J/tIdbZzBM3GMFVw8c6IFBydagYHyjt674
-	 bGABQWgMnKZ27jdgJNKUMCy6+JM1hhOXszjkS7FLZUxQ7IYYovRWuGZVLEuSWK/CQ+
-	 6XrL6NxvVQyWLok/hZTbIpMlUFQBt2ut6dxVFuzDLew3P6UyHO2lldVkJUSByEV6s4
-	 gs9wo711Uur/ecR2+wmImVVbzUGJQ/6OghYviJaDc1Fyr+W9wGkM2IniMqmsX3TzAr
-	 CWRZWajZjoT3Q==
+	b=Nd8nnbRlJC8iiA2u6kC0eybY94O8ZMtoycBWR4QXJtuQTaUI+1CMD3QmwXpKEA+9h
+	 pFUG09AxCZCOFEQf/8NQGAAArFm5Wyp+FI+Do/395vFeq7YA5AFSfd+UvTRyTlycUQ
+	 9mdxwitq9JlmSPnghfi0UKNf4j4zVJeOAa8MMivHkT4jPLsv2PDeJkgpPEXYK6/BGo
+	 mk5T6ueXD5EU88iewrYe+C1YjOS8wDoMzsSugq3Q18DD/lCCzaqjY7zGE3ZkJua1ws
+	 aNcDb+rguCT5vb1Df0+LH531Lt6ZYcd/fDTdnp0YujAjYOkFHa1xuZoOf8XTaSkJYJ
+	 lwY2W1QTFfkxQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yang Jihong <yangjihong1@huawei.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Ian Rogers <irogers@google.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 099/183] perf evsel: Fix duplicate initialization of data->id in evsel__parse_sample()
-Date: Sun, 24 Mar 2024 19:45:12 -0400
-Message-ID: <20240324234638.1355609-100-sashal@kernel.org>
+Subject: [PATCH 5.4 101/183] media: em28xx: annotate unchecked call to media_device_register()
+Date: Sun, 24 Mar 2024 19:45:14 -0400
+Message-ID: <20240324234638.1355609-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -50,35 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yang Jihong <yangjihong1@huawei.com>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-[ Upstream commit 4962aec0d684c8edb14574ccd0da53e4926ff834 ]
+[ Upstream commit fd61d77a3d28444b2635f0c8b5a2ecd6a4d94026 ]
 
-data->id has been initialized at line 2362, remove duplicate initialization.
+Static analyzers generate alerts for an unchecked call to
+`media_device_register()`. However, in this case, the device will work
+reliably without the media controller API.
 
-Fixes: 3ad31d8a0df2 ("perf evsel: Centralize perf_sample initialization")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240127025756.4041808-1-yangjihong1@huawei.com
+Add a comment above the call to prevent future unnecessary changes.
+
+Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: 37ecc7b1278f ("[media] em28xx: add media controller support")
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/evsel.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/media/usb/em28xx/em28xx-cards.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9dd9e3f4ef591..cd1eddf0ab371 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1955,7 +1955,6 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	data->period = evsel->core.attr.sample_period;
- 	data->cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
- 	data->misc    = event->header.misc;
--	data->id = -1ULL;
- 	data->data_src = PERF_MEM_DATA_SRC_NONE;
+diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
+index 5ae13ee9272d5..252e463cc13b4 100644
+--- a/drivers/media/usb/em28xx/em28xx-cards.c
++++ b/drivers/media/usb/em28xx/em28xx-cards.c
+@@ -3989,6 +3989,10 @@ static int em28xx_usb_probe(struct usb_interface *intf,
+ 	 * topology will likely change after the load of the em28xx subdrivers.
+ 	 */
+ #ifdef CONFIG_MEDIA_CONTROLLER
++	/*
++	 * No need to check the return value, the device will still be
++	 * usable without media controller API.
++	 */
+ 	retval = media_device_register(dev->media_dev);
+ #endif
  
- 	if (event->header.type != PERF_RECORD_SAMPLE) {
 -- 
 2.43.0
 
