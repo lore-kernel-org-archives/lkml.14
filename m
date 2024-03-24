@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D92A137C35;
-	Sun, 24 Mar 2024 23:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98907137C37;
+	Sun, 24 Mar 2024 23:06:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321571; cv=none; b=j8xU3LFlbcvlmPWNHMlRrUU9ADlYfCCYwAb/yDVLvoJMj90wa+s4jSCKKyyYF6Pl5gTF1npE2Sv6wi999UDkzf2RAAH4WoB4jlAvP1T7ZtvWISviNFESSw294SDZ1cm6bF3NLHPx59NZZ3ykFLVoyJFJKbdSiJNoqGa/PlTAk/w=
+	t=1711321569; cv=none; b=RW2kXuysLsHXhBDkaFRP6dGQqwdslOa3fMEKuOK0I8zYa0s1Ftya3df1yBqpfjfCG0eDUTDYu6AD7rRflOsModYkpD7/RofaX3iW1M0XZh1akE6FmFci5FRPNcXGc1cplTu/DDAaLRzAVHpt8wqjDuUdUUaBjnsHO8VX/cv7BBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321571; c=relaxed/simple;
-	bh=n0ZZGalvuA0PD6jzMmVDBM2mpyQqpmLP63G0KklBvQ4=;
+	s=arc-20240116; t=1711321569; c=relaxed/simple;
+	bh=uBcSLHXRyE6dQb2A9gm9vxlYQW46b9gnve9H65mF034=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UPJIc+Uf6Ykls6mZ5BjY9nGrzg03sROS3nNkOf1evTJyhR6yoU/rATYvGaGx4jXdn7LXkJh+b659xfeDqTGAF9cgMj9SrvETVmuRvhHW6zWhiaCqeRXnvvkN5g1wyL6jEWuk2PTsHJjas0hcFvGa2QKc+cNHzqYO5yqAa/TZ6Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SX67PqPb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=m+jnGemrc/+Y1iyHbiz6RG4S/LaT1ooT1EvuFmPHqV4XvaBd6502hKbGCHjbBdmhCJPBEOpyVkK6dk0Saz5D7z6Er4/LXD8HVSh8shrbE3S9wQeLM8BhraT2YMF5BsQTDniWWJQRd4ZtfcndPzG9sVxfk5jErBwpaHMrt1qoo0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YkeTCNnm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SX67PqPb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD49C43390;
-	Sun, 24 Mar 2024 23:06:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YkeTCNnm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A94E8C433A6;
+	Sun, 24 Mar 2024 23:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321570;
-	bh=n0ZZGalvuA0PD6jzMmVDBM2mpyQqpmLP63G0KklBvQ4=;
+	s=k20201202; t=1711321568;
+	bh=uBcSLHXRyE6dQb2A9gm9vxlYQW46b9gnve9H65mF034=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SX67PqPbjR7C/DskaxLUyQ1HO23CGaD8b/B4O4mnrFvAQLGHAV0rHQCCjI2GSN0WC
-	 t3AA7QxTM593winP0D13EUgGZPpOm+WjNL9aMtOh47OErTfFlw201ZMlZyFk3acoVq
-	 MHJRrodPMlT36231v7u3/4btEYt7gu/3rrjWPtlYaDsd+4hwuKWgKR/8CtXGXq9RUj
-	 +6qQTIFEjmiakuOh8qx7eNRpAIAM1fgc490rObM61CKF7LhW9QZmjihMc3deVYbxjx
-	 8eJDDgC2WqRIpuYST92zlII6+vYPvSOtlcqTZJJhI2P5nBg1tew6qviTT+iOdFKB/Z
-	 PDrQlxk3bIjog==
+	b=YkeTCNnmz5Z6tH0uWxHeomXAdXFp65O5xJEOTYvXgNRIbKEx2TntKsMalFGE/UFVf
+	 zA2uUMkADGZYPdwhpV7EknveHaZLCq3F+JFBosmW4UWQsP1rv/vuByaal4Q6GhKHfl
+	 VV2oys+V1gwFX7n7/oBfKJMMG5Fp/yVy7ci9e3Az8sCo/rsq0I0YCZkcjPihPajr48
+	 kL1LKO8rQ4mEWzjdnkVWIrGYaN+MA+f8bdYF3Ob9mp+2XC6Ck/YQ98Hdjz4WQxzKPw
+	 Jl1AaVioHbVYtmSn0ZLx+xHTl0lRZMDYri7F9Bfg12NadzCa+GUHfjC+0Czl5p2BWU
+	 gZ7EitW9YvbEw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 298/638] Bluetooth: Remove HCI_POWER_OFF_TIMEOUT
-Date: Sun, 24 Mar 2024 18:55:35 -0400
-Message-ID: <20240324230116.1348576-299-sashal@kernel.org>
+Subject: [PATCH 6.6 296/638] igb: Fix missing time sync events
+Date: Sun, 24 Mar 2024 18:55:33 -0400
+Message-ID: <20240324230116.1348576-297-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,39 +46,96 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jonas Dreßler <verdre@v0yd.nl>
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 
-[ Upstream commit 968667f2e0345a67a6eea5a502f4659085666564 ]
+[ Upstream commit ee14cc9ea19ba9678177e2224a9c58cce5937c73 ]
 
-With commit cf75ad8b41d2 ("Bluetooth: hci_sync: Convert MGMT_SET_POWERED"),
-the power off sequence got refactored so that this timeout was no longer
-necessary, let's remove the leftover define from the header too.
+Fix "double" clearing of interrupts, which can cause external events
+or timestamps to be missed.
 
-Fixes: cf75ad8b41d2 ("Bluetooth: hci_sync: Convert MGMT_SET_POWERED")
-Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+The E1000_TSIRC Time Sync Interrupt Cause register can be cleared in two
+ways, by either reading it or by writing '1' into the specific cause
+bit. This is documented in section 8.16.1.
+
+The following flow was used:
+    1. read E1000_TSIRC into 'tsicr';
+    2. handle the interrupts present into 'tsirc' and mark them in 'ack';
+    3. write 'ack' into E1000_TSICR;
+
+As both (1) and (3) will clear the interrupt cause, if the same
+interrupt happens again between (1) and (3) it will be ignored,
+causing events to be missed.
+
+Remove the extra clear in (3).
+
+Fixes: 00c65578b47b ("igb: enable internal PPS for the i210")
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Tested-by: Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com> (A Contingent worker at Intel)
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/bluetooth/hci.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 23 +++++------------------
+ 1 file changed, 5 insertions(+), 18 deletions(-)
 
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index bdee5d649cc61..f7918c7551834 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -437,7 +437,6 @@ enum {
- #define HCI_NCMD_TIMEOUT	msecs_to_jiffies(4000)	/* 4 seconds */
- #define HCI_ACL_TX_TIMEOUT	msecs_to_jiffies(45000)	/* 45 seconds */
- #define HCI_AUTO_OFF_TIMEOUT	msecs_to_jiffies(2000)	/* 2 seconds */
--#define HCI_POWER_OFF_TIMEOUT	msecs_to_jiffies(5000)	/* 5 seconds */
- #define HCI_LE_CONN_TIMEOUT	msecs_to_jiffies(20000)	/* 20 seconds */
- #define HCI_LE_AUTOCONN_TIMEOUT	msecs_to_jiffies(4000)	/* 4 seconds */
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 76b34cee1da3c..11921141b6079 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -6985,44 +6985,31 @@ static void igb_extts(struct igb_adapter *adapter, int tsintr_tt)
+ static void igb_tsync_interrupt(struct igb_adapter *adapter)
+ {
+ 	struct e1000_hw *hw = &adapter->hw;
+-	u32 ack = 0, tsicr = rd32(E1000_TSICR);
++	u32 tsicr = rd32(E1000_TSICR);
+ 	struct ptp_clock_event event;
  
+ 	if (tsicr & TSINTR_SYS_WRAP) {
+ 		event.type = PTP_CLOCK_PPS;
+ 		if (adapter->ptp_caps.pps)
+ 			ptp_clock_event(adapter->ptp_clock, &event);
+-		ack |= TSINTR_SYS_WRAP;
+ 	}
+ 
+ 	if (tsicr & E1000_TSICR_TXTS) {
+ 		/* retrieve hardware timestamp */
+ 		schedule_work(&adapter->ptp_tx_work);
+-		ack |= E1000_TSICR_TXTS;
+ 	}
+ 
+-	if (tsicr & TSINTR_TT0) {
++	if (tsicr & TSINTR_TT0)
+ 		igb_perout(adapter, 0);
+-		ack |= TSINTR_TT0;
+-	}
+ 
+-	if (tsicr & TSINTR_TT1) {
++	if (tsicr & TSINTR_TT1)
+ 		igb_perout(adapter, 1);
+-		ack |= TSINTR_TT1;
+-	}
+ 
+-	if (tsicr & TSINTR_AUTT0) {
++	if (tsicr & TSINTR_AUTT0)
+ 		igb_extts(adapter, 0);
+-		ack |= TSINTR_AUTT0;
+-	}
+ 
+-	if (tsicr & TSINTR_AUTT1) {
++	if (tsicr & TSINTR_AUTT1)
+ 		igb_extts(adapter, 1);
+-		ack |= TSINTR_AUTT1;
+-	}
+-
+-	/* acknowledge the interrupts */
+-	wr32(E1000_TSICR, ack);
+ }
+ 
+ static irqreturn_t igb_msix_other(int irq, void *data)
 -- 
 2.43.0
 
