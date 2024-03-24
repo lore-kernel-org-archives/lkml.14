@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB887F7D7;
-	Sun, 24 Mar 2024 22:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8385079DB9;
+	Sun, 24 Mar 2024 22:47:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320477; cv=none; b=Z1lqH8AVdSMxBZXfoaTidhgL62W440wDapuykWlEPNMOTHmOCRKj+NX/vRESE2lwEWH79RsSeQbBW30N4uBDnbVepzCFTCdwScdmEx1olSyVlSKVMfl7dMoggo/TzBnA4RXQqNxn0A5PqLqrKtWxNTadJtzhiNji4xFoyi7ZyV4=
+	t=1711320464; cv=none; b=tg2fx0JjdUWcTbsNzKRT/IaFQ4U5/XBQAPe4CoRo700P3ZnihDeJIIPt1Z3v/PvCK4QHENrLJmyBfW6TTjLikI5GVORu62yzGyh+ludvvyq1YbOBQTAehTCFswsXzg1S81yZ7t0FsZymKdTf3gliPypmdrLhRRoi3E70kWqpXXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320477; c=relaxed/simple;
-	bh=q0QfNTy7LCZMzM+Y77fnUYNSiw0FW0Vlv85XEPhFh5M=;
+	s=arc-20240116; t=1711320464; c=relaxed/simple;
+	bh=3wlScet/gGLXlUYxf1X1RksuP6JQN/1vtVXO9KjdtqM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p/N6xAImgdfObju5fC5rl7kPBt8FOKk7bjzy3EtqKzl8mh1xJHsbv1Knkhlsw0eDpouw2/SgqyqXMEE/1JuIQFGlysnC0eVZDXf7xJKUXWsDb1c40bBSMsAmWPj58h4uALUrvQdoihUHnHplalW+50r+RZhpwynCnjL8Cd2OAlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oAyiLUVd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Mpqwht+wOhrIFDRKVMiS1ayVikmBC12dNG3JDCQvMkTPYkA4cQjC/I4yKrgo3eg+KmB+7NPoSTMVV+HG8tWXLbj/G/vSVldGK6hbIlSzoHkLbqzQXjMEWWTAxCLYocJoXn9Wxge6uxF0bS3+ic7WnNPwOGNncLtlWaaOkMNAGlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0K3gwX9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oAyiLUVd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 721CFC43390;
-	Sun, 24 Mar 2024 22:47:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0K3gwX9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD3F5C43390;
+	Sun, 24 Mar 2024 22:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320477;
-	bh=q0QfNTy7LCZMzM+Y77fnUYNSiw0FW0Vlv85XEPhFh5M=;
+	s=k20201202; t=1711320464;
+	bh=3wlScet/gGLXlUYxf1X1RksuP6JQN/1vtVXO9KjdtqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oAyiLUVdcBfxlokGd+GOaiqqO/3yiZKNjNQIXJwWLzsJqAfJZiBnOGUHRrKeIIBoY
-	 wiYvlYai/kVUz9akaf4RJT7Y+rSWKBUdJpuG1ywh1iuNErJc3S+R1maqCQr7/yZG0N
-	 fHEFjpqf5s3AmQR+bjylqL0k6SnH24CGt9aJlV9z7WOo24nzKN6howNwGwhslzzT+C
-	 vM8WBSzs4P/85BxLDVUkfv45IrZHoebbPH9KJNSubGLJ0DUbjpUawhPp4Bthup7kUt
-	 xMSV4/U5OOFCdLYK9CoUGhVVGdQR54jiQDAZ5GyhAgHoWofRenT2urT5xS6nFldXxv
-	 w9nm20dU6p4ZQ==
+	b=f0K3gwX9Gc+CVYZgdPMWXV7nRonHFm00YElGH/2CzRLXIEKylihy95vOQDEh8FXor
+	 9mdqzr76wp5BCJpvWkbfbb2GcivuEppRZ7Yr4PF5YBhUnwN/6LyZUEY+gp99tRPqiC
+	 HpJdcIoCD0VeT5Fly50erw1TOonDxgMcncjhPcXyxvVVgxJjmVh8KdcKob2NAlyelZ
+	 ZZ0Fcut4ZStOTlcQNBF27sWHKMCoTg6q9YaUZkPD78gLL5jYcs5PKvqezeIGp3PZXn
+	 EOud5CKnJ1eRAAVFYZuOhCN3C8yAxIG+c3mYRzHPK649cpSL4jjkqgjr7AefknXiw+
+	 wfPZnP7giha+A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Greg Joyce <gjoyce@linux.ibm.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Andrew Ballance <andrewjballance@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 036/713] block: sed-opal: handle empty atoms when parsing response
-Date: Sun, 24 Mar 2024 18:36:02 -0400
-Message-ID: <20240324224720.1345309-37-sashal@kernel.org>
+Subject: [PATCH 6.7 023/713] gen_compile_commands: fix invalid escape sequence warning
+Date: Sun, 24 Mar 2024 18:35:49 -0400
+Message-ID: <20240324224720.1345309-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,63 +49,34 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Greg Joyce <gjoyce@linux.ibm.com>
+From: Andrew Ballance <andrewjballance@gmail.com>
 
-[ Upstream commit 5429c8de56f6b2bd8f537df3a1e04e67b9c04282 ]
+[ Upstream commit dae4a0171e25884787da32823b3081b4c2acebb2 ]
 
-The SED Opal response parsing function response_parse() does not
-handle the case of an empty atom in the response. This causes
-the entry count to be too high and the response fails to be
-parsed. Recognizing, but ignoring, empty atoms allows response
-handling to succeed.
+With python 3.12, '\#' results in this warning
+    SyntaxWarning: invalid escape sequence '\#'
 
-Signed-off-by: Greg Joyce <gjoyce@linux.ibm.com>
-Link: https://lore.kernel.org/r/20240216210417.3526064-2-gjoyce@linux.ibm.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/opal_proto.h | 1 +
- block/sed-opal.c   | 6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ scripts/clang-tools/gen_compile_commands.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/opal_proto.h b/block/opal_proto.h
-index dec7ce3a3edb7..d247a457bf6e3 100644
---- a/block/opal_proto.h
-+++ b/block/opal_proto.h
-@@ -71,6 +71,7 @@ enum opal_response_token {
- #define SHORT_ATOM_BYTE  0xBF
- #define MEDIUM_ATOM_BYTE 0xDF
- #define LONG_ATOM_BYTE   0xE3
-+#define EMPTY_ATOM_BYTE  0xFF
+diff --git a/scripts/clang-tools/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+index 5dea4479240bc..e4fb686dfaa9f 100755
+--- a/scripts/clang-tools/gen_compile_commands.py
++++ b/scripts/clang-tools/gen_compile_commands.py
+@@ -170,7 +170,7 @@ def process_line(root_directory, command_prefix, file_path):
+     # escape the pound sign '#', either as '\#' or '$(pound)' (depending on the
+     # kernel version). The compile_commands.json file is not interepreted
+     # by Make, so this code replaces the escaped version with '#'.
+-    prefix = command_prefix.replace('\#', '#').replace('$(pound)', '#')
++    prefix = command_prefix.replace(r'\#', '#').replace('$(pound)', '#')
  
- #define OPAL_INVAL_PARAM 12
- #define OPAL_MANUFACTURED_INACTIVE 0x08
-diff --git a/block/sed-opal.c b/block/sed-opal.c
-index 3d9e9cd250bd5..fa4dba5d85319 100644
---- a/block/sed-opal.c
-+++ b/block/sed-opal.c
-@@ -1056,16 +1056,20 @@ static int response_parse(const u8 *buf, size_t length,
- 			token_length = response_parse_medium(iter, pos);
- 		else if (pos[0] <= LONG_ATOM_BYTE) /* long atom */
- 			token_length = response_parse_long(iter, pos);
-+		else if (pos[0] == EMPTY_ATOM_BYTE) /* empty atom */
-+			token_length = 1;
- 		else /* TOKEN */
- 			token_length = response_parse_token(iter, pos);
- 
- 		if (token_length < 0)
- 			return token_length;
- 
-+		if (pos[0] != EMPTY_ATOM_BYTE)
-+			num_entries++;
-+
- 		pos += token_length;
- 		total -= token_length;
- 		iter++;
--		num_entries++;
- 	}
- 
- 	resp->num = num_entries;
+     # Return the canonical path, eliminating any symbolic links encountered in the path.
+     abs_path = os.path.realpath(os.path.join(root_directory, file_path))
 -- 
 2.43.0
 
