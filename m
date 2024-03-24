@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFD21D5F92;
-	Sun, 24 Mar 2024 22:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32311DB405;
+	Sun, 24 Mar 2024 22:51:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320681; cv=none; b=U8iwsjES+fM4EH2K3sspP6mNDJnvdmx/x/AWTK9E4qIA7CbR057OeYF4hr+XkaJl+rlK9nU4WSGbiQkrUMnzsnzCrftz9zdJdWKlQkSIkhClUbDoKyTo12qOjg7fbaYTH4m16fE4DFF8Mw+UVx0xppd1T564mpWLrkCRyWXbUtQ=
+	t=1711320691; cv=none; b=RrpmZWc6YtoxWXcdvTqZljVV12njTEOqun+UwCO9TUrDVNrEfn6HExb/WZ6ZvST59Y6pr0/ykpR1OzvtvA1O4uVpjS+b8RM5OgzGASHlLRZqnM/1AHZ+53LVEwA8JlhghbNWQfzg8gsiAte/LTFbp/qApfvOEpel6BC2qrhf2Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320681; c=relaxed/simple;
-	bh=/qCNevVVEggzTf1GpDuuZorY4cKNTJEWoKSpqvi5tJ4=;
+	s=arc-20240116; t=1711320691; c=relaxed/simple;
+	bh=Zx9oHE9XflvjybKHTXCi5dRQLTOXPeicehCdr9wDNqo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RqUpoyjoLqt60F2ejt8BoKcLmktQMiwHA7oT//dz4VdEZNJ7/hfxt1au+yyWubDOQpNc3BQYAe5JA2of4s4tWb1PIIR7h6HLEj5cyQz3ZxHbJYd0OG5WlJ++jdBvkIsqq53dty6Nly5y+HGoW3/IOZhP4p/E6d1AHeKJX8uu+Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGfmGUl4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WEn281eFERMoqqi+9z51WzYmnGL45DodcNXtKCbGJqyeIAWgwSTQtFLEIAnu20ZHxSNMQudwLcpC/TGZVObZFugw569FGE4Ed04tvcH7oN6rLyQE3IZWf4eYhKaBqt112jj/VmvX/yE6UzOSbyN0p87I3UoGWSs06qc7d9W+BNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZuCcwUm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGfmGUl4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506C5C433C7;
-	Sun, 24 Mar 2024 22:51:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZuCcwUm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B209C43394;
+	Sun, 24 Mar 2024 22:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320680;
-	bh=/qCNevVVEggzTf1GpDuuZorY4cKNTJEWoKSpqvi5tJ4=;
+	s=k20201202; t=1711320689;
+	bh=Zx9oHE9XflvjybKHTXCi5dRQLTOXPeicehCdr9wDNqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HGfmGUl4UVzCnbw4jo/XAeGfJddGx8+VFVH8D0Tziak2HP6u3B2CHifx/h60u9wJb
-	 Wqd1uCFTCTary1D41sy4qCWcvEU8LvjYDLXPOyfDuNkQcdNbfywMcmK9mmQqwSGd8U
-	 1YHd0ltIrai2uooR7eC7VjwNWRvgGrgbMlBURhv/hudJ3LQGgWlTJzsnCGw/4mbhG+
-	 +5De5JFxYS3JcQdkUX3pjUnwMj8iNKyeNiYPle0Q98GZiz8i/idM/WxRHGYN5EIIKB
-	 Ze7/rczj3ZPOZUDJl0sZdRg4MuEAvEjWiOgIQ7WbBe91ajsyvBQ4DmdoZ7MGg7unvL
-	 kuKOlk8eUWSHg==
+	b=iZuCcwUm4oVE57e1eBtFxcMuMTW7/hcK9RmPOZLtJ4h8ySCHlsCNIrSDOnYL2YhMl
+	 +T+Vvfq910/hgR1lHew2HPKm2wUDT7JemaM8nHDsWjVpcVzb/8fIcPanuORwmPcCtJ
+	 QyNHwuEM9DL4MOUcuChOMFRz9sQdINL/dHkilrus/PR7z4nzKdC5kU81qQMTZqfiva
+	 EeHs33YxVMGE1WDPpWdiwoyai2R5iXTi/xBIxaGZ+QCF0nuaFZ67Qt7Srt4hTMwNf4
+	 FM7UHDnhgmyLLEeX/onMKPS2pCDba0jBfq2uQKKfBLX7b6EYzvuCX6VlhHr457xrko
+	 IEoXeAXK3lOLw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Sam Shih <sam.shih@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: Unnathi Chalicheemala <quic_uchalich@quicinc.com>,
+	Elliot Berman <quic_eberman@quicinc.com>,
+	Mukesh Ojha <quic_mojha@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 242/713] arm64: dts: mediatek: mt7986: add "#reset-cells" to infracfg
-Date: Sun, 24 Mar 2024 18:39:28 -0400
-Message-ID: <20240324224720.1345309-243-sashal@kernel.org>
+Subject: [PATCH 6.7 252/713] soc: qcom: llcc: Check return value on Broadcast_OR reg read
+Date: Sun, 24 Mar 2024 18:39:38 -0400
+Message-ID: <20240324224720.1345309-253-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -46,47 +46,43 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
 
-[ Upstream commit d993daff5962b2dd08f32a83bb1c0e5fa75732ea ]
+[ Upstream commit ceeaddc19a90039861564d8e1078b778a8f95101 ]
 
-MT7986's Infrastructure System Configuration Controller includes reset
-controller. It can reset blocks as specified in the
-include/dt-bindings/reset/mt7986-resets.h . Add #reset-cells so it can
-be referenced properly.
+Commit c72ca343f911 ("soc: qcom: llcc: Add v4.1 HW version support")
+introduced a new 4.1 if statement in llcc_update_act_ctrl() without
+considering that ret might be overwritten. So, add return value check
+after Broadcast_OR register read in llcc_update_act_ctrl().
 
-This fixes:
-arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dtb: infracfg@10001000: '#reset-cells' is a required property
-        from schema $id: http://devicetree.org/schemas/arm/mediatek/mediatek,infracfg.yaml#
-
-Fixes: 1f9986b258c2 ("arm64: dts: mediatek: add clock support for mt7986a")
-Cc: Sam Shih <sam.shih@mediatek.com>
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Link: https://lore.kernel.org/r/20240101182040.28538-2-zajec5@gmail.com
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Fixes: c72ca343f911 ("soc: qcom: llcc: Add v4.1 HW version support")
+Signed-off-by: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
+Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
+Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
+Link: https://lore.kernel.org/r/20240212183515.433873-1-quic_uchalich@quicinc.com
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7986a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/qcom/llcc-qcom.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-index 7b6591509c54d..d974739eae1c9 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-@@ -153,6 +153,7 @@ infracfg: infracfg@10001000 {
- 			compatible = "mediatek,mt7986-infracfg", "syscon";
- 			reg = <0 0x10001000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
+diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
+index 57d47dcf11b92..1b7e921d45a11 100644
+--- a/drivers/soc/qcom/llcc-qcom.c
++++ b/drivers/soc/qcom/llcc-qcom.c
+@@ -766,6 +766,8 @@ static int llcc_update_act_ctrl(u32 sid,
+ 	ret = regmap_read_poll_timeout(drv_data->bcast_regmap, status_reg,
+ 				      slice_status, !(slice_status & status),
+ 				      0, LLCC_STATUS_READ_DELAY);
++	if (ret)
++		return ret;
  
- 		wed_pcie: wed-pcie@10003000 {
+ 	if (drv_data->version >= LLCC_VERSION_4_1_0_0)
+ 		ret = regmap_write(drv_data->bcast_regmap, act_clear_reg,
 -- 
 2.43.0
 
