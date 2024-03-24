@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DBC13248B;
-	Sun, 24 Mar 2024 23:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58687202B84;
+	Sun, 24 Mar 2024 23:03:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321435; cv=none; b=GTmwGHU4nODldoX5GGb9uL8QM5FGcUe8cS23bAWXm5aa1iL5KdLa1Wkd6PLlbKR6JHH0qeTkkzQa06rT63PcaTOK1WqhJrijF6UJibi6ORzRcJnnq7Yi8OtNYzYWN3oFtfyoX7Th9wArmntg+PjcQjk9lhsSjcajHeL2si69Sx4=
+	t=1711321436; cv=none; b=DmGEQhN3IVoWFgwB2HmjI8fw5XKP15ZMyuxwLm0NYU0tQNcXINqUEEtCeYWwQeNGKT70DeyWYh/jZEEaHHnJOI6fTua3slboeqbBoHjwGhWr0JTAWX42SPJp0r7+SvgMkMwZBZIoE0oOYcXbS6lHXFmrSRf1M6Ldtgvx0uJB0fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321435; c=relaxed/simple;
-	bh=2diJNys690X5vuo8K0Z2rkLA90NikcwwPE7MwS9PceI=;
+	s=arc-20240116; t=1711321436; c=relaxed/simple;
+	bh=C5+iWgv1WmZKo9V89Vlt5pXL8s+c771eDGwih5584Qk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pCsmFYN+x8mvPfBY2vjPCsLjL8qYfZ/JYXegEU+Aw5xZ2qaTiLaMMBoF2aviML3Yht9FOG5O2rcBmGIFmx8jySRJ/s/tQQ5cvpU4jmQAUCPmDz91zdjaEGRxk78dkPalc2rHH+78MdpHf7S8WbM+j0S7mN9X0z+z0Wtitk47LiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHnSEQtX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZM79YTVboRh+jYRDvx7zFC17BjRUB1F3JBpJiwFAGGMFw904/08f0o/LPhSL1wTJmhr3/x1vfG/rtD3/MK66rJYm9D+XUqKwptJNRthJU9ky+bvgGvd/84z5WYEY0Wi5CXuQ+sYG6B8DeiDlJP0De8oEah7jHB0q3AJ7wl7T/a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KNrwGHIM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHnSEQtX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF2F0C43394;
-	Sun, 24 Mar 2024 23:03:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KNrwGHIM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9034AC433C7;
+	Sun, 24 Mar 2024 23:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321434;
-	bh=2diJNys690X5vuo8K0Z2rkLA90NikcwwPE7MwS9PceI=;
+	s=k20201202; t=1711321436;
+	bh=C5+iWgv1WmZKo9V89Vlt5pXL8s+c771eDGwih5584Qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pHnSEQtXFcutg+muB6UYim6PlKL61sdGCj8R2WsXKSx/EpDAetzKD650ecZRbwV+W
-	 vXNcQMb/gCplhKGLG+h6iT8gB++irJ1OQZAl5TGPcNBf808Mv2Wqvs6YxceIjvfQTo
-	 /n5zMb9mdJ0qLl86vzF8SqthefxLlwNkaONFrYDrY8eO6wsz/EJC/j24I23B2UrQoN
-	 g6CFZaTRkcuH7YaYfImf/RINGgEPoPDGafnApoJkCoCrbCGhqjqXhEfeibqltJCr2Y
-	 +2iBjePlk7CjxARV/SVUAWQn4vATmGC3cbt9dJ0xR1WV88DI0PPAJMFIG17GE/GdHH
-	 427gebtaCTPiQ==
+	b=KNrwGHIMreKV3D1VL7Qo+icOWwY7xPBkE0Vq9riq3LP534xjtWrf5c+uEnuoKKjKL
+	 ddM/Wq3SBjUbn3J9SFjr/4yWqmJrKkNJaqNdLywtEXXO0l670op2S0O5v+drAFU+Rk
+	 b7dHG+j9cBMolfLWe26QJD4PgfwYbKXqc/U3nZhAwA9YvKUI3TFupGA5MlnqOspoDp
+	 sZCo/THag1QXkmCV2iJ7XgWn3D6R4Q/vnvc2r0aGd0Yiq5tFUwS9HFH4WW8VH/K1j2
+	 4NQneyMOJ/XT+CcgVBfdBnya/EJrBvMDUmlG3Dvy6NFajbnSrlugRKCzUPw64RpRrO
+	 Hx1stPNtbRQBQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
 	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 158/638] arm64: dts: imx8mm-kontron: Disable pullups for onboard UART signals on BL OSM-S board
-Date: Sun, 24 Mar 2024 18:53:15 -0400
-Message-ID: <20240324230116.1348576-159-sashal@kernel.org>
+Subject: [PATCH 6.6 160/638] arm64: dts: imx8mm-kontron: Disable pull resistors for SD card signals on BL OSM-S board
+Date: Sun, 24 Mar 2024 18:53:17 -0400
+Message-ID: <20240324230116.1348576-161-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,53 +50,75 @@ Content-Transfer-Encoding: 8bit
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-[ Upstream commit c6d9b5672a0e2c4b1079a50d2fc8780c40cfd3eb ]
+[ Upstream commit 5a940ba3e4d7c8710c9073ff5d0ca4644d4da9db ]
 
-These signals are actively driven by the SoC or by the onboard
-transceiver. There's no need to enable the internal pull resistors
-and due to silicon errata ERR050080 let's disable the internal ones
-to prevent any unwanted behavior in case they wear out.
+Some signals have external pullup resistors on the board and don't need
+the internal ones to be enabled. Due to silicon errata ERR050080 let's
+disable the internal pull resistors whererever possible and prevent
+any unwanted behavior in case they wear out.
 
 Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
 Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/freescale/imx8mm-kontron-bl-osm-s.dts    | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ .../dts/freescale/imx8mm-kontron-bl-osm-s.dts  | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-index 0730c22e5b6b9..1dd03ef0a7835 100644
+index 1dd03ef0a7835..d9fa0deea7002 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
 +++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-@@ -313,19 +313,19 @@ MX8MM_IOMUXC_SAI5_MCLK_GPIO3_IO25		0x19
+@@ -337,40 +337,40 @@ MX8MM_IOMUXC_NAND_CE1_B_GPIO3_IO2		0x19
  
- 	pinctrl_uart1: uart1grp {
+ 	pinctrl_usdhc2: usdhc2grp {
  		fsl,pins = <
--			MX8MM_IOMUXC_SAI2_RXC_UART1_DCE_RX		0x140
--			MX8MM_IOMUXC_SAI2_RXFS_UART1_DCE_TX		0x140
--			MX8MM_IOMUXC_SAI2_RXD0_UART1_DCE_RTS_B		0x140
--			MX8MM_IOMUXC_SAI2_TXFS_UART1_DCE_CTS_B		0x140
-+			MX8MM_IOMUXC_SAI2_RXC_UART1_DCE_RX		0x0
-+			MX8MM_IOMUXC_SAI2_RXFS_UART1_DCE_TX		0x0
-+			MX8MM_IOMUXC_SAI2_RXD0_UART1_DCE_RTS_B		0x0
-+			MX8MM_IOMUXC_SAI2_TXFS_UART1_DCE_CTS_B		0x0
+-			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x190
++			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x90
+ 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d0
+ 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d0
+ 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d0
+ 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d0
+ 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d0
+-			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
+-			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
++			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
++			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
  		>;
  	};
  
- 	pinctrl_uart2: uart2grp {
+ 	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
  		fsl,pins = <
--			MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX		0x140
--			MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX		0x140
--			MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B		0x140
--			MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B		0x140
-+			MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX		0x0
-+			MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX		0x0
-+			MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B		0x0
-+			MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B		0x0
+-			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x194
++			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x94
+ 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d4
+ 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d4
+ 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d4
+ 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d4
+ 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d4
+-			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
+-			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
++			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
++			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
  		>;
  	};
  
+ 	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x196
++			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x96
+ 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d6
+ 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d6
+ 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d6
+ 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d6
+ 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d6
+-			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
+-			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
++			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
++			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
+ 		>;
+ 	};
+ };
 -- 
 2.43.0
 
