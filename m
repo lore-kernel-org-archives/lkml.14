@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297A2214849;
-	Sun, 24 Mar 2024 23:08:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCAD1EEEF2;
+	Sun, 24 Mar 2024 23:09:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321739; cv=none; b=miwCmPu205QL5+uXBG1j0vji4zOgEuTnmX8KWdBY0LTPLc0qKikOceZjtjEr1SNzUuuiI+S99I7Ju268ufNfuUwsVBaXbQO6hv0E1VAg9LS6Rd0+1+DM+SidGR3eAmboXJmUV06N5ltuJZ92B+yUgjR8I2h61zeQbY1LvbY373Y=
+	t=1711321745; cv=none; b=qFKea/O02sypilldGmbbDoR/RtxuRWVIpaZz+vw6VomJV1/qcmoSBBdIs9OSrBAKsqQWO4+Dr4gilbApLd+vtG88lglqa9+gW2DOvTKI9cJaUmUTOIecFOHLWfD5NeI1rlypowFe7QwgYTxnRyr3+g7ekJ6Zn8sE43519w4uWPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321739; c=relaxed/simple;
-	bh=ZImlfLx5LP+b1B5p0xTZ5FuzC/pPyNOKVABol0VrAbc=;
+	s=arc-20240116; t=1711321745; c=relaxed/simple;
+	bh=6d8vYBUrO4Vbhqa++pTzSboo0d76L1VMT2hA2lPcTZM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nqE+RsLKh5HaI7cl1g+VGqgeb8Ai4pKwFSkBrezQ5Ki274f4SmSsXNWoa7slXc02aK0AaSeAYbs7MJYB1+FA7a+PVqurKAUOa+JvrdOYhI5A5kq06JLkeeHO/ylnFqBXo1ZCqo3a3/HeQ6OtBO8GFGbDenROvcZlZ9+IQ6cPbUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T0/swgzn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=e1n3MQD+QDYV5H2RAu+PTaFhHgRJskQYwHDSNozHrYOgTh4x46lU5WbDfVrM/wNKVoxIK2J3WWtMNB2EIo+DU0KKxEBcgAnPTFgMIsREZAtfmPm54E5SKfCGITfXnJybHorUdRAw7a4PM3JNuKKfDpJJi7Az/roKRJwU52VQR/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDC9DAc5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T0/swgzn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 547F7C43390;
-	Sun, 24 Mar 2024 23:08:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDC9DAc5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC5D9C433F1;
+	Sun, 24 Mar 2024 23:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321738;
-	bh=ZImlfLx5LP+b1B5p0xTZ5FuzC/pPyNOKVABol0VrAbc=;
+	s=k20201202; t=1711321745;
+	bh=6d8vYBUrO4Vbhqa++pTzSboo0d76L1VMT2hA2lPcTZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T0/swgznZU+2gNvgW3Cxq0wNOK1zGP19GLXRjcOAysCIlmHkzx45jidtL0OqMBmdK
-	 NdaXgPafUks7PjixfhZhYNvgMMWRBE5s2z0ZpFSUDBzibSoj47tbRIm2BV5pyjckjd
-	 auX44otWh1gZbKMmkJI67WSEIjvetZI6B070sHuz/UNm7owrBwd5SwWxU1pxZbiw7u
-	 JptANArFKnb8JlXJ+qXzsEFOU00z0Ia8VGiPN0C03Qq6DyuuKTwrT06wbgJG/8SjK5
-	 AcWEp5ErB1NFT0eY+EfvKLkHp/TIcKXd/IJieUyZVzgLVcBHlWiN3LhzEtRbh1RKES
-	 KQkJkNVT4flCQ==
+	b=sDC9DAc5L8tmj1wKmr/WgwCvsK2uqzGqo94nSB7VQ1uKpPSS0nm94lP3sHBEWzyh9
+	 f2xhmQk3xLx8O7gA9TsaF5bpkLq4b+eTYzNEdWOCgb3qALwODkSeYE9UoIBqRc/dJu
+	 TBdvwrBwVqGdgX9OP73MKFTcl4fFrXOrqvd4G/D16eq/YSm5wMegIURzUm6peVRrYF
+	 Y7rKIfcPj7DRBCCiLorMJBvL41cZej3/bv9u52rMU0motyJLfxaPBcuf4KnW4g3O3K
+	 VN8lj8w3tqu+ro0obAu/p0H0PmVE7Hf5wJLWl2Plvz9C3D517S1IrUWEa+TSP8VNqR
+	 1j5wVrOL4Nx7Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Qiheng Lin <linqiheng@huawei.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 466/638] media: mediatek: vcodec: avoid -Wcast-function-type-strict warning
-Date: Sun, 24 Mar 2024 18:58:23 -0400
-Message-ID: <20240324230116.1348576-467-sashal@kernel.org>
+Subject: [PATCH 6.6 473/638] powerpc/pseries: Fix potential memleak in papr_get_attr()
+Date: Sun, 24 Mar 2024 18:58:30 -0400
+Message-ID: <20240324230116.1348576-474-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,91 +48,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Qiheng Lin <linqiheng@huawei.com>
 
-[ Upstream commit bfb1b99802ef16045402deb855c197591dc78886 ]
+[ Upstream commit cda9c0d556283e2d4adaa9960b2dc19b16156bae ]
 
-The ipi handler here tries hard to maintain const-ness of its argument,
-but by doing that causes a warning about function type casts:
+`buf` is allocated in papr_get_attr(), and krealloc() of `buf`
+could fail. We need to free the original `buf` in the case of failure.
 
-drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c:38:32: error: cast from 'mtk_vcodec_ipi_handler' (aka 'void (*)(void *, unsigned int, void *)') to 'ipi_handler_t' (aka 'void (*)(const void *, unsigned int, void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-   38 |         ipi_handler_t handler_const = (ipi_handler_t)handler;
-      |                                       ^~~~~~~~~~~~~~~~~~~~~~
-
-Remove the hack and just use a non-const argument.
-
-Fixes: bf1d556ad4e0 ("media: mtk-vcodec: abstract firmware interface")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: 3c14b73454cf ("powerpc/pseries: Interface to represent PAPR firmware attributes")
+Signed-off-by: Qiheng Lin <linqiheng@huawei.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20221208133449.16284-1-linqiheng@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mediatek/mdp/mtk_mdp_vpu.c      |  2 +-
- .../mediatek/vcodec/common/mtk_vcodec_fw_vpu.c         | 10 +---------
- drivers/media/platform/mediatek/vpu/mtk_vpu.c          |  2 +-
- drivers/media/platform/mediatek/vpu/mtk_vpu.h          |  2 +-
- 4 files changed, 4 insertions(+), 12 deletions(-)
+ arch/powerpc/platforms/pseries/papr_platform_attributes.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/mediatek/mdp/mtk_mdp_vpu.c b/drivers/media/platform/mediatek/mdp/mtk_mdp_vpu.c
-index b065ccd069140..378a1cba0144f 100644
---- a/drivers/media/platform/mediatek/mdp/mtk_mdp_vpu.c
-+++ b/drivers/media/platform/mediatek/mdp/mtk_mdp_vpu.c
-@@ -26,7 +26,7 @@ static void mtk_mdp_vpu_handle_init_ack(const struct mdp_ipi_comm_ack *msg)
- 	vpu->inst_addr = msg->vpu_inst_addr;
- }
+diff --git a/arch/powerpc/platforms/pseries/papr_platform_attributes.c b/arch/powerpc/platforms/pseries/papr_platform_attributes.c
+index 526c621b098be..eea2041b270b5 100644
+--- a/arch/powerpc/platforms/pseries/papr_platform_attributes.c
++++ b/arch/powerpc/platforms/pseries/papr_platform_attributes.c
+@@ -101,10 +101,12 @@ static int papr_get_attr(u64 id, struct energy_scale_attribute *esi)
+ 		esi_buf_size = ESI_HDR_SIZE + (CURR_MAX_ESI_ATTRS * max_esi_attrs);
  
--static void mtk_mdp_vpu_ipi_handler(const void *data, unsigned int len,
-+static void mtk_mdp_vpu_ipi_handler(void *data, unsigned int len,
- 				    void *priv)
- {
- 	const struct mdp_ipi_comm_ack *msg = data;
-diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
-index 5e03b08865599..0849ffb0dcd45 100644
---- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
-+++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
-@@ -29,15 +29,7 @@ static int mtk_vcodec_vpu_set_ipi_register(struct mtk_vcodec_fw *fw, int id,
- 					   mtk_vcodec_ipi_handler handler,
- 					   const char *name, void *priv)
- {
--	/*
--	 * The handler we receive takes a void * as its first argument. We
--	 * cannot change this because it needs to be passed down to the rproc
--	 * subsystem when SCP is used. VPU takes a const argument, which is
--	 * more constrained, so the conversion below is safe.
--	 */
--	ipi_handler_t handler_const = (ipi_handler_t)handler;
--
--	return vpu_ipi_register(fw->pdev, id, handler_const, name, priv);
-+	return vpu_ipi_register(fw->pdev, id, handler, name, priv);
- }
+ 		temp_buf = krealloc(buf, esi_buf_size, GFP_KERNEL);
+-		if (temp_buf)
++		if (temp_buf) {
+ 			buf = temp_buf;
+-		else
+-			return -ENOMEM;
++		} else {
++			ret = -ENOMEM;
++			goto out_buf;
++		}
  
- static int mtk_vcodec_vpu_ipi_send(struct mtk_vcodec_fw *fw, int id, void *buf,
-diff --git a/drivers/media/platform/mediatek/vpu/mtk_vpu.c b/drivers/media/platform/mediatek/vpu/mtk_vpu.c
-index 7243604a82a5b..724ae7c2ab3ba 100644
---- a/drivers/media/platform/mediatek/vpu/mtk_vpu.c
-+++ b/drivers/media/platform/mediatek/vpu/mtk_vpu.c
-@@ -635,7 +635,7 @@ int vpu_load_firmware(struct platform_device *pdev)
- }
- EXPORT_SYMBOL_GPL(vpu_load_firmware);
- 
--static void vpu_init_ipi_handler(const void *data, unsigned int len, void *priv)
-+static void vpu_init_ipi_handler(void *data, unsigned int len, void *priv)
- {
- 	struct mtk_vpu *vpu = priv;
- 	const struct vpu_run *run = data;
-diff --git a/drivers/media/platform/mediatek/vpu/mtk_vpu.h b/drivers/media/platform/mediatek/vpu/mtk_vpu.h
-index a56053ff135af..da05f3e740810 100644
---- a/drivers/media/platform/mediatek/vpu/mtk_vpu.h
-+++ b/drivers/media/platform/mediatek/vpu/mtk_vpu.h
-@@ -17,7 +17,7 @@
-  * VPU interfaces with other blocks by share memory and interrupt.
-  */
- 
--typedef void (*ipi_handler_t) (const void *data,
-+typedef void (*ipi_handler_t) (void *data,
- 			       unsigned int len,
- 			       void *priv);
- 
+ 		goto retry;
+ 	}
 -- 
 2.43.0
 
