@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615822197C8;
-	Sun, 24 Mar 2024 23:10:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6551EFFD9;
+	Sun, 24 Mar 2024 23:10:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321809; cv=none; b=qJqKoEZ5ggWlB97Uql0kkvLkac3V62pwdkAh0tQpOYFFCVXrtRjf4lYPftGGtTSMG4hJLRDyq4lyC3RbqCnbIRRAN3KQWl/UG17bVCKc8gNOiCId/gxBRHe/xljBZs8l4Q5Mq58W/gLEj3aDH15JrZCfkvSPrNSPMbvFGSQnsgA=
+	t=1711321802; cv=none; b=s2ApB6uD8udWn14HoP5do0QpomXSNu3us+t+pzOC6mZvZ9cr0/YpWsh9k0hKjArGCkxmdTH3KTg8BhXIsl+L7E7b2bUlf9GHbJcTidLEQ69q2y2W518c3JkMYBeGYR/oO9IIy+4XBKp4SM0zkO/4utW1Y/arAgyH35FpEeAM5kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321809; c=relaxed/simple;
-	bh=nEDO/0XGTNtem6HpiNI4+3w9EGHAwaFyTBbnA6UkIn4=;
+	s=arc-20240116; t=1711321802; c=relaxed/simple;
+	bh=dhKFxGipNUYb7+OZCcYXRa1jL6XDpWTD56tS1MNSVQM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SEF0zyKyDK9xhZ+Ux3HU/KcNu7w+2Ebe7ZqvZWUJLZMEzUpbFSzo5l6f8zRV4Fj+ec9TrP5Sdw+OlLTCxpD3LecB/IN6kXCIEZEZylkfFpCS2/GXULYhWrzQT2C5LzTF4qkAb9gjhJSuOUO6S237eUIJ5AXHowXMSUyEPLb3Ffg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TYayPjI8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fR6Li+O+ORlcJmxsUUzNlE8AcTtUa+jB+lWFNLPtwOycBWx1PGrCmgX1/jh1IpeQpVr/3HAS5lyiZNh2u7n6BzVOqdufh0VqO9OUsK+li8yDZ179pNohmK9bzw5Hez/4CVH/21XMt9N2krF1LrYcUHzegRcDb/5An2IqLNLMBUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZlHObspu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TYayPjI8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F66EC433C7;
-	Sun, 24 Mar 2024 23:10:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlHObspu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CDB9C433F1;
+	Sun, 24 Mar 2024 23:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321809;
-	bh=nEDO/0XGTNtem6HpiNI4+3w9EGHAwaFyTBbnA6UkIn4=;
+	s=k20201202; t=1711321802;
+	bh=dhKFxGipNUYb7+OZCcYXRa1jL6XDpWTD56tS1MNSVQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TYayPjI8POdFSItwQJE4C/a5X7FMRAHoK+ufgMyhaa/ctwvJGIsnnCVJ8xNg2/Gqc
-	 UgYNCM/z6z2krVrAEwrPpZMbyTxQSKGBI3M/7WS+fUW5uJm61LJyuFhqel0Provm5L
-	 g6N6TR6itWUzujRE7npFM1M6qXStvJS9mxKvxQsyp6QKlgYiHQchCprD+ZdC4mTHRg
-	 bZjkZBemkAh1U+IFwAPLo7woOmx0A9nuAV1onAqYafHBzcB8XKMs4Lj9/wlqJLZeFr
-	 44CISWLsUEzUvViRvSFAomx2ozr8hvkNmO0paMv4HnS1YexRkBqDlWDTOR6dmMW70Z
-	 vGlneU2FZ3wbQ==
+	b=ZlHObspuar9xzF7dqbYkLSdgAlsXPbItK9969+m3pFcfXzOn/RAW9TloCXkmxscC3
+	 OT7EPNHw+Pkj56x7ocinsAiTckAoCagstWSosOISbByHCEcqWFzia1C33b/p+OOAPc
+	 fhcQLtjlt/z6YB0ix7yAISbwRv83FnkVytU3YReQpwc15N/Y9aUTk0aufZwo3UeyUd
+	 3uuVP/41s8CPga3V5ll2+xYub6RHHRyf1Yv8dx+rzJEzsW1cSvBbEsNp+GTAU3cd4t
+	 KbSQboCC9caIRwGdkK8AULYU0qhRTOfHczuub06sonMlNNr1iJcGCGBwsSv3xDw2xG
+	 WNoU6fX2uW7PA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 537/638] f2fs: fix to use correct segment type in f2fs_allocate_data_block()
-Date: Sun, 24 Mar 2024 18:59:34 -0400
-Message-ID: <20240324230116.1348576-538-sashal@kernel.org>
+Subject: [PATCH 6.6 530/638] net: sunrpc: Fix an off by one in rpc_sockaddr2uaddr()
+Date: Sun, 24 Mar 2024 18:59:27 -0400
+Message-ID: <20240324230116.1348576-531-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,42 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 7324858237829733dec9c670170df2377c5ca6e2 ]
+[ Upstream commit d6f4de70f73a106986ee315d7d512539f2f3303a ]
 
-@type in f2fs_allocate_data_block() indicates log header's type, it
-can be CURSEG_COLD_DATA_PINNED or CURSEG_ALL_DATA_ATGC, rather than
-type of data/node, however IS_DATASEG()/IS_NODESEG() only accept later
-one, fix it.
+The intent is to check if the strings' are truncated or not. So, >= should
+be used instead of >, because strlcat() and snprintf() return the length of
+the output, excluding the trailing NULL.
 
-Fixes: 093749e296e2 ("f2fs: support age threshold based garbage collection")
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: a02d69261134 ("SUNRPC: Provide functions for managing universal addresses")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 4 ++--
+ net/sunrpc/addr.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index e77591a0cc118..e995823d271f6 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3490,12 +3490,12 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 	locate_dirty_segment(sbi, GET_SEGNO(sbi, old_blkaddr));
- 	locate_dirty_segment(sbi, GET_SEGNO(sbi, *new_blkaddr));
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index d435bffc61999..97ff11973c493 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -284,10 +284,10 @@ char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
+ 	}
  
--	if (IS_DATASEG(type))
-+	if (IS_DATASEG(curseg->seg_type))
- 		atomic64_inc(&sbi->allocated_data_blocks);
+ 	if (snprintf(portbuf, sizeof(portbuf),
+-		     ".%u.%u", port >> 8, port & 0xff) > (int)sizeof(portbuf))
++		     ".%u.%u", port >> 8, port & 0xff) >= (int)sizeof(portbuf))
+ 		return NULL;
  
- 	up_write(&sit_i->sentry_lock);
+-	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) > sizeof(addrbuf))
++	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) >= sizeof(addrbuf))
+ 		return NULL;
  
--	if (page && IS_NODESEG(type)) {
-+	if (page && IS_NODESEG(curseg->seg_type)) {
- 		fill_node_footer_blkaddr(page, NEXT_FREE_BLKADDR(sbi, curseg));
- 
- 		f2fs_inode_chksum_set(sbi, page);
+ 	return kstrdup(addrbuf, gfp_flags);
 -- 
 2.43.0
 
