@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E53D14600A;
-	Sun, 24 Mar 2024 23:14:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB4914600F;
+	Sun, 24 Mar 2024 23:14:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322066; cv=none; b=rA2O6Z4MQ6n4I7HX8mR8POymvDT8LmFhy5pekLQdmfcLcJC1HvRkmNYuxgq7YmDrd1RcAjNAZUTJNLd+PZrtPXPFW9Vx65mKRI4xL30B3bAP5K4q2+zqg0is3sheUtzp08PwzZ+368MCMlOc3FUTyhMWKxfN211mr/X4Kg8H7Cs=
+	t=1711322069; cv=none; b=o12DNz7GEoKl9YQaJ+4IlCZmijFce3YhHH6bYSdWusWh/3XJioKuBwVvEcNJZgaQPoIm5wqmL3aM4e6uSCoLeTJi8QTxun+aFX5fPmQkg8pWBMP6PR8nn7R+zPACrXyzkN35ncITwdx3hQ75y5qTGHIi3GcObdsnRu0VFQ6o4Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322066; c=relaxed/simple;
-	bh=of02US8bUUeHmltBhwO0q0jgCHO9nnXXigQFqbU83BU=;
+	s=arc-20240116; t=1711322069; c=relaxed/simple;
+	bh=LJoL7FVENAJIiFqx9+N2Qkpe7UbQUGUTth5EZ2C6PEE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d3dIxbgVuyp92WZ7PkuVpNvMAjy8ObaH4Y9rgwRaJdHyCwduESeeJkq5dsge2/AfmmNyjJitINtKbvvKyeRO0k+V/Qw9fSl3PwkKhR51kBmL7Ytjv/++Sq0guED9vamZn1mIEidnNLjycibo1YI0piPp7SOMqop1pM0uALoG2HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iII5Qdmu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=dqd4VeZdBauffwdy8MrISdWqv8XLF4PTvhf206yosW7zbkYKUSlM+eIRbwje2MLz0Wj7TFOksNOsV87JlrZWQsSn+e2F8DlQYO3ce+sWUSC1elDCFSlfq8ljI3ycx/IV0k29tvMord89mLBypbmiJpmleHR31d7sCIwop7Ff8Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=livUQaFR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iII5Qdmu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0A4BC43394;
-	Sun, 24 Mar 2024 23:14:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="livUQaFR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23DFC43390;
+	Sun, 24 Mar 2024 23:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322065;
-	bh=of02US8bUUeHmltBhwO0q0jgCHO9nnXXigQFqbU83BU=;
+	s=k20201202; t=1711322069;
+	bh=LJoL7FVENAJIiFqx9+N2Qkpe7UbQUGUTth5EZ2C6PEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iII5QdmuNCr48bmZCPZ7/hv9Gf7fMWGh7dDzVDxg2nQNCB13uTBn5lORj5rMpge6f
-	 jCVJQLF8BU67Aao2ngzfEPU5E0M0hADDvngYvVCuJGnyEMelZBCynruzF7l1WqmZDh
-	 txjzIQBQ+LJV+hZ3IZ02Nfun+d525c7apFViYSxjZusD7IJ099gC67yqOh4Hh06RDu
-	 d1fPm4aLNwySZPGyy+mb7y8bigyr/ieGzzAXzXQz3CmG+HD1Tyme2PjoKDXm4nedPe
-	 A/gJtG2P1RjjdzeC0sJJ/25ogJGGHs0cqcdcu97O16kItpd1d0MyuA600Nr61MkDbZ
-	 3wuO0WlxPcJzw==
+	b=livUQaFR3Ks+0WR3jUvt62hYxEp3vCfBiDiJgYwlbQFgWA03dtz7v7ocFmEiltdWj
+	 2KqYR2Gx+E6as01SxPF0alyVIk8l9BLP81f0J5oSqJZ4coJ/jm5arNypU7m52pF/Za
+	 J7dgOnsnyRrQzL+pVGEN5CMPvHqLwYNex6aVRM/KTC4rzD0WEBmPIbyGxANLptCr/T
+	 eO35Bfbxqjzbsgz16r9VDDOT9iRQ6qN8h+RbBY5sA0fTkk0m09ORaz3xeOlJzfUofg
+	 +Fp8esk7lohtiILF1aPY5aDRC7hhnqkdvB2yrBcBilZ0xxAb1QRLcXqBzGYrSnSHoN
+	 UeyCg3LBd4jgQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Petr Machata <petrm@nvidia.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 138/451] selftests: forwarding: Add missing config entries
-Date: Sun, 24 Mar 2024 19:06:54 -0400
-Message-ID: <20240324231207.1351418-139-sashal@kernel.org>
+Subject: [PATCH 6.1 142/451] arm64: dts: mt8183: Move CrosEC base detection node to kukui-based DTs
+Date: Sun, 24 Mar 2024 19:06:58 -0400
+Message-ID: <20240324231207.1351418-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,85 +45,105 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Petr Machata <petrm@nvidia.com>
+From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-[ Upstream commit 4acf4e62cd572b0c806035046b3698f5585ab821 ]
+[ Upstream commit 04bd6411f506357fd1faedc2b2156e7ef206aa9a ]
 
-The config file contains a partial kernel configuration to be used by
-`virtme-configkernel --custom'. The presumption is that the config file
-contains all Kconfig options needed by the selftests from the directory.
+The cbas node is used to describe base detection functionality in the
+ChromeOS EC, which is used for units that have a detachable keyboard and
+thus rely on this functionality to switch between tablet and laptop
+mode.
 
-In net/forwarding/config, many are missing, which manifests as spurious
-failures when running the selftests, with messages about unknown device
-types, qdisc kinds or classifier actions. Add the missing configurations.
+Despite the original commit having added the cbas node to the
+mt8183-kukui.dtsi, not all machines that include it are detachables. In
+fact all machines that include from mt8183-kukui-jacuzzi.dtsi are either
+clamshells (ie normal laptops) or convertibles, meaning the keyboard can
+be flipped but not detached. The detection for the keyboard getting
+flipped is handled by the driver bound to the keyboard-controller node
+in the EC.
 
-Tested the resulting configuration using virtme-ng as follows:
+Move the base detection node from the base kukui dtsi to the dtsis where
+all machines are detachables, and thus actually make use of the node.
 
- # vng -b -f tools/testing/selftests/net/forwarding/config
- # vng --user root
- (within the VM:)
- # make -C tools/testing/selftests TARGETS=net/forwarding run_tests
-
-Signed-off-by: Petr Machata <petrm@nvidia.com>
-Link: https://lore.kernel.org/r/025abded7ff9cea5874a7fe35dcd3fd41bf5e6ac.1706286755.git.petrm@nvidia.com
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Stable-dep-of: f0ddf15f0a74 ("selftests: forwarding: Add missing multicast routing config entries")
+Fixes: 4fa8492d1e5b ("arm64: dts: mt8183: add cbas node under cros_ec")
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://lore.kernel.org/r/20240116-mt8183-kukui-cbas-remove-v3-1-055e21406e86@collabora.com
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/forwarding/config | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi | 4 ++++
+ arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi | 4 ++++
+ arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi  | 4 ++++
+ arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi        | 4 ----
+ 4 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/net/forwarding/config b/tools/testing/selftests/net/forwarding/config
-index 697994a9278bb..ba23435145827 100644
---- a/tools/testing/selftests/net/forwarding/config
-+++ b/tools/testing/selftests/net/forwarding/config
-@@ -6,14 +6,42 @@ CONFIG_IPV6_MULTIPLE_TABLES=y
- CONFIG_NET_VRF=m
- CONFIG_BPF_SYSCALL=y
- CONFIG_CGROUP_BPF=y
-+CONFIG_DUMMY=m
-+CONFIG_IPV6=y
-+CONFIG_IPV6_GRE=m
-+CONFIG_MACVLAN=m
- CONFIG_NET_ACT_CT=m
- CONFIG_NET_ACT_MIRRED=m
- CONFIG_NET_ACT_MPLS=m
-+CONFIG_NET_ACT_PEDIT=m
-+CONFIG_NET_ACT_POLICE=m
-+CONFIG_NET_ACT_SAMPLE=m
-+CONFIG_NET_ACT_SKBEDIT=m
-+CONFIG_NET_ACT_TUNNEL_KEY=m
- CONFIG_NET_ACT_VLAN=m
- CONFIG_NET_CLS_FLOWER=m
- CONFIG_NET_CLS_MATCHALL=m
-+CONFIG_NET_CLS_BASIC=m
-+CONFIG_NET_EMATCH=y
-+CONFIG_NET_EMATCH_META=m
-+CONFIG_NET_IPGRE=m
-+CONFIG_NET_IPGRE_DEMUX=m
-+CONFIG_NET_IPIP=m
-+CONFIG_NET_SCH_ETS=m
- CONFIG_NET_SCH_INGRESS=m
- CONFIG_NET_ACT_GACT=m
-+CONFIG_NET_SCH_PRIO=m
-+CONFIG_NET_SCH_RED=m
-+CONFIG_NET_SCH_TBF=m
-+CONFIG_NET_TC_SKB_EXT=y
-+CONFIG_NET_TEAM=y
-+CONFIG_NET_TEAM_MODE_LOADBALANCE=y
-+CONFIG_NETFILTER=y
-+CONFIG_NF_CONNTRACK=m
-+CONFIG_NF_FLOW_TABLE=m
-+CONFIG_NF_TABLES=m
- CONFIG_VETH=m
- CONFIG_NAMESPACES=y
- CONFIG_NET_NS=y
-+CONFIG_VXLAN=m
-+CONFIG_XFRM_USER=m
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
+index a11adeb29b1f2..0d3c7b8162ff0 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
+@@ -373,6 +373,10 @@ pen_eject {
+ };
+ 
+ &cros_ec {
++	cbas {
++		compatible = "google,cros-cbas";
++	};
++
+ 	keyboard-controller {
+ 		compatible = "google,cros-ec-keyb-switches";
+ 	};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
+index 4864c39e53a4f..e73113cb51f53 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
+@@ -340,6 +340,10 @@ touch_pin_reset: pin_reset {
+ };
+ 
+ &cros_ec {
++	cbas {
++		compatible = "google,cros-cbas";
++	};
++
+ 	keyboard-controller {
+ 		compatible = "google,cros-ec-keyb-switches";
+ 	};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
+index d5f41c6c98814..181da69d18f46 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
+@@ -344,6 +344,10 @@ rst_pin {
+ };
+ 
+ &cros_ec {
++	cbas {
++		compatible = "google,cros-cbas";
++	};
++
+ 	keyboard-controller {
+ 		compatible = "google,cros-ec-keyb-switches";
+ 	};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+index de610874a9125..1db97d94658b9 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+@@ -896,10 +896,6 @@ usbc_extcon: extcon0 {
+ 			google,usb-port-id = <0>;
+ 		};
+ 
+-		cbas {
+-			compatible = "google,cros-cbas";
+-		};
+-
+ 		typec {
+ 			compatible = "google,cros-ec-typec";
+ 			#address-cells = <1>;
 -- 
 2.43.0
 
