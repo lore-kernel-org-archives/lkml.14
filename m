@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF65175C81;
-	Sun, 24 Mar 2024 23:36:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167061F0970;
+	Sun, 24 Mar 2024 23:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323389; cv=none; b=K199zAPDhWIrnJdoKbWH2gJe/HxccOdnHADSOKemQcahaKapCEGf95AmKdTskSzafSb3EsQIJm1lnTNNWNO3zrnUI57S+NW/CmM3Dh66Nyou92l3Gz4wvMkLniu2oWIx9V2sw/UdYzsWcFyY5Jj50t/+GxNsPFwmgZhE6Bx8sIo=
+	t=1711323392; cv=none; b=hwm0QpORMo9RRTTFfLz6/4R27ZhEIY3auIoFf3dOTTgh4u/WauzM0maA3dwuIGTrfvzpdWkGRXR7jyxQfXLAaByD48wylZwcC6BtjbxCa5zF3WWUuA3dKPgiVkhACdxoBgFUzyO91f+YghBqE0uQUoT/milsg+4tF9go2iKIa2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323389; c=relaxed/simple;
-	bh=Fy2IfXuEmyWDKc8aoG+7VxfO1DUFtWc51famz17+kRk=;
+	s=arc-20240116; t=1711323392; c=relaxed/simple;
+	bh=RhExOqD90ay6b6jf70iwXvA+yE4eM00jqamd/5u6OQM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CbUd1SsajblpbiUnFClMZW6tDwFuDbp77vdzTOp9K7byfrKH5WHjRynCh5p8949qu1pOdirj+Kexk3FTKUxrdqVTX4VD7tRqicg4aUzrywjcNmwkBQUfm1w1saMxMmtoXOi/+qk7bnjr/xJEVZ30XPWnM6ug2alCcr1+v+t0ZK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u7Jd84PE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hx07svKwUsJZ2bw8lQsO7EMTkrUp2VsN9czOBebGSLzSYtHqoe7DVMiuv7Mb1zw3SCQ/qyzrqjvBViGr2smqgTgW3n+kf1jBwM8TWRUIAKRpgxqbe0z2UZo0MEiUtjvyIa+q8aOQsE5bKTEKpSGGZOHY3XCBGkD8DQDLFGwQSL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MXnwbUMK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u7Jd84PE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B627C43399;
-	Sun, 24 Mar 2024 23:36:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MXnwbUMK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E1D5C433C7;
+	Sun, 24 Mar 2024 23:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323388;
-	bh=Fy2IfXuEmyWDKc8aoG+7VxfO1DUFtWc51famz17+kRk=;
+	s=k20201202; t=1711323390;
+	bh=RhExOqD90ay6b6jf70iwXvA+yE4eM00jqamd/5u6OQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u7Jd84PEVkgel6U9uOrq2NpJ8IPrV6C7xtb4gJ3JCfhSIY1gKjXvnMPop7VZzwrDb
-	 aVZbz1BxQsw4E4ObJ6PHtNTYsCMQIgl5IHjsPEK67bnMWJMFNlLY3L5ECSjn/s/h6J
-	 SLFUKeXqmOXBFU832/ysEQVEtYudu7HtZCWxM/s2n+CIYEd3yzsLebyLLw/SlqX45C
-	 +axmeKa3jbx7D+oVRZLwakt+lIChZd5ecSvDXQzyOp5zz25Xy8SDbgry13ssnj/05e
-	 Em25YA/pyVIM4hunbfjJfoKDx8IsvVtzLSTSTRQIkcoV2h5nTQMnhZH/MhfngRa27f
-	 SU1MwFwWq1mjw==
+	b=MXnwbUMKZFKPHOOxJcu19sDQsn8+SsR7gw5Db8AjtkU+KiMH0K4VgOEYYnPiEqJQX
+	 n+xKeV+N8rC3PY7nbCR0rP7YbfGgmFT63yBJz0IG2w5BLHBpYNTPpKGAH62brcWnHK
+	 /1ZWL/WWPjMHA4oIKHMLm+QUCeHLDNDZQ5phUhftO4qFx+ud0HJpCfq/Savo3E+FEf
+	 hI9LpqmKu46mwdOwGapHYNps/UAh1jOP2wLg9a4+jiS6zyZ7iQDFPT1TXr4g45q+GW
+	 Gln7aP33myLA/gqzq2bzyoPnnJCFzTFaIwQYu3WVL2iJN3O0eW7at6gFvn50v06nhl
+	 KwctMYG26KRtQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Petr Mladek <pmladek@suse.com>,
+	John Ogness <john.ogness@linutronix.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 088/317] arm64: dts: qcom: msm8998: switch USB QMP PHY to new style of bindings
-Date: Sun, 24 Mar 2024 19:31:08 -0400
-Message-ID: <20240324233458.1352854-89-sashal@kernel.org>
+Subject: [PATCH 5.15 091/317] printk: Disable passing console lock owner completely during panic()
+Date: Sun, 24 Mar 2024 19:31:11 -0400
+Message-ID: <20240324233458.1352854-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,82 +48,114 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+From: Petr Mladek <pmladek@suse.com>
 
-[ Upstream commit b7efebfeb2e8ad8187cdabba5f0212ba2e6c1069 ]
+[ Upstream commit d04d5882cd678b898a9d7c5aee6afbe9e6e77fcd ]
 
-Change the USB QMP PHY to use newer style of QMP PHY bindings (single
-resource region, no per-PHY subnodes).
+The commit d51507098ff91 ("printk: disable optimistic spin
+during panic") added checks to avoid becoming a console waiter
+if a panic is in progress.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Link: https://lore.kernel.org/r/20230824211952.1397699-11-dmitry.baryshkov@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
-Stable-dep-of: fc835b2311d4 ("arm64: dts: qcom: msm8998: declare VLS CLAMP register for USB3 PHY")
+However, the transition to panic can occur while there is
+already a waiter. The current owner should not pass the lock to
+the waiter because it might get stopped or blocked anytime.
+
+Also the panic context might pass the console lock owner to an
+already stopped waiter by mistake. It might happen when
+console_flush_on_panic() ignores the current lock owner, for
+example:
+
+CPU0                                CPU1
+----                                ----
+console_lock_spinning_enable()
+                                    console_trylock_spinning()
+                                      [CPU1 now console waiter]
+NMI: panic()
+  panic_other_cpus_shutdown()
+                                    [stopped as console waiter]
+  console_flush_on_panic()
+    console_lock_spinning_enable()
+    [print 1 record]
+    console_lock_spinning_disable_and_check()
+      [handover to stopped CPU1]
+
+This results in panic() not flushing the panic messages.
+
+Fix these problems by disabling all spinning operations
+completely during panic().
+
+Another advantage is that it prevents possible deadlocks caused
+by "console_owner_lock". The panic() context does not need to
+take it any longer. The lockless checks are safe because the
+functions become NOPs when they see the panic in progress. All
+operations manipulating the state are still synchronized by the
+lock even when non-panic CPUs would notice the panic
+synchronously.
+
+The current owner might stay spinning. But non-panic() CPUs
+would get stopped anyway and the panic context will never start
+spinning.
+
+Fixes: dbdda842fe96 ("printk: Add console owner and waiter logic to load balance console writes")
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Link: https://lore.kernel.org/r/20240207134103.1357162-12-john.ogness@linutronix.de
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 35 +++++++++++----------------
- 1 file changed, 14 insertions(+), 21 deletions(-)
+ kernel/printk/printk.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index e1b744d76251d..b3b1258f2d6f8 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -1982,7 +1982,7 @@ usb3_dwc3: dwc3@a800000 {
- 				interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
- 				snps,dis_u2_susphy_quirk;
- 				snps,dis_enblslpm_quirk;
--				phys = <&qusb2phy>, <&usb1_ssphy>;
-+				phys = <&qusb2phy>, <&usb3phy>;
- 				phy-names = "usb2-phy", "usb3-phy";
- 				snps,has-lpm-erratum;
- 				snps,hird-threshold = /bits/ 8 <0x10>;
-@@ -1991,33 +1991,26 @@ usb3_dwc3: dwc3@a800000 {
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index de44ccf9743c1..5ad824b080e27 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -1802,10 +1802,23 @@ static bool console_waiter;
+  */
+ static void console_lock_spinning_enable(void)
+ {
++	/*
++	 * Do not use spinning in panic(). The panic CPU wants to keep the lock.
++	 * Non-panic CPUs abandon the flush anyway.
++	 *
++	 * Just keep the lockdep annotation. The panic-CPU should avoid
++	 * taking console_owner_lock because it might cause a deadlock.
++	 * This looks like the easiest way how to prevent false lockdep
++	 * reports without handling races a lockless way.
++	 */
++	if (panic_in_progress())
++		goto lockdep;
++
+ 	raw_spin_lock(&console_owner_lock);
+ 	console_owner = current;
+ 	raw_spin_unlock(&console_owner_lock);
  
- 		usb3phy: phy@c010000 {
- 			compatible = "qcom,msm8998-qmp-usb3-phy";
--			reg = <0x0c010000 0x18c>;
--			status = "disabled";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			ranges;
-+			reg = <0x0c010000 0x1000>;
++lockdep:
+ 	/* The waiter may spin on us after setting console_owner */
+ 	spin_acquire(&console_owner_dep_map, 0, 0, _THIS_IP_);
+ }
+@@ -1829,6 +1842,22 @@ static int console_lock_spinning_disable_and_check(void)
+ {
+ 	int waiter;
  
- 			clocks = <&gcc GCC_USB3_PHY_AUX_CLK>,
-+				 <&gcc GCC_USB3_CLKREF_CLK>,
- 				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
--				 <&gcc GCC_USB3_CLKREF_CLK>;
--			clock-names = "aux", "cfg_ahb", "ref";
-+				 <&gcc GCC_USB3_PHY_PIPE_CLK>;
-+			clock-names = "aux",
-+				      "ref",
-+				      "cfg_ahb",
-+				      "pipe";
-+			clock-output-names = "usb3_phy_pipe_clk_src";
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
- 
- 			resets = <&gcc GCC_USB3_PHY_BCR>,
- 				 <&gcc GCC_USB3PHY_PHY_BCR>;
--			reset-names = "phy", "common";
-+			reset-names = "phy",
-+				      "phy_phy";
- 
--			usb1_ssphy: phy@c010200 {
--				reg = <0xc010200 0x128>,
--				      <0xc010400 0x200>,
--				      <0xc010c00 0x20c>,
--				      <0xc010600 0x128>,
--				      <0xc010800 0x200>;
--				#phy-cells = <0>;
--				#clock-cells = <0>;
--				clocks = <&gcc GCC_USB3_PHY_PIPE_CLK>;
--				clock-names = "pipe0";
--				clock-output-names = "usb3_phy_pipe_clk_src";
--			};
-+			status = "disabled";
- 		};
- 
- 		qusb2phy: phy@c012000 {
++	/*
++	 * Ignore spinning waiters during panic() because they might get stopped
++	 * or blocked at any time,
++	 *
++	 * It is safe because nobody is allowed to start spinning during panic
++	 * in the first place. If there has been a waiter then non panic CPUs
++	 * might stay spinning. They would get stopped anyway. The panic context
++	 * will never start spinning and an interrupted spin on panic CPU will
++	 * never continue.
++	 */
++	if (panic_in_progress()) {
++		/* Keep lockdep happy. */
++		spin_release(&console_owner_dep_map, _THIS_IP_);
++		return 0;
++	}
++
+ 	raw_spin_lock(&console_owner_lock);
+ 	waiter = READ_ONCE(console_waiter);
+ 	console_owner = NULL;
 -- 
 2.43.0
 
