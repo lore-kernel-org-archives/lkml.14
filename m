@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B071272B8;
-	Sun, 24 Mar 2024 22:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F69128386;
+	Sun, 24 Mar 2024 22:53:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320801; cv=none; b=bNQZLKpmzGaUkkkDuIad0e6DSlJz944VAtuDhnuLDBlPLRJrQCYUNrkmtAWPtGZCd5AQSDjsw/oXW0xbowGuulR/EIvSGfWQ0vX+GUxv/1gH52/8u1u9KSEnHgHkvVRwDZdoDBERw8PPk12EaoY/iXxSB0J1hyQC3gxPmrS/kxQ=
+	t=1711320803; cv=none; b=n+6uBUephKNVbHKs5IYMlfin7mLH908JlQ+7kcqOiWphvdyWCoutqkVlhjwuIhVvHttjhG5ajYtwIYpZUyGdwK/LRXIDOrzpP269zbFCl64+Xt3F1BG5hju4T4uMazTS44afkhAB3lHuK5GUJKzUoabybfLODAqCgYnYmqYOWPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320801; c=relaxed/simple;
-	bh=9sb3DEvcgysAOVvCd3EzJUsl/MlOiN2diTQTQ94DBHs=;
+	s=arc-20240116; t=1711320803; c=relaxed/simple;
+	bh=pNcFH+ooFkIv/Gh6pWZygMrI9+wZ6KT5OyHzXrzdBTc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UUwCg5bNStER1e5GbddVEYVBaDOGhSg4yJDoM9gKROvqjv2cCyhfZiUDW9AWU247r7SbSa1osh+C7bm2dl372xIjkmc2FSp9qEOzCrX8QHtQLGpiJ9bH7VpIkk+hwv8h3hLIVaOvym861AZVA8xsikHOgnDDLys/1R3a6vTBn7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EYGX5+/Q; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AL0z8MZNdvDrci1u91pWPVHFV/Q+LD5mVvU76MfyL2ZrjgNI/IPAWFuGD4rSyipuIY8iaxBS0R3eRshUBadS3cOHWqez0mZweMFyqN2zh8ebMCu+DC3VmVKdzjZNfqkrR8wDsVR66reQVds6c351cOGuTr0TT4jiTkcCsyqgAy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FoVDj5uc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EYGX5+/Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A012C43390;
-	Sun, 24 Mar 2024 22:53:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FoVDj5uc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 300AAC43390;
+	Sun, 24 Mar 2024 22:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320799;
-	bh=9sb3DEvcgysAOVvCd3EzJUsl/MlOiN2diTQTQ94DBHs=;
+	s=k20201202; t=1711320802;
+	bh=pNcFH+ooFkIv/Gh6pWZygMrI9+wZ6KT5OyHzXrzdBTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EYGX5+/QYzxfsaDROwBLv8xF9pFfGZzwBzaOBcLq42Sf2GEfGzOI4WLeSArN5VbnN
-	 EUX5qQsrsGvXQ4TMcESldU8y2j/RNTusEmLpCmuTiw5HNPy2yADgmsVtZQGFcBurqZ
-	 Z21sA7obSYuuotbcPKXhf+Ch3JJuF5UVFZgAiT2nu2MJ7ZlSQ53bjBozbJ2LVDGx2p
-	 8NQnka8f8Q47a65swQ+fmX7sKMRfDnRsJN7Fa6M8jRsRzfGLgWHl200Wp42hdPWQNB
-	 L6zFTf3GLnVJVDwH2h0sPPZDpzz7Evv+0E49tB5nGdr6kCXePD8NqAYFFe8+cwvkpK
-	 pO04jFxxgMquQ==
+	b=FoVDj5ucybIRw2upv0FYUE+cgNdYdi233/uv4k6aimRQYceA0G9mdpUzyY+hP2TcS
+	 vjKIy9AJ7e3mye97sm8teDH5WlA8SaRjvOUzn9gjCLgPzXXYe55MDCXw7vmneTrGLS
+	 QIvjhLxlHB3RwKeV2WDhtpZp0N5kTnKPrGpHRnXJLWQILGeKHAVwS4yCHZSQ3vgWQn
+	 biE3QcrRaWbZ58f3HNrIGirb0ONAUVU6Wy6l3GA4rDcIvi3BN2nrWSpW/Y99six3G7
+	 FpDL85meQI3txfoFlkJE5MWRoSd1F8sJXtQ/DcD4T2CUTQiiFXA45A2gMi7u2jY+/u
+	 l7/5Vi9Kly6Og==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jiri Pirko <jiri@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Shiming Cheng <shiming.cheng@mediatek.com>,
+	Lena Wang <lena.wang@mediatek.com>,
+	David Ahern <dsahern@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 364/713] dpll: spec: use proper enum for pin capabilities attribute
-Date: Sun, 24 Mar 2024 18:41:30 -0400
-Message-ID: <20240324224720.1345309-365-sashal@kernel.org>
+Subject: [PATCH 6.7 366/713] ipv6: fib6_rules: flush route cache when rule is changed
+Date: Sun, 24 Mar 2024 18:41:32 -0400
+Message-ID: <20240324224720.1345309-367-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,46 +50,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jiri Pirko <jiri@nvidia.com>
+From: Shiming Cheng <shiming.cheng@mediatek.com>
 
-[ Upstream commit 5c497a64820ef9f10962a9c37607df45d6395fa5 ]
+[ Upstream commit c4386ab4f6c600f75fdfd21143f89bac3e625d0d ]
 
-The enum is defined, however the pin capabilities attribute does
-refer to it. Add this missing enum field.
+When rule policy is changed, ipv6 socket cache is not refreshed.
+The sock's skb still uses a outdated route cache and was sent to
+a wrong interface.
 
-This fixes ynl cli output:
+To avoid this error we should update fib node's version when
+rule is changed. Then skb's route will be reroute checked as
+route cache version is already different with fib node version.
+The route cache is refreshed to match the latest rule.
 
-Example current output:
-$ sudo ./tools/net/ynl/cli.py --spec Documentation/netlink/specs/dpll.yaml --do pin-get --json '{"id": 0}'
-{'capabilities': 4,
- ...
-Example new output:
-$ sudo ./tools/net/ynl/cli.py --spec Documentation/netlink/specs/dpll.yaml --do pin-get --json '{"id": 0}'
-{'capabilities': {'state-can-change'},
- ...
-
-Fixes: 3badff3a25d8 ("dpll: spec: Add Netlink spec in YAML")
-Signed-off-by: Jiri Pirko <jiri@nvidia.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-Link: https://lore.kernel.org/r/20240306120739.1447621-1-jiri@resnulli.us
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 101367c2f8c4 ("[IPV6]: Policy Routing Rules")
+Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+Signed-off-by: Lena Wang <lena.wang@mediatek.com>
+Reviewed-by: David Ahern <dsahern@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/netlink/specs/dpll.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ net/ipv6/fib6_rules.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/netlink/specs/dpll.yaml b/Documentation/netlink/specs/dpll.yaml
-index 2b4c4bcd83615..5b25ad589e3d0 100644
---- a/Documentation/netlink/specs/dpll.yaml
-+++ b/Documentation/netlink/specs/dpll.yaml
-@@ -274,6 +274,7 @@ attribute-sets:
-       -
-         name: capabilities
-         type: u32
-+        enum: pin-capabilities
-       -
-         name: parent-device
-         type: nest
+diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
+index 7c20038330104..be52b18e08a6b 100644
+--- a/net/ipv6/fib6_rules.c
++++ b/net/ipv6/fib6_rules.c
+@@ -449,6 +449,11 @@ static size_t fib6_rule_nlmsg_payload(struct fib_rule *rule)
+ 	       + nla_total_size(16); /* src */
+ }
+ 
++static void fib6_rule_flush_cache(struct fib_rules_ops *ops)
++{
++	rt_genid_bump_ipv6(ops->fro_net);
++}
++
+ static const struct fib_rules_ops __net_initconst fib6_rules_ops_template = {
+ 	.family			= AF_INET6,
+ 	.rule_size		= sizeof(struct fib6_rule),
+@@ -461,6 +466,7 @@ static const struct fib_rules_ops __net_initconst fib6_rules_ops_template = {
+ 	.compare		= fib6_rule_compare,
+ 	.fill			= fib6_rule_fill,
+ 	.nlmsg_payload		= fib6_rule_nlmsg_payload,
++	.flush_cache		= fib6_rule_flush_cache,
+ 	.nlgroup		= RTNLGRP_IPV6_RULE,
+ 	.owner			= THIS_MODULE,
+ 	.fro_net		= &init_net,
 -- 
 2.43.0
 
