@@ -1,179 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E91E2002DD;
-	Sun, 24 Mar 2024 23:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1102002E4;
+	Sun, 24 Mar 2024 23:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322298; cv=none; b=Io5gK9mx/+5kaoxdaFpy1JYFxLQ99zH+2gvEDvLBE4MlUe/Qu3tx2if8KgX073BRooDg/OzErXH3MXi/6BcmEDlBi8xdUM3QwKnm9JrvxhydtCZqKXlsHFt6ayuVlNPczWTEfYHhyUI/+hg/XlUKXsu0225yPVuD/DKiL420cOU=
+	t=1711322300; cv=none; b=S1ESHq7RHYr1SFgU0keZXgpVMV07c1CwGLlCH/+617QxmC3t89keeQi9nx5J54HAot8eDRXrN+GeEFnZP76fHkFl6IVKepQ3glzjZFOuUQvov0gHxCgTzVpHqinlFd6XcCkzbtN+zrGrb2aBqGvaDYGglvLStXxEvVYjpYnxmCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322298; c=relaxed/simple;
-	bh=/bXkY6dK5NCiDQ0gc7WTqr8VejKapTB/nJwPlB62Ets=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VbjA0TscumuSCcq81GENopdEvKKW2Gs9w0BY9mbU6giUfGtggR8ZCLQf6JXAmjnoTRdw5640agTf09Tcs8u94daE139X4F6qyXJTCAhH6VgdZH1iBwBZBtShwm+/A7GaqB/k375WPB+Av+4MKv1HtyXW3ICl4n8Xmk6AmdzXBhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qJQCEJYh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711322300; c=relaxed/simple;
+	bh=ym05624QlF+M51JYEl67O0kD6CiBDhKaB/w5yQTYn9k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qWEuCWzJAIXCZcAazLdaTJXn6CZkTbnsjLwMXzCZcEll6/woFxb03P84HxccCUjDHuDFd6IxK+J1JUov7wLbD9O6StMtNERXDFbYYdl7Oi9ubqKI+Up11WjYBuX+BgtwPF3DTcVVeWbD9yL+w7dgUt+Saf6LeQ0tnlXgb1yXHXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c6v21Mb9; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJQCEJYh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C02DC433A6;
-	Sun, 24 Mar 2024 23:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322297;
-	bh=/bXkY6dK5NCiDQ0gc7WTqr8VejKapTB/nJwPlB62Ets=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qJQCEJYhdrae5R/v7UWP4yfqHso0fN6vwBpTEXeA7Tl7vlNcqy+wV/kcqqdIH9ueo
-	 jBmQ8Yz2ylBrMi/3YpWKDiG4jb0qVYaI1qy7XvgYnLY4TrevihOK9Rg+eHx2USIaON
-	 CBnbh1hI1jGKkkDCK1FZA8bAc0rHo9pfZ0DvKLmZhtnG1A2sMl0ONR1CPFE0FwuBce
-	 EGde/HgDqND5ghlyU3MDz+yfj2UD4L8dZXzUiN8SLh3j404hjHKQs25AnK+vUjEYvB
-	 v8nEmkJ9sAkkyRzwt9Sfu4sZt3YKtCq+VoNgBaZ75cfNR8hUA8Yz/2n5234x9J37Ul
-	 hNI7vaQMy3I1w==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Xiuhong Wang <xiuhong.wang@unisoc.com>,
-	Zhiguo Niu <zhiguo.niu@unisoc.com>,
-	Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 380/451] f2fs: compress: fix reserve_cblocks counting error when out of space
-Date: Sun, 24 Mar 2024 19:10:56 -0400
-Message-ID: <20240324231207.1351418-381-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
-References: <20240324231207.1351418-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c6v21Mb9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711322298; x=1742858298;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=ym05624QlF+M51JYEl67O0kD6CiBDhKaB/w5yQTYn9k=;
+  b=c6v21Mb9E0YMQvXxUYlTm14w7DPwtcWn52Z6R2EWYXy8DW9PP4YVS553
+   1eGgIpWZIw8FJPvovtGbyScyzjE8HXXTF92+mw5a6AwLlXssymoeErIt6
+   Bse5aieMwQs0+uY/Eg1DXc7HYGl2egZ/nFMw0bFfyTuBPoyavKC7F5o/q
+   mdr6aRK+c9+gZWmHEPhChBQ0zuOGimBEq2EW839ga+AbeNIITjp1MKb83
+   9wetxe1H5OHZVHV07NBZpxeaO5p3FKBrpdlPQZ6D7lgk1EuUNqJ4OC4/O
+   9gVcslPemjMUDvy9Xh7eL4C6r7ryYILXMI/WwnIvrl2o4biE5a4kqaPrn
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="10078015"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="10078015"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="15869362"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.186.165])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:13 -0700
+From: ira.weiny@intel.com
+Date: Sun, 24 Mar 2024 16:18:11 -0700
+Subject: [PATCH 08/26] cxl/mem: Expose device dynamic capacity capabilities
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240324-dcd-type2-upstream-v1-8-b7b00d623625@intel.com>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=4987;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=Wq3gb7omnGtPtB2eYEFuqUs1HeX/Mmr6GMdslTnf6Tg=;
+ b=O9UTPyK9mGikrLriFRWsu3itRU7wDUho/u57Kv9yshveTfdziesP7bxPSwFf2Mn9EUkPwvYKr
+ WJd1eNEu1L9CDHuzPE0WK7GsuAw9KiIUeLgnaHpGt53sYpAstA3YRW7
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-From: Xiuhong Wang <xiuhong.wang@unisoc.com>
+From: Navneet Singh <navneet.singh@intel.com>
 
-[ Upstream commit 2f6d721e14b69d6e1251f69fa238b48e8374e25f ]
+To properly configure CXL regions on Dynamic Capacity Devices (DCD),
+user space will need to know the details of the DC Regions available on
+a device.
 
-When a file only needs one direct_node, performing the following
-operations will cause the file to be unrepairable:
+Expose driver dynamic capacity capabilities through sysfs
+attributes.
 
-unisoc # ./f2fs_io compress test.apk
-unisoc #df -h | grep dm-48
-/dev/block/dm-48 112G 112G 1.2M 100% /data
+Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-unisoc # ./f2fs_io release_cblocks test.apk
-924
-unisoc # df -h | grep dm-48
-/dev/block/dm-48 112G 112G 4.8M 100% /data
-
-unisoc # dd if=/dev/random of=file4 bs=1M count=3
-3145728 bytes (3.0 M) copied, 0.025 s, 120 M/s
-unisoc # df -h | grep dm-48
-/dev/block/dm-48 112G 112G 1.8M 100% /data
-
-unisoc # ./f2fs_io reserve_cblocks test.apk
-F2FS_IOC_RESERVE_COMPRESS_BLOCKS failed: No space left on device
-
-adb reboot
-unisoc # df -h  | grep dm-48
-/dev/block/dm-48             112G 112G   11M 100% /data
-unisoc # ./f2fs_io reserve_cblocks test.apk
-0
-
-This is because the file has only one direct_node. After returning
-to -ENOSPC, reserved_blocks += ret will not be executed. As a result,
-the reserved_blocks at this time is still 0, which is not the real
-number of reserved blocks. Therefore, fsck cannot be set to repair
-the file.
-
-After this patch, the fsck flag will be set to fix this problem.
-
-unisoc # df -h | grep dm-48
-/dev/block/dm-48             112G 112G  1.8M 100% /data
-unisoc # ./f2fs_io reserve_cblocks test.apk
-F2FS_IOC_RESERVE_COMPRESS_BLOCKS failed: No space left on device
-
-adb reboot then fsck will be executed
-unisoc # df -h  | grep dm-48
-/dev/block/dm-48             112G 112G   11M 100% /data
-unisoc # ./f2fs_io reserve_cblocks test.apk
-924
-
-Fixes: c75488fb4d82 ("f2fs: introduce F2FS_IOC_RESERVE_COMPRESS_BLOCKS")
-Signed-off-by: Xiuhong Wang <xiuhong.wang@unisoc.com>
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+Changes for v1:
+[iweiny: remove review tags]
+[iweiny: mark sysfs for 6.10 kernel]
+---
+ Documentation/ABI/testing/sysfs-bus-cxl | 17 ++++++++
+ drivers/cxl/core/memdev.c               | 76 +++++++++++++++++++++++++++++++++
+ 2 files changed, 93 insertions(+)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 5dbd874ba3d8d..2fbc8d89c600b 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -3561,10 +3561,10 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
- 	return ret;
- }
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 8b3efaf6563c..8a4f572c8498 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -54,6 +54,23 @@ Description:
+ 		identically named field in the Identify Memory Device Output
+ 		Payload in the CXL-2.0 specification.
  
--static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
-+static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count,
-+		unsigned int *reserved_blocks)
++What:		/sys/bus/cxl/devices/memX/dc/region_count
++Date:		June, 2024
++KernelVersion:	v6.10
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) Number of Dynamic Capacity (DC) regions supported on the
++		device.  May be 0 if the device does not support Dynamic
++		Capacity.
++
++What:		/sys/bus/cxl/devices/memX/dc/regionY_size
++Date:		June, 2024
++KernelVersion:	v6.10
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) Size of the Dynamic Capacity (DC) region Y.  Only
++		available on devices which support DC and only for those
++		region indexes supported by the device.
+ 
+ What:		/sys/bus/cxl/devices/memX/pmem/qos_class
+ Date:		May, 2023
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index d4e259f3a7e9..a7b880e33a7e 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -101,6 +101,18 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
+ static struct device_attribute dev_attr_pmem_size =
+ 	__ATTR(size, 0444, pmem_size_show, NULL);
+ 
++static ssize_t region_count_show(struct device *dev, struct device_attribute *attr,
++				 char *buf)
++{
++	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
++
++	return sysfs_emit(buf, "%d\n", mds->nr_dc_region);
++}
++
++static struct device_attribute dev_attr_region_count =
++	__ATTR(region_count, 0444, region_count_show, NULL);
++
+ static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
+ 			   char *buf)
  {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
--	unsigned int reserved_blocks = 0;
- 	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
- 	block_t blkaddr;
- 	int i;
-@@ -3628,12 +3628,12 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
+@@ -492,6 +504,63 @@ static struct attribute *cxl_memdev_security_attributes[] = {
+ 	NULL,
+ };
  
- 		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, true);
- 
--		reserved_blocks += reserved;
-+		*reserved_blocks += reserved;
- next:
- 		count -= cluster_size;
- 	}
- 
--	return reserved_blocks;
++static ssize_t show_size_regionN(struct cxl_memdev *cxlmd, char *buf, int pos)
++{
++	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
++
++	return sysfs_emit(buf, "%#llx\n", mds->dc_region[pos].decode_len);
++}
++
++#define REGION_SIZE_ATTR_RO(n)						\
++static ssize_t region##n##_size_show(struct device *dev,		\
++				     struct device_attribute *attr,	\
++				     char *buf)				\
++{									\
++	return show_size_regionN(to_cxl_memdev(dev), buf, (n));		\
++}									\
++static DEVICE_ATTR_RO(region##n##_size)
++REGION_SIZE_ATTR_RO(0);
++REGION_SIZE_ATTR_RO(1);
++REGION_SIZE_ATTR_RO(2);
++REGION_SIZE_ATTR_RO(3);
++REGION_SIZE_ATTR_RO(4);
++REGION_SIZE_ATTR_RO(5);
++REGION_SIZE_ATTR_RO(6);
++REGION_SIZE_ATTR_RO(7);
++
++static struct attribute *cxl_memdev_dc_attributes[] = {
++	&dev_attr_region0_size.attr,
++	&dev_attr_region1_size.attr,
++	&dev_attr_region2_size.attr,
++	&dev_attr_region3_size.attr,
++	&dev_attr_region4_size.attr,
++	&dev_attr_region5_size.attr,
++	&dev_attr_region6_size.attr,
++	&dev_attr_region7_size.attr,
++	&dev_attr_region_count.attr,
++	NULL,
++};
++
++static umode_t cxl_dc_visible(struct kobject *kobj, struct attribute *a, int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
++
++	/* Not a memory device */
++	if (!mds)
++		return 0;
++
++	if (a == &dev_attr_region_count.attr)
++		return a->mode;
++
++	/* Show only the regions supported */
++	if (n < mds->nr_dc_region)
++		return a->mode;
++
 +	return 0;
- }
++}
++
+ static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
+ 				  int n)
+ {
+@@ -567,11 +636,18 @@ static struct attribute_group cxl_memdev_security_attribute_group = {
+ 	.is_visible = cxl_memdev_security_visible,
+ };
  
- static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
-@@ -3694,7 +3694,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
- 		count = round_up(count, F2FS_I(inode)->i_cluster_size);
++static struct attribute_group cxl_memdev_dc_attribute_group = {
++	.name = "dc",
++	.attrs = cxl_memdev_dc_attributes,
++	.is_visible = cxl_dc_visible,
++};
++
+ static const struct attribute_group *cxl_memdev_attribute_groups[] = {
+ 	&cxl_memdev_attribute_group,
+ 	&cxl_memdev_ram_attribute_group,
+ 	&cxl_memdev_pmem_attribute_group,
+ 	&cxl_memdev_security_attribute_group,
++	&cxl_memdev_dc_attribute_group,
+ 	NULL,
+ };
  
--		ret = reserve_compress_blocks(&dn, count);
-+		ret = reserve_compress_blocks(&dn, count, &reserved_blocks);
- 
- 		f2fs_put_dnode(&dn);
- 
-@@ -3702,13 +3702,12 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 			break;
- 
- 		page_idx += count;
--		reserved_blocks += ret;
- 	}
- 
- 	filemap_invalidate_unlock(inode->i_mapping);
- 	f2fs_up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
- 
--	if (ret >= 0) {
-+	if (!ret) {
- 		clear_inode_flag(inode, FI_COMPRESS_RELEASED);
- 		inode->i_ctime = current_time(inode);
- 		f2fs_mark_inode_dirty_sync(inode, true);
-@@ -3717,7 +3716,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 	inode_unlock(inode);
- 	mnt_drop_write_file(filp);
- 
--	if (ret >= 0) {
-+	if (!ret) {
- 		ret = put_user(reserved_blocks, (u64 __user *)arg);
- 	} else if (reserved_blocks &&
- 			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
+
 -- 
-2.43.0
+2.44.0
 
