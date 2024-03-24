@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199D328453A;
-	Sun, 24 Mar 2024 23:43:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EB2284559;
+	Sun, 24 Mar 2024 23:43:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323788; cv=none; b=cGC6a/dbRXBwWl+o1tK8z+BX9yGOPoJ+8W0sXPdqgJd+1QouJy8BXLGoWSXODTUzGiSs2/LSFbEJ9wont//RK3pud19Vy6o4PrR1AQGpwMaUcM/r5NZ74TiYCljIftxZZphDG5miFy6h+9NxpOObS2DmSd/E6Vx94Ft0vlowH/o=
+	t=1711323794; cv=none; b=ATQV469mmbaoG+p65/UIAdBo/R01WzQa2DIfGdV1JoBNruGf3VIgnw5lKXKecmn7fx9cSzmfHdKW//7HFGJESWpOwlUCUYV6zvgUObrZHgvSNX/xG3NgWrMJoifF/RzKTtxRM0nSlD59Lf9lVYqcHKKB/OdYn0e5ctxam7/f2L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323788; c=relaxed/simple;
-	bh=IzdRU3IdcMNYWKy4HXT890rMU1sqwkd081iJnDt2tYI=;
+	s=arc-20240116; t=1711323794; c=relaxed/simple;
+	bh=MN8aMj40GuMp0oDJC2Acpjv/qU1lXE28W5v93tDW/l8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c04w0tYZt93K3xc1bTtMsOFx0UqWmq9z3wIfbXQYvfpaRxgRbCXjNZDVerOMeaBJFa8FdN5dnFwWrn6WkCpwKewEQgYFNS1ibOa1wF2/xE9IsQ0Vro/E/PhH6abbgGBZrQMM/7WsOqIdw+y7+l3vJQ1kYhgelUgskGclycLaIhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i681koWQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=llyMG6Wrzpdq89ggBOb9yqrZdLY4XsIJxOzQyvE5Pe+vTY9QdH1ZffPRiwV6xw1IL/UGLrtfVfCw9dvenko/amdpYWO1Jw148ZfwxMUE+2BmZqDA0yVxlm9jr7B7Ahx/N4hZGdHbkiyNZAxq72nw6XEWp6Eu5UaVBBLqIu8fHoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UMTVi+/8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i681koWQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEA9EC43390;
-	Sun, 24 Mar 2024 23:43:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UMTVi+/8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 292D4C433C7;
+	Sun, 24 Mar 2024 23:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323786;
-	bh=IzdRU3IdcMNYWKy4HXT890rMU1sqwkd081iJnDt2tYI=;
+	s=k20201202; t=1711323794;
+	bh=MN8aMj40GuMp0oDJC2Acpjv/qU1lXE28W5v93tDW/l8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i681koWQ2rVVeGJIZCeAf1VOKYNOFNiixfzNF6qvy9Puy7Ny+3fY4Zc+DvCJuIIvS
-	 Zq2xUwS9eZv/rPLb8nAVPPZKDcsSvyysfjTAoaTK516JnsZqs+ZZJyfuuWbJsbFFgw
-	 XUE3mVRb0cVJW+wax4YOgRJ5pvwBGfJRtXo4OuY1SscM2PrhS+JqsHU9hrDcJCswLc
-	 oR97/vkIwsu4LL9gO/lk8EhAJ9u+xmEhlGEkd19Nqr1KoM13cOMQdPpXQMow7MNcr1
-	 zoet7RGz9WlDn0iwBSi/XASy2Kti4ciO9Sv/DTd19d+6s4WNCIdhVuLiOzRdG4LYip
-	 ZT+4h6c10KTPA==
+	b=UMTVi+/81ONudUIouHbbWjKW1AvjyzQ6ymzdMUjHkpJEGk1u/S9SOzWedWXuXXOA8
+	 HWyzuEeoKF5fDeSfeibuq/UADiBULPU+6q7RPOsE9AWzmvslvK/7Vz/RZlB4rx+xiX
+	 jsw4x/7T5UHMIY82CX3x4VsLUYwD/kfK0pTAQbzSFiV2wL+pf7caU6ZFBIVV+MOLcF
+	 c9IxdMnhlwXPJg0raYeX5E+GiEZMxhQLQ1SbRpoRDe9VIIwI1ySXV3hbHJfwo8wAKx
+	 772pmTT2tSQSiBKkPHyHpvJ0ChufipfJU0nMPDSQFzV8rsTEA98JsevIzkOplZXeoW
+	 RH/2H9s9mG1Hw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Griffin <peter.griffin@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Jammy Zhou <Jammy.Zhou@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 163/238] mfd: syscon: Call of_node_put() only when of_parse_phandle() takes a ref
-Date: Sun, 24 Mar 2024 19:39:11 -0400
-Message-ID: <20240324234027.1354210-164-sashal@kernel.org>
+Subject: [PATCH 5.10 171/238] drm/amdgpu: Fix missing break in ATOM_ARG_IMM Case of atom_get_src_int()
+Date: Sun, 24 Mar 2024 19:39:19 -0400
+Message-ID: <20240324234027.1354210-172-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -44,43 +46,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Griffin <peter.griffin@linaro.org>
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit d2b0680cf3b05490b579e71b0df6e07451977745 ]
+[ Upstream commit 7cf1ad2fe10634238b38442a851d89514cb14ea2 ]
 
-of_parse_phandle() returns a device_node with refcount incremented, which
-the callee needs to call of_node_put() on when done. We should only call
-of_node_put() when the property argument is provided though as otherwise
-nothing has taken a reference on the node.
+Missing break statement in the ATOM_ARG_IMM case of a switch statement,
+adds the missing break statement, ensuring that the program's control
+flow is as intended.
 
-Fixes: 45330bb43421 ("mfd: syscon: Allow property as NULL in syscon_regmap_lookup_by_phandle")
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Link: https://lore.kernel.org/r/20240220115012.471689-2-peter.griffin@linaro.org
-Signed-off-by: Lee Jones <lee@kernel.org>
+Fixes the below:
+drivers/gpu/drm/amd/amdgpu/atom.c:323 atom_get_src_int() warn: ignoring unreachable code.
+
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Cc: Jammy Zhou <Jammy.Zhou@amd.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/syscon.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/atom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index 60f74144a4f88..4d536a097e8cb 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -224,7 +224,9 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
- 		return ERR_PTR(-ENODEV);
- 
- 	regmap = syscon_node_to_regmap(syscon_np);
--	of_node_put(syscon_np);
-+
-+	if (property)
-+		of_node_put(syscon_np);
- 
- 	return regmap;
- }
+diff --git a/drivers/gpu/drm/amd/amdgpu/atom.c b/drivers/gpu/drm/amd/amdgpu/atom.c
+index 4cfc786699c7f..c1841fa873f56 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atom.c
++++ b/drivers/gpu/drm/amd/amdgpu/atom.c
+@@ -310,7 +310,7 @@ static uint32_t atom_get_src_int(atom_exec_context *ctx, uint8_t attr,
+ 				DEBUG("IMM 0x%02X\n", val);
+ 			return val;
+ 		}
+-		return 0;
++		break;
+ 	case ATOM_ARG_PLL:
+ 		idx = U8(*ptr);
+ 		(*ptr)++;
 -- 
 2.43.0
 
