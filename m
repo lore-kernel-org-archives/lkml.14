@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4D52210DF;
-	Sun, 24 Mar 2024 23:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742CC22098E;
+	Sun, 24 Mar 2024 23:11:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321890; cv=none; b=swksaxz23u6RL4SnNgOkTP/xnudAlMJG/xYTapfGavn6W6gGIcTtsy+UHgMZkzPC4ZwfVaKBNXH5oEV3PBzid302PKsmHNanT2iFgnlymrTYH1RpgVWvbu/MJ1W/gZqEDpmNJp08mL5618+NWiq5qN4EOPjMi/wmVV/MM7VzRVI=
+	t=1711321887; cv=none; b=he29EZwClR48Hv8+wZpdHXpXB9uFYT4zyqc4xrN9gSm+EpXMVxS7crL9nmC5m0U4AEooxInPH/ufg1yR9D70EjwsGXdijgZhwijomJbN/HtodzPLGiZO/RhnZ7YT/yEzyJ38IKs6iKAuO8U4DE+yyV/fiiVJScR68jJNyubDI3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321890; c=relaxed/simple;
-	bh=E2R52L8IyfHAqj1g/QjHvsRYE4HYLzHkG2Hu6aVvulI=;
+	s=arc-20240116; t=1711321887; c=relaxed/simple;
+	bh=u4ufuJkyupCrutFxJsNV8Mzjv+4OTdE4ZWbYzCHnvzk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fjKle6M1vqmuWr6JVYlc02c5POr3RnoqRYPkjWua5IsbG/uZuArzFR0Fcb+dGXlqYKlgJjIA/GZGMIo1mI9H+Mnq0qqU4misdxql4eEjnNmQ//7L/ig6PWPuzHfkMCEbSI+9hZHDzobTyDAfl5XJ+2xjSrYnqJDTSJzB0ohqKHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rFT8aoze; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gwRLLh9/x6UNXWLXRSD/nnQ+G1dPcGIVAy5iXmQ1otmx1y/2zcdNtm4zEM+hCYjGTU4T3F0pbzjn1mOywSrD9z4DT06/5daN5zLYQ+KmitIObPT3ovPsGhPi/5CzZ1U1ItHYxTeu2SE3V5F6AADuiv2Td8MWfHECTlFPEml/SbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XpFfa/oW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFT8aoze"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F74CC43399;
-	Sun, 24 Mar 2024 23:11:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XpFfa/oW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B04EC43394;
+	Sun, 24 Mar 2024 23:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321889;
-	bh=E2R52L8IyfHAqj1g/QjHvsRYE4HYLzHkG2Hu6aVvulI=;
+	s=k20201202; t=1711321886;
+	bh=u4ufuJkyupCrutFxJsNV8Mzjv+4OTdE4ZWbYzCHnvzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rFT8aozewx0YZuFAmtz1kipYSVGhPDfk2U4aZGDMNQ9k8wrM/O/qSoAltrA3sYO7B
-	 bx65qwp+yyU/xTxcD7/zm4mSrBuIYrHfodAyvB8FDD1zcfXeBnS0Fhod2y81lVD+kg
-	 NrSQIAomrHtOfYUwFtw4tRGUZFE8bjYxym71AfiqLHFG71RUNv44XS5gCQhm/Y5tJ/
-	 DD3G+Zo3Mi5Kx1Sj6qzFyD0V6fQbiPGfbOzhxOnllIMRIekc78hcnvHswU5ZRQyU1T
-	 WxkJwhfjFzJCceFZhY81aqi/zKXEgUPoe0AnNWQ4ys5RtKuZt0zW+0beDk77awkasR
-	 d8DWEUMeanoCg==
+	b=XpFfa/oWuzvcxJ4nV3pt4YMyQ9Ce6a8AdL+JrsvU+V+u8m6fXjnKW8FKLFW3gUIF5
+	 F3A3fkxUUUkAfEv0i/SFM9KLdcvLOsHKHjzWmhfDC7P86AKkB68kBQzI3pzIABrIzd
+	 zZGGMlzj9OZ50ea1BVF9bFYKiT/9wGY4LuQY/tQcC7NmcfGxaG3dvDPynzXIDjfHVR
+	 No3EYW0g4Er4FDV/nWJpdkNB5ktrVAhKaLV2CxdAtW4EGzkq8NqJId5jFrRljBQaiV
+	 w5HdWuIVkAchzY3XZOubsqwCSc/V6UsrwNaR42ftFQ8DtYxhPxbfE+WyG9odKRe1C5
+	 nzHKwppLq01Bg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jiri Pirko <jiri@nvidia.com>,
-	Chenyuan Yang <chenyuan0y@gmail.com>,
-	Parav Pandit <parav@nvidia.com>,
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Nikita Kiryushin <kiryushin@ancud.ru>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 617/638] devlink: fix port new reply cmd type
-Date: Sun, 24 Mar 2024 19:00:54 -0400
-Message-ID: <20240324230116.1348576-618-sashal@kernel.org>
+Subject: [PATCH 6.6 614/638] net: phy: fix phy_read_poll_timeout argument type in genphy_loopback
+Date: Sun, 24 Mar 2024 19:00:51 -0400
+Message-ID: <20240324230116.1348576-615-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -51,44 +49,51 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jiri Pirko <jiri@nvidia.com>
+From: Nikita Kiryushin <kiryushin@ancud.ru>
 
-[ Upstream commit 78a2f5e6c15d8dcbd6495bb9635c7cb89235dfc5 ]
+[ Upstream commit 32fa4366cc4da1c97b725a0066adf43c6b298f37 ]
 
-Due to a c&p error, port new reply fills-up cmd with wrong value,
-any other existing port command replies and notifications.
+read_poll_timeout inside phy_read_poll_timeout can set val negative
+in some cases (for example, __mdiobus_read inside phy_read can return
+-EOPNOTSUPP).
 
-Fix it by filling cmd with value DEVLINK_CMD_PORT_NEW.
+Supposedly, commit 4ec732951702 ("net: phylib: fix phy_read*_poll_timeout()")
+should fix problems with wrong-signed vals, but I do not see how
+as val is sent to phy_read as is and __val = phy_read (not val)
+is checked for sign.
 
-Skimmed through devlink userspace implementations, none of them cares
-about this cmd value.
+Change val type for signed to allow better error handling as done in other
+phy_read_poll_timeout callers. This will not fix any error handling
+by itself, but allows, for example, to modify cond with appropriate
+sign check or check resulting val separately.
 
-Reported-by: Chenyuan Yang <chenyuan0y@gmail.com>
-Closes: https://lore.kernel.org/all/ZfZcDxGV3tSy4qsV@cy-server/
-Fixes: cd76dcd68d96 ("devlink: Support add and delete devlink port")
-Signed-off-by: Jiri Pirko <jiri@nvidia.com>
-Reviewed-by: Parav Pandit <parav@nvidia.com>
-Reviewed-by: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>
-Link: https://lore.kernel.org/r/20240318091908.2736542-1-jiri@resnulli.us
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: 014068dcb5b1 ("net: phy: genphy_loopback: add link speed configuration")
+Signed-off-by: Nikita Kiryushin <kiryushin@ancud.ru>
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Link: https://lore.kernel.org/r/20240315175052.8049-1-kiryushin@ancud.ru
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/devlink/port.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/phy_device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/devlink/port.c b/net/devlink/port.c
-index 9b5ff0fccefdd..4d49c21997e61 100644
---- a/net/devlink/port.c
-+++ b/net/devlink/port.c
-@@ -881,7 +881,7 @@ int devlink_nl_cmd_port_new_doit(struct sk_buff *skb, struct genl_info *info)
- 		err = -ENOMEM;
- 		goto err_out_port_del;
- 	}
--	err = devlink_nl_port_fill(msg, devlink_port, DEVLINK_CMD_NEW,
-+	err = devlink_nl_port_fill(msg, devlink_port, DEVLINK_CMD_PORT_NEW,
- 				   info->snd_portid, info->snd_seq, 0, NULL);
- 	if (WARN_ON_ONCE(err))
- 		goto err_out_msg_free;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index bbc459f97b7b0..813b753e21dec 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2701,8 +2701,8 @@ EXPORT_SYMBOL(genphy_resume);
+ int genphy_loopback(struct phy_device *phydev, bool enable)
+ {
+ 	if (enable) {
+-		u16 val, ctl = BMCR_LOOPBACK;
+-		int ret;
++		u16 ctl = BMCR_LOOPBACK;
++		int ret, val;
+ 
+ 		ctl |= mii_bmcr_encode_fixed(phydev->speed, phydev->duplex);
+ 
 -- 
 2.43.0
 
