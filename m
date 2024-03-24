@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEBF1826E9;
-	Sun, 24 Mar 2024 23:49:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56549182750;
+	Sun, 24 Mar 2024 23:49:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324151; cv=none; b=cyK5yYvHD2U73wQfl/GFn1cH7RyaG2jKGcRUXaStPx5BqGcPBgLJd/YIjRAA7Ps/p8QDCYkhea62N4VVec4k856hMSuV0u3DHF+LgyrXGhRDAVlrkMGzH/7Ts5fpGULK818KYWhF1u/9gnLPHCHMjeAcnCgXhd8D8oAHxSawGLE=
+	t=1711324163; cv=none; b=cJEkOsM4pu29aibaFmg+Hl1WfY4uGqH3ob9I1JzvXK6nUEEy9xm9IGXkaSIX7Zic/iMXe3frWW0SFJdYhHNGG8VkqADQArIoQ07ZXv+4CowRjI/89KDv6zpZW19UNrxSThwMSjfZFufc7HjiM2nnsL+pldHi2wFIbNU3PsTRftQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324151; c=relaxed/simple;
-	bh=3seKHVoN8/gBs3/qRcJQnELvobzcetvAIc5iZRBAZi0=;
+	s=arc-20240116; t=1711324163; c=relaxed/simple;
+	bh=1HX/XtXY9tKoIkbNvy21lYq1+GU7W/u60Q5A+0A38Ok=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NOlFi7xt8LjdR3D+sZDWwk/ev+Dzlgx9IVoA4O+GQKnDAvbs5JX65udMl1Nv0qt74uCaOmMVflz7gwBVrFZ6Ow8F15W4+wB4AEHxKNXvOYPjRRWSXew/Hm5JTP8RuVGup7yFKjlNFuKQhCnxlR6gcX1hD+2kMLyj4iN31Dp0CVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMqSJA98; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WVMMqtvojMb6nxMLNRiyff4uDmbR3wIWdnbqwlt4Oe3zGji1oWonYnwjUDc13bfra7QdexRy9R+v24PcfawUdSDcPwbHeSywBvK5VWDOMPutBjMbjgTbyIZk00fD/QjjMGYEuESzQX9XqFq1rIq1493fRbK8VBLsAhSR0zjyV4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaDf541h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMqSJA98"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90E9EC43399;
-	Sun, 24 Mar 2024 23:49:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaDf541h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C40EC43390;
+	Sun, 24 Mar 2024 23:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324150;
-	bh=3seKHVoN8/gBs3/qRcJQnELvobzcetvAIc5iZRBAZi0=;
+	s=k20201202; t=1711324162;
+	bh=1HX/XtXY9tKoIkbNvy21lYq1+GU7W/u60Q5A+0A38Ok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hMqSJA98KW45yuCZ82+6rz2b+wRtodV3UhbJsU+f6hE8H9nQdXxZZinR44+QS9ClL
-	 wNlRG2K5apWKT4yueziia9BUdZIbWgqNRDCipXnWtJ42FGn/I2+/NorlmE7RPAaYXB
-	 edLviICg/Apx65r0AqTJss+ZCDFiC2DaHNhxLYZRKI1HXC2GwMRpPSAIpY6E2bCrKx
-	 6xzQUBQX9pT+8xra6Izkn7FxMMxGmFHgSccv5SCJQOpjl8/ub+I+NFUNUAdJt36Gn6
-	 9nIW24WpaMiU2YXUQEsuLYuCNEJRjJIv3LhCrLXoPaB4fOrNY/cGxB5o4tc3GP03ol
-	 Z++vdcubzLjng==
+	b=BaDf541hM585AMZqUhk3k74m59Sm80Lvq28mIeSyShB3sy+3K9hiEMzp5sWwQDElY
+	 /kJ1kSOVT2O0OWjSIY0pNj0QRRhej3RX+YtwCqHvIVTrM89tivW9kLuGelh0gTlH4B
+	 L73PjtdShQNznCCscZL971aslh7z+OLBTB/gcE+TPJztSEphPU/fYNVuKhKqkthKOC
+	 n4D4U6rZ7YHXDxN66kwuEJpX48sFIZsvoPleDpqhkTmjd7Rs4ElW4/KY9WeZFpm0EX
+	 1J8HdsHNOopPhQD4HVuHR3dmX+inmZcUrPa0av/hqAKyR9ZUdAeJcVZkOjDsLOb4ZD
+	 Ihx4C79HV55mw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Thompson <daniel.thompson@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Ben Wolsieffer <ben.wolsieffer@hefring.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 146/183] backlight: da9052: Fully initialize backlight_properties during probe
-Date: Sun, 24 Mar 2024 19:45:59 -0400
-Message-ID: <20240324234638.1355609-147-sashal@kernel.org>
+Subject: [PATCH 5.4 157/183] watchdog: stm32_iwdg: initialize default timeout
+Date: Sun, 24 Mar 2024 19:46:10 -0400
+Message-ID: <20240324234638.1355609-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,35 +49,57 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Thompson <daniel.thompson@linaro.org>
+From: Ben Wolsieffer <ben.wolsieffer@hefring.com>
 
-[ Upstream commit 0285e9efaee8276305db5c52a59baf84e9731556 ]
+[ Upstream commit dbd7c0088b7f44aa0b9276ed3449df075a7b5b54 ]
 
-props is stack allocated and the fields that are not explcitly set
-by the probe function need to be zeroed or we'll get undefined behaviour
-(especially so power/blank states)!
+The driver never sets a default timeout value, therefore it is
+initialized to zero. When CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is
+enabled, the watchdog is started during probe. The kernel is supposed to
+automatically ping the watchdog from this point until userspace takes
+over, but this does not happen if the configured timeout is zero. A zero
+timeout causes watchdog_need_worker() to return false, so the heartbeat
+worker does not run and the system therefore resets soon after the
+driver is probed.
 
-Fixes: 6ede3d832aaa ("backlight: add driver for DA9052/53 PMIC v1")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240220153532.76613-2-daniel.thompson@linaro.org
-Signed-off-by: Lee Jones <lee@kernel.org>
+This patch fixes this by setting an arbitrary non-zero default timeout.
+The default could be read from the hardware instead, but I didn't see
+any reason to add this complexity.
+
+This has been tested on an STM32F746.
+
+Fixes: 85fdc63fe256 ("drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at probe")
+Signed-off-by: Ben Wolsieffer <ben.wolsieffer@hefring.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20240228182723.12855-1-ben.wolsieffer@hefring.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/da9052_bl.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/watchdog/stm32_iwdg.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/video/backlight/da9052_bl.c b/drivers/video/backlight/da9052_bl.c
-index 882359dd288c0..aa00379392a0f 100644
---- a/drivers/video/backlight/da9052_bl.c
-+++ b/drivers/video/backlight/da9052_bl.c
-@@ -117,6 +117,7 @@ static int da9052_backlight_probe(struct platform_device *pdev)
- 	wleds->led_reg = platform_get_device_id(pdev)->driver_data;
- 	wleds->state = DA9052_WLEDS_OFF;
+diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+index 25188d6bbe152..16dd1aab7c676 100644
+--- a/drivers/watchdog/stm32_iwdg.c
++++ b/drivers/watchdog/stm32_iwdg.c
+@@ -21,6 +21,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/watchdog.h>
  
-+	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW;
- 	props.max_brightness = DA9052_MAX_BRIGHTNESS;
- 
++#define DEFAULT_TIMEOUT 10
++
+ /* IWDG registers */
+ #define IWDG_KR		0x00 /* Key register */
+ #define IWDG_PR		0x04 /* Prescaler Register */
+@@ -254,6 +256,7 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+ 	wdd->parent = dev;
+ 	wdd->info = &stm32_iwdg_info;
+ 	wdd->ops = &stm32_iwdg_ops;
++	wdd->timeout = DEFAULT_TIMEOUT;
+ 	wdd->min_timeout = DIV_ROUND_UP((RLR_MIN + 1) * PR_MIN, wdt->rate);
+ 	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * wdt->data->max_prescaler *
+ 				    1000) / wdt->rate;
 -- 
 2.43.0
 
