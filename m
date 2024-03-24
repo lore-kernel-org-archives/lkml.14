@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A72027CBD3;
-	Sun, 24 Mar 2024 23:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212FF27CBF3;
+	Sun, 24 Mar 2024 23:39:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323542; cv=none; b=mCd5OWwvExYqQfu2JOWq1vU6PIwk/EUuw/yywwhIsEgnb5s4cHE7ufPvTOC6AY/bx62w/K9dlmutGoM4q9L9sPz+/nfh6fA/VI3ep+NuCQJi0asjdopCzLvDSR8xR1octZ5JuhSNdhEUw20P9FFNnVK0mSzj7ugOdYzd25YKfjE=
+	t=1711323547; cv=none; b=dsWYAGN0pmXNe/iLhsUhbUSvm6LKbwnkVda5GE1TJKHPhYrj2KIkucUelOSNIaE/DKvAXDtLd2ZqEj21PLl+cWnCLVWYiyvu2ZfM6j6yytcSH77GvzMxEzOutwqnyRGgTItyEGXrTChOT7Y3gkGtDtgB4B9/vTISUTytftt4+FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323542; c=relaxed/simple;
-	bh=qUsKLSR4/2S+QJrOFojeB/hmcUgRxhpYTpV7hOoNmWw=;
+	s=arc-20240116; t=1711323547; c=relaxed/simple;
+	bh=fjM6vof3XjpYnzJ3HZjB4SSWGQ7zcn+LI18Tle961iA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VwzqBjwNxxKkLPV2e504Uky6uxLUfEX2+Jilrgj59wrTQ9j2g3AM/QX0m0Qi3pKYMu2c2AWhsMYPol/QTHovvnUmcGFeS3xyHz+LBAryQBF8e/5R6pdGT7qXG5HGjLI+hOriZ86U6nca3GVB5M00h8C0XvkwSS7AABHyjua0UDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BdutJ/vn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=M2JZn1+zDCuwzXHpODdCZttzxEDr9PeaVBaX1Y8xVtghBnAv1oFfuU7oh13xFMmf7JPfoUAw70XbSxBSXrDyD76e1GaKRQV7JRnEAr0AXHO9XoTOA1mEOIgroKZ8hIUH9kLDslHgoLbB1lFRoYGvnl+dkC0ECOM/IdtnxTH2t6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BFzJQPgI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BdutJ/vn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A495C43394;
-	Sun, 24 Mar 2024 23:39:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BFzJQPgI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A17FC43390;
+	Sun, 24 Mar 2024 23:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323541;
-	bh=qUsKLSR4/2S+QJrOFojeB/hmcUgRxhpYTpV7hOoNmWw=;
+	s=k20201202; t=1711323546;
+	bh=fjM6vof3XjpYnzJ3HZjB4SSWGQ7zcn+LI18Tle961iA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BdutJ/vn+fQe71rlxK/Tm1Vs+YO+j6fQhA/EwJr1EqQgghAuaFSg2gJ2bZg7UmLu8
-	 7Dkh+4s5nsaTJuhCkb1Q+awuwYeIdJVPUgTfYpIzthdJ7CZEJjeetE/28c6pM0MidK
-	 5G6TklGka71dA79iYyC2k+/5UMucJKGKTqIRN2/uzxsD6AKVv7FmQEjIJrYtqPmD6k
-	 Nz7Ho6YUoRKZ+ZK1z4gMibQUb6p42sxLl1A+HaKf7vGkNnvZIgoyU9shg7tr9uh5QH
-	 fgmWx8wwjHStOOTcmHka4gSjyY23/piGY7JwjASCmi8/qLc80S8MST2tvAILFrS67L
-	 uORFFs9aNE2DQ==
+	b=BFzJQPgIEZ1vuq40rdgxNZ3xGzRUPjYTaQpBcxSnBpZXqb9Q5VN96Y7qNR0jgPoRF
+	 g96eOCvMANBsAWlW/h9MpMrkAyOffm0Q3Fa15hRGKLzoMY+btNXP+5kyA3NHtniOOS
+	 p7VFbaGXRlBwbfY4VSc6Fu3hfJdAqvSgs/khPSxN/OWWzWaYVF96LNk88UM8ePWlXG
+	 XYNy7/+0GWsl3yXRHGaVxXufyRjIH7sOAzaZkWfWeohOGH0t/z2txtzFg+3ls+jNcm
+	 PEnu6a3vurpw3JZC13rcBFqHBjsuVryia0+T5WDhl91oJ8hj/Y/2X5Yero0wbc2reS
+	 Ooglz27b4YCjQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sam Ravnborg <sam@ravnborg.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
+Cc: William Kucharski <william.kucharski@oracle.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Leon Romanovsky <leon@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 249/317] sparc32: Fix section mismatch in leon_pci_grpci
-Date: Sun, 24 Mar 2024 19:33:49 -0400
-Message-ID: <20240324233458.1352854-250-sashal@kernel.org>
+Subject: [PATCH 5.15 254/317] RDMA/srpt: Do not register event handler until srpt device is fully setup
+Date: Sun, 24 Mar 2024 19:33:54 -0400
+Message-ID: <20240324233458.1352854-255-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,60 +49,58 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Sam Ravnborg <sam@ravnborg.org>
+From: William Kucharski <william.kucharski@oracle.com>
 
-[ Upstream commit 24338a6ae13cb743ced77da1b3a12c83f08a0c96 ]
+[ Upstream commit c21a8870c98611e8f892511825c9607f1e2cd456 ]
 
-Passing a datastructre marked _initconst to platform_driver_register()
-is wrong. Drop the __initconst notation.
+Upon rare occasions, KASAN reports a use-after-free Write
+in srpt_refresh_port().
 
-This fixes the following warnings:
+This seems to be because an event handler is registered before the
+srpt device is fully setup and a race condition upon error may leave a
+partially setup event handler in place.
 
-WARNING: modpost: vmlinux: section mismatch in reference: grpci1_of_driver+0x30 (section: .data) -> grpci1_of_match (section: .init.rodata)
-WARNING: modpost: vmlinux: section mismatch in reference: grpci2_of_driver+0x30 (section: .data) -> grpci2_of_match (section: .init.rodata)
+Instead, only register the event handler after srpt device initialization
+is complete.
 
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Andreas Larsson <andreas@gaisler.com>
-Fixes: 4154bb821f0b ("sparc: leon: grpci1: constify of_device_id")
-Fixes: 03949b1cb9f1 ("sparc: leon: grpci2: constify of_device_id")
-Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Reviewed-by: Andreas Larsson <andreas@gaisler.com>
-Tested-by: Andreas Larsson <andreas@gaisler.com>
-Signed-off-by: Andreas Larsson <andreas@gaisler.com>
-Link: https://lore.kernel.org/r/20240224-sam-fix-sparc32-all-builds-v2-7-1f186603c5c4@ravnborg.org
+Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
+Signed-off-by: William Kucharski <william.kucharski@oracle.com>
+Link: https://lore.kernel.org/r/20240202091549.991784-2-william.kucharski@oracle.com
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/kernel/leon_pci_grpci1.c | 2 +-
- arch/sparc/kernel/leon_pci_grpci2.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/ulp/srpt/ib_srpt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/sparc/kernel/leon_pci_grpci1.c b/arch/sparc/kernel/leon_pci_grpci1.c
-index e6935d0ac1ec9..c32590bdd3120 100644
---- a/arch/sparc/kernel/leon_pci_grpci1.c
-+++ b/arch/sparc/kernel/leon_pci_grpci1.c
-@@ -696,7 +696,7 @@ static int grpci1_of_probe(struct platform_device *ofdev)
- 	return err;
- }
+diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
+index 60f9c612eb3c3..1b44ce0ac991c 100644
+--- a/drivers/infiniband/ulp/srpt/ib_srpt.c
++++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+@@ -3209,7 +3209,6 @@ static int srpt_add_one(struct ib_device *device)
  
--static const struct of_device_id grpci1_of_match[] __initconst = {
-+static const struct of_device_id grpci1_of_match[] = {
- 	{
- 	 .name = "GAISLER_PCIFBRG",
- 	 },
-diff --git a/arch/sparc/kernel/leon_pci_grpci2.c b/arch/sparc/kernel/leon_pci_grpci2.c
-index ca22f93d90454..dd06abc61657f 100644
---- a/arch/sparc/kernel/leon_pci_grpci2.c
-+++ b/arch/sparc/kernel/leon_pci_grpci2.c
-@@ -887,7 +887,7 @@ static int grpci2_of_probe(struct platform_device *ofdev)
- 	return err;
- }
+ 	INIT_IB_EVENT_HANDLER(&sdev->event_handler, sdev->device,
+ 			      srpt_event_handler);
+-	ib_register_event_handler(&sdev->event_handler);
  
--static const struct of_device_id grpci2_of_match[] __initconst = {
-+static const struct of_device_id grpci2_of_match[] = {
- 	{
- 	 .name = "GAISLER_GRPCI2",
- 	 },
+ 	for (i = 1; i <= sdev->device->phys_port_cnt; i++) {
+ 		sport = &sdev->port[i - 1];
+@@ -3232,6 +3231,7 @@ static int srpt_add_one(struct ib_device *device)
+ 		}
+ 	}
+ 
++	ib_register_event_handler(&sdev->event_handler);
+ 	spin_lock(&srpt_dev_lock);
+ 	list_add_tail(&sdev->list, &srpt_dev_list);
+ 	spin_unlock(&srpt_dev_lock);
+@@ -3242,7 +3242,6 @@ static int srpt_add_one(struct ib_device *device)
+ 
+ err_port:
+ 	srpt_unregister_mad_agent(sdev, i);
+-	ib_unregister_event_handler(&sdev->event_handler);
+ err_cm:
+ 	if (sdev->cm_id)
+ 		ib_destroy_cm_id(sdev->cm_id);
 -- 
 2.43.0
 
