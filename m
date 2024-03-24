@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822811769E6;
-	Sun, 24 Mar 2024 23:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F14627899B;
+	Sun, 24 Mar 2024 23:37:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323446; cv=none; b=uKvpcdAf7WOBc0mPrp+9YnFx0VpcdJUcIVCmbqLVbhPLbM8S3WQ5/2t7tjeLAvBHZqA+zLWDEqLNNvC2bN9Yh+qspoog+sjDEO0wn6cxsqX3+wdDSLpBtMLvKhEDjjxC8Kx+oDCxyZyD6LPFlssk5BOQpkQPTlx9TtsH7zX3uno=
+	t=1711323453; cv=none; b=ND+n9rrhnz6N0HM0bOF986NJKMlbI76f2X3xw/pKxgTpD3gQByZgJzZ4sjcqRLUzuTy3+Qv518foejIRhk5VgTVPXHmmE6FfKgFrFHItBPBlsuqip5i8+9+t0v6NCJThbTGkFUhQS+k5v7AeiLZh5SfPDXSInRQReZOtSVK4zT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323446; c=relaxed/simple;
-	bh=wkw81QTNMZE7CcCiJK6eFwijCpAGFyOZ4hyjY259Npg=;
+	s=arc-20240116; t=1711323453; c=relaxed/simple;
+	bh=V+QTxs8ZNX2e9Unfo7ANnUqWpeXj6vfwQlIB3jSMCBw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X3E9q8IYBf4wBDRP4Bqe/CE59NubOgVfXwem/mbvZtxQg/n4r7rLJJNyIZyxzBn6rkyYMqhlRhxEyxAX4AWFpBGuePePyNAhoagzgFi3mFwVJQpoSAcsY5FBZwg12iBbbjN0shOhrsGfguAJPpka++a7xMPjfnnBnGs40TodfsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mk6rssw5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uDJqPDaz6L2qZrETR/cPcTtSycszxSKeL8odm4BVRk5KaaawkxH+ia84TX5skKGJnm/+BFKr1c3nQEe46RBcOQytlWyIfuLXR/UjgunSE/XYu102W96C9u235LmYfF2Pn2YGyYDcthPZ0qkYsxLnWM5xlojD+pZywut5Zv0aw7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSDHZ4+H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mk6rssw5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABBF1C43394;
-	Sun, 24 Mar 2024 23:37:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSDHZ4+H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E50C43394;
+	Sun, 24 Mar 2024 23:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323446;
-	bh=wkw81QTNMZE7CcCiJK6eFwijCpAGFyOZ4hyjY259Npg=;
+	s=k20201202; t=1711323452;
+	bh=V+QTxs8ZNX2e9Unfo7ANnUqWpeXj6vfwQlIB3jSMCBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mk6rssw5V8iVlyh3n4xmSm7hR0MkB7UN4AxSXQJJI/N1mcrHC7rrJowMzXeKqWxyN
-	 br4Mw58RXgSAs4rCN4zbxyDIepb6M1uZfN062U15eos5T6pOkf64Yz+nUUifuJWMUs
-	 l3jWeb0jMCFlrP6qns6peSM+Xomv5/YFG35rmfHXa9xT7U1hWOu+XeabLJLngIj6Bz
-	 RcyTazodIJE9hmWPFIM9vLANykNaPwsMQxWJNnKPtGyuFBEb9uPoXKZAh6aAQy15rL
-	 LKc1/vVeNC9SRbLrbuQdtaea3rhZDEN9e9vLZSFiJykVdkwj7Wxsq2yS4a3vCngSt7
-	 1tMMAf9444vlw==
+	b=QSDHZ4+Hcjn05x7qKjJC0Fl4mTZZ2KdXYwgtWZgVQ0BbpoG7EHSFyfN8OduIVWAw/
+	 WjWKPBux3T8xfe8e5Em8w7jKJ3WKv2sZVsCpBdGBneQd/OZE82tbUMVJ/opTv8/SdH
+	 riDWS39cWYxEGP1Eh8OHUaumYQVvavC93r8jn4ED2dWipP6C4zPErpa210avZVFePF
+	 ZB84PjW8TK3o1/NNR/aEb9M9CbqmyWDEEimVPZVgTNtkALCr03HNojITqrfAV0UgFx
+	 KC7QJy7xja12cxrU3pEkVJXbytPfc2EXJnmWOM862PyN1pGn1gNeO2bbd8SBbWPphS
+	 kqPNxGOtqRVow==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
-	Tom Parkin <tparkin@katalix.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Chen Ni <nichen@iscas.ac.cn>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 149/317] l2tp: fix incorrect parameter validation in the pppol2tp_getsockopt() function
-Date: Sun, 24 Mar 2024 19:32:09 -0400
-Message-ID: <20240324233458.1352854-150-sashal@kernel.org>
+Subject: [PATCH 5.15 156/317] drm/tegra: dsi: Add missing check for of_find_device_by_node
+Date: Sun, 24 Mar 2024 19:32:16 -0400
+Message-ID: <20240324233458.1352854-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,44 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+From: Chen Ni <nichen@iscas.ac.cn>
 
-[ Upstream commit 955e9876ba4ee26eeaab1b13517f5b2c88e73d55 ]
+[ Upstream commit afe6fcb9775882230cd29b529203eabd5d2a638d ]
 
-The 'len' variable can't be negative when assigned the result of
-'min_t' because all 'min_t' parameters are cast to unsigned int,
-and then the minimum one is chosen.
+Add check for the return value of of_find_device_by_node() and return
+the error if it fails in order to avoid NULL pointer dereference.
 
-To fix the logic, check 'len' as read from 'optlen',
-where the types of relevant variables are (signed) int.
-
-Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
-Reviewed-by: Tom Parkin <tparkin@katalix.com>
-Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e94236cde4d5 ("drm/tegra: dsi: Add ganged mode support")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231024080738.825553-1-nichen@iscas.ac.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/l2tp/l2tp_ppp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/tegra/dsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
-index 9cef8e080f644..55de42b000d8a 100644
---- a/net/l2tp/l2tp_ppp.c
-+++ b/net/l2tp/l2tp_ppp.c
-@@ -1357,11 +1357,11 @@ static int pppol2tp_getsockopt(struct socket *sock, int level, int optname,
- 	if (get_user(len, optlen))
- 		return -EFAULT;
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index de1333dc0d867..0adce882f157b 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -1534,9 +1534,11 @@ static int tegra_dsi_ganged_probe(struct tegra_dsi *dsi)
+ 	np = of_parse_phandle(dsi->dev->of_node, "nvidia,ganged-mode", 0);
+ 	if (np) {
+ 		struct platform_device *gangster = of_find_device_by_node(np);
++		of_node_put(np);
++		if (!gangster)
++			return -EPROBE_DEFER;
  
--	len = min_t(unsigned int, len, sizeof(int));
--
- 	if (len < 0)
- 		return -EINVAL;
+ 		dsi->slave = platform_get_drvdata(gangster);
+-		of_node_put(np);
  
-+	len = min_t(unsigned int, len, sizeof(int));
-+
- 	err = -ENOTCONN;
- 	if (!sk->sk_user_data)
- 		goto end;
+ 		if (!dsi->slave) {
+ 			put_device(&gangster->dev);
 -- 
 2.43.0
 
