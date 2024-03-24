@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6580517BB0E;
-	Sun, 24 Mar 2024 23:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A119517BB13;
+	Sun, 24 Mar 2024 23:42:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323752; cv=none; b=TTcyDlE5AWKBF+ic+QV9WiFkuHdTclESVEr8Du3HyBi7L3Nccsaewzy9oDMyFw5ldbW5FxukqAcLvqhcVi4+iLZqMuR6+l2k4yu934VGwFfdBp+0H0sMezhTSaAd5BB2qjPcfMA40XqqSAajspb53RG1BeP2MPCfc6eXZosex2A=
+	t=1711323750; cv=none; b=m+XHDkN3E2VSvVCQga9OAYzaSuHRihqJzN3SvOng+PuVqZz+K1flB+M3FEnpjHEdNJtUQE5onnxvLn9GaHMhs/G2QlpGiFkhyKnTeB0VTyQrqfj4mEReK6mDX6mLf7qUiJchyPVgE7XKefHkLMZc/SpZK/Ao121ybudaboPWKhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323752; c=relaxed/simple;
-	bh=EhfoDP/XImJDzEgHFjKQbGQJRU+kHbEc34Ec+kJzGOQ=;
+	s=arc-20240116; t=1711323750; c=relaxed/simple;
+	bh=BEDj/bZZ8ydWaXAwhh7YWirDihFEP8hae+QSA1Zd6Mk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CR96TazX3IWDuRPi90WLm0ksuVC17U5EI12tBZDqk2IY2/VLR8DCuLGYIzHGDDae2XLu1i0QpuZuyTKgWl2EW4hQyNG9pGL4xl5UduPjL0YWTFUqSGNS/+3SzZeCSiGFy1KFN43F+PE4QpRrhcI6gBkRDo9bHt6COYb+PXn/Zg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ic4yJkPb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=FfvLc82HAB7eVKJSnXNAUNE9iZNH6jUlg8bwxyUj5gewwBGc/mHLVYaWtKmqBrvuMl1fJwqITCjJzAc7wYw1V/TCOj1K2vbcpfAeUPJY7rVsvEBCEAtAA/euzp7BR8gsbGW9oVXedFguVYeNelxIaFVfz4sboZ1BZD8THag5E1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOBgcZ09; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ic4yJkPb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A17C433F1;
-	Sun, 24 Mar 2024 23:42:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOBgcZ09"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D858BC43390;
+	Sun, 24 Mar 2024 23:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323752;
-	bh=EhfoDP/XImJDzEgHFjKQbGQJRU+kHbEc34Ec+kJzGOQ=;
+	s=k20201202; t=1711323750;
+	bh=BEDj/bZZ8ydWaXAwhh7YWirDihFEP8hae+QSA1Zd6Mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ic4yJkPbI1P9IH5IbEOzli0jmdy0GmmPIxVGdhBglckzcSQEMk71QP7TKbz3yNk6x
-	 Z0uvwUYPd03+CnKxoViz5DbPyD+CgFSXwHAtDh3KqNkg9rwv8jgz1ALYvhLdi/R7pj
-	 dWxXvmPhFTzb6jGxbbToi6SslVrQcei2LS5GpwvVlPPrHyQtKg+1PggfQCvxF4lFS7
-	 M29nYtXpI5tBrNFVsMR5xHV+7cPXKthf6Wb8FT2YhXcoZhEi78kS7Ti1tOc4ulXnNI
-	 uJT8F/36sIlVqJaHP4AlDG6th/p29mxYJ5yJCXhdyRb20WOngJXjEtLq6M0cQbKe9T
-	 nqgJZPPNAHjnw==
+	b=TOBgcZ09KuQgk9rAZVZPN4mCdpIkdYkjNfSAinZn/S2KGsc/EJU222CBajyTlQX37
+	 FVpJo2kpSEyz2tMJFQ4+/Iv6Xz7lLjGGE1S7BKB2toiRybCoPChgXlbw3oX9iu6mMS
+	 ap8Ihgm6RvU9lzmq1N2oqHBAWoEDrewXNtQVMn1YF2m08p3PZ4lvU/R6T2CqYRR7h3
+	 0i1Hy1yhDFEwTKiAPB0hK7SbkD9nG+WfWbNPqk2BBTa/guR84ODN5gmr4piifYfqNQ
+	 rR+w2otggq2drIvE4hHeJothtvQlMJJqVswVxJ67ukeGBbuItBi2z9kjelUbe5xk49
+	 2io9FcRTSIpjA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mikhail Khvainitski <me@khvoinitsky.org>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 127/238] HID: lenovo: Add middleclick_workaround sysfs knob for cptkbd
-Date: Sun, 24 Mar 2024 19:38:35 -0400
-Message-ID: <20240324234027.1354210-128-sashal@kernel.org>
+Subject: [PATCH 5.10 125/238] PCI/DPC: Print all TLP Prefixes, not just the first
+Date: Sun, 24 Mar 2024 19:38:33 -0400
+Message-ID: <20240324234027.1354210-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -44,136 +44,45 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mikhail Khvainitski <me@khvoinitsky.org>
+From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-[ Upstream commit 2814646f76f8518326964f12ff20aaee70ba154d ]
+[ Upstream commit 6568d82512b0a64809acff3d7a747362fa4288c8 ]
 
-Previous attempt to autodetect well-behaving patched firmware
-introduced in commit 46a0a2c96f0f ("HID: lenovo: Detect quirk-free fw
-on cptkbd and stop applying workaround") has shown that there are
-false-positives on original firmware (on both 1st gen and 2nd gen
-keyboards) which causes the middle button click workaround to be
-mistakenly disabled.
+The TLP Prefix Log Register consists of multiple DWORDs (PCIe r6.1 sec
+7.9.14.13) but the loop in dpc_process_rp_pio_error() keeps reading from
+the first DWORD, so we print only the first PIO TLP Prefix (duplicated
+several times), and we never print the second, third, etc., Prefixes.
 
-This commit adds explicit parameter to sysfs to control this
-workaround.
+Add the iteration count based offset calculation into the config read.
 
-Fixes: 46a0a2c96f0f ("HID: lenovo: Detect quirk-free fw on cptkbd and stop applying workaround")
-Fixes: 43527a0094c1 ("HID: lenovo: Restrict detection of patched firmware only to USB cptkbd")
-Signed-off-by: Mikhail Khvainitski <me@khvoinitsky.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Fixes: f20c4ea49ec4 ("PCI/DPC: Add eDPC support")
+Link: https://lore.kernel.org/r/20240118110815.3867-1-ilpo.jarvinen@linux.intel.com
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+[bhelgaas: add user-visible details to commit log]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-lenovo.c | 57 +++++++++++++++++++++++++++-------------
- 1 file changed, 39 insertions(+), 18 deletions(-)
+ drivers/pci/pcie/dpc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
-index 249af8d26fe78..c9fdeffbe1a9e 100644
---- a/drivers/hid/hid-lenovo.c
-+++ b/drivers/hid/hid-lenovo.c
-@@ -53,10 +53,10 @@ struct lenovo_drvdata {
- 	/* 0: Up
- 	 * 1: Down (undecided)
- 	 * 2: Scrolling
--	 * 3: Patched firmware, disable workaround
- 	 */
- 	u8 middlebutton_state;
- 	bool fn_lock;
-+	bool middleclick_workaround_cptkbd;
- };
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index f21d64ae4ffcc..cf0d4ba2e157a 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -231,7 +231,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
  
- #define map_key_clear(c) hid_map_usage_clear(hi, usage, bit, max, EV_KEY, (c))
-@@ -418,6 +418,36 @@ static ssize_t attr_sensitivity_store_cptkbd(struct device *dev,
- 	return count;
- }
- 
-+static ssize_t attr_middleclick_workaround_show_cptkbd(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	struct hid_device *hdev = to_hid_device(dev);
-+	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
-+
-+	return snprintf(buf, PAGE_SIZE, "%u\n",
-+		cptkbd_data->middleclick_workaround_cptkbd);
-+}
-+
-+static ssize_t attr_middleclick_workaround_store_cptkbd(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf,
-+		size_t count)
-+{
-+	struct hid_device *hdev = to_hid_device(dev);
-+	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
-+	int value;
-+
-+	if (kstrtoint(buf, 10, &value))
-+		return -EINVAL;
-+	if (value < 0 || value > 1)
-+		return -EINVAL;
-+
-+	cptkbd_data->middleclick_workaround_cptkbd = !!value;
-+
-+	return count;
-+}
-+
- 
- static struct device_attribute dev_attr_fn_lock =
- 	__ATTR(fn_lock, S_IWUSR | S_IRUGO,
-@@ -429,10 +459,16 @@ static struct device_attribute dev_attr_sensitivity_cptkbd =
- 			attr_sensitivity_show_cptkbd,
- 			attr_sensitivity_store_cptkbd);
- 
-+static struct device_attribute dev_attr_middleclick_workaround_cptkbd =
-+	__ATTR(middleclick_workaround, S_IWUSR | S_IRUGO,
-+			attr_middleclick_workaround_show_cptkbd,
-+			attr_middleclick_workaround_store_cptkbd);
-+
- 
- static struct attribute *lenovo_attributes_cptkbd[] = {
- 	&dev_attr_fn_lock.attr,
- 	&dev_attr_sensitivity_cptkbd.attr,
-+	&dev_attr_middleclick_workaround_cptkbd.attr,
- 	NULL
- };
- 
-@@ -483,23 +519,7 @@ static int lenovo_event_cptkbd(struct hid_device *hdev,
- {
- 	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
- 
--	if (cptkbd_data->middlebutton_state != 3) {
--		/* REL_X and REL_Y events during middle button pressed
--		 * are only possible on patched, bug-free firmware
--		 * so set middlebutton_state to 3
--		 * to never apply workaround anymore
--		 */
--		if (hdev->product == USB_DEVICE_ID_LENOVO_CUSBKBD &&
--				cptkbd_data->middlebutton_state == 1 &&
--				usage->type == EV_REL &&
--				(usage->code == REL_X || usage->code == REL_Y)) {
--			cptkbd_data->middlebutton_state = 3;
--			/* send middle button press which was hold before */
--			input_event(field->hidinput->input,
--				EV_KEY, BTN_MIDDLE, 1);
--			input_sync(field->hidinput->input);
--		}
--
-+	if (cptkbd_data->middleclick_workaround_cptkbd) {
- 		/* "wheel" scroll events */
- 		if (usage->type == EV_REL && (usage->code == REL_WHEEL ||
- 				usage->code == REL_HWHEEL)) {
-@@ -976,6 +996,7 @@ static int lenovo_probe_cptkbd(struct hid_device *hdev)
- 	cptkbd_data->middlebutton_state = 0;
- 	cptkbd_data->fn_lock = true;
- 	cptkbd_data->sensitivity = 0x05;
-+	cptkbd_data->middleclick_workaround_cptkbd = true;
- 	lenovo_features_set_cptkbd(hdev);
- 
- 	ret = sysfs_create_group(&hdev->dev.kobj, &lenovo_attr_group_cptkbd);
+ 	for (i = 0; i < pdev->dpc_rp_log_size - 5; i++) {
+ 		pci_read_config_dword(pdev,
+-			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
++			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG + i * 4, &prefix);
+ 		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
+ 	}
+  clear_status:
 -- 
 2.43.0
 
