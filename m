@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2BC1FD5A3;
-	Sun, 24 Mar 2024 23:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CEB22F4ED;
+	Sun, 24 Mar 2024 23:52:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324369; cv=none; b=kt3UBAZ/zCy9LVfgtCnLEyowfpAqCEO+8pF46FrcfpRH6LWILXe0wHbZVtkIdqomXQajOVqyA4M7MPMzN4Mw1SfuoGTY+1koaE1TFsXiTcUPhP6PDAcSdQXoUU8S/lzviPvvuVzOuw/wTGZunkKcAIOzwOvjifdokd/I4PgoY4E=
+	t=1711324371; cv=none; b=J21CZLaG0fb4kXK1SfYu0u1rEC+JslDoIS0NC5IfO4KANoV1UOV/zTdx24CIIWuc3Sq/bP9CraSyRovXpByvNtzrVmJc5rSt/p5i/EQWweZa8hE+9AfxrdD2goZBbC2q7nlzeY5A0/lSK4teRNF4QuImfp+STGVfagUfXa1jLug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324369; c=relaxed/simple;
-	bh=VFG8uoOm1/L9ANDqRLELcegRMZpFjjikqvQRLkeqTg8=;
+	s=arc-20240116; t=1711324371; c=relaxed/simple;
+	bh=QUGCoymRcEaCqGNz+5TWFFGBLJK+0XjjHAOkdaWp5gM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ArURvk+7El4BOFRm2YUYpNwuHsN7QL1hwFIYStQe2X3jZjKWj3YY5S07he8pPuQ/n3DEk2tDb3R15qdxGD7phzMY3YAsAXKW+f3vv4VNU1qUSLHDAtMgXMz+slRZHr2RGxTQl9btC3BTBF5SMztijwbI/wrNy7BWX6v21x4M8XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LyZNPJET; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fb+ooUT2+b/jy8wU6du1YqDYup9vtChISfNokG+x3Uh2QhZg/PQtbdl1UH7ECyWKgdFIsk1mXAM88+bwCC784be1/UtDWcIqDPlDkQwraz4/7wm8oJXa781SxYujalukvjMyY+VPkmNz9vG+8YDv7oHvjfFqcX1yanvLR+qzU8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4CmaObg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LyZNPJET"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF2E3C43394;
-	Sun, 24 Mar 2024 23:52:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4CmaObg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A42C43390;
+	Sun, 24 Mar 2024 23:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324368;
-	bh=VFG8uoOm1/L9ANDqRLELcegRMZpFjjikqvQRLkeqTg8=;
+	s=k20201202; t=1711324370;
+	bh=QUGCoymRcEaCqGNz+5TWFFGBLJK+0XjjHAOkdaWp5gM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LyZNPJETD/nxXVi/uyprZYVdJqoXt7gWxiVIOUaS+VIhhg/qf3yjozBpuM6Q6Y1G3
-	 n2EiaQU4v5iWEjJMV7peIuQbyunvmvHJW17vwKlyFukPnWpZQ9Mvk+jcW/y7Mbwiv5
-	 GQuDwSZnBogUy6xU8D77t5QdFuVVfDOlQTfALd9vBUbpaCYktxZscu4Xv5SnCiVzr2
-	 ysCqpymSAA8/tCUi/rB48XsyY+lpqYkCH0pO/bWzOnvBiCLhUtgJ6I0tOcVu8zCRoQ
-	 pZwDowVwwCoYN5gjjsSNvmu8lQGNBm+neP6u0rSTkM3aWU+tISHLDPnpdRKpmnejAM
-	 imBETBmYxoJXQ==
+	b=a4CmaObgl2LSyn4hfglew4zgo4rnyfsgPUul/JezWfIsUecEMnpvLWsgzTYFkcxTW
+	 hf59F3MwrpfYzCwkwOkZXBEO5XKALIokvTwIdeP07L8yxzg0Yt5rlFm3KQJBzFox1L
+	 7+AJQBg1c87nzdzzGd3P3b0W+cwcP2fFQAnBPeqSY1ytK4s7xU7FVIO/Dz1dQlW3YR
+	 UMco5XzAn2UHMQpX8kDvSlRj7N0NMnphKG6pSaAByqY2Ixe27j2DVwjp3NgwCp/b12
+	 72GiQHgO9xUGRYoCMk/Sw4+BNixghDwiTw+WDuWjhRh3RlEL5v/eNCI/h+ZkR9++wE
+	 +A2oyDVsQHwkg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 135/148] serial: max310x: fix syntax error in IRQ error message
-Date: Sun, 24 Mar 2024 19:49:59 -0400
-Message-ID: <20240324235012.1356413-136-sashal@kernel.org>
+Subject: [PATCH 4.19 137/148] kconfig: fix infinite loop when expanding a macro at the end of file
+Date: Sun, 24 Mar 2024 19:50:01 -0400
+Message-ID: <20240324235012.1356413-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -49,38 +47,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 8ede8c6f474255b2213cccd7997b993272a8e2f9 ]
+[ Upstream commit af8bbce92044dc58e4cc039ab94ee5d470a621f5 ]
 
-Replace g with q.
+A macro placed at the end of a file with no newline causes an infinite
+loop.
 
-Helpful when grepping thru source code or logs for
-"request" keyword.
+[Test Kconfig]
+  $(info,hello)
+  \ No newline at end of file
 
-Fixes: f65444187a66 ("serial: New serial driver MAX310X")
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Link: https://lore.kernel.org/r/20240118152213.2644269-6-hugo@hugovil.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I realized that flex-provided input() returns 0 instead of EOF when it
+reaches the end of a file.
+
+Fixes: 104daea149c4 ("kconfig: reference environment variables directly and remove 'option env='")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/max310x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/kconfig/zconf.l | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index e68dbd13110ba..1c8fd06befec4 100644
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -1363,7 +1363,7 @@ static int max310x_probe(struct device *dev, struct max310x_devtype *devtype,
- 	if (!ret)
- 		return 0;
+diff --git a/scripts/kconfig/zconf.l b/scripts/kconfig/zconf.l
+index c2f577d719647..2a47ce9b219a0 100644
+--- a/scripts/kconfig/zconf.l
++++ b/scripts/kconfig/zconf.l
+@@ -292,8 +292,11 @@ static char *expand_token(const char *in, size_t n)
+ 	new_string();
+ 	append_string(in, n);
  
--	dev_err(dev, "Unable to reguest IRQ %i\n", irq);
-+	dev_err(dev, "Unable to request IRQ %i\n", irq);
- 
- out_uart:
- 	for (i = 0; i < devtype->nr; i++) {
+-	/* get the whole line because we do not know the end of token. */
+-	while ((c = input()) != EOF) {
++	/*
++	 * get the whole line because we do not know the end of token.
++	 * input() returns 0 (not EOF!) when it reachs the end of file.
++	 */
++	while ((c = input()) != 0) {
+ 		if (c == '\n') {
+ 			unput(c);
+ 			break;
 -- 
 2.43.0
 
