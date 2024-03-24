@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7622C1DA14B;
-	Sun, 24 Mar 2024 22:51:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199DA1DA15E;
+	Sun, 24 Mar 2024 22:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320672; cv=none; b=i5H8AtXAIKi5L5qlHqH9psOFv4wbHs8h2gfNkL/o4qsPebHIp6m2CxrUQKKC/ryeZOnzESmJfJKDOwud0ak4gG1XcvpuU95mMO4e4FSyunaJ3zutjcJFGrPe8D0q+U0e523iOPr+lDRwY9Y7ByBNWHanAceQEU239UrSZKQq5ck=
+	t=1711320678; cv=none; b=HKUdGgiu8KdPw3LCN6xXW4XjN60CoqcWbQo35mUZr1yKaq0I2fYMBUsn6+l1v7qVJ0lJIqf0NlHT1j3wCM5VHMKbj5cYJAZPGOXp+CNfwwuf/VzJ6gcaj63Fan4j41l+ulJZ0FUXSTOg9P5S6d93qfg4RO+2y/JWREcX2Llb4NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320672; c=relaxed/simple;
-	bh=PixZTdAIXb+apt1+3VrFpubrgiRaiLYdNla0aHXf+/Q=;
+	s=arc-20240116; t=1711320678; c=relaxed/simple;
+	bh=dX+p9aq8ZTnlef2Gmg+V8hnuIMD3+xTYM25f1+TPgKM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EURAH6kIKEarO07pYi+BT+63t0UHi9H4h2Gxz4cVhNz9eOKdSr9c2bzJDaYpnf98muGbVnXoWmqgpFVeSrKd4fztGd5UNVLROxXMcUcYGuEtiT0Eshj+shzja1p8E9SwNtCGC4eZnn1NbI+BhdeJYgna7M+zzqVun1dzuWj/vPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiFGIXcE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=cVrDVtnUmMRx4Fr9V4p3Z9/yRxl6gfO/ZBEeKck/UFia/YMoH+VC7KYRhCilrBQz9WuLmw5ZNHybrkLiCAjfAw7UPfZe0YFNw5z3eM2ERgkFMKRzaGV004J5hvKAJTzbhP11L4dTi+K+FIB2bhDEWZmR9OcUxnbA8i/00IH+5KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0Wx3fBT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiFGIXcE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99AEEC433C7;
-	Sun, 24 Mar 2024 22:51:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0Wx3fBT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44449C433F1;
+	Sun, 24 Mar 2024 22:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320671;
-	bh=PixZTdAIXb+apt1+3VrFpubrgiRaiLYdNla0aHXf+/Q=;
+	s=k20201202; t=1711320677;
+	bh=dX+p9aq8ZTnlef2Gmg+V8hnuIMD3+xTYM25f1+TPgKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tiFGIXcEE76B2RYEH4rM3usAbm/fbBJoL3Xcn7Uj9+gHIgCHPxBisJPOhP1qQpNcw
-	 mS9hAfcllMq+BpLDgOhOnzXOMtrHi3dYq3yesg5KKVyds/3Zv61nD75aoBRJmLJTvE
-	 mQDuiYp4MtdNuxUS1oFaZXOSJ7Mf1XHuMj6UTe2PTGZW4hL6STXPf+sCwNe2aD4ZFJ
-	 yvMkxQ07Ldz+K6xB3fp94iFgKTH7ELm9ylUV0JIeCtOJtFLFsIKWu+b/6lKxnht/kl
-	 HWgawzvssseAA+qPtLM61jaajUEhG2TJMMa6hu5On6VuN06PdJ6XybMRv+XrTIhfmf
-	 MXrK6L77TpjAQ==
+	b=i0Wx3fBTubs4l3w6cbaS8FLb15ItrD5wZJ6wL4tYcaRU3nrRKJL6aWoQ3varAHBkn
+	 mddtYmS/ZGdx8EX072nQ+k1H0Gh8Mny7mlHy/5eS4LmCK4Nobs9AWXZRVbvHuBL4QB
+	 Jt+GWKyjzSWKEa7qPoLISmUDtPVMNwMKkkKFXF1WdBX9RHGet6tv5JE7brHtIMzE1I
+	 knnv9psJUjcPsq1HROfQ1UzMJ7UTYO4gBKER92JuYSGT1hSEtmtTQE25oHVFhnhpF6
+	 HwSmE3lE6kuIlEW73KgBQU7aeVUbJuSCUi0eSq3GUpFXUwMNHjYPEeykOUtkpuDXKe
+	 WFIbi0+AFRSWg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ido Schimmel <idosch@nvidia.com>,
-	Simon Horman <horms@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 234/713] selftests: forwarding: Add missing multicast routing config entries
-Date: Sun, 24 Mar 2024 18:39:20 -0400
-Message-ID: <20240324224720.1345309-235-sashal@kernel.org>
+Subject: [PATCH 6.7 239/713] arm64: dts: mediatek: mt7986: fix SPI bus width properties
+Date: Sun, 24 Mar 2024 18:39:25 -0400
+Message-ID: <20240324224720.1345309-240-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,48 +45,63 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ido Schimmel <idosch@nvidia.com>
+From: Rafał Miłecki <rafal@milecki.pl>
 
-[ Upstream commit f0ddf15f0a74c27eb4b2271a90e69948acc3fa2c ]
+[ Upstream commit 4e7dc18a753cec130b06f1ddbae10ea9dcfb1723 ]
 
-The two tests that make use of multicast routig (router.sh and
-router_multicast.sh) are currently failing in the netdev CI because the
-kernel is missing multicast routing support.
+This fixes SPI setup and resolves following validation errors:
+arch/arm64/boot/dts/mediatek/mt7986a-rfb.dtb: spi_nand@0: Unevaluated properties are not allowed ('spi-rx-buswidth', 'spi-tx-buswidth' were unexpected)
+        from schema $id: http://devicetree.org/schemas/mtd/spi-nand.yaml#
+arch/arm64/boot/dts/mediatek/mt7986b-rfb.dtb: spi_nand@0: Unevaluated properties are not allowed ('spi-rx-buswidth', 'spi-tx-buswidth' were unexpected)
+        from schema $id: http://devicetree.org/schemas/mtd/spi-nand.yaml#
 
-Fix by adding the required config entries.
-
-Fixes: 6d4efada3b82 ("selftests: forwarding: Add multicast routing test")
-Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Link: https://lore.kernel.org/r/20240208165538.1303021-1-idosch@nvidia.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 885e153ed7c1 ("arm64: dts: mt7986: add spi related device nodes")
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://lore.kernel.org/r/20231116130952.5099-1-zajec5@gmail.com
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/forwarding/config | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts | 4 ++--
+ arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/net/forwarding/config b/tools/testing/selftests/net/forwarding/config
-index ba23435145827..8d7a1a004b7c3 100644
---- a/tools/testing/selftests/net/forwarding/config
-+++ b/tools/testing/selftests/net/forwarding/config
-@@ -9,6 +9,13 @@ CONFIG_CGROUP_BPF=y
- CONFIG_DUMMY=m
- CONFIG_IPV6=y
- CONFIG_IPV6_GRE=m
-+CONFIG_IPV6_MROUTE=y
-+CONFIG_IPV6_MROUTE_MULTIPLE_TABLES=y
-+CONFIG_IPV6_PIMSM_V2=y
-+CONFIG_IP_MROUTE=y
-+CONFIG_IP_MROUTE_MULTIPLE_TABLES=y
-+CONFIG_IP_PIMSM_V1=y
-+CONFIG_IP_PIMSM_V2=y
- CONFIG_MACVLAN=m
- CONFIG_NET_ACT_CT=m
- CONFIG_NET_ACT_MIRRED=m
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+index 3ef371ca254e8..bcb3ebb85d708 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+@@ -241,8 +241,8 @@ spi_nand: spi_nand@0 {
+ 		compatible = "spi-nand";
+ 		reg = <0>;
+ 		spi-max-frequency = <10000000>;
+-		spi-tx-buswidth = <4>;
+-		spi-rx-buswidth = <4>;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
+index dde190442e386..48fe50e671779 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
+@@ -156,8 +156,8 @@ spi_nand: spi_nand@0 {
+ 		compatible = "spi-nand";
+ 		reg = <0>;
+ 		spi-max-frequency = <10000000>;
+-		spi-tx-buswidth = <4>;
+-		spi-rx-buswidth = <4>;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
+ 	};
+ };
+ 
 -- 
 2.43.0
 
