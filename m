@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31563232117;
-	Sun, 24 Mar 2024 23:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005F22310F6;
+	Sun, 24 Mar 2024 23:17:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322257; cv=none; b=uNs+wNTK/TGEFns+T+rAix9wzacY5sYW71yDtkq3chaMX/L+XvEEcb/xvp7U5UABa1yh0A1oyQN85Jg7nIocDjuFqCBG4VdkxpztQIpAhFrSZ7A6R3bIHLGD9g9K1Kg5kdYyJe+yMQqGa7FxZsBpD3BYSYzlfn4KHzlhkL5ieGA=
+	t=1711322242; cv=none; b=dmvw/T9yJY+Oq1vylkAAQnzoET6aL6FX3JDPqr57w4YueBMUlE8EM1VVeviKbEI/GGiwBpDrdu/Pg3X8JSmIKgYk3boedvcCl93EPyGW3pwmlSe5TP1ECyYGalGXp8ozBWP/mG5OsWp1nax0US5gQmwSzsVSn4AzlPU7vrKgY5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322257; c=relaxed/simple;
-	bh=qSKxe6142rJK0Ne88XZvstcmyQSGACKS9WVwUqirlh0=;
+	s=arc-20240116; t=1711322242; c=relaxed/simple;
+	bh=CtjPN60KHWabBCP40nzTYEuMUXB7PpgyH+0xKuKgn8I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W/eHQpFCM1yLtez1w4NVTzKQY9h/elZBnjeWdbVSSF1W3xgjwKZ5sC5+yB6Rhh9/aa3Tu2uiQ+PI3IHD7ADNS4Up36tSO0PyLN5+TJ8QiFvEFt4YgSDyzm+JE94bsx6QeDmX3wTJsYp3vVVrIchGhQS3jftmal1fkRxueJztNuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gOOZJtJi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=AhKtAvlofoMWzkdWQUVB++p7pyVLpY87oLqGJRbm3zl2oeKlfnNSkoKTx8nopPMgTHYKVV4smxz00bMNV8kJI5DzV1Dta3vXkIOSiDOEv3BJx8k2qzvfyBLXNLhK5iSOHi0zVCZwcTW67ZwrGmdvDLLhjdqPpp9LY2/qjgiXAcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6SjBdma; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gOOZJtJi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C377C43399;
-	Sun, 24 Mar 2024 23:17:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6SjBdma"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C7E2C433C7;
+	Sun, 24 Mar 2024 23:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322257;
-	bh=qSKxe6142rJK0Ne88XZvstcmyQSGACKS9WVwUqirlh0=;
+	s=k20201202; t=1711322241;
+	bh=CtjPN60KHWabBCP40nzTYEuMUXB7PpgyH+0xKuKgn8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gOOZJtJiw5aG/W42OcMtxjZhQh+/MsTYA8i3K30bxlYlB0ocyORvMqt0uhNPuYJNY
-	 zL65MyqMBC8MS79pGQOa9HJ9Y7idGAMfrn442U3tRNmXTWdJWv2qUFxdgisues2av1
-	 SfgcUypOIIkwWFWv62o7WBDG615/gSsNwRsanxZoOXPngYopOwZF1CYPEFEOf0tY4R
-	 DfE/sIIEdhGUN9rqmcInETFB4VvoMHgwr5yd3GtsHaWP2JFK5yPy4bI7gRGw9YZqRi
-	 LISDA+EHSDM7uH2c0XxH9QKuUQtU7et0qzNoGDs6D3R03uqCb8qzuJZH/SjayaQGeA
-	 ROS7X4b+1Spqg==
+	b=D6SjBdmalySKva+SaiZrJXU4KY3SYh9XH9j4cYQtLiWvisD3Izx35dgOO56bpbr6t
+	 gBPhnC24cw4olL39QIv9l4AVvRTQiE3yezXIV0C1zj9yVQi+agoxaNbWhlpqOrZuKH
+	 CiIwrrHnnwU5CCHGODTbC7GrSz13e9QGlwWZZnve1JjwBNuE7MfOeEGr/wGgfXxabr
+	 AAmEs00uC3qazMoJENVeLdJPCnMrXIOUQ1U5L6rUwwWv1+Eg4RClbqf4mykXoICQPu
+	 qnfHIBZ55GloSW5Y3JjO2xYzSeuSkzIEZxbECxWGdaQlkYgKjgs8x4MI33azQ2l6wv
+	 QjuNSjL9rLYYg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Luca Weiss <luca@z3ntu.xyz>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Jammy Zhou <Jammy.Zhou@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 339/451] backlight: lm3630a: Don't set bl->props.brightness in get_brightness
-Date: Sun, 24 Mar 2024 19:10:15 -0400
-Message-ID: <20240324231207.1351418-340-sashal@kernel.org>
+Subject: [PATCH 6.1 323/451] drm/amdgpu: Fix missing break in ATOM_ARG_IMM Case of atom_get_src_int()
+Date: Sun, 24 Mar 2024 19:09:59 -0400
+Message-ID: <20240324231207.1351418-324-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,79 +46,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Luca Weiss <luca@z3ntu.xyz>
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit 4bf7ddd2d2f0f8826f25f74c7eba4e2c323a1446 ]
+[ Upstream commit 7cf1ad2fe10634238b38442a851d89514cb14ea2 ]
 
-There's no need to set bl->props.brightness, the get_brightness function
-is just supposed to return the current brightness and not touch the
-struct.
+Missing break statement in the ATOM_ARG_IMM case of a switch statement,
+adds the missing break statement, ensuring that the program's control
+flow is as intended.
 
-With that done we can also remove the 'goto out' and just return the
-value.
+Fixes the below:
+drivers/gpu/drm/amd/amdgpu/atom.c:323 atom_get_src_int() warn: ignoring unreachable code.
 
-Fixes: 0c2a665a648e ("backlight: add Backlight driver for lm3630 chip")
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240220-lm3630a-fixups-v1-2-9ca62f7e4a33@z3ntu.xyz
-Signed-off-by: Lee Jones <lee@kernel.org>
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Cc: Jammy Zhou <Jammy.Zhou@amd.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lm3630a_bl.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/atom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 855c275754578..0d43f6326750f 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -231,7 +231,7 @@ static int lm3630a_bank_a_get_brightness(struct backlight_device *bl)
- 		if (rval < 0)
- 			goto out_i2c_err;
- 		brightness |= rval;
--		goto out;
-+		return brightness;
- 	}
- 
- 	/* disable sleep */
-@@ -242,11 +242,8 @@ static int lm3630a_bank_a_get_brightness(struct backlight_device *bl)
- 	rval = lm3630a_read(pchip, REG_BRT_A);
- 	if (rval < 0)
- 		goto out_i2c_err;
--	brightness = rval;
-+	return rval;
- 
--out:
--	bl->props.brightness = brightness;
--	return bl->props.brightness;
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access register\n");
- 	return 0;
-@@ -306,7 +303,7 @@ static int lm3630a_bank_b_get_brightness(struct backlight_device *bl)
- 		if (rval < 0)
- 			goto out_i2c_err;
- 		brightness |= rval;
--		goto out;
-+		return brightness;
- 	}
- 
- 	/* disable sleep */
-@@ -317,11 +314,8 @@ static int lm3630a_bank_b_get_brightness(struct backlight_device *bl)
- 	rval = lm3630a_read(pchip, REG_BRT_B);
- 	if (rval < 0)
- 		goto out_i2c_err;
--	brightness = rval;
-+	return rval;
- 
--out:
--	bl->props.brightness = brightness;
--	return bl->props.brightness;
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access register\n");
- 	return 0;
+diff --git a/drivers/gpu/drm/amd/amdgpu/atom.c b/drivers/gpu/drm/amd/amdgpu/atom.c
+index 1c5d9388ad0bb..cb6eb47aab65b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atom.c
++++ b/drivers/gpu/drm/amd/amdgpu/atom.c
+@@ -313,7 +313,7 @@ static uint32_t atom_get_src_int(atom_exec_context *ctx, uint8_t attr,
+ 				DEBUG("IMM 0x%02X\n", val);
+ 			return val;
+ 		}
+-		return 0;
++		break;
+ 	case ATOM_ARG_PLL:
+ 		idx = U8(*ptr);
+ 		(*ptr)++;
 -- 
 2.43.0
 
