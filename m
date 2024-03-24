@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEBA17557A;
-	Sun, 24 Mar 2024 23:36:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8CB27551E;
+	Sun, 24 Mar 2024 23:36:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323379; cv=none; b=pdSsDHAuq5YJIzeZ3oHFJg5mNb22nzAS6K/CCMr9Tgtxhzfau/ZXwaHl1JWgfs0N3nKMjKPkEsH1uDWVgvlkns+c+HE7pFqYhHF43Bw/jNX7keu2gtB7b0pqqcUDzXQuOkLnHqv22PhKpOSk88UZW+G1hSsK5jJjP63W0emA77c=
+	t=1711323364; cv=none; b=A1KGhCDSXtGSqa8HRChgxjHJgktiPPzFX+oVgCZtqrRZqEaUJ3EvZQKM2FktJiGgWzZeUENT7ho+3rjbfoNDExSLjTT9Qp5lAHHXqonNmKsnLapECmpByPqz0oi7vYj4mgyQ/9qqDDUtKZs+EVXj9f/ieOCzjX+rPXQNJ83C4+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323379; c=relaxed/simple;
-	bh=TupQ8eyn7/dVfYP6ZIVgExANMk6jJM8HzYOFyaH/OCA=;
+	s=arc-20240116; t=1711323364; c=relaxed/simple;
+	bh=tSvBj+9fAZrbZVQNSGQIlc8MnLUWAHjaR1WzNmMgebM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BYTRODSW9rYr4RUFI8xKBXGhH0vgiMVixnfJW0OtMlMFnxXyrGWFWEBOdxy2ewlj24ZS1rpwdaCgIvsQQmnfm2aArtIFi8VvhufNHZV9dkrKy5dk0u1Vd1VYsmWABOX09naUre6Rhwrn56UGmHK3EZrnG1tCeqv5IuQMmc9SfDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LscAOKvJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CtplJrlCJW+nbygsSKoqe+UwWzhXTvqbC4FhmtYA2MvTmFTwQnfNf/9fdK2UokY8LI8buFyW9Lycm1MaIr34R21DMIfnlAeHtdhNmgtDGaB2swjJyOuRwwqx4+elp0I/8at0OaqMfDvMc8A8MG+G61F6eW9EiTVHBevuia8mFhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUnooDrj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LscAOKvJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5B97C433C7;
-	Sun, 24 Mar 2024 23:36:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUnooDrj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4C4C43394;
+	Sun, 24 Mar 2024 23:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323378;
-	bh=TupQ8eyn7/dVfYP6ZIVgExANMk6jJM8HzYOFyaH/OCA=;
+	s=k20201202; t=1711323363;
+	bh=tSvBj+9fAZrbZVQNSGQIlc8MnLUWAHjaR1WzNmMgebM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LscAOKvJaeja/wG3S99Hg2i0iY1xcjkQ7nO1MMAKbprQ/cEUeJ0YwP0IZsp0t8F1q
-	 TxCU/ORFn6OZO8IblNZrm2KALrQqs4dh5+Uv09bmpMtAgxvuU78mKJJOfmWvdLR7Mn
-	 ZwCTObrLay4JuDpiker9QdczjVgWzC1K1B7LjlZQZxgZAfMqA0fAWrKWC4K1aU/rhm
-	 lD8xRJ+ciRTOV7WD/1eDkUiV48aROVMnzDa/HLJ4CnTdcDYKNSu29SRGNVjStq3OLR
-	 w6FbcSq7YWunvvkyyaIugie1CS/bWKSw6xzRajBnG3WYs/FiYCWoF00137IMqr0QP1
-	 eGQ9yxapMb6Lg==
+	b=IUnooDrjBp3qpM0cZHfdlzKnyBHBxHTQ226CEmv4RL0QZcE0JosafliPs18BC/5h9
+	 eVN0XcLQrIYtdN7IPqpzESjdIoj6HJsbSb2UhBvubzaOoaSty75+mEdH8vVm15iEj5
+	 DS0j6hxxONBXkfmH/2b3Eb5Lzkxn/NSXRMavcztsmmL52q6kjNysnz1w12R9Ey7oIr
+	 2HCEaLDM4X1WGIiGmcAtAvLdR0CBj763SrOJ/SutsGRWSZKCIjHtQ83cpCetdYWwYW
+	 8bIoc6llgCOvpYHI8ZMQnwU98vsaisCwjpLGADXQ0OLX92q6I0lMQqSoDiN/GOsy/a
+	 iW3YEl5YGaL4A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	Gregory Greenman <gregory.greenman@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 078/317] wifi: iwlwifi: dbg-tlv: ensure NUL termination
-Date: Sun, 24 Mar 2024 19:30:58 -0400
-Message-ID: <20240324233458.1352854-79-sashal@kernel.org>
+Subject: [PATCH 5.15 063/317] cpufreq: mediatek-hw: Wait for CPU supplies before probing
+Date: Sun, 24 Mar 2024 19:30:43 -0400
+Message-ID: <20240324233458.1352854-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -45,45 +46,72 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-[ Upstream commit ea1d166fae14e05d49ffb0ea9fcd4658f8d3dcea ]
+[ Upstream commit 788715b5f21c6455264fe00a1779e61bec407fe2 ]
 
-The iwl_fw_ini_debug_info_tlv is used as a string, so we must
-ensure the string is terminated correctly before using it.
+Before proceeding with the probe and enabling frequency scaling for the
+CPUs, make sure that all supplies feeding the CPUs have probed.
 
-Fixes: a9248de42464 ("iwlwifi: dbg_ini: add TLV allocation new API support")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Reviewed-by: Gregory Greenman <gregory.greenman@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://msgid.link/20240128084842.be15e858ee89.Ibff93429cf999eafc7b26f3eef4c055dc84984a0@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This fixes an issue observed on MT8195-Tomato where if the
+mediatek-cpufreq-hw driver enabled the hardware (by writing to
+REG_FREQ_ENABLE) before the SPMI controller driver (spmi-mtk-pmif),
+behind which lies the big CPU supply, probed the platform would hang
+shortly after with "rcu: INFO: rcu_preempt detected stalls on
+CPUs/tasks" being printed in the log.
+
+Fixes: 4855e26bcf4d ("cpufreq: mediatek-hw: Add support for CPUFREQ HW")
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/cpufreq/mediatek-cpufreq-hw.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-index 8a610c518082a..fe3239c4607e3 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-@@ -99,6 +99,12 @@ static int iwl_dbg_tlv_alloc_debug_info(struct iwl_trans *trans,
- 	if (le32_to_cpu(tlv->length) != sizeof(*debug_info))
- 		return -EINVAL;
+diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
+index 8a4e52b22eed7..4a7478a91fb61 100644
+--- a/drivers/cpufreq/mediatek-cpufreq-hw.c
++++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
+@@ -13,6 +13,7 @@
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/slab.h>
  
-+	/* we use this as a string, ensure input was NUL terminated */
-+	if (strnlen(debug_info->debug_cfg_name,
-+		    sizeof(debug_info->debug_cfg_name)) ==
-+			sizeof(debug_info->debug_cfg_name))
-+		return -EINVAL;
+ #define LUT_MAX_ENTRIES			32U
+@@ -268,7 +269,23 @@ static struct cpufreq_driver cpufreq_mtk_hw_driver = {
+ static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
+ {
+ 	const void *data;
+-	int ret;
++	int ret, cpu;
++	struct device *cpu_dev;
++	struct regulator *cpu_reg;
 +
- 	IWL_DEBUG_FW(trans, "WRT: Loading debug cfg: %s\n",
- 		     debug_info->debug_cfg_name);
++	/* Make sure that all CPU supplies are available before proceeding. */
++	for_each_possible_cpu(cpu) {
++		cpu_dev = get_cpu_device(cpu);
++		if (!cpu_dev)
++			return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
++					     "Failed to get cpu%d device\n", cpu);
++
++		cpu_reg = devm_regulator_get_optional(cpu_dev, "cpu");
++		if (IS_ERR(cpu_reg))
++			return dev_err_probe(&pdev->dev, PTR_ERR(cpu_reg),
++					     "CPU%d regulator get failed\n", cpu);
++	}
++
  
+ 	data = of_device_get_match_data(&pdev->dev);
+ 	if (!data)
 -- 
 2.43.0
 
