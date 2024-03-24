@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC831E586C;
-	Sun, 24 Mar 2024 22:53:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC7B1DA179;
+	Sun, 24 Mar 2024 22:53:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320832; cv=none; b=tAl7gLWJi+WJdP3i9XQx7kFmX2qLW25JrU2zTrbLfvlZGWcTaWOp/PyTX+06wgdH60AF/4M0aBeugkpzAdOzHQT1u/lvZLublBbJ9hzYutVXPaTs6POpCAWxaE9Rl6yiNFWGo5tS4bMMUT3PNoaZaF0X1vFN23MdpQUcgTgdzak=
+	t=1711320815; cv=none; b=qbegBNJWloyEkrtJ+KgkAN7EXCvrEIKGeA7R4201rmM7gnnYqTLx95TtAcerrkE5Tig6P+vVFPsu7bHPDdCA8+ibQlOYe+Vr/cBYRUhq6B8725DQkMs87aecHMLEFp4yNcX7+cRoguinK3fl9SCyL4aMW1xjU6GH3lAAYT0rIDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320832; c=relaxed/simple;
-	bh=HiFTlZ3SKcc4YSHufcREYcJE8gSsUS12Vn56iUfMUs4=;
+	s=arc-20240116; t=1711320815; c=relaxed/simple;
+	bh=FkpSNpSlpycCmcF3vPsdKNwVZjnMaXFcSIOgP4WTv0Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hvRov5N2fapEj36MAFZacoS7SoU6JesHAPiUytTSmHMGCidVjBuhMkUPIoL15jlFlMty7jtc4uaILm06bQM3VzxuU+RB0qHkptDQzE6p5y3QWMd0z7NGl7IY4je1EkjbMmWFpNmp7FxpDDvh29E10UpMKeBG5p9vUg1xaxG+0Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5D7Mzhi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cs53/wyDAq1UygpnXtpe+tIwpJ5E8o39fLTrHqCPR1d94knUnIJqqR5p0ma2ixjIQQWmn/vK0na0IGaYhIbHauNIsUxkbAjGuljZKpDyzW3DJMEMSOBVVDb9nDkH4Ju8qSnyGVkIv2lkRhSPrj5TpeUcd/CE/0IuDp7byUclYhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Noh4FoI7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5D7Mzhi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59A9CC433C7;
-	Sun, 24 Mar 2024 22:53:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Noh4FoI7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B80C433F1;
+	Sun, 24 Mar 2024 22:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320831;
-	bh=HiFTlZ3SKcc4YSHufcREYcJE8gSsUS12Vn56iUfMUs4=;
+	s=k20201202; t=1711320814;
+	bh=FkpSNpSlpycCmcF3vPsdKNwVZjnMaXFcSIOgP4WTv0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E5D7MzhiljetDXC4H/ZZSwFsBEm0NxrXOK5+8VQt1SOyK91FIqJtaUej59a/MrEHg
-	 rOBzRgFig0wxgozssjin7qTn94K2/L5lITNZH9dfV2+JtShX2rKfL5urUdPiWs6bA4
-	 joAoO7dtVePOVpYOvaqe1NpsQpwVB+TU1kXdAJaWhMgXE9CDqrspgxs+bov6QyeZdP
-	 JwuVh3ItwSpfdpJkDcVj/Dlg9EyRSFa/qwdM3OXH89u8Se5H7ITYWQVpW/SO5K9AHR
-	 1Qbo7F+QcI/CL69qNakX/DFBixiunpkKhCJTDnM8DdJxP7YwiRMGC1V9SArpGTgEtF
-	 WUcIUUy0qUDKA==
+	b=Noh4FoI7Uotl4LBilO2RLK/zF8zJKxpDdZ2WRDOROfUZQR2q2RstffbWYSJvwyeFz
+	 dBgLeh6N+hwXFY2qJEnveyoTS6dqQNeZL81QQZmoCrpa6DVdLx7bw67qrB0x0PeJZY
+	 5XYTB9NkbhELrDEGdJFOaUBj/puVMQzFwkOsanAtmRYr06whEJKEpSAV/iJRkb626Z
+	 MICZyxaMAKVNPhdbfA+gtylgxNP8e/Frili6LMqMCextsWLH9imwySNZSmpQWD2jiV
+	 RzaAKPQ8ny9So92uCqEDTqudp+zCpl3P47B0wQx9XjkNMYLK/WqOAwvBWcxk52yBZ1
+	 WRw4dmfcHifZA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 396/713] drm/tegra: output: Fix missing i2c_put_adapter() in the error handling paths of tegra_output_probe()
-Date: Sun, 24 Mar 2024 18:42:02 -0400
-Message-ID: <20240324224720.1345309-397-sashal@kernel.org>
+Subject: [PATCH 6.7 379/713] ipmr: fix incorrect parameter validation in the ip_mroute_getsockopt() function
+Date: Sun, 24 Mar 2024 18:41:45 -0400
+Message-ID: <20240324224720.1345309-380-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,72 +48,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit 2db4578ef6ffb2b52115ca0ebf897b60ec559556 ]
+[ Upstream commit 5c3be3e0eb44b7f978bb6cbb20ad956adb93f736 ]
 
-If an error occurs after a successful of_get_i2c_adapter_by_node() call, it
-should be undone by a corresponding i2c_put_adapter().
+The 'olr' variable can't be negative when assigned the result of
+'min_t' because all 'min_t' parameters are cast to unsigned int,
+and then the minimum one is chosen.
 
-Add the missing i2c_put_adapter() call.
+To fix the logic, check 'olr' as read from 'optlen',
+where the types of relevant variables are (signed) int.
 
-Fixes: 9be7d864cf07 ("drm/tegra: Implement panel support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/b38604178991e1f08b2cda219103be266be2d680.1693667005.git.christophe.jaillet@wanadoo.fr
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/output.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ net/ipv4/ipmr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-index dc2dcb5ca1c89..d7d2389ac2f5a 100644
---- a/drivers/gpu/drm/tegra/output.c
-+++ b/drivers/gpu/drm/tegra/output.c
-@@ -142,8 +142,10 @@ int tegra_output_probe(struct tegra_output *output)
- 					GPIOD_IN,
- 					"HDMI hotplug detect");
- 	if (IS_ERR(output->hpd_gpio)) {
--		if (PTR_ERR(output->hpd_gpio) != -ENOENT)
--			return PTR_ERR(output->hpd_gpio);
-+		if (PTR_ERR(output->hpd_gpio) != -ENOENT) {
-+			err = PTR_ERR(output->hpd_gpio);
-+			goto put_i2c;
-+		}
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index e49242706b5f5..66eade3fb629f 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -1603,9 +1603,11 @@ int ip_mroute_getsockopt(struct sock *sk, int optname, sockptr_t optval,
  
- 		output->hpd_gpio = NULL;
- 	}
-@@ -152,7 +154,7 @@ int tegra_output_probe(struct tegra_output *output)
- 		err = gpiod_to_irq(output->hpd_gpio);
- 		if (err < 0) {
- 			dev_err(output->dev, "gpiod_to_irq(): %d\n", err);
--			return err;
-+			goto put_i2c;
- 		}
- 
- 		output->hpd_irq = err;
-@@ -165,7 +167,7 @@ int tegra_output_probe(struct tegra_output *output)
- 		if (err < 0) {
- 			dev_err(output->dev, "failed to request IRQ#%u: %d\n",
- 				output->hpd_irq, err);
--			return err;
-+			goto put_i2c;
- 		}
- 
- 		output->connector.polled = DRM_CONNECTOR_POLL_HPD;
-@@ -179,6 +181,12 @@ int tegra_output_probe(struct tegra_output *output)
- 	}
- 
- 	return 0;
+ 	if (copy_from_sockptr(&olr, optlen, sizeof(int)))
+ 		return -EFAULT;
+-	olr = min_t(unsigned int, olr, sizeof(int));
+ 	if (olr < 0)
+ 		return -EINVAL;
 +
-+put_i2c:
-+	if (output->ddc)
-+		i2c_put_adapter(output->ddc);
++	olr = min_t(unsigned int, olr, sizeof(int));
 +
-+	return err;
- }
- 
- void tegra_output_remove(struct tegra_output *output)
+ 	if (copy_to_sockptr(optlen, &olr, sizeof(int)))
+ 		return -EFAULT;
+ 	if (copy_to_sockptr(optval, &val, olr))
 -- 
 2.43.0
 
