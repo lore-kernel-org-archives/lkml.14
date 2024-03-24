@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120FB183B8D;
-	Sun, 24 Mar 2024 23:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605B5183BB0;
+	Sun, 24 Mar 2024 23:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324258; cv=none; b=fVD7lVfCWuTiboUGhYdaoWkx9Vi2ua++PLRLubkh+zDagHtSJbZyLC+ezx/OzXxe3Plm4lZLndG+L1rCTLwcX4yWnznVkpjvKS5hXztHsaPCzWYM7JW3eExu7aS5rnQBaFzBX2VUyi5PNOnTSiSo3uj4wCgiG+MaqnOcz9ixbTI=
+	t=1711324260; cv=none; b=IGPLTGArB1IUIcDhuhF8p6c7Fq7312em9aaTH5QaCrfbrTmdNLgBkdMnt5CgETtHdyXPTXiyx6zWBlyLxV0QB48WKUGD+4X1bkWeYO9ekz/nMONG+XWTVpNLiHybG+kwUOEwMvI5CTKwglYNKUW1YW8nrowKu/qj9NbYY+TLtjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324258; c=relaxed/simple;
-	bh=/7/1b9rks8twEubNpUt8qsAQs2IeCT+nNQFQ6FdH8sI=;
+	s=arc-20240116; t=1711324260; c=relaxed/simple;
+	bh=QjY6aZN1hS5n+MvNAri57QJpxl0NRj7LaNQvjtQ+YUQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SqFSndJu1U1xFEklDdE3SHDYbUVj4W/+UrMjlFKNy+OJqapAQKBRRZUGv/xSWki7oxcckbyLV9IsX0xphGclR+3aUlCNSXojGxv1+6pjkextB7cHoH6noiXvA7QpdG5qDtG5x51lW7z+aUy9XPMoT51rm0Jnzwzf30ugbGKCnBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVDbu7rZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KywZkPvvmSU7ChQVsOWCyckUXH98sawdVNqfvt44EM9F5ik/iyi2CagadmPIB9XSrisxueZXyNIaWoja5VHdOU0Qwabeups663tVaA6fY3Vmfu6AaGUgs6D2UMZuZ525tDkOzCDmJL0AyasW/2EABrahC/RPUXgANb+OBxXb1u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMQHYtHA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVDbu7rZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B548C43394;
-	Sun, 24 Mar 2024 23:50:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMQHYtHA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F3AC433B1;
+	Sun, 24 Mar 2024 23:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324256;
-	bh=/7/1b9rks8twEubNpUt8qsAQs2IeCT+nNQFQ6FdH8sI=;
+	s=k20201202; t=1711324260;
+	bh=QjY6aZN1hS5n+MvNAri57QJpxl0NRj7LaNQvjtQ+YUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BVDbu7rZML13csxl7Y+8xuHjEClBj/izOWzwipHX40Xsa0z/cG/UY1FAIK2B2pEqG
-	 Oj6Ju6QZXhjyHRiTKHN0qk3BnLZ8c9/a9iSFbFx5QdIKcstH1ieT9RB6bDSJhcAU/1
-	 WZr/MT9SsK9Ae6ddTLJ6I4mUudAB5fRpB59/AAfI1mda4hv5iMpm7ty4ykwIijT8RD
-	 /QGRhnbEvBxVCemQ8i6dcl/W0NcJxQUDY7Ylf635OWyKbNaikFoyGxes1jf/MFcITy
-	 L8yXCwjdaryU2exfZdxovTflQI2Nyf69ES7+k+AvgUR8SZY/cHMRHS3Hq1G+e2Iaxg
-	 7X47nj1JMXJTQ==
+	b=GMQHYtHAI7dYa+fGdRvArYO03MWgFzDpKy+uWRVXrW+BoaxYy+729BcvGYqcNmERI
+	 mcqr0qeKqrIEqzQDgSohKZugHrF3lfiY/p1m+qW7fWIBVUlzhI/sV3qIKcrOku1l6s
+	 zK0dMXZJCzmIJ8wNCS0prB6mTWVODtfkCmzVKngg4aZLi9PVL/6phvSD/Z4buO6XM7
+	 ZvpIumV8teBQB9DEX5Tcw/IbkvlNLhBYSgcBUCX23prxwGHPzcdjiMU2+N1JvYwis0
+	 brT7DEN9lTnX4/M8H5tBGplOAVe+6oHWaCxb5yeLUtkVMwXgWt3OjVDU1IbGoMIv28
+	 52h1OySjkuJJg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Anastasia Belova <abelova@astralinux.ru>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 037/148] cpufreq: brcmstb-avs-cpufreq: add check for cpufreq_cpu_get's return value
-Date: Sun, 24 Mar 2024 19:48:21 -0400
-Message-ID: <20240324235012.1356413-38-sashal@kernel.org>
+Subject: [PATCH 4.19 040/148] wifi: libertas: fix some memleaks in lbs_allocate_cmd_buffer()
+Date: Sun, 24 Mar 2024 19:48:24 -0400
+Message-ID: <20240324235012.1356413-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,36 +48,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Anastasia Belova <abelova@astralinux.ru>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit f661017e6d326ee187db24194cabb013d81bc2a6 ]
+[ Upstream commit 5f0e4aede01cb01fa633171f0533affd25328c3a ]
 
-cpufreq_cpu_get may return NULL. To avoid NULL-dereference check it
-and return 0 in case of error.
+In the for statement of lbs_allocate_cmd_buffer(), if the allocation of
+cmdarray[i].cmdbuf fails, both cmdarray and cmdarray[i].cmdbuf needs to
+be freed. Otherwise, there will be memleaks in lbs_allocate_cmd_buffer().
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
-Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Fixes: 876c9d3aeb98 ("[PATCH] Marvell Libertas 8388 802.11b/g USB driver")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240126075336.2825608-1-alexious@zju.edu.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/brcmstb-avs-cpufreq.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/marvell/libertas/cmd.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-index 541486217984b..1302e1900dcb1 100644
---- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
-+++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-@@ -457,6 +457,8 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
- static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
- {
- 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-+	if (!policy)
-+		return 0;
- 	struct private_data *priv = policy->driver_data;
+diff --git a/drivers/net/wireless/marvell/libertas/cmd.c b/drivers/net/wireless/marvell/libertas/cmd.c
+index c1f4229187378..d1984f03fdfca 100644
+--- a/drivers/net/wireless/marvell/libertas/cmd.c
++++ b/drivers/net/wireless/marvell/libertas/cmd.c
+@@ -1132,7 +1132,7 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
+ 		if (!cmdarray[i].cmdbuf) {
+ 			lbs_deb_host("ALLOC_CMD_BUF: ptempvirtualaddr is NULL\n");
+ 			ret = -1;
+-			goto done;
++			goto free_cmd_array;
+ 		}
+ 	}
  
- 	return brcm_avs_get_frequency(priv->base);
+@@ -1140,8 +1140,17 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
+ 		init_waitqueue_head(&cmdarray[i].cmdwait_q);
+ 		lbs_cleanup_and_insert_cmd(priv, &cmdarray[i]);
+ 	}
+-	ret = 0;
++	return 0;
+ 
++free_cmd_array:
++	for (i = 0; i < LBS_NUM_CMD_BUFFERS; i++) {
++		if (cmdarray[i].cmdbuf) {
++			kfree(cmdarray[i].cmdbuf);
++			cmdarray[i].cmdbuf = NULL;
++		}
++	}
++	kfree(priv->cmd_array);
++	priv->cmd_array = NULL;
+ done:
+ 	return ret;
+ }
 -- 
 2.43.0
 
