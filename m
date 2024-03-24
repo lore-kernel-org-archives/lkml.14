@@ -1,91 +1,63 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD0A25543
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 18:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D2537157;
+	Sun, 24 Mar 2024 18:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711304412; cv=none; b=rUk7eRtuVPXban2h1z4Fu5SOoj+zXUClEr+HdKREZ70KwtmDqDtx0s8t8sBZAEnfZwOXaMztEbqNbawBVvYek50/I6G3mrMKv4xFUD2KxHlSe8EyuBhxflavcTlaGe/d3MZoCl+g/RaDhOrE8B/F98Lbw8C5mHnz47vLHYv1Z2o=
+	t=1711304762; cv=none; b=Up8RSa8M26AJt+zET4n7paIeAN9DzTTy6Cc0fj2C9GATahkjyUJDxmblFMek/d6+4yW9SeXbu+WxXDf5jz5tQ/paGc+IMP32bJCV7QIuRNregR0z0rvIiH7TgQJfkTbzYM4aGPVpm5n/TP7rCXXf741Q0LsQrDPRjLNlaw0VjGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711304412; c=relaxed/simple;
-	bh=tcURe01+2Dp23RDAAs5J3VwKExLuBYmDlvMP6G0CPRY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TslcEynL++L99+zu7NueEoxhT27raFMth1aXKDLnvzrCYAukqKPa6bc/xO81q+um0idyk8EeoyRXk/38IAgMRdtvjJWhuersGwaQz+5pjePikuX2JIFeCR9dkR1/I4R/i4GuaMh+hegaztGbH3EwWyXj+ol4VIGl22TopnO1+FY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=xmqKUySj; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1711304762; c=relaxed/simple;
+	bh=E3gjHFWhZPLifRb125wIzKQjSoovtj/Sb6hT6swBPVk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=IN/bP0pCumSJ72hWJcLFyCni67JME+UyidEiIEiYkAvw0DWwNFkvj0OiW3zgtC5AHx0h5q6Z/zt40thoYvkSF9utIv53AHsBzheoeXTdM3hozORY8ueb//00Zb8rr+FAeKoSkdNpfOP8WtgIloQsTWtxOadBs92fTpkmaL/TPm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jXvvThwH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="xmqKUySj"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a44665605f3so413646466b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 11:20:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711304408; x=1711909208; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tcURe01+2Dp23RDAAs5J3VwKExLuBYmDlvMP6G0CPRY=;
-        b=xmqKUySjLIXbdVyBeXvPJavrdibFp5g5W3JBrMclGy+PTLzjHt+Rh8i6dcwCNd8qg3
-         Rp0FAWz3+CFqZJHjz/9NMu0xM4mUEFkd6WlfVfOzmaucAn81/JaTNpcu7Fy0gv6XS3WR
-         8Hr9ZK5T7rVWfL+GGlS8ogSTiOUwXP+70bhEHWIwkYfM3DWj0hJA8ATq1cC84CwVcImg
-         XEtR8LsxfmJnKuvUP9KBE2hBbT4gobEtNqTOFgctHUR55qUnsP6q0Z7q8Y3tTXEObxy9
-         E0DS7P359H1zbNix/peYH5sLe+WkCpXez7XG6nvAacxO1XqQg8gdDpCJLQaLdR8ukQ7z
-         9Vow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711304408; x=1711909208;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tcURe01+2Dp23RDAAs5J3VwKExLuBYmDlvMP6G0CPRY=;
-        b=BPFIMShr9NzqLNSfgvXbxspPJjxyVip/tHnq7ta674rKr9SuExcPk9SSOqm02W57Bk
-         LZRuYm8J9TUYsWJvKHBBsjEvqM2/i0TprVEbqLJHEy7BkC4tOGhgcizXomwEuAzxEZHQ
-         amuUToOZUSRse3RV2llDcln5LHbXbUqgTsiFLUQoFBACy/uA9aX1o7NKhrmEPEf4lfEK
-         cMwyt15QPbPAfaHQgz6UrZ5t8UG57/7tTP3NxGqC4sWp2aaM/p2m3x9+7FtH7Q2Ec69J
-         RmzZRPU0OSDHxG8iXW+h1hStz/HJVxQN/DG3hER0XPtM06tMjL+OXO3oOn8xwEdj6xDW
-         DDkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWiKUNMqE6fU58tr1TDS0MXZ8efjVfiv/vfvfd88wzIk8B8+AUdO4XedGIPM1fMQeBKIhID8fyfrKgkQ7Y9YOeRJUGDUx2NLDVvHdbo
-X-Gm-Message-State: AOJu0Yz//qK1X//aKkQCCjzGXMWgIJM1F+pxPJFDw1ZG2OlATLI2D/ZZ
-	QzWGxVAnVJ4yx5/FdoweWWIdL0TT362sxGtBPDR4wCLN0QNjIjXt1HsNW1KG2pB+fFl4kWzGrc+
-	xc6KtkxbXK0rB+3n/HwR+iCn6yBtvCEZaH9DAsg==
-X-Google-Smtp-Source: AGHT+IH80eFEX1cLDFFwaoYEe0nA3zQAUOJv6glpAAIEAlcfpQG3B9i6sSNod2Y6qc1if8PuXmzbfow2pjSjlkiL6rM=
-X-Received: by 2002:a17:906:fa90:b0:a46:faa7:d014 with SMTP id
- lt16-20020a170906fa9000b00a46faa7d014mr3249934ejb.9.1711304407841; Sun, 24
- Mar 2024 11:20:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jXvvThwH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 58B09C43394;
+	Sun, 24 Mar 2024 18:26:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711304762;
+	bh=E3gjHFWhZPLifRb125wIzKQjSoovtj/Sb6hT6swBPVk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=jXvvThwHP1CZG4kUlYbEgnV7gWir8JI8m3ehcAl8gJxV/m+PoGkaC2zutryXfYut4
+	 FO0/SLyxCYc38VQAzLJWIr56w93gg537s9Yo6+UCYx8ByIzKBE/HrN7+bDwD+2UZji
+	 F15JbH/jdSK8orRl9uZ2n6hp5/Y5qWiaKw+QHv8bpH1OKjDIPG14AtDcFrLgAHBwwD
+	 m2hkZ5cQihfh14o7HTO0iqW+X5atgWoTR1Mwim/u+dXMNRripFkqwGl81E7ljioUcP
+	 /ykq36MokcEGAnpY18FHINP96YRZmbApr4sBwiYrc0sQvK2aZuoDoEPzYyP+5z8X1K
+	 PCt3JCqWhokMg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4F220D8BCE2;
+	Sun, 24 Mar 2024 18:26:02 +0000 (UTC)
+Subject: Re: [GIT PULL] dma-mapping fixes for Linux 6.9
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <Zf9ur7uQA0JLleTU@infradead.org>
+References: <Zf9ur7uQA0JLleTU@infradead.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Zf9ur7uQA0JLleTU@infradead.org>
+X-PR-Tracked-Remote: git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-6.9-2024-03-24
+X-PR-Tracked-Commit-Id: 14cebf689a78e8a1c041138af221ef6eac6bc7da
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 864ad046c15758747809d9397cae621540493bcb
+Message-Id: <171130476231.9900.12574763141133315819.pr-tracker-bot@kernel.org>
+Date: Sun, 24 Mar 2024 18:26:02 +0000
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240322112629.68170-1-alexghiti@rivosinc.com> <20240323062625.2488-1-dqfext@gmail.com>
-In-Reply-To: <20240323062625.2488-1-dqfext@gmail.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Sun, 24 Mar 2024 19:19:56 +0100
-Message-ID: <CAHVXubisa6HQJDbj_GfjwhP1Y4as0DzrxsU0B7N6DSU6HZNaaw@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Improve sbi_ecall() code generation by reordering arguments
-To: Qingfang Deng <dqfext@gmail.com>
-Cc: aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
-	samuel.holland@sifive.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Qingfang,
+The pull request you sent on Sun, 24 Mar 2024 08:07:11 +0800:
 
-On Sat, Mar 23, 2024 at 7:26=E2=80=AFAM Qingfang Deng <dqfext@gmail.com> wr=
-ote:
->
-> Hi Alexandre,
->
-> You can simply make sbi_ecall `__always_inline`, so the C function call
-> overhead can be fully avoided.
+> git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-6.9-2024-03-24
 
-I understand your point, though I don't think we need to mark
-sbi_ecall() as inline, it's not in any hot path so it's not worth it.
-This patch simply gets rid of a really useless overhead, but it does
-not visibly accelerate anything.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/864ad046c15758747809d9397cae621540493bcb
 
-I hope it makes sense,
+Thank you!
 
-Thanks,
-
-Alex
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
