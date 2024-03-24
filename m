@@ -1,82 +1,110 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71C4A1401B
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 05:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
+Received: from ms-10.1blu.de (ms-10.1blu.de [178.254.4.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AF82CA4;
+	Sun, 24 Mar 2024 06:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.254.4.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711259988; cv=none; b=UzXCZjZa6SjxY3uVSbMMHGsxoKxAEG6cJDANyAbUSgf2X5psjzkZIHxunTsjlirC5cIqBm7tDfKiV3ZKlzlXRiKzCoZspYExhEfcynKvqaGaX3YnjaHpLdErhAMgQ2khSkMkhZMmQ2vqgzKwuPvWUi0Vy4eXME0a5KcQcwwZqhk=
+	t=1711260030; cv=none; b=tmMuFPu3jKr1hzn/j4PZdc7Ns37W1LEoPwBaV3nVEpfd6FS1CgEnmsZROkTfF/YC38FGBJT2fEu6WOk7Mq1i7pD8amsJmygCEBmLsARxvI+n3pYg0t5gXkftsrcucvL4dMO0sGqbS0n+kf5Vt/wr2BRH+i86C1lVx2Ri+psU5ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711259988; c=relaxed/simple;
-	bh=PsuaDPqm8DQofOBUGVCnB35jZD2S7WLofCGY1/+Tg3I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=Pym+aOoi9e1GXBrG4l/agozmBJB4RAl/k3C/tDbEO/z9zA+gpeeeMHNKE4tTY5fDXvA+4Ef5zHUHwEG5qolZwKnlkWz+ZTugE2Iq1dgRVePfYgzynZaFxt+SvlQDxswpCccELjC9SO5bU6pOy+RWoAW/uR1nMRj3leJ85p5PlF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=XuMoMBPP reason="signature verification failed"; arc=none smtp.client-ip=45.254.50.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="XuMoMBPP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=2fmT27jHvOGa6PS5j0CUeHGImW686mB4oZoue7hfT8c=; b=X
-	uMoMBPPo1DzpN6UZpGc655Uznvr9k0NaqrbvNN4l352YSvRaQa4aKHyWzIjkzjj1
-	xkMvcWxzYIaQJUP7yEQxcf/M5Pe/UUNt9047VRqP/klxwxjhK3h5X/kHDRovLAvs
-	5a6BAYN/VOXPlXuQ46J6rFwpUnozhkh+UtrrBegSjc=
-Received: from lumingyindetect$163.com ( [106.39.130.76] ) by
- ajax-webmail-wmsvr-40-119 (Coremail) ; Sun, 24 Mar 2024 13:59:24 +0800
- (CST)
-Date: Sun, 24 Mar 2024 13:59:24 +0800 (CST)
-From: lumingyindetect <lumingyindetect@163.com>
-To: "Josh Poimboeuf" <jpoimboe@kernel.org>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org
-Subject: Re:Re: [PATCH] tools:Fix a memory leak related to variable name
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <20240323182209.xqzb6rsswvfbg74n@treble>
-References: <20240323084526.662556-1-lumingyindetect@163.com>
- <20240323182209.xqzb6rsswvfbg74n@treble>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=utf-8
+	s=arc-20240116; t=1711260030; c=relaxed/simple;
+	bh=s8cMKpHaAcyyuLqkjUj7usrzSAx6MOM0pJf8hD0ogvY=;
+	h=From:Subject:To:Cc:Message-ID:Date:MIME-Version:Content-Type; b=GgkkGPcQ8O182MWwChXj+IcKX05Sr+hrHYYbrD5OJ1pqBWDVJkiCmvJGTKplWQgD29mKd6dtI21BH0a7LtiJX3BcZ/R8a+KhHCFdyxl48iZMqmon1jxrnEooeVwhbhqcmJ2Gpx/CINuMdMqFwk0lYrxnxszpsKbf7hUBNjEj+fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jsigle.com; spf=pass smtp.mailfrom=jsigle.com; arc=none smtp.client-ip=178.254.4.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jsigle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jsigle.com
+Received: from [87.102.202.253] (helo=[192.168.1.64])
+	by ms-10.1blu.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <joerg.sigle@jsigle.com>)
+	id 1roGKA-001UXd-CP;
+	Sun, 24 Mar 2024 06:23:14 +0100
+From: "Joerg M. Sigle" <joerg.sigle@jsigle.com>
+Subject: Patch [001/001] Documentation: Correct small errors in recently added
+ info on CPU vulnerabilities
+Openpgp: preference=signencrypt
+Autocrypt: addr=joerg.sigle@jsigle.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8PuOAKC9roFUBE+MA3ttuTAdqMIxhIo1cw==
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Daniel Sneddon <daniel.sneddon@linux.intel.com>
+Message-ID: <ba47d363-28e8-b470-7752-b684e3d05250@jsigle.com>
+Date: Sun, 24 Mar 2024 06:23:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <492c10a0.1aa3.18e6f0ad487.Coremail.lumingyindetect@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD3Xx08wf9lPNMMAA--.65049W
-X-CM-SenderInfo: poxpx0hj1l0vphwhu3i6rwjhhfrp/1tbiKRar92VOCH1F9QAFsI
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE-1901
+Content-Transfer-Encoding: 7bit
+X-Con-Id: 102464
+X-Con-U: 0-joergsigle
 
-VGhhbmsgeW91IGZvciB5b3VyIHByb21wdCByZXNwb25zZSEgSXQgaXMgaW5kZWVkIGEgd2lzZSBk
-ZWNpc2lvbiBub3QgdG8gcmVsZWFzZSBkeW5hbWljIG1lbW9yeSB3aGVuIHRoZSB0b29sIHJ1bnMg
-YnJpZWZseSBhbmQgZW5jb3VudGVycyBlcnJvcnMuIEhvd2V2ZXIsIEkgYWxzbyBub3RpY2VkIGlu
-IHRoZSBkaXNhc19mdW5jcyBmdW5jdGlvbiBpbiB0aGUgL2xpbnV4L3Rvb2xzL29ianRvb2wvY2hl
-Y2suYyBmaWxlIChsaW5lIDQ2MTcpIHRoYXQgYSB2YXJpYWJsZSBuYW1lZCBjbWQgcG9pbnRpbmcg
-dG8gYSBkeW5hbWljIG1lbW9yeSBhcmVhIGlzIG5vdCBiZWluZyBmcmVlZCAocmVnYXJkbGVzcyBv
-ZiB3aGV0aGVyIGFuIGVycm9yIG9jY3VycykuIEluIHRoaXMgY2FzZSwgd291bGQgaXQgYmUgbmVj
-ZXNzYXJ5IHRvIGFkZCBhIGZyZWUoY21kKT88YnIvPjxici8+LS08YnIvPkx1TWluZ1lpbgpBdCAy
-MDI0LTAzLTI0IDAyOjIyOjA5LCAiSm9zaCBQb2ltYm9ldWYiIDxqcG9pbWJvZUBrZXJuZWwub3Jn
-PiB3cm90ZToKPk9uIFNhdCwgTWFyIDIzLCAyMDI0IGF0IDA0OjQ1OjI2UE0gKzA4MDAsIEx1TWlu
-Z1lpbiB3cm90ZToNCj4+IEluIHRoZSBlbGZfY3JlYXRlX3ByZWZpeF9zeW1ib2wgZnVuY3Rpb24g
-ZGVmaW5lZCBpbiB0aGUgL2xpbnV4L3Rvb2xzL29ianRvb2wvZWxmLmMgZmlsZSwgdHdvIHBvaW50
-ZXIgdmFyaWFibGVzIHN5bSBhbmQgbmFtZSBhcmUgZGVmaW5lZC4gVGhlIHByb2dyYW0gYWxsb2Nh
-dGVzIGR5bmFtaWMgbWVtb3J5IGZvciB0aGUgcG9pbnRlciBzeW0gdXNpbmcgdGhlIGNhbGxvYyBm
-dW5jdGlvbiBhdCBsaW5lIDgyMiwgYW5kIGZvciB0aGUgcG9pbnRlciBuYW1lIHVzaW5nIHRoZSBt
-YWxsb2MgZnVuY3Rpb24gYXQgbGluZSA4MjQuIFdoZW4gdGhlIGlmIHN0YXRlbWVudCBhdCBsaW5l
-IDgyNiByZXR1cm5zIHRydWUsIHRoZSBwcm9ncmFtIHJldHVybnMgYXQgbGluZSA4MjguIFRoZSBj
-b250ZW50IG9mIHRoZSBpZiBzdGF0ZW1lbnQgYXQgbGluZSA4MjggaXMgaWYgKHN5bT09TlVMTCB8
-fCBuYW1lPT1OVUxMKSwgd2hpY2ggY2hlY2tzIGlmIGVpdGhlciBzeW0gb3IgbmFtZSBpcyBOVUxM
-LiBJZiB0aGlzIGNvbmRpdGlvbiByZXR1cm5zIHRydWUsIGl0IGluZGljYXRlcyBhIHNpdHVhdGlv
-biB3aGVyZSBvbmUgb2YgdGhlIHBvaW50ZXJzIGhhcyBzdWNjZXNzZnVsbHkgYWxsb2NhdGVkIG1l
-bW9yeSBidXQgdGhlIG90aGVyIGhhcyBub3QuIFRoZXJlZm9yZSwgaWYgdGhlIGlmIHN0YXRlbWVu
-dCByZXR1cm5zIHRydWUsIGRpcmVjdGx5IHJldHVybmluZyBtYXkgbGVhZCB0byBtZW1vcnkgbGVh
-ayBpc3N1ZXMuIEhlbmNlLCBpbiB0aGUgY29kZSwgSSBoYXZlIGFkZGVkIGNoZWNrcyBzZXBhcmF0
-ZWx5IGZvciB3aGV0aGVyIHN5bSBhbmQgbmFtZSBhcmUgTlVMTCwgYW5kIGlmIHRoZXkgYXJlIG5v
-dCBOVUxMLCB0aGUgY29ycmVzcG9uZGluZyBkeW5hbWljIG1lbW9yeSBzcGFjZXMgYXJlIGZyZWVk
-Lg0KPj4gDQo+PiBTaWduZWQtb2ZmLWJ5OiBMdU1pbmdZaW4gPGx1bWluZ3lpbmRldGVjdEAxNjMu
-Y29tPg0KPg0KPlRoYW5rcyBmb3IgdGhlIHBhdGNoLiAgSW4gZ2VuZXJhbCB3ZSBkb24ndCBjYXJl
-IGFib3V0IG1lbW9yeSBsZWFrcyBpbg0KPm9ianRvb2wgKHBhcnRpY3VsYXJseSBpbiBlcnJvciBv
-ciBleGl0IHBhdGhzKSwgYXMgaXQncyBhIHNob3J0LXJ1bm5pbmcNCj50b29sLiAgV2hlbiBpdCBl
-eGl0cywgYWxsIHRoZSBtZW1vcnkgd2lsbCBiZSBmcmVlZCBhbnl3YXkuICBTbyBpdCdzDQo+ZmFz
-dGVyIHRvIG5vdCBmcmVlIHRoZSBtZW1vcnkgbWFudWFsbHkuDQo+DQo+LS0gDQo+Sm9zaA0K
+From: Joerg-Michael Sigle <joerg.sigle@jsigle.com>
+
+In file     Documentation/admin-guide/hw-vuln/gather_data_sampling.rst
+the words   Guest can infer guest from other guests
+should be   Guests can infer data from other guests
+
+Found in 15.5.152, this may affect all kernel versions with the same documentation file.
+The error came as part of commit 8974eb588283b7d44a7c91fa09fcbaf380339f3a in the master branch.
+
+Signed-off-by: Joerg-Michael Sigle <joerg.sigle@jsigle.com>
+
+---
+
+The corrected text is in section "Attack scenarios", example 4; also visible in the 2nd diff output in:
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=8974eb588283b7d44a7c91fa09fcbaf380339f3a
+
+I'm submitting this patch to you as you're referenced in that patch
+or shown by scripts/get_maintainer.pl -f Documentation/admin-guide/hw-vuln/
+Hope this is ok and useful. Thanks & kind regards, Joerg
+
+
+# diff -ru a/Documentation/admin-guide/hw-vuln/gather_data_sampling.rst b/Documentation/admin-guide/hw-vuln/gather_data_sampling.rst
+--- a/Documentation/admin-guide/hw-vuln/gather_data_sampling.rst        2024-03-15 19:30:36.000000000 +0100
++++ b/Documentation/admin-guide/hw-vuln/gather_data_sampling.rst        2024-03-24 06:07:51.847427462 +0100
+@@ -32,7 +32,7 @@
+        Non-enclaves can infer SGX enclave data
+        Userspace can infer kernel data
+        Guests can infer data from hosts
+-       Guest can infer guest from other guests
++       Guests can infer data from other guests
+        Users can infer data from other users
+
+ Because of this, it is important to ensure that the mitigation stays enabled in
