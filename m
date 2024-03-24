@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34421514F7;
-	Sun, 24 Mar 2024 23:05:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FF8208961;
+	Sun, 24 Mar 2024 23:05:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321533; cv=none; b=WOBA4O4CIIIUvdrFBmcRXejW8SEqsg4/8S9BR4MEtRm5EDtt5omWpb0m0T5ZhNHZ21+/GTmuxTw5vCGlawbgQkxx/b29oDriItzA4jopZs9J1AXJEyZbn4bv5Akbjam0Wefzrjghy9IgPd1RmJ4Pq1H4Aasm/2/j+n53FgT1xr0=
+	t=1711321544; cv=none; b=mdY15Nwe8+wUDAdvRzH+xtH2nchWdsIYvKbf7+XBfewT9VnKC5WvctrlwWWJzGV56HjH7WSTUOSFK5Q4NvU1fN52Unxzp17paRZO3T1SrqKiXiVMgvyyxKm+N9CVazsmZt85kUz7yrWprkRkSgJvMSKYHJ1Q5ZIgEqKTLiMTAM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321533; c=relaxed/simple;
-	bh=hyROmaA6Q7+b/zmxeASSX3HaH0N+z82aRXBd1lKaYLE=;
+	s=arc-20240116; t=1711321544; c=relaxed/simple;
+	bh=Ta11fKnZobjyFkQcnU/qNvjknrk6rRLtjqxBTTMP/JQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RGcnx0PJuQ052UBPNecUj0uAj76NkcQWgU5vytpUKW5pErx/vsLzNJAsM/rv/a4ULyIB8Ao3+EHp0jv5VkwbgODWBTS1M9bJk6fNqsdzoUB0Y+wwT+x7wOut5Iai86IbiQQHrSF40Eoeju8z/mOdxMtTgpcJ8D2huY16FELxMXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VYvwMGLH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nTU0K7sSWnCOSPAI6x0pV7inTUBpgyKj7XzHSKa4xCidzD8rbfKryJrVpwnhoADXpfsZj1Q15yZFqSYy7Ga8x7i7GPCGaFU/cqsYNyoZ/A4c3n6Eu2VtK5QnUL/Sv1fDKsW/8GnyLkLBnrBop0M8JseJzGmRxiC9vjrj3Bfhfko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rEmUqNBc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VYvwMGLH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B80F2C433F1;
-	Sun, 24 Mar 2024 23:05:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rEmUqNBc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6D16C43601;
+	Sun, 24 Mar 2024 23:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321531;
-	bh=hyROmaA6Q7+b/zmxeASSX3HaH0N+z82aRXBd1lKaYLE=;
+	s=k20201202; t=1711321543;
+	bh=Ta11fKnZobjyFkQcnU/qNvjknrk6rRLtjqxBTTMP/JQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VYvwMGLHfOm0wekZsMZPB5oJKh/DozDbjWjkSWgFK1hJFBl+FAS7uVeRBYnyUgNdm
-	 fSgfR3RDPCjNyIrRstp7JYwliR7SYYD7leMmmngiY7/bVkcquHWDyDkkopLbg9TPqS
-	 /kMpvdHDTTErLrRmBTy3zdJCfGw+wihm2zEW9KIfVhZObGpLNanREml3JeU7DSWmxF
-	 Yux6rbBbOC69bYwfpiYpQ2EFFSfACAcsHHeNgLcHYY8eVO+r+gb+bTxO4jEs84wt6T
-	 m+yXNSezmm1dvBScAQfWuex3x6f6ok8wiCJgrZtEa0Jpe8onQ6WVviWMoAk1GhAFv5
-	 2obbM9epKEutQ==
+	b=rEmUqNBc5HCwXIYY7LHvDU7ZPPxUuOujHc4hmtGx/iAgtEGGvqe2e0rrGoD6BtKNY
+	 2ejP/KgIKhCgrgM3ajzfTta6sY/sayyGO8CTiSNND5PrrrvHUp3LT/uvob0tqcUxnS
+	 BxQFzphrNOVDbp9owOTxe/qIBTRGWJie4bpSGDhOrPJLkCp3hqgsRTInEL/VK14T5x
+	 YxFYt9q29btTkPOyErsk8OmOw6BkX2aIMpNd7giuYDx2CvIreIpfsWXAn2vaUJIq2M
+	 pfz2aIpDCTeBPjSDbZD6tttUJsHqbSwaxZERBI+hF93s6bEuWb4Z2Can+zU/P/b26j
+	 3fpBTok+0Y+qA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Deren Wu <deren.wu@mediatek.com>,
-	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-	Felix Fietkau <nbd@nbd.name>,
+Cc: John Keeping <jkeeping@inmusicbrands.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 258/638] wifi: mt76: mt7921e: fix use-after-free in free_irq()
-Date: Sun, 24 Mar 2024 18:54:55 -0400
-Message-ID: <20240324230116.1348576-259-sashal@kernel.org>
+Subject: [PATCH 6.6 271/638] regulator: userspace-consumer: add module device table
+Date: Sun, 24 Mar 2024 18:55:08 -0400
+Message-ID: <20240324230116.1348576-272-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,90 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Deren Wu <deren.wu@mediatek.com>
+From: John Keeping <jkeeping@inmusicbrands.com>
 
-[ Upstream commit c957280ef6ab6bdf559a91ae693a6b34310697e3 ]
+[ Upstream commit 531a0c0cdbff9cecf41073220a826f8b1132f9ab ]
 
-From commit a304e1b82808 ("[PATCH] Debug shared irqs"), there is a test
-to make sure the shared irq handler should be able to handle the unexpected
-event after deregistration. For this case, let's apply MT76_REMOVED flag to
-indicate the device was removed and do not run into the resource access
-anymore.
+The userspace consumer can be built as a module but it cannot be
+automatically probed as there is no device table to match it up with
+device tree nodes.
 
-BUG: KASAN: use-after-free in mt7921_irq_handler+0xd8/0x100 [mt7921e]
-Read of size 8 at addr ffff88824a7d3b78 by task rmmod/11115
-CPU: 28 PID: 11115 Comm: rmmod Tainted: G        W    L    5.17.0 #10
-Hardware name: Micro-Star International Co., Ltd. MS-7D73/MPG B650I
-EDGE WIFI (MS-7D73), BIOS 1.81 01/05/2024
-Call Trace:
- <TASK>
- dump_stack_lvl+0x6f/0xa0
- print_address_description.constprop.0+0x1f/0x190
- ? mt7921_irq_handler+0xd8/0x100 [mt7921e]
- ? mt7921_irq_handler+0xd8/0x100 [mt7921e]
- kasan_report.cold+0x7f/0x11b
- ? mt7921_irq_handler+0xd8/0x100 [mt7921e]
- mt7921_irq_handler+0xd8/0x100 [mt7921e]
- free_irq+0x627/0xaa0
- devm_free_irq+0x94/0xd0
- ? devm_request_any_context_irq+0x160/0x160
- ? kobject_put+0x18d/0x4a0
- mt7921_pci_remove+0x153/0x190 [mt7921e]
- pci_device_remove+0xa2/0x1d0
- __device_release_driver+0x346/0x6e0
- driver_detach+0x1ef/0x2c0
- bus_remove_driver+0xe7/0x2d0
- ? __check_object_size+0x57/0x310
- pci_unregister_driver+0x26/0x250
- __do_sys_delete_module+0x307/0x510
- ? free_module+0x6a0/0x6a0
- ? fpregs_assert_state_consistent+0x4b/0xb0
- ? rcu_read_lock_sched_held+0x10/0x70
- ? syscall_enter_from_user_mode+0x20/0x70
- ? trace_hardirqs_on+0x1c/0x130
- do_syscall_64+0x5c/0x80
- ? trace_hardirqs_on_prepare+0x72/0x160
- ? do_syscall_64+0x68/0x80
- ? trace_hardirqs_on_prepare+0x72/0x160
- entry_SYSCALL_64_after_hwframe+0x44/0xae
+Add the missing macro so that the module can load automatically.
 
-Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Closes: https://lore.kernel.org/linux-wireless/CABXGCsOdvVwdLmSsC8TZ1jF0UOg_F_W3wqLECWX620PUkvNk=A@mail.gmail.com/
-Fixes: 9270270d6219 ("wifi: mt76: mt7921: fix PCI DMA hang after reboot")
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Signed-off-by: Deren Wu <deren.wu@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Fixes: 5c51d4afcf3fd ("regulator: userspace-consumer: Handle regulator-output DT nodes")
+Signed-off-by: John Keeping <jkeeping@inmusicbrands.com>
+Link: https://msgid.link/r/20240226160554.1453283-1-jkeeping@inmusicbrands.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7921/pci.c | 1 +
- drivers/net/wireless/mediatek/mt76/mt792x_dma.c | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/regulator/userspace-consumer.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/pci.c b/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
-index f04e7095e1810..49d4f3c4829ea 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
-@@ -387,6 +387,7 @@ static void mt7921_pci_remove(struct pci_dev *pdev)
- 	struct mt792x_dev *dev = container_of(mdev, struct mt792x_dev, mt76);
+diff --git a/drivers/regulator/userspace-consumer.c b/drivers/regulator/userspace-consumer.c
+index 97f075ed68c95..cb1de24b98626 100644
+--- a/drivers/regulator/userspace-consumer.c
++++ b/drivers/regulator/userspace-consumer.c
+@@ -210,6 +210,7 @@ static const struct of_device_id regulator_userspace_consumer_of_match[] = {
+ 	{ .compatible = "regulator-output", },
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, regulator_userspace_consumer_of_match);
  
- 	mt7921e_unregister_device(dev);
-+	set_bit(MT76_REMOVED, &mdev->phy.state);
- 	devm_free_irq(&pdev->dev, pdev->irq, dev);
- 	mt76_free_device(&dev->mt76);
- 	pci_free_irq_vectors(pdev);
-diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_dma.c b/drivers/net/wireless/mediatek/mt76/mt792x_dma.c
-index a3dbd3865b2f5..be3119aa9afa1 100644
---- a/drivers/net/wireless/mediatek/mt76/mt792x_dma.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt792x_dma.c
-@@ -12,6 +12,8 @@ irqreturn_t mt792x_irq_handler(int irq, void *dev_instance)
- {
- 	struct mt792x_dev *dev = dev_instance;
- 
-+	if (test_bit(MT76_REMOVED, &dev->mt76.phy.state))
-+		return IRQ_NONE;
- 	mt76_wr(dev, dev->irq_map->host_irq_enable, 0);
- 
- 	if (!test_bit(MT76_STATE_INITIALIZED, &dev->mphy.state))
+ static struct platform_driver regulator_userspace_consumer_driver = {
+ 	.probe		= regulator_userspace_consumer_probe,
 -- 
 2.43.0
 
