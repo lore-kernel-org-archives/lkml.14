@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A34A14601D;
-	Sun, 24 Mar 2024 23:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA2914601C;
+	Sun, 24 Mar 2024 23:14:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322079; cv=none; b=nZ9Iq78QYuxDt5BQg1baR4FYDnm9NAm3ncdmwY2Z7UMQcRD32TtXLbbk68M123Ji4D/iEHs6QNoAEgsxSN3BL5xQ+X9Za9qquPThK0bS8fWx5Tvy+7auiqhlHf/qwJP5mSlSpQ6xDxJSI4f6rx26HDUDW0LJh90Da2v/hsJdz/A=
+	t=1711322078; cv=none; b=I24neWEx1PB7cpC5kX7XG2sAe1sOO7ABwJ3nXU8zCySYy+1upQi/6E8VOYEL/4u/NlkA6t4fGGsS/BHVsUkZqqk5bnwfTRHcDQDoBnNuoj1bDWR7XB9AB73LfjxUmKUMwmcd1ezGTobgnP/xevX2zpZg4x56jfV+MHRCL1h2B7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322079; c=relaxed/simple;
-	bh=XPaa/mrroDUfMDpkjAsvH2WF2Yb7bzR0M63O/5YR8l4=;
+	s=arc-20240116; t=1711322078; c=relaxed/simple;
+	bh=uHy+ZQRtaiUU/OqpA7P1f9fxwPU31Q0gaycK+CSU++4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T1v5L1nipqwGYM+sMsIBVuc0ryLCT7zb246xLGfXWtpSZcu+f+w5diCllTiuFBZaZOOzi45nIpUwbN+KZLnXI9sse+XfUY01T4EZ6Kz5u10BvKST7bJnMpigeoFilGVo3vKqsodMfnLy4ADNN3mhWKk/0D4Ybx3tY1ogHLvPVMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciyyJTap; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qqUR3BYKd/lrTDd3PXoc17DYkMe2YbZ1gaN5aVbyruiZe5qWmvx/IK/JDrJQGQRz6fAwS9Mqe1tZSW4t0N7boIJY7nEgg3di49nBjmzloAfFFZmsQQ1ajFAbDzLnZCVYeu9YLQbM1ZAj2ZTOLyKVHIydSXHGfEo7OajeQzfs5VM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxgAd/jZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciyyJTap"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6559FC433C7;
-	Sun, 24 Mar 2024 23:14:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxgAd/jZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AA96C43390;
+	Sun, 24 Mar 2024 23:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322079;
-	bh=XPaa/mrroDUfMDpkjAsvH2WF2Yb7bzR0M63O/5YR8l4=;
+	s=k20201202; t=1711322077;
+	bh=uHy+ZQRtaiUU/OqpA7P1f9fxwPU31Q0gaycK+CSU++4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ciyyJTapkRaPTmE3Yo5ZJku523Dk2dkQVaCNiyBlY2n89Ar4Hu6+SkhbpTK0tKXH8
-	 QPK9Ij+lxbz5WpojeTiYXA8uMCyXrVmMP1BCefMMa2eUGR4rn2YsVK3g0Rs3MY1ZSg
-	 wAGoG0fJN0Xg43wTYVOkhfX0vqNJchyl/2YsOJRvNTECxOFDWVNTTyx9ss8tD+/nwC
-	 F/XEh617VcyEHQ3FbWFuMp9OqYZlUtg/V+SKTUJ0TmD4R3gqOafm/I0fApNEn9sT00
-	 KxfLS+5RYgzlTrzgLJaHs+iKkbtKZ8prKxUTP6nB6wIg5ht2e40OIP2qnwloaZysfb
-	 HO8fkdpORyjmA==
+	b=OxgAd/jZZlHd6+RAiLi4RVJ1uTB1F/gT7a3+oCLsasLhxsl0OlqzkpCYxf+skHefn
+	 HVFXz/cDKkzBLI8i7axT51BJww/94velkJC4TfFPbKw7+wl/ncH8Cj/eNZhKmaqKwR
+	 wZV3+zjdaMcmA/ps2LuXT7kU2XRM41KqrCJvOEZR/fX20fPrgjPkEN3JKuFRxHJsVA
+	 ZeOkXuxyxTPE/QbqdFQZAoR9xlpaiyn/9obNM1Ni9uavndyTZOFiQ9GfOZS4ima22A
+	 TQmv5nfOjID3IFR11uTcMwfHpmV5bbh1vVhPn/V80+wb00lvgvAAwMe49Xr+Rs2cdj
+	 QzIpXZheyW4Fw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 152/451] wifi: wilc1000: prevent use-after-free on vif when cleaning up all interfaces
-Date: Sun, 24 Mar 2024 19:07:08 -0400
-Message-ID: <20240324231207.1351418-153-sashal@kernel.org>
+Subject: [PATCH 6.1 150/451] bpf: don't infer PTR_TO_CTX for programs with unnamed context type
+Date: Sun, 24 Mar 2024 19:07:06 -0400
+Message-ID: <20240324231207.1351418-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,171 +44,99 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexis Lothoré <alexis.lothore@bootlin.com>
+From: Andrii Nakryiko <andrii@kernel.org>
 
-[ Upstream commit cb5942b77c05d54310a0420cac12935e9b6aa21c ]
+[ Upstream commit 879bbe7aa4afa80acf72a1cad7f52416ea78c52d ]
 
-wilc_netdev_cleanup currently triggers a KASAN warning, which can be
-observed on interface registration error path, or simply by
-removing the module/unbinding device from driver:
+For program types that don't have named context type name (e.g., BPF
+iterator programs or tracepoint programs), ctx_tname will be a non-NULL
+empty string. For such programs it shouldn't be possible to have
+PTR_TO_CTX argument for global subprogs based on type name alone.
+arg:ctx tag is the only way to have PTR_TO_CTX passed into global
+subprog for such program types.
 
-echo spi0.1 > /sys/bus/spi/drivers/wilc1000_spi/unbind
+Fix this loophole, which currently would assume PTR_TO_CTX whenever
+user uses a pointer to anonymous struct as an argument to their global
+subprogs. This happens in practice with the following (quite common, in
+practice) approach:
 
-==================================================================
-BUG: KASAN: slab-use-after-free in wilc_netdev_cleanup+0x508/0x5cc
-Read of size 4 at addr c54d1ce8 by task sh/86
+typedef struct { /* anonymous */
+    int x;
+} my_type_t;
 
-CPU: 0 PID: 86 Comm: sh Not tainted 6.8.0-rc1+ #117
-Hardware name: Atmel SAMA5
- unwind_backtrace from show_stack+0x18/0x1c
- show_stack from dump_stack_lvl+0x34/0x58
- dump_stack_lvl from print_report+0x154/0x500
- print_report from kasan_report+0xac/0xd8
- kasan_report from wilc_netdev_cleanup+0x508/0x5cc
- wilc_netdev_cleanup from wilc_bus_remove+0xc8/0xec
- wilc_bus_remove from spi_remove+0x8c/0xac
- spi_remove from device_release_driver_internal+0x434/0x5f8
- device_release_driver_internal from unbind_store+0xbc/0x108
- unbind_store from kernfs_fop_write_iter+0x398/0x584
- kernfs_fop_write_iter from vfs_write+0x728/0xf88
- vfs_write from ksys_write+0x110/0x1e4
- ksys_write from ret_fast_syscall+0x0/0x1c
+int my_subprog(my_type_t *arg) { ... }
 
-[...]
+User's intent is to have PTR_TO_MEM argument for `arg`, but verifier
+will complain about expecting PTR_TO_CTX.
 
-Allocated by task 1:
- kasan_save_track+0x30/0x5c
- __kasan_kmalloc+0x8c/0x94
- __kmalloc_node+0x1cc/0x3e4
- kvmalloc_node+0x48/0x180
- alloc_netdev_mqs+0x68/0x11dc
- alloc_etherdev_mqs+0x28/0x34
- wilc_netdev_ifc_init+0x34/0x8ec
- wilc_cfg80211_init+0x690/0x910
- wilc_bus_probe+0xe0/0x4a0
- spi_probe+0x158/0x1b0
- really_probe+0x270/0xdf4
- __driver_probe_device+0x1dc/0x580
- driver_probe_device+0x60/0x140
- __driver_attach+0x228/0x5d4
- bus_for_each_dev+0x13c/0x1a8
- bus_add_driver+0x2a0/0x608
- driver_register+0x24c/0x578
- do_one_initcall+0x180/0x310
- kernel_init_freeable+0x424/0x484
- kernel_init+0x20/0x148
- ret_from_fork+0x14/0x28
+This fix also closes unintended s390x-specific KPROBE handling of
+PTR_TO_CTX case. Selftest change is necessary to accommodate this.
 
-Freed by task 86:
- kasan_save_track+0x30/0x5c
- kasan_save_free_info+0x38/0x58
- __kasan_slab_free+0xe4/0x140
- kfree+0xb0/0x238
- device_release+0xc0/0x2a8
- kobject_put+0x1d4/0x46c
- netdev_run_todo+0x8fc/0x11d0
- wilc_netdev_cleanup+0x1e4/0x5cc
- wilc_bus_remove+0xc8/0xec
- spi_remove+0x8c/0xac
- device_release_driver_internal+0x434/0x5f8
- unbind_store+0xbc/0x108
- kernfs_fop_write_iter+0x398/0x584
- vfs_write+0x728/0xf88
- ksys_write+0x110/0x1e4
- ret_fast_syscall+0x0/0x1c
- [...]
-
-David Mosberger-Tan initial investigation [1] showed that this
-use-after-free is due to netdevice unregistration during vif list
-traversal. When unregistering a net device, since the needs_free_netdev has
-been set to true during registration, the netdevice object is also freed,
-and as a consequence, the corresponding vif object too, since it is
-attached to it as private netdevice data. The next occurrence of the loop
-then tries to access freed vif pointer to the list to move forward in the
-list.
-
-Fix this use-after-free thanks to two mechanisms:
-- navigate in the list with list_for_each_entry_safe, which allows to
-  safely modify the list as we go through each element. For each element,
-  remove it from the list with list_del_rcu
-- make sure to wait for RCU grace period end after each vif removal to make
-  sure it is safe to free the corresponding vif too (through
-  unregister_netdev)
-
-Since we are in a RCU "modifier" path (not a "reader" path), and because
-such path is expected not to be concurrent to any other modifier (we are
-using the vif_mutex lock), we do not need to use RCU list API, that's why
-we can benefit from list_for_each_entry_safe.
-
-[1] https://lore.kernel.org/linux-wireless/ab077dbe58b1ea5de0a3b2ca21f275a07af967d2.camel@egauge.net/
-
-Fixes: 8399918f3056 ("staging: wilc1000: use RCU list to maintain vif interfaces list")
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240212-wilc_rework_deinit-v1-1-9203ae56c27f@bootlin.com
+Fixes: 91cc1a99740e ("bpf: Annotate context types")
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Link: https://lore.kernel.org/r/20240212233221.2575350-4-andrii@kernel.org
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/microchip/wilc1000/netdev.c  | 28 +++++--------------
- 1 file changed, 7 insertions(+), 21 deletions(-)
+ kernel/bpf/btf.c                              |  3 +++
+ .../bpf/progs/test_global_func_ctx_args.c     | 19 +++++++++++++++++++
+ 2 files changed, 22 insertions(+)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
-index 0e6eeeed2e086..b714da48eaa17 100644
---- a/drivers/net/wireless/microchip/wilc1000/netdev.c
-+++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
-@@ -878,8 +878,7 @@ static const struct net_device_ops wilc_netdev_ops = {
- 
- void wilc_netdev_cleanup(struct wilc *wilc)
- {
--	struct wilc_vif *vif;
--	int srcu_idx, ifc_cnt = 0;
-+	struct wilc_vif *vif, *vif_tmp;
- 
- 	if (!wilc)
- 		return;
-@@ -889,32 +888,19 @@ void wilc_netdev_cleanup(struct wilc *wilc)
- 		wilc->firmware = NULL;
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 7582ec4fd4131..73c36ff758b5e 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -5135,6 +5135,9 @@ btf_get_prog_ctx_type(struct bpf_verifier_log *log, const struct btf *btf,
+ 		bpf_log(log, "Please fix kernel include/linux/bpf_types.h\n");
+ 		return NULL;
  	}
++	/* program types without named context types work only with arg:ctx tag */
++	if (ctx_tname[0] == '\0')
++		return false;
+ 	/* only compare that prog's ctx type name is the same as
+ 	 * kernel expects. No need to compare field by field.
+ 	 * It's ok for bpf prog to do:
+diff --git a/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c b/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
+index 7faa8eef0598b..144d30e654ad2 100644
+--- a/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
++++ b/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
+@@ -26,6 +26,23 @@ int kprobe_typedef_ctx(void *ctx)
+ 	return kprobe_typedef_ctx_subprog(ctx);
+ }
  
--	srcu_idx = srcu_read_lock(&wilc->srcu);
--	list_for_each_entry_rcu(vif, &wilc->vif_list, list) {
-+	list_for_each_entry_safe(vif, vif_tmp, &wilc->vif_list, list) {
-+		mutex_lock(&wilc->vif_mutex);
-+		list_del_rcu(&vif->list);
-+		wilc->vif_num--;
-+		mutex_unlock(&wilc->vif_mutex);
-+		synchronize_srcu(&wilc->srcu);
- 		if (vif->ndev)
- 			unregister_netdev(vif->ndev);
- 	}
--	srcu_read_unlock(&wilc->srcu, srcu_idx);
++/* s390x defines:
++ *
++ * typedef user_pt_regs bpf_user_pt_regs_t;
++ * typedef struct { ... } user_pt_regs;
++ *
++ * And so "canonical" underlying struct type is anonymous.
++ * So on s390x only valid ways to have PTR_TO_CTX argument in global subprogs
++ * are:
++ *   - bpf_user_pt_regs_t *ctx (typedef);
++ *   - struct bpf_user_pt_regs_t *ctx (backwards compatible struct hack);
++ *   - void *ctx __arg_ctx (arg:ctx tag)
++ *
++ * Other architectures also allow using underlying struct types (e.g.,
++ * `struct pt_regs *ctx` for x86-64)
++ */
++#ifndef bpf_target_s390
++
+ #define pt_regs_struct_t typeof(*(__PT_REGS_CAST((struct pt_regs *)NULL)))
  
- 	wilc_wfi_deinit_mon_interface(wilc, false);
- 	destroy_workqueue(wilc->hif_workqueue);
+ __weak int kprobe_struct_ctx_subprog(pt_regs_struct_t *ctx)
+@@ -40,6 +57,8 @@ int kprobe_resolved_ctx(void *ctx)
+ 	return kprobe_struct_ctx_subprog(ctx);
+ }
  
--	while (ifc_cnt < WILC_NUM_CONCURRENT_IFC) {
--		mutex_lock(&wilc->vif_mutex);
--		if (wilc->vif_num <= 0) {
--			mutex_unlock(&wilc->vif_mutex);
--			break;
--		}
--		vif = wilc_get_wl_to_vif(wilc);
--		if (!IS_ERR(vif))
--			list_del_rcu(&vif->list);
--
--		wilc->vif_num--;
--		mutex_unlock(&wilc->vif_mutex);
--		synchronize_srcu(&wilc->srcu);
--		ifc_cnt++;
--	}
--
- 	wilc_wlan_cfg_deinit(wilc);
- 	wlan_deinit_locks(wilc);
- 	wiphy_unregister(wilc->wiphy);
++#endif
++
+ /* this is current hack to make this work on old kernels */
+ struct bpf_user_pt_regs_t {};
+ 
 -- 
 2.43.0
 
