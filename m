@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB3B145323;
-	Sun, 24 Mar 2024 23:12:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8E61448F2;
+	Sun, 24 Mar 2024 23:12:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321971; cv=none; b=emlWo5wl9mtlMKOkTTLXQhMRf/ttntMxIa+XDZCu58XnRbk/SspAXNxl+f3MMTgdVbQ3aIT2vPjjEsmmbE4Xy61SEpYLCEOLvxbJJ5xrXq4KRNAlSeBSxzjoCJhgPPU2gfIx2Z52bPi2mr8MOqaQubffT4aeRcRl6mSLBe4UBwM=
+	t=1711321962; cv=none; b=Ad2FkTcdSvv+7/e4l63Z37/YyOm1p4DbaYi2DTrr5UpNhCyFZzOaxuYm69WkmzjyKrvtVuUQ1qG0KaxmgDpi35CpWjQbsMY9IMWJMIJks21m8CujWL+2UEgMjxMUoamX3ms6o890So9lF1F8K1wJCtkil9QNCW6oBD1hoqfYtko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321971; c=relaxed/simple;
-	bh=S9i6rVDTLrc92ZdyKfg4Ixk7H6eGpB3PH6E05e+MPh0=;
+	s=arc-20240116; t=1711321962; c=relaxed/simple;
+	bh=kEhPTZIPEr2oYN3WqCLLgUWERIFeS4Dajodq0P0U8eA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tXY3jWZT02nggqLbQtAPMnbNXkelSaMYQBtYxFIjzTGTpekjLKuSZNINpADx5wDCopeqCf/BrV6DCXG728FB2FtjDfYPUV6mSyX9g+bzOPI7XF0HZ1T5T32uuI2C4kC3W0G/01bf26/kDwaaon0Is/JjCQwsAO51QlvJ/Ropv64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VbVS5Y98; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Nwl3eAjd25JJF1zIUpPChQWZ5Cuv/YU7zH7rRcFZk+NCiCcfwMKVBJ7RH9d5SMenSYcIi8+bWZR/x+6lJAuVBFmODicvrNJWY2r8QGCijsVMcX04keiOhwmGt37+n6oiYQGtVs0UHd+XbpBuEf56b5NB/QNf1PNaV5Ge1Jvn7gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lOVPCnNS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VbVS5Y98"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA4CFC43390;
-	Sun, 24 Mar 2024 23:12:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lOVPCnNS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A24EC433F1;
+	Sun, 24 Mar 2024 23:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321971;
-	bh=S9i6rVDTLrc92ZdyKfg4Ixk7H6eGpB3PH6E05e+MPh0=;
+	s=k20201202; t=1711321961;
+	bh=kEhPTZIPEr2oYN3WqCLLgUWERIFeS4Dajodq0P0U8eA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VbVS5Y98jZPtumrEtneMHJXzI8B+VXCF2glZTaDkTLvoBgEFrd/r2lDWIRk8iDiIN
-	 p3DDzv71HwInwf5OVmcU7/hMcaap7DGNhlpMrIUKSezRdQBfGwO6vA2RVtQo01Id5j
-	 q3pOlrQ2xxT7ju6E19+aHsEQYlpZqSkAdkceoUaFnDHtMlWJIFxfiDf/dnyKXTWAqp
-	 CRDcC71XMIXodoy9vaFih8p8SkciI8AUeyu7XLmH8fUZOrE0w6K/Fv3Te2Ls3KQP0C
-	 ZncwH/hfBHfXO+OLrrlSf4ChuUwDp0vAu8A5geMXZPvp6TU8oMAXRZ4IY/C7b9be7P
-	 D68EdQnk4UQqA==
+	b=lOVPCnNSq/8l+jNPerqLvzkU5wk/0qlYkDexxehqG2dzUKoUSA5V111DAM3uXaMkn
+	 I4tm5/T1rGDZbpJdrL8kbuw2D+4SyybID5+sRKTCROMfKzl/jJk+hExz5oFW6AzYWk
+	 deKygd0YS2vffZWGKZdp1guXz08vLXahCJ2eteYy/UjuYD9EVeNKbKAVUkYN7y8/l3
+	 9xE0omwE/KJaqz9dx6O2+rpN4zENYofW30z+I3RBazqGPAXhHxb1mwSQcwNdEBfTE5
+	 oa17NqkgJ9kvsvFHlIaE35F5KY9gw1aL1bb1P4/3VLDk9GNfLSyz7k2mM51vOvz4iY
+	 C8rQKiMUyoAuQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Felix Fietkau <nbd@nbd.name>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Hou Tao <houtao1@huawei.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 043/451] wifi: mac80211: only call drv_sta_rc_update for uploaded stations
-Date: Sun, 24 Mar 2024 19:05:19 -0400
-Message-ID: <20240324231207.1351418-44-sashal@kernel.org>
+Subject: [PATCH 6.1 033/451] x86/mm: Move is_vsyscall_vaddr() into asm/vsyscall.h
+Date: Sun, 24 Mar 2024 19:05:09 -0400
+Message-ID: <20240324231207.1351418-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,37 +49,69 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit 413dafc8170fcb925fb17af8842f06af305f8e0b ]
+[ Upstream commit ee0e39a63b78849f8abbef268b13e4838569f646 ]
 
-When a station has not been uploaded yet, receiving SMPS or channel width
-notification action frames can lead to rate_control_rate_update calling
-drv_sta_rc_update with uninitialized driver private data.
-Fix this by adding a missing check for sta->uploaded.
+Move is_vsyscall_vaddr() into asm/vsyscall.h to make it available for
+copy_from_kernel_nofault_allowed() in arch/x86/mm/maccess.c.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Link: https://msgid.link/20240221140535.16102-1-nbd@nbd.name
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Link: https://lore.kernel.org/r/20240202103935.3154011-2-houtao@huaweicloud.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rate.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/vsyscall.h | 10 ++++++++++
+ arch/x86/mm/fault.c             |  9 ---------
+ 2 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/net/mac80211/rate.c b/net/mac80211/rate.c
-index d5ea5f5bcf3a0..9d33fd2377c88 100644
---- a/net/mac80211/rate.c
-+++ b/net/mac80211/rate.c
-@@ -119,7 +119,8 @@ void rate_control_rate_update(struct ieee80211_local *local,
- 		rcu_read_unlock();
- 	}
+diff --git a/arch/x86/include/asm/vsyscall.h b/arch/x86/include/asm/vsyscall.h
+index ab60a71a8dcb9..472f0263dbc61 100644
+--- a/arch/x86/include/asm/vsyscall.h
++++ b/arch/x86/include/asm/vsyscall.h
+@@ -4,6 +4,7 @@
  
--	drv_sta_rc_update(local, sta->sdata, &sta->sta, changed);
-+	if (sta->uploaded)
-+		drv_sta_rc_update(local, sta->sdata, &sta->sta, changed);
+ #include <linux/seqlock.h>
+ #include <uapi/asm/vsyscall.h>
++#include <asm/page_types.h>
+ 
+ #ifdef CONFIG_X86_VSYSCALL_EMULATION
+ extern void map_vsyscall(void);
+@@ -24,4 +25,13 @@ static inline bool emulate_vsyscall(unsigned long error_code,
+ }
+ #endif
+ 
++/*
++ * The (legacy) vsyscall page is the long page in the kernel portion
++ * of the address space that has user-accessible permissions.
++ */
++static inline bool is_vsyscall_vaddr(unsigned long vaddr)
++{
++	return unlikely((vaddr & PAGE_MASK) == VSYSCALL_ADDR);
++}
++
+ #endif /* _ASM_X86_VSYSCALL_H */
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 1dbbad73192a1..f20636510eb1e 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -818,15 +818,6 @@ show_signal_msg(struct pt_regs *regs, unsigned long error_code,
+ 	show_opcodes(regs, loglvl);
  }
  
- int ieee80211_rate_control_register(const struct rate_control_ops *ops)
+-/*
+- * The (legacy) vsyscall page is the long page in the kernel portion
+- * of the address space that has user-accessible permissions.
+- */
+-static bool is_vsyscall_vaddr(unsigned long vaddr)
+-{
+-	return unlikely((vaddr & PAGE_MASK) == VSYSCALL_ADDR);
+-}
+-
+ static void
+ __bad_area_nosemaphore(struct pt_regs *regs, unsigned long error_code,
+ 		       unsigned long address, u32 pkey, int si_code)
 -- 
 2.43.0
 
