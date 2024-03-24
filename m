@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95DCE292B87;
-	Sun, 24 Mar 2024 23:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120FB183B8D;
+	Sun, 24 Mar 2024 23:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324254; cv=none; b=Y8KTpw2HWUaPRSG1s0zXV2VYz9Ffnx/Xr1KagHvN/+nnDojN2Z9qop8qMt1XgZu99RjJRD0WCLsZfo7m06JOhYceamFsyksV/1wmxZEsuyHpI7SSifDWxHjQdt4e0LEjD3aj+kKy4y5u3Mw78ycxBmknjoWw1iyKeJSIEpeCxJk=
+	t=1711324258; cv=none; b=fVD7lVfCWuTiboUGhYdaoWkx9Vi2ua++PLRLubkh+zDagHtSJbZyLC+ezx/OzXxe3Plm4lZLndG+L1rCTLwcX4yWnznVkpjvKS5hXztHsaPCzWYM7JW3eExu7aS5rnQBaFzBX2VUyi5PNOnTSiSo3uj4wCgiG+MaqnOcz9ixbTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324254; c=relaxed/simple;
-	bh=7XJBJ3ssNqsZXuFbQT4PN2MmLcu/dCRwK9QCwYai6S0=;
+	s=arc-20240116; t=1711324258; c=relaxed/simple;
+	bh=/7/1b9rks8twEubNpUt8qsAQs2IeCT+nNQFQ6FdH8sI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fwm+sW+i20aRsYqZH4JM5NBSk9HMoxh2FH+SH7GpK8irP/B/L4FOOjBeV7yciczPDawccKCAelQUPzXPnnUI+cE348dK5ZjjWiD7LJjCJqfLQ8f6M29BG++INXBC+AtlLG75FwSxV/TdWUTz5Jp6HDXVxnE9I6kX03vu5yKcXQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zk47uWqI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SqFSndJu1U1xFEklDdE3SHDYbUVj4W/+UrMjlFKNy+OJqapAQKBRRZUGv/xSWki7oxcckbyLV9IsX0xphGclR+3aUlCNSXojGxv1+6pjkextB7cHoH6noiXvA7QpdG5qDtG5x51lW7z+aUy9XPMoT51rm0Jnzwzf30ugbGKCnBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVDbu7rZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zk47uWqI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE274C433C7;
-	Sun, 24 Mar 2024 23:50:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVDbu7rZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B548C43394;
+	Sun, 24 Mar 2024 23:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324254;
-	bh=7XJBJ3ssNqsZXuFbQT4PN2MmLcu/dCRwK9QCwYai6S0=;
+	s=k20201202; t=1711324256;
+	bh=/7/1b9rks8twEubNpUt8qsAQs2IeCT+nNQFQ6FdH8sI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zk47uWqIy/e0+h7AGoXGOgQFosoM8Pbq2UlvCtLsNaTp1lt6BTSJf8M20CY9do7tU
-	 Gf61Ww/Ep4oPF6Bd8Hm3cVtKTdK+Lq6OOSNOMcykuxG6yM76WTSuDl7SMoBTjR4G/p
-	 jtGs4UfafjWja73+hv75L2fEWoYT8f87P/6bTMLoJwMX8hfVf6aXl5KM6y5YSw34NQ
-	 7FipvyiUTiSZjtMTS4X7oGpfdSRF1OmetCow4czCsRbEQxr9Xh4zg8c9Bvg/xTIGQs
-	 HmjJFPO4ykd8FxAKk5prjQ+4FgIx8DbjnQZnWzoi1eKJf3zqNXI+EcG7ljbWdK9uxi
-	 uJcMJubQf+/6g==
+	b=BVDbu7rZML13csxl7Y+8xuHjEClBj/izOWzwipHX40Xsa0z/cG/UY1FAIK2B2pEqG
+	 Oj6Ju6QZXhjyHRiTKHN0qk3BnLZ8c9/a9iSFbFx5QdIKcstH1ieT9RB6bDSJhcAU/1
+	 WZr/MT9SsK9Ae6ddTLJ6I4mUudAB5fRpB59/AAfI1mda4hv5iMpm7ty4ykwIijT8RD
+	 /QGRhnbEvBxVCemQ8i6dcl/W0NcJxQUDY7Ylf635OWyKbNaikFoyGxes1jf/MFcITy
+	 L8yXCwjdaryU2exfZdxovTflQI2Nyf69ES7+k+AvgUR8SZY/cHMRHS3Hq1G+e2Iaxg
+	 7X47nj1JMXJTQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 035/148] wifi: mwifiex: debugfs: Drop unnecessary error check for debugfs_create_dir()
-Date: Sun, 24 Mar 2024 19:48:19 -0400
-Message-ID: <20240324235012.1356413-36-sashal@kernel.org>
+Subject: [PATCH 4.19 037/148] cpufreq: brcmstb-avs-cpufreq: add check for cpufreq_cpu_get's return value
+Date: Sun, 24 Mar 2024 19:48:21 -0400
+Message-ID: <20240324235012.1356413-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -49,43 +48,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jinjie Ruan <ruanjinjie@huawei.com>
+From: Anastasia Belova <abelova@astralinux.ru>
 
-[ Upstream commit 50180c7f8e3de7c2d87f619131776598fcb1478d ]
+[ Upstream commit f661017e6d326ee187db24194cabb013d81bc2a6 ]
 
-debugfs_create_dir() returns ERR_PTR and never return NULL.
+cpufreq_cpu_get may return NULL. To avoid NULL-dereference check it
+and return 0 in case of error.
 
-As Russell suggested, this patch removes the error checking for
-debugfs_create_dir(). This is because the DebugFS kernel API is developed
-in a way that the caller can safely ignore the errors that occur during
-the creation of DebugFS nodes. The debugfs APIs have a IS_ERR() judge in
-start_creating() which can handle it gracefully. So these checks are
-unnecessary.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20230903030216.1509013-3-ruanjinjie@huawei.com
+Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/debugfs.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/debugfs.c b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-index 0f62da50e11a2..63af04202d75f 100644
---- a/drivers/net/wireless/marvell/mwifiex/debugfs.c
-+++ b/drivers/net/wireless/marvell/mwifiex/debugfs.c
-@@ -977,9 +977,6 @@ mwifiex_dev_debugfs_init(struct mwifiex_private *priv)
- 	priv->dfs_dev_dir = debugfs_create_dir(priv->netdev->name,
- 					       mwifiex_dfs_dir);
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index 541486217984b..1302e1900dcb1 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -457,6 +457,8 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
+ static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
+ {
+ 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
++	if (!policy)
++		return 0;
+ 	struct private_data *priv = policy->driver_data;
  
--	if (!priv->dfs_dev_dir)
--		return;
--
- 	MWIFIEX_DFS_ADD_FILE(info);
- 	MWIFIEX_DFS_ADD_FILE(debug);
- 	MWIFIEX_DFS_ADD_FILE(getlog);
+ 	return brcm_avs_get_frequency(priv->base);
 -- 
 2.43.0
 
