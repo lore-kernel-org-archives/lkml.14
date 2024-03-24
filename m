@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266F6127B63;
-	Sun, 24 Mar 2024 22:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599461DF7BF;
+	Sun, 24 Mar 2024 22:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320778; cv=none; b=UzTIKUITT92PcmCS9s0gxCpdrtfh2Pk5L/Wlso9Qov+fgsfs6Ke60YM5KnctYxOAvLSz7RvRW/vgvqilKvibnGP70Jc4LOjwVsCNLYdwBESVXI0My9n7Y9wGsy1g9eThDtiE2jw9QJBFGh68kVWHQcLLiuCYnGKeCxCTPZUrfTA=
+	t=1711320765; cv=none; b=AlHazVfMC6nmUK+Qm7GB0/SLjA00mdUlEgtFRKsoL1dGMvhWIWEHDPtrKQ6Y5fYqZkoL8wo9KTiDwzgWA7+I9cM5Hqn42zIuhPGTynSey0ogdRWkpVl9a561Vwj0aSo73MV8CH2bOqp1wQfy1bROOTsmS+DREl6nTOo4iDYs8EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320778; c=relaxed/simple;
-	bh=5PFsaQlyqdwHk72k/+qjhy0XjH+8BI1+xj26NDsB7+s=;
+	s=arc-20240116; t=1711320765; c=relaxed/simple;
+	bh=CWRgix+uDvTPQLyz3Skw1HxUUQ9clC+hsv2lUdDt+KI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GIqRqgU+euOijDrj5mlwko4N6AH74m3GppbkQJUcVryFQS0Kd180PPeObVxv9E+Rm1oRQqoXUO+bfhK53qrpvaAdWs/iNSFkZFpeJoDaI3oDQbPqv2MDn/8GcBNuYx/Bi4HvjJtudpXBP+xbOCGuz5CdFe19Oisx6SMHfya5vDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqEGjE3l; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=V5GQxePc5uMHsMDBeRIesUCMA+zg6ZJfljVqJbS4QOJDhTD1XtkNrqi4P5DNdqhG/6ewH40Zy2n1tkFg4CbmqNCkF9W++V8Bj7mwXWVBKhgJfrRqRM+QazJDVZsfopeGYfkuHAqPmCphdmzq3vwq4+LMWvbWlCZouH07I2Dj2vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JyX9IrP+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqEGjE3l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34409C43390;
-	Sun, 24 Mar 2024 22:52:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JyX9IrP+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EA9EC433C7;
+	Sun, 24 Mar 2024 22:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320778;
-	bh=5PFsaQlyqdwHk72k/+qjhy0XjH+8BI1+xj26NDsB7+s=;
+	s=k20201202; t=1711320764;
+	bh=CWRgix+uDvTPQLyz3Skw1HxUUQ9clC+hsv2lUdDt+KI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MqEGjE3luNu7cPLvvQA5Pbh3FRH0tqi0Sr9Ab6MBn80M8XHxuh1VSFEmPMWqqhmgN
-	 oEHnKeNGsJTc59c9kmEfmzpVptRNuX2EECT3iCNLhRzhP/n8ZC+sHjlLi1+ktS+5pP
-	 wc/wETHdbXqI8HlGF6sBJGLaLgKuvUkV9JjalnFHNBn2EnTqgRhfrGCXGADWzrIEEa
-	 7Utfwt1npYE+CJQ1E4Up0vSwnUjcwkB1iGlWks8p/aXVvkoBIP1lc65DtTGZERgspu
-	 5q6Lo5F+q3KCpYn5Nj74xfWXq6vvaWorzfs8xhvrrTYSmTgznC6r8XrSZUfoDaTOaL
-	 xlVq8dv637xyg==
+	b=JyX9IrP+mdFNymz0hhMFi1Xamshk2knCz8qBSwi6VKwe8/qn14YeWGvVu1bub3CMH
+	 SqYQ/+aEGMvWfrvHiXQYQZUF/qXE6rPBwA9E5Ie5aURSNXUdl6Xn1Tt2Equ3RkXVOe
+	 22ZR72n5sy2KRYQ5xg2COlQTUS1juzW5Lc/gppInvy9bQmx22MXudnEUFXUu8g+U80
+	 lkzPPU4cp7XsEv+1VOEWm0rKDN917abkGAj6VauXgGgfgN0/fNGgghYq4o6gvNN4n1
+	 Mohylw8jH7fqWSyPkxEBb+BHqMlzm7eiiKTB2pxeJMbvy9ZXlzPdP6foCUf8CO9EJ6
+	 WeQd5GIteEFxg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
+Cc: Kees Cook <keescook@chromium.org>,
+	Guixiong Wei <guixiongwei@gmail.com>,
+	Juergen Gross <jgross@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 341/713] igb: Fix missing time sync events
-Date: Sun, 24 Mar 2024 18:41:07 -0400
-Message-ID: <20240324224720.1345309-342-sashal@kernel.org>
+Subject: [PATCH 6.7 328/713] x86, relocs: Ignore relocations in .notes section
+Date: Sun, 24 Mar 2024 18:40:54 -0400
+Message-ID: <20240324224720.1345309-329-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,92 +49,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit ee14cc9ea19ba9678177e2224a9c58cce5937c73 ]
+[ Upstream commit aaa8736370db1a78f0e8434344a484f9fd20be3b ]
 
-Fix "double" clearing of interrupts, which can cause external events
-or timestamps to be missed.
+When building with CONFIG_XEN_PV=y, .text symbols are emitted into
+the .notes section so that Xen can find the "startup_xen" entry point.
+This information is used prior to booting the kernel, so relocations
+are not useful. In fact, performing relocations against the .notes
+section means that the KASLR base is exposed since /sys/kernel/notes
+is world-readable.
 
-The E1000_TSIRC Time Sync Interrupt Cause register can be cleared in two
-ways, by either reading it or by writing '1' into the specific cause
-bit. This is documented in section 8.16.1.
+To avoid leaking the KASLR base without breaking unprivileged tools that
+are expecting to read /sys/kernel/notes, skip performing relocations in
+the .notes section. The values readable in .notes are then identical to
+those found in System.map.
 
-The following flow was used:
-    1. read E1000_TSIRC into 'tsicr';
-    2. handle the interrupts present into 'tsirc' and mark them in 'ack';
-    3. write 'ack' into E1000_TSICR;
-
-As both (1) and (3) will clear the interrupt cause, if the same
-interrupt happens again between (1) and (3) it will be ignored,
-causing events to be missed.
-
-Remove the extra clear in (3).
-
-Fixes: 00c65578b47b ("igb: enable internal PPS for the i210")
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Tested-by: Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com> (A Contingent worker at Intel)
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Reported-by: Guixiong Wei <guixiongwei@gmail.com>
+Closes: https://lore.kernel.org/all/20240218073501.54555-1-guixiongwei@gmail.com/
+Fixes: 5ead97c84fa7 ("xen: Core Xen implementation")
+Fixes: da1a679cde9b ("Add /sys/kernel/notes")
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_main.c | 23 +++++------------------
- 1 file changed, 5 insertions(+), 18 deletions(-)
+ arch/x86/tools/relocs.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index b2295caa2f0ab..ada42ba635498 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -6984,44 +6984,31 @@ static void igb_extts(struct igb_adapter *adapter, int tsintr_tt)
- static void igb_tsync_interrupt(struct igb_adapter *adapter)
- {
- 	struct e1000_hw *hw = &adapter->hw;
--	u32 ack = 0, tsicr = rd32(E1000_TSICR);
-+	u32 tsicr = rd32(E1000_TSICR);
- 	struct ptp_clock_event event;
- 
- 	if (tsicr & TSINTR_SYS_WRAP) {
- 		event.type = PTP_CLOCK_PPS;
- 		if (adapter->ptp_caps.pps)
- 			ptp_clock_event(adapter->ptp_clock, &event);
--		ack |= TSINTR_SYS_WRAP;
- 	}
- 
- 	if (tsicr & E1000_TSICR_TXTS) {
- 		/* retrieve hardware timestamp */
- 		schedule_work(&adapter->ptp_tx_work);
--		ack |= E1000_TSICR_TXTS;
- 	}
- 
--	if (tsicr & TSINTR_TT0) {
-+	if (tsicr & TSINTR_TT0)
- 		igb_perout(adapter, 0);
--		ack |= TSINTR_TT0;
--	}
- 
--	if (tsicr & TSINTR_TT1) {
-+	if (tsicr & TSINTR_TT1)
- 		igb_perout(adapter, 1);
--		ack |= TSINTR_TT1;
--	}
- 
--	if (tsicr & TSINTR_AUTT0) {
-+	if (tsicr & TSINTR_AUTT0)
- 		igb_extts(adapter, 0);
--		ack |= TSINTR_AUTT0;
--	}
- 
--	if (tsicr & TSINTR_AUTT1) {
-+	if (tsicr & TSINTR_AUTT1)
- 		igb_extts(adapter, 1);
--		ack |= TSINTR_AUTT1;
--	}
--
--	/* acknowledge the interrupts */
--	wr32(E1000_TSICR, ack);
- }
- 
- static irqreturn_t igb_msix_other(int irq, void *data)
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index d30949e25ebd9..e7013283640f5 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -653,6 +653,14 @@ static void print_absolute_relocs(void)
+ 		if (!(sec_applies->shdr.sh_flags & SHF_ALLOC)) {
+ 			continue;
+ 		}
++		/*
++		 * Do not perform relocations in .notes section; any
++		 * values there are meant for pre-boot consumption (e.g.
++		 * startup_xen).
++		 */
++		if (sec_applies->shdr.sh_type == SHT_NOTE) {
++			continue;
++		}
+ 		sh_symtab  = sec_symtab->symtab;
+ 		sym_strtab = sec_symtab->link->strtab;
+ 		for (j = 0; j < sec->shdr.sh_size/sizeof(Elf_Rel); j++) {
 -- 
 2.43.0
 
