@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA1D1FDB20;
-	Sun, 24 Mar 2024 23:17:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAAD2308AD;
+	Sun, 24 Mar 2024 23:17:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322236; cv=none; b=fNVhd8P+ZUBHYwstabBC/QHNgLibY8P+KY4WcHBh1sHVDbLtfObJnOgEpUiOLrwnjfc+y8JbgGDOL5mwrTgO+pHXmj16ihb2DN6WQjPwZh+WOL3zUAIZ9wUkc3vosO9zHFt3DcJ+yHwjd1BkfYrSSw1bA57lJUbHyklU91yRqfw=
+	t=1711322229; cv=none; b=WL9TyUSX/ZcSiglKI8iWSpdYnW+YNktVd7cF+vg7zPqjONPtu6QX8ezHzvtDj92nBjX80nZJvYo/eluwym8LVTHbhg/m44McKAdS007bvWx5K1ATrcy8OUrWzxMrPf0AU7EtkGEMLuf5p68aEGA+7l+WjLqnumNp2azkbOtAR/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322236; c=relaxed/simple;
-	bh=Gy1sz4Eze5808M416wNc584UKti/F2FjtjnCgy11LHU=;
+	s=arc-20240116; t=1711322229; c=relaxed/simple;
+	bh=9jN6vKZ98/bJPDMoRNuvk8UuWNbHvTAGirA78gAMS2I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OjRMr5ujZfDiNwqV5F1KFftp72D5oVLBnZYv8vYZ/IF1mT6bVJG0HEuknA6LPo8muSVVhmHiyGt6TPJIeghx6wCZyAwHkmKDd1NnXaGBexCilV1m7n0OD6obSlKLyjZxbzTPuoqbu09kMyShnTU6imAdCMRHDoqo9/EVOr6Xkmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1qaoKdU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jAeFPdA/FCpTbCGtAezAw47x8CLbbo5zjb2GDSlZD2wZmF37dGQRO4mPeo2hCEMbW+5PjOiN6Yy/Yidbru0dYDJ92OlJeATjDw2g1OGldBC+DQ9x9LgU/nOHlPmptUgUUxVtKmArW0NAFLPvaFOjya90UM+07kcTN3/cvxQ+4D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDSdSM8O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1qaoKdU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2448C43394;
-	Sun, 24 Mar 2024 23:17:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDSdSM8O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5AAAC433C7;
+	Sun, 24 Mar 2024 23:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322235;
-	bh=Gy1sz4Eze5808M416wNc584UKti/F2FjtjnCgy11LHU=;
+	s=k20201202; t=1711322228;
+	bh=9jN6vKZ98/bJPDMoRNuvk8UuWNbHvTAGirA78gAMS2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o1qaoKdUMmdYJEUw0Dcf2GTSb7BUoIjnFx+1U+ZQIByt+4s3TIYaUFcM5a+Dt4eHW
-	 Wc5Vkx9oWMQhz3afzygWF7edjxPnUmjtEwKW2Ptw0TJ78NXInxfKkgfe/frz+sFAJ+
-	 aRmF0UDUAcDGaLZI70+vx0Oi7pN3Hwi2HkpUT8bEkxUU5LhZEx2j4hXeu+/Gcw0Jyn
-	 i3Z8k+D8tvQj+3a7iJoR6s/RBDrinT6jttY8pEEec2RGMdCVTABT+01kXRdLUuTQy/
-	 ItQXscPFpbIGzvUMoBlPKGQYvSG8A383jOYeRTTm980MtRQd65DyVKSDLzSAQgNezY
-	 WFH4Gt1M13kUA==
+	b=oDSdSM8Ob2SkQCrjxeDQEpUAAvU2OmE9OcehPf9sMv2nQWTDPJ9wjE771H5VfIdmn
+	 jrsrTT95iQfpAWq14UnI8BlLHZPEWcbLLYOt7UGngSil2YZdlfnkrGuPMo3ULg14w+
+	 nwWudp5we4aHAVgYnKO5IPdxW9qQ8TRnC/aV9IdKlgYZNHxbh62VvgkVQgBw0/PqQa
+	 eu73i0CVvXM2K3u+irYeMhnvbly5J/glpzwfUs/HHQ1WhdIu/qrxWc/M2cnlbe6ys0
+	 1fnoRLCgZHH9qpcDZ51lhpJ4p6FGa2430ieRHszuucwaYdwYWcnuzoH60mKv4eQ+Oe
+	 DGj9jKKruV4xg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 316/451] drm/tidss: Fix sync-lost issue with two displays
-Date: Sun, 24 Mar 2024 19:09:52 -0400
-Message-ID: <20240324231207.1351418-317-sashal@kernel.org>
+Subject: [PATCH 6.1 309/451] clk: hisilicon: hi3559a: Fix an erroneous devm_kfree()
+Date: Sun, 24 Mar 2024 19:09:45 -0400
+Message-ID: <20240324231207.1351418-310-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,62 +48,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit c079e2e113f2ec2803ba859bbb442a6ab82c96bd ]
+[ Upstream commit 64c6a38136b74a2f18c42199830975edd9fbc379 ]
 
-A sync lost issue can be observed with two displays, when moving a plane
-from one disabled display to an another disabled display, and then
-enabling the display to which the plane was moved to. The exact
-requirements for this to trigger are not clear.
+'p_clk' is an array allocated just before the for loop for all clk that
+need to be registered.
+It is incremented at each loop iteration.
 
-It looks like the issue is that the layers are left enabled in the first
-display's OVR registers. Even if the corresponding VP is disabled, it
-still causes an issue, as if the disabled VP and its OVR would still be
-in use, leading to the same VID being used by two OVRs. However, this is
-just speculation based on testing the DSS behavior.
+If a clk_register() call fails, 'p_clk' may point to something different
+from what should be freed.
 
-Experimentation shows that as a workaround, we can disable all the
-layers in the OVR when disabling a VP. There should be no downside to
-this, as the OVR is anyway effectively disabled if its VP is disabled,
-and it seems to solve the sync lost issue.
+The best we can do, is to avoid this wrong release of memory.
 
-However, there may be a bigger issue in play here, related to J721e
-erratum i2097 ("DSS: Disabling a Layer Connected to Overlay May Result
-in Synclost During the Next Frame"). Experimentation also shows that the
-OVR's CHANNELIN field has similar issue. So we may need to revisit this
-when we find out more about the core issue.
-
-Fixes: 32a1795f57ee ("drm/tidss: New driver for TI Keystone platform Display SubSystem")
-Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240213-tidss-fixes-v1-2-d709e8dfa505@ideasonboard.com
+Fixes: 6c81966107dc ("clk: hisilicon: Add clock driver for hi3559A SoC")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/773fc8425c3b8f5b0ca7c1d89f15b65831a85ca9.1705850155.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tidss/tidss_crtc.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/clk/hisilicon/clk-hi3559a.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
-index cb66a425dd200..896a77853ebc5 100644
---- a/drivers/gpu/drm/tidss/tidss_crtc.c
-+++ b/drivers/gpu/drm/tidss/tidss_crtc.c
-@@ -270,6 +270,16 @@ static void tidss_crtc_atomic_disable(struct drm_crtc *crtc,
+diff --git a/drivers/clk/hisilicon/clk-hi3559a.c b/drivers/clk/hisilicon/clk-hi3559a.c
+index 9ea1a80acbe8b..0272276550ff1 100644
+--- a/drivers/clk/hisilicon/clk-hi3559a.c
++++ b/drivers/clk/hisilicon/clk-hi3559a.c
+@@ -491,7 +491,6 @@ static void hisi_clk_register_pll(struct hi3559av100_pll_clock *clks,
  
- 	reinit_completion(&tcrtc->framedone_completion);
- 
-+	/*
-+	 * If a layer is left enabled when the videoport is disabled, and the
-+	 * vid pipeline that was used for the layer is taken into use on
-+	 * another videoport, the DSS will report sync lost issues. Disable all
-+	 * the layers here as a work-around.
-+	 */
-+	for (u32 layer = 0; layer < tidss->feat->num_planes; layer++)
-+		dispc_ovr_enable_layer(tidss->dispc, tcrtc->hw_videoport, layer,
-+				       false);
-+
- 	dispc_vp_disable(tidss->dispc, tcrtc->hw_videoport);
- 
- 	if (!wait_for_completion_timeout(&tcrtc->framedone_completion,
+ 		clk = clk_register(NULL, &p_clk->hw);
+ 		if (IS_ERR(clk)) {
+-			devm_kfree(dev, p_clk);
+ 			dev_err(dev, "%s: failed to register clock %s\n",
+ 			       __func__, clks[i].name);
+ 			continue;
 -- 
 2.43.0
 
