@@ -1,84 +1,85 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01E04085A;
-	Sun, 24 Mar 2024 22:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFEA43ACC;
+	Sun, 24 Mar 2024 22:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319663; cv=none; b=nFfhwQ6Dr+YAkBBekHrvhXMDt5N4K/TAh47FdTqpvjYnY4wDT+9w6YHbhks7NR7Wa15Ixrnei8N329aOLKv0KD9aByhyAUmFxyDpjlS/wAlY7ZrWCHK5/n9vxlXGdxqCHAtSMfUrTtQTXsNQ5Z5YaR+IncGUJBLezaG8/MH/sp8=
+	t=1711319665; cv=none; b=NT63A3eHlqNTrZg3A2JSXQsAqHRLRRxpGXWjUbayWKfXgQ0ZQLv+c6hDBnvLDl7cY5Mo9lIrdvisR/p3dmPnIXg7wUFvT3akOG4ESK+ielkMiDKjmjv5sMF0oYaDAQtSLpKA22efFHhUbFo8aSppghaQSAADVg4BR2LZRiM4P9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319663; c=relaxed/simple;
-	bh=rblbZbeUNDFkN6Ya4j5DhEAFl/f3CnZ68qMOk7KGkcM=;
+	s=arc-20240116; t=1711319665; c=relaxed/simple;
+	bh=bJ86mbIQjLwbn//NFmnurEsU7QTgkvcp3FVZZRVJCis=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=do07k7R1K4fd7YNZISi2Ml+KTx6asdgQlYOiWqbM1Kp52lEwL0cz30CEdGJDIdt57wI9eQIQwOqczhDBJDTUjXIgC9uKCtaAyqk2f97N3kzG57h7veNfKoK+edsefIK5sxOjmBX5dLFafPRsiR8pIcpDWx0+JsFgSDuR5FwY+HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K1R+xqfN; arc=none smtp.client-ip=209.85.222.180
+	 MIME-Version; b=WqE8ABaSuDsxVk2yMoCmdfkL+Mroijz9h97zoEQ16MqCSsSH1AIV1WApN4aSYU66IRpq6FuMGe/mbigXT3mE+IEK9cTHP/a6ht0HwlxZe0XeMlENyJ7Bp7+dSbyeBKkwTVhDIPw07UpujLBahrSCahn0lPyIBdmCpkuhf/6feV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XcT/QOgL; arc=none smtp.client-ip=209.85.222.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1R+xqfN"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-78a5580324eso26510285a.3;
-        Sun, 24 Mar 2024 15:34:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XcT/QOgL"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-78a3bccc420so171560485a.1;
+        Sun, 24 Mar 2024 15:34:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711319661; x=1711924461; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711319662; x=1711924462; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=r4dkugQkcRSjLN47IMqLis/1vAo+zF2RZMH9C3fgvJ4=;
-        b=K1R+xqfNaBFKjCbU9RZeZ0xAtQSzd42QwsQfJugTXogkO90NBOpeaS4f7Mmxd9onrd
-         1DegnjrAyUHhJJewfdunuxei7Icv6gp/uIg8NLYLuH1S+AriQLqyvgCzNgMS9fK9D2HK
-         Oxm0hISab4cZQ9GMhZ7dbAXfnwRdIcat0Fzu5OwzZCFT7tP3j4JNytvWIPqCyd6ivruh
-         NgZ96mDTw7ik+RcAETTWxJ4CmcDyW3TkNCXO/Ki+2v61dUUa6nx0JnIU2kafnbKwPH53
-         jyjj+K6Rvdz7AnopH3Oz/rEvw4GPLl6h10uREmG3DXPZ19H8F1RmzZWkf/HFxQZ682aJ
-         pvrw==
+        bh=sdmtxUeccR9mblyOKVx+vdMDj9Zw7MyhLqQWnpnpKTE=;
+        b=XcT/QOgLouX+XbDSUamrw2L1UgLIY3emyDz0iMOsWLpSBaWjC6iMuTq8wvkN/yqUFC
+         TPwbFO4ksYueykT9CHGjELt4NeVzpQfZSu+tgVGTNFNXK9sxqGCRCwh3JmQtHIvqQnpM
+         HVPyIy+BpNZ/hIZ77I67yYZzjwS2X/idCRf9hA5HEajahrv/k5prgdyAwFjjr2IGPo4o
+         pw6QOZw23+cJh4nY9DNYat5wp5+d8BQAVtDhn2+NC6SZwFZ6K7rebDnTyPLIetwcjv/8
+         uMIKoYzndb9ptybt8iGwlG4hueRAT556nsdyrRA0EqQYrHeyuNZMsSVmoeaFn6V36cvi
+         Xz1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711319661; x=1711924461;
+        d=1e100.net; s=20230601; t=1711319662; x=1711924462;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=r4dkugQkcRSjLN47IMqLis/1vAo+zF2RZMH9C3fgvJ4=;
-        b=B3s9q7UjGnU8wR2D/T5a1nj4Nk5Z/rbMHIMc0TXAJCIdte9PflzDS055fPhvB+Cdte
-         nG6LPL4Tys5O2A/VGKFwdec4HrC9U12RcgS0irT4FE58zGysS7E8dXHC4vcF0jZdyJZH
-         hUTu4H7C2oDYNEFegUhcr74APwARTpfAXd/S9yFN2bqp/1Ha+AJrmLEiLDjuNKBNefBX
-         SF02lRmeDDPSNuLD7xk1V2V3dO/pM8Ln27H/Lor9ssMi9MDNZ7X7nfBmQV0mzOcbBCg9
-         /9pEKbXSOvZSm6U/F3K1RwHyw0eavy12PZ9lmqvTC1sUHYw0SpGgWRBGd7/k/FP/UxHs
-         VDWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXN24RQHCtg63cJfLGciRJ/6ZjHY2bJcKMIFaewa43oztLZH/XeIJA0TCG906OowQu+vN8tjZw81Q7L27UfeoulQWvvoDUcsypacldr
-X-Gm-Message-State: AOJu0YwuzN8SN74P0l7iyqH4CmQANBfHctXW7NcreUctEkf1utxdyRk6
-	7RcA1ba9rduAspjl/sZMsCTu4cwZ7BNXJD9OpfDVnyyKfKMXgF65McvrILz8
-X-Google-Smtp-Source: AGHT+IEGXwFi4OApdpQX0xAGF4IQqEMsHc2HieH20JpsoDEe2F+hszVBR1E3kHFAFNt1xADcoOjI+g==
-X-Received: by 2002:a05:620a:5d82:b0:78a:2b1b:e56b with SMTP id xx2-20020a05620a5d8200b0078a2b1be56bmr5899720qkn.68.1711319660903;
-        Sun, 24 Mar 2024 15:34:20 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id q3-20020ae9e403000000b0078a48172335sm1356193qkc.24.2024.03.24.15.34.20
+        bh=sdmtxUeccR9mblyOKVx+vdMDj9Zw7MyhLqQWnpnpKTE=;
+        b=VTf/fzQnedF45TgW/jLjz9RAwJnKi1fDwB8mHCiR+wH5ocx0vc/QS1hSia9sTuR81g
+         NOUypzSLaTJAVEKvvXya+7+gfpFI9oOtp2Eclz2MtGBo5u6k3xE7sIqbseWNl50k4yNC
+         7ZqBlFz751/xP85O4zCd0QnNiyI/07DarmU8+pwkPzQjN2l2rzW1cqw2VFv6JmhYuCyW
+         TJsWjvQmmxzViGcwG00IyTmoIHZ0zdmzHamoWNbQCj3wLnFMFy4DnhOM3oty6VdC4NFH
+         uBvr1sApTJ0/iKVGczGXSIN3OjVfFyyHExecH0GeA4zUPrJbRVoRUyMcuLOor42SFh7X
+         +i5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVadp1Edc2E/5TmGhTGLUkeaEz5w8fySiql5T0gkBIpmIZOHXOeOCSCISRpLGgTz7L/o2wi2U8dqT7SjjoHjR6UaOu4gxIZb7BFC+8P
+X-Gm-Message-State: AOJu0YyFToaDUSvo3Nb/hguVuiQS/L8pmwvGl+pX9gy2/+Iu3bNYglqz
+	cWCB50u6z5qFJPHQ8Y9dJuWKWlSRTntL/gTr29OJkNis+yQ1o14q
+X-Google-Smtp-Source: AGHT+IFLQPh7gqo+zXF+9PbKRGc+rHtCUybFWEY/2W6Tn5dZpR95LD4k7sPOmVENHxAxa3tgQSbCdA==
+X-Received: by 2002:a05:620a:4c:b0:78a:3326:13f with SMTP id t12-20020a05620a004c00b0078a3326013fmr6094290qkt.58.1711319662549;
+        Sun, 24 Mar 2024 15:34:22 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id w14-20020a05620a094e00b00787930320b6sm1652237qkw.70.2024.03.24.15.34.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Mar 2024 15:34:20 -0700 (PDT)
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailauth.nyi.internal (Postfix) with ESMTP id EAE1D27C005B;
-	Sun, 24 Mar 2024 18:34:19 -0400 (EDT)
+        Sun, 24 Mar 2024 15:34:22 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id A14901200032;
+	Sun, 24 Mar 2024 18:34:21 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Sun, 24 Mar 2024 18:34:19 -0400
-X-ME-Sender: <xms:a6oAZp5zQput8PTUkfkglQ-44m1TzYe8VaA-Ze6qviqyVBZFPKFnIQ>
-    <xme:a6oAZm5KybByycoyXrMS-NPSIwkb_eoli4CnYVDShobTVzaCc74WQSfnnTLFhCXqu
-    y1uKhKt-AkQYkYa3g>
-X-ME-Received: <xmr:a6oAZgfdWxfVuAYh3clpSbjZ1vNmhPVKJ1kgp5xZncd2c1PAk0O00qCz9cA>
+  by compute6.internal (MEProxy); Sun, 24 Mar 2024 18:34:21 -0400
+X-ME-Sender: <xms:baoAZuVP-c-k2r-eUekvNLcsRKMaMAv1mZ2q2JIqrDXFjHJzke2yqQ>
+    <xme:baoAZqneABAPAlQQioms_pbpZJTO5u3sFgc5wxFUc2TrjqItLQQTADnSxFU7vz-qu
+    dfRKwu48j-Prfhrfw>
+X-ME-Received: <xmr:baoAZib8lmEnzvJnj1EhIG63pEtxO16mrha0bSHyPXQBnpk3s902SyXS6MA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtjedgudeihecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhq
     uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnhepgeeljeeitdehvdehgefgjeevfeejjeekgfevffeiueejhfeuiefggeeu
-    heeggefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
-    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
-    higihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:a6oAZiLSCJTVAK3qxVMl1V9DA5Tt8Vax52T3LG-I0Nf4ZiWT53zeaw>
-    <xmx:a6oAZtLIJ2StmFQjg9fybjgeDx1a7GhpSE-y6tEkHeiM7sA_1UbdjQ>
-    <xmx:a6oAZrzJ2yFWVPYzHOnDtzUYWOktwohkSbc251lSkkYwPpYpQrRZrA>
-    <xmx:a6oAZpJewVVPv0lu_zWHT3CoxI05dG3oCLDgTncjCeZ3AGHXFRuPpQ>
-    <xmx:a6oAZqfCwaF7xOH_w-9qGjY5UdxRpTIncgJ2n3hNFDUobk0-6Z-ETQ>
+    grthhtvghrnhepjeeftdetjeekjefguefggffgiedvieffleejieejueeugfehiefhhfef
+    geekkedvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdprghnughrohhiugdrtghomh
+    dprhhushhtqdhfohhrqdhlihhnuhigrdgtohhmnecuvehluhhsthgvrhfuihiivgeptden
+    ucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrh
+    hsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgv
+    nhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:baoAZlXsvt8JYuCQDiAWgkmnqK3joe-FjfFVCYvzaw8HSUtzG88Reg>
+    <xmx:baoAZonCPp1qnyYvsb9C6hyfkAYBP1hQcww4-hMMTZ0AWxYPyqhGsQ>
+    <xmx:baoAZqeGsvv1RTxwuF165DY3DcHZHJ3YAQMsDXPKFUH1vJGWg2hh9w>
+    <xmx:baoAZqHwjvbDqAFR-oQ7oOI7mqOa9hn2ryXvlKXjK97ZWuQBcCM2UQ>
+    <xmx:baoAZvpaGj_uUUtk6QLrnL0kL8pnAAYk0ykOLQtxwxhgsuw_dq81vTfqf2I>
 Feedback-ID: iad51458e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 24 Mar 2024 18:34:19 -0400 (EDT)
+ 24 Mar 2024 18:34:20 -0400 (EDT)
 From: Boqun Feng <boqun.feng@gmail.com>
 To: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -97,9 +98,9 @@ Cc: Alice Ryhl <aliceryhl@google.com>,
 	Valentin Obst <kernel@valentinobst.de>,
 	Heghedus Razvan <heghedus.razvan@protonmail.com>,
 	Asahi Lina <lina@asahilina.net>
-Subject: [PATCH 3/5] rust: time: Introduce clock reading framework
-Date: Sun, 24 Mar 2024 15:33:37 -0700
-Message-ID: <20240324223339.971934-4-boqun.feng@gmail.com>
+Subject: [PATCH 4/5] rust: time: Support reading CLOCK_MONOTONIC
+Date: Sun, 24 Mar 2024 15:33:38 -0700
+Message-ID: <20240324223339.971934-5-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240324223339.971934-1-boqun.feng@gmail.com>
 References: <20240324223339.971934-1-boqun.feng@gmail.com>
@@ -111,87 +112,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To make sure Rust code doesn't mix timestamps from different clocks, a
-type safe clock reading framework is introduced. It includes:
+Rust Binder will need to read CLOCK_MONOTONIC to compute how many
+milliseconds a transaction has been active for when dumping the current
+state of the Binder driver. This replicates the logic in C Binder [1].
 
-* A `Clock` trait that represents different clocks, to read a particular
-  clock, one needs implement the `Clock::now()` function.
+For a usage example in Rust Binder, see [2].
 
-* A `Instant<Clock>` type that represents timestamps of different
-  clocks, whose implementation is just a `ktime_t`, so all the
-  calculation on `ktime_t` should apply to it as well.
+Hence add the support for CLOCK_MONOTONIC read.
 
+The `ktime_get` method cannot be safely called in NMI context. This
+requirement is not checked by these abstractions, but it is intended
+that klint [3] or a similar tool will be used to check it in the future.
+
+Link: https://lore.kernel.org/lkml/5ac8c0d09392290be789423f0dd78a520b830fab.1682333709.git.zhangchuang3@xiaomi.com/ [1]
+Link: https://r.android.com/3004103 [2]
+Link: https://rust-for-linux.com/klint [3]
 Co-developed-by: Heghedus Razvan <heghedus.razvan@protonmail.com>
 Signed-off-by: Heghedus Razvan <heghedus.razvan@protonmail.com>
 Co-developed-by: Asahi Lina <lina@asahilina.net>
 Signed-off-by: Asahi Lina <lina@asahilina.net>
+Co-developed-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- rust/kernel/time.rs | 49 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+@Alice, I still put the link to the usage of Android binder here, if you
+want to remove that, please let me know.
+
+ rust/kernel/time.rs | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-index b238b3a4e899..0f9f5605ed48 100644
+index 0f9f5605ed48..5cd669cbea01 100644
 --- a/rust/kernel/time.rs
 +++ b/rust/kernel/time.rs
-@@ -6,6 +6,9 @@
- //! have been ported or wrapped for usage by Rust code in the kernel.
- //!
- //! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.h).
-+//! C header: [`include/linux/ktime.h`](srctree/include/linux/ktime.h).
-+
-+use core::marker::PhantomData;
- 
- /// The number of nanoseconds per millisecond.
- pub const NSEC_PER_MSEC: i64 = bindings::NSEC_PER_MSEC as i64;
-@@ -64,3 +67,49 @@ pub fn to_ns(self) -> i64 {
-         self.inner
+@@ -113,3 +113,22 @@ fn sub(self, other: Self) -> Self::Output {
+         Duration::new(self.inner.wrapping_sub(other.inner))
      }
  }
 +
-+/// Represents a clock, that is, a unique time source and it can be queried for the current time.
-+pub trait Clock: Sized {
-+    /// Returns the current time for this clock.
-+    fn now() -> Instant<Self>;
-+}
++/// Contains the various clock source types available to the kernel.
++pub mod clock {
++    use super::*;
 +
-+/// Marker trait for clock sources that are guaranteed to be monotonic.
-+pub trait Monotonic {}
++    /// A clock representing the default kernel time source (`CLOCK_MONOTONIC`).
++    pub struct KernelTime;
 +
-+/// A timestamp of a given [`Clock`]
-+#[repr(transparent)]
-+#[derive(Debug)]
-+pub struct Instant<T: Clock> {
-+    inner: bindings::ktime_t,
-+    clock: PhantomData<T>,
-+}
++    /// `CLOCK_MONOTONIC` is monotonic.
++    impl Monotonic for KernelTime {}
 +
-+impl<T: Clock> Clone for Instant<T> {
-+    fn clone(&self) -> Self {
-+        *self
-+    }
-+}
-+
-+impl<T: Clock> Copy for Instant<T> {}
-+
-+impl<T: Clock> Instant<T> {
-+    fn new(ktime: bindings::ktime_t) -> Self {
-+        Self {
-+            inner: ktime,
-+            clock: PhantomData,
++    impl Clock for KernelTime {
++        #[inline]
++        fn now() -> Instant<Self> {
++            // SAFETY: It is always safe to call `ktime_get` outside of NMI context.
++            Instant::<Self>::new(unsafe { bindings::ktime_get() })
 +        }
-+    }
-+}
-+
-+impl<T: Clock> core::ops::Sub for Instant<T> {
-+    type Output = Duration;
-+
-+    /// Returns the difference of two timestamps.
-+    #[inline]
-+    fn sub(self, other: Self) -> Self::Output {
-+        // `ktime_t` is an `i64` value of nanoseconds, and kernel defines signed overflow to behave
-+        // like 2s-complement, hence `wrapping_sub()` is used here to mirror `ktime_sub()`.
-+        Duration::new(self.inner.wrapping_sub(other.inner))
 +    }
 +}
 -- 
