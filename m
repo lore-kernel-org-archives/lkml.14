@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAE92308BA;
-	Sun, 24 Mar 2024 23:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37635232118;
+	Sun, 24 Mar 2024 23:17:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322230; cv=none; b=YYt19QF+XJ9T3iibt0yorc1eYa6IHtyA0NtaOoJn66RG2zk5NEXnSIH7SElaLdeu7Ko8zb22KRefAGFHA9lq3+OMAMgMV/FAtLfFtRn2JsmNhR6GIXdgqkliLhMkA+Rvsr3MDcJNAMgkYT4kVMr8oaCgpro7vvQOUb9xfbpWT6E=
+	t=1711322257; cv=none; b=qql5cpAwM/4ecmw4An15LLmJ++AXyV/ImmEpPLYghsZl2N7BB6EvUU5ZbNEilKll5xf5nhY2gfs1+U3GrQLZsPfq6F5i9byKMyGAt1RUkT7FIcmiGx3wfGucLmIMtxnfafn7r92TM+AxP5aEz/6Z9p8xHJ2v+CzE1HOeYEqmIMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322230; c=relaxed/simple;
-	bh=MSxCy/4TxfYruyCaWrEQgACwt3pBEGbUGmPsGDUWZeg=;
+	s=arc-20240116; t=1711322257; c=relaxed/simple;
+	bh=mA/FdB/ILepXOKnaZRIA8fPzJ15qQPq8YcnleMPrszk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dD5k5tBLY9sKPZl79UQ6suSAXgGgaxn1xaGLsxPj2m0nKmASUmrunesaL7Hmi2cuF9JZM7AWOkRfpN4Jt2kSYuXlZCpmrRLpbLtDaOsH/RfJh7NSw7dWOqRdUASc0efCSjoAd3xyWmyh8KqQq3hsRTrh9BVRqrpaEThBDSBruE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8Hdhj0j; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=C4Io1bj0pQRaXIOh+Ql59B5NBwgOkCB4UGXoTeVh5iA2HUeNeUtRTyD8CXnIleFvh66U7SeUqjMbMdhU3exduabsE5P7dyk2nmdRPQj9fsVur2lUcJpkeMvd4T+f409l3RLCSJgf0McON4UxZrBve6Fo/sq2+8rdPXdyBtwT0ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7mR1G2W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8Hdhj0j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEF37C43394;
-	Sun, 24 Mar 2024 23:17:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7mR1G2W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E516C43390;
+	Sun, 24 Mar 2024 23:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322229;
-	bh=MSxCy/4TxfYruyCaWrEQgACwt3pBEGbUGmPsGDUWZeg=;
+	s=k20201202; t=1711322256;
+	bh=mA/FdB/ILepXOKnaZRIA8fPzJ15qQPq8YcnleMPrszk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M8Hdhj0jmLkprMQQ8ksOkmjMWwzJggfok3yIceNp8T/5dZJTIGNPrNPqtdDqgCzYe
-	 b0b/ERQlB7MH/l+q3RWeQusEFd47G6z5rE6LDAg6YR0ttHU2rAfVT8e7+DIn5bpbru
-	 vhe5MTHhHZHMgl6xddHEidDSLEzYTYTLbQONoySXHSKx8kSq6lc7VcmQ3qwlDq23P5
-	 F/ia0BTHM7Ygik21WGjkye+WkyCm15sCqG0hDhLh4gXCgaXqa32lNkN2TwqYMFBvH6
-	 +7tMZxJycGsoup8Gkqr9pDbrHgLeLnzHrXTqWlSR495dlMcrXMEbJ2y/GLbaDXe6jO
-	 4r1+p2GngVPow==
+	b=F7mR1G2WIGxhl4D6xn0w4BCtur3SUp2hwKeh4FFlN3PKtS0pzz4cPMmMwrr2Q0v/u
+	 lDMr0N4NFe2GHX4/S4yA2zitTuXNq6KCwUFzmjBrkuWPYl3Qa6dvIl6bnTD8JqwuV7
+	 0ziV0nMLk8dz8RWUbdfXK4oe6bP4EkQ4cUljcCzk8jYVkE0BVquyqz3/OnqKfQiEP6
+	 9tNTOtNYPdGNuxKA6do7JKLFiEEr34HNPwA+pDZ1/UDP+0n40q1Pdftge0Ogawd+ZK
+	 V/Lk6L/JNeX2GBOVBS2g6X1o+ApN1ZHLlsm73NeHbcUbPH9x4pJ2lw0jjqotsQnkE1
+	 tgkPJlnXq2d6g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Luca Weiss <luca@z3ntu.xyz>,
+	Daniel Thompson <daniel.thompson@linaro.org>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 310/451] drm/tegra: put drm_gem_object ref on error in tegra_fb_create
-Date: Sun, 24 Mar 2024 19:09:46 -0400
-Message-ID: <20240324231207.1351418-311-sashal@kernel.org>
+Subject: [PATCH 6.1 338/451] backlight: lm3630a: Initialize backlight_properties on init
+Date: Sun, 24 Mar 2024 19:10:14 -0400
+Message-ID: <20240324231207.1351418-339-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,38 +49,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Fedor Pchelkin <pchelkin@ispras.ru>
+From: Luca Weiss <luca@z3ntu.xyz>
 
-[ Upstream commit 32e5a120a5105bce01561978ee55aee8e40ac0dc ]
+[ Upstream commit ad9aeb0e3aa90ebdad5fabf9c21783740eb95907 ]
 
-Inside tegra_fb_create(), drm_gem_object_lookup() increments ref count of
-the found object. But if the following size check fails then the last
-found object's ref count should be put there as the unreferencing loop
-can't detect this situation.
+The backlight_properties struct should be initialized to zero before
+using, otherwise there will be some random values in the struct.
 
-Found by Linux Verification Center (linuxtesting.org).
-
-Fixes: de2ba664c30f ("gpu: host1x: drm: Add memory manager and fb")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231215093356.12067-1-pchelkin@ispras.ru
+Fixes: 0c2a665a648e ("backlight: add Backlight driver for lm3630 chip")
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20240220-lm3630a-fixups-v1-1-9ca62f7e4a33@z3ntu.xyz
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/fb.c | 1 +
+ drivers/video/backlight/lm3630a_bl.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-index 9291209154a7a..a688ecf08451e 100644
---- a/drivers/gpu/drm/tegra/fb.c
-+++ b/drivers/gpu/drm/tegra/fb.c
-@@ -166,6 +166,7 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
+diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+index 475f35635bf67..855c275754578 100644
+--- a/drivers/video/backlight/lm3630a_bl.c
++++ b/drivers/video/backlight/lm3630a_bl.c
+@@ -339,6 +339,7 @@ static int lm3630a_backlight_register(struct lm3630a_chip *pchip)
+ 	struct backlight_properties props;
+ 	const char *label;
  
- 		if (gem->size < size) {
- 			err = -EINVAL;
-+			drm_gem_object_put(gem);
- 			goto unreference;
- 		}
- 
++	memset(&props, 0, sizeof(struct backlight_properties));
+ 	props.type = BACKLIGHT_RAW;
+ 	if (pdata->leda_ctrl != LM3630A_LEDA_DISABLE) {
+ 		props.brightness = pdata->leda_init_brt;
 -- 
 2.43.0
 
