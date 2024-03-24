@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF617177A89;
-	Sun, 24 Mar 2024 23:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B51177A87;
+	Sun, 24 Mar 2024 23:38:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323514; cv=none; b=CGcWjO+R1K9gwxq4Ali1dhb6C1CmS8M2Ao/3+/HEn82wx1MFM6FvsYd0FsUEr42TON931fz0EVAAdiF6eZz+qGfgPH4aO9Z4RmmPr3w1TZ4gx+t8QvLJ7BOjL6ySBJTVQ27bLKewNNKYiqw2Ts1dxF5f1yzMwASI8e3JvFEEeRs=
+	t=1711323513; cv=none; b=Rs3ltxMn4JaPh15UviKUV9sOfvt6UJLKDF2G18BzDd2XhgT9T3mPmk/M5ykA84Rj/S/cXpcypSlkqOssn3kod+M+TRL8AcUpCiCHdg98Q31gcVSwEO02R20Rb1q6+zN2LT3icG4fJ/YLkes9xQ/f3DfolDW8u5LwSDBHocB2LBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323514; c=relaxed/simple;
-	bh=IV4ylyCe+rLhJ/9f7eLC5kmhrVumZhOvn69bL0YEEUY=;
+	s=arc-20240116; t=1711323513; c=relaxed/simple;
+	bh=9jN6vKZ98/bJPDMoRNuvk8UuWNbHvTAGirA78gAMS2I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G2AF70pywm6YaC2AGnqpeBSFyxOzuLBqktF9vCeeQMYNKx8ozd3bQI/ywiYMCTrAMDk18zJtIg4obnwenjLRRPUfyiFB2E67ut9LpSJVLgVXAD8xcFD6dhB9ubn6Rtd34nPCpPt8RpNyk31uDN78b7UP2P3NDJAUPLxwTT6k6oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3saeYix; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=C66mneY5Q8jGTQEqlCSAQ5KhaoO3fzu9EWc2SXlF1inbXV6AD5rNIueDKP7rP11lspFJC4TsloJh+cGuNvBcaNFDG69cTMblZWlvTUZ31+8CCGWS5w1QBadq6+rEq7uf2nuAW7UnRFLOAXnBmLArqtGqae34QG1AMCguxjQtESE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldgHJ8hr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3saeYix"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D680C43390;
-	Sun, 24 Mar 2024 23:38:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldgHJ8hr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62F2EC433F1;
+	Sun, 24 Mar 2024 23:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323513;
-	bh=IV4ylyCe+rLhJ/9f7eLC5kmhrVumZhOvn69bL0YEEUY=;
+	s=k20201202; t=1711323512;
+	bh=9jN6vKZ98/bJPDMoRNuvk8UuWNbHvTAGirA78gAMS2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U3saeYixZdXcpiQoS9aL4XqBS5XXQ5PvuOBjc2OMVbLs93cTni1YfoPonKvtYiaJX
-	 qXlvo2Ws1oih4Z7m+q4vaEif2XpJR5TIHcpnP04hzzbkdTAqVa6mcMukMiNX1bMBkx
-	 j9nmmJqyey+Su4/O8QMyhEXyxcBcXK+vaL5utoicz+bQ2r1SbO2pVhvrxX/BsJW21z
-	 qD2ZgJN9zZAIzana3Le8YWaT1Tq0ouJdnoa4cSQudLPZVmk5NRWMLrbSzDZ2rNIGCS
-	 zTIbovR8RDeT+H9F7hHkP4fDvCidh5buNeNJ+MPJZ0AuOFKg9UYTOmWiCf5JdgSU2g
-	 K7rUTnGQHvcFg==
+	b=ldgHJ8hrUTAzqNJKGjrrUjI3XpccJmqvTIfvcAMSmtciJs+oaazHQ6cXx0N8ZJxsy
+	 GB651bnXlj4DK8g8K1if2FH+KEiR0YKubDFyBDHcBtXiNXYZ1c6NwOpI8lmOT30iYu
+	 m9CjKKOIFhq5JG28iaULv+T/kEBQ+FGIxwpPR7BHt1FyhlWtdq79DFh3CMeLFtZUIK
+	 +p1caiAbeaI3mFJorhLe2HT/JZd4on2z2slogce7AxnS+hVGPVWGhis4Q2THGk5gh6
+	 LOIrbrfBxOpT4jOB5QjjDmEQQ9vhOtcPJ0TFs+dBUll0R+Wv2n+vLPZqJkMdCZgCh3
+	 tC+WZNdtilqwA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Griffin <peter.griffin@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 220/317] mfd: syscon: Call of_node_put() only when of_parse_phandle() takes a ref
-Date: Sun, 24 Mar 2024 19:33:20 -0400
-Message-ID: <20240324233458.1352854-221-sashal@kernel.org>
+Subject: [PATCH 5.15 218/317] clk: hisilicon: hi3559a: Fix an erroneous devm_kfree()
+Date: Sun, 24 Mar 2024 19:33:18 -0400
+Message-ID: <20240324233458.1352854-219-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,39 +48,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Griffin <peter.griffin@linaro.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit d2b0680cf3b05490b579e71b0df6e07451977745 ]
+[ Upstream commit 64c6a38136b74a2f18c42199830975edd9fbc379 ]
 
-of_parse_phandle() returns a device_node with refcount incremented, which
-the callee needs to call of_node_put() on when done. We should only call
-of_node_put() when the property argument is provided though as otherwise
-nothing has taken a reference on the node.
+'p_clk' is an array allocated just before the for loop for all clk that
+need to be registered.
+It is incremented at each loop iteration.
 
-Fixes: 45330bb43421 ("mfd: syscon: Allow property as NULL in syscon_regmap_lookup_by_phandle")
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Link: https://lore.kernel.org/r/20240220115012.471689-2-peter.griffin@linaro.org
-Signed-off-by: Lee Jones <lee@kernel.org>
+If a clk_register() call fails, 'p_clk' may point to something different
+from what should be freed.
+
+The best we can do, is to avoid this wrong release of memory.
+
+Fixes: 6c81966107dc ("clk: hisilicon: Add clock driver for hi3559A SoC")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/773fc8425c3b8f5b0ca7c1d89f15b65831a85ca9.1705850155.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/syscon.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/hisilicon/clk-hi3559a.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index 552b1861adad4..75c732ee9ed6e 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -224,7 +224,9 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
- 		return ERR_PTR(-ENODEV);
+diff --git a/drivers/clk/hisilicon/clk-hi3559a.c b/drivers/clk/hisilicon/clk-hi3559a.c
+index 9ea1a80acbe8b..0272276550ff1 100644
+--- a/drivers/clk/hisilicon/clk-hi3559a.c
++++ b/drivers/clk/hisilicon/clk-hi3559a.c
+@@ -491,7 +491,6 @@ static void hisi_clk_register_pll(struct hi3559av100_pll_clock *clks,
  
- 	regmap = syscon_node_to_regmap(syscon_np);
--	of_node_put(syscon_np);
-+
-+	if (property)
-+		of_node_put(syscon_np);
- 
- 	return regmap;
- }
+ 		clk = clk_register(NULL, &p_clk->hw);
+ 		if (IS_ERR(clk)) {
+-			devm_kfree(dev, p_clk);
+ 			dev_err(dev, "%s: failed to register clock %s\n",
+ 			       __func__, clks[i].name);
+ 			continue;
 -- 
 2.43.0
 
