@@ -1,171 +1,109 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F301A33F9;
-	Sun, 24 Mar 2024 10:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE7417583
+	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 10:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711277054; cv=none; b=NedWSsl9izTsMqPQYyJkmGET6XNhhbyluGtSowXo8iks3CbezoZ5ir4AiPW7P9dsbtGPv+Pet7QgPvyEvFl9aM231IhnPbXZhBHtO6YNKYHOaokiI0hGeUVbeY60lMmH5Q3TU5uZvoEcsXtuucS0RUndbxiCsSGjbPGV7Q419G4=
+	t=1711277116; cv=none; b=KLeCj/7ohsQkiFXdfqC8BQaZAqtQ3127pabQP5BQagAa9mQUxTKSX7+q12LWb56VN7iNlE/TyIUgmsqgrzEqBXe1gddT0wFJE+9wof9G1safYsThKbeXKtDaCdPz5gf8FrKR9kARBul5i/9bNpKrry86ol3Euexd9ldozlvuZIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711277054; c=relaxed/simple;
-	bh=MgeEKYRUkfHUMypUhDM+pgDwBgka/ZUioY24LhF9q74=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tKh2+UiXR3gkuwZF6BzhQnoDEctUU/fRboUzAa7VLA3eN62WwSsJh5ZcPisnY8qQUEHm6GQlb4+nqv55pA2lMpGN+/P8nsbKjtT0f2UrjJYEjBCnu0D0hhO+hjHdkAbrgmH1M6whhigwaKrpUmDe9ioaicEwarRPA/MNJmjVj+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XYvB5sgx; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711277116; c=relaxed/simple;
+	bh=sQckmXFITy4Xkbkc59BJtYFx0lkcS3ukS9NHkCGTGSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JfVs245Y89DFfs5uMbLvTLk6PEWwfrOTJLNDgL0qTBwrqBNMHCxjJclDVnL3jB3H6HANwb+ifWIKVpN0MCxAGMySN9R4nJebbUaKBQYQuegRjGzCzq0XMVh4sqM4+6i+cZmW1FpuNPvOFtzdrtR4Afo48YnJlvxP5N7RxcFTbcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n887v36a; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYvB5sgx"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4147fbe6146so7198945e9.1;
-        Sun, 24 Mar 2024 03:44:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n887v36a"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a46a7208eedso478941166b.0
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 03:45:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711277051; x=1711881851; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uUdV8FF+BI4dVa5TN7lmP24qHxhF6e2K9idJyEape4U=;
-        b=XYvB5sgxzQyrNnulg8QKFRvRI1EaZrJ0X6+HuYlmbz242xp6DfPcn6j5LsJWMzmBWV
-         r3RXAux6Ju+BnqKdzpnPZyXr0nlFkQzm8608Hp2cWyW0prLFCURF5PmeJlknU/CihCMG
-         fLnv+T3BUjJ79nLKUCi66u1b3hYCZ7rRkxYcBraxVcp3N5b87u1TuLqw3Je26tkUlt3K
-         SRjm5Ex49eGAjSYGH87BjAXe0w6FF/G3lHGc46eTzApnK8drpCZgt+TzLH4w4QuLtRZa
-         h0ieTxd5QFicRYwQPW/TV2ph6zuJL3lPCW3pOAEaOY5nPs6kxanUC46Iw3/02EFG/0me
-         B3pw==
+        d=linaro.org; s=google; t=1711277113; x=1711881913; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CWY24m2OMeavf9ZqUqvQSQdTD4THnN/BxwjI9GZeFo8=;
+        b=n887v36aoMM9NxY2Dc4wrGGIvVnmsDggw7CQmw3wdRD1SkSXGXfww8ZhfYTdI4QCG+
+         x9Rdk+FQ0hUw6ToYuJj12Gs4RKXBE596EDWdmLBBbpqnzpXTxQY6yIdm2ZDz/H1Ims2f
+         BAkfmakJ0AjXCUwp4g8nhv95eZSFRNXCvpxGr9kwGl22Cj4YxmMcqYlHRXl9QePyB5j+
+         HubheSDXz9hZlL37VfMe/n/5kPng8KWbiKRVSMAdbB2/eCxV9NgpyWstH3pzPGpATOMV
+         8SP2WG2CSlmBXgMx4ZAjgtqGDSXw89D2JYs4JTpi9c+2FuhxffB3l1r/YaRUv37TTNZn
+         X+ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711277051; x=1711881851;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uUdV8FF+BI4dVa5TN7lmP24qHxhF6e2K9idJyEape4U=;
-        b=ACAr1C/LV42EZ0sbM7N4irmia6t0Gx574OAmclnJLhKrwuN/Xhp5+OzggKD63AWKl4
-         I3mWMe/M4Ex9rBL0wYq/BfjUcK0a+h8Wc4AwOCjzHrmsLXRBQ9xlo/QJjVG9Zvg14Z2y
-         4HySAsPlMPb9HW5JhvpMCzY9IcIk+KMb/JH5EB6VcQQTS/UygTfOjFbCUhOlwsAHLyeP
-         5sKSxLxy1D06BGL7fSb/cQO/xKA4ixdAVq1f+4sahtU0SCnVU8k9ABG8k86bsl+UMdin
-         ZvI0eE081i9MUoNYVPMKR6QcACO6v8G+1QyyRfuX8A8O6EQTtCxF2y4r6VBu6f38nYB6
-         ysoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWO8vGdLPUcOyL6URbapdzD/d8gdi3UYpi+0U6FUO/MCufx61gTesKpqN5VSqH8T6v39T76bRb461kawMMbTvPn135GW29RzPearSlwsgEulb846RLK/Vocf16rRexaz+eeFtzWp1CVYL/uCMDPSF6FkNuxkXz8Xmj
-X-Gm-Message-State: AOJu0YwLqHgNviDath94Q/EeopR7ThyuO15XxkgNFc6XmGGBWcgTOW90
-	T4aRilPnFmMMLk4StTIs4Q18p6w/ZKFJcm2qEilWgUQOTu/19wLK
-X-Google-Smtp-Source: AGHT+IEdFXcZjYG/ojvsgSzDOiGLCbVdXamxzEsEZdU9c6RIH093BXmj+TvCSPlBpOH19ScOlJ4vTQ==
-X-Received: by 2002:a05:600c:1391:b0:413:ef69:df65 with SMTP id u17-20020a05600c139100b00413ef69df65mr3064211wmf.20.1711277050892;
-        Sun, 24 Mar 2024 03:44:10 -0700 (PDT)
-Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
-        by smtp.gmail.com with ESMTPSA id i5-20020a05600c354500b004146a304863sm4922142wmq.34.2024.03.24.03.44.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2024 03:44:10 -0700 (PDT)
-From: Puranjay Mohan <puranjay12@gmail.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Daniel Borkmann
- <daniel@iogearbox.net>
-Cc: "David S. Miller" <davem@davemloft.net>, David Ahern
- <dsahern@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko
- <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard
- Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
- <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
- Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, X86 ML
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Jean-Philippe Brucker
- <jean-philippe@linaro.org>, Network Development <netdev@vger.kernel.org>,
- bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Ilya
- Leoshkevich <iii@linux.ibm.com>
-Subject: Re: [PATCH bpf v4] bpf: verifier: prevent userspace memory access
-In-Reply-To: <CAADnVQJhxQV0xBJDWVkTGXJ+XYpsq5kFmMsuMEHBEaqUmkh0iw@mail.gmail.com>
-References: <20240321124640.8870-1-puranjay12@gmail.com>
- <9f2b63b5-569c-1e00-a635-93d9cd695517@iogearbox.net>
- <mb61p4jcyxq5m.fsf@gmail.com>
- <15ba79e3-14b2-d92e-3f94-e4f5f963e15d@iogearbox.net>
- <CAADnVQJhxQV0xBJDWVkTGXJ+XYpsq5kFmMsuMEHBEaqUmkh0iw@mail.gmail.com>
-Date: Sun, 24 Mar 2024 10:44:08 +0000
-Message-ID: <mb61ple677vuv.fsf@gmail.com>
+        d=1e100.net; s=20230601; t=1711277113; x=1711881913;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CWY24m2OMeavf9ZqUqvQSQdTD4THnN/BxwjI9GZeFo8=;
+        b=Egl3fmI5+ByslndkrRI0CRY5RqMKjzwVppl2sV8fTGdv2/NsRUkd+cVJrEyjz/1aTQ
+         RfIlIBgYrM/LwA1ppMn1fAxzDcxwI5JqRHhBzXG76KcEGOvZMDtfHomI9++lUVxzv3KQ
+         ZhulkoNIvjd95umioVgWxmRdGqgBHuVlAqLgt6FLg8XHGqctZOqj2qZjC2dUikvpapFw
+         6w4o7ztpd4MXjttBt7JUC9PCB/T0jD+JBRXZllpYoAsxG5B69HHWy9vojHE1bQDwPdnS
+         W8FSts2cqh/bvtqRz9EWXV+iONKiELDAQ5HjjEQYcpi1UqIEZihxwf5j2oNFl9jDZR45
+         G+jg==
+X-Forwarded-Encrypted: i=1; AJvYcCUm6rl9OfMTnF+l3T19EzBIRDCM2NhNNfWxQo5qrfeezV/dr+IRpEfpgdCvylKx1Bj/cELPot1QScL1BR4+OYQIitepI7+Qc8B4M42K
+X-Gm-Message-State: AOJu0YyHz3An7p5J/EvZtfklt4B2GAyj6ztQQPO/G1UAW7ffsV0aq3jB
+	LNlpFWU3gaZVk08jt0gqzYmA9Ve9zfhwi1qoIQgUjDuZ5hU6UHtGu3rMDMsXF0U=
+X-Google-Smtp-Source: AGHT+IELgbvcq/YR2JYAdj3UMR62uFgEJo23GKSMx5QvCd5lojQP9akIksslHXLJQFzjzg27Z268bQ==
+X-Received: by 2002:a17:906:a19:b0:a46:f955:3720 with SMTP id w25-20020a1709060a1900b00a46f9553720mr2593989ejf.51.1711277112766;
+        Sun, 24 Mar 2024 03:45:12 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id ws9-20020a170907704900b00a46caa13e67sm1832993ejb.105.2024.03.24.03.45.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Mar 2024 03:45:12 -0700 (PDT)
+Date: Sun, 24 Mar 2024 13:45:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	AKASHI Takahiro <takahiro.akashi@linaro.org>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v5 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <b06ab1e3-c00a-444c-908f-0ac8ad4d95fc@moroto.mountain>
+References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
+ <20240314-pinctrl-scmi-v5-3-b19576e557f2@nxp.com>
+ <7a4a8287-1f86-4ac4-acdf-c02339ba5e1e@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a4a8287-1f86-4ac4-acdf-c02339ba5e1e@moroto.mountain>
 
-Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+On Thu, Mar 21, 2024 at 05:46:53PM +0300, Dan Carpenter wrote:
+> On Thu, Mar 14, 2024 at 09:35:20PM +0800, Peng Fan (OSS) wrote:
+> > +enum scmi_pinctrl_protocol_cmd {
+> > +	PINCTRL_ATTRIBUTES = 0x3,
+> > +	PINCTRL_LIST_ASSOCIATIONS = 0x4,
+> > +	PINCTRL_CONFIG_GET = 0x5,
+> > +	PINCTRL_CONFIG_SET = 0x6,
+> > +	PINCTRL_FUNCTION_SELECT = 0x7,
+> 
+> PINCTRL_FUNCTION_SELECT was removed from the spec so the other cmds were
+> renumbered.  I'm still going through and reviewing this file.  I'll
+> hopefully be done tomorrow.
+> 
 
-> On Fri, Mar 22, 2024 at 9:28=E2=80=AFAM Daniel Borkmann <daniel@iogearbox=
-.net> wrote:
->>
->> On 3/22/24 4:05 PM, Puranjay Mohan wrote:
->> [...]
->> >>> +           /* Make it impossible to de-reference a userspace addres=
-s */
->> >>> +           if (BPF_CLASS(insn->code) =3D=3D BPF_LDX &&
->> >>> +               (BPF_MODE(insn->code) =3D=3D BPF_PROBE_MEM ||
->> >>> +                BPF_MODE(insn->code) =3D=3D BPF_PROBE_MEMSX)) {
->> >>> +                   struct bpf_insn *patch =3D &insn_buf[0];
->> >>> +                   u64 uaddress_limit =3D bpf_arch_uaddress_limit();
->> >>> +
->> >>> +                   if (!uaddress_limit)
->> >>> +                           goto next_insn;
->> >>> +
->> >>> +                   *patch++ =3D BPF_MOV64_REG(BPF_REG_AX, insn->src=
-_reg);
->> >>> +                   if (insn->off)
->> >>> +                           *patch++ =3D BPF_ALU64_IMM(BPF_ADD, BPF_=
-REG_AX, insn->off);
->> >>> +                   *patch++ =3D BPF_ALU64_IMM(BPF_RSH, BPF_REG_AX, =
-32);
->> >>> +                   *patch++ =3D BPF_JMP_IMM(BPF_JLE, BPF_REG_AX, ua=
-ddress_limit >> 32, 2);
->> >>> +                   *patch++ =3D *insn;
->> >>> +                   *patch++ =3D BPF_JMP_IMM(BPF_JA, 0, 0, 1);
->> >>> +                   *patch++ =3D BPF_MOV64_IMM(insn->dst_reg, 0);
->> >>
->> >> But how does this address other cases where we could fault e.g. non-c=
-anonical,
->> >> vsyscall page, etc? Technically, we would have to call to copy_from_k=
-ernel_nofault_allowed()
->> >> to really address all the cases aside from the overflow (good catch b=
-tw!) where kernel
->> >> turns into user address.
->> >
->> > So, we are trying to ~simulate a call to
->> > copy_from_kernel_nofault_allowed() here. If the address under
->> > consideration is below TASK_SIZE (TASK_SIZE + 4GB to be precise) then =
-we
->> > skip that load because that address could be mapped by the user.
->> >
->> > If the address is above TASK_SIZE + 4GB, we allow the load and it could
->> > cause a fault if the address is invalid, non-canonical etc. Taking the
->> > fault is fine because JIT will add an exception table entry for
->> > for that load with BPF_PBOBE_MEM.
->>
->> Are you sure? I don't think the kernel handles non-canonical fixup.
->
-> I believe it handles it fine otherwise our selftest bpf_testmod_return_pt=
-r:
->    case 4: return (void *)(1ull << 60);    /* non-canonical and invalid */
-> would have been crashing for the last 3 years,
-> since we've been running it.
->
->> > The vsyscall page is special, this approach skips all loads from this
->> > page. I am not sure if that is acceptable.
->>
->> The bpf_probe_read_kernel() does handle it fine via copy_from_kernel_nof=
-ault().
->>
->> So there is tail risk that BPF_PROBE_* could trigger a crash.
->
-> For this patch let's do
-> return max(TASK_SIZE_MAX + PAGE_SIZE, VSYSCALL_ADDR)
-> to cover both with one check?
+I think the rest is okay.  It's just updating to the new version of the
+spec.  CONFIG_GET/SET need to be updated and FUNCTION_SELECT gets
+deleted.
 
-I agree, will add this in the next version.
+regards,
+dan carpenter
 
->> Other archs might
->> have other quirks, e.g. in case of loongarch it says highest bit set mea=
-ns kernel
->> space.
->
-> let's tackle loongarch with whatever quirks it has separately.
-
-Yes, having the current patch will not break loongarch, it will help it
-skip some userspace addresses. We can later implement
-bpf_arch_uaddress_limit() in loongarch JIT to handle its specific
-quirks.
