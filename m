@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD53B28452B;
-	Sun, 24 Mar 2024 23:43:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6A6284522;
+	Sun, 24 Mar 2024 23:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323785; cv=none; b=skAI6R/ek4naf0nsWXkf8aETN6vpcm9HiieBqCtLIHrR4IoZRJX3QoBZ3tS/XI68VNiZwfcEizMxrFO/x3JuQCnEEqEOriJTnz/qOV8iv4SBzt3mCbxWj4QqlivdZWEv2Hsbnd8phT28SeA8fk0+C8fuDiUMNW1+q2csV4Vu+1I=
+	t=1711323784; cv=none; b=i1ceZrJlfQF4zyvyy70+O91PYWAapajXawjUUPCFVtm4wcYTIAc+I7SxhIUQnJ1v5WfF5WYqznGHOrBYUKJJ9WxHrOmqyd+jEvKMfOBtAodm2vAdDfrj0s191hdVvl88EO18DplU8LoUVQ5w7fDmmaJQ+GdG5jovzbU1nZojFKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323785; c=relaxed/simple;
-	bh=Ahjw586ptN4sdwzK489e5WfNo6aZ+MPOLgqVLZPcfa4=;
+	s=arc-20240116; t=1711323784; c=relaxed/simple;
+	bh=ztQ8/XKKj53vrj2RHX4SHK5hJSeYb4qx+sJnAISMHI4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PjBQmEjUTJhITcRu5lEV/DXPaoQdhqKAzhTupaejtG7AFp0PN1NUUXAlyb8BePJTyZYPKUm75bRNYSxGE7gdYk5wRMXk3ridX0PZ+jGdLydMYI4XNTNQU9RleC0k71KR3uE3AiwL3YN3u/cJ1VHnckWpDUFq7fy0Ni03v2mGiSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pmSL00rl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=LoXrlCk/xmkf/jZs/e19jEFPZnVe2ugOFL4D5KD8/wPV4QooDuy/BsxhN6rhvcXVBtN05nVS2yZsHQ5Dpf2jJ/8wUroAs+rdmn04XsC0reD2RY+8aO++f42ue9HrMc5tigP3akHNc2xM21c2peSxI8FncfbXeuGvYSR4WuKIMMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLrcnvIl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pmSL00rl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19BD3C433C7;
-	Sun, 24 Mar 2024 23:43:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLrcnvIl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F7D0C43390;
+	Sun, 24 Mar 2024 23:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323785;
-	bh=Ahjw586ptN4sdwzK489e5WfNo6aZ+MPOLgqVLZPcfa4=;
+	s=k20201202; t=1711323783;
+	bh=ztQ8/XKKj53vrj2RHX4SHK5hJSeYb4qx+sJnAISMHI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pmSL00rlO9e8s7kBynQrlJ8UHI1Ar/gMgRHoUNNXjemrZMNQGhQse4kTEezW/dDJs
-	 rTdEfjpK3QzZkzmIY58avGyuesPq5H3P3IOfOJRPSr1Y91Rv+ag5T1hqi9yjg3IrUR
-	 CoAj1cAHvi7DYWQz2ELPQVlv3KnjDZvGoNqggdOvqOl17/v5cH1Z1rX8+z3B6eJ2O0
-	 SMf8IVNDlgIuvJoFBiBQihP29Bmic9pq79RbDSRbnW0lp5nGqg3zbTfK+wcAW0Tt1M
-	 2fi1hMieN+TaRq47cBqPV5lvV3rZ8LEV/0dymMhi1k3QHU8pUi0mNxD0Wk7RPMkeT7
-	 2RfNAgA1z1Ztw==
+	b=KLrcnvIlmtx65KSsNr82+7WoVI+EwmO0YRuMIVjoJkpRUAGJnVz+PQKcar7ln/cNA
+	 4ffjATghIogVvjMPrfWezUOURNZjIIvj+QZLS1jc0+T9XLtflgkvhhSrWQkZQUhckG
+	 nmkhJzBvIrES6f5D+KtsfaoUP7XJ18vBismqRrm8OcEem49cQIkFwX3gQ6q2R1NYIR
+	 uCi41WnQXYBr5Mw4uxxJRDaE61AUoYDw7cOJBYTo+KweMpZS0RmwMKC2gpTYvv/O2A
+	 8vb7wEi7jpYX5TM2FZ9ndu2E7eKKi2wCWaW9KPEJMZzN2GDLfTvI/PFH+G5XxwGwNA
+	 HHMZgJCirCUZA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: =?UTF-8?q?J=C3=B6rg=20Wedekind?= <joerg@wedekind.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 162/238] drm/tegra: put drm_gem_object ref on error in tegra_fb_create
-Date: Sun, 24 Mar 2024 19:39:10 -0400
-Message-ID: <20240324234027.1354210-163-sashal@kernel.org>
+Subject: [PATCH 5.10 160/238] PCI: Mark 3ware-9650SE Root Port Extended Tags as broken
+Date: Sun, 24 Mar 2024 19:39:08 -0400
+Message-ID: <20240324234027.1354210-161-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -44,42 +44,56 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Fedor Pchelkin <pchelkin@ispras.ru>
+From: Jörg Wedekind <joerg@wedekind.de>
 
-[ Upstream commit 32e5a120a5105bce01561978ee55aee8e40ac0dc ]
+[ Upstream commit baf67aefbe7d7deafa59ca49612d163f8889934c ]
 
-Inside tegra_fb_create(), drm_gem_object_lookup() increments ref count of
-the found object. But if the following size check fails then the last
-found object's ref count should be put there as the unreferencing loop
-can't detect this situation.
+Per PCIe r6.1, sec 2.2.6.2 and 7.5.3.4, a Requester may not use 8-bit Tags
+unless its Extended Tag Field Enable is set, but all Receivers/Completers
+must handle 8-bit Tags correctly regardless of their Extended Tag Field
+Enable.
 
-Found by Linux Verification Center (linuxtesting.org).
+Some devices do not handle 8-bit Tags as Completers, so add a quirk for
+them.  If we find such a device, we disable Extended Tags for the entire
+hierarchy to make peer-to-peer DMA possible.
 
-Fixes: de2ba664c30f ("gpu: host1x: drm: Add memory manager and fb")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231215093356.12067-1-pchelkin@ispras.ru
+The 3ware 9650SE seems to have issues with handling 8-bit tags. Mark it as
+broken.
+
+This fixes PCI Parity Errors like :
+
+  3w-9xxx: scsi0: ERROR: (0x06:0x000C): PCI Parity Error: clearing.
+  3w-9xxx: scsi0: ERROR: (0x06:0x000D): PCI Abort: clearing.
+  3w-9xxx: scsi0: ERROR: (0x06:0x000E): Controller Queue Error: clearing.
+  3w-9xxx: scsi0: ERROR: (0x06:0x0010): Microcontroller Error: clearing.
+
+Link: https://lore.kernel.org/r/20240219132811.8351-1-joerg@wedekind.de
+Fixes: 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if supported")
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=202425
+Signed-off-by: Jörg Wedekind <joerg@wedekind.de>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/fb.c | 1 +
+ drivers/pci/quirks.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-index 01939c57fc74d..2040dbfed7e21 100644
---- a/drivers/gpu/drm/tegra/fb.c
-+++ b/drivers/gpu/drm/tegra/fb.c
-@@ -155,6 +155,7 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index b67aea8d8f197..646807a443e2d 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5364,6 +5364,7 @@ static void quirk_no_ext_tags(struct pci_dev *pdev)
  
- 		if (gem->size < size) {
- 			err = -EINVAL;
-+			drm_gem_object_put(gem);
- 			goto unreference;
- 		}
- 
+ 	pci_walk_bus(bridge->bus, pci_configure_extended_tags, NULL);
+ }
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_3WARE, 0x1004, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0132, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0140, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0141, quirk_no_ext_tags);
 -- 
 2.43.0
 
