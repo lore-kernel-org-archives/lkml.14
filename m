@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840E01384B3;
-	Sun, 24 Mar 2024 23:06:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC1020AF62;
+	Sun, 24 Mar 2024 23:06:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321599; cv=none; b=BsP0TCXnf+rXa4nOr92smFgVyECZ6ktKiKa2CnzIIvL+1wWJ0NCCm3ifQUXtaZWGs3YyrtVBvuq3fAeJIc5Ir0KavZBgmrOtcWBkYYlkiIKPBfdXAeYVImgTkdqV3dk7T5dta2KYl68iqMvUtS7xxYQ50ALslYuSwJuZbyiacB8=
+	t=1711321601; cv=none; b=q1gwruAzFCxdEB0xQ7n3nBnPs1Sb7znWlUAE/M91UDfdnGqfkldgOX3huAX9Cytwu8sCUftowJVRsBtbr7espM9clL9eV4lA1bcoBEHNME9jtcFwgk0rTVX6lkxppKMSlXM+joY81IpqvHkjgdxNA3PWiJeaX2hVfzGNJ5tiujI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321599; c=relaxed/simple;
-	bh=KMdxwmMNod1obbjCFhfxTYuNvd75ARGzr7DHPrUE1dM=;
+	s=arc-20240116; t=1711321601; c=relaxed/simple;
+	bh=bqhQ8CzGWTTriI8TaVQ625rSdktHGajB4fQc3wcp1no=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oa4+x3mSfC6HTrmApk+uQn37vRXfX7GGS/PU+VlAn/ldN5RhMNypxuZIpgXzeqLlVV00kwPzctG1fEfVgA5zWqysvmBjNOHUMTGA24yBIHFE1pi2MURUAdrjHoMb9+fXjyAHg6AHDExnI1v32sbnmvlmJVnirThs5d6CYFPeBX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gvQbyrrg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rH8BOFO0g8zm1BA/9so12XXS8zFev859qpJn0jZIYQNaf3OO1k21wx9a5PCuWytn0Mh+30SIl0ZrJ9qmpnpLLkRmTKg2ta8WpoOOjTpU6gVjDMN3WPlfzUJo17Zw3zOeZqJNZQJDFDKA/XNW1HX760WC3KBiAaGfUvr+/433FWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVXYxUkc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gvQbyrrg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4CB0C433C7;
-	Sun, 24 Mar 2024 23:06:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVXYxUkc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 129E0C43609;
+	Sun, 24 Mar 2024 23:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321598;
-	bh=KMdxwmMNod1obbjCFhfxTYuNvd75ARGzr7DHPrUE1dM=;
+	s=k20201202; t=1711321600;
+	bh=bqhQ8CzGWTTriI8TaVQ625rSdktHGajB4fQc3wcp1no=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gvQbyrrgQL3Uq1jkV08tSozwumCG2mP7WaC7WKm8vEjai2nNKQAT+9QNqQv8tzKZG
-	 rLYFqPLHMOiCixbJQJwSjpgjea5NMigB9kztMn9tLva7eAqDpoG2DzwombsUJTjJAT
-	 +KQhUCDRzXDLmXyX2ui1YPSaGCHK3CNo7ZFEXWLoeVCZ40PMQqNkmMZP/LckM42Yxq
-	 MqUqtrYhCHFMLyOLFW7RUxKBoL2GaCjz3JBmrzYrG7pcJvwCTT6SulL/jVRyQACIbf
-	 7uzogGlcIBPFOtaivpZ045hW8PhDsWErpnLr71wZeZuo6uWUDcbou4yWe07+12i6be
-	 vcpjkulkyEPLQ==
+	b=IVXYxUkcIEsZBESKjz1odEpU1VL07mUtOF4/YF+nRZEy+LEbLuWH9eooOTZfgTV7E
+	 y9ilsVtwiTXbL8KFoSWgnLWukmJ//nqR5xnPsodKp0/U9Baq9DnvxTSLg12kfL6znV
+	 UOKhmWGpy4rb95ny6uSOn3RQoJrORycK1ocj5AnMuy011TJKAYtZWSxp8xjn8G4W56
+	 lb2Cdgo4xdVSAaA+nydyd5MIzV8XyKTRun1qazmPbEC/Qij5Bu76cTaI6ZjJJQ2Cco
+	 /64ukysNC5hHvaVSsaDPBpiQgM5j0foPTTs6QHPTpbVHN+laWjKa1y+/dnnXfTCMQL
+	 hSpKKQC6Mj4ew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jan Kara <jack@suse.cz>,
-	Christoph Hellwig <hch@lst.de>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: Al Viro <viro@zeniv.linux.org.uk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 328/638] block: Provide bdev_open_* functions
-Date: Sun, 24 Mar 2024 18:56:05 -0400
-Message-ID: <20240324230116.1348576-329-sashal@kernel.org>
+Subject: [PATCH 6.6 330/638] erofs: fix handling kern_mount() failure
+Date: Sun, 24 Mar 2024 18:56:07 -0400
+Message-ID: <20240324230116.1348576-331-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,130 +47,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jan Kara <jack@suse.cz>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit e719b4d156749f02eafed31a3c515f2aa9dcc72a ]
+[ Upstream commit 2c88c16dc20e88dd54d2f6f4d01ae1dce6cc9654 ]
 
-Create struct bdev_handle that contains all parameters that need to be
-passed to blkdev_put() and provide bdev_open_* functions that return
-this structure instead of plain bdev pointer. This will eventually allow
-us to pass one more argument to blkdev_put() (renamed to bdev_release())
-without too much hassle.
+if you have a variable that holds NULL or  a pointer to live struct mount,
+do not shove ERR_PTR() into it - not if you later treat "not NULL" as
+"holds a pointer to object".
 
-Acked-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20230927093442.25915-1-jack@suse.cz
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Stable-dep-of: 0f28be64d132 ("erofs: fix lockdep false positives on initializing erofs_pseudo_mnt")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bdev.c           | 48 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/blkdev.h | 10 +++++++++
- 2 files changed, 58 insertions(+)
+ fs/erofs/fscache.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/block/bdev.c b/block/bdev.c
-index 04dba25b0019e..5a54977518eea 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -831,6 +831,25 @@ struct block_device *blkdev_get_by_dev(dev_t dev, blk_mode_t mode, void *holder,
- }
- EXPORT_SYMBOL(blkdev_get_by_dev);
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index 87ff35bff8d5b..1052f75d1dfae 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -381,11 +381,12 @@ static int erofs_fscache_init_domain(struct super_block *sb)
+ 		goto out;
  
-+struct bdev_handle *bdev_open_by_dev(dev_t dev, blk_mode_t mode, void *holder,
-+				     const struct blk_holder_ops *hops)
-+{
-+	struct bdev_handle *handle = kmalloc(sizeof(*handle), GFP_KERNEL);
-+	struct block_device *bdev;
-+
-+	if (!handle)
-+		return ERR_PTR(-ENOMEM);
-+	bdev = blkdev_get_by_dev(dev, mode, holder, hops);
-+	if (IS_ERR(bdev)) {
-+		kfree(handle);
-+		return ERR_CAST(bdev);
-+	}
-+	handle->bdev = bdev;
-+	handle->holder = holder;
-+	return handle;
-+}
-+EXPORT_SYMBOL(bdev_open_by_dev);
-+
- /**
-  * blkdev_get_by_path - open a block device by name
-  * @path: path to the block device to open
-@@ -869,6 +888,28 @@ struct block_device *blkdev_get_by_path(const char *path, blk_mode_t mode,
- }
- EXPORT_SYMBOL(blkdev_get_by_path);
+ 	if (!erofs_pseudo_mnt) {
+-		erofs_pseudo_mnt = kern_mount(&erofs_fs_type);
+-		if (IS_ERR(erofs_pseudo_mnt)) {
+-			err = PTR_ERR(erofs_pseudo_mnt);
++		struct vfsmount *mnt = kern_mount(&erofs_fs_type);
++		if (IS_ERR(mnt)) {
++			err = PTR_ERR(mnt);
+ 			goto out;
+ 		}
++		erofs_pseudo_mnt = mnt;
+ 	}
  
-+struct bdev_handle *bdev_open_by_path(const char *path, blk_mode_t mode,
-+		void *holder, const struct blk_holder_ops *hops)
-+{
-+	struct bdev_handle *handle;
-+	dev_t dev;
-+	int error;
-+
-+	error = lookup_bdev(path, &dev);
-+	if (error)
-+		return ERR_PTR(error);
-+
-+	handle = bdev_open_by_dev(dev, mode, holder, hops);
-+	if (!IS_ERR(handle) && (mode & BLK_OPEN_WRITE) &&
-+	    bdev_read_only(handle->bdev)) {
-+		bdev_release(handle);
-+		return ERR_PTR(-EACCES);
-+	}
-+
-+	return handle;
-+}
-+EXPORT_SYMBOL(bdev_open_by_path);
-+
- void blkdev_put(struct block_device *bdev, void *holder)
- {
- 	struct gendisk *disk = bdev->bd_disk;
-@@ -905,6 +946,13 @@ void blkdev_put(struct block_device *bdev, void *holder)
- }
- EXPORT_SYMBOL(blkdev_put);
- 
-+void bdev_release(struct bdev_handle *handle)
-+{
-+	blkdev_put(handle->bdev, handle->holder);
-+	kfree(handle);
-+}
-+EXPORT_SYMBOL(bdev_release);
-+
- /**
-  * lookup_bdev() - Look up a struct block_device by name.
-  * @pathname: Name of the block device in the filesystem.
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index f59fcd5b499a5..5b6e86b2c37a5 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1479,14 +1479,24 @@ extern const struct blk_holder_ops fs_holder_ops;
- #define sb_open_mode(flags) \
- 	(BLK_OPEN_READ | (((flags) & SB_RDONLY) ? 0 : BLK_OPEN_WRITE))
- 
-+struct bdev_handle {
-+	struct block_device *bdev;
-+	void *holder;
-+};
-+
- struct block_device *blkdev_get_by_dev(dev_t dev, blk_mode_t mode, void *holder,
- 		const struct blk_holder_ops *hops);
- struct block_device *blkdev_get_by_path(const char *path, blk_mode_t mode,
- 		void *holder, const struct blk_holder_ops *hops);
-+struct bdev_handle *bdev_open_by_dev(dev_t dev, blk_mode_t mode, void *holder,
-+		const struct blk_holder_ops *hops);
-+struct bdev_handle *bdev_open_by_path(const char *path, blk_mode_t mode,
-+		void *holder, const struct blk_holder_ops *hops);
- int bd_prepare_to_claim(struct block_device *bdev, void *holder,
- 		const struct blk_holder_ops *hops);
- void bd_abort_claiming(struct block_device *bdev, void *holder);
- void blkdev_put(struct block_device *bdev, void *holder);
-+void bdev_release(struct bdev_handle *handle);
- 
- /* just for blk-cgroup, don't use elsewhere */
- struct block_device *blkdev_get_no_open(dev_t dev);
+ 	domain->volume = sbi->volume;
 -- 
 2.43.0
 
