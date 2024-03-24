@@ -1,370 +1,228 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74FA663B
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 00:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A723563B;
+	Sun, 24 Mar 2024 00:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711241180; cv=none; b=RFyOtOs69+zbIFwK8Eezikkv2JWUCkzfjMkOxxb38NtaMeltYmaqbES4VMXPhgcphtoYpWXwJaqFkCKwkudgYhzidxr3NmBs+gpOyj8EZ7kTIzqkm+e8+OPi4106rYXXFrFBzHxRnG7DyVmxZ+0NSVdERs6FzXFUBLHolXVkFv8=
+	t=1711241450; cv=none; b=ohQTCsKwCpvpY/1QtIibnLbN42WtPijLuGV/wrDqNOm3hihvK66tzDoKfgkOIN7DX+4Po6qIiSmXAP9ihBLzSvTtaQr5fdFJtmmAXXWFYfkppv3E0fwLGyXHXgg6b9azryYb6AuCJLMuOOPO4JVq8Z5WODXEkyOnuRMNUmgMshI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711241180; c=relaxed/simple;
-	bh=fagvafmRW8bAsH4PlwGjJkpm+a8ityfbiaduDn++QaU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=djtutAOtba+7oJlIcPinTWBzh79TazhNSpYi4YjLAMInRatBPiyzOxlQrH/YpnNuTWVMYRnQtO1owyA8G95MqMsj6Y1Lg+ZvGvL50v0zBzBDtmejTatSJbcFPbYB2hv3mU2teJhUVGEJ2PKPLhJdR9jvAFTWTttrB0y/lYFIXCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=z9a2vU0n; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1711241450; c=relaxed/simple;
+	bh=6+3n5jGyQ2Zf+BUw/Fg23lhslfgdOfy3aqLiWiy6NlY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lAlyi14CVhp4O1EjPiTv654ItwASDEffP8Z+N9SONOwAAfiAU1mDu6qednEyY21tT8Oc2dHMlP/WdqtIHs11lcuWpRmcCm5tFsR8j2lgn262kR6JZwHu5CegxGz36uq9FMneC55bYiEQOvJFACsaux5+qPv7tz/50zHe6vqFuug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mN2IuuFG; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="z9a2vU0n"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-414811d8241so3895995e9.2
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2024 17:46:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mN2IuuFG"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56bf6591865so1273955a12.0;
+        Sat, 23 Mar 2024 17:50:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1711241177; x=1711845977; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1711241447; x=1711846247; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cxpj4P4M/KwhXcgLKvhRv6OYn6sM9Gs71BX39fQzMVY=;
-        b=z9a2vU0nqm0lTF5a//AfOBYoxj9TSR4nmH09ZnCZECNWekfpzxR5OShVjJkjpBaiuu
-         gf3MOCv3szcfmxweH3OccOtf/Os4Fj4RS6h6TYf5RfQYbSpQFIRYmvvska2ELAk0Ld6E
-         cSpHVkCy3v0L+bhIN3IRDRRT0k2b5053XLE6k5wRjNgQMhdZVA7Z9Qi4cYwxcyKNO4nh
-         098dTgTAwJvWWwSwtBhsUm93i6hhTxEsT8WUzUgIO0+d8jqEtekXY/72UjlHFgVrwY0N
-         FoexWUOkEpD0J/8dj+uAi8PkZ1m05EMy4Wgjr6HUuts4cle5/tlU6/bnqnQ0bjDi+YVF
-         DgYQ==
+        bh=Gd+E+wjGsxttwBVcnZu6WwsovFEvT79fd7mf/2LSTkw=;
+        b=mN2IuuFGZ98rs0DnC38CpeTse1nZIF3dukqqscjy70bwvODnuXTAbl6wJoxuhxVdh8
+         B0S/j/UtOyMqrv08OAEWcZq/E46+LS+oY1RtznNR8/igdLV4UIrYDurK7sbExTqbwH5y
+         Av82U5K/EPkBIsXpfrM/TrCiOeEVLjSR+L4ZDjr/5qdLzgG/ElVqu+5rqze76N8EqxS9
+         j+HUkwDIKP+n/CpwMXm53wXC8aeCNJTc3rrCWmocxh1bHroHqV7U/ipZQPGZku4YjQx5
+         nVv5CG7rS5MRyYJ9jQS5QOB9eEv2TZPu5LzOXu6QU4rNuXGLxeFBhxxHMuCDs/csQSg5
+         cssQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711241177; x=1711845977;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711241447; x=1711846247;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cxpj4P4M/KwhXcgLKvhRv6OYn6sM9Gs71BX39fQzMVY=;
-        b=lruOG7pdp9B0fwaTKAquBXmS9PpMAKr2+/qQ5CshX1r+Guw5VP4wjv7sCU7xrmaIkw
-         1ys11H5Kse1h834fwNLnB8xaw5PyTG/RXVRW2LcLngxVXKwRaaH6zzUhbvLZgg49r5he
-         uwRi9M3JQeq/mBQvR7TlVfZtqQnMu2WlAvkHtm7/n+aY+K1blNZN078M6zgasq5od/o/
-         XM+wIEMvuHuS9sbKowStF8UZMvqoWoKrR38EW0f8Oc+vz1HN6IuVPHkIvqSBkadB1csk
-         NI8NBcNB1wf+AlQdOyczzGzCcF5EGW0Hj+JG4zDkrsfgowy+hV6nX7xSJXbR8umpF/Eb
-         CbGg==
-X-Gm-Message-State: AOJu0YwAB91dyN8kO+7e8qL0k29+9mlEa7TcgvGYwshC56OL5d4ffvil
-	cJYF+kGmyZXMBZ+7q/Dw0jIVKvdAJDTvGyRE/QzMg0ZG2z+/lkk2q/T2re1FKQk=
-X-Google-Smtp-Source: AGHT+IH2RobPfD8yX8gSuTNLW776CVT+XMomm7GaS5uOIbTqLVAz/wbTNVfGJnNan5dhUnV6plrdxw==
-X-Received: by 2002:a05:600c:3ba8:b0:414:63c6:8665 with SMTP id n40-20020a05600c3ba800b0041463c68665mr2819002wms.2.1711241176860;
-        Sat, 23 Mar 2024 17:46:16 -0700 (PDT)
-Received: from airbuntu.. (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id i6-20020a05600c354600b00414674a1a40sm3778179wmq.45.2024.03.23.17.46.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Mar 2024 17:46:16 -0700 (PDT)
-From: Qais Yousef <qyousef@layalina.io>
-To: Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: linux-kernel@vger.kernel.org,
-	"Pierre Gondois" <Pierre.Gondois@arm.com>,
-	Qais Yousef <qyousef@layalina.io>
-Subject: [PATCH v8 2/4] sched/fair: Check a task has a fitting cpu when updating misfit
-Date: Sun, 24 Mar 2024 00:45:50 +0000
-Message-Id: <20240324004552.999936-3-qyousef@layalina.io>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240324004552.999936-1-qyousef@layalina.io>
-References: <20240324004552.999936-1-qyousef@layalina.io>
+        bh=Gd+E+wjGsxttwBVcnZu6WwsovFEvT79fd7mf/2LSTkw=;
+        b=napeW6EBGpqoNONvpbyrZYCawXjAUvwGjGmKudVqf1XwPjCHzOrsba6EO87shVCrFT
+         EPjH4WdITYvCd+7eesZGd1nBIVUhInJpeKZ3NbejDR+VsskEYVNZsRZ8n3g7MREFVyvL
+         EFeu9kEc7gehIcwBRbtVbwPeKQWOSH/Nw8hfcBagMFiR662kl6MsmDm5NiAOD7ZY7YCz
+         4cX+7gdhMP5DvYQzjpNU1r64y7J5KijZfXtYkB4wLNzvM+01wEkMx8ZmgmPySKhFZ760
+         fb48bEsjCNX1K4vCxGzLPFVBYforQRw1oGFF23Yef5mVRTt5R6WuELJJ1yV/1f4pJZRi
+         jxMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGqb6kSyNzYzdkQFkKsFHp8ttBuyLNtqZU7YtAooaPKimgATu7mHGRWta6WKdF92l6u5/1Xy/cTHoZ6ueD6MEsw2X1kDHtIVujIJc3cQubMKf7GuTWzBIOOeABxOhLIISRoX2v3R6T/e6AVuV9l2zp0e2NJwXGIMzW
+X-Gm-Message-State: AOJu0YyB2u6NB3SAeNs/zbiWb7d5oYA44OKt3D/FAQq0Pew/wmYdCe0B
+	8sQN8UEDQZ5NP/2dnwE1fmivBoEoL9A4+HXMoo3ZGGszCJCm8nZursl3+npTBUj040KgHJp/b8T
+	xCdgt3znAN9gzDfkgZcf9GRfZ+4A=
+X-Google-Smtp-Source: AGHT+IH1GhLlXNu4wxRQeu+7VChdoCTU8z8vep/jUAaVa3Bryzp6hSNIggybceHZBLWQE5A0E2b8n907yBmYmdsHWyQ=
+X-Received: by 2002:a50:9b4e:0:b0:565:9e16:60da with SMTP id
+ a14-20020a509b4e000000b005659e1660damr2050000edj.30.1711241446487; Sat, 23
+ Mar 2024 17:50:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <0000000000003dc8e00614076ab6@google.com> <CAADnVQLORV5PT0iTAhRER+iLBTkByCYNBYyvBSgjN1T31K+gOw@mail.gmail.com>
+In-Reply-To: <CAADnVQLORV5PT0iTAhRER+iLBTkByCYNBYyvBSgjN1T31K+gOw@mail.gmail.com>
+From: Andrei Matei <andreimatei1@gmail.com>
+Date: Sat, 23 Mar 2024 20:50:35 -0400
+Message-ID: <CABWLsetXQ8Xj-RECoyC7mp4YrdSsPwmSvkS36Eq2JKLfAYULuw@mail.gmail.com>
+Subject: Re: stack access issue. Re: [syzbot] [bpf?] UBSAN:
+ array-index-out-of-bounds in check_stack_range_initialized
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, eadavis@qq.com
+Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Eddy Z <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
+	KP Singh <kpsingh@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Network Development <netdev@vger.kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Song Liu <song@kernel.org>, 
+	syzkaller-bugs <syzkaller-bugs@googlegroups.com>, Yonghong Song <yonghong.song@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If a misfit task is affined to a subset of the possible cpus, we need to
-verify that one of these cpus can fit it. Otherwise the load balancer
-code will continuously trigger needlessly leading the balance_interval
-to increase in return and eventually end up with a situation where real
-imbalances take a long time to address because of this impossible
-imbalance situation.
++ Edward
 
-This can happen in Android world where it's common for background tasks
-to be restricted to little cores.
+On Thu, Mar 21, 2024 at 3:33=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> Hi Andrei,
+>
+> looks like the refactoring of stack access introduced a bug.
+> See the reproducer below.
+> positive offsets are not caught by check_stack_access_within_bounds().
 
-Similarly if we can't fit the biggest core, triggering misfit is
-pointless as it is the best we can ever get on this system.
+check_stack_access_within_bounds() tries to catch positive offsets;
+It does: [1]
 
-To be able to detect that; we use asym_cap_list to iterate through
-capacities in the system to see if the task is able to run at a higher
-capacity level based on its p->cpus_ptr. We do that when the affinity
-change, a fair task is forked, or when a task switched to fair policy.
-We store the max_allowed_capacity in task_struct to allow for cheap
-comparison in the fast path.
+err =3D check_stack_slot_within_bounds(env, min_off, state, type);
+if (!err && max_off > 0)
+  err =3D -EINVAL; /* out of stack access into non-negative offsets */
 
-Improve check_misfit_status() function by removing redundant checks.
-misfit_task_load will be 0 if the task can't move to a bigger CPU. And
-nohz_balancer_kick() already checks for cpu_check_capacity() before
-calling check_misfit_status().
+Notice the max_off > 0 in there.
+And we have various tests that seem to check that positive offsets are
+rejected. Do you know what the bug is?
+I'm thinking maybe there's some overflow going on, except that UBSAN
+reported an index of -1 as being the problem.
 
-Test:
-=====
+Edward, I see that you've been tickling the robot trying to narrow the issu=
+e;
+perhaps you've figured it out?
 
-Add
+If the bug is not immediately apparent to anyone, I would really appreciate=
+ a
+bit of tutoring around how to reproduce and get verifier logs. I have tried=
+ a
+bunch of cases of constant- and variable-offset accesses, and couldn't repr=
+o. I
+can run syzkaller's repro on its own vm image, and indeed it crashes. But I=
+'m
+not sure how to get verifier logs out of the C reproducer.  Alternatively, =
+I'm
+not sure how to figure out the actual BPF program corresponding to the "syz
+repro" in [2] and turn it into a test_progs test. How do you guys do it?
 
-	trace_printk("balance_interval = %lu\n", interval)
+Thanks a lot!
 
-in get_sd_balance_interval().
+[1] https://github.com/torvalds/linux/blob/70293240c5ce675a67bfc48f419b0930=
+23b862b3/kernel/bpf/verifier.c#L6695
+[2] https://syzkaller.appspot.com/x/repro.syz?x=3D1763a479180000
 
-run
-	if [ "$MASK" != "0" ]; then
-		adb shell "taskset -a $MASK cat /dev/zero > /dev/null"
-	fi
-	sleep 10
-	// parse ftrace buffer counting the occurrence of each valaue
 
-Where MASK is either:
-
-	* 0: no busy task running
-	* 1: busy task is pinned to 1 cpu; handled today to not cause
-	  misfit
-	* f: busy task pinned to little cores, simulates busy background
-	  task, demonstrates the problem to be fixed
-
-Results:
-========
-
-Note how occurrence of balance_interval = 128 overshoots for MASK = f.
-
-BEFORE
-------
-
-	MASK=0
-
-		   1 balance_interval = 175
-		 120 balance_interval = 128
-		 846 balance_interval = 64
-		  55 balance_interval = 63
-		 215 balance_interval = 32
-		   2 balance_interval = 31
-		   2 balance_interval = 16
-		   4 balance_interval = 8
-		1870 balance_interval = 4
-		  65 balance_interval = 2
-
-	MASK=1
-
-		  27 balance_interval = 175
-		  37 balance_interval = 127
-		 840 balance_interval = 64
-		 167 balance_interval = 63
-		 449 balance_interval = 32
-		  84 balance_interval = 31
-		 304 balance_interval = 16
-		1156 balance_interval = 8
-		2781 balance_interval = 4
-		 428 balance_interval = 2
-
-	MASK=f
-
-		   1 balance_interval = 175
-		1328 balance_interval = 128
-		  44 balance_interval = 64
-		 101 balance_interval = 63
-		  25 balance_interval = 32
-		   5 balance_interval = 31
-		  23 balance_interval = 16
-		  23 balance_interval = 8
-		4306 balance_interval = 4
-		 177 balance_interval = 2
-
-AFTER
------
-
-Note how the high values almost disappear for all MASK values. The
-system has background tasks that could trigger the problem without
-simulate it even with MASK=0.
-
-	MASK=0
-
-		 103 balance_interval = 63
-		  19 balance_interval = 31
-		 194 balance_interval = 8
-		4827 balance_interval = 4
-		 179 balance_interval = 2
-
-	MASK=1
-
-		 131 balance_interval = 63
-		   1 balance_interval = 31
-		  87 balance_interval = 8
-		3600 balance_interval = 4
-		   7 balance_interval = 2
-
-	MASK=f
-
-		   8 balance_interval = 127
-		 182 balance_interval = 63
-		   3 balance_interval = 31
-		   9 balance_interval = 16
-		 415 balance_interval = 8
-		3415 balance_interval = 4
-		  21 balance_interval = 2
-
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Qais Yousef <qyousef@layalina.io>
----
- include/linux/sched.h |  1 +
- init/init_task.c      |  1 +
- kernel/sched/fair.c   | 66 ++++++++++++++++++++++++++++++++-----------
- 3 files changed, 52 insertions(+), 16 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 7eb7f31af796..37b95dbdb4cb 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -835,6 +835,7 @@ struct task_struct {
- #endif
- 
- 	unsigned int			policy;
-+	unsigned long			max_allowed_capacity;
- 	int				nr_cpus_allowed;
- 	const cpumask_t			*cpus_ptr;
- 	cpumask_t			*user_cpus_ptr;
-diff --git a/init/init_task.c b/init/init_task.c
-index 4daee6d761c8..2558b719e053 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -77,6 +77,7 @@ struct task_struct init_task __aligned(L1_CACHE_BYTES) = {
- 	.cpus_ptr	= &init_task.cpus_mask,
- 	.user_cpus_ptr	= NULL,
- 	.cpus_mask	= CPU_MASK_ALL,
-+	.max_allowed_capacity	= SCHED_CAPACITY_SCALE,
- 	.nr_cpus_allowed= NR_CPUS,
- 	.mm		= NULL,
- 	.active_mm	= &init_mm,
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index c8e50fbac345..3b88cf58fb45 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5092,15 +5092,19 @@ static inline int task_fits_cpu(struct task_struct *p, int cpu)
- 
- static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
- {
-+	int cpu = cpu_of(rq);
-+
- 	if (!sched_asym_cpucap_active())
- 		return;
- 
--	if (!p || p->nr_cpus_allowed == 1) {
--		rq->misfit_task_load = 0;
--		return;
--	}
-+	/*
-+	 * Affinity allows us to go somewhere higher?  Or are we on biggest
-+	 * available CPU already? Or do we fit into this CPU ?
-+	 */
-+	if (!p || (p->nr_cpus_allowed == 1) ||
-+	    (arch_scale_cpu_capacity(cpu) == p->max_allowed_capacity) ||
-+	    task_fits_cpu(p, cpu)) {
- 
--	if (task_fits_cpu(p, cpu_of(rq))) {
- 		rq->misfit_task_load = 0;
- 		return;
- 	}
-@@ -8247,6 +8251,36 @@ static void task_dead_fair(struct task_struct *p)
- 	remove_entity_load_avg(&p->se);
- }
- 
-+/*
-+ * Set the max capacity the task is allowed to run at for misfit detection.
-+ */
-+static void set_task_max_allowed_capacity(struct task_struct *p)
-+{
-+	struct asym_cap_data *entry;
-+
-+	if (!sched_asym_cpucap_active())
-+		return;
-+
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(entry, &asym_cap_list, link) {
-+		cpumask_t *cpumask;
-+
-+		cpumask = cpu_capacity_span(entry);
-+		if (!cpumask_intersects(p->cpus_ptr, cpumask))
-+			continue;
-+
-+		p->max_allowed_capacity = entry->capacity;
-+		break;
-+	}
-+	rcu_read_unlock();
-+}
-+
-+static void set_cpus_allowed_fair(struct task_struct *p, struct affinity_context *ctx)
-+{
-+	set_cpus_allowed_common(p, ctx);
-+	set_task_max_allowed_capacity(p);
-+}
-+
- static int
- balance_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- {
-@@ -8255,6 +8289,8 @@ balance_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 
- 	return sched_balance_newidle(rq, rf) != 0;
- }
-+#else
-+static inline void set_task_max_allowed_capacity(struct task_struct *p) {}
- #endif /* CONFIG_SMP */
- 
- static void set_next_buddy(struct sched_entity *se)
-@@ -9604,16 +9640,10 @@ check_cpu_capacity(struct rq *rq, struct sched_domain *sd)
- 				(arch_scale_cpu_capacity(cpu_of(rq)) * 100));
- }
- 
--/*
-- * Check whether a rq has a misfit task and if it looks like we can actually
-- * help that task: we can migrate the task to a CPU of higher capacity, or
-- * the task's current CPU is heavily pressured.
-- */
--static inline int check_misfit_status(struct rq *rq, struct sched_domain *sd)
-+/* Check if the rq has a misfit task */
-+static inline bool check_misfit_status(struct rq *rq)
- {
--	return rq->misfit_task_load &&
--		(arch_scale_cpu_capacity(rq->cpu) < rq->rd->max_cpu_capacity ||
--		 check_cpu_capacity(rq, sd));
-+	return rq->misfit_task_load;
- }
- 
- /*
-@@ -11917,7 +11947,7 @@ static void nohz_balancer_kick(struct rq *rq)
- 		 * When ASYM_CPUCAPACITY; see if there's a higher capacity CPU
- 		 * to run the misfit task on.
- 		 */
--		if (check_misfit_status(rq, sd)) {
-+		if (check_misfit_status(rq)) {
- 			flags = NOHZ_STATS_KICK | NOHZ_BALANCE_KICK;
- 			goto unlock;
- 		}
-@@ -12642,6 +12672,8 @@ static void task_fork_fair(struct task_struct *p)
- 	rq_lock(rq, &rf);
- 	update_rq_clock(rq);
- 
-+	set_task_max_allowed_capacity(p);
-+
- 	cfs_rq = task_cfs_rq(current);
- 	curr = cfs_rq->curr;
- 	if (curr)
-@@ -12765,6 +12797,8 @@ static void switched_to_fair(struct rq *rq, struct task_struct *p)
- {
- 	attach_task_cfs_rq(p);
- 
-+	set_task_max_allowed_capacity(p);
-+
- 	if (task_on_rq_queued(p)) {
- 		/*
- 		 * We were most likely switched from sched_rt, so
-@@ -13136,7 +13170,7 @@ DEFINE_SCHED_CLASS(fair) = {
- 	.rq_offline		= rq_offline_fair,
- 
- 	.task_dead		= task_dead_fair,
--	.set_cpus_allowed	= set_cpus_allowed_common,
-+	.set_cpus_allowed	= set_cpus_allowed_fair,
- #endif
- 
- 	.task_tick		= task_tick_fair,
--- 
-2.34.1
-
+> So both slot and spi become negative and access
+> stack[spi].slot_type[slot % BPF_REG_SIZE]
+> returns garbage.
+>
+> On Tue, Mar 19, 2024 at 11:12=E2=80=AFAM syzbot
+> <syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following issue on:
+> >
+> > HEAD commit:    0740b6427e90 Merge branch 'bpf-arena-followups'
+> > git tree:       bpf
+> > console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D12fed769180=
+000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D6fb1be60a19=
+3d440
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D33f4297b5f927=
+648741a
+> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for D=
+ebian) 2.40
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1763a4791=
+80000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D15c38711180=
+000
+> >
+> > Downloadable assets:
+> > disk image: https://storage.googleapis.com/syzbot-assets/c9e6e9f97566/d=
+isk-0740b642.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/78476a588b62/vmli=
+nux-0740b642.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/50cd6fab9ead=
+/bzImage-0740b642.xz
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the co=
+mmit:
+> > Reported-by: syzbot+33f4297b5f927648741a@syzkaller.appspotmail.com
+> >
+> > ------------[ cut here ]------------
+> > UBSAN: array-index-out-of-bounds in kernel/bpf/verifier.c:7190:12
+> > index -1 is out of range for type 'u8[8]' (aka 'unsigned char[8]')
+> > CPU: 0 PID: 5071 Comm: syz-executor474 Not tainted 6.8.0-syzkaller-0522=
+6-g0740b6427e90 #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS=
+ Google 02/29/2024
+> > Call Trace:
+> >  <TASK>
+> >  __dump_stack lib/dump_stack.c:88 [inline]
+> >  dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+> >  ubsan_epilogue lib/ubsan.c:217 [inline]
+> >  __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:415
+> >  check_stack_range_initialized+0x1668/0x19a0 kernel/bpf/verifier.c:7190
+> >  check_helper_mem_access+0x2eb/0xfa0 kernel/bpf/verifier.c:7294
+> >  check_helper_call+0x263c/0x7220 kernel/bpf/verifier.c:10252
+> >  do_check+0x9e29/0x10530 kernel/bpf/verifier.c:17801
+> >  do_check_common+0x14bd/0x1dd0 kernel/bpf/verifier.c:20500
+> >  do_check_main kernel/bpf/verifier.c:20591 [inline]
+> >  bpf_check+0x136ab/0x19010 kernel/bpf/verifier.c:21261
+> >  bpf_prog_load+0x1667/0x20f0 kernel/bpf/syscall.c:2895
+> >  __sys_bpf+0x4ee/0x810 kernel/bpf/syscall.c:5631
+> >  __do_sys_bpf kernel/bpf/syscall.c:5738 [inline]
+> >  __se_sys_bpf kernel/bpf/syscall.c:5736 [inline]
+> >  __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5736
+> >  do_syscall_64+0xfb/0x240
+> >  entry_SYSCALL_64_after_hwframe+0x6d/0x75
+> > RIP: 0033:0x7f8416194629
+> > Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89=
+ f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 =
+ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> > RSP: 002b:00007ffdc6f0fdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+> > RAX: ffffffffffffffda RBX: 00007ffdc6f0ff88 RCX: 00007f8416194629
+> > RDX: 0000000000000090 RSI: 00000000200000c0 RDI: 0000000000000005
+> > RBP: 00007f8416207610 R08: 0000000000000000 R09: 00007ffdc6f0ff88
+> > R10: 00000000fffffff8 R11: 0000000000000246 R12: 0000000000000001
+> > R13: 00007ffdc6f0ff78 R14: 0000000000000001 R15: 0000000000000001
+> >  </TASK>
+> > ---[ end trace ]---
+> >
+> >
+> > ---
+> > This report is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this issue. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> >
+> > If the report is already addressed, let syzbot know by replying with:
+> > #syz fix: exact-commit-title
+> >
+> > If you want syzbot to run the reproducer, reply with:
+> > #syz test: git://repo/address.git branch-or-commit-hash
+> > If you attach or paste a git patch, syzbot will apply it before testing=
+.
+> >
+> > If you want to overwrite report's subsystems, reply with:
+> > #syz set subsystems: new-subsystem
+> > (See the list of subsystem names on the web dashboard)
+> >
+> > If the report is a duplicate of another one, reply with:
+> > #syz dup: exact-subject-of-another-report
+> >
+> > If you want to undo deduplication, reply with:
+> > #syz undup
