@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0000312C7FF;
-	Sun, 24 Mar 2024 22:57:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E859E1F1ADC;
+	Sun, 24 Mar 2024 22:58:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321076; cv=none; b=vF0+K5jOxLhF/HApzpw7UrewYTzuDdqtgNSi9UmkcHImA8RuszTD9f6FgWAKIwouxprlBINA5ijQ5ajps01KnNOwFZWu3JAsLi591s9QYO4SvqhPiT4rbMqyJvfLdOMZcQRz33V8AAtSG//cjupf7xopr1hAoGRftS5MCuz7ZNM=
+	t=1711321088; cv=none; b=HyC7CXV6+IZ91PjgSi+RaSfpPxSXRXg5rr6/zvxtHA/9KaTxFZ4LqbK/ykAP/oYIjSzcIA9DuOVkMyMPBCeXsUkyLHK+ifO35tHGxoZaYO0yhKJAuJW41oYQhG4x0OhBg0y2D4f7pd3dZ3LzogsPttsq/vkSYCtKKVpgTDx7u+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321076; c=relaxed/simple;
-	bh=6DQJougX0ptKj6bY2XsiqJrGTso8eSy+jqQnXQDK+8M=;
+	s=arc-20240116; t=1711321088; c=relaxed/simple;
+	bh=mT8CPKPTFzdNbzFNWoRo7kKXrSvp1WjcoYFwixPGY5Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cnIZfNphr3Kw+vH3NKpNlT24g2ubDBNCSEYQntfElLyVE0Vq/wOkYQBY//sFqR5Zh1Ht+veK13WcasAWeivZtNEXoEgWm0d7oSpZkM5kfJaChgzwaoF6ORODnRf31KtQGTn4eUwrOYmzZcvDmP6YilxRlNtr/hCsTvvBFotaYA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r4zOPuwH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tuT/b5Pl/H/vz8MKIxrEQIkw2R5SvjtRxZp3QKPERmv3BhOeqet30RzsJcH2J9NOidd5Z284TJC68jlMfr/H09rirgiR7GVVCHdxtoTbjrBJs2OWc5LO9+9jrINj+PA4j7dHQwyYWavpw9WsbQtWMAeQi41IB7rB0bMdkl69qqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGheUJE7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r4zOPuwH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C7E0C433F1;
-	Sun, 24 Mar 2024 22:57:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGheUJE7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1394C433F1;
+	Sun, 24 Mar 2024 22:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321075;
-	bh=6DQJougX0ptKj6bY2XsiqJrGTso8eSy+jqQnXQDK+8M=;
+	s=k20201202; t=1711321087;
+	bh=mT8CPKPTFzdNbzFNWoRo7kKXrSvp1WjcoYFwixPGY5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r4zOPuwHEF77CBRPHztIYANtGWf+ZPNUu4M8NV/4o09j+WAQHD3VYtuzlBKhEDp7K
-	 OmVjXqgZuT4hT+cjZhVMQZGasE/BvucWuRDHu5WM6mKW+m/jFAhzMN7TZvEkvcuaRr
-	 l5LGDbK24gtPCGeJvdDxJXza42+pNMjMh10OhAlt87kp3LJZEKWiOnspre1Lc3WA60
-	 zK9TQrXq4yleK8uM9vqlxt10u1UyEnwdWB3N659jS7OEXb5ZBNiJdpyf6BA3mbF8FF
-	 lwkXKHjnu6XyIGWwAwYfNNALT82x43kd47fwrb0sVn2NlFQU03qWy/VozDRtM1pl4e
-	 Dxs2I5EfuQ1tQ==
+	b=YGheUJE7Df+wgTgi+A48mNvb0wjqi0qjK3ozJ12A+EwoswXTBedvAxiAbBBNpNCBD
+	 1P0myp1HbPdW8wq22EXrwsh719cxBV3cXHv+uzLbtqppMfoApeF7xLx5aNGIEMISJC
+	 DOyRbTdMd98fDDGOxodiEC2LVPUS+l8Mm1xSeFOflm/dMGWOhCMWV84iys25TLcBcL
+	 PP4h6SrEIfmmQ6xfIbWltF9O8oiyDjWvRXKuS+Ysreruui9xQCxyrBBXK89vvrHSMG
+	 6xgB9JnyvRl3Nfp7mjq1ahtWGC8FfaYW5JsIKDOZngFs1nNQkEmMV9BRxLJgMshUjK
+	 fR7qAGL15HfOQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Ido Schimmel <idosch@nvidia.com>,
+	Jiri Pirko <jiri@nvidia.com>,
+	Petr Machata <petrm@nvidia.com>,
+	Simon Horman <horms@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 639/713] ASoC: tlv320adc3xxx: Don't strip remove function when driver is builtin
-Date: Sun, 24 Mar 2024 18:46:05 -0400
-Message-ID: <20240324224720.1345309-640-sashal@kernel.org>
+Subject: [PATCH 6.7 651/713] devlink: Move private netlink flags to C file
+Date: Sun, 24 Mar 2024 18:46:17 -0400
+Message-ID: <20240324224720.1345309-652-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,59 +47,57 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Ido Schimmel <idosch@nvidia.com>
 
-[ Upstream commit f31e0d0c2cad23e0cc48731634f85bb2d8707790 ]
+[ Upstream commit 526dd6d7877b80b1f56d87156b65b8227c69d59f ]
 
-Using __exit for the remove function results in the remove callback
-being discarded with SND_SOC_TLV320ADC3XXX=y. When such a device gets
-unbound (e.g. using sysfs or hotplug), the driver is just removed
-without the cleanup being performed. This results in resource leaks. Fix
-it by compiling in the remove callback unconditionally.
+The flags are not used outside of the C file so move them there.
 
-This also fixes a W=1 modpost warning:
-
-	WARNING: modpost: sound/soc/codecs/snd-soc-tlv320adc3xxx: section mismatch in reference: adc3xxx_i2c_driver+0x10 (section: .data) -> adc3xxx_i2c_remove (section: .exit.text)
-
-(which only happens with SND_SOC_TLV320ADC3XXX=m).
-
-Fixes: e9a3b57efd28 ("ASoC: codec: tlv320adc3xxx: New codec driver")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Link: https://msgid.link/r/20240310143852.397212-2-u.kleine-koenig@pengutronix.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Suggested-by: Jiri Pirko <jiri@nvidia.com>
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Signed-off-by: Petr Machata <petrm@nvidia.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Stable-dep-of: d7d75124965a ("devlink: Fix devlink parallel commands processing")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tlv320adc3xxx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/devlink/devl_internal.h | 3 ---
+ net/devlink/netlink.c       | 3 +++
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/tlv320adc3xxx.c b/sound/soc/codecs/tlv320adc3xxx.c
-index 420bbf588efea..e100cc9f5c192 100644
---- a/sound/soc/codecs/tlv320adc3xxx.c
-+++ b/sound/soc/codecs/tlv320adc3xxx.c
-@@ -1429,7 +1429,7 @@ static int adc3xxx_i2c_probe(struct i2c_client *i2c)
- 	return ret;
- }
+diff --git a/net/devlink/devl_internal.h b/net/devlink/devl_internal.h
+index 183dbe3807ab3..2a9b263300a4b 100644
+--- a/net/devlink/devl_internal.h
++++ b/net/devlink/devl_internal.h
+@@ -111,9 +111,6 @@ int devlink_rel_devlink_handle_put(struct sk_buff *msg, struct devlink *devlink,
+ 				   bool *msg_updated);
  
--static void __exit adc3xxx_i2c_remove(struct i2c_client *client)
-+static void adc3xxx_i2c_remove(struct i2c_client *client)
- {
- 	struct adc3xxx *adc3xxx = i2c_get_clientdata(client);
- 
-@@ -1452,7 +1452,7 @@ static struct i2c_driver adc3xxx_i2c_driver = {
- 		   .of_match_table = tlv320adc3xxx_of_match,
- 		  },
- 	.probe = adc3xxx_i2c_probe,
--	.remove = __exit_p(adc3xxx_i2c_remove),
-+	.remove = adc3xxx_i2c_remove,
- 	.id_table = adc3xxx_i2c_id,
+ /* Netlink */
+-#define DEVLINK_NL_FLAG_NEED_PORT		BIT(0)
+-#define DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT	BIT(1)
+-
+ enum devlink_multicast_groups {
+ 	DEVLINK_MCGRP_CONFIG,
  };
+diff --git a/net/devlink/netlink.c b/net/devlink/netlink.c
+index d0b90ebc8b152..7350138c8bb44 100644
+--- a/net/devlink/netlink.c
++++ b/net/devlink/netlink.c
+@@ -9,6 +9,9 @@
  
+ #include "devl_internal.h"
+ 
++#define DEVLINK_NL_FLAG_NEED_PORT		BIT(0)
++#define DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT	BIT(1)
++
+ static const struct genl_multicast_group devlink_nl_mcgrps[] = {
+ 	[DEVLINK_MCGRP_CONFIG] = { .name = DEVLINK_GENL_MCGRP_CONFIG_NAME },
+ };
 -- 
 2.43.0
 
