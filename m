@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC481FB093;
-	Sun, 24 Mar 2024 23:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356141826F2;
+	Sun, 24 Mar 2024 23:49:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324128; cv=none; b=VJ7YLShyJs1wRlZt6H6fcY78i+/z5TK95mPTtDBrynqwIg0ac/vCmhRJYwHrQgwuaZMvWabB8DBbXxXVVNTJDmbd1jpUTNRX6P0UACXNRYOLvIadY3EtO0z89Vi9hbMutnzalo/bj8QsUAIev+tRTqmQAcWDrHc5btT4+pKCt80=
+	t=1711324153; cv=none; b=DOe6I/VOYthfdtbwFmh4OiRQbKNBMP76gi1Lu6fj3pj3uEmiHwhEV5TrnYrYwJFvx4Hp2NgAZBU2yqp31bv/8fIKI3/f9eu/hqrlrtv7otrfWnzFeTbOti66CZUJnfS0/xJea2w6vJQK6Yd3Obf2eIwf9k7nRBqSdTHGHHOCGt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324128; c=relaxed/simple;
-	bh=7zVaDgT2dMSkrpsp3xzqYvEZpVYt/GwYB4YhIWzsABs=;
+	s=arc-20240116; t=1711324153; c=relaxed/simple;
+	bh=jmfwr9b4WGqYyhKL2RJ0GcThkXvWGfJ4utHVDz5KbWM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HF8+wygbkqM9a7SCag2WeUQ6HIf3WwkKyDrg2bML4fj1KX8epkb19m6mUu/1Z9mFfi3Sspae1wXF3TfpUYeufogcJ0UWDY6a5GxNSqzb1YKGvW4D01GjxyKaIM0vtfKnVhle9cbGTDWlooH7GxW7vw145wKreuAWh6ZoZwfuVwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jiJf0NDU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=E/EAhHkiQ8JqcCqsoOYTqUPDSjHS2r5OBN2tdPtmkR9KjNyrDNZUbbAnFdQN3091o/cpOZISqHaCUCmLCjapEaNFo7N/JwJNS8UUZYO/uFGlG1E7+e+kgsTtjs6YQGL+N9WMHlnfOYmqHXGYGwMTAcR681ZNgQ6n8Jo2w2iSfi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hc7Ly+Gv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jiJf0NDU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183C7C43390;
-	Sun, 24 Mar 2024 23:48:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hc7Ly+Gv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5819BC43394;
+	Sun, 24 Mar 2024 23:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324127;
-	bh=7zVaDgT2dMSkrpsp3xzqYvEZpVYt/GwYB4YhIWzsABs=;
+	s=k20201202; t=1711324153;
+	bh=jmfwr9b4WGqYyhKL2RJ0GcThkXvWGfJ4utHVDz5KbWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jiJf0NDUc7DjBlORm63rE193IlUw8dVcl4yc+m/a7p/vhlLeYz4XkoH0mlPAK0O/X
-	 t6NKl5yaxRulv55WaCb/RzpAQRJAvuHNjSrWr1dso1EEnEwia0bYx8PN5ieAC3YV9o
-	 ckhspUHv7une2FUIGujrhQvHaFbcnGZ1pzft5BM0GGSzi5POSs0yl2H0cUKgjfrAfO
-	 HSzKrOwuuSNYxX2XCpWuMCf93CzpPVCzwUqQv0lT+cpMPPxNTpalSjGNv+j4MGFWx3
-	 Or2c0m5AOcCnWnsCfbEUwN5bIkiTmEty+NqK+L1ZvFiDjsf0WoBV2WNDHFjI6ewyYg
-	 ZUJPoakBrVOtw==
+	b=hc7Ly+Gv2J3FV1ZoaTKrQlCag/pY97mm+3xeZULVy/LZ6325GmlOxJvGBXcOz/WJu
+	 LS6uRTyBisnFXq4kNvldhTgxebINGM4jI6tmAHrC3RcAErJ3LxGGv4HbT24YeLTcec
+	 /L4KEAI78ZUcxhwDXhOYpa/LFqNEznzilc2fluu2R9gvuqX8uHadBVv382M5jBA7PQ
+	 eXppbTKqGfqLnVwW5auyE4RZmLLrBZs4ViKkaEGzCqPyf7L5fG4yu5wMoi+lUPV/b7
+	 Ar6oOKS8igo2QJLjIHGWe6s5HR55ZAGIdp3ZtbemyibmIpV7AUZ6md79/Ni53DWCKN
+	 YTxiXRN9Q6FHQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 125/183] drm/tegra: put drm_gem_object ref on error in tegra_fb_create
-Date: Sun, 24 Mar 2024 19:45:38 -0400
-Message-ID: <20240324234638.1355609-126-sashal@kernel.org>
+Subject: [PATCH 5.4 149/183] arch/powerpc: Remove <linux/fb.h> from backlight code
+Date: Sun, 24 Mar 2024 19:46:02 -0400
+Message-ID: <20240324234638.1355609-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,38 +49,96 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Fedor Pchelkin <pchelkin@ispras.ru>
+From: Thomas Zimmermann <tzimmermann@suse.de>
 
-[ Upstream commit 32e5a120a5105bce01561978ee55aee8e40ac0dc ]
+[ Upstream commit 838f865802b9f26135ea7df4e30f89ac2f50c23e ]
 
-Inside tegra_fb_create(), drm_gem_object_lookup() increments ref count of
-the found object. But if the following size check fails then the last
-found object's ref count should be put there as the unreferencing loop
-can't detect this situation.
+Replace <linux/fb.h> with a forward declaration in <asm/backlight.h> to
+resolve an unnecessary dependency. Remove pmac_backlight_curve_lookup()
+and struct fb_info from source and header files. The function and the
+framebuffer struct are unused. No functional changes.
 
-Found by Linux Verification Center (linuxtesting.org).
+v3:
+	* Add Fixes tag (Christophe)
+	* fix typos in commit message (Jani)
 
-Fixes: de2ba664c30f ("gpu: host1x: drm: Add memory manager and fb")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231215093356.12067-1-pchelkin@ispras.ru
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Fixes: d565dd3b0824 ("[PATCH] powerpc: More via-pmu backlight fixes")
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> # (powerpc)
+Link: https://patchwork.freedesktop.org/patch/msgid/20240306122935.10626-4-tzimmermann@suse.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/fb.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/include/asm/backlight.h        |  5 ++--
+ arch/powerpc/platforms/powermac/backlight.c | 26 ---------------------
+ 2 files changed, 2 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-index e34325c83d28e..361e67e4cd984 100644
---- a/drivers/gpu/drm/tegra/fb.c
-+++ b/drivers/gpu/drm/tegra/fb.c
-@@ -155,6 +155,7 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
+diff --git a/arch/powerpc/include/asm/backlight.h b/arch/powerpc/include/asm/backlight.h
+index 1b5eab62ed047..061a910d74929 100644
+--- a/arch/powerpc/include/asm/backlight.h
++++ b/arch/powerpc/include/asm/backlight.h
+@@ -10,15 +10,14 @@
+ #define __ASM_POWERPC_BACKLIGHT_H
+ #ifdef __KERNEL__
  
- 		if (gem->size < size) {
- 			err = -EINVAL;
-+			drm_gem_object_put(gem);
- 			goto unreference;
- 		}
+-#include <linux/fb.h>
+ #include <linux/mutex.h>
  
++struct backlight_device;
++
+ /* For locking instructions, see the implementation file */
+ extern struct backlight_device *pmac_backlight;
+ extern struct mutex pmac_backlight_mutex;
+ 
+-extern int pmac_backlight_curve_lookup(struct fb_info *info, int value);
+-
+ extern int pmac_has_backlight_type(const char *type);
+ 
+ extern void pmac_backlight_key(int direction);
+diff --git a/arch/powerpc/platforms/powermac/backlight.c b/arch/powerpc/platforms/powermac/backlight.c
+index 32224cb489d75..eab339d2059d5 100644
+--- a/arch/powerpc/platforms/powermac/backlight.c
++++ b/arch/powerpc/platforms/powermac/backlight.c
+@@ -9,7 +9,6 @@
+  */
+ 
+ #include <linux/kernel.h>
+-#include <linux/fb.h>
+ #include <linux/backlight.h>
+ #include <linux/adb.h>
+ #include <linux/pmu.h>
+@@ -73,31 +72,6 @@ int pmac_has_backlight_type(const char *type)
+ 	return 0;
+ }
+ 
+-int pmac_backlight_curve_lookup(struct fb_info *info, int value)
+-{
+-	int level = (FB_BACKLIGHT_LEVELS - 1);
+-
+-	if (info && info->bl_dev) {
+-		int i, max = 0;
+-
+-		/* Look for biggest value */
+-		for (i = 0; i < FB_BACKLIGHT_LEVELS; i++)
+-			max = max((int)info->bl_curve[i], max);
+-
+-		/* Look for nearest value */
+-		for (i = 0; i < FB_BACKLIGHT_LEVELS; i++) {
+-			int diff = abs(info->bl_curve[i] - value);
+-			if (diff < max) {
+-				max = diff;
+-				level = i;
+-			}
+-		}
+-
+-	}
+-
+-	return level;
+-}
+-
+ static void pmac_backlight_key_worker(struct work_struct *work)
+ {
+ 	if (atomic_read(&kernel_backlight_disabled))
 -- 
 2.43.0
 
