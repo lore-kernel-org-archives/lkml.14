@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D6C1494B5;
-	Sun, 24 Mar 2024 22:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963BB1494B2;
+	Sun, 24 Mar 2024 22:56:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320971; cv=none; b=A01GBkb9NTWIxsw4sSMY5fbsnDwEkunJf36Z9ATKCQ1jFSC7DcRRm5RjDVvG54Cj5KxqJ8eAMTIkdipMtQhSnqZ2WTOSNvRCckUC32vv2N08E7/fV6VhBvWS8i033mLIX3KwKftgJhYs1PZ42R1/ttikQH5IDiCVmvaMz0Rdm3Q=
+	t=1711320973; cv=none; b=TUnKYf4235hiUC0tJi1JQB87bSN7czFlPklvyE/+HtW2M9bvQg/7/yfS7Lf8zre8cLlEy+7MhS0HzzPvGYS42VdLLew713pDFVOBINPeqPsZCTmNkqAg0IgO3lYUOF7meoBVOS+pQJHQZpDlqTlPKNF9frknLpns9QLv45NEDzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320971; c=relaxed/simple;
-	bh=sS78OHTJDBntt7GXwUOMvLEvB3n9Tp87rFlzWJIksEA=;
+	s=arc-20240116; t=1711320973; c=relaxed/simple;
+	bh=FfAkLR82zNo8vXgN3x469UcnQzAZ56OYmk6OGgnHwmA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=frcLn8lRBvIhIz+je+EIrZEw5op86wIOlbknoftgDRiYlmLzeoe9FiT/oBVFCZrh1fKdoW4lxxQTFVdu4Y2USZOUak6swcr1XSQOMbUnauZcKFWnALvsv5QpCMPw/S3Kb9OdJjhYer3lKGdHqZBwDIU0Jt5cmFVV+7ZVzQ979zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2QYLz9R; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OVwOW/bf1wQ4YMcGwywesqtOyuGALi5+N0cqwOW4EfxUlIYoMvEx9fq+ZZwnOnP1Lcsl6FfBw+qx5TS0kWCNG+mRg1coR9ZfNreJSeWz33Vc6qeK4Ahqnuz3+VDjCggY5pWfQ4Th4XZHkRXdrqi1+mJFzHBkwAcj/NxD5qaW2xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWwG1vxP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2QYLz9R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C33BC433C7;
-	Sun, 24 Mar 2024 22:56:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dWwG1vxP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADF70C43609;
+	Sun, 24 Mar 2024 22:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320971;
-	bh=sS78OHTJDBntt7GXwUOMvLEvB3n9Tp87rFlzWJIksEA=;
+	s=k20201202; t=1711320973;
+	bh=FfAkLR82zNo8vXgN3x469UcnQzAZ56OYmk6OGgnHwmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r2QYLz9Rkjk7/FoND48tBToML4zaxbOPtQld3If5Jaf+B7HL5y/d2odRNTx8KNkJ9
-	 N7ljI1e87hUzyM0jX9yp1rATlZz8rZwSrVqPyBIZCE+zj/bj+OfnnijcltMghHmI4r
-	 6O0nNFBQ6uwi3oKtEMj7ediYC1bT1Qoc5t72aTAxfJWlQqzy2LaI+LN3LvyY/MygMd
-	 woSOHXEYwVdekmzzB4iNZwdeUDbNFVFf7/nHSFzQjaspO5hmz04jcnV6YxG+73P/iU
-	 lYU391Bfj9RqGwq9wIPJzN4gFkWUR+xDboGUYnG799OIJPtceSa3cPBV4q1Ih7C4p8
-	 T/h3RyUpthXdw==
+	b=dWwG1vxPwChTraVyU1vlUpFvYpntmxHywL3ZRGuL/ZRw1HDHmn1dWBRsH0OcLNK0h
+	 hKs1/isrDRcSf7rJ7d15qMUW/ZwsrliaGTMYh6VJ6PlRFR9KZCxyBXOnRPdsKuAmA5
+	 TDHieLWOjHjvK8NW+SHZUWwRNZNK/kpAeCjIUliDcNlzq3kH0E7Jv/WmhtBX/0rpa1
+	 NvXI1XBqL/+hlINP3iUWuej2MK3a+jyYmi25TPsma3hChcax1X3KumGq2rvuJA0Sbk
+	 H0fjwYfjuqQE2uSP/4T/N/xKZcnIPgQv5RrgPCrfYwOUWQf689rtiUxaG/8TAq260N
+	 FAE6br1l1wnEA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Paloma Arellano <quic_parellan@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Maciej Strozek <mstrozek@opensource.cirrus.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 534/713] drm/msm/dpu: add division of drm_display_mode's hskew parameter
-Date: Sun, 24 Mar 2024 18:44:20 -0400
-Message-ID: <20240324224720.1345309-535-sashal@kernel.org>
+Subject: [PATCH 6.7 536/713] mfd: cs42l43: Fix wrong GPIO_FN_SEL and SPI_CLK_CONFIG1 defaults
+Date: Sun, 24 Mar 2024 18:44:22 -0400
+Message-ID: <20240324224720.1345309-537-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,47 +49,46 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Paloma Arellano <quic_parellan@quicinc.com>
+From: Maciej Strozek <mstrozek@opensource.cirrus.com>
 
-[ Upstream commit 551ee0f210991d25f336bc27262353bfe99d3eed ]
+[ Upstream commit 78334c343bef528b911da83a6b041d15a1a72efb ]
 
-Setting up the timing engine when the physical encoder has a split role
-neglects dividing the drm_display_mode's hskew parameter. Let's fix this
-since this must also be done in preparation for implementing YUV420 over
-DP.
+Two regs have wrong values in existing fields, change them to match
+the datasheet.
 
-Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-Signed-off-by: Paloma Arellano <quic_parellan@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Patchwork: https://patchwork.freedesktop.org/patch/579605/
-Link: https://lore.kernel.org/r/20240222194025.25329-3-quic_parellan@quicinc.com
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Fixes: ace6d1448138 ("mfd: cs42l43: Add support for cs42l43 core driver")
+
+Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20240301101547.2136948-1-mstrozek@opensource.cirrus.com
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/mfd/cs42l43.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-index 2b20ff720c130..f66e0f125a03c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-@@ -258,12 +258,14 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
- 		mode.htotal >>= 1;
- 		mode.hsync_start >>= 1;
- 		mode.hsync_end >>= 1;
-+		mode.hskew >>= 1;
- 
- 		DPU_DEBUG_VIDENC(phys_enc,
--			"split_role %d, halve horizontal %d %d %d %d\n",
-+			"split_role %d, halve horizontal %d %d %d %d %d\n",
- 			phys_enc->split_role,
- 			mode.hdisplay, mode.htotal,
--			mode.hsync_start, mode.hsync_end);
-+			mode.hsync_start, mode.hsync_end,
-+			mode.hskew);
- 	}
- 
- 	drm_mode_to_intf_timing_params(phys_enc, &mode, &timing_params);
+diff --git a/drivers/mfd/cs42l43.c b/drivers/mfd/cs42l43.c
+index 73c88ee6a866c..1cea3f8f467d4 100644
+--- a/drivers/mfd/cs42l43.c
++++ b/drivers/mfd/cs42l43.c
+@@ -84,7 +84,7 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
+ 	{ CS42L43_DRV_CTRL_5,				0x136C00C0 },
+ 	{ CS42L43_GPIO_CTRL1,				0x00000707 },
+ 	{ CS42L43_GPIO_CTRL2,				0x00000000 },
+-	{ CS42L43_GPIO_FN_SEL,				0x00000000 },
++	{ CS42L43_GPIO_FN_SEL,				0x00000004 },
+ 	{ CS42L43_MCLK_SRC_SEL,				0x00000000 },
+ 	{ CS42L43_SAMPLE_RATE1,				0x00000003 },
+ 	{ CS42L43_SAMPLE_RATE2,				0x00000003 },
+@@ -217,7 +217,7 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
+ 	{ CS42L43_CTRL_REG,				0x00000006 },
+ 	{ CS42L43_FDIV_FRAC,				0x40000000 },
+ 	{ CS42L43_CAL_RATIO,				0x00000080 },
+-	{ CS42L43_SPI_CLK_CONFIG1,			0x00000000 },
++	{ CS42L43_SPI_CLK_CONFIG1,			0x00000001 },
+ 	{ CS42L43_SPI_CONFIG1,				0x00000000 },
+ 	{ CS42L43_SPI_CONFIG2,				0x00000000 },
+ 	{ CS42L43_SPI_CONFIG3,				0x00000001 },
 -- 
 2.43.0
 
