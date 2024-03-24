@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC7412CDB4;
-	Sun, 24 Mar 2024 22:58:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC1214B076;
+	Sun, 24 Mar 2024 22:57:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321082; cv=none; b=iPsW6YsAUMHiIhjrofNCP7sEyjej/QSibaLB8ti7bcql3XLSVeAgfeLvg0Hqm4mVruCpwOw9mZg8pLtOpTX17Gh4iMDvy8yLtjGlPCE1L0ovX0gw5SIVFHnMwkwzWoncejfPKMQySBttSVyfr8JIOc6bD2An+9fMoylhv84+/VA=
+	t=1711321062; cv=none; b=B943b7umW/ISCdrbXrNbxHzDVJsPIJKVx/tcwzQ8ZppsvsSBRvLq/OoorlPaUWAFrx2CxszOAbCBfnW/hvXAs3n8MCmyYZlFi6qUvmGNBU4kA3C9Xbvv7IJuscgBKn4zOAdwJCTHLiNuugnuQSLOhXeOtwxeX9YvUx0k5Wgzzww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321082; c=relaxed/simple;
-	bh=jtvvDvLTHptqMgKwVWj6/9UOww+mAtVi2jZFHDQ67tk=;
+	s=arc-20240116; t=1711321062; c=relaxed/simple;
+	bh=3CRWekLwFioJeZgnXz6vAQ0PCM/tVBdgdeT6ULdDfkk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tLpFWz9K9GpatyebLnSnSimmJ7sOXgjL9C/vukgW9HTk11DbDbNk4G3+deSf2hE0wbWEymrhn+paXMoiDo62jPpboW++eQ9X8Mcet70LgfRZHdn5ufGImdWV2yxt9n8enf/3NlwGyJD5h8bzyi+SbDdokBGQsyYQRoJ3U09T+gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFSoStCX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nqPT8CYLb6AgSogJVuOPl5A14/vkVCFGDYdo6Cmi8Vyc7NVbKWsRaZKrVz8nKuqgnIwMrkAORTMxmWEvty0EvVoEjVToE5URMLaNr2MYE/Vf4fTt16EZi9P0+Zqe3mvp0nKBIifXl/NUolCXyFzqzt7G+kSG9AfVEJMHXWAyZSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9CPzo4V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFSoStCX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7A6AC433C7;
-	Sun, 24 Mar 2024 22:58:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9CPzo4V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83A7DC43390;
+	Sun, 24 Mar 2024 22:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321081;
-	bh=jtvvDvLTHptqMgKwVWj6/9UOww+mAtVi2jZFHDQ67tk=;
+	s=k20201202; t=1711321061;
+	bh=3CRWekLwFioJeZgnXz6vAQ0PCM/tVBdgdeT6ULdDfkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cFSoStCX1jZbbrhuNJvS7W11FAYB9qkbbbMZt4CEqgB8uCnxa4XB6icyZySAZm1e5
-	 OKaK3onLhxrdW8N9f/qNq1nb4jHFjkCqJwBFXlUmRId9iokjyb7Hi4kCKExjDydN59
-	 wS30m9TP5PSrm0MktnAjMa9mwWvxjWXs0j4oq5h8GCc262/kU5Djn+iAvFexQ2ZQ1B
-	 8O63Qb4GP7o45fLfKwlxtPH5FVu12r7XDfdyO6lf0IDNcs5LWQmD9c+R/y/0RLyAOG
-	 3qvArlzOgGVQBuBwF1XNBFJznjuF3UnYNcDXHUfRAWZGDPhL+2gi4QMv/W/hssymea
-	 HdqiFSAFcVbtQ==
+	b=e9CPzo4VMLnjdA+7JCDLnYEVW0Fzv40HmzYVmkysW7jii1gIyGymGtGbC4OeOQCv+
+	 TQhmQ7QVfE4qG86o/+6t6bgbrFRdP9nMCv2+SwrBGhtGzPiTjNbMTbG4Ei0jkmmiGJ
+	 nLVdZfuX/YzxGJl6v9Go/27B8VDvJ0Ym21PUZjTAIxrO3GsXNePDDw+QQ+dd2yP+Ua
+	 7f2eZK0HfVUnN6BUyukFIX7/+YcwnAWPDSTJ/RUK4qRFiOmwAMXkDaQkwKHROh+Bsp
+	 FqQdWgU39k4BEjpD9HA7VLh7RCNRmQ7ii+UcYV3a3dURZvEEApFFbWtLBJg2ciE4Uj
+	 t9h0w9+eJAewQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dave Airlie <airlied@redhat.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Danilo Krummrich <dakr@redhat.com>,
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Sam Protsenko <semen.protsenko@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 645/713] nouveau: reset the bo resource bus info after an eviction
-Date: Sun, 24 Mar 2024 18:46:11 -0400
-Message-ID: <20240324224720.1345309-646-sashal@kernel.org>
+Subject: [PATCH 6.7 625/713] tty: serial: samsung: fix tx_empty() to return TIOCSER_TEMT
+Date: Sun, 24 Mar 2024 18:45:51 -0400
+Message-ID: <20240324224720.1345309-626-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,43 +45,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dave Airlie <airlied@redhat.com>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
 
-[ Upstream commit f35c9af45ea7a4b1115b193d84858b14d13517fc ]
+[ Upstream commit 314c2b399288f0058a8c5b6683292cbde5f1531b ]
 
-Later attempts to refault the bo won't happen and the whole
-GPU does to lunch. I think Christian's refactoring of this
-code out to the driver broke this not very well tested path.
+The core expects for tx_empty() either TIOCSER_TEMT when the tx is
+empty or 0 otherwise. s3c24xx_serial_txempty_nofifo() might return
+0x4, and at least uart_get_lsr_info() tries to clear exactly
+TIOCSER_TEMT (BIT(1)). Fix tx_empty() to return TIOCSER_TEMT.
 
-Fixes: 141b15e59175 ("drm/nouveau: move io_reserve_lru handling into the driver v5")
-Cc: Christian König <christian.koenig@amd.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Acked-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Danilo Krummrich <dakr@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240311072037.287905-1-airlied@gmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+Link: https://lore.kernel.org/r/20240119104526.1221243-2-tudor.ambarus@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_bo.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/tty/serial/samsung_tty.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_bo.c b/drivers/gpu/drm/nouveau/nouveau_bo.c
-index 280d1d9a559ba..254d6c9ef2023 100644
---- a/drivers/gpu/drm/nouveau/nouveau_bo.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
-@@ -1255,6 +1255,8 @@ nouveau_ttm_io_mem_reserve(struct ttm_device *bdev, struct ttm_resource *reg)
- 			drm_vma_node_unmap(&nvbo->bo.base.vma_node,
- 					   bdev->dev_mapping);
- 			nouveau_ttm_io_mem_free_locked(drm, nvbo->bo.resource);
-+			nvbo->bo.resource->bus.offset = 0;
-+			nvbo->bo.resource->bus.addr = NULL;
- 			goto retry;
- 		}
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 3bd552841cd28..06d140c9f56cf 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -987,11 +987,10 @@ static unsigned int s3c24xx_serial_tx_empty(struct uart_port *port)
+ 		if ((ufstat & info->tx_fifomask) != 0 ||
+ 		    (ufstat & info->tx_fifofull))
+ 			return 0;
+-
+-		return 1;
++		return TIOCSER_TEMT;
+ 	}
  
+-	return s3c24xx_serial_txempty_nofifo(port);
++	return s3c24xx_serial_txempty_nofifo(port) ? TIOCSER_TEMT : 0;
+ }
+ 
+ /* no modem control lines */
 -- 
 2.43.0
 
