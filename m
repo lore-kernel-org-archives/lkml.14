@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93DE1FD114;
-	Sun, 24 Mar 2024 23:02:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7B6130AC7;
+	Sun, 24 Mar 2024 23:02:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321329; cv=none; b=pT7mARhiJV0Kw+50SR5UYOpwY0XnWoE9KF6eEdAnWcMlM+WaE/awW0pQmMr65QU8BEYh4JvaiKAWid2tg2KT1B62l7wo/YJ7sLlPJ37lquC074S2Pcv4kWMSmALiYhylzVCUseL9CELBeYsXNF7hXbIz24k3KOQtcLx6YUw9oCo=
+	t=1711321341; cv=none; b=IfxpfbMOFkuyIk9t3M88rAg18YqaG3jpIPqGbFmZGcKAejY7PZ+kWWwo7n38jfz19j/PHyiXxqqUlfe8YSyUj/j9MHWq7u1N4ZaCm7EMTwfdQMjeWCmR9jK6SHCGAS3tUlysFBpSKqrqUUAThY6kPBhzituUhEOHfgyl6LJD66I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321329; c=relaxed/simple;
-	bh=rd9CTn5d36v+u366AsJVE1eQgwQIsnkSjg/Q6MfoA3Y=;
+	s=arc-20240116; t=1711321341; c=relaxed/simple;
+	bh=ArqBZbZhefIxwbraxACefImVik8nTnkU/EWw5Mm15V8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AvQvUpICJWf8l9uu09+BKYkWtlIHXs6rUGm0WR3JzMibRkb050y+g+jR9srd/xDsQwKvifeJ9FvhX6yKCFfBcjG9e+1uPnInyrGMXhHUfB9VLuk/4GRDSygnGaHCRdQgYsgOhI9sEkw5gfmQTlynHZp0+op+dL2AjVMBiM9TVQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHOBafGx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KfldKy77r16H8aQcFSRbQyTGu7uR2Fb3GUPsUydCB0KNvS/ad9Xx1K4xcBCUZ3H9Xy8Cf598oM8ArqQ8wieSZKzPnU+Gb0xbuoeLY6ZFyUIAAEbZh19f29W7QYEnR8V/DrJjHTpDeOGvgq043/i9/AKMCKCBg70aJ0EJZ+JPcm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7g6Turq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHOBafGx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F41BAC433C7;
-	Sun, 24 Mar 2024 23:02:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7g6Turq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE0F8C43399;
+	Sun, 24 Mar 2024 23:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321329;
-	bh=rd9CTn5d36v+u366AsJVE1eQgwQIsnkSjg/Q6MfoA3Y=;
+	s=k20201202; t=1711321341;
+	bh=ArqBZbZhefIxwbraxACefImVik8nTnkU/EWw5Mm15V8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NHOBafGxoE1Gieh1NTYOr6CIJu0suovL3o0t8kE2GkDR7OkVYt/4bJMemYyIdqpx4
-	 IIoO48zPA5BBYHtbjwotTkl5AfeYgLnLR6+4fvU3kcjccggxI3QhgO43LU2l7jk0OW
-	 UWDe1gHmwBZw4ivWQ7tlsdBtjnwmCc39dKnoaGKwfNLTi93xkj7dD6d3a9KOENYJta
-	 ecO6EnQpZ7XoPqjGUukglZ3sWCxVjj7FVd1NZVAbQoueqQLlfseSnk7TpHiN+RwEFU
-	 hNz/5TQQ4JTyoyFppQnroB+LXbXBQT685mfQESzrWiGESkJQdNyKHlSPa/DTryivub
-	 RhaMN6I0DoBhA==
+	b=m7g6TurqdFrVrdD1QQiD5z3Mlt5D+HVMXMBLOod0NmQai/tNFM7Ir9ZiM6aeUFZRq
+	 QHojEa4jc1hIpcmmxaZXzAW8fYoIn+fQmfQKGYlg9r7IXotCejsrWiS9eslE6DxSjG
+	 f7qFJIZdm8/hR7O14aHqfEj0fxkynQP72Jjf34QDKyuPxRCHt3DubAyq3DGHdsSZTS
+	 +RybYhzQadRmmdT2daFEzD0kdcvlobu7OfZg7ewRXWSUtSFOlXxuvcDisRn+iQf8A/
+	 j5E0C28vM9c71YyzioF0oNgnKxIr3viVgtm5WEVjxyyvKqo/bmlvG5Nx0b9KM0Agam
+	 uVwPSgbSzkwGg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yuxuan Hu <20373622@buaa.edu.cn>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 053/638] Bluetooth: rfcomm: Fix null-ptr-deref in rfcomm_check_security
-Date: Sun, 24 Mar 2024 18:51:30 -0400
-Message-ID: <20240324230116.1348576-54-sashal@kernel.org>
+Subject: [PATCH 6.6 065/638] ASoC: wm8962: Enable both SPKOUTR_ENA and SPKOUTL_ENA in mono mode
+Date: Sun, 24 Mar 2024 18:51:42 -0400
+Message-ID: <20240324230116.1348576-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,56 +48,74 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yuxuan Hu <20373622@buaa.edu.cn>
+From: Stuart Henderson <stuarth@opensource.cirrus.com>
 
-[ Upstream commit 2535b848fa0f42ddff3e5255cf5e742c9b77bb26 ]
+[ Upstream commit 6fa849e4d78b880e878138bf238e4fd2bac3c4fa ]
 
-During our fuzz testing of the connection and disconnection process at the
-RFCOMM layer, we discovered this bug. By comparing the packets from a
-normal connection and disconnection process with the testcase that
-triggered a KASAN report. We analyzed the cause of this bug as follows:
-
-1. In the packets captured during a normal connection, the host sends a
-`Read Encryption Key Size` type of `HCI_CMD` packet
-(Command Opcode: 0x1408) to the controller to inquire the length of
-encryption key.After receiving this packet, the controller immediately
-replies with a Command Completepacket (Event Code: 0x0e) to return the
-Encryption Key Size.
-
-2. In our fuzz test case, the timing of the controller's response to this
-packet was delayed to an unexpected point: after the RFCOMM and L2CAP
-layers had disconnected but before the HCI layer had disconnected.
-
-3. After receiving the Encryption Key Size Response at the time described
-in point 2, the host still called the rfcomm_check_security function.
-However, by this time `struct l2cap_conn *conn = l2cap_pi(sk)->chan->conn;`
-had already been released, and when the function executed
-`return hci_conn_security(conn->hcon, d->sec_level, auth_type, d->out);`,
-specifically when accessing `conn->hcon`, a null-ptr-deref error occurred.
-
-To fix this bug, check if `sk->sk_state` is BT_CLOSED before calling
-rfcomm_recv_frame in rfcomm_process_rx.
-
-Signed-off-by: Yuxuan Hu <20373622@buaa.edu.cn>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
+Link: https://msgid.link/r/20240306161439.1385643-2-stuarth@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/rfcomm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/wm8962.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
-index 053ef8f25fae4..1d34d84970332 100644
---- a/net/bluetooth/rfcomm/core.c
-+++ b/net/bluetooth/rfcomm/core.c
-@@ -1941,7 +1941,7 @@ static struct rfcomm_session *rfcomm_process_rx(struct rfcomm_session *s)
- 	/* Get data directly from socket receive queue without copying it. */
- 	while ((skb = skb_dequeue(&sk->sk_receive_queue))) {
- 		skb_orphan(skb);
--		if (!skb_linearize(skb)) {
-+		if (!skb_linearize(skb) && sk->sk_state != BT_CLOSED) {
- 			s = rfcomm_recv_frame(s, skb);
- 			if (!s)
- 				break;
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index d444b7776ece1..914f8eb418357 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -2229,6 +2229,9 @@ SND_SOC_DAPM_PGA_E("HPOUT", SND_SOC_NOPM, 0, 0, NULL, 0, hp_event,
+ 
+ SND_SOC_DAPM_OUTPUT("HPOUTL"),
+ SND_SOC_DAPM_OUTPUT("HPOUTR"),
++
++SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
++SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
+ };
+ 
+ static const struct snd_soc_dapm_widget wm8962_dapm_spk_mono_widgets[] = {
+@@ -2236,7 +2239,6 @@ SND_SOC_DAPM_MIXER("Speaker Mixer", WM8962_MIXER_ENABLES, 1, 0,
+ 		   spkmixl, ARRAY_SIZE(spkmixl)),
+ SND_SOC_DAPM_MUX_E("Speaker PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
+ 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
+-SND_SOC_DAPM_PGA("Speaker Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
+ SND_SOC_DAPM_OUTPUT("SPKOUT"),
+ };
+ 
+@@ -2251,9 +2253,6 @@ SND_SOC_DAPM_MUX_E("SPKOUTL PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
+ SND_SOC_DAPM_MUX_E("SPKOUTR PGA", WM8962_PWR_MGMT_2, 3, 0, &spkoutr_mux,
+ 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
+ 
+-SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
+-SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
+-
+ SND_SOC_DAPM_OUTPUT("SPKOUTL"),
+ SND_SOC_DAPM_OUTPUT("SPKOUTR"),
+ };
+@@ -2366,12 +2365,18 @@ static const struct snd_soc_dapm_route wm8962_spk_mono_intercon[] = {
+ 	{ "Speaker PGA", "Mixer", "Speaker Mixer" },
+ 	{ "Speaker PGA", "DAC", "DACL" },
+ 
+-	{ "Speaker Output", NULL, "Speaker PGA" },
+-	{ "Speaker Output", NULL, "SYSCLK" },
+-	{ "Speaker Output", NULL, "TOCLK" },
+-	{ "Speaker Output", NULL, "TEMP_SPK" },
++	{ "SPKOUTL Output", NULL, "Speaker PGA" },
++	{ "SPKOUTL Output", NULL, "SYSCLK" },
++	{ "SPKOUTL Output", NULL, "TOCLK" },
++	{ "SPKOUTL Output", NULL, "TEMP_SPK" },
++
++	{ "SPKOUTR Output", NULL, "Speaker PGA" },
++	{ "SPKOUTR Output", NULL, "SYSCLK" },
++	{ "SPKOUTR Output", NULL, "TOCLK" },
++	{ "SPKOUTR Output", NULL, "TEMP_SPK" },
+ 
+-	{ "SPKOUT", NULL, "Speaker Output" },
++	{ "SPKOUT", NULL, "SPKOUTL Output" },
++	{ "SPKOUT", NULL, "SPKOUTR Output" },
+ };
+ 
+ static const struct snd_soc_dapm_route wm8962_spk_stereo_intercon[] = {
 -- 
 2.43.0
 
