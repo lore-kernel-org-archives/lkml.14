@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B802145339;
-	Sun, 24 Mar 2024 23:13:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B4A535C9;
+	Sun, 24 Mar 2024 23:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321985; cv=none; b=KbiszEPKJ7VO8GBFD3sS4bArDWrDZtfDjzUoiqwKKd3W2D2+8cVzr95/9++WCVER6aIqVrWJgEQtg253/JGLPE28YjzoV6fJph9dvk+2oMbpIQq38AIcT+KT82sjEMNx95N2zewyBtexJ+5VHM7oWd/BBQghpi7MctSAZmq9SW4=
+	t=1711322053; cv=none; b=Re/UeIcolsVm76BanwpNJTaASiMCKrkznYgSit69e1iymKoNsIKyOrcZRQUefF5/d+iSspK5f6tkGUVlr8wV2vrPa1bdjtSWiqV0eIwSshRlKX2UZ4/PWUtSzTfg6v2MKM1XGuVu/RDloiYRtwoC71Hd+xqTFfvpTrQeCxHOPBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321985; c=relaxed/simple;
-	bh=Kh34Wl5Hm35G11oz9z4Kp6zAuV/vNfZQ04qtSDbysKg=;
+	s=arc-20240116; t=1711322053; c=relaxed/simple;
+	bh=RQrolhc/4neGjp94YqluMsQFQZd5V1OjoECo2SmYWsM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HDwZSARP4v2xVZWavRmXN2eV6kbV1m0MLpfuWW6oU+8mU5CIi6EDOMsQexfEnngVdz5Fzxv/jLjFE3G2B28VNfiW8VDpUif3g8oPT/xnH3U+zxP+l5eIevA5FxxnAFwmk14lcazYxRIIi47TgI21Ol1x1SuGybVbbF1DmmSQ9Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vdgcgoee; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=S1PGlt5e8Rs7yACtYba1hz9llABqXqfahtH/587aEJ42LC+NS+qZoJ3xE2P/ri9d94AhbGLot2/M2T/Yso92mIoO1sgyj//AEYU8yYZr1NrrxL17TBOozJyOFLprXihbd4ryj6qUTh/X5QZuDX1PwJbJdtS4jWDCn0eIjeB7Iu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PDHCLKzN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vdgcgoee"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93A9BC433F1;
-	Sun, 24 Mar 2024 23:13:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PDHCLKzN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05AA6C433C7;
+	Sun, 24 Mar 2024 23:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321985;
-	bh=Kh34Wl5Hm35G11oz9z4Kp6zAuV/vNfZQ04qtSDbysKg=;
+	s=k20201202; t=1711322053;
+	bh=RQrolhc/4neGjp94YqluMsQFQZd5V1OjoECo2SmYWsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VdgcgoeergCDouIrV1nvvln6G8qGZqym0xPwOwJRwjZtVX90kaCnZ5K+CnQAbndOO
-	 o8BkfFrKyMB2cs+Bb38/NqU2l14/AV0blzH7G6UIlkprl/hzsWzsE7Di9Vg4/sH/eb
-	 g0cAD5DDwTm8+xO/fT+erPEqmb1WuVUAfc6Cb2DLujkQdGWBKVG1x3K92QLbA+lQez
-	 HImZS+YP8IglafCGRlQ/zqPLHtq4c5uCZmNx513FRwyB2Cvajpr7oxg2BPB+ZAd/Ol
-	 1xBxcNYQHNSqD3fJfOgThFeMs9K2+lTFDRFHlnNEjNioDR2JkK4oCtG2O2Yd+ctP10
-	 hMNAT1JKQmU0g==
+	b=PDHCLKzNam0XTkhdRL1OAp+DHraP3kaFOLqUggHrUB5Rp5nuaK6w2wDf8dnHHGT3p
+	 jY/oSEZYlKK8MLaozjSnvq9/QcmQqaUqLZTYE7LADDQQiVqEuFKgJFmENdqHc5lHYt
+	 sXHgvHSnlcZbIe6CI9cYgHrDUnmfdIp9pZEMxJVTwhrYnOCKqGYKXZX9i+oQXo9KrI
+	 MRmbc5GwIgtHidTBB70eBLGd0TS39Jh4VUnVrS4ln5VqBlu6szWFrsA+BMZ9FNQM/x
+	 D/oVKEw5uHzsLSkRGtNZzS/EHJiGtk2eSzORT5Lr16MRxl4PPtGvitmkTUdhXxdIgJ
+	 BBp4ZNFNdyJ1Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Chuck Lever III <chuck.lever@oracle.com>,
-	syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com,
-	Jan Kara <jack@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 058/451] do_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak
-Date: Sun, 24 Mar 2024 19:05:34 -0400
-Message-ID: <20240324231207.1351418-59-sashal@kernel.org>
+Subject: [PATCH 6.1 126/451] wifi: libertas: fix some memleaks in lbs_allocate_cmd_buffer()
+Date: Sun, 24 Mar 2024 19:06:42 -0400
+Message-ID: <20240324231207.1351418-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -51,70 +48,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 3948abaa4e2be938ccdfc289385a27342fb13d43 ]
+[ Upstream commit 5f0e4aede01cb01fa633171f0533affd25328c3a ]
 
-syzbot identified a kernel information leak vulnerability in
-do_sys_name_to_handle() and issued the following report [1].
+In the for statement of lbs_allocate_cmd_buffer(), if the allocation of
+cmdarray[i].cmdbuf fails, both cmdarray and cmdarray[i].cmdbuf needs to
+be freed. Otherwise, there will be memleaks in lbs_allocate_cmd_buffer().
 
-[1]
-"BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40
- instrument_copy_to_user include/linux/instrumented.h:114 [inline]
- _copy_to_user+0xbc/0x100 lib/usercopy.c:40
- copy_to_user include/linux/uaccess.h:191 [inline]
- do_sys_name_to_handle fs/fhandle.c:73 [inline]
- __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
- __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94
- __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
- ...
-
-Uninit was created at:
- slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
- slab_alloc_node mm/slub.c:3478 [inline]
- __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517
- __do_kmalloc_node mm/slab_common.c:1006 [inline]
- __kmalloc+0x121/0x3c0 mm/slab_common.c:1020
- kmalloc include/linux/slab.h:604 [inline]
- do_sys_name_to_handle fs/fhandle.c:39 [inline]
- __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
- __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94
- __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
- ...
-
-Bytes 18-19 of 20 are uninitialized
-Memory access of size 20 starts at ffff888128a46380
-Data copied to user address 0000000020000240"
-
-Per Chuck Lever's suggestion, use kzalloc() instead of kmalloc() to
-solve the problem.
-
-Fixes: 990d6c2d7aee ("vfs: Add name to file handle conversion support")
-Suggested-by: Chuck Lever III <chuck.lever@oracle.com>
-Reported-and-tested-by: <syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com>
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Link: https://lore.kernel.org/r/20240119153906.4367-1-n.zhandarovich@fintech.ru
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Fixes: 876c9d3aeb98 ("[PATCH] Marvell Libertas 8388 802.11b/g USB driver")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240126075336.2825608-1-alexious@zju.edu.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fhandle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/libertas/cmd.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fhandle.c b/fs/fhandle.c
-index f2bc27d1975e1..a8c25557c8c12 100644
---- a/fs/fhandle.c
-+++ b/fs/fhandle.c
-@@ -37,7 +37,7 @@ static long do_sys_name_to_handle(const struct path *path,
- 	if (f_handle.handle_bytes > MAX_HANDLE_SZ)
- 		return -EINVAL;
+diff --git a/drivers/net/wireless/marvell/libertas/cmd.c b/drivers/net/wireless/marvell/libertas/cmd.c
+index 104d2b6dc9af6..5a525da434c28 100644
+--- a/drivers/net/wireless/marvell/libertas/cmd.c
++++ b/drivers/net/wireless/marvell/libertas/cmd.c
+@@ -1132,7 +1132,7 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
+ 		if (!cmdarray[i].cmdbuf) {
+ 			lbs_deb_host("ALLOC_CMD_BUF: ptempvirtualaddr is NULL\n");
+ 			ret = -1;
+-			goto done;
++			goto free_cmd_array;
+ 		}
+ 	}
  
--	handle = kmalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
-+	handle = kzalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
- 			 GFP_KERNEL);
- 	if (!handle)
- 		return -ENOMEM;
+@@ -1140,8 +1140,17 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
+ 		init_waitqueue_head(&cmdarray[i].cmdwait_q);
+ 		lbs_cleanup_and_insert_cmd(priv, &cmdarray[i]);
+ 	}
+-	ret = 0;
++	return 0;
+ 
++free_cmd_array:
++	for (i = 0; i < LBS_NUM_CMD_BUFFERS; i++) {
++		if (cmdarray[i].cmdbuf) {
++			kfree(cmdarray[i].cmdbuf);
++			cmdarray[i].cmdbuf = NULL;
++		}
++	}
++	kfree(priv->cmd_array);
++	priv->cmd_array = NULL;
+ done:
+ 	return ret;
+ }
 -- 
 2.43.0
 
