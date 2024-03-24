@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FB3127B69;
-	Sun, 24 Mar 2024 22:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858631E3077;
+	Sun, 24 Mar 2024 22:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320783; cv=none; b=Cjwv/NyNAgZ/QW3M69tB8jGjs6k38+VmNkrhH3Acu3LzQixRQUX1fvVpbt90hzoZNJIQV/1cmRwlBApUMmOHPa00fCiW5TNK108fJlQwFTkhlM4b/61TuzLMUf2m0eVRJz9/BOu+EnUEY2/jtJ5zc8lL0iI/MroraULdIgs8hE0=
+	t=1711320794; cv=none; b=n+Ry+Lg55qbPFcSawKpUf8kxQKxn8waLK/WhW+xl80f49/uVMEHN0G9Cn9EFSYWy8rh7HOLubArGZNY6aaALPgqXDcI+zLMxvSUSz2F5d7LslLKMGNoNATGxeoQfLfmDWuRfHSwePcBOpPo12B3IOvFjpVjvfKt8mKOBiwDw3uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320783; c=relaxed/simple;
-	bh=8/kr8B8u6KwyMHX/o0qNOYBBY6aCjmBMpsM2+5DKcnw=;
+	s=arc-20240116; t=1711320794; c=relaxed/simple;
+	bh=CgppWVbYSdfdH7pUfBvvux86ej8YyJiAHOmFHrzmnXI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rqHpYwSI0+adeePxUsL5f9AuxCq+5GCKUxd7mE4nZAaNAgzmwD9vtcZtLc6e+c1MuyDmQVasm/BHG5Z2O7YReIJ5ZCxurq137GdKDdWXXT9IErh+osYhTt3RZlhfv1GWbyCZ6blcxxQC2e3UBE0VSZJ5ukRMrlQhMTydn/wzN6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ul0Gh5up; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GyX2xF0PzfGRkjnN3BhnrxghEUUwdKS8coW1BqgHrmJQ6AlgWSxIkjnDEqmUz5rJczNH9KBoLyOI6jhEXKzMGitOuZryZ22Z7Ge6VmDb3FEp6vVknUBgfHU2c9/DdspFvN6rK2epyuYD6+n7hkNDXgDNqljWGPQzB7EYEm45Mlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDinYUrv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ul0Gh5up"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72B3BC433F1;
-	Sun, 24 Mar 2024 22:53:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDinYUrv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FE1C433C7;
+	Sun, 24 Mar 2024 22:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320782;
-	bh=8/kr8B8u6KwyMHX/o0qNOYBBY6aCjmBMpsM2+5DKcnw=;
+	s=k20201202; t=1711320793;
+	bh=CgppWVbYSdfdH7pUfBvvux86ej8YyJiAHOmFHrzmnXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ul0Gh5up+7z90/0f/pwtbBEOVgferKwY0EM365pCIF9U+K68dtt87F9s4yuI0kVnS
-	 sHrLvHmFawXdXIAunWVRBRGONQoXbwwOdP9Z0p7B1NWjByfsRkwOmaOoN+6az/3v0n
-	 tgjd1L2zxA67sZI7Vy/9h/cwDlNFZXfF1cM4T4oFsxX7Gq5SrJhNkJygsQ7Qn0+eGO
-	 aRAo4KudbkEbUugnSzwkwoyFABY5JSlDX5xr2YYqB0cPH94Ly7b22Iu9ySUywnG2kv
-	 dEPzVNUhrbcoEu7+ki1lTjNLOr+P53x6z0Y7ehWM7m62Hrgu2KJcg1LwiVRr/4YW9s
-	 VE+LE8fbkcGkg==
+	b=KDinYUrvNwqQEga4rZCweR5LpJNlnqRodC36iUzt8JT/BHXY1crwxXIFnrE8IjkS3
+	 yADnuraL7ejvBz+2JwbGagItIG4xOtCfOUMDU/0wyS+VthbliUAht7Qb1NR/gVhl0q
+	 Xu7xKmWbNUoOJq6PcBC2I+Cjg6JS5zeN2lkYHlSpSLxAIbzvOMpKHoQrxpj9vN0+oW
+	 cA8nwouf/eygonKQvqLbVkdQMTGAI8sTXWz+F8+W9uGEnelIA48yMFl9EFy4Klu3G5
+	 uxqgu9OzKdXTE7NxXcYumI2pIMzznWAfZHPMFV4bVx8jCL7PEIff9rW6F2hjijtfI3
+	 BqWC+DdIBvEkQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
+Cc: Pauli Virtanen <pav@iki.fi>,
 	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 345/713] Bluetooth: Remove superfluous call to hci_conn_check_pending()
-Date: Sun, 24 Mar 2024 18:41:11 -0400
-Message-ID: <20240324224720.1345309-346-sashal@kernel.org>
+Subject: [PATCH 6.7 357/713] Bluetooth: fix use-after-free in accessing skb after sending it
+Date: Sun, 24 Mar 2024 18:41:23 -0400
+Message-ID: <20240324224720.1345309-358-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,62 +44,63 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jonas Dreßler <verdre@v0yd.nl>
+From: Pauli Virtanen <pav@iki.fi>
 
-[ Upstream commit 78e3639fc8031275010c3287ac548c0bc8de83b1 ]
+[ Upstream commit 947ec0d002dce8577b655793dcc6fc78d67b7cb6 ]
 
-The "pending connections" feature was originally introduced with commit
-4c67bc74f016 ("[Bluetooth] Support concurrent connect requests") and
-6bd57416127e ("[Bluetooth] Handling pending connect attempts after
-inquiry") to handle controllers supporting only a single connection request
-at a time. Later things were extended to also cancel ongoing inquiries on
-connect() with commit 89e65975fea5 ("Bluetooth: Cancel Inquiry before
-Create Connection").
+hci_send_cmd_sync first sends skb and then tries to clone it.  However,
+the driver may have already freed the skb at that point.
 
-With commit a9de9248064b ("[Bluetooth] Switch from OGF+OCF to using only
-opcodes"), hci_conn_check_pending() was introduced as a helper to
-consolidate a few places where we check for pending connections (indicated
-by the BT_CONNECT2 flag) and then try to connect.
+Fix by cloning the sent_cmd cloned just above, instead of the original.
 
-This refactoring commit also snuck in two more calls to
-hci_conn_check_pending():
+Log:
+================================================================
+BUG: KASAN: slab-use-after-free in __copy_skb_header+0x1a/0x240
+...
+Call Trace: ..
+ __skb_clone+0x59/0x2c0
+ hci_cmd_work+0x3b3/0x3d0 [bluetooth]
+ process_one_work+0x459/0x900
+...
+Allocated by task 129: ...
+ __alloc_skb+0x1ae/0x220
+ __hci_cmd_sync_sk+0x44c/0x7a0 [bluetooth]
+ __hci_cmd_sync_status+0x24/0xb0 [bluetooth]
+ set_cig_params_sync+0x778/0x7d0 [bluetooth]
+...
+Freed by task 0: ...
+ kmem_cache_free+0x157/0x3c0
+ __usb_hcd_giveback_urb+0x11e/0x1e0
+ usb_giveback_urb_bh+0x1ad/0x2a0
+ tasklet_action_common.isra.0+0x259/0x4a0
+ __do_softirq+0x15b/0x5a7
+================================================================
 
-- One is in the failure callback of hci_cs_inquiry(), this one probably
-makes sense: If we send an "HCI Inquiry" command and then immediately
-after a "Create Connection" command, the "Create Connection" command might
-fail before the "HCI Inquiry" command, and then we want to retry the
-"Create Connection" on failure of the "HCI Inquiry".
-
-- The other added call to hci_conn_check_pending() is in the event handler
-for the "Remote Name" event, this seems unrelated and is possibly a
-copy-paste error, so remove that one.
-
-Fixes: a9de9248064b ("[Bluetooth] Switch from OGF+OCF to using only opcodes")
-Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
+Fixes: 2615fd9a7c25 ("Bluetooth: hci_sync: Fix overwriting request callback")
+Signed-off-by: Pauli Virtanen <pav@iki.fi>
 Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c | 2 --
- 1 file changed, 2 deletions(-)
+ net/bluetooth/hci_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 2a5f5a7d2412b..1f63f77661dce 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -3556,8 +3556,6 @@ static void hci_remote_name_evt(struct hci_dev *hdev, void *data,
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 85a91c438d721..7d5334b529834 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -4185,7 +4185,7 @@ static void hci_send_cmd_sync(struct hci_dev *hdev, struct sk_buff *skb)
+ 	if (hci_req_status_pend(hdev) &&
+ 	    !hci_dev_test_and_set_flag(hdev, HCI_CMD_PENDING)) {
+ 		kfree_skb(hdev->req_skb);
+-		hdev->req_skb = skb_clone(skb, GFP_KERNEL);
++		hdev->req_skb = skb_clone(hdev->sent_cmd, GFP_KERNEL);
+ 	}
  
- 	bt_dev_dbg(hdev, "status 0x%2.2x", ev->status);
- 
--	hci_conn_check_pending(hdev);
--
- 	hci_dev_lock(hdev);
- 
- 	conn = hci_conn_hash_lookup_ba(hdev, ACL_LINK, &ev->bdaddr);
+ 	atomic_dec(&hdev->cmd_cnt);
 -- 
 2.43.0
 
