@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DCA1DC7EC;
-	Sun, 24 Mar 2024 22:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC2D1DC81D;
+	Sun, 24 Mar 2024 22:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320709; cv=none; b=EMJpJgctmgiOrbU0e4e3J0Lq297J7Hf3sDN1rPZNTlisjAEhJVnEP2OcxLf4rCfTIe3plgjON5Pu+2IynOh6fL8Dr68Go4OLjKNxanpMoYnnsYjcWHJd4y4kBdysAf084Kp7LamaOfXBiNaf/cytQ2Yh7xKmSR8Suzkl8AHm8IE=
+	t=1711320715; cv=none; b=N1ZxrRhU/IYZu9wnw16RvallDNm7jMctwpEI/D+X/Ed7kybYGSx6CyO4rn21uEZOMMPUFn3ePEH+I0y1hEDf1+PW1EHQoRvhCv19NeX8u4GBEGtXi5+RSP50PVr/3fnCHpO/bPZqY9BuPrfz9l3xD6vxNCRBLOsa1Vg/q+atqmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320709; c=relaxed/simple;
-	bh=UhipjQvNWfeeujAdzDwbZqGmfdqnpiMVNNRI02gZzEk=;
+	s=arc-20240116; t=1711320715; c=relaxed/simple;
+	bh=VhGrNDsi/hSAF7zLn+fZKZbQpK32uQKZn69jSk9m1gs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V3eLt9G1aVj+oZXM0zbnFqspDX4yLrAh7CGQCSgTyWkPMUqoOg9b8ttiZBEjGsckXurxKuew6vXCB9H3Cof4o18D2yBaJO35tTyTBKD4IPEgDbGatwiB4mPZtQaOVaSB8+Z+4b+W9bsSYpy8RinkfCLeLgeFzQcwxWgleFs6LOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h+JugOsH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oTvIFzNONaZRBiERHWWcQTNvG5nxfnUCE0GMeM8PI/uMorSMyZGAcPX9wq37V/F8c0NV0zcF0qZrwTM7dLp3S1fhM6Sic0JTWDHn088yOyDwF90INbDpXdyt1B3u+au/0WBRWk2P9siqf+BYnhnd7PBP/bkuQcgspvo0dj0nYsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZaNT7Oy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h+JugOsH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3556CC43394;
-	Sun, 24 Mar 2024 22:51:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZaNT7Oy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D96D0C43399;
+	Sun, 24 Mar 2024 22:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320707;
-	bh=UhipjQvNWfeeujAdzDwbZqGmfdqnpiMVNNRI02gZzEk=;
+	s=k20201202; t=1711320714;
+	bh=VhGrNDsi/hSAF7zLn+fZKZbQpK32uQKZn69jSk9m1gs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h+JugOsHZSBBm0ul4FsuBPdHyim+QHmGzcWGmFhS83j5yt+ubxUiw5OmHKpsLVYaH
-	 DaG+2+yEEocULoANM7+KgsZkQVz+8CtsVO1FWDMh5sRmZhV/rnG5IakqqjROMQKOzL
-	 fpS3lcr10XAPqzu2n+Pht2BZ18yO3FXbRSu74Fo5j4WJthDZA1eMZLGKsxH0DGok7+
-	 kd5cqGThDewW2JiD8QRYhv6JiEglAMTXntCbGLwEq8y72CFWik/sUPkPPi3mBx6/Fp
-	 Iu+yrCKKAlXACpcyFr5A1d3q7X2i5GTzOZOZK0XLytfGqEz5U7h2rs4CXrBOlOeIKf
-	 3yyyktqspoFvQ==
+	b=ZZaNT7Oy1NN+w+TFfBwl6NuhovXEcoh3sDeEMDGkv2h1HY1iGaFvvPf7NOjKXshA5
+	 RAjQRaGOT+aS0jpKulH4qZ2najcoyBNCGkMFbVe16xKfvjIkdyf6JYLMN68y+UqZkW
+	 eS87g1TDEuWv7KhG49XWbX8gLWNGu7wwJxmBM8R53NDra1NfDv7ipTDRPDhk3uGoH3
+	 JmBtc+1cvkxjCrJWJCtMp9aRSqN9EQam7SCvNu5vsPIT8lEqKll03v7yJE+VY5cJK8
+	 GF43xZV3PmpflPyO5YbZmnVq1GKmVwX74SIppl5O2qaWaLUI9O+qhtGJAKWgep9+A2
+	 HOLMWvOmMA5Wg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bhavya Kapoor <b-kapoor@ti.com>,
+Cc: Devarsh Thakkar <devarsht@ti.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 270/713] arm64: dts: ti: k3-j7200-common-proc-board: Remove clock-frequency from mcu_uart0
-Date: Sun, 24 Mar 2024 18:39:56 -0400
-Message-ID: <20240324224720.1345309-271-sashal@kernel.org>
+Subject: [PATCH 6.7 277/713] arm64: dts: ti: Add common1 register space for AM62x SoC
+Date: Sun, 24 Mar 2024 18:40:03 -0400
+Message-ID: <20240324224720.1345309-278-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,35 +50,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bhavya Kapoor <b-kapoor@ti.com>
+From: Devarsh Thakkar <devarsht@ti.com>
 
-[ Upstream commit 0fa8b0e2083d333e4854b9767fb893f924e70ae5 ]
+[ Upstream commit 7d8ee2c3b8a2aabb9ce75795bad20773bfe1ba13 ]
 
-Clock-frequency property is already present in mcu_uart0 node of the
-k3-j7200-mcu-wakeup.dtsi file. Thus, remove redundant clock-frequency
-property from mcu_uart0 node.
+This adds common1 register space for AM62x SoC which is using TI's Keystone
+display hardware and supporting it as described in
+Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
 
-Fixes: 3709ea7f960e ("arm64: dts: ti: k3-j7200-common-proc-board: Add uart pinmux")
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
-Link: https://lore.kernel.org/r/20240214105846.1096733-3-b-kapoor@ti.com
+Fixes: 8ccc1073c7bb ("arm64: dts: ti: k3-am62-main: Add node for DSS")
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
+Link: https://lore.kernel.org/r/20240216062426.4170528-4-devarsht@ti.com
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-index 53594c5fb8e8f..7a0c599f2b1c3 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-@@ -211,7 +211,6 @@ &mcu_uart0 {
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mcu_uart0_pins_default>;
--	clock-frequency = <96000000>;
- };
- 
- &main_uart0 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+index c1ace4a376d17..2f318c5287581 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+@@ -757,9 +757,10 @@ dss: dss@30200000 {
+ 		      <0x00 0x30207000 0x00 0x1000>, /* ovr1 */
+ 		      <0x00 0x30208000 0x00 0x1000>, /* ovr2 */
+ 		      <0x00 0x3020a000 0x00 0x1000>, /* vp1: Used for OLDI */
+-		      <0x00 0x3020b000 0x00 0x1000>; /* vp2: Used as DPI Out */
++		      <0x00 0x3020b000 0x00 0x1000>, /* vp2: Used as DPI Out */
++		      <0x00 0x30201000 0x00 0x1000>; /* common1 */
+ 		reg-names = "common", "vidl1", "vid",
+-			    "ovr1", "ovr2", "vp1", "vp2";
++			    "ovr1", "ovr2", "vp1", "vp2", "common1";
+ 		power-domains = <&k3_pds 186 TI_SCI_PD_EXCLUSIVE>;
+ 		clocks = <&k3_clks 186 6>,
+ 			 <&dss_vp1_clk>,
 -- 
 2.43.0
 
