@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3296D2801E3;
-	Sun, 24 Mar 2024 23:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3372801FC;
+	Sun, 24 Mar 2024 23:40:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323631; cv=none; b=J5m438C7atW6SjYbwishhF2LVibHU7i6na3DhFLKdsI2OCpclV+LM79qU8AhwFBLqMqaWDM0s/9WDDJ0l4LXuRlfWX3QxbE9pDoyKJmmhZWowBQJeMrrp7cvg0vttMD3xGrM0yJ0njbsfPQ26Td6twOV9RqoNwxi/bq1Q1ZGsyU=
+	t=1711323636; cv=none; b=WaoUS35zjxNMjLSfgQM/gM4UoLXA7N7nCYerJuTV2BVUwGXH4Hq/Z+pvV9LAP2k1q0rvrfILpxeOvkTXxb597XSwsbicos8/hNz7gHo//shK59KNXyOJDwDBEVACMKA6LNoPZT2PIGZllwHxbKn+gdgLcAJvZrO01dj7/1s5mA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323631; c=relaxed/simple;
-	bh=YmYGiJNWvwm8qvLTcguVJPE0uIR5n311XccO/74AuCM=;
+	s=arc-20240116; t=1711323636; c=relaxed/simple;
+	bh=wN9qknYWyXLhykrwy7deV6GMrdHRh+3YLf4iu0Y3Nyo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Knev5wKkC+0CNSnds03LpZuo5zWbga4IABqRVGg4VlPUb4yY1csl/pgD9Ey11+S0N4gPN41VejxEJqLOsC4rRC/KN9aWO5gFzYNMK9D0sN9TuF9wuadLb3AOHGFeov0dGfUf4EbYVNQUjeIuqx5YPpD4wiGkfnZYypnLfaZHiko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+ZdNEtI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JWTEi4PahRLQ+lX7WFNLwUf6uyhw/Pw50V+uX3vDS2S5pxakt/MyPiVUWwFSRPNnMjisPd8e9UQln+mtCoCdJGHN91VblnD4yQR9FgR2dsIdigOaqMbV+GqyQGtdd8Fmws/sXAAwmKviB0+PLMfhw3sIlGJ0pyyhHd542YO8umI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijloQtLL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+ZdNEtI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 859D7C433A6;
-	Sun, 24 Mar 2024 23:40:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijloQtLL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C9A2C433B1;
+	Sun, 24 Mar 2024 23:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323630;
-	bh=YmYGiJNWvwm8qvLTcguVJPE0uIR5n311XccO/74AuCM=;
+	s=k20201202; t=1711323636;
+	bh=wN9qknYWyXLhykrwy7deV6GMrdHRh+3YLf4iu0Y3Nyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p+ZdNEtIhUyx6zY557ezLNHqSFRjxgyysiW03vEjkrxaJRgLCPD8XHhtOe23uU8ck
-	 XfH5g6NjaXghe3XP6WwBkUnNWZqqZeyAJ6SBG8U3yEs+PJ2KqV6+x5Z1TDnM1jgt49
-	 D1rrlclEHKosSmo+lrC91MiArdonlyxsAu4+e3VXnxotQkBUHWw/SyqeM3wqXvJwjz
-	 y8ZJ9c9inWBAZhb2qFEi0Q2gBZSeGblOvvYZYmGfIWiUocWHBkE2HoQO5W5N95jFDD
-	 FsHOGDdgxtFQmP4EHo0W2oePJLaFys3dnYWLjQgRCEYuQCRwoXWOuUu/sc0dyy1HZe
-	 LBed12OL3U5sg==
+	b=ijloQtLLT4Cc3q8p3gBW47KIf8Wte33UMOZiO/59UWWdbKhwuQq0md7kczOZPOyua
+	 P8lKNtPXeoj59GC5uvNrfquXmeXxCIed4OwW/D59r6GNJi2yOcHUXonGjjz6h8KAF/
+	 1OgKMPs/eErrz2EZqAi//XniZqRV3Wh640DmHU/sJ9+7W6vETOB5IagD04LU0m6plb
+	 z6S+Muap1vpGp3tckoGZyeB1PUzGfZWupClH0pDoFp7r3CFP7EY77ZoCwPMt/9BtdN
+	 nlLysxNnrP+HQC3JMTU5wycxu4q2AUSTc449Tg/MTXzNlNLFaORqKo3JYWyuI/fJYy
+	 GCFXIQgrW8KEQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>,
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 001/238] io_uring/unix: drop usage of io_uring socket
-Date: Sun, 24 Mar 2024 19:36:29 -0400
-Message-ID: <20240324234027.1354210-2-sashal@kernel.org>
+Subject: [PATCH 5.10 007/238] ASoC: rt5645: Make LattePanda board DMI match more precise
+Date: Sun, 24 Mar 2024 19:36:35 -0400
+Message-ID: <20240324234027.1354210-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -47,129 +48,61 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Hans de Goede <hdegoede@redhat.com>
 
-Commit a4104821ad651d8a0b374f0b2474c345bbb42f82 upstream.
+[ Upstream commit 551539a8606e28cb2a130f8ef3e9834235b456c4 ]
 
-Since we no longer allow sending io_uring fds over SCM_RIGHTS, move to
-using io_is_uring_fops() to detect whether this is a io_uring fd or not.
-With that done, kill off io_uring_get_socket() as nobody calls it
-anymore.
+The DMI strings used for the LattePanda board DMI quirks are very generic.
 
-This is in preparation to yanking out the rest of the core related to
-unix gc with io_uring.
+Using the dmidecode database from https://linux-hardware.org/ shows
+that the chosen DMI strings also match the following 2 laptops
+which also have a rt5645 codec:
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Insignia NS-P11W7100 https://linux-hardware.org/?computer=E092FFF8BA04
+Insignia NS-P10W8100 https://linux-hardware.org/?computer=AFB6C0BF7934
+
+All 4 hw revisions of the LattePanda board have "S70CR" in their BIOS
+version DMI strings:
+
+DF-BI-7-S70CR100-*
+DF-BI-7-S70CR110-*
+DF-BI-7-S70CR200-*
+LP-BS-7-S70CR700-*
+
+See e.g. https://linux-hardware.org/?computer=D98250A817C0
+
+Add a partial (non exact) DMI match on this string to make the LattePanda
+board DMI match more precise to avoid false-positive matches.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://msgid.link/r/20240211212736.179605-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/io_uring.h | 10 +++++-----
- io_uring/io_uring.c      | 18 +++++-------------
- net/core/scm.c           |  2 +-
- net/unix/scm.c           |  4 +---
- 4 files changed, 12 insertions(+), 22 deletions(-)
+ sound/soc/codecs/rt5645.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
-index 649a4d7c241bc..55d09f594cd14 100644
---- a/include/linux/io_uring.h
-+++ b/include/linux/io_uring.h
-@@ -6,9 +6,9 @@
- #include <linux/xarray.h>
- 
- #if defined(CONFIG_IO_URING)
--struct sock *io_uring_get_socket(struct file *file);
- void __io_uring_cancel(bool cancel_all);
- void __io_uring_free(struct task_struct *tsk);
-+bool io_is_uring_fops(struct file *file);
- 
- static inline void io_uring_files_cancel(void)
- {
-@@ -26,10 +26,6 @@ static inline void io_uring_free(struct task_struct *tsk)
- 		__io_uring_free(tsk);
- }
- #else
--static inline struct sock *io_uring_get_socket(struct file *file)
--{
--	return NULL;
--}
- static inline void io_uring_task_cancel(void)
- {
- }
-@@ -39,6 +35,10 @@ static inline void io_uring_files_cancel(void)
- static inline void io_uring_free(struct task_struct *tsk)
- {
- }
-+static inline bool io_is_uring_fops(struct file *file)
-+{
-+	return false;
-+}
- #endif
- 
- #endif
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 936abc6ee450c..a80c808d3a0ef 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -1113,19 +1113,6 @@ static struct kmem_cache *req_cachep;
- 
- static const struct file_operations io_uring_fops;
- 
--struct sock *io_uring_get_socket(struct file *file)
--{
--#if defined(CONFIG_UNIX)
--	if (file->f_op == &io_uring_fops) {
--		struct io_ring_ctx *ctx = file->private_data;
--
--		return ctx->ring_sock->sk;
--	}
--#endif
--	return NULL;
--}
--EXPORT_SYMBOL(io_uring_get_socket);
--
- static inline void io_tw_lock(struct io_ring_ctx *ctx, bool *locked)
- {
- 	if (!*locked) {
-@@ -10275,6 +10262,11 @@ static const struct file_operations io_uring_fops = {
- #endif
- };
- 
-+bool io_is_uring_fops(struct file *file)
-+{
-+	return file->f_op == &io_uring_fops;
-+}
-+
- static int io_allocate_scq_urings(struct io_ring_ctx *ctx,
- 				  struct io_uring_params *p)
- {
-diff --git a/net/core/scm.c b/net/core/scm.c
-index 3c7f160720d34..d09849cb60f08 100644
---- a/net/core/scm.c
-+++ b/net/core/scm.c
-@@ -105,7 +105,7 @@ static int scm_fp_copy(struct cmsghdr *cmsg, struct scm_fp_list **fplp)
- 		if (fd < 0 || !(file = fget_raw(fd)))
- 			return -EBADF;
- 		/* don't allow io_uring files */
--		if (io_uring_get_socket(file)) {
-+		if (io_is_uring_fops(file)) {
- 			fput(file);
- 			return -EINVAL;
- 		}
-diff --git a/net/unix/scm.c b/net/unix/scm.c
-index e8e2a00bb0f58..d1048b4c2baaf 100644
---- a/net/unix/scm.c
-+++ b/net/unix/scm.c
-@@ -34,10 +34,8 @@ struct sock *unix_get_socket(struct file *filp)
- 		/* PF_UNIX ? */
- 		if (s && sock->ops && sock->ops->family == PF_UNIX)
- 			u_sock = s;
--	} else {
--		/* Could be an io_uring instance */
--		u_sock = io_uring_get_socket(filp);
- 	}
-+
- 	return u_sock;
- }
- EXPORT_SYMBOL(unix_get_socket);
+diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
+index 04457cbed5b4e..5db63ef33f1a2 100644
+--- a/sound/soc/codecs/rt5645.c
++++ b/sound/soc/codecs/rt5645.c
+@@ -3772,6 +3772,16 @@ static const struct dmi_system_id dmi_platform_data[] = {
+ 		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+ 		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+ 		  DMI_EXACT_MATCH(DMI_BOARD_VERSION, "Default string"),
++		  /*
++		   * Above strings are too generic, LattePanda BIOS versions for
++		   * all 4 hw revisions are:
++		   * DF-BI-7-S70CR100-*
++		   * DF-BI-7-S70CR110-*
++		   * DF-BI-7-S70CR200-*
++		   * LP-BS-7-S70CR700-*
++		   * Do a partial match for S70CR to avoid false positive matches.
++		   */
++		  DMI_MATCH(DMI_BIOS_VERSION, "S70CR"),
+ 		},
+ 		.driver_data = (void *)&lattepanda_board_platform_data,
+ 	},
 -- 
 2.43.0
 
