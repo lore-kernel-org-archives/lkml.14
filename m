@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552E7282A60;
-	Sun, 24 Mar 2024 23:42:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D15282A84;
+	Sun, 24 Mar 2024 23:42:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323738; cv=none; b=ITMem/HVdnKFyTabE9hM3kA6CymLSzOrzlhgfHZFfEqT+XEhWK/KN5Iasi4FJigIZLxTNFAHGfl5p6JPDPBW/0xLFQd7C4dVIKqh1fRfO8zmRPTuiLMMf0SKpcsie7IHwSFj2Xhk30pPnPd7u9wFMz6fzO7e8bFguHrZrEgaIHo=
+	t=1711323744; cv=none; b=c944qTBnavsqgnHZjrs03THp0g1xFkTR6aWPaqc/5BOKyPRD2KFD9OeueM2unEDwBxoP06M+JijJ5RXrrAUwfLCeCQCwo1FgIisB9SlylBTD9h+JpBKzzl9zTKv5yvkms4/HHFUHCOvKy5pvI6SGoXMJvnyf3MYawWHhRGp/GdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323738; c=relaxed/simple;
-	bh=KM87Xwe8+UKkpGiWc+ZVcMH17sbsmgKLsPwheUARK3g=;
+	s=arc-20240116; t=1711323744; c=relaxed/simple;
+	bh=hHsHjQUDMUNwTrq8KfLKMh80GfvG17A8FJ8f8Y0O8Us=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AtH+bUyw5nlDlNcVsOqYXHhqyjCcOjcaacR8e7gQoQ1huaIgUecA0MUryIIAD06XPwXjDlGTkDmJkB+U6tm+3ROc1IoTF10dmowtWcRlJb57pU99wFboL17OzB0V8h/YPq6aZJkib1LvfErZiKBqSQxPutn6WpRCIMCh95U11ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sFCzHHe2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cWb8+IWhJ3sT2wgbWPLUw81+9g5/pH9wp8DQn0+jqrUD/7b7Fm62gDOuNFuGQaiX42ohz/4kDQwMtPDywsGf6tm1Jsz5KP6XSQsOGtWUc5hkK7cRH0U5Z7cS/hMV9mc6zADaeBnEw2089agK1CelY0Sqn7JXuf2OStOL6/K4iWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r9J2Qm4y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sFCzHHe2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BE87C43399;
-	Sun, 24 Mar 2024 23:42:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r9J2Qm4y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB2A1C43330;
+	Sun, 24 Mar 2024 23:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323737;
-	bh=KM87Xwe8+UKkpGiWc+ZVcMH17sbsmgKLsPwheUARK3g=;
+	s=k20201202; t=1711323743;
+	bh=hHsHjQUDMUNwTrq8KfLKMh80GfvG17A8FJ8f8Y0O8Us=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sFCzHHe2fIairCOZEMwh8LSFWRuTtz84hJxz7HSSYVdT4unrj1/KDGIk8OERFB7dq
-	 PHz358rPm2Oj7WJQ0EPGWWtOrn8NCuoLHukSU6oB3H3WTRTWV1Zlz+VKQm4rV+j+N1
-	 ZZdYETq1Mh4VYeApslFjYdwgBTzvyjWeoxO+vjzvGV3xZtqabwb4nVcAngOVZinuZH
-	 6Duiugh65D4gQcOjfjmjU5rb/QiJwmc6LMTkgObk4VrKZy9zzosonTn0VC8UZbK68+
-	 MzimEjfQe7uXREX7i6WNk/EL9DuQgeIkOY+coKqJncBsz7vWodtKTzHYSJRXOYvUrY
-	 878Mel1jAr6vA==
+	b=r9J2Qm4y+mSojYLrQ68OvSe4dHma3U6AlgmfV14ktQHugjwDlWnLfFFjT8eebl/w1
+	 XFeGj10/YlBMZU+BjvxY2AIay0E5PrPbQ000nCubZkyjTRmbX5fmpGBsbixuV9CSML
+	 b/M0au2lsk3BWWrRj3hmxusHtcUyGzblqtIMSZvQ6zc+4aWDQjYBeMWJoKxfzi28w0
+	 5Lb40Eq2f+FgpenmTDmZqSLaHtPxbzMB/wUsuNIBMnJjWtUSWgXY3yL0EwbhEPhmxe
+	 3wukfn9Hu5jTNMXSpcU3/VATvwRip9dPQzdg5wQZNMYd+Ty/YqqUo+M3kcLbPLT3Z/
+	 PsyS07pg6NQLg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ming Lei <ming.lei@redhat.com>,
-	Patrick Plenefisch <simonpatp@gmail.com>,
-	Mike Snitzer <snitzer@kernel.org>,
+Cc: Alex Bee <knaerzche@gmail.com>,
+	Zheng Yang <zhengyang@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 111/238] dm raid: fix false positive for requeue needed during reshape
-Date: Sun, 24 Mar 2024 19:38:19 -0400
-Message-ID: <20240324234027.1354210-112-sashal@kernel.org>
+Subject: [PATCH 5.10 118/238] drm/rockchip: inno_hdmi: Fix video timing
+Date: Sun, 24 Mar 2024 19:38:26 -0400
+Message-ID: <20240324234027.1354210-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,44 +49,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Alex Bee <knaerzche@gmail.com>
 
-[ Upstream commit b25b8f4b8ecef0f48c05f0c3572daeabefe16526 ]
+[ Upstream commit 47a145c03484d33e65d773169d5ca1b9fe2a492e ]
 
-An empty flush doesn't have a payload, so it should never be looked at
-when considering to possibly requeue a bio for the case when a reshape
-is in progress.
+The controller wants the difference between *total and *sync_start in the
+HDMI_VIDEO_EXT_*DELAY registers. Otherwise the signal is very unstable for
+certain non-VIC modes. See downstream commit [0].
 
-Fixes: 9dbd1aa3a81c ("dm raid: add reshaping support to the target")
-Reported-by: Patrick Plenefisch <simonpatp@gmail.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+[0] https://github.com/rockchip-linux/kernel/commit/8eb559f2502c
+
+Fixes: 412d4ae6b7a5 ("drm/rockchip: hdmi: add Innosilicon HDMI support")
+Co-developed-by: Zheng Yang <zhengyang@rock-chips.com>
+Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231222174220.55249-4-knaerzche@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-raid.c | 4 ++--
+ drivers/gpu/drm/rockchip/inno_hdmi.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-index 140bdf2a6ee11..e523ecdf947f4 100644
---- a/drivers/md/dm-raid.c
-+++ b/drivers/md/dm-raid.c
-@@ -3329,14 +3329,14 @@ static int raid_map(struct dm_target *ti, struct bio *bio)
- 	struct mddev *mddev = &rs->md;
+diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
+index 78120da5e63aa..27540d308ccb9 100644
+--- a/drivers/gpu/drm/rockchip/inno_hdmi.c
++++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
+@@ -402,7 +402,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_L, value & 0xFF);
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_H, (value >> 8) & 0xFF);
  
- 	/*
--	 * If we're reshaping to add disk(s)), ti->len and
-+	 * If we're reshaping to add disk(s), ti->len and
- 	 * mddev->array_sectors will differ during the process
- 	 * (ti->len > mddev->array_sectors), so we have to requeue
- 	 * bios with addresses > mddev->array_sectors here or
- 	 * there will occur accesses past EOD of the component
- 	 * data images thus erroring the raid set.
- 	 */
--	if (unlikely(bio_end_sector(bio) > mddev->array_sectors))
-+	if (unlikely(bio_has_data(bio) && bio_end_sector(bio) > mddev->array_sectors))
- 		return DM_MAPIO_REQUEUE;
+-	value = mode->hsync_start - mode->hdisplay;
++	value = mode->htotal - mode->hsync_start;
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_L, value & 0xFF);
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_H, (value >> 8) & 0xFF);
  
- 	md_handle_request(mddev, bio);
+@@ -417,7 +417,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
+ 	value = mode->vtotal - mode->vdisplay;
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VBLANK, value & 0xFF);
+ 
+-	value = mode->vsync_start - mode->vdisplay;
++	value = mode->vtotal - mode->vsync_start;
+ 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VDELAY, value & 0xFF);
+ 
+ 	value = mode->vsync_end - mode->vsync_start;
 -- 
 2.43.0
 
