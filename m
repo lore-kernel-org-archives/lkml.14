@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3AD1E4A31;
-	Sun, 24 Mar 2024 23:01:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B661E5F79;
+	Sun, 24 Mar 2024 23:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321283; cv=none; b=HPl7TrKXxj4DG8fW06gugANmHOyY8CJfRNRblFDY6WM4/epllFr5J42j5mCwt0QBlbnPT+mrcfjq13zrT10kPyxXt6GcEHCWtE2jVWteOSIOvQXVl9UulXMDggzuVlWq5xJZ+WK6Sqb4s3/Ltw3qZHWiCl8YDLJ2Iq7YWe5FZuw=
+	t=1711321299; cv=none; b=BXw8tWsi5A59ajoDQQ/LkxhfGkMBDOYdh1P/LTgqh3qfjf/l9hE6M0tJKTcroBD4EpIeoFnlzctX+gN5W1k6nU+/jkwloZGN6KtRGAudo67QXGSuMz2ypmx/6nB37CMreWY9ZGv5Sa4UPOFr2XeIHV7KAy8+uAVICh2LnLE0yTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321283; c=relaxed/simple;
-	bh=8z2nE/zW8rE3KsAFpVlPxAcg/pD53I/rou9MThQ9TEU=;
+	s=arc-20240116; t=1711321299; c=relaxed/simple;
+	bh=OutfAaxHplxN/6QYJB+BYOmAYda3+2Wj95CgSbf2Z1Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O462WYpW5/smGdy6Tk/v3psNBtMR4zT0XvYkZ+tFiCdh0EghCk0Q4MS/VAyCoIRLKZ34/c/+Vzo6Vl5UNk0W+LN49a/i6sara3BECEJPjhvBh+PJ8x7clgd+Frw7tjr5qMlI+V8D1OhEkFMQQ/eGsf2/MOoWvopbA7JPrfBg7OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fztzV6lr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XtwKDdEAhI7Mj7YxvhlKvY+1o1Z18wuSyzxyr60VMitRn2nd0v3TJQY3K7FuINFaDinRRFKe/kGFVZw/cPa03lxeez0oIP1+I9nzl9pHk4vUqNd0Oa/rFyAuHJOb32QWuoFOmWPJKlb4opDOj0igfKNpab8Zbxv+btDQ802f7ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oiSxFimE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fztzV6lr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C017FC43390;
-	Sun, 24 Mar 2024 23:01:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oiSxFimE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D1C7C433F1;
+	Sun, 24 Mar 2024 23:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321282;
-	bh=8z2nE/zW8rE3KsAFpVlPxAcg/pD53I/rou9MThQ9TEU=;
+	s=k20201202; t=1711321297;
+	bh=OutfAaxHplxN/6QYJB+BYOmAYda3+2Wj95CgSbf2Z1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fztzV6lrstsZa0aJQ3iVnQCmcnuQtW4ZablI0T4RRDv41eATEaigby51AUNwEeriG
-	 UfvroCzLhW8D3VBlEW3BpwWHM723tC920ZcPBKjfl6T80K1yC3tollCD5DrUcP6SAz
-	 6myca5IIUCKSRl/+Pgj19RVBgwHxLXLJY8/U0Fj/DBtEkQp/ZBUIT08dMrZhkHdpMq
-	 735nA9bPfQ5igRlZYubd9IrMIwCaOgjKoBPdIF8D108xY2Luzj+ImJaY404Z6eWB5g
-	 WfivaBvP7ACBwAccOrf4cfmUsXzJ3b6crxowlnoCAbCkGQDLJkDxAvQFd/yVuwyz73
-	 sif5u3vadTI7Q==
+	b=oiSxFimE7PlITkUW3jxIL/Da4Jp0ZlQpxprJSC//1HbGe2LxYRtthEVytc2+Wi/+1
+	 ZoO2ktxC1f3wG9dzKXQhGGZvGiyzlMA7WO5ch7R88g9Xp27Qdp6ZohlUX3cPYha7p3
+	 C3PCKENd4Uv4QBe4JxSeoKuHNkkkdTK8pucDdkFD8LV3k5beIC961FnbtoysoSVhDR
+	 Qjx4AoJTcJCKyT8CAIYftcdwV0q2A3gAM6d84iz4l04z3fpFir2rY6HUsh7NWCPIJT
+	 YaryaFy2BxkLFhfjkkRpITw+eqTVmsv/MwVfOA6WVSsqMPb7QwqcAFJS2XJsIZ2Ia7
+	 uKnL0Vp3AJKXA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Mark Brown <broonie@kernel.org>,
+	Doug Anderson <dianders@chromium.org>,
+	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 004/638] soc: qcom: pmic_glink_altmode: fix drm bridge use-after-free
-Date: Sun, 24 Mar 2024 18:50:41 -0400
-Message-ID: <20240324230116.1348576-5-sashal@kernel.org>
+Subject: [PATCH 6.6 020/638] arm64/sve: Lower the maximum allocation for the SVE ptrace regset
+Date: Sun, 24 Mar 2024 18:50:57 -0400
+Message-ID: <20240324230116.1348576-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,109 +49,97 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Johan Hovold <johan+linaro@kernel.org>
+From: Mark Brown <broonie@kernel.org>
 
-commit b979f2d50a099f3402418d7ff5f26c3952fb08bb upstream.
+[ Upstream commit 2813926261e436d33bc74486b51cce60b76edf78 ]
 
-A recent DRM series purporting to simplify support for "transparent
-bridges" and handling of probe deferrals ironically exposed a
-use-after-free issue on pmic_glink_altmode probe deferral.
+Doug Anderson observed that ChromeOS crashes are being reported which
+include failing allocations of order 7 during core dumps due to ptrace
+allocating storage for regsets:
 
-This has manifested itself as the display subsystem occasionally failing
-to initialise and NULL-pointer dereferences during boot of machines like
-the Lenovo ThinkPad X13s.
+  chrome: page allocation failure: order:7,
+          mode:0x40dc0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO),
+          nodemask=(null),cpuset=urgent,mems_allowed=0
+   ...
+  regset_get_alloc+0x1c/0x28
+  elf_core_dump+0x3d8/0xd8c
+  do_coredump+0xeb8/0x1378
 
-Specifically, the dp-hpd bridge is currently registered before all
-resources have been acquired which means that it can also be
-deregistered on probe deferrals.
+with further investigation showing that this is:
 
-In the meantime there is a race window where the new aux bridge driver
-(or PHY driver previously) may have looked up the dp-hpd bridge and
-stored a (non-reference-counted) pointer to the bridge which is about to
-be deallocated.
+   [   66.957385] DOUG: Allocating 279584 bytes
 
-When the display controller is later initialised, this triggers a
-use-after-free when attaching the bridges:
+which is the maximum size of the SVE regset. As Doug observes it is not
+entirely surprising that such a large allocation of contiguous memory might
+fail on a long running system.
 
-	dp -> aux -> dp-hpd (freed)
+The SVE regset is currently sized to hold SVE registers with a VQ of
+SVE_VQ_MAX which is 512, substantially more than the architectural maximum
+of 16 which we might see even in a system emulating the limits of the
+architecture. Since we don't expose the size we tell the regset core
+externally let's define ARCH_SVE_VQ_MAX with the actual architectural
+maximum and use that for the regset, we'll still overallocate most of the
+time but much less so which will be helpful even if the core is fixed to
+not require contiguous allocations.
 
-which may, for example, result in the freed bridge failing to attach:
+Specify ARCH_SVE_VQ_MAX in terms of the maximum value that can be written
+into ZCR_ELx.LEN (where this is set in the hardware). For consistency
+update the maximum SME vector length to be specified in the same style
+while we are at it.
 
-	[drm:drm_bridge_attach [drm]] *ERROR* failed to attach bridge /soc@0/phy@88eb000 to encoder TMDS-31: -16
+We could also teach the ptrace core about runtime discoverable regset sizes
+but that would be a more invasive change and this is being observed in
+practical systems.
 
-or a NULL-pointer dereference:
-
-	Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-	...
-	Call trace:
-	  drm_bridge_attach+0x70/0x1a8 [drm]
-	  drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
-	  drm_bridge_attach+0x80/0x1a8 [drm]
-	  dp_bridge_init+0xa8/0x15c [msm]
-	  msm_dp_modeset_init+0x28/0xc4 [msm]
-
-The DRM bridge implementation is clearly fragile and implicitly built on
-the assumption that bridges may never go away. In this case, the fix is
-to move the bridge registration in the pmic_glink_altmode driver to
-after all resources have been looked up.
-
-Incidentally, with the new dp-hpd bridge implementation, which registers
-child devices, this is also a requirement due to a long-standing issue
-in driver core that can otherwise lead to a probe deferral loop (see
-commit fbc35b45f9f6 ("Add documentation on meaning of -EPROBE_DEFER")).
-
-[DB: slightly fixed commit message by adding the word 'commit']
-Fixes: 080b4e24852b ("soc: qcom: pmic_glink: Introduce altmode support")
-Fixes: 2bcca96abfbf ("soc: qcom: pmic-glink: switch to DRM_AUX_HPD_BRIDGE")
-Cc: <stable@vger.kernel.org>      # 6.3
-Cc: Bjorn Andersson <andersson@kernel.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240217150228.5788-4-johan+linaro@kernel.org
-[ johan: backport to 6.7 which does not have DRM aux bridge ]
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Reported-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20240213-arm64-sve-ptrace-regset-size-v2-1-c7600ca74b9b@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/pmic_glink_altmode.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/arm64/include/asm/fpsimd.h | 12 ++++++------
+ arch/arm64/kernel/ptrace.c      |  3 ++-
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/soc/qcom/pmic_glink_altmode.c b/drivers/soc/qcom/pmic_glink_altmode.c
-index 9b0000b5f064c..a35df66bb07b5 100644
---- a/drivers/soc/qcom/pmic_glink_altmode.c
-+++ b/drivers/soc/qcom/pmic_glink_altmode.c
-@@ -469,12 +469,6 @@ static int pmic_glink_altmode_probe(struct auxiliary_device *adev,
- 		alt_port->bridge.ops = DRM_BRIDGE_OP_HPD;
- 		alt_port->bridge.type = DRM_MODE_CONNECTOR_DisplayPort;
+diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
+index b54506d707380..7415c63b41874 100644
+--- a/arch/arm64/include/asm/fpsimd.h
++++ b/arch/arm64/include/asm/fpsimd.h
+@@ -36,13 +36,13 @@
+  * When we defined the maximum SVE vector length we defined the ABI so
+  * that the maximum vector length included all the reserved for future
+  * expansion bits in ZCR rather than those just currently defined by
+- * the architecture. While SME follows a similar pattern the fact that
+- * it includes a square matrix means that any allocations that attempt
+- * to cover the maximum potential vector length (such as happen with
+- * the regset used for ptrace) end up being extremely large. Define
+- * the much lower actual limit for use in such situations.
++ * the architecture.  Using this length to allocate worst size buffers
++ * results in excessively large allocations, and this effect is even
++ * more pronounced for SME due to ZA.  Define more suitable VLs for
++ * these situations.
+  */
+-#define SME_VQ_MAX	16
++#define ARCH_SVE_VQ_MAX ((ZCR_ELx_LEN_MASK >> ZCR_ELx_LEN_SHIFT) + 1)
++#define SME_VQ_MAX	((SMCR_ELx_LEN_MASK >> SMCR_ELx_LEN_SHIFT) + 1)
  
--		ret = devm_drm_bridge_add(dev, &alt_port->bridge);
--		if (ret) {
--			fwnode_handle_put(fwnode);
--			return ret;
--		}
--
- 		alt_port->dp_alt.svid = USB_TYPEC_DP_SID;
- 		alt_port->dp_alt.mode = USB_TYPEC_DP_MODE;
- 		alt_port->dp_alt.active = 1;
-@@ -525,6 +519,16 @@ static int pmic_glink_altmode_probe(struct auxiliary_device *adev,
- 		}
- 	}
+ struct task_struct;
  
-+	for (port = 0; port < ARRAY_SIZE(altmode->ports); port++) {
-+		alt_port = &altmode->ports[port];
-+		if (!alt_port->altmode)
-+			continue;
-+
-+		ret = devm_drm_bridge_add(dev, &alt_port->bridge);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	altmode->client = devm_pmic_glink_register_client(dev,
- 							  altmode->owner_id,
- 							  pmic_glink_altmode_callback,
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index b3f64144b5cd9..c94c0f8c9a737 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1499,7 +1499,8 @@ static const struct user_regset aarch64_regsets[] = {
+ #ifdef CONFIG_ARM64_SVE
+ 	[REGSET_SVE] = { /* Scalable Vector Extension */
+ 		.core_note_type = NT_ARM_SVE,
+-		.n = DIV_ROUND_UP(SVE_PT_SIZE(SVE_VQ_MAX, SVE_PT_REGS_SVE),
++		.n = DIV_ROUND_UP(SVE_PT_SIZE(ARCH_SVE_VQ_MAX,
++					      SVE_PT_REGS_SVE),
+ 				  SVE_VQ_BYTES),
+ 		.size = SVE_VQ_BYTES,
+ 		.align = SVE_VQ_BYTES,
 -- 
 2.43.0
 
