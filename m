@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79F717A36A;
-	Sun, 24 Mar 2024 23:40:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F48179FBD;
+	Sun, 24 Mar 2024 23:40:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323652; cv=none; b=Iru3fVdOBRZvgwJ0+8F1Inbjt1+Cju3FfGD/ZNGYzipSIWBRcSRlcTlJTAE7O9zUqh6QB5E8+lgbz4lDUCuhJZKcRN+twjkrk2zJInxUTeENQZ0DnWKvPS4PUafFsm61s7JQYtPuEYITox5/X0DjJum/9ySY7yQJqIGvB61/yIw=
+	t=1711323649; cv=none; b=fK9HfEEAdsAzfKhw4LikKtLBIc5Dv/6CdI6Aiyg3cvCt9QwZfLYjHP1HBmDLX9nD2jXW5tHqj2wJ4HmxNuMGpsYijLKXjzJ+Ek1S4Z/+Z1RR8xvRuZ7EaXcU1E9832RovSd/xpsTUKZtJyTOTxgPkuTVP14kw+xOrceQoibijv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323652; c=relaxed/simple;
-	bh=YEz4yne20Y+PXJLPWPogO6ruSXDx1kKR8hKUaO0QDu8=;
+	s=arc-20240116; t=1711323649; c=relaxed/simple;
+	bh=Du80a8081lcmLcIyq1r2JOmgELaCBxEoYXMTEtF6bGQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PqY0k39/BYLUVpwRCuXJadcDYiu12XzZe/Uafn8KzhfzqqrCoqwsIe9oDeXAOlVF9BY3R2LoxHQ2axGjhG1MJQT/uiKxJVMq170Z6W9uCEHoXcGgLU0b7bVzYhccDst8obXtg/h941V7/46sBH+MeLAvOK3I3BK7h//VYR7JbU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUO3XcNI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=J7WMEBdDhZrXZUdUq8CpYoOE/jdLCD4pJkrgWkPufn88mzAxIkKeA3oL3sys9AnuUFGL5zPBGqbSb9EjUcEcmDwu0KtXmdhWYWGhhVsHVr8UVt46QHI4g+Yz9hk+hm2MvNtCMpIba8MG/qaOThFIiXNzr0VlAAaORtmEiecakpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kXZL/o7I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUO3XcNI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC833C433C7;
-	Sun, 24 Mar 2024 23:40:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kXZL/o7I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D1A2C433C7;
+	Sun, 24 Mar 2024 23:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323652;
-	bh=YEz4yne20Y+PXJLPWPogO6ruSXDx1kKR8hKUaO0QDu8=;
+	s=k20201202; t=1711323649;
+	bh=Du80a8081lcmLcIyq1r2JOmgELaCBxEoYXMTEtF6bGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CUO3XcNI6fEqHqNlbPCqkke34sA+455eUNfFW766WWkTXoRwaNpkjSKuqZo9MA75o
-	 NRLBIDRJrrDn7x4LdeeG7lKtkwN1x/qYsHCqXJ01q5mMZJNQbacF9AM0ttyxQM2fBA
-	 H/yO+GpfODctYGkxRBpRHqV5VFdUYljPhrusn4pzWRy2+ohOpxK66kiOjfsoWmDQx/
-	 7BXTP67wu8ub9EGRA1gz2KKmwwlQT0TkBqp679VxONpzscajPRllMLevA7krZafzDe
-	 1c8ClYlgXVoB5MRGL0ioqvD6lHTfQ5FM0vM5HckMlOw3faoyjMfCax/9wtmre2fvZa
-	 BKLXX4OOmvn3Q==
+	b=kXZL/o7IT25/uBFUTxGGnKVy1i7IIJO/iGfzogMkVm9W5RG/V8mC5rcXydJSOCKce
+	 DrsvMU2z2iHm5ZLvaSaph4UsLEEqNetSX2+7LUUzrWRKx0pjVgTFHwVnUUNAIo8UvK
+	 SzZWUN9OM7ljQCArGpalsIp0+rWXPdl8McjjxAhmmmsxSeSAY1eN7JlSRmK47UKLwA
+	 v7JKYatbQTEFzpghkwQAT8ftEgDX9hpwaZBTH+mm0yRFpn9S2x5Ox057QHsOIjFwuw
+	 +lNxWV69WtuBkOCCSrFeMbxIonUMAfv4nvEv9QMeZOnC76o4wdOKGj7AXDZCNOG4/p
+	 m8TRXxNNCDb4A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Cc: Yuxuan Hu <20373622@buaa.edu.cn>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 024/238] Input: gpio_keys_polled - suppress deferred probe error for gpio
-Date: Sun, 24 Mar 2024 19:36:52 -0400
-Message-ID: <20240324234027.1354210-25-sashal@kernel.org>
+Subject: [PATCH 5.10 021/238] Bluetooth: rfcomm: Fix null-ptr-deref in rfcomm_check_security
+Date: Sun, 24 Mar 2024 19:36:49 -0400
+Message-ID: <20240324234027.1354210-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -45,55 +44,60 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Yuxuan Hu <20373622@buaa.edu.cn>
 
-[ Upstream commit 963465a33141d0d52338e77f80fe543d2c9dc053 ]
+[ Upstream commit 2535b848fa0f42ddff3e5255cf5e742c9b77bb26 ]
 
-On a PC Engines APU our admins are faced with:
+During our fuzz testing of the connection and disconnection process at the
+RFCOMM layer, we discovered this bug. By comparing the packets from a
+normal connection and disconnection process with the testcase that
+triggered a KASAN report. We analyzed the cause of this bug as follows:
 
-	$ dmesg | grep -c "gpio-keys-polled gpio-keys-polled: unable to claim gpio 0, err=-517"
-	261
+1. In the packets captured during a normal connection, the host sends a
+`Read Encryption Key Size` type of `HCI_CMD` packet
+(Command Opcode: 0x1408) to the controller to inquire the length of
+encryption key.After receiving this packet, the controller immediately
+replies with a Command Completepacket (Event Code: 0x0e) to return the
+Encryption Key Size.
 
-Such a message always appears when e.g. a new USB device is plugged in.
+2. In our fuzz test case, the timing of the controller's response to this
+packet was delayed to an unexpected point: after the RFCOMM and L2CAP
+layers had disconnected but before the HCI layer had disconnected.
 
-Suppress this message which considerably clutters the kernel log for
-EPROBE_DEFER (i.e. -517).
+3. After receiving the Encryption Key Size Response at the time described
+in point 2, the host still called the rfcomm_check_security function.
+However, by this time `struct l2cap_conn *conn = l2cap_pi(sk)->chan->conn;`
+had already been released, and when the function executed
+`return hci_conn_security(conn->hcon, d->sec_level, auth_type, d->out);`,
+specifically when accessing `conn->hcon`, a null-ptr-deref error occurred.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20240305101042.10953-2-u.kleine-koenig@pengutronix.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To fix this bug, check if `sk->sk_state` is BT_CLOSED before calling
+rfcomm_recv_frame in rfcomm_process_rx.
+
+Signed-off-by: Yuxuan Hu <20373622@buaa.edu.cn>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/gpio_keys_polled.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ net/bluetooth/rfcomm/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-index c3937d2fc7446..a0f9978c68f55 100644
---- a/drivers/input/keyboard/gpio_keys_polled.c
-+++ b/drivers/input/keyboard/gpio_keys_polled.c
-@@ -319,12 +319,10 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
- 
- 			error = devm_gpio_request_one(dev, button->gpio,
- 					flags, button->desc ? : DRV_NAME);
--			if (error) {
--				dev_err(dev,
--					"unable to claim gpio %u, err=%d\n",
--					button->gpio, error);
--				return error;
--			}
-+			if (error)
-+				return dev_err_probe(dev, error,
-+						     "unable to claim gpio %u\n",
-+						     button->gpio);
- 
- 			bdata->gpiod = gpio_to_desc(button->gpio);
- 			if (!bdata->gpiod) {
+diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
+index 8d6fce9005bdd..4f54c7df3a94f 100644
+--- a/net/bluetooth/rfcomm/core.c
++++ b/net/bluetooth/rfcomm/core.c
+@@ -1937,7 +1937,7 @@ static struct rfcomm_session *rfcomm_process_rx(struct rfcomm_session *s)
+ 	/* Get data directly from socket receive queue without copying it. */
+ 	while ((skb = skb_dequeue(&sk->sk_receive_queue))) {
+ 		skb_orphan(skb);
+-		if (!skb_linearize(skb)) {
++		if (!skb_linearize(skb) && sk->sk_state != BT_CLOSED) {
+ 			s = rfcomm_recv_frame(s, skb);
+ 			if (!s)
+ 				break;
 -- 
 2.43.0
 
