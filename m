@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779BF17EB63;
-	Sun, 24 Mar 2024 23:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E9D17EB67;
+	Sun, 24 Mar 2024 23:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324004; cv=none; b=t95S/rLaHqZvhJHIqrQM41OZ/iQbGbK2nGz8yYgg/7dk9v5XGPHejT1Auvklk6NxpOCKxPWLPbcmzY6qj+EsQ5Tp8aRNHVFIBkrLxeJoFece3MqHEyKpTwnpSVJWSlUar0wgiKgu03vFgqXupPsGld/1RNstt2g6ldnMwdb/O1g=
+	t=1711324005; cv=none; b=YEu+dCHeXIlWeDJGD4QHKlNf+9VSgpG8HxSn5TUnAzOVEUNJU4rJQJEYmvSV1wNZvHCzt3st9jUNnFoM09rR5PwPQClqLhGDiHk8ch16onanr/KoyUFqd56rdk/ETqjg7IfiODdBEU5q+s0bxzQ68WD+pOyrutQjMO/CB1j2IF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324004; c=relaxed/simple;
-	bh=GFFbQlzh6HC4SDDh95NsXiORtcwm6elGZF0AA+G9MdQ=;
+	s=arc-20240116; t=1711324005; c=relaxed/simple;
+	bh=KXobGiOoIaXzXOXJJJNhZJEIoAnZhnUZnhGA9Ii+OtU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KV9z4aDI1XWt8N6ua7SaJS8Y9COtLapw0dRWdByOgQ3IOodMgwGo/U47ozpAMbxkYf5tPAnSzot9ib/12FsUPB9GJ+DUsoVcroyaQZGArLk8LuYkdQONs8SG48uOQ7BOI613SsBdF2dIAG05FKDE4X0Ioyp2ckHP+h7pXkFTJQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnBZ3zVA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tp/W/GQkKophMI1VmVsDv62Fjl/i/+ouUApNMKFmYJaOkCsA5RLNT3IrGtJh1dOZ0AE9QRoDVexdKbOmnEEABP5tSRl5EFWwtazSVIThwZRA1lvZl5lJABB4+6obs6uvJNdj4CBmWt7VfJdwUHLRZbdsYI1X1AnbRg79SXdHscw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VoGDuPqC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnBZ3zVA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401BFC43394;
-	Sun, 24 Mar 2024 23:46:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VoGDuPqC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22FC0C43390;
+	Sun, 24 Mar 2024 23:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324003;
-	bh=GFFbQlzh6HC4SDDh95NsXiORtcwm6elGZF0AA+G9MdQ=;
+	s=k20201202; t=1711324004;
+	bh=KXobGiOoIaXzXOXJJJNhZJEIoAnZhnUZnhGA9Ii+OtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AnBZ3zVAhG+M6fEuOJnlP4PKU52wHFlAhRxTFXCy7jdjqTOX20MJVttveydTiKNAg
-	 tTr8dWzKftpMieEhkzEHO0VbTcUJPtoR87UFZdMuosUhgNzAibQkF4KU3y45RUKkcS
-	 8s5bR6iP/1UoGfK3alkFXn1xR2bBMEgN6+79mjq7YmQovpyT2H9DEfpwaCfIyypwWK
-	 DqxI6o2Xy9yW1zcacnJft7oosIVZHbJvLKsffZPs+VDw0x7zqZg041IFA9ZB07pR5v
-	 j5wQ5SLmDbu859dAhbIp+OcCvuZfZQt/fpZ5c1lKARX5F29D5N/TyAC0WEOAp6bUxu
-	 ObYEMk5z5clhw==
+	b=VoGDuPqCcvjXN5CRvzn6U0xJGz2xct/SwbRbcf9y2fIySA/sQTDlQ/sWF0Do7TRvN
+	 wF6rNOI4XRCgjzbk22r0Afy3y4D0u/litnBcl98C2xeA0SCn2UvtIBWNSJkvuuZyxK
+	 N+guD7Mj2MrBWZ98GKEiSfu8ncd2uBmcaEVy7PWjfExJfV8Fwtyx5ERAJ9gmerRKv+
+	 ItP7kK7z0Hzkquu0q3RGfu/3QYPpKTaVmhI3upok0XMsYt6M9+fFJFBjbsBwtq5x4b
+	 hbSwsHPHaClBrJH7ysDQFf7Cr2KUuoFHB/2wp53Viu+Ci33JPnKKPJ/d5oelw6Uboz
+	 vL/vXRryNTKAQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Kunwu Chan <chentao@kylinos.cn>,
+	kernel test robot <lkp@intel.com>,
+	Markus Elfring <Markus.Elfring@web.de>,
+	Juergen Gross <jgross@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 003/183] selftests: tls: use exact comparison in recv_partial
-Date: Sun, 24 Mar 2024 19:43:36 -0400
-Message-ID: <20240324234638.1355609-4-sashal@kernel.org>
+Subject: [PATCH 5.4 005/183] x86/xen: Add some null pointer checking to smp.c
+Date: Sun, 24 Mar 2024 19:43:38 -0400
+Message-ID: <20240324234638.1355609-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,42 +50,77 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Kunwu Chan <chentao@kylinos.cn>
 
-[ Upstream commit 49d821064c44cb5ffdf272905236012ea9ce50e3 ]
+[ Upstream commit 3693bb4465e6e32a204a5b86d3ec7e6b9f7e67c2 ]
 
-This exact case was fail for async crypto and we weren't
-catching it.
+kasprintf() returns a pointer to dynamically allocated memory
+which can be NULL upon failure. Ensure the allocation was successful
+by checking the pointer validity.
 
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202401161119.iof6BQsf-lkp@intel.com/
+Suggested-by: Markus Elfring <Markus.Elfring@web.de>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Link: https://lore.kernel.org/r/20240119094948.275390-1-chentao@kylinos.cn
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/tls.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/xen/smp.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
-index 837206dbe5d6e..81bb3cc6704f8 100644
---- a/tools/testing/selftests/net/tls.c
-+++ b/tools/testing/selftests/net/tls.c
-@@ -580,12 +580,12 @@ TEST_F(tls, recv_partial)
+diff --git a/arch/x86/xen/smp.c b/arch/x86/xen/smp.c
+index a1cc855c539c1..a76ba342a6695 100644
+--- a/arch/x86/xen/smp.c
++++ b/arch/x86/xen/smp.c
+@@ -65,6 +65,8 @@ int xen_smp_intr_init(unsigned int cpu)
+ 	char *resched_name, *callfunc_name, *debug_name;
  
- 	memset(recv_mem, 0, sizeof(recv_mem));
- 	EXPECT_EQ(send(self->fd, test_str, send_len, 0), send_len);
--	EXPECT_NE(recv(self->cfd, recv_mem, strlen(test_str_first),
--		       MSG_WAITALL), -1);
-+	EXPECT_EQ(recv(self->cfd, recv_mem, strlen(test_str_first),
-+		       MSG_WAITALL), strlen(test_str_first));
- 	EXPECT_EQ(memcmp(test_str_first, recv_mem, strlen(test_str_first)), 0);
- 	memset(recv_mem, 0, sizeof(recv_mem));
--	EXPECT_NE(recv(self->cfd, recv_mem, strlen(test_str_second),
--		       MSG_WAITALL), -1);
-+	EXPECT_EQ(recv(self->cfd, recv_mem, strlen(test_str_second),
-+		       MSG_WAITALL), strlen(test_str_second));
- 	EXPECT_EQ(memcmp(test_str_second, recv_mem, strlen(test_str_second)),
- 		  0);
- }
+ 	resched_name = kasprintf(GFP_KERNEL, "resched%d", cpu);
++	if (!resched_name)
++		goto fail_mem;
+ 	per_cpu(xen_resched_irq, cpu).name = resched_name;
+ 	rc = bind_ipi_to_irqhandler(XEN_RESCHEDULE_VECTOR,
+ 				    cpu,
+@@ -77,6 +79,8 @@ int xen_smp_intr_init(unsigned int cpu)
+ 	per_cpu(xen_resched_irq, cpu).irq = rc;
+ 
+ 	callfunc_name = kasprintf(GFP_KERNEL, "callfunc%d", cpu);
++	if (!callfunc_name)
++		goto fail_mem;
+ 	per_cpu(xen_callfunc_irq, cpu).name = callfunc_name;
+ 	rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_VECTOR,
+ 				    cpu,
+@@ -90,6 +94,9 @@ int xen_smp_intr_init(unsigned int cpu)
+ 
+ 	if (!xen_fifo_events) {
+ 		debug_name = kasprintf(GFP_KERNEL, "debug%d", cpu);
++		if (!debug_name)
++			goto fail_mem;
++
+ 		per_cpu(xen_debug_irq, cpu).name = debug_name;
+ 		rc = bind_virq_to_irqhandler(VIRQ_DEBUG, cpu,
+ 					     xen_debug_interrupt,
+@@ -101,6 +108,9 @@ int xen_smp_intr_init(unsigned int cpu)
+ 	}
+ 
+ 	callfunc_name = kasprintf(GFP_KERNEL, "callfuncsingle%d", cpu);
++	if (!callfunc_name)
++		goto fail_mem;
++
+ 	per_cpu(xen_callfuncsingle_irq, cpu).name = callfunc_name;
+ 	rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_SINGLE_VECTOR,
+ 				    cpu,
+@@ -114,6 +124,8 @@ int xen_smp_intr_init(unsigned int cpu)
+ 
+ 	return 0;
+ 
++ fail_mem:
++	rc = -ENOMEM;
+  fail:
+ 	xen_smp_intr_free(cpu);
+ 	return rc;
 -- 
 2.43.0
 
