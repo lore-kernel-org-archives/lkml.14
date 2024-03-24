@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B50420DD56;
-	Sun, 24 Mar 2024 23:07:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1249120D5D2;
+	Sun, 24 Mar 2024 23:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321657; cv=none; b=DBuHHcblmmxfs6wy8Cr1Fymkzx90+cKTRCSDU/cWaK9NZUMwtan1t5Dhxgr1f8nHn5Vnsxd7JdRGqQ452SD6TSiIR3JEI4e4tzsQ32FMExqdIt4PtKHAzTjImdSVC+Eqpf5o/SfR6zW0gRfkyNpYJSSUfICioKpkmw4KLZbv8HY=
+	t=1711321649; cv=none; b=kgDQ0bYAKoefGaj5lJGLZds+WIWwiB+8d02F65PZASqPlpCGoRm7BznllfK1RPIfiuModSc0HVo1j2k7NCH9Tj6NRdKYAKEYcYwFVPVI3BYiXxSroHFAlfo23qv7lLeED8T6P1POpsnt8mukl56dmxwvrct2CYIUuBJfEYgsuW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321657; c=relaxed/simple;
-	bh=ScxSW6UgPUsVoztvMsj+KZEAdBvd7VPwubsif2s549w=;
+	s=arc-20240116; t=1711321649; c=relaxed/simple;
+	bh=exBUztv4jQiK9QCdarVk8mleKrG+kqbYAMlkM+o7oTg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XR/03zSpXM3bo5XmzNoXZpjBM5MNAw4HorrlkyVqde7AqRFfzFmx34QSHC1PrGzc6izewjYwKu0gqZK+Ne+Ir8S4CY2up+AHNzihk97x2OQdibaHpWDMDnPoeqyUM8coW18ZVayA74wRrjy5TZmjsqfyg6Hzpttu5uZuwQjJvfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IbZxKwRy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OUcqTdmml+jJrPJfHzqxYX/L6z2zU9khyxDMOeVh7+6Pg3NbxHYRWAMkA8PVtXdQJTProXsfLCEGTXcNAV1KO2t3hZzYYvx1K3lwfJb9IerstfRZoxjE+K7RlyMsj6mINCgGo6ODp55hNhO9WF9xO8mopOm4vUg0LEuHli1p5yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NB2EJCvz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IbZxKwRy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AF91C43394;
-	Sun, 24 Mar 2024 23:07:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NB2EJCvz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23056C433F1;
+	Sun, 24 Mar 2024 23:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321656;
-	bh=ScxSW6UgPUsVoztvMsj+KZEAdBvd7VPwubsif2s549w=;
+	s=k20201202; t=1711321647;
+	bh=exBUztv4jQiK9QCdarVk8mleKrG+kqbYAMlkM+o7oTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IbZxKwRyCBTrQqQYHxNDHJfmqjqI4+6vyZrdkV2HxhciMVGOhO6us9rXp32JSWPP8
-	 dCaNvjz37L74qlCf4o+VWA3t+oFCa2LahM45lyq7EsamWEmKTjxepXFgTBgfUBRLFd
-	 75cPujZY9B6OT1uZzQy8d7ssiag5CL8ZkoCxS0hfwVsty94XDcwII0Hthrluuf7zIH
-	 OMzhv2P8j/BeiuoTBy16uoyQrC73y776QK9153xoA/vrp6gDjqSlhV0Hn6Zi/Z9vkK
-	 eCSsymiM+B1dNy3eRdNJogRVZF5+aX7SNSjpxld4MAKgnyhuzCDkRA2Eg0WT8R6ZT9
-	 WExR1peD+HlMw==
+	b=NB2EJCvzy9jkcPt6MjBOrPoH8RRocFQjFgDsfoCB6LgiUgKlOhUFYOSqKiGtDHjYl
+	 ZrvUbt2Dnqi9POW+V4vmbBZCQlY55oLujI8HX+29EhfF0/ngEE5EtKMkBLYUn7goKa
+	 z79jP5Ylm0kmX4imcR91KhYav+euZDnhjy410+tvs96VtNy4vdUjZ0Y9OwyrfKuG/x
+	 QoYjLe8jQXDx8BcUgTePfqzRrMxX4LEN8B9ozebzpnW/CLgDl5MvhQTtJyiQs52V2o
+	 u+eYU9iZOpRAbQlotJemjBfO/BI2Ia4aCJo+tQiP+ZWs57i1tTe7z2Zh3VI2cxxftx
+	 e5qyzV62eM5rg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
+Cc: Yang Jihong <yangjihong1@huawei.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 385/638] media: edia: dvbdev: fix a use-after-free
-Date: Sun, 24 Mar 2024 18:57:02 -0400
-Message-ID: <20240324230116.1348576-386-sashal@kernel.org>
+Subject: [PATCH 6.6 377/638] perf evsel: Fix duplicate initialization of data->id in evsel__parse_sample()
+Date: Sun, 24 Mar 2024 18:56:54 -0400
+Message-ID: <20240324230116.1348576-378-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,82 +50,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Yang Jihong <yangjihong1@huawei.com>
 
-[ Upstream commit 8c64f4cdf4e6cc5682c52523713af8c39c94e6d5 ]
+[ Upstream commit 4962aec0d684c8edb14574ccd0da53e4926ff834 ]
 
-In dvb_register_device, *pdvbdev is set equal to dvbdev, which is freed
-in several error-handling paths. However, *pdvbdev is not set to NULL
-after dvbdev's deallocation, causing use-after-frees in many places,
-for example, in the following call chain:
+data->id has been initialized at line 2362, remove duplicate initialization.
 
-budget_register
-  |-> dvb_dmxdev_init
-        |-> dvb_register_device
-  |-> dvb_dmxdev_release
-        |-> dvb_unregister_device
-              |-> dvb_remove_device
-                    |-> dvb_device_put
-                          |-> kref_put
-
-When calling dvb_unregister_device, dmxdev->dvbdev (i.e. *pdvbdev in
-dvb_register_device) could point to memory that had been freed in
-dvb_register_device. Thereafter, this pointer is transferred to
-kref_put and triggering a use-after-free.
-
-Link: https://lore.kernel.org/linux-media/20240203134046.3120099-1-alexious@zju.edu.cn
-Fixes: b61901024776 ("V4L/DVB (5244): Dvbdev: fix illegal re-usage of fileoperations struct")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: 3ad31d8a0df2 ("perf evsel: Centralize perf_sample initialization")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240127025756.4041808-1-yangjihong1@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-core/dvbdev.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/util/evsel.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index 49f0eb7d0b9d3..733d0bc4b4cc3 100644
---- a/drivers/media/dvb-core/dvbdev.c
-+++ b/drivers/media/dvb-core/dvbdev.c
-@@ -490,6 +490,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		dvbdevfops = kmemdup(template->fops, sizeof(*dvbdevfops), GFP_KERNEL);
- 		if (!dvbdevfops) {
- 			kfree(dvbdev);
-+			*pdvbdev = NULL;
- 			mutex_unlock(&dvbdev_register_lock);
- 			return -ENOMEM;
- 		}
-@@ -498,6 +499,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		if (!new_node) {
- 			kfree(dvbdevfops);
- 			kfree(dvbdev);
-+			*pdvbdev = NULL;
- 			mutex_unlock(&dvbdev_register_lock);
- 			return -ENOMEM;
- 		}
-@@ -531,6 +533,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		}
- 		list_del(&dvbdev->list_head);
- 		kfree(dvbdev);
-+		*pdvbdev = NULL;
- 		up_write(&minor_rwsem);
- 		mutex_unlock(&dvbdev_register_lock);
- 		return -EINVAL;
-@@ -553,6 +556,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		dvb_media_device_free(dvbdev);
- 		list_del(&dvbdev->list_head);
- 		kfree(dvbdev);
-+		*pdvbdev = NULL;
- 		mutex_unlock(&dvbdev_register_lock);
- 		return ret;
- 	}
-@@ -571,6 +575,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		dvb_media_device_free(dvbdev);
- 		list_del(&dvbdev->list_head);
- 		kfree(dvbdev);
-+		*pdvbdev = NULL;
- 		mutex_unlock(&dvbdev_register_lock);
- 		return PTR_ERR(clsdev);
- 	}
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a8a5ff87cc1f7..6d2b056232f6e 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2366,7 +2366,6 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 	data->period = evsel->core.attr.sample_period;
+ 	data->cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
+ 	data->misc    = event->header.misc;
+-	data->id = -1ULL;
+ 	data->data_src = PERF_MEM_DATA_SRC_NONE;
+ 	data->vcpu = -1;
+ 
 -- 
 2.43.0
 
