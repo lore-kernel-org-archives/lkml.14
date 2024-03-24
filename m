@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094B11442E2;
-	Sun, 24 Mar 2024 22:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1101442EB;
+	Sun, 24 Mar 2024 22:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320653; cv=none; b=SY5KLG9StxC+bmC9UjVo8N+BBajyQmawpkq1SkACmwoYRmWJW43cQPFEETAfJ6F7bRCyVRU4/wHxJTnxPiWRxMqXOn2dJo5BDjsWv6nd5iCDIDtmwa8ftfIpGxDESYFhIHpY8KB1MLUcjmB4jr73hdsWiaf/rnuzTdt+qXhxWQo=
+	t=1711320655; cv=none; b=UOuOu4CXTx42CKxsitBhu77D8yO8gIQEMYGKklkvt4d2T53wK2NuolHnTtWcRVMrd8jIdlT06Kwq3JAyrRFeAThWye1liMUYxMYxEzTqvWBH1t0Ur4w8VXnin2VsNhHrA5w+V3jq1PZLqWSAZws85zs2llFsnh7YO5O9ePKwv80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320653; c=relaxed/simple;
-	bh=ihf/gRh8V3eyFigSVCgEiwUDfiQkJZ0pUrLWekgm6JU=;
+	s=arc-20240116; t=1711320655; c=relaxed/simple;
+	bh=JOG+YyezGeMBbIJgXZ49Ud5Nd6CLwHeZEpDp+srOCHU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BHfoWwd75X/lZP9XvYmbACbusKJ/LzNh/B2IFLEwCPF/Pjmz9BcKeJonSFkOkcb4eXXLSoVm7nz1VcFLgi6TDzuj28ttP3KVF6gJ6UAIq9J4DbyRIGKwjF8/8olVTmyX4g2jkn9gnhk8m320hlVhGT5o2Plqi4vNYkq4RnxsIDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j94uLUFx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=I0A07v3wP5KLauowT8Y0jtNEe9zo3Ifb2iPbu4fCgyTAyu84F/pm0vayDMU1c3AC1ycOnl/KDrJ0CXW1fahULAlNW/2S14kyW5yJku+MRrwBNosbYfIWQ3Mf0fu7cs+PW7IqZYP1c9IkXDS/PQc9b3hIBpOOr1UNstwsRH0RVsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWE4GZOx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j94uLUFx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32916C433A6;
-	Sun, 24 Mar 2024 22:50:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWE4GZOx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A483C433C7;
+	Sun, 24 Mar 2024 22:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320652;
-	bh=ihf/gRh8V3eyFigSVCgEiwUDfiQkJZ0pUrLWekgm6JU=;
+	s=k20201202; t=1711320654;
+	bh=JOG+YyezGeMBbIJgXZ49Ud5Nd6CLwHeZEpDp+srOCHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j94uLUFx7UZ8WM2aGhtqx/RiqBr4g1ZT4fNc7jigbxiqbE+4OJgFN3Yqs0P0BMYkI
-	 zeqENmYJ2nz9iKhy2qiBpOfPxxo5EPQmcMWtuaL53L2RisgKNSLJ3L9CmPoYeIZIe2
-	 w3bIak2gNBkthbBAyAYMdqXpc+Mm7Z2/RZJMG2DAtWAx0REVQ9BOm+gjLe2VlZr7aI
-	 5iBxZoYfo91brAEIW5kaLvTiJQipWlErFJtcrbDhVKU3jKc/9hiyAWac5G3XP8JJDG
-	 rOEfgKcMdB3JNWQOeW4Nykl44+MzH5/4gngz5r6TLQeONHidNoadSD6aI+c5vUJF0t
-	 /hEJazw0gc0ew==
+	b=BWE4GZOx6WTEAEEV8kcL2230572qJgtCagwjQ5JdsTQOJe7Av3NXe7miQzToLfY5V
+	 Nqay4XLFyuC+706rYqBWYKOBgB0lLWjPDZBsbDsmrrHh9fin8MluVveXN53Al9rkvF
+	 ky5wDiDP6uwHhMi/QLnph+wb6Ie2wmFxU0QIoF74HBdMNunxRJTtRSUqJUtkwnPYcx
+	 9Yp6DDiqKp+8jby51wRPNcr6M37ZXTc0WWtBqQd2Sof5hixt/BycjiJGxWmdcsi4Xc
+	 vsJveL/fBrGF/pPc7FktG5fet3U/0Ug0XvFw3n9+LWGhnoaXpAoFfPaz0fZfWKGY2O
+	 dgT58dT0C7NNA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: John Ogness <john.ogness@linutronix.de>,
+	Petr Mladek <pmladek@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 214/713] arm64: dts: qcom: sm6115: declare VLS CLAMP register for USB3 PHY
-Date: Sun, 24 Mar 2024 18:39:00 -0400
-Message-ID: <20240324224720.1345309-215-sashal@kernel.org>
+Subject: [PATCH 6.7 216/713] printk: nbcon: Relocate 32bit seq macros
+Date: Sun, 24 Mar 2024 18:39:02 -0400
+Message-ID: <20240324224720.1345309-217-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,49 +48,154 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+From: John Ogness <john.ogness@linutronix.de>
 
-[ Upstream commit 95d739ed962c9aaa17d77b739606dbdf31879f6e ]
+[ Upstream commit 5b73e706f00f3553e1a4efbb31951ce9fe18f2dc ]
 
-The USB3 PHY on the SM6115 platform doesn't have built-in
-PCS_MISC_CLAMP_ENABLE register. Instead clamping is handled separately
-via the register in the TCSR space. Declare corresponding register.
+The macros __seq_to_nbcon_seq() and __nbcon_seq_to_seq() are
+used to provide support for atomic handling of sequence numbers
+on 32bit systems. Until now this was only used by nbcon.c,
+which is why they were located in nbcon.c and include nbcon in
+the name.
 
-Fixes: 9dd5f6dba729 ("arm64: dts: qcom: sm6115: Add USB SS qmp phy node")
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20240117-usbc-phy-vls-clamp-v2-6-a950c223f10f@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+In a follow-up commit this functionality is also needed by
+printk_ringbuffer. Rather than duplicating the functionality,
+relocate the macros to printk_ringbuffer.h.
+
+Also, since the macros will be no longer nbcon-specific, rename
+them to __u64seq_to_ulseq() and __ulseq_to_u64seq().
+
+This does not result in any functional change.
+
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Link: https://lore.kernel.org/r/20240207134103.1357162-2-john.ogness@linutronix.de
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+Stable-dep-of: 5f72e52ba959 ("printk: ringbuffer: Do not skip non-finalized records with prb_next_seq()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm6115.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ kernel/printk/nbcon.c             | 41 +++----------------------------
+ kernel/printk/printk_ringbuffer.h | 33 +++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+), 37 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm6115.dtsi b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-index 839c603512403..87cbc4e8b1ed5 100644
---- a/arch/arm64/boot/dts/qcom/sm6115.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-@@ -591,6 +591,11 @@ tcsr_mutex: hwlock@340000 {
- 			#hwlock-cells = <1>;
- 		};
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index b96077152f49d..c8093bcc01fe6 100644
+--- a/kernel/printk/nbcon.c
++++ b/kernel/printk/nbcon.c
+@@ -140,39 +140,6 @@ static inline bool nbcon_state_try_cmpxchg(struct console *con, struct nbcon_sta
+ 	return atomic_try_cmpxchg(&ACCESS_PRIVATE(con, nbcon_state), &cur->atom, new->atom);
+ }
  
-+		tcsr_regs: syscon@3c0000 {
-+			compatible = "qcom,sm6115-tcsr", "syscon";
-+			reg = <0x0 0x003c0000 0x0 0x40000>;
-+		};
+-#ifdef CONFIG_64BIT
+-
+-#define __seq_to_nbcon_seq(seq) (seq)
+-#define __nbcon_seq_to_seq(seq) (seq)
+-
+-#else /* CONFIG_64BIT */
+-
+-#define __seq_to_nbcon_seq(seq) ((u32)seq)
+-
+-static inline u64 __nbcon_seq_to_seq(u32 nbcon_seq)
+-{
+-	u64 seq;
+-	u64 rb_next_seq;
+-
+-	/*
+-	 * The provided sequence is only the lower 32 bits of the ringbuffer
+-	 * sequence. It needs to be expanded to 64bit. Get the next sequence
+-	 * number from the ringbuffer and fold it.
+-	 *
+-	 * Having a 32bit representation in the console is sufficient.
+-	 * If a console ever gets more than 2^31 records behind
+-	 * the ringbuffer then this is the least of the problems.
+-	 *
+-	 * Also the access to the ring buffer is always safe.
+-	 */
+-	rb_next_seq = prb_next_seq(prb);
+-	seq = rb_next_seq - ((u32)rb_next_seq - nbcon_seq);
+-
+-	return seq;
+-}
+-
+-#endif /* CONFIG_64BIT */
+-
+ /**
+  * nbcon_seq_read - Read the current console sequence
+  * @con:	Console to read the sequence of
+@@ -183,7 +150,7 @@ u64 nbcon_seq_read(struct console *con)
+ {
+ 	unsigned long nbcon_seq = atomic_long_read(&ACCESS_PRIVATE(con, nbcon_seq));
+ 
+-	return __nbcon_seq_to_seq(nbcon_seq);
++	return __ulseq_to_u64seq(prb, nbcon_seq);
+ }
+ 
+ /**
+@@ -204,7 +171,7 @@ void nbcon_seq_force(struct console *con, u64 seq)
+ 	 */
+ 	u64 valid_seq = max_t(u64, seq, prb_first_valid_seq(prb));
+ 
+-	atomic_long_set(&ACCESS_PRIVATE(con, nbcon_seq), __seq_to_nbcon_seq(valid_seq));
++	atomic_long_set(&ACCESS_PRIVATE(con, nbcon_seq), __u64seq_to_ulseq(valid_seq));
+ 
+ 	/* Clear con->seq since nbcon consoles use con->nbcon_seq instead. */
+ 	con->seq = 0;
+@@ -223,11 +190,11 @@ void nbcon_seq_force(struct console *con, u64 seq)
+  */
+ static void nbcon_seq_try_update(struct nbcon_context *ctxt, u64 new_seq)
+ {
+-	unsigned long nbcon_seq = __seq_to_nbcon_seq(ctxt->seq);
++	unsigned long nbcon_seq = __u64seq_to_ulseq(ctxt->seq);
+ 	struct console *con = ctxt->console;
+ 
+ 	if (atomic_long_try_cmpxchg(&ACCESS_PRIVATE(con, nbcon_seq), &nbcon_seq,
+-				    __seq_to_nbcon_seq(new_seq))) {
++				    __u64seq_to_ulseq(new_seq))) {
+ 		ctxt->seq = new_seq;
+ 	} else {
+ 		ctxt->seq = nbcon_seq_read(con);
+diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
+index 18cd25e489b89..b82a96dc2ea2b 100644
+--- a/kernel/printk/printk_ringbuffer.h
++++ b/kernel/printk/printk_ringbuffer.h
+@@ -381,4 +381,37 @@ bool prb_read_valid_info(struct printk_ringbuffer *rb, u64 seq,
+ u64 prb_first_valid_seq(struct printk_ringbuffer *rb);
+ u64 prb_next_seq(struct printk_ringbuffer *rb);
+ 
++#ifdef CONFIG_64BIT
 +
- 		tlmm: pinctrl@500000 {
- 			compatible = "qcom,sm6115-tlmm";
- 			reg = <0x0 0x00500000 0x0 0x400000>,
-@@ -856,6 +861,8 @@ usb_qmpphy: phy@1615000 {
- 
- 			#phy-cells = <0>;
- 
-+			qcom,tcsr-reg = <&tcsr_regs 0xb244>;
++#define __u64seq_to_ulseq(u64seq) (u64seq)
++#define __ulseq_to_u64seq(rb, ulseq) (ulseq)
 +
- 			status = "disabled";
- 		};
- 
++#else /* CONFIG_64BIT */
++
++#define __u64seq_to_ulseq(u64seq) ((u32)u64seq)
++
++static inline u64 __ulseq_to_u64seq(struct printk_ringbuffer *rb, u32 ulseq)
++{
++	u64 seq;
++	u64 rb_next_seq;
++
++	/*
++	 * The provided sequence is only the lower 32 bits of the ringbuffer
++	 * sequence. It needs to be expanded to 64bit. Get the next sequence
++	 * number from the ringbuffer and fold it.
++	 *
++	 * Having a 32bit representation in the console is sufficient.
++	 * If a console ever gets more than 2^31 records behind
++	 * the ringbuffer then this is the least of the problems.
++	 *
++	 * Also the access to the ring buffer is always safe.
++	 */
++	rb_next_seq = prb_next_seq(rb);
++	seq = rb_next_seq - ((u32)rb_next_seq - ulseq);
++
++	return seq;
++}
++
++#endif /* CONFIG_64BIT */
++
+ #endif /* _KERNEL_PRINTK_RINGBUFFER_H */
 -- 
 2.43.0
 
