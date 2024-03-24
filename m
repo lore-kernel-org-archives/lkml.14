@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C715229BED;
-	Sun, 24 Mar 2024 23:48:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0A345038;
+	Sun, 24 Mar 2024 23:48:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324131; cv=none; b=uahro3/1Z4UJmL8fVGM4Yb4E0L34Ut6vZvkk9+FxozBQ3Rx76PXCyWpZ4xQv8f0MHoH91WWCEDsoTBv8RcNZXtCwPeBhzKfrl5Vxz1TBe3yJI7gglMSt3ARutIsh49M7dH5nue9+NZJ9DHNQeZcNXAhewEdHVODJqe5mnOWaGO4=
+	t=1711324139; cv=none; b=eSDrR+OKO6oJAHis5qpKaXoNt1wMKGPzkgE4kRm9hZuXLCF60QNYKTvKHP0fYQkLzqpFMbHE6v0MZKo5ZLxTuZ2KL/x4Q4MPpdazohA8FevMPzYhToSBYiBMxU2xq0CpbJlR8ks7EFOlJsqizM52GWJCPF4hNBRZotvnQGyZdLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324131; c=relaxed/simple;
-	bh=slAMw1Km2rpZeovsMLkrSqOofhvPEAZcfBzpGuxpwpE=;
+	s=arc-20240116; t=1711324139; c=relaxed/simple;
+	bh=jsmquPFMRbDY+YIiRzxqSApPUWnYvWRIhZBNozaJxdg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YoIdvfJmsAiFbGyIdruagfjzG9mR428FAfw2OXRPvjZc2bDauB8Zinn6bwSkBzAxFuXKil3B14Mnb9wcBlCjwzj5ENynxg1eSYU6qbx3CII3NUGYNnYgaHI2EJ7ybroQbw3bGMXr2S6k++Q6CD4MwcxcwaA98dA/bBM9QVh7p4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZKEf+rc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hZ5ExVJuBtkD7MdkD10ViDza4J8AUuCIdhAYr4l/CPZOs43RMNDEgDVnSVNuPfuf+laUhhylxXyeOPy/Wgdi7w2A6Fz3mVGtDJcDanH+A6iZZX0GEEOR8KQPvBeyWVo+LmZaOFajBFiFhqIfKAyEl7IhvAv/OGeC3tN92RvIa08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4pidBnE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZKEf+rc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E99B2C43394;
-	Sun, 24 Mar 2024 23:48:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4pidBnE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BFA3C43394;
+	Sun, 24 Mar 2024 23:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324131;
-	bh=slAMw1Km2rpZeovsMLkrSqOofhvPEAZcfBzpGuxpwpE=;
+	s=k20201202; t=1711324138;
+	bh=jsmquPFMRbDY+YIiRzxqSApPUWnYvWRIhZBNozaJxdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GZKEf+rcN1F6bxYhd2Vu6SJqQw1m3zKrM7eosz1xt1nGz5BF1nDq2oIHtZT6rElCB
-	 7lHqA9RBtE/LLLAwH9XQCdClKZ8hlTLxGhF7OwCeepnfmHtWy2c8VbMhUhBeRbFZaK
-	 Q5CjzRre/VR6Tr4jAVzo461eWlXkbvDQYuHYHaWEsc22GLIVQPPkLHBH6E+L0YxcNw
-	 PbU9kpch2TcZjt3D9GYnzY6y/j4RHXOFq7ar7uOf9SaLuW1DSH1hoH86p67BMXqKiX
-	 ss7J+zWgGbmXYnft2Mpw9iX3qxGUPqwWlg7f5Wt10YuYA/sA9hgkSFzNBepUSjvuDf
-	 ya5PSwfOBv9Sg==
+	b=Y4pidBnEUkma08rSoMmieUz4ertTD43nwIXPQvCUdbT/Nal6Gqk4PUdoHbFs06Dz+
+	 S/gKgY0dwPuVbkm21l1EaMRsJOYdyrXO5AuBcRuRfqmt00ixSxpWzPWczTZqqNwhfF
+	 7BFGNt0B9FmyS731EWmvxg2hs4Hdyd93VtJaiYi4JUf91R8ffmpauVJ/HtrcWmQ/kb
+	 5noBEJH5HVem0e1P1/HMX5w3suLH3gohAQLP+pwr14K+uil5083j37KkKeFEhGPuBm
+	 Fmqe6d+TTdh9pn+51y0OZGUaAZj3Fwk4FwTabQkCJeC2+LPCzs+MUqvlkXREYkG3xE
+	 Fku1PZqMhRtqQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 128/183] crypto: arm/sha - fix function cast warnings
-Date: Sun, 24 Mar 2024 19:45:41 -0400
-Message-ID: <20240324234638.1355609-129-sashal@kernel.org>
+Subject: [PATCH 5.4 135/183] media: go7007: fix a memleak in go7007_load_encoder
+Date: Sun, 24 Mar 2024 19:45:48 -0400
+Message-ID: <20240324234638.1355609-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,113 +48,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 53cc9baeb9bc2a187eb9c9790d30995148852b12 ]
+[ Upstream commit b9b683844b01d171a72b9c0419a2d760d946ee12 ]
 
-clang-16 warns about casting between incompatible function types:
+In go7007_load_encoder, bounce(i.e. go->boot_fw), is allocated without
+a deallocation thereafter. After the following call chain:
 
-arch/arm/crypto/sha256_glue.c:37:5: error: cast from 'void (*)(u32 *, const void *, unsigned int)' (aka 'void (*)(unsigned int *, const void *, unsigned int)') to 'sha256_block_fn *' (aka 'void (*)(struct sha256_state *, const unsigned char *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-   37 |                                 (sha256_block_fn *)sha256_block_data_order);
-      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm/crypto/sha512-glue.c:34:3: error: cast from 'void (*)(u64 *, const u8 *, int)' (aka 'void (*)(unsigned long long *, const unsigned char *, int)') to 'sha512_block_fn *' (aka 'void (*)(struct sha512_state *, const unsigned char *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-   34 |                 (sha512_block_fn *)sha512_block_data_order);
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+saa7134_go7007_init
+  |-> go7007_boot_encoder
+        |-> go7007_load_encoder
+  |-> kfree(go)
 
-Fix the prototypes for the assembler functions to match the typedef.
-The code already relies on the digest being the first part of the
-state structure, so there is no change in behavior.
+go is freed and thus bounce is leaked.
 
-Fixes: c80ae7ca3726 ("crypto: arm/sha512 - accelerated SHA-512 using ARM generic ASM and NEON")
-Fixes: b59e2ae3690c ("crypto: arm/sha256 - move SHA-224/256 ASM/NEON implementation to base layer")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 95ef39403f89 ("[media] go7007: remember boot firmware")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/sha256_glue.c | 13 +++++--------
- arch/arm/crypto/sha512-glue.c | 12 +++++-------
- 2 files changed, 10 insertions(+), 15 deletions(-)
+ drivers/media/usb/go7007/go7007-driver.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/crypto/sha256_glue.c b/arch/arm/crypto/sha256_glue.c
-index 215497f011f23..cb3be0c15a044 100644
---- a/arch/arm/crypto/sha256_glue.c
-+++ b/arch/arm/crypto/sha256_glue.c
-@@ -25,8 +25,8 @@
+diff --git a/drivers/media/usb/go7007/go7007-driver.c b/drivers/media/usb/go7007/go7007-driver.c
+index b9302d77d6c83..8ee0d5ea84157 100644
+--- a/drivers/media/usb/go7007/go7007-driver.c
++++ b/drivers/media/usb/go7007/go7007-driver.c
+@@ -80,7 +80,7 @@ static int go7007_load_encoder(struct go7007 *go)
+ 	const struct firmware *fw_entry;
+ 	char fw_name[] = "go7007/go7007fw.bin";
+ 	void *bounce;
+-	int fw_len, rv = 0;
++	int fw_len;
+ 	u16 intr_val, intr_data;
  
- #include "sha256_glue.h"
- 
--asmlinkage void sha256_block_data_order(u32 *digest, const void *data,
--					unsigned int num_blks);
-+asmlinkage void sha256_block_data_order(struct sha256_state *state,
-+					const u8 *data, int num_blks);
- 
- int crypto_sha256_arm_update(struct shash_desc *desc, const u8 *data,
- 			     unsigned int len)
-@@ -34,23 +34,20 @@ int crypto_sha256_arm_update(struct shash_desc *desc, const u8 *data,
- 	/* make sure casting to sha256_block_fn() is safe */
- 	BUILD_BUG_ON(offsetof(struct sha256_state, state) != 0);
- 
--	return sha256_base_do_update(desc, data, len,
--				(sha256_block_fn *)sha256_block_data_order);
-+	return sha256_base_do_update(desc, data, len, sha256_block_data_order);
- }
- EXPORT_SYMBOL(crypto_sha256_arm_update);
- 
- static int crypto_sha256_arm_final(struct shash_desc *desc, u8 *out)
- {
--	sha256_base_do_finalize(desc,
--				(sha256_block_fn *)sha256_block_data_order);
-+	sha256_base_do_finalize(desc, sha256_block_data_order);
- 	return sha256_base_finish(desc, out);
+ 	if (go->boot_fw == NULL) {
+@@ -109,9 +109,11 @@ static int go7007_load_encoder(struct go7007 *go)
+ 	    go7007_read_interrupt(go, &intr_val, &intr_data) < 0 ||
+ 			(intr_val & ~0x1) != 0x5a5a) {
+ 		v4l2_err(go, "error transferring firmware\n");
+-		rv = -1;
++		kfree(go->boot_fw);
++		go->boot_fw = NULL;
++		return -1;
+ 	}
+-	return rv;
++	return 0;
  }
  
- int crypto_sha256_arm_finup(struct shash_desc *desc, const u8 *data,
- 			    unsigned int len, u8 *out)
- {
--	sha256_base_do_update(desc, data, len,
--			      (sha256_block_fn *)sha256_block_data_order);
-+	sha256_base_do_update(desc, data, len, sha256_block_data_order);
- 	return crypto_sha256_arm_final(desc, out);
- }
- EXPORT_SYMBOL(crypto_sha256_arm_finup);
-diff --git a/arch/arm/crypto/sha512-glue.c b/arch/arm/crypto/sha512-glue.c
-index 8775aa42bbbe8..1a16b98ec1085 100644
---- a/arch/arm/crypto/sha512-glue.c
-+++ b/arch/arm/crypto/sha512-glue.c
-@@ -25,27 +25,25 @@ MODULE_ALIAS_CRYPTO("sha512");
- MODULE_ALIAS_CRYPTO("sha384-arm");
- MODULE_ALIAS_CRYPTO("sha512-arm");
- 
--asmlinkage void sha512_block_data_order(u64 *state, u8 const *src, int blocks);
-+asmlinkage void sha512_block_data_order(struct sha512_state *state,
-+					u8 const *src, int blocks);
- 
- int sha512_arm_update(struct shash_desc *desc, const u8 *data,
- 		      unsigned int len)
- {
--	return sha512_base_do_update(desc, data, len,
--		(sha512_block_fn *)sha512_block_data_order);
-+	return sha512_base_do_update(desc, data, len, sha512_block_data_order);
- }
- 
- static int sha512_arm_final(struct shash_desc *desc, u8 *out)
- {
--	sha512_base_do_finalize(desc,
--		(sha512_block_fn *)sha512_block_data_order);
-+	sha512_base_do_finalize(desc, sha512_block_data_order);
- 	return sha512_base_finish(desc, out);
- }
- 
- int sha512_arm_finup(struct shash_desc *desc, const u8 *data,
- 		     unsigned int len, u8 *out)
- {
--	sha512_base_do_update(desc, data, len,
--		(sha512_block_fn *)sha512_block_data_order);
-+	sha512_base_do_update(desc, data, len, sha512_block_data_order);
- 	return sha512_arm_final(desc, out);
- }
- 
+ MODULE_FIRMWARE("go7007/go7007fw.bin");
 -- 
 2.43.0
 
