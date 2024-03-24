@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF6420F23B;
-	Sun, 24 Mar 2024 23:07:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C6313A89B;
+	Sun, 24 Mar 2024 23:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321678; cv=none; b=Xmebx4c96PrvlxRbXMnijmxuR0KvUVQYr9xz9vKxBqCe7MV06sAFDgWbxLJTtXasABvu5p4oaNsNKsJSCPcZGwrBXtAj5Yn6XVJe0uJUVklV6IZLFFYl9YkBAaTcEXRu6qZmwCyyuotSM4FE/pNR3MmLDmTaTngYoU2OaYE6pmo=
+	t=1711321687; cv=none; b=csy4Q0gillaiq4eE1diKAmaqjaWS7ckWtLV+Qm80+f0wXwILrnllL9YrjFkvuNDTJazRD3RouGH5e78FaoywCImkzKHjPUj0c/ePUcINdRKNQ6FK84yKK7xajptNcnkZKP2F9AewjsTbuoxUE5Mvf/PIcMUH/XQPDVpUFeO3H4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321678; c=relaxed/simple;
-	bh=h8BdH7BljQ0FdEXcZo6/KF7jYRa7kna71QzsImwJywI=;
+	s=arc-20240116; t=1711321687; c=relaxed/simple;
+	bh=rKYlC7jVDqXNr3hDf0STuqNXitRGrhJcxmC1di3E12E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Eko83aOLUJb+2Ka/Z+HET9LXRipjkNG8zoXA3kKxYitnKLx9C15FY39/qUWuW23iJDxFKhbW5EuCjIrcVFjXTXw6h8wQbnrzSrEdsLCKTXkJbtS0f5FOQJC52cE1Hl/XWBdD1AuazWNUaCRZFpqUkjZq/zzPJLXyHipoGMXNlHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRQ2ozjt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Nv7vtP0Jl41jgP5x9SitW2sMxP1VrWCpJ4YNtSqfJKw7mhH9FicIzaYr8CI2FOn7ICT6nMOnuYJF/KC7ipSVRv1wpQoRBLbcgXdeGGJgHksTY1nTeK8R+UWSMdhueKn5IL72uuRRjRL5bRbYg4dH6RxYyGIkoN/jlvK/c9wo4NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHct1SrK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRQ2ozjt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39ACEC43394;
-	Sun, 24 Mar 2024 23:07:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHct1SrK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66266C433F1;
+	Sun, 24 Mar 2024 23:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321677;
-	bh=h8BdH7BljQ0FdEXcZo6/KF7jYRa7kna71QzsImwJywI=;
+	s=k20201202; t=1711321687;
+	bh=rKYlC7jVDqXNr3hDf0STuqNXitRGrhJcxmC1di3E12E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nRQ2ozjtqB90JWZklGYpCbRG0JVs0PiSVevyhCXKR19vlsCW6YfiyvlXlt5Z2jmuX
-	 I95Y31aij7IAA6XhpTfgRzfF5B+dOo7xbXY+NSxTOzK1P4GobQSQ+zR9AAT5ZElH9K
-	 gGY5YPuEdzUQNqK+O/sBNmBaNLydUSnFR47ONNSWpISS5quZZXKr22PbbDGQ4/HHnx
-	 nl1QPsAKhjTnlaZHm9iw9zoUqIxKVOPr8MXUnxgXAq/6sQdtWGra9dkVlqed1yTZ97
-	 fFsRvRIyIvyrKDhoKuZSeT54QJ3FGlkszwfw2fTGTxfTyHelFXNODS5h2BPKwMKZ/D
-	 WDDNWgZKVhyUQ==
+	b=OHct1SrKKndNr8vZ3WwRsQHvfRtthGA1iv3P1r510pBnftRzRw9mDqnS2IKMSA1Ps
+	 DmPERuWHnNJ4uvoYgIEM20UX8MgotbF3En/q9j8Oxud77tzAe7TakO2NKevSJNc0ms
+	 fYEjdqHx5KFB5pQWAPdHduNfD/+NyWRCyiQToi29Q1oqEfMLtJnnnmoBDUIWCWy0yX
+	 saqy081QwFui0rvvRc3563fQzAzcf8eSHRmm3gDRIXeEIfpDn+BTfB2snUfXfbRqSJ
+	 Q+eZRGAjzBjQmEo637X1T/G2za/X0o7UdKAEWTIC/FpT7cDKddU8oZUWE0KQGAT4rO
+	 lFKHmFVNEDmIg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Arnd Bergmann <arnd@arndb.de>,
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Helen Koike <helen.koike@collabora.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 407/638] ALSA: seq: fix function cast warnings
-Date: Sun, 24 Mar 2024 18:57:24 -0400
-Message-ID: <20240324230116.1348576-408-sashal@kernel.org>
+Subject: [PATCH 6.6 415/638] drm: ci: use clk_ignore_unused for apq8016
+Date: Sun, 24 Mar 2024 18:57:32 -0400
+Message-ID: <20240324230116.1348576-416-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,93 +49,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-[ Upstream commit d7bf73809849463f76de42aad62c850305dd6c5d ]
+[ Upstream commit aa1267e673fe5307cf00d02add4017d2878598b6 ]
 
-clang-16 points out a control flow integrity (kcfi) issue when event
-callbacks get converted to incompatible types:
+If the ADV7511 bridge driver is compiled as a module, while DRM_MSM is
+built-in, the clk_disable_unused congests with the runtime PM handling
+of the DSI PHY for the clk_prepare_lock(). This causes apq8016 runner to
+fail without completing any jobs ([1]). Drop the BM_CMDLINE which
+duplicate the command line from the .baremetal-igt-arm64 clause and
+enforce the clk_ignore_unused kernelarg instead to make apq8016 runner
+work.
 
-sound/core/seq/seq_midi.c:135:30: error: cast from 'int (*)(struct snd_rawmidi_substream *, const char *, int)' to 'snd_seq_dump_func_t' (aka 'int (*)(void *, void *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-  135 |                 snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)dump_midi, substream);
-      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sound/core/seq/seq_virmidi.c:83:31: error: cast from 'int (*)(struct snd_rawmidi_substream *, const unsigned char *, int)' to 'snd_seq_dump_func_t' (aka 'int (*)(void *, void *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-   83 |                         snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)snd_rawmidi_receive, vmidi->substream);
-      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[1] https://gitlab.freedesktop.org/drm/msm/-/jobs/54990475
 
-For addressing those errors, introduce wrapper functions that are used
-for callbacks and bridge to the actual function call with pointer
-cast.
-
-The code was originally added with the initial ALSA merge in linux-2.5.4.
-
-[ the patch description shamelessly copied from Arnd's original patch
-  -- tiwai ]
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20240213101020.459183-1-arnd@kernel.org
-Link: https://lore.kernel.org/r/20240213135343.16411-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 0119c894ab0d ("drm: Add initial ci/ subdirectory")
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Acked-by: Helen Koike <helen.koike@collabora.com>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20240214083708.2323967-1-dmitry.baryshkov@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_midi.c    | 8 +++++++-
- sound/core/seq/seq_virmidi.c | 9 ++++++++-
- 2 files changed, 15 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/ci/test.yml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/sound/core/seq/seq_midi.c b/sound/core/seq/seq_midi.c
-index 18320a248aa7d..78dcb0ea15582 100644
---- a/sound/core/seq/seq_midi.c
-+++ b/sound/core/seq/seq_midi.c
-@@ -113,6 +113,12 @@ static int dump_midi(struct snd_rawmidi_substream *substream, const char *buf, i
- 	return 0;
- }
- 
-+/* callback for snd_seq_dump_var_event(), bridging to dump_midi() */
-+static int __dump_midi(void *ptr, void *buf, int count)
-+{
-+	return dump_midi(ptr, buf, count);
-+}
-+
- static int event_process_midi(struct snd_seq_event *ev, int direct,
- 			      void *private_data, int atomic, int hop)
- {
-@@ -132,7 +138,7 @@ static int event_process_midi(struct snd_seq_event *ev, int direct,
- 			pr_debug("ALSA: seq_midi: invalid sysex event flags = 0x%x\n", ev->flags);
- 			return 0;
- 		}
--		snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)dump_midi, substream);
-+		snd_seq_dump_var_event(ev, __dump_midi, substream);
- 		snd_midi_event_reset_decode(msynth->parser);
- 	} else {
- 		if (msynth->parser == NULL)
-diff --git a/sound/core/seq/seq_virmidi.c b/sound/core/seq/seq_virmidi.c
-index 1b9260108e482..1678737f11be7 100644
---- a/sound/core/seq/seq_virmidi.c
-+++ b/sound/core/seq/seq_virmidi.c
-@@ -62,6 +62,13 @@ static void snd_virmidi_init_event(struct snd_virmidi *vmidi,
- /*
-  * decode input event and put to read buffer of each opened file
-  */
-+
-+/* callback for snd_seq_dump_var_event(), bridging to snd_rawmidi_receive() */
-+static int dump_to_rawmidi(void *ptr, void *buf, int count)
-+{
-+	return snd_rawmidi_receive(ptr, buf, count);
-+}
-+
- static int snd_virmidi_dev_receive_event(struct snd_virmidi_dev *rdev,
- 					 struct snd_seq_event *ev,
- 					 bool atomic)
-@@ -80,7 +87,7 @@ static int snd_virmidi_dev_receive_event(struct snd_virmidi_dev *rdev,
- 		if (ev->type == SNDRV_SEQ_EVENT_SYSEX) {
- 			if ((ev->flags & SNDRV_SEQ_EVENT_LENGTH_MASK) != SNDRV_SEQ_EVENT_LENGTH_VARIABLE)
- 				continue;
--			snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)snd_rawmidi_receive, vmidi->substream);
-+			snd_seq_dump_var_event(ev, dump_to_rawmidi, vmidi->substream);
- 			snd_midi_event_reset_decode(vmidi->parser);
- 		} else {
- 			len = snd_midi_event_decode(vmidi->parser, msg, sizeof(msg), ev);
+diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
+index 6473cddaa7a96..e5b7d309ca186 100644
+--- a/drivers/gpu/drm/ci/test.yml
++++ b/drivers/gpu/drm/ci/test.yml
+@@ -104,7 +104,10 @@ msm:apq8016:
+     DRIVER_NAME: msm
+     BM_DTB: https://${PIPELINE_ARTIFACTS_BASE}/arm64/apq8016-sbc.dtb
+     GPU_VERSION: apq8016
+-    BM_CMDLINE: "ip=dhcp console=ttyMSM0,115200n8 $BM_KERNEL_EXTRA_ARGS root=/dev/nfs rw nfsrootdebug nfsroot=,tcp,nfsvers=4.2 init=/init $BM_KERNELARGS"
++    # disabling unused clocks congests with the MDSS runtime PM trying to
++    # disable those clocks and causes boot to fail.
++    # Reproducer: DRM_MSM=y, DRM_I2C_ADV7511=m
++    BM_KERNEL_EXTRA_ARGS: clk_ignore_unused
+     RUNNER_TAG: google-freedreno-db410c
+   script:
+     - ./install/bare-metal/fastboot.sh
 -- 
 2.43.0
 
