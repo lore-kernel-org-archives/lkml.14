@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C6522BBE3;
-	Sun, 24 Mar 2024 23:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143A115B56D;
+	Sun, 24 Mar 2024 23:16:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322170; cv=none; b=OdMY8mcMJXCYL82I+THkWvZxRcfX0+/khtv63HC6sdMm7wx2QSqO5A4wRoCQoDkcoh+7w1qj8vbC48+Ie5B2AoJxtpVos9dJZg1otbL55lbZHmIcyxjklEeqmHhMl/V8UQZhwikUZLoQlw5pwPIxAXLW62q8mKQ/YgbfdLj8aJM=
+	t=1711322165; cv=none; b=RYC/mmPhKDvp3GYXOap1moPJPKkERYsvzEDpMO2j1HpSuFfC6ANd9tni9mL7dYezdA0Xj5Ye27ZPJfjKPYbLy8ZRaQgspHiVQOVAtSBX+oxzsAykaPJdwBHU+CqisybhyHn1dWde9OxOndThGDDnpNGFwDDdpm2qUKBSroxNg6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322170; c=relaxed/simple;
-	bh=HMi0+x9nx54yQycau/GhhoDRdzUG5BNhX56pSJ+Iofc=;
+	s=arc-20240116; t=1711322165; c=relaxed/simple;
+	bh=RZNVU4IURpxBQT1ORogNbGIWkBlDKgL0aWdcsIXGZEw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IMsbnOLKBUNiBRqyyaGafZfNuiEdzZb2rbCmEHx5FDT1RzTMACeNVE+dM70SskWaoxkebZUQkVSo6cpkw/AozBF7pA124rmqu122Idb/3rr3xkS9jGd8duSMYJXuodWI+WRosIlZHMLT4QiBnGWpsM+IbGB8D3SO6zUCAoGh7WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGjqGG+p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ShpPZcMqwm6hh1MviGFZNviwv4W9LDiLtKyraMnBiPT/Y/p7Ow2nifnlonPzpPYHaN0Iq4OgF601pM6jrcnalTx4XXUyINblnXB4eVyNRPZK9zH4U9qr1uMeODaneqA0Eft1P+7pdZX2PZS34Y9FfM6mHPeWdMIM0qfPlVg2+Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SytYU7oR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGjqGG+p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF35C433C7;
-	Sun, 24 Mar 2024 23:16:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SytYU7oR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53E40C433C7;
+	Sun, 24 Mar 2024 23:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322169;
-	bh=HMi0+x9nx54yQycau/GhhoDRdzUG5BNhX56pSJ+Iofc=;
+	s=k20201202; t=1711322164;
+	bh=RZNVU4IURpxBQT1ORogNbGIWkBlDKgL0aWdcsIXGZEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aGjqGG+pQMkGoQXONQ3TDW7JWzjHHdSwndG23SP6v24mDUR1kLlKd5a17ardUkPyX
-	 GMaJP8c/gAWseJMiKFb93YVvpTmtW46JyDp2A15rN85zRW5FPqHj/khcGdRSBaNl74
-	 D+xzI1eefPwXAt5PAi/MZvOTH7PieV1ChhGZD/ksgLev5yoxZWG2TTcKIU3FbtFtON
-	 JOf8kcBDbZYmY1R0lvy2sbYEL52Up+Xo/jM5FnNbMIYSsTDufrYbRQoh5UqNLjdJ3F
-	 rT0ORADPPX9HRl+Uc4vxU3prZyzKWnr2Ag86Nkl5Es5t62Qhs2FAE5xcYImPfTfFum
-	 /UjrkaJc1zJpg==
+	b=SytYU7oR30Z56Nk3nCvPv8NxKzYNROdJmui4VTEPLuDvMMT/wiJOIV2Ap33b0ZrJK
+	 Hbw7icTmT7sQrOLvU2LwSRWDDNM+j9+k/IRMhMDidUG9d8ECLttZn2hMtnqasXJy+s
+	 3nQxlmTgHudqu1ALTAoWawXeAWWAm0ryRB0xcJ5Tyod53TQkgQI2ny2w36/nDUJxXv
+	 lC1tEUsdsqIqElEbklai2JctSMkYYaEOlwJpw09BnWFr1H+5tQLyMOXmDmhg4HNsLn
+	 7qV7uJKYVQB9NJ3jtG1KvMp4NxQysFS7KtFpJucmltw8sLNqoSLN8+SLpg1cOSqnjW
+	 U39s+4mrYpsnQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-	Quentin Schulz <foss+kernel@0leil.net>,
-	Heiko Stuebner <heiko@sntech.de>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 248/451] drm/rockchip: lvds: do not print scary message when probing defer
-Date: Sun, 24 Mar 2024 19:08:44 -0400
-Message-ID: <20240324231207.1351418-249-sashal@kernel.org>
+Subject: [PATCH 6.1 243/451] drm/tegra: output: Fix missing i2c_put_adapter() in the error handling paths of tegra_output_probe()
+Date: Sun, 24 Mar 2024 19:08:39 -0400
+Message-ID: <20240324231207.1351418-244-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,39 +48,72 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 52d11c863ac92e36a0365249f7f6d27ac48c78bc ]
+[ Upstream commit 2db4578ef6ffb2b52115ca0ebf897b60ec559556 ]
 
-This scary message can misled the user into thinking something bad has
-happened and needs to be fixed, however it could simply be part of a
-normal boot process where EPROBE_DEFER is taken into account. Therefore,
-let's use dev_err_probe so that this message doesn't get shown (by
-default) when the return code is EPROBE_DEFER.
+If an error occurs after a successful of_get_i2c_adapter_by_node() call, it
+should be undone by a corresponding i2c_put_adapter().
 
-Fixes: 34cc0aa25456 ("drm/rockchip: Add support for Rockchip Soc LVDS")
-Cc: Quentin Schulz <foss+kernel@0leil.net>
-Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231120-rk-lvds-defer-msg-v2-2-9c59a5779cf9@theobroma-systems.com
+Add the missing i2c_put_adapter() call.
+
+Fixes: 9be7d864cf07 ("drm/tegra: Implement panel support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/b38604178991e1f08b2cda219103be266be2d680.1693667005.git.christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/rockchip_lvds.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/tegra/output.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-index 1fde888cdd827..eb4a108c5bd2a 100644
---- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-@@ -577,7 +577,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		ret = -EINVAL;
- 		goto err_put_port;
- 	} else if (ret) {
--		DRM_DEV_ERROR(dev, "failed to find panel and bridge node\n");
-+		dev_err_probe(dev, ret, "failed to find panel and bridge node\n");
- 		goto err_put_port;
+diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
+index 47d26b5d99456..7ccd010a821b7 100644
+--- a/drivers/gpu/drm/tegra/output.c
++++ b/drivers/gpu/drm/tegra/output.c
+@@ -139,8 +139,10 @@ int tegra_output_probe(struct tegra_output *output)
+ 						       GPIOD_IN,
+ 						       "HDMI hotplug detect");
+ 	if (IS_ERR(output->hpd_gpio)) {
+-		if (PTR_ERR(output->hpd_gpio) != -ENOENT)
+-			return PTR_ERR(output->hpd_gpio);
++		if (PTR_ERR(output->hpd_gpio) != -ENOENT) {
++			err = PTR_ERR(output->hpd_gpio);
++			goto put_i2c;
++		}
+ 
+ 		output->hpd_gpio = NULL;
  	}
- 	if (lvds->panel)
+@@ -149,7 +151,7 @@ int tegra_output_probe(struct tegra_output *output)
+ 		err = gpiod_to_irq(output->hpd_gpio);
+ 		if (err < 0) {
+ 			dev_err(output->dev, "gpiod_to_irq(): %d\n", err);
+-			return err;
++			goto put_i2c;
+ 		}
+ 
+ 		output->hpd_irq = err;
+@@ -162,7 +164,7 @@ int tegra_output_probe(struct tegra_output *output)
+ 		if (err < 0) {
+ 			dev_err(output->dev, "failed to request IRQ#%u: %d\n",
+ 				output->hpd_irq, err);
+-			return err;
++			goto put_i2c;
+ 		}
+ 
+ 		output->connector.polled = DRM_CONNECTOR_POLL_HPD;
+@@ -176,6 +178,12 @@ int tegra_output_probe(struct tegra_output *output)
+ 	}
+ 
+ 	return 0;
++
++put_i2c:
++	if (output->ddc)
++		i2c_put_adapter(output->ddc);
++
++	return err;
+ }
+ 
+ void tegra_output_remove(struct tegra_output *output)
 -- 
 2.43.0
 
