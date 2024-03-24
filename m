@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BF61D2A89;
-	Sun, 24 Mar 2024 22:48:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75281D2AA8;
+	Sun, 24 Mar 2024 22:48:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320537; cv=none; b=oWsYlFc210Vlig+g/0Jhgurkm+JOVj8fe9hyngwgJMD/UejF5t2ughsCkqlcjp1ETkkzuJ9TjjNGftyZ1sQSv4SoAkHsEcdC+xxPIwOQWdQjdvIMWZ/Ag/y1tZlrX48vm+sxVAETy5IrP9JJJ8jV5MSr02sPLI73Au9D9JoluYw=
+	t=1711320539; cv=none; b=KhRziT/QL5c+TCtGOufSoMPHB7D1ZN9ZLjK1HCcXtTkEYqXYB9916ujFBRHeYU6geegyNqyPU8mc9IFaw7Z9IWg/JryNnJY5b1Us+u26/Q8N9ieCZjcJFBtzbrAnQ9xu6w75OpTX20qkDK7UQ8X4hwuo62Q4K8eJ2Rg5TbRqNlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320537; c=relaxed/simple;
-	bh=XuA+8nGkGj4xp7oyuXzOhHBuT5R9Q9Rrl3+R1s6tAsw=;
+	s=arc-20240116; t=1711320539; c=relaxed/simple;
+	bh=3F/obsnB6vypavBgIG5iRuZ26KM+eIJVxAzL8Q3GuRc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QoiqGIqLdnjeQ9kUB0l3a0go+DsFiMltqRwe+0cHg3hikn86ILJwVXDXQ3Pnc0Ka4w+6Lq16IjHBnRizWOuOw3qtZsiempOI9Spert/i8sELQlIfQZevanNgv3vnsw4MzNMD5deQjcFXDKREgUjv/WqBVaC062ueC9mnYdfajuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEdqcoRc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mtqy0giCwsNixPI48WiJETIhmMe7GlTTPHH5tZ+S9URXBJxaZGzWBho6CVZuxB9K8pS2dvL5uQBoRhArKhJ4Hw2UVnq+LgP2n3LceQOGvl2sn9FD1Vm8P86BaegTLxQEHYqedKvtdBLSuIV16dOUIuCPDh9EMPg+X53IxrQZQio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HclZI0Gd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEdqcoRc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D50D6C43394;
-	Sun, 24 Mar 2024 22:48:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HclZI0Gd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBE1FC43394;
+	Sun, 24 Mar 2024 22:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320536;
-	bh=XuA+8nGkGj4xp7oyuXzOhHBuT5R9Q9Rrl3+R1s6tAsw=;
+	s=k20201202; t=1711320538;
+	bh=3F/obsnB6vypavBgIG5iRuZ26KM+eIJVxAzL8Q3GuRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CEdqcoRcuGNUa7tUtfHeUY6YJkW6bYvND0zCz2TxybrJbhnluXpHv+0XOMKt5YuE0
-	 9rx+fcPlNHg6q0C0OImznsXOkRPGcq4cv75XRe7S8XeLiEv9bN/55DCTSGvhg7bWi/
-	 s6g47hfMHrGZ5RdEP6sdap4+IEURjO411xK53b8/VXkHrP+tiYv4c7fHFLs+4dnFa4
-	 hNCWtm/9Cvc9XpStK+Jfvc47IWsvuFCbMHTc/JpHR3B5NZk2WZcjjOV6YESTZN0pF0
-	 GFyIg0O91J2UEa6QPjUQYxJmuRedqJ9DYnHn1PdFsmHBnJsP4ujCX9m/vRTUQbeMun
-	 eilbW8ZydnCGw==
+	b=HclZI0GdrQoiAqrQrABv+AhS2jRhv/6Hi0809o9Xi0YHZuCjeLAzCn5WaFmpuzHem
+	 Bh/8/JN9P5i8ncbSfOnfTEYqdXQjFCdLJ83NAu4P20E/UJ67lNFr1m/R6J9BXmhgSd
+	 szfmwmA+LNpMOwSYzWvAcqrNu/xw7gkyeuPqL6EgfvBbyU/AAGD+iujGFiaJ9Jn7uq
+	 weQ9//biGC+XJehJh+UNZkIDV/eNYqJM8IvhVWmFZ9xpnGDKa49O10+MTfGKd1jWpJ
+	 9O9sR/1BKAyPFb1Tbx2/mGxrCO5SvjRg3iqr2E4DHHgKhDQJ0qIj2Xl3l4bOTlYpKg
+	 UjuOGK24BylVw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Li Nan <linan122@huawei.com>,
-	Song Liu <song@kernel.org>,
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 098/713] md: fix kmemleak of rdev->serial
-Date: Sun, 24 Mar 2024 18:37:04 -0400
-Message-ID: <20240324224720.1345309-99-sashal@kernel.org>
+Subject: [PATCH 6.7 100/713] rcu/exp: Handle RCU expedited grace period kworker allocation failure
+Date: Sun, 24 Mar 2024 18:37:06 -0400
+Message-ID: <20240324224720.1345309-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,55 +50,126 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Li Nan <linan122@huawei.com>
+From: Frederic Weisbecker <frederic@kernel.org>
 
-[ Upstream commit 6cf350658736681b9d6b0b6e58c5c76b235bb4c4 ]
+[ Upstream commit e7539ffc9a770f36bacedcf0fbfb4bf2f244f4a5 ]
 
-If kobject_add() is fail in bind_rdev_to_array(), 'rdev->serial' will be
-alloc not be freed, and kmemleak occurs.
+Just like is done for the kworker performing nodes initialization,
+gracefully handle the possible allocation failure of the RCU expedited
+grace period main kworker.
 
-unreferenced object 0xffff88815a350000 (size 49152):
-  comm "mdadm", pid 789, jiffies 4294716910
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace (crc f773277a):
-    [<0000000058b0a453>] kmemleak_alloc+0x61/0xe0
-    [<00000000366adf14>] __kmalloc_large_node+0x15e/0x270
-    [<000000002e82961b>] __kmalloc_node.cold+0x11/0x7f
-    [<00000000f206d60a>] kvmalloc_node+0x74/0x150
-    [<0000000034bf3363>] rdev_init_serial+0x67/0x170
-    [<0000000010e08fe9>] mddev_create_serial_pool+0x62/0x220
-    [<00000000c3837bf0>] bind_rdev_to_array+0x2af/0x630
-    [<0000000073c28560>] md_add_new_disk+0x400/0x9f0
-    [<00000000770e30ff>] md_ioctl+0x15bf/0x1c10
-    [<000000006cfab718>] blkdev_ioctl+0x191/0x3f0
-    [<0000000085086a11>] vfs_ioctl+0x22/0x60
-    [<0000000018b656fe>] __x64_sys_ioctl+0xba/0xe0
-    [<00000000e54e675e>] do_syscall_64+0x71/0x150
-    [<000000008b0ad622>] entry_SYSCALL_64_after_hwframe+0x6c/0x74
+While at it perform a rename of the related checking functions to better
+reflect the expedited specifics.
 
-Fixes: 963c555e75b0 ("md: introduce mddev_create/destroy_wb_pool for the change of member device")
-Signed-off-by: Li Nan <linan122@huawei.com>
-Signed-off-by: Song Liu <song@kernel.org>
-Link: https://lore.kernel.org/r/20240208085556.2412922-1-linan666@huaweicloud.com
+Reviewed-by: Kalesh Singh <kaleshsingh@google.com>
+Fixes: 9621fbee44df ("rcu: Move expedited grace period (GP) work to RT kthread_worker")
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/rcu/tree.c     |  2 ++
+ kernel/rcu/tree_exp.h | 25 +++++++++++++++++++------
+ 2 files changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 58889bc72659a..0b49033afa6bc 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -2582,6 +2582,7 @@ static int bind_rdev_to_array(struct md_rdev *rdev, struct mddev *mddev)
-  fail:
- 	pr_warn("md: failed to register dev-%s for %s\n",
- 		b, mdname(mddev));
-+	mddev_destroy_serial_pool(mddev, rdev);
- 	return err;
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index fc318477877ba..f544f24df1856 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -4741,6 +4741,7 @@ static void __init rcu_start_exp_gp_kworkers(void)
+ 	rcu_exp_gp_kworker = kthread_create_worker(0, gp_kworker_name);
+ 	if (IS_ERR_OR_NULL(rcu_exp_gp_kworker)) {
+ 		pr_err("Failed to create %s!\n", gp_kworker_name);
++		rcu_exp_gp_kworker = NULL;
+ 		return;
+ 	}
+ 
+@@ -4749,6 +4750,7 @@ static void __init rcu_start_exp_gp_kworkers(void)
+ 		pr_err("Failed to create %s!\n", par_gp_kworker_name);
+ 		rcu_exp_par_gp_kworker = NULL;
+ 		kthread_destroy_worker(rcu_exp_gp_kworker);
++		rcu_exp_gp_kworker = NULL;
+ 		return;
+ 	}
+ 
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index 2ac440bc7e10b..8107f818455da 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -428,7 +428,12 @@ static void sync_rcu_exp_select_node_cpus(struct kthread_work *wp)
+ 	__sync_rcu_exp_select_node_cpus(rewp);
  }
  
+-static inline bool rcu_gp_par_worker_started(void)
++static inline bool rcu_exp_worker_started(void)
++{
++	return !!READ_ONCE(rcu_exp_gp_kworker);
++}
++
++static inline bool rcu_exp_par_worker_started(void)
+ {
+ 	return !!READ_ONCE(rcu_exp_par_gp_kworker);
+ }
+@@ -478,7 +483,12 @@ static void sync_rcu_exp_select_node_cpus(struct work_struct *wp)
+ 	__sync_rcu_exp_select_node_cpus(rewp);
+ }
+ 
+-static inline bool rcu_gp_par_worker_started(void)
++static inline bool rcu_exp_worker_started(void)
++{
++	return !!READ_ONCE(rcu_gp_wq);
++}
++
++static inline bool rcu_exp_par_worker_started(void)
+ {
+ 	return !!READ_ONCE(rcu_par_gp_wq);
+ }
+@@ -541,7 +551,7 @@ static void sync_rcu_exp_select_cpus(void)
+ 		rnp->exp_need_flush = false;
+ 		if (!READ_ONCE(rnp->expmask))
+ 			continue; /* Avoid early boot non-existent wq. */
+-		if (!rcu_gp_par_worker_started() ||
++		if (!rcu_exp_par_worker_started() ||
+ 		    rcu_scheduler_active != RCU_SCHEDULER_RUNNING ||
+ 		    rcu_is_last_leaf_node(rnp)) {
+ 			/* No worker started yet or last leaf, do direct call. */
+@@ -956,7 +966,7 @@ static void rcu_exp_print_detail_task_stall_rnp(struct rcu_node *rnp)
+  */
+ void synchronize_rcu_expedited(void)
+ {
+-	bool boottime = (rcu_scheduler_active == RCU_SCHEDULER_INIT);
++	bool use_worker;
+ 	unsigned long flags;
+ 	struct rcu_exp_work rew;
+ 	struct rcu_node *rnp;
+@@ -967,6 +977,9 @@ void synchronize_rcu_expedited(void)
+ 			 lock_is_held(&rcu_sched_lock_map),
+ 			 "Illegal synchronize_rcu_expedited() in RCU read-side critical section");
+ 
++	use_worker = (rcu_scheduler_active != RCU_SCHEDULER_INIT) &&
++		      rcu_exp_worker_started();
++
+ 	/* Is the state is such that the call is a grace period? */
+ 	if (rcu_blocking_is_gp()) {
+ 		// Note well that this code runs with !PREEMPT && !SMP.
+@@ -996,7 +1009,7 @@ void synchronize_rcu_expedited(void)
+ 		return;  /* Someone else did our work for us. */
+ 
+ 	/* Ensure that load happens before action based on it. */
+-	if (unlikely(boottime)) {
++	if (unlikely(!use_worker)) {
+ 		/* Direct call during scheduler init and early_initcalls(). */
+ 		rcu_exp_sel_wait_wake(s);
+ 	} else {
+@@ -1014,7 +1027,7 @@ void synchronize_rcu_expedited(void)
+ 	/* Let the next expedited grace period start. */
+ 	mutex_unlock(&rcu_state.exp_mutex);
+ 
+-	if (likely(!boottime))
++	if (likely(use_worker))
+ 		synchronize_rcu_expedited_destroy_work(&rew);
+ }
+ EXPORT_SYMBOL_GPL(synchronize_rcu_expedited);
 -- 
 2.43.0
 
