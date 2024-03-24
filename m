@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343AF17A90B;
-	Sun, 24 Mar 2024 23:41:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E697131187;
+	Sun, 24 Mar 2024 23:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323691; cv=none; b=NyfIUsqxS8rNwhIOy25dK3Lnw7XlNY9serFblhlaWiAi271ZZllTejw5Ik2YOLhQyd6hXR4NalsFLDC50eDJtG/7aaw/LZkAHKqQmxMVdRqa+YeiCGeqm7X0r37vA10myKq2b8fghfzsSzSlHr7FtxWUhU1pukc+t4buBhunRHw=
+	t=1711323683; cv=none; b=WMRSqJgmqmQedxoKeEma6Y6JqT03ihXxKJ5N6aVqVufENmpkSAqHuUqO3LWfjrFKi0lzjsvJBbtWKAX/if6RiFuPRH1JvQnnMKgRuH1yvTYwPKKZ50sETHwvhdAf1pd8n/FprNdf9lmy5f8E7oDfZG5gIVJ6/IZK/ez+fxWbNl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323691; c=relaxed/simple;
-	bh=YcupNQxkyz3XG7lX4bTxXOqOKbkMCzLitxyZm3jArR8=;
+	s=arc-20240116; t=1711323683; c=relaxed/simple;
+	bh=QyAnXMWYQENBOHd4XUvZKCz+yB+VOQoDw0E4z1GetK0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BZAw9lY2P0CWp+dLyZD5sEcYxTS3BvleIHlVUCNGmh99rQgXiFnhqzv7nUfN0/S8O9SiYbak+6IpPJYb0MiHgmdsPUw6b5CmrpjgHdSLUrOP2Tebn2GVosu3l+D5yoOVRkVnnR5T6m+0o67d4QjOuvIvdSRzbwh60kQLgeK72wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXPLzQd9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=k/ZGeu9boezr1TEmy1nA/C88Ek/lcUh/kkePw6YprRInpwgNL3gMqTWRcLM/p0k3c2WTqnPozB17qh5qelGJCQ+IFFDmor3MDi9dakzkVOVGVeyllTFGyLcnzX/dYkBYPR3nLVlV+3IrCxGXK+1HcBl2mzIbvP/XLERYcEp1XsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGID7eUH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXPLzQd9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2C4C433C7;
-	Sun, 24 Mar 2024 23:41:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGID7eUH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 678EEC433C7;
+	Sun, 24 Mar 2024 23:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323691;
-	bh=YcupNQxkyz3XG7lX4bTxXOqOKbkMCzLitxyZm3jArR8=;
+	s=k20201202; t=1711323683;
+	bh=QyAnXMWYQENBOHd4XUvZKCz+yB+VOQoDw0E4z1GetK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UXPLzQd9y8CVXAcGmKPRjvH4HWrDFM+p4q6PM7AW8waEP6oJeRONTjdYsdOqzZb6s
-	 8VC2Xhen91ZJ5Ler+k1stvqJMRF3WxFDl48ngC90+nZhNNPnj1r/qEOVxBz04x2Qv9
-	 cYFWGj5W2Pq61jMvfWCxdI1N2T44KNNyxebzBe9xJ+Rcisira8JjmHKh6LbV8RYAS8
-	 lUHgxu3ZPBuyJQ4eIE7KLfDNr1pdRCZEYkcQUl5O8xCKpl79Ef8RFbKkUtbVyrF8Xi
-	 RGr3YLg1KDpOW3RmPKlZKgzKJM3nviconz3kChRimcbo5V5aPBD7M2usCqNrIjByU6
-	 g0SifJOLVA5Lw==
+	b=KGID7eUHnco+UOMoSmXPPnhGRkFdu1YpN0kNGON5Ixa4y+9Fvk9fgUEpCX5/IK0AZ
+	 7/7H1eu94RdzFLD+eCJHtYjCAUSlhtLg2xwGo4CBqOWi7/GDm4PqSh/jTznx813mmg
+	 mk74kIJf3QlXD1aOgwYWnHm8quTfKYs7cX/8jdV/fctfVkXP0+rD/8LajwqiDNJafA
+	 t8P/h+DIZlnOsZ/PfcNLBbpGx/YlwN6Nd4Dqr6/dGlCOGU16kpU3BJTJJsXq8YdV0t
+	 5mVYcJZD9df19EPX5WdUTkv4qrLugjBYVKfuOZYBhZwMjDuiDlBxPvQ+v5I8aHxMcR
+	 i7vqjPsKkDY0Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <kafai@fb.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Ubisectech Sirius <bugreport@ubisectech.com>,
+	Kalle Valo <quic_kvalo@quicinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 063/238] bpf: Factor out bpf_spin_lock into helpers.
-Date: Sun, 24 Mar 2024 19:37:31 -0400
-Message-ID: <20240324234027.1354210-64-sashal@kernel.org>
+Subject: [PATCH 5.10 055/238] wifi: ath9k: delay all of ath9k_wmi_event_tasklet() until init is complete
+Date: Sun, 24 Mar 2024 19:37:23 -0400
+Message-ID: <20240324234027.1354210-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -52,81 +50,118 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexei Starovoitov <ast@kernel.org>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit c1b3fed319d32a721d4b9c17afaeb430444ff773 ]
+[ Upstream commit 24355fcb0d4cbcb6ddda262596558e8cfba70f11 ]
 
-Move ____bpf_spin_lock/unlock into helpers to make it more clear
-that quadruple underscore bpf_spin_lock/unlock are irqsave/restore variants.
+The ath9k_wmi_event_tasklet() used in ath9k_htc assumes that all the data
+structures have been fully initialised by the time it runs. However, because of
+the order in which things are initialised, this is not guaranteed to be the
+case, because the device is exposed to the USB subsystem before the ath9k driver
+initialisation is completed.
 
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Link: https://lore.kernel.org/bpf/20210715005417.78572-3-alexei.starovoitov@gmail.com
-Stable-dep-of: 178c54666f9c ("bpf: Mark bpf_spin_{lock,unlock}() helpers with notrace correctly")
+We already committed a partial fix for this in commit:
+8b3046abc99e ("ath9k_htc: fix NULL pointer dereference at ath9k_htc_tx_get_packet()")
+
+However, that commit only aborted the WMI_TXSTATUS_EVENTID command in the event
+tasklet, pairing it with an "initialisation complete" bit in the TX struct. It
+seems syzbot managed to trigger the race for one of the other commands as well,
+so let's just move the existing synchronisation bit to cover the whole
+tasklet (setting it at the end of ath9k_htc_probe_device() instead of inside
+ath9k_tx_init()).
+
+Link: https://lore.kernel.org/r/ed1d2c66-1193-4c81-9542-d514c29ba8b8.bugreport@ubisectech.com
+Fixes: 8b3046abc99e ("ath9k_htc: fix NULL pointer dereference at ath9k_htc_tx_get_packet()")
+Reported-by: Ubisectech Sirius <bugreport@ubisectech.com>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+Link: https://msgid.link/20240126140218.1033443-1-toke@toke.dk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/helpers.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/net/wireless/ath/ath9k/htc.h          |  2 +-
+ drivers/net/wireless/ath/ath9k/htc_drv_init.c |  4 ++++
+ drivers/net/wireless/ath/ath9k/htc_drv_txrx.c |  4 ----
+ drivers/net/wireless/ath/ath9k/wmi.c          | 10 ++++++----
+ 4 files changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index 0efe7c7bfe5e9..d758641973d6d 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -278,13 +278,18 @@ static inline void __bpf_spin_unlock(struct bpf_spin_lock *lock)
- 
- static DEFINE_PER_CPU(unsigned long, irqsave_flags);
- 
--notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
-+static inline void __bpf_spin_lock_irqsave(struct bpf_spin_lock *lock)
- {
- 	unsigned long flags;
- 
- 	local_irq_save(flags);
- 	__bpf_spin_lock(lock);
- 	__this_cpu_write(irqsave_flags, flags);
-+}
-+
-+notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
-+{
-+	__bpf_spin_lock_irqsave(lock);
- 	return 0;
- }
- 
-@@ -295,13 +300,18 @@ const struct bpf_func_proto bpf_spin_lock_proto = {
- 	.arg1_type	= ARG_PTR_TO_SPIN_LOCK,
+diff --git a/drivers/net/wireless/ath/ath9k/htc.h b/drivers/net/wireless/ath/ath9k/htc.h
+index 237f4ec2cffd7..6c33e898b3000 100644
+--- a/drivers/net/wireless/ath/ath9k/htc.h
++++ b/drivers/net/wireless/ath/ath9k/htc.h
+@@ -306,7 +306,6 @@ struct ath9k_htc_tx {
+ 	DECLARE_BITMAP(tx_slot, MAX_TX_BUF_NUM);
+ 	struct timer_list cleanup_timer;
+ 	spinlock_t tx_lock;
+-	bool initialized;
  };
  
--notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
-+static inline void __bpf_spin_unlock_irqrestore(struct bpf_spin_lock *lock)
- {
- 	unsigned long flags;
+ struct ath9k_htc_tx_ctl {
+@@ -515,6 +514,7 @@ struct ath9k_htc_priv {
+ 	unsigned long ps_usecount;
+ 	bool ps_enabled;
+ 	bool ps_idle;
++	bool initialized;
  
- 	flags = __this_cpu_read(irqsave_flags);
- 	__bpf_spin_unlock(lock);
- 	local_irq_restore(flags);
-+}
+ #ifdef CONFIG_MAC80211_LEDS
+ 	enum led_brightness brightness;
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_init.c b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
+index 96a3185a96d75..b014185373f34 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_init.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
+@@ -966,6 +966,10 @@ int ath9k_htc_probe_device(struct htc_target *htc_handle, struct device *dev,
+ 
+ 	htc_handle->drv_priv = priv;
+ 
++	/* Allow ath9k_wmi_event_tasklet() to operate. */
++	smp_wmb();
++	priv->initialized = true;
 +
-+notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
-+{
-+	__bpf_spin_unlock_irqrestore(lock);
+ 	return 0;
+ 
+ err_init:
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+index 5037142c5a822..95146ec754d5c 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+@@ -810,10 +810,6 @@ int ath9k_tx_init(struct ath9k_htc_priv *priv)
+ 	skb_queue_head_init(&priv->tx.data_vo_queue);
+ 	skb_queue_head_init(&priv->tx.tx_failed);
+ 
+-	/* Allow ath9k_wmi_event_tasklet(WMI_TXSTATUS_EVENTID) to operate. */
+-	smp_wmb();
+-	priv->tx.initialized = true;
+-
  	return 0;
  }
  
-@@ -322,9 +332,9 @@ void copy_map_value_locked(struct bpf_map *map, void *dst, void *src,
- 	else
- 		lock = dst + map->spin_lock_off;
- 	preempt_disable();
--	____bpf_spin_lock(lock);
-+	__bpf_spin_lock_irqsave(lock);
- 	copy_map_value(map, dst, src);
--	____bpf_spin_unlock(lock);
-+	__bpf_spin_unlock_irqrestore(lock);
- 	preempt_enable();
- }
+diff --git a/drivers/net/wireless/ath/ath9k/wmi.c b/drivers/net/wireless/ath/ath9k/wmi.c
+index 1476b42b52a91..805ad31edba2b 100644
+--- a/drivers/net/wireless/ath/ath9k/wmi.c
++++ b/drivers/net/wireless/ath/ath9k/wmi.c
+@@ -155,6 +155,12 @@ void ath9k_wmi_event_tasklet(struct tasklet_struct *t)
+ 		}
+ 		spin_unlock_irqrestore(&wmi->wmi_lock, flags);
  
++		/* Check if ath9k_htc_probe_device() completed. */
++		if (!data_race(priv->initialized)) {
++			kfree_skb(skb);
++			continue;
++		}
++
+ 		hdr = (struct wmi_cmd_hdr *) skb->data;
+ 		cmd_id = be16_to_cpu(hdr->command_id);
+ 		wmi_event = skb_pull(skb, sizeof(struct wmi_cmd_hdr));
+@@ -169,10 +175,6 @@ void ath9k_wmi_event_tasklet(struct tasklet_struct *t)
+ 					     &wmi->drv_priv->fatal_work);
+ 			break;
+ 		case WMI_TXSTATUS_EVENTID:
+-			/* Check if ath9k_tx_init() completed. */
+-			if (!data_race(priv->tx.initialized))
+-				break;
+-
+ 			spin_lock_bh(&priv->tx.tx_lock);
+ 			if (priv->tx.flags & ATH9K_HTC_OP_TX_DRAIN) {
+ 				spin_unlock_bh(&priv->tx.tx_lock);
 -- 
 2.43.0
 
