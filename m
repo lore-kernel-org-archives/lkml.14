@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CC31DCCAE;
-	Sun, 24 Mar 2024 22:55:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A735B1D6862;
+	Sun, 24 Mar 2024 22:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320913; cv=none; b=aBAv1Rjj6AF6nL9V9KHnwwabiGnj6f6YyTdBvyrdeDkPH3Y1n7miMXR4iL0YRLK58T2jsnsIJtoegQSTuhdV/euiIEw5vYuY996mDaEqTxc4WrTvMc5f3Ve5De5X3GgJfzC47vIiedfcQuOQJZKCWqpKW6GjOI+9xHnnq6E2S3c=
+	t=1711320720; cv=none; b=VNbrpyNXwkQWAAe1sWR8/Az/4AN9skhQJMUvn7IQUXFx4bYvufaXxErUPnStf2sz/vwCHVk+5mfG5t1u7gzfHe00e/1yszyFCouVowB0gONt9kvxFtwYekowBIdvGiSMpSBfGBp8wq/oBglWIe0PIVquCrQUezBvU3HzciqZCaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320913; c=relaxed/simple;
-	bh=kB9jl1qMMQaC+HGZkILpshVUAWry7MsqV7jwPaM+sUY=;
+	s=arc-20240116; t=1711320720; c=relaxed/simple;
+	bh=FqGypTOb490W/ywG+V8ao7/xpZ8vZxNiO43DA4jiXGk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f+N/BnFBp+/MGrGe1bEbCUWcdEZZI7ESM+oc0u605fTfNaVlYMCdXCIXzijJPb3upQcvm9zEFsm3Iq2BlrCv6u/eDh9qEdFuvzKcdR2eP4PEDa9nDPrPQQJ0KNRYgIY73LbSaPedbtABeoTbdoaIn33OXfOH5iE46sjC8E7p1r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5ww0uxS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=f4T6iC09b3KrR8xcWtYxYCYADspVCPPMusy0vOOnbIFJM+4mjk0jbRGcrFYQ4J1JILOuIOx/lXGCwJmwObTmuWTPl2/X2RSv7m7SVE2gTJ83sIpYM89nQ8OqgOulAUpup5Pod3BuotuXq80YctDyAaKuf4P8XiAyEm89UBteRrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tN/F9ML+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5ww0uxS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BDDDC43394;
-	Sun, 24 Mar 2024 22:55:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tN/F9ML+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3EFBC433F1;
+	Sun, 24 Mar 2024 22:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320912;
-	bh=kB9jl1qMMQaC+HGZkILpshVUAWry7MsqV7jwPaM+sUY=;
+	s=k20201202; t=1711320719;
+	bh=FqGypTOb490W/ywG+V8ao7/xpZ8vZxNiO43DA4jiXGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l5ww0uxS1zdE8ZjSMHUtUMYb82E+kgtILpGyPl6m7NQRwL07PQ2/pM9TOjzyeQpyn
-	 6eYvOZVcL7ogHytWB/YpwK6yFmlR6p2dY12CwJ2B4iVTME83wHQApJq11+Bm7dHHdt
-	 BEMhZ0RjsSxDxMK0lZesh7jI9EFQjJliIWs6hzKvKAqGBIMgeGa7ZkjDJRugAJ+A0w
-	 Yb+sOJuK4NTFNiN2TpYquFRiXtyLgcPH1BSRP8AtKvjX/+8JBWjA0/3YlJ5bVr83my
-	 G2dPWqYZBj2B6gwFzA2AWkyvzbR658o01tsjf/Z/hPcr4q6ux2YTAnICfpEVUChbkL
-	 vHESn8q1VVQZQ==
+	b=tN/F9ML+nPBPrptGP+VKQWOv8kj2/qdM3C1zahK8PxAeY2gJ+EZxIC+Sm/GxEhbKb
+	 TxDh9hpgCv0MlMBfqHWcOR20MKnpPqaQh2OdYXz87whQydnQgXOpR9Oovz/7JiSe4o
+	 SS/n1KQM1drQ0FIdTOOUKsLtCDSPz8IPNR7z91uXQbUociIEXVMPFLLGsh0j8NyUPK
+	 3MiS+bd6HyX6Bw5b8Vy2AFWLm8iLS5hdBxqXOzwRbs3SznrzbW4EBNuGIHxPUNZri4
+	 dAqauwB049TEyhch/Le+ntBFIOaadnLuK0NS/bS+V6MXAmHzMUGAyGUpLvW77Zm25e
+	 AyOBS+ezrY/xg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Douglas Anderson <dianders@chromium.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
+Cc: Jon Hunter <jonathanh@nvidia.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 475/713] drm/panel: boe-tv101wum-nl6: make use of prepare_prev_first
-Date: Sun, 24 Mar 2024 18:43:21 -0400
-Message-ID: <20240324224720.1345309-476-sashal@kernel.org>
+Subject: [PATCH 6.7 282/713] memory: tegra: Correct DLA client names
+Date: Sun, 24 Mar 2024 18:40:08 -0400
+Message-ID: <20240324224720.1345309-283-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,40 +48,105 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-[ Upstream commit 42a7a16bedc991190310a02dd202e29cfac52525 ]
+[ Upstream commit 51d915cbeef4c7a154f5d810b1e10d8125f2b0cc ]
 
-The panel on sc7180-trogdor-wormdingler and
-sc7180-trogdor-quackingstick hasn't been coming up since commit
-9e15123eca79 ("drm/msm/dsi: Stop unconditionally powering up DSI hosts
-at modeset"). Let's add "prepare_prev_first" as has been done for many
-other DSI panels.
+Some of the names for the Tegra234 DLA clients are not unique and do not
+align with the name of the client ID definitions. Therefore, it is not
+possible to determine the exact DLA client from messages that print the
+client name. Fix this by correcting the DLA memory client names for
+Tegra234 to align with the name of the corresponding memory client ID.
 
-Fixes: 9e15123eca79 ("drm/msm/dsi: Stop unconditionally powering up DSI hosts at modeset")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-Link: https://lore.kernel.org/r/20240216123111.1.I71c103720909790e1ec5a3f5bd96b18ab7b596fa@changeid
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240216123111.1.I71c103720909790e1ec5a3f5bd96b18ab7b596fa@changeid
+Note that although the client names are also used by the interconnect
+framework, interconnect support for the DLA clients has not been added
+and so this issue does not impact the interconnect support.
+
+Fixes: 5cd24ca0985f ("memory: tegra: Add DLA clients for Tegra234")
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20240220124430.19072-1-jonathanh@nvidia.com
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/memory/tegra/tegra234.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-index c4c0f08e92026..bc08814954f9b 100644
---- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-+++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-@@ -1871,6 +1871,8 @@ static int boe_panel_add(struct boe_panel *boe)
- 
- 	gpiod_set_value(boe->enable_gpio, 0);
- 
-+	boe->base.prepare_prev_first = true;
-+
- 	drm_panel_init(&boe->base, dev, &boe_panel_funcs,
- 		       DRM_MODE_CONNECTOR_DSI);
- 	err = of_drm_get_panel_orientation(dev->of_node, &boe->orientation);
+diff --git a/drivers/memory/tegra/tegra234.c b/drivers/memory/tegra/tegra234.c
+index abff87f917cb4..b8a7af2d36c11 100644
+--- a/drivers/memory/tegra/tegra234.c
++++ b/drivers/memory/tegra/tegra234.c
+@@ -121,7 +121,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDB,
+-		.name = "dla0rdb",
++		.name = "dla1rdb",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -407,7 +407,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDB1,
+-		.name = "dla0rdb1",
++		.name = "dla1rdb1",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -417,7 +417,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1WRB,
+-		.name = "dla0wrb",
++		.name = "dla1wrb",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -699,7 +699,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDA,
+-		.name = "dla0rda",
++		.name = "dla1rda",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -709,7 +709,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1FALRDB,
+-		.name = "dla0falrdb",
++		.name = "dla1falrdb",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -719,7 +719,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1WRA,
+-		.name = "dla0wra",
++		.name = "dla1wra",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -729,7 +729,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1FALWRB,
+-		.name = "dla0falwrb",
++		.name = "dla1falwrb",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
+@@ -917,7 +917,7 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_DLA1RDA1,
+-		.name = "dla0rda1",
++		.name = "dla1rda1",
+ 		.sid = TEGRA234_SID_NVDLA1,
+ 		.regs = {
+ 			.sid = {
 -- 
 2.43.0
 
