@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DD2182EE6;
-	Sun, 24 Mar 2024 23:49:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB76182F0F;
+	Sun, 24 Mar 2024 23:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324180; cv=none; b=jo6A4Gnc9Yb5nO2nwZA1oT0ZEg5lst4vBVEFbL536jyapGVsYadHlp3vPOZyn268BbOHSwlRTyk7/YbvieA0IbgOVvTl4VN4VZHUBlWY40ZHnvFaKwoWeSiZ1Rt6Wne4sQZ9BXuWWRzNOg26l/bP5jNf7LJzk975unmY/Ti3Sgk=
+	t=1711324190; cv=none; b=FQETYQEV1YDgoW1S2GHQ33iSkz3aZP/9wX+UU+l2woSWPQYLwj1mvSn4K4P0ULXgjKjx9fHVX6T9MtSf/XEevw2LQP3UmxXqksssgA9457wdeUuBZw2j2tCzfe3yyvaHu/FpzUHEZ4SBWvf2OBXJQvPiRr6F2Q56m8Gi+X38yU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324180; c=relaxed/simple;
-	bh=H9+Z6tw0a54j3G9lSJGWtJ0NwwhnT4Y44Yjt7W6ADWY=;
+	s=arc-20240116; t=1711324190; c=relaxed/simple;
+	bh=harBe5+ycWcpGaaRXQex1N/DCMhWycMN9uszLnw1iR0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D5MnaidaIB3RrOCzu0lTbxnAy7iElC/cscVI3tAcJRgddR7m61+hHyFh2eBA5uzCaqdPRC4MrWuh2e0/Kb8hTS9qiycBRjJfU+nzBqIN8/2H+81RGcApaqeQkEHjWo5huTYE+tkEdGP14v5ABsrOXyx2O1ohczi2CdCZhBMV1fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMQcgUF1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AH3duVF6UeDa6Gb4U8YJ+FFioH+E1wj4X3O92C2p6CTU1/cCb9BcGfUMnN7DTEJjaFjt3jRyVJHTQQHafH7QAXUfo1PRLFm3uHaGYE6REytkexHmoVPt1bE+XN4xXIRUN65Y5/JYqkpxwpS161o7NDNKKU8Z/VrRV0DFHTCvP6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFzZcTn/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMQcgUF1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2289C433A6;
-	Sun, 24 Mar 2024 23:49:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFzZcTn/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B6CC433C7;
+	Sun, 24 Mar 2024 23:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324179;
-	bh=H9+Z6tw0a54j3G9lSJGWtJ0NwwhnT4Y44Yjt7W6ADWY=;
+	s=k20201202; t=1711324188;
+	bh=harBe5+ycWcpGaaRXQex1N/DCMhWycMN9uszLnw1iR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VMQcgUF13J6Ld3XiCrZcGwuWeC7ie8YqAl/beuHRfeYrmE0E2vPpMRYDY9pMkx8p3
-	 HtaqKpuk2P9VCuBFGP4hTCRSazhQE2dDQMdJr1tWv4JE2kfiNeligBZP5712/u/XU4
-	 F8MBpSuKS+jRsg/ynKZeIo2kUbVhuxR1rU+KcAIinD1m5NCZBtOq2unSyQKuSwMeVY
-	 zXEwOFCxfNHwXpH3yIm98O6YtiwM7WswrP9QW5Ufv9bIaw0682z6liQ7MPUMohs57G
-	 JgqRB/YcwihmA18+sXMGaNJ+Dr5TvDPNoz/5NDmwn/QgZm5Bn8oYcS3JTtkFYqTDb6
-	 7ZUHUBsS40stA==
+	b=MFzZcTn/xjGWWXfbIXc78apaQ9ewiZfz4SqlNXfWY5o2lZScsdcrtO6hY7WE5L2bR
+	 hfh+xsy60ohsON8FBsLaTxWu1kK2GWarSvLF0XeJ4suzJmFrLQCVJTtXc17byHvwVd
+	 JIsdY1SULoTKrppEZIW9TUprL8YLK5klLZ2pFaRn3ua5Fx9bPwv2R4bMrjgrJHvybj
+	 +YSwdA5HaTjxdQ3+0sYeyzYCiHTcScylXkPvXFSrv1W8XBToSJE55WWoI51IgtTIaH
+	 Cz7MIY9LQnx1ceJafGFFwS4CXHVQN1AIiFdc7yQgIsZm981S/W/8Eyr17TOxn96VVp
+	 cGTx5CXP7OLvQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mete Durlu <meted@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 170/183] s390/vtime: fix average steal time calculation
-Date: Sun, 24 Mar 2024 19:46:23 -0400
-Message-ID: <20240324234638.1355609-171-sashal@kernel.org>
+Subject: [PATCH 5.4 178/183] netfilter: nf_tables: do not compare internal table flags on updates
+Date: Sun, 24 Mar 2024 19:46:31 -0400
+Message-ID: <20240324234638.1355609-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,62 +47,32 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mete Durlu <meted@linux.ibm.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 367c50f78451d3bd7ad70bc5c89f9ba6dec46ca9 ]
+[ Upstream commit 4a0e7f2decbf9bd72461226f1f5f7dcc4b08f139 ]
 
-Current average steal timer calculation produces volatile and inflated
-values. The only user of this value is KVM so far and it uses that to
-decide whether or not to yield the vCPU which is seeing steal time.
-KVM compares average steal timer to a threshold and if the threshold
-is past then it does not allow CPU polling and yields it to host, else
-it keeps the CPU by polling.
-Since KVM's steal time threshold is very low by default (%10) it most
-likely is not effected much by the bloated average steal timer values
-because the operating region is pretty small. However there might be
-new users in the future who might rely on this number. Fix average
-steal timer calculation by changing the formula from:
+Restore skipping transaction if table update does not modify flags.
 
-	avg_steal_timer = avg_steal_timer / 2 + steal_timer;
-
-to the following:
-
-	avg_steal_timer = (avg_steal_timer + steal_timer) / 2;
-
-This ensures that avg_steal_timer is actually a naive average of steal
-timer values. It now closely follows steal timer values but of course
-in a smoother manner.
-
-Fixes: 152e9b8676c6 ("s390/vtime: steal time exponential moving average")
-Signed-off-by: Mete Durlu <meted@linux.ibm.com>
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
-Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Fixes: 179d9ba5559a ("netfilter: nf_tables: fix table flag updates")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/vtime.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/netfilter/nf_tables_api.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/vtime.c b/arch/s390/kernel/vtime.c
-index 6e60cc2443b2e..2c99de1cc92cb 100644
---- a/arch/s390/kernel/vtime.c
-+++ b/arch/s390/kernel/vtime.c
-@@ -214,13 +214,13 @@ void vtime_flush(struct task_struct *tsk)
- 		virt_timer_expire();
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index c5dbb950822fd..2d372d5fcbfaa 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -916,7 +916,7 @@ static int nf_tables_updtable(struct nft_ctx *ctx)
+ 	if (flags & ~NFT_TABLE_F_DORMANT)
+ 		return -EINVAL;
  
- 	steal = S390_lowcore.steal_timer;
--	avg_steal = S390_lowcore.avg_steal_timer / 2;
-+	avg_steal = S390_lowcore.avg_steal_timer;
- 	if ((s64) steal > 0) {
- 		S390_lowcore.steal_timer = 0;
- 		account_steal_time(cputime_to_nsecs(steal));
- 		avg_steal += steal;
- 	}
--	S390_lowcore.avg_steal_timer = avg_steal;
-+	S390_lowcore.avg_steal_timer = avg_steal / 2;
- }
+-	if (flags == ctx->table->flags)
++	if (flags == (ctx->table->flags & NFT_TABLE_F_MASK))
+ 		return 0;
  
- /*
+ 	/* No dormant off/on/off/on games in single transaction */
 -- 
 2.43.0
 
