@@ -1,133 +1,90 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C82310A3C;
-	Sun, 24 Mar 2024 19:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CBEDF58
+	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 20:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711310269; cv=none; b=SDF8lpoXYFMzXXrw8pYU31DrOmruzeC9YVVih6qIf8fTk8G+QA/zzgoAeRg4Odw838jsDGI+Avj31tg7lgSxyOKs3j6HIueNeAataXy1do4zMuGW6t2L0GGqCz2kf332yXbHV57/XxeGlOPHsLBqj+v1PoYbYqP8LlTK7lkDElU=
+	t=1711310727; cv=none; b=FY5REkPVJSjYjb4jrVY+D6aixba0d16mV4uT3HxN8460cZkiNPsyWMZ9j4Ilao/o3e+ZXe7qpABzozFqQqi/ClXQblUyW0CCCQJBp+pMnqzOMQTuKzY916CyC81QyjqFtmrhEve+AO48BlxZ2SX0hEi1x/B0OPTlz8hGdM6pRtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711310269; c=relaxed/simple;
-	bh=lg3kSg+bqI7JQzEKtAQoAr21sTsP2afkIOflNBDtQVI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c6ExOi05/gdw/mLXrxCuyuu62fFKPM8tLn27yUmaLogVSc5aWBLZlo6Bjv8AkhSS1WaxqRwWpFbcNFkua7wrgd9SP2Z0RnU894IanhcSWvBt1553m8F9qL+UjApdiZyJ3l6lWRVOfHKsP+XxYeexOc++VX70b8ZXjj5CZMq+g+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=maprH2J4; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maprH2J4"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a450bedffdfso422126666b.3;
-        Sun, 24 Mar 2024 12:57:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711310266; x=1711915066; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x4IPlP6THkrkzdSIlJOyjo59Thug/31oXQ6SWrMV7JI=;
-        b=maprH2J4tllBSXMqOSb6mn5VIkZgzohxfz9OkpaDdSf9SyVWnaONF5Iol8LMaRytxz
-         zGpZL6kzZ7REfQ2SqdKdStzHo2hVODTwFR9JZtEzHeN21DDywC83rAU3kwZugQiUzxK/
-         FfMSUfm3C4sRYV3jxzpSZ77uUqQdIoslf1KdKPAA8XGhedi/+Iqg12m2SGBSYVTLRyI+
-         JCAV1vHoASTj5U5UQSUbawDOXH8lGrkOexam6SONLiLO5ElC/yVxsLCRf1qCNPNzfU/E
-         0oll6sTsCj0ARTch8o7a75u/dYvakbcXUohMadDRWRtTNv+GmG/59LzdxRLmuq2bNbTx
-         jrsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711310266; x=1711915066;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x4IPlP6THkrkzdSIlJOyjo59Thug/31oXQ6SWrMV7JI=;
-        b=J/rmVcVGCezNDlLoagIMzupjtLhX2NhU/jP3abXcy8GV8Fz41F2RahHrW28WhjUGBO
-         clxCnLl2FJV7h6bSuCLm68PvrEPsva1gdfHffl0FfJZuKZuDGwZa4WwhQkMBN0L6KHxL
-         jLtXEcaeAFFNWd0JliXMHjg1JMmO8ztGGiFLy21V4vnHRL37nwxbOWzOGPfRUZXdXGyh
-         GOlFO18Swbr3naZGan5AD/jH6qVcqM6FhBlGFY/Dm2fBLGI7uP1t0GuWPBF7JZufNH4T
-         SkdTgOanZCIslsRH14Uj5pmzm7dWo7O6Xc0O70a1yCpRnFAvpV0Sc5QnFTtcI0xIbVTe
-         Xpcw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHRchXKjVDjgtKT0N5iu4Jz0EJjSlNAa6z7XH/nje+XscnUoEAsmsCKk4XLfIslQ0eCpatSehf3LPG9eksN/YpJyjfYM45ENdN4DVpBC2suIwZs+SRSKfcfjygIGK4g41jt/nju6kOYYhMlfRqdl4tFUmLokGss6Gn5igx9wQ/B4ZkoW4BY7+qxDV2U7HMSSA8uZhtFG06zqJWFccQsXXh/pVdhd9QZg==
-X-Gm-Message-State: AOJu0YweUNTxfiXFgG/CEONTA8f3wPDEWilvcfLooQ3urpUWykiPWHR4
-	b9DRhYz9YZHtpVCOM6v7sQqJkPgINqERDt9cI17uiRzPc9ecvDhJaj+SFDZnHwyL2Jjl8AGJ0Km
-	3BvMbGcz0OxCOg8Sicg9+YIstifjM2d3CYRA=
-X-Google-Smtp-Source: AGHT+IEFjPMkPi7I5EWm+abAes/bngmSQZQVeOkjRaOnuFzJaLMLEr25KfKquHTPuZGLqrLP1se8F+n2HwEI/ky/5PA=
-X-Received: by 2002:a17:906:2688:b0:a46:8c40:7a3a with SMTP id
- t8-20020a170906268800b00a468c407a3amr3489936ejc.26.1711310266196; Sun, 24 Mar
- 2024 12:57:46 -0700 (PDT)
+	s=arc-20240116; t=1711310727; c=relaxed/simple;
+	bh=IvfySWcVa3xtvUCqNnf2m8MSm9ibBjQP1xVDPkMxZhA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=jTHhsmww12A3Acdfl57mHCqjXDhSX0WvFH10G862o/gB+W3ScGg7J61RpBh0qlZsjGhF3mYYxQIw+RVudlyk/ZGYOriB3wZxcvoZfSFjWOvs2zP3lOXWLs82iS29JM3iq0hp7MsT5s1ZWtsckCVVXPZKcb167KUx1ZxpCpn3Rlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-31-9M3ZnYw6P76jOK7te1drUg-1; Sun, 24 Mar 2024 20:05:19 +0000
+X-MC-Unique: 9M3ZnYw6P76jOK7te1drUg-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 24 Mar
+ 2024 20:04:48 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sun, 24 Mar 2024 20:04:48 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Alexei Starovoitov' <alexei.starovoitov@gmail.com>, Puranjay Mohan
+	<puranjay12@gmail.com>, Ilya Leoshkevich <iii@linux.ibm.com>
+CC: "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, "Yonghong
+ Song" <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>,
+	"KP Singh" <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
+	<haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Thomas Gleixner
+	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, X86 ML
+	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Jean-Philippe Brucker
+	<jean-philippe@linaro.org>, Network Development <netdev@vger.kernel.org>, bpf
+	<bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH bpf] bpf: verifier: prevent userspace memory access
+Thread-Topic: [PATCH bpf] bpf: verifier: prevent userspace memory access
+Thread-Index: AQHae1YhECDY/uuUVEW0JBnf8hxKG7FHVPhw
+Date: Sun, 24 Mar 2024 20:04:48 +0000
+Message-ID: <1686adb401b34adaa3b703ec1a8ffe49@AcuMS.aculab.com>
+References: <20240320105436.4781-1-puranjay12@gmail.com>
+ <CAADnVQJ3o6DsURi=N_KXx+mbW9r7__3LrwYLyYwuoMOsqFHPkw@mail.gmail.com>
+In-Reply-To: <CAADnVQJ3o6DsURi=N_KXx+mbW9r7__3LrwYLyYwuoMOsqFHPkw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324150107.976025-1-hpa@redhat.com> <20240324150107.976025-3-hpa@redhat.com>
-In-Reply-To: <20240324150107.976025-3-hpa@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 24 Mar 2024 21:57:08 +0200
-Message-ID: <CAHp75VdosbYNKU90QWt+6SU_i5dWC94=xZy0GXiKvoQeDF30wg@mail.gmail.com>
-Subject: Re: [PATCH v5 RESEND 2/6] leds: rgb: leds-ktd202x: Get device
- properties through fwnode to support ACPI
-To: Kate Hsuan <hpa@redhat.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
-	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Sun, Mar 24, 2024 at 5:02=E2=80=AFPM Kate Hsuan <hpa@redhat.com> wrote:
->
-> This LED controller also installed on a Xiaomi pad2 and it is a x86
-> platform. The original driver is based on device tree and can't be
+RnJvbTogQWxleGVpIFN0YXJvdm9pdG92DQo+IFNlbnQ6IDIxIE1hcmNoIDIwMjQgMDY6MDgNCj4g
+DQo+IE9uIFdlZCwgTWFyIDIwLCAyMDI0IGF0IDM6NTXigK9BTSBQdXJhbmpheSBNb2hhbiA8cHVy
+YW5qYXkxMkBnbWFpbC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gVGhlIEpJVHMgbmVlZCB0byBpbXBs
+ZW1lbnQgYnBmX2FyY2hfdWFkZHJlc3NfbGltaXQoKSB0byBkZWZpbmUgd2hlcmUNCj4gPiB0aGUg
+dXNlcnNwYWNlIGFkZHJlc3NlcyBlbmQgZm9yIHRoYXQgYXJjaGl0ZWN0dXJlIG9yIFRBU0tfU0la
+RSBpcyB0YWtlbg0KPiA+IGFzIGRlZmF1bHQuDQo+ID4NCj4gPiBUaGUgaW1wbGVtZW50YXRpb24g
+aXMgYXMgZm9sbG93czoNCj4gPg0KPiA+IFJFR19BWCA9ICBTUkNfUkVHDQo+ID4gaWYob2Zmc2V0
+KQ0KPiA+ICAgICAgICAgUkVHX0FYICs9IG9mZnNldDsNCj4gPiBSRUdfQVggPj49IDMyOw0KPiA+
+IGlmIChSRUdfQVggPD0gKHVhZGRyZXNzX2xpbWl0ID4+IDMyKSkNCj4gPiAgICAgICAgIERTVF9S
+RUcgPSAwOw0KPiA+IGVsc2UNCj4gPiAgICAgICAgIERTVF9SRUcgPSAqKHNpemUgKikoU1JDX1JF
+RyArIG9mZnNldCk7DQo+IA0KPiBUaGUgcGF0Y2ggbG9va3MgZ29vZCwgYnV0IGl0IHNlZW1zIHRv
+IGJlIGNhdXNpbmcgczM5MCBDSSBmYWlsdXJlcy4NCg0KSSdtIGNvbmZ1c2VkIGJ5IHRoZSBuZWVk
+IGZvciB0aGlzIGNoZWNrIChhbmQsIElJUkMsIHNvbWUgb3RoZXIgYnBmDQpjb2RlIHRoYXQgZG9l
+cyBrZXJuZWwgY29waWVzIHRoYXQgY2FuIGZhdWx0IC0gYW5kIHJldHVybiBhbiBlcnJvcikuDQoN
+CkkgdGhvdWdoIHRoYXQgdGhlIGVudGlyZSBwb2ludCBvZiBicGYgd2FzIHRoYXQgaXMgc2FuaXRp
+c2VkIGFuZA0KdmVyaWZpZWQgZXZlcnl0aGluZyB0byBsaW1pdCB3aGF0IHRoZSAncHJvZ3JhbScg
+Y291bGQgZG8gaW4gb3JkZXINCnRvIHN0b3AgaXQgb3ZlcndyaXRpbmcgKG9yIGV2ZW4gcmVhZGlu
+Zykga2VybmVsIHN0cnVjdHVyZXMgdGhhdA0KaXMgd2Fzbid0IHN1cHBvc2VkIHRvIGFjY2Vzcy4N
+Cg0KU28gaXQganVzdCBzaG91bGRuJ3QgaGF2ZSBhIGFkZHJlc3MgdGhhdCBtaWdodCBiZSAoaW4g
+YW55IHdheSkNCmludmFsaWQuDQoNClRoZSBvbmx5IHBvc3NpYmxlIGFkZHJlc3MgdmVyaWZ5IGlz
+IGFjY2Vzc19vaygpIHRvIGVuc3VyZSB0aGF0DQphIHVzZXMgYWRkcmVzcyByZWFsbHkgaXMgYSB1
+c2VyIGFkZHJlc3MuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUs
+IEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJl
+Z2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-the device
-
-> used for this ACPI based system. This patch migrated the driver to
-> use fwnode to access the properties. Moreover, the fwnode API
-> supports device tree so this work won't effect the original
-
-affect
-
-> implementations.
-
-...
-
-> +       fwnode_for_each_available_child_node(fwnode, child) {
-> +               num_channels++;
-> +       }
-
-{} are not needed.
-
->         if (!num_channels || num_channels > chip->num_leds)
->                 return -EINVAL;
-
-...
-
-> +static int ktd202x_add_led(struct ktd202x *chip,
-> +                          struct fwnode_handle *fwnode_color,
-
-Can it be simply fwnode? (Originally it was np, so I assume there is
-no name collision)
-
-...
-
-> +       count =3D device_get_child_node_count(dev);
->         if (!count || count > chip->num_leds)
->                 return -EINVAL;
-
-> +       fwnode =3D dev_fwnode(chip->dev);
-
-Why not dev?
-
-> +       if (!fwnode)
-> +               return -ENODEV;
-
-This is dead code. Please remove these three lines.
-
-...
-
-> +       .id_table =3D ktd202x_id,
-
-Seems to me that you may split the I=C2=B2C ID table addition into a separa=
-te change.
-
---=20
-With Best Regards,
-Andy Shevchenko
