@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B147145B24;
-	Sun, 24 Mar 2024 23:13:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D70145B1F;
+	Sun, 24 Mar 2024 23:13:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322026; cv=none; b=dJkkO6QHGWoZ2ftf+xI5ZjLBOQxG8WL7C2m8NjDnqVd74vsedwvJSNy+jMS7KqvEm7DDk49M58B6ohY+7sWZ9icoWuRvIjuDxO6fChdBSwWBCxF+b4GD1Hxr7TuOr8eKsKfyEEIPwCNqlACTt5ocRHcIimdqqlzlH71ZUyNfhz0=
+	t=1711322019; cv=none; b=QkbQeW0sUhjbNohCITPKSDF3j3Tk80J+DTaGdXnRIvBqUAZACERJ8XV6s9+DU18C7ZvgJRQiVpsBNL8u5518LI2uXZxLKcakBQee75HTtN1aPVJG0q9t9AUFSFGy1fTcHCeRa43NfA7PJ+vPQP+5sPQkhC2z0KAYVJK6cV3Tj88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322026; c=relaxed/simple;
-	bh=AG23bdc6T+HcriaBH5aprj0FR+KrOH33r/hrRR9Hni4=;
+	s=arc-20240116; t=1711322019; c=relaxed/simple;
+	bh=rM/a6NXuhaaDJxRNqFU+vOj3znGsfhW1ZP19rBQIkT4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O+FgZxrNvyvRx37OopOInFKnfuH7GCNVLWG7MsE1uVOQnhmEnkQnWodGCKsOVZgPcAUVF1NvDaI8RhrLW8utOTyBFcDqDuV9LQbWHHm43V3ty0B0PlMaYviyVEQWP96jZ0SiyorScoWeKLe5+cAFYjZAIfkmBtYEFGPQgNg00SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g40Kce4+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=lVHsIgoTpZZSE26Irhpc9XWEgngTPBkExjOWncxq/B09wgwUFsyiheBWe/THjLxzaXOAejTM4ylf14FRlnG9LYGi3J7vzXE2ajwj7xUhpkFGONw7/PEipx/S5uv0Sqxr9i0IHFw9DsNQRItlyBGjeoI8XZsFU1hqf/feUMY5Kfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3X6BvFR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g40Kce4+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28F21C433C7;
-	Sun, 24 Mar 2024 23:13:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3X6BvFR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72A5EC433F1;
+	Sun, 24 Mar 2024 23:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322025;
-	bh=AG23bdc6T+HcriaBH5aprj0FR+KrOH33r/hrRR9Hni4=;
+	s=k20201202; t=1711322019;
+	bh=rM/a6NXuhaaDJxRNqFU+vOj3znGsfhW1ZP19rBQIkT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g40Kce4+3HgKGpHHoG10idS7xmXRZ6yUenH4seQlLCVfc2BZW99sk+EHH4M9kJXo1
-	 HOrs9q258+w8yuHGJlajfLQ/WyFsOyV2AkjYkGgwajP0RHtDfVdk/CPkqS6lqrIfZ7
-	 SQauGPtshH/WjO9dKOsr3bS6fbHrfcg2Jv8+F+U4IBA7S5UR8HnVT1WhP+XO/aSzaJ
-	 v1iq2iHlO2il/B6fiXVPuD2L30CB8O0xcatWrOwle7jS1honLdZFkzxg6oAtXUlQ8h
-	 XVdrVRP42Qenz+YOdMwdOYJec5VcRutj6Ir7PzDfbSAIxPfMmpctMvVenT1gI5u5Yr
-	 KzNkn2qBgNcSQ==
+	b=Y3X6BvFRNma5N9snvapp1mpFsCrYaTM0KpTW2ARIUbL3fYLmN/r4lzhdXrx1w6QSm
+	 NTr0xpnskSs3TWU5Z3vwGrXBIw9RgiLI8TrhT3cYFjiozHaXJl4B9uFnGC/movicf7
+	 WNFV8qLqHuVYqQrAC45CzxIT9H2cpmEoOfs0OvBRXLLM9agVuSMV9tczVEGB3uwuVu
+	 YrI7GKGRvaL3xeFViCnDlNPF8NosItKuE4NKZa+a38Vp5kb2amM3DAnrcJiEgboKb6
+	 J6I2k+awl5s5tBoXhQCCAJO69JLU1TXXmIsLeSy8gPXZ/dwVotx88DbbHkig/MRnbw
+	 ytZJLP4XISpHQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
+Cc: Ajay Singh <ajay.kathat@microchip.com>,
+	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 097/451] cpufreq: mediatek-hw: Wait for CPU supplies before probing
-Date: Sun, 24 Mar 2024 19:06:13 -0400
-Message-ID: <20240324231207.1351418-98-sashal@kernel.org>
+Subject: [PATCH 6.1 091/451] wifi: wilc1000: do not realloc workqueue everytime an interface is added
+Date: Sun, 24 Mar 2024 19:06:07 -0400
+Message-ID: <20240324231207.1351418-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -51,67 +50,117 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+From: Ajay Singh <ajay.kathat@microchip.com>
 
-[ Upstream commit 788715b5f21c6455264fe00a1779e61bec407fe2 ]
+[ Upstream commit 328efda22af81130c2ad981c110518cb29ff2f1d ]
 
-Before proceeding with the probe and enabling frequency scaling for the
-CPUs, make sure that all supplies feeding the CPUs have probed.
+Commit 09ed8bfc5215 ("wilc1000: Rename workqueue from "WILC_wq" to
+"NETDEV-wq"") moved workqueue creation in wilc_netdev_ifc_init in order to
+set the interface name in the workqueue name. However, while the driver
+needs only one workqueue, the wilc_netdev_ifc_init is called each time we
+add an interface over a phy, which in turns overwrite the workqueue with a
+new one. This can be observed with the following commands:
 
-This fixes an issue observed on MT8195-Tomato where if the
-mediatek-cpufreq-hw driver enabled the hardware (by writing to
-REG_FREQ_ENABLE) before the SPMI controller driver (spmi-mtk-pmif),
-behind which lies the big CPU supply, probed the platform would hang
-shortly after with "rcu: INFO: rcu_preempt detected stalls on
-CPUs/tasks" being printed in the log.
+for i in $(seq 0 10)
+do
+  iw phy phy0 interface add wlan1 type managed
+  iw dev wlan1 del
+done
+ps -eo pid,comm|grep wlan
 
-Fixes: 4855e26bcf4d ("cpufreq: mediatek-hw: Add support for CPUFREQ HW")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+ 39 kworker/R-wlan0
+ 98 kworker/R-wlan1
+102 kworker/R-wlan1
+105 kworker/R-wlan1
+108 kworker/R-wlan1
+111 kworker/R-wlan1
+114 kworker/R-wlan1
+117 kworker/R-wlan1
+120 kworker/R-wlan1
+123 kworker/R-wlan1
+126 kworker/R-wlan1
+129 kworker/R-wlan1
+
+Fix this leakage by putting back hif_workqueue allocation in
+wilc_cfg80211_init. Regarding the workqueue name, it is indeed relevant to
+set it lowercase, however it is not  attached to a specific netdev, so
+enforcing netdev name in the name is not so relevant. Still, enrich the
+name with the wiphy name to make it clear which phy is using the workqueue.
+
+Fixes: 09ed8bfc5215 ("wilc1000: Rename workqueue from "WILC_wq" to "NETDEV-wq"")
+Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
+Co-developed-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240115-wilc_1000_fixes-v1-3-54d29463a738@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/mediatek-cpufreq-hw.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ drivers/net/wireless/microchip/wilc1000/cfg80211.c | 11 ++++++++++-
+ drivers/net/wireless/microchip/wilc1000/netdev.c   | 10 +---------
+ 2 files changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
-index 212bbca8daf32..42240a7d826da 100644
---- a/drivers/cpufreq/mediatek-cpufreq-hw.c
-+++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
-@@ -13,6 +13,7 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
+diff --git a/drivers/net/wireless/microchip/wilc1000/cfg80211.c b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
+index b545d93c6e374..2f75dc4b47975 100644
+--- a/drivers/net/wireless/microchip/wilc1000/cfg80211.c
++++ b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
+@@ -1810,15 +1810,24 @@ int wilc_cfg80211_init(struct wilc **wilc, struct device *dev, int io_type,
+ 	INIT_LIST_HEAD(&wl->rxq_head.list);
+ 	INIT_LIST_HEAD(&wl->vif_list);
  
- #define LUT_MAX_ENTRIES			32U
-@@ -296,7 +297,23 @@ static struct cpufreq_driver cpufreq_mtk_hw_driver = {
- static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
- {
- 	const void *data;
--	int ret;
-+	int ret, cpu;
-+	struct device *cpu_dev;
-+	struct regulator *cpu_reg;
-+
-+	/* Make sure that all CPU supplies are available before proceeding. */
-+	for_each_possible_cpu(cpu) {
-+		cpu_dev = get_cpu_device(cpu);
-+		if (!cpu_dev)
-+			return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
-+					     "Failed to get cpu%d device\n", cpu);
-+
-+		cpu_reg = devm_regulator_get_optional(cpu_dev, "cpu");
-+		if (IS_ERR(cpu_reg))
-+			return dev_err_probe(&pdev->dev, PTR_ERR(cpu_reg),
-+					     "CPU%d regulator get failed\n", cpu);
++	wl->hif_workqueue = alloc_ordered_workqueue("%s", WQ_MEM_RECLAIM,
++						    wiphy_name(wl->wiphy));
++	if (!wl->hif_workqueue) {
++		ret = -ENOMEM;
++		goto free_cfg;
 +	}
-+
+ 	vif = wilc_netdev_ifc_init(wl, "wlan%d", WILC_STATION_MODE,
+ 				   NL80211_IFTYPE_STATION, false);
+ 	if (IS_ERR(vif)) {
+ 		ret = PTR_ERR(vif);
+-		goto free_cfg;
++		goto free_hq;
+ 	}
  
- 	data = of_device_get_match_data(&pdev->dev);
- 	if (!data)
+ 	return 0;
+ 
++free_hq:
++	destroy_workqueue(wl->hif_workqueue);
++
+ free_cfg:
+ 	wilc_wlan_cfg_deinit(wl);
+ 
+diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
+index e9f59de31b0b9..0e6eeeed2e086 100644
+--- a/drivers/net/wireless/microchip/wilc1000/netdev.c
++++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
+@@ -977,13 +977,6 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
+ 		goto error;
+ 	}
+ 
+-	wl->hif_workqueue = alloc_ordered_workqueue("%s-wq", WQ_MEM_RECLAIM,
+-						    ndev->name);
+-	if (!wl->hif_workqueue) {
+-		ret = -ENOMEM;
+-		goto unregister_netdev;
+-	}
+-
+ 	ndev->needs_free_netdev = true;
+ 	vif->iftype = vif_type;
+ 	vif->idx = wilc_get_available_idx(wl);
+@@ -996,12 +989,11 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
+ 
+ 	return vif;
+ 
+-unregister_netdev:
++error:
+ 	if (rtnl_locked)
+ 		cfg80211_unregister_netdevice(ndev);
+ 	else
+ 		unregister_netdev(ndev);
+-  error:
+ 	free_netdev(ndev);
+ 	return ERR_PTR(ret);
+ }
 -- 
 2.43.0
 
