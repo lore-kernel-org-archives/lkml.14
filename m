@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7336D17E3BD;
-	Sun, 24 Mar 2024 23:46:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF4417F36D;
+	Sun, 24 Mar 2024 23:46:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324003; cv=none; b=iSjXhNNm/YwI83Y2ZhKeDlwZlxzvx0Cw4WJlY5RzyLWouB38wJFwwjnK2oqgY/JZXROdJPyC43bv53jB11TbV3tkAT4Kc75ZRDch/2SWBVkea0PMailxBxERx3eXEZ+ACfbQ3ErLuAj2Qv4HtTOxAr+rLTtHYXU4TuCwAhSr1QQ=
+	t=1711324016; cv=none; b=Zb/o47Vvs7mOT+au8Bh4FDDuONVXjnlFbAPjbpqBC8Qy1hjtJgtuxEdEdA6s4wx4i+pv1+s/dV9Zq/diUKm8MYI3oywa0DF2P3NuRHdEm4KRFL93J6bf2MMxFNxjnCJrl8MtrHol3OKVdtidI8rUrgTi9REdhY7VDcQfjhhFQ2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324003; c=relaxed/simple;
-	bh=8SlzC+69nG3/1cKu3UH6WI7Twg+uVJqHbd/cBgcKaXs=;
+	s=arc-20240116; t=1711324016; c=relaxed/simple;
+	bh=gAqdm49DZG7gHX8FLf99AYsnKM/Po+UYbJY+eyoQle0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A1uwrZh5OxcoHCxcdIPxkDKKKCP5NbCXeYsNV0bH41AWenywE9HTT0hS5PDOFvgsUmyHWr8M9V+Idn4Oh5kNuRu0Iqier5cKG4O8KPG9SNa9WojpaNA32tZs+hlpVlAXjYMikDgwbadyQNEIyYnmvsBwA7vzh4/zRLCSojLbb54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oLjAWsRj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qcH2BOPBE2R/CkQ0hPKlRV960ALTOe7E/16Qw2t2ivf/XsgOnk3vK8kxgjITaQaAN1o1d/P+G1KCx3hG3QRMIb6ZqL9JjM8uDd2Q26JtNygrxDRzU1jiv6h1Wf6ZOD6Z2YO/1xORlns5P6vphJcxDWc+QBAxV3v17FKKjJE/4fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sP/tVTif; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oLjAWsRj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A701C43390;
-	Sun, 24 Mar 2024 23:46:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sP/tVTif"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72DA5C43394;
+	Sun, 24 Mar 2024 23:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324002;
-	bh=8SlzC+69nG3/1cKu3UH6WI7Twg+uVJqHbd/cBgcKaXs=;
+	s=k20201202; t=1711324015;
+	bh=gAqdm49DZG7gHX8FLf99AYsnKM/Po+UYbJY+eyoQle0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oLjAWsRjl6MS63X0bnp1Efu/4hbcyIXpPo1uBF34F8utRkUJek7jqfhUQGWyR7nYJ
-	 i+bHg5pmR8Nh3ZkaY8mGcBz3R9ougPUcinK55H/NDI1/hvJL/jtuZRRiJS/mw64ngH
-	 aRO/e7XTyijE/7nvBPPZNotmO/V/prUZZXOdOSs9SnxqODQTDslCzJZelJ6HEIwafx
-	 +KEvTHVQkeIwML6P4MMaK63Y9V2SLoK4ju4Monn4qWJ3kFCkRIg44xT0Q+qomyVuNV
-	 gGuYab4/eIJ7PWLiXPig7ufFpyPSlAYD5IH8NAQODunNRfNviT/fZn9OylRaUk+rfa
-	 Tlj835I/KlblA==
+	b=sP/tVTif7ObvCcHI4khAjIq5OCiPx16MLjKYc2UsNdMmngdHtq9YV4R/Z/HyBe7VQ
+	 Z/hAVlDG23HyVxGrX31zqT5yIIiRrNTkhYP0kUEx/XxKKBz/S9ucfkwtrMZZCJ8yHW
+	 oljgHDNIJv8kSSYzQ5v9KW412IZdA+zZNP9Q1QeGb+YlEgy5k0P+QYBf1D8ks6cYMV
+	 aZYaWbdehOUgI2RA7wXhIeIVFGw5wjYcEmczOZ0U1Hsr7uHSqvS2n7ySWBV5rEgG9B
+	 WZENJASLDtCQ48qKQnwWZ3bRt8sP7v7ARhf3uRonEY2563ybFEKcmnQE+r4oEcCL7w
+	 X2vrwL8vMKpew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>,
+Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Adam Goldman <adamg@pobox.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 002/183] io_uring: drop any code related to SCM_RIGHTS
-Date: Sun, 24 Mar 2024 19:43:35 -0400
-Message-ID: <20240324234638.1355609-3-sashal@kernel.org>
+Subject: [PATCH 5.4 016/183] firewire: core: use long bus reset on gap count error
+Date: Sun, 24 Mar 2024 19:43:49 -0400
+Message-ID: <20240324234638.1355609-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -47,126 +48,63 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-Commit 6e5e6d274956305f1fc0340522b38f5f5be74bdb upstream.
+[ Upstream commit d0b06dc48fb15902d7da09c5c0861e7f042a9381 ]
 
-This is dead code after we dropped support for passing io_uring fds
-over SCM_RIGHTS, get rid of it.
+When resetting the bus after a gap count error, use a long rather than
+short bus reset.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+IEEE 1394-1995 uses only long bus resets. IEEE 1394a adds the option of
+short bus resets. When video or audio transmission is in progress and a
+device is hot-plugged elsewhere on the bus, the resulting bus reset can
+cause video frame drops or audio dropouts. Short bus resets reduce or
+eliminate this problem. Accordingly, short bus resets are almost always
+preferred.
+
+However, on a mixed 1394/1394a bus, a short bus reset can trigger an
+immediate additional bus reset. This double bus reset can be interpreted
+differently by different nodes on the bus, resulting in an inconsistent gap
+count after the bus reset. An inconsistent gap count will cause another bus
+reset, leading to a neverending bus reset loop. This only happens for some
+bus topologies, not for all mixed 1394/1394a buses.
+
+By instead sending a long bus reset after a gap count inconsistency, we
+avoid the doubled bus reset, restoring the bus to normal operation.
+
+Signed-off-by: Adam Goldman <adamg@pobox.com>
+Link: https://sourceforge.net/p/linux1394/mailman/message/58741624/
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 47 +++--------------------------------------------
- 1 file changed, 3 insertions(+), 44 deletions(-)
+ drivers/firewire/core-card.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index cd1858cc63206..2c793e4ccf096 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -63,7 +63,6 @@
- #include <linux/net.h>
- #include <net/sock.h>
- #include <net/af_unix.h>
--#include <net/scm.h>
- #include <linux/anon_inodes.h>
- #include <linux/sched/mm.h>
- #include <linux/uaccess.h>
-@@ -264,10 +263,6 @@ struct io_ring_ctx {
- 
- 	struct async_list	pending_async[2];
- 
--#if defined(CONFIG_UNIX)
--	struct socket		*ring_sock;
--#endif
--
- 	struct list_head	task_list;
- 	spinlock_t		task_lock;
- };
-@@ -3067,20 +3062,10 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 
- static void __io_sqe_files_unregister(struct io_ring_ctx *ctx)
- {
--#if defined(CONFIG_UNIX)
--	if (ctx->ring_sock) {
--		struct sock *sock = ctx->ring_sock->sk;
--		struct sk_buff *skb;
--
--		while ((skb = skb_dequeue(&sock->sk_receive_queue)) != NULL)
--			kfree_skb(skb);
--	}
--#else
- 	int i;
- 
- 	for (i = 0; i < ctx->nr_user_files; i++)
- 		fput(ctx->user_files[i]);
--#endif
- }
- 
- static int io_sqe_files_unregister(struct io_ring_ctx *ctx)
-@@ -3575,13 +3560,6 @@ static void io_ring_ctx_free(struct io_ring_ctx *ctx)
- 	io_sqe_files_unregister(ctx);
- 	io_eventfd_unregister(ctx);
- 
--#if defined(CONFIG_UNIX)
--	if (ctx->ring_sock) {
--		ctx->ring_sock->file = NULL; /* so that iput() is called */
--		sock_release(ctx->ring_sock);
--	}
--#endif
--
- 	io_mem_free(ctx->rings);
- 	io_mem_free(ctx->sq_sqes);
- 
-@@ -3833,45 +3811,26 @@ static int io_allocate_scq_urings(struct io_ring_ctx *ctx,
- /*
-  * Allocate an anonymous fd, this is what constitutes the application
-  * visible backing of an io_uring instance. The application mmaps this
-- * fd to gain access to the SQ/CQ ring details. If UNIX sockets are enabled,
-- * we have to tie this fd to a socket for file garbage collection purposes.
-+ * fd to gain access to the SQ/CQ ring details.
-  */
- static int io_uring_get_fd(struct io_ring_ctx *ctx)
- {
- 	struct file *file;
- 	int ret;
- 
--#if defined(CONFIG_UNIX)
--	ret = sock_create_kern(&init_net, PF_UNIX, SOCK_RAW, IPPROTO_IP,
--				&ctx->ring_sock);
--	if (ret)
--		return ret;
--#endif
--
- 	ret = get_unused_fd_flags(O_RDWR | O_CLOEXEC);
- 	if (ret < 0)
--		goto err;
-+		return ret;
- 
- 	file = anon_inode_getfile("[io_uring]", &io_uring_fops, ctx,
- 					O_RDWR | O_CLOEXEC);
- 	if (IS_ERR(file)) {
- 		put_unused_fd(ret);
--		ret = PTR_ERR(file);
--		goto err;
-+		return PTR_ERR(file);
+diff --git a/drivers/firewire/core-card.c b/drivers/firewire/core-card.c
+index be195ba834632..d446a72629414 100644
+--- a/drivers/firewire/core-card.c
++++ b/drivers/firewire/core-card.c
+@@ -500,7 +500,19 @@ static void bm_work(struct work_struct *work)
+ 		fw_notice(card, "phy config: new root=%x, gap_count=%d\n",
+ 			  new_root_id, gap_count);
+ 		fw_send_phy_config(card, new_root_id, generation, gap_count);
+-		reset_bus(card, true);
++		/*
++		 * Where possible, use a short bus reset to minimize
++		 * disruption to isochronous transfers. But in the event
++		 * of a gap count inconsistency, use a long bus reset.
++		 *
++		 * As noted in 1394a 8.4.6.2, nodes on a mixed 1394/1394a bus
++		 * may set different gap counts after a bus reset. On a mixed
++		 * 1394/1394a bus, a short bus reset can get doubled. Some
++		 * nodes may treat the double reset as one bus reset and others
++		 * may treat it as two, causing a gap count inconsistency
++		 * again. Using a long bus reset prevents this.
++		 */
++		reset_bus(card, card->gap_count != 0);
+ 		/* Will allocate broadcast channel after the reset. */
+ 		goto out;
  	}
- 
--#if defined(CONFIG_UNIX)
--	ctx->ring_sock->file = file;
--	ctx->ring_sock->sk->sk_user_data = ctx;
--#endif
- 	fd_install(ret, file);
- 	return ret;
--err:
--#if defined(CONFIG_UNIX)
--	sock_release(ctx->ring_sock);
--	ctx->ring_sock = NULL;
--#endif
--	return ret;
- }
- 
- static int io_uring_create(unsigned entries, struct io_uring_params *p)
 -- 
 2.43.0
 
