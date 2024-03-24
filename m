@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B7D296194;
-	Sun, 24 Mar 2024 23:51:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C83D296BA9;
+	Sun, 24 Mar 2024 23:52:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324318; cv=none; b=uYkB4CVocQy3zkAWv7lPJ/Sz/2pxJhHuIYet4PaWRcaAiks9DWspq6P/U5ANgX8aLF+zDAexouOVc7qLKF1inUY0EPn0SHTKGOdGn8svta/38kOOu/BKgHcKPRMAVONQ8oxPuOrtKPpYGilJWCOi2En4bMkDjAqarjDHq796oGU=
+	t=1711324322; cv=none; b=npn15b92koY/rwAb5aIIMK5aS+qujzh7FzUhtba81t6gnvTemMl+L89tQpMGyQTN9iqfESNW0AJyw3vSHuOHT2MySFlJ0L/YtFTi9yeuo88Jvt5FPfJn/8L6mP1P21WgSriXJi/V4dqbjV6/4ADVeJN8LNWVxVVvhhLRwgeHjcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324318; c=relaxed/simple;
-	bh=lADsJniJZHzbQRfYWEvMrBb8j0yKXv7+WxDIULm0MAs=;
+	s=arc-20240116; t=1711324322; c=relaxed/simple;
+	bh=v2O7Te2gUiMryxEplDSahEdoCwle9NUThvljuAWldk8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sdYxalRgoHKNZPd8CWNWCrA4UjagScww6VkApyC4MhZVKe9rOSXFErzcIVFgXbll4AslBT7TO/pNvsdkDUVKVEX4yAepZuYxABpNycRHe9dAJMh6cnlsrXLYhlgwKDnKNImiT/Y/7GIVuICyOyGPmmg35oOzUrsnXP5h1JrBr8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J0IHf/Al; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SDZSgaatIH9gRQ2aofSkUKHO9QWZknFCw+XwXS+9pUldofPzepzvnhtwIIBcv+8qOgvSESXwJKd66SIbM3F9vF/FepGEUzzm4nIuKCtm/eQ7eJczspuURzMOd/Y/HDZCQ1QId/9mMOd18+7wZICXgET4eDGIYvU3cEmRJeyuSUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qCTk7SUS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J0IHf/Al"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CEFAC433F1;
-	Sun, 24 Mar 2024 23:51:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qCTk7SUS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A43C43390;
+	Sun, 24 Mar 2024 23:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324318;
-	bh=lADsJniJZHzbQRfYWEvMrBb8j0yKXv7+WxDIULm0MAs=;
+	s=k20201202; t=1711324322;
+	bh=v2O7Te2gUiMryxEplDSahEdoCwle9NUThvljuAWldk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J0IHf/Alu+nB+HsU4bIEuPIHKx7eWUdMggiugDZMH2UNsfYIBA6kIn75AC8OX0Vug
-	 WAJcY9sbcd7Io9NsDD/sLPcuF32ejC9XCH9/sKy7rM5OwDxfhvLVVnaXYi7DDKbmZB
-	 YAcCyuBBkBGFKqRRPAb1Ftdg4cL4+HjDj/pxNPYQZ2a+2RxpG/docDiX0ibHThOVgf
-	 6O7opwtt1OdbIBxoJUA1NQojR25lqYyQIhYggRBc0XqRytJeHryi4L3XHoSwM4tw0n
-	 0zCFrYn66FwPfO1vwOOTw5lcP70lzUnkngGGjeJXWq5ys3/iG3IiH3kMsYpE33NFC0
-	 r43Fj1Ccf8kSw==
+	b=qCTk7SUSDu0tfaWODCgr7vcmS7OLiUPoK8NQ9k2tmBlm4s67dFBwu3BkAIdO5AfUt
+	 cAeyktC2Y5XdHDMtZZcoEZ7T/SPuvYa7nZlu+aQv99gg5two2DxOZSFvbVj6g/w9Ux
+	 /z6RLjISKeCA8HLldtfUItBkJihlZ4Ic3jbthBsiWlKiidm0LagJxd/xBC1z2ZW8Ij
+	 23pXJfMnbh7tZc68YKnIceksgnnKXhCJzuobFA5VKqjjfxmT0LvoX5kYDJp8WxImwh
+	 yMCrRHxFliPC2h9/aKu17IP8nawfZY9KIjRYuDDR7Fp04rY0LVkEfCEXb7ZJKt5cdE
+	 W6QW/KUre+pKA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Robert Marko <robimarko@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Jiang Biao <benbjiang@tencent.com>,
+	Jan Kara <jack@suse.cz>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/148] clk: qcom: reset: support resetting multiple bits
-Date: Sun, 24 Mar 2024 19:49:13 -0400
-Message-ID: <20240324235012.1356413-90-sashal@kernel.org>
+Subject: [PATCH 4.19 093/148] fs/quota: erase unused but set variable warning
+Date: Sun, 24 Mar 2024 19:49:17 -0400
+Message-ID: <20240324235012.1356413-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,70 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Robert Marko <robimarko@gmail.com>
+From: Jiang Biao <benbjiang@tencent.com>
 
-[ Upstream commit 4a5210893625f89723ea210d7c630b730abb37ad ]
+[ Upstream commit 78bc3334a69ff289dbc973a9db7c52a2d7757e5b ]
 
-This patch adds the support for giving the complete bitmask
-in reset structure and reset operation will use this bitmask
-for all reset operations.
+Local variable *reserved* of remove_dquot_ref() is only used if
+define CONFIG_QUOTA_DEBUG, but not ebraced in CONFIG_QUOTA_DEBUG
+macro, which leads to unused-but-set-variable warning when compiling.
 
-Currently, reset structure only takes a single bit for each reset
-and then calculates the bitmask by using the BIT() macro.
+This patch ebrace it into CONFIG_QUOTA_DEBUG macro like what is done
+in add_dquot_ref().
 
-However, this is not sufficient anymore for newer SoC-s like IPQ8074,
-IPQ6018 and more, since their networking resets require multiple bits
-to be asserted in order to properly reset the HW block completely.
-
-So, in order to allow asserting multiple bits add "bitmask" field to
-qcom_reset_map, and then use that bitmask value if its populated in the
-driver, if its not populated, then we just default to existing behaviour
-and calculate the bitmask on the fly.
-
-Signed-off-by: Robert Marko <robimarko@gmail.com>
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
-Link: https://lore.kernel.org/r/20221107132901.489240-1-robimarko@gmail.com
-Stable-dep-of: 2f8cf2c3f3e3 ("clk: qcom: reset: Ensure write completion on reset de/assertion")
+Signed-off-by: Jiang Biao <benbjiang@tencent.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Stable-dep-of: 179b8c97ebf6 ("quota: Fix rcu annotations of inode dquot pointers")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/reset.c | 4 ++--
- drivers/clk/qcom/reset.h | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ fs/quota/dquot.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/clk/qcom/reset.c b/drivers/clk/qcom/reset.c
-index fc68c8fa30ac7..60b60631c3445 100644
---- a/drivers/clk/qcom/reset.c
-+++ b/drivers/clk/qcom/reset.c
-@@ -38,7 +38,7 @@ qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 683727c5758c0..b55d91d3d87c2 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -1129,7 +1129,9 @@ static void remove_dquot_ref(struct super_block *sb, int type,
+ 		struct list_head *tofree_head)
+ {
+ 	struct inode *inode;
++#ifdef CONFIG_QUOTA_DEBUG
+ 	int reserved = 0;
++#endif
  
- 	rst = to_qcom_reset_controller(rcdev);
- 	map = &rst->reset_map[id];
--	mask = BIT(map->bit);
-+	mask = map->bitmask ? map->bitmask : BIT(map->bit);
- 
- 	return regmap_update_bits(rst->regmap, map->reg, mask, mask);
- }
-@@ -52,7 +52,7 @@ qcom_reset_deassert(struct reset_controller_dev *rcdev, unsigned long id)
- 
- 	rst = to_qcom_reset_controller(rcdev);
- 	map = &rst->reset_map[id];
--	mask = BIT(map->bit);
-+	mask = map->bitmask ? map->bitmask : BIT(map->bit);
- 
- 	return regmap_update_bits(rst->regmap, map->reg, mask, 0);
- }
-diff --git a/drivers/clk/qcom/reset.h b/drivers/clk/qcom/reset.h
-index 3e30f6724c7a4..a118311503d41 100644
---- a/drivers/clk/qcom/reset.h
-+++ b/drivers/clk/qcom/reset.h
-@@ -20,6 +20,7 @@ struct qcom_reset_map {
- 	unsigned int reg;
- 	u8 bit;
- 	u8 udelay;
-+	u32 bitmask;
- };
- 
- struct regmap;
+ 	spin_lock(&sb->s_inode_list_lock);
+ 	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
+@@ -1141,8 +1143,10 @@ static void remove_dquot_ref(struct super_block *sb, int type,
+ 		 */
+ 		spin_lock(&dq_data_lock);
+ 		if (!IS_NOQUOTA(inode)) {
++#ifdef CONFIG_QUOTA_DEBUG
+ 			if (unlikely(inode_get_rsv_space(inode) > 0))
+ 				reserved = 1;
++#endif
+ 			remove_inode_dquot_ref(inode, type, tofree_head);
+ 		}
+ 		spin_unlock(&dq_data_lock);
 -- 
 2.43.0
 
