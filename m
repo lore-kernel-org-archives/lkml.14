@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA97280203;
-	Sun, 24 Mar 2024 23:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA58179FA2;
+	Sun, 24 Mar 2024 23:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323637; cv=none; b=tfueCE3dUDNn6D5Yvj9tAVpnjXVmvzCXHyzJhPmikxRU+bR4JdPxdgi55Vp7BsJKxS7yuUYpBBn4rs/x2hgd/3Xnj9ZRle5SJHXCNEMQ/vNcPgzxFOzLntfsbnxesVa03w6KEL5XCSlXbD2h/Vy2Rjw9RA7pM5zAUggHZIgzz8c=
+	t=1711323644; cv=none; b=sP06XrycjgMX7Hno66Kb2uVj4liiMIjSI1BSml0BA6hcKYhyQa/hRCnhB7pzCwYmsUtibIexYVSecOmtW2zhBuaugakAMKn3t2vF2T5Yz3p8u4dDa+f2dpbxujzAIqvLiiqBECcOMBe/QH9xp/SbKnz/OhMKjFgvTHJvr0Aos9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323637; c=relaxed/simple;
-	bh=tjjI2nsFG1aGxXNU8gC7cWP86c+GUyG67wihdRCmajA=;
+	s=arc-20240116; t=1711323644; c=relaxed/simple;
+	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G9lbFitmdgm72nmDBtbEnj7xoorK9CawpAqFVIZmED5rj9luhLBT8MPWF7y3m3qNgdyvEsPoKBfOPE4ubctXGNzOp+wpu2/+zf+N2l4oVC8JsNQyInpuqvjhzbLmFF/RN52LM/IbuGPPPNJXrpWM8g7yaykgF9t2VP6w9es0icU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijZdy8z6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ua+BRM5vBx5x4TyEDis89CyZs4DhH4ldDy7cxLNMOOc5VEE0BrxTr+Z9S9+P6GskaJtzFEQh21P5PxWhxyVFrLBRlYOaR4eVdtbO1jy9b6AGzChhD0yf46qQHIH3tfLYW3SaLq2YHxGOF7gWvrlFm88zFPrGQgQ8yuxMMNv36iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WdZZWYVa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijZdy8z6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF44C433F1;
-	Sun, 24 Mar 2024 23:40:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WdZZWYVa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA3FC43390;
+	Sun, 24 Mar 2024 23:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323637;
-	bh=tjjI2nsFG1aGxXNU8gC7cWP86c+GUyG67wihdRCmajA=;
+	s=k20201202; t=1711323644;
+	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ijZdy8z69XJWaWgDssJFUzlKCb+rfhGEJFuZczreAxWexakfzysW0LDsO478o2Bqd
-	 Sk+WkB+mKH40kXsynRAzyfmtV/VQoKWrjCAlFZ8cTtp3DgDWYUOkNvwbH3rrMup4v/
-	 4jwQEqZSueTwtgrDmAIfitifqWCTitIgz0fgE6aZfv23opSTYyaSQzz0g4RENBA7Fo
-	 GgZSK8urEsoDtU9ySAZMwofeEZ/sw7WXcY//Nxx7AnMigaUGq2my40WF0YgH5OitR3
-	 WOw9eDuIeuuu3MI66LaRa+Z8HtZSB+krZasGo5jTXxgP0AbO4r/xVhQMCFGH0w+Ora
-	 jCKTpqvBTxBQA==
+	b=WdZZWYVa03pnTKSTauywC6ZKM1vs1ORJSDzfD2NgCgP67SOPeWv7IYdgPkFQADqNU
+	 W/HfvopHNCnSkTzvcGAuCvBueu2uBEnjjbx4er6QH/ZrXhfsWnDObU/GdBnWEQLjFO
+	 VkFiXdPphBLYwMw4YdOFD7BfMOWhXHJWr+80EOkiWGhDTZpBk1qI6qeTV4EvtSPfP3
+	 qgzbF23s4u5mWpzUg3Hr11wzuanRxx6BxDqGjWBrThLEeBZAavbgD5TLmXHvUKlacY
+	 vaj+vY2lBHFn5qWLb3XUchU+aMDKwZhLusHi1D6YHs3+tozEa52xhydLddI+NxjIJ2
+	 rw2lBpfi4qdlw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kunwu Chan <chentao@kylinos.cn>,
-	kernel test robot <lkp@intel.com>,
-	Markus Elfring <Markus.Elfring@web.de>,
-	Juergen Gross <jgross@suse.com>,
+Cc: Hou Tao <houtao1@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com,
+	xingwei lee <xrivendell7@gmail.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 008/238] x86/xen: Add some null pointer checking to smp.c
-Date: Sun, 24 Mar 2024 19:36:36 -0400
-Message-ID: <20240324234027.1354210-9-sashal@kernel.org>
+Subject: [PATCH 5.10 015/238] x86/mm: Disallow vsyscall page read for copy_from_kernel_nofault()
+Date: Sun, 24 Mar 2024 19:36:43 -0400
+Message-ID: <20240324234027.1354210-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -50,77 +52,98 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kunwu Chan <chentao@kylinos.cn>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit 3693bb4465e6e32a204a5b86d3ec7e6b9f7e67c2 ]
+[ Upstream commit 32019c659ecfe1d92e3bf9fcdfbb11a7c70acd58 ]
 
-kasprintf() returns a pointer to dynamically allocated memory
-which can be NULL upon failure. Ensure the allocation was successful
-by checking the pointer validity.
+When trying to use copy_from_kernel_nofault() to read vsyscall page
+through a bpf program, the following oops was reported:
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202401161119.iof6BQsf-lkp@intel.com/
-Suggested-by: Markus Elfring <Markus.Elfring@web.de>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Link: https://lore.kernel.org/r/20240119094948.275390-1-chentao@kylinos.cn
-Signed-off-by: Juergen Gross <jgross@suse.com>
+  BUG: unable to handle page fault for address: ffffffffff600000
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 3231067 P4D 3231067 PUD 3233067 PMD 3235067 PTE 0
+  Oops: 0000 [#1] PREEMPT SMP PTI
+  CPU: 1 PID: 20390 Comm: test_progs ...... 6.7.0+ #58
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996) ......
+  RIP: 0010:copy_from_kernel_nofault+0x6f/0x110
+  ......
+  Call Trace:
+   <TASK>
+   ? copy_from_kernel_nofault+0x6f/0x110
+   bpf_probe_read_kernel+0x1d/0x50
+   bpf_prog_2061065e56845f08_do_probe_read+0x51/0x8d
+   trace_call_bpf+0xc5/0x1c0
+   perf_call_bpf_enter.isra.0+0x69/0xb0
+   perf_syscall_enter+0x13e/0x200
+   syscall_trace_enter+0x188/0x1c0
+   do_syscall_64+0xb5/0xe0
+   entry_SYSCALL_64_after_hwframe+0x6e/0x76
+   </TASK>
+  ......
+  ---[ end trace 0000000000000000 ]---
+
+The oops is triggered when:
+
+1) A bpf program uses bpf_probe_read_kernel() to read from the vsyscall
+page and invokes copy_from_kernel_nofault() which in turn calls
+__get_user_asm().
+
+2) Because the vsyscall page address is not readable from kernel space,
+a page fault exception is triggered accordingly.
+
+3) handle_page_fault() considers the vsyscall page address as a user
+space address instead of a kernel space address. This results in the
+fix-up setup by bpf not being applied and a page_fault_oops() is invoked
+due to SMAP.
+
+Considering handle_page_fault() has already considered the vsyscall page
+address as a userspace address, fix the problem by disallowing vsyscall
+page read for copy_from_kernel_nofault().
+
+Originally-by: Thomas Gleixner <tglx@linutronix.de>
+Reported-by: syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/bpf/CAG48ez06TZft=ATH1qh2c5mpS5BT8UakwNkzi6nvK5_djC-4Nw@mail.gmail.com
+Reported-by: xingwei lee <xrivendell7@gmail.com>
+Closes: https://lore.kernel.org/bpf/CABOYnLynjBoFZOf3Z4BhaZkc5hx_kHfsjiW+UWLoB=w33LvScw@mail.gmail.com
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240202103935.3154011-3-houtao@huaweicloud.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/xen/smp.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/x86/mm/maccess.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/xen/smp.c b/arch/x86/xen/smp.c
-index cdec892b28e2e..a641e0d452194 100644
---- a/arch/x86/xen/smp.c
-+++ b/arch/x86/xen/smp.c
-@@ -65,6 +65,8 @@ int xen_smp_intr_init(unsigned int cpu)
- 	char *resched_name, *callfunc_name, *debug_name;
+diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
+index 6993f026adec9..42115ac079cfe 100644
+--- a/arch/x86/mm/maccess.c
++++ b/arch/x86/mm/maccess.c
+@@ -3,6 +3,8 @@
+ #include <linux/uaccess.h>
+ #include <linux/kernel.h>
  
- 	resched_name = kasprintf(GFP_KERNEL, "resched%d", cpu);
-+	if (!resched_name)
-+		goto fail_mem;
- 	per_cpu(xen_resched_irq, cpu).name = resched_name;
- 	rc = bind_ipi_to_irqhandler(XEN_RESCHEDULE_VECTOR,
- 				    cpu,
-@@ -77,6 +79,8 @@ int xen_smp_intr_init(unsigned int cpu)
- 	per_cpu(xen_resched_irq, cpu).irq = rc;
- 
- 	callfunc_name = kasprintf(GFP_KERNEL, "callfunc%d", cpu);
-+	if (!callfunc_name)
-+		goto fail_mem;
- 	per_cpu(xen_callfunc_irq, cpu).name = callfunc_name;
- 	rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_VECTOR,
- 				    cpu,
-@@ -90,6 +94,9 @@ int xen_smp_intr_init(unsigned int cpu)
- 
- 	if (!xen_fifo_events) {
- 		debug_name = kasprintf(GFP_KERNEL, "debug%d", cpu);
-+		if (!debug_name)
-+			goto fail_mem;
++#include <asm/vsyscall.h>
 +
- 		per_cpu(xen_debug_irq, cpu).name = debug_name;
- 		rc = bind_virq_to_irqhandler(VIRQ_DEBUG, cpu,
- 					     xen_debug_interrupt,
-@@ -101,6 +108,9 @@ int xen_smp_intr_init(unsigned int cpu)
- 	}
+ #ifdef CONFIG_X86_64
+ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
+ {
+@@ -15,6 +17,14 @@ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
+ 	if (vaddr < TASK_SIZE_MAX + PAGE_SIZE)
+ 		return false;
  
- 	callfunc_name = kasprintf(GFP_KERNEL, "callfuncsingle%d", cpu);
-+	if (!callfunc_name)
-+		goto fail_mem;
++	/*
++	 * Reading from the vsyscall page may cause an unhandled fault in
++	 * certain cases.  Though it is at an address above TASK_SIZE_MAX, it is
++	 * usually considered as a user space address.
++	 */
++	if (is_vsyscall_vaddr(vaddr))
++		return false;
 +
- 	per_cpu(xen_callfuncsingle_irq, cpu).name = callfunc_name;
- 	rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_SINGLE_VECTOR,
- 				    cpu,
-@@ -114,6 +124,8 @@ int xen_smp_intr_init(unsigned int cpu)
- 
- 	return 0;
- 
-+ fail_mem:
-+	rc = -ENOMEM;
-  fail:
- 	xen_smp_intr_free(cpu);
- 	return rc;
+ 	/*
+ 	 * Allow everything during early boot before 'x86_virt_bits'
+ 	 * is initialized.  Needed for instruction decoding in early
 -- 
 2.43.0
 
