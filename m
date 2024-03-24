@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28822174EE5;
-	Sun, 24 Mar 2024 23:35:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0F22745CD;
+	Sun, 24 Mar 2024 23:35:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323335; cv=none; b=FybbMggsRgxpFkPJ/fAgM2HE6bTxUTFDDvOKhIOJKvYq/89sIVi6Iae2nztRO9Sg4TrGbDYypyjD8cTi7yKeSiYsvtleYhi1330J7UlBdnlNJxlcuevfK3AvKDLhGCp+ZPV9UYpavmbEwGB5S9ONVnGnoTzmpHJ6oiAVdIlfFVE=
+	t=1711323337; cv=none; b=eWG8w/3nvqXHPsxbbIL0sfMGEMJrzFpgq5lvRAtLI2Wdz0MZgb21x91yBpbBopri61iAUO/teQQ91DEcm6LFdbQCwWlN2J3ABNoJakdyQwWV+pICHSi1BEyJGjv5skzsQrDEowXT3hETXRUiUvsLxhd5lHYF77y2DCrMgjEbxVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323335; c=relaxed/simple;
-	bh=dU5rKxIRdpARhzb/iQNx1mD2zTtGGTT1rLng1T61/JY=;
+	s=arc-20240116; t=1711323337; c=relaxed/simple;
+	bh=1uevdEvXHAOsPGA1ADrqF8fzrLL8wCgB7j2/r5OTiSU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zj1XY8O4aDIw9AQiVPeWJulTY/JVjEtJnCMu8uDUOpa7qO20KZpZRUmfXO4UvwddMYnj78eBJVtOvGvWiL+0Tl2hJa/jz4viywSJdjFjy/zLQcwFktQofNtHpmSbsjFnzGLEusGhTaNl0iDBOQkHhVuxUfOUsfSIBVzxWSFkCo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RhrCD2cp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PiRcndB8LZCBYLBa2j1ebbAFd2y+2wm+ZNjELufx1ssZWgw4VyjY1zrLBQWPFpGX2836ezrqlA1S0XZKbP9cum9A1sfdJqkevfesTAKjc8eRfv/k6okHVu3kYaGRwJQAGFKRK2XH0vEyVSb5gK9Sr7N6cetYSXm21PrfWdsKyJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PagDRjnj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RhrCD2cp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13016C43390;
-	Sun, 24 Mar 2024 23:35:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PagDRjnj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F2EC43394;
+	Sun, 24 Mar 2024 23:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323333;
-	bh=dU5rKxIRdpARhzb/iQNx1mD2zTtGGTT1rLng1T61/JY=;
+	s=k20201202; t=1711323335;
+	bh=1uevdEvXHAOsPGA1ADrqF8fzrLL8wCgB7j2/r5OTiSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RhrCD2cpwgrBMBsTURsOmmhuJ1hjqufXoVGhkPBAE1VA0Bi36+3JLNKFTOU0IX63G
-	 W/6VHyzwRC7a2dB/PvG7wZYvRS1mv7Kj0TBOORC3EUnRhwkIbWQ3WSkmx3kSImO4YM
-	 X/4KR2zLr4sUWLCVmPr9dSN4LoOl568dX80cjre8hskyfbBYfImKsXu8ghOXt3AAtq
-	 829aMLfaor6pbj0/TXMVCM9NU8HMY66MN+sNd4cPVOQTpl/HZX6oh0fBROUuJdJg+5
-	 ldC+eVJjKCct2j/+RpTOUaE7aBtSi71fBYtxbndCV0tHERcJIrSqXm6r8+Mm8l9ebk
-	 Y97xiEqOyJWBw==
+	b=PagDRjnjwqWHekpsilm8vDstIyPaVvD89udmSb9zqDYIOhlxZjY5k4zw6dDc4W5m5
+	 FaSXDn5/jqcB/NvQzNCSLFOUHbws4XthCL60ASEhew9pK3+8jl63AaW8F1+CmqbYY/
+	 uagsfHk03ipZFBRti9YAv+y1eyP4N1vGBv98BbsbCfyXYRK/3BSN690o2yDevxQsWz
+	 vI2Bj1U35Nvr259t1EMJZGLVqpb11vXIY13QAHtIvWgJliPz5tJXgb6ItKVP770XZu
+	 mDN/jd6cyDMtGO/k9WwihCq8C1Hd+cFDXCzu99DBe+OE+0e6F6g3/DyZ1bvs2cllSz
+	 uQosrn33IrV9w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Stefan Haberland <sth@linux.ibm.com>,
 	Jan Hoeppner <hoeppner@linux.ibm.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
 	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 034/317] s390/dasd: add query PPRC function
-Date: Sun, 24 Mar 2024 19:30:14 -0400
-Message-ID: <20240324233458.1352854-35-sashal@kernel.org>
+Subject: [PATCH 5.15 036/317] s390/dasd: add autoquiesce feature
+Date: Sun, 24 Mar 2024 19:30:16 -0400
+Message-ID: <20240324233458.1352854-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -51,177 +52,212 @@ Content-Transfer-Encoding: 8bit
 
 From: Stefan Haberland <sth@linux.ibm.com>
 
-[ Upstream commit 3f217cceb6846e7533511fc69bc774cdba37ff7d ]
+[ Upstream commit 1cee2975bbabd89df1097c354867192106b058ea ]
 
-Add function to query the Peer-to-Peer-Remote-Copy (PPRC) state of a
-device by reading the related structure through a read subsystem data call.
+Add the internal logic to check for autoquiesce triggers and handle
+them.
+
+Quiesce and resume are functions that tell Linux to stop/resume
+issuing I/Os to a specific DASD.
+The DASD driver allows a manual quiesce/resume via ioctl.
+
+Autoquiesce will define an amount of triggers that will lead to
+an automatic quiesce if a certain event occurs.
+There is no automatic resume.
+
+All events will be reported via DASD Extended Error Reporting (EER)
+if configured.
 
 Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
 Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
-Link: https://lore.kernel.org/r/20220920192616.808070-3-sth@linux.ibm.com
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+Link: https://lore.kernel.org/r/20230405142017.2446986-3-sth@linux.ibm.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Stable-dep-of: c3116e62ddef ("s390/dasd: fix double module refcount decrement")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 66 ++++++++++++++++++++++++++++++++++
- drivers/s390/block/dasd_eckd.h |  6 ++++
- drivers/s390/block/dasd_int.h  | 32 +++++++++++++++++
- 3 files changed, 104 insertions(+)
+ arch/s390/include/uapi/asm/dasd.h |  2 ++
+ drivers/s390/block/dasd.c         | 60 ++++++++++++++++++++++---------
+ drivers/s390/block/dasd_eer.c     |  1 +
+ drivers/s390/block/dasd_int.h     |  2 ++
+ 4 files changed, 48 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index cf80db7a74a3d..76f861c2ce614 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -6105,6 +6105,71 @@ static int dasd_hosts_print(struct dasd_device *device, struct seq_file *m)
- 	return 0;
- }
+diff --git a/arch/s390/include/uapi/asm/dasd.h b/arch/s390/include/uapi/asm/dasd.h
+index 9ec86fae99805..188d17fc5f0c1 100644
+--- a/arch/s390/include/uapi/asm/dasd.h
++++ b/arch/s390/include/uapi/asm/dasd.h
+@@ -78,6 +78,7 @@ typedef struct dasd_information2_t {
+  * 0x040: give access to raw eckd data
+  * 0x080: enable discard support
+  * 0x100: enable autodisable for IFCC errors (default)
++ * 0x200: enable requeue of all requests on autoquiesce
+  */
+ #define DASD_FEATURE_READONLY	      0x001
+ #define DASD_FEATURE_USEDIAG	      0x002
+@@ -88,6 +89,7 @@ typedef struct dasd_information2_t {
+ #define DASD_FEATURE_USERAW	      0x040
+ #define DASD_FEATURE_DISCARD	      0x080
+ #define DASD_FEATURE_PATH_AUTODISABLE 0x100
++#define DASD_FEATURE_REQUEUEQUIESCE   0x200
+ #define DASD_FEATURE_DEFAULT	      DASD_FEATURE_PATH_AUTODISABLE
  
-+/*
-+ * Perform Subsystem Function - Peer-to-Peer Remote Copy Extended Query
-+ */
-+static int dasd_eckd_query_pprc_status(struct dasd_device *device,
-+				       struct dasd_pprc_data_sc4 *data)
+ #define DASD_PARTN_BITS 2
+diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
+index dc73b20e7424f..c45b6f3780ebd 100644
+--- a/drivers/s390/block/dasd.c
++++ b/drivers/s390/block/dasd.c
+@@ -84,7 +84,8 @@ static void dasd_profile_init(struct dasd_profile *, struct dentry *);
+ static void dasd_profile_exit(struct dasd_profile *);
+ static void dasd_hosts_init(struct dentry *, struct dasd_device *);
+ static void dasd_hosts_exit(struct dasd_device *);
+-
++static int dasd_handle_autoquiesce(struct dasd_device *, struct dasd_ccw_req *,
++				   unsigned int);
+ /*
+  * SECTION: Operations on the device structure.
+  */
+@@ -2349,7 +2350,7 @@ static int _dasd_sleep_on(struct dasd_ccw_req *maincqr, int interruptible)
+ 		/* Non-temporary stop condition will trigger fail fast */
+ 		if (device->stopped & ~DASD_STOPPED_PENDING &&
+ 		    test_bit(DASD_CQR_FLAGS_FAILFAST, &cqr->flags) &&
+-		    (!dasd_eer_enabled(device))) {
++		    !dasd_eer_enabled(device) && device->aq_mask == 0) {
+ 			cqr->status = DASD_CQR_FAILED;
+ 			cqr->intrc = -ENOLINK;
+ 			continue;
+@@ -2825,20 +2826,18 @@ static void __dasd_process_block_ccw_queue(struct dasd_block *block,
+ 			dasd_log_sense(cqr, &cqr->irb);
+ 		}
+ 
+-		/* First of all call extended error reporting. */
+-		if (dasd_eer_enabled(base) &&
+-		    cqr->status == DASD_CQR_FAILED) {
+-			dasd_eer_write(base, cqr, DASD_EER_FATALERROR);
+-
+-			/* restart request  */
++		/*
++		 * First call extended error reporting and check for autoquiesce
++		 */
++		spin_lock_irqsave(get_ccwdev_lock(base->cdev), flags);
++		if (cqr->status == DASD_CQR_FAILED &&
++		    dasd_handle_autoquiesce(base, cqr, DASD_EER_FATALERROR)) {
+ 			cqr->status = DASD_CQR_FILLED;
+ 			cqr->retries = 255;
+-			spin_lock_irqsave(get_ccwdev_lock(base->cdev), flags);
+-			dasd_device_set_stop_bits(base, DASD_STOPPED_QUIESCE);
+-			spin_unlock_irqrestore(get_ccwdev_lock(base->cdev),
+-					       flags);
++			spin_unlock_irqrestore(get_ccwdev_lock(base->cdev), flags);
+ 			goto restart;
+ 		}
++		spin_unlock_irqrestore(get_ccwdev_lock(base->cdev), flags);
+ 
+ 		/* Process finished ERP request. */
+ 		if (cqr->refers) {
+@@ -2880,7 +2879,7 @@ static void __dasd_block_start_head(struct dasd_block *block)
+ 		/* Non-temporary stop condition will trigger fail fast */
+ 		if (block->base->stopped & ~DASD_STOPPED_PENDING &&
+ 		    test_bit(DASD_CQR_FLAGS_FAILFAST, &cqr->flags) &&
+-		    (!dasd_eer_enabled(block->base))) {
++		    !dasd_eer_enabled(block->base) && block->base->aq_mask == 0) {
+ 			cqr->status = DASD_CQR_FAILED;
+ 			cqr->intrc = -ENOLINK;
+ 			dasd_schedule_block_bh(block);
+@@ -3743,8 +3742,8 @@ int dasd_generic_last_path_gone(struct dasd_device *device)
+ 	dev_warn(&device->cdev->dev, "No operational channel path is left "
+ 		 "for the device\n");
+ 	DBF_DEV_EVENT(DBF_WARNING, device, "%s", "last path gone");
+-	/* First of all call extended error reporting. */
+-	dasd_eer_write(device, NULL, DASD_EER_NOPATH);
++	/* First call extended error reporting and check for autoquiesce. */
++	dasd_handle_autoquiesce(device, NULL, DASD_EER_NOPATH);
+ 
+ 	if (device->state < DASD_STATE_BASIC)
+ 		return 0;
+@@ -3877,7 +3876,8 @@ void dasd_generic_path_event(struct ccw_device *cdev, int *path_event)
+ 			 "No verified channel paths remain for the device\n");
+ 		DBF_DEV_EVENT(DBF_WARNING, device,
+ 			      "%s", "last verified path gone");
+-		dasd_eer_write(device, NULL, DASD_EER_NOPATH);
++		/* First call extended error reporting and check for autoquiesce. */
++		dasd_handle_autoquiesce(device, NULL, DASD_EER_NOPATH);
+ 		dasd_device_set_stop_bits(device,
+ 					  DASD_STOPPED_DC_WAIT);
+ 	}
+@@ -3899,7 +3899,8 @@ EXPORT_SYMBOL_GPL(dasd_generic_verify_path);
+ void dasd_generic_space_exhaust(struct dasd_device *device,
+ 				struct dasd_ccw_req *cqr)
+ {
+-	dasd_eer_write(device, NULL, DASD_EER_NOSPC);
++	/* First call extended error reporting and check for autoquiesce. */
++	dasd_handle_autoquiesce(device, NULL, DASD_EER_NOSPC);
+ 
+ 	if (device->state < DASD_STATE_BASIC)
+ 		return;
+@@ -3992,6 +3993,31 @@ void dasd_schedule_requeue(struct dasd_device *device)
+ }
+ EXPORT_SYMBOL(dasd_schedule_requeue);
+ 
++static int dasd_handle_autoquiesce(struct dasd_device *device,
++				   struct dasd_ccw_req *cqr,
++				   unsigned int reason)
 +{
-+	struct dasd_pprc_data_sc4 *pprc_data;
-+	struct dasd_psf_prssd_data *prssdp;
-+	struct dasd_ccw_req *cqr;
-+	struct ccw1 *ccw;
-+	int rc;
++	/* in any case write eer message with reason */
++	if (dasd_eer_enabled(device))
++		dasd_eer_write(device, cqr, reason);
 +
-+	cqr = dasd_smalloc_request(DASD_ECKD_MAGIC, 1 /* PSF */	+ 1 /* RSSD */,
-+				   sizeof(*prssdp) + sizeof(*pprc_data) + 1,
-+				   device, NULL);
-+	if (IS_ERR(cqr)) {
-+		DBF_EVENT_DEVID(DBF_WARNING, device->cdev, "%s",
-+				"Could not allocate query PPRC status request");
-+		return PTR_ERR(cqr);
-+	}
-+	cqr->startdev = device;
-+	cqr->memdev = device;
-+	cqr->block = NULL;
-+	cqr->retries = 256;
-+	cqr->expires = 10 * HZ;
++	if (!test_bit(reason, &device->aq_mask))
++		return 0;
 +
-+	/* Prepare for Read Subsystem Data */
-+	prssdp = (struct dasd_psf_prssd_data *)cqr->data;
-+	memset(prssdp, 0, sizeof(struct dasd_psf_prssd_data));
-+	prssdp->order = PSF_ORDER_PRSSD;
-+	prssdp->suborder = PSF_SUBORDER_PPRCEQ;
-+	prssdp->varies[0] = PPRCEQ_SCOPE_4;
-+	pprc_data = (struct dasd_pprc_data_sc4 *)(prssdp + 1);
++	/* notify eer about autoquiesce */
++	if (dasd_eer_enabled(device))
++		dasd_eer_write(device, NULL, DASD_EER_AUTOQUIESCE);
 +
-+	ccw = cqr->cpaddr;
-+	ccw->cmd_code = DASD_ECKD_CCW_PSF;
-+	ccw->count = sizeof(struct dasd_psf_prssd_data);
-+	ccw->flags |= CCW_FLAG_CC;
-+	ccw->flags |= CCW_FLAG_SLI;
-+	ccw->cda = (__u32)(addr_t)prssdp;
++	pr_info("%s: The DASD has been put in the quiesce state\n",
++		dev_name(&device->cdev->dev));
++	dasd_device_set_stop_bits(device, DASD_STOPPED_QUIESCE);
 +
-+	/* Read Subsystem Data - query host access */
-+	ccw++;
-+	ccw->cmd_code = DASD_ECKD_CCW_RSSD;
-+	ccw->count = sizeof(*pprc_data);
-+	ccw->flags |= CCW_FLAG_SLI;
-+	ccw->cda = (__u32)(addr_t)pprc_data;
++	if (device->features & DASD_FEATURE_REQUEUEQUIESCE)
++		dasd_schedule_requeue(device);
 +
-+	cqr->buildclk = get_tod_clock();
-+	cqr->status = DASD_CQR_FILLED;
-+
-+	rc = dasd_sleep_on_interruptible(cqr);
-+	if (rc == 0) {
-+		*data = *pprc_data;
-+	} else {
-+		DBF_EVENT_DEVID(DBF_WARNING, device->cdev,
-+				"PPRC Extended Query failed with rc=%d\n",
-+				rc);
-+		rc = -EOPNOTSUPP;
-+	}
-+
-+	dasd_sfree_request(cqr, cqr->memdev);
-+	return rc;
++	return 1;
 +}
 +
- /*
-  * Perform Subsystem Function - CUIR response
-  */
-@@ -6723,6 +6788,7 @@ static struct dasd_discipline dasd_eckd_discipline = {
- 	.ext_pool_exhaust = dasd_eckd_ext_pool_exhaust,
- 	.ese_format = dasd_eckd_ese_format,
- 	.ese_read = dasd_eckd_ese_read,
-+	.pprc_status = dasd_eckd_query_pprc_status,
- };
- 
- static int __init
-diff --git a/drivers/s390/block/dasd_eckd.h b/drivers/s390/block/dasd_eckd.h
-index 65e4630ad2aea..ed83a9a55191b 100644
---- a/drivers/s390/block/dasd_eckd.h
-+++ b/drivers/s390/block/dasd_eckd.h
-@@ -66,9 +66,15 @@
-  * Perform Subsystem Function / Sub-Orders
-  */
- #define PSF_SUBORDER_QHA		 0x1C /* Query Host Access */
-+#define PSF_SUBORDER_PPRCEQ		 0x50 /* PPRC Extended Query */
- #define PSF_SUBORDER_VSQ		 0x52 /* Volume Storage Query */
- #define PSF_SUBORDER_LCQ		 0x53 /* Logical Configuration Query */
- 
-+/*
-+ * PPRC Extended Query Scopes
-+ */
-+#define PPRCEQ_SCOPE_4			 0x04 /* Scope 4 for PPRC Extended Query */
-+
- /*
-  * CUIR response condition codes
-  */
+ static struct dasd_ccw_req *dasd_generic_build_rdc(struct dasd_device *device,
+ 						   int rdc_buffer_size,
+ 						   int magic)
+diff --git a/drivers/s390/block/dasd_eer.c b/drivers/s390/block/dasd_eer.c
+index 5ae64af9ccea3..22338033e6bfb 100644
+--- a/drivers/s390/block/dasd_eer.c
++++ b/drivers/s390/block/dasd_eer.c
+@@ -387,6 +387,7 @@ void dasd_eer_write(struct dasd_device *device, struct dasd_ccw_req *cqr,
+ 		break;
+ 	case DASD_EER_NOPATH:
+ 	case DASD_EER_NOSPC:
++	case DASD_EER_AUTOQUIESCE:
+ 		dasd_eer_write_standard_trigger(device, NULL, id);
+ 		break;
+ 	case DASD_EER_STATECHANGE:
 diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_int.h
-index d94ae067f085e..2ee8bc035b34a 100644
+index d743d1d2b38e9..744e14a81cc48 100644
 --- a/drivers/s390/block/dasd_int.h
 +++ b/drivers/s390/block/dasd_int.h
-@@ -260,6 +260,37 @@ struct dasd_uid {
- 	char vduit[33];
+@@ -459,6 +459,7 @@ extern struct dasd_discipline *dasd_diag_discipline_pointer;
+ #define DASD_EER_STATECHANGE 3
+ #define DASD_EER_PPRCSUSPEND 4
+ #define DASD_EER_NOSPC	     5
++#define DASD_EER_AUTOQUIESCE 31
+ 
+ /* DASD path handling */
+ 
+@@ -636,6 +637,7 @@ struct dasd_device {
+ 	struct dasd_format_entry format_entry;
+ 	struct kset *paths_info;
+ 	struct dasd_copy_relation *copy;
++	unsigned long aq_mask;
  };
  
-+/*
-+ * PPRC Status data
-+ */
-+struct dasd_pprc_header {
-+	__u8 entries;		/* 0     Number of device entries */
-+	__u8 unused;		/* 1     unused */
-+	__u16 entry_length;	/* 2-3   Length of device entry */
-+	__u32 unused2;		/* 4-7   unused */
-+} __packed;
-+
-+struct dasd_pprc_dev_info {
-+	__u8 state;		/* 0       Copy State */
-+	__u8 flags;		/* 1       Flags */
-+	__u8 reserved1[2];	/* 2-3     reserved */
-+	__u8 prim_lss;		/* 4       Primary device LSS */
-+	__u8 primary;		/* 5       Primary device address */
-+	__u8 sec_lss;		/* 6       Secondary device LSS */
-+	__u8 secondary;		/* 7       Secondary device address */
-+	__u16 pprc_id;		/* 8-9     Peer-to-Peer Remote Copy ID */
-+	__u8 reserved2[12];	/* 10-21   reserved */
-+	__u16 prim_cu_ssid;	/* 22-23   Pimary Control Unit SSID */
-+	__u8 reserved3[12];	/* 24-35   reserved */
-+	__u16 sec_cu_ssid;	/* 36-37   Secondary Control Unit SSID */
-+	__u8 reserved4[90];	/* 38-127  reserved */
-+} __packed;
-+
-+struct dasd_pprc_data_sc4 {
-+	struct dasd_pprc_header header;
-+	struct dasd_pprc_dev_info dev_info[5];
-+} __packed;
-+
- /*
-  * the struct dasd_discipline is
-  * sth like a table of virtual functions, if you think of dasd_eckd
-@@ -388,6 +419,7 @@ struct dasd_discipline {
- 	struct dasd_ccw_req *(*ese_format)(struct dasd_device *,
- 					   struct dasd_ccw_req *, struct irb *);
- 	int (*ese_read)(struct dasd_ccw_req *, struct irb *);
-+	int (*pprc_status)(struct dasd_device *, struct	dasd_pprc_data_sc4 *);
- };
- 
- extern struct dasd_discipline *dasd_diag_discipline_pointer;
+ struct dasd_block {
 -- 
 2.43.0
 
