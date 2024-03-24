@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A441E6F5A;
-	Sun, 24 Mar 2024 22:54:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80AF1E6210;
+	Sun, 24 Mar 2024 22:53:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320857; cv=none; b=nb7ynsoVXB6BiYbJuv0HJGcbCbxIK09t5SdSg2tEJf9sfWhmhkipeB8vC1ppVKqJhbyAkYFEjn4PXs0+wzFqwpYL05cGxylslHgDL5s1EMyGGuaz7ZczIELyZlazdGeNA50hAl+h0dSToyFXi72RECjIx6XMVN+Lbya22qNWV/Y=
+	t=1711320840; cv=none; b=VhrnNRcMCiNhcS/lg5m6nLkxtST1C2MSnmMmV/MuDXoi1wnN3xg5TIfF8/8NvKSrxtlRaBWwOHLHKOFwq4hYyUBD6UgI793D3QaKOkwvLcInZz1iDkAZYZytQVfzQi9FfdNhHMoWHVBBlxjiU/G+e6sXvMOJYFYn7RQP8qyIWMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320857; c=relaxed/simple;
-	bh=NxVz+WguTMB6Coo2YUZwzcntSivhyOF+Rdca8TF9s9s=;
+	s=arc-20240116; t=1711320840; c=relaxed/simple;
+	bh=IQMlcf/x3JYpjgH2EoHDafE++YM8FkcTZYcWbvKrJG0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VfMNck0h5zP4YYeQaezEInvf4Iv7bgHVH+RsP6sgPm/QxaReP7O6gjum5ezBWaBmmsNzrfWH8bLV0SB6xpt/h40E2xBI4MGLWYNLsXtXPalsu+BjEPHHdPBBli0r6j3T/OfR1itaewqEaVveYGwLGCB2gyyveUA68+1wmpm++Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EX3hjf6j; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lcyPFNx9+GMkFAOfq/mpxSoUM2gweDcZWQXAO+305TbUOwa4a2qvX/hJGPIfA4/l5ZsjDW59wIRblKz/od+E2JK9z0+c3MoSoD64MQh7wmbN9WeG6EsfeZP3yuEjuAy3tKLreSrBunUIAZq4tlxP2UvG/1W9gxqDGdyg9PO48ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUAN57mj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EX3hjf6j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85C92C433F1;
-	Sun, 24 Mar 2024 22:54:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUAN57mj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CCD1C433F1;
+	Sun, 24 Mar 2024 22:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320856;
-	bh=NxVz+WguTMB6Coo2YUZwzcntSivhyOF+Rdca8TF9s9s=;
+	s=k20201202; t=1711320839;
+	bh=IQMlcf/x3JYpjgH2EoHDafE++YM8FkcTZYcWbvKrJG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EX3hjf6jIMvbSHt383OCMIWBMGn/qWZZik2gV1LV/Pq9EmRvHlsAjM1FYnF9DYlz7
-	 dq8hRkaL7/PZe6uXRKxCB58GMYokE3RAMYSeCauo75QzimDQMyCCkEIczO9YRYXd2P
-	 PfkQVaNqD8jIvzdegxfsgnmxRA6p7AuVhzbxQWKSTaUMIIK/h5n8VUEwuFNp5F6e/C
-	 o/tmJJaZZKYuqG1Oyx5CwvEE2Ytb6HI89qBMxHwkh8h2wQcvW2gJy7ZP8ADIZkdyCc
-	 GyDsRYr/Oc6vcJVP8uGOeJ8eV0fLvsQ0hGXiL/zU8VEuFhvhB69jHAQ9ecfacwTGEq
-	 Hl66bqQIwWswg==
+	b=kUAN57mjsQWfd0iNqWtwBQQzyP8ImOFZ36NePaIJ/UBDFi7ISfdFW5BGmjanU5jEk
+	 cP+e80y5yPS45CGg/SZI2oBnNvub+h2RD1jtSGqMCzxPKrzal7Yfz4LX9tJmv4kaU+
+	 GDqhA9vMfWtcD5JoynsgCkBMx4U04Q+5dTjC6M2ElR6JE+HLdtxTGXc5eERod2jiha
+	 x8rLfzvBm4Zq/2v4yW1UV0VDc7lS9J/FBsG/0gVQTEUC57HrOkwaFuCqZuwSNG8KHP
+	 2RRd54kC7XlyG+Z3Id3m7TL2ANPeaIKiRIbACuS0yCD7OWNvDi6YDormqc05aQEJqH
+	 DtDqhPuYwF4rw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Martin Krastev <martin.krastev@broadcom.com>,
-	Maaz Mombasawala <maaz.mombasawala@broadcom.com>,
-	Zack Rusin <zack.rusin@broadcom.com>,
+Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Emil Velikov <emil.velikov@collabora.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 420/713] drm/vmwgfx: Fix vmw_du_get_cursor_mob fencing of newly-created MOBs
-Date: Sun, 24 Mar 2024 18:42:26 -0400
-Message-ID: <20240324224720.1345309-421-sashal@kernel.org>
+Subject: [PATCH 6.7 405/713] ASoC: amd: acp: Add missing error handling in sof-mach
+Date: Sun, 24 Mar 2024 18:42:11 -0400
+Message-ID: <20240324224720.1345309-406-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,54 +49,51 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Martin Krastev <martin.krastev@broadcom.com>
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 
-[ Upstream commit ed96cf7ad590989b009d6da5cd26387d995dac13 ]
+[ Upstream commit d0ada20279db2649a7549a2b8a4a3379c59f238d ]
 
-The fencing of MOB creation used in vmw_du_get_cursor_mob was incompatible
-with register-based device communication employed by this routine. As a
-result cursor MOB creation was racy, leading to potentially broken/missing
-mouse cursor on desktops using CursorMob device feature.
+Handle potential acp_sofdsp_dai_links_create() errors in ACP SOF machine
+driver's probe function.  Note there is no need for an undo.
 
-Fixes: 53bc3f6fb6b3 ("drm/vmwgfx: Clean up cursor mobs")
-Signed-off-by: Martin Krastev <martin.krastev@broadcom.com>
-Reviewed-by: Maaz Mombasawala <maaz.mombasawala@broadcom.com>
-Reviewed-by: Zack Rusin <zack.rusin@broadcom.com>
-Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240126200804.732454-5-zack.rusin@broadcom.com
+While at it, switch to dev_err_probe().
+
+Fixes: 9f84940f5004 ("ASoC: amd: acp: Add SOF audio support on Chrome board")
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+Link: https://msgid.link/r/20231219030728.2431640-4-cristian.ciocaltea@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_kms.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ sound/soc/amd/acp/acp-sof-mach.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
-index 818b7f109f538..b51578918cf8d 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
-@@ -272,6 +272,7 @@ static int vmw_du_get_cursor_mob(struct vmw_cursor_plane *vcp,
- 	u32 size = vmw_du_cursor_mob_size(vps->base.crtc_w, vps->base.crtc_h);
- 	u32 i;
- 	u32 cursor_max_dim, mob_max_size;
-+	struct vmw_fence_obj *fence = NULL;
- 	int ret;
+diff --git a/sound/soc/amd/acp/acp-sof-mach.c b/sound/soc/amd/acp/acp-sof-mach.c
+index 5223033a122f8..354d0fc55299b 100644
+--- a/sound/soc/amd/acp/acp-sof-mach.c
++++ b/sound/soc/amd/acp/acp-sof-mach.c
+@@ -120,16 +120,14 @@ static int acp_sof_probe(struct platform_device *pdev)
+ 	if (dmi_id && dmi_id->driver_data)
+ 		acp_card_drvdata->tdm_mode = dmi_id->driver_data;
  
- 	if (!dev_priv->has_mob ||
-@@ -313,7 +314,15 @@ static int vmw_du_get_cursor_mob(struct vmw_cursor_plane *vcp,
- 	if (ret != 0)
- 		goto teardown;
+-	acp_sofdsp_dai_links_create(card);
++	ret = acp_sofdsp_dai_links_create(card);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "Failed to create DAI links\n");
  
--	vmw_bo_fence_single(&vps->cursor.bo->tbo, NULL);
-+	ret = vmw_execbuf_fence_commands(NULL, dev_priv, &fence, NULL);
-+	if (ret != 0) {
-+		ttm_bo_unreserve(&vps->cursor.bo->tbo);
-+		goto teardown;
-+	}
-+
-+	dma_fence_wait(&fence->base, false);
-+	dma_fence_put(&fence->base);
-+
- 	ttm_bo_unreserve(&vps->cursor.bo->tbo);
+ 	ret = devm_snd_soc_register_card(&pdev->dev, card);
+-	if (ret) {
+-		dev_err(&pdev->dev,
+-				"devm_snd_soc_register_card(%s) failed: %d\n",
+-				card->name, ret);
+-		return ret;
+-	}
+-
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "Failed to register card(%s)\n", card->name);
  	return 0;
+ }
  
 -- 
 2.43.0
