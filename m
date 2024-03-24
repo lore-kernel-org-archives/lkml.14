@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6862415B578;
-	Sun, 24 Mar 2024 23:16:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C6522BBE3;
+	Sun, 24 Mar 2024 23:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322166; cv=none; b=EORAYpvXpDH7gViI7/Bw3qRJqYfUncNGLIYi58IGAMj2VvMbEHMUt1g9iNfyBkPO0X8Rm63M+2Dc0ajqhADsGpPJ/bW0cJVB6F2uG97tlxgeHN7cqndA44ll+YrzMt8CLkjfp7pRZGV8CbDI2prteUOy08MmU+5XTKdPvCt8fc4=
+	t=1711322170; cv=none; b=OdMY8mcMJXCYL82I+THkWvZxRcfX0+/khtv63HC6sdMm7wx2QSqO5A4wRoCQoDkcoh+7w1qj8vbC48+Ie5B2AoJxtpVos9dJZg1otbL55lbZHmIcyxjklEeqmHhMl/V8UQZhwikUZLoQlw5pwPIxAXLW62q8mKQ/YgbfdLj8aJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322166; c=relaxed/simple;
-	bh=To4HsCrsnedksP+Kzm+hV1nDB+dQos6t+2a1BObyQHs=;
+	s=arc-20240116; t=1711322170; c=relaxed/simple;
+	bh=HMi0+x9nx54yQycau/GhhoDRdzUG5BNhX56pSJ+Iofc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nYWrEv5a1BWV4HOyqpSj/5W4lh3EkM1oso6Yebup7jGYQ88AFcm3DxzCGoOQgrvsci0Ns5ZPGz3WdIo9UrvmqmIMh8J+xsdABcQ0Mkfra0MlEp6tP2rJZqAQGrv9JyqqaGgsiD+01lJIZGRJEK/S9T+AQBWN7B3sqUts79ZR3Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRZUC7sC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IMsbnOLKBUNiBRqyyaGafZfNuiEdzZb2rbCmEHx5FDT1RzTMACeNVE+dM70SskWaoxkebZUQkVSo6cpkw/AozBF7pA124rmqu122Idb/3rr3xkS9jGd8duSMYJXuodWI+WRosIlZHMLT4QiBnGWpsM+IbGB8D3SO6zUCAoGh7WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGjqGG+p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRZUC7sC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 358DEC433F1;
-	Sun, 24 Mar 2024 23:16:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGjqGG+p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF35C433C7;
+	Sun, 24 Mar 2024 23:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322165;
-	bh=To4HsCrsnedksP+Kzm+hV1nDB+dQos6t+2a1BObyQHs=;
+	s=k20201202; t=1711322169;
+	bh=HMi0+x9nx54yQycau/GhhoDRdzUG5BNhX56pSJ+Iofc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iRZUC7sCDcSca5IkcQbYB1eDPrB723ZmevSj5nN08vsEooV3VMAPRuKlj/tvFAds9
-	 q8twoWBnFcyRQTylsfDX2V5SpFxnRk8nknE4tQfJVEjG+3iv+mZHoJMm7myTj1e8zF
-	 i86rcwr1ZEiaUDcnpBSAObiht35ErnPOU5KOsc+3hM9LQSBh84vOUKxuRidkHYtXNn
-	 iUTCdD7Olvp6RDJHT+DYAXZBk5w6nZ2yD8tVepuxk2yeC/9nApGTZbJvADUiezyr+B
-	 xJz9b4orFh+YEiewSFT7X/tur+cPhqfFcTSWdaluBRo8YWoegUYTbvzliITln67y9Y
-	 AwutSlykuJaWA==
+	b=aGjqGG+pQMkGoQXONQ3TDW7JWzjHHdSwndG23SP6v24mDUR1kLlKd5a17ardUkPyX
+	 GMaJP8c/gAWseJMiKFb93YVvpTmtW46JyDp2A15rN85zRW5FPqHj/khcGdRSBaNl74
+	 D+xzI1eefPwXAt5PAi/MZvOTH7PieV1ChhGZD/ksgLev5yoxZWG2TTcKIU3FbtFtON
+	 JOf8kcBDbZYmY1R0lvy2sbYEL52Up+Xo/jM5FnNbMIYSsTDufrYbRQoh5UqNLjdJ3F
+	 rT0ORADPPX9HRl+Uc4vxU3prZyzKWnr2Ag86Nkl5Es5t62Qhs2FAE5xcYImPfTfFum
+	 /UjrkaJc1zJpg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alex Bee <knaerzche@gmail.com>,
-	Zheng Yang <zhengyang@rock-chips.com>,
+Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+	Quentin Schulz <foss+kernel@0leil.net>,
 	Heiko Stuebner <heiko@sntech.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 244/451] drm/rockchip: inno_hdmi: Fix video timing
-Date: Sun, 24 Mar 2024 19:08:40 -0400
-Message-ID: <20240324231207.1351418-245-sashal@kernel.org>
+Subject: [PATCH 6.1 248/451] drm/rockchip: lvds: do not print scary message when probing defer
+Date: Sun, 24 Mar 2024 19:08:44 -0400
+Message-ID: <20240324231207.1351418-249-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,49 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alex Bee <knaerzche@gmail.com>
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-[ Upstream commit 47a145c03484d33e65d773169d5ca1b9fe2a492e ]
+[ Upstream commit 52d11c863ac92e36a0365249f7f6d27ac48c78bc ]
 
-The controller wants the difference between *total and *sync_start in the
-HDMI_VIDEO_EXT_*DELAY registers. Otherwise the signal is very unstable for
-certain non-VIC modes. See downstream commit [0].
+This scary message can misled the user into thinking something bad has
+happened and needs to be fixed, however it could simply be part of a
+normal boot process where EPROBE_DEFER is taken into account. Therefore,
+let's use dev_err_probe so that this message doesn't get shown (by
+default) when the return code is EPROBE_DEFER.
 
-[0] https://github.com/rockchip-linux/kernel/commit/8eb559f2502c
-
-Fixes: 412d4ae6b7a5 ("drm/rockchip: hdmi: add Innosilicon HDMI support")
-Co-developed-by: Zheng Yang <zhengyang@rock-chips.com>
-Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
+Fixes: 34cc0aa25456 ("drm/rockchip: Add support for Rockchip Soc LVDS")
+Cc: Quentin Schulz <foss+kernel@0leil.net>
+Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231222174220.55249-4-knaerzche@gmail.com
+Link: https://patchwork.freedesktop.org/patch/msgid/20231120-rk-lvds-defer-msg-v2-2-9c59a5779cf9@theobroma-systems.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/inno_hdmi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/rockchip/rockchip_lvds.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
-index f51774866f412..8f230f4c01bc3 100644
---- a/drivers/gpu/drm/rockchip/inno_hdmi.c
-+++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
-@@ -411,7 +411,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_L, value & 0xFF);
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_H, (value >> 8) & 0xFF);
- 
--	value = mode->hsync_start - mode->hdisplay;
-+	value = mode->htotal - mode->hsync_start;
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_L, value & 0xFF);
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_H, (value >> 8) & 0xFF);
- 
-@@ -426,7 +426,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
- 	value = mode->vtotal - mode->vdisplay;
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VBLANK, value & 0xFF);
- 
--	value = mode->vsync_start - mode->vdisplay;
-+	value = mode->vtotal - mode->vsync_start;
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VDELAY, value & 0xFF);
- 
- 	value = mode->vsync_end - mode->vsync_start;
+diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+index 1fde888cdd827..eb4a108c5bd2a 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
++++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+@@ -577,7 +577,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
+ 		ret = -EINVAL;
+ 		goto err_put_port;
+ 	} else if (ret) {
+-		DRM_DEV_ERROR(dev, "failed to find panel and bridge node\n");
++		dev_err_probe(dev, ret, "failed to find panel and bridge node\n");
+ 		goto err_put_port;
+ 	}
+ 	if (lvds->panel)
 -- 
 2.43.0
 
