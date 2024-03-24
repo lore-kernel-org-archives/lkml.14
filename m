@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0771E4A3D;
-	Sun, 24 Mar 2024 22:53:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC831E586C;
+	Sun, 24 Mar 2024 22:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320813; cv=none; b=pZE3e/zYSH1e4oodjjwoxIF4dIwnczEhkDxJ0z5k7nUiLAViKBcjR9+YqcI0N9LWjFyKe30TRH26hVCKiGfserZHQ7zKjbvR/viQXxqeukBTrklyXQ23VNUR33PpO2zehSIpN2TDXrHe+8otGSZqF9614v7GOmHIW/YpPGCAddU=
+	t=1711320832; cv=none; b=tAl7gLWJi+WJdP3i9XQx7kFmX2qLW25JrU2zTrbLfvlZGWcTaWOp/PyTX+06wgdH60AF/4M0aBeugkpzAdOzHQT1u/lvZLublBbJ9hzYutVXPaTs6POpCAWxaE9Rl6yiNFWGo5tS4bMMUT3PNoaZaF0X1vFN23MdpQUcgTgdzak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320813; c=relaxed/simple;
-	bh=hP68GkQ2L6JTHbh2rG6h+rkhITHFGKUHyafkXz2mEaQ=;
+	s=arc-20240116; t=1711320832; c=relaxed/simple;
+	bh=HiFTlZ3SKcc4YSHufcREYcJE8gSsUS12Vn56iUfMUs4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V10IeFEz77UYva69vqBRb129F6DWQbxGmHheV7gpbV4M23+H89497ZxTg/kI5Wvz7YEpVBm4i7SVuCqLXdz3yRPeLPmTnH9ca7m1GCClw412kxD3mfzDLEb1Dd6BC9jrEHQeT36vGT/dxyLjbjp8Z+TSMJ7ZynhTIeq1QSF2P0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jm9XH+Be; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hvRov5N2fapEj36MAFZacoS7SoU6JesHAPiUytTSmHMGCidVjBuhMkUPIoL15jlFlMty7jtc4uaILm06bQM3VzxuU+RB0qHkptDQzE6p5y3QWMd0z7NGl7IY4je1EkjbMmWFpNmp7FxpDDvh29E10UpMKeBG5p9vUg1xaxG+0Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5D7Mzhi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jm9XH+Be"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 013A8C433B1;
-	Sun, 24 Mar 2024 22:53:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5D7Mzhi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59A9CC433C7;
+	Sun, 24 Mar 2024 22:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320812;
-	bh=hP68GkQ2L6JTHbh2rG6h+rkhITHFGKUHyafkXz2mEaQ=;
+	s=k20201202; t=1711320831;
+	bh=HiFTlZ3SKcc4YSHufcREYcJE8gSsUS12Vn56iUfMUs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jm9XH+Be06ErztLnCEWyvbkWCIS1oexB4uVpjPsyLr2AQ72PbpV2ykMC3xivq2ypu
-	 r1i4sl6D+1SshrBy+qUun1S5gupefshuYp5F5ZkR21+2eCKdNGz21Zs4KfEKQZsIeT
-	 SJ6qTnv5G8JoMYWZ0yqzK872EtUvBnZJ6bLuL2WOM0M4WiiJlhzwuISEaaQ6pazUG8
-	 ++pbzW4ZsAmvc9DSu2mfaMwISAFb/HGMrLd/7yPYiEO+Dz6ZpeyZj8nlm5xv3AXHxD
-	 Tzlh6T6x9SuGezxpYw2y6l8FsQ5NHFOJoBQbePhN0OtQJTGAhIwUBjDTnhf6gkW8Nn
-	 z4to8uhyjO/7w==
+	b=E5D7MzhiljetDXC4H/ZZSwFsBEm0NxrXOK5+8VQt1SOyK91FIqJtaUej59a/MrEHg
+	 rOBzRgFig0wxgozssjin7qTn94K2/L5lITNZH9dfV2+JtShX2rKfL5urUdPiWs6bA4
+	 joAoO7dtVePOVpYOvaqe1NpsQpwVB+TU1kXdAJaWhMgXE9CDqrspgxs+bov6QyeZdP
+	 JwuVh3ItwSpfdpJkDcVj/Dlg9EyRSFa/qwdM3OXH89u8Se5H7ITYWQVpW/SO5K9AHR
+	 1Qbo7F+QcI/CL69qNakX/DFBixiunpkKhCJTDnM8DdJxP7YwiRMGC1V9SArpGTgEtF
+	 WUcIUUy0qUDKA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Viresh Kumar <viresh.kumar@linaro.org>,
-	kernel test robot <lkp@intel.com>,
-	Dhruva Gole <d-gole@ti.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 377/713] OPP: debugfs: Fix warning around icc_get_name()
-Date: Sun, 24 Mar 2024 18:41:43 -0400
-Message-ID: <20240324224720.1345309-378-sashal@kernel.org>
+Subject: [PATCH 6.7 396/713] drm/tegra: output: Fix missing i2c_put_adapter() in the error handling paths of tegra_output_probe()
+Date: Sun, 24 Mar 2024 18:42:02 -0400
+Message-ID: <20240324224720.1345309-397-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,48 +48,72 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 28330ceb953e39880ea77da4895bb902a1244860 ]
+[ Upstream commit 2db4578ef6ffb2b52115ca0ebf897b60ec559556 ]
 
-If the kernel isn't built with interconnect support, icc_get_name()
-returns NULL and we get following warning:
+If an error occurs after a successful of_get_i2c_adapter_by_node() call, it
+should be undone by a corresponding i2c_put_adapter().
 
-drivers/opp/debugfs.c: In function 'bw_name_read':
-drivers/opp/debugfs.c:43:42: error: '%.62s' directive argument is null [-Werror=format-overflow=]
-         i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
+Add the missing i2c_put_adapter() call.
 
-Fix it.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402141313.81ltVF5g-lkp@intel.com/
-Fixes: 0430b1d5704b0 ("opp: Expose bandwidth information via debugfs")
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Fixes: 9be7d864cf07 ("drm/tegra: Implement panel support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/b38604178991e1f08b2cda219103be266be2d680.1693667005.git.christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/opp/debugfs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/tegra/output.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/opp/debugfs.c b/drivers/opp/debugfs.c
-index ec030b19164a3..f157fb50be50c 100644
---- a/drivers/opp/debugfs.c
-+++ b/drivers/opp/debugfs.c
-@@ -37,10 +37,12 @@ static ssize_t bw_name_read(struct file *fp, char __user *userbuf,
- 			    size_t count, loff_t *ppos)
- {
- 	struct icc_path *path = fp->private_data;
-+	const char *name = icc_get_name(path);
- 	char buf[64];
--	int i;
-+	int i = 0;
+diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
+index dc2dcb5ca1c89..d7d2389ac2f5a 100644
+--- a/drivers/gpu/drm/tegra/output.c
++++ b/drivers/gpu/drm/tegra/output.c
+@@ -142,8 +142,10 @@ int tegra_output_probe(struct tegra_output *output)
+ 					GPIOD_IN,
+ 					"HDMI hotplug detect");
+ 	if (IS_ERR(output->hpd_gpio)) {
+-		if (PTR_ERR(output->hpd_gpio) != -ENOENT)
+-			return PTR_ERR(output->hpd_gpio);
++		if (PTR_ERR(output->hpd_gpio) != -ENOENT) {
++			err = PTR_ERR(output->hpd_gpio);
++			goto put_i2c;
++		}
  
--	i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
-+	if (name)
-+		i = scnprintf(buf, sizeof(buf), "%.62s\n", name);
+ 		output->hpd_gpio = NULL;
+ 	}
+@@ -152,7 +154,7 @@ int tegra_output_probe(struct tegra_output *output)
+ 		err = gpiod_to_irq(output->hpd_gpio);
+ 		if (err < 0) {
+ 			dev_err(output->dev, "gpiod_to_irq(): %d\n", err);
+-			return err;
++			goto put_i2c;
+ 		}
  
- 	return simple_read_from_buffer(userbuf, count, ppos, buf, i);
+ 		output->hpd_irq = err;
+@@ -165,7 +167,7 @@ int tegra_output_probe(struct tegra_output *output)
+ 		if (err < 0) {
+ 			dev_err(output->dev, "failed to request IRQ#%u: %d\n",
+ 				output->hpd_irq, err);
+-			return err;
++			goto put_i2c;
+ 		}
+ 
+ 		output->connector.polled = DRM_CONNECTOR_POLL_HPD;
+@@ -179,6 +181,12 @@ int tegra_output_probe(struct tegra_output *output)
+ 	}
+ 
+ 	return 0;
++
++put_i2c:
++	if (output->ddc)
++		i2c_put_adapter(output->ddc);
++
++	return err;
  }
+ 
+ void tegra_output_remove(struct tegra_output *output)
 -- 
 2.43.0
 
