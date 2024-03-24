@@ -1,47 +1,66 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7526D1B5;
-	Mon, 25 Mar 2024 15:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13246FE09;
+	Mon, 25 Mar 2024 15:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711380463; cv=none; b=ZkAAplME+UZs+xI9Mjgz+hbdVoFf1cpMLw/yb3aIAn2/KqkdgG6FX4RZpKTVmxdsK67MdjCQxjB7J/c3P9zMFxUdRNhMM3QHRPfVGMFNtsTUPu1Ch/mjxVxBz49Ech8kpoMbLJKheRaSAHbSgibDBrQTJ9vYs0Bb822osrHiR/4=
+	t=1711380490; cv=none; b=BGce2VNMx37AcQL4SwFqIxNejZ1UdfAeFhHx6YlR4Ncl/RGRLAYwd54wxPdKojmahE/dXeLvgSI587TlGn3xC4eWjR+D+L1e5ftVNLS46Q7Xe0/kvWgX51eYu/xV3u5ZX76tyjsI3MI7sSdC6K92HLubk0pMfEWdHeIQ7ltxbYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711380463; c=relaxed/simple;
-	bh=xeCJhhkfOqR0/lYcw66pUQaVeJ2E9uNUlDvPgWtGRRc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dMadZpZUpTJwQzG814vdGiF+UMEJJrEcqtQ7MAvSMTSNzz0o3ED9H0o/ssnQDs08lgdT57q3K2VmeQGcB12RvyI92S1p3vOW/Qsjt81z4EbwCiEP1/PTMebVK2EsxY6FkWTJapVxKFwhidmXv3wfmzr/GmZIkvai44tRbj1glsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UiLdwfHn; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1711380490; c=relaxed/simple;
+	bh=5TNZ/0vXqU8T1qc7INc6viVA07FvS1UZfC3Iz40p8us=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=DYWCaDCC04VcHnW/QGQR9hoG6q/LvQmOYoWFtAzVERJLDAIZuzCt+pNu//uIPycGpu2ga/odkcwyg0zleG/PJjMG9jOX88m7+i8BVcKsaVN8vlS2zAnDssIW6xIYrLswNtTcIR5I3KlYTPYaa2r7DakEhi0dYxUyFSI1o2tWQw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=0IJ02dZJ; arc=none smtp.client-ip=161.97.139.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UiLdwfHn"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 91A6D240008;
-	Mon, 25 Mar 2024 15:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711380458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=GfMOxpWRXLDXkXWQTgxb0njMa5htX2S/fZtS26Kk3Z4=;
-	b=UiLdwfHnU5NRNZtqPh1TqkAkfPQF0gugqOgtH/H8AiQaVVinunCILHj3NKgsoLsSadibcV
-	He6tvM6WOZR+erZ7BkxlTMHFbOSf7FdhmCm7k1BEWnPKLDrTFsiIVj2NRjxBQjF5gd4ih6
-	GfcMyBerVaivFUPHtVqPa5+l26W5ltm/1aY72PwUpDH+UH6iIS2R7EbPtnMfa7K1NpDTQo
-	Cu8R4lgatYIQSlYLydh9+YJkHNEriZDeKKRAALs/8kczJOM3Bww16WsMUVkyJOqitRzJyQ
-	5Gm4bIluNp707Pct5hTvA04IkVVqjz0oyffNOlwCX+8T8Uu1Lwd0FxYqb9YueA==
-From: thomas.perrot@bootlin.com
-To: Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="0IJ02dZJ"
+Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
+	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1roltB-003KE7-37;
+	Mon, 25 Mar 2024 16:05:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
+	Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=8+IJOcRrnTEfFitmECGtcWpIAwCHu/9+63TuWIfjEw0=; b=0IJ02dZJXALWDHAreLDC72TRan
+	zLZRv2pU3/co53GzKa4ET1I3s5NLiZQUzpeEkeglKiAAlfUfN1RtoNRUoqhKEGmBUKLUp5sx2yCrE
+	v1ANbUr7xuOqpNUdfjkwWUSqT/l1PzBOi727qxOd/7IYcKmgVnP1ACzJDdl3tzWXLsEXQ58fTOKB4
+	c5CC8hQbuJ13Im+AShvlNsBM3MyYJJWRFdI+BrwavQXdGq27PPMd1I36TmQPCxkixzxMOS3wC7hru
+	j2F4k+Csbovvx3sgmVv/7NFZR+sPphp5KnFtLNo0H9/lMdogwsDTHSq9IVChEz/wk3X37gSOD1XjN
+	4sTx6kBw==;
+Received: from p2003010777026a001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:107:7702:6a00:1a3d:a2ff:febf:d33a] helo=aktux)
+	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <andreas@kemnade.info>)
+	id 1roSqL-000Y1x-Oi; Sun, 24 Mar 2024 19:45:17 +0100
+Received: from andi by aktux with local (Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1roSqK-000rkG-2I;
+	Sun, 24 Mar 2024 19:45:16 +0100
+From: Andreas Kemnade <andreas@kemnade.info>
+To: dmitry.torokhov@gmail.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	andreas@kemnade.info,
+	o.rempel@pengutronix.de,
+	dario.binacchi@amarulasolutions.com,
+	u.kleine-koenig@pengutronix.de,
+	hdegoede@redhat.com,
+	p.puschmann@pironex.com,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Thomas Perrot <thomas.perrot@bootlin.com>
-Subject: [PATCH net-next] net: macb: allow MTU change when the interface is up
-Date: Mon, 25 Mar 2024 16:27:35 +0100
-Message-ID: <20240325152735.1708636-1-thomas.perrot@bootlin.com>
-X-Mailer: git-send-email 2.44.0
+	caleb.connolly@linaro.org
+Subject: [PATCH 0/2] Input: add ft5426
+Date: Sun, 24 Mar 2024 19:44:13 +0100
+Message-Id: <20240324184415.206587-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,53 +68,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: thomas.perrot@bootlin.com
 
-From: Thomas Perrot <thomas.perrot@bootlin.com>
+Add ft5426 touchscreen controller and the corresponding compatible.
 
-The macb_change_mtu callback doesn't allow MTU changes when the
-interface is up because the MTU is used to set the buffer size on
-GEM.
+Andreas Kemnade (2):
+  dt-bindings: input: touchscreen: edt-ft5x06: Add ft5426
+  Input: edt-ft5x06 - add ft5426
 
-So, to be able to change the MTU from userspace it is necessary to
-explicitly down then to up the interface, which is problematic in
-some cases.
+ .../devicetree/bindings/input/touchscreen/edt-ft5x06.yaml        | 1 +
+ drivers/input/touchscreen/edt-ft5x06.c                           | 1 +
+ 2 files changed, 2 insertions(+)
 
-Then we suggest to reset the interface when the interface is already
-up to allow to change the MTU, regardless of if the interface is up
-or not.
-
-Signed-off-by: Thomas Perrot <thomas.perrot@bootlin.com>
----
- drivers/net/ethernet/cadence/macb_main.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 898debfd4db3..5c20b162c5da 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -3019,11 +3019,19 @@ static int macb_close(struct net_device *dev)
- 
- static int macb_change_mtu(struct net_device *dev, int new_mtu)
- {
--	if (netif_running(dev))
--		return -EBUSY;
-+	int reset = 0;
-+
-+	/* On GEM the buffer size is based on the MTU */
-+	if (netif_running(dev)) {
-+		macb_close(dev);
-+		reset = 1;
-+	}
- 
- 	dev->mtu = new_mtu;
- 
-+	if (reset)
-+		macb_open(dev);
-+
- 	return 0;
- }
- 
 -- 
-2.44.0
+2.39.2
 
