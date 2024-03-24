@@ -1,82 +1,84 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D0933EE;
-	Sun, 24 Mar 2024 22:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33741A38D3;
+	Sun, 24 Mar 2024 22:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319659; cv=none; b=jsCgTwxvHlS8Sa9rBNWz9uUQkN8w+diqO5v7aRtb9/Xd7MRsAD24N/SBPpvehyn8bDbVm6SPvpvK1qtVRcBqptmm1DeIttifdXdt6Fz677KIxEANVvkv8Ivh8HHlIEct8R+F6flJq1pae5bRFV8ZXj3BEi/mwMmACRPrtcRQd8Q=
+	t=1711319660; cv=none; b=IdTNCRD4R1MxtGjab6Ht/dJHskgypREta1yBT5Kq6t60z6awZQWgqUu8oN0IzQigLo7X1UuX0C08oMCB60acm0FUagv2BapyqVqUqCImhcQPzbRj2ftZ7IdlVmg+cn+gTQv0AhoykKcpLgi2mT3EjGKzGasmLtwbPZc+pVSK5E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319659; c=relaxed/simple;
-	bh=AqFkJFWBvaMw+zfMIgl3xomLAFFq9YqqVutllV/J8kg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Kvx+ouh8V0KNQoRdZ9QH+a45UJ1TpzsfIe4NXfSYh6H83paBpWYx3K6yqqE/r5Fm2cfg2qCKB8MiQ5/4oDkHzrj+JZDj8mfS2DcdS/VdcMmtuv+odTdfnoLSdB3YQG8dfKtQkH/tbr3jYdqsruiFz+YZuFdfMMGnuJ0cjMZk2hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A/3Gnc2W; arc=none smtp.client-ip=209.85.160.177
+	s=arc-20240116; t=1711319660; c=relaxed/simple;
+	bh=T8jE1fNZfbPD7fRxzoZy3IXaoPYSqWA6sjSsFVqxxLU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pTP2F0KPHRz1ea5P2Pj6HF9H3TXH44yvpeTBVpnoKxbcevCluS5JiEnEU9y0Xp09bDhkwYP5NVyrodbz9rfBPvLQFz8JplwcKsBc9IFI4H7UdKLnGBq7ggXoJsth6k/JgkREmG9qVtK6uKZnkeMlWjagcC7v/Hio49DuCxTf08I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OY25uz8f; arc=none smtp.client-ip=209.85.222.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A/3Gnc2W"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-430c45ab240so23744001cf.0;
-        Sun, 24 Mar 2024 15:34:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OY25uz8f"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-78a5580333bso29496985a.2;
+        Sun, 24 Mar 2024 15:34:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711319656; x=1711924456; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=TsjmfCDFGITGTAqlv2AZ5kLiFTR8eAn1Iun3m/vv7Ug=;
-        b=A/3Gnc2Wt7+jsAIf3IeVRMzSBblaEg+T1XhgFXkbOvwIYNEFuLYW4loJgFYrhAP38d
-         GkEqLIy7GbCBhrwylznEPRkZwcC3fJsrjVHE4qZDiZas11hZVlRP3BUwqNhFRiMtI6xA
-         ZP55spNdydB9eOFYy5esegnMfUic5MZU5mR8lcDArSE7NtOXdN1q+dLQ0Gzuz2/aQhPG
-         0/BFsDxYBalRU2Zrdv+WNYmw/koBX1qg6m9bOGapCSqASS+ObQIp+dz/68qFlb0R9/g7
-         A9U1NcBe2pxhbp/6SJmNsE3vvvbAjfP+UAN5aoUFa88CRv2HbgvKdR1eyRx89SYNGZ6f
-         sW1A==
+        d=gmail.com; s=20230601; t=1711319657; x=1711924457; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8vg6DKo7pmohO9e53wVPKI3PJtqwPw3kiGTVfZV5+Bk=;
+        b=OY25uz8fllWafBPnMi/tSTt+NGPNSLNT5/19vxVFszFm8arBv9txzwzG8TRvpSarj5
+         vD3yCkC5M3zKz8+wszvviT9fQbH4DoI16zaSXunCcMv86esKMnzuGI6spk0Q41E+xyzj
+         FBlq7MsgyiZVsgXOb4soiKi8guO3aD/Sem1BA2B7qDCQNDe4bUWTPuiUf3A1BqD5WnnU
+         X+PlaKhmowRhRL0vgxlzyAoBIOsME8GnvwL0LoMq4hCc1t0pqPSI+gysD+nfO0KPz6Lu
+         /2rBZm7IXp+Yo244E23Nwa3weDsOjj1ccZj87iYady47n8IaaFPZoynEKkv09zltH3Q3
+         /e7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711319656; x=1711924456;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:feedback-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TsjmfCDFGITGTAqlv2AZ5kLiFTR8eAn1Iun3m/vv7Ug=;
-        b=TuqQwbIsyqOpAFP9df9xXY9Vht6D7PqEPx9+uMI03aW/cjtfWlZ99BJJcda2d6HfGV
-         AwPLrEOZ+Hkn6zZJXVTqXtUgMnZe/BUfHDJwiAqMaXzObiMbwHJC6FQwvfEZE5KZQSDl
-         B7xYWXzGj86jm68hcpwjCkk7IS49Y3y9dzbQ9U6N+s35o6UXiXPyasq1GshmwZ1pFXyT
-         EobO2thPUoNAtEyZj/Ax/mRojyCX1fLb06Hg7uiDykLh+5Ijh1VUGJr7+Do/xnHvdOL/
-         B5E8C78OVvEsgJnRA9zOQ3n8yqIYpKu2lhWYgxj+/B+lmpaO2LUIFGMKMy05siguvLCW
-         8/mA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLa9l5XAJWybbLa5jG2celyo6K6EE3i3yCKWfHlkAquMrUVFqGecSdBEXUGhpQF4M4uZ4N2zAs+oQIWTvcAYsId5H7CpeG5vjZQlTy
-X-Gm-Message-State: AOJu0Yy0SRdWduETvKEFlGtrmRbOlvo5/IU1JJ4RVQ0PWRC/dTtslQgH
-	sPZbjXMPWjUHoYHBL6ook9xHOGKMwaOVKKbHvjhYhV1+pan8yRqg
-X-Google-Smtp-Source: AGHT+IEOveF9UbntUxmeb+e0X61SQlJ1XyQ4o/IbANscdGDMXK1a8bNLPOHlN158zX5Jwmon2vM0jw==
-X-Received: by 2002:a05:622a:1883:b0:431:2051:4798 with SMTP id v3-20020a05622a188300b0043120514798mr7069993qtc.14.1711319656564;
-        Sun, 24 Mar 2024 15:34:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711319657; x=1711924457;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8vg6DKo7pmohO9e53wVPKI3PJtqwPw3kiGTVfZV5+Bk=;
+        b=dwAhYvajDK1qmQbBZKbGAu6bm6fu6LNi3Qwkuetr/CE+ba4YxPx6FoOdzBqt5lrPs8
+         gnrG1L/uFJqPuaiCxIyzb2XQ+3KK0ym9FXdFiFcjXcMwQm0Sxuog0IYgp77LO5LEaP8b
+         M1D3yIr646g82AqYGN03M+iybtCnuZ4dtfAxvaujnjqMhXh704bTR/lUIafDkFr9jL7R
+         9ZRvNr/HyuVdPbfHg6u+WYaUL8gHGKlan29bWOP24EPRiN+QmZOnkyocRBB/shBv15Oy
+         xdEAvAK7+COhwMq3bEfsV8FBJlVviCYjHo40NS7z3UeMRSzBq4LU+2qAbBpA9Tqa+Zep
+         V+zA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+ZPGGngwBVbDKqKa83BgRPWtyWneKt1h8hfDsStW9VtQuxnvZsJtWEbfBA5VbB8WV6lFqfNYPCmwgGWHGbizI+hCB7JgGk6th7lqP
+X-Gm-Message-State: AOJu0YxGwtM383GXYQH0zc3GcGPOfx0NcZS8D0WAI9Feh2ov5q/puc+w
+	AdG5HHT8jCkhkYG6PBRc7xLCgh39E8eWGZVRP9huqSkQOedtFx0s
+X-Google-Smtp-Source: AGHT+IGspEUpnu/ZPsX/qIFQsL6kaiAPPv2KtchS+uvNToGluKWw7BWFObL4Oc4kqlya+VW8yWG6OA==
+X-Received: by 2002:a05:6214:f07:b0:696:7ff4:7f09 with SMTP id gw7-20020a0562140f0700b006967ff47f09mr5468198qvb.54.1711319657700;
+        Sun, 24 Mar 2024 15:34:17 -0700 (PDT)
 Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id f9-20020a05622a114900b0043140cd9996sm1755194qty.38.2024.03.24.15.34.15
+        by smtp.gmail.com with ESMTPSA id q1-20020a05621419e100b006968077890csm1588628qvc.118.2024.03.24.15.34.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Mar 2024 15:34:16 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 71CE81200032;
-	Sun, 24 Mar 2024 18:34:15 -0400 (EDT)
+        Sun, 24 Mar 2024 15:34:17 -0700 (PDT)
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id E32DD1200032;
+	Sun, 24 Mar 2024 18:34:16 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Sun, 24 Mar 2024 18:34:15 -0400
-X-ME-Sender: <xms:ZqoAZskVdGmhQOS8zL2KIdPl9geuz2l8sxA5agPqGeyZnsaQ_m_KWg>
-    <xme:ZqoAZr34Qd14dUXkNabIm-LIgo5ExmDOIQWaCjMhEgv8T2I2dwM1vg_u98kom5Nl2
-    1GDt0DnbBxL8gXrtA>
-X-ME-Received: <xmr:ZqoAZqoOLaavqJWSMA12JkWf0NCkI5oXgaJvJn3Sr8xPhNnm6jVRCHKNpZM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtkecutefuodetggdotefrodftvfcurf
-    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhnucfhvghn
-    ghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnh
-    epgeegueekgefhvedukedtveejhefhkeffveeufeduiedvleetledtkeehjefgieevnecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshho
-    nhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngh
-    eppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:ZqoAZolm93EPyBPofGZoKueO3M_toAm3XE2FVD5v-g2KF84iBmOTpA>
-    <xmx:ZqoAZq2CBV2j-2HAjZ0s696N6F6pryw7hyWKd_eUpbVSvc5XkpJMMw>
-    <xmx:ZqoAZvutIo04m9R2uAi5HY1CWg1xhSiCLR-FzX3zo-9Uyw6MTWr_hw>
-    <xmx:ZqoAZmUnFcBFJsq-LJC7JrwoO0do9dzJy10kxJykkTMREJT_oyopDg>
-    <xmx:Z6oAZl0mNwEreChwyMQeU908jCwfiLLrrv30bQ8p_bW0fSdk_a1utwiczrY>
+  by compute7.internal (MEProxy); Sun, 24 Mar 2024 18:34:16 -0400
+X-ME-Sender: <xms:aKoAZjls6ARdyUjLUWMH1atcgWAYB7gUEaV6s9EhBIq3HAH56Szpcw>
+    <xme:aKoAZm1ms2LD2tSn-ALyZrMFuklul8yvW7igx8P3LnHW2qQHNylooimW5gaOcDC2O
+    WiNGycWKkeQ0KA_iA>
+X-ME-Received: <xmr:aKoAZpriRB6sIctfGpUs_gYbJ-aQ3v6w1fidrN1oMFmV-qsc2Wv2sEFmjkY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtjedgudeihecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhepgeeljeeitdehvdehgefgjeevfeejjeekgfevffeiueejhfeuiefggeeu
+    heeggefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
+    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
+    higihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:aKoAZrlDxn39ZFG1dWd8PyT42H1B0cz8OsrAP-P6xuY4FfmtyBizDA>
+    <xmx:aKoAZh3QEsc0GffCh3dxr0ahrYZFKXZS4FaNW4t72RrK4cIrmvOguQ>
+    <xmx:aKoAZqtGnyt-HoXGrr_IpRhb_Q5OYQAjgZiPc_ccWT0jP1fdtZoAbw>
+    <xmx:aKoAZlVKkI5zp3SUdPt2n1h2PvYsQGOhMM7n3ZAJuy17df7NP2SQuQ>
+    <xmx:aKoAZg3m6uigRuY3Pgz__vHFUNLGYYrxIdWifj1-rbFkHspo_Nta3Vb3XNs>
 Feedback-ID: iad51458e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 24 Mar 2024 18:34:14 -0400 (EDT)
+ 24 Mar 2024 18:34:16 -0400 (EDT)
 From: Boqun Feng <boqun.feng@gmail.com>
 To: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -93,10 +95,12 @@ Cc: Alice Ryhl <aliceryhl@google.com>,
 	John Stultz <jstultz@google.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Valentin Obst <kernel@valentinobst.de>
-Subject: [PATCH 0/5] rust: time: Add clock read support
-Date: Sun, 24 Mar 2024 15:33:34 -0700
-Message-ID: <20240324223339.971934-1-boqun.feng@gmail.com>
+Subject: [PATCH 1/5] rust: time: doc: Add missing C header link to jiffies
+Date: Sun, 24 Mar 2024 15:33:35 -0700
+Message-ID: <20240324223339.971934-2-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240324223339.971934-1-boqun.feng@gmail.com>
+References: <20240324223339.971934-1-boqun.feng@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -105,57 +109,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Thomas,
+The definitions related to jiffies are at linux/jiffies.h, and since
+`kernel::time` provides the functionality dealing with jiffies, it makes
+sense to add a link to it from Rust's time module.
 
-This is an updated version of:
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+---
+ rust/kernel/time.rs | 2 ++
+ 1 file changed, 2 insertions(+)
 
-	https://lore.kernel.org/rust-for-linux/Zf2kio8NYG5DEgyY@tardis/	
-
-where I'm trying to provide the same functionality of Alice's patch:
-
-	https://lore.kernel.org/rust-for-linux/20240322-rust-ktime_ms_delta-v2-1-d98de1f7c282@google.com/
-
-along with the lesson we learned from the previous discussion:
-
-	https://lore.kernel.org/rust-for-linux/20230221-gpu-up-time-v1-1-bf8fe74b7f55@asahilina.net/
-	https://lore.kernel.org/rust-for-linux/20230714-rust-time-v2-1-f5aed84218c4@asahilina.net/
-
-There are three important types or traits (the design was mostly brought
-from previous patches):
-
-* Instant type: it's a generic type for timestamps, whose backend is
-  just ktime_t, but it has a generic type to differentiate clocks.
-
-* Clock trait: to read a clock, one must implement the `now` function,
-  in this series, only CLOCK_MONOTONIC support is added.
-
-* Duration type: it's a signed 64 bit value which represents the
-  timedelta, I've considered making it unsigned, but I want the
-  following code:
-
-  	d = ts2 - ts1;
-	ts = ts3 + d;
-
-  to work even when ts2 < ts1, but I'm also OK to define it as an
-  unsigned.
-
-Let me know how you think about this.
-
-Regards,
-Boqun
-
-Alice Ryhl (1):
-  rust: time: Introduce Duration type
-
-Boqun Feng (4):
-  rust: time: doc: Add missing C header link to jiffies
-  rust: time: Introduce clock reading framework
-  rust: time: Support reading CLOCK_MONOTONIC
-  rust: time: Add Instant::elapsed() for monotonic clocks
-
- rust/kernel/time.rs | 139 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 139 insertions(+)
-
+diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+index 25a896eed468..bbb666e64dd7 100644
+--- a/rust/kernel/time.rs
++++ b/rust/kernel/time.rs
+@@ -4,6 +4,8 @@
+ //!
+ //! This module contains the kernel APIs related to time and timers that
+ //! have been ported or wrapped for usage by Rust code in the kernel.
++//!
++//! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.h).
+ 
+ /// The time unit of Linux kernel. One jiffy equals (1/HZ) second.
+ pub type Jiffies = core::ffi::c_ulong;
 -- 
 2.44.0
 
