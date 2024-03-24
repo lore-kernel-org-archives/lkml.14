@@ -1,41 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B2317CF42;
-	Sun, 24 Mar 2024 23:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C2A17D257;
+	Sun, 24 Mar 2024 23:43:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323804; cv=none; b=vAENiqVImNznDP/oZnFqTVwDFWcKp9dW2xYzdM5wvM7QU9IpYc5dPB9+nIk/2g7LSrsm4wfhN4RfhxXxagPFQEMHBdFBjnLIsoNn7pekVDCSRBmPGvtZtzFQ/ERbcTT6i/yUe73t5dpl76p2nSfxhZk/nazcSfau67UBjg8QRB0=
+	t=1711323837; cv=none; b=nzdxPuydBmxf4Y4FkR4vBzMbMQwtC7KlSafFjNLd0Xk/MQxopro4YIZi6wkeQ928tAQnAptLd4YQdRfedI5rnGCngfie67Q3gwarc27n7a+ZpyzTpHmFME1QWedXV7sKeKw8pcGtFiSZx44UosKJgOuZzgeAn04VMc7pX3ffK30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323804; c=relaxed/simple;
-	bh=WcWIkH5q7zZPWwW1JMd5ars6aARZtyMpPCQlr0PEIBc=;
+	s=arc-20240116; t=1711323837; c=relaxed/simple;
+	bh=epx3Knk9RNJ4Vo/NPzLzQAq4psMUnGkQ7mnl0Vhi1Sc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IVGd2e9JQHd2XN31c6efWSNakK7yTZrj8KR/JXTlzd1f7/RAjy9nMInq+oQkZ3kSX774WbsIgkmAzalfdb3APCYxBYJ3OVusCSdbiJwo/qExIFPiLGeBWMRcY0AKeHE2261jPbOQztGWSVk8/GHG2V+cf+Kl0q1/fqr7+lR1vJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a53+j1mb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=k9u+aDCDE91jeF9K7G2f643vJUeHj4fP5zzgC/B3pr00Yo/S226fdfIAMndiK6oQV7Sc0H4/1gkTUGRu56phqFrXuj5VxAZJckSeAXzaxdB0yLTd9WZ7Bo39nt0zyExORZd8ftEC8YUBIVmo05Gveacjx53z1+WWr/gp/CVLeqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hKlrWTLm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a53+j1mb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C3D7C433C7;
-	Sun, 24 Mar 2024 23:43:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hKlrWTLm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78AFC433C7;
+	Sun, 24 Mar 2024 23:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323803;
-	bh=WcWIkH5q7zZPWwW1JMd5ars6aARZtyMpPCQlr0PEIBc=;
+	s=k20201202; t=1711323836;
+	bh=epx3Knk9RNJ4Vo/NPzLzQAq4psMUnGkQ7mnl0Vhi1Sc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a53+j1mbcbREPT+ZymrcXBLGiwGKAIqG8MhRCH701AMZ+CPtTq2TZQrHVthR2+CIX
-	 6lC87cHq21gOp2o+MiihZT+cSk4A/gPthN7yg6pHSRPgrCbLyB6WCtE9eL6EcCjVtu
-	 Tq07ziyQbVvESXZfGKWbumdlFt67zREkKIsGyx86audBrHh4jo/txmnWJoT3mndxXH
-	 CHU4/oIJjQPRcF7Ore+dggJE+uRYHtGbnEJHEJWqb8ZxBbDt06oZ4Gdhasb+XjeOf5
-	 1uVobJu6FYqHnbQLJbfAM2JDJVibOhOJ2ZpGDDfjXNlVqYrpteTqlb0Rlljo2BcYZt
-	 0WQ2djNZvrFLA==
+	b=hKlrWTLmEscDOfPpWVywVvVIZU2bGAYt34gz+mDRWZPTettUsCAAwMDgCjaaITnM3
+	 iqcTmCmliLdmI3PusAQ7bqM7g7XqmHwLv/a+XzcjtSfGea8IcDvuNX+ti4lb9hrbVB
+	 UO4PmfHtjqREQW6y3ypUVBSGrt0+grqHT/8zNNOMREmKc1kW31jCqYDIxuAbNh6Oaf
+	 MNRCfAQY3KvvSo7MRDeCDWR4OZitjXG36MqmTjw1SAOa0DFg38tWGLSyVzhSO2MkDF
+	 PPN2rlE7Iwe4PFQKIVps7g9Q425T0zBz0b5/VSwc9MwnGUggw0QtlEk8DMRjmESyKG
+	 fueQjfBW1/SBQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: George Stark <gnstark@salutedevices.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Lee Jones <lee@kernel.org>,
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Eddie Huang <eddie.huang@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-rtc@vger.kernel.org,
+	Marc Zyngier <maz@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Peter Rosin <peda@axentia.se>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 181/238] leds: aw2013: Unlock mutex before destroying it
-Date: Sun, 24 Mar 2024 19:39:29 -0400
-Message-ID: <20240324234027.1354210-182-sashal@kernel.org>
+Subject: [PATCH 5.10 214/238] rtc: mt6397: select IRQ_DOMAIN instead of depending on it
+Date: Sun, 24 Mar 2024 19:40:02 -0400
+Message-ID: <20240324234027.1354210-215-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,35 +60,57 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: George Stark <gnstark@salutedevices.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 6969d0a2ba1adc9ba6a49b9805f24080896c255c ]
+[ Upstream commit 544c42f798e1651dcb04fb0395219bf0f1c2607e ]
 
-In the probe() callback in case of error mutex is destroyed being locked
-which is not allowed so unlock the mutex before destroying.
+IRQ_DOMAIN is a hidden (not user visible) symbol. Users cannot set
+it directly thru "make *config", so drivers should select it instead
+of depending on it if they need it.
+Relying on it being set for a dependency is risky.
 
-Fixes: 59ea3c9faf32 ("leds: add aw2013 driver")
-Signed-off-by: George Stark <gnstark@salutedevices.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Link: https://lore.kernel.org/r/20231214173614.2820929-2-gnstark@salutedevices.com
-Signed-off-by: Lee Jones <lee@kernel.org>
+Consistently using "select" or "depends on" can also help reduce
+Kconfig circular dependency issues.
+
+Therefore, change the use of "depends on" for IRQ_DOMAIN to
+"select" for RTC_DRV_MT6397.
+
+Fixes: 04d3ba70a3c9 ("rtc: mt6397: add IRQ domain dependency")
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Eddie Huang <eddie.huang@mediatek.com>
+Cc: Sean Wang <sean.wang@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-rtc@vger.kernel.org
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Peter Rosin <peda@axentia.se>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lore.kernel.org/r/20240213050258.6167-1-rdunlap@infradead.org
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-aw2013.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/rtc/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-aw2013.c b/drivers/leds/leds-aw2013.c
-index 80d937454aeef..f7d9795ce5e1f 100644
---- a/drivers/leds/leds-aw2013.c
-+++ b/drivers/leds/leds-aw2013.c
-@@ -397,6 +397,7 @@ static int aw2013_probe(struct i2c_client *client)
- 	regulator_disable(chip->vcc_regulator);
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 54cf5ec8f4019..8ddd334e049e1 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1833,7 +1833,8 @@ config RTC_DRV_MT2712
  
- error:
-+	mutex_unlock(&chip->mutex);
- 	mutex_destroy(&chip->mutex);
- 	return ret;
- }
+ config RTC_DRV_MT6397
+ 	tristate "MediaTek PMIC based RTC"
+-	depends on MFD_MT6397 || (COMPILE_TEST && IRQ_DOMAIN)
++	depends on MFD_MT6397 || COMPILE_TEST
++	select IRQ_DOMAIN
+ 	help
+ 	  This selects the MediaTek(R) RTC driver. RTC is part of MediaTek
+ 	  MT6397 PMIC. You should enable MT6397 PMIC MFD before select
 -- 
 2.43.0
 
