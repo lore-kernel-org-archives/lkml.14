@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC30414532C;
-	Sun, 24 Mar 2024 23:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7FC145B38;
+	Sun, 24 Mar 2024 23:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321977; cv=none; b=Et4nBMO7cDAlj/SdNY08YacvfMi2Kjc1asAtXk4wkHiN40G17Rd/wbxeaopUzDRMLLQRCVxREPyjTsg6V9m9hYqWUL+4nOsQ/7NikpPbCjKM4zQBho/AmB1Mz07qGK/6KOBI7UmP11r3K8KYyeYdIIlL4fLLOpbORrfk56WY5TM=
+	t=1711322036; cv=none; b=f6JzM3HQPTljgXLFYcM3hAUEMnIXadACWpiplTj53JrPhyeAcv9h3fRgCDwJvz+qRzxcbfEHV5yeL2e6cC0SYu+CsYPKjuG+QSFMAIHNkovkq4XUFwZ1EYn3fMhTvJgzxAp1X1AMgR5znVAMxTjjKHIPKe3QU6rh6EC21qyv/0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321977; c=relaxed/simple;
-	bh=Du80a8081lcmLcIyq1r2JOmgELaCBxEoYXMTEtF6bGQ=;
+	s=arc-20240116; t=1711322036; c=relaxed/simple;
+	bh=7gluWkL9ytXsWbTJVw0ZLIOnRL3giWSD5tOoQxJEgPI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cV/AHK5mCMev5+8lSsYYJKADcERMphzuDor9A1b/XE4y0Jb3fFhjZ+Iq4Z7RqGnCvGI91qN4+VRTnGaAiqLTP9hX2jF/v9kzRu8UDLUwSHHU2VVLXWy/ElGSEkoC+usFOYalXBKaSOnNX6RYz0dg15gNe7R/KlEU+IzQMCAfdRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqSVzmoZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qzJXG6ci6q7hyJerzdKfGwL0DbSl/CeTKb9Lasm5QpKiqZMtt/1qRgTPXdNfpw5BdjZkbnmEQmptCk1UaMYKYSkDQWAHobUvt24IfldjSXKU2wKYYLuJg2uIURrI2GN/ZldQO1Z+CPB6Z/+QwcRh9Y3Iz5vcv9ZJ4zjthDBI9bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TO3kU9lr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqSVzmoZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33C15C43390;
-	Sun, 24 Mar 2024 23:12:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TO3kU9lr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 174EEC43143;
+	Sun, 24 Mar 2024 23:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321976;
-	bh=Du80a8081lcmLcIyq1r2JOmgELaCBxEoYXMTEtF6bGQ=;
+	s=k20201202; t=1711322035;
+	bh=7gluWkL9ytXsWbTJVw0ZLIOnRL3giWSD5tOoQxJEgPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JqSVzmoZN0I5HGiqp0EDf24LkW0QyWV5eDuMJRbNzJW1qlQF7JAin/icYMtk84n5b
-	 3TkbOrwDhauKVJz9Vy+J0Ynta5g1qjDnMxL3kE4c52GLyWFBoS1Yhx2LiBctKdjy+7
-	 NGvKfweCUgpIZESR5Hk3WGctnLKqzdzygk5xjm5Z68PVR9QDPZosqPJTOwBis+ZO/I
-	 815i36AvhNMKwYGKomfdkSe+9+CXDxSQAVynfNfXjPnExpiQ7j8CGCXwLaAg9tm2Tq
-	 4bX0C+ul/wTb4RrPoVz72wIn9sGzGzzGHJ5X21fygn+x53TOVwsmhJV/Pfofi7Wp+R
-	 nbWkPy6kjgvDA==
+	b=TO3kU9lrgzO8zr1ULIceAMHZkwxvjBJkA6rML1Mj5tzQbpOYYLtdi1rG1homFq3cc
+	 YdJoEVIGKXkl9WPNby1jpW6HjhxgjSU6+bEbVjquVDwgRuJgvIAsceG9oZrAZaAWYi
+	 xB3hrKN8FiHBTpILTtQS/MYK5eekoZhJwdydkr0D/tHJkedl299y0nEDr4Lw5v8jLg
+	 3I930z9L/nMeA7/GD03ViilXJP2/CGig76VSZ0MM/PHsS9XXmDKDMmxmAUOjmGBHKK
+	 njSnF6CftFHnM6WmZTiBD8Iq5Ifh4TOpROBqjbtA2zRlmCrTLToBFuEQr0LtMkVg59
+	 ymSMmQqIJnkfA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yuxuan Hu <20373622@buaa.edu.cn>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 049/451] Bluetooth: rfcomm: Fix null-ptr-deref in rfcomm_check_security
-Date: Sun, 24 Mar 2024 19:05:25 -0400
-Message-ID: <20240324231207.1351418-50-sashal@kernel.org>
+Subject: [PATCH 6.1 107/451] arm64: dts: imx8mm-kontron: Disable pullups for I2C signals on OSM-S i.MX8MM
+Date: Sun, 24 Mar 2024 19:06:23 -0400
+Message-ID: <20240324231207.1351418-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,56 +48,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yuxuan Hu <20373622@buaa.edu.cn>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-[ Upstream commit 2535b848fa0f42ddff3e5255cf5e742c9b77bb26 ]
+[ Upstream commit 96293af54f6aa859015d8ca40a1437d3115ad50c ]
 
-During our fuzz testing of the connection and disconnection process at the
-RFCOMM layer, we discovered this bug. By comparing the packets from a
-normal connection and disconnection process with the testcase that
-triggered a KASAN report. We analyzed the cause of this bug as follows:
+There are external pullup resistors on the board and due to silicon
+errata ERR050080 let's disable the internal ones to prevent any
+unwanted behavior in case they wear out.
 
-1. In the packets captured during a normal connection, the host sends a
-`Read Encryption Key Size` type of `HCI_CMD` packet
-(Command Opcode: 0x1408) to the controller to inquire the length of
-encryption key.After receiving this packet, the controller immediately
-replies with a Command Completepacket (Event Code: 0x0e) to return the
-Encryption Key Size.
-
-2. In our fuzz test case, the timing of the controller's response to this
-packet was delayed to an unexpected point: after the RFCOMM and L2CAP
-layers had disconnected but before the HCI layer had disconnected.
-
-3. After receiving the Encryption Key Size Response at the time described
-in point 2, the host still called the rfcomm_check_security function.
-However, by this time `struct l2cap_conn *conn = l2cap_pi(sk)->chan->conn;`
-had already been released, and when the function executed
-`return hci_conn_security(conn->hcon, d->sec_level, auth_type, d->out);`,
-specifically when accessing `conn->hcon`, a null-ptr-deref error occurred.
-
-To fix this bug, check if `sk->sk_state` is BT_CLOSED before calling
-rfcomm_recv_frame in rfcomm_process_rx.
-
-Signed-off-by: Yuxuan Hu <20373622@buaa.edu.cn>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/rfcomm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts | 4 ++--
+ arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi   | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
-index 8d6fce9005bdd..4f54c7df3a94f 100644
---- a/net/bluetooth/rfcomm/core.c
-+++ b/net/bluetooth/rfcomm/core.c
-@@ -1937,7 +1937,7 @@ static struct rfcomm_session *rfcomm_process_rx(struct rfcomm_session *s)
- 	/* Get data directly from socket receive queue without copying it. */
- 	while ((skb = skb_dequeue(&sk->sk_receive_queue))) {
- 		skb_orphan(skb);
--		if (!skb_linearize(skb)) {
-+		if (!skb_linearize(skb) && sk->sk_state != BT_CLOSED) {
- 			s = rfcomm_recv_frame(s, skb);
- 			if (!s)
- 				break;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
+index 8b16bd68576c0..0730c22e5b6b9 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
+@@ -294,8 +294,8 @@ MX8MM_IOMUXC_SAI3_MCLK_GPIO5_IO2		0x19
+ 
+ 	pinctrl_i2c4: i2c4grp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL			0x400001c3
+-			MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA			0x400001c3
++			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL			0x40000083
++			MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA			0x40000083
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
+index 8d10f5b412978..9643d6ed9a7c7 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
+@@ -247,8 +247,8 @@ MX8MM_IOMUXC_ECSPI1_SS0_GPIO5_IO9		0x19
+ 
+ 	pinctrl_i2c1: i2c1grp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL			0x400001c3
+-			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA			0x400001c3
++			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL			0x40000083
++			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA			0x40000083
+ 		>;
+ 	};
+ 
 -- 
 2.43.0
 
