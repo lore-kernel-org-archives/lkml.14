@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913CB22E141;
-	Sun, 24 Mar 2024 23:16:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF6514A4C0;
+	Sun, 24 Mar 2024 23:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322195; cv=none; b=QPETgAH64KI0f7V0PtYvL2SpNLFMBVfj3YFyJ/sOaKNlAuteFBxWNKffRgodKlJkHijbJF7zdJEqHRKxLeLMbsgabS6u2NeaepIV8pLrK0TxURnXj1p/FYThatCT+7CZ+92/cFEbXh1vzfZSZjAXEnBKey/8ZJemcSh6tQ2XUfA=
+	t=1711322182; cv=none; b=iE9aPHT09Pq7aefnFe96/QBRD+oDkAN+eWQU9O/sd/Kos202Am0uQx3qs9ZMOi2/kP6Ae4fKFhZdw4AzHFe1UwznPlPwoFFVV4Dck+cC2cyQ6gtbqqBQ/RfUisi5VF9skXPHqgZ0knfgvCYvQr2t/+lWby6QWPT49xHsVr928Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322195; c=relaxed/simple;
-	bh=KER8bZzciCHbeBCuGOVRIdNqfbhATTMUIsmkFhl/6ec=;
+	s=arc-20240116; t=1711322182; c=relaxed/simple;
+	bh=QqkZgGYU2lgtpapgy5erAMujVrBkQkZDtOtUDqmcD90=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bl3zlYrj6otP1TF3MlJUjuLcrzndULnBsAqVcX89qIqeTkHvhXvnguEzNYjiwgnUT1fXdNFUv4+Mi45UTfqFKMqa+cmKDftcKEz9fRqIxFos1IxK4Eq45+3HcHmAPRpRhCGAP9bg7jOoxy+GnF5R1Ni8cR/NXGz45BH2zNOLUpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+1zoBQg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kxCfVYBFqCp7lQfFhYbBKOXSKYhO+NwnxAXKigxbJifmu/RJn40w6UR4LDIy8LIHrZBPx3l1hvxDNCXs90OZK4ODPr2XU7Zu7W10ZmiAcSn0mznNMStyZHle8eiUx6ZI4RHIu9OoldhRv2qRdRHjJDzHp8NBCziG+0jha7ktsx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyYA+Yom; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+1zoBQg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2BECC43390;
-	Sun, 24 Mar 2024 23:16:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyYA+Yom"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F95BC43390;
+	Sun, 24 Mar 2024 23:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322194;
-	bh=KER8bZzciCHbeBCuGOVRIdNqfbhATTMUIsmkFhl/6ec=;
+	s=k20201202; t=1711322181;
+	bh=QqkZgGYU2lgtpapgy5erAMujVrBkQkZDtOtUDqmcD90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s+1zoBQgWUo28BJCVw3xwVU/g6NjN1J3+sLiE4EgElMYsTMnzgyOksvLI/5tj1h7h
-	 2XYOdt3obJXszCsWdobjHR3ct3JsjLCxJnotf6yj0Wn61q8gwUlCp8a8kbwEChgIit
-	 oNc7uDgIS3DUIA6nDSQdf64gpWpsbffNJsNxWIzQdua1L83E/pb7R06i98gsl9FxII
-	 k7wPK3WCWV1V8TF4M78imnBZLHEa47Oi9TuT74Z6BD92xE6WSPTloXfsMpizfbKUSY
-	 xMoGBLzeCM9dY6v49H1PCNYSrBV19lt6uSEWmC3LY3k2dkpJF8wqLF5+eWd+nERyEm
-	 rtpMBXVDFtcBA==
+	b=pyYA+Yomb6S3w09GmVQ2oPPiwhGciJIYIZWVLjs2oRm6oMPcbU1VtZTXFrXgFmnLr
+	 auc+VCFWGGL46uRZCyXqza9Uexuc2XxjpLZ0Z5HmgI0/vNus2PXt13kCPCpV85M89J
+	 qLDNsUd5tQipkg5N3Ba5yU5xC4Pab2JwQzK0wFfopH01oMd6RXD32YmaQ4SazeIRyS
+	 qgX0XFg4Be6r0djcqKoHIP3UM1zoYmuLEjjn56/tDFAlozjQhX7zDwYY+8lDQsvTFN
+	 3OBYdSrOZ8mQBj/zKc+nQAeSkZ3i0yrU8r1L5Fve34zC1f2yzaZHGOdRZYLMI5nKBc
+	 Y8/3xS2dBjP1A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Baokun Li <libaokun1@huawei.com>,
-	Jan Kara <jack@suse.cz>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 273/451] quota: simplify drop_dquot_ref()
-Date: Sun, 24 Mar 2024 19:09:09 -0400
-Message-ID: <20240324231207.1351418-274-sashal@kernel.org>
+Subject: [PATCH 6.1 260/451] pinctrl: renesas: r8a779g0: Add missing SCIF_CLK2 pin group/function
+Date: Sun, 24 Mar 2024 19:08:56 -0400
+Message-ID: <20240324231207.1351418-261-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,130 +47,67 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Baokun Li <libaokun1@huawei.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 7bce48f0fec602b3b6c335963b26d9eefa417788 ]
+[ Upstream commit 68540257cdf1d07ff8a649aa94c21c5804bbb9b0 ]
 
-As Honza said, remove_inode_dquot_ref() currently does not release the
-last dquot reference but instead adds the dquot to tofree_head list. This
-is because dqput() can sleep while dropping of the last dquot reference
-(writing back the dquot and calling ->release_dquot()) and that must not
-happen under dq_list_lock. Now that dqput() queues the final dquot cleanup
-into a workqueue, remove_inode_dquot_ref() can call dqput() unconditionally
-and we can significantly simplify it.
+R-Car V4H actually has two SCIF_CLK pins.
+The second pin provides the SCIF_CLK signal for HSCIF2 and SCIF4.
 
-Here we open code the simplified code of remove_inode_dquot_ref() into
-remove_dquot_ref() and remove the function put_dquot_list() which is no
-longer used.
-
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Message-Id: <20230630110822.3881712-6-libaokun1@huawei.com>
-Stable-dep-of: 179b8c97ebf6 ("quota: Fix rcu annotations of inode dquot pointers")
+Fixes: 050442ae4c74f830 ("pinctrl: renesas: r8a779g0: Add pins, groups and functions")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/6352ec9b63fdd38c2c70d8d203e46f21fbfeccdc.1705589612.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/quota/dquot.c | 70 +++++++-----------------------------------------
- 1 file changed, 9 insertions(+), 61 deletions(-)
+ drivers/pinctrl/renesas/pfc-r8a779g0.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index b0cf3869d3bf5..730d8ffc4928a 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -1084,59 +1084,7 @@ static int add_dquot_ref(struct super_block *sb, int type)
- 	return err;
- }
+diff --git a/drivers/pinctrl/renesas/pfc-r8a779g0.c b/drivers/pinctrl/renesas/pfc-r8a779g0.c
+index 14774163df354..acf7664ea835b 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
++++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
+@@ -2360,6 +2360,14 @@ static const unsigned int scif_clk_mux[] = {
+ 	SCIF_CLK_MARK,
+ };
  
--/*
-- * Remove references to dquots from inode and add dquot to list for freeing
-- * if we have the last reference to dquot
-- */
--static void remove_inode_dquot_ref(struct inode *inode, int type,
--				   struct list_head *tofree_head)
--{
--	struct dquot **dquots = i_dquot(inode);
--	struct dquot *dquot = dquots[type];
--
--	if (!dquot)
--		return;
--
--	dquots[type] = NULL;
--	if (list_empty(&dquot->dq_free)) {
--		/*
--		 * The inode still has reference to dquot so it can't be in the
--		 * free list
--		 */
--		spin_lock(&dq_list_lock);
--		list_add(&dquot->dq_free, tofree_head);
--		spin_unlock(&dq_list_lock);
--	} else {
--		/*
--		 * Dquot is already in a list to put so we won't drop the last
--		 * reference here.
--		 */
--		dqput(dquot);
--	}
--}
--
--/*
-- * Free list of dquots
-- * Dquots are removed from inodes and no new references can be got so we are
-- * the only ones holding reference
-- */
--static void put_dquot_list(struct list_head *tofree_head)
--{
--	struct list_head *act_head;
--	struct dquot *dquot;
--
--	act_head = tofree_head->next;
--	while (act_head != tofree_head) {
--		dquot = list_entry(act_head, struct dquot, dq_free);
--		act_head = act_head->next;
--		/* Remove dquot from the list so we won't have problems... */
--		list_del_init(&dquot->dq_free);
--		dqput(dquot);
--	}
--}
--
--static void remove_dquot_ref(struct super_block *sb, int type,
--		struct list_head *tofree_head)
-+static void remove_dquot_ref(struct super_block *sb, int type)
- {
- 	struct inode *inode;
- #ifdef CONFIG_QUOTA_DEBUG
-@@ -1153,11 +1101,16 @@ static void remove_dquot_ref(struct super_block *sb, int type,
- 		 */
- 		spin_lock(&dq_data_lock);
- 		if (!IS_NOQUOTA(inode)) {
-+			struct dquot **dquots = i_dquot(inode);
-+			struct dquot *dquot = dquots[type];
++static const unsigned int scif_clk2_pins[] = {
++	/* SCIF_CLK2 */
++	RCAR_GP_PIN(8, 11),
++};
++static const unsigned int scif_clk2_mux[] = {
++	SCIF_CLK2_MARK,
++};
 +
- #ifdef CONFIG_QUOTA_DEBUG
- 			if (unlikely(inode_get_rsv_space(inode) > 0))
- 				reserved = 1;
- #endif
--			remove_inode_dquot_ref(inode, type, tofree_head);
-+			dquots[type] = NULL;
-+			if (dquot)
-+				dqput(dquot);
- 		}
- 		spin_unlock(&dq_data_lock);
- 	}
-@@ -1174,13 +1127,8 @@ static void remove_dquot_ref(struct super_block *sb, int type,
- /* Gather all references from inodes and drop them */
- static void drop_dquot_ref(struct super_block *sb, int type)
- {
--	LIST_HEAD(tofree_head);
--
--	if (sb->dq_op) {
--		remove_dquot_ref(sb, type, &tofree_head);
--		synchronize_srcu(&dquot_srcu);
--		put_dquot_list(&tofree_head);
--	}
-+	if (sb->dq_op)
-+		remove_dquot_ref(sb, type);
- }
+ /* - SSI ------------------------------------------------- */
+ static const unsigned int ssi_data_pins[] = {
+ 	/* SSI_SD */
+@@ -2667,6 +2675,7 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
+ 	SH_PFC_PIN_GROUP(scif4_clk),
+ 	SH_PFC_PIN_GROUP(scif4_ctrl),
+ 	SH_PFC_PIN_GROUP(scif_clk),
++	SH_PFC_PIN_GROUP(scif_clk2),
  
- static inline
+ 	SH_PFC_PIN_GROUP(ssi_data),
+ 	SH_PFC_PIN_GROUP(ssi_ctrl),
+@@ -2983,6 +2992,10 @@ static const char * const scif_clk_groups[] = {
+ 	"scif_clk",
+ };
+ 
++static const char * const scif_clk2_groups[] = {
++	"scif_clk2",
++};
++
+ static const char * const ssi_groups[] = {
+ 	"ssi_data",
+ 	"ssi_ctrl",
+@@ -3068,6 +3081,7 @@ static const struct sh_pfc_function pinmux_functions[] = {
+ 	SH_PFC_FUNCTION(scif3),
+ 	SH_PFC_FUNCTION(scif4),
+ 	SH_PFC_FUNCTION(scif_clk),
++	SH_PFC_FUNCTION(scif_clk2),
+ 
+ 	SH_PFC_FUNCTION(ssi),
+ 
 -- 
 2.43.0
 
