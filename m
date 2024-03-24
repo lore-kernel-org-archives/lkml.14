@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074C61FD102;
-	Sun, 24 Mar 2024 23:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FEA1FDB5C;
+	Sun, 24 Mar 2024 23:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321328; cv=none; b=bhiSiUvBhIbIt/Yq5YhIferbOz9omeU+CGTKLWTA/han7genQLMKaF5BoQgcY0l3OjZNjGnX4YRjVs+Kc2zG4a/1wiqiKE0XGT/QNcc9QaG5ZI4jV2dBUGo1q5wjBPqYqx9fuhoC99m34Gs56MqKDYhU73RFWrJVICBxSCAKM9A=
+	t=1711321341; cv=none; b=h2BrAy02HO+EvkTH0/6vmUHJZ7N0m4LC0fXb4AmArv/0GEuev3mL8EvEZIaQDC2MyGsU9wGXu7dk/T/cpHcKhTSjjnFMKEfZXWY4kt23rvOa9KouG/UoGLOChzNjPw6g7ed1Y1YIyNm90Fz8lpV0jxFmW0K+R4LzJqYo6caGRcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321328; c=relaxed/simple;
-	bh=/LhJIP8T8+p/zwAyQer+F/R9x5sOpEcp3+Z1eGMIylE=;
+	s=arc-20240116; t=1711321341; c=relaxed/simple;
+	bh=a90TlNcd55CuvJI7AGBcJt7/5SipQJTr/jE8uvYuenY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YyvLow9TvXULDpxSRyBx9L1bsCXmziYdGngHBEWkOyHG4Y70Abge9lqyz5Ged1nZ0ofza9aNUCLxuqp3OpolfsvXNReu16QRcAk/oB37eJIKQil21N1tsOWQ2UOkFJ4Gott0hycLDX7xh3Ya80P0lxWXhQgbw2zivMJ1DDHyciY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hEbXUUla; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Byy7xkDaoIcWLnw9rJ6T01CdWgWaOlFxBobKE0gUyzj79NaNwHkpRZz6Hm95LY2GC4VqAYnyTHYi6CQpL62C2kC2CSSe3BW8cU/ZKdJyPW05cJl3oEqDZINrU3+oYZceLKN3uVEf7u0HCt9LC1zKIXTJMyHUFOaBuH9oGXsV0gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h4r3XgGi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hEbXUUla"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4591FC433C7;
-	Sun, 24 Mar 2024 23:02:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h4r3XgGi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B191C433A6;
+	Sun, 24 Mar 2024 23:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321326;
-	bh=/LhJIP8T8+p/zwAyQer+F/R9x5sOpEcp3+Z1eGMIylE=;
+	s=k20201202; t=1711321339;
+	bh=a90TlNcd55CuvJI7AGBcJt7/5SipQJTr/jE8uvYuenY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hEbXUUlayrwm6RkBvu5cNx8Whqma8AP4537pdqUdqXPtLRyJD6ee3cBAjnoKMicuK
-	 fCq79IDWArB7polBstdD+4Nw7gZALuDsWyxYavplKHePyqBLRm7Dw2NXiuh6otnkHA
-	 SGpVfFmnaA2jyImB/qMoDvvdLLFLdI/b7in9pxP0AaRNS6y7jngbr8xWyhswv50Smk
-	 5SVtAcdBiUUsIpaNgPhtAxn3V8IA9Mcr+S9s/F/OtIDOjWxb0bJGk7eW9QHWH8YT/A
-	 1J+FMojH0K9Phjg4M4lHHftchTBMiGEOkG3HwEywDfY5qPR1QduSdreLYu0apZjRQe
-	 9RzDISfLouJgw==
+	b=h4r3XgGieelOL5DuBBYVJISeeh6tWecDijYB//90d5dAIGqAySJfWPXcJlt5b7/U0
+	 F41/6u5q2q5v0v/LE9qhZ4DDGr3Jruq8+Z18pOhWOvujSTFG9Jpp3YlZa+eQ3KRsO8
+	 W1C7M3SWOjAAffJd7eemdpzGrh9zPA8wuxlxpnQPNBOs0obl1M1NdVwVRhuqCwc8GK
+	 0ol0602rfWXIde1YEc0XJSEXv3KVE9xBCPiiEUDL6XR3amVzFB2geLmNrsH408yANt
+	 46Tpa8cvJYG2/afm+bRzRKwZU4X6ZQmeu+lm6lStKCBTxAYp7kvYx3oQmWDCrmcmrs
+	 tpl4bOi7ujBLw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kailang Yang <kailang@realtek.com>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 050/638] ALSA: hda/realtek - ALC285 reduce pop noise from Headphone port
-Date: Sun, 24 Mar 2024 18:51:27 -0400
-Message-ID: <20240324230116.1348576-51-sashal@kernel.org>
+Subject: [PATCH 6.6 063/638] Input: gpio_keys_polled - suppress deferred probe error for gpio
+Date: Sun, 24 Mar 2024 18:51:40 -0400
+Message-ID: <20240324230116.1348576-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,37 +45,55 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kailang Yang <kailang@realtek.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit b34bf65838f7c6e785f62681605a538b73c2808c ]
+[ Upstream commit 963465a33141d0d52338e77f80fe543d2c9dc053 ]
 
-It had pop noise from Headphone port when system reboot state.
-If NID 58h Index 0x0 to fill default value, it will reduce pop noise.
+On a PC Engines APU our admins are faced with:
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Link: https://lore.kernel.org/r/7493e207919a4fb3a0599324fd010e3e@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+	$ dmesg | grep -c "gpio-keys-polled gpio-keys-polled: unable to claim gpio 0, err=-517"
+	261
+
+Such a message always appears when e.g. a new USB device is plugged in.
+
+Suppress this message which considerably clutters the kernel log for
+EPROBE_DEFER (i.e. -517).
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20240305101042.10953-2-u.kleine-koenig@pengutronix.de
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/input/keyboard/gpio_keys_polled.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 88d006ac9568c..234c8b46d9254 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -3683,6 +3683,7 @@ static void alc285_hp_init(struct hda_codec *codec)
- 	int i, val;
- 	int coef38, coef0d, coef36;
+diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+index ba00ecfbd343b..b41fd1240f431 100644
+--- a/drivers/input/keyboard/gpio_keys_polled.c
++++ b/drivers/input/keyboard/gpio_keys_polled.c
+@@ -315,12 +315,10 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
  
-+	alc_write_coefex_idx(codec, 0x58, 0x00, 0x1888); /* write default value */
- 	alc_update_coef_idx(codec, 0x4a, 1<<15, 1<<15); /* Reset HP JD */
- 	coef38 = alc_read_coef_idx(codec, 0x38); /* Amp control */
- 	coef0d = alc_read_coef_idx(codec, 0x0d); /* Digital Misc control */
+ 			error = devm_gpio_request_one(dev, button->gpio,
+ 					flags, button->desc ? : DRV_NAME);
+-			if (error) {
+-				dev_err(dev,
+-					"unable to claim gpio %u, err=%d\n",
+-					button->gpio, error);
+-				return error;
+-			}
++			if (error)
++				return dev_err_probe(dev, error,
++						     "unable to claim gpio %u\n",
++						     button->gpio);
+ 
+ 			bdata->gpiod = gpio_to_desc(button->gpio);
+ 			if (!bdata->gpiod) {
 -- 
 2.43.0
 
