@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9B61EEF1E;
-	Sun, 24 Mar 2024 23:09:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C7721592C;
+	Sun, 24 Mar 2024 23:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321748; cv=none; b=tBg6whu90/JuT+LRJ1/HL+ZlEaWrK6ua/oPt9I2BBCkCtfdfP8CTMnQsPfLaJlfSQ7KOJr8sap6TbQo8y8Kc+w9WSMblgloOrXku33NWJmOXeOZpysG6SRAqjhDBvKgZkxfjb18H64tbHAGNbB3PDQd44qh56ed4vqNICIUOk+s=
+	t=1711321750; cv=none; b=ht3IoAM5rUSTEcRgl7IPdDw130WEZe/T/zW/85o4AJp1fzDXXfrcB6vK33a2rud8Yw0JYm17v5MAyYUlqQRSdxPI8JEUnAwjvi6ZQXrNxuTyhHUuOrgyJSV8WE/BY6NzKWe5z7SIDOlNsxmqdOocStTcQowp2s0NzZerrlRBSq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321748; c=relaxed/simple;
-	bh=HbgZw9N+VUEsDVSumJzDXwzRXkwAv6FGk526J2/ntac=;
+	s=arc-20240116; t=1711321750; c=relaxed/simple;
+	bh=XBZH04MyonTga9mdAf67jwkN7tm6Zud8jwE7ugfw8/M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TrcfZ4P3scSKhE3RnxrZ14IJqYcwJaJ+zwVbFPrMqtiMn+HZDjSHR+Dypd5KGBqLypzqiCzNMsRwx/0orpH0N+i84QV0qFpYjPVOXmoGwVhUPfZHgfHArV/QO2ml8lUldMHZZVnF6imnhFAenEGRWRChstX5jhWVZUtvmbwLI2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PIWJzAc4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sRQ4br77cmugxmKO/J3kFXRyLy7Kl1+BBlSdLb0yL5AMkpmG7Y3MTkvdz8hybpjX6sGgZv809OLHCL2Yr/+CQ9XWGmq8CxJzf3dlITLTTnx6eX7d5G6vlq3/NN817EKfM6H0iGluE3km9EHa2ZdByRMO3w6KO9cwAVHAAvfXdQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKt708X/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PIWJzAc4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD446C433F1;
-	Sun, 24 Mar 2024 23:09:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKt708X/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00141C43394;
+	Sun, 24 Mar 2024 23:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321747;
-	bh=HbgZw9N+VUEsDVSumJzDXwzRXkwAv6FGk526J2/ntac=;
+	s=k20201202; t=1711321750;
+	bh=XBZH04MyonTga9mdAf67jwkN7tm6Zud8jwE7ugfw8/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PIWJzAc42lrA4dc3g2fjO9OaIWj5YXE35CcaNo17BUS3MmRWlHyolNWpXow5/TKL9
-	 apJ7g0acSF9W6UGQ3RBBMdU9GEE8F5Q54Bud+tzF7aMPU11z7zBmd7qR+MHi11QIPE
-	 DImFHEtjFCvibQJv2aXU7wDZQvvC2+7O3RxgsnQTP1ybfi7/FQYe+3tDRtUlIaFLjB
-	 VyG7cZVcfZEkOCp5e4MoK41c8E/layF7UHZHLwPDpxLsIzHYmbLudI/LHqAn/JyyHJ
-	 Rl3LiELEpKoQQZ157EbhzS08znkXLnrA4dDXA6nYJ+T5XtKMokVFyEzE9cpIkaNumg
-	 7tQjbRoRxdPgg==
+	b=iKt708X/A7BbZtOmqQy37KAggg8msPvrCNr43O/NrwGWn/QoSbtArpb4g/cHxUSyQ
+	 MaCWBx0Wu1m4KKnbckRTETeHEReM0a8V9e6yGhUZkKF9w9Obf+xem6D1ki0zAU/mtB
+	 RC52PpxQ8sd13B9u/aV4YzGWlQKOxr1/7wYDp+f6YAhxHHhmlK68MVtSRFl39XKpb1
+	 XFkbZNqChkolBJv0GqFoBk+VZKGNNmH1K9nsxU0oqwhExpVwpby2tZyT8CPkRI8if4
+	 3Vj9kD7/F+lLEpTsNcrd7RZYtJLgtSjWXhLV4JKSmVH+EeYV3MyzfJZV+qkVRCEyu7
+	 OOEHSAV4/guFw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gabor Juhos <j4g8y7@gmail.com>,
+Cc: Paloma Arellano <quic_parellan@quicinc.com>,
 	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 475/638] clk: qcom: gcc-ipq5018: fix 'enable_reg' offset of 'gcc_gmac0_sys_clk'
-Date: Sun, 24 Mar 2024 18:58:32 -0400
-Message-ID: <20240324230116.1348576-476-sashal@kernel.org>
+Subject: [PATCH 6.6 478/638] drm/msm/dpu: add division of drm_display_mode's hskew parameter
+Date: Sun, 24 Mar 2024 18:58:35 -0400
+Message-ID: <20240324230116.1348576-479-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,53 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gabor Juhos <j4g8y7@gmail.com>
+From: Paloma Arellano <quic_parellan@quicinc.com>
 
-[ Upstream commit f982adcc1b1c02a3114f68ac73c811cbfabe90fa ]
+[ Upstream commit 551ee0f210991d25f336bc27262353bfe99d3eed ]
 
-The value of the 'enable_reg' field in the 'gcc_gmac0_sys_clk'
-clock definition seems wrong as it is greater than the
-'max_register' value defined in the regmap configuration.
-Additionally, all other gmac specific branch clock definitions
-within the driver uses the same value both for the 'enable_reg'
-and for the 'halt_reg' fields.
+Setting up the timing engine when the physical encoder has a split role
+neglects dividing the drm_display_mode's hskew parameter. Let's fix this
+since this must also be done in preparation for implementing YUV420 over
+DP.
 
-Due to the lack of documentation the correct value is not known.
-Looking into the downstream driver does not help either, as that
-uses the same (presumably wrong) value [1].
-
-Nevertheless, change the 'enable_reg' field of 'gcc_gmac0_sys_clk'
-to use the value from the 'halt_reg' field so it follows the pattern
-used in other gmac clock definitions. The change is based on the
-assumption that the register layout of this clock is the same
-as the other gmac clocks.
-
-1. https://git.codelinaro.org/clo/qsdk/oss/kernel/linux-ipq-5.4/-/blob/NHSS.QSDK.12.4.r4/drivers/clk/qcom/gcc-ipq5018.c?ref_type=heads#L1889
-
-Fixes: e3fdbef1bab8 ("clk: qcom: Add Global Clock controller (GCC) driver for IPQ5018")
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
+Signed-off-by: Paloma Arellano <quic_parellan@quicinc.com>
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-Link: https://lore.kernel.org/r/20240225-gcc-ipq5018-register-fixes-v1-1-3c191404d9f0@gmail.com
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Patchwork: https://patchwork.freedesktop.org/patch/579605/
+Link: https://lore.kernel.org/r/20240222194025.25329-3-quic_parellan@quicinc.com
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-ipq5018.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq5018.c
-index 2a3c0659b7008..72484a44a8219 100644
---- a/drivers/clk/qcom/gcc-ipq5018.c
-+++ b/drivers/clk/qcom/gcc-ipq5018.c
-@@ -1753,7 +1753,7 @@ static struct clk_branch gcc_gmac0_sys_clk = {
- 	.halt_check = BRANCH_HALT_DELAY,
- 	.halt_bit = 31,
- 	.clkr = {
--		.enable_reg = 0x683190,
-+		.enable_reg = 0x68190,
- 		.enable_mask = BIT(0),
- 		.hw.init = &(struct clk_init_data) {
- 			.name = "gcc_gmac0_sys_clk",
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+index 97c31d03d5520..2141b81397824 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+@@ -258,12 +258,14 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
+ 		mode.htotal >>= 1;
+ 		mode.hsync_start >>= 1;
+ 		mode.hsync_end >>= 1;
++		mode.hskew >>= 1;
+ 
+ 		DPU_DEBUG_VIDENC(phys_enc,
+-			"split_role %d, halve horizontal %d %d %d %d\n",
++			"split_role %d, halve horizontal %d %d %d %d %d\n",
+ 			phys_enc->split_role,
+ 			mode.hdisplay, mode.htotal,
+-			mode.hsync_start, mode.hsync_end);
++			mode.hsync_start, mode.hsync_end,
++			mode.hskew);
+ 	}
+ 
+ 	drm_mode_to_intf_timing_params(phys_enc, &mode, &timing_params);
 -- 
 2.43.0
 
