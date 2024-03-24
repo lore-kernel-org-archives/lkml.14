@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922491CF8D2;
-	Sun, 24 Mar 2024 22:47:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D000579955;
+	Sun, 24 Mar 2024 22:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320463; cv=none; b=sarqNQkw7g/ckEUCa7x15gVdviRxWjPCXqW7sYQW5RcYeswsp1dG8b7mxEkilvTtq3nWoFHJMOpeKPdTg6H540YLtM9cAJPRLTgFhrOWaNEqcrPKzzUPu+YPki8q9dORpsbfDd1pTdCTZjcoDcK8dWB1zgiyP9gXjnq9blIpoZE=
+	t=1711320465; cv=none; b=Th4Sdv18w44EX5XAsiN+WTyQWANk4j+3vWPwFjJ8QlJQygfL8eTPbvZpBHeqKqpHuDRfGr/urP9psyG7KOc1OdE3RRfgkHlpFbDWPlkae4GpBDhzFxeM37RYOtpMaDystbba8xisgEyNV1iuVf0zm9/oePWSgk/A77zQkM6UcCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320463; c=relaxed/simple;
-	bh=bIVtbSMKxcSFFD/wdw1wvG/4arj3wpTutJa23UtENBU=;
+	s=arc-20240116; t=1711320465; c=relaxed/simple;
+	bh=zL734AcNKdHLnb0g9HvGqJNJE/3x5Nz2G5npj9OKw+U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZSyeHbEirW3rwmSFqBnZ4AbNclIUwbWUH6nn0d0NS4XVE8+6TRUoGvz2fmR3aBvpI/hga+tCEVNAQZCxZn8MZXdZZbEqWNcN7mh5Geg0A0MaLUq4bMucOfk7ef0QzFHs3d8SYDnSe0NOO/fSIeN0ffwkwbM9s1EvP1OuEJObAZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LeczNmOJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mOPYLqSK32JSSwvFTGjKZfT/G2hGK0UuGMbWyZaobkYEHBflh3pA9z6TCLdcwuff6obRZ/PvPqpwmMGoXeG6mXZRIN1BDsl2kpe3IFUuzqIzE9e/Ce/tAuCfPV3LQwmvmqkN4BqnlH/QUvuokiF8iGYAabdEko8wJP39dCYJAPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nANlMskj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LeczNmOJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6B8CC433C7;
-	Sun, 24 Mar 2024 22:47:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nANlMskj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6903C43399;
+	Sun, 24 Mar 2024 22:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320463;
-	bh=bIVtbSMKxcSFFD/wdw1wvG/4arj3wpTutJa23UtENBU=;
+	s=k20201202; t=1711320465;
+	bh=zL734AcNKdHLnb0g9HvGqJNJE/3x5Nz2G5npj9OKw+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LeczNmOJFHDBgqd25HBDBmrP+YA+yKmdIeCsxcsIJYaXSf7ByVD0CFSganxiUKzTa
-	 Orb42AmzbfoCGuPCnjCEt8h4s/OjVkTOPeGXSwuQwPZNZojTi97EnnJjs61LCmc0EE
-	 jehm2oSbifDFUsP/UYiKMm0m/Z9csdcjZkqtwk7nbhqkR4WbJ2Ad7QK1yRkhmx7j9c
-	 B0mJ39tC+BPaOHEmdbsxdNw+DGcKll2iwxFB/NmqwW7yFhsxRdXdnvlVjgIpN/fg5G
-	 fpd+QJzSTQ7qvrTuB1JsTR56a3HQ3Hwd32R5gZPNzi6X11BvzBOVhlVmZAQpyCjP/d
-	 ZcSRJNaJVcVqA==
+	b=nANlMskjFE7pXG6RKASd2BIfepmn8ny15cnY5PGh7SQ86g6zvfU0rEjzgZ/thTY0q
+	 sXDzuG5a1GlPeliUl9M4QDMjqoQ27srXoWOGJL5tJvdqjKhNH6txbsqoY/pGd+1o3D
+	 1FklRvuhPeEjcAdN9s+nsz4NqhMjnIPMynbhlEgt8Ok62mZgx/OAzuCs8FQv4zbIzz
+	 0dDt+gAzv3VGhYHaVICW3X6A0LaLA04Qncr05hiMNUqa3M5M6jy3iHBUtSRAn4AMf5
+	 CmupRjw9hK6FkxQZNHUPGOCig4XTnpWqAdTF+e3mKRSfE+xIimn0grY8sP51y96YBG
+	 puQMscbGeBhiw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Jean-Lo=C3=AFc=20Charroud?= <lagiraudiere+linux@free.fr>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: Mark Brown <broonie@kernel.org>,
+	Doug Anderson <dianders@chromium.org>,
+	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 022/713] ALSA: hda/realtek: cs35l41: Add internal speaker support for ASUS UM3402 with missing DSD
-Date: Sun, 24 Mar 2024 18:35:48 -0400
-Message-ID: <20240324224720.1345309-23-sashal@kernel.org>
+Subject: [PATCH 6.7 024/713] arm64/sve: Lower the maximum allocation for the SVE ptrace regset
+Date: Sun, 24 Mar 2024 18:35:50 -0400
+Message-ID: <20240324224720.1345309-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,45 +45,101 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jean-Loïc Charroud <lagiraudiere+linux@free.fr>
+From: Mark Brown <broonie@kernel.org>
 
-[ Upstream commit 706c1fa1ab09f11a131fc4d699ce4c0224b1cb2d ]
+[ Upstream commit 2813926261e436d33bc74486b51cce60b76edf78 ]
 
-Add the values for the missing DSD properties to the cs35l41 config table.
+Doug Anderson observed that ChromeOS crashes are being reported which
+include failing allocations of order 7 during core dumps due to ptrace
+allocating storage for regsets:
 
-Signed-off-by: Jean-Loïc Charroud <lagiraudiere+linux@free.fr>
-Link: https://lore.kernel.org/r/1435594585.650325975.1707867511062.JavaMail.zimbra@free.fr
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  chrome: page allocation failure: order:7,
+          mode:0x40dc0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO),
+          nodemask=(null),cpuset=urgent,mems_allowed=0
+   ...
+  regset_get_alloc+0x1c/0x28
+  elf_core_dump+0x3d8/0xd8c
+  do_coredump+0xeb8/0x1378
+
+with further investigation showing that this is:
+
+   [   66.957385] DOUG: Allocating 279584 bytes
+
+which is the maximum size of the SVE regset. As Doug observes it is not
+entirely surprising that such a large allocation of contiguous memory might
+fail on a long running system.
+
+The SVE regset is currently sized to hold SVE registers with a VQ of
+SVE_VQ_MAX which is 512, substantially more than the architectural maximum
+of 16 which we might see even in a system emulating the limits of the
+architecture. Since we don't expose the size we tell the regset core
+externally let's define ARCH_SVE_VQ_MAX with the actual architectural
+maximum and use that for the regset, we'll still overallocate most of the
+time but much less so which will be helpful even if the core is fixed to
+not require contiguous allocations.
+
+Specify ARCH_SVE_VQ_MAX in terms of the maximum value that can be written
+into ZCR_ELx.LEN (where this is set in the hardware). For consistency
+update the maximum SME vector length to be specified in the same style
+while we are at it.
+
+We could also teach the ptrace core about runtime discoverable regset sizes
+but that would be a more invasive change and this is being observed in
+practical systems.
+
+Reported-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20240213-arm64-sve-ptrace-regset-size-v2-1-c7600ca74b9b@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/cs35l41_hda_property.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/include/asm/fpsimd.h | 12 ++++++------
+ arch/arm64/kernel/ptrace.c      |  3 ++-
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
-index d74cf11eef1ea..6cf4c02f9effd 100644
---- a/sound/pci/hda/cs35l41_hda_property.c
-+++ b/sound/pci/hda/cs35l41_hda_property.c
-@@ -91,6 +91,7 @@ static const struct cs35l41_config cs35l41_config_table[] = {
- 	{ "10431D1F", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
- 	{ "10431DA2", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
- 	{ "10431E02", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
-+	{ "10431E12", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
- 	{ "10431EE2", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, -1, -1, 0, 0, 0 },
- 	{ "10431F12", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
- 	{ "10431F1F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 0, 0, 0 },
-@@ -427,6 +428,7 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
- 	{ "CSC3551", "10431D1F", generic_dsd_config },
- 	{ "CSC3551", "10431DA2", generic_dsd_config },
- 	{ "CSC3551", "10431E02", generic_dsd_config },
-+	{ "CSC3551", "10431E12", generic_dsd_config },
- 	{ "CSC3551", "10431EE2", generic_dsd_config },
- 	{ "CSC3551", "10431F12", generic_dsd_config },
- 	{ "CSC3551", "10431F1F", generic_dsd_config },
+diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
+index 7780d343ef080..b67b89c54e1c8 100644
+--- a/arch/arm64/include/asm/fpsimd.h
++++ b/arch/arm64/include/asm/fpsimd.h
+@@ -62,13 +62,13 @@ static inline void cpacr_restore(unsigned long cpacr)
+  * When we defined the maximum SVE vector length we defined the ABI so
+  * that the maximum vector length included all the reserved for future
+  * expansion bits in ZCR rather than those just currently defined by
+- * the architecture. While SME follows a similar pattern the fact that
+- * it includes a square matrix means that any allocations that attempt
+- * to cover the maximum potential vector length (such as happen with
+- * the regset used for ptrace) end up being extremely large. Define
+- * the much lower actual limit for use in such situations.
++ * the architecture.  Using this length to allocate worst size buffers
++ * results in excessively large allocations, and this effect is even
++ * more pronounced for SME due to ZA.  Define more suitable VLs for
++ * these situations.
+  */
+-#define SME_VQ_MAX	16
++#define ARCH_SVE_VQ_MAX ((ZCR_ELx_LEN_MASK >> ZCR_ELx_LEN_SHIFT) + 1)
++#define SME_VQ_MAX	((SMCR_ELx_LEN_MASK >> SMCR_ELx_LEN_SHIFT) + 1)
+ 
+ struct task_struct;
+ 
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index b3f64144b5cd9..c94c0f8c9a737 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1499,7 +1499,8 @@ static const struct user_regset aarch64_regsets[] = {
+ #ifdef CONFIG_ARM64_SVE
+ 	[REGSET_SVE] = { /* Scalable Vector Extension */
+ 		.core_note_type = NT_ARM_SVE,
+-		.n = DIV_ROUND_UP(SVE_PT_SIZE(SVE_VQ_MAX, SVE_PT_REGS_SVE),
++		.n = DIV_ROUND_UP(SVE_PT_SIZE(ARCH_SVE_VQ_MAX,
++					      SVE_PT_REGS_SVE),
+ 				  SVE_VQ_BYTES),
+ 		.size = SVE_VQ_BYTES,
+ 		.align = SVE_VQ_BYTES,
 -- 
 2.43.0
 
