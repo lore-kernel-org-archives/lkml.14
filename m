@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE80130A48;
-	Sun, 24 Mar 2024 23:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E018F2779D9;
+	Sun, 24 Mar 2024 23:36:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323417; cv=none; b=LUBiOpe/BAmIOlZVdbnDxaBxHLtrHHIb7yKATJfl7XAT7gw7Ygp+xQ6WC6kwluExXX1GFLVqtB8txx1GOwrBfo0v5zO8DVWnXXVFgIIfOWlV1mNai+a+0l1GQeRzNIj67uIqeo+J1xnSXlGShffAOaHTuhn6HbGhbfwRxGZTMWs=
+	t=1711323413; cv=none; b=ZiON/x7rbGMgeIfFhDXr6Ym5gpZL5nOuv9jPG584zf5BlHjX7NcORfD7N9KJIiYRLRVA9L4w2LCNyUYnEIJi1Xv8GKWb6dbBmMcQfBqT5ylFGtceqg/BdxRouWlnZrgNQF25M8UlfLdW7Qh66Mr2DX8jX8aV8UfypSD/hn9oU5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323417; c=relaxed/simple;
-	bh=7KtJtuNFRVaxEGGiEmg0uLBDuikiomwiTay6L1kpgZM=;
+	s=arc-20240116; t=1711323413; c=relaxed/simple;
+	bh=WubfcSULKJ4wzT3l0PE5wg/VyrYArkzhxC2koqHrvV4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eVIrBwbvvdCAIVjniWn75mbPidAffYPbNpGWBtiKNq8RRidREdoqiOp3UZLyd48RzgdXYvOfwYkDoUK8rySlyp2WrjE8U5VUMB836iSWrQ+t5WFzkoXfDAbywE3P/UNoNEeOUWIONjoOa4mFE1F4XnkIJE9c2+2A77AKan1WwWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZtrHIKER; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=bx/yMqOHLE7tLNDPNz8E5TZAuCuEnV951+Pm9yRLIidgq/NB2KKMlQJjKztiFXywq9ty161YPVLJ6Z3ev2dhejGQYamq7zDPhZZh4DZdHXtv3SqVqlHgdMV7hZk0A5zBA2RGh4AJ4KKdFdIWHnLzd3SI2OoiFPaay2gPaZFmMgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwNV7FGS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZtrHIKER"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E1BC43394;
-	Sun, 24 Mar 2024 23:36:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwNV7FGS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1343BC433F1;
+	Sun, 24 Mar 2024 23:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323416;
-	bh=7KtJtuNFRVaxEGGiEmg0uLBDuikiomwiTay6L1kpgZM=;
+	s=k20201202; t=1711323411;
+	bh=WubfcSULKJ4wzT3l0PE5wg/VyrYArkzhxC2koqHrvV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZtrHIKERzWSw/tWA2IORunSDzQ/xtpyPLh2PJfL9O89/Bp7dE0qXUzRGyTY6t7ELG
-	 Fv1inmkxViLehz+xqR+utTfuN9cT1WLkOxWvKfwAegdJDwUB0CLCJpG0eOWBM1H/Fj
-	 IBwGOmQhCBTCIZNxNVawLMMZ2SSHOataOBrVLFWD62Ko7S37nUXAbghvCLM6AZ/rHf
-	 mWuunrGx6rk29KevhcQZSJNjp6YixktLjbZ3FmGJ8xHc3W/2ueWXLyJoruZjiigqiR
-	 1LGpSYk0Sy2Kwl7ruUhCAA8g/5jmvq1/p+vyrE3PtAavXyHyRLswyFB4fEn3IncAHx
-	 RmEbi+lMFEUwQ==
+	b=mwNV7FGSuTegb5VAdCb0EcKAWoN9LMF4W9ggxx8qYPm7H3Yd2nocm6Hcnm7mIhGQS
+	 6J9slp4KwBpPTxEvYBypHPTrNfA1F11fONADHF4srmiNsowNM57fdtZ83QUaPWwZuz
+	 TXZRxXdnTaQMTGo3w6ab5coCZ9m3n0+K7ks4FPPg6lwBfNURD10vXgHxRbU8d4zCKM
+	 ovpMQgVApcoBSPeGJdhkzcck69ysrMuk1c1rvPj6DWmyw3M+KxuIB8hHlzn+Ikw5JL
+	 oDAdFzHzwv2S3lKd4eOWJhfD+AuoBYH3YG7wAINf3pnkxbdbzk9jsvPnL/p3t3UKLm
+	 GWz2Mv/4MsWOg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Maxim Kudinov <m.kudinovv@gmail.com>,
-	Maxim Trofimov <maxvereschagin@gmail.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 118/317] ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override
-Date: Sun, 24 Mar 2024 19:31:38 -0400
-Message-ID: <20240324233458.1352854-119-sashal@kernel.org>
+Subject: [PATCH 5.15 113/317] ARM: dts: imx6dl-yapp4: Fix typo in the QCA switch register address
+Date: Sun, 24 Mar 2024 19:31:33 -0400
+Message-ID: <20240324233458.1352854-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -45,51 +45,42 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Maxim Kudinov <m.kudinovv@gmail.com>
+From: Michal Vokáč <michal.vokac@ysoft.com>
 
-[ Upstream commit 021a67d096154893cd1d883c7be0097e2ee327fd ]
+[ Upstream commit 023bd910d3ab735459f84b22bb99fb9e00bd9d76 ]
 
-A known issue on some Zen laptops, keyboard stopped working due to commit
-9946e39fe8d0 fael@kernel.org("ACPI: resource: skip IRQ override on AMD
-Zen platforms") on kernel 5.19.10.
+This change does not have any functional effect. The switch works just
+fine without this patch as it has full access to all the addresses
+on the bus. This is simply a clean-up to set the node name address
+and reg address to the same value.
 
-The ACPI IRQ override is required for this board due to buggy DSDT, thus
-adding the board vendor and name to irq1_edge_low_force_override fixes
-the issue.
-
-Fixes: 9946e39fe8d0 ("ACPI: resource: skip IRQ override on AMD Zen platforms")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=217394
-Link: https://lore.kernel.org/linux-acpi/20231006123304.32686-1-hdegoede@redhat.com/
-Tested-by: Maxim Trofimov <maxvereschagin@gmail.com>
-Signed-off-by: Maxim Kudinov <m.kudinovv@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 15b43e497ffd ("ARM: dts: imx6dl-yapp4: Use correct pseudo PHY address for the switch")
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/resource.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index a46e0bf0e1dc4..0f533aff23a17 100644
---- a/drivers/acpi/resource.c
-+++ b/drivers/acpi/resource.c
-@@ -572,6 +572,13 @@ static const struct dmi_system_id lg_laptop[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "LL6FA"),
- 		},
- 	},
-+	{
-+		/* MAIBENBEN X577 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MAIBENBEN"),
-+			DMI_MATCH(DMI_BOARD_NAME, "X577"),
-+		},
-+	},
- 	{ }
- };
+diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+index 844f31f7c4114..76da90e858045 100644
+--- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
++++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+@@ -127,7 +127,7 @@ phy_port3: phy@2 {
  
+ 		switch@10 {
+ 			compatible = "qca,qca8334";
+-			reg = <10>;
++			reg = <0x10>;
+ 			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+ 
+ 			switch_ports: ports {
 -- 
 2.43.0
 
