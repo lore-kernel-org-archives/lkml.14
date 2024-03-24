@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F76721FA0C;
-	Sun, 24 Mar 2024 23:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E0215666B;
+	Sun, 24 Mar 2024 23:11:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321878; cv=none; b=mRJVzjIGdk/nrV/WzlHmNIyx67O77AKoOMGHhHX5CE3MhTIQkby3dcv+G+e6afh60c6OMfQ2joAlghVzGmtbCoKnEUpFNHbTO7bg1ETD8xDjlmWSgLEwxHozE1Q/OrQl7s+Bkn6QU0/1tSuNep/xh7f/2+WV/dpW3C5q7QvMWx0=
+	t=1711321874; cv=none; b=FvmnZ+UsNibZ5S0+Zndif1AZKyJRXdSvxT5Grp/7T7KP3RCznbBCmlqoLQjN0C+1lAwTtGykfxf6o/36/5AKSuECHW9r/uF4O1hUP665fm8rYfdGu3MQm4KqAPVsyU0SOed99Hgxd+SGoDaxv+97zJGcJGWKCiHq4eQMxplueNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321878; c=relaxed/simple;
-	bh=oPWSx8SdfdjsEVzy+Z5jo84gY+npncO8mSnmQcUnbCs=;
+	s=arc-20240116; t=1711321874; c=relaxed/simple;
+	bh=GBtMvyQ4Pow6PVi2bB8hpS6fY8x1l/vc4erlX1gilSU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i0Cmy8r1cp893H/kzon0bimsMLit47so9AnzFHTopwPM+z2rMGe/UM55omH9ZDVoIMFcFkwE9XI3FGhv7TsKFTeofPhuxI+qEwMeZ0i5gwI+CmJzP0+ngcz99bHYBZXmntG4Mog026vzHtAQ71rSsq23x13npWcKsRynM8bR3dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igZi3Vbv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=YO5re6pCcTHvXzyqqLxDulsrbFeqSjQGU8e3WXewRoFyAr4vsyLe1Uzxps1EutyQhZDtGOdbarZYcta39NU25BNqKL+ahVADxHoqB6nGt9MVZGqXH87FLQ6vEw2vBQsu9XbruVpOAYbJvA8cE92oVk82selv8xZ+wv96X3XqfFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TrB2iiHj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igZi3Vbv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EF9BC43399;
-	Sun, 24 Mar 2024 23:11:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TrB2iiHj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43C85C43390;
+	Sun, 24 Mar 2024 23:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321877;
-	bh=oPWSx8SdfdjsEVzy+Z5jo84gY+npncO8mSnmQcUnbCs=;
+	s=k20201202; t=1711321874;
+	bh=GBtMvyQ4Pow6PVi2bB8hpS6fY8x1l/vc4erlX1gilSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=igZi3VbvPFvVyryv02QuESkVIJHDEB82jWs+jrrTcNa9Fiqtk0XGiZmI5kfoDm7rb
-	 bcvESnAX8kOjh/CRat9Mlrjsh7XoGRZbn+zyfLJ8o404/XhxHGcYirc3UvfSRsqwJ/
-	 Sm44YEUIQTrj7d5BTKG5v8xD2VZA4eKOTD5tBxNdY++GB1i9yivOO8+drUDHfTlW2A
-	 I+YQLRxpwxNyKNWRNgGIVwd6ja6uc+L2Fmh1dzWj4yvLx/jymTaX43zZ3fXCaTCa8V
-	 o51zDXLSUqfUnEBbLWhqNPl5BMZv3M0+EMrk1oR9pFUSYvftLXCybp7kNEpcM0dlbG
-	 Otg04tSkrXPtQ==
+	b=TrB2iiHjKxVUpq/xZKqp++JtgmonyVc/MXLpl87DicUFSQzpREKHYtoD4OaVuKCfy
+	 IMZU3L0jjwv6yW+lh6DK+yHURSD/ZC6Fq3oqHDIiRjVLKEB9cBLAvQjXNJCs7d9mxO
+	 OdA1w454Z9MIonbVlcsRT4wwp/8wDFGmY8cU+p6qWmyl6p1sh9BxGI+EqP76sYE4E/
+	 hnawLwQGVoCoxaxakYnQrUNG8Lpinw7CX2HtMQe/owYVbqSdPfmT/ErkeyWl+f4Ztq
+	 yvPkzqsRheqHPeZSQjC+3Fq1zllC5cdyPlzOO9rJzYsNDORy5pk6DlMr09AL9oOg14
+	 Ldhm2FcPhoQpw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arthur Grillo <arthurgrillo@riseup.net>,
-	Pekka Paalanen <pekka.paalanen@collabora.com>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Melissa Wen <mwen@igalia.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
+Cc: Ignat Korchagin <ignat@cloudflare.com>,
+	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 605/638] drm: Fix drm_fixp2int_round() making it add 0.5
-Date: Sun, 24 Mar 2024 19:00:42 -0400
-Message-ID: <20240324230116.1348576-606-sashal@kernel.org>
+Subject: [PATCH 6.6 602/638] net: veth: do not manipulate GRO when using XDP
+Date: Sun, 24 Mar 2024 19:00:39 -0400
+Message-ID: <20240324230116.1348576-603-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -47,53 +45,85 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arthur Grillo <arthurgrillo@riseup.net>
+From: Ignat Korchagin <ignat@cloudflare.com>
 
-[ Upstream commit 807f96abdf14c80f534c78f2d854c2590963345c ]
+[ Upstream commit d7db7775ea2e31502d46427f5efd385afc4ff1eb ]
 
-As well noted by Pekka[1], the rounding of drm_fixp2int_round is wrong.
-To round a number, you need to add 0.5 to the number and floor that,
-drm_fixp2int_round() is adding 0.0000076. Make it add 0.5.
+Commit d3256efd8e8b ("veth: allow enabling NAPI even without XDP") tried to fix
+the fact that GRO was not possible without XDP, because veth did not use NAPI
+without XDP. However, it also introduced the behaviour that GRO is always
+enabled, when XDP is enabled.
 
-[1]: https://lore.kernel.org/all/20240301135327.22efe0dd.pekka.paalanen@collabora.com/
+While it might be desired for most cases, it is confusing for the user at best
+as the GRO flag suddenly changes, when an XDP program is attached. It also
+introduces some complexities in state management as was partially addressed in
+commit fe9f801355f0 ("net: veth: clear GRO when clearing XDP even when down").
 
-Fixes: 8b25320887d7 ("drm: Add fixed-point helper to get rounded integer values")
-Suggested-by: Pekka Paalanen <pekka.paalanen@collabora.com>
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-Reviewed-by: Melissa Wen <mwen@igalia.com>
-Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240316-drm_fixed-v2-1-c1bc2665b5ed@riseup.net
+But the biggest problem is that it is not possible to disable GRO at all, when
+an XDP program is attached, which might be needed for some use cases.
+
+Fix this by not touching the GRO flag on XDP enable/disable as the code already
+supports switching to NAPI if either GRO or XDP is requested.
+
+Link: https://lore.kernel.org/lkml/20240311124015.38106-1-ignat@cloudflare.com/
+Fixes: d3256efd8e8b ("veth: allow enabling NAPI even without XDP")
+Fixes: fe9f801355f0 ("net: veth: clear GRO when clearing XDP even when down")
+Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
+Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_fixed.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/veth.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
-diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
-index 0c9f917a4d4be..81572d32db0c2 100644
---- a/include/drm/drm_fixed.h
-+++ b/include/drm/drm_fixed.h
-@@ -71,7 +71,6 @@ static inline u32 dfixed_div(fixed20_12 A, fixed20_12 B)
+diff --git a/drivers/net/veth.c b/drivers/net/veth.c
+index 0ae90702e7f84..5cdb77e861c0e 100644
+--- a/drivers/net/veth.c
++++ b/drivers/net/veth.c
+@@ -1525,8 +1525,6 @@ static netdev_features_t veth_fix_features(struct net_device *dev,
+ 		if (peer_priv->_xdp_prog)
+ 			features &= ~NETIF_F_GSO_SOFTWARE;
+ 	}
+-	if (priv->_xdp_prog)
+-		features |= NETIF_F_GRO;
+ 
+ 	return features;
  }
+@@ -1630,14 +1628,6 @@ static int veth_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ 		}
  
- #define DRM_FIXED_POINT		32
--#define DRM_FIXED_POINT_HALF	16
- #define DRM_FIXED_ONE		(1ULL << DRM_FIXED_POINT)
- #define DRM_FIXED_DECIMAL_MASK	(DRM_FIXED_ONE - 1)
- #define DRM_FIXED_DIGITS_MASK	(~DRM_FIXED_DECIMAL_MASK)
-@@ -90,7 +89,7 @@ static inline int drm_fixp2int(s64 a)
+ 		if (!old_prog) {
+-			if (!veth_gro_requested(dev)) {
+-				/* user-space did not require GRO, but adding
+-				 * XDP is supposed to get GRO working
+-				 */
+-				dev->features |= NETIF_F_GRO;
+-				netdev_features_change(dev);
+-			}
+-
+ 			peer->hw_features &= ~NETIF_F_GSO_SOFTWARE;
+ 			peer->max_mtu = max_mtu;
+ 		}
+@@ -1653,14 +1643,6 @@ static int veth_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ 			if (dev->flags & IFF_UP)
+ 				veth_disable_xdp(dev);
  
- static inline int drm_fixp2int_round(s64 a)
- {
--	return drm_fixp2int(a + (1 << (DRM_FIXED_POINT_HALF - 1)));
-+	return drm_fixp2int(a + DRM_FIXED_ONE / 2);
- }
- 
- static inline int drm_fixp2int_ceil(s64 a)
+-			/* if user-space did not require GRO, since adding XDP
+-			 * enabled it, clear it now
+-			 */
+-			if (!veth_gro_requested(dev)) {
+-				dev->features &= ~NETIF_F_GRO;
+-				netdev_features_change(dev);
+-			}
+-
+ 			if (peer) {
+ 				peer->hw_features |= NETIF_F_GSO_SOFTWARE;
+ 				peer->max_mtu = ETH_MAX_MTU;
 -- 
 2.43.0
 
