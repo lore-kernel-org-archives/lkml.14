@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470441EF7DE;
-	Sun, 24 Mar 2024 22:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AB812C7E3;
+	Sun, 24 Mar 2024 22:57:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321035; cv=none; b=VtXqFv8O2wu62uwNw4TB/fFtF2NMdWa/jfGYj8dp1pdFVShLzkUCwGb6QRaO9452t0FNtSDPygDXWU8V2uhbD4fBARJcahHrRmGtMcuRo4Nv5aCKAtcSljPthvwZKlfhHk4ezVLE9UZrAFr29qjqkzXxE0vZaLfilELqrHwrHAg=
+	t=1711321039; cv=none; b=CktIgRbmeWbDM9YS/LC3x7na9mvMDUdHPcMNgjnj0LSDdWcorbKia34s1/JkkM8uqOUuyF1vKcgpmEACQH6NIlsWy358luXKafPNl9f2b0st+hDLIWOmIaGfP7Qi4pjjcsWsRVJJMXnL8Fn51Q+DCK/nDhVIiQXiPEuJ2AnCeHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321035; c=relaxed/simple;
-	bh=I8ZEAf3dinyvI/3ws4H3uGRlv1YlJNvEjPVFatNhj1w=;
+	s=arc-20240116; t=1711321039; c=relaxed/simple;
+	bh=DfOoZsIT4CceyDNQSJzOMOwj8RU1jaP12MR59o7D7JM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L+eMUASYKTZGpG/IdkjbginnVCAVIu739xg0ZFJsCZXx0P4zBKsk5BIwTZLQqSoEfVMWVCWhPT51GDifjz1S15PcAQy/gdL6EvBEfYJd4PRzzKR/OCmZ5rzu0p/V1wzVUn9mObGEUHigN4MKs3+0dMjEzJvYOuPxq9FwOPSRws8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPHxdkL4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=u2TM3cSKji5MsG69KHgxiiy9vxdnRGIAoZNm8NAZ20yrBRjZGqaWzXx5+30x2PByG4J96JfJh8MreFqoZpr2HlVh9I3xN2ipVwytwyW2053VM6MHABpLq45qj7G90S2iEswbyYaH47s3/tcIjIw8jie/R+8NC2F7PDKdbNfyi54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nd+8VHDm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPHxdkL4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87197C43390;
-	Sun, 24 Mar 2024 22:57:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nd+8VHDm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D9DBC433C7;
+	Sun, 24 Mar 2024 22:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321034;
-	bh=I8ZEAf3dinyvI/3ws4H3uGRlv1YlJNvEjPVFatNhj1w=;
+	s=k20201202; t=1711321038;
+	bh=DfOoZsIT4CceyDNQSJzOMOwj8RU1jaP12MR59o7D7JM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nPHxdkL4JWd1+lUrZhAgzrqRZtyw0O9I/tgwv13838PGxWOHVeVKtAvxVINvNvltJ
-	 poB/Nta6bEa4Mva4k9TQuzVYA+YaBUZJ2DabMyPooeBvjJdbW2VsPr+CtNAk2ZyuhG
-	 62Qtu4kx5S41f3+OzFd/MHYH/Dim5Z/+BePaEA5tMFdSaiiJ+w/88egqQ82Dcd77Ls
-	 5kGXm1qIMZ758mwigYHlSHAnXlNq3At23xvj4oO20z9RatyCMJBg0sTmUiTiNHBRoA
-	 EYh1botJ+lMOpPr4fKr+oViDF8HBbbJ1XvKwxIyLCDYF+BhGvEseqU6D3gpGHbBSKB
-	 P6xfjPuT4WNNg==
+	b=Nd+8VHDmAduSifzTY6kAheldOChZ/bOT+n4TEuJwSeDC5EUKn78/We7L4EHsPi6TH
+	 X/dL/hRvQjrBOg+2t2iaYEL8tci9YudEv0KXbCHVQgvLab4Ir40TI/ZG92F9CfoATF
+	 35fTh4kY9YNvUBny9AEOfbi8lB9QGdKj9HG7hauqOOYXrEngM415/ojwPAd1GQj16M
+	 Vocp2gfU7wE2kl+YKTUyYqWodNPM+AnMkOnWdnT6zTfayGdSU96x4Cd11W3xjme6de
+	 YX8pN/gSgP5zRL9tH75DiiS5KyZEPi00GwIs/xgNJD3KdQu7uWSVczlW6DNSzI/ubf
+	 x8NX2vNg0e+eA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
+Cc: Olga Kornievskaia <kolga@netapp.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 597/713] RDMA/mana_ib: Fix bug in creation of dma regions
-Date: Sun, 24 Mar 2024 18:45:23 -0400
-Message-ID: <20240324224720.1345309-598-sashal@kernel.org>
+Subject: [PATCH 6.7 601/713] NFSv4.1/pnfs: fix NFS with TLS in pnfs
+Date: Sun, 24 Mar 2024 18:45:27 -0400
+Message-ID: <20240324224720.1345309-602-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,34 +48,110 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit e02497fb654689049ba8b46f098f17d5f19e0b3c ]
+[ Upstream commit a35518cae4b325632840bc8c3aa9ad9bac430038 ]
 
-Use ib_umem_dma_offset() helper to calculate correct dma offset.
+Currently, even though xprtsec=tls is specified and used for operations
+to MDS, any operations that go to DS travel over unencrypted connection.
+Or additionally, if more than 1 DS can serve the data, then trunked
+connections are also done unencrypted.
 
-Fixes: 0266a177631d ("RDMA/mana_ib: Add a driver for Microsoft Azure Network Adapter")
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
-Link: https://lore.kernel.org/r/1709560361-26393-2-git-send-email-kotaranov@linux.microsoft.com
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
+IN GETDEVINCEINFO, we get an entry for the DS which carries a protocol
+type (which is TCP), then nfs4_set_ds_client() gets called with TCP
+instead of TCP with TLS.
+
+Currently, each trunked connection is created and uses clp->cl_hostname
+value which if TLS is used would get passed up in the handshake upcall,
+but instead we need to pass in the appropriate trunked address value.
+
+Fixes: c8407f2e560c ("NFS: Add an "xprtsec=" NFS mount option")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mana/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/pnfs_nfs.c | 44 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index 7be4c3adb4e2b..ab91009aea883 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -358,7 +358,7 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 			     sizeof(struct gdma_create_dma_region_resp));
+diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
+index afd23910f3bff..88e061bd711b7 100644
+--- a/fs/nfs/pnfs_nfs.c
++++ b/fs/nfs/pnfs_nfs.c
+@@ -919,6 +919,8 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 	dprintk("--> %s DS %s\n", __func__, ds->ds_remotestr);
  
- 	create_req->length = umem->length;
--	create_req->offset_in_page = umem->address & (page_sz - 1);
-+	create_req->offset_in_page = ib_umem_dma_offset(umem, page_sz);
- 	create_req->gdma_page_type = order_base_2(page_sz) - PAGE_SHIFT;
- 	create_req->page_count = num_pages_total;
+ 	list_for_each_entry(da, &ds->ds_addrs, da_node) {
++		char servername[48];
++
+ 		dprintk("%s: DS %s: trying address %s\n",
+ 			__func__, ds->ds_remotestr, da->da_remotestr);
  
+@@ -929,6 +931,7 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 				.dstaddr = (struct sockaddr *)&da->da_addr,
+ 				.addrlen = da->da_addrlen,
+ 				.servername = clp->cl_hostname,
++				.xprtsec = clp->cl_xprtsec,
+ 			};
+ 			struct nfs4_add_xprt_data xprtdata = {
+ 				.clp = clp,
+@@ -938,10 +941,45 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 				.data = &xprtdata,
+ 			};
+ 
+-			if (da->da_transport != clp->cl_proto)
++			if (da->da_transport != clp->cl_proto &&
++					clp->cl_proto != XPRT_TRANSPORT_TCP_TLS)
+ 				continue;
++			if (da->da_transport == XPRT_TRANSPORT_TCP &&
++				mds_srv->nfs_client->cl_proto ==
++					XPRT_TRANSPORT_TCP_TLS) {
++				struct sockaddr *addr =
++					(struct sockaddr *)&da->da_addr;
++				struct sockaddr_in *sin =
++					(struct sockaddr_in *)&da->da_addr;
++				struct sockaddr_in6 *sin6 =
++					(struct sockaddr_in6 *)&da->da_addr;
++
++				/* for NFS with TLS we need to supply a correct
++				 * servername of the trunked transport, not the
++				 * servername of the main transport stored in
++				 * clp->cl_hostname. And set the protocol to
++				 * indicate to use TLS
++				 */
++				servername[0] = '\0';
++				switch(addr->sa_family) {
++				case AF_INET:
++					snprintf(servername, sizeof(servername),
++						"%pI4", &sin->sin_addr.s_addr);
++					break;
++				case AF_INET6:
++					snprintf(servername, sizeof(servername),
++						"%pI6", &sin6->sin6_addr);
++					break;
++				default:
++					/* do not consider this address */
++					continue;
++				}
++				xprt_args.ident = XPRT_TRANSPORT_TCP_TLS;
++				xprt_args.servername = servername;
++			}
+ 			if (da->da_addr.ss_family != clp->cl_addr.ss_family)
+ 				continue;
++
+ 			/**
+ 			* Test this address for session trunking and
+ 			* add as an alias
+@@ -953,6 +991,10 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 			if (xprtdata.cred)
+ 				put_cred(xprtdata.cred);
+ 		} else {
++			if (da->da_transport == XPRT_TRANSPORT_TCP &&
++				mds_srv->nfs_client->cl_proto ==
++					XPRT_TRANSPORT_TCP_TLS)
++				da->da_transport = XPRT_TRANSPORT_TCP_TLS;
+ 			clp = nfs4_set_ds_client(mds_srv,
+ 						&da->da_addr,
+ 						da->da_addrlen,
 -- 
 2.43.0
 
