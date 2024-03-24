@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BB71E5856;
-	Sun, 24 Mar 2024 22:53:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0771E4A3D;
+	Sun, 24 Mar 2024 22:53:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320831; cv=none; b=kQQVurSB1D0oDrwNOoaLps8E4GZPa3Hh9Y2hT1YvAqoNvxsgqsdViZEfmxT+7HyOMJjKQnRkyxoKSfNfkZpAaP/U+1ucHuriCkhkrP3+oq0nFImJFEZVvac4U9Oa6mLN3EwoijuvyPDqe/tXdWmcCYfUj+W9tzN5f96/+FrvRgM=
+	t=1711320813; cv=none; b=pZE3e/zYSH1e4oodjjwoxIF4dIwnczEhkDxJ0z5k7nUiLAViKBcjR9+YqcI0N9LWjFyKe30TRH26hVCKiGfserZHQ7zKjbvR/viQXxqeukBTrklyXQ23VNUR33PpO2zehSIpN2TDXrHe+8otGSZqF9614v7GOmHIW/YpPGCAddU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320831; c=relaxed/simple;
-	bh=xx4kwvzAxT8EfZAIHWdVzcLqTUvuj8Q6VMgCYvPhFCo=;
+	s=arc-20240116; t=1711320813; c=relaxed/simple;
+	bh=hP68GkQ2L6JTHbh2rG6h+rkhITHFGKUHyafkXz2mEaQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=acSbmWXurrpKeZm5X2sIvigayx5w4Ic/Bkf+Dvhxvcvw7xduEIFVcjIOoKEW6N2R1/dsMQIy1bpEMZuAFvqIKOOAHnebANH1TQfSbpnc83DiW73jEjK587jgvu3lx6r8mkKmxhpLN2VqbQbpddhPirX6TiFR0ccZc4nMG8eVkMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjAbnaui; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=V10IeFEz77UYva69vqBRb129F6DWQbxGmHheV7gpbV4M23+H89497ZxTg/kI5Wvz7YEpVBm4i7SVuCqLXdz3yRPeLPmTnH9ca7m1GCClw412kxD3mfzDLEb1Dd6BC9jrEHQeT36vGT/dxyLjbjp8Z+TSMJ7ZynhTIeq1QSF2P0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jm9XH+Be; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjAbnaui"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7191CC43394;
-	Sun, 24 Mar 2024 22:53:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jm9XH+Be"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 013A8C433B1;
+	Sun, 24 Mar 2024 22:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320830;
-	bh=xx4kwvzAxT8EfZAIHWdVzcLqTUvuj8Q6VMgCYvPhFCo=;
+	s=k20201202; t=1711320812;
+	bh=hP68GkQ2L6JTHbh2rG6h+rkhITHFGKUHyafkXz2mEaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tjAbnauiifz0+8vEmJCbUZWjB2HNSWNBHvNEf4i4XkdywBUAouD8Dz2V6l9u6Btem
-	 JAQr1NKCqptJP0FbqoGPhgBsrm7/roFvLEEX4uMxi+uXOKesXv8Tw8EyM7z67nkBjc
-	 dfzAD6eZOqCNnlkWtlxZIMtI9XiBdH5m5Sn4BPfW7wmKTj5qvWcXKbKjUDgq3bUOth
-	 cJywLWkvxI0mVBXnlzX21E2dZBpUwdYyJvWz9uY6t4whv4onIgy5MuAfnNPXqPgjqd
-	 4aYAr/CHzOgQzrqrkG08cTxI3k4i/VcU3tRKTDWtnyveuqx40HKIPMZDUFXkC7MLuO
-	 ORVHnfD8YHwbg==
+	b=jm9XH+Be06ErztLnCEWyvbkWCIS1oexB4uVpjPsyLr2AQ72PbpV2ykMC3xivq2ypu
+	 r1i4sl6D+1SshrBy+qUun1S5gupefshuYp5F5ZkR21+2eCKdNGz21Zs4KfEKQZsIeT
+	 SJ6qTnv5G8JoMYWZ0yqzK872EtUvBnZJ6bLuL2WOM0M4WiiJlhzwuISEaaQ6pazUG8
+	 ++pbzW4ZsAmvc9DSu2mfaMwISAFb/HGMrLd/7yPYiEO+Dz6ZpeyZj8nlm5xv3AXHxD
+	 Tzlh6T6x9SuGezxpYw2y6l8FsQ5NHFOJoBQbePhN0OtQJTGAhIwUBjDTnhf6gkW8Nn
+	 z4to8uhyjO/7w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+	kernel test robot <lkp@intel.com>,
+	Dhruva Gole <d-gole@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 395/713] drm/tegra: rgb: Fix missing clk_put() in the error handling paths of tegra_dc_rgb_probe()
-Date: Sun, 24 Mar 2024 18:42:01 -0400
-Message-ID: <20240324224720.1345309-396-sashal@kernel.org>
+Subject: [PATCH 6.7 377/713] OPP: debugfs: Fix warning around icc_get_name()
+Date: Sun, 24 Mar 2024 18:41:43 -0400
+Message-ID: <20240324224720.1345309-378-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,47 +49,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 45c8034db47842b25a3ab6139d71e13b4e67b9b3 ]
+[ Upstream commit 28330ceb953e39880ea77da4895bb902a1244860 ]
 
-If clk_get_sys(..., "pll_d2_out0") fails, the clk_get_sys() call must be
-undone.
+If the kernel isn't built with interconnect support, icc_get_name()
+returns NULL and we get following warning:
 
-Add the missing clk_put and a new 'put_pll_d_out0' label in the error
-handling path, and use it.
+drivers/opp/debugfs.c: In function 'bw_name_read':
+drivers/opp/debugfs.c:43:42: error: '%.62s' directive argument is null [-Werror=format-overflow=]
+         i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
 
-Fixes: 0c921b6d4ba0 ("drm/tegra: dc: rgb: Allow changing PLLD rate on Tegra30+")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/0182895ead4e4730426616b0d9995954c960b634.1693667005.git.christophe.jaillet@wanadoo.fr
+Fix it.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202402141313.81ltVF5g-lkp@intel.com/
+Fixes: 0430b1d5704b0 ("opp: Expose bandwidth information via debugfs")
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/rgb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/opp/debugfs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
-index 53c492b13d129..1e8ec50b759e4 100644
---- a/drivers/gpu/drm/tegra/rgb.c
-+++ b/drivers/gpu/drm/tegra/rgb.c
-@@ -254,7 +254,7 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
- 		if (IS_ERR(rgb->pll_d2_out0)) {
- 			err = PTR_ERR(rgb->pll_d2_out0);
- 			dev_err(dc->dev, "failed to get pll_d2_out0: %d\n", err);
--			goto remove;
-+			goto put_pll;
- 		}
- 	}
+diff --git a/drivers/opp/debugfs.c b/drivers/opp/debugfs.c
+index ec030b19164a3..f157fb50be50c 100644
+--- a/drivers/opp/debugfs.c
++++ b/drivers/opp/debugfs.c
+@@ -37,10 +37,12 @@ static ssize_t bw_name_read(struct file *fp, char __user *userbuf,
+ 			    size_t count, loff_t *ppos)
+ {
+ 	struct icc_path *path = fp->private_data;
++	const char *name = icc_get_name(path);
+ 	char buf[64];
+-	int i;
++	int i = 0;
  
-@@ -262,6 +262,8 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
+-	i = scnprintf(buf, sizeof(buf), "%.62s\n", icc_get_name(path));
++	if (name)
++		i = scnprintf(buf, sizeof(buf), "%.62s\n", name);
  
- 	return 0;
- 
-+put_pll:
-+	clk_put(rgb->pll_d_out0);
- remove:
- 	tegra_output_remove(&rgb->output);
- 	return err;
+ 	return simple_read_from_buffer(userbuf, count, ppos, buf, i);
+ }
 -- 
 2.43.0
 
