@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F381EE6BA;
-	Sun, 24 Mar 2024 22:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67AE12C532;
+	Sun, 24 Mar 2024 22:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321018; cv=none; b=D3vGAmXh4SJa5JUiKCkwxbpIP8N7iXCW/DcuzFnaQbhX88Ji6EDRDIxu9kjmleTo/CtHlcmwGT2nqPj5bJ/5pMsRMPQw3+9WJclaLL4Hg1/sYla9/4wW1yRzxgO8CvLAR/faIt7jGcGhqspIG/wi2Q0relSlviqZONFKSZooP5c=
+	t=1711321020; cv=none; b=aYDBhuhfwzLXc477p0g2YPUUU/CInkCJEUtmCFmAw96xNeiFsepH7z9FuMu4yoCnu6DWZ7N9Ef2pjVowfK5k5iKfUAB5HF4wgV4h82YXdvZI1W7OJeTzW8ym8rHvMhSEzPSfe/04Q1XlLdFOYkORBCQ3br+4JkIumRhA+bD8/W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321018; c=relaxed/simple;
-	bh=AS+JGYpUDsPlHwpiNSjJhMQhjdqKCPCQtDNBzfmKuyQ=;
+	s=arc-20240116; t=1711321020; c=relaxed/simple;
+	bh=d4d70dx4mY4TtK4N2jcZedJwT75E082k/GEnjjKrmuo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R8NPvOaNGpnx/SuFk7Ppv1rwm6dWY2atcla6IE/6nER0Uk1UQkV1xVYOG5n7XvwKWSxyKdqeH9ORsWjGvJoTp+371MmUDQm8xQV8xIFtRrpMj5hq65T4RBPpF/VcSl3M80eR3033CvhxSQL/+5q1MgUhhaseJp+SDLsVYwNOEaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8ebye0p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cOK5KKpH2u0ezx/goZIl01dqECoCbdmE7r0L850feOPYY230WswUM1/PVAiPSvgMYReAZAIp2RQTiGRU/4Et6iIbQfI/Wg3hyJi0SFzmKjwjx3DIFJCkKMsbd6GsY3bdlMDxnTYHHaf9QBs58CEP+r2sqe4zSfFsrO7s6zAK+WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7y75FhX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8ebye0p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C50AC433F1;
-	Sun, 24 Mar 2024 22:56:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7y75FhX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD7BC43399;
+	Sun, 24 Mar 2024 22:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321017;
-	bh=AS+JGYpUDsPlHwpiNSjJhMQhjdqKCPCQtDNBzfmKuyQ=;
+	s=k20201202; t=1711321019;
+	bh=d4d70dx4mY4TtK4N2jcZedJwT75E082k/GEnjjKrmuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L8ebye0p7oKqsJQZBgIfQDv+fq9SMWJ4H6y7ZveY+wFT02f6FK3npDne6qROryIBb
-	 YImxRiMdWZHuyTXBed6MiIR7mjJuS9OhNamoHBZBcN0b9UlphNykCUWCGS4H/96O7F
-	 FwYq2lCMiTmfRj7H3/YRRzwFoyaYoI7Wway8AGLFhk9b+fIyUwfxyRSoDKXia0tS+m
-	 2KhlGjbic/bEwHgEeQ5U9U8trqsMcRMT9+u8mWeB4LTzcbu9V0EDo80e7/J1m89hOt
-	 zWoLajuQAnKCnVdhRzKUzz3Y7tilwIypl2DL8o/HPCjAjqyVApOGxDs0sS3yQwW+rR
-	 eKnPhqDdU6Ifg==
+	b=X7y75FhXvxxJNLJjp3sFKXOdEmnNuUvjnQfkODYyq/YGzMkZw59/5GnLrDTIgu7EP
+	 obB+vS8+mIwe7G1v1YJ6gr/y+KvAN1Mda92zBafBHA7RlXocbpuFBiCH9lZP0dWt/l
+	 5QhQi7VBpIhPdmkFBULvIyNYCrgC50bOfxPW2KeEnFftynDtR5KtaOX3nw8Jduo5wD
+	 QF46+cv832sJhv167a4rRGdFNDLlQ96kgKwHHFoIEIbgehlFB6HWybq3dmPeKSMvdr
+	 eWyWiM5FyCCx+Gb5mmyxEsW5sAsuMT6xeISeVtbtP9GkYGJVnvJq1WYZvgMFble+Ey
+	 hxB87HMgHLzfA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Luoyouming <luoyouming@huawei.com>,
+	Junxian Huang <huangjunxian6@hisilicon.com>,
+	Leon Romanovsky <leon@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 580/713] scsi: csiostor: Avoid function pointer casts
-Date: Sun, 24 Mar 2024 18:45:06 -0400
-Message-ID: <20240324224720.1345309-581-sashal@kernel.org>
+Subject: [PATCH 6.7 582/713] RDMA/hns: Fix mis-modifying default congestion control algorithm
+Date: Sun, 24 Mar 2024 18:45:08 -0400
+Message-ID: <20240324224720.1345309-583-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,133 +49,132 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Luoyouming <luoyouming@huawei.com>
 
-[ Upstream commit 9f3dbcb5632d6876226031d552ef6163bb3ad215 ]
+[ Upstream commit d20a7cf9f714f0763efb56f0f2eeca1cb91315ed ]
 
-csiostor uses function pointer casts to keep the csio_ln_ev state machine
-hidden, but this causes warnings about control flow integrity (KCFI)
-violations in clang-16 and higher:
+Commit 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured
+with DCQCN") adds a check of congest control alorithm for UD. But
+that patch causes a problem: hr_dev->caps.congest_type is global,
+used by all QPs, so modifying this field to DCQCN for UD QPs causes
+other QPs unable to use any other algorithm except DCQCN.
 
-drivers/scsi/csiostor/csio_lnode.c:1098:33: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1098 |         return (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready));
-      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/csiostor/csio_lnode.c:1369:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1369 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_uninit)) {
-      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/csiostor/csio_lnode.c:1373:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1373 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready)) {
-      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/csiostor/csio_lnode.c:1377:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1377 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_offline)) {
-      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Revert the modification in commit 27c5fd271d8b ("RDMA/hns: The UD
+mode can only be configured with DCQCN"). Add a new field cong_type
+to struct hns_roce_qp and configure DCQCN for UD QPs.
 
-Move the enum into a shared header so the correct types can be used without
-the need for casts.
-
-Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20240213100518.457623-1-arnd@kernel.org
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured with DCQCN")
+Fixes: f91696f2f053 ("RDMA/hns: Support congestion control type selection according to the FW")
+Signed-off-by: Luoyouming <luoyouming@huawei.com>
+Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
+Link: https://lore.kernel.org/r/20240219061805.668170-1-huangjunxian6@hisilicon.com
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/csiostor/csio_defs.h  | 18 ++++++++++++++++--
- drivers/scsi/csiostor/csio_lnode.c |  8 ++++----
- drivers/scsi/csiostor/csio_lnode.h | 13 -------------
- 3 files changed, 20 insertions(+), 19 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_device.h | 17 +++++++++--------
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 16 ++++++++++------
+ 2 files changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/scsi/csiostor/csio_defs.h b/drivers/scsi/csiostor/csio_defs.h
-index c38017b4af982..e50e93e7fe5a1 100644
---- a/drivers/scsi/csiostor/csio_defs.h
-+++ b/drivers/scsi/csiostor/csio_defs.h
-@@ -73,7 +73,21 @@ csio_list_deleted(struct list_head *list)
- #define csio_list_prev(elem)	(((struct list_head *)(elem))->prev)
+diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
+index 1627f3b0ef28b..f08417d3721dc 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_device.h
++++ b/drivers/infiniband/hw/hns/hns_roce_device.h
+@@ -584,6 +584,13 @@ struct hns_roce_work {
+ 	u32 queue_num;
+ };
  
- /* State machine */
--typedef void (*csio_sm_state_t)(void *, uint32_t);
-+struct csio_lnode;
-+
-+/* State machine evets */
-+enum csio_ln_ev {
-+	CSIO_LNE_NONE = (uint32_t)0,
-+	CSIO_LNE_LINKUP,
-+	CSIO_LNE_FAB_INIT_DONE,
-+	CSIO_LNE_LINK_DOWN,
-+	CSIO_LNE_DOWN_LINK,
-+	CSIO_LNE_LOGO,
-+	CSIO_LNE_CLOSE,
-+	CSIO_LNE_MAX_EVENT,
++enum hns_roce_cong_type {
++	CONG_TYPE_DCQCN,
++	CONG_TYPE_LDCP,
++	CONG_TYPE_HC3,
++	CONG_TYPE_DIP,
 +};
 +
-+typedef void (*csio_sm_state_t)(struct csio_lnode *ln, enum csio_ln_ev evt);
+ struct hns_roce_qp {
+ 	struct ib_qp		ibqp;
+ 	struct hns_roce_wq	rq;
+@@ -627,6 +634,7 @@ struct hns_roce_qp {
+ 	struct list_head	sq_node; /* all send qps are on a list */
+ 	struct hns_user_mmap_entry *dwqe_mmap_entry;
+ 	u32			config;
++	enum hns_roce_cong_type	cong_type;
+ };
  
- struct csio_sm {
- 	struct list_head	sm_list;
-@@ -83,7 +97,7 @@ struct csio_sm {
- static inline void
- csio_set_state(void *smp, void *state)
- {
--	((struct csio_sm *)smp)->sm_state = (csio_sm_state_t)state;
-+	((struct csio_sm *)smp)->sm_state = state;
- }
+ struct hns_roce_ib_iboe {
+@@ -698,13 +706,6 @@ struct hns_roce_eq_table {
+ 	struct hns_roce_eq	*eq;
+ };
  
- static inline void
-diff --git a/drivers/scsi/csiostor/csio_lnode.c b/drivers/scsi/csiostor/csio_lnode.c
-index d5ac938970232..5b3ffefae476d 100644
---- a/drivers/scsi/csiostor/csio_lnode.c
-+++ b/drivers/scsi/csiostor/csio_lnode.c
-@@ -1095,7 +1095,7 @@ csio_handle_link_down(struct csio_hw *hw, uint8_t portid, uint32_t fcfi,
- int
- csio_is_lnode_ready(struct csio_lnode *ln)
- {
--	return (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready));
-+	return (csio_get_state(ln) == csio_lns_ready);
- }
- 
- /*****************************************************************************/
-@@ -1366,15 +1366,15 @@ csio_free_fcfinfo(struct kref *kref)
- void
- csio_lnode_state_to_str(struct csio_lnode *ln, int8_t *str)
- {
--	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_uninit)) {
-+	if (csio_get_state(ln) == csio_lns_uninit) {
- 		strcpy(str, "UNINIT");
- 		return;
- 	}
--	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready)) {
-+	if (csio_get_state(ln) == csio_lns_ready) {
- 		strcpy(str, "READY");
- 		return;
- 	}
--	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_offline)) {
-+	if (csio_get_state(ln) == csio_lns_offline) {
- 		strcpy(str, "OFFLINE");
- 		return;
- 	}
-diff --git a/drivers/scsi/csiostor/csio_lnode.h b/drivers/scsi/csiostor/csio_lnode.h
-index 372a67d122d38..607698a0f0631 100644
---- a/drivers/scsi/csiostor/csio_lnode.h
-+++ b/drivers/scsi/csiostor/csio_lnode.h
-@@ -53,19 +53,6 @@
- extern int csio_fcoe_rnodes;
- extern int csio_fdmi_enable;
- 
--/* State machine evets */
--enum csio_ln_ev {
--	CSIO_LNE_NONE = (uint32_t)0,
--	CSIO_LNE_LINKUP,
--	CSIO_LNE_FAB_INIT_DONE,
--	CSIO_LNE_LINK_DOWN,
--	CSIO_LNE_DOWN_LINK,
--	CSIO_LNE_LOGO,
--	CSIO_LNE_CLOSE,
--	CSIO_LNE_MAX_EVENT,
+-enum cong_type {
+-	CONG_TYPE_DCQCN,
+-	CONG_TYPE_LDCP,
+-	CONG_TYPE_HC3,
+-	CONG_TYPE_DIP,
 -};
 -
--
- struct csio_fcf_info {
- 	struct list_head	list;
- 	uint8_t			priority;
+ struct hns_roce_caps {
+ 	u64		fw_ver;
+ 	u8		num_ports;
+@@ -834,7 +835,7 @@ struct hns_roce_caps {
+ 	u16		default_aeq_period;
+ 	u16		default_aeq_arm_st;
+ 	u16		default_ceq_arm_st;
+-	enum cong_type	cong_type;
++	enum hns_roce_cong_type cong_type;
+ };
+ 
+ enum hns_roce_device_state {
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index aa9527ac2fe06..81d6d4331cdd6 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -4733,12 +4733,15 @@ static int check_cong_type(struct ib_qp *ibqp,
+ 			   struct hns_roce_congestion_algorithm *cong_alg)
+ {
+ 	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
++	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
+ 
+-	if (ibqp->qp_type == IB_QPT_UD)
+-		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
++	if (ibqp->qp_type == IB_QPT_UD || ibqp->qp_type == IB_QPT_GSI)
++		hr_qp->cong_type = CONG_TYPE_DCQCN;
++	else
++		hr_qp->cong_type = hr_dev->caps.cong_type;
+ 
+ 	/* different congestion types match different configurations */
+-	switch (hr_dev->caps.cong_type) {
++	switch (hr_qp->cong_type) {
+ 	case CONG_TYPE_DCQCN:
+ 		cong_alg->alg_sel = CONG_DCQCN;
+ 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
+@@ -4766,8 +4769,8 @@ static int check_cong_type(struct ib_qp *ibqp,
+ 	default:
+ 		ibdev_warn(&hr_dev->ib_dev,
+ 			   "invalid type(%u) for congestion selection.\n",
+-			   hr_dev->caps.cong_type);
+-		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
++			   hr_qp->cong_type);
++		hr_qp->cong_type = CONG_TYPE_DCQCN;
+ 		cong_alg->alg_sel = CONG_DCQCN;
+ 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
+ 		cong_alg->dip_vld = DIP_INVALID;
+@@ -4786,6 +4789,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
+ 	struct hns_roce_congestion_algorithm cong_field;
+ 	struct ib_device *ibdev = ibqp->device;
+ 	struct hns_roce_dev *hr_dev = to_hr_dev(ibdev);
++	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
+ 	u32 dip_idx = 0;
+ 	int ret;
+ 
+@@ -4798,7 +4802,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
+ 		return ret;
+ 
+ 	hr_reg_write(context, QPC_CONG_ALGO_TMPL_ID, hr_dev->cong_algo_tmpl_id +
+-		     hr_dev->caps.cong_type * HNS_ROCE_CONG_SIZE);
++		     hr_qp->cong_type * HNS_ROCE_CONG_SIZE);
+ 	hr_reg_clear(qpc_mask, QPC_CONG_ALGO_TMPL_ID);
+ 	hr_reg_write(&context->ext, QPCEX_CONG_ALG_SEL, cong_field.alg_sel);
+ 	hr_reg_clear(&qpc_mask->ext, QPCEX_CONG_ALG_SEL);
 -- 
 2.43.0
 
