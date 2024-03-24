@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1321788AB;
-	Sun, 24 Mar 2024 23:39:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E6927CBD9;
+	Sun, 24 Mar 2024 23:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323559; cv=none; b=PhKt97dOVfig1OLvzlZEvm1pz+BbTnGJKEMqzjz+uz3itZlc6eQ7u7Ie3FoLLXQlIeHXQ3RqiK65ZVWhioTVt9qnCOQKfnBQVLU3VJ3U+jlpAW8nF1sQwU4Gn0e/wypFGgs39SwJ09chGjM89W9RWs0oeH/nSuJzH1qHwoj92s0=
+	t=1711323544; cv=none; b=LdSfpob5lHd8x0ihUxMBbuDxzhjMQbGfpj+M6/m58HsZHFegYzBPXrINOfgp0cUgKvggA5PAndikuuNRwB1t/yrNyVzUgBAvEboTVb3zf94NQVJ/G0amohsa/w+59Zr8jsvtEZt4Bm4NltZd5VVbfKP7p95nFnoR6gYDhzI0GH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323559; c=relaxed/simple;
-	bh=n/DivqH/I9rjaV+4WoG2fZKBc8VxgNOqomA49mhUcIY=;
+	s=arc-20240116; t=1711323544; c=relaxed/simple;
+	bh=uv+y9qKoXVm0GVCcYcJXwCwMLvSbWX+N9jYqynB1a0c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qf+DAMKrzbAIFlQx6nDYD+uVebljDz3IHIEK7TWrBvxolxCBvH7BZ3T9W1kO6gny041ZGvurGrR6wmORTkxBt1g25n6/xBAcDTTEHdqRrgjMAY7Knsyf3VXpxnqw+XI0AIzaF0CG2rHbYmtv/wlJ+KsfzSTQVjEuFQ3H+hLhOTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hABzEwcd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Gk8Q+9tWXN9pSAyUtIvDW5CcG1iuqqDRimIUn7crbWVZKlKHHmMeDh8auck6F6KfxisJnX5diPolDkgQ+du3a+sDMS7N8nZ51ey2SqnCn20UuNmBTVTIv+zWUx7YaeEyc9QyWo9Z/jncPXpDd383h4MgzxgAray/6lM5AP57SVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pOwE3UBj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hABzEwcd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74EB7C433A6;
-	Sun, 24 Mar 2024 23:39:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pOwE3UBj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 827B9C43399;
+	Sun, 24 Mar 2024 23:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323558;
-	bh=n/DivqH/I9rjaV+4WoG2fZKBc8VxgNOqomA49mhUcIY=;
+	s=k20201202; t=1711323543;
+	bh=uv+y9qKoXVm0GVCcYcJXwCwMLvSbWX+N9jYqynB1a0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hABzEwcdZRDKoFCT7+2btDOnZMg4I9B++qAUjad/M1W5bhW1skCC+pID4r4l7CU3p
-	 q9RAoMULOeK4Tzs0C8JcgAxzHB67FAp6dpce+jhoyeMl9nOAe5my3sRduBrtG5MtkF
-	 wAfSnekSpVEsHxkO0f2IG1ubUPdl5VR+EegEXW9A6VdAjRgWBF1xOFy2x0kDVn4ZLc
-	 fOHFagdrYsxMf1upwzJSGar6NG5aLDVczsMJxjgxbtdOQFQhoqk1ES6cSzyKqdPpd2
-	 Y5ZOlP7CkU3L+9P2UDv2jDnjt86Ez+jzOrbvUtXEUJBc/pdHm2nB33PJ02rstb8lJf
-	 iAiX/vBS355IQ==
+	b=pOwE3UBjYcx3AVCvdprxXDIYs2RIY1zD/d4p58F1zqx5sFqzvDfGhu0UQBjtN1ZuQ
+	 DNBeDsor4Tj3YxHlmlWX3dqBS0cMitKmErlnbsEpoq7QkDlJRM2Oj81o4v0XKZ9iKT
+	 P6qAh8Qgxa3pw0SMGnpM8VOU38W8OmhSg3uARtXxmHN5Gmd7EqAdzW1Sg+reZoQ/QI
+	 mHY0fEUQCRJFbHIaZUHiz3ly90GX6TYqNuslo1lkUAtMU4WGjeRHKnWN3Vv1YdA+7L
+	 R7iPyVMuDfgjyUZGwIF0mK7TOUnUx+3QQ2vq+YUSG7USoQvqAejkPxlPmnuVIEdaSA
+	 EpNHa4trumNRA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
-	Jack Wang <jinpu.wang@ionos.com>,
-	Leon Romanovsky <leon@kernel.org>,
+Cc: Duoming Zhou <duoming@zju.edu.cn>,
+	Michal Simek <michal.simek@amd.com>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 265/317] RDMA/rtrs-clt: Check strnlen return len in sysfs mpath_policy_store()
-Date: Sun, 24 Mar 2024 19:34:05 -0400
-Message-ID: <20240324233458.1352854-266-sashal@kernel.org>
+Subject: [PATCH 5.15 251/317] clk: zynq: Prevent null pointer dereference caused by kmalloc failure
+Date: Sun, 24 Mar 2024 19:33:51 -0400
+Message-ID: <20240324233458.1352854-252-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,39 +49,72 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexey Kodanev <aleksei.kodanev@bell-sw.com>
+From: Duoming Zhou <duoming@zju.edu.cn>
 
-[ Upstream commit 7a7b7f575a25aa68ee934ee8107294487efcb3fe ]
+[ Upstream commit 7938e9ce39d6779d2f85d822cc930f73420e54a6 ]
 
-strnlen() may return 0 (e.g. for "\0\n" string), it's better to
-check the result of strnlen() before using 'len - 1' expression
-for the 'buf' array index.
+The kmalloc() in zynq_clk_setup() will return null if the
+physical memory has run out. As a result, if we use snprintf()
+to write data to the null address, the null pointer dereference
+bug will happen.
 
-Detected using the static analysis tool - Svace.
+This patch uses a stack variable to replace the kmalloc().
 
-Fixes: dc3b66a0ce70 ("RDMA/rtrs-clt: Add a minimum latency multipath policy")
-Signed-off-by: Alexey Kodanev <aleksei.kodanev@bell-sw.com>
-Link: https://lore.kernel.org/r/20240221113204.147478-1-aleksei.kodanev@bell-sw.com
-Acked-by: Jack Wang <jinpu.wang@ionos.com>
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Fixes: 0ee52b157b8e ("clk: zynq: Add clock controller driver")
+Suggested-by: Michal Simek <michal.simek@amd.com>
+Suggested-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+Link: https://lore.kernel.org/r/20240301084437.16084-1-duoming@zju.edu.cn
+Acked-by: Michal Simek <michal.simek@amd.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/zynq/clkc.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c b/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c
-index dbf9a778c3bd7..583c38eb04326 100644
---- a/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c
-+++ b/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c
-@@ -131,7 +131,7 @@ static ssize_t mpath_policy_store(struct device *dev,
+diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
+index 204b83d911b90..c615664505a55 100644
+--- a/drivers/clk/zynq/clkc.c
++++ b/drivers/clk/zynq/clkc.c
+@@ -42,6 +42,7 @@ static void __iomem *zynq_clkc_base;
+ #define SLCR_SWDT_CLK_SEL		(zynq_clkc_base + 0x204)
  
- 	/* distinguish "mi" and "min-latency" with length */
- 	len = strnlen(buf, NAME_MAX);
--	if (buf[len - 1] == '\n')
-+	if (len && buf[len - 1] == '\n')
- 		len--;
+ #define NUM_MIO_PINS	54
++#define CLK_NAME_LEN	16
  
- 	if (!strncasecmp(buf, "round-robin", 11) ||
+ #define DBG_CLK_CTRL_CLKACT_TRC		BIT(0)
+ #define DBG_CLK_CTRL_CPU_1XCLKACT	BIT(1)
+@@ -215,7 +216,7 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 	int i;
+ 	u32 tmp;
+ 	int ret;
+-	char *clk_name;
++	char clk_name[CLK_NAME_LEN];
+ 	unsigned int fclk_enable = 0;
+ 	const char *clk_output_name[clk_max];
+ 	const char *cpu_parents[4];
+@@ -425,12 +426,10 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 			"gem1_emio_mux", CLK_SET_RATE_PARENT,
+ 			SLCR_GEM1_CLK_CTRL, 0, 0, &gem1clk_lock);
+ 
+-	tmp = strlen("mio_clk_00x");
+-	clk_name = kmalloc(tmp, GFP_KERNEL);
+ 	for (i = 0; i < NUM_MIO_PINS; i++) {
+ 		int idx;
+ 
+-		snprintf(clk_name, tmp, "mio_clk_%2.2d", i);
++		snprintf(clk_name, CLK_NAME_LEN, "mio_clk_%2.2d", i);
+ 		idx = of_property_match_string(np, "clock-names", clk_name);
+ 		if (idx >= 0)
+ 			can_mio_mux_parents[i] = of_clk_get_parent_name(np,
+@@ -438,7 +437,6 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 		else
+ 			can_mio_mux_parents[i] = dummy_nm;
+ 	}
+-	kfree(clk_name);
+ 	clk_register_mux(NULL, "can_mux", periph_parents, 4,
+ 			CLK_SET_RATE_NO_REPARENT, SLCR_CAN_CLK_CTRL, 4, 2, 0,
+ 			&canclk_lock);
 -- 
 2.43.0
 
