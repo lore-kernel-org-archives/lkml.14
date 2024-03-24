@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD98C21D158;
-	Sun, 24 Mar 2024 23:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380671419A1;
+	Sun, 24 Mar 2024 23:11:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321852; cv=none; b=Kg0pVODsig+jfFB+fEtdFhf5+r6uivZrJfY2NYATNfIExl3JgC5+SbAz2OFb33JJA19fToE/u921/fNvUu8rQGFo4hfvRlTpHKFepR6ti5q2B9KZbHLpjlFljYtpDXu3a/kKOqiQmkFtEczZNJZm1OqQDnkw9rFDPj3/0JaHy74=
+	t=1711321865; cv=none; b=Z5mEpqUx8HGHqR7GqrGcNMUuaByXfBzVlOyiNezFYZG8psKQ3IBHZD151Ux1g6xf7CkfSTI7SOaEg4oB7u+gC5nrRy6sW5nZKPn+po6o9HbB+w+85QZggVJxA4bHUwsYrmkBLN/6V2weceJO8BMo9GvE30Uaxd3UGmvqPOZpKRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321852; c=relaxed/simple;
-	bh=B8oGi9dfAaBRt2j+HYNsW/8VQ3WhUGEvKoxAv6ORkPs=;
+	s=arc-20240116; t=1711321865; c=relaxed/simple;
+	bh=9S5h8flYvGTiisaL/cn2+2XRFNuvfJFgKPwjKS6Qmk4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uQ1SXOeroI9AQH7bOrJXEZM3xbhVKXdMYk/V/4wXtWf27C4cmoRulWBPXUwQ/Kef1+JKLp/2hXTV7QlCQFKy/ifJPbKlNsyVG0bDv41bpIaR4p6I7yOASgb3FWXNdZ/dpdoip/Ii3SiDsZL2DTs+e78KcezShIoCx9wVoEdXEyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XtGCfsp+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jlskHByLOCQkD2TczysaiHCRLL0mMlGbO5tWvHee4SS9f+2pxF50mSLEOU6z6SEGVJsFBC5Z6TnAinUVhz3xNWKEiX8zGsMz6NHYUG1bIpx+kUOISfGI6slbfCMXNZTwiRornb9WVAUqxxpWSq7sGe0pYzbaoU9IIKYSrVh3Clg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J99GXm58; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtGCfsp+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC22DC433C7;
-	Sun, 24 Mar 2024 23:10:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J99GXm58"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F6ECC43390;
+	Sun, 24 Mar 2024 23:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321852;
-	bh=B8oGi9dfAaBRt2j+HYNsW/8VQ3WhUGEvKoxAv6ORkPs=;
+	s=k20201202; t=1711321865;
+	bh=9S5h8flYvGTiisaL/cn2+2XRFNuvfJFgKPwjKS6Qmk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XtGCfsp+YQ3dCWqKnprR2QJAmywjLJi6CFi1QSJ2vDz5VZc8rAlIlRBnI31Y7+i31
-	 a59piuawT57hDHULfFDmAFHjp5WGPDc5TcyeUkdvQQ53X1jr+b3bRxsqovMbiHWSAC
-	 DF4vmhWPWfcs72gpB1aCBgWr8ZZQmLT00ncUA6GGRungg9AycoD54Hanc5nLmelcUM
-	 4+I2nQF1ugsm7qcSNFGp/HmpIdDO58I/QS9fgerQUGMcl4DBO3LAaf1KjkajZT18w7
-	 H8r34eNk3/IrK3T4nUUe4IDCl6xLZDwJFhyDXa7whZq9j4LqSqMWbEBBV/UxiWSCh9
-	 8WqetckqFSnJw==
+	b=J99GXm58B+Wp43+WhZzDH0GUGIonWs/w9dZhybZCX5Oy7bVpcXxCx4DgoP26F1bBN
+	 ZL1ds4ZcLG3jftS9CDZFog060CwLakEkwVcC7t7qUMNfFPFPo2kYD5maTl7bps0i2M
+	 nIpGQTcwjaCEW3Z1XvDvCz5bj2T1Qxh3cjGkTWeELk/WFMggsXahvi+3xezb1jlEfj
+	 EYIYgtz0BDTYnYTfIwrs2jbj6NbqoE30Z0IXvqdRON76dvV0d8SyPz1qcrsqzVtzuf
+	 YY1/3XooSg91WPGp8KQLDEKX479z8dZbzMTCD7+s1zu4HPdl0DYzh/AsT3maVqLF/r
+	 VPKyOAJgPQ5XQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Chunguang Xu <chunguang.xu@shopee.com>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 581/638] tcp: Fix NEW_SYN_RECV handling in inet_twsk_purge()
-Date: Sun, 24 Mar 2024 19:00:18 -0400
-Message-ID: <20240324230116.1348576-582-sashal@kernel.org>
+Subject: [PATCH 6.6 593/638] nvme: fix reconnection fail due to reserved tag allocation
+Date: Sun, 24 Mar 2024 19:00:30 -0400
+Message-ID: <20240324230116.1348576-594-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,114 +51,76 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Chunguang Xu <chunguang.xu@shopee.com>
 
-[ Upstream commit 1c4e97dd2d3c9a3e84f7e26346aa39bc426d3249 ]
+[ Upstream commit de105068fead55ed5c07ade75e9c8e7f86a00d1d ]
 
-inet_twsk_purge() uses rcu to find TIME_WAIT and NEW_SYN_RECV
-objects to purge.
+We found a issue on production environment while using NVMe over RDMA,
+admin_q reconnect failed forever while remote target and network is ok.
+After dig into it, we found it may caused by a ABBA deadlock due to tag
+allocation. In my case, the tag was hold by a keep alive request
+waiting inside admin_q, as we quiesced admin_q while reset ctrl, so the
+request maked as idle and will not process before reset success. As
+fabric_q shares tagset with admin_q, while reconnect remote target, we
+need a tag for connect command, but the only one reserved tag was held
+by keep alive command which waiting inside admin_q. As a result, we
+failed to reconnect admin_q forever. In order to fix this issue, I
+think we should keep two reserved tags for admin queue.
 
-These objects use SLAB_TYPESAFE_BY_RCU semantic and need special
-care. We need to use refcount_inc_not_zero(&sk->sk_refcnt).
-
-Reuse the existing correct logic I wrote for TIME_WAIT,
-because both structures have common locations for
-sk_state, sk_family, and netns pointer.
-
-If after the refcount_inc_not_zero() the object fields longer match
-the keys, use sock_gen_put(sk) to release the refcount.
-
-Then we can call inet_twsk_deschedule_put() for TIME_WAIT,
-inet_csk_reqsk_queue_drop_and_put() for NEW_SYN_RECV sockets,
-with BH disabled.
-
-Then we need to restart the loop because we had drop rcu_read_lock().
-
-Fixes: 740ea3c4a0b2 ("tcp: Clean up kernel listener's reqsk in inet_twsk_purge()")
-Link: https://lore.kernel.org/netdev/CANn89iLvFuuihCtt9PME2uS1WJATnf5fKjDToa1WzVnRzHnPfg@mail.gmail.com/T/#u
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Link: https://lore.kernel.org/r/20240308200122.64357-2-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: ed01fee283a0 ("nvme-fabrics: only reserve a single tag")
+Signed-off-by: Chunguang Xu <chunguang.xu@shopee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/inet_timewait_sock.c | 41 ++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 22 deletions(-)
+ drivers/nvme/host/core.c    | 6 ++++--
+ drivers/nvme/host/fabrics.h | 7 -------
+ 2 files changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
-index dd37a5bf68811..757ae3a4e2f1a 100644
---- a/net/ipv4/inet_timewait_sock.c
-+++ b/net/ipv4/inet_timewait_sock.c
-@@ -278,12 +278,12 @@ void __inet_twsk_schedule(struct inet_timewait_sock *tw, int timeo, bool rearm)
- }
- EXPORT_SYMBOL_GPL(__inet_twsk_schedule);
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index d4564a2517eb5..012c8b3f5f9c9 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -4246,7 +4246,8 @@ int nvme_alloc_admin_tag_set(struct nvme_ctrl *ctrl, struct blk_mq_tag_set *set,
+ 	set->ops = ops;
+ 	set->queue_depth = NVME_AQ_MQ_TAG_DEPTH;
+ 	if (ctrl->ops->flags & NVME_F_FABRICS)
+-		set->reserved_tags = NVMF_RESERVED_TAGS;
++		/* Reserved for fabric connect and keep alive */
++		set->reserved_tags = 2;
+ 	set->numa_node = ctrl->numa_node;
+ 	set->flags = BLK_MQ_F_NO_SCHED;
+ 	if (ctrl->ops->flags & NVME_F_BLOCKING)
+@@ -4315,7 +4316,8 @@ int nvme_alloc_io_tag_set(struct nvme_ctrl *ctrl, struct blk_mq_tag_set *set,
+ 	if (ctrl->quirks & NVME_QUIRK_SHARED_TAGS)
+ 		set->reserved_tags = NVME_AQ_DEPTH;
+ 	else if (ctrl->ops->flags & NVME_F_FABRICS)
+-		set->reserved_tags = NVMF_RESERVED_TAGS;
++		/* Reserved for fabric connect */
++		set->reserved_tags = 1;
+ 	set->numa_node = ctrl->numa_node;
+ 	set->flags = BLK_MQ_F_SHOULD_MERGE;
+ 	if (ctrl->ops->flags & NVME_F_BLOCKING)
+diff --git a/drivers/nvme/host/fabrics.h b/drivers/nvme/host/fabrics.h
+index 82e7a27ffbde3..80e15ad3936f3 100644
+--- a/drivers/nvme/host/fabrics.h
++++ b/drivers/nvme/host/fabrics.h
+@@ -18,13 +18,6 @@
+ /* default is -1: the fail fast mechanism is disabled  */
+ #define NVMF_DEF_FAIL_FAST_TMO		-1
  
-+/* Remove all non full sockets (TIME_WAIT and NEW_SYN_RECV) for dead netns */
- void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
- {
--	struct inet_timewait_sock *tw;
--	struct sock *sk;
- 	struct hlist_nulls_node *node;
- 	unsigned int slot;
-+	struct sock *sk;
- 
- 	for (slot = 0; slot <= hashinfo->ehash_mask; slot++) {
- 		struct inet_ehash_bucket *head = &hashinfo->ehash[slot];
-@@ -292,38 +292,35 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
- 		rcu_read_lock();
- restart:
- 		sk_nulls_for_each_rcu(sk, node, &head->chain) {
--			if (sk->sk_state != TCP_TIME_WAIT) {
--				/* A kernel listener socket might not hold refcnt for net,
--				 * so reqsk_timer_handler() could be fired after net is
--				 * freed.  Userspace listener and reqsk never exist here.
--				 */
--				if (unlikely(sk->sk_state == TCP_NEW_SYN_RECV &&
--					     hashinfo->pernet)) {
--					struct request_sock *req = inet_reqsk(sk);
+-/*
+- * Reserved one command for internal usage.  This command is used for sending
+- * the connect command, as well as for the keep alive command on the admin
+- * queue once live.
+- */
+-#define NVMF_RESERVED_TAGS	1
 -
--					inet_csk_reqsk_queue_drop_and_put(req->rsk_listener, req);
--				}
-+			int state = inet_sk_state_load(sk);
- 
-+			if ((1 << state) & ~(TCPF_TIME_WAIT |
-+					     TCPF_NEW_SYN_RECV))
- 				continue;
--			}
- 
--			tw = inet_twsk(sk);
--			if ((tw->tw_family != family) ||
--				refcount_read(&twsk_net(tw)->ns.count))
-+			if (sk->sk_family != family ||
-+			    refcount_read(&sock_net(sk)->ns.count))
- 				continue;
- 
--			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
-+			if (unlikely(!refcount_inc_not_zero(&sk->sk_refcnt)))
- 				continue;
- 
--			if (unlikely((tw->tw_family != family) ||
--				     refcount_read(&twsk_net(tw)->ns.count))) {
--				inet_twsk_put(tw);
-+			if (unlikely(sk->sk_family != family ||
-+				     refcount_read(&sock_net(sk)->ns.count))) {
-+				sock_gen_put(sk);
- 				goto restart;
- 			}
- 
- 			rcu_read_unlock();
- 			local_bh_disable();
--			inet_twsk_deschedule_put(tw);
-+			if (state == TCP_TIME_WAIT) {
-+				inet_twsk_deschedule_put(inet_twsk(sk));
-+			} else {
-+				struct request_sock *req = inet_reqsk(sk);
-+
-+				inet_csk_reqsk_queue_drop_and_put(req->rsk_listener,
-+								  req);
-+			}
- 			local_bh_enable();
- 			goto restart_rcu;
- 		}
+ /*
+  * Define a host as seen by the target.  We allocate one at boot, but also
+  * allow the override it when creating controllers.  This is both to provide
 -- 
 2.43.0
 
