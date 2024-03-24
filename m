@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BE020C03A;
-	Sun, 24 Mar 2024 23:07:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0BA20C043;
+	Sun, 24 Mar 2024 23:07:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321625; cv=none; b=mf53+aJj+ESm7qQuVws+BL6K3qDVa6RtnVgljeV3mCo1LeVmC+BD6bI34cFo9j7OfhOXf4n8cO9Yg/8kUu5cNUUbKNCH5HfctooLcsn7iYcTlCqfG+sEA/bnGtyejOoRNDc9eIRKViXswvS/hvOohYQ/Peu+hU2C1S54KumocM4=
+	t=1711321628; cv=none; b=Dwp+zEDIp7khPML8IvG5WGSeitURLBf+Pyw1ULJ1FKyzgWr7nZqozK8S8PoNhcl/QwH+tdzPS6FRuWfxWN0i0G5LZskSIw8WuBCsTpwgAVWQ0LjesZAs8ucPqtI5kEL56n6L/DehfAqRdxoIZOILDLR91bXXQYwlk32wMBpXM+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321625; c=relaxed/simple;
-	bh=N321SsALO94SeiSHRq0mWFeBWWQddhzmHDlaHmCj6kc=;
+	s=arc-20240116; t=1711321628; c=relaxed/simple;
+	bh=IQMlcf/x3JYpjgH2EoHDafE++YM8FkcTZYcWbvKrJG0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yorpm+DPxEUZxibhIJllSQc0EJ9MqKi4E6hum5oqYRmCft16QohiBFgy+byKGplJwI5WoB4hoL9Y/+7/Dekqw3qlSbf2tX1T98VneGBIXMg2mJE1uXunX9XK+UZwtjyOegqVPBssdhah0gbt5PE0KlVPmc3nvqu0R17mdOFmDEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hI64oaEr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qdYk4E8vM7u8/kdDJwr2HFyIv/B1PQ2sK/BcFQmwtqppnd6+CACd3GTCcEopZ8qfQUmNLGrMQdoFZPNfpvfTv143P4JHBvxhl9dLQBOhaVp1JZHFYhUZvLWk7fYTvR1zSsJ0+UH/04PzoY9jYYJ0WqYOOQTmx++QDoBAOt2fuR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MI2DWFqU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hI64oaEr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18F43C433F1;
-	Sun, 24 Mar 2024 23:07:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MI2DWFqU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0A0DC433A6;
+	Sun, 24 Mar 2024 23:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321624;
-	bh=N321SsALO94SeiSHRq0mWFeBWWQddhzmHDlaHmCj6kc=;
+	s=k20201202; t=1711321628;
+	bh=IQMlcf/x3JYpjgH2EoHDafE++YM8FkcTZYcWbvKrJG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hI64oaErC0N5oGNGujE9Cg/X+29Mm3kmGK669zhsXhgWJJ18i4diO2wFIKNHnIhUJ
-	 Qr+G8b+q51KHJ2mfXKP68ICo5KnizniPtTWrWu9jWIKogDOm2up4PJtkLH77ZnHpvU
-	 Lnb2Vc/BQ+6jhfeOn5SbwnLdR092N+QEp5xGVwzQdQaI+B+UuxASllDkCsFcL9uI15
-	 Um67VvBZ0BryD7OzBLPYxerK8EGNUVh+Crx+kBSkLs4fSMl3qW+aIYREOaCd5D7Ehq
-	 1VgvVtP5m/poPnK5h7BdSVZj/a0MrxhxSSiHSYVOxxUP+Mc1Ek0HxYG5FPhutyo0Oz
-	 YGRJJSiUmNY8w==
+	b=MI2DWFqUAI6oB2W61axsTUSlpxKsFHp7unh0YfwVHjtgcWCvzTgyS6hPknhLqOaQL
+	 Yw4LuWKqmGuKjz6C4msnFmGi30K0edyTRfuljricHiYdr/fnx0iKA8jlyWgvBRCCFG
+	 GoUZUmFyv6nLmjOgyO28IR57z121qg+p2aJDHPOzEbvNy2QCEUmcZZY7SRV+l2UD6P
+	 XOD8CBKcg9yKQGM7Yqp7XFTDCHf4aFih908y+6xZ8NGfPcmYvSPaUF1oOsI/HzIZqY
+	 tExcUVBphDjuoseDvc6Pj7e/fgKvFYwSzPJkRnv1+BuSFw6/LngGV13T8JaJKUod8S
+	 RBxBGj7puObHA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-	Quentin Schulz <foss+kernel@0leil.net>,
-	Heiko Stuebner <heiko@sntech.de>,
+Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Emil Velikov <emil.velikov@collabora.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 355/638] drm/rockchip: lvds: do not overwrite error code
-Date: Sun, 24 Mar 2024 18:56:32 -0400
-Message-ID: <20240324230116.1348576-356-sashal@kernel.org>
+Subject: [PATCH 6.6 359/638] ASoC: amd: acp: Add missing error handling in sof-mach
+Date: Sun, 24 Mar 2024 18:56:36 -0400
+Message-ID: <20240324230116.1348576-360-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,36 +49,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 
-[ Upstream commit 79b09453c4e369ca81cfb670d0136d089e3b92f0 ]
+[ Upstream commit d0ada20279db2649a7549a2b8a4a3379c59f238d ]
 
-ret variable stores the return value of drm_of_find_panel_or_bridge
-which can return error codes different from EPROBE_DEFER. Therefore,
-let's just return that error code instead of forcing it to EPROBE_DEFER.
+Handle potential acp_sofdsp_dai_links_create() errors in ACP SOF machine
+driver's probe function.  Note there is no need for an undo.
 
-Fixes: 34cc0aa25456 ("drm/rockchip: Add support for Rockchip Soc LVDS")
-Cc: Quentin Schulz <foss+kernel@0leil.net>
-Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231120-rk-lvds-defer-msg-v2-1-9c59a5779cf9@theobroma-systems.com
+While at it, switch to dev_err_probe().
+
+Fixes: 9f84940f5004 ("ASoC: amd: acp: Add SOF audio support on Chrome board")
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+Link: https://msgid.link/r/20231219030728.2431640-4-cristian.ciocaltea@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/rockchip_lvds.c | 1 -
- 1 file changed, 1 deletion(-)
+ sound/soc/amd/acp/acp-sof-mach.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-index 5828593877923..27ef812ebc600 100644
---- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-@@ -578,7 +578,6 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		goto err_put_port;
- 	} else if (ret) {
- 		DRM_DEV_ERROR(dev, "failed to find panel and bridge node\n");
--		ret = -EPROBE_DEFER;
- 		goto err_put_port;
- 	}
- 	if (lvds->panel)
+diff --git a/sound/soc/amd/acp/acp-sof-mach.c b/sound/soc/amd/acp/acp-sof-mach.c
+index 5223033a122f8..354d0fc55299b 100644
+--- a/sound/soc/amd/acp/acp-sof-mach.c
++++ b/sound/soc/amd/acp/acp-sof-mach.c
+@@ -120,16 +120,14 @@ static int acp_sof_probe(struct platform_device *pdev)
+ 	if (dmi_id && dmi_id->driver_data)
+ 		acp_card_drvdata->tdm_mode = dmi_id->driver_data;
+ 
+-	acp_sofdsp_dai_links_create(card);
++	ret = acp_sofdsp_dai_links_create(card);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "Failed to create DAI links\n");
+ 
+ 	ret = devm_snd_soc_register_card(&pdev->dev, card);
+-	if (ret) {
+-		dev_err(&pdev->dev,
+-				"devm_snd_soc_register_card(%s) failed: %d\n",
+-				card->name, ret);
+-		return ret;
+-	}
+-
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "Failed to register card(%s)\n", card->name);
+ 	return 0;
+ }
+ 
 -- 
 2.43.0
 
