@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D96D17F363;
-	Sun, 24 Mar 2024 23:46:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779BF17EB63;
+	Sun, 24 Mar 2024 23:46:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324018; cv=none; b=gYSSu4kKcqJByYCLi2UGPZjJa/+WiEUL5+RsbqRNr2E61FHuFfx0hb0kw1s0QWh2jPCdM2pzRJIBPjSpfpcMQs4FQryYjw5uWD7Nkl/earBUmRFVeKupRVLiOdHTa+3fLxEaa1AlZ9UDg2kUNQ0+8lv7OwWpkl/KBIvOWW8Vxfc=
+	t=1711324004; cv=none; b=t95S/rLaHqZvhJHIqrQM41OZ/iQbGbK2nGz8yYgg/7dk9v5XGPHejT1Auvklk6NxpOCKxPWLPbcmzY6qj+EsQ5Tp8aRNHVFIBkrLxeJoFece3MqHEyKpTwnpSVJWSlUar0wgiKgu03vFgqXupPsGld/1RNstt2g6ldnMwdb/O1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324018; c=relaxed/simple;
-	bh=Nolwht7xB4k8AtWq7yscABEu12du6hQAJPByB7bvTj8=;
+	s=arc-20240116; t=1711324004; c=relaxed/simple;
+	bh=GFFbQlzh6HC4SDDh95NsXiORtcwm6elGZF0AA+G9MdQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XuoVOorJAK7GZruZUb7w9zrtnq3hlWcegFLbF0Xj4B6h6rxOlKGhTJkNdSO8URGDh8Fxe+r3sEjkfiOdrFJEpanzRjcqpD0iUDmJHP/iROGww25D8/bbPlcEXnzUrPDQBFmp6BaLkVjXECg/cPO0lJ8EOmPxr39kM9f6Llcra14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEEpIa8l; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KV9z4aDI1XWt8N6ua7SaJS8Y9COtLapw0dRWdByOgQ3IOodMgwGo/U47ozpAMbxkYf5tPAnSzot9ib/12FsUPB9GJ+DUsoVcroyaQZGArLk8LuYkdQONs8SG48uOQ7BOI613SsBdF2dIAG05FKDE4X0Ioyp2ckHP+h7pXkFTJQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnBZ3zVA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEEpIa8l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B51CAC433A6;
-	Sun, 24 Mar 2024 23:46:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnBZ3zVA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401BFC43394;
+	Sun, 24 Mar 2024 23:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324017;
-	bh=Nolwht7xB4k8AtWq7yscABEu12du6hQAJPByB7bvTj8=;
+	s=k20201202; t=1711324003;
+	bh=GFFbQlzh6HC4SDDh95NsXiORtcwm6elGZF0AA+G9MdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MEEpIa8lm85S8G/CFah1+DWGjoWdn409/lPbDDGrsr1EiGNDJH/1LAIXkaK0oC898
-	 pkK23NTRcG+b9YCmbLeKAWiEJyhbgdiRkWoL/rqtZQkrTFQh1K4zc/Tt2JcRwB+QrN
-	 mqIB4vCnWojSSQ5aS5S1S1Hlrvk+ZOkJW6cjmBRgI4aFjFjOIDTYI5coI0IBg79fy4
-	 b19trSx6Atb9lCYm/0llUFcPhwJ9K/Kujj5yMdBlbyMj6mN54QeE0PG/9b29k6pdF4
-	 eyB9tvr3OUaZ2u/jBsv+rOWZeHT03OT0RsDQK7SK7a6s/K32fnR/KOiEflcOv7rGOh
-	 TRav4eTCKI+2Q==
+	b=AnBZ3zVAhG+M6fEuOJnlP4PKU52wHFlAhRxTFXCy7jdjqTOX20MJVttveydTiKNAg
+	 tTr8dWzKftpMieEhkzEHO0VbTcUJPtoR87UFZdMuosUhgNzAibQkF4KU3y45RUKkcS
+	 8s5bR6iP/1UoGfK3alkFXn1xR2bBMEgN6+79mjq7YmQovpyT2H9DEfpwaCfIyypwWK
+	 DqxI6o2Xy9yW1zcacnJft7oosIVZHbJvLKsffZPs+VDw0x7zqZg041IFA9ZB07pR5v
+	 j5wQ5SLmDbu859dAhbIp+OcCvuZfZQt/fpZ5c1lKARX5F29D5N/TyAC0WEOAp6bUxu
+	 ObYEMk5z5clhw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 018/183] Input: gpio_keys_polled - suppress deferred probe error for gpio
-Date: Sun, 24 Mar 2024 19:43:51 -0400
-Message-ID: <20240324234638.1355609-19-sashal@kernel.org>
+Subject: [PATCH 5.4 003/183] selftests: tls: use exact comparison in recv_partial
+Date: Sun, 24 Mar 2024 19:43:36 -0400
+Message-ID: <20240324234638.1355609-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -45,55 +45,46 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 963465a33141d0d52338e77f80fe543d2c9dc053 ]
+[ Upstream commit 49d821064c44cb5ffdf272905236012ea9ce50e3 ]
 
-On a PC Engines APU our admins are faced with:
+This exact case was fail for async crypto and we weren't
+catching it.
 
-	$ dmesg | grep -c "gpio-keys-polled gpio-keys-polled: unable to claim gpio 0, err=-517"
-	261
-
-Such a message always appears when e.g. a new USB device is plugged in.
-
-Suppress this message which considerably clutters the kernel log for
-EPROBE_DEFER (i.e. -517).
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20240305101042.10953-2-u.kleine-koenig@pengutronix.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/gpio_keys_polled.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ tools/testing/selftests/net/tls.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-index 465eecfa6b3f0..825fff00e4f88 100644
---- a/drivers/input/keyboard/gpio_keys_polled.c
-+++ b/drivers/input/keyboard/gpio_keys_polled.c
-@@ -325,12 +325,10 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
+index 837206dbe5d6e..81bb3cc6704f8 100644
+--- a/tools/testing/selftests/net/tls.c
++++ b/tools/testing/selftests/net/tls.c
+@@ -580,12 +580,12 @@ TEST_F(tls, recv_partial)
  
- 			error = devm_gpio_request_one(dev, button->gpio,
- 					flags, button->desc ? : DRV_NAME);
--			if (error) {
--				dev_err(dev,
--					"unable to claim gpio %u, err=%d\n",
--					button->gpio, error);
--				return error;
--			}
-+			if (error)
-+				return dev_err_probe(dev, error,
-+						     "unable to claim gpio %u\n",
-+						     button->gpio);
- 
- 			bdata->gpiod = gpio_to_desc(button->gpio);
- 			if (!bdata->gpiod) {
+ 	memset(recv_mem, 0, sizeof(recv_mem));
+ 	EXPECT_EQ(send(self->fd, test_str, send_len, 0), send_len);
+-	EXPECT_NE(recv(self->cfd, recv_mem, strlen(test_str_first),
+-		       MSG_WAITALL), -1);
++	EXPECT_EQ(recv(self->cfd, recv_mem, strlen(test_str_first),
++		       MSG_WAITALL), strlen(test_str_first));
+ 	EXPECT_EQ(memcmp(test_str_first, recv_mem, strlen(test_str_first)), 0);
+ 	memset(recv_mem, 0, sizeof(recv_mem));
+-	EXPECT_NE(recv(self->cfd, recv_mem, strlen(test_str_second),
+-		       MSG_WAITALL), -1);
++	EXPECT_EQ(recv(self->cfd, recv_mem, strlen(test_str_second),
++		       MSG_WAITALL), strlen(test_str_second));
+ 	EXPECT_EQ(memcmp(test_str_second, recv_mem, strlen(test_str_second)),
+ 		  0);
+ }
 -- 
 2.43.0
 
