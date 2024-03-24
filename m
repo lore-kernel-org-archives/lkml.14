@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD6F1DCC81;
-	Sun, 24 Mar 2024 23:06:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07104137C39;
+	Sun, 24 Mar 2024 23:06:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321572; cv=none; b=VEelyXSozs6mW5dxsXAkR+fIBcneFBq8rMdF5uS2s9X7do9v1n7XIL/4wq9uWsxFKbz/AxQpTcWwbBnmK+3uxQ8QDTHTqqzGqUiS7pW8PK0RIaIfVVITsWH56L8e10HWWjG7snmyOhtnIyaDnxSqB65rzzczhTnOCbpEnLlBjFM=
+	t=1711321570; cv=none; b=tNLtTXitA3dYTuhz/cJxDPxzAyDYlU6yyhZrzd3/UUhD7jUA7ZQlF/zQndsDQIaSqeipmSia8k/Bb7N6b0IgbtWs3Qw+uTJ7HuB1YzGY2Xl4LhtWMJ7AH1K3Qu3ILEWp8zcwlsBgcsQkVh2VbxOCSe3lI5YYCXAdmGhrx52/OBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321572; c=relaxed/simple;
-	bh=fxh2FzIss8jfV/LFAffOsp5nCtgdW3PvQ5ctpWMXbPg=;
+	s=arc-20240116; t=1711321570; c=relaxed/simple;
+	bh=Pyt0ViNt/NxQb9umfa1yxApnmliIPJZW05Akdhj054A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t6CwacSqG9mJcrnQRorx+G0FAyrOO6+T7blNSZ45chwdp7kr1zs0iS9DT+8dzR+1oHVEUDf54bd1+994O4Go3fC6YyQxtcRLninjFrqkAJno7GOynCjRtYy2Y18AMEvL1PBSL2GqWBwbUev6O4I3DfJtMLwwNbg0ROLw8O7BAlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWaYO1iQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ul5BAh6KoI1Ifv6+FLsp3acwTOEdZ1gZpjfNiReOjDgmkTH1K6aYrorink/goGJPK8RqzZEBNHg2zT2IdP3q54kFalTLruy1wme501lgQUlzbMg1Bx15npPlTpPemYQebc0EdwEsz6BtnMIF2TGKPjecpBswLngcysyXEoR2CF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TsDio8bD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWaYO1iQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15F36C433C7;
-	Sun, 24 Mar 2024 23:06:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TsDio8bD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC48EC433C7;
+	Sun, 24 Mar 2024 23:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321571;
-	bh=fxh2FzIss8jfV/LFAffOsp5nCtgdW3PvQ5ctpWMXbPg=;
+	s=k20201202; t=1711321569;
+	bh=Pyt0ViNt/NxQb9umfa1yxApnmliIPJZW05Akdhj054A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EWaYO1iQx1LawQu51vqRURydQox6+RrIxzJvbFbnVr466ZLVi+hq9Cq4R6Flcm0K8
-	 nmdzwj0sW6SAjlVeoWe3QMZpeYgZzSLkQ/V6f+Rb57sd+993HxdqoVjT6XQbiBaLcV
-	 Cj/DTf67hZM/GDkWwSW22ZlKQ7Ulym//EP9RiJjjn6j57pBuwROPClkdQljbyrl4P5
-	 84gIdNzNgoFSkjoTNoEMiczbwrgVxdFOI9OeugnwFYnHaEg19sMguJbjkd0iU6sgBG
-	 UPl8rzxXH1LaMuE3KdAKB5gdtdD5tyUUE5/i6ZQJeea5Y7MLHnj7aalNTGL4d96ihI
-	 5nkUj6+22286Q==
+	b=TsDio8bDSmppirD5E8Q6fjXbMBtqAglwb8sTuipTPnbqVUtFkt9mMMaOeqyVT83xS
+	 Yy6Q58J/GxEebYUYmUTGjhpfFmxPwwQ1Q/QhSU7vm6EZnOwK8JCag0YYns7IyVyKUQ
+	 hwL2iSn1lCeVLToTIA5SlZODRt8hOgNXz+joHPG6U0HVC0hakcon1TG52npBk69J1f
+	 Lg4lk+nQ41bVaOCOp3r9QpBprBOEoYk4q5C58wtk5I7x31ptkxyEEBkB/MXyAgVxk1
+	 TuPnhp+TUAiIyrRde7o4n0381EFn8snditL/cHfbKHB7LPl5kSOKtdT3HpA4woDoBM
+	 6GedQEORlugyw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Nebojsa Stevanovic <nebojsa.stevanovic@gcore.com>,
+	Christian Rohmann <christian.rohmann@inovex.de>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Simon Horman <horms@kernel.org>,
+	Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 299/638] Bluetooth: mgmt: Remove leftover queuing of power_off work
-Date: Sun, 24 Mar 2024 18:55:36 -0400
-Message-ID: <20240324230116.1348576-300-sashal@kernel.org>
+Subject: [PATCH 6.6 297/638] ice: fix stats being updated by way too large values
+Date: Sun, 24 Mar 2024 18:55:34 -0400
+Message-ID: <20240324230116.1348576-298-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,78 +49,92 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jonas Dreßler <verdre@v0yd.nl>
+From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
 
-[ Upstream commit fee054b7579fe252f8b9e6c17b9c5bfdaa84dd7e ]
+[ Upstream commit 257310e998700e60382fbd3f4fd275fdbd9b2aaf ]
 
-Queuing of power_off work was introduced in these functions with commits
-8b064a3ad377 ("Bluetooth: Clean up HCI state when doing power off") and
-c9910d0fb4fc ("Bluetooth: Fix disconnecting connections in non-connected
-states") in an effort to clean up state and do things like disconnecting
-devices before actually powering off the device.
+Simplify stats accumulation logic to fix the case where we don't take
+previous stat value into account, we should always respect it.
 
-After that, commit a3172b7eb4a2 ("Bluetooth: Add timer to force power off")
-introduced a timeout to ensure that the device actually got powered off,
-even if some of the cleanup work would never complete.
+Main netdev stats of our PF (Tx/Rx packets/bytes) were reported orders of
+magnitude too big during OpenStack reconfiguration events, possibly other
+reconfiguration cases too.
 
-This code later got refactored with commit cf75ad8b41d2 ("Bluetooth:
-hci_sync: Convert MGMT_SET_POWERED"), which made powering off the device
-synchronous and removed the need for initiating the power_off work from
-other places. The timeout mentioned above got removed too, because we now
-also made use of the command timeout during power on/off.
+The regression was reported to be between 6.1 and 6.2, so I was almost
+certain that on of the two "preserve stats over reset" commits were the
+culprit. While reading the code, it was found that in some cases we will
+increase the stats by arbitrarily large number (thanks to ignoring "-prev"
+part of condition, after zeroing it).
 
-These days the power_off work still exists, but it only seems to only be
-used for HCI_AUTO_OFF functionality, which is why we never noticed
-those two leftover places where we queue power_off work. So let's remove
-that code.
+Note that this fixes also the case where we were around limits of u64, but
+that was not the regression reported.
 
-Fixes: cf75ad8b41d2 ("Bluetooth: hci_sync: Convert MGMT_SET_POWERED")
-Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Full disclosure: I remember suggesting this particular piece of code to
+Ben a few years ago, so blame on me.
+
+Fixes: 2fd5e433cd26 ("ice: Accumulate HW and Netdev statistics over reset")
+Reported-by: Nebojsa Stevanovic <nebojsa.stevanovic@gcore.com>
+Link: https://lore.kernel.org/intel-wired-lan/VI1PR02MB439744DEDAA7B59B9A2833FE912EA@VI1PR02MB4397.eurprd02.prod.outlook.com
+Reported-by: Christian Rohmann <christian.rohmann@inovex.de>
+Link: https://lore.kernel.org/intel-wired-lan/f38a6ca4-af05-48b1-a3e6-17ef2054e525@inovex.de
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Tested-by: Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com> (A Contingent worker at Intel)
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/mgmt.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_main.c | 24 +++++++++++------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 2448a154a4069..324f06e2e9ddb 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -9766,14 +9766,6 @@ void mgmt_device_disconnected(struct hci_dev *hdev, bdaddr_t *bdaddr,
- 	struct mgmt_ev_device_disconnected ev;
- 	struct sock *sk = NULL;
- 
--	/* The connection is still in hci_conn_hash so test for 1
--	 * instead of 0 to know if this is the last one.
--	 */
--	if (mgmt_powering_down(hdev) && hci_conn_count(hdev) == 1) {
--		cancel_delayed_work(&hdev->power_off);
--		queue_work(hdev->req_workqueue, &hdev->power_off.work);
--	}
--
- 	if (!mgmt_connected)
- 		return;
- 
-@@ -9830,14 +9822,6 @@ void mgmt_connect_failed(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 link_type,
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index d23f2ebddeb45..8ebb6517f6b96 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -6557,6 +6557,7 @@ static void ice_update_vsi_ring_stats(struct ice_vsi *vsi)
  {
- 	struct mgmt_ev_connect_failed ev;
+ 	struct rtnl_link_stats64 *net_stats, *stats_prev;
+ 	struct rtnl_link_stats64 *vsi_stats;
++	struct ice_pf *pf = vsi->back;
+ 	u64 pkts, bytes;
+ 	int i;
  
--	/* The connection is still in hci_conn_hash so test for 1
--	 * instead of 0 to know if this is the last one.
--	 */
--	if (mgmt_powering_down(hdev) && hci_conn_count(hdev) == 1) {
--		cancel_delayed_work(&hdev->power_off);
--		queue_work(hdev->req_workqueue, &hdev->power_off.work);
--	}
+@@ -6602,21 +6603,18 @@ static void ice_update_vsi_ring_stats(struct ice_vsi *vsi)
+ 	net_stats = &vsi->net_stats;
+ 	stats_prev = &vsi->net_stats_prev;
+ 
+-	/* clear prev counters after reset */
+-	if (vsi_stats->tx_packets < stats_prev->tx_packets ||
+-	    vsi_stats->rx_packets < stats_prev->rx_packets) {
+-		stats_prev->tx_packets = 0;
+-		stats_prev->tx_bytes = 0;
+-		stats_prev->rx_packets = 0;
+-		stats_prev->rx_bytes = 0;
++	/* Update netdev counters, but keep in mind that values could start at
++	 * random value after PF reset. And as we increase the reported stat by
++	 * diff of Prev-Cur, we need to be sure that Prev is valid. If it's not,
++	 * let's skip this round.
++	 */
++	if (likely(pf->stat_prev_loaded)) {
++		net_stats->tx_packets += vsi_stats->tx_packets - stats_prev->tx_packets;
++		net_stats->tx_bytes += vsi_stats->tx_bytes - stats_prev->tx_bytes;
++		net_stats->rx_packets += vsi_stats->rx_packets - stats_prev->rx_packets;
++		net_stats->rx_bytes += vsi_stats->rx_bytes - stats_prev->rx_bytes;
+ 	}
+ 
+-	/* update netdev counters */
+-	net_stats->tx_packets += vsi_stats->tx_packets - stats_prev->tx_packets;
+-	net_stats->tx_bytes += vsi_stats->tx_bytes - stats_prev->tx_bytes;
+-	net_stats->rx_packets += vsi_stats->rx_packets - stats_prev->rx_packets;
+-	net_stats->rx_bytes += vsi_stats->rx_bytes - stats_prev->rx_bytes;
 -
- 	bacpy(&ev.addr.bdaddr, bdaddr);
- 	ev.addr.type = link_to_bdaddr(link_type, addr_type);
- 	ev.status = mgmt_status(status);
+ 	stats_prev->tx_packets = vsi_stats->tx_packets;
+ 	stats_prev->tx_bytes = vsi_stats->tx_bytes;
+ 	stats_prev->rx_packets = vsi_stats->rx_packets;
 -- 
 2.43.0
 
