@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4976F1EC62E;
-	Sun, 24 Mar 2024 22:55:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB96C1EC626;
+	Sun, 24 Mar 2024 22:55:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320944; cv=none; b=rYTK6cKtQUS742cIYpsOZfSd7hWJ8ndIZvLXBoA/kZE2e8DEIoaswrpRRLLElBW1mlany9poBBNYbtF1WmIeyJDCH/g8oXbvm5GZaGXBH4CbuDU9ZUkqidU2XclOGcMH20iIv1j+Y52vTkRMw+/6AV5/9ORqigWFypcxIFW4aQU=
+	t=1711320946; cv=none; b=B4d4EYVhvKKehi9McLx1dgcLPJb3QIFHZN8lCIlNgctzBARjjCCEHJZDXRT9Gzm/OR5fbGuIE40grReEgmUDVSAFC5jjsjQ5lD53GW5rRlnV4GLDRZhPwckoEWJ237v8msDLXLscnf2wWNmXDozrPDW7InaD2oNgbtXddG6tCdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320944; c=relaxed/simple;
-	bh=R0o9mtiY+b9wcMRZccfj/l4j7rw/QnFthxmzKd6U52Y=;
+	s=arc-20240116; t=1711320946; c=relaxed/simple;
+	bh=M1XBoXiOTq0p7mgERHXcig2Q0cM/9V/unK6ZP5x0oO0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jcq8NG4kRFxDTkdO1IElCPLhWbm7bLq4qgLPYReuhcyy6H22q+iWxrm8O1D2ECwPf2KwdxtFCbZG0gxxS3HuRiBsfu1Zmyzq0naAHzDEKFR5eZ9tO1YHuDS2n66XQ1M1l5oDRYq4hw2XI3jCZFSFQvIZPEwyMeoZzoEyfo4Dod4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMbuhpnf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=auxx6kGgLWPSfcZ0VCJXW/9RlyciLKU6QTOVmNDQeelEPxyiAt4nV5tladSlalLpK4rvsrwxLZnq7zRIvuRcMSu+PP16YNHmI2GUrj4IdQQGZsb/J57jdDJWouv48XvQ1Z6I0qyeI/35FlWtaK0QJc+fg8YPu/CztJQaoQWKQew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqNU94hC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMbuhpnf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B5B8C43394;
-	Sun, 24 Mar 2024 22:55:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqNU94hC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11C4EC43394;
+	Sun, 24 Mar 2024 22:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320943;
-	bh=R0o9mtiY+b9wcMRZccfj/l4j7rw/QnFthxmzKd6U52Y=;
+	s=k20201202; t=1711320946;
+	bh=M1XBoXiOTq0p7mgERHXcig2Q0cM/9V/unK6ZP5x0oO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WMbuhpnf/CDWGWhcdXwaN2ppQ/eujmnzhi8IzMMJMe+71rFRpCA35zCQsyjqk6zZt
-	 JxTbUlAkOo7XwFDymcJhwneEgEkcksUrxJRYI4myn2rhBVTTNTC140Wi50pvRkFByV
-	 nXvQExkHIIM3ZkCHzQ+pReUdUDvVl/iU1VCzzo45260458tZm9ShxZipWkkVBE2COT
-	 aZt4EvuIBK2zhop3BQsdYxo0JeEV1BccXoDKR5byMchgT1a8LiI48bFBw/LiV0N9Vz
-	 a9oNd4pZSDPfiXuGKS++C8CYv0HNl2xN0WpZkLOUc+fiwp+Ex4iCXto67ZRK3AChRe
-	 9tT6cYvaWR4zA==
+	b=YqNU94hCe32JH6bwyyI3mUcHmkuzgJFjRCOaC/QmVb49SO6OhY8HKwQNdEWT+YLo/
+	 WDI0mXFQJcZx140T/BlACMECWS2ZoHyk8qIXoDvnUEwLuGM+i5iRL3/VDZHeV+3Rq2
+	 s98j/vyjjUMDvWHzbgP1Zhl/KFvjHeZZiZi9xEoVFwuBglJxLT8jEahMTCjqmMg83t
+	 kRa+SboMn6+/fy6cntjPQLjLtGU87Ahxir5BjnmQbtT0EXQdWt0DmHEQNmsoXgTfe7
+	 LXspQuF6lYwFrOy538okoy7MgtFSmg08Dv17bNObV1Jso8j1kN5t3OIrqbkcIup5Oz
+	 gRYYB853T+XcQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 506/713] drm/tidss: Fix sync-lost issue with two displays
-Date: Sun, 24 Mar 2024 18:43:52 -0400
-Message-ID: <20240324224720.1345309-507-sashal@kernel.org>
+Subject: [PATCH 6.7 510/713] ASoC: meson: axg-tdm-interface: fix mclk setup without mclk-fs
+Date: Sun, 24 Mar 2024 18:43:56 -0400
+Message-ID: <20240324224720.1345309-511-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,62 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit c079e2e113f2ec2803ba859bbb442a6ab82c96bd ]
+[ Upstream commit e3741a8d28a1137f8b19ae6f3d6e3be69a454a0a ]
 
-A sync lost issue can be observed with two displays, when moving a plane
-from one disabled display to an another disabled display, and then
-enabling the display to which the plane was moved to. The exact
-requirements for this to trigger are not clear.
+By default, when mclk-fs is not provided, the tdm-interface driver
+requests an MCLK that is 4x the bit clock, SCLK.
 
-It looks like the issue is that the layers are left enabled in the first
-display's OVR registers. Even if the corresponding VP is disabled, it
-still causes an issue, as if the disabled VP and its OVR would still be
-in use, leading to the same VID being used by two OVRs. However, this is
-just speculation based on testing the DSS behavior.
+However there is no justification for this:
 
-Experimentation shows that as a workaround, we can disable all the
-layers in the OVR when disabling a VP. There should be no downside to
-this, as the OVR is anyway effectively disabled if its VP is disabled,
-and it seems to solve the sync lost issue.
+* If the codec needs MCLK for its operation, mclk-fs is expected to be set
+  according to the codec requirements.
+* If the codec does not need MCLK the minimum is 2 * SCLK, because this is
+  minimum the divider between SCLK and MCLK can do.
 
-However, there may be a bigger issue in play here, related to J721e
-erratum i2097 ("DSS: Disabling a Layer Connected to Overlay May Result
-in Synclost During the Next Frame"). Experimentation also shows that the
-OVR's CHANNELIN field has similar issue. So we may need to revisit this
-when we find out more about the core issue.
+Multiplying by 4 may cause problems because the PLL limit may be reached
+sooner than it should, so use 2x instead.
 
-Fixes: 32a1795f57ee ("drm/tidss: New driver for TI Keystone platform Display SubSystem")
-Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240213-tidss-fixes-v1-2-d709e8dfa505@ideasonboard.com
+Fixes: d60e4f1e4be5 ("ASoC: meson: add tdm interface driver")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://msgid.link/r/20240223175116.2005407-2-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tidss/tidss_crtc.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ sound/soc/meson/axg-tdm-interface.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
-index 7c78c074e3a2e..1baa4ace12e15 100644
---- a/drivers/gpu/drm/tidss/tidss_crtc.c
-+++ b/drivers/gpu/drm/tidss/tidss_crtc.c
-@@ -269,6 +269,16 @@ static void tidss_crtc_atomic_disable(struct drm_crtc *crtc,
+diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
+index 1c3d433cefd23..cd5168e826df4 100644
+--- a/sound/soc/meson/axg-tdm-interface.c
++++ b/sound/soc/meson/axg-tdm-interface.c
+@@ -264,8 +264,8 @@ static int axg_tdm_iface_set_sclk(struct snd_soc_dai *dai,
+ 	srate = iface->slots * iface->slot_width * params_rate(params);
  
- 	reinit_completion(&tcrtc->framedone_completion);
- 
-+	/*
-+	 * If a layer is left enabled when the videoport is disabled, and the
-+	 * vid pipeline that was used for the layer is taken into use on
-+	 * another videoport, the DSS will report sync lost issues. Disable all
-+	 * the layers here as a work-around.
-+	 */
-+	for (u32 layer = 0; layer < tidss->feat->num_planes; layer++)
-+		dispc_ovr_enable_layer(tidss->dispc, tcrtc->hw_videoport, layer,
-+				       false);
-+
- 	dispc_vp_disable(tidss->dispc, tcrtc->hw_videoport);
- 
- 	if (!wait_for_completion_timeout(&tcrtc->framedone_completion,
+ 	if (!iface->mclk_rate) {
+-		/* If no specific mclk is requested, default to bit clock * 4 */
+-		clk_set_rate(iface->mclk, 4 * srate);
++		/* If no specific mclk is requested, default to bit clock * 2 */
++		clk_set_rate(iface->mclk, 2 * srate);
+ 	} else {
+ 		/* Check if we can actually get the bit clock from mclk */
+ 		if (iface->mclk_rate % srate) {
 -- 
 2.43.0
 
