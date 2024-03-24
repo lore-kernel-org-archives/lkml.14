@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F101D1EC642;
-	Sun, 24 Mar 2024 22:55:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21501EC645;
+	Sun, 24 Mar 2024 22:55:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320953; cv=none; b=oHvVUf1GwEOQmn0iBpmdX7kicb5nCuRfiROu5fcEyc8/VNuuFyiFh6ZcQMXISENx4qOuoT9AiiP3rAfa4L2N3IFakkF7zOUWhbCxfYzvF9c5NfrqSUYbDTaErMehL9lnnSwQG/BvuAPmt0M/1wNeaalC3oTTtBuqpfcI98srz0E=
+	t=1711320950; cv=none; b=nInpGBgEn9jo6nJCBVy/PywLAVXmGBgTZhaqAVabBKq3XDX6zspUDBHtYG2g5R92SqCvFrk5nbcKAZakKhtUG7Zw1EnWLTMLlurR1Pz0GkYeOTjY3SQMKm3EZzrlwBjx93WEEpC0qmvo1YEJpnwXtL/IFnrqZMNNC1g1jBCuVjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320953; c=relaxed/simple;
-	bh=EUd3H01z/g6e+KfDNp6I74U5/lYNo/7jxkXAtx9zt4Y=;
+	s=arc-20240116; t=1711320950; c=relaxed/simple;
+	bh=sdiZ1qUDoyOouFFJuBLt5ddv90gXD8wwmSNJapd092Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qpiD0YkiJv7IhPT3u5WdmK2OKFSMArgc0dY36yVdjRr/iJsfLXbu7DM6hjYC9ciZIAmeX7Vv1jozODoOvhcM0+xxlWn5/y9AReciSCm5i+uf7Bk+Tsvh3MF+isDicf2yV0d7U9OETTcJdhqZ0BvvNvyyeP+e8NzZmKyjvV7TsBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E926Ogxq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cBlFiPFp5iuS//tqWL8hSbNCUdW9V9w2HXy5lxsY7M8UXdwMuLO/R2fAIV/XeGKpgSCUR7bAVrJ7vO9YXA60mEBI2hkAn5IQtj7IZUP395ITNL6A+m2T6bjCqA8D8QL9GEzXR4Z7BaXFn2ZLhkukR/Bpc7BcGSkDrQLtbw3SiKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lr/+Vgqr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E926Ogxq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEC52C43394;
-	Sun, 24 Mar 2024 22:55:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lr/+Vgqr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3CDBC433F1;
+	Sun, 24 Mar 2024 22:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320952;
-	bh=EUd3H01z/g6e+KfDNp6I74U5/lYNo/7jxkXAtx9zt4Y=;
+	s=k20201202; t=1711320949;
+	bh=sdiZ1qUDoyOouFFJuBLt5ddv90gXD8wwmSNJapd092Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E926OgxqxeVUK/7KBnaN3+YMEkUDoZWpc5lT60TDST25CxiGRMgIgEWuiAdNw4gMT
-	 8kVSd/j/w/oDuuIRiQ8UJsNAf7FBO+FZiXT6HHnkZb2rw6Ioyc3d60waFrkUjKepaC
-	 rHz3yBa7AEFQSikwvW6BZSEHsDqC4HRF9+PUFwUKhXaGGRtu9rV1O1QCowaU9k2j/t
-	 OHZPaxhLJoo50Gh8iQoU62K5/x0461/mpoNhs3QNl/Haaui2fXI2+dAdMlYIvH6F8c
-	 7uyR5VHE21jHthjOs/jCEKFHEGO0RMnDMYPZMT/3+0haU8lF0Nno1ChtBwxtDkqKkn
-	 x3P1X8lPJAmkQ==
+	b=lr/+VgqrE6NyKVnXd+Gs5IRVEG94K8jla2UQYRfNPa8GnUyLB5lVaJnZwtFux67gv
+	 F4cLLu+YHXGet20mUvMRDk5/7XHMFIfYAnvTxRMC8gX1bZuuucdHITDwgocXObdd2t
+	 IC18kRwMF5T9d7OZXBA7XIiBb2vf+fo4yuJhoBFa5vIS4KXTUlELlaQcnYjvbrVudY
+	 hPd03y9Me5J0dyadD5QJCIm2H8hb25Yo+kDkEXVwPB+SAQr2XR2WsBNCfJL2F3IamO
+	 0omegl4/MD/5iz7ol4WXScPOULiVJs8W9IKK/UVphGUTQg8Y1HeVKM2hZM6Wsxm5tQ
+	 SwQZMJuhyhpRQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Jammy Zhou <Jammy.Zhou@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Ian Rogers <irogers@google.com>,
+	kernel-janitors@vger.kernel.org,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 516/713] drm/amdgpu: Fix missing break in ATOM_ARG_IMM Case of atom_get_src_int()
-Date: Sun, 24 Mar 2024 18:44:02 -0400
-Message-ID: <20240324224720.1345309-517-sashal@kernel.org>
+Subject: [PATCH 6.7 513/713] perf pmu: Fix a potential memory leak in perf_pmu__lookup()
+Date: Sun, 24 Mar 2024 18:43:59 -0400
+Message-ID: <20240324224720.1345309-514-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -46,47 +46,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 7cf1ad2fe10634238b38442a851d89514cb14ea2 ]
+[ Upstream commit ef5de1613d7d92bdc975e6beb34bb0fa94f34078 ]
 
-Missing break statement in the ATOM_ARG_IMM case of a switch statement,
-adds the missing break statement, ensuring that the program's control
-flow is as intended.
+The commit in Fixes has reordered some code, but missed an error handling
+path.
 
-Fixes the below:
-drivers/gpu/drm/amd/amdgpu/atom.c:323 atom_get_src_int() warn: ignoring unreachable code.
+'goto err' now, in order to avoid a memory leak in case of error.
 
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Cc: Jammy Zhou <Jammy.Zhou@amd.com>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: f63a536f03a2 ("perf pmu: Merge JSON events with sysfs at load time")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Cc: kernel-janitors@vger.kernel.org
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/9538b2b634894c33168dfe9d848d4df31fd4d801.1693085544.git.christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/atom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/pmu.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atom.c b/drivers/gpu/drm/amd/amdgpu/atom.c
-index 2c221000782cd..1b51be9b5f36b 100644
---- a/drivers/gpu/drm/amd/amdgpu/atom.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atom.c
-@@ -313,7 +313,7 @@ static uint32_t atom_get_src_int(atom_exec_context *ctx, uint8_t attr,
- 				DEBUG("IMM 0x%02X\n", val);
- 			return val;
- 		}
--		return 0;
-+		break;
- 	case ATOM_ARG_PLL:
- 		idx = U8(*ptr);
- 		(*ptr)++;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 33e783fc908fe..aaa013af52524 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1019,10 +1019,9 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+ 	 * type value and format definitions. Load both right
+ 	 * now.
+ 	 */
+-	if (pmu_format(pmu, dirfd, name)) {
+-		free(pmu);
+-		return NULL;
+-	}
++	if (pmu_format(pmu, dirfd, name))
++		goto err;
++
+ 	pmu->is_core = is_pmu_core(name);
+ 	pmu->cpus = pmu_cpumask(dirfd, name, pmu->is_core);
+ 
 -- 
 2.43.0
 
