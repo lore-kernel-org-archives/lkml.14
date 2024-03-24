@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F11148306;
-	Sun, 24 Mar 2024 23:15:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71033227E0E;
+	Sun, 24 Mar 2024 23:15:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322106; cv=none; b=UWFMUgHJmferDkHYm0Aw3a6hSuyX4c86RI2IQffHAZ+sMf4L9CODE4T401tg3qufjzHNy13JEKsIBJGS4rg6APcDQBlrqtYyDyDOis8EmU9fjeLqAu47GEdRlTZkCWNMzlc8ug39AJI/5QwmfPd0U6rbOwxETOU8mkx+4IoKjZc=
+	t=1711322122; cv=none; b=o136o7oZGnQKr0pXQC2CTrNO/CkmQlalGZvVCTozRDTlBLaxsYEJC3EBJXGlzYeBu4gXdSnmGziJ3Usnq0R/j3vKS8EnQFLoNCK8ARrYdshW+RJlNENxbAMKQj16nt5UkUBSG46z0WC+gVSdg5W+5XQ7sPxEv8ds3bvk94CYIC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322106; c=relaxed/simple;
-	bh=r9p82nwq3SbuY3gJ5vMnydbl3jGN8WfF4TJodVM9dL4=;
+	s=arc-20240116; t=1711322122; c=relaxed/simple;
+	bh=FMBIVLUImQuclpTP1MRxQVmY+Su/qzutzl+hDYcOGpE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZbJiS2Kgxvc2x69Hty/i2ee3hXZ8H4FdQUglo49+zoC7eBDFCKXde7MOMXkRcnUrUJ3gfoLs2ztKy8wCHbitKuUxyDjj4wptI1J9x1aG+lcomXLrKHZAU0b+3ObwyctlvzgffUuFdajm0TRDeppybfSi+PiDzPrQ+469zaCIl4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TL22DE5Y; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=q5K53+GJ0t3W1tjmVWRpj548KP4SscEVG1hOf/yWZ+Iu9YG5twd1xxdnVakJiAi7SX0a35GfgOUMZtVlgdV34TJXDJVWSNlE4uJPd7vi1lk2mNTgVZ6gjQFWWX6V08SKFd5LNYNlNUMbDhOuIkfitLgjl1L0fpLsW3VBhLur5AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4ADvN4J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TL22DE5Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCFCC433C7;
-	Sun, 24 Mar 2024 23:15:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4ADvN4J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADBC8C433C7;
+	Sun, 24 Mar 2024 23:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322105;
-	bh=r9p82nwq3SbuY3gJ5vMnydbl3jGN8WfF4TJodVM9dL4=;
+	s=k20201202; t=1711322121;
+	bh=FMBIVLUImQuclpTP1MRxQVmY+Su/qzutzl+hDYcOGpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TL22DE5Y0w4tjrYDuBDJL4sIkaMeb0BzhUiHtOh0IzMsMBBUMl6iJPy+8XeDr0JKO
-	 GeGSA36N6geB1naaoc7EYAXPPU8twOLTltMnQIQbZE+WvzW7MZNQBGPth5/vTY/WDA
-	 kBnfOzKRpy0iRCv4nec6+BSz2LAyjGncheBLYwhIS8mNMluy+0io0LdtkLpJorbFL5
-	 jUeRxhuOfwHry2dAyG5iFR5qQPkYu+CW3OWhqA6S2IOC/LcGrFDlEPyPHv7pFo05TP
-	 k8HnMOzy5epy1kY+s8stGh72Bomk2HdR2Yklmfi0+fQnGw0YrL7j2kWiXjii73Aog5
-	 qEPN2yoArvO9Q==
+	b=Z4ADvN4J05oVw2dBoolHMie/2NaIzWmZcNuKF5z7CHrmcFG6X1pv8etAH0QU/kc3W
+	 DIv7WuNA8reHH1VzedzjrqBTXUyx0A0Imad+UuEr23Z5ayicQtI1LZh0cK5BA5eS4R
+	 YBA93q0zgvYKcJsZ+0RbDPb7LFIOUfwK6Rz0QfwWV8WkfYhm7w4iWFatT5zitoWx+v
+	 WcAz0Z7mkbUfOKAJtafrs5D90YtOirXVUqASCu1V9PyPZ0ne+A9HfBWslFbHPkZezH
+	 hxU8uZ0UJVi+Mrlr8cSb4O3SmlQb3oqDqyAV9uxsgXm7SLPTtUshGaCtu7FMv/F3d8
+	 qt95+tBrxlphQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: David McFarland <corngood@gmail.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 180/451] ACPI: resource: Add Infinity laptops to irq1_edge_low_force_override
-Date: Sun, 24 Mar 2024 19:07:36 -0400
-Message-ID: <20240324231207.1351418-181-sashal@kernel.org>
+Subject: [PATCH 6.1 196/451] Bluetooth: Remove superfluous call to hci_conn_check_pending()
+Date: Sun, 24 Mar 2024 19:07:52 -0400
+Message-ID: <20240324231207.1351418-197-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,53 +44,62 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: David McFarland <corngood@gmail.com>
+From: Jonas Dreßler <verdre@v0yd.nl>
 
-[ Upstream commit e2605d4039a42a03000856b3229932455717b48b ]
+[ Upstream commit 78e3639fc8031275010c3287ac548c0bc8de83b1 ]
 
-A user reported a keyboard problem similar to ones reported with other
-Zen laptops, on an Infinity E15-5A165-BM.
+The "pending connections" feature was originally introduced with commit
+4c67bc74f016 ("[Bluetooth] Support concurrent connect requests") and
+6bd57416127e ("[Bluetooth] Handling pending connect attempts after
+inquiry") to handle controllers supporting only a single connection request
+at a time. Later things were extended to also cancel ongoing inquiries on
+connect() with commit 89e65975fea5 ("Bluetooth: Cancel Inquiry before
+Create Connection").
 
-Add board name matches for this model and one (untested) close relative
-to irq1_edge_low_force_override.
+With commit a9de9248064b ("[Bluetooth] Switch from OGF+OCF to using only
+opcodes"), hci_conn_check_pending() was introduced as a helper to
+consolidate a few places where we check for pending connections (indicated
+by the BT_CONNECT2 flag) and then try to connect.
 
-Link: https://lemmy.ml/post/9864736
-Link: https://www.infinitygaming.com.au/bios/
-Link: https://lore.kernel.org/linux-acpi/20231006123304.32686-1-hdegoede@redhat.com
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Stable-dep-of: 021a67d09615 ("ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override")
+This refactoring commit also snuck in two more calls to
+hci_conn_check_pending():
+
+- One is in the failure callback of hci_cs_inquiry(), this one probably
+makes sense: If we send an "HCI Inquiry" command and then immediately
+after a "Create Connection" command, the "Create Connection" command might
+fail before the "HCI Inquiry" command, and then we want to retry the
+"Create Connection" on failure of the "HCI Inquiry".
+
+- The other added call to hci_conn_check_pending() is in the event handler
+for the "Remote Name" event, this seems unrelated and is possibly a
+copy-paste error, so remove that one.
+
+Fixes: a9de9248064b ("[Bluetooth] Switch from OGF+OCF to using only opcodes")
+Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/resource.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/bluetooth/hci_event.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index 5ebeb0d7b6be0..35a98a5916f63 100644
---- a/drivers/acpi/resource.c
-+++ b/drivers/acpi/resource.c
-@@ -543,6 +543,18 @@ static const struct dmi_system_id lg_laptop[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "17U70P"),
- 		},
- 	},
-+	{
-+		/* Infinity E15-5A165-BM */
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GM5RG1E0009COM"),
-+		},
-+	},
-+	{
-+		/* Infinity E15-5A305-1M */
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GM5RGEE0016COM"),
-+		},
-+	},
- 	{ }
- };
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 452d839c152fc..0cd093ec6486c 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -3567,8 +3567,6 @@ static void hci_remote_name_evt(struct hci_dev *hdev, void *data,
  
+ 	bt_dev_dbg(hdev, "status 0x%2.2x", ev->status);
+ 
+-	hci_conn_check_pending(hdev);
+-
+ 	hci_dev_lock(hdev);
+ 
+ 	conn = hci_conn_hash_lookup_ba(hdev, ACL_LINK, &ev->bdaddr);
 -- 
 2.43.0
 
