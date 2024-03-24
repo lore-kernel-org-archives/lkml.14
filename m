@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D7814A600;
-	Sun, 24 Mar 2024 22:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8760814A611;
+	Sun, 24 Mar 2024 22:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321021; cv=none; b=n/7aWlCtsjE3XW5vVrJS2VVsOcA24Ytg43CcvCwRJNYOVZmwy8Fv4hG7FlRYVecEoKPdRmcE0G2NkTSnIth0x+5Gb1cPvuLylcQ1WfP1mOchgRvYLqS5HvYO6m3pCrpm/GmlklLsmchHRx2PajQ9QvvxNzkhI25so1odpYQos1o=
+	t=1711321024; cv=none; b=lbRj6wui8XEK6yszkTf0w7hOe/HbCVUVaEvXiZwVa62pesWFrJc2VkxR81nu+zjpBSxwL71FaJ0jLDGXTQMPfUsoc0Lk8t6oNVSfczU+O/43GNKi0cb4/n0EX2Lq0iLAomWRYI2+ps+vuzUCDdN4FQCURnhfxegiLFsvOMdpUJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321021; c=relaxed/simple;
-	bh=w9hTT74KPxpjUb9Jz1A1kgmJgCEjM1yGi+Xx/yRSAec=;
+	s=arc-20240116; t=1711321024; c=relaxed/simple;
+	bh=dVQDY0+MQj8P3UOvJkNC+ZHiMUxAk+kHIchL/X2PMSY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ne1t2k4cz8AmW/P0wsueM9DmGCcA1KwKjh+wDTjt52nMevRN7DMz/qVLFcRN7RnIRrVrdRdK8ovId4eWq21b8IYAzSqIaSKtNGCdKhD+QJMAVmqnRJ9tWgUCQR+notioiGW8LFqwZkECMlYlIhRfjneXO2dKGA5NDRbVls2AyvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGZZKKtc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UoP23juF5xAwYU62GO6cwCA7QL+rBXExLgB2DhTQGeTr9Rif+vkB0vnMb2TTitKqXkp7s5JG/jaNsdGIlul5rLYIu4ghgXMhaRR85oykS+MfzbQuSR8ynWJV1DhfDdEmlGVGCq9QiEIeYhCLkSwOhj3rjxB+bwIXcFnrgkP6g0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r1vR6gs8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGZZKKtc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDE96C433C7;
-	Sun, 24 Mar 2024 22:56:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1vR6gs8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5630C43394;
+	Sun, 24 Mar 2024 22:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321020;
-	bh=w9hTT74KPxpjUb9Jz1A1kgmJgCEjM1yGi+Xx/yRSAec=;
+	s=k20201202; t=1711321023;
+	bh=dVQDY0+MQj8P3UOvJkNC+ZHiMUxAk+kHIchL/X2PMSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qGZZKKtcoe4Cj3gpJ+gUCRIW9L1AK8rpwmpkKsNkKOhlBNu6DXHrHd6iAqHpExIcH
-	 uQMZEVquVKhQErm8meHFE3atORbqmzt3zOwhobIVWFuVhI3Qz7kUpD7LzwbWRrl962
-	 I4hgkMoZZNoTxXKwNoBz3uiQStNbaBuC9lVApDPszVBpL7wo3D8qdKKgqaUvd45dY4
-	 5pSnakNNLnBDA87yK9pfbXgxeoWaGfi3rSJiK0/2ErDxTiFd19O/dl6f5/764kpFpZ
-	 V+6a/zgY9oo9qGZWD/UD/Id8c6Jn6Zs9/k+txBrG+FdR57y7Vw9dI+MBj7xqZaJu2i
-	 fAXj6A2G8ZI5A==
+	b=r1vR6gs8qDhnXn9yA+Avk+TcXoac1e7rSzBXlhnfF7oD7kd+GVpupXMGYmDrfjY/r
+	 k8gvZAhEAqw81ebWY0kH5oraGcs16dDZL5dBSG1XQ1/epwLFnEK4IDrIz8+ZDeuNsm
+	 MSLMioocLF8d+SgAXJbzfZQFB+Fd/CnWbJRvq+MGzi5wPR5kWl7HUe/3TAgz+uzQmz
+	 sHs13B/igsCWPd6tVebSb+HmhPuZXK3w68VBz+mDoXcyfgHxpP6vnHIoXBbvElZkHV
+	 I+9lNDHp2XvMJ0hbETdTWaJyxT79ItjXIa33L7wSBggS1GRAVdqVdpq4p9e+Wt9FG5
+	 e6FCOuD7PyTnQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shifeng Li <lishifeng@sangfor.com.cn>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jason Gunthorpe <jgg@nvidia.com>,
+Cc: Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 583/713] RDMA/device: Fix a race between mad_client and cm_client init
-Date: Sun, 24 Mar 2024 18:45:09 -0400
-Message-ID: <20240324224720.1345309-584-sashal@kernel.org>
+Subject: [PATCH 6.7 586/713] f2fs: fix to create selinux label during whiteout initialization
+Date: Sun, 24 Mar 2024 18:45:12 -0400
+Message-ID: <20240324224720.1345309-587-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,131 +48,140 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Shifeng Li <lishifeng@sangfor.com.cn>
+From: Chao Yu <chao@kernel.org>
 
-[ Upstream commit 7a8bccd8b29c321ac181369b42b04fecf05f98e2 ]
+[ Upstream commit 40b2d55e045222dd6de2a54a299f682e0f954b03 ]
 
-The mad_client will be initialized in enable_device_and_get(), while the
-devices_rwsem will be downgraded to a read semaphore. There is a window
-that leads to the failed initialization for cm_client, since it can not
-get matched mad port from ib_mad_port_list, and the matched mad port will
-be added to the list after that.
+#generic/700       - output mismatch (see /media/fstests/results//generic/700.out.bad)
+#    --- tests/generic/700.out	2023-03-28 10:40:42.735529223 +0000
+#    +++ /media/fstests/results//generic/700.out.bad	2024-02-06 04:37:56.000000000 +0000
+#    @@ -1,2 +1,4 @@
+#     QA output created by 700
+#    +/mnt/scratch_f2fs/f1: security.selinux: No such attribute
+#    +/mnt/scratch_f2fs/f2: security.selinux: No such attribute
+#     Silence is golden
+#    ...
+#    (Run 'diff -u /media/fstests/tests/generic/700.out /media/fstests/results//generic/700.out.bad'  to see the entire diff)
 
-    mad_client    |                       cm_client
-------------------|--------------------------------------------------------
-ib_register_device|
-enable_device_and_get
-down_write(&devices_rwsem)
-xa_set_mark(&devices, DEVICE_REGISTERED)
-downgrade_write(&devices_rwsem)
-                  |
-                  |ib_cm_init
-                  |ib_register_client(&cm_client)
-                  |down_read(&devices_rwsem)
-                  |xa_for_each_marked (&devices, DEVICE_REGISTERED)
-                  |add_client_context
-                  |cm_add_one
-                  |ib_register_mad_agent
-                  |ib_get_mad_port
-                  |__ib_get_mad_port
-                  |list_for_each_entry(entry, &ib_mad_port_list, port_list)
-                  |return NULL
-                  |up_read(&devices_rwsem)
-                  |
-add_client_context|
-ib_mad_init_device|
-ib_mad_port_open  |
-list_add_tail(&port_priv->port_list, &ib_mad_port_list)
-up_read(&devices_rwsem)
-                  |
+HINT: You _MAY_ be missing kernel fix:
+      70b589a37e1a xfs: add selinux labels to whiteout inodes
 
-Fix it by using down_write(&devices_rwsem) in ib_register_client().
+Previously, it missed to create selinux labels during whiteout inode
+initialization, fix this issue.
 
-Fixes: d0899892edd0 ("RDMA/device: Provide APIs from the core code to help unregistration")
-Link: https://lore.kernel.org/r/20240203035313.98991-1-lishifeng@sangfor.com.cn
-Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-Signed-off-by: Shifeng Li <lishifeng@sangfor.com.cn>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixes: 7e01e7ad746b ("f2fs: support RENAME_WHITEOUT")
+Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/device.c | 37 +++++++++++++++++++-------------
- 1 file changed, 22 insertions(+), 15 deletions(-)
+ fs/f2fs/dir.c   |  5 +++--
+ fs/f2fs/f2fs.h  |  3 ++-
+ fs/f2fs/namei.c | 25 +++++++++++++++++--------
+ 3 files changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index 67bcea7a153c6..07cb6c5ffda00 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -1730,7 +1730,7 @@ static int assign_client_id(struct ib_client *client)
- {
- 	int ret;
- 
--	down_write(&clients_rwsem);
-+	lockdep_assert_held(&clients_rwsem);
- 	/*
- 	 * The add/remove callbacks must be called in FIFO/LIFO order. To
- 	 * achieve this we assign client_ids so they are sorted in
-@@ -1739,14 +1739,11 @@ static int assign_client_id(struct ib_client *client)
- 	client->client_id = highest_client_id;
- 	ret = xa_insert(&clients, client->client_id, client, GFP_KERNEL);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	highest_client_id++;
- 	xa_set_mark(&clients, client->client_id, CLIENT_REGISTERED);
--
--out:
--	up_write(&clients_rwsem);
--	return ret;
-+	return 0;
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 042593aed1ec0..1b937f7d0414f 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -830,13 +830,14 @@ int f2fs_do_add_link(struct inode *dir, const struct qstr *name,
+ 	return err;
  }
  
- static void remove_client_id(struct ib_client *client)
-@@ -1776,25 +1773,35 @@ int ib_register_client(struct ib_client *client)
+-int f2fs_do_tmpfile(struct inode *inode, struct inode *dir)
++int f2fs_do_tmpfile(struct inode *inode, struct inode *dir,
++					struct f2fs_filename *fname)
  {
- 	struct ib_device *device;
- 	unsigned long index;
-+	bool need_unreg = false;
- 	int ret;
+ 	struct page *page;
+ 	int err = 0;
  
- 	refcount_set(&client->uses, 1);
- 	init_completion(&client->uses_zero);
-+
-+	/*
-+	 * The devices_rwsem is held in write mode to ensure that a racing
-+	 * ib_register_device() sees a consisent view of clients and devices.
-+	 */
-+	down_write(&devices_rwsem);
-+	down_write(&clients_rwsem);
- 	ret = assign_client_id(client);
- 	if (ret)
--		return ret;
-+		goto out;
+ 	f2fs_down_write(&F2FS_I(inode)->i_sem);
+-	page = f2fs_init_inode_metadata(inode, dir, NULL, NULL);
++	page = f2fs_init_inode_metadata(inode, dir, fname, NULL);
+ 	if (IS_ERR(page)) {
+ 		err = PTR_ERR(page);
+ 		goto fail;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 007f39ff99b20..655e27e7bef9c 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3572,7 +3572,8 @@ int f2fs_do_add_link(struct inode *dir, const struct qstr *name,
+ 			struct inode *inode, nid_t ino, umode_t mode);
+ void f2fs_delete_entry(struct f2fs_dir_entry *dentry, struct page *page,
+ 			struct inode *dir, struct inode *inode);
+-int f2fs_do_tmpfile(struct inode *inode, struct inode *dir);
++int f2fs_do_tmpfile(struct inode *inode, struct inode *dir,
++					struct f2fs_filename *fname);
+ bool f2fs_empty_dir(struct inode *dir);
  
--	down_read(&devices_rwsem);
-+	need_unreg = true;
- 	xa_for_each_marked (&devices, index, device, DEVICE_REGISTERED) {
- 		ret = add_client_context(device, client);
--		if (ret) {
--			up_read(&devices_rwsem);
--			ib_unregister_client(client);
--			return ret;
--		}
-+		if (ret)
-+			goto out;
+ static inline int f2fs_add_link(struct dentry *dentry, struct inode *inode)
+diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+index 7f71bae2c83b5..9cdf3f36d1b90 100644
+--- a/fs/f2fs/namei.c
++++ b/fs/f2fs/namei.c
+@@ -853,7 +853,7 @@ static int f2fs_mknod(struct mnt_idmap *idmap, struct inode *dir,
+ 
+ static int __f2fs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
+ 			  struct file *file, umode_t mode, bool is_whiteout,
+-			  struct inode **new_inode)
++			  struct inode **new_inode, struct f2fs_filename *fname)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(dir);
+ 	struct inode *inode;
+@@ -881,7 +881,7 @@ static int __f2fs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
+ 	if (err)
+ 		goto out;
+ 
+-	err = f2fs_do_tmpfile(inode, dir);
++	err = f2fs_do_tmpfile(inode, dir, fname);
+ 	if (err)
+ 		goto release_out;
+ 
+@@ -932,22 +932,24 @@ static int f2fs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
+ 	if (!f2fs_is_checkpoint_ready(sbi))
+ 		return -ENOSPC;
+ 
+-	err = __f2fs_tmpfile(idmap, dir, file, mode, false, NULL);
++	err = __f2fs_tmpfile(idmap, dir, file, mode, false, NULL, NULL);
+ 
+ 	return finish_open_simple(file, err);
+ }
+ 
+ static int f2fs_create_whiteout(struct mnt_idmap *idmap,
+-				struct inode *dir, struct inode **whiteout)
++				struct inode *dir, struct inode **whiteout,
++				struct f2fs_filename *fname)
+ {
+-	return __f2fs_tmpfile(idmap, dir, NULL,
+-				S_IFCHR | WHITEOUT_MODE, true, whiteout);
++	return __f2fs_tmpfile(idmap, dir, NULL, S_IFCHR | WHITEOUT_MODE,
++						true, whiteout, fname);
+ }
+ 
+ int f2fs_get_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
+ 		     struct inode **new_inode)
+ {
+-	return __f2fs_tmpfile(idmap, dir, NULL, S_IFREG, false, new_inode);
++	return __f2fs_tmpfile(idmap, dir, NULL, S_IFREG,
++				false, new_inode, NULL);
+ }
+ 
+ static int f2fs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+@@ -990,7 +992,14 @@ static int f2fs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
  	}
--	up_read(&devices_rwsem);
--	return 0;
-+	ret = 0;
-+out:
-+	up_write(&clients_rwsem);
-+	up_write(&devices_rwsem);
-+	if (need_unreg && ret)
-+		ib_unregister_client(client);
-+	return ret;
- }
- EXPORT_SYMBOL(ib_register_client);
  
+ 	if (flags & RENAME_WHITEOUT) {
+-		err = f2fs_create_whiteout(idmap, old_dir, &whiteout);
++		struct f2fs_filename fname;
++
++		err = f2fs_setup_filename(old_dir, &old_dentry->d_name,
++							0, &fname);
++		if (err)
++			return err;
++
++		err = f2fs_create_whiteout(idmap, old_dir, &whiteout, &fname);
+ 		if (err)
+ 			return err;
+ 	}
 -- 
 2.43.0
 
