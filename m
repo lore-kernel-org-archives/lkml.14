@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1FF209E23;
-	Sun, 24 Mar 2024 23:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C91B137C52;
+	Sun, 24 Mar 2024 23:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321581; cv=none; b=DmVx9kLte3byEahAuz+taGzOzhf1CUIjNQLf1REOe+85On3k7WntzIdDc7bSsfQuf3IwQmSBroWmabQELSMe/wOjvM187b2ntvVP1gZTVdiRP3IEblBDjg8JDpPmTMGDcSzrylRX2C1Wuuqis3wKRWmt0/Ku+UiEZiZuT7r9QB0=
+	t=1711321587; cv=none; b=RShA5qID13+yWyOi10KkldqQe5+DfkyFdeLosWuoY0k3O7Ur0VFcCqX66j0w6juKiOXxtwfqKx9myynPpYZ1bT3Mf4SvsJyCi2aXVFGIFPqhlLPmSiIEXn2r8pG2zElBDoty8V7sVhh6XjQbREhmBuwCkYC3DKe4UjSyI9tihT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321581; c=relaxed/simple;
-	bh=eZ8P3VvFJh8AOiFHtetE+vSb5xhTtJgCpVECyeF04SA=;
+	s=arc-20240116; t=1711321587; c=relaxed/simple;
+	bh=Mc/P9/6Sk5XwLDubGvWl2JOLLtczsB37LimzgM0opGo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Aolw926tptvAry5ikPsFtDVES0n3uLdqZ56RH5Fb6t4IPnDbqeAE5sg2CCOc94Z34vQ3ZWGPOP0QPGBcn16EY6DyYlAJDcRL32HSxpKu7FNUGSGnca5wV6/2zlcdcqQKAmqNsQgB9oPIQ2lvu5tXZfBb3mXou8MpLbYT5XocoKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tpV0dwVU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=U8cNm1VoAz0Bo2yvcORx7rPxeEyWqlfbl0MKHmgvSfWs9kMpqyHSXNJMMGWNP9kUqk6OTqslyg+f2QOmCt0zgdUlqh387xns7RHOF8HY/VKE25yydSLfRYgothhDr6CwsQCTH4zbeSfdFeRLuIK9O8M22J+8IHDmBtzV283giLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KleW3R0z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tpV0dwVU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82420C433C7;
-	Sun, 24 Mar 2024 23:06:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KleW3R0z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93408C433B2;
+	Sun, 24 Mar 2024 23:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321581;
-	bh=eZ8P3VvFJh8AOiFHtetE+vSb5xhTtJgCpVECyeF04SA=;
+	s=k20201202; t=1711321586;
+	bh=Mc/P9/6Sk5XwLDubGvWl2JOLLtczsB37LimzgM0opGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tpV0dwVU1K8mimf10YWJBUcvabNItLokDs5VqCPjaYngt+UunPEwaNfsvzLioVfCb
-	 lsdiIw/IYgUte6u3ibnGYbaes4Lb4yAnPYb5/gu28Pqz/v0FZXwnv9Kd2yZp0p84L3
-	 Gwr3kPm5uUpZTdeWS0Lqa/Jk0nKuYTgyYZ5w3AKniye4XwwpNbt0UIR+5bBIp5vIPM
-	 zKjzxpnXXAexT3hnIBUMdjRF8b++vS4ICIY4Sz5chRTRpan+gicXmS6qbX+q6fgr7C
-	 y4NjrEAJUqISXzYuyO/bc6jiOBJJcu0YjMPss7WfI8avWampQGE80qZpkeVto6omIy
-	 0Sf33djHh0FZQ==
+	b=KleW3R0zyh7TZJlhxGfjVSlzoCQ3I5ZLY5qAeElJnsp4jUw4sNAEVzCz7GXWoLIIM
+	 9Wk6W4MjFZMGlyaOEoQyM4QFcoG14VRTTk2HyG+X6zyUstGxXw9rJKjZp4I9YA2zsU
+	 Pi76BNQXXk/tHItqXlNh4S4cP/mX9oP9ymqBzvg71pBZKIbuiGj7eLfQ9oj2lwRi2y
+	 cYG5OcVY6S+96DQRnFDtcaU8TPQTHglZcPJz/9hRuQTu+5zAO/Om16yK/V6kphTCFf
+	 jM2BVPDUGKBisX5epOs+Is3At9bufqm5liBg/MVuEzhxt/Gb01cWbKAJku/goqS3dE
+	 s2dKAYulgMMOw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	syzbot+8cd36f6b65f3cafd400a@syzkaller.appspotmail.com,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 310/638] Bluetooth: msft: Fix memory leak
-Date: Sun, 24 Mar 2024 18:55:47 -0400
-Message-ID: <20240324230116.1348576-311-sashal@kernel.org>
+Subject: [PATCH 6.6 316/638] bpf: Fix DEVMAP_HASH overflow check on 32-bit arches
+Date: Sun, 24 Mar 2024 18:55:53 -0400
+Message-ID: <20240324230116.1348576-317-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -43,44 +45,66 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit a6e06258f4c31eba0fcd503e19828b5f8fe7b08b ]
+[ Upstream commit 281d464a34f540de166cee74b723e97ac2515ec3 ]
 
-Fix leaking buffer allocated to send MSFT_OP_LE_MONITOR_ADVERTISEMENT.
+The devmap code allocates a number hash buckets equal to the next power
+of two of the max_entries value provided when creating the map. When
+rounding up to the next power of two, the 32-bit variable storing the
+number of buckets can overflow, and the code checks for overflow by
+checking if the truncated 32-bit value is equal to 0. However, on 32-bit
+arches the rounding up itself can overflow mid-way through, because it
+ends up doing a left-shift of 32 bits on an unsigned long value. If the
+size of an unsigned long is four bytes, this is undefined behaviour, so
+there is no guarantee that we'll end up with a nice and tidy 0-value at
+the end.
 
-Fixes: 9e14606d8f38 ("Bluetooth: msft: Extended monitor tracking by address filter")
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Syzbot managed to turn this into a crash on arm32 by creating a
+DEVMAP_HASH with max_entries > 0x80000000 and then trying to update it.
+Fix this by moving the overflow check to before the rounding up
+operation.
+
+Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
+Link: https://lore.kernel.org/r/000000000000ed666a0611af6818@google.com
+Reported-and-tested-by: syzbot+8cd36f6b65f3cafd400a@syzkaller.appspotmail.com
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Message-ID: <20240307120340.99577-2-toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/msft.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/bpf/devmap.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
-index 630e3023273b2..9612c5d1b13f6 100644
---- a/net/bluetooth/msft.c
-+++ b/net/bluetooth/msft.c
-@@ -875,6 +875,7 @@ static int msft_add_address_filter_sync(struct hci_dev *hdev, void *data)
- 		remove = true;
- 		goto done;
- 	}
-+
- 	cp->sub_opcode           = MSFT_OP_LE_MONITOR_ADVERTISEMENT;
- 	cp->rssi_high		 = address_filter->rssi_high;
- 	cp->rssi_low		 = address_filter->rssi_low;
-@@ -887,6 +888,8 @@ static int msft_add_address_filter_sync(struct hci_dev *hdev, void *data)
+diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+index 4d42f6ed6c11a..69e78dc4bb18e 100644
+--- a/kernel/bpf/devmap.c
++++ b/kernel/bpf/devmap.c
+@@ -130,13 +130,14 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
+ 	bpf_map_init_from_attr(&dtab->map, attr);
  
- 	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, size, cp,
- 			     HCI_CMD_TIMEOUT);
-+	kfree(cp);
+ 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
+-		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
+-
+-		if (!dtab->n_buckets) /* Overflow check */
++		/* hash table size must be power of 2; roundup_pow_of_two() can
++		 * overflow into UB on 32-bit arches, so check that first
++		 */
++		if (dtab->map.max_entries > 1UL << 31)
+ 			return -EINVAL;
+-	}
+ 
+-	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
++		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
 +
- 	if (IS_ERR(skb)) {
- 		bt_dev_err(hdev, "Failed to enable address %pMR filter",
- 			   &address_filter->bdaddr);
+ 		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets,
+ 							   dtab->map.numa_node);
+ 		if (!dtab->dev_index_head)
 -- 
 2.43.0
 
