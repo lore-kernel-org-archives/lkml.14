@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0036D13EFFB;
-	Sun, 24 Mar 2024 23:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B57217E05;
+	Sun, 24 Mar 2024 23:09:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321796; cv=none; b=HR6tKDoDy9BVq97v9gDxMnTArL4MapCBuLqjZC185/+HpOh6yXmAnbeWNbZjQXcq+JLmDscZZqE1rfhOeZRZudDMaTjJe0n+glAmh9jrIi9xUFWSFrqxmCR+cDeI5lSGMQQrLPZhji0uV2vKQZUmuKnlPlzc3tmBe8/99McijjM=
+	t=1711321781; cv=none; b=I9eeaoy3zsUZl2/f6oHqufxk9rnCADsKSNeI3TO6PXmPZvQ+tuC+kBbB8wo43yPnamdhIcDT65vmNREU8Pw/lCOOs1oU/DAxouLKEPcd7g/10t3cKq089GCsCsQKeSL6eFiCSK/nmJFTqvdSGP2SHTtK7N6z7kpwaGXvD2sPU38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321796; c=relaxed/simple;
-	bh=AS+JGYpUDsPlHwpiNSjJhMQhjdqKCPCQtDNBzfmKuyQ=;
+	s=arc-20240116; t=1711321781; c=relaxed/simple;
+	bh=Nq/1J7cAFfxLhMkKfL+OgxXajCbPPICS93POMZRo9rA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BpMs+6C+pdQ6RVTuD4gqyJWhPDxayExZ/fiePncDZXPN0DMsPnbKszC8Y8BxxnK4BZFic27Mjws+WfX9IwyIXafore7rGbPZaRSx9DfcQEKV7TL3YYiQzlVIOC92y2JtYubStQN3UusXOk2HjTC0OxakGux9lXPl8BHsdNq7hWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iV9DqiqL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X+7NOy1XLxaSch/oihMUpuq24JN7I+BVH65w6PN4aJ037byHyVIOjw2sUapGaCmobhW7WyTZmhYpSe+Kvpl+tM2Ilz8YGbvYcWU0Y1QUJiLTYiO0D89pJ81kL4c/k99uuoNOIK0QBVDW+Y9c0bm7vIm72dJnrLn81s2tcKE5BYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pg5g3174; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iV9DqiqL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3181C43399;
-	Sun, 24 Mar 2024 23:09:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pg5g3174"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F10FAC43394;
+	Sun, 24 Mar 2024 23:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321794;
-	bh=AS+JGYpUDsPlHwpiNSjJhMQhjdqKCPCQtDNBzfmKuyQ=;
+	s=k20201202; t=1711321779;
+	bh=Nq/1J7cAFfxLhMkKfL+OgxXajCbPPICS93POMZRo9rA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iV9DqiqLvqb5HverbVygzRohg67MLx6Sh+V5SnhMkXYIDnONMJ7L5/flpoeNXcy+E
-	 BL/VPXe0HmaDJUmbYQ1aA2ViBlbdLkJhL6/S0wxXMp4DThC1WEN18YuJlPk++9ffHA
-	 xLc9Vnt2sNCRgFRzoZ6PrciLSEIw0gS02kZv6geYcWvZJNvoCd0arNh9bneTAbZ9BJ
-	 jwmsKDT1/57ZI00YJF2pM3686idUIVo9zIfZ6sNFa2TsoszX0A8ZkAdNeWy9SbiNN9
-	 xbjjWcarhWbqaJJT5RqPSjsreQM4O4R51KV7fzssgiABWc6NzHw/+j79/Cl987ZS7c
-	 5cJ45QsCklL+Q==
+	b=pg5g3174rwK9N5IXIRpxyKaeRet5/qC6dw1RKIyDl7lR4M9MKapx5ISG+4KPFTE+R
+	 VfXmh+30qxn//yK85DxBFM5mSCN3wkCC/V1WyggqyzdEulOdIAVYGXNE/t2kYrC0JN
+	 la+25RWQOcXBYSEUtfvG8SnlU081dt7LpxXSLY1cjy6vHH9bQ/uZAv/WB1c+82vSev
+	 fxMMX+3q12mXoJcsNdBUyxHhh4af/5sjKtZ++ZXU5A+irK3FXWJNYsjpKawspmpk+M
+	 /EjE8BivbQp2UZEJ7gvn4Al0eEAPlJtDONDPk+mP5DOcTq4qgU+zJr7oZ9R2CaR0ba
+	 OqdDfbYnXrSOQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Mustafa Ismail <mustafa.ismail@intel.com>,
+	Shiraz Saleem <shiraz.saleem@intel.com>,
+	Sindhu Devale <sindhu.devale@intel.com>,
+	Leon Romanovsky <leon@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 522/638] scsi: csiostor: Avoid function pointer casts
-Date: Sun, 24 Mar 2024 18:59:19 -0400
-Message-ID: <20240324230116.1348576-523-sashal@kernel.org>
+Subject: [PATCH 6.6 507/638] RDMA/irdma: Remove duplicate assignment
+Date: Sun, 24 Mar 2024 18:59:04 -0400
+Message-ID: <20240324230116.1348576-508-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,133 +50,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Mustafa Ismail <mustafa.ismail@intel.com>
 
-[ Upstream commit 9f3dbcb5632d6876226031d552ef6163bb3ad215 ]
+[ Upstream commit 926e8ea4b8dac84f6d14a4b60d0653f1f2ba9431 ]
 
-csiostor uses function pointer casts to keep the csio_ln_ev state machine
-hidden, but this causes warnings about control flow integrity (KCFI)
-violations in clang-16 and higher:
+Remove the unneeded assignment of the qp_num which is already
+set in irdma_create_qp().
 
-drivers/scsi/csiostor/csio_lnode.c:1098:33: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1098 |         return (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready));
-      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/csiostor/csio_lnode.c:1369:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1369 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_uninit)) {
-      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/csiostor/csio_lnode.c:1373:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1373 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready)) {
-      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/csiostor/csio_lnode.c:1377:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1377 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_offline)) {
-      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Move the enum into a shared header so the correct types can be used without
-the need for casts.
-
-Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20240213100518.457623-1-arnd@kernel.org
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: b48c24c2d710 ("RDMA/irdma: Implement device supported verb APIs")
+Signed-off-by: Mustafa Ismail <mustafa.ismail@intel.com>
+Signed-off-by: Shiraz Saleem <shiraz.saleem@intel.com>
+Signed-off-by: Sindhu Devale <sindhu.devale@intel.com>
+Link: https://lore.kernel.org/r/20240131233953.400483-1-sindhu.devale@intel.com
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/csiostor/csio_defs.h  | 18 ++++++++++++++++--
- drivers/scsi/csiostor/csio_lnode.c |  8 ++++----
- drivers/scsi/csiostor/csio_lnode.h | 13 -------------
- 3 files changed, 20 insertions(+), 19 deletions(-)
+ drivers/infiniband/hw/irdma/verbs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/csiostor/csio_defs.h b/drivers/scsi/csiostor/csio_defs.h
-index c38017b4af982..e50e93e7fe5a1 100644
---- a/drivers/scsi/csiostor/csio_defs.h
-+++ b/drivers/scsi/csiostor/csio_defs.h
-@@ -73,7 +73,21 @@ csio_list_deleted(struct list_head *list)
- #define csio_list_prev(elem)	(((struct list_head *)(elem))->prev)
+diff --git a/drivers/infiniband/hw/irdma/verbs.c b/drivers/infiniband/hw/irdma/verbs.c
+index 60618b2046b97..ca3e89909ecf4 100644
+--- a/drivers/infiniband/hw/irdma/verbs.c
++++ b/drivers/infiniband/hw/irdma/verbs.c
+@@ -719,7 +719,6 @@ static int irdma_setup_kmode_qp(struct irdma_device *iwdev,
+ 		info->rq_pa + (ukinfo->rq_depth * IRDMA_QP_WQE_MIN_SIZE);
+ 	ukinfo->sq_size = ukinfo->sq_depth >> ukinfo->sq_shift;
+ 	ukinfo->rq_size = ukinfo->rq_depth >> ukinfo->rq_shift;
+-	ukinfo->qp_id = iwqp->ibqp.qp_num;
  
- /* State machine */
--typedef void (*csio_sm_state_t)(void *, uint32_t);
-+struct csio_lnode;
-+
-+/* State machine evets */
-+enum csio_ln_ev {
-+	CSIO_LNE_NONE = (uint32_t)0,
-+	CSIO_LNE_LINKUP,
-+	CSIO_LNE_FAB_INIT_DONE,
-+	CSIO_LNE_LINK_DOWN,
-+	CSIO_LNE_DOWN_LINK,
-+	CSIO_LNE_LOGO,
-+	CSIO_LNE_CLOSE,
-+	CSIO_LNE_MAX_EVENT,
-+};
-+
-+typedef void (*csio_sm_state_t)(struct csio_lnode *ln, enum csio_ln_ev evt);
+ 	iwqp->max_send_wr = (ukinfo->sq_depth - IRDMA_SQ_RSVD) >> ukinfo->sq_shift;
+ 	iwqp->max_recv_wr = (ukinfo->rq_depth - IRDMA_RQ_RSVD) >> ukinfo->rq_shift;
+@@ -944,7 +943,7 @@ static int irdma_create_qp(struct ib_qp *ibqp,
+ 	iwqp->host_ctx.size = IRDMA_QP_CTX_SIZE;
  
- struct csio_sm {
- 	struct list_head	sm_list;
-@@ -83,7 +97,7 @@ struct csio_sm {
- static inline void
- csio_set_state(void *smp, void *state)
- {
--	((struct csio_sm *)smp)->sm_state = (csio_sm_state_t)state;
-+	((struct csio_sm *)smp)->sm_state = state;
- }
- 
- static inline void
-diff --git a/drivers/scsi/csiostor/csio_lnode.c b/drivers/scsi/csiostor/csio_lnode.c
-index d5ac938970232..5b3ffefae476d 100644
---- a/drivers/scsi/csiostor/csio_lnode.c
-+++ b/drivers/scsi/csiostor/csio_lnode.c
-@@ -1095,7 +1095,7 @@ csio_handle_link_down(struct csio_hw *hw, uint8_t portid, uint32_t fcfi,
- int
- csio_is_lnode_ready(struct csio_lnode *ln)
- {
--	return (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready));
-+	return (csio_get_state(ln) == csio_lns_ready);
- }
- 
- /*****************************************************************************/
-@@ -1366,15 +1366,15 @@ csio_free_fcfinfo(struct kref *kref)
- void
- csio_lnode_state_to_str(struct csio_lnode *ln, int8_t *str)
- {
--	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_uninit)) {
-+	if (csio_get_state(ln) == csio_lns_uninit) {
- 		strcpy(str, "UNINIT");
- 		return;
- 	}
--	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready)) {
-+	if (csio_get_state(ln) == csio_lns_ready) {
- 		strcpy(str, "READY");
- 		return;
- 	}
--	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_offline)) {
-+	if (csio_get_state(ln) == csio_lns_offline) {
- 		strcpy(str, "OFFLINE");
- 		return;
- 	}
-diff --git a/drivers/scsi/csiostor/csio_lnode.h b/drivers/scsi/csiostor/csio_lnode.h
-index 372a67d122d38..607698a0f0631 100644
---- a/drivers/scsi/csiostor/csio_lnode.h
-+++ b/drivers/scsi/csiostor/csio_lnode.h
-@@ -53,19 +53,6 @@
- extern int csio_fcoe_rnodes;
- extern int csio_fdmi_enable;
- 
--/* State machine evets */
--enum csio_ln_ev {
--	CSIO_LNE_NONE = (uint32_t)0,
--	CSIO_LNE_LINKUP,
--	CSIO_LNE_FAB_INIT_DONE,
--	CSIO_LNE_LINK_DOWN,
--	CSIO_LNE_DOWN_LINK,
--	CSIO_LNE_LOGO,
--	CSIO_LNE_CLOSE,
--	CSIO_LNE_MAX_EVENT,
--};
--
--
- struct csio_fcf_info {
- 	struct list_head	list;
- 	uint8_t			priority;
+ 	init_info.pd = &iwpd->sc_pd;
+-	init_info.qp_uk_init_info.qp_id = iwqp->ibqp.qp_num;
++	init_info.qp_uk_init_info.qp_id = qp_num;
+ 	if (!rdma_protocol_roce(&iwdev->ibdev, 1))
+ 		init_info.qp_uk_init_info.first_sq_wq = 1;
+ 	iwqp->ctx_info.qp_compl_ctx = (uintptr_t)qp;
 -- 
 2.43.0
 
