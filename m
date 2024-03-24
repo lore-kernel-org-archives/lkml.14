@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5AE145350;
-	Sun, 24 Mar 2024 23:13:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD23E145FEC;
+	Sun, 24 Mar 2024 23:14:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321991; cv=none; b=Go8Nh6KGtpBV35u+VB89nakAb8OnlHmWTpKrbJUtJJYJwrthyY3YhSQWLdvFVLs6MFAMFeWJ2QA+Nf3pngTTkmvRcIBqxuLBhpGL6WSiO2LaKogJ2Pk8c2o9ClSES4S/1TZxWSyvgQ+9iVzSDtMQ/PcesEjvhynhjLR8sFb0O98=
+	t=1711322049; cv=none; b=iilCS8ClggEyFEOsFLmExXctBYK/eTRa/Zfg/NGpBRcE/QwiYepnD+ShdMMlQ0RHRhpiNxxfvWPFR5M9rAYuECiMyTdN9mEa3QCkS4xbPDPzV+eOQyvJyRGcKbuxpaDy41w/9AiH1q/5VU5itTwg81QtEEQkVDe2MQicqBumZrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321991; c=relaxed/simple;
-	bh=Tw2Mo9pMwb8UWfiQMOBnWjkJa+eOioaYjMoii0+/Lik=;
+	s=arc-20240116; t=1711322049; c=relaxed/simple;
+	bh=akUmTWz/zsZ2kenJnJwgx9OQCKZ8/xx+LY8+fSU5Lyw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t+XElpkk1hvtOrwsdubcMcLZxw0fyffwsjlDQ2DtqyZbULlQ5c8JzyGTgCspGjwjYzaaKI72NNBZ3dfG83uigGyTU3dGX8WwZ3htr810bc0TlVhWo2mc2f0tMkGj4g5ArullRnaDHG5Ifm4GbL19lVvmm5eKjZlCZux/mVKdQr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WAkMMrV/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Y3H1nZuHoxxC65y/Q2ToFGAkvbIn4OZulPbrLgyDY5qP9WHt9UtHms8+0R4CDBohNSL33bavMOB9FF+bWKj0SDouzynIaxZyBrKWWwSjiytszsB5zHtb9OjOq1yNZAE+L86zBX1Ia8LAAysuGytoGQfBpon1gD+Utm9lkjNuMZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jne2TL4X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WAkMMrV/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C6BC433C7;
-	Sun, 24 Mar 2024 23:13:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jne2TL4X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1054DC433C7;
+	Sun, 24 Mar 2024 23:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321991;
-	bh=Tw2Mo9pMwb8UWfiQMOBnWjkJa+eOioaYjMoii0+/Lik=;
+	s=k20201202; t=1711322049;
+	bh=akUmTWz/zsZ2kenJnJwgx9OQCKZ8/xx+LY8+fSU5Lyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WAkMMrV/eglPj3oNSgwyQh93HexX8RVkkQvvlXcqegZgV21aG4wSAWPEGQiYEi9ZW
-	 2s1DhUmrs+cUBrX+GZNeGA+9zuGmpQYLJ4l1vm+/sGO9cMUSBnJ7IyJB/471TSUaNr
-	 QevaejDBrNnmdFs1MtAaGVYrKGYFr4YQFHMkZovui7YtDZo1gv+GrOBlBzyCfIrVMF
-	 0etEMTpLSIYO98uRqURZwNMbndjkWOkn5oLoiKEe3HEXJgWVUo12D+/btZDmOlcdAJ
-	 Vy+F4v+Q2gleWTKvk0iroaKq1DuntW1nj+5iLfZaZmi3PUi65T4RCzkzo1fZgeMBWM
-	 flfcqPdBwCDLg==
+	b=Jne2TL4XJLxrqySoEO8zkGLxDIDcP5EqMFK3GcuFvQdb9pvXChTdy2azb1oCren2C
+	 eSfYD5tFMZJ2F4H+FijA0jl3K/snhmM359s9j1qksIc4YKhbE6j17b074BQtxnoepk
+	 hFKXBoQU2g5eKitIjvUsBQbwauzEf9GPO2zi/KqEvSdicYndx/efw3kt2xzBLBFxpA
+	 TgmsH7MV88XEPRD4IKvvHmnSyQHVXflAFv3MlAdkJfEg4wplCmkKEoMUlLeUI7SL2w
+	 bWt5mvIEAuutBscb7w4r8cJPtEC2wPmX1MWpctaV2ghUmGJoOKrZ5uHW7kwd8wSe2f
+	 /9Ek28WrCxt4w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Kalesh Singh <kaleshsingh@google.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Thierry Reding <thierry.reding@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 063/451] rcu/exp: Fix RCU expedited parallel grace period kworker allocation failure recovery
-Date: Sun, 24 Mar 2024 19:05:39 -0400
-Message-ID: <20240324231207.1351418-64-sashal@kernel.org>
+Subject: [PATCH 6.1 122/451] pwm: atmel-hlcdc: Use consistent variable naming
+Date: Sun, 24 Mar 2024 19:06:38 -0400
+Message-ID: <20240324231207.1351418-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -46,47 +45,210 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit a636c5e6f8fc34be520277e69c7c6ee1d4fc1d17 ]
+[ Upstream commit aecab554b6ffa9a94ba796031eb39ea20eb60fb3 ]
 
-Under CONFIG_RCU_EXP_KTHREAD=y, the nodes initialization for expedited
-grace periods is queued to a kworker. However if the allocation of that
-kworker failed, the nodes initialization is performed synchronously by
-the caller instead.
+In PWM drivers the variable name "chip" is usually only used for struct
+pwm_chip pointers. This driver however used "chip" for its driver data
+and pwm_chip pointers are named "chip", too, when there is no driver
+data around and "c" otherwise. Instead use "atmel" for driver data and
+always "chip" for pwm_chips.
 
-Now the check for kworker initialization failure relies on the kworker
-pointer to be NULL while its value might actually encapsulate an
-allocation failure error.
-
-Make sure to handle this case.
-
-Reviewed-by: Kalesh Singh <kaleshsingh@google.com>
-Fixes: 9621fbee44df ("rcu: Move expedited grace period (GP) work to RT kthread_worker")
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+[thierry.reding@gmail.com: replace ddata by atmel]
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Stable-dep-of: e25ac87d3f83 ("pwm: atmel-hlcdc: Fix clock imbalance related to suspend support")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/tree.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pwm/pwm-atmel-hlcdc.c | 65 ++++++++++++++++++-----------------
+ 1 file changed, 33 insertions(+), 32 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 9d7464a90f85d..c879ed0c55079 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -4471,6 +4471,7 @@ static void __init rcu_start_exp_gp_kworkers(void)
- 	rcu_exp_par_gp_kworker = kthread_create_worker(0, par_gp_kworker_name);
- 	if (IS_ERR_OR_NULL(rcu_exp_par_gp_kworker)) {
- 		pr_err("Failed to create %s!\n", par_gp_kworker_name);
-+		rcu_exp_par_gp_kworker = NULL;
- 		kthread_destroy_worker(rcu_exp_gp_kworker);
- 		return;
+diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
+index 96a709a9d49a8..4d0b859d0ac13 100644
+--- a/drivers/pwm/pwm-atmel-hlcdc.c
++++ b/drivers/pwm/pwm-atmel-hlcdc.c
+@@ -38,11 +38,11 @@ static inline struct atmel_hlcdc_pwm *to_atmel_hlcdc_pwm(struct pwm_chip *chip)
+ 	return container_of(chip, struct atmel_hlcdc_pwm, chip);
+ }
+ 
+-static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, struct pwm_device *pwm,
++static int atmel_hlcdc_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 				 const struct pwm_state *state)
+ {
+-	struct atmel_hlcdc_pwm *chip = to_atmel_hlcdc_pwm(c);
+-	struct atmel_hlcdc *hlcdc = chip->hlcdc;
++	struct atmel_hlcdc_pwm *atmel = to_atmel_hlcdc_pwm(chip);
++	struct atmel_hlcdc *hlcdc = atmel->hlcdc;
+ 	unsigned int status;
+ 	int ret;
+ 
+@@ -54,7 +54,7 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, struct pwm_device *pwm,
+ 		u32 pwmcfg;
+ 		int pres;
+ 
+-		if (!chip->errata || !chip->errata->slow_clk_erratum) {
++		if (!atmel->errata || !atmel->errata->slow_clk_erratum) {
+ 			clk_freq = clk_get_rate(new_clk);
+ 			if (!clk_freq)
+ 				return -EINVAL;
+@@ -64,7 +64,7 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, struct pwm_device *pwm,
+ 		}
+ 
+ 		/* Errata: cannot use slow clk on some IP revisions */
+-		if ((chip->errata && chip->errata->slow_clk_erratum) ||
++		if ((atmel->errata && atmel->errata->slow_clk_erratum) ||
+ 		    clk_period_ns > state->period) {
+ 			new_clk = hlcdc->sys_clk;
+ 			clk_freq = clk_get_rate(new_clk);
+@@ -77,8 +77,8 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, struct pwm_device *pwm,
+ 
+ 		for (pres = 0; pres <= ATMEL_HLCDC_PWMPS_MAX; pres++) {
+ 		/* Errata: cannot divide by 1 on some IP revisions */
+-			if (!pres && chip->errata &&
+-			    chip->errata->div1_clk_erratum)
++			if (!pres && atmel->errata &&
++			    atmel->errata->div1_clk_erratum)
+ 				continue;
+ 
+ 			if ((clk_period_ns << pres) >= state->period)
+@@ -90,7 +90,7 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, struct pwm_device *pwm,
+ 
+ 		pwmcfg = ATMEL_HLCDC_PWMPS(pres);
+ 
+-		if (new_clk != chip->cur_clk) {
++		if (new_clk != atmel->cur_clk) {
+ 			u32 gencfg = 0;
+ 			int ret;
+ 
+@@ -98,8 +98,8 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, struct pwm_device *pwm,
+ 			if (ret)
+ 				return ret;
+ 
+-			clk_disable_unprepare(chip->cur_clk);
+-			chip->cur_clk = new_clk;
++			clk_disable_unprepare(atmel->cur_clk);
++			atmel->cur_clk = new_clk;
+ 
+ 			if (new_clk == hlcdc->sys_clk)
+ 				gencfg = ATMEL_HLCDC_CLKPWMSEL;
+@@ -160,8 +160,8 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, struct pwm_device *pwm,
+ 		if (ret)
+ 			return ret;
+ 
+-		clk_disable_unprepare(chip->cur_clk);
+-		chip->cur_clk = NULL;
++		clk_disable_unprepare(atmel->cur_clk);
++		atmel->cur_clk = NULL;
  	}
+ 
+ 	return 0;
+@@ -183,31 +183,32 @@ static const struct atmel_hlcdc_pwm_errata atmel_hlcdc_pwm_sama5d3_errata = {
+ #ifdef CONFIG_PM_SLEEP
+ static int atmel_hlcdc_pwm_suspend(struct device *dev)
+ {
+-	struct atmel_hlcdc_pwm *chip = dev_get_drvdata(dev);
++	struct atmel_hlcdc_pwm *atmel = dev_get_drvdata(dev);
+ 
+ 	/* Keep the periph clock enabled if the PWM is still running. */
+-	if (pwm_is_enabled(&chip->chip.pwms[0]))
+-		clk_disable_unprepare(chip->hlcdc->periph_clk);
++	if (pwm_is_enabled(&atmel->chip.pwms[0]))
++		clk_disable_unprepare(atmel->hlcdc->periph_clk);
+ 
+ 	return 0;
+ }
+ 
+ static int atmel_hlcdc_pwm_resume(struct device *dev)
+ {
+-	struct atmel_hlcdc_pwm *chip = dev_get_drvdata(dev);
++	struct atmel_hlcdc_pwm *atmel = dev_get_drvdata(dev);
+ 	struct pwm_state state;
+ 	int ret;
+ 
+-	pwm_get_state(&chip->chip.pwms[0], &state);
++	pwm_get_state(&atmel->chip.pwms[0], &state);
+ 
+ 	/* Re-enable the periph clock it was stopped during suspend. */
+ 	if (!state.enabled) {
+-		ret = clk_prepare_enable(chip->hlcdc->periph_clk);
++		ret = clk_prepare_enable(atmel->hlcdc->periph_clk);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
+-	return atmel_hlcdc_pwm_apply(&chip->chip, &chip->chip.pwms[0], &state);
++	return atmel_hlcdc_pwm_apply(&atmel->chip, &atmel->chip.pwms[0],
++				     &state);
+ }
+ #endif
+ 
+@@ -244,14 +245,14 @@ static int atmel_hlcdc_pwm_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *match;
+ 	struct device *dev = &pdev->dev;
+-	struct atmel_hlcdc_pwm *chip;
++	struct atmel_hlcdc_pwm *atmel;
+ 	struct atmel_hlcdc *hlcdc;
+ 	int ret;
+ 
+ 	hlcdc = dev_get_drvdata(dev->parent);
+ 
+-	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+-	if (!chip)
++	atmel = devm_kzalloc(dev, sizeof(*atmel), GFP_KERNEL);
++	if (!atmel)
+ 		return -ENOMEM;
+ 
+ 	ret = clk_prepare_enable(hlcdc->periph_clk);
+@@ -260,31 +261,31 @@ static int atmel_hlcdc_pwm_probe(struct platform_device *pdev)
+ 
+ 	match = of_match_node(atmel_hlcdc_dt_ids, dev->parent->of_node);
+ 	if (match)
+-		chip->errata = match->data;
++		atmel->errata = match->data;
+ 
+-	chip->hlcdc = hlcdc;
+-	chip->chip.ops = &atmel_hlcdc_pwm_ops;
+-	chip->chip.dev = dev;
+-	chip->chip.npwm = 1;
++	atmel->hlcdc = hlcdc;
++	atmel->chip.ops = &atmel_hlcdc_pwm_ops;
++	atmel->chip.dev = dev;
++	atmel->chip.npwm = 1;
+ 
+-	ret = pwmchip_add(&chip->chip);
++	ret = pwmchip_add(&atmel->chip);
+ 	if (ret) {
+ 		clk_disable_unprepare(hlcdc->periph_clk);
+ 		return ret;
+ 	}
+ 
+-	platform_set_drvdata(pdev, chip);
++	platform_set_drvdata(pdev, atmel);
+ 
+ 	return 0;
+ }
+ 
+ static void atmel_hlcdc_pwm_remove(struct platform_device *pdev)
+ {
+-	struct atmel_hlcdc_pwm *chip = platform_get_drvdata(pdev);
++	struct atmel_hlcdc_pwm *atmel = platform_get_drvdata(pdev);
+ 
+-	pwmchip_remove(&chip->chip);
++	pwmchip_remove(&atmel->chip);
+ 
+-	clk_disable_unprepare(chip->hlcdc->periph_clk);
++	clk_disable_unprepare(atmel->hlcdc->periph_clk);
+ }
+ 
+ static const struct of_device_id atmel_hlcdc_pwm_dt_ids[] = {
 -- 
 2.43.0
 
