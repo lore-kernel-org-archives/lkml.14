@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F96822C676;
-	Sun, 24 Mar 2024 23:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4C914A08E;
+	Sun, 24 Mar 2024 23:16:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322181; cv=none; b=b48WGhZft+8cipylFkpHyG/fkGaUbiIKVK++LMynxYCFL2N7IJUykERKvMxqQyT8ZFDoK7eUtkiMWoKu6OtMKg5eGVOsjXSA+XugoxyvBSF6H0SuXn/g2FoPNsH1mFCAOt7x0lN8wYS5zkFAf9fVtGPO9Sxtwpav1uOCreteLIk=
+	t=1711322168; cv=none; b=cJQ5MWI/qKZut2lQnr1ZFd2ZUry7JuEgaBAmyUg8umo5V5sx2eV+4gH18OwfCK9RKRN8JrC9kzNopY3zZ1BwbfuuLvK95opETyd8dN/2hGmetJmJmvtDYcStIZaztS+67/Cw1V0oMYYi2AlsIql8QAxTVevHBwuDmzM5kl9zlGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322181; c=relaxed/simple;
-	bh=IRmiRuxaCVe79WWds/IFxgcx0pw2UqYBA9WRsE0KnHQ=;
+	s=arc-20240116; t=1711322168; c=relaxed/simple;
+	bh=KwT+Jadw65672/zjmUvOIOc9f3vzYLmL/4riuvvi1Yo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WAsxuRzHkIYWPog99BPAAm/dcI3cHwFM/zhf4KygXAPjDJdHpINoLuvjtMxjaY66XW3alOp5oRPBSpasdmo/fd6M9ZPrCXk+qccKV2mSB8jbdLU/DRrR40UotHIKUCviDe1u8jMNiKv9AudOYtxi8cFTuBHDRZYde/bi1EaK3FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AQmInFfZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Qszj5l7wi1iRvrOHPpAGqwqk/jPmj7Jc4W2t/siSXTGUsU+P1fxdOT9TLp9ZC7L0LE0aJlG0144fgxpBqXw3LqpSiWmHdDNKChJIz3eJUF+PdFrbssg05oRuHI5mslti7Z/mmxgW05JD2jbRFGQ6+5Q7notkNt9t5SN4dbXbBA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bNrZhQzr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQmInFfZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 095CEC43390;
-	Sun, 24 Mar 2024 23:16:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bNrZhQzr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31B6CC433C7;
+	Sun, 24 Mar 2024 23:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322180;
-	bh=IRmiRuxaCVe79WWds/IFxgcx0pw2UqYBA9WRsE0KnHQ=;
+	s=k20201202; t=1711322167;
+	bh=KwT+Jadw65672/zjmUvOIOc9f3vzYLmL/4riuvvi1Yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AQmInFfZUDAoriUei/Xylg8/8s8K7VnYJzsXiXI/agNYSHsfjR/rgZ76bVcbsehvE
-	 4mFuVJdUJ6Hi2y35AXwgdsExvO2yEekS65rL0H/dGPNB8mp3YoGpKJmSrWTtDhrGG2
-	 pib353gVsWMrohqw9oLAzRSgUGWIMfscAr8XYfwG1HuNwg+Y6iCk5BO1oX4ceEti5G
-	 HrZ0cItmEZ7W04CYqMxjMeBtERZQVQ4/O5Xqu0hJnovht/CK/f/99uwoGo6Y/UCEO2
-	 L05IlwbF8aT5BKAJqdwOPKbwkMyQoJvklpLt3n2BDip30Un4ptDt7aKaPQexeKM8WL
-	 IPK11yYEHnmFA==
+	b=bNrZhQzr49LwiaWQPKNZ14Ixt3ZHKMkSth+XvPvZC850lddCFgD2FCyzneKwXGS7C
+	 OKslId0Zunhml6D8Ac50gDYtQ22tgBHXG6Jf97P5pAv8d7XcYZmCN7ZsAChSdFPrqL
+	 hxPp3gDnYwz2J3kmu2Q8OGSlryQ6B+qxuEOHS/mcs5mhcH3erZKqG3GhichswqypHL
+	 ttlKZbJRuHj1jsn1b52QRv5qXkDfwTtWH7m3Cy/Rjd3iOLSoOClBSa6jTsXij6bNG3
+	 6OCp/2xyIVkwlV/rVak6Us2j9DNhYxfWhkecKnCTppNYfhCv1n+00MgzyFwfO49eIt
+	 E7SLGhrvBm+Sg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Wyatt Wood <wyatt.wood@amd.com>,
-	Anthony Koo <Anthony.Koo@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Harry Wentland <harry.wentland@amd.com>,
+	Simon Ser <contact@emersion.fr>,
+	Melissa Wen <mwen@igalia.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 258/451] drm/amd/display: Fix potential NULL pointer dereferences in 'dcn10_set_output_transfer_func()'
-Date: Sun, 24 Mar 2024 19:08:54 -0400
-Message-ID: <20240324231207.1351418-259-sashal@kernel.org>
+Subject: [PATCH 6.1 245/451] drm: Don't treat 0 as -1 in drm_fixp2int_ceil
+Date: Sun, 24 Mar 2024 19:08:41 -0400
+Message-ID: <20240324231207.1351418-246-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -52,54 +50,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+From: Harry Wentland <harry.wentland@amd.com>
 
-[ Upstream commit 9ccfe80d022df7c595f1925afb31de2232900656 ]
+[ Upstream commit cf8837d7204481026335461629b84ac7f4538fa5 ]
 
-The 'stream' pointer is used in dcn10_set_output_transfer_func() before
-the check if 'stream' is NULL.
+Unit testing this in VKMS shows that passing 0 into
+this function returns -1, which is highly counter-
+intuitive. Fix it by checking whether the input is
+>= 0 instead of > 0.
 
-Fixes the below:
-drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:1892 dcn10_set_output_transfer_func() warn: variable dereferenced before check 'stream' (see line 1875)
-
-Fixes: ddef02de0d71 ("drm/amd/display: add null checks before logging")
-Cc: Wyatt Wood <wyatt.wood@amd.com>
-Cc: Anthony Koo <Anthony.Koo@amd.com>
-Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 64566b5e767f ("drm: Add drm_fixp_from_fraction and drm_fixp2int_ceil")
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Reviewed-by: Simon Ser <contact@emersion.fr>
+Reviewed-by: Melissa Wen <mwen@igalia.com>
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231108163647.106853-2-harry.wentland@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ include/drm/drm_fixed.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index 009b5861a3fec..d6c5d48c878ec 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -1854,6 +1854,9 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
+diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
+index 03cb890690e83..6230088428cdb 100644
+--- a/include/drm/drm_fixed.h
++++ b/include/drm/drm_fixed.h
+@@ -94,7 +94,7 @@ static inline int drm_fixp2int_round(s64 a)
+ 
+ static inline int drm_fixp2int_ceil(s64 a)
  {
- 	struct dpp *dpp = pipe_ctx->plane_res.dpp;
- 
-+	if (!stream)
-+		return false;
-+
- 	if (dpp == NULL)
- 		return false;
- 
-@@ -1876,8 +1879,8 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
- 	} else
- 		dpp->funcs->dpp_program_regamma_pwl(dpp, NULL, OPP_REGAMMA_BYPASS);
- 
--	if (stream != NULL && stream->ctx != NULL &&
--			stream->out_transfer_func != NULL) {
-+	if (stream->ctx &&
-+	    stream->out_transfer_func) {
- 		log_tf(stream->ctx,
- 				stream->out_transfer_func,
- 				dpp->regamma_params.hw_points_num);
+-	if (a > 0)
++	if (a >= 0)
+ 		return drm_fixp2int(a + DRM_FIXED_ALMOST_ONE);
+ 	else
+ 		return drm_fixp2int(a - DRM_FIXED_ALMOST_ONE);
 -- 
 2.43.0
 
