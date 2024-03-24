@@ -1,39 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94762023AF;
-	Sun, 24 Mar 2024 23:03:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1AB1E7DE5;
+	Sun, 24 Mar 2024 23:03:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321431; cv=none; b=I3nq+OCcXaBDnQWsKinSIsAtERAMosyhVffS7JjeY1/fnNUGEm+ZGuuMqtb9HFgfW42s1mZ5u+caZhvRu5B8q+ZDWDxUzruKx71MWQ5pfBc4PJv6aOtDE1ohA45bT4O5lz1hCYHOAtCJ8QHSQcf0k1Dg1oWwcUPbNtYNzkhBY64=
+	t=1711321411; cv=none; b=Iy1l/KfxncxrQQUpQaVjVuTFqnEDKQj0ETPvpcBw0Xe72KBrA+0hlKxaLDdsA3td/2dVijO11Z0HpFtrH9TWT+YXUyt0jjmndfklCQGYt/wD0lReE/oAIEOXLLZsrIBLtwaH+dQIrmHHkdnHPA3+USzFBhPVcvil2Dd17tSEsTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321431; c=relaxed/simple;
-	bh=9Qq1iVEdw0G3vZVt9MiiXBeQOuukWCru2oMuL3av5NQ=;
+	s=arc-20240116; t=1711321411; c=relaxed/simple;
+	bh=D57pdJksZDNWerhEQsBg1nHrR5mUgawKpu8fiJ1v6ro=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a+vQIpBDjF3bxVDz0MTvOQbRV9zxOfoT/hilFLW3wIZjdq8sOtUfP827M9Qxv/xG009h62qtJ5VYRhEyhH3zA5tJRyorKYjTripuSl8I9tmlcijCenbWIUvhP/acVrqsTnu9Hr5JM0fhKGwqN5XoAvCmkY0EyfDK96al7KpyQlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tps8sW4u; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=K/O5spFvT+4JD1UCUkBU6OJ2m8a230KlD5owkv04DLVote2Pmlc0he7H6HG0i3w+l3JB4SUVDQfJ2emWJqEOVDhcT3RbWUHYUhcsUjZD/XsQJOC4D7W/bppVVqP+33LCOCZwef+Xx4UPifJqE1M+GWnwOWSJdDjdOrG22h207CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGBosb5T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tps8sW4u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE697C433C7;
-	Sun, 24 Mar 2024 23:03:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGBosb5T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A7AC43394;
+	Sun, 24 Mar 2024 23:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321430;
-	bh=9Qq1iVEdw0G3vZVt9MiiXBeQOuukWCru2oMuL3av5NQ=;
+	s=k20201202; t=1711321409;
+	bh=D57pdJksZDNWerhEQsBg1nHrR5mUgawKpu8fiJ1v6ro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tps8sW4uBPt5+DA2quxbtwJJp2Dp44tGCbt+gJtA7gIcIzQP3oyGxpGORVa0hV4dO
-	 qIyvcwT4lMnblzz6ogsGfyiw1za8AZOpmQE4t5Ilknagy7Feab8t+EZ6VVGeNJ/gYS
-	 7dlZiAZ5dKTEvbiO5H5wJrzm4911BXWF+Py9YIeIuAWYbJuC/aywgujHtDAGsi4pwR
-	 FlJ3/B32La3wDYeBaP9hA+8Ypt34jZDcE5wfnM75BP+E2BSnQdDE57I/FR08qoCo30
-	 f3sj2VW0z/uxsy4hzs37BooORpghzPcKlo5D5e222pdsV7PbVoeg341yeQQeIOJr0J
-	 qax8qCGUtOGWw==
+	b=DGBosb5Tg+CImmbs0+6/lYKAev1F+3qhLQWOY3CI49+p8zOzGeV1l+ECoprFQrI1T
+	 kP5kfMZeYwfDftUT/iua2v7sd4fYA7EmY5l2Pbn3b/1NBtl5aAy5Q/j5agGIv14YNK
+	 yjjDVQbQ3SJ8ND87a6uFCgDFa/C5yddsqmxKFyOGO6THBkR+fLGpdDy9EDm8BrHnn3
+	 hiewSrBQQm5NLYzgAciYssE+AK+EP+HQhWjEasQdsgrQ9orMu7H29IoaAd9+BrtHTR
+	 6Ot7lkvSPCZBpw4ht2XWnvqP58caSROaQ++uBCahLY3H2HwRQY+GQ83pUlGzm54pMI
+	 WxycnagEoROZg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	Guillaume Nault <gnault@redhat.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 154/638] arm64: dts: renesas: r8a779g0: Add missing SCIF_CLK2
-Date: Sun, 24 Mar 2024 18:53:11 -0400
-Message-ID: <20240324230116.1348576-155-sashal@kernel.org>
+Subject: [PATCH 6.6 134/638] sock_diag: annotate data-races around sock_diag_handlers[family]
+Date: Sun, 24 Mar 2024 18:52:51 -0400
+Message-ID: <20240324230116.1348576-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -47,65 +51,72 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 08e799f6bce80dd63c174d8d0fc61d1a6149960b ]
+[ Upstream commit efd402537673f9951992aea4ef0f5ff51d858f4b ]
 
-R-Car V4H actually has two SCIF_CLK pins.
-The second pin provides the SCIF_CLK signal for HSCIF2 and SCIF4.
+__sock_diag_cmd() and sock_diag_bind() read sock_diag_handlers[family]
+without a lock held.
 
-Fixes: a4c31c56d2d35641 ("arm64: dts: renesas: r8a779g0: Add SCIF nodes")
-Fixes: 39d9dfc6fbe1860e ("arm64: dts: renesas: r8a779g0: Add remaining HSCIF nodes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/72f20c1bf32187bd30a963cafe27252907d661f9.1705589612.git.geert+renesas@glider.be
+Use READ_ONCE()/WRITE_ONCE() annotations to avoid potential issues.
+
+Fixes: 8ef874bfc729 ("sock_diag: Move the sock_ code to net/core/")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a779g0.dtsi | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ net/core/sock_diag.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-index 3be1159982b20..0c83940b3d8a1 100644
---- a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-@@ -185,13 +185,19 @@ psci {
- 		method = "smc";
- 	};
+diff --git a/net/core/sock_diag.c b/net/core/sock_diag.c
+index b1e29e18d1d60..c53b731f2d672 100644
+--- a/net/core/sock_diag.c
++++ b/net/core/sock_diag.c
+@@ -193,7 +193,7 @@ int sock_diag_register(const struct sock_diag_handler *hndl)
+ 	if (sock_diag_handlers[hndl->family])
+ 		err = -EBUSY;
+ 	else
+-		sock_diag_handlers[hndl->family] = hndl;
++		WRITE_ONCE(sock_diag_handlers[hndl->family], hndl);
+ 	mutex_unlock(&sock_diag_table_mutex);
  
--	/* External SCIF clock - to be overridden by boards that provide it */
-+	/* External SCIF clocks - to be overridden by boards that provide them */
- 	scif_clk: scif {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <0>;
- 	};
+ 	return err;
+@@ -209,7 +209,7 @@ void sock_diag_unregister(const struct sock_diag_handler *hnld)
  
-+	scif_clk2: scif2 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
- 	soc: soc {
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
-@@ -681,7 +687,7 @@ hscif2: serial@e6560000 {
- 			interrupts = <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 516>,
- 				 <&cpg CPG_CORE R8A779G0_CLK_SASYNCPERD1>,
--				 <&scif_clk>;
-+				 <&scif_clk2>;
- 			clock-names = "fck", "brg_int", "scif_clk";
- 			dmas = <&dmac0 0x35>, <&dmac0 0x34>,
- 			       <&dmac1 0x35>, <&dmac1 0x34>;
-@@ -1057,7 +1063,7 @@ scif4: serial@e6c40000 {
- 			interrupts = <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 705>,
- 				 <&cpg CPG_CORE R8A779G0_CLK_SASYNCPERD1>,
--				 <&scif_clk>;
-+				 <&scif_clk2>;
- 			clock-names = "fck", "brg_int", "scif_clk";
- 			dmas = <&dmac0 0x59>, <&dmac0 0x58>,
- 			       <&dmac1 0x59>, <&dmac1 0x58>;
+ 	mutex_lock(&sock_diag_table_mutex);
+ 	BUG_ON(sock_diag_handlers[family] != hnld);
+-	sock_diag_handlers[family] = NULL;
++	WRITE_ONCE(sock_diag_handlers[family], NULL);
+ 	mutex_unlock(&sock_diag_table_mutex);
+ }
+ EXPORT_SYMBOL_GPL(sock_diag_unregister);
+@@ -227,7 +227,7 @@ static int __sock_diag_cmd(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 		return -EINVAL;
+ 	req->sdiag_family = array_index_nospec(req->sdiag_family, AF_MAX);
+ 
+-	if (sock_diag_handlers[req->sdiag_family] == NULL)
++	if (READ_ONCE(sock_diag_handlers[req->sdiag_family]) == NULL)
+ 		sock_load_diag_module(req->sdiag_family, 0);
+ 
+ 	mutex_lock(&sock_diag_table_mutex);
+@@ -286,12 +286,12 @@ static int sock_diag_bind(struct net *net, int group)
+ 	switch (group) {
+ 	case SKNLGRP_INET_TCP_DESTROY:
+ 	case SKNLGRP_INET_UDP_DESTROY:
+-		if (!sock_diag_handlers[AF_INET])
++		if (!READ_ONCE(sock_diag_handlers[AF_INET]))
+ 			sock_load_diag_module(AF_INET, 0);
+ 		break;
+ 	case SKNLGRP_INET6_TCP_DESTROY:
+ 	case SKNLGRP_INET6_UDP_DESTROY:
+-		if (!sock_diag_handlers[AF_INET6])
++		if (!READ_ONCE(sock_diag_handlers[AF_INET6]))
+ 			sock_load_diag_module(AF_INET6, 0);
+ 		break;
+ 	}
 -- 
 2.43.0
 
