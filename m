@@ -1,41 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC9921411F;
-	Sun, 24 Mar 2024 23:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E42121485D;
+	Sun, 24 Mar 2024 23:08:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321735; cv=none; b=Ipi3xWIicyw3Ej85KpZQMfIc8NsPtkzSjLWGJOAOMKT9OvoiNl3vzlF6clxxxf6T15hJQ51ODLj3fkLQ0mwJbHyk1YbKi4pTSQKEmmN+l0qqp6rbppcMdS6czNNFgBoghJhVHgCFcPM9iy1YSi5zVw0KAGG9bEWkOUv4g8Zne6U=
+	t=1711321740; cv=none; b=pV/WVetzKlzuBNWidZVaVHSu30Fiee5B3eaC9V0/yCh2CpswzAKDNI7zeNC7LhtV3Whz0SvtRBw2dWlgus77Aw/GpLCbWDxeIqN2UTlMhbIJiG8PKYf/2LpjZlXF+fm6au/1E7ag3GhikjQk3I8pytvghMQoaDaKJCviNLdpPnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321735; c=relaxed/simple;
-	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
+	s=arc-20240116; t=1711321740; c=relaxed/simple;
+	bh=gFwAlKTfqXWNZTGG/o2AQGLpEbs15X5IP2Rzpw4hAEE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YUpxSgH3jIasCaY9rslM8tSMdgA5zulf/XrAj65p5L4xSj2w9qBAZdvAcnjR89aziYI/NRwP8N/NPX1vRJKTke+XnXyD22RwLojqb8LfJ4rSd98Rhw/3zZk7fL2pzdbqdGLSTvsT+fnHE0iOFkZMmEQ1I/2h5dpkI5R2MfQrhNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BtL/7sh4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nPk0bezjARdTPT6X8GKNPZoFnzN6gJ9RKcOoyNFVhSZppdP2zYQsPSQHq+wZenKjuQ1asuZ4pOiX9Or3WnYIuqYxbiC/Bd3ILYITtRaC0Uz4HHcxsXqjlIWV6vLv48rRLwRIqtw3Ip3UZMVs8Gg+kZ56g3uYxel5kYm2HhtGYaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZU/mGRb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BtL/7sh4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A2A7C433F1;
-	Sun, 24 Mar 2024 23:08:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZU/mGRb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52BD8C433C7;
+	Sun, 24 Mar 2024 23:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321734;
-	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
+	s=k20201202; t=1711321739;
+	bh=gFwAlKTfqXWNZTGG/o2AQGLpEbs15X5IP2Rzpw4hAEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BtL/7sh4coOUWSWY18zIx8xuzj27eNdnTi9YgCXxm9feuNBKPajcPqSJVAdp7m1+O
-	 VLYRASE/i8FPVojucsIgSPlW1aIl6g/56cLWFs6mjMcYuHisSdNlsMy1oLx05wt8Kr
-	 m0zPbj4vxemLDWblgBn2ym4zsMOPpJNZWV7ZhiQp6VqSchTqU9osNMbh2WXoG21imn
-	 mxXvlrOGtK0LSvw0R0GYUFuQxxQKet3aXMyhj0astYVz0YNxZwjBk+1FyTDKeb0PKQ
-	 2SD17bawZQdR75CisJsQNoIEYHe81HROTj8OeMS3jlsWpMuGbsB4IpqJjQdPp6Wdy9
-	 R+RehyJVxrSag==
+	b=OZU/mGRb7AH2o1/5dWl8pT2fOuQBmV1t0yZv5WX18JTmN753sMfJbujq07F7+0L2z
+	 jb8O26eaMXg9F+KgIImKbYnVlJUlDsf1yOXXiNtHh3OwmOTDoDzu5J4JgUdq8YD/Aq
+	 gVMUiRxHRZMxEFYFviI6pBqkzMM9JH3IzXkc3k1FDODdxcziiC2FzeDxmaqbWgtWVf
+	 i509lDQYr6UJry3y9djiocVRg8Hyglt8gUnF5g9yc+KN03nfgTA0U5MRi7YO53ybCV
+	 TAAPyN+YTkRGOou7kr0hN4vUU8Ud4IKERck5UuFfjl4bobAcBFS6qSOcfsi28ExDN2
+	 iskygwZIH+3bw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Edward Adam Davis <eadavis@qq.com>,
-	syzbot+ce750e124675d4599449@syzkaller.appspotmail.com,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Stephen Boyd <swboyd@chromium.org>,
+	Jason Ling <jasonling@chromium.org>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	llvm@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 462/638] media: pvrusb2: fix uaf in pvr2_context_set_notify
-Date: Sun, 24 Mar 2024 18:58:19 -0400
-Message-ID: <20240324230116.1348576-463-sashal@kernel.org>
+Subject: [PATCH 6.6 467/638] arm64: ftrace: Don't forbid CALL_OPS+CC_OPTIMIZE_FOR_SIZE with Clang
+Date: Sun, 24 Mar 2024 18:58:24 -0400
+Message-ID: <20240324230116.1348576-468-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,73 +56,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Edward Adam Davis <eadavis@qq.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit 0a0b79ea55de8514e1750884e5fec77f9fdd01ee ]
+[ Upstream commit a743f26d03a96593c0f3d05dc26b388f45de67c9 ]
 
-[Syzbot reported]
-BUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
-Read of size 4 at addr ffff888113aeb0d8 by task kworker/1:1/26
+Per commit b3f11af9b2ce ("arm64: ftrace: forbid CALL_OPS with
+CC_OPTIMIZE_FOR_SIZE"), GCC is silently ignoring `-falign-functions=N`
+when passed `-Os`, causing functions to be improperly aligned. This
+doesn't seem to be a problem with Clang though, where enabling CALL_OPS
+with CC_OPTIMIZE_FOR_SIZE doesn't spit out any warnings at boot about
+misaligned patch-sites. Only forbid CALL_OPS if GCC is used and we're
+optimizing for size so that CALL_OPS can be used with clang optimizing
+for size.
 
-CPU: 1 PID: 26 Comm: kworker/1:1 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0xc4/0x620 mm/kasan/report.c:488
- kasan_report+0xda/0x110 mm/kasan/report.c:601
- pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
- pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]
- pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272
-
-Freed by task 906:
-kasan_save_stack+0x33/0x50 mm/kasan/common.c:47
-kasan_save_track+0x14/0x30 mm/kasan/common.c:68
-kasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640
-poison_slab_object mm/kasan/common.c:241 [inline]
-__kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257
-kasan_slab_free include/linux/kasan.h:184 [inline]
-slab_free_hook mm/slub.c:2121 [inline]
-slab_free mm/slub.c:4299 [inline]
-kfree+0x105/0x340 mm/slub.c:4409
-pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]
-pvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
-
-[Analyze]
-Task A set disconnect_flag = !0, which resulted in Task B's condition being met
-and releasing mp, leading to this issue.
-
-[Fix]
-Place the disconnect_flag assignment operation after all code in pvr2_context_disconnect()
-to avoid this issue.
-
-Reported-and-tested-by: syzbot+ce750e124675d4599449@syzkaller.appspotmail.com
-Fixes: e5be15c63804 ("V4L/DVB (7711): pvrusb2: Fix race on module unload")
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: Jason Ling <jasonling@chromium.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Bill Wendling <morbo@google.com>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: llvm@lists.linux.dev
+Fixes: b3f11af9b2ce ("arm64: ftrace: forbid CALL_OPS with CC_OPTIMIZE_FOR_SIZE")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Link: https://lore.kernel.org/r/20240223064032.3463229-1-swboyd@chromium.org
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-context.c | 2 +-
+ arch/arm64/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-index 58f2f3ff10ee2..73c95ba2328a4 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-@@ -267,9 +267,9 @@ static void pvr2_context_exit(struct pvr2_context *mp)
- void pvr2_context_disconnect(struct pvr2_context *mp)
- {
- 	pvr2_hdw_disconnect(mp->hdw);
--	mp->disconnect_flag = !0;
- 	if (!pvr2_context_shutok())
- 		pvr2_context_notify(mp);
-+	mp->disconnect_flag = !0;
- }
- 
- 
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index b5df38c2a0067..f9777ce2ccb2d 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -196,7 +196,7 @@ config ARM64
+ 		if DYNAMIC_FTRACE_WITH_ARGS && DYNAMIC_FTRACE_WITH_CALL_OPS
+ 	select HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS \
+ 		if (DYNAMIC_FTRACE_WITH_ARGS && !CFI_CLANG && \
+-		    !CC_OPTIMIZE_FOR_SIZE)
++		    (CC_IS_CLANG || !CC_OPTIMIZE_FOR_SIZE))
+ 	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
+ 		if DYNAMIC_FTRACE_WITH_ARGS
+ 	select HAVE_SAMPLE_FTRACE_DIRECT
 -- 
 2.43.0
 
