@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AAD214871;
-	Sun, 24 Mar 2024 23:09:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDAD215951;
+	Sun, 24 Mar 2024 23:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321741; cv=none; b=mGxGv3GRtyPacrgJI8eZsf2En+jdwW83NLHEeqO5R50XTla1WMBxHReiVzqfWQGKP6QUj0jryR/ccMDc321pjNYDntK8YN3UkAirMsB6GoVcEKXZXRYrBczc2e9x5N+KflVWdmtcOuWsDXjCUW/B549D1NhblltVGp8Iq2RuzQ0=
+	t=1711321753; cv=none; b=mUgDrD152HRh8FLEgm8kPNoWn3ITge8QTJ7TL85hRG23V4dvCetKcgG8f8GOzCJHii2bvTpbjnpIFdt8u/OXlPH4H4BDtFrKwq7t/7f5rcoNDIIi0LL9DD+VpcHq0UcpiTSn4yH9GYnF8uf86ElF7tuEAbDSdMm0RPYdo4iXTo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321741; c=relaxed/simple;
-	bh=3hJv1C7S8XE7V4wMtaiW0cPgyCupiCP1W5fbV7VJQjY=;
+	s=arc-20240116; t=1711321753; c=relaxed/simple;
+	bh=VRyHqkwnrWOxKYONL7l3ggEL9OY/Mc3b+ogGjCd+mZA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tBjU/j2AI4JsXueMt6msVLlgnXhjsbvHgA4pTGKHvjl4+UmpMPOSeFlxnXLFJqfedjTEN8siFp0whg4oY/IR8iOQH2WAi9QwvGWe+69hqc9J5yDR5YCeY5WDT1+8vr7zpoR5eysHb9sqcXu46fkJxlusKLgnTv92AlP7o4khLl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=riRwi4W4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=b1oPEGwwLaocp0rbMvEpjd+sPypMWEmPhABZpQn3JHltP9tudFWCiRV/DSZWPbkpkAx7wz8uqzS9hhWlTs3cNRYNIaBU0X9/oc3KLTvqq5kFyjATWdx9GUQQNDZh6N7kRBgIOgK734ZuMK3QsWzFlj/tG/gKjAJOiW3mat/PCBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hsfR1RPi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="riRwi4W4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE6B0C43330;
-	Sun, 24 Mar 2024 23:08:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hsfR1RPi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB3B5C43390;
+	Sun, 24 Mar 2024 23:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321740;
-	bh=3hJv1C7S8XE7V4wMtaiW0cPgyCupiCP1W5fbV7VJQjY=;
+	s=k20201202; t=1711321751;
+	bh=VRyHqkwnrWOxKYONL7l3ggEL9OY/Mc3b+ogGjCd+mZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=riRwi4W4XGopA0n/BWsArR8SULtddJMeTUpGWjj/A91J64R+oyfQXawCHL1sWxkID
-	 R7aEplm9t1wjvcZPBESRoi5pl0iNhv9t1Nu1qeYb7nBZ/BmJA1lLzOISWwlKWAWuX9
-	 hq8OIFC08UgwpG6NKmx2Vraf7B21xQc8BKBnEWcWxXAS+Pg6DguAjCYJN1JL9IYM0L
-	 8x7bJ1t+JyaIG1FHrZ+6lHzuboDP78WPoUiejDnLHIaPFdBPd0yHABboBzjdm0tyd8
-	 MxDcFYyu/xlanxM3gwPIpiRPOnOW/7brkGNncCv6vnEJydV5ZSABchnuZO2D7JSKLG
-	 XzKGc0PxlEaGw==
+	b=hsfR1RPiHZR6Lws37b/kSpgaZ2cXCRWWS85WADj1gs9eYSZcRvtg+AZpwNfVx7LFB
+	 P8yRzErdLIanlbpt4btrkoNB3pWqb+XTprZqWYJsQm/r9Q451rzxH2UVpYnYWEc56j
+	 /V0Aqi770PE8F8rGGKQs5Yn+6aAk2snVfcesRVQHMKFF7Zcx0AbjnY+pfvZwWDmzMK
+	 O3NW2RIALloZtbrlCG6DhYIUSKbhAvKc3QJ8N6ByEZ55wb+7AJmT0jAttHrUY8U5vv
+	 d+dOuhQawRhWnqbXzGloYrmoL7h/HUxPIE7eyLWTqMr5UuFSiutNdrKTH3/h6EKfLc
+	 d/OTRsNVyONQg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Maxime Ripard <mripard@kernel.org>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
+Cc: Changbin Du <changbin.du@huawei.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Xiaoyi Su <suxiaoyi@huawei.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 468/638] drm/tests: helpers: Include missing drm_drv header
-Date: Sun, 24 Mar 2024 18:58:25 -0400
-Message-ID: <20240324230116.1348576-469-sashal@kernel.org>
+Subject: [PATCH 6.6 479/638] modules: wait do_free_init correctly
+Date: Sun, 24 Mar 2024 18:58:36 -0400
+Message-ID: <20240324230116.1348576-480-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,44 +47,127 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Maxime Ripard <mripard@kernel.org>
+From: Changbin Du <changbin.du@huawei.com>
 
-[ Upstream commit 73984daf07a1a89ace8f0db6dd2d640654ebbbee ]
+[ Upstream commit 8f8cd6c0a43ed637e620bbe45a8d0e0c2f4d5130 ]
 
-We have a few functions declared in our kunit helpers header, some of
-them dereferencing the struct drm_driver.
+The synchronization here is to ensure the ordering of freeing of a module
+init so that it happens before W+X checking.  It is worth noting it is not
+that the freeing was not happening, it is just that our sanity checkers
+raced against the permission checkers which assume init memory is already
+gone.
 
-However, we don't include the drm_drv.h header file defining that
-structure, leading to compilation errors if we don't include both
-headers.
+Commit 1a7b7d922081 ("modules: Use vmalloc special flag") moved calling
+do_free_init() into a global workqueue instead of relying on it being
+called through call_rcu(..., do_free_init), which used to allowed us call
+do_free_init() asynchronously after the end of a subsequent grace period.
+The move to a global workqueue broke the gaurantees for code which needed
+to be sure the do_free_init() would complete with rcu_barrier().  To fix
+this callers which used to rely on rcu_barrier() must now instead use
+flush_work(&init_free_wq).
 
-Fixes: d98780310719 ("drm/tests: helpers: Allow to pass a custom drm_driver")
-Reviewed-by: Maíra Canal <mcanal@igalia.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240222-kms-hdmi-connector-state-v7-1-8f4af575fce2@kernel.org
+Without this fix, we still could encounter false positive reports in W+X
+checking since the rcu_barrier() here can not ensure the ordering now.
+
+Even worse, the rcu_barrier() can introduce significant delay.  Eric
+Chanudet reported that the rcu_barrier introduces ~0.1s delay on a
+PREEMPT_RT kernel.
+
+  [    0.291444] Freeing unused kernel memory: 5568K
+  [    0.402442] Run /sbin/init as init process
+
+With this fix, the above delay can be eliminated.
+
+Link: https://lkml.kernel.org/r/20240227023546.2490667-1-changbin.du@huawei.com
+Fixes: 1a7b7d922081 ("modules: Use vmalloc special flag")
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+Tested-by: Eric Chanudet <echanude@redhat.com>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Xiaoyi Su <suxiaoyi@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_kunit_helpers.h | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/moduleloader.h | 8 ++++++++
+ init/main.c                  | 5 +++--
+ kernel/module/main.c         | 9 +++++++--
+ 3 files changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/include/drm/drm_kunit_helpers.h b/include/drm/drm_kunit_helpers.h
-index ba483c87f0e7b..3ae19892229db 100644
---- a/include/drm/drm_kunit_helpers.h
-+++ b/include/drm/drm_kunit_helpers.h
-@@ -3,6 +3,8 @@
- #ifndef DRM_KUNIT_HELPERS_H_
- #define DRM_KUNIT_HELPERS_H_
+diff --git a/include/linux/moduleloader.h b/include/linux/moduleloader.h
+index 001b2ce83832e..89b1e0ed98114 100644
+--- a/include/linux/moduleloader.h
++++ b/include/linux/moduleloader.h
+@@ -115,6 +115,14 @@ int module_finalize(const Elf_Ehdr *hdr,
+ 		    const Elf_Shdr *sechdrs,
+ 		    struct module *mod);
  
-+#include <drm/drm_drv.h>
++#ifdef CONFIG_MODULES
++void flush_module_init_free_work(void);
++#else
++static inline void flush_module_init_free_work(void)
++{
++}
++#endif
 +
- #include <linux/device.h>
+ /* Any cleanup needed when module leaves. */
+ void module_arch_cleanup(struct module *mod);
  
- #include <kunit/test.h>
+diff --git a/init/main.c b/init/main.c
+index e24b0780fdff7..9e6ab6d593bd8 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -88,6 +88,7 @@
+ #include <linux/sched/task_stack.h>
+ #include <linux/context_tracking.h>
+ #include <linux/random.h>
++#include <linux/moduleloader.h>
+ #include <linux/list.h>
+ #include <linux/integrity.h>
+ #include <linux/proc_ns.h>
+@@ -1402,11 +1403,11 @@ static void mark_readonly(void)
+ 	if (rodata_enabled) {
+ 		/*
+ 		 * load_module() results in W+X mappings, which are cleaned
+-		 * up with call_rcu().  Let's make sure that queued work is
++		 * up with init_free_wq. Let's make sure that queued work is
+ 		 * flushed so that we don't hit false positives looking for
+ 		 * insecure pages which are W+X.
+ 		 */
+-		rcu_barrier();
++		flush_module_init_free_work();
+ 		mark_rodata_ro();
+ 		rodata_test();
+ 	} else
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 98fedfdb8db52..34d9e718c2c7d 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -2486,6 +2486,11 @@ static void do_free_init(struct work_struct *w)
+ 	}
+ }
+ 
++void flush_module_init_free_work(void)
++{
++	flush_work(&init_free_wq);
++}
++
+ #undef MODULE_PARAM_PREFIX
+ #define MODULE_PARAM_PREFIX "module."
+ /* Default value for module->async_probe_requested */
+@@ -2590,8 +2595,8 @@ static noinline int do_init_module(struct module *mod)
+ 	 * Note that module_alloc() on most architectures creates W+X page
+ 	 * mappings which won't be cleaned up until do_free_init() runs.  Any
+ 	 * code such as mark_rodata_ro() which depends on those mappings to
+-	 * be cleaned up needs to sync with the queued work - ie
+-	 * rcu_barrier()
++	 * be cleaned up needs to sync with the queued work by invoking
++	 * flush_module_init_free_work().
+ 	 */
+ 	if (llist_add(&freeinit->node, &init_free_list))
+ 		schedule_work(&init_free_wq);
 -- 
 2.43.0
 
