@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C70157A70;
-	Sun, 24 Mar 2024 23:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA8C157A6E;
+	Sun, 24 Mar 2024 23:12:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321948; cv=none; b=jcAAK/jgoWRcQpm7Lm0r8lvCKVO81f5qzChOy2ur5fx20qZDBC8uH/OGj1o2Lw4e0Qv0NP/A7FSO6bcUpswFQsDeCqDM2Iu+mf4ASOw95xCZK3SdtR0XwoVV6Jii5mnKEiv+iN0WJPomu+2yf+9MbYOtfgqeWvmqAnzFYzeQxrU=
+	t=1711321949; cv=none; b=qWbfXKQSBSMrtHqcnQZzC6esgZ4kSU+Cx8PPm3TMHtRs7TPW5e1m5fOqk6slJCiX6iS2kCOTLxJ16HPoew3gBZKKBeM5yBAC2ZfZe4icD6fPa6ZZOmZn6mOxG/6McrXuU+4chhYgpNtb35AiW+lWic61hQT10dGjCZlBwqhFi9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321948; c=relaxed/simple;
-	bh=xCRkXkxj939qhQga1OEIUAKaWDt7w7dJ1mcqA2JkAV4=;
+	s=arc-20240116; t=1711321949; c=relaxed/simple;
+	bh=gm3JDmWm3Iv/jXg4yR5m/l3bvC4wQhLEHX/09mWS7TE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GbceJeag/M8jXqGCH15pgzJt4aIkM1sroqxDLu6RKTJcJLN960Ehea84jJJO4KZdXh99+G0UgRqycUgqlOmJ79dzKe24oGsQj5Pc/V2kV9BJRcidTD/mv4BaGN8vy43o6i4P412quVCLisyKxKSof5txu7UQTBNFpVYJScqkA0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUtpjHpM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uQuEoZ1NWKJVRKz/2u/zC1lv7xg0KwatjvQ3MkCkx7lcu6ol1YkajLn5dF5RHx1TSWsc+oWUjHe/HioQTJrnEttEE6azYpqd0mmB2QVx5Ev72jdB4/syt0Ae+bwz81K4NLjLrVMGBiTQI1QG0z0hvS6OiCBoBDgRuM8zpi0Xjr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKpr2aLY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUtpjHpM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14070C433F1;
-	Sun, 24 Mar 2024 23:12:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKpr2aLY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1430EC43390;
+	Sun, 24 Mar 2024 23:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321945;
-	bh=xCRkXkxj939qhQga1OEIUAKaWDt7w7dJ1mcqA2JkAV4=;
+	s=k20201202; t=1711321947;
+	bh=gm3JDmWm3Iv/jXg4yR5m/l3bvC4wQhLEHX/09mWS7TE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gUtpjHpMpDeGpNBtv8tPqbFHXIoV0SAPFym0US1J8hNbkS2ka/8Rz4ALp3srvkLH8
-	 QjM+NalS5/v+QwMZRWBmobUJ27QLb9S8+zs64NiUZeKP4E6+tIDbe2ac+ED+IZme8I
-	 EW0WJpWHOlhr7qu0q2odwRnyjSDK7o43D+zm8L7vfra+6OiewgI1Puw1WQF9jyc330
-	 zzaPJfZIjziBxPN4irsCW9TdAvqORq2jMBOPfjBrw7K+rhBjBdTIXcq+9F3zcDJmSX
-	 OqDOmAkXN+yH2AVIem1Jc/CCm7hsNe5XXaq5TxDPsGun2bU6BcSVBi0utn0BPW+e5h
-	 gKqBK0LgNxjdA==
+	b=lKpr2aLYFJW82Lfm9vodCamGTQhxmZnTr3IQ3vHIn4t00pHSfc3CvVIkjveBzoaWG
+	 ipCDKF8+rNMnqfJkHN62d76Cxr5xPdCXSkVVAZUj8BUomgq1a4DH3V4eE3d364gYh+
+	 7KU8UOrRbCJVlmhrzxjtXMLODlaiqP/FfSKxoIJczvgmABA/9rsLtPlnWMiqLNNahr
+	 YE1r9JHIvgRkCbvb+8WTk4z6mibUVDkU0Zmonsmd8YuwNYWExpJVyBIe3o/FcCa03F
+	 jdK+36Q4lRs+66byp4wnrawokhF7u2eCOayeXaJX8CfPdkBnOUsm8r8OcgbyJu2uIx
+	 2XRl2pkxCOc2w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Tom Talpey <tom@talpey.com>,
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 017/451] NFSD: Add an nfsd4_encode_nfstime4() helper
-Date: Sun, 24 Mar 2024 19:04:53 -0400
-Message-ID: <20240324231207.1351418-18-sashal@kernel.org>
+Subject: [PATCH 6.1 019/451] media: rkisp1: Fix IRQ handling due to shared interrupts
+Date: Sun, 24 Mar 2024 19:04:55 -0400
+Message-ID: <20240324231207.1351418-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,95 +49,138 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-[ Upstream commit 262176798b18b12fd8ab84c94cfece0a6a652476 ]
+[ Upstream commit ffb635bb398fc07cb38f8a7b4a82cbe5f412f08e ]
 
-Clean up: de-duplicate some common code.
+The driver requests the interrupts as IRQF_SHARED, so the interrupt
+handlers can be called at any time. If such a call happens while the ISP
+is powered down, the SoC will hang as the driver tries to access the
+ISP registers.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Acked-by: Tom Talpey <tom@talpey.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+This can be reproduced even without the platform sharing the IRQ line:
+Enable CONFIG_DEBUG_SHIRQ and unload the driver, and the board will
+hang.
+
+Fix this by adding a new field, 'irqs_enabled', which is used to bail
+out from the interrupt handler when the ISP is not operational.
+
+Link: https://lore.kernel.org/r/20231218-rkisp-shirq-fix-v1-2-173007628248@ideasonboard.com
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4xdr.c | 46 ++++++++++++++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 20 deletions(-)
+ .../platform/rockchip/rkisp1/rkisp1-capture.c |  3 +++
+ .../platform/rockchip/rkisp1/rkisp1-common.h  |  2 ++
+ .../platform/rockchip/rkisp1/rkisp1-csi.c     |  3 +++
+ .../platform/rockchip/rkisp1/rkisp1-dev.c     | 22 +++++++++++++++++++
+ .../platform/rockchip/rkisp1/rkisp1-isp.c     |  3 +++
+ 5 files changed, 33 insertions(+)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 597f14a80512f..514f4456cf5c6 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2541,6 +2541,20 @@ static __be32 *encode_change(__be32 *p, struct kstat *stat, struct inode *inode,
- 	return p;
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
+index d4540684ea9af..0bcb9db5ad190 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
+@@ -701,6 +701,9 @@ irqreturn_t rkisp1_capture_isr(int irq, void *ctx)
+ 	unsigned int i;
+ 	u32 status;
+ 
++	if (!rkisp1->irqs_enabled)
++		return IRQ_NONE;
++
+ 	status = rkisp1_read(rkisp1, RKISP1_CIF_MI_MIS);
+ 	if (!status)
+ 		return IRQ_NONE;
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+index f9ec1c6138947..5776292f914a4 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+@@ -467,6 +467,7 @@ struct rkisp1_debug {
+  * @debug:	   debug params to be exposed on debugfs
+  * @info:	   version-specific ISP information
+  * @irqs:          IRQ line numbers
++ * @irqs_enabled:  the hardware is enabled and can cause interrupts
+  */
+ struct rkisp1_device {
+ 	void __iomem *base_addr;
+@@ -488,6 +489,7 @@ struct rkisp1_device {
+ 	struct rkisp1_debug debug;
+ 	const struct rkisp1_info *info;
+ 	int irqs[RKISP1_NUM_IRQS];
++	bool irqs_enabled;
+ };
+ 
+ /*
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-csi.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-csi.c
+index e862f515cc6d3..95b6e41c48ec2 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-csi.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-csi.c
+@@ -211,6 +211,9 @@ irqreturn_t rkisp1_csi_isr(int irq, void *ctx)
+ 	struct rkisp1_device *rkisp1 = dev_get_drvdata(dev);
+ 	u32 val, status;
+ 
++	if (!rkisp1->irqs_enabled)
++		return IRQ_NONE;
++
+ 	status = rkisp1_read(rkisp1, RKISP1_CIF_MIPI_MIS);
+ 	if (!status)
+ 		return IRQ_NONE;
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
+index 41abb18b00acb..7a3b69ba51b97 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
+@@ -305,6 +305,24 @@ static int __maybe_unused rkisp1_runtime_suspend(struct device *dev)
+ {
+ 	struct rkisp1_device *rkisp1 = dev_get_drvdata(dev);
+ 
++	rkisp1->irqs_enabled = false;
++	/* Make sure the IRQ handler will see the above */
++	mb();
++
++	/*
++	 * Wait until any running IRQ handler has returned. The IRQ handler
++	 * may get called even after this (as it's a shared interrupt line)
++	 * but the 'irqs_enabled' flag will make the handler return immediately.
++	 */
++	for (unsigned int il = 0; il < ARRAY_SIZE(rkisp1->irqs); ++il) {
++		if (rkisp1->irqs[il] == -1)
++			continue;
++
++		/* Skip if the irq line is the same as previous */
++		if (il == 0 || rkisp1->irqs[il - 1] != rkisp1->irqs[il])
++			synchronize_irq(rkisp1->irqs[il]);
++	}
++
+ 	clk_bulk_disable_unprepare(rkisp1->clk_size, rkisp1->clks);
+ 	return pinctrl_pm_select_sleep_state(dev);
+ }
+@@ -321,6 +339,10 @@ static int __maybe_unused rkisp1_runtime_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	rkisp1->irqs_enabled = true;
++	/* Make sure the IRQ handler will see the above */
++	mb();
++
+ 	return 0;
  }
  
-+static __be32 nfsd4_encode_nfstime4(struct xdr_stream *xdr,
-+				    struct timespec64 *tv)
-+{
-+	__be32 *p;
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c
+index 00dca284c1222..2af5c1a48070b 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c
+@@ -1023,6 +1023,9 @@ irqreturn_t rkisp1_isp_isr(int irq, void *ctx)
+ 	struct rkisp1_device *rkisp1 = dev_get_drvdata(dev);
+ 	u32 status, isp_err;
+ 
++	if (!rkisp1->irqs_enabled)
++		return IRQ_NONE;
 +
-+	p = xdr_reserve_space(xdr, XDR_UNIT * 3);
-+	if (!p)
-+		return nfserr_resource;
-+
-+	p = xdr_encode_hyper(p, (s64)tv->tv_sec);
-+	*p = cpu_to_be32(tv->tv_nsec);
-+	return nfs_ok;
-+}
-+
- /*
-  * ctime (in NFSv4, time_metadata) is not writeable, and the client
-  * doesn't really care what resolution could theoretically be stored by
-@@ -3346,11 +3360,9 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 		p = xdr_encode_hyper(p, dummy64);
- 	}
- 	if (bmval1 & FATTR4_WORD1_TIME_ACCESS) {
--		p = xdr_reserve_space(xdr, 12);
--		if (!p)
--			goto out_resource;
--		p = xdr_encode_hyper(p, (s64)stat.atime.tv_sec);
--		*p++ = cpu_to_be32(stat.atime.tv_nsec);
-+		status = nfsd4_encode_nfstime4(xdr, &stat.atime);
-+		if (status)
-+			goto out;
- 	}
- 	if (bmval1 & FATTR4_WORD1_TIME_DELTA) {
- 		p = xdr_reserve_space(xdr, 12);
-@@ -3359,25 +3371,19 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 		p = encode_time_delta(p, d_inode(dentry));
- 	}
- 	if (bmval1 & FATTR4_WORD1_TIME_METADATA) {
--		p = xdr_reserve_space(xdr, 12);
--		if (!p)
--			goto out_resource;
--		p = xdr_encode_hyper(p, (s64)stat.ctime.tv_sec);
--		*p++ = cpu_to_be32(stat.ctime.tv_nsec);
-+		status = nfsd4_encode_nfstime4(xdr, &stat.ctime);
-+		if (status)
-+			goto out;
- 	}
- 	if (bmval1 & FATTR4_WORD1_TIME_MODIFY) {
--		p = xdr_reserve_space(xdr, 12);
--		if (!p)
--			goto out_resource;
--		p = xdr_encode_hyper(p, (s64)stat.mtime.tv_sec);
--		*p++ = cpu_to_be32(stat.mtime.tv_nsec);
-+		status = nfsd4_encode_nfstime4(xdr, &stat.mtime);
-+		if (status)
-+			goto out;
- 	}
- 	if (bmval1 & FATTR4_WORD1_TIME_CREATE) {
--		p = xdr_reserve_space(xdr, 12);
--		if (!p)
--			goto out_resource;
--		p = xdr_encode_hyper(p, (s64)stat.btime.tv_sec);
--		*p++ = cpu_to_be32(stat.btime.tv_nsec);
-+		status = nfsd4_encode_nfstime4(xdr, &stat.btime);
-+		if (status)
-+			goto out;
- 	}
- 	if (bmval1 & FATTR4_WORD1_MOUNTED_ON_FILEID) {
- 		u64 ino = stat.ino;
+ 	status = rkisp1_read(rkisp1, RKISP1_CIF_ISP_MIS);
+ 	if (!status)
+ 		return IRQ_NONE;
 -- 
 2.43.0
 
