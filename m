@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B60713C672;
-	Sun, 24 Mar 2024 23:37:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDDA1774DC;
+	Sun, 24 Mar 2024 23:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323479; cv=none; b=LX8hmcmFXxrfBEJuL0WyyN+dJgH/FaueAp9BX/X6gTgHRon/Qli1QWh/C/SqoVPu2uCd0w9qKpeAn20Tx26AXWZfFJlGiUa5aZeaqPEi9yWCpJ5hyL9rASybLuIxmiQi1S5Z6uCjJJNLCZmjREp+Q3rQ4A188kszuGNO25zsNas=
+	t=1711323482; cv=none; b=QRhhAiIQLd+DBHD9MtlSlZbMJU9B7lLIsAy2DvhnFMi6pBdo2Y3L19xfQ8B+cZCzFCJOR0rLvdAfZgJvIH1oIjBa6mCkToD2+R4Ypc8bGQYHAsSvQEkt1TAsr9v7GN2BGir+CI6MdMJqUoH6yFQ8cp8eXFB8cupHQZVE3FLFjkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323479; c=relaxed/simple;
-	bh=jiL9wfyJXlDE5MK27tjQQfAKCMTvZq36JY4t91RIOjA=;
+	s=arc-20240116; t=1711323482; c=relaxed/simple;
+	bh=J5+ydmUTB6GHW5Flj4avryRijwC5zl0W+aYGABAuqX8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ItUx9/2z1Q6FInjQy+rq7rKlJY9yiqEQXT/bfaHQ2bqH5E2zFvv85NSMCfpaP/ceGAgZuBRIrwvpvEFZW+rQw67sqUlfF+PX635/2kp/kprdZVWOP8HfrYwX3E92as5evZEyaqNZG7J0/nA6LAPo+KfY329DWVm6pMPFnK5bzWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEbqJETY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PgJI91quu4wW3SLzgNHa64jxsqGhpYm0Gi98J/0cipWuAxK/762FiRwnflJaN+o+PvIPYQAuUK1wW0eUBi///+fo6xl5lwvdiYgGWqje43bzpY8wzYF/UHikiJrj2mkg/fYYmaG9JQlYsCIj1h3rHtROzQVFZcn73V/NaKVYwKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=etQ7rCGT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEbqJETY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 349A3C43390;
-	Sun, 24 Mar 2024 23:37:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="etQ7rCGT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5BF7C43394;
+	Sun, 24 Mar 2024 23:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323478;
-	bh=jiL9wfyJXlDE5MK27tjQQfAKCMTvZq36JY4t91RIOjA=;
+	s=k20201202; t=1711323482;
+	bh=J5+ydmUTB6GHW5Flj4avryRijwC5zl0W+aYGABAuqX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oEbqJETY6ouO8KEkO+z6wTooNmD9cTSIOt0eFi9tWyJkh5TtjzBZddRgeCkrVxt+b
-	 TC1K3ilX9ZjauyHV4Iy1QqLTv3WPAxM7g8Wx2MXqFAtFsw1Bkqfwm+bszHjnwhO1hw
-	 Xp2XiSPT8x9H+rkEB4JXkG8DwTem318ylV/0PUlMMKExgkL59qTpot/uDAr+yeIK6g
-	 1CYmnU2eYje3agreM0eMb64NSO1nM9TApqjW258QnZhoPZ8I9CPX+0ewZW6lApAkkX
-	 bX37XE6kv3IVc0g5aq7ZYpjHGVWfxIWGDQsoHsVxryfdKW4V3cdKEo4lMhR4AIRNKg
-	 SH5RYcpoLTD6g==
+	b=etQ7rCGTULQhHPdfo1fZcQ7/S2J6TGGeXyTxPEGGQEyC6xcukaXaga0G+gO9LvbLH
+	 ELvqCmzOUNR7X/LOcnlH6f6B/H0O2dEZ/7PmpHDYxOV7PEsXT3CX/xidMgFuLvfKn+
+	 gAvTayKe84diRQUjCyeBP3H4kG7nXMpAlQs0vhF/RKvmH2WXcXX/l6l84PI+rQUegT
+	 WsObAzhtmBKQHnq5YLnVb/URI/TsaoSeip4QG3j1eNaI43g/bZWLj2jcdEbKiqTjzk
+	 F2/nXprqXpEE+ME6L2sKY32A3osCV6b7NBW5NRQCKgxG1QIvISewVQO0yqq4S0pGJ5
+	 pO/PCYTN09rYg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 183/317] media: em28xx: annotate unchecked call to media_device_register()
-Date: Sun, 24 Mar 2024 19:32:43 -0400
-Message-ID: <20240324233458.1352854-184-sashal@kernel.org>
+Subject: [PATCH 5.15 187/317] pinctrl: mediatek: Drop bogus slew rate register range for MT8192
+Date: Sun, 24 Mar 2024 19:32:47 -0400
+Message-ID: <20240324233458.1352854-188-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,40 +49,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+From: Chen-Yu Tsai <wenst@chromium.org>
 
-[ Upstream commit fd61d77a3d28444b2635f0c8b5a2ecd6a4d94026 ]
+[ Upstream commit e15ab05a6b3ed42f2f43f8bd1a1abdbde64afecd ]
 
-Static analyzers generate alerts for an unchecked call to
-`media_device_register()`. However, in this case, the device will work
-reliably without the media controller API.
+The MT8192 does not support configuring pin slew rate. This is evident
+from both the datasheet, and the fact that the driver points the slew
+rate register range at the GPIO direction register range.
 
-Add a comment above the call to prevent future unnecessary changes.
+Drop the bogus setting.
 
-Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Fixes: 37ecc7b1278f ("[media] em28xx: add media controller support")
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: d32f38f2a8fc ("pinctrl: mediatek: Add pinctrl driver for mt8192")
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://lore.kernel.org/r/20240131071910.3950450-2-wenst@chromium.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/em28xx/em28xx-cards.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/mediatek/pinctrl-mt8192.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
-index 92d867fc519c4..8ab10518957c4 100644
---- a/drivers/media/usb/em28xx/em28xx-cards.c
-+++ b/drivers/media/usb/em28xx/em28xx-cards.c
-@@ -4099,6 +4099,10 @@ static int em28xx_usb_probe(struct usb_interface *intf,
- 	 * topology will likely change after the load of the em28xx subdrivers.
- 	 */
- #ifdef CONFIG_MEDIA_CONTROLLER
-+	/*
-+	 * No need to check the return value, the device will still be
-+	 * usable without media controller API.
-+	 */
- 	retval = media_device_register(dev->media_dev);
- #endif
- 
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8192.c b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
+index 0c16b2c756bf3..f3020e3c8533b 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt8192.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
+@@ -1346,7 +1346,6 @@ static const struct mtk_pin_reg_calc mt8192_reg_cals[PINCTRL_PIN_REG_MAX] = {
+ 	[PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8192_pin_dir_range),
+ 	[PINCTRL_PIN_REG_DI] = MTK_RANGE(mt8192_pin_di_range),
+ 	[PINCTRL_PIN_REG_DO] = MTK_RANGE(mt8192_pin_do_range),
+-	[PINCTRL_PIN_REG_SR] = MTK_RANGE(mt8192_pin_dir_range),
+ 	[PINCTRL_PIN_REG_SMT] = MTK_RANGE(mt8192_pin_smt_range),
+ 	[PINCTRL_PIN_REG_IES] = MTK_RANGE(mt8192_pin_ies_range),
+ 	[PINCTRL_PIN_REG_PU] = MTK_RANGE(mt8192_pin_pu_range),
 -- 
 2.43.0
 
