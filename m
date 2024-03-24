@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625D3209E24;
-	Sun, 24 Mar 2024 23:06:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B2B209E2F;
+	Sun, 24 Mar 2024 23:06:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321581; cv=none; b=MOLCNd/Nh3xLrkMGrdnr27Mr5Vhl+hSGTL8jSOzIe4Y6ivevnXX7cDKVNIbJhEK77cvnLw27IpjKmYZsUX1KKlxrLXti7BOltCgFhReocASBNakK6wZG9892gS1apmcQDNesC6SoVF4qD/Ip466Yn6s3rF5nKhS/fNS444PyK/0=
+	t=1711321583; cv=none; b=es0ivuAeQVymnKKvT7te0wCvfHLbDFmCt3ZSmkkUtxFgea/fjIMG0lMllELYxmGr/tb2Av/w4KOtg4n74DQPOb9o5Nwu7v7CgJn6YJTkh5gzfpSTYdjoRluN4BCHcQpaDmInQg4ewwk43NSBeZ0kJT4IQk1rTGLtTI1nMKlr5H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321581; c=relaxed/simple;
-	bh=937m8QQtPhg4Yw4d9wkhLHxuM3X2FKfxaRJBMMb9aLQ=;
+	s=arc-20240116; t=1711321583; c=relaxed/simple;
+	bh=epv7NMyYMjfOOD6a1efAZbOUcwhy5jbD9SVjVk810xo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HeTIaTI0sJdgq4+ZYD6nAH1JEcksIUChrMQuioIarjwENptvg8hbWlraVMiN3lj41WFybk7ZkWieu92PgcCeks4weGB0s2ZeZa2JWHZN8Fs4iv1CusPxCamB3Vr1Kr9+2G4WQslKs+tDrSLbxp1PA+8V1eSOQoif5dZ4DBpzJVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h+u9Dgns; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uS2VPgaE5p+nt++/3kCIqeOzBZI5Xa+AkhCfF3FH9wOe2b308mAKCz47/2V270AmiiFtbGUCWjhn6yH+pAmzaFh+nhGrbX6G+5MmzTDH+TOqibDVylj/bSPfACXkr1ErnyG6LCyQ3BNrQcjlf+INDcJ3KkyjWZ7SmsD3ZYLfUxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ci65BtE5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h+u9Dgns"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF01C43394;
-	Sun, 24 Mar 2024 23:06:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ci65BtE5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5158FC433B1;
+	Sun, 24 Mar 2024 23:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321580;
-	bh=937m8QQtPhg4Yw4d9wkhLHxuM3X2FKfxaRJBMMb9aLQ=;
+	s=k20201202; t=1711321581;
+	bh=epv7NMyYMjfOOD6a1efAZbOUcwhy5jbD9SVjVk810xo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h+u9DgnsptR5rZiNTZtAzNpBWekvafb5PCCN7esw2yj0d+6n3PvlZZJNcVcJw3+kL
-	 lEbL+ho/z6Z5ZLix4n2GqcpiSfqsu3z8okapwRCs5KnjiUSXTiZm7sjD3WJ8qf3xjK
-	 8YmelLNHQ2zRUq6VKIgN5iJPMqrQbAt+7Wxslp3zjNUrXyQ+/9siI5wTnjRSE3xA0L
-	 I5xIH3gf8YDnh6YahbtvXbn4amiNCmahd79pNACJrbM+uqTTu9YlL1kK9hUhSQBtPO
-	 zVqGTrhH8hPfzDc9559t8iMl7geAqXLXfg+2DdMDZeK+iw1pqmThpWGMB1hBHgJOVe
-	 5vrh2uAuquGHQ==
+	b=ci65BtE5gKt+yz2y0Wu/zbK9JH/jwzSCYtHTxCWloOb4Zqqjh2r4U1xN2iL9jutjb
+	 HchrEDBdJ35GVZSas7KkL9jlI5ZgQP6AuvUTY/aFOrKo8LVChXAQMr0iFVoQfLjwG9
+	 PsibfrgfJvicPvpkjEtXbLQ5T1EE5464rCbGyawBqEEjvBsx8ZoZc/OZEt1Mof5mCY
+	 fmXlv3Ko71d6I5b6xaQ8/kUiAgKwt/7hYyrZ8RD6i3rQe+a7KvQaSJyuaIbpkwjrIt
+	 qKcZCQBfcNXIIUxLaT70Op1Doi1PSwinF2A8ihsAi3X9duOWbDt67ThaC0q+TudVCt
+	 McocWOwaquCxw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 309/638] Bluetooth: msft: __hci_cmd_sync() doesn't return NULL
-Date: Sun, 24 Mar 2024 18:55:46 -0400
-Message-ID: <20240324230116.1348576-310-sashal@kernel.org>
+Subject: [PATCH 6.6 311/638] Bluetooth: btusb: Fix memory leak
+Date: Sun, 24 Mar 2024 18:55:48 -0400
+Message-ID: <20240324230116.1348576-312-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,109 +47,66 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dan Carpenter <dan.carpenter@linaro.org>
+From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit 41c56aa94c647a0f84c5c33fffb3f283e6f0e5bf ]
+[ Upstream commit 79f4127a502c5905f04da1f20a7bbe07103fb77c ]
 
-The __hci_cmd_sync() function doesn't return NULL.  Checking for NULL
-doesn't make the code safer, it just confuses people.
+This checks if CONFIG_DEV_COREDUMP is enabled before attempting to clone
+the skb and also make sure btmtk_process_coredump frees the skb passed
+following the same logic.
 
-When a function returns both error pointers and NULL then generally the
-NULL is a kind of success case.  For example, maybe we look up an item
-then errors mean we ran out of memory but NULL means the item is not
-found.  Or if we request a feature, then error pointers mean that there
-was an error but NULL means that the feature has been deliberately
-turned off.
-
-In this code it's different.  The NULL is handled as if there is a bug
-in __hci_cmd_sync() where it accidentally returns NULL instead of a
-proper error code.  This was done consistently until commit 9e14606d8f38
-("Bluetooth: msft: Extended monitor tracking by address filter") which
-deleted the work around for the potential future bug and treated NULL as
-success.
-
-Predicting potential future bugs is complicated, but we should just fix
-them instead of working around them.  Instead of debating whether NULL
-is failure or success, let's just say it's currently impossible and
-delete the dead code.
-
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Fixes: 0b7015132878 ("Bluetooth: btusb: mediatek: add MediaTek devcoredump support")
 Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Stable-dep-of: a6e06258f4c3 ("Bluetooth: msft: Fix memory leak")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/msft.c | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ drivers/bluetooth/btmtk.c |  4 +++-
+ drivers/bluetooth/btusb.c | 10 ++++++----
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
-index abbafa6194ca1..630e3023273b2 100644
---- a/net/bluetooth/msft.c
-+++ b/net/bluetooth/msft.c
-@@ -150,10 +150,7 @@ static bool read_supported_features(struct hci_dev *hdev,
+diff --git a/drivers/bluetooth/btmtk.c b/drivers/bluetooth/btmtk.c
+index aaabb732082cd..285418dbb43f5 100644
+--- a/drivers/bluetooth/btmtk.c
++++ b/drivers/bluetooth/btmtk.c
+@@ -372,8 +372,10 @@ int btmtk_process_coredump(struct hci_dev *hdev, struct sk_buff *skb)
+ 	struct btmediatek_data *data = hci_get_priv(hdev);
+ 	int err;
  
- 	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, sizeof(cp), &cp,
- 			     HCI_CMD_TIMEOUT);
--	if (IS_ERR_OR_NULL(skb)) {
--		if (!skb)
--			skb = ERR_PTR(-EIO);
--
-+	if (IS_ERR(skb)) {
- 		bt_dev_err(hdev, "Failed to read MSFT supported features (%ld)",
- 			   PTR_ERR(skb));
- 		return false;
-@@ -353,7 +350,7 @@ static void msft_remove_addr_filters_sync(struct hci_dev *hdev, u8 handle)
+-	if (!IS_ENABLED(CONFIG_DEV_COREDUMP))
++	if (!IS_ENABLED(CONFIG_DEV_COREDUMP)) {
++		kfree_skb(skb);
+ 		return 0;
++	}
  
- 		skb = __hci_cmd_sync(hdev, hdev->msft_opcode, sizeof(cp), &cp,
- 				     HCI_CMD_TIMEOUT);
--		if (IS_ERR_OR_NULL(skb)) {
-+		if (IS_ERR(skb)) {
- 			kfree(address_filter);
- 			continue;
- 		}
-@@ -442,11 +439,8 @@ static int msft_remove_monitor_sync(struct hci_dev *hdev,
+ 	switch (data->cd_info.state) {
+ 	case HCI_DEVCOREDUMP_IDLE:
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 66080fae072f2..8dbdc51976e7b 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -3267,7 +3267,6 @@ static int btusb_recv_acl_mtk(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+ 	struct btusb_data *data = hci_get_drvdata(hdev);
+ 	u16 handle = le16_to_cpu(hci_acl_hdr(skb)->handle);
+-	struct sk_buff *skb_cd;
  
- 	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, sizeof(cp), &cp,
- 			     HCI_CMD_TIMEOUT);
--	if (IS_ERR_OR_NULL(skb)) {
--		if (!skb)
--			return -EIO;
-+	if (IS_ERR(skb))
- 		return PTR_ERR(skb);
--	}
+ 	switch (handle) {
+ 	case 0xfc6f:		/* Firmware dump from device */
+@@ -3280,9 +3279,12 @@ static int btusb_recv_acl_mtk(struct hci_dev *hdev, struct sk_buff *skb)
+ 		 * for backward compatibility, so we have to clone the packet
+ 		 * extraly for the in-kernel coredump support.
+ 		 */
+-		skb_cd = skb_clone(skb, GFP_ATOMIC);
+-		if (skb_cd)
+-			btmtk_process_coredump(hdev, skb_cd);
++		if (IS_ENABLED(CONFIG_DEV_COREDUMP)) {
++			struct sk_buff *skb_cd = skb_clone(skb, GFP_ATOMIC);
++
++			if (skb_cd)
++				btmtk_process_coredump(hdev, skb_cd);
++		}
  
- 	return msft_le_cancel_monitor_advertisement_cb(hdev, hdev->msft_opcode,
- 						       monitor, skb);
-@@ -559,7 +553,7 @@ static int msft_add_monitor_sync(struct hci_dev *hdev,
- 	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, total_size, cp,
- 			     HCI_CMD_TIMEOUT);
- 
--	if (IS_ERR_OR_NULL(skb)) {
-+	if (IS_ERR(skb)) {
- 		err = PTR_ERR(skb);
- 		goto out_free;
- 	}
-@@ -740,10 +734,10 @@ static int msft_cancel_address_filter_sync(struct hci_dev *hdev, void *data)
- 
- 	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, sizeof(cp), &cp,
- 			     HCI_CMD_TIMEOUT);
--	if (IS_ERR_OR_NULL(skb)) {
-+	if (IS_ERR(skb)) {
- 		bt_dev_err(hdev, "MSFT: Failed to cancel address (%pMR) filter",
- 			   &address_filter->bdaddr);
--		err = -EIO;
-+		err = PTR_ERR(skb);
- 		goto done;
- 	}
- 	kfree_skb(skb);
-@@ -893,7 +887,7 @@ static int msft_add_address_filter_sync(struct hci_dev *hdev, void *data)
- 
- 	skb = __hci_cmd_sync(hdev, hdev->msft_opcode, size, cp,
- 			     HCI_CMD_TIMEOUT);
--	if (IS_ERR_OR_NULL(skb)) {
-+	if (IS_ERR(skb)) {
- 		bt_dev_err(hdev, "Failed to enable address %pMR filter",
- 			   &address_filter->bdaddr);
- 		skb = NULL;
+ 		fallthrough;
+ 	case 0x05ff:		/* Firmware debug logging 1 */
 -- 
 2.43.0
 
