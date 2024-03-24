@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E2B2987BE;
-	Sun, 24 Mar 2024 23:52:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817A81856AD;
+	Sun, 24 Mar 2024 23:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324361; cv=none; b=pfUE349QVSsG66wxm5DaeLl8vsmi/tgu7hWCEyVSrKTR8LdaxXnq06kxkUiLjUv0/Z7hDWp4ppxX9vvkUY9BZd88WhnrSXBNk8zYLlsBS9M2aU3kM3ic2j4zK8A92bzu0tWbqT/P2JRh+AvFuI9dgXWm3l3kBFknaNYW3rMAWyw=
+	t=1711324364; cv=none; b=V5t2y965+xZP7u3a59/MhN1QGYWQd1hHeLqSdml6YEDxeIsN3RP/OS32BKOwWrPbW+i2TyslYo+Ol+DphqLgWw+xs+U+bcuHduc3fiztEWVeXZa1E8TVNK05Qgm4KCQvC+u2FLzxY6ejBEW0wDgkE/QnuOSiy9EF1U5T37iVwCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324361; c=relaxed/simple;
-	bh=fsol7G2VQdcWBezi229DI5jXveSllbDp0hy5//iZjkA=;
+	s=arc-20240116; t=1711324364; c=relaxed/simple;
+	bh=JheoSwJSnHfF0q6NRf7tt3Cg5P8qwcOVNT8AoQjQpRY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XBCm4iXTLT3YusWIMgtK3AVuZ6Vud8Mub8PvP5wN8fgAWJ0yUZtsNpr1MG52JB7x+cCXkkeEzxkko51UEQx8pWOo0M0gIdLOPn5ZQoQ8gimaqWWSKp/H/sJGYAjDp47fl5V/a2Y3CD2UW35Kg2+h4bbEBxVSekRy+5s3JgXf0C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rrcgboyo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SDbeNuQIHEA4oKQCyiluL6mP46s3AgxBYuF10LXLTQN3nt88IYs50LAoOKEfmSuD/H5TfSBUYn3l0uS1aXXahdNrGUZuAweSXwqkes/9zkKKlWz8Gg1bT+cSgI5VB4YkZTxczqMoU4kiqxK86SY6BbVd0oGQhO8/cwsjerPFOCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ckDdUes2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rrcgboyo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC38DC433C7;
-	Sun, 24 Mar 2024 23:52:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ckDdUes2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7260C43394;
+	Sun, 24 Mar 2024 23:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324360;
-	bh=fsol7G2VQdcWBezi229DI5jXveSllbDp0hy5//iZjkA=;
+	s=k20201202; t=1711324364;
+	bh=JheoSwJSnHfF0q6NRf7tt3Cg5P8qwcOVNT8AoQjQpRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RrcgboyoKoMFfpU+MaS5kMtwPHkEVPXD3Jjz8RKIAe1DUgQfeWxn+h+DUBNDz8mGo
-	 GeDa9e5qyX5KBj/UpPGhBMv8yT9pPb4088FFVYpeJXJ98RN1a6ckwPzNA6Tg0Tisjr
-	 7WzPZJD+Ok2BchbkrzRyBnLCBrNZc53LOxEnhvujEETue+J19OrjAtQqlDhDLkd3If
-	 jCA3dqUJKnPXDLZ6GbUIgO++TV1K2zLoymfY/vuOMqt3O3uY/DZcoEnK1IcoDnYx5K
-	 ovgAGJ1aYi6Ah11pIPXA+6dD3rv60Oe2zDR7bxMXpO8iVbN/NyuaiSqAu31u90HOHE
-	 fYQ8heGDBIUcg==
+	b=ckDdUes2CNTnT5WBSHLf9gDEmhIrMDa8ROkY+h/VwY2zwqlckUYcjn0bM1c8KNs3C
+	 gDZSKtQz0GoW67BiD5uskQUgJAyHaaJug7jl5/YRIeAChzEku2T5QxyI6//889Frpe
+	 +Xfdul9e9wSEi1cmUcpaBygELH/kxjqL2za4sRyDdXwMYlgPk+3WxuPvTCMTpvXpOw
+	 0x2vBKZh0eLhRzfoEEDD3fv3bBFY1Nf9xg/pCcOiyCAFKzyYzxgwhxjiVPgrJS9jZL
+	 QMyFLj6LuoHkNKxMSbCvZQTSCUa85AhQjp7s6HGKcBzp9buUXnIeZdQW0vYpKTPPOw
+	 1gXJy+/uZJIug==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johan Carlsson <johan.carlsson@teenage.engineering>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 128/148] ALSA: usb-audio: Stop parsing channels bits when all channels are found.
-Date: Sun, 24 Mar 2024 19:49:52 -0400
-Message-ID: <20240324235012.1356413-129-sashal@kernel.org>
+Subject: [PATCH 4.19 131/148] net: sunrpc: Fix an off by one in rpc_sockaddr2uaddr()
+Date: Sun, 24 Mar 2024 19:49:55 -0400
+Message-ID: <20240324235012.1356413-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,40 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Johan Carlsson <johan.carlsson@teenage.engineering>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit a39d51ff1f52cd0b6fe7d379ac93bd8b4237d1b7 ]
+[ Upstream commit d6f4de70f73a106986ee315d7d512539f2f3303a ]
 
-If a usb audio device sets more bits than the amount of channels
-it could write outside of the map array.
+The intent is to check if the strings' are truncated or not. So, >= should
+be used instead of >, because strlcat() and snprintf() return the length of
+the output, excluding the trailing NULL.
 
-Signed-off-by: Johan Carlsson <johan.carlsson@teenage.engineering>
-Fixes: 04324ccc75f9 ("ALSA: usb-audio: add channel map support")
-Message-ID: <20240313081509.9801-1-johan.carlsson@teenage.engineering>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: a02d69261134 ("SUNRPC: Provide functions for managing universal addresses")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/stream.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/sunrpc/addr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/stream.c b/sound/usb/stream.c
-index 1cfb30465df7d..3f20438a1b56e 100644
---- a/sound/usb/stream.c
-+++ b/sound/usb/stream.c
-@@ -306,9 +306,12 @@ static struct snd_pcm_chmap_elem *convert_chmap(int channels, unsigned int bits,
- 	c = 0;
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index 7404f02702a1c..eba3b6f4d4ace 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -287,10 +287,10 @@ char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
+ 	}
  
- 	if (bits) {
--		for (; bits && *maps; maps++, bits >>= 1)
-+		for (; bits && *maps; maps++, bits >>= 1) {
- 			if (bits & 1)
- 				chmap->map[c++] = *maps;
-+			if (c == chmap->channels)
-+				break;
-+		}
- 	} else {
- 		/* If we're missing wChannelConfig, then guess something
- 		    to make sure the channel map is not skipped entirely */
+ 	if (snprintf(portbuf, sizeof(portbuf),
+-		     ".%u.%u", port >> 8, port & 0xff) > (int)sizeof(portbuf))
++		     ".%u.%u", port >> 8, port & 0xff) >= (int)sizeof(portbuf))
+ 		return NULL;
+ 
+-	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) > sizeof(addrbuf))
++	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) >= sizeof(addrbuf))
+ 		return NULL;
+ 
+ 	return kstrdup(addrbuf, gfp_flags);
 -- 
 2.43.0
 
