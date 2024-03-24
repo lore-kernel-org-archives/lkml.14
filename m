@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E46A80021;
-	Sun, 24 Mar 2024 22:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDFD7FBDB;
+	Sun, 24 Mar 2024 22:48:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320502; cv=none; b=akeDqbjbG2t52+0kIBh3ZUmM2sN47P0zpyj42aH1N+wsK8loCQ2mNKOkzejdIcJoxoCTiIqgu0L+sQ0A7T8wnh20fnKpfVLuxmrKxZx4w7ilFhtGj+nfYgKZSHwglDgtG7CMJ2z5TdhbChJ/N6q3aLQl5IxYFvcLNbWEYe866WI=
+	t=1711320498; cv=none; b=fX6WJVfW9vkwKhV+EFlttOWKiY5T1PugN26geQwP1APVZ0cKcvLHyo7k7eyirfJlUfG12L/HUW02NuZWZK7CErygEyMJKItsXKG7VGBEr/vcy0jwziWSMfnnoKsZmkLW+LP0akOayrDou669i1se5/gvRSG0YEXPuL63ntvzSrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320502; c=relaxed/simple;
-	bh=vGsRcugzQXk3Cte7pTGXjU6O3+vYXY4P4bjFaOnISPY=;
+	s=arc-20240116; t=1711320498; c=relaxed/simple;
+	bh=C3JXHkC8QSlxMQacEgZP+jIDKkUrjVb3FnkXfTRxrtw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qZlG8GRip18HlgoIF+DUbhbMdZSf4mrOOFu584q+5IrQ2Vn4G3qwht0NBFlnxfxqqbXWgA6vxQigBqf3Aq3QfLoKTkZ4il2nGV7kqSmH+4oJQqzDIwQ15ZXEKHUK/ziMcL8g0mv7vijxb2WqFM0Evd8cQJaxpF9m7sT4EMIWCgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmJt0wq7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=l40/+8vHYXbss6pknwiP1m3VSjN1U97bPSSrdIEh2XmBGW/LAknGVfJbeZbDFzJtvxI+YQqyL4LLhI/7kSKjsqkUgeN0n+Y6MkH0l+Kl8cmyBdNi7RLKtjSNInFV43odMluEc+6ymDJAVKIdK8yT1luOhQp/rNcTBRmespUQEYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXNdmKN8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmJt0wq7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE854C433C7;
-	Sun, 24 Mar 2024 22:48:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXNdmKN8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161A4C43399;
+	Sun, 24 Mar 2024 22:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320502;
-	bh=vGsRcugzQXk3Cte7pTGXjU6O3+vYXY4P4bjFaOnISPY=;
+	s=k20201202; t=1711320498;
+	bh=C3JXHkC8QSlxMQacEgZP+jIDKkUrjVb3FnkXfTRxrtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EmJt0wq7bppQzJwOP7KIZzDelfh3Ns6Qhq2aBM8I92gyWxp0nbJxcVVZ6D9KzNzMe
-	 ZtIPHM2TNLtBqpD9ZYKrnBAEGWySRhbrNNLKYODoASeEPi2p17qg66qMhI/LKIO9LU
-	 zTiLGlA0rVtlBIyMGIenJKU6tpfbvWhL+tDEQMAKyQKbiRuXHKlF7lRm/UtUcXEqlh
-	 RzN46kreuYMeY5vw86TLq4QYITFKUV+4gv61lB+w8aWB1ctEtFKntm/n68FqUwvwOF
-	 EpegNPaMPxtBS36H4hhm0EvaJG4hheTICTNcZ6g2HMyb9i5ylxDFGpSv4vDkP3qL+Y
-	 BuEF199UZ330Q==
+	b=nXNdmKN84Cr2nohznlDZqZbcwNDHiauo/iG36bkcCQmz7/KnyXOH3DjOaIx115fDY
+	 InaX8X6wZVFqFJ0YpqDBl9D8MnL91HTKpwGjq4OJqg58GyFtfz6FEOs4M18ClyGFtK
+	 YW8YTz4YFB0jwnCgBeDsCQPFpMdYG/OAR49V9QSyMF8EXvBb3N5QCa7TeahCeJvImT
+	 qYu+Mf7KRMPQ7+Zep4/O0NpET811RA79EPztWmxLQ/wODw8lSQSayccK6NI5w4YObO
+	 D4g60YAiA4GFxzfyG1h9f5SYQd65a8PzXy8FyMaNqZ9eS0j13G3kB8SgeauF9EaVkn
+	 ilqS09sSIB9zw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Prike Liang <Prike.Liang@amd.com>,
+Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 062/713] drm/amdgpu: Enable gpu reset for S3 abort cases on Raven series
-Date: Sun, 24 Mar 2024 18:36:28 -0400
-Message-ID: <20240324224720.1345309-63-sashal@kernel.org>
+Subject: [PATCH 6.7 058/713] drm/ttm/tests: depend on UML || COMPILE_TEST
+Date: Sun, 24 Mar 2024 18:36:24 -0400
+Message-ID: <20240324224720.1345309-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,92 +44,50 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Prike Liang <Prike.Liang@amd.com>
+From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit c671ec01311b4744b377f98b0b4c6d033fe569b3 ]
+[ Upstream commit 9d3f8a723c7950e56e0b95ab84b572caee29e065 ]
 
-Currently, GPU resets can now be performed successfully on the Raven
-series. While GPU reset is required for the S3 suspend abort case.
-So now can enable gpu reset for S3 abort cases on the Raven series.
+At least the device test requires that no other driver using TTM is
+loaded. So make those unit tests depend on UML || COMPILE_TEST to
+prevent people from trying them on bare metal.
 
-Signed-off-by: Prike Liang <Prike.Liang@amd.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
 Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lore.kernel.org/all/20240219230116.77b8ad68@yea/
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/soc15.c | 45 +++++++++++++++++-------------
- 1 file changed, 25 insertions(+), 20 deletions(-)
+ drivers/gpu/drm/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
-index 9b5af3f1383a7..f9ba1803046d9 100644
---- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-+++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-@@ -574,11 +574,34 @@ soc15_asic_reset_method(struct amdgpu_device *adev)
- 		return AMD_RESET_METHOD_MODE1;
- }
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 3eee8636f847a..9b079f3a1b811 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -198,7 +198,7 @@ config DRM_TTM
+ config DRM_TTM_KUNIT_TEST
+         tristate "KUnit tests for TTM" if !KUNIT_ALL_TESTS
+         default n
+-        depends on DRM && KUNIT && MMU
++        depends on DRM && KUNIT && MMU && (UML || COMPILE_TEST)
+         select DRM_TTM
+         select DRM_EXPORT_FOR_TESTS if m
+         select DRM_KUNIT_TEST_HELPERS
+@@ -206,7 +206,8 @@ config DRM_TTM_KUNIT_TEST
+         help
+           Enables unit tests for TTM, a GPU memory manager subsystem used
+           to manage memory buffers. This option is mostly useful for kernel
+-          developers.
++          developers. It depends on (UML || COMPILE_TEST) since no other driver
++          which uses TTM can be loaded while running the tests.
  
-+static bool soc15_need_reset_on_resume(struct amdgpu_device *adev)
-+{
-+	u32 sol_reg;
-+
-+	sol_reg = RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81);
-+
-+	/* Will reset for the following suspend abort cases.
-+	 * 1) Only reset limit on APU side, dGPU hasn't checked yet.
-+	 * 2) S3 suspend abort and TOS already launched.
-+	 */
-+	if (adev->flags & AMD_IS_APU && adev->in_s3 &&
-+			!adev->suspend_complete &&
-+			sol_reg)
-+		return true;
-+
-+	return false;
-+}
-+
- static int soc15_asic_reset(struct amdgpu_device *adev)
- {
- 	/* original raven doesn't have full asic reset */
--	if ((adev->apu_flags & AMD_APU_IS_RAVEN) ||
--	    (adev->apu_flags & AMD_APU_IS_RAVEN2))
-+	/* On the latest Raven, the GPU reset can be performed
-+	 * successfully. So now, temporarily enable it for the
-+	 * S3 suspend abort case.
-+	 */
-+	if (((adev->apu_flags & AMD_APU_IS_RAVEN) ||
-+	    (adev->apu_flags & AMD_APU_IS_RAVEN2)) &&
-+		!soc15_need_reset_on_resume(adev))
- 		return 0;
+           If in doubt, say "N".
  
- 	switch (soc15_asic_reset_method(adev)) {
-@@ -1297,24 +1320,6 @@ static int soc15_common_suspend(void *handle)
- 	return soc15_common_hw_fini(adev);
- }
- 
--static bool soc15_need_reset_on_resume(struct amdgpu_device *adev)
--{
--	u32 sol_reg;
--
--	sol_reg = RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81);
--
--	/* Will reset for the following suspend abort cases.
--	 * 1) Only reset limit on APU side, dGPU hasn't checked yet.
--	 * 2) S3 suspend abort and TOS already launched.
--	 */
--	if (adev->flags & AMD_IS_APU && adev->in_s3 &&
--			!adev->suspend_complete &&
--			sol_reg)
--		return true;
--
--	return false;
--}
--
- static int soc15_common_resume(void *handle)
- {
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 -- 
 2.43.0
 
