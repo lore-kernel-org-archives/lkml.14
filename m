@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245B117B4FB;
-	Sun, 24 Mar 2024 23:42:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8351D17B513;
+	Sun, 24 Mar 2024 23:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323724; cv=none; b=ib6f2naLsQYcXCRY+sfVhrIWxXryqEEcSaYoZI4nYimv3fqVWea6K4ekA6YyvCO8Xd7KhrwgM7I17xsjbHAILtTG2Ti9MUGsE8xZXpUvwQmjqjSbCB2opOn6nAuL2gzsXqyI5fbjVorN+sLMQLwcfmwNkhHc86Nuuh/XOSTh5IE=
+	t=1711323726; cv=none; b=S3V5YVnVJuig5LzfyFrjWk1VqkWSB57u3jI7YdSt3rwBYUOVDUAZbVzv9KtGF5JGZReLjs8vuwo753JbvB6S3+8tfFInBOju6UoSh7cckzYkx4t4lCHOavE/DmTaot+pBSwT5YD7eSforNhml7NAlITbYGgUxa9qh2k4niTAxMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323724; c=relaxed/simple;
-	bh=EWdZk2t0N8dwccaXvhhlbSDrH2hjfcC9HGHEuRAS7cM=;
+	s=arc-20240116; t=1711323726; c=relaxed/simple;
+	bh=CkgFxL9FgjAMNaLTaZvuR6d3RbTc8CUeahwUgaq3dA4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qeUQrehLQI+aH6/gHFc1mrxYEcBrBq08BjKM61xd5J8LPpLta38qcqiNiU1mVAY+b/e3i7Bwggeh/jSl62KuRQBCvkOy167QNGFHlPCS7r2nb8RJSrHT/f4B51yshBTt0bRlSF+OklU0QqDdjSStxWT6GHPYJFJSnNknF3gVlbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzFR8A29; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UzHs0gkZ+9W5R1rEo9Z0L6hbAFoc9ADYUDArkstXTFqna4Udm/e08LbN+WLRvagWfh4SBJyCQNn+vPXKONmka6KZmKpIwLX48EgBMo600OPUGbzU+4G43mOTi932oMBIDP3ILiIPMpa6O03sr8XG4tJ2dwkG+BlQtcSnEHV6ZuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gbz10e9J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzFR8A29"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B253C433C7;
-	Sun, 24 Mar 2024 23:42:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gbz10e9J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71AD4C433F1;
+	Sun, 24 Mar 2024 23:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323723;
-	bh=EWdZk2t0N8dwccaXvhhlbSDrH2hjfcC9HGHEuRAS7cM=;
+	s=k20201202; t=1711323725;
+	bh=CkgFxL9FgjAMNaLTaZvuR6d3RbTc8CUeahwUgaq3dA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dzFR8A29vSyrNFSMX3aONdAqnpNEgXWVBPOdzOZJjmL+xAaBqmJHl4hR4q1n2mP1+
-	 DvA8WyiXZAgTOQOHcACGZWbcjch7WtOFi9ydM9LdXLOeP0eC87wOEEMXEpW3ncD3OH
-	 jg+gGeSE6TmbcNV3wN1R5EsH7gUKBuobKiSzm7slidiNKnWip0o/EFdh0XuL05Jvm9
-	 Q8rsjETMfkYU2HQie7zfHvtDZxXrmyiBczjRr8p2V5DluvLCTnURQa29sFaMINHAGv
-	 gR6Or4sS/iq8EIw515OyAVmzaBS0oaKn+2KGMdqx5loiU1T0eJ52awWKI4aku+soLu
-	 LLqabG4Fs8yBQ==
+	b=gbz10e9JoAp2H3rTMtvaaCNublGsmFvDANLwrmj3XzkKkzEkQdEIWCY4ouLgvWKIs
+	 zKVkTuxLcn5qzxpZefWRwy8LzowStb8Aqo3ye5ORybinfiysL2WSNsnUzSEP5HFZbN
+	 NGzi53/kxrBwdIHjIqnrlYenlcMtJ8rrPsiWkeIL4ENi56n3SfKESJyHgNiD6g5+t6
+	 xOAoB7TPcmEAo6Vw6yZ/R9Jzix4qRZjFp53la/U33tpWRwpdrGNmteUnKzE1iVKfii
+	 h5EZAXWxPqQnUGT/IihVzokRT5J75KL9dr7sAn1Gpk5E1xQWQ4fmdXJfHp/3CGKBGG
+	 NR/jDNZo47WhQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jie Wang <wangjie125@huawei.com>,
-	Jijie Shao <shaojijie@huawei.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Tim Pambor <tp@osasysteme.de>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 096/238] net: hns3: fix port duplex configure error in IMP reset
-Date: Sun, 24 Mar 2024 19:38:04 -0400
-Message-ID: <20240324234027.1354210-97-sashal@kernel.org>
+Subject: [PATCH 5.10 098/238] net: phy: dp83822: Fix RGMII TX delay configuration
+Date: Sun, 24 Mar 2024 19:38:06 -0400
+Message-ID: <20240324234027.1354210-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,42 +48,89 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jie Wang <wangjie125@huawei.com>
+From: Tim Pambor <tp@osasysteme.de>
 
-[ Upstream commit 11d80f79dd9f871a52feba4bf24b5ac39f448eb7 ]
+[ Upstream commit c8a5c731fd1223090af57da33838c671a7fc6a78 ]
 
-Currently, the mac port is fixed to configured as full dplex mode in
-hclge_mac_init() when driver initialization or reset restore. Users may
-change the mode to half duplex with ethtool,  so it may cause the user
-configuration dropped after reset.
+The logic for enabling the TX clock shift is inverse of enabling the RX
+clock shift. The TX clock shift is disabled when DP83822_TX_CLK_SHIFT is
+set. Correct the current behavior and always write the delay configuration
+to ensure consistent delay settings regardless of bootloader configuration.
 
-To fix it, don't change the duplex mode when resetting.
+Reference: https://www.ti.com/lit/ds/symlink/dp83822i.pdf p. 69
 
-Fixes: 2d03eacc0b7e ("net: hns3: Only update mac configuation when necessary")
-Signed-off-by: Jie Wang <wangjie125@huawei.com>
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 8095295292b5 ("net: phy: DP83822: Add setting the fixed internal delay")
+Signed-off-by: Tim Pambor <tp@osasysteme.de>
+Link: https://lore.kernel.org/r/20240305110608.104072-1-tp@osasysteme.de
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/phy/dp83822.c | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index deba485ced1bd..c14c391a0cec6 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2723,7 +2723,10 @@ static int hclge_mac_init(struct hclge_dev *hdev)
- 	int ret;
+diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
+index dce87589b1120..14c5e082ccc8f 100644
+--- a/drivers/net/phy/dp83822.c
++++ b/drivers/net/phy/dp83822.c
+@@ -359,7 +359,7 @@ static int dp83822_config_init(struct phy_device *phydev)
+ {
+ 	struct dp83822_private *dp83822 = phydev->priv;
+ 	struct device *dev = &phydev->mdio.dev;
+-	int rgmii_delay;
++	int rgmii_delay = 0;
+ 	s32 rx_int_delay;
+ 	s32 tx_int_delay;
+ 	int err = 0;
+@@ -369,30 +369,33 @@ static int dp83822_config_init(struct phy_device *phydev)
+ 		rx_int_delay = phy_get_internal_delay(phydev, dev, NULL, 0,
+ 						      true);
  
- 	hdev->support_sfp_query = true;
--	hdev->hw.mac.duplex = HCLGE_MAC_FULL;
+-		if (rx_int_delay <= 0)
+-			rgmii_delay = 0;
+-		else
+-			rgmii_delay = DP83822_RX_CLK_SHIFT;
++		/* Set DP83822_RX_CLK_SHIFT to enable rx clk internal delay */
++		if (rx_int_delay > 0)
++			rgmii_delay |= DP83822_RX_CLK_SHIFT;
+ 
+ 		tx_int_delay = phy_get_internal_delay(phydev, dev, NULL, 0,
+ 						      false);
 +
-+	if (!test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
-+		hdev->hw.mac.duplex = HCLGE_MAC_FULL;
++		/* Set DP83822_TX_CLK_SHIFT to disable tx clk internal delay */
+ 		if (tx_int_delay <= 0)
+-			rgmii_delay &= ~DP83822_TX_CLK_SHIFT;
+-		else
+ 			rgmii_delay |= DP83822_TX_CLK_SHIFT;
+ 
+-		if (rgmii_delay) {
+-			err = phy_set_bits_mmd(phydev, DP83822_DEVADDR,
+-					       MII_DP83822_RCSR, rgmii_delay);
+-			if (err)
+-				return err;
+-		}
++		err = phy_modify_mmd(phydev, DP83822_DEVADDR, MII_DP83822_RCSR,
++				     DP83822_RX_CLK_SHIFT | DP83822_TX_CLK_SHIFT, rgmii_delay);
++		if (err)
++			return err;
 +
- 	ret = hclge_cfg_mac_speed_dup_hw(hdev, hdev->hw.mac.speed,
- 					 hdev->hw.mac.duplex);
- 	if (ret)
++		err = phy_set_bits_mmd(phydev, DP83822_DEVADDR,
++				       MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
+ 
+-		phy_set_bits_mmd(phydev, DP83822_DEVADDR,
+-					MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
++		if (err)
++			return err;
+ 	} else {
+-		phy_clear_bits_mmd(phydev, DP83822_DEVADDR,
+-					MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
++		err = phy_clear_bits_mmd(phydev, DP83822_DEVADDR,
++					 MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
++
++		if (err)
++			return err;
+ 	}
+ 
+ 	if (dp83822->fx_enabled) {
 -- 
 2.43.0
 
