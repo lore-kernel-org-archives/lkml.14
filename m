@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C521448C9;
-	Sun, 24 Mar 2024 23:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0E1145FFD;
+	Sun, 24 Mar 2024 23:14:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322009; cv=none; b=cO6eURhCJuC+hSlriQc3Xq7grt/VzRC31tmAKb2NvUqa7n91/sgvRR0p1u2bR9hjYg0v3GaxyI5M4hwDKdRMlmM+HF9JqLtiblB4DJA3bRsn1h8MCyOaTLuuCTRi1hfjWcmfhE690H5scQPvaopJUG15KYQqIgQn2QEDy1WVacc=
+	t=1711322058; cv=none; b=TYxYdjPTFe+Lrz+wUbY/afZGqwf2vCS2FaJOPGwHm+X2rDlCmJ3VGJ5KVstdD4BqrKRtl4wDV7bekcVw4nnG9k4pK80CP3alo5e4ZCXcadfiIkCmLlpUaGzQ0mtgmzlkGRmPAxWYVCqS87U1DKlm23tHVYDYSOwK7fen6qXAywI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322009; c=relaxed/simple;
-	bh=TKCgqMi4JKjK1DRtsQX7URt7rxVjhX1KP57kx5DM9Zg=;
+	s=arc-20240116; t=1711322058; c=relaxed/simple;
+	bh=kHvAj5Exwy/HdBqTXaGhsB0NkokkTU+SfCPdSR18a9c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BK1QbA9WPryQqoMfRAz7jIRF0sL5j9Up2bx1n760wmDvja5gkYTpZNWogStN3tCJmQT8JbOivFoiL8/SFhPxgyBDlW0zjN21yTL+P2jRWAOvFE6lyEdmn586ixXpAQvQdao9fXsPxoj8+waGZzm8QAefKJWiyk5gkkI4IN2R4d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jnxKTtVy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=izT6A7LvBsmjJD+sWpQ9iAaBe0bNP3P+aoohbUBysjAFPurA83zYgFw6vQNHcZ0HMU9nDbJOsDvliFyPNsRZECvcWmzhKTEFEagGmln3Xg+Q+hcE3I1I9CQsuLBUhetgboVQ6ZdED3IsIo4YZ+tOdugbPRrwo0HHZ/S/7j3MK9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDVwD2R7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jnxKTtVy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B844C433C7;
-	Sun, 24 Mar 2024 23:13:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDVwD2R7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02B5BC433A6;
+	Sun, 24 Mar 2024 23:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322009;
-	bh=TKCgqMi4JKjK1DRtsQX7URt7rxVjhX1KP57kx5DM9Zg=;
+	s=k20201202; t=1711322058;
+	bh=kHvAj5Exwy/HdBqTXaGhsB0NkokkTU+SfCPdSR18a9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jnxKTtVyRI5f0TtKIzQeUFBhqqJqm7I1PWle5NrO9Jzjb4/1Fb3rjrvwg4nVJ7dY8
-	 66yQ0y9ZsbPWULuMcxLKeaqE0U7lWwF13AW4VAcjfq79qR0Rf01ZeYz8cXGP4rnWRQ
-	 6HSg9ikg4lADisAlqCAwZRlq8aSxAOVVaVhIxIdSMknLSuTncQQSarWqZ6s2nTe9Do
-	 YHlMrAFhRJbDnyDRq/n6h2RmmVhzAyiP6NfpC2TzJG2mz1QHqKWp14EmUW+ibqghqU
-	 hmHP5KkkHrkPu2VuHYnOaMV4cW6gOgI9QfcKbb7tOQiHzcZutsoVKCRBWkuRo1NJGn
-	 8Ut/hDpz9tBMw==
+	b=UDVwD2R78kn2u8X0gEdBQqUgeFLT0sZ9JYTJ+GFUiGxFnVJ54kiqsROxCsWzKTdIR
+	 zfG79pJaSsEOQrG7rIhKGx8oUD1Yr/y9D1qrIYBj7yVTHdesGGAmZwO2oT+ImMyvEG
+	 0LE/DVpvQrUPOH4HUqbTacwzb2Kp3GH317gUO/YFYoTicbzpDqYhXLMzasIY7iOJC5
+	 pNBoXWR1NG+LIM9My3kwD5zXoMBkg0kvFjvgWNlZW9R5DoZLgJoBd/u2gdjmWo2XTL
+	 pbcIQiDiejyYSWDbLMUJK0E0hd3PvrBzgJmdLLpcA3I2Z909w8QnKtvMrvGUwb0nPS
+	 5R6/oxpw8owhw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Ingo Molnar <mingo@kernel.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
+Cc: Petr Mladek <pmladek@suse.com>,
+	John Ogness <john.ogness@linutronix.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 081/451] sched/fair: Take the scheduling domain into account in select_idle_smt()
-Date: Sun, 24 Mar 2024 19:05:57 -0400
-Message-ID: <20240324231207.1351418-82-sashal@kernel.org>
+Subject: [PATCH 6.1 131/451] printk: Disable passing console lock owner completely during panic()
+Date: Sun, 24 Mar 2024 19:06:47 -0400
+Message-ID: <20240324231207.1351418-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,84 +48,114 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Keisuke Nishimura <keisuke.nishimura@inria.fr>
+From: Petr Mladek <pmladek@suse.com>
 
-[ Upstream commit 8aeaffef8c6eceab0e1498486fdd4f3dc3b7066c ]
+[ Upstream commit d04d5882cd678b898a9d7c5aee6afbe9e6e77fcd ]
 
-When picking a CPU on task wakeup, select_idle_smt() has to take
-into account the scheduling domain of @target. This is because the
-"isolcpus" kernel command line option can remove CPUs from the domain to
-isolate them from other SMT siblings.
+The commit d51507098ff91 ("printk: disable optimistic spin
+during panic") added checks to avoid becoming a console waiter
+if a panic is in progress.
 
-This fix checks if the candidate CPU is in the target scheduling domain.
+However, the transition to panic can occur while there is
+already a waiter. The current owner should not pass the lock to
+the waiter because it might get stopped or blocked anytime.
 
-Commit:
+Also the panic context might pass the console lock owner to an
+already stopped waiter by mistake. It might happen when
+console_flush_on_panic() ignores the current lock owner, for
+example:
 
-  df3cb4ea1fb6 ("sched/fair: Fix wrong cpu selecting from isolated domain")
+CPU0                                CPU1
+----                                ----
+console_lock_spinning_enable()
+                                    console_trylock_spinning()
+                                      [CPU1 now console waiter]
+NMI: panic()
+  panic_other_cpus_shutdown()
+                                    [stopped as console waiter]
+  console_flush_on_panic()
+    console_lock_spinning_enable()
+    [print 1 record]
+    console_lock_spinning_disable_and_check()
+      [handover to stopped CPU1]
 
-... originally introduced this fix by adding the check of the scheduling
-domain in the loop.
+This results in panic() not flushing the panic messages.
 
-However, commit:
+Fix these problems by disabling all spinning operations
+completely during panic().
 
-  3e6efe87cd5cc ("sched/fair: Remove redundant check in select_idle_smt()")
+Another advantage is that it prevents possible deadlocks caused
+by "console_owner_lock". The panic() context does not need to
+take it any longer. The lockless checks are safe because the
+functions become NOPs when they see the panic in progress. All
+operations manipulating the state are still synchronized by the
+lock even when non-panic CPUs would notice the panic
+synchronously.
 
-... accidentally removed the check. Bring it back.
+The current owner might stay spinning. But non-panic() CPUs
+would get stopped anyway and the panic context will never start
+spinning.
 
-Fixes: 3e6efe87cd5c ("sched/fair: Remove redundant check in select_idle_smt()")
-Signed-off-by: Keisuke Nishimura <keisuke.nishimura@inria.fr>
-Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lore.kernel.org/r/20240110131707.437301-1-keisuke.nishimura@inria.fr
+Fixes: dbdda842fe96 ("printk: Add console owner and waiter logic to load balance console writes")
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Link: https://lore.kernel.org/r/20240207134103.1357162-12-john.ogness@linutronix.de
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ kernel/printk/printk.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 2558ab9033bee..1c4e54fffb8b6 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6678,13 +6678,19 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
- /*
-  * Scan the local SMT mask for idle CPUs.
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index cc53fb77f77cc..981cdb00b8722 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -1797,10 +1797,23 @@ static bool console_waiter;
   */
--static int select_idle_smt(struct task_struct *p, int target)
-+static int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
+ static void console_lock_spinning_enable(void)
  {
- 	int cpu;
++	/*
++	 * Do not use spinning in panic(). The panic CPU wants to keep the lock.
++	 * Non-panic CPUs abandon the flush anyway.
++	 *
++	 * Just keep the lockdep annotation. The panic-CPU should avoid
++	 * taking console_owner_lock because it might cause a deadlock.
++	 * This looks like the easiest way how to prevent false lockdep
++	 * reports without handling races a lockless way.
++	 */
++	if (panic_in_progress())
++		goto lockdep;
++
+ 	raw_spin_lock(&console_owner_lock);
+ 	console_owner = current;
+ 	raw_spin_unlock(&console_owner_lock);
  
- 	for_each_cpu_and(cpu, cpu_smt_mask(target), p->cpus_ptr) {
- 		if (cpu == target)
- 			continue;
-+		/*
-+		 * Check if the CPU is in the LLC scheduling domain of @target.
-+		 * Due to isolcpus, there is no guarantee that all the siblings are in the domain.
-+		 */
-+		if (!cpumask_test_cpu(cpu, sched_domain_span(sd)))
-+			continue;
- 		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
- 			return cpu;
- 	}
-@@ -6708,7 +6714,7 @@ static inline int select_idle_core(struct task_struct *p, int core, struct cpuma
- 	return __select_idle_cpu(core, p);
++lockdep:
+ 	/* The waiter may spin on us after setting console_owner */
+ 	spin_acquire(&console_owner_dep_map, 0, 0, _THIS_IP_);
  }
- 
--static inline int select_idle_smt(struct task_struct *p, int target)
-+static inline int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
+@@ -1824,6 +1837,22 @@ static int console_lock_spinning_disable_and_check(void)
  {
- 	return -1;
- }
-@@ -6970,7 +6976,7 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 		has_idle_core = test_idle_cores(target);
+ 	int waiter;
  
- 		if (!has_idle_core && cpus_share_cache(prev, target)) {
--			i = select_idle_smt(p, prev);
-+			i = select_idle_smt(p, sd, prev);
- 			if ((unsigned int)i < nr_cpumask_bits)
- 				return i;
- 		}
++	/*
++	 * Ignore spinning waiters during panic() because they might get stopped
++	 * or blocked at any time,
++	 *
++	 * It is safe because nobody is allowed to start spinning during panic
++	 * in the first place. If there has been a waiter then non panic CPUs
++	 * might stay spinning. They would get stopped anyway. The panic context
++	 * will never start spinning and an interrupted spin on panic CPU will
++	 * never continue.
++	 */
++	if (panic_in_progress()) {
++		/* Keep lockdep happy. */
++		spin_release(&console_owner_dep_map, _THIS_IP_);
++		return 0;
++	}
++
+ 	raw_spin_lock(&console_owner_lock);
+ 	waiter = READ_ONCE(console_waiter);
+ 	console_owner = NULL;
 -- 
 2.43.0
 
