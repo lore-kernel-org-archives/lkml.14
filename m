@@ -1,42 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAA41F1ADA;
-	Sun, 24 Mar 2024 22:58:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A92D14B09A;
+	Sun, 24 Mar 2024 22:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321085; cv=none; b=RokX0JOhxu4Jptjo98tHaOrKyx591sVsHCUp+wRED1znLcmOJJLy2UO1KXtJe4MnqnsZHEBUSMnPlDIRu1Y2FZEMBeufisYFLSrNj/KOXVjO5ZVuR1TMLhR8ZAsJvJRGhv408clYQ13I/deNMt4CHKIZRyZgb6jvZ/YXbx7OadM=
+	t=1711321066; cv=none; b=OsXZji2WDFoUeNnN7tJmKmdnO+i/Sp0/+34oXHduT3bgul0RtMTmZovnXpX0+aqHuOalba74FD9gMwQaUG5R8oUDF0X56HEoXPb7WwLwuhRqTJLo5MvreYRsrQyndbyHQC6RXhU/ogjoHoAeuRt6Txh9JQwHc07mwa5JdDQcwj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321085; c=relaxed/simple;
-	bh=PYENx02CKZGs2pTnzPJ7cRTd7xeRIal9wjJ8Gx4KiIY=;
+	s=arc-20240116; t=1711321066; c=relaxed/simple;
+	bh=vYDrj65XbguCNZEvMXtOEcXUTXcfMV3g0dkmYc1mhQ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kh5MeMWl20bkdOxgCsKtz00lWnli+bIZPm3B+CFnAPc+J/yBf4G0zg8b79GJ2deOd57I2XFXgNmtn4GDvk6oQXH9ta8QEz10F9b5b2Jgzc6q8hHLQ9ZCQIq9u7j7dUDtX4j4O/UKowbvMn0EKlDgA/bt+CmR3DmZ2TwYArr6fG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OduZTzPI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YzgfLEmISWtuZ4qeahfNAOjWgdALp2vChvrircHeR7KdZI0TVQyw0/AJeoamdv0y72xU5aJ1cHIwpTyAcli2+vrPHBbk85DWsOMV6UKbofObkUkmFYjaunnN0ZMhaYkFaTzMxLD/W18omUIqtgDAri0pSysE7eV/6vLbUP4hwBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0GDI0j3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OduZTzPI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB3BDC433F1;
-	Sun, 24 Mar 2024 22:58:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0GDI0j3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A40C433C7;
+	Sun, 24 Mar 2024 22:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321084;
-	bh=PYENx02CKZGs2pTnzPJ7cRTd7xeRIal9wjJ8Gx4KiIY=;
+	s=k20201202; t=1711321065;
+	bh=vYDrj65XbguCNZEvMXtOEcXUTXcfMV3g0dkmYc1mhQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OduZTzPIljbhxU1LLhwNTFwAm3j7apx+5BfdsxsMHnvhq3+lgG42avD/i92nMUUPx
-	 lumt7GMgcb2+KrmUe+ptxeNCJAxwARw857tDMc0CkSXEzH2Oz4p9ov7acAkW2WXoH7
-	 JDBPP0FcuK7fl9iDZC0gdtwXzKQgRAkL9Z2y5TeBePPRDHO7spJ/GsSyLld4MCNvTe
-	 NNj9VoXAxZ7AxiY0PAa4nc2qJms3rOcqzLVT0Gi/BBX8VAwLVzfjvD2Va08xSDVA3/
-	 9zfhuPDGxC2w942i3u0AkxSkk3/fKNenc3bvO/iwyMXzh/aBhGKI+7v3lbGOZVMKnn
-	 +gVMWduRpTIyQ==
+	b=i0GDI0j3jN0rQnMzODqIs+wlSL/owagVY1XSOQ/yv9ygxIOoob7/GLY/I7RQXphHR
+	 fDkAmpcAN0IyReu1YmhuMZKNHo5S2AWBZMY9HIn6eTL66KrxmNTCpANMGRSze+GtnD
+	 l9im6Y0hDEfAllmrE3LH7iCZKBtAqs+o+LnEh9z7YShrwb4asia7o9A2PAHp5xWXEq
+	 k665lFbZBnxaPsp2KOPFDXqEh8gPlaufh5w8IfLWouQYGlESArXC3b0L1dbRVl2TXG
+	 5wxespjbcD5HTRXT2KJkpNR1bKH0vF6Ns6K8qtyXxVq6LK7Q+8HwhL8Wexv1eTU9CC
+	 1wpQes1KeydkQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Linu Cherian <lcherian@marvell.com>,
-	Sunil Goutham <sgoutham@marvell.com>,
-	Subbaraya Sundeep <sbhatta@marvell.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 648/713] octeontx2-af: Use matching wake_up API variant in CGX command interface
-Date: Sun, 24 Mar 2024 18:46:14 -0400
-Message-ID: <20240324224720.1345309-649-sashal@kernel.org>
+Subject: [PATCH 6.7 629/713] kconfig: fix infinite loop when expanding a macro at the end of file
+Date: Sun, 24 Mar 2024 18:45:55 -0400
+Message-ID: <20240324224720.1345309-630-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,36 +47,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Linu Cherian <lcherian@marvell.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit e642921dfeed1e15e73f78f2c3b6746f72b6deb2 ]
+[ Upstream commit af8bbce92044dc58e4cc039ab94ee5d470a621f5 ]
 
-Use wake_up API instead of wake_up_interruptible, since
-wait_event_timeout API is used for waiting on command completion.
+A macro placed at the end of a file with no newline causes an infinite
+loop.
 
-Fixes: 1463f382f58d ("octeontx2-af: Add support for CGX link management")
-Signed-off-by: Linu Cherian <lcherian@marvell.com>
-Signed-off-by: Sunil Goutham <sgoutham@marvell.com>
-Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[Test Kconfig]
+  $(info,hello)
+  \ No newline at end of file
+
+I realized that flex-provided input() returns 0 instead of EOF when it
+reaches the end of a file.
+
+Fixes: 104daea149c4 ("kconfig: reference environment variables directly and remove 'option env='")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/octeontx2/af/cgx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/kconfig/lexer.l | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/cgx.c b/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
-index 6c70c84986904..3c0f55b3e48ea 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
-@@ -1338,7 +1338,7 @@ static irqreturn_t cgx_fwi_event_handler(int irq, void *data)
+diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
+index cc386e4436834..2c2b3e6f248ca 100644
+--- a/scripts/kconfig/lexer.l
++++ b/scripts/kconfig/lexer.l
+@@ -302,8 +302,11 @@ static char *expand_token(const char *in, size_t n)
+ 	new_string();
+ 	append_string(in, n);
  
- 		/* Release thread waiting for completion  */
- 		lmac->cmd_pend = false;
--		wake_up_interruptible(&lmac->wq_cmd_cmplt);
-+		wake_up(&lmac->wq_cmd_cmplt);
- 		break;
- 	case CGX_EVT_ASYNC:
- 		if (cgx_event_is_linkevent(event))
+-	/* get the whole line because we do not know the end of token. */
+-	while ((c = input()) != EOF) {
++	/*
++	 * get the whole line because we do not know the end of token.
++	 * input() returns 0 (not EOF!) when it reachs the end of file.
++	 */
++	while ((c = input()) != 0) {
+ 		if (c == '\n') {
+ 			unput(c);
+ 			break;
 -- 
 2.43.0
 
