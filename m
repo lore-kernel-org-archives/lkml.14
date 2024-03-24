@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAA71F23F0;
-	Sun, 24 Mar 2024 22:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C781F23FA;
+	Sun, 24 Mar 2024 22:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321106; cv=none; b=D9fGUvoeJLoTwZc2PoODlb4Kw3k45iaXt8pVDTjVYezxkiFANnXxS9pXvzjT1ju9JyxtMzOBh90rEwF9A3Yktnswsr8ZtqtVHVUAlTeCwskdYmsg+Nsau1iGbm+l3K4d7he9aQVaN8rYiDPt3YsxlFuooD7UwvTLIMTp50ODHcA=
+	t=1711321108; cv=none; b=trtPgwda58/MF9MYcmA3kPL+1DwTvRRm0V5TkSywHKreLxkPUKNdBChbqruxOTSaW+9ptYuAchrmrz93/oqZEmTE7h+kCV+levlsNlDaKBNB5Nzkol+fyNXS8vJD6cpSgUFTp7PEjDMs6naBkwKj9pFmtNzfzTgQWNoFlO6nCh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321106; c=relaxed/simple;
-	bh=ElVdjxUV2VcNvyjO2SKyW/p4yoGPYipISTRYJuLUWJc=;
+	s=arc-20240116; t=1711321108; c=relaxed/simple;
+	bh=HF7/g01MyF5usS4jtmaXCrXMB/637THnKn0KAttJEFY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pY+kFgq3qEUqkpR7VXu7zQtmSyn25rTk091NAMTZgUqLrl5ZM4btSlVTVeoCxI+Jd0BesQCT/Syoj3T1V1td6kzlQL0a7YJRa8k/wa/q1z0O2ccmwuoS9lDy7/dUtcCNxWYnJgVVIdEUkxfQyo7WsnND67kDy1GupsTeN0nkzig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iofenbaJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CD6r74XjCc/tpWeIKNuMo+7uxwAxD4IX1jTaa9DwJ2JA9d3y1Nw9kwgQbKRe+1eVyR1hw+Vk9uxTMJR6+ha8/z2lnPM3/Ey62QagOel43YTuAyUc9zWjMCeOwoKLMEpyWWHUDxsAsu4eSof4f8lBVrlDUSimVyCFmB4dvhuPgwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J1v77yAS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iofenbaJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 484EDC43390;
-	Sun, 24 Mar 2024 22:58:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J1v77yAS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C4BBC43390;
+	Sun, 24 Mar 2024 22:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321104;
-	bh=ElVdjxUV2VcNvyjO2SKyW/p4yoGPYipISTRYJuLUWJc=;
+	s=k20201202; t=1711321106;
+	bh=HF7/g01MyF5usS4jtmaXCrXMB/637THnKn0KAttJEFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iofenbaJPHcCxfLaGD8QJjDRAYNacBipmf3gPCpjH3it3++3nAtsCpyC/3YjBnqN5
-	 6kA7vOQHeIYBEYV35Iq0gckhJ5eUwrTD8nsYk4Dp9pTRQ6XWLEZFyPNQVk1XzXEVna
-	 te24Vlck6F1xSCr75gWOZcwQ9DxZM48DAmH4C2KO0ThBCdPZbE+se7N3roSVu9e7Uc
-	 W6chGHUZpHBEbhwWFuABBl3+3DruyTQkz6/CwOaPC1Uz1+urhKyw1PMuo1EY0qZSet
-	 BSWmxuT6mgOfKTeXzNStUzLS9DYaayt+DTIHKOOt91soV+ki65I0C8kiQWAjW1u2rx
-	 JxgyfIPF1RrSA==
+	b=J1v77yASM7g7c/v2nLvAx+6IdkKTUe/1v/vDlWcc9eKERChh9bXg2nXyu9W8URety
+	 5DFDo+OqHfSu8gYUcFOUINLkyESQrlqSZqC0mSR8bvk7MaQjZh6QxXNZag8YQhAU4f
+	 GcmzfGx3zFQwtlViSZESmOaBTCV1OtuBGRiPmPhexV4dD0IGoHKDTHU2PEEXiBMGPF
+	 F8oOrcWW8o8zxdqtJ48wE1PWJI4bcvFsS+VsZtRSUJSn2a+9t/t52aRtr6tzftLnV3
+	 sTaDyRKwWnEDr2sbt/8dB54METDphwMC0hmE0yJCmOO1TIUyuI2pit540XhVrUYuOO
+	 Zfj4HmCEUtxvA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Pavel Begunkov <asml.silence@gmail.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Juergen Gross <jgross@suse.com>,
+	Demi Marie Obenour <demi@invisiblethingslab.com>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 667/713] io_uring: fix poll_remove stalled req completion
-Date: Sun, 24 Mar 2024 18:46:33 -0400
-Message-ID: <20240324224720.1345309-668-sashal@kernel.org>
+Subject: [PATCH 6.7 669/713] xen/evtchn: avoid WARN() when unbinding an event channel
+Date: Sun, 24 Mar 2024 18:46:35 -0400
+Message-ID: <20240324224720.1345309-670-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,46 +49,60 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit 5e3afe580a9f5ca173a6bd55ffe10948796ef7e5 ]
+[ Upstream commit 51c23bd691c0f1fb95b29731c356c6fd69925d17 ]
 
-Taking the ctx lock is not enough to use the deferred request completion
-infrastructure, it'll get queued into the list but no one would expect
-it there, so it will sit there until next io_submit_flush_completions().
-It's hard to care about the cancellation path, so complete it via tw.
+When unbinding a user event channel, the related handler might be
+called a last time in case the kernel was built with
+CONFIG_DEBUG_SHIRQ. This might cause a WARN() in the handler.
 
-Fixes: ef7dfac51d8ed ("io_uring/poll: serialize poll linked timer start with poll removal")
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Link: https://lore.kernel.org/r/c446740bc16858f8a2a8dcdce899812f21d15f23.1710514702.git.asml.silence@gmail.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Avoid that by adding an "unbinding" flag to struct user_event which
+will short circuit the handler.
+
+Fixes: 9e90e58c11b7 ("xen: evtchn: Allow shared registration of IRQ handers")
+Reported-by: Demi Marie Obenour <demi@invisiblethingslab.com>
+Tested-by: Demi Marie Obenour <demi@invisiblethingslab.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Link: https://lore.kernel.org/r/20240313071409.25913-2-jgross@suse.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- io_uring/poll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/xen/evtchn.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/io_uring/poll.c b/io_uring/poll.c
-index 7513afc7b702e..58b7556f621eb 100644
---- a/io_uring/poll.c
-+++ b/io_uring/poll.c
-@@ -995,7 +995,6 @@ int io_poll_remove(struct io_kiocb *req, unsigned int issue_flags)
- 	struct io_hash_bucket *bucket;
- 	struct io_kiocb *preq;
- 	int ret2, ret = 0;
--	struct io_tw_state ts = { .locked = true };
+diff --git a/drivers/xen/evtchn.c b/drivers/xen/evtchn.c
+index 59717628ca42b..f6a2216c2c870 100644
+--- a/drivers/xen/evtchn.c
++++ b/drivers/xen/evtchn.c
+@@ -85,6 +85,7 @@ struct user_evtchn {
+ 	struct per_user_data *user;
+ 	evtchn_port_t port;
+ 	bool enabled;
++	bool unbinding;
+ };
  
- 	io_ring_submit_lock(ctx, issue_flags);
- 	preq = io_poll_find(ctx, true, &cd, &ctx->cancel_table, &bucket);
-@@ -1044,7 +1043,8 @@ int io_poll_remove(struct io_kiocb *req, unsigned int issue_flags)
+ static void evtchn_free_ring(evtchn_port_t *ring)
+@@ -164,6 +165,10 @@ static irqreturn_t evtchn_interrupt(int irq, void *data)
+ 	struct per_user_data *u = evtchn->user;
+ 	unsigned int prod, cons;
  
- 	req_set_fail(preq);
- 	io_req_set_res(preq, -ECANCELED, 0);
--	io_req_task_complete(preq, &ts);
-+	preq->io_task_work.func = io_req_task_complete;
-+	io_req_task_work_add(preq);
- out:
- 	io_ring_submit_unlock(ctx, issue_flags);
- 	if (ret < 0) {
++	/* Handler might be called when tearing down the IRQ. */
++	if (evtchn->unbinding)
++		return IRQ_HANDLED;
++
+ 	WARN(!evtchn->enabled,
+ 	     "Interrupt for port %u, but apparently not enabled; per-user %p\n",
+ 	     evtchn->port, u);
+@@ -421,6 +426,7 @@ static void evtchn_unbind_from_user(struct per_user_data *u,
+ 
+ 	BUG_ON(irq < 0);
+ 
++	evtchn->unbinding = true;
+ 	unbind_from_irqhandler(irq, evtchn);
+ 
+ 	del_evtchn(u, evtchn);
 -- 
 2.43.0
 
