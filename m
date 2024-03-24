@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD16145B31;
-	Sun, 24 Mar 2024 23:13:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9792A146004;
+	Sun, 24 Mar 2024 23:14:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322036; cv=none; b=P68hxUlJKD5yG9kY7DNYlIN8uPdxb7W4xJNdG8itBhw+NOIJFMdtGSOi7djzmHAEOP0wwHgdys3GN6eG1QgNa5tNC2+hL5UEf2/8yyrwvYUz7PgOxheugq0VJyfMHnkr5v/fMVuRN2m16lIvu7TQV9I4sn1Ua8JaIx6KVQ67jUs=
+	t=1711322067; cv=none; b=bFQdzwi4ORaNih4c6SlgivkxC01wKsvHvcixi8WXlEMfYrWiTAEzebYVnfY98nCr4qVTbeAgrvEOjygAD3UHEIrw2WfdQZEH+XiTl+ZhNgLMDAp31+qslc1bq6jebwoc37xwwgPbVEH7Y0KMeV26R+BWraZ0Pqc6l+O7bw+r3q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322036; c=relaxed/simple;
-	bh=tCSre+Ddtl3qL0VguPf4rFmfNsZDRggcxJFqUVMB4OY=;
+	s=arc-20240116; t=1711322067; c=relaxed/simple;
+	bh=jubhwmrQUsrVgFdJLK6lEL3+DBrHBzq3x+JNYFWCb2c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yngd8M0VPH6EtVhcNXds8Wvxd5hUNgXjfcUP5YAFQpReBsCF/qgXtDrzFggWBI41spRF6dOJR6c6tFmaxdK4cjbvRTyMv9th1SbQhT2sXGli1ArJUNVqUyg5p0548BhvvxuPp6e28EDWzhAwMJc0qmiKAJOHobjZ9nQ/PI++0Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bIUQ/Ukx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oNmU5dBe1viFt7uzrOu1VZLNwB/Tzi2NCsx/7d2B34MxTB4Nx5vtzYA9efgCeX8AyaoEey3fOdtWH5acqnNjfz523KvN/jcRHYXaet4OEIBZgKdNkpOifSuTcqeEk568BcAB7gu05PVEcvUjjsBJg5t7usRwFbBC31IE9aZ1nh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BvjhK9sg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bIUQ/Ukx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06ECC433C7;
-	Sun, 24 Mar 2024 23:13:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvjhK9sg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92613C43394;
+	Sun, 24 Mar 2024 23:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322036;
-	bh=tCSre+Ddtl3qL0VguPf4rFmfNsZDRggcxJFqUVMB4OY=;
+	s=k20201202; t=1711322067;
+	bh=jubhwmrQUsrVgFdJLK6lEL3+DBrHBzq3x+JNYFWCb2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bIUQ/UkxklqBNNlC+Uw1GVQouUlkDeMME9V3DhEuJATt9ullzsMDdb+9BSLIuGBr4
-	 ORjV+OCXEeAsRCaYVtpPbypDxfsWN2r97BjEhmhYgtjnuDz7I/rpm9QsEVtMIKVHPY
-	 gaNjN5F+xYL/hsPb3DyRuI+X7O2WSZGSWyCP/tOyTVG0EoJSGfOcRgnw8Rl7lZn9Qc
-	 UTkFGx/tmN7xbF/FjKHrCUeP1Nr7xOzrCtiz2/Tsy36nNULUjrPWXFev9m6BiNy0bD
-	 uP9Xop//cEYRWFav20IDQg7niEiisj6LxCq4FLCExKyp+6fDH/gFt6wle2o0GVOIU3
-	 kNTi3/Th0ustA==
+	b=BvjhK9sgmVNzJjOPD/T1jSIzwi/vEgMulMzArYwGMDECXCY50ZUKdGZgsadccEQKM
+	 BRlPVOPtqjDBBSfuazn1TNLeUPRUV6TrLKebCnEv8qqEtBBnN+C3xJ81IN9GwbQGhF
+	 DJp3w380H6ZwWblxx/s743Ecjn2S2X87x1RHR7kv3qBZ0z+yN1CH04WzG0EHA3mB7n
+	 jBIKHgq9dKRxushHLF+lbv1Zyu8MNkF23gLAqNHl2V6K7S2xI0tq8+1QhSdXxV5cGH
+	 5moRPE3QrqatfdPxOaO880gptXe9rrPhO6Y0wd28M2uXbQ6jCCSmpzxNw/EqywQWIl
+	 ge+Ek4gBsprXg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	Taehee Yoo <ap420073@gmail.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	David Ahern <dsahern@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 108/451] arm64: dts: imx8mm-kontron: Disable pullups for I2C signals on SL/BL i.MX8MM
-Date: Sun, 24 Mar 2024 19:06:24 -0400
-Message-ID: <20240324231207.1351418-109-sashal@kernel.org>
+Subject: [PATCH 6.1 140/451] ipv6: mcast: remove one synchronize_net() barrier in ipv6_mc_down()
+Date: Sun, 24 Mar 2024 19:06:56 -0400
+Message-ID: <20240324231207.1351418-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,52 +51,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit f19e5bb91d53264d7dac5d845a4825afadf72440 ]
+[ Upstream commit 17ef8efc00b34918b966388b2af0993811895a8c ]
 
-There are external pullup resistors on the board and due to silicon
-errata ERR050080 let's disable the internal ones to prevent any
-unwanted behavior in case they wear out.
+As discussed in the past (commit 2d3916f31891 ("ipv6: fix skb drops
+in igmp6_event_query() and igmp6_event_report()")) I think the
+synchronize_net() call in ipv6_mc_down() is not needed.
 
-Fixes: 8668d8b2e67f ("arm64: dts: Add the Kontron i.MX8M Mini SoMs and baseboards")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Under load, synchronize_net() can last between 200 usec and 5 ms.
+
+KASAN seems to agree as well.
+
+Fixes: f185de28d9ae ("mld: add new workqueues for process mld events")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Taehee Yoo <ap420073@gmail.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: David Ahern <dsahern@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts  | 4 ++--
- arch/arm64/boot/dts/freescale/imx8mm-kontron-sl.dtsi | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ net/ipv6/mcast.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-index a079322a37931..8d0527bb6fa59 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-@@ -277,8 +277,8 @@ MX8MM_IOMUXC_SAI3_MCLK_GPIO5_IO2		0x19
- 
- 	pinctrl_i2c4: i2c4grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL			0x400001c3
--			MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA			0x400001c3
-+			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL			0x40000083
-+			MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA			0x40000083
- 		>;
- 	};
- 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-sl.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-kontron-sl.dtsi
-index 0679728d24899..884ae2ad35114 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-sl.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-sl.dtsi
-@@ -237,8 +237,8 @@ MX8MM_IOMUXC_ECSPI1_SS0_GPIO5_IO9		0x19
- 
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL			0x400001c3
--			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA			0x400001c3
-+			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL			0x40000083
-+			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA			0x40000083
- 		>;
- 	};
+diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
+index 566f3b7b957e9..a777695389403 100644
+--- a/net/ipv6/mcast.c
++++ b/net/ipv6/mcast.c
+@@ -2722,7 +2722,6 @@ void ipv6_mc_down(struct inet6_dev *idev)
+ 	/* Should stop work after group drop. or we will
+ 	 * start work again in mld_ifc_event()
+ 	 */
+-	synchronize_net();
+ 	mld_query_stop_work(idev);
+ 	mld_report_stop_work(idev);
  
 -- 
 2.43.0
