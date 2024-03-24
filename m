@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881B014A627;
-	Sun, 24 Mar 2024 22:57:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9301B12C558;
+	Sun, 24 Mar 2024 22:57:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321026; cv=none; b=cCLybeVuyDTqrYgqS8amPZBn1VW6iJH5JRQGB+fpsGPGdtoDaxJ4idhCs3BSte0qV1bo8kfHSLmXZg20JFTsZKqrmVL9s/XFm25H7g7dvOkhKClbqhpYD6scOtylJ9rcL+Oelx63GlWukN4FSn7nW8RPDLoJ2cKfKZrSEst4v/M=
+	t=1711321031; cv=none; b=DoJthqO6BfODpPV8SIjCA11cTAQyEzNUVPXHind1kwIUpEfoyFxbJjr2Ej67NLYuqDwi6L2Ze8d6oHu7cQIbMoezeMmj7DRWA4K+4Ibz81iHib8fAlKLoan4P6toZahdhiTp0HPrQYLPyvbVo6K1GLYYbE5gy8viQedd9a++tXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321026; c=relaxed/simple;
-	bh=qM1U2wXCsRZOl0yJeh2zTqlMsGMvm1pacSCvynlzoqM=;
+	s=arc-20240116; t=1711321031; c=relaxed/simple;
+	bh=Vygp2TWkGLy0BzP36pH0XzONz44hyfZcDWMybmTjJT4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZV/3B2C4iKQuc/FIUG6eo2EAQ6OR+QShz/234Z/yoaf5YbAM3LuyXTPJFu4HjIOD0wkqkBJhoqeEZxqCbFFgQa88LK6s2r+aFQZg5701f4DhUEF4Guh8TZCjoDimYGJlrSqE5YNg0cVHZf8q02EeJVy5QuYOi4PmeULgXGLcHzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhiiUd6J; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bT7dGuWbFGYviPoc1dqE51CMruxGieiREmqecCWJiBLFM4pbUneq+fea6qzpVkXBPIS5AZtUpehlZRHSpKrmaNxOt72kG3mjm2yea96yVbFnW5GOU4nrfPysOnyM7YW0UWdX64RID5Y+wpriYaCPVjBffkA0VkSq9iYwDd7sQwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUZj2rO8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhiiUd6J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9654AC433C7;
-	Sun, 24 Mar 2024 22:57:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUZj2rO8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE075C433F1;
+	Sun, 24 Mar 2024 22:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321026;
-	bh=qM1U2wXCsRZOl0yJeh2zTqlMsGMvm1pacSCvynlzoqM=;
+	s=k20201202; t=1711321031;
+	bh=Vygp2TWkGLy0BzP36pH0XzONz44hyfZcDWMybmTjJT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BhiiUd6JZIDlylKX4S/sQRp/pJB6ahQ3i1hDcU1h7pmrwN6p9yD0PKCupSkbqegff
-	 dWJva1clcfMm+zJEMadJQFMAg0bnY1cmASz/7P8zyL4JAMr+H9apu2kkxb6C15SeCv
-	 iTkzkm4bsTCTNkITRu5QGHNf/wCD2y8elWkcsFPFlmqntZ3Rc7t4/QJllrUUSo1myC
-	 5nOJcigQrBdxiZiLYTSGgy1mM9RrrU7poHCBRjbdttmLKA+kJ496g+yJkRdj1waRJ1
-	 WYv5cAKL2cbmT+KZeUEaKD5rGX615NPoOQ80iZ1H0A5/PrPZQqYKCHb8cRQeRqpLpr
-	 WZX9tucJE2zHQ==
+	b=bUZj2rO8NtF3gAJtwHpzLhcXZrZTxBIXghuu/whXsrY1CE49tSdRswK4dBDX12ltc
+	 HRHn6Q8IwiT4PwlozBGhDATuCkv6GJGs3DJvTr3RVtxpxt1nCm3x9PnKAgEwf7rypg
+	 5TZogDVss5g4PL7+9kG7564s2CbgMtmhxKFQAXJuKlu29mhim/Z1221+8syM+4zGal
+	 hqjJyXsswHq8ZRCG4mOAk8/Yx/uP7mQW5MY4p3dxkqQ6oGmqn97EOslVs+1nUZxzrT
+	 I03Ix1IHPdm32lijiFXD0CVJCJuYslyf3zGkoS4BPsxCKuDKv7sIlwt8WIx8EuF7m3
+	 AhMuOiSVqSegw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jorge Mora <jmora1300@gmail.com>,
-	Jorge Mora <mora@netapp.com>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc: Ben Wolsieffer <ben.wolsieffer@hefring.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 589/713] NFSv4.2: fix nfs4_listxattr kernel BUG at mm/usercopy.c:102
-Date: Sun, 24 Mar 2024 18:45:15 -0400
-Message-ID: <20240324224720.1345309-590-sashal@kernel.org>
+Subject: [PATCH 6.7 594/713] watchdog: stm32_iwdg: initialize default timeout
+Date: Sun, 24 Mar 2024 18:45:20 -0400
+Message-ID: <20240324224720.1345309-595-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,97 +49,57 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jorge Mora <jmora1300@gmail.com>
+From: Ben Wolsieffer <ben.wolsieffer@hefring.com>
 
-[ Upstream commit 251a658bbfceafb4d58c76b77682c8bf7bcfad65 ]
+[ Upstream commit dbd7c0088b7f44aa0b9276ed3449df075a7b5b54 ]
 
-A call to listxattr() with a buffer size = 0 returns the actual
-size of the buffer needed for a subsequent call. When size > 0,
-nfs4_listxattr() does not return an error because either
-generic_listxattr() or nfs4_listxattr_nfs4_label() consumes
-exactly all the bytes then size is 0 when calling
-nfs4_listxattr_nfs4_user() which then triggers the following
-kernel BUG:
+The driver never sets a default timeout value, therefore it is
+initialized to zero. When CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is
+enabled, the watchdog is started during probe. The kernel is supposed to
+automatically ping the watchdog from this point until userspace takes
+over, but this does not happen if the configured timeout is zero. A zero
+timeout causes watchdog_need_worker() to return false, so the heartbeat
+worker does not run and the system therefore resets soon after the
+driver is probed.
 
-  [   99.403778] kernel BUG at mm/usercopy.c:102!
-  [   99.404063] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
-  [   99.408463] CPU: 0 PID: 3310 Comm: python3 Not tainted 6.6.0-61.fc40.aarch64 #1
-  [   99.415827] Call trace:
-  [   99.415985]  usercopy_abort+0x70/0xa0
-  [   99.416227]  __check_heap_object+0x134/0x158
-  [   99.416505]  check_heap_object+0x150/0x188
-  [   99.416696]  __check_object_size.part.0+0x78/0x168
-  [   99.416886]  __check_object_size+0x28/0x40
-  [   99.417078]  listxattr+0x8c/0x120
-  [   99.417252]  path_listxattr+0x78/0xe0
-  [   99.417476]  __arm64_sys_listxattr+0x28/0x40
-  [   99.417723]  invoke_syscall+0x78/0x100
-  [   99.417929]  el0_svc_common.constprop.0+0x48/0xf0
-  [   99.418186]  do_el0_svc+0x24/0x38
-  [   99.418376]  el0_svc+0x3c/0x110
-  [   99.418554]  el0t_64_sync_handler+0x120/0x130
-  [   99.418788]  el0t_64_sync+0x194/0x198
-  [   99.418994] Code: aa0003e3 d000a3e0 91310000 97f49bdb (d4210000)
+This patch fixes this by setting an arbitrary non-zero default timeout.
+The default could be read from the hardware instead, but I didn't see
+any reason to add this complexity.
 
-Issue is reproduced when generic_listxattr() returns 'system.nfs4_acl',
-thus calling lisxattr() with size = 16 will trigger the bug.
+This has been tested on an STM32F746.
 
-Add check on nfs4_listxattr() to return ERANGE error when it is
-called with size > 0 and the return value is greater than size.
-
-Fixes: 012a211abd5d ("NFSv4.2: hook in the user extended attribute handlers")
-Signed-off-by: Jorge Mora <mora@netapp.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: 85fdc63fe256 ("drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at probe")
+Signed-off-by: Ben Wolsieffer <ben.wolsieffer@hefring.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20240228182723.12855-1-ben.wolsieffer@hefring.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/watchdog/stm32_iwdg.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 23819a7565085..b2ff8c7a21494 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -10615,29 +10615,33 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
- static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
- {
- 	ssize_t error, error2, error3;
-+	size_t left = size;
+diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+index d9fd50df9802c..5404e03876202 100644
+--- a/drivers/watchdog/stm32_iwdg.c
++++ b/drivers/watchdog/stm32_iwdg.c
+@@ -20,6 +20,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/watchdog.h>
  
--	error = generic_listxattr(dentry, list, size);
-+	error = generic_listxattr(dentry, list, left);
- 	if (error < 0)
- 		return error;
- 	if (list) {
- 		list += error;
--		size -= error;
-+		left -= error;
- 	}
- 
--	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, size);
-+	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, left);
- 	if (error2 < 0)
- 		return error2;
- 
- 	if (list) {
- 		list += error2;
--		size -= error2;
-+		left -= error2;
- 	}
- 
--	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, size);
-+	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
- 	if (error3 < 0)
- 		return error3;
- 
--	return error + error2 + error3;
-+	error += error2 + error3;
-+	if (size && error > size)
-+		return -ERANGE;
-+	return error;
- }
- 
- static void nfs4_enable_swap(struct inode *inode)
++#define DEFAULT_TIMEOUT 10
++
+ /* IWDG registers */
+ #define IWDG_KR		0x00 /* Key register */
+ #define IWDG_PR		0x04 /* Prescaler Register */
+@@ -248,6 +250,7 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+ 	wdd->parent = dev;
+ 	wdd->info = &stm32_iwdg_info;
+ 	wdd->ops = &stm32_iwdg_ops;
++	wdd->timeout = DEFAULT_TIMEOUT;
+ 	wdd->min_timeout = DIV_ROUND_UP((RLR_MIN + 1) * PR_MIN, wdt->rate);
+ 	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * wdt->data->max_prescaler *
+ 				    1000) / wdt->rate;
 -- 
 2.43.0
 
