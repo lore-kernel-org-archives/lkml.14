@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508C620F229;
-	Sun, 24 Mar 2024 23:07:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF6420F23B;
+	Sun, 24 Mar 2024 23:07:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321677; cv=none; b=KmtHOaYrIxXcMyNHsHC9x/odfBbEApy0r/6CeISnOFFmayloRT+wn1KGgEd/RAo41qMEGbvBc7LrjZyePnnhb2g/kjCMI2vlOTtq9Tzq7h8yRcVzCyysOkQ/usACiafW7a1NW233LlAqAcYbOB2eCChF7uL/D+1kKouJvycz/Jg=
+	t=1711321678; cv=none; b=Xmebx4c96PrvlxRbXMnijmxuR0KvUVQYr9xz9vKxBqCe7MV06sAFDgWbxLJTtXasABvu5p4oaNsNKsJSCPcZGwrBXtAj5Yn6XVJe0uJUVklV6IZLFFYl9YkBAaTcEXRu6qZmwCyyuotSM4FE/pNR3MmLDmTaTngYoU2OaYE6pmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321677; c=relaxed/simple;
-	bh=EwpQiZTZb60HWNqw7nmbTZpT6J3V+5xuYnr9mw2QicA=;
+	s=arc-20240116; t=1711321678; c=relaxed/simple;
+	bh=h8BdH7BljQ0FdEXcZo6/KF7jYRa7kna71QzsImwJywI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DBIt82Mb8E/wygk3YyfI3N6Ea54WYru4auGI0cj+jQfXHbOVo4Y47nwG/JNnseS7S2OP9FM7OMfSt1coKE57OxN54qSlLQBYv8h3xK2+H1y+P7gM3nmW0QDjLPqTEiBxH9BOmGxy6HqLdp+ejtSLXtfhfYUYzMhmOjQ6ZInroB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T8qG9Sbe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Eko83aOLUJb+2Ka/Z+HET9LXRipjkNG8zoXA3kKxYitnKLx9C15FY39/qUWuW23iJDxFKhbW5EuCjIrcVFjXTXw6h8wQbnrzSrEdsLCKTXkJbtS0f5FOQJC52cE1Hl/XWBdD1AuazWNUaCRZFpqUkjZq/zzPJLXyHipoGMXNlHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRQ2ozjt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T8qG9Sbe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99998C43399;
-	Sun, 24 Mar 2024 23:07:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRQ2ozjt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39ACEC43394;
+	Sun, 24 Mar 2024 23:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321676;
-	bh=EwpQiZTZb60HWNqw7nmbTZpT6J3V+5xuYnr9mw2QicA=;
+	s=k20201202; t=1711321677;
+	bh=h8BdH7BljQ0FdEXcZo6/KF7jYRa7kna71QzsImwJywI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T8qG9SbeGrB4pOQDnjnggWcaQVX1ppV0lH7XMuyyFYPvb0O7f7w/3CESORiiRIUP0
-	 BiE/dWyK7mlzWCi5FtCcJwAIRwhBxRBxRFk6/WGNL6pyktAI0RnZHIePls5Ar0j6IU
-	 yjfQD70KmgERXa8QrT9aLwvXfkhdxnXlQThoYNYH6DKn5gEBXye2rOzdb4NYrvASqF
-	 uWCgbSYibgDPU2Ao0/Oewm/LGtM3gaXqsiZ9yknrIl8w78LHpjXvn0rU/OKI5iySXB
-	 TnSkD9hqxRcwURi9ZLHRg4DqRQkOUayt2IWBbTuXUfzIxfHO5uEod74GXp4qx3VBi9
-	 dP/gi9KGSm7Lg==
+	b=nRQ2ozjtqB90JWZklGYpCbRG0JVs0PiSVevyhCXKR19vlsCW6YfiyvlXlt5Z2jmuX
+	 I95Y31aij7IAA6XhpTfgRzfF5B+dOo7xbXY+NSxTOzK1P4GobQSQ+zR9AAT5ZElH9K
+	 gGY5YPuEdzUQNqK+O/sBNmBaNLydUSnFR47ONNSWpISS5quZZXKr22PbbDGQ4/HHnx
+	 nl1QPsAKhjTnlaZHm9iw9zoUqIxKVOPr8MXUnxgXAq/6sQdtWGra9dkVlqed1yTZ97
+	 fFsRvRIyIvyrKDhoKuZSeT54QJ3FGlkszwfw2fTGTxfTyHelFXNODS5h2BPKwMKZ/D
+	 WDDNWgZKVhyUQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Arnd Bergmann <arnd@arndb.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 405/638] clk: renesas: r8a779g0: Correct PFC/GPIO parent clocks
-Date: Sun, 24 Mar 2024 18:57:22 -0400
-Message-ID: <20240324230116.1348576-406-sashal@kernel.org>
+Subject: [PATCH 6.6 407/638] ALSA: seq: fix function cast warnings
+Date: Sun, 24 Mar 2024 18:57:24 -0400
+Message-ID: <20240324230116.1348576-408-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -43,78 +44,97 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit abb3fa662b8f8eaed1590b0e7a4e19eda467cdd3 ]
+[ Upstream commit d7bf73809849463f76de42aad62c850305dd6c5d ]
 
-According to the R-Car V4H Series Hardware User’s Manual Rev.1.00, the
-parent clock of the Pin Function (PFC/GPIO) module clocks is the CP
-clock.
+clang-16 points out a control flow integrity (kcfi) issue when event
+callbacks get converted to incompatible types:
 
-Fix this by adding the missing CP clock, and correcting the PFC parents.
+sound/core/seq/seq_midi.c:135:30: error: cast from 'int (*)(struct snd_rawmidi_substream *, const char *, int)' to 'snd_seq_dump_func_t' (aka 'int (*)(void *, void *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  135 |                 snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)dump_midi, substream);
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sound/core/seq/seq_virmidi.c:83:31: error: cast from 'int (*)(struct snd_rawmidi_substream *, const unsigned char *, int)' to 'snd_seq_dump_func_t' (aka 'int (*)(void *, void *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+   83 |                         snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)snd_rawmidi_receive, vmidi->substream);
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fixes: f2afa78d5a0c0b0b ("dt-bindings: clock: Add r8a779g0 CPG Core Clock Definitions")
-Fixes: 36ff366033f0dde1 ("clk: renesas: r8a779g0: Add PFC/GPIO clocks")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/5401fccd204dc90b44f0013e7f53b9eff8df8214.1706197297.git.geert+renesas@glider.be
+For addressing those errors, introduce wrapper functions that are used
+for callbacks and bridge to the actual function call with pointer
+cast.
+
+The code was originally added with the initial ALSA merge in linux-2.5.4.
+
+[ the patch description shamelessly copied from Arnd's original patch
+  -- tiwai ]
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20240213101020.459183-1-arnd@kernel.org
+Link: https://lore.kernel.org/r/20240213135343.16411-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/r8a779g0-cpg-mssr.c       | 11 ++++++-----
- include/dt-bindings/clock/r8a779g0-cpg-mssr.h |  1 +
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ sound/core/seq/seq_midi.c    | 8 +++++++-
+ sound/core/seq/seq_virmidi.c | 9 ++++++++-
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/renesas/r8a779g0-cpg-mssr.c b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
-index 7cc580d673626..7999faa9a921b 100644
---- a/drivers/clk/renesas/r8a779g0-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
-@@ -22,7 +22,7 @@
+diff --git a/sound/core/seq/seq_midi.c b/sound/core/seq/seq_midi.c
+index 18320a248aa7d..78dcb0ea15582 100644
+--- a/sound/core/seq/seq_midi.c
++++ b/sound/core/seq/seq_midi.c
+@@ -113,6 +113,12 @@ static int dump_midi(struct snd_rawmidi_substream *substream, const char *buf, i
+ 	return 0;
+ }
  
- enum clk_ids {
- 	/* Core Clock Outputs exported to DT */
--	LAST_DT_CORE_CLK = R8A779G0_CLK_R,
-+	LAST_DT_CORE_CLK = R8A779G0_CLK_CP,
- 
- 	/* External Input Clocks */
- 	CLK_EXTAL,
-@@ -141,6 +141,7 @@ static const struct cpg_core_clk r8a779g0_core_clks[] __initconst = {
- 	DEF_FIXED("svd2_vip",	R8A779G0_CLK_SVD2_VIP,	CLK_SV_VIP,	2, 1),
- 	DEF_FIXED("cbfusa",	R8A779G0_CLK_CBFUSA,	CLK_EXTAL,	2, 1),
- 	DEF_FIXED("cpex",	R8A779G0_CLK_CPEX,	CLK_EXTAL,	2, 1),
-+	DEF_FIXED("cp",		R8A779G0_CLK_CP,	CLK_EXTAL,	2, 1),
- 	DEF_FIXED("viobus",	R8A779G0_CLK_VIOBUS,	CLK_VIO,	1, 1),
- 	DEF_FIXED("viobusd2",	R8A779G0_CLK_VIOBUSD2,	CLK_VIO,	2, 1),
- 	DEF_FIXED("vcbus",	R8A779G0_CLK_VCBUS,	CLK_VC,		1, 1),
-@@ -230,10 +231,10 @@ static const struct mssr_mod_clk r8a779g0_mod_clks[] __initconst = {
- 	DEF_MOD("cmt1",		911,	R8A779G0_CLK_R),
- 	DEF_MOD("cmt2",		912,	R8A779G0_CLK_R),
- 	DEF_MOD("cmt3",		913,	R8A779G0_CLK_R),
--	DEF_MOD("pfc0",		915,	R8A779G0_CLK_CL16M),
--	DEF_MOD("pfc1",		916,	R8A779G0_CLK_CL16M),
--	DEF_MOD("pfc2",		917,	R8A779G0_CLK_CL16M),
--	DEF_MOD("pfc3",		918,	R8A779G0_CLK_CL16M),
-+	DEF_MOD("pfc0",		915,	R8A779G0_CLK_CP),
-+	DEF_MOD("pfc1",		916,	R8A779G0_CLK_CP),
-+	DEF_MOD("pfc2",		917,	R8A779G0_CLK_CP),
-+	DEF_MOD("pfc3",		918,	R8A779G0_CLK_CP),
- 	DEF_MOD("tsc",		919,	R8A779G0_CLK_CL16M),
- 	DEF_MOD("ssiu",		2926,	R8A779G0_CLK_S0D6_PER),
- 	DEF_MOD("ssi",		2927,	R8A779G0_CLK_S0D6_PER),
-diff --git a/include/dt-bindings/clock/r8a779g0-cpg-mssr.h b/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
-index 754c54a6eb06a..7850cdc62e285 100644
---- a/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
-+++ b/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
-@@ -86,5 +86,6 @@
- #define R8A779G0_CLK_CPEX		74
- #define R8A779G0_CLK_CBFUSA		75
- #define R8A779G0_CLK_R			76
-+#define R8A779G0_CLK_CP			77
- 
- #endif /* __DT_BINDINGS_CLOCK_R8A779G0_CPG_MSSR_H__ */
++/* callback for snd_seq_dump_var_event(), bridging to dump_midi() */
++static int __dump_midi(void *ptr, void *buf, int count)
++{
++	return dump_midi(ptr, buf, count);
++}
++
+ static int event_process_midi(struct snd_seq_event *ev, int direct,
+ 			      void *private_data, int atomic, int hop)
+ {
+@@ -132,7 +138,7 @@ static int event_process_midi(struct snd_seq_event *ev, int direct,
+ 			pr_debug("ALSA: seq_midi: invalid sysex event flags = 0x%x\n", ev->flags);
+ 			return 0;
+ 		}
+-		snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)dump_midi, substream);
++		snd_seq_dump_var_event(ev, __dump_midi, substream);
+ 		snd_midi_event_reset_decode(msynth->parser);
+ 	} else {
+ 		if (msynth->parser == NULL)
+diff --git a/sound/core/seq/seq_virmidi.c b/sound/core/seq/seq_virmidi.c
+index 1b9260108e482..1678737f11be7 100644
+--- a/sound/core/seq/seq_virmidi.c
++++ b/sound/core/seq/seq_virmidi.c
+@@ -62,6 +62,13 @@ static void snd_virmidi_init_event(struct snd_virmidi *vmidi,
+ /*
+  * decode input event and put to read buffer of each opened file
+  */
++
++/* callback for snd_seq_dump_var_event(), bridging to snd_rawmidi_receive() */
++static int dump_to_rawmidi(void *ptr, void *buf, int count)
++{
++	return snd_rawmidi_receive(ptr, buf, count);
++}
++
+ static int snd_virmidi_dev_receive_event(struct snd_virmidi_dev *rdev,
+ 					 struct snd_seq_event *ev,
+ 					 bool atomic)
+@@ -80,7 +87,7 @@ static int snd_virmidi_dev_receive_event(struct snd_virmidi_dev *rdev,
+ 		if (ev->type == SNDRV_SEQ_EVENT_SYSEX) {
+ 			if ((ev->flags & SNDRV_SEQ_EVENT_LENGTH_MASK) != SNDRV_SEQ_EVENT_LENGTH_VARIABLE)
+ 				continue;
+-			snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)snd_rawmidi_receive, vmidi->substream);
++			snd_seq_dump_var_event(ev, dump_to_rawmidi, vmidi->substream);
+ 			snd_midi_event_reset_decode(vmidi->parser);
+ 		} else {
+ 			len = snd_midi_event_decode(vmidi->parser, msg, sizeof(msg), ev);
 -- 
 2.43.0
 
