@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20B6217E0C;
-	Sun, 24 Mar 2024 23:09:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E72217E17;
+	Sun, 24 Mar 2024 23:09:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321782; cv=none; b=hLnWzfrs4XN6M0ijPzL0Qpoekza0i5X4ZL9QIAWkWeJGcZbNE68DG2qNlWHUfp4/jyExE422jJ4FMeXEDWnIE3QqPul7lAiaWA6+mjlQAil/IaW8rQK+5cmDE/HhBB3JlSbCZDZyg9jIyQhfmbsN5WzKzxY02/S8IdPAUXV6eN4=
+	t=1711321784; cv=none; b=jPIcDg9PNsoRa9kbPa9bAqs6uYkp2v93QwgSb7QDQ1IZ9PkbrLvQ2rOxyN7vcPMlrp7y1TLKqo/AubUfTmWS0EFPnrBAOuUitMdbziMujjRXIoUHBuxhRqPb3BAchI12hj/rX9SxPI7gTHkVkQc2FrT1c4VgljoFlTg3bfb+VFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321782; c=relaxed/simple;
-	bh=hkI4T48tky6Dsn098i4nYiPHOajWB4JBuWm2GZ+ywxE=;
+	s=arc-20240116; t=1711321784; c=relaxed/simple;
+	bh=HtIh6Izzs/rj3ULEcLwsf1FABKMnRpwiZxfRnnYtDN4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K7xNd5EqTJUS2hvfeA5QdBVyuxpEiJtNf2zZnz/53fQyRyyYksJ1zGexOIfk13Gwizw82ixId5Qfd1/+1v74xVHpkg4qwyDzKUqrPclY+Pw2oInVFZQ2Q102fyLCT18kEHOJ93kuQGFRLnzKn55k7glp4lVRv6QIEerLaW5cd2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gww13tkf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IoC7Trk/zsM0l5ny8epsBIyqVBg5KgaURKrrM1HzqEXcZ+4ONkotbMOh+ZqEloNCxIH8DFdOc+6kLU/UJbIaVhIJsyAO/oNzdS0xouqJudMOSBHKFJNRrt8gQQmejPfx3UbTw1io8bxC9aisI2v8Q7AXwhJCkkuhqBJ13qZdqj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ErbdGyo2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gww13tkf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1417CC43390;
-	Sun, 24 Mar 2024 23:09:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ErbdGyo2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17D37C43390;
+	Sun, 24 Mar 2024 23:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321780;
-	bh=hkI4T48tky6Dsn098i4nYiPHOajWB4JBuWm2GZ+ywxE=;
+	s=k20201202; t=1711321782;
+	bh=HtIh6Izzs/rj3ULEcLwsf1FABKMnRpwiZxfRnnYtDN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gww13tkf3iy7G+o7FySOflCXhLn7H27tOc3NgrUIyhJw0p26R2WXnKfzA4mW+buXN
-	 KfXUAhf30MxSG5MGeVDscIQexYYOyZgJMXHsojb68551ZPL+B4dh8FUqIbBICp4/Yo
-	 jAS1Gj6E6ykiybI8XW/xBwvUA9kBvFP7ljTAeMIkkGh03agYF9f6/WNRS6spmHfUrR
-	 6xC51RNJ4LeyeqSfU50CLjuKhDqXE+kBdqeKUi76pppriZW3pN1OusSnsMZqxvTDGE
-	 gsk8u5Gx42XYLLX8gPNTdd2OVQpaWqJtsuKV2IlJtm8oPxq1YqOfWq09dYkK5xYQ/8
-	 2ZSh5vo9kwEeA==
+	b=ErbdGyo20we8YcnuYmuHuBiH9vAf5iaazUVksWCFjFt/b2jDtjKU/RFI6COyFKVf7
+	 gyHxL5t8MyLuo1y4sTclOxSxvUZmNTK+RCiENK19Cz+A6n2OSmKZnrYR389a/5HaFU
+	 6Od3KOUADLscpwBsWH5eaIX1kecwXwYohYjPss9K8R9g32RGPRssxPwx81JGGky1S3
+	 6mrFLm3R01SYUVsjtJ3gT9oc1od4MaQFvaM5FPTIfcQpdVt8R2tGB+U/VjcJrxfji3
+	 gEYWrkrzZEOIbOzgE4ehCuHHxxUZpPEjhbbMtygaKgZsJqFB+hL317aUIr2Js774ks
+	 ng1xEHudH1PFA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: William Kucharski <william.kucharski@oracle.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Leon Romanovsky <leon@kernel.org>,
+Cc: Chao Yu <chao@kernel.org>,
+	Daeho Jeong <daehojeong@google.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 508/638] RDMA/srpt: Do not register event handler until srpt device is fully setup
-Date: Sun, 24 Mar 2024 18:59:05 -0400
-Message-ID: <20240324230116.1348576-509-sashal@kernel.org>
+Subject: [PATCH 6.6 510/638] f2fs: compress: fix to cover normal cluster write with cp_rwsem
+Date: Sun, 24 Mar 2024 18:59:07 -0400
+Message-ID: <20240324230116.1348576-511-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,58 +49,123 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: William Kucharski <william.kucharski@oracle.com>
+From: Chao Yu <chao@kernel.org>
 
-[ Upstream commit c21a8870c98611e8f892511825c9607f1e2cd456 ]
+[ Upstream commit fd244524c2cf07b5f4c3fe8abd6a99225c76544b ]
 
-Upon rare occasions, KASAN reports a use-after-free Write
-in srpt_refresh_port().
+When we overwrite compressed cluster w/ normal cluster, we should
+not unlock cp_rwsem during f2fs_write_raw_pages(), otherwise data
+will be corrupted if partial blocks were persisted before CP & SPOR,
+due to cluster metadata wasn't updated atomically.
 
-This seems to be because an event handler is registered before the
-srpt device is fully setup and a race condition upon error may leave a
-partially setup event handler in place.
-
-Instead, only register the event handler after srpt device initialization
-is complete.
-
-Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
-Signed-off-by: William Kucharski <william.kucharski@oracle.com>
-Link: https://lore.kernel.org/r/20240202091549.991784-2-william.kucharski@oracle.com
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+Reviewed-by: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/srpt/ib_srpt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/f2fs/compress.c | 27 ++++++++++++++++++---------
+ fs/f2fs/data.c     |  3 ++-
+ 2 files changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
-index 015bfeede90e1..45547bf281e31 100644
---- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-+++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-@@ -3209,7 +3209,6 @@ static int srpt_add_one(struct ib_device *device)
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index dfc59a658836f..100353355213d 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1438,12 +1438,14 @@ void f2fs_compress_write_end_io(struct bio *bio, struct page *page)
+ }
  
- 	INIT_IB_EVENT_HANDLER(&sdev->event_handler, sdev->device,
- 			      srpt_event_handler);
--	ib_register_event_handler(&sdev->event_handler);
+ static int f2fs_write_raw_pages(struct compress_ctx *cc,
+-					int *submitted,
++					int *submitted_p,
+ 					struct writeback_control *wbc,
+ 					enum iostat_type io_type)
+ {
+ 	struct address_space *mapping = cc->inode->i_mapping;
+-	int _submitted, compr_blocks, ret, i;
++	struct f2fs_sb_info *sbi = F2FS_M_SB(mapping);
++	int submitted, compr_blocks, i;
++	int ret = 0;
  
- 	for (i = 1; i <= sdev->device->phys_port_cnt; i++) {
- 		sport = &sdev->port[i - 1];
-@@ -3232,6 +3231,7 @@ static int srpt_add_one(struct ib_device *device)
+ 	compr_blocks = f2fs_compressed_blocks(cc);
+ 
+@@ -1458,6 +1460,10 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
+ 	if (compr_blocks < 0)
+ 		return compr_blocks;
+ 
++	/* overwrite compressed cluster w/ normal cluster */
++	if (compr_blocks > 0)
++		f2fs_lock_op(sbi);
++
+ 	for (i = 0; i < cc->cluster_size; i++) {
+ 		if (!cc->rpages[i])
+ 			continue;
+@@ -1482,7 +1488,7 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
+ 		if (!clear_page_dirty_for_io(cc->rpages[i]))
+ 			goto continue_unlock;
+ 
+-		ret = f2fs_write_single_data_page(cc->rpages[i], &_submitted,
++		ret = f2fs_write_single_data_page(cc->rpages[i], &submitted,
+ 						NULL, NULL, wbc, io_type,
+ 						compr_blocks, false);
+ 		if (ret) {
+@@ -1490,26 +1496,29 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
+ 				unlock_page(cc->rpages[i]);
+ 				ret = 0;
+ 			} else if (ret == -EAGAIN) {
++				ret = 0;
+ 				/*
+ 				 * for quota file, just redirty left pages to
+ 				 * avoid deadlock caused by cluster update race
+ 				 * from foreground operation.
+ 				 */
+ 				if (IS_NOQUOTA(cc->inode))
+-					return 0;
+-				ret = 0;
++					goto out;
+ 				f2fs_io_schedule_timeout(DEFAULT_IO_TIMEOUT);
+ 				goto retry_write;
+ 			}
+-			return ret;
++			goto out;
  		}
+ 
+-		*submitted += _submitted;
++		*submitted_p += submitted;
  	}
  
-+	ib_register_event_handler(&sdev->event_handler);
- 	spin_lock(&srpt_dev_lock);
- 	list_add_tail(&sdev->list, &srpt_dev_list);
- 	spin_unlock(&srpt_dev_lock);
-@@ -3242,7 +3242,6 @@ static int srpt_add_one(struct ib_device *device)
+-	f2fs_balance_fs(F2FS_M_SB(mapping), true);
++out:
++	if (compr_blocks > 0)
++		f2fs_unlock_op(sbi);
  
- err_port:
- 	srpt_unregister_mad_agent(sdev, i);
--	ib_unregister_event_handler(&sdev->event_handler);
- err_cm:
- 	if (sdev->cm_id)
- 		ib_destroy_cm_id(sdev->cm_id);
+-	return 0;
++	f2fs_balance_fs(sbi, true);
++	return ret;
+ }
+ 
+ int f2fs_write_multi_pages(struct compress_ctx *cc,
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 349c9559f0b36..6f673fc44bdbc 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2848,7 +2848,7 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
+ 		.encrypted_page = NULL,
+ 		.submitted = 0,
+ 		.compr_blocks = compr_blocks,
+-		.need_lock = LOCK_RETRY,
++		.need_lock = compr_blocks ? LOCK_DONE : LOCK_RETRY,
+ 		.post_read = f2fs_post_read_required(inode) ? 1 : 0,
+ 		.io_type = io_type,
+ 		.io_wbc = wbc,
+@@ -2932,6 +2932,7 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
+ 	if (err == -EAGAIN) {
+ 		err = f2fs_do_write_data_page(&fio);
+ 		if (err == -EAGAIN) {
++			f2fs_bug_on(sbi, compr_blocks);
+ 			fio.need_lock = LOCK_REQ;
+ 			err = f2fs_do_write_data_page(&fio);
+ 		}
 -- 
 2.43.0
 
