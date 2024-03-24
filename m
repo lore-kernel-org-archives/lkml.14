@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D727179211;
-	Sun, 24 Mar 2024 23:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20BF179215;
+	Sun, 24 Mar 2024 23:39:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323589; cv=none; b=o/H1inyjIEc8D9yFeuBRpGKLdZZ2xfwh2HkGd1ageOhn6omcnKeTZEz/swFWEnY2KwDFkryxuHPpba90sqNsNeCypQUECxmb9G/Io9I/vlLfIo5xqfspPgTxFjzDqhtEdsCCcxJAVY+OoVsuMGnejVAHHxbVJ8lRWwtbHep7fvM=
+	t=1711323592; cv=none; b=njYmXjgmziW9Iv0qQj74al4qcXhzJPdjQhSt+ujAlN/MOOCSCqNEoGF8/ybPLw5r/xC2xkUaDesldPMVRO/VrxDPssvl4hqQcku8wi3dzT5ty3tZYcsNwHGWumOEAkb+jjqX+a2Tp+gf/w7fPULmo9kaVs61xTDPFt8IKWbSa+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323589; c=relaxed/simple;
-	bh=DP7eS2BLiLJag7ca28yuThlRVBYGxPMMTfFtKxToGc8=;
+	s=arc-20240116; t=1711323592; c=relaxed/simple;
+	bh=1iSWyDGqMjAOjyD45RQQNwJCnJjHhCq9814UWAMzE/0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YYB5dW9s5irYQ2r2sZ5gmdN1DFWsqOI79rbZMl/wau9z6Ta+2bLtEe+qs8XoXLqSYEP5lp6jSZ0P+LEQVptPO5H2+7EX7TA3/onKEKIHR8OAAEcvKu6wa/MCHdkBtO9RNM2uy1yB/1X5PO7PY7e6f5Fr2E2a0wbS41r5pBZrG0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2DK6M58; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=VKO+9RMBtyGdZRlE025r+ryO6Xh92F1zVx8dCc/5H3fc/CvdLMcF2cy2xHD/FU0YqoLFzfZ3HbAnSyWBhXr5h9pTH+6S/56Bzk/66H033ViC1hwoeJojZ1v/M86PY3k+a94Gj8sEPuLpZ75s+mJ8IzKk9jRqzPzYE3iPGZcr4TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A+ZpfALu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2DK6M58"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7613C433C7;
-	Sun, 24 Mar 2024 23:39:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A+ZpfALu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DB25C43394;
+	Sun, 24 Mar 2024 23:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323588;
-	bh=DP7eS2BLiLJag7ca28yuThlRVBYGxPMMTfFtKxToGc8=;
+	s=k20201202; t=1711323590;
+	bh=1iSWyDGqMjAOjyD45RQQNwJCnJjHhCq9814UWAMzE/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E2DK6M589cXo7OBeITRgpNJ7iQ0wG8lSfgIHC8J15ELpf1puuenVuBkrxsPoMBq7z
-	 91gG47c4wpI8DNKr3SykRdMQFbCVEBT1xIlW+ZEbHTOrnglxo20HxfG+U5GBkYs4S4
-	 dj5RaxqLLQy8FTx/BeXzBB9z4emlCmd8lnM6bXkThsnWNqd4GeKB6Zovn41FXgUz3O
-	 lvhsW5m4GfC80eY2gLuvLGcami0ViRVNw67yGVTnVG4oa5k0+n+1WVij8ypwvoqO0p
-	 gwodVs+X66e+0TYSH23qAS/U6Glu+gWKimrhR9xBknkTQMB18/cKObwvcMWZqwh6Ma
-	 RvHYTB+VUc9rA==
+	b=A+ZpfALuYGP5jydpPFFQQ2GN7NuID8NkUpulGCqwTB7wHSe/nnu4+euzrDrgflc5v
+	 TugVBBMimIvZSD5i4KaBFDst2H7VHLOO6RunilJ1iFvz7aGWOJkFYw1AUjKNsodZLL
+	 R8mY+JCKoNpNVmLWfJP0FZipkolpBdj45ucAJSyM+6GvSJ7oS+Vr1CwDcs2nUK1Lk/
+	 wn/MVQqFyqwATvz1WXAU6eUzIakoMaT/GnAhZbcJ2kyQy3dUa6NhbB4gejdikNBlSe
+	 80a9MvIewQmDL7YyOEIdwmWVGjVx0o+ohSb4Zt38feG+ZzYt+Rjku4rgH8+K6bywB6
+	 2HHfpXSMUCSQQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Golle <daniel@makrotopia.org>,
-	Bc-bocun Chen <bc-bocun.chen@mediatek.com>,
+Cc: Ignat Korchagin <ignat@cloudflare.com>,
+	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 295/317] net: ethernet: mtk_eth_soc: fix PPE hanging issue
-Date: Sun, 24 Mar 2024 19:34:35 -0400
-Message-ID: <20240324233458.1352854-296-sashal@kernel.org>
+Subject: [PATCH 5.15 297/317] net: veth: do not manipulate GRO when using XDP
+Date: Sun, 24 Mar 2024 19:34:37 -0400
+Message-ID: <20240324233458.1352854-298-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -45,72 +45,85 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Golle <daniel@makrotopia.org>
+From: Ignat Korchagin <ignat@cloudflare.com>
 
-[ Upstream commit ea80e3ed09ab2c2b75724faf5484721753e92c31 ]
+[ Upstream commit d7db7775ea2e31502d46427f5efd385afc4ff1eb ]
 
-A patch to resolve an issue was found in MediaTek's GPL-licensed SDK:
-In the mtk_ppe_stop() function, the PPE scan mode is not disabled before
-disabling the PPE. This can potentially lead to a hang during the process
-of disabling the PPE.
+Commit d3256efd8e8b ("veth: allow enabling NAPI even without XDP") tried to fix
+the fact that GRO was not possible without XDP, because veth did not use NAPI
+without XDP. However, it also introduced the behaviour that GRO is always
+enabled, when XDP is enabled.
 
-Without this patch, the PPE may experience a hang during the reboot test.
+While it might be desired for most cases, it is confusing for the user at best
+as the GRO flag suddenly changes, when an XDP program is attached. It also
+introduces some complexities in state management as was partially addressed in
+commit fe9f801355f0 ("net: veth: clear GRO when clearing XDP even when down").
 
-Link: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/b40da332dfe763932a82f9f62a4709457a15dd6c
-Fixes: ba37b7caf1ed ("net: ethernet: mtk_eth_soc: add support for initializing the PPE")
-Suggested-by: Bc-bocun Chen <bc-bocun.chen@mediatek.com>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+But the biggest problem is that it is not possible to disable GRO at all, when
+an XDP program is attached, which might be needed for some use cases.
+
+Fix this by not touching the GRO flag on XDP enable/disable as the code already
+supports switching to NAPI if either GRO or XDP is requested.
+
+Link: https://lore.kernel.org/lkml/20240311124015.38106-1-ignat@cloudflare.com/
+Fixes: d3256efd8e8b ("veth: allow enabling NAPI even without XDP")
+Fixes: fe9f801355f0 ("net: veth: clear GRO when clearing XDP even when down")
+Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
+Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_ppe.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ drivers/net/veth.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.c b/drivers/net/ethernet/mediatek/mtk_ppe.c
-index 66298e2235c91..5e7b66846791d 100644
---- a/drivers/net/ethernet/mediatek/mtk_ppe.c
-+++ b/drivers/net/ethernet/mediatek/mtk_ppe.c
-@@ -425,7 +425,7 @@ int mtk_ppe_start(struct mtk_ppe *ppe)
- 			 MTK_PPE_KEEPALIVE_DISABLE) |
- 	      FIELD_PREP(MTK_PPE_TB_CFG_HASH_MODE, 1) |
- 	      FIELD_PREP(MTK_PPE_TB_CFG_SCAN_MODE,
--			 MTK_PPE_SCAN_MODE_KEEPALIVE_AGE) |
-+			 MTK_PPE_SCAN_MODE_CHECK_AGE) |
- 	      FIELD_PREP(MTK_PPE_TB_CFG_ENTRY_NUM,
- 			 MTK_PPE_ENTRIES_SHIFT);
- 	ppe_w32(ppe, MTK_PPE_TB_CFG, val);
-@@ -493,17 +493,21 @@ int mtk_ppe_stop(struct mtk_ppe *ppe)
+diff --git a/drivers/net/veth.c b/drivers/net/veth.c
+index 0102f86d48676..cfacf8965bc59 100644
+--- a/drivers/net/veth.c
++++ b/drivers/net/veth.c
+@@ -1388,8 +1388,6 @@ static netdev_features_t veth_fix_features(struct net_device *dev,
+ 		if (peer_priv->_xdp_prog)
+ 			features &= ~NETIF_F_GSO_SOFTWARE;
+ 	}
+-	if (priv->_xdp_prog)
+-		features |= NETIF_F_GRO;
  
- 	mtk_ppe_cache_enable(ppe, false);
- 
--	/* disable offload engine */
--	ppe_clear(ppe, MTK_PPE_GLO_CFG, MTK_PPE_GLO_CFG_EN);
--	ppe_w32(ppe, MTK_PPE_FLOW_CFG, 0);
--
- 	/* disable aging */
- 	val = MTK_PPE_TB_CFG_AGE_NON_L4 |
- 	      MTK_PPE_TB_CFG_AGE_UNBIND |
- 	      MTK_PPE_TB_CFG_AGE_TCP |
- 	      MTK_PPE_TB_CFG_AGE_UDP |
--	      MTK_PPE_TB_CFG_AGE_TCP_FIN;
-+	      MTK_PPE_TB_CFG_AGE_TCP_FIN |
-+		  MTK_PPE_TB_CFG_SCAN_MODE;
- 	ppe_clear(ppe, MTK_PPE_TB_CFG, val);
- 
--	return mtk_ppe_wait_busy(ppe);
-+	if (mtk_ppe_wait_busy(ppe))
-+		return -ETIMEDOUT;
-+
-+	/* disable offload engine */
-+	ppe_clear(ppe, MTK_PPE_GLO_CFG, MTK_PPE_GLO_CFG_EN);
-+	ppe_w32(ppe, MTK_PPE_FLOW_CFG, 0);
-+
-+	return 0;
+ 	return features;
  }
+@@ -1481,14 +1479,6 @@ static int veth_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ 		}
+ 
+ 		if (!old_prog) {
+-			if (!veth_gro_requested(dev)) {
+-				/* user-space did not require GRO, but adding
+-				 * XDP is supposed to get GRO working
+-				 */
+-				dev->features |= NETIF_F_GRO;
+-				netdev_features_change(dev);
+-			}
+-
+ 			peer->hw_features &= ~NETIF_F_GSO_SOFTWARE;
+ 			peer->max_mtu = max_mtu;
+ 		}
+@@ -1499,14 +1489,6 @@ static int veth_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ 			if (dev->flags & IFF_UP)
+ 				veth_disable_xdp(dev);
+ 
+-			/* if user-space did not require GRO, since adding XDP
+-			 * enabled it, clear it now
+-			 */
+-			if (!veth_gro_requested(dev)) {
+-				dev->features &= ~NETIF_F_GRO;
+-				netdev_features_change(dev);
+-			}
+-
+ 			if (peer) {
+ 				peer->hw_features |= NETIF_F_GSO_SOFTWARE;
+ 				peer->max_mtu = ETH_MAX_MTU;
 -- 
 2.43.0
 
