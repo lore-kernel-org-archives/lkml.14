@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB153149E1E;
-	Sun, 24 Mar 2024 23:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62959149DEB;
+	Sun, 24 Mar 2024 23:15:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322159; cv=none; b=mqHSJGY7IrEPHMcjot3Qt1HDYSLHS57jBX5RjveA+WIZa+3JCZfDhAbCTTIevHRPOdYT/UqWi5QGZhGuMg5Zqqq+E+2yJHrhqYm3IV0ZxKgGxhIFMLfB44JOIfpTMrFS/engefOOvRdKHP9Sm2DD5YuAaQ/R8OTDa75+bpnE5tQ=
+	t=1711322145; cv=none; b=IzlYACZVE/xPYKPhlu9G1XOghSB7ciryeJAYo9fFyZb7KrCEQ3ujOYtxV1YR4WrGEm1ZS1zZMlzqe1+JdLr9CkeWD2YT2d32qRbJ6Y08OQ1R2YNiaL2UMu2o8djVpLUFTPh8dXQNO266LhA3vb6M2VvOSflgZEVc4xTAkjzg2Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322159; c=relaxed/simple;
-	bh=gLvrobefHih3m36oqL0RUatkLn6qrzrvGHRqDvv4vu0=;
+	s=arc-20240116; t=1711322145; c=relaxed/simple;
+	bh=cpHQl2U6XX5lZOCEkpT458uk/SmfHyyclBjqSxRJwOI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ObRljyIevOLF6BRHXZu4LBGj6eOneBS/LSzkR1Sd1xJ2EKYBAs88m241QKbJi+gmYxEHvpSREwynAVoeMJYbtGeubOEsxf8Utq59DHXJ6RpVFF6V84xnP/dsHB1jFQQ/LcDsQhszWxMUTGC6gR8rg1EK8zUlvH38TVjtsz8YCUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/OhtsVN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=PAN+cDWXpyMcvU1WvM+ejTwJpNtA422nwDvNfOKim0nKgHp6SW43YmpNhpd/AyPVadTO7MiKQzmHtKLupanJud14g71XX8q3fTXhZEw1V2940mURapO9CZe4O4VYbXJN9m1avV1EEun+OuHdgFbKRF0okwbN6nOl9YQfzj+pusc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G0oFoybi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/OhtsVN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3517CC433F1;
-	Sun, 24 Mar 2024 23:15:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G0oFoybi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D30C433C7;
+	Sun, 24 Mar 2024 23:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322157;
-	bh=gLvrobefHih3m36oqL0RUatkLn6qrzrvGHRqDvv4vu0=;
+	s=k20201202; t=1711322144;
+	bh=cpHQl2U6XX5lZOCEkpT458uk/SmfHyyclBjqSxRJwOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L/OhtsVNlKA6vLNxcVMotAyRMO2CqgHGUc8gmKMltMCl5FyvypfzlbwSzgMmFKZj2
-	 UnXIzDcqYgFSRtkc4jxiDpqWVc9YSVsfr/br6hC12KBy2yFTloCuyibtZKvelocjLs
-	 uhtT6LjoJhBvr5t+jq7yfx/y2qfg61c7KaljOw7HTdTz7+I1Tb+78rtwqG+nA3oFBZ
-	 0WFUTI5bB2KXNUNgZla3DfmJfhr8bSi0h/XY5FY8baBZ8zl1d6XKafCX0Bo6LQNLtL
-	 dDWnycBEH0sB+4zOr/c+DPaVAwICp8Q6K5W/n83tXNgVIClA4782oIp+oss//Azv81
-	 AXLCyHctYhkVw==
+	b=G0oFoybiazUJ4Te1iK3IMfrC1F5KNFInxbdXMfchX929eKAnGvRSn14mgtDhhtDlh
+	 LVigsWaSXZDwLrfdeBeqvcTlfKuV9SAh5Lv20la3aoCnyq/Ef9D/x6HuEar++/j2+c
+	 qXIqSqoOxi8LayR+LvTriSptsU6CcAzHpShU6zmauIly9/2KpZ4UJ3OJdcy9XEFoIv
+	 8LdwJ+qEeJz39BJm8HN+8HlPOGqSwxhWa9P6SBNpfnBp55zZQrXH9AZsBodT427NGd
+	 LvaayL5LLfxUxbbjPFgCyjbqHMgbH4hVK4W963jdkvrr4KPDKVzjcOFl78wjhosGGZ
+	 ea8BArde1TOEw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhang Shurong <zhang_shurong@foxmail.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Danis?= <frederic.danis@collabora.com>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 235/451] drm/tegra: dpaux: Fix PM disable depth imbalance in tegra_dpaux_probe
-Date: Sun, 24 Mar 2024 19:08:31 -0400
-Message-ID: <20240324231207.1351418-236-sashal@kernel.org>
+Subject: [PATCH 6.1 221/451] Bluetooth: Fix eir name length
+Date: Sun, 24 Mar 2024 19:08:17 -0400
+Message-ID: <20240324231207.1351418-222-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,79 +44,106 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhang Shurong <zhang_shurong@foxmail.com>
+From: Frédéric Danis <frederic.danis@collabora.com>
 
-[ Upstream commit 0800880f4eb789b7d299db40f2e86e056bd33a4e ]
+[ Upstream commit 2ab3e8d67fc1d4a7638b769cf83023ec209fc0a9 ]
 
-The pm_runtime_enable function increases the power disable depth,
-which means that we must perform a matching decrement on the error
-handling path to maintain balance within the given context.
-Additionally, we need to address the same issue for pm_runtime_get_sync.
-We fix this by invoking pm_runtime_disable and pm_runtime_put_sync
-when error returns.
+According to Section 1.2 of Core Specification Supplement Part A the
+complete or short name strings are defined as utf8s, which should not
+include the trailing NULL for variable length array as defined in Core
+Specification Vol1 Part E Section 2.9.3.
 
-Fixes: 82b81b3ec1a7 ("drm/tegra: dpaux: Implement runtime PM")
-Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/tencent_B13DB7F6C0023C46157250A524966F326A09@qq.com
+Removing the trailing NULL allows PTS to retrieve the random address based
+on device name, e.g. for SM/PER/KDU/BV-02-C, SM/PER/KDU/BV-08-C or
+GAP/BROB/BCST/BV-03-C.
+
+Fixes: f61851f64b17 ("Bluetooth: Fix append max 11 bytes of name to scan rsp data")
+Signed-off-by: Frédéric Danis <frederic.danis@collabora.com>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dpaux.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ net/bluetooth/eir.c  | 29 +++++++----------------------
+ net/bluetooth/mgmt.c |  2 +-
+ 2 files changed, 8 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dpaux.c b/drivers/gpu/drm/tegra/dpaux.c
-index d773ef4854188..b563988fb6848 100644
---- a/drivers/gpu/drm/tegra/dpaux.c
-+++ b/drivers/gpu/drm/tegra/dpaux.c
-@@ -524,7 +524,7 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
- 	if (err < 0) {
- 		dev_err(dpaux->dev, "failed to request IRQ#%u: %d\n",
- 			dpaux->irq, err);
--		return err;
-+		goto err_pm_disable;
- 	}
+diff --git a/net/bluetooth/eir.c b/net/bluetooth/eir.c
+index 9214189279e80..1bc51e2b05a34 100644
+--- a/net/bluetooth/eir.c
++++ b/net/bluetooth/eir.c
+@@ -13,48 +13,33 @@
  
- 	disable_irq(dpaux->irq);
-@@ -544,7 +544,7 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
+ #define PNP_INFO_SVCLASS_ID		0x1200
+ 
+-static u8 eir_append_name(u8 *eir, u16 eir_len, u8 type, u8 *data, u8 data_len)
+-{
+-	u8 name[HCI_MAX_SHORT_NAME_LENGTH + 1];
+-
+-	/* If data is already NULL terminated just pass it directly */
+-	if (data[data_len - 1] == '\0')
+-		return eir_append_data(eir, eir_len, type, data, data_len);
+-
+-	memcpy(name, data, HCI_MAX_SHORT_NAME_LENGTH);
+-	name[HCI_MAX_SHORT_NAME_LENGTH] = '\0';
+-
+-	return eir_append_data(eir, eir_len, type, name, sizeof(name));
+-}
+-
+ u8 eir_append_local_name(struct hci_dev *hdev, u8 *ptr, u8 ad_len)
+ {
+ 	size_t short_len;
+ 	size_t complete_len;
+ 
+-	/* no space left for name (+ NULL + type + len) */
+-	if ((max_adv_len(hdev) - ad_len) < HCI_MAX_SHORT_NAME_LENGTH + 3)
++	/* no space left for name (+ type + len) */
++	if ((max_adv_len(hdev) - ad_len) < HCI_MAX_SHORT_NAME_LENGTH + 2)
+ 		return ad_len;
+ 
+ 	/* use complete name if present and fits */
+ 	complete_len = strnlen(hdev->dev_name, sizeof(hdev->dev_name));
+ 	if (complete_len && complete_len <= HCI_MAX_SHORT_NAME_LENGTH)
+-		return eir_append_name(ptr, ad_len, EIR_NAME_COMPLETE,
+-				       hdev->dev_name, complete_len + 1);
++		return eir_append_data(ptr, ad_len, EIR_NAME_COMPLETE,
++				       hdev->dev_name, complete_len);
+ 
+ 	/* use short name if present */
+ 	short_len = strnlen(hdev->short_name, sizeof(hdev->short_name));
+ 	if (short_len)
+-		return eir_append_name(ptr, ad_len, EIR_NAME_SHORT,
++		return eir_append_data(ptr, ad_len, EIR_NAME_SHORT,
+ 				       hdev->short_name,
+-				       short_len == HCI_MAX_SHORT_NAME_LENGTH ?
+-				       short_len : short_len + 1);
++				       short_len);
+ 
+ 	/* use shortened full name if present, we already know that name
+ 	 * is longer then HCI_MAX_SHORT_NAME_LENGTH
  	 */
- 	err = tegra_dpaux_pad_config(dpaux, DPAUX_PADCTL_FUNC_I2C);
- 	if (err < 0)
--		return err;
-+		goto err_pm_disable;
+ 	if (complete_len)
+-		return eir_append_name(ptr, ad_len, EIR_NAME_SHORT,
++		return eir_append_data(ptr, ad_len, EIR_NAME_SHORT,
+ 				       hdev->dev_name,
+ 				       HCI_MAX_SHORT_NAME_LENGTH);
  
- #ifdef CONFIG_GENERIC_PINCONF
- 	dpaux->desc.name = dev_name(&pdev->dev);
-@@ -557,7 +557,8 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
- 	dpaux->pinctrl = devm_pinctrl_register(&pdev->dev, &dpaux->desc, dpaux);
- 	if (IS_ERR(dpaux->pinctrl)) {
- 		dev_err(&pdev->dev, "failed to register pincontrol\n");
--		return PTR_ERR(dpaux->pinctrl);
-+		err = PTR_ERR(dpaux->pinctrl);
-+		goto err_pm_disable;
- 	}
- #endif
- 	/* enable and clear all interrupts */
-@@ -573,10 +574,15 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
- 	err = devm_of_dp_aux_populate_ep_devices(&dpaux->aux);
- 	if (err < 0) {
- 		dev_err(dpaux->dev, "failed to populate AUX bus: %d\n", err);
--		return err;
-+		goto err_pm_disable;
- 	}
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 21c0924787e22..716f6dc4934b7 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -8465,7 +8465,7 @@ static int read_adv_features(struct sock *sk, struct hci_dev *hdev,
  
- 	return 0;
-+
-+err_pm_disable:
-+	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+	return err;
+ static u8 calculate_name_len(struct hci_dev *hdev)
+ {
+-	u8 buf[HCI_MAX_SHORT_NAME_LENGTH + 3];
++	u8 buf[HCI_MAX_SHORT_NAME_LENGTH + 2]; /* len + type + name */
+ 
+ 	return eir_append_local_name(hdev, buf, 0);
  }
- 
- static int tegra_dpaux_remove(struct platform_device *pdev)
 -- 
 2.43.0
 
