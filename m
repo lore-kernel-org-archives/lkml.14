@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2E97F7FF;
-	Sun, 24 Mar 2024 22:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E0B80610;
+	Sun, 24 Mar 2024 22:48:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320487; cv=none; b=hA7uP12VGygyAmfgW1F6dZzJ3qQrILMIMATddth5MFimrr1wnhmm+rnUhTO53nlOqyOfRf+nK+ACPoWH/Makq5oq4qBG181yD72SkOARvdFXpJJqR4K9vfo2SGek/v46yw2BK0qTPwCgRGIdFDDY0EXdCNLTukR3K2KTYNfe5FY=
+	t=1711320513; cv=none; b=Q5AYd/ogRhIp9hpgDs86IJRzWgO4DPrfFnzcvPOQp81AV3/NzIkYdlliADQj3556Y195DIK9PRtSV9ULIjwWjEdC6Kg0Eljc0U9t3yGnYr5skYBlytoslM3fWRf8hLQWOLW5nwOcCwYho2KlOuOXrQj94Q8AjPAnvE2wkUT2cBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320487; c=relaxed/simple;
-	bh=Hydcgv3m0EEIxLFQJmaHc1+FBJMwBP1WrXhgZbFNRGY=;
+	s=arc-20240116; t=1711320513; c=relaxed/simple;
+	bh=lNQsheyNDdU4fFjsczF/E8ef3yJSjcxsBtth7BKLDKg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZRcRWJQCESbVNnHHISETasXsIXy3hUiNoFSCo74KQi05bCQWU6Yt6/AXdW8dCdMnS5xp4EOnmz+tTkkhLpHBAIFpmKa6VCas15D3V9nkQ20fmLnDupYc9hGA/xEbJdQQ+2z3xrJnVL/r2oojU9AYrYE37CqamQGR7UttVlI5zzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScMrPyjh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bpOORBlRYhh9Dxl8LpGIg9gDsRdiXF7X95Pl1uzSA5MtghJaat64WggY7YhWG9g2cgZH3BsAxGEFC95O0NFQyWIg+kKUEnEHWm4P7RUFyH5zPYmT96mpRb/QpMy9mkDv0mf6v1JkByYFfulZIapIzBAO4x75ieBM1JTGRKsh+fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjkdiMeU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScMrPyjh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E86DC43399;
-	Sun, 24 Mar 2024 22:48:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjkdiMeU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44313C433C7;
+	Sun, 24 Mar 2024 22:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320487;
-	bh=Hydcgv3m0EEIxLFQJmaHc1+FBJMwBP1WrXhgZbFNRGY=;
+	s=k20201202; t=1711320512;
+	bh=lNQsheyNDdU4fFjsczF/E8ef3yJSjcxsBtth7BKLDKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ScMrPyjhCDXlaesphR9woe9CdyAt4wUhWUE1tTbaNWZTboSHAfBwyV7plyX1Z+gdY
-	 9yAFp4EBK8T/fbgQTX1rycQKu/0ceeT7FAY3dXptUTNohZZOcbVlodwFVGjbPNhXqT
-	 elai+R8IKtUSH/uSGndnd2i5ROs1SI2zYHGb4b7bYWHzKcwGb3Dm9QUqbacY0nGqQq
-	 yodlTG6VMpmSGzwYCIpGRTm1Yg6bu9jrwnfUDXr89Wpttr/DMbUPkm3ebpbDNi52O+
-	 UuSrDxjQVPCSKXVwkzJgJGxMHYNzRIYh7CJUYQyQF0iJQ+Ujnz/trnxK376/F3S6c3
-	 fJu9mH5YTlR0A==
+	b=gjkdiMeUkD3TxiNsCG1lU5rX7MwMgrtIaxG3wdwpYXGWOyUuVgLNmpGiXJMHvcErM
+	 5RhnbW5iWG8L3J8c/YQ7vs/IYf2l9f3uEvN4WE1/MhM3CqGKOadfYkKmRHO4Q8zsQz
+	 /Hzq3orBg/esZmGrk1P/C4DuC+0jIRvAcNthV/fvwpQt7qCuvQCMzXOM0oscs2esxs
+	 YyxoXXOBihBzLJI83HqEcrkrw4W/nJZDqaWxCLLMmOVpmhs0jkufNtwzWT4NYASZne
+	 mOAiWh7nkShwpwAVQjEF3nj7ashSbyNjozVVaaKasTBFpy/hexy9ig3eYtr4uKH3fO
+	 CTL/4G7k0EvpA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Rob Herring <robh@kernel.org>,
+Cc: Stefan Binding <sbinding@opensource.cirrus.com>,
+	Takashi Iwai <tiwai@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 046/713] ARM: dts: renesas: rcar-gen2: Add missing #interrupt-cells to DA9063 nodes
-Date: Sun, 24 Mar 2024 18:36:12 -0400
-Message-ID: <20240324224720.1345309-47-sashal@kernel.org>
+Subject: [PATCH 6.7 073/713] ALSA: hda: cs35l41: Overwrite CS35L41 configuration for ASUS UM5302LA
+Date: Sun, 24 Mar 2024 18:36:39 -0400
+Message-ID: <20240324224720.1345309-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,129 +48,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Stefan Binding <sbinding@opensource.cirrus.com>
 
-[ Upstream commit 8c987693dc2d292d777f1be63cb35233049ae25e ]
+[ Upstream commit b603d95692e47dc6f5f733e93c3841dc0c01e624 ]
 
-make dtbs_check W=2:
+Whilst this laptop contains _DSD inside the BIOS, there is an error in
+this configuration. Override the _DSD in the BIOS with the correct
+configuration for this laptop.
 
-    arch/arm/boot/dts/renesas/r8a7790-lager.dts:444.11-458.5: Warning (interrupt_provider): /i2c-mux4/pmic@58: Missing '#interrupt-cells' in interrupt provider
-    ...
-
-Fix this by adding the missing #interrupt-cells properties.
-
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/a351e503ea97fb1af68395843f513925ff1bdf26.1707922460.git.geert+renesas@glider.be
+Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20240301160154.158398-4-sbinding@opensource.cirrus.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/renesas/r8a7790-lager.dts   | 1 +
- arch/arm/boot/dts/renesas/r8a7790-stout.dts   | 1 +
- arch/arm/boot/dts/renesas/r8a7791-koelsch.dts | 1 +
- arch/arm/boot/dts/renesas/r8a7791-porter.dts  | 1 +
- arch/arm/boot/dts/renesas/r8a7792-blanche.dts | 1 +
- arch/arm/boot/dts/renesas/r8a7793-gose.dts    | 1 +
- arch/arm/boot/dts/renesas/r8a7794-alt.dts     | 1 +
- arch/arm/boot/dts/renesas/r8a7794-silk.dts    | 1 +
- 8 files changed, 8 insertions(+)
+ sound/pci/hda/cs35l41_hda_property.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/renesas/r8a7790-lager.dts b/arch/arm/boot/dts/renesas/r8a7790-lager.dts
-index 4d666ad8b114b..b17a9f9307e59 100644
---- a/arch/arm/boot/dts/renesas/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7790-lager.dts
-@@ -432,6 +432,7 @@ pmic@58 {
- 			interrupt-parent = <&irqc0>;
- 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 			interrupt-controller;
-+			#interrupt-cells = <2>;
- 
- 			rtc {
- 				compatible = "dlg,da9063-rtc";
-diff --git a/arch/arm/boot/dts/renesas/r8a7790-stout.dts b/arch/arm/boot/dts/renesas/r8a7790-stout.dts
-index fe14727eefe1e..25956661a8754 100644
---- a/arch/arm/boot/dts/renesas/r8a7790-stout.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7790-stout.dts
-@@ -332,6 +332,7 @@ pmic@58 {
- 		interrupt-parent = <&irqc0>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		onkey {
- 			compatible = "dlg,da9063-onkey";
-diff --git a/arch/arm/boot/dts/renesas/r8a7791-koelsch.dts b/arch/arm/boot/dts/renesas/r8a7791-koelsch.dts
-index 545515b41ea3f..ec01cc8595161 100644
---- a/arch/arm/boot/dts/renesas/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7791-koelsch.dts
-@@ -795,6 +795,7 @@ pmic@58 {
- 		interrupt-parent = <&irqc0>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		rtc {
- 			compatible = "dlg,da9063-rtc";
-diff --git a/arch/arm/boot/dts/renesas/r8a7791-porter.dts b/arch/arm/boot/dts/renesas/r8a7791-porter.dts
-index ec0a20d5130d6..fcc9a2313e1df 100644
---- a/arch/arm/boot/dts/renesas/r8a7791-porter.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7791-porter.dts
-@@ -389,6 +389,7 @@ pmic@5a {
- 		interrupt-parent = <&irqc0>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		watchdog {
- 			compatible = "dlg,da9063-watchdog";
-diff --git a/arch/arm/boot/dts/renesas/r8a7792-blanche.dts b/arch/arm/boot/dts/renesas/r8a7792-blanche.dts
-index e793134f32a30..af16f251849c6 100644
---- a/arch/arm/boot/dts/renesas/r8a7792-blanche.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7792-blanche.dts
-@@ -332,6 +332,7 @@ pmic@58 {
- 		interrupt-parent = <&irqc>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		rtc {
- 			compatible = "dlg,da9063-rtc";
-diff --git a/arch/arm/boot/dts/renesas/r8a7793-gose.dts b/arch/arm/boot/dts/renesas/r8a7793-gose.dts
-index 79b537b246426..9358fc7d0e9f6 100644
---- a/arch/arm/boot/dts/renesas/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7793-gose.dts
-@@ -735,6 +735,7 @@ pmic@58 {
- 		interrupt-parent = <&irqc0>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		rtc {
- 			compatible = "dlg,da9063-rtc";
-diff --git a/arch/arm/boot/dts/renesas/r8a7794-alt.dts b/arch/arm/boot/dts/renesas/r8a7794-alt.dts
-index 08df031bc27c9..73ec4d3541541 100644
---- a/arch/arm/boot/dts/renesas/r8a7794-alt.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7794-alt.dts
-@@ -453,6 +453,7 @@ pmic@58 {
- 		interrupt-parent = <&gpio3>;
- 		interrupts = <31 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		rtc {
- 			compatible = "dlg,da9063-rtc";
-diff --git a/arch/arm/boot/dts/renesas/r8a7794-silk.dts b/arch/arm/boot/dts/renesas/r8a7794-silk.dts
-index b7af1befa126b..b825f2e25dd06 100644
---- a/arch/arm/boot/dts/renesas/r8a7794-silk.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7794-silk.dts
-@@ -424,6 +424,7 @@ pmic@58 {
- 		interrupt-parent = <&gpio3>;
- 		interrupts = <31 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		onkey {
- 			compatible = "dlg,da9063-onkey";
+diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
+index 6cf4c02f9effd..5a5f4b499fd94 100644
+--- a/sound/pci/hda/cs35l41_hda_property.c
++++ b/sound/pci/hda/cs35l41_hda_property.c
+@@ -83,6 +83,7 @@ static const struct cs35l41_config cs35l41_config_table[] = {
+ 	{ "104317F3", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
+ 	{ "10431863", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
+ 	{ "104318D3", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
++	{ "10431A83", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
+ 	{ "10431C9F", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
+ 	{ "10431CAF", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
+ 	{ "10431CCF", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
+@@ -420,6 +421,7 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
+ 	{ "CSC3551", "104317F3", generic_dsd_config },
+ 	{ "CSC3551", "10431863", generic_dsd_config },
+ 	{ "CSC3551", "104318D3", generic_dsd_config },
++	{ "CSC3551", "10431A83", generic_dsd_config },
+ 	{ "CSC3551", "10431C9F", generic_dsd_config },
+ 	{ "CSC3551", "10431CAF", generic_dsd_config },
+ 	{ "CSC3551", "10431CCF", generic_dsd_config },
 -- 
 2.43.0
 
