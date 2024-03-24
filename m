@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7143D1D44B8;
-	Sun, 24 Mar 2024 22:49:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37191D5F92;
+	Sun, 24 Mar 2024 22:49:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320557; cv=none; b=KLvpTC43pXGnFbUItiOYOxcDqQkO6NYLm1Sfme8H4o6ZOaxcZoTZE5FNdZKRxFI6gmunuGH0sm+RbdSbG4yaKQGE4vBQ6tZRdiSF8hEOLfgzYdCduHrSKDg+3FVM+Z2o+hOMU0TqNxp3+rbmUL3BSAYwfpgjrXwFDUz7UqxneFo=
+	t=1711320573; cv=none; b=E6i6yQSEicdjZHM9xpbdNYQjYLWg10/OZrk611+cl/oUG17MsS0Vq5AdQOsieVsmz4x9b7gptisNXxOfhQEFAeTqXN+L2ObK4DP3Q0gE9jdoCjmPVRIJhYNsSzK5jUvx8LySEfP8exbiNCZjVQy0LJTp1U+sIjMEJzuHE3h1uKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320557; c=relaxed/simple;
-	bh=o0P18BDc75hN2CyaedHN48mE5buT5ZzzGqs59ZBu8ls=;
+	s=arc-20240116; t=1711320573; c=relaxed/simple;
+	bh=T+ReKdZ9roAuzU/DfsquugIpMTaDIpDuv/0TiIsOPPI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mer6JQhv/gvvA9qK1sMMGrsjtY3jZQGbNHBEyADM0L8Zqw0gh6wsd3EuHdkScB6W60OPcvzGV/SkBGnLmYHHWJPp7UAuUxdC7aQTX0jJy2BGCrKao9Ji+aRWrb6Eh8qBgI/5zP7DB2Beol3/368Z/YgxLUAZWuVjaTFZimsXm20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMHwz1sQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=daSC1jqnndeVeX0k71A2c3a7oyJJoRlBmcn8M5byuLIAw/AnK5+9RmRhVeMzszVweCbVb9RwSIA//siOioxC4vJOLibkC28yr1d05YLfx3Is8wEVbJfKeGf8q7/Un9IjNYuN2GVljHZDVAqYTapEedVOYJ/vmXwEG7Wxm/SatCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0zlSFO1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMHwz1sQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC1D6C433F1;
-	Sun, 24 Mar 2024 22:49:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0zlSFO1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC750C43390;
+	Sun, 24 Mar 2024 22:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320556;
-	bh=o0P18BDc75hN2CyaedHN48mE5buT5ZzzGqs59ZBu8ls=;
+	s=k20201202; t=1711320573;
+	bh=T+ReKdZ9roAuzU/DfsquugIpMTaDIpDuv/0TiIsOPPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bMHwz1sQUThKXqc8MlTOOKXi8SPWceOGugFMGA+Jbodpgq/9mkshk/k3ld2UWqrtB
-	 /XurdISA5wmSp0qfIBh0Kp908eh3qeC7tA0V+VlX3ORNpyTfpqMaEx2HbUjeme3dHM
-	 nmU9n9TVQJ8uS+YEboWSfnQPvK3364ZeBgvbBzXTxXIBC8BTBJyv7KD0E1w38M44r6
-	 5GfRJ5CfNp4591E2ol37C3vieIvDNPhpW/ug1YuUI1uz7nYsxec25VPOOIEqES2EE7
-	 hJzba8Fm92e7B78fif5y/3+8rNzzCji6yB90mi2FmJqet7Wrh5FgvIQn5NNDsyLz/d
-	 ca4JwFvAoGOvA==
+	b=l0zlSFO1SXnRV9a3zmbYS+2qsqd+ud/o0knNgw4IYsjpRHOMT5p01YA526A2bySky
+	 JCPsua4/uiwMooZKM1+FOPggZa4eK9gLii+SpKttfaua6OLJwENJcKw+YBdztVzfHV
+	 EH+0L0YPShfa1RABjE4/di7RBlPkSXc5+5yKRguC0GUpUgxYvyw7eYFCPUIUjVTQCQ
+	 GIqq9K+2LGwskoOdvuYXeN56ZKHcWXAUU6ZzjWYrnP/msLoTQZZdalGffvmhKflmeu
+	 nU/w7S9Kry1FtJg2fFLU/oey1zF5TKVVxBBcrsdsR5GlQ11vq0i+x7rwiLB4ETf867
+	 9eqkMsLtcXARA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>,
+Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
+	Julian Calaby <julian.calaby@gmail.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 117/713] io_uring/net: unify how recvmsg and sendmsg copy in the msghdr
-Date: Sun, 24 Mar 2024 18:37:23 -0400
-Message-ID: <20240324224720.1345309-118-sashal@kernel.org>
+Subject: [PATCH 6.7 134/713] wifi: b43: Stop correct queue in DMA worker when QoS is disabled
+Date: Sun, 24 Mar 2024 18:37:40 -0400
+Message-ID: <20240324224720.1345309-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -47,328 +49,64 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
 
-[ Upstream commit 52307ac4f2b507f60bae6df5be938d35e199c688 ]
+[ Upstream commit 581c8967d66c4961076dbbee356834e9c6777184 ]
 
-For recvmsg, we roll our own since we support buffer selections. This
-isn't the case for sendmsg right now, but in preparation for doing so,
-make the recvmsg copy helpers generic so we can call them from the
-sendmsg side as well.
+When QoS is disabled, the queue priority value will not map to the correct
+ieee80211 queue since there is only one queue. Stop queue 0 when QoS is
+disabled to prevent trying to stop a non-existent queue and failing to stop
+the actual queue instantiated.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Stable-dep-of: 8ede3db5061b ("io_uring/net: fix overflow check in io_recvmsg_mshot_prep()")
+Fixes: bad691946966 ("b43: avoid packet losses in the dma worker code.")
+Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20231231050300.122806-4-sergeantsagara@protonmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- io_uring/net.c | 271 ++++++++++++++++++++++++++-----------------------
- 1 file changed, 142 insertions(+), 129 deletions(-)
+ drivers/net/wireless/broadcom/b43/main.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/io_uring/net.c b/io_uring/net.c
-index 161622029147c..ef495e2aac2bc 100644
---- a/io_uring/net.c
-+++ b/io_uring/net.c
-@@ -204,16 +204,150 @@ static int io_setup_async_msg(struct io_kiocb *req,
- 	return -EAGAIN;
- }
- 
-+static bool io_recvmsg_multishot_overflow(struct io_async_msghdr *iomsg)
-+{
-+	int hdr;
-+
-+	if (iomsg->namelen < 0)
-+		return true;
-+	if (check_add_overflow((int)sizeof(struct io_uring_recvmsg_out),
-+			       iomsg->namelen, &hdr))
-+		return true;
-+	if (check_add_overflow(hdr, (int)iomsg->controllen, &hdr))
-+		return true;
-+
-+	return false;
-+}
-+
-+#ifdef CONFIG_COMPAT
-+static int __io_compat_msg_copy_hdr(struct io_kiocb *req,
-+				    struct io_async_msghdr *iomsg,
-+				    struct sockaddr __user **addr, int ddir)
-+{
-+	struct io_sr_msg *sr = io_kiocb_to_cmd(req, struct io_sr_msg);
-+	struct compat_msghdr msg;
-+	struct compat_iovec __user *uiov;
-+	int ret;
-+
-+	if (copy_from_user(&msg, sr->umsg_compat, sizeof(msg)))
-+		return -EFAULT;
-+
-+	ret = __get_compat_msghdr(&iomsg->msg, &msg, addr);
-+	if (ret)
-+		return ret;
-+
-+	uiov = compat_ptr(msg.msg_iov);
-+	if (req->flags & REQ_F_BUFFER_SELECT) {
-+		compat_ssize_t clen;
-+
-+		iomsg->free_iov = NULL;
-+		if (msg.msg_iovlen == 0) {
-+			sr->len = 0;
-+		} else if (msg.msg_iovlen > 1) {
-+			return -EINVAL;
-+		} else {
-+			if (!access_ok(uiov, sizeof(*uiov)))
-+				return -EFAULT;
-+			if (__get_user(clen, &uiov->iov_len))
-+				return -EFAULT;
-+			if (clen < 0)
-+				return -EINVAL;
-+			sr->len = clen;
-+		}
-+
-+		if (ddir == ITER_DEST && req->flags & REQ_F_APOLL_MULTISHOT) {
-+			iomsg->namelen = msg.msg_namelen;
-+			iomsg->controllen = msg.msg_controllen;
-+			if (io_recvmsg_multishot_overflow(iomsg))
-+				return -EOVERFLOW;
-+		}
-+
-+		return 0;
-+	}
-+
-+	iomsg->free_iov = iomsg->fast_iov;
-+	ret = __import_iovec(ddir, (struct iovec __user *)uiov, msg.msg_iovlen,
-+				UIO_FASTIOV, &iomsg->free_iov,
-+				&iomsg->msg.msg_iter, true);
-+	if (unlikely(ret < 0))
-+		return ret;
-+
-+	return 0;
-+}
-+#endif
-+
-+static int __io_msg_copy_hdr(struct io_kiocb *req, struct io_async_msghdr *iomsg,
-+			     struct sockaddr __user **addr, int ddir)
-+{
-+	struct io_sr_msg *sr = io_kiocb_to_cmd(req, struct io_sr_msg);
-+	struct user_msghdr msg;
-+	int ret;
-+
-+	if (copy_from_user(&msg, sr->umsg, sizeof(*sr->umsg)))
-+		return -EFAULT;
-+
-+	ret = __copy_msghdr(&iomsg->msg, &msg, addr);
-+	if (ret)
-+		return ret;
-+
-+	if (req->flags & REQ_F_BUFFER_SELECT) {
-+		if (msg.msg_iovlen == 0) {
-+			sr->len = iomsg->fast_iov[0].iov_len = 0;
-+			iomsg->fast_iov[0].iov_base = NULL;
-+			iomsg->free_iov = NULL;
-+		} else if (msg.msg_iovlen > 1) {
-+			return -EINVAL;
-+		} else {
-+			if (copy_from_user(iomsg->fast_iov, msg.msg_iov,
-+					   sizeof(*msg.msg_iov)))
-+				return -EFAULT;
-+			sr->len = iomsg->fast_iov[0].iov_len;
-+			iomsg->free_iov = NULL;
-+		}
-+
-+		if (ddir == ITER_DEST && req->flags & REQ_F_APOLL_MULTISHOT) {
-+			iomsg->namelen = msg.msg_namelen;
-+			iomsg->controllen = msg.msg_controllen;
-+			if (io_recvmsg_multishot_overflow(iomsg))
-+				return -EOVERFLOW;
-+		}
-+
-+		return 0;
-+	}
-+
-+	iomsg->free_iov = iomsg->fast_iov;
-+	ret = __import_iovec(ddir, msg.msg_iov, msg.msg_iovlen, UIO_FASTIOV,
-+				&iomsg->free_iov, &iomsg->msg.msg_iter, false);
-+	if (unlikely(ret < 0))
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int io_msg_copy_hdr(struct io_kiocb *req, struct io_async_msghdr *iomsg,
-+			   struct sockaddr __user **addr, int ddir)
-+{
-+	iomsg->msg.msg_name = &iomsg->addr;
-+	iomsg->msg.msg_iter.nr_segs = 0;
-+
-+#ifdef CONFIG_COMPAT
-+	if (req->ctx->compat)
-+		return __io_compat_msg_copy_hdr(req, iomsg, addr, ddir);
-+#endif
-+
-+	return __io_msg_copy_hdr(req, iomsg, addr, ddir);
-+}
-+
- static int io_sendmsg_copy_hdr(struct io_kiocb *req,
- 			       struct io_async_msghdr *iomsg)
+diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
+index 92ca0b2ca286d..97d8bdeaa06cb 100644
+--- a/drivers/net/wireless/broadcom/b43/main.c
++++ b/drivers/net/wireless/broadcom/b43/main.c
+@@ -3603,7 +3603,7 @@ static void b43_tx_work(struct work_struct *work)
+ 				err = b43_dma_tx(dev, skb);
+ 			if (err == -ENOSPC) {
+ 				wl->tx_queue_stopped[queue_num] = true;
+-				ieee80211_stop_queue(wl->hw, queue_num);
++				b43_stop_queue(dev, queue_num);
+ 				skb_queue_head(&wl->tx_queue[queue_num], skb);
+ 				break;
+ 			}
+@@ -3627,6 +3627,7 @@ static void b43_op_tx(struct ieee80211_hw *hw,
+ 		      struct sk_buff *skb)
  {
- 	struct io_sr_msg *sr = io_kiocb_to_cmd(req, struct io_sr_msg);
- 	int ret;
+ 	struct b43_wl *wl = hw_to_b43_wl(hw);
++	u16 skb_queue_mapping;
  
--	iomsg->msg.msg_name = &iomsg->addr;
--	iomsg->free_iov = iomsg->fast_iov;
--	ret = sendmsg_copy_msghdr(&iomsg->msg, sr->umsg, sr->msg_flags,
--					&iomsg->free_iov);
-+	ret = io_msg_copy_hdr(req, iomsg, NULL, ITER_SOURCE);
-+	if (ret)
-+		return ret;
-+
- 	/* save msg_control as sys_sendmsg() overwrites it */
- 	sr->msg_control = iomsg->msg.msg_control_user;
- 	return ret;
-@@ -435,142 +569,21 @@ int io_send(struct io_kiocb *req, unsigned int issue_flags)
- 	return IOU_OK;
- }
+ 	if (unlikely(skb->len < 2 + 2 + 6)) {
+ 		/* Too short, this can't be a valid frame. */
+@@ -3635,12 +3636,12 @@ static void b43_op_tx(struct ieee80211_hw *hw,
+ 	}
+ 	B43_WARN_ON(skb_shinfo(skb)->nr_frags);
  
--static bool io_recvmsg_multishot_overflow(struct io_async_msghdr *iomsg)
--{
--	int hdr;
--
--	if (iomsg->namelen < 0)
--		return true;
--	if (check_add_overflow((int)sizeof(struct io_uring_recvmsg_out),
--			       iomsg->namelen, &hdr))
--		return true;
--	if (check_add_overflow(hdr, (int)iomsg->controllen, &hdr))
--		return true;
--
--	return false;
--}
--
--static int __io_recvmsg_copy_hdr(struct io_kiocb *req,
--				 struct io_async_msghdr *iomsg)
--{
--	struct io_sr_msg *sr = io_kiocb_to_cmd(req, struct io_sr_msg);
--	struct user_msghdr msg;
--	int ret;
--
--	if (copy_from_user(&msg, sr->umsg, sizeof(*sr->umsg)))
--		return -EFAULT;
--
--	ret = __copy_msghdr(&iomsg->msg, &msg, &iomsg->uaddr);
--	if (ret)
--		return ret;
--
--	if (req->flags & REQ_F_BUFFER_SELECT) {
--		if (msg.msg_iovlen == 0) {
--			sr->len = iomsg->fast_iov[0].iov_len = 0;
--			iomsg->fast_iov[0].iov_base = NULL;
--			iomsg->free_iov = NULL;
--		} else if (msg.msg_iovlen > 1) {
--			return -EINVAL;
--		} else {
--			if (copy_from_user(iomsg->fast_iov, msg.msg_iov, sizeof(*msg.msg_iov)))
--				return -EFAULT;
--			sr->len = iomsg->fast_iov[0].iov_len;
--			iomsg->free_iov = NULL;
--		}
--
--		if (req->flags & REQ_F_APOLL_MULTISHOT) {
--			iomsg->namelen = msg.msg_namelen;
--			iomsg->controllen = msg.msg_controllen;
--			if (io_recvmsg_multishot_overflow(iomsg))
--				return -EOVERFLOW;
--		}
+-	skb_queue_tail(&wl->tx_queue[skb->queue_mapping], skb);
+-	if (!wl->tx_queue_stopped[skb->queue_mapping]) {
++	skb_queue_mapping = skb_get_queue_mapping(skb);
++	skb_queue_tail(&wl->tx_queue[skb_queue_mapping], skb);
++	if (!wl->tx_queue_stopped[skb_queue_mapping])
+ 		ieee80211_queue_work(wl->hw, &wl->tx_work);
 -	} else {
--		iomsg->free_iov = iomsg->fast_iov;
--		ret = __import_iovec(ITER_DEST, msg.msg_iov, msg.msg_iovlen, UIO_FASTIOV,
--				     &iomsg->free_iov, &iomsg->msg.msg_iter,
--				     false);
--		if (ret > 0)
--			ret = 0;
+-		ieee80211_stop_queue(wl->hw, skb->queue_mapping);
 -	}
--
--	return ret;
--}
--
--#ifdef CONFIG_COMPAT
--static int __io_compat_recvmsg_copy_hdr(struct io_kiocb *req,
--					struct io_async_msghdr *iomsg)
--{
--	struct io_sr_msg *sr = io_kiocb_to_cmd(req, struct io_sr_msg);
--	struct compat_msghdr msg;
--	struct compat_iovec __user *uiov;
--	int ret;
--
--	if (copy_from_user(&msg, sr->umsg_compat, sizeof(msg)))
--		return -EFAULT;
--
--	ret = __get_compat_msghdr(&iomsg->msg, &msg, &iomsg->uaddr);
--	if (ret)
--		return ret;
--
--	uiov = compat_ptr(msg.msg_iov);
--	if (req->flags & REQ_F_BUFFER_SELECT) {
--		compat_ssize_t clen;
--
--		iomsg->free_iov = NULL;
--		if (msg.msg_iovlen == 0) {
--			sr->len = 0;
--		} else if (msg.msg_iovlen > 1) {
--			return -EINVAL;
--		} else {
--			if (!access_ok(uiov, sizeof(*uiov)))
--				return -EFAULT;
--			if (__get_user(clen, &uiov->iov_len))
--				return -EFAULT;
--			if (clen < 0)
--				return -EINVAL;
--			sr->len = clen;
--		}
--
--		if (req->flags & REQ_F_APOLL_MULTISHOT) {
--			iomsg->namelen = msg.msg_namelen;
--			iomsg->controllen = msg.msg_controllen;
--			if (io_recvmsg_multishot_overflow(iomsg))
--				return -EOVERFLOW;
--		}
--	} else {
--		iomsg->free_iov = iomsg->fast_iov;
--		ret = __import_iovec(ITER_DEST, (struct iovec __user *)uiov, msg.msg_iovlen,
--				   UIO_FASTIOV, &iomsg->free_iov,
--				   &iomsg->msg.msg_iter, true);
--		if (ret < 0)
--			return ret;
--	}
--
--	return 0;
--}
--#endif
--
- static int io_recvmsg_copy_hdr(struct io_kiocb *req,
- 			       struct io_async_msghdr *iomsg)
- {
--	iomsg->msg.msg_name = &iomsg->addr;
--	iomsg->msg.msg_iter.nr_segs = 0;
--
--#ifdef CONFIG_COMPAT
--	if (req->ctx->compat)
--		return __io_compat_recvmsg_copy_hdr(req, iomsg);
--#endif
--
--	return __io_recvmsg_copy_hdr(req, iomsg);
-+	return io_msg_copy_hdr(req, iomsg, &iomsg->uaddr, ITER_DEST);
++	else
++		b43_stop_queue(wl->current_dev, skb_queue_mapping);
  }
  
- int io_recvmsg_prep_async(struct io_kiocb *req)
- {
-+	struct io_async_msghdr *iomsg;
- 	int ret;
- 
- 	if (!io_msg_alloc_async_prep(req))
- 		return -ENOMEM;
--	ret = io_recvmsg_copy_hdr(req, req->async_data);
-+	iomsg = req->async_data;
-+	ret = io_recvmsg_copy_hdr(req, iomsg);
- 	if (!ret)
- 		req->flags |= REQ_F_NEED_CLEANUP;
- 	return ret;
+ static void b43_qos_params_upload(struct b43_wldev *dev,
 -- 
 2.43.0
 
