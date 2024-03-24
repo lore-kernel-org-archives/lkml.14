@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A35721C184;
-	Sun, 24 Mar 2024 23:38:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C03C17889F;
+	Sun, 24 Mar 2024 23:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323529; cv=none; b=A8Mfd8kJUvpBdMAYArwkmJZ3gGNkF00414f+JOGYmDX+nP0CG35e6r9GH7t6no+QW0P/FlljOrsogk9cSII0kncJNINJUiN7Mp2/xl9glcfGcSCfz4FqMeN4OcPKpV1BxEDjpevEnLJiEh51pvJ5zQUH2bsNAnrHKc1KaXNgjXU=
+	t=1711323557; cv=none; b=SdyNSg+g4y1E9NjcB/Fc0q/9qd02b7jxPV9cVvG/MxVPKtCffbYFpA3Ry8VyfsDSwvPauc2WySWK026VNM7v4Zq6T2cZ7KApcRXfDU+J/n8h/FXQ/Iqw+YH6yMaC1Pq8OWDMXdC5tyuVij1fqckylPoAVK4D9J/sXnuwzRChRW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323529; c=relaxed/simple;
-	bh=v7Lbn2S7HlHnMABuuL2PAxf1ijlu0rIBhEKI+Yo/usU=;
+	s=arc-20240116; t=1711323557; c=relaxed/simple;
+	bh=AS+JGYpUDsPlHwpiNSjJhMQhjdqKCPCQtDNBzfmKuyQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s0PVEBogkJROJHb24NZu77VEYeo70ySheJNPogNVjQ+GfXrKbAQJYxtOxMeM7rhepjoNiEtH6KK4AYzlZL/TTd6ROrzMBiHejTpZT3BI5msW7CJ2+mBAM/cr/a7Npff/gdFYzLXVIaZyu6mPVzeZCgn4Cmei8OIExeQIGy6pGlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UfY7xpGA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IUGOCj4QSICZXBl+fIP0YHhcPH3sir9SLl6lqpgnp5nfBo5MGCAmDNnw8gV4psUoloAVkiXxUXfoE+/ZPcLNo/FAXeE8MxkAvswYvjjqRGvUPkSzM2vvdUTenDEgGGyJZ8drxTsuaiPhi3eqHCA4GExQKmag4inQo3zw8R4QJPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vDRZnGyF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UfY7xpGA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A81C433C7;
-	Sun, 24 Mar 2024 23:38:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vDRZnGyF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 982FFC433F1;
+	Sun, 24 Mar 2024 23:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323527;
-	bh=v7Lbn2S7HlHnMABuuL2PAxf1ijlu0rIBhEKI+Yo/usU=;
+	s=k20201202; t=1711323556;
+	bh=AS+JGYpUDsPlHwpiNSjJhMQhjdqKCPCQtDNBzfmKuyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UfY7xpGAWg/NsjMFj35tFdJv3NvNShmHjbToDpFk2+q40ZXQtaW5puhDlS8wgnA7c
-	 ld5ve22RyPQfpnf7LpUxDKzRhbEenAQokvHm4AEytFH2w++xVc0ydEsA6tyzRTq2nJ
-	 sBXvbhJ6ejIYWTDuarfW4cszhx46qbsEfqjBEGzWzTJGRCSaYoOQhGPasSXL1qySXC
-	 M205xExUUk7r3jLAC5835LQQxJmM9+rXDUuC10udVuyQN7J4ICBzIEjsVRAEyXsInO
-	 q49qMFFXc1sSqaOzwVgeSGMXIQ3D8FRPwSdOMYYyS7WSvaUKZVrfJ/SceDqThWDKKH
-	 W4tAAY3LeC+PQ==
+	b=vDRZnGyFqOhJgsHO6k4eU4OLHtm07t4UZAtXFoKoi0ajTI/dOwRoOafmGucCS+2tm
+	 pKUSbBw5Z+JDiVMUZUQaDkg+b0vdCjYzGyJyzitxCSnzVG1SzOU1WqWukBhHLHqAXH
+	 UMtFJ0GXpLnLQLVrkwEI/1Mc0+BkgpS+ca/6NzUeS1r+OBOd6RX8DhMlSpos7O+sxD
+	 PRSWA5nKgEn7apNGCxaAKrMiH5zbg/oaFbMeZQQ1ahmPvRu6E8Yhi8IykkotRVPPXP
+	 8d2K/ew4+0JUqbf63Sq4bU6r+Bm45m1kPTfM51F9yUXt/5TVPAIUjiE4Sbb2UnSqMY
+	 CRIWTZoG9ZBTw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>,
-	CK Hu <ck.hu@mediatek.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 235/317] drm/mediatek: Fix a null pointer crash in mtk_drm_crtc_finish_page_flip
-Date: Sun, 24 Mar 2024 19:33:35 -0400
-Message-ID: <20240324233458.1352854-236-sashal@kernel.org>
+Subject: [PATCH 5.15 263/317] scsi: csiostor: Avoid function pointer casts
+Date: Sun, 24 Mar 2024 19:34:03 -0400
+Message-ID: <20240324233458.1352854-264-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,78 +48,133 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit c958e86e9cc1b48cac004a6e245154dfba8e163b ]
+[ Upstream commit 9f3dbcb5632d6876226031d552ef6163bb3ad215 ]
 
-It's possible that mtk_crtc->event is NULL in
-mtk_drm_crtc_finish_page_flip().
+csiostor uses function pointer casts to keep the csio_ln_ev state machine
+hidden, but this causes warnings about control flow integrity (KCFI)
+violations in clang-16 and higher:
 
-pending_needs_vblank value is set by mtk_crtc->event, but in
-mtk_drm_crtc_atomic_flush(), it's is not guarded by the same
-lock in mtk_drm_finish_page_flip(), thus a race condition happens.
+drivers/scsi/csiostor/csio_lnode.c:1098:33: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1098 |         return (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready));
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/csiostor/csio_lnode.c:1369:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1369 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_uninit)) {
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/csiostor/csio_lnode.c:1373:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1373 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready)) {
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/csiostor/csio_lnode.c:1377:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1377 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_offline)) {
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Consider the following case:
+Move the enum into a shared header so the correct types can be used without
+the need for casts.
 
-CPU1                              CPU2
-step 1:
-mtk_drm_crtc_atomic_begin()
-mtk_crtc->event is not null,
-                                  step 1:
-                                  mtk_drm_crtc_atomic_flush:
-                                  mtk_drm_crtc_update_config(
-                                      !!mtk_crtc->event)
-step 2:
-mtk_crtc_ddp_irq ->
-mtk_drm_finish_page_flip:
-lock
-mtk_crtc->event set to null,
-pending_needs_vblank set to false
-unlock
-                                  pending_needs_vblank set to true,
-
-                                  step 2:
-                                  mtk_crtc_ddp_irq ->
-                                  mtk_drm_finish_page_flip called again,
-                                  pending_needs_vblank is still true
-                                  //null pointer
-
-Instead of guarding the entire mtk_drm_crtc_atomic_flush(), it's more
-efficient to just check if mtk_crtc->event is null before use.
-
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Link: https://patchwork.kernel.org/project/dri-devel/patch/20240223212404.3709690-1-hsinyi@chromium.org/
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20240213100518.457623-1-arnd@kernel.org
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/scsi/csiostor/csio_defs.h  | 18 ++++++++++++++++--
+ drivers/scsi/csiostor/csio_lnode.c |  8 ++++----
+ drivers/scsi/csiostor/csio_lnode.h | 13 -------------
+ 3 files changed, 20 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index d6781e54b3356..1a038fa004668 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -92,11 +92,13 @@ static void mtk_drm_crtc_finish_page_flip(struct mtk_drm_crtc *mtk_crtc)
- 	struct drm_crtc *crtc = &mtk_crtc->base;
- 	unsigned long flags;
+diff --git a/drivers/scsi/csiostor/csio_defs.h b/drivers/scsi/csiostor/csio_defs.h
+index c38017b4af982..e50e93e7fe5a1 100644
+--- a/drivers/scsi/csiostor/csio_defs.h
++++ b/drivers/scsi/csiostor/csio_defs.h
+@@ -73,7 +73,21 @@ csio_list_deleted(struct list_head *list)
+ #define csio_list_prev(elem)	(((struct list_head *)(elem))->prev)
  
--	spin_lock_irqsave(&crtc->dev->event_lock, flags);
--	drm_crtc_send_vblank_event(crtc, mtk_crtc->event);
--	drm_crtc_vblank_put(crtc);
--	mtk_crtc->event = NULL;
--	spin_unlock_irqrestore(&crtc->dev->event_lock, flags);
-+	if (mtk_crtc->event) {
-+		spin_lock_irqsave(&crtc->dev->event_lock, flags);
-+		drm_crtc_send_vblank_event(crtc, mtk_crtc->event);
-+		drm_crtc_vblank_put(crtc);
-+		mtk_crtc->event = NULL;
-+		spin_unlock_irqrestore(&crtc->dev->event_lock, flags);
-+	}
+ /* State machine */
+-typedef void (*csio_sm_state_t)(void *, uint32_t);
++struct csio_lnode;
++
++/* State machine evets */
++enum csio_ln_ev {
++	CSIO_LNE_NONE = (uint32_t)0,
++	CSIO_LNE_LINKUP,
++	CSIO_LNE_FAB_INIT_DONE,
++	CSIO_LNE_LINK_DOWN,
++	CSIO_LNE_DOWN_LINK,
++	CSIO_LNE_LOGO,
++	CSIO_LNE_CLOSE,
++	CSIO_LNE_MAX_EVENT,
++};
++
++typedef void (*csio_sm_state_t)(struct csio_lnode *ln, enum csio_ln_ev evt);
+ 
+ struct csio_sm {
+ 	struct list_head	sm_list;
+@@ -83,7 +97,7 @@ struct csio_sm {
+ static inline void
+ csio_set_state(void *smp, void *state)
+ {
+-	((struct csio_sm *)smp)->sm_state = (csio_sm_state_t)state;
++	((struct csio_sm *)smp)->sm_state = state;
  }
  
- static void mtk_drm_finish_page_flip(struct mtk_drm_crtc *mtk_crtc)
+ static inline void
+diff --git a/drivers/scsi/csiostor/csio_lnode.c b/drivers/scsi/csiostor/csio_lnode.c
+index d5ac938970232..5b3ffefae476d 100644
+--- a/drivers/scsi/csiostor/csio_lnode.c
++++ b/drivers/scsi/csiostor/csio_lnode.c
+@@ -1095,7 +1095,7 @@ csio_handle_link_down(struct csio_hw *hw, uint8_t portid, uint32_t fcfi,
+ int
+ csio_is_lnode_ready(struct csio_lnode *ln)
+ {
+-	return (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready));
++	return (csio_get_state(ln) == csio_lns_ready);
+ }
+ 
+ /*****************************************************************************/
+@@ -1366,15 +1366,15 @@ csio_free_fcfinfo(struct kref *kref)
+ void
+ csio_lnode_state_to_str(struct csio_lnode *ln, int8_t *str)
+ {
+-	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_uninit)) {
++	if (csio_get_state(ln) == csio_lns_uninit) {
+ 		strcpy(str, "UNINIT");
+ 		return;
+ 	}
+-	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready)) {
++	if (csio_get_state(ln) == csio_lns_ready) {
+ 		strcpy(str, "READY");
+ 		return;
+ 	}
+-	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_offline)) {
++	if (csio_get_state(ln) == csio_lns_offline) {
+ 		strcpy(str, "OFFLINE");
+ 		return;
+ 	}
+diff --git a/drivers/scsi/csiostor/csio_lnode.h b/drivers/scsi/csiostor/csio_lnode.h
+index 372a67d122d38..607698a0f0631 100644
+--- a/drivers/scsi/csiostor/csio_lnode.h
++++ b/drivers/scsi/csiostor/csio_lnode.h
+@@ -53,19 +53,6 @@
+ extern int csio_fcoe_rnodes;
+ extern int csio_fdmi_enable;
+ 
+-/* State machine evets */
+-enum csio_ln_ev {
+-	CSIO_LNE_NONE = (uint32_t)0,
+-	CSIO_LNE_LINKUP,
+-	CSIO_LNE_FAB_INIT_DONE,
+-	CSIO_LNE_LINK_DOWN,
+-	CSIO_LNE_DOWN_LINK,
+-	CSIO_LNE_LOGO,
+-	CSIO_LNE_CLOSE,
+-	CSIO_LNE_MAX_EVENT,
+-};
+-
+-
+ struct csio_fcf_info {
+ 	struct list_head	list;
+ 	uint8_t			priority;
 -- 
 2.43.0
 
