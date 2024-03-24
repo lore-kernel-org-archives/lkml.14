@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579F91384A4;
-	Sun, 24 Mar 2024 23:06:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320612092F7;
+	Sun, 24 Mar 2024 23:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321591; cv=none; b=jrWmfn9ZszeSLoZQBkVAlvuG2OxPsx1oGH8+fn9/hKJ4I97u4Z23iLt0iCjyK4OqASG5sdGhJcBadMVeaa0q7aTK8CPdQOZkfPBXghcXrrYAyUQNU0sU66LUZbn1BXDQ7J1L8CPnqQ+cfqpOrgfBbUiOl9f0V7aMODLHwkBWagc=
+	t=1711321559; cv=none; b=p3Yd+CuuO2se08U21L+FQXSquwkLm4KSDOwrq87Ocrf5S+laHL1Yts5X2N993qehd7RCUHY5piZIK4zSh/HSthkRPW6ShY3oI+U1EEgjkseNgFCZKSRHyVGMAjZ+PlnQZeEt5ErdIFct76fzlqpHcX7sHvHUXm4K/bmx9xw+0q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321591; c=relaxed/simple;
-	bh=pNcFH+ooFkIv/Gh6pWZygMrI9+wZ6KT5OyHzXrzdBTc=;
+	s=arc-20240116; t=1711321559; c=relaxed/simple;
+	bh=SABHHO5iWkeJQHPBFzdh88YsNhXLEezPk/RzQRrTY9I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bzFBD9qbto6mH6AVyXtaPG+FCNyd3rg2DVatPBWZggN9mrLz9XBalL17KjXJR/IQ1Fjedgw9PvQ0WKwHNr48f92346cEz/mSRZCqYJWvFdpo8HR+VC15w4afDK7tRYIGFhsiuBh6VPyLqUiQd4PD70/Kmk4xsads3LznXYg2UZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tnn4/sOL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cr1egLt1rNlLNuJU1oKpGcKukgNTDv7cQEAqojOnXu7UMOIZftx8lYYfxbpAz4NO9+RFsSXNiOFjjprhxh4rPcMYxmtvRI3yZ7ZyAMHVyXHoZdtn2HSN96rjtRtXKoHjExtp9mvsbj7uBiN1ekI9Iq+7Ot/CFcph9F2e3tVVz3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWOAXrYJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tnn4/sOL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE0DC43394;
-	Sun, 24 Mar 2024 23:06:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWOAXrYJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A91C43394;
+	Sun, 24 Mar 2024 23:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321590;
-	bh=pNcFH+ooFkIv/Gh6pWZygMrI9+wZ6KT5OyHzXrzdBTc=;
+	s=k20201202; t=1711321557;
+	bh=SABHHO5iWkeJQHPBFzdh88YsNhXLEezPk/RzQRrTY9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tnn4/sOL7KL4cJd+v3EhqAY8yProSz0cshrbEAbjXF5Ffo+EtVVr1v6u4pPfnacdM
-	 mpXccYSSMoTiYVk0hik5HEmBrWtKLfYGD0KQwB70nMPoFAiuNgpRWML9gwTnl03whh
-	 j2URncIDoC5Po5aH/076HLdSl4xvMROsmHiWre5a7QB57PLRpGxo16sCfmUNsmwSXN
-	 VdE6VtOjZTxvrg2mJmvoY7OoRJOXpNxin9Z1CKYJxHGvs57EPC86aqfLOe2paE4cWd
-	 XwlTBi1I/HCePYoOH3x6j02MHGG22W+HFwSelWvZF0FGdU5Du/wrENKbv0Dp60nSkr
-	 DHKQIS9aQyQjQ==
+	b=gWOAXrYJj3vwbdUqNZMBzyy/4m8KDXPdXTAxeou/I8eCCaxTomAR1vHo5q/Nv0GFC
+	 3XLdCqM06loEI4SrxxFDDyQLReDyPVKIGshrz0BjbMMupuz/+oochSMfpwKpz0yc/2
+	 hKyRWmoA7BOR083Tmznhi6ozMkGXOtlI7cm80XotKUjf9RQa1pEhNaLGU6XV3MMrn5
+	 rPBYhqLhgaBT8ulWpbVYb5xxmAJtblg2lEqnFMGCPf8/IAe+OovTSojXBthnyst1Fm
+	 U5HxyPE43WqimHXJMwQ+Tx2iKjjRyaEGy7Zs0srrOvwwDsXF8nWCez0KKDjpoZLX5U
+	 Hv/K0hsvFz1BQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shiming Cheng <shiming.cheng@mediatek.com>,
-	Lena Wang <lena.wang@mediatek.com>,
-	David Ahern <dsahern@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Abel Vesa <abel.vesa@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 320/638] ipv6: fib6_rules: flush route cache when rule is changed
-Date: Sun, 24 Mar 2024 18:55:57 -0400
-Message-ID: <20240324230116.1348576-321-sashal@kernel.org>
+Subject: [PATCH 6.6 286/638] arm64: dts: qcom: sm8550: Fix SPMI channels size
+Date: Sun, 24 Mar 2024 18:55:23 -0400
+Message-ID: <20240324230116.1348576-287-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,53 +50,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Shiming Cheng <shiming.cheng@mediatek.com>
+From: Abel Vesa <abel.vesa@linaro.org>
 
-[ Upstream commit c4386ab4f6c600f75fdfd21143f89bac3e625d0d ]
+[ Upstream commit 77dd1e50ffcba33c3195ae4fc78f354368ddacb2 ]
 
-When rule policy is changed, ipv6 socket cache is not refreshed.
-The sock's skb still uses a outdated route cache and was sent to
-a wrong interface.
+The actual size of the channels registers region is 4MB, according to the
+documentation. This issue was not caught until now because the driver was
+supposed to allow same regions being mapped multiple times for supporting
+multiple buses. Thie driver is using platform_get_resource_byname() and
+devm_ioremap() towards that purpose, which intentionally avoids
+devm_request_mem_region() altogether.
 
-To avoid this error we should update fib node's version when
-rule is changed. Then skb's route will be reroute checked as
-route cache version is already different with fib node version.
-The route cache is refreshed to match the latest rule.
-
-Fixes: 101367c2f8c4 ("[IPV6]: Policy Routing Rules")
-Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
-Signed-off-by: Lena Wang <lena.wang@mediatek.com>
-Reviewed-by: David Ahern <dsahern@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ffc50b2d3828 ("arm64: dts: qcom: Add base SM8550 dtsi")
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
+Link: https://lore.kernel.org/r/20240221-dts-qcom-sm8550-fix-spmi-chnls-size-v2-1-72b5efd9dc4f@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/fib6_rules.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/qcom/sm8550.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
-index 7c20038330104..be52b18e08a6b 100644
---- a/net/ipv6/fib6_rules.c
-+++ b/net/ipv6/fib6_rules.c
-@@ -449,6 +449,11 @@ static size_t fib6_rule_nlmsg_payload(struct fib_rule *rule)
- 	       + nla_total_size(16); /* src */
- }
- 
-+static void fib6_rule_flush_cache(struct fib_rules_ops *ops)
-+{
-+	rt_genid_bump_ipv6(ops->fro_net);
-+}
-+
- static const struct fib_rules_ops __net_initconst fib6_rules_ops_template = {
- 	.family			= AF_INET6,
- 	.rule_size		= sizeof(struct fib6_rule),
-@@ -461,6 +466,7 @@ static const struct fib_rules_ops __net_initconst fib6_rules_ops_template = {
- 	.compare		= fib6_rule_compare,
- 	.fill			= fib6_rule_fill,
- 	.nlmsg_payload		= fib6_rule_nlmsg_payload,
-+	.flush_cache		= fib6_rule_flush_cache,
- 	.nlgroup		= RTNLGRP_IPV6_RULE,
- 	.owner			= THIS_MODULE,
- 	.fro_net		= &init_net,
+diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+index 076715ef09d56..90e6cd239f569 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+@@ -3017,7 +3017,7 @@ sram@c3f0000 {
+ 		spmi_bus: spmi@c400000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0 0x0c400000 0 0x3000>,
+-			      <0 0x0c500000 0 0x4000000>,
++			      <0 0x0c500000 0 0x400000>,
+ 			      <0 0x0c440000 0 0x80000>,
+ 			      <0 0x0c4c0000 0 0x20000>,
+ 			      <0 0x0c42d000 0 0x4000>;
 -- 
 2.43.0
 
