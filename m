@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B06F17495C;
-	Sun, 24 Mar 2024 23:35:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07AA2720EA;
+	Sun, 24 Mar 2024 23:35:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323303; cv=none; b=YRevj+le9W/AuZnG2S51aAoPO+dviucUzlATMijMcHV0X1cAgYUFOBNlzm9wixmvVNNd/YXL2CprEc8iWmRuu8cs6dYcPheablXFQUvIxtgA0MvPmmSQoe0OZV107PCgGyQZ4CZbMXkBZS9kTK+wg1HlOO8QD0+JTfKTRMo0mr4=
+	t=1711323304; cv=none; b=fvQ2j4SR57x2je+p/QL1XGyoiHVCvSvQRE59DK+CNrmyGhbuxWm2AoHtM745o5efl9LPsNDC8UhrJm47Oq2ent9OgCXUfjYpGPXIKoOpwPjG7oirQY/Nnkrcrpv63COfTaBduJUzajuJMeBb0tPtduYSK8HpO0fvFE0ylgRIDVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323303; c=relaxed/simple;
-	bh=H7FLLI4avKTJLorUo/cM4y50p2DgXJ2uNm9FdOmC1sk=;
+	s=arc-20240116; t=1711323304; c=relaxed/simple;
+	bh=J4fhyG1iQ5vLe+pk9Wp2Byk5gpEXClLC4Qx6nixNZ7g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tLm69l4IvnyQrab6fqCZNcBbAxOyOZu9FIktCdEhAO1nwGX/9bNEjzgOLMCafVCdnQWcISIQNgdI2JcoAGiTDi3HrjYoJirbGPitJIc7qe5ejWH1Pe8oB6vxvRQxsFs21J8tC4bNoslPumGty4anNdk4Gub9QqD0NWx6tCeWQJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j4lHJDS6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AzQAEGShLhaAuA0UG/Ljd3An88FAUU23+ipaBy4+EaS41q+10Cu6gMg++xmDU8OWvd0WM8Rs0tuTXy//dH7z1I0NJdAhQcMLqAKIVTsLiZE8PSamezUcnTuXaAhFlvm9J9jN+0/3QeZLevriRSswa13ZaKBTOH65oljOedCR5ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nV0ezSB+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j4lHJDS6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E4FC433A6;
-	Sun, 24 Mar 2024 23:35:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nV0ezSB+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9016BC433C7;
+	Sun, 24 Mar 2024 23:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323302;
-	bh=H7FLLI4avKTJLorUo/cM4y50p2DgXJ2uNm9FdOmC1sk=;
+	s=k20201202; t=1711323304;
+	bh=J4fhyG1iQ5vLe+pk9Wp2Byk5gpEXClLC4Qx6nixNZ7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j4lHJDS6XjiVafS/2+zibES1xzkdTwDz2x1AaZZc4+RhOHvi2VjtvagoqfAaK6bTJ
-	 UdDgEoyVuTwg+xUsZ+TMN6qRD6oX9YqdA70foSgUHOU6w//6lauJA/7XuV5hLDzuE3
-	 KnXFsN/FYTI6q5wTi9HLQ84TF8oMlw3+dkrsJpG9l8jeR05ufi6Qudp3Wd6E6ZUF0J
-	 MDun1S1pQtbSAuCw3UukDiLt7fpmcuqSdpW838202VQ17i/uXPlhdcFmXzu0c/U7Jl
-	 zGsCBP56LHtY8FDFgHPkU0jISkLAyzwN0D0Uob5xoKD5+EfDm+f0qOD7S/7ELqHOUT
-	 BxQKuLavcPc8w==
+	b=nV0ezSB+wZvggWlddIcCMw/+fCmx+yI7Onju0GJT7HNGNEg/w2iEFzU57IWukPqn2
+	 63L7KRuVZB9DINhyuFxy4Wz+cwQ+BKJgZI5wgSwPT9T+Iq9VvLAoKF5toocqdvJ5Cq
+	 Ds0mT8ei98th5lOLO6qUZZVLtHZZ2vsIqRmpMeaqpURpzqJgiPlbj/K6HzUxUhHZK2
+	 LVhYD5DUlhmJ/wuOLuSu2aj7zKtGn7xqOYOHoOvXwc9wj4zA7wHj/VY7+Uivo8pgwp
+	 CmPnH7ZcoG5+PyCeQMmfhe1uRCAAMp4aGLH0XBb5eUW7YoUOgn8xOQkDJZITS49qQo
+	 SQ1pFWPbdt/xA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 002/317] io_uring: drop any code related to SCM_RIGHTS
-Date: Sun, 24 Mar 2024 19:29:42 -0400
-Message-ID: <20240324233458.1352854-3-sashal@kernel.org>
+Cc: Hou Tao <houtao1@huawei.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Robert Kolchmeyer <rkolchmeyer@google.com>
+Subject: [PATCH 5.15 004/317] bpf: Defer the free of inner map when necessary
+Date: Sun, 24 Mar 2024 19:29:44 -0400
+Message-ID: <20240324233458.1352854-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -47,298 +49,131 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Hou Tao <houtao1@huawei.com>
 
-Commit 6e5e6d274956305f1fc0340522b38f5f5be74bdb upstream.
+[ Upstream commit 876673364161da50eed6b472d746ef88242b2368 ]
 
-This is dead code after we dropped support for passing io_uring fds
-over SCM_RIGHTS, get rid of it.
+When updating or deleting an inner map in map array or map htab, the map
+may still be accessed by non-sleepable program or sleepable program.
+However bpf_map_fd_put_ptr() decreases the ref-counter of the inner map
+directly through bpf_map_put(), if the ref-counter is the last one
+(which is true for most cases), the inner map will be freed by
+ops->map_free() in a kworker. But for now, most .map_free() callbacks
+don't use synchronize_rcu() or its variants to wait for the elapse of a
+RCU grace period, so after the invocation of ops->map_free completes,
+the bpf program which is accessing the inner map may incur
+use-after-free problem.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fix the free of inner map by invoking bpf_map_free_deferred() after both
+one RCU grace period and one tasks trace RCU grace period if the inner
+map has been removed from the outer map before. The deferment is
+accomplished by using call_rcu() or call_rcu_tasks_trace() when
+releasing the last ref-counter of bpf map. The newly-added rcu_head
+field in bpf_map shares the same storage space with work field to
+reduce the size of bpf_map.
+
+Fixes: bba1dc0b55ac ("bpf: Remove redundant synchronize_rcu.")
+Fixes: 638e4b825d52 ("bpf: Allows per-cpu maps and map-in-map in sleepable programs")
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Link: https://lore.kernel.org/r/20231204140425.1480317-5-houtao@huaweicloud.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+(cherry picked from commit 62fca83303d608ad4fec3f7428c8685680bb01b0)
+Signed-off-by: Robert Kolchmeyer <rkolchmeyer@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- io_uring/io_uring.c | 211 +-------------------------------------------
- 1 file changed, 3 insertions(+), 208 deletions(-)
+ include/linux/bpf.h     |  7 ++++++-
+ kernel/bpf/map_in_map.c | 11 ++++++++---
+ kernel/bpf/syscall.c    | 26 ++++++++++++++++++++++++--
+ 3 files changed, 38 insertions(+), 6 deletions(-)
 
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 541e6a6985ecc..386b32e6fd9a8 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -62,7 +62,6 @@
- #include <linux/net.h>
- #include <net/sock.h>
- #include <net/af_unix.h>
--#include <net/scm.h>
- #include <linux/anon_inodes.h>
- #include <linux/sched/mm.h>
- #include <linux/uaccess.h>
-@@ -440,9 +439,6 @@ struct io_ring_ctx {
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 97d94bcba1314..df15d4d445ddc 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -192,9 +192,14 @@ struct bpf_map {
+ 	 */
+ 	atomic64_t refcnt ____cacheline_aligned;
+ 	atomic64_t usercnt;
+-	struct work_struct work;
++	/* rcu is used before freeing and work is only used during freeing */
++	union {
++		struct work_struct work;
++		struct rcu_head rcu;
++	};
+ 	struct mutex freeze_mutex;
+ 	atomic64_t writecnt;
++	bool free_after_mult_rcu_gp;
+ };
  
- 	/* Keep this last, we don't need it for the fast path */
- 	struct {
--		#if defined(CONFIG_UNIX)
--			struct socket		*ring_sock;
--		#endif
- 		/* hashed buffered write serialization */
- 		struct io_wq_hash		*hash_map;
+ static inline bool map_value_has_spin_lock(const struct bpf_map *map)
+diff --git a/kernel/bpf/map_in_map.c b/kernel/bpf/map_in_map.c
+index af0f15db1bf9a..4cf79f86bf458 100644
+--- a/kernel/bpf/map_in_map.c
++++ b/kernel/bpf/map_in_map.c
+@@ -110,10 +110,15 @@ void *bpf_map_fd_get_ptr(struct bpf_map *map,
  
-@@ -8151,15 +8147,6 @@ static void io_free_file_tables(struct io_file_table *table)
- 
- static void __io_sqe_files_unregister(struct io_ring_ctx *ctx)
+ void bpf_map_fd_put_ptr(struct bpf_map *map, void *ptr, bool need_defer)
  {
--#if defined(CONFIG_UNIX)
--	if (ctx->ring_sock) {
--		struct sock *sock = ctx->ring_sock->sk;
--		struct sk_buff *skb;
--
--		while ((skb = skb_dequeue(&sock->sk_receive_queue)) != NULL)
--			kfree_skb(skb);
--	}
--#else
- 	int i;
- 
- 	for (i = 0; i < ctx->nr_user_files; i++) {
-@@ -8169,7 +8156,6 @@ static void __io_sqe_files_unregister(struct io_ring_ctx *ctx)
- 		if (file)
- 			fput(file);
- 	}
--#endif
- 	io_free_file_tables(&ctx->file_table);
- 	io_rsrc_data_free(ctx->file_data);
- 	ctx->file_data = NULL;
-@@ -8321,170 +8307,11 @@ static struct io_sq_data *io_get_sq_data(struct io_uring_params *p,
- 	return sqd;
+-	/* ptr->ops->map_free() has to go through one
+-	 * rcu grace period by itself.
++	struct bpf_map *inner_map = ptr;
++
++	/* The inner map may still be used by both non-sleepable and sleepable
++	 * bpf program, so free it after one RCU grace period and one tasks
++	 * trace RCU grace period.
+ 	 */
+-	bpf_map_put(ptr);
++	if (need_defer)
++		WRITE_ONCE(inner_map->free_after_mult_rcu_gp, true);
++	bpf_map_put(inner_map);
  }
  
--#if defined(CONFIG_UNIX)
--/*
-- * Ensure the UNIX gc is aware of our file set, so we are certain that
-- * the io_uring can be safely unregistered on process exit, even if we have
-- * loops in the file referencing.
-- */
--static int __io_sqe_files_scm(struct io_ring_ctx *ctx, int nr, int offset)
--{
--	struct sock *sk = ctx->ring_sock->sk;
--	struct scm_fp_list *fpl;
--	struct sk_buff *skb;
--	int i, nr_files;
--
--	fpl = kzalloc(sizeof(*fpl), GFP_KERNEL);
--	if (!fpl)
--		return -ENOMEM;
--
--	skb = alloc_skb(0, GFP_KERNEL);
--	if (!skb) {
--		kfree(fpl);
--		return -ENOMEM;
--	}
--
--	skb->sk = sk;
--	skb->scm_io_uring = 1;
--
--	nr_files = 0;
--	fpl->user = get_uid(current_user());
--	for (i = 0; i < nr; i++) {
--		struct file *file = io_file_from_index(ctx, i + offset);
--
--		if (!file)
--			continue;
--		fpl->fp[nr_files] = get_file(file);
--		unix_inflight(fpl->user, fpl->fp[nr_files]);
--		nr_files++;
--	}
--
--	if (nr_files) {
--		fpl->max = SCM_MAX_FD;
--		fpl->count = nr_files;
--		UNIXCB(skb).fp = fpl;
--		skb->destructor = unix_destruct_scm;
--		refcount_add(skb->truesize, &sk->sk_wmem_alloc);
--		skb_queue_head(&sk->sk_receive_queue, skb);
--
--		for (i = 0; i < nr; i++) {
--			struct file *file = io_file_from_index(ctx, i + offset);
--
--			if (file)
--				fput(file);
--		}
--	} else {
--		kfree_skb(skb);
--		free_uid(fpl->user);
--		kfree(fpl);
--	}
--
--	return 0;
--}
--
--/*
-- * If UNIX sockets are enabled, fd passing can cause a reference cycle which
-- * causes regular reference counting to break down. We rely on the UNIX
-- * garbage collection to take care of this problem for us.
-- */
--static int io_sqe_files_scm(struct io_ring_ctx *ctx)
--{
--	unsigned left, total;
--	int ret = 0;
--
--	total = 0;
--	left = ctx->nr_user_files;
--	while (left) {
--		unsigned this_files = min_t(unsigned, left, SCM_MAX_FD);
--
--		ret = __io_sqe_files_scm(ctx, this_files, total);
--		if (ret)
--			break;
--		left -= this_files;
--		total += this_files;
--	}
--
--	if (!ret)
--		return 0;
--
--	while (total < ctx->nr_user_files) {
--		struct file *file = io_file_from_index(ctx, total);
--
--		if (file)
--			fput(file);
--		total++;
--	}
--
--	return ret;
--}
--#else
--static int io_sqe_files_scm(struct io_ring_ctx *ctx)
--{
--	return 0;
--}
--#endif
--
- static void io_rsrc_file_put(struct io_ring_ctx *ctx, struct io_rsrc_put *prsrc)
- {
- 	struct file *file = prsrc->file;
--#if defined(CONFIG_UNIX)
--	struct sock *sock = ctx->ring_sock->sk;
--	struct sk_buff_head list, *head = &sock->sk_receive_queue;
--	struct sk_buff *skb;
--	int i;
- 
--	__skb_queue_head_init(&list);
--
--	/*
--	 * Find the skb that holds this file in its SCM_RIGHTS. When found,
--	 * remove this entry and rearrange the file array.
--	 */
--	skb = skb_dequeue(head);
--	while (skb) {
--		struct scm_fp_list *fp;
--
--		fp = UNIXCB(skb).fp;
--		for (i = 0; i < fp->count; i++) {
--			int left;
--
--			if (fp->fp[i] != file)
--				continue;
--
--			unix_notinflight(fp->user, fp->fp[i]);
--			left = fp->count - 1 - i;
--			if (left) {
--				memmove(&fp->fp[i], &fp->fp[i + 1],
--						left * sizeof(struct file *));
--			}
--			fp->count--;
--			if (!fp->count) {
--				kfree_skb(skb);
--				skb = NULL;
--			} else {
--				__skb_queue_tail(&list, skb);
--			}
--			fput(file);
--			file = NULL;
--			break;
--		}
--
--		if (!file)
--			break;
--
--		__skb_queue_tail(&list, skb);
--
--		skb = skb_dequeue(head);
--	}
--
--	if (skb_peek(&list)) {
--		spin_lock_irq(&head->lock);
--		while ((skb = __skb_dequeue(&list)) != NULL)
--			__skb_queue_tail(head, skb);
--		spin_unlock_irq(&head->lock);
--	}
--#else
- 	fput(file);
--#endif
+ u32 bpf_map_fd_sys_lookup_elem(void *ptr)
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 64206856a05c4..d4b4a47081b51 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -487,6 +487,25 @@ static void bpf_map_put_uref(struct bpf_map *map)
+ 	}
  }
  
- static void __io_rsrc_put_work(struct io_rsrc_node *ref_node)
-@@ -8595,12 +8422,6 @@ static int io_sqe_files_register(struct io_ring_ctx *ctx, void __user *arg,
- 		io_fixed_file_set(io_fixed_file_slot(&ctx->file_table, i), file);
- 	}
- 
--	ret = io_sqe_files_scm(ctx);
--	if (ret) {
--		__io_sqe_files_unregister(ctx);
--		return ret;
--	}
--
- 	io_rsrc_node_switch(ctx, NULL);
- 	return ret;
- out_fput:
-@@ -9557,12 +9378,6 @@ static void io_ring_ctx_free(struct io_ring_ctx *ctx)
- 	WARN_ON_ONCE(!list_empty(&ctx->rsrc_ref_list));
- 	WARN_ON_ONCE(!llist_empty(&ctx->rsrc_put_llist));
- 
--#if defined(CONFIG_UNIX)
--	if (ctx->ring_sock) {
--		ctx->ring_sock->file = NULL; /* so that iput() is called */
--		sock_release(ctx->ring_sock);
--	}
--#endif
- 	WARN_ON_ONCE(!list_empty(&ctx->ltimeout_list));
- 
- 	if (ctx->mm_account) {
-@@ -10499,32 +10314,12 @@ static int io_uring_install_fd(struct io_ring_ctx *ctx, struct file *file)
- /*
-  * Allocate an anonymous fd, this is what constitutes the application
-  * visible backing of an io_uring instance. The application mmaps this
-- * fd to gain access to the SQ/CQ ring details. If UNIX sockets are enabled,
-- * we have to tie this fd to a socket for file garbage collection purposes.
-+ * fd to gain access to the SQ/CQ ring details.
++static void bpf_map_free_in_work(struct bpf_map *map)
++{
++	INIT_WORK(&map->work, bpf_map_free_deferred);
++	schedule_work(&map->work);
++}
++
++static void bpf_map_free_rcu_gp(struct rcu_head *rcu)
++{
++	bpf_map_free_in_work(container_of(rcu, struct bpf_map, rcu));
++}
++
++static void bpf_map_free_mult_rcu_gp(struct rcu_head *rcu)
++{
++	if (rcu_trace_implies_rcu_gp())
++		bpf_map_free_rcu_gp(rcu);
++	else
++		call_rcu(rcu, bpf_map_free_rcu_gp);
++}
++
+ /* decrement map refcnt and schedule it for freeing via workqueue
+  * (unrelying map implementation ops->map_free() might sleep)
   */
- static struct file *io_uring_get_file(struct io_ring_ctx *ctx)
- {
--	struct file *file;
--#if defined(CONFIG_UNIX)
--	int ret;
--
--	ret = sock_create_kern(&init_net, PF_UNIX, SOCK_RAW, IPPROTO_IP,
--				&ctx->ring_sock);
--	if (ret)
--		return ERR_PTR(ret);
--#endif
--
--	file = anon_inode_getfile("[io_uring]", &io_uring_fops, ctx,
--					O_RDWR | O_CLOEXEC);
--#if defined(CONFIG_UNIX)
--	if (IS_ERR(file)) {
--		sock_release(ctx->ring_sock);
--		ctx->ring_sock = NULL;
--	} else {
--		ctx->ring_sock->file = file;
--	}
--#endif
--	return file;
-+	return anon_inode_getfile("[io_uring]", &io_uring_fops, ctx,
-+				  O_RDWR | O_CLOEXEC);
+@@ -496,8 +515,11 @@ static void __bpf_map_put(struct bpf_map *map, bool do_idr_lock)
+ 		/* bpf_map_free_id() must be called first */
+ 		bpf_map_free_id(map, do_idr_lock);
+ 		btf_put(map->btf);
+-		INIT_WORK(&map->work, bpf_map_free_deferred);
+-		schedule_work(&map->work);
++
++		if (READ_ONCE(map->free_after_mult_rcu_gp))
++			call_rcu_tasks_trace(&map->rcu, bpf_map_free_mult_rcu_gp);
++		else
++			bpf_map_free_in_work(map);
+ 	}
  }
  
- static int io_uring_create(unsigned entries, struct io_uring_params *p,
 -- 
 2.43.0
 
