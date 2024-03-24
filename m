@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FE227898D;
-	Sun, 24 Mar 2024 23:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB0A2789BD;
+	Sun, 24 Mar 2024 23:37:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323451; cv=none; b=rqD5G9s+Wlk+mAGkzAQpxtbq4apnCRImZ8A1oYl9YROo2aJs1mh0dlIAdoyeJlw2ZRBYCS/a2nfVF6ne6IeprHB8t2xZA0k9gF6Mo7PgPbPU0M4oOAfIVOmYNGgPbPJIoeNQ93XRLf9DzVj7PM4+rZe8oqIylbOsdjs//uuq0rI=
+	t=1711323456; cv=none; b=BfJpw1U80ddRTkg4dQwLa3OregxC5HOmz31v3nDHxK6aFp5pWkdbdbkK2uUK0ifz1eH3XN1l1eR9W0DkPk4D+cQn7ZJL/ELetQAJv9ibx2g2ymJw+dSzqh9ZGN05LGZMByeOByEOqzpC5esmT24CfSW8hWNX9wovYnhycQTnumo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323451; c=relaxed/simple;
-	bh=1iglNrylsU2Jo217moQ36heLo5ehGv/yQsgFmZHd4EQ=;
+	s=arc-20240116; t=1711323456; c=relaxed/simple;
+	bh=I5IZLXRovJJX137SJGnoEbJCPVfKKUehgGid1mWVd0k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tr++4zWHnuZWfoubFxIL+fA9QTcK43d8hzJ53nq7DrB7kuWQm6zhT1BBjj6Jn4+1NXQ8c5LKSFAnkTukJoTMurZ5z2Ihvbx+eDAIp21qZ54SNS6ddkVo/ZXOJAIvTn5a/3y3CQJohGSF50xGZgGrmPJc5PyBlxebzNEc2zR9e38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Se9Ote8G; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ix17dkZjxcISLEVXma7OCjWhyb3D9h6L3ZCLOsxsU2Yufz4llV2B87UB03NCQLFPtrF1uJ7JC9/Noc5iXjkXBI+3MS8H5aKQR8XK4J0lDWFk7F7o/a3JuxULnpuSwjkXgr03hP1m8H5pe9CooQfcSle+j5KHpPOQUZaQtWmFMTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtapN0J5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Se9Ote8G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F9B3C433F1;
-	Sun, 24 Mar 2024 23:37:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtapN0J5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8F10C43390;
+	Sun, 24 Mar 2024 23:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323451;
-	bh=1iglNrylsU2Jo217moQ36heLo5ehGv/yQsgFmZHd4EQ=;
+	s=k20201202; t=1711323455;
+	bh=I5IZLXRovJJX137SJGnoEbJCPVfKKUehgGid1mWVd0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Se9Ote8Gt1p/Pd+X+xJdHA8U1VYFlVQDVwsxQtLAg18xW6+DVEZQ+LwflaoRjE2x9
-	 IgFzQRjVYwY/wFVfw/wC5pW3lP2no/V7ecIssdJylDETqKG5XFfZyYTvXKaGZvZWR7
-	 hmuc1/RaBFHtHhYqs0oAEidFJw36hvcL1/vH59CNpm8FNH9eWlR6Q2REE+/a96vtzx
-	 THFNVWmjXtWJ1boTrpZmAsUXE6wgcijU4T0JxA8EtEr5m8bQSHukd636ICHGUmkOO8
-	 wzRcfqcpeQ4Iav7VX7qB30pe1CIHbaKT2e4IMrq/uiJKf1PHyU3ccVULzfhmGnaYCa
-	 sw3X5J89ubM6w==
+	b=jtapN0J5jWghDr0SEnLlYX53mYDQM/SJv+Xpt1TW70lu1hLU/4qW1eFm295V7FdOP
+	 i/yB2AlzjUqMvzd+DnXrfIXF7Sw/qfMsozwosVX2rWSGSjtzhZsS1sEh59gap8hV9y
+	 s2hZNuBm8mFSX/lms53BxKF5oH9YzDqliLunfEJADxovxoWolASzgiUdz06KywR1hX
+	 IZCS4fOZ3dU5jUHF7zwnVoQlEp/V3tP+OXjunxTVByE1xuiXFQwG77bzpSSrjl7OA3
+	 Jm+Rmbkqxcxb6b3DDbEqmLZafB/HX50hWpDoMpEFZSyd6iVkkCQsSDGACR8TuHJl1a
+	 A5WV5cdNDnlbQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ming Lei <ming.lei@redhat.com>,
-	Patrick Plenefisch <simonpatp@gmail.com>,
-	Mike Snitzer <snitzer@kernel.org>,
+Cc: Cai Huoqing <caihuoqing@baidu.com>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 154/317] dm raid: fix false positive for requeue needed during reshape
-Date: Sun, 24 Mar 2024 19:32:14 -0400
-Message-ID: <20240324233458.1352854-155-sashal@kernel.org>
+Subject: [PATCH 5.15 159/317] drm/tegra: dsi: Make use of the helper function dev_err_probe()
+Date: Sun, 24 Mar 2024 19:32:19 -0400
+Message-ID: <20240324233458.1352854-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,44 +48,69 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Cai Huoqing <caihuoqing@baidu.com>
 
-[ Upstream commit b25b8f4b8ecef0f48c05f0c3572daeabefe16526 ]
+[ Upstream commit fc75e4fcbd1e4252a0481ebb23cd4516c127a8e2 ]
 
-An empty flush doesn't have a payload, so it should never be looked at
-when considering to possibly requeue a bio for the case when a reshape
-is in progress.
+When possible use dev_err_probe help to properly deal with the
+PROBE_DEFER error, the benefit is that DEFER issue will be logged
+in the devices_deferred debugfs file.
+And using dev_err_probe() can reduce code size, the error value
+gets printed.
 
-Fixes: 9dbd1aa3a81c ("dm raid: add reshaping support to the target")
-Reported-by: Patrick Plenefisch <simonpatp@gmail.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Stable-dep-of: 830c1ded3563 ("drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-raid.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/tegra/dsi.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-index 8d489933d5792..04769fb20cf7f 100644
---- a/drivers/md/dm-raid.c
-+++ b/drivers/md/dm-raid.c
-@@ -3329,14 +3329,14 @@ static int raid_map(struct dm_target *ti, struct bio *bio)
- 	struct mddev *mddev = &rs->md;
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index 0adce882f157b..6cbba2adb6e5a 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -1591,28 +1591,24 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+ 	}
  
- 	/*
--	 * If we're reshaping to add disk(s)), ti->len and
-+	 * If we're reshaping to add disk(s), ti->len and
- 	 * mddev->array_sectors will differ during the process
- 	 * (ti->len > mddev->array_sectors), so we have to requeue
- 	 * bios with addresses > mddev->array_sectors here or
- 	 * there will occur accesses past EOD of the component
- 	 * data images thus erroring the raid set.
- 	 */
--	if (unlikely(bio_end_sector(bio) > mddev->array_sectors))
-+	if (unlikely(bio_has_data(bio) && bio_end_sector(bio) > mddev->array_sectors))
- 		return DM_MAPIO_REQUEUE;
+ 	dsi->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(dsi->clk)) {
+-		dev_err(&pdev->dev, "cannot get DSI clock\n");
+-		return PTR_ERR(dsi->clk);
+-	}
++	if (IS_ERR(dsi->clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
++				     "cannot get DSI clock\n");
  
- 	md_handle_request(mddev, bio);
+ 	dsi->clk_lp = devm_clk_get(&pdev->dev, "lp");
+-	if (IS_ERR(dsi->clk_lp)) {
+-		dev_err(&pdev->dev, "cannot get low-power clock\n");
+-		return PTR_ERR(dsi->clk_lp);
+-	}
++	if (IS_ERR(dsi->clk_lp))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
++				     "cannot get low-power clock\n");
+ 
+ 	dsi->clk_parent = devm_clk_get(&pdev->dev, "parent");
+-	if (IS_ERR(dsi->clk_parent)) {
+-		dev_err(&pdev->dev, "cannot get parent clock\n");
+-		return PTR_ERR(dsi->clk_parent);
+-	}
++	if (IS_ERR(dsi->clk_parent))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
++				     "cannot get parent clock\n");
+ 
+ 	dsi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
+-	if (IS_ERR(dsi->vdd)) {
+-		dev_err(&pdev->dev, "cannot get VDD supply\n");
+-		return PTR_ERR(dsi->vdd);
+-	}
++	if (IS_ERR(dsi->vdd))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
++				     "cannot get VDD supply\n");
+ 
+ 	err = tegra_dsi_setup_clocks(dsi);
+ 	if (err < 0) {
 -- 
 2.43.0
 
