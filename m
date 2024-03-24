@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF7A136678;
-	Sun, 24 Mar 2024 23:04:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF05C2062E4;
+	Sun, 24 Mar 2024 23:04:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321495; cv=none; b=ajxazDZSXpZRY1vWg1ptvXTdeHVYLGbbSj0OZwB+Kgi24ZsNj7+utZFsL110hxHqDaeCSdc4oIn3grY6BabFzBVL4c5EyU2cmx1PJzaLnokjUh9cw4atJF22ViKMrqHhzFJNWaYk2JVYKfKOvAksQbKLmuaBNn0Xo1a1KglE0Bs=
+	t=1711321497; cv=none; b=Zef7mh+NQORqin8nlYV5xTMM9Ef0QQ1JFCOFr38XEdCcRT7Ttiou70YGaq1eJhA4HInaG7+8fogiH6hpCC/K/TfkHG5BMHGpOxjKpXhZDaNIiuAe/ExlYDA1QbBichTudkPxGC/e6K7FS6z3csATkXDwmzLt72Arnu3Z1J7+CEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321495; c=relaxed/simple;
-	bh=zDwrV9qQ/N4C7MwDZaNZ+GJUXT8auFLqKHkwnMxLKcQ=;
+	s=arc-20240116; t=1711321497; c=relaxed/simple;
+	bh=ejgvvjlYrP0ggQ6p2mT2a42/l5zIDdfBEPIknr/GpMc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XjatkSraATFsXw5fvMnJM549wMMsSHIYvLpg1GSWOCFIf3xuC0/BM22bnTV/AQZoSg9cT0PnHEelhhW+FMC9LJ/BDvjfCLoKK5Xgh1E17ZLkVW6+OvUY4AkOgcYJ1B8IP8O6oz5SU2u/MShJZxBkr5xsvgbwuYXkcU3rHOiI3NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3IoukpM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JfppluXirH0JIVlRSQelcdgCr9iWlSjGMkSiiqDaRE9NtIHIi5z3ASp8FC0A7ddRH/nr7rnujJDP9hzRHuduozm27qLkBocIZ6nWEFIwCqEP8Oy4KviWCCGoihZ1jWd6OqSd06NR0s8ccnMheavX/HeuQuehKJ9oxsr4juixfok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rr9CGd7I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3IoukpM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8122DC43394;
-	Sun, 24 Mar 2024 23:04:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rr9CGd7I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 742C2C43394;
+	Sun, 24 Mar 2024 23:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321494;
-	bh=zDwrV9qQ/N4C7MwDZaNZ+GJUXT8auFLqKHkwnMxLKcQ=;
+	s=k20201202; t=1711321496;
+	bh=ejgvvjlYrP0ggQ6p2mT2a42/l5zIDdfBEPIknr/GpMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q3IoukpMGZxZWYSMYu9ObdvH66sKOOngj8Fdk5+mBtOFvHC5gb7n9qCG5qVccy1WN
-	 0onc+uU0iAdHuoUqugZ+tVg7YyvwUGNC+0ISi6fSzLYwKgWOXirdyP4Rhn7ejz0Q0p
-	 vvpzhu+mPt3OocmGWuIYn1MusWLidKWGiByiSdldZFyfCD0D+WmnupuMOqFGjSAaAV
-	 CIETuyQfeye/D+14IzZKEYJGQhLAw6l6hIfiKVkNA0pRcKKydXwkHzmZwXWJFbFZ4T
-	 IV62iowguPQ1pdu1Okeml3YhMpGdvIXl614aWX7Ek+WjCFr2kv6aWBCqNGLghyxI2A
-	 hKrKwEUkHLVtQ==
+	b=Rr9CGd7IF9ZoIqk83gMNh0XVNl8k2svhMgvs8vKcdbuQv1PM2O5mBfCuQ/I3vCrXE
+	 VcwEeOcD8BUki7VWHm7WNepXbWSBd0413beNyGTWp5T565G9pzF4FHPYk21BLj0cqi
+	 8Z+QRcmHgAyqtGZPEKhQBx4vuBQMZ02WwXX64o6jJ7pwnZnt+z31tiIK+tpvrqmM/c
+	 ATOP5kdUWjfRaQTN+b3mjBUVVqUDNyfm6TLeDhXnEJsjOxZtWhYAbZcF0gDwAA2sCO
+	 KZi8Gz/5HQb5RLxcl26JZYlRAjCcYhEjKMqS/B7R9r3tuSrzrQ/xNR6WtNSAyAmgJb
+	 bv3BOMl8HkvKg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+Cc: Craig Tatlor <ctatlor97@gmail.com>,
+	Luca Weiss <luca@z3ntu.xyz>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 219/638] arm64: dts: qcom: sdm845: Use the Low Power Island CX/MX for SLPI
-Date: Sun, 24 Mar 2024 18:54:16 -0400
-Message-ID: <20240324230116.1348576-220-sashal@kernel.org>
+Subject: [PATCH 6.6 221/638] ARM: dts: qcom: msm8974: correct qfprom node size
+Date: Sun, 24 Mar 2024 18:54:18 -0400
+Message-ID: <20240324230116.1348576-222-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,37 +50,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
+From: Craig Tatlor <ctatlor97@gmail.com>
 
-[ Upstream commit 5dd227ccfb9568935bdaf82bc1893b36457dd4d3 ]
+[ Upstream commit 724c4bf0e4bf81dba77736afb93964c986c3c123 ]
 
-The SLPI is powered by the Low Power Island power rails. Fix the incorrect
-assignment.
+The qfprom actually is bigger than 0x1000, so adjust the reg.
 
-Fixes: 74588aada59a ("arm64: dts: qcom: sdm845: add SLPI remoteproc")
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20231220-topic-sdm845_slpi_lcxmx-v1-1-db7c72ef99ae@linaro.org
+Note that the non-ECC-corrected qfprom can be found at 0xfc4b8000
+(-0x4000). The current reg points to the ECC-corrected qfprom block
+which should have equivalent values at all offsets compared to the
+non-corrected version.
+
+[luca@z3ntu.xyz: extract to standalone patch and adjust for review
+comments]
+
+Fixes: c59ffb519357 ("arm: dts: msm8974: Add thermal zones, tsens and qfprom nodes")
+Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20240210-msm8974-qfprom-v3-1-26c424160334@z3ntu.xyz
 Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/qcom/qcom-msm8974.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 234d7875cd8e1..5bf0d5af452af 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3363,8 +3363,8 @@ slpi_pas: remoteproc@5c00000 {
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
+index 706fef53767e1..4a8eb8b423290 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
+@@ -1194,7 +1194,7 @@ restart@fc4ab000 {
  
- 			qcom,qmp = <&aoss_qmp>;
+ 		qfprom: qfprom@fc4bc000 {
+ 			compatible = "qcom,msm8974-qfprom", "qcom,qfprom";
+-			reg = <0xfc4bc000 0x1000>;
++			reg = <0xfc4bc000 0x2100>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
  
--			power-domains = <&rpmhpd SDM845_CX>,
--					<&rpmhpd SDM845_MX>;
-+			power-domains = <&rpmhpd SDM845_LCX>,
-+					<&rpmhpd SDM845_LMX>;
- 			power-domain-names = "lcx", "lmx";
- 
- 			memory-region = <&slpi_mem>;
 -- 
 2.43.0
 
