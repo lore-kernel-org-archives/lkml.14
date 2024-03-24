@@ -1,104 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C701FEC6B;
-	Sun, 24 Mar 2024 23:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37252236581;
+	Sun, 24 Mar 2024 23:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322301; cv=none; b=ozYtNdHmIaqE3mFx32tYbukSk9owP/oC0zHmKSCVB4pXBkG5nO3Q3kBQ0gfzA2XK+2ijlVXsXDoa11CSvWOVXiDZtsWbd/kIs6hHmhVe40FdCVRzY/r0L6BJZRxz6t7oM8upOw/jkGaa4IHwICml1FUXD75SKpCUIDtE9r5OQiU=
+	t=1711322302; cv=none; b=b+AxuGmwa8zZ+PcPAOyNQo70r3/eJOWzJYSwg2XY52fw/wLVrc0lajh1c7X2QLC9V7z1Z7kRdOsNtZyr/qhtKtjC4xvL9Ztz+J7SM5BpO4z6N6D6lO5s0yGHtynpVhve/8CynyP3IBby8oEUeuL8HZUQQbDN2XCVhE2Zs0c/3mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322301; c=relaxed/simple;
-	bh=4WG5syGSUSvWMzXjHZoH1055UV3cQo4/qWbF4cAssk4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n8IFvPNY5xiglKNH9CVhUHCW7lNZOhkF3lBMpRH2SZt3//Ext+izqSsyfKl1/mm/AsN+YnvzqJuKjnepkT3Gc+y6feoeItAYQ7tFCWxPHOTUTkSCefx2WO+uRXydutwJT8fkVsSjeswyOdedcU+lYAKsPvfTRML/tXVzdV3K0rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNYbjs4P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711322302; c=relaxed/simple;
+	bh=CiHiKsG4LEsFUzhFG3rWxV2fGxiw05tzfl9X4v0Ed0o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=J0trhuvHAQCLJPbJHy7FsteC9ZgIU21TM3bNnT8y96/g5wTBV8+aIJJBp8RnPVXBeavQJ7qPmyCZdksbzIwuNdOZ65IHlZtgWfm5uvSoWaU0GzdmsAaksIqWJ2WJDgZjrjUh9mqdkD5Tc++Q5RxuntG+O0+R2DLAZt0mul9heU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nh5n5TSr; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNYbjs4P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEA19C43394;
-	Sun, 24 Mar 2024 23:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322299;
-	bh=4WG5syGSUSvWMzXjHZoH1055UV3cQo4/qWbF4cAssk4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fNYbjs4Ps23E0RikUf5fVgBxQYPOwaXkP0fuH6Hi3wSWAFdv9JVFQwHCT/rMGv6f9
-	 HJt6MFimCgL6Z4TrqH+CZ/z4gLOK4BueCX4a2MvMlS0Fqlo8wd/2wrXCJbHOQkS6LS
-	 aOHSuoedV5uXnF/U45NxYAqL/jBKImRp46vaNLgxPQKPLjS1vJLFWMfPXfklm5jMFx
-	 56Pi0NBWGYhob9b71cMy2lBpv8zNKxasXs2G0Mw1hPWlUwfUpIlcE7PLPPOr4MprlF
-	 1+p7p63jiqYBkszaxONu+rs21EYx1uv1wpmc5mapw4879696AxYZcFlXV7fqGONiGd
-	 XwZEar0onvxWg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>,
-	Markus Suvanto <markus.suvanto@gmail.com>,
-	Jeffrey E Altman <jaltman@auristor.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	linux-afs@lists.infradead.org,
-	Christian Brauner <brauner@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 382/451] afs: Revert "afs: Hide silly-rename files from userspace"
-Date: Sun, 24 Mar 2024 19:10:58 -0400
-Message-ID: <20240324231207.1351418-383-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
-References: <20240324231207.1351418-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nh5n5TSr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711322301; x=1742858301;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=CiHiKsG4LEsFUzhFG3rWxV2fGxiw05tzfl9X4v0Ed0o=;
+  b=Nh5n5TSrWs9nBntAAKceTzUORFOssIcAGzMEAKr5iZg7JAjTs3iSGad5
+   7krxjTsWfy7i2T3lZLmz+SvGewX1S2ytM4KzUqh8Y7Qos2zA4Pljzmcyj
+   h6jjcad9aL1E4269VGnqrKeJJkK6ZSXIhZ6FVQf6TGH49Cr98lkx/HoFs
+   goOXZ3725tC90iPqVKz5zWRm62tox7AKt+kpJgR0ZRQYjIdH4Z/msx21g
+   GZI64hdcPlzQ01lqtKU++FyjMfU8XFgQy7ZiurOMCdK+YjABTa/f0roV3
+   xMWA1Kbo3d6uoGyzonwyqtv8zygyZXE4YE4uL6RaBD9jlLycrvy37LEXz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6431720"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="6431720"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="15464692"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.186.165])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:17 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+Date: Sun, 24 Mar 2024 16:18:15 -0700
+Subject: [PATCH 12/26] cxl/pci: Factor out interrupt policy check
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240324-dcd-type2-upstream-v1-12-b7b00d623625@intel.com>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=1959;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=CiHiKsG4LEsFUzhFG3rWxV2fGxiw05tzfl9X4v0Ed0o=;
+ b=o2G89A/C/ro+KexNY+8PtmPRkeuPhN2vLmc6wqo19fSzntp8uudLilGvrNqhq2329sh3Ci0Ax
+ LWMISYLWW/rCCZtl2abE1KLgfKtgSQBNTtFFRBN3xqGiilF3oKEe2Yt
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-From: David Howells <dhowells@redhat.com>
+Dynamic capacity devices (DCD) require interrupts to notify the host of
+events in the DCD log.  The interrupts for DCD may be supported despite
+FW control of memory event logs.
 
-[ Upstream commit 0aec3847d044273733285dcff90afda89ad461d2 ]
+Prepare to support DCD event interrupts separate from other event
+interrupts by factoring out the check for event interrupt settings.
 
-This reverts commit 57e9d49c54528c49b8bffe6d99d782ea051ea534.
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-This undoes the hiding of .__afsXXXX silly-rename files.  The problem with
-hiding them is that rm can't then manually delete them.
-
-This also reverts commit 5f7a07646655fb4108da527565dcdc80124b14c4 ("afs: Fix
-endless loop in directory parsing") as that's a bugfix for the above.
-
-Fixes: 57e9d49c5452 ("afs: Hide silly-rename files from userspace")
-Reported-by: Markus Suvanto <markus.suvanto@gmail.com>
-Link: https://lists.infradead.org/pipermail/linux-afs/2024-February/008102.html
-Signed-off-by: David Howells <dhowells@redhat.com>
-Link: https://lore.kernel.org/r/3085695.1710328121@warthog.procyon.org.uk
-Reviewed-by: Jeffrey E Altman <jaltman@auristor.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: linux-afs@lists.infradead.org
-Signed-off-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/dir.c | 10 ----------
- 1 file changed, 10 deletions(-)
+Changes for V3:
+[iweiny: new patch]
+---
+ drivers/cxl/pci.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 6e2c967fae6fc..07dc4ec73520c 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -473,16 +473,6 @@ static int afs_dir_iterate_block(struct afs_vnode *dvnode,
- 			continue;
- 		}
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index ccaf4ad26a4f..12cd5d399230 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -738,6 +738,21 @@ static bool cxl_event_int_is_fw(u8 setting)
+ 	return mode == CXL_INT_FW;
+ }
  
--		/* Don't expose silly rename entries to userspace. */
--		if (nlen > 6 &&
--		    dire->u.name[0] == '.' &&
--		    ctx->actor != afs_lookup_filldir &&
--		    ctx->actor != afs_lookup_one_filldir &&
--		    memcmp(dire->u.name, ".__afs", 6) == 0) {
--			ctx->pos = blkoff + next * sizeof(union afs_xdr_dirent);
--			continue;
--		}
--
- 		/* found the next entry */
- 		if (!dir_emit(ctx, dire->u.name, nlen,
- 			      ntohl(dire->u.vnode),
++static bool cxl_event_validate_mem_policy(struct cxl_memdev_state *mds,
++					  struct cxl_event_interrupt_policy *policy)
++{
++	if (cxl_event_int_is_fw(policy->info_settings) ||
++	    cxl_event_int_is_fw(policy->warn_settings) ||
++	    cxl_event_int_is_fw(policy->failure_settings) ||
++	    cxl_event_int_is_fw(policy->fatal_settings)) {
++		dev_err(mds->cxlds.dev,
++			"FW still in control of Event Logs despite _OSC settings\n");
++		return false;
++	}
++
++	return true;
++}
++
+ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+ 			    struct cxl_memdev_state *mds, bool irq_avail)
+ {
+@@ -760,14 +775,8 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+ 	if (rc)
+ 		return rc;
+ 
+-	if (cxl_event_int_is_fw(policy.info_settings) ||
+-	    cxl_event_int_is_fw(policy.warn_settings) ||
+-	    cxl_event_int_is_fw(policy.failure_settings) ||
+-	    cxl_event_int_is_fw(policy.fatal_settings)) {
+-		dev_err(mds->cxlds.dev,
+-			"FW still in control of Event Logs despite _OSC settings\n");
++	if (!cxl_event_validate_mem_policy(mds, &policy))
+ 		return -EBUSY;
+-	}
+ 
+ 	rc = cxl_event_config_msgnums(mds, &policy);
+ 	if (rc)
+
 -- 
-2.43.0
+2.44.0
 
