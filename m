@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A631487F9;
-	Sun, 24 Mar 2024 23:15:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F11148306;
+	Sun, 24 Mar 2024 23:15:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322115; cv=none; b=tOBasQpRa2JeuTIBM8IaQloSwCkEyUi83H1Q5MOmk19zKM4aILsqPV+QJ9jC4InPKB04HbfGKQmiTvmaSPnNODb1xi4WaFgX3NypbR2EAXH6l2p58QB2DAmjG4WZejsHGkBxSWF9+lEMuhxLGmH2eWMtYpaGj2C2c+lpSR5MhA0=
+	t=1711322106; cv=none; b=UWFMUgHJmferDkHYm0Aw3a6hSuyX4c86RI2IQffHAZ+sMf4L9CODE4T401tg3qufjzHNy13JEKsIBJGS4rg6APcDQBlrqtYyDyDOis8EmU9fjeLqAu47GEdRlTZkCWNMzlc8ug39AJI/5QwmfPd0U6rbOwxETOU8mkx+4IoKjZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322115; c=relaxed/simple;
-	bh=Nmw5THMc56boYoN+6LILknPlj2jAuIWd5p8Yh2bj8GQ=;
+	s=arc-20240116; t=1711322106; c=relaxed/simple;
+	bh=r9p82nwq3SbuY3gJ5vMnydbl3jGN8WfF4TJodVM9dL4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NSpp1+5IcHvfNO5sroQo95G9iDR49LGOrhS3EdtRfiMP3eABsRuPvVPskeeZNeaEs9mq8XrFVYLrUVXPqdpP4NOss/nBHeq1ir70Oa3H58HlZyPPjCaTPCURCQQr897XxkfcZHbrkOUDeZbhOKDxE95vn4jDB90KR8pVsVqSvvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ip+NDEOH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZbJiS2Kgxvc2x69Hty/i2ee3hXZ8H4FdQUglo49+zoC7eBDFCKXde7MOMXkRcnUrUJ3gfoLs2ztKy8wCHbitKuUxyDjj4wptI1J9x1aG+lcomXLrKHZAU0b+3ObwyctlvzgffUuFdajm0TRDeppybfSi+PiDzPrQ+469zaCIl4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TL22DE5Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ip+NDEOH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CB2FC433C7;
-	Sun, 24 Mar 2024 23:15:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TL22DE5Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCFCC433C7;
+	Sun, 24 Mar 2024 23:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322115;
-	bh=Nmw5THMc56boYoN+6LILknPlj2jAuIWd5p8Yh2bj8GQ=;
+	s=k20201202; t=1711322105;
+	bh=r9p82nwq3SbuY3gJ5vMnydbl3jGN8WfF4TJodVM9dL4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ip+NDEOHtv8AusZZrboVf+m55llIwpiqpbLBS5XclYn/wDU/YmGW0tcyqJDEN95Z3
-	 edK8i0iPE3LathAWLIPqy+ePZohupAR9UKgFVBSiyxIeaZJIGCPnOXqHVqTidRACIE
-	 qUrwZm4PNaRZfmyRZmbhL9wVTRWyhGeBHAN/+nAtufmTOdqpBMxCsQkgzSpy60jErj
-	 5wAYaDIT48U51JgrOel0CZLJvvBP2cxYx02wzuwUobEoPJIPyJa25ePGBrFOBktJZC
-	 yBan5Te7LSkZsq92ukfl+IxC/FilFB/ScKwcorzumpUNJzDzbYtm/KEJR663R4G3Ui
-	 dNRNliWL6shGQ==
+	b=TL22DE5Y0w4tjrYDuBDJL4sIkaMeb0BzhUiHtOh0IzMsMBBUMl6iJPy+8XeDr0JKO
+	 GeGSA36N6geB1naaoc7EYAXPPU8twOLTltMnQIQbZE+WvzW7MZNQBGPth5/vTY/WDA
+	 kBnfOzKRpy0iRCv4nec6+BSz2LAyjGncheBLYwhIS8mNMluy+0io0LdtkLpJorbFL5
+	 jUeRxhuOfwHry2dAyG5iFR5qQPkYu+CW3OWhqA6S2IOC/LcGrFDlEPyPHv7pFo05TP
+	 k8HnMOzy5epy1kY+s8stGh72Bomk2HdR2Yklmfi0+fQnGw0YrL7j2kWiXjii73Aog5
+	 qEPN2yoArvO9Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: David McFarland <corngood@gmail.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 190/451] wifi: rtw88: 8821c: Fix false alarm count
-Date: Sun, 24 Mar 2024 19:07:46 -0400
-Message-ID: <20240324231207.1351418-191-sashal@kernel.org>
+Subject: [PATCH 6.1 180/451] ACPI: resource: Add Infinity laptops to irq1_edge_low_force_override
+Date: Sun, 24 Mar 2024 19:07:36 -0400
+Message-ID: <20240324231207.1351418-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,38 +48,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+From: David McFarland <corngood@gmail.com>
 
-[ Upstream commit c238adbc578eeb70cbc8fdd1bef3666b0f585b13 ]
+[ Upstream commit e2605d4039a42a03000856b3229932455717b48b ]
 
-total_fa_cnt is supposed to include cck_fa_cnt and ofdm_fa_cnt, not just
-ofdm_fa_cnt.
+A user reported a keyboard problem similar to ones reported with other
+Zen laptops, on an Infinity E15-5A165-BM.
 
-Fixes: 960361238b86 ("rtw88: 8821c: add false alarm statistics")
-Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/f3cb6d17-e4e4-44a7-9c9b-72aed994b5c9@gmail.com
+Add board name matches for this model and one (untested) close relative
+to irq1_edge_low_force_override.
+
+Link: https://lemmy.ml/post/9864736
+Link: https://www.infinitygaming.com.au/bios/
+Link: https://lore.kernel.org/linux-acpi/20231006123304.32686-1-hdegoede@redhat.com
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Stable-dep-of: 021a67d09615 ("ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/rtw8821c.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/resource.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/rtw8821c.c b/drivers/net/wireless/realtek/rtw88/rtw8821c.c
-index 609a2b86330d8..50e3e46f7d8aa 100644
---- a/drivers/net/wireless/realtek/rtw88/rtw8821c.c
-+++ b/drivers/net/wireless/realtek/rtw88/rtw8821c.c
-@@ -674,9 +674,9 @@ static void rtw8821c_false_alarm_statistics(struct rtw_dev *rtwdev)
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index 5ebeb0d7b6be0..35a98a5916f63 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -543,6 +543,18 @@ static const struct dmi_system_id lg_laptop[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "17U70P"),
+ 		},
+ 	},
++	{
++		/* Infinity E15-5A165-BM */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GM5RG1E0009COM"),
++		},
++	},
++	{
++		/* Infinity E15-5A305-1M */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GM5RGEE0016COM"),
++		},
++	},
+ 	{ }
+ };
  
- 	dm_info->cck_fa_cnt = cck_fa_cnt;
- 	dm_info->ofdm_fa_cnt = ofdm_fa_cnt;
-+	dm_info->total_fa_cnt = ofdm_fa_cnt;
- 	if (cck_enable)
- 		dm_info->total_fa_cnt += cck_fa_cnt;
--	dm_info->total_fa_cnt = ofdm_fa_cnt;
- 
- 	crc32_cnt = rtw_read32(rtwdev, REG_CRC_CCK);
- 	dm_info->cck_ok_cnt = FIELD_GET(GENMASK(15, 0), crc32_cnt);
 -- 
 2.43.0
 
