@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E4E1D5F74;
-	Sun, 24 Mar 2024 22:49:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE6D1D6955;
+	Sun, 24 Mar 2024 22:49:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320570; cv=none; b=hebIVTDCVNo6zvtv3hRGyS0sykukkq+TxHCvk7NnkvgfqXBgvcYi+goPGNFrxBUUuWS+3JxLEj728XUt7p1dwrSq7lVOYgZIdF1Z9opZlvSfQ99VwFZFSX+njSmEvPI5x3qlCX6PPpXRKkrbDpXEY4+V0Y0Uc+AGmFKS6BVvGNA=
+	t=1711320578; cv=none; b=o7dKFlcAKP//BeHAE9UjcO/10EFjf+JUnCxvlVIJ0dIFKeQNNkjswn3RF0mDsK5HQgbk8Awm4QtAxIwQOt1pBdgUwSd3WmGW/8ZGodIfzLs5ysKB9JI1xmzVqHE7b1KZfXxvmD+DkTJTu41qDUjOxQQex4+pLiX7a4f4LqNW6ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320570; c=relaxed/simple;
-	bh=bNg6LzGgXvZgGySCXYzXDG3E4aRuskSPGtJL92Jmy/8=;
+	s=arc-20240116; t=1711320578; c=relaxed/simple;
+	bh=HRsI8JAt342So7xUBYg8KsqVHOOsA3e9WgoFFAH9MKM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jT4W4WUht/htYPdI3+vL7i0sBxZNahh09oUsB474R2cGh+3kqKcBZcD54tYz50N233ceby26SQOfJIIfalMPed4OribTgNY/8Qep4ZKTTo0NGwzS+pKu0jAdOwFi+UB4ENpucUHQIeOvAjWI+5un0N2fUYjYzNneXewKmvJNC5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAWfCVwn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ImuuNJ5OFyWq3z5lQGY8q01jU2/yO7xkgJGJgKQwMHWdLn16qjVeCMbWZyucn9veokV0KVp3KjERhmsMlw+cbdMkupNviDSFq2VDL6+6uZOv0WvcORstmh6r5OLx+btLkdaIJq8Ixv0Dr4+aLIhnxmNO2Eg9+sCUvIEc+qkTTzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hhROVB0J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAWfCVwn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC6A6C433F1;
-	Sun, 24 Mar 2024 22:49:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hhROVB0J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A39E2C433C7;
+	Sun, 24 Mar 2024 22:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320569;
-	bh=bNg6LzGgXvZgGySCXYzXDG3E4aRuskSPGtJL92Jmy/8=;
+	s=k20201202; t=1711320577;
+	bh=HRsI8JAt342So7xUBYg8KsqVHOOsA3e9WgoFFAH9MKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nAWfCVwn4lDQbwXP44qD7c+SR9euUfsKo9aiE039Fxf3Eqw3syOLewLJMNh2upGf9
-	 4KgVCXvV+MUfFuP3AspJeXvCBGeKQtDTBA1uH33RO8PmHdkkOD/Wm6L9JlgD/gI2yl
-	 qUJ+O5hYUmV+IQsWOjqKFgSrJpLSdYGYZLTsy8cmfRGXwdQXAVxvWZYGYpASB1nFPk
-	 X+Z/78+vKnGuNCw7utBGSDhONvA7f70W80oLr1iQdneW2WEwIlQrr7kt4MV3G978Q8
-	 LuWYTtg0WxQHCnwykZuggle8oK0vCrDlesDm+aS6RBbvEMvhxtIQvwvGnH5iD4J2Z0
-	 GVw0cHYzlHa5A==
+	b=hhROVB0J1QZqoEZvxQNuFQwfw3gyv49rXsXqhLwyNO/QAK7cmbk5zZhJHX2teaoJN
+	 vpzj0UFL8OK2Tp9jgbEkcsjgrQI3DQ21IcChlhG7esEe1W7LpVL+KLEBld1B7qcyhm
+	 fS24bRcPeAmC7ZmCasgz2FGlP1s8LFctgtbUc7eNJIk3AXsBpRrbroaFhA2S2wWU/y
+	 9BAxEz4h+D6bclu17FfVjkvTchvJwpDTPj0sjc+QsdGaASkLGQeig7tLWfiZsFix0U
+	 0R8za0M+Nq9nYhBcRtKxavZDvFoWGoxvOmAeP0Iy1mmz/MiQWs8g+zmYeUnYH9HnIf
+	 r91uIbXf5hDJA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Ingo Molnar <mingo@kernel.org>,
+Cc: Martin Kaistra <martin.kaistra@linutronix.de>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 130/713] sched/fair: Take the scheduling domain into account in select_idle_core()
-Date: Sun, 24 Mar 2024 18:37:36 -0400
-Message-ID: <20240324224720.1345309-131-sashal@kernel.org>
+Subject: [PATCH 6.7 138/713] wifi: rtl8xxxu: add cancel_work_sync() for c2hcmd_work
+Date: Sun, 24 Mar 2024 18:37:44 -0400
+Message-ID: <20240324224720.1345309-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,52 +49,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Keisuke Nishimura <keisuke.nishimura@inria.fr>
+From: Martin Kaistra <martin.kaistra@linutronix.de>
 
-[ Upstream commit 23d04d8c6b8ec339057264659b7834027f3e6a63 ]
+[ Upstream commit 1213acb478a7181cd73eeaf00db430f1e45b1361 ]
 
-When picking a CPU on task wakeup, select_idle_core() has to take
-into account the scheduling domain where the function looks for the CPU.
+The workqueue might still be running, when the driver is stopped. To
+avoid a use-after-free, call cancel_work_sync() in rtl8xxxu_stop().
 
-This is because the "isolcpus" kernel command line option can remove CPUs
-from the domain to isolate them from other SMT siblings.
-
-This change replaces the set of CPUs allowed to run the task from
-p->cpus_ptr by the intersection of p->cpus_ptr and sched_domain_span(sd)
-which is stored in the 'cpus' argument provided by select_idle_cpu().
-
-Fixes: 9fe1f127b913 ("sched/fair: Merge select_idle_core/cpu()")
-Signed-off-by: Keisuke Nishimura <keisuke.nishimura@inria.fr>
-Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20240110131707.437301-2-keisuke.nishimura@inria.fr
+Fixes: e542e66b7c2e ("rtl8xxxu: add bluetooth co-existence support for single antenna")
+Signed-off-by: Martin Kaistra <martin.kaistra@linutronix.de>
+Reviewed-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240111163628.320697-2-martin.kaistra@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 68bd1102133ef..c43b71792a8e5 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7296,7 +7296,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
- 		if (!available_idle_cpu(cpu)) {
- 			idle = false;
- 			if (*idle_cpu == -1) {
--				if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, p->cpus_ptr)) {
-+				if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, cpus)) {
- 					*idle_cpu = cpu;
- 					break;
- 				}
-@@ -7304,7 +7304,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
- 			}
- 			break;
- 		}
--		if (*idle_cpu == -1 && cpumask_test_cpu(cpu, p->cpus_ptr))
-+		if (*idle_cpu == -1 && cpumask_test_cpu(cpu, cpus))
- 			*idle_cpu = cpu;
- 	}
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 180907319e8cd..04df0f54aa667 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -7304,6 +7304,7 @@ static void rtl8xxxu_stop(struct ieee80211_hw *hw)
+ 	if (priv->usb_interrupts)
+ 		rtl8xxxu_write32(priv, REG_USB_HIMR, 0);
  
++	cancel_work_sync(&priv->c2hcmd_work);
+ 	cancel_delayed_work_sync(&priv->ra_watchdog);
+ 
+ 	rtl8xxxu_free_rx_resources(priv);
 -- 
 2.43.0
 
