@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A043145338;
-	Sun, 24 Mar 2024 23:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5A414533C;
+	Sun, 24 Mar 2024 23:13:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321983; cv=none; b=Bq8CHwCCwVe/NmSc5QR8GCptSTZMRhuQgJFkChDrQBtb9DGYhhoWEmDyFTDqSVedYIV6q3YaqYVjUVfu9BiFpt+mBDXf3AV+UyoCZIBYkjFWhpaR9FzybaLUGyVa9cl55Xt5+XnT8vf4ilz5JJOEYqJledibI5CpPHdjluybr/Q=
+	t=1711321982; cv=none; b=Mgw51c8fRhLryon0GdFz2/DpoIhEGKm1CUoz0DjOh9dWnUrveJkYlJUGRX/BLYh9ujj3I76YdUV5oa5k8f3ToDZQWV/At9ZsoTnGXLE2KH0Zd9XN59HIfsknPphBXJl87NeyD0H+U1qtefje+lF9ocOfFt6mTFqIdFV7QtxlWys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321983; c=relaxed/simple;
-	bh=EkiW/xBoFPH9AMXJdE9+NbGQAItDzmU2qSMfZ3TDNe4=;
+	s=arc-20240116; t=1711321982; c=relaxed/simple;
+	bh=YEz4yne20Y+PXJLPWPogO6ruSXDx1kKR8hKUaO0QDu8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CMgDMDjjA4dSMn0rS0zGTKPVGvKf1keXBK+iW1mtsOqnpPy0VINqjy+Hx0yn7WbQqgWwo4oCVWSpDarS5jXIPHj7QjZyu1JeDZJtPV2LVz3wgpztGOo9vnWteR1ulzZ49LB04iHRH5B2KgFhpTKw98/0HbrpxTNdxUYci3PsMys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VCEcsvXv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=NNLDX0iVWvTVLd91kii76WUbXg2X4wRCSW6KPX1XWKYemO5KF+x3pVtwd9YwRbFZ/p4JUErB8nUlNzBFbpPnPRhsgI0+QBLYrMZDjTNK+kUpcbJTf/XL5XpqmQelg3a0JcRjX+Y4gA2AWBDnM7aJpT2W3uTcHz/Ef4LwTm0oaRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kp+72O3e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VCEcsvXv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7C3BC43390;
-	Sun, 24 Mar 2024 23:13:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kp+72O3e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD9FBC433C7;
+	Sun, 24 Mar 2024 23:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321983;
-	bh=EkiW/xBoFPH9AMXJdE9+NbGQAItDzmU2qSMfZ3TDNe4=;
+	s=k20201202; t=1711321981;
+	bh=YEz4yne20Y+PXJLPWPogO6ruSXDx1kKR8hKUaO0QDu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VCEcsvXvG9pOVkf6CpD5xS+hb2HDb5SEaK7h/0Q9ySn/WL6NLDRuWq3xuEfJYhZP3
-	 GTYTyecHpwGg2g0Nn9tQS01pUMNmiRwwEsZqQDMIoZWny7I7Wvz7wMncqn3UkD6yr6
-	 pAOQbBz8+AXHTFtMtQZNvzx5U2g2CWzUGzDFw3f6tiUi2XwnExGhqeCkJuDOSJSYcO
-	 JRsuFplsHDYJly8b1Ejry/ER7gw8jCKwZvWRjh+e3kwLei1/bIVklHNTcz/XR/g1/1
-	 IaC8empaozavGJYOg5rslUIwrwzeW6GaFC58LQUc6mB65vI1yZVNTQ4UnDh36a7Dj6
-	 37FFzGp1gxrFw==
+	b=Kp+72O3ehbx2ec2ZvUYcY3reRlh7EdfLdgRBtpIksUEGPRAJe4rt96Cswv402E97E
+	 10GBSx1N8SM7SEV17MouYcmKbGV1MQyfMsJQz04fOzuk9fQSmyecehHUQ6WR/9i/uV
+	 W/J+1t0FCcv7iAUmQRwOejWv+r7B64He9Bc+IOS9kTeXww051aC7XgdXscGstUwG6Y
+	 +Y8NakBIwHyj/u95RsMSngNXVGaSAWVKWz1PMhMvAK/UZFL1GtunHIijNHfJ6hOhxN
+	 /4p4IzPLpsbIYSXCNtBD0ML2IJEIoLqqbodVGJcyLgoGx/IsWeQEnDJiIWZgWAccyu
+	 Po7XlQi4rddzA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 056/451] ASoC: wm8962: Enable both SPKOUTR_ENA and SPKOUTL_ENA in mono mode
-Date: Sun, 24 Mar 2024 19:05:32 -0400
-Message-ID: <20240324231207.1351418-57-sashal@kernel.org>
+Subject: [PATCH 6.1 054/451] Input: gpio_keys_polled - suppress deferred probe error for gpio
+Date: Sun, 24 Mar 2024 19:05:30 -0400
+Message-ID: <20240324231207.1351418-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,78 +45,55 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stuart Henderson <stuarth@opensource.cirrus.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 6fa849e4d78b880e878138bf238e4fd2bac3c4fa ]
+[ Upstream commit 963465a33141d0d52338e77f80fe543d2c9dc053 ]
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-Link: https://msgid.link/r/20240306161439.1385643-2-stuarth@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+On a PC Engines APU our admins are faced with:
+
+	$ dmesg | grep -c "gpio-keys-polled gpio-keys-polled: unable to claim gpio 0, err=-517"
+	261
+
+Such a message always appears when e.g. a new USB device is plugged in.
+
+Suppress this message which considerably clutters the kernel log for
+EPROBE_DEFER (i.e. -517).
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20240305101042.10953-2-u.kleine-koenig@pengutronix.de
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/input/keyboard/gpio_keys_polled.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index 35d8cd4fc71a7..806b69c9b2e36 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2229,6 +2229,9 @@ SND_SOC_DAPM_PGA_E("HPOUT", SND_SOC_NOPM, 0, 0, NULL, 0, hp_event,
+diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+index c3937d2fc7446..a0f9978c68f55 100644
+--- a/drivers/input/keyboard/gpio_keys_polled.c
++++ b/drivers/input/keyboard/gpio_keys_polled.c
+@@ -319,12 +319,10 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
  
- SND_SOC_DAPM_OUTPUT("HPOUTL"),
- SND_SOC_DAPM_OUTPUT("HPOUTR"),
-+
-+SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
- };
+ 			error = devm_gpio_request_one(dev, button->gpio,
+ 					flags, button->desc ? : DRV_NAME);
+-			if (error) {
+-				dev_err(dev,
+-					"unable to claim gpio %u, err=%d\n",
+-					button->gpio, error);
+-				return error;
+-			}
++			if (error)
++				return dev_err_probe(dev, error,
++						     "unable to claim gpio %u\n",
++						     button->gpio);
  
- static const struct snd_soc_dapm_widget wm8962_dapm_spk_mono_widgets[] = {
-@@ -2236,7 +2239,6 @@ SND_SOC_DAPM_MIXER("Speaker Mixer", WM8962_MIXER_ENABLES, 1, 0,
- 		   spkmixl, ARRAY_SIZE(spkmixl)),
- SND_SOC_DAPM_MUX_E("Speaker PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
- 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
--SND_SOC_DAPM_PGA("Speaker Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
- SND_SOC_DAPM_OUTPUT("SPKOUT"),
- };
- 
-@@ -2251,9 +2253,6 @@ SND_SOC_DAPM_MUX_E("SPKOUTL PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
- SND_SOC_DAPM_MUX_E("SPKOUTR PGA", WM8962_PWR_MGMT_2, 3, 0, &spkoutr_mux,
- 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
- 
--SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
--SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
--
- SND_SOC_DAPM_OUTPUT("SPKOUTL"),
- SND_SOC_DAPM_OUTPUT("SPKOUTR"),
- };
-@@ -2366,12 +2365,18 @@ static const struct snd_soc_dapm_route wm8962_spk_mono_intercon[] = {
- 	{ "Speaker PGA", "Mixer", "Speaker Mixer" },
- 	{ "Speaker PGA", "DAC", "DACL" },
- 
--	{ "Speaker Output", NULL, "Speaker PGA" },
--	{ "Speaker Output", NULL, "SYSCLK" },
--	{ "Speaker Output", NULL, "TOCLK" },
--	{ "Speaker Output", NULL, "TEMP_SPK" },
-+	{ "SPKOUTL Output", NULL, "Speaker PGA" },
-+	{ "SPKOUTL Output", NULL, "SYSCLK" },
-+	{ "SPKOUTL Output", NULL, "TOCLK" },
-+	{ "SPKOUTL Output", NULL, "TEMP_SPK" },
-+
-+	{ "SPKOUTR Output", NULL, "Speaker PGA" },
-+	{ "SPKOUTR Output", NULL, "SYSCLK" },
-+	{ "SPKOUTR Output", NULL, "TOCLK" },
-+	{ "SPKOUTR Output", NULL, "TEMP_SPK" },
- 
--	{ "SPKOUT", NULL, "Speaker Output" },
-+	{ "SPKOUT", NULL, "SPKOUTL Output" },
-+	{ "SPKOUT", NULL, "SPKOUTR Output" },
- };
- 
- static const struct snd_soc_dapm_route wm8962_spk_stereo_intercon[] = {
+ 			bdata->gpiod = gpio_to_desc(button->gpio);
+ 			if (!bdata->gpiod) {
 -- 
 2.43.0
 
