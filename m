@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A298517D238;
-	Sun, 24 Mar 2024 23:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE9217DC1D;
+	Sun, 24 Mar 2024 23:44:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323819; cv=none; b=H5wOFTiFrTZXmAKM4V0Y+2KqCK4uRsWpBTJt9dysN7doP2VV92wfpWVXzQnfzgrhhb9hFsBxJXhusSYOIq5ObD8qHJ1wKN2jjL94xnkcFijuhgh8XTl7lr3XoUJqb/0eYXp/6UH3/GbHUydbp/rnxB4mMWl9O7os1j4CLfGvz4Q=
+	t=1711323844; cv=none; b=nrMjeWM7aGMcPBkofU636cleL4Mk+ZwplnYoRd20ln4b2HaisxuA+jfsOLMESRU3KtchBJIT/fRF3J7T5aRI8RgZelLt6fBpUNX6F8gYGPKKs0LLF5peORUOtfeZcdsy4gj8sAmV5QVlJAQDX58ORBNQLvpPX3F/cD+tRC+3GUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323819; c=relaxed/simple;
-	bh=dhKFxGipNUYb7+OZCcYXRa1jL6XDpWTD56tS1MNSVQM=;
+	s=arc-20240116; t=1711323844; c=relaxed/simple;
+	bh=5X8S5ybhvWZig025ctYVfTowCUD3Su5evdmdXKPRrx8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Obhl4iKqKhjTWAT5Ba5jeIabJFTkgNGHCbfGYAoxHsQTaHKuFIw6460AplckcQx0MMNhQ8RaVf60ZidHQlq8A0rQonriTQE9vlnpinrqNv7Eeyijy++0+QLAuBBsx7RIJA/TcjUUJidadHsrim8zOV08LD5og7XUEpbZJOCQAkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OsQKhbjg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rGpjUSdvV28n0buwONiuWQ0SJ4Nf+Q/FScyZxI9NrOcNqPSQs6QS6Q3xgTWMEEr2STMSor3/Q0ZVfm/5qqUZkeNZZUfYXHMxYczZKfJ8HnxnLg974NhC1tNlMUwH/UxKn5Zv1ImVsCp2cCIQ+g+ZrJa0SgpVJ8bzTV7jX2dkmxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=miv0UUYP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OsQKhbjg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD172C43399;
-	Sun, 24 Mar 2024 23:43:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="miv0UUYP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 660F9C433F1;
+	Sun, 24 Mar 2024 23:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323819;
-	bh=dhKFxGipNUYb7+OZCcYXRa1jL6XDpWTD56tS1MNSVQM=;
+	s=k20201202; t=1711323844;
+	bh=5X8S5ybhvWZig025ctYVfTowCUD3Su5evdmdXKPRrx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OsQKhbjgHrgXbqdlXoiLIjaNa6PbKaOxQ9CbuH0DIFeHggjQ3xd6eUdi+avEAaoKv
-	 DHTVqbOz+r38I/4cQBp+xHWoMOYFltuD28NM4U/MVg8B73ZOJu+DpdRg3M6qVXOcl9
-	 UfDwN8PVsKL7lxSS8N6bngDGd0koOH3J1cHAmAOpvnclLHijkYujlQWshiLT3IakJ1
-	 15B//ApzU/oF61X2tweAnZ8iHwyu8BL0FnmRqmB8wLbWdl7iO17rt+dqKVHa3bkgGN
-	 21Pt0ZKZBpcz2Sanv0wCYz12mma6M/9FTYtuuzgQnRXGF5Bys3aDoO8Q8ng5OrM5P+
-	 G8HIRbENXxEgA==
+	b=miv0UUYPyoP1ZPda54z6P2CHLB3Ob/CLnSZLytxaSsrTRTIhrZhlgEP7aQl/HcpU6
+	 Rjc6xlV58NbQb16mEIpwPjvj0u92Fn94lSddmwJ5HD+KoLKjoKLF11jBAgkXBOsza8
+	 WlUWmASowDMFzKcH3k4bV0I94dI0IXGqLOfaxxqHpZCiri7mKjcZotDioNgFiV/1hS
+	 hF3jaThj0nuFL3+xWo65xuG8fq1/iNWbuuBtA3EsYczwELYJfKNvrY6ACc8AYhhQ5V
+	 9VJiT7HlUnpwZkRLZm24LFIY1mGpNH2A6UCwtnnm7LFGsSa6bheemqm7bkKPYdQmDp
+	 qcJkeBVb/zjkw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc: Shigeru Yoshida <syoshida@redhat.com>,
+	syzbot+2ef3a8ce8e91b5a50098@syzkaller.appspotmail.com,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 198/238] net: sunrpc: Fix an off by one in rpc_sockaddr2uaddr()
-Date: Sun, 24 Mar 2024 19:39:46 -0400
-Message-ID: <20240324234027.1354210-199-sashal@kernel.org>
+Subject: [PATCH 5.10 222/238] hsr: Fix uninit-value access in hsr_get_node()
+Date: Sun, 24 Mar 2024 19:40:10 -0400
+Message-ID: <20240324234027.1354210-223-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,40 +49,96 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Shigeru Yoshida <syoshida@redhat.com>
 
-[ Upstream commit d6f4de70f73a106986ee315d7d512539f2f3303a ]
+[ Upstream commit ddbec99f58571301679addbc022256970ca3eac6 ]
 
-The intent is to check if the strings' are truncated or not. So, >= should
-be used instead of >, because strlcat() and snprintf() return the length of
-the output, excluding the trailing NULL.
+KMSAN reported the following uninit-value access issue [1]:
 
-Fixes: a02d69261134 ("SUNRPC: Provide functions for managing universal addresses")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+=====================================================
+BUG: KMSAN: uninit-value in hsr_get_node+0xa2e/0xa40 net/hsr/hsr_framereg.c:246
+ hsr_get_node+0xa2e/0xa40 net/hsr/hsr_framereg.c:246
+ fill_frame_info net/hsr/hsr_forward.c:577 [inline]
+ hsr_forward_skb+0xe12/0x30e0 net/hsr/hsr_forward.c:615
+ hsr_dev_xmit+0x1a1/0x270 net/hsr/hsr_device.c:223
+ __netdev_start_xmit include/linux/netdevice.h:4940 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4954 [inline]
+ xmit_one net/core/dev.c:3548 [inline]
+ dev_hard_start_xmit+0x247/0xa10 net/core/dev.c:3564
+ __dev_queue_xmit+0x33b8/0x5130 net/core/dev.c:4349
+ dev_queue_xmit include/linux/netdevice.h:3134 [inline]
+ packet_xmit+0x9c/0x6b0 net/packet/af_packet.c:276
+ packet_snd net/packet/af_packet.c:3087 [inline]
+ packet_sendmsg+0x8b1d/0x9f30 net/packet/af_packet.c:3119
+ sock_sendmsg_nosec net/socket.c:730 [inline]
+ __sock_sendmsg net/socket.c:745 [inline]
+ __sys_sendto+0x735/0xa10 net/socket.c:2191
+ __do_sys_sendto net/socket.c:2203 [inline]
+ __se_sys_sendto net/socket.c:2199 [inline]
+ __x64_sys_sendto+0x125/0x1c0 net/socket.c:2199
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+
+Uninit was created at:
+ slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
+ slab_alloc_node mm/slub.c:3478 [inline]
+ kmem_cache_alloc_node+0x5e9/0xb10 mm/slub.c:3523
+ kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:560
+ __alloc_skb+0x318/0x740 net/core/skbuff.c:651
+ alloc_skb include/linux/skbuff.h:1286 [inline]
+ alloc_skb_with_frags+0xc8/0xbd0 net/core/skbuff.c:6334
+ sock_alloc_send_pskb+0xa80/0xbf0 net/core/sock.c:2787
+ packet_alloc_skb net/packet/af_packet.c:2936 [inline]
+ packet_snd net/packet/af_packet.c:3030 [inline]
+ packet_sendmsg+0x70e8/0x9f30 net/packet/af_packet.c:3119
+ sock_sendmsg_nosec net/socket.c:730 [inline]
+ __sock_sendmsg net/socket.c:745 [inline]
+ __sys_sendto+0x735/0xa10 net/socket.c:2191
+ __do_sys_sendto net/socket.c:2203 [inline]
+ __se_sys_sendto net/socket.c:2199 [inline]
+ __x64_sys_sendto+0x125/0x1c0 net/socket.c:2199
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+
+CPU: 1 PID: 5033 Comm: syz-executor334 Not tainted 6.7.0-syzkaller-00562-g9f8413c4a66f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
+=====================================================
+
+If the packet type ID field in the Ethernet header is either ETH_P_PRP or
+ETH_P_HSR, but it is not followed by an HSR tag, hsr_get_skb_sequence_nr()
+reads an invalid value as a sequence number. This causes the above issue.
+
+This patch fixes the issue by returning NULL if the Ethernet header is not
+followed by an HSR tag.
+
+Fixes: f266a683a480 ("net/hsr: Better frame dispatch")
+Reported-and-tested-by: syzbot+2ef3a8ce8e91b5a50098@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=2ef3a8ce8e91b5a50098 [1]
+Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
+Link: https://lore.kernel.org/r/20240312152719.724530-1-syoshida@redhat.com
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/addr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/hsr/hsr_framereg.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-index d435bffc61999..97ff11973c493 100644
---- a/net/sunrpc/addr.c
-+++ b/net/sunrpc/addr.c
-@@ -284,10 +284,10 @@ char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
- 	}
- 
- 	if (snprintf(portbuf, sizeof(portbuf),
--		     ".%u.%u", port >> 8, port & 0xff) > (int)sizeof(portbuf))
-+		     ".%u.%u", port >> 8, port & 0xff) >= (int)sizeof(portbuf))
- 		return NULL;
- 
--	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) > sizeof(addrbuf))
-+	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) >= sizeof(addrbuf))
- 		return NULL;
- 
- 	return kstrdup(addrbuf, gfp_flags);
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 87fc86aade5c9..fc9fb3e5ae3e2 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -237,6 +237,10 @@ struct hsr_node *hsr_get_node(struct hsr_port *port, struct list_head *node_db,
+ 	 */
+ 	if (ethhdr->h_proto == htons(ETH_P_PRP) ||
+ 	    ethhdr->h_proto == htons(ETH_P_HSR)) {
++		/* Check if skb contains hsr_ethhdr */
++		if (skb->mac_len < sizeof(struct hsr_ethhdr))
++			return NULL;
++
+ 		/* Use the existing sequence_nr from the tag as starting point
+ 		 * for filtering duplicate frames.
+ 		 */
 -- 
 2.43.0
 
