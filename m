@@ -1,135 +1,177 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333F3185F08;
-	Sun, 24 Mar 2024 23:53:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C162AE8D5;
+	Sun, 24 Mar 2024 23:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324382; cv=none; b=FVKtIyos9r3WK59oGb56rhaSVW0Dl45bxmmarQo35SfA1k0PUF6oZp0ROgxTM9t9ah5MjWSNF80U8FqQ8uw8f/FoG4TPFwjr2lZHKcGWcwwAt8tKaxgXwq4n+drONPDlNY9cz1NeKUvxksdaI/v0Z3VXwAk570QJgUuIEJpZq1E=
+	t=1711324674; cv=none; b=AwlsGYDuZ+jfU4dFK0fbA8c7x0LZhjOB1nnbSGyDoiwIfGHhgOO9xS+c+TB/Rl9Z+ag6bngNNzRQWNLz0efMR0/9KKkr41AmCHwGkVCeH6YXQgODtzN3ywiZaz2kbX4OdhV2bmyVyFl4t8THVkP3NhU17Q+WmWVH1mX+NbxOttk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324382; c=relaxed/simple;
-	bh=i4JmSMxH5OlnL+XOfQJWj9C2cgHjqyhvb5Orgg/tQzE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qCyOtXj7oT5UM7VG3qatKB3cAJyRzRyQO4xvwvH/cZ7l/4kSLyZXduETma87ZLut8nYsfq57Lq3fP6KEwIOi3wwVP8Q82OI1we5unSVN8jmndzYTBtwfYQvze7FuPVAvWUODKqyURzco5iaulLsvH5Y3vzfOX73dtzxha0wIrac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W9noazb3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711324674; c=relaxed/simple;
+	bh=B+hDJSEtZmTKGwjosQVzHLsZ21o1d5mgFIcyszz+X+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B9pBO2gC+l9VIVzf7RkUKV4+QhLuzKlX+FjdjR7LbFwHrSYu0O93hlpZRHa1tnccGF3y5Z2U7dZaWOrSuNqBcdxADTW1hp1Zae0DF5jkMv5DW/G+2qbUD8/Wv24KmgUpJpzt8C3aS4/Gzdr5QZnHQhA3BKT1Nh3s/SZu7KyEl7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXvAkoRL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W9noazb3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52DACC43390;
-	Sun, 24 Mar 2024 23:53:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXvAkoRL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D5BEC433F1;
+	Sun, 24 Mar 2024 23:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324381;
-	bh=i4JmSMxH5OlnL+XOfQJWj9C2cgHjqyhvb5Orgg/tQzE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W9noazb3JZ/Qqaqni3htUUUX7lyPCz/T4wq6a24DxuTVkgI+qhl31gxMroJmzAcuP
-	 jlSZHKyVX75QgeoiqXpVswVUgjdJ02FVZvYQlj5T+FTeRKUXCIJ5caivCycgZu7ixD
-	 bj7jCUmOMWJFq3KWuvpqSfLPA8GyUKdCy4e1NrR1H05mdxQLuZGkaNPpiWH2InBfhz
-	 /wQ5B3TKbCPzPNeTZM3PBFNeXt/1hoiT3sR53EEYS5YW6YfK/HRspP0wu/kRIpoeew
-	 hQI8t++qqntb2ML3h2REoAvZ6P2PhGlR5omOFVrjNmh4syIrAcXBsRH7XYp43tjvWm
-	 r5Hh78EsT6qPw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Thinh Tran <thinhtr@linux.ibm.com>,
-	Jiri Pirko <jiri@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 146/148] net/bnx2x: Prevent access to a freed page in page_pool
-Date: Sun, 24 Mar 2024 19:50:10 -0400
-Message-ID: <20240324235012.1356413-147-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
-References: <20240324235012.1356413-1-sashal@kernel.org>
+	s=k20201202; t=1711324672;
+	bh=B+hDJSEtZmTKGwjosQVzHLsZ21o1d5mgFIcyszz+X+s=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=VXvAkoRLMY62I9KFD5orWlj59XGpDkzi5cIA2GMV6QI8b6pBSARWzoatAMQ0GvCzn
+	 vuHY/3dprYDZHORzohPbl0n+SRwQ1hgBW70KRHkwFrxA1cl8zL1DIZdwAbnHSfrzJ3
+	 e04as6W54Iug2x/500OYNiVWMrZFFHWBksdlqRRaXahroHaI/YSuPSQINYeERNE0mx
+	 03l13sbMpV0to3E710lPiFc0vzkOJ9iH4NW8XirbabzfczQSIE4/f0A9b4xg352cQc
+	 WlnbCdDs2wxSskedMajEpUB6fqmB1OfwrBktVrFzVysV+iak7KdUr8JNCScNQCONYY
+	 u5PEGmiByRpXg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 2AD25CE11CE; Sun, 24 Mar 2024 16:57:52 -0700 (PDT)
+Date: Sun, 24 Mar 2024 16:57:52 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Zqiang <qiang.zhang1211@gmail.com>
+Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
+	rcu@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcutorture: Make rcutorture support srcu double call test
+Message-ID: <fded324e-19bd-47a0-bd92-f25aaeddfc1f@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240324124224.615-1-qiang.zhang1211@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240324124224.615-1-qiang.zhang1211@gmail.com>
 
-From: Thinh Tran <thinhtr@linux.ibm.com>
+On Sun, Mar 24, 2024 at 08:42:24PM +0800, Zqiang wrote:
+> This commit also allows rcutorture to support srcu double call test
+> with CONFIG_DEBUG_OBJECTS_RCU_HEAD option enabled. since the spinlock
 
-[ Upstream commit d27e2da94a42655861ca4baea30c8cd65546f25d ]
+						   ^ Comma ","?
 
-Fix race condition leading to system crash during EEH error handling
+> will be called in call_srcu(), in RT-kernel, the spinlock is sleepable,
 
-During EEH error recovery, the bnx2x driver's transmit timeout logic
-could cause a race condition when handling reset tasks. The
-bnx2x_tx_timeout() schedules reset tasks via bnx2x_sp_rtnl_task(),
-which ultimately leads to bnx2x_nic_unload(). In bnx2x_nic_unload()
-SGEs are freed using bnx2x_free_rx_sge_range(). However, this could
-overlap with the EEH driver's attempt to reset the device using
-bnx2x_io_slot_reset(), which also tries to free SGEs. This race
-condition can result in system crashes due to accessing freed memory
-locations in bnx2x_free_rx_sge()
+You lost me on "the spinlock will be called in call_srcu()".
 
-799  static inline void bnx2x_free_rx_sge(struct bnx2x *bp,
-800				struct bnx2x_fastpath *fp, u16 index)
-801  {
-802	struct sw_rx_page *sw_buf = &fp->rx_page_ring[index];
-803     struct page *page = sw_buf->page;
-....
-where sw_buf was set to NULL after the call to dma_unmap_page()
-by the preceding thread.
+> therefore remove disable-irq and disable-preempt protection.
+> 
+> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
 
-    EEH: Beginning: 'slot_reset'
-    PCI 0011:01:00.0#10000: EEH: Invoking bnx2x->slot_reset()
-    bnx2x: [bnx2x_io_slot_reset:14228(eth1)]IO slot reset initializing...
-    bnx2x 0011:01:00.0: enabling device (0140 -> 0142)
-    bnx2x: [bnx2x_io_slot_reset:14244(eth1)]IO slot reset --> driver unload
-    Kernel attempted to read user page (0) - exploit attempt? (uid: 0)
-    BUG: Kernel NULL pointer dereference on read at 0x00000000
-    Faulting instruction address: 0xc0080000025065fc
-    Oops: Kernel access of bad area, sig: 11 [#1]
-    .....
-    Call Trace:
-    [c000000003c67a20] [c00800000250658c] bnx2x_io_slot_reset+0x204/0x610 [bnx2x] (unreliable)
-    [c000000003c67af0] [c0000000000518a8] eeh_report_reset+0xb8/0xf0
-    [c000000003c67b60] [c000000000052130] eeh_pe_report+0x180/0x550
-    [c000000003c67c70] [c00000000005318c] eeh_handle_normal_event+0x84c/0xa60
-    [c000000003c67d50] [c000000000053a84] eeh_event_handler+0xf4/0x170
-    [c000000003c67da0] [c000000000194c58] kthread+0x1c8/0x1d0
-    [c000000003c67e10] [c00000000000cf64] ret_from_kernel_thread+0x5c/0x64
+Nice!  A question below.
 
-To solve this issue, we need to verify page pool allocations before
-freeing.
+> ---
+>  kernel/rcu/rcutorture.c | 36 +++++++++++++++++++++---------------
+>  1 file changed, 21 insertions(+), 15 deletions(-)
+> 
+> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> index 3f9c3766f52b..6571a69142f8 100644
+> --- a/kernel/rcu/rcutorture.c
+> +++ b/kernel/rcu/rcutorture.c
+> @@ -388,6 +388,7 @@ struct rcu_torture_ops {
+>  	int extendables;
+>  	int slow_gps;
+>  	int no_pi_lock;
+> +	int debug_objects;
+>  	const char *name;
+>  };
+>  
+> @@ -573,6 +574,7 @@ static struct rcu_torture_ops rcu_ops = {
+>  	.irq_capable		= 1,
+>  	.can_boost		= IS_ENABLED(CONFIG_RCU_BOOST),
+>  	.extendables		= RCUTORTURE_MAX_EXTEND,
+> +	.debug_objects		= 1,
+>  	.name			= "rcu"
+>  };
+>  
+> @@ -743,6 +745,7 @@ static struct rcu_torture_ops srcu_ops = {
+>  	.cbflood_max	= 50000,
+>  	.irq_capable	= 1,
+>  	.no_pi_lock	= IS_ENABLED(CONFIG_TINY_SRCU),
+> +	.debug_objects	= 1,
+>  	.name		= "srcu"
+>  };
+>  
+> @@ -782,6 +785,7 @@ static struct rcu_torture_ops srcud_ops = {
+>  	.cbflood_max	= 50000,
+>  	.irq_capable	= 1,
+>  	.no_pi_lock	= IS_ENABLED(CONFIG_TINY_SRCU),
+> +	.debug_objects	= 1,
+>  	.name		= "srcud"
+>  };
+>  
+> @@ -3481,35 +3485,37 @@ static void rcu_test_debug_objects(void)
+>  #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD
+>  	struct rcu_head rh1;
+>  	struct rcu_head rh2;
+> +	int idx;
+> +
+> +	if (!cur_ops->debug_objects || !cur_ops->call ||
+> +			!cur_ops->cb_barrier)
 
-Fixes: 4cace675d687 ("bnx2x: Alloc 4k fragment for each rx ring buffer element")
-Signed-off-by: Thinh Tran <thinhtr@linux.ibm.com>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Link: https://lore.kernel.org/r/20240315205535.1321-1-thinhtr@linux.ibm.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+If this is built-in, could we please WARN if there is a conflict?
+Otherwise, it looks like the test succeeded.
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-index df5e8c2e8eafe..844195849ae76 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-@@ -1008,9 +1008,6 @@ static inline void bnx2x_set_fw_mac_addr(__le16 *fw_hi, __le16 *fw_mid,
- static inline void bnx2x_free_rx_mem_pool(struct bnx2x *bp,
- 					  struct bnx2x_alloc_pool *pool)
- {
--	if (!pool->page)
--		return;
--
- 	put_page(pool->page);
- 
- 	pool->page = NULL;
-@@ -1021,6 +1018,9 @@ static inline void bnx2x_free_rx_sge_range(struct bnx2x *bp,
- {
- 	int i;
- 
-+	if (!fp->page_pool.page)
-+		return;
-+
- 	if (fp->mode == TPA_MODE_DISABLED)
- 		return;
- 
--- 
-2.43.0
+> +		return;
+> +
+>  	struct rcu_head *rhp = kmalloc(sizeof(*rhp), GFP_KERNEL);
+>  
+>  	init_rcu_head_on_stack(&rh1);
+>  	init_rcu_head_on_stack(&rh2);
+> -	pr_alert("%s: WARN: Duplicate call_rcu() test starting.\n", KBUILD_MODNAME);
+> +	pr_alert("%s: WARN: Duplicate call_%s() test starting.\n", KBUILD_MODNAME, cur_ops->name);
+>  
+>  	/* Try to queue the rh2 pair of callbacks for the same grace period. */
+> -	preempt_disable(); /* Prevent preemption from interrupting test. */
 
+What makes us not need this preempt_disable() in the RCU case?
+
+> -	rcu_read_lock(); /* Make it impossible to finish a grace period. */
+> -	call_rcu_hurry(&rh1, rcu_torture_leak_cb); /* Start grace period. */
+> -	local_irq_disable(); /* Make it harder to start a new grace period. */
+
+Same question for the local_irq_disable()?
+
+> -	call_rcu_hurry(&rh2, rcu_torture_leak_cb);
+> -	call_rcu_hurry(&rh2, rcu_torture_err_cb); /* Duplicate callback. */
+> +	idx = cur_ops->readlock(); /* Make it impossible to finish a grace period. */
+> +	cur_ops->call(&rh1, rcu_torture_leak_cb); /* Start grace period. */
+> +	cur_ops->call(&rh2, rcu_torture_leak_cb);
+> +	cur_ops->call(&rh2, rcu_torture_err_cb); /* Duplicate callback. */
+>  	if (rhp) {
+> -		call_rcu_hurry(rhp, rcu_torture_leak_cb);
+> -		call_rcu_hurry(rhp, rcu_torture_err_cb); /* Another duplicate callback. */
+> +		cur_ops->call(rhp, rcu_torture_leak_cb);
+> +		cur_ops->call(rhp, rcu_torture_err_cb); /* Another duplicate callback. */
+>  	}
+> -	local_irq_enable();
+> -	rcu_read_unlock();
+> -	preempt_enable();
+> +	cur_ops->readunlock(idx);
+>  
+>  	/* Wait for them all to get done so we can safely return. */
+> -	rcu_barrier();
+> -	pr_alert("%s: WARN: Duplicate call_rcu() test complete.\n", KBUILD_MODNAME);
+> +	cur_ops->cb_barrier();
+> +	pr_alert("%s: WARN: Duplicate call_%s() test complete.\n", KBUILD_MODNAME, cur_ops->name);
+>  	destroy_rcu_head_on_stack(&rh1);
+>  	destroy_rcu_head_on_stack(&rh2);
+>  	kfree(rhp);
+>  #else /* #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD */
+> -	pr_alert("%s: !CONFIG_DEBUG_OBJECTS_RCU_HEAD, not testing duplicate call_rcu()\n", KBUILD_MODNAME);
+> +	pr_alert("%s: !CONFIG_DEBUG_OBJECTS_RCU_HEAD, not testing duplicate call_%s()\n", KBUILD_MODNAME, cur_ops->name);
+>  #endif /* #else #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD */
+
+It might be possible to simplify the code by turning this #ifdef into
+IS_ENABLED().
+
+							Thanx, Paul
+
+>  }
+>  
+> -- 
+> 2.17.1
+> 
