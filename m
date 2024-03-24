@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A1E1327E4;
-	Sun, 24 Mar 2024 23:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFC322E7F3;
+	Sun, 24 Mar 2024 23:51:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324299; cv=none; b=CXsET9mSlDNvGrqkFAtLcLqAGaX7KoDSSCJUxJQlU0EjD9xQupDNoFmdx05ZoF0qV3xJq/KWCveSg6nH9gXD0l0XSlEFs80oQCwCGWHvHEQ+sotwM5qXwQADPdJsNVuk2A6D2plMjW8Et9JBbGNa/NtXP/pQlSAK5NKQA/X6IVU=
+	t=1711324303; cv=none; b=poCgRhD2Dobz9/YF932BQaljxbVKGU+hDe6u7mtbbuzzbQLSq1FoxPfniDa6pbpsKpAmxTG+bgEEktmIOSERtkIq89qTqKh5YXZaEfmQBpeRtq4BSW0AUJcglG2CdWV0VppimX0EXa5vbP8I3pebyF8i0DphLMQyKGLWdFCezKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324299; c=relaxed/simple;
-	bh=gbU2EowSPlHE2x6WXeXSsOfbfUQE1IU/R3YYLu6N2co=;
+	s=arc-20240116; t=1711324303; c=relaxed/simple;
+	bh=6gbpBif9goTkU8krONbkMQJBzcRlkeg/lr9CK6CErfM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WHAbUBpm9P9Ui00eolt4XS6RtLh5sKDN1Pnl3zpMkibCEc6zi3HQb/WRSpZduqvUyWc70IgHZcLRUoRAUiuZzpIZdUM6TYWmPv2LgYb/jvG6yM61fZz2hGDkQx/6v3PS7TZscL0IAXXmFbgkyj2GzjoRvwO7Gjj6QbuD1LsFlDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJfrUx2O; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IDU+xAiFA7SuCUKI/1xyorLgcLWynW6g5+OT4bx0lKE4QAFCgIYKx8+6PCugnhe7buUL8/+MEnkRiUX5pYj9d6DYY3ySxw43ec0oh/eBL8edwasWfQaVhbLUUKps8N2L6e5XXJqdTQApgTqWfXqFOMhawwlNeEtZfHnnkvRV87c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NmAUavp5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJfrUx2O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 971DAC43394;
-	Sun, 24 Mar 2024 23:51:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NmAUavp5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD52AC433F1;
+	Sun, 24 Mar 2024 23:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324298;
-	bh=gbU2EowSPlHE2x6WXeXSsOfbfUQE1IU/R3YYLu6N2co=;
+	s=k20201202; t=1711324303;
+	bh=6gbpBif9goTkU8krONbkMQJBzcRlkeg/lr9CK6CErfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EJfrUx2OXY0uZ6N15hprJsheyIFX+cBtrhw1RlQsfHPqPWL37uNuYJPWWzQYMTk0c
-	 Sc9bzffMlLH00EDngAaFSbGtDQ4sD2EkyfthDWl/UciLAw5XZZwWnJwVMBGsQ6lH4R
-	 1Ed3Ef6MhBypfdOA29a18klLsC+/2MgrPllW+zjJbTPUmN+y3K1cphM92Q5iMZqLu+
-	 oxzejZ0LFJQG2Al4e0cwyk6ssv6ICDBMZhrzopRg1rTbo/MtdFpr3HD1g2YJS509Kj
-	 jk+AI/uOwUr+aLlrYRpNKusaLXWnUeLVOk/wz/hjBxVU83XcmQaZ9ggFJ3C7DqA2v+
-	 FdIRxxkGqpwuw==
+	b=NmAUavp5225H+Qc6XrjoqP43EfTkxZHXUgs/aGeTwufKoI6/stDrOLJh4DbbjmHLg
+	 u7Xjee+O11oJ0Kb5Dn09TJ86OxUgMa/QgszFBKuc6TcKX3UQIjBWg4r+XJJWAW5OpT
+	 rqGoyL++FjoSuFanD/YvIH4TqqQIMv1z1r574pLmkMx4iHG/2uoSc/ztQO9f4pLA+f
+	 DvGKvs2QoXaCXqGssWFNP7+nQ+C0hNFtp5J3qp3CrL5aBmo4ac29rj10xdVwquYWEI
+	 fUIvqvRHijfjeU1GhqwRJn9RhppkyilrPc/pCFpwDmcTmZvidRPmlr8Vx51PG3O1ud
+	 rq/2U+SlKlKOg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Harry Wentland <harry.wentland@amd.com>,
-	Simon Ser <contact@emersion.fr>,
-	Melissa Wen <mwen@igalia.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
+Cc: Yang Jihong <yangjihong1@huawei.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 072/148] drm: Don't treat 0 as -1 in drm_fixp2int_ceil
-Date: Sun, 24 Mar 2024 19:48:56 -0400
-Message-ID: <20240324235012.1356413-73-sashal@kernel.org>
+Subject: [PATCH 4.19 076/148] perf evsel: Fix duplicate initialization of data->id in evsel__parse_sample()
+Date: Sun, 24 Mar 2024 19:49:00 -0400
+Message-ID: <20240324235012.1356413-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -50,39 +50,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Harry Wentland <harry.wentland@amd.com>
+From: Yang Jihong <yangjihong1@huawei.com>
 
-[ Upstream commit cf8837d7204481026335461629b84ac7f4538fa5 ]
+[ Upstream commit 4962aec0d684c8edb14574ccd0da53e4926ff834 ]
 
-Unit testing this in VKMS shows that passing 0 into
-this function returns -1, which is highly counter-
-intuitive. Fix it by checking whether the input is
->= 0 instead of > 0.
+data->id has been initialized at line 2362, remove duplicate initialization.
 
-Fixes: 64566b5e767f ("drm: Add drm_fixp_from_fraction and drm_fixp2int_ceil")
-Signed-off-by: Harry Wentland <harry.wentland@amd.com>
-Reviewed-by: Simon Ser <contact@emersion.fr>
-Reviewed-by: Melissa Wen <mwen@igalia.com>
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231108163647.106853-2-harry.wentland@amd.com
+Fixes: 3ad31d8a0df2 ("perf evsel: Centralize perf_sample initialization")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240127025756.4041808-1-yangjihong1@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_fixed.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/evsel.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
-index 553210c02ee0f..627efa56e59fb 100644
---- a/include/drm/drm_fixed.h
-+++ b/include/drm/drm_fixed.h
-@@ -88,7 +88,7 @@ static inline int drm_fixp2int(s64 a)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 11a2aa80802d5..0644ae23122cd 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2116,7 +2116,6 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 	data->period = evsel->attr.sample_period;
+ 	data->cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
+ 	data->misc    = event->header.misc;
+-	data->id = -1ULL;
+ 	data->data_src = PERF_MEM_DATA_SRC_NONE;
  
- static inline int drm_fixp2int_ceil(s64 a)
- {
--	if (a > 0)
-+	if (a >= 0)
- 		return drm_fixp2int(a + DRM_FIXED_ALMOST_ONE);
- 	else
- 		return drm_fixp2int(a - DRM_FIXED_ALMOST_ONE);
+ 	if (event->header.type != PERF_RECORD_SAMPLE) {
 -- 
 2.43.0
 
