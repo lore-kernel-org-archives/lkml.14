@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C002062FE;
-	Sun, 24 Mar 2024 23:04:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84D7137748;
+	Sun, 24 Mar 2024 23:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321500; cv=none; b=nIkgcd7+FsUhrEyt4XbxdB7nGFyxtOhac7fbi4wynTHNlZ4OoJjovxAuZ2/O1ax7noShgXJlvBnZPoV29cfaYvdoTuiCqg0oTXz7fKas8A8C2K8Szoe2L7Hvgh+Sz7H5lcyX2soLAjBovGsJspyZvgDVGQlOTSzbsgE83plEK7s=
+	t=1711321517; cv=none; b=kH5TPw5TwDHbfH9enrRqkhzrQ3J511xkpIou5FUssg0QajXDM8CVBHxwHVjOO8difanWhDrTJ4R2A8dXq1rW3HbgowaisG8sZ8FdGx9yjmTmJHU6nM1EH+2xnCf2cLh2wcpyBvRwLsmnt7p+m85NPsXzjIQAhqrrs8iI2E4S8gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321500; c=relaxed/simple;
-	bh=eOFSIzfqtIpRZNnVVtzJpHLcTC4yIAg2d1c5jY0FyDo=;
+	s=arc-20240116; t=1711321517; c=relaxed/simple;
+	bh=M0rRp9TZohhOSgUlfBcWPQEY0vryjI1+b07eow0JeMc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l1YJsLGnzb7yLorWB+k+CEp+q6e7JnuVUwWJWYzvH+rkR7UE5OeAeYIvRz6XTuxLbXbbFgeLwiYp/DgLVnnLlFmnyG1nDFYYMtsWPPEjwv2woFVbPOff4e4cDpUAqhjm4W+zTZ+YDNG8RtjHHLmMXLb6iTKHtHnTS2MVbr+5Enk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqAEEx7N; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gnKYso12TbDjF9BttZBT4ESXBt9hGIIxQYYJuo5GmlKW0+Gj5DFBc/r4lfyVvbrMyLxO1m6wF/PPDbd/Ov1OjftZhlXK6qhBuhaDcvgW3MMPUSITOQFMEb5OIdA3z7dPV1ADCNXNi2wB90te1L8Ui+nqQrln3YVlo/qibRWq0V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWUsL5BT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqAEEx7N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52843C43394;
-	Sun, 24 Mar 2024 23:04:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWUsL5BT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A8C4C43330;
+	Sun, 24 Mar 2024 23:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321498;
-	bh=eOFSIzfqtIpRZNnVVtzJpHLcTC4yIAg2d1c5jY0FyDo=;
+	s=k20201202; t=1711321516;
+	bh=M0rRp9TZohhOSgUlfBcWPQEY0vryjI1+b07eow0JeMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jqAEEx7NXinHMU0NOVStOBxjPJrblBG3b8CbtxhBrt/5r+/O55+LLWAIT/UrRB6Ej
-	 +tsNwSEz6HVpYDc6sStha5QbKKL1Yf/fBDUjWh+EC6K56CrvH3VAfDcucxoCCLDqyJ
-	 h0JPWcU9kHLZfLxMES5wtxNI8iTqXbqodmjZo9M7pQSrg12GcyTb5o+zhBookvdUm0
-	 56MOrzsWEvxfPGnvIXen14snyLggzZCBaH+yTWs+49keZAPrnWllxyIhS3a0KX/Xiy
-	 fZCw0dTlPPL+aHgMFDNDYuVmPnae+bW9VL+FhwsSTJMOPU8uVY1ja3zOhvKKsPwuhf
-	 wIZ2Ho32J/bEQ==
+	b=jWUsL5BTW80xoCSYxnr89zqjpbnduwHr16dQYYZ3jTwjGacMKnx8B9/eh8CMq3whQ
+	 0x+xLAuXpHnOsCc/GzGDxDMsMeon8kuzz1/NcAAyAOMx3ABLXSfZwZW0wf4q6SvFho
+	 tzg1LThQgxmwsyBRIfXUTmgma5WFw4BH3LdhHyRioH31UDU32OqgD5I70emUGDL51Q
+	 W038zuegt7hpbOuScS1BvNKbSi/fyLplEwUca2+1utx5uQWOcW5ZDc2ElH/m/SCF5t
+	 kH16RqDjO06XJwV0RGGCBFv+MWDlSYrSvU7o92xTIT2HUp8jWyEMOkXLZBzZu7+Jd7
+	 SVsXJYOD71lyQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
+Cc: Judith Mendez <jm@ti.com>,
+	Wadim Egorov <w.egorov@phytec.de>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 224/638] cpufreq: qcom-hw: add CONFIG_COMMON_CLK dependency
-Date: Sun, 24 Mar 2024 18:54:21 -0400
-Message-ID: <20240324230116.1348576-225-sashal@kernel.org>
+Subject: [PATCH 6.6 243/638] arm64: dts: ti: k3-am64-main: Fix ITAP/OTAP values for MMC
+Date: Sun, 24 Mar 2024 18:54:40 -0400
+Message-ID: <20240324230116.1348576-244-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,45 +49,57 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Judith Mendez <jm@ti.com>
 
-[ Upstream commit 3093fa33539b54db77171d2919352ad4f044a1c5 ]
+[ Upstream commit 379c7752bbd0e81654544a896dd19c19ebb6faba ]
 
-It is still possible to compile-test a kernel without CONFIG_COMMON_CLK
-for some ancient ARM boards or other architectures, but this causes a
-link failure in the qcom-cpufreq-hw driver:
+Update MMC0/MMC1 OTAP/ITAP values according to the datasheet
+[0], refer to Table 7-68 for MMC0 and Table 7-77 for MMC1.
 
-ERROR: modpost: "devm_clk_hw_register" [drivers/cpufreq/qcom-cpufreq-hw.ko] undefined!
-ERROR: modpost: "devm_of_clk_add_hw_provider" [drivers/cpufreq/qcom-cpufreq-hw.ko] undefined!
-ERROR: modpost: "of_clk_hw_onecell_get" [drivers/cpufreq/qcom-cpufreq-hw.ko] undefined!
+[0] https://www.ti.com/lit/ds/symlink/am6442.pdf
 
-Add a Kconfig dependency here to make sure this always work. Apparently
-this bug has been in the kernel for a while without me running into it
-on randconfig builds as COMMON_CLK is almost always enabled.
-
-I have cross-checked by building an allmodconfig kernel with COMMON_CLK
-disabled, which showed no other driver having this problem.
-
-Fixes: 4370232c727b ("cpufreq: qcom-hw: Add CPU clock provider support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Fixes: 8abae9389bdb ("arm64: dts: ti: Add support for AM642 SoC")
+Signed-off-by: Judith Mendez <jm@ti.com>
+Tested-by: Wadim Egorov <w.egorov@phytec.de>
+Link: https://lore.kernel.org/r/20240213235701.2438513-5-jm@ti.com
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/Kconfig.arm | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/ti/k3-am64-main.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index 123b4bbfcfee1..c5cecbd89ba9c 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -173,6 +173,7 @@ config ARM_QCOM_CPUFREQ_NVMEM
- config ARM_QCOM_CPUFREQ_HW
- 	tristate "QCOM CPUFreq HW driver"
- 	depends on ARCH_QCOM || COMPILE_TEST
-+	depends on COMMON_CLK
- 	help
- 	  Support for the CPUFreq HW driver.
- 	  Some QCOM chipsets have a HW engine to offload the steps
+diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+index 693e7550bf955..064eb062bb54a 100644
+--- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+@@ -612,6 +612,9 @@ sdhci0: mmc@fa10000 {
+ 		ti,otap-del-sel-mmc-hs = <0x0>;
+ 		ti,otap-del-sel-ddr52 = <0x6>;
+ 		ti,otap-del-sel-hs200 = <0x7>;
++		ti,itap-del-sel-legacy = <0x10>;
++		ti,itap-del-sel-mmc-hs = <0xa>;
++		ti,itap-del-sel-ddr52 = <0x3>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -624,12 +627,16 @@ sdhci1: mmc@fa00000 {
+ 		clock-names = "clk_ahb", "clk_xin";
+ 		ti,trm-icp = <0x2>;
+ 		ti,otap-del-sel-legacy = <0x0>;
+-		ti,otap-del-sel-sd-hs = <0xf>;
++		ti,otap-del-sel-sd-hs = <0x0>;
+ 		ti,otap-del-sel-sdr12 = <0xf>;
+ 		ti,otap-del-sel-sdr25 = <0xf>;
+ 		ti,otap-del-sel-sdr50 = <0xc>;
+ 		ti,otap-del-sel-sdr104 = <0x6>;
+ 		ti,otap-del-sel-ddr50 = <0x9>;
++		ti,itap-del-sel-legacy = <0x0>;
++		ti,itap-del-sel-sd-hs = <0x0>;
++		ti,itap-del-sel-sdr12 = <0x0>;
++		ti,itap-del-sel-sdr25 = <0x0>;
+ 		ti,clkbuf-sel = <0x7>;
+ 		status = "disabled";
+ 	};
 -- 
 2.43.0
 
