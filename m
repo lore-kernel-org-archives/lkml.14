@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E75C1FB71B;
-	Sun, 24 Mar 2024 23:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B5514EC55;
+	Sun, 24 Mar 2024 23:02:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321308; cv=none; b=RtBW6lU4J5SB/C9AsG8naKX/1e0cLtKUA/Snp2OeAdiGt0pfmCU7h4NNepMeFhHu2ig0CcB2sxLWzq8QB7p9L+utKsdWf5NFm9a1YDysxJzwh8GosyGvfFdpy9lZluH2jBQAGuMI+Eh1A+2C6jWH/8ZNUiag/fs5PJJ3VJcK8/M=
+	t=1711321322; cv=none; b=VimhvElY90I+lJYIX6OIghhghvzTJpk+fgLrSEEB7cEZAHsYsjBM+KWFCioDLGQox7Pmzgnw4jz5goev95frJfQLNG8U38CU0XcEnHTTU9Mn5T2WLTUASsgR8NsFgwSWJ6Ipu3VzBfdAF/F9ht8wbU97Pnz8o9UOezkvIdJe+uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321308; c=relaxed/simple;
-	bh=mxRUa5CthTVInxGr8kKOevfXkarA6jUudOI+9gLETuc=;
+	s=arc-20240116; t=1711321322; c=relaxed/simple;
+	bh=Ci9riVZbxJ14AJQUWZVd75cjZHMBm4hSSB/4WuT7fmw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OW9/zSm9MTKhXTSdGPCYKa0w6DNaR3q5Aih5GPIqAiA7hxjr/V8V0djzaibvvLxWHabQ77quVnHZf9IzRNEvQ5b74zzboB+9TEj2Jl+u7OOlBifQvtPeNlYSMe+01UFvO1/U/b8h30gxkagHq1XdQpEQNUoZS8ovdoN4DtmNDIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rmYJNAYD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QD2YvMcGNW6u35P9P0WoHHjz5dAskHNDageHUX8fQ6BU4WFksD1II6xWITC27JiFh3OLwLNVLhmjZiXs0pF9c+pnGXaj/+7Sl0/72xLKChVni5KqxoHPssnB+2Up80B4dbeXaFMqfS7kpP+y+iJZOHVFNJVPVWNzjKqxBQuYLw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KcsUsNiU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rmYJNAYD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B814AC433F1;
-	Sun, 24 Mar 2024 23:01:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KcsUsNiU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E57A7C433F1;
+	Sun, 24 Mar 2024 23:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321308;
-	bh=mxRUa5CthTVInxGr8kKOevfXkarA6jUudOI+9gLETuc=;
+	s=k20201202; t=1711321320;
+	bh=Ci9riVZbxJ14AJQUWZVd75cjZHMBm4hSSB/4WuT7fmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rmYJNAYDnDlu5kxyRiXiYX2k9RmGHwhcWL+GnPAPD9KTKBEnHj5XBfChQ9ycV2Pzv
-	 3Bh0Id5BWgThcs+gTxu5xsdr9Un60Pw7Zsxa9tBs3dTOPVCnfyIo3kzvDxrkLFAzZA
-	 agk3s9SfHrZjRRT+j7fwql0np9imI/Mc7wWX/wOBDVyq4Kkrzfp0iRlwkyw+EGhPq4
-	 pSy+a2GKIBYO52iwVq05fBtOlsRHSVvd6EHJfCijikVKBWuuejDAgtaiVRobJY7Ujw
-	 vEfPDZu9uW1iF4xOGhv9XHQbv2xm8RsLEBd5BK8PUu6F57X983EvIgFzwvg7rTcMKN
-	 9t9QdtK0GrBJw==
+	b=KcsUsNiUg3XmMlwMtNvMAQp4hbhWQ23Ei1BTSN+j5KX0nyRhZTo87yD7xf9XSLzob
+	 ovtMOV5RKgvIEfYOFc2/FLso0rE4xxShjBoCGonbnuOgUiFZeD71UfvG/t/kJ7Umvk
+	 +UBBawPBIXR5eICh1yESgrv5GjNXOWnhRAlsT9kW+4yc6WSzNnTEk7idcmdtosMAlK
+	 OZbR7/AN8CwoJnaUuYyda1kQdLE/lUd8Fk+B/0SIDNN6O3uWtKV/0fMrvSS5PTIulO
+	 iZF4ggRXxkik974mq+0wZO6BSK5k3+h5UyzH5XPq9nOyMLscEVa+qtLa63aAScyQfm
+	 CRcYkMvWniMvQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Greg Joyce <gjoyce@linux.ibm.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Filipe Manana <fdmanana@suse.com>,
+	David Sterba <dsterba@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 031/638] block: sed-opal: handle empty atoms when parsing response
-Date: Sun, 24 Mar 2024 18:51:08 -0400
-Message-ID: <20240324230116.1348576-32-sashal@kernel.org>
+Subject: [PATCH 6.6 043/638] btrfs: fix data races when accessing the reserved amount of block reserves
+Date: Sun, 24 Mar 2024 18:51:20 -0400
+Message-ID: <20240324230116.1348576-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,63 +48,161 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Greg Joyce <gjoyce@linux.ibm.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 5429c8de56f6b2bd8f537df3a1e04e67b9c04282 ]
+[ Upstream commit e06cc89475eddc1f3a7a4d471524256152c68166 ]
 
-The SED Opal response parsing function response_parse() does not
-handle the case of an empty atom in the response. This causes
-the entry count to be too high and the response fails to be
-parsed. Recognizing, but ignoring, empty atoms allows response
-handling to succeed.
+At space_info.c we have several places where we access the ->reserved
+field of a block reserve without taking the block reserve's spinlock
+first, which makes KCSAN warn about a data race since that field is
+always updated while holding the spinlock.
 
-Signed-off-by: Greg Joyce <gjoyce@linux.ibm.com>
-Link: https://lore.kernel.org/r/20240216210417.3526064-2-gjoyce@linux.ibm.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The reports from KCSAN are like the following:
+
+  [117.193526] BUG: KCSAN: data-race in btrfs_block_rsv_release [btrfs] / need_preemptive_reclaim [btrfs]
+
+  [117.195148] read to 0x000000017f587190 of 8 bytes by task 6303 on cpu 3:
+  [117.195172]  need_preemptive_reclaim+0x222/0x2f0 [btrfs]
+  [117.195992]  __reserve_bytes+0xbb0/0xdc8 [btrfs]
+  [117.196807]  btrfs_reserve_metadata_bytes+0x4c/0x120 [btrfs]
+  [117.197620]  btrfs_block_rsv_add+0x78/0xa8 [btrfs]
+  [117.198434]  btrfs_delayed_update_inode+0x154/0x368 [btrfs]
+  [117.199300]  btrfs_update_inode+0x108/0x1c8 [btrfs]
+  [117.200122]  btrfs_dirty_inode+0xb4/0x140 [btrfs]
+  [117.200937]  btrfs_update_time+0x8c/0xb0 [btrfs]
+  [117.201754]  touch_atime+0x16c/0x1e0
+  [117.201789]  filemap_read+0x674/0x728
+  [117.201823]  btrfs_file_read_iter+0xf8/0x410 [btrfs]
+  [117.202653]  vfs_read+0x2b6/0x498
+  [117.203454]  ksys_read+0xa2/0x150
+  [117.203473]  __s390x_sys_read+0x68/0x88
+  [117.203495]  do_syscall+0x1c6/0x210
+  [117.203517]  __do_syscall+0xc8/0xf0
+  [117.203539]  system_call+0x70/0x98
+
+  [117.203579] write to 0x000000017f587190 of 8 bytes by task 11 on cpu 0:
+  [117.203604]  btrfs_block_rsv_release+0x2e8/0x578 [btrfs]
+  [117.204432]  btrfs_delayed_inode_release_metadata+0x7c/0x1d0 [btrfs]
+  [117.205259]  __btrfs_update_delayed_inode+0x37c/0x5e0 [btrfs]
+  [117.206093]  btrfs_async_run_delayed_root+0x356/0x498 [btrfs]
+  [117.206917]  btrfs_work_helper+0x160/0x7a0 [btrfs]
+  [117.207738]  process_one_work+0x3b6/0x838
+  [117.207768]  worker_thread+0x75e/0xb10
+  [117.207797]  kthread+0x21a/0x230
+  [117.207830]  __ret_from_fork+0x6c/0xb8
+  [117.207861]  ret_from_fork+0xa/0x30
+
+So add a helper to get the reserved amount of a block reserve while
+holding the lock. The value may be not be up to date anymore when used by
+need_preemptive_reclaim() and btrfs_preempt_reclaim_metadata_space(), but
+that's ok since the worst it can do is cause more reclaim work do be done
+sooner rather than later. Reading the field while holding the lock instead
+of using the data_race() annotation is used in order to prevent load
+tearing.
+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/opal_proto.h | 1 +
- block/sed-opal.c   | 6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ fs/btrfs/block-rsv.h  | 16 ++++++++++++++++
+ fs/btrfs/space-info.c | 26 +++++++++++++-------------
+ 2 files changed, 29 insertions(+), 13 deletions(-)
 
-diff --git a/block/opal_proto.h b/block/opal_proto.h
-index dec7ce3a3edb7..d247a457bf6e3 100644
---- a/block/opal_proto.h
-+++ b/block/opal_proto.h
-@@ -71,6 +71,7 @@ enum opal_response_token {
- #define SHORT_ATOM_BYTE  0xBF
- #define MEDIUM_ATOM_BYTE 0xDF
- #define LONG_ATOM_BYTE   0xE3
-+#define EMPTY_ATOM_BYTE  0xFF
+diff --git a/fs/btrfs/block-rsv.h b/fs/btrfs/block-rsv.h
+index b0bd12b8652f4..fb440a074700a 100644
+--- a/fs/btrfs/block-rsv.h
++++ b/fs/btrfs/block-rsv.h
+@@ -101,4 +101,20 @@ static inline bool btrfs_block_rsv_full(const struct btrfs_block_rsv *rsv)
+ 	return data_race(rsv->full);
+ }
  
- #define OPAL_INVAL_PARAM 12
- #define OPAL_MANUFACTURED_INACTIVE 0x08
-diff --git a/block/sed-opal.c b/block/sed-opal.c
-index 04f38a3f5d959..e27109be77690 100644
---- a/block/sed-opal.c
-+++ b/block/sed-opal.c
-@@ -1055,16 +1055,20 @@ static int response_parse(const u8 *buf, size_t length,
- 			token_length = response_parse_medium(iter, pos);
- 		else if (pos[0] <= LONG_ATOM_BYTE) /* long atom */
- 			token_length = response_parse_long(iter, pos);
-+		else if (pos[0] == EMPTY_ATOM_BYTE) /* empty atom */
-+			token_length = 1;
- 		else /* TOKEN */
- 			token_length = response_parse_token(iter, pos);
- 
- 		if (token_length < 0)
- 			return token_length;
- 
-+		if (pos[0] != EMPTY_ATOM_BYTE)
-+			num_entries++;
++/*
++ * Get the reserved mount of a block reserve in a context where getting a stale
++ * value is acceptable, instead of accessing it directly and trigger data race
++ * warning from KCSAN.
++ */
++static inline u64 btrfs_block_rsv_reserved(struct btrfs_block_rsv *rsv)
++{
++	u64 ret;
 +
- 		pos += token_length;
- 		total -= token_length;
- 		iter++;
--		num_entries++;
- 	}
++	spin_lock(&rsv->lock);
++	ret = rsv->reserved;
++	spin_unlock(&rsv->lock);
++
++	return ret;
++}
++
+ #endif /* BTRFS_BLOCK_RSV_H */
+diff --git a/fs/btrfs/space-info.c b/fs/btrfs/space-info.c
+index d7e8cd4f140cf..3f7a9605e2d3a 100644
+--- a/fs/btrfs/space-info.c
++++ b/fs/btrfs/space-info.c
+@@ -837,7 +837,7 @@ btrfs_calc_reclaim_metadata_size(struct btrfs_fs_info *fs_info,
+ static bool need_preemptive_reclaim(struct btrfs_fs_info *fs_info,
+ 				    struct btrfs_space_info *space_info)
+ {
+-	u64 global_rsv_size = fs_info->global_block_rsv.reserved;
++	const u64 global_rsv_size = btrfs_block_rsv_reserved(&fs_info->global_block_rsv);
+ 	u64 ordered, delalloc;
+ 	u64 thresh;
+ 	u64 used;
+@@ -937,8 +937,8 @@ static bool need_preemptive_reclaim(struct btrfs_fs_info *fs_info,
+ 	ordered = percpu_counter_read_positive(&fs_info->ordered_bytes) >> 1;
+ 	delalloc = percpu_counter_read_positive(&fs_info->delalloc_bytes);
+ 	if (ordered >= delalloc)
+-		used += fs_info->delayed_refs_rsv.reserved +
+-			fs_info->delayed_block_rsv.reserved;
++		used += btrfs_block_rsv_reserved(&fs_info->delayed_refs_rsv) +
++			btrfs_block_rsv_reserved(&fs_info->delayed_block_rsv);
+ 	else
+ 		used += space_info->bytes_may_use - global_rsv_size;
  
- 	resp->num = num_entries;
+@@ -1153,7 +1153,7 @@ static void btrfs_preempt_reclaim_metadata_space(struct work_struct *work)
+ 		enum btrfs_flush_state flush;
+ 		u64 delalloc_size = 0;
+ 		u64 to_reclaim, block_rsv_size;
+-		u64 global_rsv_size = global_rsv->reserved;
++		const u64 global_rsv_size = btrfs_block_rsv_reserved(global_rsv);
+ 
+ 		loops++;
+ 
+@@ -1165,9 +1165,9 @@ static void btrfs_preempt_reclaim_metadata_space(struct work_struct *work)
+ 		 * assume it's tied up in delalloc reservations.
+ 		 */
+ 		block_rsv_size = global_rsv_size +
+-			delayed_block_rsv->reserved +
+-			delayed_refs_rsv->reserved +
+-			trans_rsv->reserved;
++			btrfs_block_rsv_reserved(delayed_block_rsv) +
++			btrfs_block_rsv_reserved(delayed_refs_rsv) +
++			btrfs_block_rsv_reserved(trans_rsv);
+ 		if (block_rsv_size < space_info->bytes_may_use)
+ 			delalloc_size = space_info->bytes_may_use - block_rsv_size;
+ 
+@@ -1187,16 +1187,16 @@ static void btrfs_preempt_reclaim_metadata_space(struct work_struct *work)
+ 			to_reclaim = delalloc_size;
+ 			flush = FLUSH_DELALLOC;
+ 		} else if (space_info->bytes_pinned >
+-			   (delayed_block_rsv->reserved +
+-			    delayed_refs_rsv->reserved)) {
++			   (btrfs_block_rsv_reserved(delayed_block_rsv) +
++			    btrfs_block_rsv_reserved(delayed_refs_rsv))) {
+ 			to_reclaim = space_info->bytes_pinned;
+ 			flush = COMMIT_TRANS;
+-		} else if (delayed_block_rsv->reserved >
+-			   delayed_refs_rsv->reserved) {
+-			to_reclaim = delayed_block_rsv->reserved;
++		} else if (btrfs_block_rsv_reserved(delayed_block_rsv) >
++			   btrfs_block_rsv_reserved(delayed_refs_rsv)) {
++			to_reclaim = btrfs_block_rsv_reserved(delayed_block_rsv);
+ 			flush = FLUSH_DELAYED_ITEMS_NR;
+ 		} else {
+-			to_reclaim = delayed_refs_rsv->reserved;
++			to_reclaim = btrfs_block_rsv_reserved(delayed_refs_rsv);
+ 			flush = FLUSH_DELAYED_REFS_NR;
+ 		}
+ 
 -- 
 2.43.0
 
