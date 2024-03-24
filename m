@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FEA1FDB5C;
-	Sun, 24 Mar 2024 23:02:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76B21FD10E;
+	Sun, 24 Mar 2024 23:02:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321341; cv=none; b=h2BrAy02HO+EvkTH0/6vmUHJZ7N0m4LC0fXb4AmArv/0GEuev3mL8EvEZIaQDC2MyGsU9wGXu7dk/T/cpHcKhTSjjnFMKEfZXWY4kt23rvOa9KouG/UoGLOChzNjPw6g7ed1Y1YIyNm90Fz8lpV0jxFmW0K+R4LzJqYo6caGRcI=
+	t=1711321329; cv=none; b=PA4b1BcFvD1/qJedS21khZCZsXOwDnsb6Hln4ldyRpCKBHC9UJpmPxEdkTn1spQBHA1orQ3IFVP1Zg4phJ+w4LpV+XSyYF7uosuDMMDh8xBS5QQDKg5JmKAKuTAw3qmvUGFjaFUOlurTTJJkX/Xxwi8bxfyBi5qjyWXEMkc99r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321341; c=relaxed/simple;
-	bh=a90TlNcd55CuvJI7AGBcJt7/5SipQJTr/jE8uvYuenY=;
+	s=arc-20240116; t=1711321329; c=relaxed/simple;
+	bh=Em+y3OczuTBhg6IrRilmQsX+jlGDdnBmeK0jNqSWFp8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Byy7xkDaoIcWLnw9rJ6T01CdWgWaOlFxBobKE0gUyzj79NaNwHkpRZz6Hm95LY2GC4VqAYnyTHYi6CQpL62C2kC2CSSe3BW8cU/ZKdJyPW05cJl3oEqDZINrU3+oYZceLKN3uVEf7u0HCt9LC1zKIXTJMyHUFOaBuH9oGXsV0gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h4r3XgGi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KHSwRTJowe5NElVxmRIB70r744b3O4vba3gU91eWHKEy5ogrDAvZy46dW2fIJZkuOxN8FgybOfKgZxstRuFaQe2cn0jlTR1iiqZ+D1nLF+ER2Zs2rINM3SurDXyl7is5/Yq3ftr44lxvdOkEoSx0bAAMDYtdcZtvPJGtfd2Z50s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nEyofUal; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h4r3XgGi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B191C433A6;
-	Sun, 24 Mar 2024 23:02:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nEyofUal"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DA2FC433F1;
+	Sun, 24 Mar 2024 23:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321339;
-	bh=a90TlNcd55CuvJI7AGBcJt7/5SipQJTr/jE8uvYuenY=;
+	s=k20201202; t=1711321327;
+	bh=Em+y3OczuTBhg6IrRilmQsX+jlGDdnBmeK0jNqSWFp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h4r3XgGieelOL5DuBBYVJISeeh6tWecDijYB//90d5dAIGqAySJfWPXcJlt5b7/U0
-	 F41/6u5q2q5v0v/LE9qhZ4DDGr3Jruq8+Z18pOhWOvujSTFG9Jpp3YlZa+eQ3KRsO8
-	 W1C7M3SWOjAAffJd7eemdpzGrh9zPA8wuxlxpnQPNBOs0obl1M1NdVwVRhuqCwc8GK
-	 0ol0602rfWXIde1YEc0XJSEXv3KVE9xBCPiiEUDL6XR3amVzFB2geLmNrsH408yANt
-	 46Tpa8cvJYG2/afm+bRzRKwZU4X6ZQmeu+lm6lStKCBTxAYp7kvYx3oQmWDCrmcmrs
-	 tpl4bOi7ujBLw==
+	b=nEyofUalN9WyVaZfWmBCFJ6dwvG2nJ+ShT0OU59r28SmMk0hmQtLig0d+vTr9eARa
+	 54kcb8xdAOkFZWxvhwPmywB27MNmYT+DPsLatw7Vs9TZXrVGBkTKfaUkZdKiiaktTm
+	 RCAMd/ote7Nx8IDnExUagtgQvqrW1dtTGIAiNx0drNLAAs4dPmHNg6HfqzCmjEsJ2E
+	 bNnw/wKJPlLRpHhoTQF/U/bJvOS67Q91+FLjsB/JBH7GPkKd170R+hJBPOIiJP34+y
+	 kTdfJoHlm4GE+/LwWHQjc1/8H6IexDr2XVi4jb9UfzEMjjdL3Bbh48inqOp8kGAs/G
+	 XW31IJb9yfJNw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Cc: Prike Liang <Prike.Liang@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 063/638] Input: gpio_keys_polled - suppress deferred probe error for gpio
-Date: Sun, 24 Mar 2024 18:51:40 -0400
-Message-ID: <20240324230116.1348576-64-sashal@kernel.org>
+Subject: [PATCH 6.6 051/638] drm/amdgpu: Enable gpu reset for S3 abort cases on Raven series
+Date: Sun, 24 Mar 2024 18:51:28 -0400
+Message-ID: <20240324230116.1348576-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -45,55 +44,92 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Prike Liang <Prike.Liang@amd.com>
 
-[ Upstream commit 963465a33141d0d52338e77f80fe543d2c9dc053 ]
+[ Upstream commit c671ec01311b4744b377f98b0b4c6d033fe569b3 ]
 
-On a PC Engines APU our admins are faced with:
+Currently, GPU resets can now be performed successfully on the Raven
+series. While GPU reset is required for the S3 suspend abort case.
+So now can enable gpu reset for S3 abort cases on the Raven series.
 
-	$ dmesg | grep -c "gpio-keys-polled gpio-keys-polled: unable to claim gpio 0, err=-517"
-	261
-
-Such a message always appears when e.g. a new USB device is plugged in.
-
-Suppress this message which considerably clutters the kernel log for
-EPROBE_DEFER (i.e. -517).
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20240305101042.10953-2-u.kleine-koenig@pengutronix.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Prike Liang <Prike.Liang@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/gpio_keys_polled.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/soc15.c | 45 +++++++++++++++++-------------
+ 1 file changed, 25 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-index ba00ecfbd343b..b41fd1240f431 100644
---- a/drivers/input/keyboard/gpio_keys_polled.c
-+++ b/drivers/input/keyboard/gpio_keys_polled.c
-@@ -315,12 +315,10 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
+index 2a7c606d1d191..a41ed67ea9fea 100644
+--- a/drivers/gpu/drm/amd/amdgpu/soc15.c
++++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+@@ -574,11 +574,34 @@ soc15_asic_reset_method(struct amdgpu_device *adev)
+ 		return AMD_RESET_METHOD_MODE1;
+ }
  
- 			error = devm_gpio_request_one(dev, button->gpio,
- 					flags, button->desc ? : DRV_NAME);
--			if (error) {
--				dev_err(dev,
--					"unable to claim gpio %u, err=%d\n",
--					button->gpio, error);
--				return error;
--			}
-+			if (error)
-+				return dev_err_probe(dev, error,
-+						     "unable to claim gpio %u\n",
-+						     button->gpio);
++static bool soc15_need_reset_on_resume(struct amdgpu_device *adev)
++{
++	u32 sol_reg;
++
++	sol_reg = RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81);
++
++	/* Will reset for the following suspend abort cases.
++	 * 1) Only reset limit on APU side, dGPU hasn't checked yet.
++	 * 2) S3 suspend abort and TOS already launched.
++	 */
++	if (adev->flags & AMD_IS_APU && adev->in_s3 &&
++			!adev->suspend_complete &&
++			sol_reg)
++		return true;
++
++	return false;
++}
++
+ static int soc15_asic_reset(struct amdgpu_device *adev)
+ {
+ 	/* original raven doesn't have full asic reset */
+-	if ((adev->apu_flags & AMD_APU_IS_RAVEN) ||
+-	    (adev->apu_flags & AMD_APU_IS_RAVEN2))
++	/* On the latest Raven, the GPU reset can be performed
++	 * successfully. So now, temporarily enable it for the
++	 * S3 suspend abort case.
++	 */
++	if (((adev->apu_flags & AMD_APU_IS_RAVEN) ||
++	    (adev->apu_flags & AMD_APU_IS_RAVEN2)) &&
++		!soc15_need_reset_on_resume(adev))
+ 		return 0;
  
- 			bdata->gpiod = gpio_to_desc(button->gpio);
- 			if (!bdata->gpiod) {
+ 	switch (soc15_asic_reset_method(adev)) {
+@@ -1296,24 +1319,6 @@ static int soc15_common_suspend(void *handle)
+ 	return soc15_common_hw_fini(adev);
+ }
+ 
+-static bool soc15_need_reset_on_resume(struct amdgpu_device *adev)
+-{
+-	u32 sol_reg;
+-
+-	sol_reg = RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81);
+-
+-	/* Will reset for the following suspend abort cases.
+-	 * 1) Only reset limit on APU side, dGPU hasn't checked yet.
+-	 * 2) S3 suspend abort and TOS already launched.
+-	 */
+-	if (adev->flags & AMD_IS_APU && adev->in_s3 &&
+-			!adev->suspend_complete &&
+-			sol_reg)
+-		return true;
+-
+-	return false;
+-}
+-
+ static int soc15_common_resume(void *handle)
+ {
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
 -- 
 2.43.0
 
