@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779C617AFBD;
-	Sun, 24 Mar 2024 23:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80257282A91;
+	Sun, 24 Mar 2024 23:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323735; cv=none; b=ZKJtXN0+FPzqHb6mF+HvGmxd2Yn05+/8rjF6iUS0jGeui3DKBD+fT3vV35er5ueF43NN+7ykYFtHyNv2zydc3tLND6+Zwr1mNJv5K438zWRlKxUMUFINOP+dTMe/6AhrNIUYschlrJI4X93hqUf/BxLvvY49Dm/T0JCqgvVX2zI=
+	t=1711323752; cv=none; b=OxCqYRYv2zP9SZsiGUjY5iV6UiTBzyUJT3uyelxM8BrQ+RERDvI3aHLcO4v7KDpjg4848K1z58tjP8ZcA7HAcxVUrsvFcdMkfCO8GEqXM3wwzlxImRZ3TapoLLOA5mP2efWBR6e/LvJSxysByRJk/LVoTR2/p0MsQgmraRI+m8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323735; c=relaxed/simple;
-	bh=y0C9wDt/PoG/I56N8RTFN9zd2/fgM9X7VUPWELxLLUY=;
+	s=arc-20240116; t=1711323752; c=relaxed/simple;
+	bh=BBsdOgI7mqDDEImW93zb/FJvtoIILKLC7lgZTgI7w/c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mqO1jP8yftwXcHDSfi9KF1yVGw7f1RNRuR88r8V2u+kWaHMpoycnBqCwX2uIDW5gwnz5Dh3VVjiiVxO6sy8pjEKaGrFHgXuJ48CyhrCV2AXzalzA53ugk8xvtvsYckoFCLReOc4yF+v8S0XFuor1Ufv5mVmgLm+8ZvQDftRXURI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfwApZ/V; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JZMaqUAKt5vCk8cYw9X39k/kXSMhK9wiYicUUGf88h5ZQ5MKmPWTeP0w0dU3sH7Zz11qJxcwWZ9wxbjETvN8uDOAoVwgBw+EZWFNgtxgCxhrg2wKlRRJUT/sdmxNw2Ae7VNV0nJ6TJBVFNElMG39CFyd25cX9LJkrjQzvWRaqOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s8o+nE6M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfwApZ/V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7BD5C433B2;
-	Sun, 24 Mar 2024 23:42:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s8o+nE6M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C02B3C433C7;
+	Sun, 24 Mar 2024 23:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323734;
-	bh=y0C9wDt/PoG/I56N8RTFN9zd2/fgM9X7VUPWELxLLUY=;
+	s=k20201202; t=1711323751;
+	bh=BBsdOgI7mqDDEImW93zb/FJvtoIILKLC7lgZTgI7w/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gfwApZ/VL56svfYv2gbYbeMWdI7b3x+6uey2rvjok4bXSOssuSU/ddVhCmCpTv8YQ
-	 sn/7vl2YJbI6nGK+4xRiBVz95SpcPeEo7v2K1VF+lyKOqEKEU9S+NFdkRAnDd75+jD
-	 kTBq0w6cOVHSjSQkFKfueopFLoF7Yf90SP7lLkxFFCAPZBYORBcbi4rUGkAVo2Pfvn
-	 5HegUzmk83BP8L4DyXZBJ9tA/naNvCM8BIaHPOhd2B9d6R9iZWhlccNS86vuxHoChO
-	 E7+6/XHny36LQOaGaNi7VZsKuYKbrfRmlpc6345t4mCdYVjBs6vlDwBZH9TnO9DWKo
-	 +/kFsiefo56qg==
+	b=s8o+nE6MjFc+WzogSrI0iCWmFBX6ZAocNYcAy4kx3rKogz+5e2Ut8yu3KW06rS8ls
+	 nTY+W9drb5f5UIJvPZRM1BGvfY8H2AfjSD0sFGaAe9Mjv4XTTy9vLAsodjF0/6cGG8
+	 HNN7htlgVKJ59Gc+RHrLwT39T2dT2eZl6ibWK9DPZM5e/im6/pAeatG3Ktpai+FZrB
+	 UVA/z4Ia1lMX4cJhugOu8k+ZvqiDMt0PxGWJjcRcpaES1AOYmv8wjHGz/hPNcvyoBk
+	 NitujFheoOhAIcM9tZ93Y1vHv6O0lrI6GMF5mGkVfi6t3ilDAOfXMkRr1MzOwnpThf
+	 UBoWnLPPaj30A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Yang Jihong <yangjihong1@huawei.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 108/238] net: kcm: fix incorrect parameter validation in the kcm_getsockopt) function
-Date: Sun, 24 Mar 2024 19:38:16 -0400
-Message-ID: <20240324234027.1354210-109-sashal@kernel.org>
+Subject: [PATCH 5.10 126/238] perf record: Fix possible incorrect free in record__switch_output()
+Date: Sun, 24 Mar 2024 19:38:34 -0400
+Message-ID: <20240324234027.1354210-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,42 +48,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+From: Yang Jihong <yangjihong1@huawei.com>
 
-[ Upstream commit 3ed5f415133f9b7518fbe55ba9ae9a3f5e700929 ]
+[ Upstream commit aff10a165201f6f60cff225083ce301ad3f5d8f1 ]
 
-The 'len' variable can't be negative when assigned the result of
-'min_t' because all 'min_t' parameters are cast to unsigned int,
-and then the minimum one is chosen.
+perf_data__switch() may not assign a legal value to 'new_filename'.
+In this case, 'new_filename' uses the on-stack value, which may cause a
+incorrect free and unexpected result.
 
-To fix the logic, check 'len' as read from 'optlen',
-where the types of relevant variables are (signed) int.
-
-Fixes: ab7ac4eb9832 ("kcm: Kernel Connection Multiplexor module")
-Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 03724b2e9c45 ("perf record: Allow to limit number of reported perf.data files")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240119040304.3708522-2-yangjihong1@huawei.com
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/kcm/kcmsock.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/builtin-record.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
-index 39b3c7fbf9f66..7420b4f19b45e 100644
---- a/net/kcm/kcmsock.c
-+++ b/net/kcm/kcmsock.c
-@@ -1275,10 +1275,11 @@ static int kcm_getsockopt(struct socket *sock, int level, int optname,
- 	if (get_user(len, optlen))
- 		return -EFAULT;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index e5c938d538ee5..167cd8d3b7a21 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1264,8 +1264,8 @@ static int
+ record__switch_output(struct record *rec, bool at_exit)
+ {
+ 	struct perf_data *data = &rec->data;
++	char *new_filename = NULL;
+ 	int fd, err;
+-	char *new_filename;
  
--	len = min_t(unsigned int, len, sizeof(int));
- 	if (len < 0)
- 		return -EINVAL;
- 
-+	len = min_t(unsigned int, len, sizeof(int));
-+
- 	switch (optname) {
- 	case KCM_RECV_DISABLE:
- 		val = kcm->rx_disabled;
+ 	/* Same Size:      "2015122520103046"*/
+ 	char timestamp[] = "InvalidTimestamp";
 -- 
 2.43.0
 
