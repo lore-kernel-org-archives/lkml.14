@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8201EFE59;
-	Sun, 24 Mar 2024 22:57:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E081EFE51;
+	Sun, 24 Mar 2024 22:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321054; cv=none; b=fAO4POHJ0hz55fRemfzpSVD0Qc8JuwsmZMwAmdmozCW6Ts0aGmdSLM+ovTMiM2pY+2syA1nmyFuqW494OnE1hgvcwRZi3HonjyqHMe3+G60pj6ju0/CBAzmRq0Gh3REL3TzZQAJ5m48VBUQjPFuLaSGYCZGVwomOZgk4UTyy2HE=
+	t=1711321052; cv=none; b=Y3wgvrx0jRvdwtVAQRl0DJkZ0qMtKqJzI4SIw/IZEdV/iwoVVoLDrwfzUDf2rvhRqXYAD9BDcEVs8IBTw3fc9j1lr80pP9Rab6i2zCqo81gBRH+/SXTnyMuThss0llNEWA3DPqMTwPJho+/8Y+ueA4dwwaWSxZbnpHV6gznaxsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321054; c=relaxed/simple;
-	bh=U7g9Y0xZPvSe/JiBFaypvdFGXsPf97kTS1mDNLbllxU=;
+	s=arc-20240116; t=1711321052; c=relaxed/simple;
+	bh=zSaTQbLe5/o3mV5I+JsovcB5JCLObPOmrNcs48f9lrA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tnNtl8RkFa7PYhkwAfKIg5CM7LtxusPabzvozH1F+CTBRuwfij2IoLBiOHBeM0oX1EPzjfTjRV70D4p6euDxcbvb0LzqGBRPuvAiSETojw5/LE5kdAPdV81q+SAv3syXovWJw0zUicNNMU6gLX+DuE5vcj0IMAw7u55zHaFl9ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rmuno7Pc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MwO3GCUdPaULEWA7J+zs+1CTZUo2ZFeWRy3HRWuZQir2tFADS4FPIdiwkXJbXEDyDdqK90LLB8PftQ3VS9Pq/afNFAbB7XwC2q2DtaZ8tdi64dXSwrT2OPO4HoMsqWv2jbUrL9uOvUuruI9zdPWWjR4OVWXZdE1iESHhAQeBzso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkC/EUUU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rmuno7Pc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA6FC433C7;
-	Sun, 24 Mar 2024 22:57:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkC/EUUU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BC73C43394;
+	Sun, 24 Mar 2024 22:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321054;
-	bh=U7g9Y0xZPvSe/JiBFaypvdFGXsPf97kTS1mDNLbllxU=;
+	s=k20201202; t=1711321052;
+	bh=zSaTQbLe5/o3mV5I+JsovcB5JCLObPOmrNcs48f9lrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rmuno7PcLPHRE/vVvSq9XCu59O5o/IbUSKEOBdqhpmgAx39BEKBW34QRbS+Urmxe0
-	 95AvhbdXljJLLdSckAxhcfbRHhH91oRk0z5FQNrPGKqtcnzI5uVnGp/PDOsoFBd/OX
-	 LCM2O6k3+ECEwwebXzxWgWMquFCHokNM41aPTHr+CXTm2PPimQ6mzUAFXIJloghwgS
-	 yyluBO1QfYp6F+PqTxhXkPUbk3dc3i/27jxgdl++yVdn71stUZQ2wU+X3gsSx4SwA4
-	 73nqvF7d7nSdgy3lRaLRS8hHIchQ8l+cwRUzeu3x1VipwhhcDNnsIEAa5UFqTo9qjI
-	 tpXuCENVM3VXQ==
+	b=jkC/EUUU9tAHEkZYRKo91SjmDQYhoH1GutRRKFcRRjezx/vdKOyDEicdm2CIDf/uS
+	 UBS6wVgMDocpt9nhxJQ0w22SNZGc4RJBnq+qN5FaQZgTizzRDw4obRn4gIF6O4Lk/l
+	 GDofBXLB8oUmol536irXDo0m5y39GsSQjjdGubVQ+XdL+LBFDL4lx/+mtJSuRgfQiX
+	 ufQGHMgYC0+szoGvXVHGwPlFFIIKbVkwCEi7EZt80THJbaJDx1tZRjAezLpClVkq0b
+	 PLVKLtBZG621ap1uDcecg3/Ef0qpZ9UIthY92zBZV6bWGaEK03Z4OQGqXs+bYvy9I4
+	 G9fUr0XCrVpWQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexander Usyskin <alexander.usyskin@intel.com>,
-	Tomas Winkler <tomas.winkler@intel.com>,
+Cc: Frej Drejhammar <frej.drejhammar@gmail.com>,
+	Ian Abbott <abbotti@mev.co.uk>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 6.7 618/713] mei: gsc_proxy: match component when GSC is on different bus
-Date: Sun, 24 Mar 2024 18:45:44 -0400
-Message-ID: <20240324224720.1345309-619-sashal@kernel.org>
+Subject: [PATCH 6.7 616/713] comedi: comedi_8255: Correct error in subdevice initialization
+Date: Sun, 24 Mar 2024 18:45:42 -0400
+Message-ID: <20240324224720.1345309-617-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,65 +48,119 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Frej Drejhammar <frej.drejhammar@gmail.com>
 
-commit a0776c214d47ea4f7aaef138095beaa41cff03ef upstream.
+commit cfa9ba1ae0bef0681833a22d326174fe633caab5 upstream.
 
-On Arrow Lake S systems, MEI is no longer strictly connected to bus 0,
-while graphics remain exclusively on bus 0. Adapt the component
-matching logic to accommodate this change:
+The refactoring done in commit 5c57b1ccecc7 ("comedi: comedi_8255: Rework
+subdevice initialization functions") to the initialization of the io
+field of struct subdev_8255_private broke all cards using the
+drivers/comedi/drivers/comedi_8255.c module.
 
-Original behavior: Required both MEI and graphics to be on the same
-bus 0.
+Prior to 5c57b1ccecc7, __subdev_8255_init() initialized the io field
+in the newly allocated struct subdev_8255_private to the non-NULL
+callback given to the function, otherwise it used a flag parameter to
+select between subdev_8255_mmio and subdev_8255_io. The refactoring
+removed that logic and the flag, as subdev_8255_mm_init() and
+subdev_8255_io_init() now explicitly pass subdev_8255_mmio and
+subdev_8255_io respectively to __subdev_8255_init(), only
+__subdev_8255_init() never sets spriv->io to the supplied
+callback. That spriv->io is NULL leads to a later BUG:
 
-New behavior: Only enforces graphics to be on bus 0 (integrated),
-allowing MEI to reside on any bus.
-This ensures compatibility with Arrow Lake S and maintains functionality
-for the legacy systems.
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+PGD 0 P4D 0
+Oops: 0010 [#1] SMP PTI
+CPU: 1 PID: 1210 Comm: systemd-udevd Not tainted 6.7.3-x86_64 #1
+Hardware name: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+RIP: 0010:0x0
+Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+RSP: 0018:ffffa3f1c02d7b78 EFLAGS: 00010202
+RAX: 0000000000000000 RBX: ffff91f847aefd00 RCX: 000000000000009b
+RDX: 0000000000000003 RSI: 0000000000000001 RDI: ffff91f840f6fc00
+RBP: ffff91f840f6fc00 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 000000000000005f R12: 0000000000000000
+R13: 0000000000000000 R14: ffffffffc0102498 R15: ffff91f847ce6ba8
+FS:  00007f72f4e8f500(0000) GS:ffff91f8d5c80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 000000010540e000 CR4: 00000000000406f0
+Call Trace:
+ <TASK>
+ ? __die_body+0x15/0x57
+ ? page_fault_oops+0x2ef/0x33c
+ ? insert_vmap_area.constprop.0+0xb6/0xd5
+ ? alloc_vmap_area+0x529/0x5ee
+ ? exc_page_fault+0x15a/0x489
+ ? asm_exc_page_fault+0x22/0x30
+ __subdev_8255_init+0x79/0x8d [comedi_8255]
+ pci_8255_auto_attach+0x11a/0x139 [8255_pci]
+ comedi_auto_config+0xac/0x117 [comedi]
+ ? __pfx___driver_attach+0x10/0x10
+ pci_device_probe+0x88/0xf9
+ really_probe+0x101/0x248
+ __driver_probe_device+0xbb/0xed
+ driver_probe_device+0x1a/0x72
+ __driver_attach+0xd4/0xed
+ bus_for_each_dev+0x76/0xb8
+ bus_add_driver+0xbe/0x1be
+ driver_register+0x9a/0xd8
+ comedi_pci_driver_register+0x28/0x48 [comedi_pci]
+ ? __pfx_pci_8255_driver_init+0x10/0x10 [8255_pci]
+ do_one_initcall+0x72/0x183
+ do_init_module+0x5b/0x1e8
+ init_module_from_file+0x86/0xac
+ __do_sys_finit_module+0x151/0x218
+ do_syscall_64+0x72/0xdb
+ entry_SYSCALL_64_after_hwframe+0x6e/0x76
+RIP: 0033:0x7f72f50a0cb9
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 47 71 0c 00 f7 d8 64 89 01 48
+RSP: 002b:00007ffd47e512d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 0000562dd06ae070 RCX: 00007f72f50a0cb9
+RDX: 0000000000000000 RSI: 00007f72f52d32df RDI: 000000000000000e
+RBP: 0000000000000000 R08: 00007f72f5168b20 R09: 0000000000000000
+R10: 0000000000000050 R11: 0000000000000246 R12: 00007f72f52d32df
+R13: 0000000000020000 R14: 0000562dd06785c0 R15: 0000562dcfd0e9a8
+ </TASK>
+Modules linked in: 8255_pci(+) comedi_8255 comedi_pci comedi intel_gtt e100(+) acpi_cpufreq rtc_cmos usbhid
+CR2: 0000000000000000
+---[ end trace 0000000000000000 ]---
+RIP: 0010:0x0
+Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+RSP: 0018:ffffa3f1c02d7b78 EFLAGS: 00010202
+RAX: 0000000000000000 RBX: ffff91f847aefd00 RCX: 000000000000009b
+RDX: 0000000000000003 RSI: 0000000000000001 RDI: ffff91f840f6fc00
+RBP: ffff91f840f6fc00 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 000000000000005f R12: 0000000000000000
+R13: 0000000000000000 R14: ffffffffc0102498 R15: ffff91f847ce6ba8
+FS:  00007f72f4e8f500(0000) GS:ffff91f8d5c80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 000000010540e000 CR4: 00000000000406f0
 
-Fixes: 1dd924f6885b ("mei: gsc_proxy: add gsc proxy driver")
-Cc: stable@vger.kernel.org # v6.3+
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20240220200020.231192-1-tomas.winkler@intel.com
+This patch simply corrects the above mistake by initializing spriv->io
+to the given io callback.
+
+Fixes: 5c57b1ccecc7 ("comedi: comedi_8255: Rework subdevice initialization functions")
+Signed-off-by: Frej Drejhammar <frej.drejhammar@gmail.com>
+Cc: stable@vger.kernel.org
+Acked-by: Ian Abbott <abbotti@mev.co.uk>
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20240211175822.1357-1-frej.drejhammar@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/misc/mei/gsc_proxy/mei_gsc_proxy.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/comedi/drivers/comedi_8255.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/misc/mei/gsc_proxy/mei_gsc_proxy.c b/drivers/misc/mei/gsc_proxy/mei_gsc_proxy.c
-index be52b113aea93..89364bdbb1290 100644
---- a/drivers/misc/mei/gsc_proxy/mei_gsc_proxy.c
-+++ b/drivers/misc/mei/gsc_proxy/mei_gsc_proxy.c
-@@ -96,7 +96,8 @@ static const struct component_master_ops mei_component_master_ops = {
-  *
-  *    The function checks if the device is pci device and
-  *    Intel VGA adapter, the subcomponent is SW Proxy
-- *    and the parent of MEI PCI and the parent of VGA are the same PCH device.
-+ *    and the VGA is on the bus 0 reserved for built-in devices
-+ *    to reject discrete GFX.
-  *
-  * @dev: master device
-  * @subcomponent: subcomponent to match (I915_COMPONENT_SWPROXY)
-@@ -123,7 +124,8 @@ static int mei_gsc_proxy_component_match(struct device *dev, int subcomponent,
- 	if (subcomponent != I915_COMPONENT_GSC_PROXY)
- 		return 0;
+diff --git a/drivers/comedi/drivers/comedi_8255.c b/drivers/comedi/drivers/comedi_8255.c
+index e4974b508328d..a933ef53845a5 100644
+--- a/drivers/comedi/drivers/comedi_8255.c
++++ b/drivers/comedi/drivers/comedi_8255.c
+@@ -159,6 +159,7 @@ static int __subdev_8255_init(struct comedi_device *dev,
+ 		return -ENOMEM;
  
--	return component_compare_dev(dev->parent, ((struct device *)data)->parent);
-+	/* Only built-in GFX */
-+	return (pdev->bus->number == 0);
- }
+ 	spriv->context = context;
++	spriv->io      = io;
  
- static int mei_gsc_proxy_probe(struct mei_cl_device *cldev,
-@@ -146,7 +148,7 @@ static int mei_gsc_proxy_probe(struct mei_cl_device *cldev,
- 	}
- 
- 	component_match_add_typed(&cldev->dev, &master_match,
--				  mei_gsc_proxy_component_match, cldev->dev.parent);
-+				  mei_gsc_proxy_component_match, NULL);
- 	if (IS_ERR_OR_NULL(master_match)) {
- 		ret = -ENOMEM;
- 		goto err_exit;
+ 	s->type		= COMEDI_SUBD_DIO;
+ 	s->subdev_flags	= SDF_READABLE | SDF_WRITABLE;
 -- 
 2.43.0
 
