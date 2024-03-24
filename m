@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28131535B6;
-	Sun, 24 Mar 2024 23:14:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916B7146008;
+	Sun, 24 Mar 2024 23:14:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322046; cv=none; b=TQGCaKw8qoKC3xC2cr5MR4WlFnrbtJGAlqRMHJiPh2H5sN3lNmE3zxAic9IVv4wNs4oPa9GwHi7bMTBaUWTj9jJxitXpYLxWRpLkE9kU2w1/yIjYAxvgvf56nN+nrC84pko8ehWb5dYKFooCcSDQWnXwpTjyZs8AjdqLaHNICfg=
+	t=1711322063; cv=none; b=pMjbzYuv8fm2gVdoj4VERUIu7MEQazLJpj5Yoa+6y0Q12puof01kEHS2RCtD1thizEJQ4qOxMk9zjESwb+5PvhsUwFYW74/N1R6liRH2Zlnju5CZcTuMtQJ1SFt/m310SYRHHMYDA+kBltMGOh0UPmOE3HgJT7I3/3hmdYS+KaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322046; c=relaxed/simple;
-	bh=5U0eUZZUNHAgCzjs8VzSGTtjfKcCAcG5sjFRe2C/4hQ=;
+	s=arc-20240116; t=1711322063; c=relaxed/simple;
+	bh=4wew/RSvJCKd70KkUzTO7tnMZFfdWo4VyC7/kEuXCSw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WusP5FUsLJ9s+BYEs9blsJWZ5oUZFqi0sHwaUWsGy76GDIv3WOAX+PLcqBPSLqO1ve9WyR4nwvZJJ+JQaJ7MORF8flr4XjlETRPjVE/AHl0iOa9KWdHVDzgfEfsM5ys+S2vFQNpdxpcZyYMWUrldfdTXRX0FH0uRRu/dDKD3/7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=utFVvUp9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=n5JHFSNJSvmJ29AEaGsBUjsvWKS3rKiFKP4Ro02KZ47UJFVqFkxtG+f+t0FUV5BYEFSYd3v3jNkPpVWX4AXgfFIRZ1xF09jeacnKoZG1qquKpcMJxjX0HPALZh6iEhHCaQ4/KONXM/AT/cNtdpA76j3Tx7PYPvU5chZJpxBTFpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=etgnbJhM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="utFVvUp9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5063DC433C7;
-	Sun, 24 Mar 2024 23:14:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="etgnbJhM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD01EC433C7;
+	Sun, 24 Mar 2024 23:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322046;
-	bh=5U0eUZZUNHAgCzjs8VzSGTtjfKcCAcG5sjFRe2C/4hQ=;
+	s=k20201202; t=1711322063;
+	bh=4wew/RSvJCKd70KkUzTO7tnMZFfdWo4VyC7/kEuXCSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=utFVvUp9IxH4j4wYOECCLsbZeb1HcVzlHzXQ+N2SHG26wRmr4LcMj89cjsJ8Ca5P7
-	 zOa8XcIRJJfWJk+4D7mn0IyRyFV2xz6RuEEUK5RE/I+UOkEBuHutcCH/h8fYjMXIln
-	 dNmshgRVeuYF9i8Z8RP97/m7i6wNPLj7DDDrTYvbKUGkuXHogLJjxWJ53Z0vPJi9qM
-	 T+nYA+mYUTQd15prqWqEQ6XLwyinlHHxLsg61tbEFOutaqowN/HnTX6ZZuMW2MRLYN
-	 Jg4pc38C/BcE20f5XwjrL4Dp/jhw0h1M0JfUZDUXyR9z9G/gjCjV0HiSy4HWotwMet
-	 ImDEyjop9rG3w==
+	b=etgnbJhMKkw5rdGEaiSQrVbJVZlwx6Qjg2u2DQyP0F8TWYCV870+1JEZVnn7no5lY
+	 BhAky3tcpUmClUpAVOBfdrmGzObMEZxpwXgqpBXvQIpz1GGckhm3MkHYj3L5kJLLmE
+	 Mpr9qGePHQB3z5B4XjdhknxXkdtBSGixaBFU0DiViFPwOMIE7lFGXsET9R9bO/Gn5n
+	 Ui0HMN90H8LnSlYt7VGnjhd3lSTtGVY0+OYla4Sq7p/PRx0m7rMxD6Waxj995bfrsW
+	 W01FwjvpRyrV3YGTE7ba9DfUDFoUznmwduNisbkIosRdF9fE+U/EXzAlznuMeSD8RP
+	 IiUcPiMtD+lKw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Gregory Greenman <gregory.greenman@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Thomas Richter <tmricht@linux.ibm.com>,
+	Sumanth Korikkar <sumanthk@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 118/451] wifi: iwlwifi: fix EWRD table validity check
-Date: Sun, 24 Mar 2024 19:06:34 -0400
-Message-ID: <20240324231207.1351418-119-sashal@kernel.org>
+Subject: [PATCH 6.1 136/451] s390/pai: fix attr_event_free upper limit for pai device drivers
+Date: Sun, 24 Mar 2024 19:06:52 -0400
+Message-ID: <20240324231207.1351418-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,41 +49,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit c8d8f3911135921ace8e939ea0956b55f74bf8a0 ]
+[ Upstream commit 225d09d6e5f3870560665a1829d2db79330b4c58 ]
 
-EWRD ACPI table contains up to 3 additional sar profiles.
-According to the BIOS spec, the table contains a n_profile
-variable indicating how many additional profiles exist in the
-table.
-Currently we check that n_profiles is not <= 0.
-But according to the BIOS spec, 0 is a valid value,
-and it can't be < 0 anyway because we receive that from ACPI as
-an unsigned integer.
+When the device drivers are initialized, a sysfs directory
+is created. This contains many attributes which are allocated with
+kzalloc(). Should it fail, the memory for the attributes already
+created is freed in attr_event_free(). Its second parameter is number
+of attribute elements to delete. This parameter is off by one.
+When i. e. the 10th attribute fails to get created, attributes
+numbered 0 to 9 should be deleted. Currently only attributes
+numbered 0 to 8 are deleted.
 
-Fixes: 39c1a9728f93 ("iwlwifi: refactor the SAR tables from mvm to acpi")
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Reviewed-by: Gregory Greenman <gregory.greenman@intel.com>
-Link: https://msgid.link/20240129211905.448ea2f40814.Iffd2aadf8e8693e6cb599bee0406a800a0c1e081@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 39d62336f5c1 ("s390/pai: add support for cryptography counters")
+Reported-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/fw/acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/kernel/perf_pai_crypto.c | 2 +-
+ arch/s390/kernel/perf_pai_ext.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/acpi.c b/drivers/net/wireless/intel/iwlwifi/fw/acpi.c
-index f5fcc547de391..235963e1d7a9a 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/acpi.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/acpi.c
-@@ -725,7 +725,7 @@ int iwl_sar_get_ewrd_table(struct iwl_fw_runtime *fwrt)
- 	 * from index 1, so the maximum value allowed here is
- 	 * ACPI_SAR_PROFILES_NUM - 1.
- 	 */
--	if (n_profiles <= 0 || n_profiles >= ACPI_SAR_PROFILE_NUM) {
-+	if (n_profiles >= ACPI_SAR_PROFILE_NUM) {
- 		ret = -EINVAL;
- 		goto out_free;
+diff --git a/arch/s390/kernel/perf_pai_crypto.c b/arch/s390/kernel/perf_pai_crypto.c
+index 6826e2a69a216..f61a652046cfb 100644
+--- a/arch/s390/kernel/perf_pai_crypto.c
++++ b/arch/s390/kernel/perf_pai_crypto.c
+@@ -647,7 +647,7 @@ static int __init attr_event_init(void)
+ 	for (i = 0; i < ARRAY_SIZE(paicrypt_ctrnames); i++) {
+ 		ret = attr_event_init_one(attrs, i);
+ 		if (ret) {
+-			attr_event_free(attrs, i - 1);
++			attr_event_free(attrs, i);
+ 			return ret;
+ 		}
+ 	}
+diff --git a/arch/s390/kernel/perf_pai_ext.c b/arch/s390/kernel/perf_pai_ext.c
+index 74b53c531e0cd..b4d89654183a2 100644
+--- a/arch/s390/kernel/perf_pai_ext.c
++++ b/arch/s390/kernel/perf_pai_ext.c
+@@ -612,7 +612,7 @@ static int __init attr_event_init(void)
+ 	for (i = 0; i < ARRAY_SIZE(paiext_ctrnames); i++) {
+ 		ret = attr_event_init_one(attrs, i);
+ 		if (ret) {
+-			attr_event_free(attrs, i - 1);
++			attr_event_free(attrs, i);
+ 			return ret;
+ 		}
  	}
 -- 
 2.43.0
