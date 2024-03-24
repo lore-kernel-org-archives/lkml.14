@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B5B12B159;
-	Sun, 24 Mar 2024 22:56:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5954112B160;
+	Sun, 24 Mar 2024 22:56:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320962; cv=none; b=SyKe7uctL/ZZkPfDSRmKmAw4axPoJSdoftomX/piwnHvWtFCD30RuVOtsEP6CEt9m7z7he5ZmSk+KoV4udXLqoHMfzrYPtimKfSzsPu5EUddo/wsaBWIEBZ9wznLMwZzoD038msU/wUdTY9N/5gqmjq2gRNhXSYmErKLyfryFlk=
+	t=1711320966; cv=none; b=rY1R9y0TzKUGn0uEHWD8rm9hiIygp2ymrHlSwfFLqPpM7EGYV3Rd5YNfhc891r/ezQlZwAJPRlQpsHSWrMsbRsUNhOclajs5GBf1LPberwHuQ0GmBnBEtoGUcO6lL/5CwMtVypSvenB37X4RcOflRL4E+asTjaHeHmU0H1JQjtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320962; c=relaxed/simple;
-	bh=h1N7vHTMKPSHyWL4ms1StcDbFShuW2Hz5zNXog4pYzY=;
+	s=arc-20240116; t=1711320966; c=relaxed/simple;
+	bh=c4K8ZsQm+zOTS2fUOLLnP8gSNrKbnjB+6Do1gx198Co=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AOmEyr2OBeQ7n7A6BKXa+vYHF8uVgp7jKgpvC9SgAREy5v6Z8UsTiKZEnvG5SyuXD+yrZ80lR8VtHaPTUVb1RdfObBp7GR0xSRUXmcwt0ZfBW2u9KTZd8zIRg5stz5VFyDRL3btzjkbG8REcb/D8VYfDHB+T4HVgqYTOqqIX9xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hsMEYLzI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=K5RRJmdNKDpx1fmFnoOrZmJ2LfspdZCioe4NHUXu6/NgrTdloLoMCJbCkIMPO04nFaunpW0DJYbIDfKrLPTJT2Jq1qH9igG4Wr4h674kU+LVTPGY8WQd360dsGjfdQco4Z4KdnlSTDTJFzojTKLxk3GbnuHM2T86I7QK99UK8aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRJ05uII; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hsMEYLzI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C98A0C43394;
-	Sun, 24 Mar 2024 22:56:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRJ05uII"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99081C433F1;
+	Sun, 24 Mar 2024 22:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320962;
-	bh=h1N7vHTMKPSHyWL4ms1StcDbFShuW2Hz5zNXog4pYzY=;
+	s=k20201202; t=1711320965;
+	bh=c4K8ZsQm+zOTS2fUOLLnP8gSNrKbnjB+6Do1gx198Co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hsMEYLzINKpR2aOlEAI15oz6htainGeEQ4E60RNFWADxXQmhmzorKeCX7mob+RaPX
-	 u32A6uWawE5apciIZUcHZCrVRPv3XykX6iV/LsaVo1siVVJXkfzxrJwrXqjihuJY/K
-	 uvJm1wjN/xIMbKQELttvtJzfWOr8rD73V2heUYa7smrMbbpnuYkjP1ARUdBl0bXVkS
-	 IEgcKqFS6YH4MIO51Kt068VW1IYLv6sPlL7V+0+YCIqSkBU3nFZHpd2fzgeyhyPITN
-	 Xbzfdq0FdlqiSaj5XouuUR+UN3JWvRq4frP6kMrsxsgZgjQi+LHOibJTlDA2hkuRwq
-	 EoWFL2JOLk3gg==
+	b=TRJ05uIIiJu0NsmI/R5GSFkgZTbFVw+TRPChuIimlFd4L8ZIfN+vt06u7jCbU06t+
+	 pZAQfcnD+pHym0NlZbflO2KnjJP1nUuQudeOOG3sf5uuT35TWpnlLtdRpOVn5SNN70
+	 aK0owvnOaOp/poECNr9/Egu5XcfB17FOggq2pNdimlOmy1wT2dyPxW/fyu21aV3I6k
+	 oYR5apDE6SscYTQAfTGhGtIYwuSo8oVhIHvun6goSkmO1frI1Xt/gRBmfrmDtL0mgR
+	 lLZx4aj577CMs++JmlMcBy61haaG2cYs5i0srif9sgRQ8nM809mQwIcOD2na8jDWl1
+	 j+PWLDyGC95UA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+	Randy Dunlap <rdunlap@infradead.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 525/713] gpio: nomadik: fix offset bug in nmk_pmx_set()
-Date: Sun, 24 Mar 2024 18:44:11 -0400
-Message-ID: <20240324224720.1345309-526-sashal@kernel.org>
+Subject: [PATCH 6.7 528/713] powerpc/32: fix ADB_CUDA kconfig warning
+Date: Sun, 24 Mar 2024 18:44:14 -0400
+Message-ID: <20240324224720.1345309-529-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,57 +44,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Théo Lebrun <theo.lebrun@bootlin.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 53cf6b72e074864b94ade97dcb6f30b5ac1a82dc ]
+[ Upstream commit b72c066ba85a131091498a15a62d6068997278a4 ]
 
-Previously, the statement looked like:
+Fix a (randconfig) kconfig warning by correcting the select
+statement:
 
-    slpm[x] &= ~BIT(g->grp.pins[i]);
+WARNING: unmet direct dependencies detected for ADB_CUDA
+  Depends on [n]: MACINTOSH_DRIVERS [=n] && (ADB [=n] || PPC_PMAC [=y]) && !PPC_PMAC64 [=n]
+  Selected by [y]:
+  - PPC_PMAC [=y] && PPC_BOOK3S [=y] && CPU_BIG_ENDIAN [=y] && POWER_RESET [=y] && PPC32 [=y]
 
-Where:
- - slpm is a unsigned int pointer;
- - g->grp.pins[i] is a pin number. It can grow to more than 32.
+The PPC32 isn't needed because ADB depends on (PPC_PMAC && PPC32).
 
-The expected shift amount is a pin bank offset.
-
-This bug does not occur on every group or pin: the altsetting must be
-NMK_GPIO_ALT_C and the pin must be 32 or above. It might have occured.
-For example, in pinctrl-nomadik-db8500.c, pin group i2c3_c_2 has the
-right altsetting and pins 229 and 230.
-
-Fixes: dbfe8ca259e1 ("pinctrl/nomadik: implement pin multiplexing")
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-Link: https://lore.kernel.org/r/20240228-mbly-gpio-v2-5-3ba757474006@bootlin.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: a3ef2fef198c ("powerpc/32: Add dependencies of POWER_RESET for pmac32")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Tested: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20240211221623.31112-1-rdunlap@infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/nomadik/pinctrl-nomadik.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/powermac/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-index 863732287b1e5..445c61a4a7e55 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-@@ -1575,8 +1575,10 @@ static int nmk_pmx_set(struct pinctrl_dev *pctldev, unsigned function,
- 		 * Then mask the pins that need to be sleeping now when we're
- 		 * switching to the ALT C function.
- 		 */
--		for (i = 0; i < g->grp.npins; i++)
--			slpm[g->grp.pins[i] / NMK_GPIO_PER_CHIP] &= ~BIT(g->grp.pins[i]);
-+		for (i = 0; i < g->grp.npins; i++) {
-+			unsigned int bit = g->grp.pins[i] % NMK_GPIO_PER_CHIP;
-+			slpm[g->grp.pins[i] / NMK_GPIO_PER_CHIP] &= ~BIT(bit);
-+		}
- 		nmk_gpio_glitch_slpm_init(slpm);
- 	}
- 
+diff --git a/arch/powerpc/platforms/powermac/Kconfig b/arch/powerpc/platforms/powermac/Kconfig
+index 8bdae0caf21e5..84f101ec53a96 100644
+--- a/arch/powerpc/platforms/powermac/Kconfig
++++ b/arch/powerpc/platforms/powermac/Kconfig
+@@ -2,7 +2,7 @@
+ config PPC_PMAC
+ 	bool "Apple PowerMac based machines"
+ 	depends on PPC_BOOK3S && CPU_BIG_ENDIAN
+-	select ADB_CUDA if POWER_RESET && PPC32
++	select ADB_CUDA if POWER_RESET && ADB
+ 	select MPIC
+ 	select FORCE_PCI
+ 	select PPC_INDIRECT_PCI if PPC32
 -- 
 2.43.0
 
