@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2798575815;
-	Sun, 24 Mar 2024 22:48:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78797EEFE;
+	Sun, 24 Mar 2024 22:47:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320480; cv=none; b=HJ0LeHvHxNwf2C/4d8lq7hQsCnJvCMtAeEsopk9IdLYapG2BcKoN4AEZ3hptMTW+B3PXLn4O4Jwn8NldpunWiPOhcMfkZ2CnUXqfa6KHvjwnCZ9IWalElNgTCjiT0eRdCIZBSV+W2N+oYPUKKFgP5nsAw1OzZJynbqE0NzUidW0=
+	t=1711320474; cv=none; b=JcMsoq4Hn/bUulLbUTc6LRTBMK101e+F1KozR7ipGgPFw9J1k840iQL/lH/3EwNk6Naqq23sRtcRZzfRHGQSI8jnbvregsvUfiMfeTDk5xnJUSA5lL7ouHLztnG/UhsPivnLD3QplZrTFaNuLgBa85VrO61MuR0E7ssu4mxPHCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320480; c=relaxed/simple;
-	bh=45ZrZ9a6InGLOX3zCd/VX2084a+7yRSkog5VZIcOYcM=;
+	s=arc-20240116; t=1711320474; c=relaxed/simple;
+	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SRuE4LbIWcA8qFRJ5tKmtTo24K3mTnoPFxkNYvPmm2BfpmvZVIdVO1uFrhtzhYMd6ymFNUr6/btpJsR4pYvYli5eAviDf7wPKJIDa92xQ256yWVbMSCWViyC2zuu7RrqA5NRgiSaVH+ftAawIBmiAP++al+2K6eaPa8avfx9A14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sL3O8u43; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pZvIQ1X7iOL3MP3E4tXIbeAvaXHjXnbF/NfR/dpmTZLO/jNTUMLn/of2fnwhEwMZ7nwWvnZnh6aQrVJRxaDdvmSpdjDn5B9Cu3njDVRymvYNSkjhob1Jxr9N7xrUcsALGQG2AlA30GvxGfpIkU06BnA/0AXXWtKnsj7Hn9eLdks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qazjXgRv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sL3O8u43"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50028C43394;
-	Sun, 24 Mar 2024 22:47:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qazjXgRv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5744CC433C7;
+	Sun, 24 Mar 2024 22:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320480;
-	bh=45ZrZ9a6InGLOX3zCd/VX2084a+7yRSkog5VZIcOYcM=;
+	s=k20201202; t=1711320474;
+	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sL3O8u43dvX80ZkH3iJkx5nds1Ieju/GJiQwAQHXCbyQpEvM6ntrqIDflF836oKsA
-	 R6NPszQVuW4MU0JsmVVd82zDokTyV5oT1OdxhV/XdvuIHT2oIdC5LNOAjWmFy6weVw
-	 ZpuU39sx4pw7AXqCAYidq2OCEjFpPzHZW5KGrwgRIOhQK8i6umhFb9Ok4nNO/UXoW5
-	 LoI9Jqlcyup32/ca6tXQz92s1lnViG8+vlfl764r5SDCiwK73ePbWI1b5YAndPexyh
-	 MQOewduWqSCZ+sytHoC9EKlEfez5dzGz/rpLeaFWLpGgYMblTqAiHvFPLdrXV2z4R6
-	 r5rxAmEwtcO9A==
+	b=qazjXgRv7oAG4OxmXfUTnI8s1S43mScRJT/onwIQ38L2d6qW/QcrH+2njcLXrRTn4
+	 PUyaPMNuU1OihDiRe+am/fwZAyB8i0t5+YAAutABc7BFuy+ADT8XEBdA505t/emb/2
+	 wGqZqzlx9mlcKy/EGetX7jZwjCipow6nuEYLq/Y4+TMZ+E9Hv3zKLTAAn7sWwgav9P
+	 PNmXKdd4UFVfI5uHMmnzqwLWNIyLlHUcrKrO2IytiwSGS9xslk2HFdQmhnE6U+eh2y
+	 ix7BM30EamoDkg/gUQQyxEcEE0atn98JSF0NnL0Uo/CN9TIqzznz4/cKDV9gdr2jA/
+	 eyFceN4QxQ8fg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hojin Nam <hj96.nam@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
+Cc: Hou Tao <houtao1@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com,
+	xingwei lee <xrivendell7@gmail.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 039/713] perf: CXL: fix CPMU filter value mask length
-Date: Sun, 24 Mar 2024 18:36:05 -0400
-Message-ID: <20240324224720.1345309-40-sashal@kernel.org>
+Subject: [PATCH 6.7 033/713] x86/mm: Disallow vsyscall page read for copy_from_kernel_nofault()
+Date: Sun, 24 Mar 2024 18:35:59 -0400
+Message-ID: <20240324224720.1345309-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,57 +52,98 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hojin Nam <hj96.nam@samsung.com>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit 802379b8f9e169293e9ba7089e5f1a6340e2e7a3 ]
+[ Upstream commit 32019c659ecfe1d92e3bf9fcdfbb11a7c70acd58 ]
 
-CPMU filter value is described as 4B length in CXL r3.0 8.2.7.2.2.
-However, it is used as 2B length in code and comments.
+When trying to use copy_from_kernel_nofault() to read vsyscall page
+through a bpf program, the following oops was reported:
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Hojin Nam <hj96.nam@samsung.com>
-Link: https://lore.kernel.org/r/20240216014522.32321-1-hj96.nam@samsung.com
-Signed-off-by: Will Deacon <will@kernel.org>
+  BUG: unable to handle page fault for address: ffffffffff600000
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 3231067 P4D 3231067 PUD 3233067 PMD 3235067 PTE 0
+  Oops: 0000 [#1] PREEMPT SMP PTI
+  CPU: 1 PID: 20390 Comm: test_progs ...... 6.7.0+ #58
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996) ......
+  RIP: 0010:copy_from_kernel_nofault+0x6f/0x110
+  ......
+  Call Trace:
+   <TASK>
+   ? copy_from_kernel_nofault+0x6f/0x110
+   bpf_probe_read_kernel+0x1d/0x50
+   bpf_prog_2061065e56845f08_do_probe_read+0x51/0x8d
+   trace_call_bpf+0xc5/0x1c0
+   perf_call_bpf_enter.isra.0+0x69/0xb0
+   perf_syscall_enter+0x13e/0x200
+   syscall_trace_enter+0x188/0x1c0
+   do_syscall_64+0xb5/0xe0
+   entry_SYSCALL_64_after_hwframe+0x6e/0x76
+   </TASK>
+  ......
+  ---[ end trace 0000000000000000 ]---
+
+The oops is triggered when:
+
+1) A bpf program uses bpf_probe_read_kernel() to read from the vsyscall
+page and invokes copy_from_kernel_nofault() which in turn calls
+__get_user_asm().
+
+2) Because the vsyscall page address is not readable from kernel space,
+a page fault exception is triggered accordingly.
+
+3) handle_page_fault() considers the vsyscall page address as a user
+space address instead of a kernel space address. This results in the
+fix-up setup by bpf not being applied and a page_fault_oops() is invoked
+due to SMAP.
+
+Considering handle_page_fault() has already considered the vsyscall page
+address as a userspace address, fix the problem by disallowing vsyscall
+page read for copy_from_kernel_nofault().
+
+Originally-by: Thomas Gleixner <tglx@linutronix.de>
+Reported-by: syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/bpf/CAG48ez06TZft=ATH1qh2c5mpS5BT8UakwNkzi6nvK5_djC-4Nw@mail.gmail.com
+Reported-by: xingwei lee <xrivendell7@gmail.com>
+Closes: https://lore.kernel.org/bpf/CABOYnLynjBoFZOf3Z4BhaZkc5hx_kHfsjiW+UWLoB=w33LvScw@mail.gmail.com
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240202103935.3154011-3-houtao@huaweicloud.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/cxl_pmu.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/mm/maccess.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index bc0d414a6aff9..308c9969642e1 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -59,7 +59,7 @@
- #define   CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK	GENMASK_ULL(63, 59)
+diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
+index 6993f026adec9..42115ac079cfe 100644
+--- a/arch/x86/mm/maccess.c
++++ b/arch/x86/mm/maccess.c
+@@ -3,6 +3,8 @@
+ #include <linux/uaccess.h>
+ #include <linux/kernel.h>
  
- #define CXL_PMU_FILTER_CFG_REG(n, f)	(0x400 + 4 * ((f) + (n) * 8))
--#define   CXL_PMU_FILTER_CFG_VALUE_MSK			GENMASK(15, 0)
-+#define   CXL_PMU_FILTER_CFG_VALUE_MSK			GENMASK(31, 0)
++#include <asm/vsyscall.h>
++
+ #ifdef CONFIG_X86_64
+ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
+ {
+@@ -15,6 +17,14 @@ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
+ 	if (vaddr < TASK_SIZE_MAX + PAGE_SIZE)
+ 		return false;
  
- #define CXL_PMU_COUNTER_REG(n)		(0xc00 + 8 * (n))
- 
-@@ -314,9 +314,9 @@ static bool cxl_pmu_config1_get_edge(struct perf_event *event)
- }
- 
- /*
-- * CPMU specification allows for 8 filters, each with a 16 bit value...
-- * So we need to find 8x16bits to store it in.
-- * As the value used for disable is 0xffff, a separate enable switch
-+ * CPMU specification allows for 8 filters, each with a 32 bit value...
-+ * So we need to find 8x32bits to store it in.
-+ * As the value used for disable is 0xffff_ffff, a separate enable switch
-  * is needed.
-  */
- 
-@@ -642,7 +642,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
- 		if (cxl_pmu_config1_hdm_filter_en(event))
- 			cfg = cxl_pmu_config2_get_hdm_decoder(event);
- 		else
--			cfg = GENMASK(15, 0); /* No filtering if 0xFFFF_FFFF */
-+			cfg = GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
- 		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
- 	}
- 
++	/*
++	 * Reading from the vsyscall page may cause an unhandled fault in
++	 * certain cases.  Though it is at an address above TASK_SIZE_MAX, it is
++	 * usually considered as a user space address.
++	 */
++	if (is_vsyscall_vaddr(vaddr))
++		return false;
++
+ 	/*
+ 	 * Allow everything during early boot before 'x86_virt_bits'
+ 	 * is initialized.  Needed for instruction decoding in early
 -- 
 2.43.0
 
