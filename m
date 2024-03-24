@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994A520013D;
-	Sun, 24 Mar 2024 23:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E97130E4F;
+	Sun, 24 Mar 2024 23:03:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321385; cv=none; b=mEPwjplk0nsfGVepSyfjmFRPm3O9sZuzoRlIht/TPmkteCu5UeTKBJsMGCMoTZH124alzgn0SuS2/50KmZqsol4kU+/Cpj9ilXK/lMYQ2MdKvME18pSWNuGoKnZoyEaVPlGbvTt4NTr5y46hiOSVH2/WD07alPKOBnyBVxHoXKM=
+	t=1711321387; cv=none; b=uBsruswLsqu9o6Oie4DdikcMar7NPT7e1jAO5TF696wOp20eQyNo28FdJYyIREJ+Su0jbheiKQ9jMHULK7i0Kkr6g5cyJ5FqiQ8QUr854+MMk7g7I3bEFZsf8TSE9B1CLyTMVJc639F7et2gaAsG9kilC8nCdo7M6Zvh6NcU4a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321385; c=relaxed/simple;
-	bh=23eHHuh/DV2k7PZWl6XBVkeG9jJGgENpTKhIC6FWxGs=;
+	s=arc-20240116; t=1711321387; c=relaxed/simple;
+	bh=4NV8jozK46/fbyAfW2dcGTbTjJRTkGsTkxZjNikSahs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j6YcpRMEpWdjAWoJfDSDVj6J1Tn55OPOCeMcrd6z4xLyAcnFVrLbT4vOS0veKBGIDAWhf4lGcTBUnZlIV4AZ7uY6KoNVUmAYuSw4NtdfFzsuIyyLmAUPILiBEnfQxNRzi7KuDF/LqfofIymUmr6VmdOt/UovdX//SGSpFTQF8/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XMvgGnGW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YREyFmzZqVl/1M517H1wDy+F1el1qzxKYXY1GgcBahG8keNT0p15Vyqg8WtcxzCYg6E1rQ0CcTqKdBZbxVD1yahmkhf2apN7ERWJBvlRCZ9eQzoYXRAIHkkmiNQm7ifGJ2/Kx92hodPqGI0XdJzPZKx/bBvfzy5Qiw4McJVHbh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TBleWQRa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XMvgGnGW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2CFEC43330;
-	Sun, 24 Mar 2024 23:03:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TBleWQRa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2B84C433C7;
+	Sun, 24 Mar 2024 23:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321384;
-	bh=23eHHuh/DV2k7PZWl6XBVkeG9jJGgENpTKhIC6FWxGs=;
+	s=k20201202; t=1711321386;
+	bh=4NV8jozK46/fbyAfW2dcGTbTjJRTkGsTkxZjNikSahs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XMvgGnGWPmN2jdvPTeoI+N7gyhHGLwk63QYPTAmwI7pukCATSty96IWfKaNWufcs+
-	 3b+YIClyLJdthIsK7qZZzHnqHzJUWgxRfjcLnipzndrx2N8VkAHY+6Tw+SeMsjmWuM
-	 3uVIfRH0pHHTPebcb2mb6QMYP6wLT4NZJQ+r3XL2+ximHFPHeTGIuK33OyIWgyaF9u
-	 XMYQ6rlV0T4IAfCv5jAhNr1FAsro+PQgbdBOzDbLtrcfgmBcP+G2TfZ5YxK5nPNpQb
-	 wh5y1fRd/FvZba+d80FSvit932U0Nnh4lkFUptWABBXgrsnEEqWlSwXYOY61M69lkR
-	 gmT/jkEPFSH7g==
+	b=TBleWQRaxfS+IKZZMLWOfb0MgXftmX6Ab9bn92Zy9F7Zt5U4KlRZ2Rv0JB6Hjsez7
+	 +nYkL4MdW6Oxr7vWIzXFcuWS7x5NZsTrYTcipa8P8cl4Wh6fKfo1hvR5n8qioj5rKa
+	 VQYzyI9UVkde/A3KKYu4grb+sfTaSKPYgafN30qKagV1uTZVaLvuKd9La5cAT1freS
+	 CCM1GqT7OLwD8aABX8h6DDniSvSorVHlYS8wXiZXYRchsPvmrw7djTnjyybGcecXyA
+	 tqBa/BnULQ9u8weddosq+canon+623Vhxt5LEJpSQjTZYcQdJuaFZohhfMQ58gr3kX
+	 H3+gm7TyCp0Sw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -33,9 +33,9 @@ Cc: Peter Hilber <peter.hilber@opensynergy.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	John Stultz <jstultz@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 108/638] timekeeping: Fix cross-timestamp interpolation on counter wrap
-Date: Sun, 24 Mar 2024 18:52:25 -0400
-Message-ID: <20240324230116.1348576-109-sashal@kernel.org>
+Subject: [PATCH 6.6 110/638] timekeeping: Fix cross-timestamp interpolation for non-x86
+Date: Sun, 24 Mar 2024 18:52:27 -0400
+Message-ID: <20240324230116.1348576-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -51,39 +51,54 @@ Content-Transfer-Encoding: 8bit
 
 From: Peter Hilber <peter.hilber@opensynergy.com>
 
-[ Upstream commit 84dccadd3e2a3f1a373826ad71e5ced5e76b0c00 ]
+[ Upstream commit 14274d0bd31b4debf28284604589f596ad2e99f2 ]
 
-cycle_between() decides whether get_device_system_crosststamp() will
-interpolate for older counter readings.
+So far, get_device_system_crosststamp() unconditionally passes
+system_counterval.cycles to timekeeping_cycles_to_ns(). But when
+interpolating system time (do_interp == true), system_counterval.cycles is
+before tkr_mono.cycle_last, contrary to the timekeeping_cycles_to_ns()
+expectations.
 
-cycle_between() yields wrong results for a counter wrap-around where after
-< before < test, and for the case after < test < before.
+On x86, CONFIG_CLOCKSOURCE_VALIDATE_LAST_CYCLE will mitigate on
+interpolating, setting delta to 0. With delta == 0, xtstamp->sys_monoraw
+and xtstamp->sys_realtime are then set to the last update time, as
+implicitly expected by adjust_historical_crosststamp(). On other
+architectures, the resulting nonsense xtstamp->sys_monoraw and
+xtstamp->sys_realtime corrupt the xtstamp (ts) adjustment in
+adjust_historical_crosststamp().
 
-Fix the comparison logic.
+Fix this by deriving xtstamp->sys_monoraw and xtstamp->sys_realtime from
+the last update time when interpolating, by using the local variable
+"cycles". The local variable already has the right value when
+interpolating, unlike system_counterval.cycles.
 
 Fixes: 2c756feb18d9 ("time: Add history to cross timestamp interface supporting slower devices")
 Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: John Stultz <jstultz@google.com>
-Link: https://lore.kernel.org/r/20231218073849.35294-2-peter.hilber@opensynergy.com
+Link: https://lore.kernel.org/r/20231218073849.35294-4-peter.hilber@opensynergy.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/timekeeping.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/timekeeping.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index 266d02809dbb1..8f35455b62509 100644
+index 4e9f2f88c9d6e..8aab7ed414907 100644
 --- a/kernel/time/timekeeping.c
 +++ b/kernel/time/timekeeping.c
-@@ -1186,7 +1186,7 @@ static bool cycle_between(u64 before, u64 test, u64 after)
- {
- 	if (test > before && test < after)
- 		return true;
--	if (test < before && before > after)
-+	if (before > after && (test > before || test < after))
- 		return true;
- 	return false;
- }
+@@ -1261,10 +1261,8 @@ int get_device_system_crosststamp(int (*get_time_fn)
+ 				      tk_core.timekeeper.offs_real);
+ 		base_raw = tk->tkr_raw.base;
+ 
+-		nsec_real = timekeeping_cycles_to_ns(&tk->tkr_mono,
+-						     system_counterval.cycles);
+-		nsec_raw = timekeeping_cycles_to_ns(&tk->tkr_raw,
+-						    system_counterval.cycles);
++		nsec_real = timekeeping_cycles_to_ns(&tk->tkr_mono, cycles);
++		nsec_raw = timekeeping_cycles_to_ns(&tk->tkr_raw, cycles);
+ 	} while (read_seqcount_retry(&tk_core.seq, seq));
+ 
+ 	xtstamp->sys_realtime = ktime_add_ns(base_real, nsec_real);
 -- 
 2.43.0
 
