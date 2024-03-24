@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA8B1DE9E8;
-	Sun, 24 Mar 2024 22:52:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D989F1DF0E2;
+	Sun, 24 Mar 2024 22:52:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320738; cv=none; b=tPZDCBfxCOCFUN+PSDBf24+iaqOpifvNcYnnqw1gLDGQLuDnyzeS+0Luu7qj6onu2QBiJy25dod4vtg09/UDfpD1RQcLJF/u6ARVkAsT6yCMyCfdVpGi2idBHYt77FXMMXOYNyc6uFfSoKWHiy+oDKppzT04YCVSdtAvUW0nUUw=
+	t=1711320742; cv=none; b=ApP3K+HKH3L4ArKt1oTxrt2Q6Tmk5oPiJ9NamwsQzygW4gseJUrIC4nstGyj0Srl6x/dXztAOKCdJwMTFuisN5QMPODqA0xmSPH4iix9IJZ+ohMcHGzz16FnYmRR/HujujdExk24yuJl6lSZPDwq+cfJxryh9xEA0RythdtkFbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320738; c=relaxed/simple;
-	bh=GWhucM3UOWCf+Jn0EA1zuh0UWwbQen1v+fnZzq9n2WQ=;
+	s=arc-20240116; t=1711320742; c=relaxed/simple;
+	bh=58B98bGY5tMD2svD0Au4W1Qr/ZKoc4cnw7wxauTqbjE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n6zjRb+d4H9zsUTJ87VPWIjgfnoiHCaojL6j51lzJRi/WbbX6bMNTEDFvWj4heU8Z+GnNC4cb7p3Vk22c8hfqnvyivUDi9RwHUXC2Qv6py1zGRmK4TFh8GUUTSS67yeLPakVXrGVewfr6Cu57jzMPDIFaLYDqoy67KaBeKve4KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nnLBPfpG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Z6eH+EKv7IQBHlcaMiT+futA8cpKFG+Xszg+H3EjAEA7rN1x/ddHkgmgDOX722jTjliZBl2fCSNPN0/mn+RXigbEIIlAGmY0REszP315UfBWhlOe6TyCgk47MRVN9lC19Y+nb0HYseUd+Xp2YHw2gE2AKe7BMqChxRYmUYujbdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UhyWMkM4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nnLBPfpG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 773CFC43390;
-	Sun, 24 Mar 2024 22:52:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UhyWMkM4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B876C433C7;
+	Sun, 24 Mar 2024 22:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320738;
-	bh=GWhucM3UOWCf+Jn0EA1zuh0UWwbQen1v+fnZzq9n2WQ=;
+	s=k20201202; t=1711320742;
+	bh=58B98bGY5tMD2svD0Au4W1Qr/ZKoc4cnw7wxauTqbjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nnLBPfpGlPrMQKk7XWpGZJ0QMKJwQeoaBhHAiBq9HTWn0yOrZKm1PBJZL5faJiLjo
-	 qqkSNYatNzAzNVp7dku2Ajkld6XVrf99BG0rmzrGAEUA/3yLes2UTekndLHpS8Cgjc
-	 VPUI5lQCS4PcJ6T9PvO4rZl+GDnAo9iIKEdPnxZDvbJu0YAMJsMafJTgW7UP152Wye
-	 Xw5NGbhwQHge2HSua19Py5tIY4WMf4eRi3Fpq4rNsTPmPEGVk+Uxlc7aiBxm+Kh80m
-	 DhBt36WE5snhJTlI7+7/29z3wtWn5n/QZ5PT4UTIggdNoYpnF+q4eLu9NMMEh+SnQt
-	 rcR/WmsectB4w==
+	b=UhyWMkM4uddfmJfbVHLSwZlpfAV95ZhJkDk2jFm4rLa26opZH+riBMsOtwIRE0Ggw
+	 vvRYqVWPGsZmudf4ngAooXBipuLDS9vnoSD7Tr2ZTQYANGQ3dVKnGl3MB7Ca4rqEoT
+	 BDRha6K20ppxpcyzKrTjUswQd9xKk4AVII3HEcANFQ0Xn6pm/UYOvQf/fhguhHjHeJ
+	 g/lzKr8llcySPWjNVJxF/7VWe+2gY/EmMlaL4/moaKhLaJAbjlEyEuCAyLfTtr+2XB
+	 PWxKKcMamnOUYtCy44tUHLQwmh2RrOHLcBV28IZXNebmKpAQo2nTTIoRik/G3pIDkV
+	 kBQnxnORuJ9FA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Deren Wu <deren.wu@mediatek.com>,
-	Felix Fietkau <nbd@nbd.name>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 301/713] wifi: mt76: mt7925e: fix use-after-free in free_irq()
-Date: Sun, 24 Mar 2024 18:40:27 -0400
-Message-ID: <20240324224720.1345309-302-sashal@kernel.org>
+Subject: [PATCH 6.7 306/713] arm64: dts: renesas: r8a779a0: Correct avb[01] reg sizes
+Date: Sun, 24 Mar 2024 18:40:32 -0400
+Message-ID: <20240324224720.1345309-307-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,36 +47,46 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Deren Wu <deren.wu@mediatek.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit a5a5f4413d91f395cb2d89829d376d7393ad48b9 ]
+[ Upstream commit 0c51912331f8ba5ce5fb52f46e340945160672a3 ]
 
-From commit a304e1b82808 ("[PATCH] Debug shared irqs"), there is a test
-to make sure the shared irq handler should be able to handle the unexpected
-event after deregistration. For this case, let's apply MT76_REMOVED flag to
-indicate the device was removed and do not run into the resource access
-anymore.
+All Ethernet AVB instances on R-Car V3U have registers related to UDP/IP
+support, but the declared register blocks for the first two instances
+are too small to cover them.
 
-Fixes: c948b5da6bbe ("wifi: mt76: mt7925: add Mediatek Wi-Fi7 driver for mt7925 chips")
-Signed-off-by: Deren Wu <deren.wu@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Fix this by extending the register block sizes.
+
+Fixes: 5a633320f08b8c9b ("arm64: dts: renesas: r8a779a0: Add Ethernet-AVB support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/ce6ce3c4b1495e02e7c1803fca810a7178a84500.1707660323.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7925/pci.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/renesas/r8a779a0.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/pci.c b/drivers/net/wireless/mediatek/mt76/mt7925/pci.c
-index c16d683e4891e..bf02a15067ef6 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7925/pci.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7925/pci.c
-@@ -427,6 +427,7 @@ static void mt7925_pci_remove(struct pci_dev *pdev)
- 	struct mt792x_dev *dev = container_of(mdev, struct mt792x_dev, mt76);
- 
- 	mt7925e_unregister_device(dev);
-+	set_bit(MT76_REMOVED, &mdev->phy.state);
- 	devm_free_irq(&pdev->dev, pdev->irq, dev);
- 	mt76_free_device(&dev->mt76);
- 	pci_free_irq_vectors(pdev);
+diff --git a/arch/arm64/boot/dts/renesas/r8a779a0.dtsi b/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
+index 4e67a03564971..504ac8c93faf5 100644
+--- a/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
+@@ -658,7 +658,7 @@ channel7 {
+ 		avb0: ethernet@e6800000 {
+ 			compatible = "renesas,etheravb-r8a779a0",
+ 				     "renesas,etheravb-rcar-gen4";
+-			reg = <0 0xe6800000 0 0x800>;
++			reg = <0 0xe6800000 0 0x1000>;
+ 			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>,
+@@ -706,7 +706,7 @@ avb0: ethernet@e6800000 {
+ 		avb1: ethernet@e6810000 {
+ 			compatible = "renesas,etheravb-r8a779a0",
+ 				     "renesas,etheravb-rcar-gen4";
+-			reg = <0 0xe6810000 0 0x800>;
++			reg = <0 0xe6810000 0 0x1000>;
+ 			interrupts = <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
 -- 
 2.43.0
 
