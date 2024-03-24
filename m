@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D078E17C6C2;
-	Sun, 24 Mar 2024 23:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C157117C6D2;
+	Sun, 24 Mar 2024 23:43:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323798; cv=none; b=a45M3NAeUITZsRWZaG8p/RvQ7yAEFBoS9GXr+zeOQNmV4f5JhkvERe+jw4gISEYmvmUr4XMPKuDPQxbgCIlnr26ej9TEKiGAQwjRk3WfwvY45AmJ8EAD08UPCjVCgabvgzyearTjBTBx1JHJ7w6QCMy2l393l+yfDPRbRkddUwU=
+	t=1711323801; cv=none; b=aYtM2fXZ0dtwX23Lj7OtbLEMEl8eoBDD0JthseSOlbVU5mSWMOq8BhMcPQHWS4xhXcXEQmuidZDlMxJu6FJrzosIvuWqhh1Yu2+QhkOeLp4/FKSYYGVvtnFNB9chUrzDTnYxFkrwllQPO+SSELU8dx67IZQgiKInMtaAWC1+aog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323798; c=relaxed/simple;
-	bh=ieKy/hv6bciQ6MqgyuqOGf6/YtMkhtBG+HDbPucQycQ=;
+	s=arc-20240116; t=1711323801; c=relaxed/simple;
+	bh=tfhiyz79ICdQeKvhnCLH9GxQyaU1564g7hI9bfQA7x4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q5iwcbF6+HQCLQ0qkL+GFGWysrGNd2c87Ch5DySG51m37LNwK8EBOueSMZS8eBJo946t6WoOHhZGFxihVhisYPPC1YgpiZgEbd+GgqiSE0pBfvh3cSJwNDt2Iigg4cM1Axco2UqXpZ5tL5uX6eE5PzuHj9WPcpdDSpuEoJOhmiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QhxQwSEY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hv0WspnBwoGC2cZHbv75nJ4lPmZ0d+38o87tzTMDNtV+roVQgfI0fvMoAEWqDbF7OZ/I+jkO0mlzrsXsxujC/eV/dJC7hRly3/j8YVj42NWAXT6QyJ5HWGyccohJXIjLbYB1z0WSx67GuenNy8xnPzAw0XnISFwDVcNeLGrZX34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ydh3eR7A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QhxQwSEY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 139CBC433F1;
-	Sun, 24 Mar 2024 23:43:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ydh3eR7A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA0D8C43394;
+	Sun, 24 Mar 2024 23:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323797;
-	bh=ieKy/hv6bciQ6MqgyuqOGf6/YtMkhtBG+HDbPucQycQ=;
+	s=k20201202; t=1711323800;
+	bh=tfhiyz79ICdQeKvhnCLH9GxQyaU1564g7hI9bfQA7x4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QhxQwSEYrDeYpujnPH+nghySXbicHHjj8Yo41GgUYXnfhgBQTtI/sZmx/wQCDjJ75
-	 zeV4BYFNTm25XuVaRjbPFjpnAi3CRp3Go+qPjFXw+UO+fpqXG006mBdkF9NieTMZmK
-	 BWc/OJcPMToCZga9eC7ZLO8rygKSqJ0j/zsEoXlABrdfg404YhKQgJiYxfRcezHmta
-	 8QpfiLIvt0FuJBKuIehmcSydtpa/Z1rkz+ABAf5hn/weZxpi6hI9x/FQoqfMKxPstz
-	 kMSmj9oqJPrlTg253+VpQ32YSOZeMZyWF2TZ7aPA141ht+/ZUoRTN7XIacCBU2AGlc
-	 ddsO6wlx0n3Fw==
+	b=Ydh3eR7A4KnYNTmNgsBCUwj2ZUhy2WaCkRSugq/pwJgOD33j+yRS0Fl9RKv/Cfiyv
+	 jde8JsBVGtOvrK6B6fEXkkGr8MyiBHTdyxaIFwXdR9chtohUC7E7jd7FYWbI6B1Ie5
+	 dNLbOH6Pn2bnM7uz2QRzQJdpq8AwHyLUvmvuJ/pF+6dnIg+XGq9O+ko6rdtnr0j0Re
+	 x1sl2QurzRn7CSyETTbnD+q0UiNMNZ9zNswIcwpMhAmYz2niAmvGgb1i+1Kfic2f5/
+	 9nC+eMmc3A2h7N2aMSMXlSjaTSlRmh49wqYYVIId39OlRQl0z2eYcHqsopj02Nx9Xh
+	 IbLDoYZRvmz7A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Kajol Jain <kjain@linux.ibm.com>,
+	Akanksha J N <akanksha@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 175/238] media: ttpci: fix two memleaks in budget_av_attach
-Date: Sun, 24 Mar 2024 19:39:23 -0400
-Message-ID: <20240324234027.1354210-176-sashal@kernel.org>
+Subject: [PATCH 5.10 178/238] powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks
+Date: Sun, 24 Mar 2024 19:39:26 -0400
+Message-ID: <20240324234027.1354210-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,50 +49,115 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Kajol Jain <kjain@linux.ibm.com>
 
-[ Upstream commit d0b07f712bf61e1a3cf23c87c663791c42e50837 ]
+[ Upstream commit ad86d7ee43b22aa2ed60fb982ae94b285c1be671 ]
 
-When saa7146_register_device and saa7146_vv_init fails, budget_av_attach
-should free the resources it allocates, like the error-handling of
-ttpci_budget_init does. Besides, there are two fixme comment refers to
-such deallocations.
+Running event hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
+in one of the system throws below error:
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+ ---Logs---
+ # perf list | grep hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles
+  hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=?/[Kernel PMU event]
+
+ # perf stat -v -e hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ sleep 2
+Using CPUID 00800200
+Control descriptor is not initialized
+Warning:
+hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ event is not supported by the kernel.
+failed to read counter hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
+
+ Performance counter stats for 'system wide':
+
+   <not supported>      hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
+
+       2.000700771 seconds time elapsed
+
+The above error is because of the hcall failure as required
+permission "Enable Performance Information Collection" is not set.
+Based on current code, single_gpci_request function did not check the
+error type incase hcall fails and by default returns EINVAL. But we can
+have other reasons for hcall failures like H_AUTHORITY/H_PARAMETER with
+detail_rc as GEN_BUF_TOO_SMALL, for which we need to act accordingly.
+
+Fix this issue by adding new checks in the single_gpci_request and
+h_gpci_event_init functions.
+
+Result after fix patch changes:
+
+ # perf stat -e hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ sleep 2
+Error:
+No permission to enable hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ event.
+
+Fixes: 220a0c609ad1 ("powerpc/perf: Add support for the hv gpci (get performance counter info) interface")
+Reported-by: Akanksha J N <akanksha@linux.ibm.com>
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20240229122847.101162-1-kjain@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/ttpci/budget-av.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/powerpc/perf/hv-gpci.c | 29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/pci/ttpci/budget-av.c b/drivers/media/pci/ttpci/budget-av.c
-index 3cb83005cf09b..519f85e0a397d 100644
---- a/drivers/media/pci/ttpci/budget-av.c
-+++ b/drivers/media/pci/ttpci/budget-av.c
-@@ -1462,7 +1462,8 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
- 		budget_av->has_saa7113 = 1;
- 		err = saa7146_vv_init(dev, &vv_data);
- 		if (err != 0) {
--			/* fixme: proper cleanup here */
-+			ttpci_budget_deinit(&budget_av->budget);
-+			kfree(budget_av);
- 			ERR("cannot init vv subsystem\n");
- 			return err;
- 		}
-@@ -1471,9 +1472,10 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
- 		vv_data.vid_ops.vidioc_s_input = vidioc_s_input;
+diff --git a/arch/powerpc/perf/hv-gpci.c b/arch/powerpc/perf/hv-gpci.c
+index 28b770bbc10b4..2a054de80e50b 100644
+--- a/arch/powerpc/perf/hv-gpci.c
++++ b/arch/powerpc/perf/hv-gpci.c
+@@ -164,6 +164,20 @@ static unsigned long single_gpci_request(u32 req, u32 starting_index,
  
- 		if ((err = saa7146_register_device(&budget_av->vd, dev, "knc1", VFL_TYPE_VIDEO))) {
--			/* fixme: proper cleanup here */
--			ERR("cannot register capture v4l2 device\n");
- 			saa7146_vv_release(dev);
-+			ttpci_budget_deinit(&budget_av->budget);
-+			kfree(budget_av);
-+			ERR("cannot register capture v4l2 device\n");
- 			return err;
- 		}
+ 	ret = plpar_hcall_norets(H_GET_PERF_COUNTER_INFO,
+ 			virt_to_phys(arg), HGPCI_REQ_BUFFER_SIZE);
++
++	/*
++	 * ret value as 'H_PARAMETER' with detail_rc as 'GEN_BUF_TOO_SMALL',
++	 * specifies that the current buffer size cannot accommodate
++	 * all the information and a partial buffer returned.
++	 * Since in this function we are only accessing data for a given starting index,
++	 * we don't need to accommodate whole data and can get required count by
++	 * accessing first entry data.
++	 * Hence hcall fails only incase the ret value is other than H_SUCCESS or
++	 * H_PARAMETER with detail_rc value as GEN_BUF_TOO_SMALL(0x1B).
++	 */
++	if (ret == H_PARAMETER && be32_to_cpu(arg->params.detail_rc) == 0x1B)
++		ret = 0;
++
+ 	if (ret) {
+ 		pr_devel("hcall failed: 0x%lx\n", ret);
+ 		goto out;
+@@ -228,6 +242,7 @@ static int h_gpci_event_init(struct perf_event *event)
+ {
+ 	u64 count;
+ 	u8 length;
++	unsigned long ret;
  
+ 	/* Not our event */
+ 	if (event->attr.type != event->pmu->type)
+@@ -258,13 +273,23 @@ static int h_gpci_event_init(struct perf_event *event)
+ 	}
+ 
+ 	/* check if the request works... */
+-	if (single_gpci_request(event_get_request(event),
++	ret = single_gpci_request(event_get_request(event),
+ 				event_get_starting_index(event),
+ 				event_get_secondary_index(event),
+ 				event_get_counter_info_version(event),
+ 				event_get_offset(event),
+ 				length,
+-				&count)) {
++				&count);
++
++	/*
++	 * ret value as H_AUTHORITY implies that partition is not permitted to retrieve
++	 * performance information, and required to set
++	 * "Enable Performance Information Collection" option.
++	 */
++	if (ret == H_AUTHORITY)
++		return -EPERM;
++
++	if (ret) {
+ 		pr_devel("gpci hcall failed\n");
+ 		return -EINVAL;
+ 	}
 -- 
 2.43.0
 
