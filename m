@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2AD291B76;
-	Sun, 24 Mar 2024 23:50:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AAB291B65;
+	Sun, 24 Mar 2024 23:50:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324240; cv=none; b=qqNJHC5N0DKPAfdLmJYcRkRkyye47R2OVuhnuuH8kRsSR4HgGfxX8M9QWTNY8A2nZTIuBWhapq3Yn79Knn6JVPOK5JQaaMSh7TIhKWJL9Fgue6vrUuvUzXNMubdQjRvoQmGrwbv7QtjeaoHrkjK+dj+uWNGNTYPfldQEjIBtons=
+	t=1711324236; cv=none; b=pIc7RhlpuPlgjn4iej5h+PlcVzIRIVB+1WOG4QuSQ51xQsffvYVrLX52q4mDTxW9yxfW1Pv4HIymq7qrDrj/zByUqo9wSqBo2uPXZHCjZl94XlTUL4swnd8/0Qv53CxdR5jF0voSNyqZg330xi24VtZ1TM4UCkyEx2x7FJTORnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324240; c=relaxed/simple;
-	bh=M5YgR7dp89qvG5/MBGCVJI1h4SHXDq4czn6ZSPk3NT4=;
+	s=arc-20240116; t=1711324236; c=relaxed/simple;
+	bh=C33EEltJRwHMDdwN6dS+Wo7jrwyUKT4NvKbIs0EN4cM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L0bF4ASScNL4jN3yoWcepPm2ynBxybkNJa6VfDi7Vyz5qxqa+W5XKAWLeGIHtuWxjKM8ym3U+U7L7cNxUlKZaKo8TKIXvtRykz+z3vhCzyjLBniV71IucAlW+zRWxFpP37WhJA/3ZIgjBAnOZuGzZuM42qd05LHSNaDqAVy+2V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3kDPozZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hjN5m7o8vHCHYGMOHAmbLKnMjgeOBJ42N3hjV+S+An47hV6LOyd/RgKj4QReuOmUonOE2sqS/ZHx7essN21Jjq9O3gmQINmRtdu6Js4yVn1gom/KR34qQJ07r1ig3lixo17kZI1kc5o1hOeV8/3AuyX3Aq5zgYG9y85R+6OF3ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GpY2x8uO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3kDPozZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4584C433C7;
-	Sun, 24 Mar 2024 23:50:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GpY2x8uO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19379C433A6;
+	Sun, 24 Mar 2024 23:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324238;
-	bh=M5YgR7dp89qvG5/MBGCVJI1h4SHXDq4czn6ZSPk3NT4=;
+	s=k20201202; t=1711324235;
+	bh=C33EEltJRwHMDdwN6dS+Wo7jrwyUKT4NvKbIs0EN4cM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q3kDPozZOAEILnXDZF9VvnoSotmHR28PBVIdCy0pynr/qHf9kLh+PM4dRvGddQ9x3
-	 Hi2HCL08f3Mv8JUjlevKDyT0foTNmTv3TSy03NF5UC8xGffSbI/wO7KSa1ilBrHJlE
-	 ZOLIDeFTl7p/LBBphgaPegc/y6LG1vjp25xuQPXQGpIl4VREJ5n0zEUeGy9dBoBF6L
-	 W1XfjXmdeeg9WaSPQqXuMRbkNMCzkIrmH39HmHOa0SKup4/mx9Ni40cyWji4+UuBgK
-	 TEj6r8OsW5LIUX0nqvHZ97dNYzELDjncUrPHr+/WJInom9mbUKn4UgrosmqZCQzz+G
-	 seiT5igIIiDVQ==
+	b=GpY2x8uOK0zA8PegS5Qrq1Y2AmuNw6sH33hhcQtZSMY9C8hcsnLDYVp+rFtUAruwx
+	 vbJG1Xjsc5F/QIgf0kT49coHId4suyCN16Fi6/SQmz6PBW5mUjb106TVFyACin4I9O
+	 tDt3Ntp4ZYJJR52U7raa9VCM8UbqsB5q7JJxAfaXExGpSEaI5luHZNleVMQ1oLjK+p
+	 bywSb95wBoAKSBJ7cswVL3vahYtuEVt2xnw82KY7mSDdEJ/MYwHPSYR0l+WPLtR4XH
+	 TJsx+D1dFG+k89AR2DxSIMaEQ0yqZahHLw/ff1R2tHA6NohRSc2PQcHhPGxA56UWmN
+	 zxiTTKXNYaPEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christoph Hellwig <hch@lst.de>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Chuck Lever III <chuck.lever@oracle.com>,
+	syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com,
+	Jan Kara <jack@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 021/148] block: add a new set_read_only method
-Date: Sun, 24 Mar 2024 19:48:05 -0400
-Message-ID: <20240324235012.1356413-22-sashal@kernel.org>
+Subject: [PATCH 4.19 018/148] do_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak
+Date: Sun, 24 Mar 2024 19:48:02 -0400
+Message-ID: <20240324235012.1356413-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,51 +51,70 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christoph Hellwig <hch@lst.de>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-[ Upstream commit e00adcadf3af7a8335026d71ab9f0e0a922191ac ]
+[ Upstream commit 3948abaa4e2be938ccdfc289385a27342fb13d43 ]
 
-Add a new method to allow for driver-specific processing when setting or
-clearing the block device read-only state.  This allows to replace the
-cumbersome and error-prone override of the whole ioctl implementation.
+syzbot identified a kernel information leak vulnerability in
+do_sys_name_to_handle() and issued the following report [1].
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Stable-dep-of: 9674f54e41ff ("md: Don't clear MD_CLOSING when the raid is about to stop")
+[1]
+"BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40
+ instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+ _copy_to_user+0xbc/0x100 lib/usercopy.c:40
+ copy_to_user include/linux/uaccess.h:191 [inline]
+ do_sys_name_to_handle fs/fhandle.c:73 [inline]
+ __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
+ __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94
+ __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
+ ...
+
+Uninit was created at:
+ slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
+ slab_alloc_node mm/slub.c:3478 [inline]
+ __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517
+ __do_kmalloc_node mm/slab_common.c:1006 [inline]
+ __kmalloc+0x121/0x3c0 mm/slab_common.c:1020
+ kmalloc include/linux/slab.h:604 [inline]
+ do_sys_name_to_handle fs/fhandle.c:39 [inline]
+ __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
+ __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94
+ __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
+ ...
+
+Bytes 18-19 of 20 are uninitialized
+Memory access of size 20 starts at ffff888128a46380
+Data copied to user address 0000000020000240"
+
+Per Chuck Lever's suggestion, use kzalloc() instead of kmalloc() to
+solve the problem.
+
+Fixes: 990d6c2d7aee ("vfs: Add name to file handle conversion support")
+Suggested-by: Chuck Lever III <chuck.lever@oracle.com>
+Reported-and-tested-by: <syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com>
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Link: https://lore.kernel.org/r/20240119153906.4367-1-n.zhandarovich@fintech.ru
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/ioctl.c          | 5 +++++
- include/linux/blkdev.h | 1 +
- 2 files changed, 6 insertions(+)
+ fs/fhandle.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 3884d810efd27..6d6c4f4c411a6 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -451,6 +451,11 @@ static int blkdev_roset(struct block_device *bdev, fmode_t mode,
- 		return ret;
- 	if (get_user(n, (int __user *)arg))
- 		return -EFAULT;
-+	if (bdev->bd_disk->fops->set_read_only) {
-+		ret = bdev->bd_disk->fops->set_read_only(bdev, n);
-+		if (ret)
-+			return ret;
-+	}
- 	set_device_ro(bdev, n);
- 	return 0;
- }
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index ac407c1d4d40f..8f0aafae09d97 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1997,6 +1997,7 @@ struct block_device_operations {
- 	void (*unlock_native_capacity) (struct gendisk *);
- 	int (*revalidate_disk) (struct gendisk *);
- 	int (*getgeo)(struct block_device *, struct hd_geometry *);
-+	int (*set_read_only)(struct block_device *bdev, bool ro);
- 	/* this callback is with swap_lock and sometimes page table lock held */
- 	void (*swap_slot_free_notify) (struct block_device *, unsigned long);
- 	struct module *owner;
+diff --git a/fs/fhandle.c b/fs/fhandle.c
+index 0ee727485615b..cb78dbfd7cd51 100644
+--- a/fs/fhandle.c
++++ b/fs/fhandle.c
+@@ -37,7 +37,7 @@ static long do_sys_name_to_handle(struct path *path,
+ 	if (f_handle.handle_bytes > MAX_HANDLE_SZ)
+ 		return -EINVAL;
+ 
+-	handle = kmalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
++	handle = kzalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
+ 			 GFP_KERNEL);
+ 	if (!handle)
+ 		return -ENOMEM;
 -- 
 2.43.0
 
