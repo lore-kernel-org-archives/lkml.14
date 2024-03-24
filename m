@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5666120DD27;
-	Sun, 24 Mar 2024 23:07:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9812820DD4B;
+	Sun, 24 Mar 2024 23:07:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321654; cv=none; b=P06yXpK0DR5YFfl2a1DQGG49quREtPfdR7V+MOX45CLfAowaIKODrv4NESqdY38LQrUm3mReGntRaI2FPfWx3jzzW7i5+ycGWDtBSKMtCFhdSEu0f28yPx0I4yYY+wJLZ//1N4+72cmXFoMt0LwkQuxYOLkBKG0JghkUUDliyDw=
+	t=1711321656; cv=none; b=X0WSO5UzoMu3IYoKr486G+rYE9oP4bo6qwhqMEV5ACOKBkPT25HI+RzckcFgYZ439o2GSOLrC/oiLjCxTSdmTKrGkEcdQIXuxZHVjNEa3ghZLnUzIC4Ofl2aqyXJ2mYMXyHMrWEiHaBBCDZXDmZBvQlI6lK9c2GC6Uo+SxOS5JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321654; c=relaxed/simple;
-	bh=EWgKnN4Jo0bf+oXAc5grq6JHSvSF9OfBeXnKDb9HOws=;
+	s=arc-20240116; t=1711321656; c=relaxed/simple;
+	bh=YZPj3TCyeuHzFbALh1S/QKMJWCXWAsaZ839msyp0NqU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aDRq00T/khd603CBBRuCJlEMlFAqUrzovTP5oJlT/9JR1Dkefz+3Hldu2QNeoaWDXBI3A+fSnPW4wpQeBHavgXpQHDOJKdwU+vAfFZE1Y982C369iP6kLNFHRLnLGgw+xiLZD77VdAYVeSSLytaR99t+kC1SaDrx89pGPTkTNnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NUEAgWu8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZTHWGhYjcSpjoyhqgEOWn6NHFV3qnJ/VjNBA3Zu9sWCgc4Ee7dJadanQ1NHIS6U78LRmAQ/0dBAC6GE7i1d7xEd19Bk0bb1AeHEnFww/0EFUjs5jlq1PvzPo9ZNKRVPLu+kaSVfXR8/jQSPj/qg1ArU/jQdDvBt4pr9bibywtQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XRvMl9PK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NUEAgWu8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC84C433F1;
-	Sun, 24 Mar 2024 23:07:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XRvMl9PK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D121C43399;
+	Sun, 24 Mar 2024 23:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321653;
-	bh=EWgKnN4Jo0bf+oXAc5grq6JHSvSF9OfBeXnKDb9HOws=;
+	s=k20201202; t=1711321655;
+	bh=YZPj3TCyeuHzFbALh1S/QKMJWCXWAsaZ839msyp0NqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NUEAgWu80Hc/4ecaF4V6/phqF1zge7MTKGmy0HfHlhn8b7QvgEmLrDplL68QXGWPC
-	 ODNClq8tbS2Z6TaC7DxhyW8Kg0yBteIzpM0YBi/almL5p/2zKVtCnwSRGp7hAQcsoq
-	 k2dENMqC/MvQhvG9+77dRWWxHsbD4kiegwB2OmNv8gCRYP0cvTkLA031bLfHRFi6bn
-	 AvCc7SUZn35bekaOjYIHqniFGWazAI81M+xi4SuTslMKsxNrW9JmBeN4hX1EjI/J4x
-	 ughdpFuaGPOW9bqilLs5A7ydtaMrz8c3ooHJpcEFwYR4SfBvoSLs4Btoix2BgoXegG
-	 oYpx6lmYa/AXA==
+	b=XRvMl9PKgal/1AVMR5RAm8azdWf8O4LAl2ciwmlCtoCXDGYZ8zwo9fs/neFrD4Dk7
+	 rNp5bVCxMAMt6vQcLewpj7fEDKYLPOH2adoi2FZjQVdFN0wzPwO6NMgrAuOB3rt9nv
+	 YrIzTndzk7pWj7LdqrOSKuNqbWKjxGawSTUJEDQUuAPHk8QOUvgR1qIaJsdql7viJN
+	 dQtXJg+fONK8F+3JcysB+U6Wv+HfsmcpasIpOcGZlWviYBmDm3bjoXNCU/z9XRUaK4
+	 67gWYD2eGyEucelT2saD1pWLNPRU3jpVgvZJtZbh107DLJ9hzWiax65SoGvKE2W2FV
+	 eK7+0v0nxJ1lQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Ezra Buehler <ezra.buehler@husqvarnagroup.com>,
+	Martin Kurbanov <mmkurbanov@salutedevices.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 382/638] media: v4l2-tpg: fix some memleaks in tpg_alloc
-Date: Sun, 24 Mar 2024 18:56:59 -0400
-Message-ID: <20240324230116.1348576-383-sashal@kernel.org>
+Subject: [PATCH 6.6 384/638] mtd: spinand: esmt: Extend IDs to 5 bytes
+Date: Sun, 24 Mar 2024 18:57:01 -0400
+Message-ID: <20240324230116.1348576-385-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,110 +49,66 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Ezra Buehler <ezra.buehler@husqvarnagroup.com>
 
-[ Upstream commit 8cf9c5051076e0eb958f4361d50d8b0c3ee6691c ]
+[ Upstream commit 4bd14b2fd8a83a2f5220ba4ef323f741e11bfdfd ]
 
-In tpg_alloc, resources should be deallocated in each and every
-error-handling paths, since they are allocated in for statements.
-Otherwise there would be memleaks because tpg_free is called only when
-tpg_alloc return 0.
+According to the datasheets, the ESMT chips in question will return a 5
+byte long identification code where the last 3 bytes are the JEDEC
+continuation codes (7Fh). Although, I would have expected 4 continuation
+codes as Powerchip Semiconductor (C8h, corresponding to the parameter
+page data) is located in bank 5 of the JEDEC database.
 
-Fixes: 63881df94d3e ("[media] vivid: add the Test Pattern Generator")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+By matching the full 5 bytes we can avoid clashes with GigaDevice NAND
+flashes.
+
+This fix allows the MT7688-based GARDENA smart Gateway to boot again.
+
+Fixes: aa08bf187f32 ("mtd: spinand: esmt: add support for F50D2G41KA")
+Signed-off-by: Ezra Buehler <ezra.buehler@husqvarnagroup.com>
+Reviewed-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
+Tested-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20240125200108.24374-3-ezra@easyb.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 52 +++++++++++++++----
- 1 file changed, 42 insertions(+), 10 deletions(-)
+ drivers/mtd/nand/spi/esmt.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-index a366566f22c3b..642c48e8c1f58 100644
---- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-+++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-@@ -113,6 +113,7 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- {
- 	unsigned pat;
- 	unsigned plane;
-+	int ret = 0;
+diff --git a/drivers/mtd/nand/spi/esmt.c b/drivers/mtd/nand/spi/esmt.c
+index 31c439a557b18..4597a82de23a4 100644
+--- a/drivers/mtd/nand/spi/esmt.c
++++ b/drivers/mtd/nand/spi/esmt.c
+@@ -104,7 +104,8 @@ static const struct mtd_ooblayout_ops f50l1g41lb_ooblayout = {
  
- 	tpg->max_line_width = max_w;
- 	for (pat = 0; pat < TPG_MAX_PAT_LINES; pat++) {
-@@ -121,14 +122,18 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- 
- 			tpg->lines[pat][plane] =
- 				vzalloc(array3_size(max_w, 2, pixelsz));
--			if (!tpg->lines[pat][plane])
--				return -ENOMEM;
-+			if (!tpg->lines[pat][plane]) {
-+				ret = -ENOMEM;
-+				goto free_lines;
-+			}
- 			if (plane == 0)
- 				continue;
- 			tpg->downsampled_lines[pat][plane] =
- 				vzalloc(array3_size(max_w, 2, pixelsz));
--			if (!tpg->downsampled_lines[pat][plane])
--				return -ENOMEM;
-+			if (!tpg->downsampled_lines[pat][plane]) {
-+				ret = -ENOMEM;
-+				goto free_lines;
-+			}
- 		}
- 	}
- 	for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-@@ -136,18 +141,45 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- 
- 		tpg->contrast_line[plane] =
- 			vzalloc(array_size(pixelsz, max_w));
--		if (!tpg->contrast_line[plane])
--			return -ENOMEM;
-+		if (!tpg->contrast_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
-+		}
- 		tpg->black_line[plane] =
- 			vzalloc(array_size(pixelsz, max_w));
--		if (!tpg->black_line[plane])
--			return -ENOMEM;
-+		if (!tpg->black_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
-+		}
- 		tpg->random_line[plane] =
- 			vzalloc(array3_size(max_w, 2, pixelsz));
--		if (!tpg->random_line[plane])
--			return -ENOMEM;
-+		if (!tpg->random_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
-+		}
- 	}
- 	return 0;
-+
-+free_contrast_line:
-+	for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-+		vfree(tpg->contrast_line[plane]);
-+		vfree(tpg->black_line[plane]);
-+		vfree(tpg->random_line[plane]);
-+		tpg->contrast_line[plane] = NULL;
-+		tpg->black_line[plane] = NULL;
-+		tpg->random_line[plane] = NULL;
-+	}
-+free_lines:
-+	for (pat = 0; pat < TPG_MAX_PAT_LINES; pat++)
-+		for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-+			vfree(tpg->lines[pat][plane]);
-+			tpg->lines[pat][plane] = NULL;
-+			if (plane == 0)
-+				continue;
-+			vfree(tpg->downsampled_lines[pat][plane]);
-+			tpg->downsampled_lines[pat][plane] = NULL;
-+		}
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(tpg_alloc);
- 
+ static const struct spinand_info esmt_c8_spinand_table[] = {
+ 	SPINAND_INFO("F50L1G41LB",
+-		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_ADDR, 0x01),
++		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_ADDR, 0x01, 0x7f,
++				0x7f, 0x7f),
+ 		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
+ 		     NAND_ECCREQ(1, 512),
+ 		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
+@@ -113,7 +114,8 @@ static const struct spinand_info esmt_c8_spinand_table[] = {
+ 		     0,
+ 		     SPINAND_ECCINFO(&f50l1g41lb_ooblayout, NULL)),
+ 	SPINAND_INFO("F50D1G41LB",
+-		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_ADDR, 0x11),
++		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_ADDR, 0x11, 0x7f,
++				0x7f, 0x7f),
+ 		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
+ 		     NAND_ECCREQ(1, 512),
+ 		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
+@@ -122,7 +124,8 @@ static const struct spinand_info esmt_c8_spinand_table[] = {
+ 		     0,
+ 		     SPINAND_ECCINFO(&f50l1g41lb_ooblayout, NULL)),
+ 	SPINAND_INFO("F50D2G41KA",
+-		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_ADDR, 0x51),
++		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_ADDR, 0x51, 0x7f,
++				0x7f, 0x7f),
+ 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
+ 		     NAND_ECCREQ(8, 512),
+ 		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
 -- 
 2.43.0
 
