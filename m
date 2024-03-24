@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1538313776A;
-	Sun, 24 Mar 2024 23:05:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5992C206C8B;
+	Sun, 24 Mar 2024 23:05:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321524; cv=none; b=YVoariFAZB54Sxg+M3nG7vC6EdXr+YXwgaGU6yRgxnl3v3YEQEdwGujMBba7kd8/hlE/yMd0nLLYSvDPxAFkwogA71FWPV3Gd22bN55ky1BpY8aYKUY08SIbrr0ee89Vemnhes/dFijZTLZE4BNS+AzvrX3FrXFbeZlmOJTOGGM=
+	t=1711321513; cv=none; b=scHKkTXluqtDcsW93ClTiHlDsdThJPLFlkJGiJ7GKpg2VsJlx6WxwRxfBIXUbq+k2EbezMER+5Wft2gbu3qe5RlgEzvUlSE1hqTVoz3zWxtpVWuFdd/rlhBMlMWpH0yuDxJ1CvOrFPPZb/FtFjvCE2LLfPR4rNGtMrvYCyo1770=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321524; c=relaxed/simple;
-	bh=IIAH9R+wJulgFrXMraygEhGyRL+cuXpt2/Ip4olD4X8=;
+	s=arc-20240116; t=1711321513; c=relaxed/simple;
+	bh=9fBJTe87mI9XM2IpLXAQVydlYYvMSHSgDaCK0LeAZws=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l20Q6260fjDQjdEhPr1s/vYryxZ/pesqddHxJ2MeV/Psz1a3MTZr4Epq4jN7NCN6SXvIR2950LBzktLThqw1wPfpw+A4Cft8rwAy6Au0vTtDVB8veWOqG+W6qkW9DPkHRri5z0OrkahVBUI8PnmmSX3miI6Ye2m6U5audBrINzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwLnOb3j; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LGzB1MyExPLx20LKcY1Cn7RQcODdbUA2yRqDgkbbSZM8f8iQ6ksElMo/ybgXWNrk+wIknjr77CxCpqIghkQXFm7BQX/4iI+DXyVPlqEmPIscmWwDNgqm8BY1bBvUHppS/9sd7Qtp5hcKn0R+6PGBnnPL+kWOoztaruix02Ev2wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOLVhWmO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwLnOb3j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21986C433C7;
-	Sun, 24 Mar 2024 23:05:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOLVhWmO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88CDEC43390;
+	Sun, 24 Mar 2024 23:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321523;
-	bh=IIAH9R+wJulgFrXMraygEhGyRL+cuXpt2/Ip4olD4X8=;
+	s=k20201202; t=1711321512;
+	bh=9fBJTe87mI9XM2IpLXAQVydlYYvMSHSgDaCK0LeAZws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RwLnOb3j1sEEhEaciC6xziDk6KIcsc0mC5ZAvSz5qapLubIgnFPh1/DZp69Vlf0s/
-	 yae2CuxgfQQFhy2D58MaR5KTYN1aW1BW5ttlRwgmjRepRN3zBpSv7hP98DyoM/tCgJ
-	 wRh80mJwcjEmAi5O3vWbz96/4RqvaU2rM3iUE9q0jhEHvq6c5kf/MkaKoQWHDnQyCJ
-	 xo11Q/98/ocU4GKFNOEG/hp/bQILyCbpMursjrtIMmc1ehKdCUs8x1kCutieBJf3pj
-	 q7Ym8Ih2/OGT88GZk2FMMlBfcCgNjRGjOtmwGDq+Ytbu1G4sg2/Q9cKgnt6NeMEEKk
-	 TqAsR5U8/JP8w==
+	b=sOLVhWmODttDY5wbvieTGDcHUGTjSEQKSi9GWZNGDMb9BiQqHHagimSMVTHaPvFts
+	 gAzmNhlUVV1ie13uVDYPbKIhHKVCNKy51OpzI9+qEPs8IEihinSXrKpm4kJp9ETl/R
+	 hcuiMMWCaFkn5RYTIJHO2zITbrLy1epMqtg4YYFCVf/wfxGVv0GgdCfAa0Ycjfl2i4
+	 6CvS/z/Sc8nMWRJCXmwzGxiFvkSx0r/1iBcj9lOXjeBYlsrnkOgTQHzTsplTgD5zv4
+	 rJtNrs+UaLeQeHuww9eMPBQZG8/Nd+p8QRwaz14mfBaQoZRBsAUrEyL32f8SNtlZR0
+	 9xHeWVHQ4ThsQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Ajay Singh <ajay.kathat@microchip.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Bhavya Kapoor <b-kapoor@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 249/638] wifi: wilc1000: revert reset line logic flip
-Date: Sun, 24 Mar 2024 18:54:46 -0400
-Message-ID: <20240324230116.1348576-250-sashal@kernel.org>
+Subject: [PATCH 6.6 238/638] arm64: dts: ti: k3-j721s2-common-proc-board: Remove Pinmux for CTS and RTS in wkup_uart0
+Date: Sun, 24 Mar 2024 18:54:35 -0400
+Message-ID: <20240324230116.1348576-239-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -46,70 +44,41 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexis Lothoré <alexis.lothore@bootlin.com>
+From: Bhavya Kapoor <b-kapoor@ti.com>
 
-[ Upstream commit f3ec643947634bed41b97bd56b248f7c78498eab ]
+[ Upstream commit 28e5b74d524050008edf415f20a3e38907b8f176 ]
 
-This reverts commit fcf690b0b47494df51d214db5c5a714a400b0257.
+Only Tx and Rx Signal lines for wkup_uart0 are brought out on
+the Common Proc Board through SoM, but CTS and RTS signal lines
+are not brought on the board. Thus, remove pinmux for CTS and RTS
+signal lines for wkup_uart0 in J721S2.
 
-When using a wilc1000 chip over a spi bus, users can optionally define a
-reset gpio and a chip enable gpio. The reset line of wilc1000 is active
-low, so to hold the chip in reset, a low (physical) value must be applied.
-
-The corresponding device tree binding documentation was introduced by
-commit f31ee3c0a555 ("wilc1000: Document enable-gpios and reset-gpios
-properties") and correctly indicates that the reset line is an active-low
-signal. The corresponding driver part, brought by commit ec031ac4792c
-("wilc1000: Add reset/enable GPIO support to SPI driver") was applying the
-correct logic. But commit fcf690b0b474 ("wifi: wilc1000: use correct
-sequence of RESET for chip Power-UP/Down") eventually flipped this logic
-and started misusing the gpiod APIs, applying an inverted logic when
-powering up/down the chip (for example, setting the reset line to a logic
-"1" during power up, which in fact asserts the reset line when device tree
-describes the reset line as GPIO_ACTIVE_LOW). As a consequence, any
-platform currently using the driver in SPI mode must use a faulty reset
-line description in device tree, or else chip will be maintained in reset
-and will not even allow to bring up the chip.
-
-Fix reset line usage by inverting back the gpiod APIs usage, setting the
-reset line to the logic value "0" when powering the chip, and the logic
-value "1" when powering off the chip.
-
-Fixes: fcf690b0b474 ("wifi: wilc1000: use correct sequence of RESET for chip Power-UP/Down")
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Acked-by: Ajay Singh <ajay.kathat@microchip.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240217-wilc_1000_reset_line-v2-1-b216f433d7d5@bootlin.com
+Fixes: f5e9ee0b354a ("arm64: dts: ti: k3-j721s2-common-proc-board: Add uart pinmux")
+Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
+Link: https://lore.kernel.org/r/20240214105846.1096733-4-b-kapoor@ti.com
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/microchip/wilc1000/spi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/spi.c b/drivers/net/wireless/microchip/wilc1000/spi.c
-index 77b4cdff73c37..4cf8586ed55ae 100644
---- a/drivers/net/wireless/microchip/wilc1000/spi.c
-+++ b/drivers/net/wireless/microchip/wilc1000/spi.c
-@@ -192,11 +192,11 @@ static void wilc_wlan_power(struct wilc *wilc, bool on)
- 		/* assert ENABLE: */
- 		gpiod_set_value(gpios->enable, 1);
- 		mdelay(5);
--		/* assert RESET: */
--		gpiod_set_value(gpios->reset, 1);
--	} else {
- 		/* deassert RESET: */
- 		gpiod_set_value(gpios->reset, 0);
-+	} else {
-+		/* assert RESET: */
-+		gpiod_set_value(gpios->reset, 1);
- 		/* deassert ENABLE: */
- 		gpiod_set_value(gpios->enable, 0);
- 	}
+diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+index c6b85bbf9a179..1ba1f53c72d03 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+@@ -190,8 +190,6 @@ J721S2_IOPAD(0x038, PIN_OUTPUT, 0) /* (AB28) MCASP0_ACLKX.MCAN5_TX */
+ &wkup_pmx2 {
+ 	wkup_uart0_pins_default: wkup-uart0-default-pins {
+ 		pinctrl-single,pins = <
+-			J721S2_WKUP_IOPAD(0x070, PIN_INPUT, 0) /* (E25) WKUP_GPIO0_6.WKUP_UART0_CTSn */
+-			J721S2_WKUP_IOPAD(0x074, PIN_OUTPUT, 0) /* (F28) WKUP_GPIO0_7.WKUP_UART0_RTSn */
+ 			J721S2_WKUP_IOPAD(0x048, PIN_INPUT, 0) /* (D28) WKUP_UART0_RXD */
+ 			J721S2_WKUP_IOPAD(0x04c, PIN_OUTPUT, 0) /* (D27) WKUP_UART0_TXD */
+ 		>;
 -- 
 2.43.0
 
