@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EED92251E8;
-	Sun, 24 Mar 2024 23:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9798B14BFBD;
+	Sun, 24 Mar 2024 23:12:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321936; cv=none; b=puPh7EkeCa3jpBHCisxyspna/yiCO6/bA6KGl8VJTR0e/M+l5Yo0rEnhYKoXYhJzQmY+R0O4mYqXVJmGjmlDOvqvyQN0AZjSHzKcJ11jtCGPR/9NYLZMdQvsAYehezfCSpy685bUXwv73EskLim4azzHjKVEHKG2qyBpust0lW8=
+	t=1711321956; cv=none; b=JkMP5ctOjtKmIsukVwX0lf2AV9o/O/HvPKRAPCbNJQp96Ae+h0Yw/hPwjeAmbHygaa50rccbc3Dx8PhB0mN8sz5AK4SuGL9CQPFI++T6tCjlxaKczHNDrGTSmNuepGSZRlBRZGfj0y3xIHesks63H82cnkV8G9ImxaRl6KCA2D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321936; c=relaxed/simple;
-	bh=8XXOns9lt6hyCk9TvaQg011KZvUoFs/LBL8puhHyXhg=;
+	s=arc-20240116; t=1711321956; c=relaxed/simple;
+	bh=vdkbPj+PFhQKjWVJYcrhGD7J8o8ZdlE3izlhiVJaqxo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tHX/EZfcs6FSNuXGuVaMq8y6Eq7n478+YRzkgw+Hj4hCEf1fp06HA4WRjF4UToHKv8hxZVoUU9rryQMvYXLCzUwFMSWapxr2lihfW/VLXgSS32BiggCy4JRk2lYpi94fntzrLS6s6E1/gmBmbDdrxgu010PkohC+qpkvM/CU/Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRhVLuqI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mOv+bN/S6fPSZw8O2HFZS0oOvxdtm+n1akAezsvSRXveXwV6COxnB6wCpT/lcNC0WiuDfW3DG3UJdqz9qjRtweUOfG6Q9jppprqaXvMUyBAIRm7Quxlejcv0kc2lrNkuzL04B+lWYn9i4NvJyoR0PRNqmKKYfbqI8dKR0mFdrjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d01wfdtb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRhVLuqI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1297C433A6;
-	Sun, 24 Mar 2024 23:12:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d01wfdtb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2C09C43390;
+	Sun, 24 Mar 2024 23:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321935;
-	bh=8XXOns9lt6hyCk9TvaQg011KZvUoFs/LBL8puhHyXhg=;
+	s=k20201202; t=1711321955;
+	bh=vdkbPj+PFhQKjWVJYcrhGD7J8o8ZdlE3izlhiVJaqxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DRhVLuqI2vxji8Cf8ezWgDWeKdmtJ9MK7a2jel8musTiAVPUd/PI+myY6aPQ3Nbkh
-	 mP5jytQv0xhqn4zzW6LoC7TmXhbWOfoRWMf8rgqvk1b7rO2iAsLCxnnH4+CCvOf+9e
-	 TO67f/P4es7okks4nde/e7ky7aheD9xFACbMAoCYykXKndJhKBegoi2NGscfDopUsc
-	 dOVG7q2v7SIqrz7CoiZUgshUvxShCHr+zo+qbRVXM+bfcyA1RaAXQSh2E8m0bafOUe
-	 HAtMC1QOSNk4BPZ0XzZsShHzrR6ZvjDebtganU4hWYrMNd4g7rbulOv1yqmF5vIalu
-	 cu/IiEQ2jUm9Q==
+	b=d01wfdtbxN3TDH/q6ZFcddxsioXDWP5DM4X5pfE7l4wlKewBcZEWk/BRwyU0G4K9t
+	 L20w8M/YRsZtH827usBfatfjHyTsEviR0Dd2tsbXGqOP4dDYDPWue7X/qExnQMFCUI
+	 fhhToNZD03pjSgoi/wOZ6e6P3GXEvO/4tHoYTnfObQAdinW47hWYIdbFYB3T4Z4LAv
+	 N2+/g2JSNFNMRmWy7CRAuodRj74BV6ocpB2B7gyIJReU/u532lRWdiwTcolyb4eBPj
+	 vD2A5nO9NzVmPBojGbDo2poXW8s2b4qC13XBG8uDoI7evEciUCz2dXE9RtaZYaynOe
+	 npnj/B8g1aO7g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
+Cc: Andrew Ballance <andrewjballance@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 006/451] nfsd: don't open-code clear_and_wake_up_bit
-Date: Sun, 24 Mar 2024 19:04:42 -0400
-Message-ID: <20240324231207.1351418-7-sashal@kernel.org>
+Subject: [PATCH 6.1 027/451] gen_compile_commands: fix invalid escape sequence warning
+Date: Sun, 24 Mar 2024 19:05:03 -0400
+Message-ID: <20240324231207.1351418-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,32 +49,34 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Andrew Ballance <andrewjballance@gmail.com>
 
-[ Upstream commit b8bea9f6cdd7236c7c2238d022145e9b2f8aac22 ]
+[ Upstream commit dae4a0171e25884787da32823b3081b4c2acebb2 ]
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+With python 3.12, '\#' results in this warning
+    SyntaxWarning: invalid escape sequence '\#'
+
+Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/filecache.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ scripts/clang-tools/gen_compile_commands.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 6e8712bd7c998..5b5d39ec7b010 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -1174,9 +1174,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		status = nfserr_jukebox;
- 	if (status != nfs_ok)
- 		nfsd_file_unhash(nf);
--	clear_bit_unlock(NFSD_FILE_PENDING, &nf->nf_flags);
--	smp_mb__after_atomic();
--	wake_up_bit(&nf->nf_flags, NFSD_FILE_PENDING);
-+	clear_and_wake_up_bit(NFSD_FILE_PENDING, &nf->nf_flags);
- 	goto out;
- }
+diff --git a/scripts/clang-tools/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+index d800b2c0af977..4f414ab706bd8 100755
+--- a/scripts/clang-tools/gen_compile_commands.py
++++ b/scripts/clang-tools/gen_compile_commands.py
+@@ -170,7 +170,7 @@ def process_line(root_directory, command_prefix, file_path):
+     # escape the pound sign '#', either as '\#' or '$(pound)' (depending on the
+     # kernel version). The compile_commands.json file is not interepreted
+     # by Make, so this code replaces the escaped version with '#'.
+-    prefix = command_prefix.replace('\#', '#').replace('$(pound)', '#')
++    prefix = command_prefix.replace(r'\#', '#').replace('$(pound)', '#')
  
+     # Use os.path.abspath() to normalize the path resolving '.' and '..' .
+     abs_path = os.path.abspath(os.path.join(root_directory, file_path))
 -- 
 2.43.0
 
