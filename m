@@ -1,46 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523F41D1D58;
-	Sun, 24 Mar 2024 22:48:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB887F7D7;
+	Sun, 24 Mar 2024 22:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320533; cv=none; b=FmjcuAa4WLeIRNrWfRAFVH3QfbuPmIxcmkYFxSBw3W7PJC1+Ht9PnFVDeEQj6FOtoEvtEvmy8tLB13+9XavQeLsWWuC5cLwYqVO0jiK6NXvnPeb0/0UOplqbVbRE2DpTpzS9qoK1BeI5DmYOeGv6xt2SMySFSY94psxZe32Xl1s=
+	t=1711320477; cv=none; b=Z1lqH8AVdSMxBZXfoaTidhgL62W440wDapuykWlEPNMOTHmOCRKj+NX/vRESE2lwEWH79RsSeQbBW30N4uBDnbVepzCFTCdwScdmEx1olSyVlSKVMfl7dMoggo/TzBnA4RXQqNxn0A5PqLqrKtWxNTadJtzhiNji4xFoyi7ZyV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320533; c=relaxed/simple;
-	bh=76vkGyrV3hb3aWyw3PS3hSUigT9JbLaVi74F4EZkltQ=;
+	s=arc-20240116; t=1711320477; c=relaxed/simple;
+	bh=q0QfNTy7LCZMzM+Y77fnUYNSiw0FW0Vlv85XEPhFh5M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c0B/jWAokJ6zVUNNl4fFtNN6987Jh1zYVYndi3ExrePfPmyfGk7VOdxCOOYUac+kNqnx2oFOMEaoLzVH643ZBzqjVeHoVc8yoyc65pLkQjtv1vaQ/C8BlcrfR86Et5C232ILqf/AgPMGwYF+WIJSB/YcI/p5veBlX0+tSrdO2vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhhUi1aM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=p/N6xAImgdfObju5fC5rl7kPBt8FOKk7bjzy3EtqKzl8mh1xJHsbv1Knkhlsw0eDpouw2/SgqyqXMEE/1JuIQFGlysnC0eVZDXf7xJKUXWsDb1c40bBSMsAmWPj58h4uALUrvQdoihUHnHplalW+50r+RZhpwynCnjL8Cd2OAlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oAyiLUVd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhhUi1aM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAC5CC43330;
-	Sun, 24 Mar 2024 22:48:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oAyiLUVd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 721CFC43390;
+	Sun, 24 Mar 2024 22:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320531;
-	bh=76vkGyrV3hb3aWyw3PS3hSUigT9JbLaVi74F4EZkltQ=;
+	s=k20201202; t=1711320477;
+	bh=q0QfNTy7LCZMzM+Y77fnUYNSiw0FW0Vlv85XEPhFh5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NhhUi1aMyE7ukx0oD9AQLBK26vBN1cxtCHxI2jm7b4YPq91TmcDIf3Z2Jur/s69iz
-	 utO6U/71LXy+B6m+9ZA32wjh+eiNeOjaq7gs+lu39sAek3ewyCbp9cu3fU+aWSXTxy
-	 9HB4zu7rlzh7zW0dV0xIqDmd8Lyh/C7WrBfTkoaCsQ5+1wfBkhItO/ok8qNYh1+ddn
-	 9Dd65Nx8Ym2N3bE8UjRX9T44LXMq0Mm9FMzhddy/+WjwBS+lQWzOL6M9MxKKDzBH1T
-	 62OKs4LVF+Hs56nml2634Sw9UolD6rwhyL7Icrz2Rbox1Y+aVhaxFbS9RUJsh2D03/
-	 LJyHohE8OAXPg==
+	b=oAyiLUVdcBfxlokGd+GOaiqqO/3yiZKNjNQIXJwWLzsJqAfJZiBnOGUHRrKeIIBoY
+	 wiYvlYai/kVUz9akaf4RJT7Y+rSWKBUdJpuG1ywh1iuNErJc3S+R1maqCQr7/yZG0N
+	 fHEFjpqf5s3AmQR+bjylqL0k6SnH24CGt9aJlV9z7WOo24nzKN6howNwGwhslzzT+C
+	 vM8WBSzs4P/85BxLDVUkfv45IrZHoebbPH9KJNSubGLJ0DUbjpUawhPp4Bthup7kUt
+	 xMSV4/U5OOFCdLYK9CoUGhVVGdQR54jiQDAZ5GyhAgHoWofRenT2urT5xS6nFldXxv
+	 w9nm20dU6p4ZQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bart Van Assche <bvanassche@acm.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
+Cc: Greg Joyce <gjoyce@linux.ibm.com>,
 	Jens Axboe <axboe@kernel.dk>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 093/713] fs: Fix rw_hint validation
-Date: Sun, 24 Mar 2024 18:36:59 -0400
-Message-ID: <20240324224720.1345309-94-sashal@kernel.org>
+Subject: [PATCH 6.7 036/713] block: sed-opal: handle empty atoms when parsing response
+Date: Sun, 24 Mar 2024 18:36:02 -0400
+Message-ID: <20240324224720.1345309-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -54,65 +48,63 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Greg Joyce <gjoyce@linux.ibm.com>
 
-[ Upstream commit ec16b147a55bfa14e858234eb7b1a7c8e7cd5021 ]
+[ Upstream commit 5429c8de56f6b2bd8f537df3a1e04e67b9c04282 ]
 
-Reject values that are valid rw_hints after truncation but not before
-truncation by passing an untruncated value to rw_hint_valid().
+The SED Opal response parsing function response_parse() does not
+handle the case of an empty atom in the response. This causes
+the entry count to be too high and the response fails to be
+parsed. Recognizing, but ignoring, empty atoms allows response
+handling to succeed.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Kanchan Joshi <joshi.k@samsung.com>
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 5657cb0797c4 ("fs/fcntl: use copy_to/from_user() for u64 types")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Link: https://lore.kernel.org/r/20240202203926.2478590-2-bvanassche@acm.org
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Greg Joyce <gjoyce@linux.ibm.com>
+Link: https://lore.kernel.org/r/20240216210417.3526064-2-gjoyce@linux.ibm.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fcntl.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ block/opal_proto.h | 1 +
+ block/sed-opal.c   | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/fcntl.c b/fs/fcntl.c
-index c80a6acad742f..3ff707bf2743a 100644
---- a/fs/fcntl.c
-+++ b/fs/fcntl.c
-@@ -268,7 +268,7 @@ static int f_getowner_uids(struct file *filp, unsigned long arg)
- }
- #endif
+diff --git a/block/opal_proto.h b/block/opal_proto.h
+index dec7ce3a3edb7..d247a457bf6e3 100644
+--- a/block/opal_proto.h
++++ b/block/opal_proto.h
+@@ -71,6 +71,7 @@ enum opal_response_token {
+ #define SHORT_ATOM_BYTE  0xBF
+ #define MEDIUM_ATOM_BYTE 0xDF
+ #define LONG_ATOM_BYTE   0xE3
++#define EMPTY_ATOM_BYTE  0xFF
  
--static bool rw_hint_valid(enum rw_hint hint)
-+static bool rw_hint_valid(u64 hint)
- {
- 	switch (hint) {
- 	case RWH_WRITE_LIFE_NOT_SET:
-@@ -288,19 +288,17 @@ static long fcntl_rw_hint(struct file *file, unsigned int cmd,
- {
- 	struct inode *inode = file_inode(file);
- 	u64 __user *argp = (u64 __user *)arg;
--	enum rw_hint hint;
--	u64 h;
-+	u64 hint;
+ #define OPAL_INVAL_PARAM 12
+ #define OPAL_MANUFACTURED_INACTIVE 0x08
+diff --git a/block/sed-opal.c b/block/sed-opal.c
+index 3d9e9cd250bd5..fa4dba5d85319 100644
+--- a/block/sed-opal.c
++++ b/block/sed-opal.c
+@@ -1056,16 +1056,20 @@ static int response_parse(const u8 *buf, size_t length,
+ 			token_length = response_parse_medium(iter, pos);
+ 		else if (pos[0] <= LONG_ATOM_BYTE) /* long atom */
+ 			token_length = response_parse_long(iter, pos);
++		else if (pos[0] == EMPTY_ATOM_BYTE) /* empty atom */
++			token_length = 1;
+ 		else /* TOKEN */
+ 			token_length = response_parse_token(iter, pos);
  
- 	switch (cmd) {
- 	case F_GET_RW_HINT:
--		h = inode->i_write_hint;
--		if (copy_to_user(argp, &h, sizeof(*argp)))
-+		hint = inode->i_write_hint;
-+		if (copy_to_user(argp, &hint, sizeof(*argp)))
- 			return -EFAULT;
- 		return 0;
- 	case F_SET_RW_HINT:
--		if (copy_from_user(&h, argp, sizeof(h)))
-+		if (copy_from_user(&hint, argp, sizeof(hint)))
- 			return -EFAULT;
--		hint = (enum rw_hint) h;
- 		if (!rw_hint_valid(hint))
- 			return -EINVAL;
+ 		if (token_length < 0)
+ 			return token_length;
  
++		if (pos[0] != EMPTY_ATOM_BYTE)
++			num_entries++;
++
+ 		pos += token_length;
+ 		total -= token_length;
+ 		iter++;
+-		num_entries++;
+ 	}
+ 
+ 	resp->num = num_entries;
 -- 
 2.43.0
 
