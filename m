@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E99181476;
-	Sun, 24 Mar 2024 23:48:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566F218147F;
+	Sun, 24 Mar 2024 23:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324098; cv=none; b=iFInKKRFA3WsU+ygVAf+9UTeI8aLLIH46aicaoAjyI6aKbSBP4V8kHGFl2UckGR1AN313+jHeec55/Bq2G0bCf0fIMmCn6KUICNoBq2WgiAK1JBucSRAJ0HpZMh3i9nYJei2dhF3sYwxLn+YzRtCou0PrQiZJydlRJ9frKAkN6s=
+	t=1711324107; cv=none; b=ZUiUl4uMFTsEI1LezNQ+YvRxmYNzGI5Cgarl41YDwiqgIyvPTOaCuP/y6E/pTzyoWhXMML7MlCgn5/l21F1UcfviRZAVUQ2ZMaj0uitizRxwUSNQF6kYgxQg6AzaqM6nXDnSm3eBNDxV588mDhXofgcRCbYvAs8xewjDsAnUf0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324098; c=relaxed/simple;
-	bh=sJQ8UZ4SBoO1+vqNVm8qn6td0Err00uTMoDvqacQoPQ=;
+	s=arc-20240116; t=1711324107; c=relaxed/simple;
+	bh=iHOmPupuYN1u4C6Wff80pv7Gaw7k94/ErZJbEesHVgs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qcjSyf0BRl0ADdAihSQ0wOi9MYmcBp/QijeI0iniCOst80XTFbubHJcnDLdIvy2Z55rnD4kENQgh7AGWvSOkRhSOVj6DdeJYGmWgewtIkwrayjWQhfsBn+q/0AzJvGvCne4IWrgQPHnz56DbLlHXMfkjbiGzRVptXhWLqI7O8JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ydr9DINa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Sr+CD1cOVRMXjboBSBeDvrb4sd0AvNFNJOMUs5iIn9NvK6/pFrbgDAXLc4BZwy6hfTxyD21Uc0GIjMw98JX7bUAFvMfb82KhsCSXFesl3APSvuyMQnenbgU2QylWVsJOlaNBx0zi/sZyyQrVQmXFYPFcOuwFYmgyoZYg+12qIXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYCDEdy+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ydr9DINa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9A80C433C7;
-	Sun, 24 Mar 2024 23:48:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYCDEdy+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96498C433F1;
+	Sun, 24 Mar 2024 23:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324097;
-	bh=sJQ8UZ4SBoO1+vqNVm8qn6td0Err00uTMoDvqacQoPQ=;
+	s=k20201202; t=1711324106;
+	bh=iHOmPupuYN1u4C6Wff80pv7Gaw7k94/ErZJbEesHVgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ydr9DINanPRQpHpb5N1DNptWHKYj8/5lep5kqpf6JI7MgzUFVm19J+XguDcw5FH/3
-	 Vt2HYacXMdBsl0BegJzxhZWxiNWgGc/DLS1dXa2MlmECKPEmWoBTGxTy+RhhDrG7p3
-	 FfTNpWbZjberV+0nce1QBKe1Ul7DUaefsc3hvf3Umv0ZmxqDeZaHNe8NlvKqdTZ8Zx
-	 1bvbSFGr2R5zxZnKhicvbDkUBBqh8Csaeft6Pw1U2nxYCix66cPW4pi6KOjQ1hHM+6
-	 mcXsi7rahGV7gNk5k984r6gd3DpTNxHFSDI762ce5IyFKqRw5CVt3s05pAAjLFLQyc
-	 Ia8CYHXxV7KuQ==
+	b=oYCDEdy+DAaVIVgVL8WTyEobvANwV1Q0wxd7X/PO7655XKYLyCsZGjXqp8Wiqo3JF
+	 1SYnzxUXwQPG99/PmTBgMPrEwlFxdUzuFKuDPNgXujc/Oxu25zSz53vA4lBpOazH/o
+	 q4sLXysqKbGCrnZ2yyPb1aAoauPqurWi6HuzMZ4XmZHi0yJsCzQbc6eGryZ98H/3v4
+	 q0Cfe6Bte599jg/03pcZjKlgRFuGM0tdHobyhgSJ6trhmT7ILtj0pluG+sW8yzCZOM
+	 XpthUfdOhGAcUVI64REgutgYJi4SHyp/czYdxNENyvMZtI/W0Ty6slCgWZN/4bUthJ
+	 ihbBoR9mGueYQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Stephan Gerhold <stephan.gerhold@kernkonzept.com>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 096/183] PCI/DPC: Print all TLP Prefixes, not just the first
-Date: Sun, 24 Mar 2024 19:45:09 -0400
-Message-ID: <20240324234638.1355609-97-sashal@kernel.org>
+Subject: [PATCH 5.4 105/183] clk: qcom: reset: Allow specifying custom reset delay
+Date: Sun, 24 Mar 2024 19:45:18 -0400
+Message-ID: <20240324234638.1355609-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -44,45 +44,69 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+From: Stephan Gerhold <stephan.gerhold@kernkonzept.com>
 
-[ Upstream commit 6568d82512b0a64809acff3d7a747362fa4288c8 ]
+[ Upstream commit 2cb8a39b6781ea23accd1fa93b3ad000d0948aec ]
 
-The TLP Prefix Log Register consists of multiple DWORDs (PCIe r6.1 sec
-7.9.14.13) but the loop in dpc_process_rp_pio_error() keeps reading from
-the first DWORD, so we print only the first PIO TLP Prefix (duplicated
-several times), and we never print the second, third, etc., Prefixes.
+The amount of time required between asserting and deasserting the reset
+signal can vary depending on the involved hardware component. Sometimes
+1 us might not be enough and a larger delay is necessary to conform to
+the specifications.
 
-Add the iteration count based offset calculation into the config read.
+Usually this is worked around in the consuming drivers, by replacing
+reset_control_reset() with a sequence of reset_control_assert(), waiting
+for a custom delay, followed by reset_control_deassert().
 
-Fixes: f20c4ea49ec4 ("PCI/DPC: Add eDPC support")
-Link: https://lore.kernel.org/r/20240118110815.3867-1-ilpo.jarvinen@linux.intel.com
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-[bhelgaas: add user-visible details to commit log]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+However, in some cases the driver making use of the reset is generic and
+can be used with different reset controllers. In this case the reset
+time requirement is better handled directly by the reset controller
+driver.
+
+Make this possible by adding an "udelay" field to the qcom_reset_map
+that allows setting a different reset delay (in microseconds).
+
+Signed-off-by: Stephan Gerhold <stephan.gerhold@kernkonzept.com>
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Link: https://lore.kernel.org/r/20220706134132.3623415-4-stephan.gerhold@kernkonzept.com
+Stable-dep-of: 2f8cf2c3f3e3 ("clk: qcom: reset: Ensure write completion on reset de/assertion")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/dpc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/qcom/reset.c | 4 +++-
+ drivers/clk/qcom/reset.h | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index a32ec3487a8d0..d5734a83606fb 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -195,7 +195,7 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
+diff --git a/drivers/clk/qcom/reset.c b/drivers/clk/qcom/reset.c
+index 819d194be8f7b..2a16adb572d2b 100644
+--- a/drivers/clk/qcom/reset.c
++++ b/drivers/clk/qcom/reset.c
+@@ -13,8 +13,10 @@
  
- 	for (i = 0; i < dpc->rp_log_size - 5; i++) {
- 		pci_read_config_dword(pdev,
--			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
-+			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG + i * 4, &prefix);
- 		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
- 	}
-  clear_status:
+ static int qcom_reset(struct reset_controller_dev *rcdev, unsigned long id)
+ {
++	struct qcom_reset_controller *rst = to_qcom_reset_controller(rcdev);
++
+ 	rcdev->ops->assert(rcdev, id);
+-	udelay(1);
++	udelay(rst->reset_map[id].udelay ?: 1); /* use 1 us as default */
+ 	rcdev->ops->deassert(rcdev, id);
+ 	return 0;
+ }
+diff --git a/drivers/clk/qcom/reset.h b/drivers/clk/qcom/reset.h
+index 2a08b5e282c77..b8c113582072b 100644
+--- a/drivers/clk/qcom/reset.h
++++ b/drivers/clk/qcom/reset.h
+@@ -11,6 +11,7 @@
+ struct qcom_reset_map {
+ 	unsigned int reg;
+ 	u8 bit;
++	u8 udelay;
+ };
+ 
+ struct regmap;
 -- 
 2.43.0
 
