@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A53C128836;
-	Sun, 24 Mar 2024 22:53:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2A0146D73;
+	Sun, 24 Mar 2024 22:53:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320835; cv=none; b=mFfwn5+Ugrgzpl3rxBkt/TavuCU4Ua4GT26stikJpLzSYTRmklLxYG0rFFXsfA/9kTlXEMgQ31W2kjPsNXFpI1wRsC8L1Q38XsG2GMCGpSSSXH4GXkSTj4z5nxu+0YLz0uLI+kMnHukYMlXKXj4wDVS6wLIK14e1XICSlJvZ0MA=
+	t=1711320821; cv=none; b=jQajULTOqMcKH0iF1Sr9sVdoZxIqloJz+vyqjUM/KaVf6Ot2IeRxwPrdj0oXpa4i0Xu6ZY8oQweA+hvtG9Nrmlj6Pq9YCo1ltvOLytgpmpiS1nZvk4q/qquaotRlcXM6PkiiYXwMAwVvetG1P70SzqYVizu27KQag1jB6eU61r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320835; c=relaxed/simple;
-	bh=r94iDyI3IDylZBFHddqhoES6VAbPF+0tOiw1jowT+zQ=;
+	s=arc-20240116; t=1711320821; c=relaxed/simple;
+	bh=M2OsYs51VjFRIBUMTBUyP13zL0lmYIgF0zd8yxKnow8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DUT9dEJ87PriqkOyHxxVuIVR7T2RUYrXe6gt8w7aau9PZR0iB8Ho20513SM3Uju08GaMlEOn89obrGMLdY8DQ2mJfcZAmCrjqOjU+nslY9VtIPOdX76inWdXqcRFKx24MxlVl8bL6LocaYu9eeD8LtnLBvgUPEVsoMzLJbtuHYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjPWlIAC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TeKmsVXRm834A1UCAbUJdMga2E6e3u5kvjrsO2ESAxsqwtLhkzAxk58SkJyFYbtq+b4Yec5ObyTcN7s2+a/TPb1gy0c3sL6DZ7wTFqkiiZT6DmpFFULP38RX1sOK57EBjq22VewKyVZ+Hm/EdZSYbaRXf3ggWEhdiSwY/RBofdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohh8n+Al; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjPWlIAC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 502E7C43390;
-	Sun, 24 Mar 2024 22:53:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohh8n+Al"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 971D0C433C7;
+	Sun, 24 Mar 2024 22:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320834;
-	bh=r94iDyI3IDylZBFHddqhoES6VAbPF+0tOiw1jowT+zQ=;
+	s=k20201202; t=1711320819;
+	bh=M2OsYs51VjFRIBUMTBUyP13zL0lmYIgF0zd8yxKnow8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tjPWlIACfpPbJ0TeUIxNVaedXSk7j89HAip1cNbJ1PsvOw/sWWOAPGr2VSDV3xydY
-	 uaSo5zYe+oKLfVIQM9T6HrCBo6Mh3mjiof7/dSnKMFBNfW+/wZDeSj9gqv1uRJ3l/N
-	 CwXAudkGcdH0NXkGG+7DcykCEodWctW15GVwDBYc273H2/ftTt01vW+26rcKH49Gyx
-	 XnLEn/zbSDauFsbpMPW5n2XxaO1fqMHcu9WohgJlxkAmLPxYiBMLlTq8Cja8WEEzlq
-	 po6RKGUgGc9YsWOLyOVWkazsMSbD7Zz+p35JcrDRFca9SG9/ny5GcnkqhXxEWyFX8P
-	 GXOsoVVc8dRrQ==
+	b=ohh8n+Al/U10C36TRU0vkztZxwB4WEAPS6v8v+pw99+iDae9mMc99qMEW8Z6eJDT0
+	 8QiwJiUGvamXiBJyQVEBSHt2txGUgIbOAOHyx9S8VA3JHBgnWppW9WYkv+dItswRU1
+	 oY2inn/flD6AM2auRADlkU9ZHi0xCng9ESZ1Oy652hIOWzf7Lt2AG9pI8Bw6H0KGQx
+	 MhjZ4XUsutTmSIRE5los+IFimfNpdxr82pYzwfU/9zby0zrSyxozhxoSgUGRPytH1S
+	 QWEwitidWgKCGUxfykVqMuzduNVLI1leNQ7aSRqL5HnSuy+oW7Dplk7+2ZVo4NY8AS
+	 RDQ2ubl2PCEug==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Harry Wentland <harry.wentland@amd.com>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Melissa Wen <mwen@igalia.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
+Cc: William Tu <witu@nvidia.com>,
+	Jiri Pirko <jiri@nvidia.com>,
+	Simon Horman <horms@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 399/713] drm/vkms: Avoid reading beyond LUT array
-Date: Sun, 24 Mar 2024 18:42:05 -0400
-Message-ID: <20240324224720.1345309-400-sashal@kernel.org>
+Subject: [PATCH 6.7 384/713] devlink: Fix length of eswitch inline-mode
+Date: Sun, 24 Mar 2024 18:41:50 -0400
+Message-ID: <20240324224720.1345309-385-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,64 +50,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Harry Wentland <harry.wentland@amd.com>
+From: William Tu <witu@nvidia.com>
 
-[ Upstream commit 2fee84030d12d9fddfa874e4562d71761a129277 ]
+[ Upstream commit 8f4cd89bf10607de08231d6d91a73dd63336808e ]
 
-When the floor LUT index (drm_fixp2int(lut_index) is the last
-index of the array the ceil LUT index will point to an entry
-beyond the array. Make sure we guard against it and use the
-value of the floor LUT index.
+Set eswitch inline-mode to be u8, not u16. Otherwise, errors below
 
-v3:
- - Drop bits from commit description that didn't contribute
-   anything of value
+$ devlink dev eswitch set pci/0000:08:00.0 mode switchdev \
+  inline-mode network
+    Error: Attribute failed policy validation.
+    kernel answers: Numerical result out of rang
+    netlink: 'devlink': attribute type 26 has an invalid length.
 
-Fixes: db1f254f2cfa ("drm/vkms: Add support to 1D gamma LUT")
-Signed-off-by: Harry Wentland <harry.wentland@amd.com>
-Cc: Arthur Grillo <arthurgrillo@riseup.net>
-Reviewed-by: Arthur Grillo <arthurgrillo@riseup.net>
-Reviewed-by: Melissa Wen <mwen@igalia.com>
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231108163647.106853-6-harry.wentland@amd.com
+Fixes: f2f9dd164db0 ("netlink: specs: devlink: add the remaining command to generate complete split_ops")
+Signed-off-by: William Tu <witu@nvidia.com>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Link: https://lore.kernel.org/r/20240310164547.35219-1-witu@nvidia.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vkms/vkms_composer.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ Documentation/netlink/specs/devlink.yaml | 2 +-
+ net/devlink/netlink_gen.c                | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index 3c99fb8b54e2d..e7441b227b3ce 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -123,6 +123,8 @@ static u16 apply_lut_to_channel_value(const struct vkms_color_lut *lut, u16 chan
- 				      enum lut_channel channel)
- {
- 	s64 lut_index = get_lut_index(lut, channel_value);
-+	u16 *floor_lut_value, *ceil_lut_value;
-+	u16 floor_channel_value, ceil_channel_value;
+diff --git a/Documentation/netlink/specs/devlink.yaml b/Documentation/netlink/specs/devlink.yaml
+index 572d83a414d0d..42a9d77803b2b 100644
+--- a/Documentation/netlink/specs/devlink.yaml
++++ b/Documentation/netlink/specs/devlink.yaml
+@@ -244,7 +244,7 @@ attribute-sets:
  
- 	/*
- 	 * This checks if `struct drm_color_lut` has any gap added by the compiler
-@@ -130,11 +132,15 @@ static u16 apply_lut_to_channel_value(const struct vkms_color_lut *lut, u16 chan
- 	 */
- 	static_assert(sizeof(struct drm_color_lut) == sizeof(__u16) * 4);
+       -
+         name: eswitch-inline-mode
+-        type: u16
++        type: u8
+         enum: eswitch-inline-mode
+       -
+         name: dpipe-tables
+diff --git a/net/devlink/netlink_gen.c b/net/devlink/netlink_gen.c
+index 788dfdc498a95..371f27f653317 100644
+--- a/net/devlink/netlink_gen.c
++++ b/net/devlink/netlink_gen.c
+@@ -198,7 +198,7 @@ static const struct nla_policy devlink_eswitch_set_nl_policy[DEVLINK_ATTR_ESWITC
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_ESWITCH_MODE] = NLA_POLICY_MAX(NLA_U16, 1),
+-	[DEVLINK_ATTR_ESWITCH_INLINE_MODE] = NLA_POLICY_MAX(NLA_U16, 3),
++	[DEVLINK_ATTR_ESWITCH_INLINE_MODE] = NLA_POLICY_MAX(NLA_U8, 3),
+ 	[DEVLINK_ATTR_ESWITCH_ENCAP_MODE] = NLA_POLICY_MAX(NLA_U8, 1),
+ };
  
--	u16 *floor_lut_value = (__u16 *)&lut->base[drm_fixp2int(lut_index)];
--	u16 *ceil_lut_value = (__u16 *)&lut->base[drm_fixp2int_ceil(lut_index)];
-+	floor_lut_value = (__u16 *)&lut->base[drm_fixp2int(lut_index)];
-+	if (drm_fixp2int(lut_index) == (lut->lut_length - 1))
-+		/* We're at the end of the LUT array, use same value for ceil and floor */
-+		ceil_lut_value = floor_lut_value;
-+	else
-+		ceil_lut_value = (__u16 *)&lut->base[drm_fixp2int_ceil(lut_index)];
- 
--	u16 floor_channel_value = floor_lut_value[channel];
--	u16 ceil_channel_value = ceil_lut_value[channel];
-+	floor_channel_value = floor_lut_value[channel];
-+	ceil_channel_value = ceil_lut_value[channel];
- 
- 	return lerp_u16(floor_channel_value, ceil_channel_value,
- 			lut_index & DRM_FIXED_DECIMAL_MASK);
 -- 
 2.43.0
 
