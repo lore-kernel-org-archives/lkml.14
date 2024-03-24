@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C3D17C648;
-	Sun, 24 Mar 2024 23:42:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AC517C6A9;
+	Sun, 24 Mar 2024 23:43:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323778; cv=none; b=XG1jsId9tg/h+TSHkVpKSsK74qhllJNaWWwfldGMjfRL42KM4AoTOoXm79qk259FULICOlq7FwsQFsA6plp3yr+S1PYKNy5SLF3RWWA9YCDyJcNIAfb7JjhsO85HBNc372qgsPFf1sa4xocs8hi3YwNjiYPsvGqWnDsjMg1CAec=
+	t=1711323781; cv=none; b=DLvZ5VMSDP7lT1Z3/jnFymWwidRUzgidG2GUsJXPD8IbhFNCSSpBXDvXOwUbpIXk7mMooFmc5Zo/bLZYdIb1uBsKZvJFESFAlUUDzJwL+CiufvWPlAAUvGzVNXeQXCil8OofriihbwutTYYU9mtdiGJw2kovO9n9bq/tPAYo9rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323778; c=relaxed/simple;
-	bh=R4fpI3nUxblZ9piHZOY3BrzsEQgwRd80qaLogd7/6gU=;
+	s=arc-20240116; t=1711323781; c=relaxed/simple;
+	bh=fkQUcbORkODKGwcIjJeKyjjU5hkBPC4MQG1SSmB4Lms=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gdzz45/MhV2CUn+xxXjoJMwdholD8R34usFFtfE5JAnvHy4sk4hVM5jCalVFgrMjVZyi7ui1sf+jWzd86ByrfApxWOmIZk4yNG3KTPvD1D4GblTwAEQJl/OXzcAnTIDhTP2h7wNJql08T5F7gDEMIyKR+Vv8AKaN7fdvZ/k6n88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NT08DQLK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OUZr2yevjf/4tmcYfW9scoX6F65fapJWbZ8TYCOhCzaVAeTA7ljtWgwEu4odvjj5ptEmtcBMi89CSCq5iMR+2EMad3pBMwOucrzcIC6PAD06hbIAt3WHqlaSllY54uGUS6rV61uwLuqeIVDsP5v3aJ9uj/C1Z7WC1hQstdYZSGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6ticShk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NT08DQLK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C359BC433F1;
-	Sun, 24 Mar 2024 23:42:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6ticShk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 819DFC433C7;
+	Sun, 24 Mar 2024 23:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323777;
-	bh=R4fpI3nUxblZ9piHZOY3BrzsEQgwRd80qaLogd7/6gU=;
+	s=k20201202; t=1711323780;
+	bh=fkQUcbORkODKGwcIjJeKyjjU5hkBPC4MQG1SSmB4Lms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NT08DQLKI50Ud9lrHhtpa6aEepzdxe7vL9QBAQt5MBzwD09E19dauyoMrSsyzXOsZ
-	 R+pqIV6orSqFuYU6ZHmTc7nch4tNn4Cq1a3+CEvEDfh+hTUbVp5UDMTIzCw5qcGx+2
-	 7wI/CCFx0Bh+kF3SDiO0f+bBk3nhJvC5yssCKjlLk+Tof0AttOv6WgUliACLilapQQ
-	 5DfZglD0zIrJuFQGdyQ8qiN17lj9Cvl/kXLF0Pv2Lge92ibSvhGiduY8vzjulOvJxY
-	 kLv5E+NZWuny8g7ynHrOfblIDJH9hS+oXNkv+hnff6rpQBXnK6ha5HU3deMjX5Ah3G
-	 41HQFGwbMG6yw==
+	b=E6ticShkGwMeEs2o8MMN3Bj3vwQMxQGJo5IuJ6JQUnnUg075FU+PasyqVcTidcipN
+	 AgR38GZdadzZWQ+1Zv+hAyKW2PLuSPqBWmCCT6XKBy7J7kHgvwK93eW3805H9hGBSo
+	 lhFDKcmgd7K+FGdx1453y7Tqkc5aPcX7LmpUS9eVCfoNib5UlOgm+OUkIDvoJSoFpI
+	 J95+055VJFTWZ6HkxZiHKsp/7jrSdOHan75bm7CpzYlCuv4yfsgB7PJ5rDFdOfTLtv
+	 69IVLTJf2rytAeZZ4EC/Xi6c3H0RrsokF296VNURL9Yuovx0bdPV7QeUAZz4PQ49jT
+	 +stYk7WqbHGDw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jernej Skrabec <jernej.skrabec@gmail.com>,
+Cc: Daniil Dulov <d.dulov@aladdin.ru>,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 153/238] media: sun8i-di: Fix chroma difference threshold
-Date: Sun, 24 Mar 2024 19:39:01 -0400
-Message-ID: <20240324234027.1354210-154-sashal@kernel.org>
+Subject: [PATCH 5.10 156/238] media: pvrusb2: remove redundant NULL check
+Date: Sun, 24 Mar 2024 19:39:04 -0400
+Message-ID: <20240324234027.1354210-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,34 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jernej Skrabec <jernej.skrabec@gmail.com>
+From: Daniil Dulov <d.dulov@aladdin.ru>
 
-[ Upstream commit 856525e8db272b0ce6d9c6e6c2eeb97892b485a6 ]
+[ Upstream commit 95ac1210fb2753f968ebce0730d4fbc553c2a3dc ]
 
-While there is no good explanation what this value does, vendor driver
-uses value 31 for it. Align driver with it.
+Pointer dip->stream cannot be NULL due to a shift, thus remove redundant
+NULL check.
 
-Fixes: a4260ea49547 ("media: sun4i: Add H3 deinterlace driver")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: c74e0062684b ("V4L/DVB (5059): Pvrusb2: Be smarter about mode restoration")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/sunxi/sun8i-di/sun8i-di.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-index cb6d32c59191f..f0d2bcbe20b0d 100644
---- a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-+++ b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-@@ -304,7 +304,7 @@ static void deinterlace_init(struct deinterlace_dev *dev)
- 
- 	deinterlace_clr_set_bits(dev, DEINTERLACE_CHROMA_DIFF,
- 				 DEINTERLACE_CHROMA_DIFF_TH_MSK,
--				 DEINTERLACE_CHROMA_DIFF_TH(5));
-+				 DEINTERLACE_CHROMA_DIFF_TH(31));
- }
- 
- static inline struct deinterlace_ctx *deinterlace_file2ctx(struct file *file)
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index 9657c18833116..c872868becbdc 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -1202,11 +1202,6 @@ static void pvr2_v4l2_dev_init(struct pvr2_v4l2_dev *dip,
+ 		dip->minor_type = pvr2_v4l_type_video;
+ 		nr_ptr = video_nr;
+ 		caps |= V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_AUDIO;
+-		if (!dip->stream) {
+-			pr_err(KBUILD_MODNAME
+-				": Failed to set up pvrusb2 v4l video dev due to missing stream instance\n");
+-			return;
+-		}
+ 		break;
+ 	case VFL_TYPE_VBI:
+ 		dip->config = pvr2_config_vbi;
 -- 
 2.43.0
 
