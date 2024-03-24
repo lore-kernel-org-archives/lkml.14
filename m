@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E922E14C5B4;
-	Sun, 24 Mar 2024 23:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B6A2319D3;
+	Sun, 24 Mar 2024 23:17:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322245; cv=none; b=U+A1LFiZnhwZ3xDCkYjLmlGjE1RsE+9vqWofzySpbnOl1nNcXdbVHsf34JU0l/sn1EL/bB3LaB/764rjA+maJb0FTiNBims7lA6uzX8RG2oXPVZrpZTAvLWwg5cJQlLk+OB0dhb8MiQmdIiNzcUokrxZSwzQGEcictWbPMR273w=
+	t=1711322246; cv=none; b=iTar3Tii0QH6VX9PxiSJI9mpIbZBQ351AERfGIHLWcNdFpJS+ydikW5JBwlfJopWVzKWerKAZCQmtphQN+h0HvoS/SDfsbu3wemy/bDadry5I5okOFh26heylAraKRPHP9RDHrtO3IFqvkR2zpAvGeq35EwSVt57O3uMgnBri1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322245; c=relaxed/simple;
-	bh=vY/fC/eRi3EUQWBPfjVdjNpnum2oqCLfcU1o+uebky4=;
+	s=arc-20240116; t=1711322246; c=relaxed/simple;
+	bh=lhrE8fSYga6BlgK6tHslFO927ryv1ls3v3xhZjgfFN8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vh89MVAkVs4xnI72Cd2Go/1TBw+TfQjtoMVAJp/ZHX/M2dWVJ0ysEaDEb6CJF14hLhsA00KXUkozZH0cJt+0GqJ8NkMMhzhicQto/Qhpaa3RNhG9O78UZglgF3c+QWGTH0YSHoKkqjJNg/JQnrHlZE3kr41zPFWyVB4WsPK4V1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVG1qxI8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=R23DL28cNOriLYsia/24k1uUfidGoyV3qjyxY2mNcdABe2koI63A/C2cUMYtPYhK8FXaxxM0dnvHZiMpnJVAHsVgTCA/SxWbC9Tk6FSXtAu86ZMV0lTRk7Bi0W56Snkctt6fcEOHpzR/JczPhLn0Ronsem2Fzizd7PmJHepfNOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dlh060FQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVG1qxI8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CC43C43390;
-	Sun, 24 Mar 2024 23:17:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dlh060FQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2E80C433C7;
+	Sun, 24 Mar 2024 23:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322243;
-	bh=vY/fC/eRi3EUQWBPfjVdjNpnum2oqCLfcU1o+uebky4=;
+	s=k20201202; t=1711322245;
+	bh=lhrE8fSYga6BlgK6tHslFO927ryv1ls3v3xhZjgfFN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iVG1qxI8dUurNikJChHKxNpaeg4IucEltKLCfBdkKSSlTwgMpnn2sucBZvywgfnQb
-	 wuEtyy78LNVsZml4Ivyig8D5A/HJq+P6us+NFxteLQYe0fd3SW2UeWd118RMYSFVtL
-	 Z57TVmTOwpQ4x1Nt2tgcaxhZVd9G8hEI6Rnb6tAx5poDLW2W2GfGUNdvuEbQiLbepC
-	 AujZjccZTnjMA9AqBuw535ltfg6mbAym9E+GAfB0pgUiKcgFfzdQ/gwoI8e+hPLCE9
-	 0Ih9uZDV4FPF+UrPI2LsIntepPA/yK4oC1NxVB9B+IBm139ZmZiPsEyXkZpNwWmTBm
-	 iABDJiKAZrFmg==
+	b=dlh060FQTVDn6XNuUjT5rWxNcqaAuelawX2y8DiPleupOOZJn3M9/38DSCAAF/I0p
+	 ra5YTiqeqEsTdQ4u7GYymDbzU4cbNK1vRExNsk506pEP/gJ2Ci54WbeQhtC5qN5ZE4
+	 E4be5An8+W0Q3HAeHO2pjPZfZjQKCJon3GwLdhS9LH8vFVAwzK2xeMyePFVkZV8W5L
+	 l/61GrD5fBsbC1S1rWm6JlusNtIN6shK6xPBfZfNNx/CGoHQU1KDmsGWwgkw55Ld66
+	 8TZLCbz2pAR1EYm8Ql3483krPwhNya8xhDYBT6ytQ40y85SFOOSFjiODstSykvtO4Y
+	 HP4d1RoskiWxg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Justin Stitt <justinstitt@google.com>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 325/451] media: dvb-frontends: avoid stack overflow warnings with clang
-Date: Sun, 24 Mar 2024 19:10:01 -0400
-Message-ID: <20240324231207.1351418-326-sashal@kernel.org>
+Subject: [PATCH 6.1 327/451] media: ttpci: fix two memleaks in budget_av_attach
+Date: Sun, 24 Mar 2024 19:10:03 -0400
+Message-ID: <20240324231207.1351418-328-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,93 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 7a4cf27d1f0538f779bf31b8c99eda394e277119 ]
+[ Upstream commit d0b07f712bf61e1a3cf23c87c663791c42e50837 ]
 
-A previous patch worked around a KASAN issue in stv0367, now a similar
-problem showed up with clang:
+When saa7146_register_device and saa7146_vv_init fails, budget_av_attach
+should free the resources it allocates, like the error-handling of
+ttpci_budget_init does. Besides, there are two fixme comment refers to
+such deallocations.
 
-drivers/media/dvb-frontends/stv0367.c:1222:12: error: stack frame size (3624) exceeds limit (2048) in 'stv0367ter_set_frontend' [-Werror,-Wframe-larger-than]
- 1214 | static int stv0367ter_set_frontend(struct dvb_frontend *fe)
-
-Rework the stv0367_writereg() function to be simpler and mark both
-register access functions as noinline_for_stack so the temporary
-i2c_msg structures do not get duplicated on the stack when KASAN_STACK
-is enabled.
-
-Fixes: 3cd890dbe2a4 ("media: dvb-frontends: fix i2c access helpers for KASAN")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-frontends/stv0367.c | 34 +++++++--------------------
- 1 file changed, 8 insertions(+), 26 deletions(-)
+ .../staging/media/deprecated/saa7146/ttpci/budget-av.c    | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/dvb-frontends/stv0367.c b/drivers/media/dvb-frontends/stv0367.c
-index 04556b77c16c9..0977564a4a1a4 100644
---- a/drivers/media/dvb-frontends/stv0367.c
-+++ b/drivers/media/dvb-frontends/stv0367.c
-@@ -118,50 +118,32 @@ static const s32 stv0367cab_RF_LookUp2[RF_LOOKUP_TABLE2_SIZE][RF_LOOKUP_TABLE2_S
- 	}
- };
+diff --git a/drivers/staging/media/deprecated/saa7146/ttpci/budget-av.c b/drivers/staging/media/deprecated/saa7146/ttpci/budget-av.c
+index 0c61a2dec2211..81fc4835679f3 100644
+--- a/drivers/staging/media/deprecated/saa7146/ttpci/budget-av.c
++++ b/drivers/staging/media/deprecated/saa7146/ttpci/budget-av.c
+@@ -1462,7 +1462,8 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+ 		budget_av->has_saa7113 = 1;
+ 		err = saa7146_vv_init(dev, &vv_data);
+ 		if (err != 0) {
+-			/* fixme: proper cleanup here */
++			ttpci_budget_deinit(&budget_av->budget);
++			kfree(budget_av);
+ 			ERR("cannot init vv subsystem\n");
+ 			return err;
+ 		}
+@@ -1471,9 +1472,10 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+ 		vv_data.vid_ops.vidioc_s_input = vidioc_s_input;
  
--static
--int stv0367_writeregs(struct stv0367_state *state, u16 reg, u8 *data, int len)
-+static noinline_for_stack
-+int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
- {
--	u8 buf[MAX_XFER_SIZE];
-+	u8 buf[3] = { MSB(reg), LSB(reg), data };
- 	struct i2c_msg msg = {
- 		.addr = state->config->demod_address,
- 		.flags = 0,
- 		.buf = buf,
--		.len = len + 2
-+		.len = 3,
- 	};
- 	int ret;
+ 		if ((err = saa7146_register_device(&budget_av->vd, dev, "knc1", VFL_TYPE_VIDEO))) {
+-			/* fixme: proper cleanup here */
+-			ERR("cannot register capture v4l2 device\n");
+ 			saa7146_vv_release(dev);
++			ttpci_budget_deinit(&budget_av->budget);
++			kfree(budget_av);
++			ERR("cannot register capture v4l2 device\n");
+ 			return err;
+ 		}
  
--	if (2 + len > sizeof(buf)) {
--		printk(KERN_WARNING
--		       "%s: i2c wr reg=%04x: len=%d is too big!\n",
--		       KBUILD_MODNAME, reg, len);
--		return -EINVAL;
--	}
--
--
--	buf[0] = MSB(reg);
--	buf[1] = LSB(reg);
--	memcpy(buf + 2, data, len);
--
- 	if (i2cdebug)
- 		printk(KERN_DEBUG "%s: [%02x] %02x: %02x\n", __func__,
--			state->config->demod_address, reg, buf[2]);
-+			state->config->demod_address, reg, data);
- 
- 	ret = i2c_transfer(state->i2c, &msg, 1);
- 	if (ret != 1)
- 		printk(KERN_ERR "%s: i2c write error! ([%02x] %02x: %02x)\n",
--			__func__, state->config->demod_address, reg, buf[2]);
-+			__func__, state->config->demod_address, reg, data);
- 
- 	return (ret != 1) ? -EREMOTEIO : 0;
- }
- 
--static int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
--{
--	u8 tmp = data; /* see gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
--
--	return stv0367_writeregs(state, reg, &tmp, 1);
--}
--
--static u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
-+static noinline_for_stack
-+u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
- {
- 	u8 b0[] = { 0, 0 };
- 	u8 b1[] = { 0 };
 -- 
 2.43.0
 
