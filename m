@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE801CF8D7;
-	Sun, 24 Mar 2024 22:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F32B763FF;
+	Sun, 24 Mar 2024 22:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320448; cv=none; b=C/EUobPwynWpnnouJGCC7BDkf+FifvPLmQ6agbaZDAKe8MvJtOQezM96JQEhSwuFdKRZeta1Cx0U8dPNSXAhLNQmv4js7JB4LTJCxs9uUgc+ZUup/C+Hilea0iIUeLIMIf8dcg4yZcvNOHyZs1qQTmF0fr5l2vNbQ/INFNLsCPA=
+	t=1711320454; cv=none; b=lqZPHbVikXxFhFjyjrU+xujCpj/ql2Q7ngCKruBrHjmo1j934SzilBvry8RumS0y8GDAHiTwIAykFoQ1dClrh3M2O2ejQPK421hCOSPnzOdcl1Vm12trV76xS6YA4SgPRfulEl3Tngf6IwBCS2aioz6ac8hJkrNKaBtauAIMYxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320448; c=relaxed/simple;
-	bh=bnbHqN1p6Pi+S070hSgaMpfnK259Dy/ZeqRsKyuue0E=;
+	s=arc-20240116; t=1711320454; c=relaxed/simple;
+	bh=3W6dR8PdnATH3wLhgXePo6qAuvBQwrdOzzSzsfx9tTs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tND9qmg+so64FpH2RdmlDib2m1iT+Fc9BaV2yDBo9cdglgmVV7VMN+Yri2q6QUQAhH8QDowz2A11kR2lE1b8erTC9DfKerwVEpVvEXwAM6BmzhyjtyOR4ctDOKhgxqb+li2mEjlxTfO3uJMSfBQZHeAG7aoVe6bvmzsMbDSEahw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=td5JIwy/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Haal0qxDFl+svp9TlRuYZiSnq0P03knyTbHMEK066hLTKGmGAkfsxHO3xX7stv6N20hHlyvkbFE+RfbPUVIOAbqRfJGuJMBaMkemwDYgZakemp6ZRL12QFPZ3hvSfp7NY/WJwKETAFJQPtZbJDHwthxwdLoqJPzSn9PIfqlZyv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ruebdpPE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="td5JIwy/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776D8C433C7;
-	Sun, 24 Mar 2024 22:47:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ruebdpPE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D4CC433F1;
+	Sun, 24 Mar 2024 22:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320448;
-	bh=bnbHqN1p6Pi+S070hSgaMpfnK259Dy/ZeqRsKyuue0E=;
+	s=k20201202; t=1711320453;
+	bh=3W6dR8PdnATH3wLhgXePo6qAuvBQwrdOzzSzsfx9tTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=td5JIwy/U19v7VqG4INC0PoSKWXZuB7VtSwXwYzWDsiGlEU+VbWb0P/to5kmbAS2L
-	 v4tvTjodoig34CvbTzaTA+w1Wsf9VA9isRjc55N9zFeCS4/Z5PEf9RdzFMeCGX35/9
-	 MNJxKVXpgH7PY7RAgsO9UJ6x+HoWTDTBOaqJTM/IpCmLpUKKRn6jbirT6j/uF021qt
-	 z2lwtKWj+9tN6k3bZbJnFUuHukJCcVqlI77dMXv+zpVp8dAC0oVLzMkd9nAxFeAuWH
-	 Eq7n3ensbL4+ti3Cg8tt91HJTXymR/w2M8wo5Q8xGFLdpZ8Yxqb9HQefgb/CuHx79w
-	 PiMJgHcZyApLA==
+	b=ruebdpPEXLyp17TN5P0ohiKq3+LgvMN5VJZR0bpcyzZBO9sJt/c0QHpkjVLbvIsof
+	 K4rYiEwqXr2p0A3sqrK7flgqP1es2gpeWb5vUndaUFeR/fx3OOBdYRO00NNWoFt5t6
+	 FrrHH3h4VVDTPL2SmM5O+O9ihXvbnBqzX4Gk+eMNSOtJKL0JpwUGaeMMQBCadNBFpc
+	 gENRDwgis+8pL10bKoqCD7Lv+IHLohbyVYawAFXLqH+fdiWDPZ75L9GOgXs3HQyY1u
+	 JyRKG9CWYAg1Lk9Ab9GYp/l2n+ewT/5wlJR5wXQ7bRz8UfFUGY90XTJJLaAu23LBqN
+	 cetA1/Od82Lzw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Oleksandr Natalenko <oleksandr@natalenko.name>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 006/713] HID: logitech-hidpp: Do not flood kernel log
-Date: Sun, 24 Mar 2024 18:35:32 -0400
-Message-ID: <20240324224720.1345309-7-sashal@kernel.org>
+Subject: [PATCH 6.7 012/713] ASoC: rt5645: Make LattePanda board DMI match more precise
+Date: Sun, 24 Mar 2024 18:35:38 -0400
+Message-ID: <20240324224720.1345309-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,69 +48,61 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 411a20db905b44e18cc9129b745f1d5deba4eae5 ]
+[ Upstream commit 551539a8606e28cb2a130f8ef3e9834235b456c4 ]
 
-Since commit 680ee411a98e ("HID: logitech-hidpp: Fix connect event race")
-the following messages appear in the kernel log from time to time:
+The DMI strings used for the LattePanda board DMI quirks are very generic.
 
-logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
-logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
-logitech-hidpp-device 0003:046D:4051.0006: Disconnected
-logitech-hidpp-device 0003:046D:408A.0005: Disconnected
+Using the dmidecode database from https://linux-hardware.org/ shows
+that the chosen DMI strings also match the following 2 laptops
+which also have a rt5645 codec:
 
-As discussed, print the first per-device "device connected" message
-at info level, demoting subsequent messages to debug level. Also,
-demote the "Disconnected message" to debug level unconditionally.
+Insignia NS-P11W7100 https://linux-hardware.org/?computer=E092FFF8BA04
+Insignia NS-P10W8100 https://linux-hardware.org/?computer=AFB6C0BF7934
 
-Link: https://lore.kernel.org/lkml/3277085.44csPzL39Z@natalenko.name/
-Signed-off-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+All 4 hw revisions of the LattePanda board have "S70CR" in their BIOS
+version DMI strings:
+
+DF-BI-7-S70CR100-*
+DF-BI-7-S70CR110-*
+DF-BI-7-S70CR200-*
+LP-BS-7-S70CR700-*
+
+See e.g. https://linux-hardware.org/?computer=D98250A817C0
+
+Add a partial (non exact) DMI match on this string to make the LattePanda
+board DMI match more precise to avoid false-positive matches.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://msgid.link/r/20240211212736.179605-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ sound/soc/codecs/rt5645.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 6ef0c88e3e60a..d2f3f234f29de 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -203,6 +203,8 @@ struct hidpp_device {
- 	struct hidpp_scroll_counter vertical_wheel_counter;
- 
- 	u8 wireless_feature_index;
-+
-+	bool connected_once;
- };
- 
- /* HID++ 1.0 error codes */
-@@ -988,8 +990,13 @@ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
- 	hidpp->protocol_minor = response.rap.params[1];
- 
- print_version:
--	hid_info(hidpp->hid_dev, "HID++ %u.%u device connected.\n",
--		 hidpp->protocol_major, hidpp->protocol_minor);
-+	if (!hidpp->connected_once) {
-+		hid_info(hidpp->hid_dev, "HID++ %u.%u device connected.\n",
-+			 hidpp->protocol_major, hidpp->protocol_minor);
-+		hidpp->connected_once = true;
-+	} else
-+		hid_dbg(hidpp->hid_dev, "HID++ %u.%u device connected.\n",
-+			 hidpp->protocol_major, hidpp->protocol_minor);
- 	return 0;
- }
- 
-@@ -4184,7 +4191,7 @@ static void hidpp_connect_event(struct work_struct *work)
- 	/* Get device version to check if it is connected */
- 	ret = hidpp_root_get_protocol_version(hidpp);
- 	if (ret) {
--		hid_info(hidpp->hid_dev, "Disconnected\n");
-+		hid_dbg(hidpp->hid_dev, "Disconnected\n");
- 		if (hidpp->battery.ps) {
- 			hidpp->battery.online = false;
- 			hidpp->battery.status = POWER_SUPPLY_STATUS_UNKNOWN;
+diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
+index ea08b7cfc31da..e0da151508309 100644
+--- a/sound/soc/codecs/rt5645.c
++++ b/sound/soc/codecs/rt5645.c
+@@ -3829,6 +3829,16 @@ static const struct dmi_system_id dmi_platform_data[] = {
+ 		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+ 		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+ 		  DMI_EXACT_MATCH(DMI_BOARD_VERSION, "Default string"),
++		  /*
++		   * Above strings are too generic, LattePanda BIOS versions for
++		   * all 4 hw revisions are:
++		   * DF-BI-7-S70CR100-*
++		   * DF-BI-7-S70CR110-*
++		   * DF-BI-7-S70CR200-*
++		   * LP-BS-7-S70CR700-*
++		   * Do a partial match for S70CR to avoid false positive matches.
++		   */
++		  DMI_MATCH(DMI_BIOS_VERSION, "S70CR"),
+ 		},
+ 		.driver_data = (void *)&lattepanda_board_platform_data,
+ 	},
 -- 
 2.43.0
 
