@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D857C142906;
-	Sun, 24 Mar 2024 23:12:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDD52251F2;
+	Sun, 24 Mar 2024 23:12:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321933; cv=none; b=Q5B43ta+nnlTNmE9RnNMRVfC8wPSiyOPwgdXuGw3oWI/igE2nMGkwVC8nHfzW4xvV9CDTQ61giBZxOkE7FloBPlRDH5ja6xKz0wgJST5DmcOEu9CGR0cjlMyTA+nDYvpOyGvKPmk+/lEvToEkg9Ihy5mtZ07yZ+a/vPROXoDeII=
+	t=1711321937; cv=none; b=mOH9apUAtkh9zra06JsPGkNP982XigEd1h0TtSKCzt0sYl/W8/dGBuEKKTOIHaSu/lhRrWyHyBYJ3Cet46tNAdUwF0//K6Qlyx+6Jw6CTev2E9zCsax1NVR2WA3csAJCFIQFJlrJdRh8hBBVzqN5mMHTPg3AWaP/QnOzh7+PXaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321933; c=relaxed/simple;
-	bh=LEKNRecMmvxXUllhD4M+yND2wFd/fo2ndQcInkj7mNs=;
+	s=arc-20240116; t=1711321937; c=relaxed/simple;
+	bh=XT1yZ8Jye37Pt1dNEFHUCS6lEDPqswFnIVZBkfvzm7Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XUsb6xohV3jvatPAJYmdACVLem1s6J7R8ZpfC/7jKfz1EgnXsvOpm56U1XysYY1yU+SrZTIGwTE0SUB5CpsMwdf5oYp7g9nN+5NAw70F2oFdTihshVvTa+W8kDOE47c5T4+X+OlgFYDodQUj8YdVbR18OOTmw0HbDFaPfZSmeqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+FTRbno; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oieUowT/xzbozSS9SI+Z9f2F93VRgawropQjz/2FecixBPO92HJqnhcrXpf8xLxHDpdaovxNZFUoeRA7cks7gJh5Svf9C06A+U5mZ5O0yjTgCzyM1K7U4FtFI1lLx9xsrqkbPYD36stQ5YFiyAXW4sIBhvxovNikC+mH8X/5fHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rSOLcnTy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+FTRbno"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF05C43394;
-	Sun, 24 Mar 2024 23:12:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rSOLcnTy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E46C433F1;
+	Sun, 24 Mar 2024 23:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321932;
-	bh=LEKNRecMmvxXUllhD4M+yND2wFd/fo2ndQcInkj7mNs=;
+	s=k20201202; t=1711321937;
+	bh=XT1yZ8Jye37Pt1dNEFHUCS6lEDPqswFnIVZBkfvzm7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W+FTRbnoywarMWsCiowx0OdOSAMFOkQqSL+cZqsQ07T+mXXbrZTbEcg/Z7++7R+To
-	 EBXITtvxaYbL+M7MU6miDUsuAHxMuGVIvwtplokF946FvHHQPdkEOHPpEnyQKhaE1S
-	 Ew4Iu3QC6VxuiO1JBfySj3lSXmaLD0wjgxWDBpOK11mrXoOeJf+rhVYfkAs9XrRXIg
-	 rp7Q9A5CObZJwuXR2V2uP+otkqSbFvfhBke2dzVMmymiMf1ECehF0oMe3rKdWEaPM8
-	 rp3JXvPa9kXQvzrx6oUWDq7Xu/NfiaLbQVUJ16fgq0T5Ptvq0uwtjSLUI1y4Er0OgJ
-	 Hk3pbBdJJCvRA==
+	b=rSOLcnTyl6Q525aTy5tGUBkjv0bZtq3qL0dEGr/YwCodCNYHjYWAyem3xHssPh1x+
+	 h6t+OT4sZS/M8MyRrZB6HZQNAh2V56VueogJsvQQSJpmDqviIk8P843VFwbiu/DyQ2
+	 Ipj8I0LGLAQnx8/ChqbanCwbC6YgLkcKkdevgFBq76AexATvibeU70BpdW5MZlsZ7s
+	 KUMz++13J/I5gNNX6MJNeGXMDrQ2sc80VTZYtHReKUALLSl7d3pVI7GD+2ZFeX446F
+	 /jmsp0sIpVv/2Gv5nPJy/1cR0LNZd1VB26ym70pzmL1OLaPCN38ATlA7QB89Dnow7p
+	 cBXYOfs8niVkg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>,
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 003/451] io_uring/unix: drop usage of io_uring socket
-Date: Sun, 24 Mar 2024 19:04:39 -0400
-Message-ID: <20240324231207.1351418-4-sashal@kernel.org>
+Subject: [PATCH 6.1 008/451] nfsd: simplify test_bit return in NFSD_FILE_KEY_FULL comparator
+Date: Sun, 24 Mar 2024 19:04:44 -0400
+Message-ID: <20240324231207.1351418-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -47,132 +48,33 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Jeff Layton <jlayton@kernel.org>
 
-Commit a4104821ad651d8a0b374f0b2474c345bbb42f82 upstream.
+[ Upstream commit d69b8dbfd0866abc5ec84652cc1c10fc3d4d91ef ]
 
-Since we no longer allow sending io_uring fds over SCM_RIGHTS, move to
-using io_is_uring_fops() to detect whether this is a io_uring fd or not.
-With that done, kill off io_uring_get_socket() as nobody calls it
-anymore.
+test_bit returns bool, so we can just compare the result of that to the
+key->gc value without the "!!".
 
-This is in preparation to yanking out the rest of the core related to
-unix gc with io_uring.
-
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/io_uring.h | 10 +++++-----
- io_uring/io_uring.c      | 13 -------------
- io_uring/io_uring.h      |  1 -
- net/core/scm.c           |  2 +-
- net/unix/scm.c           |  4 +---
- 5 files changed, 7 insertions(+), 23 deletions(-)
+ fs/nfsd/filecache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
-index a1484cdb3158e..a8f3058448eaa 100644
---- a/include/linux/io_uring.h
-+++ b/include/linux/io_uring.h
-@@ -42,11 +42,11 @@ void io_uring_cmd_done(struct io_uring_cmd *cmd, ssize_t ret, ssize_t res2,
- 			unsigned issue_flags);
- void io_uring_cmd_complete_in_task(struct io_uring_cmd *ioucmd,
- 			void (*task_work_cb)(struct io_uring_cmd *, unsigned));
--struct sock *io_uring_get_socket(struct file *file);
- void __io_uring_cancel(bool cancel_all);
- void __io_uring_free(struct task_struct *tsk);
- void io_uring_unreg_ringfd(void);
- const char *io_uring_get_opcode(u8 opcode);
-+bool io_is_uring_fops(struct file *file);
- 
- static inline void io_uring_files_cancel(void)
- {
-@@ -71,6 +71,10 @@ static inline int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
- {
- 	return -EOPNOTSUPP;
- }
-+static inline bool io_is_uring_fops(struct file *file)
-+{
-+	return false;
-+}
- static inline void io_uring_cmd_done(struct io_uring_cmd *cmd, ssize_t ret,
- 		ssize_t ret2, unsigned issue_flags)
- {
-@@ -79,10 +83,6 @@ static inline void io_uring_cmd_complete_in_task(struct io_uring_cmd *ioucmd,
- 			void (*task_work_cb)(struct io_uring_cmd *, unsigned))
- {
- }
--static inline struct sock *io_uring_get_socket(struct file *file)
--{
--	return NULL;
--}
- static inline void io_uring_task_cancel(void)
- {
- }
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 35894955b4549..cf7dd62da0e37 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -153,19 +153,6 @@ static void __io_submit_flush_completions(struct io_ring_ctx *ctx);
- 
- static struct kmem_cache *req_cachep;
- 
--struct sock *io_uring_get_socket(struct file *file)
--{
--#if defined(CONFIG_UNIX)
--	if (io_is_uring_fops(file)) {
--		struct io_ring_ctx *ctx = file->private_data;
--
--		return ctx->ring_sock->sk;
--	}
--#endif
--	return NULL;
--}
--EXPORT_SYMBOL(io_uring_get_socket);
--
- static inline void io_submit_flush_completions(struct io_ring_ctx *ctx)
- {
- 	if (!wq_list_empty(&ctx->submit_state.compl_reqs))
-diff --git a/io_uring/io_uring.h b/io_uring/io_uring.h
-index 019600570ee49..59e6f755f12c6 100644
---- a/io_uring/io_uring.h
-+++ b/io_uring/io_uring.h
-@@ -52,7 +52,6 @@ static inline bool io_req_ffs_set(struct io_kiocb *req)
- }
- 
- void __io_req_task_work_add(struct io_kiocb *req, bool allow_local);
--bool io_is_uring_fops(struct file *file);
- bool io_alloc_async_data(struct io_kiocb *req);
- void io_req_task_queue(struct io_kiocb *req);
- void io_queue_iowq(struct io_kiocb *req, bool *dont_use);
-diff --git a/net/core/scm.c b/net/core/scm.c
-index e762a4b8a1d22..a877c4ef4c256 100644
---- a/net/core/scm.c
-+++ b/net/core/scm.c
-@@ -105,7 +105,7 @@ static int scm_fp_copy(struct cmsghdr *cmsg, struct scm_fp_list **fplp)
- 		if (fd < 0 || !(file = fget_raw(fd)))
- 			return -EBADF;
- 		/* don't allow io_uring files */
--		if (io_uring_get_socket(file)) {
-+		if (io_is_uring_fops(file)) {
- 			fput(file);
- 			return -EINVAL;
- 		}
-diff --git a/net/unix/scm.c b/net/unix/scm.c
-index e8e2a00bb0f58..d1048b4c2baaf 100644
---- a/net/unix/scm.c
-+++ b/net/unix/scm.c
-@@ -34,10 +34,8 @@ struct sock *unix_get_socket(struct file *filp)
- 		/* PF_UNIX ? */
- 		if (s && sock->ops && sock->ops->family == PF_UNIX)
- 			u_sock = s;
--	} else {
--		/* Could be an io_uring instance */
--		u_sock = io_uring_get_socket(filp);
- 	}
-+
- 	return u_sock;
- }
- EXPORT_SYMBOL(unix_get_socket);
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index c36e3032d4386..568963b8a4777 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -189,7 +189,7 @@ static int nfsd_file_obj_cmpfn(struct rhashtable_compare_arg *arg,
+ 			return 1;
+ 		if (!nfsd_match_cred(nf->nf_cred, key->cred))
+ 			return 1;
+-		if (!!test_bit(NFSD_FILE_GC, &nf->nf_flags) != key->gc)
++		if (test_bit(NFSD_FILE_GC, &nf->nf_flags) != key->gc)
+ 			return 1;
+ 		if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) == 0)
+ 			return 1;
 -- 
 2.43.0
 
