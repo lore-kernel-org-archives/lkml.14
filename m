@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8D327B100;
-	Sun, 24 Mar 2024 23:38:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9659177A99;
+	Sun, 24 Mar 2024 23:38:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323507; cv=none; b=G/ZCVQATzrb5L8OTaZkV9M+Bn5E51MOIXyd53X9p0YnFdqW/I65cYmLThc5FfJLuC78dcq+iGyneVzBmzYX3VYEEwueRzePFwRuCmkluU1kidXVp8LhC4FYy8uXL2BRjvcsYyzIVosskDCDxHFqWFESZVAk1xSuzp5Im6r5aSbU=
+	t=1711323516; cv=none; b=GQGQXhL3kXWvTg4uxQ8fRFB8Gezg5BLVtmU/F6WDVvzTtMLCMrhH2wxkRqrKoKqWEuSyOqRP/KIrUhu+48tRvp7j/9Yuy5GncpTgoEqCjEDBS6UveAnCVyZ4e8CIHx5XwVHgt2dAgv+jJMjtVs+ojKgvLP6O/E8ao9EohFHitmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323507; c=relaxed/simple;
-	bh=fkQUcbORkODKGwcIjJeKyjjU5hkBPC4MQG1SSmB4Lms=;
+	s=arc-20240116; t=1711323516; c=relaxed/simple;
+	bh=8NG5ryWG5HYBva078aNyd9BCSi5cg3Cn9gXeZNtAs18=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dc9sv2jr1NNwMBnO5lVa0Q0W/ioFWD+M38sqYZw2r53pqnQmnz7g6f0dsJd0Ir04DKDVb0R1det4bx+2ir07GRwi3C1KJIvvNlEBXYIvSW46gsfVI/xFR11yf0/flkw0/JFTHC/fRVZUvN5naS8ncytTX+kCTJLTjJdHPSZ58r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOfKFE4C; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jBuhwRmvU7tL2HGxInECJDu2DPupZDVsgtvOowMchqxNZDX0j9ynpF1lZYObDHrjUYzKR+52FW2ENQjXYLNVHkABUCOHmQhhYLwXmlT+wEPEer0JRuaoA2IUBZCR8R+LbSkiXJTWBEB9FtZ9/uWGw/Rk5bzwJNOZz4hXcs1RAe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YE3AVvfH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOfKFE4C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0644C433A6;
-	Sun, 24 Mar 2024 23:38:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YE3AVvfH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC9ADC433C7;
+	Sun, 24 Mar 2024 23:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323506;
-	bh=fkQUcbORkODKGwcIjJeKyjjU5hkBPC4MQG1SSmB4Lms=;
+	s=k20201202; t=1711323515;
+	bh=8NG5ryWG5HYBva078aNyd9BCSi5cg3Cn9gXeZNtAs18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MOfKFE4CwvttOpVEGIrqdz6zm8HJFnWnp1DNCPvyvZVeODto4QR883jon1F9NW4KJ
-	 SHxAjRRSOmZSZ5AuGsRx0wy/PSYUxq2yOj4OUBN+Z2qj2dne2E+wjSuLGBOirfNG2/
-	 kBUTWDSPuAiQEt3Bm12kE7jGqW+HWAN49tcHX8bDtIYS19HBBPvVn7iyJCX+QSAQ2T
-	 OnGU1TGlcqmuTxKGEpP9PltqLHgeKrYFipvxqcn/GE4OZKjFSDDUbvxNLxQ3xRKA94
-	 4tI4lP4Ls7ZvNBNQnWoTMH9L5QIs1bHU0OqVwz+AA8PurFrw0UJzmvBzclUm80twJN
-	 9Al2u0k5KS0fA==
+	b=YE3AVvfHoJTGNNZ4J/qm+HZLesYrNtPSEKQcQ0ytdTHX9ielZhTCkeTBYBgrym+th
+	 AwkzGDRU+2PibPsvA4dK/gAc6+QVAYb5qn6rm5tzntUM7w7dv6H2gAimYtn/t2nQxs
+	 pK4q/9JpAo/H+Z4hxHV7uwkueolztQVV3h4+lj40kjFwDeRJzHiQYbR3TFKUB303SP
+	 83rHUxrxxHMOlqUZ+7GtXyprj2ENHq9MrdzKJnIft2wTYTzD4l90s7asSNnvu1B7fH
+	 UhgL9Cj5P4umZrsgQzXechEBXHo8kx/jDXpuOlTmue1o5Kot63yhuNBEbeuMAq94B7
+	 HaKbGDPUGk2GQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniil Dulov <d.dulov@aladdin.ru>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 212/317] media: pvrusb2: remove redundant NULL check
-Date: Sun, 24 Mar 2024 19:33:12 -0400
-Message-ID: <20240324233458.1352854-213-sashal@kernel.org>
+Subject: [PATCH 5.15 222/317] crypto: arm/sha - fix function cast warnings
+Date: Sun, 24 Mar 2024 19:33:22 -0400
+Message-ID: <20240324233458.1352854-223-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,39 +49,113 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniil Dulov <d.dulov@aladdin.ru>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 95ac1210fb2753f968ebce0730d4fbc553c2a3dc ]
+[ Upstream commit 53cc9baeb9bc2a187eb9c9790d30995148852b12 ]
 
-Pointer dip->stream cannot be NULL due to a shift, thus remove redundant
-NULL check.
+clang-16 warns about casting between incompatible function types:
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+arch/arm/crypto/sha256_glue.c:37:5: error: cast from 'void (*)(u32 *, const void *, unsigned int)' (aka 'void (*)(unsigned int *, const void *, unsigned int)') to 'sha256_block_fn *' (aka 'void (*)(struct sha256_state *, const unsigned char *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+   37 |                                 (sha256_block_fn *)sha256_block_data_order);
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm/crypto/sha512-glue.c:34:3: error: cast from 'void (*)(u64 *, const u8 *, int)' (aka 'void (*)(unsigned long long *, const unsigned char *, int)') to 'sha512_block_fn *' (aka 'void (*)(struct sha512_state *, const unsigned char *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+   34 |                 (sha512_block_fn *)sha512_block_data_order);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fixes: c74e0062684b ("V4L/DVB (5059): Pvrusb2: Be smarter about mode restoration")
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fix the prototypes for the assembler functions to match the typedef.
+The code already relies on the digest being the first part of the
+state structure, so there is no change in behavior.
+
+Fixes: c80ae7ca3726 ("crypto: arm/sha512 - accelerated SHA-512 using ARM generic ASM and NEON")
+Fixes: b59e2ae3690c ("crypto: arm/sha256 - move SHA-224/256 ASM/NEON implementation to base layer")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/arm/crypto/sha256_glue.c | 13 +++++--------
+ arch/arm/crypto/sha512-glue.c | 12 +++++-------
+ 2 files changed, 10 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-index 9657c18833116..c872868becbdc 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-@@ -1202,11 +1202,6 @@ static void pvr2_v4l2_dev_init(struct pvr2_v4l2_dev *dip,
- 		dip->minor_type = pvr2_v4l_type_video;
- 		nr_ptr = video_nr;
- 		caps |= V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_AUDIO;
--		if (!dip->stream) {
--			pr_err(KBUILD_MODNAME
--				": Failed to set up pvrusb2 v4l video dev due to missing stream instance\n");
--			return;
--		}
- 		break;
- 	case VFL_TYPE_VBI:
- 		dip->config = pvr2_config_vbi;
+diff --git a/arch/arm/crypto/sha256_glue.c b/arch/arm/crypto/sha256_glue.c
+index 433ee4ddce6c8..f85933fdec75f 100644
+--- a/arch/arm/crypto/sha256_glue.c
++++ b/arch/arm/crypto/sha256_glue.c
+@@ -24,8 +24,8 @@
+ 
+ #include "sha256_glue.h"
+ 
+-asmlinkage void sha256_block_data_order(u32 *digest, const void *data,
+-					unsigned int num_blks);
++asmlinkage void sha256_block_data_order(struct sha256_state *state,
++					const u8 *data, int num_blks);
+ 
+ int crypto_sha256_arm_update(struct shash_desc *desc, const u8 *data,
+ 			     unsigned int len)
+@@ -33,23 +33,20 @@ int crypto_sha256_arm_update(struct shash_desc *desc, const u8 *data,
+ 	/* make sure casting to sha256_block_fn() is safe */
+ 	BUILD_BUG_ON(offsetof(struct sha256_state, state) != 0);
+ 
+-	return sha256_base_do_update(desc, data, len,
+-				(sha256_block_fn *)sha256_block_data_order);
++	return sha256_base_do_update(desc, data, len, sha256_block_data_order);
+ }
+ EXPORT_SYMBOL(crypto_sha256_arm_update);
+ 
+ static int crypto_sha256_arm_final(struct shash_desc *desc, u8 *out)
+ {
+-	sha256_base_do_finalize(desc,
+-				(sha256_block_fn *)sha256_block_data_order);
++	sha256_base_do_finalize(desc, sha256_block_data_order);
+ 	return sha256_base_finish(desc, out);
+ }
+ 
+ int crypto_sha256_arm_finup(struct shash_desc *desc, const u8 *data,
+ 			    unsigned int len, u8 *out)
+ {
+-	sha256_base_do_update(desc, data, len,
+-			      (sha256_block_fn *)sha256_block_data_order);
++	sha256_base_do_update(desc, data, len, sha256_block_data_order);
+ 	return crypto_sha256_arm_final(desc, out);
+ }
+ EXPORT_SYMBOL(crypto_sha256_arm_finup);
+diff --git a/arch/arm/crypto/sha512-glue.c b/arch/arm/crypto/sha512-glue.c
+index 0635a65aa488b..1be5bd498af36 100644
+--- a/arch/arm/crypto/sha512-glue.c
++++ b/arch/arm/crypto/sha512-glue.c
+@@ -25,27 +25,25 @@ MODULE_ALIAS_CRYPTO("sha512");
+ MODULE_ALIAS_CRYPTO("sha384-arm");
+ MODULE_ALIAS_CRYPTO("sha512-arm");
+ 
+-asmlinkage void sha512_block_data_order(u64 *state, u8 const *src, int blocks);
++asmlinkage void sha512_block_data_order(struct sha512_state *state,
++					u8 const *src, int blocks);
+ 
+ int sha512_arm_update(struct shash_desc *desc, const u8 *data,
+ 		      unsigned int len)
+ {
+-	return sha512_base_do_update(desc, data, len,
+-		(sha512_block_fn *)sha512_block_data_order);
++	return sha512_base_do_update(desc, data, len, sha512_block_data_order);
+ }
+ 
+ static int sha512_arm_final(struct shash_desc *desc, u8 *out)
+ {
+-	sha512_base_do_finalize(desc,
+-		(sha512_block_fn *)sha512_block_data_order);
++	sha512_base_do_finalize(desc, sha512_block_data_order);
+ 	return sha512_base_finish(desc, out);
+ }
+ 
+ int sha512_arm_finup(struct shash_desc *desc, const u8 *data,
+ 		     unsigned int len, u8 *out)
+ {
+-	sha512_base_do_update(desc, data, len,
+-		(sha512_block_fn *)sha512_block_data_order);
++	sha512_base_do_update(desc, data, len, sha512_block_data_order);
+ 	return sha512_arm_final(desc, out);
+ }
+ 
 -- 
 2.43.0
 
