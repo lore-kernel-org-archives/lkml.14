@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C0E148315;
-	Sun, 24 Mar 2024 23:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA47146015;
+	Sun, 24 Mar 2024 23:14:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322108; cv=none; b=L5+blqR2FnnGnFyXtsUK1h74TTC1inEuvrjKZ9v++KoCtc8qK79jvbUXttPejT2ToLfbT2e/ZsDQxPGaphA0PPeRh2To2UvtOHYTMJKfI4KP/40AzuKp+y4GPBDLo1Y6iYENs/lwOlND9TRPEAb9b2d2Jq7y3fwHrNaoU2oxtXs=
+	t=1711322081; cv=none; b=FJW2dfrKBVBQ/Q1C6SndvnPWVP2Xq5vcKCTGeAgrgaRMSRCWlznCWw5SLO2HLWUPYDvON0BSDTxNp2ChRMHUR92mC2btMQJBJTnElJ1j3kNYAcsd0XwM6wfoSbc6w/glVh7nLr0yxaLxr5ITfiNfxhGmTJxYmOjnUx5T6cQo6P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322108; c=relaxed/simple;
-	bh=s34dqxsBVuJEo+Uhd4PDQPvUNDoBzlzGIbyFisqBYbU=;
+	s=arc-20240116; t=1711322081; c=relaxed/simple;
+	bh=CI5aKXSZgFc/eeP7euBsbtDOIK02Hte68IcEDoH60/U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GbW8gTZqZMzKk0c/wpbHejmLdbBiDczBIly+ct8HKNFsEncDZjhv1sJodYMVY+MTFzNV2w1NY+gGXsEzp7wAPXq/zoT345o5OMMEpFrrEnTZlH5ApqEEPtaOlxuWm+vJlJ150htpE96HlIzUr8Qj1A8Gk50nzaTv324Pt6U6lqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwzKdkiS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qvwBapy4Fh2Gqe40TkMhxaPWSWk6aovSm+FSTdG1E043q/7cF6oP52rEk5ZoaZ+tl4P3HNjePdSUI+jknUeiDA8St8e7E2Xn0jKlWA+Rak0tMN0GF78CW3oRFz/ahxXySsJqvxydCarMQB0yM2TO+TPOtoaQ2mEhkppkUImdsoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hiCaoj0s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwzKdkiS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89E6DC433C7;
-	Sun, 24 Mar 2024 23:15:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hiCaoj0s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3427EC43394;
+	Sun, 24 Mar 2024 23:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322108;
-	bh=s34dqxsBVuJEo+Uhd4PDQPvUNDoBzlzGIbyFisqBYbU=;
+	s=k20201202; t=1711322080;
+	bh=CI5aKXSZgFc/eeP7euBsbtDOIK02Hte68IcEDoH60/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UwzKdkiSWpYYGaofCtGKQIKs0Rjud+GfGz4pOK15LWP2dOE738BSzMW45bKn1xbMX
-	 yt4sduZtNuEmqOqu1RNFD4MnskVDHjtpWAct6biyXGN1YGcQCTkxvUs/nLObdACtsw
-	 wExaL51nFO3q7Hz1ZnEGQg1cf5vsXlVXfH3aept9jIH/wqetSL+H63vTC+xd1UFMiz
-	 GWzbgjA9WDdsu1WDO8ebs3yD0SKgci7HFkOFyCOovMwYBUgPn+Dggg21+rRzW/+KLy
-	 ka3eQ2gZQP63pjjS4XbxSeUjOmimscA+ImhSloPTCLjBvP1JwYpz5dyIQgOvzrXWKC
-	 rpVLejDRCTdsw==
+	b=hiCaoj0sTF1JbGCHx8I7jEQXb5alS2TOa523biBwqF2UsFTG7Q+F8GHirUeS1MXLk
+	 PFH9jUpmFX35jfSJ+y/8SZfrdhvuKJcE9+kdkOaUIGtAEsK83aX0ZHJFDoYOtM28wS
+	 q6p12XARHAEZ/ydOJAlyLd7CC4uvPHpOglLULAT6iAfJ1XlGAXzKowCBbMzmYzsZ6W
+	 oPz304Fx+ylIaYDMqs09N8+NGLykZIjfIkfhkowY7ZSWArGxRCdCcB6V4bzGMAEdwv
+	 q7y/t+7MkwBwOj9p/qKwVCrTU1sM5I79wMKx5XMc0jRpyEFhm6HZRLsgeSqSeRi1DB
+	 5Kd/i1rCHDUOA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+Cc: Peter Robinson <pbrobinson@gmail.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 183/451] ACPI: scan: Fix device check notification handling
-Date: Sun, 24 Mar 2024 19:07:39 -0400
-Message-ID: <20240324231207.1351418-184-sashal@kernel.org>
+Subject: [PATCH 6.1 154/451] bus: tegra-aconnect: Update dependency to ARCH_TEGRA
+Date: Sun, 24 Mar 2024 19:07:10 -0400
+Message-ID: <20240324231207.1351418-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,55 +49,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Peter Robinson <pbrobinson@gmail.com>
 
-[ Upstream commit 793551c965116d9dfaf0550dacae1396a20efa69 ]
+[ Upstream commit 4acd21a45c1446277e2abaece97d7fa7c2e692a9 ]
 
-It is generally invalid to fail a Device Check notification if the scan
-handler has not been attached to the given device after a bus rescan,
-because there may be valid reasons for the scan handler to refuse
-attaching to the device (for example, the device is not ready).
+Update the architecture dependency to be the generic Tegra
+because the driver works on the four latest Tegra generations
+not just Tegra210, if you build a kernel with a specific
+ARCH_TEGRA_xxx_SOC option that excludes Tegra210 you don't get
+this driver.
 
-For this reason, modify acpi_scan_device_check() to return 0 in that
-case without printing a warning.
-
-While at it, reduce the log level of the "already enumerated" message
-in the same function, because it is only interesting when debugging
-notification handling
-
-Fixes: 443fc8202272 ("ACPI / hotplug: Rework generic code to handle suprise removals")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 46a88534afb59 ("bus: Add support for Tegra ACONNECT")
+Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+Cc: Jon Hunter <jonathanh@nvidia.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/scan.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/bus/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 94154a849a3ea..293cdf486fd81 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -315,18 +315,14 @@ static int acpi_scan_device_check(struct acpi_device *adev)
- 		 * again).
- 		 */
- 		if (adev->handler) {
--			dev_warn(&adev->dev, "Already enumerated\n");
--			return -EALREADY;
-+			dev_dbg(&adev->dev, "Already enumerated\n");
-+			return 0;
- 		}
- 		error = acpi_bus_scan(adev->handle);
- 		if (error) {
- 			dev_warn(&adev->dev, "Namespace scan failure\n");
- 			return error;
- 		}
--		if (!adev->handler) {
--			dev_warn(&adev->dev, "Enumeration failure\n");
--			error = -ENODEV;
--		}
- 	} else {
- 		error = acpi_scan_device_not_present(adev);
- 	}
+diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+index 7bfe998f3514a..bdc7633905504 100644
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -186,11 +186,12 @@ config SUNXI_RSB
+ 
+ config TEGRA_ACONNECT
+ 	tristate "Tegra ACONNECT Bus Driver"
+-	depends on ARCH_TEGRA_210_SOC
++	depends on ARCH_TEGRA
+ 	depends on OF && PM
+ 	help
+ 	  Driver for the Tegra ACONNECT bus which is used to interface with
+-	  the devices inside the Audio Processing Engine (APE) for Tegra210.
++	  the devices inside the Audio Processing Engine (APE) for
++	  Tegra210 and later.
+ 
+ config TEGRA_GMI
+ 	tristate "Tegra Generic Memory Interface bus driver"
 -- 
 2.43.0
 
