@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297A6225219;
-	Sun, 24 Mar 2024 23:12:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435CF225216;
+	Sun, 24 Mar 2024 23:12:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321941; cv=none; b=lWav+pCX+36Wabd8NGaVfo4aeUU8JbCPzapTvNyC5zB26h7spNtAvFmZj1YfifOuwGDJzDSw4hlmgvlmwVd7wRfmBXpjAdMxHs+NyERnssK4wadVajF6FeaC1LRb8Pfyd+Ts3KodtaSlHZcqZKVJCaSNEMN/7EKtQj/zhfDWTSw=
+	t=1711321940; cv=none; b=ce3NPDSavoK/jQ3tMsgtVPU/x7zqQ1AG6ktFjEV9zVdaLEdPVRSnWo7mOlaM7vTrKlxTWmtLmIDTCrGUPuQSVAFf0dC6pr/96g2VQvuC4zrXO52LxLYp+jrKuT9ICM7FzOu0a65zOrYY5I3EGkcVQZdACR+Kq5kzt1q2NYfy4BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321941; c=relaxed/simple;
-	bh=QojNL+Cb9RditocGthFN/Ct6+fVG+hVShAGwJAb8Xxg=;
+	s=arc-20240116; t=1711321940; c=relaxed/simple;
+	bh=23GL57ye74vveaYu/3CUzURuBoHACp2aCQAhOc/s4z4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G2TmIAaw0EdTt9/ddQKhd7ooC/KyegKT5p2mRC2SOQAtVwkyrWtiIqkWuYymJ3qo1eYwaHfRU7udyi9lVMZu/l6iBJuCn8V+XRCx0GDX0x0ZSovmqoxLvkWV354EySRJPk+F0X2xNVBnRn5ja7Sb0lUt/tvhYkQ7dqm7CiXAbYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHdsgDvk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VncF0d+AbuxdvT3D4f2MutCTHJmKMPgB0yaVd8YrMXICzJat7XXgfYA95XLNo1IzllCP3Bbt/APZdioj7XuUC75canyYo6FT96aJcmwotECiSVhQ0hnxhFOi9zdOSxkcB5ETpRkWvOAVr3fJVKe/1fmr64dQrODKtQaqtv1sJMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SESmlu4j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHdsgDvk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6590DC43399;
-	Sun, 24 Mar 2024 23:12:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SESmlu4j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 680C9C433F1;
+	Sun, 24 Mar 2024 23:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321940;
-	bh=QojNL+Cb9RditocGthFN/Ct6+fVG+hVShAGwJAb8Xxg=;
+	s=k20201202; t=1711321939;
+	bh=23GL57ye74vveaYu/3CUzURuBoHACp2aCQAhOc/s4z4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XHdsgDvkGy0+I1RuocdNrYvbS/KbygKFD/HQP9yVMTW2aQ9np3piVh/ejZJRNAcnV
-	 cqTrOgh9JMPJavXilP8HdddEHJPXVbLI2Q97OWM2WijvjajXWt2JoIodKwC2cd0kJp
-	 0HaIdDwZdcfnnmi++zmXIyGSIuFGW8QIm0rsoX1eXeEBLffTSH8MvYBqlAP21tbqfw
-	 P2sM8llO+5Vd95da+glMMTJRW1tqEo7S44we2hr1duJFi2JnQ7m+VkPaQAK9B/n/gu
-	 Te2Yc7kTxVpGEcs60sonmZai1LMwsKqqzJWi3Cjt3Zed9oBtDUm7DWna4a1FP0nuVu
-	 lQnk63e1Y0B5w==
+	b=SESmlu4juaXC/RGEj5HrB/iBinwxeIu9HKQtVlq635Y2wN7oA5quqn+JL3yJAz8Be
+	 +yUTJnbkloPxFx/kwbE54b29szdGVXkxG4t5EJLf+ZHdWZradwxdp3nYSPKHlcZVpQ
+	 8jhlRWip0R5FERY6oZqr4rEiRabQiD9024GuIJIyFyvaT0+o76pizlBGtGmQkzdu5g
+	 u/SYUxN+AseCm9PwqCTFstqyqiiPVX6wUEbfhTG92eefxvT6Ix0DtE7t3czE2vzs/z
+	 J1WEm8liAbe9RqB7/vfSjlItG/9qPwyd2zclkiikKcMSQsuueEStUnkgHMtdXyNTM1
+	 a1u0KhHLtvl5A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
+	David Howells <dhowells@redhat.com>,
 	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 011/451] nfsd: don't take/put an extra reference when putting a file
-Date: Sun, 24 Mar 2024 19:04:47 -0400
-Message-ID: <20240324231207.1351418-12-sashal@kernel.org>
+Subject: [PATCH 6.1 010/451] nfsd: add some comments to nfsd_file_do_acquire
+Date: Sun, 24 Mar 2024 19:04:46 -0400
+Message-ID: <20240324231207.1351418-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,34 +51,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Jeff Layton <jlayton@kernel.org>
 
-[ Upstream commit b2ff1bd71db2a1b193a6dde0845adcd69cbcf75e ]
+[ Upstream commit b680cb9b737331aad271feebbedafb865504e234 ]
 
-The last thing that filp_close does is an fput, so don't bother taking
-and putting the extra reference.
+David Howells mentioned that he found this bit of code confusing, so
+sprinkle in some comments to clarify.
 
+Reported-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/filecache.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/nfsd/filecache.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 50349449a4e52..51e2947c21a7d 100644
+index ab37b85b72077..50349449a4e52 100644
 --- a/fs/nfsd/filecache.c
 +++ b/fs/nfsd/filecache.c
-@@ -382,10 +382,8 @@ nfsd_file_free(struct nfsd_file *nf)
- 	if (nf->nf_mark)
- 		nfsd_file_mark_put(nf->nf_mark);
- 	if (nf->nf_file) {
--		get_file(nf->nf_file);
--		filp_close(nf->nf_file, NULL);
- 		nfsd_file_check_write_error(nf);
--		fput(nf->nf_file);
-+		filp_close(nf->nf_file, NULL);
- 	}
+@@ -1094,6 +1094,11 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	rcu_read_unlock();
  
- 	/*
+ 	if (nf) {
++		/*
++		 * If the nf is on the LRU then it holds an extra reference
++		 * that must be put if it's removed. It had better not be
++		 * the last one however, since we should hold another.
++		 */
+ 		if (nfsd_file_lru_remove(nf))
+ 			WARN_ON_ONCE(refcount_dec_and_test(&nf->nf_ref));
+ 		goto wait_for_construction;
 -- 
 2.43.0
 
