@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C42181B91;
-	Sun, 24 Mar 2024 23:48:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B000A181BA1;
+	Sun, 24 Mar 2024 23:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324114; cv=none; b=UECGHeTre0JIbAVChfr87x1Yv9waqHmCgdLyLzs3xS0J1xZZfe4+PSWLOnfMKOGCyZBvB7ClHzYYEKX+Hpge/C13/cw5WRLZOVcfBTejcIEIhF0xlbbAgzUCBV4dwy/Z8F5DrNxzCH7KspWJPiFHp8SjCm8qc20ftEeskzzYIo0=
+	t=1711324117; cv=none; b=g/D5zQrkEZVq4J4vaDJew5Gt1uby0a5odQhm2q/mDAq9Orh1XTg1NeJoQV2YifXM0NuuV36fBOzeAINhzDnnNVme99fW5jFSrDUAC2m2H56KVe5/I7Bl+R3Sk7W796jkBk5mqE+5D88JV61fePAS4MSRpuWe04kwB0m1cdxbyik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324114; c=relaxed/simple;
-	bh=x1NtUxseTfEcrQF83Qqi+L2VnzDZc8ZkZ64G2ZdZTfc=;
+	s=arc-20240116; t=1711324117; c=relaxed/simple;
+	bh=lqEdFFPxC0/3d/WRyr5uSH3G+pJQvMxlAk1JO+CwFYs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pnWmQAJPmdVjNQWWFnr2PuwLiSSoQQnA9HqGFEn0PSxZqpzWYG+BDbYildPNtKyyHn39HS6ZP97hBWKlEHRYDoxqk18bI6QGeXbbejG5UYQmOA4io3ZQm9x4llCvB6qWcV8zGuWb2UBLt+7ldRdx7IJlZvUqL+SK6yIohi0kPrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5On6cya; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PBcwbkFbn5vb3kzou3HFuPFE6tjtswMeJvUrfnmeU29DIF2B24WFO/kU1st6qx9GrYX2Lvva5L8k5tVIt/2kPgMJAJZdwnMSTHovseWovFEbTcDThwxmWe/hCgKRH1OUlJn2W+6FqMaJY99JH8me31G46gx5uVTJgptdEPGtnHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjAxMs69; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5On6cya"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 302CFC43141;
-	Sun, 24 Mar 2024 23:48:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjAxMs69"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1327C43394;
+	Sun, 24 Mar 2024 23:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324112;
-	bh=x1NtUxseTfEcrQF83Qqi+L2VnzDZc8ZkZ64G2ZdZTfc=;
+	s=k20201202; t=1711324116;
+	bh=lqEdFFPxC0/3d/WRyr5uSH3G+pJQvMxlAk1JO+CwFYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j5On6cyaIp+2wLOOjncBK3QT6ZrzCgQOR2xpbQIOeZeeyQkLFys1YUoLJFQGA5x0Y
-	 IO8SsMBVfqpaVPA6OCqFNWflZ2ryLRLTGT+EhVNgvoPZAFnm/ucryL+XQ3QfE0fxAP
-	 TMrh4aC8DEnAAcDWeP6DX44XGWppg6QGTzws0rSJ4lEudjmwGmoiszJpRKoyPCq2Js
-	 uxQKVGW7PhMnAaqmOIWx9ozCHv/LkOoJlqLQCAkGJhew9LTgAxpjtFkykRMV0WR6Da
-	 hHaK/zTkhbXWZ8OC8Zu67+W7EaW2RHuuau6+SQzTK0qk/c7dsaEB0uHVxp1eqLPPQE
-	 bmRiS4c+FUfNQ==
+	b=AjAxMs69bnoMAyJNCTEU4AhCExSYl3bWoW8mTujDOLbGWBWpqYLh5+MkMs2gNkLtS
+	 PPcoCmROBlSuPRzivVU0SbA/p6yhQkD5JeeXKoo/WSdCsPvvTNWoMRbDh+K7IJWZKG
+	 GiDO9/zt5N4sUL437pryviL+PQFHMrwqTF4bYE9m0scprA+sXlfN8hsVF64QENyXb2
+	 qYuHicEAsvymluoVInCO1CbWG/1xtOEhHzmz2a7Ph0gLxpawXs4OuuMM5YOfXqLkBD
+	 MOJ6YDuFbpiMTpXz36kd4XmWXPlF3J+Yt4FiLo2t09MZK7UxU4lwM8yIcfbIvMzxk+
+	 VLwOYZpiYr8NA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jan Kara <jack@suse.cz>,
-	kernel test robot <lkp@intel.com>,
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Arnd Bergmann <arnd@arndb.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 111/183] quota: Fix rcu annotations of inode dquot pointers
-Date: Sun, 24 Mar 2024 19:45:24 -0400
-Message-ID: <20240324234638.1355609-112-sashal@kernel.org>
+Subject: [PATCH 5.4 115/183] ALSA: seq: fix function cast warnings
+Date: Sun, 24 Mar 2024 19:45:28 -0400
+Message-ID: <20240324234638.1355609-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,251 +48,93 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jan Kara <jack@suse.cz>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 179b8c97ebf63429589f5afeba59a181fe70603e ]
+[ Upstream commit d7bf73809849463f76de42aad62c850305dd6c5d ]
 
-Dquot pointers in i_dquot array in the inode are protected by
-dquot_srcu. Annotate the array pointers with __rcu, perform the locked
-dereferences with srcu_dereference_check() instead of plain reads, and
-set the array elements with rcu_assign_pointer().
+clang-16 points out a control flow integrity (kcfi) issue when event
+callbacks get converted to incompatible types:
 
-Fixes: b9ba6f94b238 ("quota: remove dqptr_sem")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402061900.rTuYDlo6-lkp@intel.com/
-Signed-off-by: Jan Kara <jack@suse.cz>
+sound/core/seq/seq_midi.c:135:30: error: cast from 'int (*)(struct snd_rawmidi_substream *, const char *, int)' to 'snd_seq_dump_func_t' (aka 'int (*)(void *, void *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  135 |                 snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)dump_midi, substream);
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sound/core/seq/seq_virmidi.c:83:31: error: cast from 'int (*)(struct snd_rawmidi_substream *, const unsigned char *, int)' to 'snd_seq_dump_func_t' (aka 'int (*)(void *, void *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+   83 |                         snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)snd_rawmidi_receive, vmidi->substream);
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For addressing those errors, introduce wrapper functions that are used
+for callbacks and bridge to the actual function call with pointer
+cast.
+
+The code was originally added with the initial ALSA merge in linux-2.5.4.
+
+[ the patch description shamelessly copied from Arnd's original patch
+  -- tiwai ]
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20240213101020.459183-1-arnd@kernel.org
+Link: https://lore.kernel.org/r/20240213135343.16411-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/quota/dquot.c | 66 ++++++++++++++++++++++++++++--------------------
- 1 file changed, 39 insertions(+), 27 deletions(-)
+ sound/core/seq/seq_midi.c    | 8 +++++++-
+ sound/core/seq/seq_virmidi.c | 9 ++++++++-
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index c4726a1895582..a7ddb874912d4 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -399,7 +399,7 @@ int dquot_mark_dquot_dirty(struct dquot *dquot)
- EXPORT_SYMBOL(dquot_mark_dquot_dirty);
- 
- /* Dirtify all the dquots - this can block when journalling */
--static inline int mark_all_dquot_dirty(struct dquot * const *dquots)
-+static inline int mark_all_dquot_dirty(struct dquot __rcu * const *dquots)
- {
- 	int ret, err, cnt;
- 	struct dquot *dquot;
-@@ -997,14 +997,15 @@ struct dquot *dqget(struct super_block *sb, struct kqid qid)
- }
- EXPORT_SYMBOL(dqget);
- 
--static inline struct dquot **i_dquot(struct inode *inode)
-+static inline struct dquot __rcu **i_dquot(struct inode *inode)
- {
--	return inode->i_sb->s_op->get_dquots(inode);
-+	/* Force __rcu for now until filesystems are fixed */
-+	return (struct dquot __rcu **)inode->i_sb->s_op->get_dquots(inode);
+diff --git a/sound/core/seq/seq_midi.c b/sound/core/seq/seq_midi.c
+index 6825940ea2cf8..a741d1ae6639a 100644
+--- a/sound/core/seq/seq_midi.c
++++ b/sound/core/seq/seq_midi.c
+@@ -111,6 +111,12 @@ static int dump_midi(struct snd_rawmidi_substream *substream, const char *buf, i
+ 	return 0;
  }
  
- static int dqinit_needed(struct inode *inode, int type)
- {
--	struct dquot * const *dquots;
-+	struct dquot __rcu * const *dquots;
- 	int cnt;
- 
- 	if (IS_NOQUOTA(inode))
-@@ -1094,14 +1095,16 @@ static void remove_dquot_ref(struct super_block *sb, int type)
- 		 */
- 		spin_lock(&dq_data_lock);
- 		if (!IS_NOQUOTA(inode)) {
--			struct dquot **dquots = i_dquot(inode);
--			struct dquot *dquot = dquots[type];
-+			struct dquot __rcu **dquots = i_dquot(inode);
-+			struct dquot *dquot = srcu_dereference_check(
-+				dquots[type], &dquot_srcu,
-+				lockdep_is_held(&dq_data_lock));
- 
- #ifdef CONFIG_QUOTA_DEBUG
- 			if (unlikely(inode_get_rsv_space(inode) > 0))
- 				reserved = 1;
- #endif
--			dquots[type] = NULL;
-+			rcu_assign_pointer(dquots[type], NULL);
- 			if (dquot)
- 				dqput(dquot);
- 		}
-@@ -1454,7 +1457,8 @@ static int inode_quota_active(const struct inode *inode)
- static int __dquot_initialize(struct inode *inode, int type)
- {
- 	int cnt, init_needed = 0;
--	struct dquot **dquots, *got[MAXQUOTAS] = {};
-+	struct dquot __rcu **dquots;
-+	struct dquot *got[MAXQUOTAS] = {};
- 	struct super_block *sb = inode->i_sb;
- 	qsize_t rsv;
- 	int ret = 0;
-@@ -1529,7 +1533,7 @@ static int __dquot_initialize(struct inode *inode, int type)
- 		if (!got[cnt])
- 			continue;
- 		if (!dquots[cnt]) {
--			dquots[cnt] = got[cnt];
-+			rcu_assign_pointer(dquots[cnt], got[cnt]);
- 			got[cnt] = NULL;
- 			/*
- 			 * Make quota reservation system happy if someone
-@@ -1537,12 +1541,16 @@ static int __dquot_initialize(struct inode *inode, int type)
- 			 */
- 			rsv = inode_get_rsv_space(inode);
- 			if (unlikely(rsv)) {
-+				struct dquot *dquot = srcu_dereference_check(
-+					dquots[cnt], &dquot_srcu,
-+					lockdep_is_held(&dq_data_lock));
++/* callback for snd_seq_dump_var_event(), bridging to dump_midi() */
++static int __dump_midi(void *ptr, void *buf, int count)
++{
++	return dump_midi(ptr, buf, count);
++}
 +
- 				spin_lock(&inode->i_lock);
- 				/* Get reservation again under proper lock */
- 				rsv = __inode_get_rsv_space(inode);
--				spin_lock(&dquots[cnt]->dq_dqb_lock);
--				dquots[cnt]->dq_dqb.dqb_rsvspace += rsv;
--				spin_unlock(&dquots[cnt]->dq_dqb_lock);
-+				spin_lock(&dquot->dq_dqb_lock);
-+				dquot->dq_dqb.dqb_rsvspace += rsv;
-+				spin_unlock(&dquot->dq_dqb_lock);
- 				spin_unlock(&inode->i_lock);
- 			}
+ static int event_process_midi(struct snd_seq_event *ev, int direct,
+ 			      void *private_data, int atomic, int hop)
+ {
+@@ -130,7 +136,7 @@ static int event_process_midi(struct snd_seq_event *ev, int direct,
+ 			pr_debug("ALSA: seq_midi: invalid sysex event flags = 0x%x\n", ev->flags);
+ 			return 0;
  		}
-@@ -1564,7 +1572,7 @@ EXPORT_SYMBOL(dquot_initialize);
- 
- bool dquot_initialize_needed(struct inode *inode)
- {
--	struct dquot **dquots;
-+	struct dquot __rcu **dquots;
- 	int i;
- 
- 	if (!inode_quota_active(inode))
-@@ -1589,13 +1597,14 @@ EXPORT_SYMBOL(dquot_initialize_needed);
- static void __dquot_drop(struct inode *inode)
- {
- 	int cnt;
--	struct dquot **dquots = i_dquot(inode);
-+	struct dquot __rcu **dquots = i_dquot(inode);
- 	struct dquot *put[MAXQUOTAS];
- 
- 	spin_lock(&dq_data_lock);
- 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
--		put[cnt] = dquots[cnt];
--		dquots[cnt] = NULL;
-+		put[cnt] = srcu_dereference_check(dquots[cnt], &dquot_srcu,
-+					lockdep_is_held(&dq_data_lock));
-+		rcu_assign_pointer(dquots[cnt], NULL);
- 	}
- 	spin_unlock(&dq_data_lock);
- 	dqput_all(put);
-@@ -1603,7 +1612,7 @@ static void __dquot_drop(struct inode *inode)
- 
- void dquot_drop(struct inode *inode)
- {
--	struct dquot * const *dquots;
-+	struct dquot __rcu * const *dquots;
- 	int cnt;
- 
- 	if (IS_NOQUOTA(inode))
-@@ -1676,7 +1685,7 @@ int __dquot_alloc_space(struct inode *inode, qsize_t number, int flags)
- 	int cnt, ret = 0, index;
- 	struct dquot_warn warn[MAXQUOTAS];
- 	int reserve = flags & DQUOT_SPACE_RESERVE;
--	struct dquot **dquots;
-+	struct dquot __rcu **dquots;
- 	struct dquot *dquot;
- 
- 	if (!inode_quota_active(inode)) {
-@@ -1746,7 +1755,7 @@ int dquot_alloc_inode(struct inode *inode)
- {
- 	int cnt, ret = 0, index;
- 	struct dquot_warn warn[MAXQUOTAS];
--	struct dquot * const *dquots;
-+	struct dquot __rcu * const *dquots;
- 	struct dquot *dquot;
- 
- 	if (!inode_quota_active(inode))
-@@ -1791,7 +1800,7 @@ EXPORT_SYMBOL(dquot_alloc_inode);
+-		snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)dump_midi, substream);
++		snd_seq_dump_var_event(ev, __dump_midi, substream);
+ 		snd_midi_event_reset_decode(msynth->parser);
+ 	} else {
+ 		if (msynth->parser == NULL)
+diff --git a/sound/core/seq/seq_virmidi.c b/sound/core/seq/seq_virmidi.c
+index 77d7037d1476f..82396b8c885a5 100644
+--- a/sound/core/seq/seq_virmidi.c
++++ b/sound/core/seq/seq_virmidi.c
+@@ -62,6 +62,13 @@ static void snd_virmidi_init_event(struct snd_virmidi *vmidi,
+ /*
+  * decode input event and put to read buffer of each opened file
   */
- int dquot_claim_space_nodirty(struct inode *inode, qsize_t number)
- {
--	struct dquot **dquots;
-+	struct dquot __rcu **dquots;
- 	struct dquot *dquot;
- 	int cnt, index;
- 
-@@ -1833,7 +1842,7 @@ EXPORT_SYMBOL(dquot_claim_space_nodirty);
-  */
- void dquot_reclaim_space_nodirty(struct inode *inode, qsize_t number)
- {
--	struct dquot **dquots;
-+	struct dquot __rcu **dquots;
- 	struct dquot *dquot;
- 	int cnt, index;
- 
-@@ -1877,7 +1886,7 @@ void __dquot_free_space(struct inode *inode, qsize_t number, int flags)
- {
- 	unsigned int cnt;
- 	struct dquot_warn warn[MAXQUOTAS];
--	struct dquot **dquots;
-+	struct dquot __rcu **dquots;
- 	struct dquot *dquot;
- 	int reserve = flags & DQUOT_SPACE_RESERVE, index;
- 
-@@ -1934,7 +1943,7 @@ void dquot_free_inode(struct inode *inode)
- {
- 	unsigned int cnt;
- 	struct dquot_warn warn[MAXQUOTAS];
--	struct dquot * const *dquots;
-+	struct dquot __rcu * const *dquots;
- 	struct dquot *dquot;
- 	int index;
- 
-@@ -1981,6 +1990,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 	qsize_t cur_space;
- 	qsize_t rsv_space = 0;
- 	qsize_t inode_usage = 1;
-+	struct dquot __rcu **dquots;
- 	struct dquot *transfer_from[MAXQUOTAS] = {};
- 	int cnt, index, ret = 0;
- 	char is_valid[MAXQUOTAS] = {};
-@@ -2013,6 +2023,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 	}
- 	cur_space = __inode_get_bytes(inode);
- 	rsv_space = __inode_get_rsv_space(inode);
-+	dquots = i_dquot(inode);
- 	/*
- 	 * Build the transfer_from list, check limits, and update usage in
- 	 * the target structures.
-@@ -2027,7 +2038,8 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 		if (!sb_has_quota_active(inode->i_sb, cnt))
- 			continue;
- 		is_valid[cnt] = 1;
--		transfer_from[cnt] = i_dquot(inode)[cnt];
-+		transfer_from[cnt] = srcu_dereference_check(dquots[cnt],
-+				&dquot_srcu, lockdep_is_held(&dq_data_lock));
- 		ret = dquot_add_inodes(transfer_to[cnt], inode_usage,
- 				       &warn_to[cnt]);
- 		if (ret)
-@@ -2066,7 +2078,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 						  rsv_space);
- 			spin_unlock(&transfer_from[cnt]->dq_dqb_lock);
- 		}
--		i_dquot(inode)[cnt] = transfer_to[cnt];
-+		rcu_assign_pointer(dquots[cnt], transfer_to[cnt]);
- 	}
- 	spin_unlock(&inode->i_lock);
- 	spin_unlock(&dq_data_lock);
-@@ -2077,8 +2089,8 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 	 * mark_all_dquot_dirty().
- 	 */
- 	index = srcu_read_lock(&dquot_srcu);
--	mark_all_dquot_dirty(transfer_from);
--	mark_all_dquot_dirty(transfer_to);
-+	mark_all_dquot_dirty((struct dquot __rcu **)transfer_from);
-+	mark_all_dquot_dirty((struct dquot __rcu **)transfer_to);
- 	srcu_read_unlock(&dquot_srcu, index);
- 
- 	flush_warnings(warn_to);
++
++/* callback for snd_seq_dump_var_event(), bridging to snd_rawmidi_receive() */
++static int dump_to_rawmidi(void *ptr, void *buf, int count)
++{
++	return snd_rawmidi_receive(ptr, buf, count);
++}
++
+ static int snd_virmidi_dev_receive_event(struct snd_virmidi_dev *rdev,
+ 					 struct snd_seq_event *ev,
+ 					 bool atomic)
+@@ -80,7 +87,7 @@ static int snd_virmidi_dev_receive_event(struct snd_virmidi_dev *rdev,
+ 		if (ev->type == SNDRV_SEQ_EVENT_SYSEX) {
+ 			if ((ev->flags & SNDRV_SEQ_EVENT_LENGTH_MASK) != SNDRV_SEQ_EVENT_LENGTH_VARIABLE)
+ 				continue;
+-			snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)snd_rawmidi_receive, vmidi->substream);
++			snd_seq_dump_var_event(ev, dump_to_rawmidi, vmidi->substream);
+ 			snd_midi_event_reset_decode(vmidi->parser);
+ 		} else {
+ 			len = snd_midi_event_decode(vmidi->parser, msg, sizeof(msg), ev);
 -- 
 2.43.0
 
