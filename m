@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128D01AE050;
-	Sun, 24 Mar 2024 22:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1964B1AE02F;
+	Sun, 24 Mar 2024 22:44:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320251; cv=none; b=UY6QF0Ls9qncYUT4aBMn2hPAik2zVbSmc2XcADXKQbYFLZHbm46/V1tfaIgrqWGZVZbR+48wFeG9Iuq6Tgad/txflrxiIj6rBLFSCSQMBxU9StmMFPkcngDcLyta2L2dfeBn100xrI6OHpm10hiHo/vFuWhyRALfGQxNv/sUEaY=
+	t=1711320250; cv=none; b=GSSdqfuk/4sTdye5Uxp6MLzlgV5yaIGvT/HDCN2P2GV3f9pfynVn9xMKpVs7xEwFv0dDNngluswAgkkAnY4kfxBJd0wsaVKHzA/CyNVZiOBXMGPol5S9dP6E9QhIjCl4Pqzr1swomp8WQTjfpjsEGhn3HUYwmsV7LA9BPK2fuQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320251; c=relaxed/simple;
-	bh=j/uLWJi1N1qWK4ODXJnBPySHzNDtY9Iwe9qrdAKQqxo=;
+	s=arc-20240116; t=1711320250; c=relaxed/simple;
+	bh=XJdMnQgXD90zhNAK03LGBoZ6NzzvmlXp1ppP5ajCa6E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JHpbQdSuN4lUprDr1HSorxdrajZMNus+BlXHSyEE72x+EmY18RYV0LBCLEZ6VGRk9r/NfHrvhd71Al6ALkP6pQ/XoLrG8oPWel0uVDBgWltAv8WSP3hFV8jIy2waSzVCecFXIVNOtYTLdQp5vXq2tHiRWMiclaytYdV7cFC1DKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=claz7+3t; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KzvetlzaupTxmAR/gWpFM1A5F1W8HSp/kYqpFG0V3v0e+veNsQNUqTw3rNtGHBFTOCN4n17w3C2aEs/SE8x0N2An9e54VUHN/n8cFEkBZVPiDcp5T7bw9XD3rufxYP6fQzV/4Daka8rgXdCtmGfiyU6zYyl3Go9SVhotZec72OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YfIXJATy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="claz7+3t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A67FC43399;
-	Sun, 24 Mar 2024 22:44:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YfIXJATy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E1E5C43390;
+	Sun, 24 Mar 2024 22:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320250;
-	bh=j/uLWJi1N1qWK4ODXJnBPySHzNDtY9Iwe9qrdAKQqxo=;
+	s=k20201202; t=1711320248;
+	bh=XJdMnQgXD90zhNAK03LGBoZ6NzzvmlXp1ppP5ajCa6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=claz7+3tN+N2AO23aIrrHPi2HbzdGhAB7YyCqgIZe6IguXgmRDMPlDIXrtmY4b56U
-	 hJahPULTcaVQiPSz4fpZTbn10tYwe7owVD6KsFINe+QeNf8lXHu+tA9UCV6x6Giybc
-	 0jj9WiXD7AezJvj/oll8F71mS0E7dcO2wh+WefG+3t0XJmYcBCT8VHn9Ufnfaq5D7w
-	 uIwIBrFISRJFtgtq0GxU3zl4YErEB4vpK3B6aFmlD8rs2WCXQnjGAUFfhUJdxH2vms
-	 WI6n0Zh3CsSHba1jRHA6vnhKWdSdPsvhqk+j4sUlSmk68yjL+moK0+LyBZGIhVXo/z
-	 8zq+5pus8eA6g==
+	b=YfIXJATyS/CUwVRhUvw+jN52XJl1AgubkJ/RtHtCTUt4XRtSBnE+FcJDnuTkulpe+
+	 KhaxcmVjTwHvNYJcNnCAyO3oxnBJlCl+AKP8lG5MSnx6WuiyVvUSCcb2KF7ujBenXR
+	 cGCtFve+CL3vDB3V27UWkXm06Fx+JNjrdRHPOCltHS4tdqnjchJRDS1dcahscjYmiM
+	 wOUkL5ti2WCSuszTyrmPnhlS7kMc8ZFhoB8MFYzObGCPagGTRtMD8dcdT7X6JdhWgS
+	 XOrQ9Q+yCzUbQW3bWlAYHNG1grokW1jWF/vvlta72TAoKH7vbzngi0F8/qdcDZLN5g
+	 A0M3UnBIOvhVQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: William Kucharski <william.kucharski@oracle.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Leon Romanovsky <leon@kernel.org>,
+Cc: Yihang Li <liyihang9@huawei.com>,
+	Xiang Chen <chenxiang66@hisilicon.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 558/715] RDMA/srpt: Do not register event handler until srpt device is fully setup
-Date: Sun, 24 Mar 2024 18:32:17 -0400
-Message-ID: <20240324223455.1342824-559-sashal@kernel.org>
+Subject: [PATCH 6.8 556/715] scsi: hisi_sas: Fix a deadlock issue related to automatic dump
+Date: Sun, 24 Mar 2024 18:32:15 -0400
+Message-ID: <20240324223455.1342824-557-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
 References: <20240324223455.1342824-1-sashal@kernel.org>
@@ -49,58 +49,123 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: William Kucharski <william.kucharski@oracle.com>
+From: Yihang Li <liyihang9@huawei.com>
 
-[ Upstream commit c21a8870c98611e8f892511825c9607f1e2cd456 ]
+[ Upstream commit 3c4f53b2c341ec6428b98cb51a89a09b025d0953 ]
 
-Upon rare occasions, KASAN reports a use-after-free Write
-in srpt_refresh_port().
+If we issue a disabling PHY command, the device attached with it will go
+offline, if a 2 bit ECC error occurs at the same time, a hung task may be
+found:
 
-This seems to be because an event handler is registered before the
-srpt device is fully setup and a race condition upon error may leave a
-partially setup event handler in place.
+[ 4613.652388] INFO: task kworker/u256:0:165233 blocked for more than 120 seconds.
+[ 4613.666297] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 4613.674809] task:kworker/u256:0  state:D stack:    0 pid:165233 ppid:     2 flags:0x00000208
+[ 4613.683959] Workqueue: 0000:74:02.0_disco_q sas_revalidate_domain [libsas]
+[ 4613.691518] Call trace:
+[ 4613.694678]  __switch_to+0xf8/0x17c
+[ 4613.698872]  __schedule+0x660/0xee0
+[ 4613.703063]  schedule+0xac/0x240
+[ 4613.706994]  schedule_timeout+0x500/0x610
+[ 4613.711705]  __down+0x128/0x36c
+[ 4613.715548]  down+0x240/0x2d0
+[ 4613.719221]  hisi_sas_internal_abort_timeout+0x1bc/0x260 [hisi_sas_main]
+[ 4613.726618]  sas_execute_internal_abort+0x144/0x310 [libsas]
+[ 4613.732976]  sas_execute_internal_abort_dev+0x44/0x60 [libsas]
+[ 4613.739504]  hisi_sas_internal_task_abort_dev.isra.0+0xbc/0x1b0 [hisi_sas_main]
+[ 4613.747499]  hisi_sas_dev_gone+0x174/0x250 [hisi_sas_main]
+[ 4613.753682]  sas_notify_lldd_dev_gone+0xec/0x2e0 [libsas]
+[ 4613.759781]  sas_unregister_common_dev+0x4c/0x7a0 [libsas]
+[ 4613.765962]  sas_destruct_devices+0xb8/0x120 [libsas]
+[ 4613.771709]  sas_do_revalidate_domain.constprop.0+0x1b8/0x31c [libsas]
+[ 4613.778930]  sas_revalidate_domain+0x60/0xa4 [libsas]
+[ 4613.784716]  process_one_work+0x248/0x950
+[ 4613.789424]  worker_thread+0x318/0x934
+[ 4613.793878]  kthread+0x190/0x200
+[ 4613.797810]  ret_from_fork+0x10/0x18
+[ 4613.802121] INFO: task kworker/u256:4:316722 blocked for more than 120 seconds.
+[ 4613.816026] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 4613.824538] task:kworker/u256:4  state:D stack:    0 pid:316722 ppid:     2 flags:0x00000208
+[ 4613.833670] Workqueue: 0000:74:02.0 hisi_sas_rst_work_handler [hisi_sas_main]
+[ 4613.841491] Call trace:
+[ 4613.844647]  __switch_to+0xf8/0x17c
+[ 4613.848852]  __schedule+0x660/0xee0
+[ 4613.853052]  schedule+0xac/0x240
+[ 4613.856984]  schedule_timeout+0x500/0x610
+[ 4613.861695]  __down+0x128/0x36c
+[ 4613.865542]  down+0x240/0x2d0
+[ 4613.869216]  hisi_sas_controller_prereset+0x58/0x1fc [hisi_sas_main]
+[ 4613.876324]  hisi_sas_rst_work_handler+0x40/0x8c [hisi_sas_main]
+[ 4613.883019]  process_one_work+0x248/0x950
+[ 4613.887732]  worker_thread+0x318/0x934
+[ 4613.892204]  kthread+0x190/0x200
+[ 4613.896118]  ret_from_fork+0x10/0x18
+[ 4613.900423] INFO: task kworker/u256:1:348985 blocked for more than 121 seconds.
+[ 4613.914341] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 4613.922852] task:kworker/u256:1  state:D stack:    0 pid:348985 ppid:     2 flags:0x00000208
+[ 4613.931984] Workqueue: 0000:74:02.0_event_q sas_port_event_worker [libsas]
+[ 4613.939549] Call trace:
+[ 4613.942702]  __switch_to+0xf8/0x17c
+[ 4613.946892]  __schedule+0x660/0xee0
+[ 4613.951083]  schedule+0xac/0x240
+[ 4613.955015]  schedule_timeout+0x500/0x610
+[ 4613.959725]  wait_for_common+0x200/0x610
+[ 4613.964349]  wait_for_completion+0x3c/0x5c
+[ 4613.969146]  flush_workqueue+0x198/0x790
+[ 4613.973776]  sas_porte_broadcast_rcvd+0x1e8/0x320 [libsas]
+[ 4613.979960]  sas_port_event_worker+0x54/0xa0 [libsas]
+[ 4613.985708]  process_one_work+0x248/0x950
+[ 4613.990420]  worker_thread+0x318/0x934
+[ 4613.994868]  kthread+0x190/0x200
+[ 4613.998800]  ret_from_fork+0x10/0x18
 
-Instead, only register the event handler after srpt device initialization
-is complete.
+This is because when the device goes offline, we obtain the hisi_hba
+semaphore and send the ABORT_DEV command to the device. However, the
+internal abort timed out due to the 2 bit ECC error and triggers automatic
+dump. In addition, since the hisi_hba semaphore has been obtained, the dump
+cannot be executed and the controller cannot be reset.
 
-Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
-Signed-off-by: William Kucharski <william.kucharski@oracle.com>
-Link: https://lore.kernel.org/r/20240202091549.991784-2-william.kucharski@oracle.com
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Therefore, the deadlocks occur on the following circular dependencies:
+hisi_sas_dev_gone() -> down() -> hisi_sas_internal_task_abort_dev() -> ...
+-> hisi_sas_internal_abort_timeout() -> down().
+
+The deadlock is triggered only when the timeout occurs during device goes
+offline. To fix this issue, use .rst_ha_timeout to distinguish the scenario
+where a device goes offline from other scenarios.
+
+Fixes: 2ff07b5c6fe9 ("scsi: hisi_sas: Directly call register snapshot instead of using workqueue")
+Signed-off-by: Yihang Li <liyihang9@huawei.com>
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Link: https://lore.kernel.org/r/1705904747-62186-2-git-send-email-chenxiang66@hisilicon.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/srpt/ib_srpt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
-index 040234c01be4d..9632afbd727b6 100644
---- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-+++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-@@ -3209,7 +3209,6 @@ static int srpt_add_one(struct ib_device *device)
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index bbb7b2d9ffcfb..1abc62b07d24c 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -1962,9 +1962,17 @@ static bool hisi_sas_internal_abort_timeout(struct sas_task *task,
+ 	struct hisi_sas_internal_abort_data *timeout = data;
  
- 	INIT_IB_EVENT_HANDLER(&sdev->event_handler, sdev->device,
- 			      srpt_event_handler);
--	ib_register_event_handler(&sdev->event_handler);
- 
- 	for (i = 1; i <= sdev->device->phys_port_cnt; i++) {
- 		sport = &sdev->port[i - 1];
-@@ -3232,6 +3231,7 @@ static int srpt_add_one(struct ib_device *device)
- 		}
+ 	if (hisi_sas_debugfs_enable && hisi_hba->debugfs_itct[0].itct) {
+-		down(&hisi_hba->sem);
++		/*
++		 * If timeout occurs in device gone scenario, to avoid
++		 * circular dependency like:
++		 * hisi_sas_dev_gone() -> down() -> ... ->
++		 * hisi_sas_internal_abort_timeout() -> down().
++		 */
++		if (!timeout->rst_ha_timeout)
++			down(&hisi_hba->sem);
+ 		hisi_hba->hw->debugfs_snapshot_regs(hisi_hba);
+-		up(&hisi_hba->sem);
++		if (!timeout->rst_ha_timeout)
++			up(&hisi_hba->sem);
  	}
  
-+	ib_register_event_handler(&sdev->event_handler);
- 	spin_lock(&srpt_dev_lock);
- 	list_add_tail(&sdev->list, &srpt_dev_list);
- 	spin_unlock(&srpt_dev_lock);
-@@ -3242,7 +3242,6 @@ static int srpt_add_one(struct ib_device *device)
- 
- err_port:
- 	srpt_unregister_mad_agent(sdev, i);
--	ib_unregister_event_handler(&sdev->event_handler);
- err_cm:
- 	if (sdev->cm_id)
- 		ib_destroy_cm_id(sdev->cm_id);
+ 	if (task->task_state_flags & SAS_TASK_STATE_DONE) {
 -- 
 2.43.0
 
