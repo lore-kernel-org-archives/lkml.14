@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677D9288917;
-	Sun, 24 Mar 2024 23:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE583224A03;
+	Sun, 24 Mar 2024 23:47:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324033; cv=none; b=T/dYX6sm2dBNvmGhFqqv7AtFDACpArmwYFKB1uT+RWZYn060LoVbPtFv6hEjFdO919X/JpmGwfkLgLHQhw1kyZpep6q04/HPj2InrgY/rbTAm2Lhq9r5q+Xeq/o9QuCgyeDft1S+eBs8gV77Y586ohPhklqnxMK4bSWsb7w5A/w=
+	t=1711324026; cv=none; b=scp8HPwJngTRAFXRRyBcru1RQMwrm6q6jWzYUojO4ULxKivn2+ZjEWHETutTU8M6/UBOaNbuL1za6VDG0fjfDMSjF1P+mowNKJIW6f6O3BTXGErmafILX6PresdiUbSURZRfZtclm275f6fNbBu5fkFUQv0qJ+A3iVL55Xqi0W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324033; c=relaxed/simple;
-	bh=1DPcpeBDnF2xH8ZQfHSXct1kQm/M4ZIPnjfT2U2xWzI=;
+	s=arc-20240116; t=1711324026; c=relaxed/simple;
+	bh=PY6QXC5NF5XvQGFaT52WK479ZqTA9uhgoUxN21uXupg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DK+IoucNyX1OSaAC+LljtWc6JaJMHYLzm4hs+uoqxp1zer9ea5NqD0nhAKqxDDLkjzjXCoj+WiSBFyhccLsNhwfKAcYn+uxAyrlWr1OzCIOTrGBokvmFKy/lr7GGcm8X4oXsREMfW/xbfSdbqGq0LkagdsorbctjO4CH/jr7VQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OhVzIajT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZBzDZvbSA70vI1suASDqtuT7rw2g8G//31k0rrVSv+6w5Lvrh2gVTX6Dc72q4M/r8KC23Jq6iR53UM8+CbG1ye1eBBY7T8X2TArjw9F48KZjmlB+DqWwQm6A7Re9Xe7bHw+QDM3Cr3OHoEsAc9F9p30rM3fBC/zFZsHm8xA2fE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bq4xxRq6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OhVzIajT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A47F9C43394;
-	Sun, 24 Mar 2024 23:47:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bq4xxRq6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D30D3C433F1;
+	Sun, 24 Mar 2024 23:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324032;
-	bh=1DPcpeBDnF2xH8ZQfHSXct1kQm/M4ZIPnjfT2U2xWzI=;
+	s=k20201202; t=1711324025;
+	bh=PY6QXC5NF5XvQGFaT52WK479ZqTA9uhgoUxN21uXupg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OhVzIajT+tK6k/lrs3Xu69FFBLd49nRLp9ND6C7M6WnEzcNjBDfA8ZL/TUW77rcfS
-	 vvFjNhz2CwoahQRmyvenRP4eCAzLg5DGGSwvduHjTApUEV5F3ULSy3SvesHkQP6HLq
-	 eBHYlweYuJChBPLI5MMlJcLW1Lcl4qKb+R7heXDT50lOyEDEW6f4OEwSnU+9ppykOz
-	 CBbbZ9EZgijLfF8TBWt3DctIfqH2Cn9opadaKclD8dlBaAvxCuWprlnZB/h4+sYWol
-	 Ivyr+4XtVmljRtgzWf0+ggiKh+pOKTk+it6j4c90wTyXtPJPj9og/jUj0gT5ct20Ej
-	 664HdCBa6xRDA==
+	b=bq4xxRq6PAOpmV+B2wpo4srKLCOjZtKFDAP4l7pUWiGVojSZz5+cqCjm24WNvxOWs
+	 uxC9avRNqkdZCVWyGFV7AVEF6XDy4uXXawxXT1N8K1qGULXM7lmA/op+99ZSw/JWpJ
+	 e7UKJnII9RrO3YmNdsMoA0AEkvk7MizRnUm6AUr53S2xZiCcs7KCv+P/0BK4A+BXSX
+	 6/i1tXIxfnMLQlUM9oT2jg1ajm8fWtfenWUmEmPImbi2NsuXX3kkAcZOHIh1MkDcFD
+	 Yp7py/ENlWBtdDf9GNG0ABNwYnHi+CsmfjjhUtfEUGvVdjANVK/Y5XZd+GSaqzyISf
+	 pGZjf67c0Zuvg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Saurav Girepunje <saurav.girepunje@gmail.com>,
-	Kalle Valo <kvalo@codeaurora.org>,
+Cc: Peter Hilber <peter.hilber@opensynergy.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Stultz <jstultz@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 033/183] b43: main: Fix use true/false for bool type
-Date: Sun, 24 Mar 2024 19:44:06 -0400
-Message-ID: <20240324234638.1355609-34-sashal@kernel.org>
+Subject: [PATCH 5.4 026/183] timekeeping: Fix cross-timestamp interpolation on counter wrap
+Date: Sun, 24 Mar 2024 19:43:59 -0400
+Message-ID: <20240324234638.1355609-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,51 +49,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Saurav Girepunje <saurav.girepunje@gmail.com>
+From: Peter Hilber <peter.hilber@opensynergy.com>
 
-[ Upstream commit 6db774c1725059f98e4fce97f878688248584be5 ]
+[ Upstream commit 84dccadd3e2a3f1a373826ad71e5ced5e76b0c00 ]
 
-use true/false on bool type variable assignment.
+cycle_between() decides whether get_device_system_crosststamp() will
+interpolate for older counter readings.
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Stable-dep-of: 581c8967d66c ("wifi: b43: Stop correct queue in DMA worker when QoS is disabled")
+cycle_between() yields wrong results for a counter wrap-around where after
+< before < test, and for the case after < test < before.
+
+Fix the comparison logic.
+
+Fixes: 2c756feb18d9 ("time: Add history to cross timestamp interface supporting slower devices")
+Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: John Stultz <jstultz@google.com>
+Link: https://lore.kernel.org/r/20231218073849.35294-2-peter.hilber@opensynergy.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43/main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/time/timekeeping.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
-index 3432dfe1ddb47..3ad94dad2d89b 100644
---- a/drivers/net/wireless/broadcom/b43/main.c
-+++ b/drivers/net/wireless/broadcom/b43/main.c
-@@ -3600,7 +3600,7 @@ static void b43_tx_work(struct work_struct *work)
- 			else
- 				err = b43_dma_tx(dev, skb);
- 			if (err == -ENOSPC) {
--				wl->tx_queue_stopped[queue_num] = 1;
-+				wl->tx_queue_stopped[queue_num] = true;
- 				ieee80211_stop_queue(wl->hw, queue_num);
- 				skb_queue_head(&wl->tx_queue[queue_num], skb);
- 				break;
-@@ -3611,7 +3611,7 @@ static void b43_tx_work(struct work_struct *work)
- 		}
- 
- 		if (!err)
--			wl->tx_queue_stopped[queue_num] = 0;
-+			wl->tx_queue_stopped[queue_num] = false;
- 	}
- 
- #if B43_DEBUG
-@@ -5603,7 +5603,7 @@ static struct b43_wl *b43_wireless_init(struct b43_bus_dev *dev)
- 	/* Initialize queues and flags. */
- 	for (queue_num = 0; queue_num < B43_QOS_QUEUE_NUM; queue_num++) {
- 		skb_queue_head_init(&wl->tx_queue[queue_num]);
--		wl->tx_queue_stopped[queue_num] = 0;
-+		wl->tx_queue_stopped[queue_num] = false;
- 	}
- 
- 	snprintf(chip_name, ARRAY_SIZE(chip_name),
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 105dd0b663291..5ae2b5b5ce4a0 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1099,7 +1099,7 @@ static bool cycle_between(u64 before, u64 test, u64 after)
+ {
+ 	if (test > before && test < after)
+ 		return true;
+-	if (test < before && before > after)
++	if (before > after && (test > before || test < after))
+ 		return true;
+ 	return false;
+ }
 -- 
 2.43.0
 
