@@ -1,88 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4C914A08E;
-	Sun, 24 Mar 2024 23:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8B322C67A;
+	Sun, 24 Mar 2024 23:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322168; cv=none; b=cJQ5MWI/qKZut2lQnr1ZFd2ZUry7JuEgaBAmyUg8umo5V5sx2eV+4gH18OwfCK9RKRN8JrC9kzNopY3zZ1BwbfuuLvK95opETyd8dN/2hGmetJmJmvtDYcStIZaztS+67/Cw1V0oMYYi2AlsIql8QAxTVevHBwuDmzM5kl9zlGQ=
+	t=1711322183; cv=none; b=X4pk5lmunbzPoVLepS9OineUMiLnm3zpXuUC8JN3gWIJNW+v5+hn/3nSmZxb2jwWO0Wf5EWIxP2ZToRAbgxuYTRxjGHWUsaa9iKP0CQhoEzsIK21m55lJh7Jz1sr/mXYIFgOXt1pvWcTADLPyo1M01LVG4DeRjSd/aOWkY1zCfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322168; c=relaxed/simple;
-	bh=KwT+Jadw65672/zjmUvOIOc9f3vzYLmL/4riuvvi1Yo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qszj5l7wi1iRvrOHPpAGqwqk/jPmj7Jc4W2t/siSXTGUsU+P1fxdOT9TLp9ZC7L0LE0aJlG0144fgxpBqXw3LqpSiWmHdDNKChJIz3eJUF+PdFrbssg05oRuHI5mslti7Z/mmxgW05JD2jbRFGQ6+5Q7notkNt9t5SN4dbXbBA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bNrZhQzr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bNrZhQzr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31B6CC433C7;
-	Sun, 24 Mar 2024 23:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322167;
-	bh=KwT+Jadw65672/zjmUvOIOc9f3vzYLmL/4riuvvi1Yo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bNrZhQzr49LwiaWQPKNZ14Ixt3ZHKMkSth+XvPvZC850lddCFgD2FCyzneKwXGS7C
-	 OKslId0Zunhml6D8Ac50gDYtQ22tgBHXG6Jf97P5pAv8d7XcYZmCN7ZsAChSdFPrqL
-	 hxPp3gDnYwz2J3kmu2Q8OGSlryQ6B+qxuEOHS/mcs5mhcH3erZKqG3GhichswqypHL
-	 ttlKZbJRuHj1jsn1b52QRv5qXkDfwTtWH7m3Cy/Rjd3iOLSoOClBSa6jTsXij6bNG3
-	 6OCp/2xyIVkwlV/rVak6Us2j9DNhYxfWhkecKnCTppNYfhCv1n+00MgzyFwfO49eIt
-	 E7SLGhrvBm+Sg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Harry Wentland <harry.wentland@amd.com>,
-	Simon Ser <contact@emersion.fr>,
-	Melissa Wen <mwen@igalia.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 245/451] drm: Don't treat 0 as -1 in drm_fixp2int_ceil
-Date: Sun, 24 Mar 2024 19:08:41 -0400
-Message-ID: <20240324231207.1351418-246-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
-References: <20240324231207.1351418-1-sashal@kernel.org>
+	s=arc-20240116; t=1711322183; c=relaxed/simple;
+	bh=Y+++sfCOOqMd/jN8jYmvU8/LoJkxzD+F97Ejdpsn/YE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WwxPxILKIWVA2R1Af8w4R6k3ZMRwx3nHwKdX5oSl6h81dA6Fbg6Ops6MmakhhCwpIMH2zvWRZGM2DFebVlvKm6sPR+PJEat/CCS1jkuq8saX8RvgAPdC80ZZ6KiImXBomssTKTVAHc1rB3PoiRCsnrgzcrlE5UREMC/6MiGMJTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 38CAF68D13; Mon, 25 Mar 2024 00:16:12 +0100 (CET)
+Date: Mon, 25 Mar 2024 00:16:11 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Bart Van Assche <bvanassche@acm.org>,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	"josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"jack@suse.com" <jack@suse.com>, Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: Re: [RFC RESEND 00/16] Split IOMMU DMA mapping operation to two
+ steps
+Message-ID: <20240324231611.GB20765@lst.de>
+References: <20240307000036.GP9225@ziepe.ca> <20240307150505.GA28978@lst.de> <20240307210116.GQ9225@ziepe.ca> <20240308164920.GA17991@lst.de> <20240308202342.GZ9225@ziepe.ca> <20240309161418.GA27113@lst.de> <20240319153620.GB66976@ziepe.ca> <20240320085536.GA14887@unreal> <20240321224013.GB22663@lst.de> <20240322174617.GD14887@unreal>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240322174617.GD14887@unreal>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-From: Harry Wentland <harry.wentland@amd.com>
+On Fri, Mar 22, 2024 at 07:46:17PM +0200, Leon Romanovsky wrote:
+> > As far as I can tell it totally misses the point.  Which is not to never
+> > return non-P2P if the flag is set, but to return either all P2P or non-P2
+> > P and not create a boundary in the single call.
+> 
+> You are treating FOLL_PCI_P2PDMA as a hint, but in iov_iter_extract_user_pages()
+> you set it only for p2p queues. I was under impression that you want only p2p pages
+> in these queues.
 
-[ Upstream commit cf8837d7204481026335461629b84ac7f4538fa5 ]
-
-Unit testing this in VKMS shows that passing 0 into
-this function returns -1, which is highly counter-
-intuitive. Fix it by checking whether the input is
->= 0 instead of > 0.
-
-Fixes: 64566b5e767f ("drm: Add drm_fixp_from_fraction and drm_fixp2int_ceil")
-Signed-off-by: Harry Wentland <harry.wentland@amd.com>
-Reviewed-by: Simon Ser <contact@emersion.fr>
-Reviewed-by: Melissa Wen <mwen@igalia.com>
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231108163647.106853-2-harry.wentland@amd.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/drm/drm_fixed.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
-index 03cb890690e83..6230088428cdb 100644
---- a/include/drm/drm_fixed.h
-+++ b/include/drm/drm_fixed.h
-@@ -94,7 +94,7 @@ static inline int drm_fixp2int_round(s64 a)
- 
- static inline int drm_fixp2int_ceil(s64 a)
- {
--	if (a > 0)
-+	if (a >= 0)
- 		return drm_fixp2int(a + DRM_FIXED_ALMOST_ONE);
- 	else
- 		return drm_fixp2int(a - DRM_FIXED_ALMOST_ONE);
--- 
-2.43.0
+FOLL_PCI_P2PDMA is an indicator that the caller can cope with P2P
+pages.  Most callers simply can't.
 
