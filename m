@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D70145B1F;
-	Sun, 24 Mar 2024 23:13:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64C9145FFA;
+	Sun, 24 Mar 2024 23:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322019; cv=none; b=QkbQeW0sUhjbNohCITPKSDF3j3Tk80J+DTaGdXnRIvBqUAZACERJ8XV6s9+DU18C7ZvgJRQiVpsBNL8u5518LI2uXZxLKcakBQee75HTtN1aPVJG0q9t9AUFSFGy1fTcHCeRa43NfA7PJ+vPQP+5sPQkhC2z0KAYVJK6cV3Tj88=
+	t=1711322057; cv=none; b=jqHPGT2NgRDyQAmXQnqMIWjkD8cBRPmJ+MkR1Tpxi96MNG8h+a94M86kb3uQXA/l1ccZZb55Pcbc0C6sMYIEdfmnULRnkQSczej88BKpN0mvr9qyeqdtgt354Irnar0q6HehGHvwjk/vR7GK5DgVevFAwkOaRCzym8HMZ5NUHnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322019; c=relaxed/simple;
-	bh=rM/a6NXuhaaDJxRNqFU+vOj3znGsfhW1ZP19rBQIkT4=;
+	s=arc-20240116; t=1711322057; c=relaxed/simple;
+	bh=NPq6MquJ5yUC5CMPcnfevOigtOVMb24x6buBjtq8ZJI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lVHsIgoTpZZSE26Irhpc9XWEgngTPBkExjOWncxq/B09wgwUFsyiheBWe/THjLxzaXOAejTM4ylf14FRlnG9LYGi3J7vzXE2ajwj7xUhpkFGONw7/PEipx/S5uv0Sqxr9i0IHFw9DsNQRItlyBGjeoI8XZsFU1hqf/feUMY5Kfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3X6BvFR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bukf2UQFgLf0H3Sa38IlgiejBirehnmm+g8WEc54jUoPARAGuJJmdRTK1hABEeCEtSG9X5rEp8wTrW9dMRRL7zaWn7/sM5NEvC3DFimtbiREa0wkgxxySGX5596yy9w76c3YclSc7VQkZnzz3RJlh2K17jJzIg1LVn8lOnR8/p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EL+qEFt8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3X6BvFR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72A5EC433F1;
-	Sun, 24 Mar 2024 23:13:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EL+qEFt8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA88CC433C7;
+	Sun, 24 Mar 2024 23:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322019;
-	bh=rM/a6NXuhaaDJxRNqFU+vOj3znGsfhW1ZP19rBQIkT4=;
+	s=k20201202; t=1711322057;
+	bh=NPq6MquJ5yUC5CMPcnfevOigtOVMb24x6buBjtq8ZJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y3X6BvFRNma5N9snvapp1mpFsCrYaTM0KpTW2ARIUbL3fYLmN/r4lzhdXrx1w6QSm
-	 NTr0xpnskSs3TWU5Z3vwGrXBIw9RgiLI8TrhT3cYFjiozHaXJl4B9uFnGC/movicf7
-	 WNFV8qLqHuVYqQrAC45CzxIT9H2cpmEoOfs0OvBRXLLM9agVuSMV9tczVEGB3uwuVu
-	 YrI7GKGRvaL3xeFViCnDlNPF8NosItKuE4NKZa+a38Vp5kb2amM3DAnrcJiEgboKb6
-	 J6I2k+awl5s5tBoXhQCCAJO69JLU1TXXmIsLeSy8gPXZ/dwVotx88DbbHkig/MRnbw
-	 ytZJLP4XISpHQ==
+	b=EL+qEFt8YnF1D8EXtjAXS17jpNIU9lV0XeYhqh2Qkaz8zJ7aB/SeSxLgW5nMEp0lk
+	 oj9dGN9Yk1afg3H65Glj0SPKoKSKndOqoCABLdQFDHqr26fPe2w9078C1z5lPKJFyF
+	 Lmj+RD2ZiK6H4CbEuLW5OkQ693b67dzLzQTuEpxVu+RCTilg+5Za4FK4WgV8DQihjS
+	 c2Qpe/IaHGATXYiqOc5syP9za/Kx/pEN7tWwiL9SjHAlCnUs4Zya/ywQ0kQNZkpj39
+	 SVuXkLcMUD27WmXBe+R9BsIo+npEqb4CEbjnURXKVgTaT/71te0wLLjFOljFWLuLqH
+	 ppnIcR4Lh5ZOA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ajay Singh <ajay.kathat@microchip.com>,
-	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Brian Masney <bmasney@redhat.com>,
+	Konrad Dybcio <konrad.dybcio@somainline.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 091/451] wifi: wilc1000: do not realloc workqueue everytime an interface is added
-Date: Sun, 24 Mar 2024 19:06:07 -0400
-Message-ID: <20240324231207.1351418-92-sashal@kernel.org>
+Subject: [PATCH 6.1 130/451] arm64: dts: qcom: sc8280xp: update UFS PHY nodes
+Date: Sun, 24 Mar 2024 19:06:46 -0400
+Message-ID: <20240324231207.1351418-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,122 +46,121 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Johan Hovold <johan+linaro@kernel.org>
 
-[ Upstream commit 328efda22af81130c2ad981c110518cb29ff2f1d ]
+[ Upstream commit 33c4e6588e4f018abc43381ee21fe2bed37e34a5 ]
 
-Commit 09ed8bfc5215 ("wilc1000: Rename workqueue from "WILC_wq" to
-"NETDEV-wq"") moved workqueue creation in wilc_netdev_ifc_init in order to
-set the interface name in the workqueue name. However, while the driver
-needs only one workqueue, the wilc_netdev_ifc_init is called each time we
-add an interface over a phy, which in turns overwrite the workqueue with a
-new one. This can be observed with the following commands:
+Update the UFS PHY nodes to match the new binding.
 
-for i in $(seq 0 10)
-do
-  iw phy phy0 interface add wlan1 type managed
-  iw dev wlan1 del
-done
-ps -eo pid,comm|grep wlan
-
- 39 kworker/R-wlan0
- 98 kworker/R-wlan1
-102 kworker/R-wlan1
-105 kworker/R-wlan1
-108 kworker/R-wlan1
-111 kworker/R-wlan1
-114 kworker/R-wlan1
-117 kworker/R-wlan1
-120 kworker/R-wlan1
-123 kworker/R-wlan1
-126 kworker/R-wlan1
-129 kworker/R-wlan1
-
-Fix this leakage by putting back hif_workqueue allocation in
-wilc_cfg80211_init. Regarding the workqueue name, it is indeed relevant to
-set it lowercase, however it is not  attached to a specific netdev, so
-enforcing netdev name in the name is not so relevant. Still, enrich the
-name with the wiphy name to make it clear which phy is using the workqueue.
-
-Fixes: 09ed8bfc5215 ("wilc1000: Rename workqueue from "WILC_wq" to "NETDEV-wq"")
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Co-developed-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240115-wilc_1000_fixes-v1-3-54d29463a738@bootlin.com
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Reviewed-by: Brian Masney <bmasney@redhat.com>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Link: https://lore.kernel.org/r/20221104092045.17410-3-johan+linaro@kernel.org
+Stable-dep-of: 1d4ef9644e21 ("arm64: dts: qcom: sc8280xp: Fix UFS PHY clocks")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/microchip/wilc1000/cfg80211.c | 11 ++++++++++-
- drivers/net/wireless/microchip/wilc1000/netdev.c   | 10 +---------
- 2 files changed, 11 insertions(+), 10 deletions(-)
+ arch/arm64/boot/dts/qcom/sc8280xp.dtsi | 49 +++++++++-----------------
+ 1 file changed, 17 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/cfg80211.c b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-index b545d93c6e374..2f75dc4b47975 100644
---- a/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-+++ b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-@@ -1810,15 +1810,24 @@ int wilc_cfg80211_init(struct wilc **wilc, struct device *dev, int io_type,
- 	INIT_LIST_HEAD(&wl->rxq_head.list);
- 	INIT_LIST_HEAD(&wl->vif_list);
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+index 7e3aaf5de3f5c..88140ce104a44 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+@@ -845,7 +845,7 @@ ufs_mem_hc: ufs@1d84000 {
+ 				     "jedec,ufs-2.0";
+ 			reg = <0 0x01d84000 0 0x3000>;
+ 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
+-			phys = <&ufs_mem_phy_lanes>;
++			phys = <&ufs_mem_phy>;
+ 			phy-names = "ufsphy";
+ 			lanes-per-direction = <2>;
+ 			#reset-cells = <1>;
+@@ -887,27 +887,20 @@ ufs_mem_hc: ufs@1d84000 {
  
-+	wl->hif_workqueue = alloc_ordered_workqueue("%s", WQ_MEM_RECLAIM,
-+						    wiphy_name(wl->wiphy));
-+	if (!wl->hif_workqueue) {
-+		ret = -ENOMEM;
-+		goto free_cfg;
-+	}
- 	vif = wilc_netdev_ifc_init(wl, "wlan%d", WILC_STATION_MODE,
- 				   NL80211_IFTYPE_STATION, false);
- 	if (IS_ERR(vif)) {
- 		ret = PTR_ERR(vif);
--		goto free_cfg;
-+		goto free_hq;
- 	}
- 
- 	return 0;
- 
-+free_hq:
-+	destroy_workqueue(wl->hif_workqueue);
+ 		ufs_mem_phy: phy@1d87000 {
+ 			compatible = "qcom,sc8280xp-qmp-ufs-phy";
+-			reg = <0 0x01d87000 0 0x1c8>;
+-			#address-cells = <2>;
+-			#size-cells = <2>;
+-			ranges;
+-			clock-names = "ref",
+-				      "ref_aux";
++			reg = <0 0x01d87000 0 0x1000>;
 +
- free_cfg:
- 	wilc_wlan_cfg_deinit(wl);
+ 			clocks = <&gcc GCC_UFS_CARD_CLKREF_CLK>,
+ 				 <&gcc GCC_UFS_PHY_PHY_AUX_CLK>;
++			clock-names = "ref", "ref_aux";
++
++			power-domains = <&gcc UFS_PHY_GDSC>;
  
-diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
-index e9f59de31b0b9..0e6eeeed2e086 100644
---- a/drivers/net/wireless/microchip/wilc1000/netdev.c
-+++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
-@@ -977,13 +977,6 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
- 		goto error;
- 	}
+ 			resets = <&ufs_mem_hc 0>;
+ 			reset-names = "ufsphy";
+-			status = "disabled";
  
--	wl->hif_workqueue = alloc_ordered_workqueue("%s-wq", WQ_MEM_RECLAIM,
--						    ndev->name);
--	if (!wl->hif_workqueue) {
--		ret = -ENOMEM;
--		goto unregister_netdev;
--	}
--
- 	ndev->needs_free_netdev = true;
- 	vif->iftype = vif_type;
- 	vif->idx = wilc_get_available_idx(wl);
-@@ -996,12 +989,11 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
+-			ufs_mem_phy_lanes: phy@1d87400 {
+-				reg = <0 0x01d87400 0 0x108>,
+-				      <0 0x01d87600 0 0x1e0>,
+-				      <0 0x01d87c00 0 0x1dc>,
+-				      <0 0x01d87800 0 0x108>,
+-				      <0 0x01d87a00 0 0x1e0>;
+-				#phy-cells = <0>;
+-			};
++			#phy-cells = <0>;
++
++			status = "disabled";
+ 		};
  
- 	return vif;
+ 		ufs_card_hc: ufs@1da4000 {
+@@ -915,7 +908,7 @@ ufs_card_hc: ufs@1da4000 {
+ 				     "jedec,ufs-2.0";
+ 			reg = <0 0x01da4000 0 0x3000>;
+ 			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
+-			phys = <&ufs_card_phy_lanes>;
++			phys = <&ufs_card_phy>;
+ 			phy-names = "ufsphy";
+ 			lanes-per-direction = <2>;
+ 			#reset-cells = <1>;
+@@ -956,28 +949,20 @@ ufs_card_hc: ufs@1da4000 {
  
--unregister_netdev:
-+error:
- 	if (rtnl_locked)
- 		cfg80211_unregister_netdevice(ndev);
- 	else
- 		unregister_netdev(ndev);
--  error:
- 	free_netdev(ndev);
- 	return ERR_PTR(ret);
- }
+ 		ufs_card_phy: phy@1da7000 {
+ 			compatible = "qcom,sc8280xp-qmp-ufs-phy";
+-			reg = <0 0x01da7000 0 0x1c8>;
+-			#address-cells = <2>;
+-			#size-cells = <2>;
+-			ranges;
+-			clock-names = "ref",
+-				      "ref_aux";
++			reg = <0 0x01da7000 0 0x1000>;
++
+ 			clocks = <&gcc GCC_UFS_1_CARD_CLKREF_CLK>,
+ 				 <&gcc GCC_UFS_CARD_PHY_AUX_CLK>;
++			clock-names = "ref", "ref_aux";
++
++			power-domains = <&gcc UFS_CARD_GDSC>;
+ 
+ 			resets = <&ufs_card_hc 0>;
+ 			reset-names = "ufsphy";
+ 
+-			status = "disabled";
++			#phy-cells = <0>;
+ 
+-			ufs_card_phy_lanes: phy@1da7400 {
+-				reg = <0 0x01da7400 0 0x108>,
+-				      <0 0x01da7600 0 0x1e0>,
+-				      <0 0x01da7c00 0 0x1dc>,
+-				      <0 0x01da7800 0 0x108>,
+-				      <0 0x01da7a00 0 0x1e0>;
+-				#phy-cells = <0>;
+-			};
++			status = "disabled";
+ 		};
+ 
+ 		tcsr_mutex: hwlock@1f40000 {
 -- 
 2.43.0
 
