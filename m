@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D886155749;
-	Sun, 24 Mar 2024 23:10:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D904913F422;
+	Sun, 24 Mar 2024 23:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321833; cv=none; b=ueMKhc5dOzZsiHLEpdKcnbQWypJe2OInxaWHA3mrybQS+cNmoIciWRuTv2c5Dn2vBechfx1qQFzGLKSg4TsBg1CuQS+ZsmbLMwet4gRsx4KSxNA/h1Hh7Ez5MQ+C4OtnVUQgTTgipIX+SUdcnnZWf2jGSgSk8mF5qRgTMdp265U=
+	t=1711321829; cv=none; b=V83aReekkv24FCRcAUN1jVg9A+yhst00XjtFT8UiSKa5ZlUfGf4Q3xyp8L5v/iciSjrtQPC2MvUgHBJHec/XxKBwb/J1VVUVxfN3ygkT2hiBXuRxigSbmWRRjVOQixoCUSwKM9CMuIzzw3B9cqY71Ld9EFQ5V+LVHCN5WunxX0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321833; c=relaxed/simple;
-	bh=pR61DMqp2sHAArlHOnPe8VQRVUud4+7/SaeB+zSCfKo=;
+	s=arc-20240116; t=1711321829; c=relaxed/simple;
+	bh=YKSk4417jnkaegNrpdi4LwpmOOlK3FepNJNTBW4pIRU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lq3kUo7Z/XApduFgGIiTZjBdr4ZTC8GfYhaVJFxDr8usPjHtoD2iBSHGWEH+SAbZmp8zZkC+OLXK8SirSNoNSooWeO1JMnTM/LCqCyjB/vlLyPYlI5128GFLP4IeKTeLLHEgQJ+rGvFNY7ReYLhjzCWhv0esda+HLcHJWbQlmRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVv3K7Oq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KHJjEF2oZJW2awmEF9frQbDAkbgLNT+CYGXdNSXAzxaJqBgcaFqnpJ0FcWJ8CfAKO4B8mvxAHuhoTN9pE+uAbWjN7yO5hwFCs7r0PYePawFHICjYtF8cY8GdGDDvm19gGwNer0TlP+vBJaEXsYI5uXNsBjBwvXClxATV06iCkzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8g7lh46; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVv3K7Oq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0E8EC43399;
-	Sun, 24 Mar 2024 23:10:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8g7lh46"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FC54C43394;
+	Sun, 24 Mar 2024 23:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321830;
-	bh=pR61DMqp2sHAArlHOnPe8VQRVUud4+7/SaeB+zSCfKo=;
+	s=k20201202; t=1711321828;
+	bh=YKSk4417jnkaegNrpdi4LwpmOOlK3FepNJNTBW4pIRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YVv3K7Oqw8PVl9TEW+ASqIyhaZFzjmVOeI1WBsdXUbJxuImffHlZoN8Yy9UJ/JCOA
-	 PlkYyuPoflF2ss/28u0vx8gOHZyH4bgiOoBqn07Ci0KhL/SwjgeqwTpCcrNrhR2isj
-	 qzAjforBVUxiOj6kh7PgR1TwQAvrlIMZfSaYTQC9LCPa5m5Pp1xvdbO+F+sUsTQ25d
-	 ENqrz/Z8IdrorjYRhs59EW91YOLxRpwPEG7m/MqNOTaxHNc8NWngS65nSuZfZXj9D5
-	 q3t+ABkNfk7fRW8joRoAotUTQ4g+4mkzICiBYeT88obem+fq8GEeDB5+zrzYo7KCXz
-	 1CFBrpf3AhiJA==
+	b=J8g7lh46du48XnVdh6RKZyYrXqECCKqt+m2P4gwrjMLZ0GlPVZ+WH1kKm8FXKTySk
+	 RxUriwd2RhvaNERnUGjBu8JmfoNdNtjndfHNtYkN369BHVTEHpWLN7EtztBlKg2QF/
+	 Iwzu5azLwS9I7cd+KimM9CqaDQjlLinC8cyDyGbyMDjgacUYnAJNVjstmqSkWnM6HT
+	 ROJoyJzZVJkCF0jzijKdCDJXicp4mI2yPzDW1P0RUJRZMUjrQeJTjpIi4gDVoWmNAD
+	 CSr7CNPw7tnKPuQcjFe7V97ZFnNxyiV5jxY25hD8bH1RTNoh793HNrA+EuSz1MzgPm
+	 vAhF5o39CNXMg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Martin Hostettler <textshell@uchuujin.de>,
-	Helge Deller <deller@gmx.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Petre Rodan <petre.rodan@subdimension.ro>,
+	Andreas Klinger <ak@it-klinger.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 559/638] tty: vt: fix 20 vs 0x20 typo in EScsiignore
-Date: Sun, 24 Mar 2024 18:59:56 -0400
-Message-ID: <20240324230116.1348576-560-sashal@kernel.org>
+Subject: [PATCH 6.6 557/638] iio: pressure: mprls0025pa fix off-by-one enum
+Date: Sun, 24 Mar 2024 18:59:54 -0400
+Message-ID: <20240324230116.1348576-558-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,43 +49,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+From: Petre Rodan <petre.rodan@subdimension.ro>
 
-[ Upstream commit 0e6a92f67c8a94707f7bb27ac29e2bdf3e7c167d ]
+[ Upstream commit 9e65506ca9c7ff716c8441a33417820ad61d3a16 ]
 
-The if (c >= 20 && c <= 0x3f) test added in commit 7a99565f8732 is
-wrong.  20 is DC4 in ascii and it makes no sense to consider that as the
-bottom limit. Instead, it should be 0x20 as in the other test in
-the commit above. This is supposed to NOT change anything as we handle
-interesting 20-0x20 asciis far before this if.
+Fix off-by-one error in transfer-function property.
+The honeywell,transfer-function property takes values between 1-3 so
+make sure the proper enum gets used.
 
-So for sakeness, change to 0x20 (which is SPACE).
-
-Signed-off-by: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Fixes: 7a99565f8732 ("vt: ignore csi sequences with intermediate characters.")
-Cc: Martin Hostettler <textshell@uchuujin.de>
-Link: https://lore.kernel.org/all/ZaP45QY2WEsDqoxg@neutronstar.dyndns.org/
-Tested-by: Helge Deller <deller@gmx.de> # parisc STI console
-Link: https://lore.kernel.org/r/20240122110401.7289-4-jirislaby@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 713337d9143ed ("iio: pressure: Honeywell mprls0025pa pressure sensor")
+Co-developed-by: Andreas Klinger <ak@it-klinger.de>
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
+Link: https://lore.kernel.org/r/20231229092445.30180-5-petre.rodan@subdimension.ro
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/vt/vt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/pressure/mprls0025pa.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 5c47f77804f0f..9bf3ac3dc1f09 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -2469,7 +2469,7 @@ static void do_con_trol(struct tty_struct *tty, struct vc_data *vc, int c)
- 		}
- 		return;
- 	case EScsiignore:
--		if (c >= 20 && c <= 0x3f)
-+		if (c >= 0x20 && c <= 0x3f)
- 			return;
- 		vc->vc_state = ESnormal;
- 		return;
+diff --git a/drivers/iio/pressure/mprls0025pa.c b/drivers/iio/pressure/mprls0025pa.c
+index 30fb2de368210..e3f0de020a40c 100644
+--- a/drivers/iio/pressure/mprls0025pa.c
++++ b/drivers/iio/pressure/mprls0025pa.c
+@@ -323,6 +323,7 @@ static int mpr_probe(struct i2c_client *client)
+ 	struct iio_dev *indio_dev;
+ 	struct device *dev = &client->dev;
+ 	s64 scale, offset;
++	u32 func;
+ 
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_READ_BYTE))
+ 		return dev_err_probe(dev, -EOPNOTSUPP,
+@@ -362,10 +363,11 @@ static int mpr_probe(struct i2c_client *client)
+ 			return dev_err_probe(dev, ret,
+ 				"honeywell,pmax-pascal could not be read\n");
+ 		ret = device_property_read_u32(dev,
+-				"honeywell,transfer-function", &data->function);
++				"honeywell,transfer-function", &func);
+ 		if (ret)
+ 			return dev_err_probe(dev, ret,
+ 				"honeywell,transfer-function could not be read\n");
++		data->function = func - 1;
+ 		if (data->function > MPR_FUNCTION_C)
+ 			return dev_err_probe(dev, -EINVAL,
+ 				"honeywell,transfer-function %d invalid\n",
 -- 
 2.43.0
 
