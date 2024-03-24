@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057AC212D3C;
-	Sun, 24 Mar 2024 23:08:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD4113B787;
+	Sun, 24 Mar 2024 23:08:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321727; cv=none; b=nth+8AV/awWKGVB3b6WHdUdlTAv9/xR1BCx7veIcFS1iOUezghvB1sGBtyjG0JcgwTpdljzBd2MTaBP2SuHdRgOBSlkZaYbYwqBZidLh0fa3rp/ewxkNbUM+ND8q0KAAk+uON9bdk6ubbGvHzgE2J9xPKxVMeGP6jV4CpAvLzxk=
+	t=1711321738; cv=none; b=Wn1H5tK0kzRM0wixhyN/I1Mjv5DSjOrPEyzxctbK/RDrboDg1MeAvT6hA7cWA5kQViq7UvlNgmSX6yX8vyJgTi9xJc8ihbGz54DqynMflMeHfOAT8cxHps6ZM7DVMTeg3AWXtgw8sEfguez5IZ51DEtftu5vJjlUkqen2Hw72pE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321727; c=relaxed/simple;
-	bh=88D2h7ESbBu8z6z2H1BIcpBwdPI4hxWEwZy8Q42aC84=;
+	s=arc-20240116; t=1711321738; c=relaxed/simple;
+	bh=bgLAqlsnttLg7kNlv60BvhVTkQQ/GGMhQj+OGhBRKN8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BdIgLiGHGb832x5f7Xt5dgjIbhQTIky0aTmE5sbgmChzOM7GnV4Fmu7lmUwRfch+SOhwIAZEk448l9vH5bLpNOmjCHUW9fkICIQCexgzp2/dQKZDPRZERt4uymbbUW7GEaZJiw2+DXZl9et1FYSNPNqNuIE0XfebxRSwDqAaeEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mEM1SUJi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=r5UH56f4nqhWdlQ3J5ebU4OGPFDZndf5G+qzaZrgn33e1a/qVZNH/bT3nwUpcSPNWfdkj+S56NMO78wUiMhEAq4oN5aUDl7Vj3AAGKd2ehzx5WJWwxauzXdODy+1hcWoi5bxMAjsqSW4IRczN7huLJThujHNeiQBvg8cO14RMM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YSCgmPep; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mEM1SUJi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43A6BC43399;
-	Sun, 24 Mar 2024 23:08:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YSCgmPep"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71292C43394;
+	Sun, 24 Mar 2024 23:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321726;
-	bh=88D2h7ESbBu8z6z2H1BIcpBwdPI4hxWEwZy8Q42aC84=;
+	s=k20201202; t=1711321737;
+	bh=bgLAqlsnttLg7kNlv60BvhVTkQQ/GGMhQj+OGhBRKN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mEM1SUJiHEVzaIMNjej8mZz6ZTpxmVdUIaD9GFJKYzATXILYq0mxYYbFbsCrnp86Q
-	 qp6SHxpgtPS77VJxeT5DUr56IkgcM6QI8cEKHG3RbP57GXasaHk0CP2LCzVlcVvJwh
-	 KXMzH4RTQDIqhpCPYUuUZhdD2id5Sw0zMZ+Orz2V69hc5Cmn3IzIX1KifBwrqpeitx
-	 f7gwYOgkPqK7B7wKAeVnStR5FEm4Zc43Bk3lwDDybZZPGkzpkdT7UrJ91VGaiTDEHf
-	 B0rh/snxGtWeZsj68hKMjBk1vCT6oTmneciNoB1UJXxLiwCsz01YHdq9iNkEtw06Lv
-	 MQQ4mzRdn3czw==
+	b=YSCgmPep6bYioey7YYYRK8infdBjvoUItIgB2V7HDpAGNu5YbmM1yxBHE+JJZkErM
+	 nMEag8F9gOUtlUrMheObUwLmbeQyrOw/8Q/WD+aBxxZKqpt1BWHhUc0jqYZ/edXZku
+	 Ef7scgMXtEkLOS6exvQd2q/70OftigIpYIUA+N8+LGQv7pFyXmirF2G1qBzSgcNd3D
+	 GPC6lVvNXSjWSlv5zrdS0E/N6EDv4SXt0+2eWaw1q2WJ5hQCnBuJqeUH5vHU26CPgp
+	 m2Cx0tGRAbq/xw8ftL7B+KTBASK3/gG0lM2NzvjYbCpmLGfZ3YMklTJq9zeIaZX88f
+	 cIBdqrhSyUfOg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 455/638] mtd: rawnand: lpc32xx_mlc: fix irq handler prototype
-Date: Sun, 24 Mar 2024 18:58:12 -0400
-Message-ID: <20240324230116.1348576-456-sashal@kernel.org>
+Subject: [PATCH 6.6 465/638] media: ttpci: fix two memleaks in budget_av_attach
+Date: Sun, 24 Mar 2024 18:58:22 -0400
+Message-ID: <20240324230116.1348576-466-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,50 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 347b828882e6334690e7003ce5e2fe5f233dc508 ]
+[ Upstream commit d0b07f712bf61e1a3cf23c87c663791c42e50837 ]
 
-clang-16 warns about mismatched function prototypes:
+When saa7146_register_device and saa7146_vv_init fails, budget_av_attach
+should free the resources it allocates, like the error-handling of
+ttpci_budget_init does. Besides, there are two fixme comment refers to
+such deallocations.
 
-drivers/mtd/nand/raw/lpc32xx_mlc.c:783:29: error: cast from 'irqreturn_t (*)(int, struct lpc32xx_nand_host *)' (aka 'enum irqreturn (*)(int, struct lpc32xx_nand_host *)') to 'irq_handler_t' (aka 'enum irqreturn (*)(int, void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-
-Change the interrupt handler to the normal way of just passing
-a void* pointer and converting it inside the function..
-
-Fixes: 70f7cb78ec53 ("mtd: add LPC32xx MLC NAND driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20240213100146.455811-1-arnd@kernel.org
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/lpc32xx_mlc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/pci/ttpci/budget-av.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/lpc32xx_mlc.c b/drivers/mtd/nand/raw/lpc32xx_mlc.c
-index 488fd452611a6..677fcb03f9bef 100644
---- a/drivers/mtd/nand/raw/lpc32xx_mlc.c
-+++ b/drivers/mtd/nand/raw/lpc32xx_mlc.c
-@@ -303,8 +303,9 @@ static int lpc32xx_nand_device_ready(struct nand_chip *nand_chip)
- 	return 0;
- }
+diff --git a/drivers/media/pci/ttpci/budget-av.c b/drivers/media/pci/ttpci/budget-av.c
+index 230b104a7cdf0..a47c5850ef875 100644
+--- a/drivers/media/pci/ttpci/budget-av.c
++++ b/drivers/media/pci/ttpci/budget-av.c
+@@ -1463,7 +1463,8 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+ 		budget_av->has_saa7113 = 1;
+ 		err = saa7146_vv_init(dev, &vv_data);
+ 		if (err != 0) {
+-			/* fixme: proper cleanup here */
++			ttpci_budget_deinit(&budget_av->budget);
++			kfree(budget_av);
+ 			ERR("cannot init vv subsystem\n");
+ 			return err;
+ 		}
+@@ -1472,9 +1473,10 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+ 		vv_data.vid_ops.vidioc_s_input = vidioc_s_input;
  
--static irqreturn_t lpc3xxx_nand_irq(int irq, struct lpc32xx_nand_host *host)
-+static irqreturn_t lpc3xxx_nand_irq(int irq, void *data)
- {
-+	struct lpc32xx_nand_host *host = data;
- 	uint8_t sr;
+ 		if ((err = saa7146_register_device(&budget_av->vd, dev, "knc1", VFL_TYPE_VIDEO))) {
+-			/* fixme: proper cleanup here */
+-			ERR("cannot register capture v4l2 device\n");
+ 			saa7146_vv_release(dev);
++			ttpci_budget_deinit(&budget_av->budget);
++			kfree(budget_av);
++			ERR("cannot register capture v4l2 device\n");
+ 			return err;
+ 		}
  
- 	/* Clear interrupt flag by reading status */
-@@ -780,7 +781,7 @@ static int lpc32xx_nand_probe(struct platform_device *pdev)
- 		goto release_dma_chan;
- 	}
- 
--	if (request_irq(host->irq, (irq_handler_t)&lpc3xxx_nand_irq,
-+	if (request_irq(host->irq, &lpc3xxx_nand_irq,
- 			IRQF_TRIGGER_HIGH, DRV_NAME, host)) {
- 		dev_err(&pdev->dev, "Error requesting NAND IRQ\n");
- 		res = -ENXIO;
 -- 
 2.43.0
 
