@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD0113C8EC;
-	Sun, 24 Mar 2024 23:50:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FD71836D8;
+	Sun, 24 Mar 2024 23:50:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324220; cv=none; b=InjePGCBjJUOs2WDX1KJVx6gG/Xc//Oiwi50PMqJyAt3yMl1H/L+nGScThaFg8Hs3ZA3pRNJFgMZuJ7qY+Y1xCRNkkGcHH4b8Y4iMFUmk13aGRZqJELnZzPl5VTNrTuTdvDF3gNsHOckg2xMFLkEGdFFvSaEFwYe2Qze+7176Qk=
+	t=1711324223; cv=none; b=qsaA7cyeiZhcS6gArMj7XztheBdFJDEaqAFV/8AFb/S8wnhT/JWvq+VMP+X4eW1z0oTWbc2Dv1+wb6jKi+G3j6WGXzDKeNwF8RSBk3w9PqnyFcnbjQ0hJzpSXSUEzzL56dH/RfIFS4Yy2LNZ+n7SOqZFIStn9K/rBnsFBqC/RFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324220; c=relaxed/simple;
-	bh=KXobGiOoIaXzXOXJJJNhZJEIoAnZhnUZnhGA9Ii+OtU=;
+	s=arc-20240116; t=1711324223; c=relaxed/simple;
+	bh=pPqTwLB7TLaUTeD8LOWSvUk2b+PMhg//U8wFczNoAVE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CCiJq82SkIRVMEekP1FH6wK59vp5lDmIIgWbY1UPSsa/XfpyrCawoXtPRScKpx4cWD6VdAHM5hiMHVooAOG+A7Tzc4QqDBTowCkHdyExunCaeOd0EX3IWjIApd+00V4an0WM1GT1hHlTe9w7lLwD/NphWPLvYvUZz+JszbQImAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnhHeOvO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PCHAqgwgYWBTQR7ZH9qaM6gEsUYeMiZzcU1NkymnWbd9fxzJ7GF5EwNrInxhYP+BJA9mpAxlk/QXCC/HaxnDkm05B2VvTcgJX90AvM8hFq0FpL+PLwf1E4Rkq4WD7WjjbWRiP65zuyKcXMznd79nzUCKSlIOT7mWj03D4dHn2YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QEnzQu0e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnhHeOvO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 363E1C43399;
-	Sun, 24 Mar 2024 23:50:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QEnzQu0e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D1DC433F1;
+	Sun, 24 Mar 2024 23:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324219;
-	bh=KXobGiOoIaXzXOXJJJNhZJEIoAnZhnUZnhGA9Ii+OtU=;
+	s=k20201202; t=1711324221;
+	bh=pPqTwLB7TLaUTeD8LOWSvUk2b+PMhg//U8wFczNoAVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mnhHeOvOaz36TSZHzWTyITyAYQoi9ZDhVgkRiOu/yoqqzKeNU/kAI8cJGubNIHyIQ
-	 KraJDITnxRu8ep093PQmUFqYT+I8wV3a3RR829/mX61HA1pWTpTDr2WZdQxXB6RHUD
-	 EBV3lU6AQF6wJrwaf5C0csj2ceJUn35UHcmt20nj/2bJaPY/aBByUHz3a7JFxYgI0Y
-	 zapTy4aQ+/ApboD8KU+HTpLzl7c2rJp85W0tuOMFlQK/+kqjoSPHKvmbRhVnL9KYcn
-	 BW7qE9hBS9w+e/1MwUaxOsR5G0k2FJKBuRW0U0fxdUxL652BGKW7GNuO8Vcb4uqhkR
-	 rHwQ3Z8sNSJVA==
+	b=QEnzQu0eDIgMMy8LR43mfGcZPFswBf3Lryc8MB1tXtTxgX9up+RSYT9IcAetIwtNy
+	 ruZ7ayw181ByaHBuAPwUDDElcRny7kbdHyXLKVWJUWUM5v2txIrO5/SANm2tLeeDKQ
+	 X2p/ayyEp1uhvuWjLDCaoN8DAanbyDCe8maIScJQOY8ATV9pmrZ5Ufbs+LaulUXC4h
+	 Ldyv7VEgjR5QlpbEVxMkIfvhivTgxR4ykPcnG22FS7Yxr6RMzaOTeh3gGqZg3sM+S2
+	 SNxAXVXDKez61nOhjB5d0iNf46/B/owh+tLVKRCMyp278rkdfXELaeZi/jKHl+A1HC
+	 CkTYtRpC5I6mQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kunwu Chan <chentao@kylinos.cn>,
-	kernel test robot <lkp@intel.com>,
-	Markus Elfring <Markus.Elfring@web.de>,
-	Juergen Gross <jgross@suse.com>,
+Cc: Greg Joyce <gjoyce@linux.ibm.com>,
+	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 002/148] x86/xen: Add some null pointer checking to smp.c
-Date: Sun, 24 Mar 2024 19:47:46 -0400
-Message-ID: <20240324235012.1356413-3-sashal@kernel.org>
+Subject: [PATCH 4.19 005/148] block: sed-opal: handle empty atoms when parsing response
+Date: Sun, 24 Mar 2024 19:47:49 -0400
+Message-ID: <20240324235012.1356413-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -50,77 +48,63 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kunwu Chan <chentao@kylinos.cn>
+From: Greg Joyce <gjoyce@linux.ibm.com>
 
-[ Upstream commit 3693bb4465e6e32a204a5b86d3ec7e6b9f7e67c2 ]
+[ Upstream commit 5429c8de56f6b2bd8f537df3a1e04e67b9c04282 ]
 
-kasprintf() returns a pointer to dynamically allocated memory
-which can be NULL upon failure. Ensure the allocation was successful
-by checking the pointer validity.
+The SED Opal response parsing function response_parse() does not
+handle the case of an empty atom in the response. This causes
+the entry count to be too high and the response fails to be
+parsed. Recognizing, but ignoring, empty atoms allows response
+handling to succeed.
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202401161119.iof6BQsf-lkp@intel.com/
-Suggested-by: Markus Elfring <Markus.Elfring@web.de>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Link: https://lore.kernel.org/r/20240119094948.275390-1-chentao@kylinos.cn
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Greg Joyce <gjoyce@linux.ibm.com>
+Link: https://lore.kernel.org/r/20240216210417.3526064-2-gjoyce@linux.ibm.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/xen/smp.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ block/opal_proto.h | 1 +
+ block/sed-opal.c   | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/xen/smp.c b/arch/x86/xen/smp.c
-index a1cc855c539c1..a76ba342a6695 100644
---- a/arch/x86/xen/smp.c
-+++ b/arch/x86/xen/smp.c
-@@ -65,6 +65,8 @@ int xen_smp_intr_init(unsigned int cpu)
- 	char *resched_name, *callfunc_name, *debug_name;
+diff --git a/block/opal_proto.h b/block/opal_proto.h
+index e20be82588542..2456b8adc4574 100644
+--- a/block/opal_proto.h
++++ b/block/opal_proto.h
+@@ -73,6 +73,7 @@ enum opal_response_token {
+ #define SHORT_ATOM_BYTE  0xBF
+ #define MEDIUM_ATOM_BYTE 0xDF
+ #define LONG_ATOM_BYTE   0xE3
++#define EMPTY_ATOM_BYTE  0xFF
  
- 	resched_name = kasprintf(GFP_KERNEL, "resched%d", cpu);
-+	if (!resched_name)
-+		goto fail_mem;
- 	per_cpu(xen_resched_irq, cpu).name = resched_name;
- 	rc = bind_ipi_to_irqhandler(XEN_RESCHEDULE_VECTOR,
- 				    cpu,
-@@ -77,6 +79,8 @@ int xen_smp_intr_init(unsigned int cpu)
- 	per_cpu(xen_resched_irq, cpu).irq = rc;
+ #define OPAL_INVAL_PARAM 12
+ #define OPAL_MANUFACTURED_INACTIVE 0x08
+diff --git a/block/sed-opal.c b/block/sed-opal.c
+index 9651c40e093a5..7c7cd27411541 100644
+--- a/block/sed-opal.c
++++ b/block/sed-opal.c
+@@ -844,16 +844,20 @@ static int response_parse(const u8 *buf, size_t length,
+ 			token_length = response_parse_medium(iter, pos);
+ 		else if (pos[0] <= LONG_ATOM_BYTE) /* long atom */
+ 			token_length = response_parse_long(iter, pos);
++		else if (pos[0] == EMPTY_ATOM_BYTE) /* empty atom */
++			token_length = 1;
+ 		else /* TOKEN */
+ 			token_length = response_parse_token(iter, pos);
  
- 	callfunc_name = kasprintf(GFP_KERNEL, "callfunc%d", cpu);
-+	if (!callfunc_name)
-+		goto fail_mem;
- 	per_cpu(xen_callfunc_irq, cpu).name = callfunc_name;
- 	rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_VECTOR,
- 				    cpu,
-@@ -90,6 +94,9 @@ int xen_smp_intr_init(unsigned int cpu)
+ 		if (token_length < 0)
+ 			return token_length;
  
- 	if (!xen_fifo_events) {
- 		debug_name = kasprintf(GFP_KERNEL, "debug%d", cpu);
-+		if (!debug_name)
-+			goto fail_mem;
++		if (pos[0] != EMPTY_ATOM_BYTE)
++			num_entries++;
 +
- 		per_cpu(xen_debug_irq, cpu).name = debug_name;
- 		rc = bind_virq_to_irqhandler(VIRQ_DEBUG, cpu,
- 					     xen_debug_interrupt,
-@@ -101,6 +108,9 @@ int xen_smp_intr_init(unsigned int cpu)
+ 		pos += token_length;
+ 		total -= token_length;
+ 		iter++;
+-		num_entries++;
  	}
  
- 	callfunc_name = kasprintf(GFP_KERNEL, "callfuncsingle%d", cpu);
-+	if (!callfunc_name)
-+		goto fail_mem;
-+
- 	per_cpu(xen_callfuncsingle_irq, cpu).name = callfunc_name;
- 	rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_SINGLE_VECTOR,
- 				    cpu,
-@@ -114,6 +124,8 @@ int xen_smp_intr_init(unsigned int cpu)
- 
- 	return 0;
- 
-+ fail_mem:
-+	rc = -ENOMEM;
-  fail:
- 	xen_smp_intr_free(cpu);
- 	return rc;
+ 	if (num_entries == 0) {
 -- 
 2.43.0
 
