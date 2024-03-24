@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A487512AAC0;
-	Sun, 24 Mar 2024 23:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C269138481;
+	Sun, 24 Mar 2024 23:06:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321585; cv=none; b=BJ8C7BaKB1X8WaQQLXLtBMNokwApLKz852PBTgpW4iw3Xx5VT8SwKSdWro62oLaGXch0XIxIIM4QRwyL5cPWYuV0MCEyFF9/L5rKgd42RrWpB/4oTGe7zqrKZGX/X9yR/KSUzyWnpPBiJWPaDAJf1mnnXW6mHEg3wuZ7Bn5ajMA=
+	t=1711321588; cv=none; b=gzlf89fbCFDrA0Gt8MP8wEPANn1t5wBrGvU+kDlzH6RSyPrJMW8nru4zjXiLVFPzIWLxq0ZsMhbZAJVtnbtJMKHxqJXEU0RwijIwrc1LJzN8R+VgZpVWYzwBBon25Clo1V1Bmx3y3PYTJbgD0gG3ImUvy3eAy3AJi5vZTliam4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321585; c=relaxed/simple;
-	bh=cF4utwkVIlwsuri+yGIzK8zQ7Xl4PGNgqJiLSyNkDDs=;
+	s=arc-20240116; t=1711321588; c=relaxed/simple;
+	bh=BSB4jCWJU4ghse22gPst7g6+o8OVQyN+w/jFKOUHFEg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IDiSHNSidZTVi/0XMByKEtL4VRt2zALkQqTw513vQvwMVFRXUfVVPCePIa/ulMsV0KTBF63wmJwfFD6PwZBvMAiDeldXGbPU5Ct0gcbYLP/wEI4vLu8idDyCBJmjZTDhVYZGmkTZyZdTGVlruFGi0gM3rd2UKB/ClPthmWlQg3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kdat+2Ue; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=NYyetcPkcnN4Zfz3H94GW0JnBD5M3MB18871FZF3YIo7fVLS7iRtYdyz13YUTSMXxOS4m4vVPB5OAbWjEyE03ncp/RWlGjrpdANwxiRPF89lROyuqOhgRtXd/CqXFxVca8HQghPBiwxQqXwXWnKrnDhRPp7hck9JHgXuhG1eiEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qa42jo1/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kdat+2Ue"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC2EC433F1;
-	Sun, 24 Mar 2024 23:06:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qa42jo1/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EC5EC433C7;
+	Sun, 24 Mar 2024 23:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321584;
-	bh=cF4utwkVIlwsuri+yGIzK8zQ7Xl4PGNgqJiLSyNkDDs=;
+	s=k20201202; t=1711321587;
+	bh=BSB4jCWJU4ghse22gPst7g6+o8OVQyN+w/jFKOUHFEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Kdat+2UelAKLrsc3Rx+OdbFzmPj1xsHUIJJPBUQXTUkK7TnNqjdamPpboNQ8j2289
-	 G5xfu7271MaV/eDXis6Jx72aT6IZyUNC0xyKVMkMTerBbnmFt+nt4jJ6SnxPBFaqJ9
-	 6UiecBB+ydE0Ivid3TTxDs+elNdLdO8jcJiqTiTRzYzbJODiVIxFWVD+DES33fOXDd
-	 xI8mGHj8o107IAe00CbkROn0dxRolEfjbZNvzzSyVDIfJK5fkm1zlsDxq8IhobI6Cw
-	 VaBjh9hxQWhTBsgDBlPfCwH5E0VGDQnAHaobp8PsC7d9OlpyYjz/YZxjWQ4lpxTMf2
-	 ORSTHReRqhwqg==
+	b=Qa42jo1/dEZdNZ0lvWQqgTdoSVUWrmpjn0LPXbuRgcOnKAPNqbfxM7jAMGD/a3EV+
+	 pkHiodm8QPqN0+MMucQsxj7lDsssydj7Gfw7PE2iGpX/7Df9InXkqHl1nTdQ3Xi48x
+	 eTTjGZHF2vF+5if2Zn+l1S16Zy79fuY31hpG9IZlvvj3AM2x1Vhm9lGDeKIVQZr1j2
+	 K5aBs+wtS7SHfa3txR71WElQtJQQHLY5tZ2fnFFe1bZVyyr09HRDiQ5CCn6uT4EHft
+	 Yxk1kajQha0WXe8ek4XvsEKtOcQZuiKrmU2bS8fJbbsyBnyM7l1L+yXE/7d99H3xEa
+	 VgVxReSwdTjMQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chen Ni <nichen@iscas.ac.cn>,
-	Simon Horman <horms@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 314/638] sr9800: Add check for usbnet_get_endpoints
-Date: Sun, 24 Mar 2024 18:55:51 -0400
-Message-ID: <20240324230116.1348576-315-sashal@kernel.org>
+Subject: [PATCH 6.6 317/638] bpf: Fix hashtab overflow check on 32-bit arches
+Date: Sun, 24 Mar 2024 18:55:54 -0400
+Message-ID: <20240324230116.1348576-318-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -45,42 +44,65 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chen Ni <nichen@iscas.ac.cn>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 07161b2416f740a2cb87faa5566873f401440a61 ]
+[ Upstream commit 6787d916c2cf9850c97a0a3f73e08c43e7d973b1 ]
 
-Add check for usbnet_get_endpoints() and return the error if it fails
-in order to transfer the error.
+The hashtab code relies on roundup_pow_of_two() to compute the number of
+hash buckets, and contains an overflow check by checking if the
+resulting value is 0. However, on 32-bit arches, the roundup code itself
+can overflow by doing a 32-bit left-shift of an unsigned long value,
+which is undefined behaviour, so it is not guaranteed to truncate
+neatly. This was triggered by syzbot on the DEVMAP_HASH type, which
+contains the same check, copied from the hashtab code. So apply the same
+fix to hashtab, by moving the overflow check to before the roundup.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Fixes: 19a38d8e0aa3 ("USB2NET : SR9800 : One chip USB2.0 USB2NET SR9800 Device Driver Support")
-Link: https://lore.kernel.org/r/20240305075927.261284-1-nichen@iscas.ac.cn
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: daaf427c6ab3 ("bpf: fix arraymap NULL deref and missing overflow and zero size checks")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Message-ID: <20240307120340.99577-3-toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/sr9800.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/bpf/hashtab.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
-index f5e19f3ef6cdd..4de5144821835 100644
---- a/drivers/net/usb/sr9800.c
-+++ b/drivers/net/usb/sr9800.c
-@@ -737,7 +737,9 @@ static int sr9800_bind(struct usbnet *dev, struct usb_interface *intf)
+diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+index 5b9146fa825fd..85cd17ca38290 100644
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -498,7 +498,13 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
+ 							  num_possible_cpus());
+ 	}
  
- 	data->eeprom_len = SR9800_EEPROM_LEN;
+-	/* hash table size must be power of 2 */
++	/* hash table size must be power of 2; roundup_pow_of_two() can overflow
++	 * into UB on 32-bit arches, so check that first
++	 */
++	err = -E2BIG;
++	if (htab->map.max_entries > 1UL << 31)
++		goto free_htab;
++
+ 	htab->n_buckets = roundup_pow_of_two(htab->map.max_entries);
  
--	usbnet_get_endpoints(dev, intf);
-+	ret = usbnet_get_endpoints(dev, intf);
-+	if (ret)
-+		goto out;
+ 	htab->elem_size = sizeof(struct htab_elem) +
+@@ -508,10 +514,8 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
+ 	else
+ 		htab->elem_size += round_up(htab->map.value_size, 8);
  
- 	/* LED Setting Rule :
- 	 * AABB:CCDD
+-	err = -E2BIG;
+-	/* prevent zero size kmalloc and check for u32 overflow */
+-	if (htab->n_buckets == 0 ||
+-	    htab->n_buckets > U32_MAX / sizeof(struct bucket))
++	/* check for u32 overflow */
++	if (htab->n_buckets > U32_MAX / sizeof(struct bucket))
+ 		goto free_htab;
+ 
+ 	err = bpf_map_init_elem_count(&htab->map);
 -- 
 2.43.0
 
