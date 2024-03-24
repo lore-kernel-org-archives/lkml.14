@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2F5175CAA;
-	Sun, 24 Mar 2024 23:36:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7382779DD;
+	Sun, 24 Mar 2024 23:36:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323407; cv=none; b=oFtjSmGpkF2K8y5C8TIVji3beUhSOyaST347nJ2NOJVYPRg2LVPiGh9fioHMpiDTc5RV5X15MEb5XeEDEMqLTxQRWAWdbYUvwRURitC/JCjLsEX0R2mvTmvHjPVtiQ7locbJzCCiMpDmUkkp6iKiGf+yG/+XxZoKq5iusnFrC6E=
+	t=1711323414; cv=none; b=PAVpzzq9VFdsMgpOqEtNpfhU9RCejdGU0SpoYQFZw0liVOXGm9J5Gx3OnfrWXxA4jN6olzn+Ps8h8Wd+Cf13MEup2L81PWhH5PHU9bYouTHiIfcQX2Ga8rZYNrq2d+TzGp3rcGDSQ5xG4lrePNSkb0+9NHWVWAvKmF4h2hcajmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323407; c=relaxed/simple;
-	bh=BVOqvSyGtKmf/122ACtzVkhhLsTLB3szaQSQ0zvlj5s=;
+	s=arc-20240116; t=1711323414; c=relaxed/simple;
+	bh=/YcyTFGQuKRCQLnEtNVZ7X7oui9OK53d2UmFWsIndx8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g8MOct9dlltuzxeRNYRocgBBZfmRhbH+VmYQacmtdzTMaMLp5ePgmCRMnWeUTFUYoA3K6I919ltLzhMYWsouH5O9MBpI3GnP1zk4ESfoe4ZvS/I8bSoZtVy0ROf5FapX/uENxp70aELDGMy2k9n9sb/W/f1VvaBy0IPs/c5RQ3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kq4r6Gny; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KGl43+OZYYj2buw9X/5RqQagw4HYKSMdgmynWgaQprLNMO8mrm5q6PGUSNzQfmCCSFQOD+vPmGaWtZ/dWC0Pp59f5p4bBtjkJP8FaP2FH7TnBD//cm7EC0xmV3Ox35dtzos8Hq1l1WZFdN33MTLVU+8Za+soYqwtQIGiDa897dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNpyfc0+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kq4r6Gny"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87770C433B1;
-	Sun, 24 Mar 2024 23:36:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNpyfc0+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1590C433F1;
+	Sun, 24 Mar 2024 23:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323407;
-	bh=BVOqvSyGtKmf/122ACtzVkhhLsTLB3szaQSQ0zvlj5s=;
+	s=k20201202; t=1711323414;
+	bh=/YcyTFGQuKRCQLnEtNVZ7X7oui9OK53d2UmFWsIndx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kq4r6GnyS0Ob70h+LgEfGgcyul54KPbsbN2vMyg8WyA3cRhwLZq+XKLqEFASR940I
-	 j6kbdiFrC01p7xDmSfK34ZLH1HGLAnqmxEAZFUWZ0jKcTbEC/BJMM0iqNKzEYdbixI
-	 aG1dBNaN8yxjRpwu9mG0oRJvuC/gufZz2bVb8q2oDWGlf+4XJQGV6MqMqSxmMlR4HE
-	 X7MDPMkjYPKAd4x/biJUcIjpu/qZSua9dwg0MJ2IeSf8utV74UaYHSJy/GwqHLoCZR
-	 g2HZOZrJBvxAIPNHKCKk/hJRPxCyjfDKHNnEsGLOilrz6YiX4xVYLzlkl+gsuxUuPm
-	 kskv4y2Ok+vQQ==
+	b=mNpyfc0+z4QIYV+uQrKdMksN417XkywLDfuykTOqsbbgcyx3lE2xoV4ur16Wvbx7M
+	 3NidfYao3UHkPnnAHeirIml3wM2mkPUBPKTejXSZkM9qusrp8+1UmUjAfcFTaO5K2h
+	 Xp3SMID8A6JcKkj7BRaXVrBNiNxKAxcKuv3W+dkXewpfkNiJ5aOVrLWXrMbGfI8Xjd
+	 +YdQeRz6mMt5LRMN5na0KKeJxf/giHref5vDDiQVHngOqY58yNwpUgLQ8WMu0qoSSW
+	 dPYdURxpP1uL/2IKETMIv1M3K0O3t+P0mDpARRT7Db9A4DD0uypx131t11/xmD5KQj
+	 IvNWDrxBGhD2w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kamal Heib <kheib@redhat.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: David McFarland <corngood@gmail.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 108/317] net: ena: Remove ena_select_queue
-Date: Sun, 24 Mar 2024 19:31:28 -0400
-Message-ID: <20240324233458.1352854-109-sashal@kernel.org>
+Subject: [PATCH 5.15 116/317] ACPI: resource: Add Infinity laptops to irq1_edge_low_force_override
+Date: Sun, 24 Mar 2024 19:31:36 -0400
+Message-ID: <20240324233458.1352854-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,64 +48,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kamal Heib <kheib@redhat.com>
+From: David McFarland <corngood@gmail.com>
 
-[ Upstream commit 78e886ba2b549945ecada055ee0765f0ded5707a ]
+[ Upstream commit e2605d4039a42a03000856b3229932455717b48b ]
 
-Avoid the following warnings by removing the ena_select_queue() function
-and rely on the net core to do the queue selection, The issue happen
-when an skb received from an interface with more queues than ena is
-forwarded to the ena interface.
+A user reported a keyboard problem similar to ones reported with other
+Zen laptops, on an Infinity E15-5A165-BM.
 
-[ 1176.159959] eth0 selects TX queue 11, but real number of TX queues is 8
-[ 1176.863976] eth0 selects TX queue 14, but real number of TX queues is 8
-[ 1180.767877] eth0 selects TX queue 14, but real number of TX queues is 8
-[ 1188.703742] eth0 selects TX queue 14, but real number of TX queues is 8
+Add board name matches for this model and one (untested) close relative
+to irq1_edge_low_force_override.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Kamal Heib <kheib@redhat.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lemmy.ml/post/9864736
+Link: https://www.infinitygaming.com.au/bios/
+Link: https://lore.kernel.org/linux-acpi/20231006123304.32686-1-hdegoede@redhat.com
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Stable-dep-of: 021a67d09615 ("ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+ drivers/acpi/resource.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 7d4b862be783d..43c099141e211 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -3187,22 +3187,6 @@ static netdev_tx_t ena_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	return NETDEV_TX_OK;
- }
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index a364cb07c5578..16a18654f6879 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -546,6 +546,18 @@ static const struct dmi_system_id lg_laptop[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "17U70P"),
+ 		},
+ 	},
++	{
++		/* Infinity E15-5A165-BM */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GM5RG1E0009COM"),
++		},
++	},
++	{
++		/* Infinity E15-5A305-1M */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GM5RGEE0016COM"),
++		},
++	},
+ 	{ }
+ };
  
--static u16 ena_select_queue(struct net_device *dev, struct sk_buff *skb,
--			    struct net_device *sb_dev)
--{
--	u16 qid;
--	/* we suspect that this is good for in--kernel network services that
--	 * want to loop incoming skb rx to tx in normal user generated traffic,
--	 * most probably we will not get to this
--	 */
--	if (skb_rx_queue_recorded(skb))
--		qid = skb_get_rx_queue(skb);
--	else
--		qid = netdev_pick_tx(dev, skb, NULL);
--
--	return qid;
--}
--
- static void ena_config_host_info(struct ena_com_dev *ena_dev, struct pci_dev *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -3372,7 +3356,6 @@ static const struct net_device_ops ena_netdev_ops = {
- 	.ndo_open		= ena_open,
- 	.ndo_stop		= ena_close,
- 	.ndo_start_xmit		= ena_start_xmit,
--	.ndo_select_queue	= ena_select_queue,
- 	.ndo_get_stats64	= ena_get_stats64,
- 	.ndo_tx_timeout		= ena_tx_timeout,
- 	.ndo_change_mtu		= ena_change_mtu,
 -- 
 2.43.0
 
