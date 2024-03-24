@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68850145B1A;
-	Sun, 24 Mar 2024 23:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9152145B34;
+	Sun, 24 Mar 2024 23:13:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322016; cv=none; b=QM2SEbjgVmi5SYR/QO2M2yRKXyOMYQyr496vo9qD/p/G0jRWiOkwDfT+0JuuOAuq6iBFBXNTtTAiLVjBCNpw3eZG7X1rxgSzM44S2vhafou6lPWtOKvdAQiN6UZoTBDy9/vmSPdgfjUdIWJzrAb9SBsC9KJPBswmH1XseAeo+5k=
+	t=1711322035; cv=none; b=Q0WCSC/01ymnlfGduQWsLuPDaouyldhqTyYr0c9Agnjk1j+IwZDdNg6ru/oCR8N5bIGfvm3pMSPLeCqkRKsB83Q8TJ4lpKGA4L9fEkd0V5OBPa6opfLZHLm/V8EcIYSj1YnhQxU5ChEFYBQdh9t06rIw+GKx63BeEYTDb7uZ6bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322016; c=relaxed/simple;
-	bh=e3S7j0C5eISdqw4Fg5NN+8n0PP+t0wc7M4Hdhp4DL+Y=;
+	s=arc-20240116; t=1711322035; c=relaxed/simple;
+	bh=PBNNIx8LWar5cbDoBeRTvKcB+cXMQt3unzNSrboVD4g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cTXEq+YLoHCXziMnDfa/k1XjrzcBDT8FoSGDBps009wxZBjMPRE31d7/bOch1WUduW4tEns0ZhlPsRuEIh+48fJaIe6aqxWyUBgv5HjBt5g6vyZDr5q/N7xa79Ul72UqTWlVe67+NN98urxvVyTBXzm9j4L6tqkePeWBDgCM8nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M2rVsagf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cDNYtzRlmN0WeOxqaBEfDRPYULurrAl58jFvJyZhfoEi0puM2PUgT3mHuIKv8d49jyvngeYJARhD0q84YkmFti+afrMtFZBSJ8aP7Cnqr9K4K8AeeXELwFfToNzsBo4XBBS1NUTN1Zhknxr3d9Lf1XS3+a0cpqNsF8/Ybwslq04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kn8QLplt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M2rVsagf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F48C433B1;
-	Sun, 24 Mar 2024 23:13:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kn8QLplt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05E61C43394;
+	Sun, 24 Mar 2024 23:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322016;
-	bh=e3S7j0C5eISdqw4Fg5NN+8n0PP+t0wc7M4Hdhp4DL+Y=;
+	s=k20201202; t=1711322034;
+	bh=PBNNIx8LWar5cbDoBeRTvKcB+cXMQt3unzNSrboVD4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M2rVsagfC/MqfWPOWoy9bYKxN1unh4hnbfcxE+kOsIEkIcFFOzbw9R7TRYLr1hVoe
-	 B3jvz0sDRw7dw9x6n0RXWIDcaQ5WUMoMNNSsU3Y0Cw4XtibCb+NYY4wfr0SO+3WrpC
-	 kC4vsyBPp87FgEuQ2+bdVXsay3iF9vRCrRxmPCDyHZSbgzgftVh62S4L3Fb7+czqUf
-	 bzsSlzKpzKv0wJhFlZT9J+cTfykgrpKjRCzBVLb8NblDcLCOunIUF6UefemLR90G5v
-	 wsuiBjqWHYhT+2R8v+LrJL8eC3sdfkaY1GAGah+b2vGYZepKH9FirTTpE43fzUVnKC
-	 YwyUA21BvLoPw==
+	b=Kn8QLplt7Ngtq0zHYB1gsyJOIMRywd+TvUI4oDOxQ7keFRfgUxLRsnp2FQFf1CpJA
+	 1j7R32DsGv9rLudewsjHUhsffcwSAKEwqw7Bb77nAFFQIHn24m4WzOr16lVYKtmruG
+	 ssgbTuEpxmb1N1S6e4JTxbnn7BERyYsbuXbpghBeGkh98Ewm7cjCmxGtiV+grUohM0
+	 GCN1sYLTrTq6DUizqU3LInerpGlC6+OvQ999NEKtpAPkH/pk2XCkxTWBb32eS2G8mS
+	 UjOmZ+aUyKIEIlgBo5GieHPGD3JEwH4cLd2OLeBdpxO7K/jpV6oI48fQ6iG8U0WOAW
+	 blLEQyXPw5mkQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 088/451] wifi: wilc1000: fix declarations ordering
-Date: Sun, 24 Mar 2024 19:06:04 -0400
-Message-ID: <20240324231207.1351418-89-sashal@kernel.org>
+Subject: [PATCH 6.1 106/451] pmdomain: qcom: rpmhpd: Drop SA8540P gfx.lvl
+Date: Sun, 24 Mar 2024 19:06:22 -0400
+Message-ID: <20240324231207.1351418-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,49 +46,41 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexis Lothoré <alexis.lothore@bootlin.com>
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-[ Upstream commit 535733e90e5d8912ebeccebb05b354a2d06ff459 ]
+[ Upstream commit 883957bee580b723fd87d49ac73e0c84fc03a446 ]
 
-Reorder parameters declaration in wilc_parse_join_bss_param to enforce
-reverse christmas tree
+On SA8295P and SA8540P gfx.lvl is not provdied by rpmh, but rather is
+handled by an external regulator (max20411). Drop gfx.lvl from the list
+of power-domains exposed on this platform.
 
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240105075733.36331-2-alexis.lothore@bootlin.com
-Stable-dep-of: 205c50306acf ("wifi: wilc1000: fix RCU usage in connect path")
+Fixes: f68f1cb3437d ("soc: qcom: rpmhpd: add sc8280xp & sa8540p rpmh power-domains")
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20240125-sa8295p-gpu-v4-4-7011c2a63037@quicinc.com
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/microchip/wilc1000/hif.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/soc/qcom/rpmhpd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/hif.c b/drivers/net/wireless/microchip/wilc1000/hif.c
-index a1b75feec6edf..00ecf14afab01 100644
---- a/drivers/net/wireless/microchip/wilc1000/hif.c
-+++ b/drivers/net/wireless/microchip/wilc1000/hif.c
-@@ -374,13 +374,13 @@ static void handle_connect_timeout(struct work_struct *work)
- void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 				struct cfg80211_crypto_settings *crypto)
- {
--	struct wilc_join_bss_param *param;
--	struct ieee80211_p2p_noa_attr noa_attr;
--	u8 rates_len = 0;
-+	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
- 	const u8 *tim_elm, *ssid_elm, *rates_ie, *supp_rates_ie;
- 	const u8 *ht_ie, *wpa_ie, *wmm_ie, *rsn_ie;
-+	struct ieee80211_p2p_noa_attr noa_attr;
-+	struct wilc_join_bss_param *param;
-+	u8 rates_len = 0;
- 	int ret;
--	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
- 
- 	param = kzalloc(sizeof(*param), GFP_KERNEL);
- 	if (!param)
+diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+index 9a90f241bb97f..6efe36aeb48e9 100644
+--- a/drivers/soc/qcom/rpmhpd.c
++++ b/drivers/soc/qcom/rpmhpd.c
+@@ -195,7 +195,6 @@ static struct rpmhpd *sa8540p_rpmhpds[] = {
+ 	[SC8280XP_CX] = &cx,
+ 	[SC8280XP_CX_AO] = &cx_ao,
+ 	[SC8280XP_EBI] = &ebi,
+-	[SC8280XP_GFX] = &gfx,
+ 	[SC8280XP_LCX] = &lcx,
+ 	[SC8280XP_LMX] = &lmx,
+ 	[SC8280XP_MMCX] = &mmcx,
 -- 
 2.43.0
 
