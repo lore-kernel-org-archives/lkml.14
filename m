@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDE5145FF3;
-	Sun, 24 Mar 2024 23:14:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC783145B2A;
+	Sun, 24 Mar 2024 23:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322056; cv=none; b=Z/tFMYJ8fnw1v4kJYPU1jtW05CS81xkyIQsb5n2TAnc3QA6Whrz4kX62vhUg2lB3RrZLiPnlxuiFputZaBpUEnlJQLhKoXuiDwpU2JDxF0gtxajtM9jaRPU18cFqL/F/sWeffkqqlESxu2QibXtgjNC0yQQoBtpUXNMCj1dxSgc=
+	t=1711322033; cv=none; b=bZhh5ip5d9wYCTtsRTCrsQpyoEet5doNS+uSyQXOlr9NqVpm+IkF3BV+i7nUHcTfnNclxtRTq8/b7qhhkAkaySczGqH0oamLE4T0z50YJqEzd5XhGcoQmLHgmXmGqHDkqgfRdyohUwxeSdC8uzqZzuu4UQSxetEKL3kZSIUNZ9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322056; c=relaxed/simple;
-	bh=cZ3FDbVrdGMansDtfsbUATAeF8l7KjlYgQN5CPOAiUk=;
+	s=arc-20240116; t=1711322033; c=relaxed/simple;
+	bh=+mmJq1X8ggrGC5bBCdN8KC/xh9zWt9V43RNjKymHVus=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eBF19py/3M8b3LhRDwWeoTrJ0/3jVaPpbjfjhblD50C9YbiX3Bf2Hgwk2lEUK7mRbtisa7mmZVtsASJiOS4W4Afe6qrLIWD3bUp+GDGfAYFhJSYHI6P/Wq3HnNY36tXoPu7qwailnkfwY9G3CuVi8E+OCX3c5tzO5f0Tw8BKMh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iFeCjqgw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=kqe4tHitFDb92JW3ZzxtLcWwPHhBlL+a0OqBKbArxbW/Q8IkbHW2xxaOvd+X1DEBuQLATZkM1TVvzCGwnFCbtzADc4wr/fUd7GjVGP1Z/fb36H1w/qVoqIxsG1nNUcF+Kg6YA76/oZ5CIwA9rbSpP1A9vyI6soZb+ujAYTFJbTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfG6YZgh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iFeCjqgw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC7E0C433F1;
-	Sun, 24 Mar 2024 23:14:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfG6YZgh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF15AC43394;
+	Sun, 24 Mar 2024 23:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322055;
-	bh=cZ3FDbVrdGMansDtfsbUATAeF8l7KjlYgQN5CPOAiUk=;
+	s=k20201202; t=1711322032;
+	bh=+mmJq1X8ggrGC5bBCdN8KC/xh9zWt9V43RNjKymHVus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iFeCjqgwyzeJ7h8OWIKQ01hhoa8Khff7BeMaoZYQaPOVR8SnU6uR7X6I6K51J05Q7
-	 8D++fZeNNrIETojoL6L2xFKSKMk+aLzu9BvY43j/za1bfTTTUMqBM4GRLeJy/Scw+P
-	 H9nFCtkvzjfFINj9rbo9mDZJy+eTF1BEYQX9dZJ7b0Jykh7wqT1ArBGP+n7Rfrm5H1
-	 2AKnYuFN67hO23ZrG/8hdMhA6Fm4p8E8UEUrLxn+20e8RAHleAQ0roDjTcJC3gjkRD
-	 kJkykInVBnHk57xoZS0R9+QCT1DsKGhQPmX57mONGwzwEXqrGfvj5stoFR8HrbhIEN
-	 7+mrvCOdJNWPw==
+	b=GfG6YZghNUf/7AcwHpNvRuMQMfwcr8tseRNazfXuPbPRUsUKOhfYMOwiFsa+ANS9F
+	 dIgydtQ7dbvVnX45qZwIt/5nuIyx50ENKSMV6X+eJ59IHApJoAwshngkehaMsAW7TT
+	 bd4D1T2ZoZio/WqPQ3RmaNtLkpPo/3uR6p/lV3tZcGgqna3TIzIobFfh0nre0gECHf
+	 4W/SGbwazDeGYUJhKn9PrR3aOtlH8mm0Kcu/lNVyB0ytGEZS+3CoMe7A0MOTSRDWj7
+	 EPfxrMsD30brIhx+BrT0+8fiWE29hoGuQNvugsmcR8FmYUdg0ybAszkPgsCtXHU9lk
+	 PyjyygZtMCg+g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	"kernelci . org bot" <bot@kernelci.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 128/451] arm64: dts: qcom: msm8998: switch USB QMP PHY to new style of bindings
-Date: Sun, 24 Mar 2024 19:06:44 -0400
-Message-ID: <20240324231207.1351418-129-sashal@kernel.org>
+Subject: [PATCH 6.1 104/451] cpufreq: mediatek-hw: Don't error out if supply is not found
+Date: Sun, 24 Mar 2024 19:06:20 -0400
+Message-ID: <20240324231207.1351418-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,86 +46,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-[ Upstream commit b7efebfeb2e8ad8187cdabba5f0212ba2e6c1069 ]
+[ Upstream commit eaffb10b51bf74415c9252fd8fb4dd77122501ee ]
 
-Change the USB QMP PHY to use newer style of QMP PHY bindings (single
-resource region, no per-PHY subnodes).
+devm_regulator_get_optional() returns -ENODEV if no supply can be found.
+By introducing its usage, commit 788715b5f21c ("cpufreq: mediatek-hw:
+Wait for CPU supplies before probing") caused the driver to fail probe
+if no supply was present in any of the CPU DT nodes.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Link: https://lore.kernel.org/r/20230824211952.1397699-11-dmitry.baryshkov@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
-Stable-dep-of: fc835b2311d4 ("arm64: dts: qcom: msm8998: declare VLS CLAMP register for USB3 PHY")
+Use devm_regulator_get() instead since the CPUs do require supplies
+even if not described in the DT. It will gracefully return a dummy
+regulator if none is found in the DT node, allowing probe to succeed.
+
+Fixes: 788715b5f21c ("cpufreq: mediatek-hw: Wait for CPU supplies before probing")
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Closes: https://linux.kernelci.org/test/case/id/65b0b169710edea22852a3fa/
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 35 +++++++++++----------------
- 1 file changed, 14 insertions(+), 21 deletions(-)
+ drivers/cpufreq/mediatek-cpufreq-hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 7a41250539ff5..6eef7cbe7d7bf 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -2030,7 +2030,7 @@ usb3_dwc3: usb@a800000 {
- 				interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
- 				snps,dis_u2_susphy_quirk;
- 				snps,dis_enblslpm_quirk;
--				phys = <&qusb2phy>, <&usb1_ssphy>;
-+				phys = <&qusb2phy>, <&usb3phy>;
- 				phy-names = "usb2-phy", "usb3-phy";
- 				snps,has-lpm-erratum;
- 				snps,hird-threshold = /bits/ 8 <0x10>;
-@@ -2039,33 +2039,26 @@ usb3_dwc3: usb@a800000 {
+diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
+index 42240a7d826da..7f326bb5fd8de 100644
+--- a/drivers/cpufreq/mediatek-cpufreq-hw.c
++++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
+@@ -308,7 +308,7 @@ static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
+ 			return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
+ 					     "Failed to get cpu%d device\n", cpu);
  
- 		usb3phy: phy@c010000 {
- 			compatible = "qcom,msm8998-qmp-usb3-phy";
--			reg = <0x0c010000 0x18c>;
--			status = "disabled";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			ranges;
-+			reg = <0x0c010000 0x1000>;
- 
- 			clocks = <&gcc GCC_USB3_PHY_AUX_CLK>,
-+				 <&gcc GCC_USB3_CLKREF_CLK>,
- 				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
--				 <&gcc GCC_USB3_CLKREF_CLK>;
--			clock-names = "aux", "cfg_ahb", "ref";
-+				 <&gcc GCC_USB3_PHY_PIPE_CLK>;
-+			clock-names = "aux",
-+				      "ref",
-+				      "cfg_ahb",
-+				      "pipe";
-+			clock-output-names = "usb3_phy_pipe_clk_src";
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
- 
- 			resets = <&gcc GCC_USB3_PHY_BCR>,
- 				 <&gcc GCC_USB3PHY_PHY_BCR>;
--			reset-names = "phy", "common";
-+			reset-names = "phy",
-+				      "phy_phy";
- 
--			usb1_ssphy: phy@c010200 {
--				reg = <0xc010200 0x128>,
--				      <0xc010400 0x200>,
--				      <0xc010c00 0x20c>,
--				      <0xc010600 0x128>,
--				      <0xc010800 0x200>;
--				#phy-cells = <0>;
--				#clock-cells = <0>;
--				clocks = <&gcc GCC_USB3_PHY_PIPE_CLK>;
--				clock-names = "pipe0";
--				clock-output-names = "usb3_phy_pipe_clk_src";
--			};
-+			status = "disabled";
- 		};
- 
- 		qusb2phy: phy@c012000 {
+-		cpu_reg = devm_regulator_get_optional(cpu_dev, "cpu");
++		cpu_reg = devm_regulator_get(cpu_dev, "cpu");
+ 		if (IS_ERR(cpu_reg))
+ 			return dev_err_probe(&pdev->dev, PTR_ERR(cpu_reg),
+ 					     "CPU%d regulator get failed\n", cpu);
 -- 
 2.43.0
 
