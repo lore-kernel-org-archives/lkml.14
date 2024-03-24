@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10169229D91;
-	Sun, 24 Mar 2024 23:15:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5231487F8;
+	Sun, 24 Mar 2024 23:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322144; cv=none; b=nvX3IpCUqiX8gsh19H01Xtbzep2h3wZ8JtdG3C3AMIYKVVD9tVKiZcwuPol2X4dqjXLdcFkwGBWP9Ugnxq4czQOcx3RzTHgNTExJREtmA2zz0rKged5bBtHbhwrozX81/3Ts4o0eLNhqeoWJs+Ok30MQS+c+Y36gfnqwnlWE63Q=
+	t=1711322145; cv=none; b=Q8gs8hbHgvTpPAHNGNSJbqlzS9ecD35oxgFuZLNUT7GhVhBVEQX89W857OhCd0jPsBWpmRHO0WVcO+VfusOeHLcNYyuovN/7xqcWuQrceTkUmDAoCXxzpBEdcVG3Nyr02L1ZaWZl1IXUW0mA7n1Llf5f7WiegeJ4nPV29kOay7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322144; c=relaxed/simple;
-	bh=70+Of7/72M+9iSPocJk3c0sQgYlZ86lfC/taxquLJag=;
+	s=arc-20240116; t=1711322145; c=relaxed/simple;
+	bh=2DvJvaZyFK9vHNgI+suBjYVyGIRaLvxgXFom/JoexWE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jzdb/cj4EK2gszBhHT/D0LXIh/wMXCm2YMoe2u2LK7eaij91liS/4MVbNM7eCq2QOO8K2SVnVWZoSZh7uP/4eIN1PQRd0vqy5KZnLxxQsKsh8tDPIUZxO+7L2t4iQHnbbn6upPiPhABhwHlCnjEcwYESwhLb0UeE8IM8psKbpSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JcX31ePM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oailKz4w+3cycjRxSh7yLrf7o2YRgmKsdMNfExFM9upmmBRYCpWxOJ9Cp4oK4UBcgkCIaqV59a1OVdKwaaIOk5C4XhHd8400QoewDxVxzC1Xq1oth+wO/iXGSlRJBghNQkwnaWw/Ti+8d5IfiKi0KX9D3qgbKhKtsm2Ps76H3to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qUSX+/mq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JcX31ePM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E2A1C433F1;
-	Sun, 24 Mar 2024 23:15:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qUSX+/mq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88021C433F1;
+	Sun, 24 Mar 2024 23:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322142;
-	bh=70+Of7/72M+9iSPocJk3c0sQgYlZ86lfC/taxquLJag=;
+	s=k20201202; t=1711322145;
+	bh=2DvJvaZyFK9vHNgI+suBjYVyGIRaLvxgXFom/JoexWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JcX31ePMv0M5UF68Ya3yaDjXn15fdCN9hfAMPfUui96CfpkIMnh4wJSEbNsyRuYmb
-	 9CC4dpt4DO0w0JUVXfXpLbSbDCQ1Lov2oNuHgIA1TxB2nKk9MAKt8o5wMMjDUac/3s
-	 b/LfOSwG8EN1TSPqLPt0Q1CWoda5CKwqn9Qye6+ewfKAWB98QdTh2TU9uuLOzhjPPt
-	 HEs6PE1e3XNXnPXcUKeAH30cVUqEmatEFihcVLYpxHATiszpmgygKibC0FgtcuyKbP
-	 ypcWHTMsfbeMZckG7aQjllIOb61U1uRUNXuhtgL2PGAWpKMZMXUGzuGGXoAp1spPfZ
-	 09NOxhuDSE7bQ==
+	b=qUSX+/mqpQJWjKOBmr71gAq83CcFFFocgCw/i+PCkuo1cd7LrDv2F68aJ99fN+Czi
+	 BfcJXB1BGrklIhKWGKVmI9ajCqblEURgU8dwgvAVD1r8/fI89uL506uEIf+cwvhFIX
+	 xcjqMB/9k5ChoRHZf6gI83rGm2qMIaxurhHBY33eaAiyJ1wZxWY0S66cEjFoP/BZgT
+	 0mLYR9s0ERlnIIcP3IYlKfCMvQkf+nWsuOugi1qkzpB0R6V2XN5FuLa8PYnTdfOX52
+	 hK+UpyolZCMKKMcoZUmvee4LOnZSkn+t6f4DROkcoUsTPp6bDD9H3Vs+uTnryJ1iKu
+	 4/C6QbciGfv4Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: Tim Pambor <tp@osasysteme.de>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 219/451] Bluetooth: MGMT: Fix always using HCI_MAX_AD_LENGTH
-Date: Sun, 24 Mar 2024 19:08:15 -0400
-Message-ID: <20240324231207.1351418-220-sashal@kernel.org>
+Subject: [PATCH 6.1 222/451] net: phy: dp83822: Fix RGMII TX delay configuration
+Date: Sun, 24 Mar 2024 19:08:18 -0400
+Message-ID: <20240324231207.1351418-223-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -47,106 +48,89 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+From: Tim Pambor <tp@osasysteme.de>
 
-[ Upstream commit 112b5090c21905531314fee41f691f0317bbf4f6 ]
+[ Upstream commit c8a5c731fd1223090af57da33838c671a7fc6a78 ]
 
-HCI_MAX_AD_LENGTH shall only be used if the controller doesn't support
-extended advertising, otherwise HCI_MAX_EXT_AD_LENGTH shall be used
-instead.
+The logic for enabling the TX clock shift is inverse of enabling the RX
+clock shift. The TX clock shift is disabled when DP83822_TX_CLK_SHIFT is
+set. Correct the current behavior and always write the delay configuration
+to ensure consistent delay settings regardless of bootloader configuration.
 
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Stable-dep-of: 2ab3e8d67fc1 ("Bluetooth: Fix eir name length")
+Reference: https://www.ti.com/lit/ds/symlink/dp83822i.pdf p. 69
+
+Fixes: 8095295292b5 ("net: phy: DP83822: Add setting the fixed internal delay")
+Signed-off-by: Tim Pambor <tp@osasysteme.de>
+Link: https://lore.kernel.org/r/20240305110608.104072-1-tp@osasysteme.de
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/bluetooth/hci_core.h |  4 ++++
- net/bluetooth/hci_event.c        | 12 +++++++-----
- net/bluetooth/mgmt.c             |  6 +++---
- 3 files changed, 14 insertions(+), 8 deletions(-)
+ drivers/net/phy/dp83822.c | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 6bc6de5345261..53155cb703b5d 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -1710,6 +1710,10 @@ void hci_conn_del_sysfs(struct hci_conn *conn);
- /* Extended advertising support */
- #define ext_adv_capable(dev) (((dev)->le_features[1] & HCI_LE_EXT_ADV))
+diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
+index 267e6fd3d4448..57411ee1d8374 100644
+--- a/drivers/net/phy/dp83822.c
++++ b/drivers/net/phy/dp83822.c
+@@ -380,7 +380,7 @@ static int dp83822_config_init(struct phy_device *phydev)
+ {
+ 	struct dp83822_private *dp83822 = phydev->priv;
+ 	struct device *dev = &phydev->mdio.dev;
+-	int rgmii_delay;
++	int rgmii_delay = 0;
+ 	s32 rx_int_delay;
+ 	s32 tx_int_delay;
+ 	int err = 0;
+@@ -390,30 +390,33 @@ static int dp83822_config_init(struct phy_device *phydev)
+ 		rx_int_delay = phy_get_internal_delay(phydev, dev, NULL, 0,
+ 						      true);
  
-+/* Maximum advertising length */
-+#define max_adv_len(dev) \
-+	(ext_adv_capable(dev) ? HCI_MAX_EXT_AD_LENGTH : HCI_MAX_AD_LENGTH)
+-		if (rx_int_delay <= 0)
+-			rgmii_delay = 0;
+-		else
+-			rgmii_delay = DP83822_RX_CLK_SHIFT;
++		/* Set DP83822_RX_CLK_SHIFT to enable rx clk internal delay */
++		if (rx_int_delay > 0)
++			rgmii_delay |= DP83822_RX_CLK_SHIFT;
+ 
+ 		tx_int_delay = phy_get_internal_delay(phydev, dev, NULL, 0,
+ 						      false);
 +
- /* BLUETOOTH CORE SPECIFICATION Version 5.3 | Vol 4, Part E page 1789:
-  *
-  * C24: Mandatory if the LE Controller supports Connection State and either
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 6b746ab9f6d21..b150dee88f35c 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -1761,7 +1761,7 @@ static void store_pending_adv_report(struct hci_dev *hdev, bdaddr_t *bdaddr,
- {
- 	struct discovery_state *d = &hdev->discovery;
++		/* Set DP83822_TX_CLK_SHIFT to disable tx clk internal delay */
+ 		if (tx_int_delay <= 0)
+-			rgmii_delay &= ~DP83822_TX_CLK_SHIFT;
+-		else
+ 			rgmii_delay |= DP83822_TX_CLK_SHIFT;
  
--	if (len > HCI_MAX_AD_LENGTH)
-+	if (len > max_adv_len(hdev))
- 		return;
+-		if (rgmii_delay) {
+-			err = phy_set_bits_mmd(phydev, DP83822_DEVADDR,
+-					       MII_DP83822_RCSR, rgmii_delay);
+-			if (err)
+-				return err;
+-		}
++		err = phy_modify_mmd(phydev, DP83822_DEVADDR, MII_DP83822_RCSR,
++				     DP83822_RX_CLK_SHIFT | DP83822_TX_CLK_SHIFT, rgmii_delay);
++		if (err)
++			return err;
++
++		err = phy_set_bits_mmd(phydev, DP83822_DEVADDR,
++				       MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
  
- 	bacpy(&d->last_adv_addr, bdaddr);
-@@ -6240,8 +6240,9 @@ static void process_adv_report(struct hci_dev *hdev, u8 type, bdaddr_t *bdaddr,
- 		return;
+-		phy_set_bits_mmd(phydev, DP83822_DEVADDR,
+-					MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
++		if (err)
++			return err;
+ 	} else {
+-		phy_clear_bits_mmd(phydev, DP83822_DEVADDR,
+-					MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
++		err = phy_clear_bits_mmd(phydev, DP83822_DEVADDR,
++					 MII_DP83822_RCSR, DP83822_RGMII_MODE_EN);
++
++		if (err)
++			return err;
  	}
  
--	if (!ext_adv && len > HCI_MAX_AD_LENGTH) {
--		bt_dev_err_ratelimited(hdev, "legacy adv larger than 31 bytes");
-+	if (len > max_adv_len(hdev)) {
-+		bt_dev_err_ratelimited(hdev,
-+				       "adv larger than maximum supported");
- 		return;
- 	}
- 
-@@ -6306,7 +6307,8 @@ static void process_adv_report(struct hci_dev *hdev, u8 type, bdaddr_t *bdaddr,
- 	 */
- 	conn = check_pending_le_conn(hdev, bdaddr, bdaddr_type, bdaddr_resolved,
- 				     type);
--	if (!ext_adv && conn && type == LE_ADV_IND && len <= HCI_MAX_AD_LENGTH) {
-+	if (!ext_adv && conn && type == LE_ADV_IND &&
-+	    len <= max_adv_len(hdev)) {
- 		/* Store report for later inclusion by
- 		 * mgmt_device_connected
- 		 */
-@@ -6447,7 +6449,7 @@ static void hci_le_adv_report_evt(struct hci_dev *hdev, void *data,
- 					info->length + 1))
- 			break;
- 
--		if (info->length <= HCI_MAX_AD_LENGTH) {
-+		if (info->length <= max_adv_len(hdev)) {
- 			rssi = info->data[info->length];
- 			process_adv_report(hdev, info->type, &info->bdaddr,
- 					   info->bdaddr_type, NULL, 0, rssi,
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 4a35535f56607..1486fb9bb78f7 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -8436,8 +8436,8 @@ static int read_adv_features(struct sock *sk, struct hci_dev *hdev,
- 	supported_flags = get_supported_adv_flags(hdev);
- 
- 	rp->supported_flags = cpu_to_le32(supported_flags);
--	rp->max_adv_data_len = HCI_MAX_AD_LENGTH;
--	rp->max_scan_rsp_len = HCI_MAX_AD_LENGTH;
-+	rp->max_adv_data_len = max_adv_len(hdev);
-+	rp->max_scan_rsp_len = max_adv_len(hdev);
- 	rp->max_instances = hdev->le_num_of_adv_sets;
- 	rp->num_instances = hdev->adv_instance_cnt;
- 
-@@ -8473,7 +8473,7 @@ static u8 calculate_name_len(struct hci_dev *hdev)
- static u8 tlv_data_max_len(struct hci_dev *hdev, u32 adv_flags,
- 			   bool is_adv_data)
- {
--	u8 max_len = HCI_MAX_AD_LENGTH;
-+	u8 max_len = max_adv_len(hdev);
- 
- 	if (is_adv_data) {
- 		if (adv_flags & (MGMT_ADV_FLAG_DISCOV |
+ 	if (dp83822->fx_enabled) {
 -- 
 2.43.0
 
