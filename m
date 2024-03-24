@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A133017C63D;
-	Sun, 24 Mar 2024 23:42:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA47517C638;
+	Sun, 24 Mar 2024 23:42:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323776; cv=none; b=SyGsMnuWuO/5QGHYWohc7qEiiTyroCpBRgoM1dGuHk/0F1+kFKKlYrkEUS24vC36AnzdAtbocFBp2CobP6ximew9GJWQNq3v4aAbwEXhRzlO0LOgbi+tbL4KX5TgkuEV//izDjzK+nlSwWqqbnSlK4zeNxBbcnPNv6XzmUyl0aQ=
+	t=1711323773; cv=none; b=dN0fYrL4HUrTx1OdiIctt01hvemwTpmhurJ+Z2bInVSjujScRDgOgf43E4ffOUeDibwwJr87na5Jqd+eboF1iM27N8jDXX2XE5Fcfz9Ms9qR0nm9Ll2h3EeGx/RFWKsHOVqJvtcelPJAwUC5UY/0lM+8wygiuZrQs85ISZ8t7EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323776; c=relaxed/simple;
-	bh=iYn8hq6s2Qn3vdHi8ZTdnpLNgfPLwVGSAJnvl2Q+Sfo=;
+	s=arc-20240116; t=1711323773; c=relaxed/simple;
+	bh=BAZzIM9JpzWbgzhrY9OZLIrNdLPXeXZI5MUQmeGqK7I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ru89oV7kaobrPrRm/aIUxt7VZq/MZ0VrNv/6NquD44K9pVHNCha0fwAQyrSlIw4vcwzfoZIwr5BO4wQ4bZdDKcohH0iu/Twu34UQREUgpemT6Tp+sNTrUeygDgevn5HVzjIQpTIUsrZ/Iwb3mb+SChScUgkqB73gosNb/gNhr0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=peVo8nRn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=plUysMRRlz/nz0beqWT2RP4xdC2fpfavxUgk9aVH+N8cZnp9m9ifvTWZGMgCD64nGuVogfYKuilHqb4zdwjvL6TDh+QpbGOSTSTTrjOhVpGBNAlKKwDH3JK2TBDcflpcBG5ZdSsk3AYapEm4uLy+zr7tW022eOz9+IxcRGE6zBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyN32Nmf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="peVo8nRn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E11DFC433C7;
-	Sun, 24 Mar 2024 23:42:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyN32Nmf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10F5C433A6;
+	Sun, 24 Mar 2024 23:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323776;
-	bh=iYn8hq6s2Qn3vdHi8ZTdnpLNgfPLwVGSAJnvl2Q+Sfo=;
+	s=k20201202; t=1711323773;
+	bh=BAZzIM9JpzWbgzhrY9OZLIrNdLPXeXZI5MUQmeGqK7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=peVo8nRnpwTd+ITZG/VehJI1g7VfswwfGgMm8CBCW/O1K8ZR/cF81loY++PmaJJoH
-	 gRTBDzL4RyRk8ctWxyL2mPBnMrmqNINAhajFMvaxFwlM8qIBP/Fsh9DLBL+JinoUlM
-	 ZMH2g8mlPhpA/mQuIQK/nYcdUlBV48SGtGuylg/GqmhZM0YCn8UmjTEBIY5WDTkpd7
-	 0PxMA4AcFPoLYEhZop9dwLC1sXNuqXG/S1KYuSaMwyhZb0Vd7HxHt4Ch6bDGfUbJOr
-	 NKjIIY/fjJO5G7wJiNbUzJjo57b4TLeRTdsVKMvbmkkUOAwWkADN7eSahpAYcAsbcT
-	 3mdk3NtTeV1xQ==
+	b=tyN32NmfxW8nyC4FbOmlwy7HSF9MGjczFcJaQ2ol6BNu9lt+bBQjV1FwcPs3+8KKt
+	 tPnTt7fLaNC0IIQcN9KnNzul7qqUr++F76Mbgjq/hqhudSHCe1zGTHe7VOoU3gD3CI
+	 EygCaYiQOgkSnnNZjNPZEFmz2ijJ48LAx848QmmmSlNI+WNaOi2YRa4Ps/bUt9AZFz
+	 VngJHB+Z5iJizc0JifPFkzbuickCYJLYuhEFTv/MP20spTIo1sOu1Px9d1Hsl6XmW3
+	 A/e9iBTzi+wp5CTxR8Zqdgla3a0fy5+LSXMdC3xoY7CtNbTJUiBIWIXI9R65S14Vij
+	 9AzcnCuRWXXnQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 152/238] media: sun8i-di: Fix power on/off sequences
-Date: Sun, 24 Mar 2024 19:39:00 -0400
-Message-ID: <20240324234027.1354210-153-sashal@kernel.org>
+Subject: [PATCH 5.10 149/238] ASoC: meson: aiu: fix function pointer type mismatch
+Date: Sun, 24 Mar 2024 19:38:57 -0400
+Message-ID: <20240324234027.1354210-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,86 +50,83 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jernej Skrabec <jernej.skrabec@gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit cff104e33bad38f4b2c8d58816a7accfaa2879f9 ]
+[ Upstream commit 98ac85a00f31d2e9d5452b825a9ed0153d934043 ]
 
-According to user manual, reset line should be deasserted before clocks
-are enabled. Also fix power down sequence to be reverse of that.
+clang-16 warns about casting functions to incompatible types, as is done
+here to call clk_disable_unprepare:
 
-Fixes: a4260ea49547 ("media: sun4i: Add H3 deinterlace driver")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+sound/soc/meson/aiu.c:243:12: error: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  243 |                                        (void(*)(void *))clk_disable_unprepare,
+
+The pattern of getting, enabling and setting a disable callback for a
+clock can be replaced with devm_clk_get_enabled(), which also fixes
+this warning.
+
+Fixes: 6ae9ca9ce986 ("ASoC: meson: aiu: add i2s and spdif support")
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Link: https://msgid.link/r/20240213215807.3326688-2-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 25 ++++++++++---------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ sound/soc/meson/aiu.c | 19 ++++---------------
+ sound/soc/meson/aiu.h |  1 -
+ 2 files changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-index a9d3272940be0..cb6d32c59191f 100644
---- a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-+++ b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-@@ -937,11 +937,18 @@ static int deinterlace_runtime_resume(struct device *device)
- 		return ret;
- 	}
+diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
+index 386a31a044700..03bc3e5b6cab5 100644
+--- a/sound/soc/meson/aiu.c
++++ b/sound/soc/meson/aiu.c
+@@ -215,11 +215,12 @@ static const char * const aiu_spdif_ids[] = {
+ static int aiu_clk_get(struct device *dev)
+ {
+ 	struct aiu *aiu = dev_get_drvdata(dev);
++	struct clk *pclk;
+ 	int ret;
  
-+	ret = reset_control_deassert(dev->rstc);
-+	if (ret) {
-+		dev_err(dev->dev, "Failed to apply reset\n");
-+
-+		goto err_exclusive_rate;
-+	}
-+
- 	ret = clk_prepare_enable(dev->bus_clk);
- 	if (ret) {
- 		dev_err(dev->dev, "Failed to enable bus clock\n");
+-	aiu->pclk = devm_clk_get(dev, "pclk");
+-	if (IS_ERR(aiu->pclk))
+-		return dev_err_probe(dev, PTR_ERR(aiu->pclk), "Can't get the aiu pclk\n");
++	pclk = devm_clk_get_enabled(dev, "pclk");
++	if (IS_ERR(pclk))
++		return dev_err_probe(dev, PTR_ERR(pclk), "Can't get the aiu pclk\n");
  
--		goto err_exclusive_rate;
-+		goto err_rst;
- 	}
+ 	aiu->spdif_mclk = devm_clk_get(dev, "spdif_mclk");
+ 	if (IS_ERR(aiu->spdif_mclk))
+@@ -236,18 +237,6 @@ static int aiu_clk_get(struct device *dev)
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Can't get the spdif clocks\n");
  
- 	ret = clk_prepare_enable(dev->mod_clk);
-@@ -958,23 +965,16 @@ static int deinterlace_runtime_resume(struct device *device)
- 		goto err_mod_clk;
- 	}
- 
--	ret = reset_control_deassert(dev->rstc);
+-	ret = clk_prepare_enable(aiu->pclk);
 -	if (ret) {
--		dev_err(dev->dev, "Failed to apply reset\n");
--
--		goto err_ram_clk;
+-		dev_err(dev, "peripheral clock enable failed\n");
+-		return ret;
 -	}
 -
- 	deinterlace_init(dev);
- 
- 	return 0;
- 
--err_ram_clk:
--	clk_disable_unprepare(dev->ram_clk);
- err_mod_clk:
- 	clk_disable_unprepare(dev->mod_clk);
- err_bus_clk:
- 	clk_disable_unprepare(dev->bus_clk);
-+err_rst:
-+	reset_control_assert(dev->rstc);
- err_exclusive_rate:
- 	clk_rate_exclusive_put(dev->mod_clk);
- 
-@@ -985,11 +985,12 @@ static int deinterlace_runtime_suspend(struct device *device)
- {
- 	struct deinterlace_dev *dev = dev_get_drvdata(device);
- 
--	reset_control_assert(dev->rstc);
+-	ret = devm_add_action_or_reset(dev,
+-				       (void(*)(void *))clk_disable_unprepare,
+-				       aiu->pclk);
+-	if (ret)
+-		dev_err(dev, "failed to add reset action on pclk");
 -
- 	clk_disable_unprepare(dev->ram_clk);
- 	clk_disable_unprepare(dev->mod_clk);
- 	clk_disable_unprepare(dev->bus_clk);
-+
-+	reset_control_assert(dev->rstc);
-+
- 	clk_rate_exclusive_put(dev->mod_clk);
+ 	return ret;
+ }
  
- 	return 0;
+diff --git a/sound/soc/meson/aiu.h b/sound/soc/meson/aiu.h
+index 87aa19ac4af3a..44f8c213d35a0 100644
+--- a/sound/soc/meson/aiu.h
++++ b/sound/soc/meson/aiu.h
+@@ -33,7 +33,6 @@ struct aiu_platform_data {
+ };
+ 
+ struct aiu {
+-	struct clk *pclk;
+ 	struct clk *spdif_mclk;
+ 	struct aiu_interface i2s;
+ 	struct aiu_interface spdif;
 -- 
 2.43.0
 
