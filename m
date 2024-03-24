@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9CD180A60;
-	Sun, 24 Mar 2024 23:47:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4063180A8D;
+	Sun, 24 Mar 2024 23:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324052; cv=none; b=HkkpH9NrRpaT3ZzFnqWCQK/2BwpJCckiCwF9hLyF/2WbO1ONtJtF8de0slzuQYXJ0wGyyqnOqUuARTdt6SpU9uobLNfBgz2riDth+xfSnzbYx6POa75eDhitAsWd/rioKJV+rNe51Z28XsWJibvr30F6fqaAaQIzLCXnyQ4ALt4=
+	t=1711324056; cv=none; b=lxcqNonQxDBxLL7atjeIAu1VJeJh1a9bBd1LAfNYPRWBvfh547t+8L16sjuUuw0gY9qFxkc2KkGXwnYuh+/WWzhGkU6dswJouaptrSvDCVJy/s9IrnMlscKGe6TgR0C8hJ1hLlKmbCfpxG+hs25dA13k9tRyX5Ff3B6RdHtUGDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324052; c=relaxed/simple;
-	bh=lgXP9On9Wm+u+TZ9h19CicXaNfIlQ6uLGbBbbX9/1rk=;
+	s=arc-20240116; t=1711324056; c=relaxed/simple;
+	bh=g9oUjtbgVyPfa42NId5r5PY1QsKy5NCIqsClJIdX5IE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fmqQrmVHAWJedvRvM5yLFXwweSZY1jNu2IrAZ5IEklpWZ7LW+ea6lJqytGt/YxkeaQDWHP1tKNjYLWJDOkcEZ4cUoSTPwIzSv0WOyQHFudD24ztehZgfT7xPk3C8feGfRwEQohDrjLEMSD9jKyNyLn9r3MarX/cE7SQZnX/vfSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4ITCWIq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=J2gOozFcXDs3q9Ig3eZaxZeEvBx1l86dMPBnI/Mzg/F1G8HSdNLUprep0TgM+QX8auFJ3NoB4MH0UQwWuNw6t6F8TpDXYBYxOZQTdGoJcEB18bd+vfxrzKpgJuqSApgiqbygAokca/h3JzQV+GChHpZkTqSPR625nj4pMhWvXNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jcG3bf71; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4ITCWIq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECFB7C433F1;
-	Sun, 24 Mar 2024 23:47:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jcG3bf71"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 278F7C433C7;
+	Sun, 24 Mar 2024 23:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324052;
-	bh=lgXP9On9Wm+u+TZ9h19CicXaNfIlQ6uLGbBbbX9/1rk=;
+	s=k20201202; t=1711324055;
+	bh=g9oUjtbgVyPfa42NId5r5PY1QsKy5NCIqsClJIdX5IE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m4ITCWIq9wNFUsEK8AIN2Rz5wNVFIN0E2lhyN+RRGbnliXce/vhmdrV28kGdRhECG
-	 D7ciMYZFgegH4wIbh5gOrPzsDpkxeEy68uSfiyxg+1aBijm+9FjQLjq8eGI7cOfoNb
-	 3NO8slrAUGQDVG+W58lazdEc5+s+Te1rsn5ZlFKwXtGsAcsBCSno84pJ4ob+kw476U
-	 lKRzWXhQ+VlE76fZBsOTqoyIHyHycObHyAHXz2eQ2cFemfpvdBXvnSjbRyb6ON/udy
-	 ho+5rMCkKREQ/UPnVD7yX3/mUzHPXm3zGoCDYR7PhwylHfiI0mLy559OEDSm6a49v0
-	 bxvupm4FqJLlA==
+	b=jcG3bf714F6LYp+OHYFf8DYgrPycvjOufa9XljgNsjaOsMo3eaFtZ7/Ll5KDGrxX5
+	 ec6v9LZGJvAVCw8IcrlHClNs+ObQyFEaDOamj+OaXPDwKhGuer+0LcE4Ag+5m3FJsc
+	 5pyzLEPghCYkkdl/4jfXbHYLvz97wXfQuaFCQAaJfP1wmMPNwgzxG4nmJLNGE8qy0k
+	 AFPtDmnJ39jKRGBPAqCqxnZhAB3lObWbrnW1N94qo5823q71CSSqw5mq7Y/I3q7qGu
+	 dYwas8Rp4nAXvEVP7DGfIxGgHQ6B3OHWFQe15zImq4K5+6TjJ64pSKTUE9QUIgd3NY
+	 lJxXSvNZ3jxeA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 053/183] ACPI: processor_idle: Fix memory leak in acpi_processor_power_exit()
-Date: Sun, 24 Mar 2024 19:44:26 -0400
-Message-ID: <20240324234638.1355609-54-sashal@kernel.org>
+Subject: [PATCH 5.4 056/183] wifi: brcmsmac: avoid function pointer casts
+Date: Sun, 24 Mar 2024 19:44:29 -0400
+Message-ID: <20240324234638.1355609-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,59 +49,79 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Armin Wolf <W_Armin@gmx.de>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit e18afcb7b2a12b635ac10081f943fcf84ddacc51 ]
+[ Upstream commit e1ea6db35fc3ba5ff063f097385e9f7a88c25356 ]
 
-After unregistering the CPU idle device, the memory associated with
-it is not freed, leading to a memory leak:
+An old cleanup went a little too far and causes a warning with clang-16
+and higher as it breaks control flow integrity (KCFI) rules:
 
-unreferenced object 0xffff896282f6c000 (size 1024):
-  comm "swapper/0", pid 1, jiffies 4294893170
-  hex dump (first 32 bytes):
-    00 00 00 00 0b 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace (crc 8836a742):
-    [<ffffffff993495ed>] kmalloc_trace+0x29d/0x340
-    [<ffffffff9972f3b3>] acpi_processor_power_init+0xf3/0x1c0
-    [<ffffffff9972d263>] __acpi_processor_start+0xd3/0xf0
-    [<ffffffff9972d2bc>] acpi_processor_start+0x2c/0x50
-    [<ffffffff99805872>] really_probe+0xe2/0x480
-    [<ffffffff99805c98>] __driver_probe_device+0x78/0x160
-    [<ffffffff99805daf>] driver_probe_device+0x1f/0x90
-    [<ffffffff9980601e>] __driver_attach+0xce/0x1c0
-    [<ffffffff99803170>] bus_for_each_dev+0x70/0xc0
-    [<ffffffff99804822>] bus_add_driver+0x112/0x210
-    [<ffffffff99807245>] driver_register+0x55/0x100
-    [<ffffffff9aee4acb>] acpi_processor_driver_init+0x3b/0xc0
-    [<ffffffff990012d1>] do_one_initcall+0x41/0x300
-    [<ffffffff9ae7c4b0>] kernel_init_freeable+0x320/0x470
-    [<ffffffff99b231f6>] kernel_init+0x16/0x1b0
-    [<ffffffff99042e6d>] ret_from_fork+0x2d/0x50
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c:64:34: error: cast from 'void (*)(struct brcms_phy *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+   64 |                         brcms_init_timer(physhim->wl, (void (*)(void *))fn,
+      |                                                       ^~~~~~~~~~~~~~~~~~~~
 
-Fix this by freeing the CPU idle device after unregistering it.
+Change this one instance back to passing a void pointer so it can be
+used with the timer callback interface.
 
-Fixes: 3d339dcbb56d ("cpuidle / ACPI : move cpuidle_device field out of the acpi_processor_power structure")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: d89a4c80601d ("staging: brcm80211: removed void * from softmac phy")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240213100548.457854-1-arnd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/processor_idle.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c   | 3 ++-
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c  | 5 ++---
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h  | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index 0ea5e677f00ee..0aca77cb8301c 100644
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -1531,6 +1531,8 @@ int acpi_processor_power_exit(struct acpi_processor *pr)
- 		acpi_processor_registered--;
- 		if (acpi_processor_registered == 0)
- 			cpuidle_unregister_driver(&acpi_idle_driver);
-+
-+		kfree(dev);
- 	}
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
+index 2441714169de1..849c8109b3982 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
+@@ -383,8 +383,9 @@ struct shared_phy *wlc_phy_shared_attach(struct shared_phy_params *shp)
+ 	return sh;
+ }
  
- 	pr->flags.power_setup_done = 0;
+-static void wlc_phy_timercb_phycal(struct brcms_phy *pi)
++static void wlc_phy_timercb_phycal(void *ptr)
+ {
++	struct brcms_phy *pi = ptr;
+ 	uint delay = 5;
+ 
+ 	if (PHY_PERICAL_MPHASE_PENDING(pi)) {
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
+index a0de5db0cd646..b723817915365 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
+@@ -57,12 +57,11 @@ void wlc_phy_shim_detach(struct phy_shim_info *physhim)
+ }
+ 
+ struct wlapi_timer *wlapi_init_timer(struct phy_shim_info *physhim,
+-				     void (*fn)(struct brcms_phy *pi),
++				     void (*fn)(void *pi),
+ 				     void *arg, const char *name)
+ {
+ 	return (struct wlapi_timer *)
+-			brcms_init_timer(physhim->wl, (void (*)(void *))fn,
+-					 arg, name);
++			brcms_init_timer(physhim->wl, fn, arg, name);
+ }
+ 
+ void wlapi_free_timer(struct wlapi_timer *t)
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
+index dd8774717adee..27d0934e600ed 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
+@@ -131,7 +131,7 @@ void wlc_phy_shim_detach(struct phy_shim_info *physhim);
+ 
+ /* PHY to WL utility functions */
+ struct wlapi_timer *wlapi_init_timer(struct phy_shim_info *physhim,
+-				     void (*fn)(struct brcms_phy *pi),
++				     void (*fn)(void *pi),
+ 				     void *arg, const char *name);
+ void wlapi_free_timer(struct wlapi_timer *t);
+ void wlapi_add_timer(struct wlapi_timer *t, uint ms, int periodic);
 -- 
 2.43.0
 
