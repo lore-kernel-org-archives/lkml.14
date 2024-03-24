@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D76A1D695F;
-	Sun, 24 Mar 2024 22:49:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCDF1442F8;
+	Sun, 24 Mar 2024 22:50:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320579; cv=none; b=Gvm+0IK04IqBxf6owV5vq+0e3Asd64RIPUaX4Fh/dUJWOpgDcGGUBzC6Eiaa6EmcTe6692y0PYAlqXEX3nazD/J78rA/cF6z74NCQlsq4WKb2DbKbhsey9nm4VVkO61p9XSkvkrrug03IyEf8Oot4OqmBhmczrBxHVThkGloMao=
+	t=1711320657; cv=none; b=izaA5YWbxzyl4tkdiZ7anp9cbOQqp0lte4s0A0r1TFrKG+1VoddgSLcDWFFW1siClx6RXEVbw0RTvxhw2JXNFtj+IrnQthOCUnTy6l73ogiPhXIToWG7vmpvUbvIHNLkwgz8E2saaPZzK76xMCazQvypPEX1I/+o3p07pUZnUtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320579; c=relaxed/simple;
-	bh=WqsZA9zL0MuvkFRHQCU6S33CFbNlq2m/TCnMWYOtG9s=;
+	s=arc-20240116; t=1711320657; c=relaxed/simple;
+	bh=Hb/NsZOhMbQg490AAjzJrWojSX3thYXJ3sqhmuaCxWw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AdQRMtT3f/5L9T+10LG0ZO1MOr2li5z9YSL+AYOiJek+OmTIkcyGxcTqEuGZaGeZgtvA1PQINunDtYHJ4q1h5hNCc40wRiTTAQNDRnNvD2+/hleiVolFtrmewxWGMp6AfoT3ya71TZurDFmnBRKSIets8mkFa4y4dOu1qklbjvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSgsZgkb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CbOrmQwF+QSCDRf8PMEPK2NVt8O4DrSgbRtplVW8yQkdjpDcTs0GLCfsvAXyjHFfBeBmGCkjdRxowNp7r0Y8h0Xm1/8xf+fsVZR40LveI9u7PdHvGyvXwJp9iSpHMRu2wKCouLk+i5dQj8+KkfS+Vn2/Jd0/n/3KONdC68qmZZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzDiNy2M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSgsZgkb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A458EC433F1;
-	Sun, 24 Mar 2024 22:49:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzDiNy2M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA69EC43390;
+	Sun, 24 Mar 2024 22:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320578;
-	bh=WqsZA9zL0MuvkFRHQCU6S33CFbNlq2m/TCnMWYOtG9s=;
+	s=k20201202; t=1711320656;
+	bh=Hb/NsZOhMbQg490AAjzJrWojSX3thYXJ3sqhmuaCxWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GSgsZgkb9IDCkl/R58Sd+5vVBZcZePTlIVYWpTaVAqbyISz8hNWo/kYF7yS4Op4tG
-	 cxHFb1cBhKmhzOAsQDwYgC/KQ2fMry0J6DjXEiOXI/n6MjmbZPf26FFDfGXhYI3Y8S
-	 nN18BbibGCRabKK8Rvv1e8xQBiDBJJSR4IR2s/VtBeW1Cx7qTUG5t+IKie0NP7R0Sa
-	 BMjURO6foPj24Xt426+XcmQKCY8G9YLjWbRMiNPH15j2VsaMLUnM10TTnst3SlQ1Gh
-	 YX61QEF7jsrclBqnpgX9sU3wgkfhqpDBhsHzagjuKcZKIA5Spx2xLJMAAa35ZOtsZ3
-	 Sbawwn2mrJZBg==
+	b=nzDiNy2Mjr3CwR3gqzzNfp2MFbgNdx/Q9TY3H/I8l5uTrdkqXojWMZfTp55k8w5Pw
+	 uFwK2pDo8UFQr5jL8SEe9IdD15iScxjRHchRbv5iduIDRBJ7MoE7LckSBS/QQsCTWE
+	 bCgsrqHruXDCVhJ5mfhi2REqIeUTGQQ8yG8SUd95u6ylS5Gr/OoVpNE+6QDTMA4h99
+	 j5eS4mOzej7PeC0Peeq/2OiO0/AkgcnXmpw7+nY5mp1YDBUtY/hHwe5aWal0diflgr
+	 WyI4/1gZcxmeohQbB1BYBsevwDjB+8/DSEh5jYj7PvoGDTBzdFjZ6w0OWR58f+v4pK
+	 pLRkquxFVwjXA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ajay Singh <ajay.kathat@microchip.com>,
-	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: John Ogness <john.ogness@linutronix.de>,
+	Petr Mladek <pmladek@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 139/713] wifi: wilc1000: do not realloc workqueue everytime an interface is added
-Date: Sun, 24 Mar 2024 18:37:45 -0400
-Message-ID: <20240324224720.1345309-140-sashal@kernel.org>
+Subject: [PATCH 6.7 218/713] printk: Wait for all reserved records with pr_flush()
+Date: Sun, 24 Mar 2024 18:39:04 -0400
+Message-ID: <20240324224720.1345309-219-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,122 +44,180 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: John Ogness <john.ogness@linutronix.de>
 
-[ Upstream commit 328efda22af81130c2ad981c110518cb29ff2f1d ]
+[ Upstream commit ac7d7844c64d15603daa3e905a311ddcfbb4bc91 ]
 
-Commit 09ed8bfc5215 ("wilc1000: Rename workqueue from "WILC_wq" to
-"NETDEV-wq"") moved workqueue creation in wilc_netdev_ifc_init in order to
-set the interface name in the workqueue name. However, while the driver
-needs only one workqueue, the wilc_netdev_ifc_init is called each time we
-add an interface over a phy, which in turns overwrite the workqueue with a
-new one. This can be observed with the following commands:
+Currently pr_flush() will only wait for records that were
+available to readers at the time of the call (using
+prb_next_seq()). But there may be more records (non-finalized)
+that have following finalized records. pr_flush() should wait
+for these to print as well. Particularly because any trailing
+finalized records may be the messages that the calling context
+wants to ensure are printed.
 
-for i in $(seq 0 10)
-do
-  iw phy phy0 interface add wlan1 type managed
-  iw dev wlan1 del
-done
-ps -eo pid,comm|grep wlan
+Add a new ringbuffer function prb_next_reserve_seq() to return
+the sequence number following the most recently reserved record.
+This guarantees that pr_flush() will wait until all current
+printk() messages (completed or in progress) have been printed.
 
- 39 kworker/R-wlan0
- 98 kworker/R-wlan1
-102 kworker/R-wlan1
-105 kworker/R-wlan1
-108 kworker/R-wlan1
-111 kworker/R-wlan1
-114 kworker/R-wlan1
-117 kworker/R-wlan1
-120 kworker/R-wlan1
-123 kworker/R-wlan1
-126 kworker/R-wlan1
-129 kworker/R-wlan1
-
-Fix this leakage by putting back hif_workqueue allocation in
-wilc_cfg80211_init. Regarding the workqueue name, it is indeed relevant to
-set it lowercase, however it is not  attached to a specific netdev, so
-enforcing netdev name in the name is not so relevant. Still, enrich the
-name with the wiphy name to make it clear which phy is using the workqueue.
-
-Fixes: 09ed8bfc5215 ("wilc1000: Rename workqueue from "WILC_wq" to "NETDEV-wq"")
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Co-developed-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240115-wilc_1000_fixes-v1-3-54d29463a738@bootlin.com
+Fixes: 3b604ca81202 ("printk: add pr_flush()")
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Link: https://lore.kernel.org/r/20240207134103.1357162-10-john.ogness@linutronix.de
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/microchip/wilc1000/cfg80211.c | 11 ++++++++++-
- drivers/net/wireless/microchip/wilc1000/netdev.c   | 10 +---------
- 2 files changed, 11 insertions(+), 10 deletions(-)
+ kernel/printk/printk.c            |   2 +-
+ kernel/printk/printk_ringbuffer.c | 105 ++++++++++++++++++++++++++++++
+ kernel/printk/printk_ringbuffer.h |   1 +
+ 3 files changed, 107 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/cfg80211.c b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-index da52f91693b5b..fec18be90697c 100644
---- a/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-+++ b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-@@ -1810,15 +1810,24 @@ int wilc_cfg80211_init(struct wilc **wilc, struct device *dev, int io_type,
- 	INIT_LIST_HEAD(&wl->rxq_head.list);
- 	INIT_LIST_HEAD(&wl->vif_list);
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index f2444b581e16c..d9420207282ac 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3761,7 +3761,7 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
  
-+	wl->hif_workqueue = alloc_ordered_workqueue("%s", WQ_MEM_RECLAIM,
-+						    wiphy_name(wl->wiphy));
-+	if (!wl->hif_workqueue) {
-+		ret = -ENOMEM;
-+		goto free_cfg;
-+	}
- 	vif = wilc_netdev_ifc_init(wl, "wlan%d", WILC_STATION_MODE,
- 				   NL80211_IFTYPE_STATION, false);
- 	if (IS_ERR(vif)) {
- 		ret = PTR_ERR(vif);
--		goto free_cfg;
-+		goto free_hq;
- 	}
+ 	might_sleep();
  
- 	return 0;
+-	seq = prb_next_seq(prb);
++	seq = prb_next_reserve_seq(prb);
  
-+free_hq:
-+	destroy_workqueue(wl->hif_workqueue);
-+
- free_cfg:
- 	wilc_wlan_cfg_deinit(wl);
- 
-diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
-index 91d71e0f7ef23..d6602ced44f50 100644
---- a/drivers/net/wireless/microchip/wilc1000/netdev.c
-+++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
-@@ -989,13 +989,6 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
- 		goto error;
- 	}
- 
--	wl->hif_workqueue = alloc_ordered_workqueue("%s-wq", WQ_MEM_RECLAIM,
--						    ndev->name);
--	if (!wl->hif_workqueue) {
--		ret = -ENOMEM;
--		goto unregister_netdev;
--	}
--
- 	ndev->needs_free_netdev = true;
- 	vif->iftype = vif_type;
- 	vif->idx = wilc_get_available_idx(wl);
-@@ -1008,12 +1001,11 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
- 
- 	return vif;
- 
--unregister_netdev:
-+error:
- 	if (rtnl_locked)
- 		cfg80211_unregister_netdevice(ndev);
- 	else
- 		unregister_netdev(ndev);
--  error:
- 	free_netdev(ndev);
- 	return ERR_PTR(ret);
+ 	/* Flush the consoles so that records up to @seq are printed. */
+ 	console_lock();
+diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+index 4ce1826dc9426..d152b6bd35c9a 100644
+--- a/kernel/printk/printk_ringbuffer.c
++++ b/kernel/printk/printk_ringbuffer.c
+@@ -1974,6 +1974,111 @@ static u64 prb_first_seq(struct printk_ringbuffer *rb)
+ 	return seq;
  }
+ 
++/**
++ * prb_next_reserve_seq() - Get the sequence number after the most recently
++ *                  reserved record.
++ *
++ * @rb:  The ringbuffer to get the sequence number from.
++ *
++ * This is the public function available to readers to see what sequence
++ * number will be assigned to the next reserved record.
++ *
++ * Note that depending on the situation, this value can be equal to or
++ * higher than the sequence number returned by prb_next_seq().
++ *
++ * Context: Any context.
++ * Return: The sequence number that will be assigned to the next record
++ *         reserved.
++ */
++u64 prb_next_reserve_seq(struct printk_ringbuffer *rb)
++{
++	struct prb_desc_ring *desc_ring = &rb->desc_ring;
++	unsigned long last_finalized_id;
++	atomic_long_t *state_var;
++	u64 last_finalized_seq;
++	unsigned long head_id;
++	struct prb_desc desc;
++	unsigned long diff;
++	struct prb_desc *d;
++	int err;
++
++	/*
++	 * It may not be possible to read a sequence number for @head_id.
++	 * So the ID of @last_finailzed_seq is used to calculate what the
++	 * sequence number of @head_id will be.
++	 */
++
++try_again:
++	last_finalized_seq = desc_last_finalized_seq(rb);
++
++	/*
++	 * @head_id is loaded after @last_finalized_seq to ensure that
++	 * it points to the record with @last_finalized_seq or newer.
++	 *
++	 * Memory barrier involvement:
++	 *
++	 * If desc_last_finalized_seq:A reads from
++	 * desc_update_last_finalized:A, then
++	 * prb_next_reserve_seq:A reads from desc_reserve:D.
++	 *
++	 * Relies on:
++	 *
++	 * RELEASE from desc_reserve:D to desc_update_last_finalized:A
++	 *    matching
++	 * ACQUIRE from desc_last_finalized_seq:A to prb_next_reserve_seq:A
++	 *
++	 * Note: desc_reserve:D and desc_update_last_finalized:A can be
++	 *       different CPUs. However, the desc_update_last_finalized:A CPU
++	 *       (which performs the release) must have previously seen
++	 *       desc_read:C, which implies desc_reserve:D can be seen.
++	 */
++	head_id = atomic_long_read(&desc_ring->head_id); /* LMM(prb_next_reserve_seq:A) */
++
++	d = to_desc(desc_ring, last_finalized_seq);
++	state_var = &d->state_var;
++
++	/* Extract the ID, used to specify the descriptor to read. */
++	last_finalized_id = DESC_ID(atomic_long_read(state_var));
++
++	/* Ensure @last_finalized_id is correct. */
++	err = desc_read_finalized_seq(desc_ring, last_finalized_id, last_finalized_seq, &desc);
++
++	if (err == -EINVAL) {
++		if (last_finalized_seq == 0) {
++			/*
++			 * No record has been finalized or even reserved yet.
++			 *
++			 * The @head_id is initialized such that the first
++			 * increment will yield the first record (seq=0).
++			 * Handle it separately to avoid a negative @diff
++			 * below.
++			 */
++			if (head_id == DESC0_ID(desc_ring->count_bits))
++				return 0;
++
++			/*
++			 * One or more descriptors are already reserved. Use
++			 * the descriptor ID of the first one (@seq=0) for
++			 * the @diff below.
++			 */
++			last_finalized_id = DESC0_ID(desc_ring->count_bits) + 1;
++		} else {
++			/* Record must have been overwritten. Try again. */
++			goto try_again;
++		}
++	}
++
++	/* Diff of known descriptor IDs to compute related sequence numbers. */
++	diff = head_id - last_finalized_id;
++
++	/*
++	 * @head_id points to the most recently reserved record, but this
++	 * function returns the sequence number that will be assigned to the
++	 * next (not yet reserved) record. Thus +1 is needed.
++	 */
++	return (last_finalized_seq + diff + 1);
++}
++
+ /*
+  * Non-blocking read of a record. Updates @seq to the last finalized record
+  * (which may have no data available).
+diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
+index 70457916d577d..5aebe97bd4afc 100644
+--- a/kernel/printk/printk_ringbuffer.h
++++ b/kernel/printk/printk_ringbuffer.h
+@@ -380,6 +380,7 @@ bool prb_read_valid_info(struct printk_ringbuffer *rb, u64 seq,
+ 
+ u64 prb_first_valid_seq(struct printk_ringbuffer *rb);
+ u64 prb_next_seq(struct printk_ringbuffer *rb);
++u64 prb_next_reserve_seq(struct printk_ringbuffer *rb);
+ 
+ #ifdef CONFIG_64BIT
+ 
 -- 
 2.43.0
 
