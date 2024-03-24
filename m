@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99E028452D;
-	Sun, 24 Mar 2024 23:43:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124B017C6B5;
+	Sun, 24 Mar 2024 23:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323786; cv=none; b=KfjVmkyp4DbF7pdIw5oNbob2JNK2gQZfQ2JdgbL3/aylOqEpL3Il8x527u8Lewx8v1h7RPMoMbOahWruc7UK61umByzPt2tbdPF2iadvQ5S6XYnNAOogmMGWSBq4nWVGcTPvFI4VfX5TlMC+p1xvzl9UBLIqrUz43GjNCZYzdVk=
+	t=1711323797; cv=none; b=U/oqN5vkIq1V92K0bMKzx+rtXLHW6+HeUf1WflT/pvmx+lBvlARtqnsWWPvrL++ZOHxgJw7ioQ2QYetQ7hycnwBhAhPWc7OOCCN3UbLzp10TySRUkbpYUUDGA5tSWZk4MHzZkslp3765SzePN2jkybmEFDFJ6xN6Edw6giEMCpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323786; c=relaxed/simple;
-	bh=rNDijfEyC5ir0j9HjxxEwdGbtVG4058Sq8QzGTqaCdg=;
+	s=arc-20240116; t=1711323797; c=relaxed/simple;
+	bh=EpkfoWx72jhMfIWXfpdojzGNUtDam6OnAiKzo5ntHS0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VEg0I/IeVlkgq8Ys+CGlehhIFyiHi2cR7pRbYt/4f6/uBf/j08+ViEL6LNciCCy+yc3Fp3OR1MMZAXTpMa0SukFw45ZIFscB4tpd5u6udNu6bo2UJSLh5+kGrFTHAzX+UhKRbPH2D2xlVNhsR3Nv0KFR8nQ3rGeqwB8+vHIWmZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hn05a89H; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X4JueQXidyvsP4E8m309YwK5pCnMBT06csK24uD7wJFznCSD9PJctLIf9DwkC+mHvFHizJQkzpKyecaDokTcJve5Tv4uKmkkrwdUh4pgI5nbuN0pMJF+s/oD/tTlXcs0vq4XwWIlRHeXjcFDtj7NIdUdpPxOpEu4ukbw/iXR57o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=utfPA2Os; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hn05a89H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 314FFC433F1;
-	Sun, 24 Mar 2024 23:43:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="utfPA2Os"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 333E9C433C7;
+	Sun, 24 Mar 2024 23:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323784;
-	bh=rNDijfEyC5ir0j9HjxxEwdGbtVG4058Sq8QzGTqaCdg=;
+	s=k20201202; t=1711323795;
+	bh=EpkfoWx72jhMfIWXfpdojzGNUtDam6OnAiKzo5ntHS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hn05a89HpiMO4DA9nrlbCSJS5TWfP2JDv39N4dYZc4ENDpIZvr1BThMR8kB2DL6DT
-	 ZStOR6sNhTV/JFiEMBpEB4qM3fXrHzlIrObqUSuwuQ4agz/EINDHLxiMHygkNWHp7d
-	 FQzgmNQbUfIbh/iZCO3GIBOmO0sVrSyir2TuHrQmudlIq8WCnhsIHMhVzf39LfXk8t
-	 JDjVMvgEhYasKNjvvVdLW6nPlSL44CeHx4UVTK7niNuAkxx+PFAK7W7uRdwZh+2dcO
-	 984qY069g436619uxVdSk32oewsCpFtBuvztFaN5cgrF6BLUrMQ8Qp50MY6PIj8WFs
-	 NMkeRz4xVleGw==
+	b=utfPA2OsSraKSEzHa4s0a7jFk9DCMNtg1gQKqXpGYVHDkXZKK14xiWbKufI9CKwQq
+	 ZtJl8cm9cUxGyimvO9XEaEzSZ5E27qC9F58xbwQEiOign0gyc3XP7ZuHCcBVksOHMI
+	 Xlg+RsgKZdW92yRgMEpSdXhqlBljqfBfLscLdbUr75rXAHdwFE5q0zobl3O87Dxx4O
+	 u/p6q3mOu9OX3u0pSNg/5x4GNan7GBPd2tPYXUum/RxvSvZzddvgYhZ4Ir8OWib6Fy
+	 VMtSkje6SrMtQwTGRz67RocPXNT3D6ICVNfaJm1NYCykpQgcOl8WB75jaCMFfZXyeN
+	 dWCE/Z85orRAQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Stephen Boyd <sboyd@kernel.org>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 161/238] clk: hisilicon: hi3519: Release the correct number of gates in hi3519_clk_unregister()
-Date: Sun, 24 Mar 2024 19:39:09 -0400
-Message-ID: <20240324234027.1354210-162-sashal@kernel.org>
+Subject: [PATCH 5.10 173/238] media: dvb-frontends: avoid stack overflow warnings with clang
+Date: Sun, 24 Mar 2024 19:39:21 -0400
+Message-ID: <20240324234027.1354210-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,36 +49,93 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 74e39f526d95c0c119ada1874871ee328c59fbee ]
+[ Upstream commit 7a4cf27d1f0538f779bf31b8c99eda394e277119 ]
 
-The gates are stored in 'hi3519_gate_clks', not 'hi3519_mux_clks'.
-This is also in line with how hisi_clk_register_gate() is called in the
-probe.
+A previous patch worked around a KASAN issue in stv0367, now a similar
+problem showed up with clang:
 
-Fixes: 224b3b262c52 ("clk: hisilicon: hi3519: add driver remove path and fix some issues")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/c3f1877c9a0886fa35c949c8f0ef25547f284f18.1704912510.git.christophe.jaillet@wanadoo.fr
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+drivers/media/dvb-frontends/stv0367.c:1222:12: error: stack frame size (3624) exceeds limit (2048) in 'stv0367ter_set_frontend' [-Werror,-Wframe-larger-than]
+ 1214 | static int stv0367ter_set_frontend(struct dvb_frontend *fe)
+
+Rework the stv0367_writereg() function to be simpler and mark both
+register access functions as noinline_for_stack so the temporary
+i2c_msg structures do not get duplicated on the stack when KASAN_STACK
+is enabled.
+
+Fixes: 3cd890dbe2a4 ("media: dvb-frontends: fix i2c access helpers for KASAN")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/hisilicon/clk-hi3519.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/dvb-frontends/stv0367.c | 34 +++++++--------------------
+ 1 file changed, 8 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/clk/hisilicon/clk-hi3519.c b/drivers/clk/hisilicon/clk-hi3519.c
-index ad0c7f350cf03..60d8a27a90824 100644
---- a/drivers/clk/hisilicon/clk-hi3519.c
-+++ b/drivers/clk/hisilicon/clk-hi3519.c
-@@ -130,7 +130,7 @@ static void hi3519_clk_unregister(struct platform_device *pdev)
- 	of_clk_del_provider(pdev->dev.of_node);
+diff --git a/drivers/media/dvb-frontends/stv0367.c b/drivers/media/dvb-frontends/stv0367.c
+index 0bfca1174e9e7..8cbae8235b174 100644
+--- a/drivers/media/dvb-frontends/stv0367.c
++++ b/drivers/media/dvb-frontends/stv0367.c
+@@ -118,50 +118,32 @@ static const s32 stv0367cab_RF_LookUp2[RF_LOOKUP_TABLE2_SIZE][RF_LOOKUP_TABLE2_S
+ 	}
+ };
  
- 	hisi_clk_unregister_gate(hi3519_gate_clks,
--				ARRAY_SIZE(hi3519_mux_clks),
-+				ARRAY_SIZE(hi3519_gate_clks),
- 				crg->clk_data);
- 	hisi_clk_unregister_mux(hi3519_mux_clks,
- 				ARRAY_SIZE(hi3519_mux_clks),
+-static
+-int stv0367_writeregs(struct stv0367_state *state, u16 reg, u8 *data, int len)
++static noinline_for_stack
++int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
+ {
+-	u8 buf[MAX_XFER_SIZE];
++	u8 buf[3] = { MSB(reg), LSB(reg), data };
+ 	struct i2c_msg msg = {
+ 		.addr = state->config->demod_address,
+ 		.flags = 0,
+ 		.buf = buf,
+-		.len = len + 2
++		.len = 3,
+ 	};
+ 	int ret;
+ 
+-	if (2 + len > sizeof(buf)) {
+-		printk(KERN_WARNING
+-		       "%s: i2c wr reg=%04x: len=%d is too big!\n",
+-		       KBUILD_MODNAME, reg, len);
+-		return -EINVAL;
+-	}
+-
+-
+-	buf[0] = MSB(reg);
+-	buf[1] = LSB(reg);
+-	memcpy(buf + 2, data, len);
+-
+ 	if (i2cdebug)
+ 		printk(KERN_DEBUG "%s: [%02x] %02x: %02x\n", __func__,
+-			state->config->demod_address, reg, buf[2]);
++			state->config->demod_address, reg, data);
+ 
+ 	ret = i2c_transfer(state->i2c, &msg, 1);
+ 	if (ret != 1)
+ 		printk(KERN_ERR "%s: i2c write error! ([%02x] %02x: %02x)\n",
+-			__func__, state->config->demod_address, reg, buf[2]);
++			__func__, state->config->demod_address, reg, data);
+ 
+ 	return (ret != 1) ? -EREMOTEIO : 0;
+ }
+ 
+-static int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
+-{
+-	u8 tmp = data; /* see gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
+-
+-	return stv0367_writeregs(state, reg, &tmp, 1);
+-}
+-
+-static u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
++static noinline_for_stack
++u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
+ {
+ 	u8 b0[] = { 0, 0 };
+ 	u8 b1[] = { 0 };
 -- 
 2.43.0
 
