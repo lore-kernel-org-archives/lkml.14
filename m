@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587FB21EB90;
-	Sun, 24 Mar 2024 23:11:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A61215665A;
+	Sun, 24 Mar 2024 23:11:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321869; cv=none; b=G8H09CeWR/qGXYi3WrdpSBeT5vgcpi7MH8lK9u5T63pvpNXJ22tV/f/HnEDQ84kQbZRprOqw1VKpLrjZfxrVeXaG5Z2HqRUwCtmiBTsTse1ppTNt5c2HE7ynrpkQnq3OYBH5ukLpX6AghEQ8nvmNGMLRq02V6vSBLdhN2whIIdE=
+	t=1711321873; cv=none; b=r8aP+Yy8f0z+350eRkOXM/TqiggAUNRGt+APV/tjHfK2e2+WEgOlZjOEC3P06CDyR92XMD4NG4MBWLP43nhZFMkyPTSa0h5BjGQAWoqlJOSiqG+lU39j5OHUzl3yxJDh3lPU6VRDoiZfJbnK/Xm01aVIYC9PAIGaxwYAM0rcyBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321869; c=relaxed/simple;
-	bh=ZloeDXuNotLauck6uEX90ePi0vwHZyM1N3tt/cTdlZg=;
+	s=arc-20240116; t=1711321873; c=relaxed/simple;
+	bh=IPQUPry+ITtcAdi3zYmL9JlqymXhYmP6surBfz44xq4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iMZeqOcluDVyLQyLzVJJBhPs26KYO9yqwlRl5lInCtZjUa/ueA18i62Zh4OjN0saK6l9XxG3jUPayKzIgScILt/iouoR04TrqAUus71abxf5/cBqhglu0T9LkxertD+Z97mbnrF4NvNkOLubpR4x/bsqpl9S43h58lMiH5SHzXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2a8IMwA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aLXti/53hWhTauOjaebwnEpljI6cg2yXNphzwMiYczXjfCNeHvdEkyuVnZH3HL7QF7LOYT13zyyhBx+Mx8tWZNlcDUDQbk2linE2J5THoISF3ohAkpZCNxBS1oKacuTdinODhgvcW6Z7mhNQGuCeinRSvXPI/7lvyk+LJfKWVjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m+VyzLFd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2a8IMwA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5482AC43394;
-	Sun, 24 Mar 2024 23:11:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m+VyzLFd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C13CC43394;
+	Sun, 24 Mar 2024 23:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321867;
-	bh=ZloeDXuNotLauck6uEX90ePi0vwHZyM1N3tt/cTdlZg=;
+	s=k20201202; t=1711321873;
+	bh=IPQUPry+ITtcAdi3zYmL9JlqymXhYmP6surBfz44xq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q2a8IMwAziaJpHo4KZd/xTFClPsIjGfGIAT1dib7USzGqODlulYhfYMFw8Qk6kJzB
-	 Wju/8LSPC0Qm4BvTWVstCVN8n9yqd/jsXl/715VsaTw2iIeZNHzBg7LzxaraLdob/N
-	 enRIlFBjZYsnAtONwoaGLV+ir8Z1kw13+BHQiqtevJBUcPFOJa3KBieVn0HTSfZxPn
-	 Xxn4rkOztY6bg0fe4Cc3PT2JmWKh0eScJD5wBMkSi5TFdpex9pHciJZ5dg+2TSHv/M
-	 FNW/s/tatf2ymUEOQne062WPSjA9bUgdcjxctWwcbn3utR9oj/r6Q7H9USiAgXV1DJ
-	 D2lpt7kYERWmQ==
+	b=m+VyzLFd0h15Iwi3+Zxq5ZMKHC1zWab0GeI1QuzND2B3FomWYvaN3OAV0Tj+T7Bgx
+	 IgNtJgIB9EfpNGO3HnXLGeNmuSYukG4wb2Sa8tME+RBjM9dN9Whfkw8JNBMhfD4Cpu
+	 VWAceR05xD4fs8mniF9PJHgVCfqB41JSbyq5P6ojjEjEdsdUBbN3qboKYLglwML51m
+	 dpkybV1PYeQaKY3NytiY0eq7NX5XuQM2OjJjxqANbm0pvaCk1iGVYcElrdGKKIoamh
+	 hoRhQpAQtHPgJVfeuhQx1tPCur0XmrSsRjG/QRPWqCzWXEZrynLAvNOKnmtg+nkLue
+	 CLAG5xNaHyAwg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Pavel Begunkov <asml.silence@gmail.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Leon Romanovsky <leonro@nvidia.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 596/638] io_uring: fix poll_remove stalled req completion
-Date: Sun, 24 Mar 2024 19:00:33 -0400
-Message-ID: <20240324230116.1348576-597-sashal@kernel.org>
+Subject: [PATCH 6.6 601/638] xfrm: Allow UDP encapsulation only in offload modes
+Date: Sun, 24 Mar 2024 19:00:38 -0400
+Message-ID: <20240324230116.1348576-602-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,46 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Leon Romanovsky <leonro@nvidia.com>
 
-[ Upstream commit 5e3afe580a9f5ca173a6bd55ffe10948796ef7e5 ]
+[ Upstream commit 773bb766ca4a05bf363203030b72b10088869224 ]
 
-Taking the ctx lock is not enough to use the deferred request completion
-infrastructure, it'll get queued into the list but no one would expect
-it there, so it will sit there until next io_submit_flush_completions().
-It's hard to care about the cancellation path, so complete it via tw.
+The missing check of x->encap caused to the situation where GSO packets
+were created with UDP encapsulation.
 
-Fixes: ef7dfac51d8ed ("io_uring/poll: serialize poll linked timer start with poll removal")
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Link: https://lore.kernel.org/r/c446740bc16858f8a2a8dcdce899812f21d15f23.1710514702.git.asml.silence@gmail.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+As a solution return the encap check for non-offloaded SA.
+
+Fixes: 983a73da1f99 ("xfrm: Pass UDP encapsulation in TX packet offload")
+Closes: https://lore.kernel.org/all/a650221ae500f0c7cf496c61c96c1b103dcb6f67.camel@redhat.com
+Reported-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- io_uring/poll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/xfrm/xfrm_device.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/io_uring/poll.c b/io_uring/poll.c
-index 48ca0810a54af..5cf4fffe8b6c8 100644
---- a/io_uring/poll.c
-+++ b/io_uring/poll.c
-@@ -981,7 +981,6 @@ int io_poll_remove(struct io_kiocb *req, unsigned int issue_flags)
- 	struct io_hash_bucket *bucket;
- 	struct io_kiocb *preq;
- 	int ret2, ret = 0;
--	struct io_tw_state ts = { .locked = true };
+diff --git a/net/xfrm/xfrm_device.c b/net/xfrm/xfrm_device.c
+index 653e51ae39648..6346690d5c699 100644
+--- a/net/xfrm/xfrm_device.c
++++ b/net/xfrm/xfrm_device.c
+@@ -407,7 +407,8 @@ bool xfrm_dev_offload_ok(struct sk_buff *skb, struct xfrm_state *x)
+ 	struct xfrm_dst *xdst = (struct xfrm_dst *)dst;
+ 	struct net_device *dev = x->xso.dev;
  
- 	io_ring_submit_lock(ctx, issue_flags);
- 	preq = io_poll_find(ctx, true, &cd, &ctx->cancel_table, &bucket);
-@@ -1030,7 +1029,8 @@ int io_poll_remove(struct io_kiocb *req, unsigned int issue_flags)
+-	if (!x->type_offload)
++	if (!x->type_offload ||
++	    (x->xso.type == XFRM_DEV_OFFLOAD_UNSPECIFIED && x->encap))
+ 		return false;
  
- 	req_set_fail(preq);
- 	io_req_set_res(preq, -ECANCELED, 0);
--	io_req_task_complete(preq, &ts);
-+	preq->io_task_work.func = io_req_task_complete;
-+	io_req_task_work_add(preq);
- out:
- 	io_ring_submit_unlock(ctx, issue_flags);
- 	if (ret < 0) {
+ 	if (x->xso.type == XFRM_DEV_OFFLOAD_PACKET ||
 -- 
 2.43.0
 
