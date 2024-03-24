@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCC71F1AF4;
-	Sun, 24 Mar 2024 22:58:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF6B1F1ADF;
+	Sun, 24 Mar 2024 22:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321089; cv=none; b=Q/71a8FP5bXI0ZTbV9cLGRbimoYJi6Lt6CdkreeiikYTRz3TjNAa+qRMdyp1uzvmYD+XMBLHbUIHWS+3MVaCGX2RGgdXOClr9xGi94c8M452jqBka5I2M3q6Ev0bo2G16u7bCBj1OFQcTlOgd3kEB7BYxdGrURGbDPRtstniUVk=
+	t=1711321086; cv=none; b=LBBwRuNTEZaIvaYhQKjGFib4Su9GPXwWCZTAfB/JsVtZPNBQ55dI9DkG0AA47JT0hy3QOxvtbcEay+wChsRoiwY0CfiAsrEuq0+qlFrjuvdFQjAo4FoHGGCkUJQTLRCp/xBbARU0O9EJXiBu9yy+RvSGjW6WiSwjiY9Khvj0cpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321089; c=relaxed/simple;
-	bh=KCdEeAzHYRbBp8014JNKSfgbZL0yss104STtYKpL/DU=;
+	s=arc-20240116; t=1711321086; c=relaxed/simple;
+	bh=NLXg1mMIeDthRs3gevp71oajPJK8l3xOG32jfOjQjjM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DFa62RhtMWycAimFbBFYe6dFtfRbZPFtgivqUqzWz4Sx9XFj7jKhx9dZVUJxVBm9/oqUE0RHynHd30NvOkn7cp/qjWKkes/dSbPF+EOu57M7xNflARJ3u/imiM60iXDslW5KXcRjlzmESV2WRS7n8x8yYksXZxE9EpAhVgTjfEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aIQXDyM1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EBowotfJGJBv7JQk+hVXtqdnZWkHUolANuCIuQSLcoBu5erQU5Wywbce4D5CKV1OK3Znhft3kyGnlChu0/tvEaXWUz9IfYfYE8xeCg4+61QLvdpUzyP0vJ/kv8NXpCNpWV1RAqN0fwYtrCak505+bP4q8zdAUvN9TEVdQ6fkrzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ft/71UfM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aIQXDyM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17166C43399;
-	Sun, 24 Mar 2024 22:58:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ft/71UfM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8AA5C433A6;
+	Sun, 24 Mar 2024 22:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321089;
-	bh=KCdEeAzHYRbBp8014JNKSfgbZL0yss104STtYKpL/DU=;
+	s=k20201202; t=1711321086;
+	bh=NLXg1mMIeDthRs3gevp71oajPJK8l3xOG32jfOjQjjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aIQXDyM1bRqHu28/b5XjafnW/0RYSKgIzbHMXGLxWNBWVTD+GFSrkrXzLXju9J5YB
-	 ez4bUvGz9r+ttMBWp8+NrkjoSM5mbcUEv4+EkQ/Bt6riHjehfT/W0sXRoaK2z/ZyM4
-	 z6++OHSpxQPgZUu1ZpB845k98Se1HpqbeWzhxXv9Kk6PmSCMc5I+hEwcR5uhFyWqbX
-	 q92gSpqqmAhBuR5kvP9LHexokbFLBTxkwd/t4KGTwR+y9MoT3bdfIS1+qIT6/S7NuK
-	 y0kS213sgsn7q/1lGd5Kdd+9QyipBWas7HMxMJx906Qzs+zSLt4QaCkX61adZoldG1
-	 mqxWqaq9GuPSA==
+	b=ft/71UfMzMTBvs/EJtBRdqZcmDiywp6Z02ci3uSTpPhRy7ju0BmU28Wc3K6q9lATk
+	 4yXH13jI4knZnOdwfFTggcrY7sycbk6hK+tGtuPu7Da9RjO5Po9bYXk1PIOhcvUBBh
+	 +r1ZBGS3MhzD9uQ+QTpoix08mpkmtS++db0AkUv7rD8Hb8kxEHh7vzGgcc91DOhC89
+	 qyw/937CBlJUFXIp4Qd1zGKSWWUgLIX9YeWlQqWIO8gjFPEvR8NLag+sAD9hpdVN+t
+	 YXuMtULo9S6nzLKGTKo+Mg4Io5rCHoW6xp5X/sA922t8ftufYeT1d9lw9NK7hCYKCz
+	 rbsUamNX443Cw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ido Schimmel <idosch@nvidia.com>,
-	Jiri Pirko <jiri@nvidia.com>,
-	Petr Machata <petrm@nvidia.com>,
-	Simon Horman <horms@kernel.org>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	syzbot+a340daa06412d6028918@syzkaller.appspotmail.com,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Michal Kubiak <michal.kubiak@intel.com>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 652/713] devlink: Acquire device lock during netns dismantle
-Date: Sun, 24 Mar 2024 18:46:18 -0400
-Message-ID: <20240324224720.1345309-653-sashal@kernel.org>
+Subject: [PATCH 6.7 650/713] net/sched: taprio: proper TCA_TAPRIO_TC_ENTRY_INDEX check
+Date: Sun, 24 Mar 2024 18:46:16 -0400
+Message-ID: <20240324224720.1345309-651-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -51,103 +51,85 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ido Schimmel <idosch@nvidia.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit e21c52d7814f5768f05224e773644629fe124af2 ]
+[ Upstream commit 343041b59b7810f9cdca371f445dd43b35c740b1 ]
 
-Device drivers register with devlink from their probe routines (under
-the device lock) by acquiring the devlink instance lock and calling
-devl_register().
+taprio_parse_tc_entry() is not correctly checking
+TCA_TAPRIO_TC_ENTRY_INDEX attribute:
 
-Drivers that support a devlink reload usually implement the
-reload_{down, up}() operations in a similar fashion to their remove and
-probe routines, respectively.
+	int tc; // Signed value
 
-However, while the remove and probe routines are invoked with the device
-lock held, the reload operations are only invoked with the devlink
-instance lock held. It is therefore impossible for drivers to acquire
-the device lock from their reload operations, as this would result in
-lock inversion.
+	tc = nla_get_u32(tb[TCA_TAPRIO_TC_ENTRY_INDEX]);
+	if (tc >= TC_QOPT_MAX_QUEUE) {
+		NL_SET_ERR_MSG_MOD(extack, "TC entry index out of range");
+		return -ERANGE;
+	}
 
-The motivating use case for invoking the reload operations with the
-device lock held is in mlxsw which needs to trigger a PCI reset as part
-of the reload. The driver cannot call pci_reset_function() as this
-function acquires the device lock. Instead, it needs to call
-__pci_reset_function_locked which expects the device lock to be held.
+syzbot reported that it could fed arbitary negative values:
 
-To that end, adjust devlink to always acquire the device lock before the
-devlink instance lock when performing a reload.
+UBSAN: shift-out-of-bounds in net/sched/sch_taprio.c:1722:18
+shift exponent -2147418108 is negative
+CPU: 0 PID: 5066 Comm: syz-executor367 Not tainted 6.8.0-rc7-syzkaller-00136-gc8a5c731fd12 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+Call Trace:
+ <TASK>
+  __dump_stack lib/dump_stack.c:88 [inline]
+  dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+  ubsan_epilogue lib/ubsan.c:217 [inline]
+  __ubsan_handle_shift_out_of_bounds+0x3c7/0x420 lib/ubsan.c:386
+  taprio_parse_tc_entry net/sched/sch_taprio.c:1722 [inline]
+  taprio_parse_tc_entries net/sched/sch_taprio.c:1768 [inline]
+  taprio_change+0xb87/0x57d0 net/sched/sch_taprio.c:1877
+  taprio_init+0x9da/0xc80 net/sched/sch_taprio.c:2134
+  qdisc_create+0x9d4/0x1190 net/sched/sch_api.c:1355
+  tc_modify_qdisc+0xa26/0x1e40 net/sched/sch_api.c:1776
+  rtnetlink_rcv_msg+0x885/0x1040 net/core/rtnetlink.c:6617
+  netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
+  netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]
+  netlink_unicast+0x7ea/0x980 net/netlink/af_netlink.c:1367
+  netlink_sendmsg+0xa3b/0xd70 net/netlink/af_netlink.c:1908
+  sock_sendmsg_nosec net/socket.c:730 [inline]
+  __sock_sendmsg+0x221/0x270 net/socket.c:745
+  ____sys_sendmsg+0x525/0x7d0 net/socket.c:2584
+  ___sys_sendmsg net/socket.c:2638 [inline]
+  __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2667
+ do_syscall_64+0xf9/0x240
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7f1b2dea3759
+Code: 48 83 c4 28 c3 e8 d7 19 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd4de452f8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f1b2def0390 RCX: 00007f1b2dea3759
+RDX: 0000000000000000 RSI: 00000000200007c0 RDI: 0000000000000004
+RBP: 0000000000000003 R08: 0000555500000000 R09: 0000555500000000
+R10: 0000555500000000 R11: 0000000000000246 R12: 00007ffd4de45340
+R13: 00007ffd4de45310 R14: 0000000000000001 R15: 00007ffd4de45340
 
-For now, only do that when reload is triggered as part of netns
-dismantle. Subsequent patches will handle the case where reload is
-explicitly triggered by user space.
-
-Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Signed-off-by: Petr Machata <petrm@nvidia.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
+Fixes: a54fc09e4cba ("net/sched: taprio: allow user input of per-tc max SDU")
+Reported-and-tested-by: syzbot+a340daa06412d6028918@syzkaller.appspotmail.com
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Stable-dep-of: d7d75124965a ("devlink: Fix devlink parallel commands processing")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/devlink/core.c          |  4 ++--
- net/devlink/devl_internal.h | 15 +++++++++++++++
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ net/sched/sch_taprio.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/devlink/core.c b/net/devlink/core.c
-index bc3d265fe2d6e..7f0b093208d75 100644
---- a/net/devlink/core.c
-+++ b/net/devlink/core.c
-@@ -503,14 +503,14 @@ static void __net_exit devlink_pernet_pre_exit(struct net *net)
- 	 * all devlink instances from this namespace into init_net.
- 	 */
- 	devlinks_xa_for_each_registered_get(net, index, devlink) {
--		devl_lock(devlink);
-+		devl_dev_lock(devlink, true);
- 		err = 0;
- 		if (devl_is_registered(devlink))
- 			err = devlink_reload(devlink, &init_net,
- 					     DEVLINK_RELOAD_ACTION_DRIVER_REINIT,
- 					     DEVLINK_RELOAD_LIMIT_UNSPEC,
- 					     &actions_performed, NULL);
--		devl_unlock(devlink);
-+		devl_dev_unlock(devlink, true);
- 		devlink_put(devlink);
- 		if (err && err != -EOPNOTSUPP)
- 			pr_warn("Failed to reload devlink instance into init_net\n");
-diff --git a/net/devlink/devl_internal.h b/net/devlink/devl_internal.h
-index 2a9b263300a4b..178abaf74a107 100644
---- a/net/devlink/devl_internal.h
-+++ b/net/devlink/devl_internal.h
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2016 Jiri Pirko <jiri@mellanox.com>
-  */
+diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
+index 31a8252bd09c9..ad99409c6325e 100644
+--- a/net/sched/sch_taprio.c
++++ b/net/sched/sch_taprio.c
+@@ -1008,7 +1008,8 @@ static const struct nla_policy entry_policy[TCA_TAPRIO_SCHED_ENTRY_MAX + 1] = {
+ };
  
-+#include <linux/device.h>
- #include <linux/etherdevice.h>
- #include <linux/mutex.h>
- #include <linux/netdevice.h>
-@@ -96,6 +97,20 @@ static inline bool devl_is_registered(struct devlink *devlink)
- 	return xa_get_mark(&devlinks, devlink->index, DEVLINK_REGISTERED);
- }
- 
-+static inline void devl_dev_lock(struct devlink *devlink, bool dev_lock)
-+{
-+	if (dev_lock)
-+		device_lock(devlink->dev);
-+	devl_lock(devlink);
-+}
-+
-+static inline void devl_dev_unlock(struct devlink *devlink, bool dev_lock)
-+{
-+	devl_unlock(devlink);
-+	if (dev_lock)
-+		device_unlock(devlink->dev);
-+}
-+
- typedef void devlink_rel_notify_cb_t(struct devlink *devlink, u32 obj_index);
- typedef void devlink_rel_cleanup_cb_t(struct devlink *devlink, u32 obj_index,
- 				      u32 rel_index);
+ static const struct nla_policy taprio_tc_policy[TCA_TAPRIO_TC_ENTRY_MAX + 1] = {
+-	[TCA_TAPRIO_TC_ENTRY_INDEX]	   = { .type = NLA_U32 },
++	[TCA_TAPRIO_TC_ENTRY_INDEX]	   = NLA_POLICY_MAX(NLA_U32,
++							    TC_QOPT_MAX_QUEUE),
+ 	[TCA_TAPRIO_TC_ENTRY_MAX_SDU]	   = { .type = NLA_U32 },
+ 	[TCA_TAPRIO_TC_ENTRY_FP]	   = NLA_POLICY_RANGE(NLA_U32,
+ 							      TC_FP_EXPRESS,
 -- 
 2.43.0
 
