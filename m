@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F0E288916;
-	Sun, 24 Mar 2024 23:47:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F9F1802CE;
+	Sun, 24 Mar 2024 23:47:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324033; cv=none; b=hSyl6rhkDjiJi1LeKC1gzXXCGRExAFuRjWlMba3Vii+9kqYtnZhZCwIEjsEDZAq5aEWOBfXH2hBOTJNH/dw7NXaiial1WYCcOKhvVUMOXpSmFd8ZWBEmzRdoiZRhCSrrW1yIwe5vfF6llV0AOhAA5A9b4zhyhlDZnVgat7s+uZw=
+	t=1711324036; cv=none; b=Y6gWrDa9+wEJYzLrESmloKhP1btuxQ9kQzM8o/J5rkMbi6ObfHB6CDgN6hM0XXXk0ZLmpwxnFJ/3ngiTCmq+bNX3buPcIOxx4JIYqH8YpBXHv74lU9M1ibzwK168SDjJX61d2tjxc5RajlvNPxZXtSp4YBWd0mhwCOS7psXGXF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324033; c=relaxed/simple;
-	bh=YeEcgtNG14s91o5QteY4cf13XJRDzXh4Bs56jSDt/XY=;
+	s=arc-20240116; t=1711324036; c=relaxed/simple;
+	bh=myX2+tAmhFIBAAXFLdRpZctMsZOAIV46IPbeD/+7xpI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NoHMAPuYC1juMFl/9Qo5cEVFra2c0OEIYx8bdUb53K80HhAUoU6l7IeLiwhFE3ygXobN84Y2PzsvD/w7fXp7s6csYuc9w6c0HbSZNs4VH7uvdPahC5cCcfvTFRRQ3MaR9j/OmoZwcYyk4l573x5DmqbbYohN2Wc7uyzuflbgXtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dG9wXmMx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=WbT/wMY/wfJggoLhsbzmgkeu4hCqkoZL+X5zFN/y+0UlohTPor+EWnpm0VL7tAuT/KkTk0oTTjwWJ6hGZzsoM9JM6JoFUEQXAOaMhbfdCNgk9m8o90eYYi68qpiWSO8YSH1bCq8Z4dxgzM94OVXUJUAZ5ztiwdxLQSIbr5BOAs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJrARb+f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dG9wXmMx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B070C43390;
-	Sun, 24 Mar 2024 23:47:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJrARb+f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82A62C433C7;
+	Sun, 24 Mar 2024 23:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324033;
-	bh=YeEcgtNG14s91o5QteY4cf13XJRDzXh4Bs56jSDt/XY=;
+	s=k20201202; t=1711324035;
+	bh=myX2+tAmhFIBAAXFLdRpZctMsZOAIV46IPbeD/+7xpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dG9wXmMx2AqCDKoTjDowH7XiBpTC/G+UQ7Ilmw7GJH8gLS6k+CI905qkJwxoTy8R/
-	 QAitUYuNPnJqXTIaqiG94296DhCZUJf38J9j9unRqNWXbcPR4vhjPgxUy/5XNO10Is
-	 7cgnW5YRk63O7NjbB07V47Ymzt2i3EKK3ko/xYidLQ3pi+CNgId2synBwfLVkUciHt
-	 fL/kLHWYvr3jXoXYcuAjPHkuJ9pG77fv3ENETBQxpeq/HNiGEH5zfNJ7tnGxDhA2m/
-	 l9cusKiVJoRDrTzs18gu5Ax5VYroRP4uN2Oo18ApRMYxqX7fn9Al4w0VjWIbv1YHvY
-	 hYQqfubEo+gHA==
+	b=FJrARb+fNEBtB+kl5yCef2xPKCDyb2ROGPsP1SgB/VZOa4KY3+5DwukIN0PaVO5i7
+	 UYGa6cCum5q0sf/TgWEy09LcTQJ+H0Tj17Db/yRhryWDKD94gKvARytQdJobTXf3lh
+	 K2oq9U3JgVd+MWOb1I7BJ+1oy9Bi8PBD+GKHzeIKhaIXbkSSS+JSdUFuBU2oA8m3s7
+	 +/gkkxYe8j2233ahCJuO+HCj80pApDUuvNPbttptrEp1PSEb+f+V7Jmmrzz19Hlg6p
+	 kp4hjD7x7NdgWU7oaqaUCKRGhqWH6+jxWMPfwtw63psjlnveGiexHv60Mn2AK2q/L+
+	 jPpiDtK8AWPZA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
-	Julian Calaby <julian.calaby@gmail.com>,
+Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
 	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 034/183] wifi: b43: Stop correct queue in DMA worker when QoS is disabled
-Date: Sun, 24 Mar 2024 19:44:07 -0400
-Message-ID: <20240324234638.1355609-35-sashal@kernel.org>
+Subject: [PATCH 5.4 036/183] wifi: wilc1000: fix declarations ordering
+Date: Sun, 24 Mar 2024 19:44:09 -0400
+Message-ID: <20240324234638.1355609-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -45,68 +44,49 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+From: Alexis Lothoré <alexis.lothore@bootlin.com>
 
-[ Upstream commit 581c8967d66c4961076dbbee356834e9c6777184 ]
+[ Upstream commit 535733e90e5d8912ebeccebb05b354a2d06ff459 ]
 
-When QoS is disabled, the queue priority value will not map to the correct
-ieee80211 queue since there is only one queue. Stop queue 0 when QoS is
-disabled to prevent trying to stop a non-existent queue and failing to stop
-the actual queue instantiated.
+Reorder parameters declaration in wilc_parse_join_bss_param to enforce
+reverse christmas tree
 
-Fixes: bad691946966 ("b43: avoid packet losses in the dma worker code.")
-Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20231231050300.122806-4-sergeantsagara@protonmail.com
+Link: https://msgid.link/20240105075733.36331-2-alexis.lothore@bootlin.com
+Stable-dep-of: 205c50306acf ("wifi: wilc1000: fix RCU usage in connect path")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43/main.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/staging/wilc1000/wilc_hif.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
-index 3ad94dad2d89b..b4701846caf3e 100644
---- a/drivers/net/wireless/broadcom/b43/main.c
-+++ b/drivers/net/wireless/broadcom/b43/main.c
-@@ -3601,7 +3601,7 @@ static void b43_tx_work(struct work_struct *work)
- 				err = b43_dma_tx(dev, skb);
- 			if (err == -ENOSPC) {
- 				wl->tx_queue_stopped[queue_num] = true;
--				ieee80211_stop_queue(wl->hw, queue_num);
-+				b43_stop_queue(dev, queue_num);
- 				skb_queue_head(&wl->tx_queue[queue_num], skb);
- 				break;
- 			}
-@@ -3625,6 +3625,7 @@ static void b43_op_tx(struct ieee80211_hw *hw,
- 		      struct sk_buff *skb)
+diff --git a/drivers/staging/wilc1000/wilc_hif.c b/drivers/staging/wilc1000/wilc_hif.c
+index 221e3d93db148..b9c21315a403a 100644
+--- a/drivers/staging/wilc1000/wilc_hif.c
++++ b/drivers/staging/wilc1000/wilc_hif.c
+@@ -441,13 +441,13 @@ static void handle_connect_timeout(struct work_struct *work)
+ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
+ 				struct cfg80211_crypto_settings *crypto)
  {
- 	struct b43_wl *wl = hw_to_b43_wl(hw);
-+	u16 skb_queue_mapping;
+-	struct wilc_join_bss_param *param;
+-	struct ieee80211_p2p_noa_attr noa_attr;
+-	u8 rates_len = 0;
++	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
+ 	const u8 *tim_elm, *ssid_elm, *rates_ie, *supp_rates_ie;
+ 	const u8 *ht_ie, *wpa_ie, *wmm_ie, *rsn_ie;
++	struct ieee80211_p2p_noa_attr noa_attr;
++	struct wilc_join_bss_param *param;
++	u8 rates_len = 0;
+ 	int ret;
+-	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
  
- 	if (unlikely(skb->len < 2 + 2 + 6)) {
- 		/* Too short, this can't be a valid frame. */
-@@ -3633,12 +3634,12 @@ static void b43_op_tx(struct ieee80211_hw *hw,
- 	}
- 	B43_WARN_ON(skb_shinfo(skb)->nr_frags);
- 
--	skb_queue_tail(&wl->tx_queue[skb->queue_mapping], skb);
--	if (!wl->tx_queue_stopped[skb->queue_mapping]) {
-+	skb_queue_mapping = skb_get_queue_mapping(skb);
-+	skb_queue_tail(&wl->tx_queue[skb_queue_mapping], skb);
-+	if (!wl->tx_queue_stopped[skb_queue_mapping])
- 		ieee80211_queue_work(wl->hw, &wl->tx_work);
--	} else {
--		ieee80211_stop_queue(wl->hw, skb->queue_mapping);
--	}
-+	else
-+		b43_stop_queue(wl->current_dev, skb_queue_mapping);
- }
- 
- static void b43_qos_params_upload(struct b43_wldev *dev,
+ 	param = kzalloc(sizeof(*param), GFP_KERNEL);
+ 	if (!param)
 -- 
 2.43.0
 
