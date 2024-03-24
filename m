@@ -1,175 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5849915E805;
-	Sun, 24 Mar 2024 23:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322294; cv=none; b=RIa0ADJWBijNurRcedwhjq4rWYMdC/vwa9sWMkUwvObe0qzSU7skxDP9gKPn7Qn5oVxktFDw7f2foXkmsDPRvRcaNBFwACzwwlA4Hv42ZJ5mc6MUm478bZhxEBUoTgU1Bg7vjM5GA247FHRN49iI+5M//1vgIKGYEKuht/8x1IQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322294; c=relaxed/simple;
-	bh=aBNzUS7dBm9Gu1lMbTmUImJRo+8hDSQMAvRhu3gkyuE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ludNnsrtCu8gXD4UQS1L2VD+Jw8DylELm4qFpLmnqv1AYhQ6oSsWw8Ov06IVYpHVibrLb01yFxJ9W/IRrrwtDc/fy0oVK0He7+h4oH/HM5OIIksDId6NS6WB9I1jnCooAZPGAx7kso30u2T/3y4johsNe0nvYTzGtRdgDn1V0vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o79HUnp8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o79HUnp8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BE4EC43390;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F56615E802;
 	Sun, 24 Mar 2024 23:18:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322293;
-	bh=aBNzUS7dBm9Gu1lMbTmUImJRo+8hDSQMAvRhu3gkyuE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o79HUnp85RHRWaR24yw05Qe3DYUvBkF9s7qlPCqV2NItAA6OnMP1v+difcba7NEYX
-	 tdY/KH38/AsMoQ90MriItxkHlywTy2/J5hfCeJFc6c3017AE4DucZIC2TyqgoRwRth
-	 1MwvVwIA1JtAhmwWrabLlFHCTQDiv0L3eEocW1iSfSjaA16aitxBsE4Stm47u1bTd8
-	 JG+u0JcFbKbMteMgDL6LC2ESoioDH1Z3H8Hm2GtVuGfq0SZqwCmTdr8REBvHCKn8VT
-	 jJF2ZDJU5GD4RT5a83K+eyVVg4XWUmTS7ZKmhcZIoc8eWwU0nwnwvgQfVA1WqNQafN
-	 qsVPq5gIzKG2Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 376/451] f2fs: ro: compress: fix to avoid caching unaligned extent
-Date: Sun, 24 Mar 2024 19:10:52 -0400
-Message-ID: <20240324231207.1351418-377-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
-References: <20240324231207.1351418-1-sashal@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711322296; cv=none; b=N3H+8yxH9MBqABwxOs5HWu95i7n8Te+rH7YomDJStGSQo2wMDsQY9ww3KjvKb8yaAdG+0O/PlEp3f/o49IxGnmhVC5Tg/IK5HrCDe2LuwKnh6wanmVYt4g+xb8N3HEcxMulUpbg9U8NU2BYC0YqTMMFYAGNPhTMJ7a+Or53801A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711322296; c=relaxed/simple;
+	bh=M+medqUQU7lSqKA8l3jnSvTpXlTcFSndgvbsEVhVGSE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gEInjHlyXJNSh4UNelLiGLayVL26Q3iXe/7SIEoaFHl+ToAIhiY2bAa4+SdrFSk2NAaYvsPVoEGolMzR3Tmb+pm6h1xJrd2HYEJTtmQyH06yt0kLuNVw2kJerocA19YHqBmfeenuQLFdNPX4MlpXtv/BKZHV1ck6Wl1Qy3KPHGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R910GRuI; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R910GRuI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711322294; x=1742858294;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=M+medqUQU7lSqKA8l3jnSvTpXlTcFSndgvbsEVhVGSE=;
+  b=R910GRuIV+e9EdIJftqoKllO0TrIJGfS5bZz5obDCEVCVbZKXtZE446i
+   BClirswQyUcJ6qko32wB7r0pS1W5BUDzJuJ20QgPtYD1OzWsxi6EOm+aL
+   Gg0Hdi8eSQzwOyXNG8G9OeFFYa8yeCt+d2XqVQLyPMGA1ML3oW6Wv7wUh
+   dC1qYHZbmuUlhAxzsX0TckAzS+zhkV0qRUbqKA6GizkUwGHYwN32P+EHm
+   +3A5e770zm5XMMWu+0wSpVNT0xLZFwaF10Wegjv/oU52kZbc7taK2N2YC
+   n7qNiyE8xVhDaY3JdHUAIv2ey+RV3dAd32qy+NkPFqbeAlDI9nPojcKe7
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="10078005"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="10078005"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="15869353"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.186.165])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:12 -0700
+From: ira.weiny@intel.com
+Date: Sun, 24 Mar 2024 16:18:09 -0700
+Subject: [PATCH 06/26] cxl/port: Add Dynamic Capacity mode support to
+ endpoint decoders
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240324-dcd-type2-upstream-v1-6-b7b00d623625@intel.com>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=4932;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=E2n+KEwFlMb8AhAZBsqU2WmNuZ+3LaZb4X01l2hoYBk=;
+ b=tTH4ZAwHdfKGAQPOCI5pNgXdEob7CTitZZvEt7eLXnGvKVR1KOpNg6o1Z+oNzN8TsI8B/c66v
+ cIINC79d5udBywpso7Bk2MnApBWLBCH3y2qzBGkSKytjp5XCEaL7iyg
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-From: Chao Yu <chao@kernel.org>
+From: Navneet Singh <navneet.singh@intel.com>
 
-[ Upstream commit 4b99ecd304290c4ef55666a62c89dfb2dbf0b2cd ]
+Endpoint decoders which are used to map Dynamic Capacity must be
+configured to point to the correct Dynamic Capacity (DC) Region.  The
+decoder mode currently represents the partition the decoder points to
+such as ram or pmem.
 
-Mapping info from dump.f2fs:
-i_addr[0x2d] cluster flag    		[0xfffffffe : 4294967294]
-i_addr[0x2e]                 		[0x   10428 : 66600]
-i_addr[0x2f]                 		[0x   10429 : 66601]
-i_addr[0x30]                 		[0x   1042a : 66602]
+Expand the mode to include DC regions [partitions].
 
-f2fs_io fiemap 37 1 /mnt/f2fs/disk-58390c8c.raw
+Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Previsouly, it missed to align fofs and ofs_in_node to cluster_size,
-result in adding incorrect read extent cache, fix it.
-
-Before:
-f2fs_update_read_extent_tree_range: dev = (253,48), ino = 5, pgofs = 37, len = 4, blkaddr = 66600, c_len = 3
-
-After:
-f2fs_update_read_extent_tree_range: dev = (253,48), ino = 5, pgofs = 36, len = 4, blkaddr = 66600, c_len = 3
-
-Fixes: 94afd6d6e525 ("f2fs: extent cache: support unaligned extent")
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/compress.c | 10 ++++++----
- fs/f2fs/f2fs.h     |  6 ++++--
- fs/f2fs/node.c     | 20 ++++++++++++++------
- 3 files changed, 24 insertions(+), 12 deletions(-)
+Changes for v1:
+[iweiny: eliminate added gotos]
+[iweiny: Mark DC support for 6.10 kernel]
+---
+ Documentation/ABI/testing/sysfs-bus-cxl | 21 +++++++++++----------
+ drivers/cxl/core/hdm.c                  | 19 +++++++++++++++++++
+ drivers/cxl/core/port.c                 | 16 ++++++++++++++++
+ 3 files changed, 46 insertions(+), 10 deletions(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 5973fda2349c7..df6dfd7de6d0d 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1843,16 +1843,18 @@ void f2fs_put_page_dic(struct page *page, bool in_task)
-  * check whether cluster blocks are contiguous, and add extent cache entry
-  * only if cluster blocks are logically and physically contiguous.
-  */
--unsigned int f2fs_cluster_blocks_are_contiguous(struct dnode_of_data *dn)
-+unsigned int f2fs_cluster_blocks_are_contiguous(struct dnode_of_data *dn,
-+						unsigned int ofs_in_node)
- {
--	bool compressed = f2fs_data_blkaddr(dn) == COMPRESS_ADDR;
-+	bool compressed = data_blkaddr(dn->inode, dn->node_page,
-+					ofs_in_node) == COMPRESS_ADDR;
- 	int i = compressed ? 1 : 0;
- 	block_t first_blkaddr = data_blkaddr(dn->inode, dn->node_page,
--						dn->ofs_in_node + i);
-+							ofs_in_node + i);
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index fff2581b8033..8b3efaf6563c 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -316,23 +316,24 @@ Description:
  
- 	for (i += 1; i < F2FS_I(dn->inode)->i_cluster_size; i++) {
- 		block_t blkaddr = data_blkaddr(dn->inode, dn->node_page,
--						dn->ofs_in_node + i);
-+							ofs_in_node + i);
  
- 		if (!__is_valid_data_blkaddr(blkaddr))
- 			break;
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index f5d69893d2d92..5ae1c4aa3ae92 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -4258,7 +4258,8 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc);
- void f2fs_decompress_end_io(struct decompress_io_ctx *dic, bool failed,
- 				bool in_task);
- void f2fs_put_page_dic(struct page *page, bool in_task);
--unsigned int f2fs_cluster_blocks_are_contiguous(struct dnode_of_data *dn);
-+unsigned int f2fs_cluster_blocks_are_contiguous(struct dnode_of_data *dn,
-+						unsigned int ofs_in_node);
- int f2fs_init_compress_ctx(struct compress_ctx *cc);
- void f2fs_destroy_compress_ctx(struct compress_ctx *cc, bool reuse);
- void f2fs_init_compress_info(struct f2fs_sb_info *sbi);
-@@ -4315,7 +4316,8 @@ static inline void f2fs_put_page_dic(struct page *page, bool in_task)
- {
- 	WARN_ON_ONCE(1);
+ What:		/sys/bus/cxl/devices/decoderX.Y/mode
+-Date:		May, 2022
+-KernelVersion:	v6.0
++Date:		May, 2022, June 2024
++KernelVersion:	v6.0, v6.10 (dcY)
+ Contact:	linux-cxl@vger.kernel.org
+ Description:
+ 		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
+ 		translates from a host physical address range, to a device local
+ 		address range. Device-local address ranges are further split
+-		into a 'ram' (volatile memory) range and 'pmem' (persistent
+-		memory) range. The 'mode' attribute emits one of 'ram', 'pmem',
+-		'mixed', or 'none'. The 'mixed' indication is for error cases
+-		when a decoder straddles the volatile/persistent partition
+-		boundary, and 'none' indicates the decoder is not actively
+-		decoding, or no DPA allocation policy has been set.
++		into a 'ram' (volatile memory) range, 'pmem' (persistent
++		memory) range, or Dynamic Capacity (DC) range. The 'mode'
++		attribute emits one of 'ram', 'pmem', 'dcY', 'mixed', or
++		'none'. The 'mixed' indication is for error cases when a
++		decoder straddles the volatile/persistent partition boundary,
++		and 'none' indicates the decoder is not actively decoding, or
++		no DPA allocation policy has been set.
+ 
+ 		'mode' can be written, when the decoder is in the 'disabled'
+-		state, with either 'ram' or 'pmem' to set the boundaries for the
+-		next allocation.
++		state, with 'ram', 'pmem', or 'dcY' to set the boundaries for
++		the next allocation.
+ 
+ 
+ What:		/sys/bus/cxl/devices/decoderX.Y/dpa_resource
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 66b8419fd0c3..e22b6f4f7145 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -255,6 +255,14 @@ static void devm_cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
+ 	__cxl_dpa_release(cxled);
  }
--static inline unsigned int f2fs_cluster_blocks_are_contiguous(struct dnode_of_data *dn) { return 0; }
-+static inline unsigned int f2fs_cluster_blocks_are_contiguous(
-+			struct dnode_of_data *dn, unsigned int ofs_in_node) { return 0; }
- static inline bool f2fs_sanity_check_cluster(struct dnode_of_data *dn) { return false; }
- static inline int f2fs_init_compress_inode(struct f2fs_sb_info *sbi) { return 0; }
- static inline void f2fs_destroy_compress_inode(struct f2fs_sb_info *sbi) { }
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 5db6740d31364..fcf22a50ff5db 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -850,21 +850,29 @@ int f2fs_get_dnode_of_data(struct dnode_of_data *dn, pgoff_t index, int mode)
  
- 	if (is_inode_flag_set(dn->inode, FI_COMPRESSED_FILE) &&
- 					f2fs_sb_has_readonly(sbi)) {
--		unsigned int c_len = f2fs_cluster_blocks_are_contiguous(dn);
-+		unsigned int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
-+		unsigned int ofs_in_node = dn->ofs_in_node;
-+		pgoff_t fofs = index;
-+		unsigned int c_len;
- 		block_t blkaddr;
- 
-+		/* should align fofs and ofs_in_node to cluster_size */
-+		if (fofs % cluster_size) {
-+			fofs = round_down(fofs, cluster_size);
-+			ofs_in_node = round_down(ofs_in_node, cluster_size);
-+		}
++static int dc_mode_to_region_index(enum cxl_decoder_mode mode)
++{
++	if (mode < CXL_DECODER_DC0 || CXL_DECODER_DC7 < mode)
++		return -EINVAL;
 +
-+		c_len = f2fs_cluster_blocks_are_contiguous(dn, ofs_in_node);
- 		if (!c_len)
- 			goto out;
++	return mode - CXL_DECODER_DC0;
++}
++
+ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+ 			     resource_size_t base, resource_size_t len,
+ 			     resource_size_t skipped)
+@@ -411,6 +419,7 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+ 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 	struct device *dev = &cxled->cxld.dev;
++	int rc;
  
--		blkaddr = f2fs_data_blkaddr(dn);
-+		blkaddr = data_blkaddr(dn->inode, dn->node_page, ofs_in_node);
- 		if (blkaddr == COMPRESS_ADDR)
- 			blkaddr = data_blkaddr(dn->inode, dn->node_page,
--						dn->ofs_in_node + 1);
-+						ofs_in_node + 1);
+ 	guard(rwsem_write)(&cxl_dpa_rwsem);
+ 	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE)
+@@ -433,6 +442,16 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+ 			return -ENXIO;
+ 		}
+ 		break;
++	case CXL_DECODER_DC0 ... CXL_DECODER_DC7:
++		rc = dc_mode_to_region_index(mode);
++		if (rc < 0)
++			return rc;
++
++		if (resource_size(&cxlds->dc_res[rc]) == 0) {
++			dev_dbg(dev, "no available dynamic capacity\n");
++			return -ENXIO;
++		}
++		break;
+ 	default:
+ 		dev_dbg(dev, "unsupported mode: %d\n", mode);
+ 		return -EINVAL;
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index e59d9d37aa65..80c0651794eb 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -208,6 +208,22 @@ static ssize_t mode_store(struct device *dev, struct device_attribute *attr,
+ 		mode = CXL_DECODER_PMEM;
+ 	else if (sysfs_streq(buf, "ram"))
+ 		mode = CXL_DECODER_RAM;
++	else if (sysfs_streq(buf, "dc0"))
++		mode = CXL_DECODER_DC0;
++	else if (sysfs_streq(buf, "dc1"))
++		mode = CXL_DECODER_DC1;
++	else if (sysfs_streq(buf, "dc2"))
++		mode = CXL_DECODER_DC2;
++	else if (sysfs_streq(buf, "dc3"))
++		mode = CXL_DECODER_DC3;
++	else if (sysfs_streq(buf, "dc4"))
++		mode = CXL_DECODER_DC4;
++	else if (sysfs_streq(buf, "dc5"))
++		mode = CXL_DECODER_DC5;
++	else if (sysfs_streq(buf, "dc6"))
++		mode = CXL_DECODER_DC6;
++	else if (sysfs_streq(buf, "dc7"))
++		mode = CXL_DECODER_DC7;
+ 	else
+ 		return -EINVAL;
  
- 		f2fs_update_read_extent_tree_range_compressed(dn->inode,
--					index, blkaddr,
--					F2FS_I(dn->inode)->i_cluster_size,
--					c_len);
-+					fofs, blkaddr, cluster_size, c_len);
- 	}
- out:
- 	return 0;
+
 -- 
-2.43.0
+2.44.0
 
