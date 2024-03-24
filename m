@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFBE13540E;
-	Sun, 24 Mar 2024 23:04:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114F3204FC3;
+	Sun, 24 Mar 2024 23:04:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321479; cv=none; b=N31irfbck3Pukkxe5SNPCJd2HlYxhYyi6SKu2FXrmHg8ig4LIRq9JCLLzbuw1yvNW1ZUzyLzkLtgak+eEksJ2UWeUe6RZoBkQmkw0mZG/JJWUEbf2Fpyq+zpoZTF1MqR3ls7w21dx60ol8x2l5uvJUdmeidVSFVnhj/ezF9XTtY=
+	t=1711321478; cv=none; b=UQcL50uNx2boJTApeD2jO3nyAztYuQywkoA7PprBeebnr+BTpLUZWdXiNKu8zC70AiOsw5FzyBNkG57H33hlfigB6R2FWSXAwY4v4Zzh+mDcmLNFxviT5EUnAzZJXSlCZTH6ktStwHqMFO/6z8h332J0TKwfxBGvk4EprVdqGX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321479; c=relaxed/simple;
-	bh=4sy4eq2T8L33zFLZ8FETfbnQqlhB56H99f02c8RLNa8=;
+	s=arc-20240116; t=1711321478; c=relaxed/simple;
+	bh=PixZTdAIXb+apt1+3VrFpubrgiRaiLYdNla0aHXf+/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gslm6oaWifOC6N2CU9JTXyeWKKHeYw5Ki0dcioJ1L9JVnOmmSZBNTEPHGmFxgA4pEutx/aOsG94PtNDMygdSBUSrlnDIHXSzGkC5YaB40TxRG3rl51hAOtMXDJOkz8N1EZS6PGYB6CiD9VlivsTIgl1G+95xoDBef2nS9mrcEno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ey1TELRN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=G7v8Bbw7Cv8sLcNAgaUuaBuzhMutYcwtBDZqypTmO7hSgd47YLDnZE3iGqYnsZCi2d11sw7bubsuALjuGJcxMXdp/u5rhyn52E+AmMiT5/aDEJ+WNDg+QX66CWO2CY+YyC9NNZ7o2RxMz3kseCma3/cOvlWflCpZLkUNm29LH4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fhemxXJ1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ey1TELRN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32EE9C433F1;
-	Sun, 24 Mar 2024 23:04:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhemxXJ1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B00C43390;
+	Sun, 24 Mar 2024 23:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321478;
-	bh=4sy4eq2T8L33zFLZ8FETfbnQqlhB56H99f02c8RLNa8=;
+	s=k20201202; t=1711321476;
+	bh=PixZTdAIXb+apt1+3VrFpubrgiRaiLYdNla0aHXf+/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ey1TELRN2s9y8xJwctUSMnkLvcv+YIgdwBqarXfkeem4mQQJG/vFiCm+NWi2QYJ4z
-	 6esNAUlpjJDA5zjHpl/lXxRa8kp3OzPFG/nbTFvvaFNnw1M85XEVHr0oC5t+QqXySO
-	 rSTIKEtzmHVyqUSxntRwTmocAjResPIF4huAUG19o43Yx6n8J0kamTRwXgSQC07djT
-	 IDV12LGhmiYpvXQGPlPNg7hjWaS5ja5fNNAOm8XZhOQiIt9s06iwmQ5lk+oaATAY6V
-	 FMrtGQvTfNIr7gaam4I8crxXb2YyPLb52i6q2kAtZEwZ0c2sN/aPG79Q6ce4Vox7+p
-	 cZMDh/7KmLcsg==
+	b=fhemxXJ1PnYaBrbHS7N1nyvygK7qJs8u4Cx3pNYctoTOeH38HRaF5bfVJnXfNuVi4
+	 FSdcgjSUQTHIiG48msPEqS8xTnaj2GyOL6mXC9Zs8yIXnH7kQWOkutmmpXAjq27f1B
+	 G0ABH2fTsMYlR9CXftkEhdQKN+Wttvkncr6F4LDO7HJcGwBTE8EG2o4jlSTxjaxzJP
+	 h6AT8qXrSoQbCwdZbsZQjn2noBRxwB9grXQ6z9ROalTs0GEO5EdP6JcUA5k8VNq77h
+	 CYlpXW097CQJAdpNf4Tuc5Ntz2F6F7Z0tmJiVcfwZ67bgkr79IVwdfqt/4WkkiGqkH
+	 /lsMUM28VBH0Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Taehee Yoo <ap420073@gmail.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	David Ahern <dsahern@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Ido Schimmel <idosch@nvidia.com>,
+	Simon Horman <horms@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 203/638] ipv6: mcast: remove one synchronize_net() barrier in ipv6_mc_down()
-Date: Sun, 24 Mar 2024 18:54:00 -0400
-Message-ID: <20240324230116.1348576-204-sashal@kernel.org>
+Subject: [PATCH 6.6 202/638] selftests: forwarding: Add missing multicast routing config entries
+Date: Sun, 24 Mar 2024 18:53:59 -0400
+Message-ID: <20240324230116.1348576-203-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -51,41 +49,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Ido Schimmel <idosch@nvidia.com>
 
-[ Upstream commit 17ef8efc00b34918b966388b2af0993811895a8c ]
+[ Upstream commit f0ddf15f0a74c27eb4b2271a90e69948acc3fa2c ]
 
-As discussed in the past (commit 2d3916f31891 ("ipv6: fix skb drops
-in igmp6_event_query() and igmp6_event_report()")) I think the
-synchronize_net() call in ipv6_mc_down() is not needed.
+The two tests that make use of multicast routig (router.sh and
+router_multicast.sh) are currently failing in the netdev CI because the
+kernel is missing multicast routing support.
 
-Under load, synchronize_net() can last between 200 usec and 5 ms.
+Fix by adding the required config entries.
 
-KASAN seems to agree as well.
-
-Fixes: f185de28d9ae ("mld: add new workqueues for process mld events")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Taehee Yoo <ap420073@gmail.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: David Ahern <dsahern@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 6d4efada3b82 ("selftests: forwarding: Add multicast routing test")
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Link: https://lore.kernel.org/r/20240208165538.1303021-1-idosch@nvidia.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/mcast.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/testing/selftests/net/forwarding/config | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index f948cf7bfc448..fae30bdca9073 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -2720,7 +2720,6 @@ void ipv6_mc_down(struct inet6_dev *idev)
- 	/* Should stop work after group drop. or we will
- 	 * start work again in mld_ifc_event()
- 	 */
--	synchronize_net();
- 	mld_query_stop_work(idev);
- 	mld_report_stop_work(idev);
- 
+diff --git a/tools/testing/selftests/net/forwarding/config b/tools/testing/selftests/net/forwarding/config
+index ba23435145827..8d7a1a004b7c3 100644
+--- a/tools/testing/selftests/net/forwarding/config
++++ b/tools/testing/selftests/net/forwarding/config
+@@ -9,6 +9,13 @@ CONFIG_CGROUP_BPF=y
+ CONFIG_DUMMY=m
+ CONFIG_IPV6=y
+ CONFIG_IPV6_GRE=m
++CONFIG_IPV6_MROUTE=y
++CONFIG_IPV6_MROUTE_MULTIPLE_TABLES=y
++CONFIG_IPV6_PIMSM_V2=y
++CONFIG_IP_MROUTE=y
++CONFIG_IP_MROUTE_MULTIPLE_TABLES=y
++CONFIG_IP_PIMSM_V1=y
++CONFIG_IP_PIMSM_V2=y
+ CONFIG_MACVLAN=m
+ CONFIG_NET_ACT_CT=m
+ CONFIG_NET_ACT_MIRRED=m
 -- 
 2.43.0
 
