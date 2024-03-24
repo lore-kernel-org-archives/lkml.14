@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F90A278998;
-	Sun, 24 Mar 2024 23:37:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CB2176FC6;
+	Sun, 24 Mar 2024 23:37:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323450; cv=none; b=uvRSPw0BuhNcVdVZVArs8cirsVZfaduozOi0KIZfNtaoiJsjD/EiZIwJsCV0E3RYVXajNKkUtCODRyXrGNmezkIKJS7WETqyo8MC9q7KFQUr4EfdiYluxqf4Fs14uPJFgr1GeE1ZypwQzielwO5U/S5aZGNW0Z6eDjHomMWZLwI=
+	t=1711323465; cv=none; b=FltNzyl9BFWkT/7E3+/TwNelZ0nlF/K3TRistcWnjWrKCxFMMNELIgIX+FT0xEmAbdJKps+/T8lxnf6NdfS45mK0e5wP4qa/7sa0JxRxegY7BLJ5pTlMTo/LarO3hIc1XLkmwlHa8k5d3/ZhWn0g4HM089kBEHXh/kiJ5dWbrqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323450; c=relaxed/simple;
-	bh=fRURc9EA+Wjz171uYkXIOhdPEisDxnzCuFLmzd7uGvk=;
+	s=arc-20240116; t=1711323465; c=relaxed/simple;
+	bh=MPZkWRHizNJDxVsOELL2yrKRR5ySSqUDjNHTmI+Lx+E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KUhBmJk5RwoLLJZS2B2NluKf/Ss6GCjWm3v/agzRl6VMuwUStdKc7YR1B9UVZaTOadKj3tg++fGzmpQyfZ8ZhrvtUOJPuyLxuR31AANcJdqFHrG6D9MhpSnmI5CdfG4lgmOca9tKEMVNbbEZrFG4Pt7zqul8plp/9o0fUknTa8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhDCFYsc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DClGeshRqOmnDXQFnpU6WmmlWwV4VHr6jP1ZNqnpvRb4DFA4Z9gf+iqhoAO7dXwFl8wEebmalh5OpygQC4eQc2pVL2jKfYvhjaGYoQYuAhj6n+Q0B+80gZD99OSBXynUGHxMHlW57ZKlsi934MLh0RM/EYE3zKmGUeT0Fscx5TI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwB0K8OP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhDCFYsc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ECBEC43394;
-	Sun, 24 Mar 2024 23:37:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwB0K8OP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21905C43394;
+	Sun, 24 Mar 2024 23:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323449;
-	bh=fRURc9EA+Wjz171uYkXIOhdPEisDxnzCuFLmzd7uGvk=;
+	s=k20201202; t=1711323464;
+	bh=MPZkWRHizNJDxVsOELL2yrKRR5ySSqUDjNHTmI+Lx+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NhDCFYscYM8o+voEkqJdXEeA1t/zfVZ2X5NwQDrG+jfQrYscgLPjdIFsdBnC1Di5B
-	 zuBD9LfgDvcngCb4KPvwnPAkJKSv0dfbtPRUv5OfJwZHv0AkNXzNECqCyuul6x0FMy
-	 WtyKJ9cx5+DinhjKXJomJyQ9BCRKq8pLMjGqz1Q0VLva+NgA7JbVr/6BPw4FLG1gEu
-	 I3h9vI4xLi7ufccaWK+FlcKQvG7PT8exXKJBB4OUucNyps1VnYFXgyGkFPBPe0IOjb
-	 k1cusa3gfMVVYzKKJsRMm4LuTffPnV7wOejC+AE6eQFNElDlqAFdb8kSzeX1YCgmob
-	 pjxhmqfJbqvNA==
+	b=RwB0K8OPH0/9nVCA9aW9E/paBnD24U6soopKkMwtAyz0b9t12gL3YrVEiYS4g7E2Z
+	 +jDdtBBsctogUaCm5jnEZ6Yq3Y4hfVB3DT4MEvmChO+57cTA0HurNfIEpVHzMrDuUz
+	 KsagP2O6U2ao+0+CHEj7tYcqNeekfROEWnS136/cem0vHDAmXY+gID7e9Rw0Z2pm7g
+	 CIyvx5VUPth9ZpJ7XcjAJts33qJS6H1TqozYcCvlFoHnKeXQeGsd2PibvpPpbFUfzB
+	 wGS1xkfXNIQAPVWRaQNzqZqqU8+5J0/UxzDyQ3Xv5Dp6rY3uNxPRvmbcLFNdjxi2MG
+	 8RmOs3M6z7CvA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Zack Rusin <zack.rusin@broadcom.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 152/317] net/x25: fix incorrect parameter validation in the x25_getsockopt() function
-Date: Sun, 24 Mar 2024 19:32:12 -0400
-Message-ID: <20240324233458.1352854-153-sashal@kernel.org>
+Subject: [PATCH 5.15 169/317] drm/vmwgfx: fix a memleak in vmw_gmrid_man_get_node
+Date: Sun, 24 Mar 2024 19:32:29 -0400
+Message-ID: <20240324233458.1352854-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,44 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit d6eb8de2015f0c24822e47356f839167ebde2945 ]
+[ Upstream commit 89709105a6091948ffb6ec2427954cbfe45358ce ]
 
-The 'len' variable can't be negative when assigned the result of
-'min_t' because all 'min_t' parameters are cast to unsigned int,
-and then the minimum one is chosen.
+When ida_alloc_max fails, resources allocated before should be freed,
+including *res allocated by kmalloc and ttm_resource_init.
 
-To fix the logic, check 'len' as read from 'optlen',
-where the types of relevant variables are (signed) int.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: d3bcb4b02fe9 ("drm/vmwgfx: switch the TTM backends to self alloc")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231204091416.3308430-1-alexious@zju.edu.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/x25/af_x25.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
-index 07f6206e7cb47..1e5152fdee589 100644
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -460,12 +460,12 @@ static int x25_getsockopt(struct socket *sock, int level, int optname,
- 	if (get_user(len, optlen))
- 		goto out;
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c b/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c
+index bfd686bb8d194..eef7bab8bc3a6 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c
+@@ -64,8 +64,11 @@ static int vmw_gmrid_man_get_node(struct ttm_resource_manager *man,
+ 	ttm_resource_init(bo, place, *res);
  
--	len = min_t(unsigned int, len, sizeof(int));
--
- 	rc = -EINVAL;
- 	if (len < 0)
- 		goto out;
+ 	id = ida_alloc_max(&gman->gmr_ida, gman->max_gmr_ids - 1, GFP_KERNEL);
+-	if (id < 0)
++	if (id < 0) {
++		ttm_resource_fini(man, *res);
++		kfree(*res);
+ 		return id;
++	}
  
-+	len = min_t(unsigned int, len, sizeof(int));
-+
- 	rc = -EFAULT;
- 	if (put_user(len, optlen))
- 		goto out;
+ 	spin_lock(&gman->lock);
+ 
 -- 
 2.43.0
 
