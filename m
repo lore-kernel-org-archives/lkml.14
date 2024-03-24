@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66093180B7C;
-	Sun, 24 Mar 2024 23:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA64A181D0D;
+	Sun, 24 Mar 2024 23:49:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324149; cv=none; b=m8rYmS2/7CXC73lNHJVkVsOq4b1ZHA588V4HTioOif8gLXEOdKhDmxIFvxosjHUF6lbhb9mFq+DSviWStFXxbs+erOvVBJrd85SLeZ6kGKReM+0d7tRvTcA+nNFft0HEWFp8onmIunvj2SDFm7bgQGlBjHb9EYSdWY0FWXpa6c8=
+	t=1711324144; cv=none; b=o2CheFYH5kT9I/wVcohnu5pjvijsvL8IuBGwGHWIVZS7Jx+X+2k9Q0w0miUcqrocommNK7LASJKcBAjYVNDwLO6+mZl+wNv4DO9UDEQf4y4UIWhd1U5ye5t2yi2k/lDZz9kXFTaedYeMQ7CX4uSsxCtwI2eqexGU+GcKFkLIBlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324149; c=relaxed/simple;
-	bh=IzTEcDebd2Jwpb/mHtM3aH2GYrOGj5CQjm4gi4PxzwY=;
+	s=arc-20240116; t=1711324144; c=relaxed/simple;
+	bh=q0TseBmdD4j1bSZE8TyL8DKxdTzbsmqgxfwePlJzWqc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W4GpwGYmgGj+i9yalQ7XxGnu1XaW2bIvy/uDHWRa+N7949/zni2qss5QDV7RiFWuHKuujEL1Sa7msPNIkMcitm7qSh/brNh5NXPpmYiUzVJ3XVKNYdg02o8BRld2n/RzUFbAhEiErudThio4/B7rUmIvC19BemxxioR4Go0h+Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hI/8JcuG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NkYT9AYDgmMZYZlHXXeplIIdErSdBZpO/+okis4Genn9XEK8T795HgVEFpDMan999ujAMH2CHSXxpJIC4gaSdc//QLOVbXqoMS3hho4jr99yi9H2lvjCCUiezK4ACpCn/hp6gcv/ertaK4aTOos/ziHG5ruX8HxpRd5n7ExZaNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMHyuCE9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hI/8JcuG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BD58C43399;
-	Sun, 24 Mar 2024 23:49:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMHyuCE9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E17DDC43390;
+	Sun, 24 Mar 2024 23:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324148;
-	bh=IzTEcDebd2Jwpb/mHtM3aH2GYrOGj5CQjm4gi4PxzwY=;
+	s=k20201202; t=1711324143;
+	bh=q0TseBmdD4j1bSZE8TyL8DKxdTzbsmqgxfwePlJzWqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hI/8JcuGkwWhGVxBG8Sw5xLdBQIExdTHFxNGiUadVbmCBOk8vT/gC7ECD49HThaBo
-	 i7tSaS4EhUTr1DPrasHSdZKu0hCQaI2GYD0M9dvL5ybAK2/AYPwQAT7Z0mBZUF9oQK
-	 ixx1pAc9OQNe5FUc4FvdMvSj1EF3GZx0BvWjU9n4TENiF6zDRbq5O7gUhUj1uHQkGO
-	 th931oj6oiVUdFYr67FkJZhtAmPTUHn50HQO1dZ0Aq5kfl/UUItzH9VHY6pK+lOllN
-	 yawXk4/4JY7sQC0MdTj2epNI1aCf8o2R6vs9WxiIvRE8Cl55FhjzKiLxtR5FVE1L+J
-	 wpEHEYaJxYEoQ==
+	b=fMHyuCE9ummo6DMLnq4SyDP9f9jC0xQXiRBKsBQHxd/ZzYEWdsYMYroImMgRM4K+o
+	 zoFHY9CQ3LCtgC06OtlAlhm31oRbl02gAozgdZzBAOhuoeFQBKQB23T6r4Hi0oO7Ax
+	 DLk3Agz22uJm9J3LhMMYbCxLe8HGfRZHZxBWU6OFlewKtZuelHPqEo7By4vV9/d7qp
+	 yQ78vt7oMdCRQDQQYU5MWXi/X/aoy7eObQhHL8JtugpCAnpxjYq7DfWK/gu+6gUcv8
+	 OImDQ4htBgD2Z7UWxFdF/e9BEuC/wJE/kvpHS6uecEQ47RjzZqadjJUNPV5gNFhdhv
+	 AoQHuvFbNG2Sg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Luca Weiss <luca@z3ntu.xyz>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 144/183] backlight: lm3630a: Initialize backlight_properties on init
-Date: Sun, 24 Mar 2024 19:45:57 -0400
-Message-ID: <20240324234638.1355609-145-sashal@kernel.org>
+Subject: [PATCH 5.4 139/183] media: ttpci: fix two memleaks in budget_av_attach
+Date: Sun, 24 Mar 2024 19:45:52 -0400
+Message-ID: <20240324234638.1355609-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,35 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Luca Weiss <luca@z3ntu.xyz>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit ad9aeb0e3aa90ebdad5fabf9c21783740eb95907 ]
+[ Upstream commit d0b07f712bf61e1a3cf23c87c663791c42e50837 ]
 
-The backlight_properties struct should be initialized to zero before
-using, otherwise there will be some random values in the struct.
+When saa7146_register_device and saa7146_vv_init fails, budget_av_attach
+should free the resources it allocates, like the error-handling of
+ttpci_budget_init does. Besides, there are two fixme comment refers to
+such deallocations.
 
-Fixes: 0c2a665a648e ("backlight: add Backlight driver for lm3630 chip")
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240220-lm3630a-fixups-v1-1-9ca62f7e4a33@z3ntu.xyz
-Signed-off-by: Lee Jones <lee@kernel.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lm3630a_bl.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/pci/ttpci/budget-av.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 8096202fbe5d5..a381b3990986d 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -337,6 +337,7 @@ static int lm3630a_backlight_register(struct lm3630a_chip *pchip)
- 	struct backlight_properties props;
- 	const char *label;
+diff --git a/drivers/media/pci/ttpci/budget-av.c b/drivers/media/pci/ttpci/budget-av.c
+index 38cac508bd728..3766c7aa96f44 100644
+--- a/drivers/media/pci/ttpci/budget-av.c
++++ b/drivers/media/pci/ttpci/budget-av.c
+@@ -1462,7 +1462,8 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+ 		budget_av->has_saa7113 = 1;
+ 		err = saa7146_vv_init(dev, &vv_data);
+ 		if (err != 0) {
+-			/* fixme: proper cleanup here */
++			ttpci_budget_deinit(&budget_av->budget);
++			kfree(budget_av);
+ 			ERR("cannot init vv subsystem\n");
+ 			return err;
+ 		}
+@@ -1471,9 +1472,10 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+ 		vv_data.vid_ops.vidioc_s_input = vidioc_s_input;
  
-+	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW;
- 	if (pdata->leda_ctrl != LM3630A_LEDA_DISABLE) {
- 		props.brightness = pdata->leda_init_brt;
+ 		if ((err = saa7146_register_device(&budget_av->vd, dev, "knc1", VFL_TYPE_VIDEO))) {
+-			/* fixme: proper cleanup here */
+-			ERR("cannot register capture v4l2 device\n");
+ 			saa7146_vv_release(dev);
++			ttpci_budget_deinit(&budget_av->budget);
++			kfree(budget_av);
++			ERR("cannot register capture v4l2 device\n");
+ 			return err;
+ 		}
+ 
 -- 
 2.43.0
 
