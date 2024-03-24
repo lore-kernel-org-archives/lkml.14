@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE13180A9B;
-	Sun, 24 Mar 2024 23:47:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059A1180A8F;
+	Sun, 24 Mar 2024 23:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324057; cv=none; b=loy0gdvGH6Nu+4BlcyEqgBvSU4B5PODVqQWf5zDj5CYURDWJe+gdvMVXfMo0KruLz7YLQl29SglhYiIyvsfSnemGmmK9nrmSXEW/Ya6+FuYj+Onn3uJuVewuQJ9TNeOUp7sc70uPYMOpIaJQybWM7OIdP6lsOifYGqx6kYkhQ0o=
+	t=1711324056; cv=none; b=QWIa+OGutsGK1RGDi9X+MOQFpzAvpBL9vvkdUobKChqiz+FPVWxW5C5+NmlfcDspanRuZ2hPd3qwyIGhijqdosf3J0Eo24+cD7V66rj0RYtVRwctGlNHqduh1JC+L+6gs0BK4+q0ejCpScz7yCsSqXa5pXuaBXl07tR9a/R/eY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324057; c=relaxed/simple;
-	bh=TTPp54xaP7hPOWsq1BkuCXtQRgtzjCMxElupHnk0CuQ=;
+	s=arc-20240116; t=1711324056; c=relaxed/simple;
+	bh=NzjFbhFV+1szkeOU6f/PGRB/2eW54jz9i68ODl8u9+Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=at0hZ1PZybRLCg2RQqlRtp/70eJ9tv2tY3Y8cF7NFpt9giSpkxevGx2ef+GEvgxBQoZ/eohuKE7RK2cXxdWrE3yg8m44+YvvtreEBWZy+krS2Z0cglC0QqCYyLsiaWOzuMpNje4ORL5FpaWnWhPEr57egKC5dNXM9U6tEp9dNW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uVQfOj3b; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=F2Sgvwy4+eyEcd+TLLxT2JgaYGMcmKovM2kNf+3zjrTvHQQjGeigAHpwaWar3CnWGGZe706SBth0X0UuNYWpXnUGNe5X7h7j6TPjRs1x9QdZG8Bx8XiB0coiRaV2KAQwrYHSTqjjg5oaC/w4sdwBUCKGIzcLAuAl4Nmq7J4w8Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmn8lyn4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uVQfOj3b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F4AC433C7;
-	Sun, 24 Mar 2024 23:47:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmn8lyn4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D231CC43394;
+	Sun, 24 Mar 2024 23:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324057;
-	bh=TTPp54xaP7hPOWsq1BkuCXtQRgtzjCMxElupHnk0CuQ=;
+	s=k20201202; t=1711324054;
+	bh=NzjFbhFV+1szkeOU6f/PGRB/2eW54jz9i68ODl8u9+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uVQfOj3bEkzEEHxwDI74mIOlkQTQRWKbkb+xeC3HwRzLodGle/8C/gO3MmgjPkUlN
-	 8hcBKbXlHusUjBjEAe9qs5iBW51ZxpOIhHgBN7WoyimmWK6OhQdKtIWFcV7JH89Fga
-	 7E5pbqmwf8SE6N06rP15IabJGGhAx7HDp6e+SQhridlgUeYemXn/GsUG6ad2m9b+Ud
-	 45Nb8y2BWwBCw0cbz2oVDy/IXEhT+8QyNtcRT9cHjT2+FTOecEhEkd1VPyULxcvO3X
-	 11AR1mkqT6dXwEPI7hyJCZ+I9IqwZnBW6MprYrQCQFg/jo50yjVERc925EeLuEXxYy
-	 eX1ahLBgF497w==
+	b=lmn8lyn43Xe2U1jL3X9lMwoXOR4McKOln5q3RnORh2dgCQFhaJZbrfhennup2GFC6
+	 5Mc+0HWN7PLD/HhmDZpXeE+KKS9lWFs7hdElKhhWQ2xBMKHBniGI0ZD1NB9OYj3t1U
+	 R4Hg9Us//k25Sltj5HBr3TfAUtRQRnyc9IoykqreHA3JMTYepOd2jmYecmvWtV+RpR
+	 YGjr+17AvFfSNUnCFRcN3++JPxUFw3pl78MyfULWc1rd8x8dYF2H6I/khm2dwWei1b
+	 5ImVGIiRFvmWPUNpLm+rIbZKglGr5sDRHsJ295Y2MytDEnbWT2KZJiYmKImsVp4dY7
+	 etnT45aVSy6+g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kamal Heib <kheib@redhat.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joerg Roedel <jroedel@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 058/183] net: ena: Remove ena_select_queue
-Date: Sun, 24 Mar 2024 19:44:31 -0400
-Message-ID: <20240324234638.1355609-59-sashal@kernel.org>
+Subject: [PATCH 5.4 055/183] iommu/amd: Mark interrupt as managed
+Date: Sun, 24 Mar 2024 19:44:28 -0400
+Message-ID: <20240324234638.1355609-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,64 +49,67 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kamal Heib <kheib@redhat.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-[ Upstream commit 78e886ba2b549945ecada055ee0765f0ded5707a ]
+[ Upstream commit 0feda94c868d396fac3b3cb14089d2d989a07c72 ]
 
-Avoid the following warnings by removing the ena_select_queue() function
-and rely on the net core to do the queue selection, The issue happen
-when an skb received from an interface with more queues than ena is
-forwarded to the ena interface.
+On many systems that have an AMD IOMMU the following sequence of
+warnings is observed during bootup.
 
-[ 1176.159959] eth0 selects TX queue 11, but real number of TX queues is 8
-[ 1176.863976] eth0 selects TX queue 14, but real number of TX queues is 8
-[ 1180.767877] eth0 selects TX queue 14, but real number of TX queues is 8
-[ 1188.703742] eth0 selects TX queue 14, but real number of TX queues is 8
+```
+pci 0000:00:00.2  can't derive routing for PCI INT A
+pci 0000:00:00.2: PCI INT A: not connected
+```
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Kamal Heib <kheib@redhat.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This series of events happens because of the IOMMU initialization
+sequence order and the lack of _PRT entries for the IOMMU.
+
+During initialization the IOMMU driver first enables the PCI device
+using pci_enable_device().  This will call acpi_pci_irq_enable()
+which will check if the interrupt is declared in a PCI routing table
+(_PRT) entry. According to the PCI spec [1] these routing entries
+are only required under PCI root bridges:
+	The _PRT object is required under all PCI root bridges
+
+The IOMMU is directly connected to the root complex, so there is no
+parent bridge to look for a _PRT entry. The first warning is emitted
+since no entry could be found in the hierarchy. The second warning is
+then emitted because the interrupt hasn't yet been configured to any
+value.  The pin was configured in pci_read_irq() but the byte in
+PCI_INTERRUPT_LINE return 0xff which means "Unknown".
+
+After that sequence of events pci_enable_msi() is called and this
+will allocate an interrupt.
+
+That is both of these warnings are totally harmless because the IOMMU
+uses MSI for interrupts.  To avoid even trying to probe for a _PRT
+entry mark the IOMMU as IRQ managed. This avoids both warnings.
+
+Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html?highlight=_prt#prt-pci-routing-table [1]
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Fixes: cffe0a2b5a34 ("x86, irq: Keep balance of IOAPIC pin reference count")
+Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
+Link: https://lore.kernel.org/r/20240122233400.1802-1-mario.limonciello@amd.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+ drivers/iommu/amd_iommu_init.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 734da4e9ead2f..8e2e0c3bee0b9 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -2385,22 +2385,6 @@ static netdev_tx_t ena_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	return NETDEV_TX_OK;
- }
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 4a9feff340da7..15e25f712f393 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -1745,6 +1745,9 @@ static int __init iommu_init_pci(struct amd_iommu *iommu)
+ 	/* Prevent binding other PCI device drivers to IOMMU devices */
+ 	iommu->dev->match_driver = false;
  
--static u16 ena_select_queue(struct net_device *dev, struct sk_buff *skb,
--			    struct net_device *sb_dev)
--{
--	u16 qid;
--	/* we suspect that this is good for in--kernel network services that
--	 * want to loop incoming skb rx to tx in normal user generated traffic,
--	 * most probably we will not get to this
--	 */
--	if (skb_rx_queue_recorded(skb))
--		qid = skb_get_rx_queue(skb);
--	else
--		qid = netdev_pick_tx(dev, skb, NULL);
--
--	return qid;
--}
--
- static void ena_config_host_info(struct ena_com_dev *ena_dev, struct pci_dev *pdev)
- {
- 	struct ena_admin_host_info *host_info;
-@@ -2549,7 +2533,6 @@ static const struct net_device_ops ena_netdev_ops = {
- 	.ndo_open		= ena_open,
- 	.ndo_stop		= ena_close,
- 	.ndo_start_xmit		= ena_start_xmit,
--	.ndo_select_queue	= ena_select_queue,
- 	.ndo_get_stats64	= ena_get_stats64,
- 	.ndo_tx_timeout		= ena_tx_timeout,
- 	.ndo_change_mtu		= ena_change_mtu,
++	/* ACPI _PRT won't have an IRQ for IOMMU */
++	iommu->dev->irq_managed = 1;
++
+ 	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_CAP_HDR_OFFSET,
+ 			      &iommu->cap);
+ 	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_RANGE_OFFSET,
 -- 
 2.43.0
 
