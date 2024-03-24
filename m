@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C444F1482E2;
-	Sun, 24 Mar 2024 23:15:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A631487F9;
+	Sun, 24 Mar 2024 23:15:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322101; cv=none; b=WyJDR2jve6IMKqgmtLGgLoilTlHIA1IkyB03J9restsB2fg6cuS+M6/ZJLp8ucZmjvlFqWsATPr8xAgJ6hI5Gnmz98zU9ztld+C1m5PP5mYTZ9wcrbka8KjEzuZOhqjaWsMi1EOSq74ltN20Hjt6jeQgwouVSsnet2VkN7NsIz4=
+	t=1711322115; cv=none; b=tOBasQpRa2JeuTIBM8IaQloSwCkEyUi83H1Q5MOmk19zKM4aILsqPV+QJ9jC4InPKB04HbfGKQmiTvmaSPnNODb1xi4WaFgX3NypbR2EAXH6l2p58QB2DAmjG4WZejsHGkBxSWF9+lEMuhxLGmH2eWMtYpaGj2C2c+lpSR5MhA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322101; c=relaxed/simple;
-	bh=PSfaJaGHfeh9RYxvNOEV3FNhCqWgQCV/Di0zLdoOfeM=;
+	s=arc-20240116; t=1711322115; c=relaxed/simple;
+	bh=Nmw5THMc56boYoN+6LILknPlj2jAuIWd5p8Yh2bj8GQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DpqDSS79V8GFGPX6Pi6D4xeJrawJiE+ATCwSVSQfbk5/zmBEMGoYRRrtq6+ZqDfkC1eC74qqmrnJ6eLbOvmZ3BtRrB1No01e63zTSyPdkf5mfB6oO892rCeu8xP+dSwPuA2GxEUntZCQObZh9GTouSR5lmNMesMe37x0XrOvW0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWMJrYnw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NSpp1+5IcHvfNO5sroQo95G9iDR49LGOrhS3EdtRfiMP3eABsRuPvVPskeeZNeaEs9mq8XrFVYLrUVXPqdpP4NOss/nBHeq1ir70Oa3H58HlZyPPjCaTPCURCQQr897XxkfcZHbrkOUDeZbhOKDxE95vn4jDB90KR8pVsVqSvvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ip+NDEOH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWMJrYnw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB374C433C7;
-	Sun, 24 Mar 2024 23:14:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ip+NDEOH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CB2FC433C7;
+	Sun, 24 Mar 2024 23:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322100;
-	bh=PSfaJaGHfeh9RYxvNOEV3FNhCqWgQCV/Di0zLdoOfeM=;
+	s=k20201202; t=1711322115;
+	bh=Nmw5THMc56boYoN+6LILknPlj2jAuIWd5p8Yh2bj8GQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KWMJrYnwYoSV6o5aFJRkD3htWpEPgEkU62uAx3gA1WCr31kwZTqi4ROP1hsADA3QT
-	 4mIe8cmgn3SkF6TGviUS7+PwSMHe7ETU/0Ju5bR/s9O8HKon23oB+VYbzLuiv4/rfS
-	 rF3R13EwONV3u9n+o2ivEWa23X+V3d0I+3y6QGtiI/+IFDfAMtAGBcGJ6YENpdUNr9
-	 tcHBlXFXl9szD2IhPYqEcjiv8B1d01HJ4dI4JWbcWDLZLSAQ52RKtvACp6U0eqftn6
-	 Mb1PQnjSJdepmOct59qC72DbOeKj8usSa0wI9CAD1WoS0RRZ+n+0WDllbi6G+wsH4F
-	 y56/W6qMHPRCA==
+	b=ip+NDEOHtv8AusZZrboVf+m55llIwpiqpbLBS5XclYn/wDU/YmGW0tcyqJDEN95Z3
+	 edK8i0iPE3LathAWLIPqy+ePZohupAR9UKgFVBSiyxIeaZJIGCPnOXqHVqTidRACIE
+	 qUrwZm4PNaRZfmyRZmbhL9wVTRWyhGeBHAN/+nAtufmTOdqpBMxCsQkgzSpy60jErj
+	 5wAYaDIT48U51JgrOel0CZLJvvBP2cxYx02wzuwUobEoPJIPyJa25ePGBrFOBktJZC
+	 yBan5Te7LSkZsq92ukfl+IxC/FilFB/ScKwcorzumpUNJzDzbYtm/KEJR663R4G3Ui
+	 dNRNliWL6shGQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chen-Yu Tsai <wens@csie.org>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
+Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 175/451] arm64: dts: allwinner: h6: Add RX DMA channel for SPDIF
-Date: Sun, 24 Mar 2024 19:07:31 -0400
-Message-ID: <20240324231207.1351418-176-sashal@kernel.org>
+Subject: [PATCH 6.1 190/451] wifi: rtw88: 8821c: Fix false alarm count
+Date: Sun, 24 Mar 2024 19:07:46 -0400
+Message-ID: <20240324231207.1351418-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,81 +49,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
 
-[ Upstream commit 7b59348c11f3355e284d77bbe3d33632ddadcfc2 ]
+[ Upstream commit c238adbc578eeb70cbc8fdd1bef3666b0f585b13 ]
 
-The SPDIF hardware found on the H6 supports both transmit and receive
-functions. However it is missing the RX DMA channel.
+total_fa_cnt is supposed to include cck_fa_cnt and ofdm_fa_cnt, not just
+ofdm_fa_cnt.
 
-Add the SPDIF hardware block's RX DMA channel. Also remove the
-by-default pinmux, since the end device can choose to implement
-either or both functionalities.
-
-Fixes: f95b598df419 ("arm64: dts: allwinner: Add SPDIF node for Allwinner H6")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-Link: https://lore.kernel.org/r/20240127163247.384439-6-wens@kernel.org
-Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Fixes: 960361238b86 ("rtw88: 8821c: add false alarm statistics")
+Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/f3cb6d17-e4e4-44a7-9c9b-72aed994b5c9@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 2 ++
- arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi      | 2 ++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi            | 7 +++----
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/net/wireless/realtek/rtw88/rtw8821c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index 9ec49ac2f6fd5..381d58cea092d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -291,6 +291,8 @@ sw {
- };
+diff --git a/drivers/net/wireless/realtek/rtw88/rtw8821c.c b/drivers/net/wireless/realtek/rtw88/rtw8821c.c
+index 609a2b86330d8..50e3e46f7d8aa 100644
+--- a/drivers/net/wireless/realtek/rtw88/rtw8821c.c
++++ b/drivers/net/wireless/realtek/rtw88/rtw8821c.c
+@@ -674,9 +674,9 @@ static void rtw8821c_false_alarm_statistics(struct rtw_dev *rtwdev)
  
- &spdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spdif_tx_pin>;
- 	status = "okay";
- };
+ 	dm_info->cck_fa_cnt = cck_fa_cnt;
+ 	dm_info->ofdm_fa_cnt = ofdm_fa_cnt;
++	dm_info->total_fa_cnt = ofdm_fa_cnt;
+ 	if (cck_enable)
+ 		dm_info->total_fa_cnt += cck_fa_cnt;
+-	dm_info->total_fa_cnt = ofdm_fa_cnt;
  
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
-index 4903d6358112d..855b7d43bc503 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
-@@ -166,6 +166,8 @@ &r_ir {
- };
- 
- &spdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spdif_tx_pin>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index ca1d287a0a01d..d11e5041bae9a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -406,6 +406,7 @@ spi1_cs_pin: spi1-cs-pin {
- 				function = "spi1";
- 			};
- 
-+			/omit-if-no-ref/
- 			spdif_tx_pin: spdif-tx-pin {
- 				pins = "PH7";
- 				function = "spdif";
-@@ -655,10 +656,8 @@ spdif: spdif@5093000 {
- 			clocks = <&ccu CLK_BUS_SPDIF>, <&ccu CLK_SPDIF>;
- 			clock-names = "apb", "spdif";
- 			resets = <&ccu RST_BUS_SPDIF>;
--			dmas = <&dma 2>;
--			dma-names = "tx";
--			pinctrl-names = "default";
--			pinctrl-0 = <&spdif_tx_pin>;
-+			dmas = <&dma 2>, <&dma 2>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
+ 	crc32_cnt = rtw_read32(rtwdev, REG_CRC_CCK);
+ 	dm_info->cck_ok_cnt = FIELD_GET(GENMASK(15, 0), crc32_cnt);
 -- 
 2.43.0
 
