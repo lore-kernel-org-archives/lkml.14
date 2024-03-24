@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD452853C5;
-	Sun, 24 Mar 2024 23:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86D52853D4;
+	Sun, 24 Mar 2024 23:43:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323822; cv=none; b=GWOANZvZci3HLEmtkytd1dr1Gu0/aH0nUoLjucuByvwdeyjK/7n+3VNe5NSFF94bOGX2DkL02vdKl76IW8FMS1IAun5XUNIl0AGKriqzRCvVPF7G+Eu79x3cP1eFOykl/Y0vqk5ruk2O47QRltLROeXoVP2pJ2iXZ5OX6y2pxYs=
+	t=1711323824; cv=none; b=Z1IvleEnZ+Jvcuje3VYebQBRKjC0o7zSOdQRyUk6631zBXhsINO6HhvNGAsXQYamdlHsVPoWbcjiqu66sW2L02SZj7q1PFV2cqHWYr/NvzhtrhJKomAL88K0cNlh/t+4A9mscUROev1E9p3/R69k05iDP5n4Gk8RMK69k52sbVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323822; c=relaxed/simple;
-	bh=LYazFtegKbUQmWF4+002xX2Q9D4Jt0jQN6fweMdHyiQ=;
+	s=arc-20240116; t=1711323824; c=relaxed/simple;
+	bh=Roie6MsJdNvp73cKniu3QDUBbywUVPcSI2K9N8bQLTQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UibFkBS3QarJbf/5ExntpZV/dVByI92KDTZLAMULJxot8mcAIRWeP64HR3G0qV32g2bAKfRP/NXxPcKMQtiIPC9031dAQQL97/3J9wMM4oz+jbXfeNRo1FmlfdBqjzohH9pDESy0yH8wMYFJPkIBSipWHdQMMLSrHs5CeBY1Bn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5RUsx/2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IGOH0tZyaBuNWNs3Ytn2RS8CUdVZesLnB2cjYd3TGtEJXRxqUHBN0BAOm199fUQ5xFSfJQV6k5XjR2g8MrL5tWxCogPU1Z3PYJ8h2OjPgseqPNV1uryTw3GbmuZwaGwRWItVcwXPHwaCmaSG1yofAmquLUNexhpzsXVHojSde+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kjFfnO4A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5RUsx/2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D21C43390;
-	Sun, 24 Mar 2024 23:43:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kjFfnO4A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0569C433F1;
+	Sun, 24 Mar 2024 23:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323821;
-	bh=LYazFtegKbUQmWF4+002xX2Q9D4Jt0jQN6fweMdHyiQ=;
+	s=k20201202; t=1711323823;
+	bh=Roie6MsJdNvp73cKniu3QDUBbywUVPcSI2K9N8bQLTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j5RUsx/27tYdzHGQF3diTgs2az5Bp9KdnWcYBTcLWzvbReeg7m10N3/F3L6rwuoZB
-	 mI46DfOwjLQXfQGZxL8fDizxhzDxt1pj/gI0TImldlOglIWc23C3S+AgQT2HMcLag3
-	 b5dVApQkasMHVpww0/8m6FEWj2pXzOD46TOzKr6P2e3iJCgPwPymNfYasdo8wQ/eME
-	 61C14WEWIM4YcTYGhuKxmNrFzYGlUFwnhUibYqsFHaeNSmELcCcf7q3fBuqL2d1bww
-	 qG8ASU5bU35pdoR/I3pcvI7ZHJlHpwdJ2P8ZWKRCBUKmGOrfN4qGjr8Ta6ZQFDyT96
-	 66sAWb2O8twDg==
+	b=kjFfnO4APQ/H5haW66R+rdPtoKeKval7o2klD1BuY2+UMtPtlm+6jc/2y+UNW9MoB
+	 9AvuSOsmpD2v+kLWMlXDT7Brle0aInmjnDvjFni9WVwJw/wMQ3Z9ndFtzG1tPbAQig
+	 Gc2tc+xClmTJkWyzjtG+P0cBOSiEk65SurC1gdRk7QsTiU0Av7MDXoCxTConk9OvtK
+	 7RvDINBHtaXlFBDkH6VoBq+BXJqnaSHdSnSgVjj0rKamqSX6+Lrk2Td56LiiGjk8/V
+	 fYBekTgYn/Kp2jAY2C1oYnEcuUQ5eWPV9d5VF5Y0y68lqhTmLcFxRSocFZNpyaGvU0
+	 xPbbo53SNrXAw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jorge Mora <jmora1300@gmail.com>,
-	Jorge Mora <mora@netapp.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	Benjamin Coddington <bcodding@redhat.com>,
 	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 200/238] NFSv4.2: fix listxattr maximum XDR buffer size
-Date: Sun, 24 Mar 2024 19:39:48 -0400
-Message-ID: <20240324234027.1354210-201-sashal@kernel.org>
+Subject: [PATCH 5.10 202/238] NFS: Fix an off by one in root_nfs_cat()
+Date: Sun, 24 Mar 2024 19:39:50 -0400
+Message-ID: <20240324234027.1354210-203-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -50,58 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jorge Mora <jmora1300@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit bcac8bff90a6ee1629f90669cdb9d28fb86049b0 ]
+[ Upstream commit 698ad1a538da0b6bf969cfee630b4e3a026afb87 ]
 
-Switch order of operations to avoid creating a short XDR buffer:
-e.g., buflen = 12, old xdrlen = 12, new xdrlen = 20.
+The intent is to check if 'dest' is truncated or not. So, >= should be
+used instead of >, because strlcat() returns the length of 'dest' and 'src'
+excluding the trailing NULL.
 
-Having a short XDR buffer leads to lxa_maxcount be a few bytes
-less than what is needed to retrieve the whole list when using
-a buflen as returned by a call with size = 0:
-    buflen = listxattr(path, NULL, 0);
-    buf = malloc(buflen);
-    buflen = listxattr(path, buf, buflen);
-
-For a file with one attribute (name = '123456'), the first call
-with size = 0 will return buflen = 12 ('user.123456\x00').
-The second call with size = 12, sends LISTXATTRS with
-lxa_maxcount = 12 + 8 (cookie) + 4 (array count) = 24. The
-XDR buffer needs 8 (cookie) + 4 (array count) + 4 (name count)
-+ 6 (name len) + 2 (padding) + 4 (eof) = 28 which is 4 bytes
-shorter than the lxa_maxcount provided in the call.
-
-Fixes: 04a5da690e8f ("NFSv4.2: define limits and sizes for user xattr handling")
-Signed-off-by: Jorge Mora <mora@netapp.com>
+Fixes: 56463e50d1fc ("NFS: Use super.c for NFSROOT mount option parsing")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs42.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/nfs/nfsroot.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs42.h b/fs/nfs/nfs42.h
-index 0fe5aacbcfdf1..e7192d0eea3de 100644
---- a/fs/nfs/nfs42.h
-+++ b/fs/nfs/nfs42.h
-@@ -54,11 +54,14 @@ int nfs42_proc_removexattr(struct inode *inode, const char *name);
-  * They would be 7 bytes long in the eventual buffer ("user.x\0"), and
-  * 8 bytes long XDR-encoded.
-  *
-- * Include the trailing eof word as well.
-+ * Include the trailing eof word as well and make the result a multiple
-+ * of 4 bytes.
-  */
- static inline u32 nfs42_listxattr_xdrsize(u32 buflen)
- {
--	return ((buflen / (XATTR_USER_PREFIX_LEN + 2)) * 8) + 4;
-+	u32 size = 8 * buflen / (XATTR_USER_PREFIX_LEN + 2) + 4;
-+
-+	return (size + 3) & ~3;
+diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
+index fa148308822cc..c2cf4ff628811 100644
+--- a/fs/nfs/nfsroot.c
++++ b/fs/nfs/nfsroot.c
+@@ -175,10 +175,10 @@ static int __init root_nfs_cat(char *dest, const char *src,
+ 	size_t len = strlen(dest);
+ 
+ 	if (len && dest[len - 1] != ',')
+-		if (strlcat(dest, ",", destlen) > destlen)
++		if (strlcat(dest, ",", destlen) >= destlen)
+ 			return -1;
+ 
+-	if (strlcat(dest, src, destlen) > destlen)
++	if (strlcat(dest, src, destlen) >= destlen)
+ 		return -1;
+ 	return 0;
  }
- #endif /* CONFIG_NFS_V4_2 */
- #endif /* __LINUX_FS_NFS_NFS4_2_H */
 -- 
 2.43.0
 
