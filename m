@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE67B2853F8;
-	Sun, 24 Mar 2024 23:43:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A582917C6D9;
+	Sun, 24 Mar 2024 23:43:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323831; cv=none; b=WOvcW5yIXsazKJlN7UHuUj8Y+nlPWu950xeP8jFvLHQQtpky6hzhqtMFJCSaXUV3+K98q6MwQW/sk0u3rmA/r220hDSrSbkCOOP3mbf7mGIxZSuzVLz/VAPkt+Yv9tILt02wD4g7AG2BMxGQTd47LcUyMoQJAdokidbxzfhqynI=
+	t=1711323802; cv=none; b=t4JQV2rd9nkyMNxOVj7ArhcripbBnwjjuqlpQlG50bDeCATfQbdQ1uI+CtYg90/qagMX3nTMD2Itgu3qdTlsobx3wp83ISqxWyddS9UMwwStWm1AbOjQzNaHf7W/DemE4CprXCJGpMaurxiYKybUwjJwXVKbNX4gsW1msBUhYfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323831; c=relaxed/simple;
-	bh=Z2KX9mTTI28dMsecRddWr5ign6Feol3zpL27DLWJepI=;
+	s=arc-20240116; t=1711323802; c=relaxed/simple;
+	bh=ljODnJprINJouMOUr8OzHtLvij5iu2kW/2nFcfMeJ7A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TImbv3NDW7753Nsnl9HEpBUhvJFMKW2tvxouZgyeAfpuRSB3Zde13WmuSdNrbUpf13cTjJZlFqO3o9DIyokd3rjs2FqL6t0WB1MSCEmXP6JpKIEWAI73nTr9dQBJiotcTWMgQpd/1Dr7NC4eMKGNKhGCF55tQsmaM+7qu0wuTFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0K3wmlw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Z/0l+xjfhdqmi5bCO+SoNuObCRH36js20NBtxeAlxJx+eCODbVRhBbSAOAo3ty9irz0bcgmMo4WYC+5MQrO1JWX0s6xNygWVyrTM8tjVxQ00OHB/1ZxxEbgGwDcnrR26nattEUcKv/Z/NDG6bFln4tCYaRnunFdx+IOIFHfuJ6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pIsHpqcK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0K3wmlw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A217C43394;
-	Sun, 24 Mar 2024 23:43:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pIsHpqcK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4CDEC433A6;
+	Sun, 24 Mar 2024 23:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323830;
-	bh=Z2KX9mTTI28dMsecRddWr5ign6Feol3zpL27DLWJepI=;
+	s=k20201202; t=1711323801;
+	bh=ljODnJprINJouMOUr8OzHtLvij5iu2kW/2nFcfMeJ7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l0K3wmlwLlA3aiK3VgG4vrhb+0S+wEHir/5bQ7jC8w6r09CN9NZCXzfVdp6AdWpZm
-	 cm4Ee047XsJ9MAte7JCDvKfs5DvAPJl607roxndgHY+L2jDoOMo3TV8yjoB4bWWUst
-	 kaMWjlQctna2f56DX9cQHs8oy0mJFoIBk4eT5hPAcXiXofXoGKs8iu5Kpl1u4c4PgF
-	 jl2eO1uDjWKTbSKxp5ldNr+spSCZkKLNZIVes63v+sLkIIPs9vniNtRTa/UQwRENAk
-	 RQhwoiRF+py3Avq3R2K74/g3r4/kf+ZOkJhBvgoHHj7dyJS3d7TWSW3/PRmVJJgcIj
-	 +mHO6Na5JZW3Q==
+	b=pIsHpqcKNo69LmjozyN9ZLy+qWIGeX7Qm5aWqgPxnMw45Baa+USU4hO+vYTdIz4r9
+	 6o0yDsFkbC+cAE/teXlJo4IbZTNI5hTWztBNn7uDOs3zz/mEz2BfKfh1QUz48sWUnx
+	 hUz6jmiod05GXEs3ruBNcabeA6Wb2wfvVHkZvi11zM7o2O6j8vHMQPOGJAEPVFE33A
+	 odwF4DrToAmnSewYoWCrxsTpLTS/8wLYzKx8bzGFPGtHaqzGjfroKA440E4v03Z2nP
+	 iqAqGtbT0y4ZbGmh/6YbEUb7KlxviiIsFjUqFkoSPe3hRjO+Gj1hgu3TVQnRBbpgFO
+	 aUL6knntn/Psg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
+Cc: Paloma Arellano <quic_parellan@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 209/238] remoteproc: stm32: Fix incorrect type assignment returned by stm32_rproc_get_loaded_rsc_tablef
-Date: Sun, 24 Mar 2024 19:39:57 -0400
-Message-ID: <20240324234027.1354210-210-sashal@kernel.org>
+Subject: [PATCH 5.10 179/238] drm/msm/dpu: add division of drm_display_mode's hskew parameter
+Date: Sun, 24 Mar 2024 19:39:27 -0400
+Message-ID: <20240324234027.1354210-180-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,41 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+From: Paloma Arellano <quic_parellan@quicinc.com>
 
-[ Upstream commit c77b35ce66af25bdd6fde60b62e35b9b316ea5c2 ]
+[ Upstream commit 551ee0f210991d25f336bc27262353bfe99d3eed ]
 
-The sparse tool complains about the remove of the _iomem attribute.
+Setting up the timing engine when the physical encoder has a split role
+neglects dividing the drm_display_mode's hskew parameter. Let's fix this
+since this must also be done in preparation for implementing YUV420 over
+DP.
 
-stm32_rproc.c:660:17: warning: cast removes address space '__iomem' of expression
-
-Add '__force' to explicitly specify that the cast is intentional.
-This conversion is necessary to cast to addresses pointer,
-which are then managed by the remoteproc core as a pointer to a
-resource_table structure.
-
-Fixes: 8a471396d21c ("remoteproc: stm32: Move resource table setup to rproc_ops")
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Link: https://lore.kernel.org/r/20240117135312.3381936-3-arnaud.pouliquen@foss.st.com
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
+Signed-off-by: Paloma Arellano <quic_parellan@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Patchwork: https://patchwork.freedesktop.org/patch/579605/
+Link: https://lore.kernel.org/r/20240222194025.25329-3-quic_parellan@quicinc.com
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/stm32_rproc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index d11949ae3ba0d..6e529ea05d3a8 100644
---- a/drivers/remoteproc/stm32_rproc.c
-+++ b/drivers/remoteproc/stm32_rproc.c
-@@ -617,7 +617,7 @@ stm32_rproc_get_loaded_rsc_table(struct rproc *rproc, size_t *table_sz)
- done:
- 	/* Assuming the resource table fits in 1kB is fair */
- 	*table_sz = RSC_TBL_SIZE;
--	return (struct resource_table *)ddata->rsc_va;
-+	return (__force struct resource_table *)ddata->rsc_va;
- }
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+index 805e059b50b71..33880f66625e6 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+@@ -265,12 +265,14 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
+ 		mode.htotal >>= 1;
+ 		mode.hsync_start >>= 1;
+ 		mode.hsync_end >>= 1;
++		mode.hskew >>= 1;
  
- static const struct rproc_ops st_rproc_ops = {
+ 		DPU_DEBUG_VIDENC(phys_enc,
+-			"split_role %d, halve horizontal %d %d %d %d\n",
++			"split_role %d, halve horizontal %d %d %d %d %d\n",
+ 			phys_enc->split_role,
+ 			mode.hdisplay, mode.htotal,
+-			mode.hsync_start, mode.hsync_end);
++			mode.hsync_start, mode.hsync_end,
++			mode.hskew);
+ 	}
+ 
+ 	drm_mode_to_intf_timing_params(phys_enc, &mode, &timing_params);
 -- 
 2.43.0
 
