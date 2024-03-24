@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67A4282A8D;
-	Sun, 24 Mar 2024 23:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C261B17A92F;
+	Sun, 24 Mar 2024 23:41:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323743; cv=none; b=agbh8cKh20y194x9CTRP3ikOGkdxCcuBadZ8nXN6POR3uo8bLHvrTUoOvHulFuRIVRB8rasy7adEi/tPZE6GCC41HJn8NW4MKAgoUazjIThK2Ar4dv9ivlHVhw1PI4lLdas76npR4ff1Dw31HeBWisoaTjLPu6k0sbcuHkHcYiw=
+	t=1711323698; cv=none; b=jC+sC3SbRdaroNn+tJjZRdftrayMr4F4K2pi1wMRD40EED44CWjR03n07w7yjMvY3IcWHOocnfRlndSSbzB5YAYWOkE9zuZft/geiLAbuLJ9yzGCpyXgiptlRifJd8vaWJm0ft9fsRetiypjeCO6aQe8Tar5DZFDdS2sYQzRTJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323743; c=relaxed/simple;
-	bh=RZNVU4IURpxBQT1ORogNbGIWkBlDKgL0aWdcsIXGZEw=;
+	s=arc-20240116; t=1711323698; c=relaxed/simple;
+	bh=LxXCsMHV06d1AmLDDwEmpwTgUubYkAlaotSgTsXd4QA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H8ke+JGLuXGShm+a7y/bf4uvg1wlHjQbIOm6T9GpPCujzUhLqrel8fdaYsLjNitJKpaFcI8jMUp7YBOtZAY+o10MWsKlmVd6A/DQdMOdrwUxCYymve2dceS9/rQ8VD5BmBqwwJLsyEmbRKzt5s490Rcci/EI2kbiMx7HfZCIBBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5trB/hG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X0A69yHg6quzBo6P2zOng8Qa8cji6E7mlB6wQgua7DLuPH0gHSusTUzjLlonmwZcYQcCVhctCH94BB2tIXeTOIIZfZ2vYLN+msSnpsTchfbwL2VSdUCx1tSaWkvImAZrWq5nVW8qpHkSnF3kn//CuFUCq+H1B0HGsnopNtxrdEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2tdOiR1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5trB/hG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3EC5C433C7;
-	Sun, 24 Mar 2024 23:42:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2tdOiR1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C06C43390;
+	Sun, 24 Mar 2024 23:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323742;
-	bh=RZNVU4IURpxBQT1ORogNbGIWkBlDKgL0aWdcsIXGZEw=;
+	s=k20201202; t=1711323698;
+	bh=LxXCsMHV06d1AmLDDwEmpwTgUubYkAlaotSgTsXd4QA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p5trB/hGPGT5+ScNI68RJvPjIK2+dZxEBuB4rxWyxLI9kzU8S6zoAi49jEo5I+2ma
-	 4nx/poDQHXcmut6y2ag9H+4mvjeEBrFVd+bIwBCyyMXKkOWQP4GoWHvP5Gd/dg19bp
-	 Y+l3klQvezACgq89v/dadX4ZBKhRzSdzXf9mE/Cxv0jqG09wQ3iLKV/7+kUfBZwT9p
-	 dAp2hW4BwdiSe/52ZmD5Bb319nne74Q3bmXETySn5WOW1rL58z4LPTzkaLV44wMzcV
-	 xLv1erTAvqXjoN0NGmUAdz4VXGC+sBuQt5cIgyXIRRzsQqT0HjqwFGUZznffqhNKg2
-	 /SOlst89ZLTMA==
+	b=g2tdOiR1i1MXoiSRgosAAZEjycp8sJrC3QhO7fswGib7AlYMb+dcrjVH6chaFIAyf
+	 elS+CSWAdt37TuKjd1fJtZrFFscOSwx/K/o9k445ev+MVGXFKTBp8G1O7lZvEX2OtG
+	 aNx/WYT/20cKColmJSytAv3Hp+XratwB72i34CZ0gAeVJMxTsUetLYj+7TgBP7C3dw
+	 tWjfPezfPQG7GyPDCRy5PauczHBVfMX6kbzH3as11gsFNlWSYppSXB+kONCLMuxihe
+	 al/pMAJ4i5QB0A/uvNiJ4KKjfcXSysIz17WlWvAUBb/ujQDM8N0PRekqI/0gjEVXw/
+	 sfuP3mh3R5crA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Kamal Heib <kheib@redhat.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 117/238] drm/tegra: output: Fix missing i2c_put_adapter() in the error handling paths of tegra_output_probe()
-Date: Sun, 24 Mar 2024 19:38:25 -0400
-Message-ID: <20240324234027.1354210-118-sashal@kernel.org>
+Subject: [PATCH 5.10 071/238] net: ena: Remove ena_select_queue
+Date: Sun, 24 Mar 2024 19:37:39 -0400
+Message-ID: <20240324234027.1354210-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,72 +49,64 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Kamal Heib <kheib@redhat.com>
 
-[ Upstream commit 2db4578ef6ffb2b52115ca0ebf897b60ec559556 ]
+[ Upstream commit 78e886ba2b549945ecada055ee0765f0ded5707a ]
 
-If an error occurs after a successful of_get_i2c_adapter_by_node() call, it
-should be undone by a corresponding i2c_put_adapter().
+Avoid the following warnings by removing the ena_select_queue() function
+and rely on the net core to do the queue selection, The issue happen
+when an skb received from an interface with more queues than ena is
+forwarded to the ena interface.
 
-Add the missing i2c_put_adapter() call.
+[ 1176.159959] eth0 selects TX queue 11, but real number of TX queues is 8
+[ 1176.863976] eth0 selects TX queue 14, but real number of TX queues is 8
+[ 1180.767877] eth0 selects TX queue 14, but real number of TX queues is 8
+[ 1188.703742] eth0 selects TX queue 14, but real number of TX queues is 8
 
-Fixes: 9be7d864cf07 ("drm/tegra: Implement panel support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/b38604178991e1f08b2cda219103be266be2d680.1693667005.git.christophe.jaillet@wanadoo.fr
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Kamal Heib <kheib@redhat.com>
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/output.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-index 47d26b5d99456..7ccd010a821b7 100644
---- a/drivers/gpu/drm/tegra/output.c
-+++ b/drivers/gpu/drm/tegra/output.c
-@@ -139,8 +139,10 @@ int tegra_output_probe(struct tegra_output *output)
- 						       GPIOD_IN,
- 						       "HDMI hotplug detect");
- 	if (IS_ERR(output->hpd_gpio)) {
--		if (PTR_ERR(output->hpd_gpio) != -ENOENT)
--			return PTR_ERR(output->hpd_gpio);
-+		if (PTR_ERR(output->hpd_gpio) != -ENOENT) {
-+			err = PTR_ERR(output->hpd_gpio);
-+			goto put_i2c;
-+		}
- 
- 		output->hpd_gpio = NULL;
- 	}
-@@ -149,7 +151,7 @@ int tegra_output_probe(struct tegra_output *output)
- 		err = gpiod_to_irq(output->hpd_gpio);
- 		if (err < 0) {
- 			dev_err(output->dev, "gpiod_to_irq(): %d\n", err);
--			return err;
-+			goto put_i2c;
- 		}
- 
- 		output->hpd_irq = err;
-@@ -162,7 +164,7 @@ int tegra_output_probe(struct tegra_output *output)
- 		if (err < 0) {
- 			dev_err(output->dev, "failed to request IRQ#%u: %d\n",
- 				output->hpd_irq, err);
--			return err;
-+			goto put_i2c;
- 		}
- 
- 		output->connector.polled = DRM_CONNECTOR_POLL_HPD;
-@@ -176,6 +178,12 @@ int tegra_output_probe(struct tegra_output *output)
- 	}
- 
- 	return 0;
-+
-+put_i2c:
-+	if (output->ddc)
-+		i2c_put_adapter(output->ddc);
-+
-+	return err;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index e13ae04d2f0fd..fa65971949fce 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -3057,22 +3057,6 @@ static netdev_tx_t ena_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	return NETDEV_TX_OK;
  }
  
- void tegra_output_remove(struct tegra_output *output)
+-static u16 ena_select_queue(struct net_device *dev, struct sk_buff *skb,
+-			    struct net_device *sb_dev)
+-{
+-	u16 qid;
+-	/* we suspect that this is good for in--kernel network services that
+-	 * want to loop incoming skb rx to tx in normal user generated traffic,
+-	 * most probably we will not get to this
+-	 */
+-	if (skb_rx_queue_recorded(skb))
+-		qid = skb_get_rx_queue(skb);
+-	else
+-		qid = netdev_pick_tx(dev, skb, NULL);
+-
+-	return qid;
+-}
+-
+ static void ena_config_host_info(struct ena_com_dev *ena_dev, struct pci_dev *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -3242,7 +3226,6 @@ static const struct net_device_ops ena_netdev_ops = {
+ 	.ndo_open		= ena_open,
+ 	.ndo_stop		= ena_close,
+ 	.ndo_start_xmit		= ena_start_xmit,
+-	.ndo_select_queue	= ena_select_queue,
+ 	.ndo_get_stats64	= ena_get_stats64,
+ 	.ndo_tx_timeout		= ena_tx_timeout,
+ 	.ndo_change_mtu		= ena_change_mtu,
 -- 
 2.43.0
 
