@@ -1,52 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4938F237B68;
-	Sun, 24 Mar 2024 23:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C32236D1C;
+	Sun, 24 Mar 2024 23:18:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322315; cv=none; b=GAuOKGiBVoa+YvyXe6PXvNNq4Pnm4AK6zXWxTh31SxXj5mtmoTJ2Fy7KYwjDUfEvNNlEF0kuCJjZfvoc+GVTAqQxT7lYI3dDh21Sp+y3v51x5TpNb4Umne8iLDewAXULqhRUoHP0QlmoHCbrIdtdAQn2JtfOv+ZYGwTkCdSPzhk=
+	t=1711322308; cv=none; b=cuo8fwF363b6mTIU9FNC+SHE3NysxDyChW32ngS55263rLsaDXxuU1ItM5YThSO8aAJeefRtA4ORUTXaUmJiy3lzQHlDXV8WOj1CCEMLPr/0epjsEqwGRvvAiVwQcqxxuTnLvxZM2zfb0aOVfxhXh5mECyF3mxm80TrzdIur5hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322315; c=relaxed/simple;
-	bh=gBhXWSoBYXejgNmTg9AjOpEs4SYyQFME6K8UyMn5e4U=;
+	s=arc-20240116; t=1711322308; c=relaxed/simple;
+	bh=pe5hIO3xWI9TK9yQ2KjLqytV+CTZ6O7lgmoKx49laOI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VdSSinmXoCiWl6MX1PH2+CpZ4BHW+Nqmph8jU7oDwYAoB8pmYihz+gSAEWJReKwnwYWeTrm+0VwyTsahcO6U/OXyOYnZ6If+NM84QimHwnftIZtLvDRV5ID7xyb+Cp1k5SwgUFEhltYv/hQ6XJTT7W0ifeBwAm3kq/2nygO0O/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDJNxWdj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kkgiZEFSBDOmCbseDDRQijxogSTfLWao1GnDFxJ0Xn3JtsxAeYfpRMsY2iaHd2rPdmraO9Wtu/tVq3b3MkRtuFK+THMgK02jqLz3wBxY0IFbxfIsHJ8uQd4BTTDVJWyd0F5FUNXunbO7VaGehgdewELUPapUq5cg4qK12lcgJ0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Igon312l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDJNxWdj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07CC1C433A6;
-	Sun, 24 Mar 2024 23:18:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Igon312l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63B70C43399;
+	Sun, 24 Mar 2024 23:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322313;
-	bh=gBhXWSoBYXejgNmTg9AjOpEs4SYyQFME6K8UyMn5e4U=;
+	s=k20201202; t=1711322307;
+	bh=pe5hIO3xWI9TK9yQ2KjLqytV+CTZ6O7lgmoKx49laOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mDJNxWdjX3KuhmuSdcr/aqaLOypChic2OICNcyWnU4VWI0QG9lFB5AZpTm61mnWrW
-	 nn67M+ihv4Wq53oHj97IoaHPG9v7POiT1avTxXdh+tbJZSkbLflfkc7cXZm7Tvugct
-	 zE88uGwg6lASEeaLylQ4ZFzznO6SPhmcJ0WVpweKP3AiqAOPv3HtZTyys1GeXoyOS9
-	 9wMX+bH7aVco3w5SZtGpfwoNro7sQm0Cbk8D8/nNGTcf64VVbEBOpEaLIV/E4gR3YS
-	 ZZG4DZMYw1TTk4LWoWsSeWK9ZOHHFDn57Uik1YkFAah4erCGD/COO9xxqPxW6czrNS
-	 dyqWRZsk31zDA==
+	b=Igon312lzxnHOAAv86XzizwN15td4wmJq5kY6cm1+z1r/PBmSS85ym/13Ue6fZ1C4
+	 OZMMLFh8QjZzpkJFPKu6TMTFoxFzpg/+ftVfqvR1ybxySyTIvGyw9TewmR9p0fy5zy
+	 vw0jPQKgniHtINVblaDMBabmiNDAN3nKECtrZn70fTrfcpEAma8Cw4mMua3kdRN3es
+	 TIrounmrmEDXR1fICos2ovQWQIerqhqrq6FP6jWS8L/Xn5wIV/3PC7FZ4x1yzvswcM
+	 27yuLRe6EYRHCHZezYkhaStbT9dCB1YCc+g7djVz9CRZuC327DnZnEnemlvMzmthKs
+	 lu1y8j3PLPJ4Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Eddie Huang <eddie.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Peter Rosin <peda@axentia.se>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Martin Hostettler <textshell@uchuujin.de>,
+	Helge Deller <deller@gmx.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 396/451] rtc: mt6397: select IRQ_DOMAIN instead of depending on it
-Date: Sun, 24 Mar 2024 19:11:12 -0400
-Message-ID: <20240324231207.1351418-397-sashal@kernel.org>
+Subject: [PATCH 6.1 390/451] tty: vt: fix 20 vs 0x20 typo in EScsiignore
+Date: Sun, 24 Mar 2024 19:11:06 -0400
+Message-ID: <20240324231207.1351418-391-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -60,57 +50,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 
-[ Upstream commit 544c42f798e1651dcb04fb0395219bf0f1c2607e ]
+[ Upstream commit 0e6a92f67c8a94707f7bb27ac29e2bdf3e7c167d ]
 
-IRQ_DOMAIN is a hidden (not user visible) symbol. Users cannot set
-it directly thru "make *config", so drivers should select it instead
-of depending on it if they need it.
-Relying on it being set for a dependency is risky.
+The if (c >= 20 && c <= 0x3f) test added in commit 7a99565f8732 is
+wrong.  20 is DC4 in ascii and it makes no sense to consider that as the
+bottom limit. Instead, it should be 0x20 as in the other test in
+the commit above. This is supposed to NOT change anything as we handle
+interesting 20-0x20 asciis far before this if.
 
-Consistently using "select" or "depends on" can also help reduce
-Kconfig circular dependency issues.
+So for sakeness, change to 0x20 (which is SPACE).
 
-Therefore, change the use of "depends on" for IRQ_DOMAIN to
-"select" for RTC_DRV_MT6397.
-
-Fixes: 04d3ba70a3c9 ("rtc: mt6397: add IRQ domain dependency")
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Sean Wang <sean.wang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Peter Rosin <peda@axentia.se>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20240213050258.6167-1-rdunlap@infradead.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Fixes: 7a99565f8732 ("vt: ignore csi sequences with intermediate characters.")
+Cc: Martin Hostettler <textshell@uchuujin.de>
+Link: https://lore.kernel.org/all/ZaP45QY2WEsDqoxg@neutronstar.dyndns.org/
+Tested-by: Helge Deller <deller@gmx.de> # parisc STI console
+Link: https://lore.kernel.org/r/20240122110401.7289-4-jirislaby@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/vt/vt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index bb63edb507da4..87dc050ca004c 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1843,7 +1843,8 @@ config RTC_DRV_MT2712
- 
- config RTC_DRV_MT6397
- 	tristate "MediaTek PMIC based RTC"
--	depends on MFD_MT6397 || (COMPILE_TEST && IRQ_DOMAIN)
-+	depends on MFD_MT6397 || COMPILE_TEST
-+	select IRQ_DOMAIN
- 	help
- 	  This selects the MediaTek(R) RTC driver. RTC is part of MediaTek
- 	  MT6397 PMIC. You should enable MT6397 PMIC MFD before select
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 981d2bfcf9a5b..9e30ef2b6eb8c 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -2515,7 +2515,7 @@ static void do_con_trol(struct tty_struct *tty, struct vc_data *vc, int c)
+ 		}
+ 		return;
+ 	case EScsiignore:
+-		if (c >= 20 && c <= 0x3f)
++		if (c >= 0x20 && c <= 0x3f)
+ 			return;
+ 		vc->vc_state = ESnormal;
+ 		return;
 -- 
 2.43.0
 
