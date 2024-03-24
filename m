@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA24327B114;
-	Sun, 24 Mar 2024 23:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7374027B12C;
+	Sun, 24 Mar 2024 23:38:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323506; cv=none; b=tOZ2p6KUCgju6AWdlmdV9/FMb4h/APUSiOnjM2xavPUk9DLUVuzPiTg45e8P8jKWkj+Bfg57vbjrIBeWun3tTUhvdjqjQgRctZPlPHC/rA23AX+sjAt1hgzqSkevv7loqbFZnhb6Pq317Z9s++sAJ9yyycLNs9s5xFdoPESfwEo=
+	t=1711323510; cv=none; b=LWKCU4Cln2of8bEQQtehnKgRhh82uwfyUDTjqrigku8qpFvc1AIEj/IWQCAZ8xFz715AtaOFx1KMH+h0sB87q8Jj/sEWhU8wX0yS1E7f/A5LfMGx5Fv3Uv/z3WzZehH5P5Wg15W9SEoGSt7fS+UHqUD1pYndqMjbZG/42zpGQgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323506; c=relaxed/simple;
-	bh=BApVoZr1HWgG77uIAlP5say5xUHr6e9CzMP/GXvg8hE=;
+	s=arc-20240116; t=1711323510; c=relaxed/simple;
+	bh=b79EiSGynL91pVsZeyJVlfZ6C3AKeK6xiHQUqCCbOwQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WgvZVGkbaejrEf5PuQ1V76tfMhpkyBQtw5flkP3gVhGog9FKfOX/8L/MJ9F9eM7hZxmvUA3KqJgQh+92sAV3OnimUx1kCDZ3chXXU5FlFb2yvm2MrEdx5/vEf5K72qc7LpvXkEA/yU+FUJdC5SznpLFzn9cB0kpAMHgmPCPr1N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYgThkYH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BavZHXCCNUGMgY1nERheqkxaywkFPl8LJ0GqSdcfJJbw97kdsluLijeIjMHxrUCPRFEQ+B9lnMqcNxnz686aBl2s4QL9rBR0vG9egYLqTRwY+p8oMkIEb5n5vnaLcX+oG/CTDvK2+JUOa4BvHn1CJYbGtKvso+EmnYkGnxP6c6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b6p3U+rr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYgThkYH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9209C433F1;
-	Sun, 24 Mar 2024 23:38:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b6p3U+rr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C7EFC433A6;
+	Sun, 24 Mar 2024 23:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323505;
-	bh=BApVoZr1HWgG77uIAlP5say5xUHr6e9CzMP/GXvg8hE=;
+	s=k20201202; t=1711323509;
+	bh=b79EiSGynL91pVsZeyJVlfZ6C3AKeK6xiHQUqCCbOwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PYgThkYHElOhh+fkG5KIzcWRXE/NOumdlOHbnXS3M2MsOblMyDuA1RATkpCvlfIn8
-	 DTjotGdwOBANMQISQQGXv+4GLVVrWlvUvzs8BLL5Eo36ddtXC3wgn58M9MIu+hdOtc
-	 FX/JsD7VplWO2rs0PmgjLY9PBGawEPqxcy77aIePFz3Dm6iCoFT5tEq80ErncBsCTy
-	 /QR+STDRP20THZqM9HubzbqNEiY9TMPEDS2/F6qMjLFdWpTitNJj29peFMDyVocb+Z
-	 pQy973Q7K+7gn/7uCy3AeUUsCCqph2i9H9pkLD3TGHSGOiFsPUAeS5fmOi0to/keN5
-	 zs9JeyzpXNdEg==
+	b=b6p3U+rr8Ni9AiQJ4E0g/AE/MkrG/4wVaq188maLHJgf/wXCNN0/WtA1d6/KcKd1j
+	 DyG4CPXk0T2ZLrbsfJCghL/MrCsXIKePl0+yr9ho5RiMlpPhKeEqe2V8UM7dNQ3Bi/
+	 H96EvodgZnalLlPU4Sbmsq2YYoeW8h1N7Uzgfec9Lb2qBSb52eA9rCjFvs8wtmZ2e7
+	 jYa47SMGrlc9XCVdnWL1t9qDcxVkM1/Lb6yuGnfMzTevfSFc/cW+DxyIp3TnYGYcdY
+	 R/vJ+3FG7R8cuqI+MvehoKtnqKebUlyC+nQhz0Locd/3f61cSdsnKhvSFxDtjnOG2h
+	 fr0fESKMRSdkg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniil Dulov <d.dulov@aladdin.ru>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Alexandre Mergnat <amergnat@baylibre.com>,
+	CK Hu <ck.hu@mediatek.com>,
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 211/317] media: go7007: add check of return value of go7007_read_addr()
-Date: Sun, 24 Mar 2024 19:33:11 -0400
-Message-ID: <20240324233458.1352854-212-sashal@kernel.org>
+Subject: [PATCH 5.15 215/317] drm/mediatek: dsi: Fix DSI RGB666 formats and definitions
+Date: Sun, 24 Mar 2024 19:33:15 -0400
+Message-ID: <20240324233458.1352854-216-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,38 +50,76 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniil Dulov <d.dulov@aladdin.ru>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-[ Upstream commit 0b70530ee740861f4776ff724fcc25023df1799a ]
+[ Upstream commit fae6f815505301b92d9113764f4d76d0bfe45607 ]
 
-If go7007_read_addr() returns error channel is not assigned a value.
-In this case go to allocfail.
+The register bits definitions for RGB666 formats are wrong in multiple
+ways: first, in the DSI_PS_SEL bits region, the Packed 18-bits RGB666
+format is selected with bit 1, while the Loosely Packed one is bit 2,
+and second - the definition name "LOOSELY_PS_18BIT_RGB666" is wrong
+because the loosely packed format is 24 bits instead!
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Either way, functions mtk_dsi_ps_control_vact() and mtk_dsi_ps_control()
+do not even agree on the DSI_PS_SEL bit to set in DSI_PSCTRL: one sets
+loosely packed (24) on RGB666, the other sets packed (18), and the other
+way around for RGB666_PACKED.
 
-Fixes: 866b8695d67e ("Staging: add the go7007 video driver")
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixing this entire stack of issues is done in one go:
+ - Use the correct bit for the Loosely Packed RGB666 definition
+ - Rename LOOSELY_PS_18BIT_RGB666 to LOOSELY_PS_24BIT_RGB666
+ - Change ps_bpp_mode in mtk_dsi_ps_control_vact() to set:
+    - Loosely Packed, 24-bits for MIPI_DSI_FMT_RGB666
+    - Packed, 18-bits for MIPI_DSI_FMT_RGB666_PACKED
+
+Fixes: 2e54c14e310f ("drm/mediatek: Add DSI sub driver")
+Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://patchwork.kernel.org/project/dri-devel/patch/20240215085316.56835-3-angelogioacchino.delregno@collabora.com/
+Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/go7007/go7007-usb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/usb/go7007/go7007-usb.c b/drivers/media/usb/go7007/go7007-usb.c
-index eeb85981e02b6..762c13e49bfa5 100644
---- a/drivers/media/usb/go7007/go7007-usb.c
-+++ b/drivers/media/usb/go7007/go7007-usb.c
-@@ -1201,7 +1201,9 @@ static int go7007_usb_probe(struct usb_interface *intf,
- 				u16 channel;
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 57eaf111b6a8a..3b55a83b7cdff 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -70,8 +70,8 @@
+ #define DSI_PS_WC			0x3fff
+ #define DSI_PS_SEL			(3 << 16)
+ #define PACKED_PS_16BIT_RGB565		(0 << 16)
+-#define LOOSELY_PS_18BIT_RGB666		(1 << 16)
+-#define PACKED_PS_18BIT_RGB666		(2 << 16)
++#define PACKED_PS_18BIT_RGB666		(1 << 16)
++#define LOOSELY_PS_24BIT_RGB666		(2 << 16)
+ #define PACKED_PS_24BIT_RGB888		(3 << 16)
  
- 				/* read channel number from GPIO[1:0] */
--				go7007_read_addr(go, 0x3c81, &channel);
-+				if (go7007_read_addr(go, 0x3c81, &channel))
-+					goto allocfail;
-+
- 				channel &= 0x3;
- 				go->board_id = GO7007_BOARDID_ADLINK_MPG24;
- 				usb->board = board = &board_adlink_mpg24;
+ #define DSI_VSA_NL		0x20
+@@ -366,10 +366,10 @@ static void mtk_dsi_ps_control_vact(struct mtk_dsi *dsi)
+ 		ps_bpp_mode |= PACKED_PS_24BIT_RGB888;
+ 		break;
+ 	case MIPI_DSI_FMT_RGB666:
+-		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
++		ps_bpp_mode |= LOOSELY_PS_24BIT_RGB666;
+ 		break;
+ 	case MIPI_DSI_FMT_RGB666_PACKED:
+-		ps_bpp_mode |= LOOSELY_PS_18BIT_RGB666;
++		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
+ 		break;
+ 	case MIPI_DSI_FMT_RGB565:
+ 		ps_bpp_mode |= PACKED_PS_16BIT_RGB565;
+@@ -423,7 +423,7 @@ static void mtk_dsi_ps_control(struct mtk_dsi *dsi)
+ 		dsi_tmp_buf_bpp = 3;
+ 		break;
+ 	case MIPI_DSI_FMT_RGB666:
+-		tmp_reg = LOOSELY_PS_18BIT_RGB666;
++		tmp_reg = LOOSELY_PS_24BIT_RGB666;
+ 		dsi_tmp_buf_bpp = 3;
+ 		break;
+ 	case MIPI_DSI_FMT_RGB666_PACKED:
 -- 
 2.43.0
 
