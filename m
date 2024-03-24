@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0BA20C043;
-	Sun, 24 Mar 2024 23:07:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8F920CDF4;
+	Sun, 24 Mar 2024 23:07:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321628; cv=none; b=Dwp+zEDIp7khPML8IvG5WGSeitURLBf+Pyw1ULJ1FKyzgWr7nZqozK8S8PoNhcl/QwH+tdzPS6FRuWfxWN0i0G5LZskSIw8WuBCsTpwgAVWQ0LjesZAs8ucPqtI5kEL56n6L/DehfAqRdxoIZOILDLR91bXXQYwlk32wMBpXM+w=
+	t=1711321643; cv=none; b=NJ+YPTjRCqbv7UWe9dn1OYNmlin4A3hpJG+GdqXPN7MRdKsgBminwnGtCsmUmmksntGuMEJ83PGDfqL9JUNCn/j7uDhmODCY2bccPWJnZ5QFCi2+bWOP67nXA1xXOhVqrHKyAB4R7B9pNdxlk4zKa6RgJEvlWFso3GGAzeoeGbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321628; c=relaxed/simple;
-	bh=IQMlcf/x3JYpjgH2EoHDafE++YM8FkcTZYcWbvKrJG0=;
+	s=arc-20240116; t=1711321643; c=relaxed/simple;
+	bh=wUIaf37jsc83rrxxeJBxZppS9V3AFNl4MTW2tB/QxbQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qdYk4E8vM7u8/kdDJwr2HFyIv/B1PQ2sK/BcFQmwtqppnd6+CACd3GTCcEopZ8qfQUmNLGrMQdoFZPNfpvfTv143P4JHBvxhl9dLQBOhaVp1JZHFYhUZvLWk7fYTvR1zSsJ0+UH/04PzoY9jYYJ0WqYOOQTmx++QDoBAOt2fuR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MI2DWFqU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=stpsJeNo+nNSVs/Q8xCCKZVhdsY4sK4WsptizCnIDhK6tSh2nTrSP9+w+ZCTi3+U6IhtUu/gd9jU6brlu7N0raGEPtKvvyAdO25EFDwTQwQ/g/12JVvT/t0tCYzu9CAV3s6Xcn4VIAoXqx72DDj2O+fwUmEsKt2o2Tcg51BmFTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxVylRBE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MI2DWFqU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0A0DC433A6;
-	Sun, 24 Mar 2024 23:07:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxVylRBE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F27BCC43399;
+	Sun, 24 Mar 2024 23:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321628;
-	bh=IQMlcf/x3JYpjgH2EoHDafE++YM8FkcTZYcWbvKrJG0=;
+	s=k20201202; t=1711321642;
+	bh=wUIaf37jsc83rrxxeJBxZppS9V3AFNl4MTW2tB/QxbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MI2DWFqUAI6oB2W61axsTUSlpxKsFHp7unh0YfwVHjtgcWCvzTgyS6hPknhLqOaQL
-	 Yw4LuWKqmGuKjz6C4msnFmGi30K0edyTRfuljricHiYdr/fnx0iKA8jlyWgvBRCCFG
-	 GoUZUmFyv6nLmjOgyO28IR57z121qg+p2aJDHPOzEbvNy2QCEUmcZZY7SRV+l2UD6P
-	 XOD8CBKcg9yKQGM7Yqp7XFTDCHf4aFih908y+6xZ8NGfPcmYvSPaUF1oOsI/HzIZqY
-	 tExcUVBphDjuoseDvc6Pj7e/fgKvFYwSzPJkRnv1+BuSFw6/LngGV13T8JaJKUod8S
-	 RBxBGj7puObHA==
+	b=VxVylRBECrpnpbpu0oTpVeNoLnralaZrPDXJQ+wpATEUfP2rVKsWvndX1b8Csduku
+	 QYnoUOs0w66W2hqQPd8BFRcMcmNZrAeZKrFvz5leegmHSGQCJRsUYSJPV228YcroKS
+	 YFmHDIM95Xa4qGS76MvdU5xcuNndOsbiUUqBc4MohHDPA83vu1aS5pv8nLBLGvNEGb
+	 B7LSsaYeHVOvpeL0n0rdxo8R4gAyzC/Eoy12asgBq3R7oQNv8e8mkiXdhRA5W3G1Bk
+	 sn0zdBOYZ6H/aQH1E6IiK5qwwgX8uYq+FFzn2fzSpDN6AR8tQxkotjUXosUJ1DLs6c
+	 N3+nQsW5uvRug==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Emil Velikov <emil.velikov@collabora.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Wyatt Wood <wyatt.wood@amd.com>,
+	Anthony Koo <Anthony.Koo@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 359/638] ASoC: amd: acp: Add missing error handling in sof-mach
-Date: Sun, 24 Mar 2024 18:56:36 -0400
-Message-ID: <20240324230116.1348576-360-sashal@kernel.org>
+Subject: [PATCH 6.6 371/638] drm/amd/display: Fix potential NULL pointer dereferences in 'dcn10_set_output_transfer_func()'
+Date: Sun, 24 Mar 2024 18:56:48 -0400
+Message-ID: <20240324230116.1348576-372-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,52 +52,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit d0ada20279db2649a7549a2b8a4a3379c59f238d ]
+[ Upstream commit 9ccfe80d022df7c595f1925afb31de2232900656 ]
 
-Handle potential acp_sofdsp_dai_links_create() errors in ACP SOF machine
-driver's probe function.  Note there is no need for an undo.
+The 'stream' pointer is used in dcn10_set_output_transfer_func() before
+the check if 'stream' is NULL.
 
-While at it, switch to dev_err_probe().
+Fixes the below:
+drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:1892 dcn10_set_output_transfer_func() warn: variable dereferenced before check 'stream' (see line 1875)
 
-Fixes: 9f84940f5004 ("ASoC: amd: acp: Add SOF audio support on Chrome board")
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
-Link: https://msgid.link/r/20231219030728.2431640-4-cristian.ciocaltea@collabora.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: ddef02de0d71 ("drm/amd/display: add null checks before logging")
+Cc: Wyatt Wood <wyatt.wood@amd.com>
+Cc: Anthony Koo <Anthony.Koo@amd.com>
+Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/amd/acp/acp-sof-mach.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/amd/acp/acp-sof-mach.c b/sound/soc/amd/acp/acp-sof-mach.c
-index 5223033a122f8..354d0fc55299b 100644
---- a/sound/soc/amd/acp/acp-sof-mach.c
-+++ b/sound/soc/amd/acp/acp-sof-mach.c
-@@ -120,16 +120,14 @@ static int acp_sof_probe(struct platform_device *pdev)
- 	if (dmi_id && dmi_id->driver_data)
- 		acp_card_drvdata->tdm_mode = dmi_id->driver_data;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index db1d7be7fda38..e3f4d497d32d5 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -1832,6 +1832,9 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
+ {
+ 	struct dpp *dpp = pipe_ctx->plane_res.dpp;
  
--	acp_sofdsp_dai_links_create(card);
-+	ret = acp_sofdsp_dai_links_create(card);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to create DAI links\n");
++	if (!stream)
++		return false;
++
+ 	if (dpp == NULL)
+ 		return false;
  
- 	ret = devm_snd_soc_register_card(&pdev->dev, card);
--	if (ret) {
--		dev_err(&pdev->dev,
--				"devm_snd_soc_register_card(%s) failed: %d\n",
--				card->name, ret);
--		return ret;
--	}
--
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "Failed to register card(%s)\n", card->name);
- 	return 0;
- }
+@@ -1854,8 +1857,8 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
+ 	} else
+ 		dpp->funcs->dpp_program_regamma_pwl(dpp, NULL, OPP_REGAMMA_BYPASS);
  
+-	if (stream != NULL && stream->ctx != NULL &&
+-			stream->out_transfer_func != NULL) {
++	if (stream->ctx &&
++	    stream->out_transfer_func) {
+ 		log_tf(stream->ctx,
+ 				stream->out_transfer_func,
+ 				dpp->regamma_params.hw_points_num);
 -- 
 2.43.0
 
