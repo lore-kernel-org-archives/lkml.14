@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430F02308CC;
-	Sun, 24 Mar 2024 23:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAB41FDA2B;
+	Sun, 24 Mar 2024 23:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322232; cv=none; b=mkUIQskB+Rq1H2I004fnAL9A2TftDqCtxvsaX6VBksF54++7Wb0lbR9UmFsm/GZ0gArZJ3lfUqkwGIMLqws4f0f1zls4p5aOEJHFQsNmBRDQYaU5Z3qZHZSvCBOS+/Gsjc9w3oPf7D4EM4rpdps1pAVjxaBSS6CX/Bq02EpRgz0=
+	t=1711322224; cv=none; b=jyr4N/1lRGSe0jH4lR36JmNiuBPK2sIGt/5jr4NY6EjA7aVtyKWQhNidGOilRmIQIqeFi7RQWXn9OSLxUagXzFjKqPnrdes1OZ5LvM2LFb9y0b0dprCoBb8iAKSMsJFUoQyCLwNhIxCuPWYFmX/MVCOtXSUOQwI++ZnnxG0Ycho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322232; c=relaxed/simple;
-	bh=8NG5ryWG5HYBva078aNyd9BCSi5cg3Cn9gXeZNtAs18=;
+	s=arc-20240116; t=1711322224; c=relaxed/simple;
+	bh=yYTK3GBeBJ6pb6nFTxDchYYPTvh21mQVFBwD5goDuPQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J58j13ujz+Flee+PXKMh7afh4Ud5VV/R+gF9pOMkcAVpOPIm42oNbDuUconbHaE5Evh7j5WX1pa+dXCsDkzEDuz6GYkH5/ItoWw6jlLfVXSjIHH/SSp57LsZs/fOoKKPZBybqazUGtPMN6ptJAqOC1mitlxnI+7Z+CGkw2T5b58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iL//NJfC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AFlZt3Q8rTMAxX/4ORy0mDFwdtIb3jimfLNhOGwSKr35/CLpWL9GhTGdKl1qPak5kcDsR7Gy5rPLUfFI5H92AXZ+jRt1e+/2Hb63TUBqO64/z1gDV/79PVjjzcmDYvY1aJ+jQW3ym7vo2FWKyuMmrxlB6+pN9s5Yd4/3pg+DQsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMAfRLBc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iL//NJfC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B8F7C43390;
-	Sun, 24 Mar 2024 23:17:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMAfRLBc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23E2BC433C7;
+	Sun, 24 Mar 2024 23:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322232;
-	bh=8NG5ryWG5HYBva078aNyd9BCSi5cg3Cn9gXeZNtAs18=;
+	s=k20201202; t=1711322223;
+	bh=yYTK3GBeBJ6pb6nFTxDchYYPTvh21mQVFBwD5goDuPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iL//NJfCOVus2AML/gOPpHH3Jojp3NFUNbUb7woeQBcL13SchEkOfFAVWFx0uV3FT
-	 zUfxeHiNgROAgGAe9QOnfTp8pYeKz07z9t7s26Xjn28ZFxBEapRdjDA1VgFL8oNbAz
-	 TgeskUHCcWnKZT0OXRSvKRkL0DV5dCyMmjh8yrgvpSWDAgLgEXY4AxAFh7vLv02Du9
-	 EXGlTERCBc6r+cI8LSwCfoDQz15D7Qed8Brwwh9DkRx6zPKYiKfUfW5XhhuwM63GKc
-	 ZQcsoTeTp3KQ/tdVBf3uk+0w2VHEOi452xKE67H+flg92TLBgXV0qC6T8yq1Plf29H
-	 p4JKSq1Vkex+Q==
+	b=qMAfRLBcPqkpu9Sq8RxaHr/7z9xkWIst1O18wO/fg5ktJDPA0wUbT6owS7ZVnFLa9
+	 vwJ8rP5tbkxSgfRmDY5+6SYfaUiwFNuXnQphPctqZshLMg94JdxBP2aeYZoDpM7qoi
+	 n2pw1p6gfEAP2FMcHmHfho4TxcHfYXEnGznx+gLjRGgDYR6RbCD4o/b2Ai8gEXqepJ
+	 nwuywqgPGFGYcvuFPZXua70GrpOgO3uEHItyAdS/I+qfdInEodw6F/WdznX7kM3MBB
+	 dGv2AT8pf2XX1/6rQIiKdmlbBSXBSUzirqVQ5GHWi/JLQ4zfl5UcFBFbYuAAwDL0pV
+	 Q4kT3zssBiZBw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 313/451] crypto: arm/sha - fix function cast warnings
-Date: Sun, 24 Mar 2024 19:09:49 -0400
-Message-ID: <20240324231207.1351418-314-sashal@kernel.org>
+Subject: [PATCH 6.1 304/451] media: pvrusb2: fix pvr2_stream_callback casts
+Date: Sun, 24 Mar 2024 19:09:40 -0400
+Message-ID: <20240324231207.1351418-305-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -51,111 +50,111 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 53cc9baeb9bc2a187eb9c9790d30995148852b12 ]
+[ Upstream commit 30baa4a96b23add91a87305baaeba82c4e109e1f ]
 
-clang-16 warns about casting between incompatible function types:
+clang-16 complains about a control flow integrity (KCFI) issue in pvrusb2,
+which casts three different prototypes into pvr2_stream_callback:
 
-arch/arm/crypto/sha256_glue.c:37:5: error: cast from 'void (*)(u32 *, const void *, unsigned int)' (aka 'void (*)(unsigned int *, const void *, unsigned int)') to 'sha256_block_fn *' (aka 'void (*)(struct sha256_state *, const unsigned char *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-   37 |                                 (sha256_block_fn *)sha256_block_data_order);
-      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm/crypto/sha512-glue.c:34:3: error: cast from 'void (*)(u64 *, const u8 *, int)' (aka 'void (*)(unsigned long long *, const unsigned char *, int)') to 'sha512_block_fn *' (aka 'void (*)(struct sha512_state *, const unsigned char *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-   34 |                 (sha512_block_fn *)sha512_block_data_order);
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/media/usb/pvrusb2/pvrusb2-v4l2.c:1070:30: error: cast from 'void (*)(struct pvr2_v4l2_fh *)' to 'pvr2_stream_callback' (aka 'void (*)(void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1070 |         pvr2_stream_set_callback(sp,(pvr2_stream_callback)pvr2_v4l2_notify,fh);
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/media/usb/pvrusb2/pvrusb2-context.c:110:6: error: cast from 'void (*)(struct pvr2_context *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  110 |                                         (void (*)(void *))pvr2_context_notify,
+      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/media/usb/pvrusb2/pvrusb2-dvb.c:152:6: error: cast from 'void (*)(struct pvr2_dvb_adapter *)' to 'pvr2_stream_callback' (aka 'void (*)(void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  152 |                                  (pvr2_stream_callback) pvr2_dvb_notify, adap);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fix the prototypes for the assembler functions to match the typedef.
-The code already relies on the digest being the first part of the
-state structure, so there is no change in behavior.
+Change the functions to actually take a void* argument so the cast is no longer
+needed.
 
-Fixes: c80ae7ca3726 ("crypto: arm/sha512 - accelerated SHA-512 using ARM generic ASM and NEON")
-Fixes: b59e2ae3690c ("crypto: arm/sha256 - move SHA-224/256 ASM/NEON implementation to base layer")
+Fixes: bb8ce9d9143c ("V4L/DVB (7682): pvrusb2-dvb: finish up stream & buffer handling")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/sha256_glue.c | 13 +++++--------
- arch/arm/crypto/sha512-glue.c | 12 +++++-------
- 2 files changed, 10 insertions(+), 15 deletions(-)
+ drivers/media/usb/pvrusb2/pvrusb2-context.c | 8 ++++----
+ drivers/media/usb/pvrusb2/pvrusb2-dvb.c     | 6 ++++--
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c    | 6 ++++--
+ 3 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/crypto/sha256_glue.c b/arch/arm/crypto/sha256_glue.c
-index 433ee4ddce6c8..f85933fdec75f 100644
---- a/arch/arm/crypto/sha256_glue.c
-+++ b/arch/arm/crypto/sha256_glue.c
-@@ -24,8 +24,8 @@
- 
- #include "sha256_glue.h"
- 
--asmlinkage void sha256_block_data_order(u32 *digest, const void *data,
--					unsigned int num_blks);
-+asmlinkage void sha256_block_data_order(struct sha256_state *state,
-+					const u8 *data, int num_blks);
- 
- int crypto_sha256_arm_update(struct shash_desc *desc, const u8 *data,
- 			     unsigned int len)
-@@ -33,23 +33,20 @@ int crypto_sha256_arm_update(struct shash_desc *desc, const u8 *data,
- 	/* make sure casting to sha256_block_fn() is safe */
- 	BUILD_BUG_ON(offsetof(struct sha256_state, state) != 0);
- 
--	return sha256_base_do_update(desc, data, len,
--				(sha256_block_fn *)sha256_block_data_order);
-+	return sha256_base_do_update(desc, data, len, sha256_block_data_order);
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+index 1764674de98bc..58f2f3ff10ee2 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+@@ -90,8 +90,10 @@ static void pvr2_context_destroy(struct pvr2_context *mp)
  }
- EXPORT_SYMBOL(crypto_sha256_arm_update);
  
- static int crypto_sha256_arm_final(struct shash_desc *desc, u8 *out)
+ 
+-static void pvr2_context_notify(struct pvr2_context *mp)
++static void pvr2_context_notify(void *ptr)
  {
--	sha256_base_do_finalize(desc,
--				(sha256_block_fn *)sha256_block_data_order);
-+	sha256_base_do_finalize(desc, sha256_block_data_order);
- 	return sha256_base_finish(desc, out);
++	struct pvr2_context *mp = ptr;
++
+ 	pvr2_context_set_notify(mp,!0);
  }
  
- int crypto_sha256_arm_finup(struct shash_desc *desc, const u8 *data,
- 			    unsigned int len, u8 *out)
+@@ -106,9 +108,7 @@ static void pvr2_context_check(struct pvr2_context *mp)
+ 		pvr2_trace(PVR2_TRACE_CTXT,
+ 			   "pvr2_context %p (initialize)", mp);
+ 		/* Finish hardware initialization */
+-		if (pvr2_hdw_initialize(mp->hdw,
+-					(void (*)(void *))pvr2_context_notify,
+-					mp)) {
++		if (pvr2_hdw_initialize(mp->hdw, pvr2_context_notify, mp)) {
+ 			mp->video_stream.stream =
+ 				pvr2_hdw_get_video_stream(mp->hdw);
+ 			/* Trigger interface initialization.  By doing this
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-dvb.c b/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
+index 26811efe0fb58..9a9bae21c6147 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-dvb.c
+@@ -88,8 +88,10 @@ static int pvr2_dvb_feed_thread(void *data)
+ 	return stat;
+ }
+ 
+-static void pvr2_dvb_notify(struct pvr2_dvb_adapter *adap)
++static void pvr2_dvb_notify(void *ptr)
  {
--	sha256_base_do_update(desc, data, len,
--			      (sha256_block_fn *)sha256_block_data_order);
-+	sha256_base_do_update(desc, data, len, sha256_block_data_order);
- 	return crypto_sha256_arm_final(desc, out);
++	struct pvr2_dvb_adapter *adap = ptr;
++
+ 	wake_up(&adap->buffer_wait_data);
  }
- EXPORT_SYMBOL(crypto_sha256_arm_finup);
-diff --git a/arch/arm/crypto/sha512-glue.c b/arch/arm/crypto/sha512-glue.c
-index 0635a65aa488b..1be5bd498af36 100644
---- a/arch/arm/crypto/sha512-glue.c
-+++ b/arch/arm/crypto/sha512-glue.c
-@@ -25,27 +25,25 @@ MODULE_ALIAS_CRYPTO("sha512");
- MODULE_ALIAS_CRYPTO("sha384-arm");
- MODULE_ALIAS_CRYPTO("sha512-arm");
  
--asmlinkage void sha512_block_data_order(u64 *state, u8 const *src, int blocks);
-+asmlinkage void sha512_block_data_order(struct sha512_state *state,
-+					u8 const *src, int blocks);
+@@ -149,7 +151,7 @@ static int pvr2_dvb_stream_do_start(struct pvr2_dvb_adapter *adap)
+ 	}
  
- int sha512_arm_update(struct shash_desc *desc, const u8 *data,
- 		      unsigned int len)
+ 	pvr2_stream_set_callback(pvr->video_stream.stream,
+-				 (pvr2_stream_callback) pvr2_dvb_notify, adap);
++				 pvr2_dvb_notify, adap);
+ 
+ 	ret = pvr2_stream_set_buffer_count(stream, PVR2_DVB_BUFFER_COUNT);
+ 	if (ret < 0) return ret;
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index d195bd6a2248b..d608b793fa847 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -1033,8 +1033,10 @@ static int pvr2_v4l2_open(struct file *file)
+ }
+ 
+ 
+-static void pvr2_v4l2_notify(struct pvr2_v4l2_fh *fhp)
++static void pvr2_v4l2_notify(void *ptr)
  {
--	return sha512_base_do_update(desc, data, len,
--		(sha512_block_fn *)sha512_block_data_order);
-+	return sha512_base_do_update(desc, data, len, sha512_block_data_order);
++	struct pvr2_v4l2_fh *fhp = ptr;
++
+ 	wake_up(&fhp->wait_data);
  }
  
- static int sha512_arm_final(struct shash_desc *desc, u8 *out)
- {
--	sha512_base_do_finalize(desc,
--		(sha512_block_fn *)sha512_block_data_order);
-+	sha512_base_do_finalize(desc, sha512_block_data_order);
- 	return sha512_base_finish(desc, out);
- }
+@@ -1067,7 +1069,7 @@ static int pvr2_v4l2_iosetup(struct pvr2_v4l2_fh *fh)
  
- int sha512_arm_finup(struct shash_desc *desc, const u8 *data,
- 		     unsigned int len, u8 *out)
- {
--	sha512_base_do_update(desc, data, len,
--		(sha512_block_fn *)sha512_block_data_order);
-+	sha512_base_do_update(desc, data, len, sha512_block_data_order);
- 	return sha512_arm_final(desc, out);
- }
- 
+ 	hdw = fh->channel.mc_head->hdw;
+ 	sp = fh->pdi->stream->stream;
+-	pvr2_stream_set_callback(sp,(pvr2_stream_callback)pvr2_v4l2_notify,fh);
++	pvr2_stream_set_callback(sp, pvr2_v4l2_notify, fh);
+ 	pvr2_hdw_set_stream_type(hdw,fh->pdi->config);
+ 	if ((ret = pvr2_hdw_set_streaming(hdw,!0)) < 0) return ret;
+ 	return pvr2_ioread_set_enabled(fh->rhp,!0);
 -- 
 2.43.0
 
