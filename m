@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314A421F9F4;
-	Sun, 24 Mar 2024 23:11:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66064156884;
+	Sun, 24 Mar 2024 23:11:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321879; cv=none; b=Anjk0xUr8mNFT7zpQUgBCjmGpVsaHYM/pyqCla4TaQHsT/96Gth5aXwHyAk8+TkN9D9ip/HXTLtVSpezrVqDjHmX3twfJVPAKQZ87Od3Fi75zqMbUC0gid4yQr+8ZaEuvrDmBbabdEVRw3WXOP1VVGedtzfVg3EiMsNG4wanbEM=
+	t=1711321882; cv=none; b=btSTlJYZaeHILqsYR16KoMElaHbFAzYVir2S3B0ckdTK7iREH4W2REp+6shNjWbVo6284IE0VkjdNUTwIdBFaB298bwzDGV6kpqMD2ddOliq05cRdFCRQWai0WUisxTr4pa1iFiIV1qSEfMuf4/r+fNAurYiacnpVVtZICo9/1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321879; c=relaxed/simple;
-	bh=ncP4VVJXjWIqhc/CiV3uRRV6k6wbXfDl8IbLaEANtMs=;
+	s=arc-20240116; t=1711321882; c=relaxed/simple;
+	bh=RMsiwQfl7cYHKFn8JymDMhMZpp+GCZ0RkLUQJ2lV0CU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JZVfm0FBzXM3WvCuSsMZ1pev0EyqWrxO3P42xIISLw1Reeg2fupEz386TicvOjeq0kP95sQBAVrjgIIqDQHN+DGS1ureRl7eXt/gseM/yHQuB5zLmUJfLoyHB2Du0OddMe48PekQxJ6kuJPpDI7AcSHP8bAz303myHi9fDIZMkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bf2qnqtF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ad3ImzqhGPk/Fr1tIS4cXuNLrRYUQ4DyHco0QrV2tEjBpiTamI0lwnxjHhVhGfXvXmWrmQAlXcjdndG4Uxu0O/JafL9LyymZfcfyR+BUjyRfMqoYEiOtbXuBQk+4+kEeVKOKNFJg3v2pUQSOoR1tpG6ZDRiH3hivagaTvyBg9gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJh90HfS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bf2qnqtF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 463CBC433F1;
-	Sun, 24 Mar 2024 23:11:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJh90HfS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 616AFC43390;
+	Sun, 24 Mar 2024 23:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321878;
-	bh=ncP4VVJXjWIqhc/CiV3uRRV6k6wbXfDl8IbLaEANtMs=;
+	s=k20201202; t=1711321881;
+	bh=RMsiwQfl7cYHKFn8JymDMhMZpp+GCZ0RkLUQJ2lV0CU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Bf2qnqtFMCuhs+R4kYKE1z0SR8hBZ9IYULR5MMfB1dui6MFKTnh7y0Zhyq6Kxl7Fe
-	 Z9c2RlTYcPdXkOBV6Q6i/zTmpt8m68Z9pErEU8j12A0Hxgl5XRhL6FslWuGjKPScwt
-	 rxseRT456fOfSJtpGyUDXwWW56tCDp1oh8Xrv7y4PI/0MA4SMpfdEl8A1/XF8TjXeC
-	 7ZMuA0/IEIOVO78kp4dXQM2vhWgl3f2D23KR5nkToqk3HbsOlIN2oOkXEqwau4qB/H
-	 KmVf4UAqVPRswGHfLK3lAs0t7nO+qDdJBfLVdwvufJYfP4A7NF8Ej/9ZubYEvNBwLw
-	 wsFRyGCZuKQHg==
+	b=WJh90HfSKe8+Jctw2vGAXLkswpsBfHnna4B9bFXKJMdc1tlc+IyMUXl4WN5sf++Ng
+	 G3oldDj/tlU+h+IJgoZasYfUPjwL7Z+z6pP+kRJiAqRdBSjmX1Hoz8j3CTwjg4ZLA4
+	 TabxMQgx1GKrVUFnA4TpXEm0BeYKHrG5EI03jp2c35/+/R2RluXAhx1rEJYvtoKUZL
+	 vB+Guf/qwNjOPa5S33L9aaMq0Tsx4kp8as+yaTMAnCcuhL7LN/hcQZUcpW4eXZVQfm
+	 fc5fWJSauIdApEvz/wnSnjP1CSym3sTjQF9L47iiEvfWkpTNBkdcjtqd0OKm+cFOIo
+	 Y/4kz98TnuzfQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Steve Sistare <steven.sistare@oracle.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>,
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	syzbot+d1de830e4ecdaac83d89@syzkaller.appspotmail.com,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Jiri Pirko <jiri@nvidia.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 606/638] vdpa_sim: reset must not run
-Date: Sun, 24 Mar 2024 19:00:43 -0400
-Message-ID: <20240324230116.1348576-607-sashal@kernel.org>
+Subject: [PATCH 6.6 609/638] wireguard: receive: annotate data-race around receiving_counter.counter
+Date: Sun, 24 Mar 2024 19:00:46 -0400
+Message-ID: <20240324230116.1348576-610-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -46,51 +47,86 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Steve Sistare <steven.sistare@oracle.com>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-[ Upstream commit 9588e7fc511f9c55b9835f14916e90ab940061b7 ]
+[ Upstream commit bba045dc4d996d03dce6fe45726e78a1a1f6d4c3 ]
 
-vdpasim_do_reset sets running to true, which is wrong, as it allows
-vdpasim_kick_vq to post work requests before the device has been
-configured.  To fix, do not set running until VIRTIO_CONFIG_S_DRIVER_OK
-is set.
+Syzkaller with KCSAN identified a data-race issue when accessing
+keypair->receiving_counter.counter. Use READ_ONCE() and WRITE_ONCE()
+annotations to mark the data race as intentional.
 
-Fixes: 0c89e2a3a9d0 ("vdpa_sim: Implement suspend vdpa op")
-Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
-Reviewed-by: Eugenio Pérez <eperezma@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Message-Id: <1707517807-137331-1-git-send-email-steven.sistare@oracle.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+    BUG: KCSAN: data-race in wg_packet_decrypt_worker / wg_packet_rx_poll
+
+    write to 0xffff888107765888 of 8 bytes by interrupt on cpu 0:
+     counter_validate drivers/net/wireguard/receive.c:321 [inline]
+     wg_packet_rx_poll+0x3ac/0xf00 drivers/net/wireguard/receive.c:461
+     __napi_poll+0x60/0x3b0 net/core/dev.c:6536
+     napi_poll net/core/dev.c:6605 [inline]
+     net_rx_action+0x32b/0x750 net/core/dev.c:6738
+     __do_softirq+0xc4/0x279 kernel/softirq.c:553
+     do_softirq+0x5e/0x90 kernel/softirq.c:454
+     __local_bh_enable_ip+0x64/0x70 kernel/softirq.c:381
+     __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:167 [inline]
+     _raw_spin_unlock_bh+0x36/0x40 kernel/locking/spinlock.c:210
+     spin_unlock_bh include/linux/spinlock.h:396 [inline]
+     ptr_ring_consume_bh include/linux/ptr_ring.h:367 [inline]
+     wg_packet_decrypt_worker+0x6c5/0x700 drivers/net/wireguard/receive.c:499
+     process_one_work kernel/workqueue.c:2633 [inline]
+     ...
+
+    read to 0xffff888107765888 of 8 bytes by task 3196 on cpu 1:
+     decrypt_packet drivers/net/wireguard/receive.c:252 [inline]
+     wg_packet_decrypt_worker+0x220/0x700 drivers/net/wireguard/receive.c:501
+     process_one_work kernel/workqueue.c:2633 [inline]
+     process_scheduled_works+0x5b8/0xa30 kernel/workqueue.c:2706
+     worker_thread+0x525/0x730 kernel/workqueue.c:2787
+     ...
+
+Fixes: a9e90d9931f3 ("wireguard: noise: separate receive counter from send counter")
+Reported-by: syzbot+d1de830e4ecdaac83d89@syzkaller.appspotmail.com
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireguard/receive.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-index 76d41058add9a..421ab01ef06ba 100644
---- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-+++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-@@ -158,7 +158,7 @@ static void vdpasim_do_reset(struct vdpasim *vdpasim)
- 		vdpasim->iommu_pt[i] = true;
+diff --git a/drivers/net/wireguard/receive.c b/drivers/net/wireguard/receive.c
+index a176653c88616..db01ec03bda00 100644
+--- a/drivers/net/wireguard/receive.c
++++ b/drivers/net/wireguard/receive.c
+@@ -251,7 +251,7 @@ static bool decrypt_packet(struct sk_buff *skb, struct noise_keypair *keypair)
+ 
+ 	if (unlikely(!READ_ONCE(keypair->receiving.is_valid) ||
+ 		  wg_birthdate_has_expired(keypair->receiving.birthdate, REJECT_AFTER_TIME) ||
+-		  keypair->receiving_counter.counter >= REJECT_AFTER_MESSAGES)) {
++		  READ_ONCE(keypair->receiving_counter.counter) >= REJECT_AFTER_MESSAGES)) {
+ 		WRITE_ONCE(keypair->receiving.is_valid, false);
+ 		return false;
+ 	}
+@@ -318,7 +318,7 @@ static bool counter_validate(struct noise_replay_counter *counter, u64 their_cou
+ 		for (i = 1; i <= top; ++i)
+ 			counter->backtrack[(i + index_current) &
+ 				((COUNTER_BITS_TOTAL / BITS_PER_LONG) - 1)] = 0;
+-		counter->counter = their_counter;
++		WRITE_ONCE(counter->counter, their_counter);
  	}
  
--	vdpasim->running = true;
-+	vdpasim->running = false;
- 	spin_unlock(&vdpasim->iommu_lock);
- 
- 	vdpasim->features = 0;
-@@ -477,6 +477,7 @@ static void vdpasim_set_status(struct vdpa_device *vdpa, u8 status)
- 
- 	mutex_lock(&vdpasim->mutex);
- 	vdpasim->status = status;
-+	vdpasim->running = (status & VIRTIO_CONFIG_S_DRIVER_OK) != 0;
- 	mutex_unlock(&vdpasim->mutex);
- }
+ 	index &= (COUNTER_BITS_TOTAL / BITS_PER_LONG) - 1;
+@@ -463,7 +463,7 @@ int wg_packet_rx_poll(struct napi_struct *napi, int budget)
+ 			net_dbg_ratelimited("%s: Packet has invalid nonce %llu (max %llu)\n",
+ 					    peer->device->dev->name,
+ 					    PACKET_CB(skb)->nonce,
+-					    keypair->receiving_counter.counter);
++					    READ_ONCE(keypair->receiving_counter.counter));
+ 			goto next;
+ 		}
  
 -- 
 2.43.0
