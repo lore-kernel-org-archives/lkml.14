@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC50082867;
-	Sun, 24 Mar 2024 22:51:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150C7144D33;
+	Sun, 24 Mar 2024 22:51:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320664; cv=none; b=SxVEZjdADQjGigfU83Ltp8zSpOyfsU7j81csa3/J/KV+777+THF8zQseL2gP+KXSZTKHw56pXy/6xcrql0zy3mRKOlX08yfxeJSdaSLx3A6ccW7EZ6O4GvQlIKg9AsQ8A2QwxYXnE/CYRceUVA61MzHBmdz6LBJxQKxjvLYccbo=
+	t=1711320687; cv=none; b=rh0HRwc3fjrZP0WtyZ0BauLVOevEN6JYnbh32K5VLjQZMUZe8vaq571OBX0AU+pJL1lpebNbgQjsRV0nLDpEwC/dCeJ0BRF9njW1Cha02vyM/EXGu8Mb6rZNpwXP9T209Zl3uoPW2yn3E/EwxzsSfXFBo7QVzQqCDhSP18VhGv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320664; c=relaxed/simple;
-	bh=uZTzWKQcsPV7yMNUkAApk1NzfA6xdSEQZjBPmeeK1cY=;
+	s=arc-20240116; t=1711320687; c=relaxed/simple;
+	bh=0lwUrRExluHks6ybPWjrs9YUurAMcTJFMoLDlXpgg5U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mN9+TIXbly7ZsRO6TtqcOTYa8FRjv1Oi4elqLW2K5ce6gaTH7c94p1gWkUKkoWcwC8gEOpz/akZYw6JS7PWTsbpSU0Cyh+khqlsbbOrcpxX+QCJaMX/XuXRBw+Ny47bZFm6P/EFAVu1aHFeTCG35LtpFF55mm2d3h1FFus0Q6tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibulD/4o; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MPACVjaRoC2QcZFJ9PQ24vrjctM2BHobLOyNUxjlFejseP3mcirfaQrmgYbXLeeS8IPLFXw/jKfM2ap07kjwGWECNG0BsTk2y0DEqIJTmfwdiodbj4kBPWKqAll+mtV1acALc5wzNs3WAntOJNbbMNB2Jn3nxxsu9OWPz7dBvic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVVek/cb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibulD/4o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3067CC433C7;
-	Sun, 24 Mar 2024 22:51:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVVek/cb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36ED9C433F1;
+	Sun, 24 Mar 2024 22:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320662;
-	bh=uZTzWKQcsPV7yMNUkAApk1NzfA6xdSEQZjBPmeeK1cY=;
+	s=k20201202; t=1711320686;
+	bh=0lwUrRExluHks6ybPWjrs9YUurAMcTJFMoLDlXpgg5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ibulD/4oGediT0PXeXJ3QzmbKiaSVSQSBXlr2EgUkYZUwtDYCZvvibrslrBXqLgD5
-	 uc+T2yQY5/JgpKsMveN6kTuY3kSPG562gHzuHGz/jchNnu5BA+FcyIA8f0Ha89OW0X
-	 dcOY9rf6ujp3AH0EAhCtWHx5MpG8r5A3O9At1H4ySVQzjM7kqWh07nrUIgFgWPTmVF
-	 DlkMzAJSRbbduuOFJY6tGcp7mnm6GGakarMng/EfPHkl3CFhlQS5/fgqFNGq+X4b3K
-	 0ifePd7PAeqSTIympk2Dtzqz/Oqw8wuyMGIDX1Lz9Gnk5fL5mdymkBTAcqU6CWDZsF
-	 vojQlKOpodBiw==
+	b=hVVek/cbBI58eEWvaAYEt2YGgF/bwjtqcg22UBVsKsLBfzLK97i3RvPzFhAigFT13
+	 Cs7xEJ9kwjMTdh0vNIGJIeGDFgpjCpVFtDNAdDYKH+21m+FiU6nj3t9NpvQhntoAf7
+	 AZOy+hHgVrFs3qWRWiSqtytYlJE+BPu45Xot5PEy9KBdbbozMWFFabVmltbN/hztsA
+	 7T4wucVeHEv2wudamrGyTW2TZcc1lwQ2kBwR7MPmwFkbJxoiUswGTxCEQL0SIdRzTb
+	 G/aTQTjLnETrcMSq4aTGqBrYVw7mSoC0ZePnGrJpbL6RzzmLpi18va2BLYAiIGFviF
+	 9EcTMjzz9Rp5w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Viktor Malik <vmalik@redhat.com>,
+Cc: Yonghong Song <yonghong.song@linux.dev>,
 	Andrii Nakryiko <andrii@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 225/713] tools/resolve_btfids: Fix cross-compilation to non-host endianness
-Date: Sun, 24 Mar 2024 18:39:11 -0400
-Message-ID: <20240324224720.1345309-226-sashal@kernel.org>
+Subject: [PATCH 6.7 249/713] bpf: Mark bpf_spin_{lock,unlock}() helpers with notrace correctly
+Date: Sun, 24 Mar 2024 18:39:35 -0400
+Message-ID: <20240324224720.1345309-250-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,119 +49,131 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Viktor Malik <vmalik@redhat.com>
+From: Yonghong Song <yonghong.song@linux.dev>
 
-[ Upstream commit 903fad4394666bc23975c93fb58f137ce64b5192 ]
+[ Upstream commit 178c54666f9c4d2f49f2ea661d0c11b52f0ed190 ]
 
-The .BTF_ids section is pre-filled with zeroed BTF ID entries during the
-build and afterwards patched by resolve_btfids with correct values.
-Since resolve_btfids always writes in host-native endianness, it relies
-on libelf to do the translation when the target ELF is cross-compiled to
-a different endianness (this was introduced in commit 61e8aeda9398
-("bpf: Fix libelf endian handling in resolv_btfids")).
+Currently tracing is supposed not to allow for bpf_spin_{lock,unlock}()
+helper calls. This is to prevent deadlock for the following cases:
+  - there is a prog (prog-A) calling bpf_spin_{lock,unlock}().
+  - there is a tracing program (prog-B), e.g., fentry, attached
+    to bpf_spin_lock() and/or bpf_spin_unlock().
+  - prog-B calls bpf_spin_{lock,unlock}().
+For such a case, when prog-A calls bpf_spin_{lock,unlock}(),
+a deadlock will happen.
 
-Unfortunately, the translation will corrupt the flags fields of SET8
-entries because these were written during vmlinux compilation and are in
-the correct endianness already. This will lead to numerous selftests
-failures such as:
+The related source codes are below in kernel/bpf/helpers.c:
+  notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
+  notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
+notrace is supposed to prevent fentry prog from attaching to
+bpf_spin_{lock,unlock}().
 
-    $ sudo ./test_verifier 502 502
-    #502/p sleepable fentry accept FAIL
-    Failed to load prog 'Invalid argument'!
-    bpf_fentry_test1 is not sleepable
-    verification time 34 usec
-    stack depth 0
-    processed 0 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
-    Summary: 0 PASSED, 0 SKIPPED, 1 FAILED
+But actually this is not the case and fentry prog can successfully
+attached to bpf_spin_lock(). Siddharth Chintamaneni reported
+the issue in [1]. The following is the macro definition for
+above BPF_CALL_1:
+  #define BPF_CALL_x(x, name, ...)                                               \
+        static __always_inline                                                 \
+        u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__));   \
+        typedef u64 (*btf_##name)(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__)); \
+        u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__));         \
+        u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__))          \
+        {                                                                      \
+                return ((btf_##name)____##name)(__BPF_MAP(x,__BPF_CAST,__BPF_N,__VA_ARGS__));\
+        }                                                                      \
+        static __always_inline                                                 \
+        u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__))
 
-Since it's not possible to instruct libelf to translate just certain
-values, let's manually bswap the flags (both global and entry flags) in
-resolve_btfids when needed, so that libelf then translates everything
-correctly.
+  #define BPF_CALL_1(name, ...)   BPF_CALL_x(1, name, __VA_ARGS__)
 
-Fixes: ef2c6f370a63 ("tools/resolve_btfids: Add support for 8-byte BTF sets")
-Signed-off-by: Viktor Malik <vmalik@redhat.com>
+The notrace attribute is actually applied to the static always_inline function
+____bpf_spin_{lock,unlock}(). The actual callback function
+bpf_spin_{lock,unlock}() is not marked with notrace, hence
+allowing fentry prog to attach to two helpers, and this
+may cause the above mentioned deadlock. Siddharth Chintamaneni
+actually has a reproducer in [2].
+
+To fix the issue, a new macro NOTRACE_BPF_CALL_1 is introduced which
+will add notrace attribute to the original function instead of
+the hidden always_inline function and this fixed the problem.
+
+  [1] https://lore.kernel.org/bpf/CAE5sdEigPnoGrzN8WU7Tx-h-iFuMZgW06qp0KHWtpvoXxf1OAQ@mail.gmail.com/
+  [2] https://lore.kernel.org/bpf/CAE5sdEg6yUc_Jz50AnUXEEUh6O73yQ1Z6NV2srJnef0ZrQkZew@mail.gmail.com/
+
+Fixes: d83525ca62cf ("bpf: introduce bpf_spin_lock")
+Signed-off-by: Yonghong Song <yonghong.song@linux.dev>
 Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Link: https://lore.kernel.org/bpf/7b6bff690919555574ce0f13d2a5996cacf7bf69.1707223196.git.vmalik@redhat.com
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: https://lore.kernel.org/bpf/20240207070102.335167-1-yonghong.song@linux.dev
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/resolve_btfids/main.c | 35 +++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ include/linux/filter.h | 21 ++++++++++++---------
+ kernel/bpf/helpers.c   |  4 ++--
+ 2 files changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/tools/bpf/resolve_btfids/main.c b/tools/bpf/resolve_btfids/main.c
-index 32634f00abba4..d9520cb826b31 100644
---- a/tools/bpf/resolve_btfids/main.c
-+++ b/tools/bpf/resolve_btfids/main.c
-@@ -90,6 +90,14 @@
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index a4953fafc8cb8..02e043bd93b1a 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -547,24 +547,27 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
+ 	__BPF_MAP(n, __BPF_DECL_ARGS, __BPF_N, u64, __ur_1, u64, __ur_2,       \
+ 		  u64, __ur_3, u64, __ur_4, u64, __ur_5)
  
- #define ADDR_CNT	100
+-#define BPF_CALL_x(x, name, ...)					       \
++#define BPF_CALL_x(x, attr, name, ...)					       \
+ 	static __always_inline						       \
+ 	u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__));   \
+ 	typedef u64 (*btf_##name)(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__)); \
+-	u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__));	       \
+-	u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__))	       \
++	attr u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__));    \
++	attr u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__))     \
+ 	{								       \
+ 		return ((btf_##name)____##name)(__BPF_MAP(x,__BPF_CAST,__BPF_N,__VA_ARGS__));\
+ 	}								       \
+ 	static __always_inline						       \
+ 	u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__))
  
-+#if __BYTE_ORDER == __LITTLE_ENDIAN
-+# define ELFDATANATIVE	ELFDATA2LSB
-+#elif __BYTE_ORDER == __BIG_ENDIAN
-+# define ELFDATANATIVE	ELFDATA2MSB
-+#else
-+# error "Unknown machine endianness!"
-+#endif
+-#define BPF_CALL_0(name, ...)	BPF_CALL_x(0, name, __VA_ARGS__)
+-#define BPF_CALL_1(name, ...)	BPF_CALL_x(1, name, __VA_ARGS__)
+-#define BPF_CALL_2(name, ...)	BPF_CALL_x(2, name, __VA_ARGS__)
+-#define BPF_CALL_3(name, ...)	BPF_CALL_x(3, name, __VA_ARGS__)
+-#define BPF_CALL_4(name, ...)	BPF_CALL_x(4, name, __VA_ARGS__)
+-#define BPF_CALL_5(name, ...)	BPF_CALL_x(5, name, __VA_ARGS__)
++#define __NOATTR
++#define BPF_CALL_0(name, ...)	BPF_CALL_x(0, __NOATTR, name, __VA_ARGS__)
++#define BPF_CALL_1(name, ...)	BPF_CALL_x(1, __NOATTR, name, __VA_ARGS__)
++#define BPF_CALL_2(name, ...)	BPF_CALL_x(2, __NOATTR, name, __VA_ARGS__)
++#define BPF_CALL_3(name, ...)	BPF_CALL_x(3, __NOATTR, name, __VA_ARGS__)
++#define BPF_CALL_4(name, ...)	BPF_CALL_x(4, __NOATTR, name, __VA_ARGS__)
++#define BPF_CALL_5(name, ...)	BPF_CALL_x(5, __NOATTR, name, __VA_ARGS__)
 +
- struct btf_id {
- 	struct rb_node	 rb_node;
- 	char		*name;
-@@ -117,6 +125,7 @@ struct object {
- 		int		 idlist_shndx;
- 		size_t		 strtabidx;
- 		unsigned long	 idlist_addr;
-+		int		 encoding;
- 	} efile;
++#define NOTRACE_BPF_CALL_1(name, ...)	BPF_CALL_x(1, notrace, name, __VA_ARGS__)
  
- 	struct rb_root	sets;
-@@ -320,6 +329,7 @@ static int elf_collect(struct object *obj)
+ #define bpf_ctx_range(TYPE, MEMBER)						\
+ 	offsetof(TYPE, MEMBER) ... offsetofend(TYPE, MEMBER) - 1
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index ce4729ef1ad2d..b912d055a8470 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -334,7 +334,7 @@ static inline void __bpf_spin_lock_irqsave(struct bpf_spin_lock *lock)
+ 	__this_cpu_write(irqsave_flags, flags);
+ }
+ 
+-notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
++NOTRACE_BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
  {
- 	Elf_Scn *scn = NULL;
- 	size_t shdrstrndx;
-+	GElf_Ehdr ehdr;
- 	int idx = 0;
- 	Elf *elf;
- 	int fd;
-@@ -351,6 +361,13 @@ static int elf_collect(struct object *obj)
- 		return -1;
- 	}
+ 	__bpf_spin_lock_irqsave(lock);
+ 	return 0;
+@@ -357,7 +357,7 @@ static inline void __bpf_spin_unlock_irqrestore(struct bpf_spin_lock *lock)
+ 	local_irq_restore(flags);
+ }
  
-+	if (gelf_getehdr(obj->efile.elf, &ehdr) == NULL) {
-+		pr_err("FAILED cannot get ELF header: %s\n",
-+			elf_errmsg(-1));
-+		return -1;
-+	}
-+	obj->efile.encoding = ehdr.e_ident[EI_DATA];
-+
- 	/*
- 	 * Scan all the elf sections and look for save data
- 	 * from .BTF_ids section and symbols.
-@@ -681,6 +698,24 @@ static int sets_patch(struct object *obj)
- 			 */
- 			BUILD_BUG_ON(set8->pairs != &set8->pairs[0].id);
- 			qsort(set8->pairs, set8->cnt, sizeof(set8->pairs[0]), cmp_id);
-+
-+			/*
-+			 * When ELF endianness does not match endianness of the
-+			 * host, libelf will do the translation when updating
-+			 * the ELF. This, however, corrupts SET8 flags which are
-+			 * already in the target endianness. So, let's bswap
-+			 * them to the host endianness and libelf will then
-+			 * correctly translate everything.
-+			 */
-+			if (obj->efile.encoding != ELFDATANATIVE) {
-+				int i;
-+
-+				set8->flags = bswap_32(set8->flags);
-+				for (i = 0; i < set8->cnt; i++) {
-+					set8->pairs[i].flags =
-+						bswap_32(set8->pairs[i].flags);
-+				}
-+			}
- 		}
- 
- 		pr_debug("sorting  addr %5lu: cnt %6d [%s]\n",
+-notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
++NOTRACE_BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
+ {
+ 	__bpf_spin_unlock_irqrestore(lock);
+ 	return 0;
 -- 
 2.43.0
 
