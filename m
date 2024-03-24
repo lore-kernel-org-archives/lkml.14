@@ -1,110 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE92130A6D;
-	Sun, 24 Mar 2024 23:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625E517655F;
+	Sun, 24 Mar 2024 23:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323432; cv=none; b=E7G/pNd2ACeyXKOlZa10c0UtJZouXGrvQ39VBgEwgFSkfmuQmcnAwk3g6Hq5e5eW8EyQMPAibHimJsw3L2M8XlqBx27QLiwHsh7VARKrVG9ry+LDh9NPgD1h7bIDPxYTbYwyQSr1bRtb8xz0R+DSwgwpN2WIyPGoRdbr+33aq8g=
+	t=1711323442; cv=none; b=Jlxgk4E1Qku1bGgd74VfbM+L6hBkmXyvNs91o4zo38hRfEFxZsV8xbPpbpabWl1dA+imQZFCRqXIql3aqhPJR5dOE0trT/f2gn5+UKUTXP0RtOBDK4msNvfKz6qIRnjD++MIDKte4sMhEKNHV0KzIuTLuhE5DCSkmRWOEM3D8BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323432; c=relaxed/simple;
-	bh=NPjfnzED8BoT35x6bgMnmQsuwCdMFgSn/d3NxJwHA54=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JaVOZL91XJw03VyZacnCDggBlWvQgYxcY1FCraQAOuWZ05x0oI9LbeN/vhJVLrVfHd7XuLfXx2YigjdPyE4gEBrgja0Ao02mZyrON4LFDNJnJbBd+GqoGHK7J/WCcfOHXOUoa0erMki4oXX+iTmezYTNO3BE50fQn1coBTjefF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FhsyWPT6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711323442; c=relaxed/simple;
+	bh=FiUcIHSFBZBxALtmt61YlYMiFB6wlrdxR2XHmKr2s7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=favyb5F3OrEMpateG3M8MGMcWkZIo9rCV6PvgS//O9ZNBakKo5XN5ArKg2zLulzc/LPsjpBOyTEZ2cbmNo7CYzua0WbDr33B0EatD5xtf7pizIXQ6uvmchtW/smN7grOv2vOTEnXX5D4N3l22aGcat2qonzwZvl/0h2CW7zl/lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Rn3ZXEup; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FhsyWPT6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29FECC433B1;
-	Sun, 24 Mar 2024 23:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323430;
-	bh=NPjfnzED8BoT35x6bgMnmQsuwCdMFgSn/d3NxJwHA54=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FhsyWPT6aX4LRgFlxkiic8TmDohiAtSaWFTmpIzof5G3oACBC8IOeuaSlRCpEKn2Z
-	 xaFja10ieWtJq7ncdyG9t2iwDHTkjo5m8+TU1o4Btq3AtIsStzNFpu013kzkAw1lWk
-	 pRDJTdVc8gscld8hPJjBxlQtBVBd7ejlx6XcbmxM73xvcc80rVZlDqF9zJyELRHl3+
-	 2K8LxEMwRa+j6IPsH19Ms/7mJI1Kzm5QsSN5HvxaJ3cZGpoyHd+vASXCP8QcgVxyKh
-	 j0gJlBatt9vT1LyqnPM10/cSuIO3gs92hcGsn/uWLUtSpUxEASVXQ/VBJsmEz+sVYK
-	 objCgghR09fFw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	syzbot+8cd36f6b65f3cafd400a@syzkaller.appspotmail.com,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 133/317] bpf: Fix DEVMAP_HASH overflow check on 32-bit arches
-Date: Sun, 24 Mar 2024 19:31:53 -0400
-Message-ID: <20240324233458.1352854-134-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
-References: <20240324233458.1352854-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Rn3ZXEup"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FiUcIHSFBZBxALtmt61YlYMiFB6wlrdxR2XHmKr2s7U=; b=Rn3ZXEupjlK9s8ygJnhwVpaGLT
+	dYBT49gIZK2OasO7sRPbhGvozmqTWhWXakl0JdzZ5cKLRDR+c36ME7FaSO3vP+vc0ab55QyF/Tbnm
+	VR7AcUA32IstZO1srXhjDa7+/jYt21mfVP/hFgBA0du80/ImT2KAK+oV3TS9s3xBjbeYDQ0epZRT9
+	GWvOmvyJ3hc5FwMK5EXCGJeM7XPDrx8s13MBRdQZ+diEbvQ1lBI8OFOgmdCv5v+duYq9iPYpNvFOW
+	CEk3k5Zos95tElXC8siQdd3gLpPlZrUQyJ+KwVU69saNmVUOftUpZrECpAe7ts+UYRmTnl4jGiUGq
+	G4f556uA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1roXOo-0000000DuZF-2Stz;
+	Sun, 24 Mar 2024 23:37:15 +0000
+Date: Sun, 24 Mar 2024 16:37:10 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Shakeel Butt <shakeelb@google.com>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
+ custom page providers
+Message-ID: <ZgC5JoSiWAYf3IgX@infradead.org>
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <20240305020153.2787423-3-almasrymina@google.com>
+ <ZfegzB341oNc_Ocz@infradead.org>
+ <CAHS8izOUi6qGp=LSQb_o5oph-EnhNOuhLkPSfbQRU3eniZvbdA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHS8izOUi6qGp=LSQb_o5oph-EnhNOuhLkPSfbQRU3eniZvbdA@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+On Fri, Mar 22, 2024 at 10:54:54AM -0700, Mina Almasry wrote:
+> Sorry I don't mean to argue but as David mentioned, there are some
+> plans in the works and ones not in the works to extend this to other
+> memory types. David mentioned io_uring & Jakub's huge page use cases
+> which may want to re-use this design. I have an additional one in
+> mind, which is extending devmem TCP for storage devices. Currently
+> storage devices do not support dmabuf and my understanding is that
+> it's very hard to do so, and NVMe uses pci_p2pdma instead. I wonder if
+> it's possible to extend devmem TCP in the future to support pci_p2pdma
+> to support nvme devices in the future.
 
-[ Upstream commit 281d464a34f540de166cee74b723e97ac2515ec3 ]
-
-The devmap code allocates a number hash buckets equal to the next power
-of two of the max_entries value provided when creating the map. When
-rounding up to the next power of two, the 32-bit variable storing the
-number of buckets can overflow, and the code checks for overflow by
-checking if the truncated 32-bit value is equal to 0. However, on 32-bit
-arches the rounding up itself can overflow mid-way through, because it
-ends up doing a left-shift of 32 bits on an unsigned long value. If the
-size of an unsigned long is four bytes, this is undefined behaviour, so
-there is no guarantee that we'll end up with a nice and tidy 0-value at
-the end.
-
-Syzbot managed to turn this into a crash on arm32 by creating a
-DEVMAP_HASH with max_entries > 0x80000000 and then trying to update it.
-Fix this by moving the overflow check to before the rounding up
-operation.
-
-Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
-Link: https://lore.kernel.org/r/000000000000ed666a0611af6818@google.com
-Reported-and-tested-by: syzbot+8cd36f6b65f3cafd400a@syzkaller.appspotmail.com
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Message-ID: <20240307120340.99577-2-toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/bpf/devmap.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index f02d04540c0c0..b591073c5f83d 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -130,13 +130,14 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- 	bpf_map_init_from_attr(&dtab->map, attr);
- 
- 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
--		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
--
--		if (!dtab->n_buckets) /* Overflow check */
-+		/* hash table size must be power of 2; roundup_pow_of_two() can
-+		 * overflow into UB on 32-bit arches, so check that first
-+		 */
-+		if (dtab->map.max_entries > 1UL << 31)
- 			return -EINVAL;
--	}
- 
--	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
-+		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
-+
- 		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets,
- 							   dtab->map.numa_node);
- 		if (!dtab->dev_index_head)
--- 
-2.43.0
-
+The block layer needs to suppotr dmabuf for this kind of I/O.
+Any special netdev to block side channel will be NAKed before you can
+even send it out.
