@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEE414F115;
-	Sun, 24 Mar 2024 23:02:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5C514F139;
+	Sun, 24 Mar 2024 23:02:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321344; cv=none; b=P4PUzXZG8dqVnQq804ot7dYxXEeLwpLMPkZU3RCb9DDHjPchD7DWVpHBaks+OnJd6V4u4u8dqqVuXj1lGbK0KEK7i5rS5OTEXqr1p3H7dxKFLGmRRtlTHGe2HxHJDWY4sM0YPaJqJ6TPnIdBDRapMAD8HhkdjN8dkurQ6YSbbj8=
+	t=1711321349; cv=none; b=mBfu/LeACnPm2uspc7lFRWz2+U2BclfH/qGZ4qiaMbanwWQVc4ojFMzmY3ticgMvLfCLjeS1ebbl3z7E3t9yxyWOuhRt6l5+SSzrUidm6G9cAaHSjrC+BVTeU2MK+vz3kigS6e3fRPFXlw0k87UOmKtvATpWw4dNLNxzHKPZjy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321344; c=relaxed/simple;
-	bh=XBHbYPR8C3NkL6EjNIF6UM5IMap2ZDW4fEy/kjUMKuw=;
+	s=arc-20240116; t=1711321349; c=relaxed/simple;
+	bh=yCXgsa4q4NyeqaJ3F8dc0OUAUpdMrUoM3XM3Wg3r9OU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rEZmc4qUJkW6+vUkvYXqQXL+66kxBQHl4IMtkZkcSuUjuuA6Q99khO/l/0I0/VLa0+xjgXKERVkt591Byv0wiNnJA5AxPjlA5XylRm/iNhPB3MuBfL1ISGzdjXE1QnSyUkPrZROazQiC/x06g9g2IiGJ9AETLaaXpws9lZnbfyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DFfyMt0I; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=orl202ZrocPCGTXZoY0ms/cVfILBwNuewNPA5ovw1VCsRyklgBuWJMqGDTSbTk3NbsQPjIPzsg5rAhaR2Iap0tVrXBhYcy5IUtuFjQ/Tl62qAxc3oL0ry+S2jr6UnzJ5CXQPirnFl0yVsXd8KiL5ggUYEjT8hbn/YIimiWIAH2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iv5nNiA0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DFfyMt0I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E70C43394;
-	Sun, 24 Mar 2024 23:02:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iv5nNiA0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B68C433C7;
+	Sun, 24 Mar 2024 23:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321343;
-	bh=XBHbYPR8C3NkL6EjNIF6UM5IMap2ZDW4fEy/kjUMKuw=;
+	s=k20201202; t=1711321347;
+	bh=yCXgsa4q4NyeqaJ3F8dc0OUAUpdMrUoM3XM3Wg3r9OU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DFfyMt0I+a9vu1Chct3xFeO59bAma23dypLp6UMyWEHhSOL4HqsqiEkKtJW3QhMT/
-	 5UvBgSC2i/KaR20gZCfFUJGhHaTparaUHCZ06+mbAvBvDAwWwQwuV/HzfKWIkPrBQR
-	 IimnkUJFHKBLAj++IPutZ+gSs03TWExwuOq1uCFEGqaO9QovjW3YxsWoIKoXEgt2/J
-	 AwIkYDvFg/p35JaqEqYiFK1ynMHLknHPg24idVRTv0zD2l6n7xJZuvObm3oEZ9SiL1
-	 0H5qXUTf25uQFod0VfQaE6Bq3lo9dOdc+bfAar+dHPqYaD1HX6e5RA4FuJ9d3Y7xnp
-	 3YQVR+jpKcM2w==
+	b=Iv5nNiA0Ys8VbZyFj1fhKIsHvBC2BGMoe3/Irfp4QBnvMgMhUvlnSB0ujSVWyoT56
+	 vcdVQc7XUhVf5ry0z+INl45jg9KnCRvKJCW54QjceMiHsEOnpCN8TFK6/APdDAndwk
+	 bwnc3yR+dT+EsXpSA926JRGnCUck8L/yrQkV2NiPnoCfG1BaEw7LCXqPv9tY4pbpO6
+	 5ofO3KoxcBiXdkBG6uAvCBKk1KzTRIrur3gNbeFN3L4w2/OKMUDkBpqBb8STlzKZkL
+	 0En0ckfh8F1cAyu9CJsoBdg8qEenuvNcRpdEXiKObZlaU3B9zNYv7yJM4CE9Q7C7Yn
+	 FgYfR1ntc5hfQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Chuck Lever III <chuck.lever@oracle.com>,
-	syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com,
-	Jan Kara <jack@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 067/638] do_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak
-Date: Sun, 24 Mar 2024 18:51:44 -0400
-Message-ID: <20240324230116.1348576-68-sashal@kernel.org>
+Subject: [PATCH 6.6 072/638] workqueue: Move nr_active handling into helpers
+Date: Sun, 24 Mar 2024 18:51:49 -0400
+Message-ID: <20240324230116.1348576-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -51,70 +48,181 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 3948abaa4e2be938ccdfc289385a27342fb13d43 ]
+[ Upstream commit 1c270b79ce0b8290f146255ea9057243f6dd3c17 ]
 
-syzbot identified a kernel information leak vulnerability in
-do_sys_name_to_handle() and issued the following report [1].
+__queue_work(), pwq_dec_nr_in_flight() and wq_adjust_max_active() were
+open-coding nr_active handling, which is fine given that the operations are
+trivial. However, the planned unbound nr_active update will make them more
+complicated, so let's move them into helpers.
 
-[1]
-"BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40
- instrument_copy_to_user include/linux/instrumented.h:114 [inline]
- _copy_to_user+0xbc/0x100 lib/usercopy.c:40
- copy_to_user include/linux/uaccess.h:191 [inline]
- do_sys_name_to_handle fs/fhandle.c:73 [inline]
- __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
- __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94
- __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
- ...
+- pwq_tryinc_nr_active() is added. It increments nr_active if under
+  max_active limit and return a boolean indicating whether inc was
+  successful. Note that the function is structured to accommodate future
+  changes. __queue_work() is updated to use the new helper.
 
-Uninit was created at:
- slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
- slab_alloc_node mm/slub.c:3478 [inline]
- __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517
- __do_kmalloc_node mm/slab_common.c:1006 [inline]
- __kmalloc+0x121/0x3c0 mm/slab_common.c:1020
- kmalloc include/linux/slab.h:604 [inline]
- do_sys_name_to_handle fs/fhandle.c:39 [inline]
- __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
- __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94
- __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
- ...
+- pwq_activate_first_inactive() is updated to use pwq_tryinc_nr_active() and
+  thus no longer assumes that nr_active is under max_active and returns a
+  boolean to indicate whether a work item has been activated.
 
-Bytes 18-19 of 20 are uninitialized
-Memory access of size 20 starts at ffff888128a46380
-Data copied to user address 0000000020000240"
+- wq_adjust_max_active() no longer tests directly whether a work item can be
+  activated. Instead, it's updated to use the return value of
+  pwq_activate_first_inactive() to tell whether a work item has been
+  activated.
 
-Per Chuck Lever's suggestion, use kzalloc() instead of kmalloc() to
-solve the problem.
+- nr_active decrement and activating the first inactive work item is
+  factored into pwq_dec_nr_active().
 
-Fixes: 990d6c2d7aee ("vfs: Add name to file handle conversion support")
-Suggested-by: Chuck Lever III <chuck.lever@oracle.com>
-Reported-and-tested-by: <syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com>
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Link: https://lore.kernel.org/r/20240119153906.4367-1-n.zhandarovich@fintech.ru
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+v3: - WARN_ON_ONCE(!WORK_STRUCT_INACTIVE) added to __pwq_activate_work() as
+      now we're calling the function unconditionally from
+      pwq_activate_first_inactive().
+
+v2: - wq->max_active now uses WRITE/READ_ONCE() as suggested by Lai.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
+Stable-dep-of: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fhandle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/workqueue.c | 86 ++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 67 insertions(+), 19 deletions(-)
 
-diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 6ea8d35a9382a..99dcf07cfecfe 100644
---- a/fs/fhandle.c
-+++ b/fs/fhandle.c
-@@ -40,7 +40,7 @@ static long do_sys_name_to_handle(const struct path *path,
- 	if (f_handle.handle_bytes > MAX_HANDLE_SZ)
- 		return -EINVAL;
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 3436fd266cde0..51dc508ac35b5 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1458,11 +1458,14 @@ static bool pwq_is_empty(struct pool_workqueue *pwq)
+ static void __pwq_activate_work(struct pool_workqueue *pwq,
+ 				struct work_struct *work)
+ {
++	unsigned long *wdb = work_data_bits(work);
++
++	WARN_ON_ONCE(!(*wdb & WORK_STRUCT_INACTIVE));
+ 	trace_workqueue_activate_work(work);
+ 	if (list_empty(&pwq->pool->worklist))
+ 		pwq->pool->watchdog_ts = jiffies;
+ 	move_linked_works(work, &pwq->pool->worklist, NULL);
+-	__clear_bit(WORK_STRUCT_INACTIVE_BIT, work_data_bits(work));
++	__clear_bit(WORK_STRUCT_INACTIVE_BIT, wdb);
+ }
  
--	handle = kmalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
-+	handle = kzalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
- 			 GFP_KERNEL);
- 	if (!handle)
- 		return -ENOMEM;
+ /**
+@@ -1487,12 +1490,66 @@ static bool pwq_activate_work(struct pool_workqueue *pwq,
+ 	return true;
+ }
+ 
+-static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
++/**
++ * pwq_tryinc_nr_active - Try to increment nr_active for a pwq
++ * @pwq: pool_workqueue of interest
++ *
++ * Try to increment nr_active for @pwq. Returns %true if an nr_active count is
++ * successfully obtained. %false otherwise.
++ */
++static bool pwq_tryinc_nr_active(struct pool_workqueue *pwq)
++{
++	struct workqueue_struct *wq = pwq->wq;
++	struct worker_pool *pool = pwq->pool;
++	bool obtained;
++
++	lockdep_assert_held(&pool->lock);
++
++	obtained = pwq->nr_active < READ_ONCE(wq->max_active);
++
++	if (obtained)
++		pwq->nr_active++;
++	return obtained;
++}
++
++/**
++ * pwq_activate_first_inactive - Activate the first inactive work item on a pwq
++ * @pwq: pool_workqueue of interest
++ *
++ * Activate the first inactive work item of @pwq if available and allowed by
++ * max_active limit.
++ *
++ * Returns %true if an inactive work item has been activated. %false if no
++ * inactive work item is found or max_active limit is reached.
++ */
++static bool pwq_activate_first_inactive(struct pool_workqueue *pwq)
++{
++	struct work_struct *work =
++		list_first_entry_or_null(&pwq->inactive_works,
++					 struct work_struct, entry);
++
++	if (work && pwq_tryinc_nr_active(pwq)) {
++		__pwq_activate_work(pwq, work);
++		return true;
++	} else {
++		return false;
++	}
++}
++
++/**
++ * pwq_dec_nr_active - Retire an active count
++ * @pwq: pool_workqueue of interest
++ *
++ * Decrement @pwq's nr_active and try to activate the first inactive work item.
++ */
++static void pwq_dec_nr_active(struct pool_workqueue *pwq)
+ {
+-	struct work_struct *work = list_first_entry(&pwq->inactive_works,
+-						    struct work_struct, entry);
++	struct worker_pool *pool = pwq->pool;
+ 
+-	pwq_activate_work(pwq, work);
++	lockdep_assert_held(&pool->lock);
++
++	pwq->nr_active--;
++	pwq_activate_first_inactive(pwq);
+ }
+ 
+ /**
+@@ -1510,14 +1567,8 @@ static void pwq_dec_nr_in_flight(struct pool_workqueue *pwq, unsigned long work_
+ {
+ 	int color = get_work_color(work_data);
+ 
+-	if (!(work_data & WORK_STRUCT_INACTIVE)) {
+-		pwq->nr_active--;
+-		if (!list_empty(&pwq->inactive_works)) {
+-			/* one down, submit an inactive one */
+-			if (pwq->nr_active < READ_ONCE(pwq->wq->max_active))
+-				pwq_activate_first_inactive(pwq);
+-		}
+-	}
++	if (!(work_data & WORK_STRUCT_INACTIVE))
++		pwq_dec_nr_active(pwq);
+ 
+ 	pwq->nr_in_flight[color]--;
+ 
+@@ -1819,13 +1870,11 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
+ 	 * @work must also queue behind existing inactive work items to maintain
+ 	 * ordering when max_active changes. See wq_adjust_max_active().
+ 	 */
+-	if (list_empty(&pwq->inactive_works) &&
+-	    pwq->nr_active < READ_ONCE(pwq->wq->max_active)) {
++	if (list_empty(&pwq->inactive_works) && pwq_tryinc_nr_active(pwq)) {
+ 		if (list_empty(&pool->worklist))
+ 			pool->watchdog_ts = jiffies;
+ 
+ 		trace_workqueue_activate_work(work);
+-		pwq->nr_active++;
+ 		insert_work(pwq, work, &pool->worklist, work_flags);
+ 		kick_pool(pool);
+ 	} else {
+@@ -4687,9 +4736,8 @@ static void wq_adjust_max_active(struct workqueue_struct *wq)
+ 		/* this function can be called during early boot w/ irq disabled */
+ 		raw_spin_lock_irqsave(&pwq->pool->lock, flags);
+ 
+-		while (!list_empty(&pwq->inactive_works) &&
+-		       pwq->nr_active < wq->max_active)
+-			pwq_activate_first_inactive(pwq);
++		while (pwq_activate_first_inactive(pwq))
++			;
+ 
+ 		kick_pool(pwq->pool);
+ 
 -- 
 2.43.0
 
