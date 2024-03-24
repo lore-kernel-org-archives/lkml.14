@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EEA1E7DFA;
-	Sun, 24 Mar 2024 23:03:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2881E7E0C;
+	Sun, 24 Mar 2024 23:03:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321413; cv=none; b=Mi87vYeqs6JFSWw0oItQb3XcpkzveHIFXXXbH1rl58GWM1Qo43lGNwolJfSgu53n8vkVLQHTOKAOYCeIMcR2HGxqVT+fQjVlYPxqdXv9UVfnHtYCfKoCF3X1R6mcjdwmk6h/Ob/qEX8AkWJLnJ4R+xYj4BMH+t7qY3WwP1Rk+iE=
+	t=1711321417; cv=none; b=QUel5xtutiShfbm438CbvRmaWgk5AgQxNYqzh+DqSCONaaJ8VsUns33DyrbJiR4JhGszptcaaLLWKV8+WF4ujyWy92j3YB6kODPM89ic/G08OioBV0b4KWlANLsC6/vtL9fRcLKbEuMohmiiP3Hkv1qyfbpZBZ0kjDKSujnU/Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321413; c=relaxed/simple;
-	bh=7Dr+Ll8d67dEAoULtrMbU5o/YUvZsxpqU78n5IU0YrE=;
+	s=arc-20240116; t=1711321417; c=relaxed/simple;
+	bh=ucO1ROlYGDE8bFvsPrY8PYxu+AoZeDX3F6itb2/x/9Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fSvjKIqQkTmnD14p/IJoMKE+xZrzVF9H1TiusfszE6HFoInv/gDrvR8D1Lo31PVDHeLh3LnjApSY7Sa2GTwSpCLU8No3ysy0pxfnzJ2XfwXDRN0nQy3pN3koqnlVmBvOWqCxL9FbZ55PvH4MyX9BKY9Sw0w0HH/T85tgfKM0FvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZ3BkXPi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cnsHGHD6aBX5987J21xm8osopeqFzqMkR0fpbnUhHX70Qgnunm3MxViCGrmgWBqaxJliD0VSlP0opt4QDhe15baxfNuYovhOXK8QIrPTOYZzLRi/OvOHUME8jfPOYQq7UeZloG1+grD9+QiXelH529DWJ6Rx6jMmnpG25F/N5k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M14VHoxP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZ3BkXPi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612C1C43399;
-	Sun, 24 Mar 2024 23:03:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M14VHoxP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A68C433C7;
+	Sun, 24 Mar 2024 23:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321413;
-	bh=7Dr+Ll8d67dEAoULtrMbU5o/YUvZsxpqU78n5IU0YrE=;
+	s=k20201202; t=1711321416;
+	bh=ucO1ROlYGDE8bFvsPrY8PYxu+AoZeDX3F6itb2/x/9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VZ3BkXPiVBINi0l9xy5yw4jx4bqywDYOFn5KBWh9lvsIy08kpRTWXrYXYBmZd5zre
-	 8zgL1WqgCCaMgFJLR4UAJBnSTLEqsq1vIJbNrQiq72OQ6Zt3i2GOp9ctyMnXzZLhMM
-	 PTP6EfCWSkYqX1uk+0Y1EdUHfIqRQjPpcDtS8mEaXBqE1nmQmGEi+H6HTpDf2ATOgg
-	 VtwL2/UR01rAzLAvVfmY3xtLPw3cKIYtNlok78gg/mGVWONSb41uCmGpe5CAduN+aD
-	 TAJFdaxGzQlxbXT5acvyu3iz0M8Fhzjt0bcCdBFzOzJBzH3oAmkCQukXU6BMH9se6K
-	 r+U0iRf7D2X6w==
+	b=M14VHoxP29QrDRUgPOhXCZicRZsw5d+oPNBbZ7T8nZgAE+Xe3ioKJi3qz6crZ6t64
+	 3Uy9F+sJUnlx7CBDGGKiuqaD2qS6THAmEi2flWx5HS2Hpb+gCCBTkETHu48dBQ+tO8
+	 c2lPB/hj3ROXXtPpUgy9cK5ii1RmUmKrJa3x3CRiHW7dL5VaNsXehph3A68dekZf1s
+	 E4dNObfHQrRhk/aPEgk5GVqvQNjLPnslfnGuXhf8/AC3nfp9KhwZkBKISJB73yzSR5
+	 Mh8nm5L9dmq6vXQgHUQJHY/HEeNxFL/BBGSqrwdYfTv/pYgKbNpFP4HEXLWlGCBqJC
+	 iwx951Tzew3qw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Artem Savkov <asavkov@redhat.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Sriram R <quic_srirrama@quicinc.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Kalle Valo <quic_kvalo@quicinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 137/638] selftests/bpf: Fix potential premature unload in bpf_testmod
-Date: Sun, 24 Mar 2024 18:52:54 -0400
-Message-ID: <20240324230116.1348576-138-sashal@kernel.org>
+Subject: [PATCH 6.6 140/638] wifi: ath12k: Fix issues in channel list update
+Date: Sun, 24 Mar 2024 18:52:57 -0400
+Message-ID: <20240324230116.1348576-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -51,60 +49,99 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Artem Savkov <asavkov@redhat.com>
+From: Sriram R <quic_srirrama@quicinc.com>
 
-[ Upstream commit d177c1be06ce28aa8c8710ac55be1b5ad3f314c6 ]
+[ Upstream commit 67a48d937fac917947540c9f89630d472cd61fcb ]
 
-It is possible for bpf_kfunc_call_test_release() to be called from
-bpf_map_free_deferred() when bpf_testmod is already unloaded and
-perf_test_stuct.cnt which it tries to decrease is no longer in memory.
-This patch tries to fix the issue by waiting for all references to be
-dropped in bpf_testmod_exit().
+Currently, the logic used to select the 6 GHz band is incorrect,
+which may cause 6 GHz supported channels to not be updated properly.
+This is because the 6 GHz Max frequency supported by the driver is
+being compared to the Max frequency supported on the board. If in
+some cases, the 6 GHz Max frequency supported on the board is less
+than the defined 6 GHz Max frequency, all 6 GHz channels are disabled.
+To address this, compare the max frequency supported by the board to
+the defined 6 GHz Minimum frequency by the driver.
 
-The issue can be triggered by running 'test_progs -t map_kptr' in 6.5,
-but is obscured in 6.6 by d119357d07435 ("rcu-tasks: Treat only
-synchronous grace periods urgently").
+Similarly, when a dual mac card supports both 6 GHz and 5 GHz radios,
+if the 5 GHz radio gets enumerated first before 6 GHz, the checks in
+ath12k_mac_setup_channels_rates() can cause the 5 GHz channels which
+were enabled earlier to get disabled when the 6 GHz channel list is
+updated. This is because the Min 6 GHz frequency defined in the driver
+is 5945 MHz, which should be 5925 MHz since channel 2 is not considered
+currently, but the firmware can pass 5925 MHz as the minimum.
+Hence, update the Min frequency supported by the driver to 5925 MHz.
 
-Fixes: 65eb006d85a2 ("bpf: Move kernel test kfuncs to bpf_testmod")
-Signed-off-by: Artem Savkov <asavkov@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yonghong.song@linux.dev>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: https://lore.kernel.org/bpf/82f55c0e-0ec8-4fe1-8d8c-b1de07558ad9@linux.dev
-Link: https://lore.kernel.org/bpf/20240110085737.8895-1-asavkov@redhat.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+In addition, ensure that the channel list update to firmware updates
+only the channels that the current radio (ar) supports rather than
+considering the wiphy support. This would be required when multiple pdevs
+are supported in a wiphy and they support different ranges of frequencies
+or bands as in single wiphy support.
+
+Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7 devices")
+
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.0.1-00029-QCAHKSWPL_SILICONZ-1
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.1.1-00188-QCAHKSWPL_SILICONZ-1
+Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+
+Signed-off-by: Sriram R <quic_srirrama@quicinc.com>
+Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+Link: https://msgid.link/20240117062628.8260-1-quic_srirrama@quicinc.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/wireless/ath/ath12k/core.h | 2 +-
+ drivers/net/wireless/ath/ath12k/mac.c  | 2 +-
+ drivers/net/wireless/ath/ath12k/reg.c  | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-index cefc5dd72573c..2e8adf059fa3b 100644
---- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-@@ -2,6 +2,7 @@
- /* Copyright (c) 2020 Facebook */
- #include <linux/btf.h>
- #include <linux/btf_ids.h>
-+#include <linux/delay.h>
- #include <linux/error-injection.h>
- #include <linux/init.h>
- #include <linux/module.h>
-@@ -541,6 +542,14 @@ static int bpf_testmod_init(void)
+diff --git a/drivers/net/wireless/ath/ath12k/core.h b/drivers/net/wireless/ath/ath12k/core.h
+index d873b573dac66..c926952c956ef 100644
+--- a/drivers/net/wireless/ath/ath12k/core.h
++++ b/drivers/net/wireless/ath/ath12k/core.h
+@@ -400,7 +400,7 @@ struct ath12k_sta {
+ };
  
- static void bpf_testmod_exit(void)
- {
-+        /* Need to wait for all references to be dropped because
-+         * bpf_kfunc_call_test_release() which currently resides in kernel can
-+         * be called after bpf_testmod is unloaded. Once release function is
-+         * moved into the module this wait can be removed.
-+         */
-+	while (refcount_read(&prog_test_struct.cnt) > 1)
-+		msleep(20);
-+
- 	return sysfs_remove_bin_file(kernel_kobj, &bin_attr_bpf_testmod_file);
- }
+ #define ATH12K_MIN_5G_FREQ 4150
+-#define ATH12K_MIN_6G_FREQ 5945
++#define ATH12K_MIN_6G_FREQ 5925
+ #define ATH12K_MAX_6G_FREQ 7115
+ #define ATH12K_NUM_CHANS 100
+ #define ATH12K_MAX_5G_CHAN 173
+diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
+index 5434883eaf962..6563772b84307 100644
+--- a/drivers/net/wireless/ath/ath12k/mac.c
++++ b/drivers/net/wireless/ath/ath12k/mac.c
+@@ -7004,7 +7004,7 @@ static int ath12k_mac_setup_channels_rates(struct ath12k *ar,
+ 	}
  
+ 	if (supported_bands & WMI_HOST_WLAN_5G_CAP) {
+-		if (reg_cap->high_5ghz_chan >= ATH12K_MAX_6G_FREQ) {
++		if (reg_cap->high_5ghz_chan >= ATH12K_MIN_6G_FREQ) {
+ 			channels = kmemdup(ath12k_6ghz_channels,
+ 					   sizeof(ath12k_6ghz_channels), GFP_KERNEL);
+ 			if (!channels) {
+diff --git a/drivers/net/wireless/ath/ath12k/reg.c b/drivers/net/wireless/ath/ath12k/reg.c
+index 6ede91ebc8e16..a2645ccae94aa 100644
+--- a/drivers/net/wireless/ath/ath12k/reg.c
++++ b/drivers/net/wireless/ath/ath12k/reg.c
+@@ -103,7 +103,7 @@ int ath12k_reg_update_chan_list(struct ath12k *ar)
+ 
+ 	bands = hw->wiphy->bands;
+ 	for (band = 0; band < NUM_NL80211_BANDS; band++) {
+-		if (!bands[band])
++		if (!(ar->mac.sbands[band].channels && bands[band]))
+ 			continue;
+ 
+ 		for (i = 0; i < bands[band]->n_channels; i++) {
+@@ -129,7 +129,7 @@ int ath12k_reg_update_chan_list(struct ath12k *ar)
+ 	ch = arg->channel;
+ 
+ 	for (band = 0; band < NUM_NL80211_BANDS; band++) {
+-		if (!bands[band])
++		if (!(ar->mac.sbands[band].channels && bands[band]))
+ 			continue;
+ 
+ 		for (i = 0; i < bands[band]->n_channels; i++) {
 -- 
 2.43.0
 
