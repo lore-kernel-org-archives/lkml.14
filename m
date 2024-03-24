@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5272212F58A;
-	Sun, 24 Mar 2024 23:14:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481E0146019;
+	Sun, 24 Mar 2024 23:14:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322074; cv=none; b=F1Z0ZMm/annOdjorHsHoC2RaMy+nio77b9k7bilL0kAdXOhPsDglaqzbblNkpawPZrRYxz3ByGfvQ/b4/tnCQ/W8LoJo3eeWNHnglWB9JhTAJOEcE2JmucrWLHhf4BP2CukXgtMA2F0G0HP2F4h3QgD/3gmboqqTI8KDJ7QlttQ=
+	t=1711322076; cv=none; b=a1VdmT6VeV9giz4fAV1EpVEWb0NG8TEAsgkJsBcWF0k3FfSHjtaJk2G9cvBcNExDsi3HIqLEtESBjtv7mHRRQBEClGyHelDbrpckvvQKAT6HNElSdGEITENyPnZWdm4gxriYFi1vBYWQZReEu7DvHvamN8Ns82Lqe6lvJFh4jYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322074; c=relaxed/simple;
-	bh=YvQ9+//vR8b/prfeRh/EeuVJOWrKI0Ac7A+Fh42W4Q4=;
+	s=arc-20240116; t=1711322076; c=relaxed/simple;
+	bh=fX80GMalYyvbWjTGR43Qrf2n8NK9uE12CRuupmtEfWE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AEGQ66FcEWSXFr53SS18bevMUL1jb87wxmAxzLRx4KbhB/COUOnDRO1ZKdzppEP25VhyypuOssJkeiz1nletBjE1P+aOAvqX8s+mpUxt4Ns0i6ANtKi0bx89xkK2d8GukC63dEU8FpFLCg1LfJ3iWUzYOwRsld2SGeFeVt6sfr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EjWdQKgb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EUki/146IjljTBSRiqHoJIcq2lsH8No9a2UELrYwA98Qemr2VbrI7IzJMHXxi9L/uMO5OazEqnaRGcmlGpQSsKx7Qs/2T1i9QUlQnHOxDm/agZXKOiwitaPbv6DJkAdRLbQ3ZLTyS4TfkufX5kK3JsSoqay+uVsZnSv7HRMWHfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OcQC7QF5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EjWdQKgb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7921FC43394;
-	Sun, 24 Mar 2024 23:14:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OcQC7QF5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FA2CC433C7;
+	Sun, 24 Mar 2024 23:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322074;
-	bh=YvQ9+//vR8b/prfeRh/EeuVJOWrKI0Ac7A+Fh42W4Q4=;
+	s=k20201202; t=1711322076;
+	bh=fX80GMalYyvbWjTGR43Qrf2n8NK9uE12CRuupmtEfWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EjWdQKgbBN2iWTDkSMQSkWibRD3oG3cGbW4qQhxkAocxeY9slKgNKOkgStLp0NC7M
-	 YKIYFtMVh+lKEW1FA9JSjBMLbkWAPRcbwnTpZtluLM9UJ2dCdvwxNV4sHvpfa6DNKN
-	 osqaAdUq5x05PnjZnV+FA6hWjMB0E+NwF6qTmlVj2fp4M9ClORJ9tvvd24bBnEN69i
-	 ARY1BRE0MrUjqqTp6S70Y/Pn391wvBoti4fpnzfKUpX5XDsuInmnOQ/Ksf0tkgN5Sn
-	 wwG86CMPA7+DLCkFwihDj5PweVYaoKT965pB6MXNKm2vOiFlULuF38sjmgZc83dtqy
-	 zQyH7O+3vz+Kg==
+	b=OcQC7QF5Tmk8os6GY0pZEyxq+GNDwnWj8UcxbvwafTmcSpz9v0Z5u0r/LrWZZGcDi
+	 QTwdOF//0wicKR/U4Vhe3njFKZUsZ2VYeEKUZ6vPXCZHb78ZeBTn9+dFOi2qavpqi9
+	 l2SNYGb8gu0+BgGUkdLJpBPLQuTTMiHGO1SUZc95JfhpJPdrRSELSyzxv3woU42tEP
+	 S1/3+IqhHhwdGdkb9jIgwyLmGTwD2+vlkdiRcDIOcFpA9AP85zJ3B6te3+VrNxJIQl
+	 OapXWnJU4DpCKiXaPIsptb9F5ZXEbI5NYw40tjCBJkkH6JFSMR3CV+0jwA3gMDPt+H
+	 ACiiP7KNA6oOQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yonghong Song <yonghong.song@linux.dev>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Stanislav Fomichev <sdf@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 147/451] bpf: Mark bpf_spin_{lock,unlock}() helpers with notrace correctly
-Date: Sun, 24 Mar 2024 19:07:03 -0400
-Message-ID: <20240324231207.1351418-148-sashal@kernel.org>
+Subject: [PATCH 6.1 149/451] selftests/bpf: Add global subprog context passing tests
+Date: Sun, 24 Mar 2024 19:07:05 -0400
+Message-ID: <20240324231207.1351418-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,131 +49,155 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yonghong Song <yonghong.song@linux.dev>
+From: Andrii Nakryiko <andrii@kernel.org>
 
-[ Upstream commit 178c54666f9c4d2f49f2ea661d0c11b52f0ed190 ]
+[ Upstream commit e2b5cfc978f871996d1f8667515c0e06b33e620e ]
 
-Currently tracing is supposed not to allow for bpf_spin_{lock,unlock}()
-helper calls. This is to prevent deadlock for the following cases:
-  - there is a prog (prog-A) calling bpf_spin_{lock,unlock}().
-  - there is a tracing program (prog-B), e.g., fentry, attached
-    to bpf_spin_lock() and/or bpf_spin_unlock().
-  - prog-B calls bpf_spin_{lock,unlock}().
-For such a case, when prog-A calls bpf_spin_{lock,unlock}(),
-a deadlock will happen.
+Add tests validating that it's possible to pass context arguments into
+global subprogs for various types of programs, including a particularly
+tricky KPROBE programs (which cover kprobes, uprobes, USDTs, a vast and
+important class of programs).
 
-The related source codes are below in kernel/bpf/helpers.c:
-  notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
-  notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
-notrace is supposed to prevent fentry prog from attaching to
-bpf_spin_{lock,unlock}().
-
-But actually this is not the case and fentry prog can successfully
-attached to bpf_spin_lock(). Siddharth Chintamaneni reported
-the issue in [1]. The following is the macro definition for
-above BPF_CALL_1:
-  #define BPF_CALL_x(x, name, ...)                                               \
-        static __always_inline                                                 \
-        u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__));   \
-        typedef u64 (*btf_##name)(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__)); \
-        u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__));         \
-        u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__))          \
-        {                                                                      \
-                return ((btf_##name)____##name)(__BPF_MAP(x,__BPF_CAST,__BPF_N,__VA_ARGS__));\
-        }                                                                      \
-        static __always_inline                                                 \
-        u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__))
-
-  #define BPF_CALL_1(name, ...)   BPF_CALL_x(1, name, __VA_ARGS__)
-
-The notrace attribute is actually applied to the static always_inline function
-____bpf_spin_{lock,unlock}(). The actual callback function
-bpf_spin_{lock,unlock}() is not marked with notrace, hence
-allowing fentry prog to attach to two helpers, and this
-may cause the above mentioned deadlock. Siddharth Chintamaneni
-actually has a reproducer in [2].
-
-To fix the issue, a new macro NOTRACE_BPF_CALL_1 is introduced which
-will add notrace attribute to the original function instead of
-the hidden always_inline function and this fixed the problem.
-
-  [1] https://lore.kernel.org/bpf/CAE5sdEigPnoGrzN8WU7Tx-h-iFuMZgW06qp0KHWtpvoXxf1OAQ@mail.gmail.com/
-  [2] https://lore.kernel.org/bpf/CAE5sdEg6yUc_Jz50AnUXEEUh6O73yQ1Z6NV2srJnef0ZrQkZew@mail.gmail.com/
-
-Fixes: d83525ca62cf ("bpf: introduce bpf_spin_lock")
-Signed-off-by: Yonghong Song <yonghong.song@linux.dev>
 Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: https://lore.kernel.org/bpf/20240207070102.335167-1-yonghong.song@linux.dev
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Stanislav Fomichev <sdf@google.com>
+Link: https://lore.kernel.org/bpf/20230216045954.3002473-4-andrii@kernel.org
+Stable-dep-of: 879bbe7aa4af ("bpf: don't infer PTR_TO_CTX for programs with unnamed context type")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/filter.h | 21 ++++++++++++---------
- kernel/bpf/helpers.c   |  4 ++--
- 2 files changed, 14 insertions(+), 11 deletions(-)
+ .../bpf/prog_tests/test_global_funcs.c        |   2 +
+ .../bpf/progs/test_global_func_ctx_args.c     | 104 ++++++++++++++++++
+ 2 files changed, 106 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
 
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index efc42a6e3aed0..face590b24e17 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -495,24 +495,27 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
- 	__BPF_MAP(n, __BPF_DECL_ARGS, __BPF_N, u64, __ur_1, u64, __ur_2,       \
- 		  u64, __ur_3, u64, __ur_4, u64, __ur_5)
+diff --git a/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c b/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
+index 2ff4d5c7abfce..e0879df38639b 100644
+--- a/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
++++ b/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
+@@ -18,6 +18,7 @@
+ #include "test_global_func15.skel.h"
+ #include "test_global_func16.skel.h"
+ #include "test_global_func17.skel.h"
++#include "test_global_func_ctx_args.skel.h"
  
--#define BPF_CALL_x(x, name, ...)					       \
-+#define BPF_CALL_x(x, attr, name, ...)					       \
- 	static __always_inline						       \
- 	u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__));   \
- 	typedef u64 (*btf_##name)(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__)); \
--	u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__));	       \
--	u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__))	       \
-+	attr u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__));    \
-+	attr u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__))     \
- 	{								       \
- 		return ((btf_##name)____##name)(__BPF_MAP(x,__BPF_CAST,__BPF_N,__VA_ARGS__));\
- 	}								       \
- 	static __always_inline						       \
- 	u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__))
- 
--#define BPF_CALL_0(name, ...)	BPF_CALL_x(0, name, __VA_ARGS__)
--#define BPF_CALL_1(name, ...)	BPF_CALL_x(1, name, __VA_ARGS__)
--#define BPF_CALL_2(name, ...)	BPF_CALL_x(2, name, __VA_ARGS__)
--#define BPF_CALL_3(name, ...)	BPF_CALL_x(3, name, __VA_ARGS__)
--#define BPF_CALL_4(name, ...)	BPF_CALL_x(4, name, __VA_ARGS__)
--#define BPF_CALL_5(name, ...)	BPF_CALL_x(5, name, __VA_ARGS__)
-+#define __NOATTR
-+#define BPF_CALL_0(name, ...)	BPF_CALL_x(0, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_1(name, ...)	BPF_CALL_x(1, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_2(name, ...)	BPF_CALL_x(2, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_3(name, ...)	BPF_CALL_x(3, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_4(name, ...)	BPF_CALL_x(4, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_5(name, ...)	BPF_CALL_x(5, __NOATTR, name, __VA_ARGS__)
+ void test_test_global_funcs(void)
+ {
+@@ -38,4 +39,5 @@ void test_test_global_funcs(void)
+ 	RUN_TESTS(test_global_func15);
+ 	RUN_TESTS(test_global_func16);
+ 	RUN_TESTS(test_global_func17);
++	RUN_TESTS(test_global_func_ctx_args);
+ }
+diff --git a/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c b/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
+new file mode 100644
+index 0000000000000..7faa8eef0598b
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
+@@ -0,0 +1,104 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2023 Meta Platforms, Inc. and affiliates. */
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_tracing.h>
++#include <bpf/bpf_core_read.h>
++#include "bpf_misc.h"
 +
-+#define NOTRACE_BPF_CALL_1(name, ...)	BPF_CALL_x(1, notrace, name, __VA_ARGS__)
- 
- #define bpf_ctx_range(TYPE, MEMBER)						\
- 	offsetof(TYPE, MEMBER) ... offsetofend(TYPE, MEMBER) - 1
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index 83f8f67e933df..758510b46d87b 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -328,7 +328,7 @@ static inline void __bpf_spin_lock_irqsave(struct bpf_spin_lock *lock)
- 	__this_cpu_write(irqsave_flags, flags);
- }
- 
--notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
-+NOTRACE_BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
- {
- 	__bpf_spin_lock_irqsave(lock);
- 	return 0;
-@@ -350,7 +350,7 @@ static inline void __bpf_spin_unlock_irqrestore(struct bpf_spin_lock *lock)
- 	local_irq_restore(flags);
- }
- 
--notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
-+NOTRACE_BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
- {
- 	__bpf_spin_unlock_irqrestore(lock);
- 	return 0;
++char _license[] SEC("license") = "GPL";
++
++static long stack[256];
++
++/*
++ * KPROBE contexts
++ */
++
++__weak int kprobe_typedef_ctx_subprog(bpf_user_pt_regs_t *ctx)
++{
++	return bpf_get_stack(ctx, &stack, sizeof(stack), 0);
++}
++
++SEC("?kprobe")
++__success
++int kprobe_typedef_ctx(void *ctx)
++{
++	return kprobe_typedef_ctx_subprog(ctx);
++}
++
++#define pt_regs_struct_t typeof(*(__PT_REGS_CAST((struct pt_regs *)NULL)))
++
++__weak int kprobe_struct_ctx_subprog(pt_regs_struct_t *ctx)
++{
++	return bpf_get_stack((void *)ctx, &stack, sizeof(stack), 0);
++}
++
++SEC("?kprobe")
++__success
++int kprobe_resolved_ctx(void *ctx)
++{
++	return kprobe_struct_ctx_subprog(ctx);
++}
++
++/* this is current hack to make this work on old kernels */
++struct bpf_user_pt_regs_t {};
++
++__weak int kprobe_workaround_ctx_subprog(struct bpf_user_pt_regs_t *ctx)
++{
++	return bpf_get_stack(ctx, &stack, sizeof(stack), 0);
++}
++
++SEC("?kprobe")
++__success
++int kprobe_workaround_ctx(void *ctx)
++{
++	return kprobe_workaround_ctx_subprog(ctx);
++}
++
++/*
++ * RAW_TRACEPOINT contexts
++ */
++
++__weak int raw_tp_ctx_subprog(struct bpf_raw_tracepoint_args *ctx)
++{
++	return bpf_get_stack(ctx, &stack, sizeof(stack), 0);
++}
++
++SEC("?raw_tp")
++__success
++int raw_tp_ctx(void *ctx)
++{
++	return raw_tp_ctx_subprog(ctx);
++}
++
++/*
++ * RAW_TRACEPOINT_WRITABLE contexts
++ */
++
++__weak int raw_tp_writable_ctx_subprog(struct bpf_raw_tracepoint_args *ctx)
++{
++	return bpf_get_stack(ctx, &stack, sizeof(stack), 0);
++}
++
++SEC("?raw_tp")
++__success
++int raw_tp_writable_ctx(void *ctx)
++{
++	return raw_tp_writable_ctx_subprog(ctx);
++}
++
++/*
++ * PERF_EVENT contexts
++ */
++
++__weak int perf_event_ctx_subprog(struct bpf_perf_event_data *ctx)
++{
++	return bpf_get_stack(ctx, &stack, sizeof(stack), 0);
++}
++
++SEC("?perf_event")
++__success
++int perf_event_ctx(void *ctx)
++{
++	return perf_event_ctx_subprog(ctx);
++}
 -- 
 2.43.0
 
