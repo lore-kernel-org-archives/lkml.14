@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D989F1DF0E2;
-	Sun, 24 Mar 2024 22:52:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B981DF78A;
+	Sun, 24 Mar 2024 22:52:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320742; cv=none; b=ApP3K+HKH3L4ArKt1oTxrt2Q6Tmk5oPiJ9NamwsQzygW4gseJUrIC4nstGyj0Srl6x/dXztAOKCdJwMTFuisN5QMPODqA0xmSPH4iix9IJZ+ohMcHGzz16FnYmRR/HujujdExk24yuJl6lSZPDwq+cfJxryh9xEA0RythdtkFbY=
+	t=1711320748; cv=none; b=Gg9E+UtyubiVw5RFceWNi9tdfM96hURIU2LIT/xuYZCTsDsL8ifDKI/uGhDGPWGft/g5ZFBqBuaL08Gm1NFJ0P7UW82nMXWylnLDv6GXl/VBXH66Wh6rjSKsC/6Ex7f6H25ykywGijuWOoygOVqtXSeu9YkI7rByoHNJ1Hxoepo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320742; c=relaxed/simple;
-	bh=58B98bGY5tMD2svD0Au4W1Qr/ZKoc4cnw7wxauTqbjE=;
+	s=arc-20240116; t=1711320748; c=relaxed/simple;
+	bh=PSfaJaGHfeh9RYxvNOEV3FNhCqWgQCV/Di0zLdoOfeM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z6eH+EKv7IQBHlcaMiT+futA8cpKFG+Xszg+H3EjAEA7rN1x/ddHkgmgDOX722jTjliZBl2fCSNPN0/mn+RXigbEIIlAGmY0REszP315UfBWhlOe6TyCgk47MRVN9lC19Y+nb0HYseUd+Xp2YHw2gE2AKe7BMqChxRYmUYujbdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UhyWMkM4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UREnKvR3lW8IYG7BJTObhLvgufBdKR2Tg9ePfWUWJle+9LCdfPD8bIhY38EoI8SiaO2S7pbbGf+iKmlHd02Y4cu2oXQ907m1LG9gsnDXSvJohi8PqXmNBxoxDmZT3ka1xjrDxC6lOWVPeKvObpKBIKijVI/cl68g2s96PrUzK/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rk3QGSJ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UhyWMkM4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B876C433C7;
-	Sun, 24 Mar 2024 22:52:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rk3QGSJ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE6EC433C7;
+	Sun, 24 Mar 2024 22:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320742;
-	bh=58B98bGY5tMD2svD0Au4W1Qr/ZKoc4cnw7wxauTqbjE=;
+	s=k20201202; t=1711320747;
+	bh=PSfaJaGHfeh9RYxvNOEV3FNhCqWgQCV/Di0zLdoOfeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UhyWMkM4uddfmJfbVHLSwZlpfAV95ZhJkDk2jFm4rLa26opZH+riBMsOtwIRE0Ggw
-	 vvRYqVWPGsZmudf4ngAooXBipuLDS9vnoSD7Tr2ZTQYANGQ3dVKnGl3MB7Ca4rqEoT
-	 BDRha6K20ppxpcyzKrTjUswQd9xKk4AVII3HEcANFQ0Xn6pm/UYOvQf/fhguhHjHeJ
-	 g/lzKr8llcySPWjNVJxF/7VWe+2gY/EmMlaL4/moaKhLaJAbjlEyEuCAyLfTtr+2XB
-	 PWxKKcMamnOUYtCy44tUHLQwmh2RrOHLcBV28IZXNebmKpAQo2nTTIoRik/G3pIDkV
-	 kBQnxnORuJ9FA==
+	b=rk3QGSJ5wGHaSdINwE/zsQMLG3OEH+ZgqZ2KJ0wf3wOSqxbs7LUxO7cwd7TBBsUzQ
+	 qDPJu6zyR3A46A5j13v+8RlOUGtJeBrB/VLRzVeUjtFqQWXqPEJ4x1mvJPW5Rz87Wv
+	 ZmZzbLFKEvZuE6uj1FvVrVUdZdjPfs74aC4xZY3EqvJ0QPYuVrnQkcBMlIS8h8N/AO
+	 6qGFv9dDxfQQ38yMI7vXKRYu09IwBztLziEAbodca0re/2vQp6kcMChmDPn/LrsFOW
+	 w3CysMyRW0war4WnLCQTUrm/rCPdQ3aN/CchC3E1dpSzj2m/3bksf6uO62gx/EYz8T
+	 jmartopfm1bwA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc: Chen-Yu Tsai <wens@csie.org>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 306/713] arm64: dts: renesas: r8a779a0: Correct avb[01] reg sizes
-Date: Sun, 24 Mar 2024 18:40:32 -0400
-Message-ID: <20240324224720.1345309-307-sashal@kernel.org>
+Subject: [PATCH 6.7 311/713] arm64: dts: allwinner: h6: Add RX DMA channel for SPDIF
+Date: Sun, 24 Mar 2024 18:40:37 -0400
+Message-ID: <20240324224720.1345309-312-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -47,46 +49,81 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 0c51912331f8ba5ce5fb52f46e340945160672a3 ]
+[ Upstream commit 7b59348c11f3355e284d77bbe3d33632ddadcfc2 ]
 
-All Ethernet AVB instances on R-Car V3U have registers related to UDP/IP
-support, but the declared register blocks for the first two instances
-are too small to cover them.
+The SPDIF hardware found on the H6 supports both transmit and receive
+functions. However it is missing the RX DMA channel.
 
-Fix this by extending the register block sizes.
+Add the SPDIF hardware block's RX DMA channel. Also remove the
+by-default pinmux, since the end device can choose to implement
+either or both functionalities.
 
-Fixes: 5a633320f08b8c9b ("arm64: dts: renesas: r8a779a0: Add Ethernet-AVB support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/ce6ce3c4b1495e02e7c1803fca810a7178a84500.1707660323.git.geert+renesas@glider.be
+Fixes: f95b598df419 ("arm64: dts: allwinner: Add SPDIF node for Allwinner H6")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Link: https://lore.kernel.org/r/20240127163247.384439-6-wens@kernel.org
+Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a779a0.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 2 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi      | 2 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi            | 7 +++----
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a779a0.dtsi b/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
-index 4e67a03564971..504ac8c93faf5 100644
---- a/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
-@@ -658,7 +658,7 @@ channel7 {
- 		avb0: ethernet@e6800000 {
- 			compatible = "renesas,etheravb-r8a779a0",
- 				     "renesas,etheravb-rcar-gen4";
--			reg = <0 0xe6800000 0 0x800>;
-+			reg = <0 0xe6800000 0 0x1000>;
- 			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>,
-@@ -706,7 +706,7 @@ avb0: ethernet@e6800000 {
- 		avb1: ethernet@e6810000 {
- 			compatible = "renesas,etheravb-r8a779a0",
- 				     "renesas,etheravb-rcar-gen4";
--			reg = <0 0xe6810000 0 0x800>;
-+			reg = <0 0xe6810000 0 0x1000>;
- 			interrupts = <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 9ec49ac2f6fd5..381d58cea092d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -291,6 +291,8 @@ sw {
+ };
+ 
+ &spdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spdif_tx_pin>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
+index 4903d6358112d..855b7d43bc503 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
+@@ -166,6 +166,8 @@ &r_ir {
+ };
+ 
+ &spdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spdif_tx_pin>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index ca1d287a0a01d..d11e5041bae9a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -406,6 +406,7 @@ spi1_cs_pin: spi1-cs-pin {
+ 				function = "spi1";
+ 			};
+ 
++			/omit-if-no-ref/
+ 			spdif_tx_pin: spdif-tx-pin {
+ 				pins = "PH7";
+ 				function = "spdif";
+@@ -655,10 +656,8 @@ spdif: spdif@5093000 {
+ 			clocks = <&ccu CLK_BUS_SPDIF>, <&ccu CLK_SPDIF>;
+ 			clock-names = "apb", "spdif";
+ 			resets = <&ccu RST_BUS_SPDIF>;
+-			dmas = <&dma 2>;
+-			dma-names = "tx";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&spdif_tx_pin>;
++			dmas = <&dma 2>, <&dma 2>;
++			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.43.0
 
