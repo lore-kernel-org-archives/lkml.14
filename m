@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DE717F38C;
-	Sun, 24 Mar 2024 23:46:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF25C1802B5;
+	Sun, 24 Mar 2024 23:47:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324020; cv=none; b=ZHapSUPiGcNNtTcUKiCnF5Kst6VuyxUpmxKgW+31sZDiiS3JGuUUzcuHtwkk5DON0+wJpavxWBbKzctue+17DUCkCadbt9C6bFmlhLT/gmqkFmYZufIHQgY3+3lQHa1cSzpzMexvLrjvPfiKD3O9viFx+XPW+ba0QFZwhlo7mTQ=
+	t=1711324024; cv=none; b=UWj6isaXIK21yvdrZ/fbHHimwmbESgwZ3fwDZQT9eqa+PTcpP2ksb5azyhgU5SwHRIlpKNuL0jWGHmS5bXogniYOtL3Njecsr4cTC3xuGKi/cGgixsjUz8zb/TZxtSz4IUZHDLSV7BOSqaoPBjedvYOfeRaXleZM8Vbx0D/wWFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324020; c=relaxed/simple;
-	bh=9sSDmvXQHGR0M8poLQXFPWiWAjJ+z04RpjNhHuw8szU=;
+	s=arc-20240116; t=1711324024; c=relaxed/simple;
+	bh=AdKOgoZ7YM6xhwA39T+067LYWPCUSATZWLKHjQVp4b4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FE58O0vWbZbEJOsUy7b2AOKnIjujcRuZ87iHWLP53vy7kbpmuQFKuJv9idqihh6dg8+tmCqeEwlBGwIPQhBA+9UT0U+NjiDlAEwuHax6Skvgz6xYMog/J6HUXQCoNyTAB5h96KX2ESM605OU3nka/rXyq0KR2bcaNrQkqnKHMtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwoGO5rs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lDi+V5ujOs8sqP8C2KvCpBzqK7On3JT8Gt+4BCXvYaJXwB6NFCMgHzsa0lWcZaeW1VCRbVF8/q2xE86L/D6QWm2fEzkEctTgJU9W5VAQ53pW89DRDwt353u5rknGON2A1ZlgKKnQxWE/3mt91EzOwUo4AXOvb7xgUffFzmrvU1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Elwtz9Wu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwoGO5rs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94039C433C7;
-	Sun, 24 Mar 2024 23:46:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Elwtz9Wu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA14BC43390;
+	Sun, 24 Mar 2024 23:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324019;
-	bh=9sSDmvXQHGR0M8poLQXFPWiWAjJ+z04RpjNhHuw8szU=;
+	s=k20201202; t=1711324024;
+	bh=AdKOgoZ7YM6xhwA39T+067LYWPCUSATZWLKHjQVp4b4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KwoGO5rskItwL7fjCoRqQTTcpgDpiU3NlUBc31MqbGbXufjv1U54J+LNc3DZUvU0v
-	 PBx1DODzAXluJFCr225tdSiYKqAcp70WWpsLyxfNOm7f0bzHDi5t/4D5ifQCGHxw6x
-	 1bLq+a1J7tu+ETL5wnuxirwCw0tuQ2cR4PKLXMEopnkEXQXq/NxazaJPw/ZGGTGv7o
-	 G+yYNtGAopvrP9raBDguy3GBV3HloiyRZo0YDHvRxuDurVkt9RbYNYMgACFef7a7pW
-	 53YdGv7Iiw0WNzoHg1/KjqaH8bozk0Qvlsbjf1lERpnkR72PUJT2jWJFFd81Uo78CO
-	 lU3ru9rijEoXQ==
+	b=Elwtz9Wufg1fOo/VT5YlYkRb2gIqq7WinQ8MnMlM4Q781gi2iAW4j/Kzp+kXY1pyH
+	 rpkhIUlL6uAVQyi+S594DFFvh04YcOg0/7k/eczTtevocWC+mmox9UTgd/b9ajh3HM
+	 WUlGR1i0JSwN311iwYjhaaWhfeESKn68RcayVIw9ZPM+dCZhrBd06NkHVE00gQPeWS
+	 svjTkn+UrsgtvrL4P5iHEoUm3pNIvWoFBvv7J7ERgqyJzUQn8F5lDs+XFznf0P1Hxe
+	 YNiGMbs9rgJAv3iIkZSeNU2FJtknsl4sgKd7u8r5wcXMjEczGnWFkBzo9hd74W6sXq
+	 Ah0IE4mKovILQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Chun-Yi Lee <jlee@suse.com>,
+	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 020/183] ASoC: wm8962: Enable both SPKOUTR_ENA and SPKOUTL_ENA in mono mode
-Date: Sun, 24 Mar 2024 19:43:53 -0400
-Message-ID: <20240324234638.1355609-21-sashal@kernel.org>
+Subject: [PATCH 5.4 025/183] aoe: fix the potential use-after-free problem in aoecmd_cfg_pkts
+Date: Sun, 24 Mar 2024 19:43:58 -0400
+Message-ID: <20240324234638.1355609-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,74 +48,86 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stuart Henderson <stuarth@opensource.cirrus.com>
+From: Chun-Yi Lee <jlee@suse.com>
 
-[ Upstream commit 6fa849e4d78b880e878138bf238e4fd2bac3c4fa ]
+[ Upstream commit f98364e926626c678fb4b9004b75cacf92ff0662 ]
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-Link: https://msgid.link/r/20240306161439.1385643-2-stuarth@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This patch is against CVE-2023-6270. The description of cve is:
+
+  A flaw was found in the ATA over Ethernet (AoE) driver in the Linux
+  kernel. The aoecmd_cfg_pkts() function improperly updates the refcnt on
+  `struct net_device`, and a use-after-free can be triggered by racing
+  between the free on the struct and the access through the `skbtxq`
+  global queue. This could lead to a denial of service condition or
+  potential code execution.
+
+In aoecmd_cfg_pkts(), it always calls dev_put(ifp) when skb initial
+code is finished. But the net_device ifp will still be used in
+later tx()->dev_queue_xmit() in kthread. Which means that the
+dev_put(ifp) should NOT be called in the success path of skb
+initial code in aoecmd_cfg_pkts(). Otherwise tx() may run into
+use-after-free because the net_device is freed.
+
+This patch removed the dev_put(ifp) in the success path in
+aoecmd_cfg_pkts(), and added dev_put() after skb xmit in tx().
+
+Link: https://nvd.nist.gov/vuln/detail/CVE-2023-6270
+Fixes: 7562f876cd93 ("[NET]: Rework dev_base via list_head (v3)")
+Signed-off-by: Chun-Yi Lee <jlee@suse.com>
+Link: https://lore.kernel.org/r/20240305082048.25526-1-jlee@suse.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/block/aoe/aoecmd.c | 12 ++++++------
+ drivers/block/aoe/aoenet.c |  1 +
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index c84afc1d02dab..9ccec511352a0 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2218,6 +2218,9 @@ SND_SOC_DAPM_PGA_E("HPOUT", SND_SOC_NOPM, 0, 0, NULL, 0, hp_event,
+diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
+index 3cf9bc5d8d959..3d5117be57f9f 100644
+--- a/drivers/block/aoe/aoecmd.c
++++ b/drivers/block/aoe/aoecmd.c
+@@ -420,13 +420,16 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
+ 	rcu_read_lock();
+ 	for_each_netdev_rcu(&init_net, ifp) {
+ 		dev_hold(ifp);
+-		if (!is_aoe_netif(ifp))
+-			goto cont;
++		if (!is_aoe_netif(ifp)) {
++			dev_put(ifp);
++			continue;
++		}
  
- SND_SOC_DAPM_OUTPUT("HPOUTL"),
- SND_SOC_DAPM_OUTPUT("HPOUTR"),
-+
-+SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
- };
- 
- static const struct snd_soc_dapm_widget wm8962_dapm_spk_mono_widgets[] = {
-@@ -2225,7 +2228,6 @@ SND_SOC_DAPM_MIXER("Speaker Mixer", WM8962_MIXER_ENABLES, 1, 0,
- 		   spkmixl, ARRAY_SIZE(spkmixl)),
- SND_SOC_DAPM_MUX_E("Speaker PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
- 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
--SND_SOC_DAPM_PGA("Speaker Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
- SND_SOC_DAPM_OUTPUT("SPKOUT"),
- };
- 
-@@ -2240,9 +2242,6 @@ SND_SOC_DAPM_MUX_E("SPKOUTL PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
- SND_SOC_DAPM_MUX_E("SPKOUTR PGA", WM8962_PWR_MGMT_2, 3, 0, &spkoutr_mux,
- 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
- 
--SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
--SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
+ 		skb = new_skb(sizeof *h + sizeof *ch);
+ 		if (skb == NULL) {
+ 			printk(KERN_INFO "aoe: skb alloc failure\n");
+-			goto cont;
++			dev_put(ifp);
++			continue;
+ 		}
+ 		skb_put(skb, sizeof *h + sizeof *ch);
+ 		skb->dev = ifp;
+@@ -441,9 +444,6 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
+ 		h->major = cpu_to_be16(aoemajor);
+ 		h->minor = aoeminor;
+ 		h->cmd = AOECMD_CFG;
 -
- SND_SOC_DAPM_OUTPUT("SPKOUTL"),
- SND_SOC_DAPM_OUTPUT("SPKOUTR"),
- };
-@@ -2352,12 +2351,18 @@ static const struct snd_soc_dapm_route wm8962_spk_mono_intercon[] = {
- 	{ "Speaker PGA", "Mixer", "Speaker Mixer" },
- 	{ "Speaker PGA", "DAC", "DACL" },
- 
--	{ "Speaker Output", NULL, "Speaker PGA" },
--	{ "Speaker Output", NULL, "SYSCLK" },
--	{ "Speaker Output", NULL, "TOCLK" },
--	{ "Speaker Output", NULL, "TEMP_SPK" },
-+	{ "SPKOUTL Output", NULL, "Speaker PGA" },
-+	{ "SPKOUTL Output", NULL, "SYSCLK" },
-+	{ "SPKOUTL Output", NULL, "TOCLK" },
-+	{ "SPKOUTL Output", NULL, "TEMP_SPK" },
-+
-+	{ "SPKOUTR Output", NULL, "Speaker PGA" },
-+	{ "SPKOUTR Output", NULL, "SYSCLK" },
-+	{ "SPKOUTR Output", NULL, "TOCLK" },
-+	{ "SPKOUTR Output", NULL, "TEMP_SPK" },
- 
--	{ "SPKOUT", NULL, "Speaker Output" },
-+	{ "SPKOUT", NULL, "SPKOUTL Output" },
-+	{ "SPKOUT", NULL, "SPKOUTR Output" },
- };
- 
- static const struct snd_soc_dapm_route wm8962_spk_stereo_intercon[] = {
+-cont:
+-		dev_put(ifp);
+ 	}
+ 	rcu_read_unlock();
+ }
+diff --git a/drivers/block/aoe/aoenet.c b/drivers/block/aoe/aoenet.c
+index 63773a90581dd..1e66c7a188a12 100644
+--- a/drivers/block/aoe/aoenet.c
++++ b/drivers/block/aoe/aoenet.c
+@@ -64,6 +64,7 @@ tx(int id) __must_hold(&txlock)
+ 			pr_warn("aoe: packet could not be sent on %s.  %s\n",
+ 				ifp ? ifp->name : "netif",
+ 				"consider increasing tx_queue_len");
++		dev_put(ifp);
+ 		spin_lock_irq(&txlock);
+ 	}
+ 	return 0;
 -- 
 2.43.0
 
