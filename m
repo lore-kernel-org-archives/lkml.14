@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AD3209E1E;
-	Sun, 24 Mar 2024 23:06:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E69209E16;
+	Sun, 24 Mar 2024 23:06:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321580; cv=none; b=ayqDg1FkZ4g05RaY/+eeSF0NLFf2koM8kjrria/hodYEsFtRQFBP43VEhC/IOO+/W1aBssMRsK6Iy46NK0wDfsr+reciGgIXa/a+fmpXWgUsYMmcc5DJq01n7aqBQNisObMySyUYHQx+Oew5xrReR7JWkpd0gGkcVLZUpYsQSyc=
+	t=1711321578; cv=none; b=p4moThybw4xE+IqSAF/HWvPdcZN2oGutrOzH/YlNVvTmee48rRTIJCN825snbbOYRNaG8i9MfTVcnpoBIPa1Euu9dc8OwRZzG9LoA52iV9v1Ki7mGZJjnfWNr5l+55fD0FCPitZ6Dd6+Aqknql688C3rYIptVKr6zSd/OHk1p3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321580; c=relaxed/simple;
-	bh=Ugg1J7IKQDMYXnCywrahvRSEfKqAl3Vln5nLujV8KfQ=;
+	s=arc-20240116; t=1711321578; c=relaxed/simple;
+	bh=ArHPtWX3+1gtQ68zc8c0UMu038IRAJ3nC1hv6nvkR10=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s0B3S2vsi/ljEsOIkBaq4UV+o8od/fhqVVQ9RxDun5jWEkdp5c+lFIxeviuFE3RdvmUYNXqfbyH27MSlSRSx7jG/tZeZDdgE0/x/9AMKJ3ktN8VisvAd7wlS3EN5kQnd9fZ9emyAmflj7ZQSIpjV0kQa3VE9+nZPA1MV3FV9Y5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EH9ZitlB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mww0lnrZ/Gscrbe/2e0nDmqTIHl0rutAF4O7hPfQd2+sg4xnIOdoTEWzBwl2ioUalALEkFBsrKBl95y41VXsEg6434imY1V6Atwp2EhWO0FIsSJxaWPkySJrACt1sW5cJwT9fnHPwZBEltNIpmoGoBUHppYVFTy1KVWK17Nwa7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UV/7wu/z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EH9ZitlB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3057C433F1;
-	Sun, 24 Mar 2024 23:06:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UV/7wu/z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10BAAC43399;
+	Sun, 24 Mar 2024 23:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321579;
-	bh=Ugg1J7IKQDMYXnCywrahvRSEfKqAl3Vln5nLujV8KfQ=;
+	s=k20201202; t=1711321577;
+	bh=ArHPtWX3+1gtQ68zc8c0UMu038IRAJ3nC1hv6nvkR10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EH9ZitlBaim/f5LdD/P2etPt1hbT3ndpZ67Y/cSF1sDJEYuIofSG/Iq+hDsvjFd1T
-	 fxXf0ciN1RvF/0d9Mbk5OZ3ZGNZe0CnV1zasnzVbCM6MAPOIWXMpUIDd5Axr29xFtC
-	 0SEgTFu2K0W80Qafez7E34yXA5iZQlMHdcoHl3Ylxyonuo62/AL4kdHVF7iY7BkgeU
-	 pAakoL1k9tLb1C0kKdFsHxtk6xR2bJQBY5aT5XTFCuwSQ3fEwb4Y5xkl3ZjXqgNs3i
-	 q3eYWNkNkcgZofxsYdhy00geIT52bILd2KpSSWppvjLAwIoQUaMzkLIoHtqaYgoh7l
-	 oSZyXRTxwJYWw==
+	b=UV/7wu/zHPh5gPefd/HqjdyhhA2pscEAl3bztZAvX5IKrQs+KC3k1LXZm7LlYfO8A
+	 SVD4jchCWyDvHBHt9tdpKp0RmX6pzYSQifTvCdEceyqNF0tkpXIKN0GVaMobr/T/Nz
+	 fyOOKpJ/nR+P8z4mSbUbpagtO0ij7AZfrdy6wkEFKTxaEIcWacHsm6SUX1uiZKyks3
+	 yTSBShS4FkfZ6xIhtk/qxkXKtTWOh6kkbj7P1MnA0eSSfZDVzFV0l71uKPFEXjoun/
+	 coUy3ppsP3TLO6z1udt7PTt/tqTlpxXUMo6UqOfz/2Db9HKNXqLZtKiPwZz2tG5iRF
+	 Ma9L8YIxFxOcw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: Andrey Skvortsov <andrej.skvortzov@gmail.com>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 308/638] Bluetooth: hci_core: Fix possible buffer overflow
-Date: Sun, 24 Mar 2024 18:55:45 -0400
-Message-ID: <20240324230116.1348576-309-sashal@kernel.org>
+Subject: [PATCH 6.6 306/638] Bluetooth: hci_h5: Add ability to allocate memory for private data
+Date: Sun, 24 Mar 2024 18:55:43 -0400
+Message-ID: <20240324230116.1348576-307-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -47,34 +48,102 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+From: Andrey Skvortsov <andrej.skvortzov@gmail.com>
 
-[ Upstream commit 81137162bfaa7278785b24c1fd2e9e74f082e8e4 ]
+[ Upstream commit 7a6d793e9ca8bc0c1d2f0aa0a02ec380d1124c74 ]
 
-struct hci_dev_info has a fixed size name[8] field so in the event that
-hdev->name is bigger than that strcpy would attempt to write past its
-size, so this fixes this problem by switching to use strscpy.
+In some cases uart-base drivers may need to use priv data. For
+example, to store information needed for devcoredump.
 
-Fixes: dcda165706b9 ("Bluetooth: hci_core: Fix build warnings")
+Fixes: 044014ce85a1 ("Bluetooth: btrtl: Add Realtek devcoredump support")
+Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
 Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bluetooth/hci_h5.c     |  4 +++-
+ drivers/bluetooth/hci_serdev.c |  9 +++++----
+ drivers/bluetooth/hci_uart.h   | 12 +++++++++++-
+ 3 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 96707deef296b..85a91c438d721 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -908,7 +908,7 @@ int hci_get_dev_info(void __user *arg)
- 	else
- 		flags = hdev->flags;
+diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
+index 71e748a9477e4..b66136348bd64 100644
+--- a/drivers/bluetooth/hci_h5.c
++++ b/drivers/bluetooth/hci_h5.c
+@@ -113,6 +113,7 @@ struct h5_vnd {
+ 	int (*suspend)(struct h5 *h5);
+ 	int (*resume)(struct h5 *h5);
+ 	const struct acpi_gpio_mapping *acpi_gpio_map;
++	int sizeof_priv;
+ };
  
--	strcpy(di.name, hdev->name);
-+	strscpy(di.name, hdev->name, sizeof(di.name));
- 	di.bdaddr   = hdev->bdaddr;
- 	di.type     = (hdev->bus & 0x0f) | ((hdev->dev_type & 0x03) << 4);
- 	di.flags    = flags;
+ struct h5_device_data {
+@@ -863,7 +864,8 @@ static int h5_serdev_probe(struct serdev_device *serdev)
+ 	if (IS_ERR(h5->device_wake_gpio))
+ 		return PTR_ERR(h5->device_wake_gpio);
+ 
+-	return hci_uart_register_device(&h5->serdev_hu, &h5p);
++	return hci_uart_register_device_priv(&h5->serdev_hu, &h5p,
++					     h5->vnd->sizeof_priv);
+ }
+ 
+ static void h5_serdev_remove(struct serdev_device *serdev)
+diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+index f16fd79bc02b8..611a11fbb2f3a 100644
+--- a/drivers/bluetooth/hci_serdev.c
++++ b/drivers/bluetooth/hci_serdev.c
+@@ -300,8 +300,9 @@ static const struct serdev_device_ops hci_serdev_client_ops = {
+ 	.write_wakeup = hci_uart_write_wakeup,
+ };
+ 
+-int hci_uart_register_device(struct hci_uart *hu,
+-			     const struct hci_uart_proto *p)
++int hci_uart_register_device_priv(struct hci_uart *hu,
++			     const struct hci_uart_proto *p,
++			     int sizeof_priv)
+ {
+ 	int err;
+ 	struct hci_dev *hdev;
+@@ -325,7 +326,7 @@ int hci_uart_register_device(struct hci_uart *hu,
+ 	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 
+ 	/* Initialize and register HCI device */
+-	hdev = hci_alloc_dev();
++	hdev = hci_alloc_dev_priv(sizeof_priv);
+ 	if (!hdev) {
+ 		BT_ERR("Can't allocate HCI device");
+ 		err = -ENOMEM;
+@@ -394,7 +395,7 @@ int hci_uart_register_device(struct hci_uart *hu,
+ 	percpu_free_rwsem(&hu->proto_lock);
+ 	return err;
+ }
+-EXPORT_SYMBOL_GPL(hci_uart_register_device);
++EXPORT_SYMBOL_GPL(hci_uart_register_device_priv);
+ 
+ void hci_uart_unregister_device(struct hci_uart *hu)
+ {
+diff --git a/drivers/bluetooth/hci_uart.h b/drivers/bluetooth/hci_uart.h
+index fb4a2d0d8cc80..68c8c7e95d64d 100644
+--- a/drivers/bluetooth/hci_uart.h
++++ b/drivers/bluetooth/hci_uart.h
+@@ -97,7 +97,17 @@ struct hci_uart {
+ 
+ int hci_uart_register_proto(const struct hci_uart_proto *p);
+ int hci_uart_unregister_proto(const struct hci_uart_proto *p);
+-int hci_uart_register_device(struct hci_uart *hu, const struct hci_uart_proto *p);
++
++int hci_uart_register_device_priv(struct hci_uart *hu,
++				  const struct hci_uart_proto *p,
++				  int sizeof_priv);
++
++static inline int hci_uart_register_device(struct hci_uart *hu,
++					   const struct hci_uart_proto *p)
++{
++	return hci_uart_register_device_priv(hu, p, 0);
++}
++
+ void hci_uart_unregister_device(struct hci_uart *hu);
+ 
+ int hci_uart_tx_wakeup(struct hci_uart *hu);
 -- 
 2.43.0
 
