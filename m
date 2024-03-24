@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E758625F;
-	Sun, 24 Mar 2024 22:51:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4FA86638;
+	Sun, 24 Mar 2024 22:51:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320679; cv=none; b=WAspMu2R2sPX89FwY0gfS73dJjVthfzINW3vgbv7KpfD6AS/aT5UWDDws/BVemhvn0ELAKvwPyKtQ8IrWEOkr2T7ESjsR1PhqhR8tZiHZq3+s9oe2VqVmgAQkHdvseTSfREbfkw4omd25VxA1IdjH8B+CrUvjKvGDZF3WHvRBbI=
+	t=1711320690; cv=none; b=uh/+U9MYEZ/bS9+sjRuDCirV5VHkyY7/fpPZCXsp/ulTFGjnSucUkr/goC/OOwWKFJPWeRkzdSAEdNMR+aYZa8Dihgjymiv8AJGlIxTQUx46iLxocNqrRHF0ggQDn0HGfNNanQGTwbHjJDvvtH4w+CAslNjbZHnBPmP57mw6Qbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320679; c=relaxed/simple;
-	bh=6IAXt7kg0mXsg5guh9sUHvOjMA33teZAxvgBy5cfGJY=;
+	s=arc-20240116; t=1711320690; c=relaxed/simple;
+	bh=WGTDycXs3pSFgOQuZXxQtwm6ivvARn299Bk7dfwWqhk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bNqg2V9qfPNv5G3nD1neaxdj40R398im0UKQAfIVJIje8ucuy+BtewxM7jZ6PDzM/2tIFydsVL2UC5lPVaTj3HECEh/jiQG9V6aqy76zEOQbtSPY7zRVlBEGiUaIEMrm6WlDM0s6YfL2Gx6x5L+ob0gwDNDccvgdsJjfJ8yzUp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j3hn51Qf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=exWOvxYEMB7u+lBLB0Bx0L43yXEohaW1stdd++1pqMzAKYbT7GA+pwIlEAOCthU2mTOt7KrSfM5HCEEtzM+OjlF1LqZzpYak8rMyEvWgQFWRMmeDaLHbIRNY+OBvCReVizZlcsmSC3NretF2647SVDC0Otgh0Ao70Ngn8tYdPLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUEYLvam; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j3hn51Qf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D5C2C433C7;
-	Sun, 24 Mar 2024 22:51:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUEYLvam"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2291FC43390;
+	Sun, 24 Mar 2024 22:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320678;
-	bh=6IAXt7kg0mXsg5guh9sUHvOjMA33teZAxvgBy5cfGJY=;
+	s=k20201202; t=1711320688;
+	bh=WGTDycXs3pSFgOQuZXxQtwm6ivvARn299Bk7dfwWqhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j3hn51Qfo+yztoqJKFj2MBZgtLy9/O42hTDMJlXYvG7innPdKirZPVPVq0ScF9DRC
-	 C9KRXlM0iI5u7PzL5iYfAEaXjnuMDWOEKD2S6RocXxvxAhaju72erIFLaGG8f7Jq3C
-	 n2n2hyxCZMrWsqVlaXJw8Fwu6gwQWqTtSS7DIv+uKBRRCRBF9Ahc7287nbR0Su9YhS
-	 WrckfKyKLl+IMPQSvpMp2jUem3FLF2OJbxgmcmWQyPrUmceY7Dp596grvuQFh94V1/
-	 y7Tr17RalplBykXLVfP8hzB4TT9EXqINQ0X8TSGxRZ4114oZIDC7A9wtSi0T5el6n4
-	 RMwhgseBU9yVg==
+	b=DUEYLvamyr6XSI+EObRqCiQjO3NxpQVSSrYAYAT/t5F+NiOs8R9YEv189EC4qfJeH
+	 MaeuIyFCAWRupRms501UQKoUf+VV+SJa5BmvnCbMlKCXdjkehslb/BvNmu4H3TWKy8
+	 hviQYs7HDSr+mWfKazx3cTEWaivbA+fyMmSADO2PMbS6gSQ2uxLVdVAF8+RVhUyB8O
+	 eM4oreBX9GiuIafeeM0vnCusM/mA76ITTtDvIYPcjW5BHl3vu+8Iio7U6krYAbE/de
+	 DO/P+KsUTk9BVNGi6Y3R4fQ579UgkbXU/iALFrsI7pCOebLNtW411+bsDIXDuV9Gs+
+	 /xbQjRg18oOuA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 240/713] arm64: dts: mediatek: mt7986: fix SPI nodename
-Date: Sun, 24 Mar 2024 18:39:26 -0400
-Message-ID: <20240324224720.1345309-241-sashal@kernel.org>
+Subject: [PATCH 6.7 251/713] arm64: dts: qcom: sdm845: Use the Low Power Island CX/MX for SLPI
+Date: Sun, 24 Mar 2024 18:39:37 -0400
+Message-ID: <20240324224720.1345309-252-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,61 +44,41 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-[ Upstream commit bbe266c70e1343ee3e71ca31138141b3da265085 ]
+[ Upstream commit 5dd227ccfb9568935bdaf82bc1893b36457dd4d3 ]
 
-This fixes following validation errors:
-arch/arm64/boot/dts/mediatek/mt7986a-rfb.dtb: spi_nand@0: $nodename:0: 'spi_nand@0' does not match '^(flash|.*sram|nand)(@.*)?$'
-        from schema $id: http://devicetree.org/schemas/mtd/spi-nand.yaml#
-arch/arm64/boot/dts/mediatek/mt7986b-rfb.dtb: spi_nand@0: $nodename:0: 'spi_nand@0' does not match '^(flash|.*sram|nand)(@.*)?$'
-        from schema $id: http://devicetree.org/schemas/mtd/spi-nand.yaml#
+The SLPI is powered by the Low Power Island power rails. Fix the incorrect
+assignment.
 
-Fixes: 885e153ed7c1 ("arm64: dts: mt7986: add spi related device nodes")
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://lore.kernel.org/r/20231116130952.5099-2-zajec5@gmail.com
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Fixes: 74588aada59a ("arm64: dts: qcom: sdm845: add SLPI remoteproc")
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20231220-topic-sdm845_slpi_lcxmx-v1-1-db7c72ef99ae@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts | 3 ++-
- arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-index bcb3ebb85d708..2f884c24f1eb4 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-@@ -237,7 +237,8 @@ &spi0 {
- 	pinctrl-0 = <&spi_flash_pins>;
- 	cs-gpios = <0>, <0>;
- 	status = "okay";
--	spi_nand: spi_nand@0 {
-+
-+	spi_nand: flash@0 {
- 		compatible = "spi-nand";
- 		reg = <0>;
- 		spi-max-frequency = <10000000>;
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-index 48fe50e671779..57dcaeef31d7f 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-@@ -152,7 +152,8 @@ &spi0 {
- 	pinctrl-0 = <&spi_flash_pins>;
- 	cs-gpios = <0>, <0>;
- 	status = "okay";
--	spi_nand: spi_nand@0 {
-+
-+	spi_nand: flash@0 {
- 		compatible = "spi-nand";
- 		reg = <0>;
- 		spi-max-frequency = <10000000>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 9e594d21ecd80..88ed543de81bf 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3353,8 +3353,8 @@ slpi_pas: remoteproc@5c00000 {
+ 
+ 			qcom,qmp = <&aoss_qmp>;
+ 
+-			power-domains = <&rpmhpd SDM845_CX>,
+-					<&rpmhpd SDM845_MX>;
++			power-domains = <&rpmhpd SDM845_LCX>,
++					<&rpmhpd SDM845_LMX>;
+ 			power-domain-names = "lcx", "lmx";
+ 
+ 			memory-region = <&slpi_mem>;
 -- 
 2.43.0
 
