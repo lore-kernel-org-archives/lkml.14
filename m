@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E06276C4B;
-	Sun, 24 Mar 2024 23:36:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63562197BB;
+	Sun, 24 Mar 2024 23:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323394; cv=none; b=mbLHGv58VC7qNI+bvL+EGSjy9xHrpAvgfN9oIr5eLeqcy8m3wur8/g19ahXwSoMyhzVeAJC2SEqfageT1O0xHfNWgkgpGvbFZp6ASYfOh+XwVkO5ihjJI/mGR0NRRjeb1azLqflSlhJsRzuaLONEAUpePxmtH7aHbhh7z9faCL0=
+	t=1711323393; cv=none; b=qnEZBNb7TmXsOHIDU7u/D89ZgpJwhyJ7jcPTRjt2Ftrg2ZcGUjjJPYkg1M3mqTxFFSnZ1lK72DUyC1kd69EZ3XN8HMiQpeHBl5EtLyX2hXxqDOOPBdPx1dWnxcZflrAt6r73XAfDMLaTDX4DtSxZ6Nz3+VHdVgYdch2jWsRNS6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323394; c=relaxed/simple;
-	bh=X4/j2O3DpjXdIuhLxyiVTcZ6Bcd21yeYa7KusoFZdg8=;
+	s=arc-20240116; t=1711323393; c=relaxed/simple;
+	bh=ZO85aW3zlGqioP9YJ8rjMRMntZODEzmJfm/4JlKC8Ao=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DGF9pxc8m8q/omf0l1+dJt+y5VpbtJ2j3LgJ5xlwjWArD0QQM8a+rNUuHJeXVrUWkEkNCDB13UB70tssocSIPD+Aadw7FT2WYydhgPMIgVuMcGd4Xv/faVLk39T9fvrR31lcmu3FjhSol5wykevHBHmJCTBhau6YnrscoGUnSTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tbSAGosF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=f5HXvmYlzN1sbErNLF2kLNuA6cBOHDdCMcU425NDSd3G5tylyVIBE4cjoIofXAcxG0XWDroRwou82CuRA/o9gpcI4cbmOOMCr57d63Y5SmUMdqy2uStSZgazgGPcRXLDaVWXvbYRMN0MwBn+t1FjnqkGVafkYuQa4K5gYE8evfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pKqI4NBD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tbSAGosF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5964C433C7;
-	Sun, 24 Mar 2024 23:36:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pKqI4NBD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B62C43390;
+	Sun, 24 Mar 2024 23:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323393;
-	bh=X4/j2O3DpjXdIuhLxyiVTcZ6Bcd21yeYa7KusoFZdg8=;
+	s=k20201202; t=1711323391;
+	bh=ZO85aW3zlGqioP9YJ8rjMRMntZODEzmJfm/4JlKC8Ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tbSAGosFjzubcsJ/uch4omVUMfp8E8nqX552/TUqXFFaZ7CmN3seAiy5lsZcv1cVv
-	 NVFkdLEYrS+QEanxYgvAWUIT/erVTE8O7BhrQi1ffK/0J81iuaUb4msWRu3h+G3+i9
-	 7QrHx8OpgdgTPv1hKVCV4sbjTuniXvjJ53bQw1wsKkDWfoNQHOdnrRb6BYtUnoYokP
-	 Pnx5eh80FRHPS1jyA+EEfrVH90dtKn9OVdF/MPMX4SAQW52dMS1Bu2twtxTYASTEgm
-	 Os0Ntl0wUcADS0Ni7kVP5xmzXUZCD3ouwlIukmRUWdarfE6YK4h2j4I+DFXOeWfxoe
-	 MtESvk69oQkhw==
+	b=pKqI4NBDf5FfV2AWmOkrBvrrQRwFP8jy0dGPvkSu3SdOUpkPhC14lzFwTR6LaPHzM
+	 jlTiK7Ibl8OTCuva4q2YAhl5HbMFIrnH339rJ8CFZdjTmZcGoHimA0o6nxq38L882N
+	 BNmWjr2r4B7Xf/QtwHesM5LAPEu98fTKvoGgBx/xpUm2cMtrGDis1geTiOfYys5h8+
+	 OJ5cDh1GpFBd65kYcXUMkkftWCKDTs7NJkLcvwhQAv1j9c9DVRC3+zRU5IwT82plEn
+	 oyj3PW5FRr06lQnh9tJ3OotRS1lr6qCJvQw/JfLfTCj2+D275Hljzcb+gpc4OAs6mm
+	 xQe6h/6Kt6Iew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Thierry Reding <thierry.reding@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 094/317] wifi: iwlwifi: mvm: don't set replay counters to 0xff
-Date: Sun, 24 Mar 2024 19:31:14 -0400
-Message-ID: <20240324233458.1352854-95-sashal@kernel.org>
+Subject: [PATCH 5.15 092/317] pwm: sti: Implement .apply() callback
+Date: Sun, 24 Mar 2024 19:31:12 -0400
+Message-ID: <20240324233458.1352854-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -44,54 +44,71 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit d5bd4041cd70faf26fc9a54bd6f172537bbe77f3 ]
+[ Upstream commit b2e60b32b4fe5da4cf7fedd976416b5f47f62332 ]
 
-The firmware (later) actually uses the values even for keys
-that are invalid as far as the host is concerned, later in
-rekeying, and then only sets the low 48 bits since the PNs
-are only 48 bits over the air. It does, however, compare the
-full 64 bits later, obviously causing problems.
+To eventually get rid of all legacy drivers convert this driver to the
+modern world implementing .apply().
+This just pushed a variant of pwm_apply_legacy() into the driver that was
+slightly simplified because the driver doesn't provide a .set_polarity()
+callback.
 
-Remove the memset and use kzalloc instead to avoid any old
-heap data leaking to the firmware. We already init all the
-other fields in the struct anyway. This leaves the data set
-to zero for any unused fields, so the firmware can look at
-them safely even if they're not used right now.
-
-Fixes: 79e561f0f05a ("iwlwifi: mvm: d3: implement RSC command version 5")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://msgid.link/20240206175739.462101146fef.I10f3855b99417af4247cff04af78dcbc6cb75c9c@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Stable-dep-of: 5f623835584f ("pwm: sti: Fix capture for st,pwm-num-chan < st,capture-num-chan")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pwm/pwm-sti.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-index 27756e47f7caf..c4c62bcbe67de 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-@@ -462,12 +462,10 @@ static int iwl_mvm_wowlan_config_rsc_tsc(struct iwl_mvm *mvm,
- 		struct wowlan_key_rsc_v5_data data = {};
- 		int i;
+diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
+index f8a3f30e54dd5..652fdb8dc7bfa 100644
+--- a/drivers/pwm/pwm-sti.c
++++ b/drivers/pwm/pwm-sti.c
+@@ -392,11 +392,34 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return ret;
+ }
  
--		data.rsc = kmalloc(sizeof(*data.rsc), GFP_KERNEL);
-+		data.rsc = kzalloc(sizeof(*data.rsc), GFP_KERNEL);
- 		if (!data.rsc)
- 			return -ENOMEM;
- 
--		memset(data.rsc, 0xff, sizeof(*data.rsc));
--
- 		for (i = 0; i < ARRAY_SIZE(data.rsc->mcast_key_id_map); i++)
- 			data.rsc->mcast_key_id_map[i] =
- 				IWL_MCAST_KEY_MAP_INVALID;
++static int sti_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			 const struct pwm_state *state)
++{
++	int err;
++
++	if (state->polarity != PWM_POLARITY_NORMAL)
++		return -EINVAL;
++
++	if (!state->enabled) {
++		if (pwm->state.enabled)
++			sti_pwm_disable(chip, pwm);
++
++		return 0;
++	}
++
++	err = sti_pwm_config(pwm->chip, pwm, state->duty_cycle, state->period);
++	if (err)
++		return err;
++
++	if (!pwm->state.enabled)
++		err = sti_pwm_enable(chip, pwm);
++
++	return err;
++}
++
+ static const struct pwm_ops sti_pwm_ops = {
+ 	.capture = sti_pwm_capture,
+-	.config = sti_pwm_config,
+-	.enable = sti_pwm_enable,
+-	.disable = sti_pwm_disable,
++	.apply = sti_pwm_apply,
+ 	.free = sti_pwm_free,
+ 	.owner = THIS_MODULE,
+ };
 -- 
 2.43.0
 
