@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AA0294E3A;
-	Sun, 24 Mar 2024 23:51:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C83184314;
+	Sun, 24 Mar 2024 23:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324300; cv=none; b=NXn+4q3yqUH2CYbhS9ypzLGbIRXVzGQXRuXxTr15nrbrrOPco2tZt08dXfAmTBJIuObb4jpAwhkzgSLegDQeHlTmh+1+svussXoimsADP8+fowMtKzIdYGP3qCnEGUgcwr6coMXkLsYNsQTcuSkTft7IzQOa2XdJ3QDwSQOS/F0=
+	t=1711324278; cv=none; b=fqPwWpv31r8ebvRju4UlMfxUOVvqA331U1RNbJZzB6o8XSFbXcVR9bI2/YOLrwUNZdQ0Oyp2J3yjbRF/8wns1HJDrri3a/sgbCRCCCyWAbbwlu5IxO3CXdpmHPcjnx1z8du5QAXNVP9i4I/lHplgnSozompa+sPliX5XEeFMVZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324300; c=relaxed/simple;
-	bh=qHUqDEVnUyC8jvQK3TsQQlVfLcutvmYMKDDZVZDmIdU=;
+	s=arc-20240116; t=1711324278; c=relaxed/simple;
+	bh=QnZwcPZGcyCW/XtB6zKt3HftXxpmW+ty+R0k8p/gbuM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pQ0Q4bEoz5T3lWKvHtI7GNWN9uSPpl9eIFy9/M7g0JeAhHjdVENpdFEo2iIeNz16SgNgPfP3BMoCqXfRutx5XUC73fEqX0SlrfK8BwJ6cWcN4qiLWtdPl28sQWYHtNMp9rLlYTzbmmcvVmUD13sBDMjB7RmTn5DH1Hd57d4giuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dg0lzkn3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=iLpKuaiMgQTWfbC1nm02MgDMD8G1s5d0rNdNXuUTgOUnT4wDKUPdU3j/XyH30GsB/A1s/jzJ/VS2itL8Q8YHeDPkcFRr0IGWhVlPF5+FsUrEsMm86emEsyohUyHMpeXv2Y1dezH2NRl2qd2uT/JD5/GBBnfJcGMm2cBZg/45sEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKAm6kJZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dg0lzkn3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 873A2C433F1;
-	Sun, 24 Mar 2024 23:51:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKAm6kJZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43EE6C433F1;
+	Sun, 24 Mar 2024 23:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324299;
-	bh=qHUqDEVnUyC8jvQK3TsQQlVfLcutvmYMKDDZVZDmIdU=;
+	s=k20201202; t=1711324277;
+	bh=QnZwcPZGcyCW/XtB6zKt3HftXxpmW+ty+R0k8p/gbuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dg0lzkn3CRvy1E3MOrUkWdu//083Rj4HvR5UQxp56c6oBQGzeenvGW5+GDWJKrZXG
-	 U4eqSZJeayvXQ02HZLCtb+CLGFA0AEDKs/p+pIEipUW9qDO645MdWlXBWcR5hrNjrx
-	 MICRK/Acf07B9T/Z9CFw3NMCe4X/1GcIK5yYRAXI/7LRIV4Tv7c/wfp5mlWmnFe/Yd
-	 k6fh1O8Q0Jmj2yTVUdzAcnReASr7CECeAgYnZ+lJRxuFvio583XlLoYhWd4lXjI42m
-	 MK4iKO4vvm1/qxIQPgWfKveKN08Vtv9f+E+yEPv90oot5qo4rvL6ilaACglb1tTlVl
-	 pCntXFdGFgGiw==
+	b=lKAm6kJZG5o+Yrv12/rDm2rOu9NAK0xYYfrndCs53LrYPGEZMps7H9mddxVu+kIIg
+	 AkD/yTiQo6WjQiGoqWecuyKa3flzXQgz1VKUN9os35IVDcTbDlUuxlkvqWXEV/eu6m
+	 Tv8v/yws8cqvl11isxZHH6MUqK4sSCdxqLMY7WyPpltsemKnbb/F3HloIYx7diqcXT
+	 8crc12GQIO9s9wiibgpk4lHgnyi9buf24MOv6QK/JKLY7m83ZjKNkgWShahGqvmC6u
+	 Nt1fk2hJJP98KkJKz3CUiGafFmsUToV1zplkv8hOvrfgRyYh/1OWQP8PwaZeamTpJE
+	 1e6ukPWYFUL1w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-	Quentin Schulz <foss+kernel@0leil.net>,
-	Heiko Stuebner <heiko@sntech.de>,
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 073/148] drm/rockchip: lvds: do not overwrite error code
-Date: Sun, 24 Mar 2024 19:48:57 -0400
-Message-ID: <20240324235012.1356413-74-sashal@kernel.org>
+Subject: [PATCH 4.19 055/148] bpf: Fix hashtab overflow check on 32-bit arches
+Date: Sun, 24 Mar 2024 19:48:39 -0400
+Message-ID: <20240324235012.1356413-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -45,40 +44,65 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 79b09453c4e369ca81cfb670d0136d089e3b92f0 ]
+[ Upstream commit 6787d916c2cf9850c97a0a3f73e08c43e7d973b1 ]
 
-ret variable stores the return value of drm_of_find_panel_or_bridge
-which can return error codes different from EPROBE_DEFER. Therefore,
-let's just return that error code instead of forcing it to EPROBE_DEFER.
+The hashtab code relies on roundup_pow_of_two() to compute the number of
+hash buckets, and contains an overflow check by checking if the
+resulting value is 0. However, on 32-bit arches, the roundup code itself
+can overflow by doing a 32-bit left-shift of an unsigned long value,
+which is undefined behaviour, so it is not guaranteed to truncate
+neatly. This was triggered by syzbot on the DEVMAP_HASH type, which
+contains the same check, copied from the hashtab code. So apply the same
+fix to hashtab, by moving the overflow check to before the roundup.
 
-Fixes: 34cc0aa25456 ("drm/rockchip: Add support for Rockchip Soc LVDS")
-Cc: Quentin Schulz <foss+kernel@0leil.net>
-Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231120-rk-lvds-defer-msg-v2-1-9c59a5779cf9@theobroma-systems.com
+Fixes: daaf427c6ab3 ("bpf: fix arraymap NULL deref and missing overflow and zero size checks")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Message-ID: <20240307120340.99577-3-toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/rockchip_lvds.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/bpf/hashtab.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-index 456bd9f13baef..215885c780759 100644
---- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-@@ -374,7 +374,6 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		goto err_put_port;
- 	} else if (ret) {
- 		DRM_DEV_ERROR(dev, "failed to find panel and bridge node\n");
--		ret = -EPROBE_DEFER;
- 		goto err_put_port;
+diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+index 8e379b667a0f7..16081d8384bfc 100644
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -330,7 +330,13 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
+ 							  num_possible_cpus());
  	}
- 	if (lvds->panel)
+ 
+-	/* hash table size must be power of 2 */
++	/* hash table size must be power of 2; roundup_pow_of_two() can overflow
++	 * into UB on 32-bit arches, so check that first
++	 */
++	err = -E2BIG;
++	if (htab->map.max_entries > 1UL << 31)
++		goto free_htab;
++
+ 	htab->n_buckets = roundup_pow_of_two(htab->map.max_entries);
+ 
+ 	htab->elem_size = sizeof(struct htab_elem) +
+@@ -340,10 +346,8 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
+ 	else
+ 		htab->elem_size += round_up(htab->map.value_size, 8);
+ 
+-	err = -E2BIG;
+-	/* prevent zero size kmalloc and check for u32 overflow */
+-	if (htab->n_buckets == 0 ||
+-	    htab->n_buckets > U32_MAX / sizeof(struct bucket))
++	/* check for u32 overflow */
++	if (htab->n_buckets > U32_MAX / sizeof(struct bucket))
+ 		goto free_htab;
+ 
+ 	cost = (u64) htab->n_buckets * sizeof(struct bucket) +
 -- 
 2.43.0
 
