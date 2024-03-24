@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9344628A58D;
-	Sun, 24 Mar 2024 23:47:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAF928A5B1;
+	Sun, 24 Mar 2024 23:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324062; cv=none; b=JAloTGRstU6mqk2nDmTicp3w5Yq+MfIHnw/pfJ/w/IfLP6Ws47NA4Ekwr0hQt8aSt/CDnyGZdnX9uhSQTC27qI5vSF7xqAITi1Cul3/QUtUsPHaL8ts4DR4XcT8pV5luoQB0etGBvB4WBltZ+KmLv4TGRHay1pM7Rri3G+gkpks=
+	t=1711324066; cv=none; b=E9UARtYUfrQAwx5cCXA2l6kOIPwltMzebOQxpkuxWKLEWWV4OMueY8WSOwFNq3Z/6CxIV6vEvRSYkK2hYoUY5QHOxUjZrxFMkXIsmcDr/SPA1bjAlA0Ou4htepB6ySmW5B2bIETuaPwH6k4+zNd5XKF2eaDeonabaBAmJ8gsIqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324062; c=relaxed/simple;
-	bh=KxoXkw8EMJ4UyTeRijlN1ijgtLEipvile9D9fHXzNVc=;
+	s=arc-20240116; t=1711324066; c=relaxed/simple;
+	bh=q4FQbdmsrgd2cVAnEuk372EhOMMJ2c0RE9ooJVL7GqQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ngwvGceeFl+skgvfMR5c05UytsVWPqQDZJAlQIetS0CF5z53Gq5G+EFT8jrmBojbVmO0xvARGZz+LVxzJhR+uWC37AtDUitSqM1V3Qt6YL5YU6YkfBu7vpcIkRyrePksee0Q739HGvTKFD7ZMEwbKQm2vuiGuHSGdY2RjKfTep8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iiVZ22hb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X4dcEmfipiAubc5Cu6UmGzH2yhvyg7L5P0q68vBlCqtBOwTcM3rGDJrBvf9+hn3kAIhzGAno+GcSU/jQ6gNMQbrX8ymq6FumI/y4Y1x1tE6q9wWcScPjEdc8X3A05cN9VbBhG5RzUyr1d4k5SZjJEQmKAymY9hMw7hCYb7xq0Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRe29KFx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iiVZ22hb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D460FC43394;
-	Sun, 24 Mar 2024 23:47:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRe29KFx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9887EC433C7;
+	Sun, 24 Mar 2024 23:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324062;
-	bh=KxoXkw8EMJ4UyTeRijlN1ijgtLEipvile9D9fHXzNVc=;
+	s=k20201202; t=1711324065;
+	bh=q4FQbdmsrgd2cVAnEuk372EhOMMJ2c0RE9ooJVL7GqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iiVZ22hbrQQUcNaZFxgm/DYYjSILjZadb1lP+Jwwub2cVtGrtdC21DYHnYrWcOGO1
-	 MLqrJVjScgkdHWX1RrgGnuvat4nqe1GDZdRk9gQi4Kqte1uyrrYgeUzcZ/eCEkxIyO
-	 jFLl9J8SYXjq30b4V7uN/DLweWrmUJw/XlgF3/6L92mRAn8tEed4RyqUJraQxeIqZP
-	 L+FpRane5AKWj4DXprdRNDrLQJCl3MXPuPJbKtqnfMoVBd7mNhMT6ye1fYLA48L8AA
-	 XfNU8oxW8cILYDLMpf/POaSSaKogZndI5WN0XXrYHpS36/rtfg/gCF+rZUJ7PR1SrH
-	 IrrBJhD6jhSuA==
+	b=iRe29KFxOM8jxyK9DjB6QFl49+369nkQy68+Wq03TPtSQ0AfkAeVi6AesZLA97sGo
+	 1kK+dFLnkFIb9IlSPH0CgqxbAxgYtK5kQn9VjM8tjBeVFJUc9qKg2o5G6dva5kyZm5
+	 SqZ40FyvoHnuXzFpRh1W03cqGOFWmeokCOz49eyitqIYNRzKz0fZlDfZENDr/rMGR/
+	 uDMh5GnabwBMrgr6a0IO2S4Z7korwQIzaLBQJNO4EbnJrexroZivwP9eOkHij0XgKs
+	 +Sdzg9HiBnb7DFY34fbZEG2r19C8tLeto2TQIzn/Qogm8N9iU6cQKq+7nlQIA4yeDZ
+	 aGGVAjZ027mIA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 063/183] ACPI: scan: Fix device check notification handling
-Date: Sun, 24 Mar 2024 19:44:36 -0400
-Message-ID: <20240324234638.1355609-64-sashal@kernel.org>
+Subject: [PATCH 5.4 066/183] mmc: wmt-sdmmc: remove an incorrect release_mem_region() call in the .remove function
+Date: Sun, 24 Mar 2024 19:44:39 -0400
+Message-ID: <20240324234638.1355609-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,55 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 793551c965116d9dfaf0550dacae1396a20efa69 ]
+[ Upstream commit ae5004a40a262d329039b99b62bd3fe7645b66ad ]
 
-It is generally invalid to fail a Device Check notification if the scan
-handler has not been attached to the given device after a bus rescan,
-because there may be valid reasons for the scan handler to refuse
-attaching to the device (for example, the device is not ready).
+This looks strange to call release_mem_region() in a remove function
+without any request_mem_region() in the probe or "struct resource"
+somewhere.
 
-For this reason, modify acpi_scan_device_check() to return 0 in that
-case without printing a warning.
+So remove the corresponding code.
 
-While at it, reduce the log level of the "already enumerated" message
-in the same function, because it is only interesting when debugging
-notification handling
-
-Fixes: 443fc8202272 ("ACPI / hotplug: Rework generic code to handle suprise removals")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 3a96dff0f828 ("mmc: SD/MMC Host Controller for Wondermedia WM8505/WM8650")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/bb0bb1ed1e18de55e8c0547625bde271e64b8c31.1708983064.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/scan.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/mmc/host/wmt-sdmmc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 5d4be80ee6cb4..629e6044f6233 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -322,18 +322,14 @@ static int acpi_scan_device_check(struct acpi_device *adev)
- 		 * again).
- 		 */
- 		if (adev->handler) {
--			dev_warn(&adev->dev, "Already enumerated\n");
--			return -EALREADY;
-+			dev_dbg(&adev->dev, "Already enumerated\n");
-+			return 0;
- 		}
- 		error = acpi_bus_scan(adev->handle);
- 		if (error) {
- 			dev_warn(&adev->dev, "Namespace scan failure\n");
- 			return error;
- 		}
--		if (!adev->handler) {
--			dev_warn(&adev->dev, "Enumeration failure\n");
--			error = -ENODEV;
--		}
- 	} else {
- 		error = acpi_scan_device_not_present(adev);
- 	}
+diff --git a/drivers/mmc/host/wmt-sdmmc.c b/drivers/mmc/host/wmt-sdmmc.c
+index b1e4199f82920..345b3c50f27dd 100644
+--- a/drivers/mmc/host/wmt-sdmmc.c
++++ b/drivers/mmc/host/wmt-sdmmc.c
+@@ -889,7 +889,6 @@ static int wmt_mci_remove(struct platform_device *pdev)
+ {
+ 	struct mmc_host *mmc;
+ 	struct wmt_mci_priv *priv;
+-	struct resource *res;
+ 	u32 reg_tmp;
+ 
+ 	mmc = platform_get_drvdata(pdev);
+@@ -917,9 +916,6 @@ static int wmt_mci_remove(struct platform_device *pdev)
+ 	clk_disable_unprepare(priv->clk_sdmmc);
+ 	clk_put(priv->clk_sdmmc);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	release_mem_region(res->start, resource_size(res));
+-
+ 	mmc_free_host(mmc);
+ 
+ 	dev_info(&pdev->dev, "WMT MCI device removed\n");
 -- 
 2.43.0
 
