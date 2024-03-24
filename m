@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF40A149017;
-	Sun, 24 Mar 2024 23:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A688227E03;
+	Sun, 24 Mar 2024 23:15:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322132; cv=none; b=WriSmSgucSphAIKKlaO1e/HhKJBk2+SIY1PcFOG+O/s0gCHrd3GLGnzpkey5rCHXbUpxotkPneq+PdRPWjiYsPpfYYudXIkgMiFZU7jNSlaqf6+7bbB8Ffqu3YMHJa9ZxLz+anIewBsRqCc4/tUqhUh3Dp0eJSyEzS7lAVmPQeI=
+	t=1711322121; cv=none; b=FCxF0bXwLCIvh1VVkunL7ClNYzylANV0Hzd5n1+nqcE2878Z0gPq+uyTeRxKYnjUbYz6I9e1vGWzk6RNlheITGoD/Fcsyqi0vUDkc9nZCTdh4zr3Ao3T4wSCMGcV0yals/OclJ2RflSqq+uc7eVXoHc+5SKOLGP38Wn/hEhk3/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322132; c=relaxed/simple;
-	bh=h6ZYwpSBwtXJoNRDtu4RvndFREm1RakT/c8crUpd+T8=;
+	s=arc-20240116; t=1711322121; c=relaxed/simple;
+	bh=QMTB5ty4wAWaaMauawzTLJGbHPTq/VgmxTmQY9eNAD0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SIyUaFVvS1v/BdSehf0TEiZEFqAcbuBa7HVYGy6+h+jdtIebh1SLf97RudMu1h+GzGXBWDpvpX0Sk3P2DJpkegVf+Fl583M8EdUgyCLQzRJs263u5G/mYWpLudhT1KwpGX0W8e9ztHk889rt8blvQ6f6CsCBzzY3NZVfnyXwGLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XRZSKrOm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CtGsI6/ZVf8EMBsCfMHXO5CJvmrWDYct5mHWlguhcO1db338pM7oPGfWq26Iz+6K6hZCcdKerO5zHXglw9pCj3/tMAsfpD3hOT4kqxYsjJJ8b3tHEy5ZrswGDgoTSkr7ic5tOzR+FYmYpqVP3nuKLif7GlLZVE4pbwSgXTzokj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YP3T+FV4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XRZSKrOm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 000FFC433F1;
-	Sun, 24 Mar 2024 23:15:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YP3T+FV4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C969DC43399;
+	Sun, 24 Mar 2024 23:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322131;
-	bh=h6ZYwpSBwtXJoNRDtu4RvndFREm1RakT/c8crUpd+T8=;
+	s=k20201202; t=1711322120;
+	bh=QMTB5ty4wAWaaMauawzTLJGbHPTq/VgmxTmQY9eNAD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XRZSKrOm93A2OcskCFRzOt8x7t3pGcHn6B6AmfyfvYDvWmkcqLzWPsH+4O4rYi9XC
-	 imc2LxQiI3t/MqpXMpO02avTi1KN646jcv8Pjn4JFBqc0yW4+gbKPitige47xubWWr
-	 MtG82l3JhkZwdNYMMFW8+ROOC4XtKDc9gdE1NufYtRDZ3jkehoWw4ClSKpnTaYd2Hh
-	 yc3BrJo48h8O0DAXt0riefRLcYMGZZSzWz/nTzOKz71zFLr9aypoOeUa4nzBOpamnL
-	 63LeOg7NXcfM2glzIwNKyGR2ROeRO7cffUmCFbBaYlID8IYA8IWqYlTCof26MVOuOb
-	 gvIry1tv8qPPA==
+	b=YP3T+FV4S1cirIhpj4MLtjZEFnqaWsEvmMIoVjgXgigF8jtpHis2aReq+4r/Vk8bo
+	 u6xQTnxNZ2tKmE6XwpdjlrDwA8IGux5rdDC8QEKilzrqbT9sCiASo3JT8kEb6dI5vl
+	 y1LDUJbJGoBR5CuKELCAvgpXxmePZssDw9SEpHeb8UwH3z5zv0jDMWUAxoooy091pr
+	 fxca7G6JciCKL4iTm5uB2zASdp/SEBqhwcmwNIwsl9f5zvNq6MprQR5Py3CEmpamRz
+	 rTsSAFkoPsujeW4vOiy9sqlGEOiJK7Z0U5VEiTbRAAuBpp+a/XtyKR+I6Aa77IRxsm
+	 IFCjPZ2GV3PbQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	syzbot+8cd36f6b65f3cafd400a@syzkaller.appspotmail.com,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 208/451] bpf: Fix DEVMAP_HASH overflow check on 32-bit arches
-Date: Sun, 24 Mar 2024 19:08:04 -0400
-Message-ID: <20240324231207.1351418-209-sashal@kernel.org>
+Subject: [PATCH 6.1 195/451] Bluetooth: mgmt: Remove leftover queuing of power_off work
+Date: Sun, 24 Mar 2024 19:07:51 -0400
+Message-ID: <20240324231207.1351418-196-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,61 +49,73 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Jonas Dreßler <verdre@v0yd.nl>
 
-[ Upstream commit 281d464a34f540de166cee74b723e97ac2515ec3 ]
+[ Upstream commit fee054b7579fe252f8b9e6c17b9c5bfdaa84dd7e ]
 
-The devmap code allocates a number hash buckets equal to the next power
-of two of the max_entries value provided when creating the map. When
-rounding up to the next power of two, the 32-bit variable storing the
-number of buckets can overflow, and the code checks for overflow by
-checking if the truncated 32-bit value is equal to 0. However, on 32-bit
-arches the rounding up itself can overflow mid-way through, because it
-ends up doing a left-shift of 32 bits on an unsigned long value. If the
-size of an unsigned long is four bytes, this is undefined behaviour, so
-there is no guarantee that we'll end up with a nice and tidy 0-value at
-the end.
+Queuing of power_off work was introduced in these functions with commits
+8b064a3ad377 ("Bluetooth: Clean up HCI state when doing power off") and
+c9910d0fb4fc ("Bluetooth: Fix disconnecting connections in non-connected
+states") in an effort to clean up state and do things like disconnecting
+devices before actually powering off the device.
 
-Syzbot managed to turn this into a crash on arm32 by creating a
-DEVMAP_HASH with max_entries > 0x80000000 and then trying to update it.
-Fix this by moving the overflow check to before the rounding up
-operation.
+After that, commit a3172b7eb4a2 ("Bluetooth: Add timer to force power off")
+introduced a timeout to ensure that the device actually got powered off,
+even if some of the cleanup work would never complete.
 
-Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
-Link: https://lore.kernel.org/r/000000000000ed666a0611af6818@google.com
-Reported-and-tested-by: syzbot+8cd36f6b65f3cafd400a@syzkaller.appspotmail.com
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Message-ID: <20240307120340.99577-2-toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+This code later got refactored with commit cf75ad8b41d2 ("Bluetooth:
+hci_sync: Convert MGMT_SET_POWERED"), which made powering off the device
+synchronous and removed the need for initiating the power_off work from
+other places. The timeout mentioned above got removed too, because we now
+also made use of the command timeout during power on/off.
+
+These days the power_off work still exists, but it only seems to only be
+used for HCI_AUTO_OFF functionality, which is why we never noticed
+those two leftover places where we queue power_off work. So let's remove
+that code.
+
+Fixes: cf75ad8b41d2 ("Bluetooth: hci_sync: Convert MGMT_SET_POWERED")
+Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/devmap.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/bluetooth/mgmt.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index f9a87dcc5535b..e051cbb07dac0 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -131,13 +131,14 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- 	bpf_map_init_from_attr(&dtab->map, attr);
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index ab63f807e3c80..a80bf9c42c2ef 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -9766,14 +9766,6 @@ void mgmt_device_disconnected(struct hci_dev *hdev, bdaddr_t *bdaddr,
+ 	struct mgmt_ev_device_disconnected ev;
+ 	struct sock *sk = NULL;
  
- 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
--		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
--
--		if (!dtab->n_buckets) /* Overflow check */
-+		/* hash table size must be power of 2; roundup_pow_of_two() can
-+		 * overflow into UB on 32-bit arches, so check that first
-+		 */
-+		if (dtab->map.max_entries > 1UL << 31)
- 			return -EINVAL;
+-	/* The connection is still in hci_conn_hash so test for 1
+-	 * instead of 0 to know if this is the last one.
+-	 */
+-	if (mgmt_powering_down(hdev) && hci_conn_count(hdev) == 1) {
+-		cancel_delayed_work(&hdev->power_off);
+-		queue_work(hdev->req_workqueue, &hdev->power_off.work);
 -	}
+-
+ 	if (!mgmt_connected)
+ 		return;
  
--	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
-+		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
-+
- 		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets,
- 							   dtab->map.numa_node);
- 		if (!dtab->dev_index_head)
+@@ -9830,14 +9822,6 @@ void mgmt_connect_failed(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 link_type,
+ {
+ 	struct mgmt_ev_connect_failed ev;
+ 
+-	/* The connection is still in hci_conn_hash so test for 1
+-	 * instead of 0 to know if this is the last one.
+-	 */
+-	if (mgmt_powering_down(hdev) && hci_conn_count(hdev) == 1) {
+-		cancel_delayed_work(&hdev->power_off);
+-		queue_work(hdev->req_workqueue, &hdev->power_off.work);
+-	}
+-
+ 	bacpy(&ev.addr.bdaddr, bdaddr);
+ 	ev.addr.type = link_to_bdaddr(link_type, addr_type);
+ 	ev.status = mgmt_status(status);
 -- 
 2.43.0
 
