@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C261B17A92F;
-	Sun, 24 Mar 2024 23:41:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE8B1311A3;
+	Sun, 24 Mar 2024 23:41:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323698; cv=none; b=jC+sC3SbRdaroNn+tJjZRdftrayMr4F4K2pi1wMRD40EED44CWjR03n07w7yjMvY3IcWHOocnfRlndSSbzB5YAYWOkE9zuZft/geiLAbuLJ9yzGCpyXgiptlRifJd8vaWJm0ft9fsRetiypjeCO6aQe8Tar5DZFDdS2sYQzRTJ4=
+	t=1711323702; cv=none; b=d1RAlwicFjXttZI/oLCwwj+orKCpIc9UKRJwRGv2ujrmAp/IrcxsZqYLhmSTwWD27623xMH56KzzvVsK13EKEpRlJPd2/tyIQTzFa/INmD2NP2DkpzZzimmJ/m0FHx18fTFn3wURbzy33T1hYl2ySMjMLf7YqZ6nojDN3iZbNLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323698; c=relaxed/simple;
-	bh=LxXCsMHV06d1AmLDDwEmpwTgUubYkAlaotSgTsXd4QA=;
+	s=arc-20240116; t=1711323702; c=relaxed/simple;
+	bh=dSI5qBjOnFdBTRPXrxPTEl5Owb7ZLke4MimUaePBXUo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X0A69yHg6quzBo6P2zOng8Qa8cji6E7mlB6wQgua7DLuPH0gHSusTUzjLlonmwZcYQcCVhctCH94BB2tIXeTOIIZfZ2vYLN+msSnpsTchfbwL2VSdUCx1tSaWkvImAZrWq5nVW8qpHkSnF3kn//CuFUCq+H1B0HGsnopNtxrdEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2tdOiR1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=bYReqU0WPsTXBjV+zlhmkGGpBSgyHRTxUoL4+kGrGd6Q7y7He/v+NTj2zG9ROVihVX6mPj0CCZALTjuH9H4VQs+v/wNI/R7GtemOS9VhGY5d9pfKD070pZBI0GuLtLcJfglrw5WNeDmuGt/gg0HiIc7KgqcBer7CBCapsOuwIQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOgx1VJI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2tdOiR1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C06C43390;
-	Sun, 24 Mar 2024 23:41:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOgx1VJI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7E9BC433C7;
+	Sun, 24 Mar 2024 23:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323698;
-	bh=LxXCsMHV06d1AmLDDwEmpwTgUubYkAlaotSgTsXd4QA=;
+	s=k20201202; t=1711323701;
+	bh=dSI5qBjOnFdBTRPXrxPTEl5Owb7ZLke4MimUaePBXUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g2tdOiR1i1MXoiSRgosAAZEjycp8sJrC3QhO7fswGib7AlYMb+dcrjVH6chaFIAyf
-	 elS+CSWAdt37TuKjd1fJtZrFFscOSwx/K/o9k445ev+MVGXFKTBp8G1O7lZvEX2OtG
-	 aNx/WYT/20cKColmJSytAv3Hp+XratwB72i34CZ0gAeVJMxTsUetLYj+7TgBP7C3dw
-	 tWjfPezfPQG7GyPDCRy5PauczHBVfMX6kbzH3as11gsFNlWSYppSXB+kONCLMuxihe
-	 al/pMAJ4i5QB0A/uvNiJ4KKjfcXSysIz17WlWvAUBb/ujQDM8N0PRekqI/0gjEVXw/
-	 sfuP3mh3R5crA==
+	b=DOgx1VJIai3Sdkrf1hI05Easi2f+ZXvzjNX3SbC8zdd/3MupIEaGT/jYHFvOMY1L8
+	 wHvenyvEp913kemfQPdQkfXpRBkcRmVZOXPN8dJyNjIYv4sJpHjodMqb8oWHqa1wZ7
+	 YxzdiKZ4q90m2JkHpta1WnomF7BaM8cJYoPDDuWWMM44ZmGUPf6oVzr59JeWD/WlK9
+	 zGhZmTMm6s6J0FPVLF/r0jtGbUZVZxsz0ZmDHW0raDpnYURwRPeM72Em6Bt0gK1b+J
+	 5uCho5JhvOpIfwE8JUSfRgHgMZfhe2H1GM4fcSVjW5TBAL4toK4QxqmcmtRGUFXIiw
+	 fQjXJh0ar5JrA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kamal Heib <kheib@redhat.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 071/238] net: ena: Remove ena_select_queue
-Date: Sun, 24 Mar 2024 19:37:39 -0400
-Message-ID: <20240324234027.1354210-72-sashal@kernel.org>
+Subject: [PATCH 5.10 074/238] ARM: dts: imx6dl-yapp4: Fix typo in the QCA switch register address
+Date: Sun, 24 Mar 2024 19:37:42 -0400
+Message-ID: <20240324234027.1354210-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -45,68 +45,42 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kamal Heib <kheib@redhat.com>
+From: Michal Vokáč <michal.vokac@ysoft.com>
 
-[ Upstream commit 78e886ba2b549945ecada055ee0765f0ded5707a ]
+[ Upstream commit 023bd910d3ab735459f84b22bb99fb9e00bd9d76 ]
 
-Avoid the following warnings by removing the ena_select_queue() function
-and rely on the net core to do the queue selection, The issue happen
-when an skb received from an interface with more queues than ena is
-forwarded to the ena interface.
+This change does not have any functional effect. The switch works just
+fine without this patch as it has full access to all the addresses
+on the bus. This is simply a clean-up to set the node name address
+and reg address to the same value.
 
-[ 1176.159959] eth0 selects TX queue 11, but real number of TX queues is 8
-[ 1176.863976] eth0 selects TX queue 14, but real number of TX queues is 8
-[ 1180.767877] eth0 selects TX queue 14, but real number of TX queues is 8
-[ 1188.703742] eth0 selects TX queue 14, but real number of TX queues is 8
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Kamal Heib <kheib@redhat.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 15b43e497ffd ("ARM: dts: imx6dl-yapp4: Use correct pseudo PHY address for the switch")
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index e13ae04d2f0fd..fa65971949fce 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -3057,22 +3057,6 @@ static netdev_tx_t ena_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	return NETDEV_TX_OK;
- }
+diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+index f18da2b70fdc9..b636faaddc510 100644
+--- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
++++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+@@ -125,7 +125,7 @@ phy_port3: phy@2 {
  
--static u16 ena_select_queue(struct net_device *dev, struct sk_buff *skb,
--			    struct net_device *sb_dev)
--{
--	u16 qid;
--	/* we suspect that this is good for in--kernel network services that
--	 * want to loop incoming skb rx to tx in normal user generated traffic,
--	 * most probably we will not get to this
--	 */
--	if (skb_rx_queue_recorded(skb))
--		qid = skb_get_rx_queue(skb);
--	else
--		qid = netdev_pick_tx(dev, skb, NULL);
--
--	return qid;
--}
--
- static void ena_config_host_info(struct ena_com_dev *ena_dev, struct pci_dev *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -3242,7 +3226,6 @@ static const struct net_device_ops ena_netdev_ops = {
- 	.ndo_open		= ena_open,
- 	.ndo_stop		= ena_close,
- 	.ndo_start_xmit		= ena_start_xmit,
--	.ndo_select_queue	= ena_select_queue,
- 	.ndo_get_stats64	= ena_get_stats64,
- 	.ndo_tx_timeout		= ena_tx_timeout,
- 	.ndo_change_mtu		= ena_change_mtu,
+ 		switch@10 {
+ 			compatible = "qca,qca8334";
+-			reg = <10>;
++			reg = <0x10>;
+ 			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+ 
+ 			switch_ports: ports {
 -- 
 2.43.0
 
