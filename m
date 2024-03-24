@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DAA210840;
-	Sun, 24 Mar 2024 23:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B71B20FAA1;
+	Sun, 24 Mar 2024 23:08:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321694; cv=none; b=bs1yw72CPLXMXCnXD3QHzphwDZVLBe2oBjCVbRNGQBhrqOqYNo+zRhP1f4OnfNDZvYFcfR8i7BdUNX36vQGOfiI97Fqeh/Z05ddK5/WGuO55sQB3LxzXJcL3KfMZY9D0bgy1eCCxA1rbmNpLVCkbnl9ncxx88oQfBUacTRhPG0M=
+	t=1711321683; cv=none; b=q/BULNpHhJCrWNr1Oj32qiGrgNulA8XmUnxANL7Yhs5ZU9YsNX5IquRSsemFvBtPq6otW7GlNsySHU2tCbXcQEqgaTisfCwvd0/+866682fnFrE9fdUcABm6dT+V1zj3zYkU/5G4etyI3dS10xxitN2+Yetlm4mYaFy3vcwTbb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321694; c=relaxed/simple;
-	bh=BApVoZr1HWgG77uIAlP5say5xUHr6e9CzMP/GXvg8hE=;
+	s=arc-20240116; t=1711321683; c=relaxed/simple;
+	bh=WpXy2LNVlErVoZaptWzqLxI6KmqPSeSQU3Pgz6DJJ3k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iq/D/5zF6xKGfohMKd6U0ZhDY3kiloSRZ7scaC0sHUCigU+Sxh0AeNj6MX/Vv4P/AzoN7v8dIUtRqtMn5yeDYjPbqbK0+EUvaK8u2+qGE43oCOBUR7bDiq2zMS2EACXTdscLXqhYHMuOGW/HwHlPh1jAeNJiDms6WOwoXFgnwuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kioQo2xL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bSx+H3mx3vNTGHZU8eQO7CYz3jnZhkafv/wh2/pLBwco45QcY9CtgJAuCtVzZzuWkIrf0V40E+Xq3O1N1qddVfvq+PyYHA+SH5jHr3NYL+JkdZQAPdY4osOs3i/cC6W2djMp+D3OiJaQ0YxiKQvw+isQVDuKYatBmOCQ1laDb2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tgs9rIzV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kioQo2xL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F3FC43399;
-	Sun, 24 Mar 2024 23:08:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tgs9rIzV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D913BC433C7;
+	Sun, 24 Mar 2024 23:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321693;
-	bh=BApVoZr1HWgG77uIAlP5say5xUHr6e9CzMP/GXvg8hE=;
+	s=k20201202; t=1711321682;
+	bh=WpXy2LNVlErVoZaptWzqLxI6KmqPSeSQU3Pgz6DJJ3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kioQo2xLJhfzScD//eGYOlJbWd5y6b9k7y5x0dcrsa1xFmfcYsY185JZnBRSDrqJI
-	 DD7rg9XSvsTXCD8GgWd1/7m5yMFbnEVDl7jklXHymTmd8YZz30HuclGuzYLX/mrhWi
-	 FH6vP7yIAXlUbho/EAwAXoz7UdiDRZerBJnzn4THcVooro1zO22DQZNy84yODCcEof
-	 YmjHOzYcdmE2bzSTS4a4n7/AQZ7OBWxh0LRDgONpA2uCAX+0r2GwlgLXls7+n4v25r
-	 a4bVsS1Xn1us/7AkcnVXq2Nafx/Cvn9Jc/1B+CUYyh805PW+OecuubLZwbWdvEkkGt
-	 /zrNg2Z7j67RQ==
+	b=Tgs9rIzVWGkjsqVWbUttmzL6xJZ8PeSNvAMJ1ucteQEHiQNBPKlaw3/frLA0z6EGV
+	 q3t903BLng+02ELoCCvfmQpVEoq1Lx1RjOOiNuAjzM15vwqPw8KW6/Om7UGqQptiwc
+	 x2ghdDszbUlxmBdEA6DeNoNa86NB2Ii7RDBWAPjkPhKCjVJrf46m7f8XbnAvsmLIRs
+	 z5Xk9x/lqqX7OwpUYUqodn5OnoVV23c9ykZ+UMCOaPNrf4Zzt0mNxBrDYVQ0lkR5eR
+	 H9539C3RS3CPpcIwtqJzlYqCjoZbKtC963DksEtNcsRJrO8G+UEjHpAPm4IjKpX/Gb
+	 Ypbniv72XBNDg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniil Dulov <d.dulov@aladdin.ru>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	James Clark <james.clark@arm.com>,
+	Kaige Ye <ye@kaige.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 422/638] media: go7007: add check of return value of go7007_read_addr()
-Date: Sun, 24 Mar 2024 18:57:39 -0400
-Message-ID: <20240324230116.1348576-423-sashal@kernel.org>
+Subject: [PATCH 6.6 410/638] perf metric: Don't remove scale from counts
+Date: Sun, 24 Mar 2024 18:57:27 -0400
+Message-ID: <20240324230116.1348576-411-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,38 +53,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniil Dulov <d.dulov@aladdin.ru>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit 0b70530ee740861f4776ff724fcc25023df1799a ]
+[ Upstream commit 6d6be5eb45b423a37d746d3ee0fd0c78f76ead9f ]
 
-If go7007_read_addr() returns error channel is not assigned a value.
-In this case go to allocfail.
+Counts were switched from the scaled saved value form to the
+aggregated count to avoid double accounting. When this happened the
+removing of scaling for a count should have been removed, however, it
+wasn't and this wasn't observed as it normally doesn't matter because
+a counter's scale is 1. A problem was observed with RAPL events that
+are scaled.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 866b8695d67e ("Staging: add the go7007 video driver")
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: 37cc8ad77cf8 ("perf metric: Directly use counts rather than saved_value")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Kaige Ye <ye@kaige.org>
+Cc: John Garry <john.g.garry@oracle.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240209204947.3873294-5-irogers@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/go7007/go7007-usb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/stat-shadow.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/media/usb/go7007/go7007-usb.c b/drivers/media/usb/go7007/go7007-usb.c
-index eeb85981e02b6..762c13e49bfa5 100644
---- a/drivers/media/usb/go7007/go7007-usb.c
-+++ b/drivers/media/usb/go7007/go7007-usb.c
-@@ -1201,7 +1201,9 @@ static int go7007_usb_probe(struct usb_interface *intf,
- 				u16 channel;
- 
- 				/* read channel number from GPIO[1:0] */
--				go7007_read_addr(go, 0x3c81, &channel);
-+				if (go7007_read_addr(go, 0x3c81, &channel))
-+					goto allocfail;
-+
- 				channel &= 0x3;
- 				go->board_id = GO7007_BOARDID_ADLINK_MPG24;
- 				usb->board = board = &board_adlink_mpg24;
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index e31426167852a..cf573ff3fa84f 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -414,12 +414,7 @@ static int prepare_metric(struct evsel **metric_events,
+ 				val = NAN;
+ 				source_count = 0;
+ 			} else {
+-				/*
+-				 * If an event was scaled during stat gathering,
+-				 * reverse the scale before computing the
+-				 * metric.
+-				 */
+-				val = aggr->counts.val * (1.0 / metric_events[i]->scale);
++				val = aggr->counts.val;
+ 				source_count = evsel__source_count(metric_events[i]);
+ 			}
+ 		}
 -- 
 2.43.0
 
