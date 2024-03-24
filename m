@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6838A27B124;
-	Sun, 24 Mar 2024 23:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022C327BBDF;
+	Sun, 24 Mar 2024 23:38:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323509; cv=none; b=Z6r/MVLNaIozO5DTJ2HJkRcYlh8YcUcU8DL24PcMsbocVYfu9AQi6hpu2EE/uUKPGf7KCg4qr4WtvKF4eXsgZ6cPxSte004bUur9RbR62J8KUPiSluZv0iicF8up4CF+o8W7wtybFNHGGoGrGQFxS4SkkJkxA5XyYianEXwQRVU=
+	t=1711323527; cv=none; b=YM4W1DGvq/V0o0jWif7lAvB9AyWyuvoTu+DrpohprHgwQwowDbY7MTgIXv2kyWdle+2Cg2ySIhsbgbdrmjb+vogilnLHFr2PdhdAsaZGXO/ExIBrLBulKdoa7S09xZgcbm7wGZ1SxwbzxHtETBQavdlxyMZyZucaV5q+sXTRThU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323509; c=relaxed/simple;
-	bh=bZsBnUnfKdFw2VCk5QyKwh671+Xs8KoP7fsGfnZBPpw=;
+	s=arc-20240116; t=1711323527; c=relaxed/simple;
+	bh=ieKy/hv6bciQ6MqgyuqOGf6/YtMkhtBG+HDbPucQycQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r3D915VkR+wjyqDPP5v5JimxQ9BMgRxdJLAhWp2Atp9Tho/sh8NE3mOVDg9vTbe5IwLZ6AAUfbaxnHEBcORMvKvTxsMN0Xw6Ob7RWHcm3xvBV6Lq/ei/rg/UlXlDY7arYov3mhGaVFVRKvz5hLn1P5y6eltMgJyRqY7rng577jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VF3Lh7XV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RSdyt7XHmDRubuSxIb42VvxHK3J3Ul8+jKyPPE6EIdjRnQcxvDrosrlsnNAWDQoR2UaQ+6UBTtIx8GODxW/8Rg9apTjXlwFpC8YLqiCDV51Oag5Fi98W3xVDord6x1EPDEOE0k1qpINzddEftzto42ZGjJcNm30FskuC7vGhmoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=al2Yv0Vq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VF3Lh7XV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C8AC433F1;
-	Sun, 24 Mar 2024 23:38:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="al2Yv0Vq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FDE7C43390;
+	Sun, 24 Mar 2024 23:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323508;
-	bh=bZsBnUnfKdFw2VCk5QyKwh671+Xs8KoP7fsGfnZBPpw=;
+	s=k20201202; t=1711323525;
+	bh=ieKy/hv6bciQ6MqgyuqOGf6/YtMkhtBG+HDbPucQycQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VF3Lh7XVVydJniBt/RSZbhp+HZmccVA44bx/N0+gC+5kwDKGMDO1FLKhfNxL2Fm7b
-	 9y1Q7SXvVeGkS6InrEhsmAi/yYwTra97C6/OK+wCIM4YylXlaP0tJbOU1KicZIGMNy
-	 i50i4SEZWJWBgli6xckF9xXTEILRj3TBMtnLNeHYqiMqIhNafBKosJ9JSyfilEPTCe
-	 jUsGjGoXfS/ezWwi0vhP48uKweJPpd0qGZMHwcaXHJq3TgtgGThuCRCefB8oTA8Rz0
-	 rWYy7T9xp9VZ26BNFiDv8SEvAa3pFbu+KNR2kqVr6NhJdaKcwKOe33QKm+8thZVka9
-	 kLQPutCa2YBiA==
+	b=al2Yv0Vq9/KeQ2rR7azYtDKoj1WNiB2p+QLnFkpw28gjTXSR44MrVpF8NQCtmtuNP
+	 H+E9DIOqVao+rjxG0wYbJsnQuK62vSrtR7RVWu2jPJGhMVHI9rIgWCdTvwCxGIgXy4
+	 F/TDYedLw++7sbPhp2VLAMBKPmB3J8Tt9Yi/nwkGfi884rlqD/boC+zoi1colP1q1w
+	 9ojnOIy3tgyiDVxtO+e+x5FjVgtbP/ARZnoGPhlCz7+QRePE04M3P9egwURYB5VnIs
+	 1n9k7NXFeVhWFMoY+D/rhblaThDVczih8q4WjlbnspzOiepVSy/TdNAns4e8iTi40j
+	 1mfbOdMa3khDA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Caleb Connolly <caleb.connolly@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 214/317] clk: qcom: dispcc-sdm845: Adjust internal GDSC wait times
-Date: Sun, 24 Mar 2024 19:33:14 -0400
-Message-ID: <20240324233458.1352854-215-sashal@kernel.org>
+Subject: [PATCH 5.15 233/317] media: ttpci: fix two memleaks in budget_av_attach
+Date: Sun, 24 Mar 2024 19:33:33 -0400
+Message-ID: <20240324233458.1352854-234-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,36 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 117e7dc697c2739d754db8fe0c1e2d4f1f5d5f82 ]
+[ Upstream commit d0b07f712bf61e1a3cf23c87c663791c42e50837 ]
 
-SDM845 downstream uses non-default values for GDSC internal waits.
-Program them accordingly to avoid surprises.
+When saa7146_register_device and saa7146_vv_init fails, budget_av_attach
+should free the resources it allocates, like the error-handling of
+ttpci_budget_init does. Besides, there are two fixme comment refers to
+such deallocations.
 
-Fixes: 81351776c9fb ("clk: qcom: Add display clock controller driver for SDM845")
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Tested-by: Caleb Connolly <caleb.connolly@linaro.org> # OnePlus 6
-Link: https://lore.kernel.org/r/20240103-topic-845gdsc-v1-1-368efbe1a61d@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/dispcc-sdm845.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/pci/ttpci/budget-av.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/qcom/dispcc-sdm845.c b/drivers/clk/qcom/dispcc-sdm845.c
-index 735adfefc3798..e792e0b130d33 100644
---- a/drivers/clk/qcom/dispcc-sdm845.c
-+++ b/drivers/clk/qcom/dispcc-sdm845.c
-@@ -759,6 +759,8 @@ static struct clk_branch disp_cc_mdss_vsync_clk = {
+diff --git a/drivers/media/pci/ttpci/budget-av.c b/drivers/media/pci/ttpci/budget-av.c
+index 3cb83005cf09b..519f85e0a397d 100644
+--- a/drivers/media/pci/ttpci/budget-av.c
++++ b/drivers/media/pci/ttpci/budget-av.c
+@@ -1462,7 +1462,8 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+ 		budget_av->has_saa7113 = 1;
+ 		err = saa7146_vv_init(dev, &vv_data);
+ 		if (err != 0) {
+-			/* fixme: proper cleanup here */
++			ttpci_budget_deinit(&budget_av->budget);
++			kfree(budget_av);
+ 			ERR("cannot init vv subsystem\n");
+ 			return err;
+ 		}
+@@ -1471,9 +1472,10 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+ 		vv_data.vid_ops.vidioc_s_input = vidioc_s_input;
  
- static struct gdsc mdss_gdsc = {
- 	.gdscr = 0x3000,
-+	.en_few_wait_val = 0x6,
-+	.en_rest_wait_val = 0x5,
- 	.pd = {
- 		.name = "mdss_gdsc",
- 	},
+ 		if ((err = saa7146_register_device(&budget_av->vd, dev, "knc1", VFL_TYPE_VIDEO))) {
+-			/* fixme: proper cleanup here */
+-			ERR("cannot register capture v4l2 device\n");
+ 			saa7146_vv_release(dev);
++			ttpci_budget_deinit(&budget_av->budget);
++			kfree(budget_av);
++			ERR("cannot register capture v4l2 device\n");
+ 			return err;
+ 		}
+ 
 -- 
 2.43.0
 
