@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2FF1514C6;
-	Sun, 24 Mar 2024 23:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DD71514DA;
+	Sun, 24 Mar 2024 23:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321526; cv=none; b=aMuQBZbmSc8NiuAeUIBfojYrz7zOTlNI5+8QLwUJCGeNC0Md5i+ahfCm9txAyYDceP9a7AM8lkeCZzFUPxexzTmShtqZup9UuK7N9UtdO3uKGhhHgjAV27ZyqCXqJHbt3dei0WtTJZnYaRt/EgoUhvVvvumouuaByPwBdgyDmbQ=
+	t=1711321529; cv=none; b=GGKtjAX6UQhKYw8L1gG8U+ysr8lHWJx3epk953IGKBD1rDMx1SyjRU2TwxEN6wn2HCpeW4UTycguaJlWQYIS6f68GQW8FyhH8l41vovdTZjsyuou0rDIMgiAg2MF7kTAh6qt2xcUofvFzkMvK3N9cbjffCVwf/TZXXQTo7DSa2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321526; c=relaxed/simple;
-	bh=slLq5ObvRkrF/vc8IVPcQgi3EKnkUlzKMWzIv72UzuM=;
+	s=arc-20240116; t=1711321529; c=relaxed/simple;
+	bh=gG4NPeaHHJJjbHXioBGh7gKVMITJeUNeahrHehClb3U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S5F3rX9ur8a93nzeS66wQ6lpsm77k7RbMsMVVqiQtJKt/bzD5++lFIVASzqEO1/4cEGxIQFl8Bz+sA9O67hjf3ZA+hLmCrGqr/ojMFMz/dsLh6DigCbm85JIYfECyDhIepOz6X6kYkLx4+LNfDN9zGpU9f4lq51Y6EYnTS3znO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWaBatws; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WYkGo1Q6miM9DHO3a7QZPIzJXenPYX5iXaTURUDpsfmdH1E5Fw+kU0KYmQpI0teEzQ4sAN20tbRPQwJcmgfvcfzAFB1RmXnZo+fJv9VhBnfGNRLCBGOZEt45hICKPzCLhWJ9xyw3afzvTCXBMTuP3qI3YOXcelgaPk2USXVxlwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EMxCwyDa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWaBatws"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA1A0C433C7;
-	Sun, 24 Mar 2024 23:05:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EMxCwyDa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10FFC433C7;
+	Sun, 24 Mar 2024 23:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321526;
-	bh=slLq5ObvRkrF/vc8IVPcQgi3EKnkUlzKMWzIv72UzuM=;
+	s=k20201202; t=1711321528;
+	bh=gG4NPeaHHJJjbHXioBGh7gKVMITJeUNeahrHehClb3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tWaBatws6w6AXb55OgM8s9/O+5crA1QOoPlrveu1c2DqSaIJYgAWFLasfc5nwryum
-	 9vpjjz2f0AaYx6AFweCvZjrDCG1zKEVkoJ525gSe/IaoyGiVevfOk9yFqefuPAwxjW
-	 drM2vVILw+8uZycfwb2BXnBdanCNBo+wX1D7kHNKqIgeFF5qYOj0uoPmJNj50vYUM6
-	 JA71J8H08fl70lhPewGvyyrpz+t8NurMeLQnOjThzjpiO0HW+fAsW1aZHQYx64TswS
-	 OB90QHkykeNiFTKL4CyOLDG3aLIojK51gnQcg7lR/Kx/aFIjY1K1TWqbWuP0DXqv16
-	 EPit23OOo9vZQ==
+	b=EMxCwyDaB6l8KERJ0ozR1tITGGx8y0IcMBZXfMqtZ6Dre/7yWJKmRCsv7Mn4sUDj+
+	 mLiNftG6hGhfovf4nWkvBnqzaFV1H/JBGqNn1XxehBj95I23eXalQ0FCjoG/24kmdJ
+	 Q3R2zoL537Zi+QlL1Fpomj4eeO3fIwj5t8AN/bssd7IZq0Evym1ddb6xLMCHsMZEfo
+	 oTadtazCIpS39D/da0muHThjg+J6lqBpJ3ZezG0i1zTdeCVYK6xNigbCfFXELOLypf
+	 xeOtidrgDM7BYzdHXuaRQhVjpy1gTokMvO5eoUaxdUh3k5/jBUI64sZIU9UyOVCHPU
+	 zPCPzIcvoNM+A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Benjamin Lin <benjamin-jw.lin@mediatek.com>,
+Cc: StanleyYP Wang <StanleyYP.Wang@mediatek.com>,
 	Shayne Chen <shayne.chen@mediatek.com>,
 	Felix Fietkau <nbd@nbd.name>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 253/638] wifi: mt76: mt7996: fix incorrect interpretation of EHT MCS caps
-Date: Sun, 24 Mar 2024 18:54:50 -0400
-Message-ID: <20240324230116.1348576-254-sashal@kernel.org>
+Subject: [PATCH 6.6 255/638] wifi: mt76: mt7996: fix efuse reading issue
+Date: Sun, 24 Mar 2024 18:54:52 -0400
+Message-ID: <20240324230116.1348576-256-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,59 +49,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Benjamin Lin <benjamin-jw.lin@mediatek.com>
+From: StanleyYP Wang <StanleyYP.Wang@mediatek.com>
 
-[ Upstream commit d52c97592f06552a4289008602b5d5b724084ba7 ]
+[ Upstream commit d3ad99be7cc2d174126d908addd6bea2b157aa75 ]
 
-The EHT MCS map subfield of 20 MHz-Only is not present in the EHT
-capability of AP, so STA does not need to parse the subfield.
-Moreover, AP should parse the subfield only if STA is 20 MHz-Only, which
-can be confirmed by checking supported channel width in HE capability.
+The efuse data starts from the 48th bytes instead of 64th bytes in the
+returned event skb.
 
-Fixes: 92aa2da9fa49 ("wifi: mt76: mt7996: enable EHT support in firmware")
-Co-developed-by: Shayne Chen <shayne.chen@mediatek.com>
+Fixes: 98686cd21624 ("wifi: mt76: mt7996: add driver for MediaTek Wi-Fi 7 (802.11be) devices")
+Signed-off-by: StanleyYP Wang <StanleyYP.Wang@mediatek.com>
 Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
-Signed-off-by: Benjamin Lin <benjamin-jw.lin@mediatek.com>
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7996/mcu.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt7996/mcu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c
-index 7575d3506ea4e..650c43cb899f7 100644
+index 650c43cb899f7..b4ea7d0a7f5a0 100644
 --- a/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c
 +++ b/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c
-@@ -1005,6 +1005,9 @@ mt7996_mcu_sta_he_6g_tlv(struct sk_buff *skb, struct ieee80211_sta *sta)
- static void
- mt7996_mcu_sta_eht_tlv(struct sk_buff *skb, struct ieee80211_sta *sta)
- {
-+	struct mt7996_sta *msta = (struct mt7996_sta *)sta->drv_priv;
-+	struct ieee80211_vif *vif = container_of((void *)msta->vif,
-+						 struct ieee80211_vif, drv_priv);
- 	struct ieee80211_eht_mcs_nss_supp *mcs_map;
- 	struct ieee80211_eht_cap_elem_fixed *elem;
- 	struct sta_rec_eht *eht;
-@@ -1024,8 +1027,17 @@ mt7996_mcu_sta_eht_tlv(struct sk_buff *skb, struct ieee80211_sta *sta)
- 	eht->phy_cap = cpu_to_le64(*(u64 *)elem->phy_cap_info);
- 	eht->phy_cap_ext = cpu_to_le64(elem->phy_cap_info[8]);
+@@ -3100,7 +3100,7 @@ int mt7996_mcu_get_eeprom(struct mt7996_dev *dev, u32 offset)
+ 		u32 addr = le32_to_cpu(*(__le32 *)(skb->data + 12));
+ 		u8 *buf = (u8 *)dev->mt76.eeprom.data + addr;
  
--	if (sta->deflink.bandwidth == IEEE80211_STA_RX_BW_20)
--		memcpy(eht->mcs_map_bw20, &mcs_map->only_20mhz, sizeof(eht->mcs_map_bw20));
-+	if (vif->type != NL80211_IFTYPE_STATION &&
-+	    (sta->deflink.he_cap.he_cap_elem.phy_cap_info[0] &
-+	     (IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_IN_2G |
-+	      IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_80MHZ_IN_5G |
-+	      IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_160MHZ_IN_5G |
-+	      IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_80PLUS80_MHZ_IN_5G)) == 0) {
-+		memcpy(eht->mcs_map_bw20, &mcs_map->only_20mhz,
-+		       sizeof(eht->mcs_map_bw20));
-+		return;
-+	}
-+
- 	memcpy(eht->mcs_map_bw80, &mcs_map->bw._80, sizeof(eht->mcs_map_bw80));
- 	memcpy(eht->mcs_map_bw160, &mcs_map->bw._160, sizeof(eht->mcs_map_bw160));
- 	memcpy(eht->mcs_map_bw320, &mcs_map->bw._320, sizeof(eht->mcs_map_bw320));
+-		skb_pull(skb, 64);
++		skb_pull(skb, 48);
+ 		memcpy(buf, skb->data, MT7996_EEPROM_BLOCK_SIZE);
+ 	}
+ 
 -- 
 2.43.0
 
