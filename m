@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B811717EB77;
-	Sun, 24 Mar 2024 23:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC66617EB7C;
+	Sun, 24 Mar 2024 23:46:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324007; cv=none; b=o+pHBhJg4Mk2v/s2i+vvJAYXri2yF3XUdhoe1VP2O/WVcDJFm6G+YowZQtDE/zwZyCf8Cty+aDukgkXyDB+/cF/8RN+FJzZIUA1T3p+SDRS+tQV1BQr5pp+M/DRxlRAq2YH8SNR5cprgs+Et+y+BLU5ueZT568vBs4WAR8orWHc=
+	t=1711324009; cv=none; b=jP7uNs6DnmiBtJhoPRUHeuWAojZbFPpLKC650LtL/Oiw1SMf1WOKCIQFl2ibKA+a0ssDyCZtixmR4jZGFKzgCJmJOGAFwqWQOybwSK/4GybBl7w7zdv6uZ30gFJ/yboEk4Tsx21CGnP3Gpe8aQmeLMD+YgpsWXMMJfyRbwFFBdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324007; c=relaxed/simple;
-	bh=tfnOGd7pf3A5f59RWHth3GLkpWlXj5gee4oTcfvY3k4=;
+	s=arc-20240116; t=1711324009; c=relaxed/simple;
+	bh=w3wXilM/p6r1VZTb0UA83Y9zrU52YRn0KjPnNsyVecQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m1zdmETUhGnkiO72LpZcHL8BbP7hLJ8fGM5Q/snxQRj4iA1prIxbeXqTbFgeKLrpE0yZBw9y1nw08OpO5TrHc1cWCpREqu/+mp9w9w9ieC0xH7CVPyP17qcusPIvWAmzMQOoSwNp9uBnpVYx9kFvR4jB3dr/jPVU02PTwxdgxgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1ET/F54; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=V5/XSxnTajBwDxStb4Kfw1JMTXa2wDC788ev6sxI7w4bvQkKouFYf9bblSxPhO9440cT6VJ8KC0gw8di6pRnvLwMNVrP8BpQJd4n1NcbsOKpOgwiwqES2lhtza/X5vz2/Bmk1bwRdBQTQrDsGXbWFmsiPcl4gkHNYEurouUNPIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MWNM0D0A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1ET/F54"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37704C433C7;
-	Sun, 24 Mar 2024 23:46:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MWNM0D0A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1373BC433F1;
+	Sun, 24 Mar 2024 23:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324005;
-	bh=tfnOGd7pf3A5f59RWHth3GLkpWlXj5gee4oTcfvY3k4=;
+	s=k20201202; t=1711324009;
+	bh=w3wXilM/p6r1VZTb0UA83Y9zrU52YRn0KjPnNsyVecQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k1ET/F54SOOdF0LWnukss+kX0eRRzgPIKBC7qgsbh195/gpthK5BB8iKGOq+LmPcW
-	 kuvipTxWi60JBgqTzP4sbQVLuGHqeqGGm4LN3RxTZnhHS+OHzrD7gpbYNL1lASyk22
-	 cXP4eZUQJ5WiPFWGdv+VnFxzy9J+2604HrTIyquPZeVpsau6HEEX1N/vBh6CNBgE4H
-	 EqHds3V2ucnR+7yqXImccaqaNk/jm6jetkzGqOk/kdlnM3b40TFXQaQdiDCSTyO/44
-	 TjOJABY8YZ2VO+sxt6H/lgIktN0HK/ofEOZBUUhMZJRQthJJ4RV418ivjRlzWcYxjd
-	 dpa0mm6E7fwUg==
+	b=MWNM0D0ATuVIvgW+RAAea35ZOghrUCHCEG9k/AElGQ2OYFHDJsC+/Cglf7W9Wf9oB
+	 uh0qcca2EBAeA+xI/7CpzgR4bSh6YNxMewqNO7xxoLZCbu//9sv8ARAhmL7cEFb9qe
+	 OqjkggA8hHIty6MB8ZY0ZsCb4uWrJ1zbAYZKUNEbiIVqFPCuIv0UqxH16/LcwSnHdj
+	 NuphRVTNXuX15cX4/odRlmZCnHv6c8Tyg+cCEVoiOwVRMdWudb0nHYnmekxKV27BYg
+	 QiIA1y3z8kcBF3roHpkSrj/VCZNVm2e2LsLuEnUF/XW0UssbF392TbVzHKu9xUiTLf
+	 wEdycJlzi5+rg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+Cc: Max Kellermann <max.kellermann@ionos.com>,
+	Helge Deller <deller@gmx.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 006/183] MIPS: Clear Cause.BD in instruction_pointer_set
-Date: Sun, 24 Mar 2024 19:43:39 -0400
-Message-ID: <20240324234638.1355609-7-sashal@kernel.org>
+Subject: [PATCH 5.4 010/183] parisc/ftrace: add missing CONFIG_DYNAMIC_FTRACE check
+Date: Sun, 24 Mar 2024 19:43:43 -0400
+Message-ID: <20240324234638.1355609-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,37 +48,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Max Kellermann <max.kellermann@ionos.com>
 
-[ Upstream commit 9d6e21ddf20293b3880ae55b9d14de91c5891c59 ]
+[ Upstream commit 250f5402e636a5cec9e0e95df252c3d54307210f ]
 
-Clear Cause.BD after we use instruction_pointer_set to override
-EPC.
+Fixes a bug revealed by -Wmissing-prototypes when
+CONFIG_FUNCTION_GRAPH_TRACER is enabled but not CONFIG_DYNAMIC_FTRACE:
 
-This can prevent exception_epc check against instruction code at
-new return address.
-It won't be considered as "in delay slot" after epc being overridden
-anyway.
+ arch/parisc/kernel/ftrace.c:82:5: error: no previous prototype for 'ftrace_enable_ftrace_graph_caller' [-Werror=missing-prototypes]
+    82 | int ftrace_enable_ftrace_graph_caller(void)
+       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ arch/parisc/kernel/ftrace.c:88:5: error: no previous prototype for 'ftrace_disable_ftrace_graph_caller' [-Werror=missing-prototypes]
+    88 | int ftrace_disable_ftrace_graph_caller(void)
+       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/ptrace.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/parisc/kernel/ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/ptrace.h
-index 1e76774b36ddf..2849a9b65a055 100644
---- a/arch/mips/include/asm/ptrace.h
-+++ b/arch/mips/include/asm/ptrace.h
-@@ -60,6 +60,7 @@ static inline void instruction_pointer_set(struct pt_regs *regs,
-                                            unsigned long val)
- {
- 	regs->cp0_epc = val;
-+	regs->cp0_cause &= ~CAUSEF_BD;
+diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
+index b836fc61a24f4..f3a5c5e480cf0 100644
+--- a/arch/parisc/kernel/ftrace.c
++++ b/arch/parisc/kernel/ftrace.c
+@@ -80,7 +80,7 @@ void notrace __hot ftrace_function_trampoline(unsigned long parent,
+ #endif
  }
  
- /* Query offset/name of register from its name/offset */
+-#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++#if defined(CONFIG_DYNAMIC_FTRACE) && defined(CONFIG_FUNCTION_GRAPH_TRACER)
+ int ftrace_enable_ftrace_graph_caller(void)
+ {
+ 	return 0;
 -- 
 2.43.0
 
