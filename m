@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAC580046;
-	Sun, 24 Mar 2024 22:48:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0231CE99B;
+	Sun, 24 Mar 2024 22:48:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320512; cv=none; b=dWDSyAs0RywNGDQk6ZpsgmFB86z0pEkFDz/iJLyqXmE+V4j5sBd38jOqxynZR4uhx5VmHTwO6qjrL7s955aljjje0Av9KxA/BfHSvlC9iDpEzEfLPJ1Twkd2KvaIW/Uqeh5eUUHSTXp4cY9JG/BJ91ss6pqIr9exYAwAqrr+BvU=
+	t=1711320527; cv=none; b=Hqozh9vETmpRcAVxgzjc/wtuYf35gSe7O/V95L447eRaK8gKzpysA5YNlLhlbvxJ+UUYE69zLMAqfP4zdF3gCU1qR7yF7zZyx8cgDX/2OpJcBJ0ZQhj3kBuEi755MaTLsxhmE6EbkfNCuA3FRdwyHugZPapQeIF5d/d2iLTYUgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320512; c=relaxed/simple;
-	bh=0EowKxSuj9Iounah89l3Kjvg/Er0LQCGF6R7b/uy6FY=;
+	s=arc-20240116; t=1711320527; c=relaxed/simple;
+	bh=MMQ1PVr+DULjkb6hUdVFC51M9t05DhNVZVRYlp2BvVA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hEIVpBxQ3LvyFfxoJQk/HxNXTuIbMTeBds0EfZ/S/DLT/P/WI5aWXzNytBzH/fIV2BTo9A5Em2o9ktf0XYDXnFhUgDbSVfPBm6ojvYCK6AVqdF9jnJGhiAd1yLBkgQTZU0oTT5+fF47f6DK9bGyst4bPueOqU2jKLhjligenYyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xkpx9r+I; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GT8avEoLH7y4i1gUKBT8kGlRmdJO4lKhVAEj8N6mJee0Wzv02kL6nFAC/J/cGxdFt+czVbuUU/a06rL6Zjjy4MySwLIws/jOnnpRXaIcLnQy47TfDurUV5Ao/QlGFMS8bUnyHsKSAVPWrlN3+nU+/dP1yi3bLcMSDMeKV10Jtww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KYqEGVS/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xkpx9r+I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C1B2C43399;
-	Sun, 24 Mar 2024 22:48:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KYqEGVS/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39232C433A6;
+	Sun, 24 Mar 2024 22:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320512;
-	bh=0EowKxSuj9Iounah89l3Kjvg/Er0LQCGF6R7b/uy6FY=;
+	s=k20201202; t=1711320525;
+	bh=MMQ1PVr+DULjkb6hUdVFC51M9t05DhNVZVRYlp2BvVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Xkpx9r+IBayNo0nlQ0DCjdVYyn7cSJQJIuJJMGAu2hWWE9F7jdg0M3vnKzvaQdzJv
-	 c+x4MY5DKJ1qu8ktP8wb7McyqzB5SNaMHYTX7ThLgQ4SHKnqnDYEfBG1uL/VdUs7J5
-	 ZPqIe61WWZbhA8qsGzPyIcVWS8Yf4J3w+KhKE8wOis9p/niBgVXCKzdYssJe2WbxZ0
-	 vbD7LyTcCiA0CYzwCnCO9MKMLQm+Ex+EEl3Mx84n650OEwZzYypImxmJwj8qR57i5v
-	 9p2kRuOBs+iPQx5J1GjbflAuuQnjK5SKaVhpScBExxLmX8lqaKL7+F6y+mwPZuMZ1z
-	 Inoba3WeUsKcQ==
+	b=KYqEGVS/F89y0xNHFtiIo5Hd0lgC3MIru8XJ1xCNIJ4wqNpUZZEaQPdOy78XcyrxT
+	 6vzCFRaDMTXto4h/z+dub+cEidNwciFRRwswnjqSh292NtcgnbzyNyWiOerzE0wsAB
+	 5JBwV/VOepQp3lxIUerycykZdq3yxx5jaNKGs6/FAaViLV2hwn1GksqXlIhwcIJ9l+
+	 uDemwdV3KksXoagbJoVFnCPa+fmSmfPQjjBib/iBQXstIv/LXsTMsiciFYey7r2OQ1
+	 zs2h22tE7ncCn075TOlJind6F8U3sn+onHKZuYZE5HVizbyRL5IQXvjA6YPWV6ku7/
+	 U4yg0ZE6VrIbw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stefan Binding <sbinding@opensource.cirrus.com>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 072/713] ALSA: hda/realtek: Add quirks for Lenovo Thinkbook 16P laptops
-Date: Sun, 24 Mar 2024 18:36:38 -0400
-Message-ID: <20240324224720.1345309-73-sashal@kernel.org>
+Subject: [PATCH 6.7 087/713] workqueue: Make wq_adjust_max_active() round-robin pwqs while activating
+Date: Sun, 24 Mar 2024 18:36:53 -0400
+Message-ID: <20240324224720.1345309-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,36 +48,79 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stefan Binding <sbinding@opensource.cirrus.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 6214e24cae9b10a7c1572f99552610a24614fffe ]
+[ Upstream commit c5404d4e6df6faba1007544b5f4e62c7c14416dd ]
 
-These models use 2 CS35L41 amps with HDA using I2C.
-Both models have _DSD support inside cs35l41_hda_property.c.
+wq_adjust_max_active() needs to activate work items after max_active is
+increased. Previously, it did that by visiting each pwq once activating all
+that could be activated. While this makes sense with per-pwq nr_active,
+nr_active will be shared across multiple pwqs for unbound wqs. Then, we'd
+want to round-robin through pwqs to be fairer.
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218437
+In preparation, this patch makes wq_adjust_max_active() round-robin pwqs
+while activating. While the activation ordering changes, this shouldn't
+cause user-noticeable behavior changes.
 
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20240301160154.158398-3-sbinding@opensource.cirrus.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
+Stable-dep-of: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/workqueue.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index ebde2ea8fa812..baf550b5a7c49 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10289,6 +10289,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x3886, "Y780 VECO DUAL", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x38a7, "Y780P AMD YG dual", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x38a8, "Y780P AMD VECO dual", ALC287_FIXUP_TAS2781_I2C),
-+	SND_PCI_QUIRK(0x17aa, 0x38a9, "Thinkbook 16P", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x17aa, 0x38ab, "Thinkbook 16P", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x17aa, 0x38b4, "Legion Slim 7 16IRH8", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x17aa, 0x38b5, "Legion Slim 7 16IRH8", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x17aa, 0x38b6, "Legion Slim 7 16APH8", ALC287_FIXUP_CS35L41_I2C_2),
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 78b4f4e3e41dd..059f122563def 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -4710,7 +4710,7 @@ static int init_rescuer(struct workqueue_struct *wq)
+  */
+ static void wq_adjust_max_active(struct workqueue_struct *wq)
+ {
+-	struct pool_workqueue *pwq;
++	bool activated;
+ 
+ 	lockdep_assert_held(&wq->mutex);
+ 
+@@ -4730,19 +4730,26 @@ static void wq_adjust_max_active(struct workqueue_struct *wq)
+ 	 */
+ 	WRITE_ONCE(wq->max_active, wq->saved_max_active);
+ 
+-	for_each_pwq(pwq, wq) {
+-		unsigned long flags;
+-
+-		/* this function can be called during early boot w/ irq disabled */
+-		raw_spin_lock_irqsave(&pwq->pool->lock, flags);
+-
+-		while (pwq_activate_first_inactive(pwq))
+-			;
++	/*
++	 * Round-robin through pwq's activating the first inactive work item
++	 * until max_active is filled.
++	 */
++	do {
++		struct pool_workqueue *pwq;
+ 
+-		kick_pool(pwq->pool);
++		activated = false;
++		for_each_pwq(pwq, wq) {
++			unsigned long flags;
+ 
+-		raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
+-	}
++			/* can be called during early boot w/ irq disabled */
++			raw_spin_lock_irqsave(&pwq->pool->lock, flags);
++			if (pwq_activate_first_inactive(pwq)) {
++				activated = true;
++				kick_pool(pwq->pool);
++			}
++			raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
++		}
++	} while (activated);
+ }
+ 
+ __printf(1, 4)
 -- 
 2.43.0
 
