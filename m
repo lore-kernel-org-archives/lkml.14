@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988F61EEF0A;
-	Sun, 24 Mar 2024 23:09:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE70215921;
+	Sun, 24 Mar 2024 23:09:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321747; cv=none; b=VQOC4RkteGb1dFYYkehDDyuU5c59sEvu4JBfGvkQKTSApgLpP3BzUafgo1m0lNI8CGMcM1Yb+VSVwjO9H14vEawWM8UODqjfvOC0FktPVqhh5cFqEzuZ0ichBGc3TuK13AZx3H7DqTATAGrXHkNyUOVyOTCdTXgOWYRejQtkUgU=
+	t=1711321749; cv=none; b=B9oe043u9yaWwHIlVwynLE9cEYZJ0PVzfR5xu+Q7pIymbgSugDp9ZfaEjGcOoBT8PWcxP2KXGjmliNYl4277KLLmgFi4m+bCTfTGKJbnU4ushZuuPmVzanXP5XFGCS8n5KiPdRr789CH6Y5HxVDOyL+GW16N/C+tpkKEnrMnwMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321747; c=relaxed/simple;
-	bh=LOo3lC22VEDvJtM2gwHrvZYeaT0SOw4YiVKbCdHHZVk=;
+	s=arc-20240116; t=1711321749; c=relaxed/simple;
+	bh=wmy064nOM2YSIWgVWW0lJkqy0LIKv+O0CcMtr46fkOk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q6bYlALIqwPfUIS9U2U2H02a/EjxvtZ3ZlIG9KUq8/5yrJEwA7fEaQ/vdwfcyBgu4adpLQm2Ynbftbw57tgK/K8FZNp6SY8M4n50nPOaXVXX0z+1oLxMz/Mf10bvGItHz10neOXF6uaW8ecHRRgSqDvlXnpE0M7Gkm3IVmys2J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B50xETpJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PH6cDHbFCQDc5Dj5l2JHlm8/uztRdi+2mb/ixGXkLQGithwSOGRuCF68klphGEV4x7TQBBh5uJhPb9JSJYrUWz7xyQb7jyAL57MXKoGbJNvYRzCccOtj8MWFmFSxt0M61baAa5ZU5oLMya3vAHBLVbDUg5gPm5LMCtZkDZyFPWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/crmq97; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B50xETpJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2C43C43390;
-	Sun, 24 Mar 2024 23:09:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/crmq97"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF5ECC43390;
+	Sun, 24 Mar 2024 23:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321746;
-	bh=LOo3lC22VEDvJtM2gwHrvZYeaT0SOw4YiVKbCdHHZVk=;
+	s=k20201202; t=1711321748;
+	bh=wmy064nOM2YSIWgVWW0lJkqy0LIKv+O0CcMtr46fkOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B50xETpJ6Lwxn0kSiAV0YLyCEcIkLL/l+fXrAIRQAk/rQ7LAYolxHnoBSpH/vZ/Ki
-	 rfAmugSR5modgSARjHl2I0O0XJhxa0woI1kA21OogJwEPdnHAXd8BEDrQ2TtAnzFwA
-	 psTuHHJjoGlnoOsXsaFlDJ3sS/wnqnxeFQAnxg926WGJo1eJLMxInelRw1jltdqCM4
-	 mWVhUH0m9bHpT1Izw4xX0rr8PoLkpZHG5mAtgeA0g7M3OHlN71AzXAtaMaDvplV9T0
-	 H6hL1dvbKQ89IL4VMNBrOfvvMfL1ZEo3lC8ABbTfc2IB2H4LTB9hd06glPzp7S6uiH
-	 sH5MSdj6t0GMw==
+	b=h/crmq97YFNFX/SgZgTX9FddIflHmpsfmDbz2hPD9NLWbcf6XzQ8qhrFPbU51EGOi
+	 GXXmQVL8pQHaSsXUi+fcCLQ9WCu8x5pRa03k49hGxZitCJ1OvE0wAJHscqLVyrVz4j
+	 TOBr6gr6C8ZXCX54QDrgQGYCuzsV8PjhlGl/y7X+A4xL+/lZjUqMNcp3MAkGJ1rwMj
+	 BiOwumarqkC78EgBseicEUcDxa/16mPsXwuDo4zDQX0iZa7uZ/RYB1N8LNAapWe3gj
+	 4LoLi9FRwQJ9wHe8O72Jv/ha4HmAsMjwj0NqBgtcnCuLDMrr03XHRIa6k3wwYZMqiY
+	 JAfGSaouVPeYQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kajol Jain <kjain@linux.ibm.com>,
-	Akanksha J N <akanksha@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
+Cc: Gabor Juhos <j4g8y7@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 474/638] powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks
-Date: Sun, 24 Mar 2024 18:58:31 -0400
-Message-ID: <20240324230116.1348576-475-sashal@kernel.org>
+Subject: [PATCH 6.6 476/638] clk: qcom: gcc-ipq5018: fix 'halt_reg' offset of 'gcc_pcie1_pipe_clk'
+Date: Sun, 24 Mar 2024 18:58:33 -0400
+Message-ID: <20240324230116.1348576-477-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,115 +50,68 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kajol Jain <kjain@linux.ibm.com>
+From: Gabor Juhos <j4g8y7@gmail.com>
 
-[ Upstream commit ad86d7ee43b22aa2ed60fb982ae94b285c1be671 ]
+[ Upstream commit 11b752ac5a07cbfd95592fac5237a02f45662926 ]
 
-Running event hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
-in one of the system throws below error:
+The following table shows the values of the 'halt_reg' and the
+'enable_reg' fields from the pcie clocks defined in the current
+driver:
 
- ---Logs---
- # perf list | grep hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles
-  hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=?/[Kernel PMU event]
+  clock                        halt_reg    enable_reg
 
- # perf stat -v -e hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ sleep 2
-Using CPUID 00800200
-Control descriptor is not initialized
-Warning:
-hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ event is not supported by the kernel.
-failed to read counter hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
+  gcc_pcie0_ahb_clk            0x75010     0x75010
+  gcc_pcie0_aux_clk            0x75014     0x75014
+  gcc_pcie0_axi_m_clk          0x75008     0x75008
+  gcc_pcie0_axi_s_bridge_clk   0x75048     0x75048
+  gcc_pcie0_axi_s_clk          0x7500c     0x7500c
+  gcc_pcie0_pipe_clk           0x75018     0x75018
 
- Performance counter stats for 'system wide':
+  gcc_pcie1_ahb_clk            0x76010     0x76010
+  gcc_pcie1_aux_clk            0x76014     0x76014
+  gcc_pcie1_axi_m_clk          0x76008     0x76008
+  gcc_pcie1_axi_s_bridge_clk   0x76048     0x76048
+  gcc_pcie1_axi_s_clk          0x7600c     0x7600c
+  gcc_pcie1_pipe_clk                 8*    0x76018
 
-   <not supported>      hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
+Based on the table, it is quite likely that the pcie0 and the pci1
+clocks are using the same register layout, however it seems that
+the value of the 'halt_reg' field in the 'gcc_pcie1_pipe_clk' clock
+is wrong.
 
-       2.000700771 seconds time elapsed
+In the downstream driver [1], the same '0x76018' value is used for
+both the 'halt_reg' and for the 'enable_reg' fields of the
+'gcc_pcie1_pipe_clk' clock.
 
-The above error is because of the hcall failure as required
-permission "Enable Performance Information Collection" is not set.
-Based on current code, single_gpci_request function did not check the
-error type incase hcall fails and by default returns EINVAL. But we can
-have other reasons for hcall failures like H_AUTHORITY/H_PARAMETER with
-detail_rc as GEN_BUF_TOO_SMALL, for which we need to act accordingly.
+Update the current driver to use the same value used downstream as
+probably that is the correct value.
 
-Fix this issue by adding new checks in the single_gpci_request and
-h_gpci_event_init functions.
+1. https://git.codelinaro.org/clo/qsdk/oss/kernel/linux-ipq-5.4/-/blob/NHSS.QSDK.12.4.r4/drivers/clk/qcom/gcc-ipq5018.c?ref_type=heads#L2316
 
-Result after fix patch changes:
-
- # perf stat -e hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ sleep 2
-Error:
-No permission to enable hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ event.
-
-Fixes: 220a0c609ad1 ("powerpc/perf: Add support for the hv gpci (get performance counter info) interface")
-Reported-by: Akanksha J N <akanksha@linux.ibm.com>
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/20240229122847.101162-1-kjain@linux.ibm.com
+Fixes: e3fdbef1bab8 ("clk: qcom: Add Global Clock controller (GCC) driver for IPQ5018")
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+Link: https://lore.kernel.org/r/20240225-gcc-ipq5018-register-fixes-v1-2-3c191404d9f0@gmail.com
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/hv-gpci.c | 29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ drivers/clk/qcom/gcc-ipq5018.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/perf/hv-gpci.c b/arch/powerpc/perf/hv-gpci.c
-index 27f18119fda17..241551d1282f8 100644
---- a/arch/powerpc/perf/hv-gpci.c
-+++ b/arch/powerpc/perf/hv-gpci.c
-@@ -695,6 +695,20 @@ static unsigned long single_gpci_request(u32 req, u32 starting_index,
+diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq5018.c
+index 72484a44a8219..cd15819cdce8b 100644
+--- a/drivers/clk/qcom/gcc-ipq5018.c
++++ b/drivers/clk/qcom/gcc-ipq5018.c
+@@ -2179,7 +2179,7 @@ static struct clk_branch gcc_pcie1_axi_s_clk = {
+ };
  
- 	ret = plpar_hcall_norets(H_GET_PERF_COUNTER_INFO,
- 			virt_to_phys(arg), HGPCI_REQ_BUFFER_SIZE);
-+
-+	/*
-+	 * ret value as 'H_PARAMETER' with detail_rc as 'GEN_BUF_TOO_SMALL',
-+	 * specifies that the current buffer size cannot accommodate
-+	 * all the information and a partial buffer returned.
-+	 * Since in this function we are only accessing data for a given starting index,
-+	 * we don't need to accommodate whole data and can get required count by
-+	 * accessing first entry data.
-+	 * Hence hcall fails only incase the ret value is other than H_SUCCESS or
-+	 * H_PARAMETER with detail_rc value as GEN_BUF_TOO_SMALL(0x1B).
-+	 */
-+	if (ret == H_PARAMETER && be32_to_cpu(arg->params.detail_rc) == 0x1B)
-+		ret = 0;
-+
- 	if (ret) {
- 		pr_devel("hcall failed: 0x%lx\n", ret);
- 		goto out;
-@@ -759,6 +773,7 @@ static int h_gpci_event_init(struct perf_event *event)
- {
- 	u64 count;
- 	u8 length;
-+	unsigned long ret;
- 
- 	/* Not our event */
- 	if (event->attr.type != event->pmu->type)
-@@ -789,13 +804,23 @@ static int h_gpci_event_init(struct perf_event *event)
- 	}
- 
- 	/* check if the request works... */
--	if (single_gpci_request(event_get_request(event),
-+	ret = single_gpci_request(event_get_request(event),
- 				event_get_starting_index(event),
- 				event_get_secondary_index(event),
- 				event_get_counter_info_version(event),
- 				event_get_offset(event),
- 				length,
--				&count)) {
-+				&count);
-+
-+	/*
-+	 * ret value as H_AUTHORITY implies that partition is not permitted to retrieve
-+	 * performance information, and required to set
-+	 * "Enable Performance Information Collection" option.
-+	 */
-+	if (ret == H_AUTHORITY)
-+		return -EPERM;
-+
-+	if (ret) {
- 		pr_devel("gpci hcall failed\n");
- 		return -EINVAL;
- 	}
+ static struct clk_branch gcc_pcie1_pipe_clk = {
+-	.halt_reg = 8,
++	.halt_reg = 0x76018,
+ 	.halt_check = BRANCH_HALT_DELAY,
+ 	.halt_bit = 31,
+ 	.clkr = {
 -- 
 2.43.0
 
