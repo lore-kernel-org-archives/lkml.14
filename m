@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444877F7E8;
-	Sun, 24 Mar 2024 22:48:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC19768EC;
+	Sun, 24 Mar 2024 22:47:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320486; cv=none; b=Vvb4aTjbi4kNHyadg0kwz5F3wPh2lHhgbtR7P02i7+GT6yB60Pdoh4TWqOb+dQQFUNOZHuePooJ0K+769OzKbMTZH0uJasWKwbYwxSR4JMqC3KPcZNRkLkhLwbA3juXU24mUOX2L9EA/b5xkJ3xT3jF9cWZMWKGRp1J1HzkHLso=
+	t=1711320479; cv=none; b=imTlHoMx4NkGACXZ9wNwIfIW31MvTzFFoe6RI696WP0pnbb9pN/ELABYH5w6b3M8KkufZCUu+woWYHJq1Xi3cj1oaHGnwziUF/gCwouhRq+vJeIkeHgVaXgQxjOuCkap9GP4XnYpBgY5IlZiipQGedvuWEVpJLEIh5LvAZQ1+N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320486; c=relaxed/simple;
-	bh=MSMHSSINMJYUm8BK2KXGSpQia4mfnHTv+VfS9CXCscw=;
+	s=arc-20240116; t=1711320479; c=relaxed/simple;
+	bh=231kPemi6KhrEE+kXp4dfXwlWja7tvS8rmabG6VryFY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=duyJchVmpQ43TMMDzisN35sC3tjDPKAnxUr60YYcad1fonryRuk+4mZi+HV7z5mDGYrWiRX5ftssDdbKSrf7M6CTlMyzsO71sns+eVvA7WOcwTR0mInzbMRZ126gPP5GSaZ6WCsfPuppkg3biW0fQIymA4VtQCEP//BwgIGly5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a270KwR/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cZIVdqhY0BNg45XxzhaiBUHaFR9+Kjy9dNSA4tGHn0XwIwXkc+q70ydm8MtwcRBObvoik0yBeVnTePin2ZWAzr3TOlqnoGdQ0+CLhDwiZbxPptx57q95PkJb8GV8AbBEcUDZiRvta/2z4tcyplu8UoUz6VWrEFoBNdUpHIpqAn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y/Dzm68N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a270KwR/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78FEFC433F1;
-	Sun, 24 Mar 2024 22:48:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y/Dzm68N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55E02C433C7;
+	Sun, 24 Mar 2024 22:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320486;
-	bh=MSMHSSINMJYUm8BK2KXGSpQia4mfnHTv+VfS9CXCscw=;
+	s=k20201202; t=1711320479;
+	bh=231kPemi6KhrEE+kXp4dfXwlWja7tvS8rmabG6VryFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a270KwR/8ky5g9C1w+2D6W0EEcCPXQmIXqB/vGQYDfGsauFnwLEgOt5BKVBuM3Eng
-	 hwyMFs6OVZH137avRDM5VmJAPw+opJpnyc4nIt9bm4rdx2diK71M0B1/ZO5SbO1hkl
-	 Yy2kOfQWxREdQDEzsFaZee47ynps/xb3lEYOII76a/YppkvyUWqwQm8HcaOpeeIcJG
-	 RLKxXahNnH8NMC433OX4EXYmzK3H8gL8FfgWrcfmeOQtQTGBmhXnu2ulJRKVVqVJ+l
-	 aIESGGM37uxx3n5uUtTRj192Vyc4Q12TsPxUTln+HcArD0k/k8ap0RyjMh8COiHOFx
-	 44gD1muE9kzuA==
+	b=Y/Dzm68N1uwFDyacQ1ikH/Kz4omlX+3rX0iSqEJVfRhn6RltSVb+fD2Yj1mHgrgsO
+	 FUdRjmwg2ciFD+rT3T/1v49fJhCOFf6RmGEVlCmQ1Od3+sMYLayGx6BENU0eY8qTiG
+	 0BHZWgekNjTGlDoHiWeW7cjdjMMJpaJ3fA5AqaxV4KlOfHyzDCpYX5KPjPQdNYqWPJ
+	 gwabcaJrUXftbcoDhhOniorB4mjPsLiJxofsH+NSgVaPtQPY+3irGu6AeCFxCLJ4aM
+	 7RhPKhyKlyXmWeJSs8qmUDankBaS7kvi+hvDCw1WxzXJzWOz3wf81/DkJDliH1Zse5
+	 jHhDgiJiL6iow==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Wonjae Lee <wj28.lee@samsung.com>,
+	Dan Williams <dan.j.williams@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 045/713] arm64: dts: qcom: Fix interrupt-map cell sizes
-Date: Sun, 24 Mar 2024 18:36:11 -0400
-Message-ID: <20240324224720.1345309-46-sashal@kernel.org>
+Subject: [PATCH 6.7 038/713] cxl/region: Allow out of order assembly of autodiscovered regions
+Date: Sun, 24 Mar 2024 18:36:04 -0400
+Message-ID: <20240324224720.1345309-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,84 +49,113 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rob Herring <robh@kernel.org>
+From: Alison Schofield <alison.schofield@intel.com>
 
-[ Upstream commit 704dccec0d490f2ad06f3f16ebed254d81906c3a ]
+[ Upstream commit cb66b1d60c283bb340a2fc19deff7de8acea74b1 ]
 
-The PCI node interrupt-map properties have the wrong size as #address-cells
-in the interrupt parent are not accounted for.
+Autodiscovered regions can fail to assemble if they are not discovered
+in HPA decode order. The user will see failure messages like:
 
-The dtc interrupt_map check catches this, but the warning is off because
-its dependency, interrupt_provider, is off by default.
+[] cxl region0: endpoint5: HPA order violation region1
+[] cxl region0: endpoint5: failed to allocate region reference
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20240213-arm-dt-cleanups-v1-5-f2dee1292525@kernel.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+The check that is causing the failure helps the CXL driver enforce
+a CXL spec mandate that decoders be committed in HPA order. The
+check is needless for autodiscovered regions since their decoders
+are already programmed. Trying to enforce order in the assembly of
+these regions is useless because they are assembled once all their
+member endpoints arrive, and there is no guarantee on the order in
+which endpoints are discovered during probe.
+
+Keep the existing check, but for autodiscovered regions, allow the
+out of order assembly after a sanity check that the lesser numbered
+decoder has the lesser HPA starting address.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Tested-by: Wonjae Lee <wj28.lee@samsung.com>
+Link: https://lore.kernel.org/r/3dec69ee97524ab229a20c6739272c3000b18408.1706736863.git.alison.schofield@intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/ipq6018.dtsi |  8 ++++----
- arch/arm64/boot/dts/qcom/ipq8074.dtsi | 16 ++++++++--------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+ drivers/cxl/core/region.c | 48 +++++++++++++++++++++++++++++++--------
+ 1 file changed, 38 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 0b1330b521df4..cf4e501c84bcc 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -759,10 +759,10 @@ pcie0: pci@20000000 {
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 764998fe03edc..8f0a2507ddecf 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -757,8 +757,31 @@ cxl_region_find_decoder(struct cxl_port *port,
+ 	return to_cxl_decoder(dev);
+ }
  
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
--			interrupt-map = <0 0 0 1 &intc 0 75 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
--					<0 0 0 2 &intc 0 78 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
--					<0 0 0 3 &intc 0 79 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
--					<0 0 0 4 &intc 0 83 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+			interrupt-map = <0 0 0 1 &intc 0 0 0 75 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+					<0 0 0 2 &intc 0 0 0 78 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+					<0 0 0 3 &intc 0 0 0 79 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+					<0 0 0 4 &intc 0 0 0 83 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+-static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
+-					       struct cxl_region *cxlr)
++static bool auto_order_ok(struct cxl_port *port, struct cxl_region *cxlr_iter,
++			  struct cxl_decoder *cxld)
++{
++	struct cxl_region_ref *rr = cxl_rr_load(port, cxlr_iter);
++	struct cxl_decoder *cxld_iter = rr->decoder;
++
++	/*
++	 * Allow the out of order assembly of auto-discovered regions.
++	 * Per CXL Spec 3.1 8.2.4.20.12 software must commit decoders
++	 * in HPA order. Confirm that the decoder with the lesser HPA
++	 * starting address has the lesser id.
++	 */
++	dev_dbg(&cxld->dev, "check for HPA violation %s:%d < %s:%d\n",
++		dev_name(&cxld->dev), cxld->id,
++		dev_name(&cxld_iter->dev), cxld_iter->id);
++
++	if (cxld_iter->id > cxld->id)
++		return true;
++
++	return false;
++}
++
++static struct cxl_region_ref *
++alloc_region_ref(struct cxl_port *port, struct cxl_region *cxlr,
++		 struct cxl_endpoint_decoder *cxled)
+ {
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	struct cxl_region_ref *cxl_rr, *iter;
+@@ -768,16 +791,21 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
+ 	xa_for_each(&port->regions, index, iter) {
+ 		struct cxl_region_params *ip = &iter->region->params;
  
- 			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
- 				 <&gcc GCC_PCIE0_AXI_M_CLK>,
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-index 2f275c84e5665..b33145b756ebe 100644
---- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-@@ -806,13 +806,13 @@ pcie1: pci@10000000 {
- 			interrupt-names = "msi";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
--			interrupt-map = <0 0 0 1 &intc 0 142
-+			interrupt-map = <0 0 0 1 &intc 0 0 142
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
--					<0 0 0 2 &intc 0 143
-+					<0 0 0 2 &intc 0 0 143
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
--					<0 0 0 3 &intc 0 144
-+					<0 0 0 3 &intc 0 0 144
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
--					<0 0 0 4 &intc 0 145
-+					<0 0 0 4 &intc 0 0 145
- 					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+-		if (!ip->res)
++		if (!ip->res || ip->res->start < p->res->start)
+ 			continue;
  
- 			clocks = <&gcc GCC_SYS_NOC_PCIE1_AXI_CLK>,
-@@ -868,13 +868,13 @@ pcie0: pci@20000000 {
- 			interrupt-names = "msi";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
--			interrupt-map = <0 0 0 1 &intc 0 75
-+			interrupt-map = <0 0 0 1 &intc 0 0 75
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
--					<0 0 0 2 &intc 0 78
-+					<0 0 0 2 &intc 0 0 78
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
--					<0 0 0 3 &intc 0 79
-+					<0 0 0 3 &intc 0 0 79
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
--					<0 0 0 4 &intc 0 83
-+					<0 0 0 4 &intc 0 0 83
- 					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+-		if (ip->res->start > p->res->start) {
+-			dev_dbg(&cxlr->dev,
+-				"%s: HPA order violation %s:%pr vs %pr\n",
+-				dev_name(&port->dev),
+-				dev_name(&iter->region->dev), ip->res, p->res);
+-			return ERR_PTR(-EBUSY);
++		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
++			struct cxl_decoder *cxld;
++
++			cxld = cxl_region_find_decoder(port, cxled, cxlr);
++			if (auto_order_ok(port, iter->region, cxld))
++				continue;
+ 		}
++		dev_dbg(&cxlr->dev, "%s: HPA order violation %s:%pr vs %pr\n",
++			dev_name(&port->dev),
++			dev_name(&iter->region->dev), ip->res, p->res);
++
++		return ERR_PTR(-EBUSY);
+ 	}
  
- 			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
+ 	cxl_rr = kzalloc(sizeof(*cxl_rr), GFP_KERNEL);
+@@ -954,7 +982,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
+ 			nr_targets_inc = true;
+ 		}
+ 	} else {
+-		cxl_rr = alloc_region_ref(port, cxlr);
++		cxl_rr = alloc_region_ref(port, cxlr, cxled);
+ 		if (IS_ERR(cxl_rr)) {
+ 			dev_dbg(&cxlr->dev,
+ 				"%s: failed to allocate region reference\n",
 -- 
 2.43.0
 
