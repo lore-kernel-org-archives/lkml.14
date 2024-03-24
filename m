@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C2E1FB077;
-	Sun, 24 Mar 2024 23:15:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B8F149DF5;
+	Sun, 24 Mar 2024 23:15:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322129; cv=none; b=BEkuWF46P+Dcdxlm33R1O3MyrJV2t7DA3uFFYusfkyW6IuSUrIarLGD0mgTjOJOieL5UYsSvLeWRoheqqfqZL/GYIad7h6zJF3Dp0LLDo1UYR7AarkDvaM1EP7f+LKtWtmU2aSjzIBfMhgjZNWe9aoruxHdowprD+07UanGcnYk=
+	t=1711322140; cv=none; b=J0waVERVMdCMzvg3rFQc25wFJ0hGtFpQI3TD1VSXF+t0H+9ia8XSFUgfLGwPJxRvKz1MtY2o+bP6f/fUwpagmZVR0yV8LyohtKolKIpLMWI7jCvbg02u3VgSQSxGdTk/IYIQp8MOc0IaxRHTRMWTfdNQzk7h01YtMb3ilhqAztQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322129; c=relaxed/simple;
-	bh=bQ2u+5hkniDdG9RV4wH6Q8+nWwyp8E63Gu1YI7ebTek=;
+	s=arc-20240116; t=1711322140; c=relaxed/simple;
+	bh=X9MIaMx4/X/hpsf2k8Bfn4ehDYLzQVMVPWQEQv9aeww=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q7AqOhuqD5+ZuW7aC8/NDqPKd+2rPVISFzK+JsyZXgoMRlwjjiO3L9je3oV4xELnjCd2R0x4sdC4nfr6QPr/0vWYDub/c4keU2QjCk2UesrJMJgZUfD+L8aVGn8dubF1b7B0qJnD2DWZ8IprbpFWN3AVMdOi1sDwGyyLqwfEJio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilzRGxLz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=fwykwVoFnamEurz4fQLa+gMXtNc/baP9QDx74LD31eOeNYmKRHxE3zCd19Up6Htb2tKBljHAMx0xQHR/RG2fZQ8u4I/rYZB2dUHv+CbV4MhXgQMwB2tDkiv4ILDpigLMGpusJDU+93p/hF1mGuHGMEFu3IulkH+N81T0+FqPbrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssergmit; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilzRGxLz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45C19C433C7;
-	Sun, 24 Mar 2024 23:15:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssergmit"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09751C43394;
+	Sun, 24 Mar 2024 23:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322128;
-	bh=bQ2u+5hkniDdG9RV4wH6Q8+nWwyp8E63Gu1YI7ebTek=;
+	s=k20201202; t=1711322138;
+	bh=X9MIaMx4/X/hpsf2k8Bfn4ehDYLzQVMVPWQEQv9aeww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ilzRGxLz5LaZmHfBq5LiY8kysUm5FSm3XMsz8TSoprB0wrlYknpMk0/991aJTONSI
-	 l67DMP+bocylovRHZ2ZPG20wsLvMD/cuM6bMtqA+e8QCKOATmdOiAPSCFKDjnWn6Hg
-	 ZcaofgejrsZu4r3E94TjHNcRv1sljGhO12J4RbpgP0pleOyNSiIY2UuY8NQb71vFJF
-	 0nyOLAk8RLfBPPpn31f0G86y5vBpIyCvcDe3hyM64JTI1Ueo/AK29WN82AmLF5L7Gz
-	 NpPclI8d31oE3a40FgYCEFj+j+NZqEqsLH+bUgQumWguBopXhGHfX4ennPNmALu1au
-	 rmRjYTS8MTJDw==
+	b=ssergmitX1PN9aZG6AuFg7249sjBSlgZ5KU8k4zCsJbjxBcCKcWM1fImMUEITeCub
+	 aPB7K9IFS2CEB5EjhY9NoPwhXMFh/xPFhU3YqpGq79atSXsClgwzsY6smqxcwi20NR
+	 LhuTcrtiwsWsRRaxp7u6mf1nKEdepi47u8LuDVGA1Qfj945nJaE3ANW1DAc/EHl1T3
+	 0B9kOZAFdL2QQqjXXZMBV+Vow2Ulpt9pt1D0HIbo1Ci6HCh//veC0tGaIcGGsLtM2v
+	 rU0ufrzsEvRbZKvaiJPBNCzTs6ejGycq/RZOdRtgtUupz5JhQZrK1OEjAPPXfoIVdE
+	 JYoMGJqxhdL4g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Pauli Virtanen <pav@iki.fi>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= <kevin.lhopital@savoirfairelinux.com>,
+	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 205/451] Bluetooth: fix use-after-free in accessing skb after sending it
-Date: Sun, 24 Mar 2024 19:08:01 -0400
-Message-ID: <20240324231207.1351418-206-sashal@kernel.org>
+Subject: [PATCH 6.1 215/451] net: phy: fix phy_get_internal_delay accessing an empty array
+Date: Sun, 24 Mar 2024 19:08:11 -0400
+Message-ID: <20240324231207.1351418-216-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,63 +46,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Pauli Virtanen <pav@iki.fi>
+From: Kévin L'hôpital <kevin.lhopital@savoirfairelinux.com>
 
-[ Upstream commit 947ec0d002dce8577b655793dcc6fc78d67b7cb6 ]
+[ Upstream commit 4469c0c5b14a0919f5965c7ceac96b523eb57b79 ]
 
-hci_send_cmd_sync first sends skb and then tries to clone it.  However,
-the driver may have already freed the skb at that point.
+The phy_get_internal_delay function could try to access to an empty
+array in the case that the driver is calling phy_get_internal_delay
+without defining delay_values and rx-internal-delay-ps or
+tx-internal-delay-ps is defined to 0 in the device-tree.
+This will lead to "unable to handle kernel NULL pointer dereference at
+virtual address 0". To avoid this kernel oops, the test should be delay
+>= 0. As there is already delay < 0 test just before, the test could
+only be size == 0.
 
-Fix by cloning the sent_cmd cloned just above, instead of the original.
-
-Log:
-================================================================
-BUG: KASAN: slab-use-after-free in __copy_skb_header+0x1a/0x240
-...
-Call Trace: ..
- __skb_clone+0x59/0x2c0
- hci_cmd_work+0x3b3/0x3d0 [bluetooth]
- process_one_work+0x459/0x900
-...
-Allocated by task 129: ...
- __alloc_skb+0x1ae/0x220
- __hci_cmd_sync_sk+0x44c/0x7a0 [bluetooth]
- __hci_cmd_sync_status+0x24/0xb0 [bluetooth]
- set_cig_params_sync+0x778/0x7d0 [bluetooth]
-...
-Freed by task 0: ...
- kmem_cache_free+0x157/0x3c0
- __usb_hcd_giveback_urb+0x11e/0x1e0
- usb_giveback_urb_bh+0x1ad/0x2a0
- tasklet_action_common.isra.0+0x259/0x4a0
- __do_softirq+0x15b/0x5a7
-================================================================
-
-Fixes: 2615fd9a7c25 ("Bluetooth: hci_sync: Fix overwriting request callback")
-Signed-off-by: Pauli Virtanen <pav@iki.fi>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Fixes: 92252eec913b ("net: phy: Add a helper to return the index for of the internal delay")
+Co-developed-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Signed-off-by: Kévin L'hôpital <kevin.lhopital@savoirfairelinux.com>
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_core.c | 2 +-
+ drivers/net/phy/phy_device.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 88e9d7e0865a2..70f24dc75b596 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -4176,7 +4176,7 @@ static void hci_send_cmd_sync(struct hci_dev *hdev, struct sk_buff *skb)
- 	if (hci_req_status_pend(hdev) &&
- 	    !hci_dev_test_and_set_flag(hdev, HCI_CMD_PENDING)) {
- 		kfree_skb(hdev->req_skb);
--		hdev->req_skb = skb_clone(skb, GFP_KERNEL);
-+		hdev->req_skb = skb_clone(hdev->sent_cmd, GFP_KERNEL);
- 	}
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 944f76e6fc8eb..45b07004669d6 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2893,7 +2893,7 @@ s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
+ 	if (delay < 0)
+ 		return delay;
  
- 	atomic_dec(&hdev->cmd_cnt);
+-	if (delay && size == 0)
++	if (size == 0)
+ 		return delay;
+ 
+ 	if (delay < delay_values[0] || delay > delay_values[size - 1]) {
 -- 
 2.43.0
 
