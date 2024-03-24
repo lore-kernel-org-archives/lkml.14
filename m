@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6952310CB;
-	Sun, 24 Mar 2024 23:17:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C162310E8;
+	Sun, 24 Mar 2024 23:17:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322238; cv=none; b=RxdfzkMbb8ld5mi+vOcMxauUjhQmb31e7zE5tCQOqyEpSGeTWVpjR2c3QHfmXhRVsb9FpDr4l6G2J2s8ObC9+fFK77f8wwBKSpgRFJrSF8lfbFUG24nnQ+ZR6VrW981eWED+G5voZUmlZ6rz45Z3AVM3eNDuv8la0boPJS1tyVo=
+	t=1711322241; cv=none; b=dKbsVxD2cQ2hw0qz60FgeoXzpWOcHAAqMjnzE+fNa0lYZLa6XLl5nCMfRCT4Ti5os3c7h/oSOmttYFDoZgg7xvfN9XCTcgpk5W1yS0yk0Uo/X9+T5xXnA8fma9+YsqXtdKxAoLm+AHzp8RByes5DuDTUUBS7Y/RyEQ6Z3dQJGsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322238; c=relaxed/simple;
-	bh=a404h3DZ8kzeJTl67XyP9R7Nn6wjyD0ElQOcRCs+PRQ=;
+	s=arc-20240116; t=1711322241; c=relaxed/simple;
+	bh=bUlKsHmC2HAmFh3QAs7fY6/5QARRikTHMFtZxool6Q8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iRID7zy39zl9eFDLHTu/wUyXm1qyUGMUWbnryuGApBTp7x6kYtQcUwnPnFlE1JWdCOcUc+mpDkQT8nvt6teNzDoBqC0pTCSOYNeEl+3vZfMlg6cr28rw/KxAyXrjRgXPJwMcn7F/CeyIpEibZJbsUZ9iY3LrudlOvOmgkX469Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NGocbP2t; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Im+THeZtaQiLFtZeZ0n/+JyzsNBC3DA6MNehszpuXp4GKwx3X1kL8fSMPe7LYGzEu5lSreKvtD6t7JQRXS6qDPV2b/lBoXqno2PWcjub4JN23/6/ido/OJ8HCoVr+rJPP0sVxe+zM2GCM7eGX68XHddJLaFGN0j63BReHSldpgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pwalqnQm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NGocbP2t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BDC8C433C7;
-	Sun, 24 Mar 2024 23:17:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pwalqnQm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 177CEC433B1;
+	Sun, 24 Mar 2024 23:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322237;
-	bh=a404h3DZ8kzeJTl67XyP9R7Nn6wjyD0ElQOcRCs+PRQ=;
+	s=k20201202; t=1711322239;
+	bh=bUlKsHmC2HAmFh3QAs7fY6/5QARRikTHMFtZxool6Q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NGocbP2tZdI4qbsBILnY3LSSTeQmMu7QJYcqSNsQB1UX2fKRd8bmQmEevYwmr3WqV
-	 vcYoajKsiXrm4QPYIm8X3xQx3pzijvRVrsjTysZusAncbZOlrT33spTGrpCksZOfG4
-	 at1CsQe1kN4lOYyxbXqb1L25GacVY/yTKGHOx8aixJCThGAboNrnimvy3ssCngMPCJ
-	 JFIHGu27t2VN3af1BuTQXoEc5Fy2aq8L75c2TEGLHKNjH9IV8ZHehTiBT46nLdH/zV
-	 zgyErwObcpFtfGDz6SIPL4L47D8BC29YVG8ctsmgCedIKTCqC580JssKVCZkjsLALS
-	 1c1Ri6kbldw1g==
+	b=pwalqnQmBDPJPkbUKFI5wLhzSN3RStkwrfZVlP2K0YynSAwv7BLwK/EfnITYzq4Go
+	 ODDmVR2Lgs8dHU8QulwubR9l3LKh0orIBlX+3UPsGvNI5DaBZIRRn8CfQqT/w3ci+W
+	 CGffARPXk6qJmdjYcYURxTKyk534N0vvh/2V2AyOfAGNEwyVF1ZskMihd0UXq6IY5U
+	 Ty68e8XX3LE/eLZ1X57foWnzt8M+2ryg9BBa34o3St50RdZvVeTXVUQmjC0Q4u3aCs
+	 U43V2inzG2HYwofSnL82ajX/lgdOXIBrNiRBOHstUfCLWcOKZctditc7e7Y4k5bUXY
+	 WIchw444iwx7w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+	Akshata MukundShetty <akshata.mukundshetty@amd.com>,
+	Jiri Kosina <jkosina@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 318/451] mtd: rawnand: lpc32xx_mlc: fix irq handler prototype
-Date: Sun, 24 Mar 2024 19:09:54 -0400
-Message-ID: <20240324231207.1351418-319-sashal@kernel.org>
+Subject: [PATCH 6.1 321/451] HID: amd_sfh: Update HPD sensor structure elements
+Date: Sun, 24 Mar 2024 19:09:57 -0400
+Message-ID: <20240324231207.1351418-322-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,50 +49,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 
-[ Upstream commit 347b828882e6334690e7003ce5e2fe5f233dc508 ]
+[ Upstream commit bbf0dec30696638b8bdc28cb2f5bf23f8d760b52 ]
 
-clang-16 warns about mismatched function prototypes:
+HPD sensor data is not populating properly because of wrong order of HPD
+sensor structure elements. So update the order of structure elements to
+match the HPD sensor data received from the firmware.
 
-drivers/mtd/nand/raw/lpc32xx_mlc.c:783:29: error: cast from 'irqreturn_t (*)(int, struct lpc32xx_nand_host *)' (aka 'enum irqreturn (*)(int, struct lpc32xx_nand_host *)') to 'irq_handler_t' (aka 'enum irqreturn (*)(int, void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-
-Change the interrupt handler to the normal way of just passing
-a void* pointer and converting it inside the function..
-
-Fixes: 70f7cb78ec53 ("mtd: add LPC32xx MLC NAND driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20240213100146.455811-1-arnd@kernel.org
+Fixes: 24a31ea94922 ("HID: amd_sfh: Add initial support for HPD sensor")
+Co-developed-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
+Signed-off-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
+Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/lpc32xx_mlc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/hid/amd-sfh-hid/amd_sfh_pcie.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/lpc32xx_mlc.c b/drivers/mtd/nand/raw/lpc32xx_mlc.c
-index 452ecaf7775ac..1cfe3dd0bad4d 100644
---- a/drivers/mtd/nand/raw/lpc32xx_mlc.c
-+++ b/drivers/mtd/nand/raw/lpc32xx_mlc.c
-@@ -303,8 +303,9 @@ static int lpc32xx_nand_device_ready(struct nand_chip *nand_chip)
- 	return 0;
- }
- 
--static irqreturn_t lpc3xxx_nand_irq(int irq, struct lpc32xx_nand_host *host)
-+static irqreturn_t lpc3xxx_nand_irq(int irq, void *data)
- {
-+	struct lpc32xx_nand_host *host = data;
- 	uint8_t sr;
- 
- 	/* Clear interrupt flag by reading status */
-@@ -779,7 +780,7 @@ static int lpc32xx_nand_probe(struct platform_device *pdev)
- 		goto release_dma_chan;
- 	}
- 
--	if (request_irq(host->irq, (irq_handler_t)&lpc3xxx_nand_irq,
-+	if (request_irq(host->irq, &lpc3xxx_nand_irq,
- 			IRQF_TRIGGER_HIGH, DRV_NAME, host)) {
- 		dev_err(&pdev->dev, "Error requesting NAND IRQ\n");
- 		res = -ENXIO;
+diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
+index dfb7cabd82efe..2b125cd9742cb 100644
+--- a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
++++ b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.h
+@@ -89,10 +89,10 @@ enum mem_use_type {
+ struct hpd_status {
+ 	union {
+ 		struct {
+-			u32 human_presence_report : 4;
+-			u32 human_presence_actual : 4;
+-			u32 probablity		  : 8;
+ 			u32 object_distance       : 16;
++			u32 probablity		  : 8;
++			u32 human_presence_actual : 4;
++			u32 human_presence_report : 4;
+ 		} shpd;
+ 		u32 val;
+ 	};
 -- 
 2.43.0
 
