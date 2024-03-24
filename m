@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EAC86AE9;
-	Sun, 24 Mar 2024 22:51:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14CC1DC7ED;
+	Sun, 24 Mar 2024 22:51:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320712; cv=none; b=XHJmDkjyVuJIg92rUcYqwzxz9ycOeQAtlNM52ywgL3FaZ9SeVLqt3H8b66M+nIVrHizAdxSWVAWEm7g3WMubgrkDgyAHaSDs7WFDNbkfLj8UGLZT20bg6VuecPiCT+u8nfT+oS5wGph31deOq+Msg80Z7jyHdIIGWlPm+asC6zM=
+	t=1711320710; cv=none; b=lEqLJnrg3SY8brhQ1sKMlgDNSv7CabSTEopDTspWAc1XTTS+qs17W31AbnfX1brFZ0+aAl16WR/TOmTEoduYpFaSta4e8m7J6y04j+2r9V4PqugYnCH4O3q1OUCa+ezC22HJ2CwC57o6dTj2tP9lZ3c7X2h657U+q45+XbcTupQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320712; c=relaxed/simple;
-	bh=NWPrkaaaSy9kKYxmurUP9GafqEG7VJh8Z50d+eN03o8=;
+	s=arc-20240116; t=1711320710; c=relaxed/simple;
+	bh=TFfAVrGD8nWkaGmaO0qqtQoMlM7QoySNF8X+9tFaBkY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZrULZkaBP/hI2HLgt7hWy2TezJGTArBQWSo743SJWbzv0o7Lks0DysUoSrygIXkkvL8V1DwauL5iQ8Ie+tG1j3LmU3IGUEm0opF/13SsmB60+GqD7oY0WP2HXWXwtHG1gBbUxDqCYYqNNTn2gWgkha82SC4Qlt2Cda5Bwu92fw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rB9LzNIu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rVHTNqyyfMzlPcMqruG+m/VI+TJfv6UO9qBCdogM+ephaQS2jmOowE96dwAPNJARMulIG1a9m0R18xcqpNQnD/x7/6GS0Vx4wVlqlYBgSKlw/ORoW0iYyiONpSP/7NO6kt8Hf86SJi8jthgVjoPYmUDpRJQEt0C5+1LErNYtNXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vFQWRf7Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rB9LzNIu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4168C433C7;
-	Sun, 24 Mar 2024 22:51:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vFQWRf7Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD14C43390;
+	Sun, 24 Mar 2024 22:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320712;
-	bh=NWPrkaaaSy9kKYxmurUP9GafqEG7VJh8Z50d+eN03o8=;
+	s=k20201202; t=1711320710;
+	bh=TFfAVrGD8nWkaGmaO0qqtQoMlM7QoySNF8X+9tFaBkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rB9LzNIuGdl4fYSbkx7xXO1Y+kXqaWfx1FwIQPe6dLxL/OUl5T3Gl4hoY3h2fXeAE
-	 D1TP5PnePu9DJLbYpeLlF1MAjAOnnaUi4j1KefqNq4yshh5IOwa13JV3VTyEbyOQ0D
-	 xOiIr9mIIwBLyDpJjgZWCsMdlIDzcz6JCx33Q5zTJHWrrQCNUSRxYiQ+kwV3saWeO1
-	 EzBtpj8ZqtQDwu4K+Pko103t3SGvEYtu9RRvgeFssQb7GKESVHewIX5mwxhA/dslXR
-	 vuta00/eRj6L6KWHzLbt3XpmynBcv8xy7XyA2a7zS/n5L2W6kwlTYLU2cvap1nDT9C
-	 xeSCYhWTO/ZCg==
+	b=vFQWRf7Zt3Slm/gNhYjT5rtGvEne3+8eveDwPNmYROb9D5lp6EAJw5CNNlFumpU1k
+	 mUZ2wbVRkie8EqykCw7s6YtkeL2ZiUvgkcarONgiilWtgx/wLCq8wIKqRuSv0fVDZD
+	 bXF49Chp9gIfQvVpjGDhUdrprSPqlNRTXjr+iPC5bJnPZc43TNR+LqUOGM69iRczII
+	 UGN94deKByT29hgoOYW4rKmekUdqDUnXcdU4epPBYcnq/awHRMJAsQUbWJzWKtZmBF
+	 /Gxn3BT2GSBpvdsB87q5sOXhsSe26OmbhYLX/cv2W8bvSPRsuG21nBPELWVqhJET5e
+	 HpiU8Qy3UUbBQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hsin-Te Yuan <yuanhsinte@google.com>,
-	Hsin-Te Yuan <yuanhsinte@chromium.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: Andrew Davis <afd@ti.com>,
+	Nishanth Menon <nm@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 275/713] arm64: dts: mt8195-cherry-tomato: change watchdog reset boot flow
-Date: Sun, 24 Mar 2024 18:40:01 -0400
-Message-ID: <20240324224720.1345309-276-sashal@kernel.org>
+Subject: [PATCH 6.7 273/713] arm64: dts: ti: k3-am64: Enable SDHCI nodes at the board level
+Date: Sun, 24 Mar 2024 18:39:59 -0400
+Message-ID: <20240324224720.1345309-274-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,64 +48,152 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hsin-Te Yuan <yuanhsinte@google.com>
+From: Andrew Davis <afd@ti.com>
 
-[ Upstream commit ef569d5db50e7edd709e482157769a5b3c367e22 ]
+[ Upstream commit 3b6345e3fcf4c93a79f396121cd0e6f98f04da13 ]
 
-The external output reset signal was originally disabled and sent from
-firmware. However, an unfixed bug in the firmware on tomato prevents
-the signal from being sent, causing the device to fail to boot. To fix
-this, enable external output reset signal to allow the device to reboot
-normally.
+SDHCI nodes defined in the top-level AM64 SoC dtsi files are incomplete
+and will not be functional unless they are extended.
 
-Fixes: 5eb2e303ec6b ("arm64: dts: mediatek: Introduce MT8195 Cherry platform's Tomato")
-Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://lore.kernel.org/r/20240124-send-upstream-v3-1-5097c9862a73@chromium.org
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+As the attached SD/eMMC is only known about at the board integration level,
+these nodes should only be enabled when provided with this information.
+
+Disable the SDHCI nodes in the dtsi files and only enable the ones that
+are actually pinned out on a given board.
+
+Signed-off-by: Andrew Davis <afd@ti.com>
+Link: https://lore.kernel.org/r/20231117163339.89952-2-afd@ti.com
+Signed-off-by: Nishanth Menon <nm@ti.com>
+Stable-dep-of: 379c7752bbd0 ("arm64: dts: ti: k3-am64-main: Fix ITAP/OTAP values for MMC")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts | 4 ++++
- arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts | 4 ++++
- arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts | 4 ++++
- 3 files changed, 12 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am64-main.dtsi                 | 2 ++
+ arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi          | 1 +
+ arch/arm64/boot/dts/ti/k3-am642-evm.dts                  | 6 ++++--
+ arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts | 1 +
+ arch/arm64/boot/dts/ti/k3-am642-sk.dts                   | 4 +++-
+ arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts   | 1 -
+ arch/arm64/boot/dts/ti/k3-am642-tqma64xxl.dtsi           | 1 +
+ 7 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-index 2d5e8f371b6de..a82d716f10d44 100644
---- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-@@ -23,3 +23,7 @@ &sound {
- &ts_10 {
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+index 0be642bc1b86d..c3300c36fdbcb 100644
+--- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+@@ -623,6 +623,7 @@ sdhci0: mmc@fa10000 {
+ 		ti,otap-del-sel-mmc-hs = <0x0>;
+ 		ti,otap-del-sel-ddr52 = <0x6>;
+ 		ti,otap-del-sel-hs200 = <0x7>;
++		status = "disabled";
+ 	};
+ 
+ 	sdhci1: mmc@fa00000 {
+@@ -641,6 +642,7 @@ sdhci1: mmc@fa00000 {
+ 		ti,otap-del-sel-sdr104 = <0x6>;
+ 		ti,otap-del-sel-ddr50 = <0x9>;
+ 		ti,clkbuf-sel = <0x7>;
++		status = "disabled";
+ 	};
+ 
+ 	cpsw3g: ethernet@8000000 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi
+index f87f09d83c956..b8f844f667afc 100644
+--- a/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi
+@@ -211,6 +211,7 @@ flash@0 {
  };
-+
-+&watchdog {
-+	/delete-property/ mediatek,disable-extrst;
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-index 2586c32ce6e6f..2fe20e0dad836 100644
---- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-@@ -43,3 +43,7 @@ &sound {
- &ts_10 {
- 	status = "okay";
+ 
+ &sdhci0 {
++	status = "okay";
+ 	bus-width = <8>;
+ 	non-removable;
+ 	ti,driver-strength-ohm = <50>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+index 4dba18941015d..256606be56fef 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+@@ -487,17 +487,19 @@ eeprom@0 {
+ 	};
  };
-+
-+&watchdog {
-+	/delete-property/ mediatek,disable-extrst;
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-index f54f9477b99da..dd294ca98194c 100644
---- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-@@ -44,3 +44,7 @@ &sound {
- &ts_10 {
- 	status = "okay";
+ 
++/* eMMC */
+ &sdhci0 {
+-	/* emmc */
++	status = "okay";
+ 	bus-width = <8>;
+ 	non-removable;
+ 	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
  };
-+
-+&watchdog {
-+	/delete-property/ mediatek,disable-extrst;
-+};
+ 
++/* SD/MMC */
+ &sdhci1 {
+-	/* SD/MMC */
+ 	bootph-all;
++	status = "okay";
+ 	vmmc-supply = <&vdd_mmc1>;
+ 	pinctrl-names = "default";
+ 	bus-width = <4>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
+index 9175e96842d82..53b64e55413f9 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
+@@ -264,6 +264,7 @@ &main_uart1 {
+ };
+ 
+ &sdhci1 {
++	status = "okay";
+ 	vmmc-supply = <&vcc_3v3_mmc>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_mmc1_pins_default>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+index f29c8a9b59ba7..bffbd234f715a 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+@@ -439,6 +439,7 @@ &mcu_gpio0 {
+ };
+ 
+ &sdhci0 {
++	status = "okay";
+ 	vmmc-supply = <&wlan_en>;
+ 	bus-width = <4>;
+ 	non-removable;
+@@ -458,9 +459,10 @@ wlcore: wlcore@2 {
+ 	};
+ };
+ 
++/* SD/MMC */
+ &sdhci1 {
+-	/* SD/MMC */
+ 	bootph-all;
++	status = "okay";
+ 	vmmc-supply = <&vdd_mmc1>;
+ 	pinctrl-names = "default";
+ 	bus-width = <4>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
+index d95d80076a427..55102d35cecc1 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
+@@ -425,7 +425,6 @@ &sdhci1 {
+ 	ti,driver-strength-ohm = <50>;
+ 	ti,fails-without-test-cd;
+ 	/* Enabled by overlay */
+-	status = "disabled";
+ };
+ 
+ &tscadc0 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl.dtsi b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl.dtsi
+index d82d4a98306a7..6c785eff7d2ff 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl.dtsi
+@@ -219,6 +219,7 @@ partitions {
+ };
+ 
+ &sdhci0 {
++	status = "okay";
+ 	non-removable;
+ 	disable-wp;
+ 	no-sdio;
 -- 
 2.43.0
 
