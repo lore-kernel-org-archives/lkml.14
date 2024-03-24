@@ -1,40 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7025C768E1;
-	Sun, 24 Mar 2024 22:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523F41D1D58;
+	Sun, 24 Mar 2024 22:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320461; cv=none; b=lHdsgU8YIazJmh0jjDmXyVc8cj6mELlMkbbXpJNOCxWgLvRpKIMpDBLswSZ1YcvCXJLx60f+PWD9Ca7ZQKE/CNEZqXfSx3bTIkKqdhqX4DDwKtXFhz9kPHpDDhTfrSav0wbFqVCS0b0/thPKuiozI3R0HBIw3Vm3DMOfAFUsHeM=
+	t=1711320533; cv=none; b=FmjcuAa4WLeIRNrWfRAFVH3QfbuPmIxcmkYFxSBw3W7PJC1+Ht9PnFVDeEQj6FOtoEvtEvmy8tLB13+9XavQeLsWWuC5cLwYqVO0jiK6NXvnPeb0/0UOplqbVbRE2DpTpzS9qoK1BeI5DmYOeGv6xt2SMySFSY94psxZe32Xl1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320461; c=relaxed/simple;
-	bh=cR0HqTUaknLkPLTFIwauFtbbMFpsVGfj/+7sGvCDCjw=;
+	s=arc-20240116; t=1711320533; c=relaxed/simple;
+	bh=76vkGyrV3hb3aWyw3PS3hSUigT9JbLaVi74F4EZkltQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ppJhQZQxN8Lmk4tdaHIPg5+knEXyDQcKX6MiI1xiG+hAuZT3waLqZ0hvKB4VbOZCD+PRyaCAFsaDP58EXSyql3kRhRwAjCof/UemK4H6YKJppj3ktqNoL2Wv+AKDVEvIjy9nXggPLn02MNlnVP++w8TAEF6YQz2qalpUOwy2Tfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nz4/UpRH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=c0B/jWAokJ6zVUNNl4fFtNN6987Jh1zYVYndi3ExrePfPmyfGk7VOdxCOOYUac+kNqnx2oFOMEaoLzVH643ZBzqjVeHoVc8yoyc65pLkQjtv1vaQ/C8BlcrfR86Et5C232ILqf/AgPMGwYF+WIJSB/YcI/p5veBlX0+tSrdO2vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhhUi1aM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nz4/UpRH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B11B1C433B1;
-	Sun, 24 Mar 2024 22:47:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhhUi1aM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAC5CC43330;
+	Sun, 24 Mar 2024 22:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320461;
-	bh=cR0HqTUaknLkPLTFIwauFtbbMFpsVGfj/+7sGvCDCjw=;
+	s=k20201202; t=1711320531;
+	bh=76vkGyrV3hb3aWyw3PS3hSUigT9JbLaVi74F4EZkltQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Nz4/UpRHpvalfwieQJBzu9reZseqWzeSIKCGnJVVniGT5CKAuKAMwcyD6hnjlKMpk
-	 LETJ5sLLMEcYYihQts6zt0ADOpE1/0/idgnV5L65v+s4SETXamesT6ODKVSlb2gmPU
-	 FbdkS9deF3H2h/sEuOoqVoaiCotGR8AHYCTB1c4EEYY9NpeplTXAzQxao6WiGxrlBR
-	 q6kpZIg6TqVXSxeUk9Aj0mNv4ez2zzrDSdThMlOAp3ewoBus2J5WvAmFNlSIBBSy/F
-	 Q3d/OwnrxeE9bWxCc6tvlDqENB+8x3cO00NsKZGOsowtHMPKTHDx84Cpn3Uc5hbhey
-	 61C/4YBCdJlIw==
+	b=NhhUi1aMyE7ukx0oD9AQLBK26vBN1cxtCHxI2jm7b4YPq91TmcDIf3Z2Jur/s69iz
+	 utO6U/71LXy+B6m+9ZA32wjh+eiNeOjaq7gs+lu39sAek3ewyCbp9cu3fU+aWSXTxy
+	 9HB4zu7rlzh7zW0dV0xIqDmd8Lyh/C7WrBfTkoaCsQ5+1wfBkhItO/ok8qNYh1+ddn
+	 9Dd65Nx8Ym2N3bE8UjRX9T44LXMq0Mm9FMzhddy/+WjwBS+lQWzOL6M9MxKKDzBH1T
+	 62OKs4LVF+Hs56nml2634Sw9UolD6rwhyL7Icrz2Rbox1Y+aVhaxFbS9RUJsh2D03/
+	 LJyHohE8OAXPg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Manuel Fombuena <fombuena@outlook.com>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Bart Van Assche <bvanassche@acm.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 020/713] HID: multitouch: Add required quirk for Synaptics 0xcddc device
-Date: Sun, 24 Mar 2024 18:35:46 -0400
-Message-ID: <20240324224720.1345309-21-sashal@kernel.org>
+Subject: [PATCH 6.7 093/713] fs: Fix rw_hint validation
+Date: Sun, 24 Mar 2024 18:36:59 -0400
+Message-ID: <20240324224720.1345309-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,38 +54,65 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Manuel Fombuena <fombuena@outlook.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 1741a8269e1c51fa08d4bfdf34667387a6eb10ec ]
+[ Upstream commit ec16b147a55bfa14e858234eb7b1a7c8e7cd5021 ]
 
-Add support for the pointing stick (Accupoint) and 2 mouse buttons.
+Reject values that are valid rw_hints after truncation but not before
+truncation by passing an untruncated value to rw_hint_valid().
 
-Present on some Toshiba/dynabook Portege X30 and X40 laptops.
-
-It should close https://bugzilla.kernel.org/show_bug.cgi?id=205817
-
-Signed-off-by: Manuel Fombuena <fombuena@outlook.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Kanchan Joshi <joshi.k@samsung.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 5657cb0797c4 ("fs/fcntl: use copy_to/from_user() for u64 types")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Link: https://lore.kernel.org/r/20240202203926.2478590-2-bvanassche@acm.org
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-multitouch.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/fcntl.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index fd5b0637dad68..3e91e4d6ba6fa 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -2151,6 +2151,10 @@ static const struct hid_device_id mt_devices[] = {
- 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
- 			USB_VENDOR_ID_SYNAPTICS, 0xcd7e) },
+diff --git a/fs/fcntl.c b/fs/fcntl.c
+index c80a6acad742f..3ff707bf2743a 100644
+--- a/fs/fcntl.c
++++ b/fs/fcntl.c
+@@ -268,7 +268,7 @@ static int f_getowner_uids(struct file *filp, unsigned long arg)
+ }
+ #endif
  
-+	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-+		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-+			USB_VENDOR_ID_SYNAPTICS, 0xcddc) },
-+
- 	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
- 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
- 			USB_VENDOR_ID_SYNAPTICS, 0xce08) },
+-static bool rw_hint_valid(enum rw_hint hint)
++static bool rw_hint_valid(u64 hint)
+ {
+ 	switch (hint) {
+ 	case RWH_WRITE_LIFE_NOT_SET:
+@@ -288,19 +288,17 @@ static long fcntl_rw_hint(struct file *file, unsigned int cmd,
+ {
+ 	struct inode *inode = file_inode(file);
+ 	u64 __user *argp = (u64 __user *)arg;
+-	enum rw_hint hint;
+-	u64 h;
++	u64 hint;
+ 
+ 	switch (cmd) {
+ 	case F_GET_RW_HINT:
+-		h = inode->i_write_hint;
+-		if (copy_to_user(argp, &h, sizeof(*argp)))
++		hint = inode->i_write_hint;
++		if (copy_to_user(argp, &hint, sizeof(*argp)))
+ 			return -EFAULT;
+ 		return 0;
+ 	case F_SET_RW_HINT:
+-		if (copy_from_user(&h, argp, sizeof(h)))
++		if (copy_from_user(&hint, argp, sizeof(hint)))
+ 			return -EFAULT;
+-		hint = (enum rw_hint) h;
+ 		if (!rw_hint_valid(hint))
+ 			return -EINVAL;
+ 
 -- 
 2.43.0
 
