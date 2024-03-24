@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D064202BAC;
-	Sun, 24 Mar 2024 23:03:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CEF132489;
+	Sun, 24 Mar 2024 23:04:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321440; cv=none; b=gS2FcMFvAF3UM8kSJ+TagfrcuS88KpuMQ/AcF+YNDN+FFsAkF2dUcrnDhZsiwRArjJNxBZq5Rjy23bNRvlKg7F1P7J1rGjqBxUy7jOJatSvcFN4Qki6QMfZgXfVUK0F7NQJTT9JzXubslxtUQD7f28O7jXbtR8ruowKK8/+nEc8=
+	t=1711321444; cv=none; b=D68HuepMNMRHhWOsIZtT1Q+XpWzT5E9iEJYg/3uQN/sO7XbHDY1JI/vLkM94aoqUB/+nmm7Iqc/v/MQv+GYSEsPqNw6FGJus9UZtPvtHd9befG5FCOFrNNetsmwk53VPr85y35Q2zH6N61yHONbUihUHJJj/AD/FUZxdZPs4V7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321440; c=relaxed/simple;
-	bh=TdMoJ87npDr2eKnCA3OJPAeqwewuEkteg9Dm9FzlNz4=;
+	s=arc-20240116; t=1711321444; c=relaxed/simple;
+	bh=KsprVximj/NVPgVKqZ5LbfOUeQ0+9cSinKnpOFwlChA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kafSNTPz0WFX0fpp4J0LfZkEmnemKqCbY5+r1CwHi8b+xD9XkZGr5RbAX8RDDdFZubz26RwneGCOMzuhI2p8laFlbGrrS13oa8Ttah85V7dpGlkkCcZuKRx+cGGohsHY22uaWe1k/hIMPXkanRIwtfrYutmoqdEjBHFi8+gLWhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rbcm8Rld; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=I3Xk7y0Z5WfYWvDeoZhPc7mkPbg8ITbaiEu7B+xcacV4UZ5ACh/+je2wBFLNTynKW4kAc4VkGrRgJHUGPk2dx5Mo6Musbi7MIpeOi1JTG45frsIBG7im0TdFVWlPnpxQM5hbDv8Pch3L+Ta2DUq+oGIrfM1fUo2NcGjjZKPA8Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gAUlauPc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rbcm8Rld"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4446BC43390;
-	Sun, 24 Mar 2024 23:03:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gAUlauPc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4048BC433C7;
+	Sun, 24 Mar 2024 23:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321439;
-	bh=TdMoJ87npDr2eKnCA3OJPAeqwewuEkteg9Dm9FzlNz4=;
+	s=k20201202; t=1711321444;
+	bh=KsprVximj/NVPgVKqZ5LbfOUeQ0+9cSinKnpOFwlChA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rbcm8Rld1BW5OgmHrPVPzCSK9NItMljylSGp70qwh+vvh3XMk042qgso5cqxleSlk
-	 LGtFPQ62rUROkLRId6PqR3truAMKkAhQ8cbcj1sM98kIFoj0cWA+zzN/Rt4ha7RFcC
-	 qC2vtv6QcwVZWlkAKJIJaGHcQ1QlQ2Qa0URoPvTtXdbfhOq+V2dDrfUZQrYNZvVVKd
-	 HPlu1gVA2FmxG/cc5+bhOSEkDbSZNwJ+q04JsuuplWguooB8O3ZrHwI2y+68KoCVTV
-	 KbbHcROQw+avZhfxgXtrZtY8vCfChtoyZRbzlOtI+6zRXPdA0qKfBswV8vGMeeKv9O
-	 Kl7IFYfXaIWTw==
+	b=gAUlauPcOOu25UoewHj1kq7zm1qmXVhyzx6/Myip0thFsaa/KK5HK1krMbkfGfRLA
+	 oZ1hNBmX+dmC0ceONl9ZOtYiY+QoM3bE0Bte2Z3qwEpieA8tyMzQ5LQawsQ+5VvB9r
+	 8niIkafk3LzyuDvM15qQXTOR8ywPDY44+XF+vJvAY4TAFU+CK5dWBjsh3OhOibBwrL
+	 XAweLhnEDznhNhxbNAvM1t9LTPK6jM1ur/5MCA0I4kscvsm/jOAYzPIIxACtfN6W6q
+	 JnIHjYbBAjzLDMGw8lpV1XHLts4RNw3dlu10d4omV8fE5Ni/a43xLmQN+XM0yTNn8i
+	 8r4YPlX250xBQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Eduard Zingerman <eddyz87@gmail.com>,
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 163/638] libbpf: Add missing LIBBPF_API annotation to libbpf_set_memlock_rlim API
-Date: Sun, 24 Mar 2024 18:53:20 -0400
-Message-ID: <20240324230116.1348576-164-sashal@kernel.org>
+Subject: [PATCH 6.6 168/638] wifi: iwlwifi: mvm: report beacon protection failures
+Date: Sun, 24 Mar 2024 18:53:25 -0400
+Message-ID: <20240324230116.1348576-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,37 +50,103 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andrii Nakryiko <andrii@kernel.org>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 93ee1eb85e28d1e35bb059c1f5965d65d5fc83c2 ]
+[ Upstream commit 91380f768d7f6e3d003755defa792e9a00a1444a ]
 
-LIBBPF_API annotation seems missing on libbpf_set_memlock_rlim API, so
-add it to make this API callable from libbpf's shared library version.
+Andrei reports that we just silently drop beacons after we
+report the key counters, but never report to userspace, so
+wpa_supplicant cannot send the WNM action frame. Fix that.
 
-Fixes: e542f2c4cd16 ("libbpf: Auto-bump RLIMIT_MEMLOCK if kernel needs it for BPF")
-Fixes: ab9a5a05dc48 ("libbpf: fix up few libbpf.map problems")
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-Link: https://lore.kernel.org/bpf/20240201172027.604869-3-andrii@kernel.org
+Fixes: b1fdc2505abc ("iwlwifi: mvm: advertise BIGTK client support if available")
+Reported-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Gregory Greenman <gregory.greenman@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://msgid.link/20240128084842.7d855442cdce.Iba90b26f893dc8c49bfb8be65373cd0a138af12c@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/bpf.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c | 26 +++++++++++--------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
-index 74c2887cfd24a..107fef7488682 100644
---- a/tools/lib/bpf/bpf.h
-+++ b/tools/lib/bpf/bpf.h
-@@ -35,7 +35,7 @@
- extern "C" {
- #endif
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+index 82b4d4d01097a..bac0228b8c866 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+@@ -282,6 +282,7 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 				u32 status,
+ 				struct ieee80211_rx_status *stats)
+ {
++	struct wireless_dev *wdev;
+ 	struct iwl_mvm_sta *mvmsta;
+ 	struct iwl_mvm_vif *mvmvif;
+ 	u8 keyid;
+@@ -303,9 +304,15 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 	if (!ieee80211_is_beacon(hdr->frame_control))
+ 		return 0;
  
--int libbpf_set_memlock_rlim(size_t memlock_bytes);
-+LIBBPF_API int libbpf_set_memlock_rlim(size_t memlock_bytes);
++	if (!sta)
++		return -1;
++
++	mvmsta = iwl_mvm_sta_from_mac80211(sta);
++	mvmvif = iwl_mvm_vif_from_mac80211(mvmsta->vif);
++
+ 	/* key mismatch - will also report !MIC_OK but we shouldn't count it */
+ 	if (!(status & IWL_RX_MPDU_STATUS_KEY_VALID))
+-		return -1;
++		goto report;
  
- struct bpf_map_create_opts {
- 	size_t sz; /* size of this struct for forward/backward compatibility */
+ 	/* good cases */
+ 	if (likely(status & IWL_RX_MPDU_STATUS_MIC_OK &&
+@@ -314,13 +321,6 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 		return 0;
+ 	}
+ 
+-	if (!sta)
+-		return -1;
+-
+-	mvmsta = iwl_mvm_sta_from_mac80211(sta);
+-
+-	mvmvif = iwl_mvm_vif_from_mac80211(mvmsta->vif);
+-
+ 	/*
+ 	 * both keys will have the same cipher and MIC length, use
+ 	 * whichever one is available
+@@ -329,11 +329,11 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 	if (!key) {
+ 		key = rcu_dereference(mvmvif->bcn_prot.keys[1]);
+ 		if (!key)
+-			return -1;
++			goto report;
+ 	}
+ 
+ 	if (len < key->icv_len + IEEE80211_GMAC_PN_LEN + 2)
+-		return -1;
++		goto report;
+ 
+ 	/* get the real key ID */
+ 	keyid = frame[len - key->icv_len - IEEE80211_GMAC_PN_LEN - 2];
+@@ -347,7 +347,7 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 			return -1;
+ 		key = rcu_dereference(mvmvif->bcn_prot.keys[keyid - 6]);
+ 		if (!key)
+-			return -1;
++			goto report;
+ 	}
+ 
+ 	/* Report status to mac80211 */
+@@ -355,6 +355,10 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 		ieee80211_key_mic_failure(key);
+ 	else if (status & IWL_RX_MPDU_STATUS_REPLAY_ERROR)
+ 		ieee80211_key_replay(key);
++report:
++	wdev = ieee80211_vif_to_wdev(mvmsta->vif);
++	if (wdev->netdev)
++		cfg80211_rx_unprot_mlme_mgmt(wdev->netdev, (void *)hdr, len);
+ 
+ 	return -1;
+ }
 -- 
 2.43.0
 
