@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0037F14BFBD;
-	Sun, 24 Mar 2024 22:59:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118D91F4184;
+	Sun, 24 Mar 2024 22:59:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321142; cv=none; b=Jh397LHJ6lOmNo0m+U6kTp6oljYhfU3sLkD1dElrK0vvtY13BNjEJx1FXQ1caRe+1LDaFgeAY1B9CUEGKfZip195wFuE8YLtVgdRjPkKW9RgUOVYtOXljBAy1Km5Pm8DYpxk9U70UW6DczhVMsI0LM5ej0248eLDF9/ECrKNI3g=
+	t=1711321151; cv=none; b=TqRztMULUmgCSsMVq97r0NfT1iKD7ntugHbk43+mUK3nWi67QeNc9iM248SuMlbXVYVD4VGEb0yBQ0m78QRCvLA0gy0u5ifeNfbwYfjDSL2uwNXcjE2+kcFj3O2xNQ8hbwAk+o+6PryRGjITC2sau8sosaA4nHbihnYOrsw4NKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321142; c=relaxed/simple;
-	bh=0swHJxYrBHmtAizG4AL6sWoZHWf/Br+7m4Md/cLVXVI=;
+	s=arc-20240116; t=1711321151; c=relaxed/simple;
+	bh=zYRJyHjGPDedyr/ShRm7a7j5upuj+Z24YOyQgC2F6oo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KMNseobjQwRDfSgI2I1nBT689tVXVWKglqHHBbqnzTCyCnRsIL/Mgw3rxmgJXr0Vj+8BVVXcpYp7d13otst7EeWk3PaJlLSWSO5RskpHaHDn0TIQV1PvJSIcNPglUQg1aZIX0xLloS+E8zD1d9uzacIfHUlr4fN0zs6xC7iQx/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2tgX2vN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NNvFqu/QAu/h4kfYQgohwmSYYgBI/xzA811itXL3q5bR2icLbUyn6dkXROMlkevNCihd9jCUnNm4u5XdlJPu1LdooVslhVwQwO2EgGgrhP390VE5LmOgKa8p+eYUZnGfuFmKHFGe7r3ch4jY7o0IQsf++8dm6SjR7idDWpPRodk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kvgX/3Mj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2tgX2vN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0A30C43399;
-	Sun, 24 Mar 2024 22:58:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kvgX/3Mj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7C49C433B1;
+	Sun, 24 Mar 2024 22:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321140;
-	bh=0swHJxYrBHmtAizG4AL6sWoZHWf/Br+7m4Md/cLVXVI=;
+	s=k20201202; t=1711321149;
+	bh=zYRJyHjGPDedyr/ShRm7a7j5upuj+Z24YOyQgC2F6oo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=N2tgX2vNxqEEUpK1owXpQzx/H1eMSkN4cWSQuJDVWvo1hfaXK/vfn3cFcIhTIi/I0
-	 zJJVfaTeCiHU8+khIxteYPRlsyWHpn8fpZeC/5X0+92iAtWBe3cJSQVeyqblwsfDrv
-	 WCM8ITLWlQIdwDF4EYdI4lzIFgUdmSPQfaZRih8hKbzYIZma+bQ2O13XyP4fZNlz+0
-	 uT5YF3tJ8+ERQtZAsng7lbHkCxlcyb6NAXQCC7Nd5naSOoM9eraP5FIGoivi1bhUfg
-	 9XWIoH7/YpDUkEXXhsVkYXWL5zzWh0TLxy30XTJRGOFOIQzZVB33CzJj1DhliV0smW
-	 YFKmAcXrCqN6w==
+	b=kvgX/3MjnAKfr6FVTvpSVadlg3dHqHHDG9nkz4s/1KS88ERmJ4ANRSXIKdSTFMUXT
+	 6o7Hd0/WJghXyTv/X81sYK0TNwJesQ4zjOEG+lIKIUhV5QLXJ4RvM4kFlkntUbP9Hc
+	 vj/5oo16LWBD2cdzAgHxoLTdqe2HrXnizuKeOakHcbEXIoioL2+oTPmfwaosE9AYjC
+	 1o1y7Akxo5F+CnTc/lxS1eSCqNpnZ+xJDouyNUtz3WZX9Rn/3GVnoGYD4/fIuG6PEb
+	 vB9iXr+U2GfYKTt9Hm+0VATohSDQGdD9nUgAQ5h5G2OSa/Rnf7m9fO1o8JxrAWbsLX
+	 Wgv9lL79duSHQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yan Zhai <yan@cloudflare.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+	stable@kernel.org,
+	Radek Podgorny <radek@podgorny.cz>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 702/713] net: report RCU QS on threaded NAPI repolling
-Date: Sun, 24 Mar 2024 18:47:08 -0400
-Message-ID: <20240324224720.1345309-703-sashal@kernel.org>
+Subject: [PATCH 6.7 711/713] x86/efistub: Clear decompressor BSS in native EFI entrypoint
+Date: Sun, 24 Mar 2024 18:47:17 -0400
+Message-ID: <20240324224720.1345309-712-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,85 +49,68 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yan Zhai <yan@cloudflare.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit d6dbbb11247c71203785a2c9da474c36f4b19eae ]
+[ Upstream commit b3810c5a2cc4a6665f7a65bed5393c75ce3f3aa2 ]
 
-NAPI threads can keep polling packets under load. Currently it is only
-calling cond_resched() before repolling, but it is not sufficient to
-clear out the holdout of RCU tasks, which prevent BPF tracing programs
-from detaching for long period. This can be reproduced easily with
-following set up:
+The EFI stub on x86 no longer invokes the decompressor as a subsequent
+boot stage, but calls into the decompression code directly while running
+in the context of the EFI boot services.
 
-ip netns add test1
-ip netns add test2
+This means that when using the native EFI entrypoint (as opposed to the
+EFI handover protocol, which clears BSS explicitly), the firmware PE
+image loader is being relied upon to ensure that BSS is zeroed before
+the EFI stub is entered from the firmware.
 
-ip -n test1 link add veth1 type veth peer name veth2 netns test2
+As Radek's report proves, this is a bad idea. Not all loaders do this
+correctly, which means some global variables that should be statically
+initialized to 0x0 may have junk in them.
 
-ip -n test1 link set veth1 up
-ip -n test1 link set lo up
-ip -n test2 link set veth2 up
-ip -n test2 link set lo up
+So clear BSS explicitly when entering via efi_pe_entry(). Note that
+zeroing BSS from C code is not generally safe, but in this case, the
+following assignment and dereference of a global pointer variable
+ensures that the memset() cannot be deferred or reordered.
 
-ip -n test1 addr add 192.168.1.2/31 dev veth1
-ip -n test1 addr add 1.1.1.1/32 dev lo
-ip -n test2 addr add 192.168.1.3/31 dev veth2
-ip -n test2 addr add 2.2.2.2/31 dev lo
-
-ip -n test1 route add default via 192.168.1.3
-ip -n test2 route add default via 192.168.1.2
-
-for i in `seq 10 210`; do
- for j in `seq 10 210`; do
-    ip netns exec test2 iptables -I INPUT -s 3.3.$i.$j -p udp --dport 5201
- done
-done
-
-ip netns exec test2 ethtool -K veth2 gro on
-ip netns exec test2 bash -c 'echo 1 > /sys/class/net/veth2/threaded'
-ip netns exec test1 ethtool -K veth1 tso off
-
-Then run an iperf3 client/server and a bpftrace script can trigger it:
-
-ip netns exec test2 iperf3 -s -B 2.2.2.2 >/dev/null&
-ip netns exec test1 iperf3 -c 2.2.2.2 -B 1.1.1.1 -u -l 1500 -b 3g -t 100 >/dev/null&
-bpftrace -e 'kfunc:__napi_poll{@=count();} interval:s:1{exit();}'
-
-Report RCU quiescent states periodically will resolve the issue.
-
-Fixes: 29863d41bb6e ("net: implement threaded-able napi poll loop support")
-Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Signed-off-by: Yan Zhai <yan@cloudflare.com>
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Link: https://lore.kernel.org/r/4c3b0d3f32d3b18949d75b18e5e1d9f13a24f025.1710877680.git.yan@cloudflare.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Cc: <stable@kernel.org> # v6.1+
+Reported-by: Radek Podgorny <radek@podgorny.cz>
+Closes: https://lore.kernel.org/all/a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/firmware/efi/libstub/x86-stub.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index ae898594690f7..e3c06ccf21d03 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -6668,6 +6668,8 @@ static int napi_threaded_poll(void *data)
- 	void *have;
+diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+index 99429bc4b0c7e..681f576ec02a0 100644
+--- a/drivers/firmware/efi/libstub/x86-stub.c
++++ b/drivers/firmware/efi/libstub/x86-stub.c
+@@ -21,6 +21,8 @@
+ #include "efistub.h"
+ #include "x86-stub.h"
  
- 	while (!napi_thread_wait(napi)) {
-+		unsigned long last_qs = jiffies;
++extern char _bss[], _ebss[];
 +
- 		for (;;) {
- 			bool repoll = false;
+ const efi_system_table_t *efi_system_table;
+ const efi_dxe_services_table_t *efi_dxe_table;
+ static efi_loaded_image_t *image = NULL;
+@@ -465,6 +467,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 	efi_status_t status;
+ 	char *cmdline_ptr;
  
-@@ -6692,6 +6694,7 @@ static int napi_threaded_poll(void *data)
- 			if (!repoll)
- 				break;
++	memset(_bss, 0, _ebss - _bss);
++
+ 	efi_system_table = sys_table_arg;
  
-+			rcu_softirq_qs_periodic(last_qs);
- 			cond_resched();
- 		}
- 	}
+ 	/* Check if we were booted by the EFI firmware */
+@@ -958,8 +962,6 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
+ void efi_handover_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg,
+ 			struct boot_params *boot_params)
+ {
+-	extern char _bss[], _ebss[];
+-
+ 	memset(_bss, 0, _ebss - _bss);
+ 	efi_stub_entry(handle, sys_table_arg, boot_params);
+ }
 -- 
 2.43.0
 
