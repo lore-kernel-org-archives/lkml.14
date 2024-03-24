@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D550C80C00;
-	Sun, 24 Mar 2024 22:48:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2608C80044;
+	Sun, 24 Mar 2024 22:48:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320514; cv=none; b=fQfS5fui8YtwwLiLPb4eKkx9/Wk6oMhiP8F+0jxSni1Rakdgd3LEsQhc80FHzEK8BZuzYqDL4EUD50OcEf1wzuFCI8uXuZiblqCIzGBbemGbbZ9k78qH01TVxzUJnZpds0S4240/JCtzj/8CvaUSE7DFy2kgkkSV1MBxQgPWYew=
+	t=1711320509; cv=none; b=Y1W9DXjqZkICsyHDpcu511YUDN9MpjybEZpJilv7eLd3bCnIkiY7P9+KQV8W3uoPhaO6gTCplos2GZFhmDoBy422WfHN+LVJfc3fJYzyMLB0X4pIW/rcJuz6MilPaOxgurQ/l6jz1w0LCfXKieHA8D19+zY7Ka0KpkPOL2BqHxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320514; c=relaxed/simple;
-	bh=O9V6/TN435gODXHOlwJPy0OeVZD6dXtAzOUmJleT3mQ=;
+	s=arc-20240116; t=1711320509; c=relaxed/simple;
+	bh=8H3S/q5lYOP2vdj03mp5FU8Yxc0yT9/q3KcU1fAJ4V8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RzAMKD+ufvwcWbIxkQs3uY4rjV+BqZTYshoIh/62FbA4s4yi2KcSy69Z8mzDy4wXQpnig3n2EFAWncPooRhLXqPPRvV9i1aIp1Wav5RGasktu9Ij4CaANv4VmI++Wlvo6BC9IRX0bazY8vBz+du7LYWUHqpsH8CB2kSmRaj6TSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kRL6akHw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=H8csO1VkXkzdaMJh4wdgIUgnYDeV4nVAe+yiYYYJEjGBL9j6dbv2dyCaBkXpNGfaaKJoUVNlU7QJiWxhb5Tfz2bmjXQg73GHy34Zb2Kah9VWZwoomQRI26OLUDRaZJPhq2gEnbFCe/JmlumlX2Lmxgymx0XpNIIxZG59JMfqBBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjmftE1h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kRL6akHw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22CECC43394;
-	Sun, 24 Mar 2024 22:48:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjmftE1h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6385CC433C7;
+	Sun, 24 Mar 2024 22:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320514;
-	bh=O9V6/TN435gODXHOlwJPy0OeVZD6dXtAzOUmJleT3mQ=;
+	s=k20201202; t=1711320509;
+	bh=8H3S/q5lYOP2vdj03mp5FU8Yxc0yT9/q3KcU1fAJ4V8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kRL6akHwTf0eHYDm0T8Oof6S+hsD2PIl5EWYA1CQrbaaIc5QcCeD7O6SFTlR3NNJS
-	 QvJW01Y7WnsETqaeEuM2e8jC8HdAcTVB4nP9GCBaqLrpntqNScCxcpPVu9nBud6+fn
-	 /puFVIbm89nowG341m0vuRLnHFTHOtONWuAklp5YctEFkmUysypi4smYeyZZhZxLT8
-	 NgR3CVakmlJ87pEqU8Yxd6Z64YJrwjFrS7bSDVV2ISFFLSrkZvxrQ4I3bVxaefQkYf
-	 B3Z64Fhm+mxnCvHQ3LtQNiEPompe58Ks/CdDaOYTi2IRlMppF1L/jFSuFA22yPJpt4
-	 ghoIVNCnidnZQ==
+	b=PjmftE1h11duJviEgHf1LGlt9bJYoQ/lfdnJUeBohKkNXUepampaLvVBvMv3bEWPn
+	 R77US3NN2fAmYf4DQ01OYH4TBl65WuePjztSEzVsarsNwwnEGTyZXOyJhpo7bsKJfl
+	 2YTGaDl0NDaWTqHO6QK25HqGn4NmtekMLJRUfjzcQrnl3iOR2uT61w3a+EqxvtjRCm
+	 fuDR8L+RgCJVb2cM6O3jJLWK7V/+ARK5kY6ielCXIEyy2GDwY5xfmVYD7+ronjpPQg
+	 bXbOdFvbhltcAHLfvCLyV6EZGzR7DfO8YMiJIGXgPHbWUzmPqqggq0IoXlLw1k+wii
+	 goJT6yvEk8GbQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mike Yu <yumike@google.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
+Cc: Thierry Reding <treding@nvidia.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 075/713] xfrm: fix xfrm child route lookup for packet offload
-Date: Sun, 24 Mar 2024 18:36:41 -0400
-Message-ID: <20240324224720.1345309-76-sashal@kernel.org>
+Subject: [PATCH 6.7 069/713] arm64: tegra: Set the correct PHY mode for MGBE
+Date: Sun, 24 Mar 2024 18:36:35 -0400
+Message-ID: <20240324224720.1345309-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,47 +48,33 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mike Yu <yumike@google.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit d4872d70fc6feabfc8e897edad993a81096ade9f ]
+[ Upstream commit 4c892121d43bc2b45896ca207b54f39a8fa6b852 ]
 
-In current code, xfrm_bundle_create() always uses the matched
-SA's family type to look up a xfrm child route for the skb.
-The route returned by xfrm_dst_lookup() will eventually be
-used in xfrm_output_resume() (skb_dst(skb)->ops->local_out()).
+The PHY is configured in 10GBASE-R, so make sure to reflect that in DT.
 
-If packet offload is used, the above behavior can lead to
-calling ip_local_out() for an IPv6 packet or calling
-ip6_local_out() for an IPv4 packet, which is likely to fail.
-
-This change fixes the behavior by checking if the matched SA
-has packet offload enabled. If not, keep the same behavior;
-if yes, use the matched SP's family type for the lookup.
-
-Test: verified IPv6-in-IPv4 packets on Android device with
-      IPsec packet offload enabled
-Signed-off-by: Mike Yu <yumike@google.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_policy.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-index e69d588caa0c6..9c5f2efed3333 100644
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -2694,7 +2694,9 @@ static struct dst_entry *xfrm_bundle_create(struct xfrm_policy *policy,
- 			if (xfrm[i]->props.smark.v || xfrm[i]->props.smark.m)
- 				mark = xfrm_smark_get(fl->flowi_mark, xfrm[i]);
+diff --git a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
+index ea13c4a7027c4..81a82933e3500 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
+@@ -175,7 +175,7 @@ ethernet@6800000 {
+ 			status = "okay";
  
--			family = xfrm[i]->props.family;
-+			if (xfrm[i]->xso.type != XFRM_DEV_OFFLOAD_PACKET)
-+				family = xfrm[i]->props.family;
-+
- 			oif = fl->flowi_oif ? : fl->flowi_l3mdev;
- 			dst = xfrm_dst_lookup(xfrm[i], tos, oif,
- 					      &saddr, &daddr, family, mark);
+ 			phy-handle = <&mgbe0_phy>;
+-			phy-mode = "usxgmii";
++			phy-mode = "10gbase-r";
+ 
+ 			mdio {
+ 				#address-cells = <1>;
 -- 
 2.43.0
 
