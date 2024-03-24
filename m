@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D0D200A58;
-	Sun, 24 Mar 2024 23:03:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC71201258;
+	Sun, 24 Mar 2024 23:03:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321395; cv=none; b=MWkheitlE3C5o+3/Hmlg5foIVkuN1WrqM5xFfqjpmoFGPbrs+TJSQJLWI2/0OzZO0BQ3/QyHa4LOjKjeKk6fn7J9fogx/vBmOw1UJ0Elo9BCWrM25FKNS4s2c+rV3zNLKVBTJt/BfuMn80gQ3Nb/GGK6XsSMay76k3OTpJjE8LI=
+	t=1711321401; cv=none; b=akHM+8bZwN/r56i37Y7xsBJIvHqjR+OEK2tAUYfrdYPXt8Sd7E5fbQEQO5ZHl1L/wgz1iZ/xsIsdpcCPv1KaEUYFS9etfdXYpDogQKZjYTXgUmtMoXAo2VOBGKFRMSilsnI5cLNxdRc5WVSfxCvntGNzz/o/E2eHdvLdfatDwTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321395; c=relaxed/simple;
-	bh=G+hduV/IVdxX36FY9MOF6jITJo3Fxej2/2NW473H1lw=;
+	s=arc-20240116; t=1711321401; c=relaxed/simple;
+	bh=TX73+o5Zksy/nU+bttvWqBAKEynL0P+CANS8XUJ5u7g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EmK8JvvXgF8H22Uc8fmJAVtK+GI3P7rD8LM2x3MQ7Ppeg9NRSw6c3vuNvd53H9pFXu2Tre4S84rVrdvOvDaymUBfDojFqng6ModH1zov2jR4GZvSM9GM2AUNzYmXxGb/Phfj4NMDpY/ZDp2lCGiDg3lcDAmNGfOnnx/n9rx9mpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hFmIRHhq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=BFPJiDbtx+80nfDiNQ6HNSB4U/2ihtt/MmTJ+Apwy6SQeTl3F+bMhnmdK0PgfQjkKFtwJLwobZvd7XCC8pqUaQnTljo4Y4vG2hz1MYEI38AlWO1lGj6l3M2wApabJy/TCy3uSXgBpz48HCns+z5CxzCfvGjxykw9q5nrsJcRXXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K8fUsV88; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hFmIRHhq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00560C43394;
-	Sun, 24 Mar 2024 23:03:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K8fUsV88"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B802DC433C7;
+	Sun, 24 Mar 2024 23:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321394;
-	bh=G+hduV/IVdxX36FY9MOF6jITJo3Fxej2/2NW473H1lw=;
+	s=k20201202; t=1711321400;
+	bh=TX73+o5Zksy/nU+bttvWqBAKEynL0P+CANS8XUJ5u7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hFmIRHhq9IypNpoIwRHyEpVG2tGdYTeJgMTdtbVeFLOhrAJWbNZC+OAhYF9HyEjzh
-	 bd/ZrKwALiNrTKlBR5Kw2s9fZOy+TOsP5KVsKBLbyIKBFl2DhkhaFUzApj9Y63FJIH
-	 ukN25RqAQ3ZPjic2hSHgZV2tgaAPW5f5DLbMuafBxJeH3/hw1wk4ftgKhOPoomoW2f
-	 bzhQxxSG0gKqQLdzsdgqyKfoMuem8+6RVR80A5086agFuqF8kK4ZFdy37Pi4l+5xtW
-	 8AITE8Q2YNa9HgyoFSv/kERHeJZjYLf0xDx23jgZpk8FNLd7xZaj/mAI9EwOErs+5l
-	 qNJGlQ1CgZFfg==
+	b=K8fUsV881lt4fcNfKvaQomFLYGM/GetpCFoFbo33Yt5H/l+91AaYQh1Fn5pzUbQTz
+	 4UzRx4IZHbcfXU25g05W7vEABiK/E/qg+ffxiaVcdukqMQYebYeSDxufEHm/WlKVil
+	 GjLKdSTqoddrOuLc6VAjKaCL/lflKxCjQW4hCw0s5oyulln8syr6LFpHhyfOz5oMSc
+	 nGruWJ6l8bhoS+YS2qFW2NyG61nPE5CAxbXDY3aKk/eYAVtp58vvvxwRqRA5q1sfNT
+	 +3nfwvvuNGM95LF7w7mp1VqqYy+eSU9tDhk2zk8rnD9NZKiq8tN6SbyHJuH3AL1Ahs
+	 iOo8UdRyVLXSw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 118/638] wifi: wilc1000: fix declarations ordering
-Date: Sun, 24 Mar 2024 18:52:35 -0400
-Message-ID: <20240324230116.1348576-119-sashal@kernel.org>
+Subject: [PATCH 6.6 124/638] ARM: dts: renesas: r8a73a4: Fix external clocks and clock rate
+Date: Sun, 24 Mar 2024 18:52:41 -0400
+Message-ID: <20240324230116.1348576-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,44 +49,77 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexis Lothoré <alexis.lothore@bootlin.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 535733e90e5d8912ebeccebb05b354a2d06ff459 ]
+[ Upstream commit 090c4094574705b0afc7d37825cdc5d06f0e7e02 ]
 
-Reorder parameters declaration in wilc_parse_join_bss_param to enforce
-reverse christmas tree
+External clocks should be defined as zero-Hz clocks in the SoC .dtsi,
+and overridden in the board .dts when present.
 
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240105075733.36331-2-alexis.lothore@bootlin.com
-Stable-dep-of: 205c50306acf ("wifi: wilc1000: fix RCU usage in connect path")
+Correct the clock rate of extal1 from 25 to 26 MHz, to match the crystal
+oscillator present on the APE6-EVM board.
+
+Fixes: a76809a329d6ebae ("ARM: shmobile: r8a73a4: Common clock framework DT description")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Link: https://lore.kernel.org/r/1692bc8cd465d62168cbf110522ad62a7af3f606.1705315614.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/microchip/wilc1000/hif.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/renesas/r8a73a4-ape6evm.dts | 12 ++++++++++++
+ arch/arm/boot/dts/renesas/r8a73a4.dtsi        |  9 ++++++---
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/hif.c b/drivers/net/wireless/microchip/wilc1000/hif.c
-index a28da59384813..2f8b9e9c393ce 100644
---- a/drivers/net/wireless/microchip/wilc1000/hif.c
-+++ b/drivers/net/wireless/microchip/wilc1000/hif.c
-@@ -374,13 +374,13 @@ static void handle_connect_timeout(struct work_struct *work)
- void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 				struct cfg80211_crypto_settings *crypto)
- {
--	struct wilc_join_bss_param *param;
--	struct ieee80211_p2p_noa_attr noa_attr;
--	u8 rates_len = 0;
-+	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
- 	const u8 *tim_elm, *ssid_elm, *rates_ie, *supp_rates_ie;
- 	const u8 *ht_ie, *wpa_ie, *wmm_ie, *rsn_ie;
-+	struct ieee80211_p2p_noa_attr noa_attr;
-+	struct wilc_join_bss_param *param;
-+	u8 rates_len = 0;
- 	int ret;
--	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
+diff --git a/arch/arm/boot/dts/renesas/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/renesas/r8a73a4-ape6evm.dts
+index e81a7213d3047..4282bafbb5043 100644
+--- a/arch/arm/boot/dts/renesas/r8a73a4-ape6evm.dts
++++ b/arch/arm/boot/dts/renesas/r8a73a4-ape6evm.dts
+@@ -209,6 +209,18 @@ &cmt1 {
+ 	status = "okay";
+ };
  
- 	param = kzalloc(sizeof(*param), GFP_KERNEL);
- 	if (!param)
++&extal1_clk {
++	clock-frequency = <26000000>;
++};
++
++&extal2_clk {
++	clock-frequency = <48000000>;
++};
++
++&extalr_clk {
++	clock-frequency = <32768>;
++};
++
+ &pfc {
+ 	scifa0_pins: scifa0 {
+ 		groups = "scifa0_data";
+diff --git a/arch/arm/boot/dts/renesas/r8a73a4.dtsi b/arch/arm/boot/dts/renesas/r8a73a4.dtsi
+index c39066967053f..d1f4cbd099efb 100644
+--- a/arch/arm/boot/dts/renesas/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/renesas/r8a73a4.dtsi
+@@ -450,17 +450,20 @@ clocks {
+ 		extalr_clk: extalr {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+-			clock-frequency = <32768>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
+ 		};
+ 		extal1_clk: extal1 {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+-			clock-frequency = <25000000>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
+ 		};
+ 		extal2_clk: extal2 {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+-			clock-frequency = <48000000>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
+ 		};
+ 		fsiack_clk: fsiack {
+ 			compatible = "fixed-clock";
 -- 
 2.43.0
 
