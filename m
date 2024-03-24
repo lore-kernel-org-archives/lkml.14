@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC291FD116;
-	Sun, 24 Mar 2024 23:02:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5CB130AC3;
+	Sun, 24 Mar 2024 23:02:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321329; cv=none; b=am5k7Aqm54RLWgJBMsZjVE+NVDN0oSDU9IagHtnZy265Bc29+YviAdMeiGozQbLZOZ7Xb/5g6U0gmaqQuumTgHgtpcfC3lrTb9TeXJ7JFkoUgvoAhxTo1ROnI0U9j8dQ9Ej1aqXq3sQFz02VJ0UJnFCR+OpZBipZcvcuq2Iodiw=
+	t=1711321341; cv=none; b=txs6RiukfeisG0PRpbcR/nPPZGCUrXZNEAlS6cU7Xw85HVN13yoCjfohRXA0sZZLNIuHZYj7uqCI9PTYyYJ1g08X8TdqocGxcNkgGc61mFHX9vgxhuNARvPw8p4DU1V/tTA/stxO8tknSu4Qaw4/jcEraUoClDB/XRdEx2RRUgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321329; c=relaxed/simple;
-	bh=hznCVND+HknEJDdeppqPpocutl/j4K2q3jGl5en2yYQ=;
+	s=arc-20240116; t=1711321341; c=relaxed/simple;
+	bh=g0bIDGsnLq4XPpGnk9HQAmPP+fiIyU1Ypk3bcF0ztd4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RAVbzBpieiK4CQ8asj/VeuFNpaZERAo6bq/Uhjjb70ELzXfOmDyFb55EG5Ro+ScuNSWO1Kv238PQl/b4jTFX6ikFkNHHUXD+L5Z5Q641UiktzAvoQ/a8FTV/tVmfvSw30VlYuJNVhKcZq3I7wG1LFLQcNbfT0w47a8Pzf6T+sf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9RfObhH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YSL1JynK5BOCUQtUcPu3kE2LRiteWGxQPt9d77ToZbcATfQwjHjQznqyrZW5gW722eY48OGnXzURVSDW31ndf1OZz40KwJxMGVAsVPtC/h6/YQAXZlNqr1OX6nx7zktSjEVghOkAz3LbU6DhGyOCnBR/PN63BeIiDSXIGRCM88c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VPjyfK2G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9RfObhH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 156AAC43390;
-	Sun, 24 Mar 2024 23:02:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VPjyfK2G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6DA1C433C7;
+	Sun, 24 Mar 2024 23:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321328;
-	bh=hznCVND+HknEJDdeppqPpocutl/j4K2q3jGl5en2yYQ=;
+	s=k20201202; t=1711321340;
+	bh=g0bIDGsnLq4XPpGnk9HQAmPP+fiIyU1Ypk3bcF0ztd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E9RfObhHyxelmqY+sA6Ouj+3lVn7ktUZdIjoxfRtTaVwsDDPxhG29XMIurR02ELJ9
-	 daDGrDc1sOmQWzk7IOFDfUmvDxLsziO15XO8XT6lkvcuAhCHHCP0OF7p2z8fSCp/nE
-	 sZdoCwy3kqXOJ7FGMn4AkRhQ7kLSOlJ2oZFF9YxDQauqhFxUiwYzybBezpa/Hg3rgk
-	 dy4O6UOUHOksM+Mtz7NSIaCXFujRO/MpBvZtdQ7k+CAvrFMZZSfP/V9Zbh9SOLgCJG
-	 RjVfPt1IaKNvsNvtdVpchAes9wzQ1Fle2d/edJzAiQJ/jRJC98sxU7JjCL8N2ajhOV
-	 +ZqfOQo+btkNQ==
+	b=VPjyfK2Gja47pXwH4Gbb/wQhgLhvneFGSDTyyS8lsWRD98er6yr/FrRWZMwom8B+u
+	 UN+R6pxXL77afQ+6iqr3WYKKHvJqN8fCbvJVWCZ4Bf/OiM4PsHA+5VBsyJMsPx1DME
+	 iooSbHeD3TsDgBaVZGgAE+lOO5DepiQsTyksWHji3Z9gJEYh+5udeSS/8qc5mBcjB8
+	 GOkf75GqYAcj+cArw/I0ld4RJN2lL9B/sixUJuNn4plBBcf4m5KsyqNypcWC8PDcmG
+	 ivv5roVSsQKbxr3k2bDeSscaO/u+vM4vJG/u/s/xIQH0fuynCYiVzi5kZsOeejPM3V
+	 /y2biPaPbmsoA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jiawei Wang <me@jwang.link>,
+Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
 	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 052/638] ASoC: amd: yc: Fix non-functional mic on Lenovo 21J2
-Date: Sun, 24 Mar 2024 18:51:29 -0400
-Message-ID: <20240324230116.1348576-53-sashal@kernel.org>
+Subject: [PATCH 6.6 064/638] ASoC: wm8962: Enable oscillator if selecting WM8962_FLL_OSC
+Date: Sun, 24 Mar 2024 18:51:41 -0400
+Message-ID: <20240324230116.1348576-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,39 +48,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jiawei Wang <me@jwang.link>
+From: Stuart Henderson <stuarth@opensource.cirrus.com>
 
-[ Upstream commit ed00a6945dc32462c2d3744a3518d2316da66fcc ]
+[ Upstream commit 03c7874106ca5032a312626b927b1c35f07b1f35 ]
 
-Like many other models, the Lenovo 21J2 (ThinkBook 16 G5+ APO)
-needs a quirk entry for the internal microphone to function.
-
-Signed-off-by: Jiawei Wang <me@jwang.link>
-Link: https://msgid.link/r/20240228073914.232204-2-me@jwang.link
+Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
+Link: https://msgid.link/r/20240306161439.1385643-1-stuarth@opensource.cirrus.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/soc/codecs/wm8962.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
-index 5587198751daa..abb9589b8477c 100644
---- a/sound/soc/amd/yc/acp6x-mach.c
-+++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -199,6 +199,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "21HY"),
- 		}
- 	},
-+	{
-+		.driver_data = &acp6x_card,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "21J2"),
-+		}
-+	},
- 	{
- 		.driver_data = &acp6x_card,
- 		.matches = {
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index 83ce5dbecc45d..d444b7776ece1 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -2914,8 +2914,12 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
+ 	switch (fll_id) {
+ 	case WM8962_FLL_MCLK:
+ 	case WM8962_FLL_BCLK:
++		fll1 |= (fll_id - 1) << WM8962_FLL_REFCLK_SRC_SHIFT;
++		break;
+ 	case WM8962_FLL_OSC:
+ 		fll1 |= (fll_id - 1) << WM8962_FLL_REFCLK_SRC_SHIFT;
++		snd_soc_component_update_bits(component, WM8962_PLL2,
++					      WM8962_OSC_ENA, WM8962_OSC_ENA);
+ 		break;
+ 	case WM8962_FLL_INT:
+ 		snd_soc_component_update_bits(component, WM8962_FLL_CONTROL_1,
 -- 
 2.43.0
 
