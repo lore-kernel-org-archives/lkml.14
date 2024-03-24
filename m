@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7DA20D5E0;
-	Sun, 24 Mar 2024 23:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A57F13A25A;
+	Sun, 24 Mar 2024 23:07:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321650; cv=none; b=e6he+oWCf/SbwmDt3GVJvGej0wWXL+rBBhP2X0VMCFV8udT5MCHnCRe3pfUZHdVnem4oKFXq9q6d4qbfOVliq5ui5Y+dAshstDFMD79n9X19gVGHcxp73NoejjyQdUKyJaggn+KZ/zkjrtQDEcUigiOqqwslpe5hy7soHaaQ9MI=
+	t=1711321658; cv=none; b=C92EiHK2Howe0pmUh6/xbbdO7LNL6PMRPla0Em40cFwGJa5ZLAWPLFqqG5lXa6Q4Lq8nUD81rPR8X2cJZyo0LC9bmm1Dkjn7ighIghdxX0rFEI60S1iI+S+lN3wNr7lR4bb/vKzYri9yoP39UAdeItLIp3xgLjtpz0+6C19tDXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321650; c=relaxed/simple;
-	bh=AblLMCLKhGeVcNTlP4GxhDoq/j9RcxhSil5RYWBtqm4=;
+	s=arc-20240116; t=1711321658; c=relaxed/simple;
+	bh=RjDm9ULGYGXR/Ui5vm0FWksgcl8NMVnW5oGvvsNB4/4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EKlJxDrGGrvQjye7oBNeKhZBQTayiVStFJUeLdETBemVu1RmWtyQQQB63ZjWUokuL4XuKdLzHVu8xoA9CumCICTJSzcdrE3rvTzErDSdO4UxoZuEJE3I/QJmi3vZQo2gxJmkDwLCiGm26sggMebPc20cRi68QvQhOfcWgzj3J4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvDnIR5Z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Us3e8DUJlAeLAQ6O9hh05j3ovvd4FIjLdr4fsrMd5SOYsgwGIDkJihd6UEwRGSGqSx/fEYPWHbpczub394fZj4+KwLJ1YQgAZkvP2d4OGwwaoqJT0p1lX01mPERqIi5RD1Xn7MP03M+R9+/4VRUrp3P1HYoofQkMjUnJ+yRG4YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GPdRPHxK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvDnIR5Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37E6AC433C7;
-	Sun, 24 Mar 2024 23:07:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GPdRPHxK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FC00C433F1;
+	Sun, 24 Mar 2024 23:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321648;
-	bh=AblLMCLKhGeVcNTlP4GxhDoq/j9RcxhSil5RYWBtqm4=;
+	s=k20201202; t=1711321657;
+	bh=RjDm9ULGYGXR/Ui5vm0FWksgcl8NMVnW5oGvvsNB4/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bvDnIR5ZLoiyow2VjZJBKDdcHxdmlvX8TO0aBetKFeoi4pogOtDX08Zhqxl78d8ww
-	 q7XamJJiqrSt0ANPW8izGdZaHY6uoHiCsqqQSjbAvGgQtZTqbngATnMkV3B3oqpBBQ
-	 Zq5inUVs34+eLn59Tfz3mEJZu+o9N5zwOmzEfOl5iXHVNeNM3FwPbp4uPXBWN4J8p+
-	 Fm/hZp8CDsy83xcKUWY1XDlquhs9F+wOvvEB2lSnjXoPGnMkajhdbyZNmX6g3pC48/
-	 NLzJoD+k9zDc6iSpGr1fNyMiGljA6Ez7jF2slKPWllKj2FuTRgmfxCckWAIhWar8Fl
-	 hbejo/hNyEVlw==
+	b=GPdRPHxKZQeK96TkTWQvgnomqAzUkmbl/k2jd6mvd3WS7hXSkQq1wjJGpg+Dl8MDs
+	 Hkb79brS/chELukfZfi0EaylKmYzFNLLoxHPDT/DBiM1gvU4r1glFHJG7lmdID7Zfa
+	 nZwIQk1QAdjoooM/sV+OlgGOrk5dcpevIOy5a6XVpWsd66GUpC/BR1ZkMH5vlmxdIo
+	 0J9bp8KN29f/qFclD04dK2+bFSCEnVSvwUTPoERinTesFQSicg5BVPFy7XI6MzeJ1L
+	 fmtbRAa3WFNpdrz5bAEbw9jsh7RpZlzpuHBD22N39nt276uFGpGJabF/ddZMMEBvu/
+	 obczjEfR4vjJg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 378/638] PCI/AER: Fix rootport attribute paths in ABI docs
-Date: Sun, 24 Mar 2024 18:56:55 -0400
-Message-ID: <20240324230116.1348576-379-sashal@kernel.org>
+Subject: [PATCH 6.6 386/638] pinctrl: mediatek: Drop bogus slew rate register range for MT8186
+Date: Sun, 24 Mar 2024 18:57:03 -0400
+Message-ID: <20240324230116.1348576-387-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,50 +49,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Johan Hovold <johan+linaro@kernel.org>
+From: Chen-Yu Tsai <wenst@chromium.org>
 
-[ Upstream commit 0e7d29a39a546161ea3a49e8e282a43212d7ff68 ]
+[ Upstream commit 3a29c87548809405bcbc66acc69cbe6f15184d94 ]
 
-The 'aer_stats' directory never made it into the sixth and final revision
-of the series adding the sysfs AER attributes.
+The MT8186 does not support configuring pin slew rate. This is evident
+from both the datasheet, and the fact that the driver points the slew
+rate register range at the GPIO direction register range.
 
-Link: https://lore.kernel.org/r/20240202131635.11405-2-johan+linaro@kernel.org
-Link: https://lore.kernel.org/lkml/20180621184822.GB14136@bhelgaas-glaptop.roam.corp.google.com/
-Fixes: 12833017e581 ("PCI/AER: Add sysfs attributes for rootport cumulative stats")
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Drop the bogus setting.
+
+Fixes: 8b483bda1e46 ("pinctrl: add pinctrl driver on mt8186")
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://lore.kernel.org/r/20240131071910.3950450-1-wenst@chromium.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pinctrl/mediatek/pinctrl-mt8186.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-index 860db53037a58..24087d5fd417a 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-+++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-@@ -100,19 +100,19 @@ collectors) that are AER capable. These indicate the number of error messages as
- device, so these counters include them and are thus cumulative of all the error
- messages on the PCI hierarchy originating at that root port.
- 
--What:		/sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_cor
-+What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_cor
- Date:		July 2018
- KernelVersion: 4.19.0
- Contact:	linux-pci@vger.kernel.org, rajatja@google.com
- Description:	Total number of ERR_COR messages reported to rootport.
- 
--What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_fatal
-+What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_fatal
- Date:		July 2018
- KernelVersion: 4.19.0
- Contact:	linux-pci@vger.kernel.org, rajatja@google.com
- Description:	Total number of ERR_FATAL messages reported to rootport.
- 
--What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_nonfatal
-+What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_nonfatal
- Date:		July 2018
- KernelVersion: 4.19.0
- Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8186.c b/drivers/pinctrl/mediatek/pinctrl-mt8186.c
+index a02f7c3269707..09edcf47effec 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt8186.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt8186.c
+@@ -1198,7 +1198,6 @@ static const struct mtk_pin_reg_calc mt8186_reg_cals[PINCTRL_PIN_REG_MAX] = {
+ 	[PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8186_pin_dir_range),
+ 	[PINCTRL_PIN_REG_DI] = MTK_RANGE(mt8186_pin_di_range),
+ 	[PINCTRL_PIN_REG_DO] = MTK_RANGE(mt8186_pin_do_range),
+-	[PINCTRL_PIN_REG_SR] = MTK_RANGE(mt8186_pin_dir_range),
+ 	[PINCTRL_PIN_REG_SMT] = MTK_RANGE(mt8186_pin_smt_range),
+ 	[PINCTRL_PIN_REG_IES] = MTK_RANGE(mt8186_pin_ies_range),
+ 	[PINCTRL_PIN_REG_PU] = MTK_RANGE(mt8186_pin_pu_range),
 -- 
 2.43.0
 
