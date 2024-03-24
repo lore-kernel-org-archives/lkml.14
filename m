@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668381D790B;
-	Sun, 24 Mar 2024 22:50:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0501D7918;
+	Sun, 24 Mar 2024 22:50:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320602; cv=none; b=Eq/GVnxfQys/DHvK1i2GrNkFhBlGY8ch756OMrLQrjKhCTMG54eXBJzjjlKWd/NFoUXMXiVrIkNGng25Fcjd5bOqfXFhCHNO5tOhdGsL4PEyXEfG+a42NK6KE3U8mPmlkJwC6JEpVXEzCTu0fakSpx8mOOfi346haIo/HA6xrVQ=
+	t=1711320604; cv=none; b=lQeAIgkSVKelaO/n79fzTkfbQyhDgAfE80nQ/DQ2BL/yZTEIGAv4FLqHlzXuzzeotU+YoxCwf2MLFhZYDgMtiS33/Rl2zwZUHRGKcw3NyrJL5dYG5/SKi+Oxzv3O7Or1azAl5kaiq2+7K/S2/+8aMx4lSJQXsWeFUsxJGO7fzMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320602; c=relaxed/simple;
-	bh=EPE3KJHALwKYBv9q4+tuusSD1a706QD3ySJFjaQeZ6U=;
+	s=arc-20240116; t=1711320604; c=relaxed/simple;
+	bh=8MlMsUXIAxi6EcUwJc1rCgwDpDQjngCF1q1kRo/oFOs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EcVpTa0mljOh+VE3Sp3FzKCFWvayRqHH9mz/d7DemRRvqwCiLb4J5/rlybBYmfze/UKFCeeOwdCTVWgvNaUA4dNeQtYZ/VLzXooONZ2dr7ouzcQO0/cOk497/QwkQ08TiNPKdPvgFCdgRDu6zrYacxi71OmQ+qHZc+lezXOk7xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f/kuYKvE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ADVl93y207ipuA2kSIGdQOClEb8N9kM9RpLMJwpT1CqbmIANyvba3uIZcTMVkcDbMHPwgBSqVZ+qdX9VkFRCYOJ70HX4p/FAOOPmP1pSIDWoikwKGSEKqPMU10kCxnEz7GR5eQxQRMEg02iHyWrK09knbRjNSEbkXlofPrMcf90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDww2BRE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/kuYKvE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C442C43399;
-	Sun, 24 Mar 2024 22:50:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDww2BRE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D582C43394;
+	Sun, 24 Mar 2024 22:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320601;
-	bh=EPE3KJHALwKYBv9q4+tuusSD1a706QD3ySJFjaQeZ6U=;
+	s=k20201202; t=1711320604;
+	bh=8MlMsUXIAxi6EcUwJc1rCgwDpDQjngCF1q1kRo/oFOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=f/kuYKvEXkvmM2vjlkbEMt7CJh8wNVFQXwIluIRH8RLRVE3nEttulYHA/v2FjPTEM
-	 Mbv3bsXzCol1DW6RIqLvlNjPFL+BdqIlQbunF5lM7Ac/GWh5HXve8nQo47SoLPUcuq
-	 g3FBisK+MNcLMTnwVU3v1LIrL2sBnGXJRv6u1KyJrI3QXuruVilDlUPJwqJxzxITNH
-	 Z03u11QpIO8VrgO5k0TUky7+bWcPJDZgnwvDAlW4ejVgwP4vkt15nL967wQ6EsJol/
-	 PnmIChrnkM5hZGimShCN4d66Vk1lGNB9jEQn9b3hZCI73EC37QS0l5lmy3XnA4C452
-	 dLC/lzrSiH44Q==
+	b=sDww2BREgxb2ozVb/XZ4R/gf/170rUj0K9zm9fZUv7+ImXPBUtPFII5thrklfWBAV
+	 fs1Fdj7c/v54hgCFji6WZFjJLYrtQM5LANNtSloHTW4AUZBcEU3UR0YAmTnMUVdHwP
+	 FCGKaqGVsnAre+0yNYRUMZDn1sTnZ3CfY2aoAQ6OimvTcfmlGTpK+9QlaSYAh75nCD
+	 c4RzohHehnJjH2IJBdXI7fwboR/H92u46UeLJ3codrvJVisnXiyv/qFRyCdxkyI3bQ
+	 O9uM2d7FW+71jehf7DwcilGNjBM7Xo2KzurGXhoI+vJgSz7hb+jAuL9rfdVmltFOeq
+	 wxBNpJBE2NPZQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Gregory Greenman <gregory.greenman@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 162/713] wifi: iwlwifi: change link id in time event to s8
-Date: Sun, 24 Mar 2024 18:38:08 -0400
-Message-ID: <20240324224720.1345309-163-sashal@kernel.org>
+Subject: [PATCH 6.7 165/713] soc: qcom: socinfo: rename PM2250 to PM4125
+Date: Sun, 24 Mar 2024 18:38:11 -0400
+Message-ID: <20240324224720.1345309-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,78 +49,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-[ Upstream commit 6c8ce23854b66db94d88e0957e531cb074806c16 ]
+[ Upstream commit 5155e48128826d0c5999dc9f47aa746df54da448 ]
 
-Link ID in time event data is -1 when the time event is cleared.
-Change the type of the link ID in the time event data structure
-and in the affected function from unsigned to signed.
+It seems, the only actual mentions of PM2250 can be found are related to
+the Qualcomm RB1 platform. However even RB1 schematics use PM4125 as a
+PMIC name. Rename PM2250 to PM4125 to follow the documentation.
 
-Fixes: 135065837310 ("wifi: iwlwifi: support link_id in SESSION_PROTECTION cmd")
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Reviewed-by: Gregory Greenman <gregory.greenman@intel.com>
-Link: https://msgid.link/20240123200528.50d4941f946c.Iea990b118c69bc3e1eb61c1d134c9d470b3a17ac@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 082f9bc60f33 ("soc: qcom: spmi-pmic: add more PMIC SUBTYPE IDs")
+Fixes: 112d96fd2927 ("soc: qcom: socinfo: Add some PMICs")
+Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Link: https://lore.kernel.org/r/20240128-pm2250-pm4125-rename-v2-1-d51987e9f83a@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h        | 2 +-
- drivers/net/wireless/intel/iwlwifi/mvm/time-event.c | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/soc/qcom/socinfo.c        | 2 +-
+ include/soc/qcom/qcom-spmi-pmic.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-index 3be67f0ff74f7..1e33de05d2e2c 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-@@ -121,7 +121,7 @@ struct iwl_mvm_time_event_data {
- 	 * if the te is in the time event list or not (when id == TE_MAX)
- 	 */
- 	u32 id;
--	u8 link_id;
-+	s8 link_id;
- };
+diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+index 51e05bec5bfce..9865964cf6dbf 100644
+--- a/drivers/soc/qcom/socinfo.c
++++ b/drivers/soc/qcom/socinfo.c
+@@ -114,7 +114,7 @@ static const char *const pmic_models[] = {
+ 	[50] = "PM8350B",
+ 	[51] = "PMR735A",
+ 	[52] = "PMR735B",
+-	[55] = "PM2250",
++	[55] = "PM4125",
+ 	[58] = "PM8450",
+ 	[65] = "PM8010",
+ 	[69] = "PM8550VS",
+diff --git a/include/soc/qcom/qcom-spmi-pmic.h b/include/soc/qcom/qcom-spmi-pmic.h
+index c47cc71a999ec..fdd462b295927 100644
+--- a/include/soc/qcom/qcom-spmi-pmic.h
++++ b/include/soc/qcom/qcom-spmi-pmic.h
+@@ -48,7 +48,7 @@
+ #define PMK8350_SUBTYPE		0x2f
+ #define PMR735B_SUBTYPE		0x34
+ #define PM6350_SUBTYPE		0x36
+-#define PM2250_SUBTYPE		0x37
++#define PM4125_SUBTYPE		0x37
  
-  /* Power management */
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/time-event.c b/drivers/net/wireless/intel/iwlwifi/mvm/time-event.c
-index 2e653a417d626..98c64ae315e68 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/time-event.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/time-event.c
-@@ -692,7 +692,7 @@ void iwl_mvm_protect_session(struct iwl_mvm *mvm,
- /* Determine whether mac or link id should be used, and validate the link id */
- static int iwl_mvm_get_session_prot_id(struct iwl_mvm *mvm,
- 				       struct ieee80211_vif *vif,
--				       u32 link_id)
-+				       s8 link_id)
- {
- 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
- 	int ver = iwl_fw_lookup_cmd_ver(mvm->fw,
-@@ -716,7 +716,7 @@ static int iwl_mvm_get_session_prot_id(struct iwl_mvm *mvm,
- 
- static void iwl_mvm_cancel_session_protection(struct iwl_mvm *mvm,
- 					      struct ieee80211_vif *vif,
--					      u32 id, u32 link_id)
-+					      u32 id, s8 link_id)
- {
- 	int mac_link_id = iwl_mvm_get_session_prot_id(mvm, vif, link_id);
- 	struct iwl_mvm_session_prot_cmd cmd = {
-@@ -745,7 +745,7 @@ static bool __iwl_mvm_remove_time_event(struct iwl_mvm *mvm,
- 	struct ieee80211_vif *vif = te_data->vif;
- 	struct iwl_mvm_vif *mvmvif;
- 	enum nl80211_iftype iftype;
--	unsigned int link_id;
-+	s8 link_id;
- 
- 	if (!vif)
- 		return false;
-@@ -1297,7 +1297,7 @@ void iwl_mvm_schedule_session_protection(struct iwl_mvm *mvm,
- 	struct iwl_mvm_time_event_data *te_data = &mvmvif->time_event_data;
- 	const u16 notif[] = { WIDE_ID(MAC_CONF_GROUP, SESSION_PROTECTION_NOTIF) };
- 	struct iwl_notification_wait wait_notif;
--	int mac_link_id = iwl_mvm_get_session_prot_id(mvm, vif, link_id);
-+	int mac_link_id = iwl_mvm_get_session_prot_id(mvm, vif, (s8)link_id);
- 	struct iwl_mvm_session_prot_cmd cmd = {
- 		.id_and_color = cpu_to_le32(mac_link_id),
- 		.action = cpu_to_le32(FW_CTXT_ACTION_ADD),
+ #define PMI8998_FAB_ID_SMIC	0x11
+ #define PMI8998_FAB_ID_GF	0x30
 -- 
 2.43.0
 
