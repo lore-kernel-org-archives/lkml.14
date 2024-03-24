@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00151E7724;
-	Sun, 24 Mar 2024 23:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F7A202393;
+	Sun, 24 Mar 2024 23:03:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321424; cv=none; b=CnAwkmtILW0kUe4ItjUlMv63iyLqK0cGkRFOUF9H+zKXRUne6O0G030VTdm6tLVdQveiXvFrI0uKWR3HBbHVJfV6yADW4bam3YrZhe4uVHvmNb7AOxuRzT9KKqN4/13ZjpV8afFX3ikJm3Mr6yJYONd+E4Vn3p/EMTqgW2gc3xE=
+	t=1711321427; cv=none; b=Oh5GKYDFd+1oDipxk5x4fZMvKt/qFquNYzE7FU7RP12UrTKZUZqfZnK+v9SsMBKglG4CodzWgcC6GIeAq/mTqXjYUpSyDW5WtvlIcVVGvZfuw2jDCymqIloq7W8kphiLCkRfzxM6hNLr0NCRgcE00EZBLETAVNYH0PeQj6jnQt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321424; c=relaxed/simple;
-	bh=UQ/n9Mkbco3R389fzuIFcQ9oMXzvD8ePrXG9uncztZ0=;
+	s=arc-20240116; t=1711321427; c=relaxed/simple;
+	bh=ENmzeOXJwmG/br6zOUsAuqC66/r6+HqYQSJyjqqWua4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WBJqmUHTdf/QQ/2AC902aIbZnOAw/4R7S+7gBYz5hdbzDFsPbDudDYCbKWefJK5l+px6+6Gdism7sF+ZTXCH/JYITUcQhVCncKxM7WhmeXOatiFTm9VkDzbSYl4zZ57qozR/UuyeoS3ivi2CigZ6l8cbQ4D7gdfU4Ny18jdSf3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTOxcwFD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GZhai3Y8fGTqW0C/gt8Z7Q0GuCHrZ7ZYUPUNVSef1kui/rzwX72UmOu9+cmDKDGFG4OzDnogAxIPo8AavsKtcN5szl+NYRnZKwdnHa5HByKaTiXo7Wv423uxefO/SBKLSRF1h+uiOIf+h0zchrV6wQmNMtCh6WrDID+NbkFTWfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSuBjtzz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTOxcwFD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8E54C433C7;
-	Sun, 24 Mar 2024 23:03:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSuBjtzz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4FABC433A6;
+	Sun, 24 Mar 2024 23:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321423;
-	bh=UQ/n9Mkbco3R389fzuIFcQ9oMXzvD8ePrXG9uncztZ0=;
+	s=k20201202; t=1711321427;
+	bh=ENmzeOXJwmG/br6zOUsAuqC66/r6+HqYQSJyjqqWua4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CTOxcwFDp+NeYF05voAEqIw2UpujyrMxfnHDgPYzd30A0qknD/UdlV003QCGFgrm4
-	 p+DZ9dEg2O1EuQ+tQ5rUCrAdFov+/sfSgGq2j4FjaIqv9yo0cw7D3beEKGPDr7oMTa
-	 98Z3eZSQZ6ZNwwhGv6vU08IcmC2UMdmeQ3OnQHuQfsArcTVkNAEGapAIe66WfGEwz1
-	 P1TxOI5xEReUbMUI4r3lfs9nzlfE5v7GsvasMUs8PpKkgbu1cy/gbr+x+PozYbbC1o
-	 pFx72ovVlM2lL1wMSJLWRlFTx5jTWBDB8O9oD7E1/ViJJ6Jaucl5o9nFLJ23ZaKdxX
-	 Eb3Bt89tlu+/g==
+	b=CSuBjtzzKmqRM5dEgru4BRVARaNI0Ag41KNpIw09gG/oyjKQ+HKiknLTO29fYHC9F
+	 k/6WWVryaIObs2rp4nyXU8pn9a4L9L4IZV2Z7fUi3eORS0Rg93/KiColz5MqYBYVLJ
+	 3HqeiHg/yvlUWTH7fsVwvlcoF2pxmiijFw4KbdETeiDPmUc2hUqA6q915ibSAUxtIv
+	 kycIEWP/lc5KEU3go9JSMIXMAdHkXgZM2D3eZ9tPj8iUEtTTypB7jWus5qh4GJZ5Vz
+	 fWtPFZw/pbeiSyI5Vki0pg8QrIZYbsGXw/uOcNf/wGOjgPA0m8txTgfL4R22AjTTKR
+	 ktbgNyfaO3YSg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 147/638] soc: qcom: socinfo: rename PM2250 to PM4125
-Date: Sun, 24 Mar 2024 18:53:04 -0400
-Message-ID: <20240324230116.1348576-148-sashal@kernel.org>
+Subject: [PATCH 6.6 151/638] pmdomain: qcom: rpmhpd: Drop SA8540P gfx.lvl
+Date: Sun, 24 Mar 2024 18:53:08 -0400
+Message-ID: <20240324230116.1348576-152-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,52 +50,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-[ Upstream commit 5155e48128826d0c5999dc9f47aa746df54da448 ]
+[ Upstream commit 883957bee580b723fd87d49ac73e0c84fc03a446 ]
 
-It seems, the only actual mentions of PM2250 can be found are related to
-the Qualcomm RB1 platform. However even RB1 schematics use PM4125 as a
-PMIC name. Rename PM2250 to PM4125 to follow the documentation.
+On SA8295P and SA8540P gfx.lvl is not provdied by rpmh, but rather is
+handled by an external regulator (max20411). Drop gfx.lvl from the list
+of power-domains exposed on this platform.
 
-Fixes: 082f9bc60f33 ("soc: qcom: spmi-pmic: add more PMIC SUBTYPE IDs")
-Fixes: 112d96fd2927 ("soc: qcom: socinfo: Add some PMICs")
-Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Link: https://lore.kernel.org/r/20240128-pm2250-pm4125-rename-v2-1-d51987e9f83a@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Fixes: f68f1cb3437d ("soc: qcom: rpmhpd: add sc8280xp & sa8540p rpmh power-domains")
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20240125-sa8295p-gpu-v4-4-7011c2a63037@quicinc.com
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/socinfo.c        | 2 +-
- include/soc/qcom/qcom-spmi-pmic.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/pmdomain/qcom/rpmhpd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-index 497cfb720fcb0..880b41a57da01 100644
---- a/drivers/soc/qcom/socinfo.c
-+++ b/drivers/soc/qcom/socinfo.c
-@@ -114,7 +114,7 @@ static const char *const pmic_models[] = {
- 	[50] = "PM8350B",
- 	[51] = "PMR735A",
- 	[52] = "PMR735B",
--	[55] = "PM2250",
-+	[55] = "PM4125",
- 	[58] = "PM8450",
- 	[65] = "PM8010",
- };
-diff --git a/include/soc/qcom/qcom-spmi-pmic.h b/include/soc/qcom/qcom-spmi-pmic.h
-index c47cc71a999ec..fdd462b295927 100644
---- a/include/soc/qcom/qcom-spmi-pmic.h
-+++ b/include/soc/qcom/qcom-spmi-pmic.h
-@@ -48,7 +48,7 @@
- #define PMK8350_SUBTYPE		0x2f
- #define PMR735B_SUBTYPE		0x34
- #define PM6350_SUBTYPE		0x36
--#define PM2250_SUBTYPE		0x37
-+#define PM4125_SUBTYPE		0x37
- 
- #define PMI8998_FAB_ID_SMIC	0x11
- #define PMI8998_FAB_ID_GF	0x30
+diff --git a/drivers/pmdomain/qcom/rpmhpd.c b/drivers/pmdomain/qcom/rpmhpd.c
+index 2a811666bc9d0..efca30c185a15 100644
+--- a/drivers/pmdomain/qcom/rpmhpd.c
++++ b/drivers/pmdomain/qcom/rpmhpd.c
+@@ -207,7 +207,6 @@ static struct rpmhpd *sa8540p_rpmhpds[] = {
+ 	[SC8280XP_CX] = &cx,
+ 	[SC8280XP_CX_AO] = &cx_ao,
+ 	[SC8280XP_EBI] = &ebi,
+-	[SC8280XP_GFX] = &gfx,
+ 	[SC8280XP_LCX] = &lcx,
+ 	[SC8280XP_LMX] = &lmx,
+ 	[SC8280XP_MMCX] = &mmcx,
 -- 
 2.43.0
 
