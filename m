@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5D314EC41;
-	Sun, 24 Mar 2024 23:01:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67321FB6F0;
+	Sun, 24 Mar 2024 23:01:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321320; cv=none; b=iCYlpDk9ru6OUVj2N5F/r9ghSQj2dxS3ikEqenai9A0a6DOXnwzrh7ubjSij8xhOEv0+Ej/zmmr27BEjxFZoVufJux3D4jrowweB4tdedEUHnjCtZcOYRT5l6iPjqMJUpZDKpugd3aq/OwweMDQurOWSnq3g48eUwDlWB0ODHa8=
+	t=1711321303; cv=none; b=KV1qZRN4BqobuMhdbqXtYu2Bkpmng4mLnuyEPS8FTgg18PyQ1NJX0S1xBC53NfFUeiP8n76oMyS5qiLmEQ2xTvi4nUTIilYhGlHoloblZr4i77nAhZL19Pwdzyuw8IB1ZNFJC08dmj6sIq/xWCoEI5UIL0AN3494KjNbcYzM7Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321320; c=relaxed/simple;
-	bh=n6A4tUBhWX7HwegfEx4yiXj5Dlp8rAGYSamdvQLeZP0=;
+	s=arc-20240116; t=1711321303; c=relaxed/simple;
+	bh=KSF7boKFkFUKI5Y7wTzgbmgkVIR1+Hf5SXgY2kEF1mA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jBgmoUD4sNrI9vXOvbbkv24jVOkLEQKi0dcs/1WI3BSsRUxstDVmtoIU1iKNZhulUhtMCIs7xfnqpZ617rhz4WmIgxbntbJBM4uEY1rdGiN0Tr9uOieZ2gpBJRGznWLixCIsgmWleneTm26GnfnDorR9J2vr5/SUbg8OnDlBiaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wh+kRcmj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=V7JrEuxis0Zsun53viVWoSUWCXnvenqYCRbaa/Bh4opB8E1n28igAcU9J8x/sJtFhke/R08PhgBmX0TMxAuE03pMhpM1PFEte6qLd4ZND5B17WFZdpxgWrWgfbSLFOHiYDV144GWQV6sXemw7FZp0W+0inHYE30fo7SC71/OMEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2HY68e8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wh+kRcmj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26116C43399;
-	Sun, 24 Mar 2024 23:01:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2HY68e8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBAF5C43394;
+	Sun, 24 Mar 2024 23:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321318;
-	bh=n6A4tUBhWX7HwegfEx4yiXj5Dlp8rAGYSamdvQLeZP0=;
+	s=k20201202; t=1711321301;
+	bh=KSF7boKFkFUKI5Y7wTzgbmgkVIR1+Hf5SXgY2kEF1mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wh+kRcmjqUNNbO5SOhE9nbB4dcMMwMSdwnxgOKR05nCPIamswDTieeg+fWgR3yNjw
-	 CI4WrQ2Muctr1+07K128RkqGOwv6GBSzLoEfvESf4NkgHCscq1gSOQG89MveVAMBdy
-	 wd9fET9tmGhc8aGbmAaA187ayvW91ZV5mApDRQM7m3YWzJPIuKt0+N/Je8UTG+juzm
-	 u5Hh8QaKxEvThxjNfCf/t7HE5VHlEGgmXLn9C2OjSrlA3P/jUbniIhLM7zSFUmwaoi
-	 k0vf/dmbTV/8dhu9b5PViNBQuWicyWjhVGYqG56YbtpY5EX9Rjsm4UVUkAU0pLt6a/
-	 mgXZoC7+naF/g==
+	b=c2HY68e8DArQ3uxQxtVBrtbXfxVEbhvmYEcrCmstyWwm87DEVrjNG8mIh9JFOAXa2
+	 QufsDkQ9bcpXALzc2OKGOJdk8mMu18egKVD5U71TtutrDczfFDfjcOafkganPksyq7
+	 DhtAARSxffKF3lAZx6MSj3fgneS0OaTPuxXX5oBrhSgBf1q7tKKx77C3VWq0jxae24
+	 ShbSK1Eh3qS66SfOXb77Ei6DbMSrhlGCcNYK7v6tateMogHFHU6y+abubO6WDjyC51
+	 Ph4SXrFtdG2wJDoMwjTqwT2XuFJ3CxD0pDf4ACAXREzS7m0MjU3Pl61z+zkS+tNpIs
+	 lxGf/kge3UFBg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Rob Herring <robh@kernel.org>,
+Cc: Yishai Hadas <yishaih@nvidia.com>,
+	Tamar Mashiah <tmashiah@nvidia.com>,
+	Michael Guralnik <michaelgur@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 041/638] ARM: dts: renesas: rcar-gen2: Add missing #interrupt-cells to DA9063 nodes
-Date: Sun, 24 Mar 2024 18:51:18 -0400
-Message-ID: <20240324230116.1348576-42-sashal@kernel.org>
+Subject: [PATCH 6.6 024/638] RDMA/mlx5: Relax DEVX access upon modify commands
+Date: Sun, 24 Mar 2024 18:51:01 -0400
+Message-ID: <20240324230116.1348576-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,129 +50,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Yishai Hadas <yishaih@nvidia.com>
 
-[ Upstream commit 8c987693dc2d292d777f1be63cb35233049ae25e ]
+[ Upstream commit be551ee1574280ef8afbf7c271212ac3e38933ef ]
 
-make dtbs_check W=2:
+Relax DEVX access upon modify commands to be UVERBS_ACCESS_READ.
 
-    arch/arm/boot/dts/renesas/r8a7790-lager.dts:444.11-458.5: Warning (interrupt_provider): /i2c-mux4/pmic@58: Missing '#interrupt-cells' in interrupt provider
-    ...
+The kernel doesn't need to protect what firmware protects, or what
+causes no damage to anyone but the user.
 
-Fix this by adding the missing #interrupt-cells properties.
+As firmware needs to protect itself from parallel access to the same
+object, don't block parallel modify/query commands on the same object in
+the kernel side.
 
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/a351e503ea97fb1af68395843f513925ff1bdf26.1707922460.git.geert+renesas@glider.be
+This change will allow user space application to run parallel updates to
+different entries in the same bulk object.
+
+Tested-by: Tamar Mashiah <tmashiah@nvidia.com>
+Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+Reviewed-by: Michael Guralnik <michaelgur@nvidia.com>
+Link: https://lore.kernel.org/r/7407d5ed35dc427c1097699e12b49c01e1073406.1706433934.git.leon@kernel.org
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/renesas/r8a7790-lager.dts   | 1 +
- arch/arm/boot/dts/renesas/r8a7790-stout.dts   | 1 +
- arch/arm/boot/dts/renesas/r8a7791-koelsch.dts | 1 +
- arch/arm/boot/dts/renesas/r8a7791-porter.dts  | 1 +
- arch/arm/boot/dts/renesas/r8a7792-blanche.dts | 1 +
- arch/arm/boot/dts/renesas/r8a7793-gose.dts    | 1 +
- arch/arm/boot/dts/renesas/r8a7794-alt.dts     | 1 +
- arch/arm/boot/dts/renesas/r8a7794-silk.dts    | 1 +
- 8 files changed, 8 insertions(+)
+ drivers/infiniband/hw/mlx5/devx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/renesas/r8a7790-lager.dts b/arch/arm/boot/dts/renesas/r8a7790-lager.dts
-index 5ad5349a50dc9..ab7e9fa90b9fe 100644
---- a/arch/arm/boot/dts/renesas/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7790-lager.dts
-@@ -437,6 +437,7 @@ pmic@58 {
- 			interrupt-parent = <&irqc0>;
- 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 			interrupt-controller;
-+			#interrupt-cells = <2>;
- 
- 			rtc {
- 				compatible = "dlg,da9063-rtc";
-diff --git a/arch/arm/boot/dts/renesas/r8a7790-stout.dts b/arch/arm/boot/dts/renesas/r8a7790-stout.dts
-index fe14727eefe1e..25956661a8754 100644
---- a/arch/arm/boot/dts/renesas/r8a7790-stout.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7790-stout.dts
-@@ -332,6 +332,7 @@ pmic@58 {
- 		interrupt-parent = <&irqc0>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		onkey {
- 			compatible = "dlg,da9063-onkey";
-diff --git a/arch/arm/boot/dts/renesas/r8a7791-koelsch.dts b/arch/arm/boot/dts/renesas/r8a7791-koelsch.dts
-index 26a40782cc899..4a76be68887b4 100644
---- a/arch/arm/boot/dts/renesas/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7791-koelsch.dts
-@@ -800,6 +800,7 @@ pmic@58 {
- 		interrupt-parent = <&irqc0>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		rtc {
- 			compatible = "dlg,da9063-rtc";
-diff --git a/arch/arm/boot/dts/renesas/r8a7791-porter.dts b/arch/arm/boot/dts/renesas/r8a7791-porter.dts
-index ec0a20d5130d6..fcc9a2313e1df 100644
---- a/arch/arm/boot/dts/renesas/r8a7791-porter.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7791-porter.dts
-@@ -389,6 +389,7 @@ pmic@5a {
- 		interrupt-parent = <&irqc0>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		watchdog {
- 			compatible = "dlg,da9063-watchdog";
-diff --git a/arch/arm/boot/dts/renesas/r8a7792-blanche.dts b/arch/arm/boot/dts/renesas/r8a7792-blanche.dts
-index 6a83923aa4612..20963c9bbf0ad 100644
---- a/arch/arm/boot/dts/renesas/r8a7792-blanche.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7792-blanche.dts
-@@ -330,6 +330,7 @@ pmic@58 {
- 		interrupt-parent = <&irqc>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		rtc {
- 			compatible = "dlg,da9063-rtc";
-diff --git a/arch/arm/boot/dts/renesas/r8a7793-gose.dts b/arch/arm/boot/dts/renesas/r8a7793-gose.dts
-index 79b537b246426..9358fc7d0e9f6 100644
---- a/arch/arm/boot/dts/renesas/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7793-gose.dts
-@@ -735,6 +735,7 @@ pmic@58 {
- 		interrupt-parent = <&irqc0>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		rtc {
- 			compatible = "dlg,da9063-rtc";
-diff --git a/arch/arm/boot/dts/renesas/r8a7794-alt.dts b/arch/arm/boot/dts/renesas/r8a7794-alt.dts
-index 4d93319674c6e..3a9db455ddec9 100644
---- a/arch/arm/boot/dts/renesas/r8a7794-alt.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7794-alt.dts
-@@ -458,6 +458,7 @@ pmic@58 {
- 		interrupt-parent = <&gpio3>;
- 		interrupts = <31 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		rtc {
- 			compatible = "dlg,da9063-rtc";
-diff --git a/arch/arm/boot/dts/renesas/r8a7794-silk.dts b/arch/arm/boot/dts/renesas/r8a7794-silk.dts
-index b7af1befa126b..b825f2e25dd06 100644
---- a/arch/arm/boot/dts/renesas/r8a7794-silk.dts
-+++ b/arch/arm/boot/dts/renesas/r8a7794-silk.dts
-@@ -424,6 +424,7 @@ pmic@58 {
- 		interrupt-parent = <&gpio3>;
- 		interrupts = <31 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 
- 		onkey {
- 			compatible = "dlg,da9063-onkey";
+diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
+index 8ba53edf23119..6e19974ecf6e7 100644
+--- a/drivers/infiniband/hw/mlx5/devx.c
++++ b/drivers/infiniband/hw/mlx5/devx.c
+@@ -2949,7 +2949,7 @@ DECLARE_UVERBS_NAMED_METHOD(
+ 	MLX5_IB_METHOD_DEVX_OBJ_MODIFY,
+ 	UVERBS_ATTR_IDR(MLX5_IB_ATTR_DEVX_OBJ_MODIFY_HANDLE,
+ 			UVERBS_IDR_ANY_OBJECT,
+-			UVERBS_ACCESS_WRITE,
++			UVERBS_ACCESS_READ,
+ 			UA_MANDATORY),
+ 	UVERBS_ATTR_PTR_IN(
+ 		MLX5_IB_ATTR_DEVX_OBJ_MODIFY_CMD_IN,
 -- 
 2.43.0
 
