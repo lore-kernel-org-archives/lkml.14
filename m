@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF231E8E2B;
-	Sun, 24 Mar 2024 22:54:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055CF1E962D;
+	Sun, 24 Mar 2024 22:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320887; cv=none; b=PWK0Nw+9mQLyGOX+WIT2CfPM4Ks9HdwrMBvl98d1q0x1FNvy50SWm5oKpOT1I1FjZRzAj0ylGeXoSIUTOe5baHgZL8S+teuZmC8TOwCYO+36VKyfdEVynhte8zVB/LgB26Xqufzs8wFbEt2Zy065LPbNmdiHRIgNyma+fr8Y7iM=
+	t=1711320895; cv=none; b=Ycp4lHqvBoKS2KMOEjLw+OuGmyV7LXk6ivzYynQ7EALE/pQ9znwG5M9M0jdXuz04WYpobM53pC7auG5JDiUMyt6Tb7ZgvMEIqrTLNf8Gno3mMfjOD3XCy7CcuxUFsXLjegfN0qjLOX7JE6jrdrGlxok8IeXDGcWiBZslfo31HVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320887; c=relaxed/simple;
-	bh=KjTWMrY3+yGfYp9jn+KYpHGG16il/MOGYQ7VOTN0fXI=;
+	s=arc-20240116; t=1711320895; c=relaxed/simple;
+	bh=GAnoAn7uiepYlDBYHoial6Tx6Aoa33HVjdMC4Xd30z0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n0DKuFSb29U956VDBFdzc79uS4CBdseltSxUVlMBeoQcWAAU2hWrbskoGyVXzMgQHNUjDalH2ofr9jbAvz1j8aKMafqjjxaRXfpNaGUH/RLfugUENEnQH9VXNlZx/i6T2obpFrrfXQP7vf+HeC/TnTtOG/7k82gGKTNjVUNlpzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVW6IX1q; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TD8jruBgQVOan9tZEvpW9J4JY6ZmugEUJ43gs+68jZT5P2EWce5Wu8VUmZl18CuVgX2xc3qNNhkVv3vxP/FTTjEn7KiHeXSWyn+E9fQQkr01oLJtfWGBzlWcijqXkPPqqJXVZXDH+QRjBVBsYKGlKshPYTStbxlfhMZbG8WGnsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PyPSh0lJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVW6IX1q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6E5DC43141;
-	Sun, 24 Mar 2024 22:54:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PyPSh0lJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 607DCC43390;
+	Sun, 24 Mar 2024 22:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320887;
-	bh=KjTWMrY3+yGfYp9jn+KYpHGG16il/MOGYQ7VOTN0fXI=;
+	s=k20201202; t=1711320893;
+	bh=GAnoAn7uiepYlDBYHoial6Tx6Aoa33HVjdMC4Xd30z0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fVW6IX1qIAfsldBQjyD3nMoPKB+3R8Cr2rsmtmJSdEOfDtvH9CGIXxwneAfEMUKaC
-	 hoR0s2rHH8Y9k5LLEQ94j7M2pDZJv1UMu0P5sOJwJpw+tC8WUPQGf08Aj6uAzpfPQO
-	 INUw+ufOIUH4FCRBn67IyqRCRZ5aaLBKVMn2IOVr7T0+gV2FLtO2f9tYXWBW1EzCaT
-	 zuWpiN5XH89U+F0wApSZBYPefwhRnok88vCSMBSgebRETyAP1kBUl3Kaj0gXav7k/Z
-	 38fyz6H7XXud1uZeEOKccpZ0BYLE0tw3TNDhxeoZ6Z0jHMWQiPxuLsile/VDVj0Yw6
-	 1OatJR57X0OXw==
+	b=PyPSh0lJ7ho6fBaoUe5lMbkYkucRNUC2ywsrsSL/oYMdiFIJ3GX8Tnfy4jBn7GJW4
+	 rA3nyn8n2LyT8stNYQLviWP7nESnknt8xbXonH58CgEBFC2InzJR/zOpBY3NcX6iwB
+	 l3s9ZVwx4zLlVZhSc5k89yj+Kk0xHIq8GnOQaGcHpPsxhdfdcUAI0ydYpFzJuOLeFH
+	 Ou2Yk1GSE0t9PB3LfnpCqf9Ug0U3DmfvTxsH2ZQ2stOgrhFZzjjrRz6P9Chtsq7ZdI
+	 MWEiKW/rJYqw8kpeTQF/csnane2e6RUWrgTxlVSzh+FHAwRDxA/ZFToXche0r6pqow
+	 fByUmcU9nyNKg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	James Clark <james.clark@arm.com>,
+	Kaige Ye <ye@kaige.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 451/713] drm/amd/display: fix NULL checks for adev->dm.dc in amdgpu_dm_fini()
-Date: Sun, 24 Mar 2024 18:42:57 -0400
-Message-ID: <20240324224720.1345309-452-sashal@kernel.org>
+Subject: [PATCH 6.7 457/713] perf stat: Avoid metric-only segv
+Date: Sun, 24 Mar 2024 18:43:03 -0400
+Message-ID: <20240324224720.1345309-458-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,60 +53,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit 2a3cfb9a24a28da9cc13d2c525a76548865e182c ]
+[ Upstream commit 2543947c77e0e224bda86b4e7220c2f6714da463 ]
 
-Since 'adev->dm.dc' in amdgpu_dm_fini() might turn out to be NULL
-before the call to dc_enable_dmub_notifications(), check
-beforehand to ensure there will not be a possible NULL-ptr-deref
-there.
+Cycles is recognized as part of a hard coded metric in stat-shadow.c,
+it may call print_metric_only with a NULL fmt string leading to a
+segfault. Handle the NULL fmt explicitly.
 
-Also, since commit 1e88eb1b2c25 ("drm/amd/display: Drop
-CONFIG_DRM_AMD_DC_HDCP") there are two separate checks for NULL in
-'adev->dm.dc' before dc_deinit_callbacks() and dc_dmub_srv_destroy().
-Clean up by combining them all under one 'if'.
-
-Found by Linux Verification Center (linuxtesting.org) with static
-analysis tool SVACE.
-
-Fixes: 81927e2808be ("drm/amd/display: Support for DMUB AUX")
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 088519f318be ("perf stat: Move the display functions to stat-display.c")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Kaige Ye <ye@kaige.org>
+Cc: John Garry <john.g.garry@oracle.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240209204947.3873294-4-irogers@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c    | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ tools/perf/util/stat-display.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 272c27495ede6..49f0c9454a6e6 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -1896,17 +1896,15 @@ static void amdgpu_dm_fini(struct amdgpu_device *adev)
- 		adev->dm.hdcp_workqueue = NULL;
- 	}
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index afe6db8e7bf4f..969ce40096330 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -560,7 +560,7 @@ static void print_metric_only(struct perf_stat_config *config,
+ 	if (color)
+ 		mlen += strlen(color) + sizeof(PERF_COLOR_RESET) - 1;
  
--	if (adev->dm.dc)
-+	if (adev->dm.dc) {
- 		dc_deinit_callbacks(adev->dm.dc);
--
--	if (adev->dm.dc)
- 		dc_dmub_srv_destroy(&adev->dm.dc->ctx->dmub_srv);
--
--	if (dc_enable_dmub_notifications(adev->dm.dc)) {
--		kfree(adev->dm.dmub_notify);
--		adev->dm.dmub_notify = NULL;
--		destroy_workqueue(adev->dm.delayed_hpd_wq);
--		adev->dm.delayed_hpd_wq = NULL;
-+		if (dc_enable_dmub_notifications(adev->dm.dc)) {
-+			kfree(adev->dm.dmub_notify);
-+			adev->dm.dmub_notify = NULL;
-+			destroy_workqueue(adev->dm.delayed_hpd_wq);
-+			adev->dm.delayed_hpd_wq = NULL;
-+		}
- 	}
- 
- 	if (adev->dm.dmub_bo)
+-	color_snprintf(str, sizeof(str), color ?: "", fmt, val);
++	color_snprintf(str, sizeof(str), color ?: "", fmt ?: "", val);
+ 	fprintf(out, "%*s ", mlen, str);
+ 	os->first = false;
+ }
 -- 
 2.43.0
 
