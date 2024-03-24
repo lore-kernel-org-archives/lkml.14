@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7D1130A45;
-	Sun, 24 Mar 2024 23:36:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A9E276C69;
+	Sun, 24 Mar 2024 23:36:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323417; cv=none; b=XR/FIC4Dx5vL6kYS1Q4GxQ4+bU2oAf2z9UE01mqG9QR7iS++zx7Grm9TsXE10ItY2fZX5vBPrEYz9T1PmUflqDT/YG25hTBxECYz65B2wSM3FIDXtweoSIbcflzG0uZB7svZ8VdYUE+yKktWBnjQOXjoDTtMgdFfIDrowJbefUk=
+	t=1711323399; cv=none; b=Bncyjmzir+YZFfx1e+jpCxwg9LG8vYQ6u5G+W48ag6qz6OiTFRyAMbdHqE20m6sPUHdT8MZj6POV/ENdQsiOurTz6lWQWCH4iBsSJQaKHwWy1v5yNliEWs1qgIXfjBDrfbGI3tOFt/zXN3gHfvLdPecb/5E5f7gAllFkZ6EVxdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323417; c=relaxed/simple;
-	bh=Mip5MWJ++KzY+R8yIoSXV3S+4kKpHzFO5vdVn6dFUpA=;
+	s=arc-20240116; t=1711323399; c=relaxed/simple;
+	bh=76QRHA/+FnKmTG2/ioWBslV02WDzArgzzmcyRPl2P0s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WSo3/jvUbUO4P7ib6D4S07Yi6MYDg50DoM9bBO9r8MbA5D7r5qocznauFQMNmmo92oUNcy4s9N9Q9kqhYHxejblUk3RKA01HVAFwsBfnKYVbKrA8KIswZ4qChlgwkVbr+d903SF4Bod9r4O1KxoGHLrdzV4ut98qM3pyORV413g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egBYk9aV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=EEF3MhRZbnExcmmm3+tkArT4hOyEu11nJm+SWqYINyDJMtecZ3yW8qDuMdQviFjqDX6OgdoIuGxyQ0g48E+Bf3FDdA3luHU9wIMnUVBlGN08yjhG6UXFukSL8muRZnIP+bv9kODjxdkopiiSVfNxc6sULo6xUxa7rUzJ1neq4zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMwyZlr8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egBYk9aV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F06DC43390;
-	Sun, 24 Mar 2024 23:36:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMwyZlr8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB662C43390;
+	Sun, 24 Mar 2024 23:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323417;
-	bh=Mip5MWJ++KzY+R8yIoSXV3S+4kKpHzFO5vdVn6dFUpA=;
+	s=k20201202; t=1711323398;
+	bh=76QRHA/+FnKmTG2/ioWBslV02WDzArgzzmcyRPl2P0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=egBYk9aVEzEx8OvlVaNZDvCsNnKxt3gYK7uVBmGFtD2B4+srMcKgN63+63oULTdxX
-	 p5RGKwLS6OJm5O7AOjxQQePEzTc1yHAus58JuDefrNOQleb3DqxNE+tQa5RN1256eu
-	 Hso5YVtPCdomrfPR6PydHz+jVReg69A+LfxN1FXR3OxmGCKnSIa13LPR+WeiFHm1hW
-	 aqTNBCsApjCU2T3Z1rDuGSLgJL+HSW7rKHopF0oroztlzGLGzp68Ma0cApX5OsQULe
-	 qtp8eNxLZve4/6j76R0+fsn02vaPn64FfN/gx7mDoyolt6k1DAZmDAyxbqUZW43XDs
-	 ejMjAbPVghYMQ==
+	b=GMwyZlr8mjeaa57mNCZ4wWHl67HIaUTnx5PRslly5p4jjkH4Plahb4bDjxSPZN3X8
+	 1jhqMqgsfxztpJaNMv/UzaWIceLUb+fv0Kw6im1EmUz5uwnbPRDHOaD2CGMQpSGdDR
+	 uAWMSSsXQxawcwLRGn3Y5vhyPuywbMnjEl6qrxPrhXdovNc8WWm2elSNimF2MuXzuF
+	 0FSFvIk0PseJWSoCGQZEoDZKzyEscPIOJR1da34WMRZboRHcetxFB7O4uGYE5hKmyG
+	 UCJC/W1/lTmOWO5JuYMEykM5pUS7Gn5juKv88seMfoJuS4lWzRUHaAwOmcWXnQrIQh
+	 DnS6xjY7BorGw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 119/317] ACPI: scan: Fix device check notification handling
-Date: Sun, 24 Mar 2024 19:31:39 -0400
-Message-ID: <20240324233458.1352854-120-sashal@kernel.org>
+Subject: [PATCH 5.15 099/317] arm64: dts: mt8183: Move CrosEC base detection node to kukui-based DTs
+Date: Sun, 24 Mar 2024 19:31:19 -0400
+Message-ID: <20240324233458.1352854-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -44,59 +45,105 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-[ Upstream commit 793551c965116d9dfaf0550dacae1396a20efa69 ]
+[ Upstream commit 04bd6411f506357fd1faedc2b2156e7ef206aa9a ]
 
-It is generally invalid to fail a Device Check notification if the scan
-handler has not been attached to the given device after a bus rescan,
-because there may be valid reasons for the scan handler to refuse
-attaching to the device (for example, the device is not ready).
+The cbas node is used to describe base detection functionality in the
+ChromeOS EC, which is used for units that have a detachable keyboard and
+thus rely on this functionality to switch between tablet and laptop
+mode.
 
-For this reason, modify acpi_scan_device_check() to return 0 in that
-case without printing a warning.
+Despite the original commit having added the cbas node to the
+mt8183-kukui.dtsi, not all machines that include it are detachables. In
+fact all machines that include from mt8183-kukui-jacuzzi.dtsi are either
+clamshells (ie normal laptops) or convertibles, meaning the keyboard can
+be flipped but not detached. The detection for the keyboard getting
+flipped is handled by the driver bound to the keyboard-controller node
+in the EC.
 
-While at it, reduce the log level of the "already enumerated" message
-in the same function, because it is only interesting when debugging
-notification handling
+Move the base detection node from the base kukui dtsi to the dtsis where
+all machines are detachables, and thus actually make use of the node.
 
-Fixes: 443fc8202272 ("ACPI / hotplug: Rework generic code to handle suprise removals")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 4fa8492d1e5b ("arm64: dts: mt8183: add cbas node under cros_ec")
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://lore.kernel.org/r/20240116-mt8183-kukui-cbas-remove-v3-1-055e21406e86@collabora.com
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/scan.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi | 4 ++++
+ arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi | 4 ++++
+ arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi  | 4 ++++
+ arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi        | 4 ----
+ 4 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index ae74720888dbf..2393cd993b3cb 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -315,18 +315,14 @@ static int acpi_scan_device_check(struct acpi_device *adev)
- 		 * again).
- 		 */
- 		if (adev->handler) {
--			dev_warn(&adev->dev, "Already enumerated\n");
--			return -EALREADY;
-+			dev_dbg(&adev->dev, "Already enumerated\n");
-+			return 0;
- 		}
- 		error = acpi_bus_scan(adev->handle);
- 		if (error) {
- 			dev_warn(&adev->dev, "Namespace scan failure\n");
- 			return error;
- 		}
--		if (!adev->handler) {
--			dev_warn(&adev->dev, "Enumeration failure\n");
--			error = -ENODEV;
--		}
- 	} else {
- 		error = acpi_scan_device_not_present(adev);
- 	}
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
+index 4b419623c8dcc..fa90708956945 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
+@@ -373,6 +373,10 @@ pen_eject {
+ };
+ 
+ &cros_ec {
++	cbas {
++		compatible = "google,cros-cbas";
++	};
++
+ 	keyboard-controller {
+ 		compatible = "google,cros-ec-keyb-switches";
+ 	};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
+index e6e017260693c..03724c80c0804 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
+@@ -339,6 +339,10 @@ touch_pin_reset: pin_reset {
+ };
+ 
+ &cros_ec {
++	cbas {
++		compatible = "google,cros-cbas";
++	};
++
+ 	keyboard-controller {
+ 		compatible = "google,cros-ec-keyb-switches";
+ 	};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
+index 51bb2c23712c4..be0ac786bcbc9 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
+@@ -343,6 +343,10 @@ rst_pin {
+ };
+ 
+ &cros_ec {
++	cbas {
++		compatible = "google,cros-cbas";
++	};
++
+ 	keyboard-controller {
+ 		compatible = "google,cros-ec-keyb-switches";
+ 	};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+index f70f0f43aa52b..22a1c66325c29 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+@@ -828,10 +828,6 @@ usbc_extcon: extcon0 {
+ 			google,usb-port-id = <0>;
+ 		};
+ 
+-		cbas {
+-			compatible = "google,cros-cbas";
+-		};
+-
+ 		typec {
+ 			compatible = "google,cros-ec-typec";
+ 			#address-cells = <1>;
 -- 
 2.43.0
 
