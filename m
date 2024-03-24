@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD7928A580;
-	Sun, 24 Mar 2024 23:47:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7046E28A5AA;
+	Sun, 24 Mar 2024 23:47:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324060; cv=none; b=ltYoU4xuXwpZXESOiBuf/l6XVC7LRP+HjzQbuZ+DIwDn46+vxWw4W3ZrZTtkS1k1PG8fu2lRpTdIvUbbbfKWqaZ4sg6heHXr3g+TGOdrJ8/j52MFOuSChubnGgls7FVXHkYlhk67gjK+f9FxEzGoxwuKLSsEXjTl9G8pv8Mc1e8=
+	t=1711324065; cv=none; b=KiR7dsCyU5+cPYeo0wIEo6eE8omtrw+1ka7keyad64ZiGYfM+zyookSCc+QWa1Lvr2v0e8jKoRdN4AqES3cVUaXKIvvNSoikmP83bsOXPlixfUWcXsCKnFo7/UyJyIpiDoz5/iQiNRrhDtna8FbaHSf8zdFiOfBGDVLRPc/J41U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324060; c=relaxed/simple;
-	bh=bUpUYMke4Y5Mfy8Ay4xsoBeWv65PZHQBx/Oe/vhxX68=;
+	s=arc-20240116; t=1711324065; c=relaxed/simple;
+	bh=+bjCDMRwadsGgRz/Ka4YYjHtGlwmEY4ooDUpXQ3MzME=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ESvrnnbXf5ngpThb44LP9Hspwx1cCAoD+BI61SIOPfH23EZNdI5djnlrlMDFnzCMfi7F+pQf4enDo+bgpoqc2VzslQpKubLn0sNdCYyEHpPIWVCtdVOtUil6+fWJFsCx5LV6Irz/SCjCDPA9IlPgcywJDLV2wW1LeV1PCLFlMFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=leqe7twV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dGrivOLz4zzUf4rbMO2RY4wmvk6mPWBDrz9qA2vpqOIjn1yl65priydHrtJxBTzK0tVaXhMRYCprSXTYwQVW354/gAIfE7Xk7qt4d8sprL630tUfaP+ydbht7E1j9bUToIKouuoyCjqwlFsPp6m+1hwqJ8l2ZK/Kq+QIPKxilhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDj2Hxi2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="leqe7twV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8383C433C7;
-	Sun, 24 Mar 2024 23:47:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDj2Hxi2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43C3C433F1;
+	Sun, 24 Mar 2024 23:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324059;
-	bh=bUpUYMke4Y5Mfy8Ay4xsoBeWv65PZHQBx/Oe/vhxX68=;
+	s=k20201202; t=1711324064;
+	bh=+bjCDMRwadsGgRz/Ka4YYjHtGlwmEY4ooDUpXQ3MzME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=leqe7twVGCONIPT7huTNCtdc2EGu59PmSZiJOmtTP4tpSFLzJSxnELja2krUvl5MN
-	 Hv31XwX7tnvuBhbbHPzA3N22NBaNufVNmKyTP3fSJGNgvD52JQMgdpXWukiQZN5v6w
-	 qSa1Jxf6aFsACC/8LGfhG0M0LvSkdOEce5TD4L9k4i0Qs6Ex3x+AFp6qu5Zs1GNVJZ
-	 9++oJ9UD6QYAPeFYXX8TjB6yM2wrWI4r2OwI/OhuDpdx6yjZYOdmwB4ucZSeQVtm68
-	 yo8eCiWGRmd1UoMHpxMxq3SKRf7jTb3X64ev6JsD8za0PsgI5lK9XKj7j46Lyi7NsX
-	 QL3ltJu+0grLA==
+	b=tDj2Hxi24xQ0G6WEuTaLDaS1Fac/MXoj8y1H6dzaC+alI56H5BtZmofMKb32Yo4Ah
+	 AgwVhFupnodrh3wvbIqgqBaoKQlda2MqZTkbLfLG23CtSKUhE+w4W6AopbTeNin6sO
+	 Uk9GscYdRbiQHAkHnoAv+f2MgcQLvRwYQfsnUlAtZhjul2FDssXI8zV7veMHXsxXiL
+	 MQpm3t+FbNyGMfbMOg2KA/gNHB9H9ZFy8Mnaq41HmZTBKM/S0OhGlSsBaWdVpjoVd5
+	 /kurKuy5jX+Uv8fT7XibWAj2n9eEHKPoDvhUsIdVALIK33oOX0xuAB84QmVTvMRnbX
+	 VEZWVEOOPD3tg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 060/183] ARM: dts: imx6dl-yapp4: Move phy reset into switch node
-Date: Sun, 24 Mar 2024 19:44:33 -0400
-Message-ID: <20240324234638.1355609-61-sashal@kernel.org>
+Subject: [PATCH 5.4 065/183] SUNRPC: fix some memleaks in gssx_dec_option_array
+Date: Sun, 24 Mar 2024 19:44:38 -0400
+Message-ID: <20240324234638.1355609-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -44,47 +44,88 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 7da7b84fee58c85a6075022023d31edea40e81a1 ]
+[ Upstream commit 3cfcfc102a5e57b021b786a755a38935e357797d ]
 
-Drop the phy-reset-duration and phy-reset-gpios deprecated properties and
-move reset-gpios under the switch node.
+The creds and oa->data need to be freed in the error-handling paths after
+their allocation. So this patch add these deallocations in the
+corresponding paths.
 
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Stable-dep-of: 023bd910d3ab ("ARM: dts: imx6dl-yapp4: Fix typo in the QCA switch register address")
+Fixes: 1d658336b05f ("SUNRPC: Add RPC based upcall mechanism for RPCGSS auth")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/sunrpc/auth_gss/gss_rpc_xdr.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index ce4a5a8074422..4d1e65c307f86 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -96,8 +96,6 @@ &fec {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii-id";
--	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
--	phy-reset-duration = <20>;
- 	phy-supply = <&sw2_reg>;
- 	status = "okay";
+diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+index 2ff7b7083ebab..e265b8d38aa14 100644
+--- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
++++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+@@ -250,8 +250,8 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
  
-@@ -121,6 +119,7 @@ phy_port3: phy@2 {
- 		switch@10 {
- 			compatible = "qca,qca8334";
- 			reg = <10>;
-+			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+ 	creds = kzalloc(sizeof(struct svc_cred), GFP_KERNEL);
+ 	if (!creds) {
+-		kfree(oa->data);
+-		return -ENOMEM;
++		err = -ENOMEM;
++		goto free_oa;
+ 	}
  
- 			switch_ports: ports {
- 				#address-cells = <1>;
+ 	oa->data[0].option.data = CREDS_VALUE;
+@@ -265,29 +265,40 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
+ 
+ 		/* option buffer */
+ 		p = xdr_inline_decode(xdr, 4);
+-		if (unlikely(p == NULL))
+-			return -ENOSPC;
++		if (unlikely(p == NULL)) {
++			err = -ENOSPC;
++			goto free_creds;
++		}
+ 
+ 		length = be32_to_cpup(p);
+ 		p = xdr_inline_decode(xdr, length);
+-		if (unlikely(p == NULL))
+-			return -ENOSPC;
++		if (unlikely(p == NULL)) {
++			err = -ENOSPC;
++			goto free_creds;
++		}
+ 
+ 		if (length == sizeof(CREDS_VALUE) &&
+ 		    memcmp(p, CREDS_VALUE, sizeof(CREDS_VALUE)) == 0) {
+ 			/* We have creds here. parse them */
+ 			err = gssx_dec_linux_creds(xdr, creds);
+ 			if (err)
+-				return err;
++				goto free_creds;
+ 			oa->data[0].value.len = 1; /* presence */
+ 		} else {
+ 			/* consume uninteresting buffer */
+ 			err = gssx_dec_buffer(xdr, &dummy);
+ 			if (err)
+-				return err;
++				goto free_creds;
+ 		}
+ 	}
+ 	return 0;
++
++free_creds:
++	kfree(creds);
++free_oa:
++	kfree(oa->data);
++	oa->data = NULL;
++	return err;
+ }
+ 
+ static int gssx_dec_status(struct xdr_stream *xdr,
 -- 
 2.43.0
 
