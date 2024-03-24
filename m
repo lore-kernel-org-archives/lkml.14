@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A228D28CE66;
-	Sun, 24 Mar 2024 23:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6973118146C;
+	Sun, 24 Mar 2024 23:48:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324103; cv=none; b=kt5bC9FcLKp13dro8sYTBDaZn2tQrZ0G/BPlGr0n4PEexqfUYWtXZK9q/eU8Ej70KpgybGnAWgc0wU3uMyMC7nu9AE0CdczH5bP3B89nBzs9WJwD1EbF103UquUFAelHu+ejp91tAMwLHlHgg63z+udBxdYBaJp7CKYmdrg112M=
+	t=1711324089; cv=none; b=D2poXIqBHdv2Hg7m6pz8eVPWYDbsdS+79DGpMvWb9gJpSekewe4/YzPZ21Z32UAU9DZPb2MZQJikMEd88hGAuVHwbCto9FtKLpChb0KN2E8YnkFTdg51GBOJpa/+vacwhtma9p/AZaHldyvfZT6ufpG9myC4wzAZ3FPhdik91xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324103; c=relaxed/simple;
-	bh=ELk0CTEYjYXs7vrm1JGfKcs7K4yQgG+4Xdc7nUafxQg=;
+	s=arc-20240116; t=1711324089; c=relaxed/simple;
+	bh=2i2AE3TKtLJjG+eFA0S3iT2awKSaOSooeRl2a3FPNWE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iE/GrqkagB0mJLC8oNwDVfDOgp02z4Iv79LYl3mKDqNAYF35EwGxTL6zbBr4AcyGYw/4cYnYA5NNQySUclsu/tqz/m+x52ZeHbFZRp4TpC0k3J9tTIZg4sjZGZWuM4CyuzA0a1Yhf0gMPq7GBI1UTSstOAldPLDy7Q2IpDckST4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LX5eJHdS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Nl/watcMijnLo7hX2GR8QjVmNks0vddcaETaZKXJ45//fe70AS4HRd5E3a11xH/29uKcruAJrsPhH/EPulC5aSjZa+IDTq8QhC44gB5LztI69dnElfRMj81Cpr9jltZO4OTvBwGgeMkcUi7+pw7hx8PbejWJYvH8mJGo9CRz6FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PwDgYHCa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LX5eJHdS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF74BC433F1;
-	Sun, 24 Mar 2024 23:48:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PwDgYHCa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 618BFC433C7;
+	Sun, 24 Mar 2024 23:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324103;
-	bh=ELk0CTEYjYXs7vrm1JGfKcs7K4yQgG+4Xdc7nUafxQg=;
+	s=k20201202; t=1711324088;
+	bh=2i2AE3TKtLJjG+eFA0S3iT2awKSaOSooeRl2a3FPNWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LX5eJHdSUgOvAGmnXl4Sl2SayftTkCVk759RDKPZs3uRoGWxOrwTZaMY4ov9bTfP3
-	 Jlu2wRCdztxDhThhLacZbE+qTHiwaD1TnkqVeJMoHcgP1wiW5DX2tN0Lq79LCTL8U1
-	 Beg1fnu35o7m5GxPYZa68U3KrqiqElIbXRjaM0OXEOY+Nt1qpeT56qrD2aLc2QRvdZ
-	 Iet3JT9k9a86Ol+cjjb49Dp5pCuM1CPbnv7ckfSLoXHa6C35v+c/kjZ1yoxWhOD5Lr
-	 RRlHgW5lZb8ZKtSBgZ+rpMZmI1Pt1oCdmL7Hd0lEdYonUVu3rFElfM9R7ZWrAmirox
-	 urb7VUjAzi9SA==
+	b=PwDgYHCa3xv1MSg/XyYhaZWKK1zN2hYjZeVw1PNrf3ZRwzHHvP0CcWTkvTl6rGqGt
+	 v+s1tIkLl2d42oWnDv4SbY9N57ezj8OROxUsFsolXBDci5rxLyy3s63g3NZqyYYiMY
+	 muWvcCUuq9kMx0cIA5Gak03BLQpu5qcR4U5TQlhMkLchsOhWtbjiAMadf4tCGNpDfR
+	 VvidMjwDR4tOoJbq2x4Grgs8wGxJXB1Pd5UlEv/WiTI0C4V1gRHy1U4rMvGbmdfISi
+	 azzq8VcpRGM5bkJrch+vz8AH/dgOzw/C9Fqe1VA92dr18iMFsv2Aymr55K04G8tjtS
+	 sxaHChzpEOeMA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 102/183] media: v4l2-tpg: fix some memleaks in tpg_alloc
-Date: Sun, 24 Mar 2024 19:45:15 -0400
-Message-ID: <20240324234638.1355609-103-sashal@kernel.org>
+Subject: [PATCH 5.4 088/183] drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()
+Date: Sun, 24 Mar 2024 19:45:01 -0400
+Message-ID: <20240324234638.1355609-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,109 +48,113 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 8cf9c5051076e0eb958f4361d50d8b0c3ee6691c ]
+[ Upstream commit 830c1ded356369cd1303e8bb87ce3fea6e744de8 ]
 
-In tpg_alloc, resources should be deallocated in each and every
-error-handling paths, since they are allocated in for statements.
-Otherwise there would be memleaks because tpg_free is called only when
-tpg_alloc return 0.
+If an error occurs after calling tegra_output_probe(),
+tegra_output_remove() should be called as already done in the remove
+function.
 
-Fixes: 63881df94d3e ("[media] vivid: add the Test Pattern Generator")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: dec727399a4b ("drm/tegra: Add DSI support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/16820073278d031f6c474a08d5f22a255158585e.1693667005.git.christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 52 +++++++++++++++----
- 1 file changed, 42 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/tegra/dsi.c | 54 ++++++++++++++++++++++++-------------
+ 1 file changed, 35 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-index 50f1e0b28b250..a4d729a4f3301 100644
---- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-+++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-@@ -113,6 +113,7 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- {
- 	unsigned pat;
- 	unsigned plane;
-+	int ret = 0;
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index cc0ac038a4208..072a4c1d8eff4 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -1503,44 +1503,58 @@ static int tegra_dsi_probe(struct platform_device *pdev)
  
- 	tpg->max_line_width = max_w;
- 	for (pat = 0; pat < TPG_MAX_PAT_LINES; pat++) {
-@@ -121,14 +122,18 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- 
- 			tpg->lines[pat][plane] =
- 				vzalloc(array3_size(max_w, 2, pixelsz));
--			if (!tpg->lines[pat][plane])
--				return -ENOMEM;
-+			if (!tpg->lines[pat][plane]) {
-+				ret = -ENOMEM;
-+				goto free_lines;
-+			}
- 			if (plane == 0)
- 				continue;
- 			tpg->downsampled_lines[pat][plane] =
- 				vzalloc(array3_size(max_w, 2, pixelsz));
--			if (!tpg->downsampled_lines[pat][plane])
--				return -ENOMEM;
-+			if (!tpg->downsampled_lines[pat][plane]) {
-+				ret = -ENOMEM;
-+				goto free_lines;
-+			}
- 		}
- 	}
- 	for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-@@ -136,18 +141,45 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- 
- 		tpg->contrast_line[plane] =
- 			vzalloc(array_size(pixelsz, max_w));
--		if (!tpg->contrast_line[plane])
--			return -ENOMEM;
-+		if (!tpg->contrast_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
-+		}
- 		tpg->black_line[plane] =
- 			vzalloc(array_size(pixelsz, max_w));
--		if (!tpg->black_line[plane])
--			return -ENOMEM;
-+		if (!tpg->black_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
-+		}
- 		tpg->random_line[plane] =
- 			vzalloc(array3_size(max_w, 2, pixelsz));
--		if (!tpg->random_line[plane])
--			return -ENOMEM;
-+		if (!tpg->random_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
+ 	if (!pdev->dev.pm_domain) {
+ 		dsi->rst = devm_reset_control_get(&pdev->dev, "dsi");
+-		if (IS_ERR(dsi->rst))
+-			return PTR_ERR(dsi->rst);
++		if (IS_ERR(dsi->rst)) {
++			err = PTR_ERR(dsi->rst);
++			goto remove;
 +		}
  	}
- 	return 0;
-+
-+free_contrast_line:
-+	for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-+		vfree(tpg->contrast_line[plane]);
-+		vfree(tpg->black_line[plane]);
-+		vfree(tpg->random_line[plane]);
-+		tpg->contrast_line[plane] = NULL;
-+		tpg->black_line[plane] = NULL;
-+		tpg->random_line[plane] = NULL;
+ 
+ 	dsi->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(dsi->clk))
+-		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
+-				     "cannot get DSI clock\n");
++	if (IS_ERR(dsi->clk)) {
++		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
++				    "cannot get DSI clock\n");
++		goto remove;
 +	}
-+free_lines:
-+	for (pat = 0; pat < TPG_MAX_PAT_LINES; pat++)
-+		for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-+			vfree(tpg->lines[pat][plane]);
-+			tpg->lines[pat][plane] = NULL;
-+			if (plane == 0)
-+				continue;
-+			vfree(tpg->downsampled_lines[pat][plane]);
-+			tpg->downsampled_lines[pat][plane] = NULL;
-+		}
-+	return ret;
+ 
+ 	dsi->clk_lp = devm_clk_get(&pdev->dev, "lp");
+-	if (IS_ERR(dsi->clk_lp))
+-		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
+-				     "cannot get low-power clock\n");
++	if (IS_ERR(dsi->clk_lp)) {
++		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
++				    "cannot get low-power clock\n");
++		goto remove;
++	}
+ 
+ 	dsi->clk_parent = devm_clk_get(&pdev->dev, "parent");
+-	if (IS_ERR(dsi->clk_parent))
+-		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
+-				     "cannot get parent clock\n");
++	if (IS_ERR(dsi->clk_parent)) {
++		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
++				    "cannot get parent clock\n");
++		goto remove;
++	}
+ 
+ 	dsi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
+-	if (IS_ERR(dsi->vdd))
+-		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
+-				     "cannot get VDD supply\n");
++	if (IS_ERR(dsi->vdd)) {
++		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
++				    "cannot get VDD supply\n");
++		goto remove;
++	}
+ 
+ 	err = tegra_dsi_setup_clocks(dsi);
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "cannot setup clocks\n");
+-		return err;
++		goto remove;
+ 	}
+ 
+ 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	dsi->regs = devm_ioremap_resource(&pdev->dev, regs);
+-	if (IS_ERR(dsi->regs))
+-		return PTR_ERR(dsi->regs);
++	if (IS_ERR(dsi->regs)) {
++		err = PTR_ERR(dsi->regs);
++		goto remove;
++	}
+ 
+ 	dsi->mipi = tegra_mipi_request(&pdev->dev, pdev->dev.of_node);
+-	if (IS_ERR(dsi->mipi))
+-		return PTR_ERR(dsi->mipi);
++	if (IS_ERR(dsi->mipi)) {
++		err = PTR_ERR(dsi->mipi);
++		goto remove;
++	}
+ 
+ 	dsi->host.ops = &tegra_dsi_host_ops;
+ 	dsi->host.dev = &pdev->dev;
+@@ -1571,6 +1585,8 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+ 	mipi_dsi_host_unregister(&dsi->host);
+ mipi_free:
+ 	tegra_mipi_free(dsi->mipi);
++remove:
++	tegra_output_remove(&dsi->output);
+ 	return err;
  }
- EXPORT_SYMBOL_GPL(tpg_alloc);
  
 -- 
 2.43.0
