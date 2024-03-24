@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3481D2811BB;
-	Sun, 24 Mar 2024 23:41:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E715B2811D0;
+	Sun, 24 Mar 2024 23:41:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323675; cv=none; b=nGALOHAZC/QKp9g6SO5rYII3Z3QANrQuRAV5HgJjXv3wizJg1YjnbGQtfkv15zaik4WSUya4PInMfdMkHU921e3SBAciHxfqp/9grhegvj8iKAsEC6+MbP0fuR3/0D3+175JTbyOG+UjyoLdPkoc7e6B7i3hM8/SVrcmCoXjfs8=
+	t=1711323678; cv=none; b=M10AsFJbW/T/BABlxt/ql5b+pDFgD94m0XczxvnxmEeaPWfeE4/ZOUY82M4urT6bGFYqvfdvHiJ+cUoJGJg8h1IGvNcAs2Ief6e58B+R6ih3yi1xCGKExD3wBPkDXhwJxXA7KYpNJtP21zlDtsYQTjmG9fvHQ+n2bmi7AGdkUTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323675; c=relaxed/simple;
-	bh=1XQ8MwnwM5Ha1tMesnidn2cTW17PhSN1EXbTQwFpS6A=;
+	s=arc-20240116; t=1711323678; c=relaxed/simple;
+	bh=3v2u52gHV9cGUvW7r3oyCpl4u5Lb7Ipc60LXIYLcw5Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mVeiQ4Pa+R6CYIL0lxHueP3LLaydZ2WmD2iw9s/RgIt1HOrUshMkmJ0GXfoNI4QlD7Dj3HooaMEaOubijjGQqObgt64pryrGMIB0ZEoin75lbc/IpwbYsbM+RKb5zy/r8hjCNoMQcGVoT3u9wRxZPzPYib4u7O6UXsGsf9+SOyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GELkPQ2t; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NE3hXBIt/B1aJ0NPa8XZwB2xDSUmPLwpNkQqiGaCTk0JDqY0OhhFypG/v9Us9v143CRTKnwKLRXQ/Fc51pGwfHeigjv4mBiKHkOxfAEa21fnd9rGkcLSdIt0+i3svunUclhAo7SxFdnw9WfgzFM92Pc9/ElgipZjppyLFQtBstA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fEYYpD6s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GELkPQ2t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B5DCC433F1;
-	Sun, 24 Mar 2024 23:41:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fEYYpD6s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 352F6C43390;
+	Sun, 24 Mar 2024 23:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323675;
-	bh=1XQ8MwnwM5Ha1tMesnidn2cTW17PhSN1EXbTQwFpS6A=;
+	s=k20201202; t=1711323677;
+	bh=3v2u52gHV9cGUvW7r3oyCpl4u5Lb7Ipc60LXIYLcw5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GELkPQ2tKub0pPTQJ28cmyRqaIYK+BKWZ8zHVtg/gL1yg7rhR3R9XNOP5FqKSLHIN
-	 p167/j4s6PSG7gftdnw2EQTRG+tzNUtB9boyDcDMXJStY51p/3jDCy8k7/JJ8zmxZX
-	 aDT/k/2DggucLlP13Wz+JgZSPKA27/eHbJtWkfzLvYK7BQ3OpwB+8gUvhuxcrxkpht
-	 +v3xXH9mkuoxhRo7HRDtfg/hPCQ+tBoedvyy0S13wDspv1Q3aMRUqvDbBeJYniMYdl
-	 foB9+0H7+tLlZdRMLaqjKcMFAsJsKZsqXRisrrTSUes20i5NzdoT3DZdwX62ATk7kl
-	 dWIaoVjEbGvyg==
+	b=fEYYpD6ste3NLXXBh/DGCAbRQk33R57iOY9PJmd5ei/HL40BYVQBvqu9nFMuJoAr5
+	 9KV/epCU+/LtbFl4FkUkQwJW1DHtPc2HP4agSjIZ4grYS3+8otpPUQU6hc0VVu3Xel
+	 aJ1NXRdZlKMZniBhFjv1qqWaIlJQgfOIo1IwXoGJ0hg3g9BxKwqkgMljQXPmKqnZIF
+	 4DgweS+ubtjeiQYjHAPCCjQI7HdddO4Aoo0v5sD6/XIEE6tWzWU93iQsGif40SXgXf
+	 FL9q+7njQzwafrXUNL6Y0Mj0uG/pHEc3Ka2O+LJ+q39ljdG1f8Z1/t1uRiOKFGNph9
+	 oMkCK4LOki6dg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ajay Singh <ajay.kathat@microchip.com>,
-	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 047/238] wifi: wilc1000: fix multi-vif management when deleting a vif
-Date: Sun, 24 Mar 2024 19:37:15 -0400
-Message-ID: <20240324234027.1354210-48-sashal@kernel.org>
+Subject: [PATCH 5.10 050/238] cpufreq: brcmstb-avs-cpufreq: add check for cpufreq_cpu_get's return value
+Date: Sun, 24 Mar 2024 19:37:18 -0400
+Message-ID: <20240324234027.1354210-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -45,54 +44,40 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Anastasia Belova <abelova@astralinux.ru>
 
-[ Upstream commit 12cfc9c8d3faf887a202c89bc312202445fca7e8 ]
+[ Upstream commit f661017e6d326ee187db24194cabb013d81bc2a6 ]
 
-Adding then removing a second vif currently makes the first vif not working
-anymore. This is visible for example when we have a first interface
-connected to some access point:
-- create a wpa_supplicant.conf with some AP credentials
-- wpa_supplicant -Dnl80211 -c /etc/wpa_supplicant.conf -i wlan0
-- dhclient wlan0
-- iw phy phy0 interface add wlan1 type managed
-- iw dev wlan1 del
-wlan0 does not manage properly traffic anymore (eg: ping not working)
+cpufreq_cpu_get may return NULL. To avoid NULL-dereference check it
+and return 0 in case of error.
 
-This is due to vif mode being incorrectly reconfigured with some default
-values in del_virtual_intf, affecting by default first vif.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Prevent first vif from being affected on second vif removal by removing vif
-mode change command in del_virtual_intf
-
-Fixes: 9bc061e88054 ("staging: wilc1000: added support to dynamically add/remove interfaces")
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Co-developed-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240115-wilc_1000_fixes-v1-5-54d29463a738@bootlin.com
+Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/microchip/wilc1000/cfg80211.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/cfg80211.c b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-index dd26f20861807..5d4f9e9a81e05 100644
---- a/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-+++ b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-@@ -1562,7 +1562,6 @@ static int del_virtual_intf(struct wiphy *wiphy, struct wireless_dev *wdev)
- 	unregister_netdevice(vif->ndev);
- 	vif->monitor_flag = 0;
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index f644c5e325fb2..38ec0fedb247f 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -481,6 +481,8 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
+ static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
+ {
+ 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
++	if (!policy)
++		return 0;
+ 	struct private_data *priv = policy->driver_data;
  
--	wilc_set_operation_mode(vif, 0, 0, 0);
- 	mutex_lock(&wl->vif_mutex);
- 	list_del_rcu(&vif->list);
- 	wl->vif_num--;
+ 	cpufreq_cpu_put(policy);
 -- 
 2.43.0
 
