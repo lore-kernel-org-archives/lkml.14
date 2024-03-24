@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2E513C695;
-	Sun, 24 Mar 2024 23:38:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B6A27B104;
+	Sun, 24 Mar 2024 23:38:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323502; cv=none; b=bzBGV9qYNd94MxK/fX9UWrCTNLa4Vzf5WbtacoTi5rGC/DMPSxlQgs0ZQzXgijbttX5MbeJZdynXb8INgCjIUAH19FmNYQgMuNSfh4Frjn4vAT0ZIKL9tGaUV4zy/7aUrBWeqkBvH9U4p7ZYOTx8K3vTvlBtvwq6B4lk/+J+Gxk=
+	t=1711323504; cv=none; b=mpZeCrLOMlcF02QFyOCpr7/2dfcnxXbnv7Qd69RRDBnSM1j/iKvPA05JoQxaNdoVc3VIFWm4NixiXxcwUHOUlLNxC+d6ZpiG5Z74NOZ4mac2KFmjz41wR0mlYFi/w1Gd95MnpUzTPkxoe8pxQsBf5JBbRzLn++sqddxVeH3NAoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323502; c=relaxed/simple;
-	bh=AEgavoyrrcEhc7TQRZz57wcjIAh4rUCr3ZqQ1UuR1uQ=;
+	s=arc-20240116; t=1711323504; c=relaxed/simple;
+	bh=0Eg9GoRURLgZukSzhlo77FcQHJEdGPmW8mmGZ5+MOeM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=taSrir7wQCmyW9Z/ueOFDejWYWBWAoS+jR0ZdEOa+QwO+oDwCgjEO0qrgtVYqsvawUkxhQnb9B50397TUG9TYboU9KUg2qHFw96myYT8IdtDZKpN/R2sZjF+/741S1okzGF5E0y7l1jA/v9QwUx7Al7JVkVX9V+HkB6REa0KAXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qtVt4cvz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=V9MiZRByj0MTght9g+eLroB3pTAogGtsT9f/G6DHAMypQTzhzc5cpolK4HnGcBQbnf6SztWYKaQT+VVf0xjGcgimYCSkOq77+VuhsogU3A4dR2faBbjvX1KBZkcQJ2263KySQ7KbUvcPGzBoUoR7Nxpo+R9VTVvki6gxrznKBHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E93yB//g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qtVt4cvz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BD2BC43394;
-	Sun, 24 Mar 2024 23:38:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E93yB//g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 330C0C43399;
+	Sun, 24 Mar 2024 23:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323501;
-	bh=AEgavoyrrcEhc7TQRZz57wcjIAh4rUCr3ZqQ1UuR1uQ=;
+	s=k20201202; t=1711323502;
+	bh=0Eg9GoRURLgZukSzhlo77FcQHJEdGPmW8mmGZ5+MOeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qtVt4cvzus2D2vTdmPs0V9EQGjfJ0z8BGIJvrlC+enMwrwQmXqstPpbACrKMUruYi
-	 Bc54hfMghmv/0DLfoStpFF92V8PhUrG4hpZYa6xrTz0xT3cB6E1ywniw9tjpluwIZu
-	 J18kOuAZQCHPp7i2rboDFLGBH5nARzA6EVPmamEZE1bGk8cEak1ktttBYBsnm7C9gt
-	 tXOssNKKqL6P5QDF6uEVVUfWAM4LPzSNFXuYKV7eurFEcmwcxmzb/BUV0ss2cFh8Cb
-	 bNI1YYlHZ3lnVTH9XIy7Z1ABAYgVKug2CZ75JJsAoJjZ/cEs1pIWMbVyCMPMaRP6/4
-	 6FTmgk5TGR7vg==
+	b=E93yB//ge0VM5CKhf1NIDuf4DH2FP/wzKzAxRd2rjxDQjqv37D+k+ZpFl0mPmCrGO
+	 5lamaniHpqt0fsUM+Ii5Y8sJYxxNrW9OFXBDnWJsSUhJWFaFEZD8kCuLAwnBItsIr0
+	 t18UaPvS3/0g3PUi7nJFgM21QeD417ozgnpXC7pOyoj+DGo3aOqqW+aOdHiSCg7gmV
+	 +aRxo03im2JTfyDHZ77IZkzprRen6NGtHtEXPuQhCx/EPgaj6UqPUFmtyrUm/mOjhG
+	 tUrFMlT5kjo+mOmQJVnMtMUrHI1z1vEMOq4XTsVMSzLlV2GgKw+vtidb7ACQxwAsom
+	 CBIAQCRhoGFrA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yang Yingliang <yangyingliang@huawei.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Dave Jiang <dave.jiang@intel.com>,
+Cc: Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 206/317] NTB: fix possible name leak in ntb_register_device()
-Date: Sun, 24 Mar 2024 19:33:06 -0400
-Message-ID: <20240324233458.1352854-207-sashal@kernel.org>
+Subject: [PATCH 5.15 208/317] media: sun8i-di: Fix power on/off sequences
+Date: Sun, 24 Mar 2024 19:33:08 -0400
+Message-ID: <20240324233458.1352854-209-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -46,85 +44,90 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-[ Upstream commit aebfdfe39b9327a3077d0df8db3beb3160c9bdd0 ]
+[ Upstream commit cff104e33bad38f4b2c8d58816a7accfaa2879f9 ]
 
-If device_register() fails in ntb_register_device(), the device name
-allocated by dev_set_name() should be freed. As per the comment in
-device_register(), callers should use put_device() to give up the
-reference in the error path. So fix this by calling put_device() in the
-error path so that the name can be freed in kobject_cleanup().
+According to user manual, reset line should be deasserted before clocks
+are enabled. Also fix power down sequence to be reverse of that.
 
-As a result of this, put_device() in the error path of
-ntb_register_device() is removed and the actual error is returned.
-
-Fixes: a1bd3baeb2f1 ("NTB: Add NTB hardware abstraction layer")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/20231201033057.1399131-1-yangyingliang@huaweicloud.com
-[mani: reworded commit message]
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Fixes: a4260ea49547 ("media: sun4i: Add H3 deinterlace driver")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/core.c                            | 8 +++++++-
- drivers/pci/endpoint/functions/pci-epf-vntb.c | 6 +-----
- 2 files changed, 8 insertions(+), 6 deletions(-)
+ .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 25 ++++++++++---------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/ntb/core.c b/drivers/ntb/core.c
-index 27dd93deff6e5..d702bee780826 100644
---- a/drivers/ntb/core.c
-+++ b/drivers/ntb/core.c
-@@ -100,6 +100,8 @@ EXPORT_SYMBOL(ntb_unregister_client);
- 
- int ntb_register_device(struct ntb_dev *ntb)
- {
-+	int ret;
-+
- 	if (!ntb)
- 		return -EINVAL;
- 	if (!ntb->pdev)
-@@ -120,7 +122,11 @@ int ntb_register_device(struct ntb_dev *ntb)
- 	ntb->ctx_ops = NULL;
- 	spin_lock_init(&ntb->ctx_lock);
- 
--	return device_register(&ntb->dev);
-+	ret = device_register(&ntb->dev);
-+	if (ret)
-+		put_device(&ntb->dev);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(ntb_register_device);
- 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-index 138742af51707..d4cd4bd4a0881 100644
---- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-@@ -1242,15 +1242,11 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	ret = ntb_register_device(&ndev->ntb);
- 	if (ret) {
- 		dev_err(dev, "Failed to register NTB device\n");
--		goto err_register_dev;
-+		return ret;
+diff --git a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+index 073a61c094183..8faf93c418ed5 100644
+--- a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
++++ b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+@@ -933,11 +933,18 @@ static int deinterlace_runtime_resume(struct device *device)
+ 		return ret;
  	}
  
- 	dev_dbg(dev, "PCI Virtual NTB driver loaded\n");
- 	return 0;
--
--err_register_dev:
--	put_device(&ndev->ntb.dev);
--	return -EINVAL;
- }
++	ret = reset_control_deassert(dev->rstc);
++	if (ret) {
++		dev_err(dev->dev, "Failed to apply reset\n");
++
++		goto err_exclusive_rate;
++	}
++
+ 	ret = clk_prepare_enable(dev->bus_clk);
+ 	if (ret) {
+ 		dev_err(dev->dev, "Failed to enable bus clock\n");
  
- static struct pci_device_id pci_vntb_table[] = {
+-		goto err_exclusive_rate;
++		goto err_rst;
+ 	}
+ 
+ 	ret = clk_prepare_enable(dev->mod_clk);
+@@ -954,23 +961,16 @@ static int deinterlace_runtime_resume(struct device *device)
+ 		goto err_mod_clk;
+ 	}
+ 
+-	ret = reset_control_deassert(dev->rstc);
+-	if (ret) {
+-		dev_err(dev->dev, "Failed to apply reset\n");
+-
+-		goto err_ram_clk;
+-	}
+-
+ 	deinterlace_init(dev);
+ 
+ 	return 0;
+ 
+-err_ram_clk:
+-	clk_disable_unprepare(dev->ram_clk);
+ err_mod_clk:
+ 	clk_disable_unprepare(dev->mod_clk);
+ err_bus_clk:
+ 	clk_disable_unprepare(dev->bus_clk);
++err_rst:
++	reset_control_assert(dev->rstc);
+ err_exclusive_rate:
+ 	clk_rate_exclusive_put(dev->mod_clk);
+ 
+@@ -981,11 +981,12 @@ static int deinterlace_runtime_suspend(struct device *device)
+ {
+ 	struct deinterlace_dev *dev = dev_get_drvdata(device);
+ 
+-	reset_control_assert(dev->rstc);
+-
+ 	clk_disable_unprepare(dev->ram_clk);
+ 	clk_disable_unprepare(dev->mod_clk);
+ 	clk_disable_unprepare(dev->bus_clk);
++
++	reset_control_assert(dev->rstc);
++
+ 	clk_rate_exclusive_put(dev->mod_clk);
+ 
+ 	return 0;
 -- 
 2.43.0
 
