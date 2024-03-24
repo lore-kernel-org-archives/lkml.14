@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848B91E9655;
-	Sun, 24 Mar 2024 22:54:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0D01E85D9;
+	Sun, 24 Mar 2024 22:54:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320899; cv=none; b=OqIebb8beoIK7aLmP8bIAYZGcXJYcS4MvhQC+fNVbu+BYpUc3OAsN7nhe9Ox+zzzECCzFbpsCaCdiPAeKqSp74MRKLrgG7AWxY20k/xwgj2ipfY4oNtCXghuG0AVrw6DZgnqxlsUTY+vi1GEI3W1qcDfcfPRo+SKNG1zcP+iLNg=
+	t=1711320884; cv=none; b=JYxjMWWn4VXQIZZCSVfJv/fhUiYpxwXumDRgFMboAXRStdnUOYIz1GN8+UgAgSqc1KzPXki4pAWjKTvZjNd2m6SP71UJsvJ35m/tdkId4iJj9hj/MsEAfUmuzywslpjZrorsDwQdNSCPCo41XJcDSgHGw767FyEK4n5lXxLWBIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320899; c=relaxed/simple;
-	bh=+PUu5RM10hKszLtQ9PhN2GrdWiBPvEkFSKTRdD/60jc=;
+	s=arc-20240116; t=1711320884; c=relaxed/simple;
+	bh=dNSXUR4F0PInX+6if0T8q039HcQHl4ObxNFwJQJpwJI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eaSgl02HOmkbTuL0b1Uy82e9CLIi1FZ0+6Ofi1qIRipCqAUiw2z9uIAU/3wyapz5DlRURzUBrvOa4DxarUwDxoFWMW6Q52gInmPlp97i98NgSRfMs5vgA6STTinhOyN9qkAnK+LWsx7cj6ai5D0BWE+6QbQc1UOSUMKHmpfQLT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKQ35BZp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=odAQ/Nkcor15pQQwwoppeTbtm9zHpKD+7uce8EYjKAsI/1izqEIrJwxF6OFK5A9fK89+G3Z/lJNVyNvfzlB1SL0i6bPoEPGLK5vq0wSYHELGtrm6KuHnf7zNaeS18ESjp/YcEZeGxRD80V2fw9pJ/G2Le8l0Q0m/rBzYf9RzWmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9jnRJ8D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKQ35BZp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB083C433F1;
-	Sun, 24 Mar 2024 22:54:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9jnRJ8D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02619C43394;
+	Sun, 24 Mar 2024 22:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320898;
-	bh=+PUu5RM10hKszLtQ9PhN2GrdWiBPvEkFSKTRdD/60jc=;
+	s=k20201202; t=1711320883;
+	bh=dNSXUR4F0PInX+6if0T8q039HcQHl4ObxNFwJQJpwJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qKQ35BZp0JWGG5fePZMLn09aaTXHK+JDcUfeQoo2kgMmAHJIVfdNFYUJglbyj+QGD
-	 qyeGZ1EZdZ6ssPNGWDkRfkhGtMKwyKQC8/8vwrlvRb67PIQzPB9UM+hJVNujymi4jy
-	 WuNysMwP8UjFDSDU6XIgAp4vhUtcQihjkTwHp9SpwmLFyl2pm3D6BLSVxLOKcanLmZ
-	 WgyVcZu6OX8u2L8GjtfgN75ePkwuns3OXR0+nU11OueuR0gwsQ9qAi+jG8KnFQl7+z
-	 1i+goupkWhw8Ej8qdh2tIHcOb7JoyLuQVvOR6TIQ8TyD8rT7ecw2TEESHfIg5Bhw0Q
-	 VhaR/7wf5c31g==
+	b=n9jnRJ8DsMV1fvWG2b3FSek9GpSxKurLN2hsNVbyA9VSictXL7bli5MjS2QugQJzD
+	 jkqsg9okdH8rYqoSA2RIThvkQC8l7GmKPAolMxQpJHCcd08k0VIyB0Qy/ow/gdriai
+	 zYB/GIE8N6Btsx54shpN3sdmwBXmLTFoomHXBERQc/6rBo/Q7ZOei2a9WTykFcp+CX
+	 YdRuyQPM7PGecvwVC7bMtagEakzBSKJ6OK8C7EcLzCjCsw/TnOfgyM1+wk8AgR1DzT
+	 wTcsaj+32B4rLD1DVeOaf5JtX5uCmQlE6Oq5TqsOqd461FxtVIugNakl1oz+yXOxej
+	 PDNLYFpfXUPsg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	kernel test robot <lkp@intel.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
+Cc: Adam Skladowski <a39.skl@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 461/713] powerpc: Force inlining of arch_vmap_p{u/m}d_supported()
-Date: Sun, 24 Mar 2024 18:43:07 -0400
-Message-ID: <20240324224720.1345309-462-sashal@kernel.org>
+Subject: [PATCH 6.7 447/713] dt-bindings: msm: qcom, mdss: Include ommited fam-b compatible
+Date: Sun, 24 Mar 2024 18:42:53 -0400
+Message-ID: <20240324224720.1345309-448-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,63 +49,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Adam Skladowski <a39.skl@gmail.com>
 
-[ Upstream commit c5aebb53b32460bc52680dd4e2a2f6b84d5ea521 ]
+[ Upstream commit 3b63880de42bd3cb79c2a99949135a8f2441c088 ]
 
-arch_vmap_pud_supported() and arch_vmap_pmd_supported() are
-expected to constant-fold to false when RADIX is not enabled.
+During conversion 28nm-hpm-fam-b compat got lost, add it.
 
-Force inlining in order to avoid following failure which
-leads to unexpected call of non-existing pud_set_huge() and
-pmd_set_huge() on powerpc 8xx.
-
-In function 'pud_huge_tests',
-    inlined from 'debug_vm_pgtable' at mm/debug_vm_pgtable.c:1399:2:
-./arch/powerpc/include/asm/vmalloc.h:9:33: warning: inlining failed in call to 'arch_vmap_pud_supported.isra': call is unlikely and code size would grow [-Winline]
-    9 | #define arch_vmap_pud_supported arch_vmap_pud_supported
-      |                                 ^~~~~~~~~~~~~~~~~~~~~~~
-./arch/powerpc/include/asm/vmalloc.h:10:20: note: in expansion of macro 'arch_vmap_pud_supported'
-   10 | static inline bool arch_vmap_pud_supported(pgprot_t prot)
-      |                    ^~~~~~~~~~~~~~~~~~~~~~~
-./arch/powerpc/include/asm/vmalloc.h:9:33: note: called from here
-    9 | #define arch_vmap_pud_supported arch_vmap_pud_supported
-mm/debug_vm_pgtable.c:458:14: note: in expansion of macro 'arch_vmap_pud_supported'
-  458 |         if (!arch_vmap_pud_supported(args->page_prot) ||
-      |              ^~~~~~~~~~~~~~~~~~~~~~~
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402131836.OU1TDuoi-lkp@intel.com/
-Fixes: 8309c9d71702 ("powerpc: inline huge vmap supported functions")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/bbd84ad52bf377e8d3b5865a906f2dc5d99964ba.1707832677.git.christophe.leroy@csgroup.eu
+Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
+Fixes: f7d46c5efee2 ("dt-bindings: display/msm: split qcom, mdss bindings")
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Patchwork: https://patchwork.freedesktop.org/patch/575290/
+Link: https://lore.kernel.org/r/20240121194221.13513-4-a39.skl@gmail.com
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/vmalloc.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/display/msm/qcom,mdss.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/include/asm/vmalloc.h b/arch/powerpc/include/asm/vmalloc.h
-index 4c69ece52a31e..59ed89890c902 100644
---- a/arch/powerpc/include/asm/vmalloc.h
-+++ b/arch/powerpc/include/asm/vmalloc.h
-@@ -7,14 +7,14 @@
- #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
- 
- #define arch_vmap_pud_supported arch_vmap_pud_supported
--static inline bool arch_vmap_pud_supported(pgprot_t prot)
-+static __always_inline bool arch_vmap_pud_supported(pgprot_t prot)
- {
- 	/* HPT does not cope with large pages in the vmalloc area */
- 	return radix_enabled();
- }
- 
- #define arch_vmap_pmd_supported arch_vmap_pmd_supported
--static inline bool arch_vmap_pmd_supported(pgprot_t prot)
-+static __always_inline bool arch_vmap_pmd_supported(pgprot_t prot)
- {
- 	return radix_enabled();
- }
+diff --git a/Documentation/devicetree/bindings/display/msm/qcom,mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,mdss.yaml
+index 0999ea07f47bb..e4576546bf0db 100644
+--- a/Documentation/devicetree/bindings/display/msm/qcom,mdss.yaml
++++ b/Documentation/devicetree/bindings/display/msm/qcom,mdss.yaml
+@@ -127,6 +127,7 @@ patternProperties:
+           - qcom,dsi-phy-20nm
+           - qcom,dsi-phy-28nm-8226
+           - qcom,dsi-phy-28nm-hpm
++          - qcom,dsi-phy-28nm-hpm-fam-b
+           - qcom,dsi-phy-28nm-lp
+           - qcom,hdmi-phy-8084
+           - qcom,hdmi-phy-8660
 -- 
 2.43.0
 
