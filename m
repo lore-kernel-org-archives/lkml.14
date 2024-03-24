@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115022081FD;
-	Sun, 24 Mar 2024 23:05:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F093137923;
+	Sun, 24 Mar 2024 23:05:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321542; cv=none; b=RsVMFW8g340lsRJ1PMKIXIv2OYUThvCnb7CEop9cxTU+a6E4KY8wfL7ugEbTLj81wNx2R2rw9M6P7q+pbYFBO04Kv86rZ2FozUopSUNFeeRg5dxFgfjiBA+r7eu8UW/L7OXUYR6OAOnNav2icl6FUlfFp2EYzqsnhMl8Doz1xKA=
+	t=1711321543; cv=none; b=Hf4c12VrMqiSArJ4KUIli9HIPRONNuFKtp1ruR2//N972P3eJLtM8vRVdQB33yysrCjCDtTNWE76adZMP57l/JoU/hqN6NrL8Qsr/xFBl/5KswPA9ltlEzJ5JkWA1qyQF+urmgUFvUCGIO3YNeiV9aQPlJJZtvzFBtZwwM5O1LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321542; c=relaxed/simple;
-	bh=qDdkBp52whbIdsEQJeQ73Fo2VF9QAYIUfc9LlJxEzNg=;
+	s=arc-20240116; t=1711321543; c=relaxed/simple;
+	bh=y5w/BJhZ9ZAo7JQPzIZug2Ac9FBly8WTfC9ZuWIKE8w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a8QKTuHv84MVU+x+Y0wPJN/+w34+h3TRE5Gd7LH7RdVh3P5y1+v9fz5VdLMeKMkN8LwvsywM4Vvg2jdKDYyh7x3y9n1fYLLqJQ/SFbQQcoayhjJIhF+qNTcVkuBTbfrCRX2Rrid2FhFhIJbejPZgzWuSYQ+Ipi1keOU8G5aaUbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EkavrFOP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rwYn7lRwCCqAqx7aYfhvZU88s/T83jjWEBSlteAf76pekDcI9FWdj6CLXB2nk4ugET0RuN+/mDMe0NVZ/FStzU+NDR/mfDGFRM3LbHENaIyKo6DbreqKjp8xHnUYNianlSqAMIvUgx2XuwJ5K43NGtCE3gr2pEHQtKHk3H/UFeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAV/67AB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EkavrFOP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02B8CC43399;
-	Sun, 24 Mar 2024 23:05:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAV/67AB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C22F3C43390;
+	Sun, 24 Mar 2024 23:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321540;
-	bh=qDdkBp52whbIdsEQJeQ73Fo2VF9QAYIUfc9LlJxEzNg=;
+	s=k20201202; t=1711321542;
+	bh=y5w/BJhZ9ZAo7JQPzIZug2Ac9FBly8WTfC9ZuWIKE8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EkavrFOPD3c+kGhuHZ05GESqdLg+sToYSKhUjoWO0YXSycXpcOgN/AAfbwSWlnT6B
-	 C/yVfhynkGDc6Wpajei9cYrAMPvESgDYeAwlOmAqqS0khYFP5xgb2m3+f1drWI88+Z
-	 tU1Bb6ysrGdrq07pUYSKS4G9TfBAY6lgf+PjVD1mI/CMpSDZKa+0VIAqx+2YLuIqn2
-	 HTzZ86GscvPSdWO3AOOcoW3XQep1tcE8C0H16PMZmlDzCOF434TPtgVItkgJjPDDiY
-	 Xc8CJE58jgv0y99bhyYIsyb266P4U4bpO6BwfSzT/hn2ml/Uq9OXy7ePaFc7lxa+W3
-	 8Y5X7Whxw5JYQ==
+	b=TAV/67AB6cj4AnmwbP4BdzqBuJ1gvuZ8A/xbFUudD5SWWeUb/MIK3Hga6op8XsyTN
+	 KlhjRjGZwRJFhe/dv6WCKXNAYSP+YYPBfmgIOCa1AAdTemQROHS8O60r4bvl6P6XLL
+	 UyMXGV+r3MRUbj1rN6kLmHuE/o4j+LxY1t43hJEK3GaCrKEAZkFO9jkkMhtPf0OMfz
+	 L8M1fNJrZU9OUJWrY0MWvFpJ/03Lm+E77PKvAsDLmiimVbrcxHPDfWGNln3UhIvMWm
+	 fQfkPKKKb/wOLGzvcVWYXqTbjMvk3OBpx0vip7QadVnnsm3vPZAVOVkXvL33VBS5eo
+	 HMXiwLK3QXzwg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+Cc: Liu Ying <victor.liu@nxp.com>,
 	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 268/638] ARM: dts: imx6dl-yapp4: Move the internal switch PHYs under the switch node
-Date: Sun, 24 Mar 2024 18:55:05 -0400
-Message-ID: <20240324230116.1348576-269-sashal@kernel.org>
+Subject: [PATCH 6.6 270/638] arm64: dts: imx8mp-evk: Fix hdmi@3d node
+Date: Sun, 24 Mar 2024 18:55:07 -0400
+Message-ID: <20240324230116.1348576-271-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,97 +44,121 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: Liu Ying <victor.liu@nxp.com>
 
-[ Upstream commit 79978bff2e4b8e05ebdf5fc3ee6b794002393484 ]
+[ Upstream commit 0ff08803eca417dfa9372194bebf3d1b1f501f98 ]
 
-We identified that the PHYs actually do not work since commit 7da7b84fee58
-("ARM: dts: imx6dl-yapp4: Move phy reset into switch node") as
-a coincidence of several circumstances.
+The hdmi@3d node's compatible string is "adi,adv7535" instead of
+"adi,adv7533" or "adi,adv751*".
 
-The reset signal is kept asserted by a pull-down resistor on the board
-unless it is deasserted by GPIO from the SoC. This is to keep the switch
-dead until it is configured properly by the kernel and user space.
+Fix the hdmi@3d node by means of:
+* Use default register addresses for "cec", "edid" and "packet", because
+  there is no need to use a non-default address map.
+* Add missing interrupt related properties.
+* Drop "adi,input-*" properties which are only valid for adv751*.
+* Add VEXT_3V3 fixed regulator.
+* Add "*-supply" properties, since most are required.
+* Fix label names - s/adv7533/adv7535/.
 
-Prior to the referenced commit the switch was reset by the FEC driver
-and the reset GPIO was actively deasserted. The mdio-bus was scanned
-and the attached switch and its PHYs were found and configured.
-
-With the referenced commit the switch is reset by the qca8k driver.
-Because of another bug in the qca8k driver, functionality of the reset
-pin depends on its pre-kernel configuration. See commit c44fc98f0a8f
-("net: dsa: qca8k: fix illegal usage of GPIO")
-
-The problem did not appear until we removed support for the switch
-and configuration of its reset pin from the bootloader.
-
-To fix that, properly describe the internal mdio-bus configuration of
-the qca8334 switch. The PHYs are internal to the switch and sit on its
-internal mdio-bus.
-
-Fixes: 7da7b84fee58 ("ARM: dts: imx6dl-yapp4: Move phy reset into switch node")
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Fixes: 65344b9bed3a ("arm64: dts: imx8mp-evk: Add HDMI support")
+Signed-off-by: Liu Ying <victor.liu@nxp.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi | 23 ++++++++++++-------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 33 +++++++++++++-------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
-index d2b3e09eb7df8..c32ea040fecdd 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
-@@ -117,14 +117,6 @@ mdio {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+index cc9d468b43ab8..92f8cc05fe9da 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+@@ -23,7 +23,7 @@ hdmi-connector {
  
--		phy_port2: phy@1 {
--			reg = <1>;
--		};
--
--		phy_port3: phy@2 {
--			reg = <2>;
--		};
--
- 		switch@10 {
- 			compatible = "qca,qca8334";
- 			reg = <0x10>;
-@@ -149,15 +141,30 @@ fixed-link {
- 				eth2: port@2 {
- 					reg = <2>;
- 					label = "eth2";
-+					phy-mode = "internal";
- 					phy-handle = <&phy_port2>;
- 				};
- 
- 				eth1: port@3 {
- 					reg = <3>;
- 					label = "eth1";
-+					phy-mode = "internal";
- 					phy-handle = <&phy_port3>;
- 				};
+ 		port {
+ 			hdmi_connector_in: endpoint {
+-				remote-endpoint = <&adv7533_out>;
++				remote-endpoint = <&adv7535_out>;
  			};
-+
-+			mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				phy_port2: ethernet-phy@1 {
-+					reg = <1>;
-+				};
-+
-+				phy_port3: ethernet-phy@2 {
-+					reg = <2>;
-+				};
-+			};
  		};
  	};
- };
+@@ -107,6 +107,13 @@ reg_usdhc2_vmmc: regulator-usdhc2 {
+ 		enable-active-high;
+ 	};
+ 
++	reg_vext_3v3: regulator-vext-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VEXT_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "wm8960-audio";
+@@ -342,7 +349,7 @@ BUCK4 {
+ 				regulator-always-on;
+ 			};
+ 
+-			BUCK5 {
++			reg_buck5: BUCK5 {
+ 				regulator-name = "BUCK5";
+ 				regulator-min-microvolt = <1650000>;
+ 				regulator-max-microvolt = <1950000>;
+@@ -393,14 +400,16 @@ &i2c2 {
+ 
+ 	hdmi@3d {
+ 		compatible = "adi,adv7535";
+-		reg = <0x3d>, <0x3c>, <0x3e>, <0x3f>;
+-		reg-names = "main", "cec", "edid", "packet";
++		reg = <0x3d>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
+ 		adi,dsi-lanes = <4>;
+-		adi,input-depth = <8>;
+-		adi,input-colorspace = "rgb";
+-		adi,input-clock = "1x";
+-		adi,input-style = <1>;
+-		adi,input-justification = "evenly";
++		avdd-supply = <&reg_buck5>;
++		dvdd-supply = <&reg_buck5>;
++		pvdd-supply = <&reg_buck5>;
++		a2vdd-supply = <&reg_buck5>;
++		v3p3-supply = <&reg_vext_3v3>;
++		v1p2-supply = <&reg_buck5>;
+ 
+ 		ports {
+ 			#address-cells = <1>;
+@@ -409,7 +418,7 @@ ports {
+ 			port@0 {
+ 				reg = <0>;
+ 
+-				adv7533_in: endpoint {
++				adv7535_in: endpoint {
+ 					remote-endpoint = <&dsi_out>;
+ 				};
+ 			};
+@@ -417,7 +426,7 @@ adv7533_in: endpoint {
+ 			port@1 {
+ 				reg = <1>;
+ 
+-				adv7533_out: endpoint {
++				adv7535_out: endpoint {
+ 					remote-endpoint = <&hdmi_connector_in>;
+ 				};
+ 			};
+@@ -502,7 +511,7 @@ port@1 {
+ 			reg = <1>;
+ 
+ 			dsi_out: endpoint {
+-				remote-endpoint = <&adv7533_in>;
++				remote-endpoint = <&adv7535_in>;
+ 				data-lanes = <1 2 3 4>;
+ 			};
+ 		};
 -- 
 2.43.0
 
