@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F141F1DF0E5;
-	Sun, 24 Mar 2024 22:56:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A254514A609;
+	Sun, 24 Mar 2024 22:57:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321001; cv=none; b=T+5tYwSbomD5dLZlxxK7NNbj3uPf9Bj0WXky6d0MoWu1rsKD3Dja3eKZ4gL/H17MKMQy61LuMLJ0P69FtpSbaOfzfw5IhxUYsrnY3vSOQbQDCvzCWj78+9VbKnTHaVhrQzBMzIUsxQ6CrAcg0FjX3wBy/dV4SoiqOPpFmATUBHc=
+	t=1711321023; cv=none; b=AfB6RxsEsAp4aM4i6vpej4KtshPJsJUyShDdQz3UQsuSjhSD0MBKFkfvoZ/1B2s9dBCbEVx5GyLWerpUgS5efJLfbNstVusk13ZINUsuPTk1etR4/NqMIO9NDD2GqXUuvEahWYCNNx9CbKCUYHTkI++Nql1KIoUont8TRxetWJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321001; c=relaxed/simple;
-	bh=0YEcVCzwFnO9xkjbSpQTe/cq3xstYc6uRljyZtwnVUw=;
+	s=arc-20240116; t=1711321023; c=relaxed/simple;
+	bh=scIDcklIrfROK4gOZUhY8/qPGwXweUlY6K4UoaZMNgs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=USJAgHI4IcTx6PBArbVADRyuJJy0TtzX+zi3ZI+RJd+hvCf2YEzh4NkEVzHrfxysMtaCwtV4LAjJ1tesq6Jj7wMgJ8HXl9YePXehEYMy7Rm2j9ykvSnPEx66JkSfcgR1vn5PtNGw0amsLUWgCZAukUM6TM6j4q6QMseA9kaCCeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sGCehZq8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SeIZWzdw1GxcNGPXKLkYijaRMPq5AlvhcMpbzd5D7B4RQqOcYp++Pt6RfkbVgPnqpF0BjPOkKixJkjVbrmmus/8Ff8nWSsz+T6fH2S8baUUiGRgVGh8zBZQ+jURrBjsfG/qohNPuHhj6GahYGqwnhm/ZgW7am2t9QEx9jciNvuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohTPWT7e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sGCehZq8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39D38C43394;
-	Sun, 24 Mar 2024 22:56:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohTPWT7e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E97C433C7;
+	Sun, 24 Mar 2024 22:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320999;
-	bh=0YEcVCzwFnO9xkjbSpQTe/cq3xstYc6uRljyZtwnVUw=;
+	s=k20201202; t=1711321022;
+	bh=scIDcklIrfROK4gOZUhY8/qPGwXweUlY6K4UoaZMNgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sGCehZq8zWuU33VGQxhWFnYw/RB11MCutyKOpCKOVjdhV+hbZqFEByGAF/SZbAKi+
-	 7RtRzp2gEuK6jXo0ILm/qYiJ6lbejRueWbi9bomjQIX1vD0t5KeCa8dvZOGh3jZGFy
-	 IP7T5Uvh2n54xA4Ns7/JJuPRgqihvKq1zFE3vjQpebCTacq+49SqUbqsxxtpSCfyV4
-	 wneD16rJ/zf22FMfE5rkbJ9+Fq5V67w6OL/4lHsmWsUHxpQw7RNiJWqU1+vAU6awQt
-	 vmS6PGFRZCan/+pC4UTXgaynNFrgHMY69lwHGeF1+Whdor4tdKbpW6GJcP7y5mREE+
-	 4GOZNPpU34xPA==
+	b=ohTPWT7e/3tlJhan+NXoFf9McbhI4NIxVYcKa0zshg1tIBN7jCGen/ebBiY9c5REH
+	 aWD53CAcMGBJ0MWIHZB3ryQsq6DyWgZU9DKejVPY1L9lopPi+jvfVQwK530/obXgG/
+	 6kmrLuAia8j6qXGoRcsjqsgGbosV1ZVqtsAkiqE9FM7oUZaEcmbKOToIjf8YBSGIcH
+	 5Pj+DdKGw2qOqsDiHi5t/Jrh/KD9BAdDq9u253QYu+c61fsTWwM/3u+jjPwfIgT4zh
+	 XBORkYJiwmIMJz3Og4HKkb52rQbgNI1yRs+hrVbIavYIX/lrkMa8/7SD2sUKfGUBpG
+	 i6mGYMtRNiQ3g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gergo Koteles <soyer@irl.hu>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Kees Cook <keescook@chromium.org>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 562/713] ALSA: hda/tas2781: restore power state after system_resume
-Date: Sun, 24 Mar 2024 18:44:48 -0400
-Message-ID: <20240324224720.1345309-563-sashal@kernel.org>
+Subject: [PATCH 6.7 585/713] scsi: bfa: Fix function pointer type mismatch for hcb_qe->cbfn
+Date: Sun, 24 Mar 2024 18:45:11 -0400
+Message-ID: <20240324224720.1345309-586-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,82 +49,150 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gergo Koteles <soyer@irl.hu>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 9fc91a6fe37c78ef301aed4251f7e50b8524e72d ]
+[ Upstream commit b69600231f751304db914c63b937f7098ed2895c ]
 
-After system_resume the amplifers will remain off, even if they were on
-before system_suspend.
+Some callback functions used here take a boolean argument, others take a
+status argument. This breaks KCFI type checking, so clang now warns about
+the function pointer cast:
 
-Use playback_started bool to save the playback state, and restore power
-state based on it.
+drivers/scsi/bfa/bfad_bsg.c:2138:29: error: cast from 'void (*)(void *, enum bfa_status)' to 'bfa_cb_cbfn_t' (aka 'void (*)(void *, enum bfa_boolean)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
 
-Fixes: 5be27f1e3ec9 ("ALSA: hda/tas2781: Add tas2781 HDA driver")
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Message-ID: <1742b61901781826f6e6212ffe1d21af542d134a.1709918447.git.soyer@irl.hu>
+Assuming the code is actually correct here and the callers always match the
+argument types of the callee, rework this to replace the explicit cast with
+a union of the two pointer types. This does not change the behavior of the
+code, so if something is actually broken here, a larger rework may be
+necessary.
+
+Fixes: 37ea0558b87a ("[SCSI] bfa: Added support to collect and reset fcport stats")
+Fixes: 3ec4f2c8bff2 ("[SCSI] bfa: Added support to configure QOS and collect stats.")
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20240222124433.2046570-1-arnd@kernel.org
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/tas2781_hda_i2c.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/scsi/bfa/bfa.h      |  9 ++++++++-
+ drivers/scsi/bfa/bfa_core.c |  4 +---
+ drivers/scsi/bfa/bfa_ioc.h  |  8 ++++++--
+ drivers/scsi/bfa/bfad_bsg.c | 11 ++++-------
+ 4 files changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
-index 4b6e22a4b0c11..5179b69e403ac 100644
---- a/sound/pci/hda/tas2781_hda_i2c.c
-+++ b/sound/pci/hda/tas2781_hda_i2c.c
-@@ -142,11 +142,13 @@ static void tas2781_hda_playback_hook(struct device *dev, int action)
- 		pm_runtime_get_sync(dev);
- 		mutex_lock(&tas_hda->priv->codec_lock);
- 		tasdevice_tuning_switch(tas_hda->priv, 0);
-+		tas_hda->priv->playback_started = true;
- 		mutex_unlock(&tas_hda->priv->codec_lock);
- 		break;
- 	case HDA_GEN_PCM_ACT_CLOSE:
- 		mutex_lock(&tas_hda->priv->codec_lock);
- 		tasdevice_tuning_switch(tas_hda->priv, 1);
-+		tas_hda->priv->playback_started = false;
- 		mutex_unlock(&tas_hda->priv->codec_lock);
+diff --git a/drivers/scsi/bfa/bfa.h b/drivers/scsi/bfa/bfa.h
+index 7bd2ba1ad4d11..f30fe324e6ecc 100644
+--- a/drivers/scsi/bfa/bfa.h
++++ b/drivers/scsi/bfa/bfa.h
+@@ -20,7 +20,6 @@
+ struct bfa_s;
  
- 		pm_runtime_mark_last_busy(dev);
-@@ -585,6 +587,7 @@ static void tasdev_fw_ready(const struct firmware *fmw, void *context)
- 	tasdevice_save_calibration(tas_priv);
+ typedef void (*bfa_isr_func_t) (struct bfa_s *bfa, struct bfi_msg_s *m);
+-typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
  
- 	tasdevice_tuning_switch(tas_hda->priv, 0);
-+	tas_hda->priv->playback_started = true;
+ /*
+  * Interrupt message handlers
+@@ -437,4 +436,12 @@ struct bfa_cb_pending_q_s {
+ 	(__qe)->data = (__data);				\
+ } while (0)
  
- out:
- 	mutex_unlock(&tas_hda->priv->codec_lock);
-@@ -750,6 +753,9 @@ static int tas2781_runtime_suspend(struct device *dev)
- 
- 	mutex_lock(&tas_hda->priv->codec_lock);
- 
-+	/* The driver powers up the amplifiers at module load time.
-+	 * Stop the playback if it's unused.
-+	 */
- 	if (tas_hda->priv->playback_started) {
- 		tasdevice_tuning_switch(tas_hda->priv, 1);
- 		tas_hda->priv->playback_started = false;
-@@ -789,7 +795,8 @@ static int tas2781_system_suspend(struct device *dev)
- 	mutex_lock(&tas_hda->priv->codec_lock);
- 
- 	/* Shutdown chip before system suspend */
--	tasdevice_tuning_switch(tas_hda->priv, 1);
-+	if (tas_hda->priv->playback_started)
-+		tasdevice_tuning_switch(tas_hda->priv, 1);
- 
- 	mutex_unlock(&tas_hda->priv->codec_lock);
- 
-@@ -821,6 +828,10 @@ static int tas2781_system_resume(struct device *dev)
- 	 * calibrated data inside algo.
- 	 */
- 	tasdevice_apply_calibration(tas_hda->priv);
++#define bfa_pending_q_init_status(__qe, __cbfn, __cbarg, __data) do {	\
++	bfa_q_qe_init(&((__qe)->hcb_qe.qe));			\
++	(__qe)->hcb_qe.cbfn_status = (__cbfn);			\
++	(__qe)->hcb_qe.cbarg = (__cbarg);			\
++	(__qe)->hcb_qe.pre_rmv = BFA_TRUE;			\
++	(__qe)->data = (__data);				\
++} while (0)
 +
-+	if (tas_hda->priv->playback_started)
-+		tasdevice_tuning_switch(tas_hda->priv, 0);
-+
- 	mutex_unlock(&tas_hda->priv->codec_lock);
+ #endif /* __BFA_H__ */
+diff --git a/drivers/scsi/bfa/bfa_core.c b/drivers/scsi/bfa/bfa_core.c
+index 6846ca8f7313c..3438d0b8ba062 100644
+--- a/drivers/scsi/bfa/bfa_core.c
++++ b/drivers/scsi/bfa/bfa_core.c
+@@ -1907,15 +1907,13 @@ bfa_comp_process(struct bfa_s *bfa, struct list_head *comp_q)
+ 	struct list_head		*qe;
+ 	struct list_head		*qen;
+ 	struct bfa_cb_qe_s	*hcb_qe;
+-	bfa_cb_cbfn_status_t	cbfn;
  
- 	return 0;
+ 	list_for_each_safe(qe, qen, comp_q) {
+ 		hcb_qe = (struct bfa_cb_qe_s *) qe;
+ 		if (hcb_qe->pre_rmv) {
+ 			/* qe is invalid after return, dequeue before cbfn() */
+ 			list_del(qe);
+-			cbfn = (bfa_cb_cbfn_status_t)(hcb_qe->cbfn);
+-			cbfn(hcb_qe->cbarg, hcb_qe->fw_status);
++			hcb_qe->cbfn_status(hcb_qe->cbarg, hcb_qe->fw_status);
+ 		} else
+ 			hcb_qe->cbfn(hcb_qe->cbarg, BFA_TRUE);
+ 	}
+diff --git a/drivers/scsi/bfa/bfa_ioc.h b/drivers/scsi/bfa/bfa_ioc.h
+index 933a1c3890ff5..5e568d6d7b261 100644
+--- a/drivers/scsi/bfa/bfa_ioc.h
++++ b/drivers/scsi/bfa/bfa_ioc.h
+@@ -361,14 +361,18 @@ struct bfa_reqq_wait_s {
+ 	void	*cbarg;
+ };
+ 
+-typedef void	(*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
++typedef void (*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
++typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
+ 
+ /*
+  * Generic BFA callback element.
+  */
+ struct bfa_cb_qe_s {
+ 	struct list_head	qe;
+-	bfa_cb_cbfn_t	cbfn;
++	union {
++		bfa_cb_cbfn_status_t	cbfn_status;
++		bfa_cb_cbfn_t		cbfn;
++	};
+ 	bfa_boolean_t	once;
+ 	bfa_boolean_t	pre_rmv;	/* set for stack based qe(s) */
+ 	bfa_status_t	fw_status;	/* to access fw status in comp proc */
+diff --git a/drivers/scsi/bfa/bfad_bsg.c b/drivers/scsi/bfa/bfad_bsg.c
+index d4ceca2d435ee..54bd11e6d5933 100644
+--- a/drivers/scsi/bfa/bfad_bsg.c
++++ b/drivers/scsi/bfa/bfad_bsg.c
+@@ -2135,8 +2135,7 @@ bfad_iocmd_fcport_get_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_cb_pending_q_s cb_qe;
+ 
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, &iocmd->stats);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	iocmd->status = bfa_fcport_get_stats(&bfad->bfa, &cb_qe);
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
+@@ -2159,7 +2158,7 @@ bfad_iocmd_fcport_reset_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_cb_pending_q_s cb_qe;
+ 
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp, &fcomp, NULL);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
+ 
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	iocmd->status = bfa_fcport_clear_stats(&bfad->bfa, &cb_qe);
+@@ -2443,8 +2442,7 @@ bfad_iocmd_qos_get_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
+ 
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, &iocmd->stats);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
+ 
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
+@@ -2474,8 +2472,7 @@ bfad_iocmd_qos_reset_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
+ 
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, NULL);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
+ 
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
 -- 
 2.43.0
 
