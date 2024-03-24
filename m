@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811E223A750;
-	Sun, 24 Mar 2024 23:19:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128E5152DE9;
+	Sun, 24 Mar 2024 23:19:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322346; cv=none; b=VyRLiLuHM+bzuiV5ZotxENk/Yf8VUOXy9tab/T8p0VD8KNaKiTMsMOZ1I4gh+3nalu3JkZ/NQmTUTzMfjApkXI/lCsCjHisMNMeDON9bKnuZ5MPU8bgGwjMXnLDF4WnzLLxgjDw8v8WUH8ASlvpgxu1hhYYrvTSOSQHt9NmSrTM=
+	t=1711322362; cv=none; b=C2WIjd5NSnNcVasHMSEX0A7mUpnpiKmehRQQCjwm23TK2WIaynvS8Sbc0FkCJCP/sRP9IHLcMrVIqN23S56xquAMbsjukGgckGmB118lOVIu/gwD5ITMYJO5sIlCf4k9D1ftX0xQOlx+3sew1IWy4nKFRngpxWN7BEW1bE+lAcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322346; c=relaxed/simple;
-	bh=wq1NU6b4yh8pENqwqKMnwfMu+mw7da+AGRLm2NEShzU=;
+	s=arc-20240116; t=1711322362; c=relaxed/simple;
+	bh=bzfXREwOsuRCxCub4DpF9VFnWW+ntxmyOsgP9pbWYWo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O9GSie7RIVWWaHkP8HtkB2HZFJM5mm12aaFUdoNpfjBpgw1UlRTVhiVPS68V2eH1QrZstHiQwYT/P74GaaXuU7PYLcODN+Rcf2DGy3sUuvr3EBamKSGnDMQzhfiLfVt0bXdBFtcbxTfVgi9V9NZ9pY2DCmnfaxtOvDra1tvGLEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=moIqEMx5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=bAu5OW38fMlNCJwJMIFd6Zv4BonopWuUXQqxrjGyJGxQEaVRP5stsX+wb/JP0BFNUkNrd2TbY20TOh+rm59Rl8nkvGzmRDZsp8Uv9BVt2sSirLVA1vCYS7uYhzpPcFoFNSXkk9K8t8CumhCfiHbXNFWiVrfsAvHwJi1Z3uFrBuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K9la6Wlf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="moIqEMx5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2BC2C43390;
-	Sun, 24 Mar 2024 23:19:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K9la6Wlf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F35DC433F1;
+	Sun, 24 Mar 2024 23:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322346;
-	bh=wq1NU6b4yh8pENqwqKMnwfMu+mw7da+AGRLm2NEShzU=;
+	s=k20201202; t=1711322360;
+	bh=bzfXREwOsuRCxCub4DpF9VFnWW+ntxmyOsgP9pbWYWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=moIqEMx58NXEVwq/aorsMFv6lPE69dOmZ/HVy1FFTYfKUPSBky45n0CsyyBu4oMDf
-	 a25TpxdG4OKIgn5IvH7FkTk1XgLYzyW0QBrttGuCBpFSTtze//pgxaBD6s26nQkFUg
-	 Yzzs6et9T/zS2gwtSV6XgA4SSVchi62X0EPJoGhTRKgkOpDGP0vIYKKTAN+0eF6g2z
-	 oY5HaA8cPB5rCGDE1L/6YKgI5vpDs0HXmcq0zMWlxnlT0J9mn0KPXYrhhuiWuZIZg0
-	 /aau7CkqOiMYmjQIL3Kyki2RkrMnYV185fiSVE4oRYXpEFmYAZWiVp8i19yFMIXqt+
-	 Zke5UxGtoJ1Yw==
+	b=K9la6WlftqtEEY+6o2txtKTqkmgWBaJfSro302YwXvTH6lxKsBoJzAYSHHDfmrXRi
+	 LUHuh6lccuTQWJ1vITvTkHMgRZfoOngiowxz83YPDVS5YH3qSGCySjWAwneGCeVCY2
+	 gKqbkgux/FKCnt4en3gEK+2n6cCYTiuPFDChyadjws9wbvsbY2JgsRakdXKJRh0MxY
+	 8oQCSYlMM/gwpBVHklzL3T7yjMhsUbRytnKMExnAMB54rRZo0uI8MniJj+EBhjcaic
+	 JIl5zeevtPs5+rYbEM1OxJbqKQHDVjim7gp1YCtviDdGV6e72dNr0lzaJJxNYtaMTe
+	 Ffo/uIAQgbtvQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Srujana Challa <schalla@marvell.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 428/451] octeontx2-af: recover CPT engine when it gets fault
-Date: Sun, 24 Mar 2024 19:11:44 -0400
-Message-ID: <20240324231207.1351418-429-sashal@kernel.org>
+Subject: [PATCH 6.1 443/451] net: dsa: mt7530: fix handling of all link-local frames
+Date: Sun, 24 Mar 2024 19:11:59 -0400
+Message-ID: <20240324231207.1351418-444-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,201 +44,142 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Srujana Challa <schalla@marvell.com>
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-[ Upstream commit 07ea567d84cdf0add274d66db7c02b55b818d517 ]
+[ Upstream commit 69ddba9d170bdaee1dc0eb4ced38d7e4bb7b92af ]
 
-When CPT engine has uncorrectable errors, it will get halted and
-must be disabled and re-enabled. This patch adds code for the same.
+Currently, the MT753X switches treat frames with :01-0D and :0F MAC DAs as
+regular multicast frames, therefore flooding them to user ports.
 
-Signed-off-by: Srujana Challa <schalla@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Stable-dep-of: a88e0f936ba9 ("octeontx2: Detect the mbox up or down message via register")
+On page 205, section "8.6.3 Frame filtering" of the active standard, IEEE
+Std 802.1Q™-2022, it is stated that frames with 01:80:C2:00:00:00-0F as MAC
+DA must only be propagated to C-VLAN and MAC Bridge components. That means
+VLAN-aware and VLAN-unaware bridges. On the switch designs with CPU ports,
+these frames are supposed to be processed by the CPU (software). So we make
+the switch only forward them to the CPU port. And if received from a CPU
+port, forward to a single port. The software is responsible of making the
+switch conform to the latter by setting a single port as destination port
+on the special tag.
+
+This switch intellectual property cannot conform to this part of the
+standard fully. Whilst the REV_UN frame tag covers the remaining :04-0D and
+:0F MAC DAs, it also includes :22-FF which the scope of propagation is not
+supposed to be restricted for these MAC DAs.
+
+Set frames with :01-03 MAC DAs to be trapped to the CPU port(s). Add a
+comment for the remaining MAC DAs.
+
+Note that the ingress port must have a PVID assigned to it for the switch
+to forward untagged frames. A PVID is set by default on VLAN-aware and
+VLAN-unaware ports. However, when the network interface that pertains to
+the ingress port is attached to a vlan_filtering enabled bridge, the user
+can remove the PVID assignment from it which would prevent the link-local
+frames from being trapped to the CPU port. I am yet to see a way to forward
+link-local frames while preventing other untagged frames from being
+forwarded too.
+
+Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/marvell/octeontx2/af/rvu_cpt.c   | 110 +++++++++++++-----
- 1 file changed, 80 insertions(+), 30 deletions(-)
+ drivers/net/dsa/mt7530.c | 37 +++++++++++++++++++++++++++++++++----
+ drivers/net/dsa/mt7530.h | 13 +++++++++++++
+ 2 files changed, 46 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c
-index 38bbae5d9ae05..1ed16ce515bb1 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c
-@@ -37,34 +37,60 @@
- 	(_rsp)->free_sts_##etype = free_sts;                        \
- })
- 
--static irqreturn_t rvu_cpt_af_flt_intr_handler(int irq, void *ptr)
-+static irqreturn_t cpt_af_flt_intr_handler(int vec, void *ptr)
- {
- 	struct rvu_block *block = ptr;
- 	struct rvu *rvu = block->rvu;
- 	int blkaddr = block->addr;
--	u64 reg0, reg1, reg2;
--
--	reg0 = rvu_read64(rvu, blkaddr, CPT_AF_FLTX_INT(0));
--	reg1 = rvu_read64(rvu, blkaddr, CPT_AF_FLTX_INT(1));
--	if (!is_rvu_otx2(rvu)) {
--		reg2 = rvu_read64(rvu, blkaddr, CPT_AF_FLTX_INT(2));
--		dev_err_ratelimited(rvu->dev,
--				    "Received CPTAF FLT irq : 0x%llx, 0x%llx, 0x%llx",
--				     reg0, reg1, reg2);
--	} else {
--		dev_err_ratelimited(rvu->dev,
--				    "Received CPTAF FLT irq : 0x%llx, 0x%llx",
--				     reg0, reg1);
-+	u64 reg, val;
-+	int i, eng;
-+	u8 grp;
-+
-+	reg = rvu_read64(rvu, blkaddr, CPT_AF_FLTX_INT(vec));
-+	dev_err_ratelimited(rvu->dev, "Received CPTAF FLT%d irq : 0x%llx", vec, reg);
-+
-+	i = -1;
-+	while ((i = find_next_bit((unsigned long *)&reg, 64, i + 1)) < 64) {
-+		switch (vec) {
-+		case 0:
-+			eng = i;
-+			break;
-+		case 1:
-+			eng = i + 64;
-+			break;
-+		case 2:
-+			eng = i + 128;
-+			break;
-+		}
-+		grp = rvu_read64(rvu, blkaddr, CPT_AF_EXEX_CTL2(eng)) & 0xFF;
-+		/* Disable and enable the engine which triggers fault */
-+		rvu_write64(rvu, blkaddr, CPT_AF_EXEX_CTL2(eng), 0x0);
-+		val = rvu_read64(rvu, blkaddr, CPT_AF_EXEX_CTL(eng));
-+		rvu_write64(rvu, blkaddr, CPT_AF_EXEX_CTL(eng), val & ~1ULL);
-+
-+		rvu_write64(rvu, blkaddr, CPT_AF_EXEX_CTL2(eng), grp);
-+		rvu_write64(rvu, blkaddr, CPT_AF_EXEX_CTL(eng), val | 1ULL);
- 	}
--
--	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT(0), reg0);
--	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT(1), reg1);
--	if (!is_rvu_otx2(rvu))
--		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT(2), reg2);
-+	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT(vec), reg);
- 
- 	return IRQ_HANDLED;
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 86c410f9fef8c..07065c1af55e4 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -998,6 +998,21 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+ 	mutex_unlock(&priv->reg_mutex);
  }
  
-+static irqreturn_t rvu_cpt_af_flt0_intr_handler(int irq, void *ptr)
-+{
-+	return cpt_af_flt_intr_handler(CPT_AF_INT_VEC_FLT0, ptr);
-+}
-+
-+static irqreturn_t rvu_cpt_af_flt1_intr_handler(int irq, void *ptr)
-+{
-+	return cpt_af_flt_intr_handler(CPT_AF_INT_VEC_FLT1, ptr);
-+}
-+
-+static irqreturn_t rvu_cpt_af_flt2_intr_handler(int irq, void *ptr)
-+{
-+	return cpt_af_flt_intr_handler(CPT_10K_AF_INT_VEC_FLT2, ptr);
-+}
-+
- static irqreturn_t rvu_cpt_af_rvu_intr_handler(int irq, void *ptr)
++/* On page 205, section "8.6.3 Frame filtering" of the active standard, IEEE Std
++ * 802.1Q™-2022, it is stated that frames with 01:80:C2:00:00:00-0F as MAC DA
++ * must only be propagated to C-VLAN and MAC Bridge components. That means
++ * VLAN-aware and VLAN-unaware bridges. On the switch designs with CPU ports,
++ * these frames are supposed to be processed by the CPU (software). So we make
++ * the switch only forward them to the CPU port. And if received from a CPU
++ * port, forward to a single port. The software is responsible of making the
++ * switch conform to the latter by setting a single port as destination port on
++ * the special tag.
++ *
++ * This switch intellectual property cannot conform to this part of the standard
++ * fully. Whilst the REV_UN frame tag covers the remaining :04-0D and :0F MAC
++ * DAs, it also includes :22-FF which the scope of propagation is not supposed
++ * to be restricted for these MAC DAs.
++ */
+ static void
+ mt753x_trap_frames(struct mt7530_priv *priv)
  {
- 	struct rvu_block *block = ptr;
-@@ -119,8 +145,10 @@ static void cpt_10k_unregister_interrupts(struct rvu_block *block, int off)
- 	int i;
+@@ -1012,13 +1027,27 @@ mt753x_trap_frames(struct mt7530_priv *priv)
+ 		   MT753X_BPDU_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+ 		   MT753X_BPDU_CPU_ONLY);
  
- 	/* Disable all CPT AF interrupts */
--	for (i = 0; i < CPT_10K_AF_INT_VEC_RVU; i++)
--		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(i), 0x1);
-+	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(0), ~0ULL);
-+	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(1), ~0ULL);
-+	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(2), 0xFFFF);
+-	/* Trap LLDP frames with :0E MAC DA to the CPU port(s) and egress them
+-	 * VLAN-untagged.
++	/* Trap frames with :01 and :02 MAC DAs to the CPU port(s) and egress
++	 * them VLAN-untagged.
++	 */
++	mt7530_rmw(priv, MT753X_RGAC1, MT753X_R02_EG_TAG_MASK |
++		   MT753X_R02_PORT_FW_MASK | MT753X_R01_EG_TAG_MASK |
++		   MT753X_R01_PORT_FW_MASK,
++		   MT753X_R02_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
++		   MT753X_R02_PORT_FW(MT753X_BPDU_CPU_ONLY) |
++		   MT753X_R01_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
++		   MT753X_BPDU_CPU_ONLY);
 +
- 	rvu_write64(rvu, blkaddr, CPT_AF_RVU_INT_ENA_W1C, 0x1);
- 	rvu_write64(rvu, blkaddr, CPT_AF_RAS_INT_ENA_W1C, 0x1);
++	/* Trap frames with :03 and :0E MAC DAs to the CPU port(s) and egress
++	 * them VLAN-untagged.
+ 	 */
+ 	mt7530_rmw(priv, MT753X_RGAC2, MT753X_R0E_EG_TAG_MASK |
+-		   MT753X_R0E_PORT_FW_MASK,
++		   MT753X_R0E_PORT_FW_MASK | MT753X_R03_EG_TAG_MASK |
++		   MT753X_R03_PORT_FW_MASK,
+ 		   MT753X_R0E_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+-		   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY));
++		   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY) |
++		   MT753X_R03_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
++		   MT753X_BPDU_CPU_ONLY);
+ }
  
-@@ -151,7 +179,7 @@ static void cpt_unregister_interrupts(struct rvu *rvu, int blkaddr)
+ static int
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index a5b864fd7d60c..fa2afa67ceb07 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -71,12 +71,25 @@ enum mt753x_id {
+ #define  MT753X_BPDU_EG_TAG(x)		FIELD_PREP(MT753X_BPDU_EG_TAG_MASK, x)
+ #define  MT753X_BPDU_PORT_FW_MASK	GENMASK(2, 0)
  
- 	/* Disable all CPT AF interrupts */
- 	for (i = 0; i < CPT_AF_INT_VEC_RVU; i++)
--		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(i), 0x1);
-+		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(i), ~0ULL);
- 	rvu_write64(rvu, blkaddr, CPT_AF_RVU_INT_ENA_W1C, 0x1);
- 	rvu_write64(rvu, blkaddr, CPT_AF_RAS_INT_ENA_W1C, 0x1);
- 
-@@ -172,16 +200,31 @@ static int cpt_10k_register_interrupts(struct rvu_block *block, int off)
- {
- 	struct rvu *rvu = block->rvu;
- 	int blkaddr = block->addr;
-+	irq_handler_t flt_fn;
- 	int i, ret;
- 
- 	for (i = CPT_10K_AF_INT_VEC_FLT0; i < CPT_10K_AF_INT_VEC_RVU; i++) {
- 		sprintf(&rvu->irq_name[(off + i) * NAME_SIZE], "CPTAF FLT%d", i);
++/* Register for :01 and :02 MAC DA frame control */
++#define MT753X_RGAC1			0x28
++#define  MT753X_R02_EG_TAG_MASK		GENMASK(24, 22)
++#define  MT753X_R02_EG_TAG(x)		FIELD_PREP(MT753X_R02_EG_TAG_MASK, x)
++#define  MT753X_R02_PORT_FW_MASK	GENMASK(18, 16)
++#define  MT753X_R02_PORT_FW(x)		FIELD_PREP(MT753X_R02_PORT_FW_MASK, x)
++#define  MT753X_R01_EG_TAG_MASK		GENMASK(8, 6)
++#define  MT753X_R01_EG_TAG(x)		FIELD_PREP(MT753X_R01_EG_TAG_MASK, x)
++#define  MT753X_R01_PORT_FW_MASK	GENMASK(2, 0)
 +
-+		switch (i) {
-+		case CPT_10K_AF_INT_VEC_FLT0:
-+			flt_fn = rvu_cpt_af_flt0_intr_handler;
-+			break;
-+		case CPT_10K_AF_INT_VEC_FLT1:
-+			flt_fn = rvu_cpt_af_flt1_intr_handler;
-+			break;
-+		case CPT_10K_AF_INT_VEC_FLT2:
-+			flt_fn = rvu_cpt_af_flt2_intr_handler;
-+			break;
-+		}
- 		ret = rvu_cpt_do_register_interrupt(block, off + i,
--						    rvu_cpt_af_flt_intr_handler,
--						    &rvu->irq_name[(off + i) * NAME_SIZE]);
-+						    flt_fn, &rvu->irq_name[(off + i) * NAME_SIZE]);
- 		if (ret)
- 			goto err;
--		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), 0x1);
-+		if (i == CPT_10K_AF_INT_VEC_FLT2)
-+			rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), 0xFFFF);
-+		else
-+			rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), ~0ULL);
- 	}
+ /* Register for :03 and :0E MAC DA frame control */
+ #define MT753X_RGAC2			0x2c
+ #define  MT753X_R0E_EG_TAG_MASK		GENMASK(24, 22)
+ #define  MT753X_R0E_EG_TAG(x)		FIELD_PREP(MT753X_R0E_EG_TAG_MASK, x)
+ #define  MT753X_R0E_PORT_FW_MASK	GENMASK(18, 16)
+ #define  MT753X_R0E_PORT_FW(x)		FIELD_PREP(MT753X_R0E_PORT_FW_MASK, x)
++#define  MT753X_R03_EG_TAG_MASK		GENMASK(8, 6)
++#define  MT753X_R03_EG_TAG(x)		FIELD_PREP(MT753X_R03_EG_TAG_MASK, x)
++#define  MT753X_R03_PORT_FW_MASK	GENMASK(2, 0)
  
- 	ret = rvu_cpt_do_register_interrupt(block, off + CPT_10K_AF_INT_VEC_RVU,
-@@ -208,8 +251,8 @@ static int cpt_register_interrupts(struct rvu *rvu, int blkaddr)
- {
- 	struct rvu_hwinfo *hw = rvu->hw;
- 	struct rvu_block *block;
-+	irq_handler_t flt_fn;
- 	int i, offs, ret = 0;
--	char irq_name[16];
- 
- 	if (!is_block_implemented(rvu->hw, blkaddr))
- 		return 0;
-@@ -226,13 +269,20 @@ static int cpt_register_interrupts(struct rvu *rvu, int blkaddr)
- 		return cpt_10k_register_interrupts(block, offs);
- 
- 	for (i = CPT_AF_INT_VEC_FLT0; i < CPT_AF_INT_VEC_RVU; i++) {
--		snprintf(irq_name, sizeof(irq_name), "CPTAF FLT%d", i);
-+		sprintf(&rvu->irq_name[(offs + i) * NAME_SIZE], "CPTAF FLT%d", i);
-+		switch (i) {
-+		case CPT_AF_INT_VEC_FLT0:
-+			flt_fn = rvu_cpt_af_flt0_intr_handler;
-+			break;
-+		case CPT_AF_INT_VEC_FLT1:
-+			flt_fn = rvu_cpt_af_flt1_intr_handler;
-+			break;
-+		}
- 		ret = rvu_cpt_do_register_interrupt(block, offs + i,
--						    rvu_cpt_af_flt_intr_handler,
--						    irq_name);
-+						    flt_fn, &rvu->irq_name[(offs + i) * NAME_SIZE]);
- 		if (ret)
- 			goto err;
--		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), 0x1);
-+		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), ~0ULL);
- 	}
- 
- 	ret = rvu_cpt_do_register_interrupt(block, offs + CPT_AF_INT_VEC_RVU,
+ enum mt753x_bpdu_port_fw {
+ 	MT753X_BPDU_FOLLOW_MFC,
 -- 
 2.43.0
 
