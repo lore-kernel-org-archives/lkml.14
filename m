@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67991474DE;
-	Sun, 24 Mar 2024 23:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBC11487E5;
+	Sun, 24 Mar 2024 23:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322100; cv=none; b=QtL3jGBZfSJ605dJUmb2UJfmvqbYWL+cV0weq8KHRC+5yRXTqQp3pgC48zhgcqRBAW8VpHRQyfPzUhd7gNce/mI+sMNOclakpEjxEbRM1b9sq9rARnRby+j96JgQYT8BF/9N/p64r5ojWKyePXxXb1mGaAeoQKUqHkX1w0HNEFY=
+	t=1711322113; cv=none; b=KG40Gm2La6NnDWnsN/JKfrFSs9u7RsspnDX13ats+w3uhJdYkeQNiqOXlKnfKgflhXC1GHXuXpEnoP89y9joE3Z8jc/vsDhle0XTg0lwdI7r2orykB4iPJUnFuW5/K4odLCyOb1VMuwoKItYSAPgCBhOObcvgdfzIQbubu/0Ujk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322100; c=relaxed/simple;
-	bh=Z4UyzSmW/8uH+6qS/EING1uxO1ywCsCPu6rZOXSGNbA=;
+	s=arc-20240116; t=1711322113; c=relaxed/simple;
+	bh=tIcxQzNmFWHotMJD6l4C8jJZ1FEs83u8EzsH84cKWSU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=McGuCyI/3PzjmdjYctxnucKBU/C0s5xRFQsqJRzjiifk36md0tWbckhTkxf9Q0KGKDqii35TZ/9872Vo6bgzPF6yo0FriY2MXGVKz0lE6QR47IcEr3uepmeLUNU6MpnUOEBCRqk5lXVl1/YfrR4XWUKJIUgNJU5JzKlHCVqBtx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3G9dm70; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nhBUFFeY7Hw5wsq0ZZ5XtCp+ERCxzAXtcuNiRWhRk9T+p4lxFX4H/0PCgle200v40kAAHLCBJZz8/5c87IFx1yoqMDZ47Vs/MeDBMpWnM5rmyhrt2Zye6aaTsFLU1luyNFCUsilSKL4nXMkTBe4FuSxq88VHzivvRzBb0AUJChM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jET9BDOG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3G9dm70"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26AC5C43394;
-	Sun, 24 Mar 2024 23:14:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jET9BDOG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BC84C43390;
+	Sun, 24 Mar 2024 23:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322099;
-	bh=Z4UyzSmW/8uH+6qS/EING1uxO1ywCsCPu6rZOXSGNbA=;
+	s=k20201202; t=1711322112;
+	bh=tIcxQzNmFWHotMJD6l4C8jJZ1FEs83u8EzsH84cKWSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K3G9dm70vAxB/D4sNv5K6BNtEl+ctWisXWKB3W0baENDqQAGzrDamXuQ/zXagve05
-	 HG6U5bmJmuYL4L+MNavny0eauzWBl1PHdRZ58K5r35yCfVg9ZU2oEjI52cpWXkLnF/
-	 RTVjqsb8AUpa+IKik0raPNno3DDCRZFABAO70lNn1LTCTxOfauwnNuf9ltuN/RKBHd
-	 GXSIwKPPSqW5cy69tvQquxszskiA43qfL1rrjqH4lt/sc2q2uEnT+pu7k5VH5rUn/T
-	 HZU4/H8uXzoPYwScbpWO4/KQ+Zufb6hmxzNexRKcY9a+WgsIhAoMho5IDqc56jfJNY
-	 sWZnXagKAP9qw==
+	b=jET9BDOGuqMrfOpa/zEqxGPj5/vnBHm+U4OKrk70RwOaiExc/T2t6Nr8fOZ3JlnhJ
+	 jGqrgZf8gOrLW0ac9lA0hrQ7JPfSEsndBhHXDPZ56euRhjKc7qWNOsFmhEBQ5YorUV
+	 QR3oa+ym0XzL7jgbQCTB5mzgL9kGiWzpW3NYtE8nETSXdANNbe1BTV+3s9hbB0Cw9l
+	 OfYkswP/Azz/9C3n9eE9jxuHVhhI8TK8kBvpQuK0VNOQLUlIFHZvSNtQW75fNe+mX8
+	 EFWcxYmD2tnQ9O7j2UVA7ZatFi+9bqekxyHiW26IZilknZ+PnLgH+CmjyONwpoxtI1
+	 lxQS4aaYDrShQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 6.1 174/451] pstore: inode: Only d_invalidate() is needed
-Date: Sun, 24 Mar 2024 19:07:30 -0400
-Message-ID: <20240324231207.1351418-175-sashal@kernel.org>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.1 187/451] mmc: wmt-sdmmc: remove an incorrect release_mem_region() call in the .remove function
+Date: Sun, 24 Mar 2024 19:07:43 -0400
+Message-ID: <20240324231207.1351418-188-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -47,63 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kees Cook <keescook@chromium.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit a43e0fc5e9134a46515de2f2f8d4100b74e50de3 ]
+[ Upstream commit ae5004a40a262d329039b99b62bd3fe7645b66ad ]
 
-Unloading a modular pstore backend with records in pstorefs would
-trigger the dput() double-drop warning:
+This looks strange to call release_mem_region() in a remove function
+without any request_mem_region() in the probe or "struct resource"
+somewhere.
 
-  WARNING: CPU: 0 PID: 2569 at fs/dcache.c:762 dput.part.0+0x3f3/0x410
+So remove the corresponding code.
 
-Using the combo of d_drop()/dput() (as mentioned in
-Documentation/filesystems/vfs.rst) isn't the right approach here, and
-leads to the reference counting problem seen above. Use d_invalidate()
-and update the code to not bother checking for error codes that can
-never happen.
-
-Suggested-by: Alexander Viro <viro@zeniv.linux.org.uk>
-Fixes: 609e28bb139e ("pstore: Remove filesystem records when backend is unregistered")
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Fixes: 3a96dff0f828 ("mmc: SD/MMC Host Controller for Wondermedia WM8505/WM8650")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/bb0bb1ed1e18de55e8c0547625bde271e64b8c31.1708983064.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/pstore/inode.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/mmc/host/wmt-sdmmc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index 05ddfb37b15e1..ea3f104371d62 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -306,7 +306,6 @@ int pstore_put_backend_records(struct pstore_info *psi)
+diff --git a/drivers/mmc/host/wmt-sdmmc.c b/drivers/mmc/host/wmt-sdmmc.c
+index 9aa3027ca25e4..f2abebb2d8574 100644
+--- a/drivers/mmc/host/wmt-sdmmc.c
++++ b/drivers/mmc/host/wmt-sdmmc.c
+@@ -886,7 +886,6 @@ static int wmt_mci_remove(struct platform_device *pdev)
  {
- 	struct pstore_private *pos, *tmp;
- 	struct dentry *root;
--	int rc = 0;
+ 	struct mmc_host *mmc;
+ 	struct wmt_mci_priv *priv;
+-	struct resource *res;
+ 	u32 reg_tmp;
  
- 	root = psinfo_lock_root();
- 	if (!root)
-@@ -316,11 +315,8 @@ int pstore_put_backend_records(struct pstore_info *psi)
- 		list_for_each_entry_safe(pos, tmp, &records_list, list) {
- 			if (pos->record->psi == psi) {
- 				list_del_init(&pos->list);
--				rc = simple_unlink(d_inode(root), pos->dentry);
--				if (WARN_ON(rc))
--					break;
--				d_drop(pos->dentry);
--				dput(pos->dentry);
-+				d_invalidate(pos->dentry);
-+				simple_unlink(d_inode(root), pos->dentry);
- 				pos->dentry = NULL;
- 			}
- 		}
-@@ -328,7 +324,7 @@ int pstore_put_backend_records(struct pstore_info *psi)
+ 	mmc = platform_get_drvdata(pdev);
+@@ -914,9 +913,6 @@ static int wmt_mci_remove(struct platform_device *pdev)
+ 	clk_disable_unprepare(priv->clk_sdmmc);
+ 	clk_put(priv->clk_sdmmc);
  
- 	inode_unlock(d_inode(root));
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	release_mem_region(res->start, resource_size(res));
+-
+ 	mmc_free_host(mmc);
  
--	return rc;
-+	return 0;
- }
- 
- /*
+ 	dev_info(&pdev->dev, "WMT MCI device removed\n");
 -- 
 2.43.0
 
