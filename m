@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211D11E61E6;
-	Sun, 24 Mar 2024 22:53:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C68A1E587C;
+	Sun, 24 Mar 2024 22:53:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320836; cv=none; b=j151zVkc30AalDqkAhQDb7BLIduuFwqv00clbwRwsCJKrUTSSyJ8sIrLn9zXtJLhV9hHhobyO3ya6ISrnkrvA0XH5wJMTui/46AQODiiU3VdWzRxPofGxire8GH3vf4deNWQtYuhj/gQuvHXkrBMkjYr1aFq2eIj0YRG1UPr6ZQ=
+	t=1711320834; cv=none; b=oq1qP7kHNvNrmxuyc2aoHF2GrBvdEXwQ4YK6dlME3Ep05blqMkx2KYmhHlFHlfCTUN1EUHdJ5fH3ZvVyNe7jun0bC6wxY0+KkCMKQitomLdrziSBShnE9VwDBxV84UV9UbsWkANCf0WR4B6GjsO3aWmcEvMeuw1+H91bgSbbdaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320836; c=relaxed/simple;
-	bh=m30wCZoV79dMVizD2Gw9W9KU/gugpO1FkI8VgtWsYKY=;
+	s=arc-20240116; t=1711320834; c=relaxed/simple;
+	bh=qgWoNH854Qu3UszLlD0IS5mUljLWw9/aZEUoPzuQfUA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=THjkqX1bpWEr9hTl2OFecX/MXBIsZgAb4dSuHrck8WsC622tpGWKvnBdy6L4TN+OPLTcjLBw/VwnTDeoEcSzLO7kjXzW6/a4EVT9L2+qYS71QuxivUwQ8aEj7S6dWrvA929zg2RxHreyGOPEq+eoS+xwb0dHdUL9cfelsDNZu4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Su5kOIGj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jpYP/qxKw4ZSPxKcnXNUc0zOA6H1GPVxj+3GBYluqplEuU315Fq4QUiCsrFOdfYdRnZ3nU2PBoEOiLHZRN5lV5VH0XZA5vCAVInw9ifPAZeRkmoGqf+wzKsoCIdey3LacIdzAlFx7pyBaklxMjPUCeYPyOcHxVr+jQKKmfoOrm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orqM0RQ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Su5kOIGj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A18AC43394;
-	Sun, 24 Mar 2024 22:53:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orqM0RQ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 386C4C433A6;
+	Sun, 24 Mar 2024 22:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320836;
-	bh=m30wCZoV79dMVizD2Gw9W9KU/gugpO1FkI8VgtWsYKY=;
+	s=k20201202; t=1711320833;
+	bh=qgWoNH854Qu3UszLlD0IS5mUljLWw9/aZEUoPzuQfUA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Su5kOIGj/4DHtUq3oH5jmLYesX3+nGmsOcmm/u5uvTyH/NNHoqxov2oELEjH593KQ
-	 UiZuogk+4THLVnobxeSSrxVHK6ArDkPnwh4+oPudl9Xn2u0jC+VUtnTSHRELTajUEs
-	 2PaPedbcg8pxyAJcHKP3Ig2r0OE6SxteZSXhbXINKS5vmewAz2oJCPKHuvUQXTYQyi
-	 dZoPpfmj7o62EQnUOXuMer69KyMIclpYusdWvm22DysUGnvljf720pU9Q/UmLeQwQF
-	 XlmQCv7Y7nKjnwdtQw4oDIT3GFv/eFXg/eEYZc99ACXh4UsTSHnIvarJq3ruw2iI9C
-	 1oWZXznws6cQg==
+	b=orqM0RQ0MIbu+9hWp/PTOIlq2C0aWr0tecQ+I/I6st74AszDtA4Nipz96d/C4NdEq
+	 pqaCTbzttctLrzy6orEoPFqhiWTmxK+QGgrQjAhv5s2pws23H2dWKYuMaPYJkLesuN
+	 ueUOo9A43aR6QUwaXAgMXhCNtHUJjuXaOEMiGVRZ4Gi79z++4kiVGuqcHwn6E2rezE
+	 WQQCt/670yNmTuo6z9lPY0GcxjThdKB8L9fDHJWjl2ymfu7brCMq83tjy5GNuApPLo
+	 YnIrapHeCVZ9pI4OlWRkhg0G4sx0PqhTYUDPKO/5jhB3OR+VGzs5ptTPdjPtMtZA8X
+	 LvA4d5UpzBUZg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-	Quentin Schulz <foss+kernel@0leil.net>,
-	Heiko Stuebner <heiko@sntech.de>,
+Cc: Harry Wentland <harry.wentland@amd.com>,
+	Simon Ser <contact@emersion.fr>,
+	Melissa Wen <mwen@igalia.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 401/713] drm/rockchip: lvds: do not overwrite error code
-Date: Sun, 24 Mar 2024 18:42:07 -0400
-Message-ID: <20240324224720.1345309-402-sashal@kernel.org>
+Subject: [PATCH 6.7 398/713] drm: Don't treat 0 as -1 in drm_fixp2int_ceil
+Date: Sun, 24 Mar 2024 18:42:04 -0400
+Message-ID: <20240324224720.1345309-399-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,36 +50,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+From: Harry Wentland <harry.wentland@amd.com>
 
-[ Upstream commit 79b09453c4e369ca81cfb670d0136d089e3b92f0 ]
+[ Upstream commit cf8837d7204481026335461629b84ac7f4538fa5 ]
 
-ret variable stores the return value of drm_of_find_panel_or_bridge
-which can return error codes different from EPROBE_DEFER. Therefore,
-let's just return that error code instead of forcing it to EPROBE_DEFER.
+Unit testing this in VKMS shows that passing 0 into
+this function returns -1, which is highly counter-
+intuitive. Fix it by checking whether the input is
+>= 0 instead of > 0.
 
-Fixes: 34cc0aa25456 ("drm/rockchip: Add support for Rockchip Soc LVDS")
-Cc: Quentin Schulz <foss+kernel@0leil.net>
-Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231120-rk-lvds-defer-msg-v2-1-9c59a5779cf9@theobroma-systems.com
+Fixes: 64566b5e767f ("drm: Add drm_fixp_from_fraction and drm_fixp2int_ceil")
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Reviewed-by: Simon Ser <contact@emersion.fr>
+Reviewed-by: Melissa Wen <mwen@igalia.com>
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231108163647.106853-2-harry.wentland@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/rockchip_lvds.c | 1 -
- 1 file changed, 1 deletion(-)
+ include/drm/drm_fixed.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-index f0f47e9abf5aa..17d8fc797151a 100644
---- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-@@ -578,7 +578,6 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		goto err_put_port;
- 	} else if (ret) {
- 		DRM_DEV_ERROR(dev, "failed to find panel and bridge node\n");
--		ret = -EPROBE_DEFER;
- 		goto err_put_port;
- 	}
- 	if (lvds->panel)
+diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
+index 6ea339d5de088..0c9f917a4d4be 100644
+--- a/include/drm/drm_fixed.h
++++ b/include/drm/drm_fixed.h
+@@ -95,7 +95,7 @@ static inline int drm_fixp2int_round(s64 a)
+ 
+ static inline int drm_fixp2int_ceil(s64 a)
+ {
+-	if (a > 0)
++	if (a >= 0)
+ 		return drm_fixp2int(a + DRM_FIXED_ALMOST_ONE);
+ 	else
+ 		return drm_fixp2int(a - DRM_FIXED_ALMOST_ONE);
 -- 
 2.43.0
 
