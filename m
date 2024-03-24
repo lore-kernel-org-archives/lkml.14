@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8CB27551E;
-	Sun, 24 Mar 2024 23:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8A6275530;
+	Sun, 24 Mar 2024 23:36:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323364; cv=none; b=A1KGhCDSXtGSqa8HRChgxjHJgktiPPzFX+oVgCZtqrRZqEaUJ3EvZQKM2FktJiGgWzZeUENT7ho+3rjbfoNDExSLjTT9Qp5lAHHXqonNmKsnLapECmpByPqz0oi7vYj4mgyQ/9qqDDUtKZs+EVXj9f/ieOCzjX+rPXQNJ83C4+c=
+	t=1711323366; cv=none; b=NbTBJ8hsNmRLY6ALPQfwHkEfJxTITdSi3/jK1VNBJq+teqL2fiJf4QL/dfm2/RLf87esQmUfjGj9LfVsU/tp2zQhSKglpy2YwpbiKxmfo1p8fcRWS0WsdcMTxo4ORqDsriNvJkg5ZRl3clkpLbWOfNFT8mHOE0NrX2ZNEERod+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323364; c=relaxed/simple;
-	bh=tSvBj+9fAZrbZVQNSGQIlc8MnLUWAHjaR1WzNmMgebM=;
+	s=arc-20240116; t=1711323366; c=relaxed/simple;
+	bh=H8zz5ZcHDr1oPz9K7S6HANhlVpDysfbtPJ+bRmjTSj4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CtplJrlCJW+nbygsSKoqe+UwWzhXTvqbC4FhmtYA2MvTmFTwQnfNf/9fdK2UokY8LI8buFyW9Lycm1MaIr34R21DMIfnlAeHtdhNmgtDGaB2swjJyOuRwwqx4+elp0I/8at0OaqMfDvMc8A8MG+G61F6eW9EiTVHBevuia8mFhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUnooDrj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Qg1OCZL1qiPxXImo52dxdgTvXEWw6oYv6CvEFq2vfav5XI+LZNBn+aYVsuJEyHQrkj5QU5DAkAoJWMljU9vzQSIpPd9PBrIst55xlSjTYXTIF2d1C4JPjqonYM0m6gfKqUVc9LKKM/J9aU8VSoDabb1O54k8hUtGajCxCmwKdvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qWaNirCG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUnooDrj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4C4C43394;
-	Sun, 24 Mar 2024 23:36:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qWaNirCG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A464EC43394;
+	Sun, 24 Mar 2024 23:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323363;
-	bh=tSvBj+9fAZrbZVQNSGQIlc8MnLUWAHjaR1WzNmMgebM=;
+	s=k20201202; t=1711323365;
+	bh=H8zz5ZcHDr1oPz9K7S6HANhlVpDysfbtPJ+bRmjTSj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IUnooDrjBp3qpM0cZHfdlzKnyBHBxHTQ226CEmv4RL0QZcE0JosafliPs18BC/5h9
-	 eVN0XcLQrIYtdN7IPqpzESjdIoj6HJsbSb2UhBvubzaOoaSty75+mEdH8vVm15iEj5
-	 DS0j6hxxONBXkfmH/2b3Eb5Lzkxn/NSXRMavcztsmmL52q6kjNysnz1w12R9Ey7oIr
-	 2HCEaLDM4X1WGIiGmcAtAvLdR0CBj763SrOJ/SutsGRWSZKCIjHtQ83cpCetdYWwYW
-	 8bIoc6llgCOvpYHI8ZMQnwU98vsaisCwjpLGADXQ0OLX92q6I0lMQqSoDiN/GOsy/a
-	 iW3YEl5YGaL4A==
+	b=qWaNirCGEWxC2D0uQ31qz/TNsYDN5EHBBmbYcU+NfwUztlIHbAA1DBZkh1FBAzgWR
+	 nG6C7Px0ZHrC+KyyanubBnjWn6NKf638P7V9aZw4nqqNgrPjE7AOnzdHiSM3YDPsf5
+	 +kB/PLYRVE+uXYEqvyl4kglOW9t6GJArnMuf4zKN+x0ePgzWsvBc2tU4Ybq49etRRx
+	 hm2Q47r1tlsjNVGwKdUqRJIGG+LwPL+cPH6OoMICc3/lKeAe1J8MN9Ql2OG0LvI7yR
+	 egr4TlWU0D71E/bczZ3ron9DiZIEIweqRzVcw/JuxDnXApli8LGhaHM4mlLVgfzPF0
+	 RD43i1RVkBuHA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	Guillaume Nault <gnault@redhat.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 063/317] cpufreq: mediatek-hw: Wait for CPU supplies before probing
-Date: Sun, 24 Mar 2024 19:30:43 -0400
-Message-ID: <20240324233458.1352854-64-sashal@kernel.org>
+Subject: [PATCH 5.15 065/317] inet_diag: annotate data-races around inet_diag_table[]
+Date: Sun, 24 Mar 2024 19:30:45 -0400
+Message-ID: <20240324233458.1352854-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -46,72 +47,60 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 788715b5f21c6455264fe00a1779e61bec407fe2 ]
+[ Upstream commit e50e10ae5d81ddb41547114bfdc5edc04422f082 ]
 
-Before proceeding with the probe and enabling frequency scaling for the
-CPUs, make sure that all supplies feeding the CPUs have probed.
+inet_diag_lock_handler() reads inet_diag_table[proto] locklessly.
 
-This fixes an issue observed on MT8195-Tomato where if the
-mediatek-cpufreq-hw driver enabled the hardware (by writing to
-REG_FREQ_ENABLE) before the SPMI controller driver (spmi-mtk-pmif),
-behind which lies the big CPU supply, probed the platform would hang
-shortly after with "rcu: INFO: rcu_preempt detected stalls on
-CPUs/tasks" being printed in the log.
+Use READ_ONCE()/WRITE_ONCE() annotations to avoid potential issues.
 
-Fixes: 4855e26bcf4d ("cpufreq: mediatek-hw: Add support for CPUFREQ HW")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Fixes: d523a328fb02 ("[INET]: Fix inet_diag dead-lock regression")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/mediatek-cpufreq-hw.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ net/ipv4/inet_diag.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
-index 8a4e52b22eed7..4a7478a91fb61 100644
---- a/drivers/cpufreq/mediatek-cpufreq-hw.c
-+++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
-@@ -13,6 +13,7 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
+diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
+index 09cabed358fd0..3aeba9e2b22cd 100644
+--- a/net/ipv4/inet_diag.c
++++ b/net/ipv4/inet_diag.c
+@@ -57,7 +57,7 @@ static const struct inet_diag_handler *inet_diag_lock_handler(int proto)
+ 		return ERR_PTR(-ENOENT);
+ 	}
  
- #define LUT_MAX_ENTRIES			32U
-@@ -268,7 +269,23 @@ static struct cpufreq_driver cpufreq_mtk_hw_driver = {
- static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
- {
- 	const void *data;
--	int ret;
-+	int ret, cpu;
-+	struct device *cpu_dev;
-+	struct regulator *cpu_reg;
-+
-+	/* Make sure that all CPU supplies are available before proceeding. */
-+	for_each_possible_cpu(cpu) {
-+		cpu_dev = get_cpu_device(cpu);
-+		if (!cpu_dev)
-+			return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
-+					     "Failed to get cpu%d device\n", cpu);
-+
-+		cpu_reg = devm_regulator_get_optional(cpu_dev, "cpu");
-+		if (IS_ERR(cpu_reg))
-+			return dev_err_probe(&pdev->dev, PTR_ERR(cpu_reg),
-+					     "CPU%d regulator get failed\n", cpu);
-+	}
-+
+-	if (!inet_diag_table[proto])
++	if (!READ_ONCE(inet_diag_table[proto]))
+ 		sock_load_diag_module(AF_INET, proto);
  
- 	data = of_device_get_match_data(&pdev->dev);
- 	if (!data)
+ 	mutex_lock(&inet_diag_table_mutex);
+@@ -1419,7 +1419,7 @@ int inet_diag_register(const struct inet_diag_handler *h)
+ 	mutex_lock(&inet_diag_table_mutex);
+ 	err = -EEXIST;
+ 	if (!inet_diag_table[type]) {
+-		inet_diag_table[type] = h;
++		WRITE_ONCE(inet_diag_table[type], h);
+ 		err = 0;
+ 	}
+ 	mutex_unlock(&inet_diag_table_mutex);
+@@ -1436,7 +1436,7 @@ void inet_diag_unregister(const struct inet_diag_handler *h)
+ 		return;
+ 
+ 	mutex_lock(&inet_diag_table_mutex);
+-	inet_diag_table[type] = NULL;
++	WRITE_ONCE(inet_diag_table[type], NULL);
+ 	mutex_unlock(&inet_diag_table_mutex);
+ }
+ EXPORT_SYMBOL_GPL(inet_diag_unregister);
 -- 
 2.43.0
 
