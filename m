@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A4F27F080;
-	Sun, 24 Mar 2024 23:39:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E681791F9;
+	Sun, 24 Mar 2024 23:39:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323597; cv=none; b=UM2K6qOEirdr1fU61N0ikcOoCozozC7rWXKujW8L5S95IedYUqociXIS/wDbaXlMFfXRHNiTsgZlPtGI0p6ftid8a+99IsFfFXAHcLK9z9X3Zv0RAx8RIM65UhFm7QrKaPvaU8qVwCzL1rAYy2uqHAN9f4p3aE3ksnlk85eElSs=
+	t=1711323585; cv=none; b=JuI8tn96JSwem81MUm4Aui72xTybBhUN3MRdOs6zg3P1MNPcXT4HaMXxzvlk4n3AJCRkU3mNr8kQwdir6lCJbnvS20xmXrBy6dB5AWne5AcKlxbr8f2+bvCV80rmZ1/fyOKKeEzqkTeVTadcXvVCgkPdQxwQn6WPz/Ep4tqfq1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323597; c=relaxed/simple;
-	bh=sfT9wSuVWuPB4Vz7YsLj6pSlsKLmBKXhzCbIHB8bj9I=;
+	s=arc-20240116; t=1711323585; c=relaxed/simple;
+	bh=CBebaG+0xbdd5y6jn27EFF7OtljaxvopzEok4XjCYh4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IpzLnU0gfP85aoHZFFlY+021n+SURk/gmgdOUJnyM/ZD3LAWNhTDSaWxXCVDgdEbxxVOrBRurPTd5svb45xlxAFPyzJDXE0azqWabFtilIZlE0rxI7KFsgozSlHtBmuKiV5yJKSNaC8wOHUYpUcED3MIn2bwvN5t7u14aA2194c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2tvNlwt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LfQ9rVGFRWHGcXNIKoAoPWq3y2BXzXKKWiOh7bkKZWCwWugAA5s6FJSyj5NEYdT8GULMUPzEk70r1bjLpHXbg/baPnA3lzy0LM5mXRjC45C+VpVWtbDC+UmV9ht/JByzvShg/pqB2UdHF/W2522a3USkMI/bJz0mPdisQBaznAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s7oqBrbJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2tvNlwt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538ECC43399;
-	Sun, 24 Mar 2024 23:39:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s7oqBrbJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1593FC43399;
+	Sun, 24 Mar 2024 23:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323596;
-	bh=sfT9wSuVWuPB4Vz7YsLj6pSlsKLmBKXhzCbIHB8bj9I=;
+	s=k20201202; t=1711323584;
+	bh=CBebaG+0xbdd5y6jn27EFF7OtljaxvopzEok4XjCYh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K2tvNlwtQUK4OjNrUIWsGuyEpKIN8gAP7H4wmC+y48zcRDo5ckRCNEpgyzZbaRaHd
-	 EZAnhRkrUydi3cGNoSHmpLBcAHAKU4qoAoAZ6qqMVniWzsHjSwd/lrzbPJsOWFcvKT
-	 xNJZoUdUVNLQv5qh8xM2x8bbuylbuaRy1eyM8cPbvP9JLTjWvYFCmMGo37500IGhFv
-	 /tGAc/KcN2fs7bc9J5cq2U0WzQCRbB4rAsY76dHmJ4sLhEIzxCBxVowQejrAl+A6TS
-	 JYXfBFHbCMzNXOHxor8VHIwksx7IQBw8obHPq172RZTXy68TggTH2+MSXYqc0LRpJc
-	 gmvJrmjSBA6VQ==
+	b=s7oqBrbJffoZhOT0e30Tkr95EqYCoNABGe8xvubkndxKl/kKf+/VSvkR1RnoxpNzB
+	 t6YCflJzk60QZw3jvCL8klzHQwHkcBvKZZ8oGYMohHNpzYT4ht5YOG0E8Hl2gVXY5W
+	 8k1DsHJiP0Ydjzil6MTUqMUkcjfpyauE25kIC/66Ir9Krsa6JSyjc87aHwf4FrV+qC
+	 GInav06aRD+ndp/zG8LSTfO9lkEtKlBTXgkXxgES+HmdC42Rt3cOVgDJngdFsa5XDn
+	 Cwh6XCpwk0ijC4K4cN+uqLMwRcCH6KbdKUI6cRQIkohXn6+od/ZQ8hN/GUpeUz7Jr6
+	 wAwltp/hgaPOg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Felix Maurer <fmaurer@redhat.com>,
-	Shigeru Yoshida <syoshida@redhat.com>,
-	Breno Leitao <leitao@debian.org>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 302/317] hsr: Handle failures in module init
-Date: Sun, 24 Mar 2024 19:34:42 -0400
-Message-ID: <20240324233458.1352854-303-sashal@kernel.org>
+Subject: [PATCH 5.15 291/317] soc: fsl: dpio: fix kcalloc() argument order
+Date: Sun, 24 Mar 2024 19:34:31 -0400
+Message-ID: <20240324233458.1352854-292-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,59 +48,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Felix Maurer <fmaurer@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 3cf28cd492308e5f63ed00b29ea03ca016264376 ]
+[ Upstream commit 72ebb41b88f9d7c10c5e159e0507074af0a22fe2 ]
 
-A failure during registration of the netdev notifier was not handled at
-all. A failure during netlink initialization did not unregister the netdev
-notifier.
+A previous bugfix added a call to kcalloc(), which starting in gcc-14
+causes a harmless warning about the argument order:
 
-Handle failures of netdev notifier registration and netlink initialization.
-Both functions should only return negative values on failure and thereby
-lead to the hsr module not being loaded.
+drivers/soc/fsl/dpio/dpio-service.c: In function 'dpaa2_io_service_enqueue_multiple_desc_fq':
+drivers/soc/fsl/dpio/dpio-service.c:526:29: error: 'kcalloc' sizes specified with 'sizeof' in the earlier argument and not in the later argument [-Werror=calloc-transposed-args]
+  526 |         ed = kcalloc(sizeof(struct qbman_eq_desc), 32, GFP_KERNEL);
+      |                             ^~~~~~
+drivers/soc/fsl/dpio/dpio-service.c:526:29: note: earlier argument should specify number of elements, later size of each element
 
-Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
-Signed-off-by: Felix Maurer <fmaurer@redhat.com>
-Reviewed-by: Shigeru Yoshida <syoshida@redhat.com>
-Reviewed-by: Breno Leitao <leitao@debian.org>
-Link: https://lore.kernel.org/r/3ce097c15e3f7ace98fc7fd9bcbf299f092e63d1.1710504184.git.fmaurer@redhat.com
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Since the two are only multiplied, the order does not change the
+behavior, so just fix it now to shut up the compiler warning.
+
+Dmity independently came up with the same fix.
+
+Fixes: 5c4a5999b245 ("soc: fsl: dpio: avoid stack usage warning")
+Reported-by: Dmitry Antipov <dmantipov@yandex.ru>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/hsr/hsr_main.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/soc/fsl/dpio/dpio-service.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/hsr/hsr_main.c b/net/hsr/hsr_main.c
-index b099c31501509..257b50124cee5 100644
---- a/net/hsr/hsr_main.c
-+++ b/net/hsr/hsr_main.c
-@@ -148,14 +148,21 @@ static struct notifier_block hsr_nb = {
+diff --git a/drivers/soc/fsl/dpio/dpio-service.c b/drivers/soc/fsl/dpio/dpio-service.c
+index 779c319a4b820..6cdd2c517ba68 100644
+--- a/drivers/soc/fsl/dpio/dpio-service.c
++++ b/drivers/soc/fsl/dpio/dpio-service.c
+@@ -485,7 +485,7 @@ int dpaa2_io_service_enqueue_multiple_desc_fq(struct dpaa2_io *d,
+ 	struct qbman_eq_desc *ed;
+ 	int i, ret;
  
- static int __init hsr_init(void)
- {
--	int res;
-+	int err;
+-	ed = kcalloc(sizeof(struct qbman_eq_desc), 32, GFP_KERNEL);
++	ed = kcalloc(32, sizeof(struct qbman_eq_desc), GFP_KERNEL);
+ 	if (!ed)
+ 		return -ENOMEM;
  
- 	BUILD_BUG_ON(sizeof(struct hsr_tag) != HSR_HLEN);
- 
--	register_netdevice_notifier(&hsr_nb);
--	res = hsr_netlink_init();
-+	err = register_netdevice_notifier(&hsr_nb);
-+	if (err)
-+		return err;
-+
-+	err = hsr_netlink_init();
-+	if (err) {
-+		unregister_netdevice_notifier(&hsr_nb);
-+		return err;
-+	}
- 
--	return res;
-+	return 0;
- }
- 
- static void __exit hsr_exit(void)
 -- 
 2.43.0
 
