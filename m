@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812D31802C0;
-	Sun, 24 Mar 2024 23:48:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8B7181303;
+	Sun, 24 Mar 2024 23:47:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324081; cv=none; b=NpQ4Ff+FuCMgdly2zhp5HC+xzsqrGUb4ETtQFIkjflZZiK7JAEhBjjEpbHR7WhNsn6+VBEE7WnnIxRxe4qajPvxJc6mG6YMof+/Buj4SvT4rwlTQZgjhIlXR472XFVv55qQ/+uCPNjNWcNIBRFEkVnJ4w2Qqxn7W+CjqvIC0Dpw=
+	t=1711324075; cv=none; b=NBxpR6WTEnYgREjsQCKcdQNOp8bh2C2IX9XYZoy1p+qHrE8cfujd7+yXPKcpUfsAW8CjDxVZc0PgbDLY6FFz+DiXbDTVzGPMzELJSSI2TNogBeLvGXCDGkPO4d7d+0nI+MRTVAlmYUwK2+NLnkuLxeL9YSegSy/DoTW9uVXIr+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324081; c=relaxed/simple;
-	bh=jlq9gbxywDwNsqbzWZRis+/iVmpZIiTCgDSTxuMz0/E=;
+	s=arc-20240116; t=1711324075; c=relaxed/simple;
+	bh=8dXL1NGG6IxVREHyDsFoctPuUt9MiE7fpvULh0eGgbw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NelOyhFxWWt94SEBgUq3FxXHqzxvfCWSHLW+h2rM6uhbN2dcly4O0SDE6x/FhW66jRxTn7lDZ/LZCYakO1NIrnVLKjs//rgAAd4A0KvBofLEILQZ/1l/+hI2THC1TieTZ60Jup86bIQDLbIaJFQS7wc+E0HZbS40HONR9Bq9ou8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLQzYfrZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=R2tWlYN90Ex0KkAtHp3NW/HPeVh1UYsM9+QxEShMZB7Mdw5xGlZyqjfu23Vfvj1sW5cnLte5i+YZ9Kte+IbMojx703GnrWN1wAeLhEtuUo9RRXTLaMM3EWvwsbsC4prlgKXonqH3McdvTzUuby58Xre6/B2aZgqdKtLlJ5PcVWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hF+WwWJS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLQzYfrZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB364C433C7;
-	Sun, 24 Mar 2024 23:47:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hF+WwWJS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40526C43399;
+	Sun, 24 Mar 2024 23:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324080;
-	bh=jlq9gbxywDwNsqbzWZRis+/iVmpZIiTCgDSTxuMz0/E=;
+	s=k20201202; t=1711324074;
+	bh=8dXL1NGG6IxVREHyDsFoctPuUt9MiE7fpvULh0eGgbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KLQzYfrZ0xE//iAFvYOQxtNoiMUzp+SzbTkkDVOcwiozP3mmBE5uiPn/BBrbqKKT2
-	 Sz0Ma+/OJlMDtzMpPd9vk5huil2TyfzBWeqonKUdMnKmfVWh0Imrc4OfY720Q0zRWX
-	 F8zzSO9c4Zf1ZOLanlmfsp0cyHuo+PO6ACor6Qln2Lr0Nye7aIbUJBMsTKRPVdEiMf
-	 l4y4RHIbJG0YlzeZkTZ8ct9PrXrp6SCtnarYS5FmuCdwcD7RtKBA6exFhmuWln2FjQ
-	 WDhhwwnY7laJMlzOtvHLpUbg/mRXCbYJIJXVhSjEtzxdKwudGLSYcQ2aganvcj9RIu
-	 FiUg39YIx+Oaw==
+	b=hF+WwWJSzYltf+TXTLWJlbmHW+S/E2BTrnSOT/HJJS0kdu7LWmV2C72o5asCzNlS6
+	 ZyN2cjx/kq9iDklRxOWuviq2LIUKOcQ0VeDVRCwkrPg70jvGY0WBwoyTHEfaQzovFi
+	 iNA6Ob2EP2myv/0GHdm5SV7KcVflk9hjL0Lc92BZ027qSrwpdOONqtVgEQBjzg/ZGG
+	 sCC7MkKM+fmKbS/Hh41r7U8Av/5c534TZRfxF/XUyPJNWSdYgGduGjPpGpca0Ahor6
+	 +44G1+pMLeh/je3Z2NcTjSRzHDCe6JAD9jxSNUTlnqLFuDr6SSxxKf3usTxJJKzoo0
+	 lJyaq5OQA18DA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+Cc: Shiming Cheng <shiming.cheng@mediatek.com>,
+	Lena Wang <lena.wang@mediatek.com>,
+	David Ahern <dsahern@kernel.org>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 080/183] net: kcm: fix incorrect parameter validation in the kcm_getsockopt) function
-Date: Sun, 24 Mar 2024 19:44:53 -0400
-Message-ID: <20240324234638.1355609-81-sashal@kernel.org>
+Subject: [PATCH 5.4 074/183] ipv6: fib6_rules: flush route cache when rule is changed
+Date: Sun, 24 Mar 2024 19:44:47 -0400
+Message-ID: <20240324234638.1355609-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,42 +50,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+From: Shiming Cheng <shiming.cheng@mediatek.com>
 
-[ Upstream commit 3ed5f415133f9b7518fbe55ba9ae9a3f5e700929 ]
+[ Upstream commit c4386ab4f6c600f75fdfd21143f89bac3e625d0d ]
 
-The 'len' variable can't be negative when assigned the result of
-'min_t' because all 'min_t' parameters are cast to unsigned int,
-and then the minimum one is chosen.
+When rule policy is changed, ipv6 socket cache is not refreshed.
+The sock's skb still uses a outdated route cache and was sent to
+a wrong interface.
 
-To fix the logic, check 'len' as read from 'optlen',
-where the types of relevant variables are (signed) int.
+To avoid this error we should update fib node's version when
+rule is changed. Then skb's route will be reroute checked as
+route cache version is already different with fib node version.
+The route cache is refreshed to match the latest rule.
 
-Fixes: ab7ac4eb9832 ("kcm: Kernel Connection Multiplexor module")
-Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Fixes: 101367c2f8c4 ("[IPV6]: Policy Routing Rules")
+Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+Signed-off-by: Lena Wang <lena.wang@mediatek.com>
+Reviewed-by: David Ahern <dsahern@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/kcm/kcmsock.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv6/fib6_rules.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
-index 8a8ea7e6774d5..920b0ebf1cb80 100644
---- a/net/kcm/kcmsock.c
-+++ b/net/kcm/kcmsock.c
-@@ -1277,10 +1277,11 @@ static int kcm_getsockopt(struct socket *sock, int level, int optname,
- 	if (get_user(len, optlen))
- 		return -EFAULT;
+diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
+index 1727269396523..cdc8a49d7fc34 100644
+--- a/net/ipv6/fib6_rules.c
++++ b/net/ipv6/fib6_rules.c
+@@ -437,6 +437,11 @@ static size_t fib6_rule_nlmsg_payload(struct fib_rule *rule)
+ 	       + nla_total_size(16); /* src */
+ }
  
--	len = min_t(unsigned int, len, sizeof(int));
- 	if (len < 0)
- 		return -EINVAL;
- 
-+	len = min_t(unsigned int, len, sizeof(int));
++static void fib6_rule_flush_cache(struct fib_rules_ops *ops)
++{
++	rt_genid_bump_ipv6(ops->fro_net);
++}
 +
- 	switch (optname) {
- 	case KCM_RECV_DISABLE:
- 		val = kcm->rx_disabled;
+ static const struct fib_rules_ops __net_initconst fib6_rules_ops_template = {
+ 	.family			= AF_INET6,
+ 	.rule_size		= sizeof(struct fib6_rule),
+@@ -449,6 +454,7 @@ static const struct fib_rules_ops __net_initconst fib6_rules_ops_template = {
+ 	.compare		= fib6_rule_compare,
+ 	.fill			= fib6_rule_fill,
+ 	.nlmsg_payload		= fib6_rule_nlmsg_payload,
++	.flush_cache		= fib6_rule_flush_cache,
+ 	.nlgroup		= RTNLGRP_IPV6_RULE,
+ 	.policy			= fib6_rule_policy,
+ 	.owner			= THIS_MODULE,
 -- 
 2.43.0
 
