@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB3F206C8F;
-	Sun, 24 Mar 2024 23:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38D2206CAA;
+	Sun, 24 Mar 2024 23:05:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321510; cv=none; b=uk8u3ps3l1sR+7VFMv3yV55o54TZws6pn6P0R3w4mKCQ3ZqgIy03OTlH69UpfhB/vMfWt1BqOlQVsjQj9iZUDcb9nmru5G018AIUp1uUGRwvB70OjmRVRPfQsV8AjXif2wF9xlQh1J5b5ay98r0Cs4Y6IFjW2/0ne0CeO0AFbiE=
+	t=1711321515; cv=none; b=gjgQ5swmdiZGxfhTZS/fny7xvVwh2mZClO6dfdA/CSGTtIEevWLdDKOpEYwMB0OE/awOwIuPCQsiscnkTLwDbUMuQ+SRx0gwvWIq7VIVyUMLnRr34cM3g18kFgkpF9Z1GsOPErd8SWNY4eTpMkNMAT6YP1m0WdiBR+N+ViwuodI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321510; c=relaxed/simple;
-	bh=b3EGla1ceGQDu3kI0qNL7DjBL1cafs8iz7Jsl5WCx38=;
+	s=arc-20240116; t=1711321515; c=relaxed/simple;
+	bh=kzg1twyd8x1xKB2wbJO5YxL9YZinLAhgSRISrH4vxlA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k9DsUfxS0x6Fc/Hi/KhaQftBsZSk6V4NaTiBg4E0+kQDt/gXxS2IDA4rmElzCWmVClV9Fl6NKwOMCi5N3dqKjkPEoTkiLy5m05HFCy66eU+ZgtsGirrKgqjP5KMD/fq5gUcusQg1Iu4bYnPCU6tI+ydC1HTMTEcyTaMD2jwptaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWW3hdMa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=D8ucLWl6LYPnG1oWoM7y5MmpFZUli5xm8ULO/yYhNIU0YFBpWZzEXH9XUjd9pU486SA66amSWh9G6ACEypY48ctlVH0VQVkIhqlo47pGdizWwRdfCjW+rpAA+YfvWh/zy65WWu935kLKzfzJeTBKI6MlgrwQQLNDD8DEcGV+qmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XmMXv9nE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWW3hdMa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4964C43399;
-	Sun, 24 Mar 2024 23:05:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XmMXv9nE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D7ECC433F1;
+	Sun, 24 Mar 2024 23:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321510;
-	bh=b3EGla1ceGQDu3kI0qNL7DjBL1cafs8iz7Jsl5WCx38=;
+	s=k20201202; t=1711321514;
+	bh=kzg1twyd8x1xKB2wbJO5YxL9YZinLAhgSRISrH4vxlA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kWW3hdMa9xVdAQiQQ09De/v58NFD5+KvWUqMqpFZK7MR2B5vsj3rZlIgS3FEVmXzl
-	 xpCSI8yTaTOB7m1yxIbYZef4271apnKmdTBvq+bK27+ikJgH+70feyNwYQPVY/JMeo
-	 fLHqmb+4ZfiJDhcD9HvaBt5oLNUElqTERD86OJ4/J25xXGnTw7SuDNFZKu//qpLAJi
-	 2WK5JLmpyuo1OWgUYP3axczB7CbmoctjK2BgJGFJvWWBsAzEImx6BDYj8Wh+uO0Ddr
-	 dVZmEePOEW7rK1ERErSXVi3Tq7Stnosea/rXziitBYzHKe4l5K/i28QojI6Z9MQp4i
-	 F3nNYpTjPBUsw==
+	b=XmMXv9nEkj2QOHEOQ3figCBwvRWFiFuqMxRnSOyVF/Iv2hzMD+5V8QX9BVL3eX3fH
+	 kOd2ejVHNiKkKo0yd4KNk3jLtdP0TL1v0JSFjIIhC1vCG6iqL2JNG7D0c1ZvGtI8ZN
+	 X68L4vdAjrVyU0LXI9C9yX9v+Ygz1dQ0l6Dor3CAtl4ZxMZXXKbC6i7T5BYteLX7gV
+	 08oOTD/Ir5ccgLiVUF6fm6AbaITGb3LBL5wKLqxWQUAVrezEHxZEmqFSM1obswIIA+
+	 Ii2zY4hGGVAze01oqe30KBP6igSdKuix1zpmC3vb48R+SC5JeFQ3++nikfkocyMTA5
+	 2oR21903TzRrA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bhavya Kapoor <b-kapoor@ti.com>,
+Cc: Nishanth Menon <nm@ti.com>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 236/638] arm64: dts: ti: k3-j7200-common-proc-board: Modify Pinmux for wkup_uart0 and mcu_uart0
-Date: Sun, 24 Mar 2024 18:54:33 -0400
-Message-ID: <20240324230116.1348576-237-sashal@kernel.org>
+Subject: [PATCH 6.6 241/638] arm64: dts: ti: k3-am642-sk: Add boot phase tags marking
+Date: Sun, 24 Mar 2024 18:54:38 -0400
+Message-ID: <20240324230116.1348576-242-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,61 +48,190 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bhavya Kapoor <b-kapoor@ti.com>
+From: Nishanth Menon <nm@ti.com>
 
-[ Upstream commit 566feddd2ba5e29d9ccab36d6508592ae563f275 ]
+[ Upstream commit 4669288219a7f77c6ff992d10ce6a20660863979 ]
 
-WKUP_PADCONFIG registers for wkup_uart0 and mcu_uart0 lies
-under wkup_pmx2 for J7200. Thus, modify pinmux for both
-of them.
+bootph-all as phase tag was added to dt-schema
+(dtschema/schemas/bootph.yaml) to describe various node usage during
+boot phases with DT.
 
-Fixes: 3709ea7f960e ("arm64: dts: ti: k3-j7200-common-proc-board: Add uart pinmux")
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
-Link: https://lore.kernel.org/r/20240214105846.1096733-2-b-kapoor@ti.com
+Describe the same for AM642-sk boot devices.
+
+Signed-off-by: Nishanth Menon <nm@ti.com>
+Link: https://lore.kernel.org/r/20230911172902.1057417-4-nm@ti.com
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Stable-dep-of: 379c7752bbd0 ("arm64: dts: ti: k3-am64-main: Fix ITAP/OTAP values for MMC")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/ti/k3-j7200-common-proc-board.dts  | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am642-sk.dts | 29 ++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-index cee2b4b0eb87d..53594c5fb8e8f 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-@@ -91,24 +91,25 @@ vdd_sd_dv: gpio-regulator-TLV71033 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+index 722fd285a34ec..f29c8a9b59ba7 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+@@ -34,6 +34,7 @@ aliases {
+ 	};
+ 
+ 	memory@80000000 {
++		bootph-pre-ram;
+ 		device_type = "memory";
+ 		/* 2G RAM */
+ 		reg = <0x00000000 0x80000000 0x00000000 0x80000000>;
+@@ -107,6 +108,7 @@ rtos_ipc_memory_region: ipc-memories@a5000000 {
+ 
+ 	vusb_main: regulator-0 {
+ 		/* USB MAIN INPUT 5V DC */
++		bootph-all;
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vusb_main5v0";
+ 		regulator-min-microvolt = <5000000>;
+@@ -117,6 +119,7 @@ vusb_main: regulator-0 {
+ 
+ 	vcc_3v3_sys: regulator-1 {
+ 		/* output of LP8733xx */
++		bootph-all;
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc_3v3_sys";
+ 		regulator-min-microvolt = <3300000>;
+@@ -128,6 +131,7 @@ vcc_3v3_sys: regulator-1 {
+ 
+ 	vdd_mmc1: regulator-2 {
+ 		/* TPS2051BD */
++		bootph-all;
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vdd_mmc1";
+ 		regulator-min-microvolt = <3300000>;
+@@ -234,6 +238,7 @@ led-7 {
+ 
+ &main_pmx0 {
+ 	main_mmc1_pins_default: main-mmc1-default-pins {
++		bootph-all;
+ 		pinctrl-single,pins = <
+ 			AM64X_IOPAD(0x029c, PIN_INPUT_PULLUP, 0) /* (C20) MMC1_SDWP */
+ 			AM64X_IOPAD(0x0298, PIN_INPUT_PULLUP, 0) /* (D19) MMC1_SDCD */
+@@ -248,6 +253,7 @@ AM64X_IOPAD(0x027c, PIN_INPUT_PULLUP, 0) /* (K18) MMC1_DAT3 */
+ 	};
+ 
+ 	main_uart0_pins_default: main-uart0-default-pins {
++		bootph-all;
+ 		pinctrl-single,pins = <
+ 			AM64X_IOPAD(0x0238, PIN_INPUT, 0) /* (B16) UART0_CTSn */
+ 			AM64X_IOPAD(0x023c, PIN_OUTPUT, 0) /* (A16) UART0_RTSn */
+@@ -257,6 +263,7 @@ AM64X_IOPAD(0x0234, PIN_OUTPUT, 0) /* (C16) UART0_TXD */
+ 	};
+ 
+ 	main_uart1_pins_default: main-uart1-default-pins {
++		bootph-pre-ram;
+ 		pinctrl-single,pins = <
+ 			AM64X_IOPAD(0x0248, PIN_INPUT, 0) /* (D16) UART1_CTSn */
+ 			AM64X_IOPAD(0x024c, PIN_OUTPUT, 0) /* (E16) UART1_RTSn */
+@@ -266,12 +273,14 @@ AM64X_IOPAD(0x0244, PIN_OUTPUT, 0) /* (E14) UART1_TXD */
+ 	};
+ 
+ 	main_usb0_pins_default: main-usb0-default-pins {
++		bootph-all;
+ 		pinctrl-single,pins = <
+ 			AM64X_IOPAD(0x02a8, PIN_OUTPUT, 0) /* (E19) USB0_DRVVBUS */
+ 		>;
+ 	};
+ 
+ 	main_i2c0_pins_default: main-i2c0-default-pins {
++		bootph-all;
+ 		pinctrl-single,pins = <
+ 			AM64X_IOPAD(0x0260, PIN_INPUT_PULLUP, 0) /* (A18) I2C0_SCL */
+ 			AM64X_IOPAD(0x0264, PIN_INPUT_PULLUP, 0) /* (B18) I2C0_SDA */
+@@ -279,6 +288,7 @@ AM64X_IOPAD(0x0264, PIN_INPUT_PULLUP, 0) /* (B18) I2C0_SDA */
+ 	};
+ 
+ 	main_i2c1_pins_default: main-i2c1-default-pins {
++		bootph-all;
+ 		pinctrl-single,pins = <
+ 			AM64X_IOPAD(0x0268, PIN_INPUT_PULLUP, 0) /* (C18) I2C1_SCL */
+ 			AM64X_IOPAD(0x026c, PIN_INPUT_PULLUP, 0) /* (B19) I2C1_SDA */
+@@ -367,6 +377,7 @@ AM64X_IOPAD(0x00bc, PIN_INPUT, 7) /* (U8) GPIO0_46 */
  };
  
- &wkup_pmx0 {
+ &main_uart0 {
++	bootph-all;
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_uart0_pins_default>;
+@@ -375,12 +386,14 @@ &main_uart0 {
+ 
+ &main_uart1 {
+ 	/* main_uart1 is reserved for firmware usage */
++	bootph-pre-ram;
+ 	status = "reserved";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_uart1_pins_default>;
+ };
+ 
+ &main_i2c0 {
++	bootph-all;
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_i2c0_pins_default>;
+@@ -393,12 +406,14 @@ eeprom@51 {
+ };
+ 
+ &main_i2c1 {
++	bootph-all;
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_i2c1_pins_default>;
+ 	clock-frequency = <400000>;
+ 
+ 	exp1: gpio@70 {
++		bootph-all;
+ 		compatible = "nxp,pca9538";
+ 		reg = <0x70>;
+ 		gpio-controller;
+@@ -445,6 +460,7 @@ wlcore: wlcore@2 {
+ 
+ &sdhci1 {
+ 	/* SD/MMC */
++	bootph-all;
+ 	vmmc-supply = <&vdd_mmc1>;
+ 	pinctrl-names = "default";
+ 	bus-width = <4>;
+@@ -454,11 +470,22 @@ &sdhci1 {
+ };
+ 
+ &serdes_ln_ctrl {
++	bootph-all;
+ 	idle-states = <AM64_SERDES0_LANE0_USB>;
+ };
+ 
++&serdes_refclk {
++	bootph-all;
 +};
 +
-+&wkup_pmx2 {
- 	mcu_uart0_pins_default: mcu-uart0-default-pins {
- 		pinctrl-single,pins = <
--			J721E_WKUP_IOPAD(0xf4, PIN_INPUT, 0) /* (D20) MCU_UART0_RXD */
--			J721E_WKUP_IOPAD(0xf0, PIN_OUTPUT, 0) /* (D19) MCU_UART0_TXD */
--			J721E_WKUP_IOPAD(0xf8, PIN_INPUT, 0) /* (E20) MCU_UART0_CTSn */
--			J721E_WKUP_IOPAD(0xfc, PIN_OUTPUT, 0) /* (E21) MCU_UART0_RTSn */
-+			J721E_WKUP_IOPAD(0x90, PIN_INPUT, 0) /* (E20) MCU_UART0_CTSn */
-+			J721E_WKUP_IOPAD(0x94, PIN_OUTPUT, 0) /* (E21) MCU_UART0_RTSn */
-+			J721E_WKUP_IOPAD(0x8c, PIN_INPUT, 0) /* (D20) MCU_UART0_RXD */
-+			J721E_WKUP_IOPAD(0x88, PIN_OUTPUT, 0) /* (D19) MCU_UART0_TXD */
- 		>;
- 	};
++&serdes_wiz0 {
++	bootph-all;
++};
++
+ &serdes0 {
++	bootph-all;
+ 	serdes0_usb_link: phy@0 {
++		bootph-all;
+ 		reg = <0>;
+ 		cdns,num-lanes = <1>;
+ 		#phy-cells = <0>;
+@@ -468,10 +495,12 @@ serdes0_usb_link: phy@0 {
+ };
  
- 	wkup_uart0_pins_default: wkup-uart0-default-pins {
- 		pinctrl-single,pins = <
--			J721E_WKUP_IOPAD(0xb0, PIN_INPUT, 0) /* (B14) WKUP_UART0_RXD */
--			J721E_WKUP_IOPAD(0xb4, PIN_OUTPUT, 0) /* (A14) WKUP_UART0_TXD */
-+			J721E_WKUP_IOPAD(0x48, PIN_INPUT, 0) /* (B14) WKUP_UART0_RXD */
-+			J721E_WKUP_IOPAD(0x4c, PIN_OUTPUT, 0) /* (A14) WKUP_UART0_TXD */
- 		>;
- 	};
--};
+ &usbss0 {
++	bootph-all;
+ 	ti,vbus-divider;
+ };
  
--&wkup_pmx2 {
- 	mcu_cpsw_pins_default: mcu-cpsw-default-pins {
- 		pinctrl-single,pins = <
- 			J721E_WKUP_IOPAD(0x0000, PIN_OUTPUT, 0) /* MCU_RGMII1_TX_CTL */
+ &usb0 {
++	bootph-all;
+ 	dr_mode = "host";
+ 	maximum-speed = "super-speed";
+ 	pinctrl-names = "default";
 -- 
 2.43.0
 
