@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059A1180A8F;
-	Sun, 24 Mar 2024 23:47:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4455180B74;
+	Sun, 24 Mar 2024 23:47:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324056; cv=none; b=QWIa+OGutsGK1RGDi9X+MOQFpzAvpBL9vvkdUobKChqiz+FPVWxW5C5+NmlfcDspanRuZ2hPd3qwyIGhijqdosf3J0Eo24+cD7V66rj0RYtVRwctGlNHqduh1JC+L+6gs0BK4+q0ejCpScz7yCsSqXa5pXuaBXl07tR9a/R/eY0=
+	t=1711324059; cv=none; b=XJnTaQEsEDyK66VOQ87MRbl1qdp1LQFcToNrXfYgviAg1pJeTqm/MWyzhsjC/QobG/MoUIKFLSGgKj44T+qponFRwhspW+DK0xzG61S/qoC2qZyHa8+LIIUTd8Ii4FGdEEtO+5tvgJRIVmMe8FPs9MqPIZXQWN/+72u0c9pwg98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324056; c=relaxed/simple;
-	bh=NzjFbhFV+1szkeOU6f/PGRB/2eW54jz9i68ODl8u9+Y=;
+	s=arc-20240116; t=1711324059; c=relaxed/simple;
+	bh=acSYC8qx6Eqvje3K7lC9u19vwV0fg/4u9bafU49h0t0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F2Sgvwy4+eyEcd+TLLxT2JgaYGMcmKovM2kNf+3zjrTvHQQjGeigAHpwaWar3CnWGGZe706SBth0X0UuNYWpXnUGNe5X7h7j6TPjRs1x9QdZG8Bx8XiB0coiRaV2KAQwrYHSTqjjg5oaC/w4sdwBUCKGIzcLAuAl4Nmq7J4w8Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmn8lyn4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ieoCOVq/qi8+3plGbbNCJZO7OIAzW5JasCZCMlEYRkVNse0KZ0RRMuNr/0KcZSwq+l2eE5SBQBPGp8PtbEdkEp3wlGOP/8YNuUBh9qPTjfxdJBh0+FHhkcZapPo2+/aKWzGofpkaAEkx79bfqp4InGzZ0erHl3T8q6g7PAL+lFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=raH6Tslo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmn8lyn4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D231CC43394;
-	Sun, 24 Mar 2024 23:47:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="raH6Tslo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D41DC43390;
+	Sun, 24 Mar 2024 23:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324054;
-	bh=NzjFbhFV+1szkeOU6f/PGRB/2eW54jz9i68ODl8u9+Y=;
+	s=k20201202; t=1711324058;
+	bh=acSYC8qx6Eqvje3K7lC9u19vwV0fg/4u9bafU49h0t0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lmn8lyn43Xe2U1jL3X9lMwoXOR4McKOln5q3RnORh2dgCQFhaJZbrfhennup2GFC6
-	 5Mc+0HWN7PLD/HhmDZpXeE+KKS9lWFs7hdElKhhWQ2xBMKHBniGI0ZD1NB9OYj3t1U
-	 R4Hg9Us//k25Sltj5HBr3TfAUtRQRnyc9IoykqreHA3JMTYepOd2jmYecmvWtV+RpR
-	 YGjr+17AvFfSNUnCFRcN3++JPxUFw3pl78MyfULWc1rd8x8dYF2H6I/khm2dwWei1b
-	 5ImVGIiRFvmWPUNpLm+rIbZKglGr5sDRHsJ295Y2MytDEnbWT2KZJiYmKImsVp4dY7
-	 etnT45aVSy6+g==
+	b=raH6TslomEhjOWWYXqvt5URMGDvfb/2J/73Uk7dYtkTlSkcJVnmxD0ANDwPO7gI20
+	 aMDNm1vJQfjx12uB8BEDQi86tOukXureO96AVBhjfG5Ve9RB08Th2w3aWQnD8JIJAN
+	 5fmJ5DIM1vkU2nLvbaeXEdav0Ej4F43nJQA+hOyOxc++NE4fgvPJrh3nLJMVivnkOX
+	 Dw3kgiIt6JgTIYRzvSWr8OV8DAINLTU8nRKnx/R4zqRIlS6dKkXF3khN7tJUEvO3Up
+	 pVutA/CKpZ9NQIuGTEsmTH1ttMkajVE8d858AYp11pMQpy8BkW3VNaCR7USQLYhuY7
+	 aIAuVIwgEc38A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Joerg Roedel <jroedel@suse.de>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 055/183] iommu/amd: Mark interrupt as managed
-Date: Sun, 24 Mar 2024 19:44:28 -0400
-Message-ID: <20240324234638.1355609-56-sashal@kernel.org>
+Subject: [PATCH 5.4 059/183] ARM: dts: arm: realview: Fix development chip ROM compatible value
+Date: Sun, 24 Mar 2024 19:44:32 -0400
+Message-ID: <20240324234638.1355609-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,67 +48,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 0feda94c868d396fac3b3cb14089d2d989a07c72 ]
+[ Upstream commit 3baa4c5143d65ebab2de0d99a395e5f4f1f46608 ]
 
-On many systems that have an AMD IOMMU the following sequence of
-warnings is observed during bootup.
+When the development chip ROM was added, the "direct-mapped" compatible
+value was already obsolete.  In addition, the device node lacked the
+accompanying "probe-type" property, causing the old physmap_of_core
+driver to fall back to trying all available probe types.
+Unfortunately this fallback was lost when the DT and pdata cases were
+merged.
 
-```
-pci 0000:00:00.2  can't derive routing for PCI INT A
-pci 0000:00:00.2: PCI INT A: not connected
-```
+Fix this by using the modern "mtd-rom" compatible value instead.
 
-This series of events happens because of the IOMMU initialization
-sequence order and the lack of _PRT entries for the IOMMU.
-
-During initialization the IOMMU driver first enables the PCI device
-using pci_enable_device().  This will call acpi_pci_irq_enable()
-which will check if the interrupt is declared in a PCI routing table
-(_PRT) entry. According to the PCI spec [1] these routing entries
-are only required under PCI root bridges:
-	The _PRT object is required under all PCI root bridges
-
-The IOMMU is directly connected to the root complex, so there is no
-parent bridge to look for a _PRT entry. The first warning is emitted
-since no entry could be found in the hierarchy. The second warning is
-then emitted because the interrupt hasn't yet been configured to any
-value.  The pin was configured in pci_read_irq() but the byte in
-PCI_INTERRUPT_LINE return 0xff which means "Unknown".
-
-After that sequence of events pci_enable_msi() is called and this
-will allocate an interrupt.
-
-That is both of these warnings are totally harmless because the IOMMU
-uses MSI for interrupts.  To avoid even trying to probe for a _PRT
-entry mark the IOMMU as IRQ managed. This avoids both warnings.
-
-Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html?highlight=_prt#prt-pci-routing-table [1]
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Fixes: cffe0a2b5a34 ("x86, irq: Keep balance of IOAPIC pin reference count")
-Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
-Link: https://lore.kernel.org/r/20240122233400.1802-1-mario.limonciello@amd.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 5c3f5edbe0a1dff3 ("ARM: realview: add flash devices to the PB1176 DTS")
+Fixes: 642b1e8dbed7bbbf ("mtd: maps: Merge physmap_of.c into physmap-core.c")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/arm-realview-pb1176.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 4a9feff340da7..15e25f712f393 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -1745,6 +1745,9 @@ static int __init iommu_init_pci(struct amd_iommu *iommu)
- 	/* Prevent binding other PCI device drivers to IOMMU devices */
- 	iommu->dev->match_driver = false;
+diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
+index 2625ce66f8e7e..673c6e5b2f565 100644
+--- a/arch/arm/boot/dts/arm-realview-pb1176.dts
++++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
+@@ -435,7 +435,7 @@ pb1176_serial3: serial@1010f000 {
  
-+	/* ACPI _PRT won't have an IRQ for IOMMU */
-+	iommu->dev->irq_managed = 1;
-+
- 	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_CAP_HDR_OFFSET,
- 			      &iommu->cap);
- 	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_RANGE_OFFSET,
+ 		/* Direct-mapped development chip ROM */
+ 		pb1176_rom@10200000 {
+-			compatible = "direct-mapped";
++			compatible = "mtd-rom";
+ 			reg = <0x10200000 0x4000>;
+ 			bank-width = <1>;
+ 		};
 -- 
 2.43.0
 
