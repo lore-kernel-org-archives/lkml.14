@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF6B1F1ADF;
-	Sun, 24 Mar 2024 22:58:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD3612D1EA;
+	Sun, 24 Mar 2024 22:58:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321086; cv=none; b=LBBwRuNTEZaIvaYhQKjGFib4Su9GPXwWCZTAfB/JsVtZPNBQ55dI9DkG0AA47JT0hy3QOxvtbcEay+wChsRoiwY0CfiAsrEuq0+qlFrjuvdFQjAo4FoHGGCkUJQTLRCp/xBbARU0O9EJXiBu9yy+RvSGjW6WiSwjiY9Khvj0cpg=
+	t=1711321092; cv=none; b=UwD5AWzCEUec7ioPrWgtiVZGbemP4Ehuq+zSLrbmgrhCBsqVj37a4K9iflnIeKobll3lGn/74eAvyyGvwjX4zXMq/hDmEIllDM/q+aLUwSlszWUjBHFcPjluHXYPL62z5aHvWSZR48UuImSiTyJFgiX0MqAinSbEKO+rkMoMPl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321086; c=relaxed/simple;
-	bh=NLXg1mMIeDthRs3gevp71oajPJK8l3xOG32jfOjQjjM=;
+	s=arc-20240116; t=1711321092; c=relaxed/simple;
+	bh=OFz3rgG/onaMQNrx3aFTgv7GqQgKkbhaPyQhmTu14o4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EBowotfJGJBv7JQk+hVXtqdnZWkHUolANuCIuQSLcoBu5erQU5Wywbce4D5CKV1OK3Znhft3kyGnlChu0/tvEaXWUz9IfYfYE8xeCg4+61QLvdpUzyP0vJ/kv8NXpCNpWV1RAqN0fwYtrCak505+bP4q8zdAUvN9TEVdQ6fkrzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ft/71UfM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=m7xOCictZhXs9maZZywZ/tRe96B4miXWqnVYYr0E1q0y7DFUHzYbnEU8L7VX8+r9R/nCdJHbKkwUt2Ml6ZrsgaJ46Ho+US/Nf2MQDwUdqDqDxQqza2oIOLI4KoqtrndDdf4/YHebitJ0EQz7DIy8ckVtXCPcpi59QwS2i2c9SyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igKg23+t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ft/71UfM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8AA5C433A6;
-	Sun, 24 Mar 2024 22:58:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igKg23+t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98F4DC43394;
+	Sun, 24 Mar 2024 22:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321086;
-	bh=NLXg1mMIeDthRs3gevp71oajPJK8l3xOG32jfOjQjjM=;
+	s=k20201202; t=1711321092;
+	bh=OFz3rgG/onaMQNrx3aFTgv7GqQgKkbhaPyQhmTu14o4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ft/71UfMzMTBvs/EJtBRdqZcmDiywp6Z02ci3uSTpPhRy7ju0BmU28Wc3K6q9lATk
-	 4yXH13jI4knZnOdwfFTggcrY7sycbk6hK+tGtuPu7Da9RjO5Po9bYXk1PIOhcvUBBh
-	 +r1ZBGS3MhzD9uQ+QTpoix08mpkmtS++db0AkUv7rD8Hb8kxEHh7vzGgcc91DOhC89
-	 qyw/937CBlJUFXIp4Qd1zGKSWWUgLIX9YeWlQqWIO8gjFPEvR8NLag+sAD9hpdVN+t
-	 YXuMtULo9S6nzLKGTKo+Mg4Io5rCHoW6xp5X/sA922t8ftufYeT1d9lw9NK7hCYKCz
-	 rbsUamNX443Cw==
+	b=igKg23+tbZ35ziy6nQ+gdCT4XgVj4FbYZWkJdbGFRGm1QFBvIGEsQycVmCBhu9UMP
+	 13mTVCfoHhgJEV/x6FBllvzoIvpKSK+vKm9+XGk5BKsYvnzdF4q9JN+/4/cDpN5PKm
+	 yivvvAlIFf2V066mejkjGvYZNJQqvKvPSWzQ/oZQMOEJgg7bvymulPViyZ0LQS33CV
+	 SVw05LDRzeIQz+2D6RxphDqkpqkViwA07dv0DoJgrqrX352tf2SCcIgh/1ZZa+Xz4W
+	 rYNkK+dm8rr/KOPkV+DEzkjqYFrILvB3BVoIfXVjrCOj9NDqanAg9TTEZ12hefuCdU
+	 KCDARP459O6xA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	syzbot+a340daa06412d6028918@syzkaller.appspotmail.com,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Michal Kubiak <michal.kubiak@intel.com>,
+Cc: Shay Drory <shayd@nvidia.com>,
+	Jiri Pirko <jiri@nvidia.com>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 650/713] net/sched: taprio: proper TCA_TAPRIO_TC_ENTRY_INDEX check
-Date: Sun, 24 Mar 2024 18:46:16 -0400
-Message-ID: <20240324224720.1345309-651-sashal@kernel.org>
+Subject: [PATCH 6.7 655/713] devlink: Fix devlink parallel commands processing
+Date: Sun, 24 Mar 2024 18:46:21 -0400
+Message-ID: <20240324224720.1345309-656-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -51,85 +49,61 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Shay Drory <shayd@nvidia.com>
 
-[ Upstream commit 343041b59b7810f9cdca371f445dd43b35c740b1 ]
+[ Upstream commit d7d75124965aee23e5e4421d78376545cf070b0a ]
 
-taprio_parse_tc_entry() is not correctly checking
-TCA_TAPRIO_TC_ENTRY_INDEX attribute:
+Commit 870c7ad4a52b ("devlink: protect devlink->dev by the instance
+lock") added devlink instance locking inside a loop that iterates over
+all the registered devlink instances on the machine in the pre-doit
+phase. This can lead to serialization of devlink commands over
+different devlink instances.
 
-	int tc; // Signed value
+For example: While the first devlink instance is executing firmware
+flash, all commands to other devlink instances on the machine are
+forced to wait until the first devlink finishes.
 
-	tc = nla_get_u32(tb[TCA_TAPRIO_TC_ENTRY_INDEX]);
-	if (tc >= TC_QOPT_MAX_QUEUE) {
-		NL_SET_ERR_MSG_MOD(extack, "TC entry index out of range");
-		return -ERANGE;
-	}
+Therefore, in the pre-doit phase, take the devlink instance lock only
+for the devlink instance the command is targeting. Devlink layer is
+taking a reference on the devlink instance, ensuring the devlink->dev
+pointer is valid. This reference taking was introduced by commit
+a380687200e0 ("devlink: take device reference for devlink object").
+Without this commit, it would not be safe to access devlink->dev
+lockless.
 
-syzbot reported that it could fed arbitary negative values:
-
-UBSAN: shift-out-of-bounds in net/sched/sch_taprio.c:1722:18
-shift exponent -2147418108 is negative
-CPU: 0 PID: 5066 Comm: syz-executor367 Not tainted 6.8.0-rc7-syzkaller-00136-gc8a5c731fd12 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
-Call Trace:
- <TASK>
-  __dump_stack lib/dump_stack.c:88 [inline]
-  dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
-  ubsan_epilogue lib/ubsan.c:217 [inline]
-  __ubsan_handle_shift_out_of_bounds+0x3c7/0x420 lib/ubsan.c:386
-  taprio_parse_tc_entry net/sched/sch_taprio.c:1722 [inline]
-  taprio_parse_tc_entries net/sched/sch_taprio.c:1768 [inline]
-  taprio_change+0xb87/0x57d0 net/sched/sch_taprio.c:1877
-  taprio_init+0x9da/0xc80 net/sched/sch_taprio.c:2134
-  qdisc_create+0x9d4/0x1190 net/sched/sch_api.c:1355
-  tc_modify_qdisc+0xa26/0x1e40 net/sched/sch_api.c:1776
-  rtnetlink_rcv_msg+0x885/0x1040 net/core/rtnetlink.c:6617
-  netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
-  netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]
-  netlink_unicast+0x7ea/0x980 net/netlink/af_netlink.c:1367
-  netlink_sendmsg+0xa3b/0xd70 net/netlink/af_netlink.c:1908
-  sock_sendmsg_nosec net/socket.c:730 [inline]
-  __sock_sendmsg+0x221/0x270 net/socket.c:745
-  ____sys_sendmsg+0x525/0x7d0 net/socket.c:2584
-  ___sys_sendmsg net/socket.c:2638 [inline]
-  __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2667
- do_syscall_64+0xf9/0x240
- entry_SYSCALL_64_after_hwframe+0x6f/0x77
-RIP: 0033:0x7f1b2dea3759
-Code: 48 83 c4 28 c3 e8 d7 19 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd4de452f8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f1b2def0390 RCX: 00007f1b2dea3759
-RDX: 0000000000000000 RSI: 00000000200007c0 RDI: 0000000000000004
-RBP: 0000000000000003 R08: 0000555500000000 R09: 0000555500000000
-R10: 0000555500000000 R11: 0000000000000246 R12: 00007ffd4de45340
-R13: 00007ffd4de45310 R14: 0000000000000001 R15: 00007ffd4de45340
-
-Fixes: a54fc09e4cba ("net/sched: taprio: allow user input of per-tc max SDU")
-Reported-and-tested-by: syzbot+a340daa06412d6028918@syzkaller.appspotmail.com
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
+Fixes: 870c7ad4a52b ("devlink: protect devlink->dev by the instance lock")
+Signed-off-by: Shay Drory <shayd@nvidia.com>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_taprio.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/devlink/netlink.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
-index 31a8252bd09c9..ad99409c6325e 100644
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -1008,7 +1008,8 @@ static const struct nla_policy entry_policy[TCA_TAPRIO_SCHED_ENTRY_MAX + 1] = {
- };
+diff --git a/net/devlink/netlink.c b/net/devlink/netlink.c
+index 86f12531bf998..0f41fded6a6d7 100644
+--- a/net/devlink/netlink.c
++++ b/net/devlink/netlink.c
+@@ -80,12 +80,13 @@ devlink_get_from_attrs_lock(struct net *net, struct nlattr **attrs,
+ 	devname = nla_data(attrs[DEVLINK_ATTR_DEV_NAME]);
  
- static const struct nla_policy taprio_tc_policy[TCA_TAPRIO_TC_ENTRY_MAX + 1] = {
--	[TCA_TAPRIO_TC_ENTRY_INDEX]	   = { .type = NLA_U32 },
-+	[TCA_TAPRIO_TC_ENTRY_INDEX]	   = NLA_POLICY_MAX(NLA_U32,
-+							    TC_QOPT_MAX_QUEUE),
- 	[TCA_TAPRIO_TC_ENTRY_MAX_SDU]	   = { .type = NLA_U32 },
- 	[TCA_TAPRIO_TC_ENTRY_FP]	   = NLA_POLICY_RANGE(NLA_U32,
- 							      TC_FP_EXPRESS,
+ 	devlinks_xa_for_each_registered_get(net, index, devlink) {
+-		devl_dev_lock(devlink, dev_lock);
+-		if (devl_is_registered(devlink) &&
+-		    strcmp(devlink->dev->bus->name, busname) == 0 &&
+-		    strcmp(dev_name(devlink->dev), devname) == 0)
+-			return devlink;
+-		devl_dev_unlock(devlink, dev_lock);
++		if (strcmp(devlink->dev->bus->name, busname) == 0 &&
++		    strcmp(dev_name(devlink->dev), devname) == 0) {
++			devl_dev_lock(devlink, dev_lock);
++			if (devl_is_registered(devlink))
++				return devlink;
++			devl_dev_unlock(devlink, dev_lock);
++		}
+ 		devlink_put(devlink);
+ 	}
+ 
 -- 
 2.43.0
 
