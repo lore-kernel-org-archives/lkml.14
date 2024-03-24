@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F70717EB69;
-	Sun, 24 Mar 2024 23:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B521D1802A1;
+	Sun, 24 Mar 2024 23:47:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324005; cv=none; b=Vy/6/LFWKMrJ5DW2EoOwh6bZOgRzzsSYR6wyV0ICOcj1t6pfputDyFcUofmD/oZQlMyl4WD7Upftpny9/IwUPjxMqwTovuXiQJqc5QV4U/+KBe1neJ9utAcqNmPEmJmUIkN7Fq3c9VrVFymsaQcK71zXf3iPoLrEX58sDiJmSmc=
+	t=1711324022; cv=none; b=XJvQvH+CeUrXEnmdMoMArxXBHnE9FUq5oLbGCp+1brAuKtwYPbiERCo/9krlZ1yGHQmqo2EfwEWkmj+GpJqAoK4KalWr8CmmDtRU2pOaLy6zqcwMnx9iZPqZelb0qp8xG79XsQbQpP2dKjDR9ouvWJuJPkpQ3liN4DlHyI7P6GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324005; c=relaxed/simple;
-	bh=5gEzrD119tj6hsJgRdf2pITbVhppAiihu13s8fHpiOo=;
+	s=arc-20240116; t=1711324022; c=relaxed/simple;
+	bh=LTi1uiWusNYqglrFjirvmacGHwvj6xPN7iV4nR1ZLyI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HEPckGPbRJgfGNwl0JOsdekyeYuE95z0ezfIBz75bSY+s/HLDzsxOurp35Dp+miFNZlGlIYRGMGHmSz9j3NJ7sWM6/sw3Q7K8UFp0Vo7PNoRL22/H03cRGclmMgXBGmWSPu/s9AhzBSoBl37jAiIvtm8sykIq/YjOBOgkfB0qOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=smqdlmND; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aAZKiMI0xFJKXyiS+w3D1/jfCc+1WFBa9BCK4tLxvWYJwcz/JpUXSorTH4YYotd26p1ioRZXVmO1wemmlBDfLp3lsk6vWPSrV+/hFaJJtws6xOwAFKvVhnDbmMpeyheEzMuI2y+TsJ5tvloJiym7M5BgrKI9tCmImr+/cwwLtIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJBhxVq4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="smqdlmND"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E9D2C433F1;
-	Sun, 24 Mar 2024 23:46:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJBhxVq4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D8ACC43390;
+	Sun, 24 Mar 2024 23:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324003;
-	bh=5gEzrD119tj6hsJgRdf2pITbVhppAiihu13s8fHpiOo=;
+	s=k20201202; t=1711324021;
+	bh=LTi1uiWusNYqglrFjirvmacGHwvj6xPN7iV4nR1ZLyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=smqdlmND9yOY6Q+ZWfP/8CVZfxIQnhMv+X3a/RrUirphSvg2OnO5JwRBOsSJzsEKv
-	 bcFLNqi1u73M2ZdyayVr3bhVZ0EyC3HE4CSCrT8635UHs6niS9MnrGIci74wHI9VNg
-	 QiRV5ZyjE4IOEVOUsCizRJM4mbdecnzhaVAyC2bh0mUvfArPAaqlDiU8Kge2OvHVto
-	 Nkbb+jfJtTYqaOIADq5n9D1aMH2PBI6HhJUPzC8j+hzYY0XhGwOyMwHWo1UPKD8yX5
-	 rWcJmr4NI8uH7aVeEAU0GpXlqHal+ctBu5SdxXTQiosHS4jOx/O256FpPa5Xp2qzAk
-	 pp0clYG0TXKJQ==
+	b=hJBhxVq4bc8bMw8QZSx/tVwA+1c17Cvdg37C+QlCfkvHmVp2FJg4R02nObmuAqDlL
+	 yDy+S6Hn/GRlZbl8/3xiMGoZvgxO2mHgLyoG5s1SftwkCYuiHsgBMqtHXalOpe+WEK
+	 ODoIuoYr0Q50um+Lf3pAlBUT0YGpPG+j6KRXiZA98RWcGIdtY++Gzp3Kis3vCxk0UL
+	 7G1eI8vcx6bfeIN2s4idTORzvCzZECYDITC0eFPzSPMjKY+LuSK6wIZ3jtCrs5Fd5C
+	 hn+B184EdY0xK9dHiZUzuWjPRLL6b75lLFJ38Ed+V/K6+yixjXTHtxt+KzuK1ZAMOY
+	 YzrFRKkR1T6DQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Chuck Lever III <chuck.lever@oracle.com>,
+	syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com,
+	Jan Kara <jack@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 004/183] ASoC: rt5645: Make LattePanda board DMI match more precise
-Date: Sun, 24 Mar 2024 19:43:37 -0400
-Message-ID: <20240324234638.1355609-5-sashal@kernel.org>
+Subject: [PATCH 5.4 022/183] do_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak
+Date: Sun, 24 Mar 2024 19:43:55 -0400
+Message-ID: <20240324234638.1355609-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,61 +51,70 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-[ Upstream commit 551539a8606e28cb2a130f8ef3e9834235b456c4 ]
+[ Upstream commit 3948abaa4e2be938ccdfc289385a27342fb13d43 ]
 
-The DMI strings used for the LattePanda board DMI quirks are very generic.
+syzbot identified a kernel information leak vulnerability in
+do_sys_name_to_handle() and issued the following report [1].
 
-Using the dmidecode database from https://linux-hardware.org/ shows
-that the chosen DMI strings also match the following 2 laptops
-which also have a rt5645 codec:
+[1]
+"BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40
+ instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+ _copy_to_user+0xbc/0x100 lib/usercopy.c:40
+ copy_to_user include/linux/uaccess.h:191 [inline]
+ do_sys_name_to_handle fs/fhandle.c:73 [inline]
+ __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
+ __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94
+ __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
+ ...
 
-Insignia NS-P11W7100 https://linux-hardware.org/?computer=E092FFF8BA04
-Insignia NS-P10W8100 https://linux-hardware.org/?computer=AFB6C0BF7934
+Uninit was created at:
+ slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
+ slab_alloc_node mm/slub.c:3478 [inline]
+ __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517
+ __do_kmalloc_node mm/slab_common.c:1006 [inline]
+ __kmalloc+0x121/0x3c0 mm/slab_common.c:1020
+ kmalloc include/linux/slab.h:604 [inline]
+ do_sys_name_to_handle fs/fhandle.c:39 [inline]
+ __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
+ __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94
+ __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
+ ...
 
-All 4 hw revisions of the LattePanda board have "S70CR" in their BIOS
-version DMI strings:
+Bytes 18-19 of 20 are uninitialized
+Memory access of size 20 starts at ffff888128a46380
+Data copied to user address 0000000020000240"
 
-DF-BI-7-S70CR100-*
-DF-BI-7-S70CR110-*
-DF-BI-7-S70CR200-*
-LP-BS-7-S70CR700-*
+Per Chuck Lever's suggestion, use kzalloc() instead of kmalloc() to
+solve the problem.
 
-See e.g. https://linux-hardware.org/?computer=D98250A817C0
-
-Add a partial (non exact) DMI match on this string to make the LattePanda
-board DMI match more precise to avoid false-positive matches.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://msgid.link/r/20240211212736.179605-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 990d6c2d7aee ("vfs: Add name to file handle conversion support")
+Suggested-by: Chuck Lever III <chuck.lever@oracle.com>
+Reported-and-tested-by: <syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com>
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Link: https://lore.kernel.org/r/20240119153906.4367-1-n.zhandarovich@fintech.ru
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5645.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ fs/fhandle.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
-index 88093e58dd845..c78d5833c9cd9 100644
---- a/sound/soc/codecs/rt5645.c
-+++ b/sound/soc/codecs/rt5645.c
-@@ -3766,6 +3766,16 @@ static const struct dmi_system_id dmi_platform_data[] = {
- 		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
- 		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
- 		  DMI_EXACT_MATCH(DMI_BOARD_VERSION, "Default string"),
-+		  /*
-+		   * Above strings are too generic, LattePanda BIOS versions for
-+		   * all 4 hw revisions are:
-+		   * DF-BI-7-S70CR100-*
-+		   * DF-BI-7-S70CR110-*
-+		   * DF-BI-7-S70CR200-*
-+		   * LP-BS-7-S70CR700-*
-+		   * Do a partial match for S70CR to avoid false positive matches.
-+		   */
-+		  DMI_MATCH(DMI_BIOS_VERSION, "S70CR"),
- 		},
- 		.driver_data = (void *)&lattepanda_board_platform_data,
- 	},
+diff --git a/fs/fhandle.c b/fs/fhandle.c
+index 01263ffbc4c08..9a5f153c8919e 100644
+--- a/fs/fhandle.c
++++ b/fs/fhandle.c
+@@ -37,7 +37,7 @@ static long do_sys_name_to_handle(struct path *path,
+ 	if (f_handle.handle_bytes > MAX_HANDLE_SZ)
+ 		return -EINVAL;
+ 
+-	handle = kmalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
++	handle = kzalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
+ 			 GFP_KERNEL);
+ 	if (!handle)
+ 		return -ENOMEM;
 -- 
 2.43.0
 
