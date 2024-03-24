@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF61155721;
-	Sun, 24 Mar 2024 23:10:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42665155390;
+	Sun, 24 Mar 2024 23:10:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321830; cv=none; b=mXqKDMdAxIJDJJqjZT7c+OcI6K2LpZUT7jbYY7tljKcluyV2sbO6lIoijbbY5Utj9t8UVbcz72KL1Z9Le2InpJZwVJCykH9n21NUzzdMVh39M61AFw0nzEWxflajOK96bYy2xSpmQZgtqgAIneLGfMohd/bqkmJ3o4Nhm4VyfrY=
+	t=1711321821; cv=none; b=IabOvZr4dJidcTpp5AVa19HSGfUb4R/xFTSJrJJZM/PaYzftWKI6rrXicQRLbpBnxh+21Ws3oDJ0ftIJJ4QrHoXPXzJnh8w0vq98hPBeQkcDZSOTBMC/ibI/5fU3PKK6FcNLuAAocaQr+11wel8RjuSHD8inTyuJdTzL2WgDdoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321830; c=relaxed/simple;
-	bh=zwUzAYaODXUuLSoh8bMxnP8uZUATi/z+9DEgZAogWqg=;
+	s=arc-20240116; t=1711321821; c=relaxed/simple;
+	bh=4BADOKphyuUfmCRX7mXKv8O7VvmswaFVZ+psMdvd1xI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rBAIqoByg2sW4KY3v0L6FituGcUSndzrbsiEf8fSVwRoPSa2gBNShRt8XdX+ixDWWqIddYDlWy5jCEaq/Z5HZ5x6qrj/whWi21JBe0lLpuvvW/TCEXf2z0QTQ8iivlvzt0j9FguLIOMGjGdPxBrbun79ucWTwXjWD8AGOpTh8ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LILdpnX3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qPu3C0kiMK0SeCH3pJPuw/JlHM8LLYf8Ux036emJlZyJTbBcEoIwIxe4grV0AC/agf0MsqsCqpklQquinuospTzHL+2wC1lLnNUmxwrlVz3+/Vn/yIX3mEPbTSJORP5RTvWRFpgDSWPisPUQkCA+fNr1Y8Py/EAQ6EbybsyWFLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N19qzCLB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LILdpnX3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 084DEC433C7;
-	Sun, 24 Mar 2024 23:10:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N19qzCLB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 514D4C43399;
+	Sun, 24 Mar 2024 23:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321829;
-	bh=zwUzAYaODXUuLSoh8bMxnP8uZUATi/z+9DEgZAogWqg=;
+	s=k20201202; t=1711321821;
+	bh=4BADOKphyuUfmCRX7mXKv8O7VvmswaFVZ+psMdvd1xI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LILdpnX3JeAQItPAFnuV8BUC0LSyFfwyo0q1q72DBESDZIMUgXvM0ybppIiuCma0b
-	 DtvXOMm4VLmmcf4jUPwk9Pus98doeGCOJiJEyrNGYcK5k7k0fqMpaTTLW0bJCSGmE4
-	 K9Bfnin1LBOLb1gZ/j1mOZToVxwXxXdAUJrvY8AbkIQFb3/IqxE3qMSLVoVBsdd+W/
-	 IJdExY9ApA9OlMJkCvkt9JXVQ5hBgVP0PN/aZxQ2hHfeisW4dmGN8WW75EfzfiIcr6
-	 tc5H4UhZQ3ySD5AjjjnsrEzYtXBxyYE5zuoaaw7Hp9+zGAscQejeUj/zVz00XL9NmF
-	 j5PeX29E3GVbQ==
+	b=N19qzCLBBKC6wWKIeIsK7CX8rQm+9kvtlFx0S/BzpcCRskrOzVF73XU9+/3MQOczl
+	 1hE/SzA0PUM1wz8i+oMCtII76zeAhp6ShEVe86o+Qr/08AU7htt2BQYX1FclZlvBwv
+	 Fb4zXz8NJl2TUP07XpZ6JGef3/FDmuJJJ4f1Jp5XqMahywt/cSgEKsdtY8EsxLfzMf
+	 5c3Pq1uG0deM4s4JxL280sEzOLkSVHSZyJmrfS7SLELDLy4qV3r6eimyfSKgD3eU03
+	 7ggR00R+9LMRtPZk1I1/0a+QSnCH2CNBJLfFF+1l4oAiZPZjiJ+ISTnTBO8OpV59qR
+	 1PN7CjBogGHzA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sean Anderson <sean.anderson@seco.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Sandipan Das <sandipan.das@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 558/638] usb: phy: generic: Get the vbus supply
-Date: Sun, 24 Mar 2024 18:59:55 -0400
-Message-ID: <20240324230116.1348576-559-sashal@kernel.org>
+Subject: [PATCH 6.6 549/638] perf/x86/amd/core: Avoid register reset when CPU is dead
+Date: Sun, 24 Mar 2024 18:59:46 -0400
+Message-ID: <20240324230116.1348576-550-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,41 +50,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Sean Anderson <sean.anderson@seco.com>
+From: Sandipan Das <sandipan.das@amd.com>
 
-[ Upstream commit 75fd6485cccef269ac9eb3b71cf56753341195ef ]
+[ Upstream commit ad8c91282c95f801c37812d59d2d9eba6899b384 ]
 
-While support for working with a vbus was added, the regulator was never
-actually gotten (despite what was documented). Fix this by actually
-getting the supply from the device tree.
+When bringing a CPU online, some of the PMC and LBR related registers
+are reset. The same is done when a CPU is taken offline although that
+is unnecessary. This currently happens in the "cpu_dead" callback which
+is also incorrect as the callback runs on a control CPU instead of the
+one that is being taken offline. This also affects hibernation and
+suspend to RAM on some platforms as reported in the link below.
 
-Fixes: 7acc9973e3c4 ("usb: phy: generic: add vbus support")
-Signed-off-by: Sean Anderson <sean.anderson@seco.com>
-Link: https://lore.kernel.org/r/20240123225111.1629405-3-sean.anderson@seco.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 21d59e3e2c40 ("perf/x86/amd/core: Detect PerfMonV2 support")
+Reported-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/550a026764342cf7e5812680e3e2b91fe662b5ac.1706526029.git.sandipan.das@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/phy/phy-generic.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/events/amd/core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic.c
-index 770081b828a42..b855d291dfe6b 100644
---- a/drivers/usb/phy/phy-generic.c
-+++ b/drivers/usb/phy/phy-generic.c
-@@ -268,6 +268,13 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop)
- 		return dev_err_probe(dev, PTR_ERR(nop->vbus_draw),
- 				     "could not get vbus regulator\n");
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index e24976593a298..5365d6acbf090 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -604,7 +604,6 @@ static void amd_pmu_cpu_dead(int cpu)
  
-+	nop->vbus_draw = devm_regulator_get_exclusive(dev, "vbus");
-+	if (PTR_ERR(nop->vbus_draw) == -ENODEV)
-+		nop->vbus_draw = NULL;
-+	if (IS_ERR(nop->vbus_draw))
-+		return dev_err_probe(dev, PTR_ERR(nop->vbus_draw),
-+				     "could not get vbus regulator\n");
-+
- 	nop->dev		= dev;
- 	nop->phy.dev		= nop->dev;
- 	nop->phy.label		= "nop-xceiv";
+ 	kfree(cpuhw->lbr_sel);
+ 	cpuhw->lbr_sel = NULL;
+-	amd_pmu_cpu_reset(cpu);
+ 
+ 	if (!x86_pmu.amd_nb_constraints)
+ 		return;
 -- 
 2.43.0
 
