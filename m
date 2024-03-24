@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD591826FA;
-	Sun, 24 Mar 2024 23:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7773B229C13;
+	Sun, 24 Mar 2024 23:48:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324154; cv=none; b=Rc+eqEzuQnZanyzC0086xZMniXUIz5oI6MTlQtaGWslDUIySHoilAQjHBVikyRXgjrcIaSJ7foYhnCpKd0TPw/lofXON/7KV3ppGLBufH2AiLdwhACElUCdLZRjvQiobeKrOTxxDokruCHO4ZGnQsKtgOd7qhEX7P5Rdr2ZMkOw=
+	t=1711324137; cv=none; b=i8/J2Ih0f9nWRL2sqNaGOyuP1942SL1aprjQJHeS78utonHE+HKy17Edhu4AHp461cK8sg+vWXdbJMS1/W2msqWkb/D8sJRrhrVtRol1E/Tj7/++asLYyS2jBExyk7XwlKxhnrHwPWQOpcaBy2DTwgCrKivDNQ2j3AHNdgpVQeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324154; c=relaxed/simple;
-	bh=qUsKLSR4/2S+QJrOFojeB/hmcUgRxhpYTpV7hOoNmWw=;
+	s=arc-20240116; t=1711324137; c=relaxed/simple;
+	bh=EpkfoWx72jhMfIWXfpdojzGNUtDam6OnAiKzo5ntHS0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pqln+pVU0QMlscj8QVlNFjWLl1/EW2oCe5zfbAOo5jkZwX2cMvGictFCaC3crNA8OscaQZwjgAL3GqLyt1gw6fvdSJY9VFaHqWcfbAzJV4l+dqq58PJPpOSYvw5MdEwulnd2yUR7OwnfNKTy5PYJ8VJsXGBfDPdR0c51MJrWl8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KumwD8hD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qH0O1qBmCYY+iTtsVQKcCpxbdl+yUXNhY2LbuazCPBPadV3DHCHgxmTrwEZUsJL5jQ6uAPBdmJ9qZUq37xB8kosWHIkRJCjkaVUqOKtpHBDlHdhTXsITGZkVE0eTSE1ZfPdBG5fAX23J+KOxxbGE4E4xQU6n8EQRdvv1F3phJ8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p3hnUmYa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KumwD8hD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BFC6C43390;
-	Sun, 24 Mar 2024 23:49:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p3hnUmYa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD0EC433C7;
+	Sun, 24 Mar 2024 23:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324154;
-	bh=qUsKLSR4/2S+QJrOFojeB/hmcUgRxhpYTpV7hOoNmWw=;
+	s=k20201202; t=1711324137;
+	bh=EpkfoWx72jhMfIWXfpdojzGNUtDam6OnAiKzo5ntHS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KumwD8hDm/uILu5Zw3BuFwm9UsnGeAhLEDCY6aud+GwYl25RXPiY0q1uhAuVpGtE2
-	 qzHmZwseyjnP6+BuSljQmZay96/bb5Wp4DJuXWGFW+bqgqeMQgXDUFMpSuqIb4pcWJ
-	 ineTwqWUQJ106XZWtLvIJgE9TyPrlBNd3xLI4j0sMsTbUt5EoZXdWcovezPeOfDnv4
-	 J5VS3ZhXN/w9gvUnBr0SnL100BnJ0InfmzKlJKcWxb+cNpMPPh8dEIs4tU6eb2S3yB
-	 ZSu0xqVmkQHx9t1FNBu4ZlklqdqQzi+Ci3x3yNTET4qfKKZUnAzBotZ5RG1A4sPCVI
-	 cm7Xh7zYKrQ9g==
+	b=p3hnUmYaRFL/47h3I5oqmai53ncoSCd+H1XjsfhcCi8JLtqvTY4FhI2LK+WnP26rL
+	 XU2M/rsTdeAcmRCQw7pTPaQDiFroX8lY2CEnTnUr3sD25vODpOkbbkNHhQHUhtHPSM
+	 xALROK5dKf6P3lazmsaHXewZB74eT9FJBDTcG9UIcHSHiUBVLuWqyUVEC3ARhTQdAU
+	 SC7kNjTvuE7bZlK+Jsf2iXVuQu72C1CfM6GQnUX4E4CBrCoJzWvlmyCT02ztQNRnnZ
+	 7kSwZF6Lve6k7vruNafag+TDYlFmKqffXB4VJCPW8ofoOWDxHuTOkVQQilKp9C4hBs
+	 Fwh0qOrbJAUVA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sam Ravnborg <sam@ravnborg.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 150/183] sparc32: Fix section mismatch in leon_pci_grpci
-Date: Sun, 24 Mar 2024 19:46:03 -0400
-Message-ID: <20240324234638.1355609-151-sashal@kernel.org>
+Subject: [PATCH 5.4 134/183] media: dvb-frontends: avoid stack overflow warnings with clang
+Date: Sun, 24 Mar 2024 19:45:47 -0400
+Message-ID: <20240324234638.1355609-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -50,60 +49,93 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Sam Ravnborg <sam@ravnborg.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 24338a6ae13cb743ced77da1b3a12c83f08a0c96 ]
+[ Upstream commit 7a4cf27d1f0538f779bf31b8c99eda394e277119 ]
 
-Passing a datastructre marked _initconst to platform_driver_register()
-is wrong. Drop the __initconst notation.
+A previous patch worked around a KASAN issue in stv0367, now a similar
+problem showed up with clang:
 
-This fixes the following warnings:
+drivers/media/dvb-frontends/stv0367.c:1222:12: error: stack frame size (3624) exceeds limit (2048) in 'stv0367ter_set_frontend' [-Werror,-Wframe-larger-than]
+ 1214 | static int stv0367ter_set_frontend(struct dvb_frontend *fe)
 
-WARNING: modpost: vmlinux: section mismatch in reference: grpci1_of_driver+0x30 (section: .data) -> grpci1_of_match (section: .init.rodata)
-WARNING: modpost: vmlinux: section mismatch in reference: grpci2_of_driver+0x30 (section: .data) -> grpci2_of_match (section: .init.rodata)
+Rework the stv0367_writereg() function to be simpler and mark both
+register access functions as noinline_for_stack so the temporary
+i2c_msg structures do not get duplicated on the stack when KASAN_STACK
+is enabled.
 
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Andreas Larsson <andreas@gaisler.com>
-Fixes: 4154bb821f0b ("sparc: leon: grpci1: constify of_device_id")
-Fixes: 03949b1cb9f1 ("sparc: leon: grpci2: constify of_device_id")
-Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Reviewed-by: Andreas Larsson <andreas@gaisler.com>
-Tested-by: Andreas Larsson <andreas@gaisler.com>
-Signed-off-by: Andreas Larsson <andreas@gaisler.com>
-Link: https://lore.kernel.org/r/20240224-sam-fix-sparc32-all-builds-v2-7-1f186603c5c4@ravnborg.org
+Fixes: 3cd890dbe2a4 ("media: dvb-frontends: fix i2c access helpers for KASAN")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/kernel/leon_pci_grpci1.c | 2 +-
- arch/sparc/kernel/leon_pci_grpci2.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/dvb-frontends/stv0367.c | 34 +++++++--------------------
+ 1 file changed, 8 insertions(+), 26 deletions(-)
 
-diff --git a/arch/sparc/kernel/leon_pci_grpci1.c b/arch/sparc/kernel/leon_pci_grpci1.c
-index e6935d0ac1ec9..c32590bdd3120 100644
---- a/arch/sparc/kernel/leon_pci_grpci1.c
-+++ b/arch/sparc/kernel/leon_pci_grpci1.c
-@@ -696,7 +696,7 @@ static int grpci1_of_probe(struct platform_device *ofdev)
- 	return err;
+diff --git a/drivers/media/dvb-frontends/stv0367.c b/drivers/media/dvb-frontends/stv0367.c
+index 0bfca1174e9e7..8cbae8235b174 100644
+--- a/drivers/media/dvb-frontends/stv0367.c
++++ b/drivers/media/dvb-frontends/stv0367.c
+@@ -118,50 +118,32 @@ static const s32 stv0367cab_RF_LookUp2[RF_LOOKUP_TABLE2_SIZE][RF_LOOKUP_TABLE2_S
+ 	}
+ };
+ 
+-static
+-int stv0367_writeregs(struct stv0367_state *state, u16 reg, u8 *data, int len)
++static noinline_for_stack
++int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
+ {
+-	u8 buf[MAX_XFER_SIZE];
++	u8 buf[3] = { MSB(reg), LSB(reg), data };
+ 	struct i2c_msg msg = {
+ 		.addr = state->config->demod_address,
+ 		.flags = 0,
+ 		.buf = buf,
+-		.len = len + 2
++		.len = 3,
+ 	};
+ 	int ret;
+ 
+-	if (2 + len > sizeof(buf)) {
+-		printk(KERN_WARNING
+-		       "%s: i2c wr reg=%04x: len=%d is too big!\n",
+-		       KBUILD_MODNAME, reg, len);
+-		return -EINVAL;
+-	}
+-
+-
+-	buf[0] = MSB(reg);
+-	buf[1] = LSB(reg);
+-	memcpy(buf + 2, data, len);
+-
+ 	if (i2cdebug)
+ 		printk(KERN_DEBUG "%s: [%02x] %02x: %02x\n", __func__,
+-			state->config->demod_address, reg, buf[2]);
++			state->config->demod_address, reg, data);
+ 
+ 	ret = i2c_transfer(state->i2c, &msg, 1);
+ 	if (ret != 1)
+ 		printk(KERN_ERR "%s: i2c write error! ([%02x] %02x: %02x)\n",
+-			__func__, state->config->demod_address, reg, buf[2]);
++			__func__, state->config->demod_address, reg, data);
+ 
+ 	return (ret != 1) ? -EREMOTEIO : 0;
  }
  
--static const struct of_device_id grpci1_of_match[] __initconst = {
-+static const struct of_device_id grpci1_of_match[] = {
- 	{
- 	 .name = "GAISLER_PCIFBRG",
- 	 },
-diff --git a/arch/sparc/kernel/leon_pci_grpci2.c b/arch/sparc/kernel/leon_pci_grpci2.c
-index ca22f93d90454..dd06abc61657f 100644
---- a/arch/sparc/kernel/leon_pci_grpci2.c
-+++ b/arch/sparc/kernel/leon_pci_grpci2.c
-@@ -887,7 +887,7 @@ static int grpci2_of_probe(struct platform_device *ofdev)
- 	return err;
- }
- 
--static const struct of_device_id grpci2_of_match[] __initconst = {
-+static const struct of_device_id grpci2_of_match[] = {
- 	{
- 	 .name = "GAISLER_GRPCI2",
- 	 },
+-static int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
+-{
+-	u8 tmp = data; /* see gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
+-
+-	return stv0367_writeregs(state, reg, &tmp, 1);
+-}
+-
+-static u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
++static noinline_for_stack
++u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
+ {
+ 	u8 b0[] = { 0, 0 };
+ 	u8 b1[] = { 0 };
 -- 
 2.43.0
 
