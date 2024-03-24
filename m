@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A78522AB97;
-	Sun, 24 Mar 2024 23:15:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAFB15B54D;
+	Sun, 24 Mar 2024 23:16:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322154; cv=none; b=bn3exQPSH6b1PhMZpmT8ZYKOmAr0/+x4G9MTWe9CMKcNh3tXunhDjKp67wA7JdoV9fzEf/Ux7+c2Jad51Y9o7AsvLC7RHOJproUWWwCLynF7OnsNY8xIpwu8zpYEbZ+cZkNHEw967SipF8TB9S4beaJ7gyMvHlgbR5p7toHUhHQ=
+	t=1711322161; cv=none; b=dylrF/M3I/6sD5Rbllv4XPoFXLzLhaKbRk+dzSGcC4RUJxU6Ppfy93wWOIrP+bXgA7rHeVHoZSO3LOB93rbkjIcOTdhb/WYSM7cPqZT+g02DtqvpAmh880A5tALjFsUhg9Ek99DjZkz/7d40GfsadR6hMNKc6z8S+z1sYP7I4iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322154; c=relaxed/simple;
-	bh=gwobMM9/9qbaSInsdF01UBeLUAeQfgP6FuCZ2TJ+iXo=;
+	s=arc-20240116; t=1711322161; c=relaxed/simple;
+	bh=+ZUl4XWyX2TC41ftSNhfrfsALGaw+PtYVx7wA53zQtM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MO9a7+p0P3RPdYMmZfQPMxEotCPAOqQ73Kaa7dHvSApjOmmARplYYXIYNZk4LW5LOzBronH4s4WMI4Qg/kahbOWxMksthiB2G+EgUFO9KBDJ4lHTEmNNPeDhoupJvaG3boo6iTn4sSU5zcSPS1T3WuPgC25hJqqreG2/uX+kP6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pa9VHCWp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=usMN10OyYpr3su+/hAHfySSbI4kEe/oOANqnehFuDHOHhKsgyoyoIRYy8DwKQWCOJrFMpFZfAVdm/BtFRsArFdjGNEhwREaOqWU/MtqFrBiZi5bl9N3NoY9eYt3WW/PSDpBRQ8YbJxLGXR/0VIsKkWKgFHXSqzqGTMv4+bwqFnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gEMDe3NF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pa9VHCWp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34280C433B2;
-	Sun, 24 Mar 2024 23:15:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gEMDe3NF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBACAC433F1;
+	Sun, 24 Mar 2024 23:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322152;
-	bh=gwobMM9/9qbaSInsdF01UBeLUAeQfgP6FuCZ2TJ+iXo=;
+	s=k20201202; t=1711322160;
+	bh=+ZUl4XWyX2TC41ftSNhfrfsALGaw+PtYVx7wA53zQtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Pa9VHCWp7xTj+B1GvCAGGdzLmHCRtfC/Sfl3nBUKmsJIqKoE0bvRwJAYbHqZO1DYf
-	 kVifqG+0nqKO7qwTxtxaaOpP7fZBwMU60wMkIP3dQWvjj6Z4vcx8wEhIi2EVqeBY70
-	 JO2YJKlyE5sQYgjUz3MKuP95M53nVMXxZdCp6rCI8rCOH9JTO8vw6JtfG5/MKIU4rd
-	 rE+QVfw/OwfA8Pj72QzDaRYRI9aWle5B4BatwaxgCMC1paK1kcFoL/Yt/RdpzLYm1C
-	 OOeBdIxThjsbSDqf/oUEly3v5FL87Ia4BoyXVbp+XuEUAGtn4G89c3DunBjSkjVwZi
-	 zUgtusRNUDqhA==
+	b=gEMDe3NFK33Ebmv4j7CYms3gSESiPoRC4WT8G4S+nupsq34vimJPNzX6GLsMfSCiY
+	 ty0jLHjlGm6L0hg74g4THf4jK2xPCSVf9TClYh4DjhEVi9Mlz6bCQnwPYbgax/Krpd
+	 SKWpaVFF7ygF52t2EFF2e1wBiH5jPjeViV1K1PhAsFQTfKj+fP+iiSlxDZyer5bnRr
+	 y2Moa+3iGsJBUsTbtuEZrBZp+OvjlGZ5XgR7S2BE2mMmMVgkDgk7Pz/nzQ44u92xGi
+	 I71vdJHPSE/oHtjdaIo8DQ4qQRQuj/Cjc9Z5V4/74PGPSvcim50oiwcxVgZiUZGnbz
+	 bkGcel4LgzM6g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Duoming Zhou <duoming@zju.edu.cn>,
-	Louis Peens <louis.peens@corigine.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 230/451] nfp: flower: handle acti_netdevs allocation failure
-Date: Sun, 24 Mar 2024 19:08:26 -0400
-Message-ID: <20240324231207.1351418-231-sashal@kernel.org>
+Subject: [PATCH 6.1 238/451] drm/tegra: dsi: Fix missing pm_runtime_disable() in the error handling path of tegra_dsi_probe()
+Date: Sun, 24 Mar 2024 19:08:34 -0400
+Message-ID: <20240324231207.1351418-239-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,43 +48,34 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Duoming Zhou <duoming@zju.edu.cn>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 84e95149bd341705f0eca6a7fcb955c548805002 ]
+[ Upstream commit 5286a9fc280c45b6b307ee1b07f7a997e042252c ]
 
-The kmalloc_array() in nfp_fl_lag_do_work() will return null, if
-the physical memory has run out. As a result, if we dereference
-the acti_netdevs, the null pointer dereference bugs will happen.
+If an error occurs after calling pm_runtime_enable(), pm_runtime_disable()
+should be called as already done in the remove function.
 
-This patch adds a check to judge whether allocation failure occurs.
-If it happens, the delayed work will be rescheduled and try again.
-
-Fixes: bb9a8d031140 ("nfp: flower: monitor and offload LAG groups")
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
-Reviewed-by: Louis Peens <louis.peens@corigine.com>
-Link: https://lore.kernel.org/r/20240308142540.9674-1-duoming@zju.edu.cn
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: ef8187d75265 ("drm/tegra: dsi: Implement runtime PM")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/ee4a15c9cd4b574a55cd67c30d2411239ba2cee9.1693667005.git.christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/lag_conf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpu/drm/tegra/dsi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c b/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
-index e92860e20a24a..c6a2c302a8c8b 100644
---- a/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
-@@ -308,6 +308,11 @@ static void nfp_fl_lag_do_work(struct work_struct *work)
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index 815e32e05f600..7bb26655cb3cc 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -1665,6 +1665,7 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+ 	return 0;
  
- 		acti_netdevs = kmalloc_array(entry->slave_cnt,
- 					     sizeof(*acti_netdevs), GFP_KERNEL);
-+		if (!acti_netdevs) {
-+			schedule_delayed_work(&lag->work,
-+					      NFP_FL_LAG_DELAY);
-+			continue;
-+		}
- 
- 		/* Include sanity check in the loop. It may be that a bond has
- 		 * changed between processing the last notification and the
+ unregister:
++	pm_runtime_disable(&pdev->dev);
+ 	mipi_dsi_host_unregister(&dsi->host);
+ mipi_free:
+ 	tegra_mipi_free(dsi->mipi);
 -- 
 2.43.0
 
