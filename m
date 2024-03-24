@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAAD2308AD;
-	Sun, 24 Mar 2024 23:17:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114E62310C2;
+	Sun, 24 Mar 2024 23:17:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322229; cv=none; b=WL9TyUSX/ZcSiglKI8iWSpdYnW+YNktVd7cF+vg7zPqjONPtu6QX8ezHzvtDj92nBjX80nZJvYo/eluwym8LVTHbhg/m44McKAdS007bvWx5K1ATrcy8OUrWzxMrPf0AU7EtkGEMLuf5p68aEGA+7l+WjLqnumNp2azkbOtAR/U=
+	t=1711322239; cv=none; b=P+NJOnCVkexDWZLJNW5Em1ugI9tpzMU9xNKBbaGQHKz36NjV2GJ1BRrPUwHY0eN2xy1ihI0ONDnpLSXALWyR2ZZZoWjJYpZtq0A0Gtz2hPLG4nWqhv0BxryNsY4Gescjft7ZWwb7E5TN1EOFgJA6T+kL7KrPFnlVo6qBhl4k3ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322229; c=relaxed/simple;
-	bh=9jN6vKZ98/bJPDMoRNuvk8UuWNbHvTAGirA78gAMS2I=;
+	s=arc-20240116; t=1711322239; c=relaxed/simple;
+	bh=7V/ou0JHyZfb2bXwkJZOV950h06hGRhDhCaWaRkIyps=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jAeFPdA/FCpTbCGtAezAw47x8CLbbo5zjb2GDSlZD2wZmF37dGQRO4mPeo2hCEMbW+5PjOiN6Yy/Yidbru0dYDJ92OlJeATjDw2g1OGldBC+DQ9x9LgU/nOHlPmptUgUUxVtKmArW0NAFLPvaFOjya90UM+07kcTN3/cvxQ+4D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDSdSM8O; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NX9Tor+VSpRRyoHH43B2DmKD8wxMRuLmeAFQC/mVXJ71pPmB1Jm9oWeA/OXLe2bHios3iXDuWKSC4SyQ9R7fVTwsgui1xrS/ISq0/IJDBX5gVC1m2xSorm3lEZXEf7+II1u2y4n0AdYDgEqT7UOdIjFf7iEAc0x6wRV6q6n2P9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQ77KIhc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDSdSM8O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5AAAC433C7;
-	Sun, 24 Mar 2024 23:17:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQ77KIhc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB07C433A6;
+	Sun, 24 Mar 2024 23:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322228;
-	bh=9jN6vKZ98/bJPDMoRNuvk8UuWNbHvTAGirA78gAMS2I=;
+	s=k20201202; t=1711322237;
+	bh=7V/ou0JHyZfb2bXwkJZOV950h06hGRhDhCaWaRkIyps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oDSdSM8Ob2SkQCrjxeDQEpUAAvU2OmE9OcehPf9sMv2nQWTDPJ9wjE771H5VfIdmn
-	 jrsrTT95iQfpAWq14UnI8BlLHZPEWcbLLYOt7UGngSil2YZdlfnkrGuPMo3ULg14w+
-	 nwWudp5we4aHAVgYnKO5IPdxW9qQ8TRnC/aV9IdKlgYZNHxbh62VvgkVQgBw0/PqQa
-	 eu73i0CVvXM2K3u+irYeMhnvbly5J/glpzwfUs/HHQ1WhdIu/qrxWc/M2cnlbe6ys0
-	 1fnoRLCgZHH9qpcDZ51lhpJ4p6FGa2430ieRHszuucwaYdwYWcnuzoH60mKv4eQ+Oe
-	 DGj9jKKruV4xg==
+	b=rQ77KIhcp+KsAkjt3igr8RHfll1kPLK+tkI+WnVovHz0TddVB1N/rcp6tFbYrBegi
+	 Ne2/mLf8WlBK1xMbXjzV0zm1++9wthTC5AOQr6FLnJnKbxn3t3CXgVrjZIPMwzgEmC
+	 kNDRFAEygIn6gkQW0dLaYo2IE/7Urm283y6kwDVAXrz1YaqE6URkRA/tcpNDtppdo9
+	 rmnXZVvZIC5uIlOlu3kDho1we23cffWW6JyIVdBOmAgPJpov/SCxpoMV+naYMrUyN/
+	 90nO6KmcqzZExHlmYEKNI/u6xanCJomw4abgQhiLQsqFnWDwqrhcKYHnKyD6Cqe+Wq
+	 cT2MU6Mu9Hsbg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Stephen Boyd <sboyd@kernel.org>,
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 309/451] clk: hisilicon: hi3559a: Fix an erroneous devm_kfree()
-Date: Sun, 24 Mar 2024 19:09:45 -0400
-Message-ID: <20240324231207.1351418-310-sashal@kernel.org>
+Subject: [PATCH 6.1 319/451] ASoC: meson: axg-tdm-interface: fix mclk setup without mclk-fs
+Date: Sun, 24 Mar 2024 19:09:55 -0400
+Message-ID: <20240324231207.1351418-320-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,40 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 64c6a38136b74a2f18c42199830975edd9fbc379 ]
+[ Upstream commit e3741a8d28a1137f8b19ae6f3d6e3be69a454a0a ]
 
-'p_clk' is an array allocated just before the for loop for all clk that
-need to be registered.
-It is incremented at each loop iteration.
+By default, when mclk-fs is not provided, the tdm-interface driver
+requests an MCLK that is 4x the bit clock, SCLK.
 
-If a clk_register() call fails, 'p_clk' may point to something different
-from what should be freed.
+However there is no justification for this:
 
-The best we can do, is to avoid this wrong release of memory.
+* If the codec needs MCLK for its operation, mclk-fs is expected to be set
+  according to the codec requirements.
+* If the codec does not need MCLK the minimum is 2 * SCLK, because this is
+  minimum the divider between SCLK and MCLK can do.
 
-Fixes: 6c81966107dc ("clk: hisilicon: Add clock driver for hi3559A SoC")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/773fc8425c3b8f5b0ca7c1d89f15b65831a85ca9.1705850155.git.christophe.jaillet@wanadoo.fr
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Multiplying by 4 may cause problems because the PLL limit may be reached
+sooner than it should, so use 2x instead.
+
+Fixes: d60e4f1e4be5 ("ASoC: meson: add tdm interface driver")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://msgid.link/r/20240223175116.2005407-2-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/hisilicon/clk-hi3559a.c | 1 -
- 1 file changed, 1 deletion(-)
+ sound/soc/meson/axg-tdm-interface.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/hisilicon/clk-hi3559a.c b/drivers/clk/hisilicon/clk-hi3559a.c
-index 9ea1a80acbe8b..0272276550ff1 100644
---- a/drivers/clk/hisilicon/clk-hi3559a.c
-+++ b/drivers/clk/hisilicon/clk-hi3559a.c
-@@ -491,7 +491,6 @@ static void hisi_clk_register_pll(struct hi3559av100_pll_clock *clks,
+diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
+index c040c83637e02..eb188ee950557 100644
+--- a/sound/soc/meson/axg-tdm-interface.c
++++ b/sound/soc/meson/axg-tdm-interface.c
+@@ -266,8 +266,8 @@ static int axg_tdm_iface_set_sclk(struct snd_soc_dai *dai,
+ 	srate = iface->slots * iface->slot_width * params_rate(params);
  
- 		clk = clk_register(NULL, &p_clk->hw);
- 		if (IS_ERR(clk)) {
--			devm_kfree(dev, p_clk);
- 			dev_err(dev, "%s: failed to register clock %s\n",
- 			       __func__, clks[i].name);
- 			continue;
+ 	if (!iface->mclk_rate) {
+-		/* If no specific mclk is requested, default to bit clock * 4 */
+-		clk_set_rate(iface->mclk, 4 * srate);
++		/* If no specific mclk is requested, default to bit clock * 2 */
++		clk_set_rate(iface->mclk, 2 * srate);
+ 	} else {
+ 		/* Check if we can actually get the bit clock from mclk */
+ 		if (iface->mclk_rate % srate) {
 -- 
 2.43.0
 
