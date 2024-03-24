@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACA91F30C7;
-	Sun, 24 Mar 2024 22:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A8A12D765;
+	Sun, 24 Mar 2024 22:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321124; cv=none; b=ngZD7mpEdHkCAYkRCQcsYlwTzUDI9O1LkU4Z9yKAJ+J31KbRd4QsgxHvtgWYuf/KpZd4Jas41BgLGa8HcNB0PiiK8ArcaGDC9nVSRZab17dG4AdI+u2f3armhVXuqlhNqNZIHW3r+sRyN3JRpp04BJVHGXvdqVFqcP8BccvZTKU=
+	t=1711321133; cv=none; b=h1jv9tQ0sGy9ugeMtRNPKCSG+OvVWH0RREd7s0ZL4n5zOf+GxzsnZ4kwqorSW7uWWLc681JdUZnlArWLKiCJRS6kFvmKfHDvFJyGWg72N5jz3nXEpJumYSYAhdzt2xM/q1kBZ+RT9FaQTL6kwJ+VZMAAo6is6i2WSSsXIuY60Go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321124; c=relaxed/simple;
-	bh=X/3XYKAUHv8Ahibku5Y9s1Ozf8W++cB+0fCChROp5Z0=;
+	s=arc-20240116; t=1711321133; c=relaxed/simple;
+	bh=KBxM9YEfy6MN0Zj5FWWkO4w/8khireT469bIN4a8cqM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Sl4KSQJTCPy+z12nXYhIwajHBBPkuopREaFlX5DGxeYsMkBpAfb39Iti5Noy1OGZLdGDb4diVPu6GWDtxRnw0QbhBDzhUoTOOijYNyHxRY+FZIsTshzELGiVbBiGsiqJyiZZTxxQZONoX4vT/URq3/eWuaplQeLMmu746ZyU06U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iOwlbwwc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=icHQdTPGWcDING8u9JhlgDyGpnTnrLGQe6kQ3Ys8shwLsZzmR1ALBEbCMUNDF2J9MkMRNXDdu89i1IeZuofSkpAUARUj6Qy1H0wSnZlxjrfJGdrz2GZ8i7PyCeUxWXZPWGIul/muCW+l7oxgkvh8wWdBq51qb7NUblkS+eLNi90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLxvn6mc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iOwlbwwc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98951C433F1;
-	Sun, 24 Mar 2024 22:58:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLxvn6mc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 505D3C433A6;
+	Sun, 24 Mar 2024 22:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321123;
-	bh=X/3XYKAUHv8Ahibku5Y9s1Ozf8W++cB+0fCChROp5Z0=;
+	s=k20201202; t=1711321132;
+	bh=KBxM9YEfy6MN0Zj5FWWkO4w/8khireT469bIN4a8cqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iOwlbwwc+vd/UeQEo+zZsyKECFSIpELaSR+lxfYWnDR9FNr8oUtkbJP/5LlbnqQ7b
-	 OFSxPO3gD/oSACfxWPheQTSWHHR/1u5UkD/K4rIEGQ4WSGiJDUCpIkQYNDNCC63T5N
-	 Lo/dDcCeaEU4+1NXsbIUOsH4HhnBBtUtnog0+8feegMRLtjll8E/wjHVkiH4JxgJlO
-	 Dio6uhFag+Ff8AcLr/mYYrwqGcMB4j1dOHlTSbU7CJk3Gr85FDjx3ho7KsFJMDMUe9
-	 nOQ6ez8IT62guHDeBVl7IyNq7fEufoapynfADcdfBPVkl2jMCHoI7naZ4PwgXtoYVW
-	 j/Jk4RzduX9AQ==
+	b=FLxvn6mcSG4Wl6jkmSM2Hd4iyNlL7ARJSBgPONNqGkZKFBwl5vH8Y3ITat4rG6cpR
+	 kKQ1XqZwe3vNpmB1zNRefBZyEAAK2xF90UNsDe/V8rL1axF4a8jbc7hKTd/hLUJf5e
+	 Winnz2E1uo1bq+lV6xGO1zfEjaSNfMTgJmoqd+ZGbO29FFpm28xWi4Q+LMEAdEZR1y
+	 J/9qVjzJMJ231Ye2m9ipRscWj0EK9Xslncf9G47lTqDAByB+nzqc+Icw19Sac0Ncp0
+	 G9Sw60jvvnseBrzvn+sgn5i40P73TsnpaO1Y+jEwFrEkgenEZIg4TGSGGTT3lmjyIN
+	 UT39dlvLsR+0w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dave Airlie <airlied@redhat.com>,
-	Danilo Krummrich <dakr@redhat.com>,
+Cc: Subbaraya Sundeep <sbhatta@marvell.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 684/713] nouveau/gsp: don't check devinit disable on GSP.
-Date: Sun, 24 Mar 2024 18:46:50 -0400
-Message-ID: <20240324224720.1345309-685-sashal@kernel.org>
+Subject: [PATCH 6.7 694/713] octeontx2-af: Use separate handlers for interrupts
+Date: Sun, 24 Mar 2024 18:47:00 -0400
+Message-ID: <20240324224720.1345309-695-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,37 +48,67 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dave Airlie <airlied@redhat.com>
+From: Subbaraya Sundeep <sbhatta@marvell.com>
 
-[ Upstream commit 5d4e8ae6e57b025802aadf55a4775c55cceb75f1 ]
+[ Upstream commit 50e60de381c342008c0956fd762e1c26408f372c ]
 
-GSP should be handling this and I can see no evidence in opengpu
-driver that this register should be touched.
+For PF to AF interrupt vector and VF to AF vector same
+interrupt handler is registered which is causing race condition.
+When two interrupts are raised to two CPUs at same time
+then two cores serve same event corrupting the data.
 
-Fixed acceleration on 2080 Ti GPUs.
-
-Fixes: 15740541e8f0 ("drm/nouveau/devinit/tu102-: prepare for GSP-RM")
-
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Signed-off-by: Danilo Krummrich <dakr@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240314014521.2695233-1-airlied@gmail.com
+Fixes: 7304ac4567bc ("octeontx2-af: Add mailbox IRQ and msg handlers")
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/devinit/r535.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/marvell/octeontx2/af/rvu.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/r535.c b/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/r535.c
-index 666eb93b1742c..11b4c9c274a1a 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/r535.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/r535.c
-@@ -41,7 +41,6 @@ r535_devinit_new(const struct nvkm_devinit_func *hw,
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+index d82aa6f12f114..32645aefd5934 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+@@ -2528,10 +2528,9 @@ static void rvu_queue_work(struct mbox_wq_info *mw, int first,
+ 	}
+ }
  
- 	rm->dtor = r535_devinit_dtor;
- 	rm->post = hw->post;
--	rm->disable = hw->disable;
+-static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
++static irqreturn_t rvu_mbox_pf_intr_handler(int irq, void *rvu_irq)
+ {
+ 	struct rvu *rvu = (struct rvu *)rvu_irq;
+-	int vfs = rvu->vfs;
+ 	u64 intr;
  
- 	ret = nv50_devinit_new_(rm, device, type, inst, pdevinit);
- 	if (ret)
+ 	intr = rvu_read64(rvu, BLKADDR_RVUM, RVU_AF_PFAF_MBOX_INT);
+@@ -2545,6 +2544,18 @@ static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
+ 
+ 	rvu_queue_work(&rvu->afpf_wq_info, 0, rvu->hw->total_pfs, intr);
+ 
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
++{
++	struct rvu *rvu = (struct rvu *)rvu_irq;
++	int vfs = rvu->vfs;
++	u64 intr;
++
++	/* Sync with mbox memory region */
++	rmb();
++
+ 	/* Handle VF interrupts */
+ 	if (vfs > 64) {
+ 		intr = rvupf_read64(rvu, RVU_PF_VFPF_MBOX_INTX(1));
+@@ -2882,7 +2893,7 @@ static int rvu_register_interrupts(struct rvu *rvu)
+ 	/* Register mailbox interrupt handler */
+ 	sprintf(&rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], "RVUAF Mbox");
+ 	ret = request_irq(pci_irq_vector(rvu->pdev, RVU_AF_INT_VEC_MBOX),
+-			  rvu_mbox_intr_handler, 0,
++			  rvu_mbox_pf_intr_handler, 0,
+ 			  &rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], rvu);
+ 	if (ret) {
+ 		dev_err(rvu->dev,
 -- 
 2.43.0
 
