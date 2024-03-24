@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0FC13342A;
-	Sun, 24 Mar 2024 23:05:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB6E20631F;
+	Sun, 24 Mar 2024 23:05:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321504; cv=none; b=FoC+ruqiKfgtH5P8L5OKuibqhOtaZYbEeDgIlKgKx4hNLX4h7EJhG4LYttYl/JvdPZDO9EOpNdp6qco6rKE4+YmXHR7G1HkXli1utvDhpSs6tLvDfdm62E0hhPRa6hAgGEmHF8WNO4eIDQ22lUyIdjf1Bl4stMawtvfkcEfVwXE=
+	t=1711321506; cv=none; b=Hx5HHgsWZmUjbYtjde3qz9xKn93C0q6040bOrFz6MQG+/5MzBP0Z1RIOiTVxc6CcYiO+eOQRbcug1VN+9F3W4RDEwKzu6D0VGy+S+5QK4IVseAVjYjtTJLrYF9D2tf4SvbCt0SP2VlOsUpscG2Mi+x7XILLtridJEegEptY5MOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321504; c=relaxed/simple;
-	bh=+Hxhegior8++nnyBQf5i5t5oXEIt5a5o7CvmOj5jmnE=;
+	s=arc-20240116; t=1711321506; c=relaxed/simple;
+	bh=aFO4d3waUVIdp56vRLYvX2gEdfvS8SByBmZjjBuvnb0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NxxOf/w4jJFGoN3YS04iH/+9MDqk9oJpeAhp/H12IvX4K53ij4CzDxGCFHi4FFEPd+m6qOh5KTcrRgg9pUhzLQPR0vd9fJIkh1in2fQVyDjhg74YMRt0mfXhifYj8MRMth4Jl+hgCR1r3Q9puLN1ZUYg+zx6HonqeH1i4ZWbDhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+6+Jyff; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VYSk/MiktlftwhTUabNhEhKSx3d0HjEKXNQ4GxNv7GCzxRngBWtfLB7j6l9cTYtcTrJqrT5hY+oarrnD0pQerw16qms59Omf+/EhGFin+GZwLwWFNJxwRljcjvZ1mOzaoSiX6Y7jYURVnNxigsuQcW7Jmp/ZYv85rsxwc0l8PBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q2t0QHGp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+6+Jyff"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 207FBC433C7;
-	Sun, 24 Mar 2024 23:05:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q2t0QHGp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FAD2C43390;
+	Sun, 24 Mar 2024 23:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321502;
-	bh=+Hxhegior8++nnyBQf5i5t5oXEIt5a5o7CvmOj5jmnE=;
+	s=k20201202; t=1711321505;
+	bh=aFO4d3waUVIdp56vRLYvX2gEdfvS8SByBmZjjBuvnb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R+6+JyffQRA/BTuE2GCHaOHCtLKpyv5VER9sTV5+J+S0GfQBlxHb/j7CnFBKrMjOt
-	 2OMQpAt5PwQp8T/2lSb+EbnaeWXes81xjrLiWREs7f1a+M4NRtmItqQ5kaoNVISimj
-	 wl4CWt6T8Wpv3qIIvTloehuQfAlcRNKUa7GC4xMvvGEUBZ9+yPNR2JG/SeoN0twpPh
-	 pkWrIvc5IJWLf+1yh8P/FKc5kAfVaHG2fxOGzzpg0hrwHKU775oz4ynbUA7mS38TS9
-	 5KFkaVU2vzpWljuAEZEVi3iHMXsOyekb36WJQUVZPPgNLkgPwTadopzmfrt2AdbnJM
-	 GvlJIK1SJzxRQ==
+	b=q2t0QHGpwGL8GA3XP+aXswY1itEKiFN2t1R03aKg1syvFr4EEgGX1utSBKk13+kDQ
+	 CV0NUeznzjNnpzC/suKPRv8ca4lCaG97qRrReIrMIka3GZCQU/UO+uYC1RqdZsTA8X
+	 QqTxyvIVhzTGu467ggxmxXH6AB4HEbkojGSGp/m4oYTtX6WRHOZpBJ7ePxHgIC5QJu
+	 60MH3u4OJoRGDDKjBN3M5lqoCQmG+EjVl+E0tkmnZEuUT1fBsSakiBAvaaVAEOaWPB
+	 aG4gNNCBDGYApEUmJ02VCxz17lE3kvzmOTcpX5lLT7LQnGFrQqzZzEXRueVqtP+N+z
+	 Nz4vg9I5Ty1Jw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Robinson <pbrobinson@gmail.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 228/638] bus: tegra-aconnect: Update dependency to ARCH_TEGRA
-Date: Sun, 24 Mar 2024 18:54:25 -0400
-Message-ID: <20240324230116.1348576-229-sashal@kernel.org>
+Subject: [PATCH 6.6 231/638] arm64: dts: qcom: sdm845-db845c: correct PCIe wake-gpios
+Date: Sun, 24 Mar 2024 18:54:28 -0400
+Message-ID: <20240324230116.1348576-232-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,45 +49,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Robinson <pbrobinson@gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-[ Upstream commit 4acd21a45c1446277e2abaece97d7fa7c2e692a9 ]
+[ Upstream commit 584a327c5cffc36369b2a8953d9448826240f1ac ]
 
-Update the architecture dependency to be the generic Tegra
-because the driver works on the four latest Tegra generations
-not just Tegra210, if you build a kernel with a specific
-ARCH_TEGRA_xxx_SOC option that excludes Tegra210 you don't get
-this driver.
+Bindings allow a "wake", not "enable", GPIO.  Schematics also use WAKE
+name for the pin:
 
-Fixes: 46a88534afb59 ("bus: Add support for Tegra ACONNECT")
-Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+  sdm845-db845c.dtb: pcie@1c00000: Unevaluated properties are not allowed ('enable-gpio' was unexpected)
+
+Fixes: 4a657c264b78 ("arm64: dts: qcom: db845c: Enable PCIe controllers")
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20240108131216.53867-1-krzysztof.kozlowski@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index c98dd6ca26297..fab27506d945e 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -186,11 +186,12 @@ config SUNXI_RSB
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index 7e7bf3fb3be63..0a891a0122446 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -580,7 +580,7 @@ &mss_pil {
+ &pcie0 {
+ 	status = "okay";
+ 	perst-gpios = <&tlmm 35 GPIO_ACTIVE_LOW>;
+-	enable-gpio = <&tlmm 134 GPIO_ACTIVE_HIGH>;
++	wake-gpios = <&tlmm 134 GPIO_ACTIVE_HIGH>;
  
- config TEGRA_ACONNECT
- 	tristate "Tegra ACONNECT Bus Driver"
--	depends on ARCH_TEGRA_210_SOC
-+	depends on ARCH_TEGRA
- 	depends on OF && PM
- 	help
- 	  Driver for the Tegra ACONNECT bus which is used to interface with
--	  the devices inside the Audio Processing Engine (APE) for Tegra210.
-+	  the devices inside the Audio Processing Engine (APE) for
-+	  Tegra210 and later.
+ 	vddpe-3v3-supply = <&pcie0_3p3v_dual>;
  
- config TEGRA_GMI
- 	tristate "Tegra Generic Memory Interface bus driver"
 -- 
 2.43.0
 
