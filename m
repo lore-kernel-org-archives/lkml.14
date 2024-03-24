@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B560220371E;
-	Sun, 24 Mar 2024 23:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3D313442C;
+	Sun, 24 Mar 2024 23:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321455; cv=none; b=mOF9M7dsvE4XC5tB8hR5S6Rl0sJe+SabZPhFSfYiDP9G/6CE6tP6fDibbXqxjIAli3wgtVoX4xO8t/ohlorcNF821Cv7Df3nUdphJgDEZx+QIhUpiQvOOvhhAnV1a2gDzRTkgjwudzV1G3M3ZMwZVYV29K2WvWGXqZk/b0ZW6u0=
+	t=1711321466; cv=none; b=ggBKEphDAvkuLCrmxvRa+gl3Si8xkIx1xCNM/BD7bA/jzyondkvhloh5GPflHGeu/e/HwBUvFgAQoEE1T7FzGQbCOr8gL+nCklCtKOpmD+VfgT6ID3LHI0V8JPG/dDtwkfRIRHVzqvkrd+1TLWgqZObCRt7/aAJ5wOUvGSMWtbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321455; c=relaxed/simple;
-	bh=LvtZg5e0VQtOBT+DmVlIpjevxUc7VebV46SOEb3fPHw=;
+	s=arc-20240116; t=1711321466; c=relaxed/simple;
+	bh=VnDGuHcYbqcpbVk8puKi+ZQ95N/HIblnKNAGwmVKMX4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e6Rx81wQxlHrEaGoqjpTgGnz7YRYwuBzxHViHZPuTcDxiaZBR/29LuTDL3D1FjRb7xpYUEecwmZkIi8R/X05LCWITNohHuoEQYgb4Pjb6KirlQKKdQnG7uAqTsU23kHJzUVZ0zVjM0qUiC1n+nuwu7zusibQYC2F/bnxZWh59bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKOVa0SV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kCobHww0/y1hSqtj0i+cOCGT1pMKvI2O6PKoB1xakYYToLLJrP/np63UUgXposs5C1Mkw89RGdQvznBUTIVg7Ic3Xgp5ractn1/gw0Uxd7LEAQgiIUTlpmgTi0x3mRKNmNlY4f3rpoAem/fmlEZHd8pCsR6q2kXBiAG3UhdfOlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHJ62vqU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKOVa0SV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFE0CC43394;
-	Sun, 24 Mar 2024 23:04:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHJ62vqU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15599C43601;
+	Sun, 24 Mar 2024 23:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321454;
-	bh=LvtZg5e0VQtOBT+DmVlIpjevxUc7VebV46SOEb3fPHw=;
+	s=k20201202; t=1711321465;
+	bh=VnDGuHcYbqcpbVk8puKi+ZQ95N/HIblnKNAGwmVKMX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lKOVa0SVcBY7l0tlsQLT6FtEeU+Efg5RNfuMennxuVC2PN6FwFVwz7kWg8Nz07Zvp
-	 mtWipfFyV9WuhFyjthcZXsAS/FLi64bfIEE7SML4nSVzulTOF9blm24BEFgjeOD0SM
-	 Xor9zuuMgYBuKyfRjfwaXs16UulrGnqYgN2Q6H2ufdKFyHhEwEkrhR0auk6cWMlwev
-	 pgf278jfnFwQU/nXYP46x4yPuwzbQMGlIfqEgtSmQJIT+nbUc/WKfs41aRkBF1gRqD
-	 0QoowKLSmBVJGXhvK/TpSPFJV5z2HMn2u1ZjzAvrTT5g6Po3wsWYf23nxdruwxNM6w
-	 UbEiN8LEwwqBA==
+	b=QHJ62vqUS9+F9HP0n6cHZ++438xzmdd6TSBCouIMzBLxKv1D1qMQEoU6PUe2SIXKW
+	 AmnbqRPCGYEKufQtej+bzN11JgxhkjK0Og/e84uyAMyipc+pujfu4bBkz0fqHh+H4Q
+	 GQzamUbRgrK+/XjI8V/gsxTU/aJDYCdIA/d9iivtVWzgALKffqnfR1CQ3ru68NMKid
+	 kL/D+tXjrXiTYozYkS/fd7AMHIzU3TqR47zJF0anpx2KoDWVZ4aL4or0Oz72TKh3DN
+	 dMsuhhDmUEtOut3eHzzTr9Zn9hpEO1vAlPdCnKo8y8oHpCBMs6Xo+lVQ8VMqz2jin5
+	 uBFRfyqiDkLlA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Breno Leitao <leitao@debian.org>,
-	Jiri Pirko <jiri@nvidia.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Kang Yang <quic_kangyang@quicinc.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Kalle Valo <quic_kvalo@quicinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 179/638] net: blackhole_dev: fix build warning for ethh set but not used
-Date: Sun, 24 Mar 2024 18:53:36 -0400
-Message-ID: <20240324230116.1348576-180-sashal@kernel.org>
+Subject: [PATCH 6.6 190/638] wifi: ath12k: fix incorrect logic of calculating vdev_stats_id
+Date: Sun, 24 Mar 2024 18:53:47 -0400
+Message-ID: <20240324230116.1348576-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,47 +49,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Breno Leitao <leitao@debian.org>
+From: Kang Yang <quic_kangyang@quicinc.com>
 
-[ Upstream commit 843a8851e89e2e85db04caaf88d8554818319047 ]
+[ Upstream commit 019b58dcb6ed267e17b7efd03ec8575c1b67d942 ]
 
-lib/test_blackhole_dev.c sets a variable that is never read, causing
-this following building warning:
+During calculate vdev_stats_id, will compare vdev_stats_id with
+ATH12K_INVAL_VDEV_STATS_ID by '<='. If vdev_stats_id is relatively
+small, then assign ATH12K_INVAL_VDEV_STATS_ID to vdev_stats_id.
 
-	lib/test_blackhole_dev.c:32:17: warning: variable 'ethh' set but not used [-Wunused-but-set-variable]
+This logic is incorrect. Firstly, should use '>=' instead of '<=' to
+check if this u8 variable exceeds the max valid range.
 
-Remove the variable struct ethhdr *ethh, which is unused.
+Secondly, should use the maximum value as comparison value.
 
-Fixes: 509e56b37cc3 ("blackhole_dev: add a selftest")
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Correct comparison symbols and use the maximum value
+ATH12K_MAX_VDEV_STATS_ID for comparison.
+
+Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+
+Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7 devices")
+Signed-off-by: Kang Yang <quic_kangyang@quicinc.com>
+Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+Link: https://msgid.link/20240130040303.370590-3-quic_kangyang@quicinc.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_blackhole_dev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath12k/mac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/test_blackhole_dev.c b/lib/test_blackhole_dev.c
-index 4c40580a99a36..f247089d63c08 100644
---- a/lib/test_blackhole_dev.c
-+++ b/lib/test_blackhole_dev.c
-@@ -29,7 +29,6 @@ static int __init test_blackholedev_init(void)
- {
- 	struct ipv6hdr *ip6h;
- 	struct sk_buff *skb;
--	struct ethhdr *ethh;
- 	struct udphdr *uh;
- 	int data_len;
- 	int ret;
-@@ -61,7 +60,7 @@ static int __init test_blackholedev_init(void)
- 	ip6h->saddr = in6addr_loopback;
- 	ip6h->daddr = in6addr_loopback;
- 	/* Ether */
--	ethh = (struct ethhdr *)skb_push(skb, sizeof(struct ethhdr));
-+	skb_push(skb, sizeof(struct ethhdr));
- 	skb_set_mac_header(skb, 0);
- 
- 	skb->protocol = htons(ETH_P_IPV6);
+diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
+index a8a71478baea8..61435e4489b9f 100644
+--- a/drivers/net/wireless/ath/ath12k/mac.c
++++ b/drivers/net/wireless/ath/ath12k/mac.c
+@@ -5152,7 +5152,7 @@ ath12k_mac_get_vdev_stats_id(struct ath12k_vif *arvif)
+ 	do {
+ 		if (ab->free_vdev_stats_id_map & (1LL << vdev_stats_id)) {
+ 			vdev_stats_id++;
+-			if (vdev_stats_id <= ATH12K_INVAL_VDEV_STATS_ID) {
++			if (vdev_stats_id >= ATH12K_MAX_VDEV_STATS_ID) {
+ 				vdev_stats_id = ATH12K_INVAL_VDEV_STATS_ID;
+ 				break;
+ 			}
 -- 
 2.43.0
 
