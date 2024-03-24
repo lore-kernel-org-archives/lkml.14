@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6DE1E0621;
-	Sun, 24 Mar 2024 22:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9316D1DF799;
+	Sun, 24 Mar 2024 22:52:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320759; cv=none; b=hOvjpuM/KtqQGwaEA4iNUxQWvLppPEs0kwl8um2woBvdJz19VzMkgzSncy6FonMps06Ahyhpfu9eo1HCV6voomZwnxQ3X1h9kvWCz+5RmUoWLE1BOe3fC50Zb+HygLntfT4FPVeWlefRzz0WrhTL3qVg5E2aYPy0TwDwCSJx0DY=
+	t=1711320749; cv=none; b=mMo76ocYWQW8Hy3VEBOEeNy7y6DjbQK1yO/rqlsLf0LCE2zEGlXfgqha76gJrKg37Tw2JAB0XmkqhAP1+kpamJ2vbCpJq5VcnN2zJjb0wHYQJQPrnOO7UAXKS2QAIyyItGFQCfOxpFsT7ZxD6nig4XrgZM26qpHTNPLmdAr4prI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320759; c=relaxed/simple;
-	bh=lqQQQTexJ/MMhl+mj3ydgYMv1bw4L4LJ//0o9zshRDc=;
+	s=arc-20240116; t=1711320749; c=relaxed/simple;
+	bh=ND4MKUcYcMyYShL2dADwCd1T3/24PLG/95Zp8DoRkb4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HdWXZse72MnZ7HoD6MfesYzb6VCGJLpqbO54v4tZx0DYswQf80s23VR4IQwT4gfl7pYC9VIhMNuOy8k0fg/7+ovErREB7UToXdw/Kffm1BntDb+a2macNXxeG8+V9IJrNMs155VbxRykbAamiIls7Rn6I5qGRNCKjG1RNWfLhQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dholJIfY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ZN4H6IuA2bLpU23t9OqB3smoamt/MMsEV9tfzgDR6wH7r3l7M7C/NqAqSf97h4dn27jSXQ1NAhVeF1Q6fX0+FQta3a59ng9bfF++/h3C//5p1hYQkcW2GtquKDr56nwtCriSvvunQ0BBX6JGqdBjIDoG2bOof6apsRMUaMztDSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UjVEc47v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dholJIfY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69558C43141;
-	Sun, 24 Mar 2024 22:52:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UjVEc47v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6916C43394;
+	Sun, 24 Mar 2024 22:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320758;
-	bh=lqQQQTexJ/MMhl+mj3ydgYMv1bw4L4LJ//0o9zshRDc=;
+	s=k20201202; t=1711320748;
+	bh=ND4MKUcYcMyYShL2dADwCd1T3/24PLG/95Zp8DoRkb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dholJIfYo3IRwtSqaYSBK03V3DjyXlNWvHfFHE76PBS1YQYfiPPA8QHxE9ytIY7DR
-	 1j8MKJZ9M2GfDjBzCeCmtJhD/ned5SejyAQYPZWAXqTK5p1Z+m/SgWrLSInLsYTUEu
-	 bvveTLrU3tMkBOTv9cWs0N0SupJknUCy7WgZdXSpB24fAX7q0Tahgsy0gmHClIpsUD
-	 eZmElhPAjgGSQyazRutoo4DTngHVb7oEiiVLl9HdmqEY3U8KkOqqEsiMeSMjNn/Gbz
-	 fMn6urUXonIyrwgX42gNrC0Fe8Q8IR1n+Z+UijL4Cg2bXD71Y0xTFAQGYQ+n6eLXhr
-	 KRh9GZ7lfntsQ==
+	b=UjVEc47v+4R5zufa4WGNNU1csMRdYrvhDrz9BPJxzAgj4VNx3j2dWKEq4xm3t452b
+	 UV9inHZQx31Zw5KXPISQo/6bYGRUqLRgRoieNdOABvg2M0v5z2OKehql+qaP+xvJ43
+	 XgpebxAQXcrcU39GCT+zsDVcEwqeB7UcHwke1jSfU6/K1phuaO123UOwJ2/Of7imlV
+	 lr3oWj9esv0fXna/dfksIb6qm5mXgqVmaTrd5puPTDe7SXny0gsKtCM6d4Wee39GTW
+	 RytJIsdMtm/VNp7L6HwgM7Eup3PYatNwqyyQC7oJDkuhLDHqokI09LXn+/lCNZfUOu
+	 4lNkgSusI72mQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 322/713] ACPI: scan: Fix device check notification handling
-Date: Sun, 24 Mar 2024 18:40:48 -0400
-Message-ID: <20240324224720.1345309-323-sashal@kernel.org>
+Subject: [PATCH 6.7 312/713] ARM: dts: imx6dl-yapp4: Fix typo in the QCA switch register address
+Date: Sun, 24 Mar 2024 18:40:38 -0400
+Message-ID: <20240324224720.1345309-313-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,59 +45,42 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Michal Vokáč <michal.vokac@ysoft.com>
 
-[ Upstream commit 793551c965116d9dfaf0550dacae1396a20efa69 ]
+[ Upstream commit 023bd910d3ab735459f84b22bb99fb9e00bd9d76 ]
 
-It is generally invalid to fail a Device Check notification if the scan
-handler has not been attached to the given device after a bus rescan,
-because there may be valid reasons for the scan handler to refuse
-attaching to the device (for example, the device is not ready).
+This change does not have any functional effect. The switch works just
+fine without this patch as it has full access to all the addresses
+on the bus. This is simply a clean-up to set the node name address
+and reg address to the same value.
 
-For this reason, modify acpi_scan_device_check() to return 0 in that
-case without printing a warning.
-
-While at it, reduce the log level of the "already enumerated" message
-in the same function, because it is only interesting when debugging
-notification handling
-
-Fixes: 443fc8202272 ("ACPI / hotplug: Rework generic code to handle suprise removals")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 15b43e497ffd ("ARM: dts: imx6dl-yapp4: Use correct pseudo PHY address for the switch")
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/scan.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 02bb2cce423f4..35ad5781f0a5e 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -314,18 +314,14 @@ static int acpi_scan_device_check(struct acpi_device *adev)
- 		 * again).
- 		 */
- 		if (adev->handler) {
--			dev_warn(&adev->dev, "Already enumerated\n");
--			return -EALREADY;
-+			dev_dbg(&adev->dev, "Already enumerated\n");
-+			return 0;
- 		}
- 		error = acpi_bus_scan(adev->handle);
- 		if (error) {
- 			dev_warn(&adev->dev, "Namespace scan failure\n");
- 			return error;
- 		}
--		if (!adev->handler) {
--			dev_warn(&adev->dev, "Enumeration failure\n");
--			error = -ENODEV;
--		}
- 	} else {
- 		error = acpi_scan_device_not_enumerated(adev);
- 	}
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
+index 3be38a3c4bb11..d2b3e09eb7df8 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
+@@ -127,7 +127,7 @@ phy_port3: phy@2 {
+ 
+ 		switch@10 {
+ 			compatible = "qca,qca8334";
+-			reg = <10>;
++			reg = <0x10>;
+ 			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+ 
+ 			switch_ports: ports {
 -- 
 2.43.0
 
