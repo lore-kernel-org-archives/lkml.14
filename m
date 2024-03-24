@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FB71D793D;
-	Sun, 24 Mar 2024 22:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6F61D6977;
+	Sun, 24 Mar 2024 22:49:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320611; cv=none; b=INxRn4GqxKLsvqtvyg41Pn8n+u/8k7mYlOk19QOLvtbljn+4IU2MuCJq8friBut/kxiUuyrCHspEaI5pKXMI3NuQfKmJU/jMTIc/kgAHKTW39+k51qGdUME2xSZmsHmJr/3nvE7H2J0TE3rhmkPHIlttgifQazpmx8DCR0+8osU=
+	t=1711320581; cv=none; b=h9MaJaJLsm+0JZYhOxvNhOR7YcuFDWo5nEkHu/ssJZ4qXF0PCtEXr48QzKjnsAT3darCbpXqe3keF/hTnwBPmX765R79D25P24vooSjiQIT5rYFUnoBPy9kv3mEjeLS8afNWpl4ZbNugGoaOtjdneadElumEUiLhNg8yCSm9TMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320611; c=relaxed/simple;
-	bh=UcRpu7p1jKQyG+pfEXtk4kRecvA2V6BI+5dODNtRxC4=;
+	s=arc-20240116; t=1711320581; c=relaxed/simple;
+	bh=60vo75mBcZsaaWRfia1pLHWloNQ83WhNjty4gGNM0pg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eUCFAWbce6rk4CkmyYPjB9gd4amxRpnxhIUcMtYo0XheAI9ZzWiIF/kvMPR5WTfqNVRTVCZvitLH6xFz8KVic0CKaXOuIR+hJPgR29Qpdpklszt0AUq4MBqgl19pIptq7uUsQhl0TFrD9jk4CG6Jl9BjMN8O6+huMnEVNKGndH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1yt5nKK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oHbQjoShkZM04O4f5k0wWHG94ey/6A946gWmvntbiNd1ENMuJ3wHV7jFnTdtv7kV/2dIHgbznXtELn3ELdihgygzjud9vH7tvnD3rkh1EstWx3iTqzoGQ/24nKjUI+0NuNHYYsmwjcJFxBygUVpsH0ku+K5Qob//nKQMfkQZvCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tv0lCSew; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1yt5nKK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14440C43390;
-	Sun, 24 Mar 2024 22:50:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tv0lCSew"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D0D4C43394;
+	Sun, 24 Mar 2024 22:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320609;
-	bh=UcRpu7p1jKQyG+pfEXtk4kRecvA2V6BI+5dODNtRxC4=;
+	s=k20201202; t=1711320580;
+	bh=60vo75mBcZsaaWRfia1pLHWloNQ83WhNjty4gGNM0pg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u1yt5nKKcltx8qKOxuLCkkUPwU+5UKUlk+SS2jQwNK0LG2+jw5I6TOv47BkR0htMf
-	 m9ryvDV20sJDWLq46Q/cCefmBbGo9J/JCnDaQmQ5pau+NwHqXzq39ynJTPWomTvGu3
-	 tfmx3b/RCLUA7AQRQdiPdjIOKAJbhkRgb8VuE/1ZCGjgjcDC9BSBa9QrgqXU2PZCzt
-	 NSDsKesf0Sgd7RvMaBcMYc4oxThzOzbZ8+zuRV2oeeYu7bR2IisAl+JwX2i7olJecc
-	 HlSP48P6toa8Kxu87w0uHGq0fv6QtwTngDiE5GLHwUDIhuxCoXCDPTh8ZO7h9HWRRO
-	 aru/0a2fhKmaw==
+	b=tv0lCSewDMEEwtfPiNMYNKCA5SJOxJayngE/4tsZMb5mW7nPzTVnehNtJMNrZ34Up
+	 Jm1VGNjp7PYyXkwya+TLHgeah8BRMwQO+sKWGshNk/rFWIGuznurwG8yzr6JHIRUNW
+	 A6rTUXb+V+RNajruwS4K+sGqKUpXB2ZL5++XzQfIlxM1YZsPMcIIXgmgT6P/metmfb
+	 ncYo/gqeS4aTzm+eMINLgzLtvV0NZ7R5hcG2d62uUCzu9DQQLfqCPEUmqVVEfWwufh
+	 bhgjywZDEpdpeUkWqqFCTWsAnMGmQ/W09b1wjtZv2akpK8+t4Y8ZHxIBZJ50MoZDfp
+	 1VtHpJkAPzm7Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 170/713] arm64: dts: qcom: sa8540p: Drop gfx.lvl as power-domain for gpucc
-Date: Sun, 24 Mar 2024 18:38:16 -0400
-Message-ID: <20240324224720.1345309-171-sashal@kernel.org>
+Subject: [PATCH 6.7 141/713] wifi: mwifiex: debugfs: Drop unnecessary error check for debugfs_create_dir()
+Date: Sun, 24 Mar 2024 18:37:47 -0400
+Message-ID: <20240324224720.1345309-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,39 +49,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
 
-[ Upstream commit fd5821a1a83c969ed2dcc72fef885f3a82c1d978 ]
+[ Upstream commit 50180c7f8e3de7c2d87f619131776598fcb1478d ]
 
-The SA8295P and SA8540P uses an external regulator (max20411), and
-gfx.lvl is not provided by rpmh. Drop the power-domains property of the
-gpucc node to reflect this.
+debugfs_create_dir() returns ERR_PTR and never return NULL.
 
-Fixes: eec51ab2fd6f ("arm64: dts: qcom: sc8280xp: Add GPU related nodes")
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-Link: https://lore.kernel.org/r/20240125-sa8295p-gpu-v4-5-7011c2a63037@quicinc.com
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+As Russell suggested, this patch removes the error checking for
+debugfs_create_dir(). This is because the DebugFS kernel API is developed
+in a way that the caller can safely ignore the errors that occur during
+the creation of DebugFS nodes. The debugfs APIs have a IS_ERR() judge in
+start_creating() which can handle it gracefully. So these checks are
+unnecessary.
+
+Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20230903030216.1509013-3-ruanjinjie@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sa8540p.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/marvell/mwifiex/debugfs.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8540p.dtsi b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
-index 96b2c59ad02b4..23888029cc117 100644
---- a/arch/arm64/boot/dts/qcom/sa8540p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
-@@ -168,6 +168,9 @@ opp-2592000000 {
- };
+diff --git a/drivers/net/wireless/marvell/mwifiex/debugfs.c b/drivers/net/wireless/marvell/mwifiex/debugfs.c
+index f9c9fec7c792a..d14a0f4c1b6d7 100644
+--- a/drivers/net/wireless/marvell/mwifiex/debugfs.c
++++ b/drivers/net/wireless/marvell/mwifiex/debugfs.c
+@@ -970,9 +970,6 @@ mwifiex_dev_debugfs_init(struct mwifiex_private *priv)
+ 	priv->dfs_dev_dir = debugfs_create_dir(priv->netdev->name,
+ 					       mwifiex_dfs_dir);
  
- &gpucc {
-+	/* SA8295P and SA8540P doesn't provide gfx.lvl */
-+	/delete-property/ power-domains;
-+
- 	status = "disabled";
- };
- 
+-	if (!priv->dfs_dev_dir)
+-		return;
+-
+ 	MWIFIEX_DFS_ADD_FILE(info);
+ 	MWIFIEX_DFS_ADD_FILE(debug);
+ 	MWIFIEX_DFS_ADD_FILE(getlog);
 -- 
 2.43.0
 
