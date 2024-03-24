@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7E122192B;
-	Sun, 24 Mar 2024 23:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7B8156C49;
+	Sun, 24 Mar 2024 23:11:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321894; cv=none; b=IcrN1Nk9FdUBbshPcB49loDx6mJ+iU1BitVkpHV07QSo89QuZmCHOUD1ZwSL42WKCLcFCW1jD3VMG0L/wcys28uwZ45OY6sQZ4C895RNvYRPI2pjM7+ktl+rVPSMWKkG15cmVHgoVAU0RudHd3YB+S956UrFAlpulMU5xzieToU=
+	t=1711321897; cv=none; b=Sqz1Ik5h4ZD09W3sRY/Mp6iaHPLwrUYQcSBYjU3ZxnWRQ8/JI/iuEO4LiTfibQ0ooEGWfG0TC1w2/+GaaQJajEe1q45CiyLG7fSLH7UiMXf0laGUGpfNino8HmQPNDNS1JbMgxo2mmdAdTqkNzMXXqiyBOCEBjBFTTO0hcPBIoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321894; c=relaxed/simple;
-	bh=KBxM9YEfy6MN0Zj5FWWkO4w/8khireT469bIN4a8cqM=;
+	s=arc-20240116; t=1711321897; c=relaxed/simple;
+	bh=QtPeuKSCloDhnaL1gJF50s6+yRvjF257YTBkRXOS2A0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R1WGqOidc5T/8elLmpJxHW0HaF7TxinD31YGPqtljzJErV4x9oGiTwAOjK6oS/QZZCIwSK6huBtIyKlW27LTRQGqt0L3Y3uNy/i6LAioADDJFshNbHXH3Wcs2gEus1K/rbhw6seLY29bm+pG5wx6NrBz62OoR6Cd72enYiXbsKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K31LhszW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aj1q3umvq3QcT/HfZpZ0UUlbe89mfmwk6f7EtWwwZHeA+lgpMgp5RAMxRs3EmBIMc411azO8Yr7HPq9ErhtJW1rSBXxTKqvMA9XxpFHl1pGkwEfTllm/gA6irGuTBRRSCkIyvS66SSNqeeYzmffJEocIl469m9vHCkmB9BnlS88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfLZ9LYx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K31LhszW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A979C433C7;
-	Sun, 24 Mar 2024 23:11:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfLZ9LYx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42D9C43390;
+	Sun, 24 Mar 2024 23:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321893;
-	bh=KBxM9YEfy6MN0Zj5FWWkO4w/8khireT469bIN4a8cqM=;
+	s=k20201202; t=1711321896;
+	bh=QtPeuKSCloDhnaL1gJF50s6+yRvjF257YTBkRXOS2A0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K31LhszWLAWA9tXxdzPzVxBjbRA7/NPvP5y7XqyasfUjh6biICSztFUtpINyjOZJN
-	 q0mK067wTWOBMBZjh3nUEBVE9QyFPcGj69BLfDskn/uyaqtW0aV/uy0/6TgYOc0CiY
-	 cMpgfTZD8JJv0qCdG3A5egPREPsh29wGbT8D6bDa5KhqKE/pJ4I6w+MwRD/XKKq8CC
-	 ePJnSakOO5HSs5I10MxU22OoUQnqPA2eomOQKOt2R8w5d1t2cMnUBvh4xzQWHJfZpN
-	 hHr23QfdjUQSbuFpgskB1U50Ny8tXzY6aDB5udOFct7v6a9dBNzeG5qovFaJ3quBbM
-	 iQhWMp/rpoTcQ==
+	b=HfLZ9LYxWIwcEq2B7wQC5VOuQkX3d8/gWEkIDukmp5J9iy1SU7Q8sgAy/Ur5FKvno
+	 nWTKKUoqTTvViQzcGd56CLdwuZCCvdTEPsAFbLH9Kp4W8z6q4rvkHB08zdzDsdIw2a
+	 AQk/j1ForM0hybkm6XLSdgaK6EYYolFEhoJSsjMzazhB/rZRgBPZ27zxm1FuHy/R3M
+	 LPm2hPMiIwe5x20MZfa9sKdDJOYePbL6r/uh7biEsL/d1osueTMpuf8EJ/ho5L65AQ
+	 XVivAh4yT2gpDx+pChUOVKFoYjzG22XM9Vny2c83aObrw6P+pZmQe+RSEuq9mrmvQ0
+	 Dax51umM6KYog==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Subbaraya Sundeep <sbhatta@marvell.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 622/638] octeontx2-af: Use separate handlers for interrupts
-Date: Sun, 24 Mar 2024 19:00:59 -0400
-Message-ID: <20240324230116.1348576-623-sashal@kernel.org>
+Subject: [PATCH 6.6 625/638] netfilter: nf_tables: do not compare internal table flags on updates
+Date: Sun, 24 Mar 2024 19:01:02 -0400
+Message-ID: <20240324230116.1348576-626-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,67 +47,32 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Subbaraya Sundeep <sbhatta@marvell.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 50e60de381c342008c0956fd762e1c26408f372c ]
+[ Upstream commit 4a0e7f2decbf9bd72461226f1f5f7dcc4b08f139 ]
 
-For PF to AF interrupt vector and VF to AF vector same
-interrupt handler is registered which is causing race condition.
-When two interrupts are raised to two CPUs at same time
-then two cores serve same event corrupting the data.
+Restore skipping transaction if table update does not modify flags.
 
-Fixes: 7304ac4567bc ("octeontx2-af: Add mailbox IRQ and msg handlers")
-Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 179d9ba5559a ("netfilter: nf_tables: fix table flag updates")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/octeontx2/af/rvu.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ net/netfilter/nf_tables_api.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-index d82aa6f12f114..32645aefd5934 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-@@ -2528,10 +2528,9 @@ static void rvu_queue_work(struct mbox_wq_info *mw, int first,
- 	}
- }
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 8808d78d65235..a7f10941a935a 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -1213,7 +1213,7 @@ static int nf_tables_updtable(struct nft_ctx *ctx)
+ 	if (flags & ~NFT_TABLE_F_MASK)
+ 		return -EOPNOTSUPP;
  
--static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
-+static irqreturn_t rvu_mbox_pf_intr_handler(int irq, void *rvu_irq)
- {
- 	struct rvu *rvu = (struct rvu *)rvu_irq;
--	int vfs = rvu->vfs;
- 	u64 intr;
+-	if (flags == ctx->table->flags)
++	if (flags == (ctx->table->flags & NFT_TABLE_F_MASK))
+ 		return 0;
  
- 	intr = rvu_read64(rvu, BLKADDR_RVUM, RVU_AF_PFAF_MBOX_INT);
-@@ -2545,6 +2544,18 @@ static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
- 
- 	rvu_queue_work(&rvu->afpf_wq_info, 0, rvu->hw->total_pfs, intr);
- 
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
-+{
-+	struct rvu *rvu = (struct rvu *)rvu_irq;
-+	int vfs = rvu->vfs;
-+	u64 intr;
-+
-+	/* Sync with mbox memory region */
-+	rmb();
-+
- 	/* Handle VF interrupts */
- 	if (vfs > 64) {
- 		intr = rvupf_read64(rvu, RVU_PF_VFPF_MBOX_INTX(1));
-@@ -2882,7 +2893,7 @@ static int rvu_register_interrupts(struct rvu *rvu)
- 	/* Register mailbox interrupt handler */
- 	sprintf(&rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], "RVUAF Mbox");
- 	ret = request_irq(pci_irq_vector(rvu->pdev, RVU_AF_INT_VEC_MBOX),
--			  rvu_mbox_intr_handler, 0,
-+			  rvu_mbox_pf_intr_handler, 0,
- 			  &rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], rvu);
- 	if (ret) {
- 		dev_err(rvu->dev,
+ 	if ((nft_table_has_owner(ctx->table) &&
 -- 
 2.43.0
 
