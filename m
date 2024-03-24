@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CC0131E35;
-	Sun, 24 Mar 2024 23:03:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC108131E20;
+	Sun, 24 Mar 2024 23:03:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321422; cv=none; b=FjnBehWRqBpiC+MDhUnb9S7Y2NafxhN9zTKDRYw0doncOECgE5K5YvLVTvhIwh0PYwi5vfCS4xN0wURkHxPwnf4mG555noE0J8P/D8tRCjYcT4/414y//mZqUjjNGhEcLQDbgYZBG/iw2SPWhHpKF6AT24kMoVKak4vbwibckJ4=
+	t=1711321420; cv=none; b=e8Xd5I2F2JQSjDeD1iB6rcGFGELuzIgdesq3TPL/SMFJfGO2EfCeMtY1Z8YJfkM4JrYDfUvN4TDfoqnArzTU/yI5Ah1bYJlkDyZRbdKVbJcAKgPK5LbuyTv+xnZQwIKBVx3qauHPCjCO1PfNgXGkhiNTf0VwMha4BW96F2VoHRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321422; c=relaxed/simple;
-	bh=i/ETv3Z0+14MObVPjWUndDksu7lvCqc1LjL8w6W1XSQ=;
+	s=arc-20240116; t=1711321420; c=relaxed/simple;
+	bh=0VAmgdQ1t/uj+NHVK29vS+oFQU05fhWw7epz4GYuTD8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mW/3ftMIpjrqoDYIpvz5BiglwJPYwSqGg7fOqAX3UOVjRgjaggCuj8KO1adR4X7X7qZaeY9URkU62q6Isf9eHU2ec9LvVG2vmJRdtzq/JUSfHb/1OE5IPVO/OneGjFDum16d00N9aANcuzoAibeiZs+HRQUVn4AMbsPap/YFmwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rrid0Fb+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uZ7Mw5s0mKkW4GwaOLNOCxLn1BqiYX/99WorhD7vHB7WA4+24Ej/bR3C6+sbuZjXU1K4occklGYUgFKQJz6jN27BNC3I42ttujcYs7fyv1j59iBrX+LOVjvtqG3rtTxw/JWohsx+V6EmoRJuPwvdbV0B6WIe7BgwfxTEhUAqvLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssppzhsP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rrid0Fb+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB7DC433F1;
-	Sun, 24 Mar 2024 23:03:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssppzhsP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05F44C433F1;
+	Sun, 24 Mar 2024 23:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321421;
-	bh=i/ETv3Z0+14MObVPjWUndDksu7lvCqc1LjL8w6W1XSQ=;
+	s=k20201202; t=1711321418;
+	bh=0VAmgdQ1t/uj+NHVK29vS+oFQU05fhWw7epz4GYuTD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rrid0Fb+ob0s0IbITjYanVsVDsHaGGFcthcDufPh5QJZogoaBBbXaGSh32Fm8EbVr
-	 P88i6NRyPUDdUFAHP//hRP1AgIOu5m+GqKxT6hiuzYw3X4MuQ9ax6sQ3ZeTPOZGfrg
-	 45EoUeiFKLSjRMuBTSQboOIhihEBxfitb3I6U2A0AQDfzz+72Fjk7l/AKoB1ATO2eG
-	 vubXADg9uAngFNbCPtrNHQxMVbNXg4G2+uJ1AQEvdbaQUijqwS8HgIaZAggj+FkNAS
-	 wNIRWx3OA+onoUAmesbG+9ZtROGriSnF2lnrgd1MPnEW/bL0KzwPACTsloKbegq58d
-	 bDCvGDjCZqOCQ==
+	b=ssppzhsPLEVctpmNVwbNP6qpoHSoCV/mWh7TFOY2JBMdxDEcQpJc658d4R3DrWjtz
+	 yszeLEn4c7kfEBofuviskJJvCBuWLeLEcTJ1ydIpF/xKBGa0OqLSA1iXSCR+ElqK4C
+	 BPFpAHPVEWj6iF3jz/x1KXBu0v0m59BGDMtpnegkGh7nN8Np7MT/vvFCdfgfvWtHSx
+	 YR+2oRoiV4Uxsnh9G2v/SvAuMj4KwAYW64RFIl36LYonz1ZSKJ2QQukLRc85Eg4Mec
+	 yVi06jIItzWQCXtTK39BZQN7IeWw1qMdXwWpwd1xCEr+98lZDK1DW7aplN6KLR4G6q
+	 tyt9R5uYYO/CQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Daniel Borkmann <daniel@iogearbox.net>,
+	Stanislav Fomichev <sdf@google.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Martin KaFai Lau <martin.lau@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 145/638] af_unix: Annotate data-race of gc_in_progress in wait_for_unix_gc().
-Date: Sun, 24 Mar 2024 18:53:02 -0400
-Message-ID: <20240324230116.1348576-146-sashal@kernel.org>
+Subject: [PATCH 6.6 142/638] selftests/bpf: Add netkit to tc_redirect selftest
+Date: Sun, 24 Mar 2024 18:52:59 -0400
+Message-ID: <20240324230116.1348576-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,37 +50,121 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-[ Upstream commit 31e03207119a535d0b0e3b3a7f91983aeb2cb14d ]
+[ Upstream commit adfeae2d243d9e5b83d094af481d189156b11779 ]
 
-gc_in_progress is changed under spin_lock(&unix_gc_lock),
-but wait_for_unix_gc() reads it locklessly.
+Extend the existing tc_redirect selftest to also cover netkit devices
+for exercising the bpf_redirect_peer() code paths, so that we have both
+veth as well as netkit covered, all tests still pass after this change.
 
-Let's use READ_ONCE().
-
-Fixes: 5f23b734963e ("net: Fix soft lockups/OOM issues w/ unix garbage collector")
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Link: https://lore.kernel.org/r/20240123170856.41348-2-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Stanislav Fomichev <sdf@google.com>
+Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
+Link: https://lore.kernel.org/r/20231114004220.6495-9-daniel@iogearbox.net
+Signed-off-by: Martin KaFai Lau <martin.lau@kernel.org>
+Stable-dep-of: 177f1d083a19 ("selftests/bpf: Fix the flaky tc_redirect_dtime test")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/unix/garbage.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../selftests/bpf/prog_tests/tc_redirect.c    | 52 +++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/net/unix/garbage.c b/net/unix/garbage.c
-index 2a81880dac7b7..027c86e804f8a 100644
---- a/net/unix/garbage.c
-+++ b/net/unix/garbage.c
-@@ -198,7 +198,7 @@ void wait_for_unix_gc(void)
- 	if (READ_ONCE(unix_tot_inflight) > UNIX_INFLIGHT_TRIGGER_GC &&
- 	    !READ_ONCE(gc_in_progress))
- 		unix_gc();
--	wait_event(unix_gc_wait, gc_in_progress == false);
-+	wait_event(unix_gc_wait, !READ_ONCE(gc_in_progress));
+diff --git a/tools/testing/selftests/bpf/prog_tests/tc_redirect.c b/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
+index 407ff4e9bc788..518f143c5b0fe 100644
+--- a/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
++++ b/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
+@@ -24,6 +24,7 @@
+ 
+ #include "test_progs.h"
+ #include "network_helpers.h"
++#include "netlink_helpers.h"
+ #include "test_tc_neigh_fib.skel.h"
+ #include "test_tc_neigh.skel.h"
+ #include "test_tc_peer.skel.h"
+@@ -112,6 +113,7 @@ static void netns_setup_namespaces_nofail(const char *verb)
+ 
+ enum dev_mode {
+ 	MODE_VETH,
++	MODE_NETKIT,
+ };
+ 
+ struct netns_setup_result {
+@@ -142,10 +144,51 @@ static int get_ifaddr(const char *name, char *ifaddr)
+ 	return 0;
  }
  
- /* The external entry point: unix_gc() */
++static int create_netkit(int mode, char *prim, char *peer)
++{
++	struct rtattr *linkinfo, *data, *peer_info;
++	struct rtnl_handle rth = { .fd = -1 };
++	const char *type = "netkit";
++	struct {
++		struct nlmsghdr n;
++		struct ifinfomsg i;
++		char buf[1024];
++	} req = {};
++	int err;
++
++	err = rtnl_open(&rth, 0);
++	if (!ASSERT_OK(err, "open_rtnetlink"))
++		return err;
++
++	memset(&req, 0, sizeof(req));
++	req.n.nlmsg_len = NLMSG_LENGTH(sizeof(struct ifinfomsg));
++	req.n.nlmsg_flags = NLM_F_REQUEST | NLM_F_CREATE | NLM_F_EXCL;
++	req.n.nlmsg_type = RTM_NEWLINK;
++	req.i.ifi_family = AF_UNSPEC;
++
++	addattr_l(&req.n, sizeof(req), IFLA_IFNAME, prim, strlen(prim));
++	linkinfo = addattr_nest(&req.n, sizeof(req), IFLA_LINKINFO);
++	addattr_l(&req.n, sizeof(req), IFLA_INFO_KIND, type, strlen(type));
++	data = addattr_nest(&req.n, sizeof(req), IFLA_INFO_DATA);
++	addattr32(&req.n, sizeof(req), IFLA_NETKIT_MODE, mode);
++	peer_info = addattr_nest(&req.n, sizeof(req), IFLA_NETKIT_PEER_INFO);
++	req.n.nlmsg_len += sizeof(struct ifinfomsg);
++	addattr_l(&req.n, sizeof(req), IFLA_IFNAME, peer, strlen(peer));
++	addattr_nest_end(&req.n, peer_info);
++	addattr_nest_end(&req.n, data);
++	addattr_nest_end(&req.n, linkinfo);
++
++	err = rtnl_talk(&rth, &req.n, NULL);
++	ASSERT_OK(err, "talk_rtnetlink");
++	rtnl_close(&rth);
++	return err;
++}
++
+ static int netns_setup_links_and_routes(struct netns_setup_result *result)
+ {
+ 	struct nstoken *nstoken = NULL;
+ 	char src_fwd_addr[IFADDR_STR_LEN+1] = {};
++	int err;
+ 
+ 	if (result->dev_mode == MODE_VETH) {
+ 		SYS(fail, "ip link add src type veth peer name src_fwd");
+@@ -153,6 +196,13 @@ static int netns_setup_links_and_routes(struct netns_setup_result *result)
+ 
+ 		SYS(fail, "ip link set dst_fwd address " MAC_DST_FWD);
+ 		SYS(fail, "ip link set dst address " MAC_DST);
++	} else if (result->dev_mode == MODE_NETKIT) {
++		err = create_netkit(NETKIT_L3, "src", "src_fwd");
++		if (!ASSERT_OK(err, "create_ifindex_src"))
++			goto fail;
++		err = create_netkit(NETKIT_L3, "dst", "dst_fwd");
++		if (!ASSERT_OK(err, "create_ifindex_dst"))
++			goto fail;
+ 	}
+ 
+ 	if (get_ifaddr("src_fwd", src_fwd_addr))
+@@ -1134,7 +1184,9 @@ static void *test_tc_redirect_run_tests(void *arg)
+ 	netns_setup_namespaces_nofail("delete");
+ 
+ 	RUN_TEST(tc_redirect_peer, MODE_VETH);
++	RUN_TEST(tc_redirect_peer, MODE_NETKIT);
+ 	RUN_TEST(tc_redirect_peer_l3, MODE_VETH);
++	RUN_TEST(tc_redirect_peer_l3, MODE_NETKIT);
+ 	RUN_TEST(tc_redirect_neigh, MODE_VETH);
+ 	RUN_TEST(tc_redirect_neigh_fib, MODE_VETH);
+ 	RUN_TEST(tc_redirect_dtime, MODE_VETH);
 -- 
 2.43.0
 
