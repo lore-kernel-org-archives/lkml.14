@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D55F294E0B;
-	Sun, 24 Mar 2024 23:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B1C184424;
+	Sun, 24 Mar 2024 23:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324293; cv=none; b=lw0IVc2T5v1K1+zKVcaFx77vZ6OnpNrBmd5tmToZgT8nVCsNcpPWsjn/SfUyhBVr3Cqe7TtJ4uwzlCNEJ9cabAsnACspigYUdnC5Rj7q/jdano5XgmYct2qXS64kOYP29l/btbd6kPRb6ROs/Q/icjdHBRNT2cJJ4wn+FPz0Afc=
+	t=1711324273; cv=none; b=GMq28/S3g/q0QArHqZpDjoTaUdywWnA2YGyR5Z3l/yEaDcS7CCWtx8zxFLIbyKrA5QchLs9T37CasmaPvh2t1QssnuA7QZ8fMPucDGOVyzlM9iEBrMaF/0/c4sCgGPVWTzWmd4hnAbnt5FrOQkrlRzl1mX3Y11fWCdJKIJAGRYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324293; c=relaxed/simple;
-	bh=jlytCQnOmqtIWrua3+DJqrL72f/zZ/tYkRgyQ7+DaiA=;
+	s=arc-20240116; t=1711324273; c=relaxed/simple;
+	bh=YUlZ7Qh9XrKOvLc5vbPfNIAQyjzjHe192nRk8wGzRjA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SkXu4fISPIIGzo8iEzTT9vEPpXbyppe41K12eTLHV/jYDUDQ+9vzpKTf62B8vYw8D8BCUdax2+fnBeFGcvmO+cpod/i0bAr7KkzI2kq02Fej+d3oH+0huoP6PK50Oza3vOqlqZr8ioOi7j0ti6S/ebGubPC5LfUtWXhnv9mdrnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FK+tQPKs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZY3HyNywwQR5G0rJyHKFle8Uu5EEmmvMP2FVET47BwT/bfRuey3ph/wQ7khLALHadWU8Km/IzfcNFToaC01wM46ODaj6nAsA67VMjIKjVDCdVY9IlC9i2NELi3BRc+uvMYvEyfV1Nlm3VIvfe4FV2ZCFwB/fgjvF6lVwzCRQaaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXzGKkq0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FK+tQPKs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D8F7C43390;
-	Sun, 24 Mar 2024 23:51:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXzGKkq0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCFD3C433C7;
+	Sun, 24 Mar 2024 23:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324292;
-	bh=jlytCQnOmqtIWrua3+DJqrL72f/zZ/tYkRgyQ7+DaiA=;
+	s=k20201202; t=1711324272;
+	bh=YUlZ7Qh9XrKOvLc5vbPfNIAQyjzjHe192nRk8wGzRjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FK+tQPKsKD7D+CXdF67tN+LjUnrJ+rz+1/8lBzOzwuqVZCYlWKfXWZAiRMyXfZ9C0
-	 aDFHRplqqoKLYNAs0lV/3A7RMivQW9vUjFmHxygAKTUX0PWwAPr9TjPqL11fyGx2fw
-	 AVLbt4+haPCGLzuZNMlH46cCep+KwIAdyyY9ArMkbr+r4EXSNZ0ihWzlQW+41Jc5Au
-	 NN1hegginnbCC3W2FDkuk+Gj6no7RjE22zGo4LYn3hfKJqzbXnfbbypndZsUOL0kRK
-	 qy3axjMzmXFdVaWPwA7v3zWvtogcD7gOtM5xVl3ZC2b5AaDqKhLWYBjQ/mdBiccGBW
-	 2VsgOKXCn+NBA==
+	b=FXzGKkq0pyHIrxfCW21wXs9gbEJ0WcHiFi/n9q12j8J/zHm/S3haVFOvIcPNWDuvF
+	 Cp1c0GL2D97SB1oh2Uu2g9LAzOswFDQMUhHaTCKEhmwp+S5bGF+APjJHs8XMHz6J+B
+	 qHPjndDTzMDQFNaimgfqRAyhsJKPqrBjLUbhZ5Lt5FALEaEq8CB8yPjZHtVnpR4xt2
+	 R2+CvGnr1LfKqLqHIBAoK4meC191HceLLqmzNezmV9JQo3kFgozI8X/a5g3GwL1COT
+	 qjasGA9Mgg2+rMTdSnK1iM5k7RNiDj2rwdICCHeRgNsyOLApvSFQ28K376VFHRkaAo
+	 8eB/kxgLlK0sg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Cai Huoqing <caihuoqing@baidu.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/148] drm/tegra: dsi: Make use of the helper function dev_err_probe()
-Date: Sun, 24 Mar 2024 19:48:52 -0400
-Message-ID: <20240324235012.1356413-69-sashal@kernel.org>
+Subject: [PATCH 4.19 051/148] igb: Fix missing time sync events
+Date: Sun, 24 Mar 2024 19:48:35 -0400
+Message-ID: <20240324235012.1356413-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,69 +50,92 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Cai Huoqing <caihuoqing@baidu.com>
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 
-[ Upstream commit fc75e4fcbd1e4252a0481ebb23cd4516c127a8e2 ]
+[ Upstream commit ee14cc9ea19ba9678177e2224a9c58cce5937c73 ]
 
-When possible use dev_err_probe help to properly deal with the
-PROBE_DEFER error, the benefit is that DEFER issue will be logged
-in the devices_deferred debugfs file.
-And using dev_err_probe() can reduce code size, the error value
-gets printed.
+Fix "double" clearing of interrupts, which can cause external events
+or timestamps to be missed.
 
-Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Stable-dep-of: 830c1ded3563 ("drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()")
+The E1000_TSIRC Time Sync Interrupt Cause register can be cleared in two
+ways, by either reading it or by writing '1' into the specific cause
+bit. This is documented in section 8.16.1.
+
+The following flow was used:
+    1. read E1000_TSIRC into 'tsicr';
+    2. handle the interrupts present into 'tsirc' and mark them in 'ack';
+    3. write 'ack' into E1000_TSICR;
+
+As both (1) and (3) will clear the interrupt cause, if the same
+interrupt happens again between (1) and (3) it will be ignored,
+causing events to be missed.
+
+Remove the extra clear in (3).
+
+Fixes: 00c65578b47b ("igb: enable internal PPS for the i210")
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Tested-by: Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com> (A Contingent worker at Intel)
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dsi.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 23 +++++------------------
+ 1 file changed, 5 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 7033ab28f7716..04bf4c89d870e 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1509,28 +1509,24 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index c0e2323e50c6e..5d8d5915bc276 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -6555,44 +6555,31 @@ static void igb_extts(struct igb_adapter *adapter, int tsintr_tt)
+ static void igb_tsync_interrupt(struct igb_adapter *adapter)
+ {
+ 	struct e1000_hw *hw = &adapter->hw;
+-	u32 ack = 0, tsicr = rd32(E1000_TSICR);
++	u32 tsicr = rd32(E1000_TSICR);
+ 	struct ptp_clock_event event;
+ 
+ 	if (tsicr & TSINTR_SYS_WRAP) {
+ 		event.type = PTP_CLOCK_PPS;
+ 		if (adapter->ptp_caps.pps)
+ 			ptp_clock_event(adapter->ptp_clock, &event);
+-		ack |= TSINTR_SYS_WRAP;
  	}
  
- 	dsi->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(dsi->clk)) {
--		dev_err(&pdev->dev, "cannot get DSI clock\n");
--		return PTR_ERR(dsi->clk);
--	}
-+	if (IS_ERR(dsi->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
-+				     "cannot get DSI clock\n");
+ 	if (tsicr & E1000_TSICR_TXTS) {
+ 		/* retrieve hardware timestamp */
+ 		schedule_work(&adapter->ptp_tx_work);
+-		ack |= E1000_TSICR_TXTS;
+ 	}
  
- 	dsi->clk_lp = devm_clk_get(&pdev->dev, "lp");
--	if (IS_ERR(dsi->clk_lp)) {
--		dev_err(&pdev->dev, "cannot get low-power clock\n");
--		return PTR_ERR(dsi->clk_lp);
+-	if (tsicr & TSINTR_TT0) {
++	if (tsicr & TSINTR_TT0)
+ 		igb_perout(adapter, 0);
+-		ack |= TSINTR_TT0;
 -	}
-+	if (IS_ERR(dsi->clk_lp))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
-+				     "cannot get low-power clock\n");
  
- 	dsi->clk_parent = devm_clk_get(&pdev->dev, "parent");
--	if (IS_ERR(dsi->clk_parent)) {
--		dev_err(&pdev->dev, "cannot get parent clock\n");
--		return PTR_ERR(dsi->clk_parent);
+-	if (tsicr & TSINTR_TT1) {
++	if (tsicr & TSINTR_TT1)
+ 		igb_perout(adapter, 1);
+-		ack |= TSINTR_TT1;
 -	}
-+	if (IS_ERR(dsi->clk_parent))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
-+				     "cannot get parent clock\n");
  
- 	dsi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
--	if (IS_ERR(dsi->vdd)) {
--		dev_err(&pdev->dev, "cannot get VDD supply\n");
--		return PTR_ERR(dsi->vdd);
+-	if (tsicr & TSINTR_AUTT0) {
++	if (tsicr & TSINTR_AUTT0)
+ 		igb_extts(adapter, 0);
+-		ack |= TSINTR_AUTT0;
 -	}
-+	if (IS_ERR(dsi->vdd))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
-+				     "cannot get VDD supply\n");
  
- 	err = tegra_dsi_setup_clocks(dsi);
- 	if (err < 0) {
+-	if (tsicr & TSINTR_AUTT1) {
++	if (tsicr & TSINTR_AUTT1)
+ 		igb_extts(adapter, 1);
+-		ack |= TSINTR_AUTT1;
+-	}
+-
+-	/* acknowledge the interrupts */
+-	wr32(E1000_TSICR, ack);
+ }
+ 
+ static irqreturn_t igb_msix_other(int irq, void *data)
 -- 
 2.43.0
 
