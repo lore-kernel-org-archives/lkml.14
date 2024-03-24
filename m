@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3919E1F0970;
-	Sun, 24 Mar 2024 23:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EFB2197B1;
+	Sun, 24 Mar 2024 23:10:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321817; cv=none; b=E/dccl57pupRD4bKbgZaTv+MUXvNWbdQNjuJcrULUv62p5CyeyI6WHEkusdGSJaxLnkJssLiRa6/Gyy85Z43Ag9fXIzx5K/NXQjySaoAeWZIdbA7p4yPwHWIq0zupWeGA7J9+43qXyE+JsQErmrjQ7Qcz/3uQAErDUbegQpkJYE=
+	t=1711321807; cv=none; b=b2bLvKeBHss0w7PY0R8jEhxegdVlupXeK7ypz/sJFLwzPH0EFbjSDnvMcCfs+jkGMLovUexmv7MsKAbTkb/hC1jcAPKBztZUMFayHotKyQD0ANrfILxxt7oKudB+R0+/qB8/5neOflAMMJkdw6kSbSxIXDtVQECl6rb9yHnMh3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321817; c=relaxed/simple;
-	bh=K0BLUe0va2BCxmuw9OBC6cSWbWqVc+VU5QSx3+C4C7c=;
+	s=arc-20240116; t=1711321807; c=relaxed/simple;
+	bh=HRP3kp5d/QQUx83KUISyCFGfDCNtJT2pfGqFiM0BbWQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HpJnCF6O6CnZAUgGnPgmELhe1HIElzxcmmodB8DCRv/ELbTkAgcSxhyWhcHacAjHViGMDYQm4U3jwLKseAMXlpo0F33MdF9nPcCmQVb5n2xT7V5/HC+E+Vlr37nOHBzMK/0aXles/e4tPOwkfGFXjWYGJzU1iiLfuS253YWsc68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BLGEQPpF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PuSt53Et0ebftVBW+y8khr7w4Iy245quy1rVBOlf8aAUeQ5cmtX/dt9aCcxuK0v7wfbpxH5K7zRmJIenbm8HJQUG+/S0RUVERqCsK8G/Xs68gu8b0IvYcD720z9tvfYAHCXUxyMvdoGKqG0PSoejx9kgifn0b4eU3THDkmAl/FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbiXk4Xn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BLGEQPpF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47A33C43390;
-	Sun, 24 Mar 2024 23:10:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbiXk4Xn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75071C43390;
+	Sun, 24 Mar 2024 23:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321816;
-	bh=K0BLUe0va2BCxmuw9OBC6cSWbWqVc+VU5QSx3+C4C7c=;
+	s=k20201202; t=1711321807;
+	bh=HRP3kp5d/QQUx83KUISyCFGfDCNtJT2pfGqFiM0BbWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BLGEQPpFLF5whsg3Sw75HWWn6H17F39TQwXJN4mdI5iHLxZwuB4FNn22Nq31fUj83
-	 Zv/49TJffgeKIjRVS1XVmjo6fpghPX/JtgwNpkmJX/a+t26W8Ta5FmLR1ZEJldWnlo
-	 NNxwb8aPdrgctpcrLxDDIdRmgZCYKmD1Og9olSwdTAKWUv1SNhj/L5pVUNeHK05f4l
-	 Jiq+v+4et1KqjPuqvOvq4AYJnDWu9ME6pVCboDDwIHnmdkWXqNerdefMb3X9RmtrdW
-	 ZTm5v+PfOc5KrQVNLv3PHscVGR0Z3fNGLx0FU/O5S3VxXhiq4T4xNPzyoYh2hQHmWQ
-	 dnTi/yHDdAC4A==
+	b=AbiXk4XnT0dMtAZz5skhPnvopq9GY0gFjrDo7GPV8mJF6Bd+9hD+AW6akWr2alpJ2
+	 4uynH8/6xZGhFA+BMaH4o/ok985azpCAuSMrOoOtiL688wDLylul69RrksVqHOWM4k
+	 PJbxNVYyIp6c6MJSXqP9Kw1nfERTkShhEsq6c263kICZvNyyyoMholq6egD0B8wDYZ
+	 z+oa/pTm2bIEd+TxME7ajNxeH1qd18Uu8VCFqI7+GctQM8Ws3TlRjfhPB01AHdrt0D
+	 MEWy4vQy4pL0chCdW6piQCsJ/Bupy1suUNwM/NFb1AiYWbinBcwE0rHexanuem577Q
+	 UNY6vkaUWwhFQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Xiuhong Wang <xiuhong.wang@unisoc.com>,
-	Zhiguo Niu <zhiguo.niu@unisoc.com>,
-	Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Xingyu Wu <xingyu.wu@starfivetech.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 544/638] f2fs: compress: relocate some judgments in f2fs_reserve_compress_blocks
-Date: Sun, 24 Mar 2024 18:59:41 -0400
-Message-ID: <20240324230116.1348576-545-sashal@kernel.org>
+Subject: [PATCH 6.6 535/638] watchdog: starfive: Check pm_runtime_enabled() before decrementing usage counter
+Date: Sun, 24 Mar 2024 18:59:32 -0400
+Message-ID: <20240324230116.1348576-536-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,60 +51,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Xiuhong Wang <xiuhong.wang@unisoc.com>
+From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
 
-[ Upstream commit b7d797d241c154d73ec5523f87f3b06d4f299da1 ]
+[ Upstream commit 8bc22a2f1bf0f402029087fcb53130233a544fed ]
 
-The following f2fs_io test will get a "0" result instead of -EINVAL,
-unisoc # ./f2fs_io compress file
-unisoc # ./f2fs_io reserve_cblocks file
- 0
-it's not reasonable, so the judgement of
-atomic_read(&F2FS_I(inode)->i_compr_blocks) should be placed after
-the judgement of is_inode_flag_set(inode, FI_COMPRESS_RELEASED).
+In the probe function, pm_runtime_put_sync() will fail on platform with
+runtime PM disabled.
+Check if runtime PM is enabled before calling pm_runtime_put_sync() to
+fix it.
 
-Fixes: c75488fb4d82 ("f2fs: introduce F2FS_IOC_RESERVE_COMPRESS_BLOCKS")
-Signed-off-by: Xiuhong Wang <xiuhong.wang@unisoc.com>
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: db728ea9c7be ("drivers: watchdog: Add StarFive Watchdog driver")
+Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
+Signed-off-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
+Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20240119082722.1133024-1-jisheng.teoh@starfivetech.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/watchdog/starfive-wdt.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 2c2ddb0d15836..b156ac6a17390 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -3679,9 +3679,6 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+diff --git a/drivers/watchdog/starfive-wdt.c b/drivers/watchdog/starfive-wdt.c
+index 49b38ecc092dd..e4b344db38030 100644
+--- a/drivers/watchdog/starfive-wdt.c
++++ b/drivers/watchdog/starfive-wdt.c
+@@ -494,8 +494,13 @@ static int starfive_wdt_probe(struct platform_device *pdev)
  	if (ret)
- 		return ret;
+ 		goto err_exit;
  
--	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
--		goto out;
--
- 	f2fs_balance_fs(sbi, true);
+-	if (!early_enable)
+-		pm_runtime_put_sync(&pdev->dev);
++	if (!early_enable) {
++		if (pm_runtime_enabled(&pdev->dev)) {
++			ret = pm_runtime_put_sync(&pdev->dev);
++			if (ret)
++				goto err_exit;
++		}
++	}
  
- 	inode_lock(inode);
-@@ -3691,6 +3688,9 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 		goto unlock_inode;
- 	}
+ 	return 0;
  
-+	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
-+		goto unlock_inode;
-+
- 	f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
- 	filemap_invalidate_lock(inode->i_mapping);
- 
-@@ -3737,7 +3737,6 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 	}
- unlock_inode:
- 	inode_unlock(inode);
--out:
- 	mnt_drop_write_file(filp);
- 
- 	if (ret >= 0) {
 -- 
 2.43.0
 
