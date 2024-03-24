@@ -1,48 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9A11E85CB;
-	Sun, 24 Mar 2024 22:54:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEB51E9653;
+	Sun, 24 Mar 2024 22:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320884; cv=none; b=sjgImEEObSJIeat7o3aACHBmzSQpLS/lWr+Z41w44T1cEw1fgYtuSJS6R2pENyoqIMfuvJXIpaLX33MLqDeF7m8wcNvd+MbibM2KEdCkFXvMOuuo6umDoVgBKVk3FUUWQGjWi2Hg+Jla/YSFduFVQrMoyiZNI42EWpVAyaHKE3U=
+	t=1711320899; cv=none; b=aMDkd2D/9E8vRl7KVYCN0lw86GspZS4CwtswTfNxzkmLRyey9l34v1JKyYesPC/ccajAduQCpdIPQHDkI5BAPBS9o4faYTL6Fu74YDSMvKalLMZrllPCpQwfTwCeQjJM8zCUUxgzgdQ6NU14LrVBCIKbP43uzhBzy1VXFNsGEBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320884; c=relaxed/simple;
-	bh=Ks6Rh39f4C3jBfEt62E8rPS/XnqfajC+vnztZG15Mmg=;
+	s=arc-20240116; t=1711320899; c=relaxed/simple;
+	bh=BUaEXJZUG8etbIU7z42ZW4ULk/Wh+ZSN13xgmYO0WqQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VKDTfkgxV5qRdQhv2GdGPlp1oT06NwUEsZ6NdnhReiF1V7dkKsMn+B+ubIcvJFv5Lv576BO5YxqCZdr624cQheyQYbXPGlnty2Z8Wc7+/cKMWabIb+CdahenIgcT/UmsraYqUTyDGqAGIpGoKrEQ7RQvFh1knUaDqhlHwnabBP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQVfH6FP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Alk0f1yS+frJWr0suEoPmCZMhfuDp/LcdNmkNoCw7dvpQzcg4twCb7TZ+eGKdtJXt1lGHwxhEspmOTBFFSn7VP+Rlc3JYM31HZpF397KGHhlnaH/aogq1s7omlSkZ3DSe2MxZHglbJ+wP0iv1uYZcCOe5kCqUb53MN95LExXWEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oz5ACIru; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQVfH6FP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B076C433B2;
-	Sun, 24 Mar 2024 22:54:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oz5ACIru"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A86CAC43399;
+	Sun, 24 Mar 2024 22:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320882;
-	bh=Ks6Rh39f4C3jBfEt62E8rPS/XnqfajC+vnztZG15Mmg=;
+	s=k20201202; t=1711320899;
+	bh=BUaEXJZUG8etbIU7z42ZW4ULk/Wh+ZSN13xgmYO0WqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uQVfH6FPH4EtYn/ciLExQZiJX9KixBGr9/a+Qf3mwVzBYQ3FF+To2C8G+2migTHuF
-	 t0RMbhboq0iyAVFLrW01pHR5zfZUMTnrm8B2zAUbnQcjEH49Gj2PKczNTaESz8gaAa
-	 zuVZloWP2leEpxq6zEqYX/N4cSV5KMHIz/U/pj9NRkhlDU0ggd9ZP7LrUdiIpuihzN
-	 7/ChllUJoPqlQGPlnvZMKVFb+rn26+irm4s8qryyJxOt+zKgQBLkIgB2WQokowAkYr
-	 qlBcp3NZFos9BqbIAi3a+X4LHknq8hQbKhqMyTi4Iyo0+1ZDpvb5FY54fjPM9okX9Y
-	 HbCgYUwnsX/Tg==
+	b=Oz5ACIrude7WKhFMQiM0Ic3t4IBlBoPoUXk6gatTLvIxkTx4xl6wRsLG0qDQOE8PA
+	 P5PB2FcjymHuVClK3Qg7DdlZbYf4VM4zpSsckwD67u9r7wc7IEsblg2rRH13Okjk2Q
+	 bQwNl7gb1F1/DLch+NsA70iKgFNVL6RgEZ4/fJDNnRS0dShTSbe9cQ6g1/47OPl/l0
+	 hjV+SkuOIGe4fVDyIfoO5ihMW2Wd/3E9hzI1Mn3TZ8eGK/L9l4IYRjxzh79GkU9gny
+	 ZIbql9pcXBX+qc+jxzT/YDL1W2ob8qAvfwY5PfbEwjc5hA4Eaplwax+Hnpel/Y+7nG
+	 rDgnYGRV4j8mA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	James Clark <james.clark@arm.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Tom Rix <trix@redhat.com>,
-	llvm@lists.linux.dev,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 446/713] perf srcline: Add missed addr2line closes
-Date: Sun, 24 Mar 2024 18:42:52 -0400
-Message-ID: <20240324224720.1345309-447-sashal@kernel.org>
+Subject: [PATCH 6.7 462/713] ASoC: SOF: Add some bounds checking to firmware data
+Date: Sun, 24 Mar 2024 18:43:08 -0400
+Message-ID: <20240324224720.1345309-463-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -56,44 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ian Rogers <irogers@google.com>
+From: Dan Carpenter <dan.carpenter@linaro.org>
 
-[ Upstream commit c7ba9d18ae47924a6ea6a47ca139779f58eb83c0 ]
+[ Upstream commit 98f681b0f84cfc3a1d83287b77697679e0398306 ]
 
-The child_process for addr2line sets in and out to -1 so that pipes
-get created. It is the caller's responsibility to close the pipes,
-finish_command doesn't do it. Add the missed closes.
+Smatch complains about "head->full_size - head->header_size" can
+underflow.  To some extent, we're always going to have to trust the
+firmware a bit.  However, it's easy enough to add a check for negatives,
+and let's add a upper bounds check as well.
 
-Fixes: b3801e791231 ("perf srcline: Simplify addr2line subprocess")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: John Garry <john.g.garry@oracle.com>
-Cc: Tom Rix <trix@redhat.com>
-Cc: llvm@lists.linux.dev
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240201001504.1348511-8-irogers@google.com
+Fixes: d2458baa799f ("ASoC: SOF: ipc3-loader: Implement firmware parsing and loading")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Link: https://msgid.link/r/5593d147-058c-4de3-a6f5-540ecb96f6f8@moroto.mountain
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/srcline.c | 2 ++
+ sound/soc/sof/ipc3-loader.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 034b496df2978..7addc34afcf5d 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -399,6 +399,8 @@ static void addr2line_subprocess_cleanup(struct child_process *a2l)
- 		kill(a2l->pid, SIGKILL);
- 		finish_command(a2l); /* ignore result, we don't care */
- 		a2l->pid = -1;
-+		close(a2l->in);
-+		close(a2l->out);
- 	}
+diff --git a/sound/soc/sof/ipc3-loader.c b/sound/soc/sof/ipc3-loader.c
+index 28218766d2114..6e3ef06721106 100644
+--- a/sound/soc/sof/ipc3-loader.c
++++ b/sound/soc/sof/ipc3-loader.c
+@@ -148,6 +148,8 @@ static size_t sof_ipc3_fw_parse_ext_man(struct snd_sof_dev *sdev)
  
- 	free(a2l);
+ 	head = (struct sof_ext_man_header *)fw->data;
+ 	remaining = head->full_size - head->header_size;
++	if (remaining < 0 || remaining > sdev->basefw.fw->size)
++		return -EINVAL;
+ 	ext_man_size = ipc3_fw_ext_man_size(sdev, fw);
+ 
+ 	/* Assert firmware starts with extended manifest */
 -- 
 2.43.0
 
