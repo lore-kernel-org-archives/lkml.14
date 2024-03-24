@@ -1,88 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458401A38DA;
-	Sun, 24 Mar 2024 13:51:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110A317C9B;
+	Sun, 24 Mar 2024 13:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711288283; cv=none; b=m6Vtv97N/3FpasyS/qXSjQ+gj2MMpnRbiVhdWvouQ+ICOn8Wp3ZAVxJK0oIDN9Zx1f2qSd4b9b8+TQRrBDjEEjfRQjL8WE2Oljef0NCBrA0mG926sb95pomVRVEuFZB2pGCV/UpjwZJdE3QebVUDTRINdRNn1aGZIKx936WooH8=
+	t=1711288319; cv=none; b=oiljjVjsso0v1Yvkzg/fyGyJqu7qEb8WFV8UUm+ORpyHgd3KSozp1FnWxX6q2owXdc3UPDDRi4z6SWRQfPWwhGeWgBj3dn0JRQl7/u4mMxUUkgLPOcyKdh5mhoS+2jjSX5sNEGgY/j6GVWykqK2CqxKZPpXi9luKC8tQ8Fzc/AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711288283; c=relaxed/simple;
-	bh=Q1qsaNc4Xf1RFSr+vL9gGoT1ITWqAgeVcD4vzkh8OOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V/KLuJso9tM53Wzy9UtwymKb0wEQgh8E7J/rwNj9coVIrinNVXLtWWCZ0KDKxFye9cwypg05EHDmQTFrfy6UylWijetpCTawvNoh6AaA0xRco3g/f+UAGOZ7pt0/OQADXyskj9Wzvc9VzADRXRJu+vD+cdTRe5maX5rlMaDuZ1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EY39n9/2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711288319; c=relaxed/simple;
+	bh=fdaFFsv5xeJ2owFZCWtsohQOZAhO2MGEtb3Dm1Cbn94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rua7wnqTUzK6jk0DtYunK0f1CdbehujKnmDqt20z+MPNtCMYExtFY3xFsnUqhAUCnE60eLJgWLOg0Y6XI/7l/ppzsQZmEVn3g4NBeGSj0mCnl+TyvbpgH7wn9C0vvpfiaatMEBwT2x1RKqdbw6jRPjUJC5gMEI4Ztx0fq49jaxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=u3C1SR5a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EY39n9/2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC09FC433F1;
-	Sun, 24 Mar 2024 13:51:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711288282;
-	bh=Q1qsaNc4Xf1RFSr+vL9gGoT1ITWqAgeVcD4vzkh8OOU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EY39n9/2Iz9Dw5jZ6/LFN/6DfJYpsBVf8aF1plriJ8crGr/BSN4Xpb+MXOlnj98a7
-	 TUaddxR9bi3Pao2Vg9lCO+XWPB11WobJTJY+Ms8JdLAtM8kqaJh/PYkJRR6ytyEnfb
-	 0Rd7jp4FS+6DQiwGeaTBtYCFMiyQu0A5epbtn1+kq4URa+0kJaHsLF2IiDC5/esIjB
-	 k4OBXz7PxLKid0bb0jF1OzNsjqNdAPf3Y3P2RAoaSwLf2Jzl4u/tONSM16OuKZePDl
-	 SCeHhZxD1l54+YUunXtspAgqWgWvmfUnH+JVrHv+DqPvdexbxS+gUXpQfZb+eIZ2ah
-	 7Qy3c1rY16pwA==
-Date: Sun, 24 Mar 2024 13:51:10 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Petre Rodan <petre.rodan@subdimension.ro>, Lars-Peter Clausen
- <lars@metafoo.de>, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH] iio: pressure: hsc030pa: Use spi_read()
-Message-ID: <20240324135110.1e71572d@jic23-huawei>
-In-Reply-To: <8327ac591d244ac85aa83c01e559076159c7ba12.1711283728.git.christophe.jaillet@wanadoo.fr>
-References: <8327ac591d244ac85aa83c01e559076159c7ba12.1711283728.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="u3C1SR5a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A449C433C7;
+	Sun, 24 Mar 2024 13:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711288318;
+	bh=fdaFFsv5xeJ2owFZCWtsohQOZAhO2MGEtb3Dm1Cbn94=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u3C1SR5aj8Y4iALCQyQtK6EHOPA8OBkvCA/aenQ881qiHoV8N73IBJuph1aHeoXCj
+	 Lw3okiAZLRogw20TRGwL38V9fXBPkx8MAd6u1GUkOid5GLuyTlqKuo9EQsQdhoThtT
+	 y3RyFPKVMUN0AvHD1DJZ83afyckR3GBhQlRPFtBw=
+Date: Sun, 24 Mar 2024 14:51:55 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, linux-stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.7.y
+Message-ID: <2024032439-uneasy-raking-fbed@gregkh>
+References: <2zaqetj6wlxgpbxgex643dnudgwhcrz23xgfuai3t3hgavjb2d@vwhyha3hlg5y>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2zaqetj6wlxgpbxgex643dnudgwhcrz23xgfuai3t3hgavjb2d@vwhyha3hlg5y>
 
-On Sun, 24 Mar 2024 13:36:16 +0100
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
-
-> Use spi_read() instead of hand-writing it.
-> It is less verbose.
+On Sun, Mar 10, 2024 at 03:43:38PM -0400, Kent Overstreet wrote:
+> The following changes since commit 2e7cdd29fc42c410eab52fffe5710bf656619222:
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Applied to the togreg-normal branch of iio.git.
-
-Thanks,
-
-Jonathan
-
-> ---
-> Compile test only
-> ---
->  drivers/iio/pressure/hsc030pa_spi.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
+>   Linux 6.7.9 (2024-03-06 14:54:01 +0000)
 > 
-> diff --git a/drivers/iio/pressure/hsc030pa_spi.c b/drivers/iio/pressure/hsc030pa_spi.c
-> index 818fa6303454..337eecc577d2 100644
-> --- a/drivers/iio/pressure/hsc030pa_spi.c
-> +++ b/drivers/iio/pressure/hsc030pa_spi.c
-> @@ -23,14 +23,9 @@
->  static int hsc_spi_recv(struct hsc_data *data)
->  {
->  	struct spi_device *spi = to_spi_device(data->dev);
-> -	struct spi_transfer xfer = {
-> -		.tx_buf = NULL,
-> -		.rx_buf = data->buffer,
-> -		.len = HSC_REG_MEASUREMENT_RD_SIZE,
-> -	};
->  
->  	msleep_interruptible(HSC_RESP_TIME_MS);
-> -	return spi_sync_transfer(spi, &xfer, 1);
-> +	return spi_read(spi, data->buffer, HSC_REG_MEASUREMENT_RD_SIZE);
->  }
->  
->  static int hsc_spi_probe(struct spi_device *spi)
+> are available in the Git repository at:
+> 
+>   https://evilpiepirate.org/git/bcachefs.git tags/bcachefs-for-v6.7-stable-20240310
 
+Now extracted and added to the 6.7.y queue.
+
+thanks,
+
+greg k-h
