@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121DC225210;
-	Sun, 24 Mar 2024 23:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADAC12D76B;
+	Sun, 24 Mar 2024 23:12:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321942; cv=none; b=SHVfY7bY0yG1G0AvZDRuVyMxkszdYBbBM62sW0aaE0QA8uy1MOYEV7UYBdSBzb5GWcIzIFq9d8SXGIbXeKosEpn3qB06QrqhsMsxcx/4GmI2TJh15Aoa0y9AH97oYkaPjF1crEl95Qt7RNwmtO+uuJNxr2a0P47eAv7zZ5Vxenc=
+	t=1711321950; cv=none; b=SpB6fvxpf1fYYT8P9azotCnd9zxahvEVl0yUaFiJdVroQemLOEmnAWwcNW8SRgKSC0/C4kAU+NZKsFrXVCu3ET90HJlj/0bQ4NHSA8uXuKQq/QN7E+EcS4/1s8GEzoymIzOj83mKqh8cLNM1ajbc4+qT6ROZBW7KilMAGGho0+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321942; c=relaxed/simple;
-	bh=IT1oZa5OGwdXicshCtsdRQQIl/JSaxxPgyxUULrydB0=;
+	s=arc-20240116; t=1711321950; c=relaxed/simple;
+	bh=f65IT3YJW0iM5S2hwJ/ZJqvbC+2+6g5WS+AfeSKUXOI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Huszxyvqz3QtH62iWPTdMjQ5V61zqoBqKKSQBMYFmU5eGRlc5dCa0dTkBUaYQjCKGuzqViNkIrUltlQuUiMwkm6hITdNux/k+yC3akVSNHvGNXZ+J87mXrIyVvbuvcIhLvsogIzlLikuVMo7c1ERH/FKCr18tuhWW98qlB29SwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WzbtkIab; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=a7dgkJzX3brVkKZ6qjnRXeI0xHafD9EIv63qQ81nlvtg3LtfFCLm4b00zl2QcME69GuDp+bErY/RbiTRrJHBTNHk7MidJaEHrDp/B284hko4uzhj4SvfTd92MwNNBsR7OnSsOZV/tnSvXdqs35nvL5MigtrIxEjp7F6ma+HqxQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nrFPAfzf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WzbtkIab"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33C3BC433A6;
-	Sun, 24 Mar 2024 23:12:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nrFPAfzf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D678C43390;
+	Sun, 24 Mar 2024 23:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321941;
-	bh=IT1oZa5OGwdXicshCtsdRQQIl/JSaxxPgyxUULrydB0=;
+	s=k20201202; t=1711321950;
+	bh=f65IT3YJW0iM5S2hwJ/ZJqvbC+2+6g5WS+AfeSKUXOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WzbtkIab2ynh+yTXt+mJ3g3sPx3zHz3iUwTrU/BP6tiHkXa535xkYfR1cuk5JngVa
-	 9CtaWjJ703NZneoZ4TMNehmQ7Cq9Gahep2om0wdiyYVWNHjb93VqAejm/K+So53qHg
-	 tUEK5K2XHmHyo3Ai+X0xRdD5jUELxOz441SCr6Q/oeZ1PLMGcB+iCevCPuKWb7mikB
-	 cJgeAwKS4KXeyF6sXdAVu4qvW/rmccKTPVO05pqO6yEdr4ej6FYUrw6SpbIX3Tl8tx
-	 N5q6pNqp9khuajLvnl58KPkLBfi+MvNrKB3m1F4wJ5VK5ah7Twdkwx6J9Unp6VaFOh
-	 Jv2SYy0a67xeQ==
+	b=nrFPAfzfNJp7ZUEaAwfBxQYLe82WxPu40amS2Drfzx5OdN3AyF+R3NZGBoDcmRdz4
+	 aHwFEieJ5V1nrISMTz37OaDygzckDwDJP5faB490YaEPEapiDlEGJrTSowCN39MXgA
+	 SL3T7CSQ0/c0uwaHeWVl7zS8mZvn4Lt+/Ikp/jfWJegCM3hTJ1/5o7ChudNsMcHieF
+	 Yht3/U6tNX/c0XaqNUDqQ7tY+bkcZM5e66IhmuhpDEdOLlv5a9ifWRi5ayJIRSSpMp
+	 G+jXn1JUJB4LGZpniD7WmB8zHsQtLqRNDvFQDbFyS9WRLX5m07xiuZXbMmVfJbC4GQ
+	 YX9NT0w6XMAYQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jeff Layton <jlayton@kernel.org>,
-	Anna Schumaker <Anna.Schumaker@Netapp.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 013/451] nfsd: allow reaping files still under writeback
-Date: Sun, 24 Mar 2024 19:04:49 -0400
-Message-ID: <20240324231207.1351418-14-sashal@kernel.org>
+Subject: [PATCH 6.1 022/451] ASoC: rt5645: Make LattePanda board DMI match more precise
+Date: Sun, 24 Mar 2024 19:04:58 -0400
+Message-ID: <20240324231207.1351418-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,93 +48,61 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit dcb779fcd4ed5984ad15991d574943d12a8693d1 ]
+[ Upstream commit 551539a8606e28cb2a130f8ef3e9834235b456c4 ]
 
-On most filesystems, there is no reason to delay reaping an nfsd_file
-just because its underlying inode is still under writeback. nfsd just
-relies on client activity or the local flusher threads to do writeback.
+The DMI strings used for the LattePanda board DMI quirks are very generic.
 
-The main exception is NFS, which flushes all of its dirty data on last
-close. Add a new EXPORT_OP_FLUSH_ON_CLOSE flag to allow filesystems to
-signal that they do this, and only skip closing files under writeback on
-such filesystems.
+Using the dmidecode database from https://linux-hardware.org/ shows
+that the chosen DMI strings also match the following 2 laptops
+which also have a rt5645 codec:
 
-Also, remove a redundant NULL file pointer check in
-nfsd_file_check_writeback, and clean up nfs's export op flag
-definitions.
+Insignia NS-P11W7100 https://linux-hardware.org/?computer=E092FFF8BA04
+Insignia NS-P10W8100 https://linux-hardware.org/?computer=AFB6C0BF7934
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Acked-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-[ cel: adjusted to apply to v6.1.y ]
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+All 4 hw revisions of the LattePanda board have "S70CR" in their BIOS
+version DMI strings:
+
+DF-BI-7-S70CR100-*
+DF-BI-7-S70CR110-*
+DF-BI-7-S70CR200-*
+LP-BS-7-S70CR700-*
+
+See e.g. https://linux-hardware.org/?computer=D98250A817C0
+
+Add a partial (non exact) DMI match on this string to make the LattePanda
+board DMI match more precise to avoid false-positive matches.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://msgid.link/r/20240211212736.179605-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/export.c          |  9 ++++++---
- fs/nfsd/filecache.c      | 12 +++++++++++-
- include/linux/exportfs.h |  1 +
- 3 files changed, 18 insertions(+), 4 deletions(-)
+ sound/soc/codecs/rt5645.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/fs/nfs/export.c b/fs/nfs/export.c
-index 01596f2d0a1ed..9fe9586a51b71 100644
---- a/fs/nfs/export.c
-+++ b/fs/nfs/export.c
-@@ -156,7 +156,10 @@ const struct export_operations nfs_export_ops = {
- 	.fh_to_dentry = nfs_fh_to_dentry,
- 	.get_parent = nfs_get_parent,
- 	.fetch_iversion = nfs_fetch_iversion,
--	.flags = EXPORT_OP_NOWCC|EXPORT_OP_NOSUBTREECHK|
--		EXPORT_OP_CLOSE_BEFORE_UNLINK|EXPORT_OP_REMOTE_FS|
--		EXPORT_OP_NOATOMIC_ATTR,
-+	.flags = EXPORT_OP_NOWCC		|
-+		 EXPORT_OP_NOSUBTREECHK		|
-+		 EXPORT_OP_CLOSE_BEFORE_UNLINK	|
-+		 EXPORT_OP_REMOTE_FS		|
-+		 EXPORT_OP_NOATOMIC_ATTR	|
-+		 EXPORT_OP_FLUSH_ON_CLOSE,
- };
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 9b7082fdd2115..a6fa6e9802772 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -402,13 +402,23 @@ nfsd_file_check_writeback(struct nfsd_file *nf)
- 	struct file *file = nf->nf_file;
- 	struct address_space *mapping;
- 
--	if (!file || !(file->f_mode & FMODE_WRITE))
-+	/* File not open for write? */
-+	if (!(file->f_mode & FMODE_WRITE))
- 		return false;
-+
-+	/*
-+	 * Some filesystems (e.g. NFS) flush all dirty data on close.
-+	 * On others, there is no need to wait for writeback.
-+	 */
-+	if (!(file_inode(file)->i_sb->s_export_op->flags & EXPORT_OP_FLUSH_ON_CLOSE))
-+		return false;
-+
- 	mapping = file->f_mapping;
- 	return mapping_tagged(mapping, PAGECACHE_TAG_DIRTY) ||
- 		mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK);
- }
- 
-+
- static bool nfsd_file_lru_add(struct nfsd_file *nf)
- {
- 	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
-diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-index fe848901fcc3a..218fc5c54e901 100644
---- a/include/linux/exportfs.h
-+++ b/include/linux/exportfs.h
-@@ -221,6 +221,7 @@ struct export_operations {
- #define EXPORT_OP_NOATOMIC_ATTR		(0x10) /* Filesystem cannot supply
- 						  atomic attribute updates
- 						*/
-+#define EXPORT_OP_FLUSH_ON_CLOSE	(0x20) /* fs flushes file data on close */
- 	unsigned long	flags;
- };
- 
+diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
+index 844d14d4c9a51..aac9140749968 100644
+--- a/sound/soc/codecs/rt5645.c
++++ b/sound/soc/codecs/rt5645.c
+@@ -3802,6 +3802,16 @@ static const struct dmi_system_id dmi_platform_data[] = {
+ 		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+ 		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+ 		  DMI_EXACT_MATCH(DMI_BOARD_VERSION, "Default string"),
++		  /*
++		   * Above strings are too generic, LattePanda BIOS versions for
++		   * all 4 hw revisions are:
++		   * DF-BI-7-S70CR100-*
++		   * DF-BI-7-S70CR110-*
++		   * DF-BI-7-S70CR200-*
++		   * LP-BS-7-S70CR700-*
++		   * Do a partial match for S70CR to avoid false positive matches.
++		   */
++		  DMI_MATCH(DMI_BIOS_VERSION, "S70CR"),
+ 		},
+ 		.driver_data = (void *)&lattepanda_board_platform_data,
+ 	},
 -- 
 2.43.0
 
