@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71843146D61;
-	Sun, 24 Mar 2024 22:53:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A53C128836;
+	Sun, 24 Mar 2024 22:53:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320819; cv=none; b=IM5QJNNFvjEpbjZT3uws9QnceJ9v1+UB1uAXH/VrTvhOYKj2iGBXa+R7i2HE9s4lVGqgvSaq3UWzvZr0sABr4NHiF2IB4CEqyCrgIyrC2hcjySirhsZaAzPI21S0i5qZDQt1GuhLnu2n34OZ4417NRzLs1Hl+0YfeMawQTqswJQ=
+	t=1711320835; cv=none; b=mFfwn5+Ugrgzpl3rxBkt/TavuCU4Ua4GT26stikJpLzSYTRmklLxYG0rFFXsfA/9kTlXEMgQ31W2kjPsNXFpI1wRsC8L1Q38XsG2GMCGpSSSXH4GXkSTj4z5nxu+0YLz0uLI+kMnHukYMlXKXj4wDVS6wLIK14e1XICSlJvZ0MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320819; c=relaxed/simple;
-	bh=AfZxNChh6nQgv6CiSACYtKJCz7TflBew/qgCzAtcdW4=;
+	s=arc-20240116; t=1711320835; c=relaxed/simple;
+	bh=r94iDyI3IDylZBFHddqhoES6VAbPF+0tOiw1jowT+zQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fjmo6ZUgpZv7wkjtxAScdd24uzEHe/5dG3OwmPmjoPG60tiy+OcFpRX4nkoqANDJdTj1qujSb296vmOadMBIL3NNxLnBChgz4ohP59hPf1gSdU6R4iVXD8tE52R7QesiwQz6KMAlZ3gtXLfbp4vdi/XIbZ3Fe/1gnr2SzLpXlPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uM3JDL3q; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DUT9dEJ87PriqkOyHxxVuIVR7T2RUYrXe6gt8w7aau9PZR0iB8Ho20513SM3Uju08GaMlEOn89obrGMLdY8DQ2mJfcZAmCrjqOjU+nslY9VtIPOdX76inWdXqcRFKx24MxlVl8bL6LocaYu9eeD8LtnLBvgUPEVsoMzLJbtuHYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjPWlIAC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uM3JDL3q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEE30C43394;
-	Sun, 24 Mar 2024 22:53:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjPWlIAC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 502E7C43390;
+	Sun, 24 Mar 2024 22:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320818;
-	bh=AfZxNChh6nQgv6CiSACYtKJCz7TflBew/qgCzAtcdW4=;
+	s=k20201202; t=1711320834;
+	bh=r94iDyI3IDylZBFHddqhoES6VAbPF+0tOiw1jowT+zQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uM3JDL3ql0jC6rtunJaXe1kjBtlZgE6fw1PAlBXq5dBlfPCjf3Szrv3xYdSp7AmbH
-	 srJJUUAXiU5GFAmZ0OKKKhG87w+Mj1IsIwncXd9JHxdpxAN+g/Xu1sVD4vK76ww4Pf
-	 ki90/V0TC1r3bT9OK1YZ4FlWdv1M1XEl/9FxDGqNZqHkOF2RWtgx6xsY1867ybYkSp
-	 FltuG9m/Bsz0lG8eycmJ2Jxvzm5GbQfVXnBbKfrKODcFFzHDP1UszhEEavbm6kAGcF
-	 ne71OPn/JhjmZNSLyxylVI8sbgzLN0pu0HJrWPIHCX0Hw0u2bkD9u5uWmcfnJ3US65
-	 3WNWke2HQ/ilg==
+	b=tjPWlIACfpPbJ0TeUIxNVaedXSk7j89HAip1cNbJ1PsvOw/sWWOAPGr2VSDV3xydY
+	 uaSo5zYe+oKLfVIQM9T6HrCBo6Mh3mjiof7/dSnKMFBNfW+/wZDeSj9gqv1uRJ3l/N
+	 CwXAudkGcdH0NXkGG+7DcykCEodWctW15GVwDBYc273H2/ftTt01vW+26rcKH49Gyx
+	 XnLEn/zbSDauFsbpMPW5n2XxaO1fqMHcu9WohgJlxkAmLPxYiBMLlTq8Cja8WEEzlq
+	 po6RKGUgGc9YsWOLyOVWkazsMSbD7Zz+p35JcrDRFca9SG9/ny5GcnkqhXxEWyFX8P
+	 GXOsoVVc8dRrQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Harry Wentland <harry.wentland@amd.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Melissa Wen <mwen@igalia.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 383/713] net/x25: fix incorrect parameter validation in the x25_getsockopt() function
-Date: Sun, 24 Mar 2024 18:41:49 -0400
-Message-ID: <20240324224720.1345309-384-sashal@kernel.org>
+Subject: [PATCH 6.7 399/713] drm/vkms: Avoid reading beyond LUT array
+Date: Sun, 24 Mar 2024 18:42:05 -0400
+Message-ID: <20240324224720.1345309-400-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,44 +50,64 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+From: Harry Wentland <harry.wentland@amd.com>
 
-[ Upstream commit d6eb8de2015f0c24822e47356f839167ebde2945 ]
+[ Upstream commit 2fee84030d12d9fddfa874e4562d71761a129277 ]
 
-The 'len' variable can't be negative when assigned the result of
-'min_t' because all 'min_t' parameters are cast to unsigned int,
-and then the minimum one is chosen.
+When the floor LUT index (drm_fixp2int(lut_index) is the last
+index of the array the ceil LUT index will point to an entry
+beyond the array. Make sure we guard against it and use the
+value of the floor LUT index.
 
-To fix the logic, check 'len' as read from 'optlen',
-where the types of relevant variables are (signed) int.
+v3:
+ - Drop bits from commit description that didn't contribute
+   anything of value
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: db1f254f2cfa ("drm/vkms: Add support to 1D gamma LUT")
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Cc: Arthur Grillo <arthurgrillo@riseup.net>
+Reviewed-by: Arthur Grillo <arthurgrillo@riseup.net>
+Reviewed-by: Melissa Wen <mwen@igalia.com>
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231108163647.106853-6-harry.wentland@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/x25/af_x25.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/vkms/vkms_composer.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
-index aad8ffeaee041..ae90696efe929 100644
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -460,12 +460,12 @@ static int x25_getsockopt(struct socket *sock, int level, int optname,
- 	if (get_user(len, optlen))
- 		goto out;
+diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+index 3c99fb8b54e2d..e7441b227b3ce 100644
+--- a/drivers/gpu/drm/vkms/vkms_composer.c
++++ b/drivers/gpu/drm/vkms/vkms_composer.c
+@@ -123,6 +123,8 @@ static u16 apply_lut_to_channel_value(const struct vkms_color_lut *lut, u16 chan
+ 				      enum lut_channel channel)
+ {
+ 	s64 lut_index = get_lut_index(lut, channel_value);
++	u16 *floor_lut_value, *ceil_lut_value;
++	u16 floor_channel_value, ceil_channel_value;
  
--	len = min_t(unsigned int, len, sizeof(int));
--
- 	rc = -EINVAL;
- 	if (len < 0)
- 		goto out;
+ 	/*
+ 	 * This checks if `struct drm_color_lut` has any gap added by the compiler
+@@ -130,11 +132,15 @@ static u16 apply_lut_to_channel_value(const struct vkms_color_lut *lut, u16 chan
+ 	 */
+ 	static_assert(sizeof(struct drm_color_lut) == sizeof(__u16) * 4);
  
-+	len = min_t(unsigned int, len, sizeof(int));
-+
- 	rc = -EFAULT;
- 	if (put_user(len, optlen))
- 		goto out;
+-	u16 *floor_lut_value = (__u16 *)&lut->base[drm_fixp2int(lut_index)];
+-	u16 *ceil_lut_value = (__u16 *)&lut->base[drm_fixp2int_ceil(lut_index)];
++	floor_lut_value = (__u16 *)&lut->base[drm_fixp2int(lut_index)];
++	if (drm_fixp2int(lut_index) == (lut->lut_length - 1))
++		/* We're at the end of the LUT array, use same value for ceil and floor */
++		ceil_lut_value = floor_lut_value;
++	else
++		ceil_lut_value = (__u16 *)&lut->base[drm_fixp2int_ceil(lut_index)];
+ 
+-	u16 floor_channel_value = floor_lut_value[channel];
+-	u16 ceil_channel_value = ceil_lut_value[channel];
++	floor_channel_value = floor_lut_value[channel];
++	ceil_channel_value = ceil_lut_value[channel];
+ 
+ 	return lerp_u16(floor_channel_value, ceil_channel_value,
+ 			lut_index & DRM_FIXED_DECIMAL_MASK);
 -- 
 2.43.0
 
