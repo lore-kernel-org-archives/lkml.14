@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A503A291B7C;
-	Sun, 24 Mar 2024 23:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265031836F8;
+	Sun, 24 Mar 2024 23:50:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324238; cv=none; b=tpBemvVAliVXyie77DUi4ZxOW4HqoUCc2QAZ0Q4oOm6kaUQOQ0T68VMGRACNNQhGF0JDriIKA9xT8V3sL7aH6BQM3RjC15RnjjxxbnpT/wxXnNPhSznjss9gVAWLV9353IPojFqyunOuRvH7Oxd0lU4Wo6IIOk2KS0hjDKr5XRQ=
+	t=1711324229; cv=none; b=RKWMqNFdKxkMM7CkT/DZ3/py5fPRUrb47jmLfi64JnPdw/NWAIIRHZv7Ar2zKckYG/jPJkX6uM0vntqCUYKP5tNfQsU03X3LRewh90mpkR6ra4y1/0MPCOC9nZ+tiTsxf7VP+SZ0vsjE8VFRZIo21baDPgj1zHM8DH18ucY2Ig4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324238; c=relaxed/simple;
-	bh=2K95XuFUUlB5s66cKWmbhLkdOpfBkjlpzMybXLaXRhE=;
+	s=arc-20240116; t=1711324229; c=relaxed/simple;
+	bh=3Q6+nkFmLZ8LSriDKFXBaKSN3UtPPBNDjNc8HitH7HM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K5kenHCtgl94YQHz/VDtR3J8itykHzxKE1C9VPYYh5/4lXhsqG64+ERXh1fPo3a7CB+nR9+ynn4rhb8pGz1pHLcXvbTZEEsG9ePZHj0r+O7FLLT5njrb4qZsXwm7OzZYF7h4rJP6Ia/e7Hz7r0OSE+EBJnz47za4uKo6IMH1Uws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RIUpUvU4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=IJ8bS6LkffAdcM1GyD1YCqTgDVWnQ/8PvwG4jwgUkIS454JmEtEPxkmG2k39nMORBDokEwfelwq6H/YPYNMLmVGKeYFlJ70lCFjcmvo3Budd+kmA33XNxckoAv0ep7vHmbX49NMM/GgPKVa1vvpH1XFjyBoMqyWemXBSE2wSfuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJM5+T13; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RIUpUvU4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D31D1C43399;
-	Sun, 24 Mar 2024 23:50:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJM5+T13"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5845C433F1;
+	Sun, 24 Mar 2024 23:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324237;
-	bh=2K95XuFUUlB5s66cKWmbhLkdOpfBkjlpzMybXLaXRhE=;
+	s=k20201202; t=1711324227;
+	bh=3Q6+nkFmLZ8LSriDKFXBaKSN3UtPPBNDjNc8HitH7HM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RIUpUvU4GlLWp/tdZl17isLU250oHTLZ/tCpToygpS45eK4veiWUvDlG6DgS41S6Q
-	 1WtwOpF2vxNhndIs2cCWYgNJarQueUUZOXVlgyBHkAbDm7rGSiPSYgTynoiMVxrU08
-	 6v7yMli51f9AQ2thAq0U079oqoVOc3Yn3YscS50v/dzhFsHYKsqQtklDcS3E1QhwT1
-	 3B1hkOzCJnhx9nbZa+8SYaPqzvr4DTtZ54wl3axsbmRVspMk0VG2NqkmtZba8cnq2W
-	 lzrYCw9EfMJd62i6da9SBSNjLYUmD7rfQGPj6xpwJsdcIJOHeYHjpAL8M1KIzjxxpv
-	 +vTSJM1Uo9+7w==
+	b=UJM5+T13DL+UuTWs6Nt1JGSuo26Nv5AtPaM8n0Z1IXV5YNaWKQvFyykor7ZNiQYM2
+	 fGYXu2pIfC28MmimTLogPJJ9CZWiITzXhHeGtAD+8K1S7wD6SJKgoaIAaILaQdnT9r
+	 w9HAzXhDu5O0XHhAKmAtQh2jykIrCuS8iLbt9c7z8wmM9blZwEXSjzgVYNbtk9H1g5
+	 eiepPjO36fVq3cqCucCt/JOb10W3yqRPp9CsZGXrfbB5ICSj33IEKwwyUel33sScjI
+	 t3xN1jzw1pqpPVIE3rjfCNoR6OHEYr38wAhyvz+O2hvag8BuXWP8FtvrWF5lz7a2GA
+	 xyhVJg8lp7DIA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christoph Hellwig <hch@lst.de>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 020/148] md: switch to ->check_events for media change notifications
-Date: Sun, 24 Mar 2024 19:48:04 -0400
-Message-ID: <20240324235012.1356413-21-sashal@kernel.org>
+Subject: [PATCH 4.19 011/148] Input: gpio_keys_polled - suppress deferred probe error for gpio
+Date: Sun, 24 Mar 2024 19:47:55 -0400
+Message-ID: <20240324235012.1356413-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -44,143 +45,55 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christoph Hellwig <hch@lst.de>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit a564e23f0f99759f453dbefcb9160dec6d99df96 ]
+[ Upstream commit 963465a33141d0d52338e77f80fe543d2c9dc053 ]
 
-md is the last driver using the legacy media_changed method.  Switch
-it over to (not so) new ->clear_events approach, which also removes the
-need for the ->revalidate_disk method.
+On a PC Engines APU our admins are faced with:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[axboe: remove unused 'bdops' variable in disk_clear_events()]
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Stable-dep-of: 9674f54e41ff ("md: Don't clear MD_CLOSING when the raid is about to stop")
+	$ dmesg | grep -c "gpio-keys-polled gpio-keys-polled: unable to claim gpio 0, err=-517"
+	261
+
+Such a message always appears when e.g. a new USB device is plugged in.
+
+Suppress this message which considerably clutters the kernel log for
+EPROBE_DEFER (i.e. -517).
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20240305101042.10953-2-u.kleine-koenig@pengutronix.de
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/filesystems/Locking |  4 +---
- block/genhd.c                     |  8 +-------
- drivers/md/md.c                   | 19 ++++++++-----------
- include/linux/blkdev.h            |  2 --
- 4 files changed, 10 insertions(+), 23 deletions(-)
+ drivers/input/keyboard/gpio_keys_polled.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/filesystems/Locking b/Documentation/filesystems/Locking
-index efea228ccd8af..da300708404d1 100644
---- a/Documentation/filesystems/Locking
-+++ b/Documentation/filesystems/Locking
-@@ -404,7 +404,6 @@ prototypes:
- 	int (*compat_ioctl) (struct block_device *, fmode_t, unsigned, unsigned long);
- 	int (*direct_access) (struct block_device *, sector_t, void **,
- 				unsigned long *);
--	int (*media_changed) (struct gendisk *);
- 	void (*unlock_native_capacity) (struct gendisk *);
- 	int (*revalidate_disk) (struct gendisk *);
- 	int (*getgeo)(struct block_device *, struct hd_geometry *);
-@@ -417,13 +416,12 @@ release:		yes
- ioctl:			no
- compat_ioctl:		no
- direct_access:		no
--media_changed:		no
- unlock_native_capacity:	no
- revalidate_disk:	no
- getgeo:			no
- swap_slot_free_notify:	no	(see below)
+diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+index edc7262103b9a..96e47b2401490 100644
+--- a/drivers/input/keyboard/gpio_keys_polled.c
++++ b/drivers/input/keyboard/gpio_keys_polled.c
+@@ -328,12 +328,10 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
  
--media_changed, unlock_native_capacity and revalidate_disk are called only from
-+unlock_native_capacity and revalidate_disk are called only from
- check_disk_change().
+ 			error = devm_gpio_request_one(dev, button->gpio,
+ 					flags, button->desc ? : DRV_NAME);
+-			if (error) {
+-				dev_err(dev,
+-					"unable to claim gpio %u, err=%d\n",
+-					button->gpio, error);
+-				return error;
+-			}
++			if (error)
++				return dev_err_probe(dev, error,
++						     "unable to claim gpio %u\n",
++						     button->gpio);
  
- swap_slot_free_notify is called with swap_lock and sometimes the page lock
-diff --git a/block/genhd.c b/block/genhd.c
-index 27a410d310870..d2502e175aca0 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -1771,18 +1771,12 @@ void disk_flush_events(struct gendisk *disk, unsigned int mask)
-  */
- unsigned int disk_clear_events(struct gendisk *disk, unsigned int mask)
- {
--	const struct block_device_operations *bdops = disk->fops;
- 	struct disk_events *ev = disk->ev;
- 	unsigned int pending;
- 	unsigned int clearing = mask;
- 
--	if (!ev) {
--		/* for drivers still using the old ->media_changed method */
--		if ((mask & DISK_EVENT_MEDIA_CHANGE) &&
--		    bdops->media_changed && bdops->media_changed(disk))
--			return DISK_EVENT_MEDIA_CHANGE;
-+	if (!ev)
- 		return 0;
--	}
- 
- 	disk_block_events(disk);
- 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 3cc28b2836078..a137f8b4a0541 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -5455,6 +5455,7 @@ static int md_alloc(dev_t dev, char *name)
- 	 * remove it now.
- 	 */
- 	disk->flags |= GENHD_FL_EXT_DEVT;
-+	disk->events |= DISK_EVENT_MEDIA_CHANGE;
- 	mddev->gendisk = disk;
- 	add_disk(disk);
- 
-@@ -7565,20 +7566,17 @@ static void md_release(struct gendisk *disk, fmode_t mode)
- 	mddev_put(mddev);
- }
- 
--static int md_media_changed(struct gendisk *disk)
--{
--	struct mddev *mddev = disk->private_data;
--
--	return mddev->changed;
--}
--
--static int md_revalidate(struct gendisk *disk)
-+static unsigned int md_check_events(struct gendisk *disk, unsigned int clearing)
- {
- 	struct mddev *mddev = disk->private_data;
-+	unsigned int ret = 0;
- 
-+	if (mddev->changed)
-+		ret = DISK_EVENT_MEDIA_CHANGE;
- 	mddev->changed = 0;
--	return 0;
-+	return ret;
- }
-+
- static const struct block_device_operations md_fops =
- {
- 	.owner		= THIS_MODULE,
-@@ -7589,8 +7587,7 @@ static const struct block_device_operations md_fops =
- 	.compat_ioctl	= md_compat_ioctl,
- #endif
- 	.getgeo		= md_getgeo,
--	.media_changed  = md_media_changed,
--	.revalidate_disk= md_revalidate,
-+	.check_events	= md_check_events,
- };
- 
- static int md_thread(void *arg)
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 56fe682d9beb4..ac407c1d4d40f 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1994,8 +1994,6 @@ struct block_device_operations {
- 	int (*compat_ioctl) (struct block_device *, fmode_t, unsigned, unsigned long);
- 	unsigned int (*check_events) (struct gendisk *disk,
- 				      unsigned int clearing);
--	/* ->media_changed() is DEPRECATED, use ->check_events() instead */
--	int (*media_changed) (struct gendisk *);
- 	void (*unlock_native_capacity) (struct gendisk *);
- 	int (*revalidate_disk) (struct gendisk *);
- 	int (*getgeo)(struct block_device *, struct hd_geometry *);
+ 			bdata->gpiod = gpio_to_desc(button->gpio);
+ 			if (!bdata->gpiod) {
 -- 
 2.43.0
 
