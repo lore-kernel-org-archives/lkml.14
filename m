@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AE317BB05;
-	Sun, 24 Mar 2024 23:42:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89B517BB0D;
+	Sun, 24 Mar 2024 23:42:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323748; cv=none; b=tmFXnzEbL6/byinKKBJFOc0pPAnPwULSmrwwzMxpJ811hiliWCu7lRwg9I5gx2VqHsz+9tOdSYrz0JcZWvxwIC3K58R+4QOiTKVXdRVjkHQSldYQ1h5NgDuS6OS6tmgtziXnMLihR8IpdO/q8HslgE+Pd4hMPFOTDxJrE//XFJc=
+	t=1711323749; cv=none; b=rRjXX/GJED5AMTjscmVgugpQkXtd+Cl44/x0ykHYZ3ADnKwiWkxPoO9EuhwFbF0OwgHmKyjQE3Hm50XpavaaUXyoyxlltcjTRCFrRbF6K0OeQUp9yqFAW3FD19P6LDOBwvJjqxcauX9nfoeKtBK2UwF0PScM6RpqDBQ5Y1Z7atw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323748; c=relaxed/simple;
-	bh=yR9eDH5FyneCFiaeoSi342C8aJUPm3XBozGPnp/Dtx8=;
+	s=arc-20240116; t=1711323749; c=relaxed/simple;
+	bh=UDJCJA68KZXVJvBT+zW2Mxy5ai0v5gJxejglB49KUjQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S9WjffmMXeKLbnX6Oz+eaqXCh7KfDENv9SLLPxyEekjn4Y6bceAj8V4o7PBxQu1q7Aa6BC8NO3CAuO4dsVnuc073zfqHmxLYka6q8xi8JYqaoT+7gy9gUCqQragSkBKqQJttmWnsd+U4IfqxoK3+dN7egYeDWNhkQmTd/r76sXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHKc8EZX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=f3wI62vd9meQ7XKDhgdfm5J8PYcHOw0AYF30m32wIrADOuKsxC50KcTs5w8ZXD4F69g/h3Dso1AxlDtklM91uIx3voHfxe2Dwug02PMSg00pLnX4H+zS/SqQ0+IxwEMZ0XjWbhnWRU6wN3I5/HrYxr5loZZaW/nrFi/RvXHGdFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REae+OKe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHKc8EZX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD3E7C433C7;
-	Sun, 24 Mar 2024 23:42:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REae+OKe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2165C433C7;
+	Sun, 24 Mar 2024 23:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323747;
-	bh=yR9eDH5FyneCFiaeoSi342C8aJUPm3XBozGPnp/Dtx8=;
+	s=k20201202; t=1711323749;
+	bh=UDJCJA68KZXVJvBT+zW2Mxy5ai0v5gJxejglB49KUjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PHKc8EZXSlyw2rSRHu1sE2I9wYtAD0fovPuOvGfANgAcLraHq7TxtYrQzjLLtQhz5
-	 SXjBXeH2AMwNXtuCuCW8i/5JH2KyYnBq5Q3pSSSSNxryCgDD/+V8htwJjHJItSC60l
-	 isQbnZuzo8che1bVTuW2CwWxGWzDsEuGVS65g7xMORQiMr2rudumL4AMtBnvC1mFYl
-	 AvIKJX1I5rD6ay5j1iMhmU4nOhwJVJymScbwcA4GFfvoKjnBBIm6dxPmIchJ6mwrBr
-	 sNqBEqTpuRAMN8BQX9jPKuTEjaQsk+h6lslNaMD14QHioxwLmGiGa3o/6xrjY91IMW
-	 hJtopKQdLw/Bg==
+	b=REae+OKeWNCqD4cyjqR12EtSnVig8PP+0yGMQasvhlJHwKmEGDnAof3Xo3X+0SshU
+	 1rYNBXgFoxFg8uD0IUx9cwdOk1ej5Qm3vazshYdAgrmaGcTNMxDVm+QpmxTazXj8TV
+	 V6VE64f3yRv28GUWPY4l7gO54ypmWyELWYZ015TR1lmFBqc5GuVX6p2nfusSpz0Vt7
+	 +rHl4tRUZymUIq+vLKsRHGZYGzOqXT9K/1qDgp3JFU6XQUsKARBm/J+z4u42Yz3rXH
+	 dnPf097u8Em/eNhhRQh2giwzv60+s3NYBtr8Z1/meWqOXTGBq4mHQv5qC4FZoN8a+D
+	 nJtJ/dlBe+6iA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Qiang Yu <yuq825@gmail.com>,
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Robert Foss <rfoss@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 122/238] drm/lima: fix a memleak in lima_heap_alloc
-Date: Sun, 24 Mar 2024 19:38:30 -0400
-Message-ID: <20240324234027.1354210-123-sashal@kernel.org>
+Subject: [PATCH 5.10 124/238] media: tc358743: register v4l2 async device only after successful setup
+Date: Sun, 24 Mar 2024 19:38:32 -0400
+Message-ID: <20240324234027.1354210-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,70 +48,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-[ Upstream commit 04ae3eb470e52a3c41babe85ff8cee195e4dcbea ]
+[ Upstream commit 87399f1ff92203d65f1febf5919429f4bb613a02 ]
 
-When lima_vm_map_bo fails, the resources need to be deallocated, or
-there will be memleaks.
+Ensure the device has been setup correctly before registering the v4l2
+async device, thus allowing userspace to access.
 
-Fixes: 6aebc51d7aef ("drm/lima: support heap buffer creation")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Qiang Yu <yuq825@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240117071328.3811480-1-alexious@zju.edu.cn
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Reviewed-by: Robert Foss <rfoss@kernel.org>
+Fixes: 4c5211a10039 ("[media] tc358743: register v4l2 asynchronous subdevice")
+Signed-off-by: Robert Foss <rfoss@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20240110090111.458115-1-alexander.stein@ew.tq-group.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/lima/lima_gem.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/media/i2c/tc358743.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/lima/lima_gem.c b/drivers/gpu/drm/lima/lima_gem.c
-index 11223fe348dfe..894175f2ed492 100644
---- a/drivers/gpu/drm/lima/lima_gem.c
-+++ b/drivers/gpu/drm/lima/lima_gem.c
-@@ -74,29 +74,34 @@ int lima_heap_alloc(struct lima_bo *bo, struct lima_vm *vm)
- 	} else {
- 		bo->base.sgt = kmalloc(sizeof(*bo->base.sgt), GFP_KERNEL);
- 		if (!bo->base.sgt) {
--			sg_free_table(&sgt);
--			return -ENOMEM;
-+			ret = -ENOMEM;
-+			goto err_out0;
- 		}
- 	}
+diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
+index f21da11caf224..8bcb4b354c895 100644
+--- a/drivers/media/i2c/tc358743.c
++++ b/drivers/media/i2c/tc358743.c
+@@ -2108,9 +2108,6 @@ static int tc358743_probe(struct i2c_client *client)
+ 	state->mbus_fmt_code = MEDIA_BUS_FMT_RGB888_1X24;
  
- 	ret = dma_map_sgtable(dev, &sgt, DMA_BIDIRECTIONAL, 0);
--	if (ret) {
--		sg_free_table(&sgt);
--		kfree(bo->base.sgt);
--		bo->base.sgt = NULL;
--		return ret;
--	}
-+	if (ret)
-+		goto err_out1;
+ 	sd->dev = &client->dev;
+-	err = v4l2_async_register_subdev(sd);
+-	if (err < 0)
+-		goto err_hdl;
  
- 	*bo->base.sgt = sgt;
+ 	mutex_init(&state->confctl_mutex);
  
- 	if (vm) {
- 		ret = lima_vm_map_bo(vm, bo, old_size >> PAGE_SHIFT);
- 		if (ret)
--			return ret;
-+			goto err_out2;
- 	}
+@@ -2168,6 +2165,10 @@ static int tc358743_probe(struct i2c_client *client)
+ 	if (err)
+ 		goto err_work_queues;
  
- 	bo->heap_size = new_size;
- 	return 0;
++	err = v4l2_async_register_subdev(sd);
++	if (err < 0)
++		goto err_work_queues;
 +
-+err_out2:
-+	dma_unmap_sgtable(dev, &sgt, DMA_BIDIRECTIONAL, 0);
-+err_out1:
-+	kfree(bo->base.sgt);
-+	bo->base.sgt = NULL;
-+err_out0:
-+	sg_free_table(&sgt);
-+	return ret;
- }
+ 	v4l2_info(sd, "%s found @ 0x%x (%s)\n", client->name,
+ 		  client->addr << 1, client->adapter->name);
  
- int lima_gem_create_handle(struct drm_device *dev, struct drm_file *file,
 -- 
 2.43.0
 
