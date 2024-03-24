@@ -1,40 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71033227E0E;
-	Sun, 24 Mar 2024 23:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCBB148FE7;
+	Sun, 24 Mar 2024 23:15:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322122; cv=none; b=o136o7oZGnQKr0pXQC2CTrNO/CkmQlalGZvVCTozRDTlBLaxsYEJC3EBJXGlzYeBu4gXdSnmGziJ3Usnq0R/j3vKS8EnQFLoNCK8ARrYdshW+RJlNENxbAMKQj16nt5UkUBSG46z0WC+gVSdg5W+5XQ7sPxEv8ds3bvk94CYIC4=
+	t=1711322116; cv=none; b=t7+fGtfhwY0iyuDCtpJ6VMCTYFZm8nnRS0HphMIFyNcP9zOwGNxCi+nnIcB34JVIy/tUPjMfiGboLaMZPSY/0CRm4DfZ/k7i2hKwhPYbecFXaybXYspiopf1sWaqqkea9EFMI24Bem+gdb8hZf4dPRlmnawpkPX7gsKrF9P3YIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322122; c=relaxed/simple;
-	bh=FMBIVLUImQuclpTP1MRxQVmY+Su/qzutzl+hDYcOGpE=;
+	s=arc-20240116; t=1711322116; c=relaxed/simple;
+	bh=fX6AZ+UGxnxJZMDeWsDLp4MrCDnpwCiiPlfQdIChI+0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q5K53+GJ0t3W1tjmVWRpj548KP4SscEVG1hOf/yWZ+Iu9YG5twd1xxdnVakJiAi7SX0a35GfgOUMZtVlgdV34TJXDJVWSNlE4uJPd7vi1lk2mNTgVZ6gjQFWWX6V08SKFd5LNYNlNUMbDhOuIkfitLgjl1L0fpLsW3VBhLur5AU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4ADvN4J; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=U3/cj0zxeObYLZZA3tWOWHEphz2gneTWz9mErUDoyKrfu8b319AxGdVyBZR8QmK2kXZiHo1PvCmQkYtHCGmQs6hYdrh4vUVxyp2rRQioeeeHNxmWd4CMaecbhBhfiTSJCVYi27BzHEBvJ9BdkCxvG8KixVW4+3YYOsZQGPQXwyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ot5afAK3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4ADvN4J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADBC8C433C7;
-	Sun, 24 Mar 2024 23:15:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ot5afAK3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC06C433F1;
+	Sun, 24 Mar 2024 23:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322121;
-	bh=FMBIVLUImQuclpTP1MRxQVmY+Su/qzutzl+hDYcOGpE=;
+	s=k20201202; t=1711322116;
+	bh=fX6AZ+UGxnxJZMDeWsDLp4MrCDnpwCiiPlfQdIChI+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z4ADvN4J05oVw2dBoolHMie/2NaIzWmZcNuKF5z7CHrmcFG6X1pv8etAH0QU/kc3W
-	 DIv7WuNA8reHH1VzedzjrqBTXUyx0A0Imad+UuEr23Z5ayicQtI1LZh0cK5BA5eS4R
-	 YBA93q0zgvYKcJsZ+0RbDPb7LFIOUfwK6Rz0QfwWV8WkfYhm7w4iWFatT5zitoWx+v
-	 WcAz0Z7mkbUfOKAJtafrs5D90YtOirXVUqASCu1V9PyPZ0ne+A9HfBWslFbHPkZezH
-	 hxU8uZ0UJVi+Mrlr8cSb4O3SmlQb3oqDqyAV9uxsgXm7SLPTtUshGaCtu7FMv/F3d8
-	 qt95+tBrxlphQ==
+	b=Ot5afAK3BvbRPMuPd2JwU9n0WQr/I3R1DpQgghZP+OmoGZHaoRYpOyuM3Q+MOeiIi
+	 H/1ZulEvXKDGB9CfqMOqDg++gTTWWBYymLGLhGL7UnECvysj1KotTldRcG1fYrwvP5
+	 JKrvHWNMO8e6blzTTvJ7WxUmqjKSmU8c2kJ5cTawo0aYbiMBuVK764m6ExiInyG3T1
+	 72QPJkAaTAFVPqZTIcszZJjgVxa3pcN0RUWlC1XO0VGin+qhLyuwiUJptncUtDRT1H
+	 Jj20yTHYoF0GJCMlQ+wqc6j43n28tYRFdKt8jfRjZvnlv/pkuLtjahNrRK+WDOkz/x
+	 1d6GnWCkQw2aA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Haorong Ye <yehaorong@bytedance.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Joerg Roedel <jroedel@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 196/451] Bluetooth: Remove superfluous call to hci_conn_check_pending()
-Date: Sun, 24 Mar 2024 19:07:52 -0400
-Message-ID: <20240324231207.1351418-197-sashal@kernel.org>
+Subject: [PATCH 6.1 191/451] PCI: Make pci_dev_is_disconnected() helper public for other drivers
+Date: Sun, 24 Mar 2024 19:07:47 -0400
+Message-ID: <20240324231207.1351418-192-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,62 +48,69 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jonas Dreßler <verdre@v0yd.nl>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
 
-[ Upstream commit 78e3639fc8031275010c3287ac548c0bc8de83b1 ]
+[ Upstream commit 39714fd73c6b60a8d27bcc5b431afb0828bf4434 ]
 
-The "pending connections" feature was originally introduced with commit
-4c67bc74f016 ("[Bluetooth] Support concurrent connect requests") and
-6bd57416127e ("[Bluetooth] Handling pending connect attempts after
-inquiry") to handle controllers supporting only a single connection request
-at a time. Later things were extended to also cancel ongoing inquiries on
-connect() with commit 89e65975fea5 ("Bluetooth: Cancel Inquiry before
-Create Connection").
+Make pci_dev_is_disconnected() public so that it can be called from
+Intel VT-d driver to quickly fix/workaround the surprise removal
+unplug hang issue for those ATS capable devices on PCIe switch downstream
+hotplug capable ports.
 
-With commit a9de9248064b ("[Bluetooth] Switch from OGF+OCF to using only
-opcodes"), hci_conn_check_pending() was introduced as a helper to
-consolidate a few places where we check for pending connections (indicated
-by the BT_CONNECT2 flag) and then try to connect.
+Beside pci_device_is_present() function, this one has no config space
+space access, so is light enough to optimize the normal pure surprise
+removal and safe removal flow.
 
-This refactoring commit also snuck in two more calls to
-hci_conn_check_pending():
-
-- One is in the failure callback of hci_cs_inquiry(), this one probably
-makes sense: If we send an "HCI Inquiry" command and then immediately
-after a "Create Connection" command, the "Create Connection" command might
-fail before the "HCI Inquiry" command, and then we want to retry the
-"Create Connection" on failure of the "HCI Inquiry".
-
-- The other added call to hci_conn_check_pending() is in the event handler
-for the "Remote Name" event, this seems unrelated and is possibly a
-copy-paste error, so remove that one.
-
-Fixes: a9de9248064b ("[Bluetooth] Switch from OGF+OCF to using only opcodes")
-Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+Tested-by: Haorong Ye <yehaorong@bytedance.com>
+Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Link: https://lore.kernel.org/r/20240301080727.3529832-2-haifeng.zhao@linux.intel.com
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Stable-dep-of: 4fc82cd907ac ("iommu/vt-d: Don't issue ATS Invalidation request when device is disconnected")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/pci/pci.h   | 5 -----
+ include/linux/pci.h | 5 +++++
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 452d839c152fc..0cd093ec6486c 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -3567,8 +3567,6 @@ static void hci_remote_name_evt(struct hci_dev *hdev, void *data,
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index e1d02b7c60294..9950deeb047a7 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -357,11 +357,6 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+ 	return 0;
+ }
  
- 	bt_dev_dbg(hdev, "status 0x%2.2x", ev->status);
- 
--	hci_conn_check_pending(hdev);
+-static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
+-{
+-	return dev->error_state == pci_channel_io_perm_failure;
+-}
 -
- 	hci_dev_lock(hdev);
+ /* pci_dev priv_flags */
+ #define PCI_DEV_ADDED 0
+ #define PCI_DPC_RECOVERED 1
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index eccaf1abea79d..f5d89a4b811f1 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2355,6 +2355,11 @@ static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
+ 	return NULL;
+ }
  
- 	conn = hci_conn_hash_lookup_ba(hdev, ACL_LINK, &ev->bdaddr);
++static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
++{
++	return dev->error_state == pci_channel_io_perm_failure;
++}
++
+ void pci_request_acs(void);
+ bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags);
+ bool pci_acs_path_enabled(struct pci_dev *start,
 -- 
 2.43.0
 
