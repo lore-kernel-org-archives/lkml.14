@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7382779DD;
-	Sun, 24 Mar 2024 23:36:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E122779D7;
+	Sun, 24 Mar 2024 23:36:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323414; cv=none; b=PAVpzzq9VFdsMgpOqEtNpfhU9RCejdGU0SpoYQFZw0liVOXGm9J5Gx3OnfrWXxA4jN6olzn+Ps8h8Wd+Cf13MEup2L81PWhH5PHU9bYouTHiIfcQX2Ga8rZYNrq2d+TzGp3rcGDSQ5xG4lrePNSkb0+9NHWVWAvKmF4h2hcajmg=
+	t=1711323412; cv=none; b=Fj6mT6MCiVJhbVKkFS5iAQsLKwkoqHOTi/i8WWlxNQX56d4oOCfaBS54LnJNbev0SYvx98+AXzDjJnsnY/jIaHWsaGkMMdI759X7zrPWYkVvT10QAz86V7vVNleUClz2DgpCn+7P5tBd4lsL2LWoP4Y1GOydDRiSr8vLcbqrsYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323414; c=relaxed/simple;
-	bh=/YcyTFGQuKRCQLnEtNVZ7X7oui9OK53d2UmFWsIndx8=;
+	s=arc-20240116; t=1711323412; c=relaxed/simple;
+	bh=vI7cyIplM0mY+XAcjngitzBuY6u1HBmAHntcvWfZL/s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KGl43+OZYYj2buw9X/5RqQagw4HYKSMdgmynWgaQprLNMO8mrm5q6PGUSNzQfmCCSFQOD+vPmGaWtZ/dWC0Pp59f5p4bBtjkJP8FaP2FH7TnBD//cm7EC0xmV3Ox35dtzos8Hq1l1WZFdN33MTLVU+8Za+soYqwtQIGiDa897dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNpyfc0+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=cJQd8pytrDq+AWIf5QenA2I46YHqwm+CbJb+Yf8IiIB6ERu2VpRQF/GuThE6HYMi5c34z3av7wI8ygEz7jJ/crPYwDBFeFdidLYUeVcSn9x+75YA3PgVFcIX/WRt2WPfFk1NvNesh/cRpyJRqV9dZfMYk10G9n0AeJKr6fnD3LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h0ZA34m4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNpyfc0+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1590C433F1;
-	Sun, 24 Mar 2024 23:36:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h0ZA34m4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11E4EC43390;
+	Sun, 24 Mar 2024 23:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323414;
-	bh=/YcyTFGQuKRCQLnEtNVZ7X7oui9OK53d2UmFWsIndx8=;
+	s=k20201202; t=1711323412;
+	bh=vI7cyIplM0mY+XAcjngitzBuY6u1HBmAHntcvWfZL/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mNpyfc0+z4QIYV+uQrKdMksN417XkywLDfuykTOqsbbgcyx3lE2xoV4ur16Wvbx7M
-	 3NidfYao3UHkPnnAHeirIml3wM2mkPUBPKTejXSZkM9qusrp8+1UmUjAfcFTaO5K2h
-	 Xp3SMID8A6JcKkj7BRaXVrBNiNxKAxcKuv3W+dkXewpfkNiJ5aOVrLWXrMbGfI8Xjd
-	 +YdQeRz6mMt5LRMN5na0KKeJxf/giHref5vDDiQVHngOqY58yNwpUgLQ8WMu0qoSSW
-	 dPYdURxpP1uL/2IKETMIv1M3K0O3t+P0mDpARRT7Db9A4DD0uypx131t11/xmD5KQj
-	 IvNWDrxBGhD2w==
+	b=h0ZA34m4kQaaa6vEwKbk03l4mhH3UrzsPdwhHMr497TmUZ3HcYMq2jBYxhuPWzN1J
+	 jk5lJ0mofWNLlKaobn5yTkhAIanqUMWMvfhH7XUe92EqoCXq38jts7P2TARRqvEGNI
+	 TcP1US1I1vdLu3gw1YS7blP5fTaE7nOVBBtkSsL188UrBvpWvqmKGwlPzo1dAb0XHN
+	 zpedBr6ug4CdZqsFvmcy4d5gQiiCYWIFeUcxTxEzlTgeZRJc8QXXgtNhW9u81sduFI
+	 YtRnOn/JnPf9qGQkepeXlNjONGPza3zVLvjhB+Y1PF5HUKn2uopGfn/IthIEUh/8io
+	 rV8fzme05Zdew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: David McFarland <corngood@gmail.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 116/317] ACPI: resource: Add Infinity laptops to irq1_edge_low_force_override
-Date: Sun, 24 Mar 2024 19:31:36 -0400
-Message-ID: <20240324233458.1352854-117-sashal@kernel.org>
+Subject: [PATCH 5.15 114/317] ARM: dts: imx6dl-yapp4: Move the internal switch PHYs under the switch node
+Date: Sun, 24 Mar 2024 19:31:34 -0400
+Message-ID: <20240324233458.1352854-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -44,53 +44,97 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: David McFarland <corngood@gmail.com>
+From: Michal Vokáč <michal.vokac@ysoft.com>
 
-[ Upstream commit e2605d4039a42a03000856b3229932455717b48b ]
+[ Upstream commit 79978bff2e4b8e05ebdf5fc3ee6b794002393484 ]
 
-A user reported a keyboard problem similar to ones reported with other
-Zen laptops, on an Infinity E15-5A165-BM.
+We identified that the PHYs actually do not work since commit 7da7b84fee58
+("ARM: dts: imx6dl-yapp4: Move phy reset into switch node") as
+a coincidence of several circumstances.
 
-Add board name matches for this model and one (untested) close relative
-to irq1_edge_low_force_override.
+The reset signal is kept asserted by a pull-down resistor on the board
+unless it is deasserted by GPIO from the SoC. This is to keep the switch
+dead until it is configured properly by the kernel and user space.
 
-Link: https://lemmy.ml/post/9864736
-Link: https://www.infinitygaming.com.au/bios/
-Link: https://lore.kernel.org/linux-acpi/20231006123304.32686-1-hdegoede@redhat.com
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Stable-dep-of: 021a67d09615 ("ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override")
+Prior to the referenced commit the switch was reset by the FEC driver
+and the reset GPIO was actively deasserted. The mdio-bus was scanned
+and the attached switch and its PHYs were found and configured.
+
+With the referenced commit the switch is reset by the qca8k driver.
+Because of another bug in the qca8k driver, functionality of the reset
+pin depends on its pre-kernel configuration. See commit c44fc98f0a8f
+("net: dsa: qca8k: fix illegal usage of GPIO")
+
+The problem did not appear until we removed support for the switch
+and configuration of its reset pin from the bootloader.
+
+To fix that, properly describe the internal mdio-bus configuration of
+the qca8334 switch. The PHYs are internal to the switch and sit on its
+internal mdio-bus.
+
+Fixes: 7da7b84fee58 ("ARM: dts: imx6dl-yapp4: Move phy reset into switch node")
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/resource.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 23 ++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index a364cb07c5578..16a18654f6879 100644
---- a/drivers/acpi/resource.c
-+++ b/drivers/acpi/resource.c
-@@ -546,6 +546,18 @@ static const struct dmi_system_id lg_laptop[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "17U70P"),
- 		},
- 	},
-+	{
-+		/* Infinity E15-5A165-BM */
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GM5RG1E0009COM"),
-+		},
-+	},
-+	{
-+		/* Infinity E15-5A305-1M */
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GM5RGEE0016COM"),
-+		},
-+	},
- 	{ }
- };
+diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+index 76da90e858045..69ad1f198fa71 100644
+--- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
++++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+@@ -117,14 +117,6 @@ mdio {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
+-		phy_port2: phy@1 {
+-			reg = <1>;
+-		};
+-
+-		phy_port3: phy@2 {
+-			reg = <2>;
+-		};
+-
+ 		switch@10 {
+ 			compatible = "qca,qca8334";
+ 			reg = <0x10>;
+@@ -149,15 +141,30 @@ fixed-link {
+ 				eth2: port@2 {
+ 					reg = <2>;
+ 					label = "eth2";
++					phy-mode = "internal";
+ 					phy-handle = <&phy_port2>;
+ 				};
+ 
+ 				eth1: port@3 {
+ 					reg = <3>;
+ 					label = "eth1";
++					phy-mode = "internal";
+ 					phy-handle = <&phy_port3>;
+ 				};
+ 			};
++
++			mdio {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				phy_port2: ethernet-phy@1 {
++					reg = <1>;
++				};
++
++				phy_port3: ethernet-phy@2 {
++					reg = <2>;
++				};
++			};
+ 		};
+ 	};
+ };
 -- 
 2.43.0
 
