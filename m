@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC611E8E58;
-	Sun, 24 Mar 2024 23:05:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2FF1514C6;
+	Sun, 24 Mar 2024 23:05:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321525; cv=none; b=JkGqaGvLxK/L42VGV0R/vnbJ8MU2HZzsMXsWhTtU4VRUFCsW38crsGZAAUhB8L6j/WWkVzN4jG9yZLuq29cx/H47oiiUfl0zpOkyT4Vq4HBkjD/QiHRH6v0TbIce4zf0Ir0vSOur1wQh8BP5Ad0MCdCdOoOoivh/IgC8hQiOPGE=
+	t=1711321526; cv=none; b=aMuQBZbmSc8NiuAeUIBfojYrz7zOTlNI5+8QLwUJCGeNC0Md5i+ahfCm9txAyYDceP9a7AM8lkeCZzFUPxexzTmShtqZup9UuK7N9UtdO3uKGhhHgjAV27ZyqCXqJHbt3dei0WtTJZnYaRt/EgoUhvVvvumouuaByPwBdgyDmbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321525; c=relaxed/simple;
-	bh=YKVcdpL5+OrlaJ4q8k+EUbtblJGBjMh/yaBxJ7pH7dk=;
+	s=arc-20240116; t=1711321526; c=relaxed/simple;
+	bh=slLq5ObvRkrF/vc8IVPcQgi3EKnkUlzKMWzIv72UzuM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S55Du/kX6YLgMvKS3dSwz6+XIJdxF6V/aVezEaW1bkGtbKI+3JkyktJqpD6CbvkMH6xBFURK16totd7ljnP/o4komvSPOJsQzvJ/lZe/LAwIcfxxiMgepmMUc8bnNeylREE5D1TGSa+yqdXZkvKqyEfZEQVNDFSU9IY11AyixPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDuHfAOr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=S5F3rX9ur8a93nzeS66wQ6lpsm77k7RbMsMVVqiQtJKt/bzD5++lFIVASzqEO1/4cEGxIQFl8Bz+sA9O67hjf3ZA+hLmCrGqr/ojMFMz/dsLh6DigCbm85JIYfECyDhIepOz6X6kYkLx4+LNfDN9zGpU9f4lq51Y6EYnTS3znO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWaBatws; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDuHfAOr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38485C433F1;
-	Sun, 24 Mar 2024 23:05:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWaBatws"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA1A0C433C7;
+	Sun, 24 Mar 2024 23:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321523;
-	bh=YKVcdpL5+OrlaJ4q8k+EUbtblJGBjMh/yaBxJ7pH7dk=;
+	s=k20201202; t=1711321526;
+	bh=slLq5ObvRkrF/vc8IVPcQgi3EKnkUlzKMWzIv72UzuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eDuHfAOrPS30Gd+qlxqu2n85Hlki9OsZokjbzWUwA482Ysc0mIJcu0qMCn/bVa53f
-	 7HVszLob8bNizWcteq+kCnTOLxGQo7pBetJcaR3sJ9LTJd1ZygfH+x8fAcyikpd+TG
-	 GNiFPhUfJ2lE0aqJb9t3ijFpKP4hfySDxnCkMMANylzznMZR42Cs6abDlz311W9YjQ
-	 S45/cBTGzW168rXceo48xdXbQ4P/qzpT1ITthrMcbqsV22pfgckPgwoMF2WtaRdxah
-	 SgTdffB+Rf+jxxtop39PabiYi81T2/aqtKKNJNZsFsGHATTHTH/8sWkoAKx/CRO+cs
-	 qpgL3v3Aa/fFA==
+	b=tWaBatws6w6AXb55OgM8s9/O+5crA1QOoPlrveu1c2DqSaIJYgAWFLasfc5nwryum
+	 9vpjjz2f0AaYx6AFweCvZjrDCG1zKEVkoJ525gSe/IaoyGiVevfOk9yFqefuPAwxjW
+	 drM2vVILw+8uZycfwb2BXnBdanCNBo+wX1D7kHNKqIgeFF5qYOj0uoPmJNj50vYUM6
+	 JA71J8H08fl70lhPewGvyyrpz+t8NurMeLQnOjThzjpiO0HW+fAsW1aZHQYx64TswS
+	 OB90QHkykeNiFTKL4CyOLDG3aLIojK51gnQcg7lR/Kx/aFIjY1K1TWqbWuP0DXqv16
+	 EPit23OOo9vZQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
+Cc: Benjamin Lin <benjamin-jw.lin@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Felix Fietkau <nbd@nbd.name>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 250/638] ARM: dts: arm: realview: Fix development chip ROM compatible value
-Date: Sun, 24 Mar 2024 18:54:47 -0400
-Message-ID: <20240324230116.1348576-251-sashal@kernel.org>
+Subject: [PATCH 6.6 253/638] wifi: mt76: mt7996: fix incorrect interpretation of EHT MCS caps
+Date: Sun, 24 Mar 2024 18:54:50 -0400
+Message-ID: <20240324230116.1348576-254-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,41 +49,59 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Benjamin Lin <benjamin-jw.lin@mediatek.com>
 
-[ Upstream commit 3baa4c5143d65ebab2de0d99a395e5f4f1f46608 ]
+[ Upstream commit d52c97592f06552a4289008602b5d5b724084ba7 ]
 
-When the development chip ROM was added, the "direct-mapped" compatible
-value was already obsolete.  In addition, the device node lacked the
-accompanying "probe-type" property, causing the old physmap_of_core
-driver to fall back to trying all available probe types.
-Unfortunately this fallback was lost when the DT and pdata cases were
-merged.
+The EHT MCS map subfield of 20 MHz-Only is not present in the EHT
+capability of AP, so STA does not need to parse the subfield.
+Moreover, AP should parse the subfield only if STA is 20 MHz-Only, which
+can be confirmed by checking supported channel width in HE capability.
 
-Fix this by using the modern "mtd-rom" compatible value instead.
-
-Fixes: 5c3f5edbe0a1dff3 ("ARM: realview: add flash devices to the PB1176 DTS")
-Fixes: 642b1e8dbed7bbbf ("mtd: maps: Merge physmap_of.c into physmap-core.c")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 92aa2da9fa49 ("wifi: mt76: mt7996: enable EHT support in firmware")
+Co-developed-by: Shayne Chen <shayne.chen@mediatek.com>
+Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
+Signed-off-by: Benjamin Lin <benjamin-jw.lin@mediatek.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/arm/arm-realview-pb1176.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/mt7996/mcu.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/arm/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm/arm-realview-pb1176.dts
-index efed325af88d2..d99bac02232b3 100644
---- a/arch/arm/boot/dts/arm/arm-realview-pb1176.dts
-+++ b/arch/arm/boot/dts/arm/arm-realview-pb1176.dts
-@@ -451,7 +451,7 @@ pb1176_serial3: serial@1010f000 {
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c
+index 7575d3506ea4e..650c43cb899f7 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c
+@@ -1005,6 +1005,9 @@ mt7996_mcu_sta_he_6g_tlv(struct sk_buff *skb, struct ieee80211_sta *sta)
+ static void
+ mt7996_mcu_sta_eht_tlv(struct sk_buff *skb, struct ieee80211_sta *sta)
+ {
++	struct mt7996_sta *msta = (struct mt7996_sta *)sta->drv_priv;
++	struct ieee80211_vif *vif = container_of((void *)msta->vif,
++						 struct ieee80211_vif, drv_priv);
+ 	struct ieee80211_eht_mcs_nss_supp *mcs_map;
+ 	struct ieee80211_eht_cap_elem_fixed *elem;
+ 	struct sta_rec_eht *eht;
+@@ -1024,8 +1027,17 @@ mt7996_mcu_sta_eht_tlv(struct sk_buff *skb, struct ieee80211_sta *sta)
+ 	eht->phy_cap = cpu_to_le64(*(u64 *)elem->phy_cap_info);
+ 	eht->phy_cap_ext = cpu_to_le64(elem->phy_cap_info[8]);
  
- 		/* Direct-mapped development chip ROM */
- 		pb1176_rom@10200000 {
--			compatible = "direct-mapped";
-+			compatible = "mtd-rom";
- 			reg = <0x10200000 0x4000>;
- 			bank-width = <1>;
- 		};
+-	if (sta->deflink.bandwidth == IEEE80211_STA_RX_BW_20)
+-		memcpy(eht->mcs_map_bw20, &mcs_map->only_20mhz, sizeof(eht->mcs_map_bw20));
++	if (vif->type != NL80211_IFTYPE_STATION &&
++	    (sta->deflink.he_cap.he_cap_elem.phy_cap_info[0] &
++	     (IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_IN_2G |
++	      IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_40MHZ_80MHZ_IN_5G |
++	      IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_160MHZ_IN_5G |
++	      IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_80PLUS80_MHZ_IN_5G)) == 0) {
++		memcpy(eht->mcs_map_bw20, &mcs_map->only_20mhz,
++		       sizeof(eht->mcs_map_bw20));
++		return;
++	}
++
+ 	memcpy(eht->mcs_map_bw80, &mcs_map->bw._80, sizeof(eht->mcs_map_bw80));
+ 	memcpy(eht->mcs_map_bw160, &mcs_map->bw._160, sizeof(eht->mcs_map_bw160));
+ 	memcpy(eht->mcs_map_bw320, &mcs_map->bw._320, sizeof(eht->mcs_map_bw320));
 -- 
 2.43.0
 
