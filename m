@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ACA21F9EE;
-	Sun, 24 Mar 2024 23:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0847E1F10D9;
+	Sun, 24 Mar 2024 23:11:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321877; cv=none; b=adDlBVHZSB09ttu9ZmnGVmX6uzdyCzVgwFVoT1z3cOXs0e6lZOCJqE45FaPZzqJ+vWeXX3SWo6/L/PFOEbpRn7njmjAoGP1uQ48j6drmPE1N2hP5eLZ2oar/qICTKw2b7OMrH+uPO/WpotA2k9tYt4met+bPgCi+vzRUbYwiEZs=
+	t=1711321871; cv=none; b=hEGCs8gKfhSKjJdL6aIbY8Jn2PgXE70ZZDF6dZvvwkpbH68CO6DFW9WuvLmBQl3iio3rXfIrHfO9ijBCqu7egwTjwcWQnaOyDVOdQszOH4kBcy38JnB7gqv3dhqY2SvZKx11NiCPFO+mN/tUytUSsK0l1BEQPkeYIBjnldecPjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321877; c=relaxed/simple;
-	bh=a+19uE9pstQ7kpZpoBubeHqBkGRUhM1ZZ2pWPXDeJAM=;
+	s=arc-20240116; t=1711321871; c=relaxed/simple;
+	bh=HF7/g01MyF5usS4jtmaXCrXMB/637THnKn0KAttJEFY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G0mIcLcIkpPIllKtBAwPD+Gbscm1fTSXIFEMEjaBGlpjrKHifmRgoJvbdKosP1TG54m6slE+8Thp2t/iFIXOwuTNSKWQizgDvAbqdLKEr9lTajuKOAZhdmr61UvG/ccQpk2iBL0JI+tmAXaKWErzcpd9vUKkVzvYLDi03wCm6/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RI/+qOee; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=taveYn8xUjhDT2cxpzShyN5Zrek0iIA756BWbP2oW5jbgxGFOvecifUUK/psMXyxUuH/4bUbqjY4vy0EJB3dAH08INV2TbUw1/3UmpaU9TQ2HGefe5FU5sJ5+lPIhZgBu9eZBWSpTO0ZtrJWWpYL+YKsHndpw0GO6nRIN4OcGR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o3M5xjxk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RI/+qOee"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D415C43390;
-	Sun, 24 Mar 2024 23:11:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o3M5xjxk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 309BBC433C7;
+	Sun, 24 Mar 2024 23:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321875;
-	bh=a+19uE9pstQ7kpZpoBubeHqBkGRUhM1ZZ2pWPXDeJAM=;
+	s=k20201202; t=1711321869;
+	bh=HF7/g01MyF5usS4jtmaXCrXMB/637THnKn0KAttJEFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RI/+qOeekBohK6/hkaXhUchtXmmGTBHifIN+ViVnUgfIb2lQKwDrLz0yyxQxSAIFF
-	 FlK/tOWSbxkajesLvP/IhF9SPXK4le2lIdy8gY670vDMc0Rv/SE2ojYu7XfERmRUx5
-	 7Tb5GzXk+a9NrCSupk6X8iDS9DEkMXsOMuHM+YP+gzKLcv9iQGJExZlRHiB7lwfXXH
-	 SijIDsJYl91bc7alg47Tc8JnkDHnRDRNY2HeCXb+ybfGfrKNztGNJLueYaYpI8ZHib
-	 ByKkN9aIkP9HbEm+MxBtj4V6f4d/F/3reCJSEiqIYfb23aBw5D/sm+yvjJyAWjZn9j
-	 +nvCVBPSIc6tg==
+	b=o3M5xjxk190ydVUUHx2XzsGiCM3Du8sOGkwORMiXWX5ikubqQQgla3czgj4gRdPNx
+	 fXErHd7Aj+oz5Se7nMMhtn6bYR1eK8dJYU9y1LcjaUir2t4RAoECYLhLmSx36I38vI
+	 ufe8zxGsUUDM/aEnnLfdAeH0DKmoMhSpKJOPHnQhjqn6pxn0BKCSx331IDAbk0tYbS
+	 CfMI4j1IwdhE2pdDxXZW8rjr/xUoQcc5MhBoqmL/KpCbBYYnYb6b8FNciQaXXQx0y+
+	 4Eshmn5s7rdl2oBT1N08iv4iY+a6M1AHL1O+chyXvRAQ35IGQwF58dVpNFe8Kd0gH7
+	 3E6FgnW5YKhJQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Adam Butcher <adam@jessamine.co.uk>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Juergen Gross <jgross@suse.com>,
+	Demi Marie Obenour <demi@invisiblethingslab.com>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 604/638] spi: spi-imx: fix off-by-one in mx51 CPU mode burst length
-Date: Sun, 24 Mar 2024 19:00:41 -0400
-Message-ID: <20240324230116.1348576-605-sashal@kernel.org>
+Subject: [PATCH 6.6 598/638] xen/evtchn: avoid WARN() when unbinding an event channel
+Date: Sun, 24 Mar 2024 19:00:35 -0400
+Message-ID: <20240324230116.1348576-599-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,43 +49,60 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Adam Butcher <adam@jessamine.co.uk>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit cf6d79a0f5769b5f4d9579ddaf88d2c30b03b873 ]
+[ Upstream commit 51c23bd691c0f1fb95b29731c356c6fd69925d17 ]
 
-c712c05e46c8 ("spi: imx: fix the burst length at DMA mode and CPU mode")
-corrects three cases of setting the ECSPI burst length but erroneously
-leaves the in-range CPU case one bit to big (in that field a value of
-0 means 1 bit).  The effect was that transmissions that should have been
-8-bit bytes appeared as 9-bit causing failed communication with SPI
-devices.
+When unbinding a user event channel, the related handler might be
+called a last time in case the kernel was built with
+CONFIG_DEBUG_SHIRQ. This might cause a WARN() in the handler.
 
-Link: https://lore.kernel.org/all/20240201105451.507005-1-carlos.song@nxp.com/
-Link: https://lore.kernel.org/all/20240204091912.36488-1-carlos.song@nxp.com/
-Fixes: c712c05e46c8 ("spi: imx: fix the burst length at DMA mode and CPU mode")
-Signed-off-by: Adam Butcher <adam@jessamine.co.uk>
-Link: https://msgid.link/r/20240318175119.3334-1-adam@jessamine.co.uk
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Avoid that by adding an "unbinding" flag to struct user_event which
+will short circuit the handler.
+
+Fixes: 9e90e58c11b7 ("xen: evtchn: Allow shared registration of IRQ handers")
+Reported-by: Demi Marie Obenour <demi@invisiblethingslab.com>
+Tested-by: Demi Marie Obenour <demi@invisiblethingslab.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Link: https://lore.kernel.org/r/20240313071409.25913-2-jgross@suse.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-imx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/xen/evtchn.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index e2d3e3ec13789..0e479c5406217 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -668,8 +668,8 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
- 				ctrl |= (MX51_ECSPI_CTRL_MAX_BURST * BITS_PER_BYTE - 1)
- 						<< MX51_ECSPI_CTRL_BL_OFFSET;
- 			else
--				ctrl |= spi_imx->count / DIV_ROUND_UP(spi_imx->bits_per_word,
--						BITS_PER_BYTE) * spi_imx->bits_per_word
-+				ctrl |= (spi_imx->count / DIV_ROUND_UP(spi_imx->bits_per_word,
-+						BITS_PER_BYTE) * spi_imx->bits_per_word - 1)
- 						<< MX51_ECSPI_CTRL_BL_OFFSET;
- 		}
- 	}
+diff --git a/drivers/xen/evtchn.c b/drivers/xen/evtchn.c
+index 59717628ca42b..f6a2216c2c870 100644
+--- a/drivers/xen/evtchn.c
++++ b/drivers/xen/evtchn.c
+@@ -85,6 +85,7 @@ struct user_evtchn {
+ 	struct per_user_data *user;
+ 	evtchn_port_t port;
+ 	bool enabled;
++	bool unbinding;
+ };
+ 
+ static void evtchn_free_ring(evtchn_port_t *ring)
+@@ -164,6 +165,10 @@ static irqreturn_t evtchn_interrupt(int irq, void *data)
+ 	struct per_user_data *u = evtchn->user;
+ 	unsigned int prod, cons;
+ 
++	/* Handler might be called when tearing down the IRQ. */
++	if (evtchn->unbinding)
++		return IRQ_HANDLED;
++
+ 	WARN(!evtchn->enabled,
+ 	     "Interrupt for port %u, but apparently not enabled; per-user %p\n",
+ 	     evtchn->port, u);
+@@ -421,6 +426,7 @@ static void evtchn_unbind_from_user(struct per_user_data *u,
+ 
+ 	BUG_ON(irq < 0);
+ 
++	evtchn->unbinding = true;
+ 	unbind_from_irqhandler(irq, evtchn);
+ 
+ 	del_evtchn(u, evtchn);
 -- 
 2.43.0
 
