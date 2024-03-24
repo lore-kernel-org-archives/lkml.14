@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2C62892B5;
-	Sun, 24 Mar 2024 23:47:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8257F2892C5;
+	Sun, 24 Mar 2024 23:47:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324039; cv=none; b=j6rqFm1/VNSEcuQznymoUary0AWr0RRrE20eozJFK7fmCy7vNvibMGPq6TnKlzCC75qzonX1GPO1ct4ehnPD/NllS2yAScsNcSYsuJ3M4YJYaK/eeACv7U+BU5y5jX/+vQTEP6rrfMkjpPCOfYoTreniKXxRIfdBpDrZX12FltQ=
+	t=1711324041; cv=none; b=XKjVb0pr9VTuXu2DbasqzD7o1LswNVua4sQzl1ClWC8eXzHK+jwKLUJ8nPgabGD7Wr373uxPqPRu6n0RYFgClvyd1IifNI/AAnWwfLqsArGtBAFJ9J/kZgcKCHKARoFziGUTEjaPuvsoXA3LBUadPsR8ArXY5zUi3sRI4Cmpu7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324039; c=relaxed/simple;
-	bh=McbMIX7Ej9DjfcJa/tptOsZymK3j6hDK6cy4Oi3Af4U=;
+	s=arc-20240116; t=1711324041; c=relaxed/simple;
+	bh=3LozpwnbnWU3VCjQuiw9+8pmki9smLffvfOJBovQu50=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U/ZsX0KeSA1d8AUyWRV+dQTj6Jtwl8q8qz5jdjszY/1PwVnJBt8XCL9jO57e5RRdTdmmlnNFVs1N/6I//XsRdspiBJtmcCrZ0CuTkzMfxgTs3cRI0pE6jL29dr9v8PpzdL6az0eopMNOLpVrMoCzccHmRMzaF5b/2FSIummz96M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DWcJsiUe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gh3Pw6NWBNXxshARbodgFP5hQyl7h874kWK1C3ABWRkXucqOIRHPfTNlchRw6go0SSi12Td1i16d8FmaZigcLzoxPjT4NfeR2BoC4tUVHyo6TsJzT2XRjTkwt9isvA4mCS1Nymr1LRiazcIqGTTp/lBYwJsTru+vdEfso0BzfVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJgnNNXw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DWcJsiUe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A827EC433F1;
-	Sun, 24 Mar 2024 23:47:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJgnNNXw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A3A3C43390;
+	Sun, 24 Mar 2024 23:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324038;
-	bh=McbMIX7Ej9DjfcJa/tptOsZymK3j6hDK6cy4Oi3Af4U=;
+	s=k20201202; t=1711324040;
+	bh=3LozpwnbnWU3VCjQuiw9+8pmki9smLffvfOJBovQu50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DWcJsiUegsiav9ffKlKC4Vo2HbRllesIICnd4bTlAAxgOWmzP0Fqeh/C8gsMyDLgC
-	 FmdHIkhQf6EwxXrvuxpNMeW8O5nmfsnuR9C2Q7I/9HYBAdzqoGb78ffRSVXsRWPxs1
-	 00N71aUfzH36Y6B2Stlltw95gm1DzvLuNM5666xgdldDxpKxLbeC1IOq+bOV+Oqoi6
-	 wMJayZ9uIuoM5qP8Lm1NL/5D5Jvj92/3YSTJy2zdleb0W5ol2BN8aDlUXazscAVnd2
-	 KYZdJvBouPH9Z84iWi5pHxVSEvjYqIXWRl6bL+YjznJOfDF1iUkZXsDxCNpC+YOqY9
-	 kErGM1esVgC9w==
+	b=AJgnNNXwd24AnOBBIgwTwfDI3qeKh6r8toL4eWVg2oFGj74b9WxiAV0sDfGbYeWtu
+	 s5R3+BKrcE04GiRjUBLFsIOJZILeaLIjrDYABQMDSxin2dlgfY0JAMFD1Arv2Fb4Z3
+	 2pus4oa9rw62H+2/CEgc7QHmTOxk/vWH8aVMIukSX4I6aZB098tsoXCP4ACRKs3VM6
+	 Zd4lULv5NM2kIsnf+jY3z9DEj5N/u2r9N2PWCW3EPXNWPXkbGijAb0k5yFJIx8ytdS
+	 FQ1/uztQnN3gt2fGc7/yYOYALH+TzOKeBWQxcxci3LGXzjHRlXl86f0dSH3zV4X0TS
+	 aErI2dkvGWpFQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	Guillaume Nault <gnault@redhat.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 039/183] ARM: dts: renesas: r8a73a4: Fix external clocks and clock rate
-Date: Sun, 24 Mar 2024 19:44:12 -0400
-Message-ID: <20240324234638.1355609-40-sashal@kernel.org>
+Subject: [PATCH 5.4 041/183] sock_diag: annotate data-races around sock_diag_handlers[family]
+Date: Sun, 24 Mar 2024 19:44:14 -0400
+Message-ID: <20240324234638.1355609-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -44,82 +47,76 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 090c4094574705b0afc7d37825cdc5d06f0e7e02 ]
+[ Upstream commit efd402537673f9951992aea4ef0f5ff51d858f4b ]
 
-External clocks should be defined as zero-Hz clocks in the SoC .dtsi,
-and overridden in the board .dts when present.
+__sock_diag_cmd() and sock_diag_bind() read sock_diag_handlers[family]
+without a lock held.
 
-Correct the clock rate of extal1 from 25 to 26 MHz, to match the crystal
-oscillator present on the APE6-EVM board.
+Use READ_ONCE()/WRITE_ONCE() annotations to avoid potential issues.
 
-Fixes: a76809a329d6ebae ("ARM: shmobile: r8a73a4: Common clock framework DT description")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Link: https://lore.kernel.org/r/1692bc8cd465d62168cbf110522ad62a7af3f606.1705315614.git.geert+renesas@glider.be
+Fixes: 8ef874bfc729 ("sock_diag: Move the sock_ code to net/core/")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a73a4-ape6evm.dts | 12 ++++++++++++
- arch/arm/boot/dts/r8a73a4.dtsi        |  9 ++++++---
- 2 files changed, 18 insertions(+), 3 deletions(-)
+ net/core/sock_diag.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-index a5351ddbf5060..a396f403c9091 100644
---- a/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-+++ b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-@@ -211,6 +211,18 @@ &cmt1 {
- 	status = "okay";
- };
+diff --git a/net/core/sock_diag.c b/net/core/sock_diag.c
+index c13ffbd33d8d6..315a5200d170b 100644
+--- a/net/core/sock_diag.c
++++ b/net/core/sock_diag.c
+@@ -188,7 +188,7 @@ int sock_diag_register(const struct sock_diag_handler *hndl)
+ 	if (sock_diag_handlers[hndl->family])
+ 		err = -EBUSY;
+ 	else
+-		sock_diag_handlers[hndl->family] = hndl;
++		WRITE_ONCE(sock_diag_handlers[hndl->family], hndl);
+ 	mutex_unlock(&sock_diag_table_mutex);
  
-+&extal1_clk {
-+	clock-frequency = <26000000>;
-+};
-+
-+&extal2_clk {
-+	clock-frequency = <48000000>;
-+};
-+
-+&extalr_clk {
-+	clock-frequency = <32768>;
-+};
-+
- &pfc {
- 	scifa0_pins: scifa0 {
- 		groups = "scifa0_data";
-diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-index 4447f45f0cba9..48121ef690c9d 100644
---- a/arch/arm/boot/dts/r8a73a4.dtsi
-+++ b/arch/arm/boot/dts/r8a73a4.dtsi
-@@ -494,17 +494,20 @@ clocks {
- 		extalr_clk: extalr {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
--			clock-frequency = <32768>;
-+			/* This value must be overridden by the board. */
-+			clock-frequency = <0>;
- 		};
- 		extal1_clk: extal1 {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
--			clock-frequency = <25000000>;
-+			/* This value must be overridden by the board. */
-+			clock-frequency = <0>;
- 		};
- 		extal2_clk: extal2 {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
--			clock-frequency = <48000000>;
-+			/* This value must be overridden by the board. */
-+			clock-frequency = <0>;
- 		};
- 		fsiack_clk: fsiack {
- 			compatible = "fixed-clock";
+ 	return err;
+@@ -204,7 +204,7 @@ void sock_diag_unregister(const struct sock_diag_handler *hnld)
+ 
+ 	mutex_lock(&sock_diag_table_mutex);
+ 	BUG_ON(sock_diag_handlers[family] != hnld);
+-	sock_diag_handlers[family] = NULL;
++	WRITE_ONCE(sock_diag_handlers[family], NULL);
+ 	mutex_unlock(&sock_diag_table_mutex);
+ }
+ EXPORT_SYMBOL_GPL(sock_diag_unregister);
+@@ -222,7 +222,7 @@ static int __sock_diag_cmd(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 		return -EINVAL;
+ 	req->sdiag_family = array_index_nospec(req->sdiag_family, AF_MAX);
+ 
+-	if (sock_diag_handlers[req->sdiag_family] == NULL)
++	if (READ_ONCE(sock_diag_handlers[req->sdiag_family]) == NULL)
+ 		sock_load_diag_module(req->sdiag_family, 0);
+ 
+ 	mutex_lock(&sock_diag_table_mutex);
+@@ -281,12 +281,12 @@ static int sock_diag_bind(struct net *net, int group)
+ 	switch (group) {
+ 	case SKNLGRP_INET_TCP_DESTROY:
+ 	case SKNLGRP_INET_UDP_DESTROY:
+-		if (!sock_diag_handlers[AF_INET])
++		if (!READ_ONCE(sock_diag_handlers[AF_INET]))
+ 			sock_load_diag_module(AF_INET, 0);
+ 		break;
+ 	case SKNLGRP_INET6_TCP_DESTROY:
+ 	case SKNLGRP_INET6_UDP_DESTROY:
+-		if (!sock_diag_handlers[AF_INET6])
++		if (!READ_ONCE(sock_diag_handlers[AF_INET6]))
+ 			sock_load_diag_module(AF_INET6, 0);
+ 		break;
+ 	}
 -- 
 2.43.0
 
