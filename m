@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858631E3077;
-	Sun, 24 Mar 2024 22:53:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8601E2558;
+	Sun, 24 Mar 2024 22:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320794; cv=none; b=n+Ry+Lg55qbPFcSawKpUf8kxQKxn8waLK/WhW+xl80f49/uVMEHN0G9Cn9EFSYWy8rh7HOLubArGZNY6aaALPgqXDcI+zLMxvSUSz2F5d7LslLKMGNoNATGxeoQfLfmDWuRfHSwePcBOpPo12B3IOvFjpVjvfKt8mKOBiwDw3uc=
+	t=1711320786; cv=none; b=E1c1L0JT3IQZE586QTANR+/yO+2+zal43pjasQTciAsy1VEaBNNvQy6UK0Sebl6+jyIe+qsKSJY2Mp/gbXKIjZiyEME0pvTjCeqrBoHMEXjgHvwPU6qhNe18C6ZwaVYXcYozQhp2Uy1RhoRWuxit8dBp8LiFJCblU3oObNrVvzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320794; c=relaxed/simple;
-	bh=CgppWVbYSdfdH7pUfBvvux86ej8YyJiAHOmFHrzmnXI=;
+	s=arc-20240116; t=1711320786; c=relaxed/simple;
+	bh=MMkBRdQHFky8DEcjQ8QJxN0Osw6l99H5jn7XpxtYv1E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GyX2xF0PzfGRkjnN3BhnrxghEUUwdKS8coW1BqgHrmJQ6AlgWSxIkjnDEqmUz5rJczNH9KBoLyOI6jhEXKzMGitOuZryZ22Z7Ge6VmDb3FEp6vVknUBgfHU2c9/DdspFvN6rK2epyuYD6+n7hkNDXgDNqljWGPQzB7EYEm45Mlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDinYUrv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OpgRVpYNggshx8cn0uMVWlLSwo8Ek/yQ/7M1M3tXa+foFowi23XB0EVFSRG8AHGSPLaNUQcP3PQ9RaUrxh5QsWCnCATWvSfYhOIfYa905BbhkgSJ/lr8gxid4nj9DUSyTt16K+xINJPvXC59z6xWwrTyANRFqcfwgEMJq2ulHkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5nxbm5g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDinYUrv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FE1C433C7;
-	Sun, 24 Mar 2024 22:53:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5nxbm5g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5AF7C433C7;
+	Sun, 24 Mar 2024 22:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320793;
-	bh=CgppWVbYSdfdH7pUfBvvux86ej8YyJiAHOmFHrzmnXI=;
+	s=k20201202; t=1711320784;
+	bh=MMkBRdQHFky8DEcjQ8QJxN0Osw6l99H5jn7XpxtYv1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KDinYUrvNwqQEga4rZCweR5LpJNlnqRodC36iUzt8JT/BHXY1crwxXIFnrE8IjkS3
-	 yADnuraL7ejvBz+2JwbGagItIG4xOtCfOUMDU/0wyS+VthbliUAht7Qb1NR/gVhl0q
-	 Xu7xKmWbNUoOJq6PcBC2I+Cjg6JS5zeN2lkYHlSpSLxAIbzvOMpKHoQrxpj9vN0+oW
-	 cA8nwouf/eygonKQvqLbVkdQMTGAI8sTXWz+F8+W9uGEnelIA48yMFl9EFy4Klu3G5
-	 uxqgu9OzKdXTE7NxXcYumI2pIMzznWAfZHPMFV4bVx8jCL7PEIff9rW6F2hjijtfI3
-	 BqWC+DdIBvEkQ==
+	b=K5nxbm5gHFMqkYWfmhbol9AHUNb9oXTao4i6/HBKqz6ALfhWJ83N4YjlgYjYXdB49
+	 NMcBohJXH/9ccis1pZm5Ou0lYLs3dSlyI7Jcf0rLexc75llKHhjj5+29gzQe7MD0Bv
+	 EgKvFLo4fldGAmfgVI9nDTcT2jpqZe+3OZgiidHuD7TmPZxSeM/YCOss2H/Fgl+gab
+	 7MHxF/mVMj1UGnwDecaMmo2sgQjGhGxUwQB0BC9w8YaogmSuN8nhVGj5HTKXiBICbR
+	 leDv32L7NGV8eEkTFD3cMFaDB516kjmCEJAU1aPSbe9OALV6NdzVswGh/C3z3FiE2J
+	 o/m4xTjx02lHw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Pauli Virtanen <pav@iki.fi>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 357/713] Bluetooth: fix use-after-free in accessing skb after sending it
-Date: Sun, 24 Mar 2024 18:41:23 -0400
-Message-ID: <20240324224720.1345309-358-sashal@kernel.org>
+Subject: [PATCH 6.7 347/713] Bluetooth: hci_event: Fix not indicating new connection for BIG Sync
+Date: Sun, 24 Mar 2024 18:41:13 -0400
+Message-ID: <20240324224720.1345309-348-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,59 +47,113 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Pauli Virtanen <pav@iki.fi>
+From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit 947ec0d002dce8577b655793dcc6fc78d67b7cb6 ]
+[ Upstream commit eeda1bf97bb500a901f7a9ee5615bad2160f2378 ]
 
-hci_send_cmd_sync first sends skb and then tries to clone it.  However,
-the driver may have already freed the skb at that point.
+BIG Sync (aka. Broadcast sink) requires to inform that the device is
+connected when a data path is active otherwise userspace could attempt
+to free resources allocated to the device object while scanning.
 
-Fix by cloning the sent_cmd cloned just above, instead of the original.
-
-Log:
-================================================================
-BUG: KASAN: slab-use-after-free in __copy_skb_header+0x1a/0x240
-...
-Call Trace: ..
- __skb_clone+0x59/0x2c0
- hci_cmd_work+0x3b3/0x3d0 [bluetooth]
- process_one_work+0x459/0x900
-...
-Allocated by task 129: ...
- __alloc_skb+0x1ae/0x220
- __hci_cmd_sync_sk+0x44c/0x7a0 [bluetooth]
- __hci_cmd_sync_status+0x24/0xb0 [bluetooth]
- set_cig_params_sync+0x778/0x7d0 [bluetooth]
-...
-Freed by task 0: ...
- kmem_cache_free+0x157/0x3c0
- __usb_hcd_giveback_urb+0x11e/0x1e0
- usb_giveback_urb_bh+0x1ad/0x2a0
- tasklet_action_common.isra.0+0x259/0x4a0
- __do_softirq+0x15b/0x5a7
-================================================================
-
-Fixes: 2615fd9a7c25 ("Bluetooth: hci_sync: Fix overwriting request callback")
-Signed-off-by: Pauli Virtanen <pav@iki.fi>
+Fixes: 1d11d70d1f6b ("Bluetooth: ISO: Pass BIG encryption info through QoS")
 Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/hci_event.c | 21 ++++++++++++++-------
+ net/bluetooth/mgmt.c      |  4 ++++
+ 2 files changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 85a91c438d721..7d5334b529834 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -4185,7 +4185,7 @@ static void hci_send_cmd_sync(struct hci_dev *hdev, struct sk_buff *skb)
- 	if (hci_req_status_pend(hdev) &&
- 	    !hci_dev_test_and_set_flag(hdev, HCI_CMD_PENDING)) {
- 		kfree_skb(hdev->req_skb);
--		hdev->req_skb = skb_clone(skb, GFP_KERNEL);
-+		hdev->req_skb = skb_clone(hdev->sent_cmd, GFP_KERNEL);
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 55daada8dc15d..9ee66b393981b 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -2524,9 +2524,7 @@ static void hci_check_pending_name(struct hci_dev *hdev, struct hci_conn *conn,
+ 	 * Only those in BT_CONFIG or BT_CONNECTED states can be
+ 	 * considered connected.
+ 	 */
+-	if (conn &&
+-	    (conn->state == BT_CONFIG || conn->state == BT_CONNECTED) &&
+-	    !test_and_set_bit(HCI_CONN_MGMT_CONNECTED, &conn->flags))
++	if (conn && (conn->state == BT_CONFIG || conn->state == BT_CONNECTED))
+ 		mgmt_device_connected(hdev, conn, name, name_len);
+ 
+ 	if (discov->state == DISCOVERY_STOPPED)
+@@ -3758,8 +3756,9 @@ static void hci_remote_features_evt(struct hci_dev *hdev, void *data,
+ 		bacpy(&cp.bdaddr, &conn->dst);
+ 		cp.pscan_rep_mode = 0x02;
+ 		hci_send_cmd(hdev, HCI_OP_REMOTE_NAME_REQ, sizeof(cp), &cp);
+-	} else if (!test_and_set_bit(HCI_CONN_MGMT_CONNECTED, &conn->flags))
++	} else {
+ 		mgmt_device_connected(hdev, conn, NULL, 0);
++	}
+ 
+ 	if (!hci_outgoing_auth_needed(hdev, conn)) {
+ 		conn->state = BT_CONNECTED;
+@@ -3932,6 +3931,11 @@ static u8 hci_cc_le_setup_iso_path(struct hci_dev *hdev, void *data,
+ 		 * last.
+ 		 */
+ 		hci_connect_cfm(conn, rp->status);
++
++		/* Notify device connected in case it is a BIG Sync */
++		if (!rp->status && test_bit(HCI_CONN_BIG_SYNC, &conn->flags))
++			mgmt_device_connected(hdev, conn, NULL, 0);
++
+ 		break;
  	}
  
- 	atomic_dec(&hdev->cmd_cnt);
+@@ -5006,8 +5010,9 @@ static void hci_remote_ext_features_evt(struct hci_dev *hdev, void *data,
+ 		bacpy(&cp.bdaddr, &conn->dst);
+ 		cp.pscan_rep_mode = 0x02;
+ 		hci_send_cmd(hdev, HCI_OP_REMOTE_NAME_REQ, sizeof(cp), &cp);
+-	} else if (!test_and_set_bit(HCI_CONN_MGMT_CONNECTED, &conn->flags))
++	} else {
+ 		mgmt_device_connected(hdev, conn, NULL, 0);
++	}
+ 
+ 	if (!hci_outgoing_auth_needed(hdev, conn)) {
+ 		conn->state = BT_CONNECTED;
+@@ -5980,8 +5985,7 @@ static void le_conn_complete_evt(struct hci_dev *hdev, u8 status,
+ 		goto unlock;
+ 	}
+ 
+-	if (!test_and_set_bit(HCI_CONN_MGMT_CONNECTED, &conn->flags))
+-		mgmt_device_connected(hdev, conn, NULL, 0);
++	mgmt_device_connected(hdev, conn, NULL, 0);
+ 
+ 	conn->sec_level = BT_SECURITY_LOW;
+ 	conn->state = BT_CONFIG;
+@@ -7210,6 +7214,9 @@ static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
+ 	/* Notify iso layer */
+ 	hci_connect_cfm(pa_sync, 0x00);
+ 
++	/* Notify MGMT layer */
++	mgmt_device_connected(hdev, pa_sync, NULL, 0);
++
+ unlock:
+ 	hci_dev_unlock(hdev);
+ }
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 2186ac57981e5..b21b981f15a38 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -3118,6 +3118,7 @@ static int disconnect(struct sock *sk, struct hci_dev *hdev, void *data,
+ static u8 link_to_bdaddr(u8 link_type, u8 addr_type)
+ {
+ 	switch (link_type) {
++	case ISO_LINK:
+ 	case LE_LINK:
+ 		switch (addr_type) {
+ 		case ADDR_LE_DEV_PUBLIC:
+@@ -9610,6 +9611,9 @@ void mgmt_device_connected(struct hci_dev *hdev, struct hci_conn *conn,
+ 	u16 eir_len = 0;
+ 	u32 flags = 0;
+ 
++	if (test_and_set_bit(HCI_CONN_MGMT_CONNECTED, &conn->flags))
++		return;
++
+ 	/* allocate buff for LE or BR/EDR adv */
+ 	if (conn->le_adv_data_len > 0)
+ 		skb = mgmt_alloc_skb(hdev, MGMT_EV_DEVICE_CONNECTED,
 -- 
 2.43.0
 
