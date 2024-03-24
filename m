@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5788C1EF7DF;
-	Sun, 24 Mar 2024 22:57:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A78D12C7E5;
+	Sun, 24 Mar 2024 22:57:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321037; cv=none; b=aUNF32fbzinBt0VfMxAA8lsAvPduKlKbPTklNeHBZw6jHPLQKp+fLE5gmhUhyxfHpTWtaB2KTs978jceT3Ts1LVx28KFmFm1xkJguYiTgajdxxVF5ZCEHS2DITsA5YnPQ4zDMwitvtDJQG8SlR9Zsl3xxLOGvx55fn5Fk5EoNeU=
+	t=1711321039; cv=none; b=nx+V+zeQ4/iu0o2e7XYazJdKxPvMltqG+B563upg67nhmSPG/Nr7apIOPI922rLFaADApLMAHfac1uD7cKbYR6q/FsZXAtnDITNGU6x5bQRqfB6as9yffQbyyaoUw2natSDOjJayEuHprutWKhNDr1rWtRFPYryRHYqDJsxwdyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321037; c=relaxed/simple;
-	bh=Zkv4uBQK8eMbRPj/TMoLQKTy5qtiJb0tBI+C77mgZrw=;
+	s=arc-20240116; t=1711321039; c=relaxed/simple;
+	bh=FVbYgoZrft2CYm90iEudwn483lk1Jez6x5T3j0VE+p8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RdLGHGFEqcF6+3Tg7Yv5t+NHAkc8x3thKgwwgbg7WvypbTIIh7QgamEUeaQUe/HMtMsNPXh0/ksieUYInGQuhM/IRdu1MwAESuGQ2+BGA/PC7ZTxM4CiWMht7tocoCq1Ig1/b+uZvXD4HUTcoAvHcdmpv8CY8aKjGxKOsDBGOKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVnkPiDU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=b/+Mfp1KHg7ClTlt9MPrRCFvR6MmtK7QWmeAeT0XpR/fAk4KyeM34KJh+gR7oFwlt+KbI2sjOJwvjjSKffay/ZArS6qMasgb9Ii4CwHuHil3bVBX20uuJflB4DEVECbB1k3khTTsB1oZOLRFrKIloVxtr8yUhGZlEdWO/wyYbjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mqjva9Lg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVnkPiDU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DD77C43390;
-	Sun, 24 Mar 2024 22:57:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mqjva9Lg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65FCFC433F1;
+	Sun, 24 Mar 2024 22:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321037;
-	bh=Zkv4uBQK8eMbRPj/TMoLQKTy5qtiJb0tBI+C77mgZrw=;
+	s=k20201202; t=1711321039;
+	bh=FVbYgoZrft2CYm90iEudwn483lk1Jez6x5T3j0VE+p8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WVnkPiDUvL+OLpIEypT4j6QoBEYSD6fGJZBZViqLyzvZkNg3+rUMLxBEoUlZgrbXw
-	 DFFk71DFfePz4VvOVkeJr/Etg73VZqQ+Xm13HzQ8oyu3WFxnHnLoklf31JeywWP9K7
-	 m3jdhdO32A+kfwYJ6dfZAsHYpkuE2c2E5x/CmuOMe7qooerATtwEdDRtDZw8QYPTaX
-	 Jou7yRn2aRqWvvDtelcaFfHtjojxzwRcDccP+tGkCISMVVvKNi/pWhZEFwB7LvaZ9E
-	 glsSsmwxK4qySXjCn96jz34wAfoeRYiVed6Y71r/bD9F7CacKZ2qqxBJ04lSllKkSH
-	 hQPb1PUZLouDA==
+	b=Mqjva9LggzTcFtbVsChMDgGJ7u5PMvEnNaMTSukSQY5r43KK47H30eDHJPIe10YMD
+	 SeYdEJYkC/93f7oPlGvUJTS5Cqe/N4XH0+I/MfMQA/eMqZHwH9QLbsNjlIwk69kSRi
+	 n60xl8yRCONKLFlPAMSQG0e7bTduLPjFtktw1wPPuI9AccmZ/hKmXcMgDYxov9exfE
+	 AEol7Krs+wZ5OTxOfwOVXV6Nqo3QWylp20R93Vkncu1EaQ4jbpq3d/kpywvk1YA6qT
+	 wV/CCLD5MbmRsNCTf0ttbktv/S6v6vHVTrgw8nvRnaP8864Q/OLVkKaoh/SK32uiES
+	 l24RIKgo9CrVA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc: Xiuhong Wang <xiuhong.wang@unisoc.com>,
+	Zhiguo Niu <zhiguo.niu@unisoc.com>,
+	Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 600/713] NFS: Fix an off by one in root_nfs_cat()
-Date: Sun, 24 Mar 2024 18:45:26 -0400
-Message-ID: <20240324224720.1345309-601-sashal@kernel.org>
+Subject: [PATCH 6.7 602/713] f2fs: compress: relocate some judgments in f2fs_reserve_compress_blocks
+Date: Sun, 24 Mar 2024 18:45:28 -0400
+Message-ID: <20240324224720.1345309-603-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,40 +50,60 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Xiuhong Wang <xiuhong.wang@unisoc.com>
 
-[ Upstream commit 698ad1a538da0b6bf969cfee630b4e3a026afb87 ]
+[ Upstream commit b7d797d241c154d73ec5523f87f3b06d4f299da1 ]
 
-The intent is to check if 'dest' is truncated or not. So, >= should be
-used instead of >, because strlcat() returns the length of 'dest' and 'src'
-excluding the trailing NULL.
+The following f2fs_io test will get a "0" result instead of -EINVAL,
+unisoc # ./f2fs_io compress file
+unisoc # ./f2fs_io reserve_cblocks file
+ 0
+it's not reasonable, so the judgement of
+atomic_read(&F2FS_I(inode)->i_compr_blocks) should be placed after
+the judgement of is_inode_flag_set(inode, FI_COMPRESS_RELEASED).
 
-Fixes: 56463e50d1fc ("NFS: Use super.c for NFSROOT mount option parsing")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: c75488fb4d82 ("f2fs: introduce F2FS_IOC_RESERVE_COMPRESS_BLOCKS")
+Signed-off-by: Xiuhong Wang <xiuhong.wang@unisoc.com>
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfsroot.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/file.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
-index 7600100ba26f0..432612d224374 100644
---- a/fs/nfs/nfsroot.c
-+++ b/fs/nfs/nfsroot.c
-@@ -175,10 +175,10 @@ static int __init root_nfs_cat(char *dest, const char *src,
- 	size_t len = strlen(dest);
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index a82dc1af16797..f44c29a6bc24b 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3679,9 +3679,6 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 	if (ret)
+ 		return ret;
  
- 	if (len && dest[len - 1] != ',')
--		if (strlcat(dest, ",", destlen) > destlen)
-+		if (strlcat(dest, ",", destlen) >= destlen)
- 			return -1;
+-	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
+-		goto out;
+-
+ 	f2fs_balance_fs(sbi, true);
  
--	if (strlcat(dest, src, destlen) > destlen)
-+	if (strlcat(dest, src, destlen) >= destlen)
- 		return -1;
- 	return 0;
- }
+ 	inode_lock(inode);
+@@ -3691,6 +3688,9 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 		goto unlock_inode;
+ 	}
+ 
++	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
++		goto unlock_inode;
++
+ 	f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+ 	filemap_invalidate_lock(inode->i_mapping);
+ 
+@@ -3737,7 +3737,6 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 	}
+ unlock_inode:
+ 	inode_unlock(inode);
+-out:
+ 	mnt_drop_write_file(filp);
+ 
+ 	if (ret >= 0) {
 -- 
 2.43.0
 
