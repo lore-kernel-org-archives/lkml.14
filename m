@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7BD1FC98E;
-	Sun, 24 Mar 2024 23:16:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFEB22E152;
+	Sun, 24 Mar 2024 23:16:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322186; cv=none; b=btnPpaOTc6uskXXQClKICM2TtsXRgmchfVVvs4FqMHkUeLUE0c5lf84EO3VWE/jGO/bQ+Y3kWsyABXKQn1mvxHU0W773vECHBK7y9Y/B4aZiDYltps1fU+KG8isnGmb1qdX+D3Mzy8Hy5V/VABHECpV2r9+PLqKTj0+Aj23ZQQE=
+	t=1711322196; cv=none; b=gxnwLai4Ocb8t02/TR2s3mxA1meCl/J23x5XhlITM+3gLli+Eotx19K0X0rUOP1oouETOyMe7dVs9Gt0USvpO01baMcYaGamxp3nxD8vCurXB8nmacqC/3QVlh1hramnrwLhqxhxe7BXKXfRVmRZFsh+nu7rkII/7/PNAcLhHco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322186; c=relaxed/simple;
-	bh=AblLMCLKhGeVcNTlP4GxhDoq/j9RcxhSil5RYWBtqm4=;
+	s=arc-20240116; t=1711322196; c=relaxed/simple;
+	bh=mo3QFRCIPm4CwsCY/8t5vug+x7kfAt2rWJ3UnNCoubc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r9CR125wCKmb08xlp2crfGByvoF9BiVdHbhHGmvUNM11v6eE6RjafzF+ilL/fcs1TBWGZOnSclKPXslMawqjnCZEcrZoWjNehv1Qvh24FR2QaSAzE+YHJRmouXK4VnmdlWV3WrCf6IoQZx7+Kw/QaeqtrFYeP9vjg7ZPALa54kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElxuyNIE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=op5QxTq3jJHA+n0bwuV2sDCUWpsGkQTDtuMhBAxRP391c8fSgeqHmB8B3uT9ieNIW1gUPPIr9lg1RlPQAbYyU1o0DewbGzJLXVUt6CFjGe1mnkNmlMFKM2cZX5USO2pipmU+C6k4cCUN54JHo9yK6sazZSXICAfF9oIrrx4uyHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JAkvVFnH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElxuyNIE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F7B8C433F1;
-	Sun, 24 Mar 2024 23:16:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JAkvVFnH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B374DC433C7;
+	Sun, 24 Mar 2024 23:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322184;
-	bh=AblLMCLKhGeVcNTlP4GxhDoq/j9RcxhSil5RYWBtqm4=;
+	s=k20201202; t=1711322195;
+	bh=mo3QFRCIPm4CwsCY/8t5vug+x7kfAt2rWJ3UnNCoubc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ElxuyNIEHFDHaT4Ol2Rr6ytb9dWVn42GhKDQ6B3SFQZce0Lb1yCAZf4k/+uLMelc/
-	 g4nVblyW8CTHov9xfzVOEbh9X3r50RKSnMT+1vcKymPtOJyOHrhpf40nTLjJmpghfY
-	 GYvMbkGU76kCKnOCu1SGgrnEMX6UcHOkYpxo4qAPBv6s/dMdf2ViEDHVnKhEZctEAt
-	 6PFBQ9FcWvc25ZhPFE+0vAPj8U4kcWfOe+IFXgGFbdllMRVXFN+JkvzRldFTK1ZU95
-	 tIJLYDHSxuphOskcLq9MlNPOosHheqprzggQK53xneN5m0xl316MTn17Sip7/oRycD
-	 YTPtpFJLDGXJg==
+	b=JAkvVFnHGmVMvOVfS4kY0Ad+kzeF3SFtqysltvued1qsPWI6oehVv8VXhgijDHVWA
+	 mv+7b/K9x3YiYsGMvJ7S0iWNqhfYmw3wwpDlXvaxV4aCnGcTC8K0983IlDeXkqkQxH
+	 FJ/55rxPu1XmBzJd7G/iupy4j141sICKFQ8t1CvskNM+4Le3ULF0yQ0ftRCkVKyt1k
+	 3GcDI+753LPjXcublrJ5V2gLcgJP1APKOQCuMWvGVuwmRLBM4VmXDNaRQrE8lkf2ev
+	 0pqEaysy4OxhfP0ukpCB89K/F1IpGLjO1JkRsDFdjZ+n30crRQG9tvOYtCpvrgggMb
+	 QVsW8gYIYu+uA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Wang Jianjian <wangjianjian3@huawei.com>,
+	Jan Kara <jack@suse.cz>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 263/451] PCI/AER: Fix rootport attribute paths in ABI docs
-Date: Sun, 24 Mar 2024 19:08:59 -0400
-Message-ID: <20240324231207.1351418-264-sashal@kernel.org>
+Subject: [PATCH 6.1 274/451] quota: Fix potential NULL pointer dereference
+Date: Sun, 24 Mar 2024 19:09:10 -0400
+Message-ID: <20240324231207.1351418-275-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,50 +48,276 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Johan Hovold <johan+linaro@kernel.org>
+From: Wang Jianjian <wangjianjian3@huawei.com>
 
-[ Upstream commit 0e7d29a39a546161ea3a49e8e282a43212d7ff68 ]
+[ Upstream commit d0aa72604fbd80c8aabb46eda00535ed35570f1f ]
 
-The 'aer_stats' directory never made it into the sixth and final revision
-of the series adding the sysfs AER attributes.
+Below race may cause NULL pointer dereference
 
-Link: https://lore.kernel.org/r/20240202131635.11405-2-johan+linaro@kernel.org
-Link: https://lore.kernel.org/lkml/20180621184822.GB14136@bhelgaas-glaptop.roam.corp.google.com/
-Fixes: 12833017e581 ("PCI/AER: Add sysfs attributes for rootport cumulative stats")
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+P1					P2
+dquot_free_inode			quota_off
+					  drop_dquot_ref
+					   remove_dquot_ref
+					   dquots = i_dquot(inode)
+  dquots = i_dquot(inode)
+  srcu_read_lock
+  dquots[cnt]) != NULL (1)
+					     dquots[type] = NULL (2)
+  spin_lock(&dquots[cnt]->dq_dqb_lock) (3)
+   ....
+
+If dquot_free_inode(or other routines) checks inode's quota pointers (1)
+before quota_off sets it to NULL(2) and use it (3) after that, NULL pointer
+dereference will be triggered.
+
+So let's fix it by using a temporary pointer to avoid this issue.
+
+Signed-off-by: Wang Jianjian <wangjianjian3@huawei.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Message-Id: <20240202081852.2514092-1-wangjianjian3@huawei.com>
+Stable-dep-of: 179b8c97ebf6 ("quota: Fix rcu annotations of inode dquot pointers")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/quota/dquot.c | 98 ++++++++++++++++++++++++++++--------------------
+ 1 file changed, 57 insertions(+), 41 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-index 860db53037a58..24087d5fd417a 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-+++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-@@ -100,19 +100,19 @@ collectors) that are AER capable. These indicate the number of error messages as
- device, so these counters include them and are thus cumulative of all the error
- messages on the PCI hierarchy originating at that root port.
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 730d8ffc4928a..44c4da364c994 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -399,15 +399,17 @@ int dquot_mark_dquot_dirty(struct dquot *dquot)
+ EXPORT_SYMBOL(dquot_mark_dquot_dirty);
  
--What:		/sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_cor
-+What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_cor
- Date:		July 2018
- KernelVersion: 4.19.0
- Contact:	linux-pci@vger.kernel.org, rajatja@google.com
- Description:	Total number of ERR_COR messages reported to rootport.
+ /* Dirtify all the dquots - this can block when journalling */
+-static inline int mark_all_dquot_dirty(struct dquot * const *dquot)
++static inline int mark_all_dquot_dirty(struct dquot * const *dquots)
+ {
+ 	int ret, err, cnt;
++	struct dquot *dquot;
  
--What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_fatal
-+What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_fatal
- Date:		July 2018
- KernelVersion: 4.19.0
- Contact:	linux-pci@vger.kernel.org, rajatja@google.com
- Description:	Total number of ERR_FATAL messages reported to rootport.
+ 	ret = err = 0;
+ 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
+-		if (dquot[cnt])
++		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
++		if (dquot)
+ 			/* Even in case of error we have to continue */
+-			ret = mark_dquot_dirty(dquot[cnt]);
++			ret = mark_dquot_dirty(dquot);
+ 		if (!err)
+ 			err = ret;
+ 	}
+@@ -1684,6 +1686,7 @@ int __dquot_alloc_space(struct inode *inode, qsize_t number, int flags)
+ 	struct dquot_warn warn[MAXQUOTAS];
+ 	int reserve = flags & DQUOT_SPACE_RESERVE;
+ 	struct dquot **dquots;
++	struct dquot *dquot;
  
--What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_nonfatal
-+What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_nonfatal
- Date:		July 2018
- KernelVersion: 4.19.0
- Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ 	if (!inode_quota_active(inode)) {
+ 		if (reserve) {
+@@ -1703,27 +1706,26 @@ int __dquot_alloc_space(struct inode *inode, qsize_t number, int flags)
+ 	index = srcu_read_lock(&dquot_srcu);
+ 	spin_lock(&inode->i_lock);
+ 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
+-		if (!dquots[cnt])
++		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
++		if (!dquot)
+ 			continue;
+ 		if (reserve) {
+-			ret = dquot_add_space(dquots[cnt], 0, number, flags,
+-					      &warn[cnt]);
++			ret = dquot_add_space(dquot, 0, number, flags, &warn[cnt]);
+ 		} else {
+-			ret = dquot_add_space(dquots[cnt], number, 0, flags,
+-					      &warn[cnt]);
++			ret = dquot_add_space(dquot, number, 0, flags, &warn[cnt]);
+ 		}
+ 		if (ret) {
+ 			/* Back out changes we already did */
+ 			for (cnt--; cnt >= 0; cnt--) {
+-				if (!dquots[cnt])
++				dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
++				if (!dquot)
+ 					continue;
+-				spin_lock(&dquots[cnt]->dq_dqb_lock);
++				spin_lock(&dquot->dq_dqb_lock);
+ 				if (reserve)
+-					dquot_free_reserved_space(dquots[cnt],
+-								  number);
++					dquot_free_reserved_space(dquot, number);
+ 				else
+-					dquot_decr_space(dquots[cnt], number);
+-				spin_unlock(&dquots[cnt]->dq_dqb_lock);
++					dquot_decr_space(dquot, number);
++				spin_unlock(&dquot->dq_dqb_lock);
+ 			}
+ 			spin_unlock(&inode->i_lock);
+ 			goto out_flush_warn;
+@@ -1754,6 +1756,7 @@ int dquot_alloc_inode(struct inode *inode)
+ 	int cnt, ret = 0, index;
+ 	struct dquot_warn warn[MAXQUOTAS];
+ 	struct dquot * const *dquots;
++	struct dquot *dquot;
+ 
+ 	if (!inode_quota_active(inode))
+ 		return 0;
+@@ -1764,17 +1767,19 @@ int dquot_alloc_inode(struct inode *inode)
+ 	index = srcu_read_lock(&dquot_srcu);
+ 	spin_lock(&inode->i_lock);
+ 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
+-		if (!dquots[cnt])
++		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
++		if (!dquot)
+ 			continue;
+-		ret = dquot_add_inodes(dquots[cnt], 1, &warn[cnt]);
++		ret = dquot_add_inodes(dquot, 1, &warn[cnt]);
+ 		if (ret) {
+ 			for (cnt--; cnt >= 0; cnt--) {
+-				if (!dquots[cnt])
++				dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
++				if (!dquot)
+ 					continue;
+ 				/* Back out changes we already did */
+-				spin_lock(&dquots[cnt]->dq_dqb_lock);
+-				dquot_decr_inodes(dquots[cnt], 1);
+-				spin_unlock(&dquots[cnt]->dq_dqb_lock);
++				spin_lock(&dquot->dq_dqb_lock);
++				dquot_decr_inodes(dquot, 1);
++				spin_unlock(&dquot->dq_dqb_lock);
+ 			}
+ 			goto warn_put_all;
+ 		}
+@@ -1796,6 +1801,7 @@ EXPORT_SYMBOL(dquot_alloc_inode);
+ int dquot_claim_space_nodirty(struct inode *inode, qsize_t number)
+ {
+ 	struct dquot **dquots;
++	struct dquot *dquot;
+ 	int cnt, index;
+ 
+ 	if (!inode_quota_active(inode)) {
+@@ -1811,9 +1817,8 @@ int dquot_claim_space_nodirty(struct inode *inode, qsize_t number)
+ 	spin_lock(&inode->i_lock);
+ 	/* Claim reserved quotas to allocated quotas */
+ 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
+-		if (dquots[cnt]) {
+-			struct dquot *dquot = dquots[cnt];
+-
++		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
++		if (dquot) {
+ 			spin_lock(&dquot->dq_dqb_lock);
+ 			if (WARN_ON_ONCE(dquot->dq_dqb.dqb_rsvspace < number))
+ 				number = dquot->dq_dqb.dqb_rsvspace;
+@@ -1838,6 +1843,7 @@ EXPORT_SYMBOL(dquot_claim_space_nodirty);
+ void dquot_reclaim_space_nodirty(struct inode *inode, qsize_t number)
+ {
+ 	struct dquot **dquots;
++	struct dquot *dquot;
+ 	int cnt, index;
+ 
+ 	if (!inode_quota_active(inode)) {
+@@ -1853,9 +1859,8 @@ void dquot_reclaim_space_nodirty(struct inode *inode, qsize_t number)
+ 	spin_lock(&inode->i_lock);
+ 	/* Claim reserved quotas to allocated quotas */
+ 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
+-		if (dquots[cnt]) {
+-			struct dquot *dquot = dquots[cnt];
+-
++		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
++		if (dquot) {
+ 			spin_lock(&dquot->dq_dqb_lock);
+ 			if (WARN_ON_ONCE(dquot->dq_dqb.dqb_curspace < number))
+ 				number = dquot->dq_dqb.dqb_curspace;
+@@ -1882,6 +1887,7 @@ void __dquot_free_space(struct inode *inode, qsize_t number, int flags)
+ 	unsigned int cnt;
+ 	struct dquot_warn warn[MAXQUOTAS];
+ 	struct dquot **dquots;
++	struct dquot *dquot;
+ 	int reserve = flags & DQUOT_SPACE_RESERVE, index;
+ 
+ 	if (!inode_quota_active(inode)) {
+@@ -1902,17 +1908,18 @@ void __dquot_free_space(struct inode *inode, qsize_t number, int flags)
+ 		int wtype;
+ 
+ 		warn[cnt].w_type = QUOTA_NL_NOWARN;
+-		if (!dquots[cnt])
++		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
++		if (!dquot)
+ 			continue;
+-		spin_lock(&dquots[cnt]->dq_dqb_lock);
+-		wtype = info_bdq_free(dquots[cnt], number);
++		spin_lock(&dquot->dq_dqb_lock);
++		wtype = info_bdq_free(dquot, number);
+ 		if (wtype != QUOTA_NL_NOWARN)
+-			prepare_warning(&warn[cnt], dquots[cnt], wtype);
++			prepare_warning(&warn[cnt], dquot, wtype);
+ 		if (reserve)
+-			dquot_free_reserved_space(dquots[cnt], number);
++			dquot_free_reserved_space(dquot, number);
+ 		else
+-			dquot_decr_space(dquots[cnt], number);
+-		spin_unlock(&dquots[cnt]->dq_dqb_lock);
++			dquot_decr_space(dquot, number);
++		spin_unlock(&dquot->dq_dqb_lock);
+ 	}
+ 	if (reserve)
+ 		*inode_reserved_space(inode) -= number;
+@@ -1937,6 +1944,7 @@ void dquot_free_inode(struct inode *inode)
+ 	unsigned int cnt;
+ 	struct dquot_warn warn[MAXQUOTAS];
+ 	struct dquot * const *dquots;
++	struct dquot *dquot;
+ 	int index;
+ 
+ 	if (!inode_quota_active(inode))
+@@ -1947,16 +1955,16 @@ void dquot_free_inode(struct inode *inode)
+ 	spin_lock(&inode->i_lock);
+ 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
+ 		int wtype;
+-
+ 		warn[cnt].w_type = QUOTA_NL_NOWARN;
+-		if (!dquots[cnt])
++		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
++		if (!dquot)
+ 			continue;
+-		spin_lock(&dquots[cnt]->dq_dqb_lock);
+-		wtype = info_idq_free(dquots[cnt], 1);
++		spin_lock(&dquot->dq_dqb_lock);
++		wtype = info_idq_free(dquot, 1);
+ 		if (wtype != QUOTA_NL_NOWARN)
+-			prepare_warning(&warn[cnt], dquots[cnt], wtype);
+-		dquot_decr_inodes(dquots[cnt], 1);
+-		spin_unlock(&dquots[cnt]->dq_dqb_lock);
++			prepare_warning(&warn[cnt], dquot, wtype);
++		dquot_decr_inodes(dquot, 1);
++		spin_unlock(&dquot->dq_dqb_lock);
+ 	}
+ 	spin_unlock(&inode->i_lock);
+ 	mark_all_dquot_dirty(dquots);
+@@ -1983,7 +1991,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
+ 	qsize_t rsv_space = 0;
+ 	qsize_t inode_usage = 1;
+ 	struct dquot *transfer_from[MAXQUOTAS] = {};
+-	int cnt, ret = 0;
++	int cnt, index, ret = 0;
+ 	char is_valid[MAXQUOTAS] = {};
+ 	struct dquot_warn warn_to[MAXQUOTAS];
+ 	struct dquot_warn warn_from_inodes[MAXQUOTAS];
+@@ -2072,8 +2080,16 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
+ 	spin_unlock(&inode->i_lock);
+ 	spin_unlock(&dq_data_lock);
+ 
++	/*
++	 * These arrays are local and we hold dquot references so we don't need
++	 * the srcu protection but still take dquot_srcu to avoid warning in
++	 * mark_all_dquot_dirty().
++	 */
++	index = srcu_read_lock(&dquot_srcu);
+ 	mark_all_dquot_dirty(transfer_from);
+ 	mark_all_dquot_dirty(transfer_to);
++	srcu_read_unlock(&dquot_srcu, index);
++
+ 	flush_warnings(warn_to);
+ 	flush_warnings(warn_from_inodes);
+ 	flush_warnings(warn_from_space);
 -- 
 2.43.0
 
