@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15992176FB0;
-	Sun, 24 Mar 2024 23:37:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815ED278980;
+	Sun, 24 Mar 2024 23:37:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323463; cv=none; b=RY/kpENVrrKueUE38Qi5G7PHvrCpsxzt1NeNSfKfgQDPDQVZlhDrMcbyBV3HQKDd/QjIEhUAYJP71DfFtf+y3SZd6qyxA8BCAMzV7Bg5gSIl9WE5RVwqMe0ecelNAovGs2XaMdGSOWqRHlD+8iZbG+V+WVeMNwV+0an7AIMKOqU=
+	t=1711323448; cv=none; b=lxt3oYwLATI+VqL/Ty30ZUe1W61O0ki60k2B57JIjcZ07Rd/e9xveT13of5Cme2b+xiLYQ+hMkQ8bVJrW94EoIzdum2qsCaFYqPQnve7uHU+DEcKHDKv/W8iJezWuWDj4g/AP2y9se/ISwK0ilnR/+RUM7MhO45JaNyJyMSaY/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323463; c=relaxed/simple;
-	bh=gbU2EowSPlHE2x6WXeXSsOfbfUQE1IU/R3YYLu6N2co=;
+	s=arc-20240116; t=1711323448; c=relaxed/simple;
+	bh=wUqvi6MCxNDoX/IRXsB3IsgmfWpXe5W73W19ynJlO4M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jcs45uDcSWUFQs5Tx+1Dip9YatQmKH5GXJAENkuR9u5HR0dcSXkSseNV+MuVgdASLBUqiAME4+6bdxE5w9Cz6d+HxL1U1I1ByjK7vM1zNp6FWryp0ZwdXtz23L8pUSd8U0pPG5ukCyPofwil6Mx9xKY4jZgLHUVJVSUT2SfYYGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/mbvzzO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CSYqKE9amrS9IDBPbDfZG+cfvKP1pi2KyZYIchuo5YzTuqW9SYt9VRSxfNQMlgVzs3FrjfrD/Phm2q7xuEfjejSbMBnhbfrBBXJ1cIfNyLvwOIwcJdA6lvF3y6ojyeLalrjWUytdbPrRTIvCbID45Gv1G3aCZbajxEEpCMGFM9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZD8w+aw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/mbvzzO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A9F9C433B1;
-	Sun, 24 Mar 2024 23:37:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZD8w+aw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7672C433A6;
+	Sun, 24 Mar 2024 23:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323463;
-	bh=gbU2EowSPlHE2x6WXeXSsOfbfUQE1IU/R3YYLu6N2co=;
+	s=k20201202; t=1711323447;
+	bh=wUqvi6MCxNDoX/IRXsB3IsgmfWpXe5W73W19ynJlO4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W/mbvzzO6kOSebJ/DCs8IegFo73/nheH6MEBf6AyOG66TFhuEs9fNVwhqRDVQz9S7
-	 U6TFhmryoDF7SLJ/qJleMFEbH4YjqUIGhX4+bdPyy3v7quZUMxxjzTMGEomw4rYBED
-	 Xyj4zZ41G6KI1Wb2H4VE/P7XsFiR8krpYRfIC858io1QxmLHDO3gO4X7vgsr28pHmc
-	 4ZJrIm/HGnRspx7nbSHXXvD0H6ugB/jKYmXLs572rbl4X2zPcQguJRBqqHeAaNj8M4
-	 YQNbSAhkUDL4fTGNVJh6qdn3zkzu8hZ0b2FM+YQlKqsGW4ghsOTX5VUz+aHcQbDUKB
-	 azU03rqdIVbAQ==
+	b=mZD8w+aw3EKleGKA1GhUCoNWA77HnPJok10XE5zgFk9sJTjGj/VS7t6pTYRXEPw/o
+	 ZJzbsZSrP/DHv83ja+Chxn3XGfKXyyBQ+f6N0xVdrbS+C9I/SohmznFTex7LYNAitP
+	 hm2Zh+jz5r2RRvFASToq7HMZJgLsJqhk11VD71td6b34SZlIxO5hnKASfJZD2cPZDZ
+	 yD1VunvowQdlKSqr67/0697mN+7BY9RWn+vz5nG6EQPYxj7LPmFrPvrkHlVFLri0U/
+	 H6fl3wL0a2DVbi7U/hdToqb6wVZrchvV+hJqNRmZ8OGW+9WDgDJUrP7aZGmsxe2nKt
+	 SSuVqRpXwW0Rw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Harry Wentland <harry.wentland@amd.com>,
-	Simon Ser <contact@emersion.fr>,
-	Melissa Wen <mwen@igalia.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
+Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+	Willem de Bruijn <willemb@google.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 167/317] drm: Don't treat 0 as -1 in drm_fixp2int_ceil
-Date: Sun, 24 Mar 2024 19:32:27 -0400
-Message-ID: <20240324233458.1352854-168-sashal@kernel.org>
+Subject: [PATCH 5.15 150/317] udp: fix incorrect parameter validation in the udp_lib_getsockopt() function
+Date: Sun, 24 Mar 2024 19:32:10 -0400
+Message-ID: <20240324233458.1352854-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,39 +49,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Harry Wentland <harry.wentland@amd.com>
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit cf8837d7204481026335461629b84ac7f4538fa5 ]
+[ Upstream commit 4bb3ba7b74fceec6f558745b25a43c6521cf5506 ]
 
-Unit testing this in VKMS shows that passing 0 into
-this function returns -1, which is highly counter-
-intuitive. Fix it by checking whether the input is
->= 0 instead of > 0.
+The 'len' variable can't be negative when assigned the result of
+'min_t' because all 'min_t' parameters are cast to unsigned int,
+and then the minimum one is chosen.
 
-Fixes: 64566b5e767f ("drm: Add drm_fixp_from_fraction and drm_fixp2int_ceil")
-Signed-off-by: Harry Wentland <harry.wentland@amd.com>
-Reviewed-by: Simon Ser <contact@emersion.fr>
-Reviewed-by: Melissa Wen <mwen@igalia.com>
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231108163647.106853-2-harry.wentland@amd.com
+To fix the logic, check 'len' as read from 'optlen',
+where the types of relevant variables are (signed) int.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_fixed.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/udp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
-index 553210c02ee0f..627efa56e59fb 100644
---- a/include/drm/drm_fixed.h
-+++ b/include/drm/drm_fixed.h
-@@ -88,7 +88,7 @@ static inline int drm_fixp2int(s64 a)
+diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+index c454daa78a2f8..2caf54c241037 100644
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -2814,11 +2814,11 @@ int udp_lib_getsockopt(struct sock *sk, int level, int optname,
+ 	if (get_user(len, optlen))
+ 		return -EFAULT;
  
- static inline int drm_fixp2int_ceil(s64 a)
- {
--	if (a > 0)
-+	if (a >= 0)
- 		return drm_fixp2int(a + DRM_FIXED_ALMOST_ONE);
- 	else
- 		return drm_fixp2int(a - DRM_FIXED_ALMOST_ONE);
+-	len = min_t(unsigned int, len, sizeof(int));
+-
+ 	if (len < 0)
+ 		return -EINVAL;
+ 
++	len = min_t(unsigned int, len, sizeof(int));
++
+ 	switch (optname) {
+ 	case UDP_CORK:
+ 		val = READ_ONCE(up->corkflag);
 -- 
 2.43.0
 
