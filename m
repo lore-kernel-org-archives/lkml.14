@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14CC1DC7ED;
-	Sun, 24 Mar 2024 22:51:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A3D1DBF3A;
+	Sun, 24 Mar 2024 22:51:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320710; cv=none; b=lEqLJnrg3SY8brhQ1sKMlgDNSv7CabSTEopDTspWAc1XTTS+qs17W31AbnfX1brFZ0+aAl16WR/TOmTEoduYpFaSta4e8m7J6y04j+2r9V4PqugYnCH4O3q1OUCa+ezC22HJ2CwC57o6dTj2tP9lZ3c7X2h657U+q45+XbcTupQ=
+	t=1711320701; cv=none; b=LwMFCDHDj3O6n5c7KTieE6g5Rv6OCVKIsHPyyNwxulOcNJXf7JStUHKEQ+Pw4HmCSBDH5JwiVnzx78tm5wkZ+DEoXTimnH1s69M7AeJEdMxvR8kC/ObOXTs07P4IgYy58Nku5wVEc64lff87vAUhHidMNaZ3TezwGYAoZffC8FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320710; c=relaxed/simple;
-	bh=TFfAVrGD8nWkaGmaO0qqtQoMlM7QoySNF8X+9tFaBkY=;
+	s=arc-20240116; t=1711320701; c=relaxed/simple;
+	bh=Zb0MMyK9GPqZrc9DkGXJxkLXDfwEcBT5Gn5m/Ks8+fw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rVHTNqyyfMzlPcMqruG+m/VI+TJfv6UO9qBCdogM+ephaQS2jmOowE96dwAPNJARMulIG1a9m0R18xcqpNQnD/x7/6GS0Vx4wVlqlYBgSKlw/ORoW0iYyiONpSP/7NO6kt8Hf86SJi8jthgVjoPYmUDpRJQEt0C5+1LErNYtNXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vFQWRf7Z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZeLdqyfVo3NRHPCuyq3bFT/ZZ1oeRxJEcGrBupZBw55ZdtogDh7/LrAoQiQCn0r+ENvCcrsAE6nl4NLvislI2RUcPDl+L7T5iglJBd9ObKPAXZShPQDGAW4ZedwdIrKtahYXD1ZGfYgPaR1PIItm8BvSBd7zXDNlGJpYxrHpoWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RBmvrhY9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vFQWRf7Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD14C43390;
-	Sun, 24 Mar 2024 22:51:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RBmvrhY9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AAFCC43330;
+	Sun, 24 Mar 2024 22:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320710;
-	bh=TFfAVrGD8nWkaGmaO0qqtQoMlM7QoySNF8X+9tFaBkY=;
+	s=k20201202; t=1711320699;
+	bh=Zb0MMyK9GPqZrc9DkGXJxkLXDfwEcBT5Gn5m/Ks8+fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vFQWRf7Zt3Slm/gNhYjT5rtGvEne3+8eveDwPNmYROb9D5lp6EAJw5CNNlFumpU1k
-	 mUZ2wbVRkie8EqykCw7s6YtkeL2ZiUvgkcarONgiilWtgx/wLCq8wIKqRuSv0fVDZD
-	 bXF49Chp9gIfQvVpjGDhUdrprSPqlNRTXjr+iPC5bJnPZc43TNR+LqUOGM69iRczII
-	 UGN94deKByT29hgoOYW4rKmekUdqDUnXcdU4epPBYcnq/awHRMJAsQUbWJzWKtZmBF
-	 /Gxn3BT2GSBpvdsB87q5sOXhsSe26OmbhYLX/cv2W8bvSPRsuG21nBPELWVqhJET5e
-	 HpiU8Qy3UUbBQ==
+	b=RBmvrhY93cvZNbznUtpB7zQUvptFnmHpEcDeDY3Wq6qniPMsoY4FUckOaryZPOCa2
+	 ScuP0/e4efgsOgOZYSPxgSbVQ8tgvAJ+kDPqR2XWDd7Y91sGc5Q9q85U7cEkxSv/zT
+	 77Xr2TL96ahOz9+X4Sf4zLI3v9ieNfvTash+kVXaipdexDCEH/GvSjBcK8RRDN7JG2
+	 nspyGDImbFzU0k7WAQV7MhFdFR2+a1ocPw0ZHAelr3UHyNhe2/yri1T+/EUjdak2ee
+	 E/sXXlXF15ZyX3dZIwJonYh76twfQcxtlo9mhZFS043qIQGVkUmsjEIL73ERoMSRJi
+	 LlN/8M9/XcNCw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrew Davis <afd@ti.com>,
-	Nishanth Menon <nm@ti.com>,
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joerg Roedel <jroedel@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 273/713] arm64: dts: ti: k3-am64: Enable SDHCI nodes at the board level
-Date: Sun, 24 Mar 2024 18:39:59 -0400
-Message-ID: <20240324224720.1345309-274-sashal@kernel.org>
+Subject: [PATCH 6.7 262/713] iommu/amd: Mark interrupt as managed
+Date: Sun, 24 Mar 2024 18:39:48 -0400
+Message-ID: <20240324224720.1345309-263-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,152 +49,67 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andrew Davis <afd@ti.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-[ Upstream commit 3b6345e3fcf4c93a79f396121cd0e6f98f04da13 ]
+[ Upstream commit 0feda94c868d396fac3b3cb14089d2d989a07c72 ]
 
-SDHCI nodes defined in the top-level AM64 SoC dtsi files are incomplete
-and will not be functional unless they are extended.
+On many systems that have an AMD IOMMU the following sequence of
+warnings is observed during bootup.
 
-As the attached SD/eMMC is only known about at the board integration level,
-these nodes should only be enabled when provided with this information.
+```
+pci 0000:00:00.2  can't derive routing for PCI INT A
+pci 0000:00:00.2: PCI INT A: not connected
+```
 
-Disable the SDHCI nodes in the dtsi files and only enable the ones that
-are actually pinned out on a given board.
+This series of events happens because of the IOMMU initialization
+sequence order and the lack of _PRT entries for the IOMMU.
 
-Signed-off-by: Andrew Davis <afd@ti.com>
-Link: https://lore.kernel.org/r/20231117163339.89952-2-afd@ti.com
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Stable-dep-of: 379c7752bbd0 ("arm64: dts: ti: k3-am64-main: Fix ITAP/OTAP values for MMC")
+During initialization the IOMMU driver first enables the PCI device
+using pci_enable_device().  This will call acpi_pci_irq_enable()
+which will check if the interrupt is declared in a PCI routing table
+(_PRT) entry. According to the PCI spec [1] these routing entries
+are only required under PCI root bridges:
+	The _PRT object is required under all PCI root bridges
+
+The IOMMU is directly connected to the root complex, so there is no
+parent bridge to look for a _PRT entry. The first warning is emitted
+since no entry could be found in the hierarchy. The second warning is
+then emitted because the interrupt hasn't yet been configured to any
+value.  The pin was configured in pci_read_irq() but the byte in
+PCI_INTERRUPT_LINE return 0xff which means "Unknown".
+
+After that sequence of events pci_enable_msi() is called and this
+will allocate an interrupt.
+
+That is both of these warnings are totally harmless because the IOMMU
+uses MSI for interrupts.  To avoid even trying to probe for a _PRT
+entry mark the IOMMU as IRQ managed. This avoids both warnings.
+
+Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html?highlight=_prt#prt-pci-routing-table [1]
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Fixes: cffe0a2b5a34 ("x86, irq: Keep balance of IOAPIC pin reference count")
+Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
+Link: https://lore.kernel.org/r/20240122233400.1802-1-mario.limonciello@amd.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-am64-main.dtsi                 | 2 ++
- arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi          | 1 +
- arch/arm64/boot/dts/ti/k3-am642-evm.dts                  | 6 ++++--
- arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts | 1 +
- arch/arm64/boot/dts/ti/k3-am642-sk.dts                   | 4 +++-
- arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts   | 1 -
- arch/arm64/boot/dts/ti/k3-am642-tqma64xxl.dtsi           | 1 +
- 7 files changed, 12 insertions(+), 4 deletions(-)
+ drivers/iommu/amd/init.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-index 0be642bc1b86d..c3300c36fdbcb 100644
---- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-@@ -623,6 +623,7 @@ sdhci0: mmc@fa10000 {
- 		ti,otap-del-sel-mmc-hs = <0x0>;
- 		ti,otap-del-sel-ddr52 = <0x6>;
- 		ti,otap-del-sel-hs200 = <0x7>;
-+		status = "disabled";
- 	};
+diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+index 64bcf3df37ee5..7f65f3ecb231e 100644
+--- a/drivers/iommu/amd/init.c
++++ b/drivers/iommu/amd/init.c
+@@ -2068,6 +2068,9 @@ static int __init iommu_init_pci(struct amd_iommu *iommu)
+ 	/* Prevent binding other PCI device drivers to IOMMU devices */
+ 	iommu->dev->match_driver = false;
  
- 	sdhci1: mmc@fa00000 {
-@@ -641,6 +642,7 @@ sdhci1: mmc@fa00000 {
- 		ti,otap-del-sel-sdr104 = <0x6>;
- 		ti,otap-del-sel-ddr50 = <0x9>;
- 		ti,clkbuf-sel = <0x7>;
-+		status = "disabled";
- 	};
++	/* ACPI _PRT won't have an IRQ for IOMMU */
++	iommu->dev->irq_managed = 1;
++
+ 	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_CAP_HDR_OFFSET,
+ 			      &iommu->cap);
  
- 	cpsw3g: ethernet@8000000 {
-diff --git a/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi
-index f87f09d83c956..b8f844f667afc 100644
---- a/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi
-@@ -211,6 +211,7 @@ flash@0 {
- };
- 
- &sdhci0 {
-+	status = "okay";
- 	bus-width = <8>;
- 	non-removable;
- 	ti,driver-strength-ohm = <50>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-index 4dba18941015d..256606be56fef 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-@@ -487,17 +487,19 @@ eeprom@0 {
- 	};
- };
- 
-+/* eMMC */
- &sdhci0 {
--	/* emmc */
-+	status = "okay";
- 	bus-width = <8>;
- 	non-removable;
- 	ti,driver-strength-ohm = <50>;
- 	disable-wp;
- };
- 
-+/* SD/MMC */
- &sdhci1 {
--	/* SD/MMC */
- 	bootph-all;
-+	status = "okay";
- 	vmmc-supply = <&vdd_mmc1>;
- 	pinctrl-names = "default";
- 	bus-width = <4>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
-index 9175e96842d82..53b64e55413f9 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
-@@ -264,6 +264,7 @@ &main_uart1 {
- };
- 
- &sdhci1 {
-+	status = "okay";
- 	vmmc-supply = <&vcc_3v3_mmc>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&main_mmc1_pins_default>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-index f29c8a9b59ba7..bffbd234f715a 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-@@ -439,6 +439,7 @@ &mcu_gpio0 {
- };
- 
- &sdhci0 {
-+	status = "okay";
- 	vmmc-supply = <&wlan_en>;
- 	bus-width = <4>;
- 	non-removable;
-@@ -458,9 +459,10 @@ wlcore: wlcore@2 {
- 	};
- };
- 
-+/* SD/MMC */
- &sdhci1 {
--	/* SD/MMC */
- 	bootph-all;
-+	status = "okay";
- 	vmmc-supply = <&vdd_mmc1>;
- 	pinctrl-names = "default";
- 	bus-width = <4>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
-index d95d80076a427..55102d35cecc1 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
-@@ -425,7 +425,6 @@ &sdhci1 {
- 	ti,driver-strength-ohm = <50>;
- 	ti,fails-without-test-cd;
- 	/* Enabled by overlay */
--	status = "disabled";
- };
- 
- &tscadc0 {
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl.dtsi b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl.dtsi
-index d82d4a98306a7..6c785eff7d2ff 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl.dtsi
-@@ -219,6 +219,7 @@ partitions {
- };
- 
- &sdhci0 {
-+	status = "okay";
- 	non-removable;
- 	disable-wp;
- 	no-sdio;
 -- 
 2.43.0
 
