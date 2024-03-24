@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C20B233CFE;
-	Sun, 24 Mar 2024 23:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4DC234D7C;
+	Sun, 24 Mar 2024 23:18:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322280; cv=none; b=gmLalwHqbNlwCNVzvYaOAvYQq4gz2Jz7qqPVcwL3jZy2mXWotpp9FGqDwFe01dzFXD1X8mHHIruJyV7iwKglHQoWjmHISckm6hggjrymfHuYog16Kjtxr99ApayOLrhExXYNzFMCtf8gK2V8njAgq0pJclrr8milOkvSniTDq84=
+	t=1711322290; cv=none; b=WxTeTcgvo6MZr94FwWGrl2naEJQxTpVAR/xIDYPb4YxCufUz4FpIL3efBj1qv97WZNGbwIpudAAvFzCIjwzsWL/Tp1Y1ZHOy8W5PUJVPJcbUfv/qnWnNjS3tw9WtmZrUIIdkj4yMlKJ/u0zZcsJa8pW8zHoMMwxl97tY8oNkKjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322280; c=relaxed/simple;
-	bh=Wb0lZEF+fzsfKq5nbyUbEiq7f5MQZ2qsQZlboYEXHig=;
+	s=arc-20240116; t=1711322290; c=relaxed/simple;
+	bh=g1ekMzSm4txgtotmTsA3S1y1NJqyvLL1l8D4Mk/0VZ0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YhYwd0mhgboplfiCfQRLkMUtW1SsFAtv3tyZckALVUqDJ+Ys5YtfapzSYELaVhqjP5cYhbu7DeXGNToVWgh6pWRx78oixBOCAtSz3sKRPg00v1AAxOP16fTjtVjzrFyyEoi+wzM8D7yBrRsFo2keI7QeTOh6sEBGbFXZPzUyp00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbvZ+zpT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gqFLlLqBceL8pCpD7CyL4QJIJ1Jqdnfp3y5aG7WurtOpPhVSrwRYw7pJlq9qyplAkqtlDo2g5tGM24hHEh8/SlGGTuII/A49zUeg2s4h1VVYGUXfg4R9wVw8H1kc1tf2bYGeMWVFoTlKyfBJ4+Rk5jTI+ZNfMj8uKJ4T8kOXntM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehJLEeOO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbvZ+zpT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A38FFC43390;
-	Sun, 24 Mar 2024 23:17:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehJLEeOO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ABFAC433C7;
+	Sun, 24 Mar 2024 23:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322279;
-	bh=Wb0lZEF+fzsfKq5nbyUbEiq7f5MQZ2qsQZlboYEXHig=;
+	s=k20201202; t=1711322289;
+	bh=g1ekMzSm4txgtotmTsA3S1y1NJqyvLL1l8D4Mk/0VZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NbvZ+zpTgUsVH6YYCdBdY0eHo6wpSgENIYlweNfMhu0ct/nbCYcscNO9PPC8Zp/gr
-	 SCEdXcA6PYM0k6tlgoM3ScdxWc6bkpvzXQQ427WaHvxjEW1FjdklAGKWsvmNJ8sjRs
-	 XxuQBssL10oHVanB0AbYeMDNFuOtH/b80qaUeW7kIn3llRljad8xX7IQ4KuglBa3NZ
-	 MCne6Wf2o/wfUgNGhThBzMaiiJRA/22hLAzKdgbBCbnG11GH1OkfPFZXJRwOgfi7TN
-	 9/i+U83lWvBnA1E2pRdxNFIiPikB9nJ6m5+uCi9orOtdSI/PWXA1vhO8xxurGW++g8
-	 nLHIxqWJf82VA==
+	b=ehJLEeOO7oeRCOzGB60jAU9dby7nF0FkQ6JPwFAe+zwi4j7BDNYbBj+PmwA8elrbZ
+	 WEebhIH1jFlQ2rlkRWQp3XW4hrhFkRMNqpNvaWgfYn0x6K2Doz1V0JYmnIiOxeUi/5
+	 Prl1XftTkhbw6GelJM/cytEGQEyAxp5OKdqzSb935VP3Be1e5LWOrSwejNL6sc9H5T
+	 8LGVGGSLyLukagcDU1cFAj5f6NFyGxRw0km4+SntRKPScUqcfONKTQv1oIIuvoCxuH
+	 mMvaSXQ6kiGIMPAmmkg8vJLWkAmXRNBgdnHE5DZdwhwcpLvksRY+MRyPiU7Q3sGcUY
+	 5cgC6i23eOUhg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Jorge Mora <jmora1300@gmail.com>,
+	Jorge Mora <mora@netapp.com>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 362/451] f2fs: compress: fix to cover f2fs_disable_compressed_file() w/ i_sem
-Date: Sun, 24 Mar 2024 19:10:38 -0400
-Message-ID: <20240324231207.1351418-363-sashal@kernel.org>
+Subject: [PATCH 6.1 372/451] NFSv4.2: fix listxattr maximum XDR buffer size
+Date: Sun, 24 Mar 2024 19:10:48 -0400
+Message-ID: <20240324231207.1351418-373-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,61 +50,58 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Jorge Mora <jmora1300@gmail.com>
 
-[ Upstream commit 2f9420d3a94aeebd92db88f00f4f2f1a3bd3f6cf ]
+[ Upstream commit bcac8bff90a6ee1629f90669cdb9d28fb86049b0 ]
 
-- f2fs_disable_compressed_file
-  - check inode_has_data
-					- f2fs_file_mmap
-					- mkwrite
-					 - f2fs_get_block_locked
-					 : update metadata in compressed
-					   inode's disk layout
-  - fi->i_flags &= ~F2FS_COMPR_FL
-  - clear_inode_flag(inode, FI_COMPRESSED_FILE);
+Switch order of operations to avoid creating a short XDR buffer:
+e.g., buflen = 12, old xdrlen = 12, new xdrlen = 20.
 
-we should use i_sem lock to prevent above race case.
+Having a short XDR buffer leads to lxa_maxcount be a few bytes
+less than what is needed to retrieve the whole list when using
+a buflen as returned by a call with size = 0:
+    buflen = listxattr(path, NULL, 0);
+    buf = malloc(buflen);
+    buflen = listxattr(path, buf, buflen);
 
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+For a file with one attribute (name = '123456'), the first call
+with size = 0 will return buflen = 12 ('user.123456\x00').
+The second call with size = 12, sends LISTXATTRS with
+lxa_maxcount = 12 + 8 (cookie) + 4 (array count) = 24. The
+XDR buffer needs 8 (cookie) + 4 (array count) + 4 (name count)
++ 6 (name len) + 2 (padding) + 4 (eof) = 28 which is 4 bytes
+shorter than the lxa_maxcount provided in the call.
+
+Fixes: 04a5da690e8f ("NFSv4.2: define limits and sizes for user xattr handling")
+Signed-off-by: Jorge Mora <mora@netapp.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ fs/nfs/nfs42.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 2afb91471b535..a81091a5e282d 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -4367,15 +4367,24 @@ static inline bool f2fs_disable_compressed_file(struct inode *inode)
+diff --git a/fs/nfs/nfs42.h b/fs/nfs/nfs42.h
+index b59876b01a1e3..0282d93c8bccb 100644
+--- a/fs/nfs/nfs42.h
++++ b/fs/nfs/nfs42.h
+@@ -55,11 +55,14 @@ int nfs42_proc_removexattr(struct inode *inode, const char *name);
+  * They would be 7 bytes long in the eventual buffer ("user.x\0"), and
+  * 8 bytes long XDR-encoded.
+  *
+- * Include the trailing eof word as well.
++ * Include the trailing eof word as well and make the result a multiple
++ * of 4 bytes.
+  */
+ static inline u32 nfs42_listxattr_xdrsize(u32 buflen)
  {
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
- 
--	if (!f2fs_compressed_file(inode))
-+	f2fs_down_write(&F2FS_I(inode)->i_sem);
+-	return ((buflen / (XATTR_USER_PREFIX_LEN + 2)) * 8) + 4;
++	u32 size = 8 * buflen / (XATTR_USER_PREFIX_LEN + 2) + 4;
 +
-+	if (!f2fs_compressed_file(inode)) {
-+		f2fs_up_write(&F2FS_I(inode)->i_sem);
- 		return true;
--	if (S_ISREG(inode->i_mode) && F2FS_HAS_BLOCKS(inode))
-+	}
-+	if (f2fs_is_mmap_file(inode) ||
-+		(S_ISREG(inode->i_mode) && F2FS_HAS_BLOCKS(inode))) {
-+		f2fs_up_write(&F2FS_I(inode)->i_sem);
- 		return false;
-+	}
- 
- 	fi->i_flags &= ~F2FS_COMPR_FL;
- 	stat_dec_compr_inode(inode);
- 	clear_inode_flag(inode, FI_COMPRESSED_FILE);
- 	f2fs_mark_inode_dirty_sync(inode, true);
-+
-+	f2fs_up_write(&F2FS_I(inode)->i_sem);
- 	return true;
++	return (size + 3) & ~3;
  }
- 
+ #endif /* CONFIG_NFS_V4_2 */
+ #endif /* __LINUX_FS_NFS_NFS4_2_H */
 -- 
 2.43.0
 
