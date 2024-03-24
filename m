@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE61817A90A;
-	Sun, 24 Mar 2024 23:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9564A179FCF;
+	Sun, 24 Mar 2024 23:41:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323691; cv=none; b=rzNWSEfOX1HUlUtOfUl3zZTakB9BfWE2kbZCNIpP8Gp2m6D2q/lp921UjvkxMzsi2Pu6lqZnGarqPfZAb5RVxqK8+k4NKUoINHtkUxqOkPwLFKhmcEde/FYT6/4dHp/8bkIAtVxhTVnZ4y0b7YmAVUqIn5U9ur8A1mSFeqrOKcU=
+	t=1711323665; cv=none; b=tVYOna4ldydOQBhTgHaoaf9z4lQvXZliUt67X0JxZtNbaYhVW3eAMTXa8Rc8pkDTh8eGa/54JHF6cE1GOzCr3VLkv22bQ9crYwqO5Th0A2uIS/t7rxl5SmC3kFleQd1T/z/agoYnJSDVerRJ2j6Ayj8bD4oFOdf53BcJjSqPF1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323691; c=relaxed/simple;
-	bh=21kd0MNS3pEpDqW586UDWv2efJv8oqkhwV370kyKQdc=;
+	s=arc-20240116; t=1711323665; c=relaxed/simple;
+	bh=r5p49GZRFmtuKgVaabBtNqYpK5s4aOtan8S6DcAYzIw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mk7mwDSXmVmapEFFxFrCg9QafFVsSntTCnSjgxCYA2d4UCQKOK2pJnwH3dVu5dJ6+VRzphprmqM7m6ZfaFN1uskjwFnzKaCtTHxonRWYEJBX35bQmD7w0YGp+vXrc4HuGewlI+V8Bh4qewVt0YiiT3hC9oK8FX2jiKZRv7NmorI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbIK+w/G; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=m1QbYXgR05cNzEDZBSwFrE4MvJydu/zyfz6ZBlUH1X+oFDT0qj3tmg+2b2+jycYVhwb+qqAUcUSQ/kOSYLQacr55BnxVw56dhjpdC2eDrUpJQez4FKS5hMIxQfmqKjmL+hOSC5OOTMzIOR56xjTw/95Jw2yRa6oqussZjTGm7Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uLrUItxU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbIK+w/G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 229E5C43390;
-	Sun, 24 Mar 2024 23:41:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uLrUItxU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE92C433F1;
+	Sun, 24 Mar 2024 23:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323689;
-	bh=21kd0MNS3pEpDqW586UDWv2efJv8oqkhwV370kyKQdc=;
+	s=k20201202; t=1711323664;
+	bh=r5p49GZRFmtuKgVaabBtNqYpK5s4aOtan8S6DcAYzIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fbIK+w/G54Iq57eXBzzygICPdwZcEalFLT9tvWL3/Gw1sLSkp/f8yksXw/3GenKaH
-	 u5gBAlMAZqY44BB+0ZZCZ8QQY3OgSJBFXfyKRoVPLnUFQbqhhwMyMaTsb0RvaNDCc6
-	 cr0/+KV7VFxV6IioVB1IGOlxWrEmF4VMGcNwC/83GnQEBlWxcFQvCPw67eVIzaJhDf
-	 ONdasOnrBqdRx1OlNN71TUSCRIuFoemUPBi+htYeJE3c10pK3y/3HDyMn8rJohTVCz
-	 uyDAB+JpoyalNHnKBtPvO7wZe7P0svr8fX5xIPGgOFNVFJ/nHQiFCAXDS87EVNNWt6
-	 i9TIR8/mdktxg==
+	b=uLrUItxUMo2C8kbAaL1jlnYCyupJ6CMqnHgjG1Zrxg07gRtCLRHTgVaoxGgGyZsZl
+	 dVDZAWuyhLXgpPkNpre8FsY58mE4KMTt8lRLyeoOlkHT/YEux1wP+B+aCxC5O+AHNp
+	 NLHwxI7+cpsJrZgJS6ZpY/rLzrxrgBvEOtBhuavQvBvyGDn+hv/rF88ejXxYotMydE
+	 5iSSXOLJaXwdhRrMEGKfhqP1yK/5JVn5qG0NDZXnaKEzHd11JDGbvDmpNPS4kVJPB4
+	 aXYBfg4p6iFpY+MUp2FdAQPhkg7tOrprl2GXfZwKEmQNfBTjYGFWtpJgQ0f9w2gCSp
+	 GyBmhl6w/IqjQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: Peter Hilber <peter.hilber@opensynergy.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Stultz <jstultz@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 062/238] arm64: dts: mediatek: mt7622: add missing "device_type" to memory nodes
-Date: Sun, 24 Mar 2024 19:37:30 -0400
-Message-ID: <20240324234027.1354210-63-sashal@kernel.org>
+Subject: [PATCH 5.10 036/238] timekeeping: Fix cross-timestamp interpolation on counter wrap
+Date: Sun, 24 Mar 2024 19:37:04 -0400
+Message-ID: <20240324234027.1354210-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -45,56 +45,45 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Peter Hilber <peter.hilber@opensynergy.com>
 
-[ Upstream commit 99d100e00144bc01b49a697f4bc4398f2f7e7ce4 ]
+[ Upstream commit 84dccadd3e2a3f1a373826ad71e5ced5e76b0c00 ]
 
-This fixes:
-arch/arm64/boot/dts/mediatek/mt7622-rfb1.dtb: /: memory@40000000: 'device_type' is a required property
-        from schema $id: http://devicetree.org/schemas/memory.yaml#
-arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dtb: /: memory@40000000: 'device_type' is a required property
-        from schema $id: http://devicetree.org/schemas/memory.yaml#
+cycle_between() decides whether get_device_system_crosststamp() will
+interpolate for older counter readings.
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://lore.kernel.org/r/20240122132357.31264-1-zajec5@gmail.com
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+cycle_between() yields wrong results for a counter wrap-around where after
+< before < test, and for the case after < test < before.
+
+Fix the comparison logic.
+
+Fixes: 2c756feb18d9 ("time: Add history to cross timestamp interface supporting slower devices")
+Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: John Stultz <jstultz@google.com>
+Link: https://lore.kernel.org/r/20231218073849.35294-2-peter.hilber@opensynergy.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts | 1 +
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts             | 1 +
- 2 files changed, 2 insertions(+)
+ kernel/time/timekeeping.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-index 7e6cffdc5a551..778174a7d649b 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-@@ -71,6 +71,7 @@ red {
- 
- 	memory@40000000 {
- 		reg = <0 0x40000000 0 0x40000000>;
-+		device_type = "memory";
- 	};
- 
- 	reg_1p8v: regulator-1p8v {
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-index 993f033d0bf04..810575de66702 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -57,6 +57,7 @@ wps {
- 
- 	memory@40000000 {
- 		reg = <0 0x40000000 0 0x20000000>;
-+		device_type = "memory";
- 	};
- 
- 	reg_1p8v: regulator-1p8v {
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index d9b48f7a35e0d..6a8a610b19717 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1173,7 +1173,7 @@ static bool cycle_between(u64 before, u64 test, u64 after)
+ {
+ 	if (test > before && test < after)
+ 		return true;
+-	if (test < before && before > after)
++	if (before > after && (test > before || test < after))
+ 		return true;
+ 	return false;
+ }
 -- 
 2.43.0
 
