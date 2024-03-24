@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0FC763FA;
-	Sun, 24 Mar 2024 22:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0CC7640D;
+	Sun, 24 Mar 2024 22:47:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320454; cv=none; b=ZfvUFTOW2fv4+gX1ojtoEgTqxC4QUMdoNB8s4YX1zRrFQrOCYEQqERMmz2GCreArMsh7U2jRM9+aEqz34kELQ9sdGvHB4huzeMDwDJN1+qgJXA9YuB+cEkYte9jFJqBxDmyffA4ZKUrQAkFGpMmRgEW6sFUVptiFNy+/OsVTtEM=
+	t=1711320456; cv=none; b=WRCyeYa0hIzYlOs9Axwk+ZEZP/MZXdaiuUYXJYnlTi4WCMCWg41fFijonPe354ZYYemQPt5dd71+ZsUQyZWT1n0p6R/hBGSAGVj9NDKmU2xUGZRUgSnu7WTtbAqP/+glRHorRhkqpI+CQvBPNwxjNH62dJEB+21cvOMPm93LdyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320454; c=relaxed/simple;
-	bh=W4RwcyHV3K6Low51NVIhVtApOG+DXghL1IwfkGZklV4=;
+	s=arc-20240116; t=1711320456; c=relaxed/simple;
+	bh=TVn0K55l25BpswqOak4H/Qan8tlImkF4R9suQP0gmms=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lJpLIkwlcQL8GRmHENigMjVpLs/+UUzmPX+LhmASzDwbpQ6//VNtODkLgujsQV/ynTKM87UCb2EoeJXr+BVoPccxPThK3kzQG5R3cCCrdl4M0RFPT6wbj0IxyBPcNNFmzwLr6H83JaEt6V0wkXLEvcz6jNlnRhUS8cjdrCAf818=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilHCmdxH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=X0IYZkohR3ksNQk5icWp7baBk0ytPvvgUcS+r77m0ubVKQdgtD4V0DYugCe+wLQ67wm59MzygBbsBgvECXT8X2PRrdxU+QIGssH3RJ3r7ZeuyYBsACEQQ5IJSHhLXBvp6amvOgbG1lzFKqO5RjiZpSKJFiE0Geh5eiDgUC9lGA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NycIqt/c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilHCmdxH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2600FC43390;
-	Sun, 24 Mar 2024 22:47:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NycIqt/c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0FFAC43394;
+	Sun, 24 Mar 2024 22:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320454;
-	bh=W4RwcyHV3K6Low51NVIhVtApOG+DXghL1IwfkGZklV4=;
+	s=k20201202; t=1711320456;
+	bh=TVn0K55l25BpswqOak4H/Qan8tlImkF4R9suQP0gmms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ilHCmdxHzgpz1zNcJ0enSHS7iPYk7cDhi+E2IrQ/MtHCEgQY8RDgWU9hAvOuXtWZV
-	 TFwzdBfYQapbGn71pNi84r2ukzs4NT7nod5zr2ciFEv411UT9xLnPmaXYYCXQdWdFi
-	 Hc1G2PZEqmRy4rJGkZ2NEdwwKm9EiYhHVGYFI6ESN+V39/spaYIeThCfaGwYQBxbNu
-	 KoXb43hoRGNPl8Ck6V8W2yToGPR45W5axQ1v9KpuVPwnIY/fqQ66C9DSxYA+Iwct7R
-	 Q1DNglAbGUOaJUgSQBnaT3B5jVoD006JF44V1q99uI8aa3/rxQEPThJiUWNU8B9+Vf
-	 9Uvs8D5j+6K7w==
+	b=NycIqt/cGZemNRAziuN6p/hgCx0QY8Y3vXYHULG2xx9X5GROrc0wur14TMVZJxzub
+	 Kx9nh+tLudMwufbpA7VPybklCoB61/bzhPJhjDhzQMfSExtWFZdPbQDwgtAwYH+EXW
+	 fxObNCMLt54SeD9DH8uwyZHS8Trk1YOjM0sw6kVkpq9ibXnMoSj7MgREfN474tGX60
+	 5faZRDU2+wFTfvwIEWbt2HCY+WcbXlbq6Pty5JLJFi0eExFjB4oAOSjJwqKze02O7F
+	 kAhL+vigr9PTUFr8UbQkfNzJNQZIWOX8qAYl8hawtz6DO+ZH9BAU8DgRbyDV0ScNyy
+	 KwAQbrnd6FZMA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+Cc: =?UTF-8?q?Attila=20T=C5=91k=C3=A9s?= <attitokes@gmail.com>,
 	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 013/713] spi: intel-pci: Add support for Lunar Lake-M SPI serial flash
-Date: Sun, 24 Mar 2024 18:35:39 -0400
-Message-ID: <20240324224720.1345309-14-sashal@kernel.org>
+Subject: [PATCH 6.7 015/713] ASoC: amd: yc: Fix non-functional mic on Lenovo 82UU
+Date: Sun, 24 Mar 2024 18:35:41 -0400
+Message-ID: <20240324224720.1345309-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,37 +44,44 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Attila Tőkés <attitokes@gmail.com>
 
-[ Upstream commit 8f44e3808200c1434c26ef459722f88f48b306df ]
+[ Upstream commit f7fe85b229bc30cb5dc95b4e9015a601c9e3a8cd ]
 
-Add Intel Lunar Lake-M PCI ID to the driver list of supported devices.
-This is the same controller found in previous generations.
+Like many other models, the Lenovo 82UU (Yoga Slim 7 Pro 14ARH7)
+needs a quirk entry for the internal microphone to function.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Link: https://msgid.link/r/20240212082027.2462849-1-mika.westerberg@linux.intel.com
+Signed-off-by: Attila Tőkés <attitokes@gmail.com>
+Link: https://msgid.link/r/20240210193638.144028-1-attitokes@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-intel-pci.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/spi/spi-intel-pci.c b/drivers/spi/spi-intel-pci.c
-index 07d20ca1164c3..4337ca51d7aa2 100644
---- a/drivers/spi/spi-intel-pci.c
-+++ b/drivers/spi/spi-intel-pci.c
-@@ -85,6 +85,7 @@ static const struct pci_device_id intel_spi_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0xa2a4), (unsigned long)&cnl_info },
- 	{ PCI_VDEVICE(INTEL, 0xa324), (unsigned long)&cnl_info },
- 	{ PCI_VDEVICE(INTEL, 0xa3a4), (unsigned long)&cnl_info },
-+	{ PCI_VDEVICE(INTEL, 0xa823), (unsigned long)&cnl_info },
- 	{ },
- };
- MODULE_DEVICE_TABLE(pci, intel_spi_pci_ids);
+diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
+index 80ad60d485ea0..cc231185d72c3 100644
+--- a/sound/soc/amd/yc/acp6x-mach.c
++++ b/sound/soc/amd/yc/acp6x-mach.c
+@@ -234,6 +234,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "82UG"),
+ 		}
+ 	},
++	{
++		.driver_data = &acp6x_card,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "82UU"),
++		}
++	},
+ 	{
+ 		.driver_data = &acp6x_card,
+ 		.matches = {
 -- 
 2.43.0
 
