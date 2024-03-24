@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C9A1442F7;
-	Sun, 24 Mar 2024 22:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269A0143861;
+	Sun, 24 Mar 2024 22:50:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320657; cv=none; b=slYdNtkZu05BM4Ii+VphTQVkt9PaylzntQzDqnhXjAD/RStFm5UXuFwaZMOwAdUKHmbbDdPyGDTYp+II8sfaARGuLbpw4WSkD+IfX0A59vONqDN27+40K7y8SDA/Ry0eUtjPX4lgLKxAI9qDOxl01qy+YuDYic/JqsOlHcaWWDE=
+	t=1711320619; cv=none; b=KPLETmsr6UzbgDMt8tnljm3r72TVNBlNba/T6mtsYtPAvNH866s5Lwcp+4MLRpYttgoSxY2mKCovt9w7sQYrHKJpZhl8INLk7hZSAtNeXgwPh1l/XPDVuJDLz9x4/sggCNawP3wfuS0Yhq+KaH5TJuZOreFbBDoyVuw09IeBqlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320657; c=relaxed/simple;
-	bh=weL9bKStwrCWZ03fP6/Vywm6N8qOPfvGjjZrxMDFsZM=;
+	s=arc-20240116; t=1711320619; c=relaxed/simple;
+	bh=aMDo02VAK1zjVAZyROahyTo3LEtSa9UVeeqPFxBRTII=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e/gDzC1XnrfEmObpTZW0QY8qu2Ygud5TlKngrs95Bzo5lMwWEXK9O6/Ri4IZLmbhRe1Ruig/tuvDj1zk0aHUSXRhF6xO8FrZEykIK+11Hfq2ptJvhDAZVg4irffGvx/iUa3LKx29sd/S8CALiaBPPFWcwbFnaYXwbU5VaxwXILQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XLkkDB18; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=r+bpIxcxUTO45b1vb6mpRfSVUySXNCpR8m2yawAlaFsRoGY3RmEhh9e9kkT5nFULrOGqTBqmFa1yf04s8lR0uv317xXweAdxupmQepQIOO+55o1E/xM/3YrsByrfOnBCfqILsOYv8lNSq8Gb2DXlGP19HVQJCXXd0Zn/iDppTr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JuSPH9wG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XLkkDB18"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0CE6C433F1;
-	Sun, 24 Mar 2024 22:50:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JuSPH9wG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60607C433F1;
+	Sun, 24 Mar 2024 22:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320657;
-	bh=weL9bKStwrCWZ03fP6/Vywm6N8qOPfvGjjZrxMDFsZM=;
+	s=k20201202; t=1711320619;
+	bh=aMDo02VAK1zjVAZyROahyTo3LEtSa9UVeeqPFxBRTII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XLkkDB18rD9KqXBpk6dFU7jEFe/bCXNvPCGo5f9Ml+NUEOVnDvH6n3WhYFqtooQ24
-	 ZucsrfRj0z7zE6US2WuNyBDbPB0e506PqsGwAL3GDAdmdtNr5wusUilOGT7guBkhdM
-	 yLM+F3B5TxUXJR7u8Oa6V7WBjLh+3k7JvoebiNC++hiQ55flJ13hcPV6ovvWRtpEdW
-	 +lEt6kMFlj1CuX6BXVZV8P6fboE52FGjN19FUFoTsz5qcdBDxZFWI3qpbWkF96o0aY
-	 XiVhS8YqxOtrI6zsBA+H57u0iPxiBm4LS3bAKOwji2ZUdbox5kXyDEtqr4lq+fc5Ng
-	 wTh9ZFl+U12ww==
+	b=JuSPH9wGq1ioo/kItxiECVSiXBWf/dO0nzLCHTRSAjB6F0u6QcE8An7erD8GXv1QO
+	 ofOTd8o68MpKg2xEVmlc7tVFsXC2vep0rKFuAPNpiQpl0nGjlbaZTzClKg0AxP1J3h
+	 +i9FosGdpR88tD2JQeE01FcF/j41skylrLIGKqBOlG4FFieH2gyoH+l0gTGV7Yb+Re
+	 PulLGWxK2KhoxJyFsuD2EVevUsl2JPTW9VTKvUkujME4kx/dNqvEwXVQ0SPe+fyoXd
+	 msPIEwW2eR5aGT0YG9+GC9MWwydzoZL8SGZQsbsZtFaPzOLg0CM8XLaC/2P0FOTXvJ
+	 Ohc5psiXINCrQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: John Ogness <john.ogness@linutronix.de>,
-	Petr Mladek <pmladek@suse.com>,
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 219/713] printk: Add this_cpu_in_panic()
-Date: Sun, 24 Mar 2024 18:39:05 -0400
-Message-ID: <20240324224720.1345309-220-sashal@kernel.org>
+Subject: [PATCH 6.7 180/713] arm64: dts: imx8mm-kontron: Fix interrupt for RTC on OSM-S i.MX8MM module
+Date: Sun, 24 Mar 2024 18:38:26 -0400
+Message-ID: <20240324224720.1345309-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,100 +48,33 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: John Ogness <john.ogness@linutronix.de>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-[ Upstream commit 36652d0f3bf34899e82d31a5fa9e2bdd02fd6381 ]
+[ Upstream commit 8d0f39b7d04d864e89b84063b124fd10aa4b8809 ]
 
-There is already panic_in_progress() and other_cpu_in_panic(),
-but checking if the current CPU is the panic CPU must still be
-open coded.
+The level of the interrupt signal is active low instead. Fix this.
 
-Add this_cpu_in_panic() to complete the set.
-
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Link: https://lore.kernel.org/r/20240207134103.1357162-8-john.ogness@linutronix.de
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Stable-dep-of: b1c4c67a5e90 ("printk: ringbuffer: Skip non-finalized records in panic")
+Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/internal.h |  1 +
- kernel/printk/printk.c   | 43 +++++++++++++++++++++-------------------
- 2 files changed, 24 insertions(+), 20 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
-index 6c2afee5ef620..ac2d9750e5f81 100644
---- a/kernel/printk/internal.h
-+++ b/kernel/printk/internal.h
-@@ -130,6 +130,7 @@ struct printk_message {
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
+index 3e7db968f7e64..60abcb636cedf 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
+@@ -210,7 +210,7 @@ rv3028: rtc@52 {
+ 		reg = <0x52>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_rtc>;
+-		interrupts-extended = <&gpio4 1 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts-extended = <&gpio4 1 IRQ_TYPE_LEVEL_LOW>;
+ 		trickle-diode-disable;
+ 	};
  };
- 
- bool other_cpu_in_panic(void);
-+bool this_cpu_in_panic(void);
- bool printk_get_next_message(struct printk_message *pmsg, u64 seq,
- 			     bool is_extended, bool may_supress);
- 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index d9420207282ac..b7e50f8438df3 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -347,6 +347,29 @@ static bool panic_in_progress(void)
- 	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
- }
- 
-+/* Return true if a panic is in progress on the current CPU. */
-+bool this_cpu_in_panic(void)
-+{
-+	/*
-+	 * We can use raw_smp_processor_id() here because it is impossible for
-+	 * the task to be migrated to the panic_cpu, or away from it. If
-+	 * panic_cpu has already been set, and we're not currently executing on
-+	 * that CPU, then we never will be.
-+	 */
-+	return unlikely(atomic_read(&panic_cpu) == raw_smp_processor_id());
-+}
-+
-+/*
-+ * Return true if a panic is in progress on a remote CPU.
-+ *
-+ * On true, the local CPU should immediately release any printing resources
-+ * that may be needed by the panic CPU.
-+ */
-+bool other_cpu_in_panic(void)
-+{
-+	return (panic_in_progress() && !this_cpu_in_panic());
-+}
-+
- /*
-  * This is used for debugging the mess that is the VT code by
-  * keeping track if we have the console semaphore held. It's
-@@ -2601,26 +2624,6 @@ static int console_cpu_notify(unsigned int cpu)
- 	return 0;
- }
- 
--/*
-- * Return true if a panic is in progress on a remote CPU.
-- *
-- * On true, the local CPU should immediately release any printing resources
-- * that may be needed by the panic CPU.
-- */
--bool other_cpu_in_panic(void)
--{
--	if (!panic_in_progress())
--		return false;
--
--	/*
--	 * We can use raw_smp_processor_id() here because it is impossible for
--	 * the task to be migrated to the panic_cpu, or away from it. If
--	 * panic_cpu has already been set, and we're not currently executing on
--	 * that CPU, then we never will be.
--	 */
--	return atomic_read(&panic_cpu) != raw_smp_processor_id();
--}
--
- /**
-  * console_lock - block the console subsystem from printing
-  *
 -- 
 2.43.0
 
