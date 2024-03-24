@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF24F206C86;
-	Sun, 24 Mar 2024 23:05:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20B8206C8A;
+	Sun, 24 Mar 2024 23:05:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321508; cv=none; b=DrUbzx5ouISo3PzYzpA9nZ7p/sffM3XMc8zXrg6BZJwbMdiheNBcOhmque4kHnqU/DkxZhjgVgYHFucFLbDX0r4PgOpn+ODk/iCpxTI0wwsKlgK+hp+VJule6y4RhUSHYMnaLDhwSasFSR8dS+x3YX3THa1eORG3BnlASdr6hbA=
+	t=1711321509; cv=none; b=C+WQGtURJFU3JT5ReVsldFBolSx8gYQjALGjnxVgk6eK0x/8cOD5fm3cfIbOU+iSP/x+iORUFLXOfOdjw2C0x34gtCCof9jL5JOx1hoy0L87+oe00w2G/+tiHzAekvISuQsRUBqJ+v/FlADuwjELDU2gSpuUDxyOwJ9plKGpaV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321508; c=relaxed/simple;
-	bh=9A8CvqHLodxtVSH/LLHu6eUeDRRB7EerJYiIkJtlK6E=;
+	s=arc-20240116; t=1711321509; c=relaxed/simple;
+	bh=PLMeTWfzCTYAVAuh1bq/F318sAMTXN+WWdgNpObteoQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rUsedg+6rNPsp1fpnBCXQuxJY4EYToKyLIQI+zizUfmudL8NiftHO3obzt9jRj7riI+9UiX7jH43sJVaRNIJ8F0BkcOi9Oet9OG47nhCODHSEBDpGVj1USq7oHJ/CYMOBV9DS88cENAnnlmsVNmzJX7IlFHR38ZS5vqNUgXViOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3tvcFNZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tkCZgh8T6ymDiTeCQ8tmT8N8GhUb0SIfi6LM1UhEcKywZ+PsK+wZb09RFxHEcDzCgwBayh35KX1l5Xr26UclHrRBKEMzzvb0IrholxM6BckrpufIw3j0WCf4duTp03r2HP+5zLPbBuOTuDuuzpSP0My2noSSkNOk1NXFd1WTMGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0Co4GfC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3tvcFNZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E63C5C433C7;
-	Sun, 24 Mar 2024 23:05:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0Co4GfC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA852C43394;
+	Sun, 24 Mar 2024 23:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321507;
-	bh=9A8CvqHLodxtVSH/LLHu6eUeDRRB7EerJYiIkJtlK6E=;
+	s=k20201202; t=1711321509;
+	bh=PLMeTWfzCTYAVAuh1bq/F318sAMTXN+WWdgNpObteoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M3tvcFNZeNUBx7eoW4NBzdOrG9RWMX9KrBcN1UII5idsAl0MpjybOudQWCXM6rJlw
-	 ClBh91+HuhNgtrQY7pBl7P1XYl4SBTmACUrKs/KfSDW0xm+EouQMvflMLD2Rd1R3De
-	 iuBb2xLGYaNgqfv3wBQuf1F98YRJW0KUTPQu8VNxnF4BEHJxH+kyLOJ9DWNhFbCAqf
-	 sD9uXHb6arU6fqTBeVVqFAN4fjCBgkqzN6AUqajBnvvVtpFIcR1N2cNd7c92VQtzEi
-	 uMKE8yxU/IErmXiq0uWHVkPD4tGtE8avld/xErQ/Ge4OI64DokU5Ozcp4fuj7OqUat
-	 8y2K6VBiZjyyA==
+	b=R0Co4GfCKR6eCnE8fzV6YOsp7OvYjJZRg5lp+dN5VF2dI/oWhuNd/iMMCh7b5JmWT
+	 s1FIGT9SbewmKWCPQKBaV36V/jKBAguN8u5/mMLyeZFhrNurMJ9MwoyUF7vktku40t
+	 ZGuKII1G+JSUYtv/h/zyHPdTndG6gYmT9mpQN38lJVIkPfnRN7wv8BbWOzSB6Ai8ns
+	 GaEdIXCkWrYWFmZPlzn7DIgnowajz/H3AFa5geanHocLb+Y+fH7GnpK9BYYwQYsfYV
+	 BwqOm5uhm32R3xCtuyMiN4aVicFFo+Oy1QVJTk5/p2MJFvRLzxCXeot2PZN1vJr152
+	 A6lxk6w3tom5A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Kamal Heib <kheib@redhat.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 233/638] arm64: dts: qcom: sm8150: correct PCIe wake-gpios
-Date: Sun, 24 Mar 2024 18:54:30 -0400
-Message-ID: <20240324230116.1348576-234-sashal@kernel.org>
+Subject: [PATCH 6.6 235/638] net: ena: Remove ena_select_queue
+Date: Sun, 24 Mar 2024 18:54:32 -0400
+Message-ID: <20240324230116.1348576-236-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,38 +49,64 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+From: Kamal Heib <kheib@redhat.com>
 
-[ Upstream commit 7c38989d0f7a35c83e7c4781271d42662903fa8d ]
+[ Upstream commit 78e886ba2b549945ecada055ee0765f0ded5707a ]
 
-Bindings allow a "wake", not "enable", GPIO.  Schematics also use WAKE
-name for the pin:
+Avoid the following warnings by removing the ena_select_queue() function
+and rely on the net core to do the queue selection, The issue happen
+when an skb received from an interface with more queues than ena is
+forwarded to the ena interface.
 
-  sa8155p-adp.dtb: pcie@1c00000: Unevaluated properties are not allowed ('enable-gpio' was unexpected)
+[ 1176.159959] eth0 selects TX queue 11, but real number of TX queues is 8
+[ 1176.863976] eth0 selects TX queue 14, but real number of TX queues is 8
+[ 1180.767877] eth0 selects TX queue 14, but real number of TX queues is 8
+[ 1188.703742] eth0 selects TX queue 14, but real number of TX queues is 8
 
-Fixes: a1c86c680533 ("arm64: dts: qcom: sm8150: Add PCIe nodes")
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20240108131216.53867-2-krzysztof.kozlowski@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Kamal Heib <kheib@redhat.com>
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index a3e801fe6fee4..73ef228ff2689 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -1877,7 +1877,7 @@ pcie0: pci@1c00000 {
- 			phy-names = "pciephy";
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 14e41eb57731b..cc39707a80598 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -3238,22 +3238,6 @@ static netdev_tx_t ena_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	return NETDEV_TX_OK;
+ }
  
- 			perst-gpios = <&tlmm 35 GPIO_ACTIVE_HIGH>;
--			enable-gpio = <&tlmm 37 GPIO_ACTIVE_HIGH>;
-+			wake-gpios = <&tlmm 37 GPIO_ACTIVE_HIGH>;
- 
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pcie0_default_state>;
+-static u16 ena_select_queue(struct net_device *dev, struct sk_buff *skb,
+-			    struct net_device *sb_dev)
+-{
+-	u16 qid;
+-	/* we suspect that this is good for in--kernel network services that
+-	 * want to loop incoming skb rx to tx in normal user generated traffic,
+-	 * most probably we will not get to this
+-	 */
+-	if (skb_rx_queue_recorded(skb))
+-		qid = skb_get_rx_queue(skb);
+-	else
+-		qid = netdev_pick_tx(dev, skb, NULL);
+-
+-	return qid;
+-}
+-
+ static void ena_config_host_info(struct ena_com_dev *ena_dev, struct pci_dev *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -3424,7 +3408,6 @@ static const struct net_device_ops ena_netdev_ops = {
+ 	.ndo_open		= ena_open,
+ 	.ndo_stop		= ena_close,
+ 	.ndo_start_xmit		= ena_start_xmit,
+-	.ndo_select_queue	= ena_select_queue,
+ 	.ndo_get_stats64	= ena_get_stats64,
+ 	.ndo_tx_timeout		= ena_tx_timeout,
+ 	.ndo_change_mtu		= ena_change_mtu,
 -- 
 2.43.0
 
