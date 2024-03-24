@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F2F76401;
-	Sun, 24 Mar 2024 22:47:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAA41CF8DE;
+	Sun, 24 Mar 2024 22:47:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320457; cv=none; b=DGEB5mkuShfWvbpqE/rXjwAgwKqvWmFNMd+qcu/1GWSy1J3quhwRFPmc1Qm+qy3U9yEnd7ipxb7bmXwmEFict1WOcnCzu9ctb5jSWlO0TxwPx+sV4/WRmNnXIrtlfMzXZrW3wzwila6KZQR58Jnhl3Lcj3E8F5vVZPLMoQUQjjQ=
+	t=1711320459; cv=none; b=MFKFOIxO/2hAkFBNpZMxuoi4fQuk+YFR1ABRZUWojXefFCN0VyfdOHcvOuPP/NxFb/CYZL1jIGG3eJ1jAVt/oPfLuFTfpqzElZFwlheay8Rl3wZ9DSFNUpLRfoFWvPYtsMgjUtZU3Zt2rAhnGQDPMJTPab+2zcGDKlSIoOZZ1W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320457; c=relaxed/simple;
-	bh=8b7DfpvkFhJ07ZMBds5WMnK3M2mYX6QhEVWSf43j/K4=;
+	s=arc-20240116; t=1711320459; c=relaxed/simple;
+	bh=qE+vEiN0vFqYCbenxmXpv9h1SM4UJIhPix7Hu85NBsQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iS29rSo2G2Cl2OyZiwXEYTmxJJPfphv4ph8AXFoXC1qvigNAHh2OLWtYM8DldJsMO+rc4LibTgOC+Ka/M+MJC2Z/45w4Vp9WPjOWigBP2/5tiAtsVoQkATq+3Wo2nuDjzI6GN4jHWR+05ZiuEkh0r8MnT8iL8VhTSzajdPFGlhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZoaDe4N5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=q03AucZbbZWuYxl+2p6uzN9x8y8e2sKYHW+0vLXIG+L2Xii7m3D44RwAhgMEg8fiNaqxCK/FMQ5TFKWlE9NoGkux3XrmVTGSjXXmTrN2ZHOag5q/VozgFg4yVe1bs8SFLPEsd4VfeMgkeZ+lGy57ffMre2wYe9I9Qnyt5pBA9Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jenbOAuy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZoaDe4N5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5AB9C433B1;
-	Sun, 24 Mar 2024 22:47:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jenbOAuy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6FDFC433C7;
+	Sun, 24 Mar 2024 22:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320457;
-	bh=8b7DfpvkFhJ07ZMBds5WMnK3M2mYX6QhEVWSf43j/K4=;
+	s=k20201202; t=1711320459;
+	bh=qE+vEiN0vFqYCbenxmXpv9h1SM4UJIhPix7Hu85NBsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZoaDe4N5N+IT7xEze9sB180IMd0a7MjwDAEitIzSBIsvIdwRczv3l5o6tHzEw8M8n
-	 1aD8LQ629g2V3NKAr3sQWi82Wl14pQq+3paciihZzzqO+btNUa+ePZHvNl17hgI9uI
-	 1FWWdu0QZz6L0/74pp1irUAqikFgO+LLxDyKSEFHKEY0N0F149fEyfYwjTTaTy5Qs4
-	 cHJyLqFknnBx/cvRipJzKIBauKC5CAR4HKDrXlum2yZn4H7sUNW4hERHeHUCW6GnwY
-	 XseNt5qcl8VsuM7eWsWtFaEe6xzfo7e45kO1KYN45sxfikFDzgPMIijqFE8CTmd8gE
-	 FaoLQ+jyN9osQ==
+	b=jenbOAuyf6cUjlmTdyF+UDvjMW63f2hJcLSol+ol8Fm8dg/PDkFXmsPNFjcZXZJmv
+	 QfN7Nkspx9YVuCLDyUmO8MX39UQP0iaOKT9SB2unF5M6aqXGA7jGzpFMA1q5kBku3Q
+	 HcQmwb/yS5/P/16D3GycwA2o20MSX/rDzV8GKabCNtl2rVMy38PK4ONZKDzKSMCDuB
+	 osKiN1t6PBq8LFt9NofrJF3JUs1csiE8I8F8zhRbNgWW1y9GcMo00mIpnzqpo3K6Th
+	 wUwt4Gz1mFl3+sxGd0VvevChLnHOkqkr48quqDrw/hCiaqPqj/br57LT5KkHUSvRWo
+	 vjJmqqMekMMLg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kunwu Chan <chentao@kylinos.cn>,
-	kernel test robot <lkp@intel.com>,
-	Markus Elfring <Markus.Elfring@web.de>,
-	Juergen Gross <jgross@suse.com>,
+Cc: Xiubo Li <xiubli@redhat.com>,
+	Milind Changire <mchangir@redhat.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 016/713] x86/xen: Add some null pointer checking to smp.c
-Date: Sun, 24 Mar 2024 18:35:42 -0400
-Message-ID: <20240324224720.1345309-17-sashal@kernel.org>
+Subject: [PATCH 6.7 018/713] ceph: always queue a writeback when revoking the Fb caps
+Date: Sun, 24 Mar 2024 18:35:44 -0400
+Message-ID: <20240324224720.1345309-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,77 +49,90 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kunwu Chan <chentao@kylinos.cn>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit 3693bb4465e6e32a204a5b86d3ec7e6b9f7e67c2 ]
+[ Upstream commit 902d6d013f75b68f31d208c6f3ff9cdca82648a7 ]
 
-kasprintf() returns a pointer to dynamically allocated memory
-which can be NULL upon failure. Ensure the allocation was successful
-by checking the pointer validity.
+In case there is 'Fw' dirty caps and 'CHECK_CAPS_FLUSH' is set we
+will always ignore queue a writeback. Queue a writeback is very
+important because it will block kclient flushing the snapcaps to
+MDS and which will block MDS waiting for revoking the 'Fb' caps.
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202401161119.iof6BQsf-lkp@intel.com/
-Suggested-by: Markus Elfring <Markus.Elfring@web.de>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Link: https://lore.kernel.org/r/20240119094948.275390-1-chentao@kylinos.cn
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Link: https://tracker.ceph.com/issues/50223
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Milind Changire <mchangir@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/xen/smp.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ fs/ceph/caps.c | 48 ++++++++++++++++++++++++------------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/arch/x86/xen/smp.c b/arch/x86/xen/smp.c
-index 4b0d6fff88de5..1fb9a1644d944 100644
---- a/arch/x86/xen/smp.c
-+++ b/arch/x86/xen/smp.c
-@@ -65,6 +65,8 @@ int xen_smp_intr_init(unsigned int cpu)
- 	char *resched_name, *callfunc_name, *debug_name;
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index ad1f46c66fbff..bce3a840f15c2 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -2156,6 +2156,30 @@ void ceph_check_caps(struct ceph_inode_info *ci, int flags)
+ 		      ceph_cap_string(cap->implemented),
+ 		      ceph_cap_string(revoking));
  
- 	resched_name = kasprintf(GFP_KERNEL, "resched%d", cpu);
-+	if (!resched_name)
-+		goto fail_mem;
- 	per_cpu(xen_resched_irq, cpu).name = resched_name;
- 	rc = bind_ipi_to_irqhandler(XEN_RESCHEDULE_VECTOR,
- 				    cpu,
-@@ -77,6 +79,8 @@ int xen_smp_intr_init(unsigned int cpu)
- 	per_cpu(xen_resched_irq, cpu).irq = rc;
- 
- 	callfunc_name = kasprintf(GFP_KERNEL, "callfunc%d", cpu);
-+	if (!callfunc_name)
-+		goto fail_mem;
- 	per_cpu(xen_callfunc_irq, cpu).name = callfunc_name;
- 	rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_VECTOR,
- 				    cpu,
-@@ -90,6 +94,9 @@ int xen_smp_intr_init(unsigned int cpu)
- 
- 	if (!xen_fifo_events) {
- 		debug_name = kasprintf(GFP_KERNEL, "debug%d", cpu);
-+		if (!debug_name)
-+			goto fail_mem;
++		/* completed revocation? going down and there are no caps? */
++		if (revoking) {
++			if ((revoking & cap_used) == 0) {
++				doutc(cl, "completed revocation of %s\n",
++				      ceph_cap_string(cap->implemented & ~cap->issued));
++				goto ack;
++			}
 +
- 		per_cpu(xen_debug_irq, cpu).name = debug_name;
- 		rc = bind_virq_to_irqhandler(VIRQ_DEBUG, cpu,
- 					     xen_debug_interrupt,
-@@ -101,6 +108,9 @@ int xen_smp_intr_init(unsigned int cpu)
- 	}
- 
- 	callfunc_name = kasprintf(GFP_KERNEL, "callfuncsingle%d", cpu);
-+	if (!callfunc_name)
-+		goto fail_mem;
++			/*
++			 * If the "i_wrbuffer_ref" was increased by mmap or generic
++			 * cache write just before the ceph_check_caps() is called,
++			 * the Fb capability revoking will fail this time. Then we
++			 * must wait for the BDI's delayed work to flush the dirty
++			 * pages and to release the "i_wrbuffer_ref", which will cost
++			 * at most 5 seconds. That means the MDS needs to wait at
++			 * most 5 seconds to finished the Fb capability's revocation.
++			 *
++			 * Let's queue a writeback for it.
++			 */
++			if (S_ISREG(inode->i_mode) && ci->i_wrbuffer_ref &&
++			    (revoking & CEPH_CAP_FILE_BUFFER))
++				queue_writeback = true;
++		}
 +
- 	per_cpu(xen_callfuncsingle_irq, cpu).name = callfunc_name;
- 	rc = bind_ipi_to_irqhandler(XEN_CALL_FUNCTION_SINGLE_VECTOR,
- 				    cpu,
-@@ -114,6 +124,8 @@ int xen_smp_intr_init(unsigned int cpu)
+ 		if (cap == ci->i_auth_cap &&
+ 		    (cap->issued & CEPH_CAP_FILE_WR)) {
+ 			/* request larger max_size from MDS? */
+@@ -2183,30 +2207,6 @@ void ceph_check_caps(struct ceph_inode_info *ci, int flags)
+ 			}
+ 		}
  
- 	return 0;
- 
-+ fail_mem:
-+	rc = -ENOMEM;
-  fail:
- 	xen_smp_intr_free(cpu);
- 	return rc;
+-		/* completed revocation? going down and there are no caps? */
+-		if (revoking) {
+-			if ((revoking & cap_used) == 0) {
+-				doutc(cl, "completed revocation of %s\n",
+-				      ceph_cap_string(cap->implemented & ~cap->issued));
+-				goto ack;
+-			}
+-
+-			/*
+-			 * If the "i_wrbuffer_ref" was increased by mmap or generic
+-			 * cache write just before the ceph_check_caps() is called,
+-			 * the Fb capability revoking will fail this time. Then we
+-			 * must wait for the BDI's delayed work to flush the dirty
+-			 * pages and to release the "i_wrbuffer_ref", which will cost
+-			 * at most 5 seconds. That means the MDS needs to wait at
+-			 * most 5 seconds to finished the Fb capability's revocation.
+-			 *
+-			 * Let's queue a writeback for it.
+-			 */
+-			if (S_ISREG(inode->i_mode) && ci->i_wrbuffer_ref &&
+-			    (revoking & CEPH_CAP_FILE_BUFFER))
+-				queue_writeback = true;
+-		}
+-
+ 		/* want more caps from mds? */
+ 		if (want & ~cap->mds_wanted) {
+ 			if (want & ~(cap->mds_wanted | cap->issued))
 -- 
 2.43.0
 
