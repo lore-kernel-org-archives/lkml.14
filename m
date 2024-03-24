@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C29F297D65;
-	Sun, 24 Mar 2024 23:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1B9184F1E;
+	Sun, 24 Mar 2024 23:52:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324347; cv=none; b=nZLpbsIrqNwAh1hjY013S6Diz/gsogA5R9joFBoMWykTGw4c/fhmEyNjRvnT34VwgQcFzAps7mo0QlUAeVce4qe4dE6oWamV8v26PG7KBGM14CueN+e045XC8LgqfN2kcrqnVZDU+AbiAq8GQWtYNat9w7XbbfBw7u/aFLiUxTI=
+	t=1711324352; cv=none; b=uJbbDu9UZg648LlS2mrxDzG2Lu9W4eHeQXbMRdVfrGG8CV2JnlbbhAbRcby4IHbJ8G0f6G4nYMRHBCZHC3ghi1nXDHUabb+cGzDOFPVjRS82t2o6C9+FTq11NnYDINRIgrL29lrWVpEQtSZSq5GEzOwhGG152RktfEUobT+AXeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324347; c=relaxed/simple;
-	bh=u7Zf4bD+Y7udepLlcLk7p8H0EMJhFzh/6XX54JfeMXc=;
+	s=arc-20240116; t=1711324352; c=relaxed/simple;
+	bh=IgTe3n66YGsLtCAM6MmQvEeSa0QRWAfowfES3Es53+M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eoqeh6T2IhoLr2BbqHCAE/H5XCR6SLE8iIBtp8s6l/adQBeReZU4UN3Pof8XysuAgPFp61PGrQY6apMdVLa3DIIv6aOpSzQmU2P0bFy8NGU6jahS046vpjtz3lecocgv312pDY/l5SHowz++EhTawmZ67pFtxQaSCuSX7hVriZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7Id2qGK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nb2R+vs7+Aqnq9wcdZ3iqVqqGUysQnkli2t+jGy80tSCpN8LC3kAbSYNIrb6W/7gcZPErklygwkifhXZx1iFDwbzmB/jXXu5egsMKBF1rPX/V/UplIC8jXqi4xcFy+rFmcg8OIVn81PT6BJmvknRYu86CkMy31BwWoJOw7yqLZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pV/YlrOM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7Id2qGK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA8F1C43390;
-	Sun, 24 Mar 2024 23:52:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pV/YlrOM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75869C43394;
+	Sun, 24 Mar 2024 23:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324346;
-	bh=u7Zf4bD+Y7udepLlcLk7p8H0EMJhFzh/6XX54JfeMXc=;
+	s=k20201202; t=1711324352;
+	bh=IgTe3n66YGsLtCAM6MmQvEeSa0QRWAfowfES3Es53+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C7Id2qGKKCs23cqtc7rg6+0IQA8Ul+heCS7443IHzqe8hY/oXYf7KDdEecfeIAb3C
-	 FvWWpvWibER0oCZAfpkAHPcLmBqsybuMeUrl8/YRtBPoH2SGi+JRNdko1pbMtqKBrD
-	 B+dOKl658bzk+Z2DO/wgr8qWxGriBaSi+OuNML/S/KyoGueU0iEhdup6LK4dmVTWdA
-	 3l6iDHWQdo9yaWIoFgNiteKJ+wh4igT9pjECVRTukQHDzBJ7deGa04CwBtgf2i8wQa
-	 ayMp5vx9r3XQRFK3uVUHIV9j/RTwSgrlS/GylQH39oK1mt7l4vVNHbINjgNLEeoBki
-	 OwcL3jYEane5A==
+	b=pV/YlrOMfifLRCUTfL4UgWGdQGtkRuugNxfI21Kf4942NSjRxic0BIrCpNPWAZu7R
+	 7d+2tWrgMNv9zhD6ftSz6joeYPAPRWlo8ZT5DfKQpVw4WU1Ey93a40o2eOjOfLO1wK
+	 7M9HBDExvq0wBWY9RVDt/fQpTLvNZFO4Hn6owxXEgwHakEQrQBSQtfdI2cSnc8HFFi
+	 s5QsilBDIJTZ+90EyGRBin0FcdR0nsnxrSZBFf/mohmErRGYcAKVDKcxKsbDgSLRNc
+	 RMd4hNqnSei48XsZzoheTm/B1wsX69PlSAWo2cN1qpA+ADhhqTpbjGEVZJAOaYW9sd
+	 n0hXZIfYBvaBw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Edward Adam Davis <eadavis@qq.com>,
-	syzbot+ce750e124675d4599449@syzkaller.appspotmail.com,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 115/148] media: pvrusb2: fix uaf in pvr2_context_set_notify
-Date: Sun, 24 Mar 2024 19:49:39 -0400
-Message-ID: <20240324235012.1356413-116-sashal@kernel.org>
+Subject: [PATCH 4.19 120/148] powerpc/embedded6xx: Fix no previous prototype for avr_uart_send() etc.
+Date: Sun, 24 Mar 2024 19:49:44 -0400
+Message-ID: <20240324235012.1356413-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -49,73 +47,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Edward Adam Davis <eadavis@qq.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 0a0b79ea55de8514e1750884e5fec77f9fdd01ee ]
+[ Upstream commit 20933531be0577cdd782216858c26150dbc7936f ]
 
-[Syzbot reported]
-BUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
-Read of size 4 at addr ffff888113aeb0d8 by task kworker/1:1/26
+Move the prototypes into mpc10x.h which is included by all the relevant
+C files, fixes:
 
-CPU: 1 PID: 26 Comm: kworker/1:1 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0xc4/0x620 mm/kasan/report.c:488
- kasan_report+0xda/0x110 mm/kasan/report.c:601
- pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
- pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]
- pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272
+  arch/powerpc/platforms/embedded6xx/ls_uart.c:59:6: error: no previous prototype for 'avr_uart_configure'
+  arch/powerpc/platforms/embedded6xx/ls_uart.c:82:6: error: no previous prototype for 'avr_uart_send'
 
-Freed by task 906:
-kasan_save_stack+0x33/0x50 mm/kasan/common.c:47
-kasan_save_track+0x14/0x30 mm/kasan/common.c:68
-kasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640
-poison_slab_object mm/kasan/common.c:241 [inline]
-__kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257
-kasan_slab_free include/linux/kasan.h:184 [inline]
-slab_free_hook mm/slub.c:2121 [inline]
-slab_free mm/slub.c:4299 [inline]
-kfree+0x105/0x340 mm/slub.c:4409
-pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]
-pvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
-
-[Analyze]
-Task A set disconnect_flag = !0, which resulted in Task B's condition being met
-and releasing mp, leading to this issue.
-
-[Fix]
-Place the disconnect_flag assignment operation after all code in pvr2_context_disconnect()
-to avoid this issue.
-
-Reported-and-tested-by: syzbot+ce750e124675d4599449@syzkaller.appspotmail.com
-Fixes: e5be15c63804 ("V4L/DVB (7711): pvrusb2: Fix race on module unload")
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20240305123410.3306253-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-context.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/embedded6xx/linkstation.c | 3 ---
+ arch/powerpc/platforms/embedded6xx/mpc10x.h      | 3 +++
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-index 28a9cfef8f9f2..698b2cf65526d 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-@@ -276,9 +276,9 @@ static void pvr2_context_exit(struct pvr2_context *mp)
- void pvr2_context_disconnect(struct pvr2_context *mp)
- {
- 	pvr2_hdw_disconnect(mp->hdw);
--	mp->disconnect_flag = !0;
- 	if (!pvr2_context_shutok())
- 		pvr2_context_notify(mp);
-+	mp->disconnect_flag = !0;
+diff --git a/arch/powerpc/platforms/embedded6xx/linkstation.c b/arch/powerpc/platforms/embedded6xx/linkstation.c
+index f514d5d28cd4f..3f3821eb4c36b 100644
+--- a/arch/powerpc/platforms/embedded6xx/linkstation.c
++++ b/arch/powerpc/platforms/embedded6xx/linkstation.c
+@@ -97,9 +97,6 @@ static void __init linkstation_init_IRQ(void)
+ 	mpic_init(mpic);
  }
  
+-extern void avr_uart_configure(void);
+-extern void avr_uart_send(const char);
+-
+ static void __noreturn linkstation_restart(char *cmd)
+ {
+ 	local_irq_disable();
+diff --git a/arch/powerpc/platforms/embedded6xx/mpc10x.h b/arch/powerpc/platforms/embedded6xx/mpc10x.h
+index 5ad12023e5628..ebc258fa4858d 100644
+--- a/arch/powerpc/platforms/embedded6xx/mpc10x.h
++++ b/arch/powerpc/platforms/embedded6xx/mpc10x.h
+@@ -156,4 +156,7 @@ int mpc10x_disable_store_gathering(struct pci_controller *hose);
+ /* For MPC107 boards that use the built-in openpic */
+ void mpc10x_set_openpic(void);
  
++void avr_uart_configure(void);
++void avr_uart_send(const char c);
++
+ #endif	/* __PPC_KERNEL_MPC10X_H */
 -- 
 2.43.0
 
