@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E789181313;
-	Sun, 24 Mar 2024 23:47:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FDC28BD38;
+	Sun, 24 Mar 2024 23:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324076; cv=none; b=HEsEzu00AknwzQ0/DUBLyQHvzCIFbi/PB/hKqyhjaeREKi72bjD4KuU1A3kG/ehaLB0C0oNxsm5fvu4bRU8cOkEjsOr5Z2k1sxX4dUG/g475kseTfY3mG/kPY4g3yjUxLsdSct0032MY9D2gPnvDa3lIDjF4ICpYlHKcdMdHhf4=
+	t=1711324084; cv=none; b=QnINPNtKv7FrmWilU/s575/EcyxeXlbBHAtSAhQnjFNJXp73RAM7v332A8l8FB1RtXk3uyY8uozXeWGZSPPhUjApolLcUuyoeRU46FyWpS2fxgjuraBLPhTl4+Vsn5fYPTb6lImGlFDyn3cHC407BQF+MxTzyGaf+Jff2dclFM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324076; c=relaxed/simple;
-	bh=J1y2+vEL98RFUtzoFZEVFDdMACtwuD7o7HO3pfGGSxQ=;
+	s=arc-20240116; t=1711324084; c=relaxed/simple;
+	bh=6a18xJP4TKulJ2O1rtzThoUgjvp7ZLrpu7iAywX1MsI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KrKuwUHxjrDsjII8EZ/CkIrQSKGAVgG4EviUMNu4mK5vcJSLdVmnEhXbA38sBUsU7yf5z5XiL1N+rWPyE7KioH1vIrAJFbntHCTwsgm32WuGccUp/DWyA6HlchBcObyJ47PtrxItqrNqMQFD9sMHW8DjrUXnu/zyYrezZSmK6kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ncw8ioaJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XpA2P3DC5XCCQtbJeqPKmMRWyHX5I6ReOrGcLYMtE9Zjaw1NhtAJyo0iKuII1TyepHNRQrv2/ZiBjtWPr4vV8pkUkkiWlWPfqlTFq9XhOHR5NVRkiCv5LIX586QVlcCyxERNic9VA/cJbI0Z/uviNcJbxnWeCCiQNTmmMmQl3zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAgSuIRZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ncw8ioaJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 560AEC43390;
-	Sun, 24 Mar 2024 23:47:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAgSuIRZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88335C433C7;
+	Sun, 24 Mar 2024 23:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324075;
-	bh=J1y2+vEL98RFUtzoFZEVFDdMACtwuD7o7HO3pfGGSxQ=;
+	s=k20201202; t=1711324084;
+	bh=6a18xJP4TKulJ2O1rtzThoUgjvp7ZLrpu7iAywX1MsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ncw8ioaJH89onJTGA4fdvQsKDg41aiFXUZQUn2+Hysf4aFaa/R1XxReQ8M2jMnlbz
-	 QT8v3JE5QnGw05YcUVmqFhJqXT+Ua6znPqtHRKot5CibAbvH84wYu9E7sRkW6tVWJG
-	 lWINjAW3GvxhZDCaoCW7rnhwic7uB0wuUkknfnBvS7YlhVVaIgMpE3jl5jR9grDHlp
-	 fMG8aYKkZBXCdgwCh4id18Wnurr7n8d2h0aBmKrJTxeQYnPJPKw1RKYgk1cEz7H5BK
-	 2bKw8c5ayIGYh9Tjv6CePAg4p2NaH73VIYOFlV+/Tj+a1UNx0GQqFrx5SaMeSzfgon
-	 iJ/nCWhHrYwcQ==
+	b=EAgSuIRZ+yUBCPFdoClOXc1CjmqPuus9HTTYqb57wF9us1aMHL7LCMVgeerZUCXcK
+	 R9IxUzK4NkoqTr5JR/CkP9rK7FXvx1Gu26ehfkytpbBFu8lPJWQ7JJasJFibYdxIYZ
+	 cmmVmdoc7VXwniVd1xnM8XK5VVjHmWPtfzBkUMlu4U1fxIsF+yMHyS5IwidgwchOhP
+	 ubIu1j6cAnRK5F2Szv6galcd/u+SZFhZxxL8QUL9ZA7patgUcNKjFXtCTx/F/BYoht
+	 YcqQxcS2D2uhefQ/72Ne+UNyQg/VYrShXrUjq1tw1mUg+SGILsMBx/jya6WfYLt8Uu
+	 DsZavG7Yi3H9g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	syzbot <syzkaller@googlegroups.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Mikulas Patocka <mpatocka@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 075/183] net: ip_tunnel: make sure to pull inner header in ip_tunnel_rcv()
-Date: Sun, 24 Mar 2024 19:44:48 -0400
-Message-ID: <20240324234638.1355609-76-sashal@kernel.org>
+Subject: [PATCH 5.4 084/183] dm: call the resume method on internal suspend
+Date: Sun, 24 Mar 2024 19:44:57 -0400
+Message-ID: <20240324234638.1355609-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,123 +48,121 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit b0ec2abf98267f14d032102551581c833b0659d3 ]
+[ Upstream commit 65e8fbde64520001abf1c8d0e573561b4746ef38 ]
 
-Apply the same fix than ones found in :
+There is this reported crash when experimenting with the lvm2 testsuite.
+The list corruption is caused by the fact that the postsuspend and resume
+methods were not paired correctly; there were two consecutive calls to the
+origin_postsuspend function. The second call attempts to remove the
+"hash_list" entry from a list, while it was already removed by the first
+call.
 
-8d975c15c0cd ("ip6_tunnel: make sure to pull inner header in __ip6_tnl_rcv()")
-1ca1ba465e55 ("geneve: make sure to pull inner header in geneve_rx()")
+Fix __dm_internal_resume so that it calls the preresume and resume
+methods of the table's targets.
 
-We have to save skb->network_header in a temporary variable
-in order to be able to recompute the network_header pointer
-after a pskb_inet_may_pull() call.
+If a preresume method of some target fails, we are in a tricky situation.
+We can't return an error because dm_internal_resume isn't supposed to
+return errors. We can't return success, because then the "resume" and
+"postsuspend" methods would not be paired correctly. So, we set the
+DMF_SUSPENDED flag and we fake normal suspend - it may confuse userspace
+tools, but it won't cause a kernel crash.
 
-pskb_inet_may_pull() makes sure the needed headers are in skb->head.
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:56!
+invalid opcode: 0000 [#1] PREEMPT SMP
+CPU: 1 PID: 8343 Comm: dmsetup Not tainted 6.8.0-rc6 #4
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.14.0-2 04/01/2014
+RIP: 0010:__list_del_entry_valid_or_report+0x77/0xc0
+<snip>
+RSP: 0018:ffff8881b831bcc0 EFLAGS: 00010282
+RAX: 000000000000004e RBX: ffff888143b6eb80 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffffffff819053d0 RDI: 00000000ffffffff
+RBP: ffff8881b83a3400 R08: 00000000fffeffff R09: 0000000000000058
+R10: 0000000000000000 R11: ffffffff81a24080 R12: 0000000000000001
+R13: ffff88814538e000 R14: ffff888143bc6dc0 R15: ffffffffa02e4bb0
+FS:  00000000f7c0f780(0000) GS:ffff8893f0a40000(0000) knlGS:0000000000000000
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000057fb5000 CR3: 0000000143474000 CR4: 00000000000006b0
+Call Trace:
+ <TASK>
+ ? die+0x2d/0x80
+ ? do_trap+0xeb/0xf0
+ ? __list_del_entry_valid_or_report+0x77/0xc0
+ ? do_error_trap+0x60/0x80
+ ? __list_del_entry_valid_or_report+0x77/0xc0
+ ? exc_invalid_op+0x49/0x60
+ ? __list_del_entry_valid_or_report+0x77/0xc0
+ ? asm_exc_invalid_op+0x16/0x20
+ ? table_deps+0x1b0/0x1b0 [dm_mod]
+ ? __list_del_entry_valid_or_report+0x77/0xc0
+ origin_postsuspend+0x1a/0x50 [dm_snapshot]
+ dm_table_postsuspend_targets+0x34/0x50 [dm_mod]
+ dm_suspend+0xd8/0xf0 [dm_mod]
+ dev_suspend+0x1f2/0x2f0 [dm_mod]
+ ? table_deps+0x1b0/0x1b0 [dm_mod]
+ ctl_ioctl+0x300/0x5f0 [dm_mod]
+ dm_compat_ctl_ioctl+0x7/0x10 [dm_mod]
+ __x64_compat_sys_ioctl+0x104/0x170
+ do_syscall_64+0x184/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x46/0x4e
+RIP: 0033:0xf7e6aead
+<snip>
+---[ end trace 0000000000000000 ]---
 
-syzbot reported:
-BUG: KMSAN: uninit-value in __INET_ECN_decapsulate include/net/inet_ecn.h:253 [inline]
- BUG: KMSAN: uninit-value in INET_ECN_decapsulate include/net/inet_ecn.h:275 [inline]
- BUG: KMSAN: uninit-value in IP_ECN_decapsulate include/net/inet_ecn.h:302 [inline]
- BUG: KMSAN: uninit-value in ip_tunnel_rcv+0xed9/0x2ed0 net/ipv4/ip_tunnel.c:409
-  __INET_ECN_decapsulate include/net/inet_ecn.h:253 [inline]
-  INET_ECN_decapsulate include/net/inet_ecn.h:275 [inline]
-  IP_ECN_decapsulate include/net/inet_ecn.h:302 [inline]
-  ip_tunnel_rcv+0xed9/0x2ed0 net/ipv4/ip_tunnel.c:409
-  __ipgre_rcv+0x9bc/0xbc0 net/ipv4/ip_gre.c:389
-  ipgre_rcv net/ipv4/ip_gre.c:411 [inline]
-  gre_rcv+0x423/0x19f0 net/ipv4/ip_gre.c:447
-  gre_rcv+0x2a4/0x390 net/ipv4/gre_demux.c:163
-  ip_protocol_deliver_rcu+0x264/0x1300 net/ipv4/ip_input.c:205
-  ip_local_deliver_finish+0x2b8/0x440 net/ipv4/ip_input.c:233
-  NF_HOOK include/linux/netfilter.h:314 [inline]
-  ip_local_deliver+0x21f/0x490 net/ipv4/ip_input.c:254
-  dst_input include/net/dst.h:461 [inline]
-  ip_rcv_finish net/ipv4/ip_input.c:449 [inline]
-  NF_HOOK include/linux/netfilter.h:314 [inline]
-  ip_rcv+0x46f/0x760 net/ipv4/ip_input.c:569
-  __netif_receive_skb_one_core net/core/dev.c:5534 [inline]
-  __netif_receive_skb+0x1a6/0x5a0 net/core/dev.c:5648
-  netif_receive_skb_internal net/core/dev.c:5734 [inline]
-  netif_receive_skb+0x58/0x660 net/core/dev.c:5793
-  tun_rx_batched+0x3ee/0x980 drivers/net/tun.c:1556
-  tun_get_user+0x53b9/0x66e0 drivers/net/tun.c:2009
-  tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2055
-  call_write_iter include/linux/fs.h:2087 [inline]
-  new_sync_write fs/read_write.c:497 [inline]
-  vfs_write+0xb6b/0x1520 fs/read_write.c:590
-  ksys_write+0x20f/0x4c0 fs/read_write.c:643
-  __do_sys_write fs/read_write.c:655 [inline]
-  __se_sys_write fs/read_write.c:652 [inline]
-  __x64_sys_write+0x93/0xd0 fs/read_write.c:652
-  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-Uninit was created at:
-  __alloc_pages+0x9a6/0xe00 mm/page_alloc.c:4590
-  alloc_pages_mpol+0x62b/0x9d0 mm/mempolicy.c:2133
-  alloc_pages+0x1be/0x1e0 mm/mempolicy.c:2204
-  skb_page_frag_refill+0x2bf/0x7c0 net/core/sock.c:2909
-  tun_build_skb drivers/net/tun.c:1686 [inline]
-  tun_get_user+0xe0a/0x66e0 drivers/net/tun.c:1826
-  tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2055
-  call_write_iter include/linux/fs.h:2087 [inline]
-  new_sync_write fs/read_write.c:497 [inline]
-  vfs_write+0xb6b/0x1520 fs/read_write.c:590
-  ksys_write+0x20f/0x4c0 fs/read_write.c:643
-  __do_sys_write fs/read_write.c:655 [inline]
-  __se_sys_write fs/read_write.c:652 [inline]
-  __x64_sys_write+0x93/0xd0 fs/read_write.c:652
-  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ffcc39364160 ("dm: enhance internal suspend and resume interface")
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_tunnel.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/md/dm.c | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
-diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
-index ba1decf81fe32..906c37c7f80d5 100644
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -365,7 +365,7 @@ int ip_tunnel_rcv(struct ip_tunnel *tunnel, struct sk_buff *skb,
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index 771167ee552cd..a7724ba45b437 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -2809,6 +2809,9 @@ static void __dm_internal_suspend(struct mapped_device *md, unsigned suspend_fla
+ 
+ static void __dm_internal_resume(struct mapped_device *md)
  {
- 	struct pcpu_sw_netstats *tstats;
- 	const struct iphdr *iph = ip_hdr(skb);
--	int err;
-+	int nh, err;
- 
- #ifdef CONFIG_NET_IPGRE_BROADCAST
- 	if (ipv4_is_multicast(iph->daddr)) {
-@@ -391,8 +391,21 @@ int ip_tunnel_rcv(struct ip_tunnel *tunnel, struct sk_buff *skb,
- 		tunnel->i_seqno = ntohl(tpi->seq) + 1;
- 	}
- 
-+	/* Save offset of outer header relative to skb->head,
-+	 * because we are going to reset the network header to the inner header
-+	 * and might change skb->head.
-+	 */
-+	nh = skb_network_header(skb) - skb->head;
++	int r;
++	struct dm_table *map;
 +
- 	skb_set_network_header(skb, (tunnel->dev->type == ARPHRD_ETHER) ? ETH_HLEN : 0);
+ 	BUG_ON(!md->internal_suspend_count);
  
-+	if (!pskb_inet_may_pull(skb)) {
-+		DEV_STATS_INC(tunnel->dev, rx_length_errors);
-+		DEV_STATS_INC(tunnel->dev, rx_errors);
-+		goto drop;
+ 	if (--md->internal_suspend_count)
+@@ -2817,12 +2820,23 @@ static void __dm_internal_resume(struct mapped_device *md)
+ 	if (dm_suspended_md(md))
+ 		goto done; /* resume from nested suspend */
+ 
+-	/*
+-	 * NOTE: existing callers don't need to call dm_table_resume_targets
+-	 * (which may fail -- so best to avoid it for now by passing NULL map)
+-	 */
+-	(void) __dm_resume(md, NULL);
+-
++	map = rcu_dereference_protected(md->map, lockdep_is_held(&md->suspend_lock));
++	r = __dm_resume(md, map);
++	if (r) {
++		/*
++		 * If a preresume method of some target failed, we are in a
++		 * tricky situation. We can't return an error to the caller. We
++		 * can't fake success because then the "resume" and
++		 * "postsuspend" methods would not be paired correctly, and it
++		 * would break various targets, for example it would cause list
++		 * corruption in the "origin" target.
++		 *
++		 * So, we fake normal suspend here, to make sure that the
++		 * "resume" and "postsuspend" methods will be paired correctly.
++		 */
++		DMERR("Preresume method failed: %d", r);
++		set_bit(DMF_SUSPENDED, &md->flags);
 +	}
-+	iph = (struct iphdr *)(skb->head + nh);
-+
- 	err = IP_ECN_decapsulate(iph, skb);
- 	if (unlikely(err)) {
- 		if (log_ecn_error)
+ done:
+ 	clear_bit(DMF_SUSPENDED_INTERNALLY, &md->flags);
+ 	smp_mb__after_atomic();
 -- 
 2.43.0
 
