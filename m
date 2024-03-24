@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E6C1E5872;
-	Sun, 24 Mar 2024 22:53:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892DF146D57;
+	Sun, 24 Mar 2024 22:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320833; cv=none; b=N70nYq2YF/HJHb8VC7AJhvljMvE7TOZ6VenrrEAHzScv13UDGL+Ac6k4v+VmkJA2kANlAAUm9b9yD4A2CM/k9N53X7Awpux9WWISg8+UtYWXKh0XFdg2iRyCEBKwTgP7AGfZaHKDtU7a2S/qROnnteo0ThaL3oBu6c0SNr0qR8E=
+	t=1711320818; cv=none; b=m/3NMZ6AUbkQLeTY/LI5O6bsqb+oOgAeNVwMZ6fLpfi8VNOZeA+pfcDl50aTiXqye6oxgRaPkWxuCOKYYERlWNduR/VWB5daJuflQ/X+8fjSWmgstuXzs3Y28jtDsHng0sf1+CtL1NP0wYA95ZPW1ywGJ8sDToYlfRL75p5yR/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320833; c=relaxed/simple;
-	bh=OJJPol7J7fIrfaytG9VmHCkxp+IgzNXZBKdiEqSucJQ=;
+	s=arc-20240116; t=1711320818; c=relaxed/simple;
+	bh=KEnJYE7iFGmp2/B2QX8PVoBww/lPOvrAXRR2IkS82Ls=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XT/+Ru3hYDlAoQCpInHrcckluwfVHZE7x55asNBQ9pi3VAbJd2PUc+sg+gZiJ3jg1+DNc9OjKBI3lw3kb4RIBiDJht+gL2E7FRT2OprNupkT0I+39dGlyyA3NWRwk10eduIsU3PQ5zC3q5ek+IB/1n4bigEdqUr3ufEGmN+TeGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iomq6AdI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GkEwEbLGzOzzWSSH1USGJEZ7ZiRxXBPURt1QPWfN4awuYQbQId+q4PDTyKm7aInI/3hW2l9U6f7yorAgC28Bgr9kbVwqnMEllj0CaPy6T8C1SJkycb3vOqPG4TjMsi6W//0wTYo4XW63BUYmsryJUH9OG69NUnN80eS/yfGP7pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnB4fX+F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iomq6AdI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F8DFC43390;
-	Sun, 24 Mar 2024 22:53:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnB4fX+F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA5A4C43390;
+	Sun, 24 Mar 2024 22:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320832;
-	bh=OJJPol7J7fIrfaytG9VmHCkxp+IgzNXZBKdiEqSucJQ=;
+	s=k20201202; t=1711320817;
+	bh=KEnJYE7iFGmp2/B2QX8PVoBww/lPOvrAXRR2IkS82Ls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iomq6AdIW7tdFOtY9SSCGTLpg/uQY19ul6XclnZ6FgLw+T1c2gy8f32ubk8t/2LTS
-	 /lBr6cRqB8UAQ7FzO9qyREEs6qfEcGERhE2ylEOHB+frmMvn8KrDH02RiyqVhm/nQ8
-	 2kmY9Fpo6oRT68tazcSJeZKGygNMNN7ZsmNWNUTPxFU2G7QgFxJfNE2X3+FLiSKXYI
-	 lQPf7ki79xJA3Up1FoSdLHvTs7/nriVABzChY4pMutpe1K0iTjhz6uPyygkWn5Exh+
-	 Y92FbNwLWbzxgjQJ01te+3Ym7/wdtJZF9/+KFHT05An+a44/gHrOgo9Iqj3eZLKbBC
-	 7Zc56kt9f1OeQ==
+	b=UnB4fX+FcBoGOL/FFc7cnPx7qgzEHh4uoRgsYaSVVQuU3/8bbu1Mo6vhy2yxgZjV+
+	 j8h8l9pMIID7b8w4PtPDjcoMpeT34sHw/aXPUKtVYESdizzLW3EG/fHtSlveXQxw6v
+	 qEp1XgxEkX70nyc/mK5G3zgPaCaohL+uQMveux14NRc7UnHdPV+3FunAsPgC0YK2Rb
+	 T/GsCOyt5IH1WRa58g2JO+vcoW5M8sJ9yqIQvatVFsQ6/GeYsTqXjG9haWcVd1qORN
+	 /WOkxlm53LNMeHC2qdOu48jyUQ2eBxUMO0oa9yzLHw7j8JOVKHePpX4xWnGiJ0w469
+	 cQHmAZ0fjeBoQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alex Bee <knaerzche@gmail.com>,
-	Zheng Yang <zhengyang@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>,
+Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 397/713] drm/rockchip: inno_hdmi: Fix video timing
-Date: Sun, 24 Mar 2024 18:42:03 -0400
-Message-ID: <20240324224720.1345309-398-sashal@kernel.org>
+Subject: [PATCH 6.7 382/713] net: kcm: fix incorrect parameter validation in the kcm_getsockopt) function
+Date: Sun, 24 Mar 2024 18:41:48 -0400
+Message-ID: <20240324224720.1345309-383-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,49 +48,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alex Bee <knaerzche@gmail.com>
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit 47a145c03484d33e65d773169d5ca1b9fe2a492e ]
+[ Upstream commit 3ed5f415133f9b7518fbe55ba9ae9a3f5e700929 ]
 
-The controller wants the difference between *total and *sync_start in the
-HDMI_VIDEO_EXT_*DELAY registers. Otherwise the signal is very unstable for
-certain non-VIC modes. See downstream commit [0].
+The 'len' variable can't be negative when assigned the result of
+'min_t' because all 'min_t' parameters are cast to unsigned int,
+and then the minimum one is chosen.
 
-[0] https://github.com/rockchip-linux/kernel/commit/8eb559f2502c
+To fix the logic, check 'len' as read from 'optlen',
+where the types of relevant variables are (signed) int.
 
-Fixes: 412d4ae6b7a5 ("drm/rockchip: hdmi: add Innosilicon HDMI support")
-Co-developed-by: Zheng Yang <zhengyang@rock-chips.com>
-Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231222174220.55249-4-knaerzche@gmail.com
+Fixes: ab7ac4eb9832 ("kcm: Kernel Connection Multiplexor module")
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/inno_hdmi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/kcm/kcmsock.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
-index 6e5b922a121e2..345253e033c53 100644
---- a/drivers/gpu/drm/rockchip/inno_hdmi.c
-+++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
-@@ -412,7 +412,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_L, value & 0xFF);
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HBLANK_H, (value >> 8) & 0xFF);
+diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
+index 1184d40167b86..eda933c097926 100644
+--- a/net/kcm/kcmsock.c
++++ b/net/kcm/kcmsock.c
+@@ -1152,10 +1152,11 @@ static int kcm_getsockopt(struct socket *sock, int level, int optname,
+ 	if (get_user(len, optlen))
+ 		return -EFAULT;
  
--	value = mode->hsync_start - mode->hdisplay;
-+	value = mode->htotal - mode->hsync_start;
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_L, value & 0xFF);
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_HDELAY_H, (value >> 8) & 0xFF);
+-	len = min_t(unsigned int, len, sizeof(int));
+ 	if (len < 0)
+ 		return -EINVAL;
  
-@@ -427,7 +427,7 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
- 	value = mode->vtotal - mode->vdisplay;
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VBLANK, value & 0xFF);
- 
--	value = mode->vsync_start - mode->vdisplay;
-+	value = mode->vtotal - mode->vsync_start;
- 	hdmi_writeb(hdmi, HDMI_VIDEO_EXT_VDELAY, value & 0xFF);
- 
- 	value = mode->vsync_end - mode->vsync_start;
++	len = min_t(unsigned int, len, sizeof(int));
++
+ 	switch (optname) {
+ 	case KCM_RECV_DISABLE:
+ 		val = kcm->rx_disabled;
 -- 
 2.43.0
 
