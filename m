@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBEF12B16A;
-	Sun, 24 Mar 2024 22:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815E612B157;
+	Sun, 24 Mar 2024 22:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320968; cv=none; b=m8zjUra891XXX/akxwlgdwzd/1Ai7uLog+7Z9CIXK2nf+kjPn6fvv1kNlorqvJWcNHxPGThwbvfNRtCQh/pKzyPO7ePeb8HlpiKWAazpB4pnczA6jNAnFHaJC18GN1ZmGwaqJxxd9sKor2KzXIBe7atpncqXQ/C+CN1Ec9GWPTM=
+	t=1711320965; cv=none; b=Bq+lglHnsu13q9BNVtek8Nkr7qDyNXIVBMsYfdFsNHBDvoHs2/68iOLXaHMK8Kv5LqvTACOfRxYxbkpL3EtCzcq6zdPkfbipw9T46j/UXSKxF52CdajzygI+wPkknGBjQ9P20vwjPKyMXT4iOFdddTInWrBgWSGfVltfgrjC0eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320968; c=relaxed/simple;
-	bh=LOo3lC22VEDvJtM2gwHrvZYeaT0SOw4YiVKbCdHHZVk=;
+	s=arc-20240116; t=1711320965; c=relaxed/simple;
+	bh=/OkvdvR70NnVfY2Fr/0spMghmmbQzum0lIGGLUM9FCI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eFN3/Dt/CJ8XlW6azObwRkjuVH6V7xPb52R9cjAwM2Mz2YfYyqZcaGUsLRHAWnJEwiX28oHdgxwmH06Ck53QXCZg89h5/kZ8bkfjyEQYtD9BDRfBylfN41ikgxiH4k01Dk/HVeu5UofTJNiYcq0xdc2nY1z6mkbvhPn2UNPeWBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcPC2pjz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IWxQTaiVPb1adhOA7nZfoTIChBB00HLuEwvCjW57QraMBx5EH+RNnyzzkThmzlPDz6mB/BDBDapIwisah6a0gdFe2JVmaqzS+YG4Myx7rn596o1A4eGQqoy3jLRM3+dp0a6p75t9o4skKvvbjVsxpRDwhKWRwbEVrl+tsHh4ljo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMxp99Dn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcPC2pjz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A6FC433C7;
-	Sun, 24 Mar 2024 22:56:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMxp99Dn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0DA8C43390;
+	Sun, 24 Mar 2024 22:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320967;
-	bh=LOo3lC22VEDvJtM2gwHrvZYeaT0SOw4YiVKbCdHHZVk=;
+	s=k20201202; t=1711320964;
+	bh=/OkvdvR70NnVfY2Fr/0spMghmmbQzum0lIGGLUM9FCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XcPC2pjz6HRGrBgnYB8WCUJYQaKS+FbytDsc/rFKZWZmOSvPuqYkhxAIn034bPe5q
-	 TCw8NWaqSfRkGznuei4X2l2g51Xbwgvn9G+16Dg4UBKBOKWAqluR9c4rROJfUYY3Fr
-	 aec3XmcJaJvTSTJ6pZY0EpkUSSKc1pAAv5uflEwSGZnFlZ9480I1FjrM/PVF63uSay
-	 vwKV7FUOUBI52eO42ZC8f84GCnJyi6uFQJ/27QbfcXTG7ZHOx6ffDnBgdv9ZyP/a1j
-	 ZBeZnkru0+Em49sEuVlXPUDQcOVSWbiPXWnA+hT1N2Wte6vj7G8kLC7hwVwUtvVNO6
-	 qpgNufnQ3bC3Q==
+	b=kMxp99Dn1rwawIbamka2W+sJShOIwkTHm6eysWPOxj8YAymv38+WyMva5CEzkmXIk
+	 EGmovYkRJ4rltYdaXhpE4ZXOpOP9dlzS9vYLIE89Hrsavm7Tgf73mL8Pt6YvVApT8g
+	 hXrUtdqXeJb/b5qUMxR4PEeOxAOBJGO4yPHNpnTqt+u0BprAf1+jHhc6e571s7FYXX
+	 vhctJe/KeKGpKBv6CTDrfTwxfYpt1RWTsepLWGFo+S5DcvJpREH+OIr9ZGbBsDAaFJ
+	 9BjNxjDHsiY5Jgfj5agBqacTMHbncKyTdghxi8r+iVbNK4rWPUtx0ZMqB0PilfKHBM
+	 7lena1BKKav8g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kajol Jain <kjain@linux.ibm.com>,
-	Akanksha J N <akanksha@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
+Cc: Maciej Strozek <mstrozek@opensource.cirrus.com>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 530/713] powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks
-Date: Sun, 24 Mar 2024 18:44:16 -0400
-Message-ID: <20240324224720.1345309-531-sashal@kernel.org>
+Subject: [PATCH 6.7 527/713] mfd: cs42l43: Fix wrong register defaults
+Date: Sun, 24 Mar 2024 18:44:13 -0400
+Message-ID: <20240324224720.1345309-528-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,115 +48,109 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kajol Jain <kjain@linux.ibm.com>
+From: Maciej Strozek <mstrozek@opensource.cirrus.com>
 
-[ Upstream commit ad86d7ee43b22aa2ed60fb982ae94b285c1be671 ]
+[ Upstream commit c9e1e505cde1a8ddd0968b4d54ec2ea1937dfe00 ]
 
-Running event hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
-in one of the system throws below error:
+A few regs have unnecessary values in defaults, change them to match the
+datasheet
 
- ---Logs---
- # perf list | grep hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles
-  hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=?/[Kernel PMU event]
+Fixes: ace6d1448138 ("mfd: cs42l43: Add support for cs42l43 core driver")
 
- # perf stat -v -e hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ sleep 2
-Using CPUID 00800200
-Control descriptor is not initialized
-Warning:
-hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ event is not supported by the kernel.
-failed to read counter hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
-
- Performance counter stats for 'system wide':
-
-   <not supported>      hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
-
-       2.000700771 seconds time elapsed
-
-The above error is because of the hcall failure as required
-permission "Enable Performance Information Collection" is not set.
-Based on current code, single_gpci_request function did not check the
-error type incase hcall fails and by default returns EINVAL. But we can
-have other reasons for hcall failures like H_AUTHORITY/H_PARAMETER with
-detail_rc as GEN_BUF_TOO_SMALL, for which we need to act accordingly.
-
-Fix this issue by adding new checks in the single_gpci_request and
-h_gpci_event_init functions.
-
-Result after fix patch changes:
-
- # perf stat -e hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ sleep 2
-Error:
-No permission to enable hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ event.
-
-Fixes: 220a0c609ad1 ("powerpc/perf: Add support for the hv gpci (get performance counter info) interface")
-Reported-by: Akanksha J N <akanksha@linux.ibm.com>
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/20240229122847.101162-1-kjain@linux.ibm.com
+Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20240229155616.118457-1-mstrozek@opensource.cirrus.com
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/hv-gpci.c | 29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ drivers/mfd/cs42l43.c | 68 +++++++++++++++++++++----------------------
+ 1 file changed, 34 insertions(+), 34 deletions(-)
 
-diff --git a/arch/powerpc/perf/hv-gpci.c b/arch/powerpc/perf/hv-gpci.c
-index 27f18119fda17..241551d1282f8 100644
---- a/arch/powerpc/perf/hv-gpci.c
-+++ b/arch/powerpc/perf/hv-gpci.c
-@@ -695,6 +695,20 @@ static unsigned long single_gpci_request(u32 req, u32 starting_index,
- 
- 	ret = plpar_hcall_norets(H_GET_PERF_COUNTER_INFO,
- 			virt_to_phys(arg), HGPCI_REQ_BUFFER_SIZE);
-+
-+	/*
-+	 * ret value as 'H_PARAMETER' with detail_rc as 'GEN_BUF_TOO_SMALL',
-+	 * specifies that the current buffer size cannot accommodate
-+	 * all the information and a partial buffer returned.
-+	 * Since in this function we are only accessing data for a given starting index,
-+	 * we don't need to accommodate whole data and can get required count by
-+	 * accessing first entry data.
-+	 * Hence hcall fails only incase the ret value is other than H_SUCCESS or
-+	 * H_PARAMETER with detail_rc value as GEN_BUF_TOO_SMALL(0x1B).
-+	 */
-+	if (ret == H_PARAMETER && be32_to_cpu(arg->params.detail_rc) == 0x1B)
-+		ret = 0;
-+
- 	if (ret) {
- 		pr_devel("hcall failed: 0x%lx\n", ret);
- 		goto out;
-@@ -759,6 +773,7 @@ static int h_gpci_event_init(struct perf_event *event)
- {
- 	u64 count;
- 	u8 length;
-+	unsigned long ret;
- 
- 	/* Not our event */
- 	if (event->attr.type != event->pmu->type)
-@@ -789,13 +804,23 @@ static int h_gpci_event_init(struct perf_event *event)
- 	}
- 
- 	/* check if the request works... */
--	if (single_gpci_request(event_get_request(event),
-+	ret = single_gpci_request(event_get_request(event),
- 				event_get_starting_index(event),
- 				event_get_secondary_index(event),
- 				event_get_counter_info_version(event),
- 				event_get_offset(event),
- 				length,
--				&count)) {
-+				&count);
-+
-+	/*
-+	 * ret value as H_AUTHORITY implies that partition is not permitted to retrieve
-+	 * performance information, and required to set
-+	 * "Enable Performance Information Collection" option.
-+	 */
-+	if (ret == H_AUTHORITY)
-+		return -EPERM;
-+
-+	if (ret) {
- 		pr_devel("gpci hcall failed\n");
- 		return -EINVAL;
- 	}
+diff --git a/drivers/mfd/cs42l43.c b/drivers/mfd/cs42l43.c
+index 7b6d07cbe6fc6..73c88ee6a866c 100644
+--- a/drivers/mfd/cs42l43.c
++++ b/drivers/mfd/cs42l43.c
+@@ -131,38 +131,38 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
+ 	{ CS42L43_ASP_TX_CH4_CTRL,			0x00170091 },
+ 	{ CS42L43_ASP_TX_CH5_CTRL,			0x001700C1 },
+ 	{ CS42L43_ASP_TX_CH6_CTRL,			0x001700F1 },
+-	{ CS42L43_ASPTX1_INPUT,				0x00800000 },
+-	{ CS42L43_ASPTX2_INPUT,				0x00800000 },
+-	{ CS42L43_ASPTX3_INPUT,				0x00800000 },
+-	{ CS42L43_ASPTX4_INPUT,				0x00800000 },
+-	{ CS42L43_ASPTX5_INPUT,				0x00800000 },
+-	{ CS42L43_ASPTX6_INPUT,				0x00800000 },
+-	{ CS42L43_SWIRE_DP1_CH1_INPUT,			0x00800000 },
+-	{ CS42L43_SWIRE_DP1_CH2_INPUT,			0x00800000 },
+-	{ CS42L43_SWIRE_DP1_CH3_INPUT,			0x00800000 },
+-	{ CS42L43_SWIRE_DP1_CH4_INPUT,			0x00800000 },
+-	{ CS42L43_SWIRE_DP2_CH1_INPUT,			0x00800000 },
+-	{ CS42L43_SWIRE_DP2_CH2_INPUT,			0x00800000 },
+-	{ CS42L43_SWIRE_DP3_CH1_INPUT,			0x00800000 },
+-	{ CS42L43_SWIRE_DP3_CH2_INPUT,			0x00800000 },
+-	{ CS42L43_SWIRE_DP4_CH1_INPUT,			0x00800000 },
+-	{ CS42L43_SWIRE_DP4_CH2_INPUT,			0x00800000 },
+-	{ CS42L43_ASRC_INT1_INPUT1,			0x00800000 },
+-	{ CS42L43_ASRC_INT2_INPUT1,			0x00800000 },
+-	{ CS42L43_ASRC_INT3_INPUT1,			0x00800000 },
+-	{ CS42L43_ASRC_INT4_INPUT1,			0x00800000 },
+-	{ CS42L43_ASRC_DEC1_INPUT1,			0x00800000 },
+-	{ CS42L43_ASRC_DEC2_INPUT1,			0x00800000 },
+-	{ CS42L43_ASRC_DEC3_INPUT1,			0x00800000 },
+-	{ CS42L43_ASRC_DEC4_INPUT1,			0x00800000 },
+-	{ CS42L43_ISRC1INT1_INPUT1,			0x00800000 },
+-	{ CS42L43_ISRC1INT2_INPUT1,			0x00800000 },
+-	{ CS42L43_ISRC1DEC1_INPUT1,			0x00800000 },
+-	{ CS42L43_ISRC1DEC2_INPUT1,			0x00800000 },
+-	{ CS42L43_ISRC2INT1_INPUT1,			0x00800000 },
+-	{ CS42L43_ISRC2INT2_INPUT1,			0x00800000 },
+-	{ CS42L43_ISRC2DEC1_INPUT1,			0x00800000 },
+-	{ CS42L43_ISRC2DEC2_INPUT1,			0x00800000 },
++	{ CS42L43_ASPTX1_INPUT,				0x00000000 },
++	{ CS42L43_ASPTX2_INPUT,				0x00000000 },
++	{ CS42L43_ASPTX3_INPUT,				0x00000000 },
++	{ CS42L43_ASPTX4_INPUT,				0x00000000 },
++	{ CS42L43_ASPTX5_INPUT,				0x00000000 },
++	{ CS42L43_ASPTX6_INPUT,				0x00000000 },
++	{ CS42L43_SWIRE_DP1_CH1_INPUT,			0x00000000 },
++	{ CS42L43_SWIRE_DP1_CH2_INPUT,			0x00000000 },
++	{ CS42L43_SWIRE_DP1_CH3_INPUT,			0x00000000 },
++	{ CS42L43_SWIRE_DP1_CH4_INPUT,			0x00000000 },
++	{ CS42L43_SWIRE_DP2_CH1_INPUT,			0x00000000 },
++	{ CS42L43_SWIRE_DP2_CH2_INPUT,			0x00000000 },
++	{ CS42L43_SWIRE_DP3_CH1_INPUT,			0x00000000 },
++	{ CS42L43_SWIRE_DP3_CH2_INPUT,			0x00000000 },
++	{ CS42L43_SWIRE_DP4_CH1_INPUT,			0x00000000 },
++	{ CS42L43_SWIRE_DP4_CH2_INPUT,			0x00000000 },
++	{ CS42L43_ASRC_INT1_INPUT1,			0x00000000 },
++	{ CS42L43_ASRC_INT2_INPUT1,			0x00000000 },
++	{ CS42L43_ASRC_INT3_INPUT1,			0x00000000 },
++	{ CS42L43_ASRC_INT4_INPUT1,			0x00000000 },
++	{ CS42L43_ASRC_DEC1_INPUT1,			0x00000000 },
++	{ CS42L43_ASRC_DEC2_INPUT1,			0x00000000 },
++	{ CS42L43_ASRC_DEC3_INPUT1,			0x00000000 },
++	{ CS42L43_ASRC_DEC4_INPUT1,			0x00000000 },
++	{ CS42L43_ISRC1INT1_INPUT1,			0x00000000 },
++	{ CS42L43_ISRC1INT2_INPUT1,			0x00000000 },
++	{ CS42L43_ISRC1DEC1_INPUT1,			0x00000000 },
++	{ CS42L43_ISRC1DEC2_INPUT1,			0x00000000 },
++	{ CS42L43_ISRC2INT1_INPUT1,			0x00000000 },
++	{ CS42L43_ISRC2INT2_INPUT1,			0x00000000 },
++	{ CS42L43_ISRC2DEC1_INPUT1,			0x00000000 },
++	{ CS42L43_ISRC2DEC2_INPUT1,			0x00000000 },
+ 	{ CS42L43_EQ1MIX_INPUT1,			0x00800000 },
+ 	{ CS42L43_EQ1MIX_INPUT2,			0x00800000 },
+ 	{ CS42L43_EQ1MIX_INPUT3,			0x00800000 },
+@@ -171,8 +171,8 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
+ 	{ CS42L43_EQ2MIX_INPUT2,			0x00800000 },
+ 	{ CS42L43_EQ2MIX_INPUT3,			0x00800000 },
+ 	{ CS42L43_EQ2MIX_INPUT4,			0x00800000 },
+-	{ CS42L43_SPDIF1_INPUT1,			0x00800000 },
+-	{ CS42L43_SPDIF2_INPUT1,			0x00800000 },
++	{ CS42L43_SPDIF1_INPUT1,			0x00000000 },
++	{ CS42L43_SPDIF2_INPUT1,			0x00000000 },
+ 	{ CS42L43_AMP1MIX_INPUT1,			0x00800000 },
+ 	{ CS42L43_AMP1MIX_INPUT2,			0x00800000 },
+ 	{ CS42L43_AMP1MIX_INPUT3,			0x00800000 },
 -- 
 2.43.0
 
