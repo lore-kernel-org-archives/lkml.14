@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D62D140373;
-	Sun, 24 Mar 2024 23:10:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC2514037E;
+	Sun, 24 Mar 2024 23:10:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321835; cv=none; b=fV8ky1sFXz4hXLiCuy3plMoCQ0aLDpLrcVSN/M1RuOCq9Hg4dQ3VUvVJoG6KZECbJPXStL/t2jwowNIEwvuPbA8i6X5432/7yk+CFedh2uo+Mv0Pja0Tz/iXxo3aHqsNAL5T8aj+lK7PB1SdLKE0C9s/NwiHcx09yO1yLCE6D70=
+	t=1711321846; cv=none; b=R+ktJeXE6LQVRJveqUxLvyzE3IJQTjVyM53hpiZ6a3TPlEMWvwexPRQFb18o5q8RKEAt3dd7ejAZRK75LwLalJHaT9A+Boyku/O/gR/uXbhPIZtgCbUOkKxwpSu7DnXL6r3pT2ksXUGkFZe0BfsJIxDMpz2DdOFvABVNG3gbcCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321835; c=relaxed/simple;
-	bh=EI070SEdZAysYm5J4a8toMZ9Zme6VUT+jP6dFrcVgDU=;
+	s=arc-20240116; t=1711321846; c=relaxed/simple;
+	bh=6DQJougX0ptKj6bY2XsiqJrGTso8eSy+jqQnXQDK+8M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pz7hLuSTP/tPPQI3l+HtvGhrXuDN+5TYe8ZrsxUeLbJ7uAmUlbyuIns5xoEd3myUSHUbhU+FRBJ1LAVzhMm2S9bG1R/U2LrtO1MWMlsX2hEykHy71shfhNmWSxPiN8umwByxpfDpUESusvgCs0k/h9C3cySU3gkvYcDP7GuM//k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZ4SWYRV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=UL5CT9XWVF7xc7CHrdmHevYI/tDUYXro2t6G/TRn+z2BbM8O/XhcMkHgQu1jOie1D+5a8SNjTgVtVmDZLrOZk+v0o/w5kxcmNJuIIMHv5Z6AC5O2HZ+N4/vNH/X1cemkomLdwe2/eD2ApDl9RAzx8413caT612l/VvKWN0+Lz0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OPF0Qnqj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZ4SWYRV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA83C43609;
-	Sun, 24 Mar 2024 23:10:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OPF0Qnqj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43396C433A6;
+	Sun, 24 Mar 2024 23:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321835;
-	bh=EI070SEdZAysYm5J4a8toMZ9Zme6VUT+jP6dFrcVgDU=;
+	s=k20201202; t=1711321846;
+	bh=6DQJougX0ptKj6bY2XsiqJrGTso8eSy+jqQnXQDK+8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MZ4SWYRVkduZCA//iabHVy2J1aA/ogwS6kq773KsFiFQxRFm/+lerZwgtoJMddxqc
-	 acIrp1E+cK1BuNShaN0NYoIXnsbHsZ6C2BnWN8xsoINRHxnx3BXGlHg0NnMDJGNd9p
-	 pQodnMdhmSTQr+M19ywId3085x+SHVJs9lR6ego6DBjnlQSL7C+C2irJVLfFOb/UJM
-	 WyNCHOLcfztd4IjpXWRIM2c+bYA4JDVbQjkpduTTsiZt/V/X4HRosduKgAi6mZDPBC
-	 sm96s8pEBI5o0eU/zle+9IylPrcaUAvhTL0gOfIiA/kZ0+nImQlyT4Hdj/PdPbDGnM
-	 1zbUriw8Ii/UQ==
+	b=OPF0QnqjNIh0OpTVzldSnQP+G46iIhwtaDgoq9q2/AghlAEBfiumVI3AKUcQuIxj6
+	 WcjovJHzlMtp0zC+nKoRaFyzKvW+aMES/B1+EGNtuhevc/yzWTK+ohGlDqECyj9QU8
+	 4ISTXnRW6HJCApOlqSDnlV+tyujpGaWxgh7lLdI1pHsTPmZp7V/7N0yF4w4VMm83Fp
+	 qFW4oa+czXrWMzqEqzyIVn1SMknjJHBGWrKQeWwqVyhO79Rg2bX93/LhA0BQidHo0k
+	 qlib9sF5waHbwTMbKQqEEIhFAv88spHlF8lge22mGSR6X/3bn8jGoXWJ99iNaloAQh
+	 qrgbbxBQKSRBQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mao Jinlong <quic_jinlmao@quicinc.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 564/638] coresight: etm4x: Set skip_power_up in etm4_init_arch_data function
-Date: Sun, 24 Mar 2024 19:00:01 -0400
-Message-ID: <20240324230116.1348576-565-sashal@kernel.org>
+Subject: [PATCH 6.6 574/638] ASoC: tlv320adc3xxx: Don't strip remove function when driver is builtin
+Date: Sun, 24 Mar 2024 19:00:11 -0400
+Message-ID: <20240324230116.1348576-575-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,60 +45,58 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mao Jinlong <quic_jinlmao@quicinc.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 1bbe0a247e5d72f723daeecf41596bfa99e199f1 ]
+[ Upstream commit f31e0d0c2cad23e0cc48731634f85bb2d8707790 ]
 
-skip_power_up is used in etm4_init_arch_data when set lpoverride. So
-need to set the value of it before calling using it.
+Using __exit for the remove function results in the remove callback
+being discarded with SND_SOC_TLV320ADC3XXX=y. When such a device gets
+unbound (e.g. using sysfs or hotplug), the driver is just removed
+without the cleanup being performed. This results in resource leaks. Fix
+it by compiling in the remove callback unconditionally.
 
-Fixes: 5214b563588e ("coresight: etm4x: Add support for sysreg only devices")
-Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Link: https://lore.kernel.org/r/20240131105423.9519-1-quic_jinlmao@quicinc.com
+This also fixes a W=1 modpost warning:
+
+	WARNING: modpost: sound/soc/codecs/snd-soc-tlv320adc3xxx: section mismatch in reference: adc3xxx_i2c_driver+0x10 (section: .data) -> adc3xxx_i2c_remove (section: .exit.text)
+
+(which only happens with SND_SOC_TLV320ADC3XXX=m).
+
+Fixes: e9a3b57efd28 ("ASoC: codec: tlv320adc3xxx: New codec driver")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Link: https://msgid.link/r/20240310143852.397212-2-u.kleine-koenig@pengutronix.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ sound/soc/codecs/tlv320adc3xxx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-index 34aee59dd1473..18c4544f60454 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-@@ -1160,6 +1160,7 @@ static void etm4_init_arch_data(void *info)
- 	struct etm4_init_arg *init_arg = info;
- 	struct etmv4_drvdata *drvdata;
- 	struct csdev_access *csa;
-+	struct device *dev = init_arg->dev;
- 	int i;
+diff --git a/sound/soc/codecs/tlv320adc3xxx.c b/sound/soc/codecs/tlv320adc3xxx.c
+index 420bbf588efea..e100cc9f5c192 100644
+--- a/sound/soc/codecs/tlv320adc3xxx.c
++++ b/sound/soc/codecs/tlv320adc3xxx.c
+@@ -1429,7 +1429,7 @@ static int adc3xxx_i2c_probe(struct i2c_client *i2c)
+ 	return ret;
+ }
  
- 	drvdata = dev_get_drvdata(init_arg->dev);
-@@ -1173,6 +1174,10 @@ static void etm4_init_arch_data(void *info)
- 	if (!etm4_init_csdev_access(drvdata, csa))
- 		return;
+-static void __exit adc3xxx_i2c_remove(struct i2c_client *client)
++static void adc3xxx_i2c_remove(struct i2c_client *client)
+ {
+ 	struct adc3xxx *adc3xxx = i2c_get_clientdata(client);
  
-+	if (!csa->io_mem ||
-+	    fwnode_property_present(dev_fwnode(dev), "qcom,skip-power-up"))
-+		drvdata->skip_power_up = true;
-+
- 	/* Detect the support for OS Lock before we actually use it */
- 	etm_detect_os_lock(drvdata, csa);
- 
-@@ -1998,11 +2003,6 @@ static int etm4_add_coresight_dev(struct etm4_init_arg *init_arg)
- 	if (!drvdata->arch)
- 		return -EINVAL;
- 
--	/* TRCPDCR is not accessible with system instructions. */
--	if (!desc.access.io_mem ||
--	    fwnode_property_present(dev_fwnode(dev), "qcom,skip-power-up"))
--		drvdata->skip_power_up = true;
--
- 	major = ETM_ARCH_MAJOR_VERSION(drvdata->arch);
- 	minor = ETM_ARCH_MINOR_VERSION(drvdata->arch);
+@@ -1452,7 +1452,7 @@ static struct i2c_driver adc3xxx_i2c_driver = {
+ 		   .of_match_table = tlv320adc3xxx_of_match,
+ 		  },
+ 	.probe = adc3xxx_i2c_probe,
+-	.remove = __exit_p(adc3xxx_i2c_remove),
++	.remove = adc3xxx_i2c_remove,
+ 	.id_table = adc3xxx_i2c_id,
+ };
  
 -- 
 2.43.0
