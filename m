@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0616D1E965D;
-	Sun, 24 Mar 2024 23:05:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191FA13793C;
+	Sun, 24 Mar 2024 23:05:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321555; cv=none; b=lfDIBt8uIHATt/A+hn5WHpOyr0AFJhmtCfT+NLs/o2F4v1WaKCuwife3KYfjPX4TjC7ZrIG6mqlOWVMimBjDJ2UlznK0jIpGSO/zbyCizoApPfz0n9y2ymhepPitjeE2ALdNzRf+gGfZlJZZUp0mtBCgSfxBKi2GyC7kU9A8dcY=
+	t=1711321554; cv=none; b=rIRRGhxWrIu1vmzpis6N5JtwmnTgWDHk1hDlcZIUmha3/0VRUPfgwZJxG/M5pGgaJUBBMRX7SW4LsUtmIM3ugTHIGx40HvxbVC0ELPKZMG86RNoMHDN0hSZvnh0L+lIIb8oar0Z5i0lyjW9jMI3VR8yRlA0Z+Lif1W8Wn46YPJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321555; c=relaxed/simple;
-	bh=CWRgix+uDvTPQLyz3Skw1HxUUQ9clC+hsv2lUdDt+KI=;
+	s=arc-20240116; t=1711321554; c=relaxed/simple;
+	bh=mqDHnKF4JwaqvMbLj6PvJjzjGLsRXI6R6B2MXr+ey/o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gaKClxmQbCblHwy0OxlmJxoOGvCVuc4YiAlrg7MbaoaU40rLKAC8ez+RQDfJTpP/s3SeffBH4PgTUNjelciWFlCdrWZtmviX8hO3tSS2utCObrAB6Vhig91is/SHtWBf01PbXUYoNkxltOEaLhI83naRYctxHMXjWI734G6Mtb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2MP/LPb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=O25/3o94rHPYzspOv2d0pUG634nDEIVtK2Y0oZUvPH1JCm+F057eH0b05LOUPXJRdyL2+jH5scPFsZedy96prqBiLfZjaqVQf77HQ5HKax2iIBzHJpaS6gXVGyNBaB1F7V9TIqwCl1c0TbuHarv3O4rkzl+s+yAHkJ8p4jiEynY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwhW9kXR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2MP/LPb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36F82C43394;
-	Sun, 24 Mar 2024 23:05:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwhW9kXR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 297E4C43390;
+	Sun, 24 Mar 2024 23:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321554;
-	bh=CWRgix+uDvTPQLyz3Skw1HxUUQ9clC+hsv2lUdDt+KI=;
+	s=k20201202; t=1711321553;
+	bh=mqDHnKF4JwaqvMbLj6PvJjzjGLsRXI6R6B2MXr+ey/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G2MP/LPbNx5WJSANoKGJAYdLphh1S1aXDzVZXv7kZpql9C8737IxvmPeOUzalNNTU
-	 Di8wdp1iUwA087ap9vU2gmNnCUi607CZ7B3syRzk+v2nwXj8wyG2UfIZo1eUXK9n+D
-	 1XasxBg6XxfdTEr/io8CWQpJD8BDK0vxdhOVfnMUGw8Z/zBXo4khOTtxh8nP2s+8EH
-	 bigW6BSY6c2CWvUlHqttnlN2qJd0p3iRFOC+6LrnsFq4Lz0dtcE1twD0m3rYvaqpl/
-	 Vm9cSrirB/Pa94Bw/xtefQ4jT5RfX4CIholry+gxPnmW+VxkIyPKPiCC/mCvvg3Hui
-	 Hnaxr/gA/ABsg==
+	b=cwhW9kXR/1oPJfOiqqV3mmtG9j+PjcwFEnEjHbApFsOSKm+m3XPLQzkxfSvhVMnMa
+	 FhMS0XWkiJPLaMvFb/MhS/e5Gz8Q63sMBJtsqHRt5OZIt2sncWKbRboME2O6xW6DhC
+	 sfGtP/b/Iia6wz3B36TGTadQSe8j910I4VPGKz58nQEGENuDN/oDzd+mOT1s3PFG/g
+	 yqmEmgbqXtzBXYj9uGwkT2dmXqEHMf0rApWnlqDSv/s7Dqi34mEoxtWpFwa0QZIxxX
+	 tlOp+HTJbaZN+9XAFDv0Qt9DVt8LHZGKtwHgGdapM9/czfR7MvuOkGHH+gNthUpEUE
+	 16ORbLg/LioIw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>,
-	Guixiong Wei <guixiongwei@gmail.com>,
-	Juergen Gross <jgross@suse.com>,
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 283/638] x86, relocs: Ignore relocations in .notes section
-Date: Sun, 24 Mar 2024 18:55:20 -0400
-Message-ID: <20240324230116.1348576-284-sashal@kernel.org>
+Subject: [PATCH 6.6 281/638] iommu/arm-smmu-v3: Check that the RID domain is S1 in SVA
+Date: Sun, 24 Mar 2024 18:55:18 -0400
+Message-ID: <20240324230116.1348576-282-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,52 +50,59 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kees Cook <keescook@chromium.org>
+From: Jason Gunthorpe <jgg@nvidia.com>
 
-[ Upstream commit aaa8736370db1a78f0e8434344a484f9fd20be3b ]
+[ Upstream commit ae91f6552c301e5e8569667e9d5440d5f75a90c4 ]
 
-When building with CONFIG_XEN_PV=y, .text symbols are emitted into
-the .notes section so that Xen can find the "startup_xen" entry point.
-This information is used prior to booting the kernel, so relocations
-are not useful. In fact, performing relocations against the .notes
-section means that the KASLR base is exposed since /sys/kernel/notes
-is world-readable.
+The SVA code only works if the RID domain is a S1 domain and has already
+installed the cdtable.
 
-To avoid leaking the KASLR base without breaking unprivileged tools that
-are expecting to read /sys/kernel/notes, skip performing relocations in
-the .notes section. The values readable in .notes are then identical to
-those found in System.map.
+Originally the check for this was in arm_smmu_sva_bind() but when the op
+was removed the test didn't get copied over to the new
+arm_smmu_sva_set_dev_pasid().
 
-Reported-by: Guixiong Wei <guixiongwei@gmail.com>
-Closes: https://lore.kernel.org/all/20240218073501.54555-1-guixiongwei@gmail.com/
-Fixes: 5ead97c84fa7 ("xen: Core Xen implementation")
-Fixes: da1a679cde9b ("Add /sys/kernel/notes")
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Without the test wrong usage usually will hit a WARN_ON() in
+arm_smmu_write_ctx_desc() due to a missing ctx table.
+
+However, the next patches wil change things so that an IDENTITY domain is
+not a struct arm_smmu_domain and this will get into memory corruption if
+the struct is wrongly casted.
+
+Fail in arm_smmu_sva_set_dev_pasid() if the STE does not have a S1, which
+is a proxy for the STE having a pointer to the CD table. Write it in a way
+that will be compatible with the next patches.
+
+Fixes: 386fa64fd52b ("arm-smmu-v3/sva: Add SVA domain support")
+Reported-by: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Closes: https://lore.kernel.org/linux-iommu/2a828e481416405fb3a4cceb9e075a59@huawei.com/
+Tested-by: Nicolin Chen <nicolinc@nvidia.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Link: https://lore.kernel.org/r/11-v6-96275f25c39d+2d4-smmuv3_newapi_p1_jgg@nvidia.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/tools/relocs.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-index d30949e25ebd9..e7013283640f5 100644
---- a/arch/x86/tools/relocs.c
-+++ b/arch/x86/tools/relocs.c
-@@ -653,6 +653,14 @@ static void print_absolute_relocs(void)
- 		if (!(sec_applies->shdr.sh_flags & SHF_ALLOC)) {
- 			continue;
- 		}
-+		/*
-+		 * Do not perform relocations in .notes section; any
-+		 * values there are meant for pre-boot consumption (e.g.
-+		 * startup_xen).
-+		 */
-+		if (sec_applies->shdr.sh_type == SHT_NOTE) {
-+			continue;
-+		}
- 		sh_symtab  = sec_symtab->symtab;
- 		sym_strtab = sec_symtab->link->strtab;
- 		for (j = 0; j < sec->shdr.sh_size/sizeof(Elf_Rel); j++) {
+diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
+index 8a16cd3ef487c..cc33e8297b8d0 100644
+--- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
++++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
+@@ -352,7 +352,13 @@ __arm_smmu_sva_bind(struct device *dev, struct mm_struct *mm)
+ 	struct arm_smmu_bond *bond;
+ 	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
+ 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+-	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
++	struct arm_smmu_domain *smmu_domain;
++
++	if (!(domain->type & __IOMMU_DOMAIN_PAGING))
++		return -ENODEV;
++	smmu_domain = to_smmu_domain(domain);
++	if (smmu_domain->stage != ARM_SMMU_DOMAIN_S1)
++		return -ENODEV;
+ 
+ 	if (!master || !master->sva_enabled)
+ 		return ERR_PTR(-ENODEV);
 -- 
 2.43.0
 
