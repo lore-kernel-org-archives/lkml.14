@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E8A2081E3;
-	Sun, 24 Mar 2024 23:05:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D34A137909;
+	Sun, 24 Mar 2024 23:05:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321541; cv=none; b=d6rvY5fbHJfq+EZVhCV5W+eqEIonZ0PHLdvBzmLT7l+PJ8LlyBqAtfX3lyiaBGvG45tSkHBqX+Yb5MYvFG5hfR/YG1Uk304zZbMihZ28OuxPRtHzQz3l7644zkBiDlEKx2cK9O4Avnha/svHKMtD4PXmCxWB+3RmxHEnF8EUv50=
+	t=1711321542; cv=none; b=cqhv0P/6gPEEmn7L6a8x6oNLr2Ujd9+xCZT9XTjault47suoMaG6SodPd2r1ZkUuec4IwYey16Hehqs3JQ9necKDxbPCu4i3+rDNLpAP5rP5IDs5uqVdGJTSnxAzRQjUpA0L7xRRl15jIkQIQZQcLBi/CoDi0xvQ7CqHdPdqaHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321541; c=relaxed/simple;
-	bh=ND4MKUcYcMyYShL2dADwCd1T3/24PLG/95Zp8DoRkb4=;
+	s=arc-20240116; t=1711321542; c=relaxed/simple;
+	bh=tN614vzaUT52efr1bB/r45OV/PkKSNPmC9OVEROEBJ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pCmxn9YYSHPGgs/b41tt7AsZI6WOQPGkeIJi1aExXUaZl8ib/VhbsBZo6QTJQfoD6jznGWXZukXqFvcS4vYmfLFUOhM3P1wQUPLuyLUz+OSfqlA5ZewfI9BZARUfWd9m4tJldh4F5dnVbQgONuyBPM87DiZ5JtYbRMm56gkxHiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iFHOWFJc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UQOiQotdivSN/Na3ov+A7ygrFT8J2MyFH345dudxU0oxCBr2PxnDNF2oKDrUQxTeKdIE9CA1BptZgZKrrYQfqJUlx5my7tboGPh9F4GivlRcqXh/CNUg8IAv0Z9UgBX7Hioya5jBVwImCa61tQ+k4TSAUCox/coCXl7CyFPkCEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNZqu2n8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iFHOWFJc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03D59C43390;
-	Sun, 24 Mar 2024 23:05:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNZqu2n8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCA77C43394;
+	Sun, 24 Mar 2024 23:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321539;
-	bh=ND4MKUcYcMyYShL2dADwCd1T3/24PLG/95Zp8DoRkb4=;
+	s=k20201202; t=1711321541;
+	bh=tN614vzaUT52efr1bB/r45OV/PkKSNPmC9OVEROEBJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iFHOWFJcuHqjOWLMBQi55spAsz5aCa+8mvR7BUpb4RxTqFKfJwdFqZtQsxceRSMDZ
-	 ewJUmop5Q9Wb0zfm9uVsbUU5e9xHFg0T/PLVNUq8eHEsB1JvYwCJIOlydEUz+BlvfP
-	 BRHTKmjJzzNlRb8462dZBHZ+dZfKzgoGYHj9neZo3whRWxTdwalf8wjJx1nW3XNiee
-	 H0vkngiia91kyJhJwXXj5y2V9bJaf68tjuS20IEBCGRuDKui2X79rWyWoLA/pjOCZt
-	 juJBXvivupqO5mJ7tmiNfA0w9B/zoIjAmBgyPoBjoEdxA706OCaaDT+jOMV+Fe//ic
-	 zd7F0LljWkArA==
+	b=eNZqu2n8+Hlb2Ntub5RNl1rbD7/Kj3P+TyawgE3wjm7OEq5J89VXqHjloQa4Ts1BT
+	 c8V6e4hDXStEBmpe99etXQ+L0ImDB8nqcQCjEUDbi2j+HBXcmkaN/TpBE4t1fnKEBV
+	 uhtUKM0M+LZoVfcgimGMshHitV+pdJs6KBIAg/hHgV5maL1p3/Lmdq5ixtdmkBUNKX
+	 jVdp8oHvG6omGsXa0CIoi+8RoRWi/wtukuX+4JU04mgd/4SorN0hSMkkUPSLbZhqUL
+	 xjC0Lme+VgbfoFirFfPi6fpJuNs3pmLJOtPi9tAmT0qrbZKV55XZY9g+Dd+jH16869
+	 7OxXetFlR6qWA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-	Andrew Lunn <andrew@lunn.ch>,
+Cc: Marek Vasut <marex@denx.de>,
 	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 267/638] ARM: dts: imx6dl-yapp4: Fix typo in the QCA switch register address
-Date: Sun, 24 Mar 2024 18:55:04 -0400
-Message-ID: <20240324230116.1348576-268-sashal@kernel.org>
+Subject: [PATCH 6.6 269/638] arm64: dts: imx8mp: Set SPI NOR to max 40 MHz on Data Modul i.MX8M Plus eDM SBC
+Date: Sun, 24 Mar 2024 18:55:06 -0400
+Message-ID: <20240324230116.1348576-270-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -45,42 +44,39 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 023bd910d3ab735459f84b22bb99fb9e00bd9d76 ]
+[ Upstream commit 13ab6f174a6b577bd7d09124b47ec8ace2682e42 ]
 
-This change does not have any functional effect. The switch works just
-fine without this patch as it has full access to all the addresses
-on the bus. This is simply a clean-up to set the node name address
-and reg address to the same value.
+The SPI NOR bus routing on this board cannot go above 50 MHz,
+set the clock frequency to maximum of 40 MHz to be within a
+safe margin. Remove the comment as well.
 
-Fixes: 15b43e497ffd ("ARM: dts: imx6dl-yapp4: Use correct pseudo PHY address for the switch")
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 562d222f23f0 ("arm64: dts: imx8mp: Add support for Data Modul i.MX8M Plus eDM SBC")
+Signed-off-by: Marek Vasut <marex@denx.de>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi | 2 +-
+ arch/arm64/boot/dts/freescale/imx8mp-data-modul-edm-sbc.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
-index 3be38a3c4bb11..d2b3e09eb7df8 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
-@@ -127,7 +127,7 @@ phy_port3: phy@2 {
- 
- 		switch@10 {
- 			compatible = "qca,qca8334";
--			reg = <10>;
-+			reg = <0x10>;
- 			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
- 
- 			switch_ports: ports {
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-data-modul-edm-sbc.dts b/arch/arm64/boot/dts/freescale/imx8mp-data-modul-edm-sbc.dts
+index 116bf9738a8a4..cd44bf83745ca 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-data-modul-edm-sbc.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mp-data-modul-edm-sbc.dts
+@@ -121,7 +121,7 @@ &ecspi1 {
+ 	flash@0 {	/* W25Q128JVEI */
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+-		spi-max-frequency = <100000000>;	/* Up to 133 MHz */
++		spi-max-frequency = <40000000>;
+ 		spi-tx-bus-width = <1>;
+ 		spi-rx-bus-width = <1>;
+ 	};
 -- 
 2.43.0
 
