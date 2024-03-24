@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409C617AF82;
-	Sun, 24 Mar 2024 23:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF84617AF90;
+	Sun, 24 Mar 2024 23:41:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323710; cv=none; b=g5hTGG3XC4zX5TbhMxsssqICQIDKt8L74Nrj8UBXGF8c/EkLMbRmSVkDlib/VK4aDJ/2WstaflQmK8FCc7zNn3n/61GfBQW56LqaC9ALPlAV4cMaZuiTMZ4Vjvh4wcyykiGY1Zp+MvYrx3RGmchRV5urlw0pNzLfl1N8GodVdd4=
+	t=1711323712; cv=none; b=VD0Dapy2JVGzcUoxYQm7cnyKZ/lWiQ7Nji+QLhmWEsw8k2lZ3ysEO28BtXmPhVBK7uo5TmUh03cFqbYlKhvRVXQXhqWV1Xrw6XyL8lGxvRm3YQ8dNTpv7u2poGtyJUzUIOS2sQuHqX/3wSUz6w12J/ssuPIc+nC8K18/O7nIkQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323710; c=relaxed/simple;
-	bh=T+nOVCSzRnGTdI5P8M9Z7cq6C1PiVUrKiwdyHWmFwZo=;
+	s=arc-20240116; t=1711323712; c=relaxed/simple;
+	bh=ract1cdDgR5IG6/X6Zoa8+kpV1nTRt1KjDzuWGwiT4Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q68vbM8MQbObw3VsdgdVUh1oOJIu7Fg/cDVKWEZGkwUcqakx+TUHaBJ3rP5YWcGPNDU0RXDEdq/pgZQD2/um9j+gtE8541yyfaK8Q8R/jEdGlyFLnAeNzJcq6rgbzasmByLHzTt1FblbEeWNvtPuCVmlOH+BHpSlSfdR+yEYX/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLmyZBLP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hsgO3G+/1889E/LBCysvsfzRXJ6cMl+k7lZJybfDl5z1FXYX7JD9FALRtjADBFbixxzvVTZ6Y8NuxAt9TKCKyLUkNRvb42X1q03uksgwFrXHWzlPGg9WuX2ZZnIVzLXWgE8MyNe3e/+cVUXuBH1KRnudUW+BvBof9DNcTOeYGiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e0X9ZgLN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLmyZBLP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DD2C43390;
-	Sun, 24 Mar 2024 23:41:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e0X9ZgLN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8356EC43390;
+	Sun, 24 Mar 2024 23:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323709;
-	bh=T+nOVCSzRnGTdI5P8M9Z7cq6C1PiVUrKiwdyHWmFwZo=;
+	s=k20201202; t=1711323711;
+	bh=ract1cdDgR5IG6/X6Zoa8+kpV1nTRt1KjDzuWGwiT4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rLmyZBLPc/wikNz+h7Vic52CcsI2I/WNTGqOJjEMOlfxjIkucdCdJGu01hYiTbLRI
-	 c8qOyFxewo0LGfnj7o5r1wAVDENCc7cFCEf5rKBe5lX6DH0Jl5mBdsHjTofaF1tNNm
-	 mDO+ljTGMNA4u7pZg8irSD9J1Ifzf0KrQpxFkrE65/xB1rQrXcN77Q9l5CQKqFwWTI
-	 +wAzv4LXPoB6EZRs5fHOHqzlGsC803/zqZzvMZuzfq3wfGLsviyt6Eb+w5qckYnznj
-	 L8GEJa24qwnTBkR/h7y3p8x3Z/79DRxoE1H2v/Xb/bPNektJ57C0bqywbhZHsxn+Qx
-	 aRX8wSFYItCdQ==
+	b=e0X9ZgLNjTUvI3cbT8p0Fk7Y618cbORHCHEOfMyQ5+L0rLLcSbhNbvDvAdzxasIE6
+	 Ibgbk/Pqoo7TX8qd1MD07ipz46tFOYeXlscWsAnJvp9O5TGmqMnfuHmczbWSKWn3CV
+	 Du64FjYwmg4QumBmRQN5eF1E80ddLuIrnLCs6ihEOIOq93wGFZ5qKIE6tDriJrIB/D
+	 neO5sjnTh/DhDPBBk8nHoMXAhAQBhFoEtG9gd3KKVw++2OM5Ez5BN4LaYpwRJm+XWF
+	 Gy7CKhJ1qJ/nMUuVBRkpqR9Z1Na1Vhi/XOhg/XEzk25mWAYOk4zK54fLHqj10fIukJ
+	 2vbfFf9ZwsfUQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Haorong Ye <yehaorong@bytedance.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Joerg Roedel <jroedel@suse.de>,
+Cc: Ruud Bos <kernel.hbk@gmail.com>,
+	Gurucharan G <gurucharanx.g@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 082/238] PCI: Make pci_dev_is_disconnected() helper public for other drivers
-Date: Sun, 24 Mar 2024 19:37:50 -0400
-Message-ID: <20240324234027.1354210-83-sashal@kernel.org>
+Subject: [PATCH 5.10 084/238] igb: move PEROUT and EXTTS isr logic to separate functions
+Date: Sun, 24 Mar 2024 19:37:52 -0400
+Message-ID: <20240324234027.1354210-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -52,65 +49,139 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+From: Ruud Bos <kernel.hbk@gmail.com>
 
-[ Upstream commit 39714fd73c6b60a8d27bcc5b431afb0828bf4434 ]
+[ Upstream commit cf99c1dd7b7729091043374b90807c7a5f9fd9b1 ]
 
-Make pci_dev_is_disconnected() public so that it can be called from
-Intel VT-d driver to quickly fix/workaround the surprise removal
-unplug hang issue for those ATS capable devices on PCIe switch downstream
-hotplug capable ports.
+Remove code duplication in the tsync interrupt handler function by moving
+this logic to separate functions. This keeps the interrupt handler readable
+and allows the new functions to be extended for adapter types other than
+i210.
 
-Beside pci_device_is_present() function, this one has no config space
-space access, so is light enough to optimize the normal pure surprise
-removal and safe removal flow.
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
-Tested-by: Haorong Ye <yehaorong@bytedance.com>
-Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Link: https://lore.kernel.org/r/20240301080727.3529832-2-haifeng.zhao@linux.intel.com
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Stable-dep-of: 4fc82cd907ac ("iommu/vt-d: Don't issue ATS Invalidation request when device is disconnected")
+Signed-off-by: Ruud Bos <kernel.hbk@gmail.com>
+Tested-by: Gurucharan G <gurucharanx.g@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Stable-dep-of: ee14cc9ea19b ("igb: Fix missing time sync events")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.h   | 5 -----
- include/linux/pci.h | 5 +++++
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 81 +++++++++++++----------
+ 1 file changed, 46 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 72436000ff252..32fa07bfc448e 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -399,11 +399,6 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
- 	return 0;
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 01176c86be125..05dde67a69dd0 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -6762,12 +6762,52 @@ void igb_update_stats(struct igb_adapter *adapter)
+ 	}
  }
  
--static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
--{
--	return dev->error_state == pci_channel_io_perm_failure;
--}
--
- /* pci_dev priv_flags */
- #define PCI_DEV_ADDED 0
- #define PCI_DPC_RECOVERED 1
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 550e1cdb473fa..bf46453475e31 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2191,6 +2191,11 @@ static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
- 	return NULL;
- }
- 
-+static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
++static void igb_perout(struct igb_adapter *adapter, int tsintr_tt)
 +{
-+	return dev->error_state == pci_channel_io_perm_failure;
++	int pin = ptp_find_pin(adapter->ptp_clock, PTP_PF_PEROUT, tsintr_tt);
++	struct e1000_hw *hw = &adapter->hw;
++	struct timespec64 ts;
++	u32 tsauxc;
++
++	if (pin < 0 || pin >= IGB_N_PEROUT)
++		return;
++
++	spin_lock(&adapter->tmreg_lock);
++	ts = timespec64_add(adapter->perout[pin].start,
++			    adapter->perout[pin].period);
++	/* u32 conversion of tv_sec is safe until y2106 */
++	wr32((tsintr_tt == 1) ? E1000_TRGTTIML1 : E1000_TRGTTIML0, ts.tv_nsec);
++	wr32((tsintr_tt == 1) ? E1000_TRGTTIMH1 : E1000_TRGTTIMH0, (u32)ts.tv_sec);
++	tsauxc = rd32(E1000_TSAUXC);
++	tsauxc |= TSAUXC_EN_TT0;
++	wr32(E1000_TSAUXC, tsauxc);
++	adapter->perout[pin].start = ts;
++	spin_unlock(&adapter->tmreg_lock);
 +}
 +
- void pci_request_acs(void);
- bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags);
- bool pci_acs_path_enabled(struct pci_dev *start,
++static void igb_extts(struct igb_adapter *adapter, int tsintr_tt)
++{
++	int pin = ptp_find_pin(adapter->ptp_clock, PTP_PF_EXTTS, tsintr_tt);
++	struct e1000_hw *hw = &adapter->hw;
++	struct ptp_clock_event event;
++	u32 sec, nsec;
++
++	if (pin < 0 || pin >= IGB_N_EXTTS)
++		return;
++
++	nsec = rd32((tsintr_tt == 1) ? E1000_AUXSTMPL1 : E1000_AUXSTMPL0);
++	sec  = rd32((tsintr_tt == 1) ? E1000_AUXSTMPH1 : E1000_AUXSTMPH0);
++	event.type = PTP_CLOCK_EXTTS;
++	event.index = tsintr_tt;
++	event.timestamp = sec * 1000000000ULL + nsec;
++	ptp_clock_event(adapter->ptp_clock, &event);
++}
++
+ static void igb_tsync_interrupt(struct igb_adapter *adapter)
+ {
+ 	struct e1000_hw *hw = &adapter->hw;
++	u32 ack = 0, tsicr = rd32(E1000_TSICR);
+ 	struct ptp_clock_event event;
+-	struct timespec64 ts;
+-	u32 ack = 0, tsauxc, sec, nsec, tsicr = rd32(E1000_TSICR);
+ 
+ 	if (tsicr & TSINTR_SYS_WRAP) {
+ 		event.type = PTP_CLOCK_PPS;
+@@ -6783,51 +6823,22 @@ static void igb_tsync_interrupt(struct igb_adapter *adapter)
+ 	}
+ 
+ 	if (tsicr & TSINTR_TT0) {
+-		spin_lock(&adapter->tmreg_lock);
+-		ts = timespec64_add(adapter->perout[0].start,
+-				    adapter->perout[0].period);
+-		/* u32 conversion of tv_sec is safe until y2106 */
+-		wr32(E1000_TRGTTIML0, ts.tv_nsec);
+-		wr32(E1000_TRGTTIMH0, (u32)ts.tv_sec);
+-		tsauxc = rd32(E1000_TSAUXC);
+-		tsauxc |= TSAUXC_EN_TT0;
+-		wr32(E1000_TSAUXC, tsauxc);
+-		adapter->perout[0].start = ts;
+-		spin_unlock(&adapter->tmreg_lock);
++		igb_perout(adapter, 0);
+ 		ack |= TSINTR_TT0;
+ 	}
+ 
+ 	if (tsicr & TSINTR_TT1) {
+-		spin_lock(&adapter->tmreg_lock);
+-		ts = timespec64_add(adapter->perout[1].start,
+-				    adapter->perout[1].period);
+-		wr32(E1000_TRGTTIML1, ts.tv_nsec);
+-		wr32(E1000_TRGTTIMH1, (u32)ts.tv_sec);
+-		tsauxc = rd32(E1000_TSAUXC);
+-		tsauxc |= TSAUXC_EN_TT1;
+-		wr32(E1000_TSAUXC, tsauxc);
+-		adapter->perout[1].start = ts;
+-		spin_unlock(&adapter->tmreg_lock);
++		igb_perout(adapter, 1);
+ 		ack |= TSINTR_TT1;
+ 	}
+ 
+ 	if (tsicr & TSINTR_AUTT0) {
+-		nsec = rd32(E1000_AUXSTMPL0);
+-		sec  = rd32(E1000_AUXSTMPH0);
+-		event.type = PTP_CLOCK_EXTTS;
+-		event.index = 0;
+-		event.timestamp = sec * 1000000000ULL + nsec;
+-		ptp_clock_event(adapter->ptp_clock, &event);
++		igb_extts(adapter, 0);
+ 		ack |= TSINTR_AUTT0;
+ 	}
+ 
+ 	if (tsicr & TSINTR_AUTT1) {
+-		nsec = rd32(E1000_AUXSTMPL1);
+-		sec  = rd32(E1000_AUXSTMPH1);
+-		event.type = PTP_CLOCK_EXTTS;
+-		event.index = 1;
+-		event.timestamp = sec * 1000000000ULL + nsec;
+-		ptp_clock_event(adapter->ptp_clock, &event);
++		igb_extts(adapter, 1);
+ 		ack |= TSINTR_AUTT1;
+ 	}
+ 
 -- 
 2.43.0
 
