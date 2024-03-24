@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DA91ED0F5;
-	Sun, 24 Mar 2024 23:08:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961EA211D05;
+	Sun, 24 Mar 2024 23:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321700; cv=none; b=n8f7hdYU5auASGv2o9FaFJtvhIvOlE/NPCG6tSS3JnRIp7mHzoKHNfJxNRfbt5Ep0mLe7qWas2FzwR5fq73Fiejt/PbA7r4Zs7IpSxXj/nNGsCM3xJTH3rMvtKdq2ObR/GlQph8Ngf4BwlMKWps2G4MjNGAzE1X/ihNEMqmTyiE=
+	t=1711321712; cv=none; b=PdQGFKbTzv52acx8kkMc6ZpLl/57tbiVon7f6BfzIZo2sntHv4j2bRoVECui8FI9RVWaIo7GLdgArPX/6HaMMzIxnFaOhxDyiyou/hLPppVbaKyXVS8xhx1WPFBDSOEcJpd+I2QXRQlGs7kg4GOp6r8/ftMd9hIzkr9at8Nw1Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321700; c=relaxed/simple;
-	bh=V06scgS1OL5j87Bb4ImsfPEdg8hpSPF5wgYAKzHQyXc=;
+	s=arc-20240116; t=1711321712; c=relaxed/simple;
+	bh=OOhIOyqFS4mQvDxA/ImwVYkd2JK0f+nUbxqOUBhllr0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aJztWYKjqd4Nqu0z/dB2u/WG+IR/a4a4bQVKw4ruaftnLgscX1tKbPpsreJSY7dSKvNyW07BNvbUXVfznEZx/9Y3C+atnwiBilWhlvqJdEU53f5HnJes9RMnJftc8zBeBSZxhqYDNDFYHtXFFdxhu3K5RzhpbXrHmOH+EAEuku4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JPeyujI4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Dwv/rRPJR47HHzE1WJIow7v9PQ0X4UGAPCJzdiecYU4EJBQ6wf5uAVEzlPQ/pyrcRxF+qhF/097bOB2O2Ma5tf4y/Z1LJHZo/y7ywl4Y2poCIQIBfAOT+8sHJUEKlS6ZVWyYDk5mqaCwF97FwLihJHEQLXJCVwsmqvd6iUjOxG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDd0v/2u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JPeyujI4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29EE3C433C7;
-	Sun, 24 Mar 2024 23:08:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDd0v/2u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D00DC43390;
+	Sun, 24 Mar 2024 23:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321698;
-	bh=V06scgS1OL5j87Bb4ImsfPEdg8hpSPF5wgYAKzHQyXc=;
+	s=k20201202; t=1711321711;
+	bh=OOhIOyqFS4mQvDxA/ImwVYkd2JK0f+nUbxqOUBhllr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JPeyujI4AqNEqOiXDG+UCoUSvH7xd8xX4QouN0g7TcjuQ2tFO8SXG8VC9CMBT52Ng
-	 28cLlTTRDhH8NlLSs8Kgd0tr2+RyizxB0xKatfQ06i0FkC/5xFLI5Ie1hMJ/t3HRke
-	 wrGAzvagFWVBkSlG28MSuZKe8/yM+Bi4prmR0038gAU6SHlNccZLftWy0nTXRawC8E
-	 /QP2nV/A7lREmeeWu1PSg1kF2yJN+TCB7d8D2dail+V6gGxIJGYrXqCzpkGXaQTL2C
-	 IdPmI0e9SxDv9dYbFu6UlnMPSzmcggDc5eS9JdVwHdTwQoP/c7y6RcOIlTZcD+NM4j
-	 pYR8JbF5WaJww==
+	b=IDd0v/2ui7e59UeX51rSEoBfizZu2W3+bPfpIPnJAE087Po38h9AOTUyab45ErLs4
+	 KIlz+QfcJGnI4Id6KwEui3kTKxNbPWLuJNXwv5HF+2G/3ET8fwWoIpq82Np7z6yype
+	 lPt2IQH3cSGbepHZv7ICtjQekNHKNliQdiwBrlGA//X+hV0cTKjYPmPwPHL+XrqH/v
+	 l9qE89SJnb4zboBifl4TzqFzK9TO4MPQzoB6oVS8EWa7x/g64BynV3I9S7N29/c3zH
+	 Vu7VQ3MvDnAT5xFZH0hVcaYt5yIYcEr6cRG9iSHmcEyz6T54Mt0/IlL8wlAEgb7f/B
+	 UW5b61CrNbTrw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Douglas Anderson <dianders@chromium.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 427/638] drm/panel: boe-tv101wum-nl6: make use of prepare_prev_first
-Date: Sun, 24 Mar 2024 18:57:44 -0400
-Message-ID: <20240324230116.1348576-428-sashal@kernel.org>
+Subject: [PATCH 6.6 440/638] media: i2c: imx290: Fix IMX920 typo
+Date: Sun, 24 Mar 2024 18:57:57 -0400
+Message-ID: <20240324230116.1348576-441-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,40 +51,66 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-[ Upstream commit 42a7a16bedc991190310a02dd202e29cfac52525 ]
+[ Upstream commit 6fc62efa266b0918c7b226f45c2eccfcf99a6d8e ]
 
-The panel on sc7180-trogdor-wormdingler and
-sc7180-trogdor-quackingstick hasn't been coming up since commit
-9e15123eca79 ("drm/msm/dsi: Stop unconditionally powering up DSI hosts
-at modeset"). Let's add "prepare_prev_first" as has been done for many
-other DSI panels.
+Replace IMX920 by IMX290.
 
-Fixes: 9e15123eca79 ("drm/msm/dsi: Stop unconditionally powering up DSI hosts at modeset")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-Link: https://lore.kernel.org/r/20240216123111.1.I71c103720909790e1ec5a3f5bd96b18ab7b596fa@changeid
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240216123111.1.I71c103720909790e1ec5a3f5bd96b18ab7b596fa@changeid
+Fixes: b4ab57b07c5b9 ("media: i2c: imx290: Add crop selection targets support")
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/i2c/imx290.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-index 29e63cdfb8954..7990c519a56b1 100644
---- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-+++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-@@ -2239,6 +2239,8 @@ static int boe_panel_add(struct boe_panel *boe)
+diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+index c6fea5837a19f..6dacd38ae947a 100644
+--- a/drivers/media/i2c/imx290.c
++++ b/drivers/media/i2c/imx290.c
+@@ -150,10 +150,10 @@
  
- 	gpiod_set_value(boe->enable_gpio, 0);
+ #define IMX290_PIXEL_ARRAY_WIDTH			1945
+ #define IMX290_PIXEL_ARRAY_HEIGHT			1097
+-#define IMX920_PIXEL_ARRAY_MARGIN_LEFT			12
+-#define IMX920_PIXEL_ARRAY_MARGIN_RIGHT			13
+-#define IMX920_PIXEL_ARRAY_MARGIN_TOP			8
+-#define IMX920_PIXEL_ARRAY_MARGIN_BOTTOM		9
++#define IMX290_PIXEL_ARRAY_MARGIN_LEFT			12
++#define IMX290_PIXEL_ARRAY_MARGIN_RIGHT			13
++#define IMX290_PIXEL_ARRAY_MARGIN_TOP			8
++#define IMX290_PIXEL_ARRAY_MARGIN_BOTTOM		9
+ #define IMX290_PIXEL_ARRAY_RECORDING_WIDTH		1920
+ #define IMX290_PIXEL_ARRAY_RECORDING_HEIGHT		1080
  
-+	boe->base.prepare_prev_first = true;
-+
- 	drm_panel_init(&boe->base, dev, &boe_panel_funcs,
- 		       DRM_MODE_CONNECTOR_DSI);
- 	err = of_drm_get_panel_orientation(dev->of_node, &boe->orientation);
+@@ -1161,10 +1161,10 @@ static int imx290_get_selection(struct v4l2_subdev *sd,
+ 		 * The sensor moves the readout by 1 pixel based on flips to
+ 		 * keep the Bayer order the same.
+ 		 */
+-		sel->r.top = IMX920_PIXEL_ARRAY_MARGIN_TOP
++		sel->r.top = IMX290_PIXEL_ARRAY_MARGIN_TOP
+ 			   + (IMX290_PIXEL_ARRAY_RECORDING_HEIGHT - format->height) / 2
+ 			   + imx290->vflip->val;
+-		sel->r.left = IMX920_PIXEL_ARRAY_MARGIN_LEFT
++		sel->r.left = IMX290_PIXEL_ARRAY_MARGIN_LEFT
+ 			    + (IMX290_PIXEL_ARRAY_RECORDING_WIDTH - format->width) / 2
+ 			    + imx290->hflip->val;
+ 		sel->r.width = format->width;
+@@ -1183,8 +1183,8 @@ static int imx290_get_selection(struct v4l2_subdev *sd,
+ 		return 0;
+ 
+ 	case V4L2_SEL_TGT_CROP_DEFAULT:
+-		sel->r.top = IMX920_PIXEL_ARRAY_MARGIN_TOP;
+-		sel->r.left = IMX920_PIXEL_ARRAY_MARGIN_LEFT;
++		sel->r.top = IMX290_PIXEL_ARRAY_MARGIN_TOP;
++		sel->r.left = IMX290_PIXEL_ARRAY_MARGIN_LEFT;
+ 		sel->r.width = IMX290_PIXEL_ARRAY_RECORDING_WIDTH;
+ 		sel->r.height = IMX290_PIXEL_ARRAY_RECORDING_HEIGHT;
+ 
 -- 
 2.43.0
 
