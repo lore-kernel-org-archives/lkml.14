@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625D322E160;
-	Sun, 24 Mar 2024 23:16:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99D922D884;
+	Sun, 24 Mar 2024 23:16:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322197; cv=none; b=AdLhM7F0qms8l+cQgjWTrU4pxYnj574VRN/J/gJ8SZXMHllldVynT7siocbLeS7hxrXGCA5aX7MFPpSp08ZctvZXIpUmMtKWlARjbjnUCMO3VUA196hGeRh+VwOZXGwumXRMn3IF0VscNzuPmRk7j65ReP2A+KF2MpTWfwyy5Gg=
+	t=1711322190; cv=none; b=g/n0CtLzCiZkG8yzKljG2fSNKZlvX34+uGAiJMdU4w2WdNNV6pTuvJSKAaVH9C1Vym12UTyC1gbAZ1f6+NS1Pznk4/0f6nam2ATpRxI56uM8xt8n5hQF7XybgYoCPWkgL7H269xIaJAXD9pW9ZnIBhrjrYeqQPj7wjQxHq5ubzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322197; c=relaxed/simple;
-	bh=coROLWlO5K712xxp3dUuLAN0MFaIceDLQbaWwto2zgw=;
+	s=arc-20240116; t=1711322190; c=relaxed/simple;
+	bh=l+jt0eU5Jjh6/L2EKqkfezPwODvgXeyoiZB8bb9jvVY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bDTgPHsysvVMUAm0K9MwmUaMhEifrgoQRydZaYP1+1/lAMB4yUm76fujzDPFmrAb6IY1tIQ4i+QJlDC9xBpCRC3eC0+JpU1TlcPB5TqhYSDJOHzxFj40e8azKFKRFmTvPrH5TbW70o2rGUKNxTvitMX0MCI5IR9LOdTdbg5MP/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bjm9UOen; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SXWyDpyhWIcuV6WpMtFNuHLaQ6SDACaQbcBsN7bR40bZJTPteAXDIaM42uyKMk965grRaUnp0TCtjvUnl4DPzRhRMaffvYU+2ilZxx6kBK12shV0moudOEP+coTdsbQtyHi8XI2cqBfgmo2vKGRwNA3KySpDmKUsW4O8EdWmMAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHaYDmJq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bjm9UOen"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E253C43143;
-	Sun, 24 Mar 2024 23:16:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHaYDmJq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3564DC43390;
+	Sun, 24 Mar 2024 23:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322196;
-	bh=coROLWlO5K712xxp3dUuLAN0MFaIceDLQbaWwto2zgw=;
+	s=k20201202; t=1711322188;
+	bh=l+jt0eU5Jjh6/L2EKqkfezPwODvgXeyoiZB8bb9jvVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Bjm9UOens6zJQRf+yA3XvE1SMiqDxaa4CD6WAF2+HlG30+/AZLupYHoUsOsv0JKWE
-	 fMupY1ukKN36MWh3M8ql+gECB2dliKjplPZVEzBBtVQRS67l5NjK8jV58Bc6U1CX91
-	 1S0hUv4SNyJV0XyArE74C6AN0Kwr5FcsoponCSCu4lf82bMTo0N/d1U3lJiKudoA9w
-	 pVBcgoDa5CoO5RITRJpUG2b1T2HqFDuQKINAK8ZmJ1VQeXo2gGoMon2fBj/f3bnmpf
-	 xQmOH09wcL0tHaDaFLepqVhg2bmnATF+SXmjRnzLYdD8e3BNka0eQnldF16h/pZTOI
-	 wnzOkmfr9YkvQ==
+	b=dHaYDmJqJNgHJDvg28c21QHRwJPIV/kWEfW+nJoAnfrG1Cj+xdan2bjiSo7X/sw0W
+	 ou2C303+cf5YbuEMXO3ACI8vV1d2tEUQaGhpAubEqLYPE7oWBVFjYVkBg13YbkdGKS
+	 DBIy+zj7fEZ0c1l3/5/rp9JU7q/Ia24PPHQLZdiwhObK6gN80ZQacGcqEU3+eDpxHG
+	 4Ulk8pVrqpBkrU6mmbC53RyCaajFjNjOyvxXS5EmBdkVCjS9B5oesvpQQ+e19rfKg5
+	 LDGmR4wZPWfJhjFE07d1W35C+qJuYrMDpjKjwyUI4J7SUjpy+3+D5bpnWHHX4B0Pi6
+	 i6k87NbxueBlA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jan Kara <jack@suse.cz>,
-	kernel test robot <lkp@intel.com>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 275/451] quota: Fix rcu annotations of inode dquot pointers
-Date: Sun, 24 Mar 2024 19:09:11 -0400
-Message-ID: <20240324231207.1351418-276-sashal@kernel.org>
+Subject: [PATCH 6.1 267/451] media: v4l2-mem2mem: fix a memleak in v4l2_m2m_register_entity
+Date: Sun, 24 Mar 2024 19:09:03 -0400
+Message-ID: <20240324231207.1351418-268-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,251 +48,46 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jan Kara <jack@suse.cz>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 179b8c97ebf63429589f5afeba59a181fe70603e ]
+[ Upstream commit 8f94b49a5b5d386c038e355bef6347298aabd211 ]
 
-Dquot pointers in i_dquot array in the inode are protected by
-dquot_srcu. Annotate the array pointers with __rcu, perform the locked
-dereferences with srcu_dereference_check() instead of plain reads, and
-set the array elements with rcu_assign_pointer().
+The entity->name (i.e. name) is allocated in v4l2_m2m_register_entity
+but isn't freed in its following error-handling paths. This patch
+adds such deallocation to prevent memleak of entity->name.
 
-Fixes: b9ba6f94b238 ("quota: remove dqptr_sem")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402061900.rTuYDlo6-lkp@intel.com/
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: be2fff656322 ("media: add helpers for memory-to-memory media controller")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/quota/dquot.c | 66 ++++++++++++++++++++++++++++--------------------
- 1 file changed, 39 insertions(+), 27 deletions(-)
+ drivers/media/v4l2-core/v4l2-mem2mem.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index 44c4da364c994..b67557647d61f 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -399,7 +399,7 @@ int dquot_mark_dquot_dirty(struct dquot *dquot)
- EXPORT_SYMBOL(dquot_mark_dquot_dirty);
+diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
+index be7fde1ed3eaa..97645d6509e1c 100644
+--- a/drivers/media/v4l2-core/v4l2-mem2mem.c
++++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+@@ -1084,11 +1084,17 @@ static int v4l2_m2m_register_entity(struct media_device *mdev,
+ 	entity->function = function;
  
- /* Dirtify all the dquots - this can block when journalling */
--static inline int mark_all_dquot_dirty(struct dquot * const *dquots)
-+static inline int mark_all_dquot_dirty(struct dquot __rcu * const *dquots)
- {
- 	int ret, err, cnt;
- 	struct dquot *dquot;
-@@ -1006,14 +1006,15 @@ struct dquot *dqget(struct super_block *sb, struct kqid qid)
+ 	ret = media_entity_pads_init(entity, num_pads, pads);
+-	if (ret)
++	if (ret) {
++		kfree(entity->name);
++		entity->name = NULL;
+ 		return ret;
++	}
+ 	ret = media_device_register_entity(mdev, entity);
+-	if (ret)
++	if (ret) {
++		kfree(entity->name);
++		entity->name = NULL;
+ 		return ret;
++	}
+ 
+ 	return 0;
  }
- EXPORT_SYMBOL(dqget);
- 
--static inline struct dquot **i_dquot(struct inode *inode)
-+static inline struct dquot __rcu **i_dquot(struct inode *inode)
- {
--	return inode->i_sb->s_op->get_dquots(inode);
-+	/* Force __rcu for now until filesystems are fixed */
-+	return (struct dquot __rcu **)inode->i_sb->s_op->get_dquots(inode);
- }
- 
- static int dqinit_needed(struct inode *inode, int type)
- {
--	struct dquot * const *dquots;
-+	struct dquot __rcu * const *dquots;
- 	int cnt;
- 
- 	if (IS_NOQUOTA(inode))
-@@ -1103,14 +1104,16 @@ static void remove_dquot_ref(struct super_block *sb, int type)
- 		 */
- 		spin_lock(&dq_data_lock);
- 		if (!IS_NOQUOTA(inode)) {
--			struct dquot **dquots = i_dquot(inode);
--			struct dquot *dquot = dquots[type];
-+			struct dquot __rcu **dquots = i_dquot(inode);
-+			struct dquot *dquot = srcu_dereference_check(
-+				dquots[type], &dquot_srcu,
-+				lockdep_is_held(&dq_data_lock));
- 
- #ifdef CONFIG_QUOTA_DEBUG
- 			if (unlikely(inode_get_rsv_space(inode) > 0))
- 				reserved = 1;
- #endif
--			dquots[type] = NULL;
-+			rcu_assign_pointer(dquots[type], NULL);
- 			if (dquot)
- 				dqput(dquot);
- 		}
-@@ -1463,7 +1466,8 @@ static int inode_quota_active(const struct inode *inode)
- static int __dquot_initialize(struct inode *inode, int type)
- {
- 	int cnt, init_needed = 0;
--	struct dquot **dquots, *got[MAXQUOTAS] = {};
-+	struct dquot __rcu **dquots;
-+	struct dquot *got[MAXQUOTAS] = {};
- 	struct super_block *sb = inode->i_sb;
- 	qsize_t rsv;
- 	int ret = 0;
-@@ -1538,7 +1542,7 @@ static int __dquot_initialize(struct inode *inode, int type)
- 		if (!got[cnt])
- 			continue;
- 		if (!dquots[cnt]) {
--			dquots[cnt] = got[cnt];
-+			rcu_assign_pointer(dquots[cnt], got[cnt]);
- 			got[cnt] = NULL;
- 			/*
- 			 * Make quota reservation system happy if someone
-@@ -1546,12 +1550,16 @@ static int __dquot_initialize(struct inode *inode, int type)
- 			 */
- 			rsv = inode_get_rsv_space(inode);
- 			if (unlikely(rsv)) {
-+				struct dquot *dquot = srcu_dereference_check(
-+					dquots[cnt], &dquot_srcu,
-+					lockdep_is_held(&dq_data_lock));
-+
- 				spin_lock(&inode->i_lock);
- 				/* Get reservation again under proper lock */
- 				rsv = __inode_get_rsv_space(inode);
--				spin_lock(&dquots[cnt]->dq_dqb_lock);
--				dquots[cnt]->dq_dqb.dqb_rsvspace += rsv;
--				spin_unlock(&dquots[cnt]->dq_dqb_lock);
-+				spin_lock(&dquot->dq_dqb_lock);
-+				dquot->dq_dqb.dqb_rsvspace += rsv;
-+				spin_unlock(&dquot->dq_dqb_lock);
- 				spin_unlock(&inode->i_lock);
- 			}
- 		}
-@@ -1573,7 +1581,7 @@ EXPORT_SYMBOL(dquot_initialize);
- 
- bool dquot_initialize_needed(struct inode *inode)
- {
--	struct dquot **dquots;
-+	struct dquot __rcu **dquots;
- 	int i;
- 
- 	if (!inode_quota_active(inode))
-@@ -1598,13 +1606,14 @@ EXPORT_SYMBOL(dquot_initialize_needed);
- static void __dquot_drop(struct inode *inode)
- {
- 	int cnt;
--	struct dquot **dquots = i_dquot(inode);
-+	struct dquot __rcu **dquots = i_dquot(inode);
- 	struct dquot *put[MAXQUOTAS];
- 
- 	spin_lock(&dq_data_lock);
- 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
--		put[cnt] = dquots[cnt];
--		dquots[cnt] = NULL;
-+		put[cnt] = srcu_dereference_check(dquots[cnt], &dquot_srcu,
-+					lockdep_is_held(&dq_data_lock));
-+		rcu_assign_pointer(dquots[cnt], NULL);
- 	}
- 	spin_unlock(&dq_data_lock);
- 	dqput_all(put);
-@@ -1612,7 +1621,7 @@ static void __dquot_drop(struct inode *inode)
- 
- void dquot_drop(struct inode *inode)
- {
--	struct dquot * const *dquots;
-+	struct dquot __rcu * const *dquots;
- 	int cnt;
- 
- 	if (IS_NOQUOTA(inode))
-@@ -1685,7 +1694,7 @@ int __dquot_alloc_space(struct inode *inode, qsize_t number, int flags)
- 	int cnt, ret = 0, index;
- 	struct dquot_warn warn[MAXQUOTAS];
- 	int reserve = flags & DQUOT_SPACE_RESERVE;
--	struct dquot **dquots;
-+	struct dquot __rcu **dquots;
- 	struct dquot *dquot;
- 
- 	if (!inode_quota_active(inode)) {
-@@ -1755,7 +1764,7 @@ int dquot_alloc_inode(struct inode *inode)
- {
- 	int cnt, ret = 0, index;
- 	struct dquot_warn warn[MAXQUOTAS];
--	struct dquot * const *dquots;
-+	struct dquot __rcu * const *dquots;
- 	struct dquot *dquot;
- 
- 	if (!inode_quota_active(inode))
-@@ -1800,7 +1809,7 @@ EXPORT_SYMBOL(dquot_alloc_inode);
-  */
- int dquot_claim_space_nodirty(struct inode *inode, qsize_t number)
- {
--	struct dquot **dquots;
-+	struct dquot __rcu **dquots;
- 	struct dquot *dquot;
- 	int cnt, index;
- 
-@@ -1842,7 +1851,7 @@ EXPORT_SYMBOL(dquot_claim_space_nodirty);
-  */
- void dquot_reclaim_space_nodirty(struct inode *inode, qsize_t number)
- {
--	struct dquot **dquots;
-+	struct dquot __rcu **dquots;
- 	struct dquot *dquot;
- 	int cnt, index;
- 
-@@ -1886,7 +1895,7 @@ void __dquot_free_space(struct inode *inode, qsize_t number, int flags)
- {
- 	unsigned int cnt;
- 	struct dquot_warn warn[MAXQUOTAS];
--	struct dquot **dquots;
-+	struct dquot __rcu **dquots;
- 	struct dquot *dquot;
- 	int reserve = flags & DQUOT_SPACE_RESERVE, index;
- 
-@@ -1943,7 +1952,7 @@ void dquot_free_inode(struct inode *inode)
- {
- 	unsigned int cnt;
- 	struct dquot_warn warn[MAXQUOTAS];
--	struct dquot * const *dquots;
-+	struct dquot __rcu * const *dquots;
- 	struct dquot *dquot;
- 	int index;
- 
-@@ -1990,6 +1999,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 	qsize_t cur_space;
- 	qsize_t rsv_space = 0;
- 	qsize_t inode_usage = 1;
-+	struct dquot __rcu **dquots;
- 	struct dquot *transfer_from[MAXQUOTAS] = {};
- 	int cnt, index, ret = 0;
- 	char is_valid[MAXQUOTAS] = {};
-@@ -2022,6 +2032,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 	}
- 	cur_space = __inode_get_bytes(inode);
- 	rsv_space = __inode_get_rsv_space(inode);
-+	dquots = i_dquot(inode);
- 	/*
- 	 * Build the transfer_from list, check limits, and update usage in
- 	 * the target structures.
-@@ -2036,7 +2047,8 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 		if (!sb_has_quota_active(inode->i_sb, cnt))
- 			continue;
- 		is_valid[cnt] = 1;
--		transfer_from[cnt] = i_dquot(inode)[cnt];
-+		transfer_from[cnt] = srcu_dereference_check(dquots[cnt],
-+				&dquot_srcu, lockdep_is_held(&dq_data_lock));
- 		ret = dquot_add_inodes(transfer_to[cnt], inode_usage,
- 				       &warn_to[cnt]);
- 		if (ret)
-@@ -2075,7 +2087,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 						  rsv_space);
- 			spin_unlock(&transfer_from[cnt]->dq_dqb_lock);
- 		}
--		i_dquot(inode)[cnt] = transfer_to[cnt];
-+		rcu_assign_pointer(dquots[cnt], transfer_to[cnt]);
- 	}
- 	spin_unlock(&inode->i_lock);
- 	spin_unlock(&dq_data_lock);
-@@ -2086,8 +2098,8 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 	 * mark_all_dquot_dirty().
- 	 */
- 	index = srcu_read_lock(&dquot_srcu);
--	mark_all_dquot_dirty(transfer_from);
--	mark_all_dquot_dirty(transfer_to);
-+	mark_all_dquot_dirty((struct dquot __rcu **)transfer_from);
-+	mark_all_dquot_dirty((struct dquot __rcu **)transfer_to);
- 	srcu_read_unlock(&dquot_srcu, index);
- 
- 	flush_warnings(warn_to);
 -- 
 2.43.0
 
