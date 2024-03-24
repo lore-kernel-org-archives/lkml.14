@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84CA20239E;
-	Sun, 24 Mar 2024 23:03:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE2E202B88;
+	Sun, 24 Mar 2024 23:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321430; cv=none; b=PhaNefMK4nFMR1SymcJiSFGe1g7RuwMpmcLudGp4UVfw/r1t6SNCF8tZnFpSIWuD02U0GMJeuv1U+4xSCiBYXAEyUdJIPNXIup1Cpx60a636VSzqDKxHQ2zoHMANubDqloTlQz/CD3Wm5GD/ST6v7cn/YuG+bcLywq97wnSFbb4=
+	t=1711321436; cv=none; b=ffy8veYIJ1y2p6RbkvPiQxBXpcwKtwnXhn/S8wjFlYX7uhkBbgPCwVk6jjNtFIwN45ROl3C3f2p1hunCEXlOBwmdV7c/2jcH5cEJ2YaHtilYZXNEdSNhJsmuH/BlaL9KaACIFBIrgzHlI4Pjm3ULLZ1MzhjHBuFqJg/lVtP3OW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321430; c=relaxed/simple;
-	bh=+4AiABqnksxNdiMVZMOXIxNcwiZbJbOVBDo6C4zJjWs=;
+	s=arc-20240116; t=1711321436; c=relaxed/simple;
+	bh=37Zel5azHMMPsuJmvBbKgkaQSVhGNE8yCrKdKwCBDRk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QxTKy4O6OuA7q/edSEDLjgIjfZOmAtQSs29ezNjKt0XiGgU5qqK8SNrhClZebPRdksPVGeZbCrPVCIymVIOWMvmSENAsHRk011rzKs+Y7ZHnwZXYbjLxO1DPidfbM1E6TvhY8w6G+Iida9sQBY6iwgGE14ba8Zz3oS+pivgb4i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dgWoFn+J; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QS3bcrETTfZyCr5tSdkm7NaZIMaTqvB3W75oGGdfEtuV+glH21yGJ7wz+MiBrRbtxSVfJEdvqh+80/PmPZJKgpqWu9e+33/R1uOq8Ut/RaASIKSvv8L8wfkEVKzEc/fX5COqTA20aaAZHVLZaIO0w9BZ31sILz35xq0p/Nw9HAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RIaAwB+4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dgWoFn+J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B839C433F1;
-	Sun, 24 Mar 2024 23:03:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RIaAwB+4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA973C43399;
+	Sun, 24 Mar 2024 23:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321429;
-	bh=+4AiABqnksxNdiMVZMOXIxNcwiZbJbOVBDo6C4zJjWs=;
+	s=k20201202; t=1711321435;
+	bh=37Zel5azHMMPsuJmvBbKgkaQSVhGNE8yCrKdKwCBDRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dgWoFn+JtYkrsie3Iim3VBF9Lsh1sAxZ3gxTYCbG3NRmUBeE9MLpYBUjgzCoDiOob
-	 4rD8qP0kP1ajpf0icrGefosSIpCEADsGBec+hG4kqEkB9RrWpDwUcNx93nRQJkMozl
-	 +VI3Y8Cqw1xCgJg6Ddh7mw8u8qMwxPhKNc9JsYezwZUKLJ6Y9dnBLU5dTcGPxcPTQN
-	 vAoEC+VVKivvJzAuGxD30FGrKrlwn4VFqMh3N4fQkaOgOVNuZfxCWSjdPEJ1m/LM8w
-	 rW4T2icgQhn6HzivQgUk6Ac35NLdv1WfQrGFXb7bFGtcg5N8kjAX7wdbTB7xuWpDLu
-	 XOxvVxDLnzBxQ==
+	b=RIaAwB+4rz5EyUxmgxfpQuOml4axqccPgrGt4qT6VUmfmH3HjFlvTHO8RI2xpuIGR
+	 bdpSPnEop8DU9NMum1jzKt0GZymqdC+rVKdbrdHtm9xHmorNRaAGMLQEqfNdcGHt5B
+	 jCakCrsCvIeBCEcBDrMxc+H9Bc+yMiEJtbfP/iPAp/C7sLVw1xzPvLU0T4dr/MJeFV
+	 65bmhyCJVSD5OG5dbcoi+8oIhq8vwqtN/gzD8KZMiTGDMhxhg45HtSpYgMpOSlTfb0
+	 ZD1kd+vmfHG3AChBnWr+w6QrlRK+Epk9JWBNmbdcBuoMpkJCUUZ4PgNSLKXnZn845G
+	 DquLsVZg5NVIw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 153/638] arm64: dts: renesas: r8a779g0: Restore sort order
-Date: Sun, 24 Mar 2024 18:53:10 -0400
-Message-ID: <20240324230116.1348576-154-sashal@kernel.org>
+Subject: [PATCH 6.6 159/638] arm64: dts: imx8mm-kontron: Disable pullups for onboard UART signals on BL board
+Date: Sun, 24 Mar 2024 18:53:16 -0400
+Message-ID: <20240324230116.1348576-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -47,124 +48,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-[ Upstream commit 8b93657c976a61726d7ffbe8d019b84b4abfb673 ]
+[ Upstream commit 162aadaa0df8217b0cc49d919dd00022fef65e78 ]
 
-Numerical by unit address, alphabetical by node name.
+These signals are actively driven by the SoC or by the onboard
+transceiver. There's no need to enable the internal pull resistors
+and due to silicon errata ERR050080 let's disable the internal ones
+to prevent any unwanted behavior in case they wear out.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/f00ef274a73c8fd60f940a1649423a8927b9ae8a.1705324708.git.geert+renesas@glider.be
-Stable-dep-of: 08e799f6bce8 ("arm64: dts: renesas: r8a779g0: Add missing SCIF_CLK2")
+Fixes: 8668d8b2e67f ("arm64: dts: Add the Kontron i.MX8M Mini SoMs and baseboards")
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a779g0.dtsi | 72 +++++++++++------------
- 1 file changed, 36 insertions(+), 36 deletions(-)
+ .../boot/dts/freescale/imx8mm-kontron-bl.dts     | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-index d3d25e077c5d5..3be1159982b20 100644
---- a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-@@ -161,11 +161,6 @@ L3_CA76_1: cache-controller-1 {
- 		};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
+index 5fd2e45258b11..ee93db11c0d06 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
+@@ -292,19 +292,19 @@ MX8MM_IOMUXC_SPDIF_RX_PWM2_OUT			0x19
+ 
+ 	pinctrl_uart1: uart1grp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_SAI2_RXC_UART1_DCE_RX		0x140
+-			MX8MM_IOMUXC_SAI2_RXFS_UART1_DCE_TX		0x140
+-			MX8MM_IOMUXC_SAI2_RXD0_UART1_DCE_RTS_B		0x140
+-			MX8MM_IOMUXC_SAI2_TXFS_UART1_DCE_CTS_B		0x140
++			MX8MM_IOMUXC_SAI2_RXC_UART1_DCE_RX		0x0
++			MX8MM_IOMUXC_SAI2_RXFS_UART1_DCE_TX		0x0
++			MX8MM_IOMUXC_SAI2_RXD0_UART1_DCE_RTS_B		0x0
++			MX8MM_IOMUXC_SAI2_TXFS_UART1_DCE_CTS_B		0x0
+ 		>;
  	};
  
--	psci {
--		compatible = "arm,psci-1.0", "arm,psci-0.2";
--		method = "smc";
--	};
--
- 	extal_clk: extal {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
-@@ -185,6 +180,11 @@ pmu_a76 {
- 		interrupts-extended = <&gic GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+ 	pinctrl_uart2: uart2grp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX		0x140
+-			MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX		0x140
+-			MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B		0x140
+-			MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B		0x140
++			MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX		0x0
++			MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX		0x0
++			MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B		0x0
++			MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B		0x0
+ 		>;
  	};
  
-+	psci {
-+		compatible = "arm,psci-1.0", "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
- 	/* External SCIF clock - to be overridden by boards that provide it */
- 	scif_clk: scif {
- 		compatible = "fixed-clock";
-@@ -1777,6 +1777,37 @@ ssi0: ssi-0 {
- 			};
- 		};
- 
-+		mmc0: mmc@ee140000 {
-+			compatible = "renesas,sdhi-r8a779g0",
-+				     "renesas,rcar-gen4-sdhi";
-+			reg = <0 0xee140000 0 0x2000>;
-+			interrupts = <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 706>,
-+				 <&cpg CPG_CORE R8A779G0_CLK_SD0H>;
-+			clock-names = "core", "clkh";
-+			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
-+			resets = <&cpg 706>;
-+			max-frequency = <200000000>;
-+			iommus = <&ipmmu_ds0 32>;
-+			status = "disabled";
-+		};
-+
-+		rpc: spi@ee200000 {
-+			compatible = "renesas,r8a779g0-rpc-if",
-+				     "renesas,rcar-gen4-rpc-if";
-+			reg = <0 0xee200000 0 0x200>,
-+			      <0 0x08000000 0 0x04000000>,
-+			      <0 0xee208000 0 0x100>;
-+			reg-names = "regs", "dirmap", "wbuf";
-+			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 629>;
-+			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
-+			resets = <&cpg 629>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		ipmmu_rt0: iommu@ee480000 {
- 			compatible = "renesas,ipmmu-r8a779g0",
- 				     "renesas,rcar-gen4-ipmmu-vmsa";
-@@ -1886,37 +1917,6 @@ ipmmu_mm: iommu@eefc0000 {
- 			#iommu-cells = <1>;
- 		};
- 
--		mmc0: mmc@ee140000 {
--			compatible = "renesas,sdhi-r8a779g0",
--				     "renesas,rcar-gen4-sdhi";
--			reg = <0 0xee140000 0 0x2000>;
--			interrupts = <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&cpg CPG_MOD 706>,
--				 <&cpg CPG_CORE R8A779G0_CLK_SD0H>;
--			clock-names = "core", "clkh";
--			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
--			resets = <&cpg 706>;
--			max-frequency = <200000000>;
--			iommus = <&ipmmu_ds0 32>;
--			status = "disabled";
--		};
--
--		rpc: spi@ee200000 {
--			compatible = "renesas,r8a779g0-rpc-if",
--				     "renesas,rcar-gen4-rpc-if";
--			reg = <0 0xee200000 0 0x200>,
--			      <0 0x08000000 0 0x04000000>,
--			      <0 0xee208000 0 0x100>;
--			reg-names = "regs", "dirmap", "wbuf";
--			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&cpg CPG_MOD 629>;
--			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
--			resets = <&cpg 629>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			status = "disabled";
--		};
--
- 		gic: interrupt-controller@f1000000 {
- 			compatible = "arm,gic-v3";
- 			#interrupt-cells = <3>;
 -- 
 2.43.0
 
