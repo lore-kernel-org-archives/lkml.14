@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C40923450D;
-	Sun, 24 Mar 2024 23:18:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6587E234D87;
+	Sun, 24 Mar 2024 23:18:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322282; cv=none; b=mKpzI7lwFEDoYj5YccV389b+KkzeJRHaJglNVj/3ggGyx4ZCsZ8o1IQqQ2nbkXcF7jwl2//zhg91JO74+vzaOXi6+0C/x8jV5nDeymnGopbLmthE4T0clh0f8rFslArLp6tKDVP7PLkX/OLf+9majpnnlRtIOQ/0Xk4yDsc55sU=
+	t=1711322289; cv=none; b=R8RNacZbSQhoRxxgCOrVE6VUspUsFXYifvOF5q7LNzfcFzD6CEBc68TTElIKwqx9iGq1QWEjQn4RDOjqMI5i6qSq2JWv3kryCjRig9h/CyiyU1P9xyBFzvTiVPDyMOTVSNirsDye9rbugEOg1G0xMRNA3PvMKJ+iCkBvLNmD+34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322282; c=relaxed/simple;
-	bh=29OKIg7YUnRgl/JzYN9K7rSXlGBuWt74fJoWE1JKOyU=;
+	s=arc-20240116; t=1711322289; c=relaxed/simple;
+	bh=yYO9KRfCndalG65ITRxpc4yjL9HO5ZNlZM30I0MbeX0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ErVqvQlYBbz06Il1vlbWtBom6wWT56wQ0u6fUREteIdVmQ0rZ3zklG+I8j2N2aKwbef81f12UTaxIdDT2gIKSjyAa7vwLNNWVdYzdn+OnG49Lis07S0eJ+iaO/0Hqoy52qoWY1ubExmrcGvTUcX521+o5oUc3c3jVQzkyexnwb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npD4Wuao; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KA+YbJTZ74kEkT0vENCCibvbNH8Tu6bZk+8yy84rEOD9RtstvHuw+JccLHvJ99E29doQ7dBrACmClJ98787Ideo4rmCvKiHISBuxwjiSqIg3u2QRlvWfFCPV8MbzkzOCJic/pJqq+KvTPtI+fydDvVwWuHbCILTp684d1MfQfPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXRUUe+R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npD4Wuao"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81835C43399;
-	Sun, 24 Mar 2024 23:18:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXRUUe+R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC84C43394;
+	Sun, 24 Mar 2024 23:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322282;
-	bh=29OKIg7YUnRgl/JzYN9K7rSXlGBuWt74fJoWE1JKOyU=;
+	s=k20201202; t=1711322288;
+	bh=yYO9KRfCndalG65ITRxpc4yjL9HO5ZNlZM30I0MbeX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=npD4WuaoN9+qj26wfxLTS1S6LNMkHx6goQZ4Xl6X/LvSEKtILo91NVYzm96R7R+xk
-	 v1ZSlv1Fehz0CYlU8ecJBKOrK69+Z4GaS27y51/RaP6HgrYPP7NObPzFICgombArV7
-	 xcNjws9/1z2QDgfhhxWolv8WJumR3fcmIlXSHySFOu2+fpewJ4pWj3XqAzCDMg/tB2
-	 zhgfk88Tp8QQCtpIezfveTtLi2/636DH/wNxLYlnWaRW/jLsVfwDmnQ8WqddLisfI3
-	 JG3cMhnzKvu3DSVohNPa16FX+IEoZJ9L0JbIXVQxPcFdWq5tSt63NMygBdiU8DwCs+
-	 pFEErf/kEH3lQ==
+	b=cXRUUe+RUW7RxfJr4LS/i3LgD+WQxUmyq9Vpbe9AQE4nI17o5NulaY+pVITigfCrh
+	 GV0gy8elzrsazkQCZQuxxlbFfDwpGQKnQITGfl4+5KQkr2D38NfgtCtvbk/CAUz+g5
+	 /EgsJ4PrkKsRphxyL8ENYwlu4Rin5i9dauTxC49IEVn0TD8tPLxhVz1suqcoQa22m8
+	 Q5dyyPF58MFa+sKhviQgTAereN7aNpLbyEEZtmzamWRKsAiI/jNrXADd1kROzjoTnn
+	 XMAhCQg892Is0/bFgSYs6F0F8WZwcTL7BmEtQJ4HyFGHWIEG62XubWd2Xkt05W/qS0
+	 B3fhwBrv0jMag==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Luoyouming <luoyouming@huawei.com>,
-	Junxian Huang <huangjunxian6@hisilicon.com>,
-	Leon Romanovsky <leon@kernel.org>,
+Cc: Jorge Mora <jmora1300@gmail.com>,
+	Jorge Mora <mora@netapp.com>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 365/451] RDMA/hns: Fix mis-modifying default congestion control algorithm
-Date: Sun, 24 Mar 2024 19:10:41 -0400
-Message-ID: <20240324231207.1351418-366-sashal@kernel.org>
+Subject: [PATCH 6.1 371/451] NFSv4.2: fix nfs4_listxattr kernel BUG at mm/usercopy.c:102
+Date: Sun, 24 Mar 2024 19:10:47 -0400
+Message-ID: <20240324231207.1351418-372-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,132 +50,97 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Luoyouming <luoyouming@huawei.com>
+From: Jorge Mora <jmora1300@gmail.com>
 
-[ Upstream commit d20a7cf9f714f0763efb56f0f2eeca1cb91315ed ]
+[ Upstream commit 251a658bbfceafb4d58c76b77682c8bf7bcfad65 ]
 
-Commit 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured
-with DCQCN") adds a check of congest control alorithm for UD. But
-that patch causes a problem: hr_dev->caps.congest_type is global,
-used by all QPs, so modifying this field to DCQCN for UD QPs causes
-other QPs unable to use any other algorithm except DCQCN.
+A call to listxattr() with a buffer size = 0 returns the actual
+size of the buffer needed for a subsequent call. When size > 0,
+nfs4_listxattr() does not return an error because either
+generic_listxattr() or nfs4_listxattr_nfs4_label() consumes
+exactly all the bytes then size is 0 when calling
+nfs4_listxattr_nfs4_user() which then triggers the following
+kernel BUG:
 
-Revert the modification in commit 27c5fd271d8b ("RDMA/hns: The UD
-mode can only be configured with DCQCN"). Add a new field cong_type
-to struct hns_roce_qp and configure DCQCN for UD QPs.
+  [   99.403778] kernel BUG at mm/usercopy.c:102!
+  [   99.404063] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
+  [   99.408463] CPU: 0 PID: 3310 Comm: python3 Not tainted 6.6.0-61.fc40.aarch64 #1
+  [   99.415827] Call trace:
+  [   99.415985]  usercopy_abort+0x70/0xa0
+  [   99.416227]  __check_heap_object+0x134/0x158
+  [   99.416505]  check_heap_object+0x150/0x188
+  [   99.416696]  __check_object_size.part.0+0x78/0x168
+  [   99.416886]  __check_object_size+0x28/0x40
+  [   99.417078]  listxattr+0x8c/0x120
+  [   99.417252]  path_listxattr+0x78/0xe0
+  [   99.417476]  __arm64_sys_listxattr+0x28/0x40
+  [   99.417723]  invoke_syscall+0x78/0x100
+  [   99.417929]  el0_svc_common.constprop.0+0x48/0xf0
+  [   99.418186]  do_el0_svc+0x24/0x38
+  [   99.418376]  el0_svc+0x3c/0x110
+  [   99.418554]  el0t_64_sync_handler+0x120/0x130
+  [   99.418788]  el0t_64_sync+0x194/0x198
+  [   99.418994] Code: aa0003e3 d000a3e0 91310000 97f49bdb (d4210000)
 
-Fixes: 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured with DCQCN")
-Fixes: f91696f2f053 ("RDMA/hns: Support congestion control type selection according to the FW")
-Signed-off-by: Luoyouming <luoyouming@huawei.com>
-Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
-Link: https://lore.kernel.org/r/20240219061805.668170-1-huangjunxian6@hisilicon.com
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Issue is reproduced when generic_listxattr() returns 'system.nfs4_acl',
+thus calling lisxattr() with size = 16 will trigger the bug.
+
+Add check on nfs4_listxattr() to return ERANGE error when it is
+called with size > 0 and the return value is greater than size.
+
+Fixes: 012a211abd5d ("NFSv4.2: hook in the user extended attribute handlers")
+Signed-off-by: Jorge Mora <mora@netapp.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_device.h | 17 +++++++++--------
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 16 ++++++++++------
- 2 files changed, 19 insertions(+), 14 deletions(-)
+ fs/nfs/nfs4proc.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
-index 1112afa0af552..8748b65c87ea7 100644
---- a/drivers/infiniband/hw/hns/hns_roce_device.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_device.h
-@@ -595,6 +595,13 @@ struct hns_roce_work {
- 	u32 queue_num;
- };
- 
-+enum hns_roce_cong_type {
-+	CONG_TYPE_DCQCN,
-+	CONG_TYPE_LDCP,
-+	CONG_TYPE_HC3,
-+	CONG_TYPE_DIP,
-+};
-+
- struct hns_roce_qp {
- 	struct ib_qp		ibqp;
- 	struct hns_roce_wq	rq;
-@@ -639,6 +646,7 @@ struct hns_roce_qp {
- 	struct list_head	sq_node; /* all send qps are on a list */
- 	struct hns_user_mmap_entry *dwqe_mmap_entry;
- 	u32			config;
-+	enum hns_roce_cong_type	cong_type;
- };
- 
- struct hns_roce_ib_iboe {
-@@ -710,13 +718,6 @@ struct hns_roce_eq_table {
- 	struct hns_roce_eq	*eq;
- };
- 
--enum cong_type {
--	CONG_TYPE_DCQCN,
--	CONG_TYPE_LDCP,
--	CONG_TYPE_HC3,
--	CONG_TYPE_DIP,
--};
--
- struct hns_roce_caps {
- 	u64		fw_ver;
- 	u8		num_ports;
-@@ -847,7 +848,7 @@ struct hns_roce_caps {
- 	u16		default_aeq_period;
- 	u16		default_aeq_arm_st;
- 	u16		default_ceq_arm_st;
--	enum cong_type	cong_type;
-+	enum hns_roce_cong_type cong_type;
- };
- 
- enum hns_roce_device_state {
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 58fbb1d3b7f41..d06b19e69a151 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -4886,12 +4886,15 @@ static int check_cong_type(struct ib_qp *ibqp,
- 			   struct hns_roce_congestion_algorithm *cong_alg)
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index ec3f0103e1a7f..7cc74f7451d67 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -10592,29 +10592,33 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
+ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
  {
- 	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
-+	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
+ 	ssize_t error, error2, error3;
++	size_t left = size;
  
--	if (ibqp->qp_type == IB_QPT_UD)
--		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
-+	if (ibqp->qp_type == IB_QPT_UD || ibqp->qp_type == IB_QPT_GSI)
-+		hr_qp->cong_type = CONG_TYPE_DCQCN;
-+	else
-+		hr_qp->cong_type = hr_dev->caps.cong_type;
+-	error = generic_listxattr(dentry, list, size);
++	error = generic_listxattr(dentry, list, left);
+ 	if (error < 0)
+ 		return error;
+ 	if (list) {
+ 		list += error;
+-		size -= error;
++		left -= error;
+ 	}
  
- 	/* different congestion types match different configurations */
--	switch (hr_dev->caps.cong_type) {
-+	switch (hr_qp->cong_type) {
- 	case CONG_TYPE_DCQCN:
- 		cong_alg->alg_sel = CONG_DCQCN;
- 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
-@@ -4919,8 +4922,8 @@ static int check_cong_type(struct ib_qp *ibqp,
- 	default:
- 		ibdev_warn(&hr_dev->ib_dev,
- 			   "invalid type(%u) for congestion selection.\n",
--			   hr_dev->caps.cong_type);
--		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
-+			   hr_qp->cong_type);
-+		hr_qp->cong_type = CONG_TYPE_DCQCN;
- 		cong_alg->alg_sel = CONG_DCQCN;
- 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
- 		cong_alg->dip_vld = DIP_INVALID;
-@@ -4939,6 +4942,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
- 	struct hns_roce_congestion_algorithm cong_field;
- 	struct ib_device *ibdev = ibqp->device;
- 	struct hns_roce_dev *hr_dev = to_hr_dev(ibdev);
-+	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
- 	u32 dip_idx = 0;
- 	int ret;
+-	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, size);
++	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, left);
+ 	if (error2 < 0)
+ 		return error2;
  
-@@ -4951,7 +4955,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
- 		return ret;
+ 	if (list) {
+ 		list += error2;
+-		size -= error2;
++		left -= error2;
+ 	}
  
- 	hr_reg_write(context, QPC_CONG_ALGO_TMPL_ID, hr_dev->cong_algo_tmpl_id +
--		     hr_dev->caps.cong_type * HNS_ROCE_CONG_SIZE);
-+		     hr_qp->cong_type * HNS_ROCE_CONG_SIZE);
- 	hr_reg_clear(qpc_mask, QPC_CONG_ALGO_TMPL_ID);
- 	hr_reg_write(&context->ext, QPCEX_CONG_ALG_SEL, cong_field.alg_sel);
- 	hr_reg_clear(&qpc_mask->ext, QPCEX_CONG_ALG_SEL);
+-	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, size);
++	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
+ 	if (error3 < 0)
+ 		return error3;
+ 
+-	return error + error2 + error3;
++	error += error2 + error3;
++	if (size && error > size)
++		return -ERANGE;
++	return error;
+ }
+ 
+ static void nfs4_enable_swap(struct inode *inode)
 -- 
 2.43.0
 
