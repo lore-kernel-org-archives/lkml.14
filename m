@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90BB1E5F46;
-	Sun, 24 Mar 2024 23:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094701E5F4D;
+	Sun, 24 Mar 2024 23:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321294; cv=none; b=cQRjEwmSingKTfgiIsNrZXj6ZJQyLjLs2mX/komJXNab32tmsa1AJC8gRrhb3CzCV2dbUgdfCom4ctpMMz4UH4B60gTXNIUfFIKJYmLNKrsifO2zwpaypTRwlGvd0hP7X5gzsUrn6lv+WGfeGFfme10wzFldiAgq9pBUG5k/4/0=
+	t=1711321297; cv=none; b=TQqKixEw61tlY7miunYbB5dmoD/UwTR4OGl316v9M2i9glg4WHDKwtdgTD11tye3m5N0A7UqWiltcQynx+i1djY6t4vZ2gwQ+P47jnsi2UEpf9wixtjOImjNcH+jnk43nf0A4Tn0VFIpTosGJPxsAj+f5/k/KaD58sULK5prQoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321294; c=relaxed/simple;
-	bh=XGGSvzBJNfmfnhL9G/6nyYMIHVzLF9YEZMutrFl1KtE=;
+	s=arc-20240116; t=1711321297; c=relaxed/simple;
+	bh=BTstNTU4rdjYfmXZ3VWwYPtnTndcYv9QQpk64ZexWUo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GdgbZJ3a8Hqm20lplPnR9txvH0pVGZx3B9yPDGGxoDqoy57j1uSLCz3mhgjaHQpGvJLctWsHxmGixfFAiXMQ6j4bsr7QuEwyBc0iksG0ArxN888OIiTSic8vE83tCs03vNjhJAtMMqKTalcd+pJlTh5I2awH88RzLkOq/BKcA/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFwpfl1Z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=D11m9NqdwupslmJpQ8SI6MKxwKGord2OLmRT74vOxeyG6v8Uc1kWA0FHZRS0xnlhUT3LdGkrFI5BKtGSF4BVyjv0SimLez1m8chSkBuoVbmVxvexc3suWPB91uHlE7Ej+YwdwOswLkQVTj6yb6yhlYe4Vfvkg2qIP9QAFQBN/3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKd+DjPs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFwpfl1Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30CC5C433F1;
-	Sun, 24 Mar 2024 23:01:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKd+DjPs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDDD8C433F1;
+	Sun, 24 Mar 2024 23:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321293;
-	bh=XGGSvzBJNfmfnhL9G/6nyYMIHVzLF9YEZMutrFl1KtE=;
+	s=k20201202; t=1711321295;
+	bh=BTstNTU4rdjYfmXZ3VWwYPtnTndcYv9QQpk64ZexWUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mFwpfl1ZHRtY0tx6jL0dakenpYTwNapYZYsJbbD+UcMZBPK0ixf8IwPSFIK/UE0ue
-	 6mI0lRnyqyD79XCObobhpibkZ1gNzvgUHQ/NvvPU9b66TjvyRNqQTz3yYy76LsyZYT
-	 kiBfZgyM0aaK/cuA14QTg2oE61A9uxQBhRvstHocmfGYbkioST7t5uQEH7zXBj3Qkb
-	 f4+O+vEqNTuU4ZQ57RpYhj8MbMDs9DNcGgDq2Q+BT2XVZO7HiYWn80KI1o/HOiVB9F
-	 0gXS/Y0nlc/6DMuovMIzGFQ49LKEY08/IGoxduc54u1Ap5XA9UZxC9Srl9EDKRJXU5
-	 axjVvsCP99gHQ==
+	b=jKd+DjPsi9d8OytFZCg1b6qIQ5gdwXVRR5qXwjU89TUN8eG1P/FIxylQZHc+XdiFh
+	 iUcyODz5JKwyIbqcf0Ga5ieJVxw2gXLfeWvsCS+JoviG66W+Y6BCJDXYr7vFa10kvx
+	 /OGAMx1iRkscNYxNWm77uNBZXWzee/kEoHrgVp35ldwLeoMHFvltBrFrW1Vxjeomo7
+	 uIKgS2v9WA0DvG7B2VzM2SUTegJL/jnV1+js9w2GpH1gQ+b/bLpz2ZWsvB+tNCrwTn
+	 prJ3UrsY3F6IOurGRJJGhVE00DUspjD32YQTvw6Qv69w8rjSvQ3ijKv0VINTbv0Kyo
+	 /uBx6uLpPlsOQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 016/638] MIPS: Clear Cause.BD in instruction_pointer_set
-Date: Sun, 24 Mar 2024 18:50:53 -0400
-Message-ID: <20240324230116.1348576-17-sashal@kernel.org>
+Subject: [PATCH 6.6 018/638] ASoC: SOF: ipc4-pcm: Workaround for crashed firmware on system suspend
+Date: Sun, 24 Mar 2024 18:50:55 -0400
+Message-ID: <20240324230116.1348576-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,37 +51,66 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
 
-[ Upstream commit 9d6e21ddf20293b3880ae55b9d14de91c5891c59 ]
+[ Upstream commit c40aad7c81e5fba34b70123ed7ce3397fa62a4d2 ]
 
-Clear Cause.BD after we use instruction_pointer_set to override
-EPC.
+When the system is suspended while audio is active, the
+sof_ipc4_pcm_hw_free() is invoked to reset the pipelines since during
+suspend the DSP is turned off, streams will be re-started after resume.
 
-This can prevent exception_epc check against instruction code at
-new return address.
-It won't be considered as "in delay slot" after epc being overridden
-anyway.
+If the firmware crashes during while audio is running (or when we reset
+the stream before suspend) then the sof_ipc4_set_multi_pipeline_state()
+will fail with IPC error and the state change is interrupted.
+This will cause misalignment between the kernel and firmware state on next
+DSP boot resulting errors returned by firmware for IPC messages, eventually
+failing the audio resume.
+On stream close the errors are ignored so the kernel state will be
+corrected on the next DSP boot, so the second boot after the DSP panic.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+If sof_ipc4_trigger_pipelines() is called from sof_ipc4_pcm_hw_free() then
+state parameter is SOF_IPC4_PIPE_RESET and only in this case.
+
+Treat a forced pipeline reset similarly to how we treat a pcm_free by
+ignoring error on state sending to allow the kernel's state to be
+consistent with the state the firmware will have after the next boot.
+
+Link: https://github.com/thesofproject/sof/issues/8721
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Link: https://msgid.link/r/20240213115233.15716-1-peter.ujfalusi@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/ptrace.h | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/sof/ipc4-pcm.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/ptrace.h
-index 701a233583c2c..d14d0e37ad02d 100644
---- a/arch/mips/include/asm/ptrace.h
-+++ b/arch/mips/include/asm/ptrace.h
-@@ -60,6 +60,7 @@ static inline void instruction_pointer_set(struct pt_regs *regs,
-                                            unsigned long val)
- {
- 	regs->cp0_epc = val;
-+	regs->cp0_cause &= ~CAUSEF_BD;
- }
+diff --git a/sound/soc/sof/ipc4-pcm.c b/sound/soc/sof/ipc4-pcm.c
+index db19cd03ecad8..e8acf60c27a74 100644
+--- a/sound/soc/sof/ipc4-pcm.c
++++ b/sound/soc/sof/ipc4-pcm.c
+@@ -377,7 +377,18 @@ static int sof_ipc4_trigger_pipelines(struct snd_soc_component *component,
+ 	ret = sof_ipc4_set_multi_pipeline_state(sdev, state, trigger_list);
+ 	if (ret < 0) {
+ 		dev_err(sdev->dev, "failed to set final state %d for all pipelines\n", state);
+-		goto free;
++		/*
++		 * workaround: if the firmware is crashed while setting the
++		 * pipelines to reset state we must ignore the error code and
++		 * reset it to 0.
++		 * Since the firmware is crashed we will not send IPC messages
++		 * and we are going to see errors printed, but the state of the
++		 * widgets will be correct for the next boot.
++		 */
++		if (sdev->fw_state != SOF_FW_CRASHED || state != SOF_IPC4_PIPE_RESET)
++			goto free;
++
++		ret = 0;
+ 	}
  
- /* Query offset/name of register from its name/offset */
+ 	/* update RUNNING/RESET state for all pipelines that were just triggered */
 -- 
 2.43.0
 
