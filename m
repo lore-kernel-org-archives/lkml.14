@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE42B177AA5;
-	Sun, 24 Mar 2024 23:38:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F037C177ABB;
+	Sun, 24 Mar 2024 23:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323519; cv=none; b=jnqtAMQ7ctROsL7ezkM3vTdxyFRE5o0DGevoPdk/O8rhF0Wxl0hquE72xOCktjeUIR6HtPu3Rvhp7Es27+KsyQGGUcdP+OjH9GPScgx7wtA1Ip/1kEmApFR7z4JnzYZbjw7IOC+E3rhLsuOSxWOWntTAN2KZBANkapNv1ralHLc=
+	t=1711323530; cv=none; b=mnLgZTajPWh/qvkhUm7eE3adRuiCf6kdqnAEyuc+5amS0iHRmM4xRxoI5Qbt+PI5B4yKyZp7+c0OMhQ/Ia6E6IroY+X/VOLwGwD2JFiwOhuqYqELiCaJ/yIjrgJhT1ay6ca8NvhmEi14GN5Azxn/C2jMUR0DUHNbY6ivjKYC6gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323519; c=relaxed/simple;
-	bh=Ne5JUfK0bvfx027NwHX7WBuLWU4K3WaQyRAFp3b+FPU=;
+	s=arc-20240116; t=1711323530; c=relaxed/simple;
+	bh=tfhiyz79ICdQeKvhnCLH9GxQyaU1564g7hI9bfQA7x4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hiVGBg2c3g7M7/2juchuWeIKk3Ze6BiuirvT+w+ThCe5xGJW2e9C7PDh2C0YZ9Ogsx8b29LgWfZlBkqfr2l04GPk719Cm/N1rlSNcM/T6fU5T0+BUo5QUEmUA/+aqdAlJZOsGVCrEC3ZFqoQScgt7gDyKKBbtYgerMvEwEFzX+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZL+rg3f; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=o71Qft4jtc0fzv75nM3LpWEYPFhi65ug5PFokgfUqIwy9H1bTl8H2GXV0clGOnHoaEEguP4st/0LVMpLWcc8AdsUT5RccZpfSjgocKEW3jJMP3MzD5NeAsihyJCL9xuL428XE78IpVJ1J3FmJcIdyk5/P9lU+uooZQTf9fT2yoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZzORWM6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZL+rg3f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBF18C43390;
-	Sun, 24 Mar 2024 23:38:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZzORWM6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21F54C433F1;
+	Sun, 24 Mar 2024 23:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323517;
-	bh=Ne5JUfK0bvfx027NwHX7WBuLWU4K3WaQyRAFp3b+FPU=;
+	s=k20201202; t=1711323528;
+	bh=tfhiyz79ICdQeKvhnCLH9GxQyaU1564g7hI9bfQA7x4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VZL+rg3fFH0ioPiKiu5qe2bqbo1lg+3t8tL9GLzjVGf6iDqM5st6u82Ut8l1JDSao
-	 BLd01hjz9voGA+ibAma1GdKEgo++yT/QKZeBkrp1v+svb/MySKQH5SrFXf8PZH8+os
-	 IP1/nNn3feWDRhK6Co2NQiR4onWGC3eTNBkBdW+UCoceE2N3s3MBUbEop5UZfW+X3m
-	 ul9bLkeQhaaG6nmxPqO/9elUeIEKUkgXTe3ezH70fJvG/hMwxH2GjIrFZm7a+x5RfZ
-	 3HVHg06GTKgYmqBRXEggnC374sLJB5ZfkwhcM+pcby7GsSVlwte3YARKKt1oi/LgMW
-	 GOqELSQxlcqfw==
+	b=KZzORWM6K87Kx5N/47GffiB/vXiXt9U9/HdXvjp30cxfx5U8NBL+T+ycz+mrVeWp/
+	 dLVbrhcTLp/R0mkgVcHQKF0Vre34a1C5v949gHEzShgi3nedLU/oDWORWzXJjyAHqd
+	 5gi8bvwxKs00cwSO08zc1+uj8ezQv3R+fBj3DtpMrqm3Vk5NpRD6z59HVDyR4GVzCo
+	 b+1Zb37QJUl9NIeRZsMXjbhDmMy0LATPMz7wI38vxbdPFxCxQaataPU0mSQP0OtS2w
+	 0LVcYZp1OBWwoEzyl69kMhQjrAqMMvjPiTtIPDchxsxausXdKhjoDuVRziDbFU0DiW
+	 g/U9riL7D73Cw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Baruch Siach <baruch@tkos.co.il>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
+Cc: Kajol Jain <kjain@linux.ibm.com>,
+	Akanksha J N <akanksha@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 224/317] mtd: maps: physmap-core: fix flash size larger than 32-bit
-Date: Sun, 24 Mar 2024 19:33:24 -0400
-Message-ID: <20240324233458.1352854-225-sashal@kernel.org>
+Subject: [PATCH 5.15 236/317] powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks
+Date: Sun, 24 Mar 2024 19:33:36 -0400
+Message-ID: <20240324233458.1352854-237-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,37 +49,115 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Baruch Siach <baruch@tkos.co.il>
+From: Kajol Jain <kjain@linux.ibm.com>
 
-[ Upstream commit 3884f03edd34887514a0865a80769cd5362d5c3b ]
+[ Upstream commit ad86d7ee43b22aa2ed60fb982ae94b285c1be671 ]
 
-mtd-ram can potentially be larger than 4GB. get_bitmask_order() uses
-fls() that is not guaranteed to work with values larger than 32-bit.
-Specifically on aarch64 fls() returns 0 when all 32 LSB bits are clear.
-Use fls64() instead.
+Running event hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
+in one of the system throws below error:
 
-Fixes: ba32ce95cbd987 ("mtd: maps: Merge gpio-addr-flash.c into physmap-core.c")
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/9fbf3664ce00f8b07867f1011834015f21d162a5.1707388458.git.baruch@tkos.co.il
+ ---Logs---
+ # perf list | grep hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles
+  hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=?/[Kernel PMU event]
+
+ # perf stat -v -e hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ sleep 2
+Using CPUID 00800200
+Control descriptor is not initialized
+Warning:
+hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ event is not supported by the kernel.
+failed to read counter hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
+
+ Performance counter stats for 'system wide':
+
+   <not supported>      hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
+
+       2.000700771 seconds time elapsed
+
+The above error is because of the hcall failure as required
+permission "Enable Performance Information Collection" is not set.
+Based on current code, single_gpci_request function did not check the
+error type incase hcall fails and by default returns EINVAL. But we can
+have other reasons for hcall failures like H_AUTHORITY/H_PARAMETER with
+detail_rc as GEN_BUF_TOO_SMALL, for which we need to act accordingly.
+
+Fix this issue by adding new checks in the single_gpci_request and
+h_gpci_event_init functions.
+
+Result after fix patch changes:
+
+ # perf stat -e hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ sleep 2
+Error:
+No permission to enable hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ event.
+
+Fixes: 220a0c609ad1 ("powerpc/perf: Add support for the hv gpci (get performance counter info) interface")
+Reported-by: Akanksha J N <akanksha@linux.ibm.com>
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20240229122847.101162-1-kjain@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/maps/physmap-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/perf/hv-gpci.c | 29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
-index 9ab795f03c546..e5552093585e2 100644
---- a/drivers/mtd/maps/physmap-core.c
-+++ b/drivers/mtd/maps/physmap-core.c
-@@ -528,7 +528,7 @@ static int physmap_flash_probe(struct platform_device *dev)
- 		if (!info->maps[i].phys)
- 			info->maps[i].phys = res->start;
+diff --git a/arch/powerpc/perf/hv-gpci.c b/arch/powerpc/perf/hv-gpci.c
+index 28b770bbc10b4..2a054de80e50b 100644
+--- a/arch/powerpc/perf/hv-gpci.c
++++ b/arch/powerpc/perf/hv-gpci.c
+@@ -164,6 +164,20 @@ static unsigned long single_gpci_request(u32 req, u32 starting_index,
  
--		info->win_order = get_bitmask_order(resource_size(res)) - 1;
-+		info->win_order = fls64(resource_size(res)) - 1;
- 		info->maps[i].size = BIT(info->win_order +
- 					 (info->gpios ?
- 					  info->gpios->ndescs : 0));
+ 	ret = plpar_hcall_norets(H_GET_PERF_COUNTER_INFO,
+ 			virt_to_phys(arg), HGPCI_REQ_BUFFER_SIZE);
++
++	/*
++	 * ret value as 'H_PARAMETER' with detail_rc as 'GEN_BUF_TOO_SMALL',
++	 * specifies that the current buffer size cannot accommodate
++	 * all the information and a partial buffer returned.
++	 * Since in this function we are only accessing data for a given starting index,
++	 * we don't need to accommodate whole data and can get required count by
++	 * accessing first entry data.
++	 * Hence hcall fails only incase the ret value is other than H_SUCCESS or
++	 * H_PARAMETER with detail_rc value as GEN_BUF_TOO_SMALL(0x1B).
++	 */
++	if (ret == H_PARAMETER && be32_to_cpu(arg->params.detail_rc) == 0x1B)
++		ret = 0;
++
+ 	if (ret) {
+ 		pr_devel("hcall failed: 0x%lx\n", ret);
+ 		goto out;
+@@ -228,6 +242,7 @@ static int h_gpci_event_init(struct perf_event *event)
+ {
+ 	u64 count;
+ 	u8 length;
++	unsigned long ret;
+ 
+ 	/* Not our event */
+ 	if (event->attr.type != event->pmu->type)
+@@ -258,13 +273,23 @@ static int h_gpci_event_init(struct perf_event *event)
+ 	}
+ 
+ 	/* check if the request works... */
+-	if (single_gpci_request(event_get_request(event),
++	ret = single_gpci_request(event_get_request(event),
+ 				event_get_starting_index(event),
+ 				event_get_secondary_index(event),
+ 				event_get_counter_info_version(event),
+ 				event_get_offset(event),
+ 				length,
+-				&count)) {
++				&count);
++
++	/*
++	 * ret value as H_AUTHORITY implies that partition is not permitted to retrieve
++	 * performance information, and required to set
++	 * "Enable Performance Information Collection" option.
++	 */
++	if (ret == H_AUTHORITY)
++		return -EPERM;
++
++	if (ret) {
+ 		pr_devel("gpci hcall failed\n");
+ 		return -EINVAL;
+ 	}
 -- 
 2.43.0
 
