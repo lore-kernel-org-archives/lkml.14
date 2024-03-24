@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1FD208990;
-	Sun, 24 Mar 2024 23:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D980F2081DE;
+	Sun, 24 Mar 2024 23:05:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321549; cv=none; b=QZ7GKrhlcpk0oshwyxBJ64UK9U7od02+h0P4/NHzdfZ0Yxm+WTQMqE1IP34v6DRKz08E0t/OzX0aWUywZ2xCqxyark64f8wPTDh1oRhC6KnGQT6fTz3AvU8hDcNHOAu5FGRWKoI9gGZ1o1QEALxb01kdR+krLn7gQl5Eh+jI9tY=
+	t=1711321538; cv=none; b=Mi0Ba9hcCCECAVywXXJvdF9oUTN+K1ygLKJcUEz2Ay4OQODDiuXWbH7t5NunQARHAgijWLLzjPK9kErBqCDgIUEwEFQewcGTSp7i3WQwSEUIor6LY1xTxUziPo7T4cjjqtF4ELsOKf07uHlVnhZi2dc8AysAr87xHltR6BY73Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321549; c=relaxed/simple;
-	bh=g2YXO61G3NauVALNbXM7ivW6aNYn2CeUlSl5s3qq4tQ=;
+	s=arc-20240116; t=1711321538; c=relaxed/simple;
+	bh=wIy1ReAnJ6KkGpuEl6h0vgRVgJgCpUexnLvJ/Gt3G4I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ul5Yvk22cg/0vvohOOHdYP4CDZc5wmeZLeJEiteMZTExpRNiHWAIHBiImk+6K0cQKf8k3a2DJisPAhCe5QwSlaEUh7nVNiy24EUGK55Gg8WyTIUzRC6BAA+Vr703aP/oNZ2hm1k9NOB+6Nq5dtwA8Ht6cs06itASHJbv9zii+y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZ2G/9CK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bZykxDVXaLGVD8hLkAbnhfT/IyXOND9K7YggVty6EHMg84X6LEKEEHQ+I9Hq2SAUstm9EX0hvP9jaQYSDwfcFHo6koNMPDjT+p+gfIzZV4/dbbAZd3III/YSSXU/tTlAB9Nk289ocQYXlIUq2UcUeGVnbi9BtblkP840zMGDTYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qo6e4r+u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZ2G/9CK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D72C433F1;
-	Sun, 24 Mar 2024 23:05:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qo6e4r+u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41071C433C7;
+	Sun, 24 Mar 2024 23:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321548;
-	bh=g2YXO61G3NauVALNbXM7ivW6aNYn2CeUlSl5s3qq4tQ=;
+	s=k20201202; t=1711321537;
+	bh=wIy1ReAnJ6KkGpuEl6h0vgRVgJgCpUexnLvJ/Gt3G4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mZ2G/9CKNITl5Tip3KF4G4M0lP4Jc2MmiXTQRNB0PHvhbTuuH0x9gzIx0N+gnFXK6
-	 L2mVd8QmSBjDprpqaEjMUI83PV2lABtPyGitMc6hl9Zby9CebhiewOWxvm4WBKgZg0
-	 ZJ1ZL048zfWIIBPOOIzQxfpLFCMZqN0YN1PBRcqYX2Foiwacho/beDM9jPOnjfAuPE
-	 yZlIuPPBR60v+LMYhGgET79WSyGYi9gaGZ7EfdasOzma88WZD0QbxKdxnbNj5tLsrc
-	 a1u0mVKlHO2MS5NaQpPPrv1FBE7hjRoplCc4IaLPvuO4q8RmdlHBkkLpAJKN7Pa1R6
-	 pO5ArErMveiPg==
+	b=qo6e4r+uRAJcjGzRCn+KfuZokHdtV+lPcVkTV+5H5a0uyIdhetMFVq/GMvgZOXusl
+	 1YtVlvuLNRzZdN8qiKc/+sYTpGKDd3DMdxnGHC2TAM+qCTdcLHpfnk7/nyBsympNQX
+	 C1Xr32JnixJ4EZwdVSGDpnAshOL8mBVH22WVtGt3FOmQWF16xu5RgbbG6lX6oxpXOK
+	 BBxw8bHCKeHDzHxuhRxKQH6HkN6vf6G0i148RDa5UYGdIT1rHorAY6CGsdktoejxmq
+	 j6V8qy8MJASYXBGFm2ziAGo0owm2rLQcATqBT+hPEyb2Jeci6hbpHUsgbqL/gJ46DC
+	 welDHHdYl5I5g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 277/638] ACPI: scan: Fix device check notification handling
-Date: Sun, 24 Mar 2024 18:55:14 -0400
-Message-ID: <20240324230116.1348576-278-sashal@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 6.6 265/638] pstore: inode: Only d_invalidate() is needed
+Date: Sun, 24 Mar 2024 18:55:02 -0400
+Message-ID: <20240324230116.1348576-266-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,55 +47,63 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 793551c965116d9dfaf0550dacae1396a20efa69 ]
+[ Upstream commit a43e0fc5e9134a46515de2f2f8d4100b74e50de3 ]
 
-It is generally invalid to fail a Device Check notification if the scan
-handler has not been attached to the given device after a bus rescan,
-because there may be valid reasons for the scan handler to refuse
-attaching to the device (for example, the device is not ready).
+Unloading a modular pstore backend with records in pstorefs would
+trigger the dput() double-drop warning:
 
-For this reason, modify acpi_scan_device_check() to return 0 in that
-case without printing a warning.
+  WARNING: CPU: 0 PID: 2569 at fs/dcache.c:762 dput.part.0+0x3f3/0x410
 
-While at it, reduce the log level of the "already enumerated" message
-in the same function, because it is only interesting when debugging
-notification handling
+Using the combo of d_drop()/dput() (as mentioned in
+Documentation/filesystems/vfs.rst) isn't the right approach here, and
+leads to the reference counting problem seen above. Use d_invalidate()
+and update the code to not bother checking for error codes that can
+never happen.
 
-Fixes: 443fc8202272 ("ACPI / hotplug: Rework generic code to handle suprise removals")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Suggested-by: Alexander Viro <viro@zeniv.linux.org.uk>
+Fixes: 609e28bb139e ("pstore: Remove filesystem records when backend is unregistered")
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/acpi/scan.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ fs/pstore/inode.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 1d249d0f61ae4..597d75baa1cc3 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -314,18 +314,14 @@ static int acpi_scan_device_check(struct acpi_device *adev)
- 		 * again).
- 		 */
- 		if (adev->handler) {
--			dev_warn(&adev->dev, "Already enumerated\n");
--			return -EALREADY;
-+			dev_dbg(&adev->dev, "Already enumerated\n");
-+			return 0;
+diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+index 904863dbf5327..7dbbf3b6d98d3 100644
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -306,7 +306,6 @@ int pstore_put_backend_records(struct pstore_info *psi)
+ {
+ 	struct pstore_private *pos, *tmp;
+ 	struct dentry *root;
+-	int rc = 0;
+ 
+ 	root = psinfo_lock_root();
+ 	if (!root)
+@@ -316,11 +315,8 @@ int pstore_put_backend_records(struct pstore_info *psi)
+ 		list_for_each_entry_safe(pos, tmp, &records_list, list) {
+ 			if (pos->record->psi == psi) {
+ 				list_del_init(&pos->list);
+-				rc = simple_unlink(d_inode(root), pos->dentry);
+-				if (WARN_ON(rc))
+-					break;
+-				d_drop(pos->dentry);
+-				dput(pos->dentry);
++				d_invalidate(pos->dentry);
++				simple_unlink(d_inode(root), pos->dentry);
+ 				pos->dentry = NULL;
+ 			}
  		}
- 		error = acpi_bus_scan(adev->handle);
- 		if (error) {
- 			dev_warn(&adev->dev, "Namespace scan failure\n");
- 			return error;
- 		}
--		if (!adev->handler) {
--			dev_warn(&adev->dev, "Enumeration failure\n");
--			error = -ENODEV;
--		}
- 	} else {
- 		error = acpi_scan_device_not_present(adev);
- 	}
+@@ -328,7 +324,7 @@ int pstore_put_backend_records(struct pstore_info *psi)
+ 
+ 	inode_unlock(d_inode(root));
+ 
+-	return rc;
++	return 0;
+ }
+ 
+ /*
 -- 
 2.43.0
 
