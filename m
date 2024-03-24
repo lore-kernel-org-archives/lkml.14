@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3420178CE2;
-	Sun, 24 Mar 2024 23:39:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1882D178CD2;
+	Sun, 24 Mar 2024 23:39:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323581; cv=none; b=FaQll4Hl1NxcjUf0ernzXlpvRPpxu95UO2pgrcXO13zZ002Zv1h4CUnttgh6RVOtSJ9F3td+RGUwlYIkFMArGJR4Q6EExVRO1tw53VuAquIcs5rfwhrq72yqx8jQC3RuddXwlVOF8cq77K1UnaVZVq7ofV0BupRSToWolP+gogk=
+	t=1711323580; cv=none; b=roxVfdWgetL2kE1ZvymC96wbJOQwV3XEnUwVdZ6O3Tstv/rIHyUrpFE6vTg1GfEVPBs8GALqBb9ahvi7r2Jq1OprrmrCg63cuwPb1FriR/Vtjger/TYFvYIqwSpqtyLCHk8YYOfKWjSKMc8g7Qcs0feynUHWyGrqWoOM7tuHSfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323581; c=relaxed/simple;
-	bh=sH0p05ZdpjB4X2ES+nRdMatQOHiBDZFvuGrQy/45kEk=;
+	s=arc-20240116; t=1711323580; c=relaxed/simple;
+	bh=vc/T6hVYtGIVMsW+oB8SV7sRd7M5NJFHgkE11Tm4XSA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qMfmhL1QqKVPl3ANKk55++EdFZo9v8v7Cn6qs39R/NF0scMJOPZl28OV/RYCE5ul6LOE4KSoWDK7KrUz2/N0kWZ/Kw8rD7B5yxjub/SEjmNoeCIWC0OmjprKXrzc2sVEOBY9fL/5fGMIIuNSlLx79n39PT4QJP6Go6uLqsq+UkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r81inP5M; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=T8h87YGkG23QX1FK9ptesnlsjSzRciqOTHeqFwoTscw00wGWaKn2EzLEOxHAafGRTwyisBarB6fqOstVaSMEoB5YNLlQefaUAyjtJoR2Al/1DSrGNj0ZH1/hPxcZEXdJ6su8mK4yN5/yFdxWbtkV9Sji048iSYE1lBdDD3xc68E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHE4AfPk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r81inP5M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AA92C43394;
-	Sun, 24 Mar 2024 23:39:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHE4AfPk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EBCFC43394;
+	Sun, 24 Mar 2024 23:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323581;
-	bh=sH0p05ZdpjB4X2ES+nRdMatQOHiBDZFvuGrQy/45kEk=;
+	s=k20201202; t=1711323580;
+	bh=vc/T6hVYtGIVMsW+oB8SV7sRd7M5NJFHgkE11Tm4XSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r81inP5MR1Mo1VWpNX4WfZvIVFQ8A+sHLXyZo5Ol8UZJJY3Icomquq+ZZ2HiqQHtz
-	 LmZJU5MtiwC42RJcwhEJJtlaiCSHbYt7p2oYfW/jaXOubT/RIHO+PuSWhTJBx4w3TX
-	 JwvYK/DbxME6inBHya+0/vudINA4l8GmskJ0WUejw0QHyQIazmbWccRGyFxqZFky20
-	 6cuMWSmAp7SFUoY6tgpdTKv5awIPWG6EWhajcaKLgXQXSGhBtN1d12smjeo3RcPOJw
-	 M/NL+qn13Mku15oxczF1rVKXBVAe2SPxhxgkKoCGg3OAKkfrc0SkJ7bCkRJ2rZyiM8
-	 0Me9UIwJSsH4w==
+	b=aHE4AfPke2tkA1itZZZh6YfIiXzMQSSvI+PkD0Wa9yo2sfmpHonh1xtRtGfmqmhjn
+	 tbwPZq2H3YxJ3O2o9koZII5couLCQELygFnYhiyoNhAKxw51Px9B6vjJP8XcU1PJMk
+	 eU3lSiAPj79dvqXRg3A1jMnrxZIoQXQvIVc2EoE0/hYeFrQwbnM7FVjowhg0o0ru+v
+	 OQ3JNTwI9oKVSDZn3A1LASDiL0Ct5a+VY8agfg3p6UIhW2Md8B3liGEbhAa8+5IJhr
+	 Buu1PuLWpzK9txeNbC/yYbyTJz9eUfSfm3KZ8gpH5foFW3dCczWv7P7drjCfaGA5w1
+	 H2dnfoXDGDXug==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dave Airlie <airlied@redhat.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Danilo Krummrich <dakr@redhat.com>,
+Cc: Colin Ian King <colin.i.king@gmail.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 288/317] nouveau: reset the bo resource bus info after an eviction
-Date: Sun, 24 Mar 2024 19:34:28 -0400
-Message-ID: <20240324233458.1352854-289-sashal@kernel.org>
+Subject: [PATCH 5.15 286/317] usb: gadget: net2272: Use irqflags in the call to net2272_probe_fin
+Date: Sun, 24 Mar 2024 19:34:26 -0400
+Message-ID: <20240324233458.1352854-287-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,37 +50,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dave Airlie <airlied@redhat.com>
+From: Colin Ian King <colin.i.king@gmail.com>
 
-[ Upstream commit f35c9af45ea7a4b1115b193d84858b14d13517fc ]
+[ Upstream commit 600556809f04eb3bbccd05218215dcd7b285a9a9 ]
 
-Later attempts to refault the bo won't happen and the whole
-GPU does to lunch. I think Christian's refactoring of this
-code out to the driver broke this not very well tested path.
+Currently the variable irqflags is being set but is not being used,
+it appears it should be used in the call to net2272_probe_fin
+rather than IRQF_TRIGGER_LOW being used. Kudos to Uwe Kleine-König
+for suggesting the fix.
 
-Fixes: 141b15e59175 ("drm/nouveau: move io_reserve_lru handling into the driver v5")
-Cc: Christian König <christian.koenig@amd.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Acked-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Danilo Krummrich <dakr@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240311072037.287905-1-airlied@gmail.com
+Cleans up clang scan build warning:
+drivers/usb/gadget/udc/net2272.c:2610:15: warning: variable 'irqflags'
+set but not used [-Wunused-but-set-variable]
+
+Fixes: ceb80363b2ec ("USB: net2272: driver for PLX NET2272 USB device controller")
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20240307181734.2034407-1-colin.i.king@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_bo.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/udc/net2272.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_bo.c b/drivers/gpu/drm/nouveau/nouveau_bo.c
-index da58230bcb1fc..2048eac841ddf 100644
---- a/drivers/gpu/drm/nouveau/nouveau_bo.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
-@@ -1186,6 +1186,8 @@ nouveau_ttm_io_mem_reserve(struct ttm_device *bdev, struct ttm_resource *reg)
- 			drm_vma_node_unmap(&nvbo->bo.base.vma_node,
- 					   bdev->dev_mapping);
- 			nouveau_ttm_io_mem_free_locked(drm, nvbo->bo.resource);
-+			nvbo->bo.resource->bus.offset = 0;
-+			nvbo->bo.resource->bus.addr = NULL;
- 			goto retry;
- 		}
+diff --git a/drivers/usb/gadget/udc/net2272.c b/drivers/usb/gadget/udc/net2272.c
+index 7c38057dcb4ab..e5402e05e7393 100644
+--- a/drivers/usb/gadget/udc/net2272.c
++++ b/drivers/usb/gadget/udc/net2272.c
+@@ -2650,7 +2650,7 @@ net2272_plat_probe(struct platform_device *pdev)
+ 		goto err_req;
+ 	}
+ 
+-	ret = net2272_probe_fin(dev, IRQF_TRIGGER_LOW);
++	ret = net2272_probe_fin(dev, irqflags);
+ 	if (ret)
+ 		goto err_io;
  
 -- 
 2.43.0
