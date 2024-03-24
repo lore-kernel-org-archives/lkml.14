@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A679A131185;
-	Sun, 24 Mar 2024 23:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EFC2811D9;
+	Sun, 24 Mar 2024 23:41:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323682; cv=none; b=uXyT6ys7N8FPmqRO/OrHGB4DwLfZ/Fcw4PbBOOyS0emszGEj5wzygnKJ73AWyujMn9ldodse1Hf+U4yPqzTxgT3bwUiq4VaV6dU/6b6fwaM2LhGTUpWjtvgRqZGFQWZxMcC+ul6MvrlS3FKOjI8zxjqao6mcSslybajJxrOb7lg=
+	t=1711323680; cv=none; b=gCrmj+7YA2zd2aWELObV+1/8E+6eTpuUnLZq/5ALypOFuoPqANwgLUL2lF8iXMEvgD0YnNqeaIdof4CQWSBTfaLWiN0meaJ1jsiq7NE9OlTK3QuJ8PTGgN0SMd9I+rKzWbpvZgZiFjooOWY8/mmy1MfP0UGyrVIjek8NeyCz5fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323682; c=relaxed/simple;
-	bh=3W3lrsoiKgSnvKawyn3EkiTNZnvZyA3ktpieySWGVB4=;
+	s=arc-20240116; t=1711323680; c=relaxed/simple;
+	bh=75RTwF1RiKRiyBcXXdqr/7omHTpdRTEVzn66ZABF4OM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KsULYoXOtQmJsZbaLHE57GstOhvsG3cvg+gKXyZqH8w3+zFh/TJ1ViWqnprBRZzG/uRweLD4YLJR+zybEyaVSIRx0SPcUcRJCuc2SXGHZYXM5Y1me4WWpdhqlPIcUXsC51R2+t4bgxVj14aAZqk/IFk7KFexlsdhRIrbhANa0TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SN4ROJxG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rpMoZuybVPXxPk+rROZ0ZdMF7vUPb5MLJJ4APyUr5rNZYVEE4qYDG7PPexxVEME1DGxylWRhmW5Kgk0qfJC+lPHHcZZhgOK+A8wOEeM9ji3XZlUe4gHPkap5Xr6z0JbeI6IKcboQj3m2SoSaHPg/1b+4rkj7f/RucbfyKfClpTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NI6+96z6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SN4ROJxG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71252C433A6;
-	Sun, 24 Mar 2024 23:41:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NI6+96z6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18939C4166D;
+	Sun, 24 Mar 2024 23:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323681;
-	bh=3W3lrsoiKgSnvKawyn3EkiTNZnvZyA3ktpieySWGVB4=;
+	s=k20201202; t=1711323679;
+	bh=75RTwF1RiKRiyBcXXdqr/7omHTpdRTEVzn66ZABF4OM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SN4ROJxGPw6f4yvyik0ZJSXGu9KlCT/5C4c0BFmdSd+yIkeRjgsEE5tW1btkFFppP
-	 h6xIh+txxbE6HVLEnQlNtsMg8qu2CoQdNINsM8ru1olUmPnQ9nfRHK49huTqi0JveL
-	 BQX1F1CCHIAKHoSh82mo3KoZcluc4qrASe5w+UqJbbsUPHafXiNaBVFF3/620Q0J17
-	 8gWHXKlTcOXjLAtQRSwwdDarIKghnjutVqhAkvkFiEpjLMhjNWXQej9sogtc378ezV
-	 5JQ6h0yDZzmbUd68FyTxHCvBN1pZN68zIa+I2Q+YKKakVWf6ZQ1yjuj5rQW0L5n+Kl
-	 NuzteogEJu7qQ==
+	b=NI6+96z6PGttmaFzKx0pV/pkgPVIvh8Q65dzySzYOC9TJT0ApFRo6Ijw4k9353XKV
+	 +mUMAkLl3SWqCHAM8/vVP6ZTOjDPt1Uex8QmaiOpJQOoGGJ+F3Ora3iYve/LFQKlMD
+	 LxjCqihyl2XQDqZDGK+pOGWRh4EgfzL0/3P0NTxt366p11NiSrA/XTLsqTs/oic6/W
+	 MtTWbLkrHuTWRVfOu1qIuLN5c8Vk/kju5PCcE1SwZ757GYRG/Fw7/8qCmuqASCiZQf
+	 zF4OcaeclJJF/HWRtkidk5TLuixZiGJRLNPK6BUmUFdHOq3BdL7IQvth0NsurTC+Y8
+	 u3oMfqqh1e/Mw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Quentin Monnet <quentin@isovalent.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	Guillaume Nault <gnault@redhat.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 053/238] bpftool: Silence build warning about calloc()
-Date: Sun, 24 Mar 2024 19:37:21 -0400
-Message-ID: <20240324234027.1354210-54-sashal@kernel.org>
+Subject: [PATCH 5.10 051/238] sock_diag: annotate data-races around sock_diag_handlers[family]
+Date: Sun, 24 Mar 2024 19:37:19 -0400
+Message-ID: <20240324234027.1354210-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -46,54 +47,76 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit f5f30386c78105cba520e443a6a9ee945ec1d066 ]
+[ Upstream commit efd402537673f9951992aea4ef0f5ff51d858f4b ]
 
-There exists the following warning when building bpftool:
+__sock_diag_cmd() and sock_diag_bind() read sock_diag_handlers[family]
+without a lock held.
 
-  CC      prog.o
-prog.c: In function ‘profile_open_perf_events’:
-prog.c:2301:24: warning: ‘calloc’ sizes specified with ‘sizeof’ in the earlier argument and not in the later argument [-Wcalloc-transposed-args]
- 2301 |                 sizeof(int), obj->rodata->num_cpu * obj->rodata->num_metric);
-      |                        ^~~
-prog.c:2301:24: note: earlier argument should specify number of elements, later size of each element
+Use READ_ONCE()/WRITE_ONCE() annotations to avoid potential issues.
 
-Tested with the latest upstream GCC which contains a new warning option
--Wcalloc-transposed-args. The first argument to calloc is documented to
-be number of elements in array, while the second argument is size of each
-element, just switch the first and second arguments of calloc() to silence
-the build warning, compile tested only.
-
-Fixes: 47c09d6a9f67 ("bpftool: Introduce "prog profile" command")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Quentin Monnet <quentin@isovalent.com>
-Link: https://lore.kernel.org/bpf/20240116061920.31172-1-yangtiezhu@loongson.cn
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 8ef874bfc729 ("sock_diag: Move the sock_ code to net/core/")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/prog.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/sock_diag.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index d2bcce627b320..d07996e7952f3 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -1946,7 +1946,7 @@ static int profile_open_perf_events(struct profiler_bpf *obj)
- 	int map_fd;
+diff --git a/net/core/sock_diag.c b/net/core/sock_diag.c
+index c9c45b935f990..bce65b519ee80 100644
+--- a/net/core/sock_diag.c
++++ b/net/core/sock_diag.c
+@@ -189,7 +189,7 @@ int sock_diag_register(const struct sock_diag_handler *hndl)
+ 	if (sock_diag_handlers[hndl->family])
+ 		err = -EBUSY;
+ 	else
+-		sock_diag_handlers[hndl->family] = hndl;
++		WRITE_ONCE(sock_diag_handlers[hndl->family], hndl);
+ 	mutex_unlock(&sock_diag_table_mutex);
  
- 	profile_perf_events = calloc(
--		sizeof(int), obj->rodata->num_cpu * obj->rodata->num_metric);
-+		obj->rodata->num_cpu * obj->rodata->num_metric, sizeof(int));
- 	if (!profile_perf_events) {
- 		p_err("failed to allocate memory for perf_event array: %s",
- 		      strerror(errno));
+ 	return err;
+@@ -205,7 +205,7 @@ void sock_diag_unregister(const struct sock_diag_handler *hnld)
+ 
+ 	mutex_lock(&sock_diag_table_mutex);
+ 	BUG_ON(sock_diag_handlers[family] != hnld);
+-	sock_diag_handlers[family] = NULL;
++	WRITE_ONCE(sock_diag_handlers[family], NULL);
+ 	mutex_unlock(&sock_diag_table_mutex);
+ }
+ EXPORT_SYMBOL_GPL(sock_diag_unregister);
+@@ -223,7 +223,7 @@ static int __sock_diag_cmd(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 		return -EINVAL;
+ 	req->sdiag_family = array_index_nospec(req->sdiag_family, AF_MAX);
+ 
+-	if (sock_diag_handlers[req->sdiag_family] == NULL)
++	if (READ_ONCE(sock_diag_handlers[req->sdiag_family]) == NULL)
+ 		sock_load_diag_module(req->sdiag_family, 0);
+ 
+ 	mutex_lock(&sock_diag_table_mutex);
+@@ -282,12 +282,12 @@ static int sock_diag_bind(struct net *net, int group)
+ 	switch (group) {
+ 	case SKNLGRP_INET_TCP_DESTROY:
+ 	case SKNLGRP_INET_UDP_DESTROY:
+-		if (!sock_diag_handlers[AF_INET])
++		if (!READ_ONCE(sock_diag_handlers[AF_INET]))
+ 			sock_load_diag_module(AF_INET, 0);
+ 		break;
+ 	case SKNLGRP_INET6_TCP_DESTROY:
+ 	case SKNLGRP_INET6_UDP_DESTROY:
+-		if (!sock_diag_handlers[AF_INET6])
++		if (!READ_ONCE(sock_diag_handlers[AF_INET6]))
+ 			sock_load_diag_module(AF_INET6, 0);
+ 		break;
+ 	}
 -- 
 2.43.0
 
