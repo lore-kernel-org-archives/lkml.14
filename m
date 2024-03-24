@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9B31802AA;
-	Sun, 24 Mar 2024 23:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DE717F38C;
+	Sun, 24 Mar 2024 23:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324023; cv=none; b=dlCnO3j2MN9+ecdlsrzCDMCgIekyhf9qkGx2asjpQ3UdySDN/9L4VJ2GMvpqDZ4Yp6vyvcbGTT+ptYlCdDmT1f0AKAPr+SkcjuBUepQArNKHENhUSMiYQpCTyj+TNgkTuCowaa0vC1BWhMdcNRQYPXTZuz/ICkCXirtUCKCk6Ic=
+	t=1711324020; cv=none; b=ZHapSUPiGcNNtTcUKiCnF5Kst6VuyxUpmxKgW+31sZDiiS3JGuUUzcuHtwkk5DON0+wJpavxWBbKzctue+17DUCkCadbt9C6bFmlhLT/gmqkFmYZufIHQgY3+3lQHa1cSzpzMexvLrjvPfiKD3O9viFx+XPW+ba0QFZwhlo7mTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324023; c=relaxed/simple;
-	bh=xKI0iG25BjEWQ1gvRDyg2KrUPAy82Y04LM+HtejJhYA=;
+	s=arc-20240116; t=1711324020; c=relaxed/simple;
+	bh=9sSDmvXQHGR0M8poLQXFPWiWAjJ+z04RpjNhHuw8szU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RDmiDjn5w7tN7h1O+ree8ToJ9jVhiEYnL2CUlpZ4xDvw2/vlRFBMonS5gXAeEsUFSypTIIQdjUwaupWFbagKSL72vPqdGJrb9fDDaDsWjEpoUAxi1KRTtxAaModFFv2buYQkzCgurqEKTwjFBjYuiQdbXnJr7dqbg+GrIHnyMkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tgH3HhFv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FE58O0vWbZbEJOsUy7b2AOKnIjujcRuZ87iHWLP53vy7kbpmuQFKuJv9idqihh6dg8+tmCqeEwlBGwIPQhBA+9UT0U+NjiDlAEwuHax6Skvgz6xYMog/J6HUXQCoNyTAB5h96KX2ESM605OU3nka/rXyq0KR2bcaNrQkqnKHMtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwoGO5rs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tgH3HhFv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA54C43399;
-	Sun, 24 Mar 2024 23:47:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwoGO5rs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94039C433C7;
+	Sun, 24 Mar 2024 23:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324022;
-	bh=xKI0iG25BjEWQ1gvRDyg2KrUPAy82Y04LM+HtejJhYA=;
+	s=k20201202; t=1711324019;
+	bh=9sSDmvXQHGR0M8poLQXFPWiWAjJ+z04RpjNhHuw8szU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tgH3HhFvUtPfnfdC+OJHNirsoN1VoD4aEDqgfs8LDIX+Xoqg64X2Ena06JdhQ03Bd
-	 87o673uw3L9LiH9e9vqAz12nEmYdHS/f1//TCeSrJg4QlYQAgfkoZotnhajKz8RvC7
-	 41ZsJw4is+BcUxeK0fHamb131S2EzhiLKWup8+6ozJUGpNdmzQGaIOwZsRTadThxwK
-	 vWRJuzmSNTZKWHDrCn5HZPsZkcNC3lJifdtDw9YWz43rzuGyVfBUMoUCppGV51trUE
-	 EOYYnK0hBX1xKHQlc82iZLzM37ANCeXF4lY32e8oi4Tdv52czg9SRO3lKEsTJVzKXk
-	 9nCBujIWFkpdA==
+	b=KwoGO5rskItwL7fjCoRqQTTcpgDpiU3NlUBc31MqbGbXufjv1U54J+LNc3DZUvU0v
+	 PBx1DODzAXluJFCr225tdSiYKqAcp70WWpsLyxfNOm7f0bzHDi5t/4D5ifQCGHxw6x
+	 1bLq+a1J7tu+ETL5wnuxirwCw0tuQ2cR4PKLXMEopnkEXQXq/NxazaJPw/ZGGTGv7o
+	 G+yYNtGAopvrP9raBDguy3GBV3HloiyRZo0YDHvRxuDurVkt9RbYNYMgACFef7a7pW
+	 53YdGv7Iiw0WNzoHg1/KjqaH8bozk0Qvlsbjf1lERpnkR72PUJT2jWJFFd81Uo78CO
+	 lU3ru9rijEoXQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Navid Emamdoost <navid.emamdoost@gmail.com>,
-	Michal Kubecek <mkubecek@suse.cz>,
-	Kees Cook <keescook@chromium.org>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 023/183] nbd: null check for nla_nest_start
-Date: Sun, 24 Mar 2024 19:43:56 -0400
-Message-ID: <20240324234638.1355609-24-sashal@kernel.org>
+Subject: [PATCH 5.4 020/183] ASoC: wm8962: Enable both SPKOUTR_ENA and SPKOUTL_ENA in mono mode
+Date: Sun, 24 Mar 2024 19:43:53 -0400
+Message-ID: <20240324234638.1355609-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -50,41 +48,74 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Stuart Henderson <stuarth@opensource.cirrus.com>
 
-[ Upstream commit 31edf4bbe0ba27fd03ac7d87eb2ee3d2a231af6d ]
+[ Upstream commit 6fa849e4d78b880e878138bf238e4fd2bac3c4fa ]
 
-nla_nest_start() may fail and return NULL. Insert a check and set errno
-based on other call sites within the same source code.
-
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-Fixes: 47d902b90a32 ("nbd: add a status netlink command")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20240218042534.it.206-kees@kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
+Link: https://msgid.link/r/20240306161439.1385643-2-stuarth@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/soc/codecs/wm8962.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 37994a7a1b6f4..f2d847ffcbc75 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -2313,6 +2313,12 @@ static int nbd_genl_status(struct sk_buff *skb, struct genl_info *info)
- 	}
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index c84afc1d02dab..9ccec511352a0 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -2218,6 +2218,9 @@ SND_SOC_DAPM_PGA_E("HPOUT", SND_SOC_NOPM, 0, 0, NULL, 0, hp_event,
  
- 	dev_list = nla_nest_start_noflag(reply, NBD_ATTR_DEVICE_LIST);
-+	if (!dev_list) {
-+		nlmsg_free(reply);
-+		ret = -EMSGSIZE;
-+		goto out;
-+	}
+ SND_SOC_DAPM_OUTPUT("HPOUTL"),
+ SND_SOC_DAPM_OUTPUT("HPOUTR"),
 +
- 	if (index == -1) {
- 		ret = idr_for_each(&nbd_index_idr, &status_cb, reply);
- 		if (ret) {
++SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
++SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
+ };
+ 
+ static const struct snd_soc_dapm_widget wm8962_dapm_spk_mono_widgets[] = {
+@@ -2225,7 +2228,6 @@ SND_SOC_DAPM_MIXER("Speaker Mixer", WM8962_MIXER_ENABLES, 1, 0,
+ 		   spkmixl, ARRAY_SIZE(spkmixl)),
+ SND_SOC_DAPM_MUX_E("Speaker PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
+ 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
+-SND_SOC_DAPM_PGA("Speaker Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
+ SND_SOC_DAPM_OUTPUT("SPKOUT"),
+ };
+ 
+@@ -2240,9 +2242,6 @@ SND_SOC_DAPM_MUX_E("SPKOUTL PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
+ SND_SOC_DAPM_MUX_E("SPKOUTR PGA", WM8962_PWR_MGMT_2, 3, 0, &spkoutr_mux,
+ 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
+ 
+-SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
+-SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
+-
+ SND_SOC_DAPM_OUTPUT("SPKOUTL"),
+ SND_SOC_DAPM_OUTPUT("SPKOUTR"),
+ };
+@@ -2352,12 +2351,18 @@ static const struct snd_soc_dapm_route wm8962_spk_mono_intercon[] = {
+ 	{ "Speaker PGA", "Mixer", "Speaker Mixer" },
+ 	{ "Speaker PGA", "DAC", "DACL" },
+ 
+-	{ "Speaker Output", NULL, "Speaker PGA" },
+-	{ "Speaker Output", NULL, "SYSCLK" },
+-	{ "Speaker Output", NULL, "TOCLK" },
+-	{ "Speaker Output", NULL, "TEMP_SPK" },
++	{ "SPKOUTL Output", NULL, "Speaker PGA" },
++	{ "SPKOUTL Output", NULL, "SYSCLK" },
++	{ "SPKOUTL Output", NULL, "TOCLK" },
++	{ "SPKOUTL Output", NULL, "TEMP_SPK" },
++
++	{ "SPKOUTR Output", NULL, "Speaker PGA" },
++	{ "SPKOUTR Output", NULL, "SYSCLK" },
++	{ "SPKOUTR Output", NULL, "TOCLK" },
++	{ "SPKOUTR Output", NULL, "TEMP_SPK" },
+ 
+-	{ "SPKOUT", NULL, "Speaker Output" },
++	{ "SPKOUT", NULL, "SPKOUTL Output" },
++	{ "SPKOUT", NULL, "SPKOUTR Output" },
+ };
+ 
+ static const struct snd_soc_dapm_route wm8962_spk_stereo_intercon[] = {
 -- 
 2.43.0
 
