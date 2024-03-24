@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1B9184F1E;
-	Sun, 24 Mar 2024 23:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2242987BF;
+	Sun, 24 Mar 2024 23:52:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324352; cv=none; b=uJbbDu9UZg648LlS2mrxDzG2Lu9W4eHeQXbMRdVfrGG8CV2JnlbbhAbRcby4IHbJ8G0f6G4nYMRHBCZHC3ghi1nXDHUabb+cGzDOFPVjRS82t2o6C9+FTq11NnYDINRIgrL29lrWVpEQtSZSq5GEzOwhGG152RktfEUobT+AXeE=
+	t=1711324359; cv=none; b=suz6THGIAoXoFACgtJuNWEdKPhShRgdL6lU66++QYLBt3dvrG7GQy/gEgjG0whp1huY2ZfpCZ1YIPjxpqLBd9wZkYizQN1NXf9If9A1rNP7NbQgl50aSl8SxSc6J2HvNlb5GcPIeDE2abm3oSipdLlyGBKVoLhxC6+dGPlY1/TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324352; c=relaxed/simple;
-	bh=IgTe3n66YGsLtCAM6MmQvEeSa0QRWAfowfES3Es53+M=;
+	s=arc-20240116; t=1711324359; c=relaxed/simple;
+	bh=pqyp1rLzShpKc3h8gFSRMG675w0hHlyHiwuFd+JlXfE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nb2R+vs7+Aqnq9wcdZ3iqVqqGUysQnkli2t+jGy80tSCpN8LC3kAbSYNIrb6W/7gcZPErklygwkifhXZx1iFDwbzmB/jXXu5egsMKBF1rPX/V/UplIC8jXqi4xcFy+rFmcg8OIVn81PT6BJmvknRYu86CkMy31BwWoJOw7yqLZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pV/YlrOM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZG0grstI3xJhCS6AP6vCYDdSXtm/ZellzsF0B+agWCXbgAN8jQ7ExhVdITUenm2V1L/qrySQ72oe/5apPvk0L6tH0RYmaGTcoy80qYQR5sxcPEwV8Aj5gyAnyC7zQ4rZjuHXTS6UdN7bxEDxpk3S86vw406j999rfZzLWabG2MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGLToHXB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pV/YlrOM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75869C43394;
-	Sun, 24 Mar 2024 23:52:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGLToHXB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E91C433B1;
+	Sun, 24 Mar 2024 23:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324352;
-	bh=IgTe3n66YGsLtCAM6MmQvEeSa0QRWAfowfES3Es53+M=;
+	s=k20201202; t=1711324358;
+	bh=pqyp1rLzShpKc3h8gFSRMG675w0hHlyHiwuFd+JlXfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pV/YlrOMfifLRCUTfL4UgWGdQGtkRuugNxfI21Kf4942NSjRxic0BIrCpNPWAZu7R
-	 7d+2tWrgMNv9zhD6ftSz6joeYPAPRWlo8ZT5DfKQpVw4WU1Ey93a40o2eOjOfLO1wK
-	 7M9HBDExvq0wBWY9RVDt/fQpTLvNZFO4Hn6owxXEgwHakEQrQBSQtfdI2cSnc8HFFi
-	 s5QsilBDIJTZ+90EyGRBin0FcdR0nsnxrSZBFf/mohmErRGYcAKVDKcxKsbDgSLRNc
-	 RMd4hNqnSei48XsZzoheTm/B1wsX69PlSAWo2cN1qpA+ADhhqTpbjGEVZJAOaYW9sd
-	 n0hXZIfYBvaBw==
+	b=fGLToHXBj3OtmUelwRyz2YNH9KWLMpzz8bD8AqTKT7383lXsUvKTusZjAL+KqZrlq
+	 WbGnincBbSvuQ/r6nHZI2VOcErAC3MNepF9QommLPuB4XxE+v8ca93yP1PYWMYYMko
+	 Fw7Ovqy+hFtr8Jixf8ou6hU0BcBI9LrcZ3bHQ1JKVs8R0hgN+o8piIbIb+PJdDvt/n
+	 ViXCBlPJ+l7lAC5eMjc0aV0d6sA3FdrbeAnx0D2H0ZsDGdkUz+xv2cWcjou/yytDry
+	 o4Dmgz3Qsi1wa8EpgkB+tXasTHun6KNrnzALqMnywK3vJtFuCIp/O+7vY+kDj4l/1V
+	 N6wr5L6hsch3Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 120/148] powerpc/embedded6xx: Fix no previous prototype for avr_uart_send() etc.
-Date: Sun, 24 Mar 2024 19:49:44 -0400
-Message-ID: <20240324235012.1356413-121-sashal@kernel.org>
+Subject: [PATCH 4.19 126/148] arch/powerpc: Remove <linux/fb.h> from backlight code
+Date: Sun, 24 Mar 2024 19:49:50 -0400
+Message-ID: <20240324235012.1356413-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -47,50 +49,96 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Thomas Zimmermann <tzimmermann@suse.de>
 
-[ Upstream commit 20933531be0577cdd782216858c26150dbc7936f ]
+[ Upstream commit 838f865802b9f26135ea7df4e30f89ac2f50c23e ]
 
-Move the prototypes into mpc10x.h which is included by all the relevant
-C files, fixes:
+Replace <linux/fb.h> with a forward declaration in <asm/backlight.h> to
+resolve an unnecessary dependency. Remove pmac_backlight_curve_lookup()
+and struct fb_info from source and header files. The function and the
+framebuffer struct are unused. No functional changes.
 
-  arch/powerpc/platforms/embedded6xx/ls_uart.c:59:6: error: no previous prototype for 'avr_uart_configure'
-  arch/powerpc/platforms/embedded6xx/ls_uart.c:82:6: error: no previous prototype for 'avr_uart_send'
+v3:
+	* Add Fixes tag (Christophe)
+	* fix typos in commit message (Jani)
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/20240305123410.3306253-1-mpe@ellerman.id.au
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Fixes: d565dd3b0824 ("[PATCH] powerpc: More via-pmu backlight fixes")
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> # (powerpc)
+Link: https://patchwork.freedesktop.org/patch/msgid/20240306122935.10626-4-tzimmermann@suse.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/embedded6xx/linkstation.c | 3 ---
- arch/powerpc/platforms/embedded6xx/mpc10x.h      | 3 +++
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/backlight.h        |  5 ++--
+ arch/powerpc/platforms/powermac/backlight.c | 26 ---------------------
+ 2 files changed, 2 insertions(+), 29 deletions(-)
 
-diff --git a/arch/powerpc/platforms/embedded6xx/linkstation.c b/arch/powerpc/platforms/embedded6xx/linkstation.c
-index f514d5d28cd4f..3f3821eb4c36b 100644
---- a/arch/powerpc/platforms/embedded6xx/linkstation.c
-+++ b/arch/powerpc/platforms/embedded6xx/linkstation.c
-@@ -97,9 +97,6 @@ static void __init linkstation_init_IRQ(void)
- 	mpic_init(mpic);
+diff --git a/arch/powerpc/include/asm/backlight.h b/arch/powerpc/include/asm/backlight.h
+index 1b5eab62ed047..061a910d74929 100644
+--- a/arch/powerpc/include/asm/backlight.h
++++ b/arch/powerpc/include/asm/backlight.h
+@@ -10,15 +10,14 @@
+ #define __ASM_POWERPC_BACKLIGHT_H
+ #ifdef __KERNEL__
+ 
+-#include <linux/fb.h>
+ #include <linux/mutex.h>
+ 
++struct backlight_device;
++
+ /* For locking instructions, see the implementation file */
+ extern struct backlight_device *pmac_backlight;
+ extern struct mutex pmac_backlight_mutex;
+ 
+-extern int pmac_backlight_curve_lookup(struct fb_info *info, int value);
+-
+ extern int pmac_has_backlight_type(const char *type);
+ 
+ extern void pmac_backlight_key(int direction);
+diff --git a/arch/powerpc/platforms/powermac/backlight.c b/arch/powerpc/platforms/powermac/backlight.c
+index 6b5dcccae1d30..8fae9a7d3d47c 100644
+--- a/arch/powerpc/platforms/powermac/backlight.c
++++ b/arch/powerpc/platforms/powermac/backlight.c
+@@ -8,7 +8,6 @@
+  */
+ 
+ #include <linux/kernel.h>
+-#include <linux/fb.h>
+ #include <linux/backlight.h>
+ #include <linux/adb.h>
+ #include <linux/pmu.h>
+@@ -72,31 +71,6 @@ int pmac_has_backlight_type(const char *type)
+ 	return 0;
  }
  
--extern void avr_uart_configure(void);
--extern void avr_uart_send(const char);
+-int pmac_backlight_curve_lookup(struct fb_info *info, int value)
+-{
+-	int level = (FB_BACKLIGHT_LEVELS - 1);
 -
- static void __noreturn linkstation_restart(char *cmd)
+-	if (info && info->bl_dev) {
+-		int i, max = 0;
+-
+-		/* Look for biggest value */
+-		for (i = 0; i < FB_BACKLIGHT_LEVELS; i++)
+-			max = max((int)info->bl_curve[i], max);
+-
+-		/* Look for nearest value */
+-		for (i = 0; i < FB_BACKLIGHT_LEVELS; i++) {
+-			int diff = abs(info->bl_curve[i] - value);
+-			if (diff < max) {
+-				max = diff;
+-				level = i;
+-			}
+-		}
+-
+-	}
+-
+-	return level;
+-}
+-
+ static void pmac_backlight_key_worker(struct work_struct *work)
  {
- 	local_irq_disable();
-diff --git a/arch/powerpc/platforms/embedded6xx/mpc10x.h b/arch/powerpc/platforms/embedded6xx/mpc10x.h
-index 5ad12023e5628..ebc258fa4858d 100644
---- a/arch/powerpc/platforms/embedded6xx/mpc10x.h
-+++ b/arch/powerpc/platforms/embedded6xx/mpc10x.h
-@@ -156,4 +156,7 @@ int mpc10x_disable_store_gathering(struct pci_controller *hose);
- /* For MPC107 boards that use the built-in openpic */
- void mpc10x_set_openpic(void);
- 
-+void avr_uart_configure(void);
-+void avr_uart_send(const char c);
-+
- #endif	/* __PPC_KERNEL_MPC10X_H */
+ 	if (atomic_read(&kernel_backlight_disabled))
 -- 
 2.43.0
 
