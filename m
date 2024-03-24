@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3AE27BBC7;
-	Sun, 24 Mar 2024 23:38:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383AD27BBCA;
+	Sun, 24 Mar 2024 23:38:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323523; cv=none; b=ZOhnbFUwxNdARr6SoQJeBRYcFJeabbzaoLFV/yM/A0e6hBYxX6fH0cE/glGnFx66x0zyEuUOgr91MOVGqUslHUDz6/2bCKeQ/hokFGDJzX0B6btTqOIYpPApsP0mmdVk+kgzt1teUK8qDqtX37E8Wht/TMHckQuqutFVRBHmH1A=
+	t=1711323524; cv=none; b=dhUsRCdWDiSKouVHMZf9rxn319GhIUNwUwcpZAMjzZshtksF0ZMLKdaFhIpdycaGEy+kGLUdX9A2dJghpb4wrI2RUgbl/dsDi8ODRcUrQwS3t9nFuURy17RO11fjKdDXVQrsWZFfQtDxVozcr2ZIwdextsQfbianq5t6dgQ7w8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323523; c=relaxed/simple;
-	bh=idfjZKhQHj3/3yUOplbiREuNytkT88D2q/TdJlu9oJs=;
+	s=arc-20240116; t=1711323524; c=relaxed/simple;
+	bh=EpkfoWx72jhMfIWXfpdojzGNUtDam6OnAiKzo5ntHS0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W9lqLJT33FO07/XlZvzQYN94Tjb65Jx8psgwShwYwPsCsNH2Q9edn+a+i27CmNsj5/JTXWsB/TVz/GjOewX7tunKu3z9bCqvRUg7D/5F31JWTa7YxK5jIu0BqSNYgfhw85FBM2Sq9IuT/PsU2/M+AXpQEYIpkY3nsBJrLPrDmGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PBLGgZHC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hSTGPGnz8gmNRRQ+EkuZhoFPrAe+L3SOcMPruwZp/ul6MRBdLGUnBD8iw17gWZtTJ7CxAcVtBt3uSC8aRK+KcscvmkDs5D7j7Xxm4olL4VAGsuQF3DL5gE6C1JnhzB0EsM+vIguJWyh4pqWNMK2c1S04K8BeV8yme+QZEOXF4lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hm+NwM3A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PBLGgZHC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59438C43394;
-	Sun, 24 Mar 2024 23:38:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hm+NwM3A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66B29C43390;
+	Sun, 24 Mar 2024 23:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323522;
-	bh=idfjZKhQHj3/3yUOplbiREuNytkT88D2q/TdJlu9oJs=;
+	s=k20201202; t=1711323524;
+	bh=EpkfoWx72jhMfIWXfpdojzGNUtDam6OnAiKzo5ntHS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PBLGgZHCOcS7hwMFZNxUvxpCIbbu/EMIc99AZqIZXLrQ90yzB8qVp6TB1gOKkk1bD
-	 Zv2w2uX4Pz3yrFptjhF20Fkoam/6X2q4AQinjsGPKUTDIXKDzfnIFJlWAlTqMVGfir
-	 2lLDmjc8QISm8LpWhDB+FAchJ+lkMLOgDcVlHzQewZHbB99IG8yKn44uNHjgjQ9gjF
-	 R7QZ257inkWPYvbbgSuyI4m8dVs3oIrX0u4bmZ4hmh62iw2SiGskT29ox+iQhAbLZ1
-	 cqg3oxJINWzianaVs0UF2FDRyN8ENPiq0fLJpCcUJ9iqukCBUucnGXtO3x7DOeiTGy
-	 Zpdehfh3O7qcw==
+	b=Hm+NwM3ASR3JVD4fqTAhOpGANT21PzsliRtRxt6YRf9qKQ2PB/rKUJBIKFm3yx7rk
+	 udlxUK9uehYtkKsUCqqik9FBrNTRRpyldrnUC+wmJ0UosCInLncOJsSCiYRa8Jw6eV
+	 VW/dwriE7NjNn+2Au/Uun0xmTnWqMzx5IDFBmSE1ugHFJwLIbWDUhgan245wOev2Fx
+	 Glas4MCqw6cfTgF48BN5boQ2lFktX4Q2RjFQfautPkw9k3IJf9E24lDuIzXkHvKQa1
+	 uoKaY8jN6frbRJhQfaTSbFn8nJqnN82QHprmn1BHrgTe5mXGGnXRtNDq1+2JvtcgNt
+	 +Gxa1qM3f1ObA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Jammy Zhou <Jammy.Zhou@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 229/317] drm/amdgpu: Fix missing break in ATOM_ARG_IMM Case of atom_get_src_int()
-Date: Sun, 24 Mar 2024 19:33:29 -0400
-Message-ID: <20240324233458.1352854-230-sashal@kernel.org>
+Subject: [PATCH 5.15 231/317] media: dvb-frontends: avoid stack overflow warnings with clang
+Date: Sun, 24 Mar 2024 19:33:31 -0400
+Message-ID: <20240324233458.1352854-232-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -46,47 +45,97 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 7cf1ad2fe10634238b38442a851d89514cb14ea2 ]
+[ Upstream commit 7a4cf27d1f0538f779bf31b8c99eda394e277119 ]
 
-Missing break statement in the ATOM_ARG_IMM case of a switch statement,
-adds the missing break statement, ensuring that the program's control
-flow is as intended.
+A previous patch worked around a KASAN issue in stv0367, now a similar
+problem showed up with clang:
 
-Fixes the below:
-drivers/gpu/drm/amd/amdgpu/atom.c:323 atom_get_src_int() warn: ignoring unreachable code.
+drivers/media/dvb-frontends/stv0367.c:1222:12: error: stack frame size (3624) exceeds limit (2048) in 'stv0367ter_set_frontend' [-Werror,-Wframe-larger-than]
+ 1214 | static int stv0367ter_set_frontend(struct dvb_frontend *fe)
 
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Cc: Jammy Zhou <Jammy.Zhou@amd.com>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Rework the stv0367_writereg() function to be simpler and mark both
+register access functions as noinline_for_stack so the temporary
+i2c_msg structures do not get duplicated on the stack when KASAN_STACK
+is enabled.
+
+Fixes: 3cd890dbe2a4 ("media: dvb-frontends: fix i2c access helpers for KASAN")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/atom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/dvb-frontends/stv0367.c | 34 +++++++--------------------
+ 1 file changed, 8 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atom.c b/drivers/gpu/drm/amd/amdgpu/atom.c
-index 6fa2229b72292..c279718d22fba 100644
---- a/drivers/gpu/drm/amd/amdgpu/atom.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atom.c
-@@ -311,7 +311,7 @@ static uint32_t atom_get_src_int(atom_exec_context *ctx, uint8_t attr,
- 				DEBUG("IMM 0x%02X\n", val);
- 			return val;
- 		}
--		return 0;
-+		break;
- 	case ATOM_ARG_PLL:
- 		idx = U8(*ptr);
- 		(*ptr)++;
+diff --git a/drivers/media/dvb-frontends/stv0367.c b/drivers/media/dvb-frontends/stv0367.c
+index 0bfca1174e9e7..8cbae8235b174 100644
+--- a/drivers/media/dvb-frontends/stv0367.c
++++ b/drivers/media/dvb-frontends/stv0367.c
+@@ -118,50 +118,32 @@ static const s32 stv0367cab_RF_LookUp2[RF_LOOKUP_TABLE2_SIZE][RF_LOOKUP_TABLE2_S
+ 	}
+ };
+ 
+-static
+-int stv0367_writeregs(struct stv0367_state *state, u16 reg, u8 *data, int len)
++static noinline_for_stack
++int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
+ {
+-	u8 buf[MAX_XFER_SIZE];
++	u8 buf[3] = { MSB(reg), LSB(reg), data };
+ 	struct i2c_msg msg = {
+ 		.addr = state->config->demod_address,
+ 		.flags = 0,
+ 		.buf = buf,
+-		.len = len + 2
++		.len = 3,
+ 	};
+ 	int ret;
+ 
+-	if (2 + len > sizeof(buf)) {
+-		printk(KERN_WARNING
+-		       "%s: i2c wr reg=%04x: len=%d is too big!\n",
+-		       KBUILD_MODNAME, reg, len);
+-		return -EINVAL;
+-	}
+-
+-
+-	buf[0] = MSB(reg);
+-	buf[1] = LSB(reg);
+-	memcpy(buf + 2, data, len);
+-
+ 	if (i2cdebug)
+ 		printk(KERN_DEBUG "%s: [%02x] %02x: %02x\n", __func__,
+-			state->config->demod_address, reg, buf[2]);
++			state->config->demod_address, reg, data);
+ 
+ 	ret = i2c_transfer(state->i2c, &msg, 1);
+ 	if (ret != 1)
+ 		printk(KERN_ERR "%s: i2c write error! ([%02x] %02x: %02x)\n",
+-			__func__, state->config->demod_address, reg, buf[2]);
++			__func__, state->config->demod_address, reg, data);
+ 
+ 	return (ret != 1) ? -EREMOTEIO : 0;
+ }
+ 
+-static int stv0367_writereg(struct stv0367_state *state, u16 reg, u8 data)
+-{
+-	u8 tmp = data; /* see gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
+-
+-	return stv0367_writeregs(state, reg, &tmp, 1);
+-}
+-
+-static u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
++static noinline_for_stack
++u8 stv0367_readreg(struct stv0367_state *state, u16 reg)
+ {
+ 	u8 b0[] = { 0, 0 };
+ 	u8 b1[] = { 0 };
 -- 
 2.43.0
 
