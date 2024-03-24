@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08380145FF6;
-	Sun, 24 Mar 2024 23:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8557B145FFE;
+	Sun, 24 Mar 2024 23:14:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322057; cv=none; b=hvOxCziT7mAog6YnvsA2genikBpc3PF6e4sB2n0DM/o8DIZ7X/CQyPnWGHF1PkBR3rJlHDQ5p13NexqrJ0tpfvfnUnw75oyGHVmECOl+CdHNlE5W1wFXvAy5G6tm7bD/HhyTO1eQTlPh0sCUBPGTqY2uLepDw5SJDa/Fbyb1lBM=
+	t=1711322060; cv=none; b=jo3el2W5hOvfYAFfEhjVpjo0SFoX5em9cUO3P5vd2x7lbtvssH5OpbezM134SuwIGhvkNabGCpttvgX1K8IdGzfi2xV9sVKxKuWAFlontXO3DnHIs4wmcJM25neNmWBxGmoLL9UiV+m338jJdd+MBR0s+NYdxoh46DuyyQIHs+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322057; c=relaxed/simple;
-	bh=VpsD2P4bz6+1wRTNrTSuNjvgkclOAGy4jeGl9qKsjhc=;
+	s=arc-20240116; t=1711322060; c=relaxed/simple;
+	bh=UpVdNmjTBMvFdIHiv9Cau+i5iASzj/8tzCZjDkliNf0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ngkXXrS127/s3dvt4YCxJfg50gDgvlRs3LY+Ey0vD39uBt1iePIm0Qo2h3M2oOhZ/ERzWcVhH6TxRyx6o15nh6PaQ6+ycwE0ByYiKufDbSWYVrVyyAhrB2ynnL6u9Ih7inhvMI8mi4JGhyUq2HCWU4G/orIqbZo1GR5NR6HZqnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fC1mlgw+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BDtckgjEOK8mF8XO4tDVQ9A7HYjVXXKoUw68yBRCxGPog1mvdiTkDted2k/hDPjq/ihgt8sO0VZar6INyjFYVsgXGV3li3WaY9PjjUsfep/3VUAOH5EidpnhHZvpgWVt5wG+mDZFWplvQf0SXSJtQsDrA1C/ICD0k4agyyQ4OxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWUdZKRs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fC1mlgw+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C61C9C43394;
-	Sun, 24 Mar 2024 23:14:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWUdZKRs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE995C433F1;
+	Sun, 24 Mar 2024 23:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322056;
-	bh=VpsD2P4bz6+1wRTNrTSuNjvgkclOAGy4jeGl9qKsjhc=;
+	s=k20201202; t=1711322060;
+	bh=UpVdNmjTBMvFdIHiv9Cau+i5iASzj/8tzCZjDkliNf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fC1mlgw+0lDUsFvjrshctcWEoo0V4UD+U8J/ILJgbDpD4PgHlbc2xJwXM2mFtk2Qk
-	 Q1rUSqipyQT1PUgwSSwTe4UvyucKrwtlQuNQzQViZUE6WDlmb9ZeZ8V94KqbelD6V/
-	 eoHL6s96pOmvK/udWEfFESrE37yS4Ogg6g8Rq/FRSaHgvGd3KYvNTtDviTIFBQSgpT
-	 jbJjCfkti3hbQVonUedvKstQ9mCrOX2y/HsAqZXFqoBXrd5DjMM6hg7b9/kqFa554K
-	 0x4W1KLijONCZ8ICO6V5fkMuMDEfHr+GDLQx0Lm6PfNZJ558Cg5ze0Welp4omneF34
-	 WSZ2dnIiRknzQ==
+	b=SWUdZKRsm3WxLNO0wdIURMd/i6Lbp1WatcsAY+LcjvdcErN+Fs0mzt/O1KH6onXNs
+	 IU+1SGhjkr9eRyhGiJptgYgShahOWYhmZ+LLUShwZTBp1qbBJVwm7ggGxAWwCSws6R
+	 WFmxGnHKKMwk6SVoHYhYrMDgRtzOwtKNZfr4c5Q4s73KOP4IEH8sC4V2uOlgfcH3Ob
+	 P9xmzm1eccE+bFCUMw7dNKybx3nx+uihPKyhm7Iye+X4ac/CU93fTSYL5O+YcRTxV2
+	 ADUQVrplvj4at3/5JlBvtp+ncsWl85pIZfHiZrMO1MsJBmQUDvyxa6sxeDyu8JBLsW
+	 C7npTeRm0d0qA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Jeffrey Hugo <quic_jhugo@quicinc.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Viktor Malik <vmalik@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Xu <dxu@dxuuu.xyz>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 129/451] arm64: dts: qcom: msm8998: declare VLS CLAMP register for USB3 PHY
-Date: Sun, 24 Mar 2024 19:06:45 -0400
-Message-ID: <20240324231207.1351418-130-sashal@kernel.org>
+Subject: [PATCH 6.1 133/451] tools/resolve_btfids: Refactor set sorting with types from btf_ids.h
+Date: Sun, 24 Mar 2024 19:06:49 -0400
+Message-ID: <20240324231207.1351418-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,51 +49,143 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+From: Viktor Malik <vmalik@redhat.com>
 
-[ Upstream commit fc835b2311d4deb85d776c1d73562338462aa7ac ]
+[ Upstream commit 9707ac4fe2f5bac6406d2403f8b8a64d7b3d8e43 ]
 
-The USB3 PHY on the MSM8998 platform doesn't have built-in
-PCS_MISC_CLAMP_ENABLE register. Instead clamping is handled separately
-via the register in the TCSR space. Declare corresponding register.
+Instead of using magic offsets to access BTF ID set data, leverage types
+from btf_ids.h (btf_id_set and btf_id_set8) which define the actual
+layout of the data. Thanks to this change, set sorting should also
+continue working if the layout changes.
 
-Fixes: 026dad8f5873 ("arm64: dts: qcom: msm8998: Add USB-related nodes")
-Cc: Jeffrey Hugo <quic_jhugo@quicinc.com>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
-Link: https://lore.kernel.org/r/20240117-usbc-phy-vls-clamp-v2-4-a950c223f10f@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+This requires to sync the definition of 'struct btf_id_set8' from
+include/linux/btf_ids.h to tools/include/linux/btf_ids.h. We don't sync
+the rest of the file at the moment, b/c that would require to also sync
+multiple dependent headers and we don't need any other defs from
+btf_ids.h.
+
+Signed-off-by: Viktor Malik <vmalik@redhat.com>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Acked-by: Daniel Xu <dxu@dxuuu.xyz>
+Link: https://lore.kernel.org/bpf/ff7f062ddf6a00815fda3087957c4ce667f50532.1707223196.git.vmalik@redhat.com
+Stable-dep-of: 903fad439466 ("tools/resolve_btfids: Fix cross-compilation to non-host endianness")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/bpf/resolve_btfids/main.c | 35 ++++++++++++++++++++-------------
+ tools/include/linux/btf_ids.h   |  9 +++++++++
+ 2 files changed, 30 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 6eef7cbe7d7bf..6c3aecea20370 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -1052,6 +1052,11 @@ tcsr_regs_1: syscon@1f60000 {
- 			reg = <0x01f60000 0x20000>;
- 		};
+diff --git a/tools/bpf/resolve_btfids/main.c b/tools/bpf/resolve_btfids/main.c
+index 77058174082d7..cd42977c6a1f4 100644
+--- a/tools/bpf/resolve_btfids/main.c
++++ b/tools/bpf/resolve_btfids/main.c
+@@ -70,6 +70,7 @@
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <errno.h>
++#include <linux/btf_ids.h>
+ #include <linux/rbtree.h>
+ #include <linux/zalloc.h>
+ #include <linux/err.h>
+@@ -78,7 +79,7 @@
+ #include <subcmd/parse-options.h>
  
-+		tcsr_regs_2: syscon@1fc0000 {
-+			compatible = "qcom,msm8998-tcsr", "syscon";
-+			reg = <0x01fc0000 0x26000>;
-+		};
+ #define BTF_IDS_SECTION	".BTF_ids"
+-#define BTF_ID		"__BTF_ID__"
++#define BTF_ID_PREFIX	"__BTF_ID__"
+ 
+ #define BTF_STRUCT	"struct"
+ #define BTF_UNION	"union"
+@@ -161,7 +162,7 @@ static int eprintf(int level, int var, const char *fmt, ...)
+ 
+ static bool is_btf_id(const char *name)
+ {
+-	return name && !strncmp(name, BTF_ID, sizeof(BTF_ID) - 1);
++	return name && !strncmp(name, BTF_ID_PREFIX, sizeof(BTF_ID_PREFIX) - 1);
+ }
+ 
+ static struct btf_id *btf_id__find(struct rb_root *root, const char *name)
+@@ -441,7 +442,7 @@ static int symbols_collect(struct object *obj)
+ 		 * __BTF_ID__TYPE__vfs_truncate__0
+ 		 * prefix =  ^
+ 		 */
+-		prefix = name + sizeof(BTF_ID) - 1;
++		prefix = name + sizeof(BTF_ID_PREFIX) - 1;
+ 
+ 		/* struct */
+ 		if (!strncmp(prefix, BTF_STRUCT, sizeof(BTF_STRUCT) - 1)) {
+@@ -649,19 +650,18 @@ static int cmp_id(const void *pa, const void *pb)
+ static int sets_patch(struct object *obj)
+ {
+ 	Elf_Data *data = obj->efile.idlist;
+-	int *ptr = data->d_buf;
+ 	struct rb_node *next;
+ 
+ 	next = rb_first(&obj->sets);
+ 	while (next) {
+-		unsigned long addr, idx;
++		struct btf_id_set8 *set8;
++		struct btf_id_set *set;
++		unsigned long addr, off;
+ 		struct btf_id *id;
+-		int *base;
+-		int cnt;
+ 
+ 		id   = rb_entry(next, struct btf_id, rb_node);
+ 		addr = id->addr[0];
+-		idx  = addr - obj->efile.idlist_addr;
++		off = addr - obj->efile.idlist_addr;
+ 
+ 		/* sets are unique */
+ 		if (id->addr_cnt != 1) {
+@@ -670,14 +670,21 @@ static int sets_patch(struct object *obj)
+ 			return -1;
+ 		}
+ 
+-		idx = idx / sizeof(int);
+-		base = &ptr[idx] + (id->is_set8 ? 2 : 1);
+-		cnt = ptr[idx];
++		if (id->is_set) {
++			set = data->d_buf + off;
++			qsort(set->ids, set->cnt, sizeof(set->ids[0]), cmp_id);
++		} else {
++			set8 = data->d_buf + off;
++			/*
++			 * Make sure id is at the beginning of the pairs
++			 * struct, otherwise the below qsort would not work.
++			 */
++			BUILD_BUG_ON(set8->pairs != &set8->pairs[0].id);
++			qsort(set8->pairs, set8->cnt, sizeof(set8->pairs[0]), cmp_id);
++		}
+ 
+ 		pr_debug("sorting  addr %5lu: cnt %6d [%s]\n",
+-			 (idx + 1) * sizeof(int), cnt, id->name);
+-
+-		qsort(base, cnt, id->is_set8 ? sizeof(uint64_t) : sizeof(int), cmp_id);
++			 off, id->is_set ? set->cnt : set8->cnt, id->name);
+ 
+ 		next = rb_next(next);
+ 	}
+diff --git a/tools/include/linux/btf_ids.h b/tools/include/linux/btf_ids.h
+index 2f882d5cb30f5..72535f00572f6 100644
+--- a/tools/include/linux/btf_ids.h
++++ b/tools/include/linux/btf_ids.h
+@@ -8,6 +8,15 @@ struct btf_id_set {
+ 	u32 ids[];
+ };
+ 
++struct btf_id_set8 {
++	u32 cnt;
++	u32 flags;
++	struct {
++		u32 id;
++		u32 flags;
++	} pairs[];
++};
 +
- 		tlmm: pinctrl@3400000 {
- 			compatible = "qcom,msm8998-pinctrl";
- 			reg = <0x03400000 0xc00000>;
-@@ -2058,6 +2063,8 @@ usb3phy: phy@c010000 {
- 			reset-names = "phy",
- 				      "phy_phy";
+ #ifdef CONFIG_DEBUG_INFO_BTF
  
-+			qcom,tcsr-reg = <&tcsr_regs_2 0xb244>;
-+
- 			status = "disabled";
- 		};
- 
+ #include <linux/compiler.h> /* for __PASTE */
 -- 
 2.43.0
 
