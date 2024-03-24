@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4251EC4B1;
-	Sun, 24 Mar 2024 23:07:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441191EC4D4;
+	Sun, 24 Mar 2024 23:07:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321635; cv=none; b=CCFGIBjGNDcfH5XDoNcn/0O1v90XuU79owbw3pue12Jqy93YTc5nDXsOvRvgYiYClg5osMhoEACh1clbiknjKKQGnGDYausRGEz8QblTE/TmFVVYk61h0/yTOpMrpb6nINeRqAyG3YeDUDRwwyU+DBAxOmGKbS29QTqG0xXRbbU=
+	t=1711321639; cv=none; b=q27+AC32kB7cB6NCdSTiAfjpKNaDOrgFVO53Pusl/olw/CMwiSDQjFQgR0T2VkualzsrshFsovxw2hZV2pZAyDuipBtgZ6bTWrR57pZSinHwwvYBHOTmmrDqatW/L7h4Q5im4nUWhZQW0IFd5TuT99UoGqtzL9FOSbtZ1h/upSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321635; c=relaxed/simple;
-	bh=5hAiO/oE23Dfr/v/1rIlZy338PxP8Tq6DlQNvV4pUs8=;
+	s=arc-20240116; t=1711321639; c=relaxed/simple;
+	bh=smIg7cRutQ0mZZiJ6ct3Gj4qAu74BxVNBqt3oeOmSX4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D2TA+SKF/lX6R56DcvpQwkLBVamRq7In3/LNrLbCR8//X8LowYZG+t4217scdgNgUmiTgbAoMRybjpXaIaSoQ7fuwnLF9MeTErnUMU498QkRKIUvrINylP1EkZAUXAaLaZFvM1rRIp6sjxFckxD+3pIP/vWLq+kC4+vnTG6wrb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqgbUfly; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pqD5E/iPCDvmya6tcMVITbdZhD8sLo4wo1yVB8coDh8G0UHxEl+TJpUzW0lolX9vvROlXfc/vA6n7UND5oJ+ND8LU7WMRsTtu6nVDjYjduYrM/GT9k2kcXKLaGU5LtwcE/H+S6Xxxem2ZAKWiKvFBLhyRlzgUZAwP69yprAoYrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X6xwOY5/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqgbUfly"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 061A8C43399;
-	Sun, 24 Mar 2024 23:07:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X6xwOY5/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E328C43399;
+	Sun, 24 Mar 2024 23:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321634;
-	bh=5hAiO/oE23Dfr/v/1rIlZy338PxP8Tq6DlQNvV4pUs8=;
+	s=k20201202; t=1711321639;
+	bh=smIg7cRutQ0mZZiJ6ct3Gj4qAu74BxVNBqt3oeOmSX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JqgbUflyE7e55moqs7N23qXDb+3LDeDVJHiFq6W9VeaHc47BBepqnB5z+cJMfWei3
-	 EeOgsO1ZjcwTcd7DudRi67BEJmaSv32R+N+MAjdcU/pbY5LJnVf9/kaaGkUGALpsf8
-	 mOg6h2Cc19+NYynFtBmHG+0n67552jZ/P49ItTcy7AEuPaItCUUOZ2ZIEuMttVxz2S
-	 CHSkqtPJuoDymo/neNQph4dTKEtVMhnHtnKYyAv6r8gt4/Yhk87tR9PTUuYiyAeF+N
-	 sE9yLlYx+pqFyqab9tytW0JpY5DhPkJRM7ZCMIX52MeO2zsTTCN/WHTjV3eVCV5J6N
-	 dEaPFi7SOXpuw==
+	b=X6xwOY5/OHM9CUAVH+4ccSJNH0TCxcWPhKmY9I1jnujRdhKzlay/pcRR5cvubzK86
+	 q1T58USjDabHTyOjX2bHfAX013GEXu26QHKIGdPBPL0BFU3/9y2y61DMQR4Y4YRxwy
+	 TY6JAB7v2Jvq+kS4DuDwhaez77898EmdH7oYykUjo/E4MxhMEjZL9vTujHz5O+UvmJ
+	 etrTzKITLK3nX2X58yKiU+GF9bD/x0EiFKVmdEJ8NoCv5dw5sooTbtgLm4WNz7xSR6
+	 9AfWaZbex605rfOabQ8mSCo6vsUyClNntoSUMRBTQ1PZLZSbvI/2fxOeJRvDXv7fsQ
+	 O6iitno5CU3qw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yang Jihong <yangjihong1@huawei.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Qingqing Zhuo <qingqing.zhuo@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 365/638] perf record: Fix possible incorrect free in record__switch_output()
-Date: Sun, 24 Mar 2024 18:56:42 -0400
-Message-ID: <20240324230116.1348576-366-sashal@kernel.org>
+Subject: [PATCH 6.6 369/638] drm/amd/display: Fix a potential buffer overflow in 'dp_dsc_clock_en_read()'
+Date: Sun, 24 Mar 2024 18:56:46 -0400
+Message-ID: <20240324230116.1348576-370-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,38 +53,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yang Jihong <yangjihong1@huawei.com>
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit aff10a165201f6f60cff225083ce301ad3f5d8f1 ]
+[ Upstream commit 4b09715f1504f1b6e8dff0e9643630610bc05141 ]
 
-perf_data__switch() may not assign a legal value to 'new_filename'.
-In this case, 'new_filename' uses the on-stack value, which may cause a
-incorrect free and unexpected result.
+Tell snprintf() to store at most 10 bytes in the output buffer
+instead of 30.
 
-Fixes: 03724b2e9c45 ("perf record: Allow to limit number of reported perf.data files")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240119040304.3708522-2-yangjihong1@huawei.com
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Fixes the below:
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_debugfs.c:1508 dp_dsc_clock_en_read() error: snprintf() is printing too much 30 vs 10
+
+Fixes: c06e09b76639 ("drm/amd/display: Add DSC parameters logging to debugfs")
+Cc: Alex Hung <alex.hung@amd.com>
+Cc: Qingqing Zhuo <qingqing.zhuo@amd.com>
+Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-record.c | 2 +-
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 34bb31f08bb52..cd1725643ef77 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1786,8 +1786,8 @@ static int
- record__switch_output(struct record *rec, bool at_exit)
- {
- 	struct perf_data *data = &rec->data;
-+	char *new_filename = NULL;
- 	int fd, err;
--	char *new_filename;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+index 7c21e21bcc51a..f4b9d43c5d979 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+@@ -1453,7 +1453,7 @@ static ssize_t dp_dsc_clock_en_read(struct file *f, char __user *buf,
+ 	const uint32_t rd_buf_size = 10;
+ 	struct pipe_ctx *pipe_ctx;
+ 	ssize_t result = 0;
+-	int i, r, str_len = 30;
++	int i, r, str_len = 10;
  
- 	/* Same Size:      "2015122520103046"*/
- 	char timestamp[] = "InvalidTimestamp";
+ 	rd_buf = kcalloc(rd_buf_size, sizeof(char), GFP_KERNEL);
+ 
 -- 
 2.43.0
 
