@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F228D22BF75;
-	Sun, 24 Mar 2024 23:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B03213C907;
+	Sun, 24 Mar 2024 23:50:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324231; cv=none; b=tMt31ZVrLESsbIM+oWt2xSzf4KbsR7xcObXF1MvovqYuG4rWEKGjNIhBkALmkr4Rw7ksIkQcZB/ihM4+mOGE/w/z/X03pDUFPJk2tNYX9aI9k65B1c4WNLYEn1/91at03VVKjJvaRSL/207lrJ4Q3ktB7dPWzyDMS/NvO+DdD7A=
+	t=1711324241; cv=none; b=R0+4kEOhUCJWpIxxYt9LLcI60Zvp3+gNK77N9GDxhuaOBNw755srSL301PRMOMpmiWjAGTHuCkC4iqa+MVjVPU23jyvLRIPIep2Bq9Ewnj2N4CBGerpwooEr6FLVzcMu2sHCM2LllHB1mtFdJfOaEtcz7xlzmcWG+E19Jd4S/MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324231; c=relaxed/simple;
-	bh=y6SI1aGswLNseRZzTvYEXZFknUO2uW6XeSH+ZI2z+LQ=;
+	s=arc-20240116; t=1711324241; c=relaxed/simple;
+	bh=YNK11JBRy/npL12b7ivY2GafbRJ5idFF/fFNwrKvM8I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PVCvD/b8WBY+p3nq9mtBm4jRdE1BH/BAl5XUmnLWT6C8iR05HoJ2DG05W64BkDV57BQCGGTqo8J7nZtdkWwQ3ItHOfYamKD3zclBpBAT5Wrf6pd43X+p3gJHCiJ//6FtWxw0IpWb8PpmH4OWwlzU3I6//Tp9UcglPsJcowS9low=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LsjtxOvK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=n57GQyDn3VMtY+pIJzT/nmrgsHwwpgEagfa3Q01QOgXZa7LonaU7I7/BHav7dE3J/G0N0+n6lqeguZnd3cgO8wyU7FMumpG/btVEgDJ1xzRa0Iq32AQ4fxJojPed9Dy/+YtOuXcXz0+GHiQ5uVbjyd3nFMSMB+yujb2I4PyTxZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8Gvyxo9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LsjtxOvK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7507C433C7;
-	Sun, 24 Mar 2024 23:50:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8Gvyxo9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C02AEC43390;
+	Sun, 24 Mar 2024 23:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324229;
-	bh=y6SI1aGswLNseRZzTvYEXZFknUO2uW6XeSH+ZI2z+LQ=;
+	s=k20201202; t=1711324240;
+	bh=YNK11JBRy/npL12b7ivY2GafbRJ5idFF/fFNwrKvM8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LsjtxOvKpRfaPX/tjpNAeDKdj7Km+l8ivZdS76TsU3TZtKV+0K+mUyU2h3RYrRVaq
-	 +9Bd7B+MJCVm8AZeMQS2NYODtq1i0xS8/4CHguEhXc+YORnbR7DjpuYw7mBArs/F7R
-	 ilW+YO/eJr3uhhuNSgwwsk4H82TL9ZfaAlgSgcYznS1yuPSDnsNW9xC70WWg7zj1yV
-	 meZHniUX8b4cpXq40FduL9X/KELHf023J9kNopcysH4P3m81VH43irsWULfcDpwUG/
-	 oefkjxPckfkuGq24zWTDRYiTw3b9GboMYE7hHaE41R2lDBCRQNizLdgLZfhZatTeCb
-	 Pn+vi11KqvxaA==
+	b=Y8Gvyxo9fs8hByAqVM5uHsvH9fXUYmXxiOx2Jd/Av0Wzmk8vaTPtfNS3j9lmr2WBL
+	 01njgM/odwF7MT8qaH7POg0WaN1xCIEcOTrJxt9IUBt1e5y+vDw0k2SRNgBQ6IRaRB
+	 ei+LST0gPpDDvxxCHuI0HkV1rflUkOPWzN+w0qsig5czXiQzOTiObeA4gXdzKw24dP
+	 DJQGcq5AkhfDK+4HHjuaoxo/sKdsfk/u1z33ZMBhAJlVD+CCJGwd+cMSpa9DAFkN8d
+	 Pbmlh/UB3yMdiTthmWRQwKAxrjdspY66ku9yUc/Y5CU4Wo3uXSuUQXjU6Chle4IQwp
+	 XFDSbV2S4Zr2g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Li Nan <linan122@huawei.com>,
+	Yu Kuai <yukuai3@huawei.com>,
+	Song Liu <song@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 013/148] ASoC: wm8962: Enable both SPKOUTR_ENA and SPKOUTL_ENA in mono mode
-Date: Sun, 24 Mar 2024 19:47:57 -0400
-Message-ID: <20240324235012.1356413-14-sashal@kernel.org>
+Subject: [PATCH 4.19 023/148] md: Don't clear MD_CLOSING when the raid is about to stop
+Date: Sun, 24 Mar 2024 19:48:07 -0400
+Message-ID: <20240324235012.1356413-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,74 +49,71 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stuart Henderson <stuarth@opensource.cirrus.com>
+From: Li Nan <linan122@huawei.com>
 
-[ Upstream commit 6fa849e4d78b880e878138bf238e4fd2bac3c4fa ]
+[ Upstream commit 9674f54e41fffaf06f6a60202e1fa4cc13de3cf5 ]
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-Link: https://msgid.link/r/20240306161439.1385643-2-stuarth@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The raid should not be opened anymore when it is about to be stopped.
+However, other processes can open it again if the flag MD_CLOSING is
+cleared before exiting. From now on, this flag will not be cleared when
+the raid will be stopped.
+
+Fixes: 065e519e71b2 ("md: MD_CLOSING needs to be cleared after called md_set_readonly or do_md_stop")
+Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Song Liu <song@kernel.org>
+Link: https://lore.kernel.org/r/20240226031444.3606764-6-linan666@huaweicloud.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/md/md.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index 674bc6f65ed0e..55e041031d398 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2177,6 +2177,9 @@ SND_SOC_DAPM_PGA_E("HPOUT", SND_SOC_NOPM, 0, 0, NULL, 0, hp_event,
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 8123c44de7dc8..68eb3220be1c9 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -5886,7 +5886,15 @@ static void md_clean(struct mddev *mddev)
+ 	mddev->persistent = 0;
+ 	mddev->level = LEVEL_NONE;
+ 	mddev->clevel[0] = 0;
+-	mddev->flags = 0;
++	/*
++	 * Don't clear MD_CLOSING, or mddev can be opened again.
++	 * 'hold_active != 0' means mddev is still in the creation
++	 * process and will be used later.
++	 */
++	if (mddev->hold_active)
++		mddev->flags = 0;
++	else
++		mddev->flags &= BIT_ULL_MASK(MD_CLOSING);
+ 	mddev->sb_flags = 0;
+ 	mddev->ro = 0;
+ 	mddev->metadata_type[0] = 0;
+@@ -7199,7 +7207,6 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 	int err = 0;
+ 	void __user *argp = (void __user *)arg;
+ 	struct mddev *mddev = NULL;
+-	bool did_set_md_closing = false;
  
- SND_SOC_DAPM_OUTPUT("HPOUTL"),
- SND_SOC_DAPM_OUTPUT("HPOUTR"),
-+
-+SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
- };
- 
- static const struct snd_soc_dapm_widget wm8962_dapm_spk_mono_widgets[] = {
-@@ -2184,7 +2187,6 @@ SND_SOC_DAPM_MIXER("Speaker Mixer", WM8962_MIXER_ENABLES, 1, 0,
- 		   spkmixl, ARRAY_SIZE(spkmixl)),
- SND_SOC_DAPM_MUX_E("Speaker PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
- 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
--SND_SOC_DAPM_PGA("Speaker Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
- SND_SOC_DAPM_OUTPUT("SPKOUT"),
- };
- 
-@@ -2199,9 +2201,6 @@ SND_SOC_DAPM_MUX_E("SPKOUTL PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
- SND_SOC_DAPM_MUX_E("SPKOUTR PGA", WM8962_PWR_MGMT_2, 3, 0, &spkoutr_mux,
- 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
- 
--SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
--SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
--
- SND_SOC_DAPM_OUTPUT("SPKOUTL"),
- SND_SOC_DAPM_OUTPUT("SPKOUTR"),
- };
-@@ -2311,12 +2310,18 @@ static const struct snd_soc_dapm_route wm8962_spk_mono_intercon[] = {
- 	{ "Speaker PGA", "Mixer", "Speaker Mixer" },
- 	{ "Speaker PGA", "DAC", "DACL" },
- 
--	{ "Speaker Output", NULL, "Speaker PGA" },
--	{ "Speaker Output", NULL, "SYSCLK" },
--	{ "Speaker Output", NULL, "TOCLK" },
--	{ "Speaker Output", NULL, "TEMP_SPK" },
-+	{ "SPKOUTL Output", NULL, "Speaker PGA" },
-+	{ "SPKOUTL Output", NULL, "SYSCLK" },
-+	{ "SPKOUTL Output", NULL, "TOCLK" },
-+	{ "SPKOUTL Output", NULL, "TEMP_SPK" },
-+
-+	{ "SPKOUTR Output", NULL, "Speaker PGA" },
-+	{ "SPKOUTR Output", NULL, "SYSCLK" },
-+	{ "SPKOUTR Output", NULL, "TOCLK" },
-+	{ "SPKOUTR Output", NULL, "TEMP_SPK" },
- 
--	{ "SPKOUT", NULL, "Speaker Output" },
-+	{ "SPKOUT", NULL, "SPKOUTL Output" },
-+	{ "SPKOUT", NULL, "SPKOUTR Output" },
- };
- 
- static const struct snd_soc_dapm_route wm8962_spk_stereo_intercon[] = {
+ 	if (!md_ioctl_valid(cmd))
+ 		return -ENOTTY;
+@@ -7294,7 +7301,6 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 			err = -EBUSY;
+ 			goto out;
+ 		}
+-		did_set_md_closing = true;
+ 		mutex_unlock(&mddev->open_mutex);
+ 		sync_blockdev(bdev);
+ 	}
+@@ -7458,7 +7464,7 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 		mddev->hold_active = 0;
+ 	mddev_unlock(mddev);
+ out:
+-	if(did_set_md_closing)
++	if (cmd == STOP_ARRAY_RO || (err && cmd == STOP_ARRAY))
+ 		clear_bit(MD_CLOSING, &mddev->flags);
+ 	return err;
+ }
 -- 
 2.43.0
 
