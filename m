@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581D6137C22;
-	Sun, 24 Mar 2024 23:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BE92092EE;
+	Sun, 24 Mar 2024 23:05:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321555; cv=none; b=FkCpKQNQtozW/iRPXc+wPAbSJiUu8HTuftbPVb6x9jUHfkz0sQxkobGw8qCmM2BUFA/95hYd4twTmNLlZ2ZsS4z5bXOT2WWUxJFrZFFVV9KiVySqVhNtDjnnwUYThDHdnWtf4WCiCivBnR5YWUu2BCjXzze+xtYyz+1QWUIs1zk=
+	t=1711321557; cv=none; b=cBpaVTClWsErmq7/idoffB8T1veJN1zWIvBpjqWVVbk5shScNwSv4ev3oYNi7zk4lO5Nlc699nWlhmmFHxfizIw8aww86VLjDLesko2NDcLeHHAEFs6AQ4LlgJi1zoNntEh/s3mt3/ANsxDmgvQrrnxaTpdbwFnS9D3ynmt+TrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321555; c=relaxed/simple;
-	bh=Oy4cmeOCNXlltoZON9vom6KxuGfFKgp8FtaL4HrwVTg=;
+	s=arc-20240116; t=1711321557; c=relaxed/simple;
+	bh=uRoRsaHWAWpKpAmF0MLAb2S1bcEcuSVKZ2mxImqiWlo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=knGkzqN6USgVUHb+KIxoQG6nkUj7zzYNi5zl6OjoCokdsPULbOAC8lZVyuFmrElxsHnS9ClLwC7k6CbKfCVLWezhLw8qercdiYYLjIM0eNXdhuCQ3cpqvzC5zixM1lNRclFGtrfHRW/ve7jANzdksdVQ5huxmSsBn9pPBy5U5bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6FMd3s+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fJQHPjCWgGBeWRWxjbSE+KYkrwWIf7FQyZxVdFX1DGSM8JGWedLOwft3Yqpsn1w6BGFW+S26NXq/yToD8hEw1AhHraA4qCu2uq0fOLdfIEppVAuPoUZNB1l53wGyXhLLDDQoR3ohwsvl2bAyywkr4Oy6r9UAIX8dF68YnGxA8z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SeAHk9uX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6FMd3s+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C173C433C7;
-	Sun, 24 Mar 2024 23:05:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SeAHk9uX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26800C433A6;
+	Sun, 24 Mar 2024 23:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321553;
-	bh=Oy4cmeOCNXlltoZON9vom6KxuGfFKgp8FtaL4HrwVTg=;
+	s=k20201202; t=1711321556;
+	bh=uRoRsaHWAWpKpAmF0MLAb2S1bcEcuSVKZ2mxImqiWlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G6FMd3s+lk+08q5clbCFwCENSmkRYqJek8jCyPInHvbFtcHw6mjwGoT79cjkLFA+K
-	 JHY0djz7ANeUVtTyr/lBy425enhe6bLk8J5Bik/vwPTQjjUFYbkimXQk+wlYuG1R2A
-	 H/91U19UoKiBNqfa5GgD0Vy8UTh8kJ/tRhBRBxXZUGGKaL3Yz0xN9pe7a22GyXH30e
-	 1RtGlq1j3nMuBypBXSNOQyMt/8n6EYS/eoI4yEixkeiIfXLEctiKwD5YzCEvkFw4dL
-	 ilX0KKPxwSPjaHeiV9n8B7u7mqFkfH6QIcw+fp59QBkeZXEz6xBjBG5X3ztASdgbjw
-	 QxMTYwZjwT2aQ==
+	b=SeAHk9uXBRqPWZiVYjbMszM73CE1ASiTeQ68CD9WNqC3F4+Xy1eSFZMojhXvWkybc
+	 CLxpB4VZRp2DBZ18+Ci/SY7thMBXA2rwaeWyGoSTHopTBDd0saVrFVqOMCyPPVUBFx
+	 ADBMRF+5bA6PWikMse1gwD8PyyOI1CU61ziskfeZUy+ikimaHEAJ+JVZnEMBv4JAju
+	 tHVW4AUs1QlT41moPQAx9IyIipKsxW67piN2iI7ebq4EiodxYEU2TSMBeNTr75T98x
+	 UzbUDpqwRCyIHMvkCZ7wGCtiY/j/XPaKPKpp1ZTk/JcbjqXrY/sMMkuvDd1Fw4Pg5l
+	 IMvG5mil9dlfQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	kernel test robot <lkp@intel.com>,
-	Kees Cook <keescook@chromium.org>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 282/638] objtool: Fix UNWIND_HINT_{SAVE,RESTORE} across basic blocks
-Date: Sun, 24 Mar 2024 18:55:19 -0400
-Message-ID: <20240324230116.1348576-283-sashal@kernel.org>
+Subject: [PATCH 6.6 285/638] SUNRPC: fix some memleaks in gssx_dec_option_array
+Date: Sun, 24 Mar 2024 18:55:22 -0400
+Message-ID: <20240324230116.1348576-286-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,52 +48,84 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 10b4c4bce3f5541f54bcc2039720b11d2bc96d79 ]
+[ Upstream commit 3cfcfc102a5e57b021b786a755a38935e357797d ]
 
-If SAVE and RESTORE unwind hints are in different basic blocks, and
-objtool sees the RESTORE before the SAVE, it errors out with:
+The creds and oa->data need to be freed in the error-handling paths after
+their allocation. So this patch add these deallocations in the
+corresponding paths.
 
-  vmlinux.o: warning: objtool: vmw_port_hb_in+0x242: objtool isn't smart enough to handle this CFI save/restore combo
-
-In such a case, defer following the RESTORE block until the
-straight-line path gets followed later.
-
-Fixes: 8faea26e6111 ("objtool: Re-add UNWIND_HINT_{SAVE_RESTORE}")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402240702.zJFNmahW-lkp@intel.com/
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Link: https://lore.kernel.org/r/20240227073527.avcm5naavbv3cj5s@treble
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Fixes: 1d658336b05f ("SUNRPC: Add RPC based upcall mechanism for RPCGSS auth")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/sunrpc/auth_gss/gss_rpc_xdr.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index e308d1ba664ef..e3fc263b1b206 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -3604,6 +3604,18 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 				}
+diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+index d79f12c2550ac..cb32ab9a83952 100644
+--- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
++++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+@@ -250,8 +250,8 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
  
- 				if (!save_insn->visited) {
-+					/*
-+					 * If the restore hint insn is at the
-+					 * beginning of a basic block and was
-+					 * branched to from elsewhere, and the
-+					 * save insn hasn't been visited yet,
-+					 * defer following this branch for now.
-+					 * It will be seen later via the
-+					 * straight-line path.
-+					 */
-+					if (!prev_insn)
-+						return 0;
+ 	creds = kzalloc(sizeof(struct svc_cred), GFP_KERNEL);
+ 	if (!creds) {
+-		kfree(oa->data);
+-		return -ENOMEM;
++		err = -ENOMEM;
++		goto free_oa;
+ 	}
+ 
+ 	oa->data[0].option.data = CREDS_VALUE;
+@@ -265,29 +265,40 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
+ 
+ 		/* option buffer */
+ 		p = xdr_inline_decode(xdr, 4);
+-		if (unlikely(p == NULL))
+-			return -ENOSPC;
++		if (unlikely(p == NULL)) {
++			err = -ENOSPC;
++			goto free_creds;
++		}
+ 
+ 		length = be32_to_cpup(p);
+ 		p = xdr_inline_decode(xdr, length);
+-		if (unlikely(p == NULL))
+-			return -ENOSPC;
++		if (unlikely(p == NULL)) {
++			err = -ENOSPC;
++			goto free_creds;
++		}
+ 
+ 		if (length == sizeof(CREDS_VALUE) &&
+ 		    memcmp(p, CREDS_VALUE, sizeof(CREDS_VALUE)) == 0) {
+ 			/* We have creds here. parse them */
+ 			err = gssx_dec_linux_creds(xdr, creds);
+ 			if (err)
+-				return err;
++				goto free_creds;
+ 			oa->data[0].value.len = 1; /* presence */
+ 		} else {
+ 			/* consume uninteresting buffer */
+ 			err = gssx_dec_buffer(xdr, &dummy);
+ 			if (err)
+-				return err;
++				goto free_creds;
+ 		}
+ 	}
+ 	return 0;
 +
- 					WARN_INSN(insn, "objtool isn't smart enough to handle this CFI save/restore combo");
- 					return 1;
- 				}
++free_creds:
++	kfree(creds);
++free_oa:
++	kfree(oa->data);
++	oa->data = NULL;
++	return err;
+ }
+ 
+ static int gssx_dec_status(struct xdr_stream *xdr,
 -- 
 2.43.0
 
