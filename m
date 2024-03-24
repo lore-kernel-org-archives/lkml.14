@@ -1,52 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2FF1F10B0;
-	Sun, 24 Mar 2024 22:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7831F10C2;
+	Sun, 24 Mar 2024 22:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321071; cv=none; b=h4GnwaNA7/rg/xvfdEONfj96K0EYPtWXol50RFTCe46CoTyXQXQPLy/hMay37nkdce3IwtiVMDm73+0LqQeGvnQRvrE9ey4FIJp3FYlzNdtumhi635s6FAbrZs6jWV8516vodSfuvyu5ZdtKcnJej/f8HJFB0vGgt7j9bQwz5io=
+	t=1711321073; cv=none; b=ACodIMvEEKcGhkQmIemBuKFVLf6cX7HGx32WfSd5aco6FGwOsBDE3YrHrGPnVeTLxHobh7Cuxb2GKc9TSNcMJc6nx6S4o8N30usxRKxeuqJassHuy3gKkBdQIiZNJKaADhJqsMU1s2/wPfY0hKg1gHWuQOtWVRVfHxh4IGoJCeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321071; c=relaxed/simple;
-	bh=auK8R9Pko+8qzyQY9/nghXInMkBIXsa2OBgChzHHXdM=;
+	s=arc-20240116; t=1711321073; c=relaxed/simple;
+	bh=8ZKUgi6Zm68D4WzC4t+cU2OxTpDWbRbA9/z+ZTeTjWQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XDv6WC81eXP1CXxcimpTNkIaU/+oUNYeet83blq7r0o+dP01JPf4EcuMxGEkROPjwMw5nOjIzSaSWrWGzU2g//9aUuRr3dM6OtWIqdeK80GxnECxH+ywvf3XPJarFXcJif7bK9+sN4WJLZp073+jzx297zlIh7csgjlcuQEQtGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5EiQQ8G; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FyzfNrJcPKWFBFExh98NRoPyQGmnllR8Q+Ox2S0BtNpdtG3Lc5B1EbImbgzovUeHGR9LF1KEEwRaLT0fcigv/GIMNotkJkqXkYOPF6vmYS9oV8R77GjKDCdxxkfO2kIct0/7KavIU26HYn7quoyMtJClXeHRy+ja43nCrnf/y9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bEhXRFQ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5EiQQ8G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F080C433C7;
-	Sun, 24 Mar 2024 22:57:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bEhXRFQ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3330BC433F1;
+	Sun, 24 Mar 2024 22:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321070;
-	bh=auK8R9Pko+8qzyQY9/nghXInMkBIXsa2OBgChzHHXdM=;
+	s=k20201202; t=1711321072;
+	bh=8ZKUgi6Zm68D4WzC4t+cU2OxTpDWbRbA9/z+ZTeTjWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j5EiQQ8GwKbok3hH+PEt6h+naJ9md59vvthaC7XO2XP39UqMQgN47xe56GLgNX0V5
-	 fByjIV2hTpBZOYlrNmf52Cn6Q1ZTo6eSTtax4zIGPUPhREwUIWFERALn4G/V5OlzPR
-	 M8Dn6P7PoyOit0wUkZpXxGldfyxBOTN0NJnZciIv5jUZlQynyl3GfU8ELdBV443ZBL
-	 0J40AKmYdjTBbv9cYmuzef2g91Q9035YFBHbUm7oq8G5bOrdPhIzdjsiVgA8zbPWAN
-	 mk1+yZoBMKOjjLG63FN+NTXsG64TdIeyq3x8XMlk1UIYq5tBsJz4KGW6wYHKS62ddr
-	 bbvUO0FC35uKg==
+	b=bEhXRFQ8rn9Bk/8ir2I1gPSx3qwaqtfLpfhDbxsNMxeZl7HjCG81iICYGwgiRMrwc
+	 1CaMSUSpSoVzSWqiXRxOHzfdHFb/HKNclM6NNR48jR6lXtsLS/xq8HS5mpGBDSSde3
+	 4wUyvMidAq58VA7aeoRqEZbgu5nRhIItJgbwWWu8sYcF9lbBkuBTKG90/G6rfa+oPZ
+	 QvMe5iHJBW6WYvr24RqzfaaiKPll4lnGXVAbYcj3KbbsdDtWfVGA71m+AdIk79UlLs
+	 rGr0JMH/kIf/b5Nys5XmrIVz/C5t9hBiPlz2Z6ay3c4AHAsLMbOQM4u5jWPgjL4dGv
+	 Yni/6LLzKrKMQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Eddie Huang <eddie.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Peter Rosin <peda@axentia.se>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Alex Elder <elder@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 633/713] rtc: mt6397: select IRQ_DOMAIN instead of depending on it
-Date: Sun, 24 Mar 2024 18:45:59 -0400
-Message-ID: <20240324224720.1345309-634-sashal@kernel.org>
+Subject: [PATCH 6.7 635/713] staging: greybus: fix get_channel_from_mode() failure path
+Date: Sun, 24 Mar 2024 18:46:01 -0400
+Message-ID: <20240324224720.1345309-636-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -60,57 +50,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Dan Carpenter <dan.carpenter@linaro.org>
 
-[ Upstream commit 544c42f798e1651dcb04fb0395219bf0f1c2607e ]
+[ Upstream commit 34164202a5827f60a203ca9acaf2d9f7d432aac8 ]
 
-IRQ_DOMAIN is a hidden (not user visible) symbol. Users cannot set
-it directly thru "make *config", so drivers should select it instead
-of depending on it if they need it.
-Relying on it being set for a dependency is risky.
+The get_channel_from_mode() function is supposed to return the channel
+which matches the mode.  But it has a bug where if it doesn't find a
+matching channel then it returns the last channel.  It should return
+NULL instead.
 
-Consistently using "select" or "depends on" can also help reduce
-Kconfig circular dependency issues.
+Also remove an unnecessary NULL check on "channel".
 
-Therefore, change the use of "depends on" for IRQ_DOMAIN to
-"select" for RTC_DRV_MT6397.
-
-Fixes: 04d3ba70a3c9 ("rtc: mt6397: add IRQ domain dependency")
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Sean Wang <sean.wang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Peter Rosin <peda@axentia.se>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20240213050258.6167-1-rdunlap@infradead.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 2870b52bae4c ("greybus: lights: add lights implementation")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Reviewed-by: Alex Elder <elder@linaro.org>
+Link: https://lore.kernel.org/r/379c0cb4-39e0-4293-8a18-c7b1298e5420@moroto.mountain
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/greybus/light.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 3814e0845e772..b1e1d277d4593 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1832,7 +1832,8 @@ config RTC_DRV_MT2712
+diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
+index 87d36948c6106..c6bd86a5335ab 100644
+--- a/drivers/staging/greybus/light.c
++++ b/drivers/staging/greybus/light.c
+@@ -100,15 +100,15 @@ static struct led_classdev *get_channel_cdev(struct gb_channel *channel)
+ static struct gb_channel *get_channel_from_mode(struct gb_light *light,
+ 						u32 mode)
+ {
+-	struct gb_channel *channel = NULL;
++	struct gb_channel *channel;
+ 	int i;
  
- config RTC_DRV_MT6397
- 	tristate "MediaTek PMIC based RTC"
--	depends on MFD_MT6397 || (COMPILE_TEST && IRQ_DOMAIN)
-+	depends on MFD_MT6397 || COMPILE_TEST
-+	select IRQ_DOMAIN
- 	help
- 	  This selects the MediaTek(R) RTC driver. RTC is part of MediaTek
- 	  MT6397 PMIC. You should enable MT6397 PMIC MFD before select
+ 	for (i = 0; i < light->channels_count; i++) {
+ 		channel = &light->channels[i];
+-		if (channel && channel->mode == mode)
+-			break;
++		if (channel->mode == mode)
++			return channel;
+ 	}
+-	return channel;
++	return NULL;
+ }
+ 
+ static int __gb_lights_flash_intensity_set(struct gb_channel *channel,
 -- 
 2.43.0
 
