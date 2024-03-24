@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B83B14AD15;
-	Sun, 24 Mar 2024 23:16:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CBB22EADD;
+	Sun, 24 Mar 2024 23:16:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322212; cv=none; b=RqmbF4egMR2K62dlHm24FlZZQFSbK/W1NuaMBfbCoUu5wkP63OMGYAwQAee2IAXyCWlgY/d6Opdzf1mnd4V/LPODL/yFYMxL2NoirCV6ojKhqq7polCIpkChR/R0kAu8+BPUTL3i9q/rS4pR57082WuiQyLfINyziQCeiYJ02Bw=
+	t=1711322206; cv=none; b=Q+iLPrsEI1fvJpCs9AfWEV8JBZUtw+IT+RJGyWBU1NQhOXr7k9GhbxpccxuXaVdWMqqesh4YkNiu+Q3f5kdFc4Yw6HOUArz8IO+LOfgEmeX0oREoVbY6uSaKhRe5UgHSAoA6kAEy12itIMNuCHOOnK1t8K9Ocr5tHxEB/EilOD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322212; c=relaxed/simple;
-	bh=+PUu5RM10hKszLtQ9PhN2GrdWiBPvEkFSKTRdD/60jc=;
+	s=arc-20240116; t=1711322206; c=relaxed/simple;
+	bh=EG9/Oj0L1ljMvDNRIG5H90uu4piB+73R/COY7CvO3Y8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N33MG5GQB+p74UKU9jT6p4ng0aylenkEYxMvaH5cYev9YISQQ7MXeJ0vWoi7g9N+53Vp6RujI3uKIr1vHK3DSEyzCNEffPRqTOQPjX/Y9vZbBLMOlmh58GvrEOt0ANs/MTjHStZHfIuW/T+rEPj8LwtNmR56g1sF5kEp4SRZc+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hch0+z2r; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Gq6+sGD7n/hmS15heQYxnqSTFEwkVcsvkbO1mmHu8AZNTiwv5NbFlY259M4GC4bVTqryOEyRF814HWYMwhO08ximbRrVUZwW2RPu/dzdi/arI8o8hXkxdDUhs98kntmDRMrAdXFbgkR1nBf5RYNRWwGDxAAKcXUUoAky4k3Uot0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1rztALv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hch0+z2r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3355C43390;
-	Sun, 24 Mar 2024 23:16:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1rztALv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B146C43394;
+	Sun, 24 Mar 2024 23:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322211;
-	bh=+PUu5RM10hKszLtQ9PhN2GrdWiBPvEkFSKTRdD/60jc=;
+	s=k20201202; t=1711322205;
+	bh=EG9/Oj0L1ljMvDNRIG5H90uu4piB+73R/COY7CvO3Y8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hch0+z2r5+TM3laif4CJkKMKRaYCNF6YUs1WWZDXQS5VhRjB4KZsaDF+qybTRTvcf
-	 05a5G8TTdqebthNNzUKxgWgA483jJvAP/E/0T8AINTIeOGGRtrae3X2GDT+PqvDgL/
-	 I6GSVdkfpi8GM5hvg+vhxfUTLa+8Mw84FKhFbXP8Wk0t8DHpxWyA650gzseNdsBrUT
-	 qLKmyC9t7flQ4HT7bN6ocp1Xx2bBJfplHgIZVWK8Rc7OMVg1DdV95+z7hvO7+++wzL
-	 BnVbkRk/8s40m4oQF4c4NHVMbiCfEl/Hn66Uap06hlUoWAfl0p9tc24kcU//8be9E1
-	 vlzFUNWmYmiKw==
+	b=m1rztALv6oH4Qb7ZmD1sd5JiCeGvPmVRfdoxHel1gurW2T3SbDx7SCTypJdRIATDr
+	 o7qvgV+q/uT5o0VYxTjVdrzYC2h7blZphZymjf3AdC6jvCOc7Nq9mKHDT9To2IH1sb
+	 eN1hyoumc29JHV80tzM8B5mXDZeZBiiNQE7T0vtAEmeLet5jNMh/JLHkBX6YhsICRc
+	 Koh9yRyt4ERFNVfcWKyJZRhOeWHZWlrZBkCKcp/2ebXnq29rIqy7ADnRhExdjyOUH4
+	 o6Q1PNzLr0MpPzKBxvNkSrQYS0XiaB+fuytX3dvF+yKhrUelv4/EyF+Gqb+oH33i6x
+	 qMoCuScb4gndA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	kernel test robot <lkp@intel.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 291/451] powerpc: Force inlining of arch_vmap_p{u/m}d_supported()
-Date: Sun, 24 Mar 2024 19:09:27 -0400
-Message-ID: <20240324231207.1351418-292-sashal@kernel.org>
+Subject: [PATCH 6.1 285/451] clk: renesas: r8a779g0: Correct PFC/GPIO parent clocks
+Date: Sun, 24 Mar 2024 19:09:21 -0400
+Message-ID: <20240324231207.1351418-286-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,67 +43,78 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit c5aebb53b32460bc52680dd4e2a2f6b84d5ea521 ]
+[ Upstream commit abb3fa662b8f8eaed1590b0e7a4e19eda467cdd3 ]
 
-arch_vmap_pud_supported() and arch_vmap_pmd_supported() are
-expected to constant-fold to false when RADIX is not enabled.
+According to the R-Car V4H Series Hardware User’s Manual Rev.1.00, the
+parent clock of the Pin Function (PFC/GPIO) module clocks is the CP
+clock.
 
-Force inlining in order to avoid following failure which
-leads to unexpected call of non-existing pud_set_huge() and
-pmd_set_huge() on powerpc 8xx.
+Fix this by adding the missing CP clock, and correcting the PFC parents.
 
-In function 'pud_huge_tests',
-    inlined from 'debug_vm_pgtable' at mm/debug_vm_pgtable.c:1399:2:
-./arch/powerpc/include/asm/vmalloc.h:9:33: warning: inlining failed in call to 'arch_vmap_pud_supported.isra': call is unlikely and code size would grow [-Winline]
-    9 | #define arch_vmap_pud_supported arch_vmap_pud_supported
-      |                                 ^~~~~~~~~~~~~~~~~~~~~~~
-./arch/powerpc/include/asm/vmalloc.h:10:20: note: in expansion of macro 'arch_vmap_pud_supported'
-   10 | static inline bool arch_vmap_pud_supported(pgprot_t prot)
-      |                    ^~~~~~~~~~~~~~~~~~~~~~~
-./arch/powerpc/include/asm/vmalloc.h:9:33: note: called from here
-    9 | #define arch_vmap_pud_supported arch_vmap_pud_supported
-mm/debug_vm_pgtable.c:458:14: note: in expansion of macro 'arch_vmap_pud_supported'
-  458 |         if (!arch_vmap_pud_supported(args->page_prot) ||
-      |              ^~~~~~~~~~~~~~~~~~~~~~~
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402131836.OU1TDuoi-lkp@intel.com/
-Fixes: 8309c9d71702 ("powerpc: inline huge vmap supported functions")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/bbd84ad52bf377e8d3b5865a906f2dc5d99964ba.1707832677.git.christophe.leroy@csgroup.eu
+Fixes: f2afa78d5a0c0b0b ("dt-bindings: clock: Add r8a779g0 CPG Core Clock Definitions")
+Fixes: 36ff366033f0dde1 ("clk: renesas: r8a779g0: Add PFC/GPIO clocks")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/5401fccd204dc90b44f0013e7f53b9eff8df8214.1706197297.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/vmalloc.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/renesas/r8a779g0-cpg-mssr.c       | 11 ++++++-----
+ include/dt-bindings/clock/r8a779g0-cpg-mssr.h |  1 +
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/vmalloc.h b/arch/powerpc/include/asm/vmalloc.h
-index 4c69ece52a31e..59ed89890c902 100644
---- a/arch/powerpc/include/asm/vmalloc.h
-+++ b/arch/powerpc/include/asm/vmalloc.h
-@@ -7,14 +7,14 @@
- #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
+diff --git a/drivers/clk/renesas/r8a779g0-cpg-mssr.c b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
+index aace98c0c4735..e4c616921e5ea 100644
+--- a/drivers/clk/renesas/r8a779g0-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
+@@ -22,7 +22,7 @@
  
- #define arch_vmap_pud_supported arch_vmap_pud_supported
--static inline bool arch_vmap_pud_supported(pgprot_t prot)
-+static __always_inline bool arch_vmap_pud_supported(pgprot_t prot)
- {
- 	/* HPT does not cope with large pages in the vmalloc area */
- 	return radix_enabled();
- }
+ enum clk_ids {
+ 	/* Core Clock Outputs exported to DT */
+-	LAST_DT_CORE_CLK = R8A779G0_CLK_R,
++	LAST_DT_CORE_CLK = R8A779G0_CLK_CP,
  
- #define arch_vmap_pmd_supported arch_vmap_pmd_supported
--static inline bool arch_vmap_pmd_supported(pgprot_t prot)
-+static __always_inline bool arch_vmap_pmd_supported(pgprot_t prot)
- {
- 	return radix_enabled();
- }
+ 	/* External Input Clocks */
+ 	CLK_EXTAL,
+@@ -139,6 +139,7 @@ static const struct cpg_core_clk r8a779g0_core_clks[] __initconst = {
+ 	DEF_FIXED("svd2_vip",	R8A779G0_CLK_SVD2_VIP,	CLK_SV_VIP,	2, 1),
+ 	DEF_FIXED("cbfusa",	R8A779G0_CLK_CBFUSA,	CLK_EXTAL,	2, 1),
+ 	DEF_FIXED("cpex",	R8A779G0_CLK_CPEX,	CLK_EXTAL,	2, 1),
++	DEF_FIXED("cp",		R8A779G0_CLK_CP,	CLK_EXTAL,	2, 1),
+ 	DEF_FIXED("viobus",	R8A779G0_CLK_VIOBUS,	CLK_VIO,	1, 1),
+ 	DEF_FIXED("viobusd2",	R8A779G0_CLK_VIOBUSD2,	CLK_VIO,	2, 1),
+ 	DEF_FIXED("vcbus",	R8A779G0_CLK_VCBUS,	CLK_VC,		1, 1),
+@@ -173,10 +174,10 @@ static const struct mssr_mod_clk r8a779g0_mod_clks[] __initconst = {
+ 	DEF_MOD("cmt1",		911,	R8A779G0_CLK_R),
+ 	DEF_MOD("cmt2",		912,	R8A779G0_CLK_R),
+ 	DEF_MOD("cmt3",		913,	R8A779G0_CLK_R),
+-	DEF_MOD("pfc0",		915,	R8A779G0_CLK_CL16M),
+-	DEF_MOD("pfc1",		916,	R8A779G0_CLK_CL16M),
+-	DEF_MOD("pfc2",		917,	R8A779G0_CLK_CL16M),
+-	DEF_MOD("pfc3",		918,	R8A779G0_CLK_CL16M),
++	DEF_MOD("pfc0",		915,	R8A779G0_CLK_CP),
++	DEF_MOD("pfc1",		916,	R8A779G0_CLK_CP),
++	DEF_MOD("pfc2",		917,	R8A779G0_CLK_CP),
++	DEF_MOD("pfc3",		918,	R8A779G0_CLK_CP),
+ 	DEF_MOD("tsc",		919,	R8A779G0_CLK_CL16M),
+ 	DEF_MOD("ssiu",		2926,	R8A779G0_CLK_S0D6_PER),
+ 	DEF_MOD("ssi",		2927,	R8A779G0_CLK_S0D6_PER),
+diff --git a/include/dt-bindings/clock/r8a779g0-cpg-mssr.h b/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
+index 754c54a6eb06a..7850cdc62e285 100644
+--- a/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
++++ b/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
+@@ -86,5 +86,6 @@
+ #define R8A779G0_CLK_CPEX		74
+ #define R8A779G0_CLK_CBFUSA		75
+ #define R8A779G0_CLK_R			76
++#define R8A779G0_CLK_CP			77
+ 
+ #endif /* __DT_BINDINGS_CLOCK_R8A779G0_CPG_MSSR_H__ */
 -- 
 2.43.0
 
