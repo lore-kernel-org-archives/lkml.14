@@ -1,155 +1,125 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67591826E1;
-	Sun, 24 Mar 2024 23:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB4E181CEE;
+	Sun, 24 Mar 2024 23:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324151; cv=none; b=e2y6V4c11tt/Q1WYynycVBHN84L/TMXF6w6pquca8L3UXgcBwVOb9xOd8I3/KsoxMhmVibSam9v1VyAed+1thzt1wUnbwZJvHBEw7FS/X0GF4Csy6yBG++BoKNmjlfBc3X3BvhOMWLrJfyfYXMUfPMTv3roh6+5rJ50cBmVMK9c=
+	t=1711324126; cv=none; b=TVIQ3i7LuEYKP6+asWE+a5DoTo/IPEaCl/05r/0BP7DYiewz9g5OCdHZw0vJFRfrQXeiJGsKISt8PykpfvK8gGgjV1ija3uZ/FqjWRwqDb9OTGW8J1aq4JQv5gS5sckSvDTufpdffYC887v2iooPxpEGR9Y/jHMxl+1Ngwij248=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324151; c=relaxed/simple;
-	bh=LFsZTRHTodwxEEOWKO2+M2F3Tn2p02vzi+3C1Wgsjpk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H+veooiko2pLB/CTedqoG/Je7tRy0Sl5UzxRxSRA/gLfAwIyczxIxhQ60gW1rECbHn3VhVHC5kdlr0jWt8ElkpP47W0bJrfREEUBNkjNk78bnB2jPP+HQOcWmBpEcrx/9YIVYH1Uc44eYAgilZ6Da3CkdUrGIdvgekw9CDqIpfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmzpY9+l; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711324126; c=relaxed/simple;
+	bh=ZwoDu9NJw8zKoFbb6Bko5Csdq349fZXE97KwHAXSHU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Vnpp0vDr+ZS0P/a7jS1Oy7q/GOgZylqaTKi940MPyH3FqK8m3jgB9wGGV50iW7d59MLbgMmXSdUGe0PZo0BkL4ENLP6BdQqEC78lCwhkNLF6Ol/BGL8MwOwuXkCoi3zNYpdOwI9VPKKNycKhUYUenmfXrh5sR3DFm+YwdFybiGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LxJPRFop; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmzpY9+l"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3417a3151c5so2460058f8f.1;
-        Sun, 24 Mar 2024 16:49:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711324147; x=1711928947; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rymGosSZY4eZQBtQAJDoTYCW4+6dXqpQDiTevlfvmPE=;
-        b=PmzpY9+lzY57zYbpE3RrmQwlk9jXUZ46SX0/iiipIcI2l9pey164dplL5salIwW8vE
-         glhl4/D/Z0GUBsWrla8TG/+T6u5bjUODSWvd7ybnkYDKVlrJJp2GsPwGhvdEy61d80uJ
-         dQ6Ipr3nJAk9Lmfeeb40stERKtrE4KQFANzrqEV9HXJobteNCwtvdbzk2w34EWzbqxBC
-         zgQXd8wJNOhIcsCYKNJXvAyxa0IZdgp+sBQbal2HeGwR6s0tJOJOSQ3Dp1ibTE5OUGDt
-         dh3p8MCy6cgYm/kulPR0cc8O4CR+EimZFK0APVxZ1zwUQkjZO/CWuQQwMII3XTjBuMEf
-         Ke/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711324147; x=1711928947;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rymGosSZY4eZQBtQAJDoTYCW4+6dXqpQDiTevlfvmPE=;
-        b=NvpT6xvkvTcsbDc47gkfcnBx7iC0Ne4vuk81NkZAbd2X2xVrG66cPXkWSGrZ/S6FwG
-         KwYT2Bgae3QKwJIaKWgwzGJsPQdRAvk3HrOByPv3bkFnCo9K8XZi+CyOSGOS64hT1WH6
-         +WjlsR0gzsvSrS36eIBGv14aSb5rcJUFjDdsDdktIqloYByixu/TCWFWvaaPuwOVP6I8
-         Y+deI45B+Xy/ZENbljvMloqm4qVGwdiJW1JoW2e0BKfzsquN6YnuN9qQh6eJuRSMk3R6
-         CAnDtwYyWLGsXCuRinR7qsOT7UcfQ16Kp37DNUf7pdfJFk7uR2sYo2aE+RQ6vVjBn4ny
-         SSqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXxb5jBDqJMseBl0+TeJo+Wt56LVTGrkdaFHrtcXEGzigX8DVyRB4HV49y7zR9R8RHoHgWSo1u1eGQWiCa2KtiyXp9MMbciM/uw2gVFFg7BBkH1FRd/XnkzHCHxFGQiWjpsdkJEonHWbdNybHE+udHLC0bqyc4FZvEf
-X-Gm-Message-State: AOJu0YzvgkEi6oAzUQRAIyV90Vxrx40Y/eqeXkhlt0j5XubKVQkvuIWa
-	8t3ZMxdQsgygfOfe/p+yYCs6+Lo8c4H9hWxsxYmI7+ryDe5XxEzQ7QVL0MnGRy4gxehnnTMS6Ne
-	+qqAenFSS0b4xkkF1jBzB5BsgyjE=
-X-Google-Smtp-Source: AGHT+IHCKP1lCoGQBWq085iK334TXrHJHlJK+UFurfZZTtsCL6NXswYufrLlFvKp0pWPSn7nZLF6sIhFzpATPW83QKg=
-X-Received: by 2002:a5d:51d1:0:b0:33e:6cce:c2ea with SMTP id
- n17-20020a5d51d1000000b0033e6ccec2eamr4432251wrv.51.1711324146870; Sun, 24
- Mar 2024 16:49:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LxJPRFop"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A55BC433C7;
+	Sun, 24 Mar 2024 23:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711324125;
+	bh=ZwoDu9NJw8zKoFbb6Bko5Csdq349fZXE97KwHAXSHU4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LxJPRFop57awjhExFgBB25DvMuofhjHTCJOx35Huv8t99VSgy2qAAge0W+8zxaQhM
+	 mVwNvZzLyggiTAZl0epTrHFrRyu6s33Ke2v5gXJKYrgqSGZDcIGknqeFeC5nL7EceD
+	 QgdtL4LBQspaV+eKgYFdGXLl7WFgAefu92wUhJlzY6u7De5IKgpBdyLmLReDqLLVw5
+	 9cP1sLcXA3jQd8w9NDCJJRcUG3ssTATViN/+Pqa4XG/1+Sj+MVXYUsZVk2f5DihvJG
+	 DZf64sAAUdM/SgeQftQzkTuO6KaGsFzSm4xRYA+18Jsj2At8yiI/rsWB2VLTsOPPBH
+	 R7QV68VwDLniQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Alexandre Mergnat <amergnat@baylibre.com>,
+	CK Hu <ck.hu@mediatek.com>,
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 122/183] drm/mediatek: dsi: Fix DSI RGB666 formats and definitions
+Date: Sun, 24 Mar 2024 19:45:35 -0400
+Message-ID: <20240324234638.1355609-123-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
+References: <20240324234638.1355609-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240320105436.4781-1-puranjay12@gmail.com> <CAADnVQJ3o6DsURi=N_KXx+mbW9r7__3LrwYLyYwuoMOsqFHPkw@mail.gmail.com>
- <1686adb401b34adaa3b703ec1a8ffe49@AcuMS.aculab.com> <CAADnVQJzfnK0Mv6HVKZ38VDuAemzbmSMeYscf77YoEy0SgWw+A@mail.gmail.com>
- <c73258ae8425470f90ad31c424cebe3a@AcuMS.aculab.com>
-In-Reply-To: <c73258ae8425470f90ad31c424cebe3a@AcuMS.aculab.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sun, 24 Mar 2024 16:48:55 -0700
-Message-ID: <CAADnVQ+d3pumHKBA1tTwy-8Vm21xu5Xckqv+4y-27FidBVetvQ@mail.gmail.com>
-Subject: Re: [PATCH bpf] bpf: verifier: prevent userspace memory access
-To: David Laight <David.Laight@aculab.com>
-Cc: Puranjay Mohan <puranjay12@gmail.com>, Ilya Leoshkevich <iii@linux.ibm.com>, 
-	"David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, X86 ML <x86@kernel.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
-	Network Development <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-On Sun, Mar 24, 2024 at 3:30=E2=80=AFPM David Laight <David.Laight@aculab.c=
-om> wrote:
->
-> From: Alexei Starovoitov
-> > Sent: 24 March 2024 20:43
-> >
-> > On Sun, Mar 24, 2024 at 1:05=E2=80=AFPM David Laight <David.Laight@acul=
-ab.com> wrote:
-> > >
-> > > From: Alexei Starovoitov
-> > > > Sent: 21 March 2024 06:08
-> > > >
-> > > > On Wed, Mar 20, 2024 at 3:55=E2=80=AFAM Puranjay Mohan <puranjay12@=
-gmail.com> wrote:
-> > > > >
-> > > > > The JITs need to implement bpf_arch_uaddress_limit() to define wh=
-ere
-> > > > > the userspace addresses end for that architecture or TASK_SIZE is=
- taken
-> > > > > as default.
-> > > > >
-> > > > > The implementation is as follows:
-> > > > >
-> > > > > REG_AX =3D  SRC_REG
-> > > > > if(offset)
-> > > > >         REG_AX +=3D offset;
-> > > > > REG_AX >>=3D 32;
-> > > > > if (REG_AX <=3D (uaddress_limit >> 32))
-> > > > >         DST_REG =3D 0;
-> > > > > else
-> > > > >         DST_REG =3D *(size *)(SRC_REG + offset);
-> > > >
-> > > > The patch looks good, but it seems to be causing s390 CI failures.
-> > >
-> > > I'm confused by the need for this check (and, IIRC, some other bpf
-> > > code that does kernel copies that can fault - and return an error).
-> > >
-> > > I though that the entire point of bpf was that is sanitised and
-> > > verified everything to limit what the 'program' could do in order
-> > > to stop it overwriting (or even reading) kernel structures that
-> > > is wasn't supposed to access.
-> > >
-> > > So it just shouldn't have a address that might be (in any way)
-> > > invalid.
-> >
-> > bpf tracing progs can call bpf_probe_read_kernel() which
-> > can read any kernel memory.
-> > This is nothing but an inlined version of it.
->
-> It was the getsockopt() code were I saw the copy_nocheck() calls.
-> Those have to be broken.
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-No. If you mean csum_partial_copy_nocheck() then they're fine.
+[ Upstream commit fae6f815505301b92d9113764f4d76d0bfe45607 ]
 
-> Although the way some of the options use the ptr:len supplied by
-> the application you stand no chance of do an in-kernel call
-> without a proper buffer descriptor argument (with separate optlen
-> and bufferlen fields.)
->
-> >
-> > > The only possible address verify is access_ok() to ensure that
-> > > a uses address really is a user address.
-> >
-> > access_ok() considerations don't apply.
-> > We're not dealing with user memory access.
->
-> If you do need a check for 'not a user address' don't you want to just
-> require access_ok() fail?
-> That would be architecture independent.
+The register bits definitions for RGB666 formats are wrong in multiple
+ways: first, in the DSI_PS_SEL bits region, the Packed 18-bits RGB666
+format is selected with bit 1, while the Loosely Packed one is bit 2,
+and second - the definition name "LOOSELY_PS_18BIT_RGB666" is wrong
+because the loosely packed format is 24 bits instead!
 
-No. access_ok() can only be used on the user addr.
-access_ok() =3D=3D false on the kernel addr doesn't mean that
-it's a kernel addr.
+Either way, functions mtk_dsi_ps_control_vact() and mtk_dsi_ps_control()
+do not even agree on the DSI_PS_SEL bit to set in DSI_PSCTRL: one sets
+loosely packed (24) on RGB666, the other sets packed (18), and the other
+way around for RGB666_PACKED.
+
+Fixing this entire stack of issues is done in one go:
+ - Use the correct bit for the Loosely Packed RGB666 definition
+ - Rename LOOSELY_PS_18BIT_RGB666 to LOOSELY_PS_24BIT_RGB666
+ - Change ps_bpp_mode in mtk_dsi_ps_control_vact() to set:
+    - Loosely Packed, 24-bits for MIPI_DSI_FMT_RGB666
+    - Packed, 18-bits for MIPI_DSI_FMT_RGB666_PACKED
+
+Fixes: 2e54c14e310f ("drm/mediatek: Add DSI sub driver")
+Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://patchwork.kernel.org/project/dri-devel/patch/20240215085316.56835-3-angelogioacchino.delregno@collabora.com/
+Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index e82705a33acfd..9af900076dee4 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -64,8 +64,8 @@
+ #define DSI_PS_WC			0x3fff
+ #define DSI_PS_SEL			(3 << 16)
+ #define PACKED_PS_16BIT_RGB565		(0 << 16)
+-#define LOOSELY_PS_18BIT_RGB666		(1 << 16)
+-#define PACKED_PS_18BIT_RGB666		(2 << 16)
++#define PACKED_PS_18BIT_RGB666		(1 << 16)
++#define LOOSELY_PS_24BIT_RGB666		(2 << 16)
+ #define PACKED_PS_24BIT_RGB888		(3 << 16)
+ 
+ #define DSI_VSA_NL		0x20
+@@ -321,10 +321,10 @@ static void mtk_dsi_ps_control_vact(struct mtk_dsi *dsi)
+ 		ps_bpp_mode |= PACKED_PS_24BIT_RGB888;
+ 		break;
+ 	case MIPI_DSI_FMT_RGB666:
+-		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
++		ps_bpp_mode |= LOOSELY_PS_24BIT_RGB666;
+ 		break;
+ 	case MIPI_DSI_FMT_RGB666_PACKED:
+-		ps_bpp_mode |= LOOSELY_PS_18BIT_RGB666;
++		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
+ 		break;
+ 	case MIPI_DSI_FMT_RGB565:
+ 		ps_bpp_mode |= PACKED_PS_16BIT_RGB565;
+@@ -375,7 +375,7 @@ static void mtk_dsi_ps_control(struct mtk_dsi *dsi)
+ 		dsi_tmp_buf_bpp = 3;
+ 		break;
+ 	case MIPI_DSI_FMT_RGB666:
+-		tmp_reg = LOOSELY_PS_18BIT_RGB666;
++		tmp_reg = LOOSELY_PS_24BIT_RGB666;
+ 		dsi_tmp_buf_bpp = 3;
+ 		break;
+ 	case MIPI_DSI_FMT_RGB666_PACKED:
+-- 
+2.43.0
+
