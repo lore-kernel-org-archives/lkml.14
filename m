@@ -1,52 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD98A22F4F4;
-	Sun, 24 Mar 2024 23:52:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9089822F510;
+	Sun, 24 Mar 2024 23:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324372; cv=none; b=mYPCGqGoYd8fonViOLcvrm1AsHfw7jMbnZMeb3TMgGRlgTjtnJ6EJaPMBdpgjkF3hQn9ZWmh/PcWtBIfRim0ZlvtttTFMyBBlmMaOncQQwnb/G1zAnU4/+9xDUrl4VTJGVRGWESNZ/ms9PftC/YaGouxo47fVMlINVI++SA/4qM=
+	t=1711324376; cv=none; b=Bvd7tWXlFcAm7fkOD0RBNj4j7/Ddgr74fhpbTtg5HjRrLSuzLMqyieOJQlEZQ7jY0cGs9WZ5tKOgG8mEwizaCGkBYXhNkTWzf9+TzyzfuHJcIkB+YHEtbVRAWyqnLxmF2OOEcNaP+riEy3PfUEhTQtoJl3nVRsyP1x0skjh5FDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324372; c=relaxed/simple;
-	bh=jhQcHsM9X+UJssCBHLAu+ithg8EyBjUhqhmuoeH74BI=;
+	s=arc-20240116; t=1711324376; c=relaxed/simple;
+	bh=tCYwIpLCrAOSE6XXUPJqeVGUo8QLA62vXiD5B6NkFHc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SaNV17eb0yv866zSqPMh9eFzVaGNAPxpOBfC7OzF7XSsV9pHsCe1kEZ7PnCmyD9CCzkSlxcPWSIXuSU7MMYLkb686pn60R93PTRJ9KPuPCagUi7Yd9o4lBztOcg5Hy38r6/eq4SoPnqzvw0wIjWzgnaJLeYY0VGBfJGUcddWaCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqV+wOtY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=C7jKxCb5UFjnk/b8e4EHnEn7Ml0CyBsP8+pyHM+0FeIyXTWMhLOrnTlLWY87xDlD+hjncPXjqQIQOs3wD4ZynY2Or0MNS34WAIv0Cemi7jgxjTJew8xmsI4ncY9LNqBvY4vl7P9U3/TWD7Cx5ZD4U5qQXH1A3jLh95/ZdOT6HQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BRahk9yG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqV+wOtY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C051CC43394;
-	Sun, 24 Mar 2024 23:52:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BRahk9yG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEAB8C433C7;
+	Sun, 24 Mar 2024 23:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324372;
-	bh=jhQcHsM9X+UJssCBHLAu+ithg8EyBjUhqhmuoeH74BI=;
+	s=k20201202; t=1711324376;
+	bh=tCYwIpLCrAOSE6XXUPJqeVGUo8QLA62vXiD5B6NkFHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oqV+wOtYRbfSXUKF3XwUhPj8a37YwiEMs0jHPSRrHdVz/GzKmRg/Uw57pAvv0F/5j
-	 4OhAc9BoMp+ZfFJ0AjhbtbYlB0r4TqINdHeMLNTUtNqEow1v/+dfd617HXFC8ByVg+
-	 VH8jpfzUNGzmgh7Q5renlNRz+J/iKP3N2QpRwuaPgUdAW+jjrHuj5yY0SZGM+fNaxN
-	 X1MTCvqcdV/BZGoOZjEkOaGuxMs70PjZzYs6VoigYtC+26CyckEupre/5JNymQnoFt
-	 sjANFqz0E8ZbJq7AhOX1TRWoWXS5D6FLk+o7bOioHMaYkUF+eYYgiAp2o/lh7y5/Jz
-	 LE0/yEadCxitQ==
+	b=BRahk9yG5soAKJUdIV8iKjBMgnNJz02zUHfjob7dnqTgAKIEwBM5qQ5r3ssUUm2wp
+	 2dWJa5IZrl69YQwEyCNJK2XhId+i8odp7rre9uT7OR03FRpbbXlMxFZuW+SsCeu9rj
+	 ijWhX0n3ayGn4APAU/WF4JlPc6lI3P0Ffn49/2RPAfE0/meCl1sh0a0TpGbtF7V6FP
+	 e/hoFvqO8W+eXJzfNBxzv6ORv0kKHVQGRdyxqfqzYq2kjytaWsR7ABm/WjFRzSZWwa
+	 6C0qMyTWGEtb+BBKab2OdllyvP4kGqRyWQjmAhOi/SfqNNsByUaquStyn8X2cFS0i4
+	 OH+esdxTOYpZg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Eddie Huang <eddie.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Peter Rosin <peda@axentia.se>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: Murali Karicheri <m-karicheri2@ti.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 138/148] rtc: mt6397: select IRQ_DOMAIN instead of depending on it
-Date: Sun, 24 Mar 2024 19:50:02 -0400
-Message-ID: <20240324235012.1356413-139-sashal@kernel.org>
+Subject: [PATCH 4.19 142/148] net: hsr: fix placement of logical operator in a multi-line statement
+Date: Sun, 24 Mar 2024 19:50:06 -0400
+Message-ID: <20240324235012.1356413-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -60,57 +48,65 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Murali Karicheri <m-karicheri2@ti.com>
 
-[ Upstream commit 544c42f798e1651dcb04fb0395219bf0f1c2607e ]
+[ Upstream commit 059477830022e1886f55a9641702461c249fa864 ]
 
-IRQ_DOMAIN is a hidden (not user visible) symbol. Users cannot set
-it directly thru "make *config", so drivers should select it instead
-of depending on it if they need it.
-Relying on it being set for a dependency is risky.
+In a multi-line statement exceeding 80 characters, logical operator
+should be at the end of a line instead of being at the start. This
+is seen when ran checkpatch.pl -f on files under net/hsr. The change
+is per suggestion from checkpatch.
 
-Consistently using "select" or "depends on" can also help reduce
-Kconfig circular dependency issues.
-
-Therefore, change the use of "depends on" for IRQ_DOMAIN to
-"select" for RTC_DRV_MT6397.
-
-Fixes: 04d3ba70a3c9 ("rtc: mt6397: add IRQ domain dependency")
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Sean Wang <sean.wang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Peter Rosin <peda@axentia.se>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20240213050258.6167-1-rdunlap@infradead.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Stable-dep-of: ddbec99f5857 ("hsr: Fix uninit-value access in hsr_get_node()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/hsr/hsr_forward.c  | 8 ++++----
+ net/hsr/hsr_framereg.c | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index b5845f16a3a26..199cc39459198 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1719,7 +1719,8 @@ config RTC_DRV_MOXART
+diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+index adfb497606785..886fad5922b3c 100644
+--- a/net/hsr/hsr_forward.c
++++ b/net/hsr/hsr_forward.c
+@@ -63,8 +63,8 @@ static bool is_supervision_frame(struct hsr_priv *hsr, struct sk_buff *skb)
+ 		return false;
  
- config RTC_DRV_MT6397
- 	tristate "MediaTek PMIC based RTC"
--	depends on MFD_MT6397 || (COMPILE_TEST && IRQ_DOMAIN)
-+	depends on MFD_MT6397 || COMPILE_TEST
-+	select IRQ_DOMAIN
- 	help
- 	  This selects the MediaTek(R) RTC driver. RTC is part of MediaTek
- 	  MT6397 PMIC. You should enable MT6397 PMIC MFD before select
+ 	/* Correct ether type?. */
+-	if (!(ethHdr->h_proto == htons(ETH_P_PRP)
+-			|| ethHdr->h_proto == htons(ETH_P_HSR)))
++	if (!(ethHdr->h_proto == htons(ETH_P_PRP) ||
++	      ethHdr->h_proto == htons(ETH_P_HSR)))
+ 		return false;
+ 
+ 	/* Get the supervision header from correct location. */
+@@ -336,8 +336,8 @@ static int hsr_fill_frame_info(struct hsr_frame_info *frame,
+ 		/* FIXME: */
+ 		WARN_ONCE(1, "HSR: VLAN not yet supported");
+ 	}
+-	if (ethhdr->h_proto == htons(ETH_P_PRP)
+-			|| ethhdr->h_proto == htons(ETH_P_HSR)) {
++	if (ethhdr->h_proto == htons(ETH_P_PRP) ||
++	    ethhdr->h_proto == htons(ETH_P_HSR)) {
+ 		frame->skb_std = NULL;
+ 		frame->skb_hsr = skb;
+ 		frame->sequence_nr = hsr_get_skb_sequence_nr(skb);
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 37795502bb511..9c5a423f0f7a3 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -192,8 +192,8 @@ struct hsr_node *hsr_get_node(struct hsr_port *port, struct sk_buff *skb,
+ 
+ 	/* Everyone may create a node entry, connected node to a HSR device. */
+ 
+-	if (ethhdr->h_proto == htons(ETH_P_PRP)
+-			|| ethhdr->h_proto == htons(ETH_P_HSR)) {
++	if (ethhdr->h_proto == htons(ETH_P_PRP) ||
++	    ethhdr->h_proto == htons(ETH_P_HSR)) {
+ 		/* Use the existing sequence_nr from the tag as starting point
+ 		 * for filtering duplicate frames.
+ 		 */
 -- 
 2.43.0
 
