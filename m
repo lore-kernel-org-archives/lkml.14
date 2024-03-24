@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388EC21D121;
-	Sun, 24 Mar 2024 23:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F87621C19C;
+	Sun, 24 Mar 2024 23:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321848; cv=none; b=EyFE4R09fkKA7gzw303OM8SQy/3oDdvWXIbL3hudEt3xap0EXMYZNTJ/rS5mLJETtxUTWFEQBZpaD6iJie4Ze8oc7z/u3tKvN5ehkrc1FAqaGvQSRKetZzLYlAZaSJbIuu89XEuISzWJUNL4iqzTNU9AbPXfceUBUws6zJccLmQ=
+	t=1711321840; cv=none; b=SuuiTjtOOWV1Kz0eg/FhLOyUkzEKzjBj8nT5+tMJ11U0OgpFdUDJhZ4b21yC5o6ZJyfST5+0B4WkZi8Zsb0zow7gpsP4o1b2Dn9+AqljAke2FXGdg6pPiBLGhgZlMeWKwHPl8gjn+rhG3pms6ZVAPkTTd/smJhJqbGSEXV+Quc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321848; c=relaxed/simple;
-	bh=q9cK5+CVva2zWZ5121iREcxRFvY+SrqSNGS/pgZCZmo=;
+	s=arc-20240116; t=1711321840; c=relaxed/simple;
+	bh=9UOR8yfN7Io1/nGO1CWtAhcJh70F2yuivoI9uxE5Q4c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bndS+z3k8/j6Ut2kT+No6giOiMjCe5ldvrOD5+CJHnTMLg8Huy/ab14ItGK7RBRWySRn8vljNClQXvjbmZ2dVEykA1Z5bpTwK5stcJ4EfUF+OKjWKOA3TcyR9OIt35UfNMd0uWtbn0tsECrA+dkKBkqfKhQM9at1sRiN70mdfZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FGPmmguv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fDZnfaxbF4LeDq8CI3+uXKS7iSo6e43gZWjoF2PuiTP4PENeGGXSCLeiqzu5BWw+MhVwMXIhD5rgEhwdCkiH8gw125AkbKSbjURqcSbW9bNxdrNUp9mz+qyjh+iQC4XC3WFiI/5eKtj0LmJDJUSXCbC8yWKS4y+CUbP+QBU7DE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+BS5Fpi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FGPmmguv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D968C433F1;
-	Sun, 24 Mar 2024 23:10:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+BS5Fpi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64939C43394;
+	Sun, 24 Mar 2024 23:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321848;
-	bh=q9cK5+CVva2zWZ5121iREcxRFvY+SrqSNGS/pgZCZmo=;
+	s=k20201202; t=1711321839;
+	bh=9UOR8yfN7Io1/nGO1CWtAhcJh70F2yuivoI9uxE5Q4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FGPmmguvyrp8rlzMGBskQf22i33mNxhRA8bGNpN67VYKZp4lSDMk0yHnlFLnB+W8s
-	 yqBWUKPYAy7pujKoqRpPfbz+BnswpQQxzeqiD2LPbBF9a/Hp+EHrtu7DSLvaamuRlE
-	 QdKEMWILlNAOJaL+KNdzGxSgJahgbjxpMx6i8kicUVpx3VvP+SrfS4hwwFtJDfhGAP
-	 1pWkb9/0tlqA3QScjQimloU8a09602JVQE/KzyyEzHD7ko1PUuZJjVJ3uyVHV8F9Pg
-	 rrh8ArViqKVZICxKmRwq0gyMRJPzpCQ7AWZ5qGNwfZjqhAsH5WohJ1Eyxkhty6Wk7v
-	 H4/4WNGsOZR/Q==
+	b=Z+BS5FpiG3jsgJH1fRz4ABWCJ3KYXmw8NE7rnYCeHkl8We1ZDzryC/vDVLb14Q76M
+	 M4xudgAn1OsjFau3fi2w6p06APvHcPuIjFsBuABIOgfqXM1Y00nSEwiGMIDXCm0I/e
+	 sfKd9Kt14XVbhclMDoQjyL9hksF5oLKlqRaZGnr5OAt5nmaG3wSefKf8WjBq6WyNSq
+	 L6uBIaQ/tqjWF1b8U0vreMH1uK+l5WW5wvgt1XLZrv2teFm4d7WZJLNFZ/7uWqJbmH
+	 MlhrnH6JYfEKe7o5UHYlD2xt6p/rxZrmmeIXPOnszae3SsY3puymzFJ0GU7W1Kw7s9
+	 yoXs8CMLtkl9Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peng Fan <peng.fan@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
+Cc: Yang Jihong <yangjihong1@huawei.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 576/638] thermal/drivers/qoriq: Fix getting tmu range
-Date: Sun, 24 Mar 2024 19:00:13 -0400
-Message-ID: <20240324230116.1348576-577-sashal@kernel.org>
+Subject: [PATCH 6.6 568/638] hwtracing: hisi_ptt: Move type check to the beginning of hisi_ptt_pmu_event_init()
+Date: Sun, 24 Mar 2024 19:00:05 -0400
+Message-ID: <20240324230116.1348576-569-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,78 +49,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Yang Jihong <yangjihong1@huawei.com>
 
-[ Upstream commit 4d0642074c67ed9928e9d68734ace439aa06e403 ]
+[ Upstream commit 06226d120a28f146abd3637799958a4dc4dbb7a1 ]
 
-TMU Version 1 has 4 TTRCRs, while TMU Version >=2 has 16 TTRCRs.
-So limit the len to 4 will report "invalid range data" for i.MX93.
+When perf_init_event() calls perf_try_init_event() to init pmu driver,
+searches for the next pmu driver only when the return value is -ENOENT.
+Therefore, hisi_ptt_pmu_event_init() needs to check the type at the
+beginning of the function.
+Otherwise, in the case of perf-task mode, perf_try_init_event() returns
+-EOPNOTSUPP and skips subsequent pmu drivers, causes perf_init_event() to
+fail.
 
-This patch drop the local array with allocated ttrcr array and
-able to support larger tmu ranges.
-
-Fixes: f12d60c81fce ("thermal/drivers/qoriq: Support version 2.1")
-Tested-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20240226003657.3012880-1-peng.fan@oss.nxp.com
+Fixes: ff0de066b463 ("hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe Tune and Trace device")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Link: https://lore.kernel.org/r/20240108121906.3514820-1-yangjihong1@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/qoriq_thermal.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/hwtracing/ptt/hisi_ptt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index ccc2eea7f9f54..404f01cca4dab 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -57,6 +57,9 @@
- #define REGS_TTRnCR(n)	(0xf10 + 4 * (n)) /* Temperature Range n
- 					   * Control Register
- 					   */
-+#define NUM_TTRCR_V1	4
-+#define NUM_TTRCR_MAX	16
+diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+index a991ecb7515a3..24a1f7797aeb6 100644
+--- a/drivers/hwtracing/ptt/hisi_ptt.c
++++ b/drivers/hwtracing/ptt/hisi_ptt.c
+@@ -995,6 +995,9 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
+ 	int ret;
+ 	u32 val;
+ 
++	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
++		return -ENOENT;
 +
- #define REGS_IPBRR(n)		(0xbf8 + 4 * (n)) /* IP Block Revision
- 						   * Register n
- 						   */
-@@ -71,6 +74,7 @@ struct qoriq_sensor {
+ 	if (event->cpu < 0) {
+ 		dev_dbg(event->pmu->dev, "Per-task mode not supported\n");
+ 		return -EOPNOTSUPP;
+@@ -1003,9 +1006,6 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
+ 	if (event->attach_state & PERF_ATTACH_TASK)
+ 		return -EOPNOTSUPP;
  
- struct qoriq_tmu_data {
- 	int ver;
-+	u32 ttrcr[NUM_TTRCR_MAX];
- 	struct regmap *regmap;
- 	struct clk *clk;
- 	struct qoriq_sensor	sensor[SITES_MAX];
-@@ -182,17 +186,17 @@ static int qoriq_tmu_calibration(struct device *dev,
- 				 struct qoriq_tmu_data *data)
- {
- 	int i, val, len;
--	u32 range[4];
- 	const u32 *calibration;
- 	struct device_node *np = dev->of_node;
- 
- 	len = of_property_count_u32_elems(np, "fsl,tmu-range");
--	if (len < 0 || len > 4) {
-+	if (len < 0 || (data->ver == TMU_VER1 && len > NUM_TTRCR_V1) ||
-+	    (data->ver > TMU_VER1 && len > NUM_TTRCR_MAX)) {
- 		dev_err(dev, "invalid range data.\n");
- 		return len;
- 	}
- 
--	val = of_property_read_u32_array(np, "fsl,tmu-range", range, len);
-+	val = of_property_read_u32_array(np, "fsl,tmu-range", data->ttrcr, len);
- 	if (val != 0) {
- 		dev_err(dev, "failed to read range data.\n");
- 		return val;
-@@ -200,7 +204,7 @@ static int qoriq_tmu_calibration(struct device *dev,
- 
- 	/* Init temperature range registers */
- 	for (i = 0; i < len; i++)
--		regmap_write(data->regmap, REGS_TTRnCR(i), range[i]);
-+		regmap_write(data->regmap, REGS_TTRnCR(i), data->ttrcr[i]);
- 
- 	calibration = of_get_property(np, "fsl,tmu-calibration", &len);
- 	if (calibration == NULL || len % 8) {
+-	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
+-		return -ENOENT;
+-
+ 	ret = hisi_ptt_trace_valid_filter(hisi_ptt, event->attr.config);
+ 	if (ret < 0)
+ 		return ret;
 -- 
 2.43.0
 
