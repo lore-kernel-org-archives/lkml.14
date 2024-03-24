@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D9783CA7;
-	Sun, 24 Mar 2024 22:58:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049C91F23EE;
+	Sun, 24 Mar 2024 22:58:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321110; cv=none; b=YEk3S0AlmhnOUGw2nE+k7mwslz0tBM7H4j3M5dSxhU+pxC8NgnMRIzvPP1fbcTj4s31gY8FfCdvdIVgAIGVfluqj6g7VfJisLilt4At1jvtyK6VUQnATPNV4a2wGsiUk/Er9U+K5fTwOdu82y8u7/4pT1DMQB1INPmAQzidSWUE=
+	t=1711321106; cv=none; b=Kq1BT4CXa143PxVWnNpAx3qKVChigsKwDQ5DFdjL8Zxpy3GpToPFBxWhb0nIaVSxM6P/gEXFvt3CAjOzoLw0avTb1/RiaTRp/zYAnf3c6/CD+FF+rnKJtXWAaOBbmgx56RhfrTEyMvrEkMB2SI+wDxF5EfVSD1hptwHt8QbKJ1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321110; c=relaxed/simple;
-	bh=IPQUPry+ITtcAdi3zYmL9JlqymXhYmP6surBfz44xq4=;
+	s=arc-20240116; t=1711321106; c=relaxed/simple;
+	bh=csFAl3hiYJjI5V/7nVcf/rnqXuYN6B7JCluFywskOro=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RHrOsKrDJ+RQDvdiJnR9qjt0OiT2XJ252NkNJN6OahALQhliq25LnP9HjomgIgOXKYtDt0ecsS2pQnAemGg5hYyoFMUaSxdcAPTCxvPju7IU2HdVWq9ARU0vvnNDPdNlWEccbqQ9QQfH0P2JwwWAAZsZ5I9gvI7c4eYs2uF87pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwreHUGw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UgfHQyjSVbQVrN9E3zcoSEow8jMp5uiohnD1fUSr+Bsoe//OczmW8s4vv4Yxz0lqBdvh4h2mpp/5Isi0D0tdBfkigBMq0ozsr+SCPK+bNnpdyTj8LYgGuhJ8SIcuMY1628RjjwPbgZioB5i9OA2ThtqPv7nOLSQlXmtte/jkbl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gGJ5NQE8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwreHUGw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57E2DC43390;
-	Sun, 24 Mar 2024 22:58:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gGJ5NQE8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E4CEC433C7;
+	Sun, 24 Mar 2024 22:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321110;
-	bh=IPQUPry+ITtcAdi3zYmL9JlqymXhYmP6surBfz44xq4=;
+	s=k20201202; t=1711321105;
+	bh=csFAl3hiYJjI5V/7nVcf/rnqXuYN6B7JCluFywskOro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dwreHUGwzQffQbBvgp6oPebceT42PxFLF1bpHTpj2sBRA9xH5YaLhzn7Bi0kAOswM
-	 7aFegeJkoBaJvu5GXUtGstSleDOXnvEKfAt0IoSpqStyPRVe4TgR4tQMx7hcmGJc3R
-	 GzYkOTOuQFqUre1nxPyDg8a73E7biXbYCTFcIFNRN2eD1Upfjwtbetf84Z3PBjS0ev
-	 4WZLHDHyEiH2c+RboUlKhS2U3wPD0l3o4fKBQK2fI05/kStIZNm+tZMiL+tyRjgHmC
-	 PbZDv885qFDmGmjGpmExhiTNHOB7fJ1pZxh6TThSCPO06SnB9Wvw6ETAKFTutv9Oza
-	 4toIQ8NE64Zfw==
+	b=gGJ5NQE8NccwOc4BIvovkVX7UgqCFPWvKAZevwIxPfmYjS/B0MiLXGiBke7/dScx1
+	 vLYtx67sYy576j6LheZsY4jJFvhy6SO0e09PGrgDQtTMh77/y6iydDBsgUpFId3Mnn
+	 wQ9aBShRNuXIJTmVqNjEKwiiKUJOkSgP/CuAlSNdg2qkXrI4vk65K/6gjRomHcVLWv
+	 iD+R2DBWZe98rYjjWCT2FxvnqXf34mUeugGMzEKAfAeD/QPCSU8j1UDowJF3NytFzg
+	 OscKmvd1X815UcrTt1joQlcXBSkz/6siuDgRkK5YBaN9bRrHkaO654od4Go1XvKEhe
+	 Lsi/0Q3Gr6qFg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 672/713] xfrm: Allow UDP encapsulation only in offload modes
-Date: Sun, 24 Mar 2024 18:46:38 -0400
-Message-ID: <20240324224720.1345309-673-sashal@kernel.org>
+Subject: [PATCH 6.7 668/713] riscv: Fix compilation error with FAST_GUP and rv32
+Date: Sun, 24 Mar 2024 18:46:34 -0400
+Message-ID: <20240324224720.1345309-669-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,39 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Leon Romanovsky <leonro@nvidia.com>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-[ Upstream commit 773bb766ca4a05bf363203030b72b10088869224 ]
+[ Upstream commit 2bb7e0c49302feec1c2f777bbfe8726169986ed8 ]
 
-The missing check of x->encap caused to the situation where GSO packets
-were created with UDP encapsulation.
+By surrounding the definition of pte_leaf_size() with a ifdef napot as
+it should have been.
 
-As a solution return the encap check for non-offloaded SA.
-
-Fixes: 983a73da1f99 ("xfrm: Pass UDP encapsulation in TX packet offload")
-Closes: https://lore.kernel.org/all/a650221ae500f0c7cf496c61c96c1b103dcb6f67.camel@redhat.com
-Reported-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: e0fe5ab4192c ("riscv: Fix pte_leaf_size() for NAPOT")
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Link: https://lore.kernel.org/r/20240304080247.387710-1-alexghiti@rivosinc.com
+Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_device.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/riscv/include/asm/pgtable.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/xfrm/xfrm_device.c b/net/xfrm/xfrm_device.c
-index 653e51ae39648..6346690d5c699 100644
---- a/net/xfrm/xfrm_device.c
-+++ b/net/xfrm/xfrm_device.c
-@@ -407,7 +407,8 @@ bool xfrm_dev_offload_ok(struct sk_buff *skb, struct xfrm_state *x)
- 	struct xfrm_dst *xdst = (struct xfrm_dst *)dst;
- 	struct net_device *dev = x->xso.dev;
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 76b131e7bbcad..a66845e31abad 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -439,9 +439,11 @@ static inline pte_t pte_mkhuge(pte_t pte)
+ 	return pte;
+ }
  
--	if (!x->type_offload)
-+	if (!x->type_offload ||
-+	    (x->xso.type == XFRM_DEV_OFFLOAD_UNSPECIFIED && x->encap))
- 		return false;
++#ifdef CONFIG_RISCV_ISA_SVNAPOT
+ #define pte_leaf_size(pte)	(pte_napot(pte) ?				\
+ 					napot_cont_size(napot_cont_order(pte)) :\
+ 					PAGE_SIZE)
++#endif
  
- 	if (x->xso.type == XFRM_DEV_OFFLOAD_PACKET ||
+ #ifdef CONFIG_NUMA_BALANCING
+ /*
 -- 
 2.43.0
 
