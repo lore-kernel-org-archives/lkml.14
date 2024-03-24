@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245B01D5F97;
-	Sun, 24 Mar 2024 22:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36721DC7F4;
+	Sun, 24 Mar 2024 22:51:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320707; cv=none; b=h54CcJEi/up2NZw4puERdybctxKsopl4mG6bkrPNzdKlgwWcRMZxaUACp82XZOnALNZiT3ml4WGb28NhVDZp7I8Z7lxFZkaeTdef41uRmcPDcopmirlns32td9uz+XeRv825WdiqJiOmwcpTXgChzPTQHsLWzVb9Qp7sRYfnjvY=
+	t=1711320709; cv=none; b=Ys6tYZShNeenKDz3jdbxyBcSZvfyxXiCzKLm+a25O9oxy5Mfl304lTX70zADAD+s1UNqLdfRwRAkJUqSPNmvVyANrOjg8dggmmHh4+8DtHuR6oqcKzHHPdqyGz0O+9NnKLDJiNTZWiJaObVW/oTe6Ll7QFI7L20+ijegIr6S3sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320707; c=relaxed/simple;
-	bh=/W3KWWGDJM94lmVHEzMgu1o4ztowe19RrmIKAEZrIHs=;
+	s=arc-20240116; t=1711320709; c=relaxed/simple;
+	bh=9fBJTe87mI9XM2IpLXAQVydlYYvMSHSgDaCK0LeAZws=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NQO4Xbae2+pbAtZWNBxquWh9w5f8be5azvf9B6JUzwd7kbdU7fKTw16vQxFlHwohDBHTE3r5gGIv6NUNkPHGm5INJ3vnATycux+KwggFpU3X+WvhZ7qn035Y5sN5h5m39HmIXbKio4F8OA8I8YhitioXCPAllBDZ7ZQDmx44o2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=COuN7xny; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rkRIn25/oljcpuA4x5LrCZ6f64tDIXjQxSciPIonn04CJXuRBgu8bJVBJEioMTZ63eqhUvVrxxGT5jhiB6TP3iOv0J+TWhw478AKt0Gr9IQzXe8enpxRvKkvweYntI6UEvq2bnDGQWlBWynq3fp6Ct2bCKmxcX2d7u9qeY2gRV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADosB36i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="COuN7xny"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49633C43399;
-	Sun, 24 Mar 2024 22:51:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADosB36i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DCF7C433C7;
+	Sun, 24 Mar 2024 22:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320706;
-	bh=/W3KWWGDJM94lmVHEzMgu1o4ztowe19RrmIKAEZrIHs=;
+	s=k20201202; t=1711320708;
+	bh=9fBJTe87mI9XM2IpLXAQVydlYYvMSHSgDaCK0LeAZws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=COuN7xnyZCXOtPyh8BFc83EK0anUNRfIujtMrl350hd2NM7K9Ijq1YE5Qqp1H8cWH
-	 LNhWjujZ+uRcSrhStxbObpHavb30EI3S72IC2s42CU8GoFoBkPpfgL2F4rbkZG7d+1
-	 8frI+Y45sFxd/dz1pCXgeuZMsm/ttbO6vWaK5ruf7RhjCZf38lef6fSpiU6u0Qv1Ju
-	 EjTHiO/Oonj+IOlXEuZ7OKFF4SVh647uv7Wn7tLmrM12pqxUgcowPCyOM/JdX+Atn0
-	 EMkp4zhu+OZim2cWbkGA4N+S3z0vmNXBnPQSU+skPjYvI6aeDu3Aa0MFFH+VhCdco4
-	 c4v6dDIHvH2QQ==
+	b=ADosB36ibC2F7xYy8+knOAGsR9pnBZN4fH9FSXb/0U7Wi2SroucO/lJxFN9RgsIgb
+	 4Mwtm+4Vi2BcWJIYMAyI7a1Ust+b89CgdUmh/UoWzY2aA+eklUmwC3Tdxc1UVSTtqg
+	 v58oaRmV3y4WvHOXnf7GJ0X6MygqTlnjyLdRXt2Dz7+J/Y2g92ys4DbwzMkr9Y16lO
+	 Vy9x/mbCkNRspPbhJFrN4bz4Yet3oqOKH4jnVn30dFIT3xi79sVUvH5NHvv3tQAHrH
+	 sZRyXEY/Q+RCj3UslFyjzMK1x6Y9vVm76F64K4vYlY7tvXUvKzpwL2wbDxkbBv+KVB
+	 IxTf5iJKoPezw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kamal Heib <kheib@redhat.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Bhavya Kapoor <b-kapoor@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 268/713] net: ena: Remove ena_select_queue
-Date: Sun, 24 Mar 2024 18:39:54 -0400
-Message-ID: <20240324224720.1345309-269-sashal@kernel.org>
+Subject: [PATCH 6.7 271/713] arm64: dts: ti: k3-j721s2-common-proc-board: Remove Pinmux for CTS and RTS in wkup_uart0
+Date: Sun, 24 Mar 2024 18:39:57 -0400
+Message-ID: <20240324224720.1345309-272-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,64 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kamal Heib <kheib@redhat.com>
+From: Bhavya Kapoor <b-kapoor@ti.com>
 
-[ Upstream commit 78e886ba2b549945ecada055ee0765f0ded5707a ]
+[ Upstream commit 28e5b74d524050008edf415f20a3e38907b8f176 ]
 
-Avoid the following warnings by removing the ena_select_queue() function
-and rely on the net core to do the queue selection, The issue happen
-when an skb received from an interface with more queues than ena is
-forwarded to the ena interface.
+Only Tx and Rx Signal lines for wkup_uart0 are brought out on
+the Common Proc Board through SoM, but CTS and RTS signal lines
+are not brought on the board. Thus, remove pinmux for CTS and RTS
+signal lines for wkup_uart0 in J721S2.
 
-[ 1176.159959] eth0 selects TX queue 11, but real number of TX queues is 8
-[ 1176.863976] eth0 selects TX queue 14, but real number of TX queues is 8
-[ 1180.767877] eth0 selects TX queue 14, but real number of TX queues is 8
-[ 1188.703742] eth0 selects TX queue 14, but real number of TX queues is 8
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Kamal Heib <kheib@redhat.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f5e9ee0b354a ("arm64: dts: ti: k3-j721s2-common-proc-board: Add uart pinmux")
+Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
+Link: https://lore.kernel.org/r/20240214105846.1096733-4-b-kapoor@ti.com
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+ arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index c44c44e26ddfe..4fa27c9a33974 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -3238,22 +3238,6 @@ static netdev_tx_t ena_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	return NETDEV_TX_OK;
- }
- 
--static u16 ena_select_queue(struct net_device *dev, struct sk_buff *skb,
--			    struct net_device *sb_dev)
--{
--	u16 qid;
--	/* we suspect that this is good for in--kernel network services that
--	 * want to loop incoming skb rx to tx in normal user generated traffic,
--	 * most probably we will not get to this
--	 */
--	if (skb_rx_queue_recorded(skb))
--		qid = skb_get_rx_queue(skb);
--	else
--		qid = netdev_pick_tx(dev, skb, NULL);
--
--	return qid;
--}
--
- static void ena_config_host_info(struct ena_com_dev *ena_dev, struct pci_dev *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -3424,7 +3408,6 @@ static const struct net_device_ops ena_netdev_ops = {
- 	.ndo_open		= ena_open,
- 	.ndo_stop		= ena_close,
- 	.ndo_start_xmit		= ena_start_xmit,
--	.ndo_select_queue	= ena_select_queue,
- 	.ndo_get_stats64	= ena_get_stats64,
- 	.ndo_tx_timeout		= ena_tx_timeout,
- 	.ndo_change_mtu		= ena_change_mtu,
+diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+index c6b85bbf9a179..1ba1f53c72d03 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+@@ -190,8 +190,6 @@ J721S2_IOPAD(0x038, PIN_OUTPUT, 0) /* (AB28) MCASP0_ACLKX.MCAN5_TX */
+ &wkup_pmx2 {
+ 	wkup_uart0_pins_default: wkup-uart0-default-pins {
+ 		pinctrl-single,pins = <
+-			J721S2_WKUP_IOPAD(0x070, PIN_INPUT, 0) /* (E25) WKUP_GPIO0_6.WKUP_UART0_CTSn */
+-			J721S2_WKUP_IOPAD(0x074, PIN_OUTPUT, 0) /* (F28) WKUP_GPIO0_7.WKUP_UART0_RTSn */
+ 			J721S2_WKUP_IOPAD(0x048, PIN_INPUT, 0) /* (D28) WKUP_UART0_RXD */
+ 			J721S2_WKUP_IOPAD(0x04c, PIN_OUTPUT, 0) /* (D27) WKUP_UART0_TXD */
+ 		>;
 -- 
 2.43.0
 
