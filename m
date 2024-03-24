@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC9E175558;
-	Sun, 24 Mar 2024 23:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BBF21A82E;
+	Sun, 24 Mar 2024 23:36:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323369; cv=none; b=QOILzMI8mW/m2aP2svkkChgYLNhpSsKUNDUe/on7llGbb8SGnmWUhpLALw5DlEEIXC3mRgdovOVtm5tdCjkvXp3xWF8W2D1Ns5+T3JgvIKMu0w7C3iTJ3J1XEv57jC88UhR/rd2ql1gmvyXKCgglQuEdsEpL1HVm4JVbEKoWPVI=
+	t=1711323373; cv=none; b=fCgTqGED4IjpxIXe/oHAFRjnYsdDy505Izdziq241m44j7jV58w4+/8islCofyA+JU6JDTCRVI+vLbPS+tUDFTXmM/u7O1yJRg7EePdK8hBlbZXLSE7brwF8QuMmqjfD9uukM60xz1FkYJXAnulNogsRt4+soJyQAvIOSgiiqpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323369; c=relaxed/simple;
-	bh=PyzAdGm1hzptCH7EM8IRzrHYBDnoj+9zKSyU1/zY8GE=;
+	s=arc-20240116; t=1711323373; c=relaxed/simple;
+	bh=t4VgZYcbk0X9lwkENC4ESyD43JJVmn4mAQAetzW2wAU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pdWnfY/RKoMzKkkuY4raakRivw3q4S2pq+6ljozhj5KjmqTw6W5MBAFFEB1kXU4L47UmnhYbLcDlxgPDWboPNrFRLtqZ8vSAry5H1NN+tVZALUinoauqkYi8p3XkRWs9lV0UO4IWDT+gzTJ9No36OMnNxgXSkmD+GGvXheWfq3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fiq+nQpI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gVHib0NW9eAfTx4Om8NkHFpnTMuaEM24Qge0DNyX8XQVdEyqkN/8gqemOatQnrYlF1Ip9jNdhGxvYv7/bDDsfMs+VyDgol5LTgWJjX3SWRFjVsSprTX2K1ZRDwHu5124+zOSEQAznQA3dJGFtg87J7pYjkwm+v410VOCUUW+A0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uBtGziih; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fiq+nQpI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B256C433A6;
-	Sun, 24 Mar 2024 23:36:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uBtGziih"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ED98C433C7;
+	Sun, 24 Mar 2024 23:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323369;
-	bh=PyzAdGm1hzptCH7EM8IRzrHYBDnoj+9zKSyU1/zY8GE=;
+	s=k20201202; t=1711323372;
+	bh=t4VgZYcbk0X9lwkENC4ESyD43JJVmn4mAQAetzW2wAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fiq+nQpI84FafKxd73o+e8DQ7QHF1W4y0FPGhnaq+FBGYAC3i4fpSxdW0HR6R37iC
-	 xNeXP70atnOyLiRQscn6+LRGwdm7R5IJzAfkeOS0pduDoc1WI1+oaLDFD2DpC/xjrv
-	 xg0s5oTLi9ZTAlfSP0xqUaAkFkVj07As42R0FirgtvI2gY+iawo9hirFLaauObkaAj
-	 q4BbSSaRyiuE2GFYVzwRUstb8Xb+9p/hvK7RQroGAB3Dqphb2wpalM4ULotYnaK28v
-	 hzyewbpKsHB5ghkppC+txkeTOoZTyQQg8+FIT3Y9K8pB6MFjOC2WNGfwiReSJJYfZK
-	 t9A3tom55H7Zw==
+	b=uBtGziihNVTnkR/31z9CAhTMut1o/Pagmw1Q/HntNSELLARYPQk0kCZmtXqlNNkm+
+	 DjtYOwBEXoirm33qltwzmljDPGCn9rzZdWu9v3IRwbZxXPovjEV6X+JVgpyRNaZgBN
+	 tWLlCxqUrGZsgQTUgH2en5Rxd5lFuAjhwxp9JSvMgMRbQLdQpPHV70J1NHpHTzUkWq
+	 0ivw8ZIAQgn7yVsrbonIq9KUoMmqLiOeRJfccB+DC/fjsH+/egqzKLR/eJmMEOX20T
+	 T0hIIeIaL6UPXmp3uUiUOPhd7L0vKSlPzTqpmkEFkPprKiZyVPkWOREsxYj2gc/vpZ
+	 JbQvlfugaqO/w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrey Grafin <conquistador@yandex-team.ru>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Hou Tao <houtao1@huawei.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 068/317] selftest/bpf: Add map_in_maps with BPF_MAP_TYPE_PERF_EVENT_ARRAY values
-Date: Sun, 24 Mar 2024 19:30:48 -0400
-Message-ID: <20240324233458.1352854-69-sashal@kernel.org>
+Subject: [PATCH 5.15 072/317] arm64: dts: imx8mm-kontron: Disable pullups for onboard UART signals on BL board
+Date: Sun, 24 Mar 2024 19:30:52 -0400
+Message-ID: <20240324233458.1352854-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -51,95 +48,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andrey Grafin <conquistador@yandex-team.ru>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-[ Upstream commit 40628f9fff73adecac77a9aa390f8016724cad99 ]
+[ Upstream commit 162aadaa0df8217b0cc49d919dd00022fef65e78 ]
 
-Check that bpf_object__load() successfully creates map_in_maps
-with BPF_MAP_TYPE_PERF_EVENT_ARRAY values.
-These changes cover fix in the previous patch
-"libbpf: Apply map_set_def_max_entries() for inner_maps on creation".
+These signals are actively driven by the SoC or by the onboard
+transceiver. There's no need to enable the internal pull resistors
+and due to silicon errata ERR050080 let's disable the internal ones
+to prevent any unwanted behavior in case they wear out.
 
-A command line output is:
-- w/o fix
-$ sudo ./test_maps
-libbpf: map 'mim_array_pe': failed to create inner map: -22
-libbpf: map 'mim_array_pe': failed to create: Invalid argument(-22)
-libbpf: failed to load object './test_map_in_map.bpf.o'
-Failed to load test prog
-
-- with fix
-$ sudo ./test_maps
-...
-test_maps: OK, 0 SKIPPED
-
-Fixes: 646f02ffdd49 ("libbpf: Add BTF-defined map-in-map support")
-Signed-off-by: Andrey Grafin <conquistador@yandex-team.ru>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Yonghong Song <yonghong.song@linux.dev>
-Acked-by: Hou Tao <houtao1@huawei.com>
-Link: https://lore.kernel.org/bpf/20240117130619.9403-2-conquistador@yandex-team.ru
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 8668d8b2e67f ("arm64: dts: Add the Kontron i.MX8M Mini SoMs and baseboards")
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/bpf/progs/test_map_in_map.c     | 26 +++++++++++++++++++
- tools/testing/selftests/bpf/test_maps.c       |  6 ++++-
- 2 files changed, 31 insertions(+), 1 deletion(-)
+ .../dts/freescale/imx8mm-kontron-n801x-s.dts     | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/progs/test_map_in_map.c b/tools/testing/selftests/bpf/progs/test_map_in_map.c
-index 5f0e0bfc151e5..8a52bc56568d6 100644
---- a/tools/testing/selftests/bpf/progs/test_map_in_map.c
-+++ b/tools/testing/selftests/bpf/progs/test_map_in_map.c
-@@ -23,6 +23,32 @@ struct {
- 	__uint(value_size, sizeof(__u32));
- } mim_hash SEC(".maps");
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-n801x-s.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-n801x-s.dts
+index 362f9360b4a51..67e768032320a 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-n801x-s.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-n801x-s.dts
+@@ -288,19 +288,19 @@ MX8MM_IOMUXC_SPDIF_RX_PWM2_OUT			0x19
  
-+/* The following three maps are used to test
-+ * perf_event_array map can be an inner
-+ * map of hash/array_of_maps.
-+ */
-+struct perf_event_array {
-+	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-+	__type(key, __u32);
-+	__type(value, __u32);
-+} inner_map0 SEC(".maps");
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_ARRAY_OF_MAPS);
-+	__uint(max_entries, 1);
-+	__type(key, __u32);
-+	__array(values, struct perf_event_array);
-+} mim_array_pe SEC(".maps") = {
-+	.values = {&inner_map0}};
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_HASH_OF_MAPS);
-+	__uint(max_entries, 1);
-+	__type(key, __u32);
-+	__array(values, struct perf_event_array);
-+} mim_hash_pe SEC(".maps") = {
-+	.values = {&inner_map0}};
-+
- SEC("xdp")
- int xdp_mimtest0(struct xdp_md *ctx)
- {
-diff --git a/tools/testing/selftests/bpf/test_maps.c b/tools/testing/selftests/bpf/test_maps.c
-index c7a36a9378f8c..a72cc78706eaf 100644
---- a/tools/testing/selftests/bpf/test_maps.c
-+++ b/tools/testing/selftests/bpf/test_maps.c
-@@ -1196,7 +1196,11 @@ static void test_map_in_map(void)
- 		goto out_map_in_map;
- 	}
+ 	pinctrl_uart1: uart1grp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_SAI2_RXC_UART1_DCE_RX		0x140
+-			MX8MM_IOMUXC_SAI2_RXFS_UART1_DCE_TX		0x140
+-			MX8MM_IOMUXC_SAI2_RXD0_UART1_DCE_RTS_B		0x140
+-			MX8MM_IOMUXC_SAI2_TXFS_UART1_DCE_CTS_B		0x140
++			MX8MM_IOMUXC_SAI2_RXC_UART1_DCE_RX		0x0
++			MX8MM_IOMUXC_SAI2_RXFS_UART1_DCE_TX		0x0
++			MX8MM_IOMUXC_SAI2_RXD0_UART1_DCE_RTS_B		0x0
++			MX8MM_IOMUXC_SAI2_TXFS_UART1_DCE_CTS_B		0x0
+ 		>;
+ 	};
  
--	bpf_object__load(obj);
-+	err = bpf_object__load(obj);
-+	if (err) {
-+		printf("Failed to load test prog\n");
-+		goto out_map_in_map;
-+	}
+ 	pinctrl_uart2: uart2grp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX		0x140
+-			MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX		0x140
+-			MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B		0x140
+-			MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B		0x140
++			MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX		0x0
++			MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX		0x0
++			MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B		0x0
++			MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B		0x0
+ 		>;
+ 	};
  
- 	map = bpf_object__find_map_by_name(obj, "mim_array");
- 	if (!map) {
 -- 
 2.43.0
 
