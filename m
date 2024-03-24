@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDFC513341E;
-	Sun, 24 Mar 2024 23:04:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5BC20371D;
+	Sun, 24 Mar 2024 23:04:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321452; cv=none; b=q48KCmwIZMhw7t8fXl2yOKDj7NtWcumvrQJ8md1SP5uuzqJZsL1mrm7W5saV9d2ZvlZvtGdJW8ABz8SMUsZjgOy0eBqv4yO4nIUeuZpxEKOzO7R4pDhKkUo/vCysiwjSPS7OSHZ8W7MwpDaaiPZ1WMvFoh2QqHr0Aqyd4sbODQs=
+	t=1711321455; cv=none; b=S40EJzeIEjbXVfU4BnzIbZG97U69IYjLsjVokjmRlo+q7lS8p89SQod9pCjKwg5kJSjptHJrlCgEnV15n2PtzPuQTW9r/42vDuXH+kNHYK0rkIlmS7UDEK2ppk7U54zs3ONtV+HegBExpg1sgOdjyPVyXZ/kRtBMi3GhM4RjbUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321452; c=relaxed/simple;
-	bh=daAUKUWKXLE8XmGMuJAl8BDTZCAjNe9klaEnuvYRuLE=;
+	s=arc-20240116; t=1711321455; c=relaxed/simple;
+	bh=wlZaNRduiN50WuUJtWzPVPHyfezdgv5zUJbAbAJbO/o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T14gvnCHDETZUrLYRddKGqxEA4QZTMEc54yKIox+U0gnIR63CEa60l0lAk8ReHMXPASOyn4XE6MQGA4A89aqphOkEYuvG6ZPQLewYPrJx3r9njPURQga4CmCqzb1gttSWyTK4hQhLloycMPWvkHhHaFxGU5fcg7SUVoYiVcGRB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+RAbYNE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eaumcZEmaMO278EeWxRA5R0Ji5e1eMNZlMrjEKmXGRSkIi4TzKf6brgJNREhGtzGACR8H2sXAMNKES2OJr2Az4nMJeYQ2gQwnzmUvBLy59lHOjuUdH6CkbUQtXaWU6DLEqQns0pvyfsqpiPPT6dLl93uO15aDsYBYu/JO2KSNk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4fygbJe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+RAbYNE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38F76C43390;
-	Sun, 24 Mar 2024 23:04:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4fygbJe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9479C433F1;
+	Sun, 24 Mar 2024 23:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321451;
-	bh=daAUKUWKXLE8XmGMuJAl8BDTZCAjNe9klaEnuvYRuLE=;
+	s=k20201202; t=1711321455;
+	bh=wlZaNRduiN50WuUJtWzPVPHyfezdgv5zUJbAbAJbO/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J+RAbYNEpV9KkBZizGGBMaGNt6qP66VvSR8oi7nrF922Cp56SUiZtb99nht3aQfVt
-	 M8wdfHjs6eAKmRM82BScBFbtwcHlfl8Au6kWBQtyVIbkYiQJgMW7hC2wVEKm8/VjsT
-	 38R19KvIOiysGXZDvgkc0rwev8FrCsOCUAuomjPTXumw5vvpLOTEh3sqJhGJItS/b0
-	 yx4KSIy8UZzeUReVds5eh2+3A9gtsnkLmiWQYwDoLzVVDaNsqxtjNjsI3ElxGpSXGV
-	 +VAOotb9zWZLxlTuhh41hXw54AZUBknWcaNL9bg1/9TiTSwz+QCKvqDAndrfjeXkkC
-	 11smKLaWJp1PQ==
+	b=G4fygbJeM+H7vqeeVnm+BF77BTLnUn3RqtrdzGO7SuR6oP5vV9yRw6T00w99PkDp/
+	 5QfLgZZGrx95cYUMphKpzGIuPt9yHmPgeJZEp122qF+TV3j3rvX7zOQE6Fe602mx1d
+	 rR3yxmdHfTNNhXFe8LdI2yD+WetW2S+0llT5DjECkIzclmFCdgdX/bCfiAeEcstiR+
+	 UaYz/03xNwqIhhC1Z3kPWqwu95/fJmQ+jwssns7GT7Nb5KEJWUbMh2qbxAISY9rFWf
+	 NTcFeld+Un7PJbFdztIb9z1XIQBIIeP7k607pcaJusqPFEAygKjNpfeLank0kENPLz
+	 p2JupE9rf6Ywg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Martin Kaiser <martin@kaiser.cx>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+Cc: Manorit Chawdhry <m-chawdhry@ti.com>,
+	Andrew Davis <afd@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 176/638] gpio: vf610: allow disabling the vf610 driver
-Date: Sun, 24 Mar 2024 18:53:33 -0400
-Message-ID: <20240324230116.1348576-177-sashal@kernel.org>
+Subject: [PATCH 6.6 180/638] arm64: dts: ti: k3-j721s2: Fix power domain for VTM node
+Date: Sun, 24 Mar 2024 18:53:37 -0400
+Message-ID: <20240324230116.1348576-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,41 +49,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Martin Kaiser <martin@kaiser.cx>
+From: Manorit Chawdhry <m-chawdhry@ti.com>
 
-[ Upstream commit f57595788244a838deec2d3be375291327cbc035 ]
+[ Upstream commit 5ef196ed912e80a1e64936119ced8d7eb5635f0f ]
 
-The vf610 gpio driver is enabled by default for all i.MX machines,
-without any option to disable it in a board-specific config file.
+Fix the power domain device ID for wkup_vtm0 node.
 
-Most i.MX chipsets have no hardware for this driver. Change the default
-to enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
-
-Add a text description after the bool type, this makes the driver
-selectable by make config etc.
-
-Fixes: 30a35c07d9e9 ("gpio: vf610: drop the SOC_VF610 dependency for GPIO_VF610")
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Link: https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j721s2/devices.html
+Fixes: d148e3fe52c8 ("arm64: dts: ti: j721s2: Add VTM node")
+Signed-off-by: Manorit Chawdhry <m-chawdhry@ti.com>
+Reviewed-by: Andrew Davis <afd@ti.com>
+Link: https://lore.kernel.org/r/20240201-b4-upstream-j721s2-fix-vtm-devid-v2-1-85fd568b77e3@ti.com
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 673bafb8be588..d56b835359d3b 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -691,7 +691,8 @@ config GPIO_UNIPHIER
- 	  Say yes here to support UniPhier GPIOs.
- 
- config GPIO_VF610
--	def_bool y
-+	bool "VF610 GPIO support"
-+	default y if SOC_VF610
- 	depends on ARCH_MXC
- 	select GPIOLIB_IRQCHIP
- 	help
+diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
+index 2ddad93185541..71324fec415ae 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
+@@ -652,7 +652,7 @@ wkup_vtm0: temperature-sensor@42040000 {
+ 		compatible = "ti,j7200-vtm";
+ 		reg = <0x00 0x42040000 0x0 0x350>,
+ 		      <0x00 0x42050000 0x0 0x350>;
+-		power-domains = <&k3_pds 154 TI_SCI_PD_SHARED>;
++		power-domains = <&k3_pds 180 TI_SCI_PD_SHARED>;
+ 		#thermal-sensor-cells = <1>;
+ 	};
+ };
 -- 
 2.43.0
 
