@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7730206C8C;
-	Sun, 24 Mar 2024 23:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3282D206CA4;
+	Sun, 24 Mar 2024 23:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321509; cv=none; b=EqMB/WMJN7o0lxYC7W+nCGx1DHPe680hEjB0ervvwlUHmvx74WaiiIh2DM5AICa9p8+n8tVjH/37s2qdkkk1Drs4P5EWqM3sVTl1B+9txjvhMAY0cfkdKd9dQcZ3LuLhC8HTBKuFRRSfkZe1fYiNlFoalbpRBTFNlYXHC9x71RA=
+	t=1711321514; cv=none; b=Ymvktw3x/C62j1xDRFKhHALb6YO6sNoyNXk3xiwXIhG8+VVyWfNS5ywh8ytUTPbDrG5DekVvKnSieZ6LKW5Fx2tyGPMHe9RUKbTOy04DwxLjHT437nylNGgON4zhdVMEX45naGJ46WcKnwWODvZYrETPlwuHBISyJQ54YMKu+zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321509; c=relaxed/simple;
-	bh=OC6s1nGnzvG27cdhEV9v+152Ge649GD6EUnGf7Ba9Jc=;
+	s=arc-20240116; t=1711321514; c=relaxed/simple;
+	bh=hwBbYoWGEEKSopLdY4x77EeEvapUEV0W9UCXR8bjLI0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mb9IZCEdctYrqngGf+pJmeFEZkjlCvlgmTP7Bw/UZHt86uaPRqpE+7KzBCHWXh0tve/AiToUhQNEXb5hpMcDU/WLgEzuyJlflbNPa+0d8Y9XJxPGK49X5R1FB3bZEN/ZPgfVcoufPBq8Ua+roRdfKsRaGMNbBsYyUOT1240OAig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nxOnJ491; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aVlQFMGacgMMeVTvfjLdgMcAsHjlzkTneMOd2bXuzlq1qvZLh3KheA4BMMnEg6GbcX9ohOZncRkDxbbLc8/R7eNbUE4d3oSHPY4L2bzKidFgYGWY47mtPLaoXIbsMHDke1HWc1wH4JRkaCGFjZZc9ppUM0QZo/mWivDS7iKs2Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teiLZrff; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nxOnJ491"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6172C433F1;
-	Sun, 24 Mar 2024 23:05:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teiLZrff"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70AD2C433C7;
+	Sun, 24 Mar 2024 23:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321508;
-	bh=OC6s1nGnzvG27cdhEV9v+152Ge649GD6EUnGf7Ba9Jc=;
+	s=k20201202; t=1711321513;
+	bh=hwBbYoWGEEKSopLdY4x77EeEvapUEV0W9UCXR8bjLI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nxOnJ491VcerR1igwDtxVrHetg7tPB6uofzlfJRAPvs4XZjgqpjFKZlfUxcWf3hMM
-	 0hyfzGRy/kzAyWk3Sa2RGTj+8Q6RGuvBcUjY3dpcoH6Oby8pD/PQ6mE3XVC2h5k6pR
-	 PL5tpbQhM0iK0T52v+PpIK+q5O9ruWz2d6H4cGvhjS41NjFW/rEVN8/L4s1x4copE2
-	 h9c5qzPrsI8T86m9VpKCRR+Y5h+eJbRgV6lQR2aD2kk/2ymfbYkXZAMA4aq97/umXj
-	 vW8MUBH/lwtP9o4iPafEP8UNaQ1wk4/oDdb0J95mBRpqQ2YFof8dcpL2GasUbNi0iE
-	 yJyu9D3BUoPQg==
+	b=teiLZrfffInjRN3Me4iaq+liq6/qYUowyb3RVOp+6/ZBDQYHfHcAdSfJtkbk/tn1k
+	 xGf7oO6JS6I+WKStcOt+oC4C89eF60c4CO0Bwo9bMxG4n1yuDqr/rfoc+vdY+2vrep
+	 6O9kcrkh0x57TOqtEuajCxP3cyxzgruZgtV4xcWP4BuEkPsCoD+IIk19kEyTneC8C/
+	 ExJLylM8DF2s9yoXlD1LpHxeMGuqVWwxhpkGq0b8bHzOWBPvII6Uz6fYLNXsm1eoIR
+	 6QIkzLW3aHUMyFMaWvwkPskgLhBDTXzXsxSHwpm1KU4zu45eipbya2F4Kxim9f1rdi
+	 gN1YhpDLJsoDg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: Bhavya Kapoor <b-kapoor@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 234/638] powercap: dtpm_cpu: Fix error check against freq_qos_add_request()
-Date: Sun, 24 Mar 2024 18:54:31 -0400
-Message-ID: <20240324230116.1348576-235-sashal@kernel.org>
+Subject: [PATCH 6.6 239/638] arm64: dts: ti: k3-j784s4-evm: Remove Pinmux for CTS and RTS in wkup_uart0
+Date: Sun, 24 Mar 2024 18:54:36 -0400
+Message-ID: <20240324230116.1348576-240-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,39 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
+From: Bhavya Kapoor <b-kapoor@ti.com>
 
-[ Upstream commit b50155cb0d609437236c88201206267835c6f965 ]
+[ Upstream commit d29a6cf980572d8cf7b63935716fca663e2610f0 ]
 
-The caller of the function freq_qos_add_request() checks again a non
-zero value but freq_qos_add_request() can return '1' if the request
-already exists. Therefore, the setup function fails while the QoS
-request actually did not failed.
+Only Tx and Rx Signal lines for wkup_uart0 are brought out on
+the J784S4 EVM from SoC, but CTS and RTS signal lines are not
+brought on the EVM. Thus, remove pinmux for CTS and RTS signal
+lines for wkup_uart0 in J784S4.
 
-Fix that by changing the check against a negative value like all the
-other callers of the function.
-
-Fixes: 0e8f68d7f0485 ("Add CPU energy model based support")
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 6fa5d37a2f34 ("arm64: dts: ti: k3-j784s4-evm: Add mcu and wakeup uarts")
+Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
+Link: https://lore.kernel.org/r/20240214105846.1096733-5-b-kapoor@ti.com
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/powercap/dtpm_cpu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/powercap/dtpm_cpu.c b/drivers/powercap/dtpm_cpu.c
-index 9193c3b8edebe..ae7ee611978ba 100644
---- a/drivers/powercap/dtpm_cpu.c
-+++ b/drivers/powercap/dtpm_cpu.c
-@@ -219,7 +219,7 @@ static int __dtpm_cpu_setup(int cpu, struct dtpm *parent)
- 	ret = freq_qos_add_request(&policy->constraints,
- 				   &dtpm_cpu->qos_req, FREQ_QOS_MAX,
- 				   pd->table[pd->nr_perf_states - 1].frequency);
--	if (ret)
-+	if (ret < 0)
- 		goto out_dtpm_unregister;
- 
- 	cpufreq_cpu_put(policy);
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+index 5991c2e1d994c..39f99ee39dab9 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+@@ -296,8 +296,6 @@ &wkup_pmx2 {
+ 	wkup_uart0_pins_default: wkup-uart0-default-pins {
+ 		bootph-all;
+ 		pinctrl-single,pins = <
+-			J721S2_WKUP_IOPAD(0x070, PIN_INPUT, 0) /* (L37) WKUP_GPIO0_6.WKUP_UART0_CTSn */
+-			J721S2_WKUP_IOPAD(0x074, PIN_INPUT, 0) /* (L36) WKUP_GPIO0_7.WKUP_UART0_RTSn */
+ 			J721S2_WKUP_IOPAD(0x048, PIN_INPUT, 0) /* (K35) WKUP_UART0_RXD */
+ 			J721S2_WKUP_IOPAD(0x04c, PIN_INPUT, 0) /* (K34) WKUP_UART0_TXD */
+ 		>;
 -- 
 2.43.0
 
