@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4526139581;
-	Sun, 24 Mar 2024 23:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031341EC4A5;
+	Sun, 24 Mar 2024 23:07:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321633; cv=none; b=ur3po0aYY/G1wUhWyhDmvbrtig4/2F0xu8WiQ1UvF8g3WoXKOT4zDmSlvzHpBJLbLS26hIlHT32uh23oj8p7VLiSUZ2kCrAir43ZxSXA/KYLS92DQHFcYOys3EX+IfRDOvcxvr/eSJPY0WpJd9P68zIVfm0hCVl9AY9lIYU9qjQ=
+	t=1711321637; cv=none; b=jqlpHjGMzaLFSoeHZAhNUrgJU9nDbOhyvhh0oQX3Dbvydh7Pwkqb4S3DFhmiyZC7YOR7vCX21bhlfWUNp4THTgpXLs4U/xctdriDp+wvYPxGkm/jLN8ax/4Uy1F6r6NKNbZgV4BJ5wjczrOJ5KuR0Zq9z5GL/OEi9sz/7z3Tjqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321633; c=relaxed/simple;
-	bh=YAyf/zcJ3EcipuXFZPJaTEX6O9w5ToHm7vdXp2Vnz7o=;
+	s=arc-20240116; t=1711321637; c=relaxed/simple;
+	bh=on5rA5lUDHzMSR8tAIoz2HkHMwVZeJD5y2m+BoZ5Ieo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NchSo6p+RnPnRK31x7ym/87VT8poUdfEnX5gMEBbG3qiYNUuuUkI3pXki/+hn6z9OCXofExKjMswgo12ZSV9aVRkQtVDpSxuTg7IHrEoQhKFttmuNfPRrt3m00K2nGjoQs5tUYuyCrbbPBKatvFPTnUTrodoCsmceVEjgv+F2PQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9eIqu3S; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GkqXyTwujJZXq6nYioxp9F0MdsGu2oGBRXvTwCU3A/cIUpwJRrHrxvjKc2KZBV/5wF+9PNtYSz9+aBTbJgsLggSraJE87xhQJy8uhuIH57mJN0qpRP6lahnFvsXTgxR87IiALJ/DhpL0GbfZtDVwoljQFiUY4MKpDoD3x7Z/I24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4Ea0iFu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9eIqu3S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DBD8C43390;
-	Sun, 24 Mar 2024 23:07:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4Ea0iFu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4256EC433A6;
+	Sun, 24 Mar 2024 23:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321633;
-	bh=YAyf/zcJ3EcipuXFZPJaTEX6O9w5ToHm7vdXp2Vnz7o=;
+	s=k20201202; t=1711321636;
+	bh=on5rA5lUDHzMSR8tAIoz2HkHMwVZeJD5y2m+BoZ5Ieo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e9eIqu3Sri09N8wl3Lm4mcBYEtvSJDlUR6CGLWzTLHGIUR4pz/u/NimMR7DXcI54w
-	 muK9bnHlob3wPtt+ivw0ObEEzwoMFS6WmTFT2oh0JQAMJqDXuL5RBqdLQfhwsRvXBa
-	 1OKt0LuMKJusbYccPPbh+L6V+rQ1XF2eiShtemwegw7PdJ7BeSNO7jWvBm4cGZRFQe
-	 CcT0Nbu1GrL7L2gt3apExUcSoe9gOzZrgmTo1hflpJh5+1sKIhfcbAmhmfOESowLpE
-	 GA50QWeaJ4KwSostJeoFAw6o1odL4uV4YihLry9N0RmB9eSOvbc6x2eoMG/rthOGAx
-	 ru9OHEy0zwNog==
+	b=t4Ea0iFu1DcnSvHW3QWLYk49VqZ10bWwhIFgxIyfIi2G0oxHXYG9PYrWm4/IJvRpC
+	 00U6NaQGEh8Sni9b95XUjiaIliaLZinEyUCBhV0Co7GU/5C/EsJajc6nWdtn7c8fYc
+	 0JmRrnyVivGdBcI5aF+BLbtMzyEfywSCF3RBRwk0znELtkdUMzeVNXbvuYqjiZF/q1
+	 Vw2fV7OZQMa4nPZ27KXkr1xjmm93iVoGyYlbmcH2sYthgIKbWoE4B525y5ix4gRK97
+	 1xp2ljbJhk6uVuQ2yuhchm8s4ccz9LE65ivqQnfIg+aTl2lncWgSNrA91LSLPL2txR
+	 DZaO5Ejsf6hYg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Yang Jihong <yangjihong1@huawei.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 364/638] PCI/DPC: Print all TLP Prefixes, not just the first
-Date: Sun, 24 Mar 2024 18:56:41 -0400
-Message-ID: <20240324230116.1348576-365-sashal@kernel.org>
+Subject: [PATCH 6.6 367/638] perf record: Check conflict between '--timestamp-filename' option and pipe mode before recording
+Date: Sun, 24 Mar 2024 18:56:44 -0400
+Message-ID: <20240324230116.1348576-368-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,45 +44,104 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+From: Yang Jihong <yangjihong1@huawei.com>
 
-[ Upstream commit 6568d82512b0a64809acff3d7a747362fa4288c8 ]
+[ Upstream commit 02f9b50e04812782fd006ed21c6da1c5e3e373da ]
 
-The TLP Prefix Log Register consists of multiple DWORDs (PCIe r6.1 sec
-7.9.14.13) but the loop in dpc_process_rp_pio_error() keeps reading from
-the first DWORD, so we print only the first PIO TLP Prefix (duplicated
-several times), and we never print the second, third, etc., Prefixes.
+In pipe mode, no need to switch perf data output, therefore,
+'--timestamp-filename' option should not take effect.
+Check the conflict before recording and output WARNING.
+In this case, the check pipe mode in perf_data__switch() can be removed.
 
-Add the iteration count based offset calculation into the config read.
+Before:
 
-Fixes: f20c4ea49ec4 ("PCI/DPC: Add eDPC support")
-Link: https://lore.kernel.org/r/20240118110815.3867-1-ilpo.jarvinen@linux.intel.com
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-[bhelgaas: add user-visible details to commit log]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+  # perf record --timestamp-filename -o- perf test -w noploop | perf report -i- --percent-limit=1
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Dump -.2024011812110182 ]
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 4K of event 'cycles:P'
+  # Event count (approx.): 2176784359
+  #
+  # Overhead  Command  Shared Object         Symbol
+  # ........  .......  ....................  ......................................
+  #
+      97.83%  perf     perf                  [.] noploop
+
+  #
+  # (Tip: Print event counts in CSV format with: perf stat -x,)
+  #
+
+After:
+
+  # perf record --timestamp-filename -o- perf test -w noploop | perf report -i- --percent-limit=1
+  WARNING: --timestamp-filename option is not available in pipe mode.
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.000 MB - ]
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 4K of event 'cycles:P'
+  # Event count (approx.): 2185575421
+  #
+  # Overhead  Command  Shared Object          Symbol
+  # ........  .......  .....................  .............................................
+  #
+      97.75%  perf     perf                   [.] noploop
+
+  #
+  # (Tip: Profiling branch (mis)predictions with: perf record -b / perf report)
+  #
+
+Fixes: ecfd7a9c044e ("perf record: Add '--timestamp-filename' option to append timestamp to output file name")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240119040304.3708522-3-yangjihong1@huawei.com
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/dpc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-record.c | 5 +++++
+ tools/perf/util/data.c      | 2 --
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 3ceed8e3de416..b4818007788f9 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -230,7 +230,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 69d2d71e16ee8..c40460e936ccd 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2417,6 +2417,11 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	if (data->is_pipe && rec->evlist->core.nr_entries == 1)
+ 		rec->opts.sample_id = true;
  
- 	for (i = 0; i < pdev->dpc_rp_log_size - 5; i++) {
- 		pci_read_config_dword(pdev,
--			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
-+			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG + i * 4, &prefix);
- 		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
- 	}
-  clear_status:
++	if (rec->timestamp_filename && perf_data__is_pipe(data)) {
++		rec->timestamp_filename = false;
++		pr_warning("WARNING: --timestamp-filename option is not available in pipe mode.\n");
++	}
++
+ 	evlist__uniquify_name(rec->evlist);
+ 
+ 	/* Debug message used by test scripts */
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index fc16299c915f9..851a9cd32c4a2 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -418,8 +418,6 @@ int perf_data__switch(struct perf_data *data,
+ {
+ 	int ret;
+ 
+-	if (check_pipe(data))
+-		return -EINVAL;
+ 	if (perf_data__is_read(data))
+ 		return -EINVAL;
+ 
 -- 
 2.43.0
 
