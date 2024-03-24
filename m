@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A701442E6;
-	Sun, 24 Mar 2024 22:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E01B84FAA;
+	Sun, 24 Mar 2024 22:50:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320654; cv=none; b=jBxReacfLbIDrhecdPuWn6LG/kZ8aVk4kCXOTAezVHxIILa7AHkfKgoKF2kkLuxJt1Lz/LWooU8uNInyhonEWxn/09ZBk/ctif40tRlykIrpEQLDMM1A80jBJUeU3vsohDSlBYEl60GclpQqG6HLgU6L+E4C6Jx+asPvzGeVRmI=
+	t=1711320650; cv=none; b=ECj8HbSh4TQONsRtY6LIzNghdiVe4qpYnocHlLC+72rcUZs/b/7lfR6y0KiNkWk4IZ/fZiBH98TJKkSqykRUGi+lEJsvhgKGOgQkoRGatBKWEMJ/a/WKgaL2EYeCK8tzaVJDD+NnWXxyq6xfb/nytSbXl2aGnI2mPgsPtjoa1ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320654; c=relaxed/simple;
-	bh=PHIqATS6bo6NV3wlkFnksqK/ycv/FqII4kw6233kAUc=;
+	s=arc-20240116; t=1711320650; c=relaxed/simple;
+	bh=X8VLIvZrwN5fBir6rvd0OfOk45Gpo7bw7ybhXi54sp0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IpIOXirBG7lanqutSUuojUs+P26/7aNWPBXeIBNQOSioObQ19wAjAJGPoGMS1AkBnAesQWPPLsPNzSKdp36KpCBAIS05wQc5b/1JfWhSEzdlGoTN9aar81ievymEtp7jhpjL/v+7uDN0yFNzyHliR0BMQttFRt8H0Qj+EmK9ZY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePWeB+A1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=hc+wRUvIKGByPyk94IPhNhcKY94Pf4XNwFpOx4SBANsbk5jdwc77CYpT8aoMIPeQQmPGKkkNRr0OHUYrLobECTeitsAtvk72Din/Jd9SNHjbgyzeTlUNjTsTtMOC55XmF3qnmEZLvxHUQHq7sL9zlwsHfKoxML8KZzEPjsTVLew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsVSvJ33; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePWeB+A1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EC15C43390;
-	Sun, 24 Mar 2024 22:50:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsVSvJ33"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40484C433A6;
+	Sun, 24 Mar 2024 22:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320653;
-	bh=PHIqATS6bo6NV3wlkFnksqK/ycv/FqII4kw6233kAUc=;
+	s=k20201202; t=1711320649;
+	bh=X8VLIvZrwN5fBir6rvd0OfOk45Gpo7bw7ybhXi54sp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ePWeB+A1fFnDdMcgw5SHVhV3Wpt+/5Un4u0XpnhrSiCZ6ikM2QfSRaw78pRYnWRep
-	 Wj7XVJhFrRXtZ+YLDiGHmNBcE6dqtzDBFo8/SlOXRQNbZxM7xJEXMMDmPmVfNqsmBO
-	 ijdMnPxKy3elhDOA26Hf4jGqwkPp8jkvqZ00tra8TbQ9l2t4mCHyJR8o/6C9N29agf
-	 AIMy144Dvev2OcLiQBnNx5nCutvQo3RtVoz47qdQtqpy4o3UDmOqvbijv6rlGNffAB
-	 7WhAOTZyzbXl7s1EoCmTo78z84NPAOHwGpXQ3kyy1rDA0xoZWCjgE978AvEKAKO0ib
-	 e44qxoyfesV2Q==
+	b=PsVSvJ33VNn/j0B9/hemAdGjUkWjsFNlEq27O4Uz9g1vduREE/lVk5hmaknXHkgkl
+	 UQoX9sfmuH+sztqxoby6b1b8n9M8AVwykf+2xlV1VfE//sklbS7Wh779EHLnzMvvPP
+	 BG3lSwM3kU+EPX5N0c5KI+lGnXZmEMy9vGYSQO8i/6jYKCheF01gTNzmDDMKS+3Ynl
+	 JFA6UC9bk+3n0KygjLbO/UzwiQ/fvjzHA+UCr1XqRqnUojo3IJabbLRe2Og2Z6t9ek
+	 CHc+2fsS+zC1kCR+bW4CE1ak+iiTpEkl4LMFHztUBtEKUrpEJ8vIEgiUw59tK9UxEN
+	 DwYWXdtMiYJ5w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kang Yang <quic_kangyang@quicinc.com>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Kalle Valo <quic_kvalo@quicinc.com>,
+Cc: =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= <jerome.pouiller@silabs.com>,
+	Ulrich Mohr <u.mohr@semex-engcon.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 215/713] wifi: ath12k: fix incorrect logic of calculating vdev_stats_id
-Date: Sun, 24 Mar 2024 18:39:01 -0400
-Message-ID: <20240324224720.1345309-216-sashal@kernel.org>
+Subject: [PATCH 6.7 210/713] wifi: wfx: fix memory leak when starting AP
+Date: Sun, 24 Mar 2024 18:38:56 -0400
+Message-ID: <20240324224720.1345309-211-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,51 +45,123 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kang Yang <quic_kangyang@quicinc.com>
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-[ Upstream commit 019b58dcb6ed267e17b7efd03ec8575c1b67d942 ]
+[ Upstream commit b8cfb7c819dd39965136a66fe3a7fde688d976fc ]
 
-During calculate vdev_stats_id, will compare vdev_stats_id with
-ATH12K_INVAL_VDEV_STATS_ID by '<='. If vdev_stats_id is relatively
-small, then assign ATH12K_INVAL_VDEV_STATS_ID to vdev_stats_id.
+Kmemleak reported this error:
 
-This logic is incorrect. Firstly, should use '>=' instead of '<=' to
-check if this u8 variable exceeds the max valid range.
+    unreferenced object 0xd73d1180 (size 184):
+      comm "wpa_supplicant", pid 1559, jiffies 13006305 (age 964.245s)
+      hex dump (first 32 bytes):
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 1e 00 01 00 00 00 00 00  ................
+      backtrace:
+        [<5ca11420>] kmem_cache_alloc+0x20c/0x5ac
+        [<127bdd74>] __alloc_skb+0x144/0x170
+        [<fb8a5e38>] __netdev_alloc_skb+0x50/0x180
+        [<0f9fa1d5>] __ieee80211_beacon_get+0x290/0x4d4 [mac80211]
+        [<7accd02d>] ieee80211_beacon_get_tim+0x54/0x18c [mac80211]
+        [<41e25cc3>] wfx_start_ap+0xc8/0x234 [wfx]
+        [<93a70356>] ieee80211_start_ap+0x404/0x6b4 [mac80211]
+        [<a4a661cd>] nl80211_start_ap+0x76c/0x9e0 [cfg80211]
+        [<47bd8b68>] genl_rcv_msg+0x198/0x378
+        [<453ef796>] netlink_rcv_skb+0xd0/0x130
+        [<6b7c977a>] genl_rcv+0x34/0x44
+        [<66b2d04d>] netlink_unicast+0x1b4/0x258
+        [<f965b9b6>] netlink_sendmsg+0x1e8/0x428
+        [<aadb8231>] ____sys_sendmsg+0x1e0/0x274
+        [<d2b5212d>] ___sys_sendmsg+0x80/0xb4
+        [<69954f45>] __sys_sendmsg+0x64/0xa8
+    unreferenced object 0xce087000 (size 1024):
+      comm "wpa_supplicant", pid 1559, jiffies 13006305 (age 964.246s)
+      hex dump (first 32 bytes):
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        10 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
+      backtrace:
+        [<9a993714>] __kmalloc_track_caller+0x230/0x600
+        [<f83ea192>] kmalloc_reserve.constprop.0+0x30/0x74
+        [<a2c61343>] __alloc_skb+0xa0/0x170
+        [<fb8a5e38>] __netdev_alloc_skb+0x50/0x180
+        [<0f9fa1d5>] __ieee80211_beacon_get+0x290/0x4d4 [mac80211]
+        [<7accd02d>] ieee80211_beacon_get_tim+0x54/0x18c [mac80211]
+        [<41e25cc3>] wfx_start_ap+0xc8/0x234 [wfx]
+        [<93a70356>] ieee80211_start_ap+0x404/0x6b4 [mac80211]
+        [<a4a661cd>] nl80211_start_ap+0x76c/0x9e0 [cfg80211]
+        [<47bd8b68>] genl_rcv_msg+0x198/0x378
+        [<453ef796>] netlink_rcv_skb+0xd0/0x130
+        [<6b7c977a>] genl_rcv+0x34/0x44
+        [<66b2d04d>] netlink_unicast+0x1b4/0x258
+        [<f965b9b6>] netlink_sendmsg+0x1e8/0x428
+        [<aadb8231>] ____sys_sendmsg+0x1e0/0x274
+        [<d2b5212d>] ___sys_sendmsg+0x80/0xb4
 
-Secondly, should use the maximum value as comparison value.
+However, since the kernel is build optimized, it seems the stack is not
+accurate. It appears the issue is related to wfx_set_mfp_ap(). The issue
+is obvious in this function: memory allocated by ieee80211_beacon_get()
+is never released. Fixing this leak makes kmemleak happy.
 
-Correct comparison symbols and use the maximum value
-ATH12K_MAX_VDEV_STATS_ID for comparison.
-
-Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-
-Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7 devices")
-Signed-off-by: Kang Yang <quic_kangyang@quicinc.com>
-Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
-Link: https://msgid.link/20240130040303.370590-3-quic_kangyang@quicinc.com
+Reported-by: Ulrich Mohr <u.mohr@semex-engcon.com>
+Co-developed-by: Ulrich Mohr <u.mohr@semex-engcon.com>
+Signed-off-by: Ulrich Mohr <u.mohr@semex-engcon.com>
+Fixes: 268bceec1684 ("staging: wfx: fix BA when device is AP and MFP is enabled")
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240202164213.1606145-1-jerome.pouiller@silabs.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath12k/mac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/silabs/wfx/sta.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
-index 54693e247cb31..237fb8e7cfa46 100644
---- a/drivers/net/wireless/ath/ath12k/mac.c
-+++ b/drivers/net/wireless/ath/ath12k/mac.c
-@@ -5261,7 +5261,7 @@ ath12k_mac_get_vdev_stats_id(struct ath12k_vif *arvif)
- 	do {
- 		if (ab->free_vdev_stats_id_map & (1LL << vdev_stats_id)) {
- 			vdev_stats_id++;
--			if (vdev_stats_id <= ATH12K_INVAL_VDEV_STATS_ID) {
-+			if (vdev_stats_id >= ATH12K_MAX_VDEV_STATS_ID) {
- 				vdev_stats_id = ATH12K_INVAL_VDEV_STATS_ID;
- 				break;
- 			}
+diff --git a/drivers/net/wireless/silabs/wfx/sta.c b/drivers/net/wireless/silabs/wfx/sta.c
+index 537caf9d914a7..bb4446b88c12b 100644
+--- a/drivers/net/wireless/silabs/wfx/sta.c
++++ b/drivers/net/wireless/silabs/wfx/sta.c
+@@ -344,6 +344,7 @@ static int wfx_set_mfp_ap(struct wfx_vif *wvif)
+ 	const int pairwise_cipher_suite_count_offset = 8 / sizeof(u16);
+ 	const int pairwise_cipher_suite_size = 4 / sizeof(u16);
+ 	const int akm_suite_size = 4 / sizeof(u16);
++	int ret = -EINVAL;
+ 	const u16 *ptr;
+ 
+ 	if (unlikely(!skb))
+@@ -352,22 +353,26 @@ static int wfx_set_mfp_ap(struct wfx_vif *wvif)
+ 	ptr = (u16 *)cfg80211_find_ie(WLAN_EID_RSN, skb->data + ieoffset,
+ 				      skb->len - ieoffset);
+ 	if (unlikely(!ptr))
+-		return -EINVAL;
++		goto free_skb;
+ 
+ 	ptr += pairwise_cipher_suite_count_offset;
+ 	if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
+-		return -EINVAL;
++		goto free_skb;
+ 
+ 	ptr += 1 + pairwise_cipher_suite_size * *ptr;
+ 	if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
+-		return -EINVAL;
++		goto free_skb;
+ 
+ 	ptr += 1 + akm_suite_size * *ptr;
+ 	if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
+-		return -EINVAL;
++		goto free_skb;
+ 
+ 	wfx_hif_set_mfp(wvif, *ptr & BIT(7), *ptr & BIT(6));
+-	return 0;
++	ret = 0;
++
++free_skb:
++	dev_kfree_skb(skb);
++	return ret;
+ }
+ 
+ int wfx_start_ap(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 -- 
 2.43.0
 
