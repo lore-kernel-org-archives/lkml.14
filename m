@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0F07F7DD;
-	Sun, 24 Mar 2024 22:48:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D0B482D0;
+	Sun, 24 Mar 2024 22:47:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320481; cv=none; b=Edbj5D57ZHVx/ZJ2M9mbtV6tkldDOUZT45OUxe0BrDtHpqM2kmmV7CXoUsQKOKCdV3aqK20DoN/9dD68Qhk5E1X2XvmQZp0zJiCH6yw+Ckzz/hsgF6I0G1g3D28MCd1+eNZExGoXrac9P2D24BxEAsvSbF7x75ozmlPwv7SAZKg=
+	t=1711320478; cv=none; b=trNdzeUL195I7i0mKIUA9csAlzLuijAlaPD7PP9F6Fs3/rmXY2CZHUOaYuO2IipOMKBlc8BLDfDTQ/oFwp3PSj8gdp/DNvXRoUaMPGmzQgn8+HR2NSXc4RGza6INIzepsF3LiP8h/ERTscqcLX9HdIqs18mNChEISOJqp9uH6L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320481; c=relaxed/simple;
-	bh=TtTemqRxFkxr/MdJnK17D0OUpj5P+8iDtZPeja93eE4=;
+	s=arc-20240116; t=1711320478; c=relaxed/simple;
+	bh=PkKaGziWURDv/ulaxnHD5Dgsz+znc2l24h5KSkIa8qs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=up+Y7B00D5Ag4496XXvdHKiNd/jsZWFJShZz6PSHeA3Zdw29sjFYiU5cqik/lKtx+cZEZlCx2qR8OnZV/rpRpR/xrjP3DiqTGjtf02pO/gAeF7kdO30zkTaPJdkqBFYxcXfe9NhfPZKbgEmBjK/7W/XYxcyWzBWFepWK9CMNKYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnaAXBi2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BmsHbmhSC8hD30Ywj9g1ZcSE99RLbLREpLy9szfNomE+AgOOYO5bTnbw0ivXffCVbKV0n5cUiPApqWe4oImeC6QwZFl82B2fLYKajifqYT9iJx+BWIOixUh5OXgNRUXljXMeqv+Z9sDPp+5WVoLPGRtXF4Ec9xw90AfWvay9ft0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gj9q6CX5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnaAXBi2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16C1BC433C7;
-	Sun, 24 Mar 2024 22:48:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gj9q6CX5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57FF5C43394;
+	Sun, 24 Mar 2024 22:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320481;
-	bh=TtTemqRxFkxr/MdJnK17D0OUpj5P+8iDtZPeja93eE4=;
+	s=k20201202; t=1711320478;
+	bh=PkKaGziWURDv/ulaxnHD5Dgsz+znc2l24h5KSkIa8qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pnaAXBi22vINJP3zfF/62JvGVjrot5nguXtuPVtujRdgDE9SYy9PLxn4SPN0R4bz/
-	 ssxbZrTHH5AvCXjlMYQXFtp6chZkqqJN2M9v3gGuNnZ2b5PfbfgbtwYpJgQWZ6XGIi
-	 JaAWhLTINc59b5lm2VPg6uUkUA+HZhh1gHDjl5H34UMPbTnWhiaVEiDkolhSEc32eJ
-	 WdtA8UB1DYni4t2/c1bhW7KjzwGCl8rOAxD3i6s4che93HxEsSGz3VFM9CoG1k2MNP
-	 EMP4nJKMaDU8PMGDSDuZzGtBhD9vyhJc4y/E2xR3Sxi+whijbRLwqPVr6TMkcPd0Og
-	 j1bRIeDrK8b3w==
+	b=gj9q6CX5e4hS0zw2+Iz8Vha903eraQ21UrFLM4t3P0iQTYycZnq2wAAacDmDXNKlB
+	 seaZca4SQvikY1MwmxNfPmHM1j7PeTTJt/xap0FZ7bNAxNNDy2DfB6xjM30d9x8Cuk
+	 HczitB7OW1XkeKrSz6VIFHuKC+ALYo7CHg7Tjd39qy7H4PRzb9xGTwiUQPBTcq/gJO
+	 dRkBBvnTGH/MJYAT9GMgyXKPPyhZCiJGHgEqslyhcuEhabqXtBsLbNw8R7UQ/j1tUD
+	 LE5T8fnbT9I6HlLBdXZW7MjcnxtlR9cL+zRpDewqIEsXU3Kvz1fs3e+/YjiP5ZNKjl
+	 hpRSndH7shDFg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mikulas Patocka <mpatocka@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>,
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Wonjae Lee <wj28.lee@samsung.com>,
+	Dan Williams <dan.j.williams@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 041/713] dm-verity, dm-crypt: align "struct bvec_iter" correctly
-Date: Sun, 24 Mar 2024 18:36:07 -0400
-Message-ID: <20240324224720.1345309-42-sashal@kernel.org>
+Subject: [PATCH 6.7 037/713] cxl/region: Handle endpoint decoders in cxl_region_find_decoder()
+Date: Sun, 24 Mar 2024 18:36:03 -0400
+Message-ID: <20240324224720.1345309-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,69 +49,63 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Alison Schofield <alison.schofield@intel.com>
 
-[ Upstream commit 787f1b2800464aa277236a66eb3c279535edd460 ]
+[ Upstream commit 453a7fde8031a5192ed2f9646ad048c1a5e930dc ]
 
-"struct bvec_iter" is defined with the __packed attribute, so it is
-aligned on a single byte. On X86 (and on other architectures that support
-unaligned addresses in hardware), "struct bvec_iter" is accessed using the
-8-byte and 4-byte memory instructions, however these instructions are less
-efficient if they operate on unaligned addresses.
+In preparation for adding a new caller of cxl_region_find_decoders()
+teach it to find a decoder from a cxl_endpoint_decoder structure.
 
-(on RISC machines that don't have unaligned access in hardware, GCC
-generates byte-by-byte accesses that are very inefficient - see [1])
+Combining switch and endpoint decoder lookup in one function prevents
+code duplication in call sites.
 
-This commit reorders the entries in "struct dm_verity_io" and "struct
-convert_context", so that "struct bvec_iter" is aligned on 8 bytes.
+Update the existing caller.
 
-[1] https://lore.kernel.org/all/ZcLuWUNRZadJr0tQ@fedora/T/
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Tested-by: Wonjae Lee <wj28.lee@samsung.com>
+Link: https://lore.kernel.org/r/79ae6d72978ef9f3ceec9722e1cb793820553c8e.1706736863.git.alison.schofield@intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-crypt.c  | 4 ++--
- drivers/md/dm-verity.h | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/cxl/core/region.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 4ab4e8dcfd3e2..35f50193959e0 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -53,11 +53,11 @@
- struct convert_context {
- 	struct completion restart;
- 	struct bio *bio_in;
--	struct bio *bio_out;
- 	struct bvec_iter iter_in;
-+	struct bio *bio_out;
- 	struct bvec_iter iter_out;
--	u64 cc_sector;
- 	atomic_t cc_pending;
-+	u64 cc_sector;
- 	union {
- 		struct skcipher_request *req;
- 		struct aead_request *req_aead;
-diff --git a/drivers/md/dm-verity.h b/drivers/md/dm-verity.h
-index 4620a98c99561..db93a91169d5e 100644
---- a/drivers/md/dm-verity.h
-+++ b/drivers/md/dm-verity.h
-@@ -80,12 +80,12 @@ struct dm_verity_io {
- 	/* original value of bio->bi_end_io */
- 	bio_end_io_t *orig_bi_end_io;
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 7bb656237fa0c..764998fe03edc 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -729,12 +729,17 @@ static int match_auto_decoder(struct device *dev, void *data)
+ 	return 0;
+ }
  
-+	struct bvec_iter iter;
+-static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
+-						   struct cxl_region *cxlr)
++static struct cxl_decoder *
++cxl_region_find_decoder(struct cxl_port *port,
++			struct cxl_endpoint_decoder *cxled,
++			struct cxl_region *cxlr)
+ {
+ 	struct device *dev;
+ 	int id = 0;
+ 
++	if (port == cxled_to_port(cxled))
++		return &cxled->cxld;
 +
- 	sector_t block;
- 	unsigned int n_blocks;
- 	bool in_tasklet;
+ 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
+ 		dev = device_find_child(&port->dev, &cxlr->params,
+ 					match_auto_decoder);
+@@ -852,10 +857,7 @@ static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+ {
+ 	struct cxl_decoder *cxld;
  
--	struct bvec_iter iter;
--
- 	struct work_struct work;
- 
- 	char *recheck_buffer;
+-	if (port == cxled_to_port(cxled))
+-		cxld = &cxled->cxld;
+-	else
+-		cxld = cxl_region_find_decoder(port, cxlr);
++	cxld = cxl_region_find_decoder(port, cxled, cxlr);
+ 	if (!cxld) {
+ 		dev_dbg(&cxlr->dev, "%s: no decoder available\n",
+ 			dev_name(&port->dev));
 -- 
 2.43.0
 
