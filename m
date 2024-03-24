@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89B517BB0D;
-	Sun, 24 Mar 2024 23:42:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67BD179FC5;
+	Sun, 24 Mar 2024 23:42:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323749; cv=none; b=rRjXX/GJED5AMTjscmVgugpQkXtd+Cl44/x0ykHYZ3ADnKwiWkxPoO9EuhwFbF0OwgHmKyjQE3Hm50XpavaaUXyoyxlltcjTRCFrRbF6K0OeQUp9yqFAW3FD19P6LDOBwvJjqxcauX9nfoeKtBK2UwF0PScM6RpqDBQ5Y1Z7atw=
+	t=1711323747; cv=none; b=OJD/uNAnJLWlzgF8w+KgfD1hrvwTr+DyiuA34hTLToInxrh6Mw5WupcFTsmeDH3Ga89DSpP8nvLkABYEyd0i+2iUJT3xtNOHhLTDu2DP8reFQBvGsTExyaUXUZrhZys0GZCCXFQvP5e7yiakiu+SoAw8jSiL2qJQn1Bmn7BnFsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323749; c=relaxed/simple;
-	bh=UDJCJA68KZXVJvBT+zW2Mxy5ai0v5gJxejglB49KUjQ=;
+	s=arc-20240116; t=1711323747; c=relaxed/simple;
+	bh=AoArj+1hGuzNCr+nrz58oSeri64XTy1+7yEFmRMZjmc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f3wI62vd9meQ7XKDhgdfm5J8PYcHOw0AYF30m32wIrADOuKsxC50KcTs5w8ZXD4F69g/h3Dso1AxlDtklM91uIx3voHfxe2Dwug02PMSg00pLnX4H+zS/SqQ0+IxwEMZ0XjWbhnWRU6wN3I5/HrYxr5loZZaW/nrFi/RvXHGdFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REae+OKe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HTnOGijOlME7cKwNQtNN4FoP9lQAJ4/2nTFM8pVEOEPZpN4n3D/f78Qrv30gl2EYqS7aq6KobhoXrYzed9IfkNVmxJ608y/C4XZGmAMEUwtLTPQX/kKouNV1iYhL6+0mVSER9Z7EQme4sGwv+bBnKLqmeJLk7o1ewpl88UwW5D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rNJjU9A/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REae+OKe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2165C433C7;
-	Sun, 24 Mar 2024 23:42:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rNJjU9A/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D212EC43399;
+	Sun, 24 Mar 2024 23:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323749;
-	bh=UDJCJA68KZXVJvBT+zW2Mxy5ai0v5gJxejglB49KUjQ=;
+	s=k20201202; t=1711323746;
+	bh=AoArj+1hGuzNCr+nrz58oSeri64XTy1+7yEFmRMZjmc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=REae+OKeWNCqD4cyjqR12EtSnVig8PP+0yGMQasvhlJHwKmEGDnAof3Xo3X+0SshU
-	 1rYNBXgFoxFg8uD0IUx9cwdOk1ej5Qm3vazshYdAgrmaGcTNMxDVm+QpmxTazXj8TV
-	 V6VE64f3yRv28GUWPY4l7gO54ypmWyELWYZ015TR1lmFBqc5GuVX6p2nfusSpz0Vt7
-	 +rHl4tRUZymUIq+vLKsRHGZYGzOqXT9K/1qDgp3JFU6XQUsKARBm/J+z4u42Yz3rXH
-	 dnPf097u8Em/eNhhRQh2giwzv60+s3NYBtr8Z1/meWqOXTGBq4mHQv5qC4FZoN8a+D
-	 nJtJ/dlBe+6iA==
+	b=rNJjU9A/luGNUq6C5mOZPwiyvdNZ9Bte47HTu0zjIWPScX6QLKCsVTYdIHkMi/T6A
+	 R6+ExjoWMPOuNeUepBOP1Amop5joW7KjFK989VRP48RVL7rxwnVRkjDlJ9FlFeitk/
+	 H4Ic4LZV2+GnLTIt65Hp26upwkf9CdxVzQAZ9jAFCj3/9Fi9jXLSQmH3c98JBTgQ/f
+	 njJB7iN99oWsQZiwri+bMbXCOZdhRSIfwCMfObCADpQCibEwtk3M5VotVA1SUi05CK
+	 ka0X3XP3JcPnq1NYTMhSXcLCu92MWYk7ItymQbwiUp/2sVkMwPinAqODJ2237PXEf6
+	 l0S5aHAv4OFCQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Robert Foss <rfoss@kernel.org>,
+Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+	Quentin Schulz <foss+kernel@0leil.net>,
+	Heiko Stuebner <heiko@sntech.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 124/238] media: tc358743: register v4l2 async device only after successful setup
-Date: Sun, 24 Mar 2024 19:38:32 -0400
-Message-ID: <20240324234027.1354210-125-sashal@kernel.org>
+Subject: [PATCH 5.10 121/238] drm/rockchip: lvds: do not print scary message when probing defer
+Date: Sun, 24 Mar 2024 19:38:29 -0400
+Message-ID: <20240324234027.1354210-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,48 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-[ Upstream commit 87399f1ff92203d65f1febf5919429f4bb613a02 ]
+[ Upstream commit 52d11c863ac92e36a0365249f7f6d27ac48c78bc ]
 
-Ensure the device has been setup correctly before registering the v4l2
-async device, thus allowing userspace to access.
+This scary message can misled the user into thinking something bad has
+happened and needs to be fixed, however it could simply be part of a
+normal boot process where EPROBE_DEFER is taken into account. Therefore,
+let's use dev_err_probe so that this message doesn't get shown (by
+default) when the return code is EPROBE_DEFER.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-Reviewed-by: Robert Foss <rfoss@kernel.org>
-Fixes: 4c5211a10039 ("[media] tc358743: register v4l2 asynchronous subdevice")
-Signed-off-by: Robert Foss <rfoss@kernel.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240110090111.458115-1-alexander.stein@ew.tq-group.com
+Fixes: 34cc0aa25456 ("drm/rockchip: Add support for Rockchip Soc LVDS")
+Cc: Quentin Schulz <foss+kernel@0leil.net>
+Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231120-rk-lvds-defer-msg-v2-2-9c59a5779cf9@theobroma-systems.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/tc358743.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/rockchip/rockchip_lvds.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
-index f21da11caf224..8bcb4b354c895 100644
---- a/drivers/media/i2c/tc358743.c
-+++ b/drivers/media/i2c/tc358743.c
-@@ -2108,9 +2108,6 @@ static int tc358743_probe(struct i2c_client *client)
- 	state->mbus_fmt_code = MEDIA_BUS_FMT_RGB888_1X24;
- 
- 	sd->dev = &client->dev;
--	err = v4l2_async_register_subdev(sd);
--	if (err < 0)
--		goto err_hdl;
- 
- 	mutex_init(&state->confctl_mutex);
- 
-@@ -2168,6 +2165,10 @@ static int tc358743_probe(struct i2c_client *client)
- 	if (err)
- 		goto err_work_queues;
- 
-+	err = v4l2_async_register_subdev(sd);
-+	if (err < 0)
-+		goto err_work_queues;
-+
- 	v4l2_info(sd, "%s found @ 0x%x (%s)\n", client->name,
- 		  client->addr << 1, client->adapter->name);
- 
+diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+index 1ffb2f710e4bd..96c13c182809e 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
++++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+@@ -572,7 +572,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
+ 		ret = -EINVAL;
+ 		goto err_put_port;
+ 	} else if (ret) {
+-		DRM_DEV_ERROR(dev, "failed to find panel and bridge node\n");
++		dev_err_probe(dev, ret, "failed to find panel and bridge node\n");
+ 		goto err_put_port;
+ 	}
+ 	if (lvds->panel)
 -- 
 2.43.0
 
