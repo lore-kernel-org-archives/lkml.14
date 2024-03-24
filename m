@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F2F217308;
-	Sun, 24 Mar 2024 23:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CAA216938;
+	Sun, 24 Mar 2024 23:09:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321768; cv=none; b=GUEETX/5LSdlQc2yKzwc8X01/hIbrrWoQ59SYrvzGkzFVB2/NOgeEGeY9COPA58M2+6V7F3/4f2NyBkx/BgY357FgF6cETJbzdwtQZLZaM1TwsFcXaSlooBozI7wiLPx0PpjFmMZajKkJxZatXmAx5LbN2X4DLQq1X7pWeHdP38=
+	t=1711321765; cv=none; b=NsmBfY0f7Tyb/rNF1b/cGxAbL9Aj3/1OJFTFls+jETlhmFKRoUEumwNtt2DU9Ojt35erZQ13N+xt5HKrLnAWRQXvSMS9LTTqIybxOu+kdCABhIACcb/1/r6wIHwBNxWmb+5mjrtmOW3iNQlgkUGEtX5tqU8KGhDnmw6pDEwMJQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321768; c=relaxed/simple;
-	bh=kj/dL7YvE+j0vQYw0fIYQJlGNwGBPNnRWNUy8qy+woc=;
+	s=arc-20240116; t=1711321765; c=relaxed/simple;
+	bh=NyGVQpR4RLOY36Zw3sDHzVHxgYgxuS6XHiYrBAxK3PQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m7oj/4V0aa9tmLaTYlWFuFuVNZ6w2DWRPWUKupiFcsHyV3ZeUn7oQj+tga3IPMypnXmbCR8BBdTUqPxq8vmgTWAXMwkqb785qCrNkdTKbnirWCZo/GB0x9yLFwg6xLvhv5VoHwm8SF7bP7XwximVo01HDR+kKSs8/buJV1A4hMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0MljVnT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ULUs5k+MXutQJx8vUzpE6wjkJZuoKVGCYwR3HaHCAs3KRmyixBC04dFyBoO6Ufk4UHwqFmPaWjHzNiSn3+3ZIIp0wJU7+YRWN6aSFIBOsFzcevptSROq7weA1Xqyn9zLMinIIR12jgeQ/Tk9Ln4EQCTIdGwAbIpRHYxoIPOLu4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2WNO4sV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0MljVnT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B666C43390;
-	Sun, 24 Mar 2024 23:09:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2WNO4sV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65FA3C433F1;
+	Sun, 24 Mar 2024 23:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321767;
-	bh=kj/dL7YvE+j0vQYw0fIYQJlGNwGBPNnRWNUy8qy+woc=;
+	s=k20201202; t=1711321764;
+	bh=NyGVQpR4RLOY36Zw3sDHzVHxgYgxuS6XHiYrBAxK3PQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W0MljVnTG0r1lloGYnoOUeFnIwa1ogcsQslcUdJFEBYyD1y869TTC61f0LudoNFbq
-	 qQZ9KFp+qHeBUexPb5ak+PMrgNNw8S5Dp50Vd89rNB1tBEW2CpxEQrdLx1C3OwADiB
-	 Pu6Be6tPNhGBhprR1elqBBStlp4aUvkP7JAdAQ/E3w67a/nIhXY/IHhe5TKNTMVTx+
-	 bUm8nUvnNxzOPRUeamggh0Bxp6bz8RJfRLT9mFiCgVmS/yx6XqjuIQJdpZ5fgkDDAB
-	 3rC6pteUXkkgAC4A5TZjTS8bdvde4C1rpdNX2w5SFc9rgiDDFVL/p4onV8VuE9312a
-	 jDSNi5Y4cT7pQ==
+	b=Z2WNO4sV9or69Cxi/zdC5+Z+Sc7aniXZCXhtxNah4pSMGIlF6ayg6akZs53bdAIbZ
+	 g5uJshA6EjkAXuXreUURwCMBz3190au0sCLhlWyS6Qr2DND2lHJ+8ZHDA4LeNgOb6t
+	 4Vf6g/YbOT6meOIXEAFVCuBmk7rzbd5KqUxngR9NSQzMYOM0xkARK1V0XKfKghFrm6
+	 XA3Jq3DAPui9Pc02gBiY8oSYs+QcN4gd8uB7UnT4u/ORZmFCKUMf4vJqtrkBhOlBRj
+	 f7PhWa8aSiGPQ0ySbx0GXA4a5UkMigAPEv41knWEf/1Noq4tKMQHq2kRtHytwEUcXz
+	 JarUDC3Rh34/A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	David Howells <dhowells@redhat.com>,
-	Steve French <sfrench@samba.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 495/638] smb: do not test the return value of folio_start_writeback()
-Date: Sun, 24 Mar 2024 18:58:52 -0400
-Message-ID: <20240324230116.1348576-496-sashal@kernel.org>
+Subject: [PATCH 6.6 492/638] clk: Fix clk_core_get NULL dereference
+Date: Sun, 24 Mar 2024 18:58:49 -0400
+Message-ID: <20240324230116.1348576-493-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,48 +48,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-[ Upstream commit a9540e35624d1475f47dbf6353eed8b99936d36e ]
+[ Upstream commit e97fe4901e0f59a0bfd524578fe3768f8ca42428 ]
 
-In preparation for removing the return value entirely, stop testing it
-in smb.
+It is possible for clk_core_get to dereference a NULL in the following
+sequence:
 
-Link: https://lkml.kernel.org/r/20231108204605.745109-4-willy@infradead.org
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Steve French <sfrench@samba.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Stable-dep-of: f3dc1bdb6b0b ("cifs: Fix writeback data corruption")
+clk_core_get()
+    of_clk_get_hw_from_clkspec()
+        __of_clk_get_hw_from_provider()
+            __clk_get_hw()
+
+__clk_get_hw() can return NULL which is dereferenced by clk_core_get() at
+hw->core.
+
+Prior to commit dde4eff47c82 ("clk: Look for parents with clkdev based
+clk_lookups") the check IS_ERR_OR_NULL() was performed which would have
+caught the NULL.
+
+Reading the description of this function it talks about returning NULL but
+that cannot be so at the moment.
+
+Update the function to check for hw before dereferencing it and return NULL
+if hw is NULL.
+
+Fixes: dde4eff47c82 ("clk: Look for parents with clkdev based clk_lookups")
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Link: https://lore.kernel.org/r/20240302-linux-next-24-03-01-simple-clock-fixes-v1-1-25f348a5982b@linaro.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/smb/client/file.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/clk/clk.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
-index 4cbb5487bd8d0..043bee4020a91 100644
---- a/fs/smb/client/file.c
-+++ b/fs/smb/client/file.c
-@@ -2709,8 +2709,7 @@ static void cifs_extend_writeback(struct address_space *mapping,
- 			 */
- 			if (!folio_clear_dirty_for_io(folio))
- 				WARN_ON(1);
--			if (folio_start_writeback(folio))
--				WARN_ON(1);
-+			folio_start_writeback(folio);
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 473563bc74960..50228cb0c5590 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -418,6 +418,9 @@ static struct clk_core *clk_core_get(struct clk_core *core, u8 p_index)
+ 	if (IS_ERR(hw))
+ 		return ERR_CAST(hw);
  
- 			*_count -= folio_nr_pages(folio);
- 			folio_unlock(folio);
-@@ -2745,8 +2744,7 @@ static ssize_t cifs_write_back_from_locked_folio(struct address_space *mapping,
- 	int rc;
++	if (!hw)
++		return NULL;
++
+ 	return hw->core;
+ }
  
- 	/* The folio should be locked, dirty and not undergoing writeback. */
--	if (folio_start_writeback(folio))
--		WARN_ON(1);
-+	folio_start_writeback(folio);
- 
- 	count -= folio_nr_pages(folio);
- 	len = folio_size(folio);
 -- 
 2.43.0
 
