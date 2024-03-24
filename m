@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDD113119C;
-	Sun, 24 Mar 2024 23:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343AF17A90B;
+	Sun, 24 Mar 2024 23:41:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323686; cv=none; b=mS6k9ki178eTLm6+xvrj1amsElhrDEWReR4pvx1muq0yqibhl4e2Ybt6cB5Dr9lv4et3dTZ6s8rZGn9X1WdblRgxrrh6bhG6QgWyHom8na9It60FHIt8lTOCKiphDoDLXLtEhdxdwjoM86D0UF/MmYU4FwVgZHm3LowG4Tg000Q=
+	t=1711323691; cv=none; b=NyfIUsqxS8rNwhIOy25dK3Lnw7XlNY9serFblhlaWiAi271ZZllTejw5Ik2YOLhQyd6hXR4NalsFLDC50eDJtG/7aaw/LZkAHKqQmxMVdRqa+YeiCGeqm7X0r37vA10myKq2b8fghfzsSzSlHr7FtxWUhU1pukc+t4buBhunRHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323686; c=relaxed/simple;
-	bh=LvtZg5e0VQtOBT+DmVlIpjevxUc7VebV46SOEb3fPHw=;
+	s=arc-20240116; t=1711323691; c=relaxed/simple;
+	bh=YcupNQxkyz3XG7lX4bTxXOqOKbkMCzLitxyZm3jArR8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cDw+egEndqdu6xwwVHzCy8/yWXoOdcm0CYueZCjvIdr1QE1Cc04Vq+LFCMv4J12WKAfR0FU4OnFKN/Zgg1mdBvqD6vqJpjh3x7Isv+yqBOoqEfsu5XwOH7QV0wGVglsbwjz+Jqqfy81ia2Svwq2wDrm2vEg1cIOhXNQ/zKLysp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SsW2/dRK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=BZAw9lY2P0CWp+dLyZD5sEcYxTS3BvleIHlVUCNGmh99rQgXiFnhqzv7nUfN0/S8O9SiYbak+6IpPJYb0MiHgmdsPUw6b5CmrpjgHdSLUrOP2Tebn2GVosu3l+D5yoOVRkVnnR5T6m+0o67d4QjOuvIvdSRzbwh60kQLgeK72wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXPLzQd9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SsW2/dRK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61FC3C433F1;
-	Sun, 24 Mar 2024 23:41:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXPLzQd9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2C4C433C7;
+	Sun, 24 Mar 2024 23:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323686;
-	bh=LvtZg5e0VQtOBT+DmVlIpjevxUc7VebV46SOEb3fPHw=;
+	s=k20201202; t=1711323691;
+	bh=YcupNQxkyz3XG7lX4bTxXOqOKbkMCzLitxyZm3jArR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SsW2/dRKCLpVeAH6HKD6a8oClmZ+NNuPNMr+ATjxjb/+0AcUAUGYcBICZKsRbQJRu
-	 xaZ4/ssE+AI1Ac929igPkUbw1CqHL7XJ6IjBpF5x+yM3qeTdd2ihYMIwbfHufSPsoV
-	 ieWnYKVC2/BSw+GbkOHGRu28teXLVOcNi54e7ddOBlJl/B62pp8mhpyemq0yGOIhNa
-	 CkGM4VH3BGBQeThOQVv599L9kDrV+FyURmPff1e8ZGQU9lon6ZQVigQxOS0gh+9buR
-	 c7ehYmIZBllBO/0odIpTBbLR0wbZDtB90Owl4FRtkZkgDqpz9si4lqp9aBAf1y53ht
-	 ClwgL0p2LAQJw==
+	b=UXPLzQd9y8CVXAcGmKPRjvH4HWrDFM+p4q6PM7AW8waEP6oJeRONTjdYsdOqzZb6s
+	 8VC2Xhen91ZJ5Ler+k1stvqJMRF3WxFDl48ngC90+nZhNNPnj1r/qEOVxBz04x2Qv9
+	 cYFWGj5W2Pq61jMvfWCxdI1N2T44KNNyxebzBe9xJ+Rcisira8JjmHKh6LbV8RYAS8
+	 lUHgxu3ZPBuyJQ4eIE7KLfDNr1pdRCZEYkcQUl5O8xCKpl79Ef8RFbKkUtbVyrF8Xi
+	 RGr3YLg1KDpOW3RmPKlZKgzKJM3nviconz3kChRimcbo5V5aPBD7M2usCqNrIjByU6
+	 g0SifJOLVA5Lw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Breno Leitao <leitao@debian.org>,
-	Jiri Pirko <jiri@nvidia.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <kafai@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 058/238] net: blackhole_dev: fix build warning for ethh set but not used
-Date: Sun, 24 Mar 2024 19:37:26 -0400
-Message-ID: <20240324234027.1354210-59-sashal@kernel.org>
+Subject: [PATCH 5.10 063/238] bpf: Factor out bpf_spin_lock into helpers.
+Date: Sun, 24 Mar 2024 19:37:31 -0400
+Message-ID: <20240324234027.1354210-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -45,51 +47,86 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Breno Leitao <leitao@debian.org>
+From: Alexei Starovoitov <ast@kernel.org>
 
-[ Upstream commit 843a8851e89e2e85db04caaf88d8554818319047 ]
+[ Upstream commit c1b3fed319d32a721d4b9c17afaeb430444ff773 ]
 
-lib/test_blackhole_dev.c sets a variable that is never read, causing
-this following building warning:
+Move ____bpf_spin_lock/unlock into helpers to make it more clear
+that quadruple underscore bpf_spin_lock/unlock are irqsave/restore variants.
 
-	lib/test_blackhole_dev.c:32:17: warning: variable 'ethh' set but not used [-Wunused-but-set-variable]
-
-Remove the variable struct ethhdr *ethh, which is unused.
-
-Fixes: 509e56b37cc3 ("blackhole_dev: add a selftest")
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Link: https://lore.kernel.org/bpf/20210715005417.78572-3-alexei.starovoitov@gmail.com
+Stable-dep-of: 178c54666f9c ("bpf: Mark bpf_spin_{lock,unlock}() helpers with notrace correctly")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_blackhole_dev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/bpf/helpers.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/lib/test_blackhole_dev.c b/lib/test_blackhole_dev.c
-index 4c40580a99a36..f247089d63c08 100644
---- a/lib/test_blackhole_dev.c
-+++ b/lib/test_blackhole_dev.c
-@@ -29,7 +29,6 @@ static int __init test_blackholedev_init(void)
- {
- 	struct ipv6hdr *ip6h;
- 	struct sk_buff *skb;
--	struct ethhdr *ethh;
- 	struct udphdr *uh;
- 	int data_len;
- 	int ret;
-@@ -61,7 +60,7 @@ static int __init test_blackholedev_init(void)
- 	ip6h->saddr = in6addr_loopback;
- 	ip6h->daddr = in6addr_loopback;
- 	/* Ether */
--	ethh = (struct ethhdr *)skb_push(skb, sizeof(struct ethhdr));
-+	skb_push(skb, sizeof(struct ethhdr));
- 	skb_set_mac_header(skb, 0);
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index 0efe7c7bfe5e9..d758641973d6d 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -278,13 +278,18 @@ static inline void __bpf_spin_unlock(struct bpf_spin_lock *lock)
  
- 	skb->protocol = htons(ETH_P_IPV6);
+ static DEFINE_PER_CPU(unsigned long, irqsave_flags);
+ 
+-notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
++static inline void __bpf_spin_lock_irqsave(struct bpf_spin_lock *lock)
+ {
+ 	unsigned long flags;
+ 
+ 	local_irq_save(flags);
+ 	__bpf_spin_lock(lock);
+ 	__this_cpu_write(irqsave_flags, flags);
++}
++
++notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
++{
++	__bpf_spin_lock_irqsave(lock);
+ 	return 0;
+ }
+ 
+@@ -295,13 +300,18 @@ const struct bpf_func_proto bpf_spin_lock_proto = {
+ 	.arg1_type	= ARG_PTR_TO_SPIN_LOCK,
+ };
+ 
+-notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
++static inline void __bpf_spin_unlock_irqrestore(struct bpf_spin_lock *lock)
+ {
+ 	unsigned long flags;
+ 
+ 	flags = __this_cpu_read(irqsave_flags);
+ 	__bpf_spin_unlock(lock);
+ 	local_irq_restore(flags);
++}
++
++notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
++{
++	__bpf_spin_unlock_irqrestore(lock);
+ 	return 0;
+ }
+ 
+@@ -322,9 +332,9 @@ void copy_map_value_locked(struct bpf_map *map, void *dst, void *src,
+ 	else
+ 		lock = dst + map->spin_lock_off;
+ 	preempt_disable();
+-	____bpf_spin_lock(lock);
++	__bpf_spin_lock_irqsave(lock);
+ 	copy_map_value(map, dst, src);
+-	____bpf_spin_unlock(lock);
++	__bpf_spin_unlock_irqrestore(lock);
+ 	preempt_enable();
+ }
+ 
 -- 
 2.43.0
 
