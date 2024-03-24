@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2608C80044;
-	Sun, 24 Mar 2024 22:48:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3B61411F9;
+	Sun, 24 Mar 2024 22:48:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320509; cv=none; b=Y1W9DXjqZkICsyHDpcu511YUDN9MpjybEZpJilv7eLd3bCnIkiY7P9+KQV8W3uoPhaO6gTCplos2GZFhmDoBy422WfHN+LVJfc3fJYzyMLB0X4pIW/rcJuz6MilPaOxgurQ/l6jz1w0LCfXKieHA8D19+zY7Ka0KpkPOL2BqHxA=
+	t=1711320522; cv=none; b=C0MxB7BWoYflBHYg3MI2581/PqO+8q8vzmg2NBiqSpbD8Fr44mj83+hpeonq3b5M9qqMDbwuzEFKwbnSTKfrUBeBcqfGdguWj/HRCoMA0SoOuRnUvJeSyCXhInmJA/nlYnpVPLqr1yMWfSRgk+tst8JeZoS56KC+ldz5g/VXKL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320509; c=relaxed/simple;
-	bh=8H3S/q5lYOP2vdj03mp5FU8Yxc0yT9/q3KcU1fAJ4V8=;
+	s=arc-20240116; t=1711320522; c=relaxed/simple;
+	bh=cjoyQ1faXxRarwNjQiwL0MuY+lSCvlUxadrZlLQ452M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H8csO1VkXkzdaMJh4wdgIUgnYDeV4nVAe+yiYYYJEjGBL9j6dbv2dyCaBkXpNGfaaKJoUVNlU7QJiWxhb5Tfz2bmjXQg73GHy34Zb2Kah9VWZwoomQRI26OLUDRaZJPhq2gEnbFCe/JmlumlX2Lmxgymx0XpNIIxZG59JMfqBBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjmftE1h; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AXKOLO8Pw+ZSBbTqIJJEdwWJqTyT8dDhqcT9A0Uh+8Lxk7Zp12mPMQA3WlAGEPyvjPo18/qogS5fMlvqymn5f7vIKD7IhgmbW/dvzUWTQMw6ayZopeWsrqfECEngp1oJp9cRsfQJnvy125cFzGPxvLa+s3N2gKOr0OOQtlNSf70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uv1CKWka; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjmftE1h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6385CC433C7;
-	Sun, 24 Mar 2024 22:48:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uv1CKWka"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94A21C43390;
+	Sun, 24 Mar 2024 22:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320509;
-	bh=8H3S/q5lYOP2vdj03mp5FU8Yxc0yT9/q3KcU1fAJ4V8=;
+	s=k20201202; t=1711320520;
+	bh=cjoyQ1faXxRarwNjQiwL0MuY+lSCvlUxadrZlLQ452M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PjmftE1h11duJviEgHf1LGlt9bJYoQ/lfdnJUeBohKkNXUepampaLvVBvMv3bEWPn
-	 R77US3NN2fAmYf4DQ01OYH4TBl65WuePjztSEzVsarsNwwnEGTyZXOyJhpo7bsKJfl
-	 2YTGaDl0NDaWTqHO6QK25HqGn4NmtekMLJRUfjzcQrnl3iOR2uT61w3a+EqxvtjRCm
-	 fuDR8L+RgCJVb2cM6O3jJLWK7V/+ARK5kY6ielCXIEyy2GDwY5xfmVYD7+ronjpPQg
-	 bXbOdFvbhltcAHLfvCLyV6EZGzR7DfO8YMiJIGXgPHbWUzmPqqggq0IoXlLw1k+wii
-	 goJT6yvEk8GbQ==
+	b=uv1CKWkaxaiczqkchiaeYmDvhkIOmjx7id7zHypBtHuUVeBabDEHpbV+wE4D7HlVB
+	 d8iRfUWhk7PtT2bIZC5uNgs19n6WTRiuwg21ZLYCQZM72m5bQoxVXUIs/U4/51GWa+
+	 ojbjal0iit4da8XVXwKN/xsziM/qH0172XWqIItQIIb/PDqjaRbi1nq0r+I8Ezuyg/
+	 4pb6cSVhMVnZtqbqrTnaiMMKxCTAqCkafP+tQIiz8q+w3UwX/aUKF+b9RBLHKoK/wR
+	 GcFAvfvG0ZDaiGOzllASlFnZjtryHx+MwTXzFewQzVoWqhDYeiwMJ2MPQpSWcP+0my
+	 hM6lpfj7APb3w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Thierry Reding <treding@nvidia.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Chuck Lever III <chuck.lever@oracle.com>,
+	syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com,
+	Jan Kara <jack@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 069/713] arm64: tegra: Set the correct PHY mode for MGBE
-Date: Sun, 24 Mar 2024 18:36:35 -0400
-Message-ID: <20240324224720.1345309-70-sashal@kernel.org>
+Subject: [PATCH 6.7 081/713] do_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak
+Date: Sun, 24 Mar 2024 18:36:47 -0400
+Message-ID: <20240324224720.1345309-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,33 +51,70 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Thierry Reding <treding@nvidia.com>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-[ Upstream commit 4c892121d43bc2b45896ca207b54f39a8fa6b852 ]
+[ Upstream commit 3948abaa4e2be938ccdfc289385a27342fb13d43 ]
 
-The PHY is configured in 10GBASE-R, so make sure to reflect that in DT.
+syzbot identified a kernel information leak vulnerability in
+do_sys_name_to_handle() and issued the following report [1].
 
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+[1]
+"BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40
+ instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+ _copy_to_user+0xbc/0x100 lib/usercopy.c:40
+ copy_to_user include/linux/uaccess.h:191 [inline]
+ do_sys_name_to_handle fs/fhandle.c:73 [inline]
+ __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
+ __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94
+ __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
+ ...
+
+Uninit was created at:
+ slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
+ slab_alloc_node mm/slub.c:3478 [inline]
+ __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517
+ __do_kmalloc_node mm/slab_common.c:1006 [inline]
+ __kmalloc+0x121/0x3c0 mm/slab_common.c:1020
+ kmalloc include/linux/slab.h:604 [inline]
+ do_sys_name_to_handle fs/fhandle.c:39 [inline]
+ __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
+ __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94
+ __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
+ ...
+
+Bytes 18-19 of 20 are uninitialized
+Memory access of size 20 starts at ffff888128a46380
+Data copied to user address 0000000020000240"
+
+Per Chuck Lever's suggestion, use kzalloc() instead of kmalloc() to
+solve the problem.
+
+Fixes: 990d6c2d7aee ("vfs: Add name to file handle conversion support")
+Suggested-by: Chuck Lever III <chuck.lever@oracle.com>
+Reported-and-tested-by: <syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com>
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Link: https://lore.kernel.org/r/20240119153906.4367-1-n.zhandarovich@fintech.ru
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts | 2 +-
+ fs/fhandle.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-index ea13c4a7027c4..81a82933e3500 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-@@ -175,7 +175,7 @@ ethernet@6800000 {
- 			status = "okay";
+diff --git a/fs/fhandle.c b/fs/fhandle.c
+index 18b3ba8dc8ead..57a12614addfd 100644
+--- a/fs/fhandle.c
++++ b/fs/fhandle.c
+@@ -36,7 +36,7 @@ static long do_sys_name_to_handle(const struct path *path,
+ 	if (f_handle.handle_bytes > MAX_HANDLE_SZ)
+ 		return -EINVAL;
  
- 			phy-handle = <&mgbe0_phy>;
--			phy-mode = "usxgmii";
-+			phy-mode = "10gbase-r";
- 
- 			mdio {
- 				#address-cells = <1>;
+-	handle = kmalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
++	handle = kzalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
+ 			 GFP_KERNEL);
+ 	if (!handle)
+ 		return -ENOMEM;
 -- 
 2.43.0
 
