@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE251DE100;
-	Sun, 24 Mar 2024 22:52:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD171D6854;
+	Sun, 24 Mar 2024 22:52:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320731; cv=none; b=o5+0fpcYJnHHzeqgvRyhD9clS2BlCipVvRGW47HwtvXVogy54wt9BvO9S52kFY5LBnWwZDBa4i8q3nGF9kBYG+ovanYOWKfI6qR4KgO7/8lXW5EtSaguUv5m9IKWKTfLOFRGPCXmYNpe6xPJr+SgrwJDt1rLvq7wYs1E7PiDPHg=
+	t=1711320721; cv=none; b=t3LmfBDlLp1Jb12AdpOeVEle/v+3YvyAEfacNCAAbvc36XRUAav466pnJB/4scaDqFU7RP/ha63B+vLF/TpUqfpIy/2F2kEJ4QQarhmwnzArFhtoRj7SHoyy1NcmiLaT/mJbNiSzKuuAfb8gNdm6GqLWxQ/ubfAbi5KlQakxvBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320731; c=relaxed/simple;
-	bh=NRY+7Tj0qGy+7ZmIHN94EIlHoI0r19i0s2wSgIv4I9A=;
+	s=arc-20240116; t=1711320721; c=relaxed/simple;
+	bh=yM+lvq+E4qsRmSZJeOX0H2d21XeXzg/bB/kuYKF4gAg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MAZEda2xIBpcHc6PZHLrYTf81J0+ZGSVeMnDh1H9SRS/3/fL0NthP/C7RrDgD8k7vWD5MenRdZEvJz1T7DgVylO3H2u32wWxKUTIaERXA7WpTqrrNklywibHtOyVTEFS15BKqs/ffizipVYKL0pSBpklzTQxFFdYK2CsNs8b0J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GICIdG/9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WoZcY7OUvg4lp+DTs/ijZL+3VkhFrtyddIMMiL55e1QW9o2v3xhsQ2GliFT4d4wOdXkyHr6Bth5W2l6/hLYIJZY+pAdYpciwNohtM6Cc7FBNe0nmHkkPaU37onkLnEPDku9pTi2/7Ttf4Pn9M3YzKkcpqcoxtX31qeM37cBVk4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpCtw0ks; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GICIdG/9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D7A1C43394;
-	Sun, 24 Mar 2024 22:52:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpCtw0ks"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF5CDC43390;
+	Sun, 24 Mar 2024 22:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320730;
-	bh=NRY+7Tj0qGy+7ZmIHN94EIlHoI0r19i0s2wSgIv4I9A=;
+	s=k20201202; t=1711320720;
+	bh=yM+lvq+E4qsRmSZJeOX0H2d21XeXzg/bB/kuYKF4gAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GICIdG/99OHfQOHq80nVtF3o3aYUP8D7L9AbE6JooTshVuc2H9EWktQsbBUcgE9HE
-	 ySHg+17jN5hRUQO3MERY4eohCNrwPXdepLU/vmFXaT6nRNCMuvfo1D/JZixJGXYby+
-	 wi01flfeg2krXvlq613tTKf6poOVFLiqQ7e9oy/X60QmHeoHIqukHZodKRrAiToAwy
-	 Daz72rbkZTzGvjyZsIrA3zwlnmnKEafwZN76Vs4tKoQIGGPkVVL8g6fjKT0AE+M3JS
-	 +EyH74W9toVy4BW6zc2igDJGXqBfhVJMkerJoCEW1bgxNHDCh7kMXsbrM98pdAnRrI
-	 LK+PZAlW779wA==
+	b=jpCtw0ksEDSNj5smJLtKCuEtR6nMGLCxof5oeYFaHxUjqlqMiROA/DHiZHojViboe
+	 B4YSHgDvytD/ytAGmRONyHg6a0LeNJvu3Y1OAFnrO/CDs0Te8tJUiC90KEFub219HS
+	 R9TLUM6f8Ar/Qa84kLKH0gurjqucVXoIYzU0XNErnnUNepM1egK9ij1vewGNwY+W+k
+	 c4kq9nVMG7fOCNYramSk2+aRYqvJEwiOQNIT73vTtGs/Y4dUsAXirK8VKY/iJi/wxq
+	 ZgxxZA2fKJZFuKYkCuEWbRr3uJ9FlXOuKZEE+Sib3zLSY+v2Nkw5OA/M0KjcGrbBat
+	 EH1/IbobLrOlQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Chiu <chui-hao.chiu@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
+Cc: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,
 	Felix Fietkau <nbd@nbd.name>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 293/713] wifi: mt76: mt7996: check txs format before getting skb by pid
-Date: Sun, 24 Mar 2024 18:40:19 -0400
-Message-ID: <20240324224720.1345309-294-sashal@kernel.org>
+Subject: [PATCH 6.7 283/713] wifi: mt76: mt7925: fix connect to 80211b mode fail in 2Ghz band
+Date: Sun, 24 Mar 2024 18:40:09 -0400
+Message-ID: <20240324224720.1345309-284-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,66 +48,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Chiu <chui-hao.chiu@mediatek.com>
+From: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
 
-[ Upstream commit 9c9c25f1dcdd98fffda564d2073f26219c84a2c3 ]
+[ Upstream commit 479146078a21ff2015cdd4e0467cba0559911915 ]
 
-The PPDU TXS does not include the error bit so it cannot use to report
-status to mac80211. This patch fixes issue that STA wrongly detects if AP
-is still alive.
+Driver should setting correct phy mode to firmware when in legacy mode.
 
-Fixes: 2569ea5326e2 ("wifi: mt76: mt7996: enable PPDU-TxS to host")
-Signed-off-by: Peter Chiu <chui-hao.chiu@mediatek.com>
-Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
+Fixes: c948b5da6bbe ("wifi: mt76: mt7925: add Mediatek Wi-Fi7 driver for mt7925 chips")
+Signed-off-by: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/mediatek/mt76/mt7996/mac.c   | 23 +++++++++++--------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/mac.c b/drivers/net/wireless/mediatek/mt76/mt7996/mac.c
-index fa3001e59a364..cee2ede268a2d 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7996/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7996/mac.c
-@@ -1178,25 +1178,28 @@ mt7996_mac_add_txs_skb(struct mt7996_dev *dev, struct mt76_wcid *wcid,
- 	struct ieee80211_tx_info *info;
- 	struct sk_buff_head list;
- 	struct rate_info rate = {};
--	struct sk_buff *skb;
-+	struct sk_buff *skb = NULL;
- 	bool cck = false;
- 	u32 txrate, txs, mode, stbc;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+index 9c0e397537acf..2e52f9281ab73 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+@@ -1460,12 +1460,10 @@ mt7925_mcu_sta_phy_tlv(struct sk_buff *skb,
+ 	struct tlv *tlv;
+ 	u8 af = 0, mm = 0;
  
- 	txs = le32_to_cpu(txs_data[0]);
- 
- 	mt76_tx_status_lock(mdev, &list);
--	skb = mt76_tx_status_skb_get(mdev, wcid, pid, &list);
- 
--	if (skb) {
--		info = IEEE80211_SKB_CB(skb);
--		if (!(txs & MT_TXS0_ACK_ERROR_MASK))
--			info->flags |= IEEE80211_TX_STAT_ACK;
-+	/* only report MPDU TXS */
-+	if (le32_get_bits(txs_data[0], MT_TXS0_TXS_FORMAT) == 0) {
-+		skb = mt76_tx_status_skb_get(mdev, wcid, pid, &list);
-+		if (skb) {
-+			info = IEEE80211_SKB_CB(skb);
-+			if (!(txs & MT_TXS0_ACK_ERROR_MASK))
-+				info->flags |= IEEE80211_TX_STAT_ACK;
- 
--		info->status.ampdu_len = 1;
--		info->status.ampdu_ack_len =
--			!!(info->flags & IEEE80211_TX_STAT_ACK);
-+			info->status.ampdu_len = 1;
-+			info->status.ampdu_ack_len =
-+				!!(info->flags & IEEE80211_TX_STAT_ACK);
- 
--		info->status.rates[0].idx = -1;
-+			info->status.rates[0].idx = -1;
-+		}
- 	}
- 
- 	if (mtk_wed_device_active(&dev->mt76.mmio.wed) && wcid->sta) {
+-	if (!sta->deflink.ht_cap.ht_supported && !sta->deflink.he_6ghz_capa.capa)
+-		return;
+-
+ 	tlv = mt76_connac_mcu_add_tlv(skb, STA_REC_PHY, sizeof(*phy));
+ 	phy = (struct sta_rec_phy *)tlv;
+ 	phy->phy_type = mt76_connac_get_phy_mode_v2(mvif->phy->mt76, vif, chandef->chan->band, sta);
++	phy->basic_rate = cpu_to_le16((u16)vif->bss_conf.basic_rates);
+ 	if (sta->deflink.ht_cap.ht_supported) {
+ 		af = sta->deflink.ht_cap.ampdu_factor;
+ 		mm = sta->deflink.ht_cap.ampdu_density;
 -- 
 2.43.0
 
