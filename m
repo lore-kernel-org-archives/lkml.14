@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D843F1D8BBC;
-	Sun, 24 Mar 2024 22:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2301D8BDD;
+	Sun, 24 Mar 2024 22:50:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320645; cv=none; b=p+X2suZhtOP/UbAIV6YJO4WWGde6Vo3jtHopg3D3quypwoajsyUgsLgHkuJlE1cyU7krOgBZxlnqVZwrHoXMWO+1WQJJhVOVFZ2U3EtX9UgoC+M/zqltRUl/XM5Ekh8nATbohEyCFak5FddVmky1EpMmzyx8oA7EoK/PKf//iqw=
+	t=1711320648; cv=none; b=pQNjz+Mm6FdZFLl9g6wIysNxIUfFdHIsmi6KJzCBvoHgBOSL0bdhynvBO5Axb0IbGD5kyi3kojvWCIBuqrj1awDEVbRQo5tu3Jqkv/wtEV0bt8DRF7WVGOOZ+cTr0lvIPG81enngHAwf2NEvcElBXX/QyQ//RGX69Atp1W/nbto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320645; c=relaxed/simple;
-	bh=RQrolhc/4neGjp94YqluMsQFQZd5V1OjoECo2SmYWsM=;
+	s=arc-20240116; t=1711320648; c=relaxed/simple;
+	bh=Un5M0+Yy9i5pV1czleybjGf4TKM5KEaVe8OK7vHagJE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gmjz5YCoywLd1/jFDnqJvtUDbk0Pd5JXB5c+3r+AxTlIw/u86aLjqBpgW1tZgLiOXE+dh6XHRi331CZ524HpV3g1jbYl/ictimJPqnLCaNQ/ItYF0BJZEptUkjPAsm2SPSKfXWVOuhLU+wXAVv21W23FlVSaZ+yTbqN+BU+BAZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LONUrSd7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=s2m4Gu4CQZMm0GtDKO9+DREwCMDZlYaMJWK+6cPe101f5YzdxsAscvgGOjIeXMrNVN2KWa4IcLU/dBOyFN5XCVCGTVu+Aox+kNZWDthArUrvxX69eJjS09JxWAecae9KpvIrg64NM0Vg8VqanwWRzYdoT4hmQKeUH1GrJjhyX54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQIdKa6q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LONUrSd7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23034C433C7;
-	Sun, 24 Mar 2024 22:50:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQIdKa6q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A21DC43399;
+	Sun, 24 Mar 2024 22:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320644;
-	bh=RQrolhc/4neGjp94YqluMsQFQZd5V1OjoECo2SmYWsM=;
+	s=k20201202; t=1711320648;
+	bh=Un5M0+Yy9i5pV1czleybjGf4TKM5KEaVe8OK7vHagJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LONUrSd7d6pPoqBDP/ig0MCnFCnPvu8hBf9jWMFzWHkn4FbhmxQqSgp6AhI/HS7Pr
-	 CgDGUiAYvk/qlsVv5Ry2L6hLXQuGpey/a25dv3vfMexjY9jBtRhYJGLBKBA1AADfVX
-	 t8zmNeHaoZ7A1gHbyyqtATCe+RxuYFxCdMXwgtLAccg2X3wMVOVLIe3KMKMkbJINF3
-	 visNqmXLFlVGjgVPwaNzx5W1qsl1HT7yIBUOZeqPqeA96PHDMuVnKOm5Vu7rHSTy5t
-	 b7ZdOnSi7FqL/HgufA+X7+i7mPoQWr8kjh4PEdlayO2yiYOdfu0IOrTMeBdaqOwG3o
-	 1yCQUIY62Amag==
+	b=nQIdKa6qbb9D9Z6cuiaOcm463tqU2T0fk0dIcL8s4GfD4kUZa2BKOkOeq06qcOmZ7
+	 NBKFQDjK+ekMSil8piXrpY4Uq3Epc45DRZhAh92Ihd0QUQFyGd6XsGXDVo4gkjjiB0
+	 baFRU9a82I83OnJIfn1PXFpgiP8YFK5gtAEtVwzrZGUw5cwH8V3uvVkmy9bRU3G4UK
+	 KWVKPuh1Y306SnkaKvLTX+mdlIvWNVotV+N22RNmPHm0n+fEOUxyCGO/dq6ivJ0L20
+	 0gxakiYJhJN/KcISfl68mLhsDjh9hpBH/9LeKWqBCL/o6P3h9G5rTCdammXY2LNn+G
+	 YuXS/OdhAu+8A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 206/713] wifi: libertas: fix some memleaks in lbs_allocate_cmd_buffer()
-Date: Sun, 24 Mar 2024 18:38:52 -0400
-Message-ID: <20240324224720.1345309-207-sashal@kernel.org>
+Subject: [PATCH 6.7 209/713] libbpf: Use OPTS_SET() macro in bpf_xdp_query()
+Date: Sun, 24 Mar 2024 18:38:55 -0400
+Message-ID: <20240324224720.1345309-210-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,59 +44,52 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 5f0e4aede01cb01fa633171f0533affd25328c3a ]
+[ Upstream commit 92a871ab9fa59a74d013bc04f321026a057618e7 ]
 
-In the for statement of lbs_allocate_cmd_buffer(), if the allocation of
-cmdarray[i].cmdbuf fails, both cmdarray and cmdarray[i].cmdbuf needs to
-be freed. Otherwise, there will be memleaks in lbs_allocate_cmd_buffer().
+When the feature_flags and xdp_zc_max_segs fields were added to the libbpf
+bpf_xdp_query_opts, the code writing them did not use the OPTS_SET() macro.
+This causes libbpf to write to those fields unconditionally, which means
+that programs compiled against an older version of libbpf (with a smaller
+size of the bpf_xdp_query_opts struct) will have its stack corrupted by
+libbpf writing out of bounds.
 
-Fixes: 876c9d3aeb98 ("[PATCH] Marvell Libertas 8388 802.11b/g USB driver")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240126075336.2825608-1-alexious@zju.edu.cn
+The patch adding the feature_flags field has an early bail out if the
+feature_flags field is not part of the opts struct (via the OPTS_HAS)
+macro, but the patch adding xdp_zc_max_segs does not. For consistency, this
+fix just changes the assignments to both fields to use the OPTS_SET()
+macro.
+
+Fixes: 13ce2daa259a ("xsk: add new netlink attribute dedicated for ZC max frags")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Link: https://lore.kernel.org/bpf/20240206125922.1992815-1-toke@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas/cmd.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ tools/lib/bpf/netlink.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas/cmd.c b/drivers/net/wireless/marvell/libertas/cmd.c
-index 104d2b6dc9af6..5a525da434c28 100644
---- a/drivers/net/wireless/marvell/libertas/cmd.c
-+++ b/drivers/net/wireless/marvell/libertas/cmd.c
-@@ -1132,7 +1132,7 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
- 		if (!cmdarray[i].cmdbuf) {
- 			lbs_deb_host("ALLOC_CMD_BUF: ptempvirtualaddr is NULL\n");
- 			ret = -1;
--			goto done;
-+			goto free_cmd_array;
- 		}
- 	}
+diff --git a/tools/lib/bpf/netlink.c b/tools/lib/bpf/netlink.c
+index 090bcf6e3b3d5..68a2def171751 100644
+--- a/tools/lib/bpf/netlink.c
++++ b/tools/lib/bpf/netlink.c
+@@ -496,8 +496,8 @@ int bpf_xdp_query(int ifindex, int xdp_flags, struct bpf_xdp_query_opts *opts)
+ 	if (err)
+ 		return libbpf_err(err);
  
-@@ -1140,8 +1140,17 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
- 		init_waitqueue_head(&cmdarray[i].cmdwait_q);
- 		lbs_cleanup_and_insert_cmd(priv, &cmdarray[i]);
- 	}
--	ret = 0;
-+	return 0;
+-	opts->feature_flags = md.flags;
+-	opts->xdp_zc_max_segs = md.xdp_zc_max_segs;
++	OPTS_SET(opts, feature_flags, md.flags);
++	OPTS_SET(opts, xdp_zc_max_segs, md.xdp_zc_max_segs);
  
-+free_cmd_array:
-+	for (i = 0; i < LBS_NUM_CMD_BUFFERS; i++) {
-+		if (cmdarray[i].cmdbuf) {
-+			kfree(cmdarray[i].cmdbuf);
-+			cmdarray[i].cmdbuf = NULL;
-+		}
-+	}
-+	kfree(priv->cmd_array);
-+	priv->cmd_array = NULL;
- done:
- 	return ret;
- }
+ skip_feature_flags:
+ 	return 0;
 -- 
 2.43.0
 
