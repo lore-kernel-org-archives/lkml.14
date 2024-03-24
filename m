@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABC621EB7B;
-	Sun, 24 Mar 2024 23:40:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AEB17A365;
+	Sun, 24 Mar 2024 23:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323649; cv=none; b=LeR0NSFqI66IFw1x9yxmWY366y2DhLOKJR/GR+t/M0DOQufiMIzdYZV97VxDqpGVqoXzp6nLsVF4/kIyrQ1ZVEDpmMVRATcyxZIgvZMDey+XWsO3Ef8R7iGamr4D9g7qFiFMkUXuLGs3EUEd8i9MwvJEdcxa7i4tUJxydKX1aAk=
+	t=1711323651; cv=none; b=DrWTGV0JnOh7dq6NBPjXefISBYXN4gkmuy8tqFpEul2JzA0ptw5tuRcjuCJvUROvvNkEuxt5G+pkfVg0dMfWEudBzgZxWIPI91vhbjqwTnOQpSYOfAxQYbrjn0K22i3HwDSYZLzAR4W4mny5YJD/e6WccUBa6SsdZuWJoIIXa9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323649; c=relaxed/simple;
-	bh=f2qTjhmMz1jFyOTLwRJOYcWLeZ31+lsP1caQS8kVENw=;
+	s=arc-20240116; t=1711323651; c=relaxed/simple;
+	bh=gAqdm49DZG7gHX8FLf99AYsnKM/Po+UYbJY+eyoQle0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o76yP33KF/Kx2/doHwzX4zpcEyGOY3w1tb82nW503VUQx6zgm9KMxao37nPFdMAGeH4cL8sot0O+EM/MYfGGiNamoBDmvS7IvMQHnyrKG8aH6RYxs4Tybr7i3qZCsbHy1L0K49eiFlzC2LIxNO+7b5viP/PQ5T3I0mg26LtkRzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AOoEruAj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VquZZUW42xAo/cBYhgYDx49G55/elXztCTNWzsmsf4tK3fZmgYbQCfzBcUFaqj4xbEmTPGUl766QYE0lCfbKt0nChTsgLal0vyngU/1ugWjZskYM5rQrAOgnHltOQvMe53HoOC2hOUVSKKhubcFgCVD6F4/uZOgqJy3eZec8GPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=obJc/MRj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AOoEruAj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2260EC43394;
-	Sun, 24 Mar 2024 23:40:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="obJc/MRj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8725C43399;
+	Sun, 24 Mar 2024 23:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323648;
-	bh=f2qTjhmMz1jFyOTLwRJOYcWLeZ31+lsP1caQS8kVENw=;
+	s=k20201202; t=1711323650;
+	bh=gAqdm49DZG7gHX8FLf99AYsnKM/Po+UYbJY+eyoQle0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AOoEruAjkPwNAM8jxcD2V5MiuZo3nCq8pcUy7dgmw9R6g7Ypbu4bhn/k7wt/edsUh
-	 jWu84sCoNCZw0BzrNxTjNt1wLwA5aDRwy/GPc+O4Ah1qBwdDerPen/BEGiwVXOex4c
-	 ZdgTIz4pXf/QC8nqSW8YhJv0y6LrXfxU1dxq7zuoNO6ruxEZc3aRPeeAIZkxHtaxP4
-	 TB7WV+1nN3zHA+HGcwv5CD4keqJyAdh5dVpe9swaHa/R2RLWalx5pLpoN8cBsjz5Cp
-	 BZGroi6OWnaOkBv84HTiHMRGbIDENcwUVhg+cIYxYeSrumWg52SgUqMB34O9dhYwMt
-	 5FObvUCrwbzmg==
+	b=obJc/MRjcgkA+mllmrww6+1G284TlnEyeBKJuJvyxJiDaWBAAvKAyA0LM7cX8A6ZZ
+	 E7qvzlULLrXuZR4hymU5avc7pUEE6Fl6tng9xg0DLLJRWZIWpN36v1x0M0oJUjwBWs
+	 Xl/IhXvU5ypFYqcCOgxRpstMurGAgHN59FE+sLKUMD7I6PIRc1dSKQPl+WKB4BxlkG
+	 YI78YirwGVZ/D2OL5XR7kH3HsQoQU8z5Ui+hCWk85W3V6C5v+1jrkK6S8U8kVJ1V6T
+	 MOnHJG1rwXaZChjQIFNmjWqnmCKEvu/DZMOeEhVWfYOHYfNny9lmkWsWP8mBizUCeY
+	 CP+oYXhwwgQJw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ranjan Kumar <ranjan.kumar@broadcom.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Adam Goldman <adamg@pobox.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 020/238] scsi: mpt3sas: Prevent sending diag_reset when the controller is ready
-Date: Sun, 24 Mar 2024 19:36:48 -0400
-Message-ID: <20240324234027.1354210-21-sashal@kernel.org>
+Subject: [PATCH 5.10 022/238] firewire: core: use long bus reset on gap count error
+Date: Sun, 24 Mar 2024 19:36:50 -0400
+Message-ID: <20240324234027.1354210-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,41 +48,63 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ranjan Kumar <ranjan.kumar@broadcom.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit ee0017c3ed8a8abfa4d40e42f908fb38c31e7515 ]
+[ Upstream commit d0b06dc48fb15902d7da09c5c0861e7f042a9381 ]
 
-If the driver detects that the controller is not ready before sending the
-first IOC facts command, it will wait for a maximum of 10 seconds for it to
-become ready. However, even if the controller becomes ready within 10
-seconds, the driver will still issue a diagnostic reset.
+When resetting the bus after a gap count error, use a long rather than
+short bus reset.
 
-Modify the driver to avoid sending a diag reset if the controller becomes
-ready within the 10-second wait time.
+IEEE 1394-1995 uses only long bus resets. IEEE 1394a adds the option of
+short bus resets. When video or audio transmission is in progress and a
+device is hot-plugged elsewhere on the bus, the resulting bus reset can
+cause video frame drops or audio dropouts. Short bus resets reduce or
+eliminate this problem. Accordingly, short bus resets are almost always
+preferred.
 
-Signed-off-by: Ranjan Kumar <ranjan.kumar@broadcom.com>
-Link: https://lore.kernel.org/r/20240221071724.14986-1-ranjan.kumar@broadcom.com
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+However, on a mixed 1394/1394a bus, a short bus reset can trigger an
+immediate additional bus reset. This double bus reset can be interpreted
+differently by different nodes on the bus, resulting in an inconsistent gap
+count after the bus reset. An inconsistent gap count will cause another bus
+reset, leading to a neverending bus reset loop. This only happens for some
+bus topologies, not for all mixed 1394/1394a buses.
+
+By instead sending a long bus reset after a gap count inconsistency, we
+avoid the doubled bus reset, restoring the bus to normal operation.
+
+Signed-off-by: Adam Goldman <adamg@pobox.com>
+Link: https://sourceforge.net/p/linux1394/mailman/message/58741624/
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_base.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/firewire/core-card.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-index 814ac25238058..105d781d0cacf 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -6357,7 +6357,9 @@ _base_wait_for_iocstate(struct MPT3SAS_ADAPTER *ioc, int timeout)
- 		return -EFAULT;
+diff --git a/drivers/firewire/core-card.c b/drivers/firewire/core-card.c
+index be195ba834632..d446a72629414 100644
+--- a/drivers/firewire/core-card.c
++++ b/drivers/firewire/core-card.c
+@@ -500,7 +500,19 @@ static void bm_work(struct work_struct *work)
+ 		fw_notice(card, "phy config: new root=%x, gap_count=%d\n",
+ 			  new_root_id, gap_count);
+ 		fw_send_phy_config(card, new_root_id, generation, gap_count);
+-		reset_bus(card, true);
++		/*
++		 * Where possible, use a short bus reset to minimize
++		 * disruption to isochronous transfers. But in the event
++		 * of a gap count inconsistency, use a long bus reset.
++		 *
++		 * As noted in 1394a 8.4.6.2, nodes on a mixed 1394/1394a bus
++		 * may set different gap counts after a bus reset. On a mixed
++		 * 1394/1394a bus, a short bus reset can get doubled. Some
++		 * nodes may treat the double reset as one bus reset and others
++		 * may treat it as two, causing a gap count inconsistency
++		 * again. Using a long bus reset prevents this.
++		 */
++		reset_bus(card, card->gap_count != 0);
+ 		/* Will allocate broadcast channel after the reset. */
+ 		goto out;
  	}
- 
-- issue_diag_reset:
-+	return 0;
-+
-+issue_diag_reset:
- 	rc = _base_diag_reset(ioc);
- 	return rc;
- }
 -- 
 2.43.0
 
