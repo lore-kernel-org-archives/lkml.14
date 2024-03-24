@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C076175CBE;
-	Sun, 24 Mar 2024 23:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE92130A6D;
+	Sun, 24 Mar 2024 23:37:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323427; cv=none; b=fnIr1ps6umrmTD3nqRKAqIRFfMjq/yAdPMhmABRyCPXYKNgBQ1mZwo8MS8d8HH+dYnDVxN8I+aZ9mRXB83KR3zjj/WDz1JmloAlEU4AO8lvmpZc/V2cB1LxPqWqkIqm6CTR+lX99uhLsT5EK9TawLSz4sCGnWFoZZsuQaxMj+Qw=
+	t=1711323432; cv=none; b=E7G/pNd2ACeyXKOlZa10c0UtJZouXGrvQ39VBgEwgFSkfmuQmcnAwk3g6Hq5e5eW8EyQMPAibHimJsw3L2M8XlqBx27QLiwHsh7VARKrVG9ry+LDh9NPgD1h7bIDPxYTbYwyQSr1bRtb8xz0R+DSwgwpN2WIyPGoRdbr+33aq8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323427; c=relaxed/simple;
-	bh=T3mMur1V4rYkoOdESozqVTv0V5FfDJwKwHBIEEDsft8=;
+	s=arc-20240116; t=1711323432; c=relaxed/simple;
+	bh=NPjfnzED8BoT35x6bgMnmQsuwCdMFgSn/d3NxJwHA54=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AlXY4NQ/DCgEDOS/3PskC2XiyzaPiSy/qL6K2Yh2mMgd/RfaP7oXZn5mUTWdNKO3Skt+T1pDL+6fmh02vcJ2xCkdEJdIU8ucZAMFyt2UE7PtRc/uNUUWb3CBKiB8ulNVdUTYyV0YBX8IA1jdsdJ3ZiAoMfcEkhHf0d9Xyli+qCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gvAOv1o1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=JaVOZL91XJw03VyZacnCDggBlWvQgYxcY1FCraQAOuWZ05x0oI9LbeN/vhJVLrVfHd7XuLfXx2YigjdPyE4gEBrgja0Ao02mZyrON4LFDNJnJbBd+GqoGHK7J/WCcfOHXOUoa0erMki4oXX+iTmezYTNO3BE50fQn1coBTjefF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FhsyWPT6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gvAOv1o1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CB18C433F1;
-	Sun, 24 Mar 2024 23:37:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FhsyWPT6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29FECC433B1;
+	Sun, 24 Mar 2024 23:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323426;
-	bh=T3mMur1V4rYkoOdESozqVTv0V5FfDJwKwHBIEEDsft8=;
+	s=k20201202; t=1711323430;
+	bh=NPjfnzED8BoT35x6bgMnmQsuwCdMFgSn/d3NxJwHA54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gvAOv1o1e6TSedEk3/RzyMyReFlTOe6Ys8aZtXa/Qe+JbL5oKwBfiNl/MO+Y/1p2u
-	 a/EVrKggK2lgKpOggXc5RJU+Ite6mm0J1ml1jECFWWNN1mG2HCrU6xpZs3XEmFgrqr
-	 suHSYrxZIibY8aisUVjFcql4AEjrov2vUe9XYbKGixQgpCLvcCENrpcTwxUUXl59PB
-	 PzE+oeunSxgrdgq9+bnzvpDqb2Qn5cuHRsQljot6DwxVZ0grlSOEGJdt05uMKSuMki
-	 tiTD1egpt3B5phHTLKkPrBUkHSd81aYCR7j+6heAGfZ+7Xq4Cj9Ze2vDJmDn9tch1X
-	 YUtwk320XfN9A==
+	b=FhsyWPT6aX4LRgFlxkiic8TmDohiAtSaWFTmpIzof5G3oACBC8IOeuaSlRCpEKn2Z
+	 xaFja10ieWtJq7ncdyG9t2iwDHTkjo5m8+TU1o4Btq3AtIsStzNFpu013kzkAw1lWk
+	 pRDJTdVc8gscld8hPJjBxlQtBVBd7ejlx6XcbmxM73xvcc80rVZlDqF9zJyELRHl3+
+	 2K8LxEMwRa+j6IPsH19Ms/7mJI1Kzm5QsSN5HvxaJ3cZGpoyHd+vASXCP8QcgVxyKh
+	 j0gJlBatt9vT1LyqnPM10/cSuIO3gs92hcGsn/uWLUtSpUxEASVXQ/VBJsmEz+sVYK
+	 objCgghR09fFw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	syzbot+8cd36f6b65f3cafd400a@syzkaller.appspotmail.com,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 128/317] Bluetooth: Remove superfluous call to hci_conn_check_pending()
-Date: Sun, 24 Mar 2024 19:31:48 -0400
-Message-ID: <20240324233458.1352854-129-sashal@kernel.org>
+Subject: [PATCH 5.15 133/317] bpf: Fix DEVMAP_HASH overflow check on 32-bit arches
+Date: Sun, 24 Mar 2024 19:31:53 -0400
+Message-ID: <20240324233458.1352854-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,57 +50,61 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jonas Dreßler <verdre@v0yd.nl>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 78e3639fc8031275010c3287ac548c0bc8de83b1 ]
+[ Upstream commit 281d464a34f540de166cee74b723e97ac2515ec3 ]
 
-The "pending connections" feature was originally introduced with commit
-4c67bc74f016 ("[Bluetooth] Support concurrent connect requests") and
-6bd57416127e ("[Bluetooth] Handling pending connect attempts after
-inquiry") to handle controllers supporting only a single connection request
-at a time. Later things were extended to also cancel ongoing inquiries on
-connect() with commit 89e65975fea5 ("Bluetooth: Cancel Inquiry before
-Create Connection").
+The devmap code allocates a number hash buckets equal to the next power
+of two of the max_entries value provided when creating the map. When
+rounding up to the next power of two, the 32-bit variable storing the
+number of buckets can overflow, and the code checks for overflow by
+checking if the truncated 32-bit value is equal to 0. However, on 32-bit
+arches the rounding up itself can overflow mid-way through, because it
+ends up doing a left-shift of 32 bits on an unsigned long value. If the
+size of an unsigned long is four bytes, this is undefined behaviour, so
+there is no guarantee that we'll end up with a nice and tidy 0-value at
+the end.
 
-With commit a9de9248064b ("[Bluetooth] Switch from OGF+OCF to using only
-opcodes"), hci_conn_check_pending() was introduced as a helper to
-consolidate a few places where we check for pending connections (indicated
-by the BT_CONNECT2 flag) and then try to connect.
+Syzbot managed to turn this into a crash on arm32 by creating a
+DEVMAP_HASH with max_entries > 0x80000000 and then trying to update it.
+Fix this by moving the overflow check to before the rounding up
+operation.
 
-This refactoring commit also snuck in two more calls to
-hci_conn_check_pending():
-
-- One is in the failure callback of hci_cs_inquiry(), this one probably
-makes sense: If we send an "HCI Inquiry" command and then immediately
-after a "Create Connection" command, the "Create Connection" command might
-fail before the "HCI Inquiry" command, and then we want to retry the
-"Create Connection" on failure of the "HCI Inquiry".
-
-- The other added call to hci_conn_check_pending() is in the event handler
-for the "Remote Name" event, this seems unrelated and is possibly a
-copy-paste error, so remove that one.
-
-Fixes: a9de9248064b ("[Bluetooth] Switch from OGF+OCF to using only opcodes")
-Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
+Link: https://lore.kernel.org/r/000000000000ed666a0611af6818@google.com
+Reported-and-tested-by: syzbot+8cd36f6b65f3cafd400a@syzkaller.appspotmail.com
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Message-ID: <20240307120340.99577-2-toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c | 2 --
- 1 file changed, 2 deletions(-)
+ kernel/bpf/devmap.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index ba7242729a8fb..0be37a5c1c0c2 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -3072,8 +3072,6 @@ static void hci_remote_name_evt(struct hci_dev *hdev, struct sk_buff *skb)
+diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+index f02d04540c0c0..b591073c5f83d 100644
+--- a/kernel/bpf/devmap.c
++++ b/kernel/bpf/devmap.c
+@@ -130,13 +130,14 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
+ 	bpf_map_init_from_attr(&dtab->map, attr);
  
- 	BT_DBG("%s", hdev->name);
- 
--	hci_conn_check_pending(hdev);
+ 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
+-		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
 -
- 	hci_dev_lock(hdev);
+-		if (!dtab->n_buckets) /* Overflow check */
++		/* hash table size must be power of 2; roundup_pow_of_two() can
++		 * overflow into UB on 32-bit arches, so check that first
++		 */
++		if (dtab->map.max_entries > 1UL << 31)
+ 			return -EINVAL;
+-	}
  
- 	conn = hci_conn_hash_lookup_ba(hdev, ACL_LINK, &ev->bdaddr);
+-	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
++		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
++
+ 		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets,
+ 							   dtab->map.numa_node);
+ 		if (!dtab->dev_index_head)
 -- 
 2.43.0
 
