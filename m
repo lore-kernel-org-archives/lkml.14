@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6B114430B;
-	Sun, 24 Mar 2024 22:51:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F63C144D07;
+	Sun, 24 Mar 2024 22:51:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320662; cv=none; b=btRuP9ABgZKZNQT70H81pPPlW23RLp57VSpfUGh35k08ZeExZPDG2lW5nTK9sPCbr4DwtrqTvVAnvOli08UvXQmvw1Gc7OnywvV4+r6kPT1IWcHSYb38Omdi7RaUp/xzLWv6phIst8Y/0tgEr+0F1JPQdnhhOkvjI98Njrg0VQU=
+	t=1711320682; cv=none; b=Up9yA2zDgO2u5ezK3hCvw0UQw5ycP6vww1zuoabe+Mjb2wf6I3jsjluJ5VjsVOmQ0iR9AgOoYt4oRF9syEz+bi95/YVlRfEyVnTy0JviH4wfgXvzkEgLQhgwcwZesNsVDE6N+8qc2W97HwdaGJBKJ/HHFy4hubfA0YGJ68jZboI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320662; c=relaxed/simple;
-	bh=lrV3hF7pREKUALqHJGjU2QWD2BAkZOc4EaJoGgQ0cV0=;
+	s=arc-20240116; t=1711320682; c=relaxed/simple;
+	bh=rrG1Xn02Ri/2nGX05CFu2/ro9ZQohjCcGnRg+Ua058Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sHYSPV4M+/cNQJyBfr1B50lP41faZPgygg2B94ITa2VQsnzMS3qWLxlS+5E3u/dPW5tcLa6Oj95SubKgt4VdI7FQl0y/bcl6LnWsvPpW5jv7/yD6UoB+81M8j0B8Jxk/9wOq6g0pVb2Ycqv5b/QKQmRhKfIeN0grOY+sCfMIEpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sWYV6E38; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=soe/oxMk3x87pTRn6arCkgdPk4IDn/OTxfoPmUCPfCSxFiLmfv+5+nw6sKkp968X5m5rPBWYevEyy2E4bI3wqBW+0zevQHI2Y/swuULO6/jHhzTFjPFf74WXdNGGq84ihWB8aPVX/mKlxxfF8448BnlTtdf2jJouy79YGfdc8k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MuSZ1+/d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sWYV6E38"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36147C433F1;
-	Sun, 24 Mar 2024 22:51:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MuSZ1+/d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BBEAC43399;
+	Sun, 24 Mar 2024 22:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320661;
-	bh=lrV3hF7pREKUALqHJGjU2QWD2BAkZOc4EaJoGgQ0cV0=;
+	s=k20201202; t=1711320681;
+	bh=rrG1Xn02Ri/2nGX05CFu2/ro9ZQohjCcGnRg+Ua058Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sWYV6E38Xy9iUH+8TAS4RPTp0w4W0+Ooz/tTLnc+huR6Ns1eS5YYEKuVQpTBwPUJz
-	 XjzmZFLActV0J0IpAwaBIWU39kKel334zWFq3v3EGPrzfRilzdr4u4JrX0waByHLLd
-	 rrx9Q2lbjcdgVnRkWYoNtrwrhCXmDF9aT9XIstVvtxkgl0nQ6/wo9UK4Ui6aEaoJEp
-	 oOxWJPxxjWDkA31Zp/b8s8G8h5iUEQysELd1Y1BCzGgLvPQ6qIBr5Kl+ILZEYGHzQL
-	 s0rFzH3LHcY7Nw1/+S5ZieF0RPjWnB7d0OO4zLIHvzieVqTrzUiOYxGCavu83jOyx5
-	 bBbX/p5VIfRWQ==
+	b=MuSZ1+/dUv4h0tdnzF25Jjfb9THgO690SuAJhiasY3vgw2ZiXkDFsZXOsv2twHEFz
+	 EWlzy57L/y0kiDHVJ15TBiN60yvWdYHz2YZeBXsidZbL3umN4xCtPGrEfaWAiFRvYJ
+	 fGVGtCLp2SQZs3B9C2WFxyLTXDrbIXgRfpZ8gPVfI8nVKdxIW6cwlJNhX+Tytdi5kD
+	 nIGsj5wtmYJfnhA4Z+1kAoE81k44qwNOWVLgZdP1xJis83GqxNLc8Vq/OctWLRKaGZ
+	 Ov8Wg2uSy5uNingYS3XR5vi/MHj1zCsFAV3wGZrJdq/Q17uVitpeLGfr7ttSQqjIaB
+	 iUYTiCfgZNGJg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Viktor Malik <vmalik@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Xu <dxu@dxuuu.xyz>,
+Cc: Eugen Hristev <eugen.hristev@collabora.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 224/713] tools/resolve_btfids: Refactor set sorting with types from btf_ids.h
-Date: Sun, 24 Mar 2024 18:39:10 -0400
-Message-ID: <20240324224720.1345309-225-sashal@kernel.org>
+Subject: [PATCH 6.7 244/713] arm64: dts: mediatek: mt8192: fix vencoder clock name
+Date: Sun, 24 Mar 2024 18:39:30 -0400
+Message-ID: <20240324224720.1345309-245-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,143 +48,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Viktor Malik <vmalik@redhat.com>
+From: Eugen Hristev <eugen.hristev@collabora.com>
 
-[ Upstream commit 9707ac4fe2f5bac6406d2403f8b8a64d7b3d8e43 ]
+[ Upstream commit 76aac0f2a46847ed4a7a4fdd848dd66023c19ad1 ]
 
-Instead of using magic offsets to access BTF ID set data, leverage types
-from btf_ids.h (btf_id_set and btf_id_set8) which define the actual
-layout of the data. Thanks to this change, set sorting should also
-continue working if the layout changes.
+Clock name should be `venc_sel` as per binding.
+Fix the warning message :
+arch/arm64/boot/dts/mediatek/mt8192-asurada-hayato-r1.dtb: vcodec@17020000: clock-names:0: 'venc_sel' was expected
+        from schema $id: http://devicetree.org/schemas/media/mediatek,vcodec-encoder.yaml#
 
-This requires to sync the definition of 'struct btf_id_set8' from
-include/linux/btf_ids.h to tools/include/linux/btf_ids.h. We don't sync
-the rest of the file at the moment, b/c that would require to also sync
-multiple dependent headers and we don't need any other defs from
-btf_ids.h.
-
-Signed-off-by: Viktor Malik <vmalik@redhat.com>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Daniel Xu <dxu@dxuuu.xyz>
-Link: https://lore.kernel.org/bpf/ff7f062ddf6a00815fda3087957c4ce667f50532.1707223196.git.vmalik@redhat.com
-Stable-dep-of: 903fad439466 ("tools/resolve_btfids: Fix cross-compilation to non-host endianness")
+Fixes: aa8f3711fc87 ("arm64: dts: mt8192: Add H264 venc device node")
+Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://lore.kernel.org/r/20231228113245.174706-4-eugen.hristev@collabora.com
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/resolve_btfids/main.c | 35 ++++++++++++++++++++-------------
- tools/include/linux/btf_ids.h   |  9 +++++++++
- 2 files changed, 30 insertions(+), 14 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8192.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/bpf/resolve_btfids/main.c b/tools/bpf/resolve_btfids/main.c
-index 27a23196d58e1..32634f00abba4 100644
---- a/tools/bpf/resolve_btfids/main.c
-+++ b/tools/bpf/resolve_btfids/main.c
-@@ -70,6 +70,7 @@
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <errno.h>
-+#include <linux/btf_ids.h>
- #include <linux/rbtree.h>
- #include <linux/zalloc.h>
- #include <linux/err.h>
-@@ -78,7 +79,7 @@
- #include <subcmd/parse-options.h>
- 
- #define BTF_IDS_SECTION	".BTF_ids"
--#define BTF_ID		"__BTF_ID__"
-+#define BTF_ID_PREFIX	"__BTF_ID__"
- 
- #define BTF_STRUCT	"struct"
- #define BTF_UNION	"union"
-@@ -161,7 +162,7 @@ static int eprintf(int level, int var, const char *fmt, ...)
- 
- static bool is_btf_id(const char *name)
- {
--	return name && !strncmp(name, BTF_ID, sizeof(BTF_ID) - 1);
-+	return name && !strncmp(name, BTF_ID_PREFIX, sizeof(BTF_ID_PREFIX) - 1);
- }
- 
- static struct btf_id *btf_id__find(struct rb_root *root, const char *name)
-@@ -441,7 +442,7 @@ static int symbols_collect(struct object *obj)
- 		 * __BTF_ID__TYPE__vfs_truncate__0
- 		 * prefix =  ^
- 		 */
--		prefix = name + sizeof(BTF_ID) - 1;
-+		prefix = name + sizeof(BTF_ID_PREFIX) - 1;
- 
- 		/* struct */
- 		if (!strncmp(prefix, BTF_STRUCT, sizeof(BTF_STRUCT) - 1)) {
-@@ -649,19 +650,18 @@ static int cmp_id(const void *pa, const void *pb)
- static int sets_patch(struct object *obj)
- {
- 	Elf_Data *data = obj->efile.idlist;
--	int *ptr = data->d_buf;
- 	struct rb_node *next;
- 
- 	next = rb_first(&obj->sets);
- 	while (next) {
--		unsigned long addr, idx;
-+		struct btf_id_set8 *set8;
-+		struct btf_id_set *set;
-+		unsigned long addr, off;
- 		struct btf_id *id;
--		int *base;
--		int cnt;
- 
- 		id   = rb_entry(next, struct btf_id, rb_node);
- 		addr = id->addr[0];
--		idx  = addr - obj->efile.idlist_addr;
-+		off = addr - obj->efile.idlist_addr;
- 
- 		/* sets are unique */
- 		if (id->addr_cnt != 1) {
-@@ -670,14 +670,21 @@ static int sets_patch(struct object *obj)
- 			return -1;
- 		}
- 
--		idx = idx / sizeof(int);
--		base = &ptr[idx] + (id->is_set8 ? 2 : 1);
--		cnt = ptr[idx];
-+		if (id->is_set) {
-+			set = data->d_buf + off;
-+			qsort(set->ids, set->cnt, sizeof(set->ids[0]), cmp_id);
-+		} else {
-+			set8 = data->d_buf + off;
-+			/*
-+			 * Make sure id is at the beginning of the pairs
-+			 * struct, otherwise the below qsort would not work.
-+			 */
-+			BUILD_BUG_ON(set8->pairs != &set8->pairs[0].id);
-+			qsort(set8->pairs, set8->cnt, sizeof(set8->pairs[0]), cmp_id);
-+		}
- 
- 		pr_debug("sorting  addr %5lu: cnt %6d [%s]\n",
--			 (idx + 1) * sizeof(int), cnt, id->name);
--
--		qsort(base, cnt, id->is_set8 ? sizeof(uint64_t) : sizeof(int), cmp_id);
-+			 off, id->is_set ? set->cnt : set8->cnt, id->name);
- 
- 		next = rb_next(next);
- 	}
-diff --git a/tools/include/linux/btf_ids.h b/tools/include/linux/btf_ids.h
-index 2f882d5cb30f5..72535f00572f6 100644
---- a/tools/include/linux/btf_ids.h
-+++ b/tools/include/linux/btf_ids.h
-@@ -8,6 +8,15 @@ struct btf_id_set {
- 	u32 ids[];
- };
- 
-+struct btf_id_set8 {
-+	u32 cnt;
-+	u32 flags;
-+	struct {
-+		u32 id;
-+		u32 flags;
-+	} pairs[];
-+};
-+
- #ifdef CONFIG_DEBUG_INFO_BTF
- 
- #include <linux/compiler.h> /* for __PASTE */
+diff --git a/arch/arm64/boot/dts/mediatek/mt8192.dtsi b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
+index 69f4cded5dbbf..f1fc14e53f8c7 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8192.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
+@@ -1770,7 +1770,7 @@ vcodec_enc: vcodec@17020000 {
+ 			mediatek,scp = <&scp>;
+ 			power-domains = <&spm MT8192_POWER_DOMAIN_VENC>;
+ 			clocks = <&vencsys CLK_VENC_SET1_VENC>;
+-			clock-names = "venc-set1";
++			clock-names = "venc_sel";
+ 			assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>;
+ 			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D4>;
+ 		};
 -- 
 2.43.0
 
