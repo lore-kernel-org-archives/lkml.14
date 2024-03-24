@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627101448EE;
-	Sun, 24 Mar 2024 23:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D538E1448FE;
+	Sun, 24 Mar 2024 23:12:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321959; cv=none; b=JVll19vW1/SpAVuQQ22zDA06GoJDTSuD+ovwTnNK5rU37a8ULf+jouW8oiCNOyKhTUljeZLLyK6c7mtph9Dqw+LtY6V9eNPwu1+hXeHboKwfDU9XzKTX4ufk0DYIWIbnPDcoLk4IRIc1TYx+we0SswdRX1ICFaabHZu3muevzSo=
+	t=1711321970; cv=none; b=AycSWCcT0U/9djHVbH90dG4aIdtRCicCQGPZX2Rk93pkRaLrVA7jOC3V5wditBBuX9Fbc/yhe4TTyi8Ayte0t9+1EX27lhoj58po/DpLYmq4Nw9dC1lZC6+oNduPH7K9yxWw6kPsAa2qMtEUTCqK4+T8VKuRF2/bUH6T3VJ0akE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321959; c=relaxed/simple;
-	bh=xQC6o6+q3OtIE2gwfV+uYfObv8PJwHK9mSaRmCA0uMY=;
+	s=arc-20240116; t=1711321970; c=relaxed/simple;
+	bh=d+U/DMyqrJmz9isk37XQbdH4HzIhR5FvXPZ0QF5sqY0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hh3EporKyPjoBzaGaR6IMbdAdf5P4BFHzwyZSrGkMhp68FghOA5x+7Q5EL8D4WI9chYn4tbwKzQWWccr30PZ2N7GDBKkSlWTdOpcpzzBgjQB2p4Q/zEZriGIYYkvXoSJv8V/8nipBdnrs4zMN2bFXvFsmiMnJp+9mblHLz6DJk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJe/DZKS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=I9xyBj4rjis9+57EqFWhJA+RtqJNB2ZmO8SMaquP/YX8JfiXqJQz/Jx2+jtcmWXxTBVKDYjjdfdR8fmCYCJZZRAYkvC5NRTysepVzLlpL+s6KiCBAvMAuHxBYGgytHOK6Zp7TvXb/zWctpabpQ5lO+eu0RgP3ZwgIMVjIK+YVD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cy+palL5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJe/DZKS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F2E7C433C7;
-	Sun, 24 Mar 2024 23:12:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cy+palL5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C22CBC433F1;
+	Sun, 24 Mar 2024 23:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321959;
-	bh=xQC6o6+q3OtIE2gwfV+uYfObv8PJwHK9mSaRmCA0uMY=;
+	s=k20201202; t=1711321970;
+	bh=d+U/DMyqrJmz9isk37XQbdH4HzIhR5FvXPZ0QF5sqY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hJe/DZKSt/S7ZE6m/VwbW57VsxPLy9aHdpy1KWXmuGkpGQ8FaxvOAAG5NZ5dyLuZm
-	 E+QgRCPIf+yDXbLEoUTD76SPFnF00z4dJH8rXexLcSUTHj5Yjg+ytzj8rCr+mHlWNv
-	 b26Ohf8AmTL3PpPCxUSbF1CYTjtlLisZVNGYdA5LfGBdmT9g2PBQ5cc/V5mB/Sqs34
-	 8Y+L0u4vKZV9TgNXofRusaxtZYV0L8KrMzjCfMPmkx8KFHocQYkvysuQMOattiG8BS
-	 HCHlPkTgambYWGqgTp4iKs3CrwDZF/TzncT2PAyL54MQVPeYO8Be+U1t9CuPyo3bYR
-	 GIlYHzSvBux0g==
+	b=cy+palL5Y0i1N6luL4ofQoUW4dHzfWMe/Z6LtU84wMCKA6oCnOLNPG/iCoRUggYZE
+	 RSFGZ7+MulPpJveNaFzeCOdJQ6WX2EVvSsV1ip206HxBE8k5QA1tsxthJ0PnYX/qC0
+	 E4OZR+jHigJi+CYULMnuORjwXhpr7oN+VikgtopGC4ZE3TmgkhENYMtPT06uUFm8iw
+	 7blUnXslGhUDvRlS3iFK2tpfbs5pobOwIJNtO8kn/n17JVfkkSmrWMGFOLV++E3Pke
+	 8ewo7D+Yzj2fXMv4y0s9uIXTO4azvvzGrVCnImSD7tGbp63tVONwd68w5NA6nvLQ4O
+	 RWtSpjIzFptBQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yishai Hadas <yishaih@nvidia.com>,
-	Tamar Mashiah <tmashiah@nvidia.com>,
-	Michael Guralnik <michaelgur@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
+Cc: Andre Werner <andre.werner@systec-electronic.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 031/451] RDMA/mlx5: Relax DEVX access upon modify commands
-Date: Sun, 24 Mar 2024 19:05:07 -0400
-Message-ID: <20240324231207.1351418-32-sashal@kernel.org>
+Subject: [PATCH 6.1 042/451] net: smsc95xx: add support for SYS TEC USB-SPEmodule1
+Date: Sun, 24 Mar 2024 19:05:18 -0400
+Message-ID: <20240324231207.1351418-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,45 +48,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yishai Hadas <yishaih@nvidia.com>
+From: Andre Werner <andre.werner@systec-electronic.com>
 
-[ Upstream commit be551ee1574280ef8afbf7c271212ac3e38933ef ]
+[ Upstream commit 45532b21dc2a692444b6ad5f71c253cca53e8103 ]
 
-Relax DEVX access upon modify commands to be UVERBS_ACCESS_READ.
+This patch adds support for the SYS TEC USB-SPEmodule1 10Base-T1L
+ethernet device to the existing smsc95xx driver by adding the new
+USB VID/PID pair.
 
-The kernel doesn't need to protect what firmware protects, or what
-causes no damage to anyone but the user.
-
-As firmware needs to protect itself from parallel access to the same
-object, don't block parallel modify/query commands on the same object in
-the kernel side.
-
-This change will allow user space application to run parallel updates to
-different entries in the same bulk object.
-
-Tested-by: Tamar Mashiah <tmashiah@nvidia.com>
-Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-Reviewed-by: Michael Guralnik <michaelgur@nvidia.com>
-Link: https://lore.kernel.org/r/7407d5ed35dc427c1097699e12b49c01e1073406.1706433934.git.leon@kernel.org
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Andre Werner <andre.werner@systec-electronic.com>
+Link: https://lore.kernel.org/r/20240219053413.4732-1-andre.werner@systec-electronic.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/devx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/smsc95xx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
-index f8e2baed27a5c..7013ce20549bd 100644
---- a/drivers/infiniband/hw/mlx5/devx.c
-+++ b/drivers/infiniband/hw/mlx5/devx.c
-@@ -2951,7 +2951,7 @@ DECLARE_UVERBS_NAMED_METHOD(
- 	MLX5_IB_METHOD_DEVX_OBJ_MODIFY,
- 	UVERBS_ATTR_IDR(MLX5_IB_ATTR_DEVX_OBJ_MODIFY_HANDLE,
- 			UVERBS_IDR_ANY_OBJECT,
--			UVERBS_ACCESS_WRITE,
-+			UVERBS_ACCESS_READ,
- 			UA_MANDATORY),
- 	UVERBS_ATTR_PTR_IN(
- 		MLX5_IB_ATTR_DEVX_OBJ_MODIFY_CMD_IN,
+diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+index a530f20ee2575..2fa46baa589e5 100644
+--- a/drivers/net/usb/smsc95xx.c
++++ b/drivers/net/usb/smsc95xx.c
+@@ -2104,6 +2104,11 @@ static const struct usb_device_id products[] = {
+ 		USB_DEVICE(0x0424, 0x9E08),
+ 		.driver_info = (unsigned long) &smsc95xx_info,
+ 	},
++	{
++		/* SYSTEC USB-SPEmodule1 10BASE-T1L Ethernet Device */
++		USB_DEVICE(0x0878, 0x1400),
++		.driver_info = (unsigned long)&smsc95xx_info,
++	},
+ 	{
+ 		/* Microchip's EVB-LAN8670-USB 10BASE-T1S Ethernet Device */
+ 		USB_DEVICE(0x184F, 0x0051),
 -- 
 2.43.0
 
