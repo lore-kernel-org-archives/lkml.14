@@ -1,66 +1,66 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0C33D575;
-	Sun, 24 Mar 2024 22:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01E04085A;
+	Sun, 24 Mar 2024 22:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319661; cv=none; b=EJttXu+BmhTpazyVrf6CZxEM7Og9r/FRG27ZsD5CtFDXgiPPoKb9JGpr9ph4L7E8TTaMDJiz+clpxwnL85FjapuG9iJvNLrf4vzznX488AsVnrk54dBDW8CTxvxg8cjjlPWvy0+3IEDmhj0un2nxdPWhAv78BiBNqHm3io9QZTs=
+	t=1711319663; cv=none; b=nFfhwQ6Dr+YAkBBekHrvhXMDt5N4K/TAh47FdTqpvjYnY4wDT+9w6YHbhks7NR7Wa15Ixrnei8N329aOLKv0KD9aByhyAUmFxyDpjlS/wAlY7ZrWCHK5/n9vxlXGdxqCHAtSMfUrTtQTXsNQ5Z5YaR+IncGUJBLezaG8/MH/sp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319661; c=relaxed/simple;
-	bh=vvpQmM/Tf5QRvh84FsdH0Tqa7QhnDpFIQ+omIra6w3E=;
+	s=arc-20240116; t=1711319663; c=relaxed/simple;
+	bh=rblbZbeUNDFkN6Ya4j5DhEAFl/f3CnZ68qMOk7KGkcM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GnN7QAzp4Ud+NmR+D0LMwwDGaAcOX+CqpzzcO2uzbVq64vdYMU/lrLAbb4HQPj98D2eWXeKerDLRIdFKmaqWLunQZPxJlG/EfpTwW8WgYa+6KmezbWkW5+euScqYhXLwA1ACCXdn0nQFaewKT/qRGXD73Z2KYkBEVbqb/6pUJmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4GwqlM8; arc=none smtp.client-ip=209.85.160.178
+	 MIME-Version; b=do07k7R1K4fd7YNZISi2Ml+KTx6asdgQlYOiWqbM1Kp52lEwL0cz30CEdGJDIdt57wI9eQIQwOqczhDBJDTUjXIgC9uKCtaAyqk2f97N3kzG57h7veNfKoK+edsefIK5sxOjmBX5dLFafPRsiR8pIcpDWx0+JsFgSDuR5FwY+HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K1R+xqfN; arc=none smtp.client-ip=209.85.222.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4GwqlM8"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-430acd766beso21109751cf.1;
-        Sun, 24 Mar 2024 15:34:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1R+xqfN"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-78a5580324eso26510285a.3;
+        Sun, 24 Mar 2024 15:34:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711319659; x=1711924459; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711319661; x=1711924461; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=vdcgG0wCfsjDnuqEkDhhA7hvo7PO+8wNdJ07rpMikmg=;
-        b=S4GwqlM81vlSasN7SFjspaCZHKKE3QBTURLPuF59GqWTYrmRvpDPcXfRc6qtOJfiFR
-         6QgwGZmTLhd+7Zl6wBRjUHSXZ+wrA121sIWSocCjHdciBOilQ08nmhs6GYgmARyrieu+
-         LVVQYLWe5a4MymM7dUCEbwrx+nIEOMVzUfbKuRP6009RIR6Rjax7Bpee6Xfg9I3INgTA
-         rSJl389RNzvvkmSYwnKJTNU2U+bvurZN6WtEs8y/weM/CWUc9vJtuZuvKpqHXbJwzmbw
-         srNL0Sj8FK6pecVUEkeu5+5ppJS+JLz2cZNkSXitGdFHyp/dfThgE/6PVXtwnHR2WhEY
-         ZlHg==
+        bh=r4dkugQkcRSjLN47IMqLis/1vAo+zF2RZMH9C3fgvJ4=;
+        b=K1R+xqfNaBFKjCbU9RZeZ0xAtQSzd42QwsQfJugTXogkO90NBOpeaS4f7Mmxd9onrd
+         1DegnjrAyUHhJJewfdunuxei7Icv6gp/uIg8NLYLuH1S+AriQLqyvgCzNgMS9fK9D2HK
+         Oxm0hISab4cZQ9GMhZ7dbAXfnwRdIcat0Fzu5OwzZCFT7tP3j4JNytvWIPqCyd6ivruh
+         NgZ96mDTw7ik+RcAETTWxJ4CmcDyW3TkNCXO/Ki+2v61dUUa6nx0JnIU2kafnbKwPH53
+         jyjj+K6Rvdz7AnopH3Oz/rEvw4GPLl6h10uREmG3DXPZ19H8F1RmzZWkf/HFxQZ682aJ
+         pvrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711319659; x=1711924459;
+        d=1e100.net; s=20230601; t=1711319661; x=1711924461;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vdcgG0wCfsjDnuqEkDhhA7hvo7PO+8wNdJ07rpMikmg=;
-        b=t4WYa7duoGGfFuAYdzEKgSIluuyCVklreO4CZeZ+WPNzx0Qju6AFBTiMEaL861W0JB
-         5p0I0CgGQQIllOeTtfmpaWdPvkCo1MI4wZ83nLvcQkHnbkHTccEfiW/sYofnOkyxnDCJ
-         ExZukGdRgGO/w94e2vTMUh8AKL/Jpbw97AdbIz5SK8Cwu0EQ7xbo6lWUrXCD/dSJZXDa
-         iex+tM14n9hztKstkeN3vA8yOpXNBkJDOKWTet7EY54yJpWQB0aoVTSdd6admpot1VUP
-         Dra8uWQPF4bxIQ851+qUHnPjS4bFNgrAI0xQh/HUHEdEp/D69N4EWMcxFtYUVN/NH+GD
-         teZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAfOM+9jbW7LJzDsFiIRbEHWT0PRNuVwYv/ZASGqpj4/ZasXjl3TzLykJvhsxE9FdSTkOX2iXjlu3Mwm5XLWcOrVSYB8i92AFar6bu
-X-Gm-Message-State: AOJu0YzHnKdRrZrH3UqqmGM93p4pQOPRyT6mi3+qvWj/ml1ugQPZwKhS
-	OA9lo6YaeLFRqrx5LCIGv07ltI7kk5VVB9sZzyGH1AZrj1NeX2Xg
-X-Google-Smtp-Source: AGHT+IGyoyk66ziQtdmRMnAVtGYqPKFVrzwqgoF2f1PR+0p7X/wr6BEC7PCrJegX1V23TpgNtn15fw==
-X-Received: by 2002:ac8:7e90:0:b0:431:4f15:69f9 with SMTP id w16-20020ac87e90000000b004314f1569f9mr3427042qtj.23.1711319659224;
-        Sun, 24 Mar 2024 15:34:19 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id ge11-20020a05622a5c8b00b004309754810fsm1976124qtb.89.2024.03.24.15.34.18
+        bh=r4dkugQkcRSjLN47IMqLis/1vAo+zF2RZMH9C3fgvJ4=;
+        b=B3s9q7UjGnU8wR2D/T5a1nj4Nk5Z/rbMHIMc0TXAJCIdte9PflzDS055fPhvB+Cdte
+         nG6LPL4Tys5O2A/VGKFwdec4HrC9U12RcgS0irT4FE58zGysS7E8dXHC4vcF0jZdyJZH
+         hUTu4H7C2oDYNEFegUhcr74APwARTpfAXd/S9yFN2bqp/1Ha+AJrmLEiLDjuNKBNefBX
+         SF02lRmeDDPSNuLD7xk1V2V3dO/pM8Ln27H/Lor9ssMi9MDNZ7X7nfBmQV0mzOcbBCg9
+         /9pEKbXSOvZSm6U/F3K1RwHyw0eavy12PZ9lmqvTC1sUHYw0SpGgWRBGd7/k/FP/UxHs
+         VDWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXN24RQHCtg63cJfLGciRJ/6ZjHY2bJcKMIFaewa43oztLZH/XeIJA0TCG906OowQu+vN8tjZw81Q7L27UfeoulQWvvoDUcsypacldr
+X-Gm-Message-State: AOJu0YwuzN8SN74P0l7iyqH4CmQANBfHctXW7NcreUctEkf1utxdyRk6
+	7RcA1ba9rduAspjl/sZMsCTu4cwZ7BNXJD9OpfDVnyyKfKMXgF65McvrILz8
+X-Google-Smtp-Source: AGHT+IEGXwFi4OApdpQX0xAGF4IQqEMsHc2HieH20JpsoDEe2F+hszVBR1E3kHFAFNt1xADcoOjI+g==
+X-Received: by 2002:a05:620a:5d82:b0:78a:2b1b:e56b with SMTP id xx2-20020a05620a5d8200b0078a2b1be56bmr5899720qkn.68.1711319660903;
+        Sun, 24 Mar 2024 15:34:20 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id q3-20020ae9e403000000b0078a48172335sm1356193qkc.24.2024.03.24.15.34.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Mar 2024 15:34:18 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 58F1A1200032;
-	Sun, 24 Mar 2024 18:34:18 -0400 (EDT)
+        Sun, 24 Mar 2024 15:34:20 -0700 (PDT)
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailauth.nyi.internal (Postfix) with ESMTP id EAE1D27C005B;
+	Sun, 24 Mar 2024 18:34:19 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Sun, 24 Mar 2024 18:34:18 -0400
-X-ME-Sender: <xms:aqoAZuxZiAn-1Qtc9JctAO0k0ljPkC7h7eoQysDwyOHQfh5QiTdgvQ>
-    <xme:aqoAZqRtXmXinrFL7lhN-GyVKWrXO-oDXdVh39zS37o5wP5Drflicaw88U3y_9Amh
-    CBcPGkF4SrgPtanbQ>
-X-ME-Received: <xmr:aqoAZgVfRkLhyoM7oKihQ_A8DnVZhAK1CTqqu_QK9ZPqmBuDBcoSebIi1mo>
+  by compute7.internal (MEProxy); Sun, 24 Mar 2024 18:34:19 -0400
+X-ME-Sender: <xms:a6oAZp5zQput8PTUkfkglQ-44m1TzYe8VaA-Ze6qviqyVBZFPKFnIQ>
+    <xme:a6oAZm5KybByycoyXrMS-NPSIwkb_eoli4CnYVDShobTVzaCc74WQSfnnTLFhCXqu
+    y1uKhKt-AkQYkYa3g>
+X-ME-Received: <xmr:a6oAZgfdWxfVuAYh3clpSbjZ1vNmhPVKJ1kgp5xZncd2c1PAk0O00qCz9cA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtjedgudeihecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
@@ -71,14 +71,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtjedgudeihecutefuodetgg
     epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
     ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
     higihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:aqoAZkhf1KTXzXRtA0swzZYf2W2tiK2uO4W2LvtBkm-r_cHPO3rJjw>
-    <xmx:aqoAZgAGq35Da2Bupd3rVBDwV9ULUsm7Mr06LBjUReMnfQbfS854Fw>
-    <xmx:aqoAZlIqHJ8M9tiwmtKuVZbQEgPbMOckJw3n7xfFpHYlLxd2Um30uA>
-    <xmx:aqoAZnBCOZ-EUJFiei6sYnffcpcCilwGmKjtSPPXazE7WCdtBbWDKQ>
-    <xmx:aqoAZuTwhBdERtGrGrB6hFa3ap9J4i0MvvGLfm65cUrT7WN_SOG86Tq00Fw>
+X-ME-Proxy: <xmx:a6oAZiLSCJTVAK3qxVMl1V9DA5Tt8Vax52T3LG-I0Nf4ZiWT53zeaw>
+    <xmx:a6oAZtLIJ2StmFQjg9fybjgeDx1a7GhpSE-y6tEkHeiM7sA_1UbdjQ>
+    <xmx:a6oAZrzJ2yFWVPYzHOnDtzUYWOktwohkSbc251lSkkYwPpYpQrRZrA>
+    <xmx:a6oAZpJewVVPv0lu_zWHT3CoxI05dG3oCLDgTncjCeZ3AGHXFRuPpQ>
+    <xmx:a6oAZqfCwaF7xOH_w-9qGjY5UdxRpTIncgJ2n3hNFDUobk0-6Z-ETQ>
 Feedback-ID: iad51458e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 24 Mar 2024 18:34:17 -0400 (EDT)
+ 24 Mar 2024 18:34:19 -0400 (EDT)
 From: Boqun Feng <boqun.feng@gmail.com>
 To: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -94,10 +94,12 @@ Cc: Alice Ryhl <aliceryhl@google.com>,
 	Andreas Hindborg <a.hindborg@samsung.com>,
 	John Stultz <jstultz@google.com>,
 	Stephen Boyd <sboyd@kernel.org>,
-	Valentin Obst <kernel@valentinobst.de>
-Subject: [PATCH 2/5] rust: time: Introduce Duration type
-Date: Sun, 24 Mar 2024 15:33:36 -0700
-Message-ID: <20240324223339.971934-3-boqun.feng@gmail.com>
+	Valentin Obst <kernel@valentinobst.de>,
+	Heghedus Razvan <heghedus.razvan@protonmail.com>,
+	Asahi Lina <lina@asahilina.net>
+Subject: [PATCH 3/5] rust: time: Introduce clock reading framework
+Date: Sun, 24 Mar 2024 15:33:37 -0700
+Message-ID: <20240324223339.971934-4-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240324223339.971934-1-boqun.feng@gmail.com>
 References: <20240324223339.971934-1-boqun.feng@gmail.com>
@@ -109,77 +111,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Alice Ryhl <aliceryhl@google.com>
+To make sure Rust code doesn't mix timestamps from different clocks, a
+type safe clock reading framework is introduced. It includes:
 
-Introduce a type representing time duration. Define our own type instead
-of using `core::time::Duration` because in kernel C code, an i64
-(ktime_t) is used for representing time durations, an i64 backed
-duration type is more efficient when interacting with time APIs in C.
+* A `Clock` trait that represents different clocks, to read a particular
+  clock, one needs implement the `Clock::now()` function.
 
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-[boqun: Rename `Ktime` to `Duration`, and make it a type of durations]
+* A `Instant<Clock>` type that represents timestamps of different
+  clocks, whose implementation is just a `ktime_t`, so all the
+  calculation on `ktime_t` should apply to it as well.
+
+Co-developed-by: Heghedus Razvan <heghedus.razvan@protonmail.com>
+Signed-off-by: Heghedus Razvan <heghedus.razvan@protonmail.com>
+Co-developed-by: Asahi Lina <lina@asahilina.net>
+Signed-off-by: Asahi Lina <lina@asahilina.net>
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- rust/kernel/time.rs | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ rust/kernel/time.rs | 49 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
 diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-index bbb666e64dd7..b238b3a4e899 100644
+index b238b3a4e899..0f9f5605ed48 100644
 --- a/rust/kernel/time.rs
 +++ b/rust/kernel/time.rs
-@@ -7,6 +7,9 @@
+@@ -6,6 +6,9 @@
+ //! have been ported or wrapped for usage by Rust code in the kernel.
  //!
  //! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.h).
- 
-+/// The number of nanoseconds per millisecond.
-+pub const NSEC_PER_MSEC: i64 = bindings::NSEC_PER_MSEC as i64;
++//! C header: [`include/linux/ktime.h`](srctree/include/linux/ktime.h).
 +
- /// The time unit of Linux kernel. One jiffy equals (1/HZ) second.
- pub type Jiffies = core::ffi::c_ulong;
++use core::marker::PhantomData;
  
-@@ -20,3 +23,44 @@ pub fn msecs_to_jiffies(msecs: Msecs) -> Jiffies {
-     // matter what the argument is.
-     unsafe { bindings::__msecs_to_jiffies(msecs) }
+ /// The number of nanoseconds per millisecond.
+ pub const NSEC_PER_MSEC: i64 = bindings::NSEC_PER_MSEC as i64;
+@@ -64,3 +67,49 @@ pub fn to_ns(self) -> i64 {
+         self.inner
+     }
  }
 +
-+/// A time duration.
-+///
-+/// # Examples
-+///
-+/// ```
-+/// let one_second = kernel::time::Duration::new(1000_000_000);
-+///
-+/// // 1 second is 1000 milliseconds.
-+/// assert_eq!(one_second.to_ms(), 1000);
-+/// ```
-+#[repr(transparent)]
-+#[derive(Copy, Clone, Debug)]
-+pub struct Duration {
-+    inner: i64,
++/// Represents a clock, that is, a unique time source and it can be queried for the current time.
++pub trait Clock: Sized {
++    /// Returns the current time for this clock.
++    fn now() -> Instant<Self>;
 +}
 +
-+impl Duration {
-+    /// Creates a new duration of `ns` nanoseconds.
-+    pub const fn new(ns: i64) -> Self {
-+        Self { inner: ns }
-+    }
++/// Marker trait for clock sources that are guaranteed to be monotonic.
++pub trait Monotonic {}
 +
-+    /// Divides the number of nanoseconds by a compile-time constant.
-+    #[inline]
-+    fn divns_constant<const DIV: i64>(self) -> i64 {
-+        self.to_ns() / DIV
-+    }
++/// A timestamp of a given [`Clock`]
++#[repr(transparent)]
++#[derive(Debug)]
++pub struct Instant<T: Clock> {
++    inner: bindings::ktime_t,
++    clock: PhantomData<T>,
++}
 +
-+    /// Returns the number of milliseconds.
-+    #[inline]
-+    pub fn to_ms(self) -> i64 {
-+        self.divns_constant::<NSEC_PER_MSEC>()
++impl<T: Clock> Clone for Instant<T> {
++    fn clone(&self) -> Self {
++        *self
 +    }
++}
 +
-+    /// Returns the number of nanoseconds.
++impl<T: Clock> Copy for Instant<T> {}
++
++impl<T: Clock> Instant<T> {
++    fn new(ktime: bindings::ktime_t) -> Self {
++        Self {
++            inner: ktime,
++            clock: PhantomData,
++        }
++    }
++}
++
++impl<T: Clock> core::ops::Sub for Instant<T> {
++    type Output = Duration;
++
++    /// Returns the difference of two timestamps.
 +    #[inline]
-+    pub fn to_ns(self) -> i64 {
-+        self.inner
++    fn sub(self, other: Self) -> Self::Output {
++        // `ktime_t` is an `i64` value of nanoseconds, and kernel defines signed overflow to behave
++        // like 2s-complement, hence `wrapping_sub()` is used here to mirror `ktime_sub()`.
++        Duration::new(self.inner.wrapping_sub(other.inner))
 +    }
 +}
 -- 
