@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289CC12CD8D;
-	Sun, 24 Mar 2024 22:57:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D61F1F10AF;
+	Sun, 24 Mar 2024 22:57:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321068; cv=none; b=IHFZ3JOzAbomXG/nl7AxIz7w8pxfuegtsmyySQCQd2XM8S1vFhOFghFAR/9QEiaNNPNv4srEsSBX0LsK1SDAPS7EWKA8YnhrGNGtBI4SF7yfwynnw+mnX7HaPnNOCbMw5nxZrhxOHPS2GylZEFJgg8iw6PNRJkljnR/ITpAJ1w0=
+	t=1711321071; cv=none; b=hMarIBEh7F0RluvVtIKmVhiJbYHvX9RSB0dJkWRs5LyVQZGiTdUsrPstme4FPZaKYqBY+XpUBKt2j20YVK4NTmK+OCLKRJq1IjbHFIqWLudeqvnGUno89nY7nupp83OEfMY6FdmgcRx616xr4mhneXOkAiVncGn6wMWa1819II4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321068; c=relaxed/simple;
-	bh=9UOR8yfN7Io1/nGO1CWtAhcJh70F2yuivoI9uxE5Q4c=;
+	s=arc-20240116; t=1711321071; c=relaxed/simple;
+	bh=8jusht4l5bIJ/bAuq/+9JuK/sqkynemaRzFgoT/98JE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UvB6GIpZrbE5CZW8gu0EZ6lgp/ZyPb/Le52IGTyDkUUdUF7gv1wEV+bvefZHcmYNPFLIM0CyJwrlxgbfVFz9gUa5pAlgbzL+8mx6gEPQVZK38Aoszp/h/9pG4XdilUvlLvCE/equcc7j+cyHmxRgAlnn96rHVwqb5PXV6DP0ab0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHjSjUg0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Osq6/fmZxYA4Bhs9RDT1ah4V5tY3Vs7Tw4YvImYJcMMQrEbT/reLJbiJLPMfOQy0yWi+PR3NJcapGenRyCBOM116r3NrmBaqNqeEASO9fUE5q1K14nISghTZvRgR/RaGBKWrDTdyx+cwhWBVKDbRnarBH8G1n+J9tw5QgiCCnBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d5dXFC7Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHjSjUg0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D9FEC43390;
-	Sun, 24 Mar 2024 22:57:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d5dXFC7Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DBC7C43390;
+	Sun, 24 Mar 2024 22:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321068;
-	bh=9UOR8yfN7Io1/nGO1CWtAhcJh70F2yuivoI9uxE5Q4c=;
+	s=k20201202; t=1711321070;
+	bh=8jusht4l5bIJ/bAuq/+9JuK/sqkynemaRzFgoT/98JE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cHjSjUg0B7x7SHcvFUMQzTSiOITGoTrGMcWqinwHaWaUC+zycjielriNPks1h6XEK
-	 MspamQnzwNpKHDXMtJ3uVeCTZWM+nAA90Ou81q7ooE9FCsr4kgCoQGEgt6cfaZ6KQ1
-	 45uEsX/2DfB+Gkawy9Lzsh/JtUcNUg2EFR6u3b/1stcNFx14Wh9T7DKoWPB6vSTQNt
-	 OWqZJEFXA9SqEoFwMhRHDW4GvbFePq/fqiPkNYvgKMwHPf5X4nkCJyZwa298j1WP2G
-	 oUrRJncEDrV6WPlFfyIomtMfqjtw0GLyj0viJXrZ7p7dI1teDldUQDhsxObLvlQsru
-	 yMnm4ECVyO1Mw==
+	b=d5dXFC7Yhcm+aFcFna7KRd6ATaiPQcHv/dHonYld+0eUlk7OEi85deuXEQsq4mcod
+	 oFi3Xk+nWCKR6vubycAx+8Rk1/6kMLK9ANbX0BYlTzvp/Kk2efj1znsxXjG6LmwhTb
+	 jTB1olxod3ItSV1niPGg+3CmEhmPF2ktxEKKlyNhlXxdf2p3o7Rzc1P0pnIYNe1F01
+	 LUBkTxNqNAAW53tSGIJf2gPs5vQ9qZR+GO18Th89Z5paicbN0HOtB58M7v3sB658cz
+	 bTeqarrFfIwV0SZUzzRP1w185bBiLy5/xea8jeZ0+484sWzbVbNj5eg92ojlrDuGG8
+	 QkxPs13xmm1Zg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yang Jihong <yangjihong1@huawei.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 632/713] hwtracing: hisi_ptt: Move type check to the beginning of hisi_ptt_pmu_event_init()
-Date: Sun, 24 Mar 2024 18:45:58 -0400
-Message-ID: <20240324224720.1345309-633-sashal@kernel.org>
+Subject: [PATCH 6.7 634/713] serial: 8250_exar: Don't remove GPIO device on suspend
+Date: Sun, 24 Mar 2024 18:46:00 -0400
+Message-ID: <20240324224720.1345309-635-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,52 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yang Jihong <yangjihong1@huawei.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 06226d120a28f146abd3637799958a4dc4dbb7a1 ]
+[ Upstream commit 73b5a5c00be39e23b194bad10e1ea8bb73eee176 ]
 
-When perf_init_event() calls perf_try_init_event() to init pmu driver,
-searches for the next pmu driver only when the return value is -ENOENT.
-Therefore, hisi_ptt_pmu_event_init() needs to check the type at the
-beginning of the function.
-Otherwise, in the case of perf-task mode, perf_try_init_event() returns
--EOPNOTSUPP and skips subsequent pmu drivers, causes perf_init_event() to
-fail.
+It seems a copy&paste mistake that suspend callback removes the GPIO
+device. There is no counterpart of this action, means once suspended
+there is no more GPIO device available untile full unbind-bind cycle
+is performed. Remove suspicious GPIO device removal in suspend.
 
-Fixes: ff0de066b463 ("hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe Tune and Trace device")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Link: https://lore.kernel.org/r/20240108121906.3514820-1-yangjihong1@huawei.com
+Fixes: d0aeaa83f0b0 ("serial: exar: split out the exar code from 8250_pci")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20240219150627.2101198-2-andriy.shevchenko@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/ptt/hisi_ptt.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/8250/8250_exar.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
-index a991ecb7515a3..24a1f7797aeb6 100644
---- a/drivers/hwtracing/ptt/hisi_ptt.c
-+++ b/drivers/hwtracing/ptt/hisi_ptt.c
-@@ -995,6 +995,9 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
- 	int ret;
- 	u32 val;
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+index 23366f868ae3a..dab94835b6f5f 100644
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -753,6 +753,7 @@ static void exar_pci_remove(struct pci_dev *pcidev)
+ 	for (i = 0; i < priv->nr; i++)
+ 		serial8250_unregister_port(priv->line[i]);
  
-+	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
-+		return -ENOENT;
-+
- 	if (event->cpu < 0) {
- 		dev_dbg(event->pmu->dev, "Per-task mode not supported\n");
- 		return -EOPNOTSUPP;
-@@ -1003,9 +1006,6 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
- 	if (event->attach_state & PERF_ATTACH_TASK)
- 		return -EOPNOTSUPP;
++	/* Ensure that every init quirk is properly torn down */
+ 	if (priv->board->exit)
+ 		priv->board->exit(pcidev);
+ }
+@@ -767,10 +768,6 @@ static int __maybe_unused exar_suspend(struct device *dev)
+ 		if (priv->line[i] >= 0)
+ 			serial8250_suspend_port(priv->line[i]);
  
--	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
--		return -ENOENT;
+-	/* Ensure that every init quirk is properly torn down */
+-	if (priv->board->exit)
+-		priv->board->exit(pcidev);
 -
- 	ret = hisi_ptt_trace_valid_filter(hisi_ptt, event->attr.config);
- 	if (ret < 0)
- 		return ret;
+ 	return 0;
+ }
+ 
 -- 
 2.43.0
 
