@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259781ED71B;
-	Sun, 24 Mar 2024 23:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0F0212D3D;
+	Sun, 24 Mar 2024 23:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321722; cv=none; b=WOVP44kKl/lG51QpY9/xXHEnjqw0o61mEuCp9vqTlhb+37c2+Djl2mavzJcPu0rPZKmWOM+yN+viGm6yYI1OL5TxR/yObVuU+gbimZchYLvofo46Cb6XPudXZbyCp9/1bQAhOIPVmvwnmEfldlWeZgeh/C8M7o5O170bVS8DFuc=
+	t=1711321727; cv=none; b=fGJauCfj4ut34RO6pU3QQuXwGrONWsswdqLcKjGPcCetNzrLQaSfehWSaos+k46ZNblB+hy+ehJhJqQQf+/nrxT6BxYNFJqtqFVpEz5/uw7fit+hoEnBpLvO+KxOTRQCNUFpG68VKhk7edy0LANXU0laViLr2uw7EA3X/3SAgu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321722; c=relaxed/simple;
-	bh=iVIo1tJZbll1NQ+L0HoLpLV8c4g7AVa5XZyCJ8sGWBg=;
+	s=arc-20240116; t=1711321727; c=relaxed/simple;
+	bh=Oco3c/Bg9op619lpmtlAzub1MxgaQSQT+eBfoTPStLY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JXcgWHukEtyJcxkFEv5Rnmv+kCXbCc1FG0mLRfmXAi26jXUHY3JfBGiodwVZxkjayXR63fEfTYIVVolFSpN6NSb+I7ElEqhnh23Kq6vpAhU94kjBqqB8apMOheeSCUpX6ozA8H/6HdB20dtWoFqNpJwGz+tdiJu5tTqHzXs0pfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZV2cLOs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CCDZsEXn9Qxt4z24EakyHXw+f8c+/skPgqwsrWIej91MfQvd3Px7KDU9DPzHxu0Jy4DFLbba6eAFmnB7/zUxhD96KRSfYPujrG106f7B+lqHsUxztuACJQY92OjR9UQ2uG9bS4k80axViazunbpH/SDSLwAS7t/vI2uIUMvZImc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9ib1DHf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZV2cLOs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52EA9C433C7;
-	Sun, 24 Mar 2024 23:08:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9ib1DHf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60B92C433A6;
+	Sun, 24 Mar 2024 23:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321721;
-	bh=iVIo1tJZbll1NQ+L0HoLpLV8c4g7AVa5XZyCJ8sGWBg=;
+	s=k20201202; t=1711321726;
+	bh=Oco3c/Bg9op619lpmtlAzub1MxgaQSQT+eBfoTPStLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lZV2cLOsVZDHv77J9M5Mq3JyUgPMwMsrnDwWGJCo8CiDHSvPrhndgTqPxDcwstEaR
-	 VxDpGEtZuOwHMxKD4gSSQdAL7jHVtNxnfhEHuzpXTh9LOfI0czkfcfvHmhjhUcv7GD
-	 4K19pn8XMQB75CXhOFGOdgLTQMWMD01NG+48PmOm7/ViaTNzW3B8uOLb2o2NrPU57y
-	 u6Y5ossTalijmb4s/rbIN2zZFfmOOdZOZ8Bv9sBCMXQqsuIr+WCgueJHUv3xGXG5jO
-	 dAd/1rlsqVD+cSMhhDlu56sLplow10X+qiNcAARfTLq2fo0+jOVvh/k7BWQ/EPTGJ0
-	 a9E+L105syk9Q==
+	b=m9ib1DHf0XCV1RSCgdLilM/ptqiYyKstS+OikHIQ/g88M9EuqfiPv1uKcy3xIQdz+
+	 xsn5GzYvIzzs1TLjkZd5/j26PqKVfxYlXKzY5jsraLbKYK9RXsJlyxsKwW8+1d9vli
+	 eOBK8T1SIlWS0EYz7pPW+J+KFd5mGCNHERpmNAW4wRUibkfhMocK6QIA3Qp0QET6e6
+	 wdSpicT4NVwanH6xNixtRI4pR/JicfKOb5Nv28PgQIzraoaFnMamCYQCujr4mUaxyQ
+	 pXU4ffgmBTeiHUuehzxGqzR4MXV00iIhs6Tr6Upz2l+LVB6kVml0DhEm0mUVwWtFHy
+	 i2zkrtAe7seIg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Damian Muszynski <damian.muszynski@intel.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
+Cc: Baruch Siach <baruch@tkos.co.il>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 449/638] crypto: qat - fix ring to service map for dcc in 4xxx
-Date: Sun, 24 Mar 2024 18:58:06 -0400
-Message-ID: <20240324230116.1348576-450-sashal@kernel.org>
+Subject: [PATCH 6.6 454/638] mtd: maps: physmap-core: fix flash size larger than 32-bit
+Date: Sun, 24 Mar 2024 18:58:11 -0400
+Message-ID: <20240324230116.1348576-455-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,54 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Damian Muszynski <damian.muszynski@intel.com>
+From: Baruch Siach <baruch@tkos.co.il>
 
-[ Upstream commit df018f82002a8b4dc407bc9a6f416b9241d14415 ]
+[ Upstream commit 3884f03edd34887514a0865a80769cd5362d5c3b ]
 
-If a device is configured for data compression chaining (dcc), half of the
-engines are loaded with the symmetric crypto image and the rest are loaded
-with the compression image.
-However, in such configuration all rings can handle compression requests.
+mtd-ram can potentially be larger than 4GB. get_bitmask_order() uses
+fls() that is not guaranteed to work with values larger than 32-bit.
+Specifically on aarch64 fls() returns 0 when all 32 LSB bits are clear.
+Use fls64() instead.
 
-Fix the ring to service mapping so that when a device is configured for
-dcc, the ring to service mapping reports that all rings in a bank can
-be used for compression.
-
-Fixes: a238487f7965 ("crypto: qat - fix ring to service map for QAT GEN4")
-Signed-off-by: Damian Muszynski <damian.muszynski@intel.com>
-Reviewed-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: ba32ce95cbd987 ("mtd: maps: Merge gpio-addr-flash.c into physmap-core.c")
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/9fbf3664ce00f8b07867f1011834015f21d162a5.1707388458.git.baruch@tkos.co.il
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/intel/qat/qat_4xxx/adf_4xxx_hw_data.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/mtd/maps/physmap-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/intel/qat/qat_4xxx/adf_4xxx_hw_data.c b/drivers/crypto/intel/qat/qat_4xxx/adf_4xxx_hw_data.c
-index 524fdcf3d973b..615af08832076 100644
---- a/drivers/crypto/intel/qat/qat_4xxx/adf_4xxx_hw_data.c
-+++ b/drivers/crypto/intel/qat/qat_4xxx/adf_4xxx_hw_data.c
-@@ -417,6 +417,13 @@ static u16 get_ring_to_svc_map(struct adf_accel_dev *accel_dev)
- 	if (!fw_config)
- 		return 0;
+diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
+index fc87213392824..9be71b045b259 100644
+--- a/drivers/mtd/maps/physmap-core.c
++++ b/drivers/mtd/maps/physmap-core.c
+@@ -523,7 +523,7 @@ static int physmap_flash_probe(struct platform_device *dev)
+ 		if (!info->maps[i].phys)
+ 			info->maps[i].phys = res->start;
  
-+	/* If dcc, all rings handle compression requests */
-+	if (adf_get_service_enabled(accel_dev) == SVC_DCC) {
-+		for (i = 0; i < RP_GROUP_COUNT; i++)
-+			rps[i] = COMP;
-+		goto set_mask;
-+	}
-+
- 	for (i = 0; i < RP_GROUP_COUNT; i++) {
- 		switch (fw_config[i].ae_mask) {
- 		case ADF_AE_GROUP_0:
-@@ -445,6 +452,7 @@ static u16 get_ring_to_svc_map(struct adf_accel_dev *accel_dev)
- 		}
- 	}
- 
-+set_mask:
- 	ring_to_svc_map = rps[RP_GROUP_0] << ADF_CFG_SERV_RING_PAIR_0_SHIFT |
- 			  rps[RP_GROUP_1] << ADF_CFG_SERV_RING_PAIR_1_SHIFT |
- 			  rps[RP_GROUP_0] << ADF_CFG_SERV_RING_PAIR_2_SHIFT |
+-		info->win_order = get_bitmask_order(resource_size(res)) - 1;
++		info->win_order = fls64(resource_size(res)) - 1;
+ 		info->maps[i].size = BIT(info->win_order +
+ 					 (info->gpios ?
+ 					  info->gpios->ndescs : 0));
 -- 
 2.43.0
 
