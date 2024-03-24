@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FDC28BD38;
-	Sun, 24 Mar 2024 23:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D03E181329;
+	Sun, 24 Mar 2024 23:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324084; cv=none; b=QnINPNtKv7FrmWilU/s575/EcyxeXlbBHAtSAhQnjFNJXp73RAM7v332A8l8FB1RtXk3uyY8uozXeWGZSPPhUjApolLcUuyoeRU46FyWpS2fxgjuraBLPhTl4+Vsn5fYPTb6lImGlFDyn3cHC407BQF+MxTzyGaf+Jff2dclFM0=
+	t=1711324078; cv=none; b=JZTMWi0WFhpMFEWxSbicAci8K4mHi2GAhslEvZJXwTs7IzajeUFcPRPDPp2DaiYiBfNZLHFI69317CrQbM8JnbbNhaZBdRZoBie3kkBfUBg4p299rsDrhhGxzLuBtpMz4wthlKw1twSU5XX0k6lMCphNcoDk2t2xqky+kcxke9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324084; c=relaxed/simple;
-	bh=6a18xJP4TKulJ2O1rtzThoUgjvp7ZLrpu7iAywX1MsI=;
+	s=arc-20240116; t=1711324078; c=relaxed/simple;
+	bh=4DaxpUzWlRp6+J1iAwHH9aJOrxqrNkhArjxWeuBu49s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XpA2P3DC5XCCQtbJeqPKmMRWyHX5I6ReOrGcLYMtE9Zjaw1NhtAJyo0iKuII1TyepHNRQrv2/ZiBjtWPr4vV8pkUkkiWlWPfqlTFq9XhOHR5NVRkiCv5LIX586QVlcCyxERNic9VA/cJbI0Z/uviNcJbxnWeCCiQNTmmMmQl3zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAgSuIRZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iiWsPcHBuKjPIhxwjKdwXWAHcx9KJ4j7ZaQfqmbs6KPyUHvi7joxOz5RJt2C1QQFwhZiWm7IYuRnieZakGRykZg/E4yuZOy+w3lq6WYJtERTw8GkR/8Vm5IweHDJKZflXoWlIQtnd0Ga/blataoRJE6FrYnvsd6XVSGgQ3kFUYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nvHL5XmM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAgSuIRZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88335C433C7;
-	Sun, 24 Mar 2024 23:48:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nvHL5XmM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65BA1C433F1;
+	Sun, 24 Mar 2024 23:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324084;
-	bh=6a18xJP4TKulJ2O1rtzThoUgjvp7ZLrpu7iAywX1MsI=;
+	s=k20201202; t=1711324077;
+	bh=4DaxpUzWlRp6+J1iAwHH9aJOrxqrNkhArjxWeuBu49s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EAgSuIRZ+yUBCPFdoClOXc1CjmqPuus9HTTYqb57wF9us1aMHL7LCMVgeerZUCXcK
-	 R9IxUzK4NkoqTr5JR/CkP9rK7FXvx1Gu26ehfkytpbBFu8lPJWQ7JJasJFibYdxIYZ
-	 cmmVmdoc7VXwniVd1xnM8XK5VVjHmWPtfzBkUMlu4U1fxIsF+yMHyS5IwidgwchOhP
-	 ubIu1j6cAnRK5F2Szv6galcd/u+SZFhZxxL8QUL9ZA7patgUcNKjFXtCTx/F/BYoht
-	 YcqQxcS2D2uhefQ/72Ne+UNyQg/VYrShXrUjq1tw1mUg+SGILsMBx/jya6WfYLt8Uu
-	 DsZavG7Yi3H9g==
+	b=nvHL5XmMnCuKAEA2sj3NISX+y55TToVoWak5z7DEs/m1eVwl+5tt462xuVH8MpzX5
+	 mDPXdOu/9cdh/lXj58dg9QlA8KWLcvXK8ib1JkvNuQvS1bLmYj1qRW6YmJfottBTna
+	 28KR30CDOE8Y+iAsCYBkAfEQza7tVLqMfO11MmGDqQgGoY5RrNrukGRbkN6eB7WXuu
+	 kM/V51tmdTasz1nbqSOSkJCfwgwjMiRyrefw7HtbkH/3spIMq6b8hUpkeaZZShx09n
+	 at8rY6n2QP8903f85ZS263aM+/N1ghgViTwl/w7vnGnlFUEvzrPdd6LgTLbW7ETXic
+	 xhL0c4cNs0tPQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mikulas Patocka <mpatocka@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>,
+Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 084/183] dm: call the resume method on internal suspend
-Date: Sun, 24 Mar 2024 19:44:57 -0400
-Message-ID: <20240324234638.1355609-85-sashal@kernel.org>
+Subject: [PATCH 5.4 077/183] tcp: fix incorrect parameter validation in the do_tcp_getsockopt() function
+Date: Sun, 24 Mar 2024 19:44:50 -0400
+Message-ID: <20240324234638.1355609-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,121 +49,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit 65e8fbde64520001abf1c8d0e573561b4746ef38 ]
+[ Upstream commit 716edc9706deb3bb2ff56e2eeb83559cea8f22db ]
 
-There is this reported crash when experimenting with the lvm2 testsuite.
-The list corruption is caused by the fact that the postsuspend and resume
-methods were not paired correctly; there were two consecutive calls to the
-origin_postsuspend function. The second call attempts to remove the
-"hash_list" entry from a list, while it was already removed by the first
-call.
+The 'len' variable can't be negative when assigned the result of
+'min_t' because all 'min_t' parameters are cast to unsigned int,
+and then the minimum one is chosen.
 
-Fix __dm_internal_resume so that it calls the preresume and resume
-methods of the table's targets.
+To fix the logic, check 'len' as read from 'optlen',
+where the types of relevant variables are (signed) int.
 
-If a preresume method of some target fails, we are in a tricky situation.
-We can't return an error because dm_internal_resume isn't supposed to
-return errors. We can't return success, because then the "resume" and
-"postsuspend" methods would not be paired correctly. So, we set the
-DMF_SUSPENDED flag and we fake normal suspend - it may confuse userspace
-tools, but it won't cause a kernel crash.
-
-------------[ cut here ]------------
-kernel BUG at lib/list_debug.c:56!
-invalid opcode: 0000 [#1] PREEMPT SMP
-CPU: 1 PID: 8343 Comm: dmsetup Not tainted 6.8.0-rc6 #4
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.14.0-2 04/01/2014
-RIP: 0010:__list_del_entry_valid_or_report+0x77/0xc0
-<snip>
-RSP: 0018:ffff8881b831bcc0 EFLAGS: 00010282
-RAX: 000000000000004e RBX: ffff888143b6eb80 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffffff819053d0 RDI: 00000000ffffffff
-RBP: ffff8881b83a3400 R08: 00000000fffeffff R09: 0000000000000058
-R10: 0000000000000000 R11: ffffffff81a24080 R12: 0000000000000001
-R13: ffff88814538e000 R14: ffff888143bc6dc0 R15: ffffffffa02e4bb0
-FS:  00000000f7c0f780(0000) GS:ffff8893f0a40000(0000) knlGS:0000000000000000
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 0000000057fb5000 CR3: 0000000143474000 CR4: 00000000000006b0
-Call Trace:
- <TASK>
- ? die+0x2d/0x80
- ? do_trap+0xeb/0xf0
- ? __list_del_entry_valid_or_report+0x77/0xc0
- ? do_error_trap+0x60/0x80
- ? __list_del_entry_valid_or_report+0x77/0xc0
- ? exc_invalid_op+0x49/0x60
- ? __list_del_entry_valid_or_report+0x77/0xc0
- ? asm_exc_invalid_op+0x16/0x20
- ? table_deps+0x1b0/0x1b0 [dm_mod]
- ? __list_del_entry_valid_or_report+0x77/0xc0
- origin_postsuspend+0x1a/0x50 [dm_snapshot]
- dm_table_postsuspend_targets+0x34/0x50 [dm_mod]
- dm_suspend+0xd8/0xf0 [dm_mod]
- dev_suspend+0x1f2/0x2f0 [dm_mod]
- ? table_deps+0x1b0/0x1b0 [dm_mod]
- ctl_ioctl+0x300/0x5f0 [dm_mod]
- dm_compat_ctl_ioctl+0x7/0x10 [dm_mod]
- __x64_compat_sys_ioctl+0x104/0x170
- do_syscall_64+0x184/0x1b0
- entry_SYSCALL_64_after_hwframe+0x46/0x4e
-RIP: 0033:0xf7e6aead
-<snip>
----[ end trace 0000000000000000 ]---
-
-Fixes: ffcc39364160 ("dm: enhance internal suspend and resume interface")
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ net/ipv4/tcp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 771167ee552cd..a7724ba45b437 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -2809,6 +2809,9 @@ static void __dm_internal_suspend(struct mapped_device *md, unsigned suspend_fla
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 8d7933989de0e..8ebcff40bc5ac 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3451,11 +3451,11 @@ static int do_tcp_getsockopt(struct sock *sk, int level,
+ 	if (get_user(len, optlen))
+ 		return -EFAULT;
  
- static void __dm_internal_resume(struct mapped_device *md)
- {
-+	int r;
-+	struct dm_table *map;
-+
- 	BUG_ON(!md->internal_suspend_count);
- 
- 	if (--md->internal_suspend_count)
-@@ -2817,12 +2820,23 @@ static void __dm_internal_resume(struct mapped_device *md)
- 	if (dm_suspended_md(md))
- 		goto done; /* resume from nested suspend */
- 
--	/*
--	 * NOTE: existing callers don't need to call dm_table_resume_targets
--	 * (which may fail -- so best to avoid it for now by passing NULL map)
--	 */
--	(void) __dm_resume(md, NULL);
+-	len = min_t(unsigned int, len, sizeof(int));
 -
-+	map = rcu_dereference_protected(md->map, lockdep_is_held(&md->suspend_lock));
-+	r = __dm_resume(md, map);
-+	if (r) {
-+		/*
-+		 * If a preresume method of some target failed, we are in a
-+		 * tricky situation. We can't return an error to the caller. We
-+		 * can't fake success because then the "resume" and
-+		 * "postsuspend" methods would not be paired correctly, and it
-+		 * would break various targets, for example it would cause list
-+		 * corruption in the "origin" target.
-+		 *
-+		 * So, we fake normal suspend here, to make sure that the
-+		 * "resume" and "postsuspend" methods will be paired correctly.
-+		 */
-+		DMERR("Preresume method failed: %d", r);
-+		set_bit(DMF_SUSPENDED, &md->flags);
-+	}
- done:
- 	clear_bit(DMF_SUSPENDED_INTERNALLY, &md->flags);
- 	smp_mb__after_atomic();
+ 	if (len < 0)
+ 		return -EINVAL;
+ 
++	len = min_t(unsigned int, len, sizeof(int));
++
+ 	switch (optname) {
+ 	case TCP_MAXSEG:
+ 		val = tp->mss_cache;
 -- 
 2.43.0
 
