@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFB322E81A;
-	Sun, 24 Mar 2024 23:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56695132808;
+	Sun, 24 Mar 2024 23:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324308; cv=none; b=PWiCeXSRPHvdfMzyXItsXMHHpkP/yfB3u+Wh6bukj5aHkh7Hdzh9QyznsyW607C7jh9s6abSsKRsUP/rN0FAA9Ftb0IquWRdN327fwWgNOf41+AoI6D+jvxkZkmjOSh4SIXh+FjVFbROQi89UzPeTKXuPgBL/kO07ZJwrSz5IMk=
+	t=1711324310; cv=none; b=YxoinMpwo5XDh32DjkpmsgiNcshWQ8KrZxpxm29SuIR2tYd20mVaNiu5AwqN12aEllcv/K5cU7P+pq7h7bKtbAsClHyzIoCJPTGIJx7u6uf+DD0C2xe2GZfokBNhvVvYXAl8iC34nKcAJHR1iIY1fOjwjEM8khrBbpXmTy4pBYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324308; c=relaxed/simple;
-	bh=YEoU5PFm52D5s+v/MhMGx8B0s7OKjBl9UBYhekISz4s=;
+	s=arc-20240116; t=1711324310; c=relaxed/simple;
+	bh=8z5IHMv3GWG41+xjtTI2imOucUx5FAko19b1cKHsbNI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZLYVx0wvI4KzDTIxVS3dp3ypsJa+3LlYSJRVA1RhHmf72kwP4MTgGvibU49AK+1ekFI72sXYP9yTBJz7mShT69x5GqpF310xoiXycQO0llhAdeB48AequMpVevfdHyRswEzqp/6w0jSW8VA6L7agr3T5oVJCQDLQy7mAlKjlj7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGWc7OnL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pKyu+f2UIu5/zhni1Ihga1QqigoKL9+GhErE9RIV4ElVLq6vREWdCujmMz9bgvnfcWZgXCoL4607Tdak66N8yYzTYuJm8IKwzWHWOZQkDw6QfJ7Zlou5fmccczxU6cmJ4mm3y47dRZB7oKTNIwOSQcexAwtI/OyEaXqLD7hQkcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDW1mlv4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGWc7OnL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FB85C433C7;
-	Sun, 24 Mar 2024 23:51:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDW1mlv4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A8C5C43390;
+	Sun, 24 Mar 2024 23:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324307;
-	bh=YEoU5PFm52D5s+v/MhMGx8B0s7OKjBl9UBYhekISz4s=;
+	s=k20201202; t=1711324309;
+	bh=8z5IHMv3GWG41+xjtTI2imOucUx5FAko19b1cKHsbNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UGWc7OnL6PCEdcHp+H0h1t3MagDZB+D6TMVLGKvqdHEJAO/e+SBadEUYrTVPV6g7U
-	 JQcGHqsVbJYtlkCOfwPLLK27Rhd6Khai2fGK+6Pn/bSx7z+Ty+ivP+lCOExHBzw/qe
-	 6XDaAQ8coiGumJsUZ2yeSI1JQNhNicn1C0Rk3tnHYDfkZEVERkm8EihajeN3jH+iNN
-	 hmmF0w/SHObZTpdI0HK1PZvVO3t4fccc/p0sUrzIiibV/66V2GZb9Pcv18XOpDnHPh
-	 2jVeBfFhuqTB0fU3rO/OwKH6rr3uunCMRY+VFNR0uX7aKU3Sw/kDKLnNnu45AMWYfY
-	 RmtG9YqFb8bmA==
+	b=sDW1mlv4dDWUW69Sgid9mVGHxwwz1PziL3IHAvQrDEZcFTKx/YiE9FDLnW6OlIh9d
+	 IgW9UAbkkd/A20YGItd8xMn0STghEky9WwBJNa03ytxREWDqi2XQhX/lK05fdsmcOB
+	 lZk5JTdV+3H3Xa+fgcUF+PfeliBRU6cWVcYduvv5tHR7158EPJw41Qag7a10AHap/9
+	 QcLZtcLWdj62Nj6wjrcizXvBdyHR3ki/hDm0OfuDcfJxVVgmYaPmOS6wtm0iqAFsuQ
+	 0q0eMAnZPKj16vkEvirUnoZj5hOT3pJWos71mJW3XEjvqleyJbWMn8KQcquDP1yEXY
+	 rRaMdSnAuKedA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 079/148] media: em28xx: annotate unchecked call to media_device_register()
-Date: Sun, 24 Mar 2024 19:49:03 -0400
-Message-ID: <20240324235012.1356413-80-sashal@kernel.org>
+Subject: [PATCH 4.19 081/148] media: v4l2-mem2mem: fix a memleak in v4l2_m2m_register_entity
+Date: Sun, 24 Mar 2024 19:49:05 -0400
+Message-ID: <20240324235012.1356413-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -49,40 +48,46 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit fd61d77a3d28444b2635f0c8b5a2ecd6a4d94026 ]
+[ Upstream commit 8f94b49a5b5d386c038e355bef6347298aabd211 ]
 
-Static analyzers generate alerts for an unchecked call to
-`media_device_register()`. However, in this case, the device will work
-reliably without the media controller API.
+The entity->name (i.e. name) is allocated in v4l2_m2m_register_entity
+but isn't freed in its following error-handling paths. This patch
+adds such deallocation to prevent memleak of entity->name.
 
-Add a comment above the call to prevent future unnecessary changes.
-
-Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Fixes: 37ecc7b1278f ("[media] em28xx: add media controller support")
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Fixes: be2fff656322 ("media: add helpers for memory-to-memory media controller")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/em28xx/em28xx-cards.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/v4l2-core/v4l2-mem2mem.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
-index b14bff7b4ec88..b9874324d1c44 100644
---- a/drivers/media/usb/em28xx/em28xx-cards.c
-+++ b/drivers/media/usb/em28xx/em28xx-cards.c
-@@ -3990,6 +3990,10 @@ static int em28xx_usb_probe(struct usb_interface *intf,
- 	 * topology will likely change after the load of the em28xx subdrivers.
- 	 */
- #ifdef CONFIG_MEDIA_CONTROLLER
-+	/*
-+	 * No need to check the return value, the device will still be
-+	 * usable without media controller API.
-+	 */
- 	retval = media_device_register(dev->media_dev);
- #endif
+diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
+index 75c51007768e3..5c4e4d101ca46 100644
+--- a/drivers/media/v4l2-core/v4l2-mem2mem.c
++++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+@@ -775,11 +775,17 @@ static int v4l2_m2m_register_entity(struct media_device *mdev,
+ 	entity->function = function;
  
+ 	ret = media_entity_pads_init(entity, num_pads, pads);
+-	if (ret)
++	if (ret) {
++		kfree(entity->name);
++		entity->name = NULL;
+ 		return ret;
++	}
+ 	ret = media_device_register_entity(mdev, entity);
+-	if (ret)
++	if (ret) {
++		kfree(entity->name);
++		entity->name = NULL;
+ 		return ret;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.43.0
 
