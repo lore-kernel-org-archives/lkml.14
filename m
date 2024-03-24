@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845F212CDBB;
-	Sun, 24 Mar 2024 22:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968DA1F1AE5;
+	Sun, 24 Mar 2024 22:58:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321083; cv=none; b=W8Myq7LkV0ApESBWLvvISpDYL6MwdsKhGLWK9uOZMZnXeMFu25mkjBvPp9BiFDgns+yH+yF7bY8BgWq/rxQK5psa98WGps0SxoSgDT0Dk15nZicqIlDQvKnA1aNSutE1LrtkXqOX8/5c+A9cMHpdoClkikZEWTTRmiwKxFSW4CE=
+	t=1711321085; cv=none; b=LXo4uJdLQ2ApkmAy3Jc6nP4km9MALo42m8sTLmTirgqKl4zIfOo9ohuQK7SEKcGQOdp13yiHydhro8cJpmmTgw2ot4ui6il8bX9DLrcaqmkisebiYIOElLXrqCPhccX1F27Vkn4wBAHUF+Bvctj1M1beDk/jWBLYGP6iOWa15Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321083; c=relaxed/simple;
-	bh=/xAFj90ZDfHZPfW2KNKnXlfs/ETDEw2eAYIWvVZUf4Y=;
+	s=arc-20240116; t=1711321085; c=relaxed/simple;
+	bh=pIMAx/5guFWCXZz7a5DmmTIE8rbWEEKno25pg9I15Mo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K/zkJuv2FqdRN5S+53aTZmgvowqDP1JXf3TgWSy+q7MnNJb5f3+n9cZKAD5r207jJhUjmqPo2uySLqiNFlev4AyVrlNpPufkwEvYQTBbtfxlG0za5TTN+ofwe3/dpmLQFS6XRGdsCEe++QqPm+3UjMfv291+bB7vwnocpUMEDf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PEttoOhy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Uai0CrcIz+ZlNe7sBx3ZvOdvdhf99556s3llfk7oULPp3pb0wELKbYE7uVPhtqdsPMzdtOIzNBDadPfPyOdTcwSMWJxmdEzZi/cP1VW+qNNcZycSJYLLbTYcVo7X1OThqHYh5OJfAJIViRCXuJmw0JbKPM29ITvpyJBvEjFE1Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exXZorgK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PEttoOhy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 989EAC43390;
-	Sun, 24 Mar 2024 22:58:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exXZorgK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA629C43394;
+	Sun, 24 Mar 2024 22:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321083;
-	bh=/xAFj90ZDfHZPfW2KNKnXlfs/ETDEw2eAYIWvVZUf4Y=;
+	s=k20201202; t=1711321085;
+	bh=pIMAx/5guFWCXZz7a5DmmTIE8rbWEEKno25pg9I15Mo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PEttoOhyEEtepR3p/s+OI1xnszMbCXIVNvdu/bO+PG7eniJYvWy5VP18uG9ciSRwE
-	 oZxBQvPLIwzXmJdSu/SvQwJFwZjkoDoTDAeMdYZLkDdD6HUyX+ov/Md7RwQvsI1vw4
-	 G8wdkjaj5x1gK2wJfIaw0LgidSfreyYY9dkfqLstPVr/HUnRH+5ZHHKQeB7rd1+chl
-	 bpS8i8vIzJmfC6bMvgqxh7zezFIHp1Y6WNIsVoqmOY5UhDRxCzcn2p1i7TQR9pHlCR
-	 OMbTUI72QYclUaBV8OYEKkgDnHxrXmlOelh2tTnY/VxEYvnrKVm7yPVUur4kEPYjgs
-	 PYHguOcVuufvA==
+	b=exXZorgKhtOFdh5rlX1Ds6wM+LZVCBnvfll7SdhBldW/wEbdFhrpZnMk+xtsy3IVY
+	 AsEOfBOIQcqiSRgJDb7pCdJRCiHdGCZGFJye7G0InaQibEyY4+AQXQSh6zhhGWkq00
+	 VEsI0dLbBFiXtVd6DtQxs7NeddoSGW+w7eo0Y+RW4wT25ny4ZI2G9Chii3PFWsUScB
+	 n41vDC4GwZBRQicVrb2QKxmf1QSdK5Guh/3zJ9oWpE/bQMq/mYlFzCPdB8z6troCAz
+	 WKHEX1aOkPI5h4LB8/Bxo30IEnskjAbm0iuVbrXLGM4UOUML1+Jv8Hwq/Z8hD1fpCK
+	 3gx5fbruVeUkw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>,
-	syzkaller <syzkaller@googlegroups.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Mete Durlu <meted@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 647/713] rds: tcp: Fix use-after-free of net in reqsk_timer_handler().
-Date: Sun, 24 Mar 2024 18:46:13 -0400
-Message-ID: <20240324224720.1345309-648-sashal@kernel.org>
+Subject: [PATCH 6.7 649/713] s390/vtime: fix average steal time calculation
+Date: Sun, 24 Mar 2024 18:46:15 -0400
+Message-ID: <20240324224720.1345309-650-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,153 +49,62 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+From: Mete Durlu <meted@linux.ibm.com>
 
-[ Upstream commit 2a750d6a5b365265dbda33330a6188547ddb5c24 ]
+[ Upstream commit 367c50f78451d3bd7ad70bc5c89f9ba6dec46ca9 ]
 
-syzkaller reported a warning of netns tracker [0] followed by KASAN
-splat [1] and another ref tracker warning [1].
+Current average steal timer calculation produces volatile and inflated
+values. The only user of this value is KVM so far and it uses that to
+decide whether or not to yield the vCPU which is seeing steal time.
+KVM compares average steal timer to a threshold and if the threshold
+is past then it does not allow CPU polling and yields it to host, else
+it keeps the CPU by polling.
+Since KVM's steal time threshold is very low by default (%10) it most
+likely is not effected much by the bloated average steal timer values
+because the operating region is pretty small. However there might be
+new users in the future who might rely on this number. Fix average
+steal timer calculation by changing the formula from:
 
-syzkaller could not find a repro, but in the log, the only suspicious
-sequence was as follows:
+	avg_steal_timer = avg_steal_timer / 2 + steal_timer;
 
-  18:26:22 executing program 1:
-  r0 = socket$inet6_mptcp(0xa, 0x1, 0x106)
-  ...
-  connect$inet6(r0, &(0x7f0000000080)={0xa, 0x4001, 0x0, @loopback}, 0x1c) (async)
+to the following:
 
-The notable thing here is 0x4001 in connect(), which is RDS_TCP_PORT.
+	avg_steal_timer = (avg_steal_timer + steal_timer) / 2;
 
-So, the scenario would be:
+This ensures that avg_steal_timer is actually a naive average of steal
+timer values. It now closely follows steal timer values but of course
+in a smoother manner.
 
-  1. unshare(CLONE_NEWNET) creates a per netns tcp listener in
-      rds_tcp_listen_init().
-  2. syz-executor connect()s to it and creates a reqsk.
-  3. syz-executor exit()s immediately.
-  4. netns is dismantled.  [0]
-  5. reqsk timer is fired, and UAF happens while freeing reqsk.  [1]
-  6. listener is freed after RCU grace period.  [2]
-
-Basically, reqsk assumes that the listener guarantees netns safety
-until all reqsk timers are expired by holding the listener's refcount.
-However, this was not the case for kernel sockets.
-
-Commit 740ea3c4a0b2 ("tcp: Clean up kernel listener's reqsk in
-inet_twsk_purge()") fixed this issue only for per-netns ehash.
-
-Let's apply the same fix for the global ehash.
-
-[0]:
-ref_tracker: net notrefcnt@0000000065449cc3 has 1/1 users at
-     sk_alloc (./include/net/net_namespace.h:337 net/core/sock.c:2146)
-     inet6_create (net/ipv6/af_inet6.c:192 net/ipv6/af_inet6.c:119)
-     __sock_create (net/socket.c:1572)
-     rds_tcp_listen_init (net/rds/tcp_listen.c:279)
-     rds_tcp_init_net (net/rds/tcp.c:577)
-     ops_init (net/core/net_namespace.c:137)
-     setup_net (net/core/net_namespace.c:340)
-     copy_net_ns (net/core/net_namespace.c:497)
-     create_new_namespaces (kernel/nsproxy.c:110)
-     unshare_nsproxy_namespaces (kernel/nsproxy.c:228 (discriminator 4))
-     ksys_unshare (kernel/fork.c:3429)
-     __x64_sys_unshare (kernel/fork.c:3496)
-     do_syscall_64 (arch/x86/entry/common.c:52 arch/x86/entry/common.c:83)
-     entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:129)
-...
-WARNING: CPU: 0 PID: 27 at lib/ref_tracker.c:179 ref_tracker_dir_exit (lib/ref_tracker.c:179)
-
-[1]:
-BUG: KASAN: slab-use-after-free in inet_csk_reqsk_queue_drop (./include/net/inet_hashtables.h:180 net/ipv4/inet_connection_sock.c:952 net/ipv4/inet_connection_sock.c:966)
-Read of size 8 at addr ffff88801b370400 by task swapper/0/0
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-Call Trace:
- <IRQ>
- dump_stack_lvl (lib/dump_stack.c:107 (discriminator 1))
- print_report (mm/kasan/report.c:378 mm/kasan/report.c:488)
- kasan_report (mm/kasan/report.c:603)
- inet_csk_reqsk_queue_drop (./include/net/inet_hashtables.h:180 net/ipv4/inet_connection_sock.c:952 net/ipv4/inet_connection_sock.c:966)
- reqsk_timer_handler (net/ipv4/inet_connection_sock.c:979 net/ipv4/inet_connection_sock.c:1092)
- call_timer_fn (./arch/x86/include/asm/jump_label.h:27 ./include/linux/jump_label.h:207 ./include/trace/events/timer.h:127 kernel/time/timer.c:1701)
- __run_timers.part.0 (kernel/time/timer.c:1752 kernel/time/timer.c:2038)
- run_timer_softirq (kernel/time/timer.c:2053)
- __do_softirq (./arch/x86/include/asm/jump_label.h:27 ./include/linux/jump_label.h:207 ./include/trace/events/irq.h:142 kernel/softirq.c:554)
- irq_exit_rcu (kernel/softirq.c:427 kernel/softirq.c:632 kernel/softirq.c:644)
- sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1076 (discriminator 14))
- </IRQ>
-
-Allocated by task 258 on cpu 0 at 83.612050s:
- kasan_save_stack (mm/kasan/common.c:48)
- kasan_save_track (mm/kasan/common.c:68)
- __kasan_slab_alloc (mm/kasan/common.c:343)
- kmem_cache_alloc (mm/slub.c:3813 mm/slub.c:3860 mm/slub.c:3867)
- copy_net_ns (./include/linux/slab.h:701 net/core/net_namespace.c:421 net/core/net_namespace.c:480)
- create_new_namespaces (kernel/nsproxy.c:110)
- unshare_nsproxy_namespaces (kernel/nsproxy.c:228 (discriminator 4))
- ksys_unshare (kernel/fork.c:3429)
- __x64_sys_unshare (kernel/fork.c:3496)
- do_syscall_64 (arch/x86/entry/common.c:52 arch/x86/entry/common.c:83)
- entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:129)
-
-Freed by task 27 on cpu 0 at 329.158864s:
- kasan_save_stack (mm/kasan/common.c:48)
- kasan_save_track (mm/kasan/common.c:68)
- kasan_save_free_info (mm/kasan/generic.c:643)
- __kasan_slab_free (mm/kasan/common.c:265)
- kmem_cache_free (mm/slub.c:4299 mm/slub.c:4363)
- cleanup_net (net/core/net_namespace.c:456 net/core/net_namespace.c:446 net/core/net_namespace.c:639)
- process_one_work (kernel/workqueue.c:2638)
- worker_thread (kernel/workqueue.c:2700 kernel/workqueue.c:2787)
- kthread (kernel/kthread.c:388)
- ret_from_fork (arch/x86/kernel/process.c:153)
- ret_from_fork_asm (arch/x86/entry/entry_64.S:250)
-
-The buggy address belongs to the object at ffff88801b370000
- which belongs to the cache net_namespace of size 4352
-The buggy address is located 1024 bytes inside of
- freed 4352-byte region [ffff88801b370000, ffff88801b371100)
-
-[2]:
-WARNING: CPU: 0 PID: 95 at lib/ref_tracker.c:228 ref_tracker_free (lib/ref_tracker.c:228 (discriminator 1))
-Modules linked in:
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-RIP: 0010:ref_tracker_free (lib/ref_tracker.c:228 (discriminator 1))
-...
-Call Trace:
-<IRQ>
- __sk_destruct (./include/net/net_namespace.h:353 net/core/sock.c:2204)
- rcu_core (./arch/x86/include/asm/preempt.h:26 kernel/rcu/tree.c:2165 kernel/rcu/tree.c:2433)
- __do_softirq (./arch/x86/include/asm/jump_label.h:27 ./include/linux/jump_label.h:207 ./include/trace/events/irq.h:142 kernel/softirq.c:554)
- irq_exit_rcu (kernel/softirq.c:427 kernel/softirq.c:632 kernel/softirq.c:644)
- sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1076 (discriminator 14))
-</IRQ>
-
-Reported-by: syzkaller <syzkaller@googlegroups.com>
-Suggested-by: Eric Dumazet <edumazet@google.com>
-Fixes: 467fa15356ac ("RDS-TCP: Support multiple RDS-TCP listen endpoints, one per netns.")
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Link: https://lore.kernel.org/r/20240308200122.64357-3-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 152e9b8676c6 ("s390/vtime: steal time exponential moving average")
+Signed-off-by: Mete Durlu <meted@linux.ibm.com>
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_minisocks.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/s390/kernel/vtime.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-index 9e85f2a0bddd4..0ecc7311dc6ce 100644
---- a/net/ipv4/tcp_minisocks.c
-+++ b/net/ipv4/tcp_minisocks.c
-@@ -398,10 +398,6 @@ void tcp_twsk_purge(struct list_head *net_exit_list, int family)
- 			/* Even if tw_refcount == 1, we must clean up kernel reqsk */
- 			inet_twsk_purge(net->ipv4.tcp_death_row.hashinfo, family);
- 		} else if (!purged_once) {
--			/* The last refcount is decremented in tcp_sk_exit_batch() */
--			if (refcount_read(&net->ipv4.tcp_death_row.tw_refcount) == 1)
--				continue;
--
- 			inet_twsk_purge(&tcp_hashinfo, family);
- 			purged_once = true;
- 		}
+diff --git a/arch/s390/kernel/vtime.c b/arch/s390/kernel/vtime.c
+index e0a88dcaf5cb7..24a18e5ef6e8e 100644
+--- a/arch/s390/kernel/vtime.c
++++ b/arch/s390/kernel/vtime.c
+@@ -210,13 +210,13 @@ void vtime_flush(struct task_struct *tsk)
+ 		virt_timer_expire();
+ 
+ 	steal = S390_lowcore.steal_timer;
+-	avg_steal = S390_lowcore.avg_steal_timer / 2;
++	avg_steal = S390_lowcore.avg_steal_timer;
+ 	if ((s64) steal > 0) {
+ 		S390_lowcore.steal_timer = 0;
+ 		account_steal_time(cputime_to_nsecs(steal));
+ 		avg_steal += steal;
+ 	}
+-	S390_lowcore.avg_steal_timer = avg_steal;
++	S390_lowcore.avg_steal_timer = avg_steal / 2;
+ }
+ 
+ static u64 vtime_delta(void)
 -- 
 2.43.0
 
