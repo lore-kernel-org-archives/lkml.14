@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A152319F9;
-	Sun, 24 Mar 2024 23:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942B72320EF;
+	Sun, 24 Mar 2024 23:17:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322249; cv=none; b=h9EUR+Skqk8DsCpKwXFFfYYSVZqrJoZQ+9UzPJsAH0QokjXDAP2KT9SaYqP66xiMoUOSqQaGoCjeHNisI/2kTVGlEV4tczWRarxPxtGiJiFXz1bIw3mcrSyiWmyV4sws0hGL4XvYal+AwFINgzEdBXvnjS1b7u6bq4eJIkdWF5A=
+	t=1711322253; cv=none; b=bA9UgtSnJdGhfXw4cztc68GWaKu8t+GTfB4FAumAvEwvGCl/mISthh7VYPRxxCYp/g8Qz1Z4dDVDaMJyFipPqeRAMUJUr0ax4oel9Xy9BrGhTP7sPsjpQ36JRkhJbLFamnnDNUEECs276Lfi5RZyo7bwCSpgLorFEofeYkJhJUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322249; c=relaxed/simple;
-	bh=+cppP47C2kH8155iAsn7GBfaimEltlIPM7HNR1hx8hU=;
+	s=arc-20240116; t=1711322253; c=relaxed/simple;
+	bh=BUj55u5bRB8pOlOTr4KJSlixCW5hQIDUxi8K2PNxeWQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A1dwwUT8JZ+dlh76OJcuYzu/xcn9srbCY4cx11VMzrtMoRrgX3hTlS7RfwHx8Vn9pblILCZKKoQQxUESKosUWOwE4p1YTLHMRWxU690g9+k0GpgfVTjxB9TJ51hm+PP3xCdg5n+QrGnEMsw9ULrNwT1WnxJezk5TLfyAQ663Rp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjtzFzcR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=G6h+ZGRyPtlm/omkHc4Q886RplAELUhAUnekyohLqZrO5J4TMi4BQ7xUq5VpG5k2bGm+w/KHnmdbgBGkP1T+lr3SK/KaSnfvZ/GuCawS3yQIJjEwYPTBEEtdDErGmKTNV9svBPxdlAslK+Hm//bdAagn6a8EqZH5i8J0lmPf1Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EXjK2TBN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjtzFzcR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA802C433F1;
-	Sun, 24 Mar 2024 23:17:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EXjK2TBN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D7A9C433C7;
+	Sun, 24 Mar 2024 23:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322248;
-	bh=+cppP47C2kH8155iAsn7GBfaimEltlIPM7HNR1hx8hU=;
+	s=k20201202; t=1711322252;
+	bh=BUj55u5bRB8pOlOTr4KJSlixCW5hQIDUxi8K2PNxeWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pjtzFzcRkIp5J1uy0oYrbel01RwzbWTGCKq/gqwkGoflrS1JebxT6jDrJIuKrKyOo
-	 FA3YW1NJjQPQT5Evwh2OPWUILDymv//xnRE+oZk5A+6QBU7lkb5Gtx3dq9gWhC4h6q
-	 Yi8MGx11mJgUEEu7pTqYMbn6Go7MNG+9kzt/3KQKZWIQbM5eEUH/nIeDmHnBLNM3fw
-	 3otglHaY2MMStjggWIZMfFv3esJUDo2WfYNRXBM7vIzsEwCQMMHaFfuZHdBeT8Jx1b
-	 UIB0dYpAGLVRQP27Es7W4wUEKfbGVzKx5bdLft9GxnT8IwzRjlVJsCitV0g7regvND
-	 iHKPkHZQtK71Q==
+	b=EXjK2TBNEsBdok6It0bjsVEx5M4giSY5h18P9ctdAy/eps4AyBR8E8GbDLhX7S1CR
+	 h77cwi6uqt82Yp1KAjxMzZxzuccnY+CWQqbukAf6V/pSrLttGi84TfINS0wGlb3zbq
+	 8WZFyxe/7NzLkH0yuIqypLVJkjvH6mpqeUln0JcxZKf2VGJu2pGMUQNcTJ3lUZ03gU
+	 C7kDdXP0fsfPY+v6AXg5/r/o0LOr50VeLCpp45wgT6VnU3AHVsD4z/hTnTXvjsLPiD
+	 oedtPY/ovX8veBNsofCsurWFEqRxXOvsaWRYyPF1y3ZBj2hPMnF+ncT5MFjzpWJd7M
+	 hFOSfpMvqYGlQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>,
-	CK Hu <ck.hu@mediatek.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+Cc: Changbin Du <changbin.du@huawei.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Xiaoyi Su <suxiaoyi@huawei.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 330/451] drm/mediatek: Fix a null pointer crash in mtk_drm_crtc_finish_page_flip
-Date: Sun, 24 Mar 2024 19:10:06 -0400
-Message-ID: <20240324231207.1351418-331-sashal@kernel.org>
+Subject: [PATCH 6.1 334/451] modules: wait do_free_init correctly
+Date: Sun, 24 Mar 2024 19:10:10 -0400
+Message-ID: <20240324231207.1351418-335-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,78 +51,123 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Changbin Du <changbin.du@huawei.com>
 
-[ Upstream commit c958e86e9cc1b48cac004a6e245154dfba8e163b ]
+[ Upstream commit 8f8cd6c0a43ed637e620bbe45a8d0e0c2f4d5130 ]
 
-It's possible that mtk_crtc->event is NULL in
-mtk_drm_crtc_finish_page_flip().
+The synchronization here is to ensure the ordering of freeing of a module
+init so that it happens before W+X checking.  It is worth noting it is not
+that the freeing was not happening, it is just that our sanity checkers
+raced against the permission checkers which assume init memory is already
+gone.
 
-pending_needs_vblank value is set by mtk_crtc->event, but in
-mtk_drm_crtc_atomic_flush(), it's is not guarded by the same
-lock in mtk_drm_finish_page_flip(), thus a race condition happens.
+Commit 1a7b7d922081 ("modules: Use vmalloc special flag") moved calling
+do_free_init() into a global workqueue instead of relying on it being
+called through call_rcu(..., do_free_init), which used to allowed us call
+do_free_init() asynchronously after the end of a subsequent grace period.
+The move to a global workqueue broke the gaurantees for code which needed
+to be sure the do_free_init() would complete with rcu_barrier().  To fix
+this callers which used to rely on rcu_barrier() must now instead use
+flush_work(&init_free_wq).
 
-Consider the following case:
+Without this fix, we still could encounter false positive reports in W+X
+checking since the rcu_barrier() here can not ensure the ordering now.
 
-CPU1                              CPU2
-step 1:
-mtk_drm_crtc_atomic_begin()
-mtk_crtc->event is not null,
-                                  step 1:
-                                  mtk_drm_crtc_atomic_flush:
-                                  mtk_drm_crtc_update_config(
-                                      !!mtk_crtc->event)
-step 2:
-mtk_crtc_ddp_irq ->
-mtk_drm_finish_page_flip:
-lock
-mtk_crtc->event set to null,
-pending_needs_vblank set to false
-unlock
-                                  pending_needs_vblank set to true,
+Even worse, the rcu_barrier() can introduce significant delay.  Eric
+Chanudet reported that the rcu_barrier introduces ~0.1s delay on a
+PREEMPT_RT kernel.
 
-                                  step 2:
-                                  mtk_crtc_ddp_irq ->
-                                  mtk_drm_finish_page_flip called again,
-                                  pending_needs_vblank is still true
-                                  //null pointer
+  [    0.291444] Freeing unused kernel memory: 5568K
+  [    0.402442] Run /sbin/init as init process
 
-Instead of guarding the entire mtk_drm_crtc_atomic_flush(), it's more
-efficient to just check if mtk_crtc->event is null before use.
+With this fix, the above delay can be eliminated.
 
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Link: https://patchwork.kernel.org/project/dri-devel/patch/20240223212404.3709690-1-hsinyi@chromium.org/
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Link: https://lkml.kernel.org/r/20240227023546.2490667-1-changbin.du@huawei.com
+Fixes: 1a7b7d922081 ("modules: Use vmalloc special flag")
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+Tested-by: Eric Chanudet <echanude@redhat.com>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Xiaoyi Su <suxiaoyi@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ include/linux/moduleloader.h | 8 ++++++++
+ init/main.c                  | 5 +++--
+ kernel/module/main.c         | 9 +++++++--
+ 3 files changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 558000db4a100..beaaf44004cfd 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -91,11 +91,13 @@ static void mtk_drm_crtc_finish_page_flip(struct mtk_drm_crtc *mtk_crtc)
- 	struct drm_crtc *crtc = &mtk_crtc->base;
- 	unsigned long flags;
+diff --git a/include/linux/moduleloader.h b/include/linux/moduleloader.h
+index 1322652a9d0d9..7dc186ec52a29 100644
+--- a/include/linux/moduleloader.h
++++ b/include/linux/moduleloader.h
+@@ -95,6 +95,14 @@ int module_finalize(const Elf_Ehdr *hdr,
+ 		    const Elf_Shdr *sechdrs,
+ 		    struct module *mod);
  
--	spin_lock_irqsave(&crtc->dev->event_lock, flags);
--	drm_crtc_send_vblank_event(crtc, mtk_crtc->event);
--	drm_crtc_vblank_put(crtc);
--	mtk_crtc->event = NULL;
--	spin_unlock_irqrestore(&crtc->dev->event_lock, flags);
-+	if (mtk_crtc->event) {
-+		spin_lock_irqsave(&crtc->dev->event_lock, flags);
-+		drm_crtc_send_vblank_event(crtc, mtk_crtc->event);
-+		drm_crtc_vblank_put(crtc);
-+		mtk_crtc->event = NULL;
-+		spin_unlock_irqrestore(&crtc->dev->event_lock, flags);
-+	}
++#ifdef CONFIG_MODULES
++void flush_module_init_free_work(void);
++#else
++static inline void flush_module_init_free_work(void)
++{
++}
++#endif
++
+ /* Any cleanup needed when module leaves. */
+ void module_arch_cleanup(struct module *mod);
+ 
+diff --git a/init/main.c b/init/main.c
+index 87a52bdb41d67..ccde19e7275fa 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -89,6 +89,7 @@
+ #include <linux/sched/task_stack.h>
+ #include <linux/context_tracking.h>
+ #include <linux/random.h>
++#include <linux/moduleloader.h>
+ #include <linux/list.h>
+ #include <linux/integrity.h>
+ #include <linux/proc_ns.h>
+@@ -1473,11 +1474,11 @@ static void mark_readonly(void)
+ 	if (rodata_enabled) {
+ 		/*
+ 		 * load_module() results in W+X mappings, which are cleaned
+-		 * up with call_rcu().  Let's make sure that queued work is
++		 * up with init_free_wq. Let's make sure that queued work is
+ 		 * flushed so that we don't hit false positives looking for
+ 		 * insecure pages which are W+X.
+ 		 */
+-		rcu_barrier();
++		flush_module_init_free_work();
+ 		mark_rodata_ro();
+ 		rodata_test();
+ 	} else
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 7a376e26de85b..554aba47ab689 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -2434,6 +2434,11 @@ static void do_free_init(struct work_struct *w)
+ 	}
  }
  
- static void mtk_drm_finish_page_flip(struct mtk_drm_crtc *mtk_crtc)
++void flush_module_init_free_work(void)
++{
++	flush_work(&init_free_wq);
++}
++
+ #undef MODULE_PARAM_PREFIX
+ #define MODULE_PARAM_PREFIX "module."
+ /* Default value for module->async_probe_requested */
+@@ -2524,8 +2529,8 @@ static noinline int do_init_module(struct module *mod)
+ 	 * Note that module_alloc() on most architectures creates W+X page
+ 	 * mappings which won't be cleaned up until do_free_init() runs.  Any
+ 	 * code such as mark_rodata_ro() which depends on those mappings to
+-	 * be cleaned up needs to sync with the queued work - ie
+-	 * rcu_barrier()
++	 * be cleaned up needs to sync with the queued work by invoking
++	 * flush_module_init_free_work().
+ 	 */
+ 	if (llist_add(&freeinit->node, &init_free_list))
+ 		schedule_work(&init_free_wq);
 -- 
 2.43.0
 
