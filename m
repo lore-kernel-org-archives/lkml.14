@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C18156643;
-	Sun, 24 Mar 2024 23:11:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F76721FA0C;
+	Sun, 24 Mar 2024 23:11:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321872; cv=none; b=gXZ3iRennwVsVIFP69Q8pXhOowmxYyyVJzSz/A1szdwm2JzG+j1vlgQYn1yDiRSF59iVQwgX2aTIggJZS32B0GMaUWToXL3UQ2XhcWDMp/jfeAkPQsRs08kzryzbjlHwjKIP4lb5SYL7lxPxJyBiqlPvWE2LglGGVIpFAvc+m8o=
+	t=1711321878; cv=none; b=mRJVzjIGdk/nrV/WzlHmNIyx67O77AKoOMGHhHX5CE3MhTIQkby3dcv+G+e6afh60c6OMfQ2joAlghVzGmtbCoKnEUpFNHbTO7bg1ETD8xDjlmWSgLEwxHozE1Q/OrQl7s+Bkn6QU0/1tSuNep/xh7f/2+WV/dpW3C5q7QvMWx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321872; c=relaxed/simple;
-	bh=S8aahm9GlFFZ6OB1UD/l1rrU0saHd0RKSylzxDy7tKA=;
+	s=arc-20240116; t=1711321878; c=relaxed/simple;
+	bh=oPWSx8SdfdjsEVzy+Z5jo84gY+npncO8mSnmQcUnbCs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ur4MlnOM3MGTKuGiuuo4JuAzWSjHZfGqTI02NalGI4n+of0EAAhHQorJCWoS6zj7AdKU2/dq4dkQXA0nkIyAes2+y8Gw+IYcIaKzFjpJSG2OdR4t1tRvXlUd8U5RKjyN5/8FlaKeHX4XtNzobfEEf9a45NM2URAsOtMs/l7FimU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XERhz0/4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=i0Cmy8r1cp893H/kzon0bimsMLit47so9AnzFHTopwPM+z2rMGe/UM55omH9ZDVoIMFcFkwE9XI3FGhv7TsKFTeofPhuxI+qEwMeZ0i5gwI+CmJzP0+ngcz99bHYBZXmntG4Mog026vzHtAQ71rSsq23x13npWcKsRynM8bR3dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igZi3Vbv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XERhz0/4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B9DAC43399;
-	Sun, 24 Mar 2024 23:11:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igZi3Vbv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EF9BC43399;
+	Sun, 24 Mar 2024 23:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321870;
-	bh=S8aahm9GlFFZ6OB1UD/l1rrU0saHd0RKSylzxDy7tKA=;
+	s=k20201202; t=1711321877;
+	bh=oPWSx8SdfdjsEVzy+Z5jo84gY+npncO8mSnmQcUnbCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XERhz0/4hyVVuRl15Q8paOuCsAITnuUUpGnOJdp+T2waKfdx9Dk38jtW9jsZ18J17
-	 27S3nlGcC7zN9wMJWy+jPkG9sufFa1E6LcgSE9gqJGULWT8Rsa4siuyGAWl2XeLxY/
-	 C+KhRA+YktAtVcLTlsycLc53hYyupQJzme8P0aszI5tb4SeIr8M3aQvc0XrX7cyKhx
-	 ODEempjmdmRc3d255HxN7Dg/tmqXo2BTAx85vo+1ojGd+64rF7roaGVFvMQC6g1uG/
-	 fByj/8Ha0adWPtSg+uN1sl6Qm9qbyCcUpr2kQ7ZTTgIHo5GYTOgvhaRxUIIvTi05H9
-	 XHxenD1TaPyYQ==
+	b=igZi3VbvPFvVyryv02QuESkVIJHDEB82jWs+jrrTcNa9Fiqtk0XGiZmI5kfoDm7rb
+	 bcvESnAX8kOjh/CRat9Mlrjsh7XoGRZbn+zyfLJ8o404/XhxHGcYirc3UvfSRsqwJ/
+	 Sm44YEUIQTrj7d5BTKG5v8xD2VZA4eKOTD5tBxNdY++GB1i9yivOO8+drUDHfTlW2A
+	 I+YQLRxpwxNyKNWRNgGIVwd6ja6uc+L2Fmh1dzWj4yvLx/jymTaX43zZ3fXCaTCa8V
+	 o51zDXLSUqfUnEBbLWhqNPl5BMZv3M0+EMrk1oR9pFUSYvftLXCybp7kNEpcM0dlbG
+	 Otg04tSkrXPtQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+Cc: Arthur Grillo <arthurgrillo@riseup.net>,
+	Pekka Paalanen <pekka.paalanen@collabora.com>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Melissa Wen <mwen@igalia.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 599/638] xen/events: increment refcnt only if event channel is refcounted
-Date: Sun, 24 Mar 2024 19:00:36 -0400
-Message-ID: <20240324230116.1348576-600-sashal@kernel.org>
+Subject: [PATCH 6.6 605/638] drm: Fix drm_fixp2int_round() making it add 0.5
+Date: Sun, 24 Mar 2024 19:00:42 -0400
+Message-ID: <20240324230116.1348576-606-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,113 +51,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Juergen Gross <jgross@suse.com>
+From: Arthur Grillo <arthurgrillo@riseup.net>
 
-[ Upstream commit d277f9d82802223f242cd9b60c988cfdda1d6be0 ]
+[ Upstream commit 807f96abdf14c80f534c78f2d854c2590963345c ]
 
-In bind_evtchn_to_irq_chip() don't increment the refcnt of the event
-channel blindly. In case the event channel is NOT refcounted, issue a
-warning instead.
+As well noted by Pekka[1], the rounding of drm_fixp2int_round is wrong.
+To round a number, you need to add 0.5 to the number and floor that,
+drm_fixp2int_round() is adding 0.0000076. Make it add 0.5.
 
-Add an additional safety net by doing the refcnt increment only if the
-caller has specified IRQF_SHARED in the irqflags parameter.
+[1]: https://lore.kernel.org/all/20240301135327.22efe0dd.pekka.paalanen@collabora.com/
 
-Fixes: 9e90e58c11b7 ("xen: evtchn: Allow shared registration of IRQ handers")
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Link: https://lore.kernel.org/r/20240313071409.25913-3-jgross@suse.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Fixes: 8b25320887d7 ("drm: Add fixed-point helper to get rounded integer values")
+Suggested-by: Pekka Paalanen <pekka.paalanen@collabora.com>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Reviewed-by: Melissa Wen <mwen@igalia.com>
+Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20240316-drm_fixed-v2-1-c1bc2665b5ed@riseup.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/events/events_base.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ include/drm/drm_fixed.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
-index 0c5259c68adeb..9e3b5d21d0987 100644
---- a/drivers/xen/events/events_base.c
-+++ b/drivers/xen/events/events_base.c
-@@ -1196,7 +1196,7 @@ int xen_pirq_from_irq(unsigned irq)
- EXPORT_SYMBOL_GPL(xen_pirq_from_irq);
- 
- static int bind_evtchn_to_irq_chip(evtchn_port_t evtchn, struct irq_chip *chip,
--				   struct xenbus_device *dev)
-+				   struct xenbus_device *dev, bool shared)
- {
- 	int ret = -ENOMEM;
- 	struct irq_info *info;
-@@ -1230,7 +1230,8 @@ static int bind_evtchn_to_irq_chip(evtchn_port_t evtchn, struct irq_chip *chip,
- 		 */
- 		bind_evtchn_to_cpu(info, 0, false);
- 	} else if (!WARN_ON(info->type != IRQT_EVTCHN)) {
--		info->refcnt++;
-+		if (shared && !WARN_ON(info->refcnt < 0))
-+			info->refcnt++;
- 	}
- 
- 	ret = info->irq;
-@@ -1243,13 +1244,13 @@ static int bind_evtchn_to_irq_chip(evtchn_port_t evtchn, struct irq_chip *chip,
- 
- int bind_evtchn_to_irq(evtchn_port_t evtchn)
- {
--	return bind_evtchn_to_irq_chip(evtchn, &xen_dynamic_chip, NULL);
-+	return bind_evtchn_to_irq_chip(evtchn, &xen_dynamic_chip, NULL, false);
- }
- EXPORT_SYMBOL_GPL(bind_evtchn_to_irq);
- 
- int bind_evtchn_to_irq_lateeoi(evtchn_port_t evtchn)
- {
--	return bind_evtchn_to_irq_chip(evtchn, &xen_lateeoi_chip, NULL);
-+	return bind_evtchn_to_irq_chip(evtchn, &xen_lateeoi_chip, NULL, false);
- }
- EXPORT_SYMBOL_GPL(bind_evtchn_to_irq_lateeoi);
- 
-@@ -1301,7 +1302,8 @@ static int bind_ipi_to_irq(unsigned int ipi, unsigned int cpu)
- 
- static int bind_interdomain_evtchn_to_irq_chip(struct xenbus_device *dev,
- 					       evtchn_port_t remote_port,
--					       struct irq_chip *chip)
-+					       struct irq_chip *chip,
-+					       bool shared)
- {
- 	struct evtchn_bind_interdomain bind_interdomain;
- 	int err;
-@@ -1313,14 +1315,14 @@ static int bind_interdomain_evtchn_to_irq_chip(struct xenbus_device *dev,
- 					  &bind_interdomain);
- 
- 	return err ? : bind_evtchn_to_irq_chip(bind_interdomain.local_port,
--					       chip, dev);
-+					       chip, dev, shared);
+diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
+index 0c9f917a4d4be..81572d32db0c2 100644
+--- a/include/drm/drm_fixed.h
++++ b/include/drm/drm_fixed.h
+@@ -71,7 +71,6 @@ static inline u32 dfixed_div(fixed20_12 A, fixed20_12 B)
  }
  
- int bind_interdomain_evtchn_to_irq_lateeoi(struct xenbus_device *dev,
- 					   evtchn_port_t remote_port)
+ #define DRM_FIXED_POINT		32
+-#define DRM_FIXED_POINT_HALF	16
+ #define DRM_FIXED_ONE		(1ULL << DRM_FIXED_POINT)
+ #define DRM_FIXED_DECIMAL_MASK	(DRM_FIXED_ONE - 1)
+ #define DRM_FIXED_DIGITS_MASK	(~DRM_FIXED_DECIMAL_MASK)
+@@ -90,7 +89,7 @@ static inline int drm_fixp2int(s64 a)
+ 
+ static inline int drm_fixp2int_round(s64 a)
  {
- 	return bind_interdomain_evtchn_to_irq_chip(dev, remote_port,
--						   &xen_lateeoi_chip);
-+						   &xen_lateeoi_chip, false);
+-	return drm_fixp2int(a + (1 << (DRM_FIXED_POINT_HALF - 1)));
++	return drm_fixp2int(a + DRM_FIXED_ONE / 2);
  }
- EXPORT_SYMBOL_GPL(bind_interdomain_evtchn_to_irq_lateeoi);
  
-@@ -1436,7 +1438,8 @@ static int bind_evtchn_to_irqhandler_chip(evtchn_port_t evtchn,
- {
- 	int irq, retval;
- 
--	irq = bind_evtchn_to_irq_chip(evtchn, chip, NULL);
-+	irq = bind_evtchn_to_irq_chip(evtchn, chip, NULL,
-+				      irqflags & IRQF_SHARED);
- 	if (irq < 0)
- 		return irq;
- 	retval = request_irq(irq, handler, irqflags, devname, dev_id);
-@@ -1477,7 +1480,8 @@ static int bind_interdomain_evtchn_to_irqhandler_chip(
- {
- 	int irq, retval;
- 
--	irq = bind_interdomain_evtchn_to_irq_chip(dev, remote_port, chip);
-+	irq = bind_interdomain_evtchn_to_irq_chip(dev, remote_port, chip,
-+						  irqflags & IRQF_SHARED);
- 	if (irq < 0)
- 		return irq;
- 
+ static inline int drm_fixp2int_ceil(s64 a)
 -- 
 2.43.0
 
