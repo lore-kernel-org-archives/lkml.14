@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA0514F9E7;
-	Sun, 24 Mar 2024 23:18:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C250E150986;
+	Sun, 24 Mar 2024 23:18:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322319; cv=none; b=e0QFm5EPGPDDS/gE0skMV6SDZ2Sjfi6dhS9ln06bl0wqQP++8pT/tq4OsbbVcJsGhNzyEAaaHn/K/VOreMWdKHuMFx92dBephh+nAk1E26Lb1Yft5gUVa3MNwJmrIJ4JMpms0hAwtgWUetl/drZDNSlGD1geCcMEDfS/bL0hIEA=
+	t=1711322332; cv=none; b=QKbXoSHOUwVhim49SFfwoztoFE5nSTfkHbYFiDcl0CRZQbSKdZAUVgSEBWvr6waPq2/U+97ziJMR+i2wsnAh76/CvW6DUd+vc1n22sOZF59b4GoiTpp+oEqc2HxxgtR8mP/2Ernh1DUMO7a/tcWD/rn42moXuttXM10TgPKDaoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322319; c=relaxed/simple;
-	bh=KuuMt4zo3oLS5JZnEbW5U6AfANjVJ7GS1da+dy89Zyc=;
+	s=arc-20240116; t=1711322332; c=relaxed/simple;
+	bh=jw48APu9/AC1L2Kf9urEVuSt8JpHSmRbH3Pc1+RPOgI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lhG2HJ+5Yp+9YnGb8eRBtYjwcFWYgeNGvEnU/rFMOEjJW+wWU2x9nUmgki3jQThrJun/tLE9QaqvPqVuW510TlZOSKAFvmN48MzxRCBAkxYk2jtBRv993zMvdAVD3rzO3X395CbJhfb/zM70gVO5BzkABoR04HBYruGY/wUWlX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iC9zsp5Q; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YrNtFqWubv+kpnb45pADjSc+Ja4eiWfFPqwslrkLfFEnbbBE3r0OEuqCB8pK80eywQvz7NWIfsrwSErkHA2Uey66cCC5NItYzJlDFQoFZmuz9W0nkXEJlT20UTtRzFz3OHK0Fsmp6IjU4YmOWGLzNkY+tzgcu/ngfu03+PLWyyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9GKCzbk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iC9zsp5Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEC9DC43394;
-	Sun, 24 Mar 2024 23:18:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9GKCzbk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6784C43390;
+	Sun, 24 Mar 2024 23:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322319;
-	bh=KuuMt4zo3oLS5JZnEbW5U6AfANjVJ7GS1da+dy89Zyc=;
+	s=k20201202; t=1711322331;
+	bh=jw48APu9/AC1L2Kf9urEVuSt8JpHSmRbH3Pc1+RPOgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iC9zsp5QG0tFxQ1CBCCg5fZexC+hiJykz+qXyM5jj1NiaTBpbre2Wtk4dTrA2N8Ko
-	 viagwNX28cM+H3HiKuTueJIQZE90J6N9p4u4ekUqfNZLbO3dSqP5ndL4w+du5U11/c
-	 6ogMI9M3EKp4u89T8udDcQxSDVrPuF6BVL1oqCArDa/es4Jnc0Too0smZhyX3mRIFQ
-	 rCH5uGm2NbJmnlXC2UzgYZ0PXmLU09RAsEZps9O7r/Kl5sf7Ev0dEjFN7IhAlVjBhh
-	 LGLBgKt8KRIx90OWcp8cYfpfcIb+DNALnTIeItfJ9O3UB1pBYPm7XquWuybQzeJL6v
-	 hg0JRZs3aLw6A==
+	b=C9GKCzbkz0jH93JA10d6P+cWhesC/SPEvmN+B6T2FxcVU3gn2sA/8MDgSoa9QG9yi
+	 H40eKKax3o/jf/EgKGnAR5E81sTqvaAF24PZyJonMrsXmq5UCwjaKNua/tZnwCQo3Q
+	 q/cMH98DsjtgYfulSxjbmZ3gidQxX06g907Lj86tjC7xInCMEbu5+PpFKw3yX1aTa3
+	 TB8lQA9xnZgn7C9BpZEQyiEUpHWnClJiFxiBY2CV8dTKMPuHXJThNLXoRx9+O+8umB
+	 PZUI50WcqQvPq6WDqON7FmXiR4ews3M7Oh/AGKf0mbifEK2LwfDlT3k6HnjYwVlNPT
+	 bWtlMohP0RwJA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Daniel Golle <daniel@makrotopia.org>,
+	Bc-bocun Chen <bc-bocun.chen@mediatek.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 402/451] tcp: Fix NEW_SYN_RECV handling in inet_twsk_purge()
-Date: Sun, 24 Mar 2024 19:11:18 -0400
-Message-ID: <20240324231207.1351418-403-sashal@kernel.org>
+Subject: [PATCH 6.1 414/451] net: ethernet: mtk_eth_soc: fix PPE hanging issue
+Date: Sun, 24 Mar 2024 19:11:30 -0400
+Message-ID: <20240324231207.1351418-415-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,114 +49,68 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Daniel Golle <daniel@makrotopia.org>
 
-[ Upstream commit 1c4e97dd2d3c9a3e84f7e26346aa39bc426d3249 ]
+[ Upstream commit ea80e3ed09ab2c2b75724faf5484721753e92c31 ]
 
-inet_twsk_purge() uses rcu to find TIME_WAIT and NEW_SYN_RECV
-objects to purge.
+A patch to resolve an issue was found in MediaTek's GPL-licensed SDK:
+In the mtk_ppe_stop() function, the PPE scan mode is not disabled before
+disabling the PPE. This can potentially lead to a hang during the process
+of disabling the PPE.
 
-These objects use SLAB_TYPESAFE_BY_RCU semantic and need special
-care. We need to use refcount_inc_not_zero(&sk->sk_refcnt).
+Without this patch, the PPE may experience a hang during the reboot test.
 
-Reuse the existing correct logic I wrote for TIME_WAIT,
-because both structures have common locations for
-sk_state, sk_family, and netns pointer.
-
-If after the refcount_inc_not_zero() the object fields longer match
-the keys, use sock_gen_put(sk) to release the refcount.
-
-Then we can call inet_twsk_deschedule_put() for TIME_WAIT,
-inet_csk_reqsk_queue_drop_and_put() for NEW_SYN_RECV sockets,
-with BH disabled.
-
-Then we need to restart the loop because we had drop rcu_read_lock().
-
-Fixes: 740ea3c4a0b2 ("tcp: Clean up kernel listener's reqsk in inet_twsk_purge()")
-Link: https://lore.kernel.org/netdev/CANn89iLvFuuihCtt9PME2uS1WJATnf5fKjDToa1WzVnRzHnPfg@mail.gmail.com/T/#u
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Link: https://lore.kernel.org/r/20240308200122.64357-2-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Link: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/b40da332dfe763932a82f9f62a4709457a15dd6c
+Fixes: ba37b7caf1ed ("net: ethernet: mtk_eth_soc: add support for initializing the PPE")
+Suggested-by: Bc-bocun Chen <bc-bocun.chen@mediatek.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/inet_timewait_sock.c | 41 ++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/mediatek/mtk_ppe.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
-index 1d77d992e6e77..340a8f0c29800 100644
---- a/net/ipv4/inet_timewait_sock.c
-+++ b/net/ipv4/inet_timewait_sock.c
-@@ -281,12 +281,12 @@ void __inet_twsk_schedule(struct inet_timewait_sock *tw, int timeo, bool rearm)
- }
- EXPORT_SYMBOL_GPL(__inet_twsk_schedule);
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.c b/drivers/net/ethernet/mediatek/mtk_ppe.c
+index d6eed204574a9..c64211e22ae70 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe.c
++++ b/drivers/net/ethernet/mediatek/mtk_ppe.c
+@@ -811,7 +811,7 @@ void mtk_ppe_start(struct mtk_ppe *ppe)
+ 			 MTK_PPE_KEEPALIVE_DISABLE) |
+ 	      FIELD_PREP(MTK_PPE_TB_CFG_HASH_MODE, 1) |
+ 	      FIELD_PREP(MTK_PPE_TB_CFG_SCAN_MODE,
+-			 MTK_PPE_SCAN_MODE_KEEPALIVE_AGE) |
++			 MTK_PPE_SCAN_MODE_CHECK_AGE) |
+ 	      FIELD_PREP(MTK_PPE_TB_CFG_ENTRY_NUM,
+ 			 MTK_PPE_ENTRIES_SHIFT);
+ 	if (MTK_HAS_CAPS(ppe->eth->soc->caps, MTK_NETSYS_V2))
+@@ -895,17 +895,21 @@ int mtk_ppe_stop(struct mtk_ppe *ppe)
  
-+/* Remove all non full sockets (TIME_WAIT and NEW_SYN_RECV) for dead netns */
- void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
- {
--	struct inet_timewait_sock *tw;
--	struct sock *sk;
- 	struct hlist_nulls_node *node;
- 	unsigned int slot;
-+	struct sock *sk;
+ 	mtk_ppe_cache_enable(ppe, false);
  
- 	for (slot = 0; slot <= hashinfo->ehash_mask; slot++) {
- 		struct inet_ehash_bucket *head = &hashinfo->ehash[slot];
-@@ -295,38 +295,35 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
- 		rcu_read_lock();
- restart:
- 		sk_nulls_for_each_rcu(sk, node, &head->chain) {
--			if (sk->sk_state != TCP_TIME_WAIT) {
--				/* A kernel listener socket might not hold refcnt for net,
--				 * so reqsk_timer_handler() could be fired after net is
--				 * freed.  Userspace listener and reqsk never exist here.
--				 */
--				if (unlikely(sk->sk_state == TCP_NEW_SYN_RECV &&
--					     hashinfo->pernet)) {
--					struct request_sock *req = inet_reqsk(sk);
+-	/* disable offload engine */
+-	ppe_clear(ppe, MTK_PPE_GLO_CFG, MTK_PPE_GLO_CFG_EN);
+-	ppe_w32(ppe, MTK_PPE_FLOW_CFG, 0);
 -
--					inet_csk_reqsk_queue_drop_and_put(req->rsk_listener, req);
--				}
-+			int state = inet_sk_state_load(sk);
+ 	/* disable aging */
+ 	val = MTK_PPE_TB_CFG_AGE_NON_L4 |
+ 	      MTK_PPE_TB_CFG_AGE_UNBIND |
+ 	      MTK_PPE_TB_CFG_AGE_TCP |
+ 	      MTK_PPE_TB_CFG_AGE_UDP |
+-	      MTK_PPE_TB_CFG_AGE_TCP_FIN;
++	      MTK_PPE_TB_CFG_AGE_TCP_FIN |
++		  MTK_PPE_TB_CFG_SCAN_MODE;
+ 	ppe_clear(ppe, MTK_PPE_TB_CFG, val);
  
-+			if ((1 << state) & ~(TCPF_TIME_WAIT |
-+					     TCPF_NEW_SYN_RECV))
- 				continue;
--			}
- 
--			tw = inet_twsk(sk);
--			if ((tw->tw_family != family) ||
--				refcount_read(&twsk_net(tw)->ns.count))
-+			if (sk->sk_family != family ||
-+			    refcount_read(&sock_net(sk)->ns.count))
- 				continue;
- 
--			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
-+			if (unlikely(!refcount_inc_not_zero(&sk->sk_refcnt)))
- 				continue;
- 
--			if (unlikely((tw->tw_family != family) ||
--				     refcount_read(&twsk_net(tw)->ns.count))) {
--				inet_twsk_put(tw);
-+			if (unlikely(sk->sk_family != family ||
-+				     refcount_read(&sock_net(sk)->ns.count))) {
-+				sock_gen_put(sk);
- 				goto restart;
- 			}
- 
- 			rcu_read_unlock();
- 			local_bh_disable();
--			inet_twsk_deschedule_put(tw);
-+			if (state == TCP_TIME_WAIT) {
-+				inet_twsk_deschedule_put(inet_twsk(sk));
-+			} else {
-+				struct request_sock *req = inet_reqsk(sk);
+-	return mtk_ppe_wait_busy(ppe);
++	if (mtk_ppe_wait_busy(ppe))
++		return -ETIMEDOUT;
 +
-+				inet_csk_reqsk_queue_drop_and_put(req->rsk_listener,
-+								  req);
-+			}
- 			local_bh_enable();
- 			goto restart_rcu;
- 		}
++	/* disable offload engine */
++	ppe_clear(ppe, MTK_PPE_GLO_CFG, MTK_PPE_GLO_CFG_EN);
++	ppe_w32(ppe, MTK_PPE_FLOW_CFG, 0);
++
++	return 0;
+ }
 -- 
 2.43.0
 
