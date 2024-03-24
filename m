@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04200180A68;
-	Sun, 24 Mar 2024 23:47:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD72180A73;
+	Sun, 24 Mar 2024 23:47:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324051; cv=none; b=oou3OAyYVcdBGNs5rAOhzBi/lDRbLPFo4fACPR9ulyzBidY+zm62bMWajMIo3/kMShnE/uDePQdy+u8jJbqeEA8QjL9SP7BkwZFIwy2LHgwCFdaPspZplq5xZrdJdQGorT/xx8muL/CYH6Y7ZGHsozz+q3+tmyb51A1hsVYDSPo=
+	t=1711324052; cv=none; b=tJb3IGVKixPb9zN1Mz8OCHZvC0glNlRHptDHeHULO55F/nN0Qwtc4smY8Krsbkkc5vo1XnpWrqXZv5N6voOxLRIC3F7ypB6U6S4fdf7b7g0A1+UDZIe3l5h5DIvQTOKgp/2jxizioON9H/GqoDl+KM4Lq+63LAr9ZA7p72k7OcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324051; c=relaxed/simple;
-	bh=jYDTbR26PJRInBYcYizCpWjuJC+jhpRY45ethz54KGs=;
+	s=arc-20240116; t=1711324052; c=relaxed/simple;
+	bh=wvf3sIIuiuGAOXj+OmT4D5WiGqoZZJa8njw+E8Nec1Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DGj7Y68gfnfHWYrkyMX5aa0SMcGJYu+bReXfIWCkA+szOEgupnBSzoSeDyaSNOQQaNdRnNgY0J6cKhNdmznCWz0BJjV7vwIwYEo7u/hk4aoXxq3iVcMIdatnruH2PWSDBudEndHUqMYLDEKwu+vpQjAfjYmXS3IVwk955GBHkeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MGg8DQUm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dMhAMmsAkAyyfvZfzX6e+CtQY4O5FEou8YhYZRhJmMoYCtKePvFdOsdb7eON2ifXbOG8uKWEgdNszS+CmzccaRHpcPOgbL8NBvE3dJ+ZBjPwkerrkk9IBLmuV0d1rS7vMFiHkoT2wQgAmb6XDmsIAfhPEGJbT87ZlFqrSoZEBsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vj+FLEY2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MGg8DQUm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2860FC433C7;
-	Sun, 24 Mar 2024 23:47:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vj+FLEY2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 114FDC433B2;
+	Sun, 24 Mar 2024 23:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324049;
-	bh=jYDTbR26PJRInBYcYizCpWjuJC+jhpRY45ethz54KGs=;
+	s=k20201202; t=1711324051;
+	bh=wvf3sIIuiuGAOXj+OmT4D5WiGqoZZJa8njw+E8Nec1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MGg8DQUmCe/iLfoEUKntVtQfyLV5Kci5uLe0ELTkO4nWiuSfLBPCLycmdagdjTdXj
-	 iCNJDi3Xonxnshfvn0j8q5CmfY65O/M8RYcVEiWPRU0glT3MmUcdD6/kwhyqRbni5q
-	 4ElVZxafQM4TmJ5nh72K4CN/09IFkSYsVk4bYacSFdccoa+3s9yMrjiyC2EJuTuVng
-	 0qrkAxMppS4hjIYXJrQ6Wg+A4wF5tTo6Yo3ZxYtSXKtTasYT84cdbgnElyM24oHxxY
-	 Nml+2Fyk4jQWoqckkARSkP7f9Vi2RQcAhgkoAtZ4SgTTiKAL3fWGj4zhJoa7YHGgyK
-	 7soqs04lkn25Q==
+	b=Vj+FLEY2Uyms/+46TinJac8HJRBfKptai2E5enSpqzsJWnC0F3V0euXoN4Dza7t2B
+	 RvXGWqqEibgDn8wL+9Kce3SUjXEWnmGLOojHWxtLnvEAogN8tppynD+i5e029B8naZ
+	 DYVOBkZzeU4Z8V3iMpJJb0K4CBlu4I1Amo0ihTIBHLPFI+jrByc2WT93TsrsGKBGFK
+	 2aL8AzJ4PpWS2r3mY/9huey7daA+VhcwIStahkZhFBFmnMoeYc4fYJ0safx3kV91z5
+	 T3LfS2sNS9sfbjSfmprOBkihojppvU8haSq7TAn4aV+6/YUfYm/W4bZuWsjQKUg7I6
+	 U0deVj/PdBpDA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>,
 	Vinod Koul <vkoul@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 050/183] arm64: dts: qcom: msm8996: Use node references in db820c
-Date: Sun, 24 Mar 2024 19:44:23 -0400
-Message-ID: <20240324234638.1355609-51-sashal@kernel.org>
+Subject: [PATCH 5.4 052/183] arm64: dts: qcom: msm8996: Pad addresses
+Date: Sun, 24 Mar 2024 19:44:25 -0400
+Message-ID: <20240324234638.1355609-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -50,783 +50,428 @@ Content-Transfer-Encoding: 8bit
 
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit 75b77d6492eb5e582e17618b71f62140faf2de29 ]
+[ Upstream commit 86f6d6225e5e546ffeaae6db597f4aabe50d26c1 ]
 
-Instead of mimicing the structure of the platform, reference nodes by
-their label in apq8096-db820c.dtsi. Add labels in msm8996.dtsi where
-necessary.
+Pad all addresses in msm8996.dtsi to 8 digits, in order to make it
+easier to ensure ordering when adding new nodes.
 
 Acked-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Stable-dep-of: 68c4c20848d7 ("arm64: dts: qcom: msm8996: Define UFS UniPro clock limits")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 691 +++++++++----------
- arch/arm64/boot/dts/qcom/msm8996.dtsi        |   4 +-
- 2 files changed, 341 insertions(+), 354 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 144 +++++++++++++-------------
+ 1 file changed, 72 insertions(+), 72 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index da2f01eb3be2c..44ec3eb1c8e85 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -77,396 +77,383 @@ div1_mclk: divclk1 {
- 			enable-gpios = <&pm8994_gpios 15 0>;
- 		};
- 	};
-+};
- 
--	soc {
--		serial@7570000 {
--			label = "BT-UART";
--			status = "okay";
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&blsp1_uart1_default>;
--			pinctrl-1 = <&blsp1_uart1_sleep>;
-+&blsp1_uart1 {
-+	label = "BT-UART";
-+	status = "okay";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&blsp1_uart1_default>;
-+	pinctrl-1 = <&blsp1_uart1_sleep>;
- 
--			bluetooth {
--				compatible = "qcom,qca6174-bt";
-+	bluetooth {
-+		compatible = "qcom,qca6174-bt";
- 
--				/* bt_disable_n gpio */
--				enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
-+		/* bt_disable_n gpio */
-+		enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
- 
--				clocks = <&divclk4>;
--			};
--		};
-+		clocks = <&divclk4>;
-+	};
-+};
- 
--		serial@75b0000 {
--			label = "LS-UART1";
--			status = "okay";
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&blsp2_uart1_2pins_default>;
--			pinctrl-1 = <&blsp2_uart1_2pins_sleep>;
--		};
-+&blsp2_uart1 {
-+	label = "LS-UART1";
-+	status = "okay";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&blsp2_uart1_2pins_default>;
-+	pinctrl-1 = <&blsp2_uart1_2pins_sleep>;
-+};
- 
--		serial@75b1000 {
--			label = "LS-UART0";
--			status = "disabled";
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&blsp2_uart2_4pins_default>;
--			pinctrl-1 = <&blsp2_uart2_4pins_sleep>;
--		};
-+&blsp2_uart2 {
-+	label = "LS-UART0";
-+	status = "disabled";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&blsp2_uart2_4pins_default>;
-+	pinctrl-1 = <&blsp2_uart2_4pins_sleep>;
-+};
- 
--		i2c@7577000 {
--		/* On Low speed expansion */
--			label = "LS-I2C0";
--			status = "okay";
--		};
-+&blsp1_i2c2 {
-+	/* On Low speed expansion */
-+	label = "LS-I2C0";
-+	status = "okay";
-+};
- 
--		i2c@75b6000 {
--		/* On Low speed expansion */
--			label = "LS-I2C1";
--			status = "okay";
--		};
-+&blsp2_i2c1 {
-+	/* On Low speed expansion */
-+	label = "LS-I2C1";
-+	status = "okay";
-+};
- 
--		spi@7575000 {
--		/* On Low speed expansion */
--			label = "LS-SPI0";
--			status = "okay";
--		};
-+&blsp1_spi0 {
-+	/* On Low speed expansion */
-+	label = "LS-SPI0";
-+	status = "okay";
-+};
- 
--		i2c@75b5000 {
--		/* On High speed expansion */
--			label = "HS-I2C2";
--			status = "okay";
--		};
-+&blsp2_i2c0 {
-+	/* On High speed expansion */
-+	label = "HS-I2C2";
-+	status = "okay";
-+};
- 
--		spi@75ba000{
--		/* On High speed expansion */
--			label = "HS-SPI1";
--			status = "okay";
--		};
-+&blsp2_spi5 {
-+	/* On High speed expansion */
-+	label = "HS-SPI1";
-+	status = "okay";
-+};
- 
--		sdhci@74a4900 {
--		/* External SD card */
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
--			pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
--			cd-gpios = <&msmgpio 38 0x1>;
--			vmmc-supply = <&pm8994_l21>;
--			vqmmc-supply = <&pm8994_l13>;
--			status = "okay";
--		};
-+&sdhc2 {
-+	/* External SD card */
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
-+	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
-+	cd-gpios = <&msmgpio 38 0x1>;
-+	vmmc-supply = <&pm8994_l21>;
-+	vqmmc-supply = <&pm8994_l13>;
-+	status = "okay";
-+};
- 
--		phy@627000 {
--			status = "okay";
--		};
-+&ufsphy {
-+	status = "okay";
-+};
- 
--		ufshc@624000 {
--			status = "okay";
--		};
-+&ufshc {
-+	status = "okay";
-+};
- 
--		pinctrl@1010000 {
--			gpio-line-names =
--				"[SPI0_DOUT]", /* GPIO_0, BLSP1_SPI_MOSI, LSEC pin 14 */
--				"[SPI0_DIN]", /* GPIO_1, BLSP1_SPI_MISO, LSEC pin 10 */
--				"[SPI0_CS]", /* GPIO_2, BLSP1_SPI_CS_N, LSEC pin 12 */
--				"[SPI0_SCLK]", /* GPIO_3, BLSP1_SPI_CLK, LSEC pin 8 */
--				"[UART1_TxD]", /* GPIO_4, BLSP8_UART_TX, LSEC pin 11 */
--				"[UART1_RxD]", /* GPIO_5, BLSP8_UART_RX, LSEC pin 13 */
--				"[I2C1_SDA]", /* GPIO_6, BLSP8_I2C_SDA, LSEC pin 21 */
--				"[I2C1_SCL]", /* GPIO_7, BLSP8_I2C_SCL, LSEC pin 19 */
--				"GPIO-H", /* GPIO_8, LCD0_RESET_N, LSEC pin 30 */
--				"TP93", /* GPIO_9 */
--				"GPIO-G", /* GPIO_10, MDP_VSYNC_P, LSEC pin 29 */
--				"[MDP_VSYNC_S]", /* GPIO_11, S HSEC pin 55 */
--				"NC", /* GPIO_12 */
--				"[CSI0_MCLK]", /* GPIO_13, CAM_MCLK0, P HSEC pin 15 */
--				"[CAM_MCLK1]", /* GPIO_14, J14 pin 11 */
--				"[CSI1_MCLK]", /* GPIO_15, CAM_MCLK2, P HSEC pin 17 */
--				"TP99", /* GPIO_16 */
--				"[I2C2_SDA]", /* GPIO_17, CCI_I2C_SDA0, P HSEC pin 34 */
--				"[I2C2_SCL]", /* GPIO_18, CCI_I2C_SCL0, P HSEC pin 32 */
--				"[CCI_I2C_SDA1]", /* GPIO_19, S HSEC pin 38 */
--				"[CCI_I2C_SCL1]", /* GPIO_20, S HSEC pin 36 */
--				"FLASH_STROBE_EN", /* GPIO_21, S HSEC pin 5 */
--				"FLASH_STROBE_TRIG", /* GPIO_22, S HSEC pin 1 */
--				"GPIO-K", /* GPIO_23, CAM2_RST_N, LSEC pin 33 */
--				"GPIO-D", /* GPIO_24, LSEC pin 26 */
--				"GPIO-I", /* GPIO_25, CAM0_RST_N, LSEC pin 31 */
--				"GPIO-J", /* GPIO_26, CAM0_STANDBY_N, LSEC pin 32 */
--				"BLSP6_I2C_SDA", /* GPIO_27 */
--				"BLSP6_I2C_SCL", /* GPIO_28 */
--				"GPIO-B", /* GPIO_29, TS0_RESET_N, LSEC pin 24 */
--				"GPIO30", /* GPIO_30, S HSEC pin 4 */
--				"HDMI_CEC", /* GPIO_31 */
--				"HDMI_DDC_CLOCK", /* GPIO_32 */
--				"HDMI_DDC_DATA", /* GPIO_33 */
--				"HDMI_HOT_PLUG_DETECT", /* GPIO_34 */
--				"PCIE0_RST_N", /* GPIO_35 */
--				"PCIE0_CLKREQ_N", /* GPIO_36 */
--				"PCIE0_WAKE", /* GPIO_37 */
--				"SD_CARD_DET_N", /* GPIO_38 */
--				"TSIF1_SYNC", /* GPIO_39, S HSEC pin 48 */
--				"W_DISABLE_N", /* GPIO_40 */
--				"[BLSP9_UART_TX]", /* GPIO_41 */
--				"[BLSP9_UART_RX]", /* GPIO_42 */
--				"[BLSP2_UART_CTS_N]", /* GPIO_43 */
--				"[BLSP2_UART_RFR_N]", /* GPIO_44 */
--				"[BLSP3_UART_TX]", /* GPIO_45 */
--				"[BLSP3_UART_RX]", /* GPIO_46 */
--				"[I2C0_SDA]", /* GPIO_47, LS_I2C0_SDA, LSEC pin 17 */
--				"[I2C0_SCL]", /* GPIO_48, LS_I2C0_SCL, LSEC pin 15 */
--				"[UART0_TxD]", /* GPIO_49, BLSP9_UART_TX, LSEC pin 5 */
--				"[UART0_RxD]", /* GPIO_50, BLSP9_UART_RX, LSEC pin 7 */
--				"[UART0_CTS]", /* GPIO_51, BLSP9_UART_CTS_N, LSEC pin 3 */
--				"[UART0_RTS]", /* GPIO_52, BLSP9_UART_RFR_N, LSEC pin 9 */
--				"[CODEC_INT1_N]", /* GPIO_53 */
--				"[CODEC_INT2_N]", /* GPIO_54 */
--				"[BLSP7_I2C_SDA]", /* GPIO_55 */
--				"[BLSP7_I2C_SCL]", /* GPIO_56 */
--				"MI2S_MCLK", /* GPIO_57, S HSEC pin 3 */
--				"[PCM_CLK]", /* GPIO_58, QUA_MI2S_SCK, LSEC pin 18 */
--				"[PCM_FS]", /* GPIO_59, QUA_MI2S_WS, LSEC pin 16 */
--				"[PCM_DO]", /* GPIO_60, QUA_MI2S_DATA0, LSEC pin 20 */
--				"[PCM_DI]", /* GPIO_61, QUA_MI2S_DATA1, LSEC pin 22 */
--				"GPIO-E", /* GPIO_62, LSEC pin 27 */
--				"TP87", /* GPIO_63 */
--				"[CODEC_RST_N]", /* GPIO_64 */
--				"[PCM1_CLK]", /* GPIO_65 */
--				"[PCM1_SYNC]", /* GPIO_66 */
--				"[PCM1_DIN]", /* GPIO_67 */
--				"[PCM1_DOUT]", /* GPIO_68 */
--				"AUDIO_REF_CLK", /* GPIO_69 */
--				"SLIMBUS_CLK", /* GPIO_70 */
--				"SLIMBUS_DATA0", /* GPIO_71 */
--				"SLIMBUS_DATA1", /* GPIO_72 */
--				"NC", /* GPIO_73 */
--				"NC", /* GPIO_74 */
--				"NC", /* GPIO_75 */
--				"NC", /* GPIO_76 */
--				"TP94", /* GPIO_77 */
--				"NC", /* GPIO_78 */
--				"TP95", /* GPIO_79 */
--				"GPIO-A", /* GPIO_80, MEMS_RESET_N, LSEC pin 23 */
--				"TP88", /* GPIO_81 */
--				"TP89", /* GPIO_82 */
--				"TP90", /* GPIO_83 */
--				"TP91", /* GPIO_84 */
--				"[SD_DAT0]", /* GPIO_85, BLSP12_SPI_MOSI, P HSEC pin 1 */
--				"[SD_CMD]", /* GPIO_86, BLSP12_SPI_MISO, P HSEC pin 11 */
--				"[SD_DAT3]", /* GPIO_87, BLSP12_SPI_CS_N, P HSEC pin 7 */
--				"[SD_SCLK]", /* GPIO_88, BLSP12_SPI_CLK, P HSEC pin 9 */
--				"TSIF1_CLK", /* GPIO_89, S HSEC pin 42 */
--				"TSIF1_EN", /* GPIO_90, S HSEC pin 46 */
--				"TSIF1_DATA", /* GPIO_91, S HSEC pin 44 */
--				"NC", /* GPIO_92 */
--				"TSIF2_CLK", /* GPIO_93, S HSEC pin 52 */
--				"TSIF2_EN", /* GPIO_94, S HSEC pin 56 */
--				"TSIF2_DATA", /* GPIO_95, S HSEC pin 54 */
--				"TSIF2_SYNC", /* GPIO_96, S HSEC pin 58 */
--				"NC", /* GPIO_97 */
--				"CAM1_STANDBY_N", /* GPIO_98 */
--				"NC", /* GPIO_99 */
--				"NC", /* GPIO_100 */
--				"[LCD1_RESET_N]", /* GPIO_101, S HSEC pin 51 */
--				"BOOT_CONFIG1", /* GPIO_102 */
--				"USB_HUB_RESET", /* GPIO_103 */
--				"CAM1_RST_N", /* GPIO_104 */
--				"NC", /* GPIO_105 */
--				"NC", /* GPIO_106 */
--				"NC", /* GPIO_107 */
--				"NC", /* GPIO_108 */
--				"NC", /* GPIO_109 */
--				"NC", /* GPIO_110 */
--				"NC", /* GPIO_111 */
--				"NC", /* GPIO_112 */
--				"PMI8994_BUA", /* GPIO_113 */
--				"PCIE2_RST_N", /* GPIO_114 */
--				"PCIE2_CLKREQ_N", /* GPIO_115 */
--				"PCIE2_WAKE", /* GPIO_116 */
--				"SSC_IRQ_0", /* GPIO_117 */
--				"SSC_IRQ_1", /* GPIO_118 */
--				"SSC_IRQ_2", /* GPIO_119 */
--				"NC", /* GPIO_120 */
--				"GPIO121", /* GPIO_121, S HSEC pin 2 */
--				"NC", /* GPIO_122 */
--				"SSC_IRQ_6", /* GPIO_123 */
--				"SSC_IRQ_7", /* GPIO_124 */
--				"GPIO-C", /* GPIO_125, TS_INT0, LSEC pin 25 */
--				"BOOT_CONFIG5", /* GPIO_126 */
--				"NC", /* GPIO_127 */
--				"NC", /* GPIO_128 */
--				"BOOT_CONFIG7", /* GPIO_129 */
--				"PCIE1_RST_N", /* GPIO_130 */
--				"PCIE1_CLKREQ_N", /* GPIO_131 */
--				"PCIE1_WAKE", /* GPIO_132 */
--				"GPIO-L", /* GPIO_133, CAM2_STANDBY_N, LSEC pin 34 */
--				"NC", /* GPIO_134 */
--				"NC", /* GPIO_135 */
--				"BOOT_CONFIG8", /* GPIO_136 */
--				"NC", /* GPIO_137 */
--				"NC", /* GPIO_138 */
--				"GPS_SSBI2", /* GPIO_139 */
--				"GPS_SSBI1", /* GPIO_140 */
--				"NC", /* GPIO_141 */
--				"NC", /* GPIO_142 */
--				"NC", /* GPIO_143 */
--				"BOOT_CONFIG6", /* GPIO_144 */
--				"NC", /* GPIO_145 */
--				"NC", /* GPIO_146 */
--				"NC", /* GPIO_147 */
--				"NC", /* GPIO_148 */
--				"NC"; /* GPIO_149 */
--		};
-+&msmgpio {
-+	gpio-line-names =
-+		"[SPI0_DOUT]", /* GPIO_0, BLSP1_SPI_MOSI, LSEC pin 14 */
-+		"[SPI0_DIN]", /* GPIO_1, BLSP1_SPI_MISO, LSEC pin 10 */
-+		"[SPI0_CS]", /* GPIO_2, BLSP1_SPI_CS_N, LSEC pin 12 */
-+		"[SPI0_SCLK]", /* GPIO_3, BLSP1_SPI_CLK, LSEC pin 8 */
-+		"[UART1_TxD]", /* GPIO_4, BLSP8_UART_TX, LSEC pin 11 */
-+		"[UART1_RxD]", /* GPIO_5, BLSP8_UART_RX, LSEC pin 13 */
-+		"[I2C1_SDA]", /* GPIO_6, BLSP8_I2C_SDA, LSEC pin 21 */
-+		"[I2C1_SCL]", /* GPIO_7, BLSP8_I2C_SCL, LSEC pin 19 */
-+		"GPIO-H", /* GPIO_8, LCD0_RESET_N, LSEC pin 30 */
-+		"TP93", /* GPIO_9 */
-+		"GPIO-G", /* GPIO_10, MDP_VSYNC_P, LSEC pin 29 */
-+		"[MDP_VSYNC_S]", /* GPIO_11, S HSEC pin 55 */
-+		"NC", /* GPIO_12 */
-+		"[CSI0_MCLK]", /* GPIO_13, CAM_MCLK0, P HSEC pin 15 */
-+		"[CAM_MCLK1]", /* GPIO_14, J14 pin 11 */
-+		"[CSI1_MCLK]", /* GPIO_15, CAM_MCLK2, P HSEC pin 17 */
-+		"TP99", /* GPIO_16 */
-+		"[I2C2_SDA]", /* GPIO_17, CCI_I2C_SDA0, P HSEC pin 34 */
-+		"[I2C2_SCL]", /* GPIO_18, CCI_I2C_SCL0, P HSEC pin 32 */
-+		"[CCI_I2C_SDA1]", /* GPIO_19, S HSEC pin 38 */
-+		"[CCI_I2C_SCL1]", /* GPIO_20, S HSEC pin 36 */
-+		"FLASH_STROBE_EN", /* GPIO_21, S HSEC pin 5 */
-+		"FLASH_STROBE_TRIG", /* GPIO_22, S HSEC pin 1 */
-+		"GPIO-K", /* GPIO_23, CAM2_RST_N, LSEC pin 33 */
-+		"GPIO-D", /* GPIO_24, LSEC pin 26 */
-+		"GPIO-I", /* GPIO_25, CAM0_RST_N, LSEC pin 31 */
-+		"GPIO-J", /* GPIO_26, CAM0_STANDBY_N, LSEC pin 32 */
-+		"BLSP6_I2C_SDA", /* GPIO_27 */
-+		"BLSP6_I2C_SCL", /* GPIO_28 */
-+		"GPIO-B", /* GPIO_29, TS0_RESET_N, LSEC pin 24 */
-+		"GPIO30", /* GPIO_30, S HSEC pin 4 */
-+		"HDMI_CEC", /* GPIO_31 */
-+		"HDMI_DDC_CLOCK", /* GPIO_32 */
-+		"HDMI_DDC_DATA", /* GPIO_33 */
-+		"HDMI_HOT_PLUG_DETECT", /* GPIO_34 */
-+		"PCIE0_RST_N", /* GPIO_35 */
-+		"PCIE0_CLKREQ_N", /* GPIO_36 */
-+		"PCIE0_WAKE", /* GPIO_37 */
-+		"SD_CARD_DET_N", /* GPIO_38 */
-+		"TSIF1_SYNC", /* GPIO_39, S HSEC pin 48 */
-+		"W_DISABLE_N", /* GPIO_40 */
-+		"[BLSP9_UART_TX]", /* GPIO_41 */
-+		"[BLSP9_UART_RX]", /* GPIO_42 */
-+		"[BLSP2_UART_CTS_N]", /* GPIO_43 */
-+		"[BLSP2_UART_RFR_N]", /* GPIO_44 */
-+		"[BLSP3_UART_TX]", /* GPIO_45 */
-+		"[BLSP3_UART_RX]", /* GPIO_46 */
-+		"[I2C0_SDA]", /* GPIO_47, LS_I2C0_SDA, LSEC pin 17 */
-+		"[I2C0_SCL]", /* GPIO_48, LS_I2C0_SCL, LSEC pin 15 */
-+		"[UART0_TxD]", /* GPIO_49, BLSP9_UART_TX, LSEC pin 5 */
-+		"[UART0_RxD]", /* GPIO_50, BLSP9_UART_RX, LSEC pin 7 */
-+		"[UART0_CTS]", /* GPIO_51, BLSP9_UART_CTS_N, LSEC pin 3 */
-+		"[UART0_RTS]", /* GPIO_52, BLSP9_UART_RFR_N, LSEC pin 9 */
-+		"[CODEC_INT1_N]", /* GPIO_53 */
-+		"[CODEC_INT2_N]", /* GPIO_54 */
-+		"[BLSP7_I2C_SDA]", /* GPIO_55 */
-+		"[BLSP7_I2C_SCL]", /* GPIO_56 */
-+		"MI2S_MCLK", /* GPIO_57, S HSEC pin 3 */
-+		"[PCM_CLK]", /* GPIO_58, QUA_MI2S_SCK, LSEC pin 18 */
-+		"[PCM_FS]", /* GPIO_59, QUA_MI2S_WS, LSEC pin 16 */
-+		"[PCM_DO]", /* GPIO_60, QUA_MI2S_DATA0, LSEC pin 20 */
-+		"[PCM_DI]", /* GPIO_61, QUA_MI2S_DATA1, LSEC pin 22 */
-+		"GPIO-E", /* GPIO_62, LSEC pin 27 */
-+		"TP87", /* GPIO_63 */
-+		"[CODEC_RST_N]", /* GPIO_64 */
-+		"[PCM1_CLK]", /* GPIO_65 */
-+		"[PCM1_SYNC]", /* GPIO_66 */
-+		"[PCM1_DIN]", /* GPIO_67 */
-+		"[PCM1_DOUT]", /* GPIO_68 */
-+		"AUDIO_REF_CLK", /* GPIO_69 */
-+		"SLIMBUS_CLK", /* GPIO_70 */
-+		"SLIMBUS_DATA0", /* GPIO_71 */
-+		"SLIMBUS_DATA1", /* GPIO_72 */
-+		"NC", /* GPIO_73 */
-+		"NC", /* GPIO_74 */
-+		"NC", /* GPIO_75 */
-+		"NC", /* GPIO_76 */
-+		"TP94", /* GPIO_77 */
-+		"NC", /* GPIO_78 */
-+		"TP95", /* GPIO_79 */
-+		"GPIO-A", /* GPIO_80, MEMS_RESET_N, LSEC pin 23 */
-+		"TP88", /* GPIO_81 */
-+		"TP89", /* GPIO_82 */
-+		"TP90", /* GPIO_83 */
-+		"TP91", /* GPIO_84 */
-+		"[SD_DAT0]", /* GPIO_85, BLSP12_SPI_MOSI, P HSEC pin 1 */
-+		"[SD_CMD]", /* GPIO_86, BLSP12_SPI_MISO, P HSEC pin 11 */
-+		"[SD_DAT3]", /* GPIO_87, BLSP12_SPI_CS_N, P HSEC pin 7 */
-+		"[SD_SCLK]", /* GPIO_88, BLSP12_SPI_CLK, P HSEC pin 9 */
-+		"TSIF1_CLK", /* GPIO_89, S HSEC pin 42 */
-+		"TSIF1_EN", /* GPIO_90, S HSEC pin 46 */
-+		"TSIF1_DATA", /* GPIO_91, S HSEC pin 44 */
-+		"NC", /* GPIO_92 */
-+		"TSIF2_CLK", /* GPIO_93, S HSEC pin 52 */
-+		"TSIF2_EN", /* GPIO_94, S HSEC pin 56 */
-+		"TSIF2_DATA", /* GPIO_95, S HSEC pin 54 */
-+		"TSIF2_SYNC", /* GPIO_96, S HSEC pin 58 */
-+		"NC", /* GPIO_97 */
-+		"CAM1_STANDBY_N", /* GPIO_98 */
-+		"NC", /* GPIO_99 */
-+		"NC", /* GPIO_100 */
-+		"[LCD1_RESET_N]", /* GPIO_101, S HSEC pin 51 */
-+		"BOOT_CONFIG1", /* GPIO_102 */
-+		"USB_HUB_RESET", /* GPIO_103 */
-+		"CAM1_RST_N", /* GPIO_104 */
-+		"NC", /* GPIO_105 */
-+		"NC", /* GPIO_106 */
-+		"NC", /* GPIO_107 */
-+		"NC", /* GPIO_108 */
-+		"NC", /* GPIO_109 */
-+		"NC", /* GPIO_110 */
-+		"NC", /* GPIO_111 */
-+		"NC", /* GPIO_112 */
-+		"PMI8994_BUA", /* GPIO_113 */
-+		"PCIE2_RST_N", /* GPIO_114 */
-+		"PCIE2_CLKREQ_N", /* GPIO_115 */
-+		"PCIE2_WAKE", /* GPIO_116 */
-+		"SSC_IRQ_0", /* GPIO_117 */
-+		"SSC_IRQ_1", /* GPIO_118 */
-+		"SSC_IRQ_2", /* GPIO_119 */
-+		"NC", /* GPIO_120 */
-+		"GPIO121", /* GPIO_121, S HSEC pin 2 */
-+		"NC", /* GPIO_122 */
-+		"SSC_IRQ_6", /* GPIO_123 */
-+		"SSC_IRQ_7", /* GPIO_124 */
-+		"GPIO-C", /* GPIO_125, TS_INT0, LSEC pin 25 */
-+		"BOOT_CONFIG5", /* GPIO_126 */
-+		"NC", /* GPIO_127 */
-+		"NC", /* GPIO_128 */
-+		"BOOT_CONFIG7", /* GPIO_129 */
-+		"PCIE1_RST_N", /* GPIO_130 */
-+		"PCIE1_CLKREQ_N", /* GPIO_131 */
-+		"PCIE1_WAKE", /* GPIO_132 */
-+		"GPIO-L", /* GPIO_133, CAM2_STANDBY_N, LSEC pin 34 */
-+		"NC", /* GPIO_134 */
-+		"NC", /* GPIO_135 */
-+		"BOOT_CONFIG8", /* GPIO_136 */
-+		"NC", /* GPIO_137 */
-+		"NC", /* GPIO_138 */
-+		"GPS_SSBI2", /* GPIO_139 */
-+		"GPS_SSBI1", /* GPIO_140 */
-+		"NC", /* GPIO_141 */
-+		"NC", /* GPIO_142 */
-+		"NC", /* GPIO_143 */
-+		"BOOT_CONFIG6", /* GPIO_144 */
-+		"NC", /* GPIO_145 */
-+		"NC", /* GPIO_146 */
-+		"NC", /* GPIO_147 */
-+		"NC", /* GPIO_148 */
-+		"NC"; /* GPIO_149 */
-+};
- 
--		qcom,spmi@400f000 {
--			pmic@0 {
--				gpios@c000 {
--					gpio-line-names =
--						"NC",
--						"KEY_VOLP_N",
--						"NC",
--						"BL1_PWM",
--						"GPIO-F", /* BL0_PWM, LSEC pin 28 */
--						"BL1_EN",
--						"NC",
--						"WLAN_EN",
--						"NC",
--						"NC",
--						"NC",
--						"NC",
--						"NC",
--						"NC",
--						"DIVCLK1",
--						"DIVCLK2",
--						"DIVCLK3",
--						"DIVCLK4",
--						"BT_EN",
--						"PMIC_SLB",
--						"PMIC_BUA",
--						"USB_VBUS_DET";
--				};
--
--				mpps@a000 {
--					gpio-line-names =
--						"VDDPX_BIAS",
--						"WIFI_LED",
--						"NC",
--						"BT_LED",
--						"PM_MPP05",
--						"PM_MPP06",
--						"PM_MPP07",
--						"NC";
--				};
--			};
-+&pm8994_gpios {
-+	gpio-line-names =
-+		"NC",
-+		"KEY_VOLP_N",
-+		"NC",
-+		"BL1_PWM",
-+		"GPIO-F", /* BL0_PWM, LSEC pin 28 */
-+		"BL1_EN",
-+		"NC",
-+		"WLAN_EN",
-+		"NC",
-+		"NC",
-+		"NC",
-+		"NC",
-+		"NC",
-+		"NC",
-+		"DIVCLK1",
-+		"DIVCLK2",
-+		"DIVCLK3",
-+		"DIVCLK4",
-+		"BT_EN",
-+		"PMIC_SLB",
-+		"PMIC_BUA",
-+		"USB_VBUS_DET";
-+};
- 
--			pmic@2 {
--				gpios@c000 {
--					gpio-line-names =
--						"NC",
--						"SPKR_AMP_EN1",
--						"SPKR_AMP_EN2",
--						"TP61",
--						"NC",
--						"USB2_VBUS_DET",
--						"NC",
--						"NC",
--						"NC",
--						"NC";
--				};
--			};
--		};
-+&pm8994_mpps {
-+	gpio-line-names =
-+		"VDDPX_BIAS",
-+		"WIFI_LED",
-+		"NC",
-+		"BT_LED",
-+		"PM_MPP05",
-+		"PM_MPP06",
-+		"PM_MPP07",
-+		"NC";
-+};
- 
--		phy@34000 {
--			status = "okay";
--		};
-+&pmi8994_gpios {
-+	gpio-line-names =
-+		"NC",
-+		"SPKR_AMP_EN1",
-+		"SPKR_AMP_EN2",
-+		"TP61",
-+		"NC",
-+		"USB2_VBUS_DET",
-+		"NC",
-+		"NC",
-+		"NC",
-+		"NC";
-+};
- 
--		phy@7410000 {
--			status = "okay";
--		};
-+&pcie_phy {
-+	status = "okay";
-+};
- 
--		phy@7411000 {
--			status = "okay";
--		};
-+&usb3phy {
-+	status = "okay";
-+};
- 
--		phy@7412000 {
--			status = "okay";
--		};
-+&hsusb_phy1 {
-+	status = "okay";
-+};
- 
--		usb@6af8800 {
--			status = "okay";
--			extcon = <&usb3_id>;
-+&hsusb_phy2 {
-+	status = "okay";
-+};
- 
--			dwc3@6a00000 {
--				extcon = <&usb3_id>;
--				dr_mode = "otg";
--			};
--		};
-+&usb3 {
-+	status = "okay";
-+	extcon = <&usb3_id>;
- 
--		usb@76f8800 {
--			status = "okay";
--			extcon = <&usb2_id>;
-+	dwc3@6a00000 {
-+		extcon = <&usb3_id>;
-+		dr_mode = "otg";
-+	};
-+};
- 
--			dwc3@7600000 {
--				extcon = <&usb2_id>;
--				dr_mode = "otg";
--				maximum-speed = "high-speed";
--			};
--		};
-+&usb2 {
-+	status = "okay";
-+	extcon = <&usb2_id>;
- 
--		agnoc@0 {
--			pcie@600000 {
--				status = "okay";
--				perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
--				vddpe-3v3-supply = <&wlan_en>;
--			};
-+	dwc3@7600000 {
-+		extcon = <&usb2_id>;
-+		dr_mode = "otg";
-+		maximum-speed = "high-speed";
-+	};
-+};
- 
--			pcie@608000 {
--				status = "okay";
--				perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
--			};
-+&pcie0 {
-+	status = "okay";
-+	perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-+	vddpe-3v3-supply = <&wlan_en>;
-+};
- 
--			pcie@610000 {
--				status = "okay";
--				perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
--			};
--		};
-+&pcie1 {
-+	status = "okay";
-+	perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
-+};
- 
--		slim_msm: slim@91c0000 {
--			ngd@1 {
--				wcd9335: codec@1{
--					clock-names = "mclk", "slimbus";
--					clocks = <&div1_mclk>,
--						 <&rpmcc RPM_SMD_BB_CLK1>;
--				};
--			};
--		};
-+&pcie2 {
-+	status = "okay";
-+	perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
-+};
- 
--		mdss@900000 {
--			status = "okay";
-+&wcd9335 {
-+	clock-names = "mclk", "slimbus";
-+	clocks = <&div1_mclk>,
-+		 <&rpmcc RPM_SMD_BB_CLK1>;
-+};
- 
--			mdp@901000 {
--				status = "okay";
--			};
-+&mdss {
-+	status = "okay";
-+};
- 
--			hdmi-phy@9a0600 {
--				status = "okay";
-+&mdp {
-+	status = "okay";
-+};
- 
--				vddio-supply = <&pm8994_l12>;
--				vcca-supply = <&pm8994_l28>;
--				#phy-cells = <0>;
--			};
-+&hdmi_phy {
-+	status = "okay";
- 
--			hdmi-tx@9a0000 {
--				status = "okay";
-+	vddio-supply = <&pm8994_l12>;
-+	vcca-supply = <&pm8994_l28>;
-+	#phy-cells = <0>;
-+};
- 
--				pinctrl-names = "default", "sleep";
--				pinctrl-0 = <&hdmi_hpd_active &hdmi_ddc_active>;
--				pinctrl-1 = <&hdmi_hpd_suspend &hdmi_ddc_suspend>;
-+&hdmi {
-+	status = "okay";
- 
--				core-vdda-supply = <&pm8994_l12>;
--				core-vcc-supply = <&pm8994_s4>;
--			};
--		};
--	};
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&hdmi_hpd_active &hdmi_ddc_active>;
-+	pinctrl-1 = <&hdmi_hpd_suspend &hdmi_ddc_suspend>;
- 
-+	core-vdda-supply = <&pm8994_l12>;
-+	core-vcc-supply = <&pm8994_s4>;
-+};
- 
-+/ {
- 	gpio_keys {
- 		compatible = "gpio-keys";
- 		#address-cells = <1>;
 diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index fb9556f57f55b..bbdb0fcd818e9 100644
+index bcadbdf2690e3..8bfb897b0e81b 100644
 --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1464,7 +1464,7 @@ gpu_speed_bin: gpu_speed_bin@133 {
- 			};
+@@ -584,7 +584,7 @@ soc: soc {
+ 
+ 		rpm_msg_ram: memory@68000 {
+ 			compatible = "qcom,rpm-msg-ram";
+-			reg = <0x68000 0x6000>;
++			reg = <0x00068000 0x6000>;
  		};
  
--		phy@34000 {
-+		pcie_phy: phy@34000 {
+ 		rng: rng@83000 {
+@@ -596,28 +596,28 @@ rng: rng@83000 {
+ 
+ 		tcsr_mutex_regs: syscon@740000 {
+ 			compatible = "syscon";
+-			reg = <0x740000 0x20000>;
++			reg = <0x00740000 0x20000>;
+ 		};
+ 
+ 		tsens0: thermal-sensor@4a9000 {
+ 			compatible = "qcom,msm8996-tsens";
+-			reg = <0x4a9000 0x1000>, /* TM */
+-			      <0x4a8000 0x1000>; /* SROT */
++			reg = <0x004a9000 0x1000>, /* TM */
++			      <0x004a8000 0x1000>; /* SROT */
+ 			#qcom,sensors = <13>;
+ 			#thermal-sensor-cells = <1>;
+ 		};
+ 
+ 		tsens1: thermal-sensor@4ad000 {
+ 			compatible = "qcom,msm8996-tsens";
+-			reg = <0x4ad000 0x1000>, /* TM */
+-			      <0x4ac000 0x1000>; /* SROT */
++			reg = <0x004ad000 0x1000>, /* TM */
++			      <0x004ac000 0x1000>; /* SROT */
+ 			#qcom,sensors = <8>;
+ 			#thermal-sensor-cells = <1>;
+ 		};
+ 
+ 		tcsr: syscon@7a0000 {
+ 			compatible = "qcom,tcsr-msm8996", "syscon";
+-			reg = <0x7a0000 0x18000>;
++			reg = <0x007a0000 0x18000>;
+ 		};
+ 
+ 		intc: interrupt-controller@9bc0000 {
+@@ -633,7 +633,7 @@ intc: interrupt-controller@9bc0000 {
+ 
+ 		apcs_glb: mailbox@9820000 {
+ 			compatible = "qcom,msm8996-apcs-hmss-global";
+-			reg = <0x9820000 0x1000>;
++			reg = <0x09820000 0x1000>;
+ 
+ 			#mbox-cells = <1>;
+ 		};
+@@ -643,7 +643,7 @@ gcc: clock-controller@300000 {
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 			#power-domain-cells = <1>;
+-			reg = <0x300000 0x90000>;
++			reg = <0x00300000 0x90000>;
+ 		};
+ 
+ 		stm@3002000 {
+@@ -1124,7 +1124,7 @@ apss_merge_funnel_out: endpoint {
+ 
+ 		kryocc: clock-controller@6400000 {
+ 			compatible = "qcom,apcc-msm8996";
+-			reg = <0x6400000 0x90000>;
++			reg = <0x06400000 0x90000>;
+ 			#clock-cells = <1>;
+ 		};
+ 
+@@ -1170,7 +1170,7 @@ blsp2_i2c0: i2c@75b5000 {
+ 
+ 		blsp2_uart1: serial@75b0000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+-			reg = <0x75b0000 0x1000>;
++			reg = <0x075b0000 0x1000>;
+ 			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>,
+ 				 <&gcc GCC_BLSP2_AHB_CLK>;
+@@ -1236,7 +1236,7 @@ blsp2_spi5: spi@75ba000{
+ 		sdhc2: sdhci@74a4900 {
+ 			 status = "disabled";
+ 			 compatible = "qcom,sdhci-msm-v4";
+-			 reg = <0x74a4900 0x314>, <0x74a4000 0x800>;
++			 reg = <0x074a4900 0x314>, <0x074a4000 0x800>;
+ 			 reg-names = "hc_mem", "core_mem";
+ 
+ 			 interrupts = <0 125 IRQ_TYPE_LEVEL_HIGH>,
+@@ -1321,11 +1321,11 @@ frame@98c0000 {
+ 
+ 		spmi_bus: qcom,spmi@400f000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+-			reg = <0x400f000 0x1000>,
+-			      <0x4400000 0x800000>,
+-			      <0x4c00000 0x800000>,
+-			      <0x5800000 0x200000>,
+-			      <0x400a000 0x002100>;
++			reg = <0x0400f000 0x1000>,
++			      <0x04400000 0x800000>,
++			      <0x04c00000 0x800000>,
++			      <0x05800000 0x200000>,
++			      <0x0400a000 0x002100>;
+ 			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
+ 			interrupt-names = "periph_irq";
+ 			interrupts = <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1339,7 +1339,7 @@ spmi_bus: qcom,spmi@400f000 {
+ 
+ 		ufsphy: phy@627000 {
+ 			compatible = "qcom,msm8996-ufs-phy-qmp-14nm";
+-			reg = <0x627000 0xda8>;
++			reg = <0x00627000 0xda8>;
+ 			reg-names = "phy_mem";
+ 			#phy-cells = <0>;
+ 
+@@ -1352,7 +1352,7 @@ ufsphy: phy@627000 {
+ 
+ 		ufshc: ufshc@624000 {
+ 			compatible = "qcom,ufshc";
+-			reg = <0x624000 0x2500>;
++			reg = <0x00624000 0x2500>;
+ 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			phys = <&ufsphy>;
+@@ -1411,7 +1411,7 @@ mmcc: clock-controller@8c0000 {
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 			#power-domain-cells = <1>;
+-			reg = <0x8c0000 0x40000>;
++			reg = <0x008c0000 0x40000>;
+ 			assigned-clocks = <&mmcc MMPLL9_PLL>,
+ 					  <&mmcc MMPLL1_PLL>,
+ 					  <&mmcc MMPLL3_PLL>,
+@@ -1426,7 +1426,7 @@ mmcc: clock-controller@8c0000 {
+ 
+ 		qfprom@74000 {
+ 			compatible = "qcom,qfprom";
+-			reg = <0x74000 0x8ff>;
++			reg = <0x00074000 0x8ff>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
+@@ -1448,7 +1448,7 @@ gpu_speed_bin: gpu_speed_bin@133 {
+ 
+ 		pcie_phy: phy@34000 {
  			compatible = "qcom,msm8996-qmp-pcie-phy";
- 			reg = <0x34000 0x488>;
+-			reg = <0x34000 0x488>;
++			reg = <0x00034000 0x488>;
  			#clock-cells = <1>;
-@@ -1526,7 +1526,7 @@ pciephy_2: lane@37000 {
- 			};
- 		};
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -1466,9 +1466,9 @@ pcie_phy: phy@34000 {
+ 			status = "disabled";
  
--		phy@7410000 {
-+		usb3phy: phy@7410000 {
+ 			pciephy_0: lane@35000 {
+-				reg = <0x035000 0x130>,
+-					<0x035200 0x200>,
+-					<0x035400 0x1dc>;
++				reg = <0x00035000 0x130>,
++				      <0x00035200 0x200>,
++				      <0x00035400 0x1dc>;
+ 				#phy-cells = <0>;
+ 
+ 				clock-output-names = "pcie_0_pipe_clk_src";
+@@ -1479,9 +1479,9 @@ pciephy_0: lane@35000 {
+ 			};
+ 
+ 			pciephy_1: lane@36000 {
+-				reg = <0x036000 0x130>,
+-					<0x036200 0x200>,
+-					<0x036400 0x1dc>;
++				reg = <0x00036000 0x130>,
++				      <0x00036200 0x200>,
++				      <0x00036400 0x1dc>;
+ 				#phy-cells = <0>;
+ 
+ 				clock-output-names = "pcie_1_pipe_clk_src";
+@@ -1492,9 +1492,9 @@ pciephy_1: lane@36000 {
+ 			};
+ 
+ 			pciephy_2: lane@37000 {
+-				reg = <0x037000 0x130>,
+-					<0x037200 0x200>,
+-					<0x037400 0x1dc>;
++				reg = <0x00037000 0x130>,
++				      <0x00037200 0x200>,
++				      <0x00037400 0x1dc>;
+ 				#phy-cells = <0>;
+ 
+ 				clock-output-names = "pcie_2_pipe_clk_src";
+@@ -1507,7 +1507,7 @@ pciephy_2: lane@37000 {
+ 
+ 		usb3phy: phy@7410000 {
  			compatible = "qcom,msm8996-qmp-usb3-phy";
- 			reg = <0x7410000 0x1c4>;
+-			reg = <0x7410000 0x1c4>;
++			reg = <0x07410000 0x1c4>;
  			#clock-cells = <1>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -1524,9 +1524,9 @@ usb3phy: phy@7410000 {
+ 			status = "disabled";
+ 
+ 			ssusb_phy_0: lane@7410200 {
+-				reg = <0x7410200 0x200>,
+-					<0x7410400 0x130>,
+-					<0x7410600 0x1a8>;
++				reg = <0x07410200 0x200>,
++				      <0x07410400 0x130>,
++				      <0x07410600 0x1a8>;
+ 				#phy-cells = <0>;
+ 
+ 				clock-output-names = "usb3_phy_pipe_clk_src";
+@@ -1537,7 +1537,7 @@ ssusb_phy_0: lane@7410200 {
+ 
+ 		hsusb_phy1: phy@7411000 {
+ 			compatible = "qcom,msm8996-qusb2-phy";
+-			reg = <0x7411000 0x180>;
++			reg = <0x07411000 0x180>;
+ 			#phy-cells = <0>;
+ 
+ 			clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+@@ -1551,7 +1551,7 @@ hsusb_phy1: phy@7411000 {
+ 
+ 		hsusb_phy2: phy@7412000 {
+ 			compatible = "qcom,msm8996-qusb2-phy";
+-			reg = <0x7412000 0x180>;
++			reg = <0x07412000 0x180>;
+ 			#phy-cells = <0>;
+ 
+ 			clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+@@ -1565,7 +1565,7 @@ hsusb_phy2: phy@7412000 {
+ 
+ 		usb2: usb@76f8800 {
+ 			compatible = "qcom,msm8996-dwc3", "qcom,dwc3";
+-			reg = <0x76f8800 0x400>;
++			reg = <0x076f8800 0x400>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+@@ -1585,7 +1585,7 @@ usb2: usb@76f8800 {
+ 
+ 			dwc3@7600000 {
+ 				compatible = "snps,dwc3";
+-				reg = <0x7600000 0xcc00>;
++				reg = <0x07600000 0xcc00>;
+ 				interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
+ 				phys = <&hsusb_phy2>;
+ 				phy-names = "usb2-phy";
+@@ -1596,7 +1596,7 @@ dwc3@7600000 {
+ 
+ 		usb3: usb@6af8800 {
+ 			compatible = "qcom,msm8996-dwc3", "qcom,dwc3";
+-			reg = <0x6af8800 0x400>;
++			reg = <0x06af8800 0x400>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+@@ -1617,7 +1617,7 @@ usb3: usb@6af8800 {
+ 
+ 			dwc3@6a00000 {
+ 				compatible = "snps,dwc3";
+-				reg = <0x6a00000 0xcc00>;
++				reg = <0x06a00000 0xcc00>;
+ 				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
+ 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
+ 				phy-names = "usb2-phy", "usb3-phy";
+@@ -1628,7 +1628,7 @@ dwc3@6a00000 {
+ 
+ 		vfe_smmu: iommu@da0000 {
+ 			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+-			reg = <0xda0000 0x10000>;
++			reg = <0x00da0000 0x10000>;
+ 
+ 			#global-interrupts = <1>;
+ 			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
+@@ -1644,20 +1644,20 @@ vfe_smmu: iommu@da0000 {
+ 
+ 		camss: camss@a00000 {
+ 			compatible = "qcom,msm8996-camss";
+-			reg = <0xa34000 0x1000>,
+-				<0xa00030 0x4>,
+-				<0xa35000 0x1000>,
+-				<0xa00038 0x4>,
+-				<0xa36000 0x1000>,
+-				<0xa00040 0x4>,
+-				<0xa30000 0x100>,
+-				<0xa30400 0x100>,
+-				<0xa30800 0x100>,
+-				<0xa30c00 0x100>,
+-				<0xa31000 0x500>,
+-				<0xa00020 0x10>,
+-				<0xa10000 0x1000>,
+-				<0xa14000 0x1000>;
++			reg = <0x00a34000 0x1000>,
++			      <0x00a00030 0x4>,
++			      <0x00a35000 0x1000>,
++			      <0x00a00038 0x4>,
++			      <0x00a36000 0x1000>,
++			      <0x00a00040 0x4>,
++			      <0x00a30000 0x100>,
++			      <0x00a30400 0x100>,
++			      <0x00a30800 0x100>,
++			      <0x00a30c00 0x100>,
++			      <0x00a31000 0x500>,
++			      <0x00a00020 0x10>,
++			      <0x00a10000 0x1000>,
++			      <0x00a14000 0x1000>;
+ 			reg-names = "csiphy0",
+ 				"csiphy0_clk_mux",
+ 				"csiphy1",
+@@ -1778,7 +1778,7 @@ ports {
+ 
+ 		adreno_smmu: iommu@b40000 {
+ 			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+-			reg = <0xb40000 0x10000>;
++			reg = <0x00b40000 0x10000>;
+ 
+ 			#global-interrupts = <1>;
+ 			interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
+@@ -1795,7 +1795,7 @@ adreno_smmu: iommu@b40000 {
+ 
+ 		mdp_smmu: iommu@d00000 {
+ 			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+-			reg = <0xd00000 0x10000>;
++			reg = <0x00d00000 0x10000>;
+ 
+ 			#global-interrupts = <1>;
+ 			interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+@@ -1811,7 +1811,7 @@ mdp_smmu: iommu@d00000 {
+ 
+ 		lpass_q6_smmu: iommu@1600000 {
+ 			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+-			reg = <0x1600000 0x20000>;
++			reg = <0x01600000 0x20000>;
+ 			#iommu-cells = <1>;
+ 			power-domains = <&gcc HLOS1_VOTE_LPASS_CORE_GDSC>;
+ 
+@@ -1998,7 +1998,7 @@ slimbam:dma@9184000
+ 		{
+ 			compatible = "qcom,bam-v1.7.0";
+ 			qcom,controlled-remotely;
+-			reg = <0x9184000 0x32000>;
++			reg = <0x09184000 0x32000>;
+ 			num-channels  = <31>;
+ 			interrupts = <0 164 IRQ_TYPE_LEVEL_HIGH>;
+ 			#dma-cells = <1>;
+@@ -2008,7 +2008,7 @@ slimbam:dma@9184000
+ 
+ 		slim_msm: slim@91c0000 {
+ 			compatible = "qcom,slim-ngd-v1.5.0";
+-			reg = <0x91c0000 0x2C000>;
++			reg = <0x091c0000 0x2C000>;
+ 			reg-names = "ctrl";
+ 			interrupts = <0 163 IRQ_TYPE_LEVEL_HIGH>;
+ 			dmas =	<&slimbam 3>, <&slimbam 4>,
+@@ -2052,7 +2052,7 @@ gpu@b00000 {
+ 			compatible = "qcom,adreno-530.2", "qcom,adreno";
+ 			#stream-id-cells = <16>;
+ 
+-			reg = <0xb00000 0x3f000>;
++			reg = <0x00b00000 0x3f000>;
+ 			reg-names = "kgsl_3d0_reg_memory";
+ 
+ 			interrupts = <0 300 IRQ_TYPE_LEVEL_HIGH>;
+@@ -2123,9 +2123,9 @@ zap-shader {
+ 		mdss: mdss@900000 {
+ 			compatible = "qcom,mdss";
+ 
+-			reg = <0x900000 0x1000>,
+-			      <0x9b0000 0x1040>,
+-			      <0x9b8000 0x1040>;
++			reg = <0x00900000 0x1000>,
++			      <0x009b0000 0x1040>,
++			      <0x009b8000 0x1040>;
+ 			reg-names = "mdss_phys",
+ 				    "vbif_phys",
+ 				    "vbif_nrt_phys";
+@@ -2145,7 +2145,7 @@ mdss: mdss@900000 {
+ 
+ 			mdp: mdp@901000 {
+ 				compatible = "qcom,mdp5";
+-				reg = <0x901000 0x90000>;
++				reg = <0x00901000 0x90000>;
+ 				reg-names = "mdp_phys";
+ 
+ 				interrupt-parent = <&mdss>;
+@@ -2221,12 +2221,12 @@ hdmi_in: endpoint {
+ 			hdmi_phy: hdmi-phy@9a0600 {
+ 				#phy-cells = <0>;
+ 				compatible = "qcom,hdmi-phy-8996";
+-				reg = <0x9a0600 0x1c4>,
+-				      <0x9a0a00 0x124>,
+-				      <0x9a0c00 0x124>,
+-				      <0x9a0e00 0x124>,
+-				      <0x9a1000 0x124>,
+-				      <0x9a1200 0x0c8>;
++				reg = <0x009a0600 0x1c4>,
++				      <0x009a0a00 0x124>,
++				      <0x009a0c00 0x124>,
++				      <0x009a0e00 0x124>,
++				      <0x009a1000 0x124>,
++				      <0x009a1200 0x0c8>;
+ 				reg-names = "hdmi_pll",
+ 					    "hdmi_tx_l0",
+ 					    "hdmi_tx_l1",
 -- 
 2.43.0
 
