@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2851143AC5;
-	Sun, 24 Mar 2024 22:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D0B4EB22;
+	Sun, 24 Mar 2024 22:35:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319704; cv=none; b=pAZ8kbDZD0zrU5IhueI5+OjaZCN7pLukjC84fS95WXofFu1JOL5WP8RJmLdCA4peF990FIxPRL0P4ih53oQ38fnKsAYNOoAQ37PQeAJqFFTlQXniN6aib9ScmO0HLwZk3jgC68JLdP5DKmhWG37F/Jxv8g09+WyN6YRX9OTT32Y=
+	t=1711319705; cv=none; b=SrewyFewSCQ8O80zNoWbXpAu1zyCWxJTyu7QaSZychUwWFxKGERaCXjl9V1gxUwQWRABYQ07AKXw/yc5X6H9tZWTTsNHTpXHtVLSKI2U0J4fCiyRgdVGKKPkCUDk1/l8zeoNYAjn1SH1oGK4npD3t7ekwlpoFvbT+x/SntGuNOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319704; c=relaxed/simple;
-	bh=CYKCU5m1Lbnhi0N/OhAGJKYTjm7/p8K6CjRh77KXypA=;
+	s=arc-20240116; t=1711319705; c=relaxed/simple;
+	bh=CWw8F2fVqP4cLPu49IP63ZuAjTHzljhZGVc9EXSg6Kg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nXR/CNxj6oGu9MXP2ipQa61F5NuSvB9qD2jTigwsA5noTyZWeEnO1jaP6SsZoA1gBlQLfGmFH/sBwN/dm9G9Yo+nqh667x0b9QqB5/Qc6QlgXMetTJ2CdHVNBHxmyFcBBlAdVniYhIzkEbbxhpBiz6MDrnXoafaSvC1TlztZrqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqOFuSlk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=L9QZBQhtsuiDZbjL/Thgu7cAws/8+XHtKrxIIYpnjyCPgtNJ46VTZ+LS0CT8WcC62Qv9t/HCjFCcqtfoJwYp5O0ies9Kwqm5uK3lSZs38QPzGSuzunrAjhW3Flfux476iKmQxuqIwC/gqj8TTTAEGPYaEUS+QXI3y40tWfO9hCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ShS/YUPB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqOFuSlk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F70FC433B2;
-	Sun, 24 Mar 2024 22:35:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ShS/YUPB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAB9FC433B1;
+	Sun, 24 Mar 2024 22:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711319703;
-	bh=CYKCU5m1Lbnhi0N/OhAGJKYTjm7/p8K6CjRh77KXypA=;
+	s=k20201202; t=1711319705;
+	bh=CWw8F2fVqP4cLPu49IP63ZuAjTHzljhZGVc9EXSg6Kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IqOFuSlkXrbea8LnbKK4PZv+050a2lolToSG3k6bHnAXNIQWfPtF4Tjt9Q9l4ncyW
-	 U1WizDbiDf/yLDGjoU80MrP9BnSsH1ZkwmMEOsa0LahgPmsGCDFOdx5SqU0nQ+DCN0
-	 X7jsdxAsq8IJ4ldQqd2+koMY83xLaciyyXo+vDTtkl/RmW11ETtc/NvG0gijx8Cfrh
-	 qcAUtYzu8kIfh67uSvROTPDWct9BJeX9fE+OymgSGXzfoGHL1DyEmLWSOZWHfAHv6s
-	 l5bqidlxJ6PXnQsvAw+pNoA9fLuxQCSG5s0x/HcXct5AmYXkZujwGBxolDYYusiXs1
-	 AYCVyNKG+MjUQ==
+	b=ShS/YUPBdWXCrLzfdhmQE5KBwhuNDmhRnXdnnOm28fT5IRlcBj2M9lhqjSbl8oXpA
+	 vD7C8IPtcz1+P0FC89Xo+cOm2f2ccy+Qqirga7Vlvtt1YZqTMXf5KK8+5IY1PYyLCR
+	 AVCXhLWZ+HZig77GjFAHvVwZoF6cUR6QTD4xb1oz3S/MZT7DI9CCuLHtvsDFGbKZRO
+	 +EyJsjx8i6y1169f3r1FEg3k6amE+D3pufy4MoqnO8GOF5JAMWkseEjtCB6f8iMoCH
+	 f5OiDEJsNLWHOVCx0jGmcq6B/5CgZzdRggvRRdCvsVtMNpBKk4GB7HAVUelOmSAAhl
+	 Cv58qpwwLWLkA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Tejun Heo <tj@kernel.org>,
 	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 006/715] workqueue: Move nr_active handling into helpers
-Date: Sun, 24 Mar 2024 18:23:05 -0400
-Message-ID: <20240324223455.1342824-7-sashal@kernel.org>
+Subject: [PATCH 6.8 008/715] workqueue: RCU protect wq->dfl_pwq and implement accessors for it
+Date: Sun, 24 Mar 2024 18:23:07 -0400
+Message-ID: <20240324223455.1342824-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
 References: <20240324223455.1342824-1-sashal@kernel.org>
@@ -50,179 +50,180 @@ Content-Transfer-Encoding: 8bit
 
 From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 1c270b79ce0b8290f146255ea9057243f6dd3c17 ]
+[ Upstream commit 9f66cff212bb3c1cd25996aaa0dfd0c9e9d8baab ]
 
-__queue_work(), pwq_dec_nr_in_flight() and wq_adjust_max_active() were
-open-coding nr_active handling, which is fine given that the operations are
-trivial. However, the planned unbound nr_active update will make them more
-complicated, so let's move them into helpers.
+wq->cpu_pwq is RCU protected but wq->dfl_pwq isn't. This is okay because
+currently wq->dfl_pwq is used only accessed to install it into wq->cpu_pwq
+which doesn't require RCU access. However, we want to be able to access
+wq->dfl_pwq under RCU in the future to access its __pod_cpumask and the code
+can be made easier to read by making the two pwq fields behave in the same
+way.
 
-- pwq_tryinc_nr_active() is added. It increments nr_active if under
-  max_active limit and return a boolean indicating whether inc was
-  successful. Note that the function is structured to accommodate future
-  changes. __queue_work() is updated to use the new helper.
+- Make wq->dfl_pwq RCU protected.
 
-- pwq_activate_first_inactive() is updated to use pwq_tryinc_nr_active() and
-  thus no longer assumes that nr_active is under max_active and returns a
-  boolean to indicate whether a work item has been activated.
+- Add unbound_pwq_slot() and unbound_pwq() which can access both ->dfl_pwq
+  and ->cpu_pwq. The former returns the double pointer that can be used
+  access and update the pwqs. The latter performs locking check and
+  dereferences the double pointer.
 
-- wq_adjust_max_active() no longer tests directly whether a work item can be
-  activated. Instead, it's updated to use the return value of
-  pwq_activate_first_inactive() to tell whether a work item has been
-  activated.
-
-- nr_active decrement and activating the first inactive work item is
-  factored into pwq_dec_nr_active().
-
-v3: - WARN_ON_ONCE(!WORK_STRUCT_INACTIVE) added to __pwq_activate_work() as
-      now we're calling the function unconditionally from
-      pwq_activate_first_inactive().
-
-v2: - wq->max_active now uses WRITE/READ_ONCE() as suggested by Lai.
+- pwq accesses and updates are converted to use unbound_pwq[_slot]().
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
 Stable-dep-of: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/workqueue.c | 86 ++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 67 insertions(+), 19 deletions(-)
+ kernel/workqueue.c | 64 +++++++++++++++++++++++++++++-----------------
+ 1 file changed, 40 insertions(+), 24 deletions(-)
 
 diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 7e1b0238158ea..80733046ee012 100644
+index 1659cd4a36c62..5cfc04dd05ad6 100644
 --- a/kernel/workqueue.c
 +++ b/kernel/workqueue.c
-@@ -1464,11 +1464,14 @@ static bool pwq_is_empty(struct pool_workqueue *pwq)
- static void __pwq_activate_work(struct pool_workqueue *pwq,
- 				struct work_struct *work)
- {
-+	unsigned long *wdb = work_data_bits(work);
-+
-+	WARN_ON_ONCE(!(*wdb & WORK_STRUCT_INACTIVE));
- 	trace_workqueue_activate_work(work);
- 	if (list_empty(&pwq->pool->worklist))
- 		pwq->pool->watchdog_ts = jiffies;
- 	move_linked_works(work, &pwq->pool->worklist, NULL);
--	__clear_bit(WORK_STRUCT_INACTIVE_BIT, work_data_bits(work));
-+	__clear_bit(WORK_STRUCT_INACTIVE_BIT, wdb);
+@@ -304,7 +304,7 @@ struct workqueue_struct {
+ 	int			saved_max_active; /* WQ: saved max_active */
+ 
+ 	struct workqueue_attrs	*unbound_attrs;	/* PW: only for unbound wqs */
+-	struct pool_workqueue	*dfl_pwq;	/* PW: only for unbound wqs */
++	struct pool_workqueue __rcu *dfl_pwq;   /* PW: only for unbound wqs */
+ 
+ #ifdef CONFIG_SYSFS
+ 	struct wq_device	*wq_dev;	/* I: for sysfs interface */
+@@ -635,6 +635,23 @@ static int worker_pool_assign_id(struct worker_pool *pool)
+ 	return ret;
  }
  
- /**
-@@ -1493,12 +1496,66 @@ static bool pwq_activate_work(struct pool_workqueue *pwq,
- 	return true;
- }
- 
--static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
-+/**
-+ * pwq_tryinc_nr_active - Try to increment nr_active for a pwq
-+ * @pwq: pool_workqueue of interest
-+ *
-+ * Try to increment nr_active for @pwq. Returns %true if an nr_active count is
-+ * successfully obtained. %false otherwise.
-+ */
-+static bool pwq_tryinc_nr_active(struct pool_workqueue *pwq)
++static struct pool_workqueue __rcu **
++unbound_pwq_slot(struct workqueue_struct *wq, int cpu)
 +{
-+	struct workqueue_struct *wq = pwq->wq;
-+	struct worker_pool *pool = pwq->pool;
-+	bool obtained;
-+
-+	lockdep_assert_held(&pool->lock);
-+
-+	obtained = pwq->nr_active < READ_ONCE(wq->max_active);
-+
-+	if (obtained)
-+		pwq->nr_active++;
-+	return obtained;
++       if (cpu >= 0)
++               return per_cpu_ptr(wq->cpu_pwq, cpu);
++       else
++               return &wq->dfl_pwq;
 +}
 +
-+/**
-+ * pwq_activate_first_inactive - Activate the first inactive work item on a pwq
-+ * @pwq: pool_workqueue of interest
-+ *
-+ * Activate the first inactive work item of @pwq if available and allowed by
-+ * max_active limit.
-+ *
-+ * Returns %true if an inactive work item has been activated. %false if no
-+ * inactive work item is found or max_active limit is reached.
-+ */
-+static bool pwq_activate_first_inactive(struct pool_workqueue *pwq)
++/* @cpu < 0 for dfl_pwq */
++static struct pool_workqueue *unbound_pwq(struct workqueue_struct *wq, int cpu)
 +{
-+	struct work_struct *work =
-+		list_first_entry_or_null(&pwq->inactive_works,
-+					 struct work_struct, entry);
-+
-+	if (work && pwq_tryinc_nr_active(pwq)) {
-+		__pwq_activate_work(pwq, work);
-+		return true;
-+	} else {
-+		return false;
-+	}
++	return rcu_dereference_check(*unbound_pwq_slot(wq, cpu),
++				     lockdep_is_held(&wq_pool_mutex) ||
++				     lockdep_is_held(&wq->mutex));
 +}
 +
-+/**
-+ * pwq_dec_nr_active - Retire an active count
-+ * @pwq: pool_workqueue of interest
-+ *
-+ * Decrement @pwq's nr_active and try to activate the first inactive work item.
-+ */
-+static void pwq_dec_nr_active(struct pool_workqueue *pwq)
+ static unsigned int work_color_to_flags(int color)
  {
--	struct work_struct *work = list_first_entry(&pwq->inactive_works,
--						    struct work_struct, entry);
-+	struct worker_pool *pool = pwq->pool;
- 
--	pwq_activate_work(pwq, work);
-+	lockdep_assert_held(&pool->lock);
-+
-+	pwq->nr_active--;
-+	pwq_activate_first_inactive(pwq);
+ 	return color << WORK_STRUCT_COLOR_SHIFT;
+@@ -4324,10 +4341,11 @@ static void wq_calc_pod_cpumask(struct workqueue_attrs *attrs, int cpu,
+ 				"possible intersect\n");
  }
  
- /**
-@@ -1516,14 +1573,8 @@ static void pwq_dec_nr_in_flight(struct pool_workqueue *pwq, unsigned long work_
+-/* install @pwq into @wq's cpu_pwq and return the old pwq */
++/* install @pwq into @wq and return the old pwq, @cpu < 0 for dfl_pwq */
+ static struct pool_workqueue *install_unbound_pwq(struct workqueue_struct *wq,
+ 					int cpu, struct pool_workqueue *pwq)
  {
- 	int color = get_work_color(work_data);
++	struct pool_workqueue __rcu **slot = unbound_pwq_slot(wq, cpu);
+ 	struct pool_workqueue *old_pwq;
  
--	if (!(work_data & WORK_STRUCT_INACTIVE)) {
--		pwq->nr_active--;
--		if (!list_empty(&pwq->inactive_works)) {
--			/* one down, submit an inactive one */
--			if (pwq->nr_active < READ_ONCE(pwq->wq->max_active))
--				pwq_activate_first_inactive(pwq);
--		}
--	}
-+	if (!(work_data & WORK_STRUCT_INACTIVE))
-+		pwq_dec_nr_active(pwq);
+ 	lockdep_assert_held(&wq_pool_mutex);
+@@ -4336,8 +4354,8 @@ static struct pool_workqueue *install_unbound_pwq(struct workqueue_struct *wq,
+ 	/* link_pwq() can handle duplicate calls */
+ 	link_pwq(pwq);
  
- 	pwq->nr_in_flight[color]--;
+-	old_pwq = rcu_access_pointer(*per_cpu_ptr(wq->cpu_pwq, cpu));
+-	rcu_assign_pointer(*per_cpu_ptr(wq->cpu_pwq, cpu), pwq);
++	old_pwq = rcu_access_pointer(*slot);
++	rcu_assign_pointer(*slot, pwq);
+ 	return old_pwq;
+ }
  
-@@ -1825,13 +1876,11 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
- 	 * @work must also queue behind existing inactive work items to maintain
- 	 * ordering when max_active changes. See wq_adjust_max_active().
- 	 */
--	if (list_empty(&pwq->inactive_works) &&
--	    pwq->nr_active < READ_ONCE(pwq->wq->max_active)) {
-+	if (list_empty(&pwq->inactive_works) && pwq_tryinc_nr_active(pwq)) {
- 		if (list_empty(&pool->worklist))
- 			pool->watchdog_ts = jiffies;
+@@ -4437,14 +4455,11 @@ static void apply_wqattrs_commit(struct apply_wqattrs_ctx *ctx)
  
- 		trace_workqueue_activate_work(work);
--		pwq->nr_active++;
- 		insert_work(pwq, work, &pool->worklist, work_flags);
- 		kick_pool(pool);
+ 	copy_workqueue_attrs(ctx->wq->unbound_attrs, ctx->attrs);
+ 
+-	/* save the previous pwq and install the new one */
++	/* save the previous pwqs and install the new ones */
+ 	for_each_possible_cpu(cpu)
+ 		ctx->pwq_tbl[cpu] = install_unbound_pwq(ctx->wq, cpu,
+ 							ctx->pwq_tbl[cpu]);
+-
+-	/* @dfl_pwq might not have been used, ensure it's linked */
+-	link_pwq(ctx->dfl_pwq);
+-	swap(ctx->wq->dfl_pwq, ctx->dfl_pwq);
++	ctx->dfl_pwq = install_unbound_pwq(ctx->wq, -1, ctx->dfl_pwq);
+ 
+ 	mutex_unlock(&ctx->wq->mutex);
+ }
+@@ -4554,9 +4569,7 @@ static void wq_update_pod(struct workqueue_struct *wq, int cpu,
+ 
+ 	/* nothing to do if the target cpumask matches the current pwq */
+ 	wq_calc_pod_cpumask(target_attrs, cpu, off_cpu);
+-	pwq = rcu_dereference_protected(*per_cpu_ptr(wq->cpu_pwq, cpu),
+-					lockdep_is_held(&wq_pool_mutex));
+-	if (wqattrs_equal(target_attrs, pwq->pool->attrs))
++	if (wqattrs_equal(target_attrs, unbound_pwq(wq, cpu)->pool->attrs))
+ 		return;
+ 
+ 	/* create a new pwq */
+@@ -4574,10 +4587,11 @@ static void wq_update_pod(struct workqueue_struct *wq, int cpu,
+ 
+ use_dfl_pwq:
+ 	mutex_lock(&wq->mutex);
+-	raw_spin_lock_irq(&wq->dfl_pwq->pool->lock);
+-	get_pwq(wq->dfl_pwq);
+-	raw_spin_unlock_irq(&wq->dfl_pwq->pool->lock);
+-	old_pwq = install_unbound_pwq(wq, cpu, wq->dfl_pwq);
++	pwq = unbound_pwq(wq, -1);
++	raw_spin_lock_irq(&pwq->pool->lock);
++	get_pwq(pwq);
++	raw_spin_unlock_irq(&pwq->pool->lock);
++	old_pwq = install_unbound_pwq(wq, cpu, pwq);
+ out_unlock:
+ 	mutex_unlock(&wq->mutex);
+ 	put_pwq_unlocked(old_pwq);
+@@ -4615,10 +4629,13 @@ static int alloc_and_link_pwqs(struct workqueue_struct *wq)
+ 
+ 	cpus_read_lock();
+ 	if (wq->flags & __WQ_ORDERED) {
++		struct pool_workqueue *dfl_pwq;
++
+ 		ret = apply_workqueue_attrs(wq, ordered_wq_attrs[highpri]);
+ 		/* there should only be single pwq for ordering guarantee */
+-		WARN(!ret && (wq->pwqs.next != &wq->dfl_pwq->pwqs_node ||
+-			      wq->pwqs.prev != &wq->dfl_pwq->pwqs_node),
++		dfl_pwq = rcu_access_pointer(wq->dfl_pwq);
++		WARN(!ret && (wq->pwqs.next != &dfl_pwq->pwqs_node ||
++			      wq->pwqs.prev != &dfl_pwq->pwqs_node),
+ 		     "ordering guarantee broken for workqueue %s\n", wq->name);
  	} else {
-@@ -4680,9 +4729,8 @@ static void wq_adjust_max_active(struct workqueue_struct *wq)
- 		/* this function can be called during early boot w/ irq disabled */
- 		raw_spin_lock_irqsave(&pwq->pool->lock, flags);
+ 		ret = apply_workqueue_attrs(wq, unbound_std_wq_attrs[highpri]);
+@@ -4849,7 +4866,7 @@ static bool pwq_busy(struct pool_workqueue *pwq)
+ 		if (pwq->nr_in_flight[i])
+ 			return true;
  
--		while (!list_empty(&pwq->inactive_works) &&
--		       pwq->nr_active < wq->max_active)
--			pwq_activate_first_inactive(pwq);
-+		while (pwq_activate_first_inactive(pwq))
-+			;
+-	if ((pwq != pwq->wq->dfl_pwq) && (pwq->refcnt > 1))
++	if ((pwq != rcu_access_pointer(pwq->wq->dfl_pwq)) && (pwq->refcnt > 1))
+ 		return true;
+ 	if (!pwq_is_empty(pwq))
+ 		return true;
+@@ -4933,13 +4950,12 @@ void destroy_workqueue(struct workqueue_struct *wq)
+ 	rcu_read_lock();
  
- 		kick_pool(pwq->pool);
+ 	for_each_possible_cpu(cpu) {
+-		pwq = rcu_access_pointer(*per_cpu_ptr(wq->cpu_pwq, cpu));
+-		RCU_INIT_POINTER(*per_cpu_ptr(wq->cpu_pwq, cpu), NULL);
+-		put_pwq_unlocked(pwq);
++		put_pwq_unlocked(unbound_pwq(wq, cpu));
++		RCU_INIT_POINTER(*unbound_pwq_slot(wq, cpu), NULL);
+ 	}
  
+-	put_pwq_unlocked(wq->dfl_pwq);
+-	wq->dfl_pwq = NULL;
++	put_pwq_unlocked(unbound_pwq(wq, -1));
++	RCU_INIT_POINTER(*unbound_pwq_slot(wq, -1), NULL);
+ 
+ 	rcu_read_unlock();
+ }
 -- 
 2.43.0
 
