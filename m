@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2AC14884F;
-	Sun, 24 Mar 2024 23:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C976315250B;
+	Sun, 24 Mar 2024 23:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321610; cv=none; b=esRq6yYMX0HluopLlDhWckRPcYYmLp7ySH7Ff9lqMTfk/y9J0IJLbpog4an7S9xH99mma/ulsOfsWDAq18/rcSvdJOh7JJXIZyTgyVJjAseSUm8IReYwXIqUIwqfWjbE7gYlbhaf/2U9KXfRqCyEyyOyQCzykyB8Hgnm0Q9Jhhk=
+	t=1711321611; cv=none; b=s3PMZhz+l/YI/hL4QkZ5qXjMi1u5xqacjR1Fc6bTA218mbZCnrdDUpi41bhOU2YJhYEjVis21ZaXh3iXu2oMBX99WndKpJG8jXBykEogP+Z7yqWlJuMr0RGCEuAwnoWIsh8nZKgbwIBqkqTA2LLtaa5Jrt3+cGL3Uk7ATNFsWF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321610; c=relaxed/simple;
-	bh=W2AvlN3/e6oPQY6FDGVLyCBTM427dEQ9vt1/kJm6QD4=;
+	s=arc-20240116; t=1711321611; c=relaxed/simple;
+	bh=UGaxFGHhiCU1ABKGD20RSDZbKphjf0z3i99sFcOZKJI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fUkkrTbCMVbGgDXcO2f0z1xsaLEkeCLctjP8OLvVi9nkFD3nwp2Y751Bv7yNhY+ohsAxBRVNxGt5pQZWMRQTqT6FgmaMA3vjEscnohtVUyDsTzXnupFsHKtZND7cN7van5bwzmb11QVmBRfOfWnppHvN3qRQB5vr5aIQmsFGR58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QCRdg7Oy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TI/APd8QriOVz5PDrdqihvZueLb4jfju+D0f+YK1/XfD4eqOl0bE2yr4l9GKlp06YTwGCgyxnxAYeaeVX4C2YLKi6AmngA/W1htWODK21c/36zrjfwg2HGEHJi+On8qNMKVvUl3tdW+xiwv9PqZ/gsqprVq4y6l4cOsPPMb46lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGZs9ssf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QCRdg7Oy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C04B9C433F1;
-	Sun, 24 Mar 2024 23:06:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGZs9ssf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF901C433A6;
+	Sun, 24 Mar 2024 23:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321609;
-	bh=W2AvlN3/e6oPQY6FDGVLyCBTM427dEQ9vt1/kJm6QD4=;
+	s=k20201202; t=1711321611;
+	bh=UGaxFGHhiCU1ABKGD20RSDZbKphjf0z3i99sFcOZKJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QCRdg7OySexwj+BjkwAbDHqy7mDBSvaifvPdyY+N7/Vs3n/4kG4rFpjiXHkHQM4ip
-	 of7SrqUoyPFcmmQxFIVqWyTUYIbF7HULTXZruxwwuVRnuOgLh9h7ItQ4bY7KSTFhUS
-	 221BC/Pt/10E1vzeu1pe4fVLEybcEuySUt1NxE14h0VopAnDjV3+iIl0A3Hky+n+VC
-	 I62jFT0yMHmiy8k/zh1XyQYqViTD36GG98iHUHRGNjDrgZ92tUjvjaoYA3LJKg8Xsi
-	 q8C+BDoFqa/Z9VsSr42s5wUxFRRBkrX41+/SD0Kb2NvDn2ghW89h9GU5NJ268wJtMx
-	 j82ymfgLwZJBw==
+	b=oGZs9ssfUc/r3dp1d4jhbILpdJh8blJ9kQjuTAF/vQ8Ub1vUzbtE1213WZZrnFCWw
+	 Co3rv/HEDNud4/syIdWcKq6JaTAhja9f9GuB6ojzsE+7q9S56BiXWXXfRcdl4E6lxq
+	 vBDtd/G8p2rc8lurXnKXZ7inXEF7+mhMvvGlAxmgQ/9JKZJ6yPEXhGFY3CtCEDc25P
+	 KPGi9RpJsrd+VTpocmfOPaKx69ShWXm8QaQG559CKfCYTC2U2cJpad43IPmCIuZH8/
+	 qRgfN6Zc3RDiLss04zBlvDAKgiswdXdGghtmNT9g5yEQV1VfkPUu6aFKASeUOMCRoG
+	 Va45Q8uZhvuAQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Duoming Zhou <duoming@zju.edu.cn>,
-	Louis Peens <louis.peens@corigine.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Ming Lei <ming.lei@redhat.com>,
+	Patrick Plenefisch <simonpatp@gmail.com>,
+	Mike Snitzer <snitzer@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 339/638] nfp: flower: handle acti_netdevs allocation failure
-Date: Sun, 24 Mar 2024 18:56:16 -0400
-Message-ID: <20240324230116.1348576-340-sashal@kernel.org>
+Subject: [PATCH 6.6 341/638] dm raid: fix false positive for requeue needed during reshape
+Date: Sun, 24 Mar 2024 18:56:18 -0400
+Message-ID: <20240324230116.1348576-342-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,43 +49,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Duoming Zhou <duoming@zju.edu.cn>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 84e95149bd341705f0eca6a7fcb955c548805002 ]
+[ Upstream commit b25b8f4b8ecef0f48c05f0c3572daeabefe16526 ]
 
-The kmalloc_array() in nfp_fl_lag_do_work() will return null, if
-the physical memory has run out. As a result, if we dereference
-the acti_netdevs, the null pointer dereference bugs will happen.
+An empty flush doesn't have a payload, so it should never be looked at
+when considering to possibly requeue a bio for the case when a reshape
+is in progress.
 
-This patch adds a check to judge whether allocation failure occurs.
-If it happens, the delayed work will be rescheduled and try again.
-
-Fixes: bb9a8d031140 ("nfp: flower: monitor and offload LAG groups")
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
-Reviewed-by: Louis Peens <louis.peens@corigine.com>
-Link: https://lore.kernel.org/r/20240308142540.9674-1-duoming@zju.edu.cn
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 9dbd1aa3a81c ("dm raid: add reshaping support to the target")
+Reported-by: Patrick Plenefisch <simonpatp@gmail.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/lag_conf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/md/dm-raid.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c b/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
-index 88d6d992e7d07..86db8e8141407 100644
---- a/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
-@@ -338,6 +338,11 @@ static void nfp_fl_lag_do_work(struct work_struct *work)
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index 5f9991765f270..3d8ee9eb59ea6 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -3322,14 +3322,14 @@ static int raid_map(struct dm_target *ti, struct bio *bio)
+ 	struct mddev *mddev = &rs->md;
  
- 		acti_netdevs = kmalloc_array(entry->slave_cnt,
- 					     sizeof(*acti_netdevs), GFP_KERNEL);
-+		if (!acti_netdevs) {
-+			schedule_delayed_work(&lag->work,
-+					      NFP_FL_LAG_DELAY);
-+			continue;
-+		}
+ 	/*
+-	 * If we're reshaping to add disk(s)), ti->len and
++	 * If we're reshaping to add disk(s), ti->len and
+ 	 * mddev->array_sectors will differ during the process
+ 	 * (ti->len > mddev->array_sectors), so we have to requeue
+ 	 * bios with addresses > mddev->array_sectors here or
+ 	 * there will occur accesses past EOD of the component
+ 	 * data images thus erroring the raid set.
+ 	 */
+-	if (unlikely(bio_end_sector(bio) > mddev->array_sectors))
++	if (unlikely(bio_has_data(bio) && bio_end_sector(bio) > mddev->array_sectors))
+ 		return DM_MAPIO_REQUEUE;
  
- 		/* Include sanity check in the loop. It may be that a bond has
- 		 * changed between processing the last notification and the
+ 	md_handle_request(mddev, bio);
 -- 
 2.43.0
 
