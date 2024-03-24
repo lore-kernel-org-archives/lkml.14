@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E018F2779D9;
-	Sun, 24 Mar 2024 23:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18F62779D0;
+	Sun, 24 Mar 2024 23:36:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323413; cv=none; b=ZiON/x7rbGMgeIfFhDXr6Ym5gpZL5nOuv9jPG584zf5BlHjX7NcORfD7N9KJIiYRLRVA9L4w2LCNyUYnEIJi1Xv8GKWb6dbBmMcQfBqT5ylFGtceqg/BdxRouWlnZrgNQF25M8UlfLdW7Qh66Mr2DX8jX8aV8UfypSD/hn9oU5c=
+	t=1711323412; cv=none; b=Wz0qeJFGWiHlUluLDi6OQE1ACl2pw57x+eY+pjfJhVtNaYWuts8a+II5NOGmtooDvDlep1q45jKCuD9cYyYzRCrbaJQzcj2yQBk0073PObbfqbn3EhtqN+GsOknQ+Gq6AWbZlk4B3UTYLg31DC4kwovImEg7YjLMKryE5mBolqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323413; c=relaxed/simple;
-	bh=WubfcSULKJ4wzT3l0PE5wg/VyrYArkzhxC2koqHrvV4=;
+	s=arc-20240116; t=1711323412; c=relaxed/simple;
+	bh=EWqCXld5+/sFVJsxeZf7kglMBM79UfZd99Nrpl/QVdk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bx/yMqOHLE7tLNDPNz8E5TZAuCuEnV951+Pm9yRLIidgq/NB2KKMlQJjKztiFXywq9ty161YPVLJ6Z3ev2dhejGQYamq7zDPhZZh4DZdHXtv3SqVqlHgdMV7hZk0A5zBA2RGh4AJ4KKdFdIWHnLzd3SI2OoiFPaay2gPaZFmMgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwNV7FGS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=rYqMkvZLLOXS5ImBYXWMx4wODixzFWnuFrWOvrJGpyuOXO4dJFijGpssaFKbrZnDqio9bCrfWwdrrAS3TKSmZWT8ec3MkR3rDLGktzPV22cJvWoQ/HpjHmruxiaYEVNpopzd7Qbbhi18+mtPld1t06Sf7eWo037eReg49nUulf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+lp0qPG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwNV7FGS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1343BC433F1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+lp0qPG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AED7C43390;
 	Sun, 24 Mar 2024 23:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323411;
-	bh=WubfcSULKJ4wzT3l0PE5wg/VyrYArkzhxC2koqHrvV4=;
+	s=k20201202; t=1711323410;
+	bh=EWqCXld5+/sFVJsxeZf7kglMBM79UfZd99Nrpl/QVdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mwNV7FGSuTegb5VAdCb0EcKAWoN9LMF4W9ggxx8qYPm7H3Yd2nocm6Hcnm7mIhGQS
-	 6J9slp4KwBpPTxEvYBypHPTrNfA1F11fONADHF4srmiNsowNM57fdtZ83QUaPWwZuz
-	 TXZRxXdnTaQMTGo3w6ab5coCZ9m3n0+K7ks4FPPg6lwBfNURD10vXgHxRbU8d4zCKM
-	 ovpMQgVApcoBSPeGJdhkzcck69ysrMuk1c1rvPj6DWmyw3M+KxuIB8hHlzn+Ikw5JL
-	 oDAdFzHzwv2S3lKd4eOWJhfD+AuoBYH3YG7wAINf3pnkxbdbzk9jsvPnL/p3t3UKLm
-	 GWz2Mv/4MsWOg==
+	b=R+lp0qPG3Hu8EeOFG40OLlVpLH0yjESAiNy7qL/lovWdaVciWdODTU/4Bz76b8Nb4
+	 L2m6ohip1mQTWrCzDW9jCuSAIrrsxGVT7WWKnBVhJY1dKQs1/qqgUKuZysB8rsgFm6
+	 NM5eD7NcAy33CB+Kzxn2XTg9fDGgABGK2jMUXeWDpNwqIeBO92M0oPf2vFMjmNxZZq
+	 fupuLsRamt57cpfBVNcnZ+ibvGbGUmeFZXJ3pDMCy/02Wi3MKOvMi/MWv6iTBKllft
+	 ZfMu+ctKbl6+3gQQCTLJ4lhfxcVLKZ1/T0dWluktjoTR0PwaTKoBAQt9Qm3hY72Sd0
+	 bkNX3UzsSauWA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-	Andrew Lunn <andrew@lunn.ch>,
 	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 113/317] ARM: dts: imx6dl-yapp4: Fix typo in the QCA switch register address
-Date: Sun, 24 Mar 2024 19:31:33 -0400
-Message-ID: <20240324233458.1352854-114-sashal@kernel.org>
+Subject: [PATCH 5.15 112/317] ARM: dts: imx6dl-yapp4: Move phy reset into switch node
+Date: Sun, 24 Mar 2024 19:31:32 -0400
+Message-ID: <20240324233458.1352854-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -52,35 +51,40 @@ Content-Transfer-Encoding: 8bit
 
 From: Michal Vokáč <michal.vokac@ysoft.com>
 
-[ Upstream commit 023bd910d3ab735459f84b22bb99fb9e00bd9d76 ]
+[ Upstream commit 7da7b84fee58c85a6075022023d31edea40e81a1 ]
 
-This change does not have any functional effect. The switch works just
-fine without this patch as it has full access to all the addresses
-on the bus. This is simply a clean-up to set the node name address
-and reg address to the same value.
+Drop the phy-reset-duration and phy-reset-gpios deprecated properties and
+move reset-gpios under the switch node.
 
-Fixes: 15b43e497ffd ("ARM: dts: imx6dl-yapp4: Use correct pseudo PHY address for the switch")
 Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Stable-dep-of: 023bd910d3ab ("ARM: dts: imx6dl-yapp4: Fix typo in the QCA switch register address")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index 844f31f7c4114..76da90e858045 100644
+index e5c4dc65fbabf..844f31f7c4114 100644
 --- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
 +++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -127,7 +127,7 @@ phy_port3: phy@2 {
+@@ -105,8 +105,6 @@ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+ 	phy-mode = "rgmii-id";
+-	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+-	phy-reset-duration = <20>;
+ 	phy-supply = <&sw2_reg>;
+ 	status = "okay";
  
+@@ -130,6 +128,7 @@ phy_port3: phy@2 {
  		switch@10 {
  			compatible = "qca,qca8334";
--			reg = <10>;
-+			reg = <0x10>;
- 			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+ 			reg = <10>;
++			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
  
  			switch_ports: ports {
+ 				#address-cells = <1>;
 -- 
 2.43.0
 
