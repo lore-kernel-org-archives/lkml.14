@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0FD18431F;
-	Sun, 24 Mar 2024 23:51:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14CB29448E;
+	Sun, 24 Mar 2024 23:51:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324279; cv=none; b=aLcjxNP7WLucV447njlS13hToSsX1W47aiGsYzsBfY+zFsfFxpDvkwAM8r15EdrO463x28PQvawAHdtVyO6HYQIoI+lyYgmicQZj+eJfqwB1ZJLGnY11LCgRiFjid27PAAciJ7q7M4gJTnvNCUweVVjzDIcWK4foyUVqeX8SF+o=
+	t=1711324283; cv=none; b=NiZ7NzzBREGXXBsIpGQxGJarNIz1nPbFKFjymlxdMGWQ/vo63+wFsMVFExBG5uJcRcDLq1/nX5lUYIoNcJ4IKNgmxn1YAuErRA9u10hqE/yh7k4QvVhnzjkej4GBkqxw8ME36Z5B4gSKFHlJBl8Tl2K8OAKCaCig+6MTmZonpeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324279; c=relaxed/simple;
-	bh=ZhE1dZQ4Yu9nivZcDGnzC9MzTKCMqaSKKsVcmNvEnMw=;
+	s=arc-20240116; t=1711324283; c=relaxed/simple;
+	bh=lwzXxwSWoOLNU+zV6aEFEVRdKo2gqhEXmatN3mGmyDQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EyajHbx55i2JiCKQ3cKmkO1tHzbELuYaOBNkqnKumHfDscsJWtinZqCIH+Q163j9xg/L5GhyudgubE6dokHutIjZDO5vzg6VkD6xiJ7qB1HEl4xvcA7brAiJhDS2RD52CxkcXHryF3UwLuWvQrf7HO5/s40DTagWl1SRwTRu2Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Piv0c9kw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=T7ri2A5oirSd2vAWVRWs93tCoDaEwCsaWq9hUDFdzHlb17luay3Lfd3+vxOTjFNECBQ/A7aXx2f2j1Y4DakcnxyscE8okez4jgqPIMw/nCkCQna3JiC9M8JXq426uJlROBwIiRN1Qz891OYZU39G4R0funGrC+0XzNpXhLxgeWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uMi1MDye; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Piv0c9kw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CC98C43390;
-	Sun, 24 Mar 2024 23:51:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uMi1MDye"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E79F2C43390;
+	Sun, 24 Mar 2024 23:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324278;
-	bh=ZhE1dZQ4Yu9nivZcDGnzC9MzTKCMqaSKKsVcmNvEnMw=;
+	s=k20201202; t=1711324282;
+	bh=lwzXxwSWoOLNU+zV6aEFEVRdKo2gqhEXmatN3mGmyDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Piv0c9kwkNPzHtDTdgaNEnL+HoeTLQIxTJqaElWtTIfOyi8Hvo8ZlJS6aE6Lreno+
-	 ud+wWgOWo3IBeKEd5DucRhaLK6TWElRUgtQgw1NmI3w4IcCEFXuPNvOBALFUm4iE5j
-	 WHSNdKF4IAOPzUfsqZiQkYlqgG23qkkB1Iik+LAnQzw1OacUy1+1kliU4EPUYVQaWO
-	 4mJ7as8/zRP0oEJsNVdnBtaQWbpgvDofCjJ6KOB9gDnIM4wZL1gpE6CNKbsc4KCtxH
-	 heTAmSy2PccMJWHyJYI9Ro7DaGV7UBpf09Eb2cnympbsHJSl84MFF1olQOfSmV3X6R
-	 0tqvMYBb2IKlQ==
+	b=uMi1MDyeQgiE/tl2v15zpxbbrg+aExXjvhp+cdfH7h5G2pgjzj7yjvlIAQdB860q6
+	 3GjmFH5jTwJoGbD1DsDnYyi0x6/2RazHOgwrr5l+rE7huXBVTMcPdK8STqYxBUlGI6
+	 J5lw5os1TyB6ScISBhREU/4+PifvY3nyFAl8CcPMozUdZYEBmCZa8t553YxZ5TIrx9
+	 ANZj0IkcTIyhupww/hh3U4HxMC3G0or+L956fBC5/69h/dgRjV+CCW0S+bfLGhEt8l
+	 N4f91t9ATwyBhhHUq6jfwp7/NWHyZ1jMNGOqyGTS0BU1f01cbIG9iEI+GhyfTT/9bU
+	 puf5qKekKTHAw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	Bui Quang Minh <minhquangbui99@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+	Tom Parkin <tparkin@katalix.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 056/148] bpf: Fix stackmap overflow check on 32-bit arches
-Date: Sun, 24 Mar 2024 19:48:40 -0400
-Message-ID: <20240324235012.1356413-57-sashal@kernel.org>
+Subject: [PATCH 4.19 059/148] l2tp: fix incorrect parameter validation in the pppol2tp_getsockopt() function
+Date: Sun, 24 Mar 2024 19:48:43 -0400
+Message-ID: <20240324235012.1356413-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -45,61 +45,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit 7a4b21250bf79eef26543d35bd390448646c536b ]
+[ Upstream commit 955e9876ba4ee26eeaab1b13517f5b2c88e73d55 ]
 
-The stackmap code relies on roundup_pow_of_two() to compute the number
-of hash buckets, and contains an overflow check by checking if the
-resulting value is 0. However, on 32-bit arches, the roundup code itself
-can overflow by doing a 32-bit left-shift of an unsigned long value,
-which is undefined behaviour, so it is not guaranteed to truncate
-neatly. This was triggered by syzbot on the DEVMAP_HASH type, which
-contains the same check, copied from the hashtab code.
+The 'len' variable can't be negative when assigned the result of
+'min_t' because all 'min_t' parameters are cast to unsigned int,
+and then the minimum one is chosen.
 
-The commit in the fixes tag actually attempted to fix this, but the fix
-did not account for the UB, so the fix only works on CPUs where an
-overflow does result in a neat truncation to zero, which is not
-guaranteed. Checking the value before rounding does not have this
-problem.
+To fix the logic, check 'len' as read from 'optlen',
+where the types of relevant variables are (signed) int.
 
-Fixes: 6183f4d3a0a2 ("bpf: Check for integer overflow when using roundup_pow_of_two()")
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Reviewed-by: Bui Quang Minh <minhquangbui99@gmail.com>
-Message-ID: <20240307120340.99577-4-toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
+Reviewed-by: Tom Parkin <tparkin@katalix.com>
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/stackmap.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/l2tp/l2tp_ppp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index 92310b07cb98e..a41858db14416 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -113,11 +113,14 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
- 	} else if (value_size / 8 > sysctl_perf_event_max_stack)
- 		return ERR_PTR(-EINVAL);
+diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
+index c0956781665e1..3ed3b85f30b6e 100644
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -1380,11 +1380,11 @@ static int pppol2tp_getsockopt(struct socket *sock, int level, int optname,
+ 	if (get_user(len, optlen))
+ 		return -EFAULT;
  
--	/* hash table size must be power of 2 */
--	n_buckets = roundup_pow_of_two(attr->max_entries);
--	if (!n_buckets)
-+	/* hash table size must be power of 2; roundup_pow_of_two() can overflow
-+	 * into UB on 32-bit arches, so check that first
-+	 */
-+	if (attr->max_entries > 1UL << 31)
- 		return ERR_PTR(-E2BIG);
+-	len = min_t(unsigned int, len, sizeof(int));
+-
+ 	if (len < 0)
+ 		return -EINVAL;
  
-+	n_buckets = roundup_pow_of_two(attr->max_entries);
++	len = min_t(unsigned int, len, sizeof(int));
 +
- 	cost = n_buckets * sizeof(struct stack_map_bucket *) + sizeof(*smap);
- 	if (cost >= U32_MAX - PAGE_SIZE)
- 		return ERR_PTR(-E2BIG);
+ 	err = -ENOTCONN;
+ 	if (sk->sk_user_data == NULL)
+ 		goto end;
 -- 
 2.43.0
 
