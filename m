@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097E2537E3;
-	Sun, 24 Mar 2024 23:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F86F1474A4;
+	Sun, 24 Mar 2024 23:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322082; cv=none; b=WJHPnghhXLRmpg20WADnlizgZpBZGUdVY3oGNB1rd3sMRyrgk6pEAwk2NgrY/pvOgOzvgYEf/h5o/o+Z8vDBn6RRQQkHFTSl3x5GdleSc/o8eqg23zyH44BOfHlhQ8zq+3rF5WHc5MqzTWwqYrF1T5j1hNWJYOcoX0mYM3JsCm0=
+	t=1711322080; cv=none; b=hETL+11fSSPBuN12jQ1Bv+QN/2zQcfUVonSBCL5NXHbWcJ7I4W+Semn8QdapZRdCZsOya+UcZiwQlkrqSJMoUu6nxv+zyOuIBbXEi0LXn7xBvwHCRBKgpkdk/dtkXz20E4wzlfb0/8LQ6nSYI5bA3/OhGZ/ty9BxWok74QGZ1LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322082; c=relaxed/simple;
-	bh=aDh5HbFT7bo3nQeJPz1AEYsn+qGFxyzMrs2YCCh4lL4=;
+	s=arc-20240116; t=1711322080; c=relaxed/simple;
+	bh=qzn366CElNlg9m2P1/pV3tCS4YAo8KKGyN8lBwYTbPI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U7As6KDMynOm1SnIzroKcwszChkO0leYVHBIjZ35ZJH7LFXMSkFb8K/pPp/11RSAKc0SNpcF62L+iS/4BR5dOSGzynyzDhfkYNTTSZrKRTq4Bzu4ql27IRXBRmAN/bj6+OxSkzpdMvVsS/kzRqUu+hTKjTsuWHACEXGXnDQ+WWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDIjGFUd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qvgB3vj4MHtyGspkPzpoIQkGvVMGePN/vnyl2/ns7Og/qbUwcUGplltoDMyyo3ci4vMl6IM+8Ha82GeXg6Ff2BbrCBsmwO3Aw8ywDjtrNyxET5UbFeibQomXPMN4yVD9p2JUqUX4yHDjYMm40W0qH/5qsmBmADbEUSa+PeEuyzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsP/89b9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDIjGFUd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ED96C433F1;
-	Sun, 24 Mar 2024 23:14:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsP/89b9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BFC1C433F1;
+	Sun, 24 Mar 2024 23:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322081;
-	bh=aDh5HbFT7bo3nQeJPz1AEYsn+qGFxyzMrs2YCCh4lL4=;
+	s=k20201202; t=1711322079;
+	bh=qzn366CElNlg9m2P1/pV3tCS4YAo8KKGyN8lBwYTbPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lDIjGFUdTZJewyZU2GzSY8EacJT4sjEmREvVlouEPIKIMnp5+7yznOW/AGPeLS4RN
-	 rmrv6B55SVtb/L9i7ptKuqvVStTktVfZbPQA1hZyw0n4BLHyZnOsilrgzRC2lCupvY
-	 XdBzdYu4No4RCravfNxlv5tvaLCB3VTv8PILl3oSuPbVU4K72VBIDWYa8FdJliTqt5
-	 AjGrIkJDV6VT2J1hO4kjTWWujSaUI7JljJVWqG2voQQekhX/Xm1O2kALTRXYtk3qzZ
-	 lMwtO1PHwAkOWF8a4ybK+kZL4txUzMgYCLWH/P9HLqIJGuVJgr0RWBfSPriletV46/
-	 VxPtBSEadSFEA==
+	b=PsP/89b9Ask0qPd3Yo4bt6jzyx6jaMy20ydZXfOog446Cl5UPLZ6ZM3oIflqcwZb6
+	 vqrW8xGKFTWY4Vh0aVt+wIjQNpZuNNpSEIql0JF92/1cDaAHYXqxr0REqrpM7ElgnW
+	 MJ+qorjEJwQfVbm4e92n7EMxTd7k4yU53/SYU5zB1bdT6uVg0TBU/dnM87Kx4bPGJH
+	 URDs6A9sw9z4Wig945W6PUoBpWy5XDdBj4jVl5oISa4zoETLRwxYLeky5bxJaTwqIy
+	 fuZyctxGNyalHLBAaQLlDFvPKJrgLPhBvm4NOSy6cksffnZDjYyggHTrJUBlisyE5a
+	 90FIejmpAeMbQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Joerg Roedel <jroedel@suse.de>,
+Cc: Armin Wolf <W_Armin@gmx.de>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 155/451] iommu/amd: Mark interrupt as managed
-Date: Sun, 24 Mar 2024 19:07:11 -0400
-Message-ID: <20240324231207.1351418-156-sashal@kernel.org>
+Subject: [PATCH 6.1 153/451] ACPI: processor_idle: Fix memory leak in acpi_processor_power_exit()
+Date: Sun, 24 Mar 2024 19:07:09 -0400
+Message-ID: <20240324231207.1351418-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,67 +48,59 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+From: Armin Wolf <W_Armin@gmx.de>
 
-[ Upstream commit 0feda94c868d396fac3b3cb14089d2d989a07c72 ]
+[ Upstream commit e18afcb7b2a12b635ac10081f943fcf84ddacc51 ]
 
-On many systems that have an AMD IOMMU the following sequence of
-warnings is observed during bootup.
+After unregistering the CPU idle device, the memory associated with
+it is not freed, leading to a memory leak:
 
-```
-pci 0000:00:00.2  can't derive routing for PCI INT A
-pci 0000:00:00.2: PCI INT A: not connected
-```
+unreferenced object 0xffff896282f6c000 (size 1024):
+  comm "swapper/0", pid 1, jiffies 4294893170
+  hex dump (first 32 bytes):
+    00 00 00 00 0b 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace (crc 8836a742):
+    [<ffffffff993495ed>] kmalloc_trace+0x29d/0x340
+    [<ffffffff9972f3b3>] acpi_processor_power_init+0xf3/0x1c0
+    [<ffffffff9972d263>] __acpi_processor_start+0xd3/0xf0
+    [<ffffffff9972d2bc>] acpi_processor_start+0x2c/0x50
+    [<ffffffff99805872>] really_probe+0xe2/0x480
+    [<ffffffff99805c98>] __driver_probe_device+0x78/0x160
+    [<ffffffff99805daf>] driver_probe_device+0x1f/0x90
+    [<ffffffff9980601e>] __driver_attach+0xce/0x1c0
+    [<ffffffff99803170>] bus_for_each_dev+0x70/0xc0
+    [<ffffffff99804822>] bus_add_driver+0x112/0x210
+    [<ffffffff99807245>] driver_register+0x55/0x100
+    [<ffffffff9aee4acb>] acpi_processor_driver_init+0x3b/0xc0
+    [<ffffffff990012d1>] do_one_initcall+0x41/0x300
+    [<ffffffff9ae7c4b0>] kernel_init_freeable+0x320/0x470
+    [<ffffffff99b231f6>] kernel_init+0x16/0x1b0
+    [<ffffffff99042e6d>] ret_from_fork+0x2d/0x50
 
-This series of events happens because of the IOMMU initialization
-sequence order and the lack of _PRT entries for the IOMMU.
+Fix this by freeing the CPU idle device after unregistering it.
 
-During initialization the IOMMU driver first enables the PCI device
-using pci_enable_device().  This will call acpi_pci_irq_enable()
-which will check if the interrupt is declared in a PCI routing table
-(_PRT) entry. According to the PCI spec [1] these routing entries
-are only required under PCI root bridges:
-	The _PRT object is required under all PCI root bridges
-
-The IOMMU is directly connected to the root complex, so there is no
-parent bridge to look for a _PRT entry. The first warning is emitted
-since no entry could be found in the hierarchy. The second warning is
-then emitted because the interrupt hasn't yet been configured to any
-value.  The pin was configured in pci_read_irq() but the byte in
-PCI_INTERRUPT_LINE return 0xff which means "Unknown".
-
-After that sequence of events pci_enable_msi() is called and this
-will allocate an interrupt.
-
-That is both of these warnings are totally harmless because the IOMMU
-uses MSI for interrupts.  To avoid even trying to probe for a _PRT
-entry mark the IOMMU as IRQ managed. This avoids both warnings.
-
-Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html?highlight=_prt#prt-pci-routing-table [1]
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Fixes: cffe0a2b5a34 ("x86, irq: Keep balance of IOAPIC pin reference count")
-Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
-Link: https://lore.kernel.org/r/20240122233400.1802-1-mario.limonciello@amd.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 3d339dcbb56d ("cpuidle / ACPI : move cpuidle_device field out of the acpi_processor_power structure")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd/init.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/acpi/processor_idle.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index f6e64c9858021..cc94ac6662339 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -2047,6 +2047,9 @@ static int __init iommu_init_pci(struct amd_iommu *iommu)
- 	/* Prevent binding other PCI device drivers to IOMMU devices */
- 	iommu->dev->match_driver = false;
- 
-+	/* ACPI _PRT won't have an IRQ for IOMMU */
-+	iommu->dev->irq_managed = 1;
+diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+index fc5b5b2c9e819..6f613eef28879 100644
+--- a/drivers/acpi/processor_idle.c
++++ b/drivers/acpi/processor_idle.c
+@@ -1431,6 +1431,8 @@ int acpi_processor_power_exit(struct acpi_processor *pr)
+ 		acpi_processor_registered--;
+ 		if (acpi_processor_registered == 0)
+ 			cpuidle_unregister_driver(&acpi_idle_driver);
 +
- 	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_CAP_HDR_OFFSET,
- 			      &iommu->cap);
++		kfree(dev);
+ 	}
  
+ 	pr->flags.power_setup_done = 0;
 -- 
 2.43.0
 
