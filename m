@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B5A178CE8;
-	Sun, 24 Mar 2024 23:39:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D97E27DDFA;
+	Sun, 24 Mar 2024 23:39:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323594; cv=none; b=nq4xpay1spNf2JobVbHZsVMZuRjCT0JqocQezMjKXlQVADEMIQIVazcxGUnIIOtSw9aRf8PPioHfFT29dwqBFca13ic83uLQ6kG4BcaIdwP8fkvjl4YcdQ++iFAF0gc2xmM4iponUH/0QtEMXaSYQECeuYKgWsFWCNg0dpGrwmg=
+	t=1711323571; cv=none; b=uJus7QkyzB7TxkhZm3m+BI2mI/IDL9gnj9R/y06afZg/kDkbdYlqWiYG4YUq8Flz224ki586bdKRa9kSKImPc0v/ESPzW/piJvz7B6XneuwFLo5OtWpwooUddwFvTcqafQcK0OeV0ylzhxmcqNcECNyAst373vP70THx/XoIDEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323594; c=relaxed/simple;
-	bh=iIIFuO3IyF+GToWNPBx+wb1MtQRgrsvlGd8f4fiHbJY=;
+	s=arc-20240116; t=1711323571; c=relaxed/simple;
+	bh=GUrn/8keUU0zm210yU0iU05Z5ixZFkbqpYgv4ZfIFLc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PI5x3f6xsMPKD0mcRvWWKotUPJ9zTPfscXVS9lrVVKBlGpo9eRMAcG7qlyl62uO5Yetr9aVawv2l+27Vrehl0FiRLTzGctunUIMYV5oZnThgDd6rmpW3xr1H9uI2M3r6UtI3Yjx4PuLmfWo2hkXsFmVVGfj6SeTOUpPworHDksA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EisHUUh+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iEHDpX9BGViGVMqSqpNyR7TT2CNV3uV67xW9WrvHXSArY9oQ4g71ItGJqV4w6AI68GuX2FbN0a4LymrmPBT9tB24x2ncz6G+Z1iXjiYUHohXC8zlybUcR8yd1f0RQ1fdDR7e+67Oxtl/4ufYdyZnYaK5PCZvbv3gmcIOcGuGNI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOJ9Zesq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EisHUUh+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A439C433C7;
-	Sun, 24 Mar 2024 23:39:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOJ9Zesq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACB8DC43330;
+	Sun, 24 Mar 2024 23:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323594;
-	bh=iIIFuO3IyF+GToWNPBx+wb1MtQRgrsvlGd8f4fiHbJY=;
+	s=k20201202; t=1711323570;
+	bh=GUrn/8keUU0zm210yU0iU05Z5ixZFkbqpYgv4ZfIFLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EisHUUh+wKX4wqxultWHvaPvcFZtYybpSWt1NqvM5Fi+ECQQKWU5MSzqn2H+/7YJb
-	 J0P6YHr/L9rx6937nWsp4iJrpH1J38cwY4O3EVoS1AQOr+yUUsoWKECEwwDnvyS4a0
-	 T5CCGcJvHDfOed+mbfxzWfAt+jawP3V5aIDAsu1blyPdmE+7+9ElOjYjfZ/hfWui1u
-	 Brtzo6dcfHfJjno4TP0oUWNQYKAIUtmyy4xEP7epJdQUCng+WBdbrYZDo+f8VPnOim
-	 kS9m3p2QR8RaL8L4e2B7s70nSxenGjGLOj9/ePjk7NsTDxE22eM4AMPjt8cPdKUYeK
-	 JXdrH9kGiyn8g==
+	b=DOJ9ZesqnyKPPBr7PYPAQW70mq5Jswl/QyNGlqCanQlem8LXFJwx9PL40zNrbEWVZ
+	 6qebsh5JWdLIA+ZNs3F3Y6riQh0yrycIjzuhGcudXQWjuskvQe1funq+FpHrnwQ6I4
+	 Su8ZkNeOSe6Xk/I0cH5UyXG1iGvsl8pVkECn/0SOCUOXEYNIF7ycxs0+kgP1RZE1F2
+	 wNkI2qzPHkvQR9sSSStDzQXcN2bUFdWVElB8EW0I4WuANeTGKZXJfWoecSin77z9V2
+	 YFDfKj3m6EtXq4isnxEnZkIvwmRGvUCHOFPxQmh09InEtRIybw7Oc65YsH7YtPtrlT
+	 GPPPFPcCl3O7A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	syzbot+d1de830e4ecdaac83d89@syzkaller.appspotmail.com,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Jiri Pirko <jiri@nvidia.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 300/317] wireguard: receive: annotate data-race around receiving_counter.counter
-Date: Sun, 24 Mar 2024 19:34:40 -0400
-Message-ID: <20240324233458.1352854-301-sashal@kernel.org>
+Subject: [PATCH 5.15 277/317] remoteproc: stm32: Fix incorrect type assignment returned by stm32_rproc_get_loaded_rsc_tablef
+Date: Sun, 24 Mar 2024 19:34:17 -0400
+Message-ID: <20240324233458.1352854-278-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -51,83 +48,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
 
-[ Upstream commit bba045dc4d996d03dce6fe45726e78a1a1f6d4c3 ]
+[ Upstream commit c77b35ce66af25bdd6fde60b62e35b9b316ea5c2 ]
 
-Syzkaller with KCSAN identified a data-race issue when accessing
-keypair->receiving_counter.counter. Use READ_ONCE() and WRITE_ONCE()
-annotations to mark the data race as intentional.
+The sparse tool complains about the remove of the _iomem attribute.
 
-    BUG: KCSAN: data-race in wg_packet_decrypt_worker / wg_packet_rx_poll
+stm32_rproc.c:660:17: warning: cast removes address space '__iomem' of expression
 
-    write to 0xffff888107765888 of 8 bytes by interrupt on cpu 0:
-     counter_validate drivers/net/wireguard/receive.c:321 [inline]
-     wg_packet_rx_poll+0x3ac/0xf00 drivers/net/wireguard/receive.c:461
-     __napi_poll+0x60/0x3b0 net/core/dev.c:6536
-     napi_poll net/core/dev.c:6605 [inline]
-     net_rx_action+0x32b/0x750 net/core/dev.c:6738
-     __do_softirq+0xc4/0x279 kernel/softirq.c:553
-     do_softirq+0x5e/0x90 kernel/softirq.c:454
-     __local_bh_enable_ip+0x64/0x70 kernel/softirq.c:381
-     __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:167 [inline]
-     _raw_spin_unlock_bh+0x36/0x40 kernel/locking/spinlock.c:210
-     spin_unlock_bh include/linux/spinlock.h:396 [inline]
-     ptr_ring_consume_bh include/linux/ptr_ring.h:367 [inline]
-     wg_packet_decrypt_worker+0x6c5/0x700 drivers/net/wireguard/receive.c:499
-     process_one_work kernel/workqueue.c:2633 [inline]
-     ...
+Add '__force' to explicitly specify that the cast is intentional.
+This conversion is necessary to cast to addresses pointer,
+which are then managed by the remoteproc core as a pointer to a
+resource_table structure.
 
-    read to 0xffff888107765888 of 8 bytes by task 3196 on cpu 1:
-     decrypt_packet drivers/net/wireguard/receive.c:252 [inline]
-     wg_packet_decrypt_worker+0x220/0x700 drivers/net/wireguard/receive.c:501
-     process_one_work kernel/workqueue.c:2633 [inline]
-     process_scheduled_works+0x5b8/0xa30 kernel/workqueue.c:2706
-     worker_thread+0x525/0x730 kernel/workqueue.c:2787
-     ...
-
-Fixes: a9e90d9931f3 ("wireguard: noise: separate receive counter from send counter")
-Reported-by: syzbot+d1de830e4ecdaac83d89@syzkaller.appspotmail.com
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: 8a471396d21c ("remoteproc: stm32: Move resource table setup to rproc_ops")
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+Link: https://lore.kernel.org/r/20240117135312.3381936-3-arnaud.pouliquen@foss.st.com
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireguard/receive.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/remoteproc/stm32_rproc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireguard/receive.c b/drivers/net/wireguard/receive.c
-index d38b24339a1f9..ed274e9bdf3ce 100644
---- a/drivers/net/wireguard/receive.c
-+++ b/drivers/net/wireguard/receive.c
-@@ -258,7 +258,7 @@ static bool decrypt_packet(struct sk_buff *skb, struct noise_keypair *keypair)
+diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+index e48dce98936ad..4db63e07e1cff 100644
+--- a/drivers/remoteproc/stm32_rproc.c
++++ b/drivers/remoteproc/stm32_rproc.c
+@@ -641,7 +641,7 @@ stm32_rproc_get_loaded_rsc_table(struct rproc *rproc, size_t *table_sz)
+ 	 * entire area by overwriting it with the initial values stored in rproc->clean_table.
+ 	 */
+ 	*table_sz = RSC_TBL_SIZE;
+-	return (struct resource_table *)ddata->rsc_va;
++	return (__force struct resource_table *)ddata->rsc_va;
+ }
  
- 	if (unlikely(!READ_ONCE(keypair->receiving.is_valid) ||
- 		  wg_birthdate_has_expired(keypair->receiving.birthdate, REJECT_AFTER_TIME) ||
--		  keypair->receiving_counter.counter >= REJECT_AFTER_MESSAGES)) {
-+		  READ_ONCE(keypair->receiving_counter.counter) >= REJECT_AFTER_MESSAGES)) {
- 		WRITE_ONCE(keypair->receiving.is_valid, false);
- 		return false;
- 	}
-@@ -325,7 +325,7 @@ static bool counter_validate(struct noise_replay_counter *counter, u64 their_cou
- 		for (i = 1; i <= top; ++i)
- 			counter->backtrack[(i + index_current) &
- 				((COUNTER_BITS_TOTAL / BITS_PER_LONG) - 1)] = 0;
--		counter->counter = their_counter;
-+		WRITE_ONCE(counter->counter, their_counter);
- 	}
- 
- 	index &= (COUNTER_BITS_TOTAL / BITS_PER_LONG) - 1;
-@@ -470,7 +470,7 @@ int wg_packet_rx_poll(struct napi_struct *napi, int budget)
- 			net_dbg_ratelimited("%s: Packet has invalid nonce %llu (max %llu)\n",
- 					    peer->device->dev->name,
- 					    PACKET_CB(skb)->nonce,
--					    keypair->receiving_counter.counter);
-+					    READ_ONCE(keypair->receiving_counter.counter));
- 			goto next;
- 		}
- 
+ static const struct rproc_ops st_rproc_ops = {
 -- 
 2.43.0
 
