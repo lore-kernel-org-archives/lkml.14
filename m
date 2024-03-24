@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54631791EE;
-	Sun, 24 Mar 2024 23:39:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A4F27F080;
+	Sun, 24 Mar 2024 23:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323584; cv=none; b=gEzZJhjMyeyVoXtvH4lWyqZsa84qYIn2EZt3H6ZZVRUO+7bNXQgcTWXe7TthIxnfVXFDzi4D2I94coSTMrWEoLmEmMzaS7fbE1UMtMInbMeNg0jOVdN6mO5JljbL0JNjolq5Z1b5QQpMJuEjCBRLUwM8PCfXFgtLmZG3xgPOIKk=
+	t=1711323597; cv=none; b=UM2K6qOEirdr1fU61N0ikcOoCozozC7rWXKujW8L5S95IedYUqociXIS/wDbaXlMFfXRHNiTsgZlPtGI0p6ftid8a+99IsFfFXAHcLK9z9X3Zv0RAx8RIM65UhFm7QrKaPvaU8qVwCzL1rAYy2uqHAN9f4p3aE3ksnlk85eElSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323584; c=relaxed/simple;
-	bh=B+XH0Q8cQ8IRj9cWuauv4e/6nwzU2iYes19X+eo81GE=;
+	s=arc-20240116; t=1711323597; c=relaxed/simple;
+	bh=sfT9wSuVWuPB4Vz7YsLj6pSlsKLmBKXhzCbIHB8bj9I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nicNxSf2MiEFsl+AZoPxj/o8uqX08LB793Y8Vs8NrcTYGfuMwR/t2YV77u8RUH+c47F9tDHzzbLKvpdMafqGo9NBdG0e9FJfWY+H14Uld4CwK5LMD/LQu82uZJ7zT+E4ekBl1GjIXXAoJkW756GGRpc4hYztlI6+alegjHNoZ1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ONsaFkxF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IpzLnU0gfP85aoHZFFlY+021n+SURk/gmgdOUJnyM/ZD3LAWNhTDSaWxXCVDgdEbxxVOrBRurPTd5svb45xlxAFPyzJDXE0azqWabFtilIZlE0rxI7KFsgozSlHtBmuKiV5yJKSNaC8wOHUYpUcED3MIn2bwvN5t7u14aA2194c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2tvNlwt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ONsaFkxF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 189DAC43390;
-	Sun, 24 Mar 2024 23:39:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2tvNlwt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538ECC43399;
+	Sun, 24 Mar 2024 23:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323583;
-	bh=B+XH0Q8cQ8IRj9cWuauv4e/6nwzU2iYes19X+eo81GE=;
+	s=k20201202; t=1711323596;
+	bh=sfT9wSuVWuPB4Vz7YsLj6pSlsKLmBKXhzCbIHB8bj9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ONsaFkxFvr3iGDJlxEgkKqwEHYiaypMbbA3YA+PVss8+We9I3aWfYDjXHzXdIRPsu
-	 eYNu78QT8RkPquG8IoHl4um+wNQhvEvgW7IR5xNFg+yfDhCV3P/fgyJHm/d41tSNXP
-	 N9kZCp5cPYK4p9Kw/rEwBnKSdoo/0xulMY3FglZ1U4GyuVTr0c17qRKglNDfo6t24/
-	 81/WuKT//QN+O3sVXeydT8uwQ9Hyt5uTWbUUITwShS5SQuSsJ1+3a8/6lBgiBQoCo4
-	 tiGbhg3DWj+QTHHNpVqk61R+fO5oKdTGdYsP0B2kjxChnU+YMYJjIpfmxtmFgGWNm8
-	 umK4dgtEY7Ctw==
+	b=K2tvNlwtQUK4OjNrUIWsGuyEpKIN8gAP7H4wmC+y48zcRDo5ckRCNEpgyzZbaRaHd
+	 EZAnhRkrUydi3cGNoSHmpLBcAHAKU4qoAoAZ6qqMVniWzsHjSwd/lrzbPJsOWFcvKT
+	 xNJZoUdUVNLQv5qh8xM2x8bbuylbuaRy1eyM8cPbvP9JLTjWvYFCmMGo37500IGhFv
+	 /tGAc/KcN2fs7bc9J5cq2U0WzQCRbB4rAsY76dHmJ4sLhEIzxCBxVowQejrAl+A6TS
+	 JYXfBFHbCMzNXOHxor8VHIwksx7IQBw8obHPq172RZTXy68TggTH2+MSXYqc0LRpJc
+	 gmvJrmjSBA6VQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mete Durlu <meted@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
+Cc: Felix Maurer <fmaurer@redhat.com>,
+	Shigeru Yoshida <syoshida@redhat.com>,
+	Breno Leitao <leitao@debian.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 290/317] s390/vtime: fix average steal time calculation
-Date: Sun, 24 Mar 2024 19:34:30 -0400
-Message-ID: <20240324233458.1352854-291-sashal@kernel.org>
+Subject: [PATCH 5.15 302/317] hsr: Handle failures in module init
+Date: Sun, 24 Mar 2024 19:34:42 -0400
+Message-ID: <20240324233458.1352854-303-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,62 +50,59 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mete Durlu <meted@linux.ibm.com>
+From: Felix Maurer <fmaurer@redhat.com>
 
-[ Upstream commit 367c50f78451d3bd7ad70bc5c89f9ba6dec46ca9 ]
+[ Upstream commit 3cf28cd492308e5f63ed00b29ea03ca016264376 ]
 
-Current average steal timer calculation produces volatile and inflated
-values. The only user of this value is KVM so far and it uses that to
-decide whether or not to yield the vCPU which is seeing steal time.
-KVM compares average steal timer to a threshold and if the threshold
-is past then it does not allow CPU polling and yields it to host, else
-it keeps the CPU by polling.
-Since KVM's steal time threshold is very low by default (%10) it most
-likely is not effected much by the bloated average steal timer values
-because the operating region is pretty small. However there might be
-new users in the future who might rely on this number. Fix average
-steal timer calculation by changing the formula from:
+A failure during registration of the netdev notifier was not handled at
+all. A failure during netlink initialization did not unregister the netdev
+notifier.
 
-	avg_steal_timer = avg_steal_timer / 2 + steal_timer;
+Handle failures of netdev notifier registration and netlink initialization.
+Both functions should only return negative values on failure and thereby
+lead to the hsr module not being loaded.
 
-to the following:
-
-	avg_steal_timer = (avg_steal_timer + steal_timer) / 2;
-
-This ensures that avg_steal_timer is actually a naive average of steal
-timer values. It now closely follows steal timer values but of course
-in a smoother manner.
-
-Fixes: 152e9b8676c6 ("s390/vtime: steal time exponential moving average")
-Signed-off-by: Mete Durlu <meted@linux.ibm.com>
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
-Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Felix Maurer <fmaurer@redhat.com>
+Reviewed-by: Shigeru Yoshida <syoshida@redhat.com>
+Reviewed-by: Breno Leitao <leitao@debian.org>
+Link: https://lore.kernel.org/r/3ce097c15e3f7ace98fc7fd9bcbf299f092e63d1.1710504184.git.fmaurer@redhat.com
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/vtime.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/hsr/hsr_main.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/kernel/vtime.c b/arch/s390/kernel/vtime.c
-index f216a1b2f8257..86137029235ac 100644
---- a/arch/s390/kernel/vtime.c
-+++ b/arch/s390/kernel/vtime.c
-@@ -211,13 +211,13 @@ void vtime_flush(struct task_struct *tsk)
- 		virt_timer_expire();
+diff --git a/net/hsr/hsr_main.c b/net/hsr/hsr_main.c
+index b099c31501509..257b50124cee5 100644
+--- a/net/hsr/hsr_main.c
++++ b/net/hsr/hsr_main.c
+@@ -148,14 +148,21 @@ static struct notifier_block hsr_nb = {
  
- 	steal = S390_lowcore.steal_timer;
--	avg_steal = S390_lowcore.avg_steal_timer / 2;
-+	avg_steal = S390_lowcore.avg_steal_timer;
- 	if ((s64) steal > 0) {
- 		S390_lowcore.steal_timer = 0;
- 		account_steal_time(cputime_to_nsecs(steal));
- 		avg_steal += steal;
- 	}
--	S390_lowcore.avg_steal_timer = avg_steal;
-+	S390_lowcore.avg_steal_timer = avg_steal / 2;
+ static int __init hsr_init(void)
+ {
+-	int res;
++	int err;
+ 
+ 	BUILD_BUG_ON(sizeof(struct hsr_tag) != HSR_HLEN);
+ 
+-	register_netdevice_notifier(&hsr_nb);
+-	res = hsr_netlink_init();
++	err = register_netdevice_notifier(&hsr_nb);
++	if (err)
++		return err;
++
++	err = hsr_netlink_init();
++	if (err) {
++		unregister_netdevice_notifier(&hsr_nb);
++		return err;
++	}
+ 
+-	return res;
++	return 0;
  }
  
- static u64 vtime_delta(void)
+ static void __exit hsr_exit(void)
 -- 
 2.43.0
 
