@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E057817A91D;
-	Sun, 24 Mar 2024 23:41:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0141F1311B3;
+	Sun, 24 Mar 2024 23:41:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323695; cv=none; b=UK5NSMAlkKjAXDsh2pBXhyqe5BJfImuvDh8BlwbWG5igb1rKHvU0m2zvlMywE2Jv1IxfX0iSCQ2fKmIn7nZFO9VZP+ILox0G5O6k4rAJnDeWlRyK+s8sBS9O1JfecImSJ83CgGJRP8g2n1YcjPP4f/qwT0FCjQ8RuQeUdmA1SO8=
+	t=1711323708; cv=none; b=KNROiAcNc6z2AlUd++bjgQRdtV0w3Hr/uFOnNb2SYtxlVSVyoozYQwLsy2TLOlh/gZ/0nu7Qmie15SNSmKBm9kQ/TzcRgGMTu6ONHxtVRhsr0Xi5Lbp1kmSOm5dCjjlN0FdGaYnseJwX04aGe1QkJeSLibrcb/VMoPCvifZY4BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323695; c=relaxed/simple;
-	bh=3AHGZwGBO1jHXwKXahulwh/1k2oNC2Sm2woEkVkXI0g=;
+	s=arc-20240116; t=1711323708; c=relaxed/simple;
+	bh=xfzY6sqSCTfLmXyPr1h7wJ82kutCf6cup+CAcJxnjPQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oYQddCQflOA80kLecxcvipy6saVcsKMbKYoOcjuukj+dQpJi/Jx0Sf3T7BNt/+XWAy2G7BjPwYDwj777ZGA9pZbdtHIsdQ7YzjHqpU2iMJx3KSBeIe42XK/Jzxep7Vv4S3XF2LmOlBmNHkZqRqfI0GOOdfIT6IWD9bRYqTBd448=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKbPGj6D; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nH+y4hCavTeo6821twcIuMSUXDW5iBU21Wq6D+US5hINkGBLkoRoNWHmsTvb/IQMstkKrDukseAdNE6Qr/EMy04YHtQf9eJwzkgxcqGGp0QAHDQUN+Z6tGdww9WzAjx+EPQJPxyL/rOCuiF7rfKRHdMqhJNtObZ1tJdZWQsAUs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aq/j67c7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKbPGj6D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25B92C43399;
-	Sun, 24 Mar 2024 23:41:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aq/j67c7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A8FC433C7;
+	Sun, 24 Mar 2024 23:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323693;
-	bh=3AHGZwGBO1jHXwKXahulwh/1k2oNC2Sm2woEkVkXI0g=;
+	s=k20201202; t=1711323707;
+	bh=xfzY6sqSCTfLmXyPr1h7wJ82kutCf6cup+CAcJxnjPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oKbPGj6D91H7595rRKCCyiIsv+xkZw1MahowowXUjY4yYbrZDXbXMAzhoXmz15PqM
-	 iKZKnOSmWUKW2m7scp1cBgLtPSoRyYrgISS5dYUGGGqsUo18jAEWaLU1Z3XragqE11
-	 DHW2UgWGrgHaNL84YWtQnwVxwkA+AGzUwzysvi7xuT935LjFep5lYrwePLEi+doOm0
-	 zjAbcbb+pJ8wASm+TMXFq4Zd6oKm1Z5BGUbdjzC9RwXojtrFDgYrWHDlmNKBU3QbSF
-	 DXVzvyDkKjjURTpqeN8E7O43GRikyeY2TsdG/dzNI2uL4Ahwncz3uz+xo51y8tgxf9
-	 xQ7YQ/IS/rwtw==
+	b=Aq/j67c7LEKyl844fWuC9Ey4vw2mmYCB++Lepkm3o/9lWeqWebQIGT8bLvI0EF4jo
+	 lTHAWzxynPUuUIBSLr1TeJfNxxUOBM6N9sPus/WDX7ibBhF5iLx4fOnsFWubWArjmt
+	 ElGacaHgqYI6sk4kcwv2UH91tGotfaiwMtTElyUxc0naHhtDHiLfaVIgK+MTMAE70s
+	 E/LiN0OIsxyvd3SCK9k7NUAP2En6eSgdhSM9EB6yUzUZUULX4CUiwd2XTOdirZtjfR
+	 OUtgxo0nPs3hiu8CKBFL8NlDdp/P8Q06B0V7M6KXgq/uuA7ZAfomysxA6PcQvuS2mZ
+	 pTFPVOlSNmKag==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
 	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 066/238] wifi: wilc1000: prevent use-after-free on vif when cleaning up all interfaces
-Date: Sun, 24 Mar 2024 19:37:34 -0400
-Message-ID: <20240324234027.1354210-67-sashal@kernel.org>
+Subject: [PATCH 5.10 081/238] wifi: rtw88: 8821c: Fix false alarm count
+Date: Sun, 24 Mar 2024 19:37:49 -0400
+Message-ID: <20240324234027.1354210-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -44,171 +45,42 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexis Lothoré <alexis.lothore@bootlin.com>
+From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
 
-[ Upstream commit cb5942b77c05d54310a0420cac12935e9b6aa21c ]
+[ Upstream commit c238adbc578eeb70cbc8fdd1bef3666b0f585b13 ]
 
-wilc_netdev_cleanup currently triggers a KASAN warning, which can be
-observed on interface registration error path, or simply by
-removing the module/unbinding device from driver:
+total_fa_cnt is supposed to include cck_fa_cnt and ofdm_fa_cnt, not just
+ofdm_fa_cnt.
 
-echo spi0.1 > /sys/bus/spi/drivers/wilc1000_spi/unbind
-
-==================================================================
-BUG: KASAN: slab-use-after-free in wilc_netdev_cleanup+0x508/0x5cc
-Read of size 4 at addr c54d1ce8 by task sh/86
-
-CPU: 0 PID: 86 Comm: sh Not tainted 6.8.0-rc1+ #117
-Hardware name: Atmel SAMA5
- unwind_backtrace from show_stack+0x18/0x1c
- show_stack from dump_stack_lvl+0x34/0x58
- dump_stack_lvl from print_report+0x154/0x500
- print_report from kasan_report+0xac/0xd8
- kasan_report from wilc_netdev_cleanup+0x508/0x5cc
- wilc_netdev_cleanup from wilc_bus_remove+0xc8/0xec
- wilc_bus_remove from spi_remove+0x8c/0xac
- spi_remove from device_release_driver_internal+0x434/0x5f8
- device_release_driver_internal from unbind_store+0xbc/0x108
- unbind_store from kernfs_fop_write_iter+0x398/0x584
- kernfs_fop_write_iter from vfs_write+0x728/0xf88
- vfs_write from ksys_write+0x110/0x1e4
- ksys_write from ret_fast_syscall+0x0/0x1c
-
-[...]
-
-Allocated by task 1:
- kasan_save_track+0x30/0x5c
- __kasan_kmalloc+0x8c/0x94
- __kmalloc_node+0x1cc/0x3e4
- kvmalloc_node+0x48/0x180
- alloc_netdev_mqs+0x68/0x11dc
- alloc_etherdev_mqs+0x28/0x34
- wilc_netdev_ifc_init+0x34/0x8ec
- wilc_cfg80211_init+0x690/0x910
- wilc_bus_probe+0xe0/0x4a0
- spi_probe+0x158/0x1b0
- really_probe+0x270/0xdf4
- __driver_probe_device+0x1dc/0x580
- driver_probe_device+0x60/0x140
- __driver_attach+0x228/0x5d4
- bus_for_each_dev+0x13c/0x1a8
- bus_add_driver+0x2a0/0x608
- driver_register+0x24c/0x578
- do_one_initcall+0x180/0x310
- kernel_init_freeable+0x424/0x484
- kernel_init+0x20/0x148
- ret_from_fork+0x14/0x28
-
-Freed by task 86:
- kasan_save_track+0x30/0x5c
- kasan_save_free_info+0x38/0x58
- __kasan_slab_free+0xe4/0x140
- kfree+0xb0/0x238
- device_release+0xc0/0x2a8
- kobject_put+0x1d4/0x46c
- netdev_run_todo+0x8fc/0x11d0
- wilc_netdev_cleanup+0x1e4/0x5cc
- wilc_bus_remove+0xc8/0xec
- spi_remove+0x8c/0xac
- device_release_driver_internal+0x434/0x5f8
- unbind_store+0xbc/0x108
- kernfs_fop_write_iter+0x398/0x584
- vfs_write+0x728/0xf88
- ksys_write+0x110/0x1e4
- ret_fast_syscall+0x0/0x1c
- [...]
-
-David Mosberger-Tan initial investigation [1] showed that this
-use-after-free is due to netdevice unregistration during vif list
-traversal. When unregistering a net device, since the needs_free_netdev has
-been set to true during registration, the netdevice object is also freed,
-and as a consequence, the corresponding vif object too, since it is
-attached to it as private netdevice data. The next occurrence of the loop
-then tries to access freed vif pointer to the list to move forward in the
-list.
-
-Fix this use-after-free thanks to two mechanisms:
-- navigate in the list with list_for_each_entry_safe, which allows to
-  safely modify the list as we go through each element. For each element,
-  remove it from the list with list_del_rcu
-- make sure to wait for RCU grace period end after each vif removal to make
-  sure it is safe to free the corresponding vif too (through
-  unregister_netdev)
-
-Since we are in a RCU "modifier" path (not a "reader" path), and because
-such path is expected not to be concurrent to any other modifier (we are
-using the vif_mutex lock), we do not need to use RCU list API, that's why
-we can benefit from list_for_each_entry_safe.
-
-[1] https://lore.kernel.org/linux-wireless/ab077dbe58b1ea5de0a3b2ca21f275a07af967d2.camel@egauge.net/
-
-Fixes: 8399918f3056 ("staging: wilc1000: use RCU list to maintain vif interfaces list")
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+Fixes: 960361238b86 ("rtw88: 8821c: add false alarm statistics")
+Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240212-wilc_rework_deinit-v1-1-9203ae56c27f@bootlin.com
+Link: https://msgid.link/f3cb6d17-e4e4-44a7-9c9b-72aed994b5c9@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/microchip/wilc1000/netdev.c  | 28 +++++--------------
- 1 file changed, 7 insertions(+), 21 deletions(-)
+ drivers/net/wireless/realtek/rtw88/rtw8821c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
-index 463f3bfc3064d..ab84b146aa272 100644
---- a/drivers/net/wireless/microchip/wilc1000/netdev.c
-+++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
-@@ -821,8 +821,7 @@ static const struct net_device_ops wilc_netdev_ops = {
+diff --git a/drivers/net/wireless/realtek/rtw88/rtw8821c.c b/drivers/net/wireless/realtek/rtw88/rtw8821c.c
+index f9615f76f1734..d517f92b6180b 100644
+--- a/drivers/net/wireless/realtek/rtw88/rtw8821c.c
++++ b/drivers/net/wireless/realtek/rtw88/rtw8821c.c
+@@ -579,9 +579,9 @@ static void rtw8821c_false_alarm_statistics(struct rtw_dev *rtwdev)
  
- void wilc_netdev_cleanup(struct wilc *wilc)
- {
--	struct wilc_vif *vif;
--	int srcu_idx, ifc_cnt = 0;
-+	struct wilc_vif *vif, *vif_tmp;
+ 	dm_info->cck_fa_cnt = cck_fa_cnt;
+ 	dm_info->ofdm_fa_cnt = ofdm_fa_cnt;
++	dm_info->total_fa_cnt = ofdm_fa_cnt;
+ 	if (cck_enable)
+ 		dm_info->total_fa_cnt += cck_fa_cnt;
+-	dm_info->total_fa_cnt = ofdm_fa_cnt;
  
- 	if (!wilc)
- 		return;
-@@ -832,32 +831,19 @@ void wilc_netdev_cleanup(struct wilc *wilc)
- 		wilc->firmware = NULL;
- 	}
- 
--	srcu_idx = srcu_read_lock(&wilc->srcu);
--	list_for_each_entry_rcu(vif, &wilc->vif_list, list) {
-+	list_for_each_entry_safe(vif, vif_tmp, &wilc->vif_list, list) {
-+		mutex_lock(&wilc->vif_mutex);
-+		list_del_rcu(&vif->list);
-+		wilc->vif_num--;
-+		mutex_unlock(&wilc->vif_mutex);
-+		synchronize_srcu(&wilc->srcu);
- 		if (vif->ndev)
- 			unregister_netdev(vif->ndev);
- 	}
--	srcu_read_unlock(&wilc->srcu, srcu_idx);
- 
- 	wilc_wfi_deinit_mon_interface(wilc, false);
- 	destroy_workqueue(wilc->hif_workqueue);
- 
--	while (ifc_cnt < WILC_NUM_CONCURRENT_IFC) {
--		mutex_lock(&wilc->vif_mutex);
--		if (wilc->vif_num <= 0) {
--			mutex_unlock(&wilc->vif_mutex);
--			break;
--		}
--		vif = wilc_get_wl_to_vif(wilc);
--		if (!IS_ERR(vif))
--			list_del_rcu(&vif->list);
--
--		wilc->vif_num--;
--		mutex_unlock(&wilc->vif_mutex);
--		synchronize_srcu(&wilc->srcu);
--		ifc_cnt++;
--	}
--
- 	wilc_wlan_cfg_deinit(wilc);
- 	wlan_deinit_locks(wilc);
- 	kfree(wilc->bus_data);
+ 	crc32_cnt = rtw_read32(rtwdev, REG_CRC_CCK);
+ 	dm_info->cck_ok_cnt = FIELD_GET(GENMASK(15, 0), crc32_cnt);
 -- 
 2.43.0
 
