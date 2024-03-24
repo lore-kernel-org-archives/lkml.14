@@ -1,48 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCEB15FA64;
-	Sun, 24 Mar 2024 23:19:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873A215F3F2;
+	Sun, 24 Mar 2024 23:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322351; cv=none; b=NBL1GhxOY1u42w1/Ia9ap9LaYIPPKRI5RPBNmuBRsYf/fN7px0T4eLX8UVk9B9JSvnpIg+1d2DGeKCxrgJ8sLhcShqmpHRtCh7ZWwXd+sVw7vkI0B2SV43dKMKA3c2PCaqBUy8EA49x7EbNBWS6N2yDiIyQe5IFGODfN7A3JJIg=
+	t=1711322340; cv=none; b=T3gXozYYIyCLx6ZBdPgaTYgg/bxqjWfgdyG2mlidHAWs2sKYttcxUDjLU3y3x/0JUaSzQVWaCZK3/N6q0DcijvE33V6sjyM3J5ZoYAa2gbNDeNobaoHSaeYY4IJzKF46YktRcWjmUu359F1oDRbByCog4ujU0fh4OLFYWcP0iO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322351; c=relaxed/simple;
-	bh=D3t/h4cU9xGd0/TqJ899dIcJhh3AC3fyHdtPtypVFXM=;
+	s=arc-20240116; t=1711322340; c=relaxed/simple;
+	bh=RMsiwQfl7cYHKFn8JymDMhMZpp+GCZ0RkLUQJ2lV0CU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AVJum1w3dnv9EDpohPQ/3FPuqL9Kud99tf2dK5di/81eqz/wqEeHJx/gE0YueOjht4oVrFmpX7Ro7OkUA0x38XEDoY/aKJNN/DJjPAa3JhP/OtlAlNWcitF8HnBjSCLx5p/hCWO58KY4OwieRmGBAMjpJhvowNiwLC0/FCzoreQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BJ/RjUPI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lXFghOxIDw/mtIVy+G40sjn7TxIfFpG5iZsA7f2j8vv7GOWGsiYriKZvKRwxEWNiz8WqU4i8JwhF5n0u7pomT3aCQTFOv7bbwALBsdD/x3n0oN8HPIHuGGJcNS2ux/ru7N7fv18QDouIT6XD3o1InQGjmZI3DYs52dC7XsVNgM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhh0DIW1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BJ/RjUPI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C74C433C7;
-	Sun, 24 Mar 2024 23:19:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhh0DIW1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84DE9C43394;
+	Sun, 24 Mar 2024 23:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322351;
-	bh=D3t/h4cU9xGd0/TqJ899dIcJhh3AC3fyHdtPtypVFXM=;
+	s=k20201202; t=1711322339;
+	bh=RMsiwQfl7cYHKFn8JymDMhMZpp+GCZ0RkLUQJ2lV0CU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BJ/RjUPIXNAVv3xnHrkg74uV6hNdoTjadDFhH/K3/G9h5yZmlmNyqg6uycdP300j5
-	 bPtV6j9d+3YmgXAgApwsq7bKBR4yZvCAJpv8NffSAdlMAnjbl0Ca+2UVOkqFXMJHZC
-	 9w9kbndtA71YnA0wzuHVswzCUWvdFLJLFh2+1QnSrSHKV9j6xKvh2xJBcRo4GUbcCT
-	 uGH4mCtkDThkB37vbkVxgo3IROj29FYeRe7WXrMZr5WCLYq+MdG95AaXU8ciPRvgDQ
-	 wswjB2Q3jE5dpVnRaw0jikvRJKC8O7VStSFIEa47CtMOuHKiqw9HCxmBVJY/x2Ge1/
-	 bzK3Ll4w2xVhg==
+	b=lhh0DIW1kVXpqAOfJl0By2pqFzaw0tJPvfyqSyMgf7dIcEXrlu4MqrfBqqGBhDZiN
+	 rxu38bDtbWSTZUmSL4jbsk6YFo9wya49GgPQ64BBvRA9vr3O4tAWOtP9awi5ShSbCW
+	 LvDRrCoELVqyXlpQKMZtB+LKlfgAAdLSM+y/ov40nrHpNIsAjUeRJaZwy3sP1dIC+m
+	 B8PyoH+cmmWT5BRlIm4aKkfVOHG7ZKxZADg9J8gCpsn4Sqf2Gw5s71REXFSgOrs/eb
+	 qc0PMHT4JNhbV+JjZmWSnXcJoo9F0fGxc9gifiWxw2F83D0TpL5nG0Dkk7OHLLRvjG
+	 Hw0yQu1csfQrQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tejun Heo <tj@kernel.org>,
-	Sunil Goutham <sgoutham@marvell.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	syzbot+d1de830e4ecdaac83d89@syzkaller.appspotmail.com,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Jiri Pirko <jiri@nvidia.com>,
 	Paolo Abeni <pabeni@redhat.com>,
-	Ratheesh Kannoth <rkannoth@marvell.com>,
-	Srujana Challa <schalla@marvell.com>,
-	Geetha sowjanya <gakula@marvell.com>,
-	netdev@vger.kernel.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 433/451] net: octeontx2: Use alloc_ordered_workqueue() to create ordered workqueues
-Date: Sun, 24 Mar 2024 19:11:49 -0400
-Message-ID: <20240324231207.1351418-434-sashal@kernel.org>
+Subject: [PATCH 6.1 421/451] wireguard: receive: annotate data-race around receiving_counter.counter
+Date: Sun, 24 Mar 2024 19:11:37 -0400
+Message-ID: <20240324231207.1351418-422-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -56,149 +51,82 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tejun Heo <tj@kernel.org>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-[ Upstream commit 289f97467480266f9bd8cac7f1e05a478d523f79 ]
+[ Upstream commit bba045dc4d996d03dce6fe45726e78a1a1f6d4c3 ]
 
-BACKGROUND
-==========
+Syzkaller with KCSAN identified a data-race issue when accessing
+keypair->receiving_counter.counter. Use READ_ONCE() and WRITE_ONCE()
+annotations to mark the data race as intentional.
 
-When multiple work items are queued to a workqueue, their execution order
-doesn't match the queueing order. They may get executed in any order and
-simultaneously. When fully serialized execution - one by one in the queueing
-order - is needed, an ordered workqueue should be used which can be created
-with alloc_ordered_workqueue().
+    BUG: KCSAN: data-race in wg_packet_decrypt_worker / wg_packet_rx_poll
 
-However, alloc_ordered_workqueue() was a later addition. Before it, an
-ordered workqueue could be obtained by creating an UNBOUND workqueue with
-@max_active==1. This originally was an implementation side-effect which was
-broken by 4c16bd327c74 ("workqueue: restore WQ_UNBOUND/max_active==1 to be
-ordered"). Because there were users that depended on the ordered execution,
-5c0338c68706 ("workqueue: restore WQ_UNBOUND/max_active==1 to be ordered")
-made workqueue allocation path to implicitly promote UNBOUND workqueues w/
-@max_active==1 to ordered workqueues.
+    write to 0xffff888107765888 of 8 bytes by interrupt on cpu 0:
+     counter_validate drivers/net/wireguard/receive.c:321 [inline]
+     wg_packet_rx_poll+0x3ac/0xf00 drivers/net/wireguard/receive.c:461
+     __napi_poll+0x60/0x3b0 net/core/dev.c:6536
+     napi_poll net/core/dev.c:6605 [inline]
+     net_rx_action+0x32b/0x750 net/core/dev.c:6738
+     __do_softirq+0xc4/0x279 kernel/softirq.c:553
+     do_softirq+0x5e/0x90 kernel/softirq.c:454
+     __local_bh_enable_ip+0x64/0x70 kernel/softirq.c:381
+     __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:167 [inline]
+     _raw_spin_unlock_bh+0x36/0x40 kernel/locking/spinlock.c:210
+     spin_unlock_bh include/linux/spinlock.h:396 [inline]
+     ptr_ring_consume_bh include/linux/ptr_ring.h:367 [inline]
+     wg_packet_decrypt_worker+0x6c5/0x700 drivers/net/wireguard/receive.c:499
+     process_one_work kernel/workqueue.c:2633 [inline]
+     ...
 
-While this has worked okay, overloading the UNBOUND allocation interface
-this way creates other issues. It's difficult to tell whether a given
-workqueue actually needs to be ordered and users that legitimately want a
-min concurrency level wq unexpectedly gets an ordered one instead. With
-planned UNBOUND workqueue updates to improve execution locality and more
-prevalence of chiplet designs which can benefit from such improvements, this
-isn't a state we wanna be in forever.
+    read to 0xffff888107765888 of 8 bytes by task 3196 on cpu 1:
+     decrypt_packet drivers/net/wireguard/receive.c:252 [inline]
+     wg_packet_decrypt_worker+0x220/0x700 drivers/net/wireguard/receive.c:501
+     process_one_work kernel/workqueue.c:2633 [inline]
+     process_scheduled_works+0x5b8/0xa30 kernel/workqueue.c:2706
+     worker_thread+0x525/0x730 kernel/workqueue.c:2787
+     ...
 
-This patch series audits all callsites that create an UNBOUND workqueue w/
-@max_active==1 and converts them to alloc_ordered_workqueue() as necessary.
-
-WHAT TO LOOK FOR
-================
-
-The conversions are from
-
-  alloc_workqueue(WQ_UNBOUND | flags, 1, args..)
-
-to
-
-  alloc_ordered_workqueue(flags, args...)
-
-which don't cause any functional changes. If you know that fully ordered
-execution is not ncessary, please let me know. I'll drop the conversion and
-instead add a comment noting the fact to reduce confusion while conversion
-is in progress.
-
-If you aren't fully sure, it's completely fine to let the conversion
-through. The behavior will stay exactly the same and we can always
-reconsider later.
-
-As there are follow-up workqueue core changes, I'd really appreciate if the
-patch can be routed through the workqueue tree w/ your acks. Thanks.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Sunil Goutham <sgoutham@marvell.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Ratheesh Kannoth <rkannoth@marvell.com>
-Cc: Srujana Challa <schalla@marvell.com>
-Cc: Geetha sowjanya <gakula@marvell.com>
-Cc: netdev@vger.kernel.org
-Stable-dep-of: 7558ce0d974c ("octeontx2-pf: Use default max_active works instead of one")
+Fixes: a9e90d9931f3 ("wireguard: noise: separate receive counter from send counter")
+Reported-by: syzbot+d1de830e4ecdaac83d89@syzkaller.appspotmail.com
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/octeontx2/af/rvu.c     |  5 ++---
- .../net/ethernet/marvell/octeontx2/nic/otx2_pf.c    | 13 +++++--------
- .../net/ethernet/marvell/octeontx2/nic/otx2_vf.c    |  5 ++---
- 3 files changed, 9 insertions(+), 14 deletions(-)
+ drivers/net/wireguard/receive.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-index 59e6442ddf4a4..a7965b457bee9 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-@@ -3055,9 +3055,8 @@ static int rvu_flr_init(struct rvu *rvu)
- 			    cfg | BIT_ULL(22));
+diff --git a/drivers/net/wireguard/receive.c b/drivers/net/wireguard/receive.c
+index a176653c88616..db01ec03bda00 100644
+--- a/drivers/net/wireguard/receive.c
++++ b/drivers/net/wireguard/receive.c
+@@ -251,7 +251,7 @@ static bool decrypt_packet(struct sk_buff *skb, struct noise_keypair *keypair)
+ 
+ 	if (unlikely(!READ_ONCE(keypair->receiving.is_valid) ||
+ 		  wg_birthdate_has_expired(keypair->receiving.birthdate, REJECT_AFTER_TIME) ||
+-		  keypair->receiving_counter.counter >= REJECT_AFTER_MESSAGES)) {
++		  READ_ONCE(keypair->receiving_counter.counter) >= REJECT_AFTER_MESSAGES)) {
+ 		WRITE_ONCE(keypair->receiving.is_valid, false);
+ 		return false;
+ 	}
+@@ -318,7 +318,7 @@ static bool counter_validate(struct noise_replay_counter *counter, u64 their_cou
+ 		for (i = 1; i <= top; ++i)
+ 			counter->backtrack[(i + index_current) &
+ 				((COUNTER_BITS_TOTAL / BITS_PER_LONG) - 1)] = 0;
+-		counter->counter = their_counter;
++		WRITE_ONCE(counter->counter, their_counter);
  	}
  
--	rvu->flr_wq = alloc_workqueue("rvu_afpf_flr",
--				      WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM,
--				       1);
-+	rvu->flr_wq = alloc_ordered_workqueue("rvu_afpf_flr",
-+					      WQ_HIGHPRI | WQ_MEM_RECLAIM);
- 	if (!rvu->flr_wq)
- 		return -ENOMEM;
- 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-index 05ee55022b92c..3f044b161e8bf 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-@@ -272,8 +272,7 @@ static int otx2_pf_flr_init(struct otx2_nic *pf, int num_vfs)
- {
- 	int vf;
- 
--	pf->flr_wq = alloc_workqueue("otx2_pf_flr_wq",
--				     WQ_UNBOUND | WQ_HIGHPRI, 1);
-+	pf->flr_wq = alloc_ordered_workqueue("otx2_pf_flr_wq", WQ_HIGHPRI);
- 	if (!pf->flr_wq)
- 		return -ENOMEM;
- 
-@@ -584,9 +583,8 @@ static int otx2_pfvf_mbox_init(struct otx2_nic *pf, int numvfs)
- 	if (!pf->mbox_pfvf)
- 		return -ENOMEM;
- 
--	pf->mbox_pfvf_wq = alloc_workqueue("otx2_pfvf_mailbox",
--					   WQ_UNBOUND | WQ_HIGHPRI |
--					   WQ_MEM_RECLAIM, 1);
-+	pf->mbox_pfvf_wq = alloc_ordered_workqueue("otx2_pfvf_mailbox",
-+						   WQ_HIGHPRI | WQ_MEM_RECLAIM);
- 	if (!pf->mbox_pfvf_wq)
- 		return -ENOMEM;
- 
-@@ -1088,9 +1086,8 @@ static int otx2_pfaf_mbox_init(struct otx2_nic *pf)
- 	int err;
- 
- 	mbox->pfvf = pf;
--	pf->mbox_wq = alloc_workqueue("otx2_pfaf_mailbox",
--				      WQ_UNBOUND | WQ_HIGHPRI |
--				      WQ_MEM_RECLAIM, 1);
-+	pf->mbox_wq = alloc_ordered_workqueue("otx2_pfaf_mailbox",
-+					      WQ_HIGHPRI | WQ_MEM_RECLAIM);
- 	if (!pf->mbox_wq)
- 		return -ENOMEM;
- 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
-index 68fef947ccced..dcb8190de2407 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
-@@ -308,9 +308,8 @@ static int otx2vf_vfaf_mbox_init(struct otx2_nic *vf)
- 	int err;
- 
- 	mbox->pfvf = vf;
--	vf->mbox_wq = alloc_workqueue("otx2_vfaf_mailbox",
--				      WQ_UNBOUND | WQ_HIGHPRI |
--				      WQ_MEM_RECLAIM, 1);
-+	vf->mbox_wq = alloc_ordered_workqueue("otx2_vfaf_mailbox",
-+					      WQ_HIGHPRI | WQ_MEM_RECLAIM);
- 	if (!vf->mbox_wq)
- 		return -ENOMEM;
+ 	index &= (COUNTER_BITS_TOTAL / BITS_PER_LONG) - 1;
+@@ -463,7 +463,7 @@ int wg_packet_rx_poll(struct napi_struct *napi, int budget)
+ 			net_dbg_ratelimited("%s: Packet has invalid nonce %llu (max %llu)\n",
+ 					    peer->device->dev->name,
+ 					    PACKET_CB(skb)->nonce,
+-					    keypair->receiving_counter.counter);
++					    READ_ONCE(keypair->receiving_counter.counter));
+ 			goto next;
+ 		}
  
 -- 
 2.43.0
