@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC01145B22;
-	Sun, 24 Mar 2024 23:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D03F146009;
+	Sun, 24 Mar 2024 23:14:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322022; cv=none; b=Ve10FtAIWDqKUWygdE1eJ7HbVYiz/gMQyi93VC/LqZIO2Lb31VYrCKX4K2hbSPnfbYI4UiUTqCDV9jZ9iL6J2P5p2VeHAP43ceLdXy8GrA+1BodjFkri1aZIuxwH+vxJb/25T1tIMAgyClFmCPlGlKiQDJHp8v5Wo5cVgVCY9IM=
+	t=1711322066; cv=none; b=E4sKo6z+bV9oVCMIHRTeUYtAZf7nk1D8QxB5A8Qq9lhkQmsPyvetMCIzo4CvSqG74BQnQH14A8h2aPmY4+IYxYtoxU5NXrmoG1yfS3ztmoP9ANG6hGd2WbFD9TpkZUYq3oS6/gOLKvTkzXQS8cUvtYGkzrVwbKu9Fq3HCTPLsj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322022; c=relaxed/simple;
-	bh=wCMk0SO3nkSkbyoXdW6YkCpT+RrxE0R8Tjp6ZBwW/uI=;
+	s=arc-20240116; t=1711322066; c=relaxed/simple;
+	bh=PixZTdAIXb+apt1+3VrFpubrgiRaiLYdNla0aHXf+/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sZ45geqnxuMeo0YK929FJ0707/Hhi94xHsNOUQiYMF6LV9NKYTs5ujyaOsvZ1iyAigdRMVA4+KsWp1Se+0YjRumrJbihgoA7TDnLj3hY+AOFoo+vQWONj2sPmKlzyBolXNIDVGE7BRmbq8bAlusNRrma1/j68G0p+1Yevnfif9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uxXINo7W; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sqCST4TG29BArSe3tXQSPEskZpy1K3HJpel2i4ZSzntmAfRaeWMPq4X7QJrT61sFTskThqGDgAkfXmX6zNjxmSnAz396WlNTcuwcx2pHY+CiUzT6S7AD6SWB/WFSDI3QChRgLx9CfFnDNmMjMojed8LbbeDxZ2Fzfhvk/Ktue6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLxDbmf7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uxXINo7W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60596C43394;
-	Sun, 24 Mar 2024 23:13:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLxDbmf7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9246AC43390;
+	Sun, 24 Mar 2024 23:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322022;
-	bh=wCMk0SO3nkSkbyoXdW6YkCpT+RrxE0R8Tjp6ZBwW/uI=;
+	s=k20201202; t=1711322066;
+	bh=PixZTdAIXb+apt1+3VrFpubrgiRaiLYdNla0aHXf+/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uxXINo7WM9xRTYWmH5pL5RylwfwyHenNsXi6vGV8gPl9/p8OYts+6qLrgP9iaK6go
-	 yWJ3eQwXG7r4X+e7fLx/nB9WcPpPpzpJt+wH+hbYP0dF+nAs9tc0pha/w4d1A+/oca
-	 oK8kHdGcxo2C6ET6RjRQIQ07Y+d15+9VlOWIoUSESk2LAJRzOmN+iDPmqFs7pGDFWM
-	 doQZL6vvdzTB9kbM/Q7PuqXEs9lQw1m/VzH0kYosCuzLtqBKr4gSNgHhrT0XhTbuvX
-	 C2csvslGlc+G9rgQQxhHsKBrteBO+33H619NJN9kzNaE3PyyObZrYBlo6Q6f593zk8
-	 wglHcGXtpPX8A==
+	b=mLxDbmf7rZZqUN+y2NnT6BF+inK0yldbC9w8Q+U8ZSniNCJZtoFQuxNOpe56e0b3q
+	 OqKMaXYUMjlpN/2/h8Lx5Mr59MZcAT2fo/h+yp102zfOGr5IQMCUY14UJIIPiWyIOU
+	 s1A5nIu+sv5RPycVxuoTQUqAmxkBVKtiEcasSLdzg0qa9o0rOYlrQdgUuxHwFxvkFF
+	 0sRfsQAi3c46y+oA8wPuZCnO7vtkGQIiykgX1NA+vk0iZ7FApo/4PV7YbS9fLCWoqn
+	 M1gNLlos0qH/0SPexVjVR+sLcLbt4H8nbs8dWRCFKDTjBme3SyKda2r3s3caW184gb
+	 tplqNKL2zXjpg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+Cc: Ido Schimmel <idosch@nvidia.com>,
+	Simon Horman <horms@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 094/451] ARM: dts: renesas: r8a73a4: Fix external clocks and clock rate
-Date: Sun, 24 Mar 2024 19:06:10 -0400
-Message-ID: <20240324231207.1351418-95-sashal@kernel.org>
+Subject: [PATCH 6.1 139/451] selftests: forwarding: Add missing multicast routing config entries
+Date: Sun, 24 Mar 2024 19:06:55 -0400
+Message-ID: <20240324231207.1351418-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,82 +45,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Ido Schimmel <idosch@nvidia.com>
 
-[ Upstream commit 090c4094574705b0afc7d37825cdc5d06f0e7e02 ]
+[ Upstream commit f0ddf15f0a74c27eb4b2271a90e69948acc3fa2c ]
 
-External clocks should be defined as zero-Hz clocks in the SoC .dtsi,
-and overridden in the board .dts when present.
+The two tests that make use of multicast routig (router.sh and
+router_multicast.sh) are currently failing in the netdev CI because the
+kernel is missing multicast routing support.
 
-Correct the clock rate of extal1 from 25 to 26 MHz, to match the crystal
-oscillator present on the APE6-EVM board.
+Fix by adding the required config entries.
 
-Fixes: a76809a329d6ebae ("ARM: shmobile: r8a73a4: Common clock framework DT description")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Link: https://lore.kernel.org/r/1692bc8cd465d62168cbf110522ad62a7af3f606.1705315614.git.geert+renesas@glider.be
+Fixes: 6d4efada3b82 ("selftests: forwarding: Add multicast routing test")
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Link: https://lore.kernel.org/r/20240208165538.1303021-1-idosch@nvidia.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a73a4-ape6evm.dts | 12 ++++++++++++
- arch/arm/boot/dts/r8a73a4.dtsi        |  9 ++++++---
- 2 files changed, 18 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/forwarding/config | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-index e81a7213d3047..4282bafbb5043 100644
---- a/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-+++ b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-@@ -209,6 +209,18 @@ &cmt1 {
- 	status = "okay";
- };
- 
-+&extal1_clk {
-+	clock-frequency = <26000000>;
-+};
-+
-+&extal2_clk {
-+	clock-frequency = <48000000>;
-+};
-+
-+&extalr_clk {
-+	clock-frequency = <32768>;
-+};
-+
- &pfc {
- 	scifa0_pins: scifa0 {
- 		groups = "scifa0_data";
-diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-index c39066967053f..d1f4cbd099efb 100644
---- a/arch/arm/boot/dts/r8a73a4.dtsi
-+++ b/arch/arm/boot/dts/r8a73a4.dtsi
-@@ -450,17 +450,20 @@ clocks {
- 		extalr_clk: extalr {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
--			clock-frequency = <32768>;
-+			/* This value must be overridden by the board. */
-+			clock-frequency = <0>;
- 		};
- 		extal1_clk: extal1 {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
--			clock-frequency = <25000000>;
-+			/* This value must be overridden by the board. */
-+			clock-frequency = <0>;
- 		};
- 		extal2_clk: extal2 {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
--			clock-frequency = <48000000>;
-+			/* This value must be overridden by the board. */
-+			clock-frequency = <0>;
- 		};
- 		fsiack_clk: fsiack {
- 			compatible = "fixed-clock";
+diff --git a/tools/testing/selftests/net/forwarding/config b/tools/testing/selftests/net/forwarding/config
+index ba23435145827..8d7a1a004b7c3 100644
+--- a/tools/testing/selftests/net/forwarding/config
++++ b/tools/testing/selftests/net/forwarding/config
+@@ -9,6 +9,13 @@ CONFIG_CGROUP_BPF=y
+ CONFIG_DUMMY=m
+ CONFIG_IPV6=y
+ CONFIG_IPV6_GRE=m
++CONFIG_IPV6_MROUTE=y
++CONFIG_IPV6_MROUTE_MULTIPLE_TABLES=y
++CONFIG_IPV6_PIMSM_V2=y
++CONFIG_IP_MROUTE=y
++CONFIG_IP_MROUTE_MULTIPLE_TABLES=y
++CONFIG_IP_PIMSM_V1=y
++CONFIG_IP_PIMSM_V2=y
+ CONFIG_MACVLAN=m
+ CONFIG_NET_ACT_CT=m
+ CONFIG_NET_ACT_MIRRED=m
 -- 
 2.43.0
 
