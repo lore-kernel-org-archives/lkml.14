@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F75C83CD2;
-	Sun, 24 Mar 2024 22:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0615083A14;
+	Sun, 24 Mar 2024 22:50:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320636; cv=none; b=LngyMbpz3Hulb8fAE1zMLVvCuuutPjQsv+6iWgnbXJMrQNuNQuAhB+GjmUcqcdPL1s0Hdukw73dSAnvRXaFyidW0RTkSGax1nAIBwldO7GQ8SR9A3NJpZ0Xkl7NjpXjTSvNZNyHnPrxs40lFYbU9lWjAdZ93tXw7xr1XRAJi1TM=
+	t=1711320633; cv=none; b=grberrzKoTw5cNsVYhxgstXHR0D0lGBbT5Ab/yW1lhnHi/6Pu6Lfx8bcSFNfPuwQOGeP6Bu7wE0blV0UDm4i8+Qf4grLNFtnl0p6Euv/8YheNFKxG5V+E1Wt9NIxvDYIZBHMeMNn0tSVEhjqbx7MCWHzkRKyyzePkY8l2/6T8/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320636; c=relaxed/simple;
-	bh=aJJzQQrpiTfZBv6U5QGeic3fSx+uw2bw3ZShTZrhi5o=;
+	s=arc-20240116; t=1711320633; c=relaxed/simple;
+	bh=afXxZDuytKdo2b9kX8f74F3OLY83odqcQkTH0+MIdeY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J4ZdIFK/y7R6TFL1VlX9TcAB3W74zNNfcMUTn9xrdTcqnLGwHOcddqHgNS+lfGGq9VTMm01QOajEsT8c3szkT2oQhp1YH7Ck6aJ+/VA4gs1+KA2q8EnEf5/z8flSmGZj/ZqhKRBu1sfZQUQgOhQi2vEvLsVK7vt9vWooJ2xukOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ACpBC8hQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HE4Yh1VdTeK64StQ4EbN/y8t0f7/lueZyHR9c0kvu0HM7huIQRykRLYbeaJkbWxcT14cpXSngS9uty+lUC/9lNUGUbsyPmTwELZ1emnFs2WLohjctxQaWtI4hIzmnG29pilCKpBmJqAPCMnE04JmAmS1+3jAX3wF411fwcxZCEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcCzmNJe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ACpBC8hQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B30EC433C7;
-	Sun, 24 Mar 2024 22:50:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcCzmNJe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE6FC43390;
+	Sun, 24 Mar 2024 22:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320635;
-	bh=aJJzQQrpiTfZBv6U5QGeic3fSx+uw2bw3ZShTZrhi5o=;
+	s=k20201202; t=1711320632;
+	bh=afXxZDuytKdo2b9kX8f74F3OLY83odqcQkTH0+MIdeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ACpBC8hQK1A43BXKzl1VFun/TB1XTaozESFsLxB6EV49hRf8rKOiS3r/U/rL1GCWT
-	 6XRCRbAC98PlYRNr7EpcHyT2QnNZnOkfVFRvRVcywe5V+XmuLmCDG7CG5RTozx0hpl
-	 /UX+3XwlKDusfMQbunKKyN/m0GOwod0kKDavJu2ZS6bG4HJG8FC/R50D8LixVzQw+Y
-	 BZ4rNOpMdMpe+XWGtcTkxZ9NSqoyzsVPqIAQP5VWeUrxoCao1ogM8LWGmsCtYKMNTJ
-	 Urr8YIlyaB1St0zssd06YeksgMrLtw3FvSTT6W9mPckdcSBIH7qL9AvhI5RO8KrW5z
-	 z6e49GTsJQPBA==
+	b=rcCzmNJeQSqGrXmOqica05m8Nr6S6aHWIC/G+oEXhRuQ56jD0aHiV55aa3XvkJLqC
+	 LzR8yj8XTpPS2b9GOAvK6nb5SdMuscjHuHgzUqwXWIczxVfxFHMuUBflzYJBlmoobt
+	 QetNKUu6maSnTOm9L75qORiVwFAlup3+uBz6XoSCbJmh/q/hdUkTMhPUhKrdjumaPU
+	 m40mOuTkeuHvEKsOcfQ2ExQffkaMSw2JSngfFz/NUiBjARxOq/o8Z1ZyxtABFOnENz
+	 aIlJD9/Ih30D2CdB1YGazU8yZ2J3SXYGdKUdbWNTnMY4fqrgAiKyoxWH7Eb/UcMGQY
+	 6dtfP1OTWcO9A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Martin Kaiser <martin@kaiser.cx>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	Mukesh Sisodiya <mukesh.sisodiya@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 197/713] gpio: vf610: allow disabling the vf610 driver
-Date: Sun, 24 Mar 2024 18:38:43 -0400
-Message-ID: <20240324224720.1345309-198-sashal@kernel.org>
+Subject: [PATCH 6.7 194/713] wifi: iwlwifi: always have 'uats_enabled'
+Date: Sun, 24 Mar 2024 18:38:40 -0400
+Message-ID: <20240324224720.1345309-195-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,41 +50,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Martin Kaiser <martin@kaiser.cx>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit f57595788244a838deec2d3be375291327cbc035 ]
+[ Upstream commit f639602a58e7564dd091c7c0793f61042bad9bb6 ]
 
-The vf610 gpio driver is enabled by default for all i.MX machines,
-without any option to disable it in a board-specific config file.
+We check this in code that'd be complicated to put under
+ifdef (CONFIG_ACPI), so just always have 'uats_enabled'.
 
-Most i.MX chipsets have no hardware for this driver. Change the default
-to enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
-
-Add a text description after the bool type, this makes the driver
-selectable by make config etc.
-
-Fixes: 30a35c07d9e9 ("gpio: vf610: drop the SOC_VF610 dependency for GPIO_VF610")
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Fixes: 4a9bb5b4d949 ("wifi: iwlwifi: fw: Add support for UATS table in UHB")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Mukesh Sisodiya <mukesh.sisodiya@intel.com>
+Reviewed-by: Gregory Greenman <gregory.greenman@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://msgid.link/20240129211905.bdc5fb20f00a.I902d801d79873c5c9cd51cef8e8226e2acefe88d@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/fw/runtime.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b3a133ed31ee5..41b51536bd867 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -691,7 +691,8 @@ config GPIO_UNIPHIER
- 	  Say yes here to support UniPhier GPIOs.
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/runtime.h b/drivers/net/wireless/intel/iwlwifi/fw/runtime.h
+index 357727774db90..baabb8e321f8d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/runtime.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/runtime.h
+@@ -173,9 +173,9 @@ struct iwl_fw_runtime {
+ 	struct iwl_sar_offset_mapping_cmd sgom_table;
+ 	bool sgom_enabled;
+ 	u8 reduced_power_flags;
+-	bool uats_enabled;
+ 	struct iwl_uats_table_cmd uats_table;
+ #endif
++	bool uats_enabled;
+ };
  
- config GPIO_VF610
--	def_bool y
-+	bool "VF610 GPIO support"
-+	default y if SOC_VF610
- 	depends on ARCH_MXC
- 	select GPIOLIB_IRQCHIP
- 	help
+ void iwl_fw_runtime_init(struct iwl_fw_runtime *fwrt, struct iwl_trans *trans,
 -- 
 2.43.0
 
