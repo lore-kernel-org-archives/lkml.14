@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0A217DC3E;
-	Sun, 24 Mar 2024 23:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F1A131BB0;
+	Sun, 24 Mar 2024 23:44:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323852; cv=none; b=UoByqRADpevT+oXekIjh+dxPGKVigMEdCr/NVu29Q1h9MpqjNmEI/vIEN9dviK6tSjYnuGb13/waeE518XTcriLtw5anxsbiwzTkNecfIdKYPBi7/CLtDwz+88n5Gxj+g/BOvWoQhWPlcxsh7YKRi7dzSZ21pMg2TmDPyOJHYzs=
+	t=1711323856; cv=none; b=LzBA0wEQNjOJmki4BZRq4+F64+UQnCFJmxIt6mcy53wOYxPYJqblgY9ZAXwy6MhtYCAuIn+nVtiSfPWQzpd538K83WRhe/V0poHtockUxAC6kygpa2QD4peQRniVvPxnu6ajAhCto03I+xlBRI7w6XoOj/vdhy2YHkKGJj5J7tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323852; c=relaxed/simple;
-	bh=w1K52Csdl2eq1OaHzMItpQSYmWMb0G/2QmKQbj0IUKI=;
+	s=arc-20240116; t=1711323856; c=relaxed/simple;
+	bh=aNG0AjZbig5Qhr6LXBT/gr9Q8gDY446a7r6lLHDmZX0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VyHHgwOHfXb62dcVnA9ZGqu6olnuWnD3So28dy3WIBvnh4too2FRwuCDEyG94PAMbL6NDRgpHdLPFOHulL6f1RMhJf+83HgZNp1Yin3njWcGbwTknYPFv0vw9TpgJRy7OngVpTzrve/R4CLjjzcxiF+CHUM09H/UTPIe1h9/1Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEQaDNv8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ggFIOGbuy2FKr7Z8fzzQ3UGYhtpjZ1dDW+e/4aI5EC2MPT5XwmjhdHQHrN7KMyOHTdek9BSWjle57urhHn4O2jJqJLHtsr+L7nkeiKo8wtrBdNWa9RFhVakeFGVJBKJnMqbXiTAuhvXJ189pCeKXQ8lvjMTRSx/4bSRGDzJrVMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgjx785v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEQaDNv8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA990C433C7;
-	Sun, 24 Mar 2024 23:44:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgjx785v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BCB4C433F1;
+	Sun, 24 Mar 2024 23:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323851;
-	bh=w1K52Csdl2eq1OaHzMItpQSYmWMb0G/2QmKQbj0IUKI=;
+	s=k20201202; t=1711323856;
+	bh=aNG0AjZbig5Qhr6LXBT/gr9Q8gDY446a7r6lLHDmZX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MEQaDNv8bYD2oIQiWAM1DcuzCcrn0r5I5ugr3K01oFTIWn5x7ST0IRb6ZIO1RgtXg
-	 8MvdsnA9vExSSNyo4OBNK3cyNs3HJtMI3zFe1Mhju9e927ecKa3AXUceHRQ6MkrKJF
-	 yamkNa3Y7/xY7GJ59uaxAuL4JbKOiigf1itkUt7jI8V+daO/ad/GkDPogwrkZf36bk
-	 hV1AH+iBLbwcxFWi6BqSkXVk9DcG3yOH5bPPHC790QWFzdtBM9NOnNmBuNAKIUHq79
-	 Uk6LQ+UaTf0ubxttlId9eDgjtcZMuA+cILNJ2CDLo/LpFZYHiNCaTnVIWkrc6LrLMV
-	 ajZg3oOgxsxqw==
+	b=hgjx785vJc1cINWdWF/44Aa5/jkdUjSYf2bCD16mgplhFgrn6WHv4JK1gBkPOyXk7
+	 EMFRHqZTvHj9wtCJPqKV9Qv7Z1CIfIsmz1wuiysm4EgE388rO7obPqX+rBFwzwu+DJ
+	 UK1uJR6ND/S9ucwKFTiCVBVv+r7CVTix2byeRPEVTBJWwJ22DqpZGtNGnlkftgQBEN
+	 l5Z3zjwrTSZ5A/KSO1hYTxj8H+NCg2DcRAUqwEeEWLvBDKw/Hc4tunYZ1vbBi2KoVD
+	 I/6abJs3+y0YOIIDt2W/KLKCCd6WKhqO+ENrAgNX5dBbL6olWaN9IScPrSgvlfMpvW
+	 mQuakyEE2CcfQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Subbaraya Sundeep <sbhatta@marvell.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Yan Zhai <yan@cloudflare.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 229/238] octeontx2-af: Use separate handlers for interrupts
-Date: Sun, 24 Mar 2024 19:40:17 -0400
-Message-ID: <20240324234027.1354210-230-sashal@kernel.org>
+Subject: [PATCH 5.10 234/238] rcu: add a helper to report consolidated flavor QS
+Date: Sun, 24 Mar 2024 19:40:22 -0400
+Message-ID: <20240324234027.1354210-235-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,67 +50,74 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Subbaraya Sundeep <sbhatta@marvell.com>
+From: Yan Zhai <yan@cloudflare.com>
 
-[ Upstream commit 50e60de381c342008c0956fd762e1c26408f372c ]
+[ Upstream commit 1a77557d48cff187a169c2aec01c0dd78a5e7e50 ]
 
-For PF to AF interrupt vector and VF to AF vector same
-interrupt handler is registered which is causing race condition.
-When two interrupts are raised to two CPUs at same time
-then two cores serve same event corrupting the data.
+When under heavy load, network processing can run CPU-bound for many
+tens of seconds. Even in preemptible kernels (non-RT kernel), this can
+block RCU Tasks grace periods, which can cause trace-event removal to
+take more than a minute, which is unacceptably long.
 
-Fixes: 7304ac4567bc ("octeontx2-af: Add mailbox IRQ and msg handlers")
-Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This commit therefore creates a new helper function that passes through
+both RCU and RCU-Tasks quiescent states every 100 milliseconds. This
+hard-coded value suffices for current workloads.
+
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
+Signed-off-by: Yan Zhai <yan@cloudflare.com>
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+Link: https://lore.kernel.org/r/90431d46ee112d2b0af04dbfe936faaca11810a5.1710877680.git.yan@cloudflare.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Stable-dep-of: 00bf63122459 ("bpf: report RCU QS in cpumap kthread")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/octeontx2/af/rvu.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ include/linux/rcupdate.h | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-index acbc67074f59c..23b829f974de1 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-@@ -1969,10 +1969,9 @@ static void rvu_queue_work(struct mbox_wq_info *mw, int first,
- 	}
- }
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 0122c03da24af..9db6710e6ee7b 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -226,6 +226,37 @@ do { \
+ 	cond_resched(); \
+ } while (0)
  
--static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
-+static irqreturn_t rvu_mbox_pf_intr_handler(int irq, void *rvu_irq)
- {
- 	struct rvu *rvu = (struct rvu *)rvu_irq;
--	int vfs = rvu->vfs;
- 	u64 intr;
- 
- 	intr = rvu_read64(rvu, BLKADDR_RVUM, RVU_AF_PFAF_MBOX_INT);
-@@ -1986,6 +1985,18 @@ static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
- 
- 	rvu_queue_work(&rvu->afpf_wq_info, 0, rvu->hw->total_pfs, intr);
- 
-+	return IRQ_HANDLED;
-+}
++/**
++ * rcu_softirq_qs_periodic - Report RCU and RCU-Tasks quiescent states
++ * @old_ts: jiffies at start of processing.
++ *
++ * This helper is for long-running softirq handlers, such as NAPI threads in
++ * networking. The caller should initialize the variable passed in as @old_ts
++ * at the beginning of the softirq handler. When invoked frequently, this macro
++ * will invoke rcu_softirq_qs() every 100 milliseconds thereafter, which will
++ * provide both RCU and RCU-Tasks quiescent states. Note that this macro
++ * modifies its old_ts argument.
++ *
++ * Because regions of code that have disabled softirq act as RCU read-side
++ * critical sections, this macro should be invoked with softirq (and
++ * preemption) enabled.
++ *
++ * The macro is not needed when CONFIG_PREEMPT_RT is defined. RT kernels would
++ * have more chance to invoke schedule() calls and provide necessary quiescent
++ * states. As a contrast, calling cond_resched() only won't achieve the same
++ * effect because cond_resched() does not provide RCU-Tasks quiescent states.
++ */
++#define rcu_softirq_qs_periodic(old_ts) \
++do { \
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT) && \
++	    time_after(jiffies, (old_ts) + HZ / 10)) { \
++		preempt_disable(); \
++		rcu_softirq_qs(); \
++		preempt_enable(); \
++		(old_ts) = jiffies; \
++	} \
++} while (0)
 +
-+static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
-+{
-+	struct rvu *rvu = (struct rvu *)rvu_irq;
-+	int vfs = rvu->vfs;
-+	u64 intr;
-+
-+	/* Sync with mbox memory region */
-+	rmb();
-+
- 	/* Handle VF interrupts */
- 	if (vfs > 64) {
- 		intr = rvupf_read64(rvu, RVU_PF_VFPF_MBOX_INTX(1));
-@@ -2300,7 +2311,7 @@ static int rvu_register_interrupts(struct rvu *rvu)
- 	/* Register mailbox interrupt handler */
- 	sprintf(&rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], "RVUAF Mbox");
- 	ret = request_irq(pci_irq_vector(rvu->pdev, RVU_AF_INT_VEC_MBOX),
--			  rvu_mbox_intr_handler, 0,
-+			  rvu_mbox_pf_intr_handler, 0,
- 			  &rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], rvu);
- 	if (ret) {
- 		dev_err(rvu->dev,
+ /*
+  * Infrastructure to implement the synchronize_() primitives in
+  * TREE_RCU and rcu_barrier_() primitives in TINY_RCU.
 -- 
 2.43.0
 
