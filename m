@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3130B280211;
-	Sun, 24 Mar 2024 23:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E64C2801F7;
+	Sun, 24 Mar 2024 23:40:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323638; cv=none; b=JJI4MApbO9oG+radqntd9HQJK9br5Cman+0qzBBhLywwefyioqV4HME8wENe5uMo0/8R3mxHx0nr/oOHUHoWvML8cD3Va7emUBUkyQOphIy9HJx9dDkFJdCtrqOX1yUAILG6+1Qv+YPr1sw4s7IjNfgJSBFt71fIjNyuqacZzdI=
+	t=1711323632; cv=none; b=bmehlgJK4dZnn645HFoBO9mGmJz6J6gvTw7lUsV6aOemYNWbzmKdI2BvaVaxcU2UuDuh+97ErOMB37Mq2XRfPLXbKvPWwTz62EBt1AKrpWvGRPUwlxljfPozaNtL/a0FM3MawG5fuwQlHAEIKxLWfCWZgor3vyrdAxIZRf8XIhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323638; c=relaxed/simple;
-	bh=tfnOGd7pf3A5f59RWHth3GLkpWlXj5gee4oTcfvY3k4=;
+	s=arc-20240116; t=1711323632; c=relaxed/simple;
+	bh=oD17ofTA2Z/4lB9MfJbdZTrDP3Xqo6BRlFf4yaezyaM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sCU91bD19uTTdVpXibJrPCVANAsd5n9mkwkTH79PpyhsKnykYeB3XwrfyIy8sKi0RNHiZxwBIFzZWPBH4QNtJsQqK1vNuwlCM8B0QLHrTib6iHCWhS34XRMJrScAg1l02gBtYZZcYxLydW64kvFWpDn2zTbOupsnsIAzSF8jKSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZi5Z2zx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Zghl3Wl8IGEsSgOs1RTxGbvwL5PTb6at89aPClJk9dOJGo2CNob+ShuWn7SJXdIXQ6G3R2Ey0VLTEq8sK+TpGrrXXWFfeU/fHTB7a6PwMaZxb1dsGvFnc1TuLikvMNgpS7vvIZXhrMJMu2KHqOs8DRqC+FkL7XqJZLNUhnR+xr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lCep375C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZi5Z2zx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E621C43390;
-	Sun, 24 Mar 2024 23:40:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lCep375C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 298FFC43394;
+	Sun, 24 Mar 2024 23:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323638;
-	bh=tfnOGd7pf3A5f59RWHth3GLkpWlXj5gee4oTcfvY3k4=;
+	s=k20201202; t=1711323632;
+	bh=oD17ofTA2Z/4lB9MfJbdZTrDP3Xqo6BRlFf4yaezyaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HZi5Z2zxzeRE3/FNc6bW1kRMmeK4NCHqvIgDUb1Enm3ZDml8+fwMH+GmCatTcaZ5m
-	 OUEhGKYDFRyPq8lvWjZ1+r78RyRnMJXwMCF+draHTfjuiE2xjABF3TIujOCXGEItNQ
-	 NXjvrokhN9h0R2U1wU3dCUxQwEeFRTa3EcA0+lwHzZP/zaw8Bj1NV7JJ2cPDwftZWu
-	 rqRtsNiIwbcI5CFrFsQx2dDrnVxeEnFA8gK3pnJJ1FxCQCAP2tsPjhMO6NBw0LnyOm
-	 Ra+QYWGtDduxWdFLY4WVpld9rVcdIxHYZXdiyZXkNIWFuX/3NtiEv6Z2tLNJ+35uYo
-	 fmipVoDKlCRMA==
+	b=lCep375CE6YNV1yR3a3TcXYpMoIsLj1BjjiwJvp/AqTw72qSxO595Q8VkV0YsR6xI
+	 jY8s38dhhCG6VMYoRQREZ6SGGnrwT9YCsi1zmtwIMWTwy0l9KeQsS9E7TOrtxUEB0V
+	 A6iFExh1BwUEvRblFf8n3ak9k9QMAqFhWTEtra9ReGbmj92Tm+FMKRqPhBpcDvWomk
+	 aI97x+ETqoGDM6lO/MOH1hVGqUHs8tJgN1YmpcPKVnVHbzGz/FX/THNVg827PuKtPs
+	 bfAJWFz1CWHZh7quVtNRHOnWrswg1TKrTci5KrJwIU3WYl5+YpYneicXLhF5+gD99w
+	 DVHSmPjKPtBsQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 009/238] MIPS: Clear Cause.BD in instruction_pointer_set
-Date: Sun, 24 Mar 2024 19:36:37 -0400
-Message-ID: <20240324234027.1354210-10-sashal@kernel.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+	Hou Tao <houtao@huaweicloud.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Sasha Levin <sashal@kernel.org>,
+	Robert Kolchmeyer <rkolchmeyer@google.com>
+Subject: [PATCH 5.10 003/238] rcu-tasks: Provide rcu_trace_implies_rcu_gp()
+Date: Sun, 24 Mar 2024 19:36:31 -0400
+Message-ID: <20240324234027.1354210-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,37 +51,68 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-[ Upstream commit 9d6e21ddf20293b3880ae55b9d14de91c5891c59 ]
+[ Upstream commit e6c86c513f440bec5f1046539c7e3c6c653842da ]
 
-Clear Cause.BD after we use instruction_pointer_set to override
-EPC.
+As an accident of implementation, an RCU Tasks Trace grace period also
+acts as an RCU grace period.  However, this could change at any time.
+This commit therefore creates an rcu_trace_implies_rcu_gp() that currently
+returns true to codify this accident.  Code relying on this accident
+must call this function to verify that this accident is still happening.
 
-This can prevent exception_epc check against instruction code at
-new return address.
-It won't be considered as "in delay slot" after epc being overridden
-anyway.
-
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Reported-by: Hou Tao <houtao@huaweicloud.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>
+Link: https://lore.kernel.org/r/20221014113946.965131-2-houtao@huaweicloud.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Stable-dep-of: 876673364161 ("bpf: Defer the free of inner map when necessary")
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+(cherry picked from commit 10108826191ab30388e8ae9d54505a628f78a7ec)
+Signed-off-by: Robert Kolchmeyer <rkolchmeyer@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/ptrace.h | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/rcupdate.h | 12 ++++++++++++
+ kernel/rcu/tasks.h       |  2 ++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/ptrace.h
-index 1e76774b36ddf..2849a9b65a055 100644
---- a/arch/mips/include/asm/ptrace.h
-+++ b/arch/mips/include/asm/ptrace.h
-@@ -60,6 +60,7 @@ static inline void instruction_pointer_set(struct pt_regs *regs,
-                                            unsigned long val)
- {
- 	regs->cp0_epc = val;
-+	regs->cp0_cause &= ~CAUSEF_BD;
- }
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 8716a17063518..0122c03da24af 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -201,6 +201,18 @@ static inline void exit_tasks_rcu_stop(void) { }
+ static inline void exit_tasks_rcu_finish(void) { }
+ #endif /* #else #ifdef CONFIG_TASKS_RCU_GENERIC */
  
- /* Query offset/name of register from its name/offset */
++/**
++ * rcu_trace_implies_rcu_gp - does an RCU Tasks Trace grace period imply an RCU grace period?
++ *
++ * As an accident of implementation, an RCU Tasks Trace grace period also
++ * acts as an RCU grace period.  However, this could change at any time.
++ * Code relying on this accident must call this function to verify that
++ * this accident is still happening.
++ *
++ * You have been warned!
++ */
++static inline bool rcu_trace_implies_rcu_gp(void) { return true; }
++
+ /**
+  * cond_resched_tasks_rcu_qs - Report potential quiescent states to RCU
+  *
+diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+index c5624ab0580c5..105fdc2bb004c 100644
+--- a/kernel/rcu/tasks.h
++++ b/kernel/rcu/tasks.h
+@@ -1015,6 +1015,8 @@ static void rcu_tasks_trace_postscan(struct list_head *hop)
+ 
+ 	// Wait for late-stage exiting tasks to finish exiting.
+ 	// These might have passed the call to exit_tasks_rcu_finish().
++
++	// If you remove the following line, update rcu_trace_implies_rcu_gp()!!!
+ 	synchronize_rcu();
+ 	// Any tasks that exit after this point will set ->trc_reader_checked.
+ }
 -- 
 2.43.0
 
