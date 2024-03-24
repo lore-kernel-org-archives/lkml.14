@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D3E2733C2;
-	Sun, 24 Mar 2024 23:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DE9272995;
+	Sun, 24 Mar 2024 23:35:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323318; cv=none; b=BELR5ODsVDnZiWG0UmDvXCoMyMYaUm3wLMZMiNHLnqhFXmERx9NtetaSVmcj7dPdNuFLzdtNnAYdRV1wFVfi1o+UCWLn1pFw+HvHAPsCskwoncUZID1Jscu0cNE8twW3prmV29MIBT3lUBxb7DoDIunQ9yjT1ODLXHshdu2OD88=
+	t=1711323314; cv=none; b=dhm4hTx2XxeSlAOcbZzsBW1tQacjgdWQOcrG5dclptfb25UySOnavRB8SpZqQjuMas+7bB2A6CT2JNhX3DhRjeTp++JfVx0CcVkbkifqoLOHDeF2P2NSAkjyBvM1zMnzj7EXYJ9GwMoN8lPpcdv+R5HVFqeIutVCgJKDn9C7lto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323318; c=relaxed/simple;
-	bh=+L8wkVGdqLlELuYmKWeEuKakPfIif0WoiIE0dd9miA8=;
+	s=arc-20240116; t=1711323314; c=relaxed/simple;
+	bh=lDJ/WcAUElCfR9BHJ0p9gKCvoLwlAhMexx0r5bWWcn4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=epwfl1eT1qwSGF8xfejYCTU+A3N93lFz8i22kTSk4c8ohU9UHNtA5d9ST270rz0A36tQDzwBvMV4xuk7ZHQhz6/UACeIK/DpqgNKxlgGeNhL2bzjdIoc6eeDoaP9NK7xeVzqdbmb4BIVGx8ArCMc0Ptg6IKHPA1Te39KafUXE5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bR8vMK08; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=luNOq/dYQAO7IVz4dnFVRX3aPQaf2Tz83kIecVqRLKwuVUhqd9kZMkZCpaqFKSeNDAZd+q9CkmIMZ0sh67D1lWRwYLWdsZ8mS3LA99dNFmAFUuoNSNIgAHIoIGSXZOtD25lLZuIguWsvljChinc74yXUbtfFjGdYrLM538O1Tr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScBUdi+4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bR8vMK08"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92400C433F1;
-	Sun, 24 Mar 2024 23:35:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScBUdi+4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68B4DC433F1;
+	Sun, 24 Mar 2024 23:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323317;
-	bh=+L8wkVGdqLlELuYmKWeEuKakPfIif0WoiIE0dd9miA8=;
+	s=k20201202; t=1711323314;
+	bh=lDJ/WcAUElCfR9BHJ0p9gKCvoLwlAhMexx0r5bWWcn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bR8vMK08NPVGNXchIRoUgrNDdGbl30bvh16ODIfdboM3ZlJeQZeb4d7RgX6bXCzgW
-	 lS4gux5Fj8/mUcWyDGeNbCURE9JwH2Lfbn18wokDJFCsx9fVHVY45gm1LMUso/8GTI
-	 2EnLN+KPnUo7oYmAzbntOtR1AE1IQnlmpZ66GyYbE/XojD1RkFELuvl202oPkHrAjF
-	 Do7em8huShpIYvoaeFGtBy92S8kSH0lg0E2ZAbgmnca7C/+wJpq+tgpeBiBtWWfLrp
-	 CWcEWUlFufDd70x8QP30YaPyEQHVXgIzI4Y7BOnCYGlUJsSicpef5gsaVwizEBDdSr
-	 l4kH3kmeh+kOw==
+	b=ScBUdi+4wL1YALfn7MAE8sujdiJbuAcih1JswxcOqy+Rae3NjOocPZB6L8+LOZort
+	 I1Nz33Qon2nXZNwZPKPs1eFICET+RTGto5dZ3wng5NXU4Mj/z1RoarBm3THzv5I/IE
+	 bVwjOicPg2sm8meki9ZdCjA3rU/i3M0L21RjSkyE6+FsijfWxcdhg8NzUdBJTSTn+L
+	 enMl217DZ7s6KZbIzyl0O3UfPOFQ/lyUTzmuLqbYZLwxom1YDOYZCC9yO7Rruq7Qst
+	 /iCSirpVCc9SdkvQkFKJNAaeda9JpObyQIhgVwCHMaC0+ypW9bkDcrINNoyCHBFSRv
+	 baxvMsilvrcHg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-	Alexandra Winter <wintera@linux.ibm.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 017/317] net/iucv: fix the allocation size of iucv_path_table array
-Date: Sun, 24 Mar 2024 19:29:57 -0400
-Message-ID: <20240324233458.1352854-18-sashal@kernel.org>
+Subject: [PATCH 5.15 014/317] riscv: dts: sifive: add missing #interrupt-cells to pmic
+Date: Sun, 24 Mar 2024 19:29:54 -0400
+Message-ID: <20240324233458.1352854-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,44 +48,34 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexander Gordeev <agordeev@linux.ibm.com>
+From: Conor Dooley <conor.dooley@microchip.com>
 
-[ Upstream commit b4ea9b6a18ebf7f9f3a7a60f82e925186978cfcf ]
+[ Upstream commit ce6b6d1513965f500a05f3facf223fa01fd74920 ]
 
-iucv_path_table is a dynamically allocated array of pointers to
-struct iucv_path items. Yet, its size is calculated as if it was
-an array of struct iucv_path items.
+At W=2 dtc complains:
+hifive-unmatched-a00.dts:120.10-238.4: Warning (interrupt_provider): /soc/i2c@10030000/pmic@58: Missing '#interrupt-cells' in interrupt provider
 
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Add the missing property.
+
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/iucv/iucv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
-index 8efc369934fc7..68edefed79f16 100644
---- a/net/iucv/iucv.c
-+++ b/net/iucv/iucv.c
-@@ -156,7 +156,7 @@ static char iucv_error_pathid[16] = "INVALID PATHID";
- static LIST_HEAD(iucv_handler_list);
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+index b40990210fb50..3c621f31b5fd2 100644
+--- a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
++++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+@@ -70,6 +70,7 @@ pmic@58 {
+ 		interrupt-parent = <&gpio>;
+ 		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
+ 		interrupt-controller;
++		#interrupt-cells = <2>;
  
- /*
-- * iucv_path_table: an array of iucv_path structures.
-+ * iucv_path_table: array of pointers to iucv_path structures.
-  */
- static struct iucv_path **iucv_path_table;
- static unsigned long iucv_max_pathid;
-@@ -544,7 +544,7 @@ static int iucv_enable(void)
- 
- 	cpus_read_lock();
- 	rc = -ENOMEM;
--	alloc_size = iucv_max_pathid * sizeof(struct iucv_path);
-+	alloc_size = iucv_max_pathid * sizeof(*iucv_path_table);
- 	iucv_path_table = kzalloc(alloc_size, GFP_KERNEL);
- 	if (!iucv_path_table)
- 		goto out;
+ 		regulators {
+ 			vdd_bcore1: bcore1 {
 -- 
 2.43.0
 
