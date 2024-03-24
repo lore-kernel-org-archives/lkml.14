@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC51B1D564A;
-	Sun, 24 Mar 2024 22:49:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3891D5F97;
+	Sun, 24 Mar 2024 22:49:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320563; cv=none; b=DX7zORqVwK1OZyjnzKrc7hw5m4jEyULOhAw5DolSARDNU0v4xQ/lSwUnm3GTNBglLUaLhqBSvXdi4bPRqrdw8zjTfiz0iwyRG2ZPdjrSko8efzD3ByiyCK7f/TJY0dsmP+3bvEtHqSaelPafdl2IgKVM5GNzHAAMnI7gf2tozPg=
+	t=1711320574; cv=none; b=EGzk6+H1VUKbZ4vg0dOJ9Aap34QH8JwXiSuRpzqhZsGbApQVEdPDMX6PewdvtfCUntmKLF5sgU8RBvo5B+km/w1b+p6y5eb/Z+5lI1EwjmSwoMy1ElxV0QdslLY6/7P9Qpmd1uIwz0NjCQGeD03hvq8Q8jhd6VBmnXY/zpL1sd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320563; c=relaxed/simple;
-	bh=P49efD8rlRGlUbOAd0Tvwnd/0EIr02E5XZUZfN8A1nI=;
+	s=arc-20240116; t=1711320574; c=relaxed/simple;
+	bh=5WtQM2tX+LYOhsFO7UKkhfKkpfG6hezjSSD2zr4H3Qo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZydaifnsLJ21SupcW9p6Z3fywGXwWcIl6z4/xRcNxhlCgptOfFHavtzEeyZLNTO4gY2Y2qth/6d6Wk7sJmQoRqyGvs/qZPvvxqd5wnOGB9aPIGySMs2AkhVC0Vv1Qq2Xx9gFTFtqlUiF/3ty+NLwLiBi/AxFZzU84hB0xFD6Zng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VquW1RGP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mr917uXp9V4HnxQFI/PiXkVI4LAJuTG+R7Y0xns7BKg5cXDD+Btq7w9W/ql+zQzuTYVrx3wxOwpzLFtGqkquH78d9aTL3PFLKexnTrFogpfYKQujqvFLV8yJugZcKMnQsiroPhUT4NknrOToD4v2Vdm+KD71Ok+k7kq5v6xAuME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1HB7jlP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VquW1RGP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D2A8C433F1;
-	Sun, 24 Mar 2024 22:49:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1HB7jlP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A78C43394;
+	Sun, 24 Mar 2024 22:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320562;
-	bh=P49efD8rlRGlUbOAd0Tvwnd/0EIr02E5XZUZfN8A1nI=;
+	s=k20201202; t=1711320572;
+	bh=5WtQM2tX+LYOhsFO7UKkhfKkpfG6hezjSSD2zr4H3Qo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VquW1RGPM5nHcE05mvLleur+hjzPv2gQZRR5CmnpL85VN2vbipe09fbrjsoaZXMiQ
-	 0W67Ls2Yo1xKPdAQFVeXI7CEo0rjtSJIU5USJAGkQajRhij3vaVIUY8WQfTINE7qqZ
-	 mP4JAOgich3dMJP55pWt7zC9+vv6mZNm6Chnl5LO68pBHg9EoPNDj/N62E6ySdHA/Q
-	 oDL3NJ52L6i7cgMi6wi8RD2dDM7Mpn5FRPjB/qI2tpkDGB8Hk/z/kiHGKxpf2odl4R
-	 THsjzj3pSFNcNIPnJNfWFVIPJyiyhdrWuTOA9NBeeF0cQE16nQFVAl9ZjloMf8jnjc
-	 zHrGsqpUiOwAw==
+	b=t1HB7jlPsbKBZMyHM4GtGdBOEIQxGx6n6rLMu/iynKuFJwyffeJembVfsp4eifgI0
+	 m7ipX+fkSeFIp5eO8LeCkxA3PUv4GwlJ4YTaaKjc9zNKREF5Bp0oHA2vzQ5G0Hvy3a
+	 SqxHL4fvcB63cnnwg3yE03Sacz6n+/WMpBr6q0v0Gcb5rgIBctqRtTcYMPNB9CmQwQ
+	 20ZVLOfF1ofIAtsWRi9eBJY5zoglQUHgbGe3a3ZNCylNoQWv2W503zRJYGY7mRmeFy
+	 UrRcLEKdPXFJnNy4RT021hh/IDhZSXweI01iWeQOJ6JyzCPRb3iBvgOBLqScvjnEUv
+	 +mlSJ6HI1dV1g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Babu Moger <babu.moger@amd.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Reinette Chatre <reinette.chatre@intel.com>,
+Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
+	Julian Calaby <julian.calaby@gmail.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 123/713] x86/resctrl: Read supported bandwidth sources from CPUID
-Date: Sun, 24 Mar 2024 18:37:29 -0400
-Message-ID: <20240324224720.1345309-124-sashal@kernel.org>
+Subject: [PATCH 6.7 133/713] wifi: b43: Stop/wake correct queue in PIO Tx path when QoS is disabled
+Date: Sun, 24 Mar 2024 18:37:39 -0400
+Message-ID: <20240324224720.1345309-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,117 +49,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Babu Moger <babu.moger@amd.com>
+From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
 
-[ Upstream commit 54e35eb8611cce5550d3d7689679b1a91c864f28 ]
+[ Upstream commit 77135a38f6c2f950d2306ac3d37cbb407e6243f2 ]
 
-If the BMEC (Bandwidth Monitoring Event Configuration) feature is
-supported, the bandwidth events can be configured. The maximum supported
-bandwidth bitmask can be read from CPUID:
+When QoS is disabled, the queue priority value will not map to the correct
+ieee80211 queue since there is only one queue. Stop/wake queue 0 when QoS
+is disabled to prevent trying to stop/wake a non-existent queue and failing
+to stop/wake the actual queue instantiated.
 
-  CPUID_Fn80000020_ECX_x03 [Platform QoS Monitoring Bandwidth Event Configuration]
-  Bits    Description
-  31:7    Reserved
-   6:0    Identifies the bandwidth sources that can be tracked.
-
-While at it, move the mask checking to mon_config_write() before
-iterating over all the domains. Also, print the valid bitmask when the
-user tries to configure invalid event configuration value.
-
-The CPUID details are documented in the Processor Programming Reference
-(PPR) Vol 1.1 for AMD Family 19h Model 11h B1 - 55901 Rev 0.25 in the
-Link tag.
-
-Fixes: dc2a3e857981 ("x86/resctrl: Add interface to read mbm_total_bytes_config")
-Signed-off-by: Babu Moger <babu.moger@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-Link: https://lore.kernel.org/r/669896fa512c7451319fa5ca2fdb6f7e015b5635.1705359148.git.babu.moger@amd.com
+Fixes: 5100d5ac81b9 ("b43: Add PIO support for PCMCIA devices")
+Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20231231050300.122806-3-sergeantsagara@protonmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/resctrl/internal.h |  3 +++
- arch/x86/kernel/cpu/resctrl/monitor.c  |  6 ++++++
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 14 ++++++++------
- 3 files changed, 17 insertions(+), 6 deletions(-)
+ drivers/net/wireless/broadcom/b43/pio.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index d2979748fae47..e3dc35a00a197 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -394,6 +394,8 @@ struct rdt_parse_data {
-  * @msr_update:		Function pointer to update QOS MSRs
-  * @mon_scale:		cqm counter * mon_scale = occupancy in bytes
-  * @mbm_width:		Monitor width, to detect and correct for overflow.
-+ * @mbm_cfg_mask:	Bandwidth sources that can be tracked when Bandwidth
-+ *			Monitoring Event Configuration (BMEC) is supported.
-  * @cdp_enabled:	CDP state of this resource
-  *
-  * Members of this structure are either private to the architecture
-@@ -408,6 +410,7 @@ struct rdt_hw_resource {
- 				 struct rdt_resource *r);
- 	unsigned int		mon_scale;
- 	unsigned int		mbm_width;
-+	unsigned int		mbm_cfg_mask;
- 	bool			cdp_enabled;
- };
- 
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index f136ac046851c..acca577e2b066 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -813,6 +813,12 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
- 		return ret;
- 
- 	if (rdt_cpu_has(X86_FEATURE_BMEC)) {
-+		u32 eax, ebx, ecx, edx;
-+
-+		/* Detect list of bandwidth sources that can be tracked */
-+		cpuid_count(0x80000020, 3, &eax, &ebx, &ecx, &edx);
-+		hw_res->mbm_cfg_mask = ecx & MAX_EVT_CONFIG_BITS;
-+
- 		if (rdt_cpu_has(X86_FEATURE_CQM_MBM_TOTAL)) {
- 			mbm_total_event.configurable = true;
- 			mbm_config_rftype_init("mbm_total_bytes_config");
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 69a1de92384ab..2b69e560b05f1 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1620,12 +1620,6 @@ static int mbm_config_write_domain(struct rdt_resource *r,
- 	struct mon_config_info mon_info = {0};
- 	int ret = 0;
- 
--	/* mon_config cannot be more than the supported set of events */
--	if (val > MAX_EVT_CONFIG_BITS) {
--		rdt_last_cmd_puts("Invalid event configuration\n");
--		return -EINVAL;
--	}
--
- 	/*
- 	 * Read the current config value first. If both are the same then
- 	 * no need to write it again.
-@@ -1663,6 +1657,7 @@ static int mbm_config_write_domain(struct rdt_resource *r,
- 
- static int mon_config_write(struct rdt_resource *r, char *tok, u32 evtid)
- {
-+	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
- 	char *dom_str = NULL, *id_str;
- 	unsigned long dom_id, val;
- 	struct rdt_domain *d;
-@@ -1686,6 +1681,13 @@ static int mon_config_write(struct rdt_resource *r, char *tok, u32 evtid)
- 		return -EINVAL;
+diff --git a/drivers/net/wireless/broadcom/b43/pio.c b/drivers/net/wireless/broadcom/b43/pio.c
+index 0cf70fdb60a6a..e41f2f5b4c266 100644
+--- a/drivers/net/wireless/broadcom/b43/pio.c
++++ b/drivers/net/wireless/broadcom/b43/pio.c
+@@ -525,7 +525,7 @@ int b43_pio_tx(struct b43_wldev *dev, struct sk_buff *skb)
+ 	if (total_len > (q->buffer_size - q->buffer_used)) {
+ 		/* Not enough memory on the queue. */
+ 		err = -EBUSY;
+-		ieee80211_stop_queue(dev->wl->hw, skb_get_queue_mapping(skb));
++		b43_stop_queue(dev, skb_get_queue_mapping(skb));
+ 		q->stopped = true;
+ 		goto out;
+ 	}
+@@ -552,7 +552,7 @@ int b43_pio_tx(struct b43_wldev *dev, struct sk_buff *skb)
+ 	if (((q->buffer_size - q->buffer_used) < roundup(2 + 2 + 6, 4)) ||
+ 	    (q->free_packet_slots == 0)) {
+ 		/* The queue is full. */
+-		ieee80211_stop_queue(dev->wl->hw, skb_get_queue_mapping(skb));
++		b43_stop_queue(dev, skb_get_queue_mapping(skb));
+ 		q->stopped = true;
  	}
  
-+	/* Value from user cannot be more than the supported set of events */
-+	if ((val & hw_res->mbm_cfg_mask) != val) {
-+		rdt_last_cmd_printf("Invalid event configuration: max valid mask is 0x%02x\n",
-+				    hw_res->mbm_cfg_mask);
-+		return -EINVAL;
-+	}
-+
- 	list_for_each_entry(d, &r->domains, list) {
- 		if (d->id == dom_id) {
- 			ret = mbm_config_write_domain(r, d, evtid, val);
+@@ -587,7 +587,7 @@ void b43_pio_handle_txstatus(struct b43_wldev *dev,
+ 	list_add(&pack->list, &q->packets_list);
+ 
+ 	if (q->stopped) {
+-		ieee80211_wake_queue(dev->wl->hw, q->queue_prio);
++		b43_wake_queue(dev, q->queue_prio);
+ 		q->stopped = false;
+ 	}
+ }
 -- 
 2.43.0
 
