@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB75176FA7;
-	Sun, 24 Mar 2024 23:37:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A38817652F;
+	Sun, 24 Mar 2024 23:37:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323462; cv=none; b=e6XrlPXvBqWh+OqNl84DUmjELh7YrV1i8dx/WsBmcQ7GP6cXUVS0BJxcp1uzquz/Qputj6rk8PoqBYmgi7fAYAyfUe+rHnybmEJeFJJGdCaU7Y7CC9VyxbVP3ukF03gvmDyVVJDD6e4bVs0e7owc8twGvXdQrMHO5/vqEo2E6fo=
+	t=1711323430; cv=none; b=NDAcrrVey1tK/7N1qvQxlXwgevew9anvMIdSySBLjZzSgjWBWn++tK/6QytC0Dpxyu+wZSBRH0EQgHg++EWfMmne9+d8pAHdLJw3pttuXyWP85QthraJCbIBlynBFsy5lmsENVqqUXDbQ/gvkaqLcuY0JUmE8tAxyU7iQHJEz1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323462; c=relaxed/simple;
-	bh=RZNVU4IURpxBQT1ORogNbGIWkBlDKgL0aWdcsIXGZEw=;
+	s=arc-20240116; t=1711323430; c=relaxed/simple;
+	bh=qWPlS/qcsnHUT0bA+3xVg1Wjvy8As0j+UUf925zBuOg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PX/L898r5uQGrqUu0CMIjDyb0Im0e7VyYHkpOpGHvbgRGgM2jpM/8NZsaNi1e7BZvN8edhGDdpUyjEdlS6Uf8uK/fUlASqGl+FGbKmKhaR53uKfnA84Q/htqk/NmFkY3d93+Z3A7x07w8XCfFTijQgK+Tk5o+COy0rypl8dxt3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8xxxeIn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OGFNmtsECbAVl+2ibi+3BLzTkHgvOb8uxzDMYpdX0PhyhSP11KYJlY0ySoHumpAYMpibUkVd7c+sM1uolL0FQ+0fiHHnkhfQqEuKVhcHG28x2Bmjm7X8qmT0Cu99CgFUiV+L93QiDTMmavuoq2oZXalCBV3gwz2glDy6AS8AXQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUVAY+yl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8xxxeIn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E490C433F1;
-	Sun, 24 Mar 2024 23:37:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUVAY+yl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60912C433F1;
+	Sun, 24 Mar 2024 23:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323460;
-	bh=RZNVU4IURpxBQT1ORogNbGIWkBlDKgL0aWdcsIXGZEw=;
+	s=k20201202; t=1711323428;
+	bh=qWPlS/qcsnHUT0bA+3xVg1Wjvy8As0j+UUf925zBuOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i8xxxeInDtwe73YRfTrq2Z2sNRJGkU3mOCd9a2qQTKs1LcjmDU2rLpLHrd2dgNQXv
-	 hX8XVXS8eTaxZ7F1IYQ6DvVeLYLMe3rNGKF0X2vh8bS3W2bQn/V2+LmSRmyQrlYYlj
-	 e8hqg9WUmhh5meqPJ/WxWR9zdnrUTmAK8I06g4cHb489xMK7Zk8vtaWbjivI6T+fpE
-	 vKtxEZuJSsMWtpx/zthkdCelGTF8zNGBP9fVBvF6E322yCxbWkAQ+xG/Pa9GJbdpNi
-	 lIizmadKQPqx4X8semnR4u22hBco0/ZYPq7d5uDMCXtijYphx8jOW0O7zxL422yXPz
-	 /43bQkmI/DDrA==
+	b=DUVAY+ylvpbaK1JFlwu9YeY5LHLCNMov3GZEzNj6OHaWAfnnUQmF7ra80V7GNciPW
+	 S6pcnqRWuWliYUwiOzzPqt3itmPj/4MbIms9b+7GVb7vCWnq3NMvvFWvh1G/W/Ct3f
+	 XnBnnaJxwcmhOuhjZNb1q2SpmxyI6S5uf6vLl/lWWiDQoo/w7PTQ5n9Ek7vbTGVriA
+	 C7LSnIxakDjI61n16jOwZYRNq86vCgEFTsRZsSkDSz5oEkb9hOcjXGzhTWfSvELaOU
+	 5tKojFcGB6bYs0EzvYnNd+vqTleX7HaKRTcdwspefwQmCz/61BRYuKjsHHwExGolQq
+	 lwV3u0B5zXlBg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 165/317] drm/tegra: output: Fix missing i2c_put_adapter() in the error handling paths of tegra_output_probe()
-Date: Sun, 24 Mar 2024 19:32:25 -0400
-Message-ID: <20240324233458.1352854-166-sashal@kernel.org>
+Subject: [PATCH 5.15 131/317] Bluetooth: hci_core: Fix possible buffer overflow
+Date: Sun, 24 Mar 2024 19:31:51 -0400
+Message-ID: <20240324233458.1352854-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,72 +47,34 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit 2db4578ef6ffb2b52115ca0ebf897b60ec559556 ]
+[ Upstream commit 81137162bfaa7278785b24c1fd2e9e74f082e8e4 ]
 
-If an error occurs after a successful of_get_i2c_adapter_by_node() call, it
-should be undone by a corresponding i2c_put_adapter().
+struct hci_dev_info has a fixed size name[8] field so in the event that
+hdev->name is bigger than that strcpy would attempt to write past its
+size, so this fixes this problem by switching to use strscpy.
 
-Add the missing i2c_put_adapter() call.
-
-Fixes: 9be7d864cf07 ("drm/tegra: Implement panel support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/b38604178991e1f08b2cda219103be266be2d680.1693667005.git.christophe.jaillet@wanadoo.fr
+Fixes: dcda165706b9 ("Bluetooth: hci_core: Fix build warnings")
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/output.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ net/bluetooth/hci_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-index 47d26b5d99456..7ccd010a821b7 100644
---- a/drivers/gpu/drm/tegra/output.c
-+++ b/drivers/gpu/drm/tegra/output.c
-@@ -139,8 +139,10 @@ int tegra_output_probe(struct tegra_output *output)
- 						       GPIOD_IN,
- 						       "HDMI hotplug detect");
- 	if (IS_ERR(output->hpd_gpio)) {
--		if (PTR_ERR(output->hpd_gpio) != -ENOENT)
--			return PTR_ERR(output->hpd_gpio);
-+		if (PTR_ERR(output->hpd_gpio) != -ENOENT) {
-+			err = PTR_ERR(output->hpd_gpio);
-+			goto put_i2c;
-+		}
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index a8854b24f4cfb..8a3c867bdff03 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -2187,7 +2187,7 @@ int hci_get_dev_info(void __user *arg)
+ 	else
+ 		flags = hdev->flags;
  
- 		output->hpd_gpio = NULL;
- 	}
-@@ -149,7 +151,7 @@ int tegra_output_probe(struct tegra_output *output)
- 		err = gpiod_to_irq(output->hpd_gpio);
- 		if (err < 0) {
- 			dev_err(output->dev, "gpiod_to_irq(): %d\n", err);
--			return err;
-+			goto put_i2c;
- 		}
- 
- 		output->hpd_irq = err;
-@@ -162,7 +164,7 @@ int tegra_output_probe(struct tegra_output *output)
- 		if (err < 0) {
- 			dev_err(output->dev, "failed to request IRQ#%u: %d\n",
- 				output->hpd_irq, err);
--			return err;
-+			goto put_i2c;
- 		}
- 
- 		output->connector.polled = DRM_CONNECTOR_POLL_HPD;
-@@ -176,6 +178,12 @@ int tegra_output_probe(struct tegra_output *output)
- 	}
- 
- 	return 0;
-+
-+put_i2c:
-+	if (output->ddc)
-+		i2c_put_adapter(output->ddc);
-+
-+	return err;
- }
- 
- void tegra_output_remove(struct tegra_output *output)
+-	strcpy(di.name, hdev->name);
++	strscpy(di.name, hdev->name, sizeof(di.name));
+ 	di.bdaddr   = hdev->bdaddr;
+ 	di.type     = (hdev->bus & 0x0f) | ((hdev->dev_type & 0x03) << 4);
+ 	di.flags    = flags;
 -- 
 2.43.0
 
