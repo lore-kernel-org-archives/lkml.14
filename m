@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6A91788B9;
-	Sun, 24 Mar 2024 23:39:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAB51788A6;
+	Sun, 24 Mar 2024 23:39:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323561; cv=none; b=MoplVxO1KUav0bsBbsca52ga6kJU71SYAKiezeqgnGmKjRz3U2IQVYL9LWMbERAS3dGm8z3pO9pWKcBNyndVaC8dJhZBHh/kIb1VCDkrNMPX2Nvbfs6NC4mt/GtLSvEw4SbDjFPuKpK150Bz3iogNj9AEmRBHadNF6OYGpzXYPU=
+	t=1711323560; cv=none; b=c8/0+IBS87wQK2NiRTMo+d35IeByJWJDdzzmAq/CCQ3Oszoyf8pAszq43/2cDk9wS9mIc7pqUp4jTBT+U6vHLdDCXfwsrD1Djd6lByagpvSN2L26nODmIJZ5/OJ1Tj2n9wNh713NtBNXaC/MDTemWae6tSrLBiAbveG+Wm9YcA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323561; c=relaxed/simple;
-	bh=ESxnT3azxj7fY9dw/YjvEExGfkTGb4fuQlPcFWOehpA=;
+	s=arc-20240116; t=1711323560; c=relaxed/simple;
+	bh=u09IWd1qZVsAZyxzHseF9kFtpoNg9X/fMsPqkG48VTg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sd7Ua9+XgAP9X5DP7zPH96hUOLCvoQu61f818uPXoBr4cRtjI3Ko+zSgMw9qKSC8i/M8C4sQdpEA4mzW6Bkul5kevsm4OodugxgshZh4g63myc5yrsXdyUJ2K+gn1cJOd6FgGVAiemFFAWO9CV0MchrFJ1nXd86qNtoM1+Cv81c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rtoexa6/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PjPqCUiHs13K+nlG/FPuzhOI0RXoALnsAS8qjw4jp4PoB8BSeNrE5UP9xzrRCA+ptzJc7F9A88BJkmeZNmk6r6bjmlQQyRNy2HkyqBJkpYcqPznZLjWAngr0lZczhWzKqT4d5xI5MDgztrBq0lq6dEFDna3nEsWuXHFoNdT06F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o/sE8YFh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rtoexa6/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E9AEC43394;
-	Sun, 24 Mar 2024 23:39:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/sE8YFh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71FC5C433F1;
+	Sun, 24 Mar 2024 23:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323561;
-	bh=ESxnT3azxj7fY9dw/YjvEExGfkTGb4fuQlPcFWOehpA=;
+	s=k20201202; t=1711323559;
+	bh=u09IWd1qZVsAZyxzHseF9kFtpoNg9X/fMsPqkG48VTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rtoexa6/8rRKcf4SFZ7zxSpMPj1q3T2JwCJQvZ2YnOfipV6+Yuomv79qX/EGMfwfk
-	 JWqRrJ7XCR66uimYAW4n3+kGqn94MJj+Izu4x8AXOJw9InVT22tOjJROt0heYohQvp
-	 run7yKm4Tkx11dQCsZH90Lgu0/ZmsF+EuTAvQkCdWEDUJmujsqX6+twz0bOc3BGdPS
-	 ztpxLKyNetb/c0RnNGBKPDoyTy6O/QQJ2YO8AYmjdyuPzQwfBNWWJ+FMjoQWKJYeGr
-	 T6VO8JQGrFY5JUsqEPHzCmxNQyvLZBnR7xJViN21RHw6EccAif15sAWcaTGZgPk76M
-	 pJ+mv9gQ2Ik0w==
+	b=o/sE8YFh69OnSs35bf4q9bsFgxGVXbTM25nCkcJ4pfQU73EQQA3KtRnHhF5Wthm5v
+	 LD/67DMIMMxfzSxH0cXDzqOwaHrYFloup37oWbWr2O8Wyb2X6pZj34iL5BGttjlxvA
+	 bCrOTMOv9+ln0/YIbLKu0Yo388RUQAAzpej9l5/SFEAGtC/UDSVTulv0sDeldlLC0S
+	 3fLJyi49Goh4Mdnly9lhd7StVtyYA2e2irolM4xSqm4/fZghy5U0ufJMmJP7CJjZzm
+	 5D/UN3PF9s2KunxID+RPU/6JbUQ699yCgNUaUUDXhtWc6keNINWp5yS1kN3M8FjYTN
+	 DyNNgB9vYW0Hw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jorge Mora <jmora1300@gmail.com>,
-	Jorge Mora <mora@netapp.com>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Kees Cook <keescook@chromium.org>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 268/317] NFSv4.2: fix nfs4_listxattr kernel BUG at mm/usercopy.c:102
-Date: Sun, 24 Mar 2024 19:34:08 -0400
-Message-ID: <20240324233458.1352854-269-sashal@kernel.org>
+Subject: [PATCH 5.15 266/317] scsi: bfa: Fix function pointer type mismatch for hcb_qe->cbfn
+Date: Sun, 24 Mar 2024 19:34:06 -0400
+Message-ID: <20240324233458.1352854-267-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,97 +49,150 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jorge Mora <jmora1300@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 251a658bbfceafb4d58c76b77682c8bf7bcfad65 ]
+[ Upstream commit b69600231f751304db914c63b937f7098ed2895c ]
 
-A call to listxattr() with a buffer size = 0 returns the actual
-size of the buffer needed for a subsequent call. When size > 0,
-nfs4_listxattr() does not return an error because either
-generic_listxattr() or nfs4_listxattr_nfs4_label() consumes
-exactly all the bytes then size is 0 when calling
-nfs4_listxattr_nfs4_user() which then triggers the following
-kernel BUG:
+Some callback functions used here take a boolean argument, others take a
+status argument. This breaks KCFI type checking, so clang now warns about
+the function pointer cast:
 
-  [   99.403778] kernel BUG at mm/usercopy.c:102!
-  [   99.404063] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
-  [   99.408463] CPU: 0 PID: 3310 Comm: python3 Not tainted 6.6.0-61.fc40.aarch64 #1
-  [   99.415827] Call trace:
-  [   99.415985]  usercopy_abort+0x70/0xa0
-  [   99.416227]  __check_heap_object+0x134/0x158
-  [   99.416505]  check_heap_object+0x150/0x188
-  [   99.416696]  __check_object_size.part.0+0x78/0x168
-  [   99.416886]  __check_object_size+0x28/0x40
-  [   99.417078]  listxattr+0x8c/0x120
-  [   99.417252]  path_listxattr+0x78/0xe0
-  [   99.417476]  __arm64_sys_listxattr+0x28/0x40
-  [   99.417723]  invoke_syscall+0x78/0x100
-  [   99.417929]  el0_svc_common.constprop.0+0x48/0xf0
-  [   99.418186]  do_el0_svc+0x24/0x38
-  [   99.418376]  el0_svc+0x3c/0x110
-  [   99.418554]  el0t_64_sync_handler+0x120/0x130
-  [   99.418788]  el0t_64_sync+0x194/0x198
-  [   99.418994] Code: aa0003e3 d000a3e0 91310000 97f49bdb (d4210000)
+drivers/scsi/bfa/bfad_bsg.c:2138:29: error: cast from 'void (*)(void *, enum bfa_status)' to 'bfa_cb_cbfn_t' (aka 'void (*)(void *, enum bfa_boolean)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
 
-Issue is reproduced when generic_listxattr() returns 'system.nfs4_acl',
-thus calling lisxattr() with size = 16 will trigger the bug.
+Assuming the code is actually correct here and the callers always match the
+argument types of the callee, rework this to replace the explicit cast with
+a union of the two pointer types. This does not change the behavior of the
+code, so if something is actually broken here, a larger rework may be
+necessary.
 
-Add check on nfs4_listxattr() to return ERANGE error when it is
-called with size > 0 and the return value is greater than size.
-
-Fixes: 012a211abd5d ("NFSv4.2: hook in the user extended attribute handlers")
-Signed-off-by: Jorge Mora <mora@netapp.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: 37ea0558b87a ("[SCSI] bfa: Added support to collect and reset fcport stats")
+Fixes: 3ec4f2c8bff2 ("[SCSI] bfa: Added support to configure QOS and collect stats.")
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20240222124433.2046570-1-arnd@kernel.org
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/scsi/bfa/bfa.h      |  9 ++++++++-
+ drivers/scsi/bfa/bfa_core.c |  4 +---
+ drivers/scsi/bfa/bfa_ioc.h  |  8 ++++++--
+ drivers/scsi/bfa/bfad_bsg.c | 11 ++++-------
+ 4 files changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index a865b384f0fc0..925ad7dbe6a0d 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -10517,29 +10517,33 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
- static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
- {
- 	ssize_t error, error2, error3;
-+	size_t left = size;
+diff --git a/drivers/scsi/bfa/bfa.h b/drivers/scsi/bfa/bfa.h
+index 7bd2ba1ad4d11..f30fe324e6ecc 100644
+--- a/drivers/scsi/bfa/bfa.h
++++ b/drivers/scsi/bfa/bfa.h
+@@ -20,7 +20,6 @@
+ struct bfa_s;
  
--	error = generic_listxattr(dentry, list, size);
-+	error = generic_listxattr(dentry, list, left);
- 	if (error < 0)
- 		return error;
- 	if (list) {
- 		list += error;
--		size -= error;
-+		left -= error;
+ typedef void (*bfa_isr_func_t) (struct bfa_s *bfa, struct bfi_msg_s *m);
+-typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
+ 
+ /*
+  * Interrupt message handlers
+@@ -437,4 +436,12 @@ struct bfa_cb_pending_q_s {
+ 	(__qe)->data = (__data);				\
+ } while (0)
+ 
++#define bfa_pending_q_init_status(__qe, __cbfn, __cbarg, __data) do {	\
++	bfa_q_qe_init(&((__qe)->hcb_qe.qe));			\
++	(__qe)->hcb_qe.cbfn_status = (__cbfn);			\
++	(__qe)->hcb_qe.cbarg = (__cbarg);			\
++	(__qe)->hcb_qe.pre_rmv = BFA_TRUE;			\
++	(__qe)->data = (__data);				\
++} while (0)
++
+ #endif /* __BFA_H__ */
+diff --git a/drivers/scsi/bfa/bfa_core.c b/drivers/scsi/bfa/bfa_core.c
+index 6846ca8f7313c..3438d0b8ba062 100644
+--- a/drivers/scsi/bfa/bfa_core.c
++++ b/drivers/scsi/bfa/bfa_core.c
+@@ -1907,15 +1907,13 @@ bfa_comp_process(struct bfa_s *bfa, struct list_head *comp_q)
+ 	struct list_head		*qe;
+ 	struct list_head		*qen;
+ 	struct bfa_cb_qe_s	*hcb_qe;
+-	bfa_cb_cbfn_status_t	cbfn;
+ 
+ 	list_for_each_safe(qe, qen, comp_q) {
+ 		hcb_qe = (struct bfa_cb_qe_s *) qe;
+ 		if (hcb_qe->pre_rmv) {
+ 			/* qe is invalid after return, dequeue before cbfn() */
+ 			list_del(qe);
+-			cbfn = (bfa_cb_cbfn_status_t)(hcb_qe->cbfn);
+-			cbfn(hcb_qe->cbarg, hcb_qe->fw_status);
++			hcb_qe->cbfn_status(hcb_qe->cbarg, hcb_qe->fw_status);
+ 		} else
+ 			hcb_qe->cbfn(hcb_qe->cbarg, BFA_TRUE);
  	}
+diff --git a/drivers/scsi/bfa/bfa_ioc.h b/drivers/scsi/bfa/bfa_ioc.h
+index 933a1c3890ff5..5e568d6d7b261 100644
+--- a/drivers/scsi/bfa/bfa_ioc.h
++++ b/drivers/scsi/bfa/bfa_ioc.h
+@@ -361,14 +361,18 @@ struct bfa_reqq_wait_s {
+ 	void	*cbarg;
+ };
  
--	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, size);
-+	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, left);
- 	if (error2 < 0)
- 		return error2;
+-typedef void	(*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
++typedef void (*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
++typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
  
- 	if (list) {
- 		list += error2;
--		size -= error2;
-+		left -= error2;
- 	}
+ /*
+  * Generic BFA callback element.
+  */
+ struct bfa_cb_qe_s {
+ 	struct list_head	qe;
+-	bfa_cb_cbfn_t	cbfn;
++	union {
++		bfa_cb_cbfn_status_t	cbfn_status;
++		bfa_cb_cbfn_t		cbfn;
++	};
+ 	bfa_boolean_t	once;
+ 	bfa_boolean_t	pre_rmv;	/* set for stack based qe(s) */
+ 	bfa_status_t	fw_status;	/* to access fw status in comp proc */
+diff --git a/drivers/scsi/bfa/bfad_bsg.c b/drivers/scsi/bfa/bfad_bsg.c
+index be8dfbe13e904..524e4e6979c9f 100644
+--- a/drivers/scsi/bfa/bfad_bsg.c
++++ b/drivers/scsi/bfa/bfad_bsg.c
+@@ -2135,8 +2135,7 @@ bfad_iocmd_fcport_get_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_cb_pending_q_s cb_qe;
  
--	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, size);
-+	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
- 	if (error3 < 0)
- 		return error3;
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, &iocmd->stats);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	iocmd->status = bfa_fcport_get_stats(&bfad->bfa, &cb_qe);
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
+@@ -2159,7 +2158,7 @@ bfad_iocmd_fcport_reset_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_cb_pending_q_s cb_qe;
  
--	return error + error2 + error3;
-+	error += error2 + error3;
-+	if (size && error > size)
-+		return -ERANGE;
-+	return error;
- }
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp, &fcomp, NULL);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
  
- static void nfs4_enable_swap(struct inode *inode)
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	iocmd->status = bfa_fcport_clear_stats(&bfad->bfa, &cb_qe);
+@@ -2443,8 +2442,7 @@ bfad_iocmd_qos_get_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
+ 
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, &iocmd->stats);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
+ 
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
+@@ -2474,8 +2472,7 @@ bfad_iocmd_qos_reset_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
+ 
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, NULL);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
+ 
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
 -- 
 2.43.0
 
