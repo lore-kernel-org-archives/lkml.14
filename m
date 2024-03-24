@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76283145B05;
-	Sun, 24 Mar 2024 23:13:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E17A1448C8;
+	Sun, 24 Mar 2024 23:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321993; cv=none; b=lQLKnQQD7mANMP/2U005YvBeJPrCSnh01T2cx3y8mhJnksB+tu2dnVeaUB416i0+VOVJBkH4EbZL4inI5y2oIeQgz5jLDRy3ZkQkRxva0P7OQO1Mv7XEsUut/6QLHULLrpfRGdkZWhiVQHITIU73jWbrO81BkR/sGJvyJ4ycm3Y=
+	t=1711321973; cv=none; b=p6SEwMdrlP/+IAe+tY2aRExI5T5mpb0nqLiE+Mwe9xVGjpiOx0rHOkfFm8BHVXJHeSl3Vrkq3RlNxB8VDw90NRlXHyT2UYIfLL5/vv2Y9YoKyhVuOs8CCKdxkIcRDxAp959gOA7kMTgROEqXXtEvGsaHkO3pAh6VlGTEYYsy5ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321993; c=relaxed/simple;
-	bh=AvB2jOdPf2snJyGE9H3oF9PY1mJQo3Q/t+9yru2FeY0=;
+	s=arc-20240116; t=1711321973; c=relaxed/simple;
+	bh=9kUUdf+AjWFvFSiEOTqGVjiPX8FFD9m8l8eaQutwhnk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nOID53Fg6p1yxpCtzxFYAcCp+hvKjhenL1f7IH2yNL8UObQXwznzosRkpIFpTMMUfkeEr5dGIY5R5AY4qjlCzYFt5CTY/lMINx49OOcCYFVwmq0b69ovA+sKnzhJ8eEcXn4qECESHcrPLEKiohghKRf/bZz0k6HXv7cl2+1bZXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+t3mM9d; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WbkoYnAG/Pl8Fq8OOwBNBZvgq0R8Y4ewHbkLW7mPoMtj3n5Le/6jMZRfKzUNiH+3tB+m07a+Pxkki5NbLkdv0gxv5BO1imMblVdsOMPviGo4BaMamadL6wBXxxYiovo/bnWk9Ge53jrekv/Sw5o4WUWBVwy2HLC95izxHFZcACI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=smo4iNQB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+t3mM9d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 830ABC433B1;
-	Sun, 24 Mar 2024 23:13:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="smo4iNQB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96AFAC43394;
+	Sun, 24 Mar 2024 23:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321993;
-	bh=AvB2jOdPf2snJyGE9H3oF9PY1mJQo3Q/t+9yru2FeY0=;
+	s=k20201202; t=1711321972;
+	bh=9kUUdf+AjWFvFSiEOTqGVjiPX8FFD9m8l8eaQutwhnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z+t3mM9dkGE0HboF7J0m3cSE7mL+a4N1vZIN/+Z2g2KwLp4hib5wLzwFHOkqtOcp/
-	 rHA3w1JFaRuiPS82ANkafzYH7wA1h35Ycp9s871MQFX1i/cHCHSpZavgkyf3vjLwQd
-	 a2NjYC4t5QwZrjG+0Yzl5bc13JYepE3N59CBhadbEnng0s7pWLNaOn674TazVykW4G
-	 829Q3ujQo1mkKkwLiq/6XS8cMsS7oTzTn9vUH+VJ6TUEa9QdmEo7eNiNxLifzGXVtz
-	 8ftWRqI6ZexyHTTN24RB1WSS5MBEX7/68C3dXPgWpIbxgC61gw1f7h3wbLvLU306Tu
-	 51ELuG/pESSkg==
+	b=smo4iNQBsjd9IqKOAy0dP/tm4Ft8dE0iVa6S7W25gue9BLI5lIjwWCnJuZbh/FCZD
+	 FLtJlUVrhNTVx6dDOk+mGQtUAN3qhbtXgU/XkXuSlAzESfYdGzVwWCg1Bw7juHZ7RC
+	 LfhoYsIV98a/lE6lHzIZEVHWsUhLr6VkGaVJ1tGnP9N17yF7wt+taAzhB8v8cgI9du
+	 rlOvTjKtpEUu+0Xg5B/WBp5+GkjN483DyxLb0BPdy+gmdJ560FWsq3DKKH3qTgpq1h
+	 9ZksmCUOwywTIXwj8OEOpnAAX8+vUHMGZ1SII3iyTv2m9xAk6mCjzpT7LdPpeTmClU
+	 g/d+nSDn84GoQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Navid Emamdoost <navid.emamdoost@gmail.com>,
-	Michal Kubecek <mkubecek@suse.cz>,
-	Kees Cook <keescook@chromium.org>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Johnny Hsieh <mnixry@outlook.com>,
+	linux-sound@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 065/451] nbd: null check for nla_nest_start
-Date: Sun, 24 Mar 2024 19:05:41 -0400
-Message-ID: <20240324231207.1351418-66-sashal@kernel.org>
+Subject: [PATCH 6.1 044/451] ASoC: amd: yc: Add Lenovo ThinkBook 21J0 into DMI quirk table
+Date: Sun, 24 Mar 2024 19:05:20 -0400
+Message-ID: <20240324231207.1351418-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,41 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Johnny Hsieh <mnixry@outlook.com>
 
-[ Upstream commit 31edf4bbe0ba27fd03ac7d87eb2ee3d2a231af6d ]
+[ Upstream commit 50ee641643dd0f46702e9a99354398196e1734c2 ]
 
-nla_nest_start() may fail and return NULL. Insert a check and set errno
-based on other call sites within the same source code.
+This patch adds Lenovo 21J0 (ThinkBook 16 G5+ ARP) to the DMI quirks table
+to enable internal microphone array.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-Fixes: 47d902b90a32 ("nbd: add a status netlink command")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20240218042534.it.206-kees@kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: linux-sound@vger.kernel.org
+Signed-off-by: Johnny Hsieh <mnixry@outlook.com>
+Link: https://msgid.link/r/TYSPR04MB8429D62DFDB6727866ECF1DEC55A2@TYSPR04MB8429.apcprd04.prod.outlook.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 9a53165de4cef..5c4be8dda253c 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -2408,6 +2408,12 @@ static int nbd_genl_status(struct sk_buff *skb, struct genl_info *info)
- 	}
- 
- 	dev_list = nla_nest_start_noflag(reply, NBD_ATTR_DEVICE_LIST);
-+	if (!dev_list) {
-+		nlmsg_free(reply);
-+		ret = -EMSGSIZE;
-+		goto out;
-+	}
-+
- 	if (index == -1) {
- 		ret = idr_for_each(&nbd_index_idr, &status_cb, reply);
- 		if (ret) {
+diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
+index 5921af7fd92c5..0568e64d10150 100644
+--- a/sound/soc/amd/yc/acp6x-mach.c
++++ b/sound/soc/amd/yc/acp6x-mach.c
+@@ -199,6 +199,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "21HY"),
+ 		}
+ 	},
++	{
++		.driver_data = &acp6x_card,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "21J0"),
++		}
++	},
+ 	{
+ 		.driver_data = &acp6x_card,
+ 		.matches = {
 -- 
 2.43.0
 
