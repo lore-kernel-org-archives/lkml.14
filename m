@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AE314533A;
-	Sun, 24 Mar 2024 23:13:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C72F145FE5;
+	Sun, 24 Mar 2024 23:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321982; cv=none; b=jqzWp6JBPYncZQjsV+0/M4ug82EuAPTdy/Hcuq9kPhV3V0Di1J/wNG9A+JmD7Xcwfox4oKSx931jOpsfc2n0Hu3uTBA2L5fBmrsdXbi3Ks9HnEuX0aIqo+ZPpUs9iNrB0hvv3BRe2w4NFUrMRW6D4KENVdOpZ0zFlwj7jLpk8Mc=
+	t=1711322042; cv=none; b=MD9DMB/ncG0wSxUWfArM9wvAZ5O0VOO5eytMAkdfUZf9xl+vm+t1vBhszgrHzeoX9BHnznz2yZPpybQDWU6k5+SZYOnkXSVFL0POacBii+eOZG6Ld71/JaoPMFUGEZlJo5IU+rxzg4UDGZCMYvzxJg/BLPm0oueU/CxEUO0LQWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321982; c=relaxed/simple;
-	bh=6Y0sxHPmF359JPj2GjZUJqNCtsxnGlEXTdvPBG3aWy8=;
+	s=arc-20240116; t=1711322042; c=relaxed/simple;
+	bh=OCy11gfgu5eVzkYHZYR+teWLiQJLMXzg8ub7/3DQAw8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tiiLx1YjXcH3St9UzBbYMcYM+b7KDs2UvMmEujBzWEaNx6WMUc4KO/44uShrCA97UtVQDo/WBI9LzSmitb+nf/F9PdNtUs6WD4DqLnVCidE3vu7cz0bktwpvpTcr/naV39QIANETAR6aCp9O0xcCVtr1DIrD7W72HeFuwJ0qMVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BpUynXYc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nq0MBeMrk1u9tEnMr+lr3GOIRE2VvRa2BRWid6SaU74gIV/FNzTTNSeX6UljKuPgtiukd19y9w5sxjFVBLiY9gI9kCn6UPS3j7Y55u/ExUbKP20Ui0I5ffXu9xYJc3noaf2Jz8Ze8kZb4JUo6gADaSgqg9WG8A9WLkKpR6sIghg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kyFS5gOU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpUynXYc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0240C433F1;
-	Sun, 24 Mar 2024 23:13:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kyFS5gOU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A7AC433F1;
+	Sun, 24 Mar 2024 23:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321982;
-	bh=6Y0sxHPmF359JPj2GjZUJqNCtsxnGlEXTdvPBG3aWy8=;
+	s=k20201202; t=1711322042;
+	bh=OCy11gfgu5eVzkYHZYR+teWLiQJLMXzg8ub7/3DQAw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BpUynXYcvVpGk41MtRMok34tPJv3Vqfq/TGuW0Oe7a+NmY7AuavCCsUyhkonf9qr+
-	 eyusOQRQtlj3F+wGzw6K0aNr8F8IKw+zHoVLfJnobfcrWOkqqokq4C9c5UyoNqJ0DR
-	 Syct1v8M4jGmyFyFo5T38ysOGyKMHK/0DSe2vtZvJP5vHp/ZtZNDYAt70MpFlxgryu
-	 7d3e1eALFXLkCN1MM7BS9E7yIjBPjb2a32aaZijvTaqqUqLl6xnEKVDT5+Q5NSO5B3
-	 jqgW+TSdLMtmmlwYwTLi22zXJHRceSMW4e+XXA/cr3ye8kMDAEh8qKAwZzc3WD02GB
-	 f/1uHAdG6Py1Q==
+	b=kyFS5gOUslImStGMXizI3x0j3fY15PbAFJYUJKuEQhzcHTDA+ksnYwPKNPVHRNv38
+	 FQVALqLKJgfqifFrIUByqM9ecvr0bkPN5U5fA2m82DVfbI+eeaAYf1NS2g9OQB21LV
+	 AJr1euWpXdj0K3qbttMrhXdYVxULXqXQtpqN47zEcGcX8NLNMHTAMA5pCVIv0700DH
+	 NHTSvzg+3l57oGEOxxraKytdrA4Y/AC7nUVSI4evhBaj3a6iv4RXEEJmDoSDkvr/UF
+	 bTFW/wvezwPUzjI1LrBJ8scpOZ0zF8b1VteFNVdCuRfy7l59Zqvnt6LCPxSTJMoa18
+	 JPdeE7WILTNFw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Eduard Zingerman <eddyz87@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 055/451] ASoC: wm8962: Enable oscillator if selecting WM8962_FLL_OSC
-Date: Sun, 24 Mar 2024 19:05:31 -0400
-Message-ID: <20240324231207.1351418-56-sashal@kernel.org>
+Subject: [PATCH 6.1 114/451] libbpf: Add missing LIBBPF_API annotation to libbpf_set_memlock_rlim API
+Date: Sun, 24 Mar 2024 19:06:30 -0400
+Message-ID: <20240324231207.1351418-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,35 +49,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stuart Henderson <stuarth@opensource.cirrus.com>
+From: Andrii Nakryiko <andrii@kernel.org>
 
-[ Upstream commit 03c7874106ca5032a312626b927b1c35f07b1f35 ]
+[ Upstream commit 93ee1eb85e28d1e35bb059c1f5965d65d5fc83c2 ]
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-Link: https://msgid.link/r/20240306161439.1385643-1-stuarth@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+LIBBPF_API annotation seems missing on libbpf_set_memlock_rlim API, so
+add it to make this API callable from libbpf's shared library version.
+
+Fixes: e542f2c4cd16 ("libbpf: Auto-bump RLIMIT_MEMLOCK if kernel needs it for BPF")
+Fixes: ab9a5a05dc48 ("libbpf: fix up few libbpf.map problems")
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Eduard Zingerman <eddyz87@gmail.com>
+Link: https://lore.kernel.org/bpf/20240201172027.604869-3-andrii@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/lib/bpf/bpf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index b901e4c65e8a5..35d8cd4fc71a7 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2914,8 +2914,12 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
- 	switch (fll_id) {
- 	case WM8962_FLL_MCLK:
- 	case WM8962_FLL_BCLK:
-+		fll1 |= (fll_id - 1) << WM8962_FLL_REFCLK_SRC_SHIFT;
-+		break;
- 	case WM8962_FLL_OSC:
- 		fll1 |= (fll_id - 1) << WM8962_FLL_REFCLK_SRC_SHIFT;
-+		snd_soc_component_update_bits(component, WM8962_PLL2,
-+					      WM8962_OSC_ENA, WM8962_OSC_ENA);
- 		break;
- 	case WM8962_FLL_INT:
- 		snd_soc_component_update_bits(component, WM8962_FLL_CONTROL_1,
+diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
+index fddc05c667b5d..874fe362375de 100644
+--- a/tools/lib/bpf/bpf.h
++++ b/tools/lib/bpf/bpf.h
+@@ -35,7 +35,7 @@
+ extern "C" {
+ #endif
+ 
+-int libbpf_set_memlock_rlim(size_t memlock_bytes);
++LIBBPF_API int libbpf_set_memlock_rlim(size_t memlock_bytes);
+ 
+ struct bpf_map_create_opts {
+ 	size_t sz; /* size of this struct for forward/backward compatibility */
 -- 
 2.43.0
 
