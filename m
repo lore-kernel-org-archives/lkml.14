@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8CC178238;
-	Sun, 24 Mar 2024 23:38:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A216B1782E7;
+	Sun, 24 Mar 2024 23:38:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323535; cv=none; b=eT/wyxCI0tgcTSttjE+nQBakELCa5hA5AXIk9S6wqvcn91N1TnDIQ98QwqHBZUWgZEnaFV5R1UYaQwuAqB0nTRZZS130tBOHAnt/iJGy9cnWQbd9oAmAobhOjqRitjRSs/+MuF77Zvf3rJ2ZZQ8JvtagmHqK9n8vVOvqJ7RnvG4=
+	t=1711323538; cv=none; b=oJFFcLRud0Yq2iKjVjsJLBj90FOy7S7AiO4ZrLkfYztqvJl/uDJaEhcSMUNLn7bTRHW+mhzOPs4Jnm7cmL1QrDjKRvBnnCX63uco7ss7D8Vx8r+rGpd8JPotBLGXtyx3yocyP3OmIYE69NxkJZDtqzVK+uyYQxWJ5myIEaZENSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323535; c=relaxed/simple;
-	bh=209fK/14O+ZT6vCzV5Vxv49X9YAFEn5iUZM+C4/5aUM=;
+	s=arc-20240116; t=1711323538; c=relaxed/simple;
+	bh=3seKHVoN8/gBs3/qRcJQnELvobzcetvAIc5iZRBAZi0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A3W5zNSgIQrgbTkTQbWyoky2tMblWfwOGfR2dYkyo3LeKtRoG1ETvhoH9m9oPkqcbkpI9viag2O1rHX2p4ihgZcTJON6exOgMBN40rh8DRXP0+b3Se3IB1Tpwm7mr668T4PQddgcvO68bdooxcu+ecW+OWop5clcBSjH/XoUUvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jU0UmZED; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LOdKzPVMWe/RRZqE56IDJVIZL+ZdqT4jUK4sh3HlLtnvW9v1luF2QxVbVVFOrHzknZ5tCFBaCLCRwieQoOy1okaHVx4wbmD+Liy+DXKVBaqoDS7ypqYaxeYFTo92ILNBAW4uN/g+RkjbHrcYZ5IKp60fzBspQYG4YRVIqVbC9S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2yVTPeA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jU0UmZED"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB561C433C7;
-	Sun, 24 Mar 2024 23:38:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2yVTPeA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1347C433C7;
+	Sun, 24 Mar 2024 23:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323534;
-	bh=209fK/14O+ZT6vCzV5Vxv49X9YAFEn5iUZM+C4/5aUM=;
+	s=k20201202; t=1711323537;
+	bh=3seKHVoN8/gBs3/qRcJQnELvobzcetvAIc5iZRBAZi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jU0UmZEDqOKkykRCEFJkrvP253hXAjlk9gh0W+evx9ifdKxAOzVgDTM6LECCgnAa7
-	 dsAp3E/6Y7XlLWSLrqG6YqkcOFVP8nwX9+XA2oC05qjpn/O7ntaeRO3cFOKptD4djl
-	 rVl4Xce9pAaIdRrP2LM1v+CZbpJYYj7HAxkUbpWKAtftqM1PFpSPPzmxVSH1AZs0j/
-	 ihj/tbJvMJrA8me4wcWyrNM3e9h38mz0zlYtBpTMn6JWjCh4ORYFH+ppUA4P0jXVnR
-	 f63POvPCpf3J0NIJ/gnRgpF9yb5q+YVPxnOw9Idroc6nDOvj/oh9QI1w0YcwmdMUhL
-	 OkL/udHgdgV9g==
+	b=g2yVTPeAhq3GvLum+wYMUk0LhXzPuZSwfjW7U7FHOGwfOEuCuBHlvi9BRFVKi6gKK
+	 7Ys7QD8zes6m/VZhqXllqDosFO+jy1aiepC7cVSOM53xqjvVaeYdUWcY5eP21xXkO+
+	 MiRH284KoxiCPux1pFeZ9NgKXBrzX/arIkOXlBgM98wYXep/DZA77ryL2RlIa1fje3
+	 Z69BbsSSvbnvk5/KzfZYzUFsaCymdNcwZ8f7JSFcINMK8K5/GE9FwhPw447/PQathQ
+	 Q0pGdxymxvlnwXnozUZTD+oZWUb+R5kvfloUt3Q4UuA6iHRyZitcLUxXHdHImRqi0W
+	 PGtbb1nEQjHFQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ondrej Jirman <megi@xff.cz>,
+Cc: Daniel Thompson <daniel.thompson@linaro.org>,
 	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 242/317] leds: sgm3140: Add missing timer cleanup and flash gpio control
-Date: Sun, 24 Mar 2024 19:33:42 -0400
-Message-ID: <20240324233458.1352854-243-sashal@kernel.org>
+Subject: [PATCH 5.15 245/317] backlight: da9052: Fully initialize backlight_properties during probe
+Date: Sun, 24 Mar 2024 19:33:45 -0400
+Message-ID: <20240324233458.1352854-246-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,39 +48,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ondrej Jirman <megi@xff.cz>
+From: Daniel Thompson <daniel.thompson@linaro.org>
 
-[ Upstream commit 205c29887a333ee4b37596e6533373e38cb23947 ]
+[ Upstream commit 0285e9efaee8276305db5c52a59baf84e9731556 ]
 
-Enabling strobe and then setting brightness to 0 causes the driver to enter
-invalid state after strobe end timer fires. We should cancel strobe mode
-resources when changing brightness (aka torch mode).
+props is stack allocated and the fields that are not explcitly set
+by the probe function need to be zeroed or we'll get undefined behaviour
+(especially so power/blank states)!
 
-Fixes: cef8ec8cbd21 ("leds: add sgm3140 driver")
-Signed-off-by: Ondrej Jirman <megi@xff.cz>
-Link: https://lore.kernel.org/r/20240217191133.1757553-1-megi@xff.cz
+Fixes: 6ede3d832aaa ("backlight: add driver for DA9052/53 PMIC v1")
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20240220153532.76613-2-daniel.thompson@linaro.org
 Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/flash/leds-sgm3140.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/video/backlight/da9052_bl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/leds/flash/leds-sgm3140.c b/drivers/leds/flash/leds-sgm3140.c
-index f4f831570f11c..e72017b11098b 100644
---- a/drivers/leds/flash/leds-sgm3140.c
-+++ b/drivers/leds/flash/leds-sgm3140.c
-@@ -114,8 +114,11 @@ static int sgm3140_brightness_set(struct led_classdev *led_cdev,
- 				"failed to enable regulator: %d\n", ret);
- 			return ret;
- 		}
-+		gpiod_set_value_cansleep(priv->flash_gpio, 0);
- 		gpiod_set_value_cansleep(priv->enable_gpio, 1);
- 	} else {
-+		del_timer_sync(&priv->powerdown_timer);
-+		gpiod_set_value_cansleep(priv->flash_gpio, 0);
- 		gpiod_set_value_cansleep(priv->enable_gpio, 0);
- 		ret = regulator_disable(priv->vin_regulator);
- 		if (ret) {
+diff --git a/drivers/video/backlight/da9052_bl.c b/drivers/video/backlight/da9052_bl.c
+index 882359dd288c0..aa00379392a0f 100644
+--- a/drivers/video/backlight/da9052_bl.c
++++ b/drivers/video/backlight/da9052_bl.c
+@@ -117,6 +117,7 @@ static int da9052_backlight_probe(struct platform_device *pdev)
+ 	wleds->led_reg = platform_get_device_id(pdev)->driver_data;
+ 	wleds->state = DA9052_WLEDS_OFF;
+ 
++	memset(&props, 0, sizeof(struct backlight_properties));
+ 	props.type = BACKLIGHT_RAW;
+ 	props.max_brightness = DA9052_MAX_BRIGHTNESS;
+ 
 -- 
 2.43.0
 
