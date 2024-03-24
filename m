@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90231D8BB4;
-	Sun, 24 Mar 2024 22:50:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CEB83A1F;
+	Sun, 24 Mar 2024 22:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320642; cv=none; b=kO1Ulbpp+qZZ1mVpdorkHHJq14mm95Y98uKaTjQT2szQIcMiDzX2CUt1Xs0QZ3AHVAJEDDUDnQSaRK/K1cqdwuhOGmOP6rCcOiy7HGGYtmxYll/ksTlhFqUe8Ak/ZLs7y9oS5kFChG4x/u8WmMbWTxkxC7d8/Jem62V94Mjc4RQ=
+	t=1711320639; cv=none; b=ask6HEjn0TMSpetrrPJvnNyCxMboBkvKYSm3rsmy77g+cGgsk2f5+aAy3oapqydqFv0EyT3WUE/jbUy/ZVi1waKtp4udJsvMz3fqgE7QkcO6uGKD0PEyy8TDARymi/PbgrDiHBKg8qn8ijSbnNRbHYPhbJNrLr73ceNfCj1u4t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320642; c=relaxed/simple;
-	bh=uRQPRQbfvlKBilQqRImAjQMGdfGSTQ5pK9uohbD4dss=;
+	s=arc-20240116; t=1711320639; c=relaxed/simple;
+	bh=LokX5o72x0ED+b2JNMAGsU0bHH90SPf3RnjM0uqF/ys=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aWav/T4O2/rCx95Uq5fN3Vze+J5ftjowl3O0Hw/ncpdBHvJCwgmkPDZdIvTp4WPLl1v6Vw6rzusyeYzpRX4vRboIyYU9VOgVoK7HnlwRlgUeiIOmtWctJ5HnIAyNWwvOeX86NpZZ9EGZ8HcRV75PBCz4ud6ZTsueHKzcRCQT9Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvDMbvD5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=RpqcwtjFevHR4R9LDiQO4Zstzi2BWYjrjDRX9eXQou7dzs2G+NI13hwtagvxQ4ScI+JP6ImJyTaj2ADPT5PcIbX5T5NsP0KH48igwBerSDqpxu6LhwBNaWk2F4uBDYwe3nzqSSsTvh24iaolnEvj9wQ1luNMDUDeHwKAsyXul9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehJkzSIt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvDMbvD5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B62CC43394;
-	Sun, 24 Mar 2024 22:50:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehJkzSIt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3722EC433C7;
+	Sun, 24 Mar 2024 22:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320641;
-	bh=uRQPRQbfvlKBilQqRImAjQMGdfGSTQ5pK9uohbD4dss=;
+	s=k20201202; t=1711320638;
+	bh=LokX5o72x0ED+b2JNMAGsU0bHH90SPf3RnjM0uqF/ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UvDMbvD5D262khLZ8MufYr/WyEMS9QclciJM2dyMs+KgJ4d7X+KvgSr1TymH8v/Fd
-	 uohk4rppdvQPEOiSDV7HakwxJDUQgZFKnV5MPZ9FERUw+w6LEPO1ZT+bLl1XlV9sQ4
-	 l4YYQgrMkyY3IUTsXLWI7PjSZj+8VY2qT1tYwR6FjeAM0oTBPeYCtJSk1xgOREsH/w
-	 UT3HJ7VcQiZhZCCCDKtPneROd7HBy7IWIPPDjg/f0/TFZ6huVCqwRlbEtAVh01jher
-	 StSVdpqOws9lL6t5bv/zRs1fsvzuCKYJcZ2ndMa/qDDdtFiW89LYnYWzcEbzq/WRHt
-	 wGKTJg2f5rACw==
+	b=ehJkzSIt3V3b4dXBUnMMSMdU7EsSG6SjHKkK7g7a8KkBjpli+JsdkyvY0dY6XyUo+
+	 iocBQEDryV0rce1USQaiLTCmlJr8MsMxTj88BZ79NVDhCsqRa8m962+EN+FwmfA08d
+	 n0hP/6fP7XA5uTYFQWT5rogDlf8LyVTh3q2OoaZyTIJPGFe49kvqxsugNno3z6pPh5
+	 mGx1scHc/RqtH0KiH3fo9r5ODyTQhVlD6dKwWK2iZoTiE8KOC+1Pi2aDSRJ4ZmBZvo
+	 hP0342OBCs8TMgsdj32f5xjwgZxzBvY/7faSmoE2IhCrljHCEr1Yl/BxOmbyk1++5Y
+	 zsbwMfxKobi8Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Manorit Chawdhry <m-chawdhry@ti.com>,
-	Andrew Davis <afd@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 203/713] arm64: dts: ti: k3-j721s2: Fix power domain for VTM node
-Date: Sun, 24 Mar 2024 18:38:49 -0400
-Message-ID: <20240324224720.1345309-204-sashal@kernel.org>
+Subject: [PATCH 6.7 200/713] pwm: atmel-hlcdc: Fix clock imbalance related to suspend support
+Date: Sun, 24 Mar 2024 18:38:46 -0400
+Message-ID: <20240324224720.1345309-201-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,40 +44,41 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Manorit Chawdhry <m-chawdhry@ti.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 5ef196ed912e80a1e64936119ced8d7eb5635f0f ]
+[ Upstream commit e25ac87d3f831fed002c34aadddaf4ebb4ea45ec ]
 
-Fix the power domain device ID for wkup_vtm0 node.
+The suspend callback disables the periph clock when the PWM is enabled
+and resume reenables this clock if the PWM was disabled before. Judging
+from the code comment it's suspend that is wrong here. Fix accordingly.
 
-Link: https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j721s2/devices.html
-Fixes: d148e3fe52c8 ("arm64: dts: ti: j721s2: Add VTM node")
-Signed-off-by: Manorit Chawdhry <m-chawdhry@ti.com>
-Reviewed-by: Andrew Davis <afd@ti.com>
-Link: https://lore.kernel.org/r/20240201-b4-upstream-j721s2-fix-vtm-devid-v2-1-85fd568b77e3@ti.com
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Fixes: f9bb9da7c09d ("pwm: atmel-hlcdc: Implement the suspend/resume hooks")
+Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Link: https://lore.kernel.org/r/b51ea92b0a45eff3dc83b08adefd43d930df996c.1706269232.git.u.kleine-koenig@pengutronix.de
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi | 2 +-
+ drivers/pwm/pwm-atmel-hlcdc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
-index 7254f3bd3634d..c9cf1dc04f7d9 100644
---- a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
-@@ -652,7 +652,7 @@ wkup_vtm0: temperature-sensor@42040000 {
- 		compatible = "ti,j7200-vtm";
- 		reg = <0x00 0x42040000 0x0 0x350>,
- 		      <0x00 0x42050000 0x0 0x350>;
--		power-domains = <&k3_pds 154 TI_SCI_PD_SHARED>;
-+		power-domains = <&k3_pds 180 TI_SCI_PD_SHARED>;
- 		#thermal-sensor-cells = <1>;
- 	};
+diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
+index 07920e0347575..584288d8c0503 100644
+--- a/drivers/pwm/pwm-atmel-hlcdc.c
++++ b/drivers/pwm/pwm-atmel-hlcdc.c
+@@ -186,7 +186,7 @@ static int atmel_hlcdc_pwm_suspend(struct device *dev)
+ 	struct atmel_hlcdc_pwm *atmel = dev_get_drvdata(dev);
  
+ 	/* Keep the periph clock enabled if the PWM is still running. */
+-	if (pwm_is_enabled(&atmel->chip.pwms[0]))
++	if (!pwm_is_enabled(&atmel->chip.pwms[0]))
+ 		clk_disable_unprepare(atmel->hlcdc->periph_clk);
+ 
+ 	return 0;
 -- 
 2.43.0
 
