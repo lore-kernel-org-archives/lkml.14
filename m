@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1D2180A81;
-	Sun, 24 Mar 2024 23:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE01180A9C;
+	Sun, 24 Mar 2024 23:47:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324054; cv=none; b=qI0oNJaPc6BNb/QO9bmIZVg049F+Ki1cl2KO2TrX4YdLXZuibEwMW29wmvMaffsg2CIZSgVzhIRe7PUAsn7Nh3fr1Rl/LL9GbBBLjWJxLVYKwHL5LGktB7RI3jvDJr5awaPmMsd21P5672zIf8MZ68dVmJNf33F94VJuWdd384c=
+	t=1711324058; cv=none; b=mIZQzsXjW2tWZjXAO1LiZAmf/JBCA3ig5P94qVYkD0UEBARjPqjydejgPIyDFE/3bnyjA4PHjavJ/pTIbVxXvI0Pq210jvTQF9CpjOF1y4eawXZZsihJLGl+BqhNDqEsVs/oWH7j2Iz7oVpv2+Zal6BRzv1mYyW2SdVqha1V8Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324054; c=relaxed/simple;
-	bh=6aeM9EccW5V1l59G/zhCMMLoAu+pGwX9rkHHx76rL18=;
+	s=arc-20240116; t=1711324058; c=relaxed/simple;
+	bh=MRDmClh3Cke92m76M4nPCaQOFMb5bQB4ZRJEkFsfWQo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oG77ghHGL07aSHBxEOH4ttomhlD2UW6/eK3t6GYMpSDnPU64RF+kOMWcalzMU3EUnG8Tb/5XfUK7PvN9rSPpUbJAmjqxxaKtD9sBOG9OpVK1/zlUCn6Mto/fucnF+hCWxSNlzAArfkPm3coi2JNrzSu2hHrbCaLGrhGd75SyufY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n6+o224s; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KiNtwD9WAAuvN09or6ulBxU2JW8N6A/E7wZfDshJqdEGaQSfdgXBU1sb0L2KU6tiRy/0Nhlp55Ge/ztE1iwSttuJ/Cvkhp7Q5xjBNbQwADiT4Gus5mw3SinCkKz9ecg4MpbUX7vjPgDf+1ed8osgcwmXCSzsw+hekXkTwzIi4CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qp+nYn3B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n6+o224s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D327DC43390;
-	Sun, 24 Mar 2024 23:47:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qp+nYn3B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 266D2C433B1;
+	Sun, 24 Mar 2024 23:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324053;
-	bh=6aeM9EccW5V1l59G/zhCMMLoAu+pGwX9rkHHx76rL18=;
+	s=k20201202; t=1711324056;
+	bh=MRDmClh3Cke92m76M4nPCaQOFMb5bQB4ZRJEkFsfWQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n6+o224sZSuV/ImooYpWTFN34tKF4GDKkV9AYv3dXNq/PQPpgY1Y+s5JHzCBaZSAb
-	 f60tdToaxkaXjCvKgTaGsEt1bXrHS+BIl36wOny20Wo901KqgHjH7cVi00OueZNsoD
-	 8Q0HVuCkH/M7RjI2ryJHHk0o9fkG8w/HeXlleexmsGHSoWSbYJZI6B2ttTa4UGGQq+
-	 TC+9luKUZ/qplsSEDt0JMT3c03VA8VE25pk91uN7N5Zi3cSsmhllPxOZWEFGAKR6Ay
-	 OgV/w+fO2Iz7xOmrPNlFbwEl+M/xbcUJUCXaXSNdyf7kLJYHEvE6lh5dB32S+osuUB
-	 scJZz621QGw9w==
+	b=qp+nYn3BLwpgPoJCM86Ia1LAcHUb1RamApX/L4miQvwuxYw0iBDj3H5SG3OXqR6dI
+	 Q7ctFiAA1HHGw9PjKnWBR+cvHj37l1zVpxT664Km43rOhwPmP+AxQQ9WBD3S3KOfIu
+	 MzbY9QZWs2X5p+qU0RaJ7ug48sNI/+24KarsDVL61Ids46+ZOEnBbUpucbknkIznF6
+	 1H4JbjzEK6k0Hi04aXTYxBGpgHMToETjQVVmnlDWCI7fkx7U58+Z2tCwY7BnOez/Yz
+	 mRyyI/SJzGnJm/QEY49M78KW07GyjSvR++FH0vkpgH3V20MRXn1hvxxj9B+fwQE1/p
+	 1W9aJOFENpQ1Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Robinson <pbrobinson@gmail.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Arthur Kiyanovski <akiyano@amazon.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/183] bus: tegra-aconnect: Update dependency to ARCH_TEGRA
-Date: Sun, 24 Mar 2024 19:44:27 -0400
-Message-ID: <20240324234638.1355609-55-sashal@kernel.org>
+Subject: [PATCH 5.4 057/183] net: ena: cosmetic: fix line break issues
+Date: Sun, 24 Mar 2024 19:44:30 -0400
+Message-ID: <20240324234638.1355609-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,45 +48,69 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Robinson <pbrobinson@gmail.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 4acd21a45c1446277e2abaece97d7fa7c2e692a9 ]
+[ Upstream commit 46143e58884025292bd977ca8bc0fdd9dac47c4c ]
 
-Update the architecture dependency to be the generic Tegra
-because the driver works on the four latest Tegra generations
-not just Tegra210, if you build a kernel with a specific
-ARCH_TEGRA_xxx_SOC option that excludes Tegra210 you don't get
-this driver.
+1. Join unnecessarily broken short lines in ena_com.c ena_netdev.c
+2. Fix Indentations of broken lines
 
-Fixes: 46a88534afb59 ("bus: Add support for Tegra ACONNECT")
-Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Stable-dep-of: 78e886ba2b54 ("net: ena: Remove ena_select_queue")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c    | 8 +++-----
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 3 +--
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 47c2bb444ab4a..072dc40e29a69 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -136,11 +136,12 @@ config SUNXI_RSB
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index 9225733f4fece..29700fee42e9d 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -375,7 +375,7 @@ static int ena_com_init_io_sq(struct ena_com_dev *ena_dev,
+ 		io_sq->bounce_buf_ctrl.next_to_use = 0;
  
- config TEGRA_ACONNECT
- 	tristate "Tegra ACONNECT Bus Driver"
--	depends on ARCH_TEGRA_210_SOC
-+	depends on ARCH_TEGRA
- 	depends on OF && PM
- 	help
- 	  Driver for the Tegra ACONNECT bus which is used to interface with
--	  the devices inside the Audio Processing Engine (APE) for Tegra210.
-+	  the devices inside the Audio Processing Engine (APE) for
-+	  Tegra210 and later.
+ 		size = io_sq->bounce_buf_ctrl.buffer_size *
+-			 io_sq->bounce_buf_ctrl.buffers_num;
++			io_sq->bounce_buf_ctrl.buffers_num;
  
- config TEGRA_GMI
- 	tristate "Tegra Generic Memory Interface bus driver"
+ 		dev_node = dev_to_node(ena_dev->dmadev);
+ 		set_dev_node(ena_dev->dmadev, ctx->numa_node);
+@@ -702,8 +702,7 @@ static int ena_com_config_llq_info(struct ena_com_dev *ena_dev,
+ 		/* The desc list entry size should be whole multiply of 8
+ 		 * This requirement comes from __iowrite64_copy()
+ 		 */
+-		pr_err("illegal entry size %d\n",
+-		       llq_info->desc_list_entry_size);
++		pr_err("illegal entry size %d\n", llq_info->desc_list_entry_size);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -2063,8 +2062,7 @@ void ena_com_aenq_intr_handler(struct ena_com_dev *dev, void *data)
+ 
+ 	/* write the aenq doorbell after all AENQ descriptors were read */
+ 	mb();
+-	writel_relaxed((u32)aenq->head,
+-		       dev->reg_bar + ENA_REGS_AENQ_HEAD_DB_OFF);
++	writel_relaxed((u32)aenq->head, dev->reg_bar + ENA_REGS_AENQ_HEAD_DB_OFF);
+ }
+ 
+ int ena_com_dev_reset(struct ena_com_dev *ena_dev,
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 2e5348ec2a2e9..734da4e9ead2f 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -2401,8 +2401,7 @@ static u16 ena_select_queue(struct net_device *dev, struct sk_buff *skb,
+ 	return qid;
+ }
+ 
+-static void ena_config_host_info(struct ena_com_dev *ena_dev,
+-				 struct pci_dev *pdev)
++static void ena_config_host_info(struct ena_com_dev *ena_dev, struct pci_dev *pdev)
+ {
+ 	struct ena_admin_host_info *host_info;
+ 	int rc;
 -- 
 2.43.0
 
