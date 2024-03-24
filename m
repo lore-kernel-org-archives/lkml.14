@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B03276C44;
-	Sun, 24 Mar 2024 23:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F872276C50;
+	Sun, 24 Mar 2024 23:36:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323393; cv=none; b=URLVha1CZDSHOLdmoG4ZLE9zF2RuiuMhcnV1ypm+/EFbKYTrm5Sb1Wf2KhhfmTA+mpNLsqXQJnnPD0XOEqHE+EdkjTZIhXODw4ENUN3mNLvQSfnzwLiuHMnviLJTFuv68dn0QhNyjKs7LwsdshRm/Yq3Mcy2/aRm/1hT6YhY8jE=
+	t=1711323395; cv=none; b=nWf2Kx/KNsRXhnGup4JTrMpC7SBNJ2zo489vcVL5QZf3442CV2CiL3lKqlmGXU8KXnIBaWCgJ2uwAdeGSId6sG1fc5yY1u5faoSmnDZ+DXDfDAQcofhXM1pIMBBO/BUrGRVkDEKr8Swno8qkUB0LBmTtTwGp4f9PoPMZllw2lc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323393; c=relaxed/simple;
-	bh=tuaO+TMyNegk7atL+7siquVjQWrQBQOb9fB6/Uozhyg=;
+	s=arc-20240116; t=1711323395; c=relaxed/simple;
+	bh=Ty54UJkyHxXnxmNG3U9Di3z28hRX9+NIx75utLzM6ws=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sq/FjmQ3v3NWYIgCkWTk45DxyvZkdzN+3MvF6kHF+n1ZQcetN0YI2mf1i4V7NWXkUur6OnTQbAdKM2ZI8UVdzb4WWmZ5bPZtUl4BIA3PDLJ/GRqx9/DLXqdfUapD3hxNA3Ay4LjqG41LhMHIJi8GD9aTYA0wAFJePKmXr34sMzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OK+nrClZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GXxZQ/xF0t1+bCu67upWuUZz1WnsesXUDXFanESiGLliZbpZYgBKzAaGpTKWuEZ9X5um8SCvpqc54jIa9jwhgbmmV4MXht+YzNVPpc8BUmw1Jt6ZQNnCjiKCDuWoBYUu/r77BLXDFjc2YMc66svK37yqfN/BJpOkStznMb1PQ7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XnfQPwSr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OK+nrClZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15DF0C43394;
-	Sun, 24 Mar 2024 23:36:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XnfQPwSr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB02FC43399;
+	Sun, 24 Mar 2024 23:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323392;
-	bh=tuaO+TMyNegk7atL+7siquVjQWrQBQOb9fB6/Uozhyg=;
+	s=k20201202; t=1711323394;
+	bh=Ty54UJkyHxXnxmNG3U9Di3z28hRX9+NIx75utLzM6ws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OK+nrClZzAlcqNGCcrast79z/CslPEyhWeGMKjii6/37PnwPNR1cqYdddWFMr6LPw
-	 5Bz2NkNNbqR8h1Trtv3Wh+BwjEHddYnDm6wz3CjER7pYPpW0b/J6ykKJBtKvIFaeoY
-	 qr/YJWRjkImsTKrlZYIAphBOyvZX6gbCEQty5CFhy+O6kgbz1QzKbEtbURuy7z6p86
-	 Stlo8bmY6mDPElW2dKuSwEKpMYw5R/4f58Shd87mNJLqNvrNfooi9i6FcNJiK1hr0U
-	 0/qtDl3hen2zJnj12TZyplBBn4uZA9GfqEMz6AxGGPa0vjSOGwYL0tY9dgqh04D2bd
-	 96jdqjC1/R5ZA==
+	b=XnfQPwSr1FJTU2S377JBE0o4hypQn3viyLNwivR69kR90H3+6HLvz6FbU7d81fU6T
+	 3tZT2Qz23YrcHDrjm76u+SpUxYltE6KhFmWV1pwqft82sG/Qh7jbVimUlnk9EHWhTK
+	 eUGc8gQMyP/Dsi/xWB3Ll+IcFe8m1bNgsjykG6q5UDl0ZG+4ByfR3k0r3HM/kYIQWa
+	 kWyfPk7pWcFDbPYIys9bpUtEnINDlVKNpK4PjVZU1Qw8r+hVlOX9fgrMuDUNbGwEYb
+	 PDfviYfDcw6fRDQmPxUZVBmRSpE7n9XJiz/w4ipciOOTaulzhIadxh4lEKrBfVWBKE
+	 bmHLGbXdIGXhQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Fangrui Song <maskray@google.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 093/317] pwm: sti: Fix capture for st,pwm-num-chan < st,capture-num-chan
-Date: Sun, 24 Mar 2024 19:31:13 -0400
-Message-ID: <20240324233458.1352854-94-sashal@kernel.org>
+Subject: [PATCH 5.15 095/317] s390/vdso: drop '-fPIC' from LDFLAGS
+Date: Sun, 24 Mar 2024 19:31:15 -0400
+Message-ID: <20240324233458.1352854-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -43,62 +45,68 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Nathan Chancellor <nathan@kernel.org>
 
-[ Upstream commit 5f623835584f1c8d1030666796f40c47a448ce0b ]
+[ Upstream commit 0628c03934187be33942580e10bb9afcc61adeed ]
 
-The driver only used the number of pwm channels to set the pwm_chip's
-npwm member. The result is that if there are more capture channels than
-PWM channels specified in the device tree, only a part of the capture
-channel is usable. Fix that by passing the bigger channel count to the
-pwm framework. This makes it possible that the .apply() callback is
-called with .hwpwm >= pwm_num_devs, catch that case and return an error
-code.
+'-fPIC' as an option to the linker does not do what it seems like it
+should. With ld.bfd, it is treated as '-f PIC', which does not make
+sense based on the meaning of '-f':
 
-Fixes: c97267ae831d ("pwm: sti: Add PWM capture callback")
-Link: https://lore.kernel.org/r/20240204212043.2951852-2-u.kleine-koenig@pengutronix.de
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+  -f SHLIB, --auxiliary SHLIB Auxiliary filter for shared object symbol table
+
+When building with ld.lld (currently under review in a GitHub pull
+request), it just errors out because '-f' means nothing and neither does
+'-fPIC':
+
+  ld.lld: error: unknown argument '-fPIC'
+
+'-fPIC' was blindly copied from CFLAGS when the vDSO stopped being
+linked with '$(CC)', it should not be needed. Remove it to clear up the
+build failure with ld.lld.
+
+Fixes: 2b2a25845d53 ("s390/vdso: Use $(LD) instead of $(CC) to link vDSO")
+Link: https://github.com/llvm/llvm-project/pull/75643
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Link: https://lore.kernel.org/r/20240130-s390-vdso-drop-fpic-from-ldflags-v1-1-094ad104fc55@kernel.org
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-sti.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/s390/kernel/vdso32/Makefile | 2 +-
+ arch/s390/kernel/vdso64/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
-index 652fdb8dc7bfa..0a7920cbd4949 100644
---- a/drivers/pwm/pwm-sti.c
-+++ b/drivers/pwm/pwm-sti.c
-@@ -395,8 +395,17 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
- static int sti_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			 const struct pwm_state *state)
- {
-+	struct sti_pwm_chip *pc = to_sti_pwmchip(chip);
-+	struct sti_pwm_compat_data *cdata = pc->cdata;
-+	struct device *dev = pc->dev;
- 	int err;
+diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/Makefile
+index 245bddfe9bc0e..cc513add48eb5 100644
+--- a/arch/s390/kernel/vdso32/Makefile
++++ b/arch/s390/kernel/vdso32/Makefile
+@@ -22,7 +22,7 @@ KBUILD_AFLAGS_32 += -m31 -s
+ KBUILD_CFLAGS_32 := $(filter-out -m64,$(KBUILD_CFLAGS))
+ KBUILD_CFLAGS_32 += -m31 -fPIC -shared -fno-common -fno-builtin
  
-+	if (pwm->hwpwm >= cdata->pwm_num_devs) {
-+		dev_err(dev, "device %u is not valid for pwm mode\n",
-+			pwm->hwpwm);
-+		return -EINVAL;
-+	}
-+
- 	if (state->polarity != PWM_POLARITY_NORMAL)
- 		return -EINVAL;
+-LDFLAGS_vdso32.so.dbg += -fPIC -shared -soname=linux-vdso32.so.1 \
++LDFLAGS_vdso32.so.dbg += -shared -soname=linux-vdso32.so.1 \
+ 	--hash-style=both --build-id=sha1 -melf_s390 -T
  
-@@ -647,7 +656,7 @@ static int sti_pwm_probe(struct platform_device *pdev)
+ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_32)
+diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+index 1605ba45ac4c0..42d918d50a1ff 100644
+--- a/arch/s390/kernel/vdso64/Makefile
++++ b/arch/s390/kernel/vdso64/Makefile
+@@ -26,7 +26,7 @@ KBUILD_AFLAGS_64 += -m64 -s
  
- 	pc->chip.dev = dev;
- 	pc->chip.ops = &sti_pwm_ops;
--	pc->chip.npwm = pc->cdata->pwm_num_devs;
-+	pc->chip.npwm = max(cdata->pwm_num_devs, cdata->cpt_num_devs);
+ KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
+ KBUILD_CFLAGS_64 += -m64 -fPIC -fno-common -fno-builtin
+-ldflags-y := -fPIC -shared -soname=linux-vdso64.so.1 \
++ldflags-y := -shared -soname=linux-vdso64.so.1 \
+ 	     --hash-style=both --build-id=sha1 -T
  
- 	for (i = 0; i < cdata->cpt_num_devs; i++) {
- 		struct sti_cpt_ddata *ddata = &cdata->ddata[i];
+ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
 -- 
 2.43.0
 
