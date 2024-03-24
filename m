@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771D7129A82;
-	Sun, 24 Mar 2024 22:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8061C129A9C;
+	Sun, 24 Mar 2024 22:54:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320879; cv=none; b=Svt938EgsLFzfXT7ZrkdqY8xUEfWN+z3K3X69rJVRDvPumeu7rI1/+hKXGcYLfoEwlzIYYvDMeT/hheO/6N4IADxfyU+xnrGd++iDcpZE2g3+bYsmfS5Cu0KbvLNFP+kAj/r+7XCobjVHlxjfzyxcSLnRLbgzr7PeKTCP1B+WNo=
+	t=1711320886; cv=none; b=Ja3gDatJv2I4TY/1KdaNQk1dv4VOfa8RUkkGIum02nRNNy1kLnx0jPN+4OlEqxpE7cyEKHYyMoF+/KsWcfyv7J3Q5RPox0t+NEPIwytwdCTJDi7PrzqPLD4KTqVMR8BxrReVrCacUiKx7MfR9cbDdeSg21bYOVnaXr7/IddA19k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320879; c=relaxed/simple;
-	bh=jmu23GktzhpBdA3rPY3ZLQOVWrFuA9mTgWTolJwlTE0=;
+	s=arc-20240116; t=1711320886; c=relaxed/simple;
+	bh=CrBC/CpoMhZxoAj0Biazm+a1TGHdkEOePqPGa6jE8wc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=izXgruHonUY8281Tgz8AuXqEx+T2xEq/nwdLRkRZcARwWdofOQT6AxXV8KXk2vo7vD+sap0M7rfwyU2uI9yBE5E8QN3nauv7MsB78SewQL7PQJGgpVtM9WZypNqSya9ZeFOorlA0bwYue98l4l+ZCm4ZtAfrnSiWmyj8JijmPeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2mHQTtv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BS8p2GsWRZN1u+4zifTJD997z7dINOd0K4mw/JpIRCh89fZj+WF+24VmQhuuRM1UEjAPmuFdoiH3kAmfLbHlFBHz/6dUjwH1cIRD62GXI/jVjg1Q3xRi7alSaEAumz6juNW7rs4dSdh60BHMC06evJ3k48iV52LdeNS7t5Prwlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5P5EW+Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2mHQTtv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB5AC43394;
-	Sun, 24 Mar 2024 22:54:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5P5EW+Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE14C43399;
+	Sun, 24 Mar 2024 22:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320878;
-	bh=jmu23GktzhpBdA3rPY3ZLQOVWrFuA9mTgWTolJwlTE0=;
+	s=k20201202; t=1711320886;
+	bh=CrBC/CpoMhZxoAj0Biazm+a1TGHdkEOePqPGa6jE8wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=V2mHQTtv3XPLl9xOzVDvd6aqCa5ZNIOfPYZPezJS6fCDGggQIgsTXz6vQBc27ofj1
-	 1CtwqsmdACww7ZBrdMQm8bjT/3u68oHE9QFALd6EMuLVeRiWLfdBtkqqErcGVb4UJB
-	 j+0wmxR5bJp8dTlZO4Ad3EFgTzqI56/MQknJ8ugeL5TIqnHA8PlmOxmqdSbemgLRtW
-	 4UTgC5cSjSZFYxWgvMnGGFzLoYLCGmGvaDAj/hYO+sLO5nDcogUaTyvbJ1lAJWO7Y5
-	 KXJHWIYboVVIPDhAhDn2GE8/Ym0e679HGp6iOHb3rhzVsMMlZ+xZ90X0cBxb1opyGV
-	 0xeUWhJL1+YxQ==
+	b=p5P5EW+YdIIjN4EntZ8xA0+XFePa0tNsGdAMI9NFH8hYMRKO7fryXA5z7UMISbpIz
+	 5Wsnzs6dzNE07ndQt/LSFLDefG2BPQtdWfyvdLwkZSXswVPolR+cU+TpWswSMjOq/m
+	 Vd8mv+F2u8By+G6qxQXqvoeRK1cG4bu/71TU/eAEaYYWxawUEEqYxxnJ9a375wNV2Q
+	 i7mNfq0r1jECR67cF0o/xh1wrHwYU3DquK+nOYxVYbz+24aUKnkhTEL1Tb73pr5UBk
+	 lMOskWI2NhqFoj4QBg7LenfzEJCiSELTIqBxTJtd3wqmYsffXzwUgVrZtyVyEAD+Sa
+	 +u3sYFoyEE6/g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Quanyang Wang <quanyang.wang@windriver.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 443/713] crypto: xilinx - call finalize with bh disabled
-Date: Sun, 24 Mar 2024 18:42:49 -0400
-Message-ID: <20240324224720.1345309-444-sashal@kernel.org>
+Subject: [PATCH 6.7 450/713] drm/radeon/ni: Fix wrong firmware size logging in ni_init_microcode()
+Date: Sun, 24 Mar 2024 18:42:56 -0400
+Message-ID: <20240324224720.1345309-451-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,70 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Quanyang Wang <quanyang.wang@windriver.com>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-[ Upstream commit a853450bf4c752e664abab0b2fad395b7ad7701c ]
+[ Upstream commit c4891d979c7668b195a0a75787967ec95a24ecef ]
 
-When calling crypto_finalize_request, BH should be disabled to avoid
-triggering the following calltrace:
+Clean up a typo in pr_err() erroneously printing NI MC 'rdev->mc_fw->size'
+during SMC firmware load. Log 'rdev->smc_fw->size' instead.
 
-    ------------[ cut here ]------------
-    WARNING: CPU: 2 PID: 74 at crypto/crypto_engine.c:58 crypto_finalize_request+0xa0/0x118
-    Modules linked in: cryptodev(O)
-    CPU: 2 PID: 74 Comm: firmware:zynqmp Tainted: G           O       6.8.0-rc1-yocto-standard #323
-    Hardware name: ZynqMP ZCU102 Rev1.0 (DT)
-    pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-    pc : crypto_finalize_request+0xa0/0x118
-    lr : crypto_finalize_request+0x104/0x118
-    sp : ffffffc085353ce0
-    x29: ffffffc085353ce0 x28: 0000000000000000 x27: ffffff8808ea8688
-    x26: ffffffc081715038 x25: 0000000000000000 x24: ffffff880100db00
-    x23: ffffff880100da80 x22: 0000000000000000 x21: 0000000000000000
-    x20: ffffff8805b14000 x19: ffffff880100da80 x18: 0000000000010450
-    x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-    x14: 0000000000000003 x13: 0000000000000000 x12: ffffff880100dad0
-    x11: 0000000000000000 x10: ffffffc0832dcd08 x9 : ffffffc0812416d8
-    x8 : 00000000000001f4 x7 : ffffffc0830d2830 x6 : 0000000000000001
-    x5 : ffffffc082091000 x4 : ffffffc082091658 x3 : 0000000000000000
-    x2 : ffffffc7f9653000 x1 : 0000000000000000 x0 : ffffff8802d20000
-    Call trace:
-     crypto_finalize_request+0xa0/0x118
-     crypto_finalize_aead_request+0x18/0x30
-     zynqmp_handle_aes_req+0xcc/0x388
-     crypto_pump_work+0x168/0x2d8
-     kthread_worker_fn+0xfc/0x3a0
-     kthread+0x118/0x138
-     ret_from_fork+0x10/0x20
-    irq event stamp: 40
-    hardirqs last  enabled at (39): [<ffffffc0812416f8>] _raw_spin_unlock_irqrestore+0x70/0xb0
-    hardirqs last disabled at (40): [<ffffffc08122d208>] el1_dbg+0x28/0x90
-    softirqs last  enabled at (36): [<ffffffc080017dec>] kernel_neon_begin+0x8c/0xf0
-    softirqs last disabled at (34): [<ffffffc080017dc0>] kernel_neon_begin+0x60/0xf0
-    ---[ end trace 0000000000000000 ]---
+Found by Linux Verification Center (linuxtesting.org) with static
+analysis tool SVACE.
 
-Fixes: 4d96f7d48131 ("crypto: xilinx - Add Xilinx AES driver")
-Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 6596afd48af4 ("drm/radeon/kms: add dpm support for btc (v3)")
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/xilinx/zynqmp-aes-gcm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/radeon/ni.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/xilinx/zynqmp-aes-gcm.c b/drivers/crypto/xilinx/zynqmp-aes-gcm.c
-index 3c205324b22b6..e614057188409 100644
---- a/drivers/crypto/xilinx/zynqmp-aes-gcm.c
-+++ b/drivers/crypto/xilinx/zynqmp-aes-gcm.c
-@@ -231,7 +231,10 @@ static int zynqmp_handle_aes_req(struct crypto_engine *engine,
- 		err = zynqmp_aes_aead_cipher(areq);
+diff --git a/drivers/gpu/drm/radeon/ni.c b/drivers/gpu/drm/radeon/ni.c
+index 927e5f42e97d0..3e48cbb522a1c 100644
+--- a/drivers/gpu/drm/radeon/ni.c
++++ b/drivers/gpu/drm/radeon/ni.c
+@@ -813,7 +813,7 @@ int ni_init_microcode(struct radeon_device *rdev)
+ 			err = 0;
+ 		} else if (rdev->smc_fw->size != smc_req_size) {
+ 			pr_err("ni_mc: Bogus length %zu in firmware \"%s\"\n",
+-			       rdev->mc_fw->size, fw_name);
++			       rdev->smc_fw->size, fw_name);
+ 			err = -EINVAL;
+ 		}
  	}
- 
-+	local_bh_disable();
- 	crypto_finalize_aead_request(engine, areq, err);
-+	local_bh_enable();
-+
- 	return 0;
- }
- 
 -- 
 2.43.0
 
