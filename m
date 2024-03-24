@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481E0146019;
-	Sun, 24 Mar 2024 23:14:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92B41482F5;
+	Sun, 24 Mar 2024 23:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322076; cv=none; b=a1VdmT6VeV9giz4fAV1EpVEWb0NG8TEAsgkJsBcWF0k3FfSHjtaJk2G9cvBcNExDsi3HIqLEtESBjtv7mHRRQBEClGyHelDbrpckvvQKAT6HNElSdGEITENyPnZWdm4gxriYFi1vBYWQZReEu7DvHvamN8Ns82Lqe6lvJFh4jYQ=
+	t=1711322104; cv=none; b=HZ2u/Cjsv/tsPeQUs8NL4QoSPvxFZpcRuY716gooI3qxQKmBZT8iVMuDXvzMYFHnkk4JZEUTdLrgObTZxn+YdLmW1GdUzzNqmdjRoL+eSH/UDs3O5+VvHXTfUYP6yLlc0A0f9lZyAsa8dVZLE7PduxRpopgiXpBIdCFcoq69fjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322076; c=relaxed/simple;
-	bh=fX80GMalYyvbWjTGR43Qrf2n8NK9uE12CRuupmtEfWE=;
+	s=arc-20240116; t=1711322104; c=relaxed/simple;
+	bh=Jv4YL/dREvOGuz0kUMPR0GOmR4M/8pIuTM27ESZPteI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EUki/146IjljTBSRiqHoJIcq2lsH8No9a2UELrYwA98Qemr2VbrI7IzJMHXxi9L/uMO5OazEqnaRGcmlGpQSsKx7Qs/2T1i9QUlQnHOxDm/agZXKOiwitaPbv6DJkAdRLbQ3ZLTyS4TfkufX5kK3JsSoqay+uVsZnSv7HRMWHfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OcQC7QF5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=g5BNayp2jlHmsX0hXptUoVMvEdNQKZmtI/2kYy6h1NlDQIkDBX8aWFZJ9uzZBeu7fR1ypYvi/zsfA+P1LdsHWrcbRuExDy6s5TyohUKOV347khNSTVwBFi6Sobc+jnQEdKi3CKP6laNd7JpkFbATtbXSTiFtYBqGIE2gzth7SO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=huswURFY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OcQC7QF5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FA2CC433C7;
-	Sun, 24 Mar 2024 23:14:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="huswURFY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBCD4C433F1;
+	Sun, 24 Mar 2024 23:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322076;
-	bh=fX80GMalYyvbWjTGR43Qrf2n8NK9uE12CRuupmtEfWE=;
+	s=k20201202; t=1711322103;
+	bh=Jv4YL/dREvOGuz0kUMPR0GOmR4M/8pIuTM27ESZPteI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OcQC7QF5Tmk8os6GY0pZEyxq+GNDwnWj8UcxbvwafTmcSpz9v0Z5u0r/LrWZZGcDi
-	 QTwdOF//0wicKR/U4Vhe3njFKZUsZ2VYeEKUZ6vPXCZHb78ZeBTn9+dFOi2qavpqi9
-	 l2SNYGb8gu0+BgGUkdLJpBPLQuTTMiHGO1SUZc95JfhpJPdrRSELSyzxv3woU42tEP
-	 S1/3+IqhHhwdGdkb9jIgwyLmGTwD2+vlkdiRcDIOcFpA9AP85zJ3B6te3+VrNxJIQl
-	 OapXWnJU4DpCKiXaPIsptb9F5ZXEbI5NYw40tjCBJkkH6JFSMR3CV+0jwA3gMDPt+H
-	 ACiiP7KNA6oOQ==
+	b=huswURFYGosdCAPMZf55ZYF3Gp5Dw4ukPhB3AUyn8+JS5q3Ud5PBsCbwc/feXxTk7
+	 OyJXG6sbF2+MQkWTJlj///8bpubvrb91M1IzSl5Gky5fP6OfkGTgyAPrXuyx0vb88b
+	 v3LxtzrBDKwv8tT4PnhoKKKjTtZF+ByTTSd1mbMnZMq7HaUaGCTWTNEM0fY1zc4MeQ
+	 gaexxdHfAHowJ2MBafKwBkDuljSEi/vZznIXJ0b8bxJ2ZJ77pWIU7sqiH9pCCJtlxs
+	 Dmw5OAeJvs0imlX5VHpN7n3/NbEiKjG4x2vhULXe3u8JoCuZFB8FzYbyqyc3vRYW75
+	 WsU9tJ+NCSylQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Stanislav Fomichev <sdf@google.com>,
+Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 149/451] selftests/bpf: Add global subprog context passing tests
-Date: Sun, 24 Mar 2024 19:07:05 -0400
-Message-ID: <20240324231207.1351418-150-sashal@kernel.org>
+Subject: [PATCH 6.1 178/451] ARM: dts: imx6dl-yapp4: Move the internal switch PHYs under the switch node
+Date: Sun, 24 Mar 2024 19:07:34 -0400
+Message-ID: <20240324231207.1351418-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,159 +44,97 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andrii Nakryiko <andrii@kernel.org>
+From: Michal Vokáč <michal.vokac@ysoft.com>
 
-[ Upstream commit e2b5cfc978f871996d1f8667515c0e06b33e620e ]
+[ Upstream commit 79978bff2e4b8e05ebdf5fc3ee6b794002393484 ]
 
-Add tests validating that it's possible to pass context arguments into
-global subprogs for various types of programs, including a particularly
-tricky KPROBE programs (which cover kprobes, uprobes, USDTs, a vast and
-important class of programs).
+We identified that the PHYs actually do not work since commit 7da7b84fee58
+("ARM: dts: imx6dl-yapp4: Move phy reset into switch node") as
+a coincidence of several circumstances.
 
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Stanislav Fomichev <sdf@google.com>
-Link: https://lore.kernel.org/bpf/20230216045954.3002473-4-andrii@kernel.org
-Stable-dep-of: 879bbe7aa4af ("bpf: don't infer PTR_TO_CTX for programs with unnamed context type")
+The reset signal is kept asserted by a pull-down resistor on the board
+unless it is deasserted by GPIO from the SoC. This is to keep the switch
+dead until it is configured properly by the kernel and user space.
+
+Prior to the referenced commit the switch was reset by the FEC driver
+and the reset GPIO was actively deasserted. The mdio-bus was scanned
+and the attached switch and its PHYs were found and configured.
+
+With the referenced commit the switch is reset by the qca8k driver.
+Because of another bug in the qca8k driver, functionality of the reset
+pin depends on its pre-kernel configuration. See commit c44fc98f0a8f
+("net: dsa: qca8k: fix illegal usage of GPIO")
+
+The problem did not appear until we removed support for the switch
+and configuration of its reset pin from the bootloader.
+
+To fix that, properly describe the internal mdio-bus configuration of
+the qca8334 switch. The PHYs are internal to the switch and sit on its
+internal mdio-bus.
+
+Fixes: 7da7b84fee58 ("ARM: dts: imx6dl-yapp4: Move phy reset into switch node")
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../bpf/prog_tests/test_global_funcs.c        |   2 +
- .../bpf/progs/test_global_func_ctx_args.c     | 104 ++++++++++++++++++
- 2 files changed, 106 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 23 ++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c b/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
-index 2ff4d5c7abfce..e0879df38639b 100644
---- a/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
-+++ b/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
-@@ -18,6 +18,7 @@
- #include "test_global_func15.skel.h"
- #include "test_global_func16.skel.h"
- #include "test_global_func17.skel.h"
-+#include "test_global_func_ctx_args.skel.h"
+diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+index a655b945bf2df..4b7aee8958923 100644
+--- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
++++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+@@ -118,14 +118,6 @@ mdio {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
- void test_test_global_funcs(void)
- {
-@@ -38,4 +39,5 @@ void test_test_global_funcs(void)
- 	RUN_TESTS(test_global_func15);
- 	RUN_TESTS(test_global_func16);
- 	RUN_TESTS(test_global_func17);
-+	RUN_TESTS(test_global_func_ctx_args);
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c b/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
-new file mode 100644
-index 0000000000000..7faa8eef0598b
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
-@@ -0,0 +1,104 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2023 Meta Platforms, Inc. and affiliates. */
-+#include "vmlinux.h"
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+#include <bpf/bpf_core_read.h>
-+#include "bpf_misc.h"
+-		phy_port2: phy@1 {
+-			reg = <1>;
+-		};
+-
+-		phy_port3: phy@2 {
+-			reg = <2>;
+-		};
+-
+ 		switch@10 {
+ 			compatible = "qca,qca8334";
+ 			reg = <0x10>;
+@@ -150,15 +142,30 @@ fixed-link {
+ 				eth2: port@2 {
+ 					reg = <2>;
+ 					label = "eth2";
++					phy-mode = "internal";
+ 					phy-handle = <&phy_port2>;
+ 				};
+ 
+ 				eth1: port@3 {
+ 					reg = <3>;
+ 					label = "eth1";
++					phy-mode = "internal";
+ 					phy-handle = <&phy_port3>;
+ 				};
+ 			};
 +
-+char _license[] SEC("license") = "GPL";
++			mdio {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+static long stack[256];
++				phy_port2: ethernet-phy@1 {
++					reg = <1>;
++				};
 +
-+/*
-+ * KPROBE contexts
-+ */
-+
-+__weak int kprobe_typedef_ctx_subprog(bpf_user_pt_regs_t *ctx)
-+{
-+	return bpf_get_stack(ctx, &stack, sizeof(stack), 0);
-+}
-+
-+SEC("?kprobe")
-+__success
-+int kprobe_typedef_ctx(void *ctx)
-+{
-+	return kprobe_typedef_ctx_subprog(ctx);
-+}
-+
-+#define pt_regs_struct_t typeof(*(__PT_REGS_CAST((struct pt_regs *)NULL)))
-+
-+__weak int kprobe_struct_ctx_subprog(pt_regs_struct_t *ctx)
-+{
-+	return bpf_get_stack((void *)ctx, &stack, sizeof(stack), 0);
-+}
-+
-+SEC("?kprobe")
-+__success
-+int kprobe_resolved_ctx(void *ctx)
-+{
-+	return kprobe_struct_ctx_subprog(ctx);
-+}
-+
-+/* this is current hack to make this work on old kernels */
-+struct bpf_user_pt_regs_t {};
-+
-+__weak int kprobe_workaround_ctx_subprog(struct bpf_user_pt_regs_t *ctx)
-+{
-+	return bpf_get_stack(ctx, &stack, sizeof(stack), 0);
-+}
-+
-+SEC("?kprobe")
-+__success
-+int kprobe_workaround_ctx(void *ctx)
-+{
-+	return kprobe_workaround_ctx_subprog(ctx);
-+}
-+
-+/*
-+ * RAW_TRACEPOINT contexts
-+ */
-+
-+__weak int raw_tp_ctx_subprog(struct bpf_raw_tracepoint_args *ctx)
-+{
-+	return bpf_get_stack(ctx, &stack, sizeof(stack), 0);
-+}
-+
-+SEC("?raw_tp")
-+__success
-+int raw_tp_ctx(void *ctx)
-+{
-+	return raw_tp_ctx_subprog(ctx);
-+}
-+
-+/*
-+ * RAW_TRACEPOINT_WRITABLE contexts
-+ */
-+
-+__weak int raw_tp_writable_ctx_subprog(struct bpf_raw_tracepoint_args *ctx)
-+{
-+	return bpf_get_stack(ctx, &stack, sizeof(stack), 0);
-+}
-+
-+SEC("?raw_tp")
-+__success
-+int raw_tp_writable_ctx(void *ctx)
-+{
-+	return raw_tp_writable_ctx_subprog(ctx);
-+}
-+
-+/*
-+ * PERF_EVENT contexts
-+ */
-+
-+__weak int perf_event_ctx_subprog(struct bpf_perf_event_data *ctx)
-+{
-+	return bpf_get_stack(ctx, &stack, sizeof(stack), 0);
-+}
-+
-+SEC("?perf_event")
-+__success
-+int perf_event_ctx(void *ctx)
-+{
-+	return perf_event_ctx_subprog(ctx);
-+}
++				phy_port3: ethernet-phy@2 {
++					reg = <2>;
++				};
++			};
+ 		};
+ 	};
+ };
 -- 
 2.43.0
 
