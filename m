@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC18482D7;
-	Sun, 24 Mar 2024 22:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAD77640E;
+	Sun, 24 Mar 2024 22:47:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320466; cv=none; b=dDSqZWivbMYESPHFxLM6CVJ35b7VUfE5YDBgH7eObi15uZfH9JUqEmL26DIEVxR/3wLDToZy3ueSjw5+8p8yaYnxuIMruXR9thgy/s+frFxSsSNDQeRaJbfK4GzY4F4U/gWUtUlsWwb/b6STnCY+RTIXur9y5qkJojuovVOWNIQ=
+	t=1711320469; cv=none; b=jdOgcIPxvk7ws3+zU3hFZWp9WtNNDIQI/QrfxsVhekpBkN3+tsCHfMufZYV3JiadA+jlb51ZTBRKPpAoh6WoAsk9dP4W/nprMYFkm4ZMXegquxzH3p16XQBVafdMEZ6TwX57OIdTvwzN65nl9nuN3aiA/PX9VUdQU/wRIIo5mJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320466; c=relaxed/simple;
-	bh=FkzDlT8ctDyCauDA5oCuwo7gENN9bz4/MUbxBdnuFjM=;
+	s=arc-20240116; t=1711320469; c=relaxed/simple;
+	bh=KSF7boKFkFUKI5Y7wTzgbmgkVIR1+Hf5SXgY2kEF1mA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tTDpPQ9gc4Pt9YUuVav1H68vthpWB8ljdzamO/rALqHmYoP50cFVaxkWDr/UpT6UbeirEL0CpvToDoaLjp8p4qrapfA+tqYgA+7vsjGgoFtXBar3qf9t/r6C4aFVYupBaVtLwLdxnvnANUMyQanhZLSJvrLdOTRrSulxbEhHeRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0yrrrJG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FS7AJmhuJnkp1cT141gjTB+o4Eg7sgkxZVM8ccGDSiQZU8oJ3ep6jsTMW/fMQ3llHHXmFma1ZMLRVB2JTYIePxBnm4Y4Yyhb1nZih8eyqO899r/RsJ5SqNWkA5I5Cp7VwKiZ8lNIOHm6lBAvLUAPCROjIH8E/fVLHB6M0blSMt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GY3G22KK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0yrrrJG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAB82C433F1;
-	Sun, 24 Mar 2024 22:47:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GY3G22KK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D2CFC43390;
+	Sun, 24 Mar 2024 22:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320466;
-	bh=FkzDlT8ctDyCauDA5oCuwo7gENN9bz4/MUbxBdnuFjM=;
+	s=k20201202; t=1711320469;
+	bh=KSF7boKFkFUKI5Y7wTzgbmgkVIR1+Hf5SXgY2kEF1mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P0yrrrJGYU2qLMFBN5sJXU8CEvqHyhHhxugt5px4E2htdfueVD0pnm6uuTaBXK5gI
-	 N78Q/3YCBDipUrFXbkmJKEgCJ4ps4I7PohJPmsbGxPXfTu7xvTZz/rXRRMT0TyC4KC
-	 0vZTBOq+Mt4AKNRzTzqKxOY0/US1edkHayAkSbrxOJ6iBNwF7dc8XY1ZyU+xEIPMPn
-	 zyzstlb6IzyveaaKlhL2I8ynkMGkjCSmEL7ciH/Pmmq9N5KfUZC6Yaj6UEJ9/od+JL
-	 5MHOzdz+PLi72G/XaGkjAWKaC9Br723uKqBCOvQyJC6C2U22P/P8MZqsM7T+/ReUDi
-	 w0cDXVCrhwcWw==
+	b=GY3G22KKEVEaUjJmT/WpSgpoW10OsQ/muKK+H18AjOXLaYiyeEUJx1oNjW20j5x5U
+	 n2gpDeiiOf8OfBHEUn334Zkg+ZuXCSV61zioGxizzrYcM2FRU1vde3Nazi7lFLs7NG
+	 0t4WFbDJr1PmSEhIHVX33hf4rbWZhxnIkAyDdoTPC78skFNTg2VxgVO2OY77/wjjk0
+	 5w/ecF0+KysDmm9WyQhfWflrTSsQuS06rBhefsjcyt0zx8GWn5IvxoU7bgdA4UtDRk
+	 k/vwAmiU4C+olc+7wO7HYjkv7wUfA1nffZaEUCI6eNQi3+2h7xhGh5hsk1yfNg+5xC
+	 cAeuCAHTurEMw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Conor Dooley <conor.dooley@microchip.com>,
+Cc: Yishai Hadas <yishaih@nvidia.com>,
+	Tamar Mashiah <tmashiah@nvidia.com>,
+	Michael Guralnik <michaelgur@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 025/713] soc: microchip: Fix POLARFIRE_SOC_SYS_CTRL input prompt
-Date: Sun, 24 Mar 2024 18:35:51 -0400
-Message-ID: <20240324224720.1345309-26-sashal@kernel.org>
+Subject: [PATCH 6.7 028/713] RDMA/mlx5: Relax DEVX access upon modify commands
+Date: Sun, 24 Mar 2024 18:35:54 -0400
+Message-ID: <20240324224720.1345309-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,31 +50,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Yishai Hadas <yishaih@nvidia.com>
 
-[ Upstream commit 6dd9a236042e305d7b69ee92db7347bf5943e7d3 ]
+[ Upstream commit be551ee1574280ef8afbf7c271212ac3e38933ef ]
 
-The symbol's prompt should be a one-line description, instead of just
-duplicating the symbol name.
+Relax DEVX access upon modify commands to be UVERBS_ACCESS_READ.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+The kernel doesn't need to protect what firmware protects, or what
+causes no damage to anyone but the user.
+
+As firmware needs to protect itself from parallel access to the same
+object, don't block parallel modify/query commands on the same object in
+the kernel side.
+
+This change will allow user space application to run parallel updates to
+different entries in the same bulk object.
+
+Tested-by: Tamar Mashiah <tmashiah@nvidia.com>
+Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+Reviewed-by: Michael Guralnik <michaelgur@nvidia.com>
+Link: https://lore.kernel.org/r/7407d5ed35dc427c1097699e12b49c01e1073406.1706433934.git.leon@kernel.org
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/microchip/Kconfig | 2 +-
+ drivers/infiniband/hw/mlx5/devx.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/microchip/Kconfig b/drivers/soc/microchip/Kconfig
-index eb656b33156ba..f19e74d342aa2 100644
---- a/drivers/soc/microchip/Kconfig
-+++ b/drivers/soc/microchip/Kconfig
-@@ -1,5 +1,5 @@
- config POLARFIRE_SOC_SYS_CTRL
--	tristate "POLARFIRE_SOC_SYS_CTRL"
-+	tristate "Microchip PolarFire SoC (MPFS) system controller support"
- 	depends on POLARFIRE_SOC_MAILBOX
- 	help
- 	  This driver adds support for the PolarFire SoC (MPFS) system controller.
+diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
+index 8ba53edf23119..6e19974ecf6e7 100644
+--- a/drivers/infiniband/hw/mlx5/devx.c
++++ b/drivers/infiniband/hw/mlx5/devx.c
+@@ -2949,7 +2949,7 @@ DECLARE_UVERBS_NAMED_METHOD(
+ 	MLX5_IB_METHOD_DEVX_OBJ_MODIFY,
+ 	UVERBS_ATTR_IDR(MLX5_IB_ATTR_DEVX_OBJ_MODIFY_HANDLE,
+ 			UVERBS_IDR_ANY_OBJECT,
+-			UVERBS_ACCESS_WRITE,
++			UVERBS_ACCESS_READ,
+ 			UA_MANDATORY),
+ 	UVERBS_ATTR_PTR_IN(
+ 		MLX5_IB_ATTR_DEVX_OBJ_MODIFY_CMD_IN,
 -- 
 2.43.0
 
