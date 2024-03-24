@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DE9272995;
-	Sun, 24 Mar 2024 23:35:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48572733D0;
+	Sun, 24 Mar 2024 23:35:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323314; cv=none; b=dhm4hTx2XxeSlAOcbZzsBW1tQacjgdWQOcrG5dclptfb25UySOnavRB8SpZqQjuMas+7bB2A6CT2JNhX3DhRjeTp++JfVx0CcVkbkifqoLOHDeF2P2NSAkjyBvM1zMnzj7EXYJ9GwMoN8lPpcdv+R5HVFqeIutVCgJKDn9C7lto=
+	t=1711323319; cv=none; b=KdMJyuqE8S6pSEAaSw1YYOpUF+3PJGSYy+jckIBSFu4Anplr0k9gn3GV5wHdnt+FNauXDh7pe0SNv0LT/AvqXjWhMa4Cw++RH20z0tDhk6tjyHr4WvWq5aWVNZaolGTYbUspx/TTtdwOY28MntNB+eGatd545Y5/KcdyWXwxK+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323314; c=relaxed/simple;
-	bh=lDJ/WcAUElCfR9BHJ0p9gKCvoLwlAhMexx0r5bWWcn4=;
+	s=arc-20240116; t=1711323319; c=relaxed/simple;
+	bh=3VU3H4kuIe/rQdv1ZeQ5FiFnpIIR4BQFW/7JsgHKPno=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=luNOq/dYQAO7IVz4dnFVRX3aPQaf2Tz83kIecVqRLKwuVUhqd9kZMkZCpaqFKSeNDAZd+q9CkmIMZ0sh67D1lWRwYLWdsZ8mS3LA99dNFmAFUuoNSNIgAHIoIGSXZOtD25lLZuIguWsvljChinc74yXUbtfFjGdYrLM538O1Tr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScBUdi+4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QvkVoe/8ppC71TPvLd03XZ8L/aVhaia2OdVR75kAt9/Q+pR4qqu2iGyANA143ATSj6II87xdUZsPm8+AXolaAYC4Go0c6ncbAr0Afu63JmNpJzChSpwaPahOqBRcGLoPgRR/ZsJwbZKRFH6b3naolO1hd+VN787+GM4yJg40yyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjLpoGUQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScBUdi+4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68B4DC433F1;
-	Sun, 24 Mar 2024 23:35:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjLpoGUQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98C67C43399;
+	Sun, 24 Mar 2024 23:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323314;
-	bh=lDJ/WcAUElCfR9BHJ0p9gKCvoLwlAhMexx0r5bWWcn4=;
+	s=k20201202; t=1711323318;
+	bh=3VU3H4kuIe/rQdv1ZeQ5FiFnpIIR4BQFW/7JsgHKPno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ScBUdi+4wL1YALfn7MAE8sujdiJbuAcih1JswxcOqy+Rae3NjOocPZB6L8+LOZort
-	 I1Nz33Qon2nXZNwZPKPs1eFICET+RTGto5dZ3wng5NXU4Mj/z1RoarBm3THzv5I/IE
-	 bVwjOicPg2sm8meki9ZdCjA3rU/i3M0L21RjSkyE6+FsijfWxcdhg8NzUdBJTSTn+L
-	 enMl217DZ7s6KZbIzyl0O3UfPOFQ/lyUTzmuLqbYZLwxom1YDOYZCC9yO7Rruq7Qst
-	 /iCSirpVCc9SdkvQkFKJNAaeda9JpObyQIhgVwCHMaC0+ypW9bkDcrINNoyCHBFSRv
-	 baxvMsilvrcHg==
+	b=QjLpoGUQFduNqC/Nogp/vQhns1Tg9rBX+Wu+b4k1f0lC4MXRotmWiIkpl5O2xAhS7
+	 fVDZISlttTs6ul3SMwDPEA8ynTRZZ2r9LdEthAVBmUgEUnoMhIYF++NPOfzliVqoMK
+	 EOp+NeLFnHa3vPWBQhFuKBAQrUX7VvM7xvRsE/kHJKgKaETfD5g7VarD+y/sPnm+wN
+	 T4LhO4qpzgwg93vkFhLv7T+6GRlrvxTVwJu2L9Mmkk3+1h7gWJoyPtj99XvLWqVaVP
+	 AnskGh9FuZ1ag24aYe5V/mNNC9AW6Zc0CAuRlrkCAsdtiFFxU+/BE038wtsX9zZxP5
+	 pK4IqPoTAM/tg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
+Cc: Max Kellermann <max.kellermann@ionos.com>,
+	Helge Deller <deller@gmx.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 014/317] riscv: dts: sifive: add missing #interrupt-cells to pmic
-Date: Sun, 24 Mar 2024 19:29:54 -0400
-Message-ID: <20240324233458.1352854-15-sashal@kernel.org>
+Subject: [PATCH 5.15 018/317] parisc/ftrace: add missing CONFIG_DYNAMIC_FTRACE check
+Date: Sun, 24 Mar 2024 19:29:58 -0400
+Message-ID: <20240324233458.1352854-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,34 +48,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Conor Dooley <conor.dooley@microchip.com>
+From: Max Kellermann <max.kellermann@ionos.com>
 
-[ Upstream commit ce6b6d1513965f500a05f3facf223fa01fd74920 ]
+[ Upstream commit 250f5402e636a5cec9e0e95df252c3d54307210f ]
 
-At W=2 dtc complains:
-hifive-unmatched-a00.dts:120.10-238.4: Warning (interrupt_provider): /soc/i2c@10030000/pmic@58: Missing '#interrupt-cells' in interrupt provider
+Fixes a bug revealed by -Wmissing-prototypes when
+CONFIG_FUNCTION_GRAPH_TRACER is enabled but not CONFIG_DYNAMIC_FTRACE:
 
-Add the missing property.
+ arch/parisc/kernel/ftrace.c:82:5: error: no previous prototype for 'ftrace_enable_ftrace_graph_caller' [-Werror=missing-prototypes]
+    82 | int ftrace_enable_ftrace_graph_caller(void)
+       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ arch/parisc/kernel/ftrace.c:88:5: error: no previous prototype for 'ftrace_disable_ftrace_graph_caller' [-Werror=missing-prototypes]
+    88 | int ftrace_disable_ftrace_graph_caller(void)
+       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/parisc/kernel/ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-index b40990210fb50..3c621f31b5fd2 100644
---- a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-+++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-@@ -70,6 +70,7 @@ pmic@58 {
- 		interrupt-parent = <&gpio>;
- 		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
+diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
+index 0a1e75af5382d..44d70fc30aae5 100644
+--- a/arch/parisc/kernel/ftrace.c
++++ b/arch/parisc/kernel/ftrace.c
+@@ -81,7 +81,7 @@ void notrace __hot ftrace_function_trampoline(unsigned long parent,
+ #endif
+ }
  
- 		regulators {
- 			vdd_bcore1: bcore1 {
+-#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++#if defined(CONFIG_DYNAMIC_FTRACE) && defined(CONFIG_FUNCTION_GRAPH_TRACER)
+ int ftrace_enable_ftrace_graph_caller(void)
+ {
+ 	return 0;
 -- 
 2.43.0
 
