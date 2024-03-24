@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9042821953A;
-	Sun, 24 Mar 2024 23:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446B9174EC9;
+	Sun, 24 Mar 2024 23:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323349; cv=none; b=LfUvWYuRgOtOQyRzYQLpw5/o9kprUB7EX7GaSMckYHS2rVnDslRnQEJz5S9Ei38wGH1Swt/+tIF558DlJcZ7HEXfSvwYUXkBrNDp9xpeenvWA8mR79mXggUIkKijI0Yu39d7LH6cDAND5XP+U2LiyyHjk7aF10Nk3VeUHeGwOZs=
+	t=1711323333; cv=none; b=sMjWtZJULHi9t0tkXehxpmis12HeJ4p0ZDTeYZLzUO2EN58cONDErkqitgKpJCnTcwLsXSlLDMcQqLHW7OgDABw6pABYv1JtZ80Onvs8+UJpQiFaKZOP4h7+5CZC4Ls3RiFwpNrjC4D2QNuvQhQX7M88xkw6bD9VSx9kvrT9fiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323349; c=relaxed/simple;
-	bh=2REYRR3vG1n+VWSclweLeQyiFhonzjceeaMjCWgigcQ=;
+	s=arc-20240116; t=1711323333; c=relaxed/simple;
+	bh=RbiGQbM5DV6JGkgA0anqlw12MgJgoMvxfYB2/r2rRRo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WQW6DXAa8QqWgBpNxTxoWmmUZimgYmkgaWwZMwCqFJJz/8t+ERMaSzaBhNlCXzjxYhb8fRVwHp3W4A+8lzhXcNv3QRcSa1cOfj2WMAt5dlGk7t+FEl7Oouu4xFVvV1UNrtPOMy/IEQ1LNdLIFqnzpDJWD9f1nl4UfYLYN0L16E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuFP+JKw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PWFZUlLyPPQhuK6OX2bVYKZoMsAVkbIdQ3fPkdu9FBJ0+qNIl5ThFLDYtldo01tFd0kWm1FINijN3L0+xH64vpRpxGvQA+voUynLZ8QUASJghelSFkgqAY9yweziAC03+zUHks9Au9wzDZUpCHQm2IFYdWZlzk3nmu2aBbEcGYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fg2SKXg9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuFP+JKw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B12A9C43399;
-	Sun, 24 Mar 2024 23:35:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fg2SKXg9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13F04C43399;
+	Sun, 24 Mar 2024 23:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323348;
-	bh=2REYRR3vG1n+VWSclweLeQyiFhonzjceeaMjCWgigcQ=;
+	s=k20201202; t=1711323332;
+	bh=RbiGQbM5DV6JGkgA0anqlw12MgJgoMvxfYB2/r2rRRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EuFP+JKwDWZ2QMxy3PlPHv9vBrij9FvmvMZrzwgHa2UxoEbo4FAo4obU4ljN9NzXy
-	 QLer94242o2sxl0ww4i2AIMS+vQAxuowBaaUbYRknp5YnTcID2Pd7xgsaTdRuSgqPB
-	 qCBU7WrUlnIY97Vmoa+44MCS3pbGULXWPObuBcTzclwpnuXgJecismKhnk5SdryZlq
-	 naxs/BAh+KEBvVceKdOWbCZbBAK4oPHXcqyH3p6YXVBru0NoYVm2PKiBhMywcAKpBY
-	 oX+BgWNG5cq2Wj0zexOAYeDC8H4leEV3d9gbq5waJH31wNQH+KvQlHAOuEycGQ4zAD
-	 MoIzDaw+lJJvA==
+	b=Fg2SKXg94aAaQ/XU4VQG41WEy9pB7EQLGCnP51EZ9XC8n2dkY/InTSry+UK1l2PGS
+	 kfx7p0W1hubsBbSLeJynQrnAxMsKpQ727QHm6UQjx8m6BhlPDXRiNyb4Bp6JaXih1m
+	 +4qF5P66MHCSaK8YbbB+sziSFRIhVCEuUawzou52Nbnu1YZDqV8DH2V4C5FqewaaGf
+	 7kANwRbekXhyK5J9mttkMFpf+/nkbMSCIZ4JfghzL8DKXmfleGGbCzar+1P1+zm7M1
+	 AGNYw5Rljj5kyxd0NNZ6dbfaTpjia0CpiEHxQ7d+ouB6Ir3mQZ/DpXnJAOdv3h2TP4
+	 b+Q+AKL5Af0sQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Hilber <peter.hilber@opensynergy.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	John Stultz <jstultz@google.com>,
+Cc: Stefan Haberland <sth@linux.ibm.com>,
+	Jan Hoeppner <hoeppner@linux.ibm.com>,
+	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 048/317] timekeeping: Fix cross-timestamp interpolation for non-x86
-Date: Sun, 24 Mar 2024 19:30:28 -0400
-Message-ID: <20240324233458.1352854-49-sashal@kernel.org>
+Subject: [PATCH 5.15 033/317] s390/dasd: put block allocation in separate function
+Date: Sun, 24 Mar 2024 19:30:13 -0400
+Message-ID: <20240324233458.1352854-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,56 +49,86 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Hilber <peter.hilber@opensynergy.com>
+From: Stefan Haberland <sth@linux.ibm.com>
 
-[ Upstream commit 14274d0bd31b4debf28284604589f596ad2e99f2 ]
+[ Upstream commit 2b43bf061b2e1b67561cbb1f6f305421f5fc86af ]
 
-So far, get_device_system_crosststamp() unconditionally passes
-system_counterval.cycles to timekeeping_cycles_to_ns(). But when
-interpolating system time (do_interp == true), system_counterval.cycles is
-before tkr_mono.cycle_last, contrary to the timekeeping_cycles_to_ns()
-expectations.
+Put block allocation into a separate function to put some copy pair logic
+in it in a later patch.
 
-On x86, CONFIG_CLOCKSOURCE_VALIDATE_LAST_CYCLE will mitigate on
-interpolating, setting delta to 0. With delta == 0, xtstamp->sys_monoraw
-and xtstamp->sys_realtime are then set to the last update time, as
-implicitly expected by adjust_historical_crosststamp(). On other
-architectures, the resulting nonsense xtstamp->sys_monoraw and
-xtstamp->sys_realtime corrupt the xtstamp (ts) adjustment in
-adjust_historical_crosststamp().
-
-Fix this by deriving xtstamp->sys_monoraw and xtstamp->sys_realtime from
-the last update time when interpolating, by using the local variable
-"cycles". The local variable already has the right value when
-interpolating, unlike system_counterval.cycles.
-
-Fixes: 2c756feb18d9 ("time: Add history to cross timestamp interface supporting slower devices")
-Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: John Stultz <jstultz@google.com>
-Link: https://lore.kernel.org/r/20231218073849.35294-4-peter.hilber@opensynergy.com
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
+Link: https://lore.kernel.org/r/20220920192616.808070-2-sth@linux.ibm.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Stable-dep-of: c3116e62ddef ("s390/dasd: fix double module refcount decrement")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/timekeeping.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/s390/block/dasd_eckd.c | 38 ++++++++++++++++++++--------------
+ 1 file changed, 23 insertions(+), 15 deletions(-)
 
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index d21280b3b2ea7..dfa6649c490de 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -1244,10 +1244,8 @@ int get_device_system_crosststamp(int (*get_time_fn)
- 				      tk_core.timekeeper.offs_real);
- 		base_raw = tk->tkr_raw.base;
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index 56ab74aa07f42..cf80db7a74a3d 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -2028,6 +2028,25 @@ static void dasd_eckd_kick_validate_server(struct dasd_device *device)
+ 		dasd_put_device(device);
+ }
  
--		nsec_real = timekeeping_cycles_to_ns(&tk->tkr_mono,
--						     system_counterval.cycles);
--		nsec_raw = timekeeping_cycles_to_ns(&tk->tkr_raw,
--						    system_counterval.cycles);
-+		nsec_real = timekeeping_cycles_to_ns(&tk->tkr_mono, cycles);
-+		nsec_raw = timekeeping_cycles_to_ns(&tk->tkr_raw, cycles);
- 	} while (read_seqcount_retry(&tk_core.seq, seq));
++static int dasd_eckd_alloc_block(struct dasd_device *device)
++{
++	struct dasd_block *block;
++	struct dasd_uid temp_uid;
++
++	dasd_eckd_get_uid(device, &temp_uid);
++	if (temp_uid.type == UA_BASE_DEVICE) {
++		block = dasd_alloc_block();
++		if (IS_ERR(block)) {
++			DBF_EVENT_DEVID(DBF_WARNING, device->cdev, "%s",
++					"could not allocate dasd block structure");
++			return PTR_ERR(block);
++		}
++		device->block = block;
++		block->base = device;
++	}
++	return 0;
++}
++
+ /*
+  * Check device characteristics.
+  * If the device is accessible using ECKD discipline, the device is enabled.
+@@ -2036,8 +2055,6 @@ static int
+ dasd_eckd_check_characteristics(struct dasd_device *device)
+ {
+ 	struct dasd_eckd_private *private = device->private;
+-	struct dasd_block *block;
+-	struct dasd_uid temp_uid;
+ 	int rc, i;
+ 	int readonly;
+ 	unsigned long value;
+@@ -2095,19 +2112,10 @@ dasd_eckd_check_characteristics(struct dasd_device *device)
+ 			device->default_expires = value;
+ 	}
  
- 	xtstamp->sys_realtime = ktime_add_ns(base_real, nsec_real);
+-	dasd_eckd_get_uid(device, &temp_uid);
+-	if (temp_uid.type == UA_BASE_DEVICE) {
+-		block = dasd_alloc_block();
+-		if (IS_ERR(block)) {
+-			DBF_EVENT_DEVID(DBF_WARNING, device->cdev, "%s",
+-					"could not allocate dasd "
+-					"block structure");
+-			rc = PTR_ERR(block);
+-			goto out_err1;
+-		}
+-		device->block = block;
+-		block->base = device;
+-	}
++	/* check if block device is needed and allocate in case */
++	rc = dasd_eckd_alloc_block(device);
++	if (rc)
++		goto out_err1;
+ 
+ 	/* register lcu with alias handling, enable PAV */
+ 	rc = dasd_alias_make_device_known_to_lcu(device);
 -- 
 2.43.0
 
