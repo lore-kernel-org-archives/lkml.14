@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CE0184436;
-	Sun, 24 Mar 2024 23:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0CC2944A1;
+	Sun, 24 Mar 2024 23:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324275; cv=none; b=C1Cb8qJZBIvM3oZ+FciaS5tzA+yk8TdDa8+/s1K3ePxNOZpQQ9mhTiEFCmFuZrisHV/iIxG3u/O+DaDi8Bnx0tA9MQbZggXMWQ8H+4cnU8cyDwTuF8JODjYUf2pOe7Vv7nuFgay9n073ewW91E6vhccm2BnxyUvzBN4tE5Wkf+s=
+	t=1711324287; cv=none; b=Rydr6EGhtqR+2dN7Eu6bE9/DzLfQYuc64A6H/6YxftJtesFy7SBfU/bL7BArIrmvBD7HNIS9gCkroM1ZefTbnIWwS5FU0F+3X/IZJiz8xGp81l4wFh3EBDlryV2NbfhLxD+sMuCHfYHj6NML16OiqVh1v1DHXsVDKX9jamkuCe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324275; c=relaxed/simple;
-	bh=RlpN8v+SpRk98+w7H3gbi89e8+2REgiqFkpTpNGHH7E=;
+	s=arc-20240116; t=1711324287; c=relaxed/simple;
+	bh=AtFzqDVBmi7701nAnV2WFXR0J4wXEjsi4aMYf0fKSDE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pwxqvzKLPUAnruOmdAisMyLn5LBD2Kn34DqqbxFgIiLPw98w1scnhvpsBduWTAg6g2YuEpRjGPA5Qwk4GtlGNG/8KGByd8fjvc3UoIxxmRf2cSxhr4jIeUKY6Ru6mrCL2xXFuCp2XCZYMHqqbUwwoX/+plWD/fNFADsmxDX4Pp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o8azG9SF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PwdrtcFX/cGlTaDNZhcNA2Yrlad+cQE5a5iCKc56S4F5K5tKNznH/Va9quJqsCeDZomOtSYT8tUE6+n0pjDdN+a92wQtGwvYkwFTKvx3l5LX4PuZc8ftMi9k7f8rcCImDvIAa6SmFKg5R9qejEnojHJ7RWDmYi28onJm4R4t3ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVl2O/Qg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o8azG9SF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCA6EC433A6;
-	Sun, 24 Mar 2024 23:51:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVl2O/Qg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6683AC433A6;
+	Sun, 24 Mar 2024 23:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324275;
-	bh=RlpN8v+SpRk98+w7H3gbi89e8+2REgiqFkpTpNGHH7E=;
+	s=k20201202; t=1711324286;
+	bh=AtFzqDVBmi7701nAnV2WFXR0J4wXEjsi4aMYf0fKSDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o8azG9SFh1c6klOLrgZI5bD+O5Me98wp8WKXBvEa7A0eAqKCf18CrvvT95YOLwLgO
-	 bZUWxOiXd5sRTbHKSGo6s1sFJltqjfpijFz3eEnAHUNJy7pGNClenBY9yO8kDtcFHV
-	 rL2AkknqD4jiobHnUdq0o2Ha1l+zO+6sOtUPYrgfSyy8PW3Pk2Zt5kwBZY0aYQodXN
-	 zAC4JQKQzR9eGA/gaFIhTRDGcnqbEV4glxmHJ0RPJ6TujAtDZIM4WvTIsEHoIuyHhg
-	 ppnk1MhZlupp9NhmxbeGzZhVlBm0Xrc7Z4ob4P/mhPWHpQX6XSaKRTzV8EOE1PUXPc
-	 GYPk+SkvFb/xw==
+	b=HVl2O/QgvXYWUQm7eLnvGv1688zmcksbEdBX9aIBuvsXbkGCMor+X/HRR6YLSp33T
+	 RkShRrOq2/N6uGSVwqLWyn4RdbB3hZ/Z/70xoEWKdHGXwRliw2A01EtsoyO6ls/giq
+	 7stYlFkHx8GTALBgqiQTQU3zJlIO8t2xgocPuiejZ/mLjT+eyb5zYD8mcoommvmBfC
+	 tSJiy3PDKBxAfIfcna+MTyo3e6zeJPLf/4L17Ik0aDToxbKg92e+wi4wid2SZxWuoe
+	 94U3vyNt+RBtcm5iKPuCg0lPWKEQ+m0eFgob2DGNC1hgTs/gM9AHDT1yeMT8a7f7+R
+	 iLLRy9mYBAsNg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chen Ni <nichen@iscas.ac.cn>,
-	Simon Horman <horms@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/148] sr9800: Add check for usbnet_get_endpoints
-Date: Sun, 24 Mar 2024 19:48:38 -0400
-Message-ID: <20240324235012.1356413-55-sashal@kernel.org>
+Subject: [PATCH 4.19 062/148] net/x25: fix incorrect parameter validation in the x25_getsockopt() function
+Date: Sun, 24 Mar 2024 19:48:46 -0400
+Message-ID: <20240324235012.1356413-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -49,38 +48,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chen Ni <nichen@iscas.ac.cn>
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit 07161b2416f740a2cb87faa5566873f401440a61 ]
+[ Upstream commit d6eb8de2015f0c24822e47356f839167ebde2945 ]
 
-Add check for usbnet_get_endpoints() and return the error if it fails
-in order to transfer the error.
+The 'len' variable can't be negative when assigned the result of
+'min_t' because all 'min_t' parameters are cast to unsigned int,
+and then the minimum one is chosen.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Fixes: 19a38d8e0aa3 ("USB2NET : SR9800 : One chip USB2.0 USB2NET SR9800 Device Driver Support")
-Link: https://lore.kernel.org/r/20240305075927.261284-1-nichen@iscas.ac.cn
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+To fix the logic, check 'len' as read from 'optlen',
+where the types of relevant variables are (signed) int.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/sr9800.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/x25/af_x25.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
-index 8f8c9ede88c26..a5ff7df10505b 100644
---- a/drivers/net/usb/sr9800.c
-+++ b/drivers/net/usb/sr9800.c
-@@ -737,7 +737,9 @@ static int sr9800_bind(struct usbnet *dev, struct usb_interface *intf)
+diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
+index 9d0328bb30ca1..8d78f204ba3c1 100644
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -475,12 +475,12 @@ static int x25_getsockopt(struct socket *sock, int level, int optname,
+ 	if (get_user(len, optlen))
+ 		goto out;
  
- 	data->eeprom_len = SR9800_EEPROM_LEN;
+-	len = min_t(unsigned int, len, sizeof(int));
+-
+ 	rc = -EINVAL;
+ 	if (len < 0)
+ 		goto out;
  
--	usbnet_get_endpoints(dev, intf);
-+	ret = usbnet_get_endpoints(dev, intf);
-+	if (ret)
-+		goto out;
- 
- 	/* LED Setting Rule :
- 	 * AABB:CCDD
++	len = min_t(unsigned int, len, sizeof(int));
++
+ 	rc = -EFAULT;
+ 	if (put_user(len, optlen))
+ 		goto out;
 -- 
 2.43.0
 
