@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9000113F004;
-	Sun, 24 Mar 2024 23:09:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856E81EFFD4;
+	Sun, 24 Mar 2024 23:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321796; cv=none; b=qjVyZwI7fEjUBIxzpQwIUB0IyU1ey824UhonX6HdQ3gogeU0CuRliLa16h2a7I8tOGcRewQdCrZY9hN3OSuum7THJM8oGYTUA0VmeeLlJFwxmYazgPhme9e1SRfbZmr36rpE/V4oryiWTn4VqojqXGykc5Q8Wb7OJNS7/1L0Y4s=
+	t=1711321799; cv=none; b=WhrfJFK4VnjGza/9Sum9byEjIQQ/qk7RzszhqGdu0cOViZEaEizH55YTwj9UERcBFKluI9RGO35Dclk2X0qXozWGaxRLndw38tY6IXdDQmHtMSoVDvejAmET3akdFd0+S5EMOhAlatOndcTXfHrxz8w05klMEUIQahvooExt5VU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321796; c=relaxed/simple;
-	bh=2487uyEWYMiG1zqA3cbS9DBoal7pOEM20MTlnBXdtQY=;
+	s=arc-20240116; t=1711321799; c=relaxed/simple;
+	bh=scIDcklIrfROK4gOZUhY8/qPGwXweUlY6K4UoaZMNgs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=amETzBBl/x7NCFDZ8B236vRqxuX9D0QI9/qGniUkm4VMfBGca/QvZCqBPPWo2WuQgnwaVbMmVW1ePMSAYoUvy6EC4cLZTuOKfNyFshcaWXZ9eEld7keNoryFsJZuxZvs+9R1voY7q0Oca6mpY5mB26wKDdUY1NXVwOZYlhZ57zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0U4fWA0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ImJnRMREXq+4KZQX+vwCdri0sl+mrJDP+Cvd4la9qGZgIyzdXfGe8BYQeo6w8DwYS36ac0pelkgfs5l6MTSiQ3gzwFJQLc8MFSfb+rxCMggY13FRrcGkwvsIv1W4rccUCp456PZlNNAPOFM7msLQs2/PUnEYyhYNKxt46gUp4VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WpJXiQ8E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0U4fWA0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA352C43394;
-	Sun, 24 Mar 2024 23:09:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WpJXiQ8E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE455C43394;
+	Sun, 24 Mar 2024 23:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321796;
-	bh=2487uyEWYMiG1zqA3cbS9DBoal7pOEM20MTlnBXdtQY=;
+	s=k20201202; t=1711321799;
+	bh=scIDcklIrfROK4gOZUhY8/qPGwXweUlY6K4UoaZMNgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S0U4fWA0LPXuTLCt2UbIeyqYg0+hO2SfZiKz1lZR+kYgv5OIr3VBhhKFJ7nY25Rp0
-	 /hwJi+tXJVb4q8H3YoNqTYYHuX9q0swBtqJqcYtK0WY8nytVj4KYmieMVVwzws6Xn5
-	 xwi9+7z9mZ6PZCILK/gXTadKnlgz7K8Fwk84lsNGtZ3RUH27FqNWpzo+4Uyrn1x1g8
-	 5oCcVCiv8HgW5MDjTx1iFG3eENaST8AcAuUt9S+vysyH2zFvl647o8oEK5+XlLHwvt
-	 wcCadyOkTK29KvzyOYM856n5pua6G+PAHZMwwpL20Ctq2U6EWGimLTYav7k6LbP/Z1
-	 4HGW4JGFajd7Q==
+	b=WpJXiQ8EKbP1Si5lRZXKikNP1OpU7UzY0KG1f/W4cbfCRTv8OGL1eHojXVSBIkbfG
+	 ZizIrc4IxG0SE2w/7pTMvjSP1pUIrqllVkdfnA0Ag4tU5xhn6+aCFTpgBY6xDMh8Q1
+	 tuK+V3kHmvKtvzx99yPE8dNkhzZ1rE6swtkSKMkca57hWyz7rOgF88eA4y9BqRiE4E
+	 uZBrOJ1IIlGUgcYqp1x5JI6vOIyNIyk6vCmEIPU7SQ3DyH5q50NLaJ3N6NQiOXfDaT
+	 28ICDAt+4CCVUEB6sBPDm46RjEBeC1gzcri7zUJQVCZPHBPdCzY2ewjsLoUT+C72tc
+	 I+zC9lP5YhShA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Luoyouming <luoyouming@huawei.com>,
-	Junxian Huang <huangjunxian6@hisilicon.com>,
-	Leon Romanovsky <leon@kernel.org>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Kees Cook <keescook@chromium.org>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 524/638] RDMA/hns: Fix mis-modifying default congestion control algorithm
-Date: Sun, 24 Mar 2024 18:59:21 -0400
-Message-ID: <20240324230116.1348576-525-sashal@kernel.org>
+Subject: [PATCH 6.6 527/638] scsi: bfa: Fix function pointer type mismatch for hcb_qe->cbfn
+Date: Sun, 24 Mar 2024 18:59:24 -0400
+Message-ID: <20240324230116.1348576-528-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,132 +49,150 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Luoyouming <luoyouming@huawei.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit d20a7cf9f714f0763efb56f0f2eeca1cb91315ed ]
+[ Upstream commit b69600231f751304db914c63b937f7098ed2895c ]
 
-Commit 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured
-with DCQCN") adds a check of congest control alorithm for UD. But
-that patch causes a problem: hr_dev->caps.congest_type is global,
-used by all QPs, so modifying this field to DCQCN for UD QPs causes
-other QPs unable to use any other algorithm except DCQCN.
+Some callback functions used here take a boolean argument, others take a
+status argument. This breaks KCFI type checking, so clang now warns about
+the function pointer cast:
 
-Revert the modification in commit 27c5fd271d8b ("RDMA/hns: The UD
-mode can only be configured with DCQCN"). Add a new field cong_type
-to struct hns_roce_qp and configure DCQCN for UD QPs.
+drivers/scsi/bfa/bfad_bsg.c:2138:29: error: cast from 'void (*)(void *, enum bfa_status)' to 'bfa_cb_cbfn_t' (aka 'void (*)(void *, enum bfa_boolean)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
 
-Fixes: 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured with DCQCN")
-Fixes: f91696f2f053 ("RDMA/hns: Support congestion control type selection according to the FW")
-Signed-off-by: Luoyouming <luoyouming@huawei.com>
-Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
-Link: https://lore.kernel.org/r/20240219061805.668170-1-huangjunxian6@hisilicon.com
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Assuming the code is actually correct here and the callers always match the
+argument types of the callee, rework this to replace the explicit cast with
+a union of the two pointer types. This does not change the behavior of the
+code, so if something is actually broken here, a larger rework may be
+necessary.
+
+Fixes: 37ea0558b87a ("[SCSI] bfa: Added support to collect and reset fcport stats")
+Fixes: 3ec4f2c8bff2 ("[SCSI] bfa: Added support to configure QOS and collect stats.")
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20240222124433.2046570-1-arnd@kernel.org
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_device.h | 17 +++++++++--------
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 16 ++++++++++------
- 2 files changed, 19 insertions(+), 14 deletions(-)
+ drivers/scsi/bfa/bfa.h      |  9 ++++++++-
+ drivers/scsi/bfa/bfa_core.c |  4 +---
+ drivers/scsi/bfa/bfa_ioc.h  |  8 ++++++--
+ drivers/scsi/bfa/bfad_bsg.c | 11 ++++-------
+ 4 files changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
-index 7f0d0288beb1e..82066859cc113 100644
---- a/drivers/infiniband/hw/hns/hns_roce_device.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_device.h
-@@ -581,6 +581,13 @@ struct hns_roce_work {
- 	u32 queue_num;
- };
+diff --git a/drivers/scsi/bfa/bfa.h b/drivers/scsi/bfa/bfa.h
+index 7bd2ba1ad4d11..f30fe324e6ecc 100644
+--- a/drivers/scsi/bfa/bfa.h
++++ b/drivers/scsi/bfa/bfa.h
+@@ -20,7 +20,6 @@
+ struct bfa_s;
  
-+enum hns_roce_cong_type {
-+	CONG_TYPE_DCQCN,
-+	CONG_TYPE_LDCP,
-+	CONG_TYPE_HC3,
-+	CONG_TYPE_DIP,
-+};
+ typedef void (*bfa_isr_func_t) (struct bfa_s *bfa, struct bfi_msg_s *m);
+-typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
+ 
+ /*
+  * Interrupt message handlers
+@@ -437,4 +436,12 @@ struct bfa_cb_pending_q_s {
+ 	(__qe)->data = (__data);				\
+ } while (0)
+ 
++#define bfa_pending_q_init_status(__qe, __cbfn, __cbarg, __data) do {	\
++	bfa_q_qe_init(&((__qe)->hcb_qe.qe));			\
++	(__qe)->hcb_qe.cbfn_status = (__cbfn);			\
++	(__qe)->hcb_qe.cbarg = (__cbarg);			\
++	(__qe)->hcb_qe.pre_rmv = BFA_TRUE;			\
++	(__qe)->data = (__data);				\
++} while (0)
 +
- struct hns_roce_qp {
- 	struct ib_qp		ibqp;
- 	struct hns_roce_wq	rq;
-@@ -624,6 +631,7 @@ struct hns_roce_qp {
- 	struct list_head	sq_node; /* all send qps are on a list */
- 	struct hns_user_mmap_entry *dwqe_mmap_entry;
- 	u32			config;
-+	enum hns_roce_cong_type	cong_type;
+ #endif /* __BFA_H__ */
+diff --git a/drivers/scsi/bfa/bfa_core.c b/drivers/scsi/bfa/bfa_core.c
+index 6846ca8f7313c..3438d0b8ba062 100644
+--- a/drivers/scsi/bfa/bfa_core.c
++++ b/drivers/scsi/bfa/bfa_core.c
+@@ -1907,15 +1907,13 @@ bfa_comp_process(struct bfa_s *bfa, struct list_head *comp_q)
+ 	struct list_head		*qe;
+ 	struct list_head		*qen;
+ 	struct bfa_cb_qe_s	*hcb_qe;
+-	bfa_cb_cbfn_status_t	cbfn;
+ 
+ 	list_for_each_safe(qe, qen, comp_q) {
+ 		hcb_qe = (struct bfa_cb_qe_s *) qe;
+ 		if (hcb_qe->pre_rmv) {
+ 			/* qe is invalid after return, dequeue before cbfn() */
+ 			list_del(qe);
+-			cbfn = (bfa_cb_cbfn_status_t)(hcb_qe->cbfn);
+-			cbfn(hcb_qe->cbarg, hcb_qe->fw_status);
++			hcb_qe->cbfn_status(hcb_qe->cbarg, hcb_qe->fw_status);
+ 		} else
+ 			hcb_qe->cbfn(hcb_qe->cbarg, BFA_TRUE);
+ 	}
+diff --git a/drivers/scsi/bfa/bfa_ioc.h b/drivers/scsi/bfa/bfa_ioc.h
+index 933a1c3890ff5..5e568d6d7b261 100644
+--- a/drivers/scsi/bfa/bfa_ioc.h
++++ b/drivers/scsi/bfa/bfa_ioc.h
+@@ -361,14 +361,18 @@ struct bfa_reqq_wait_s {
+ 	void	*cbarg;
  };
  
- struct hns_roce_ib_iboe {
-@@ -695,13 +703,6 @@ struct hns_roce_eq_table {
- 	struct hns_roce_eq	*eq;
- };
+-typedef void	(*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
++typedef void (*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
++typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
  
--enum cong_type {
--	CONG_TYPE_DCQCN,
--	CONG_TYPE_LDCP,
--	CONG_TYPE_HC3,
--	CONG_TYPE_DIP,
--};
--
- struct hns_roce_caps {
- 	u64		fw_ver;
- 	u8		num_ports;
-@@ -831,7 +832,7 @@ struct hns_roce_caps {
- 	u16		default_aeq_period;
- 	u16		default_aeq_arm_st;
- 	u16		default_ceq_arm_st;
--	enum cong_type	cong_type;
-+	enum hns_roce_cong_type cong_type;
- };
+ /*
+  * Generic BFA callback element.
+  */
+ struct bfa_cb_qe_s {
+ 	struct list_head	qe;
+-	bfa_cb_cbfn_t	cbfn;
++	union {
++		bfa_cb_cbfn_status_t	cbfn_status;
++		bfa_cb_cbfn_t		cbfn;
++	};
+ 	bfa_boolean_t	once;
+ 	bfa_boolean_t	pre_rmv;	/* set for stack based qe(s) */
+ 	bfa_status_t	fw_status;	/* to access fw status in comp proc */
+diff --git a/drivers/scsi/bfa/bfad_bsg.c b/drivers/scsi/bfa/bfad_bsg.c
+index d4ceca2d435ee..54bd11e6d5933 100644
+--- a/drivers/scsi/bfa/bfad_bsg.c
++++ b/drivers/scsi/bfa/bfad_bsg.c
+@@ -2135,8 +2135,7 @@ bfad_iocmd_fcport_get_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_cb_pending_q_s cb_qe;
  
- enum hns_roce_device_state {
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 3c62a0042da48..b4799c83282e2 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -4728,12 +4728,15 @@ static int check_cong_type(struct ib_qp *ibqp,
- 			   struct hns_roce_congestion_algorithm *cong_alg)
- {
- 	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
-+	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, &iocmd->stats);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	iocmd->status = bfa_fcport_get_stats(&bfad->bfa, &cb_qe);
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
+@@ -2159,7 +2158,7 @@ bfad_iocmd_fcport_reset_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_cb_pending_q_s cb_qe;
  
--	if (ibqp->qp_type == IB_QPT_UD)
--		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
-+	if (ibqp->qp_type == IB_QPT_UD || ibqp->qp_type == IB_QPT_GSI)
-+		hr_qp->cong_type = CONG_TYPE_DCQCN;
-+	else
-+		hr_qp->cong_type = hr_dev->caps.cong_type;
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp, &fcomp, NULL);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
  
- 	/* different congestion types match different configurations */
--	switch (hr_dev->caps.cong_type) {
-+	switch (hr_qp->cong_type) {
- 	case CONG_TYPE_DCQCN:
- 		cong_alg->alg_sel = CONG_DCQCN;
- 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
-@@ -4761,8 +4764,8 @@ static int check_cong_type(struct ib_qp *ibqp,
- 	default:
- 		ibdev_warn(&hr_dev->ib_dev,
- 			   "invalid type(%u) for congestion selection.\n",
--			   hr_dev->caps.cong_type);
--		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
-+			   hr_qp->cong_type);
-+		hr_qp->cong_type = CONG_TYPE_DCQCN;
- 		cong_alg->alg_sel = CONG_DCQCN;
- 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
- 		cong_alg->dip_vld = DIP_INVALID;
-@@ -4781,6 +4784,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
- 	struct hns_roce_congestion_algorithm cong_field;
- 	struct ib_device *ibdev = ibqp->device;
- 	struct hns_roce_dev *hr_dev = to_hr_dev(ibdev);
-+	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
- 	u32 dip_idx = 0;
- 	int ret;
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	iocmd->status = bfa_fcport_clear_stats(&bfad->bfa, &cb_qe);
+@@ -2443,8 +2442,7 @@ bfad_iocmd_qos_get_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
  
-@@ -4793,7 +4797,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
- 		return ret;
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, &iocmd->stats);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
  
- 	hr_reg_write(context, QPC_CONG_ALGO_TMPL_ID, hr_dev->cong_algo_tmpl_id +
--		     hr_dev->caps.cong_type * HNS_ROCE_CONG_SIZE);
-+		     hr_qp->cong_type * HNS_ROCE_CONG_SIZE);
- 	hr_reg_clear(qpc_mask, QPC_CONG_ALGO_TMPL_ID);
- 	hr_reg_write(&context->ext, QPCEX_CONG_ALG_SEL, cong_field.alg_sel);
- 	hr_reg_clear(&qpc_mask->ext, QPCEX_CONG_ALG_SEL);
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
+@@ -2474,8 +2472,7 @@ bfad_iocmd_qos_reset_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
+ 
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, NULL);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
+ 
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
 -- 
 2.43.0
 
