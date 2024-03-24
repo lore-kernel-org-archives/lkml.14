@@ -1,45 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6B62308DA;
-	Sun, 24 Mar 2024 23:17:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23001FDA27;
+	Sun, 24 Mar 2024 23:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322233; cv=none; b=YOPMe9muf63qexIlQ5Smvzq1lP0YBex8CPfzKRxLf5FrKRhEVWN3joElBF4HAJYmTnNnE3qLS4QhxxhcL/+RLKkCZ+Ym8NH+fgMhpJsGc8Dzn8HConQFceV2V5/MClE8wWyflnPf2W3Vu2u3yQKmCN3STw3FBNrYAebzRKMrG9M=
+	t=1711322224; cv=none; b=ZXBofWlTgjG79BdCwLvY4/tlx3xmjRrzajtlmgQw0kX4Kad/cmuevX8THMd4N8GXTfWgq2QRAfrV+gTZUjFjT5xuYtiOJSNKyBgDSRCZUoOxuiUlW/rOGQNqvSEdW/OFMVWjPg8XWJAI0hxbz4+iDmjb7ldUr2siRdUlrEMbos8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322233; c=relaxed/simple;
-	bh=sNhpLvjMeFCtra/NlqSxc7EpcnEV+/QgYQhLbAoVDpY=;
+	s=arc-20240116; t=1711322224; c=relaxed/simple;
+	bh=lh1tWZ+Q5ip5maxsWS3cRTsoCijckQtevMH31uUa3aI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HAHJB4TJT07YNeFdU+HPsy848GJi32jiU/TzZJBaJfXo1BFu+UXx6W9Y0WbfRGxuuyglL+guwkh6ZoUmgEMZjZ5ngu5bNWu9ENrV089Z5H8okHSjKi9DHKrevS65oC10LV8iOXTGbuWzMGzgiPTDB7gPgOEzgJm3STZw0t3LLuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bIK/KPsu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mxitt/lcznzeG8jDSC7l9PYrA5glans2je3uRaYVIH4uA1GUOxhAqxFB/wvbmBXm6NM4PaBklqeTIKfMBVFd78+LZIfOHZsocsLkibxZmfSREBSpTEKcYOetbjkVfbZg4e0yBqMDcpPhMnGMjzXFpFQYl1hbYfyhsDHw9EH+s0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jod0NAwJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bIK/KPsu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66A16C43399;
-	Sun, 24 Mar 2024 23:17:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jod0NAwJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CD0DC433F1;
+	Sun, 24 Mar 2024 23:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322233;
-	bh=sNhpLvjMeFCtra/NlqSxc7EpcnEV+/QgYQhLbAoVDpY=;
+	s=k20201202; t=1711322222;
+	bh=lh1tWZ+Q5ip5maxsWS3cRTsoCijckQtevMH31uUa3aI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bIK/KPsub7sonKRaXCLFta7gokQCbAsqxq8KHwzcXsWfYycyEnjG05CHWQsrAURZi
-	 TtkCu85L/fgAxEumdT6XF3H9RsHpJYY/0AXrnCqRk8bs08+yUQXjPt8HdXh3lY8pM7
-	 o3UwRGOQMRVgQgi37yB6+ik7g5NH17YAObqlRakFPUYn7cfI4+/Xjv23AQgxh5bsfZ
-	 nGbXGGFWEMFtNlYPlvl3DgpRUKB2KZozKR8fz5nsHM8vjXq+dfUE+sSX5CREbZJlDN
-	 KywtoHYDzGyU3l2QsLJsRmHZ57Y/8keQKYKPTt+OIvPEMqGGqAQZq3sftc70ICCvOd
-	 tddAebK/GsKQg==
+	b=jod0NAwJiNEr3xWMEitMbiW8+MqN5qe5CCF4KGvaarJoa5VJdlBzd+3XC2l0NFi6+
+	 yAB/ZPZy7xPsLkZweU8lakKMy0LLyRzZt6UoxCQogQeW+B/QI/llq1A5R0DKA+TTYe
+	 tR6ShrYqWmRv1UIZ4Y13IAo3LBr1DQjn0F0OnggbPYKfeUL3MVnAdCUFmArcDEcv+z
+	 ZdFgEkAWNw5GIQHQzNtsc2QkIt/M1SCF27MCnDNl1moIbOKKjAQoEj6o2r/kXYPpgA
+	 mdkeRKtqZN4QyOZ4MCpVA4l3W4JEKQCA1400XBuSbL7QlEe2BJ9aZckYLsdp/8MCnq
+	 jsIbq7bnN/ihA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Robert Elliott <elliott@hpe.com>,
-	Christoph Biedl <bugzilla.kernel.bpeb@manchmal.in-ulm.de>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-crypto@vger.kernel.org,
+Cc: Daniil Dulov <d.dulov@aladdin.ru>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 314/451] crypto: jitter - fix CRYPTO_JITTERENTROPY help text
-Date: Sun, 24 Mar 2024 19:09:50 -0400
-Message-ID: <20240324231207.1351418-315-sashal@kernel.org>
+Subject: [PATCH 6.1 303/451] media: pvrusb2: remove redundant NULL check
+Date: Sun, 24 Mar 2024 19:09:39 -0400
+Message-ID: <20240324231207.1351418-304-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -53,49 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Daniil Dulov <d.dulov@aladdin.ru>
 
-[ Upstream commit e63df1ec9a16dd9e13e9068243e64876de06f795 ]
+[ Upstream commit 95ac1210fb2753f968ebce0730d4fbc553c2a3dc ]
 
-Correct various small problems in the help text:
-a. change 2 spaces to ", "
-b. finish an incomplete sentence
-c. change non-working URL to working URL
+Pointer dip->stream cannot be NULL due to a shift, thus remove redundant
+NULL check.
 
-Fixes: a9a98d49da52 ("crypto: Kconfig - simplify compression/RNG entries")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218458
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Robert Elliott <elliott@hpe.com>
-Cc: Christoph Biedl <bugzilla.kernel.bpeb@manchmal.in-ulm.de>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-crypto@vger.kernel.org
-Acked-by: Bagas Sanjaya <bagasdotme@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: c74e0062684b ("V4L/DVB (5059): Pvrusb2: Be smarter about mode restoration")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index d779667671b23..edf193aff23e7 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -1285,10 +1285,11 @@ config CRYPTO_JITTERENTROPY
- 
- 	  A non-physical non-deterministic ("true") RNG (e.g., an entropy source
- 	  compliant with NIST SP800-90B) intended to provide a seed to a
--	  deterministic RNG (e.g.  per NIST SP800-90C).
-+	  deterministic RNG (e.g., per NIST SP800-90C).
- 	  This RNG does not perform any cryptographic whitening of the generated
-+	  random numbers.
- 
--	  See https://www.chronox.de/jent.html
-+	  See https://www.chronox.de/jent/
- 
- config CRYPTO_KDF800108_CTR
- 	tristate
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index c04ab7258d645..d195bd6a2248b 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -1198,11 +1198,6 @@ static void pvr2_v4l2_dev_init(struct pvr2_v4l2_dev *dip,
+ 		dip->minor_type = pvr2_v4l_type_video;
+ 		nr_ptr = video_nr;
+ 		caps |= V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_AUDIO;
+-		if (!dip->stream) {
+-			pr_err(KBUILD_MODNAME
+-				": Failed to set up pvrusb2 v4l video dev due to missing stream instance\n");
+-			return;
+-		}
+ 		break;
+ 	case VFL_TYPE_VBI:
+ 		dip->config = pvr2_config_vbi;
 -- 
 2.43.0
 
