@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F1A131BB0;
-	Sun, 24 Mar 2024 23:44:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82E117DC37;
+	Sun, 24 Mar 2024 23:44:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323856; cv=none; b=LzBA0wEQNjOJmki4BZRq4+F64+UQnCFJmxIt6mcy53wOYxPYJqblgY9ZAXwy6MhtYCAuIn+nVtiSfPWQzpd538K83WRhe/V0poHtockUxAC6kygpa2QD4peQRniVvPxnu6ajAhCto03I+xlBRI7w6XoOj/vdhy2YHkKGJj5J7tc=
+	t=1711323849; cv=none; b=oSoxKOo34fAQ6XukNy653V4MFsalIoA2xrxX+/tE2IpdeS906yPAPRKQ6cJalxvnZlExY5zrNUZCyMqt/rRSLah+gio1ORenkL/m6Jw08xEqTeF5xmhr/e2umJ8jVLTuBSqN1BVio/V9fUIJr+hU21k/FZs8ObwenUifv1dVUDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323856; c=relaxed/simple;
-	bh=aNG0AjZbig5Qhr6LXBT/gr9Q8gDY446a7r6lLHDmZX0=;
+	s=arc-20240116; t=1711323849; c=relaxed/simple;
+	bh=LDY0af1l0wOjYJ8cMrD88wlEhNgwaU1OcXBV2y4G9lw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ggFIOGbuy2FKr7Z8fzzQ3UGYhtpjZ1dDW+e/4aI5EC2MPT5XwmjhdHQHrN7KMyOHTdek9BSWjle57urhHn4O2jJqJLHtsr+L7nkeiKo8wtrBdNWa9RFhVakeFGVJBKJnMqbXiTAuhvXJ189pCeKXQ8lvjMTRSx/4bSRGDzJrVMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgjx785v; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZzYdfgHsGL1VLwlR66DlkxqVSvpurrZS/j/wQceNeSWcpHe6/MVa1thMHklOk2KflB0mR2BQH43SjwnU3RFNVtzunUxZPY2uWF3PwNB/MJGM980c5IhR33KU8qCkIYk2CnIfS6vWySZ2/jQq9Vi1aCPRnbOWlCzpKxZv4rdcKLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkM3RjX8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgjx785v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BCB4C433F1;
-	Sun, 24 Mar 2024 23:44:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkM3RjX8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAD54C433C7;
+	Sun, 24 Mar 2024 23:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323856;
-	bh=aNG0AjZbig5Qhr6LXBT/gr9Q8gDY446a7r6lLHDmZX0=;
+	s=k20201202; t=1711323849;
+	bh=LDY0af1l0wOjYJ8cMrD88wlEhNgwaU1OcXBV2y4G9lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hgjx785vJc1cINWdWF/44Aa5/jkdUjSYf2bCD16mgplhFgrn6WHv4JK1gBkPOyXk7
-	 EMFRHqZTvHj9wtCJPqKV9Qv7Z1CIfIsmz1wuiysm4EgE388rO7obPqX+rBFwzwu+DJ
-	 UK1uJR6ND/S9ucwKFTiCVBVv+r7CVTix2byeRPEVTBJWwJ22DqpZGtNGnlkftgQBEN
-	 l5Z3zjwrTSZ5A/KSO1hYTxj8H+NCg2DcRAUqwEeEWLvBDKw/Hc4tunYZ1vbBi2KoVD
-	 I/6abJs3+y0YOIIDt2W/KLKCCd6WKhqO+ENrAgNX5dBbL6olWaN9IScPrSgvlfMpvW
-	 mQuakyEE2CcfQ==
+	b=CkM3RjX8ih+eN4aXSVuDpLm5f6ewtz3vlbbZOCuLsyfqLEaXgoEMVJCoDoOgHm71r
+	 oolHzrHMdvwbydK9UezMhSRC7LqIaTP6lsPv0exoIF485CEfD8pfF5batzA2CQlHtW
+	 QpFMQOwaZLK+y9qDCCWUvrdCOUMSYQrfP7TH3d5p6+xbNJURwr3muPvXZB2//si47w
+	 0GaOBtEkMRfWOSKriLleuAT+qixzRePpoozabn/+iy9urk1HOAmjvEScWj1L8tFmn8
+	 bTUtCo6ZM0GvBM4ItNUCkAf63dH5NRL/cKNbmV2LEsMh75hnOfyHzNHW4EmOMqcdft
+	 SafXnzH8O8oXw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yan Zhai <yan@cloudflare.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Felix Maurer <fmaurer@redhat.com>,
+	Shigeru Yoshida <syoshida@redhat.com>,
+	Breno Leitao <leitao@debian.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 234/238] rcu: add a helper to report consolidated flavor QS
-Date: Sun, 24 Mar 2024 19:40:22 -0400
-Message-ID: <20240324234027.1354210-235-sashal@kernel.org>
+Subject: [PATCH 5.10 227/238] hsr: Handle failures in module init
+Date: Sun, 24 Mar 2024 19:40:15 -0400
+Message-ID: <20240324234027.1354210-228-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -50,74 +50,59 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yan Zhai <yan@cloudflare.com>
+From: Felix Maurer <fmaurer@redhat.com>
 
-[ Upstream commit 1a77557d48cff187a169c2aec01c0dd78a5e7e50 ]
+[ Upstream commit 3cf28cd492308e5f63ed00b29ea03ca016264376 ]
 
-When under heavy load, network processing can run CPU-bound for many
-tens of seconds. Even in preemptible kernels (non-RT kernel), this can
-block RCU Tasks grace periods, which can cause trace-event removal to
-take more than a minute, which is unacceptably long.
+A failure during registration of the netdev notifier was not handled at
+all. A failure during netlink initialization did not unregister the netdev
+notifier.
 
-This commit therefore creates a new helper function that passes through
-both RCU and RCU-Tasks quiescent states every 100 milliseconds. This
-hard-coded value suffices for current workloads.
+Handle failures of netdev notifier registration and netlink initialization.
+Both functions should only return negative values on failure and thereby
+lead to the hsr module not being loaded.
 
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Signed-off-by: Yan Zhai <yan@cloudflare.com>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Link: https://lore.kernel.org/r/90431d46ee112d2b0af04dbfe936faaca11810a5.1710877680.git.yan@cloudflare.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Stable-dep-of: 00bf63122459 ("bpf: report RCU QS in cpumap kthread")
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Felix Maurer <fmaurer@redhat.com>
+Reviewed-by: Shigeru Yoshida <syoshida@redhat.com>
+Reviewed-by: Breno Leitao <leitao@debian.org>
+Link: https://lore.kernel.org/r/3ce097c15e3f7ace98fc7fd9bcbf299f092e63d1.1710504184.git.fmaurer@redhat.com
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/rcupdate.h | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ net/hsr/hsr_main.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 0122c03da24af..9db6710e6ee7b 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -226,6 +226,37 @@ do { \
- 	cond_resched(); \
- } while (0)
+diff --git a/net/hsr/hsr_main.c b/net/hsr/hsr_main.c
+index 2fd1976e5b1c3..bea7f935f38e9 100644
+--- a/net/hsr/hsr_main.c
++++ b/net/hsr/hsr_main.c
+@@ -137,14 +137,21 @@ static struct notifier_block hsr_nb = {
  
-+/**
-+ * rcu_softirq_qs_periodic - Report RCU and RCU-Tasks quiescent states
-+ * @old_ts: jiffies at start of processing.
-+ *
-+ * This helper is for long-running softirq handlers, such as NAPI threads in
-+ * networking. The caller should initialize the variable passed in as @old_ts
-+ * at the beginning of the softirq handler. When invoked frequently, this macro
-+ * will invoke rcu_softirq_qs() every 100 milliseconds thereafter, which will
-+ * provide both RCU and RCU-Tasks quiescent states. Note that this macro
-+ * modifies its old_ts argument.
-+ *
-+ * Because regions of code that have disabled softirq act as RCU read-side
-+ * critical sections, this macro should be invoked with softirq (and
-+ * preemption) enabled.
-+ *
-+ * The macro is not needed when CONFIG_PREEMPT_RT is defined. RT kernels would
-+ * have more chance to invoke schedule() calls and provide necessary quiescent
-+ * states. As a contrast, calling cond_resched() only won't achieve the same
-+ * effect because cond_resched() does not provide RCU-Tasks quiescent states.
-+ */
-+#define rcu_softirq_qs_periodic(old_ts) \
-+do { \
-+	if (!IS_ENABLED(CONFIG_PREEMPT_RT) && \
-+	    time_after(jiffies, (old_ts) + HZ / 10)) { \
-+		preempt_disable(); \
-+		rcu_softirq_qs(); \
-+		preempt_enable(); \
-+		(old_ts) = jiffies; \
-+	} \
-+} while (0)
+ static int __init hsr_init(void)
+ {
+-	int res;
++	int err;
+ 
+ 	BUILD_BUG_ON(sizeof(struct hsr_tag) != HSR_HLEN);
+ 
+-	register_netdevice_notifier(&hsr_nb);
+-	res = hsr_netlink_init();
++	err = register_netdevice_notifier(&hsr_nb);
++	if (err)
++		return err;
 +
- /*
-  * Infrastructure to implement the synchronize_() primitives in
-  * TREE_RCU and rcu_barrier_() primitives in TINY_RCU.
++	err = hsr_netlink_init();
++	if (err) {
++		unregister_netdevice_notifier(&hsr_nb);
++		return err;
++	}
+ 
+-	return res;
++	return 0;
+ }
+ 
+ static void __exit hsr_exit(void)
 -- 
 2.43.0
 
