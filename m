@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9152145B34;
-	Sun, 24 Mar 2024 23:13:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3F4145B15;
+	Sun, 24 Mar 2024 23:13:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322035; cv=none; b=Q0WCSC/01ymnlfGduQWsLuPDaouyldhqTyYr0c9Agnjk1j+IwZDdNg6ru/oCR8N5bIGfvm3pMSPLeCqkRKsB83Q8TJ4lpKGA4L9fEkd0V5OBPa6opfLZHLm/V8EcIYSj1YnhQxU5ChEFYBQdh9t06rIw+GKx63BeEYTDb7uZ6bQ=
+	t=1711322014; cv=none; b=kjV8/+MIaW1HgLJSGYFhi7zCElSTKoTlHkYsGjrExzmleyqOk7wa2R2tKwj25D+rUsp+dEzCwfPQNXmHQJ6wLPjPKuwuMrhXxf0DLqyW8QaEJtUvajiYVrDVnydYGeAiLb58bCJRmaHf0I620bGBhVzGCwiDv7UjnIzuQYORVzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322035; c=relaxed/simple;
-	bh=PBNNIx8LWar5cbDoBeRTvKcB+cXMQt3unzNSrboVD4g=;
+	s=arc-20240116; t=1711322014; c=relaxed/simple;
+	bh=JormID0mpDAoMktOmH3B7X1mZ+zkwgsuNBGDq22flRY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cDNYtzRlmN0WeOxqaBEfDRPYULurrAl58jFvJyZhfoEi0puM2PUgT3mHuIKv8d49jyvngeYJARhD0q84YkmFti+afrMtFZBSJ8aP7Cnqr9K4K8AeeXELwFfToNzsBo4XBBS1NUTN1Zhknxr3d9Lf1XS3+a0cpqNsF8/Ybwslq04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kn8QLplt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Hcw089HhE/WTBDci73CFFPEZO/Ut7G1WCw6KuWuHRIesQDTVLwDqc9TtFGTFij96t0WyVUFjgUPXHMKtqeex1Nc7kK23raXX8PofaO/1c1kgOYyYOs5Un8xG5xKJvSl631gdyn2YH2tOZr7csesIXamgslhITDjemd+j67bIn0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=crcVQpjY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kn8QLplt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05E61C43394;
-	Sun, 24 Mar 2024 23:13:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="crcVQpjY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEA0DC43394;
+	Sun, 24 Mar 2024 23:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322034;
-	bh=PBNNIx8LWar5cbDoBeRTvKcB+cXMQt3unzNSrboVD4g=;
+	s=k20201202; t=1711322014;
+	bh=JormID0mpDAoMktOmH3B7X1mZ+zkwgsuNBGDq22flRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Kn8QLplt7Ngtq0zHYB1gsyJOIMRywd+TvUI4oDOxQ7keFRfgUxLRsnp2FQFf1CpJA
-	 1j7R32DsGv9rLudewsjHUhsffcwSAKEwqw7Bb77nAFFQIHn24m4WzOr16lVYKtmruG
-	 ssgbTuEpxmb1N1S6e4JTxbnn7BERyYsbuXbpghBeGkh98Ewm7cjCmxGtiV+grUohM0
-	 GCN1sYLTrTq6DUizqU3LInerpGlC6+OvQ999NEKtpAPkH/pk2XCkxTWBb32eS2G8mS
-	 UjOmZ+aUyKIEIlgBo5GieHPGD3JEwH4cLd2OLeBdpxO7K/jpV6oI48fQ6iG8U0WOAW
-	 blLEQyXPw5mkQ==
+	b=crcVQpjY10H6qXFoqL3nCt6nbAeg/KHKzTmVDnT4gqLFJ/WDwn1DJ0Q+AXN6HC4KB
+	 +Bxr5xbeJlBzaA4jWr9IPtThfxImWUji+YySsASMISWEHRFLeX/pxPFYlG7owCt+jS
+	 n0UWBoVC9jWgMqKgPoqxWnZOt15JXjJh5/ogAcUiyDgiZ3V7+T32jmqCaSuIXwwftW
+	 i8Wfstm8XusuV+p77BLAfCckq9wB+8yZiFM6XlCefGW4mJnSM9/zsWMdeN2Wf89R2p
+	 yCS0aCslJmc1tQCCAPAYA5rReiPMTlpqlIVSnMvDVFu2QT20YkTi5DMLi4ZBS0D52V
+	 vvYNSxY5VOaLA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
+Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
+	Julian Calaby <julian.calaby@gmail.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 106/451] pmdomain: qcom: rpmhpd: Drop SA8540P gfx.lvl
-Date: Sun, 24 Mar 2024 19:06:22 -0400
-Message-ID: <20240324231207.1351418-107-sashal@kernel.org>
+Subject: [PATCH 6.1 086/451] wifi: b43: Stop correct queue in DMA worker when QoS is disabled
+Date: Sun, 24 Mar 2024 19:06:02 -0400
+Message-ID: <20240324231207.1351418-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,37 +49,64 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
+From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
 
-[ Upstream commit 883957bee580b723fd87d49ac73e0c84fc03a446 ]
+[ Upstream commit 581c8967d66c4961076dbbee356834e9c6777184 ]
 
-On SA8295P and SA8540P gfx.lvl is not provdied by rpmh, but rather is
-handled by an external regulator (max20411). Drop gfx.lvl from the list
-of power-domains exposed on this platform.
+When QoS is disabled, the queue priority value will not map to the correct
+ieee80211 queue since there is only one queue. Stop queue 0 when QoS is
+disabled to prevent trying to stop a non-existent queue and failing to stop
+the actual queue instantiated.
 
-Fixes: f68f1cb3437d ("soc: qcom: rpmhpd: add sc8280xp & sa8540p rpmh power-domains")
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20240125-sa8295p-gpu-v4-4-7011c2a63037@quicinc.com
-Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+Fixes: bad691946966 ("b43: avoid packet losses in the dma worker code.")
+Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20231231050300.122806-4-sergeantsagara@protonmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/rpmhpd.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/wireless/broadcom/b43/main.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index 9a90f241bb97f..6efe36aeb48e9 100644
---- a/drivers/soc/qcom/rpmhpd.c
-+++ b/drivers/soc/qcom/rpmhpd.c
-@@ -195,7 +195,6 @@ static struct rpmhpd *sa8540p_rpmhpds[] = {
- 	[SC8280XP_CX] = &cx,
- 	[SC8280XP_CX_AO] = &cx_ao,
- 	[SC8280XP_EBI] = &ebi,
--	[SC8280XP_GFX] = &gfx,
- 	[SC8280XP_LCX] = &lcx,
- 	[SC8280XP_LMX] = &lmx,
- 	[SC8280XP_MMCX] = &mmcx,
+diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
+index b2539a916fd04..c75f294ca1bc9 100644
+--- a/drivers/net/wireless/broadcom/b43/main.c
++++ b/drivers/net/wireless/broadcom/b43/main.c
+@@ -3603,7 +3603,7 @@ static void b43_tx_work(struct work_struct *work)
+ 				err = b43_dma_tx(dev, skb);
+ 			if (err == -ENOSPC) {
+ 				wl->tx_queue_stopped[queue_num] = true;
+-				ieee80211_stop_queue(wl->hw, queue_num);
++				b43_stop_queue(dev, queue_num);
+ 				skb_queue_head(&wl->tx_queue[queue_num], skb);
+ 				break;
+ 			}
+@@ -3627,6 +3627,7 @@ static void b43_op_tx(struct ieee80211_hw *hw,
+ 		      struct sk_buff *skb)
+ {
+ 	struct b43_wl *wl = hw_to_b43_wl(hw);
++	u16 skb_queue_mapping;
+ 
+ 	if (unlikely(skb->len < 2 + 2 + 6)) {
+ 		/* Too short, this can't be a valid frame. */
+@@ -3635,12 +3636,12 @@ static void b43_op_tx(struct ieee80211_hw *hw,
+ 	}
+ 	B43_WARN_ON(skb_shinfo(skb)->nr_frags);
+ 
+-	skb_queue_tail(&wl->tx_queue[skb->queue_mapping], skb);
+-	if (!wl->tx_queue_stopped[skb->queue_mapping]) {
++	skb_queue_mapping = skb_get_queue_mapping(skb);
++	skb_queue_tail(&wl->tx_queue[skb_queue_mapping], skb);
++	if (!wl->tx_queue_stopped[skb_queue_mapping])
+ 		ieee80211_queue_work(wl->hw, &wl->tx_work);
+-	} else {
+-		ieee80211_stop_queue(wl->hw, skb->queue_mapping);
+-	}
++	else
++		b43_stop_queue(wl->current_dev, skb_queue_mapping);
+ }
+ 
+ static void b43_qos_params_upload(struct b43_wldev *dev,
 -- 
 2.43.0
 
