@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A051EBD3D;
-	Sun, 24 Mar 2024 22:55:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439A112AADB;
+	Sun, 24 Mar 2024 22:55:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320934; cv=none; b=Cmf0uU6MBcrv6LSXgCvl4eddmW+iv+u9M+wDOa4gTE5Mn8xYSsHDUhezaJzJqVI/aPASTOwdfqbx00OTUJwQX9EOn9Wy9YFB/iUHV6GcUJUOpLKmoF/XhYk+cBxvjRbOINiWqFZeE0ZNRHSu9VO1W8xCaQRdYXAyQUUtm+linfU=
+	t=1711320930; cv=none; b=rEIt/72157QRhESCcfyOWOEU42JAQEQKqE/KmuawYW31zHqMNbAm1d0a0GyZXQYdhRvu45fn5oy5yyZzU/q+x0hFmDwnQLaAdkxSZ/IpzmwlSvyRWSMVSlEzylyiSQq4OKEvQaiYvMsVWhW3Bc9JkUUHi/1p67NCDR0Ir3sokcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320934; c=relaxed/simple;
-	bh=tkufBR9raGvxU8c3aH3i6ldwN0hrm/x4DjtThUr85q8=;
+	s=arc-20240116; t=1711320930; c=relaxed/simple;
+	bh=6QT672QOnXtfVyI1jQ2OIfo7bcqP0hm5arRscEAGI0M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qhLrQADmAwy4fEMUZKxXzFpMOa10oeg7f0LwYt0i2v8Wq9bbbrEBubgeprB2dF0odQlmCTUbMN1EEuJqqhd9RJLpIfQOhnXF6rhApJ3nDeBo6aaA5xLeK234ss70ZPmVfUH8nne7wGSOJm9vHzR2hgYzjyzCyWBcMND1H9euCD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfLAqZdf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gP2Bo53+45v4BPl9wuW8Yep7LfTixqHZX7mkI4IG1/ZDF0BMXW/gyOBBZfF71ZtjF+xxFjGsTXf2DSYsD5hae6/Ks4UZQuXR2sRNjAxJ0W82Wxf0ML+5T6kwbekIu+4E1tf9ZekN7O2DvZ7HgnvxUm0p2LgCEieCH0YMkPqzcNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ir0JGfTe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfLAqZdf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C953C43394;
-	Sun, 24 Mar 2024 22:55:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ir0JGfTe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83225C433C7;
+	Sun, 24 Mar 2024 22:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320933;
-	bh=tkufBR9raGvxU8c3aH3i6ldwN0hrm/x4DjtThUr85q8=;
+	s=k20201202; t=1711320929;
+	bh=6QT672QOnXtfVyI1jQ2OIfo7bcqP0hm5arRscEAGI0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WfLAqZdflfgXAQFazefS4bR0E4p4TJdi8M1EAwKqHRNfrGwYjUMqH+59KV48vBUpI
-	 /MVku3SDO6RDadxzekplxgRFC1TulDikhsD6GsB/YOb9ladKo9DzjcoNH26AYKvOOW
-	 4XeKZhZ3T3bfTdlRzMS9yjYsembXZbVToiFB3eYQvBQJ/mffszTbBzBf3FO5UrjcTP
-	 QWpqImwGxlTTlHBwgGEE5bKCfI42XvEp3EMmasiQov3w+tJ3WO6XPy0uy/w1q7BRTL
-	 Z++Ce/cYQIJ9KQA5eXDyU8hdwqxCMZQYYK3dZruoB7z4g9RA+W3inyDSPoCns5o/x6
-	 j58/IHGTV5S7A==
+	b=ir0JGfTeSy+9L90kA+xs9gqbanfOlhtDk2JuHJLIU2L8b2e4u5IhnCmyHW81uY7M/
+	 E2dPOkQPyX1eorFl5GnOt94SuOeP7IaiW4kWhujEeKNPWGuHCXcSouXNSYzdl4qkKO
+	 JgjoR97tD+qOh62ZRgyN/k2zAGIhSHFhi67sjNb9OCADV/PWu88U+wkzJOm54AOa9H
+	 rpKiukhZhwbxkdMEGEKYCPs1b8VHYU10yh4MpL/cmry7BhVAyRm76n/PjnX8F7rkcg
+	 jm96Kmiob8bLiFc03K87LszZrXk0pk/OetzJ97i4f8z9OqaWFRwbToUUjNEYmFoRr9
+	 57C0GroPnDAhQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Tim Van Patten <timvp@google.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
+Cc: Peter Griffin <peter.griffin@linaro.org>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 497/713] crypto: ccp - Avoid discarding errors in psp_send_platform_access_msg()
-Date: Sun, 24 Mar 2024 18:43:43 -0400
-Message-ID: <20240324224720.1345309-498-sashal@kernel.org>
+Subject: [PATCH 6.7 493/713] mfd: syscon: Call of_node_put() only when of_parse_phandle() takes a ref
+Date: Sun, 24 Mar 2024 18:43:39 -0400
+Message-ID: <20240324224720.1345309-494-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,53 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+From: Peter Griffin <peter.griffin@linaro.org>
 
-[ Upstream commit 0e8fca2f12ceb77c3a6b6f210135031f264aa612 ]
+[ Upstream commit d2b0680cf3b05490b579e71b0df6e07451977745 ]
 
-Errors can potentially occur in the "processing" of PSP commands or
-commands can be processed successfully but still return an error code in
-the header.
+of_parse_phandle() returns a device_node with refcount incremented, which
+the callee needs to call of_node_put() on when done. We should only call
+of_node_put() when the property argument is provided though as otherwise
+nothing has taken a reference on the node.
 
-This second case was being discarded because PSP communication worked but
-the command returned an error code in the payload header.
-
-Capture both cases and return them to the caller as -EIO for the caller
-to investigate. The caller can detect the latter by looking at
-`req->header->status`.
-
-Reported-and-tested-by: Tim Van Patten <timvp@google.com>
-Fixes: 7ccc4f4e2e50 ("crypto: ccp - Add support for an interface for platform features")
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 45330bb43421 ("mfd: syscon: Allow property as NULL in syscon_regmap_lookup_by_phandle")
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Link: https://lore.kernel.org/r/20240220115012.471689-2-peter.griffin@linaro.org
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccp/platform-access.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/mfd/syscon.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/ccp/platform-access.c b/drivers/crypto/ccp/platform-access.c
-index 94367bc49e35b..1b8ed33897332 100644
---- a/drivers/crypto/ccp/platform-access.c
-+++ b/drivers/crypto/ccp/platform-access.c
-@@ -118,9 +118,16 @@ int psp_send_platform_access_msg(enum psp_platform_access_msg msg,
- 		goto unlock;
- 	}
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index c9550368d9ea5..7d0e91164cbaa 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -238,7 +238,9 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+ 		return ERR_PTR(-ENODEV);
  
--	/* Store the status in request header for caller to investigate */
-+	/*
-+	 * Read status from PSP. If status is non-zero, it indicates an error
-+	 * occurred during "processing" of the command.
-+	 * If status is zero, it indicates the command was "processed"
-+	 * successfully, but the result of the command is in the payload.
-+	 * Return both cases to the caller as -EIO to investigate.
-+	 */
- 	cmd_reg = ioread32(cmd);
--	req->header.status = FIELD_GET(PSP_CMDRESP_STS, cmd_reg);
-+	if (FIELD_GET(PSP_CMDRESP_STS, cmd_reg))
-+		req->header.status = FIELD_GET(PSP_CMDRESP_STS, cmd_reg);
- 	if (req->header.status) {
- 		ret = -EIO;
- 		goto unlock;
+ 	regmap = syscon_node_to_regmap(syscon_np);
+-	of_node_put(syscon_np);
++
++	if (property)
++		of_node_put(syscon_np);
+ 
+ 	return regmap;
+ }
 -- 
 2.43.0
 
