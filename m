@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0E217CF59;
-	Sun, 24 Mar 2024 23:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7279D17D252;
+	Sun, 24 Mar 2024 23:43:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323808; cv=none; b=gTthXcjy9piKcNC+csOITM9AGCfpDcpnB493qggMvNd0HRujydcZ9nT0iVfepBp7pPxeyXevm+xgO+t/l9yj5tV0uY3whQfl6m2Pr4miyiCLPMNfbVLgSVXPxXV8+eqmK+IXU13QuniDJ+UHQ0+/munR+k43C/TOnOUwe8D1GBo=
+	t=1711323838; cv=none; b=bIPt9vGjn5Dec2oHqroq6KfQFd2mRimGf8hZCHswP97bHAc0PcFn3ekEXbQbkkH97v6ItfeqlNQEp0HC0l8ZrtggL7Mr55zYL1T46w2X/3/apbpwfRPgFstGrYVYMKbx6TIlEp92/6Q8D5wWciBaxSe1f5bHsnEB22cInEBfC7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323808; c=relaxed/simple;
-	bh=3seKHVoN8/gBs3/qRcJQnELvobzcetvAIc5iZRBAZi0=;
+	s=arc-20240116; t=1711323838; c=relaxed/simple;
+	bh=gPCxG5KUKMDBx+4xfg2ayTlP2HLGPyoCCR1pzIXSQz8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f0NsW2OZuRZAj5+QFjl6FE0XoTrvwGU82aMTgGylbETI/JiL25Ual6XE1ZlblVCHNTYw3yNMFySNIagALr1e88rIT5YoNgHC7Zjo7E5eTjwx/2LVIoXjtcmOiYRLW0DMVK5VYktw50teXTuo1IL8KPCETNAF2smjeg/pPSVvfTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2/LG0j6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dElQdnkmc3+rx39h2FvSJoz/NP98Ta8CuDEXuizzgj1TlAf6grbUWhAX43M9LF2qpXSnt+h/amLvYwP80tuta6MyxNMVZUQiLZYPiH4EQzUoUckgLHszOi+Cfz45ZikrO/4cV16S78Mal+ZuA2DLi6EzNTFhZxg73E/hXJ8FeYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/CQGL5P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2/LG0j6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75EA7C433A6;
-	Sun, 24 Mar 2024 23:43:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/CQGL5P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B211FC43399;
+	Sun, 24 Mar 2024 23:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323807;
-	bh=3seKHVoN8/gBs3/qRcJQnELvobzcetvAIc5iZRBAZi0=;
+	s=k20201202; t=1711323837;
+	bh=gPCxG5KUKMDBx+4xfg2ayTlP2HLGPyoCCR1pzIXSQz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c2/LG0j6kqMt77qnX4DZLavIBiGLyyFQRZY0MxGfCFqiRHvKanRlHfiJVzsl3is4N
-	 0J2b+GHKgb1TYwfglhEjlFBn+7xEd8gqDbh6DOCe93E1sjvhIgLax5LkIFxNUTzTvX
-	 +Al6CcqRDuP/O5PSXDrpD2e2W0srrjqV3Ogx1XQPfuGbbUhQZdk/0kMAw05MPJwUC5
-	 h+p802ZfDc6E3tb85Iq8FUPV0FIgvJr0tZuIxwf2+lYYV/MwYg/PYjEEJy69XW0bT3
-	 +lU/PK1cWjYciI1ZELlxCHjZODbXBHQpbUTUFHp0trypsnYtmsU8Sgbb3hWePJXdq3
-	 D/zi0WtHIpn5A==
+	b=m/CQGL5PHG0Cobr2gWZHLxBx3+j3PGp9nQ2mJR2zaQib7tGILczhLeJH3xrdcxx0a
+	 NsiTeA1MsKBsPLnjqF6v7zO+s8DDD0JWWytb23AIpCFQ0v3THO3XijL5s3CVjwbL+M
+	 jY3+dyt5nslBxFx8vwg93G/peFzY5bIgekfgD+416OfXbYcqQMoNc0w2MD12iVg3bF
+	 jXIdB/NzyFhdel68hxgR9fG3u6vnVKmOTPSGrmGAfIz1LJiW9969EkaRobIxzy7hXR
+	 atjhS3Xq4/DS0lmeqBuPc0LsovWBgTlUDn2hOeEWXn88rxNa6bYaLCGGgIffStRASC
+	 DtF2ZFDu/4F+A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Thompson <daniel.thompson@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 185/238] backlight: da9052: Fully initialize backlight_properties during probe
-Date: Sun, 24 Mar 2024 19:39:33 -0400
-Message-ID: <20240324234027.1354210-186-sashal@kernel.org>
+Subject: [PATCH 5.10 215/238] serial: 8250_exar: Don't remove GPIO device on suspend
+Date: Sun, 24 Mar 2024 19:40:03 -0400
+Message-ID: <20240324234027.1354210-216-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,34 +48,46 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Thompson <daniel.thompson@linaro.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 0285e9efaee8276305db5c52a59baf84e9731556 ]
+[ Upstream commit 73b5a5c00be39e23b194bad10e1ea8bb73eee176 ]
 
-props is stack allocated and the fields that are not explcitly set
-by the probe function need to be zeroed or we'll get undefined behaviour
-(especially so power/blank states)!
+It seems a copy&paste mistake that suspend callback removes the GPIO
+device. There is no counterpart of this action, means once suspended
+there is no more GPIO device available untile full unbind-bind cycle
+is performed. Remove suspicious GPIO device removal in suspend.
 
-Fixes: 6ede3d832aaa ("backlight: add driver for DA9052/53 PMIC v1")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240220153532.76613-2-daniel.thompson@linaro.org
-Signed-off-by: Lee Jones <lee@kernel.org>
+Fixes: d0aeaa83f0b0 ("serial: exar: split out the exar code from 8250_pci")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20240219150627.2101198-2-andriy.shevchenko@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/da9052_bl.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/8250/8250_exar.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/video/backlight/da9052_bl.c b/drivers/video/backlight/da9052_bl.c
-index 882359dd288c0..aa00379392a0f 100644
---- a/drivers/video/backlight/da9052_bl.c
-+++ b/drivers/video/backlight/da9052_bl.c
-@@ -117,6 +117,7 @@ static int da9052_backlight_probe(struct platform_device *pdev)
- 	wleds->led_reg = platform_get_device_id(pdev)->driver_data;
- 	wleds->state = DA9052_WLEDS_OFF;
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+index 6e33c74e569f0..7c28d2752a4cd 100644
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -688,6 +688,7 @@ static void exar_pci_remove(struct pci_dev *pcidev)
+ 	for (i = 0; i < priv->nr; i++)
+ 		serial8250_unregister_port(priv->line[i]);
  
-+	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW;
- 	props.max_brightness = DA9052_MAX_BRIGHTNESS;
++	/* Ensure that every init quirk is properly torn down */
+ 	if (priv->board->exit)
+ 		priv->board->exit(pcidev);
+ }
+@@ -702,10 +703,6 @@ static int __maybe_unused exar_suspend(struct device *dev)
+ 		if (priv->line[i] >= 0)
+ 			serial8250_suspend_port(priv->line[i]);
+ 
+-	/* Ensure that every init quirk is properly torn down */
+-	if (priv->board->exit)
+-		priv->board->exit(pcidev);
+-
+ 	return 0;
+ }
  
 -- 
 2.43.0
