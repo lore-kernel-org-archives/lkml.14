@@ -1,146 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6587E234D87;
-	Sun, 24 Mar 2024 23:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95BA14E2E3;
+	Sun, 24 Mar 2024 23:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322289; cv=none; b=R8RNacZbSQhoRxxgCOrVE6VUspUsFXYifvOF5q7LNzfcFzD6CEBc68TTElIKwqx9iGq1QWEjQn4RDOjqMI5i6qSq2JWv3kryCjRig9h/CyiyU1P9xyBFzvTiVPDyMOTVSNirsDye9rbugEOg1G0xMRNA3PvMKJ+iCkBvLNmD+34=
+	t=1711322294; cv=none; b=Pyjok5KIcPPrDX9QcShEVVI3BM8w0eQYdfFjylbTFx8l2oRSTOTiVzxcR5bJxXLybtfWFq1646RbiqZy35G3FFTWutLnNM/SlxSJ7TRtkIXo2QSD5FsdEcKRXw7laHE7FHtxtZQd0w1z+l5frHlLPlioriilbl8ZtnrXgexFms4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322289; c=relaxed/simple;
-	bh=yYO9KRfCndalG65ITRxpc4yjL9HO5ZNlZM30I0MbeX0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KA+YbJTZ74kEkT0vENCCibvbNH8Tu6bZk+8yy84rEOD9RtstvHuw+JccLHvJ99E29doQ7dBrACmClJ98787Ideo4rmCvKiHISBuxwjiSqIg3u2QRlvWfFCPV8MbzkzOCJic/pJqq+KvTPtI+fydDvVwWuHbCILTp684d1MfQfPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXRUUe+R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711322294; c=relaxed/simple;
+	bh=ExbqMkEoopRff3LKVChNomfBbb1n44Pk8l4uAHbwlE0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PiWZX7aRD9iwWKyC3wiw0wBxp/zdDMJgU5sKedcba37IFd77kOvSSVI+OG0rEbnivflCLMJEXcufGftZdG+l2hCH2S3A8/wO1XZbfSD0zf6MnNQm0we0jIbxLAtGO4bcbk64+5BiIK/HRzvNcbyZ/IAWEVbAg0wduJ/o/6e3+X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kr8tq9fQ; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXRUUe+R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC84C43394;
-	Sun, 24 Mar 2024 23:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322288;
-	bh=yYO9KRfCndalG65ITRxpc4yjL9HO5ZNlZM30I0MbeX0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cXRUUe+RUW7RxfJr4LS/i3LgD+WQxUmyq9Vpbe9AQE4nI17o5NulaY+pVITigfCrh
-	 GV0gy8elzrsazkQCZQuxxlbFfDwpGQKnQITGfl4+5KQkr2D38NfgtCtvbk/CAUz+g5
-	 /EgsJ4PrkKsRphxyL8ENYwlu4Rin5i9dauTxC49IEVn0TD8tPLxhVz1suqcoQa22m8
-	 Q5dyyPF58MFa+sKhviQgTAereN7aNpLbyEEZtmzamWRKsAiI/jNrXADd1kROzjoTnn
-	 XMAhCQg892Is0/bFgSYs6F0F8WZwcTL7BmEtQJ4HyFGHWIEG62XubWd2Xkt05W/qS0
-	 B3fhwBrv0jMag==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Jorge Mora <jmora1300@gmail.com>,
-	Jorge Mora <mora@netapp.com>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 371/451] NFSv4.2: fix nfs4_listxattr kernel BUG at mm/usercopy.c:102
-Date: Sun, 24 Mar 2024 19:10:47 -0400
-Message-ID: <20240324231207.1351418-372-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
-References: <20240324231207.1351418-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kr8tq9fQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711322291; x=1742858291;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=ExbqMkEoopRff3LKVChNomfBbb1n44Pk8l4uAHbwlE0=;
+  b=Kr8tq9fQ8iW6/0KUyTT8fNJZz91A1xLZVvEaKVdX1KmVW1SJ9s2TgCon
+   bQdPpkxhRd/Uucxe+7fawdWFA8ZALkJCWCrzUevAc3UBN2GQwPp+nR0qU
+   ZXSQOVmOlwzDqvoIFDzRtQ+ol7nGBKUcgt9Gfwpc7sDY9Cx3uAXbRiXaU
+   9L/DHTekKxGn7tTv5atjldF6jkCr0i5QuUeDqsAxu4fGQQnLfwYkI+QGu
+   p4broHBpdpLOCUr5xcw0QvDZD8BNTtEIbhIuPn3DkbFSs0C6+LHVCbFqk
+   ZPSgNjei70gUMLOpvrjLIhlBBBgsHyMXYm8oXBhhL399RjjHdvpcO2CQz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="9260885"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="9260885"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="15842194"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.213.186.165])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 16:18:07 -0700
+From: ira.weiny@intel.com
+Date: Sun, 24 Mar 2024 16:18:04 -0700
+Subject: [PATCH 01/26] cxl/mbox: Flag support for Dynamic Capacity Devices
+ (DCD)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240324-dcd-type2-upstream-v1-1-b7b00d623625@intel.com>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711322284; l=4137;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=L0YFDCEsjv8HWC653cNW+kOC3bCUS327QGxxY4JOQM8=;
+ b=biXfqR5QP6sUOlha0l3wJRnbYHnl4W23vQSOFjYBoz+1E/TIkRQR07lHRJdcwgPCgOikrU1Xg
+ MksnR9HVghHAqUmllg5MShxurUIlSvsHrQ+V8apS4uEt7M+M+ujjY1w
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-From: Jorge Mora <jmora1300@gmail.com>
+From: Navneet Singh <navneet.singh@intel.com>
 
-[ Upstream commit 251a658bbfceafb4d58c76b77682c8bf7bcfad65 ]
+Per the CXL 3.1 specification software must check the Command Effects
+Log (CEL) to know if a device supports dynamic capacity (DC).  If the
+device does support DC the specifics of the DC Regions (0-7) are read
+through the mailbox.
 
-A call to listxattr() with a buffer size = 0 returns the actual
-size of the buffer needed for a subsequent call. When size > 0,
-nfs4_listxattr() does not return an error because either
-generic_listxattr() or nfs4_listxattr_nfs4_label() consumes
-exactly all the bytes then size is 0 when calling
-nfs4_listxattr_nfs4_user() which then triggers the following
-kernel BUG:
+Flag DC Device (DCD) commands in a device if they are supported.
+Subsequent patches will key off these bits to configure DCD.
 
-  [   99.403778] kernel BUG at mm/usercopy.c:102!
-  [   99.404063] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
-  [   99.408463] CPU: 0 PID: 3310 Comm: python3 Not tainted 6.6.0-61.fc40.aarch64 #1
-  [   99.415827] Call trace:
-  [   99.415985]  usercopy_abort+0x70/0xa0
-  [   99.416227]  __check_heap_object+0x134/0x158
-  [   99.416505]  check_heap_object+0x150/0x188
-  [   99.416696]  __check_object_size.part.0+0x78/0x168
-  [   99.416886]  __check_object_size+0x28/0x40
-  [   99.417078]  listxattr+0x8c/0x120
-  [   99.417252]  path_listxattr+0x78/0xe0
-  [   99.417476]  __arm64_sys_listxattr+0x28/0x40
-  [   99.417723]  invoke_syscall+0x78/0x100
-  [   99.417929]  el0_svc_common.constprop.0+0x48/0xf0
-  [   99.418186]  do_el0_svc+0x24/0x38
-  [   99.418376]  el0_svc+0x3c/0x110
-  [   99.418554]  el0t_64_sync_handler+0x120/0x130
-  [   99.418788]  el0t_64_sync+0x194/0x198
-  [   99.418994] Code: aa0003e3 d000a3e0 91310000 97f49bdb (d4210000)
-
-Issue is reproduced when generic_listxattr() returns 'system.nfs4_acl',
-thus calling lisxattr() with size = 16 will trigger the bug.
-
-Add check on nfs4_listxattr() to return ERANGE error when it is
-called with size > 0 and the return value is greater than size.
-
-Fixes: 012a211abd5d ("NFSv4.2: hook in the user extended attribute handlers")
-Signed-off-by: Jorge Mora <mora@netapp.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- fs/nfs/nfs4proc.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+Changes for v1
+[iweiny: update to latest master]
+[iweiny: update commit message]
+[iweiny: Based on the fix:
+	https://lore.kernel.org/all/20230903-cxl-cel-fix-v1-1-e260c9467be3@intel.com/
+[jonathan: remove unneeded format change]
+[jonathan: don't split security code in mbox.c]
+---
+ drivers/cxl/core/mbox.c | 33 +++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h    | 15 +++++++++++++++
+ 2 files changed, 48 insertions(+)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index ec3f0103e1a7f..7cc74f7451d67 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -10592,29 +10592,33 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
- static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
- {
- 	ssize_t error, error2, error3;
-+	size_t left = size;
- 
--	error = generic_listxattr(dentry, list, size);
-+	error = generic_listxattr(dentry, list, left);
- 	if (error < 0)
- 		return error;
- 	if (list) {
- 		list += error;
--		size -= error;
-+		left -= error;
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 9adda4795eb7..ed4131c6f50b 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -161,6 +161,34 @@ static void cxl_set_security_cmd_enabled(struct cxl_security_state *security,
  	}
- 
--	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, size);
-+	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, left);
- 	if (error2 < 0)
- 		return error2;
- 
- 	if (list) {
- 		list += error2;
--		size -= error2;
-+		left -= error2;
- 	}
- 
--	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, size);
-+	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
- 	if (error3 < 0)
- 		return error3;
- 
--	return error + error2 + error3;
-+	error += error2 + error3;
-+	if (size && error > size)
-+		return -ERANGE;
-+	return error;
  }
  
- static void nfs4_enable_swap(struct inode *inode)
++static bool cxl_is_dcd_command(u16 opcode)
++{
++#define CXL_MBOX_OP_DCD_CMDS 0x48
++
++	return (opcode >> 8) == CXL_MBOX_OP_DCD_CMDS;
++}
++
++static void cxl_set_dcd_cmd_enabled(struct cxl_memdev_state *mds,
++					u16 opcode)
++{
++	switch (opcode) {
++	case CXL_MBOX_OP_GET_DC_CONFIG:
++		set_bit(CXL_DCD_ENABLED_GET_CONFIG, mds->dcd_cmds);
++		break;
++	case CXL_MBOX_OP_GET_DC_EXTENT_LIST:
++		set_bit(CXL_DCD_ENABLED_GET_EXTENT_LIST, mds->dcd_cmds);
++		break;
++	case CXL_MBOX_OP_ADD_DC_RESPONSE:
++		set_bit(CXL_DCD_ENABLED_ADD_RESPONSE, mds->dcd_cmds);
++		break;
++	case CXL_MBOX_OP_RELEASE_DC:
++		set_bit(CXL_DCD_ENABLED_RELEASE, mds->dcd_cmds);
++		break;
++	default:
++		break;
++	}
++}
++
+ static bool cxl_is_poison_command(u16 opcode)
+ {
+ #define CXL_MBOX_OP_POISON_CMDS 0x43
+@@ -733,6 +761,11 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+ 			enabled++;
+ 		}
+ 
++		if (cxl_is_dcd_command(opcode)) {
++			cxl_set_dcd_cmd_enabled(mds, opcode);
++			enabled++;
++		}
++
+ 		dev_dbg(dev, "Opcode 0x%04x %s\n", opcode,
+ 			enabled ? "enabled" : "unsupported by driver");
+ 	}
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 20fb3b35e89e..79a67cff9143 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -238,6 +238,15 @@ struct cxl_event_state {
+ 	struct mutex log_lock;
+ };
+ 
++/* Device enabled DCD commands */
++enum dcd_cmd_enabled_bits {
++	CXL_DCD_ENABLED_GET_CONFIG,
++	CXL_DCD_ENABLED_GET_EXTENT_LIST,
++	CXL_DCD_ENABLED_ADD_RESPONSE,
++	CXL_DCD_ENABLED_RELEASE,
++	CXL_DCD_ENABLED_MAX
++};
++
+ /* Device enabled poison commands */
+ enum poison_cmd_enabled_bits {
+ 	CXL_POISON_ENABLED_LIST,
+@@ -454,6 +463,7 @@ struct cxl_dev_state {
+  *                (CXL 2.0 8.2.9.5.1.1 Identify Memory Device)
+  * @mbox_mutex: Mutex to synchronize mailbox access.
+  * @firmware_version: Firmware version for the memory device.
++ * @dcd_cmds: List of DCD commands implemented by memory device
+  * @enabled_cmds: Hardware commands found enabled in CEL.
+  * @exclusive_cmds: Commands that are kernel-internal only
+  * @total_bytes: sum of all possible capacities
+@@ -481,6 +491,7 @@ struct cxl_memdev_state {
+ 	size_t lsa_size;
+ 	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
+ 	char firmware_version[0x10];
++	DECLARE_BITMAP(dcd_cmds, CXL_DCD_ENABLED_MAX);
+ 	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
+ 	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+ 	u64 total_bytes;
+@@ -551,6 +562,10 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_UNLOCK		= 0x4503,
+ 	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
+ 	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
++	CXL_MBOX_OP_GET_DC_CONFIG	= 0x4800,
++	CXL_MBOX_OP_GET_DC_EXTENT_LIST	= 0x4801,
++	CXL_MBOX_OP_ADD_DC_RESPONSE	= 0x4802,
++	CXL_MBOX_OP_RELEASE_DC		= 0x4803,
+ 	CXL_MBOX_OP_MAX			= 0x10000
+ };
+ 
+
 -- 
-2.43.0
+2.44.0
 
