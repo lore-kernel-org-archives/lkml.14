@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA9613848E;
-	Sun, 24 Mar 2024 23:06:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9524D152527;
+	Sun, 24 Mar 2024 23:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321589; cv=none; b=e9vnNnLbZDgCsTI0X2bI6Uu+XVai3z9P1UQ1E7sYPyqKPU4N30IuEfgysgd+gFymf+Zlz8b9ECipAGpJM5n4eAH8S9imbcrTKO3jZdeQBpQtUZ8JrFuWqEuHCqnDHeQlxW2a5sh0lCZg3fiAcAWxv7QF2CeGM6ubUBVu9n8Ua8s=
+	t=1711321614; cv=none; b=J7WnsFQaHxpOaXzxptfrqMNJZFOPprMyHf7nFCGFJxl37Q0VOe99p1RMi4uMMpQW3Q51k0B06rHtm9ApriRJPuUnSqlzIJQvUbmS299xs21sHXLurWQbd5GpkHXqCIvxf4eStB6ZXjSKCJLrAEOunY7nn1YMKXF/F/BKcfq8SGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321589; c=relaxed/simple;
-	bh=cw8A2LG6a4oZo0tYO+defptfQoLZHRPmb0Ms7zyq914=;
+	s=arc-20240116; t=1711321614; c=relaxed/simple;
+	bh=RwRlzPzxBsXC/idl0YVK+0djdxlWFSHYU/Oc9ReOMuI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZnZthdzk37WPAJZ4zDQnpnsQnC0audWRHAIImZJw7K5lhGUqEC1+v90957y/7owuNzXrIDxbheNtb/Iz9BUM1wj6JMNgeexepGHBoYAjRFfbLDm88BaEG5dV9KeI/bN6RN7YZ0vaO1HPRr344dbM1GnToVz2klGONxpns/yzUpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMjx0sMH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FaqUwWXb9zvwjGp6/og3lgMx0ft3TeV0HTP5TxxArtOvIWsl8kulMkXeGgg4S5+Ga4R1/rLBFVfXWrr5n0mPvS+mTU1TEG3Y6Jpm2SKzUdB9CclJbMykUQJxAbI0g4wtD+IIbFZD+1gzMnjqcrrXRaP7ri4mx184d1y8G3J3UkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jESuOoYc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMjx0sMH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71C7AC43399;
-	Sun, 24 Mar 2024 23:06:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jESuOoYc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFB17C43390;
+	Sun, 24 Mar 2024 23:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321588;
-	bh=cw8A2LG6a4oZo0tYO+defptfQoLZHRPmb0Ms7zyq914=;
+	s=k20201202; t=1711321613;
+	bh=RwRlzPzxBsXC/idl0YVK+0djdxlWFSHYU/Oc9ReOMuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hMjx0sMHGfUgVF2hwuMIEvindKN3+ftBzoDpti+9f3nYWnC8GkYMJIl39MmYvho7K
-	 1zjf5A7ykekY1itstk7vuSmBg0ycvNU7D61BfCgHXiWJ1chKOh54ZCoWp3O/ZHnA35
-	 jWHW4qm3e55vAl0KgtKG/3iW1wJl4aqlOSOv/ildHCD0UfQLgmpuXtzYDhz4SDHBbW
-	 L/0ps672fFlxEw5dzB76vj+ThYP1O09SLYtH5C10XuHgBATFwyFkzF5b6Uvc5DYdVg
-	 pUvG36CVrNyOJNYyCJDOycCcVwXlNCYLX0R3hrJ3fsBXhWabISZ3KI80cqZ/u6G5zT
-	 gZhsoxePiGfXw==
+	b=jESuOoYcwaUj3G/h3aDqKH8viwjIM0VwbuIAx5jjemkp7XcGRtZpnXGXK1MzuP1Tx
+	 7TIOv1pNZ79Cs3zj1mI5fDXKsFjMgdgCfjKZQN+jr9p4tkQxM+JhYizjVFXPokT8+e
+	 ioZHFX1HWfsa/DG0QTEMsJ+IHSDRZHEOpzoRFJdmo90zQM6eToLiDaw26qiHoYjnlJ
+	 Lmf+TlHLCNdjgL2UGZ74pg3Opow6gHTMPaWkbYQfiQYA9/rJ6BZXYk0qjAcRIYwrnH
+	 BhP2sauM4vmji8z1ZM3xzh3sm6/fR8E4SVBMxL0OKt69/fbEdLgCTvmR7pk6BzYQGK
+	 ecAic+c1NdBHg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	Bui Quang Minh <minhquangbui99@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Chen Ni <nichen@iscas.ac.cn>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 318/638] bpf: Fix stackmap overflow check on 32-bit arches
-Date: Sun, 24 Mar 2024 18:55:55 -0400
-Message-ID: <20240324230116.1348576-319-sashal@kernel.org>
+Subject: [PATCH 6.6 343/638] drm/tegra: dsi: Add missing check for of_find_device_by_node
+Date: Sun, 24 Mar 2024 18:56:20 -0400
+Message-ID: <20240324230116.1348576-344-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -45,61 +44,43 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Chen Ni <nichen@iscas.ac.cn>
 
-[ Upstream commit 7a4b21250bf79eef26543d35bd390448646c536b ]
+[ Upstream commit afe6fcb9775882230cd29b529203eabd5d2a638d ]
 
-The stackmap code relies on roundup_pow_of_two() to compute the number
-of hash buckets, and contains an overflow check by checking if the
-resulting value is 0. However, on 32-bit arches, the roundup code itself
-can overflow by doing a 32-bit left-shift of an unsigned long value,
-which is undefined behaviour, so it is not guaranteed to truncate
-neatly. This was triggered by syzbot on the DEVMAP_HASH type, which
-contains the same check, copied from the hashtab code.
+Add check for the return value of of_find_device_by_node() and return
+the error if it fails in order to avoid NULL pointer dereference.
 
-The commit in the fixes tag actually attempted to fix this, but the fix
-did not account for the UB, so the fix only works on CPUs where an
-overflow does result in a neat truncation to zero, which is not
-guaranteed. Checking the value before rounding does not have this
-problem.
-
-Fixes: 6183f4d3a0a2 ("bpf: Check for integer overflow when using roundup_pow_of_two()")
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Reviewed-by: Bui Quang Minh <minhquangbui99@gmail.com>
-Message-ID: <20240307120340.99577-4-toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: e94236cde4d5 ("drm/tegra: dsi: Add ganged mode support")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231024080738.825553-1-nichen@iscas.ac.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/stackmap.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/tegra/dsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index 36775c4bc33fb..a330f38ae7335 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -91,11 +91,14 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
- 	} else if (value_size / 8 > sysctl_perf_event_max_stack)
- 		return ERR_PTR(-EINVAL);
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index a9870c8283749..4101b2e012118 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -1543,9 +1543,11 @@ static int tegra_dsi_ganged_probe(struct tegra_dsi *dsi)
+ 	np = of_parse_phandle(dsi->dev->of_node, "nvidia,ganged-mode", 0);
+ 	if (np) {
+ 		struct platform_device *gangster = of_find_device_by_node(np);
++		of_node_put(np);
++		if (!gangster)
++			return -EPROBE_DEFER;
  
--	/* hash table size must be power of 2 */
--	n_buckets = roundup_pow_of_two(attr->max_entries);
--	if (!n_buckets)
-+	/* hash table size must be power of 2; roundup_pow_of_two() can overflow
-+	 * into UB on 32-bit arches, so check that first
-+	 */
-+	if (attr->max_entries > 1UL << 31)
- 		return ERR_PTR(-E2BIG);
+ 		dsi->slave = platform_get_drvdata(gangster);
+-		of_node_put(np);
  
-+	n_buckets = roundup_pow_of_two(attr->max_entries);
-+
- 	cost = n_buckets * sizeof(struct stack_map_bucket *) + sizeof(*smap);
- 	smap = bpf_map_area_alloc(cost, bpf_map_attr_numa_node(attr));
- 	if (!smap)
+ 		if (!dsi->slave) {
+ 			put_device(&gangster->dev);
 -- 
 2.43.0
 
