@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B65C1FDB45;
-	Sun, 24 Mar 2024 23:02:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514591FF5C3;
+	Sun, 24 Mar 2024 23:02:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321339; cv=none; b=NWpv8/+GpaRPs70B1huFf+7NRfC77SoqcSMb50wxyyYcAsYkx2NEYdaiyQykD3v7Vf7TnQEw4xl42ZxSrImAX73ZZMaw2vT+ZtF/mBDS8SCehY7yLPzX88IWY1mtd5LcuWkl9RS8mlUL7Q7gKUD/I2xKco9ox06Gtg+mOWpKKrM=
+	t=1711321373; cv=none; b=eI2k76AhDUl7xlavcF+0Aaf6XdLBuojO4155rgJfxdkg6QRPGQKLYJWqRTZIuCICN1phmFDQi6OrroICUxIExjey4FOZDYDKLG3SNrSmMlfHJK5cgxsvaYtRsVNlLV2k5Yqlbq/q91NSjXjufvGLwy9AYvPnhUyyV46u0bgDyBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321339; c=relaxed/simple;
-	bh=KLNv6IZ5yEeP9+TzZ7XNfvS9hm4MRpt6kWqrQ9+/B+s=;
+	s=arc-20240116; t=1711321373; c=relaxed/simple;
+	bh=//otllxWTZARqxoMNJaZWiaXPi8swLKbFrMrfBueuy4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GavvZIjll9m4aPqSd5Yn94OWaQogLJS+BZ9OR5Nj8MsJVZV5k9J1kAD0ZUUkGiQrQ39ovVAfKaTEh2iFz1Nx6Krk5FFLkR0c0Kr94EBhjE0t9DTIaLS8TwPlQIUPfW9nXbNQvmScRGluRkdKBz+f98hBKnxUlIR2h6PRfkK2Y4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DbNv6opR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KElw4IfUhoAODuPELt7lSlmv/P4OYff57GGREPgTjMEVQYazCWtdjHTbSO5uJ1hRKS7JWwoM26C3QxnCZpAiOcHlxv+ItT2JNy9O76XiKC8h7erGkFlUNc1MlAnnA18zxnBDZVgvW3nZqOHGC4HiCTeQXQoDxkbysuuA8r1adLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=peXKdlXz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbNv6opR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9DFAC433C7;
-	Sun, 24 Mar 2024 23:02:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="peXKdlXz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9C2C433F1;
+	Sun, 24 Mar 2024 23:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321338;
-	bh=KLNv6IZ5yEeP9+TzZ7XNfvS9hm4MRpt6kWqrQ9+/B+s=;
+	s=k20201202; t=1711321372;
+	bh=//otllxWTZARqxoMNJaZWiaXPi8swLKbFrMrfBueuy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DbNv6opRGY9SYDI2ou+V7R3NKyAzQK+61wLizAKxE5fPZzt3oP/GFTPBWG2EgMcpI
-	 hKvQ+Vy33icCirlFt/5a9u4EkMW8EkpqaXg3V5x/RrkCOFK95+xlo8UYWT/d16yt43
-	 c6tRRc6PsKuMOcQZkhODgs4PFenLOTaK6AQ+Qp0kz5Nd9jsrmokXSzu9qtciVNVDL7
-	 0lDF4IHcH6wjQivYggtzHZKuNePQk+2UUXxalJaEU9VHgetXC610IkbGTI2DkbGWsj
-	 2hKPcJko6yhgxzObKt1KVb9+kttMmzqEmfrPm1mM9f/gRl/fLRvw2RIGxqQ5oB9lgt
-	 AjQp+OP45KpOQ==
+	b=peXKdlXzu+eh2hkq2t7z1OhJydGipYsZB1xasrWWh0flZ61z1tx6HmOjqBu69QTuT
+	 EAtuaUZVnhZwBaq6hqR5vXZuQ3B51uEKvu2xGhxnvf/0VQ3DoW/A3jVzEyxXTiv6/K
+	 BQMB+RF9pqWylE04nA5TTdrhvj0X9Tb5j8DrWsEX0Hiu88Tqa6/8BMPOUz2u9NAEH0
+	 XcOlEvEXxYgRJYikxgxFWE6k93sKcvnQhyRD1bnQhM9Igwald9AFZLbP03wpsaFIh6
+	 d6DXzy1g7eY9bi4Zo5mWrR+pNRmG3oECGfAdbwTUA0WPU0oRvDorb8Sxvk9GYaAH5M
+	 jCku04CgDauag==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mike Yu <yumike@google.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
+Cc: David Gow <davidgow@google.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Justin Stitt <justinstitt@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 062/638] xfrm: set skb control buffer based on packet offload as well
-Date: Sun, 24 Mar 2024 18:51:39 -0400
-Message-ID: <20240324230116.1348576-63-sashal@kernel.org>
+Subject: [PATCH 6.6 096/638] lib: memcpy_kunit: Fix an invalid format specifier in an assertion msg
+Date: Sun, 24 Mar 2024 18:52:13 -0400
+Message-ID: <20240324230116.1348576-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,43 +50,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mike Yu <yumike@google.com>
+From: David Gow <davidgow@google.com>
 
-[ Upstream commit 8688ab2170a5be0bc922195f7091c38b506bab2e ]
+[ Upstream commit 0a549ed22c3c7cc6da5c5f5918efd019944489a5 ]
 
-In packet offload, packets are not encrypted in XFRM stack, so
-the next network layer which the packets will be forwarded to
-should depend on where the packet came from (either xfrm4_output
-or xfrm6_output) rather than the matched SA's family type.
+The 'i' passed as an assertion message is a size_t, so should use '%zu',
+not '%d'.
 
-Test: verified IPv6-in-IPv4 packets on Android device with
-      IPsec packet offload enabled
-Signed-off-by: Mike Yu <yumike@google.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+This was found by annotating the _MSG() variants of KUnit's assertions
+to let gcc validate the format strings.
+
+Fixes: bb95ebbe89a7 ("lib: Introduce CONFIG_MEMCPY_KUNIT_TEST")
+Signed-off-by: David Gow <davidgow@google.com>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_output.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/memcpy_kunit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/xfrm/xfrm_output.c b/net/xfrm/xfrm_output.c
-index 662c83beb345e..e5722c95b8bb3 100644
---- a/net/xfrm/xfrm_output.c
-+++ b/net/xfrm/xfrm_output.c
-@@ -704,9 +704,13 @@ int xfrm_output(struct sock *sk, struct sk_buff *skb)
- {
- 	struct net *net = dev_net(skb_dst(skb)->dev);
- 	struct xfrm_state *x = skb_dst(skb)->xfrm;
-+	int family;
- 	int err;
- 
--	switch (x->outer_mode.family) {
-+	family = (x->xso.type != XFRM_DEV_OFFLOAD_PACKET) ? x->outer_mode.family
-+		: skb_dst(skb)->ops->family;
-+
-+	switch (family) {
- 	case AF_INET:
- 		memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
- 		IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
+diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+index 440aee705ccca..30e00ef0bf2e0 100644
+--- a/lib/memcpy_kunit.c
++++ b/lib/memcpy_kunit.c
+@@ -32,7 +32,7 @@ struct some_bytes {
+ 	BUILD_BUG_ON(sizeof(instance.data) != 32);	\
+ 	for (size_t i = 0; i < sizeof(instance.data); i++) {	\
+ 		KUNIT_ASSERT_EQ_MSG(test, instance.data[i], v, \
+-			"line %d: '%s' not initialized to 0x%02x @ %d (saw 0x%02x)\n", \
++			"line %d: '%s' not initialized to 0x%02x @ %zu (saw 0x%02x)\n", \
+ 			__LINE__, #instance, v, i, instance.data[i]);	\
+ 	}	\
+ } while (0)
+@@ -41,7 +41,7 @@ struct some_bytes {
+ 	BUILD_BUG_ON(sizeof(one) != sizeof(two)); \
+ 	for (size_t i = 0; i < sizeof(one); i++) {	\
+ 		KUNIT_EXPECT_EQ_MSG(test, one.data[i], two.data[i], \
+-			"line %d: %s.data[%d] (0x%02x) != %s.data[%d] (0x%02x)\n", \
++			"line %d: %s.data[%zu] (0x%02x) != %s.data[%zu] (0x%02x)\n", \
+ 			__LINE__, #one, i, one.data[i], #two, i, two.data[i]); \
+ 	}	\
+ 	kunit_info(test, "ok: " TEST_OP "() " name "\n");	\
 -- 
 2.43.0
 
