@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DDA1D8DCE;
-	Sun, 24 Mar 2024 22:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5059D1D8DD9;
+	Sun, 24 Mar 2024 22:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320754; cv=none; b=E455hct8S7q+E/7Qi3/hfWanhOMbfxTfTafESBZu/aEtRCHt/19qojQ4z96pj3XLu8ZGF9/aptK5xUd9SU5A3o3m/Xeb9Epq4fvBTdWbD8AcDlg+pdVMr8hapcw6WwzptRAkTiuQDBqP0OM9+55kftsXmf6pX6OAUcQhX4L5u/8=
+	t=1711320755; cv=none; b=mVM+apPIo8QKzWgYPKwqG6MOz7I+ckE7Fk6gfGVKbNS5VvOjSJIAAzJbfpQBApnf3BD+vY9Ms8xDIekEz2M2jooux5qT0l51pydLAXWo6lMtg+eMQkJMjc/XQ77o/O7VNkXdLaJbTKJI86DTd5sFMOWpdBYnXo6ALTAxaKTEstY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320754; c=relaxed/simple;
-	bh=l5VQlAyCqA+YBYutp6QsOdh0u8gIR7VkiFb2R+hyqs0=;
+	s=arc-20240116; t=1711320755; c=relaxed/simple;
+	bh=Gy2dyvh/ntyyDPtr64AevhST2rDGnJU/UmphK66lt+U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UCeBlvyxUk4pZbUQroTaMMu641ysIhNE//fcLK5kO2R+23eX0d+qOSx2XV+1J77CBEb5M6SgSNz1vzUh+6z8zXNwHA0hMG80Fe3FZzMb+KryORVo+vnOf2k9zNkv7H28AwzS4i9OPSkhi58LVEGFyiyb09cIrZJeTr7jFLIap8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7AafBdZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pmYBg2uV0iLeIIkpvEY7vbY/IOVGi9U3f50bXePXxODRB+GdYXycBPvsMRoCA6cAhTXh42EywYUohN70MxiwdSiLmoQ/u4/wF+G2H1FPUpXegkfe4yNZOsmKS9Ogf58prjRRqXZPZHMB4Rcw7me3YvicQd4QXqDNOZ7aNnYmdh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNw4s4w6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7AafBdZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E0DBC43394;
-	Sun, 24 Mar 2024 22:52:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNw4s4w6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F59C433F1;
+	Sun, 24 Mar 2024 22:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320753;
-	bh=l5VQlAyCqA+YBYutp6QsOdh0u8gIR7VkiFb2R+hyqs0=;
+	s=k20201202; t=1711320755;
+	bh=Gy2dyvh/ntyyDPtr64AevhST2rDGnJU/UmphK66lt+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I7AafBdZ2YHvDTchwVDfClVA17yQ5uNPZsAN6SXM2j8RHYWNpSqjh7P6b9gRer2QG
-	 j4mQkfNRFvtISBayE/sEZO1k95QIwfBYV2RhniAyBBCOd3NDBrerm+LtUiwunHYDIM
-	 v5O9KhWunFd+BuHKsdQeexfUvixoxnHCGLcixYKFB8CusXdsgDlZ0k5epCyt2VNszg
-	 eLG09YIwMuYZNOa+nyCPG0EduLwcNbDC2VqSpX5F9vUK6N0zx5wnZip96ssEsuDzv9
-	 By5psv6t3XyPZ6IFpqBchwXu5MJkS9HGE8BeoZ/WVk2WFNr5cgkbYnRibyue1r3UAp
-	 Xa9xpA2Ve2LBg==
+	b=RNw4s4w6qABQ+07Rc1w1Ql4j4rpbTE1K5xVaana+e4ID8L2ykG4qKT/noANx9eCly
+	 iUmkmeIWSHqH1XOo9QET9NMSaXILvGKMFvdrJ9L36fQ//T0YU9uEZvPP0kCLhQpWw+
+	 46IeMlKXloCiZqBwjEmsQKDnTEKJgErTgY17Mp67rtzu3qQbA/o0R893ISZA+L4UYm
+	 iYCQDP2bPCVnZb0Y+PoynyBdmuZ5voLi6YA9stmIvWHyd23ovvwEfCaaRs/+YNQrph
+	 nrZIr5FyJI3fYm5fYN6TNnLIMtubhcsSAkvS9rkmb5FgUtaiGZkLX+Wt7WE3DCY/+o
+	 I7Q2f0AO5RLqw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stephen Boyd <swboyd@chromium.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+Cc: David McFarland <corngood@gmail.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 317/713] gpiolib: Pass consumer device through to core in devm_fwnode_gpiod_get_index()
-Date: Sun, 24 Mar 2024 18:40:43 -0400
-Message-ID: <20240324224720.1345309-318-sashal@kernel.org>
+Subject: [PATCH 6.7 319/713] ACPI: resource: Add Infinity laptops to irq1_edge_low_force_override
+Date: Sun, 24 Mar 2024 18:40:45 -0400
+Message-ID: <20240324224720.1345309-320-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,94 +48,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: David McFarland <corngood@gmail.com>
 
-[ Upstream commit 0d776cfd5e5b559fdf2e38285c2aea4b7048acbd ]
+[ Upstream commit e2605d4039a42a03000856b3229932455717b48b ]
 
-This devm API takes a consumer device as an argument to setup the devm
-action, but throws it away when calling further into gpiolib. This leads
-to odd debug messages like this:
+A user reported a keyboard problem similar to ones reported with other
+Zen laptops, on an Infinity E15-5A165-BM.
 
- (NULL device *): using DT '/gpio-keys/switch-pen-insert' for '(null)' GPIO lookup
+Add board name matches for this model and one (untested) close relative
+to irq1_edge_low_force_override.
 
-Let's pass the consumer device down, by directly calling what
-fwnode_gpiod_get_index() calls but pass the device used for devm. This
-changes the message to look like this instead:
-
- gpio-keys gpio-keys: using DT '/gpio-keys/switch-pen-insert' for '(null)' GPIO lookup
-
-Note that callers of fwnode_gpiod_get_index() will still see the NULL
-device pointer debug message, but there's not much we can do about that
-because the API doesn't take a struct device.
-
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Link: https://lemmy.ml/post/9864736
+Link: https://www.infinitygaming.com.au/bios/
+Link: https://lore.kernel.org/linux-acpi/20231006123304.32686-1-hdegoede@redhat.com
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Stable-dep-of: 021a67d09615 ("ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-devres.c |  2 +-
- drivers/gpio/gpiolib.c        | 14 +++++++-------
- drivers/gpio/gpiolib.h        |  8 ++++++++
- 3 files changed, 16 insertions(+), 8 deletions(-)
+ drivers/acpi/resource.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index fe9ce6b19f15c..4987e62dcb3d1 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -158,7 +158,7 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 	if (!dr)
- 		return ERR_PTR(-ENOMEM);
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index 03b52d31a3e3f..dacad1d846c0d 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -576,6 +576,18 @@ static const struct dmi_system_id irq1_edge_low_force_override[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "GM6BG0Q"),
+ 		},
+ 	},
++	{
++		/* Infinity E15-5A165-BM */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GM5RG1E0009COM"),
++		},
++	},
++	{
++		/* Infinity E15-5A305-1M */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GM5RGEE0016COM"),
++		},
++	},
+ 	{ }
+ };
  
--	desc = fwnode_gpiod_get_index(fwnode, con_id, index, flags, label);
-+	desc = gpiod_find_and_request(dev, fwnode, con_id, index, flags, label, false);
- 	if (IS_ERR(desc)) {
- 		devres_free(dr);
- 		return desc;
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 1d033106cf396..2d8c07a442227 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4127,13 +4127,13 @@ static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
- 	return desc;
- }
- 
--static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
--						struct fwnode_handle *fwnode,
--						const char *con_id,
--						unsigned int idx,
--						enum gpiod_flags flags,
--						const char *label,
--						bool platform_lookup_allowed)
-+struct gpio_desc *gpiod_find_and_request(struct device *consumer,
-+					 struct fwnode_handle *fwnode,
-+					 const char *con_id,
-+					 unsigned int idx,
-+					 enum gpiod_flags flags,
-+					 const char *label,
-+					 bool platform_lookup_allowed)
- {
- 	unsigned long lookupflags = GPIO_LOOKUP_FLAGS_DEFAULT;
- 	struct gpio_desc *desc;
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 3ccacf3c1288e..87ec7ba5b6b38 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -207,6 +207,14 @@ static inline int gpiod_request_user(struct gpio_desc *desc, const char *label)
- 	return ret;
- }
- 
-+struct gpio_desc *gpiod_find_and_request(struct device *consumer,
-+					 struct fwnode_handle *fwnode,
-+					 const char *con_id,
-+					 unsigned int idx,
-+					 enum gpiod_flags flags,
-+					 const char *label,
-+					 bool platform_lookup_allowed);
-+
- int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
- 		unsigned long lflags, enum gpiod_flags dflags);
- int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce);
 -- 
 2.43.0
 
