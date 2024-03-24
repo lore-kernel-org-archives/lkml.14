@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6A42057E8;
-	Sun, 24 Mar 2024 23:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831CD2057F8;
+	Sun, 24 Mar 2024 23:04:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321488; cv=none; b=EAqfLdwljpJiDzihCaipVY6RnQ+5VNWYuLAJCl7jFKXDs1LgtJe2+TK8wltkhLi3F09o0lkm7lk5HhI+QGzDqrEojEP3h0IkM7jBxAwWZGPL8AWTG7Wd+46EQq5/SPFEFvbzscP7mpjEH/WJlRrm3cI/Bt2p6wVckBfN9Ikp4XY=
+	t=1711321491; cv=none; b=rSq41UWjuigL4TyBBCz7p7x3M2vwUPSBkp2Denmz1cSdLG3wBi903UtJdv2VoNWvZuS0hPDVy3G1rZtKs0ZvsCJ95N0ZrIZ4WzW+PYBYpp1LW16Agi0sWZqD6weRbW5TVdiEGFx3izlUJ07e1+D2g72qCuCWuyh4DOY1sHoabfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321488; c=relaxed/simple;
-	bh=rrG1Xn02Ri/2nGX05CFu2/ro9ZQohjCcGnRg+Ua058Y=;
+	s=arc-20240116; t=1711321491; c=relaxed/simple;
+	bh=SSr5RFektTQL/EnOjOh7JFgVsHETDVqB8XLdmop9QhU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LkA5DtACj8BSf5aN4QopdUDW2VleB1JHZEzrEGp0k7xfkVHRpu3tphB+ei8Ds/0ai8E0FUeR45MhyO0+6uBBgJMSmgUxx9gO3MgngykpCtHo7kECN+XnsNZWta3rpOLQT4ntBMVM+H6zP5H/Ewah7giLxOsFptNB15bgtJDILto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNm2kJJI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jcJMHpSyQ1laggAkFeLE+c7/SJE9/e3hJE61LWJsEiBe/6cS5bFMi9Imq9oOWMXhvSmjHeGm2sUacetGros+Ks89AucmqmFUXW4sEKG8l5dnUjZynNh+hZDXR2hsXdwaWFZSElCCvCL+Xc3e451E3TJ8ezKk4phuxP29zMTNK84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3bDG5Xh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNm2kJJI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA211C43390;
-	Sun, 24 Mar 2024 23:04:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3bDG5Xh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC3F7C433C7;
+	Sun, 24 Mar 2024 23:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321487;
-	bh=rrG1Xn02Ri/2nGX05CFu2/ro9ZQohjCcGnRg+Ua058Y=;
+	s=k20201202; t=1711321491;
+	bh=SSr5RFektTQL/EnOjOh7JFgVsHETDVqB8XLdmop9QhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RNm2kJJI24HTlayh+SNCfAIb6nHhFnsfAtwCgEL/+sP8fMrzMszgvaUop0MBF+dkU
-	 IA42eXa0WFkg5XduJY6lkrHbLCF6OhWbXPLfsnPj1wB0JWka5A1kRXF0advtEUqYtr
-	 GXxhA6XRLUSLYbFd1PMmOibL4jkSIxI7WSQCEyMzHHdnGmD12CmRckT6a1J2Sh89TE
-	 +kUDXKqdpsrAxCE9s5BF1PyzkJxX4TXC8r/GLYgo2KMVfINeznKIK25cwsBMUygOH+
-	 MtuDW/JN1PK6QqOxukYJMf4EgOK9qJnlNbzkuBmUY+H/wW4rwKJqsLDp56iw+nR8gF
-	 TY+HZJYlQTMSg==
+	b=h3bDG5XhP8y9pTqwOCJEGnlVojj9qIhi93MwWdn3EVz0XTkYvgS0mveV81oETMG5d
+	 UIl+y0mTpTcyE7MqqKtWFBVVaAfss0u/RZfgI4Tl9wQEl2Yu+evIkCH/9KiMrKBZqK
+	 tMnVW2vS3PkgP5ZeHIPX/Wdm+AXGPqQ3mHxmWEOXeH8QUoxff+COjzvSdymf56g1qb
+	 DqO8NWZqyYx+Fo1awKO2NtEUkl+7tiI6kaVkcKRaIfD9EzXxbrAQ67czOxefPfM/TO
+	 IuDJWE9R+08JNndr4M4Kk6k/b+mpzcA6GC1L/rlZjucovj+vfw7khhyRFQ4fHoFyRT
+	 Cu0rNkNCNLyTg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eugen Hristev <eugen.hristev@collabora.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: Ilan Peer <ilan.peer@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 212/638] arm64: dts: mediatek: mt8192: fix vencoder clock name
-Date: Sun, 24 Mar 2024 18:54:09 -0400
-Message-ID: <20240324230116.1348576-213-sashal@kernel.org>
+Subject: [PATCH 6.6 216/638] wifi: iwlwifi: mvm: Fix the listener MAC filter flags
+Date: Sun, 24 Mar 2024 18:54:13 -0400
+Message-ID: <20240324230116.1348576-217-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,38 +49,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eugen Hristev <eugen.hristev@collabora.com>
+From: Ilan Peer <ilan.peer@intel.com>
 
-[ Upstream commit 76aac0f2a46847ed4a7a4fdd848dd66023c19ad1 ]
+[ Upstream commit 4cdb86487e3eaddb4b3a7df30ae709e810aac84b ]
 
-Clock name should be `venc_sel` as per binding.
-Fix the warning message :
-arch/arm64/boot/dts/mediatek/mt8192-asurada-hayato-r1.dtb: vcodec@17020000: clock-names:0: 'venc_sel' was expected
-        from schema $id: http://devicetree.org/schemas/media/mediatek,vcodec-encoder.yaml#
+One of the flags was from the wrong API.
 
-Fixes: aa8f3711fc87 ("arm64: dts: mt8192: Add H264 venc device node")
-Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://lore.kernel.org/r/20231228113245.174706-4-eugen.hristev@collabora.com
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Fixes: 9be162a7b670 ("wifi: iwlwifi: mvm: add support for the new MAC CTXT command")
+Signed-off-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://msgid.link/20240208185302.a338c30ec4e9.Ic2813cdeba4443c692d462fc4859392f069d7e33@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8192.dtsi | 2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/mld-mac.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8192.dtsi b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
-index 69f4cded5dbbf..f1fc14e53f8c7 100644
---- a/arch/arm64/boot/dts/mediatek/mt8192.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
-@@ -1770,7 +1770,7 @@ vcodec_enc: vcodec@17020000 {
- 			mediatek,scp = <&scp>;
- 			power-domains = <&spm MT8192_POWER_DOMAIN_VENC>;
- 			clocks = <&vencsys CLK_VENC_SET1_VENC>;
--			clock-names = "venc-set1";
-+			clock-names = "venc_sel";
- 			assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>;
- 			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D4>;
- 		};
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mld-mac.c b/drivers/net/wireless/intel/iwlwifi/mvm/mld-mac.c
+index f313a8d771e42..ad78c69cc6cb7 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mld-mac.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mld-mac.c
+@@ -167,7 +167,7 @@ static int iwl_mvm_mld_mac_ctxt_cmd_listener(struct iwl_mvm *mvm,
+ 	iwl_mvm_mld_mac_ctxt_cmd_common(mvm, vif, &cmd, action);
+ 
+ 	cmd.filter_flags = cpu_to_le32(MAC_CFG_FILTER_PROMISC |
+-				       MAC_FILTER_IN_CONTROL_AND_MGMT |
++				       MAC_CFG_FILTER_ACCEPT_CONTROL_AND_MGMT |
+ 				       MAC_CFG_FILTER_ACCEPT_BEACON |
+ 				       MAC_CFG_FILTER_ACCEPT_PROBE_REQ |
+ 				       MAC_CFG_FILTER_ACCEPT_GRP);
 -- 
 2.43.0
 
