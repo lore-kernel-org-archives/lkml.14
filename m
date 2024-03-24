@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8CC1DD2AC;
-	Sun, 24 Mar 2024 22:52:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA8B1DE9E8;
+	Sun, 24 Mar 2024 22:52:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320728; cv=none; b=aenp9Zw85k8znafOppwfPHOT7emKaqrRqloxAXwmFvS25AMWPzBID3sEVkDPqqNVL5joWk4dVVIht9gcnziL747PPy+bZz0UMFa6v+IFSLIQQ0luKC+h3wsX5RoT4QiMkdDnWtM5RRIGjiKSNl5om/A7yFUyKjJBktcFABWuuks=
+	t=1711320738; cv=none; b=tPZDCBfxCOCFUN+PSDBf24+iaqOpifvNcYnnqw1gLDGQLuDnyzeS+0Luu7qj6onu2QBiJy25dod4vtg09/UDfpD1RQcLJF/u6ARVkAsT6yCMyCfdVpGi2idBHYt77FXMMXOYNyc6uFfSoKWHiy+oDKppzT04YCVSdtAvUW0nUUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320728; c=relaxed/simple;
-	bh=cWdscHCae5ZFuXtoirel5HNtlh1wLRIoVOpG2BJ26fM=;
+	s=arc-20240116; t=1711320738; c=relaxed/simple;
+	bh=GWhucM3UOWCf+Jn0EA1zuh0UWwbQen1v+fnZzq9n2WQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IMUPXYwg76BiDQOoaGybJWyGgZOq9g28QF4LVQOjiC2zVAerxrR/xu3cqt7xt3+kMZeqPs5KmE0jX1MpUhIkwbjPxAha23eIAimKOZld0CnJd+ncDxiKMjSooGXzDwWCsb74T1cQjVFRlKeiGUjCekBho1Ii/ScWrRFwMNS1d1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cSoyfKQX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=n6zjRb+d4H9zsUTJ87VPWIjgfnoiHCaojL6j51lzJRi/WbbX6bMNTEDFvWj4heU8Z+GnNC4cb7p3Vk22c8hfqnvyivUDi9RwHUXC2Qv6py1zGRmK4TFh8GUUTSS67yeLPakVXrGVewfr6Cu57jzMPDIFaLYDqoy67KaBeKve4KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nnLBPfpG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cSoyfKQX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 810F8C43394;
-	Sun, 24 Mar 2024 22:52:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nnLBPfpG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 773CFC43390;
+	Sun, 24 Mar 2024 22:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320728;
-	bh=cWdscHCae5ZFuXtoirel5HNtlh1wLRIoVOpG2BJ26fM=;
+	s=k20201202; t=1711320738;
+	bh=GWhucM3UOWCf+Jn0EA1zuh0UWwbQen1v+fnZzq9n2WQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cSoyfKQXbct7ce6YMnO1rxOZABSo2/+v4jjsaHiqX3TaUzROm+FY1MxcqkhQDwG0U
-	 nWrwmWfa6k3TRkcIbI//wTKp5ekUJmMBtKfKsEuwbzKEHCIWSPSOJs9hqmp66o1yOT
-	 lz4/45MNPgeiNNH35IJ1BnfrgDrpmodVeOZEwgYtuWjTYzz5De++xfLmMKGdC0P3lZ
-	 3koN6Pqp8JcTSboPSDDTLiEPGri8vFEBxFCQUc1Eka+54RCYUD7zynlWKLZrTGMYP+
-	 RdAGbANQaYGVMslpR9eqPqxaYUA/cYlyzSTfz/ok5Eg/fx243v9b0fE3H4yTurG5Vk
-	 Sc7J9Ab/woI8A==
+	b=nnLBPfpGlPrMQKk7XWpGZJ0QMKJwQeoaBhHAiBq9HTWn0yOrZKm1PBJZL5faJiLjo
+	 qqkSNYatNzAzNVp7dku2Ajkld6XVrf99BG0rmzrGAEUA/3yLes2UTekndLHpS8Cgjc
+	 VPUI5lQCS4PcJ6T9PvO4rZl+GDnAo9iIKEdPnxZDvbJu0YAMJsMafJTgW7UP152Wye
+	 Xw5NGbhwQHge2HSua19Py5tIY4WMf4eRi3Fpq4rNsTPmPEGVk+Uxlc7aiBxm+Kh80m
+	 DhBt36WE5snhJTlI7+7/29z3wtWn5n/QZ5PT4UTIggdNoYpnF+q4eLu9NMMEh+SnQt
+	 rcR/WmsectB4w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,
-	Deren Wu <deren.wu@mediatek.com>,
+Cc: Deren Wu <deren.wu@mediatek.com>,
 	Felix Fietkau <nbd@nbd.name>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 291/713] wifi: mt76: mt7925: add support to set ifs time by mcu command
-Date: Sun, 24 Mar 2024 18:40:17 -0400
-Message-ID: <20240324224720.1345309-292-sashal@kernel.org>
+Subject: [PATCH 6.7 301/713] wifi: mt76: mt7925e: fix use-after-free in free_irq()
+Date: Sun, 24 Mar 2024 18:40:27 -0400
+Message-ID: <20240324224720.1345309-302-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,134 +48,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
+From: Deren Wu <deren.wu@mediatek.com>
 
-[ Upstream commit 8536ef0aeae1177c4a59b043d4b1c41ddaa9df2a ]
+[ Upstream commit a5a5f4413d91f395cb2d89829d376d7393ad48b9 ]
 
-There's a race between driver and fw on some tx/rx control registers
-when setting ifs, which will cause accidental hw queue pause problems.
-Avoid this by setting ifs time with bss_info mcu command.
+From commit a304e1b82808 ("[PATCH] Debug shared irqs"), there is a test
+to make sure the shared irq handler should be able to handle the unexpected
+event after deregistration. For this case, let's apply MT76_REMOVED flag to
+indicate the device was removed and do not run into the resource access
+anymore.
 
 Fixes: c948b5da6bbe ("wifi: mt76: mt7925: add Mediatek Wi-Fi7 driver for mt7925 chips")
-Co-developed-by: Deren Wu <deren.wu@mediatek.com>
 Signed-off-by: Deren Wu <deren.wu@mediatek.com>
-Signed-off-by: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/mediatek/mt76/mt7925/main.c  |  2 +-
- .../net/wireless/mediatek/mt76/mt7925/mcu.c   | 33 +++++++++++++++++++
- .../net/wireless/mediatek/mt76/mt7925/mcu.h   | 19 +++++++++++
- 3 files changed, 53 insertions(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/mt7925/pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/main.c b/drivers/net/wireless/mediatek/mt76/mt7925/main.c
-index 09b53cec750b3..6f0b18ae313de 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7925/main.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7925/main.c
-@@ -712,7 +712,7 @@ static void mt7925_bss_info_changed(struct ieee80211_hw *hw,
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/pci.c b/drivers/net/wireless/mediatek/mt76/mt7925/pci.c
+index c16d683e4891e..bf02a15067ef6 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7925/pci.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7925/pci.c
+@@ -427,6 +427,7 @@ static void mt7925_pci_remove(struct pci_dev *pdev)
+ 	struct mt792x_dev *dev = container_of(mdev, struct mt792x_dev, mt76);
  
- 		if (slottime != phy->slottime) {
- 			phy->slottime = slottime;
--			mt792x_mac_set_timeing(phy);
-+			mt7925_mcu_set_timing(phy, vif);
- 		}
- 	}
- 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-index 28b871e552f0c..8e72012472874 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-@@ -2244,6 +2244,38 @@ mt7925_mcu_bss_color_tlv(struct sk_buff *skb, struct ieee80211_vif *vif,
- 		vif->bss_conf.he_bss_color.color : 0;
- }
- 
-+static void
-+mt7925_mcu_bss_ifs_tlv(struct sk_buff *skb, struct ieee80211_vif *vif)
-+{
-+	struct mt792x_vif *mvif = (struct mt792x_vif *)vif->drv_priv;
-+	struct mt792x_phy *phy = mvif->phy;
-+	struct bss_ifs_time_tlv *ifs_time;
-+	struct tlv *tlv;
-+
-+	tlv = mt76_connac_mcu_add_tlv(skb, UNI_BSS_INFO_IFS_TIME, sizeof(*ifs_time));
-+	ifs_time = (struct bss_ifs_time_tlv *)tlv;
-+	ifs_time->slot_valid = true;
-+	ifs_time->slot_time = cpu_to_le16(phy->slottime);
-+}
-+
-+int mt7925_mcu_set_timing(struct mt792x_phy *phy,
-+			  struct ieee80211_vif *vif)
-+{
-+	struct mt792x_vif *mvif = (struct mt792x_vif *)vif->drv_priv;
-+	struct mt792x_dev *dev = phy->dev;
-+	struct sk_buff *skb;
-+
-+	skb = __mt7925_mcu_alloc_bss_req(&dev->mt76, &mvif->mt76,
-+					 MT7925_BSS_UPDATE_MAX_SIZE);
-+	if (IS_ERR(skb))
-+		return PTR_ERR(skb);
-+
-+	mt7925_mcu_bss_ifs_tlv(skb, vif);
-+
-+	return mt76_mcu_skb_send_msg(&dev->mt76, skb,
-+				     MCU_UNI_CMD(BSS_INFO_UPDATE), true);
-+}
-+
- int mt7925_mcu_add_bss_info(struct mt792x_phy *phy,
- 			    struct ieee80211_chanctx_conf *ctx,
- 			    struct ieee80211_vif *vif,
-@@ -2268,6 +2300,7 @@ int mt7925_mcu_add_bss_info(struct mt792x_phy *phy,
- 	mt7925_mcu_bss_bmc_tlv(skb, phy, ctx, vif, sta);
- 	mt7925_mcu_bss_qos_tlv(skb, vif);
- 	mt7925_mcu_bss_mld_tlv(skb, vif, sta);
-+	mt7925_mcu_bss_ifs_tlv(skb, vif);
- 
- 	if (vif->bss_conf.he_support) {
- 		mt7925_mcu_bss_he_tlv(skb, vif, phy);
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.h b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.h
-index 9fce054e50657..2cf39276118eb 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.h
-@@ -440,6 +440,22 @@ struct sta_rec_mld {
- 	} __packed link[2];
- } __packed;
- 
-+struct bss_ifs_time_tlv {
-+	__le16 tag;
-+	__le16 len;
-+	u8 slot_valid;
-+	u8 sifs_valid;
-+	u8 rifs_valid;
-+	u8 eifs_valid;
-+	__le16 slot_time;
-+	__le16 sifs_time;
-+	__le16 rifs_time;
-+	__le16 eifs_time;
-+	u8 eifs_cck_valid;
-+	u8 rsv;
-+	__le16 eifs_cck_time;
-+} __packed;
-+
- #define MT7925_STA_UPDATE_MAX_SIZE	(sizeof(struct sta_req_hdr) +		\
- 					 sizeof(struct sta_rec_basic) +		\
- 					 sizeof(struct sta_rec_bf) +		\
-@@ -467,6 +483,7 @@ struct sta_rec_mld {
- 					 sizeof(struct bss_mld_tlv) +			\
- 					 sizeof(struct bss_info_uni_he) +		\
- 					 sizeof(struct bss_info_uni_bss_color) +	\
-+					 sizeof(struct bss_ifs_time_tlv) +		\
- 					 sizeof(struct tlv))
- 
- #define MT_CONNAC3_SKU_POWER_LIMIT      449
-@@ -564,6 +581,8 @@ int mt7925_mcu_add_bss_info(struct mt792x_phy *phy,
- 			    struct ieee80211_vif *vif,
- 			    struct ieee80211_sta *sta,
- 			    int enable);
-+int mt7925_mcu_set_timing(struct mt792x_phy *phy,
-+			  struct ieee80211_vif *vif);
- int mt7925_mcu_set_deep_sleep(struct mt792x_dev *dev, bool enable);
- int mt7925_mcu_set_channel_domain(struct mt76_phy *phy);
- int mt7925_mcu_set_radio_en(struct mt792x_phy *phy, bool enable);
+ 	mt7925e_unregister_device(dev);
++	set_bit(MT76_REMOVED, &mdev->phy.state);
+ 	devm_free_irq(&pdev->dev, pdev->irq, dev);
+ 	mt76_free_device(&dev->mt76);
+ 	pci_free_irq_vectors(pdev);
 -- 
 2.43.0
 
