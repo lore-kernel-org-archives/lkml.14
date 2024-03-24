@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC0C20FABA;
-	Sun, 24 Mar 2024 23:08:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDAE13A89D;
+	Sun, 24 Mar 2024 23:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321685; cv=none; b=ut9JplIhe5flI9T4iFrpopGQCxP3Vg00eRUeCBg3gHmWmFGCopQPJnP4fs7pJbgOHQk4lXA/R7QKaoJcAbZN6jH8mmJxuPuY/LpypsMMUlkKaGeotv0qadmy3teBMl5MqOyJXsDEYCveZrbqJ0pGN8bU5yqommv1kW/SSIgcnhI=
+	t=1711321687; cv=none; b=B9qtocPNSTGnwpOjbC1kvwVprMD5NtYcZwYZXpG+hd3VE86B2NpISejQe63/9vR36iey4lqWLYfg4nq6rvtterOjT6CqZcskB6Fhbn+zzTftVV2Yn2I0de15+ngSxbyBKbRaskU/ytJtPZZY0wnzw/YW2iWeflQAuip2FP8eZ+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321685; c=relaxed/simple;
-	bh=32Gku5sbfFWN/XgXjEhBLHodUGyYu8Wv1FUmnhm2HPQ=;
+	s=arc-20240116; t=1711321687; c=relaxed/simple;
+	bh=BUaEXJZUG8etbIU7z42ZW4ULk/Wh+ZSN13xgmYO0WqQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nXrk2bPEm3PY/W/wQ/kZr1wDXwfLIBxPVY0SqxStGGP/bQeT+YWO9sa2qckbwuY4YlxNMpDGV8co6De8tLFG5p2lne5qy4KQAVCIJO3U9I+dJcx4HWhNAwoK4o/FLdkyZzR3kBFAyQnV2TihqpibLCWmoGCAXlEVuoNvXlr4yyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqKjYiSE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CTMQKTO2b1cskZRdKAphA5Spc/51JKIqxg8ySjP7knR5XZZIuCwNsiOpUemWSZhnsBeErbQKV/EoVoYkERTl4UwsYzMcSolhW77/pGM+ISqlQU3geYhFpFHwmIQyyCBcBuITyeDysodusAKozoAdr5qID4nn8aJw1AG4ZE4ZIOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0DaaTiz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqKjYiSE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66056C43390;
-	Sun, 24 Mar 2024 23:08:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0DaaTiz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D9C1C433C7;
+	Sun, 24 Mar 2024 23:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321684;
-	bh=32Gku5sbfFWN/XgXjEhBLHodUGyYu8Wv1FUmnhm2HPQ=;
+	s=k20201202; t=1711321686;
+	bh=BUaEXJZUG8etbIU7z42ZW4ULk/Wh+ZSN13xgmYO0WqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nqKjYiSE7nHZvrEPj4xXpjNAUfvmAi2jTBCon6aa1QOOvveL6sQrTUMa+dbECMex2
-	 pUVz6JHe1pGbfltbFJ7w3oN1Yo+fWRZEbnV+pztx+XTc0uaETJiZ1uGVIz9W5kra2W
-	 WkRPEjs1f9Z3/4E8leNN2kHev3S5nWUmTDEDgey3eZRNvBqiMFKdOfchRFi8h8kng4
-	 HkjY5O4eTQkMGkFj9EGievN8BMsNJaMHYF+zOymPRXjAgTeYmffm7LDaoDQWxTlu8k
-	 e9Md/tc2yoTFdMuXL4XtiweUhomWUS+H7DIN/bCgwKIr527wSAZxRov8JE3tqsMbaY
-	 Kf9sDYk6H1vRQ==
+	b=l0DaaTizaVRUrTbYjAerSbukEtqcFSDDPJ7IqfB9yRKdcG4lfsf8AzH+FGOScEIqX
+	 SEF1ZrcXJhbt/vDs20JY/uNI7YFUsDjmZwP0x8qkT6ozkv+K966cbZqLuiviTw4/js
+	 USC/Rzpqt9Je23KxL0Y72bl5u3qmIcV7ibILBRKE4ylj8GaYCl9eUa2mbcK2fz/whH
+	 Q2Md1XqzM9QTFQIkLRTO0B1S1MUHGmv5V9x95IkzRPgqF/UO4esHpZCx2uLns3jx2O
+	 gJCVPjbwgzZOouvrDeDfMGTTWcq123fZ4geb5ZTEhuc9ohNqnCzm4NvocaWcfl6nno
+	 SAMpr+/tDVjgg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Justin Stitt <justinstitt@google.com>,
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
 	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 412/638] ASoC: meson: t9015: fix function pointer type mismatch
-Date: Sun, 24 Mar 2024 18:57:29 -0400
-Message-ID: <20240324230116.1348576-413-sashal@kernel.org>
+Subject: [PATCH 6.6 414/638] ASoC: SOF: Add some bounds checking to firmware data
+Date: Sun, 24 Mar 2024 18:57:31 -0400
+Message-ID: <20240324230116.1348576-415-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,81 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Dan Carpenter <dan.carpenter@linaro.org>
 
-[ Upstream commit 5ad992c71b6a8e8a547954addc7af9fbde6ca10a ]
+[ Upstream commit 98f681b0f84cfc3a1d83287b77697679e0398306 ]
 
-clang-16 warns about casting functions to incompatible types, as is done
-here to call clk_disable_unprepare:
+Smatch complains about "head->full_size - head->header_size" can
+underflow.  To some extent, we're always going to have to trust the
+firmware a bit.  However, it's easy enough to add a check for negatives,
+and let's add a upper bounds check as well.
 
-sound/soc/meson/t9015.c:274:4: error: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-  274 |                         (void(*)(void *))clk_disable_unprepare,
-
-The pattern of getting, enabling and setting a disable callback for a
-clock can be replaced with devm_clk_get_enabled(), which also fixes
-this warning.
-
-Fixes: 33901f5b9b16 ("ASoC: meson: add t9015 internal DAC driver")
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-Link: https://msgid.link/r/20240213215807.3326688-3-jbrunet@baylibre.com
+Fixes: d2458baa799f ("ASoC: SOF: ipc3-loader: Implement firmware parsing and loading")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Link: https://msgid.link/r/5593d147-058c-4de3-a6f5-540ecb96f6f8@moroto.mountain
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/t9015.c | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+ sound/soc/sof/ipc3-loader.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/meson/t9015.c b/sound/soc/meson/t9015.c
-index 9c6b4dac68932..571f65788c592 100644
---- a/sound/soc/meson/t9015.c
-+++ b/sound/soc/meson/t9015.c
-@@ -48,7 +48,6 @@
- #define POWER_CFG	0x10
+diff --git a/sound/soc/sof/ipc3-loader.c b/sound/soc/sof/ipc3-loader.c
+index 28218766d2114..6e3ef06721106 100644
+--- a/sound/soc/sof/ipc3-loader.c
++++ b/sound/soc/sof/ipc3-loader.c
+@@ -148,6 +148,8 @@ static size_t sof_ipc3_fw_parse_ext_man(struct snd_sof_dev *sdev)
  
- struct t9015 {
--	struct clk *pclk;
- 	struct regulator *avdd;
- };
+ 	head = (struct sof_ext_man_header *)fw->data;
+ 	remaining = head->full_size - head->header_size;
++	if (remaining < 0 || remaining > sdev->basefw.fw->size)
++		return -EINVAL;
+ 	ext_man_size = ipc3_fw_ext_man_size(sdev, fw);
  
-@@ -249,6 +248,7 @@ static int t9015_probe(struct platform_device *pdev)
- 	struct t9015 *priv;
- 	void __iomem *regs;
- 	struct regmap *regmap;
-+	struct clk *pclk;
- 	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-@@ -256,26 +256,14 @@ static int t9015_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	platform_set_drvdata(pdev, priv);
- 
--	priv->pclk = devm_clk_get(dev, "pclk");
--	if (IS_ERR(priv->pclk))
--		return dev_err_probe(dev, PTR_ERR(priv->pclk), "failed to get core clock\n");
-+	pclk = devm_clk_get_enabled(dev, "pclk");
-+	if (IS_ERR(pclk))
-+		return dev_err_probe(dev, PTR_ERR(pclk), "failed to get core clock\n");
- 
- 	priv->avdd = devm_regulator_get(dev, "AVDD");
- 	if (IS_ERR(priv->avdd))
- 		return dev_err_probe(dev, PTR_ERR(priv->avdd), "failed to AVDD\n");
- 
--	ret = clk_prepare_enable(priv->pclk);
--	if (ret) {
--		dev_err(dev, "core clock enable failed\n");
--		return ret;
--	}
--
--	ret = devm_add_action_or_reset(dev,
--			(void(*)(void *))clk_disable_unprepare,
--			priv->pclk);
--	if (ret)
--		return ret;
--
- 	ret = device_reset(dev);
- 	if (ret) {
- 		dev_err(dev, "reset failed\n");
+ 	/* Assert firmware starts with extended manifest */
 -- 
 2.43.0
 
