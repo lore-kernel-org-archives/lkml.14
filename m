@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E7F1E61E7;
-	Sun, 24 Mar 2024 22:53:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C6E1E5852;
+	Sun, 24 Mar 2024 22:53:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320836; cv=none; b=LEGacN68tpB9POXvgwEs9rIVem62zHLU+TFHojRp/jrfmf41Sj9Ob4SizSJob9vzLH0sgb9SDVQ/sUfjKlDtFnKrybBd0LVbktUv2JNNg5dLAI5gK8aGdcXlMk7+U/TdSecHXTKb1ptPoe+aZzWOva7+rLMvabu1e8C+/I32z64=
+	t=1711320827; cv=none; b=jyganh9YmD13F/3KISpnQLr9HZDquRzBO58H+bU91BLv/p9QSes8YFVxJ/LsMQ242oCQaYJN+OvH/x63vrZSuPXPrOOFI3J0nY42x8Tg0Eg9eNK/fAtH1anji3q65F1744+tFXHl5bmT8ZWTsOOf1xc3+zMYvMLzv5PnjxZH418=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320836; c=relaxed/simple;
-	bh=Ke97hrXldFBxj8KzdI5VmMC+f8kuAT2CHHarl1iwKgY=;
+	s=arc-20240116; t=1711320827; c=relaxed/simple;
+	bh=6PYzZwYgCOek78YwuwPl9iW6KBnvVCcfXpsYYRC/mW0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s9s5U95utmsfE2tleU6MKntM/ouGslS2eDqFtqRQ72vnpgYJBLwO/i15jJiBsXvsxcC6QuAJXz943U3jl0f17wycNHsnDS0CyzWddLFG/Qv+XWZPM3wWJc6pdfPDjYCAD/ZKt1kpmxcW1V6PC9qlke0YW464d+FSFGqvXOqltYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKiGlF2L; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GhDaPIK3yW/fmYSuAPZnzm6iuPivZ5LGFbg+PQgyft3zjLpQJlDLLX/uZaM8HwEUSGA8MBqvPX/OfOonHD8e5KFDDwuuxYO33njMpSLIE+HDBiFphKJkW6bESYKyik5O5jeOrhd5THe13IBv1HXISJsmSzeBEbBW+I4Ss4zbPmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ih4GAvVM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKiGlF2L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62C29C43399;
-	Sun, 24 Mar 2024 22:53:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ih4GAvVM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 003D6C433F1;
+	Sun, 24 Mar 2024 22:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320835;
-	bh=Ke97hrXldFBxj8KzdI5VmMC+f8kuAT2CHHarl1iwKgY=;
+	s=k20201202; t=1711320825;
+	bh=6PYzZwYgCOek78YwuwPl9iW6KBnvVCcfXpsYYRC/mW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PKiGlF2L7pBIltADaYCqRmp6L+DzLTrzgr14mOxHCfe3x60TyPR6RYp1GJmtZ/PQw
-	 95AS+MjEhQT1wd/A1oG1VpbpHe0Iec0WtmuA5rIHGR63po/gIqTzIsxiSXRSDqU+zm
-	 fvNeQWyrYAlJ4UDi7Bt3vV4p2VblxpIPKIov+vpRfioPV+pWywZEvWDX4T5X9cSh5l
-	 5D0zXb4L+t9QIdBkGW5XKSnRB4IEW4yp+DXwEscBU3nWw0T/CZfemHvWa+pobUiDEF
-	 OtZpcpxES+aZqkBI78h01uNzQw0hhjrmS0zJA6gwOS/N2wXrvrlq81V2nAX40UPI2e
-	 TYxlWmcb3J71g==
+	b=Ih4GAvVMtto0K/gSGPcZH3PrDJi6flsWmUjF+TnBuXaqxvcGrpjeBpltMRYX+5O5p
+	 vh5Y/uTPvoQrWF3vLac5NsfVyV4m5mTQr9/1sZx/RKNOhdLkXOM7ZxlvjfSpSVq/Mj
+	 ehLUHt0c1deXItG0l9qe8uXsXvq5cm5YG90ozXXdGk+3HTj45KfB/p/VnlBQBVwHaT
+	 Aht4aQ3JDLoiLgsY6/ZvKPSJ3OD2sg2X+v6XG1+LCCaA6AHB7PZD9D3JoeIs7F751l
+	 Mc5mnaYvMUJ3C7A80C2oov3z3sbzkahzlqWO7jnv0qN/vazlUv7eiUFysCpp6S1SBe
+	 l5GJ8XmTrSILQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Zack Rusin <zack.rusin@broadcom.com>,
+Cc: Zhang Shurong <zhang_shurong@foxmail.com>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 400/713] drm/vmwgfx: fix a memleak in vmw_gmrid_man_get_node
-Date: Sun, 24 Mar 2024 18:42:06 -0400
-Message-ID: <20240324224720.1345309-401-sashal@kernel.org>
+Subject: [PATCH 6.7 390/713] drm/tegra: dpaux: Fix PM disable depth imbalance in tegra_dpaux_probe
+Date: Sun, 24 Mar 2024 18:41:56 -0400
+Message-ID: <20240324224720.1345309-391-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,39 +48,75 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Zhang Shurong <zhang_shurong@foxmail.com>
 
-[ Upstream commit 89709105a6091948ffb6ec2427954cbfe45358ce ]
+[ Upstream commit 0800880f4eb789b7d299db40f2e86e056bd33a4e ]
 
-When ida_alloc_max fails, resources allocated before should be freed,
-including *res allocated by kmalloc and ttm_resource_init.
+The pm_runtime_enable function increases the power disable depth,
+which means that we must perform a matching decrement on the error
+handling path to maintain balance within the given context.
+Additionally, we need to address the same issue for pm_runtime_get_sync.
+We fix this by invoking pm_runtime_disable and pm_runtime_put_sync
+when error returns.
 
-Fixes: d3bcb4b02fe9 ("drm/vmwgfx: switch the TTM backends to self alloc")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231204091416.3308430-1-alexious@zju.edu.cn
+Fixes: 82b81b3ec1a7 ("drm/tegra: dpaux: Implement runtime PM")
+Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/tencent_B13DB7F6C0023C46157250A524966F326A09@qq.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/tegra/dpaux.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c b/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c
-index ceb4d3d3b965a..a0b47c9b33f55 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c
-@@ -64,8 +64,11 @@ static int vmw_gmrid_man_get_node(struct ttm_resource_manager *man,
- 	ttm_resource_init(bo, place, *res);
+diff --git a/drivers/gpu/drm/tegra/dpaux.c b/drivers/gpu/drm/tegra/dpaux.c
+index ef02d530f78d7..ae12d001a04bf 100644
+--- a/drivers/gpu/drm/tegra/dpaux.c
++++ b/drivers/gpu/drm/tegra/dpaux.c
+@@ -522,7 +522,7 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
+ 	if (err < 0) {
+ 		dev_err(dpaux->dev, "failed to request IRQ#%u: %d\n",
+ 			dpaux->irq, err);
+-		return err;
++		goto err_pm_disable;
+ 	}
  
- 	id = ida_alloc_max(&gman->gmr_ida, gman->max_gmr_ids - 1, GFP_KERNEL);
--	if (id < 0)
-+	if (id < 0) {
-+		ttm_resource_fini(man, *res);
-+		kfree(*res);
- 		return id;
-+	}
+ 	disable_irq(dpaux->irq);
+@@ -542,7 +542,7 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
+ 	 */
+ 	err = tegra_dpaux_pad_config(dpaux, DPAUX_PADCTL_FUNC_I2C);
+ 	if (err < 0)
+-		return err;
++		goto err_pm_disable;
  
- 	spin_lock(&gman->lock);
+ #ifdef CONFIG_GENERIC_PINCONF
+ 	dpaux->desc.name = dev_name(&pdev->dev);
+@@ -555,7 +555,8 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
+ 	dpaux->pinctrl = devm_pinctrl_register(&pdev->dev, &dpaux->desc, dpaux);
+ 	if (IS_ERR(dpaux->pinctrl)) {
+ 		dev_err(&pdev->dev, "failed to register pincontrol\n");
+-		return PTR_ERR(dpaux->pinctrl);
++		err = PTR_ERR(dpaux->pinctrl);
++		goto err_pm_disable;
+ 	}
+ #endif
+ 	/* enable and clear all interrupts */
+@@ -571,10 +572,15 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
+ 	err = devm_of_dp_aux_populate_ep_devices(&dpaux->aux);
+ 	if (err < 0) {
+ 		dev_err(dpaux->dev, "failed to populate AUX bus: %d\n", err);
+-		return err;
++		goto err_pm_disable;
+ 	}
  
+ 	return 0;
++
++err_pm_disable:
++	pm_runtime_put_sync(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++	return err;
+ }
+ 
+ static void tegra_dpaux_remove(struct platform_device *pdev)
 -- 
 2.43.0
 
