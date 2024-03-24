@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E69209E16;
-	Sun, 24 Mar 2024 23:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D366315216A;
+	Sun, 24 Mar 2024 23:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321578; cv=none; b=p4moThybw4xE+IqSAF/HWvPdcZN2oGutrOzH/YlNVvTmee48rRTIJCN825snbbOYRNaG8i9MfTVcnpoBIPa1Euu9dc8OwRZzG9LoA52iV9v1Ki7mGZJjnfWNr5l+55fD0FCPitZ6Dd6+Aqknql688C3rYIptVKr6zSd/OHk1p3c=
+	t=1711321593; cv=none; b=o8kqd0PyHt1yLE4iA3u1nW6KSzH6BQ0Q7DBI8JIGnVQ0JWPd+B1d12uv5rpORGf8Y6m3QzXpeJhWFyxaiuiIWbGZw30oh5uNiT15Wt7KPh+symHDlQu3LSU4bJ0R2orAl8XsQqUgXzcpHdHgcG6GiT6t8wRrbQ8u40Gx5VSsxPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321578; c=relaxed/simple;
-	bh=ArHPtWX3+1gtQ68zc8c0UMu038IRAJ3nC1hv6nvkR10=;
+	s=arc-20240116; t=1711321593; c=relaxed/simple;
+	bh=AFtDp0I19989MUL6aaJ2DsxhejQl4XuhXqLEYgx6LVo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mww0lnrZ/Gscrbe/2e0nDmqTIHl0rutAF4O7hPfQd2+sg4xnIOdoTEWzBwl2ioUalALEkFBsrKBl95y41VXsEg6434imY1V6Atwp2EhWO0FIsSJxaWPkySJrACt1sW5cJwT9fnHPwZBEltNIpmoGoBUHppYVFTy1KVWK17Nwa7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UV/7wu/z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ORvRw0weGkqS+6jJrGj25Abtp9T7dBYZLRwpJxP5+VoZ0hJak70K5aLnmUBwgrCRaL/qqgWL9PVWx6nNjB3A1wurpBdMLOZQLCIE57YBZYBYKN631U7XcfaUO+WTp49FSQT6CrtBDPYJpj+d5sFRnIgrpOlL5nhb3W4BuGG8Bcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qnVco60t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UV/7wu/z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10BAAC43399;
-	Sun, 24 Mar 2024 23:06:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qnVco60t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E244EC43390;
+	Sun, 24 Mar 2024 23:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321577;
-	bh=ArHPtWX3+1gtQ68zc8c0UMu038IRAJ3nC1hv6nvkR10=;
+	s=k20201202; t=1711321592;
+	bh=AFtDp0I19989MUL6aaJ2DsxhejQl4XuhXqLEYgx6LVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UV/7wu/zHPh5gPefd/HqjdyhhA2pscEAl3bztZAvX5IKrQs+KC3k1LXZm7LlYfO8A
-	 SVD4jchCWyDvHBHt9tdpKp0RmX6pzYSQifTvCdEceyqNF0tkpXIKN0GVaMobr/T/Nz
-	 fyOOKpJ/nR+P8z4mSbUbpagtO0ij7AZfrdy6wkEFKTxaEIcWacHsm6SUX1uiZKyks3
-	 yTSBShS4FkfZ6xIhtk/qxkXKtTWOh6kkbj7P1MnA0eSSfZDVzFV0l71uKPFEXjoun/
-	 coUy3ppsP3TLO6z1udt7PTt/tqTlpxXUMo6UqOfz/2Db9HKNXqLZtKiPwZz2tG5iRF
-	 Ma9L8YIxFxOcw==
+	b=qnVco60toYoDibtZxwkdJXiY0iA4nk8AhUUxwvS2smH3W4fsUQrsdEoylBKTEnv91
+	 ztGXgK16ugXhUGjIPK6n88B1Do+7lX3cEgTOAlytxhOETUveH9cuiBKDyaHoPr+imh
+	 P1M5d558q/Len9ovTS5pkErVZPpjiKf7u6jB6Uj40D5gQ3yUTtKPUwNQUsSO2VvMOg
+	 cISst1OaD2vlS/H0T5xiivELEcrbb+qi/mqpzHlTvp+zgW3zD+g9yvlZxUq3GJkuEM
+	 yJ+FvLfuy9u9rhYUShBMNCBsV3wjJMPclK7Vzdn4/4My67vXIo58iIAXN65b3rO2mx
+	 lACEywmOsPHBw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrey Skvortsov <andrej.skvortzov@gmail.com>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= <kevin.lhopital@savoirfairelinux.com>,
+	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 306/638] Bluetooth: hci_h5: Add ability to allocate memory for private data
-Date: Sun, 24 Mar 2024 18:55:43 -0400
-Message-ID: <20240324230116.1348576-307-sashal@kernel.org>
+Subject: [PATCH 6.6 322/638] net: phy: fix phy_get_internal_delay accessing an empty array
+Date: Sun, 24 Mar 2024 18:55:59 -0400
+Message-ID: <20240324230116.1348576-323-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,106 +46,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+From: Kévin L'hôpital <kevin.lhopital@savoirfairelinux.com>
 
-[ Upstream commit 7a6d793e9ca8bc0c1d2f0aa0a02ec380d1124c74 ]
+[ Upstream commit 4469c0c5b14a0919f5965c7ceac96b523eb57b79 ]
 
-In some cases uart-base drivers may need to use priv data. For
-example, to store information needed for devcoredump.
+The phy_get_internal_delay function could try to access to an empty
+array in the case that the driver is calling phy_get_internal_delay
+without defining delay_values and rx-internal-delay-ps or
+tx-internal-delay-ps is defined to 0 in the device-tree.
+This will lead to "unable to handle kernel NULL pointer dereference at
+virtual address 0". To avoid this kernel oops, the test should be delay
+>= 0. As there is already delay < 0 test just before, the test could
+only be size == 0.
 
-Fixes: 044014ce85a1 ("Bluetooth: btrtl: Add Realtek devcoredump support")
-Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Fixes: 92252eec913b ("net: phy: Add a helper to return the index for of the internal delay")
+Co-developed-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Signed-off-by: Kévin L'hôpital <kevin.lhopital@savoirfairelinux.com>
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_h5.c     |  4 +++-
- drivers/bluetooth/hci_serdev.c |  9 +++++----
- drivers/bluetooth/hci_uart.h   | 12 +++++++++++-
- 3 files changed, 19 insertions(+), 6 deletions(-)
+ drivers/net/phy/phy_device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
-index 71e748a9477e4..b66136348bd64 100644
---- a/drivers/bluetooth/hci_h5.c
-+++ b/drivers/bluetooth/hci_h5.c
-@@ -113,6 +113,7 @@ struct h5_vnd {
- 	int (*suspend)(struct h5 *h5);
- 	int (*resume)(struct h5 *h5);
- 	const struct acpi_gpio_mapping *acpi_gpio_map;
-+	int sizeof_priv;
- };
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index a42df2c1bd043..bbc459f97b7b0 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2954,7 +2954,7 @@ s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
+ 	if (delay < 0)
+ 		return delay;
  
- struct h5_device_data {
-@@ -863,7 +864,8 @@ static int h5_serdev_probe(struct serdev_device *serdev)
- 	if (IS_ERR(h5->device_wake_gpio))
- 		return PTR_ERR(h5->device_wake_gpio);
+-	if (delay && size == 0)
++	if (size == 0)
+ 		return delay;
  
--	return hci_uart_register_device(&h5->serdev_hu, &h5p);
-+	return hci_uart_register_device_priv(&h5->serdev_hu, &h5p,
-+					     h5->vnd->sizeof_priv);
- }
- 
- static void h5_serdev_remove(struct serdev_device *serdev)
-diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
-index f16fd79bc02b8..611a11fbb2f3a 100644
---- a/drivers/bluetooth/hci_serdev.c
-+++ b/drivers/bluetooth/hci_serdev.c
-@@ -300,8 +300,9 @@ static const struct serdev_device_ops hci_serdev_client_ops = {
- 	.write_wakeup = hci_uart_write_wakeup,
- };
- 
--int hci_uart_register_device(struct hci_uart *hu,
--			     const struct hci_uart_proto *p)
-+int hci_uart_register_device_priv(struct hci_uart *hu,
-+			     const struct hci_uart_proto *p,
-+			     int sizeof_priv)
- {
- 	int err;
- 	struct hci_dev *hdev;
-@@ -325,7 +326,7 @@ int hci_uart_register_device(struct hci_uart *hu,
- 	set_bit(HCI_UART_PROTO_READY, &hu->flags);
- 
- 	/* Initialize and register HCI device */
--	hdev = hci_alloc_dev();
-+	hdev = hci_alloc_dev_priv(sizeof_priv);
- 	if (!hdev) {
- 		BT_ERR("Can't allocate HCI device");
- 		err = -ENOMEM;
-@@ -394,7 +395,7 @@ int hci_uart_register_device(struct hci_uart *hu,
- 	percpu_free_rwsem(&hu->proto_lock);
- 	return err;
- }
--EXPORT_SYMBOL_GPL(hci_uart_register_device);
-+EXPORT_SYMBOL_GPL(hci_uart_register_device_priv);
- 
- void hci_uart_unregister_device(struct hci_uart *hu)
- {
-diff --git a/drivers/bluetooth/hci_uart.h b/drivers/bluetooth/hci_uart.h
-index fb4a2d0d8cc80..68c8c7e95d64d 100644
---- a/drivers/bluetooth/hci_uart.h
-+++ b/drivers/bluetooth/hci_uart.h
-@@ -97,7 +97,17 @@ struct hci_uart {
- 
- int hci_uart_register_proto(const struct hci_uart_proto *p);
- int hci_uart_unregister_proto(const struct hci_uart_proto *p);
--int hci_uart_register_device(struct hci_uart *hu, const struct hci_uart_proto *p);
-+
-+int hci_uart_register_device_priv(struct hci_uart *hu,
-+				  const struct hci_uart_proto *p,
-+				  int sizeof_priv);
-+
-+static inline int hci_uart_register_device(struct hci_uart *hu,
-+					   const struct hci_uart_proto *p)
-+{
-+	return hci_uart_register_device_priv(hu, p, 0);
-+}
-+
- void hci_uart_unregister_device(struct hci_uart *hu);
- 
- int hci_uart_tx_wakeup(struct hci_uart *hu);
+ 	if (delay < delay_values[0] || delay > delay_values[size - 1]) {
 -- 
 2.43.0
 
