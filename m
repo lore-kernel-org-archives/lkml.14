@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B311DEA0C;
-	Sun, 24 Mar 2024 22:52:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E701DF116;
+	Sun, 24 Mar 2024 22:52:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320740; cv=none; b=R1Wt2KsNZyyItuXvJWxxEW8P15WaK8zjXyEWn+hW4UVeFcBU2HY5zhdXFTAqzczLcsLwM0Xt1t/nXNgU9s+L8MQjfgSkVmcAdx8TIJKYwQRzQhaAwTz2vd5k8tXHLlyLuk9+4zNRPpgc11gbmz5C6MUVB1LNAbjCqiZLMVCTCXg=
+	t=1711320746; cv=none; b=SohsFxRurIiN1LkNse/ODVNhitX9gcs228Yx2o01iz5aRl4APDGl3/2hcJGVtReLJUFqLPPWv1jMihFVnfBL+iuByD3snC93qZIcJ91vT0GDmVqGbhLO+FRyNYXvg9Ao5f07RFV3PPJC0q891OuqBKQ2a1WnwOGC+4OIz1EGslY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320740; c=relaxed/simple;
-	bh=TQXYspbfT+moCuXb5jEZWh2Vb5Vn0eF+7P6IyRXaoAE=;
+	s=arc-20240116; t=1711320746; c=relaxed/simple;
+	bh=7eHIBbjxTnJNAvBe7y538hijttessdfvGCLOEmFqKzo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PIkiV0Bphvb8GWW5EpbwSggiahXqXyyQHmy5xYW1kdunwq55qHZ93CpGfmYvYkVQmxFZwhMqN5RCPHgmj9qp/CAy9lgMKjXV4EF1MzV0+xwEUeiuKn/XzaXuoIUhWRhaVGqCkvxZCaIShZkpnLXgDOfwWNxYukfLhjh9Z4xHw7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mvd1mos8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RhH6wPB0ZRzOzIt0eIpL3ipgbm+OjFLjjUfgfkScGEEcuSH0/14i3FWkWaKoo8B9/hmzuq5mFrqp+ozePcDlLTlmvoroz1Xt6WtvjIWCIy/pa/g4qUUmlTHx80+G3/e8608tkFFLQuUoX/SH7JDj99/yOQUzzTKgDv+Df+M7Q50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xw/L3Nds; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mvd1mos8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61903C433C7;
-	Sun, 24 Mar 2024 22:52:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xw/L3Nds"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC128C433F1;
+	Sun, 24 Mar 2024 22:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320739;
-	bh=TQXYspbfT+moCuXb5jEZWh2Vb5Vn0eF+7P6IyRXaoAE=;
+	s=k20201202; t=1711320746;
+	bh=7eHIBbjxTnJNAvBe7y538hijttessdfvGCLOEmFqKzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mvd1mos88x1TDU8EPJpxeN19C5Cgy7S9h6MFGJlSIFidM9Y+WrK26NF9GfA/ByDqO
-	 8kmPxTP/7RE0duMHerrKycCKRvLw64mB6FaJp5ZZGWeN+7Q2Zfs57jwSz+U8GVtAUa
-	 9wkrAFOUtiAcbsjF9iYvwj8SQ25A1T5XMfMwRpBxR+aJI9wqcNpOsbLkSdjRsViV9E
-	 JybMMlX2mIle3F6Y3Yg7xjOL/anFnRnGH+ZijHig2dc2uVMKEjnhhsLJoqv+dQz31V
-	 lvEAyKx7FHE4v2b4cb5kMJ1Mat9sm8FcU8CiD7uKLOyPjkH96ZDKoGQlOJgBkwV/9T
-	 2+0hiMdz2qQOA==
+	b=Xw/L3NdsvnXbYLORT1fC4q2VRTKnCzw4UIAv/xTXVgw7hudzCuv5QGsGrkx3kRA9V
+	 zOZkZoGbAwsuUtevdELl2IdQYCVqbETBiAqv7lb84u3OEvAHvvgQ4eFSaXKOl1b/n/
+	 kkINSv/zyhtSg1KjA1M78BJiCTWXPiJOyvu8YnwdQCqesu/sLAxZfS6JBISn6fNbEi
+	 2xMgVdRTg0h2wRnnbszKj4adAAW1Ml4UXEZbPYzRiohaCq2lZHXjDAD3+JrLThb9Nm
+	 xlHZaCfzPCNEiJ8lhWBEM4nC3w48QFxNX9UFjGEvwlF1SG1kGxYbfuRxQ526P8NYtp
+	 hu9dKZCmq+QHw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,
-	kernel test robot <lkp@intel.com>,
-	Felix Fietkau <nbd@nbd.name>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 302/713] wifi: mt76: mt7921: fix incorrect type conversion for CLC command
-Date: Sun, 24 Mar 2024 18:40:28 -0400
-Message-ID: <20240324224720.1345309-303-sashal@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 6.7 310/713] pstore: inode: Only d_invalidate() is needed
+Date: Sun, 24 Mar 2024 18:40:36 -0400
+Message-ID: <20240324224720.1345309-311-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,45 +47,63 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit b6351ef9994ccb93b2447d396a0c517964dff2bc ]
+[ Upstream commit a43e0fc5e9134a46515de2f2f8d4100b74e50de3 ]
 
-clc->len is defined as 32 bits in length, so it must also be
-operated on with 32 bits, not 16 bits.
+Unloading a modular pstore backend with records in pstorefs would
+trigger the dput() double-drop warning:
 
-Fixes: fa6ad88e023d ("wifi: mt76: mt7921: fix country count limitation for CLC")
-Signed-off-by: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202312112104.Zkc3QUHr-lkp@intel.com/
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  WARNING: CPU: 0 PID: 2569 at fs/dcache.c:762 dput.part.0+0x3f3/0x410
+
+Using the combo of d_drop()/dput() (as mentioned in
+Documentation/filesystems/vfs.rst) isn't the right approach here, and
+leads to the reference counting problem seen above. Use d_invalidate()
+and update the code to not bother checking for error codes that can
+never happen.
+
+Suggested-by: Alexander Viro <viro@zeniv.linux.org.uk>
+Fixes: 609e28bb139e ("pstore: Remove filesystem records when backend is unregistered")
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7921/mcu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/pstore/inode.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7921/mcu.c
-index 399d7ca6bebcb..18056045d9759 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7921/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7921/mcu.c
-@@ -1270,7 +1270,7 @@ int __mt7921_mcu_set_clc(struct mt792x_dev *dev, u8 *alpha2,
- 		.acpi_conf = mt792x_acpi_get_flags(&dev->phy),
- 	};
- 	int ret, valid_cnt = 0;
--	u16 buf_len = 0;
-+	u32 buf_len = 0;
- 	u8 *pos;
+diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+index 4b4686c593996..4ca72b08d919a 100644
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -306,7 +306,6 @@ int pstore_put_backend_records(struct pstore_info *psi)
+ {
+ 	struct pstore_private *pos, *tmp;
+ 	struct dentry *root;
+-	int rc = 0;
  
- 	if (!clc)
-@@ -1281,7 +1281,7 @@ int __mt7921_mcu_set_clc(struct mt792x_dev *dev, u8 *alpha2,
- 	if (mt76_find_power_limits_node(&dev->mt76))
- 		req.cap |= CLC_CAP_DTS_EN;
+ 	root = psinfo_lock_root();
+ 	if (!root)
+@@ -316,11 +315,8 @@ int pstore_put_backend_records(struct pstore_info *psi)
+ 		list_for_each_entry_safe(pos, tmp, &records_list, list) {
+ 			if (pos->record->psi == psi) {
+ 				list_del_init(&pos->list);
+-				rc = simple_unlink(d_inode(root), pos->dentry);
+-				if (WARN_ON(rc))
+-					break;
+-				d_drop(pos->dentry);
+-				dput(pos->dentry);
++				d_invalidate(pos->dentry);
++				simple_unlink(d_inode(root), pos->dentry);
+ 				pos->dentry = NULL;
+ 			}
+ 		}
+@@ -328,7 +324,7 @@ int pstore_put_backend_records(struct pstore_info *psi)
  
--	buf_len = le16_to_cpu(clc->len) - sizeof(*clc);
-+	buf_len = le32_to_cpu(clc->len) - sizeof(*clc);
- 	pos = clc->data;
- 	while (buf_len > 16) {
- 		struct mt7921_clc_rule *rule = (struct mt7921_clc_rule *)pos;
+ 	inode_unlock(d_inode(root));
+ 
+-	return rc;
++	return 0;
+ }
+ 
+ /*
 -- 
 2.43.0
 
