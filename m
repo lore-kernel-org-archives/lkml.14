@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909F0279868;
-	Sun, 24 Mar 2024 23:37:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CCF1774ED;
+	Sun, 24 Mar 2024 23:38:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323472; cv=none; b=u9s5kLHufWLCUiKz6eV3bssXFsU9KfLKaekkLT7N6OOglLXdSHdIGipSjhH/6qBn5nldpVO/RG7Gq76MWRrKkS3BxGnU/AZDCCl+JWzzg3v/1vtEDzBo9K00TqQBVaq3tjFb5p8m1Rb+5yozU9sveNGtfT6UMM1OAXIg9JQUSC4=
+	t=1711323486; cv=none; b=o8xu01W7Ex0xyV51W/iput1lLd6bgNCEAWIyxTyjQ8ePRJ/pIq/Hhd1FCF3NUd3d+NV4QTadZbYOei9uvC1z4CfpN+peq0FNMCdoqWN+OZQ0oaDm7xI/s5x6GPDpayKOeDF4DBMv3WhoQioY0Kj2l11jJIWpKKM9DPV7bPB3ALs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323472; c=relaxed/simple;
-	bh=uH2XdHzls3Z2hRxQe82z2NG7LfIiK2yis/hjhBMRhxs=;
+	s=arc-20240116; t=1711323486; c=relaxed/simple;
+	bh=BH/Oe6Za7hwJSjCNdDO1HHW6sU+06qst04XA7RxXClw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ThvM5ZwYzNJXe4LNDm2xIT9NHP08ShUs9HfzMlUkQcSH48pO/Sjin7ZEz8xNvpqu9BIUz+v7/6h+coT7swQgd+uLdifgwpDBu801+g2MMz5yryZlEYSYTrspRhAZ7fKg05Tld6D9VB6PRPYSkbq5+3Eh6gYDjf8fCaKzjWEy4ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IaycfeKn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DBE3OWUoaD9GUc5PbmgAk3D3Gt2X84SZmAgCVOdy8R2/LSBkxrhUapeo5WD+3Px0vLthV5fOzplY7+PyOlAXLmrBKPt7fEa3cpUjEsfc5SgGdsFQAcJmWe0gZRpMnSCsEcQ9tJaRKCIRWN1eldqmR53K6lUpweRHB7uhovsdM2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERfjF/ia; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IaycfeKn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD762C433A6;
-	Sun, 24 Mar 2024 23:37:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERfjF/ia"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B79FEC43390;
+	Sun, 24 Mar 2024 23:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323472;
-	bh=uH2XdHzls3Z2hRxQe82z2NG7LfIiK2yis/hjhBMRhxs=;
+	s=k20201202; t=1711323485;
+	bh=BH/Oe6Za7hwJSjCNdDO1HHW6sU+06qst04XA7RxXClw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IaycfeKn1AYh7KbKRpYC9DOR1bB0zmRSMi4DeL2ocLW6z2CtCournkZs9aEZOZOJb
-	 qDMFuSum2wYKq4QZn/juX8mMZHRPl3ApBx2tTfJVrJ+sAusZqG5WfC6lxoWhXaeVfv
-	 0kO7wUGb4oKcjNNxMRF4jq4bili/Yb0oXe6lPf6/ZNPN85U76iNDCGY5tAvYZpPRp2
-	 ApaHzo8G0LhVbvZJgC1T6xbm78yilSP6KrJjAVmc8BJtIdVKUnDJROYwDdoDVd0C+z
-	 3gQC/qLKXzd3RhjOADeOK+gwxCaaj8XJaR/yzK7UJDobSilZjbXgEizdcCHDjRwWES
-	 XW+KGnF40SNaw==
+	b=ERfjF/ia6pPCjyscUNTzBzYaUCJqTE3v+nvKlXAumwYy3lzJaqW+9P5tMytQmUEz1
+	 grblSTqeDXZrTSLkbP8i+TrVSdcL41jVPBoxCYn0m3b6H+fgZ7gQBNXVip5N6fPyZW
+	 7M7SPOd7P7Qmq/pns1K4eYtmSMlNLKi3ssGEr9e7gjaguxqwoAIg4gxY8zURLBV/Rn
+	 rGEATx+ejrg5+r+3+doHWS5yBr7x0LbHyTEf9AiDAeE4OSnIEjloP62XnlpH5bzhiz
+	 7tegW+2O8slpgICb8DQDin2+Jc90rK9DJizBzRPRD04lVdeL7iRl0q+y5RuIZ0jIjR
+	 XcndrAu62WAcA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mikhail Khvainitski <me@khvoinitsky.org>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Baokun Li <libaokun1@huawei.com>,
+	Jan Kara <jack@suse.cz>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 177/317] HID: lenovo: Add middleclick_workaround sysfs knob for cptkbd
-Date: Sun, 24 Mar 2024 19:32:37 -0400
-Message-ID: <20240324233458.1352854-178-sashal@kernel.org>
+Subject: [PATCH 5.15 190/317] quota: simplify drop_dquot_ref()
+Date: Sun, 24 Mar 2024 19:32:50 -0400
+Message-ID: <20240324233458.1352854-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,132 +48,130 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mikhail Khvainitski <me@khvoinitsky.org>
+From: Baokun Li <libaokun1@huawei.com>
 
-[ Upstream commit 2814646f76f8518326964f12ff20aaee70ba154d ]
+[ Upstream commit 7bce48f0fec602b3b6c335963b26d9eefa417788 ]
 
-Previous attempt to autodetect well-behaving patched firmware
-introduced in commit 46a0a2c96f0f ("HID: lenovo: Detect quirk-free fw
-on cptkbd and stop applying workaround") has shown that there are
-false-positives on original firmware (on both 1st gen and 2nd gen
-keyboards) which causes the middle button click workaround to be
-mistakenly disabled.
+As Honza said, remove_inode_dquot_ref() currently does not release the
+last dquot reference but instead adds the dquot to tofree_head list. This
+is because dqput() can sleep while dropping of the last dquot reference
+(writing back the dquot and calling ->release_dquot()) and that must not
+happen under dq_list_lock. Now that dqput() queues the final dquot cleanup
+into a workqueue, remove_inode_dquot_ref() can call dqput() unconditionally
+and we can significantly simplify it.
 
-This commit adds explicit parameter to sysfs to control this
-workaround.
+Here we open code the simplified code of remove_inode_dquot_ref() into
+remove_dquot_ref() and remove the function put_dquot_list() which is no
+longer used.
 
-Fixes: 46a0a2c96f0f ("HID: lenovo: Detect quirk-free fw on cptkbd and stop applying workaround")
-Fixes: 43527a0094c1 ("HID: lenovo: Restrict detection of patched firmware only to USB cptkbd")
-Signed-off-by: Mikhail Khvainitski <me@khvoinitsky.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Message-Id: <20230630110822.3881712-6-libaokun1@huawei.com>
+Stable-dep-of: 179b8c97ebf6 ("quota: Fix rcu annotations of inode dquot pointers")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-lenovo.c | 57 +++++++++++++++++++++++++++-------------
- 1 file changed, 39 insertions(+), 18 deletions(-)
+ fs/quota/dquot.c | 70 +++++++-----------------------------------------
+ 1 file changed, 9 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
-index 965bddaa90aee..44fd4a05ace38 100644
---- a/drivers/hid/hid-lenovo.c
-+++ b/drivers/hid/hid-lenovo.c
-@@ -53,10 +53,10 @@ struct lenovo_drvdata {
- 	/* 0: Up
- 	 * 1: Down (undecided)
- 	 * 2: Scrolling
--	 * 3: Patched firmware, disable workaround
- 	 */
- 	u8 middlebutton_state;
- 	bool fn_lock;
-+	bool middleclick_workaround_cptkbd;
- };
- 
- #define map_key_clear(c) hid_map_usage_clear(hi, usage, bit, max, EV_KEY, (c))
-@@ -469,6 +469,36 @@ static ssize_t attr_sensitivity_store_cptkbd(struct device *dev,
- 	return count;
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 75e593b1c03e8..b7d8cd84df576 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -1084,59 +1084,7 @@ static int add_dquot_ref(struct super_block *sb, int type)
+ 	return err;
  }
  
-+static ssize_t attr_middleclick_workaround_show_cptkbd(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	struct hid_device *hdev = to_hid_device(dev);
-+	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
-+
-+	return snprintf(buf, PAGE_SIZE, "%u\n",
-+		cptkbd_data->middleclick_workaround_cptkbd);
-+}
-+
-+static ssize_t attr_middleclick_workaround_store_cptkbd(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf,
-+		size_t count)
-+{
-+	struct hid_device *hdev = to_hid_device(dev);
-+	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
-+	int value;
-+
-+	if (kstrtoint(buf, 10, &value))
-+		return -EINVAL;
-+	if (value < 0 || value > 1)
-+		return -EINVAL;
-+
-+	cptkbd_data->middleclick_workaround_cptkbd = !!value;
-+
-+	return count;
-+}
-+
- 
- static struct device_attribute dev_attr_fn_lock =
- 	__ATTR(fn_lock, S_IWUSR | S_IRUGO,
-@@ -480,10 +510,16 @@ static struct device_attribute dev_attr_sensitivity_cptkbd =
- 			attr_sensitivity_show_cptkbd,
- 			attr_sensitivity_store_cptkbd);
- 
-+static struct device_attribute dev_attr_middleclick_workaround_cptkbd =
-+	__ATTR(middleclick_workaround, S_IWUSR | S_IRUGO,
-+			attr_middleclick_workaround_show_cptkbd,
-+			attr_middleclick_workaround_store_cptkbd);
-+
- 
- static struct attribute *lenovo_attributes_cptkbd[] = {
- 	&dev_attr_fn_lock.attr,
- 	&dev_attr_sensitivity_cptkbd.attr,
-+	&dev_attr_middleclick_workaround_cptkbd.attr,
- 	NULL
- };
- 
-@@ -534,23 +570,7 @@ static int lenovo_event_cptkbd(struct hid_device *hdev,
- {
- 	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
- 
--	if (cptkbd_data->middlebutton_state != 3) {
--		/* REL_X and REL_Y events during middle button pressed
--		 * are only possible on patched, bug-free firmware
--		 * so set middlebutton_state to 3
--		 * to never apply workaround anymore
--		 */
--		if (hdev->product == USB_DEVICE_ID_LENOVO_CUSBKBD &&
--				cptkbd_data->middlebutton_state == 1 &&
--				usage->type == EV_REL &&
--				(usage->code == REL_X || usage->code == REL_Y)) {
--			cptkbd_data->middlebutton_state = 3;
--			/* send middle button press which was hold before */
--			input_event(field->hidinput->input,
--				EV_KEY, BTN_MIDDLE, 1);
--			input_sync(field->hidinput->input);
--		}
+-/*
+- * Remove references to dquots from inode and add dquot to list for freeing
+- * if we have the last reference to dquot
+- */
+-static void remove_inode_dquot_ref(struct inode *inode, int type,
+-				   struct list_head *tofree_head)
+-{
+-	struct dquot **dquots = i_dquot(inode);
+-	struct dquot *dquot = dquots[type];
 -
-+	if (cptkbd_data->middleclick_workaround_cptkbd) {
- 		/* "wheel" scroll events */
- 		if (usage->type == EV_REL && (usage->code == REL_WHEEL ||
- 				usage->code == REL_HWHEEL)) {
-@@ -1015,6 +1035,7 @@ static int lenovo_probe_cptkbd(struct hid_device *hdev)
- 	cptkbd_data->middlebutton_state = 0;
- 	cptkbd_data->fn_lock = true;
- 	cptkbd_data->sensitivity = 0x05;
-+	cptkbd_data->middleclick_workaround_cptkbd = true;
- 	lenovo_features_set_cptkbd(hdev);
+-	if (!dquot)
+-		return;
+-
+-	dquots[type] = NULL;
+-	if (list_empty(&dquot->dq_free)) {
+-		/*
+-		 * The inode still has reference to dquot so it can't be in the
+-		 * free list
+-		 */
+-		spin_lock(&dq_list_lock);
+-		list_add(&dquot->dq_free, tofree_head);
+-		spin_unlock(&dq_list_lock);
+-	} else {
+-		/*
+-		 * Dquot is already in a list to put so we won't drop the last
+-		 * reference here.
+-		 */
+-		dqput(dquot);
+-	}
+-}
+-
+-/*
+- * Free list of dquots
+- * Dquots are removed from inodes and no new references can be got so we are
+- * the only ones holding reference
+- */
+-static void put_dquot_list(struct list_head *tofree_head)
+-{
+-	struct list_head *act_head;
+-	struct dquot *dquot;
+-
+-	act_head = tofree_head->next;
+-	while (act_head != tofree_head) {
+-		dquot = list_entry(act_head, struct dquot, dq_free);
+-		act_head = act_head->next;
+-		/* Remove dquot from the list so we won't have problems... */
+-		list_del_init(&dquot->dq_free);
+-		dqput(dquot);
+-	}
+-}
+-
+-static void remove_dquot_ref(struct super_block *sb, int type,
+-		struct list_head *tofree_head)
++static void remove_dquot_ref(struct super_block *sb, int type)
+ {
+ 	struct inode *inode;
+ #ifdef CONFIG_QUOTA_DEBUG
+@@ -1153,11 +1101,16 @@ static void remove_dquot_ref(struct super_block *sb, int type,
+ 		 */
+ 		spin_lock(&dq_data_lock);
+ 		if (!IS_NOQUOTA(inode)) {
++			struct dquot **dquots = i_dquot(inode);
++			struct dquot *dquot = dquots[type];
++
+ #ifdef CONFIG_QUOTA_DEBUG
+ 			if (unlikely(inode_get_rsv_space(inode) > 0))
+ 				reserved = 1;
+ #endif
+-			remove_inode_dquot_ref(inode, type, tofree_head);
++			dquots[type] = NULL;
++			if (dquot)
++				dqput(dquot);
+ 		}
+ 		spin_unlock(&dq_data_lock);
+ 	}
+@@ -1174,13 +1127,8 @@ static void remove_dquot_ref(struct super_block *sb, int type,
+ /* Gather all references from inodes and drop them */
+ static void drop_dquot_ref(struct super_block *sb, int type)
+ {
+-	LIST_HEAD(tofree_head);
+-
+-	if (sb->dq_op) {
+-		remove_dquot_ref(sb, type, &tofree_head);
+-		synchronize_srcu(&dquot_srcu);
+-		put_dquot_list(&tofree_head);
+-	}
++	if (sb->dq_op)
++		remove_dquot_ref(sb, type);
+ }
  
- 	ret = sysfs_create_group(&hdev->dev.kobj, &lenovo_attr_group_cptkbd);
+ static inline
 -- 
 2.43.0
 
