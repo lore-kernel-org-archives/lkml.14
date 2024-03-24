@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4231627A820;
-	Sun, 24 Mar 2024 23:38:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82D11774E1;
+	Sun, 24 Mar 2024 23:38:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323489; cv=none; b=hZ14bLAG5krcbKs7NBMWP29MmiogoejNKzHs0etZS2KPjlt3XXq2UkuULIqRScl/BXHRuHAQx51Bwo4rjAdUjfxwSSN+YR4p7H1DWUCEMcnP4lEqDFKD18CwduOmnB9espS9MbneEGR1B/M0WMyEUWNz6uOwlnKrzi20vnzqR2s=
+	t=1711323482; cv=none; b=uAKkKMorPYuGEBlcqBBe4oOlXuThUUDdlLcDiU4DGTqbTCCD/hyo2q1J5sngm8EVuaQv7aE+v14YfbufcyqWnVR23oecxL37wpgUjr2JQ4IsSeaPdBpqhA88o0qOB8QsfssGeutlyYFKpbqd1uprx8b6PYakeeA2HaaKlTwSGUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323489; c=relaxed/simple;
-	bh=vHZPofxw8AN48sAFxEHgXaF8fZSmhRexjjuE+y/44oY=;
+	s=arc-20240116; t=1711323482; c=relaxed/simple;
+	bh=AMhjcr4iHcg/uPkM3R5hsZYfMAcH9jNbS1n+IIKneoc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wfy8pMiwKeDWFcZObo/5vzfLYQnqOjKAtBEEs4nJjJZf8NMnnw1xDSMFXfO3/U9oBg8Zlr3aa7c4y02lJvTRfYGONsBS0jSH9hUjM5WTFGIQvoOfWw+PqAWASXccbCCn0Nf9sutFFqKySf2xNKSuTlTEVWLyMrI0vpaJeJYX/XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1uVzA2N; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eVGWIgvRJwbV1sfwXGhzvO/a79q/GJK7VR28/ye8vD6yE+n6g1I8jkyc1HOf/gFOsa81fA9viv0L6utmh7Pp/GHW6gbAyCzIB9ei72txHWDJr0Jfue0ksvFgsMQ9CuxK7+DzZlvdDC0oBWUAzY4UydORMxwvcfVOHFanBxGSQIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQ5LT+6O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1uVzA2N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D6C3C43390;
-	Sun, 24 Mar 2024 23:38:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQ5LT+6O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E85ABC43390;
+	Sun, 24 Mar 2024 23:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323488;
-	bh=vHZPofxw8AN48sAFxEHgXaF8fZSmhRexjjuE+y/44oY=;
+	s=k20201202; t=1711323481;
+	bh=AMhjcr4iHcg/uPkM3R5hsZYfMAcH9jNbS1n+IIKneoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A1uVzA2NDv7+OyFn/bIjCv7PoJbWvxWZkHJKu7CmLvrGwd76FNBDhlcrs38Zhfy5g
-	 1S4fGu06tWRNb87wGoZyAXS22TA2c59n6eUb4p2AjpjRyNBqlBa8Aw+3VT8oM02U3w
-	 8gtk5iBQZB21Q/0lL5sLa8AMsX22hGXP2ogJbQkuVjAOSRsG1v9LT0zAYXHvLoe0uC
-	 IZKVIXP6zmEVp2767g0h+TdAjmEdBn+ydLYkwJ2ruS7a7cieyvtVFWRK1eKO/vGBYe
-	 02rIVrEMK3qQlFDmGoQ4L9NpRgqXakv9z1MG71VQl+2WpzkxAIZYeGtqPOA66zJmuV
-	 XuhnXi6TKjmPQ==
+	b=XQ5LT+6OVBHYn2+3sR8fwiUkj3d+quS/yVUVQjnj4nUTXHEa8c4chuDuBGHR2Ff/e
+	 TP6rhF8Hdk9BBrkMKe1Gi0+trvnEDnmR7RiXJim4P5Gu5gevgY2SJAqNk4h62vtnEv
+	 0AO5tOhMP9xSMnWyJzcUePh68XNwtVUEacJM5gJq80f1GGf+9FY0mwBbLnebMErcvt
+	 t9ScEq/WAQprCAJkLmMgwdAMnXXXB9PXl/nnIP7L24bIcPnS+Lut70NbEULfDPhosb
+	 y8ADSFyiy8lWjYulHT9SV/CDFuUg4IoYvgNAcYvguBIV1+u6q0nrfN3wAmqWwo5dBg
+	 pAQf0v3JDCWVQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 193/317] PCI/P2PDMA: Fix a sleeping issue in a RCU read section
-Date: Sun, 24 Mar 2024 19:32:53 -0400
-Message-ID: <20240324233458.1352854-194-sashal@kernel.org>
+Subject: [PATCH 5.15 186/317] media: edia: dvbdev: fix a use-after-free
+Date: Sun, 24 Mar 2024 19:32:46 -0400
+Message-ID: <20240324233458.1352854-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,36 +48,82 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 1e5c66afd4a40bb7be17cb33cbb1a1085f727730 ]
+[ Upstream commit 8c64f4cdf4e6cc5682c52523713af8c39c94e6d5 ]
 
-It is not allowed to sleep within a RCU read section, so use GFP_ATOMIC
-instead of GFP_KERNEL here.
+In dvb_register_device, *pdvbdev is set equal to dvbdev, which is freed
+in several error-handling paths. However, *pdvbdev is not set to NULL
+after dvbdev's deallocation, causing use-after-frees in many places,
+for example, in the following call chain:
 
-Link: https://lore.kernel.org/r/02d9ec4a10235def0e764ff1f5be881ba12e16e8.1704397858.git.christophe.jaillet@wanadoo.fr
-Fixes: ae21f835a5bd ("PCI/P2PDMA: Finish RCU conversion of pdev->p2pdma")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+budget_register
+  |-> dvb_dmxdev_init
+        |-> dvb_register_device
+  |-> dvb_dmxdev_release
+        |-> dvb_unregister_device
+              |-> dvb_remove_device
+                    |-> dvb_device_put
+                          |-> kref_put
+
+When calling dvb_unregister_device, dmxdev->dvbdev (i.e. *pdvbdev in
+dvb_register_device) could point to memory that had been freed in
+dvb_register_device. Thereafter, this pointer is transferred to
+kref_put and triggering a use-after-free.
+
+Link: https://lore.kernel.org/linux-media/20240203134046.3120099-1-alexious@zju.edu.cn
+Fixes: b61901024776 ("V4L/DVB (5244): Dvbdev: fix illegal re-usage of fileoperations struct")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/p2pdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/dvb-core/dvbdev.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 316fd2f44df45..57654c82b08e8 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -536,7 +536,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 	p2pdma = rcu_dereference(provider->p2pdma);
- 	if (p2pdma)
- 		xa_store(&p2pdma->map_types, map_types_idx(client),
--			 xa_mk_value(map_type), GFP_KERNEL);
-+			 xa_mk_value(map_type), GFP_ATOMIC);
- 	rcu_read_unlock();
- 	return map_type;
- }
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index 3a83e8e092568..23a0c209744dc 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -504,6 +504,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		dvbdevfops = kmemdup(template->fops, sizeof(*dvbdevfops), GFP_KERNEL);
+ 		if (!dvbdevfops) {
+ 			kfree(dvbdev);
++			*pdvbdev = NULL;
+ 			mutex_unlock(&dvbdev_register_lock);
+ 			return -ENOMEM;
+ 		}
+@@ -512,6 +513,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		if (!new_node) {
+ 			kfree(dvbdevfops);
+ 			kfree(dvbdev);
++			*pdvbdev = NULL;
+ 			mutex_unlock(&dvbdev_register_lock);
+ 			return -ENOMEM;
+ 		}
+@@ -545,6 +547,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		}
+ 		list_del (&dvbdev->list_head);
+ 		kfree(dvbdev);
++		*pdvbdev = NULL;
+ 		up_write(&minor_rwsem);
+ 		mutex_unlock(&dvbdev_register_lock);
+ 		return -EINVAL;
+@@ -567,6 +570,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		dvb_media_device_free(dvbdev);
+ 		list_del (&dvbdev->list_head);
+ 		kfree(dvbdev);
++		*pdvbdev = NULL;
+ 		mutex_unlock(&dvbdev_register_lock);
+ 		return ret;
+ 	}
+@@ -585,6 +589,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		dvb_media_device_free(dvbdev);
+ 		list_del (&dvbdev->list_head);
+ 		kfree(dvbdev);
++		*pdvbdev = NULL;
+ 		mutex_unlock(&dvbdev_register_lock);
+ 		return PTR_ERR(clsdev);
+ 	}
 -- 
 2.43.0
 
