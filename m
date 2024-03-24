@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D538E1448FE;
-	Sun, 24 Mar 2024 23:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6501448F9;
+	Sun, 24 Mar 2024 23:12:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321970; cv=none; b=AycSWCcT0U/9djHVbH90dG4aIdtRCicCQGPZX2Rk93pkRaLrVA7jOC3V5wditBBuX9Fbc/yhe4TTyi8Ayte0t9+1EX27lhoj58po/DpLYmq4Nw9dC1lZC6+oNduPH7K9yxWw6kPsAa2qMtEUTCqK4+T8VKuRF2/bUH6T3VJ0akE=
+	t=1711321966; cv=none; b=gY6qfk3Da7+i9f5RyqhOB3Ie9nP42G1IF2nXxJZGwRL5tBqownFwBR+KB35O4fF3cOI+RwZrO3UisGdPXt5l+JwxAsbei8dcAwtPOkj+E17SjyWUTaQYDXaUOvMPsTz8eL6YXapgn75q9r4LnUWKkcJtb6uudgioZPyRHB35VNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321970; c=relaxed/simple;
-	bh=d+U/DMyqrJmz9isk37XQbdH4HzIhR5FvXPZ0QF5sqY0=;
+	s=arc-20240116; t=1711321966; c=relaxed/simple;
+	bh=I8eGADWXPdjdnNTSJAoWWwQMWOP7eoIUp9QQbE5rUWA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I9xyBj4rjis9+57EqFWhJA+RtqJNB2ZmO8SMaquP/YX8JfiXqJQz/Jx2+jtcmWXxTBVKDYjjdfdR8fmCYCJZZRAYkvC5NRTysepVzLlpL+s6KiCBAvMAuHxBYGgytHOK6Zp7TvXb/zWctpabpQ5lO+eu0RgP3ZwgIMVjIK+YVD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cy+palL5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lx2EAcanUzfzl7EueYe+ik8fZBT4/Kouii7Ywzw1qhlbORlaAYTtCaxxRkspkhLQb/wll/9Wr7fBI0jaKbn820bFztYyuvtdNKLx+O9X2PXOSR0GvI+xhyQSPEViB4GL/uGrNbJB6n28YVWuiOX+rv0/TH4P4mH2LcUedI7QIDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M54M4HVv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cy+palL5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C22CBC433F1;
-	Sun, 24 Mar 2024 23:12:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M54M4HVv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB735C433C7;
+	Sun, 24 Mar 2024 23:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321970;
-	bh=d+U/DMyqrJmz9isk37XQbdH4HzIhR5FvXPZ0QF5sqY0=;
+	s=k20201202; t=1711321966;
+	bh=I8eGADWXPdjdnNTSJAoWWwQMWOP7eoIUp9QQbE5rUWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cy+palL5Y0i1N6luL4ofQoUW4dHzfWMe/Z6LtU84wMCKA6oCnOLNPG/iCoRUggYZE
-	 RSFGZ7+MulPpJveNaFzeCOdJQ6WX2EVvSsV1ip206HxBE8k5QA1tsxthJ0PnYX/qC0
-	 E4OZR+jHigJi+CYULMnuORjwXhpr7oN+VikgtopGC4ZE3TmgkhENYMtPT06uUFm8iw
-	 7blUnXslGhUDvRlS3iFK2tpfbs5pobOwIJNtO8kn/n17JVfkkSmrWMGFOLV++E3Pke
-	 8ewo7D+Yzj2fXMv4y0s9uIXTO4azvvzGrVCnImSD7tGbp63tVONwd68w5NA6nvLQ4O
-	 RWtSpjIzFptBQ==
+	b=M54M4HVvGdbg0Poj4jU8CigggmTpTJzTEF3wXBBXHtmXVfN/23uW3bJ7x5DHEfV02
+	 S+KI3vDn28J8rKoiRdxgL91Cn0ptqlb9pKBD2JiH7FujlQohAj9ky2F41VzrpCTTEc
+	 IDr/ToZbjybNdOKTy/G+3vhzM36RS0manpaxIxlNsTd/Qa6FgMcp8/QgPhG4hTXn8/
+	 VRj7Opswj3+MYWd1Z4HuGJOgBpRU/okIds3OEAofnTsP5KXIMACCDmgMABFNZdXKuH
+	 mmm43zK8rquD4y02AAcpQsCn1GMlBJa4QK29QUoYF9nVmMo7AwMKJVZxMFdYUwofpQ
+	 RIax5WFIv6Twg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andre Werner <andre.werner@systec-electronic.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Mikulas Patocka <mpatocka@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 042/451] net: smsc95xx: add support for SYS TEC USB-SPEmodule1
-Date: Sun, 24 Mar 2024 19:05:18 -0400
-Message-ID: <20240324231207.1351418-43-sashal@kernel.org>
+Subject: [PATCH 6.1 038/451] dm-verity, dm-crypt: align "struct bvec_iter" correctly
+Date: Sun, 24 Mar 2024 19:05:14 -0400
+Message-ID: <20240324231207.1351418-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,38 +48,69 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andre Werner <andre.werner@systec-electronic.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit 45532b21dc2a692444b6ad5f71c253cca53e8103 ]
+[ Upstream commit 787f1b2800464aa277236a66eb3c279535edd460 ]
 
-This patch adds support for the SYS TEC USB-SPEmodule1 10Base-T1L
-ethernet device to the existing smsc95xx driver by adding the new
-USB VID/PID pair.
+"struct bvec_iter" is defined with the __packed attribute, so it is
+aligned on a single byte. On X86 (and on other architectures that support
+unaligned addresses in hardware), "struct bvec_iter" is accessed using the
+8-byte and 4-byte memory instructions, however these instructions are less
+efficient if they operate on unaligned addresses.
 
-Signed-off-by: Andre Werner <andre.werner@systec-electronic.com>
-Link: https://lore.kernel.org/r/20240219053413.4732-1-andre.werner@systec-electronic.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+(on RISC machines that don't have unaligned access in hardware, GCC
+generates byte-by-byte accesses that are very inefficient - see [1])
+
+This commit reorders the entries in "struct dm_verity_io" and "struct
+convert_context", so that "struct bvec_iter" is aligned on 8 bytes.
+
+[1] https://lore.kernel.org/all/ZcLuWUNRZadJr0tQ@fedora/T/
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/smsc95xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/md/dm-crypt.c  | 4 ++--
+ drivers/md/dm-verity.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
-index a530f20ee2575..2fa46baa589e5 100644
---- a/drivers/net/usb/smsc95xx.c
-+++ b/drivers/net/usb/smsc95xx.c
-@@ -2104,6 +2104,11 @@ static const struct usb_device_id products[] = {
- 		USB_DEVICE(0x0424, 0x9E08),
- 		.driver_info = (unsigned long) &smsc95xx_info,
- 	},
-+	{
-+		/* SYSTEC USB-SPEmodule1 10BASE-T1L Ethernet Device */
-+		USB_DEVICE(0x0878, 0x1400),
-+		.driver_info = (unsigned long)&smsc95xx_info,
-+	},
- 	{
- 		/* Microchip's EVB-LAN8670-USB 10BASE-T1S Ethernet Device */
- 		USB_DEVICE(0x184F, 0x0051),
+diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+index 3e215aa85b99a..e8c534b5870ac 100644
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -52,11 +52,11 @@
+ struct convert_context {
+ 	struct completion restart;
+ 	struct bio *bio_in;
+-	struct bio *bio_out;
+ 	struct bvec_iter iter_in;
++	struct bio *bio_out;
+ 	struct bvec_iter iter_out;
+-	u64 cc_sector;
+ 	atomic_t cc_pending;
++	u64 cc_sector;
+ 	union {
+ 		struct skcipher_request *req;
+ 		struct aead_request *req_aead;
+diff --git a/drivers/md/dm-verity.h b/drivers/md/dm-verity.h
+index 4620a98c99561..db93a91169d5e 100644
+--- a/drivers/md/dm-verity.h
++++ b/drivers/md/dm-verity.h
+@@ -80,12 +80,12 @@ struct dm_verity_io {
+ 	/* original value of bio->bi_end_io */
+ 	bio_end_io_t *orig_bi_end_io;
+ 
++	struct bvec_iter iter;
++
+ 	sector_t block;
+ 	unsigned int n_blocks;
+ 	bool in_tasklet;
+ 
+-	struct bvec_iter iter;
+-
+ 	struct work_struct work;
+ 
+ 	char *recheck_buffer;
 -- 
 2.43.0
 
