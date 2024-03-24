@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC411DBF41;
-	Sun, 24 Mar 2024 22:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90821DC7F9;
+	Sun, 24 Mar 2024 22:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320702; cv=none; b=D1eEa4fb8hQaP8ryEvfeCrhZGmMP1O4CRQF5khcAh97QWxcQcxNlRulBEph0zYpczDUCWamORMXjcjt7+Kn2F9NA6MfdCMm6RWtmddk77X/ok63DgKEUw/c5LouQDvLKwIjorrBhfNZq64IfYZj9gOKhii2yTCm093k1vef2XsI=
+	t=1711320710; cv=none; b=V4+1suzYFMbOYHvFtXPYKVMjRdxIhQR9OYv075KLKWKMJhUuXGZDb5SN2g91qBeJN3cb+aeMqipeKLJB/E4NvyZgtXwxQQ5Brar1SiKOrJ+Y/337p8uF/TByjrKr+81GqM1fK1zwpgNoIsfsLBYVFW9+aoyqP2/WPFGzUGKLF1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320702; c=relaxed/simple;
-	bh=nt4DweudXrWSOOYE0nV/wX2peusxuk3T7M9VaEFEUOQ=;
+	s=arc-20240116; t=1711320710; c=relaxed/simple;
+	bh=mwIH3PjBjugu5fGqYB7lKPMckfOdZeCQHALgGAMrEnM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bwbE6SAKuUXp7ham5+UOy6mg7Qt1v5IGyzHo0041d1iPi9d2cHldjfe6Crr5dHDxIUm6lG1FHJNfzbw/8VfQQUhf1cYx1d3Ne+/n/Ih1LCo1jShMaNQmoCAzHyu8Uktd5JwyjCYB5Rhq/IuiHMXfMG3Y6tt2RutPvfRoE4lapNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T2gaEc5N; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nk5lAEiSdMZVy8M/mB0I1/w4q6HwiXFPyBNNR5pxppEDJg+K0NJxdnEhHPpwIn4z8daHmECipfe3lxzP/JAU+FoW07vAx4VMEA5Kwl2T9q+FD3GcraMLUnhkGJBSq7rGANqx4kqPfV5XrDNdJ7sbW3cc74JeGNq13bKXBDpDHBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4bgoAaR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T2gaEc5N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B8DEC43390;
-	Sun, 24 Mar 2024 22:51:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4bgoAaR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0683FC43399;
+	Sun, 24 Mar 2024 22:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320700;
-	bh=nt4DweudXrWSOOYE0nV/wX2peusxuk3T7M9VaEFEUOQ=;
+	s=k20201202; t=1711320709;
+	bh=mwIH3PjBjugu5fGqYB7lKPMckfOdZeCQHALgGAMrEnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T2gaEc5N4zrMfO+KHrW2v10rBZ73LKecBCBGJy6iHV+Ck4ktSJ/nI9TTlWEFbbT1N
-	 2XCnLbNfzR2nhHK+0W7Pe2krNqNqwLvAl/zx+yptMlBzqdr5r1imA50ZNm8E52cDrJ
-	 qW2Oq/pwk4p8UPksj7OukWYJGPbloRA8wI1PR/LLgu7WzzdVZvhJ4c75xhi5HSQkpy
-	 s+/uFq3TQJiwuNQ4cGlA3vpnQdY+avkI2rR8Q3gXBVTN6ff6TtfJOaTrAmyCnHKqnQ
-	 v55v73JJuv87lxGuUGAFnyDqlcDRfrmdOeoMoTOwyeLvN0RPx/63Qm/B+I+umzSDHL
-	 dhK9H3+ktzg3Q==
+	b=a4bgoAaRXrMy2T+8lKklWcCeWWBTzr6lrwiZm+tE4SkKflc0iop3aO1NSWWvubA+c
+	 hYcygPpkPC8wFzttW+nR/Lk2FypBy99pNlugEf+x+uQhamMmoite2cELMS8QTBuAup
+	 FmP9ci9frucV9dN9fNbNqXXBdFu+nUKIEsCvsjFtDAgsqtVqJalLUnZnPX/qeQ31H8
+	 1yQLpJasB4WDRv46EtSUnI7F0nNf3sZSS7HbKm38ht3ug65BH/Z+vFfDQS/5n4a23M
+	 SVT8dN8wGtIzUCQWkAYtyVwKUSdbFLhzlORm4hlJVsoiOP83lF8i/ydJaAxFilPoIV
+	 zINhHtH+vYpgg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Bhavya Kapoor <b-kapoor@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 263/713] wifi: brcmsmac: avoid function pointer casts
-Date: Sun, 24 Mar 2024 18:39:49 -0400
-Message-ID: <20240324224720.1345309-264-sashal@kernel.org>
+Subject: [PATCH 6.7 272/713] arm64: dts: ti: k3-j784s4-evm: Remove Pinmux for CTS and RTS in wkup_uart0
+Date: Sun, 24 Mar 2024 18:39:58 -0400
+Message-ID: <20240324224720.1345309-273-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,79 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Bhavya Kapoor <b-kapoor@ti.com>
 
-[ Upstream commit e1ea6db35fc3ba5ff063f097385e9f7a88c25356 ]
+[ Upstream commit d29a6cf980572d8cf7b63935716fca663e2610f0 ]
 
-An old cleanup went a little too far and causes a warning with clang-16
-and higher as it breaks control flow integrity (KCFI) rules:
+Only Tx and Rx Signal lines for wkup_uart0 are brought out on
+the J784S4 EVM from SoC, but CTS and RTS signal lines are not
+brought on the EVM. Thus, remove pinmux for CTS and RTS signal
+lines for wkup_uart0 in J784S4.
 
-drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c:64:34: error: cast from 'void (*)(struct brcms_phy *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-   64 |                         brcms_init_timer(physhim->wl, (void (*)(void *))fn,
-      |                                                       ^~~~~~~~~~~~~~~~~~~~
-
-Change this one instance back to passing a void pointer so it can be
-used with the timer callback interface.
-
-Fixes: d89a4c80601d ("staging: brcm80211: removed void * from softmac phy")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240213100548.457854-1-arnd@kernel.org
+Fixes: 6fa5d37a2f34 ("arm64: dts: ti: k3-j784s4-evm: Add mcu and wakeup uarts")
+Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
+Link: https://lore.kernel.org/r/20240214105846.1096733-5-b-kapoor@ti.com
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c   | 3 ++-
- drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c  | 5 ++---
- drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h  | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
-index ccc621b8ed9f2..4a1fe982a948e 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
-@@ -383,8 +383,9 @@ struct shared_phy *wlc_phy_shared_attach(struct shared_phy_params *shp)
- 	return sh;
- }
- 
--static void wlc_phy_timercb_phycal(struct brcms_phy *pi)
-+static void wlc_phy_timercb_phycal(void *ptr)
- {
-+	struct brcms_phy *pi = ptr;
- 	uint delay = 5;
- 
- 	if (PHY_PERICAL_MPHASE_PENDING(pi)) {
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
-index a0de5db0cd646..b723817915365 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
-@@ -57,12 +57,11 @@ void wlc_phy_shim_detach(struct phy_shim_info *physhim)
- }
- 
- struct wlapi_timer *wlapi_init_timer(struct phy_shim_info *physhim,
--				     void (*fn)(struct brcms_phy *pi),
-+				     void (*fn)(void *pi),
- 				     void *arg, const char *name)
- {
- 	return (struct wlapi_timer *)
--			brcms_init_timer(physhim->wl, (void (*)(void *))fn,
--					 arg, name);
-+			brcms_init_timer(physhim->wl, fn, arg, name);
- }
- 
- void wlapi_free_timer(struct wlapi_timer *t)
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
-index dd8774717adee..27d0934e600ed 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
-@@ -131,7 +131,7 @@ void wlc_phy_shim_detach(struct phy_shim_info *physhim);
- 
- /* PHY to WL utility functions */
- struct wlapi_timer *wlapi_init_timer(struct phy_shim_info *physhim,
--				     void (*fn)(struct brcms_phy *pi),
-+				     void (*fn)(void *pi),
- 				     void *arg, const char *name);
- void wlapi_free_timer(struct wlapi_timer *t);
- void wlapi_add_timer(struct wlapi_timer *t, uint ms, int periodic);
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+index f1f4c8634ab69..50210700fdc8e 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+@@ -331,8 +331,6 @@ &wkup_pmx2 {
+ 	wkup_uart0_pins_default: wkup-uart0-default-pins {
+ 		bootph-all;
+ 		pinctrl-single,pins = <
+-			J721S2_WKUP_IOPAD(0x070, PIN_INPUT, 0) /* (L37) WKUP_GPIO0_6.WKUP_UART0_CTSn */
+-			J721S2_WKUP_IOPAD(0x074, PIN_INPUT, 0) /* (L36) WKUP_GPIO0_7.WKUP_UART0_RTSn */
+ 			J721S2_WKUP_IOPAD(0x048, PIN_INPUT, 0) /* (K35) WKUP_UART0_RXD */
+ 			J721S2_WKUP_IOPAD(0x04c, PIN_INPUT, 0) /* (K34) WKUP_UART0_TXD */
+ 		>;
 -- 
 2.43.0
 
