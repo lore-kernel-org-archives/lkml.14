@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3F814A4EC;
-	Sun, 24 Mar 2024 23:16:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AF61FD5C5;
+	Sun, 24 Mar 2024 23:16:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322201; cv=none; b=tTpeYjUVzqayH/HVhAOl5SW4zGcw0latpWupijq1Qb9AFp/jxVbcpS8mISxrHVpW0yo94noagrDE05l1w9bY+RiFfDKSrToYtqBlIBiVz4kZWF7JHMPnfaZ8jfHWe114l8KxoE9wzdL4WwUNPwKtxwF73N6x1SQX0/hWD0Hl7Qw=
+	t=1711322210; cv=none; b=BqA3D+neBAdwfvvfusYy32E77TUopnTv6vSnJ53EkGWcqdS9cfZ6+e2y71taDJ/rTmcdj8Qe9lR8gWvGscqwVj3/6HrlJfwF7ixFdyjzhrVdrBDu6hwZ54Ko1sUTd4sQ2NfM+zpAIt6H0U6iGr5kNCnVxuALRc9JjB53WZRP9s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322201; c=relaxed/simple;
-	bh=TcfgaUMNaa4X0MxPfCFxq4JHN1C/Ibye9dsDwAoSIyI=;
+	s=arc-20240116; t=1711322210; c=relaxed/simple;
+	bh=ZuBDzA0LJ2LWcinmQ68PW2D0/5IeWTgCwZspXksVE5o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CHH5Hway8wT7V1cmHK03+m7tB3X6ZAK9ZdoU2COPO0fiotYx+qMpSrxR7hofcjQchl3MPbBOBkZ6VMtnnXogIYOgzvkLm9Q0ttpGO7qvpzAE5MG1raepmHbRiW/KB9TjLy6pxguv6LCNHD7NRAbLAP4nRSojttDgK0CAUYcGQs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HrAWIsIb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mgYx+kAqjYjeKreLZKeyUYBu42fs/pBfTMRLg3OSKM5Ulfr9XTm88kngK6c48FpvSg2DGhjPEOJuLweRU0eai8GyJwBfYFcH7yJeMkuyDDyMpX11pD0VRiSS490JfyfliGZaZjQxGMyys5YhxdYquPvJX3yMAlX+cHeI35mT1sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PklAE7Wh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HrAWIsIb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B570C433A6;
-	Sun, 24 Mar 2024 23:16:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PklAE7Wh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 779C8C433F1;
+	Sun, 24 Mar 2024 23:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322199;
-	bh=TcfgaUMNaa4X0MxPfCFxq4JHN1C/Ibye9dsDwAoSIyI=;
+	s=k20201202; t=1711322209;
+	bh=ZuBDzA0LJ2LWcinmQ68PW2D0/5IeWTgCwZspXksVE5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HrAWIsIbMUVD6tsFG87cBMEt0WNBuQRicPm0baJJ7262FZ941GvfOgfX3uMBKZgGe
-	 00GJ/0z+ZIje0bejWVJj1L2TdZuD7xWUK21+8flvmgMgd9U//RXoOmZa12KPZr8ryU
-	 f9CQooCAZ9ZZ0NMEbFGJtf/948gif1NzrtRw8OM3DPe+e5xDqknUu1f27iERKEgAIk
-	 Ff9kXWENEqfC/pneGbclPHzt0qBq8Ki24P3q6KvWyfeg1Mv0eWzJIfrwtW11oCZyKp
-	 D54pbpSDSC82UnKmJthReNkBNqD5sl8H6Y2CTs+0bbtJo4ns/1+de7VJ64CTxmCBhH
-	 nB9LKesbQVlCA==
+	b=PklAE7WhwOnlvpxRAui5Ra2sVnsZ9OBwKy/bASknWv+LP6uPB05+IM11Oes8jYwUN
+	 FP6wjRlBZ6SfUFCNV3uRduQgKvV6kg1UPJ9szqDcpZtCt/qrym8ZIx8MLKXNOH8g6D
+	 brx1cYM/YwqgWftGCiiULYyrecSk9UGv8U6pxsd9e3s2nmK6IZnAFUVrUC2e4qrCTw
+	 Wy/yS3mnKdTaeXCVaRY3ifJrutlAja3zrgcCVp8nx6vNT9HvLT8KQL1+chAw7gK6WR
+	 HnjxBFyzbrfwsgIe9n07W5gOmaeU7EplZJchUQzggdIV0IZ4SyxAyTh+nxFRVBTDNn
+	 VG2UNyERShDxw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 279/451] drm/msm/dpu: fix the programming of INTF_CFG2_DATA_HCTL_EN
-Date: Sun, 24 Mar 2024 19:09:15 -0400
-Message-ID: <20240324231207.1351418-280-sashal@kernel.org>
+Subject: [PATCH 6.1 289/451] ASoC: meson: aiu: fix function pointer type mismatch
+Date: Sun, 24 Mar 2024 19:09:25 -0400
+Message-ID: <20240324231207.1351418-290-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,128 +50,83 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 2f4a67a3894e15c135125cb54edc5b43abc1b70e ]
+[ Upstream commit 98ac85a00f31d2e9d5452b825a9ed0153d934043 ]
 
-Currently INTF_CFG2_DATA_HCTL_EN is coupled with the enablement
-of widebus but this is incorrect because we should be enabling
-this bit independent of widebus except for cases where compression
-is enabled in one pixel per clock mode.
+clang-16 warns about casting functions to incompatible types, as is done
+here to call clk_disable_unprepare:
 
-Fix this by making the condition checks more explicit and enabling
-INTF_CFG2_DATA_HCTL_EN for all other cases when supported by DPU.
+sound/soc/meson/aiu.c:243:12: error: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  243 |                                        (void(*)(void *))clk_disable_unprepare,
 
-Fixes: 3309a7563971 ("drm/msm/dpu: revise timing engine programming to support widebus feature")
-Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Patchwork: https://patchwork.freedesktop.org/patch/576722/
-Link: https://lore.kernel.org/r/20240201004737.2478-1-quic_abhinavk@quicinc.com
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+The pattern of getting, enabling and setting a disable callback for a
+clock can be replaced with devm_clk_get_enabled(), which also fixes
+this warning.
+
+Fixes: 6ae9ca9ce986 ("ASoC: meson: aiu: add i2s and spdif support")
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Link: https://msgid.link/r/20240213215807.3326688-2-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c       |  7 +++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h       |  7 +++++++
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  |  1 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c       | 15 +++++++++------
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h       |  1 +
- 5 files changed, 25 insertions(+), 6 deletions(-)
+ sound/soc/meson/aiu.c | 19 ++++---------------
+ sound/soc/meson/aiu.h |  1 -
+ 2 files changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 25245ef386db6..4bdde5cb23aae 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -228,6 +228,13 @@ bool dpu_encoder_is_widebus_enabled(const struct drm_encoder *drm_enc)
- 	return dpu_enc->wide_bus_en;
+diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
+index 88e611e64d14f..077b9c0b6c4ca 100644
+--- a/sound/soc/meson/aiu.c
++++ b/sound/soc/meson/aiu.c
+@@ -218,11 +218,12 @@ static const char * const aiu_spdif_ids[] = {
+ static int aiu_clk_get(struct device *dev)
+ {
+ 	struct aiu *aiu = dev_get_drvdata(dev);
++	struct clk *pclk;
+ 	int ret;
+ 
+-	aiu->pclk = devm_clk_get(dev, "pclk");
+-	if (IS_ERR(aiu->pclk))
+-		return dev_err_probe(dev, PTR_ERR(aiu->pclk), "Can't get the aiu pclk\n");
++	pclk = devm_clk_get_enabled(dev, "pclk");
++	if (IS_ERR(pclk))
++		return dev_err_probe(dev, PTR_ERR(pclk), "Can't get the aiu pclk\n");
+ 
+ 	aiu->spdif_mclk = devm_clk_get(dev, "spdif_mclk");
+ 	if (IS_ERR(aiu->spdif_mclk))
+@@ -239,18 +240,6 @@ static int aiu_clk_get(struct device *dev)
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Can't get the spdif clocks\n");
+ 
+-	ret = clk_prepare_enable(aiu->pclk);
+-	if (ret) {
+-		dev_err(dev, "peripheral clock enable failed\n");
+-		return ret;
+-	}
+-
+-	ret = devm_add_action_or_reset(dev,
+-				       (void(*)(void *))clk_disable_unprepare,
+-				       aiu->pclk);
+-	if (ret)
+-		dev_err(dev, "failed to add reset action on pclk");
+-
+ 	return ret;
  }
  
-+bool dpu_encoder_is_dsc_enabled(const struct drm_encoder *drm_enc)
-+{
-+	const struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(drm_enc);
-+
-+	return dpu_enc->dsc ? true : false;
-+}
-+
- int dpu_encoder_get_crc_values_cnt(const struct drm_encoder *drm_enc)
- {
- 	struct dpu_encoder_virt *dpu_enc;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
-index 9e7236ef34e6d..a71efa2b9e508 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
-@@ -175,6 +175,13 @@ int dpu_encoder_get_vsync_count(struct drm_encoder *drm_enc);
- 
- bool dpu_encoder_is_widebus_enabled(const struct drm_encoder *drm_enc);
- 
-+/**
-+ * dpu_encoder_is_dsc_enabled - indicate whether dsc is enabled
-+ *				for the encoder.
-+ * @drm_enc:    Pointer to previously created drm encoder structure
-+ */
-+bool dpu_encoder_is_dsc_enabled(const struct drm_encoder *drm_enc);
-+
- /**
-  * dpu_encoder_get_crc_values_cnt - get number of physical encoders contained
-  *	in virtual encoder that can collect CRC values
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-index 2c14646661b77..09aeec00bf5e2 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-@@ -100,6 +100,7 @@ static void drm_mode_to_intf_timing_params(
- 	}
- 
- 	timing->wide_bus_en = dpu_encoder_is_widebus_enabled(phys_enc->parent);
-+	timing->compression_en = dpu_encoder_is_dsc_enabled(phys_enc->parent);
- 
- 	/*
- 	 * for DP, divide the horizonal parameters by 2 when
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-index 384558d2f9602..1debac4fcc3eb 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-@@ -154,13 +154,8 @@ static void dpu_hw_intf_setup_timing_engine(struct dpu_hw_intf *ctx,
- 	hsync_ctl = (hsync_period << 16) | p->hsync_pulse_width;
- 	display_hctl = (hsync_end_x << 16) | hsync_start_x;
- 
--	/*
--	 * DATA_HCTL_EN controls data timing which can be different from
--	 * video timing. It is recommended to enable it for all cases, except
--	 * if compression is enabled in 1 pixel per clock mode
--	 */
- 	if (p->wide_bus_en)
--		intf_cfg2 |= INTF_CFG2_DATABUS_WIDEN | INTF_CFG2_DATA_HCTL_EN;
-+		intf_cfg2 |= INTF_CFG2_DATABUS_WIDEN;
- 
- 	data_width = p->width;
- 
-@@ -230,6 +225,14 @@ static void dpu_hw_intf_setup_timing_engine(struct dpu_hw_intf *ctx,
- 	DPU_REG_WRITE(c, INTF_CONFIG, intf_cfg);
- 	DPU_REG_WRITE(c, INTF_PANEL_FORMAT, panel_format);
- 	if (ctx->cap->features & BIT(DPU_DATA_HCTL_EN)) {
-+		/*
-+		 * DATA_HCTL_EN controls data timing which can be different from
-+		 * video timing. It is recommended to enable it for all cases, except
-+		 * if compression is enabled in 1 pixel per clock mode
-+		 */
-+		if (!(p->compression_en && !p->wide_bus_en))
-+			intf_cfg2 |= INTF_CFG2_DATA_HCTL_EN;
-+
- 		DPU_REG_WRITE(c, INTF_CONFIG2, intf_cfg2);
- 		DPU_REG_WRITE(c, INTF_DISPLAY_DATA_HCTL, display_data_hctl);
- 		DPU_REG_WRITE(c, INTF_ACTIVE_DATA_HCTL, active_data_hctl);
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
-index e75339b96a1d2..7f502c8bee1d4 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
-@@ -33,6 +33,7 @@ struct intf_timing_params {
- 	u32 hsync_skew;
- 
- 	bool wide_bus_en;
-+	bool compression_en;
+diff --git a/sound/soc/meson/aiu.h b/sound/soc/meson/aiu.h
+index 393b6c2307e49..0f94c8bf60818 100644
+--- a/sound/soc/meson/aiu.h
++++ b/sound/soc/meson/aiu.h
+@@ -33,7 +33,6 @@ struct aiu_platform_data {
  };
  
- struct intf_prog_fetch {
+ struct aiu {
+-	struct clk *pclk;
+ 	struct clk *spdif_mclk;
+ 	struct aiu_interface i2s;
+ 	struct aiu_interface spdif;
 -- 
 2.43.0
 
