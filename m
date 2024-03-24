@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88672149C7F;
-	Sun, 24 Mar 2024 22:56:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815E31EE688;
+	Sun, 24 Mar 2024 22:56:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321010; cv=none; b=hJiOXNQm8/AbElXE7DsSy7kzNwLSK0tPPYsyhQ+/lnMUBOVgl2WI7i4gsjXaiVNg0nhn07dZaQ0wrB1F8XWk0BLbKi/OGGYGtqcNh0PMQ4nr1RI5TSmMZE/9nB7UdISMNJFGQ2PqaUrSahVcwwNP14aXHgtubZhqR1Rt3IBudGk=
+	t=1711321013; cv=none; b=pRPoIIwiZzmoiEA1mMzURPw1bIVKw8CK5arnsmqb+jPxbL1M8Qh69P6/h2qrPcqOk3Mdszbi9BfaJlYcdLOzC/ykqis1nJD7tbasjwGUO2IXh57ZLvOg0cWjZ9iCfpxyHHIe7idhhnyFbdogeQUTevY+eeTxetS5GQBCngIalJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321010; c=relaxed/simple;
-	bh=B/AVMGh7eQKn9bz3Bma04jW373t+bzbmFrmRminmKaw=;
+	s=arc-20240116; t=1711321013; c=relaxed/simple;
+	bh=gWrnndJgT90FBfCRyWDVypTXyKWyM0DYGP+MkSD85nk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OeRlk+HCF8Zlde4y//AKSMRVCAxxtp6KIiXj3eB0HTIH3rOqX0oQb6lqoXT0D/6djcIWBjaroGKLGBpRd+BrSzN/ly1+uG46M56evkr4YFaEaapEajG18HU2Nx1ZrLMdmfxAtNgvEuAg+pNUM7vqRtS8adQbmZ0yu44/DJ2dfxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEjsG2lf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Kklm4gunwGXXBVCyfN5qlPIDaVwTjrzOauZxW+R2QwvV4R6tBsE0wtt2o5JouhnLC1qnO6E3YqWqTgejdveI677Tv9hwJ+ccsHBt9pV/4mF/0BqCm610pXLFJjZQVdfMQ5JY5VqGtzSmIvxFWn3EHaZyvAN3yb5qzO3sanrWcfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uM7+OqiH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEjsG2lf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA6B8C43390;
-	Sun, 24 Mar 2024 22:56:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uM7+OqiH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2AAC433A6;
+	Sun, 24 Mar 2024 22:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321010;
-	bh=B/AVMGh7eQKn9bz3Bma04jW373t+bzbmFrmRminmKaw=;
+	s=k20201202; t=1711321012;
+	bh=gWrnndJgT90FBfCRyWDVypTXyKWyM0DYGP+MkSD85nk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HEjsG2lf1pfHBqSxtsuCEXjvHVSwIxrITqWMWAMTC3aKAfFSvJhy2+YAZXF1dpX6N
-	 bbK3qGVWsNGVRNtmW9x8oGRJxQiihbhICAfD1UO8oI82eQR4fBtju5xjOu+ke2moXQ
-	 45QOVpqm5bLZCo6YXzivGGHkr4hYNfQZjIt2V+lI6Nlj95DoJ3FqMe4C385i0Dyzyb
-	 pmYHJnOBGyebowWf+OQV5s4seVc6ObxByM6FSz0+9hXU9UEQHX+ZfaNBSvstNWgG0v
-	 6OZr1Fvt75MBQqtpl9jNvlgcbL8brvz1pZOsMroGsigh4Ez5o5Lw6p5dUAzD5d3qt4
-	 j+PWUS9NYYYIg==
+	b=uM7+OqiHhwqtICvFahgReGEHhN9nVKxJVfh/O0Y2Kc8z2IOCKYAM/r72QTwhCsuo5
+	 /du2VMARldH7oZfmENzgIVe0aGBgoAKsvD1GsIT09r28sU9B/bP1gRTADEv/3gHfkq
+	 qmZxLG50mWV33NJr3HbsBbcsM7V0MVJZdEn9oYoWkYOYJXpBt2F6NqVHr5JgntvXb+
+	 LPXRsdv9dAwsRUSfRoh3tfurM6XH1OXkdBUf/pSZy+wA0xrvlQFkQW0PR6PG5Li91E
+	 rvGJE/v43T8qoPDHeb0mOue7irWcIE2nxb17DR+OTosw1YObTX0iOdALxR3ZT6zgGk
+	 udbXzJYeYEjQg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Chao Yu <chao@kernel.org>,
+	Daeho Jeong <daehojeong@google.com>,
 	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 573/713] f2fs: update blkaddr in __set_data_blkaddr() for cleanup
-Date: Sun, 24 Mar 2024 18:44:59 -0400
-Message-ID: <20240324224720.1345309-574-sashal@kernel.org>
+Subject: [PATCH 6.7 575/713] f2fs: fix to remove unnecessary f2fs_bug_on() to avoid panic
+Date: Sun, 24 Mar 2024 18:45:01 -0400
+Message-ID: <20240324224720.1345309-576-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,130 +51,37 @@ Content-Transfer-Encoding: 8bit
 
 From: Chao Yu <chao@kernel.org>
 
-[ Upstream commit 59d0d4c3eae0f3dd8886ed59f89f21fa09e324f5 ]
+[ Upstream commit b896e302f79678451a94769ddd9e52e954c64fbb ]
 
-This patch allows caller to pass blkaddr to f2fs_set_data_blkaddr()
-and let __set_data_blkaddr() inside f2fs_set_data_blkaddr() to update
-dn->data_blkaddr w/ last value of blkaddr.
+verify_blkaddr() will trigger panic once we inject fault into
+f2fs_is_valid_blkaddr(), fix to remove this unnecessary f2fs_bug_on().
 
-Just cleanup, no logic changes.
-
+Fixes: 18792e64c86d ("f2fs: support fault injection for f2fs_is_valid_blkaddr()")
+Reviewed-by: Daeho Jeong <daehojeong@google.com>
 Signed-off-by: Chao Yu <chao@kernel.org>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Stable-dep-of: 54607494875e ("f2fs: compress: fix to avoid inconsistence bewteen i_blocks and dnode")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c | 13 ++++++-------
- fs/f2fs/f2fs.h |  2 +-
- fs/f2fs/file.c | 12 ++++--------
- 3 files changed, 11 insertions(+), 16 deletions(-)
+ fs/f2fs/f2fs.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index d1cccfded001b..88cdbb815880a 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1180,10 +1180,11 @@ static int f2fs_submit_page_read(struct inode *inode, struct page *page,
- 	return 0;
- }
- 
--static void __set_data_blkaddr(struct dnode_of_data *dn)
-+static void __set_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr)
- {
- 	__le32 *addr = get_dnode_addr(dn->inode, dn->node_page);
- 
-+	dn->data_blkaddr = blkaddr;
- 	addr[dn->ofs_in_node] = cpu_to_le32(dn->data_blkaddr);
- }
- 
-@@ -1193,18 +1194,17 @@ static void __set_data_blkaddr(struct dnode_of_data *dn)
-  *  ->node_page
-  *    update block addresses in the node page
-  */
--void f2fs_set_data_blkaddr(struct dnode_of_data *dn)
-+void f2fs_set_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr)
- {
- 	f2fs_wait_on_page_writeback(dn->node_page, NODE, true, true);
--	__set_data_blkaddr(dn);
-+	__set_data_blkaddr(dn, blkaddr);
- 	if (set_page_dirty(dn->node_page))
- 		dn->node_changed = true;
- }
- 
- void f2fs_update_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr)
- {
--	dn->data_blkaddr = blkaddr;
--	f2fs_set_data_blkaddr(dn);
-+	f2fs_set_data_blkaddr(dn, blkaddr);
- 	f2fs_update_read_extent_cache(dn);
- }
- 
-@@ -1231,8 +1231,7 @@ int f2fs_reserve_new_blocks(struct dnode_of_data *dn, blkcnt_t count)
- 		block_t blkaddr = f2fs_data_blkaddr(dn);
- 
- 		if (blkaddr == NULL_ADDR) {
--			dn->data_blkaddr = NEW_ADDR;
--			__set_data_blkaddr(dn);
-+			__set_data_blkaddr(dn, NEW_ADDR);
- 			count--;
- 		}
- 	}
 diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index fa38de60c716c..a05816556552c 100644
+index fb355b9e2e3ca..2401d91ebc25a 100644
 --- a/fs/f2fs/f2fs.h
 +++ b/fs/f2fs/f2fs.h
-@@ -3817,7 +3817,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio);
- struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
- 		block_t blk_addr, sector_t *sector);
- int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr);
--void f2fs_set_data_blkaddr(struct dnode_of_data *dn);
-+void f2fs_set_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr);
- void f2fs_update_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr);
- int f2fs_reserve_new_blocks(struct dnode_of_data *dn, blkcnt_t count);
- int f2fs_reserve_new_block(struct dnode_of_data *dn);
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 4f07fb0097965..2ea1ddd4e941f 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -582,8 +582,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
- 		if (blkaddr == NULL_ADDR)
- 			continue;
+@@ -3463,11 +3463,9 @@ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
+ static inline void verify_blkaddr(struct f2fs_sb_info *sbi,
+ 					block_t blkaddr, int type)
+ {
+-	if (!f2fs_is_valid_blkaddr(sbi, blkaddr, type)) {
++	if (!f2fs_is_valid_blkaddr(sbi, blkaddr, type))
+ 		f2fs_err(sbi, "invalid blkaddr: %u, type: %d, run fsck to fix.",
+ 			 blkaddr, type);
+-		f2fs_bug_on(sbi, 1);
+-	}
+ }
  
--		dn->data_blkaddr = NULL_ADDR;
--		f2fs_set_data_blkaddr(dn);
-+		f2fs_set_data_blkaddr(dn, NULL_ADDR);
- 
- 		if (__is_valid_data_blkaddr(blkaddr)) {
- 			if (!f2fs_is_valid_blkaddr(sbi, blkaddr,
-@@ -1479,8 +1478,7 @@ static int f2fs_do_zero_range(struct dnode_of_data *dn, pgoff_t start,
- 		}
- 
- 		f2fs_invalidate_blocks(sbi, dn->data_blkaddr);
--		dn->data_blkaddr = NEW_ADDR;
--		f2fs_set_data_blkaddr(dn);
-+		f2fs_set_data_blkaddr(dn, NEW_ADDR);
- 	}
- 
- 	f2fs_update_read_extent_cache_range(dn, start, 0, index - start);
-@@ -3460,8 +3458,7 @@ static int release_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
- 			if (blkaddr != NEW_ADDR)
- 				continue;
- 
--			dn->data_blkaddr = NULL_ADDR;
--			f2fs_set_data_blkaddr(dn);
-+			f2fs_set_data_blkaddr(dn, NULL_ADDR);
- 		}
- 
- 		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, false);
-@@ -3633,8 +3630,7 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
- 				continue;
- 			}
- 
--			dn->data_blkaddr = NEW_ADDR;
--			f2fs_set_data_blkaddr(dn);
-+			f2fs_set_data_blkaddr(dn, NEW_ADDR);
- 		}
- 
- 		reserved = cluster_size - compr_blocks;
+ static inline bool __is_valid_data_blkaddr(block_t blkaddr)
 -- 
 2.43.0
 
