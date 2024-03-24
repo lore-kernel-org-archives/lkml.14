@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887221EFFD5;
-	Sun, 24 Mar 2024 23:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A27218547;
+	Sun, 24 Mar 2024 23:09:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321799; cv=none; b=a4nZl8nwSvK9bm2iInfOGa+m/btdhqHG77AF/W+FpOq/7dY77tQ6YT4hS1Z59SvXSuwEV/3kejv4VhsxlCCqi7M5VthV86D+fHxM1J+60463Ex7qjcZ3WPckrKXXpkwVFhDQLYTtWgqOhCCLBeReZ4i7OG/UjWzDibKMA3T1hOE=
+	t=1711321791; cv=none; b=rg7Bl7bSpo6pj4RIofOYWDsLZVrIqYQ6YWaWTUQqlL6kNqRJdz9Bh1Y/WvlaXj4riI3hqD6rxggwgX1sPKe3Xk6PptDnWTbm8xxevyTKCLy4vmkG42vE5JaP1ey4rt4r3mSx/yBHarkgnA+MQgLgzAaz5UiAOaBDFRh8Czx/Kro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321799; c=relaxed/simple;
-	bh=DnIEbnQD9ob1MO8/v30ZkD/ZbTdidfNE4UviQRjCoEE=;
+	s=arc-20240116; t=1711321791; c=relaxed/simple;
+	bh=uWN6XqGL3TzC5YSOzD2F0iscnersYTYSCVK9mXXPX2A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fn/1UTHA4sM1ysu4+S6SbCRhoHaaiwH4Jermp8ya2NQXgajqLgGmydkAFu8Po1hi1oRRi3Fo1uHyjMFVYy9iZos2rvvxVQrmuHtGSUIbHivxM7QX9UVmMh6oaAk2WuZSP4qWEIzG+in2IyCLhzHqKSbcJ2GkhDVCiXAcwc6rFfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eyj5MB3S; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WYX3PZ8JTvO/83gLCVlu452LVNEP5ha65mIRcHnlYUh78C++Wr9+nKi08k7ZV4bhcMai91p2f5AVx86XMeW9oQs7iCSYYdI57Wue2zBqzpeYkGQ7OoDQmeQCTjU5S7d8VdzNFTQDuumEazXOjyl7xesiDldfMCAp8KMs8WnSqQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DlOsfwok; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eyj5MB3S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFF5AC433A6;
-	Sun, 24 Mar 2024 23:09:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DlOsfwok"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5635C433A6;
+	Sun, 24 Mar 2024 23:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321798;
-	bh=DnIEbnQD9ob1MO8/v30ZkD/ZbTdidfNE4UviQRjCoEE=;
+	s=k20201202; t=1711321790;
+	bh=uWN6XqGL3TzC5YSOzD2F0iscnersYTYSCVK9mXXPX2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Eyj5MB3SeS4LJ+dj13A7AglyoDKpN9vcVyx46hFN6M4IHk522UGwicMXOX7EmLcAw
-	 5b6kqDPBCpFMw06Qox2jgu7C7uFgnMO2hFSmwakH6WwsIRyrXRIlyw8e8pr5ISR0Oy
-	 AaWCohX34W9Ci3si7SB7RI8x+8KdqpUa67MW+gURHrL3dDVSZdZzpzS0Zr0HtK82ra
-	 bTaV7SDjMAuQcUJ5bW+I6jYUG8cUTtI7FPnenLyr3oofvqQtgeiaBMfkJKy6khIOpF
-	 V1Fd7x4HUwVeHtLBnbkIG/2O3+AYbOLqBXu2sKEvBlHgx18nGUSEYyUT2GiWDofEDC
-	 bsLXq5EY6Tryg==
+	b=DlOsfwoktP4wKgJuDGXcmkcljDPIJCEjhcW08MeQiN0Oa6SmFaek6dLrTqJlCHQdK
+	 q6gDHNC/bzmyRsHpUjh54hUqnySMAmmsTEasPduQ8C0HaFKs29Kofqfnlk2r6OZY2Q
+	 y+uSM2weCOMQ8RkY4mZvSNyEC6CDn+pIv6Hp/d/WF+r+Zs8b2SfIn987UkIkMuC0b4
+	 fUcsot/JBjXr1tZtMYsjl4/un62N2Q1SDGADkyTQXKCv0USgXGeu6ZfDN208tg4u6f
+	 zf9bORmyYSyYdUB0v7UjNprc45nSYOE4vSKxFFyL8YcZm57KWIdO6kYZfIEGKcQ48t
+	 QxmE6cdrOvBgQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
-	Jack Wang <jinpu.wang@ionos.com>,
-	Leon Romanovsky <leon@kernel.org>,
+Cc: Chao Yu <chao@kernel.org>,
+	Daeho Jeong <daehojeong@google.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 526/638] RDMA/rtrs-clt: Check strnlen return len in sysfs mpath_policy_store()
-Date: Sun, 24 Mar 2024 18:59:23 -0400
-Message-ID: <20240324230116.1348576-527-sashal@kernel.org>
+Subject: [PATCH 6.6 518/638] f2fs: zone: fix to wait completion of last bio in zone correctly
+Date: Sun, 24 Mar 2024 18:59:15 -0400
+Message-ID: <20240324230116.1348576-519-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,39 +49,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexey Kodanev <aleksei.kodanev@bell-sw.com>
+From: Chao Yu <chao@kernel.org>
 
-[ Upstream commit 7a7b7f575a25aa68ee934ee8107294487efcb3fe ]
+[ Upstream commit 536af8211586af09c5bea1c15ad28ddec5f66a97 ]
 
-strnlen() may return 0 (e.g. for "\0\n" string), it's better to
-check the result of strnlen() before using 'len - 1' expression
-for the 'buf' array index.
+It needs to check last zone_pending_bio and wait IO completion before
+traverse next fio in io->io_list, otherwise, bio in next zone may be
+submitted before all IO completion in current zone.
 
-Detected using the static analysis tool - Svace.
-
-Fixes: dc3b66a0ce70 ("RDMA/rtrs-clt: Add a minimum latency multipath policy")
-Signed-off-by: Alexey Kodanev <aleksei.kodanev@bell-sw.com>
-Link: https://lore.kernel.org/r/20240221113204.147478-1-aleksei.kodanev@bell-sw.com
-Acked-by: Jack Wang <jinpu.wang@ionos.com>
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Fixes: e067dc3c6b9c ("f2fs: maintain six open zones for zoned devices")
+Cc: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
+Reviewed-by: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/data.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c b/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c
-index d3c436ead6946..4aa80c9388f05 100644
---- a/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c
-+++ b/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c
-@@ -133,7 +133,7 @@ static ssize_t mpath_policy_store(struct device *dev,
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 3dcff94221695..271f5eab15db5 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1010,7 +1010,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+ 	f2fs_bug_on(sbi, is_read_io(fio->op));
  
- 	/* distinguish "mi" and "min-latency" with length */
- 	len = strnlen(buf, NAME_MAX);
--	if (buf[len - 1] == '\n')
-+	if (len && buf[len - 1] == '\n')
- 		len--;
+ 	f2fs_down_write(&io->io_rwsem);
+-
++next:
+ #ifdef CONFIG_BLK_DEV_ZONED
+ 	if (f2fs_sb_has_blkzoned(sbi) && btype < META && io->zone_pending_bio) {
+ 		wait_for_completion_io(&io->zone_wait);
+@@ -1020,7 +1020,6 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+ 	}
+ #endif
  
- 	if (!strncasecmp(buf, "round-robin", 11) ||
+-next:
+ 	if (fio->in_list) {
+ 		spin_lock(&io->io_lock);
+ 		if (list_empty(&io->io_list)) {
 -- 
 2.43.0
 
