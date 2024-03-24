@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6605F29618D;
-	Sun, 24 Mar 2024 23:51:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB93296BC1;
+	Sun, 24 Mar 2024 23:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324317; cv=none; b=mA6DncKh9hRPmnl802d3+6b+5ZGGctuDJ0KAPIgY9Wg/LMsCJH9oWG+J3g1EMT3ce4d4z3qVj2PL5J4Bzzp1+cjnqAERCKgO05n5BYEbe7cIByAe3f7GWldENwnC5oUXtGi+sPxLoRJWKQaRJXgyM2NPl2QMuTlwThF0l9mRyRA=
+	t=1711324325; cv=none; b=D4qd8IvOmCOrNX+qHbXlqjJR/sjgDzfF7mmLorcx/ODRGy8zDcg8j4GeVLeTP/Jt8TYuVkoE2fDTcSDXKYGtfF1BT1OBHSE1R/d8PpStWXllRLYeCsTWOaFL1EwDQNE2ws7nAQztjko8YvkfyNTnZf7HjIVPyNA192yZbNxFU50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324317; c=relaxed/simple;
-	bh=xhecuLVwTF/x3m+Vd/DgeBCVK7TzpAqqQH6UaRkUs2U=;
+	s=arc-20240116; t=1711324325; c=relaxed/simple;
+	bh=fHsIk2F+tT+hNKQUTOKDjMGFCBH6cPvUL/nt2XFd5/8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N/144OoHrBHKlcFgPYdBjQocWgdYaJ+W0weaIbIJqGea8+y/i/hCL5pRbMcIwH8+JQ6dxfRhaX+U+wyPq7UxPw0FvKvykoJKop4IAbONdhF8MqF0/DfCb3tjkW/cN7JGGML1h9KQb1eP6Hc4wu38U39nTRRsEIajIvXZr+Ay71s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXurerOg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KGS0Cad5dwRxWgG6zfo6+BFm2IJoXVSLtdyO0xzy/SXNgwkTZNiiSLXw3VjsQ49ajmli+kU9pYEbHTkyuwkhoXnU6p7hOw8Uj1YoKJF6Yrv4xl+MjzYc6uwVWZ7GHyzIwQ8pecV3yZuMorynKHVlYOppQelGaW8NfsU7J7w5pvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWjHuBgD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXurerOg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45252C433B1;
-	Sun, 24 Mar 2024 23:51:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWjHuBgD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 842E1C43394;
+	Sun, 24 Mar 2024 23:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324316;
-	bh=xhecuLVwTF/x3m+Vd/DgeBCVK7TzpAqqQH6UaRkUs2U=;
+	s=k20201202; t=1711324324;
+	bh=fHsIk2F+tT+hNKQUTOKDjMGFCBH6cPvUL/nt2XFd5/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UXurerOgJQShx5x1RX1jrlOYFDdDtTXWj+VBID/dBI10Vf5PwHpb1w7XUZINsZKTN
-	 xdapYpHR+IrguI8vaHusUpoxUQg9QE4jxtEX+RZFiuibZa0Q39WCLgun36vggHJHq8
-	 8PgKiFTAJ6bh9GHH1WOuxKNaJH5lyxmU4wFA7r+MYucdCnXVVnavT17QVvx3146h3m
-	 OJgPillJlBOxcAiqGIvINtizAIc0j7EjFYN+jhzIwIgwcYZrbNXVTQuQYl5JyaSR7g
-	 h/Q6MqEGpF1E5l4900hCc+TJjuOgs2hYukoWCGuq/TOXNPhQlU+W/WBqb+aopB0JAS
-	 Oc00iAeLc7sIQ==
+	b=SWjHuBgDtMXAdm4PChYzrHNXZDt/aURL2Zv0qH/lO1BDH38ndeFRN9XW5zH3hOnVm
+	 Cxyt2tj7jxU1NPHFNkTOUe3CYR6GN9+4iPqM07P8SVhEFiQBI1ULSD5wCoYzpV3TfN
+	 VtG4fFTxtcrsIvaDXc52OrSaahrQfM+DxhltRmZedMFwPW25CsNhPJhkN2jzUs+c9Z
+	 SnaS/gODicZFCOGYLu2e+urOhJR1AB5Mm2fqIVOIhVrVyK720MUTOwP3eqcI61Xcic
+	 p2K1KdmM3LygAeubzl69jWg8R+hqe1PHkh01b2BudshR7Gh/P0yKybIh4Vki7g0sFO
+	 YaJddQaMwuw4g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
+Cc: Baokun Li <libaokun1@huawei.com>,
+	Jan Kara <jack@suse.cz>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 087/148] media: edia: dvbdev: fix a use-after-free
-Date: Sun, 24 Mar 2024 19:49:11 -0400
-Message-ID: <20240324235012.1356413-88-sashal@kernel.org>
+Subject: [PATCH 4.19 095/148] quota: simplify drop_dquot_ref()
+Date: Sun, 24 Mar 2024 19:49:19 -0400
+Message-ID: <20240324235012.1356413-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,82 +48,130 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Baokun Li <libaokun1@huawei.com>
 
-[ Upstream commit 8c64f4cdf4e6cc5682c52523713af8c39c94e6d5 ]
+[ Upstream commit 7bce48f0fec602b3b6c335963b26d9eefa417788 ]
 
-In dvb_register_device, *pdvbdev is set equal to dvbdev, which is freed
-in several error-handling paths. However, *pdvbdev is not set to NULL
-after dvbdev's deallocation, causing use-after-frees in many places,
-for example, in the following call chain:
+As Honza said, remove_inode_dquot_ref() currently does not release the
+last dquot reference but instead adds the dquot to tofree_head list. This
+is because dqput() can sleep while dropping of the last dquot reference
+(writing back the dquot and calling ->release_dquot()) and that must not
+happen under dq_list_lock. Now that dqput() queues the final dquot cleanup
+into a workqueue, remove_inode_dquot_ref() can call dqput() unconditionally
+and we can significantly simplify it.
 
-budget_register
-  |-> dvb_dmxdev_init
-        |-> dvb_register_device
-  |-> dvb_dmxdev_release
-        |-> dvb_unregister_device
-              |-> dvb_remove_device
-                    |-> dvb_device_put
-                          |-> kref_put
+Here we open code the simplified code of remove_inode_dquot_ref() into
+remove_dquot_ref() and remove the function put_dquot_list() which is no
+longer used.
 
-When calling dvb_unregister_device, dmxdev->dvbdev (i.e. *pdvbdev in
-dvb_register_device) could point to memory that had been freed in
-dvb_register_device. Thereafter, this pointer is transferred to
-kref_put and triggering a use-after-free.
-
-Link: https://lore.kernel.org/linux-media/20240203134046.3120099-1-alexious@zju.edu.cn
-Fixes: b61901024776 ("V4L/DVB (5244): Dvbdev: fix illegal re-usage of fileoperations struct")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Message-Id: <20230630110822.3881712-6-libaokun1@huawei.com>
+Stable-dep-of: 179b8c97ebf6 ("quota: Fix rcu annotations of inode dquot pointers")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-core/dvbdev.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/quota/dquot.c | 70 +++++++-----------------------------------------
+ 1 file changed, 9 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index 35c272d77375e..f426e1bf16f0a 100644
---- a/drivers/media/dvb-core/dvbdev.c
-+++ b/drivers/media/dvb-core/dvbdev.c
-@@ -504,6 +504,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		dvbdevfops = kmemdup(template->fops, sizeof(*dvbdevfops), GFP_KERNEL);
- 		if (!dvbdevfops) {
- 			kfree(dvbdev);
-+			*pdvbdev = NULL;
- 			mutex_unlock(&dvbdev_register_lock);
- 			return -ENOMEM;
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 895636fd655f6..dd9c381b874fd 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -1074,59 +1074,7 @@ static int add_dquot_ref(struct super_block *sb, int type)
+ 	return err;
+ }
+ 
+-/*
+- * Remove references to dquots from inode and add dquot to list for freeing
+- * if we have the last reference to dquot
+- */
+-static void remove_inode_dquot_ref(struct inode *inode, int type,
+-				   struct list_head *tofree_head)
+-{
+-	struct dquot **dquots = i_dquot(inode);
+-	struct dquot *dquot = dquots[type];
+-
+-	if (!dquot)
+-		return;
+-
+-	dquots[type] = NULL;
+-	if (list_empty(&dquot->dq_free)) {
+-		/*
+-		 * The inode still has reference to dquot so it can't be in the
+-		 * free list
+-		 */
+-		spin_lock(&dq_list_lock);
+-		list_add(&dquot->dq_free, tofree_head);
+-		spin_unlock(&dq_list_lock);
+-	} else {
+-		/*
+-		 * Dquot is already in a list to put so we won't drop the last
+-		 * reference here.
+-		 */
+-		dqput(dquot);
+-	}
+-}
+-
+-/*
+- * Free list of dquots
+- * Dquots are removed from inodes and no new references can be got so we are
+- * the only ones holding reference
+- */
+-static void put_dquot_list(struct list_head *tofree_head)
+-{
+-	struct list_head *act_head;
+-	struct dquot *dquot;
+-
+-	act_head = tofree_head->next;
+-	while (act_head != tofree_head) {
+-		dquot = list_entry(act_head, struct dquot, dq_free);
+-		act_head = act_head->next;
+-		/* Remove dquot from the list so we won't have problems... */
+-		list_del_init(&dquot->dq_free);
+-		dqput(dquot);
+-	}
+-}
+-
+-static void remove_dquot_ref(struct super_block *sb, int type,
+-		struct list_head *tofree_head)
++static void remove_dquot_ref(struct super_block *sb, int type)
+ {
+ 	struct inode *inode;
+ #ifdef CONFIG_QUOTA_DEBUG
+@@ -1143,11 +1091,16 @@ static void remove_dquot_ref(struct super_block *sb, int type,
+ 		 */
+ 		spin_lock(&dq_data_lock);
+ 		if (!IS_NOQUOTA(inode)) {
++			struct dquot **dquots = i_dquot(inode);
++			struct dquot *dquot = dquots[type];
++
+ #ifdef CONFIG_QUOTA_DEBUG
+ 			if (unlikely(inode_get_rsv_space(inode) > 0))
+ 				reserved = 1;
+ #endif
+-			remove_inode_dquot_ref(inode, type, tofree_head);
++			dquots[type] = NULL;
++			if (dquot)
++				dqput(dquot);
  		}
-@@ -512,6 +513,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		if (!new_node) {
- 			kfree(dvbdevfops);
- 			kfree(dvbdev);
-+			*pdvbdev = NULL;
- 			mutex_unlock(&dvbdev_register_lock);
- 			return -ENOMEM;
- 		}
-@@ -545,6 +547,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		}
- 		list_del (&dvbdev->list_head);
- 		kfree(dvbdev);
-+		*pdvbdev = NULL;
- 		up_write(&minor_rwsem);
- 		mutex_unlock(&dvbdev_register_lock);
- 		return -EINVAL;
-@@ -567,6 +570,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		dvb_media_device_free(dvbdev);
- 		list_del (&dvbdev->list_head);
- 		kfree(dvbdev);
-+		*pdvbdev = NULL;
- 		mutex_unlock(&dvbdev_register_lock);
- 		return ret;
+ 		spin_unlock(&dq_data_lock);
  	}
-@@ -585,6 +589,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		dvb_media_device_free(dvbdev);
- 		list_del (&dvbdev->list_head);
- 		kfree(dvbdev);
-+		*pdvbdev = NULL;
- 		mutex_unlock(&dvbdev_register_lock);
- 		return PTR_ERR(clsdev);
- 	}
+@@ -1164,13 +1117,8 @@ static void remove_dquot_ref(struct super_block *sb, int type,
+ /* Gather all references from inodes and drop them */
+ static void drop_dquot_ref(struct super_block *sb, int type)
+ {
+-	LIST_HEAD(tofree_head);
+-
+-	if (sb->dq_op) {
+-		remove_dquot_ref(sb, type, &tofree_head);
+-		synchronize_srcu(&dquot_srcu);
+-		put_dquot_list(&tofree_head);
+-	}
++	if (sb->dq_op)
++		remove_dquot_ref(sb, type);
+ }
+ 
+ static inline
 -- 
 2.43.0
 
