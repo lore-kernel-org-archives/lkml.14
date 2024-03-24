@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8DC129A6C;
-	Sun, 24 Mar 2024 22:54:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF445147C8D;
+	Sun, 24 Mar 2024 22:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320870; cv=none; b=oIyIJCJwjP/cfMuyhXaqyCncQkwfTEIoRj+VLlXXs1jesIlWBK+CZG1pSqcaS1ZBPjjq8zqgdLzZH8osx6V8IM/PrxYkmRtYCzgxdNyjZ3JEf6I8glrdfpIhwWIbjCjr0h6HIzO8VeEBSMd2CpGVSPdx90wDQYfniBaQYHRDau4=
+	t=1711320877; cv=none; b=e0f0uGT4fpuqA9C0FAiCSytO7hNVbYCSAy5Lzkx4iYH5DbU8yJaXxEeDNOlQhedRv/BsoNPChPa38VPoBjOcnl0LLcj5+m1LAeb0e/boX7Qui30hsFaIV2ko+rxcnoTIVDmsi7E/dDLhIa3Sj6/L8wmtxEBP5SOyM6NmJFfpN78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320870; c=relaxed/simple;
-	bh=CppLPCfjU49vHu7bNWvje6/foOrxod7vVRZITwIj2fk=;
+	s=arc-20240116; t=1711320877; c=relaxed/simple;
+	bh=TlP6/AQtNqw7rwGx8wZwwQ5PsKZq/5mbyDLs6BK6zYA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X0xE6a51Qi+/Jyjom/PYg2meHTiuV8nnFqutsEYq4mzkuopzoOAvLdvOJAi7KRGxSNomsWqZRA8RngSxQZSpWILvaLuBA/5VxZ1JgLRJglTcY+uab1N18iZfOw+iZ82ITRFWZ6Qlrb6gGzYuTdxr/sutg4zx83/cy7ai6nwohu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kxd3dzmO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TsxtPLxfnQf5NCcJ+91m/YkwvMkHa7RaiXNYWp2Ma+hR4A8DV2KmfwrY5EF0Fo8ereLzzFpZGZ8Nd3sWt1aCHw9u4wwjhiv9ksHHLfAzMOivX/nODzCZCFP6ARMZIR1FjLSEyELPTnL+PvxZZee78yklWzaK6cNatutjABoySSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCwNO1HQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kxd3dzmO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63BD9C43399;
-	Sun, 24 Mar 2024 22:54:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCwNO1HQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D918DC433F1;
+	Sun, 24 Mar 2024 22:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320870;
-	bh=CppLPCfjU49vHu7bNWvje6/foOrxod7vVRZITwIj2fk=;
+	s=k20201202; t=1711320876;
+	bh=TlP6/AQtNqw7rwGx8wZwwQ5PsKZq/5mbyDLs6BK6zYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kxd3dzmO4aYtTAXZ6AA/jlDjDZP8jAnF3E3AQOZ5nsONqmR4ArCs5AQxmYmFzDKOb
-	 rhnhCS4MfLG3lyWMXPvaky4CiMCQD0gMHRxtvv3bNDMnYRp6zKjfuQ6xozkjrAKBpW
-	 mGHkdDDgDaUiufc+usGwmZQM1N1VKEXrIJYi4Fl9pGaPPmv7KqUVKDO+KYuW6S0LSf
-	 XBOYLfA2gHzSTL3mfAFB0/C1pgL8dlFe2jKNGk94rjTGdXqzUe2uE/AX+KHe6JxUUY
-	 c/r9yn/v9ozArwINGGSw451QPilyqI/2YseJ2QoVxSKxRM71ZF5clIy+20SFJgDmeP
-	 TXfeOFWFFx9UA==
+	b=gCwNO1HQkOM4Dz5X6PgWutXvDjsgejCMpycO9OyQ+SOmoQ5tTByuVx0oPBP6fL4e3
+	 Y+qVqVv8kJk4WvhtVmhwf+iqN/Qu8oHobnxUqLQxOoklBMmH9wz69v7PuSao9m2drS
+	 SW/zmquY9DhtGGVqHEbeJrOFtHKsHSSNUWCZj6iA+65MdisJIQCt4fnXCB/E6y00US
+	 /BMraX3n+QpT+R8lPLD3OFODZSwyG8er0zvnFSz9qxF/MyrYnhWLsFBvKGjiMOUJig
+	 qX2ZFOHu9oSmPDjTo9iN3UWk+I99PNFDO88+hYCZ950IGgM7qhHoCjMyY7CF5MchK8
+	 8cECbzYeWiM7Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 434/713] pinctrl: mediatek: Drop bogus slew rate register range for MT8192
-Date: Sun, 24 Mar 2024 18:42:40 -0400
-Message-ID: <20240324224720.1345309-435-sashal@kernel.org>
+Subject: [PATCH 6.7 441/713] PCI/P2PDMA: Fix a sleeping issue in a RCU read section
+Date: Sun, 24 Mar 2024 18:42:47 -0400
+Message-ID: <20240324224720.1345309-442-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,38 +49,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chen-Yu Tsai <wenst@chromium.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit e15ab05a6b3ed42f2f43f8bd1a1abdbde64afecd ]
+[ Upstream commit 1e5c66afd4a40bb7be17cb33cbb1a1085f727730 ]
 
-The MT8192 does not support configuring pin slew rate. This is evident
-from both the datasheet, and the fact that the driver points the slew
-rate register range at the GPIO direction register range.
+It is not allowed to sleep within a RCU read section, so use GFP_ATOMIC
+instead of GFP_KERNEL here.
 
-Drop the bogus setting.
-
-Fixes: d32f38f2a8fc ("pinctrl: mediatek: Add pinctrl driver for mt8192")
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://lore.kernel.org/r/20240131071910.3950450-2-wenst@chromium.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/02d9ec4a10235def0e764ff1f5be881ba12e16e8.1704397858.git.christophe.jaillet@wanadoo.fr
+Fixes: ae21f835a5bd ("PCI/P2PDMA: Finish RCU conversion of pdev->p2pdma")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/mediatek/pinctrl-mt8192.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pci/p2pdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8192.c b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-index dee1b3aefd36e..bf5788d6810ff 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-@@ -1379,7 +1379,6 @@ static const struct mtk_pin_reg_calc mt8192_reg_cals[PINCTRL_PIN_REG_MAX] = {
- 	[PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8192_pin_dir_range),
- 	[PINCTRL_PIN_REG_DI] = MTK_RANGE(mt8192_pin_di_range),
- 	[PINCTRL_PIN_REG_DO] = MTK_RANGE(mt8192_pin_do_range),
--	[PINCTRL_PIN_REG_SR] = MTK_RANGE(mt8192_pin_dir_range),
- 	[PINCTRL_PIN_REG_SMT] = MTK_RANGE(mt8192_pin_smt_range),
- 	[PINCTRL_PIN_REG_IES] = MTK_RANGE(mt8192_pin_ies_range),
- 	[PINCTRL_PIN_REG_PU] = MTK_RANGE(mt8192_pin_pu_range),
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 0c361561b855c..4f47a13cb500f 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -661,7 +661,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 	p2pdma = rcu_dereference(provider->p2pdma);
+ 	if (p2pdma)
+ 		xa_store(&p2pdma->map_types, map_types_idx(client),
+-			 xa_mk_value(map_type), GFP_KERNEL);
++			 xa_mk_value(map_type), GFP_ATOMIC);
+ 	rcu_read_unlock();
+ 	return map_type;
+ }
 -- 
 2.43.0
 
