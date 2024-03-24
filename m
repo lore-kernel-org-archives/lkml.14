@@ -1,40 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439A112AADB;
-	Sun, 24 Mar 2024 22:55:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A672B1EBD2F;
+	Sun, 24 Mar 2024 22:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320930; cv=none; b=rEIt/72157QRhESCcfyOWOEU42JAQEQKqE/KmuawYW31zHqMNbAm1d0a0GyZXQYdhRvu45fn5oy5yyZzU/q+x0hFmDwnQLaAdkxSZ/IpzmwlSvyRWSMVSlEzylyiSQq4OKEvQaiYvMsVWhW3Bc9JkUUHi/1p67NCDR0Ir3sokcw=
+	t=1711320932; cv=none; b=NhKCzo9Wls5lMy0J4PkoMKP6+aDeDTe3R1Ha8sybjSHfajAiW4UwecaoJLguSDz2ShuAiEUPU1sIEVvpONjo64l4cgnjsI5mPFrQj0xij0fwCJ2JcEohJwr36TY2x7y7w2DxE3xaCoD24XfAK/CXa6Ve+1uimoTl9G3ibgjxfts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320930; c=relaxed/simple;
-	bh=6QT672QOnXtfVyI1jQ2OIfo7bcqP0hm5arRscEAGI0M=;
+	s=arc-20240116; t=1711320932; c=relaxed/simple;
+	bh=Mk6BwSDODLAoCOkqq1DtmiubF/y+lT1FgIFrQKXte1I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gP2Bo53+45v4BPl9wuW8Yep7LfTixqHZX7mkI4IG1/ZDF0BMXW/gyOBBZfF71ZtjF+xxFjGsTXf2DSYsD5hae6/Ks4UZQuXR2sRNjAxJ0W82Wxf0ML+5T6kwbekIu+4E1tf9ZekN7O2DvZ7HgnvxUm0p2LgCEieCH0YMkPqzcNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ir0JGfTe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=P5+mD3T9eCikB39LbJHIZbU5iptjikoSaJG1w8aIRL9Yz774ZK0pMNS6ZBNh85FPwJIKd27JIvEnHOAAW2M5ryWsqQgKTaEl1pD3BN93/GApi6qrrJy2OjcrQeni0rgaoKk/yyw970B9Pg//pr2zXBIAhAOGiwjWXv4zCFEP1lA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HO/tKpNz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ir0JGfTe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83225C433C7;
-	Sun, 24 Mar 2024 22:55:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HO/tKpNz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51BE3C43399;
+	Sun, 24 Mar 2024 22:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320929;
-	bh=6QT672QOnXtfVyI1jQ2OIfo7bcqP0hm5arRscEAGI0M=;
+	s=k20201202; t=1711320932;
+	bh=Mk6BwSDODLAoCOkqq1DtmiubF/y+lT1FgIFrQKXte1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ir0JGfTeSy+9L90kA+xs9gqbanfOlhtDk2JuHJLIU2L8b2e4u5IhnCmyHW81uY7M/
-	 E2dPOkQPyX1eorFl5GnOt94SuOeP7IaiW4kWhujEeKNPWGuHCXcSouXNSYzdl4qkKO
-	 JgjoR97tD+qOh62ZRgyN/k2zAGIhSHFhi67sjNb9OCADV/PWu88U+wkzJOm54AOa9H
-	 rpKiukhZhwbxkdMEGEKYCPs1b8VHYU10yh4MpL/cmry7BhVAyRm76n/PjnX8F7rkcg
-	 jm96Kmiob8bLiFc03K87LszZrXk0pk/OetzJ97i4f8z9OqaWFRwbToUUjNEYmFoRr9
-	 57C0GroPnDAhQ==
+	b=HO/tKpNzfHaywlZOZK1wU95+XuKDdWm5QZyC4f0WtsZKQV5Emxt4Wwqa/L8DAAQl/
+	 L+MvS3CsdmkaqzVxlzH90vLAhLcNJcPYt7PL9zUCRT1Dn+eVxMRrYzeozd01GPHYVG
+	 OVs61BI/0aSkaHRhigmAK8jsXNdZBx+NeBvhj/aVlDb2kaRbZD9vNzEKoGy3p1q3f0
+	 Sy2IJkCOqkNJ5W1V69J7A4v2N7BjR+1gu9/ldrsieC24vrg35+kxBKSz27Vaem9GhA
+	 oI3+Ln4WemJ5XZt808/fYgrUlNOqhNgJU9LU27bGPMNG6MjTjGXY8M7PAvKlaKa+BO
+	 BJ9BYeUqa3mzg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Griffin <peter.griffin@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Hector Martin <marcan@marcan.st>,
+	John Garry <john.g.garry@oracle.com>,
+	Leo Yan <leo.yan@linux.dev>,
+	Mike Leach <mike.leach@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 493/713] mfd: syscon: Call of_node_put() only when of_parse_phandle() takes a ref
-Date: Sun, 24 Mar 2024 18:43:39 -0400
-Message-ID: <20240324224720.1345309-494-sashal@kernel.org>
+Subject: [PATCH 6.7 495/713] perf print-events: make is_event_supported() more robust
+Date: Sun, 24 Mar 2024 18:43:41 -0400
+Message-ID: <20240324224720.1345309-496-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,39 +59,152 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Griffin <peter.griffin@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit d2b0680cf3b05490b579e71b0df6e07451977745 ]
+[ Upstream commit 25412c0364f7110faa6053c73e3fd47ca956b8c3 ]
 
-of_parse_phandle() returns a device_node with refcount incremented, which
-the callee needs to call of_node_put() on when done. We should only call
-of_node_put() when the property argument is provided though as otherwise
-nothing has taken a reference on the node.
+Currently the perf tool doesn't detect support for extended event types
+on Apple M1/M2 systems, and will not auto-expand plain PERF_EVENT_TYPE
+hardware events into per-PMU events. This is due to the detection of
+extended event types not handling mandatory filters required by the
+M1/M2 PMU driver.
 
-Fixes: 45330bb43421 ("mfd: syscon: Allow property as NULL in syscon_regmap_lookup_by_phandle")
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Link: https://lore.kernel.org/r/20240220115012.471689-2-peter.griffin@linaro.org
-Signed-off-by: Lee Jones <lee@kernel.org>
+PMU drivers and the core perf_events code can require that
+perf_event_attr::exclude_* filters are configured in a specific way and
+may reject certain configurations of filters, for example:
+
+(a) Many PMUs lack support for any event filtering, and require all
+    perf_event_attr::exclude_* bits to be clear. This includes Alpha's
+    CPU PMU, and ARM CPU PMUs prior to the introduction of PMUv2 in
+    ARMv7,
+
+(b) When /proc/sys/kernel/perf_event_paranoid >= 2, the perf core
+    requires that perf_event_attr::exclude_kernel is set.
+
+(c) The Apple M1/M2 PMU requires that perf_event_attr::exclude_guest is
+    set as the hardware PMU does not count while a guest is running (but
+    might be extended in future to do so).
+
+In is_event_supported(), we try to account for cases (a) and (b), first
+attempting to open an event without any filters, and if this fails,
+retrying with perf_event_attr::exclude_kernel set. We do not account for
+case (c), or any other filters that drivers could theoretically require
+to be set.
+
+Thus is_event_supported() will fail to detect support for any events
+targeting an Apple M1/M2 PMU, even where events would be supported with
+perf_event_attr:::exclude_guest set.
+
+Since commit:
+
+  82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU number in perf_event_attr.type")
+
+... we use is_event_supported() to detect support for extended types,
+with the PMU ID encoded into the perf_event_attr::type. As above, on an
+Apple M1/M2 system this will always fail to detect that the event is
+supported, and consequently we fail to detect support for extended types
+even when these are supported, as they have been since commit:
+
+  5c816728651ae425 ("arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability")
+
+Due to this, the perf tool will not automatically expand plain
+PERF_TYPE_HARDWARE events into per-PMU events, even when all the
+necessary kernel support is present.
+
+This patch updates is_event_supported() to additionally try opening
+events with perf_event_attr::exclude_guest set, allowing support for
+events to be detected on Apple M1/M2 systems. I believe that this is
+sufficient for all contemporary CPU PMU drivers, though in future it may
+be necessary to check for other combinations of filter bits.
+
+I've deliberately changed the check to not expect a specific error code
+for missing filters, as today ;the kernel may return a number of
+different error codes for missing filters (e.g. -EACCESS, -EINVAL, or
+-EOPNOTSUPP) depending on why and where the filter configuration is
+rejected, and retrying for any error is more robust.
+
+Note that this does not remove the need for commit:
+
+  a24d9d9dc096fc0d ("perf parse-events: Make legacy events lower priority than sysfs/JSON")
+
+... which is still necessary so that named-pmu/event/ events work on
+kernels without extended type support, even if the event name happens to
+be the same as a PERF_EVENT_TYPE_HARDWARE event (e.g. as is the case for
+the M1/M2 PMU's 'cycles' and 'instructions' events).
+
+Fixes: 82fe2e45cdb00de4 ("perf pmus: Check if we can encode the PMU number in perf_event_attr.type")
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Tested-by: Ian Rogers <irogers@google.com>
+Tested-by: James Clark <james.clark@arm.com>
+Tested-by: Marc Zyngier <maz@kernel.org>
+Cc: Hector Martin <marcan@marcan.st>
+Cc: James Clark <james.clark@arm.com>
+Cc: John Garry <john.g.garry@oracle.com>
+Cc: Leo Yan <leo.yan@linux.dev>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240126145605.1005472-1-mark.rutland@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/syscon.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/print-events.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index c9550368d9ea5..7d0e91164cbaa 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -238,7 +238,9 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
- 		return ERR_PTR(-ENODEV);
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index b0fc48be623f3..4f67e8f00a4d6 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -232,7 +232,6 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
+ bool is_event_supported(u8 type, u64 config)
+ {
+ 	bool ret = true;
+-	int open_return;
+ 	struct evsel *evsel;
+ 	struct perf_event_attr attr = {
+ 		.type = type,
+@@ -246,20 +245,32 @@ bool is_event_supported(u8 type, u64 config)
  
- 	regmap = syscon_node_to_regmap(syscon_np);
--	of_node_put(syscon_np);
+ 	evsel = evsel__new(&attr);
+ 	if (evsel) {
+-		open_return = evsel__open(evsel, NULL, tmap);
+-		ret = open_return >= 0;
++		ret = evsel__open(evsel, NULL, tmap) >= 0;
+ 
+-		if (open_return == -EACCES) {
++		if (!ret) {
+ 			/*
+-			 * This happens if the paranoid value
++			 * The event may fail to open if the paranoid value
+ 			 * /proc/sys/kernel/perf_event_paranoid is set to 2
+-			 * Re-run with exclude_kernel set; we don't do that
+-			 * by default as some ARM machines do not support it.
+-			 *
++			 * Re-run with exclude_kernel set; we don't do that by
++			 * default as some ARM machines do not support it.
+ 			 */
+ 			evsel->core.attr.exclude_kernel = 1;
+ 			ret = evsel__open(evsel, NULL, tmap) >= 0;
+ 		}
 +
-+	if (property)
-+		of_node_put(syscon_np);
++		if (!ret) {
++			/*
++			 * The event may fail to open if the PMU requires
++			 * exclude_guest to be set (e.g. as the Apple M1 PMU
++			 * requires).
++			 * Re-run with exclude_guest set; we don't do that by
++			 * default as it's equally legitimate for another PMU
++			 * driver to require that exclude_guest is clear.
++			 */
++			evsel->core.attr.exclude_guest = 1;
++			ret = evsel__open(evsel, NULL, tmap) >= 0;
++		}
++
+ 		evsel__delete(evsel);
+ 	}
  
- 	return regmap;
- }
 -- 
 2.43.0
 
