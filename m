@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B0313A87C;
-	Sun, 24 Mar 2024 23:08:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057AC212D3C;
+	Sun, 24 Mar 2024 23:08:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321705; cv=none; b=MF8emsnJ1f4i6ubxIF5qS70d3wFUs27Dc+OfZVhYYX99Ba6rWU0KNHtQeWk7z4rthv4A9c9KTxU/et2N7OZ7+Xyb3bk7j31CIG9zLIkmAw0IZgXLgEgRazN+FZgbCNCIaERerEApzYQSge94/tJuyQlA6dZeEEfujuqRW31hKes=
+	t=1711321727; cv=none; b=nth+8AV/awWKGVB3b6WHdUdlTAv9/xR1BCx7veIcFS1iOUezghvB1sGBtyjG0JcgwTpdljzBd2MTaBP2SuHdRgOBSlkZaYbYwqBZidLh0fa3rp/ewxkNbUM+ND8q0KAAk+uON9bdk6ubbGvHzgE2J9xPKxVMeGP6jV4CpAvLzxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321705; c=relaxed/simple;
-	bh=W1qnD+PQflFLeBQuy72HrEwLuX68/y0GgttfO4r6uQ4=;
+	s=arc-20240116; t=1711321727; c=relaxed/simple;
+	bh=88D2h7ESbBu8z6z2H1BIcpBwdPI4hxWEwZy8Q42aC84=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tCL0vnW6JLGIwXz65oyR+jcg4PGuXS88OpE5K3FK70eSgFaKohYHYMrWxN0X/8ONz0173iM6O59bCyEl+2zgdo7cldxFfWCsUutXsvoZkineE0ZoDSKuKOpZerzDYSFIXZoiEMClWNWyqSn7CmndKd8XiftksyiEzL4U9jomzkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qm56cFqR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BdIgLiGHGb832x5f7Xt5dgjIbhQTIky0aTmE5sbgmChzOM7GnV4Fmu7lmUwRfch+SOhwIAZEk448l9vH5bLpNOmjCHUW9fkICIQCexgzp2/dQKZDPRZERt4uymbbUW7GEaZJiw2+DXZl9et1FYSNPNqNuIE0XfebxRSwDqAaeEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mEM1SUJi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qm56cFqR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E72B4C433F1;
-	Sun, 24 Mar 2024 23:08:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mEM1SUJi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43A6BC43399;
+	Sun, 24 Mar 2024 23:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321704;
-	bh=W1qnD+PQflFLeBQuy72HrEwLuX68/y0GgttfO4r6uQ4=;
+	s=k20201202; t=1711321726;
+	bh=88D2h7ESbBu8z6z2H1BIcpBwdPI4hxWEwZy8Q42aC84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Qm56cFqRdnf+lL4L6q3m5K/Mf5In1vGR/E2mNZORE7hyM3Zkp8asO+uBNW/dF1/lA
-	 MgqNr/Cz43pVbMC5gatjE/arPAEPedrkDMlyOlXgmsSWJ6QPpgbXzbrgKAMO4RzziC
-	 ZvbXE5ZimJrxfC3vxXN0amUO3vpHIrz0NVP8vWhPqxKKyj//rZC48ORcUVd8dMwDjB
-	 cJVYXOIyd0PfMGqOa8Z9eIynBrvQNhVT2+V537ajqGVnns6mxdByMgPYFd+27h3WwP
-	 OIjgFX5Iv/f3r+EBqDgCt15k8soQogg1Q6O4Bqq9LKf+4cA3RGXBP2xxgu8tf1vZ6+
-	 WCPWC+t2wpTHw==
+	b=mEM1SUJiHEVzaIMNjej8mZz6ZTpxmVdUIaD9GFJKYzATXILYq0mxYYbFbsCrnp86Q
+	 qp6SHxpgtPS77VJxeT5DUr56IkgcM6QI8cEKHG3RbP57GXasaHk0CP2LCzVlcVvJwh
+	 KXMzH4RTQDIqhpCPYUuUZhdD2id5Sw0zMZ+Orz2V69hc5Cmn3IzIX1KifBwrqpeitx
+	 f7gwYOgkPqK7B7wKAeVnStR5FEm4Zc43Bk3lwDDybZZPGkzpkdT7UrJ91VGaiTDEHf
+	 B0rh/snxGtWeZsj68hKMjBk1vCT6oTmneciNoB1UJXxLiwCsz01YHdq9iNkEtw06Lv
+	 MQQ4mzRdn3czw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Stephen Boyd <sboyd@kernel.org>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 433/638] clk: hisilicon: hi3559a: Fix an erroneous devm_kfree()
-Date: Sun, 24 Mar 2024 18:57:50 -0400
-Message-ID: <20240324230116.1348576-434-sashal@kernel.org>
+Subject: [PATCH 6.6 455/638] mtd: rawnand: lpc32xx_mlc: fix irq handler prototype
+Date: Sun, 24 Mar 2024 18:58:12 -0400
+Message-ID: <20240324230116.1348576-456-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,40 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 64c6a38136b74a2f18c42199830975edd9fbc379 ]
+[ Upstream commit 347b828882e6334690e7003ce5e2fe5f233dc508 ]
 
-'p_clk' is an array allocated just before the for loop for all clk that
-need to be registered.
-It is incremented at each loop iteration.
+clang-16 warns about mismatched function prototypes:
 
-If a clk_register() call fails, 'p_clk' may point to something different
-from what should be freed.
+drivers/mtd/nand/raw/lpc32xx_mlc.c:783:29: error: cast from 'irqreturn_t (*)(int, struct lpc32xx_nand_host *)' (aka 'enum irqreturn (*)(int, struct lpc32xx_nand_host *)') to 'irq_handler_t' (aka 'enum irqreturn (*)(int, void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
 
-The best we can do, is to avoid this wrong release of memory.
+Change the interrupt handler to the normal way of just passing
+a void* pointer and converting it inside the function..
 
-Fixes: 6c81966107dc ("clk: hisilicon: Add clock driver for hi3559A SoC")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/773fc8425c3b8f5b0ca7c1d89f15b65831a85ca9.1705850155.git.christophe.jaillet@wanadoo.fr
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 70f7cb78ec53 ("mtd: add LPC32xx MLC NAND driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20240213100146.455811-1-arnd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/hisilicon/clk-hi3559a.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/mtd/nand/raw/lpc32xx_mlc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/hisilicon/clk-hi3559a.c b/drivers/clk/hisilicon/clk-hi3559a.c
-index ff4ca0edce06a..4623befafaec4 100644
---- a/drivers/clk/hisilicon/clk-hi3559a.c
-+++ b/drivers/clk/hisilicon/clk-hi3559a.c
-@@ -491,7 +491,6 @@ static void hisi_clk_register_pll(struct hi3559av100_pll_clock *clks,
+diff --git a/drivers/mtd/nand/raw/lpc32xx_mlc.c b/drivers/mtd/nand/raw/lpc32xx_mlc.c
+index 488fd452611a6..677fcb03f9bef 100644
+--- a/drivers/mtd/nand/raw/lpc32xx_mlc.c
++++ b/drivers/mtd/nand/raw/lpc32xx_mlc.c
+@@ -303,8 +303,9 @@ static int lpc32xx_nand_device_ready(struct nand_chip *nand_chip)
+ 	return 0;
+ }
  
- 		clk = clk_register(NULL, &p_clk->hw);
- 		if (IS_ERR(clk)) {
--			devm_kfree(dev, p_clk);
- 			dev_err(dev, "%s: failed to register clock %s\n",
- 			       __func__, clks[i].name);
- 			continue;
+-static irqreturn_t lpc3xxx_nand_irq(int irq, struct lpc32xx_nand_host *host)
++static irqreturn_t lpc3xxx_nand_irq(int irq, void *data)
+ {
++	struct lpc32xx_nand_host *host = data;
+ 	uint8_t sr;
+ 
+ 	/* Clear interrupt flag by reading status */
+@@ -780,7 +781,7 @@ static int lpc32xx_nand_probe(struct platform_device *pdev)
+ 		goto release_dma_chan;
+ 	}
+ 
+-	if (request_irq(host->irq, (irq_handler_t)&lpc3xxx_nand_irq,
++	if (request_irq(host->irq, &lpc3xxx_nand_irq,
+ 			IRQF_TRIGGER_HIGH, DRV_NAME, host)) {
+ 		dev_err(&pdev->dev, "Error requesting NAND IRQ\n");
+ 		res = -ENXIO;
 -- 
 2.43.0
 
