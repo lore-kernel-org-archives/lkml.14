@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A268128BD52;
-	Sun, 24 Mar 2024 23:48:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF0328CE50;
+	Sun, 24 Mar 2024 23:48:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324086; cv=none; b=K5MvRAJZ7ocIL5d8DhVHyezuAcXorPZ4K1YvYWWwEQ5cTtrOu3bwsxdcw13rGN0PvfjP+Fg8rP25QYr85oGYZSl+kmnq1gYLFDCqK+Zq/yu6cNjKdO1gyKycj1iMyCBlsTXVlqkCp87Cd4Eid4CKz6XMLhSq2MnkFssS8To1ORY=
+	t=1711324102; cv=none; b=HcniyyCCNk1RXPfrk3/OxH9cmnXy/FgpJOvnUIbLSqWrmhi5XabF2dSkP5aFIPkGpa55wZ3mycSY94RW1Dgvud45a3QOfhXqMLQmZtsO++VA7V18+ht2ZV1gJKSuR9Yy231lrg9JSe+0dM7VJt1MIgMC+AKVtqpOKUa7z4dW99M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324086; c=relaxed/simple;
-	bh=W2auDHnhzdN2Q152if/0LfzHE3Jc54mGrChBtG4p+mE=;
+	s=arc-20240116; t=1711324102; c=relaxed/simple;
+	bh=YcHd1bswbqsnEctIwDQgIBMvzzOmYcfo7MBYD+mF5Mw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sAojt5GHUXPbkSOCz92eDUrL9yb1qwoCF8Pjg9qJS6txOC4FZEzrvLeGNGP0CIneZUpLo5ZoJ0Zg7VHaEg5m0g17hld2TcJGHe7W9n3VcngF6N+NJktVZ0UwNyF6+NoF05DcN0OOBWpK0cc9aMUucp8BaN1YFIdoNHZPMwzzlSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hh02hAWi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MgUobtF2D2rsGcT70f+pNiqs1SkzuAybUBMwSRfCW0MhMDjffor44WZWPSj+crgRbgNDoLTdUY28c4z92ZOdOxLvyR2/QtJzY1/nRyEn09dRBYB7oI26+TVnqtO52l9tl9CV8ZPfWItlvTN//iIb/+aGekMucQItjogO69kL4wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u02dUute; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hh02hAWi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51E11C433C7;
-	Sun, 24 Mar 2024 23:48:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u02dUute"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 023F8C43390;
+	Sun, 24 Mar 2024 23:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324086;
-	bh=W2auDHnhzdN2Q152if/0LfzHE3Jc54mGrChBtG4p+mE=;
+	s=k20201202; t=1711324101;
+	bh=YcHd1bswbqsnEctIwDQgIBMvzzOmYcfo7MBYD+mF5Mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hh02hAWiiMfZTGjcTOVx9IlFXJ83NL8sYqknp+JSxwe+8ecIVlqn/RnobNsf+EpIF
-	 pE9TjqD+2ihnVBtud0gg4BQHzNPpl3tQYHclKb+mhIhwFsnh4osMN85FTig8d7oNqD
-	 GgTX1cSrq8Mj0aIJ5RCpMoSf6jCL+ofvI7YMtDEtLLNsgukh6jA4uJuvFrkLeuiIES
-	 iUTzF4mG6+/Iyr019Bc6SS/hFCsXVBxxA+kEF5X5tNJgdO89+eSdIe71XixN80xje2
-	 PS65yQO+E2lA9yvuANx8atNJWH5Kuc9283Dafv9nZDJWV3R/TWS8FvApMSLkZKjZvh
-	 NHJmrdD+wNbXA==
+	b=u02dUuteFUfk/PPyTR7Ff2aZQpLuAqXi1DDPgJDGoGfEEVCZDYujgz4h8dvWNtOlI
+	 E+oiNqcOGER/CTfX5l92tqhyXiFLWPGb/7F4RMPzYMY7fNUGLQk4V7e3nTpURFEBJm
+	 r02hoJcUyDVxpXVJcFjvNstcju26l9/Xmn/IsRL2Pg7YfHjH21T7qmWE5Wd3mirARt
+	 Q5EGjCo2x6Wvx2G9O5S7DGclxS9LCCq6weoksnisSjEAD/TD0HREPoXbEzxkzQmAcd
+	 BASm+gWnj+ru5jZLDOQMCyAQemgTGYiMNtXzDBWUgVMOKJvluUYIlNsBWyScVXjaFk
+	 PaQBPMZ9jxYeg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sowjanya Komatineni <skomatineni@nvidia.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 086/183] gpu: host1x: mipi: Update tegra_mipi_request() to be node based
-Date: Sun, 24 Mar 2024 19:44:59 -0400
-Message-ID: <20240324234638.1355609-87-sashal@kernel.org>
+Subject: [PATCH 5.4 100/183] PCI/AER: Fix rootport attribute paths in ABI docs
+Date: Sun, 24 Mar 2024 19:45:13 -0400
+Message-ID: <20240324234638.1355609-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,71 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Johan Hovold <johan+linaro@kernel.org>
 
-[ Upstream commit 767598d447aa46411289c5808b0e45e20a1823b4 ]
+[ Upstream commit 0e7d29a39a546161ea3a49e8e282a43212d7ff68 ]
 
-Tegra CSI driver need a separate MIPI device for each channel as
-calibration of corresponding MIPI pads for each channel should
-happen independently.
+The 'aer_stats' directory never made it into the sixth and final revision
+of the series adding the sysfs AER attributes.
 
-So, this patch updates tegra_mipi_request() API to add a device_node
-pointer argument to allow creating mipi device for specific device
-node rather than a device.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Stable-dep-of: 830c1ded3563 ("drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()")
+Link: https://lore.kernel.org/r/20240202131635.11405-2-johan+linaro@kernel.org
+Link: https://lore.kernel.org/lkml/20180621184822.GB14136@bhelgaas-glaptop.roam.corp.google.com/
+Fixes: 12833017e581 ("PCI/AER: Add sysfs attributes for rootport cumulative stats")
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dsi.c | 2 +-
- drivers/gpu/host1x/mipi.c   | 4 ++--
- include/linux/host1x.h      | 3 ++-
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 4e454479ff157..1cc6dc6167771 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1542,7 +1542,7 @@ static int tegra_dsi_probe(struct platform_device *pdev)
- 	if (IS_ERR(dsi->regs))
- 		return PTR_ERR(dsi->regs);
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+index 3c9a8c4a25eb8..988724cc85182 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
++++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+@@ -103,19 +103,19 @@ collectors) that are AER capable. These indicate the number of error messages as
+ device, so these counters include them and are thus cumulative of all the error
+ messages on the PCI hierarchy originating at that root port.
  
--	dsi->mipi = tegra_mipi_request(&pdev->dev);
-+	dsi->mipi = tegra_mipi_request(&pdev->dev, pdev->dev.of_node);
- 	if (IS_ERR(dsi->mipi))
- 		return PTR_ERR(dsi->mipi);
+-What:		/sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_cor
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_cor
+ Date:		July 2018
+ KernelVersion: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ Description:	Total number of ERR_COR messages reported to rootport.
  
-diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
-index e00809d996a29..762d349ad00f1 100644
---- a/drivers/gpu/host1x/mipi.c
-+++ b/drivers/gpu/host1x/mipi.c
-@@ -206,9 +206,9 @@ static int tegra_mipi_power_down(struct tegra_mipi *mipi)
- 	return 0;
- }
+-What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_fatal
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_fatal
+ Date:		July 2018
+ KernelVersion: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ Description:	Total number of ERR_FATAL messages reported to rootport.
  
--struct tegra_mipi_device *tegra_mipi_request(struct device *device)
-+struct tegra_mipi_device *tegra_mipi_request(struct device *device,
-+					     struct device_node *np)
- {
--	struct device_node *np = device->of_node;
- 	struct tegra_mipi_device *dev;
- 	struct of_phandle_args args;
- 	int err;
-diff --git a/include/linux/host1x.h b/include/linux/host1x.h
-index e6eea45e11549..0b9d59807e5e2 100644
---- a/include/linux/host1x.h
-+++ b/include/linux/host1x.h
-@@ -314,7 +314,8 @@ int host1x_client_unregister(struct host1x_client *client);
- 
- struct tegra_mipi_device;
- 
--struct tegra_mipi_device *tegra_mipi_request(struct device *device);
-+struct tegra_mipi_device *tegra_mipi_request(struct device *device,
-+					     struct device_node *np);
- void tegra_mipi_free(struct tegra_mipi_device *device);
- int tegra_mipi_enable(struct tegra_mipi_device *device);
- int tegra_mipi_disable(struct tegra_mipi_device *device);
+-What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_nonfatal
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_nonfatal
+ Date:		July 2018
+ KernelVersion: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
 -- 
 2.43.0
 
