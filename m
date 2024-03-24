@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D77C144302;
-	Sun, 24 Mar 2024 22:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288AD143886;
+	Sun, 24 Mar 2024 22:50:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320659; cv=none; b=b+yJpSlSGml/z8PCmE/TcW5BDeoxLTVyN5jJa0fQX/olAYc33Hd9bFLLdQBwMbPDmbPu075jPL7JdZaFROCxDHt1gsfcAD2b+hKJkwDLJGoTbAoQJCCBPbp4TyHy+AN7Uo0VN6uEo3MuFa8EghS/ZUHNfcsVhfug5csuy3uokl8=
+	t=1711320626; cv=none; b=XKLPsiAbz8UWWI+TStTZT/jS9ZQ+navJ0XahwLeJ/pqYEXcTimAOVev9SbTXbpPLbQc4LNgRXwkxvyR87ij38ubEraHK7eKcj4/crBftWs1o9FpJBfneuv0x/nXs6zDMwYkB347NaNlD29lyhEVunczRnKZgb88AB12UB8LRCe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320659; c=relaxed/simple;
-	bh=55Nb6Gl3zSs4ji63PyDfoyTChWWBkNx9WldkUmv7yW4=;
+	s=arc-20240116; t=1711320626; c=relaxed/simple;
+	bh=CCMTvASji0/stHiT5ImMEo2vqL9mPQDDspFCl9RXgnw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nXOqaz6FofSj0SJp9q6a2kTtz1Zv5oXUAajiykEhAWs4kdfGKAr48uPoxP76DQ2gDvBvouYOqF3KPODNJrswUEfdFIvE25iP1siUUHV7XrITdgQEvcXWi6dZsz4X6TLP27G+7cZ+w50Bwg+VpMsbCHENjXySz8yGPlIROxuSosU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eM9OK/+o; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=M1FOLGB1P/iqEzYj2XlZ3kHqI32MHQjodDDyf0G4ZVBA6WD963rZYKYRNH9+B5UDtPtUhcEgBeHY7MabwP6WO4FKqLWVaZz2hQEpFjLK+Ietf6wl4/aDdbC/OiFSBACLuu804wM0QBsrT4dsFkoQtG0TA7jEo/oquic5caWmrlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e27uNjqe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eM9OK/+o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC47BC433C7;
-	Sun, 24 Mar 2024 22:50:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e27uNjqe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05AF7C433F1;
+	Sun, 24 Mar 2024 22:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320658;
-	bh=55Nb6Gl3zSs4ji63PyDfoyTChWWBkNx9WldkUmv7yW4=;
+	s=k20201202; t=1711320625;
+	bh=CCMTvASji0/stHiT5ImMEo2vqL9mPQDDspFCl9RXgnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eM9OK/+obYvCW2JBVbKiodywKdLvq8jjYsSksvRg9ioNs6zglMOKmrdXlvCsmtJbj
-	 7zD9MzGjuZuDpQW+aP7TiTyZ+a/vOvP9aNXywstdwwMgAdXy4pa8DPi5xkGxbT2vna
-	 ZPCn5uliffHSvLKbDdiw5VT9Gr0fUvCme7HMDnevVHpfHuywkqSVepGIosqWcZvTb6
-	 lc1+FCfjpAGPbhCtiESjQlXK9YW1APrG0UOd9J4TKDJfPto43zffHeCmoBNiqK2iEb
-	 ThA6b68CpbJ3aQYLJxbD6tAK5WZwcbpTNF97qmh3V03wWLqIDIcSP5z2SR8bpWDik3
-	 nSP1YX0aGVbKA==
+	b=e27uNjqe4ue7Q7+ITKOAtj0soAoWV+CsvKAaPxbWl4PKeq5pm1edU400yxE4tEFrP
+	 Q9uSa9ICXMcMZbps6WC2f55kmfMchTE2aiByA4oFhW0E5u7h3P6AhriX4/Cwh1sg6l
+	 0qijpGHMA9m4lKsknRTM3O4skNUJ//f1wWQVjy4ObaHHg9i5jhOvF6pYX0K+nUGZwP
+	 qYqxH3leZ5913OlJqcAh7ErQhWW/1Izq9IYHwpWU3BVsXw4zwRopqiQucwPucTIwo+
+	 vznAJKude0NOqCWOcYQSh1eOPeEm5HTk5zrfhH9C0m7Bgl3ClQHgNTqzDV8u42Hsn4
+	 YwUVTwi0U5aTg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: John Ogness <john.ogness@linutronix.de>,
-	Petr Mladek <pmladek@suse.com>,
+Cc: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Kalle Valo <quic_kvalo@quicinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 220/713] printk: ringbuffer: Cleanup reader terminology
-Date: Sun, 24 Mar 2024 18:39:06 -0400
-Message-ID: <20240324224720.1345309-221-sashal@kernel.org>
+Subject: [PATCH 6.7 187/713] wifi: ath12k: fix fetching MCBC flag for QCN9274
+Date: Sun, 24 Mar 2024 18:38:33 -0400
+Message-ID: <20240324224720.1345309-188-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,78 +49,60 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: John Ogness <john.ogness@linutronix.de>
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
 
-[ Upstream commit 584528d621459d1a5c31da7a591218ad3bb96d6c ]
+[ Upstream commit 902700d55d4a4522bb3eb4ef94f752a19c42230a ]
 
-With the lockless ringbuffer, it is allowed that multiple
-CPUs/contexts write simultaneously into the buffer. This creates
-an ambiguity as some writers will finalize sooner.
+In QCN9274, RX packet's multicast and broadcast(MCBC) flag is fetched
+from RX descriptor's msdu_end info5 member but it is not correct
+for QCN9274. Due to this with encryption, ARP request packet is wrongly
+marked as MCBC packet and it is sent to mac80211 without setting
+RX_FLAG_PN_VALIDATED & RX_FLAG_DECRYPTED flag. This results in packet
+getting dropped in mac80211. Hence ping initiated from station to AP
+fails.
 
-The documentation for the prb_read functions is not clear as it
-refers to "not yet written" and "no data available". Clarify the
-return values and language to be in terms of the reader: records
-available for reading.
+Fix this by fetching correct MCBC flag in case of QCN9274.
+For QC9274 MCBC flag should be fetched from RX descriptor's mpdu_start
+info6 member.
 
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Link: https://lore.kernel.org/r/20240207134103.1357162-9-john.ogness@linutronix.de
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Stable-dep-of: b1c4c67a5e90 ("printk: ringbuffer: Skip non-finalized records in panic")
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.1.1-00188-QCAHKSWPL_SILICONZ-1
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.0.1-00029-QCAHKSWPL_SILICONZ-1
+Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+
+Fixes: 8f04852e90cb ("wifi: ath12k: Use msdu_end to check MCBC")
+Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+Link: https://msgid.link/20240129065724.2310207-5-quic_rajkbhag@quicinc.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk_ringbuffer.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/net/wireless/ath/ath12k/hal.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index d152b6bd35c9a..97ec25d227976 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -2080,11 +2080,13 @@ u64 prb_next_reserve_seq(struct printk_ringbuffer *rb)
+diff --git a/drivers/net/wireless/ath/ath12k/hal.c b/drivers/net/wireless/ath/ath12k/hal.c
+index a489369d80687..1bdab8604db94 100644
+--- a/drivers/net/wireless/ath/ath12k/hal.c
++++ b/drivers/net/wireless/ath/ath12k/hal.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: BSD-3-Clause-Clear
+ /*
+  * Copyright (c) 2018-2021 The Linux Foundation. All rights reserved.
+- * Copyright (c) 2021-2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+  */
+ #include <linux/dma-mapping.h>
+ #include "hal_tx.h"
+@@ -449,8 +449,8 @@ static u8 *ath12k_hw_qcn9274_rx_desc_mpdu_start_addr2(struct hal_rx_desc *desc)
+ 
+ static bool ath12k_hw_qcn9274_rx_desc_is_da_mcbc(struct hal_rx_desc *desc)
+ {
+-	return __le16_to_cpu(desc->u.qcn9274.msdu_end.info5) &
+-	       RX_MSDU_END_INFO5_DA_IS_MCBC;
++	return __le32_to_cpu(desc->u.qcn9274.mpdu_start.info6) &
++	       RX_MPDU_START_INFO6_MCAST_BCAST;
  }
  
- /*
-- * Non-blocking read of a record. Updates @seq to the last finalized record
-- * (which may have no data available).
-+ * Non-blocking read of a record.
-  *
-- * See the description of prb_read_valid() and prb_read_valid_info()
-- * for details.
-+ * On success @seq is updated to the record that was read and (if provided)
-+ * @r and @line_count will contain the read/calculated data.
-+ *
-+ * On failure @seq is updated to a record that is not yet available to the
-+ * reader, but it will be the next record available to the reader.
-  */
- static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
- 			    struct printk_record *r, unsigned int *line_count)
-@@ -2103,7 +2105,7 @@ static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
- 			*seq = tail_seq;
- 
- 		} else if (err == -ENOENT) {
--			/* Record exists, but no data available. Skip. */
-+			/* Record exists, but the data was lost. Skip. */
- 			(*seq)++;
- 
- 		} else {
-@@ -2136,7 +2138,7 @@ static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
-  * On success, the reader must check r->info.seq to see which record was
-  * actually read. This allows the reader to detect dropped records.
-  *
-- * Failure means @seq refers to a not yet written record.
-+ * Failure means @seq refers to a record not yet available to the reader.
-  */
- bool prb_read_valid(struct printk_ringbuffer *rb, u64 seq,
- 		    struct printk_record *r)
-@@ -2166,7 +2168,7 @@ bool prb_read_valid(struct printk_ringbuffer *rb, u64 seq,
-  * On success, the reader must check info->seq to see which record meta data
-  * was actually read. This allows the reader to detect dropped records.
-  *
-- * Failure means @seq refers to a not yet written record.
-+ * Failure means @seq refers to a record not yet available to the reader.
-  */
- bool prb_read_valid_info(struct printk_ringbuffer *rb, u64 seq,
- 			 struct printk_info *info, unsigned int *line_count)
+ static void ath12k_hw_qcn9274_rx_desc_get_dot11_hdr(struct hal_rx_desc *desc,
 -- 
 2.43.0
 
