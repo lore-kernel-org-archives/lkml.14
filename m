@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDFD7FBDB;
-	Sun, 24 Mar 2024 22:48:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BD18002D;
+	Sun, 24 Mar 2024 22:48:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320498; cv=none; b=fX6WJVfW9vkwKhV+EFlttOWKiY5T1PugN26geQwP1APVZ0cKcvLHyo7k7eyirfJlUfG12L/HUW02NuZWZK7CErygEyMJKItsXKG7VGBEr/vcy0jwziWSMfnnoKsZmkLW+LP0akOayrDou669i1se5/gvRSG0YEXPuL63ntvzSrc=
+	t=1711320507; cv=none; b=eUdQZ9Tuv4fpjh9Irm0zIU7KlAU0wwYTpKNkBeHR9KdUd4d9OPMsu93ulY3Y2Buu0FLpMvcyO7Xcg7G+/Ljnobe0xh8VKtOck3p3MC5Ajmyb+skaRjNbGuArJdpQr7jg/rwrkXknTfh0SgLVo8K9UgIwueVCqi8abC6m09wDrxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320498; c=relaxed/simple;
-	bh=C3JXHkC8QSlxMQacEgZP+jIDKkUrjVb3FnkXfTRxrtw=;
+	s=arc-20240116; t=1711320507; c=relaxed/simple;
+	bh=CIckCfCvElbP7qNZyEFS868bjqgWhDCd+IzI7ldl7Hg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l40/+8vHYXbss6pknwiP1m3VSjN1U97bPSSrdIEh2XmBGW/LAknGVfJbeZbDFzJtvxI+YQqyL4LLhI/7kSKjsqkUgeN0n+Y6MkH0l+Kl8cmyBdNi7RLKtjSNInFV43odMluEc+6ymDJAVKIdK8yT1luOhQp/rNcTBRmespUQEYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXNdmKN8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tSUHL9v/FHK13MY88jZIt1u5ZItYQlRb0Mu5QakCtJPugCTMlR0yMgbxZ8oFLg6B2Ue+QZtgjucFcDcGk5orRwQLxy+gG1fUUVOxx7aK9Y+B/Q5Z1RGac+yTj3TXH5IzIMShfC2OmZzt3+rV2wMKWPGeYHd3RGbllvs85oRZJkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1qsPxTe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXNdmKN8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161A4C43399;
-	Sun, 24 Mar 2024 22:48:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1qsPxTe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A5C2C433C7;
+	Sun, 24 Mar 2024 22:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320498;
-	bh=C3JXHkC8QSlxMQacEgZP+jIDKkUrjVb3FnkXfTRxrtw=;
+	s=k20201202; t=1711320507;
+	bh=CIckCfCvElbP7qNZyEFS868bjqgWhDCd+IzI7ldl7Hg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nXNdmKN84Cr2nohznlDZqZbcwNDHiauo/iG36bkcCQmz7/KnyXOH3DjOaIx115fDY
-	 InaX8X6wZVFqFJ0YpqDBl9D8MnL91HTKpwGjq4OJqg58GyFtfz6FEOs4M18ClyGFtK
-	 YW8YTz4YFB0jwnCgBeDsCQPFpMdYG/OAR49V9QSyMF8EXvBb3N5QCa7TeahCeJvImT
-	 qYu+Mf7KRMPQ7+Zep4/O0NpET811RA79EPztWmxLQ/wODw8lSQSayccK6NI5w4YObO
-	 D4g60YAiA4GFxzfyG1h9f5SYQd65a8PzXy8FyMaNqZ9eS0j13G3kB8SgeauF9EaVkn
-	 ilqS09sSIB9zw==
+	b=u1qsPxTeJdpdTOr57F4JhGP3GGhQbE7SJCQ/zIys+dN0O2Z7jsDJCkefo81fmI/h2
+	 AbIC5NTO9eaJ3pKsBQnzlqFu6dvWcd4fdVp/fAUmKJefyg7hK/1LhpmAjIt+LYh8Ee
+	 Ff6yM6PDbg3YWDcEdNboGjrRO7uqaZuiMtse/+En1mvMQ62jdInoLwj6QYONZqr3U6
+	 Wo3wtj0ueXkWzhS6UCli0itKXL/7qPv+Sdc6EUSx/oOmHCIzrVtGXypnte+NCktnwE
+	 JLQ1VFFXqFNOlDd6HxAvJXpFEyIsincNgrenoJQraz8n1+UxirlGld8FJFfHGixrM+
+	 brNRnHyUwNm0w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Adam Goldman <adamg@pobox.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 058/713] drm/ttm/tests: depend on UML || COMPILE_TEST
-Date: Sun, 24 Mar 2024 18:36:24 -0400
-Message-ID: <20240324224720.1345309-59-sashal@kernel.org>
+Subject: [PATCH 6.7 067/713] firewire: core: use long bus reset on gap count error
+Date: Sun, 24 Mar 2024 18:36:33 -0400
+Message-ID: <20240324224720.1345309-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,50 +44,67 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christian König <christian.koenig@amd.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit 9d3f8a723c7950e56e0b95ab84b572caee29e065 ]
+[ Upstream commit d0b06dc48fb15902d7da09c5c0861e7f042a9381 ]
 
-At least the device test requires that no other driver using TTM is
-loaded. So make those unit tests depend on UML || COMPILE_TEST to
-prevent people from trying them on bare metal.
+When resetting the bus after a gap count error, use a long rather than
+short bus reset.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://lore.kernel.org/all/20240219230116.77b8ad68@yea/
+IEEE 1394-1995 uses only long bus resets. IEEE 1394a adds the option of
+short bus resets. When video or audio transmission is in progress and a
+device is hot-plugged elsewhere on the bus, the resulting bus reset can
+cause video frame drops or audio dropouts. Short bus resets reduce or
+eliminate this problem. Accordingly, short bus resets are almost always
+preferred.
+
+However, on a mixed 1394/1394a bus, a short bus reset can trigger an
+immediate additional bus reset. This double bus reset can be interpreted
+differently by different nodes on the bus, resulting in an inconsistent gap
+count after the bus reset. An inconsistent gap count will cause another bus
+reset, leading to a neverending bus reset loop. This only happens for some
+bus topologies, not for all mixed 1394/1394a buses.
+
+By instead sending a long bus reset after a gap count inconsistency, we
+avoid the doubled bus reset, restoring the bus to normal operation.
+
+Signed-off-by: Adam Goldman <adamg@pobox.com>
+Link: https://sourceforge.net/p/linux1394/mailman/message/58741624/
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/firewire/core-card.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index 3eee8636f847a..9b079f3a1b811 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -198,7 +198,7 @@ config DRM_TTM
- config DRM_TTM_KUNIT_TEST
-         tristate "KUnit tests for TTM" if !KUNIT_ALL_TESTS
-         default n
--        depends on DRM && KUNIT && MMU
-+        depends on DRM && KUNIT && MMU && (UML || COMPILE_TEST)
-         select DRM_TTM
-         select DRM_EXPORT_FOR_TESTS if m
-         select DRM_KUNIT_TEST_HELPERS
-@@ -206,7 +206,8 @@ config DRM_TTM_KUNIT_TEST
-         help
-           Enables unit tests for TTM, a GPU memory manager subsystem used
-           to manage memory buffers. This option is mostly useful for kernel
--          developers.
-+          developers. It depends on (UML || COMPILE_TEST) since no other driver
-+          which uses TTM can be loaded while running the tests.
- 
-           If in doubt, say "N".
- 
+diff --git a/drivers/firewire/core-card.c b/drivers/firewire/core-card.c
+index 8aaa7fcb2630d..401a77e3b5fa8 100644
+--- a/drivers/firewire/core-card.c
++++ b/drivers/firewire/core-card.c
+@@ -500,7 +500,19 @@ static void bm_work(struct work_struct *work)
+ 		fw_notice(card, "phy config: new root=%x, gap_count=%d\n",
+ 			  new_root_id, gap_count);
+ 		fw_send_phy_config(card, new_root_id, generation, gap_count);
+-		reset_bus(card, true);
++		/*
++		 * Where possible, use a short bus reset to minimize
++		 * disruption to isochronous transfers. But in the event
++		 * of a gap count inconsistency, use a long bus reset.
++		 *
++		 * As noted in 1394a 8.4.6.2, nodes on a mixed 1394/1394a bus
++		 * may set different gap counts after a bus reset. On a mixed
++		 * 1394/1394a bus, a short bus reset can get doubled. Some
++		 * nodes may treat the double reset as one bus reset and others
++		 * may treat it as two, causing a gap count inconsistency
++		 * again. Using a long bus reset prevents this.
++		 */
++		reset_bus(card, card->gap_count != 0);
+ 		/* Will allocate broadcast channel after the reset. */
+ 		goto out;
+ 	}
 -- 
 2.43.0
 
