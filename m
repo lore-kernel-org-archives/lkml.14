@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1721FDA13;
-	Sun, 24 Mar 2024 23:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EEF14AD32;
+	Sun, 24 Mar 2024 23:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322222; cv=none; b=hppaV+AWbg/QCzKjQ6zz9OpS2GuvuCAtmW3Qedqg8WE2gCCO84gF2+BAnix01u/PF5y0NliWkX9QKt3IGWlNqLsP+uwMF12Ukkomvcb3D5+gmo+WxHjbonaunh1c8Al38a/bvmURZ93ZVMonZZNHTZHjB12MAUBdjUE994XTNR0=
+	t=1711322220; cv=none; b=u34LNjKeKIN8aNIKOhcoU5CoDQl8eaIeofsuhF/UtiefIOAHtm0mVd3h7sCXM5MMZo6ehPAKbWld7J58a0CJlGez+sUugvTsklqzX1gTXhhaLl7HcxyudWY3qf9g8Mar23JNZifXz1imKV0zeRPtvAEqur1yrAlx0HkC2qIGYJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322222; c=relaxed/simple;
-	bh=BApVoZr1HWgG77uIAlP5say5xUHr6e9CzMP/GXvg8hE=;
+	s=arc-20240116; t=1711322220; c=relaxed/simple;
+	bh=n9RmBDkTknXlF+1oBI7LpD65+Xvb2cgfpRelD4wFYjY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SxmUTf12FOh3I8pTdIRgNlTqyyFKofhcXofNxE1x1K30zsgpQYkQXdNe7D0ezm50bbwrQdEbhm2w+2ZeAplP0PaEF7Mr08NF/4CrEPpnhnI3rGOEr0kLY8r7yxsROyXAv8AxgSBuXkwNc0WlAjPteTrYe7ckRDmKN4MAcAFqYjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nbFsb5Fp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iJLwQU0DPdE+qpqvsfeAIUTKjsLvFYTuUseKBKN3+s0MSHsMrAsp50AwA9nWE7IcXfZjuI8McZLf4Yhykl5XIlrqrp9CBK+KG8SYU9Y1aHTPS/xJ1nYcI3EL+GlRJvP9F8tqJEBCFfO1QOkxlni31TRa6iiioROsWaT3W3hCx3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BW6WYAG1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nbFsb5Fp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 596B3C433C7;
-	Sun, 24 Mar 2024 23:17:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BW6WYAG1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96D30C433C7;
+	Sun, 24 Mar 2024 23:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322222;
-	bh=BApVoZr1HWgG77uIAlP5say5xUHr6e9CzMP/GXvg8hE=;
+	s=k20201202; t=1711322219;
+	bh=n9RmBDkTknXlF+1oBI7LpD65+Xvb2cgfpRelD4wFYjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nbFsb5FpEKkuxwE8U1+uvtmYo6MS9HHcLgaMyHDGwnkM3m8LuR86CAJvS74bR3tc3
-	 e5ZcEnqqmbJij2Jyj6AxVaRWbHuq37e05mGAbY6bMESgEuVAuU9QfN0nGIriLAMF9a
-	 k1+9aIwtBzFEj/gRQK/QtUSCGbtLHGl+NGg1h75kmxA8EO84A4wfeR1hs0AB4x4IkM
-	 b/TvxY0t1Oa4BDTgeBYeKI6P+ckpMLp5djufedAHVYuKPgOmHnb2tw0XuUxy8DWYC5
-	 jaIqHJf2d+Lj3/6YqtDKgN16NeRgOAhKKihsfwthRQC0cSZxQKFlRjSAS6kKQDMheJ
-	 DdfERoffcZhSw==
+	b=BW6WYAG1+WDkpayrnxytR9sRSgabvlFrwJyW6cPjG5SPcwq7lnGCHKbmbjYnQ1l2q
+	 f5e7KDliuO/E+rcl6JGYdm57pUvJ5rbIHWhtI4enLifaNgTGZ7od69TNasmAQ5qPaC
+	 oiMudjeL0Qel7i2zpE5xGc6FAYZUeinRUsqFKJUH8uiXOVC0hqvJ5lgvnb/t+WamQ5
+	 iYCQUmYTqjUx61i3xysJZC25hatwemj3a+Pbj7qYzvHjF4ZCnwA3JNAuQ0eP4NmpH2
+	 4GAKbYbAmkG+i6IsYCg24mpV86134PUPbV+HyzaJPuimQaEolSdZWi3gqpJfqilhUO
+	 dROQ98msNssPw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniil Dulov <d.dulov@aladdin.ru>,
+Cc: Jernej Skrabec <jernej.skrabec@gmail.com>,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 302/451] media: go7007: add check of return value of go7007_read_addr()
-Date: Sun, 24 Mar 2024 19:09:38 -0400
-Message-ID: <20240324231207.1351418-303-sashal@kernel.org>
+Subject: [PATCH 6.1 299/451] media: sun8i-di: Fix power on/off sequences
+Date: Sun, 24 Mar 2024 19:09:35 -0400
+Message-ID: <20240324231207.1351418-300-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,38 +48,86 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniil Dulov <d.dulov@aladdin.ru>
+From: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-[ Upstream commit 0b70530ee740861f4776ff724fcc25023df1799a ]
+[ Upstream commit cff104e33bad38f4b2c8d58816a7accfaa2879f9 ]
 
-If go7007_read_addr() returns error channel is not assigned a value.
-In this case go to allocfail.
+According to user manual, reset line should be deasserted before clocks
+are enabled. Also fix power down sequence to be reverse of that.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 866b8695d67e ("Staging: add the go7007 video driver")
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+Fixes: a4260ea49547 ("media: sun4i: Add H3 deinterlace driver")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/go7007/go7007-usb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 25 ++++++++++---------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/media/usb/go7007/go7007-usb.c b/drivers/media/usb/go7007/go7007-usb.c
-index eeb85981e02b6..762c13e49bfa5 100644
---- a/drivers/media/usb/go7007/go7007-usb.c
-+++ b/drivers/media/usb/go7007/go7007-usb.c
-@@ -1201,7 +1201,9 @@ static int go7007_usb_probe(struct usb_interface *intf,
- 				u16 channel;
+diff --git a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+index 3e58de58cd89d..01b44dd708bd3 100644
+--- a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
++++ b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+@@ -931,11 +931,18 @@ static int deinterlace_runtime_resume(struct device *device)
+ 		return ret;
+ 	}
  
- 				/* read channel number from GPIO[1:0] */
--				go7007_read_addr(go, 0x3c81, &channel);
-+				if (go7007_read_addr(go, 0x3c81, &channel))
-+					goto allocfail;
++	ret = reset_control_deassert(dev->rstc);
++	if (ret) {
++		dev_err(dev->dev, "Failed to apply reset\n");
 +
- 				channel &= 0x3;
- 				go->board_id = GO7007_BOARDID_ADLINK_MPG24;
- 				usb->board = board = &board_adlink_mpg24;
++		goto err_exclusive_rate;
++	}
++
+ 	ret = clk_prepare_enable(dev->bus_clk);
+ 	if (ret) {
+ 		dev_err(dev->dev, "Failed to enable bus clock\n");
+ 
+-		goto err_exclusive_rate;
++		goto err_rst;
+ 	}
+ 
+ 	ret = clk_prepare_enable(dev->mod_clk);
+@@ -952,23 +959,16 @@ static int deinterlace_runtime_resume(struct device *device)
+ 		goto err_mod_clk;
+ 	}
+ 
+-	ret = reset_control_deassert(dev->rstc);
+-	if (ret) {
+-		dev_err(dev->dev, "Failed to apply reset\n");
+-
+-		goto err_ram_clk;
+-	}
+-
+ 	deinterlace_init(dev);
+ 
+ 	return 0;
+ 
+-err_ram_clk:
+-	clk_disable_unprepare(dev->ram_clk);
+ err_mod_clk:
+ 	clk_disable_unprepare(dev->mod_clk);
+ err_bus_clk:
+ 	clk_disable_unprepare(dev->bus_clk);
++err_rst:
++	reset_control_assert(dev->rstc);
+ err_exclusive_rate:
+ 	clk_rate_exclusive_put(dev->mod_clk);
+ 
+@@ -979,11 +979,12 @@ static int deinterlace_runtime_suspend(struct device *device)
+ {
+ 	struct deinterlace_dev *dev = dev_get_drvdata(device);
+ 
+-	reset_control_assert(dev->rstc);
+-
+ 	clk_disable_unprepare(dev->ram_clk);
+ 	clk_disable_unprepare(dev->mod_clk);
+ 	clk_disable_unprepare(dev->bus_clk);
++
++	reset_control_assert(dev->rstc);
++
+ 	clk_rate_exclusive_put(dev->mod_clk);
+ 
+ 	return 0;
 -- 
 2.43.0
 
