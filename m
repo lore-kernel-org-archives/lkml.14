@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961EA211D05;
-	Sun, 24 Mar 2024 23:08:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D7F21148A;
+	Sun, 24 Mar 2024 23:08:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321712; cv=none; b=PdQGFKbTzv52acx8kkMc6ZpLl/57tbiVon7f6BfzIZo2sntHv4j2bRoVECui8FI9RVWaIo7GLdgArPX/6HaMMzIxnFaOhxDyiyou/hLPppVbaKyXVS8xhx1WPFBDSOEcJpd+I2QXRQlGs7kg4GOp6r8/ftMd9hIzkr9at8Nw1Tc=
+	t=1711321706; cv=none; b=Azy5zUzPK7f7R36WmDI3N38CvijoVoC5gQ6pNTgrdw4Rdh3Vb4y28KXm3ZYo05foz7YIdzUEJuIeutAdndf0rD9go67NejHcvMAPyUqPGGA0aym0YG35fr4zEZ6yoiQlEuT+oGOmuX569vzF58Hmd4vsFuc88D3dufeXx46rQ6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321712; c=relaxed/simple;
-	bh=OOhIOyqFS4mQvDxA/ImwVYkd2JK0f+nUbxqOUBhllr0=;
+	s=arc-20240116; t=1711321706; c=relaxed/simple;
+	bh=I0ftkpg1auOYnQ2mH1Az1FoRNSu97/FiJb83KHbPwCQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Dwv/rRPJR47HHzE1WJIow7v9PQ0X4UGAPCJzdiecYU4EJBQ6wf5uAVEzlPQ/pyrcRxF+qhF/097bOB2O2Ma5tf4y/Z1LJHZo/y7ywl4Y2poCIQIBfAOT+8sHJUEKlS6ZVWyYDk5mqaCwF97FwLihJHEQLXJCVwsmqvd6iUjOxG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDd0v/2u; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DGgAqIhNLq8cdhgKYJRhdu9TPyqC/H16VY9uzD5J9OD6Z1R8Hf3P0poemhmFoHV1PH5gSqz/18Eu+WJybFgDyMge1yvBUaN6g4gXmpyF/WdV1ojunNhvw4oWqn2k58ikxeGx2nybUqKyVjrZ6EwEM1D+dt9JkVYaVrRORilDPRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=atp26hFW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDd0v/2u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D00DC43390;
-	Sun, 24 Mar 2024 23:08:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="atp26hFW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CACFAC433C7;
+	Sun, 24 Mar 2024 23:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321711;
-	bh=OOhIOyqFS4mQvDxA/ImwVYkd2JK0f+nUbxqOUBhllr0=;
+	s=k20201202; t=1711321705;
+	bh=I0ftkpg1auOYnQ2mH1Az1FoRNSu97/FiJb83KHbPwCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IDd0v/2ui7e59UeX51rSEoBfizZu2W3+bPfpIPnJAE087Po38h9AOTUyab45ErLs4
-	 KIlz+QfcJGnI4Id6KwEui3kTKxNbPWLuJNXwv5HF+2G/3ET8fwWoIpq82Np7z6yype
-	 lPt2IQH3cSGbepHZv7ICtjQekNHKNliQdiwBrlGA//X+hV0cTKjYPmPwPHL+XrqH/v
-	 l9qE89SJnb4zboBifl4TzqFzK9TO4MPQzoB6oVS8EWa7x/g64BynV3I9S7N29/c3zH
-	 Vu7VQ3MvDnAT5xFZH0hVcaYt5yIYcEr6cRG9iSHmcEyz6T54Mt0/IlL8wlAEgb7f/B
-	 UW5b61CrNbTrw==
+	b=atp26hFWh6Vl6Xmnhh++JFjfMZbiWgde0lFeHfwwJNdIzHMTwUwGrxuKqrU5cUmWk
+	 C7KsbkWtsYGZB2i8bojSuwWdmUrk+is+qc1oJye1CyfbuPc82TvRut5HpRexk6AaMf
+	 Op+m39g9N1i34X9Hr4XLNIxSBwASwXHhmOK7XoEEOD4ObXaJHLkMwEjLTq6S4dw+P7
+	 xbOZjoNoSuZSchEm6pXRxUAViandf3afNiPQII9UtAf+X3F/+zhlRe6RQ3s5mLFg9g
+	 qm3K1K7Ck7x4XyieIIUoCvBFoPenbpZLAtU+ZzFmULsvBnRGFA4Mnj3yj6hTEB7DCK
+	 wPlJruGH5y5tw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 440/638] media: i2c: imx290: Fix IMX920 typo
-Date: Sun, 24 Mar 2024 18:57:57 -0400
-Message-ID: <20240324230116.1348576-441-sashal@kernel.org>
+Subject: [PATCH 6.6 434/638] clk: mediatek: mt8135: Fix an error handling path in clk_mt8135_apmixed_probe()
+Date: Sun, 24 Mar 2024 18:57:51 -0400
+Message-ID: <20240324230116.1348576-435-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -51,66 +49,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 6fc62efa266b0918c7b226f45c2eccfcf99a6d8e ]
+[ Upstream commit 03c1c51eba6be49b42816af9db114553131af6c8 ]
 
-Replace IMX920 by IMX290.
+If an error occurs after mtk_alloc_clk_data(), mtk_free_clk_data() should
+be called, as already done in the remove function.
 
-Fixes: b4ab57b07c5b9 ("media: i2c: imx290: Add crop selection targets support")
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: 54b7026f011e ("clk: mediatek: mt8135-apmixedsys: Convert to platform_driver and module")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/6cd6af61e5a91598068227f1f68cfcfde1507453.1704615011.git.christophe.jaillet@wanadoo.fr
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/imx290.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/clk/mediatek/clk-mt8135-apmixedsys.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-index c6fea5837a19f..6dacd38ae947a 100644
---- a/drivers/media/i2c/imx290.c
-+++ b/drivers/media/i2c/imx290.c
-@@ -150,10 +150,10 @@
+diff --git a/drivers/clk/mediatek/clk-mt8135-apmixedsys.c b/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
+index d1239b4b3db74..41bb2d2e2ea74 100644
+--- a/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
++++ b/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
+@@ -59,7 +59,7 @@ static int clk_mt8135_apmixed_probe(struct platform_device *pdev)
  
- #define IMX290_PIXEL_ARRAY_WIDTH			1945
- #define IMX290_PIXEL_ARRAY_HEIGHT			1097
--#define IMX920_PIXEL_ARRAY_MARGIN_LEFT			12
--#define IMX920_PIXEL_ARRAY_MARGIN_RIGHT			13
--#define IMX920_PIXEL_ARRAY_MARGIN_TOP			8
--#define IMX920_PIXEL_ARRAY_MARGIN_BOTTOM		9
-+#define IMX290_PIXEL_ARRAY_MARGIN_LEFT			12
-+#define IMX290_PIXEL_ARRAY_MARGIN_RIGHT			13
-+#define IMX290_PIXEL_ARRAY_MARGIN_TOP			8
-+#define IMX290_PIXEL_ARRAY_MARGIN_BOTTOM		9
- #define IMX290_PIXEL_ARRAY_RECORDING_WIDTH		1920
- #define IMX290_PIXEL_ARRAY_RECORDING_HEIGHT		1080
+ 	ret = mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+ 	if (ret)
+-		return ret;
++		goto free_clk_data;
  
-@@ -1161,10 +1161,10 @@ static int imx290_get_selection(struct v4l2_subdev *sd,
- 		 * The sensor moves the readout by 1 pixel based on flips to
- 		 * keep the Bayer order the same.
- 		 */
--		sel->r.top = IMX920_PIXEL_ARRAY_MARGIN_TOP
-+		sel->r.top = IMX290_PIXEL_ARRAY_MARGIN_TOP
- 			   + (IMX290_PIXEL_ARRAY_RECORDING_HEIGHT - format->height) / 2
- 			   + imx290->vflip->val;
--		sel->r.left = IMX920_PIXEL_ARRAY_MARGIN_LEFT
-+		sel->r.left = IMX290_PIXEL_ARRAY_MARGIN_LEFT
- 			    + (IMX290_PIXEL_ARRAY_RECORDING_WIDTH - format->width) / 2
- 			    + imx290->hflip->val;
- 		sel->r.width = format->width;
-@@ -1183,8 +1183,8 @@ static int imx290_get_selection(struct v4l2_subdev *sd,
- 		return 0;
+ 	ret = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (ret)
+@@ -69,6 +69,8 @@ static int clk_mt8135_apmixed_probe(struct platform_device *pdev)
  
- 	case V4L2_SEL_TGT_CROP_DEFAULT:
--		sel->r.top = IMX920_PIXEL_ARRAY_MARGIN_TOP;
--		sel->r.left = IMX920_PIXEL_ARRAY_MARGIN_LEFT;
-+		sel->r.top = IMX290_PIXEL_ARRAY_MARGIN_TOP;
-+		sel->r.left = IMX290_PIXEL_ARRAY_MARGIN_LEFT;
- 		sel->r.width = IMX290_PIXEL_ARRAY_RECORDING_WIDTH;
- 		sel->r.height = IMX290_PIXEL_ARRAY_RECORDING_HEIGHT;
+ unregister_plls:
+ 	mtk_clk_unregister_plls(plls, ARRAY_SIZE(plls), clk_data);
++free_clk_data:
++	mtk_free_clk_data(clk_data);
  
+ 	return ret;
+ }
 -- 
 2.43.0
 
