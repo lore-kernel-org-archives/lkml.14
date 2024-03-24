@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25531F23C3;
-	Sun, 24 Mar 2024 22:58:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF791F23D8;
+	Sun, 24 Mar 2024 22:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321097; cv=none; b=JGm550pZgHHFc0e6+krwQI5d4dxQuh7LDwfbWyk967hby0WHZvwCdEeps5blZFyroWZP6o3+wVwhSql0ZvDe3CulaDM/DCdEXQM/TJjTfOnA9N2PawswlcIetwudK5Ndb5H4SiXfFZ/qVhI/eiCRBo2Iphkkgyh/+qY4urmTOVo=
+	t=1711321102; cv=none; b=nLCMWkW99Hzq1cDHRH9CwGOwX+L8z6r7BbKzOLCodfWL8Qgwx/JskWwI4ExF853fmodNvk+J0UCfEqoUP++lCZtrk0UL9NWHKaQrtHXNw/NdtuIXBMlt2iNJJEpBvjGa15aFg5BP4e935sHD4oIO8oi/aKba3Zu3T0bMKjUU++M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321097; c=relaxed/simple;
-	bh=2MsH1en75wwKv4amJIJMmpNHNy66nBsPjlTIusOeyOk=;
+	s=arc-20240116; t=1711321102; c=relaxed/simple;
+	bh=9123jR0gyQTTvHkC+QjmGNgnRZ6KOlFUFXuEXV9RdQw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kwIZiVFy3NhRWxsmriJtyVm4UCPLBXnrrqKHNVS5kLRn+FPQSuDNWNK/LYtxcvA1X26VmBhao0IBQYEXwcVIn74BPDa/PAMquAUeoCAZNUv6uPkir8b8cuceSkQ8+gLE5ZDR+AY2UizPMZR3WgoLwEK+x19zFXoh+n8hTGKVxVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I+sWM0D/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GRwn93KibEc9DpXF7W3z1ChSf2LZB/gXLD0Ac0XPAiTY2U4EagBPStoR+gaLWISRGsRwTGmgqh48YOxqjKmCxTc5OduLUYNQzLDIuHTavvnhCPAWaubEMrRU8Q4glcc/npOqV7vTG9Zwlv/fFtb4qgOQt2MyhMBx8l9q2V4Q30s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=joZ5xb6l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I+sWM0D/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D722C43394;
-	Sun, 24 Mar 2024 22:58:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="joZ5xb6l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2082DC433C7;
+	Sun, 24 Mar 2024 22:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321096;
-	bh=2MsH1en75wwKv4amJIJMmpNHNy66nBsPjlTIusOeyOk=;
+	s=k20201202; t=1711321100;
+	bh=9123jR0gyQTTvHkC+QjmGNgnRZ6KOlFUFXuEXV9RdQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I+sWM0D/J8f5pVeKmaIENqxAzLbw7NmUmuF5UCeOh4nYaTVhooEr9t5xKAJYOVVE7
-	 WjtGhpvOXJwRX7kUQ9iu79AURWN/EQ2mhTRNiPZT6hMq82cBnOuuLEX3zH92UJUK5Z
-	 XwJAa0xfaCv2qAmKpdQn/yxzFf4rNGiVPzFJ5jM4ErpUh6blOcdbV1g+Lta1Y3XwXE
-	 F4NisWq1T3rvsaE/55TQSiRR40qSdX1x6J8U/LeRMdi/Uqfn+yQXIJir/DNLT9n3uc
-	 n+ygvuKShWfMP36wiV/sNDTQ1Mgzoj8et6uiSdgOkLGsPEwbr/ewDlxGEuXerp/dx8
-	 38PR1zKrsMC+w==
+	b=joZ5xb6lTXn26jRWYpVJ1N6H4ejBAg1NTRyMSwVhwKz8Qcen02G2RHkUmHiyZx7k3
+	 ZH0ddsAhNIQKcr34FNUpBxfI378R5P2CNAQ7XUvSqZXY8diYXsRh0mLFoPSgLjrA0I
+	 pUG8iMiri6FIUCDhpt5UFros1X4JjYzgh+A8uZyg4APItcd40sWiZbU69sBWr569Ge
+	 qh3aB/1wmz0mRTmG6PwaGttD/Zum9RNg4O8PgoP+Mbec8N3rkMKvVoGQUguc+5kGg8
+	 h+4q87h3cohUbt7pnXGn34LFUYG9bctrTCK6QVa4ua5l5uvZI7njQ4ZM+0B2QMCLJH
+	 4480qwsYRH86w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gabriel Krisman Bertazi <krisman@suse.de>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Duanqiang Wen <duanqiangwen@net-swift.com>,
+	Michal Kubiak <michal.kubiak@intel.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 659/713] io_uring: Fix release of pinned pages when __io_uaddr_map fails
-Date: Sun, 24 Mar 2024 18:46:25 -0400
-Message-ID: <20240324224720.1345309-660-sashal@kernel.org>
+Subject: [PATCH 6.7 663/713] net: txgbe: fix clk_name exceed MAX_DEV_ID limits
+Date: Sun, 24 Mar 2024 18:46:29 -0400
+Message-ID: <20240324224720.1345309-664-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,86 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gabriel Krisman Bertazi <krisman@suse.de>
+From: Duanqiang Wen <duanqiangwen@net-swift.com>
 
-[ Upstream commit 67d1189d1095d471ed7fa426c7e384a7140a5dd7 ]
+[ Upstream commit e30cef001da259e8df354b813015d0e5acc08740 ]
 
-Looking at the error path of __io_uaddr_map, if we fail after pinning
-the pages for any reasons, ret will be set to -EINVAL and the error
-handler won't properly release the pinned pages.
+txgbe register clk which name is i2c_designware.pci_dev_id(),
+clk_name will be stored in clk_lookup_alloc. If PCIe bus number
+is larger than 0x39, clk_name size will be larger than 20 bytes.
+It exceeds clk_lookup_alloc MAX_DEV_ID limits. So the driver
+shortened clk_name.
 
-I didn't manage to trigger it without forcing a failure, but it can
-happen in real life when memory is heavily fragmented.
-
-Signed-off-by: Gabriel Krisman Bertazi <krisman@suse.de>
-Fixes: 223ef4743164 ("io_uring: don't allow IORING_SETUP_NO_MMAP rings on highmem pages")
-Link: https://lore.kernel.org/r/20240313213912.1920-1-krisman@suse.de
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: b63f20485e43 ("net: txgbe: Register fixed rate clock")
+Signed-off-by: Duanqiang Wen <duanqiangwen@net-swift.com>
+Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
+Link: https://lore.kernel.org/r/20240313080634.459523-1-duanqiangwen@net-swift.com
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- io_uring/io_uring.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 205dad9603733..45d6e440bdc04 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -2683,7 +2683,7 @@ static void *__io_uaddr_map(struct page ***pages, unsigned short *npages,
- 	struct page **page_array;
- 	unsigned int nr_pages;
- 	void *page_addr;
--	int ret, i;
-+	int ret, i, pinned;
+diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
+index b6c06adb86560..b95187a0847f7 100644
+--- a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
++++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
+@@ -551,7 +551,7 @@ static int txgbe_clock_register(struct txgbe *txgbe)
+ 	char clk_name[32];
+ 	struct clk *clk;
  
- 	*npages = 0;
+-	snprintf(clk_name, sizeof(clk_name), "i2c_designware.%d",
++	snprintf(clk_name, sizeof(clk_name), "i2c_dw.%d",
+ 		 pci_dev_id(pdev));
  
-@@ -2697,12 +2697,12 @@ static void *__io_uaddr_map(struct page ***pages, unsigned short *npages,
- 	if (!page_array)
- 		return ERR_PTR(-ENOMEM);
- 
--	ret = pin_user_pages_fast(uaddr, nr_pages, FOLL_WRITE | FOLL_LONGTERM,
--					page_array);
--	if (ret != nr_pages) {
--err:
--		io_pages_free(&page_array, ret > 0 ? ret : 0);
--		return ret < 0 ? ERR_PTR(ret) : ERR_PTR(-EFAULT);
-+
-+	pinned = pin_user_pages_fast(uaddr, nr_pages, FOLL_WRITE | FOLL_LONGTERM,
-+				     page_array);
-+	if (pinned != nr_pages) {
-+		ret = (pinned < 0) ? pinned : -EFAULT;
-+		goto free_pages;
- 	}
- 
- 	page_addr = page_address(page_array[0]);
-@@ -2716,7 +2716,7 @@ static void *__io_uaddr_map(struct page ***pages, unsigned short *npages,
- 		 * didn't support this feature.
- 		 */
- 		if (PageHighMem(page_array[i]))
--			goto err;
-+			goto free_pages;
- 
- 		/*
- 		 * No support for discontig pages for now, should either be a
-@@ -2725,13 +2725,17 @@ static void *__io_uaddr_map(struct page ***pages, unsigned short *npages,
- 		 * just fail them with EINVAL.
- 		 */
- 		if (page_address(page_array[i]) != page_addr)
--			goto err;
-+			goto free_pages;
- 		page_addr += PAGE_SIZE;
- 	}
- 
- 	*pages = page_array;
- 	*npages = nr_pages;
- 	return page_to_virt(page_array[0]);
-+
-+free_pages:
-+	io_pages_free(&page_array, pinned > 0 ? pinned : 0);
-+	return ERR_PTR(ret);
- }
- 
- static void *io_rings_map(struct io_ring_ctx *ctx, unsigned long uaddr,
+ 	clk = clk_register_fixed_rate(NULL, clk_name, NULL, 0, 156250000);
 -- 
 2.43.0
 
