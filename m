@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B908828ECCC;
-	Sun, 24 Mar 2024 23:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD21C18274C;
+	Sun, 24 Mar 2024 23:49:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324171; cv=none; b=LUMi7BsFbLoinhZS1ckVZKMc7mmppRu4aXYzHedpKknF8L+n6iWdeE3hJkjhLGl7cSAYYXR2FxxQhgqCHy5i1oUP85SProLvSA/lNRFso3bCMaLt28uQstSM291Ojd2w2rjulBReBzCH8BXfSoJNbHRMwQpMm+RGkbN/x1sLKd4=
+	t=1711324174; cv=none; b=sOvd43h0acTu58gJn9efhb0E1/1i0Up8O5M2FJoacaAL0DdXFzugWemuHkuwHd8zzA8Y0nG/VKUbxC+lvUKbXUXut0zqqVQlsi1oBA8M7xj7a8t8uM04i1yojd6p5ebmSR9CEyNQIQzmHl7Rm0Y2qGbzwXpbKPTaCYZJfr82rds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324171; c=relaxed/simple;
-	bh=6++RCpH2hCFj5OF3LzO27qxjf79fu8qDIIPUQYtLPu8=;
+	s=arc-20240116; t=1711324174; c=relaxed/simple;
+	bh=gTEIx53Lg9NHoGicBRiMsdfaDzGWKuRbLE9XgKQJHp0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bnNYWb1dzSVS1S5NkFP3ZINfwyIrMUHUZaEnbx6Fez5gNtSkERm+7SOqhJv6UXUuyP63HwQdzgBapZP/b1/oJaUPSg27+rh9vv1pzE6FrhRZsobAwlqUXwRBFA2UrYU6+XiCHxsv4JoD3JZSwrxKi4jbBrvKRjB7zQ2diOBJlLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxdJ04Uv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Rje9ByGxV62PIDlfSlCvhiER2YbacqpxDkwtGdJuld2E19E9V+Fee3O8IcdBSrRGX071D6MWIJ94sRl/eRoZAGRH/BHFM+Li1od/GgODNoCGcac+30yc4n4Lnbiu6zHaQ6ZYdsY35akMRR6e2+Ua0sIECcthNx9EYEvMXKDtq4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3yV1K59; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxdJ04Uv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF73BC433F1;
-	Sun, 24 Mar 2024 23:49:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3yV1K59"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A1E2C43399;
+	Sun, 24 Mar 2024 23:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324170;
-	bh=6++RCpH2hCFj5OF3LzO27qxjf79fu8qDIIPUQYtLPu8=;
+	s=k20201202; t=1711324174;
+	bh=gTEIx53Lg9NHoGicBRiMsdfaDzGWKuRbLE9XgKQJHp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rxdJ04UvI/8GHFUMp4kM2v28LZSlHMM0Be1SZUvaB1GA9SVwYVkbI67xgYcY71hAO
-	 hSj1bCM2MlgBHNBv+zHZ4jfJhsGt/urP4PU5LR0rpDF+ZF65zebqT9CDgU2PokSJiL
-	 RIh0hVBynb7z9a3UinK6OnUwTia6YjqB4G221hslqDuvlmuMC+b4M8JRkr3JVRXEZ3
-	 up8f43N/sq+Ie6aGw4xYKkIUDwnvEKyXq8WcH40pkFqDXFxLFGevZzaspd2Fxirfyc
-	 E/fJwJC4+z9eW9UfARkkezexUplZpLJBo4H2mMspcffA/o/7PmPIOv4TjBfzZn8VqH
-	 BaK52XixxRofw==
+	b=X3yV1K59zCf1/KJROa8baMmD0Zz14f65oShiykRjA0Or+fed2x8VZP2tnyyrTojxa
+	 vv123Fz8G/JzLwSDeV1kicC7dBcez2a6wwPFIOsx1z0qOObPNnSmjyRUxqOaXlUOgE
+	 zqmtx63ypeSF4/wWGo6fi2btMgHqIpOB7vnOXQTnjEG/+2JEOHQC8ps5nkQwTOqA7N
+	 akL5RWXFuZi9E1g2iW9d+1vRK+tvwaMApzziEeb/8U8LH0pb2m921Xsatc1cJD9IkY
+	 G2kLxWI+HosAnFsZQ2WNlpSEHhUIhRJakRcFVeva/cXX+vIJJPg8fvReUk+dqWv1HZ
+	 KALPFCA/rhOhw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Sam Protsenko <semen.protsenko@linaro.org>,
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 163/183] tty: serial: samsung: fix tx_empty() to return TIOCSER_TEMT
-Date: Sun, 24 Mar 2024 19:46:16 -0400
-Message-ID: <20240324234638.1355609-164-sashal@kernel.org>
+Subject: [PATCH 5.4 166/183] serial: 8250_exar: Don't remove GPIO device on suspend
+Date: Sun, 24 Mar 2024 19:46:19 -0400
+Message-ID: <20240324234638.1355609-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,43 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 314c2b399288f0058a8c5b6683292cbde5f1531b ]
+[ Upstream commit 73b5a5c00be39e23b194bad10e1ea8bb73eee176 ]
 
-The core expects for tx_empty() either TIOCSER_TEMT when the tx is
-empty or 0 otherwise. s3c24xx_serial_txempty_nofifo() might return
-0x4, and at least uart_get_lsr_info() tries to clear exactly
-TIOCSER_TEMT (BIT(1)). Fix tx_empty() to return TIOCSER_TEMT.
+It seems a copy&paste mistake that suspend callback removes the GPIO
+device. There is no counterpart of this action, means once suspended
+there is no more GPIO device available untile full unbind-bind cycle
+is performed. Remove suspicious GPIO device removal in suspend.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-Link: https://lore.kernel.org/r/20240119104526.1221243-2-tudor.ambarus@linaro.org
+Fixes: d0aeaa83f0b0 ("serial: exar: split out the exar code from 8250_pci")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20240219150627.2101198-2-andriy.shevchenko@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/samsung.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/tty/serial/8250/8250_exar.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
-index 24f9bd9101662..78d97dbfc18a8 100644
---- a/drivers/tty/serial/samsung.c
-+++ b/drivers/tty/serial/samsung.c
-@@ -800,11 +800,10 @@ static unsigned int s3c24xx_serial_tx_empty(struct uart_port *port)
- 		if ((ufstat & info->tx_fifomask) != 0 ||
- 		    (ufstat & info->tx_fifofull))
- 			return 0;
--
--		return 1;
-+		return TIOCSER_TEMT;
- 	}
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+index 93367dea4d8a5..0dfe9ceb032a5 100644
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -639,6 +639,7 @@ static void exar_pci_remove(struct pci_dev *pcidev)
+ 	for (i = 0; i < priv->nr; i++)
+ 		serial8250_unregister_port(priv->line[i]);
  
--	return s3c24xx_serial_txempty_nofifo(port);
-+	return s3c24xx_serial_txempty_nofifo(port) ? TIOCSER_TEMT : 0;
++	/* Ensure that every init quirk is properly torn down */
+ 	if (priv->board->exit)
+ 		priv->board->exit(pcidev);
+ }
+@@ -653,10 +654,6 @@ static int __maybe_unused exar_suspend(struct device *dev)
+ 		if (priv->line[i] >= 0)
+ 			serial8250_suspend_port(priv->line[i]);
+ 
+-	/* Ensure that every init quirk is properly torn down */
+-	if (priv->board->exit)
+-		priv->board->exit(pcidev);
+-
+ 	return 0;
  }
  
- /* no modem control lines */
 -- 
 2.43.0
 
