@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF5B482FA;
-	Sun, 24 Mar 2024 22:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001AC80632;
+	Sun, 24 Mar 2024 22:48:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320500; cv=none; b=bFzi2s8v0khdiVoLAVjaak0KNgNU8Cj24EqOYK0Y2gkUwfFkJWyW0yZ1XxihHtrjGdz5B/Y1+jCrlZ76abh7rqzrzkLEHvJ622UTKmkQzQ0hzxUHfEHoewTOTWVFY/nXQf/Joo0mUUAwZSsexqO7RCmqz3hZ9p/3cE7N41QJkzM=
+	t=1711320514; cv=none; b=OclBjzXTQ9Y8yxWn7BK/7VmRx/twPpI+AozsFBmmeNS2jBqL69K9cMITX6aPyYb1TeKQ4Im/jBtH5s8pVOyNK97FzUh/Ri5sL019RqKzac1Ol7z8H7e2hMQjfkiRQBFs8tljY8XZu6sVmhiCnX802kP7CISR2ZbISeDmtWMzONM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320500; c=relaxed/simple;
-	bh=oZM8KMIQOEe1NkhuP82yx6UpYRUZXW+a3NEGlch/gKM=;
+	s=arc-20240116; t=1711320514; c=relaxed/simple;
+	bh=aDa8LlvKm/2ZXeeUmHNzrvWDnXaqmsLoBFx0k0dXmCk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BkpOSE3w7r+slzTZBTrkSWgVzSDNHyKu0zAz2WjmDfzBJK63PFW5uV+RtqO8BMVFC62CrbuPB0COv1s3AmbMjTbw5RuYgv2lThU/e8JX6RE0Uwqk7KeiXY9aNN1HnpSor8QWsRjSxjlZfZ/vMfJLziL45ehaoOW6udfn9N55QnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qpNYx5ku; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ndbSVuoia0Iy5fTX1//lCCtZXT7seiM0KqfmDHwBGP8t1KWGxQHS/Q7edL4etEwA7joGdh6HNiSq1fnBBiXkDmMOZyVlE63FF+MZg5aau+/CKqBvBt0r1U8JTTINLuWbvX70ZovNlXiYYwZY4467mg85pq8aiMuwpH0tLDyO3Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pKDfpw/h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qpNYx5ku"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0065DC433F1;
-	Sun, 24 Mar 2024 22:48:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pKDfpw/h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27FABC433F1;
+	Sun, 24 Mar 2024 22:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320499;
-	bh=oZM8KMIQOEe1NkhuP82yx6UpYRUZXW+a3NEGlch/gKM=;
+	s=k20201202; t=1711320513;
+	bh=aDa8LlvKm/2ZXeeUmHNzrvWDnXaqmsLoBFx0k0dXmCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qpNYx5kuJwyRxVvFzvkGMT1mM1N2Qnfx6NI3PQ6yD3tcVZn46vtLZkwO9kZ6jMprD
-	 WPAb1WDAqy+Bf4pI5srCkZ7z++/DkWBnSvdw+XSqDkhLsnL8BUV01WpISgBoIzvOQa
-	 eKj6ezZUZ8DGU9GRbCHyGRadeSf0UicuqNi4jPVooOCn4UY9jsYoERrN513WErcPUF
-	 fTKZ0WUU5Q3daPIgz0UWfm4AP8myQ5uNhiWM5pjypjUPR8vxSHSduxBhpFd3EmuYiK
-	 K/5l3Vl7iD+M1GFkezD0rzN9XXwJOxrQluY0OGDUAzU4M6fhBu4RmbE6xI6I22eWEy
-	 jDrJTROqL0rvg==
+	b=pKDfpw/hZgVc2nayIouybOhHSQibMyL5SvELwINtJNpESipW69yIaXQ0IMH1qHqLe
+	 zqXank+WMm+KVIKvhqqxJDqINyzTAHRFIeayqtNj3Z5h79vVIx/0TuGMYhCmS1Kn3E
+	 qebSIqJmnlro/akJvx2TcKudexNuaLVRPZM00HIjBGTU4lADrvuSYFvTFL3+x6TzTK
+	 EjYGYsDuk8MAqcu0wECE3/oiAV/ZiwTLEf8XCgVIoA4KZILqSqBIFaCwhRiD9VzxdK
+	 zwOuOYAN+vPRvPatliPaOEKfHy0a8XFTOvgxaeOMqNGWM9oPVH/K0N419A1PoG8rNs
+	 sqfQhoFg5VePQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johnny Hsieh <mnixry@outlook.com>,
-	linux-sound@vger.kernel.org,
+Cc: Al Raj Hassain <alrajhassain@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
 	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 059/713] ASoC: amd: yc: Add Lenovo ThinkBook 21J0 into DMI quirk table
-Date: Sun, 24 Mar 2024 18:36:25 -0400
-Message-ID: <20240324224720.1345309-60-sashal@kernel.org>
+Subject: [PATCH 6.7 074/713] ASoC: amd: yc: Add HP Pavilion Aero Laptop 13-be2xxx(8BD6) into DMI quirk table
+Date: Sun, 24 Mar 2024 18:36:40 -0400
+Message-ID: <20240324224720.1345309-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,16 +49,15 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Johnny Hsieh <mnixry@outlook.com>
+From: Al Raj Hassain <alrajhassain@gmail.com>
 
-[ Upstream commit 50ee641643dd0f46702e9a99354398196e1734c2 ]
+[ Upstream commit b3a51137607cee7c814cd3a75d96f78b9ee1dc1f ]
 
-This patch adds Lenovo 21J0 (ThinkBook 16 G5+ ARP) to the DMI quirks table
-to enable internal microphone array.
+The HP Pavilion Aero Laptop 13-be2xxx(8BD6) requires a quirk entry for its internal microphone to function.
 
-Cc: linux-sound@vger.kernel.org
-Signed-off-by: Johnny Hsieh <mnixry@outlook.com>
-Link: https://msgid.link/r/TYSPR04MB8429D62DFDB6727866ECF1DEC55A2@TYSPR04MB8429.apcprd04.prod.outlook.com
+Signed-off-by: Al Raj Hassain <alrajhassain@gmail.com>
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+Link: https://msgid.link/r/20240304103924.13673-1-alrajhassain@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
@@ -66,18 +65,18 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+)
 
 diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
-index cc231185d72c3..5587198751daa 100644
+index abb9589b8477c..90360f8b3e81b 100644
 --- a/sound/soc/amd/yc/acp6x-mach.c
 +++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -199,6 +199,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "21HY"),
+@@ -416,6 +416,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "8B2F"),
  		}
  	},
 +	{
 +		.driver_data = &acp6x_card,
 +		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "21J0"),
++			DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
++			DMI_MATCH(DMI_BOARD_NAME, "8BD6"),
 +		}
 +	},
  	{
