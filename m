@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CEF132489;
-	Sun, 24 Mar 2024 23:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198672036F2;
+	Sun, 24 Mar 2024 23:04:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321444; cv=none; b=D68HuepMNMRHhWOsIZtT1Q+XpWzT5E9iEJYg/3uQN/sO7XbHDY1JI/vLkM94aoqUB/+nmm7Iqc/v/MQv+GYSEsPqNw6FGJus9UZtPvtHd9befG5FCOFrNNetsmwk53VPr85y35Q2zH6N61yHONbUihUHJJj/AD/FUZxdZPs4V7w=
+	t=1711321450; cv=none; b=fBgYAbxsl2c6tPn4ttAeVUzVATTE+7jttB4ibFImjvz5NBjFJqlaeQKmo3EB1rTfxupQFDPknS8gIzL1Qs14qp7lP6simrDJwOppirVvPIf7Gqn0LZygErs+loCQRMxfnbWr/2uf+AlSDdw8RSZwuu6Rdk8Mi3svXi6+JartN2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321444; c=relaxed/simple;
-	bh=KsprVximj/NVPgVKqZ5LbfOUeQ0+9cSinKnpOFwlChA=;
+	s=arc-20240116; t=1711321450; c=relaxed/simple;
+	bh=EAxgTCF44cVnF3Vp3veA+A0OsIW9qVRQPO4GdFZe8i0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I3Xk7y0Z5WfYWvDeoZhPc7mkPbg8ITbaiEu7B+xcacV4UZ5ACh/+je2wBFLNTynKW4kAc4VkGrRgJHUGPk2dx5Mo6Musbi7MIpeOi1JTG45frsIBG7im0TdFVWlPnpxQM5hbDv8Pch3L+Ta2DUq+oGIrfM1fUo2NcGjjZKPA8Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gAUlauPc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ar3EHmkemNfgpvioQKD2hsjMVFRxSLbal2oqM1FQBeAPk4YQQc8xG3zJAeEqNS9IvhKAyqSzsem0vjwO25UDjIoUfrOt/LiJwp6f5UsAIRz0BPuYMVeTXVFvWfJUX8eoH2BDTpHtxi64gUGBu5OX0GScBFsG9HrMOKq+Zog9ibw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rsdsb9So; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gAUlauPc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4048BC433C7;
-	Sun, 24 Mar 2024 23:04:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rsdsb9So"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4344CC43399;
+	Sun, 24 Mar 2024 23:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321444;
-	bh=KsprVximj/NVPgVKqZ5LbfOUeQ0+9cSinKnpOFwlChA=;
+	s=k20201202; t=1711321449;
+	bh=EAxgTCF44cVnF3Vp3veA+A0OsIW9qVRQPO4GdFZe8i0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gAUlauPcOOu25UoewHj1kq7zm1qmXVhyzx6/Myip0thFsaa/KK5HK1krMbkfGfRLA
-	 oZ1hNBmX+dmC0ceONl9ZOtYiY+QoM3bE0Bte2Z3qwEpieA8tyMzQ5LQawsQ+5VvB9r
-	 8niIkafk3LzyuDvM15qQXTOR8ywPDY44+XF+vJvAY4TAFU+CK5dWBjsh3OhOibBwrL
-	 XAweLhnEDznhNhxbNAvM1t9LTPK6jM1ur/5MCA0I4kscvsm/jOAYzPIIxACtfN6W6q
-	 JnIHjYbBAjzLDMGw8lpV1XHLts4RNw3dlu10d4omV8fE5Ni/a43xLmQN+XM0yTNn8i
-	 8r4YPlX250xBQ==
+	b=rsdsb9SouxQFE4xt2azLLAwbsKrxU7dcjTABKRD5BtFltkCfBvIhyhjjdbK3m5fD+
+	 HLPeAm82+MAEIRtToFEOyT5R0r5aCssqXciM6IQmajf3Ilp/v003ocJTRkXOje92wu
+	 a9aOp9ioJi35qU1ufA/glPC+JOXXobYIzmWgHkv0FN+A3zX7fOVX1m0JsVVg5N1Xi7
+	 5YHotxDCWcdPmPEUOaAsNMvj7S6h5vMcGc8wA3OE0spyNp70g4S1eJ06gAVixyad8f
+	 RPfScPCXLYxINQfdofjESSjjvRG+X7bwAhqLF9GeV4/FDwqo5aMt01WJLW/JkX7eP8
+	 5scyw+LzBWDZg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Johannes Berg <johannes.berg@intel.com>,
-	Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
 	Gregory Greenman <gregory.greenman@intel.com>,
 	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 168/638] wifi: iwlwifi: mvm: report beacon protection failures
-Date: Sun, 24 Mar 2024 18:53:25 -0400
-Message-ID: <20240324230116.1348576-169-sashal@kernel.org>
+Subject: [PATCH 6.6 173/638] wifi: iwlwifi: mvm: d3: fix IPN byte order
+Date: Sun, 24 Mar 2024 18:53:30 -0400
+Message-ID: <20240324230116.1348576-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -52,101 +51,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 91380f768d7f6e3d003755defa792e9a00a1444a ]
+[ Upstream commit 0c769cb6b9f364423c255f117774c9ecd5bf23ea ]
 
-Andrei reports that we just silently drop beacons after we
-report the key counters, but never report to userspace, so
-wpa_supplicant cannot send the WNM action frame. Fix that.
+The IPN is reported by the firmware in 6 bytes little endian,
+but mac80211 expects big endian so it can do memcmp() on it.
+We used to store this as a u64 which was filled in the right
+way, but never used. When implementing that it's used, we
+changed it to just be 6 bytes, but lost the conversion. Add
+it back.
 
-Fixes: b1fdc2505abc ("iwlwifi: mvm: advertise BIGTK client support if available")
-Reported-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+Fixes: 04f78e242fff ("wifi: iwlwifi: mvm: Add support for IGTK in D3 resume flow")
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Reviewed-by: Gregory Greenman <gregory.greenman@intel.com>
 Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://msgid.link/20240128084842.7d855442cdce.Iba90b26f893dc8c49bfb8be65373cd0a138af12c@changeid
+Link: https://msgid.link/20240129211905.138ed8a698e3.I1b66c386e45b5392696424ec636474bff86fd5ef@changeid
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c | 26 +++++++++++--------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
-index 82b4d4d01097a..bac0228b8c866 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
-@@ -282,6 +282,7 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
- 				u32 status,
- 				struct ieee80211_rx_status *stats)
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+index be2602d8c5bfa..dcda7fbb5a7a5 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+@@ -2167,7 +2167,10 @@ static void iwl_mvm_convert_gtk_v3(struct iwl_wowlan_status_data *status,
+ static void iwl_mvm_convert_igtk(struct iwl_wowlan_status_data *status,
+ 				 struct iwl_wowlan_igtk_status *data)
  {
-+	struct wireless_dev *wdev;
- 	struct iwl_mvm_sta *mvmsta;
- 	struct iwl_mvm_vif *mvmvif;
- 	u8 keyid;
-@@ -303,9 +304,15 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
- 	if (!ieee80211_is_beacon(hdr->frame_control))
- 		return 0;
- 
-+	if (!sta)
-+		return -1;
++	int i;
 +
-+	mvmsta = iwl_mvm_sta_from_mac80211(sta);
-+	mvmvif = iwl_mvm_vif_from_mac80211(mvmsta->vif);
+ 	BUILD_BUG_ON(sizeof(status->igtk.key) < sizeof(data->key));
++	BUILD_BUG_ON(sizeof(status->igtk.ipn) != sizeof(data->ipn));
+ 
+ 	if (!data->key_len)
+ 		return;
+@@ -2179,7 +2182,10 @@ static void iwl_mvm_convert_igtk(struct iwl_wowlan_status_data *status,
+ 		+ WOWLAN_IGTK_MIN_INDEX;
+ 
+ 	memcpy(status->igtk.key, data->key, sizeof(data->key));
+-	memcpy(status->igtk.ipn, data->ipn, sizeof(data->ipn));
 +
- 	/* key mismatch - will also report !MIC_OK but we shouldn't count it */
- 	if (!(status & IWL_RX_MPDU_STATUS_KEY_VALID))
--		return -1;
-+		goto report;
- 
- 	/* good cases */
- 	if (likely(status & IWL_RX_MPDU_STATUS_MIC_OK &&
-@@ -314,13 +321,6 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
- 		return 0;
- 	}
- 
--	if (!sta)
--		return -1;
--
--	mvmsta = iwl_mvm_sta_from_mac80211(sta);
--
--	mvmvif = iwl_mvm_vif_from_mac80211(mvmsta->vif);
--
- 	/*
- 	 * both keys will have the same cipher and MIC length, use
- 	 * whichever one is available
-@@ -329,11 +329,11 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
- 	if (!key) {
- 		key = rcu_dereference(mvmvif->bcn_prot.keys[1]);
- 		if (!key)
--			return -1;
-+			goto report;
- 	}
- 
- 	if (len < key->icv_len + IEEE80211_GMAC_PN_LEN + 2)
--		return -1;
-+		goto report;
- 
- 	/* get the real key ID */
- 	keyid = frame[len - key->icv_len - IEEE80211_GMAC_PN_LEN - 2];
-@@ -347,7 +347,7 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
- 			return -1;
- 		key = rcu_dereference(mvmvif->bcn_prot.keys[keyid - 6]);
- 		if (!key)
--			return -1;
-+			goto report;
- 	}
- 
- 	/* Report status to mac80211 */
-@@ -355,6 +355,10 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
- 		ieee80211_key_mic_failure(key);
- 	else if (status & IWL_RX_MPDU_STATUS_REPLAY_ERROR)
- 		ieee80211_key_replay(key);
-+report:
-+	wdev = ieee80211_vif_to_wdev(mvmsta->vif);
-+	if (wdev->netdev)
-+		cfg80211_rx_unprot_mlme_mgmt(wdev->netdev, (void *)hdr, len);
- 
- 	return -1;
++	/* mac80211 expects big endian for memcmp() to work, convert */
++	for (i = 0; i < sizeof(data->ipn); i++)
++		status->igtk.ipn[i] = data->ipn[sizeof(data->ipn) - i - 1];
  }
+ 
+ static void iwl_mvm_parse_wowlan_info_notif(struct iwl_mvm *mvm,
 -- 
 2.43.0
 
