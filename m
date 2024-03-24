@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86A627B108;
-	Sun, 24 Mar 2024 23:38:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5C71769FD;
+	Sun, 24 Mar 2024 23:38:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323504; cv=none; b=i10wOJ1agtAj+96z+S6sYdalOYGmMTgvVHcJ8Z9yV/C66/Lf2sbh2tIJToZ2gfCor8tt09bSXDQV6M/kKjVG/hmRfjx1epqwJP8R9wg2QPnptuxAYgTy2GAmbGLUjN9nA64hv3X2153C+ut4lz8Wi4hmBZOMfyR1S7RIkm0F/2Y=
+	t=1711323503; cv=none; b=ny5+01ggd81YnVpVo95Ns2r1vLDNX00fs4A1zFsfwjiWZ/jRfD46hKCsMewJ8W+MXe3+la5BsTGb69CesNpeMqMutxxqg07x/P98EORY2CdeojNvZGNsjjJQgN0ilYZIK4CK4w5O64ysqASbo9bZ0QrjlYNGoyCqkT78j0Ruyuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323504; c=relaxed/simple;
-	bh=Xuc3oBGo7liqs2HCz2Zg1SBZ8t+5y5rY/zRMJBrLpR4=;
+	s=arc-20240116; t=1711323503; c=relaxed/simple;
+	bh=vzvGbXL+49eDjUdw6sUa8nAJ5qfNhT2THOeIEtzub5M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E3dFnh3WpnGVG7ECqb2N8HvBfg9nCDfvneytXjmIKQ7RDj0EOQM918J45QbvrUZCT6qpsDzBBgmc7G544Qc0bP5OizjEtGpcV1kZ5AXjkZHpi7eFy4TJXg0tZxZFcX38rRkbCOGWFT0zgZQNQB5+q9GaVOnQNz8pnkUp6YY6krg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3hmVW8i; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mypi+hEq0DAwhEcfGGXfT7dOyGdIqYaDWR+F1bC1yPCzrlzBNEHmGDHgaDu+8tTY5QjAowu9yQOdudeAIexLmsHajvAnZnVnb3O/8yeqGtLafTEidxWoopL6dgnl0YwUB3rdHmrQyhr1wH6n+OsjVEEm+i58GPGZrcj8t/9sjkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ErgS/hqJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3hmVW8i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16C97C433F1;
-	Sun, 24 Mar 2024 23:38:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ErgS/hqJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB17C433C7;
+	Sun, 24 Mar 2024 23:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323503;
-	bh=Xuc3oBGo7liqs2HCz2Zg1SBZ8t+5y5rY/zRMJBrLpR4=;
+	s=k20201202; t=1711323501;
+	bh=vzvGbXL+49eDjUdw6sUa8nAJ5qfNhT2THOeIEtzub5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S3hmVW8iuCJw7i/TNYIS1sJ1hq/XM0XGn++tbUjwGRCiaV7FRkpD6o4/E+4V2x5dA
-	 eMj3ZNMGd5OsoTZR9ntTPc1kxYDXlHByj9ZID8VP4gZwZEsi/t85L6nw1V3DeSPAgH
-	 WQtdZnjrO37sraW2YBz/ClNRsw9z8OIqrFRYRfNvNld06osc3sToajK7EYkWMvQ+wM
-	 ft/DjTzAZzpLWHEaz+SBdiUIreijSZNhDjHW8DrSSI2lZQC/1NPGwzFJoYek8MHkYJ
-	 3LMxmIsI2uRPj9AwYlAOlEEwyOrmB3onJl80QJn24InSTViRzVyR9KqVcSA3BR2CDa
-	 zgicY7zjVLM6g==
+	b=ErgS/hqJ3OAEIucrhdGZg2TSe9eTDKv6ojOqW9YDSMnBaAPGqIYnuqAU8VBbSeQOq
+	 Z/N8a6pj0R0C2DvSY619pw3PKtxOjWBRJmVfkY9lnqm3eWcwJN0+86x5YHuX+MAKoU
+	 QzUZHOAAtqZJa6F5HtxnrFH0SQnU8Ve4aKAIlovH9Hd9eFGRAP3C/uvpKi/4c1jjng
+	 hef5c064lmWcQdu8ZogwknBi/cIHaKT5H4YlIGbkt2IE6j6oydFePYsL9YWPwH83C7
+	 0FeqHg36Ln91mLIjwjnFiI3aVCUmF9+M3Oax7l6m9uL+n6mEpWW7XQX1uuKJzgb2u2
+	 GXT7ggi4DC7rA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Jernej Skrabec <jernej.skrabec@gmail.com>,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 209/317] media: sun8i-di: Fix chroma difference threshold
-Date: Sun, 24 Mar 2024 19:33:09 -0400
-Message-ID: <20240324233458.1352854-210-sashal@kernel.org>
+Subject: [PATCH 5.15 207/317] media: sun8i-di: Fix coefficient writes
+Date: Sun, 24 Mar 2024 19:33:07 -0400
+Message-ID: <20240324233458.1352854-208-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,29 +50,95 @@ Content-Transfer-Encoding: 8bit
 
 From: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-[ Upstream commit 856525e8db272b0ce6d9c6e6c2eeb97892b485a6 ]
+[ Upstream commit 794b581f8c6eb7b60fe468ccb96dd3cd38ff779f ]
 
-While there is no good explanation what this value does, vendor driver
-uses value 31 for it. Align driver with it.
+Currently coefficients are applied only once, since they don't change.
+However, this is done before enable bit is set and thus it doesn't get
+applied properly.
+
+Fix that by applying coefficients after enable bit is set. While this
+means that it will be done evey time, it doesn't bring much time
+penalty.
 
 Fixes: a4260ea49547 ("media: sun4i: Add H3 deinterlace driver")
 Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/sunxi/sun8i-di/sun8i-di.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 42 +++++++++----------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-index 8faf93c418ed5..dd289c7c93bc2 100644
+index 671e4a928993d..073a61c094183 100644
 --- a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
 +++ b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-@@ -304,7 +304,7 @@ static void deinterlace_init(struct deinterlace_dev *dev)
+@@ -66,6 +66,7 @@ static void deinterlace_device_run(void *priv)
+ 	struct vb2_v4l2_buffer *src, *dst;
+ 	unsigned int hstep, vstep;
+ 	dma_addr_t addr;
++	int i;
  
+ 	src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+@@ -160,6 +161,26 @@ static void deinterlace_device_run(void *priv)
+ 	deinterlace_write(dev, DEINTERLACE_CH1_HORZ_FACT, hstep);
+ 	deinterlace_write(dev, DEINTERLACE_CH1_VERT_FACT, vstep);
+ 
++	/* neutral filter coefficients */
++	deinterlace_set_bits(dev, DEINTERLACE_FRM_CTRL,
++			     DEINTERLACE_FRM_CTRL_COEF_ACCESS);
++	readl_poll_timeout(dev->base + DEINTERLACE_STATUS, val,
++			   val & DEINTERLACE_STATUS_COEF_STATUS, 2, 40);
++
++	for (i = 0; i < 32; i++) {
++		deinterlace_write(dev, DEINTERLACE_CH0_HORZ_COEF0 + i * 4,
++				  DEINTERLACE_IDENTITY_COEF);
++		deinterlace_write(dev, DEINTERLACE_CH0_VERT_COEF + i * 4,
++				  DEINTERLACE_IDENTITY_COEF);
++		deinterlace_write(dev, DEINTERLACE_CH1_HORZ_COEF0 + i * 4,
++				  DEINTERLACE_IDENTITY_COEF);
++		deinterlace_write(dev, DEINTERLACE_CH1_VERT_COEF + i * 4,
++				  DEINTERLACE_IDENTITY_COEF);
++	}
++
++	deinterlace_clr_set_bits(dev, DEINTERLACE_FRM_CTRL,
++				 DEINTERLACE_FRM_CTRL_COEF_ACCESS, 0);
++
+ 	deinterlace_clr_set_bits(dev, DEINTERLACE_FIELD_CTRL,
+ 				 DEINTERLACE_FIELD_CTRL_FIELD_CNT_MSK,
+ 				 DEINTERLACE_FIELD_CTRL_FIELD_CNT(ctx->field));
+@@ -248,7 +269,6 @@ static irqreturn_t deinterlace_irq(int irq, void *data)
+ static void deinterlace_init(struct deinterlace_dev *dev)
+ {
+ 	u32 val;
+-	int i;
+ 
+ 	deinterlace_write(dev, DEINTERLACE_BYPASS,
+ 			  DEINTERLACE_BYPASS_CSC);
+@@ -285,26 +305,6 @@ static void deinterlace_init(struct deinterlace_dev *dev)
  	deinterlace_clr_set_bits(dev, DEINTERLACE_CHROMA_DIFF,
  				 DEINTERLACE_CHROMA_DIFF_TH_MSK,
--				 DEINTERLACE_CHROMA_DIFF_TH(5));
-+				 DEINTERLACE_CHROMA_DIFF_TH(31));
+ 				 DEINTERLACE_CHROMA_DIFF_TH(5));
+-
+-	/* neutral filter coefficients */
+-	deinterlace_set_bits(dev, DEINTERLACE_FRM_CTRL,
+-			     DEINTERLACE_FRM_CTRL_COEF_ACCESS);
+-	readl_poll_timeout(dev->base + DEINTERLACE_STATUS, val,
+-			   val & DEINTERLACE_STATUS_COEF_STATUS, 2, 40);
+-
+-	for (i = 0; i < 32; i++) {
+-		deinterlace_write(dev, DEINTERLACE_CH0_HORZ_COEF0 + i * 4,
+-				  DEINTERLACE_IDENTITY_COEF);
+-		deinterlace_write(dev, DEINTERLACE_CH0_VERT_COEF + i * 4,
+-				  DEINTERLACE_IDENTITY_COEF);
+-		deinterlace_write(dev, DEINTERLACE_CH1_HORZ_COEF0 + i * 4,
+-				  DEINTERLACE_IDENTITY_COEF);
+-		deinterlace_write(dev, DEINTERLACE_CH1_VERT_COEF + i * 4,
+-				  DEINTERLACE_IDENTITY_COEF);
+-	}
+-
+-	deinterlace_clr_set_bits(dev, DEINTERLACE_FRM_CTRL,
+-				 DEINTERLACE_FRM_CTRL_COEF_ACCESS, 0);
  }
  
  static inline struct deinterlace_ctx *deinterlace_file2ctx(struct file *file)
