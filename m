@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B02176544;
-	Sun, 24 Mar 2024 23:37:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB68130A70;
+	Sun, 24 Mar 2024 23:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323436; cv=none; b=ujCIKAXz4hF0A0Or6zXjtRjeySC6f7SwPxlsVagPyR0mffRImuZVMk8LsPnbEUhZMHxVwg2fhVDqvmhPBaep4urJpLNrCbO8o3Qa9GoIc4P+F9ZcUdDxfix28fHyiz0VNvC7Ohrwhf+ZPxy6Ggq8Ly0TCjSig0tjAgJu1HvY1NE=
+	t=1711323432; cv=none; b=teei2xF1sZmwJJjsk/ADEgSL9QmbvsCvggvo6mA8k61zSFX9Q1VghjymwFLDew67GYGbUJxp+l/W1pnkFn/CcZ6/xV70LzrMFugfPW19ZwpRZ6+NRt0c2zJa/SGFZwIustSov2RHXqmZL57pogaUxL+2hpT6vqx9KE8UeS8JZgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323436; c=relaxed/simple;
-	bh=y0/SDoJTHZbC2KUnfOWqbDLyT9cqRrJ5ZiUthqZIIxs=;
+	s=arc-20240116; t=1711323432; c=relaxed/simple;
+	bh=VCSP0Hvz9yW0LzCbR2GPdE6hk29eu4AHO+aWWY50kDw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xc+Ffx8O96Hu+xh4nCTuSoIUSvUk+CPXAWrUSKZwq70r+B1d/bzUq8OmiuamY5dwOJYQet1lljjv7v6mxzbcxjfpp8+Qfu7CDAd3bs+qWW9JewoGMV7aPZTkRp4Wivfk7vCcnXRQFAVpnz3+01c/KcAt1ZEVUe6tAreQA+BakuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAsueXXr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=LnrQgymgnp1i0DVV2JMPEp5sWtTQ3nAmCwMtMi6AeTwesUs2pJSogNDQSbnfB/3bGCkLv88wrqYD0rFK3Iwv1tRxtqFWnbOb3LW2zWODgjVXrNX0QdsIF1csDd8CKDy7+ZpUoxaTQnC2WQLrApKZBUWE+BtKCTNivVywPBzw7Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcamVFpr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAsueXXr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15687C43390;
-	Sun, 24 Mar 2024 23:37:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcamVFpr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B397C43390;
+	Sun, 24 Mar 2024 23:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323435;
-	bh=y0/SDoJTHZbC2KUnfOWqbDLyT9cqRrJ5ZiUthqZIIxs=;
+	s=k20201202; t=1711323432;
+	bh=VCSP0Hvz9yW0LzCbR2GPdE6hk29eu4AHO+aWWY50kDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uAsueXXrqlxtkmtCegohlMdBMa0KvMyiuXboYgw6/KobejZHUnZit6ULtpaV/CUDo
-	 7RHQqdFZOvIjBxM+FnygNuMsBdas+/xTowNtDTcaOPj/qfauODh6Mc9bhMEw9mgaMT
-	 myV72TuYJCeEXwP04Z2R/GYugy8CjMliAa9sZs1s7vscu7aCcc2Ett+S75VxMcwM8R
-	 PpgnQnL3RkNoxdSLmi96AOwKGPxSDl3z0FbxAy1mYp29C1vxlow/bDFwEGtEO185Wy
-	 p7FMaGAiBnYLn5fFtUvsRBJnV3LKX+bli6sk7ykQVz+NVbudCptHJ+CrJ/aPoBqLPa
-	 QnJe2zM5sG6WQ==
+	b=dcamVFpr5FQFnCRYiVFrfrG0aYirA6MZQ4sudQQE+Vtjo6KnfuSDzKznbsP08Vh4r
+	 ORESt6ZL03O7T/np2mSBjNtju9s+GK4o/R5BruV0lBF0tJYYtKCWbFqJCV/gfk2xgc
+	 Iyo+4N3yElFnQ5FN2Vfw6vDQzo5fj2PfDPxsCC67KESXJtA1ZSiMCxPHmUdCN9dRN7
+	 ZkYTnRPe3K9KSdZFBcyTNDxzH3BM/EnE6jii+Z2WVPT3eN7ft/us1h8JckOX3c4NI2
+	 OIn+KsRWkPK5Q6D+aQFJFhtquNLkfMkjo0tlcIAzglDJJvH9QxQGRw564SGxIlXuBN
+	 fjU4oBcdwa0Tw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= <kevin.lhopital@savoirfairelinux.com>,
-	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Bui Quang Minh <minhquangbui99@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 138/317] net: phy: fix phy_get_internal_delay accessing an empty array
-Date: Sun, 24 Mar 2024 19:31:58 -0400
-Message-ID: <20240324233458.1352854-139-sashal@kernel.org>
+Subject: [PATCH 5.15 135/317] bpf: Fix stackmap overflow check on 32-bit arches
+Date: Sun, 24 Mar 2024 19:31:55 -0400
+Message-ID: <20240324233458.1352854-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -51,43 +50,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kévin L'hôpital <kevin.lhopital@savoirfairelinux.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 4469c0c5b14a0919f5965c7ceac96b523eb57b79 ]
+[ Upstream commit 7a4b21250bf79eef26543d35bd390448646c536b ]
 
-The phy_get_internal_delay function could try to access to an empty
-array in the case that the driver is calling phy_get_internal_delay
-without defining delay_values and rx-internal-delay-ps or
-tx-internal-delay-ps is defined to 0 in the device-tree.
-This will lead to "unable to handle kernel NULL pointer dereference at
-virtual address 0". To avoid this kernel oops, the test should be delay
->= 0. As there is already delay < 0 test just before, the test could
-only be size == 0.
+The stackmap code relies on roundup_pow_of_two() to compute the number
+of hash buckets, and contains an overflow check by checking if the
+resulting value is 0. However, on 32-bit arches, the roundup code itself
+can overflow by doing a 32-bit left-shift of an unsigned long value,
+which is undefined behaviour, so it is not guaranteed to truncate
+neatly. This was triggered by syzbot on the DEVMAP_HASH type, which
+contains the same check, copied from the hashtab code.
 
-Fixes: 92252eec913b ("net: phy: Add a helper to return the index for of the internal delay")
-Co-developed-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-Signed-off-by: Kévin L'hôpital <kevin.lhopital@savoirfairelinux.com>
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The commit in the fixes tag actually attempted to fix this, but the fix
+did not account for the UB, so the fix only works on CPUs where an
+overflow does result in a neat truncation to zero, which is not
+guaranteed. Checking the value before rounding does not have this
+problem.
+
+Fixes: 6183f4d3a0a2 ("bpf: Check for integer overflow when using roundup_pow_of_two()")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Reviewed-by: Bui Quang Minh <minhquangbui99@gmail.com>
+Message-ID: <20240307120340.99577-4-toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/bpf/stackmap.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 0429825a7179d..c1d6ebf12ec74 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -2904,7 +2904,7 @@ s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
- 	if (delay < 0)
- 		return delay;
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index f8587abef73c1..e04571c1833f6 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -113,11 +113,14 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
+ 	} else if (value_size / 8 > sysctl_perf_event_max_stack)
+ 		return ERR_PTR(-EINVAL);
  
--	if (delay && size == 0)
-+	if (size == 0)
- 		return delay;
+-	/* hash table size must be power of 2 */
+-	n_buckets = roundup_pow_of_two(attr->max_entries);
+-	if (!n_buckets)
++	/* hash table size must be power of 2; roundup_pow_of_two() can overflow
++	 * into UB on 32-bit arches, so check that first
++	 */
++	if (attr->max_entries > 1UL << 31)
+ 		return ERR_PTR(-E2BIG);
  
- 	if (delay < delay_values[0] || delay > delay_values[size - 1]) {
++	n_buckets = roundup_pow_of_two(attr->max_entries);
++
+ 	cost = n_buckets * sizeof(struct stack_map_bucket *) + sizeof(*smap);
+ 	smap = bpf_map_area_alloc(cost, bpf_map_attr_numa_node(attr));
+ 	if (!smap)
 -- 
 2.43.0
 
