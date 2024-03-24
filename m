@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8F920CDF4;
-	Sun, 24 Mar 2024 23:07:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6024139569;
+	Sun, 24 Mar 2024 23:07:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321643; cv=none; b=NJ+YPTjRCqbv7UWe9dn1OYNmlin4A3hpJG+GdqXPN7MRdKsgBminwnGtCsmUmmksntGuMEJ83PGDfqL9JUNCn/j7uDhmODCY2bccPWJnZ5QFCi2+bWOP67nXA1xXOhVqrHKyAB4R7B9pNdxlk4zKa6RgJEvlWFso3GGAzeoeGbw=
+	t=1711321630; cv=none; b=cnYGBTK+YxoYDOHFOXXWQLldUYkFeMeV8OWxV5IR0mBoLLeIZYsTawyKkwLoEG3oAZZfR7JEP4C8WyBJZt4jsrdCBRIjtrSH5MffUp0Unw+RCiz76Bz3WPZmQK5DBiXw9aEV39oL5UbVZ7OF1jD0KvV7zIl52oG4J+bWQazrtAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321643; c=relaxed/simple;
-	bh=wUIaf37jsc83rrxxeJBxZppS9V3AFNl4MTW2tB/QxbQ=;
+	s=arc-20240116; t=1711321630; c=relaxed/simple;
+	bh=iKyn4MWRRbH3n3TzPpKz0zXDvdScToqrDIXfhIunSDk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=stpsJeNo+nNSVs/Q8xCCKZVhdsY4sK4WsptizCnIDhK6tSh2nTrSP9+w+ZCTi3+U6IhtUu/gd9jU6brlu7N0raGEPtKvvyAdO25EFDwTQwQ/g/12JVvT/t0tCYzu9CAV3s6Xcn4VIAoXqx72DDj2O+fwUmEsKt2o2Tcg51BmFTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxVylRBE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oo41WIEUg1ROIwScQ53wyeA71woTQJYNBZ7g7s1aNVbCdyOhXeQVr/Zuj30L6Lm6U7y4apfHEjfHsjRXPwM47/T+3j0QRBlTDezBXVjvNUKOOyqf/Oan2UDtt9kv7o6b5mEVBjl9X5NBTT6AH9S421xJCDbyQFlQWW4uwzr9wuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMQGdQ9b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxVylRBE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F27BCC43399;
-	Sun, 24 Mar 2024 23:07:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMQGdQ9b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDD8DC43394;
+	Sun, 24 Mar 2024 23:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321642;
-	bh=wUIaf37jsc83rrxxeJBxZppS9V3AFNl4MTW2tB/QxbQ=;
+	s=k20201202; t=1711321629;
+	bh=iKyn4MWRRbH3n3TzPpKz0zXDvdScToqrDIXfhIunSDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VxVylRBECrpnpbpu0oTpVeNoLnralaZrPDXJQ+wpATEUfP2rVKsWvndX1b8Csduku
-	 QYnoUOs0w66W2hqQPd8BFRcMcmNZrAeZKrFvz5leegmHSGQCJRsUYSJPV228YcroKS
-	 YFmHDIM95Xa4qGS76MvdU5xcuNndOsbiUUqBc4MohHDPA83vu1aS5pv8nLBLGvNEGb
-	 B7LSsaYeHVOvpeL0n0rdxo8R4gAyzC/Eoy12asgBq3R7oQNv8e8mkiXdhRA5W3G1Bk
-	 sn0zdBOYZ6H/aQH1E6IiK5qwwgX8uYq+FFzn2fzSpDN6AR8tQxkotjUXosUJ1DLs6c
-	 N3+nQsW5uvRug==
+	b=TMQGdQ9bViDNfSapgFokAdSMmwtUKzCdTCWXxJfnDaOOsYEZSXZBvg4FZrPJc83C6
+	 8+DkwHAOB03JiazP/qpnweCfJX1VBx47cH1gCVytXtFif3OROAnQJ/QUwXQggeYN/W
+	 wmfglhrGXh/cU4nCn8yeCB4aexmlg7ENUwOBJNN95GoAWqd3LHjcX1EgWDuv4RiLc4
+	 PvrE38IS+QNMB3pSm0UdaLvxtdXwDHyFWW+rgT17i6+fcyG3P4CUHSCcRVsyaT+BQt
+	 3kJKIUeg7rveCO/f1zEWxdgM/PDS/851pPrfrU62OOBsXHyELbU18D+xs7SLTZlCq2
+	 A+EiayKkeqX9w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Wyatt Wood <wyatt.wood@amd.com>,
-	Anthony Koo <Anthony.Koo@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Emil Velikov <emil.velikov@collabora.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 371/638] drm/amd/display: Fix potential NULL pointer dereferences in 'dcn10_set_output_transfer_func()'
-Date: Sun, 24 Mar 2024 18:56:48 -0400
-Message-ID: <20240324230116.1348576-372-sashal@kernel.org>
+Subject: [PATCH 6.6 360/638] ASoC: SOF: amd: Fix memory leak in amd_sof_acp_probe()
+Date: Sun, 24 Mar 2024 18:56:37 -0400
+Message-ID: <20240324230116.1348576-361-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -52,54 +49,68 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 
-[ Upstream commit 9ccfe80d022df7c595f1925afb31de2232900656 ]
+[ Upstream commit 222be59e5eed1554119294edc743ee548c2371d0 ]
 
-The 'stream' pointer is used in dcn10_set_output_transfer_func() before
-the check if 'stream' is NULL.
+Driver uses kasprintf() to initialize fw_{code,data}_bin members of
+struct acp_dev_data, but kfree() is never called to deallocate the
+memory, which results in a memory leak.
 
-Fixes the below:
-drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:1892 dcn10_set_output_transfer_func() warn: variable dereferenced before check 'stream' (see line 1875)
+Fix the issue by switching to devm_kasprintf(). Additionally, ensure the
+allocation was successful by checking the pointer validity.
 
-Fixes: ddef02de0d71 ("drm/amd/display: add null checks before logging")
-Cc: Wyatt Wood <wyatt.wood@amd.com>
-Cc: Anthony Koo <Anthony.Koo@amd.com>
-Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: f7da88003c53 ("ASoC: SOF: amd: Enable signed firmware image loading for Vangogh platform")
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+Link: https://msgid.link/r/20231219030728.2431640-6-cristian.ciocaltea@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/soc/sof/amd/acp.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index db1d7be7fda38..e3f4d497d32d5 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -1832,6 +1832,9 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
- {
- 	struct dpp *dpp = pipe_ctx->plane_res.dpp;
- 
-+	if (!stream)
-+		return false;
+diff --git a/sound/soc/sof/amd/acp.c b/sound/soc/sof/amd/acp.c
+index 19a801908b56d..4c54ce212de6a 100644
+--- a/sound/soc/sof/amd/acp.c
++++ b/sound/soc/sof/amd/acp.c
+@@ -547,17 +547,27 @@ int amd_sof_acp_probe(struct snd_sof_dev *sdev)
+ 	adata->signed_fw_image = false;
+ 	dmi_id = dmi_first_match(acp_sof_quirk_table);
+ 	if (dmi_id && dmi_id->driver_data) {
+-		adata->fw_code_bin = kasprintf(GFP_KERNEL, "%s/sof-%s-code.bin",
+-					       plat_data->fw_filename_prefix,
+-					       chip->name);
+-		adata->fw_data_bin = kasprintf(GFP_KERNEL, "%s/sof-%s-data.bin",
+-					       plat_data->fw_filename_prefix,
+-					       chip->name);
+-		adata->signed_fw_image = dmi_id->driver_data;
++		adata->fw_code_bin = devm_kasprintf(sdev->dev, GFP_KERNEL,
++						    "%s/sof-%s-code.bin",
++						    plat_data->fw_filename_prefix,
++						    chip->name);
++		if (!adata->fw_code_bin) {
++			ret = -ENOMEM;
++			goto free_ipc_irq;
++		}
 +
- 	if (dpp == NULL)
- 		return false;
++		adata->fw_data_bin = devm_kasprintf(sdev->dev, GFP_KERNEL,
++						    "%s/sof-%s-data.bin",
++						    plat_data->fw_filename_prefix,
++						    chip->name);
++		if (!adata->fw_data_bin) {
++			ret = -ENOMEM;
++			goto free_ipc_irq;
++		}
  
-@@ -1854,8 +1857,8 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
- 	} else
- 		dpp->funcs->dpp_program_regamma_pwl(dpp, NULL, OPP_REGAMMA_BYPASS);
+-		dev_dbg(sdev->dev, "fw_code_bin:%s, fw_data_bin:%s\n", adata->fw_code_bin,
+-			adata->fw_data_bin);
++		adata->signed_fw_image = dmi_id->driver_data;
+ 	}
++
+ 	adata->enable_fw_debug = enable_fw_debug;
+ 	acp_memory_init(sdev);
  
--	if (stream != NULL && stream->ctx != NULL &&
--			stream->out_transfer_func != NULL) {
-+	if (stream->ctx &&
-+	    stream->out_transfer_func) {
- 		log_tf(stream->ctx,
- 				stream->out_transfer_func,
- 				dpp->regamma_params.hw_points_num);
 -- 
 2.43.0
 
