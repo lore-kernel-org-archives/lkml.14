@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F86F1474A4;
-	Sun, 24 Mar 2024 23:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23721474A6;
+	Sun, 24 Mar 2024 23:14:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322080; cv=none; b=hETL+11fSSPBuN12jQ1Bv+QN/2zQcfUVonSBCL5NXHbWcJ7I4W+Semn8QdapZRdCZsOya+UcZiwQlkrqSJMoUu6nxv+zyOuIBbXEi0LXn7xBvwHCRBKgpkdk/dtkXz20E4wzlfb0/8LQ6nSYI5bA3/OhGZ/ty9BxWok74QGZ1LM=
+	t=1711322085; cv=none; b=I0Xsv4jRsrOUqeLmpRzjNAX3WCXjRDZcjCfDUHZWUqL4qJQdGN+S8fTwiuAgOc1lYWPiKdm9Imp8WDq8r7ETRmCA06kspngBKuY0LP4V5FXryKhxhnNnBHqoAKhVLpNkwthii23wx7nM5xUE/DpoqLs2kDdKAz3lzMkNg+s2KoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322080; c=relaxed/simple;
-	bh=qzn366CElNlg9m2P1/pV3tCS4YAo8KKGyN8lBwYTbPI=;
+	s=arc-20240116; t=1711322085; c=relaxed/simple;
+	bh=VNclXew3OYmQdcZ91mzGQyicAkl80ociEU8G6DjugSA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qvgB3vj4MHtyGspkPzpoIQkGvVMGePN/vnyl2/ns7Og/qbUwcUGplltoDMyyo3ci4vMl6IM+8Ha82GeXg6Ff2BbrCBsmwO3Aw8ywDjtrNyxET5UbFeibQomXPMN4yVD9p2JUqUX4yHDjYMm40W0qH/5qsmBmADbEUSa+PeEuyzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsP/89b9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uOnnjBVvUBwbKf34XRlNMptfrATbkyMmwzO8ccKDcgs/0zuX9pPXsogG+PwsENrzzwUAekWxNE44EKa0GX6Kupt1ufHOgcA+E8Q6tCy4Mb0y7fwkSQC3ZmvMQE0g5zmk8et8LzzN2go7Lj09sWEzQkSTvTaavhMqyv+c29kkhOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnsg/u6h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsP/89b9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BFC1C433F1;
-	Sun, 24 Mar 2024 23:14:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnsg/u6h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D9C1C43394;
+	Sun, 24 Mar 2024 23:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322079;
-	bh=qzn366CElNlg9m2P1/pV3tCS4YAo8KKGyN8lBwYTbPI=;
+	s=k20201202; t=1711322084;
+	bh=VNclXew3OYmQdcZ91mzGQyicAkl80ociEU8G6DjugSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PsP/89b9Ask0qPd3Yo4bt6jzyx6jaMy20ydZXfOog446Cl5UPLZ6ZM3oIflqcwZb6
-	 vqrW8xGKFTWY4Vh0aVt+wIjQNpZuNNpSEIql0JF92/1cDaAHYXqxr0REqrpM7ElgnW
-	 MJ+qorjEJwQfVbm4e92n7EMxTd7k4yU53/SYU5zB1bdT6uVg0TBU/dnM87Kx4bPGJH
-	 URDs6A9sw9z4Wig945W6PUoBpWy5XDdBj4jVl5oISa4zoETLRwxYLeky5bxJaTwqIy
-	 fuZyctxGNyalHLBAaQLlDFvPKJrgLPhBvm4NOSy6cksffnZDjYyggHTrJUBlisyE5a
-	 90FIejmpAeMbQ==
+	b=pnsg/u6hxFDSt7rMKUZ80bOdvgFl8lVkd0LhHqPu1J+NfP0PqNg/GgDW1pray/OQU
+	 smZgFu+TlWHQdFhxu8IpM60Dr8W8h1xb4RjS4hp4VEdG5YnuBQzgX3BrnipJkE6ckN
+	 vwgJBowe62UFzVlWn4gMrYN6BpUxl6r0aD8ez17ES/92BUptqGTEXoFJHs1TrmQn9O
+	 XwiYAK4phKFTij2dOkv5eAFIY8cBejYF2ScWU+foA5rmWCn3jzjOJDeAyHe5T/Bu9T
+	 SZX+Mw7nP8Dc/6dnrVki1yjpIcGNr3D3BReIhqehKvP5NsH2kLtjR0HkxwX6bKMRLy
+	 y7PwOJeQfb5RQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 153/451] ACPI: processor_idle: Fix memory leak in acpi_processor_power_exit()
-Date: Sun, 24 Mar 2024 19:07:09 -0400
-Message-ID: <20240324231207.1351418-154-sashal@kernel.org>
+Subject: [PATCH 6.1 158/451] arm64: dts: qcom: sm8150: use 'gpios' suffix for PCI GPIOs
+Date: Sun, 24 Mar 2024 19:07:14 -0400
+Message-ID: <20240324231207.1351418-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,59 +48,46 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Armin Wolf <W_Armin@gmx.de>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-[ Upstream commit e18afcb7b2a12b635ac10081f943fcf84ddacc51 ]
+[ Upstream commit af6f6778d34cb40e60368e288767f674cc0c5f60 ]
 
-After unregistering the CPU idle device, the memory associated with
-it is not freed, leading to a memory leak:
+Linux handles both versions, but bindings expect GPIO properties to
+have 'gpios' suffix instead of 'gpio':
 
-unreferenced object 0xffff896282f6c000 (size 1024):
-  comm "swapper/0", pid 1, jiffies 4294893170
-  hex dump (first 32 bytes):
-    00 00 00 00 0b 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace (crc 8836a742):
-    [<ffffffff993495ed>] kmalloc_trace+0x29d/0x340
-    [<ffffffff9972f3b3>] acpi_processor_power_init+0xf3/0x1c0
-    [<ffffffff9972d263>] __acpi_processor_start+0xd3/0xf0
-    [<ffffffff9972d2bc>] acpi_processor_start+0x2c/0x50
-    [<ffffffff99805872>] really_probe+0xe2/0x480
-    [<ffffffff99805c98>] __driver_probe_device+0x78/0x160
-    [<ffffffff99805daf>] driver_probe_device+0x1f/0x90
-    [<ffffffff9980601e>] __driver_attach+0xce/0x1c0
-    [<ffffffff99803170>] bus_for_each_dev+0x70/0xc0
-    [<ffffffff99804822>] bus_add_driver+0x112/0x210
-    [<ffffffff99807245>] driver_register+0x55/0x100
-    [<ffffffff9aee4acb>] acpi_processor_driver_init+0x3b/0xc0
-    [<ffffffff990012d1>] do_one_initcall+0x41/0x300
-    [<ffffffff9ae7c4b0>] kernel_init_freeable+0x320/0x470
-    [<ffffffff99b231f6>] kernel_init+0x16/0x1b0
-    [<ffffffff99042e6d>] ret_from_fork+0x2d/0x50
+  sa8155p-adp.dtb: pci@1c00000: Unevaluated properties are not allowed ('perst-gpio' was unexpected)
 
-Fix this by freeing the CPU idle device after unregistering it.
-
-Fixes: 3d339dcbb56d ("cpuidle / ACPI : move cpuidle_device field out of the acpi_processor_power structure")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Link: https://lore.kernel.org/r/20231111164229.63803-3-krzysztof.kozlowski@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Stable-dep-of: 7c38989d0f7a ("arm64: dts: qcom: sm8150: correct PCIe wake-gpios")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/processor_idle.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index fc5b5b2c9e819..6f613eef28879 100644
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -1431,6 +1431,8 @@ int acpi_processor_power_exit(struct acpi_processor *pr)
- 		acpi_processor_registered--;
- 		if (acpi_processor_registered == 0)
- 			cpuidle_unregister_driver(&acpi_idle_driver);
-+
-+		kfree(dev);
- 	}
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index eb1a9369926d2..b829a9ebc5670 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -1822,7 +1822,7 @@ pcie0: pci@1c00000 {
+ 			phys = <&pcie0_lane>;
+ 			phy-names = "pciephy";
  
- 	pr->flags.power_setup_done = 0;
+-			perst-gpio = <&tlmm 35 GPIO_ACTIVE_HIGH>;
++			perst-gpios = <&tlmm 35 GPIO_ACTIVE_HIGH>;
+ 			enable-gpio = <&tlmm 37 GPIO_ACTIVE_HIGH>;
+ 
+ 			pinctrl-names = "default";
+@@ -1925,7 +1925,7 @@ pcie1: pci@1c08000 {
+ 			phys = <&pcie1_lane>;
+ 			phy-names = "pciephy";
+ 
+-			perst-gpio = <&tlmm 102 GPIO_ACTIVE_HIGH>;
++			perst-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
+ 			enable-gpio = <&tlmm 104 GPIO_ACTIVE_HIGH>;
+ 
+ 			pinctrl-names = "default";
 -- 
 2.43.0
 
