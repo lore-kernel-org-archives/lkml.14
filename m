@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128932811D2;
-	Sun, 24 Mar 2024 23:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A679A131185;
+	Sun, 24 Mar 2024 23:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323678; cv=none; b=PJV295vLiXNtkV2dXFiBvcFKdpq7+5kCLn31jKz9ZPUq6zRI7lNtfwmH7VgJIEbZV4eqOFH2lwCJNAP7uA+0El0XxoBR9AbrmvggCZa2gi0wkr8grR1csCisTQHK8PjbtHY6KFtIMvueJPFvR0IZJIxcB3qvRJxgH58XsRMIQng=
+	t=1711323682; cv=none; b=uXyT6ys7N8FPmqRO/OrHGB4DwLfZ/Fcw4PbBOOyS0emszGEj5wzygnKJ73AWyujMn9ldodse1Hf+U4yPqzTxgT3bwUiq4VaV6dU/6b6fwaM2LhGTUpWjtvgRqZGFQWZxMcC+ul6MvrlS3FKOjI8zxjqao6mcSslybajJxrOb7lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323678; c=relaxed/simple;
-	bh=ATb1YtUcp7NvYmx4HjbB58j2NBFLq651YIr/cfDjZ2Q=;
+	s=arc-20240116; t=1711323682; c=relaxed/simple;
+	bh=3W3lrsoiKgSnvKawyn3EkiTNZnvZyA3ktpieySWGVB4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UHs2eox909DExnAPdNPAZAaTOIgSBOiq1QcudAZ5GuUW4nmCZhcjoaVn297ZbW2csBN58k1ZiWdtc3tkGKCVVk7iMn2q1X1FA2SqUGCY9jSNF1AMzhE+JpReLXqTnR96kxoKZjsWQjryGPfHOz5ZDa2iwzw9+QrsYxEohCYhCy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTo2cz4C; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=KsULYoXOtQmJsZbaLHE57GstOhvsG3cvg+gKXyZqH8w3+zFh/TJ1ViWqnprBRZzG/uRweLD4YLJR+zybEyaVSIRx0SPcUcRJCuc2SXGHZYXM5Y1me4WWpdhqlPIcUXsC51R2+t4bgxVj14aAZqk/IFk7KFexlsdhRIrbhANa0TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SN4ROJxG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTo2cz4C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 528D1C43394;
-	Sun, 24 Mar 2024 23:41:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SN4ROJxG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71252C433A6;
+	Sun, 24 Mar 2024 23:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323676;
-	bh=ATb1YtUcp7NvYmx4HjbB58j2NBFLq651YIr/cfDjZ2Q=;
+	s=k20201202; t=1711323681;
+	bh=3W3lrsoiKgSnvKawyn3EkiTNZnvZyA3ktpieySWGVB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XTo2cz4CepZh4/QJ1jNhWq/HWW1rI9SIz3UeiyDQsuQpp6QvFgkpP6QDvUMHlsiJ9
-	 11MEnR8YSkuP96dLAfVn/tfm4Z14tdBJUuXcRwmQJ/6jhKkEGpwprK/DsHNmyajWuc
-	 MfhSuBYsa+11ecIMfPS5XwQdX7BX3gg7xKUM7pyvFhIn87wiPIqwvFfB8XOrh19c0e
-	 gemDy3mtGoWscOWsbVZubBPaFKP8J+VHDritKniQo6j54D+RC/aKNUkdGt87nReo/5
-	 lE30buOKfPJ/Z5AebVqzaLuG4Vb7YYCSK6nxPS3F06BImsLh8zQkt6p0srGRPm4bve
-	 GBbCDqJ2b0sZg==
+	b=SN4ROJxGPw6f4yvyik0ZJSXGu9KlCT/5C4c0BFmdSd+yIkeRjgsEE5tW1btkFFppP
+	 h6xIh+txxbE6HVLEnQlNtsMg8qu2CoQdNINsM8ru1olUmPnQ9nfRHK49huTqi0JveL
+	 BQX1F1CCHIAKHoSh82mo3KoZcluc4qrASe5w+UqJbbsUPHafXiNaBVFF3/620Q0J17
+	 8gWHXKlTcOXjLAtQRSwwdDarIKghnjutVqhAkvkFiEpjLMhjNWXQej9sogtc378ezV
+	 5JQ6h0yDZzmbUd68FyTxHCvBN1pZN68zIa+I2Q+YKKakVWf6ZQ1yjuj5rQW0L5n+Kl
+	 NuzteogEJu7qQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Quentin Monnet <quentin@isovalent.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 049/238] ARM: dts: renesas: r8a73a4: Fix external clocks and clock rate
-Date: Sun, 24 Mar 2024 19:37:17 -0400
-Message-ID: <20240324234027.1354210-50-sashal@kernel.org>
+Subject: [PATCH 5.10 053/238] bpftool: Silence build warning about calloc()
+Date: Sun, 24 Mar 2024 19:37:21 -0400
+Message-ID: <20240324234027.1354210-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,77 +51,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 090c4094574705b0afc7d37825cdc5d06f0e7e02 ]
+[ Upstream commit f5f30386c78105cba520e443a6a9ee945ec1d066 ]
 
-External clocks should be defined as zero-Hz clocks in the SoC .dtsi,
-and overridden in the board .dts when present.
+There exists the following warning when building bpftool:
 
-Correct the clock rate of extal1 from 25 to 26 MHz, to match the crystal
-oscillator present on the APE6-EVM board.
+  CC      prog.o
+prog.c: In function ‘profile_open_perf_events’:
+prog.c:2301:24: warning: ‘calloc’ sizes specified with ‘sizeof’ in the earlier argument and not in the later argument [-Wcalloc-transposed-args]
+ 2301 |                 sizeof(int), obj->rodata->num_cpu * obj->rodata->num_metric);
+      |                        ^~~
+prog.c:2301:24: note: earlier argument should specify number of elements, later size of each element
 
-Fixes: a76809a329d6ebae ("ARM: shmobile: r8a73a4: Common clock framework DT description")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Link: https://lore.kernel.org/r/1692bc8cd465d62168cbf110522ad62a7af3f606.1705315614.git.geert+renesas@glider.be
+Tested with the latest upstream GCC which contains a new warning option
+-Wcalloc-transposed-args. The first argument to calloc is documented to
+be number of elements in array, while the second argument is size of each
+element, just switch the first and second arguments of calloc() to silence
+the build warning, compile tested only.
+
+Fixes: 47c09d6a9f67 ("bpftool: Introduce "prog profile" command")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+Link: https://lore.kernel.org/bpf/20240116061920.31172-1-yangtiezhu@loongson.cn
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a73a4-ape6evm.dts | 12 ++++++++++++
- arch/arm/boot/dts/r8a73a4.dtsi        |  9 ++++++---
- 2 files changed, 18 insertions(+), 3 deletions(-)
+ tools/bpf/bpftool/prog.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-index b088e8e351d54..1028f721b38b0 100644
---- a/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-+++ b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
-@@ -208,6 +208,18 @@ &cmt1 {
- 	status = "okay";
- };
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index d2bcce627b320..d07996e7952f3 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -1946,7 +1946,7 @@ static int profile_open_perf_events(struct profiler_bpf *obj)
+ 	int map_fd;
  
-+&extal1_clk {
-+	clock-frequency = <26000000>;
-+};
-+
-+&extal2_clk {
-+	clock-frequency = <48000000>;
-+};
-+
-+&extalr_clk {
-+	clock-frequency = <32768>;
-+};
-+
- &pfc {
- 	scifa0_pins: scifa0 {
- 		groups = "scifa0_data";
-diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-index e5fb1ce261f72..bcde8d1005976 100644
---- a/arch/arm/boot/dts/r8a73a4.dtsi
-+++ b/arch/arm/boot/dts/r8a73a4.dtsi
-@@ -494,17 +494,20 @@ clocks {
- 		extalr_clk: extalr {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
--			clock-frequency = <32768>;
-+			/* This value must be overridden by the board. */
-+			clock-frequency = <0>;
- 		};
- 		extal1_clk: extal1 {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
--			clock-frequency = <25000000>;
-+			/* This value must be overridden by the board. */
-+			clock-frequency = <0>;
- 		};
- 		extal2_clk: extal2 {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
--			clock-frequency = <48000000>;
-+			/* This value must be overridden by the board. */
-+			clock-frequency = <0>;
- 		};
- 		fsiack_clk: fsiack {
- 			compatible = "fixed-clock";
+ 	profile_perf_events = calloc(
+-		sizeof(int), obj->rodata->num_cpu * obj->rodata->num_metric);
++		obj->rodata->num_cpu * obj->rodata->num_metric, sizeof(int));
+ 	if (!profile_perf_events) {
+ 		p_err("failed to allocate memory for perf_event array: %s",
+ 		      strerror(errno));
 -- 
 2.43.0
 
