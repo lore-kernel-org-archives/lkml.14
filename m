@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E97130E4F;
-	Sun, 24 Mar 2024 23:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BEF1E6F7E;
+	Sun, 24 Mar 2024 23:03:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321387; cv=none; b=uBsruswLsqu9o6Oie4DdikcMar7NPT7e1jAO5TF696wOp20eQyNo28FdJYyIREJ+Su0jbheiKQ9jMHULK7i0Kkr6g5cyJ5FqiQ8QUr854+MMk7g7I3bEFZsf8TSE9B1CLyTMVJc639F7et2gaAsG9kilC8nCdo7M6Zvh6NcU4a8=
+	t=1711321389; cv=none; b=HYn6zIMOTl/lsoDxvT1V40FyKWs7z4PRdWUytZSTIA7SOqXrnjmKTq1tT2qDUrxrIh4ta4wHkWmfMjgXe/mfYh//q9ew6dZ3DnP79sp7EJgjQAQVDEmLQvsKNTY7lM/c2GZFbUyt0xxVy1FygjchUOg63hui4GO9smhTUEmQ0e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321387; c=relaxed/simple;
-	bh=4NV8jozK46/fbyAfW2dcGTbTjJRTkGsTkxZjNikSahs=;
+	s=arc-20240116; t=1711321389; c=relaxed/simple;
+	bh=kFJjxiqC/e/Tnxf4UKSvVVOgXrGXwDn98yQoBSlLLL8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YREyFmzZqVl/1M517H1wDy+F1el1qzxKYXY1GgcBahG8keNT0p15Vyqg8WtcxzCYg6E1rQ0CcTqKdBZbxVD1yahmkhf2apN7ERWJBvlRCZ9eQzoYXRAIHkkmiNQm7ifGJ2/Kx92hodPqGI0XdJzPZKx/bBvfzy5Qiw4McJVHbh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TBleWQRa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gotzBAMUdyzasYeYo6HXp2z2ALjTfSu6tOBMD+poODjibwskaDWX/kj89Gx8zscZUT5Qz9xYJU8FL/MSZVJGzxCCgDcSZ5ltYNkmPtbSk3CN7w0Uu2hGB5/YNFUMmo986Od3kymynHwVj4uYSMVWJwu3ErA9eYT2RX43CISHskk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lg9PoFm0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TBleWQRa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2B84C433C7;
-	Sun, 24 Mar 2024 23:03:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lg9PoFm0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE1F6C433F1;
+	Sun, 24 Mar 2024 23:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321386;
-	bh=4NV8jozK46/fbyAfW2dcGTbTjJRTkGsTkxZjNikSahs=;
+	s=k20201202; t=1711321388;
+	bh=kFJjxiqC/e/Tnxf4UKSvVVOgXrGXwDn98yQoBSlLLL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TBleWQRaxfS+IKZZMLWOfb0MgXftmX6Ab9bn92Zy9F7Zt5U4KlRZ2Rv0JB6Hjsez7
-	 +nYkL4MdW6Oxr7vWIzXFcuWS7x5NZsTrYTcipa8P8cl4Wh6fKfo1hvR5n8qioj5rKa
-	 VQYzyI9UVkde/A3KKYu4grb+sfTaSKPYgafN30qKagV1uTZVaLvuKd9La5cAT1freS
-	 CCM1GqT7OLwD8aABX8h6DDniSvSorVHlYS8wXiZXYRchsPvmrw7djTnjyybGcecXyA
-	 tqBa/BnULQ9u8weddosq+canon+623Vhxt5LEJpSQjTZYcQdJuaFZohhfMQ58gr3kX
-	 H3+gm7TyCp0Sw==
+	b=lg9PoFm01V99AEBoIW7m67DUeeKWq7aPPDlIR9bGuZzLTLw3PjUhPNU84SzZAe6zT
+	 dX3ZkHk+22GFi6HP/7IUEAh+FkL13yvvwFE1inCqjwJeCZ4Pm85E9QRGVrzqatnt7q
+	 7oDiq/TLmbkivQWjmvLpfRV4tMHxTMWtMHDJOBm1D/Q0O9bZlUxTooXfvg/pKi0Wzv
+	 0KCTRFv+oYHFH+OL0a9BIYYMFmWIz6DPObCuj9RKWY649XnhPi+ftjXdH3qEguVUaS
+	 FO84tfMi9loruOR2tGQrFxgZKrG0R9s1Fo+xTFoS/Hb6kKKiJxEockdw+VaYLIR0I4
+	 bGQv5ed1Y9WCw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Hilber <peter.hilber@opensynergy.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	John Stultz <jstultz@google.com>,
+Cc: Keisuke Nishimura <keisuke.nishimura@inria.fr>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Ingo Molnar <mingo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 110/638] timekeeping: Fix cross-timestamp interpolation for non-x86
-Date: Sun, 24 Mar 2024 18:52:27 -0400
-Message-ID: <20240324230116.1348576-111-sashal@kernel.org>
+Subject: [PATCH 6.6 112/638] sched/fair: Take the scheduling domain into account in select_idle_core()
+Date: Sun, 24 Mar 2024 18:52:29 -0400
+Message-ID: <20240324230116.1348576-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,56 +49,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Hilber <peter.hilber@opensynergy.com>
+From: Keisuke Nishimura <keisuke.nishimura@inria.fr>
 
-[ Upstream commit 14274d0bd31b4debf28284604589f596ad2e99f2 ]
+[ Upstream commit 23d04d8c6b8ec339057264659b7834027f3e6a63 ]
 
-So far, get_device_system_crosststamp() unconditionally passes
-system_counterval.cycles to timekeeping_cycles_to_ns(). But when
-interpolating system time (do_interp == true), system_counterval.cycles is
-before tkr_mono.cycle_last, contrary to the timekeeping_cycles_to_ns()
-expectations.
+When picking a CPU on task wakeup, select_idle_core() has to take
+into account the scheduling domain where the function looks for the CPU.
 
-On x86, CONFIG_CLOCKSOURCE_VALIDATE_LAST_CYCLE will mitigate on
-interpolating, setting delta to 0. With delta == 0, xtstamp->sys_monoraw
-and xtstamp->sys_realtime are then set to the last update time, as
-implicitly expected by adjust_historical_crosststamp(). On other
-architectures, the resulting nonsense xtstamp->sys_monoraw and
-xtstamp->sys_realtime corrupt the xtstamp (ts) adjustment in
-adjust_historical_crosststamp().
+This is because the "isolcpus" kernel command line option can remove CPUs
+from the domain to isolate them from other SMT siblings.
 
-Fix this by deriving xtstamp->sys_monoraw and xtstamp->sys_realtime from
-the last update time when interpolating, by using the local variable
-"cycles". The local variable already has the right value when
-interpolating, unlike system_counterval.cycles.
+This change replaces the set of CPUs allowed to run the task from
+p->cpus_ptr by the intersection of p->cpus_ptr and sched_domain_span(sd)
+which is stored in the 'cpus' argument provided by select_idle_cpu().
 
-Fixes: 2c756feb18d9 ("time: Add history to cross timestamp interface supporting slower devices")
-Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: John Stultz <jstultz@google.com>
-Link: https://lore.kernel.org/r/20231218073849.35294-4-peter.hilber@opensynergy.com
+Fixes: 9fe1f127b913 ("sched/fair: Merge select_idle_core/cpu()")
+Signed-off-by: Keisuke Nishimura <keisuke.nishimura@inria.fr>
+Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20240110131707.437301-2-keisuke.nishimura@inria.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/timekeeping.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ kernel/sched/fair.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index 4e9f2f88c9d6e..8aab7ed414907 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -1261,10 +1261,8 @@ int get_device_system_crosststamp(int (*get_time_fn)
- 				      tk_core.timekeeper.offs_real);
- 		base_raw = tk->tkr_raw.base;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index fed669ec72bce..69fe62126a28e 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7184,7 +7184,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
+ 		if (!available_idle_cpu(cpu)) {
+ 			idle = false;
+ 			if (*idle_cpu == -1) {
+-				if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, p->cpus_ptr)) {
++				if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, cpus)) {
+ 					*idle_cpu = cpu;
+ 					break;
+ 				}
+@@ -7192,7 +7192,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
+ 			}
+ 			break;
+ 		}
+-		if (*idle_cpu == -1 && cpumask_test_cpu(cpu, p->cpus_ptr))
++		if (*idle_cpu == -1 && cpumask_test_cpu(cpu, cpus))
+ 			*idle_cpu = cpu;
+ 	}
  
--		nsec_real = timekeeping_cycles_to_ns(&tk->tkr_mono,
--						     system_counterval.cycles);
--		nsec_raw = timekeeping_cycles_to_ns(&tk->tkr_raw,
--						    system_counterval.cycles);
-+		nsec_real = timekeeping_cycles_to_ns(&tk->tkr_mono, cycles);
-+		nsec_raw = timekeeping_cycles_to_ns(&tk->tkr_raw, cycles);
- 	} while (read_seqcount_retry(&tk_core.seq, seq));
- 
- 	xtstamp->sys_realtime = ktime_add_ns(base_real, nsec_real);
 -- 
 2.43.0
 
