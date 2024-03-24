@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6BC27BBB3;
-	Sun, 24 Mar 2024 23:38:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3AE27BBC7;
+	Sun, 24 Mar 2024 23:38:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323521; cv=none; b=MzshmxOYDcDvdvg2qTxGHyMXPEy9G581piEM5TW8DtbjljAVZYwCztc6w6tpZzexUtidq69xgGjV/iKcvngOQN8ivPONT2zEIGl1WseVwGZNQPmD0r01d5fRJ8j7nhPUJG9UkwlBq3Ai2oiXq2KKJQQCF1SBMBwZwcGrd32wLcE=
+	t=1711323523; cv=none; b=ZOhnbFUwxNdARr6SoQJeBRYcFJeabbzaoLFV/yM/A0e6hBYxX6fH0cE/glGnFx66x0zyEuUOgr91MOVGqUslHUDz6/2bCKeQ/hokFGDJzX0B6btTqOIYpPApsP0mmdVk+kgzt1teUK8qDqtX37E8Wht/TMHckQuqutFVRBHmH1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323521; c=relaxed/simple;
-	bh=myIllbPmWSYMqa2z/yZAREFiWRKzaKp/8Lpn3zjJYXM=;
+	s=arc-20240116; t=1711323523; c=relaxed/simple;
+	bh=idfjZKhQHj3/3yUOplbiREuNytkT88D2q/TdJlu9oJs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dx8Kqpq5qIK8e4Rwcm5d71XT9NIbJy6sOtHsKDjFKMPnDq2PJ1rGf6cN7FiWTH/D3+1crimXuHpDJLzEzJVpb41FmUdhryCbRUjDcuaW9wt/T9OWn1yxOhQmCsZzsthURNLSEGpAqPUysCChwzvwTK6mBdoafIvjK16ARulaKd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q+h3rSNz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=W9lqLJT33FO07/XlZvzQYN94Tjb65Jx8psgwShwYwPsCsNH2Q9edn+a+i27CmNsj5/JTXWsB/TVz/GjOewX7tunKu3z9bCqvRUg7D/5F31JWTa7YxK5jIu0BqSNYgfhw85FBM2Sq9IuT/PsU2/M+AXpQEYIpkY3nsBJrLPrDmGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PBLGgZHC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q+h3rSNz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C89CC43390;
-	Sun, 24 Mar 2024 23:38:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PBLGgZHC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59438C43394;
+	Sun, 24 Mar 2024 23:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323520;
-	bh=myIllbPmWSYMqa2z/yZAREFiWRKzaKp/8Lpn3zjJYXM=;
+	s=k20201202; t=1711323522;
+	bh=idfjZKhQHj3/3yUOplbiREuNytkT88D2q/TdJlu9oJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q+h3rSNz6XA6pm4rW4SrEIDmWr3zHMofjeT+VCG9pfMHkp67KhhBGjI7iYgmfEGU2
-	 V427XtxofUave6I6qAAFVm/rYkVQXj07nfUluh+1/Bokl9KsLmWvHvUsOg9wT3EQFk
-	 w2HdwNUoA9DaFXMOscPj9gYsyVMbsdZVQoh4aMorp94WDPOAIda46UHHV25pPxMwBH
-	 R5rxALyA3Y/cr40N6bR+9yX3fzbSuUlF/SP6BYBw1pk6l0NrCpQ3ELEXlKQqgB++lC
-	 QZ1EDyPikvkx5JH8ggMWeIALBNJgkT2MsjYUyQ9g20b7/pgSOTn8pMRaBF4sijoqrE
-	 7ubXaivm9MKLA==
+	b=PBLGgZHCOcS7hwMFZNxUvxpCIbbu/EMIc99AZqIZXLrQ90yzB8qVp6TB1gOKkk1bD
+	 Zv2w2uX4Pz3yrFptjhF20Fkoam/6X2q4AQinjsGPKUTDIXKDzfnIFJlWAlTqMVGfir
+	 2lLDmjc8QISm8LpWhDB+FAchJ+lkMLOgDcVlHzQewZHbB99IG8yKn44uNHjgjQ9gjF
+	 R7QZ257inkWPYvbbgSuyI4m8dVs3oIrX0u4bmZ4hmh62iw2SiGskT29ox+iQhAbLZ1
+	 cqg3oxJINWzianaVs0UF2FDRyN8ENPiq0fLJpCcUJ9iqukCBUucnGXtO3x7DOeiTGy
+	 Zpdehfh3O7qcw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Jammy Zhou <Jammy.Zhou@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 227/317] ASoC: meson: axg-tdm-interface: add frame rate constraint
-Date: Sun, 24 Mar 2024 19:33:27 -0400
-Message-ID: <20240324233458.1352854-228-sashal@kernel.org>
+Subject: [PATCH 5.15 229/317] drm/amdgpu: Fix missing break in ATOM_ARG_IMM Case of atom_get_src_int()
+Date: Sun, 24 Mar 2024 19:33:29 -0400
+Message-ID: <20240324233458.1352854-230-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -44,88 +46,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit 59c6a3a43b221cc2a211181b1298e43b2c2df782 ]
+[ Upstream commit 7cf1ad2fe10634238b38442a851d89514cb14ea2 ]
 
-According to Amlogic datasheets for the SoCs supported by this driver, the
-maximum bit clock rate is 100MHz.
+Missing break statement in the ATOM_ARG_IMM case of a switch statement,
+adds the missing break statement, ensuring that the program's control
+flow is as intended.
 
-The tdm interface allows the rates listed by the DAI driver, regardless of
-the number slots or their width. However, these will impact the bit clock
-rate.
+Fixes the below:
+drivers/gpu/drm/amd/amdgpu/atom.c:323 atom_get_src_int() warn: ignoring unreachable code.
 
-Hitting the 100MHz limit is very unlikely for most use cases but it is
-possible.
-
-For example with 32 slots / 32 bits wide, the maximum rate is no longer
-384kHz but ~96kHz.
-
-Add the constraint accordingly if the component is not already active.
-If it is active, the rate is already constrained by the first stream rate.
-
-Fixes: d60e4f1e4be5 ("ASoC: meson: add tdm interface driver")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://msgid.link/r/20240223175116.2005407-3-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Cc: Jammy Zhou <Jammy.Zhou@amd.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/axg-tdm-interface.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/atom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
-index ac43a7ab7bcf6..60d132ab1ab78 100644
---- a/sound/soc/meson/axg-tdm-interface.c
-+++ b/sound/soc/meson/axg-tdm-interface.c
-@@ -12,6 +12,9 @@
- 
- #include "axg-tdm.h"
- 
-+/* Maximum bit clock frequency according the datasheets */
-+#define MAX_SCLK 100000000 /* Hz */
-+
- enum {
- 	TDM_IFACE_PAD,
- 	TDM_IFACE_LOOPBACK,
-@@ -155,19 +158,27 @@ static int axg_tdm_iface_startup(struct snd_pcm_substream *substream,
- 		return -EINVAL;
- 	}
- 
--	/* Apply component wide rate symmetry */
- 	if (snd_soc_component_active(dai->component)) {
-+		/* Apply component wide rate symmetry */
- 		ret = snd_pcm_hw_constraint_single(substream->runtime,
- 						   SNDRV_PCM_HW_PARAM_RATE,
- 						   iface->rate);
--		if (ret < 0) {
--			dev_err(dai->dev,
--				"can't set iface rate constraint\n");
--			return ret;
--		}
-+
-+	} else {
-+		/* Limit rate according to the slot number and width */
-+		unsigned int max_rate =
-+			MAX_SCLK / (iface->slots * iface->slot_width);
-+		ret = snd_pcm_hw_constraint_minmax(substream->runtime,
-+						   SNDRV_PCM_HW_PARAM_RATE,
-+						   0, max_rate);
- 	}
- 
--	return 0;
-+	if (ret < 0)
-+		dev_err(dai->dev, "can't set iface rate constraint\n");
-+	else
-+		ret = 0;
-+
-+	return ret;
- }
- 
- static int axg_tdm_iface_set_stream(struct snd_pcm_substream *substream,
+diff --git a/drivers/gpu/drm/amd/amdgpu/atom.c b/drivers/gpu/drm/amd/amdgpu/atom.c
+index 6fa2229b72292..c279718d22fba 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atom.c
++++ b/drivers/gpu/drm/amd/amdgpu/atom.c
+@@ -311,7 +311,7 @@ static uint32_t atom_get_src_int(atom_exec_context *ctx, uint8_t attr,
+ 				DEBUG("IMM 0x%02X\n", val);
+ 			return val;
+ 		}
+-		return 0;
++		break;
+ 	case ATOM_ARG_PLL:
+ 		idx = U8(*ptr);
+ 		(*ptr)++;
 -- 
 2.43.0
 
