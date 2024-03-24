@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFC322E7F3;
-	Sun, 24 Mar 2024 23:51:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC3422E7E6;
+	Sun, 24 Mar 2024 23:51:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324303; cv=none; b=poCgRhD2Dobz9/YF932BQaljxbVKGU+hDe6u7mtbbuzzbQLSq1FoxPfniDa6pbpsKpAmxTG+bgEEktmIOSERtkIq89qTqKh5YXZaEfmQBpeRtq4BSW0AUJcglG2CdWV0VppimX0EXa5vbP8I3pebyF8i0DphLMQyKGLWdFCezKo=
+	t=1711324302; cv=none; b=RSpBImAslAMk/jStax10anGeeeY0/m0MCc00Rh9cebkbHVVIVSbVwb+cYe4z9Eugm2LMkBjSdKoTSSaOIapyj3Ga654jVQYY78+unpMH0TqpJGjD7rwPb3NxcYXq6XrJ9MYVeMPOK1sL3ZfjxR7yebFlHkiKXv0EKZO4EcZrits=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324303; c=relaxed/simple;
-	bh=6gbpBif9goTkU8krONbkMQJBzcRlkeg/lr9CK6CErfM=;
+	s=arc-20240116; t=1711324302; c=relaxed/simple;
+	bh=b1ImpgjqeU3iPayTihEvHsUtn/HigkooHHkmMme9Wzo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IDU+xAiFA7SuCUKI/1xyorLgcLWynW6g5+OT4bx0lKE4QAFCgIYKx8+6PCugnhe7buUL8/+MEnkRiUX5pYj9d6DYY3ySxw43ec0oh/eBL8edwasWfQaVhbLUUKps8N2L6e5XXJqdTQApgTqWfXqFOMhawwlNeEtZfHnnkvRV87c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NmAUavp5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JJi9eLsCAr6UvqWZ6Op/5gCPgMC8EmponONlGk6HEpB/uEjnHSh8uZwqRGcMEcOToOB/udRynIG7HGl/Ji73fu2c0cc+kAgfNOzFKmXccNGAkHbpWHq+OKy0+uoAwAOBkb7Lq3qJ2zVYo9wBH9CbTExKy3MLkIVUm8QWcTUykd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qpqjwLpb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NmAUavp5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD52AC433F1;
-	Sun, 24 Mar 2024 23:51:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qpqjwLpb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D61AFC43390;
+	Sun, 24 Mar 2024 23:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324303;
-	bh=6gbpBif9goTkU8krONbkMQJBzcRlkeg/lr9CK6CErfM=;
+	s=k20201202; t=1711324300;
+	bh=b1ImpgjqeU3iPayTihEvHsUtn/HigkooHHkmMme9Wzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NmAUavp5225H+Qc6XrjoqP43EfTkxZHXUgs/aGeTwufKoI6/stDrOLJh4DbbjmHLg
-	 u7Xjee+O11oJ0Kb5Dn09TJ86OxUgMa/QgszFBKuc6TcKX3UQIjBWg4r+XJJWAW5OpT
-	 rqGoyL++FjoSuFanD/YvIH4TqqQIMv1z1r574pLmkMx4iHG/2uoSc/ztQO9f4pLA+f
-	 DvGKvs2QoXaCXqGssWFNP7+nQ+C0hNFtp5J3qp3CrL5aBmo4ac29rj10xdVwquYWEI
-	 fUIvqvRHijfjeU1GhqwRJn9RhppkyilrPc/pCFpwDmcTmZvidRPmlr8Vx51PG3O1ud
-	 rq/2U+SlKlKOg==
+	b=qpqjwLpbsMnOQ0YugrrqOB1AfQjeRgTzrT6+/OX3VltmhqoDb0NmCfs+tnqPQk+Vz
+	 gJ73BUJpaig5BvjpWrMqtlMMqFKN363lwi7teND5e9tzfW2f6mFGDsZalZJzQ89ScM
+	 cxwsSm9jUB1NviF9EismtybaJIwQpdN2mE5C0ueEJaxdhcR2kciNumeY3Kdj2dVNO7
+	 i+2+BC91ZkEpbhwXIEC56NrQPH4w3v5SPdNtuSUYaFDjiiRKySwCJCXEOTBCUHAa9O
+	 O7jqTr/LneenG6/VHJSbdIVFrzc7lEPUu3/KzoCTUZc0rI/0eCC6w/l+EeCsaKXsbY
+	 00IEGLP3eG3bQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yang Jihong <yangjihong1@huawei.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Ian Rogers <irogers@google.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+	Quentin Schulz <foss+kernel@0leil.net>,
+	Heiko Stuebner <heiko@sntech.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 076/148] perf evsel: Fix duplicate initialization of data->id in evsel__parse_sample()
-Date: Sun, 24 Mar 2024 19:49:00 -0400
-Message-ID: <20240324235012.1356413-77-sashal@kernel.org>
+Subject: [PATCH 4.19 074/148] drm/rockchip: lvds: do not print scary message when probing defer
+Date: Sun, 24 Mar 2024 19:48:58 -0400
+Message-ID: <20240324235012.1356413-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -50,35 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yang Jihong <yangjihong1@huawei.com>
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-[ Upstream commit 4962aec0d684c8edb14574ccd0da53e4926ff834 ]
+[ Upstream commit 52d11c863ac92e36a0365249f7f6d27ac48c78bc ]
 
-data->id has been initialized at line 2362, remove duplicate initialization.
+This scary message can misled the user into thinking something bad has
+happened and needs to be fixed, however it could simply be part of a
+normal boot process where EPROBE_DEFER is taken into account. Therefore,
+let's use dev_err_probe so that this message doesn't get shown (by
+default) when the return code is EPROBE_DEFER.
 
-Fixes: 3ad31d8a0df2 ("perf evsel: Centralize perf_sample initialization")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240127025756.4041808-1-yangjihong1@huawei.com
+Fixes: 34cc0aa25456 ("drm/rockchip: Add support for Rockchip Soc LVDS")
+Cc: Quentin Schulz <foss+kernel@0leil.net>
+Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231120-rk-lvds-defer-msg-v2-2-9c59a5779cf9@theobroma-systems.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/evsel.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/rockchip/rockchip_lvds.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 11a2aa80802d5..0644ae23122cd 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2116,7 +2116,6 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
- 	data->period = evsel->attr.sample_period;
- 	data->cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
- 	data->misc    = event->header.misc;
--	data->id = -1ULL;
- 	data->data_src = PERF_MEM_DATA_SRC_NONE;
- 
- 	if (event->header.type != PERF_RECORD_SAMPLE) {
+diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+index 215885c780759..39a17c46dbf11 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
++++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+@@ -373,7 +373,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
+ 		ret = -EINVAL;
+ 		goto err_put_port;
+ 	} else if (ret) {
+-		DRM_DEV_ERROR(dev, "failed to find panel and bridge node\n");
++		dev_err_probe(dev, ret, "failed to find panel and bridge node\n");
+ 		goto err_put_port;
+ 	}
+ 	if (lvds->panel)
 -- 
 2.43.0
 
