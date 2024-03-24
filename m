@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579FC1272DD;
-	Sun, 24 Mar 2024 22:52:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266F6127B63;
+	Sun, 24 Mar 2024 22:52:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320764; cv=none; b=jvRmzPtLl3AMdVgZuafOud89+ta/1eRk88K5hbzZSM7B7pLhR8Yte/2AYf1rZX7ZQGYwN9L8EFaJ6QUBUbrEMWdBHiRwdjmlIUWNuHSGSQJAImfoMR9PpBeBdedTQvqF/xZOKbVlr9DMabt+CKhAJow4zqyMJlu5n1VUwrUWDAg=
+	t=1711320778; cv=none; b=UzTIKUITT92PcmCS9s0gxCpdrtfh2Pk5L/Wlso9Qov+fgsfs6Ke60YM5KnctYxOAvLSz7RvRW/vgvqilKvibnGP70Jc4LOjwVsCNLYdwBESVXI0My9n7Y9wGsy1g9eThDtiE2jw9QJBFGh68kVWHQcLLiuCYnGKeCxCTPZUrfTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320764; c=relaxed/simple;
-	bh=YNZbHaV8JW7SkCNxUeXarPC6P7Kv6wqn4pMipRrje38=;
+	s=arc-20240116; t=1711320778; c=relaxed/simple;
+	bh=5PFsaQlyqdwHk72k/+qjhy0XjH+8BI1+xj26NDsB7+s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OcS0VOjpRrwu4GsHqwtiQehORo7P6CsDS89zcDG3sJHui1H90WO2xf633zgHed4RjRE0bhQG5waiqYLvfK08KQxNYZ6TLJ74BAMNybBf1Mwo75j8tMQg55NvHIj0HfeWes1/ESPLSXr24akx4U0T0z8uS+Rs1+FFZZExhmJC0NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OG3IODSy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GIqRqgU+euOijDrj5mlwko4N6AH74m3GppbkQJUcVryFQS0Kd180PPeObVxv9E+Rm1oRQqoXUO+bfhK53qrpvaAdWs/iNSFkZFpeJoDaI3oDQbPqv2MDn/8GcBNuYx/Bi4HvjJtudpXBP+xbOCGuz5CdFe19Oisx6SMHfya5vDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqEGjE3l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OG3IODSy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EDE2C43399;
-	Sun, 24 Mar 2024 22:52:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqEGjE3l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34409C43390;
+	Sun, 24 Mar 2024 22:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320763;
-	bh=YNZbHaV8JW7SkCNxUeXarPC6P7Kv6wqn4pMipRrje38=;
+	s=k20201202; t=1711320778;
+	bh=5PFsaQlyqdwHk72k/+qjhy0XjH+8BI1+xj26NDsB7+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OG3IODSysIr0OO2eoVcUOfFdTvHYbT2s6aaDWWJm8CS/MXcRtj5GPdfDr/Z62PjUJ
-	 3yKL9zIzY70080i2V7fu380UJWChmRNvTDgTVjYN27viRbEkgtXREJB9hnzseTr1JW
-	 0ioXX9GalFu4tzM783n4p7Zyyn1HQRw5nUohJx0EGSxvTC1GhWfREQGdIi2mndJlsq
-	 Jt59IjlmSQ17roFHKHTxwy2C6F1JZHWpU3VQflODl/4zqxORfUYK0XnQxwM2cF1fHo
-	 6hBZR5cKOUdm5570yA6GZSXl0NSvzlzzQVurBdTvcYo3kdBvGMM62gfcnxuKEyBPMr
-	 a+0LLjpgIrWmg==
+	b=MqEGjE3luNu7cPLvvQA5Pbh3FRH0tqi0Sr9Ab6MBn80M8XHxuh1VSFEmPMWqqhmgN
+	 oEHnKeNGsJTc59c9kmEfmzpVptRNuX2EECT3iCNLhRzhP/n8ZC+sHjlLi1+ktS+5pP
+	 wc/wETHdbXqI8HlGF6sBJGLaLgKuvUkV9JjalnFHNBn2EnTqgRhfrGCXGADWzrIEEa
+	 7Utfwt1npYE+CJQ1E4Up0vSwnUjcwkB1iGlWks8p/aXVvkoBIP1lc65DtTGZERgspu
+	 5q6Lo5F+q3KCpYn5Nj74xfWXq6vvaWorzfs8xhvrrTYSmTgznC6r8XrSZUfoDaTOaL
+	 xlVq8dv637xyg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	kernel test robot <lkp@intel.com>,
-	Kees Cook <keescook@chromium.org>,
+Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 327/713] objtool: Fix UNWIND_HINT_{SAVE,RESTORE} across basic blocks
-Date: Sun, 24 Mar 2024 18:40:53 -0400
-Message-ID: <20240324224720.1345309-328-sashal@kernel.org>
+Subject: [PATCH 6.7 341/713] igb: Fix missing time sync events
+Date: Sun, 24 Mar 2024 18:41:07 -0400
+Message-ID: <20240324224720.1345309-342-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,52 +50,92 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 
-[ Upstream commit 10b4c4bce3f5541f54bcc2039720b11d2bc96d79 ]
+[ Upstream commit ee14cc9ea19ba9678177e2224a9c58cce5937c73 ]
 
-If SAVE and RESTORE unwind hints are in different basic blocks, and
-objtool sees the RESTORE before the SAVE, it errors out with:
+Fix "double" clearing of interrupts, which can cause external events
+or timestamps to be missed.
 
-  vmlinux.o: warning: objtool: vmw_port_hb_in+0x242: objtool isn't smart enough to handle this CFI save/restore combo
+The E1000_TSIRC Time Sync Interrupt Cause register can be cleared in two
+ways, by either reading it or by writing '1' into the specific cause
+bit. This is documented in section 8.16.1.
 
-In such a case, defer following the RESTORE block until the
-straight-line path gets followed later.
+The following flow was used:
+    1. read E1000_TSIRC into 'tsicr';
+    2. handle the interrupts present into 'tsirc' and mark them in 'ack';
+    3. write 'ack' into E1000_TSICR;
 
-Fixes: 8faea26e6111 ("objtool: Re-add UNWIND_HINT_{SAVE_RESTORE}")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402240702.zJFNmahW-lkp@intel.com/
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Link: https://lore.kernel.org/r/20240227073527.avcm5naavbv3cj5s@treble
-Signed-off-by: Kees Cook <keescook@chromium.org>
+As both (1) and (3) will clear the interrupt cause, if the same
+interrupt happens again between (1) and (3) it will be ignored,
+causing events to be missed.
+
+Remove the extra clear in (3).
+
+Fixes: 00c65578b47b ("igb: enable internal PPS for the i210")
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Tested-by: Pucha Himasekhar Reddy <himasekharx.reddy.pucha@intel.com> (A Contingent worker at Intel)
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/net/ethernet/intel/igb/igb_main.c | 23 +++++------------------
+ 1 file changed, 5 insertions(+), 18 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index e94756e09ca9f..167603f839851 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -3620,6 +3620,18 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 				}
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index b2295caa2f0ab..ada42ba635498 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -6984,44 +6984,31 @@ static void igb_extts(struct igb_adapter *adapter, int tsintr_tt)
+ static void igb_tsync_interrupt(struct igb_adapter *adapter)
+ {
+ 	struct e1000_hw *hw = &adapter->hw;
+-	u32 ack = 0, tsicr = rd32(E1000_TSICR);
++	u32 tsicr = rd32(E1000_TSICR);
+ 	struct ptp_clock_event event;
  
- 				if (!save_insn->visited) {
-+					/*
-+					 * If the restore hint insn is at the
-+					 * beginning of a basic block and was
-+					 * branched to from elsewhere, and the
-+					 * save insn hasn't been visited yet,
-+					 * defer following this branch for now.
-+					 * It will be seen later via the
-+					 * straight-line path.
-+					 */
-+					if (!prev_insn)
-+						return 0;
-+
- 					WARN_INSN(insn, "objtool isn't smart enough to handle this CFI save/restore combo");
- 					return 1;
- 				}
+ 	if (tsicr & TSINTR_SYS_WRAP) {
+ 		event.type = PTP_CLOCK_PPS;
+ 		if (adapter->ptp_caps.pps)
+ 			ptp_clock_event(adapter->ptp_clock, &event);
+-		ack |= TSINTR_SYS_WRAP;
+ 	}
+ 
+ 	if (tsicr & E1000_TSICR_TXTS) {
+ 		/* retrieve hardware timestamp */
+ 		schedule_work(&adapter->ptp_tx_work);
+-		ack |= E1000_TSICR_TXTS;
+ 	}
+ 
+-	if (tsicr & TSINTR_TT0) {
++	if (tsicr & TSINTR_TT0)
+ 		igb_perout(adapter, 0);
+-		ack |= TSINTR_TT0;
+-	}
+ 
+-	if (tsicr & TSINTR_TT1) {
++	if (tsicr & TSINTR_TT1)
+ 		igb_perout(adapter, 1);
+-		ack |= TSINTR_TT1;
+-	}
+ 
+-	if (tsicr & TSINTR_AUTT0) {
++	if (tsicr & TSINTR_AUTT0)
+ 		igb_extts(adapter, 0);
+-		ack |= TSINTR_AUTT0;
+-	}
+ 
+-	if (tsicr & TSINTR_AUTT1) {
++	if (tsicr & TSINTR_AUTT1)
+ 		igb_extts(adapter, 1);
+-		ack |= TSINTR_AUTT1;
+-	}
+-
+-	/* acknowledge the interrupts */
+-	wr32(E1000_TSICR, ack);
+ }
+ 
+ static irqreturn_t igb_msix_other(int irq, void *data)
 -- 
 2.43.0
 
