@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAF91F4167;
-	Sun, 24 Mar 2024 22:59:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9DF14BFBB;
+	Sun, 24 Mar 2024 22:59:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321147; cv=none; b=TPiVHMg7YxGVX1lOdNx9rAZtIWyfoIs+WrtRW4xIz7pqb21K43hqUVmp++gztT6kwrGQ+HIZNzeZhHTW6U3bNKoLzTdOqLdHRWV3ole7wb0G+xL4pnuPseToPrortZNpzXCvozSyaNQB0tWx6ZsGsfauyTI3uyivhF+rkiQnwHY=
+	t=1711321143; cv=none; b=l/yEsCnyTTg3TPKa3h80LFpxhJIzql4SKonIzjM8+PbB7KwBxTgYoRG7g318HDvHnH0NHO9SR8Eo8S9iuuYBGfO7czrPJdv6jkmXmed7j/xhlSHc6aTOLe/WrynT3hshcZW5/3FugCYjJbOeuoj8u9yoPX08dVaoVlfWkTA5Oaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321147; c=relaxed/simple;
-	bh=90Uqm9QF4FUxa1GZXRDF0mBH1f1Bbm0BPJYWcT65jps=;
+	s=arc-20240116; t=1711321143; c=relaxed/simple;
+	bh=3vQoBjkWrEZW+KNq//2LOSBjgnvZ71cIKCXkbqSyVwY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AbQtZZPvZna03TDlV53MZl/RtnTMP+CPTbfY/dW/qvpN22rlTXMx39Ipit/2NHF1od2WLDiDdbpx5shTb6y5cSfLGqpJ162CBfHVkMWoJniDcFiEC+4Nl+shXAGPYhGO3GjVy6Xb0drp92JubfHi20duYkIrMRyfxNDaWTNJtwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FEjOdZG+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=E25xtPQ/sN7bj2aaK3yWbMzT6Ewns2DFtzas98Tq86d1bsA+LP7xE17K5Gc8aPluzexQN4nqJkl7i4CXF0fRnYHf6Zzv4XOFvaa04baXtdpFNDXUDGGwdXiVJq7bIJnXntKLka7vexAe5yxfR6rKcG6A2SN6tft6EyTFg0ScIqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDmanbIh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FEjOdZG+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC735C43390;
-	Sun, 24 Mar 2024 22:59:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDmanbIh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEFD0C433C7;
+	Sun, 24 Mar 2024 22:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321146;
-	bh=90Uqm9QF4FUxa1GZXRDF0mBH1f1Bbm0BPJYWcT65jps=;
+	s=k20201202; t=1711321143;
+	bh=3vQoBjkWrEZW+KNq//2LOSBjgnvZ71cIKCXkbqSyVwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FEjOdZG+Fk8y88d7RwtMP3EBUEABuPlGtWBSY1DH2zrV3Y7eLz+CeUL40prt0hwAT
-	 maT3FcKZHIbskWUnbemsB4RVPMq+qoUyRiRxlaz0voSZQ1PvLJjZge5W7ie99hgIT2
-	 I08xwCSUIAUeDJqA0JTbGxYli5DT8pNhPZkVnYnc1gtIbfgxXJ89xMAOo87TLru/Fn
-	 tqlIpvLtb98GqQf2pezlIfwTss8bmd8FzIWcAO7QzZ/HdzCarQuSZ58RdCd1Xxw4LC
-	 onzPiKf98fbeJ35ZvXnos2bERGvzdH2+p37bkoVTfweFABekXXq2K3sz4vN4S06/GK
-	 arV+X17vwHEWw==
+	b=eDmanbIh4bX7Aw5Fp/grWdbM+nILfMRLdsSabcH9cv7N8MGSo6lEhQ/Iq1ffrrlOT
+	 kQ2vOcW9wbkU+YantJiz0GFIVgRCMiRC4+qu4jwLnG6bgjZt+6txkQf2FVUSrMi6+q
+	 T+CEANcu0o82rGPhUEplZ1gOxpStf6Y0dRdv5zr8yB8nV/nmGJ7FDyjzIWo9ZyvbcP
+	 QRF2atJtsQW/q9swFNA8ZRxrG5c14x8ReQe50Asu3toH2EpxQdY9zRTa+n8WzIi8zh
+	 qr9Xq29E6ydPTz5L+0aBFFN0et9Ip3RR4l56TunZUi/YeP5mlHZFEG4H3NT5HK0kG7
+	 nYxP1GlpJesCw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ido Schimmel <idosch@nvidia.com>,
+Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
 	Paolo Abeni <pabeni@redhat.com>,
-	Hangbin Liu <liuhangbin@gmail.com>,
-	Jiri Pirko <jiri@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 708/713] selftests: forwarding: Fix ping failure due to short timeout
-Date: Sun, 24 Mar 2024 18:47:14 -0400
-Message-ID: <20240324224720.1345309-709-sashal@kernel.org>
+Subject: [PATCH 6.7 705/713] net: dsa: mt7530: fix handling of all link-local frames
+Date: Sun, 24 Mar 2024 18:47:11 -0400
+Message-ID: <20240324224720.1345309-706-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -46,89 +44,142 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ido Schimmel <idosch@nvidia.com>
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-[ Upstream commit e4137851d4863a9bdc6aabc613bcb46c06d91e64 ]
+[ Upstream commit 69ddba9d170bdaee1dc0eb4ced38d7e4bb7b92af ]
 
-The tests send 100 pings in 0.1 second intervals and force a timeout of
-11 seconds, which is borderline (especially on debug kernels), resulting
-in random failures in netdev CI [1].
+Currently, the MT753X switches treat frames with :01-0D and :0F MAC DAs as
+regular multicast frames, therefore flooding them to user ports.
 
-Fix by increasing the timeout to 20 seconds. It should not prolong the
-test unless something is wrong, in which case the test will rightfully
-fail.
+On page 205, section "8.6.3 Frame filtering" of the active standard, IEEE
+Std 802.1Q™-2022, it is stated that frames with 01:80:C2:00:00:00-0F as MAC
+DA must only be propagated to C-VLAN and MAC Bridge components. That means
+VLAN-aware and VLAN-unaware bridges. On the switch designs with CPU ports,
+these frames are supposed to be processed by the CPU (software). So we make
+the switch only forward them to the CPU port. And if received from a CPU
+port, forward to a single port. The software is responsible of making the
+switch conform to the latter by setting a single port as destination port
+on the special tag.
 
-[1]
- # selftests: net/forwarding: vxlan_bridge_1d_port_8472_ipv6.sh
- # INFO: Running tests with UDP port 8472
- # TEST: ping: local->local                                            [ OK ]
- # TEST: ping: local->remote 1                                         [FAIL]
- # Ping failed
- [...]
+This switch intellectual property cannot conform to this part of the
+standard fully. Whilst the REV_UN frame tag covers the remaining :04-0D and
+:0F MAC DAs, it also includes :22-FF which the scope of propagation is not
+supposed to be restricted for these MAC DAs.
 
-Fixes: b07e9957f220 ("selftests: forwarding: Add VxLAN tests with a VLAN-unaware bridge for IPv6")
-Fixes: 728b35259e28 ("selftests: forwarding: Add VxLAN tests with a VLAN-aware bridge for IPv6")
-Reported-by: Paolo Abeni <pabeni@redhat.com>
-Closes: https://lore.kernel.org/netdev/24a7051fdcd1f156c3704bca39e4b3c41dfc7c4b.camel@redhat.com/
-Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-Reviewed-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Link: https://lore.kernel.org/r/20240320065717.4145325-1-idosch@nvidia.com
+Set frames with :01-03 MAC DAs to be trapped to the CPU port(s). Add a
+comment for the remaining MAC DAs.
+
+Note that the ingress port must have a PVID assigned to it for the switch
+to forward untagged frames. A PVID is set by default on VLAN-aware and
+VLAN-unaware ports. However, when the network interface that pertains to
+the ingress port is attached to a vlan_filtering enabled bridge, the user
+can remove the PVID assignment from it which would prevent the link-local
+frames from being trapped to the CPU port. I am yet to see a way to forward
+link-local frames while preventing other untagged frames from being
+forwarded too.
+
+Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../testing/selftests/net/forwarding/vxlan_bridge_1d_ipv6.sh  | 4 ++--
- .../testing/selftests/net/forwarding/vxlan_bridge_1q_ipv6.sh  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/dsa/mt7530.c | 37 +++++++++++++++++++++++++++++++++----
+ drivers/net/dsa/mt7530.h | 13 +++++++++++++
+ 2 files changed, 46 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d_ipv6.sh b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d_ipv6.sh
-index ac97f07e5ce82..bd3f7d492af2b 100755
---- a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d_ipv6.sh
-+++ b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d_ipv6.sh
-@@ -354,7 +354,7 @@ __ping_ipv4()
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index f5b2535307652..e6b8bf6035565 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -998,6 +998,21 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+ 	mutex_unlock(&priv->reg_mutex);
+ }
  
- 	# Send 100 packets and verify that at least 100 packets hit the rule,
- 	# to overcome ARP noise.
--	PING_COUNT=100 PING_TIMEOUT=11 ping_do $dev $dst_ip
-+	PING_COUNT=100 PING_TIMEOUT=20 ping_do $dev $dst_ip
- 	check_err $? "Ping failed"
++/* On page 205, section "8.6.3 Frame filtering" of the active standard, IEEE Std
++ * 802.1Q™-2022, it is stated that frames with 01:80:C2:00:00:00-0F as MAC DA
++ * must only be propagated to C-VLAN and MAC Bridge components. That means
++ * VLAN-aware and VLAN-unaware bridges. On the switch designs with CPU ports,
++ * these frames are supposed to be processed by the CPU (software). So we make
++ * the switch only forward them to the CPU port. And if received from a CPU
++ * port, forward to a single port. The software is responsible of making the
++ * switch conform to the latter by setting a single port as destination port on
++ * the special tag.
++ *
++ * This switch intellectual property cannot conform to this part of the standard
++ * fully. Whilst the REV_UN frame tag covers the remaining :04-0D and :0F MAC
++ * DAs, it also includes :22-FF which the scope of propagation is not supposed
++ * to be restricted for these MAC DAs.
++ */
+ static void
+ mt753x_trap_frames(struct mt7530_priv *priv)
+ {
+@@ -1012,13 +1027,27 @@ mt753x_trap_frames(struct mt7530_priv *priv)
+ 		   MT753X_BPDU_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+ 		   MT753X_BPDU_CPU_ONLY);
  
- 	tc_check_at_least_x_packets "dev $rp1 egress" 101 10 100
-@@ -410,7 +410,7 @@ __ping_ipv6()
+-	/* Trap LLDP frames with :0E MAC DA to the CPU port(s) and egress them
+-	 * VLAN-untagged.
++	/* Trap frames with :01 and :02 MAC DAs to the CPU port(s) and egress
++	 * them VLAN-untagged.
++	 */
++	mt7530_rmw(priv, MT753X_RGAC1, MT753X_R02_EG_TAG_MASK |
++		   MT753X_R02_PORT_FW_MASK | MT753X_R01_EG_TAG_MASK |
++		   MT753X_R01_PORT_FW_MASK,
++		   MT753X_R02_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
++		   MT753X_R02_PORT_FW(MT753X_BPDU_CPU_ONLY) |
++		   MT753X_R01_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
++		   MT753X_BPDU_CPU_ONLY);
++
++	/* Trap frames with :03 and :0E MAC DAs to the CPU port(s) and egress
++	 * them VLAN-untagged.
+ 	 */
+ 	mt7530_rmw(priv, MT753X_RGAC2, MT753X_R0E_EG_TAG_MASK |
+-		   MT753X_R0E_PORT_FW_MASK,
++		   MT753X_R0E_PORT_FW_MASK | MT753X_R03_EG_TAG_MASK |
++		   MT753X_R03_PORT_FW_MASK,
+ 		   MT753X_R0E_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+-		   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY));
++		   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY) |
++		   MT753X_R03_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
++		   MT753X_BPDU_CPU_ONLY);
+ }
  
- 	# Send 100 packets and verify that at least 100 packets hit the rule,
- 	# to overcome neighbor discovery noise.
--	PING_COUNT=100 PING_TIMEOUT=11 ping6_do $dev $dst_ip
-+	PING_COUNT=100 PING_TIMEOUT=20 ping6_do $dev $dst_ip
- 	check_err $? "Ping failed"
+ static int
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index cef2af3f24d58..75bc9043c8c0a 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -73,12 +73,25 @@ enum mt753x_id {
+ #define  MT753X_BPDU_EG_TAG(x)		FIELD_PREP(MT753X_BPDU_EG_TAG_MASK, x)
+ #define  MT753X_BPDU_PORT_FW_MASK	GENMASK(2, 0)
  
- 	tc_check_at_least_x_packets "dev $rp1 egress" 101 100
-diff --git a/tools/testing/selftests/net/forwarding/vxlan_bridge_1q_ipv6.sh b/tools/testing/selftests/net/forwarding/vxlan_bridge_1q_ipv6.sh
-index d880df89bc8bd..e83fde79f40d0 100755
---- a/tools/testing/selftests/net/forwarding/vxlan_bridge_1q_ipv6.sh
-+++ b/tools/testing/selftests/net/forwarding/vxlan_bridge_1q_ipv6.sh
-@@ -457,7 +457,7 @@ __ping_ipv4()
++/* Register for :01 and :02 MAC DA frame control */
++#define MT753X_RGAC1			0x28
++#define  MT753X_R02_EG_TAG_MASK		GENMASK(24, 22)
++#define  MT753X_R02_EG_TAG(x)		FIELD_PREP(MT753X_R02_EG_TAG_MASK, x)
++#define  MT753X_R02_PORT_FW_MASK	GENMASK(18, 16)
++#define  MT753X_R02_PORT_FW(x)		FIELD_PREP(MT753X_R02_PORT_FW_MASK, x)
++#define  MT753X_R01_EG_TAG_MASK		GENMASK(8, 6)
++#define  MT753X_R01_EG_TAG(x)		FIELD_PREP(MT753X_R01_EG_TAG_MASK, x)
++#define  MT753X_R01_PORT_FW_MASK	GENMASK(2, 0)
++
+ /* Register for :03 and :0E MAC DA frame control */
+ #define MT753X_RGAC2			0x2c
+ #define  MT753X_R0E_EG_TAG_MASK		GENMASK(24, 22)
+ #define  MT753X_R0E_EG_TAG(x)		FIELD_PREP(MT753X_R0E_EG_TAG_MASK, x)
+ #define  MT753X_R0E_PORT_FW_MASK	GENMASK(18, 16)
+ #define  MT753X_R0E_PORT_FW(x)		FIELD_PREP(MT753X_R0E_PORT_FW_MASK, x)
++#define  MT753X_R03_EG_TAG_MASK		GENMASK(8, 6)
++#define  MT753X_R03_EG_TAG(x)		FIELD_PREP(MT753X_R03_EG_TAG_MASK, x)
++#define  MT753X_R03_PORT_FW_MASK	GENMASK(2, 0)
  
- 	# Send 100 packets and verify that at least 100 packets hit the rule,
- 	# to overcome ARP noise.
--	PING_COUNT=100 PING_TIMEOUT=11 ping_do $dev $dst_ip
-+	PING_COUNT=100 PING_TIMEOUT=20 ping_do $dev $dst_ip
- 	check_err $? "Ping failed"
- 
- 	tc_check_at_least_x_packets "dev $rp1 egress" 101 10 100
-@@ -522,7 +522,7 @@ __ping_ipv6()
- 
- 	# Send 100 packets and verify that at least 100 packets hit the rule,
- 	# to overcome neighbor discovery noise.
--	PING_COUNT=100 PING_TIMEOUT=11 ping6_do $dev $dst_ip
-+	PING_COUNT=100 PING_TIMEOUT=20 ping6_do $dev $dst_ip
- 	check_err $? "Ping failed"
- 
- 	tc_check_at_least_x_packets "dev $rp1 egress" 101 100
+ enum mt753x_bpdu_port_fw {
+ 	MT753X_BPDU_FOLLOW_MFC,
 -- 
 2.43.0
 
