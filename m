@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AE0145FE4;
-	Sun, 24 Mar 2024 23:14:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710A5145341;
+	Sun, 24 Mar 2024 23:13:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322041; cv=none; b=kbQa8Xydkhpn1uo8lKDkjWtNR4ZPRnTPoCma29CpKcBMb5uNOpVEG+jr56zyw0oE7Tcz0PSHhe181x8xiB/9VbHBMy8V/l/NR2ZXiva0JpaHx2yh8nR4SNPnWGglrdN/5zs5s8cFV9M4MmlAoi5jotTq146+YfyYi30niYIM7Lc=
+	t=1711321984; cv=none; b=pDipymZV0BgqGKoGtwasa+1FDLZoRGjQM0QQ464LTLFe9eO7gidyQEDxVs1hQtIAfBLEjv/O+eE3ed3qApfXcZlyFc/mZUivMnuRz3MvZQ9JFXgQ2uij5+x87g8KLCwo2JKga64Onb9PDdZ+qX2F5bcdO0WDIU33rMynz6PHLZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322041; c=relaxed/simple;
-	bh=hIfuZhCS2CO+ecIL9mNN2he8sfme3MBnMBCtGRadDRY=;
+	s=arc-20240116; t=1711321984; c=relaxed/simple;
+	bh=TIf3s6V5bENwoiLVAZ6jPbBX6LcknLpg34pqRGhwQso=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i44rYNb5SpxBGNWmk4k6IRDdJHUHVVuNlKFELPKGP2dvECWXQyG4tsDWUN1QttBahvRH+lIAftJg5L1XnX2FhxHXHI1BWjsIQYrtDn0QsX9Ndqf9piAqVXZrUp2d75eFKLMjVicZ7H+AYRR986SwN8WC/TqSFpy7r6jAvTYQkmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpIY1YlR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=J9LYUAWjJd6kWRqTpeN51qy1uxsQxopwx5XCJQ3LpcIE2kyR+4IipYqHfG1XwPP6iM76Ce0Ekkyc1s7UtIl3P+U4gV0stE7iszPfZI2pSk7OD/E2UZg95CFGF09SPvTWdqtBdbdmXewmsOBfHUT4m58RJRRDQM81P4DT/ufW3E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ilwrwybi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpIY1YlR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81997C433C7;
-	Sun, 24 Mar 2024 23:13:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ilwrwybi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0101C43399;
+	Sun, 24 Mar 2024 23:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322040;
-	bh=hIfuZhCS2CO+ecIL9mNN2he8sfme3MBnMBCtGRadDRY=;
+	s=k20201202; t=1711321984;
+	bh=TIf3s6V5bENwoiLVAZ6jPbBX6LcknLpg34pqRGhwQso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NpIY1YlR3qfSOPEPTS7fAywvwF1JjJGosm4RJqKCjwLGIyKfq2tigS9unYKlWDpj1
-	 F4vSRE6bIkHgucPI4N6xcAfZzkW8SdOgRm8R25NwK1QmD0bXW86jw3MNond7w1VoCd
-	 g34AMcuRDVKjM8WBiTMZAqZfyg7nS51ZOZwFvT5nuJ6EKWSpcULKR/TEowY/aWPIkD
-	 ljnLRmZ8mK1G/d7+wUZH3OUvgsiEKbk5Z3uCHF7WvXZ76XSBOZz1r3OJzxPVY/mHji
-	 Ufv8NmutTzmVb8UtGJVtX+XMm06Dq+7H24l4widv1slvXWjo5cB+zVYb79a1z326Un
-	 QbGTc1/EnicMA==
+	b=IlwrwybiE6iek3AdMs8CubEipBGUAocs7nlf6qMCk3juHz8bSzQlQJ+uXd/nMnZ3E
+	 NfkI8UqD14BlzNeQBAV9EQUAnMNNAQxpH8Ac6X5j4P1ufRKvTtiJv5U2DcO5ZE4z9V
+	 kt3c05w6W9A+o3MTWB8g2oh6N5EGOxEeBdqqtGu+sUmD5W/VJUxA1e4HTPeLSpoc4S
+	 5V7OKt5vsCZljI1VuLRn0l0JZBmPzJFhKBrgHkiLcC74m7HM8mo7SHjIJop3Dbg+Sd
+	 +x0jEfaij9p3B19P2Wz+sfZxbiZ2oJ8deLyggIcnLB+ulXIs10Qiy42nmpQpdCRTML
+	 OcLtcs+F6xaog==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 112/451] arm64: dts: imx8mm-kontron: Disable pull resistors for SD card signals on BL board
-Date: Sun, 24 Mar 2024 19:06:28 -0400
-Message-ID: <20240324231207.1351418-113-sashal@kernel.org>
+Subject: [PATCH 6.1 057/451] ASoC: wm8962: Fix up incorrect error message in wm8962_set_fll
+Date: Sun, 24 Mar 2024 19:05:33 -0400
+Message-ID: <20240324231207.1351418-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,77 +48,34 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Stuart Henderson <stuarth@opensource.cirrus.com>
 
-[ Upstream commit 008820524844326ffb3123cebceba1960c0ad0dc ]
+[ Upstream commit 96e202f8c52ac49452f83317cf3b34cd1ad81e18 ]
 
-Some signals have external pullup resistors on the board and don't need
-the internal ones to be enabled. Due to silicon errata ERR050080 let's
-disable the internal pull resistors whererever possible and prevent
-any unwanted behavior in case they wear out.
+Use source instead of ret, which seems to be unrelated and will always
+be zero.
 
-Fixes: 8668d8b2e67f ("arm64: dts: Add the Kontron i.MX8M Mini SoMs and baseboards")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
+Link: https://msgid.link/r/20240306161439.1385643-5-stuarth@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/freescale/imx8mm-kontron-bl.dts   | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ sound/soc/codecs/wm8962.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-index bffa0ea4aa46a..d54cddd65b526 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts
-@@ -314,40 +314,40 @@ MX8MM_IOMUXC_NAND_CE1_B_GPIO3_IO2		0x19
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index 806b69c9b2e36..d215e58c4a7b3 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -2933,7 +2933,7 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
+ 				    WM8962_FLL_FRC_NCO, WM8962_FLL_FRC_NCO);
+ 		break;
+ 	default:
+-		dev_err(component->dev, "Unknown FLL source %d\n", ret);
++		dev_err(component->dev, "Unknown FLL source %d\n", source);
+ 		return -EINVAL;
+ 	}
  
- 	pinctrl_usdhc2: usdhc2grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x190
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x90
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d0
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d0
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
- 
- 	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x194
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x94
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d4
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d4
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
- 
- 	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x196
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x96
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d6
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d6
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
- };
 -- 
 2.43.0
 
