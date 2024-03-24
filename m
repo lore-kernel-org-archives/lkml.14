@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2874E204FA3;
-	Sun, 24 Mar 2024 23:04:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20B22057D1;
+	Sun, 24 Mar 2024 23:04:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321475; cv=none; b=NEFWANY/ZZLvs0uE/MQIxOT3vwuf50hpoI8hx98MexElxYbBN6MED33an7gStVMKW5OMJ16t07B6glaguIajxXcV+x4qVhp7knQckpJCUegEJnwlyVurQDWR79+y2/8HOm6KHDzpk5Y3CjviduvQ0P5/MN09BNjBurMNs3B1LTA=
+	t=1711321485; cv=none; b=YQUsPO70I9m9bPwlHzotO5iRJ6M+geN9p7++iJnt7aQMknsqalfT77ApbDf2zdBveL+u1Re41Fg+gLtxFgVsvvF393sIm55SJcZZegwK1Hxi5cElNwZ2CFC11LLaucHo+2HbeOeJFEe44B8mTrczJctAEmiYolZVi5mXvGQf5IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321475; c=relaxed/simple;
-	bh=6czK7Hn3MnAD3YyAV5TfrDyAIetWQpDb15+Q7U90avU=;
+	s=arc-20240116; t=1711321485; c=relaxed/simple;
+	bh=/qCNevVVEggzTf1GpDuuZorY4cKNTJEWoKSpqvi5tJ4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jWt82T/n15AhyT+Owdq0WF4Kro4NwjuQMMqW0vbnUEcbKFoPkvUHz2ng+lW3slqbD2+0esVxknUqfkggrJC+ofLthvS6CASyzsnug0ZwUulJWTAyy+cJ7ioc8cI18HKdUVWAo9VOcL7TA9J1ArFvF+yyvdJloCaBcEC5sXy8fkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1X/D/wW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=tOMQBvdwtnTuC5vOF9QAWdiBdNfpUZeYH0CFMsjfCvWcu5w+bOCp3etLbimOzXkZIxSJRIDfExBOYBP8XbWB4SGnxzzljaDCtU7xvmDhYQSCoJpqi6V3ziZkQgLxpvFQqZQdNf/54VOoaIsuW7G9yavYShQTqUyKu0Gz6Yq2anU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPXpfyx6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1X/D/wW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E74C43390;
-	Sun, 24 Mar 2024 23:04:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPXpfyx6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8235DC43394;
+	Sun, 24 Mar 2024 23:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321475;
-	bh=6czK7Hn3MnAD3YyAV5TfrDyAIetWQpDb15+Q7U90avU=;
+	s=k20201202; t=1711321485;
+	bh=/qCNevVVEggzTf1GpDuuZorY4cKNTJEWoKSpqvi5tJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D1X/D/wW8CTHryYYqDDX+Ns6qQlR4NS9SNGywjDpuj+JSviAMIQtOkkMWM7h44fli
-	 oOhCGwTYbB/SyH9NmqXno5JlsJflNOjUr55EFUS2osVofDr2Wrh3qYg+55Po6XgeEs
-	 o3lUzMFt0X4TEMCzPuAVlOEJ9+Z+2a/W2oGEWbdP82VgB/2FDUqahHr3BCdRs9drW7
-	 XFEcc0mwlyyU19OHNJcqIkTZ7Xbjqbkp/QlvpXYcWeS67O8UMYiKjGihVQ0j7ocfjm
-	 dpTeF/Yl0W+iS49FjD5aF5V4+z6kWsocnPhMPPFPY0c9mlV/XG0R3jC3CQml969E/x
-	 yQYCdaHn/Frtw==
+	b=sPXpfyx64OGsq9Xqj5JYGsnbiVqg+YdRhQd2jObH7qncrk1HgZeZf83qbfHL04z1O
+	 Mk8togRqV+wNR1nwwQ/jhr/6m9+vcOXP8KEomvQAArt23gU+KyOcF5z4d8QtjCJuHI
+	 AGHfLN9bDe0Loxs25he1nDzbALu727gJJy5LCy2o1dkOvW7o6k1cbHXtxT/HeYJjat
+	 K8RWNkwrZ/hKUvJzQygjn7OVIhAjU+5uRUtJKdio9WNBDu0kIjPA4qRNJaEO6Dfu4V
+	 y+MtyyPbFbKRAxgZc1G+oxs71ybxlognTfcTZ7onEhFoNAz6bySp9+fjHapw3+CAfr
+	 jAEpPAbulw7RQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Fangrui Song <maskray@google.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
+Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Sam Shih <sam.shih@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 200/638] s390/vdso: drop '-fPIC' from LDFLAGS
-Date: Sun, 24 Mar 2024 18:53:57 -0400
-Message-ID: <20240324230116.1348576-201-sashal@kernel.org>
+Subject: [PATCH 6.6 210/638] arm64: dts: mediatek: mt7986: add "#reset-cells" to infracfg
+Date: Sun, 24 Mar 2024 18:54:07 -0400
+Message-ID: <20240324230116.1348576-211-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -45,68 +46,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nathan Chancellor <nathan@kernel.org>
+From: Rafał Miłecki <rafal@milecki.pl>
 
-[ Upstream commit 0628c03934187be33942580e10bb9afcc61adeed ]
+[ Upstream commit d993daff5962b2dd08f32a83bb1c0e5fa75732ea ]
 
-'-fPIC' as an option to the linker does not do what it seems like it
-should. With ld.bfd, it is treated as '-f PIC', which does not make
-sense based on the meaning of '-f':
+MT7986's Infrastructure System Configuration Controller includes reset
+controller. It can reset blocks as specified in the
+include/dt-bindings/reset/mt7986-resets.h . Add #reset-cells so it can
+be referenced properly.
 
-  -f SHLIB, --auxiliary SHLIB Auxiliary filter for shared object symbol table
+This fixes:
+arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dtb: infracfg@10001000: '#reset-cells' is a required property
+        from schema $id: http://devicetree.org/schemas/arm/mediatek/mediatek,infracfg.yaml#
 
-When building with ld.lld (currently under review in a GitHub pull
-request), it just errors out because '-f' means nothing and neither does
-'-fPIC':
-
-  ld.lld: error: unknown argument '-fPIC'
-
-'-fPIC' was blindly copied from CFLAGS when the vDSO stopped being
-linked with '$(CC)', it should not be needed. Remove it to clear up the
-build failure with ld.lld.
-
-Fixes: 2b2a25845d53 ("s390/vdso: Use $(LD) instead of $(CC) to link vDSO")
-Link: https://github.com/llvm/llvm-project/pull/75643
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Link: https://lore.kernel.org/r/20240130-s390-vdso-drop-fpic-from-ldflags-v1-1-094ad104fc55@kernel.org
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Fixes: 1f9986b258c2 ("arm64: dts: mediatek: add clock support for mt7986a")
+Cc: Sam Shih <sam.shih@mediatek.com>
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Link: https://lore.kernel.org/r/20240101182040.28538-2-zajec5@gmail.com
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/vdso32/Makefile | 2 +-
- arch/s390/kernel/vdso64/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt7986a.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/Makefile
-index 23e868b79a6c9..c4b14a8700d88 100644
---- a/arch/s390/kernel/vdso32/Makefile
-+++ b/arch/s390/kernel/vdso32/Makefile
-@@ -22,7 +22,7 @@ KBUILD_CFLAGS_32 := $(filter-out -m64,$(KBUILD_CFLAGS))
- KBUILD_CFLAGS_32 := $(filter-out -mno-pic-data-is-text-relative,$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 += -m31 -fPIC -shared -fno-common -fno-builtin
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+index 7b6591509c54d..d974739eae1c9 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+@@ -153,6 +153,7 @@ infracfg: infracfg@10001000 {
+ 			compatible = "mediatek,mt7986-infracfg", "syscon";
+ 			reg = <0 0x10001000 0 0x1000>;
+ 			#clock-cells = <1>;
++			#reset-cells = <1>;
+ 		};
  
--LDFLAGS_vdso32.so.dbg += -fPIC -shared -soname=linux-vdso32.so.1 \
-+LDFLAGS_vdso32.so.dbg += -shared -soname=linux-vdso32.so.1 \
- 	--hash-style=both --build-id=sha1 -melf_s390 -T
- 
- $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_32)
-diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
-index fc1c6ff8178f5..11f798e6cfea7 100644
---- a/arch/s390/kernel/vdso64/Makefile
-+++ b/arch/s390/kernel/vdso64/Makefile
-@@ -26,7 +26,7 @@ KBUILD_AFLAGS_64 += -m64
- KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
- KBUILD_CFLAGS_64 := $(filter-out -mno-pic-data-is-text-relative,$(KBUILD_CFLAGS_64))
- KBUILD_CFLAGS_64 += -m64 -fPIC -fno-common -fno-builtin
--ldflags-y := -fPIC -shared -soname=linux-vdso64.so.1 \
-+ldflags-y := -shared -soname=linux-vdso64.so.1 \
- 	     --hash-style=both --build-id=sha1 -T
- 
- $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
+ 		wed_pcie: wed-pcie@10003000 {
 -- 
 2.43.0
 
