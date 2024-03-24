@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BC4182714;
-	Sun, 24 Mar 2024 23:49:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3F9182755;
+	Sun, 24 Mar 2024 23:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324158; cv=none; b=OLSLpxMUOEF1nKEOIXKjTYtpXqs/5vueKmt2sNlcN4Oni3CoUZ4//szQe78kKoW+Ezx+IjPkYYSCjc7UOTybfa2Du8ktW+uADlAKkEqmcm1qxDjRl8sMo8OF9xXvu3Hrc/so03ViiJ2wAA32WeamXuHMBXvgnsfGZgmix5oo/hg=
+	t=1711324163; cv=none; b=cs5ygR6NgPdUtVTF1arBW+giR1gc8hCQcNDO2pE1FpEbjRLNzY09tnEvq/Gb4y8Ik5l22bbcW5N61PJEb10tNIwtRgsvDLFBVhPzESqcrN68UVrJ9BdAokd7J8GzSAjNvbmIaKkiZEBs8fSYoQcHOgCykU3Myvw5mgMXb6MBBNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324158; c=relaxed/simple;
-	bh=EqSQ/IdTyQG233ql2ySExqWSvoh+zGSJMyO2IFT0C40=;
+	s=arc-20240116; t=1711324163; c=relaxed/simple;
+	bh=G1pmVYTlKYB2evp2UH26aRIMP5vTOXvwujH5BaIMyP8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LIgPU0QE3wltBYWBF6AmJKhc0BEzH1vWZH6I2QbmaJypMJdR2mnqYvzrDuF9IUKlddDcAvWOevO0wSzcx3v43KZ3ESyTRuUX69kf+DOAf3kim5X6mfqxKGsUGATG2gPSiyFSB1OcSWhhjEiBkolaglnbLcMUQYcO27gGdQmhkl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X/QODIm8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VhK7Ii0UnkBZqSgZewrceu8/QSMlDZLR9bS3z+FRTwJYTb+dbBJTwlOeHXZP3r7w670h0jqa9/cJMkC9i+1NZQksN/iWt686QxADYklJntI+6Z2OdjbE3WUdQ2AbwSYWf4Jvs36tjH9kcvQOUunonz26xhAWOMVjS7LvNzsAA30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tv20Lb52; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X/QODIm8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4383EC43390;
-	Sun, 24 Mar 2024 23:49:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tv20Lb52"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D098C43399;
+	Sun, 24 Mar 2024 23:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324156;
-	bh=EqSQ/IdTyQG233ql2ySExqWSvoh+zGSJMyO2IFT0C40=;
+	s=k20201202; t=1711324163;
+	bh=G1pmVYTlKYB2evp2UH26aRIMP5vTOXvwujH5BaIMyP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X/QODIm8CA6jbRIY5ds995nHqj2HFNv1XZ6vPtVTgyFYimZ6vJbOPnCP7Z4xFltAx
-	 crS+7abBbe2NeikcfTZYdOclawH8liTGGtI2xFo5vUQuLgOAgfxOHE9R8lP7aQlYOq
-	 BMGE6vLo/UecG/5O2kT7OpyD3TZI9A7+lI2SxH1WR90lbePO257HcUFspqj2lx4pHx
-	 a1O/ikPky8F0yDDLQijKxB9cNQQzb+0YWEJ3hVA20zcTas9ptpIh9BSkus2FnPLANV
-	 ATh01M87g+2rNZtUDeTnozvMaZ6uTPlI2gPXy7ULAKgvcmWHGInGAaQi/T3A6kcj0w
-	 uO5sZh3OgR/pw==
+	b=tv20Lb52KjcYxYKwFRd+1g8iEWrVxIPlvBU+iCPNe6S3c27rWpG33AGSzHnWss/4f
+	 YbEqKqEcwAI6XZDb0R0q790MdrvKAt7lKRvN3THva9Jy7yDMGr0Q84M9UjJ5Nh9hfJ
+	 rv5TpPB+yRrfMpNkKAXYpO4fFYdUIYOcCAPjJuiJAc3QYWvNpOCA4YzAOifz57cpLT
+	 O3WX5bfVamRmM+7XnBzfQPReRe5LurTL2YaSKc5BIQcDn9Gfv9zNzp7NND7W5d29mE
+	 db/VlTpSejAzLae8cXfW+57BsKDHkJyLi4A1iQE9JlbuYhn5NbxZ9WoyjFYl3/+d3K
+	 N4V1AcMUCOLdA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 153/183] scsi: csiostor: Avoid function pointer casts
-Date: Sun, 24 Mar 2024 19:46:06 -0400
-Message-ID: <20240324234638.1355609-154-sashal@kernel.org>
+Subject: [PATCH 5.4 158/183] NFS: Fix an off by one in root_nfs_cat()
+Date: Sun, 24 Mar 2024 19:46:11 -0400
+Message-ID: <20240324234638.1355609-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,133 +49,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 9f3dbcb5632d6876226031d552ef6163bb3ad215 ]
+[ Upstream commit 698ad1a538da0b6bf969cfee630b4e3a026afb87 ]
 
-csiostor uses function pointer casts to keep the csio_ln_ev state machine
-hidden, but this causes warnings about control flow integrity (KCFI)
-violations in clang-16 and higher:
+The intent is to check if 'dest' is truncated or not. So, >= should be
+used instead of >, because strlcat() returns the length of 'dest' and 'src'
+excluding the trailing NULL.
 
-drivers/scsi/csiostor/csio_lnode.c:1098:33: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1098 |         return (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready));
-      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/csiostor/csio_lnode.c:1369:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1369 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_uninit)) {
-      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/csiostor/csio_lnode.c:1373:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1373 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready)) {
-      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/csiostor/csio_lnode.c:1377:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1377 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_offline)) {
-      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Move the enum into a shared header so the correct types can be used without
-the need for casts.
-
-Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20240213100518.457623-1-arnd@kernel.org
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 56463e50d1fc ("NFS: Use super.c for NFSROOT mount option parsing")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/csiostor/csio_defs.h  | 18 ++++++++++++++++--
- drivers/scsi/csiostor/csio_lnode.c |  8 ++++----
- drivers/scsi/csiostor/csio_lnode.h | 13 -------------
- 3 files changed, 20 insertions(+), 19 deletions(-)
+ fs/nfs/nfsroot.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/csiostor/csio_defs.h b/drivers/scsi/csiostor/csio_defs.h
-index c38017b4af982..e50e93e7fe5a1 100644
---- a/drivers/scsi/csiostor/csio_defs.h
-+++ b/drivers/scsi/csiostor/csio_defs.h
-@@ -73,7 +73,21 @@ csio_list_deleted(struct list_head *list)
- #define csio_list_prev(elem)	(((struct list_head *)(elem))->prev)
+diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
+index effaa4247b912..c0f2e1751c33e 100644
+--- a/fs/nfs/nfsroot.c
++++ b/fs/nfs/nfsroot.c
+@@ -169,10 +169,10 @@ static int __init root_nfs_cat(char *dest, const char *src,
+ 	size_t len = strlen(dest);
  
- /* State machine */
--typedef void (*csio_sm_state_t)(void *, uint32_t);
-+struct csio_lnode;
-+
-+/* State machine evets */
-+enum csio_ln_ev {
-+	CSIO_LNE_NONE = (uint32_t)0,
-+	CSIO_LNE_LINKUP,
-+	CSIO_LNE_FAB_INIT_DONE,
-+	CSIO_LNE_LINK_DOWN,
-+	CSIO_LNE_DOWN_LINK,
-+	CSIO_LNE_LOGO,
-+	CSIO_LNE_CLOSE,
-+	CSIO_LNE_MAX_EVENT,
-+};
-+
-+typedef void (*csio_sm_state_t)(struct csio_lnode *ln, enum csio_ln_ev evt);
+ 	if (len && dest[len - 1] != ',')
+-		if (strlcat(dest, ",", destlen) > destlen)
++		if (strlcat(dest, ",", destlen) >= destlen)
+ 			return -1;
  
- struct csio_sm {
- 	struct list_head	sm_list;
-@@ -83,7 +97,7 @@ struct csio_sm {
- static inline void
- csio_set_state(void *smp, void *state)
- {
--	((struct csio_sm *)smp)->sm_state = (csio_sm_state_t)state;
-+	((struct csio_sm *)smp)->sm_state = state;
+-	if (strlcat(dest, src, destlen) > destlen)
++	if (strlcat(dest, src, destlen) >= destlen)
+ 		return -1;
+ 	return 0;
  }
- 
- static inline void
-diff --git a/drivers/scsi/csiostor/csio_lnode.c b/drivers/scsi/csiostor/csio_lnode.c
-index c3bf590f5d685..47803268b138f 100644
---- a/drivers/scsi/csiostor/csio_lnode.c
-+++ b/drivers/scsi/csiostor/csio_lnode.c
-@@ -1095,7 +1095,7 @@ csio_handle_link_down(struct csio_hw *hw, uint8_t portid, uint32_t fcfi,
- int
- csio_is_lnode_ready(struct csio_lnode *ln)
- {
--	return (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready));
-+	return (csio_get_state(ln) == csio_lns_ready);
- }
- 
- /*****************************************************************************/
-@@ -1367,15 +1367,15 @@ csio_free_fcfinfo(struct kref *kref)
- void
- csio_lnode_state_to_str(struct csio_lnode *ln, int8_t *str)
- {
--	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_uninit)) {
-+	if (csio_get_state(ln) == csio_lns_uninit) {
- 		strcpy(str, "UNINIT");
- 		return;
- 	}
--	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready)) {
-+	if (csio_get_state(ln) == csio_lns_ready) {
- 		strcpy(str, "READY");
- 		return;
- 	}
--	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_offline)) {
-+	if (csio_get_state(ln) == csio_lns_offline) {
- 		strcpy(str, "OFFLINE");
- 		return;
- 	}
-diff --git a/drivers/scsi/csiostor/csio_lnode.h b/drivers/scsi/csiostor/csio_lnode.h
-index 372a67d122d38..607698a0f0631 100644
---- a/drivers/scsi/csiostor/csio_lnode.h
-+++ b/drivers/scsi/csiostor/csio_lnode.h
-@@ -53,19 +53,6 @@
- extern int csio_fcoe_rnodes;
- extern int csio_fdmi_enable;
- 
--/* State machine evets */
--enum csio_ln_ev {
--	CSIO_LNE_NONE = (uint32_t)0,
--	CSIO_LNE_LINKUP,
--	CSIO_LNE_FAB_INIT_DONE,
--	CSIO_LNE_LINK_DOWN,
--	CSIO_LNE_DOWN_LINK,
--	CSIO_LNE_LOGO,
--	CSIO_LNE_CLOSE,
--	CSIO_LNE_MAX_EVENT,
--};
--
--
- struct csio_fcf_info {
- 	struct list_head	list;
- 	uint8_t			priority;
 -- 
 2.43.0
 
