@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1CA128811;
-	Sun, 24 Mar 2024 22:53:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03A81E5847;
+	Sun, 24 Mar 2024 22:53:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320823; cv=none; b=B5JeAnjDVPYfCh2r8/Il1u2CaJU/KZrILl/X45WrBMbNK/8KZsOF54VybXPXb61f7stKI9Lo6tTvqpcOExPgbuZuIHYi9oVNYu81wu3nqWzPLNZdhSLBRCBNaGljhftKcVeeoh29K0aiFpOB7i5DImmE6qdVE9yb4is0plQj1Lg=
+	t=1711320825; cv=none; b=PoKOBuqHkWttQ8Pzn6IghYg4gBiiw5YaH0S3ikLPyyKKXlvEJmD3x8HQt7mFJjYUL+vmjelE38DaB8RVChZdM07etVGe8hLoZLH70JlwgIDrftne4/P3fG4225G63ucysKhqBi0eBIk6omtzDBtCVEzwJjeeTPxNnvZ9ghkNceQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320823; c=relaxed/simple;
-	bh=9+TxO1i+oU8d5+wka1VBLhZpB1nFKtle8lTbdAgfaW0=;
+	s=arc-20240116; t=1711320825; c=relaxed/simple;
+	bh=1wD1lMemO0UeL75hTPilrXieqNAbYo6cSZgOGib9LQ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ruVu436rebXltp6gxVzb7cO0wd8zR5AetdL1rouX9jI9fmyRgGRmlyeLO00KKT43Vdc3K6r9W3KukjlLk6U664ksWUaBeQq85k0u+zFi/diKJTTRloolk5g0LyIh98aom5wEHNC8v2gHWYdBvQnTAY5Bx+RZajPQ/VO3JWWRWZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3OHli2a; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fvOoxBBa1BNnZmr2ypYj5VNjyvutjuYO1IpajSMzTv5RvyH3lkpEPpJ7ES4BK6QpDcYpKS3mq1JGvsus06rYxzSaDaMMLP4OhsOsCXf/+hwPSgpkCJt31TBkYK260Ihk94HPOob3DRG2dLCy1baNooEfLycdDl3EPw6Pl8pQp1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJLimDeN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3OHli2a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A799DC43390;
-	Sun, 24 Mar 2024 22:53:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJLimDeN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B37C433C7;
+	Sun, 24 Mar 2024 22:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320821;
-	bh=9+TxO1i+oU8d5+wka1VBLhZpB1nFKtle8lTbdAgfaW0=;
+	s=k20201202; t=1711320824;
+	bh=1wD1lMemO0UeL75hTPilrXieqNAbYo6cSZgOGib9LQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c3OHli2a4PajiBmq9k5ZERysKIYKVlpVUuWlDdMeguw+ym7JTjM+gvhXl+Xtk7IJy
-	 LuHPpNnmzHJLQUXUW++bVQPoEdV1W1OES3BXhgGvtjJLY9Gg0100OkD5xi52RcyFiB
-	 hyNpxgEaowfqwiZUb88SYxslN9DU3A0X2Iu9rvcpTEYOmLpRLTiQtor/5g2KI/SRTB
-	 qJQkdM70me9MSEVypUCNjeHpMKHTlvxSxVj91P3UDU+qKHVtnqlBf9TZCVcJgC3r0G
-	 a1XHQ51JWxTrVLpF3BljDoRn9RKDYvka2sJqaHtM2DRUOX6IhyZ8Rbnxs6a4+0NqC4
-	 cScnxZvpcWIww==
+	b=DJLimDeNHo/puLfJqD4/MPw/2Mna2wR134bWeF8YQgBbF6MmPjX9YESU7ER3hQ/s+
+	 4ScuI79CZxMLs1jit+C3JW2OUSMTlzkjdxrTxMb7aCrpbt2eAFwXn6n2AiPjXKENDZ
+	 y9ppXPVXreYwkdIql3DvsqbXiMzY6J6dcZmfGvGizO9vDX6cpaEUXISEhpsscReCcw
+	 BrAlCc5qsFAXqJtOKsbfPxKnvXji1F1EUXLYM8jfjhZcP6Mkdw+1WVDSf9yMlhSEgO
+	 8MuxkmixS/Ov+MEw1rwM2zEm1nyzJbwXJNqmqcb3wMHBuuEGuXVMl960EL1idS++DE
+	 Kw1gPLnRQTLYg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Puranjay Mohan <puranjay12@gmail.com>,
-	"kernelci.org bot" <bot@kernelci.org>,
-	kernel test robot <lkp@intel.com>,
-	Song Liu <song@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Chen Ni <nichen@iscas.ac.cn>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 386/713] bpf: hardcode BPF_PROG_PACK_SIZE to 2MB * num_possible_nodes()
-Date: Sun, 24 Mar 2024 18:41:52 -0400
-Message-ID: <20240324224720.1345309-387-sashal@kernel.org>
+Subject: [PATCH 6.7 389/713] drm/tegra: dsi: Add missing check for of_find_device_by_node
+Date: Sun, 24 Mar 2024 18:41:55 -0400
+Message-ID: <20240324224720.1345309-390-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -51,51 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Puranjay Mohan <puranjay12@gmail.com>
+From: Chen Ni <nichen@iscas.ac.cn>
 
-[ Upstream commit d6170e4aaf86424c24ce06e355b4573daa891b17 ]
+[ Upstream commit afe6fcb9775882230cd29b529203eabd5d2a638d ]
 
-On some architectures like ARM64, PMD_SIZE can be really large in some
-configurations. Like with CONFIG_ARM64_64K_PAGES=y the PMD_SIZE is
-512MB.
+Add check for the return value of of_find_device_by_node() and return
+the error if it fails in order to avoid NULL pointer dereference.
 
-Use 2MB * num_possible_nodes() as the size for allocations done through
-the prog pack allocator. On most architectures, PMD_SIZE will be equal
-to 2MB in case of 4KB pages and will be greater than 2MB for bigger page
-sizes.
-
-Fixes: ea2babac63d4 ("bpf: Simplify bpf_prog_pack_[size|mask]")
-Reported-by: "kernelci.org bot" <bot@kernelci.org>
-Closes: https://lore.kernel.org/all/7e216c88-77ee-47b8-becc-a0f780868d3c@sirena.org.uk/
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202403092219.dhgcuz2G-lkp@intel.com/
-Suggested-by: Song Liu <song@kernel.org>
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-Message-ID: <20240311122722.86232-1-puranjay12@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: e94236cde4d5 ("drm/tegra: dsi: Add ganged mode support")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231024080738.825553-1-nichen@iscas.ac.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/tegra/dsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index fe254ae035fe4..27fd41777176c 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -863,7 +863,12 @@ static LIST_HEAD(pack_list);
-  * CONFIG_MMU=n. Use PAGE_SIZE in these cases.
-  */
- #ifdef PMD_SIZE
--#define BPF_PROG_PACK_SIZE (PMD_SIZE * num_possible_nodes())
-+/* PMD_SIZE is really big for some archs. It doesn't make sense to
-+ * reserve too much memory in one allocation. Hardcode BPF_PROG_PACK_SIZE to
-+ * 2MiB * num_possible_nodes(). On most architectures PMD_SIZE will be
-+ * greater than or equal to 2MB.
-+ */
-+#define BPF_PROG_PACK_SIZE (SZ_2M * num_possible_nodes())
- #else
- #define BPF_PROG_PACK_SIZE PAGE_SIZE
- #endif
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index fbfe92a816d4b..e419b76e57d3e 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -1544,9 +1544,11 @@ static int tegra_dsi_ganged_probe(struct tegra_dsi *dsi)
+ 	np = of_parse_phandle(dsi->dev->of_node, "nvidia,ganged-mode", 0);
+ 	if (np) {
+ 		struct platform_device *gangster = of_find_device_by_node(np);
++		of_node_put(np);
++		if (!gangster)
++			return -EPROBE_DEFER;
+ 
+ 		dsi->slave = platform_get_drvdata(gangster);
+-		of_node_put(np);
+ 
+ 		if (!dsi->slave) {
+ 			put_device(&gangster->dev);
 -- 
 2.43.0
 
