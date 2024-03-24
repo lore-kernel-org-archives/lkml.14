@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9089822F510;
-	Sun, 24 Mar 2024 23:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2C322F502;
+	Sun, 24 Mar 2024 23:52:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324376; cv=none; b=Bvd7tWXlFcAm7fkOD0RBNj4j7/Ddgr74fhpbTtg5HjRrLSuzLMqyieOJQlEZQ7jY0cGs9WZ5tKOgG8mEwizaCGkBYXhNkTWzf9+TzyzfuHJcIkB+YHEtbVRAWyqnLxmF2OOEcNaP+riEy3PfUEhTQtoJl3nVRsyP1x0skjh5FDY=
+	t=1711324374; cv=none; b=J4h4OnLrEK4kWds6xi5P4YWg3RWyIq5IBMq1JHylm+LlkeCsvr96C1Fvgr4zcsoQlglhI8xJ0gPYmRFDwNu/qlOaE1P3kdVAuk6DNGD6zc9JJf4CubhK72/DevP8wZgqZ1ocaCfudY6uLFHLNpaNTQsA3/WBdf40BPG5+y3NuuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324376; c=relaxed/simple;
-	bh=tCYwIpLCrAOSE6XXUPJqeVGUo8QLA62vXiD5B6NkFHc=;
+	s=arc-20240116; t=1711324374; c=relaxed/simple;
+	bh=stj3yIGL6BZHpi7EgfUVHmgxD/4JfLOOJXM7o+vgo1o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C7jKxCb5UFjnk/b8e4EHnEn7Ml0CyBsP8+pyHM+0FeIyXTWMhLOrnTlLWY87xDlD+hjncPXjqQIQOs3wD4ZynY2Or0MNS34WAIv0Cemi7jgxjTJew8xmsI4ncY9LNqBvY4vl7P9U3/TWD7Cx5ZD4U5qQXH1A3jLh95/ZdOT6HQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BRahk9yG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XYjfL4M1oh7AJJqQwT6y971M+uMSi4ek1MU+W2axfKKPVM7JBU60z4efTT0/Ku7QoRpcRvEv79MCLwnCqmudnR5EGLbUi+f97Akxpa6GWnzxauOzJdvCh3bZlNznxFXPUl5w5O9qMSzN0iNyu8nOvziIjsNUZgU5Bw1vyipLJ0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HKVN2H6F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BRahk9yG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEAB8C433C7;
-	Sun, 24 Mar 2024 23:52:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HKVN2H6F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B57B0C43394;
+	Sun, 24 Mar 2024 23:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324376;
-	bh=tCYwIpLCrAOSE6XXUPJqeVGUo8QLA62vXiD5B6NkFHc=;
+	s=k20201202; t=1711324374;
+	bh=stj3yIGL6BZHpi7EgfUVHmgxD/4JfLOOJXM7o+vgo1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BRahk9yG5soAKJUdIV8iKjBMgnNJz02zUHfjob7dnqTgAKIEwBM5qQ5r3ssUUm2wp
-	 2dWJa5IZrl69YQwEyCNJK2XhId+i8odp7rre9uT7OR03FRpbbXlMxFZuW+SsCeu9rj
-	 ijWhX0n3ayGn4APAU/WF4JlPc6lI3P0Ffn49/2RPAfE0/meCl1sh0a0TpGbtF7V6FP
-	 e/hoFvqO8W+eXJzfNBxzv6ORv0kKHVQGRdyxqfqzYq2kjytaWsR7ABm/WjFRzSZWwa
-	 6C0qMyTWGEtb+BBKab2OdllyvP4kGqRyWQjmAhOi/SfqNNsByUaquStyn8X2cFS0i4
-	 OH+esdxTOYpZg==
+	b=HKVN2H6Fx18jHIaVERBsk7EewKIEOoQNjDPjgZ2kzTwDGix7Xhm7CgB0SW0i3YeMa
+	 2bopDt2urelxwacumf113aa2Z/4ngWtj6uMbLp8ubsSClaPsCmuyXyozqs4jB6JwzQ
+	 q1GJq2C4qej+DQWHWQTcSjWEEqrG6CQRPixR7f8l8iBBMiOYmoDJToOcPelkalfBx0
+	 FTa70Y2OLr5fZiZxukSOFzOWVtg1azRnuTP5szCDckf8j2DWA8blQNnsbm1oziWZmh
+	 lvbLqZv8c3srAih1LfKiQN84jqMDLn5fv/9Bfb27YL1ca8DU+tFjAMrnxfmrP7n/sp
+	 af7dp09EQz0qQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Alex Elder <elder@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 142/148] net: hsr: fix placement of logical operator in a multi-line statement
-Date: Sun, 24 Mar 2024 19:50:06 -0400
-Message-ID: <20240324235012.1356413-143-sashal@kernel.org>
+Subject: [PATCH 4.19 140/148] staging: greybus: fix get_channel_from_mode() failure path
+Date: Sun, 24 Mar 2024 19:50:04 -0400
+Message-ID: <20240324235012.1356413-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,65 +50,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Murali Karicheri <m-karicheri2@ti.com>
+From: Dan Carpenter <dan.carpenter@linaro.org>
 
-[ Upstream commit 059477830022e1886f55a9641702461c249fa864 ]
+[ Upstream commit 34164202a5827f60a203ca9acaf2d9f7d432aac8 ]
 
-In a multi-line statement exceeding 80 characters, logical operator
-should be at the end of a line instead of being at the start. This
-is seen when ran checkpatch.pl -f on files under net/hsr. The change
-is per suggestion from checkpatch.
+The get_channel_from_mode() function is supposed to return the channel
+which matches the mode.  But it has a bug where if it doesn't find a
+matching channel then it returns the last channel.  It should return
+NULL instead.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Stable-dep-of: ddbec99f5857 ("hsr: Fix uninit-value access in hsr_get_node()")
+Also remove an unnecessary NULL check on "channel".
+
+Fixes: 2870b52bae4c ("greybus: lights: add lights implementation")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Reviewed-by: Alex Elder <elder@linaro.org>
+Link: https://lore.kernel.org/r/379c0cb4-39e0-4293-8a18-c7b1298e5420@moroto.mountain
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/hsr/hsr_forward.c  | 8 ++++----
- net/hsr/hsr_framereg.c | 4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/staging/greybus/light.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
-index adfb497606785..886fad5922b3c 100644
---- a/net/hsr/hsr_forward.c
-+++ b/net/hsr/hsr_forward.c
-@@ -63,8 +63,8 @@ static bool is_supervision_frame(struct hsr_priv *hsr, struct sk_buff *skb)
- 		return false;
+diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
+index db06cd544af58..8c5819d1e1abe 100644
+--- a/drivers/staging/greybus/light.c
++++ b/drivers/staging/greybus/light.c
+@@ -102,15 +102,15 @@ static struct led_classdev *get_channel_cdev(struct gb_channel *channel)
+ static struct gb_channel *get_channel_from_mode(struct gb_light *light,
+ 						u32 mode)
+ {
+-	struct gb_channel *channel = NULL;
++	struct gb_channel *channel;
+ 	int i;
  
- 	/* Correct ether type?. */
--	if (!(ethHdr->h_proto == htons(ETH_P_PRP)
--			|| ethHdr->h_proto == htons(ETH_P_HSR)))
-+	if (!(ethHdr->h_proto == htons(ETH_P_PRP) ||
-+	      ethHdr->h_proto == htons(ETH_P_HSR)))
- 		return false;
- 
- 	/* Get the supervision header from correct location. */
-@@ -336,8 +336,8 @@ static int hsr_fill_frame_info(struct hsr_frame_info *frame,
- 		/* FIXME: */
- 		WARN_ONCE(1, "HSR: VLAN not yet supported");
+ 	for (i = 0; i < light->channels_count; i++) {
+ 		channel = &light->channels[i];
+-		if (channel && channel->mode == mode)
+-			break;
++		if (channel->mode == mode)
++			return channel;
  	}
--	if (ethhdr->h_proto == htons(ETH_P_PRP)
--			|| ethhdr->h_proto == htons(ETH_P_HSR)) {
-+	if (ethhdr->h_proto == htons(ETH_P_PRP) ||
-+	    ethhdr->h_proto == htons(ETH_P_HSR)) {
- 		frame->skb_std = NULL;
- 		frame->skb_hsr = skb;
- 		frame->sequence_nr = hsr_get_skb_sequence_nr(skb);
-diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
-index 37795502bb511..9c5a423f0f7a3 100644
---- a/net/hsr/hsr_framereg.c
-+++ b/net/hsr/hsr_framereg.c
-@@ -192,8 +192,8 @@ struct hsr_node *hsr_get_node(struct hsr_port *port, struct sk_buff *skb,
+-	return channel;
++	return NULL;
+ }
  
- 	/* Everyone may create a node entry, connected node to a HSR device. */
- 
--	if (ethhdr->h_proto == htons(ETH_P_PRP)
--			|| ethhdr->h_proto == htons(ETH_P_HSR)) {
-+	if (ethhdr->h_proto == htons(ETH_P_PRP) ||
-+	    ethhdr->h_proto == htons(ETH_P_HSR)) {
- 		/* Use the existing sequence_nr from the tag as starting point
- 		 * for filtering duplicate frames.
- 		 */
+ static int __gb_lights_flash_intensity_set(struct gb_channel *channel,
 -- 
 2.43.0
 
