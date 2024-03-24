@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9B517A36C;
-	Sun, 24 Mar 2024 23:40:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFC617A382;
+	Sun, 24 Mar 2024 23:40:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323652; cv=none; b=NX3vIaXQzQPl1+Z/lp48wkNvvYa1BbbbYkjXpMZ22u/dxUujAj3d7m+o0yuq7Y0ThzbJMmz2O5wIzdqKCbLNW56jkFDawY9ZXYra8yd/yfs2hb/44p1skjzs9xdWRRrYuAE78FDxbVZN1wUSI4igCtVSaOe7zZoV1U/u9WxQ0lk=
+	t=1711323656; cv=none; b=nTQM/X1wUmZneMFNmWGgwQl4JvxIX/DZrl50Ex+S8NQ32k9sxIG6V12iX+f7mvyaVRRpLp8SbU51jdQkypUVrXqm9+OE+u4rxRyQBB0/flOQiDYT8ugsYw0gabSrqxqvnw1KiVcHC46BW9cmU6z0T3PehVsBTbZwxy7u8pkG7mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323652; c=relaxed/simple;
-	bh=coEL8lDz0ZfUwW77qKN9jj5CS3Zu6IpXoXG/Xg5cYHM=;
+	s=arc-20240116; t=1711323656; c=relaxed/simple;
+	bh=iu26nAz5LeR10kqCU52zW6G6ji5s+n5Q4x2xWSNy2VA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iY8KaHjsIZH0GrN8lo5i/irLYaDpHTIQ2Lhz3Dof0S67b8ku+XAabIqZLMI2lwikOUNUra95RcuX9zzgrlGNkpze/40UVMU9qrRpS42bZ4nkoSsGbbiNjbsx2fWqCgztj8++GBWlsP3wp0954ZC2WXXISQxvzqlArSaLbpLWhYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okIQzQYK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=le0I0NnrpMtAr0NuON4WSLBW91y0y2pn2Ow336F2qavNIfaJMf00tuG8HvfdBnx7SgQwl8qrt0LvVPdu3Y0+fDwQ6zHo7SFMA+3iZ7thK3cJavdZjLWKN2zEH+ZfuR5brvFrXXc540mniFQlqUCqAU72LiwWX2pKU7eTflUiaJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dy/9QRGu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okIQzQYK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D18DAC433F1;
-	Sun, 24 Mar 2024 23:40:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dy/9QRGu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7274C43394;
+	Sun, 24 Mar 2024 23:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323651;
-	bh=coEL8lDz0ZfUwW77qKN9jj5CS3Zu6IpXoXG/Xg5cYHM=;
+	s=k20201202; t=1711323655;
+	bh=iu26nAz5LeR10kqCU52zW6G6ji5s+n5Q4x2xWSNy2VA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=okIQzQYKpRxkvVhPTLDn9fGeaXSEX7CfXkoXATQOZhSDxLS6YuKqs+43c/ssRRqbq
-	 TeyDSW80zsdj8R/yPdm1AwjEB4uyWnwVDk1b0kokMSb9oEe88g8z6vD5XCltpbYWhU
-	 sk81pTE9gOXN2SFW5x8ZRtK+1YwdOD5+9wdG7LOsIKJdflfwfFn88Nlhgy+wzv4bRl
-	 JcZYc206OflDyMKCfdmXIqWkmITBe3NU0e+/rHdhBs4KOq8UkcER1a2t0FW8o3kqKC
-	 3wBvQ3JvDEThfp0bIMZ38hpNjEplreaA05MV8/kh8uFZjhPEbSwVFeZncUHqkZNaaq
-	 EUTBfZa8izIFw==
+	b=Dy/9QRGun6yb9JlUBh3VcEBYX2/q1fOh1scaPDatNdj5gzVGuh406yHIRcin+KMO4
+	 ebCY7dzmY51eO3/ZUWafJYtE7ydXMpUwF+UPFUOxH1Guvpzd6TLKIJGACQFV3Wymik
+	 Db5PkRbcTACPvChRxlbqPY1IchN4BjMG9qbfGqJh90/VQ1YbWq3FZHbGdVZCQyQB+u
+	 4ahngzhsCgPQ1eZh3Hy44W2OQfZucA8gbsiibGqpAij3si07/dilSwOZGPNUeFWWtX
+	 eiIE2t1YJEV6oZcU+SLTIVyzUdsr7cOWG55hZ34PrVuW7OZ3FQP3ASklKePM/TJbjw
+	 q92pyrTTNU36g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Alban=20Boy=C3=A9?= <alban.boye@protonmail.com>,
-	Cezary Rojewski <cezary.rojewski@intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
 	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 023/238] ASoC: Intel: bytcr_rt5640: Add an extra entry for the Chuwi Vi8 tablet
-Date: Sun, 24 Mar 2024 19:36:51 -0400
-Message-ID: <20240324234027.1354210-24-sashal@kernel.org>
+Subject: [PATCH 5.10 027/238] ASoC: wm8962: Fix up incorrect error message in wm8962_set_fll
+Date: Sun, 24 Mar 2024 19:36:55 -0400
+Message-ID: <20240324234027.1354210-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -46,51 +44,38 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alban Boyé <alban.boye@protonmail.com>
+From: Stuart Henderson <stuarth@opensource.cirrus.com>
 
-[ Upstream commit f8b0127aca8c60826e7354e504a12d4a46b1c3bb ]
+[ Upstream commit 96e202f8c52ac49452f83317cf3b34cd1ad81e18 ]
 
-The bios version can differ depending if it is a dual-boot variant of the tablet.
-Therefore another DMI match is required.
+Use source instead of ret, which seems to be unrelated and will always
+be zero.
 
-Signed-off-by: Alban Boyé <alban.boye@protonmail.com>
-Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://msgid.link/r/20240228192807.15130-1-alban.boye@protonmail.com
+Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
+Link: https://msgid.link/r/20240306161439.1385643-5-stuarth@opensource.cirrus.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ sound/soc/codecs/wm8962.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
-index f5b1b3b876980..1d049685e7075 100644
---- a/sound/soc/intel/boards/bytcr_rt5640.c
-+++ b/sound/soc/intel/boards/bytcr_rt5640.c
-@@ -529,6 +529,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
- 					BYT_RT5640_SSP0_AIF1 |
- 					BYT_RT5640_MCLK_EN),
- 	},
-+	{	/* Chuwi Vi8 dual-boot (CWI506) */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Insyde"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "i86"),
-+			/* The above are too generic, also match BIOS info */
-+			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI2.D86JHBNR02"),
-+		},
-+		.driver_data = (void *)(BYTCR_INPUT_DEFAULTS |
-+					BYT_RT5640_MONO_SPEAKER |
-+					BYT_RT5640_SSP0_AIF1 |
-+					BYT_RT5640_MCLK_EN),
-+	},
- 	{
- 		/* Chuwi Vi10 (CWI505) */
- 		.matches = {
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index 030471248e0e4..272932e200d87 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -2917,7 +2917,7 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
+ 				    WM8962_FLL_FRC_NCO, WM8962_FLL_FRC_NCO);
+ 		break;
+ 	default:
+-		dev_err(component->dev, "Unknown FLL source %d\n", ret);
++		dev_err(component->dev, "Unknown FLL source %d\n", source);
+ 		return -EINVAL;
+ 	}
+ 
 -- 
 2.43.0
 
