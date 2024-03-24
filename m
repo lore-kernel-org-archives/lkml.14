@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026B723989C;
-	Sun, 24 Mar 2024 23:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC97923A758;
+	Sun, 24 Mar 2024 23:19:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322336; cv=none; b=c5fPj97OEYarbjRqUjBMAr8pkuyLk9qJXpEJNH0lYWSZVRAfuhyhbfOXp3V4yl0tj2G4wqGatBvthywUzXww5DwlT1XUBRuW6sJbjiA17Z6vzrKM/8GOMFitPnkdTieV3oqpu4sLGpnyIbikhH+ZBeb/yFeocKvxLE8p/zhviBA=
+	t=1711322346; cv=none; b=RydoWUBibvhtpNnAREGkILxswXaRjKvGxw+pXKpzEhI0mqg+5jNK/X/0elOI/LB0nXxgnhDjaOv9D4EWELLvX7dJMjWznLRrUIhNtuZ78MDAilMX2Gw92xDVTQLyfOnMFY569rsRrkqP8Bm9YcmU+b4YNPSvbN62Q9QVUXWaESo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322336; c=relaxed/simple;
-	bh=6J/koumIqiZ1iDg311bU9p+lmXQkJh1phB92T3wd+DM=;
+	s=arc-20240116; t=1711322346; c=relaxed/simple;
+	bh=ImYJx3//S3lb8pzEBjnxmyZSCu8/oqDudWFtAKGWTJA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W3WS55jMjetgVzK1esdUbho1g0I3YuNYYPLuRzrqeglT0QQenCHE6hUut8fM5BKef3pbuW6DMdkiWyBbhJ7m8855wsvZFKm9xXChq5tsESInK3+gLWmIKC981tcK0WCJdXU6ahkhO30deLDhEA21S7UIvcFIoscF3Cow5PwKTXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VSK3Pq33; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mDaXHUR0rnideGPfxYcQcXTwOhBPoNERUwnqb/5XgGevQ1UWj/oWWFfocEqiVr6bBcY6riGwhXc5hFa47ThmNYSx7PzoDMzR1C9E2cLeCNoDW3XBvVQUyuj+D2+qhA5d+uAAd1P68Pq/QkpG8NAkd2tZKDg9Zx/9DR6d/eEokf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VteGJ2eb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VSK3Pq33"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ACAEC433A6;
-	Sun, 24 Mar 2024 23:18:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VteGJ2eb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4AAEC433C7;
+	Sun, 24 Mar 2024 23:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322334;
-	bh=6J/koumIqiZ1iDg311bU9p+lmXQkJh1phB92T3wd+DM=;
+	s=k20201202; t=1711322345;
+	bh=ImYJx3//S3lb8pzEBjnxmyZSCu8/oqDudWFtAKGWTJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VSK3Pq336yU4GTETMFzN3gLdeXUtZsNG+DjjXWGdduZDnUC9CJYjNmBCZiB8wlxna
-	 0Cg8eXmAG2wjqAJVO8hbgNlYGr/tNhpxu0YUEksCalImWDNAujkHJELseGHWz11FcX
-	 OY1+Ssoq9eUnA4V2AH2R6ikA98bTZN9rUQJ366YSP0kQRR5GBfnjQXRfkAoGdk79OO
-	 Muk08p/XXbukKGQ6D8ChExX597u7xxpOUt8HwRpwlclFREwvkpceEctaAnn19f3YRp
-	 9ELdsyQDbniEL35ou66XZwjIwtynk81G497n3/CnieSV1QicwrNJOeM/FYmNRlu7ao
-	 mdmEoGH4olbpw==
+	b=VteGJ2ebgRY6OLMo9UFXVJdOOsTL/mwqcwqv4C/IzvGdQCYERtNjl+mIG7OHqRzuY
+	 2pUj3mf0t1J4fafMeq0Gp3OrCSioaXegnIGevM+0R/Er45qlcNypEKsRpJo8wAwJX6
+	 sCYTsFZWf73OSx7tq2LXfWsmE34S51Mu+jlovTrKhxOQkwHVeAyt/Y+3f/R3Fco++q
+	 rS5a/t3uO+/c7wmtQDg6tYNmwboMylk57HV2Rr66n9PKnM5zwMg5JpTgUtd1CcYKex
+	 A6HlUnXJGA2P+GI5OII+Zgwop4Wf+aqfVOZ/E497mz41VuMOvwvsP8sth0tKWtoqlW
+	 fngNOC/YdEYZQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Justin Swartz <justin.swartz@risingedge.co.za>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Thinh Tran <thinhtr@linux.ibm.com>,
+	Jiri Pirko <jiri@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 417/451] net: dsa: mt7530: prevent possible incorrect XTAL frequency selection
-Date: Sun, 24 Mar 2024 19:11:33 -0400
-Message-ID: <20240324231207.1351418-418-sashal@kernel.org>
+Subject: [PATCH 6.1 427/451] net/bnx2x: Prevent access to a freed page in page_pool
+Date: Sun, 24 Mar 2024 19:11:43 -0400
+Message-ID: <20240324231207.1351418-428-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,177 +45,90 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+From: Thinh Tran <thinhtr@linux.ibm.com>
 
-[ Upstream commit f490c492e946d8ffbe65ad4efc66de3c5ede30a4 ]
+[ Upstream commit d27e2da94a42655861ca4baea30c8cd65546f25d ]
 
-On MT7530, the HT_XTAL_FSEL field of the HWTRAP register stores a 2-bit
-value that represents the frequency of the crystal oscillator connected to
-the switch IC. The field is populated by the state of the ESW_P4_LED_0 and
-ESW_P4_LED_0 pins, which is done right after reset is deasserted.
+Fix race condition leading to system crash during EEH error handling
 
-  ESW_P4_LED_0    ESW_P3_LED_0    Frequency
-  -----------------------------------------
-  0               0               Reserved
-  0               1               20MHz
-  1               0               40MHz
-  1               1               25MHz
+During EEH error recovery, the bnx2x driver's transmit timeout logic
+could cause a race condition when handling reset tasks. The
+bnx2x_tx_timeout() schedules reset tasks via bnx2x_sp_rtnl_task(),
+which ultimately leads to bnx2x_nic_unload(). In bnx2x_nic_unload()
+SGEs are freed using bnx2x_free_rx_sge_range(). However, this could
+overlap with the EEH driver's attempt to reset the device using
+bnx2x_io_slot_reset(), which also tries to free SGEs. This race
+condition can result in system crashes due to accessing freed memory
+locations in bnx2x_free_rx_sge()
 
-On MT7531, the XTAL25 bit of the STRAP register stores this. The LAN0LED0
-pin is used to populate the bit. 25MHz when the pin is high, 40MHz when
-it's low.
+799  static inline void bnx2x_free_rx_sge(struct bnx2x *bp,
+800				struct bnx2x_fastpath *fp, u16 index)
+801  {
+802	struct sw_rx_page *sw_buf = &fp->rx_page_ring[index];
+803     struct page *page = sw_buf->page;
+....
+where sw_buf was set to NULL after the call to dma_unmap_page()
+by the preceding thread.
 
-These pins are also used with LEDs, therefore, their state can be set to
-something other than the bootstrapping configuration. For example, a link
-may be established on port 3 before the DSA subdriver takes control of the
-switch which would set ESW_P3_LED_0 to high.
+    EEH: Beginning: 'slot_reset'
+    PCI 0011:01:00.0#10000: EEH: Invoking bnx2x->slot_reset()
+    bnx2x: [bnx2x_io_slot_reset:14228(eth1)]IO slot reset initializing...
+    bnx2x 0011:01:00.0: enabling device (0140 -> 0142)
+    bnx2x: [bnx2x_io_slot_reset:14244(eth1)]IO slot reset --> driver unload
+    Kernel attempted to read user page (0) - exploit attempt? (uid: 0)
+    BUG: Kernel NULL pointer dereference on read at 0x00000000
+    Faulting instruction address: 0xc0080000025065fc
+    Oops: Kernel access of bad area, sig: 11 [#1]
+    .....
+    Call Trace:
+    [c000000003c67a20] [c00800000250658c] bnx2x_io_slot_reset+0x204/0x610 [bnx2x] (unreliable)
+    [c000000003c67af0] [c0000000000518a8] eeh_report_reset+0xb8/0xf0
+    [c000000003c67b60] [c000000000052130] eeh_pe_report+0x180/0x550
+    [c000000003c67c70] [c00000000005318c] eeh_handle_normal_event+0x84c/0xa60
+    [c000000003c67d50] [c000000000053a84] eeh_event_handler+0xf4/0x170
+    [c000000003c67da0] [c000000000194c58] kthread+0x1c8/0x1d0
+    [c000000003c67e10] [c00000000000cf64] ret_from_kernel_thread+0x5c/0x64
 
-Currently on mt7530_setup() and mt7531_setup(), 1000 - 1100 usec delay is
-described between reset assertion and deassertion. Some switch ICs in real
-life conditions cannot always have these pins set back to the bootstrapping
-configuration before reset deassertion in this amount of delay. This causes
-wrong crystal frequency to be selected which puts the switch in a
-nonfunctional state after reset deassertion.
+To solve this issue, we need to verify page pool allocations before
+freeing.
 
-The tests below are conducted on an MT7530 with a 40MHz crystal oscillator
-by Justin Swartz.
-
-With a cable from an active peer connected to port 3 before reset, an
-incorrect crystal frequency (0b11 = 25MHz) is selected:
-
-                      [1]                  [3]     [5]
-                      :                    :       :
-              _____________________________         __________________
-ESW_P4_LED_0                               |_______|
-              _____________________________
-ESW_P3_LED_0                               |__________________________
-
-                       :                  : :     :
-                       :                  : [4]...:
-                       :                  :
-                       [2]................:
-
-[1] Reset is asserted.
-[2] Period of 1000 - 1100 usec.
-[3] Reset is deasserted.
-[4] Period of 315 usec. HWTRAP register is populated with incorrect
-    XTAL frequency.
-[5] Signals reflect the bootstrapped configuration.
-
-Increase the delay between reset_control_assert() and
-reset_control_deassert(), and gpiod_set_value_cansleep(priv->reset, 0) and
-gpiod_set_value_cansleep(priv->reset, 1) to 5000 - 5100 usec. This amount
-ensures a higher possibility that the switch IC will have these pins back
-to the bootstrapping configuration before reset deassertion.
-
-With a cable from an active peer connected to port 3 before reset, the
-correct crystal frequency (0b10 = 40MHz) is selected:
-
-                      [1]        [2-1]     [3]     [5]
-                      :          :         :       :
-              _____________________________         __________________
-ESW_P4_LED_0                               |_______|
-              ___________________           _______
-ESW_P3_LED_0                     |_________|       |__________________
-
-                       :          :       : :     :
-                       :          [2-2]...: [4]...:
-                       [2]................:
-
-[1] Reset is asserted.
-[2] Period of 5000 - 5100 usec.
-[2-1] ESW_P3_LED_0 goes low.
-[2-2] Remaining period of 5000 - 5100 usec.
-[3] Reset is deasserted.
-[4] Period of 310 usec. HWTRAP register is populated with bootstrapped
-    XTAL frequency.
-[5] Signals reflect the bootstrapped configuration.
-
-ESW_P3_LED_0 low period before reset deassertion:
-
-              5000 usec
-            - 5100 usec
-    TEST     RESET HOLD
-       #         (usec)
-  ---------------------
-       1           5410
-       2           5440
-       3           4375
-       4           5490
-       5           5475
-       6           4335
-       7           4370
-       8           5435
-       9           4205
-      10           4335
-      11           3750
-      12           3170
-      13           4395
-      14           4375
-      15           3515
-      16           4335
-      17           4220
-      18           4175
-      19           4175
-      20           4350
-
-     Min           3170
-     Max           5490
-
-  Median       4342.500
-     Avg       4466.500
-
-Revert commit 2920dd92b980 ("net: dsa: mt7530: disable LEDs before reset").
-Changing the state of pins via reset assertion is simpler and more
-efficient than doing so by setting the LED controller off.
-
-Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
-Fixes: c288575f7810 ("net: dsa: mt7530: Add the support of MT7531 switch")
-Co-developed-by: Justin Swartz <justin.swartz@risingedge.co.za>
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4cace675d687 ("bnx2x: Alloc 4k fragment for each rx ring buffer element")
+Signed-off-by: Thinh Tran <thinhtr@linux.ibm.com>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Link: https://lore.kernel.org/r/20240315205535.1321-1-thinhtr@linux.ibm.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mt7530.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index b988c8a40d536..80b346d4d990f 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -2187,11 +2187,11 @@ mt7530_setup(struct dsa_switch *ds)
- 	 */
- 	if (priv->mcm) {
- 		reset_control_assert(priv->rstc);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		reset_control_deassert(priv->rstc);
- 	} else {
- 		gpiod_set_value_cansleep(priv->reset, 0);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		gpiod_set_value_cansleep(priv->reset, 1);
- 	}
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
+index d8b1824c334d3..0bc1367fd6492 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
+@@ -1002,9 +1002,6 @@ static inline void bnx2x_set_fw_mac_addr(__le16 *fw_hi, __le16 *fw_mid,
+ static inline void bnx2x_free_rx_mem_pool(struct bnx2x *bp,
+ 					  struct bnx2x_alloc_pool *pool)
+ {
+-	if (!pool->page)
+-		return;
+-
+ 	put_page(pool->page);
  
-@@ -2401,11 +2401,11 @@ mt7531_setup(struct dsa_switch *ds)
- 	 */
- 	if (priv->mcm) {
- 		reset_control_assert(priv->rstc);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		reset_control_deassert(priv->rstc);
- 	} else {
- 		gpiod_set_value_cansleep(priv->reset, 0);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		gpiod_set_value_cansleep(priv->reset, 1);
- 	}
+ 	pool->page = NULL;
+@@ -1015,6 +1012,9 @@ static inline void bnx2x_free_rx_sge_range(struct bnx2x *bp,
+ {
+ 	int i;
+ 
++	if (!fp->page_pool.page)
++		return;
++
+ 	if (fp->mode == TPA_MODE_DISABLED)
+ 		return;
  
 -- 
 2.43.0
