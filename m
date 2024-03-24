@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C387B28FEAA;
-	Sun, 24 Mar 2024 23:49:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105551836C9;
+	Sun, 24 Mar 2024 23:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324195; cv=none; b=N+bFoZMyZaTQT7N1pbFq13u+WmC758CGypQ2LcvJ62Er7BQjFauc8bGuQLPDDz2KA2LIEUQeqYCT+gb2Y/C1rFsOUvqpHaO3wMPwlkPHFWuBcU/Z1SP0Yi3Z0IVi4k9I6u9QkNLs9XmTz11SMS2Tb080ASk1RBlZ6r3L6680YxM=
+	t=1711324222; cv=none; b=uVSktg+/pePFvlgVIOqEXKj0j7pSCaQSTGCM96YR/4HIY5QnbF85TeJlhUpvZoWmUPTwRoHr9IK125x3+VxwRLQL+gEkonT5jzUzmStrg/4sSMwNhgiFVbHIbboQI/J5IO7uLoYnkKLzkBpKjp5b0/Pgf1Ys3zkIWu8/o8b/Yyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324195; c=relaxed/simple;
-	bh=BGr5Kim+ObIEgA059GrzTSmPeFp/yrDV29RR3h9nPwY=;
+	s=arc-20240116; t=1711324222; c=relaxed/simple;
+	bh=1jDYd53jim3o+DnL/gcsQfkGwzdeqRP4MNNLaXnXoPo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QQyBDkuf0HkH7vWHNd2dxJ5OKePnPijMVWM5TRxT+PSqLYvmdvJvAi8vBoSt3pWcvrRY55FTr0Ru8Rjixwy+atWoXSNKB13vCgh5gfE+odNOAsktMckuU3PISf5zi0Nl0C0RSOjV6WFkPApuMqEiNEzBSFzXqtSdyA/hPZX9YiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6IS4zPC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=b0btKCZAvyxrqiUkIRRz3CYEq8/nHvvpFS9mzv4f65rwfIxDUi59bf8nGVvfBrLSqUxMpoH8KgjengahFff+YiAM2D/uL6KK6zsilX7iAqW/SbJ1JcTNwk7pNkfpeoPB3kpsKIBldPoJRyCbho1GfWx8bK0gAhMGY8OPDjW9guM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eE90f+GV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6IS4zPC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30BB7C43394;
-	Sun, 24 Mar 2024 23:49:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eE90f+GV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35EFAC433C7;
+	Sun, 24 Mar 2024 23:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324194;
-	bh=BGr5Kim+ObIEgA059GrzTSmPeFp/yrDV29RR3h9nPwY=;
+	s=k20201202; t=1711324220;
+	bh=1jDYd53jim3o+DnL/gcsQfkGwzdeqRP4MNNLaXnXoPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E6IS4zPClcPiVvae77JvBEDL+ZBFF+fDmCmYgO1sK2JkmOe80KJdAE/gA6gDoU9NJ
-	 H239Cikrtc/YTvHyhzXFEGNk2FxqYdwaZna6kY0ZqqOoj8Z+XzeMFPiQnhLeR0pms9
-	 uOwHGlZZJ8MFRE226Mi1FrPDA5WMHaD0KA5/v5lB+uUw+rtH3hr2svxK8cl0g3M+A7
-	 FcBAsi94m/dlao8UquL6R/R+as5TGdbGyz3dJ2q/iEBf+ny/C+y+7VZQ38faM5oH2Z
-	 /oPeky7leSDiCp/fsgoBeZ8vjlWDHMeZzBj7dTpGK7zR3nuj4mJMAH7f6nM5AujTln
-	 2RhqpV/HhfozQ==
+	b=eE90f+GVztFPnhnvyxNuiScDGmZ7CuSJztlUZSUnhlRLmYLlMnb+KAL8xMetCs8Uj
+	 hoY5d1Pumcr+AAV9YN0JvKm6kyHgom0NK4oswFL3ykuKjpwa5nlkSe6IbNL+dwdgq+
+	 2KmsJAUQ87VAoQwomFx1e5HuiEmJAR0anAIg7Dtj+e18YG604MsM8xu8ToGDCHU9R3
+	 OlorhczTcT6h3HU4rNUlImuEhi6Cy2EoZyO+ghz0hoTZeJqO2e374CmSjjQ9XhIrRN
+	 E6Ls2MjJ//hkxqIfNKJ/pv53n8Z59w/43WL3ZDdOmp/7CUst4q2U3UUOMDNTATcjjv
+	 T41sE7iy5Aivw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 183/183] Linux 5.4.273-rc1
-Date: Sun, 24 Mar 2024 19:46:36 -0400
-Message-ID: <20240324234638.1355609-184-sashal@kernel.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Alexandra Winter <wintera@linux.ibm.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 004/148] net/iucv: fix the allocation size of iucv_path_table array
+Date: Sun, 24 Mar 2024 19:47:48 -0400
+Message-ID: <20240324235012.1356413-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
-References: <20240324234638.1355609-1-sashal@kernel.org>
+In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
+References: <20240324235012.1356413-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,26 +49,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+
+[ Upstream commit b4ea9b6a18ebf7f9f3a7a60f82e925186978cfcf ]
+
+iucv_path_table is a dynamically allocated array of pointers to
+struct iucv_path items. Yet, its size is calculated as if it was
+an array of struct iucv_path items.
+
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 4 ++--
+ net/iucv/iucv.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 184b31e84b99c..f6ceb2cc87f25 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 5
- PATCHLEVEL = 4
--SUBLEVEL = 272
--EXTRAVERSION =
-+SUBLEVEL = 273
-+EXTRAVERSION = -rc1
- NAME = Kleptomaniac Octopus
+diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
+index aacaa5119b456..da4cee91fc63d 100644
+--- a/net/iucv/iucv.c
++++ b/net/iucv/iucv.c
+@@ -192,7 +192,7 @@ static char iucv_error_pathid[16] = "INVALID PATHID";
+ static LIST_HEAD(iucv_handler_list);
  
- # *DOCUMENTATION*
+ /*
+- * iucv_path_table: an array of iucv_path structures.
++ * iucv_path_table: array of pointers to iucv_path structures.
+  */
+ static struct iucv_path **iucv_path_table;
+ static unsigned long iucv_max_pathid;
+@@ -603,7 +603,7 @@ static int iucv_enable(void)
+ 
+ 	get_online_cpus();
+ 	rc = -ENOMEM;
+-	alloc_size = iucv_max_pathid * sizeof(struct iucv_path);
++	alloc_size = iucv_max_pathid * sizeof(*iucv_path_table);
+ 	iucv_path_table = kzalloc(alloc_size, GFP_KERNEL);
+ 	if (!iucv_path_table)
+ 		goto out;
 -- 
 2.43.0
 
