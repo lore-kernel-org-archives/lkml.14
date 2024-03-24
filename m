@@ -1,110 +1,96 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3F6219546;
-	Sun, 24 Mar 2024 23:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CABF273D84;
+	Sun, 24 Mar 2024 23:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323353; cv=none; b=SwSwEl3DNZ8vBITyxorZUWnh1N7A1BxAP+Djaw75lB94WrhiPqDrIYCG6WfDMa+CEX919kfhwf9KlLfCYEe4/vLohBlnuwOQ96BsZnxZYokgBMg5eca+9fNDakuuF4rAI5AS63YOd+xFZigYHaVJBRMKOgctWi7RPzDRvCY8uaM=
+	t=1711323327; cv=none; b=IB5pSj1cxbi2+jJ86mt1y/wykf0LS1EQClIUVeuoreepkYv5KZY0I4ahx3O4yvBtDsNBxq6mw/HlPADmDEKwpIya4/47NOhwlotpujBRUbzNexeZAUlDy8OYOxUhXgadmWmLORFJJeNbV6sRyrWgFZ6JCxDLiWCIqlXWf0xorZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323353; c=relaxed/simple;
-	bh=ctMPVuDn3x7Xp7zzxNQY9JLBqhbi5/Nt3kTaMA7EuNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M2tLrrQxYnKi18Qj1H/KDroxWCXGUM/rY/75itUtYQsnQI0PQnK61Qya1ihOx3XEa5vn30jPqFVh1SYX2utL40AHu0iPGqZL41vRVgACdcS+DTYDAmCfMPdtSj/f8Ax3dsERad9Xl788PoPQ4vRhSvINnfsnvfq8RDk7UzsfWYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yJGH2jMG; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1711323327; c=relaxed/simple;
+	bh=YChU0O4tGvLJPSPKaKY3ehmHRybr4RB0vp5VJLcOpIE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IdAtNpUQvGvqHWrG8NgRShwFNGWZe1fEdGM8Q3yghLC5p9J53WHLtsdqeYyf/JzCU9zeACk9kmY/ZpcfeMxhk3XU77xLWcsWP+J8D5DWqAdWTR5X6IkMGKRRvDrTL9GpxWjSN2jOLxutB42z1s0VYM1FBeLodz2s4FH71e3WceM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJgbZocg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yJGH2jMG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HyM6VBVMJtd9gQh+FybJe9PxTYv3KhBiS6vxr8ODZ/s=; b=yJGH2jMG6oXIerQS8er4fiHOXY
-	alYQqiHpU0+UltG/yb+JD5ouEAUPz1wM6IdxphCU9oKyzs8SPFDkEmcnnWb8HLbWiqqwZyjnIfGPa
-	jsYw8HNIhHJaHQaVuCKt5mv3rcspRie21bzf2q4Rhqe1fbf04uEDrQo21EOCjJFmws8KVF/g9jEKu
-	cvPiwOLyQ8/M4pA4ebpVdmXox2hCns6eXUVGQBnDUc0XI7ZxeaVfChxOKFd8MMA5OTrH3e60mYS46
-	vkQNIoASqdpdgrXbk6MYvJG8E6Lw1EErc9ggza3c3+Lb9SLgDG07eXLdGT7Aw9rhOLX8Ho+3+j4Cd
-	gmUCCXHg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1roXNU-0000000DuBN-3XLF;
-	Sun, 24 Mar 2024 23:35:48 +0000
-Date: Sun, 24 Mar 2024 16:35:48 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Mina Almasry <almasrymina@google.com>,
-	Christoph Hellwig <hch@infradead.org>, David Wei <dw@davidwei.uk>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	David Ahern <dsahern@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Yunsheng Lin <linyunsheng@huawei.com>,
-	Shailend Chand <shailend@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
- custom page providers
-Message-ID: <ZgC41EjdPIVndcJX@infradead.org>
-References: <20240305020153.2787423-1-almasrymina@google.com>
- <20240305020153.2787423-3-almasrymina@google.com>
- <ZfegzB341oNc_Ocz@infradead.org>
- <b938514c-61cc-41e6-b592-1003b8deccae@davidwei.uk>
- <ZfjMopBl27-7asBc@infradead.org>
- <CAHS8izMT1Smz6UWu2uwAQRqgZPU7jTfS3GKiA_sDw9KLqoP-JA@mail.gmail.com>
- <20240322161944.4eba02b6@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJgbZocg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 189D5C433F1;
+	Sun, 24 Mar 2024 23:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711323325;
+	bh=YChU0O4tGvLJPSPKaKY3ehmHRybr4RB0vp5VJLcOpIE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bJgbZocgG7mlyeej01lr/TyqPn34kFEqaZydEuCD6eJUIdu0RhoyX2xO4MloyEwGV
+	 QHp46iCG2Eocsyyw593u9ijq03gK5DKKPPMhhOMs0pARjXwHD0UtUCVTbEmZzzKKN6
+	 /U67/7TZxOiwldWzqYstpF2ENtL3k86xJ6Rol/mKFzI9aMZkxsZLha0jZEQX0HHec7
+	 eIVkowtdIrj6cAP8l0IL2c3YPq9WqYYfcm2sAcI4V4wueMxb6845RPzpwiofeLABMb
+	 PwEkDaqqW24YJZDy3I3feMFAyxFvo9C3p36kbHM/aC1AT0BM55sn1B2s5t6HIjVRSS
+	 AWAG4u6622A7g==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: =?UTF-8?q?Alban=20Boy=C3=A9?= <alban.boye@protonmail.com>,
+	Cezary Rojewski <cezary.rojewski@intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.15 026/317] ASoC: Intel: bytcr_rt5640: Add an extra entry for the Chuwi Vi8 tablet
+Date: Sun, 24 Mar 2024 19:30:06 -0400
+Message-ID: <20240324233458.1352854-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
+References: <20240324233458.1352854-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240322161944.4eba02b6@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 22, 2024 at 04:19:44PM -0700, Jakub Kicinski wrote:
-> On Fri, 22 Mar 2024 10:40:26 -0700 Mina Almasry wrote:
-> > Other designs for this hugepage use case are possible, I'm just
-> > describing Jakub's idea for it as a potential use-case for these
-> > hooks. 
-> 
-> I made it ops because I had 4 different implementations with different
-> recycling algorithms. I think it's a fairly reasonable piece of code.
+From: Alban Boyé <alban.boye@protonmail.com>
 
-Assuming we need 4 different implementation.  And I strongly question
-that.
+[ Upstream commit f8b0127aca8c60826e7354e504a12d4a46b1c3bb ]
+
+The bios version can differ depending if it is a dual-boot variant of the tablet.
+Therefore another DMI match is required.
+
+Signed-off-by: Alban Boyé <alban.boye@protonmail.com>
+Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://msgid.link/r/20240228192807.15130-1-alban.boye@protonmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index 49dfbd29c5451..434679afa7e1a 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -668,6 +668,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_SSP0_AIF1 |
+ 					BYT_RT5640_MCLK_EN),
+ 	},
++	{	/* Chuwi Vi8 dual-boot (CWI506) */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "i86"),
++			/* The above are too generic, also match BIOS info */
++			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI2.D86JHBNR02"),
++		},
++		.driver_data = (void *)(BYTCR_INPUT_DEFAULTS |
++					BYT_RT5640_MONO_SPEAKER |
++					BYT_RT5640_SSP0_AIF1 |
++					BYT_RT5640_MCLK_EN),
++	},
+ 	{
+ 		/* Chuwi Vi10 (CWI505) */
+ 		.matches = {
+-- 
+2.43.0
+
