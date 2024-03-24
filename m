@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C406D14601B;
-	Sun, 24 Mar 2024 23:14:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89F31474B2;
+	Sun, 24 Mar 2024 23:14:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322086; cv=none; b=pAQKtvzfPMo9bnTRJHVNJ0H+gsRlpr0MOmumZYuMPEZZ6VrnTT0kUZQ9WiI62HbCG8ZeIOUpmx9XvpFCDcj5KDqTG/Mc2PnIaMkr4EdRH8N3502e81AFe8ji0AkLtK/MLqe3b9jdNPtBo5zsnqgciUj75jy5N4O4oolW/3DTT08=
+	t=1711322091; cv=none; b=AMmAU7qbOvXPAWTDwGNUmWSyah9hz5HuRXmj5+Vfu+ldbm3cncSTCCJbBnYzK3q5FqVuDQyzzKX9OO7vJ4z9fomG4SwOLT3PPzSLvHUekFzKoiND7ctRszHWTg37Fx1gxMJojwIDSPdFvpm7wyo+e6TVoaLr5F76T8EcFj74Wqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322086; c=relaxed/simple;
-	bh=OC6s1nGnzvG27cdhEV9v+152Ge649GD6EUnGf7Ba9Jc=;
+	s=arc-20240116; t=1711322091; c=relaxed/simple;
+	bh=27pxfdOvjIe6sVYvonAoU65JJFg1qimG5TlCJRsNZYs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WbGaEQEIvrWZKXSXk0Oa1th6GnhmhYXHKA/sMlTbWTNbhPrudjuKi//TlKPIJv+eLfC0VOq5gnJ5cdlPtmCKozXu16fBvfXqNUS4hCygcnQIxMLxFz7ZjGajq0euUr+7bwoUU5rNklPGcaesUVapqZpUGpEsK9zWOrRg099wEFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I4Wi4FKW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=suu/LjIvsozjbKTDagXqFcJQp/xtDQjgTwHGcZpfUR81AqJi+CiXHczZv/GBWOX6yOkEi0P+dHamcQ8yAlmfHQqDZkepJTB1OCleB08+oksadbhQjcmDlBGxqpG86NTI6iu/eMW/2YFFjPw2FVL6aZ1OU8ARI+icN6veYhi0Lwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZVHWpQC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I4Wi4FKW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA98C433A6;
-	Sun, 24 Mar 2024 23:14:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZVHWpQC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01C6BC43399;
+	Sun, 24 Mar 2024 23:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322086;
-	bh=OC6s1nGnzvG27cdhEV9v+152Ge649GD6EUnGf7Ba9Jc=;
+	s=k20201202; t=1711322091;
+	bh=27pxfdOvjIe6sVYvonAoU65JJFg1qimG5TlCJRsNZYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I4Wi4FKWMUm3GKg4EP2rytxxnr4bEGd2cYu1Wfl/sxmsjKm/fWpnKNeLcweJiZdN8
-	 sYb739cYjvIqQeI6y/sSMtQugbe6CM6/jhguDBCV5jlk85JVqv/mtVD6r561Yec8q0
-	 rGu+fZwcPfxi2J2B3OBBixI1+5+uzi06Sq1J1/rsvkhU+x4e8H7UehE1JDuPDCPj/1
-	 XgWZE7L093VPRgSnwMcAE87uNuz8bJoi2/FaitG+kcJuz3wRX5JumUlavZ2nBsHF7w
-	 LpZse7Dm/L7NbwvgrYgqgQv1K5gUdNDG/bzitJHn2v877L+yGfeoHmhgm4ZArRuE2r
-	 f78hRWfkY9ZAA==
+	b=aZVHWpQCzyJNqeGSWEdEE7H88JhSasklHAx8Onf7j72PDnjihJ4lqVpQL2b8TK6YC
+	 4XorSTGz4ro8nLtKNCwYSuDJWoJyz3OxnC7Thk36NynaQ5mUGdGgvjZ3JEOXbvRzya
+	 Pf7Hm81S/qXCzUjpHRvhZKSXbq8MuMHNJgNgcMNEMnMaFuRfy/4C9yKj1npgMjTMVp
+	 onPMUroCxC3RMBxa5r9PxmFJJoj/45zLgbeWJQ84iXOAG5a6qMQjna6bI7j5QzGUl7
+	 oOr7KQbuDJSe4pcDdr+RYyu1AMRF7h63qDxNNoCa0P70nRS1vouSdR6GtFry+UYVWk
+	 Ztx3rJ5ZoKkTw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 160/451] powercap: dtpm_cpu: Fix error check against freq_qos_add_request()
-Date: Sun, 24 Mar 2024 19:07:16 -0400
-Message-ID: <20240324231207.1351418-161-sashal@kernel.org>
+Subject: [PATCH 6.1 165/451] ARM: dts: arm: realview: Fix development chip ROM compatible value
+Date: Sun, 24 Mar 2024 19:07:21 -0400
+Message-ID: <20240324231207.1351418-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,39 +48,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit b50155cb0d609437236c88201206267835c6f965 ]
+[ Upstream commit 3baa4c5143d65ebab2de0d99a395e5f4f1f46608 ]
 
-The caller of the function freq_qos_add_request() checks again a non
-zero value but freq_qos_add_request() can return '1' if the request
-already exists. Therefore, the setup function fails while the QoS
-request actually did not failed.
+When the development chip ROM was added, the "direct-mapped" compatible
+value was already obsolete.  In addition, the device node lacked the
+accompanying "probe-type" property, causing the old physmap_of_core
+driver to fall back to trying all available probe types.
+Unfortunately this fallback was lost when the DT and pdata cases were
+merged.
 
-Fix that by changing the check against a negative value like all the
-other callers of the function.
+Fix this by using the modern "mtd-rom" compatible value instead.
 
-Fixes: 0e8f68d7f0485 ("Add CPU energy model based support")
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 5c3f5edbe0a1dff3 ("ARM: realview: add flash devices to the PB1176 DTS")
+Fixes: 642b1e8dbed7bbbf ("mtd: maps: Merge physmap_of.c into physmap-core.c")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/powercap/dtpm_cpu.c | 2 +-
+ arch/arm/boot/dts/arm-realview-pb1176.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/powercap/dtpm_cpu.c b/drivers/powercap/dtpm_cpu.c
-index 9193c3b8edebe..ae7ee611978ba 100644
---- a/drivers/powercap/dtpm_cpu.c
-+++ b/drivers/powercap/dtpm_cpu.c
-@@ -219,7 +219,7 @@ static int __dtpm_cpu_setup(int cpu, struct dtpm *parent)
- 	ret = freq_qos_add_request(&policy->constraints,
- 				   &dtpm_cpu->qos_req, FREQ_QOS_MAX,
- 				   pd->table[pd->nr_perf_states - 1].frequency);
--	if (ret)
-+	if (ret < 0)
- 		goto out_dtpm_unregister;
+diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
+index efed325af88d2..d99bac02232b3 100644
+--- a/arch/arm/boot/dts/arm-realview-pb1176.dts
++++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
+@@ -451,7 +451,7 @@ pb1176_serial3: serial@1010f000 {
  
- 	cpufreq_cpu_put(policy);
+ 		/* Direct-mapped development chip ROM */
+ 		pb1176_rom@10200000 {
+-			compatible = "direct-mapped";
++			compatible = "mtd-rom";
+ 			reg = <0x10200000 0x4000>;
+ 			bank-width = <1>;
+ 		};
 -- 
 2.43.0
 
