@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7626614C5BD;
-	Sun, 24 Mar 2024 23:17:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E538815E1F7;
+	Sun, 24 Mar 2024 23:17:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322251; cv=none; b=k1uMfxbQisfe8jqm4YrUyxjxjhh9R4yZuJJyHuz4oIyjMcN6PSZy4hWPPCksXqKlq0rnY5j7Ae9uK4tmJ9/Q+gZRSKQsyf24Zx+pijPF25+WloIA1q3tWKtSaVuSURRRndu04X5vaQeJ51pgdn0gHSrCPlEmHv9NRqnAioiIXwY=
+	t=1711322263; cv=none; b=cTB8i5LBYeph5FkNKDG1LwBFq7onIuLP5LYxY5gimqc2wvCtZNY9CEvHb1G1lCvHlak0DrxQdNZeiM2AffdSlHF0nKYm7DNXoIYE2ndD4xzw7KXYOvHoR/VLzPGVcrBpF9C6VVldQNRegEDfMXqJWJpbiEh6p0EtO3qfUdiIfBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322251; c=relaxed/simple;
-	bh=fejz7w+e6Aj4cT1OE67UQDec9MuCv/5OD/3K8QSXQsU=;
+	s=arc-20240116; t=1711322263; c=relaxed/simple;
+	bh=qUsKLSR4/2S+QJrOFojeB/hmcUgRxhpYTpV7hOoNmWw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CORSpTDqA20WKNksEP5fiLdu83F1sCPtuKLU5p/6bIjvTQQyRVx6H/E5TtBKPeOIvACxKofxoFoZ1zSlS0iuUjH3i63csYp06KIJgK1+MZsyjAwtQm2NNcEfq5M5JFhTdaWIqyN6T7Tr8gXHDp7TmYwoc5bMW2BGmH1P2W7GGgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BqD6nTj1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RulLrVEbFbahRs1WgBjpgibVjWZbxaoXvVtg9903WxjwF5oe1oFpjJ3Xb5QVzh/EF2fVCN3jv+mJMkcQbd7bDRuQqk4nCOcn+pjFtBsemOtd9mWmYRVDO1qOW2dLfhM0/raDhponTd3J+YClKQXV+bQKLFLxi6tkufTYO0ewp/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=juYcSnVU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BqD6nTj1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF18C43390;
-	Sun, 24 Mar 2024 23:17:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="juYcSnVU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05806C433C7;
+	Sun, 24 Mar 2024 23:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322250;
-	bh=fejz7w+e6Aj4cT1OE67UQDec9MuCv/5OD/3K8QSXQsU=;
+	s=k20201202; t=1711322261;
+	bh=qUsKLSR4/2S+QJrOFojeB/hmcUgRxhpYTpV7hOoNmWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BqD6nTj137H/L8nDb9AnLJQrbwY9jpZ2fq3Uejej2ttOL/gEESGWaZgSN9yZkcN/E
-	 XXvzjQ2LwYg/HRmnbYaky/YfO2wtOO7P1XP0Qs3oJGtE5jrz5LtJuO9Y5/Rrnhy3j4
-	 qqPM9lt8B6oei8Eqdrzc2m//0WYg4tpH0h37CerZ6VQC83aJHcDok1fi+IHy7ROVpu
-	 qSVYUmikPHmxC1OsTCziPDK+oCqRNAwKVr9YEI2GLBGXp6FsnZhvdIlNhgIbznqv6g
-	 dEAKBf0yNqnWX4uzA/gCaMQCxUhQqj4hr78RojUDNNcX4xGobf/SMC4r339igdqmx+
-	 P5VeRx4UQOsMg==
+	b=juYcSnVUcQj4WrsUDrkdPhc7DArB0BJAtQ4QdvTJBva6c/qTrW5tvdxfe55gPiLyY
+	 mSg3dLb7Meb9ec1gDd5UMPmjg2TZ2GxMoDokcQfMgn6PKlVZ+eMHETdcSOZbQBziB7
+	 OFmGkUtI9QoI/5NVM/TPxoHBwNbBfWN9xVS08u6+0FiP3/VXC0kmPrfsS/8A4Vt+I2
+	 U7XrWPQD5tOMsY2v3gmh82KBX5Rk376YNIjwnz6rUSN+Xa3roycOxyA1gL5nQCZRsT
+	 EKRbwXt9vfO0x24WiwW7KBMBdhmYbw7xtA7OrjxT7uWxSYZ27AGvV7OzqDSlitB3XD
+	 1DQDaJl9xUIqw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kajol Jain <kjain@linux.ibm.com>,
-	Akanksha J N <akanksha@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
+Cc: Sam Ravnborg <sam@ravnborg.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 332/451] powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks
-Date: Sun, 24 Mar 2024 19:10:08 -0400
-Message-ID: <20240324231207.1351418-333-sashal@kernel.org>
+Subject: [PATCH 6.1 344/451] sparc32: Fix section mismatch in leon_pci_grpci
+Date: Sun, 24 Mar 2024 19:10:20 -0400
+Message-ID: <20240324231207.1351418-345-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,115 +50,60 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kajol Jain <kjain@linux.ibm.com>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-[ Upstream commit ad86d7ee43b22aa2ed60fb982ae94b285c1be671 ]
+[ Upstream commit 24338a6ae13cb743ced77da1b3a12c83f08a0c96 ]
 
-Running event hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
-in one of the system throws below error:
+Passing a datastructre marked _initconst to platform_driver_register()
+is wrong. Drop the __initconst notation.
 
- ---Logs---
- # perf list | grep hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles
-  hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=?/[Kernel PMU event]
+This fixes the following warnings:
 
- # perf stat -v -e hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ sleep 2
-Using CPUID 00800200
-Control descriptor is not initialized
-Warning:
-hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ event is not supported by the kernel.
-failed to read counter hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
+WARNING: modpost: vmlinux: section mismatch in reference: grpci1_of_driver+0x30 (section: .data) -> grpci1_of_match (section: .init.rodata)
+WARNING: modpost: vmlinux: section mismatch in reference: grpci2_of_driver+0x30 (section: .data) -> grpci2_of_match (section: .init.rodata)
 
- Performance counter stats for 'system wide':
-
-   <not supported>      hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/
-
-       2.000700771 seconds time elapsed
-
-The above error is because of the hcall failure as required
-permission "Enable Performance Information Collection" is not set.
-Based on current code, single_gpci_request function did not check the
-error type incase hcall fails and by default returns EINVAL. But we can
-have other reasons for hcall failures like H_AUTHORITY/H_PARAMETER with
-detail_rc as GEN_BUF_TOO_SMALL, for which we need to act accordingly.
-
-Fix this issue by adding new checks in the single_gpci_request and
-h_gpci_event_init functions.
-
-Result after fix patch changes:
-
- # perf stat -e hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ sleep 2
-Error:
-No permission to enable hv_gpci/dispatch_timebase_by_processor_processor_time_in_timebase_cycles,phys_processor_idx=0/ event.
-
-Fixes: 220a0c609ad1 ("powerpc/perf: Add support for the hv gpci (get performance counter info) interface")
-Reported-by: Akanksha J N <akanksha@linux.ibm.com>
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/20240229122847.101162-1-kjain@linux.ibm.com
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Andreas Larsson <andreas@gaisler.com>
+Fixes: 4154bb821f0b ("sparc: leon: grpci1: constify of_device_id")
+Fixes: 03949b1cb9f1 ("sparc: leon: grpci2: constify of_device_id")
+Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Reviewed-by: Andreas Larsson <andreas@gaisler.com>
+Tested-by: Andreas Larsson <andreas@gaisler.com>
+Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+Link: https://lore.kernel.org/r/20240224-sam-fix-sparc32-all-builds-v2-7-1f186603c5c4@ravnborg.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/hv-gpci.c | 29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ arch/sparc/kernel/leon_pci_grpci1.c | 2 +-
+ arch/sparc/kernel/leon_pci_grpci2.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/perf/hv-gpci.c b/arch/powerpc/perf/hv-gpci.c
-index 7ff8ff3509f5f..943248a0e9a9d 100644
---- a/arch/powerpc/perf/hv-gpci.c
-+++ b/arch/powerpc/perf/hv-gpci.c
-@@ -164,6 +164,20 @@ static unsigned long single_gpci_request(u32 req, u32 starting_index,
+diff --git a/arch/sparc/kernel/leon_pci_grpci1.c b/arch/sparc/kernel/leon_pci_grpci1.c
+index e6935d0ac1ec9..c32590bdd3120 100644
+--- a/arch/sparc/kernel/leon_pci_grpci1.c
++++ b/arch/sparc/kernel/leon_pci_grpci1.c
+@@ -696,7 +696,7 @@ static int grpci1_of_probe(struct platform_device *ofdev)
+ 	return err;
+ }
  
- 	ret = plpar_hcall_norets(H_GET_PERF_COUNTER_INFO,
- 			virt_to_phys(arg), HGPCI_REQ_BUFFER_SIZE);
-+
-+	/*
-+	 * ret value as 'H_PARAMETER' with detail_rc as 'GEN_BUF_TOO_SMALL',
-+	 * specifies that the current buffer size cannot accommodate
-+	 * all the information and a partial buffer returned.
-+	 * Since in this function we are only accessing data for a given starting index,
-+	 * we don't need to accommodate whole data and can get required count by
-+	 * accessing first entry data.
-+	 * Hence hcall fails only incase the ret value is other than H_SUCCESS or
-+	 * H_PARAMETER with detail_rc value as GEN_BUF_TOO_SMALL(0x1B).
-+	 */
-+	if (ret == H_PARAMETER && be32_to_cpu(arg->params.detail_rc) == 0x1B)
-+		ret = 0;
-+
- 	if (ret) {
- 		pr_devel("hcall failed: 0x%lx\n", ret);
- 		goto out;
-@@ -228,6 +242,7 @@ static int h_gpci_event_init(struct perf_event *event)
- {
- 	u64 count;
- 	u8 length;
-+	unsigned long ret;
+-static const struct of_device_id grpci1_of_match[] __initconst = {
++static const struct of_device_id grpci1_of_match[] = {
+ 	{
+ 	 .name = "GAISLER_PCIFBRG",
+ 	 },
+diff --git a/arch/sparc/kernel/leon_pci_grpci2.c b/arch/sparc/kernel/leon_pci_grpci2.c
+index ca22f93d90454..dd06abc61657f 100644
+--- a/arch/sparc/kernel/leon_pci_grpci2.c
++++ b/arch/sparc/kernel/leon_pci_grpci2.c
+@@ -887,7 +887,7 @@ static int grpci2_of_probe(struct platform_device *ofdev)
+ 	return err;
+ }
  
- 	/* Not our event */
- 	if (event->attr.type != event->pmu->type)
-@@ -258,13 +273,23 @@ static int h_gpci_event_init(struct perf_event *event)
- 	}
- 
- 	/* check if the request works... */
--	if (single_gpci_request(event_get_request(event),
-+	ret = single_gpci_request(event_get_request(event),
- 				event_get_starting_index(event),
- 				event_get_secondary_index(event),
- 				event_get_counter_info_version(event),
- 				event_get_offset(event),
- 				length,
--				&count)) {
-+				&count);
-+
-+	/*
-+	 * ret value as H_AUTHORITY implies that partition is not permitted to retrieve
-+	 * performance information, and required to set
-+	 * "Enable Performance Information Collection" option.
-+	 */
-+	if (ret == H_AUTHORITY)
-+		return -EPERM;
-+
-+	if (ret) {
- 		pr_devel("gpci hcall failed\n");
- 		return -EINVAL;
- 	}
+-static const struct of_device_id grpci2_of_match[] __initconst = {
++static const struct of_device_id grpci2_of_match[] = {
+ 	{
+ 	 .name = "GAISLER_GRPCI2",
+ 	 },
 -- 
 2.43.0
 
