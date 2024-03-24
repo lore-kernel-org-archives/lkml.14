@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F4C276C52;
-	Sun, 24 Mar 2024 23:36:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E7C175CAB;
+	Sun, 24 Mar 2024 23:36:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323395; cv=none; b=OddUsV1bHiJvVTXwkHUSQxRmJRMeaEIXXDNUc+09J4ksZfLg+ZPpHcJoRwFb26NS7KUMD9xIQ4zjJ4qhfAq1x/GYDhy7c5YL2/2G+yFMIo5vTLLzaxVBD8EV4zw05hBEnuVi1uftIDV+2q5DQQwh7As8VOQmPvZkOPldRJdBTaQ=
+	t=1711323405; cv=none; b=LZ7u2mY4qCTMfcAwTBC+k8YiS6Yzc/cH94efN36eqF29ccCB14Rhw0v/MK+jdamTRBRLlqZmwiVPDXaRpotP8NLrBp7iSvZ07LZT6pRV+fZ/1stOiFQ4tqCSEv4tbuSU9sCDXO64XwpiCySTTIV72VXL8aZRhRyP92SkDXQpZfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323395; c=relaxed/simple;
-	bh=zWlzrrm/5wQhSozp+1bHo/83+epwrXZElVWrst8o21k=;
+	s=arc-20240116; t=1711323405; c=relaxed/simple;
+	bh=Xupc0U8JbIbytEqMbadnHXez4ca++rZbhWvNQ4V3vR8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cQnh+YOgMH6ec0Lx9PI7mc3c0O8mVppaO/5rQfjXjHpQAHXsg0rolXdZMEZrScycdl0E6TP8jpVGg5d4S3fIEtBX1SNI3LFb8PQFwxoZ0YzuRX3hJ4WNkykwRQ+rvxHPEYtgSRO0wpZqkDvFcGrMG4/sTOu0yZjqG2Y9RzkJ3hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d6D15jeP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ib9W2Ld/8tvGTPPH5B26z0bhfex9eFkPzSE8qcn5VGNypWRI2okQSefK+c5p29OFK9ouXT9crfBXratmaHHRi+VSoVLEyV7VoHlQGLx67q1+x+Iknv6b9o8lb0FdPe0dvlQD+WXMLUglcGpqo49clce53QpJYMTjS/plwUKMSug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovz/dwuq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d6D15jeP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3A98C433F1;
-	Sun, 24 Mar 2024 23:36:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovz/dwuq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EBBBC43390;
+	Sun, 24 Mar 2024 23:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323395;
-	bh=zWlzrrm/5wQhSozp+1bHo/83+epwrXZElVWrst8o21k=;
+	s=k20201202; t=1711323405;
+	bh=Xupc0U8JbIbytEqMbadnHXez4ca++rZbhWvNQ4V3vR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=d6D15jePQjHcjKyHOqEK9QdipMOL0uYc8UBeHY6GACXglxvJv02XDephX7eZ7yfyD
-	 FMX2tQqbGVm90Q3XUWfBSCpG6z+1/KwZg+eiH8Jum09x3lfaLaZIfHixA3W/xqzVD2
-	 3KgMceYiiS2s0eEqqAoROM6vWAwDln58lu4lV1XropV+VhFulFg/rDItxVegqHmjVb
-	 gQhmNkUp3OFhCwus8HL0mxcjo4kg78LHymXOMMHrXkRXhFtlQ+LnjTIoJnEeocEQGE
-	 ISitSVrME6zS+SDbZA/jz+xSZBouT5hvBEVHcDVD/9VAvt0tVWp5dWLJTHemc3V2Mi
-	 tQE4aaxmp+95g==
+	b=ovz/dwuqB/x7yLsgfXE/CoEJFKlvygYf8S3XteSn1tNxloMHqSDojtKTcJnHmayTf
+	 WxmjnVm5n3t3ss+sX05AxdRLiIEAyjyq7ZI4jU9V93CobELZfQWyN3f/n1o95MdyAd
+	 Ihv50IIt7lNI+L1eI5pAQVTb5SRLeMG2zjeyqozPHm0V+wvbgX2tNZ0g/lHXXU3RER
+	 AtELELJeCA36RP7lqtEMq5MZAW7IjcWdwknNU0ZEFtMZRRa0AUVaAT1NxGajLeE571
+	 tSH7mHqafaO58p4/q5Qovg7SjmFflED52WKon+JQp2XIP75pfqCuF5VwvGWYEAnH0Y
+	 xXAWbe4iyXIUg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Taehee Yoo <ap420073@gmail.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	David Ahern <dsahern@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joerg Roedel <jroedel@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 096/317] ipv6: mcast: remove one synchronize_net() barrier in ipv6_mc_down()
-Date: Sun, 24 Mar 2024 19:31:16 -0400
-Message-ID: <20240324233458.1352854-97-sashal@kernel.org>
+Subject: [PATCH 5.15 106/317] iommu/amd: Mark interrupt as managed
+Date: Sun, 24 Mar 2024 19:31:26 -0400
+Message-ID: <20240324233458.1352854-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -51,40 +49,66 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-[ Upstream commit 17ef8efc00b34918b966388b2af0993811895a8c ]
+[ Upstream commit 0feda94c868d396fac3b3cb14089d2d989a07c72 ]
 
-As discussed in the past (commit 2d3916f31891 ("ipv6: fix skb drops
-in igmp6_event_query() and igmp6_event_report()")) I think the
-synchronize_net() call in ipv6_mc_down() is not needed.
+On many systems that have an AMD IOMMU the following sequence of
+warnings is observed during bootup.
 
-Under load, synchronize_net() can last between 200 usec and 5 ms.
+```
+pci 0000:00:00.2  can't derive routing for PCI INT A
+pci 0000:00:00.2: PCI INT A: not connected
+```
 
-KASAN seems to agree as well.
+This series of events happens because of the IOMMU initialization
+sequence order and the lack of _PRT entries for the IOMMU.
 
-Fixes: f185de28d9ae ("mld: add new workqueues for process mld events")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Taehee Yoo <ap420073@gmail.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: David Ahern <dsahern@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+During initialization the IOMMU driver first enables the PCI device
+using pci_enable_device().  This will call acpi_pci_irq_enable()
+which will check if the interrupt is declared in a PCI routing table
+(_PRT) entry. According to the PCI spec [1] these routing entries
+are only required under PCI root bridges:
+	The _PRT object is required under all PCI root bridges
+
+The IOMMU is directly connected to the root complex, so there is no
+parent bridge to look for a _PRT entry. The first warning is emitted
+since no entry could be found in the hierarchy. The second warning is
+then emitted because the interrupt hasn't yet been configured to any
+value.  The pin was configured in pci_read_irq() but the byte in
+PCI_INTERRUPT_LINE return 0xff which means "Unknown".
+
+After that sequence of events pci_enable_msi() is called and this
+will allocate an interrupt.
+
+That is both of these warnings are totally harmless because the IOMMU
+uses MSI for interrupts.  To avoid even trying to probe for a _PRT
+entry mark the IOMMU as IRQ managed. This avoids both warnings.
+
+Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html?highlight=_prt#prt-pci-routing-table [1]
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Fixes: cffe0a2b5a34 ("x86, irq: Keep balance of IOAPIC pin reference count")
+Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
+Link: https://lore.kernel.org/r/20240122233400.1802-1-mario.limonciello@amd.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/mcast.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/iommu/amd/init.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index 0ea7d97cdc025..6e5d1ade48a89 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -2722,7 +2722,6 @@ void ipv6_mc_down(struct inet6_dev *idev)
- 	/* Should stop work after group drop. or we will
- 	 * start work again in mld_ifc_event()
- 	 */
--	synchronize_net();
- 	mld_query_stop_work(idev);
- 	mld_report_stop_work(idev);
+diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+index 50ea582be5910..ef855495c210e 100644
+--- a/drivers/iommu/amd/init.c
++++ b/drivers/iommu/amd/init.c
+@@ -1821,6 +1821,9 @@ static int __init iommu_init_pci(struct amd_iommu *iommu)
+ 	/* Prevent binding other PCI device drivers to IOMMU devices */
+ 	iommu->dev->match_driver = false;
+ 
++	/* ACPI _PRT won't have an IRQ for IOMMU */
++	iommu->dev->irq_managed = 1;
++
+ 	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_CAP_HDR_OFFSET,
+ 			      &iommu->cap);
  
 -- 
 2.43.0
