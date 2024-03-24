@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717F814A61C;
-	Sun, 24 Mar 2024 22:57:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D061DF7A7;
+	Sun, 24 Mar 2024 22:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321025; cv=none; b=piNWvI2hEWip72lKTlXoSYL3zGzVuaTiIKwAJY9YK90IShu5FVOqVYv6+uBATtFzvodmjth34BCpG1wwdjlESY7P9IWFYNEOghtZONaOSbg3OPy/8bRoYLMh+u7FZ18abLFD/55ysKyx2C9za9gExzicVhfVx6B92gZ/Y0jKBZE=
+	t=1711321021; cv=none; b=Ck4Ykt/PiE9QseqOxP5sdGKZT15yTeHEZYzXMkCosJbsScdTkQFg/IlH/TcXeVFbgAdFMvhbeEKrYhRUvizcEW0CS/4l9+tMqrjwym/D+AdU37a/IvhqnCdrFcEXh3G/JOerloKUNuHva3m7ZfiiaocxRR/CRJZ2i6S9SUtHeYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321025; c=relaxed/simple;
-	bh=perYTdueoSfw7UTcDcRUsae0k1dNzWNsx1L/dSUmIQk=;
+	s=arc-20240116; t=1711321021; c=relaxed/simple;
+	bh=DnIEbnQD9ob1MO8/v30ZkD/ZbTdidfNE4UviQRjCoEE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mbnwtBFvljSeIIAmUZa9ZYx62oguUT3JTX9Ume44dYqL7nbgWqjZ4WJHpId1MqQ4DXQb1uIFf2aC8i04c7DHdIwIYb5vEZaE0uTZVl9F5yWSYegl6sfU3p8c4CugB6vAdGvz9phohR8EPNpgJXy1vCLAFDzSmS4ytQmO7l6FX/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9fI+Rmc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GGt+ucxNdK67tZrSm8EOk+yp/c+6gQjbN2uarrSg3dvV3ZlcGn6G/3XI3qBZVQ+T3el8afAbc+dtbeKHTCS2jNeF4EZ/XK1tgZB0u+57Jph5MHM+Rk1/7ykQvoOwuIcht1NrGDqnvOlJej1Eptd9iBngopk5Iirgz8t3WcDhKhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/UJPF6a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9fI+Rmc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AADB3C43390;
-	Sun, 24 Mar 2024 22:57:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/UJPF6a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9712C433F1;
+	Sun, 24 Mar 2024 22:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321024;
-	bh=perYTdueoSfw7UTcDcRUsae0k1dNzWNsx1L/dSUmIQk=;
+	s=k20201202; t=1711321021;
+	bh=DnIEbnQD9ob1MO8/v30ZkD/ZbTdidfNE4UviQRjCoEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D9fI+RmcLPu3IfyZfELcpo4nXwHUH7+Y2ekBxlpJYYGg3ecVyTxfG+P1huy2SJH6g
-	 atHC0f/UQ0O2qi3fgR0zeshtXV47L4sHiLNyO8Mv1sqsdxMmOish8WpYemVNu5AUfK
-	 sE3alzkG7zkH4glvr0+Abzm+X/98wZmrhN3tls+hWbG/YgLPD7mZlJ0uV3S6GIl/2u
-	 fZkepSL9jxhubo/Z30J2Shn63sl9HFLFS7FvxBqjpAf3dcuDoYzokB/LPb5RZQwBJm
-	 Y/p6ESQti1hRYWIUz3QthwJ9Zoq/DklEbdVakm/2RCn0uqr7HJBNfcBbHoW/yYXY5c
-	 ftzv7uZSqOQag==
+	b=d/UJPF6aggbyvwY/hws/WfWqFudFI8et+5oqdmbLUeVjtiCdSJlqnZPahfzM5Zz3o
+	 QItexT1TbK2ZUjIUbf/dPwMna/bhxb/I22yex5yeDbnIArq5jFgomg1k0Jv94ZCBda
+	 QkGdDMVHrbjz2GtrILeBxBd2giS+GEpDgaNylU7nYGV6bbHGTvhv0ROyLr/KMpJVGe
+	 lxqxJ9x+eyXpZrrWZbAa/XNPQGI4XSJQnCnFa3erB5blNv20+/6dYnuLMiBrksEsjd
+	 cHAmXZgsik1Q6wt+aD8C/KUoD2Purfc2WVLvgSLeAzR5WZ9Dt0RU/gpRfC8ctZWSuA
+	 SCTvfzVAEFsgw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
+	Jack Wang <jinpu.wang@ionos.com>,
+	Leon Romanovsky <leon@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 587/713] f2fs: compress: fix to check zstd compress level correctly in mount option
-Date: Sun, 24 Mar 2024 18:45:13 -0400
-Message-ID: <20240324224720.1345309-588-sashal@kernel.org>
+Subject: [PATCH 6.7 584/713] RDMA/rtrs-clt: Check strnlen return len in sysfs mpath_policy_store()
+Date: Sun, 24 Mar 2024 18:45:10 -0400
+Message-ID: <20240324224720.1345309-585-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,57 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Alexey Kodanev <aleksei.kodanev@bell-sw.com>
 
-[ Upstream commit e39602da752cd1d0462e3fa04074146f6f2803f6 ]
+[ Upstream commit 7a7b7f575a25aa68ee934ee8107294487efcb3fe ]
 
-f2fs only support to config zstd compress level w/ a positive number due
-to layout design, but since commit e0c1b49f5b67 ("lib: zstd: Upgrade to
-latest upstream zstd version 1.4.10"), zstd supports negative compress
-level, so that zstd_min_clevel() may return a negative number, then w/
-below mount option, .compress_level can be configed w/ a negative number,
-which is not allowed to f2fs, let's add check condition to avoid it.
+strnlen() may return 0 (e.g. for "\0\n" string), it's better to
+check the result of strnlen() before using 'len - 1' expression
+for the 'buf' array index.
 
-mount -o compress_algorithm=zstd:4294967295 /dev/sdx /mnt/f2fs
+Detected using the static analysis tool - Svace.
 
-Fixes: 00e120b5e4b5 ("f2fs: assign default compression level")
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: dc3b66a0ce70 ("RDMA/rtrs-clt: Add a minimum latency multipath policy")
+Signed-off-by: Alexey Kodanev <aleksei.kodanev@bell-sw.com>
+Link: https://lore.kernel.org/r/20240221113204.147478-1-aleksei.kodanev@bell-sw.com
+Acked-by: Jack Wang <jinpu.wang@ionos.com>
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index b0d6a643c9ef1..655cfadc92457 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -663,7 +663,7 @@ static int f2fs_set_lz4hc_level(struct f2fs_sb_info *sbi, const char *str)
- #ifdef CONFIG_F2FS_FS_ZSTD
- static int f2fs_set_zstd_level(struct f2fs_sb_info *sbi, const char *str)
- {
--	unsigned int level;
-+	int level;
- 	int len = 4;
+diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c b/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c
+index d3c436ead6946..4aa80c9388f05 100644
+--- a/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c
++++ b/drivers/infiniband/ulp/rtrs/rtrs-clt-sysfs.c
+@@ -133,7 +133,7 @@ static ssize_t mpath_policy_store(struct device *dev,
  
- 	if (strlen(str) == len) {
-@@ -677,9 +677,15 @@ static int f2fs_set_zstd_level(struct f2fs_sb_info *sbi, const char *str)
- 		f2fs_info(sbi, "wrong format, e.g. <alg_name>:<compr_level>");
- 		return -EINVAL;
- 	}
--	if (kstrtouint(str + 1, 10, &level))
-+	if (kstrtoint(str + 1, 10, &level))
- 		return -EINVAL;
+ 	/* distinguish "mi" and "min-latency" with length */
+ 	len = strnlen(buf, NAME_MAX);
+-	if (buf[len - 1] == '\n')
++	if (len && buf[len - 1] == '\n')
+ 		len--;
  
-+	/* f2fs does not support negative compress level now */
-+	if (level < 0) {
-+		f2fs_info(sbi, "do not support negative compress level: %d", level);
-+		return -ERANGE;
-+	}
-+
- 	if (!f2fs_is_compress_level_valid(COMPRESS_ZSTD, level)) {
- 		f2fs_info(sbi, "invalid zstd compress level: %d", level);
- 		return -EINVAL;
+ 	if (!strncasecmp(buf, "round-robin", 11) ||
 -- 
 2.43.0
 
