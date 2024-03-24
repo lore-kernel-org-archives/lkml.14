@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892D32057F9;
-	Sun, 24 Mar 2024 23:04:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFA42057FF;
+	Sun, 24 Mar 2024 23:04:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321491; cv=none; b=hwWceyWaJaa6EJf88tP1mz4a9gfSmKdsDi3849yeQKd9373LNQcHlwRHC9/uPvgY7/sAyN9Vb6FoA/EWWBZilsMSy3A7VckjTCGXv6b6nKg8uq/Qj2XU21oKzmWrsuFavEBugkNYmtln7VweMd1fes02v1tKJXS29XSHef4dUTw=
+	t=1711321494; cv=none; b=Mwe66bQKoE4/oLFpu7JCyfFQ5SGCMZkWVP4DDyRMhyGp2hAL1isdNgmDY1teS+SJn1C1iX/IDdhW7SiNcc4d9hIjF8UmlGd2sOElTJ6getX5x/beQyJ+czVePEoyw9NyjHnF+XpgwUPi1OX7m5zESc9dBW/EGV9vP/eLIfIr+do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321491; c=relaxed/simple;
-	bh=z9jUFiSp3MUg0mH6coUgrT0+E54jL2MUqfmnswH9CjU=;
+	s=arc-20240116; t=1711321494; c=relaxed/simple;
+	bh=iv2KtoqLQRrFvvCar39HXyb0L8ckaFeZ8n9U20L7Jb0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g7cvxyfyWimISkwm3oJVcKi+TpCrO2353AFAB3xbhtlfgAFkIAGcNkO+XIolWHI0bKNeLPLPURi7vmrPNLNPIrFlyzI4NN+hOGwVf+YTjRvPXHWd/or1dVQ9d7NckX4WJNz9rxNaj/plHyCkzCW3HTxl6JNXmAwJe5XCbKW+TqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WFEiS2ex; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Gvj/UVivaQ/b9mGQGPF2KZoOsJdr9rxP+dH6ef1aG4n1oT6+udJHFQNODT0U2U/nNdZ6nAsxQrXqAn8ixStim9/2dhW23N+QGo519guBWZTln+uzIl2WYIM16bme2COOVyi9gXuRjX4un+CXiED6bKsUmO4qD9mNMEABkbCmu+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=De5GnfW+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WFEiS2ex"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C903C43390;
-	Sun, 24 Mar 2024 23:04:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="De5GnfW+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D442C433F1;
+	Sun, 24 Mar 2024 23:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321490;
-	bh=z9jUFiSp3MUg0mH6coUgrT0+E54jL2MUqfmnswH9CjU=;
+	s=k20201202; t=1711321493;
+	bh=iv2KtoqLQRrFvvCar39HXyb0L8ckaFeZ8n9U20L7Jb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WFEiS2exCdKKt7wvDiPm10iriDzXh2lGMZMMnSZoEruQaK8x0jo3g9asIba6D08Pb
-	 HwRf2rk9feUZdNoE46S1nYLqPYqS7vRSjHxxD+gf6NCWuLDj3gevv0EbY26IhqAJ9s
-	 fYFMf363IDWvbFJH72oiAkQKjbwD7fwvB6dZD7xrqVy4W2YtxVe9BTyPEe21x6aaUi
-	 rmBkzL9gki8Csxr9kziOtdDF93kZpCDFW+ur7EWl71MYewVbMkegTkfwyTu4S+X7XU
-	 X98LJTXBStvK06+idG8IRNmAWvXlic/31H9x6/uZ5Z47X2I9KF1j/Wh9oJPpPqKXRi
-	 cyYFKj55ppqsQ==
+	b=De5GnfW+Vz9dhI6k+pPyK5T7q/lJOdijjuSxEyJhhN5mLD+66PnelN7kyNpqVdSpR
+	 EwlNm+wvW8f7oFvfvWVQKj97t1uYpguUYa8AGm+b3iMhmXXXTuVAO5+WuYJss2PeSu
+	 43zIMd506mhWacgY5dPVP2gu6r4ANPvtf6kdIDxc/j6sqqPqY7DO0qmqqLdfv0bMix
+	 wRHEOugxd+hV/nZN3OchXVa/TxDxc+/+xcnTgnjCQoEF4pTRnLXzAGCCx4Jt5q+Ng0
+	 FUqSYv9aKVMPCy+t9Fs57BLfluX+LoBNT2RVYrbqgFZzIpWYpMXyRzwyA1/+zF5uVE
+	 UhqqoaMDBb8AQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Markus Schneider-Pargmann <msp@baylibre.com>,
-	Judith Mendez <jm@ti.com>,
-	Simon Horman <horms@kernel.org>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 215/638] can: m_can: Start/Cancel polling timer together with interrupts
-Date: Sun, 24 Mar 2024 18:54:12 -0400
-Message-ID: <20240324230116.1348576-216-sashal@kernel.org>
+Subject: [PATCH 6.6 218/638] bpf: don't infer PTR_TO_CTX for programs with unnamed context type
+Date: Sun, 24 Mar 2024 18:54:15 -0400
+Message-ID: <20240324230116.1348576-219-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,79 +48,94 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Markus Schneider-Pargmann <msp@baylibre.com>
+From: Andrii Nakryiko <andrii@kernel.org>
 
-[ Upstream commit a163c5761019b94258ca655b27b46e82657fd6f5 ]
+[ Upstream commit 879bbe7aa4afa80acf72a1cad7f52416ea78c52d ]
 
-Interrupts are enabled/disabled in more places than just m_can_start()
-and m_can_stop(). Couple the polling timer with enabling/disabling of
-all interrupts to achieve equivalent behavior.
+For program types that don't have named context type name (e.g., BPF
+iterator programs or tracepoint programs), ctx_tname will be a non-NULL
+empty string. For such programs it shouldn't be possible to have
+PTR_TO_CTX argument for global subprogs based on type name alone.
+arg:ctx tag is the only way to have PTR_TO_CTX passed into global
+subprog for such program types.
 
-Cc: Judith Mendez <jm@ti.com>
-Fixes: b382380c0d2d ("can: m_can: Add hrtimer to generate software interrupt")
-Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Link: https://lore.kernel.org/all/20240207093220.2681425-2-msp@baylibre.com
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fix this loophole, which currently would assume PTR_TO_CTX whenever
+user uses a pointer to anonymous struct as an argument to their global
+subprogs. This happens in practice with the following (quite common, in
+practice) approach:
+
+typedef struct { /* anonymous */
+    int x;
+} my_type_t;
+
+int my_subprog(my_type_t *arg) { ... }
+
+User's intent is to have PTR_TO_MEM argument for `arg`, but verifier
+will complain about expecting PTR_TO_CTX.
+
+This fix also closes unintended s390x-specific KPROBE handling of
+PTR_TO_CTX case. Selftest change is necessary to accommodate this.
+
+Fixes: 91cc1a99740e ("bpf: Annotate context types")
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Link: https://lore.kernel.org/r/20240212233221.2575350-4-andrii@kernel.org
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/m_can/m_can.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ kernel/bpf/btf.c                              |  3 +++
+ .../bpf/progs/test_global_func_ctx_args.c     | 19 +++++++++++++++++++
+ 2 files changed, 22 insertions(+)
 
-diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
-index 16ecc11c7f62a..2395b1225cc8a 100644
---- a/drivers/net/can/m_can/m_can.c
-+++ b/drivers/net/can/m_can/m_can.c
-@@ -418,6 +418,13 @@ static void m_can_config_endisable(struct m_can_classdev *cdev, bool enable)
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index a31704a6bb614..9445ae6a280e6 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -5655,6 +5655,9 @@ btf_get_prog_ctx_type(struct bpf_verifier_log *log, const struct btf *btf,
+ 		bpf_log(log, "Please fix kernel include/linux/bpf_types.h\n");
+ 		return NULL;
+ 	}
++	/* program types without named context types work only with arg:ctx tag */
++	if (ctx_tname[0] == '\0')
++		return false;
+ 	/* only compare that prog's ctx type name is the same as
+ 	 * kernel expects. No need to compare field by field.
+ 	 * It's ok for bpf prog to do:
+diff --git a/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c b/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
+index 7faa8eef0598b..144d30e654ad2 100644
+--- a/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
++++ b/tools/testing/selftests/bpf/progs/test_global_func_ctx_args.c
+@@ -26,6 +26,23 @@ int kprobe_typedef_ctx(void *ctx)
+ 	return kprobe_typedef_ctx_subprog(ctx);
+ }
  
- static inline void m_can_enable_all_interrupts(struct m_can_classdev *cdev)
- {
-+	if (!cdev->net->irq) {
-+		dev_dbg(cdev->dev, "Start hrtimer\n");
-+		hrtimer_start(&cdev->hrtimer,
-+			      ms_to_ktime(HRTIMER_POLL_INTERVAL_MS),
-+			      HRTIMER_MODE_REL_PINNED);
-+	}
++/* s390x defines:
++ *
++ * typedef user_pt_regs bpf_user_pt_regs_t;
++ * typedef struct { ... } user_pt_regs;
++ *
++ * And so "canonical" underlying struct type is anonymous.
++ * So on s390x only valid ways to have PTR_TO_CTX argument in global subprogs
++ * are:
++ *   - bpf_user_pt_regs_t *ctx (typedef);
++ *   - struct bpf_user_pt_regs_t *ctx (backwards compatible struct hack);
++ *   - void *ctx __arg_ctx (arg:ctx tag)
++ *
++ * Other architectures also allow using underlying struct types (e.g.,
++ * `struct pt_regs *ctx` for x86-64)
++ */
++#ifndef bpf_target_s390
 +
- 	/* Only interrupt line 0 is used in this driver */
- 	m_can_write(cdev, M_CAN_ILE, ILE_EINT0);
+ #define pt_regs_struct_t typeof(*(__PT_REGS_CAST((struct pt_regs *)NULL)))
+ 
+ __weak int kprobe_struct_ctx_subprog(pt_regs_struct_t *ctx)
+@@ -40,6 +57,8 @@ int kprobe_resolved_ctx(void *ctx)
+ 	return kprobe_struct_ctx_subprog(ctx);
  }
-@@ -425,6 +432,11 @@ static inline void m_can_enable_all_interrupts(struct m_can_classdev *cdev)
- static inline void m_can_disable_all_interrupts(struct m_can_classdev *cdev)
- {
- 	m_can_write(cdev, M_CAN_ILE, 0x0);
+ 
++#endif
 +
-+	if (!cdev->net->irq) {
-+		dev_dbg(cdev->dev, "Stop hrtimer\n");
-+		hrtimer_cancel(&cdev->hrtimer);
-+	}
- }
- 
- /* Retrieve internal timestamp counter from TSCV.TSC, and shift it to 32-bit
-@@ -1417,12 +1429,6 @@ static int m_can_start(struct net_device *dev)
- 
- 	m_can_enable_all_interrupts(cdev);
- 
--	if (!dev->irq) {
--		dev_dbg(cdev->dev, "Start hrtimer\n");
--		hrtimer_start(&cdev->hrtimer, ms_to_ktime(HRTIMER_POLL_INTERVAL_MS),
--			      HRTIMER_MODE_REL_PINNED);
--	}
--
- 	return 0;
- }
- 
-@@ -1577,11 +1583,6 @@ static void m_can_stop(struct net_device *dev)
- {
- 	struct m_can_classdev *cdev = netdev_priv(dev);
- 
--	if (!dev->irq) {
--		dev_dbg(cdev->dev, "Stop hrtimer\n");
--		hrtimer_cancel(&cdev->hrtimer);
--	}
--
- 	/* disable all interrupts */
- 	m_can_disable_all_interrupts(cdev);
+ /* this is current hack to make this work on old kernels */
+ struct bpf_user_pt_regs_t {};
  
 -- 
 2.43.0
