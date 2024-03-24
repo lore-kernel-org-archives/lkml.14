@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72ABE14A634;
-	Sun, 24 Mar 2024 22:57:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D7814A600;
+	Sun, 24 Mar 2024 22:57:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321030; cv=none; b=aa9yu465skK92/2hCwTucSM5m+lG0wcQ/RAsU3ESvCPqHLGjcg3ZJAP3P1rYAUKOh4mjCCFQBhsfsCrihtryTK1nPS18JMD40xyDwqLCGATnqxVMDExUh0YHaOaJg/pym3RwIwka9k/GVLn8B3S/0K5BLCYBTGI13LkVyaPpCfM=
+	t=1711321021; cv=none; b=n/7aWlCtsjE3XW5vVrJS2VVsOcA24Ytg43CcvCwRJNYOVZmwy8Fv4hG7FlRYVecEoKPdRmcE0G2NkTSnIth0x+5Gb1cPvuLylcQ1WfP1mOchgRvYLqS5HvYO6m3pCrpm/GmlklLsmchHRx2PajQ9QvvxNzkhI25so1odpYQos1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321030; c=relaxed/simple;
-	bh=Cj8amsikF3auzo51ubBDZNkX034jMQDuD+e/2IkAstQ=;
+	s=arc-20240116; t=1711321021; c=relaxed/simple;
+	bh=w9hTT74KPxpjUb9Jz1A1kgmJgCEjM1yGi+Xx/yRSAec=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LH2LyARIe6932Wj93LrU3OHlfNt/WUMQwYne69vyIus4K64ecevVoT0y75quCGW2HW2qrNcWsRlhLP4kwsAPYI6MYE+kOiGeVwz5kCirq4b808hJhmIdjWxKeg0//B3cJ7cB59zUJN4V7TS/Xk/8tmWVRohjjvsrZWiC69aj4wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IwYYM3ya; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ne1t2k4cz8AmW/P0wsueM9DmGCcA1KwKjh+wDTjt52nMevRN7DMz/qVLFcRN7RnIRrVrdRdK8ovId4eWq21b8IYAzSqIaSKtNGCdKhD+QJMAVmqnRJ9tWgUCQR+notioiGW8LFqwZkECMlYlIhRfjneXO2dKGA5NDRbVls2AyvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGZZKKtc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IwYYM3ya"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A96CBC433C7;
-	Sun, 24 Mar 2024 22:57:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGZZKKtc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDE96C433C7;
+	Sun, 24 Mar 2024 22:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321029;
-	bh=Cj8amsikF3auzo51ubBDZNkX034jMQDuD+e/2IkAstQ=;
+	s=k20201202; t=1711321020;
+	bh=w9hTT74KPxpjUb9Jz1A1kgmJgCEjM1yGi+Xx/yRSAec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IwYYM3yaSRiQv4pGToi1yh7YpEfAbj0VQJxOD9XgHvmSCLrUMkensHLNxhm6E3n+L
-	 +rjho1ujHNZQ/cM19B0tbterzUpum7XhK6eZoo48KGNzLhMsLMxf6mfHT/Ir8UO2w8
-	 vCmqjbouc5NjQv8esKFEDy4R3iNiyIQJvRYrEEloeu8um7ihjLkSh0XuOqPahknkOq
-	 DGYMrmfXTwtewgrZKonbk96nfFBe9xcVBxKBOXr/MKrHmoDPdgVOdWosWQSEpXw14m
-	 CtvglP74P9hjVv8stya/WVpadgaf8SdjksPKY2vWu/3xDYEohVy3Wc/v8ItJG9RZ9D
-	 qWgpV8SYQs9cw==
+	b=qGZZKKtcoe4Cj3gpJ+gUCRIW9L1AK8rpwmpkKsNkKOhlBNu6DXHrHd6iAqHpExIcH
+	 uQMZEVquVKhQErm8meHFE3atORbqmzt3zOwhobIVWFuVhI3Qz7kUpD7LzwbWRrl962
+	 I4hgkMoZZNoTxXKwNoBz3uiQStNbaBuC9lVApDPszVBpL7wo3D8qdKKgqaUvd45dY4
+	 5pSnakNNLnBDA87yK9pfbXgxeoWaGfi3rSJiK0/2ErDxTiFd19O/dl6f5/764kpFpZ
+	 V+6a/zgY9oo9qGZWD/UD/Id8c6Jn6Zs9/k+txBrG+FdR57y7Vw9dI+MBj7xqZaJu2i
+	 fAXj6A2G8ZI5A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>,
+Cc: Shifeng Li <lishifeng@sangfor.com.cn>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jason Gunthorpe <jgg@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 592/713] f2fs: check number of blocks in a current section
-Date: Sun, 24 Mar 2024 18:45:18 -0400
-Message-ID: <20240324224720.1345309-593-sashal@kernel.org>
+Subject: [PATCH 6.7 583/713] RDMA/device: Fix a race between mad_client and cm_client init
+Date: Sun, 24 Mar 2024 18:45:09 -0400
+Message-ID: <20240324224720.1345309-584-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,65 +49,131 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Shifeng Li <lishifeng@sangfor.com.cn>
 
-[ Upstream commit 7af2df0f67a1469762e59be3726a803882d83f6f ]
+[ Upstream commit 7a8bccd8b29c321ac181369b42b04fecf05f98e2 ]
 
-In cfd66bb715fd ("f2fs: fix deadloop in foreground GC"), we needed to check
-the number of blocks in a section instead of the segment.
+The mad_client will be initialized in enable_device_and_get(), while the
+devices_rwsem will be downgraded to a read semaphore. There is a window
+that leads to the failed initialization for cm_client, since it can not
+get matched mad port from ib_mad_port_list, and the matched mad port will
+be added to the list after that.
 
-Fixes: cfd66bb715fd ("f2fs: fix deadloop in foreground GC")
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+    mad_client    |                       cm_client
+------------------|--------------------------------------------------------
+ib_register_device|
+enable_device_and_get
+down_write(&devices_rwsem)
+xa_set_mark(&devices, DEVICE_REGISTERED)
+downgrade_write(&devices_rwsem)
+                  |
+                  |ib_cm_init
+                  |ib_register_client(&cm_client)
+                  |down_read(&devices_rwsem)
+                  |xa_for_each_marked (&devices, DEVICE_REGISTERED)
+                  |add_client_context
+                  |cm_add_one
+                  |ib_register_mad_agent
+                  |ib_get_mad_port
+                  |__ib_get_mad_port
+                  |list_for_each_entry(entry, &ib_mad_port_list, port_list)
+                  |return NULL
+                  |up_read(&devices_rwsem)
+                  |
+add_client_context|
+ib_mad_init_device|
+ib_mad_port_open  |
+list_add_tail(&port_priv->port_list, &ib_mad_port_list)
+up_read(&devices_rwsem)
+                  |
+
+Fix it by using down_write(&devices_rwsem) in ib_register_client().
+
+Fixes: d0899892edd0 ("RDMA/device: Provide APIs from the core code to help unregistration")
+Link: https://lore.kernel.org/r/20240203035313.98991-1-lishifeng@sangfor.com.cn
+Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
+Signed-off-by: Shifeng Li <lishifeng@sangfor.com.cn>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.h | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/infiniband/core/device.c | 37 +++++++++++++++++++-------------
+ 1 file changed, 22 insertions(+), 15 deletions(-)
 
-diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index 8129be788bd56..c77a562831493 100644
---- a/fs/f2fs/segment.h
-+++ b/fs/f2fs/segment.h
-@@ -573,23 +573,22 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
- 			unsigned int node_blocks, unsigned int dent_blocks)
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index 67bcea7a153c6..07cb6c5ffda00 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -1730,7 +1730,7 @@ static int assign_client_id(struct ib_client *client)
  {
+ 	int ret;
  
--	unsigned int segno, left_blocks;
-+	unsigned segno, left_blocks;
- 	int i;
+-	down_write(&clients_rwsem);
++	lockdep_assert_held(&clients_rwsem);
+ 	/*
+ 	 * The add/remove callbacks must be called in FIFO/LIFO order. To
+ 	 * achieve this we assign client_ids so they are sorted in
+@@ -1739,14 +1739,11 @@ static int assign_client_id(struct ib_client *client)
+ 	client->client_id = highest_client_id;
+ 	ret = xa_insert(&clients, client->client_id, client, GFP_KERNEL);
+ 	if (ret)
+-		goto out;
++		return ret;
  
--	/* check current node segment */
-+	/* check current node sections in the worst case. */
- 	for (i = CURSEG_HOT_NODE; i <= CURSEG_COLD_NODE; i++) {
- 		segno = CURSEG_I(sbi, i)->segno;
--		left_blocks = f2fs_usable_blks_in_seg(sbi, segno) -
--				get_seg_entry(sbi, segno)->ckpt_valid_blocks;
+ 	highest_client_id++;
+ 	xa_set_mark(&clients, client->client_id, CLIENT_REGISTERED);
 -
-+		left_blocks = CAP_BLKS_PER_SEC(sbi) -
-+				get_ckpt_valid_blocks(sbi, segno, true);
- 		if (node_blocks > left_blocks)
- 			return false;
- 	}
- 
--	/* check current data segment */
-+	/* check current data section for dentry blocks. */
- 	segno = CURSEG_I(sbi, CURSEG_HOT_DATA)->segno;
--	left_blocks = f2fs_usable_blks_in_seg(sbi, segno) -
--			get_seg_entry(sbi, segno)->ckpt_valid_blocks;
-+	left_blocks = CAP_BLKS_PER_SEC(sbi) -
-+			get_ckpt_valid_blocks(sbi, segno, true);
- 	if (dent_blocks > left_blocks)
- 		return false;
- 	return true;
-@@ -638,7 +637,7 @@ static inline bool has_not_enough_free_secs(struct f2fs_sb_info *sbi,
- 
- 	if (free_secs > upper_secs)
- 		return false;
--	else if (free_secs <= lower_secs)
-+	if (free_secs <= lower_secs)
- 		return true;
- 	return !curseg_space;
+-out:
+-	up_write(&clients_rwsem);
+-	return ret;
++	return 0;
  }
+ 
+ static void remove_client_id(struct ib_client *client)
+@@ -1776,25 +1773,35 @@ int ib_register_client(struct ib_client *client)
+ {
+ 	struct ib_device *device;
+ 	unsigned long index;
++	bool need_unreg = false;
+ 	int ret;
+ 
+ 	refcount_set(&client->uses, 1);
+ 	init_completion(&client->uses_zero);
++
++	/*
++	 * The devices_rwsem is held in write mode to ensure that a racing
++	 * ib_register_device() sees a consisent view of clients and devices.
++	 */
++	down_write(&devices_rwsem);
++	down_write(&clients_rwsem);
+ 	ret = assign_client_id(client);
+ 	if (ret)
+-		return ret;
++		goto out;
+ 
+-	down_read(&devices_rwsem);
++	need_unreg = true;
+ 	xa_for_each_marked (&devices, index, device, DEVICE_REGISTERED) {
+ 		ret = add_client_context(device, client);
+-		if (ret) {
+-			up_read(&devices_rwsem);
+-			ib_unregister_client(client);
+-			return ret;
+-		}
++		if (ret)
++			goto out;
+ 	}
+-	up_read(&devices_rwsem);
+-	return 0;
++	ret = 0;
++out:
++	up_write(&clients_rwsem);
++	up_write(&devices_rwsem);
++	if (need_unreg && ret)
++		ib_unregister_client(client);
++	return ret;
+ }
+ EXPORT_SYMBOL(ib_register_client);
+ 
 -- 
 2.43.0
 
