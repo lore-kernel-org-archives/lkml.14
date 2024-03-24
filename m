@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D0C294E07;
-	Sun, 24 Mar 2024 23:51:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243BF22E803;
+	Sun, 24 Mar 2024 23:51:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324295; cv=none; b=EMORG7CZamd+3v8lAJSJ9L7yMnD5e2INQ7ik0BPsUitbNgqJ/nd/7870dz23LTd+4ws5colaL/3SUqHtl2Qh0briVapFQmv44dBm7aPVzm+aRUwDX9Y8bpXA24W0nhRwC/OoUBw3K/l/gaCtXd18Bt9X8hkwngOlrr3nGUblrA4=
+	t=1711324305; cv=none; b=tWe9/6sZj7gxl4G0rAeFRHJbbJVNaCuxrlHc+ReVKyncfsdfDEqCwLiCWyDYfHfH3S1BuZnbxiu7Fpb8HDO6UtNWyAjWYhmCEjomfJykAybanZSihl2fUCvoPbkBzO2G25A1oi8OBb8dXWrL0rvuyGltxgC39zOKRLJHatsrs8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324295; c=relaxed/simple;
-	bh=nwY4BXfYiszV2ZimaeSXexafpBAW7FnAPleR3Q3aaCo=;
+	s=arc-20240116; t=1711324305; c=relaxed/simple;
+	bh=8klRyTWkxBJY9mtFt54/MDexI3MPHXzw9//0eOHJF/E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QcZ0OC2pZXVPxx7d5Y3wEZpD7XjtqPxNuDgKbREmBRjKiFgt6C3f5VGitTfXlupRYHUU5sS21q+XOuRQDWD/6lLiWc2U3k/EZzVbJ2jy6og1yhEjjvZcFj8jJ8P4aejNGB3kwG/Lwv+obsFoSCBtMziNSu+M+kOZs1JPsEVQwjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pankwxRA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cxTJR6GW1zbPmCVjk8pFbTKFwm+VaGmI3wgdtclc2r3XqKEYBrpJ002Cl8FVEd6iDXlQWYYLY1EVxHzlJ4a6a9WBwWulbHY3jVMeY5wksIdDssLcg9A4TPFExRFhyNJYFnZDITkc6k1EEQ/F2f+Wvukvi/E97PdAwlhxrwW+Maw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ng7x8F+s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pankwxRA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B4DFC43390;
-	Sun, 24 Mar 2024 23:51:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ng7x8F+s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B6AC433C7;
+	Sun, 24 Mar 2024 23:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324295;
-	bh=nwY4BXfYiszV2ZimaeSXexafpBAW7FnAPleR3Q3aaCo=;
+	s=k20201202; t=1711324305;
+	bh=8klRyTWkxBJY9mtFt54/MDexI3MPHXzw9//0eOHJF/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pankwxRAYKDlypBOZn7Gr+wl1DcIzOETU8pb+AKNbJlhv9gtwEiSBZYExr2eunBCP
-	 tKNrYct9WAunuawMjLeAloOTb9RLA2Ex7aXN/SDdWzlNalfsI3D9n1fV2NqikMTzWN
-	 E5pFzVwG3vek1BfHfQNkotBocODHgGZBQXKFLS08HjN39q+KxgAKMrt/EeZndxDkjA
-	 deuScqlfTNKcQ5iGgdRREq/7YJikFkqRKW+175RZAR/qfiezBCXifEOQNF5fJWaiYg
-	 Y7fkQIlwxH3VotzshPX+GTRTtZvsqNWX8I5uhcWV5yeBZunoTgEhXc/Q9lfULyggxF
-	 /vft3rJbgzzOQ==
+	b=ng7x8F+sRU4TYnf1Q/wWeOa+DoBlyxWb6tC28+6JJ4lcQFey68wsDN1D7iuZIs2wN
+	 5xAcZcWGMIBZAWBtt/Y8pxvP2/IrYDNhok3u3K0bSBVCav+DPEHpvWyO1871yOdyLD
+	 laR4Oikm1P04oUeim502HpvR98QkAnI9m0eynSVtoba6qsY5Hd6pjasy7yGo1TJjS6
+	 t+CvvDTmEdrEsjJ2eQs5eoIsfZLRVK+v254V+XoICbhSHvm8fw5az0ZKh/l7KkeUFP
+	 B7fAUaLS7HvZLhmYbg459EJbk6sGjznAXXwAfAbjPQFlqSFj5TjuA8b+kcgfkDg9uz
+	 2iXdF9mVnI3lQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 070/148] drm/tegra: dsi: Fix missing pm_runtime_disable() in the error handling path of tegra_dsi_probe()
-Date: Sun, 24 Mar 2024 19:48:54 -0400
-Message-ID: <20240324235012.1356413-71-sashal@kernel.org>
+Subject: [PATCH 4.19 077/148] ABI: sysfs-bus-pci-devices-aer_stats uses an invalid tag
+Date: Sun, 24 Mar 2024 19:49:01 -0400
+Message-ID: <20240324235012.1356413-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,34 +48,75 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-[ Upstream commit 5286a9fc280c45b6b307ee1b07f7a997e042252c ]
+[ Upstream commit abf313b5a8b72302062dd407ed7e470d67d389bb ]
 
-If an error occurs after calling pm_runtime_enable(), pm_runtime_disable()
-should be called as already done in the remove function.
+According with Documentation/ABI/, the right tag to describe
+an ABI symbol is "What:", and not "Where:".
 
-Fixes: ef8187d75265 ("drm/tegra: dsi: Implement runtime PM")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/ee4a15c9cd4b574a55cd67c30d2411239ba2cee9.1693667005.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Stable-dep-of: 0e7d29a39a54 ("PCI/AER: Fix rootport attribute paths in ABI docs")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dsi.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../ABI/testing/sysfs-bus-pci-devices-aer_stats      | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 44bf5a731ba72..fb7b000d4d341 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1583,6 +1583,7 @@ static int tegra_dsi_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+index 4b0318c99507f..ff229d71961c3 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
++++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+@@ -9,7 +9,7 @@ errors may be "seen" / reported by the link partner and not the
+ problematic endpoint itself (which may report all counters as 0 as it never
+ saw any problems).
  
- unregister:
-+	pm_runtime_disable(&pdev->dev);
- 	mipi_dsi_host_unregister(&dsi->host);
- mipi_free:
- 	tegra_mipi_free(dsi->mipi);
+-Where:		/sys/bus/pci/devices/<dev>/aer_dev_correctable
++What:		/sys/bus/pci/devices/<dev>/aer_dev_correctable
+ Date:		July 2018
+ Kernel Version: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+@@ -31,7 +31,7 @@ Header Log Overflow 0
+ TOTAL_ERR_COR 2
+ -------------------------------------------------------------------------
+ 
+-Where:		/sys/bus/pci/devices/<dev>/aer_dev_fatal
++What:		/sys/bus/pci/devices/<dev>/aer_dev_fatal
+ Date:		July 2018
+ Kernel Version: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+@@ -62,7 +62,7 @@ TLP Prefix Blocked Error 0
+ TOTAL_ERR_FATAL 0
+ -------------------------------------------------------------------------
+ 
+-Where:		/sys/bus/pci/devices/<dev>/aer_dev_nonfatal
++What:		/sys/bus/pci/devices/<dev>/aer_dev_nonfatal
+ Date:		July 2018
+ Kernel Version: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+@@ -103,19 +103,19 @@ collectors) that are AER capable. These indicate the number of error messages as
+ device, so these counters include them and are thus cumulative of all the error
+ messages on the PCI hierarchy originating at that root port.
+ 
+-Where:		/sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_cor
++What:		/sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_cor
+ Date:		July 2018
+ Kernel Version: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ Description:	Total number of ERR_COR messages reported to rootport.
+ 
+-Where:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_fatal
++What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_fatal
+ Date:		July 2018
+ Kernel Version: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ Description:	Total number of ERR_FATAL messages reported to rootport.
+ 
+-Where:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_nonfatal
++What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_nonfatal
+ Date:		July 2018
+ Kernel Version: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
 -- 
 2.43.0
 
