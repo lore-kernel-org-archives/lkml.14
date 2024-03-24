@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AC714EC43;
-	Sun, 24 Mar 2024 23:01:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55ABB12FF60;
+	Sun, 24 Mar 2024 23:01:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321320; cv=none; b=QoR1ClPlveyYyOYJsQA7QiBTCmcxSIXWl/3lt3bJRVRm2D1m2OrdG+4t7o4QOKcxZrWWfRdm4ZXY7okePCNDjv6cjN5U+6QBvC8cEADOLpnifnNhuPPqDChJZQnUHm8WoKmpoyPM93VXd0PMBF6Fqo5SCR9or3sJejdu0OaEqE4=
+	t=1711321318; cv=none; b=WZaIN5jD6bIJt5AZFPqYHzNRAlFmcd7G89UlCybf3G4jlXZuJWz8sIEM6r1d54kqgJymr+qVEMvn19S+Uo87Z3lzh+n1H1m98b/vADAT4whBDEPAO86ptmk0DvXu6Fi8l8pJlDXDO7Wgq1J7CvDcGy9CNCFD4tTWexEbN6jg6Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321320; c=relaxed/simple;
-	bh=dvp3JZnerkFLlEWRHHtB5NZ0FgULvDL+8ioxJBeGMeg=;
+	s=arc-20240116; t=1711321318; c=relaxed/simple;
+	bh=eBUzn36vqZymU/CNWaaNunB4aUI45530KBqfOLornhs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MDVT7w07bYRepmze5Okn0z4Pf3SNco3vJ8MEWUu9pAekbsOMFn29waglqlttF+ppcGt1mIHnRQPyL6kHusrFsV92rFPJWjg6znB9mmi8c64FycA799dVFhBo6hsrsZJisXQnVrVIVn66/IxheRlsl7xrZNqcvedN+dpW/DvYnsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBVUibvZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AvHu1wJf+YqpU9WKS/iRlm3ejsalmh1zed8D1sp+rguFUWlSPhttV/3OQ8xcPl+USzMxBLDE+FuucnV1lsOfZPZK6W5Ghc7re2yLlSZJANaTE0DocPJVBh2LSYNsj+Zr7P7NSegLWdr2j3yeU4Z84q3SiTl27BDSCNMvK7jtdcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovboVuUy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBVUibvZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C42AC433C7;
-	Sun, 24 Mar 2024 23:01:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovboVuUy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FC58C43394;
+	Sun, 24 Mar 2024 23:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321319;
-	bh=dvp3JZnerkFLlEWRHHtB5NZ0FgULvDL+8ioxJBeGMeg=;
+	s=k20201202; t=1711321317;
+	bh=eBUzn36vqZymU/CNWaaNunB4aUI45530KBqfOLornhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nBVUibvZ6ei60oT41deCfGvnTSJCkxtHm9vxvTMuDMqlDUTYYXHUoafaMCn2U8NdN
-	 5yMWCiaQgwQbAPU0LqYG+uEsPBwUM2mTwyj4010n2WvcsQcrwwrbg8wEXcZDE7vFLp
-	 gGmidAEqZ48SwcWP9dfNaj0KhHlsqLgUmwtvsRHfFpHTc+knGwYRYNoWPKfYoMp0vg
-	 1Qv1pOzshaMFV4qQ5/bbD09sOvox8ZGQe9wCRsVA8cccgQmaBQbvPNQNIPUDURAoM7
-	 UQ4Z0diNSEN+D2H46Ri/3Yfy0fG9OHi+Rgm+WZgSWL57mrqtqdKVBrRgzXi9yu/tgk
-	 FPr7ctz8vQylw==
+	b=ovboVuUyBRBCLoM0YGhcHV36BGPmPE774MHIJB8YeU8LRxcUHTS7jDD1z6pcw1W2R
+	 /hRqjBWGElo6k+zeIOObC6FxN74XwS1e1RU+rjI1W8qyiMbeWPCCu48eDkobCgXtLV
+	 ViAUTFfpnJt0mg/XEcn5iQCkEbzlxJ42NOhPkpagHDaC3aFItsBAQsnwUg7Nw5xcEn
+	 MBYgF+XUMHnO2+dq4NNk+mrqhUT5EauXcjFlnr6z+PTJ/hc2wKA8G18cYDMgf7GkGF
+	 c7kBAWlnNQ6+892Xyd0IU5vAPXivKfswiwkJTTJov4GZvw4c1xHNT4zJaCqPzSSH06
+	 MrasnsefAn2ew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Naresh Solanki <naresh.solanki@9elements.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Rob Herring <robh@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 042/638] regulator: max5970: Fix regulator child node name
-Date: Sun, 24 Mar 2024 18:51:19 -0400
-Message-ID: <20240324230116.1348576-43-sashal@kernel.org>
+Subject: [PATCH 6.6 039/638] arm: dts: Fix dtc interrupt_map warnings
+Date: Sun, 24 Mar 2024 18:51:16 -0400
+Message-ID: <20240324230116.1348576-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,47 +49,70 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Naresh Solanki <naresh.solanki@9elements.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit e5d40e9afd84cec01cdbbbfe62d52f89959ab3ee ]
+[ Upstream commit f02b0f0dc26fbb77fe47b6e47cc5c211f0432c37 ]
 
-Update regulator child node name to lower case i.e., sw0 & sw1 as
-descibed in max5970 dt binding.
+The dtc interrupt_map warning is off because its dependency,
+interrupt_provider, is off by default. Fix all the warnings so it can be
+enabled.
 
-Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
-Link: https://msgid.link/r/20240213145801.2564518-1-naresh.solanki@9elements.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20240213-arm-dt-cleanups-v1-4-f2dee1292525@kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/max5970-regulator.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/intel/ixp/intel-ixp42x-gateway-7001.dts | 2 ++
+ .../boot/dts/intel/ixp/intel-ixp42x-goramo-multilink.dts  | 2 ++
+ arch/arm/boot/dts/qcom/qcom-sdx55.dtsi                    | 8 ++++----
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/regulator/max5970-regulator.c b/drivers/regulator/max5970-regulator.c
-index 5c2d49ae332fb..4362f332f746b 100644
---- a/drivers/regulator/max5970-regulator.c
-+++ b/drivers/regulator/max5970-regulator.c
-@@ -28,8 +28,8 @@ struct max5970_regulator {
- };
+diff --git a/arch/arm/boot/dts/intel/ixp/intel-ixp42x-gateway-7001.dts b/arch/arm/boot/dts/intel/ixp/intel-ixp42x-gateway-7001.dts
+index 4d70f6afd13ab..6d5e69035f94d 100644
+--- a/arch/arm/boot/dts/intel/ixp/intel-ixp42x-gateway-7001.dts
++++ b/arch/arm/boot/dts/intel/ixp/intel-ixp42x-gateway-7001.dts
+@@ -60,6 +60,8 @@ pci@c0000000 {
+ 			 * We have slots (IDSEL) 1 and 2 with one assigned IRQ
+ 			 * each handling all IRQs.
+ 			 */
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0xf800 0 0 7>;
+ 			interrupt-map =
+ 			/* IDSEL 1 */
+ 			<0x0800 0 0 1 &gpio0 11 IRQ_TYPE_LEVEL_LOW>, /* INT A on slot 1 is irq 11 */
+diff --git a/arch/arm/boot/dts/intel/ixp/intel-ixp42x-goramo-multilink.dts b/arch/arm/boot/dts/intel/ixp/intel-ixp42x-goramo-multilink.dts
+index 9ec0169bacf8c..5f4c849915db7 100644
+--- a/arch/arm/boot/dts/intel/ixp/intel-ixp42x-goramo-multilink.dts
++++ b/arch/arm/boot/dts/intel/ixp/intel-ixp42x-goramo-multilink.dts
+@@ -89,6 +89,8 @@ pci@c0000000 {
+ 			 * The slots have Ethernet, Ethernet, NEC and MPCI.
+ 			 * The IDSELs are 11, 12, 13, 14.
+ 			 */
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0xf800 0 0 7>;
+ 			interrupt-map =
+ 			/* IDSEL 11 - Ethernet A */
+ 			<0x5800 0 0 1 &gpio0 4 IRQ_TYPE_LEVEL_LOW>, /* INT A on slot 11 is irq 4 */
+diff --git a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
+index 5b86b4de1a1bd..f9ad5abfbd28b 100644
+--- a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
+@@ -345,10 +345,10 @@ pcie_rc: pcie@1c00000 {
+ 					  "msi8";
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+-			interrupt-map = <0 0 0 1 &intc 0 0 0 141 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-					<0 0 0 2 &intc 0 0 0 142 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-					<0 0 0 3 &intc 0 0 0 143 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-					<0 0 0 4 &intc 0 0 0 144 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++			interrupt-map = <0 0 0 1 &intc 0 141 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
++					<0 0 0 2 &intc 0 142 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
++					<0 0 0 3 &intc 0 143 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
++					<0 0 0 4 &intc 0 144 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
  
- enum max597x_regulator_id {
--	MAX597X_SW0,
--	MAX597X_SW1,
-+	MAX597X_sw0,
-+	MAX597X_sw1,
- };
- 
- static int max597x_uvp_ovp_check_mode(struct regulator_dev *rdev, int severity)
-@@ -251,8 +251,8 @@ static int max597x_dt_parse(struct device_node *np,
- }
- 
- static const struct regulator_desc regulators[] = {
--	MAX597X_SWITCH(SW0, MAX5970_REG_CHXEN, 0, "vss1"),
--	MAX597X_SWITCH(SW1, MAX5970_REG_CHXEN, 1, "vss2"),
-+	MAX597X_SWITCH(sw0, MAX5970_REG_CHXEN, 0, "vss1"),
-+	MAX597X_SWITCH(sw1, MAX5970_REG_CHXEN, 1, "vss2"),
- };
- 
- static int max597x_regmap_read_clear(struct regmap *map, unsigned int reg,
+ 			clocks = <&gcc GCC_PCIE_PIPE_CLK>,
+ 				 <&gcc GCC_PCIE_AUX_CLK>,
 -- 
 2.43.0
 
