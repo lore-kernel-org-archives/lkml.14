@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE49132C37;
-	Sun, 24 Mar 2024 23:04:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2874E204FA3;
+	Sun, 24 Mar 2024 23:04:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321472; cv=none; b=UTVYF3JZcwyT+Gk3fxNW/kglmmM0IBMgqWf/VLKuu7mUAJ2jFuD4o3gKCJcXUwhs1trA0mzTwg+dL0zcsqCZ1WjA1VZsJ6lwtYnTmnT4f3hI3RY2WmfVJ8GE8zKSnJ22Gt1Wjar0EjpESHPMfCFioiLu3QIgb5CRH/wE8v2RUlk=
+	t=1711321475; cv=none; b=NEFWANY/ZZLvs0uE/MQIxOT3vwuf50hpoI8hx98MexElxYbBN6MED33an7gStVMKW5OMJ16t07B6glaguIajxXcV+x4qVhp7knQckpJCUegEJnwlyVurQDWR79+y2/8HOm6KHDzpk5Y3CjviduvQ0P5/MN09BNjBurMNs3B1LTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321472; c=relaxed/simple;
-	bh=qBDDt3UEpEEh1v+s/AaZiH9vTDwgz70LlK5QGjZqtYk=;
+	s=arc-20240116; t=1711321475; c=relaxed/simple;
+	bh=6czK7Hn3MnAD3YyAV5TfrDyAIetWQpDb15+Q7U90avU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IMOkWZlEd0FKE+tZ93xxBN93OkRv7H1UgnyWiuno1BYKc/EyikvJ92AdmNgCUkgki2mcPazH+aq7xffCE9ugefgwJwOuNV2tU5Dl4FRUeKCgAO401LoMWYCuVudKQppmRIsbbOZhDcE2o3A9H3otkQRfGQWyg5liQR900p1uZJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1fO2aqS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jWt82T/n15AhyT+Owdq0WF4Kro4NwjuQMMqW0vbnUEcbKFoPkvUHz2ng+lW3slqbD2+0esVxknUqfkggrJC+ofLthvS6CASyzsnug0ZwUulJWTAyy+cJ7ioc8cI18HKdUVWAo9VOcL7TA9J1ArFvF+yyvdJloCaBcEC5sXy8fkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1X/D/wW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1fO2aqS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 730FBC433C7;
-	Sun, 24 Mar 2024 23:04:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1X/D/wW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E74C43390;
+	Sun, 24 Mar 2024 23:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321472;
-	bh=qBDDt3UEpEEh1v+s/AaZiH9vTDwgz70LlK5QGjZqtYk=;
+	s=k20201202; t=1711321475;
+	bh=6czK7Hn3MnAD3YyAV5TfrDyAIetWQpDb15+Q7U90avU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G1fO2aqSrjRzqyFIXNa4OzgIUy8jXNGB9tldZEnaz0iquAcBlT6psk4KHLYxTTT0Z
-	 p0BYAng+dL56QuQkIeDC5P8lrBUPBiWP5McvVzFgpm2Xy0HxggSgR4SWvdezQ5GWKy
-	 1955xHgraJej3M5oir0U4tiPQoG3T1PhGNCYBkthcG7NmAwcIad2kf+DgSAONQ24dh
-	 O7OvaVVPDwNKPlyiwzQ0jU5wjiGJhWJzybozKQif12qENSvQOh79tS8xPSpEdLGqvy
-	 keIlvmzx6Kw9mwwLAfAq8pgJ1ucyF9CRYU14lsVSExXenAt8344eSqxxl0oIC/kJQS
-	 pGBQZf8opffGg==
+	b=D1X/D/wW8CTHryYYqDDX+Ns6qQlR4NS9SNGywjDpuj+JSviAMIQtOkkMWM7h44fli
+	 oOhCGwTYbB/SyH9NmqXno5JlsJflNOjUr55EFUS2osVofDr2Wrh3qYg+55Po6XgeEs
+	 o3lUzMFt0X4TEMCzPuAVlOEJ9+Z+2a/W2oGEWbdP82VgB/2FDUqahHr3BCdRs9drW7
+	 XFEcc0mwlyyU19OHNJcqIkTZ7Xbjqbkp/QlvpXYcWeS67O8UMYiKjGihVQ0j7ocfjm
+	 dpTeF/Yl0W+iS49FjD5aF5V4+z6kWsocnPhMPPFPY0c9mlV/XG0R3jC3CQml969E/x
+	 yQYCdaHn/Frtw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Fangrui Song <maskray@google.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 197/638] wifi: iwlwifi: mvm: don't set the MFP flag for the GTK
-Date: Sun, 24 Mar 2024 18:53:54 -0400
-Message-ID: <20240324230116.1348576-198-sashal@kernel.org>
+Subject: [PATCH 6.6 200/638] s390/vdso: drop '-fPIC' from LDFLAGS
+Date: Sun, 24 Mar 2024 18:53:57 -0400
+Message-ID: <20240324230116.1348576-201-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,72 +49,64 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+From: Nathan Chancellor <nathan@kernel.org>
 
-[ Upstream commit e35f316bce9e5733c9826120c1838f4c447b2c4c ]
+[ Upstream commit 0628c03934187be33942580e10bb9afcc61adeed ]
 
-The firmware doesn't need the MFP flag for the GTK, it can even make the
-firmware crash. in case the AP is configured with: group cipher TKIP and
-MFPC. We would send the GTK with cipher = TKIP and MFP which is of course
-not possible.
+'-fPIC' as an option to the linker does not do what it seems like it
+should. With ld.bfd, it is treated as '-f PIC', which does not make
+sense based on the meaning of '-f':
 
-Fixes: 5c75a208c244 ("wifi: iwlwifi: mvm: support new key API")
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://msgid.link/20240206175739.2f2c602ab3c6.If13b2e2fa532381d985c07df130bee1478046c89@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+  -f SHLIB, --auxiliary SHLIB Auxiliary filter for shared object symbol table
+
+When building with ld.lld (currently under review in a GitHub pull
+request), it just errors out because '-f' means nothing and neither does
+'-fPIC':
+
+  ld.lld: error: unknown argument '-fPIC'
+
+'-fPIC' was blindly copied from CFLAGS when the vDSO stopped being
+linked with '$(CC)', it should not be needed. Remove it to clear up the
+build failure with ld.lld.
+
+Fixes: 2b2a25845d53 ("s390/vdso: Use $(LD) instead of $(CC) to link vDSO")
+Link: https://github.com/llvm/llvm-project/pull/75643
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Link: https://lore.kernel.org/r/20240130-s390-vdso-drop-fpic-from-ldflags-v1-1-094ad104fc55@kernel.org
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/intel/iwlwifi/mvm/mld-key.c   | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ arch/s390/kernel/vdso32/Makefile | 2 +-
+ arch/s390/kernel/vdso64/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mld-key.c b/drivers/net/wireless/intel/iwlwifi/mvm/mld-key.c
-index ea3e9e9c6e26c..fe4b39b19a612 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mld-key.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mld-key.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
- /*
-- * Copyright (C) 2022 - 2023 Intel Corporation
-+ * Copyright (C) 2022 - 2024 Intel Corporation
-  */
- #include <linux/kernel.h>
- #include <net/mac80211.h>
-@@ -62,11 +62,13 @@ u32 iwl_mvm_get_sec_flags(struct iwl_mvm *mvm,
- 			  struct ieee80211_key_conf *keyconf)
- {
- 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
-+	bool pairwise = keyconf->flags & IEEE80211_KEY_FLAG_PAIRWISE;
-+	bool igtk = keyconf->keyidx == 4 || keyconf->keyidx == 5;
- 	u32 flags = 0;
+diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/Makefile
+index 23e868b79a6c9..c4b14a8700d88 100644
+--- a/arch/s390/kernel/vdso32/Makefile
++++ b/arch/s390/kernel/vdso32/Makefile
+@@ -22,7 +22,7 @@ KBUILD_CFLAGS_32 := $(filter-out -m64,$(KBUILD_CFLAGS))
+ KBUILD_CFLAGS_32 := $(filter-out -mno-pic-data-is-text-relative,$(KBUILD_CFLAGS_32))
+ KBUILD_CFLAGS_32 += -m31 -fPIC -shared -fno-common -fno-builtin
  
- 	lockdep_assert_held(&mvm->mutex);
+-LDFLAGS_vdso32.so.dbg += -fPIC -shared -soname=linux-vdso32.so.1 \
++LDFLAGS_vdso32.so.dbg += -shared -soname=linux-vdso32.so.1 \
+ 	--hash-style=both --build-id=sha1 -melf_s390 -T
  
--	if (!(keyconf->flags & IEEE80211_KEY_FLAG_PAIRWISE))
-+	if (!pairwise)
- 		flags |= IWL_SEC_KEY_FLAG_MCAST_KEY;
+ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_32)
+diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+index fc1c6ff8178f5..11f798e6cfea7 100644
+--- a/arch/s390/kernel/vdso64/Makefile
++++ b/arch/s390/kernel/vdso64/Makefile
+@@ -26,7 +26,7 @@ KBUILD_AFLAGS_64 += -m64
+ KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
+ KBUILD_CFLAGS_64 := $(filter-out -mno-pic-data-is-text-relative,$(KBUILD_CFLAGS_64))
+ KBUILD_CFLAGS_64 += -m64 -fPIC -fno-common -fno-builtin
+-ldflags-y := -fPIC -shared -soname=linux-vdso64.so.1 \
++ldflags-y := -shared -soname=linux-vdso64.so.1 \
+ 	     --hash-style=both --build-id=sha1 -T
  
- 	switch (keyconf->cipher) {
-@@ -96,12 +98,14 @@ u32 iwl_mvm_get_sec_flags(struct iwl_mvm *mvm,
- 	if (!sta && vif->type == NL80211_IFTYPE_STATION)
- 		sta = mvmvif->ap_sta;
- 
--	/* Set the MFP flag also for an AP interface where the key is an IGTK
--	 * key as in such a case the station would always be NULL
-+	/*
-+	 * If we are installing an iGTK (in AP or STA mode), we need to tell
-+	 * the firmware this key will en/decrypt MGMT frames.
-+	 * Same goes if we are installing a pairwise key for an MFP station.
-+	 * In case we're installing a groupwise key (which is not an iGTK),
-+	 * then, we will not use this key for MGMT frames.
- 	 */
--	if ((!IS_ERR_OR_NULL(sta) && sta->mfp) ||
--	    (vif->type == NL80211_IFTYPE_AP &&
--	     (keyconf->keyidx == 4 || keyconf->keyidx == 5)))
-+	if ((!IS_ERR_OR_NULL(sta) && sta->mfp && pairwise) || igtk)
- 		flags |= IWL_SEC_KEY_FLAG_MFP;
- 
- 	return flags;
+ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
 -- 
 2.43.0
 
