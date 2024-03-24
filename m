@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D655F14198E;
-	Sun, 24 Mar 2024 23:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA20517831E;
+	Sun, 24 Mar 2024 23:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323592; cv=none; b=qs6vNxbY84Qq3IFRp6yHW2ay7lYZpFY7gyKo88ccYjsZ0WiXEENp935ePj4aYjaOLO3C36aJQe/QuH7pvrwg7bmWQXaTO5uurSR7ed53kC3tVnirtTd2qD3GcBZBRWi998SbHcqm0M0Xqzd/MhSqRsurtMJINLe8sFbKseEdT3g=
+	t=1711323567; cv=none; b=bt21z1Ak0Gk8m2lt8TzT64/ofh0kLj3XkF3IOvxlGGYBVyi6G7yK15V86W2RRc+ZIZp6iW5yXFbIiJlK0aNIAV0V4R8VfPumjuAtKylRkfTA3HPw/+X/Cx8Nx12ze2svZlcSbKh4Jg5O0S6WVrAEgVjtwQ02U175lHe9Ug6Z4H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323592; c=relaxed/simple;
-	bh=7nFrWKjORVJFDZ04vWB+gW5EXeckc6rX1NicBls0Js0=;
+	s=arc-20240116; t=1711323567; c=relaxed/simple;
+	bh=lYH8x8NXl+D9jSgcCFP/jUoI1eKm4X/OKybsLqIHfWM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bbv+r/lx4XB0yHDjjN1oj3XOJ36JBAYLLAeVLP69SFLFfQ7uncF1sQD+ealnWf5qQFL9QRy8THt70q9WACCSSAKirgFypn9gv6e+BGFZduhUPfx9QVFd6WiH/qq/Ff6+kDhG9C8ylrsjZFViohxrK1LMhfYC1DhaSpnzTU1e+GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3dOgp8x; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KDYCvxAzKVs8bEdRj4a5/EqjGESdvFg70K4QMgiad7dlxN0wgyHyixadZcXu7hvOn/WJapFEL8gfhjTiucP3IMigmjdc2b9bH2pLzaygLBo5Bm2tTTCVb0bgOcr5Y+HRTHvc6T2OZj1uLip2Cyx26GdPfmaWPw39WRrBFo/dVPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i09gg5Qr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3dOgp8x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07AC7C433C7;
-	Sun, 24 Mar 2024 23:39:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i09gg5Qr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A48F5C433A6;
+	Sun, 24 Mar 2024 23:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323591;
-	bh=7nFrWKjORVJFDZ04vWB+gW5EXeckc6rX1NicBls0Js0=;
+	s=k20201202; t=1711323566;
+	bh=lYH8x8NXl+D9jSgcCFP/jUoI1eKm4X/OKybsLqIHfWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q3dOgp8xOCWyxa5hORN8cCphh8OIShE8YZE0Y6Y0TouXowX8HLPX03B1ccsU1LNcs
-	 PM5GVxr2HqXWpUT6PjcIkFBvI84wgN8E5X1W2CkM33x0nr+N9zG9NFWmtRMTfqfDOG
-	 QPtmaNHkEFgWv6dLhLfymljHIbrwVoFINsp49BJPodO3Tjc4Y+bepDz85QzVBltg7m
-	 y998qwrOVMMVUzqj4gc+jLyhdCK/ExJiQfowAEgZJmdcvaCeBFbQv4NFF24BWcskT6
-	 ksysS7qP5tJyEqlZoBinpqOJyvUBrtk5BlDI6knvi8XG38SOZXIRgdNJ7AlXtV9XWE
-	 yBewSKhyQ4y1A==
+	b=i09gg5QrfjbIe6h109YUp0NnPoW/5qvrY6ePxDebJCPVh+PX9q9ViNJVixt3GLZS4
+	 GPSh0VvIULab4ciRwHgLhJ7qa/snv+tUPnWO/jVOydbpjARtbZPAHxokP/CvwrGa6P
+	 ovlX7WMahSPMqKdeDsDeKpJVmRTSc2+pA1/lDbW1A1HhplnlpqISz7DhbJGwq3bcB/
+	 9XWypTOzK1dKbAl/hT+Jlzx8Zx+o1Wab+NVz1oJvEZoQ8RktKCaagCDN0cu+9a/LbC
+	 /QSNvAxsqPhwfuD7rZbOeIqqwb30v3Fq03j1dMUCOZL5ehDx8hpNMdXMAnl5TK0QyJ
+	 q/o1q7lLUtYFg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Justin Swartz <justin.swartz@risingedge.co.za>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: David Howells <dhowells@redhat.com>,
+	Markus Suvanto <markus.suvanto@gmail.com>,
+	Jeffrey E Altman <jaltman@auristor.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	linux-afs@lists.infradead.org,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 298/317] net: dsa: mt7530: prevent possible incorrect XTAL frequency selection
-Date: Sun, 24 Mar 2024 19:34:38 -0400
-Message-ID: <20240324233458.1352854-299-sashal@kernel.org>
+Subject: [PATCH 5.15 273/317] afs: Revert "afs: Hide silly-rename files from userspace"
+Date: Sun, 24 Mar 2024 19:34:13 -0400
+Message-ID: <20240324233458.1352854-274-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -45,178 +48,57 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit f490c492e946d8ffbe65ad4efc66de3c5ede30a4 ]
+[ Upstream commit 0aec3847d044273733285dcff90afda89ad461d2 ]
 
-On MT7530, the HT_XTAL_FSEL field of the HWTRAP register stores a 2-bit
-value that represents the frequency of the crystal oscillator connected to
-the switch IC. The field is populated by the state of the ESW_P4_LED_0 and
-ESW_P4_LED_0 pins, which is done right after reset is deasserted.
+This reverts commit 57e9d49c54528c49b8bffe6d99d782ea051ea534.
 
-  ESW_P4_LED_0    ESW_P3_LED_0    Frequency
-  -----------------------------------------
-  0               0               Reserved
-  0               1               20MHz
-  1               0               40MHz
-  1               1               25MHz
+This undoes the hiding of .__afsXXXX silly-rename files.  The problem with
+hiding them is that rm can't then manually delete them.
 
-On MT7531, the XTAL25 bit of the STRAP register stores this. The LAN0LED0
-pin is used to populate the bit. 25MHz when the pin is high, 40MHz when
-it's low.
+This also reverts commit 5f7a07646655fb4108da527565dcdc80124b14c4 ("afs: Fix
+endless loop in directory parsing") as that's a bugfix for the above.
 
-These pins are also used with LEDs, therefore, their state can be set to
-something other than the bootstrapping configuration. For example, a link
-may be established on port 3 before the DSA subdriver takes control of the
-switch which would set ESW_P3_LED_0 to high.
-
-Currently on mt7530_setup() and mt7531_setup(), 1000 - 1100 usec delay is
-described between reset assertion and deassertion. Some switch ICs in real
-life conditions cannot always have these pins set back to the bootstrapping
-configuration before reset deassertion in this amount of delay. This causes
-wrong crystal frequency to be selected which puts the switch in a
-nonfunctional state after reset deassertion.
-
-The tests below are conducted on an MT7530 with a 40MHz crystal oscillator
-by Justin Swartz.
-
-With a cable from an active peer connected to port 3 before reset, an
-incorrect crystal frequency (0b11 = 25MHz) is selected:
-
-                      [1]                  [3]     [5]
-                      :                    :       :
-              _____________________________         __________________
-ESW_P4_LED_0                               |_______|
-              _____________________________
-ESW_P3_LED_0                               |__________________________
-
-                       :                  : :     :
-                       :                  : [4]...:
-                       :                  :
-                       [2]................:
-
-[1] Reset is asserted.
-[2] Period of 1000 - 1100 usec.
-[3] Reset is deasserted.
-[4] Period of 315 usec. HWTRAP register is populated with incorrect
-    XTAL frequency.
-[5] Signals reflect the bootstrapped configuration.
-
-Increase the delay between reset_control_assert() and
-reset_control_deassert(), and gpiod_set_value_cansleep(priv->reset, 0) and
-gpiod_set_value_cansleep(priv->reset, 1) to 5000 - 5100 usec. This amount
-ensures a higher possibility that the switch IC will have these pins back
-to the bootstrapping configuration before reset deassertion.
-
-With a cable from an active peer connected to port 3 before reset, the
-correct crystal frequency (0b10 = 40MHz) is selected:
-
-                      [1]        [2-1]     [3]     [5]
-                      :          :         :       :
-              _____________________________         __________________
-ESW_P4_LED_0                               |_______|
-              ___________________           _______
-ESW_P3_LED_0                     |_________|       |__________________
-
-                       :          :       : :     :
-                       :          [2-2]...: [4]...:
-                       [2]................:
-
-[1] Reset is asserted.
-[2] Period of 5000 - 5100 usec.
-[2-1] ESW_P3_LED_0 goes low.
-[2-2] Remaining period of 5000 - 5100 usec.
-[3] Reset is deasserted.
-[4] Period of 310 usec. HWTRAP register is populated with bootstrapped
-    XTAL frequency.
-[5] Signals reflect the bootstrapped configuration.
-
-ESW_P3_LED_0 low period before reset deassertion:
-
-              5000 usec
-            - 5100 usec
-    TEST     RESET HOLD
-       #         (usec)
-  ---------------------
-       1           5410
-       2           5440
-       3           4375
-       4           5490
-       5           5475
-       6           4335
-       7           4370
-       8           5435
-       9           4205
-      10           4335
-      11           3750
-      12           3170
-      13           4395
-      14           4375
-      15           3515
-      16           4335
-      17           4220
-      18           4175
-      19           4175
-      20           4350
-
-     Min           3170
-     Max           5490
-
-  Median       4342.500
-     Avg       4466.500
-
-Revert commit 2920dd92b980 ("net: dsa: mt7530: disable LEDs before reset").
-Changing the state of pins via reset assertion is simpler and more
-efficient than doing so by setting the LED controller off.
-
-Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
-Fixes: c288575f7810 ("net: dsa: mt7530: Add the support of MT7531 switch")
-Co-developed-by: Justin Swartz <justin.swartz@risingedge.co.za>
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 57e9d49c5452 ("afs: Hide silly-rename files from userspace")
+Reported-by: Markus Suvanto <markus.suvanto@gmail.com>
+Link: https://lists.infradead.org/pipermail/linux-afs/2024-February/008102.html
+Signed-off-by: David Howells <dhowells@redhat.com>
+Link: https://lore.kernel.org/r/3085695.1710328121@warthog.procyon.org.uk
+Reviewed-by: Jeffrey E Altman <jaltman@auristor.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mt7530.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/afs/dir.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index f74d9fbd08178..636943035c292 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -2154,11 +2154,11 @@ mt7530_setup(struct dsa_switch *ds)
- 	 */
- 	if (priv->mcm) {
- 		reset_control_assert(priv->rstc);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		reset_control_deassert(priv->rstc);
- 	} else {
- 		gpiod_set_value_cansleep(priv->reset, 0);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		gpiod_set_value_cansleep(priv->reset, 1);
- 	}
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index c4e22e9f7a666..cec18f9f8bd7a 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -492,16 +492,6 @@ static int afs_dir_iterate_block(struct afs_vnode *dvnode,
+ 			continue;
+ 		}
  
-@@ -2368,11 +2368,11 @@ mt7531_setup(struct dsa_switch *ds)
- 	 */
- 	if (priv->mcm) {
- 		reset_control_assert(priv->rstc);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		reset_control_deassert(priv->rstc);
- 	} else {
- 		gpiod_set_value_cansleep(priv->reset, 0);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		gpiod_set_value_cansleep(priv->reset, 1);
- 	}
- 
+-		/* Don't expose silly rename entries to userspace. */
+-		if (nlen > 6 &&
+-		    dire->u.name[0] == '.' &&
+-		    ctx->actor != afs_lookup_filldir &&
+-		    ctx->actor != afs_lookup_one_filldir &&
+-		    memcmp(dire->u.name, ".__afs", 6) == 0) {
+-			ctx->pos = blkoff + next * sizeof(union afs_xdr_dirent);
+-			continue;
+-		}
+-
+ 		/* found the next entry */
+ 		if (!dir_emit(ctx, dire->u.name, nlen,
+ 			      ntohl(dire->u.vnode),
 -- 
 2.43.0
 
