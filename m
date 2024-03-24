@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F73815ECC4;
-	Sun, 24 Mar 2024 23:18:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7318237B7A;
+	Sun, 24 Mar 2024 23:18:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322310; cv=none; b=YNNZ+4zCJjrDsHFbN8+irC7TfeTLMmyt9uV59F91vuCgPl9J+Ri+raapcmcyyJG9Ch9JEabQGNxyxvWFPzDxAJm3MUVZaJcbTbUVjir0gal0KIE8o9C5C/IpQbDdSxofILiXuyOcswqvLoV80dw/SLEsSBTewe3RdRAOCWvOEY8=
+	t=1711322316; cv=none; b=snw/V3LvFVG2aGN1TAgxA/9JAjbc2yaUnSID0heIEeWozH4TZ6pobzN6PR39C2pU9iIaioNBSYyumE4/5uGG8Par9QdCHK1AGjCQ9bdv030u8J212Zm9HRWHIIHl3+fX0hVFC+2yTT+HbPJsXl6tYCPT3QNsRNjiK8KHADX09Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322310; c=relaxed/simple;
-	bh=0tn7JdnpqsNxmICS9PEs5ksvyKLvc9+5NgJKMZwIkTM=;
+	s=arc-20240116; t=1711322316; c=relaxed/simple;
+	bh=8ZKUgi6Zm68D4WzC4t+cU2OxTpDWbRbA9/z+ZTeTjWQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xg5S9Uh6hd5Tr7OM0DINShNRLTiU1Wp+/3bcRK47QCjtXrU5StB8XewIMC6xoy4xoG83wHDN3lpxhBCj6g7LdiDRiwgHeOIPZLd7p3YKjrHximnZH/gy/eZEK+LGB0CP6ZufBsDJPCJhtIS1BBXPnYXuiwaC50Lkh82nl9Q6ILA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCbHsJXv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JsJvoJcv6ZFIOvoWHS8UCX6nTpgOKQ9JnYHILVVz9SXv/6kq/ei19pVGVLxUFGgzDqkdWDfIi8vsaTZyvgp+B8eeBi+CMFdaMhBRs5OxSzLj6qjW4Xxac/Ikg+4geK5AOn3EByzt5L6AF2oW/nr/zwV+9WPmn4CE7VjlzZ0wbzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pewN/9CY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCbHsJXv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70275C433C7;
-	Sun, 24 Mar 2024 23:18:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pewN/9CY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA7B5C43399;
+	Sun, 24 Mar 2024 23:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322309;
-	bh=0tn7JdnpqsNxmICS9PEs5ksvyKLvc9+5NgJKMZwIkTM=;
+	s=k20201202; t=1711322315;
+	bh=8ZKUgi6Zm68D4WzC4t+cU2OxTpDWbRbA9/z+ZTeTjWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iCbHsJXvEFU3nGOqZZpH1J+BsWRa5xO2j/CJILQyZQW2HSKcaHmzEU/zGIVlarohp
-	 EY5t6uqcDhJ7J/8QeFkjGOk35xhv0KoWz+z8Ucej3JIZOgbTBtnW0pGQnrpPthaA+C
-	 MAbpf/RHcRCzvPlVhRe67a24XTtkQlFAUEerjVL1e1FNIcM2iDxCDAOFAikELmqEGW
-	 FVlJKOFsmFR3JbyOGUKUbx8tT6XadKgeT/szwS6j0ykHZkRuUoo9gWGbN93gMVVEoi
-	 6HzqyNWz4r8zMek2QCs2lZT7zeFSlhZJ+tQq1hpu1DlLFg1wy2VQrZTgmU5OkkW12l
-	 CSSyZfyr9xf8Q==
+	b=pewN/9CYLxpD93shOidL3wqjw3uzBt4KlUEpPthK0MYiodPef98j5aadVV7zC1NwG
+	 SHO3qZnwjYkck/Y4NjdsbMU7dqfoa8HrsTrBuMz0+hCeqyOT9cTYYAQwSr8aItjFg4
+	 q2ic4QjJG2qw2HoTBn5jFUolGBg/Sm0rxKTUXP9uyDWjHfQ2eve9rLXHG1eENVVqyH
+	 06a7hI3mDH7+HKVuFSLawY//eJMnYGhXouOEJZCgdZUSy/nBbmrGUs00JGfhxoX0sn
+	 itd8sRfm1SY8u/WJLSNQ/2DAtYzW93IVG941/+kmZEhcGXXJClrgCgdON3NttMVIjO
+	 KRbt4y2zJi8Ew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Sam Protsenko <semen.protsenko@linaro.org>,
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Alex Elder <elder@linaro.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 392/451] tty: serial: samsung: fix tx_empty() to return TIOCSER_TEMT
-Date: Sun, 24 Mar 2024 19:11:08 -0400
-Message-ID: <20240324231207.1351418-393-sashal@kernel.org>
+Subject: [PATCH 6.1 398/451] staging: greybus: fix get_channel_from_mode() failure path
+Date: Sun, 24 Mar 2024 19:11:14 -0400
+Message-ID: <20240324231207.1351418-399-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,43 +50,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
+From: Dan Carpenter <dan.carpenter@linaro.org>
 
-[ Upstream commit 314c2b399288f0058a8c5b6683292cbde5f1531b ]
+[ Upstream commit 34164202a5827f60a203ca9acaf2d9f7d432aac8 ]
 
-The core expects for tx_empty() either TIOCSER_TEMT when the tx is
-empty or 0 otherwise. s3c24xx_serial_txempty_nofifo() might return
-0x4, and at least uart_get_lsr_info() tries to clear exactly
-TIOCSER_TEMT (BIT(1)). Fix tx_empty() to return TIOCSER_TEMT.
+The get_channel_from_mode() function is supposed to return the channel
+which matches the mode.  But it has a bug where if it doesn't find a
+matching channel then it returns the last channel.  It should return
+NULL instead.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-Link: https://lore.kernel.org/r/20240119104526.1221243-2-tudor.ambarus@linaro.org
+Also remove an unnecessary NULL check on "channel".
+
+Fixes: 2870b52bae4c ("greybus: lights: add lights implementation")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Reviewed-by: Alex Elder <elder@linaro.org>
+Link: https://lore.kernel.org/r/379c0cb4-39e0-4293-8a18-c7b1298e5420@moroto.mountain
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/samsung_tty.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/staging/greybus/light.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-index aa2c51b84116f..589daed19e625 100644
---- a/drivers/tty/serial/samsung_tty.c
-+++ b/drivers/tty/serial/samsung_tty.c
-@@ -996,11 +996,10 @@ static unsigned int s3c24xx_serial_tx_empty(struct uart_port *port)
- 		if ((ufstat & info->tx_fifomask) != 0 ||
- 		    (ufstat & info->tx_fifofull))
- 			return 0;
--
--		return 1;
-+		return TIOCSER_TEMT;
- 	}
+diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
+index 87d36948c6106..c6bd86a5335ab 100644
+--- a/drivers/staging/greybus/light.c
++++ b/drivers/staging/greybus/light.c
+@@ -100,15 +100,15 @@ static struct led_classdev *get_channel_cdev(struct gb_channel *channel)
+ static struct gb_channel *get_channel_from_mode(struct gb_light *light,
+ 						u32 mode)
+ {
+-	struct gb_channel *channel = NULL;
++	struct gb_channel *channel;
+ 	int i;
  
--	return s3c24xx_serial_txempty_nofifo(port);
-+	return s3c24xx_serial_txempty_nofifo(port) ? TIOCSER_TEMT : 0;
+ 	for (i = 0; i < light->channels_count; i++) {
+ 		channel = &light->channels[i];
+-		if (channel && channel->mode == mode)
+-			break;
++		if (channel->mode == mode)
++			return channel;
+ 	}
+-	return channel;
++	return NULL;
  }
  
- /* no modem control lines */
+ static int __gb_lights_flash_intensity_set(struct gb_channel *channel,
 -- 
 2.43.0
 
