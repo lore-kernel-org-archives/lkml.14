@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8081448F6;
-	Sun, 24 Mar 2024 23:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCED2145B2F;
+	Sun, 24 Mar 2024 23:13:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322017; cv=none; b=n2yF11oQUPYA9Zma5QiW59pzacYNAJH1F4cEswDPcHHhMFp0cxnilz9IJssmGF+pmynzw7J0wgV6ORx2IKZ/+g+YTkrX+cW3o2q2INxwKMe9o+BZzKJJoQuNplu82oaEkCwXgOSZW+VzlIaxgOjFi0IdFhClbIpqHftVhr3HLgw=
+	t=1711322034; cv=none; b=HLEiUaBDseKuHi+c/kO6PLRRGS3gng00GElcHm6jORVWoyCkk8pPTHsJxPXW1rCDSGJkdDumDXYaRe9Bpl/fwKCDD/2pW811H971oTT/2a9tyqGi0NqNiStQWbkWpaykCeZdpfFbFDKbG9Dg6SI5+17LBIj4HD/3+LOBtCLPHpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322017; c=relaxed/simple;
-	bh=AkhoifRieMH0yLa9m6Zx8yE2rR+vYzoo6qgcdD1Cm54=;
+	s=arc-20240116; t=1711322034; c=relaxed/simple;
+	bh=ngN9xWqtsFLOKtMY70Ro83f6fR4n3SwhYSw3XqZWPRQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AYTzPYehQ1112aeGoqAIT3xjzp+BNG+HfjhUFnygGoHsa7dBLYSQdEMh4m36pA/rTYS5dlIgOVlqESZo7xhwf9cXqSEz1hmQYl699hSZ5r3CX+mEU9OJEgZC4idQZA6g2PQfkb6LLYyQLVHJ4LB0gj9S7Sz+UzB6xu5+gDqxFPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e2Kz9AXw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UIEvxT55EtYjJ4B8rh1V7cmt4daW7E8S99Oz79zu60+dyTn7YQlvq014dsakDsHhZqC1nLO5iAHISBbKQpIxiSHTwTRreUBP8MmWBiPBuSPG6RnkiFxvRA21iPTy0JfUXE2kuTTo9A7h4A1TlpV1OGu6KJKqk+74g532KrJ4b0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WhBW5FKM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e2Kz9AXw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CFC4C433F1;
-	Sun, 24 Mar 2024 23:13:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WhBW5FKM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A582C433C7;
+	Sun, 24 Mar 2024 23:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322017;
-	bh=AkhoifRieMH0yLa9m6Zx8yE2rR+vYzoo6qgcdD1Cm54=;
+	s=k20201202; t=1711322033;
+	bh=ngN9xWqtsFLOKtMY70Ro83f6fR4n3SwhYSw3XqZWPRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e2Kz9AXwPPv3LGPy6UhEZkDUxjxG9H9ESeeqSlz/o7nwduVn0ebbex+W+GT1P0C/7
-	 xUx0EwE1JzcoK3SpVGV+e9BlanX5VvDacFgvnu0QwsFGZKtZkARU+lhFylae7CGKsk
-	 KbL4T9xEVsrZrDojZf++/ePo+VPSViBOkoqoxY6ee51FttcDuaxExVnMXHibCvtZzr
-	 4VI5aOlthy1lYXxeSC6EC9y4la7WNIbbbK+3pDV5bDxCQeD5sJRX+HL/gyE8dfJzhO
-	 +5d/83T1v9xhfC3eUDQbN85pc3MrnRy87MWWZbDZcR2u947bfzSakDCiN6B4193ovr
-	 WONp6FQvU0BjA==
+	b=WhBW5FKMfADGAtb5Y2sSMG4lSjSxk1Qr9lZKgTYTIdSfq8f+d6x3MHqjwpF2zGfNr
+	 NJ1iqALULvn60wXXjTTklKZF6VDMr7p1cENR9ElFIkAbQHLN6Ja6VS72UjE+QozMyy
+	 BwE6C61cjL89Fgwhz/fn31sR186ubGuG7USBL62FO/+oRy/XfR/A8DAv7ywJksCtnk
+	 7X7Tge9PMiyjTvcs+spXqAVPiphZzCrG3OHtibRlvJw2bPXZ0zm7WHVHPX/Ut0zeLC
+	 /jKR6J/EPEZ7JXB86pNjOjRYRi8TtQVWG8uR7K3bzTmxqcZjeL8l+NU9gqusLwQaLM
+	 ID0kJoC/EUcpA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 089/451] wifi: wilc1000: fix RCU usage in connect path
-Date: Sun, 24 Mar 2024 19:06:05 -0400
-Message-ID: <20240324231207.1351418-90-sashal@kernel.org>
+Subject: [PATCH 6.1 105/451] libbpf: Fix faccessat() usage on Android
+Date: Sun, 24 Mar 2024 19:06:21 -0400
+Message-ID: <20240324231207.1351418-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,175 +45,57 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexis Lothoré <alexis.lothore@bootlin.com>
+From: Andrii Nakryiko <andrii@kernel.org>
 
-[ Upstream commit 205c50306acf58a335eb19fa84e40140f4fe814f ]
+[ Upstream commit ad57654053805bf9a62602aaec74cc78edb6f235 ]
 
-With lockdep enabled, calls to the connect function from cfg802.11 layer
-lead to the following warning:
+Android implementation of libc errors out with -EINVAL in faccessat() if
+passed AT_EACCESS ([0]), this leads to ridiculous issue with libbpf
+refusing to load /sys/kernel/btf/vmlinux on Androids ([1]). Fix by
+detecting Android and redefining AT_EACCESS to 0, it's equivalent on
+Android.
 
-=============================
-WARNING: suspicious RCU usage
-6.7.0-rc1-wt+ #333 Not tainted
------------------------------
-drivers/net/wireless/microchip/wilc1000/hif.c:386
-suspicious rcu_dereference_check() usage!
-[...]
-stack backtrace:
-CPU: 0 PID: 100 Comm: wpa_supplicant Not tainted 6.7.0-rc1-wt+ #333
-Hardware name: Atmel SAMA5
- unwind_backtrace from show_stack+0x18/0x1c
- show_stack from dump_stack_lvl+0x34/0x48
- dump_stack_lvl from wilc_parse_join_bss_param+0x7dc/0x7f4
- wilc_parse_join_bss_param from connect+0x2c4/0x648
- connect from cfg80211_connect+0x30c/0xb74
- cfg80211_connect from nl80211_connect+0x860/0xa94
- nl80211_connect from genl_rcv_msg+0x3fc/0x59c
- genl_rcv_msg from netlink_rcv_skb+0xd0/0x1f8
- netlink_rcv_skb from genl_rcv+0x2c/0x3c
- genl_rcv from netlink_unicast+0x3b0/0x550
- netlink_unicast from netlink_sendmsg+0x368/0x688
- netlink_sendmsg from ____sys_sendmsg+0x190/0x430
- ____sys_sendmsg from ___sys_sendmsg+0x110/0x158
- ___sys_sendmsg from sys_sendmsg+0xe8/0x150
- sys_sendmsg from ret_fast_syscall+0x0/0x1c
+  [0] https://android.googlesource.com/platform/bionic/+/refs/heads/android13-release/libc/bionic/faccessat.cpp#50
+  [1] https://github.com/libbpf/libbpf-bootstrap/issues/250#issuecomment-1911324250
 
-This warning is emitted because in the connect path, when trying to parse
-target BSS parameters, we dereference a RCU pointer whithout being in RCU
-critical section.
-Fix RCU dereference usage by moving it to a RCU read critical section. To
-avoid wrapping the whole wilc_parse_join_bss_param under the critical
-section, just use the critical section to copy ies data
-
-Fixes: c460495ee072 ("staging: wilc1000: fix incorrent type in initializer")
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240105075733.36331-3-alexis.lothore@bootlin.com
+Fixes: 6a4ab8869d0b ("libbpf: Fix the case of running as non-root with capabilities")
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: https://lore.kernel.org/bpf/20240126220944.2497665-1-andrii@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/microchip/wilc1000/hif.c | 36 ++++++++++++-------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+ tools/lib/bpf/libbpf_internal.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/hif.c b/drivers/net/wireless/microchip/wilc1000/hif.c
-index 00ecf14afab01..5eb02902e875a 100644
---- a/drivers/net/wireless/microchip/wilc1000/hif.c
-+++ b/drivers/net/wireless/microchip/wilc1000/hif.c
-@@ -374,38 +374,49 @@ static void handle_connect_timeout(struct work_struct *work)
- void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 				struct cfg80211_crypto_settings *crypto)
- {
--	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
--	const u8 *tim_elm, *ssid_elm, *rates_ie, *supp_rates_ie;
-+	const u8 *ies_data, *tim_elm, *ssid_elm, *rates_ie, *supp_rates_ie;
- 	const u8 *ht_ie, *wpa_ie, *wmm_ie, *rsn_ie;
- 	struct ieee80211_p2p_noa_attr noa_attr;
-+	const struct cfg80211_bss_ies *ies;
- 	struct wilc_join_bss_param *param;
--	u8 rates_len = 0;
-+	u8 rates_len = 0, ies_len;
- 	int ret;
+diff --git a/tools/lib/bpf/libbpf_internal.h b/tools/lib/bpf/libbpf_internal.h
+index 377642ff51fce..8669f6e0f6e2f 100644
+--- a/tools/lib/bpf/libbpf_internal.h
++++ b/tools/lib/bpf/libbpf_internal.h
+@@ -17,6 +17,20 @@
+ #include <unistd.h>
+ #include "relo_core.h"
  
- 	param = kzalloc(sizeof(*param), GFP_KERNEL);
- 	if (!param)
- 		return NULL;
- 
-+	rcu_read_lock();
-+	ies = rcu_dereference(bss->ies);
-+	ies_data = kmemdup(ies->data, ies->len, GFP_ATOMIC);
-+	if (!ies_data) {
-+		rcu_read_unlock();
-+		kfree(param);
-+		return NULL;
-+	}
-+	ies_len = ies->len;
-+	rcu_read_unlock();
++/* Android's libc doesn't support AT_EACCESS in faccessat() implementation
++ * ([0]), and just returns -EINVAL even if file exists and is accessible.
++ * See [1] for issues caused by this.
++ *
++ * So just redefine it to 0 on Android.
++ *
++ * [0] https://android.googlesource.com/platform/bionic/+/refs/heads/android13-release/libc/bionic/faccessat.cpp#50
++ * [1] https://github.com/libbpf/libbpf-bootstrap/issues/250#issuecomment-1911324250
++ */
++#ifdef __ANDROID__
++#undef AT_EACCESS
++#define AT_EACCESS 0
++#endif
 +
- 	param->beacon_period = cpu_to_le16(bss->beacon_interval);
- 	param->cap_info = cpu_to_le16(bss->capability);
- 	param->bss_type = WILC_FW_BSS_TYPE_INFRA;
- 	param->ch = ieee80211_frequency_to_channel(bss->channel->center_freq);
- 	ether_addr_copy(param->bssid, bss->bssid);
- 
--	ssid_elm = cfg80211_find_ie(WLAN_EID_SSID, ies->data, ies->len);
-+	ssid_elm = cfg80211_find_ie(WLAN_EID_SSID, ies_data, ies_len);
- 	if (ssid_elm) {
- 		if (ssid_elm[1] <= IEEE80211_MAX_SSID_LEN)
- 			memcpy(param->ssid, ssid_elm + 2, ssid_elm[1]);
- 	}
- 
--	tim_elm = cfg80211_find_ie(WLAN_EID_TIM, ies->data, ies->len);
-+	tim_elm = cfg80211_find_ie(WLAN_EID_TIM, ies_data, ies_len);
- 	if (tim_elm && tim_elm[1] >= 2)
- 		param->dtim_period = tim_elm[3];
- 
- 	memset(param->p_suites, 0xFF, 3);
- 	memset(param->akm_suites, 0xFF, 3);
- 
--	rates_ie = cfg80211_find_ie(WLAN_EID_SUPP_RATES, ies->data, ies->len);
-+	rates_ie = cfg80211_find_ie(WLAN_EID_SUPP_RATES, ies_data, ies_len);
- 	if (rates_ie) {
- 		rates_len = rates_ie[1];
- 		if (rates_len > WILC_MAX_RATES_SUPPORTED)
-@@ -416,7 +427,7 @@ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 
- 	if (rates_len < WILC_MAX_RATES_SUPPORTED) {
- 		supp_rates_ie = cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
--						 ies->data, ies->len);
-+						 ies_data, ies_len);
- 		if (supp_rates_ie) {
- 			u8 ext_rates = supp_rates_ie[1];
- 
-@@ -431,11 +442,11 @@ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 		}
- 	}
- 
--	ht_ie = cfg80211_find_ie(WLAN_EID_HT_CAPABILITY, ies->data, ies->len);
-+	ht_ie = cfg80211_find_ie(WLAN_EID_HT_CAPABILITY, ies_data, ies_len);
- 	if (ht_ie)
- 		param->ht_capable = true;
- 
--	ret = cfg80211_get_p2p_attr(ies->data, ies->len,
-+	ret = cfg80211_get_p2p_attr(ies_data, ies_len,
- 				    IEEE80211_P2P_ATTR_ABSENCE_NOTICE,
- 				    (u8 *)&noa_attr, sizeof(noa_attr));
- 	if (ret > 0) {
-@@ -459,7 +470,7 @@ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 	}
- 	wmm_ie = cfg80211_find_vendor_ie(WLAN_OUI_MICROSOFT,
- 					 WLAN_OUI_TYPE_MICROSOFT_WMM,
--					 ies->data, ies->len);
-+					 ies_data, ies_len);
- 	if (wmm_ie) {
- 		struct ieee80211_wmm_param_ie *ie;
- 
-@@ -474,13 +485,13 @@ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 
- 	wpa_ie = cfg80211_find_vendor_ie(WLAN_OUI_MICROSOFT,
- 					 WLAN_OUI_TYPE_MICROSOFT_WPA,
--					 ies->data, ies->len);
-+					 ies_data, ies_len);
- 	if (wpa_ie) {
- 		param->mode_802_11i = 1;
- 		param->rsn_found = true;
- 	}
- 
--	rsn_ie = cfg80211_find_ie(WLAN_EID_RSN, ies->data, ies->len);
-+	rsn_ie = cfg80211_find_ie(WLAN_EID_RSN, ies_data, ies_len);
- 	if (rsn_ie) {
- 		int rsn_ie_len = sizeof(struct element) + rsn_ie[1];
- 		int offset = 8;
-@@ -514,6 +525,7 @@ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 			param->akm_suites[i] = crypto->akm_suites[i] & 0xFF;
- 	}
- 
-+	kfree(ies_data);
- 	return (void *)param;
- }
+ /* make sure libbpf doesn't use kernel-only integer typedefs */
+ #pragma GCC poison u8 u16 u32 u64 s8 s16 s32 s64
  
 -- 
 2.43.0
