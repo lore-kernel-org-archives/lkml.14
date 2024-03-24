@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0811494D4;
-	Sun, 24 Mar 2024 22:56:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FA31494BA;
+	Sun, 24 Mar 2024 22:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320977; cv=none; b=KdsIcP4kJGyjUVibvJOWtbUrgU3jb2qfa9hhtZ/IPkmYZgI8WABlArMroiOiDCizckZmFNm2CK6XX15NVcNX8fZUOUA6/dmPaH4LbIepYV6vMrEE6n4dLqqvZNhP0iDyNhfkVDfJ4uUJK/k2gDydhkCWM9pgGAbrZbkFHeW/LhI=
+	t=1711320972; cv=none; b=bWnGLl4njuxTQGAt50zYA/tnkr2KK/NSN3PmZL+jiKoe1GQWHIS7H3QZe37bl6OD3AJGVIYZJNholm/seuKtwrHbQeu9mHfRr76ekYXs/vtfdWXFubMYwvFHDXORyFTC/1zLdmBOUbHRiJmew8LOjGmg/LyddtUnzszEN4OxH1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320977; c=relaxed/simple;
-	bh=1L5gyKnUNDWV2C0YYKufGqLKY6PpoYok9dEErj71eac=;
+	s=arc-20240116; t=1711320972; c=relaxed/simple;
+	bh=VRyHqkwnrWOxKYONL7l3ggEL9OY/Mc3b+ogGjCd+mZA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AwEwNtcdPr9fFZwqHVcVfNxAuX9IDudD5yedNGxbeKVOB8SyF0ZR1/R8BbnZRiujdqtkeKHSxpI++tk8+6UVkft3h18Qy7s/RPFt24/brm7efsH0O3/ZOdqdOvRnnt2UTLfeOLlV1kP5hu6tYK4xp1LaDifcVCgD8LNNKQbnLNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Msof+9h+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FHMqOkPH/Zl4k9jZTdmIqVKh+vbfcVTtiu+hmttWQsMi8D1XR94tXPvDtYbfR3XmCgsuMes66NNWlTtK8lI+I0ojqOrSClDKkzcK2BSiVdMNczdYL3r4Dj6f476QkbaonJPhHloxt3uuzSDrlXRxeysYlLVnsYS9gko+C5dQ1X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQpV/RaO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Msof+9h+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B60C43390;
-	Sun, 24 Mar 2024 22:56:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQpV/RaO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F7EC43390;
+	Sun, 24 Mar 2024 22:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320976;
-	bh=1L5gyKnUNDWV2C0YYKufGqLKY6PpoYok9dEErj71eac=;
+	s=k20201202; t=1711320972;
+	bh=VRyHqkwnrWOxKYONL7l3ggEL9OY/Mc3b+ogGjCd+mZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Msof+9h+vA3zF9+SnUOy6G/WmX2lrLjG62KbpDl00P0/BIZAnixYLjmL0ove8zy4z
-	 MWsnAKTrm7OHIT30aPVmbuoW8n7o4rYTBwahT6XoVzVqb2eI4BUxMgj0ubZJSaSFBy
-	 oY0cqxzgVI6xHYV0Y4Y8qHMEt1AjpJZ7Meh3NaOsuY+Mo7Qrkkh+ez6KAKhbFxiQtf
-	 1deXkf/sQMKLA/LGfpbtxXJtmxXRC23nwYinm4OjZXE2LkHl0ct3PhMAhdP0uZ8ijT
-	 YFgJQ4uveAOrVE+UCpKhTu/z69YWIAU7CFOmmnnGwk6CuzE3DhOMYRM2cQ3PT+AWrd
-	 thbNHvCmdXs7Q==
+	b=KQpV/RaO8NG08Ge6hV3cnQj5Xgo7Em8cjZdXUvj1U4S8IUM/78h2jOmVVEY3+eMcN
+	 mBRywQMMJgqs/qt6XYU/yB6zRgmeqIiEuNHD3XS+yySNVb4Ru/nIbJV7zRY+oRWlkJ
+	 /OtuGSKzKdeh2pO2ey2zeZ/qvOYa+DF6/e4IB0WYXvhnjUifUzH0LObsgu/TSqGslB
+	 UqIZpq+aToWbdMnjrHEnYazjyn9vhjeOkc3YFyGztnEq+zUgyxKiuRQPXsiEGJN0bQ
+	 dFuSW6ni4bnGBGJe7m43qLs2uaBr8ABoMJnPzsUgHpEOHskU3YwynpE2rNU/C4TL/S
+	 95kbq2jT8CmZQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: George Stark <gnstark@salutedevices.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Lee Jones <lee@kernel.org>,
+Cc: Changbin Du <changbin.du@huawei.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Xiaoyi Su <suxiaoyi@huawei.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 539/713] leds: aw2013: Unlock mutex before destroying it
-Date: Sun, 24 Mar 2024 18:44:25 -0400
-Message-ID: <20240324224720.1345309-540-sashal@kernel.org>
+Subject: [PATCH 6.7 535/713] modules: wait do_free_init correctly
+Date: Sun, 24 Mar 2024 18:44:21 -0400
+Message-ID: <20240324224720.1345309-536-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,35 +51,123 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: George Stark <gnstark@salutedevices.com>
+From: Changbin Du <changbin.du@huawei.com>
 
-[ Upstream commit 6969d0a2ba1adc9ba6a49b9805f24080896c255c ]
+[ Upstream commit 8f8cd6c0a43ed637e620bbe45a8d0e0c2f4d5130 ]
 
-In the probe() callback in case of error mutex is destroyed being locked
-which is not allowed so unlock the mutex before destroying.
+The synchronization here is to ensure the ordering of freeing of a module
+init so that it happens before W+X checking.  It is worth noting it is not
+that the freeing was not happening, it is just that our sanity checkers
+raced against the permission checkers which assume init memory is already
+gone.
 
-Fixes: 59ea3c9faf32 ("leds: add aw2013 driver")
-Signed-off-by: George Stark <gnstark@salutedevices.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Link: https://lore.kernel.org/r/20231214173614.2820929-2-gnstark@salutedevices.com
-Signed-off-by: Lee Jones <lee@kernel.org>
+Commit 1a7b7d922081 ("modules: Use vmalloc special flag") moved calling
+do_free_init() into a global workqueue instead of relying on it being
+called through call_rcu(..., do_free_init), which used to allowed us call
+do_free_init() asynchronously after the end of a subsequent grace period.
+The move to a global workqueue broke the gaurantees for code which needed
+to be sure the do_free_init() would complete with rcu_barrier().  To fix
+this callers which used to rely on rcu_barrier() must now instead use
+flush_work(&init_free_wq).
+
+Without this fix, we still could encounter false positive reports in W+X
+checking since the rcu_barrier() here can not ensure the ordering now.
+
+Even worse, the rcu_barrier() can introduce significant delay.  Eric
+Chanudet reported that the rcu_barrier introduces ~0.1s delay on a
+PREEMPT_RT kernel.
+
+  [    0.291444] Freeing unused kernel memory: 5568K
+  [    0.402442] Run /sbin/init as init process
+
+With this fix, the above delay can be eliminated.
+
+Link: https://lkml.kernel.org/r/20240227023546.2490667-1-changbin.du@huawei.com
+Fixes: 1a7b7d922081 ("modules: Use vmalloc special flag")
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+Tested-by: Eric Chanudet <echanude@redhat.com>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Xiaoyi Su <suxiaoyi@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-aw2013.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/moduleloader.h | 8 ++++++++
+ init/main.c                  | 5 +++--
+ kernel/module/main.c         | 9 +++++++--
+ 3 files changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/leds/leds-aw2013.c b/drivers/leds/leds-aw2013.c
-index 91f44b23cb113..17235a5e576ae 100644
---- a/drivers/leds/leds-aw2013.c
-+++ b/drivers/leds/leds-aw2013.c
-@@ -405,6 +405,7 @@ static int aw2013_probe(struct i2c_client *client)
- 			       chip->regulators);
+diff --git a/include/linux/moduleloader.h b/include/linux/moduleloader.h
+index 001b2ce83832e..89b1e0ed98114 100644
+--- a/include/linux/moduleloader.h
++++ b/include/linux/moduleloader.h
+@@ -115,6 +115,14 @@ int module_finalize(const Elf_Ehdr *hdr,
+ 		    const Elf_Shdr *sechdrs,
+ 		    struct module *mod);
  
- error:
-+	mutex_unlock(&chip->mutex);
- 	mutex_destroy(&chip->mutex);
- 	return ret;
++#ifdef CONFIG_MODULES
++void flush_module_init_free_work(void);
++#else
++static inline void flush_module_init_free_work(void)
++{
++}
++#endif
++
+ /* Any cleanup needed when module leaves. */
+ void module_arch_cleanup(struct module *mod);
+ 
+diff --git a/init/main.c b/init/main.c
+index e24b0780fdff7..9e6ab6d593bd8 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -88,6 +88,7 @@
+ #include <linux/sched/task_stack.h>
+ #include <linux/context_tracking.h>
+ #include <linux/random.h>
++#include <linux/moduleloader.h>
+ #include <linux/list.h>
+ #include <linux/integrity.h>
+ #include <linux/proc_ns.h>
+@@ -1402,11 +1403,11 @@ static void mark_readonly(void)
+ 	if (rodata_enabled) {
+ 		/*
+ 		 * load_module() results in W+X mappings, which are cleaned
+-		 * up with call_rcu().  Let's make sure that queued work is
++		 * up with init_free_wq. Let's make sure that queued work is
+ 		 * flushed so that we don't hit false positives looking for
+ 		 * insecure pages which are W+X.
+ 		 */
+-		rcu_barrier();
++		flush_module_init_free_work();
+ 		mark_rodata_ro();
+ 		rodata_test();
+ 	} else
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 98fedfdb8db52..34d9e718c2c7d 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -2486,6 +2486,11 @@ static void do_free_init(struct work_struct *w)
+ 	}
  }
+ 
++void flush_module_init_free_work(void)
++{
++	flush_work(&init_free_wq);
++}
++
+ #undef MODULE_PARAM_PREFIX
+ #define MODULE_PARAM_PREFIX "module."
+ /* Default value for module->async_probe_requested */
+@@ -2590,8 +2595,8 @@ static noinline int do_init_module(struct module *mod)
+ 	 * Note that module_alloc() on most architectures creates W+X page
+ 	 * mappings which won't be cleaned up until do_free_init() runs.  Any
+ 	 * code such as mark_rodata_ro() which depends on those mappings to
+-	 * be cleaned up needs to sync with the queued work - ie
+-	 * rcu_barrier()
++	 * be cleaned up needs to sync with the queued work by invoking
++	 * flush_module_init_free_work().
+ 	 */
+ 	if (llist_add(&freeinit->node, &init_free_list))
+ 		schedule_work(&init_free_wq);
 -- 
 2.43.0
 
