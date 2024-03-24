@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6165203711;
-	Sun, 24 Mar 2024 23:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B3A134405;
+	Sun, 24 Mar 2024 23:04:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321453; cv=none; b=hjlVBhHUP5+1DqvSHbbx33dHuaiBs6yMDiiwROJkwT6DcBvD5zRb3N3pM21atHhdI5Kh+WSs9B2NILMqtCbnQ+9oqTk4MF9a4YyOG35nB5juo02WU1sC9XbWAQN2Wk+2IldTYapxkH+tB+yzJq0XeXawui9+jjhUUM7ipFry+sg=
+	t=1711321457; cv=none; b=s0CG3SWwcDgqHb3U9iCSojfcMSsSOAd2Am5zRv0SQdugV7j1o+7GAL6hvOpIG+Ros9MXP1Gh3ahADWbO7Ont1dimxqEum2wYCQERuzyRzRNa42FBjGfhjvJM2M3bnB8k1WujsxRARywNvxTrHNJ90WvBhSXAscH1tyhVaTIo5dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321453; c=relaxed/simple;
-	bh=zEegwztfvavh3excM3TsgOKOv2GUzxn/1hJX6yd3sK0=;
+	s=arc-20240116; t=1711321457; c=relaxed/simple;
+	bh=OkQag3fGV2PD8R+QrG3u5lsG7MCrCma4Ow49X1gbOkg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ta07rrpfmiLefoWNWr2zE6PQ14DCk6qzjAGFhVDmWetkMK9Af3kkAQIWnC82P/0u2IK1KzRX26vbxaHEIJuSqLEwOuTDYS2cpCiwYAHP3FFqVDbuog0YJQ6YOQC9UdLWs4VXt+JX3ERwlNlfitL7r5zqFQUdtk7mYZCSAa1tSAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sp45FfEv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BkUg1VgFCSPfMmH8sDTltXZLt5NXjj042KY7Gz+1dUesf781DgfDDa9RXCnjjq3NqRhec2QarYPPfBlkqKBwJnFc+gtevY/HpMbVABchBz7rkWNGW7PibeK7sy4InZRBHONOrXPuuAQZjW0A1/0AO+St6WoKiO5aKsrrwf5+ZMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGQTv4/x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sp45FfEv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20491C433F1;
-	Sun, 24 Mar 2024 23:04:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGQTv4/x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0F9CC43390;
+	Sun, 24 Mar 2024 23:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321452;
-	bh=zEegwztfvavh3excM3TsgOKOv2GUzxn/1hJX6yd3sK0=;
+	s=k20201202; t=1711321456;
+	bh=OkQag3fGV2PD8R+QrG3u5lsG7MCrCma4Ow49X1gbOkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Sp45FfEvaADq7VASkhJ+vSkg5IsRQd7FynjLTDTBaHlz3amekWzNEINxQoKg3IzuL
-	 x1mz2XCaZNC+zYiHXWdjjg3y9WA6sqw4vmmPSF3jev6h1/14DLcFzRiQdvfGWfR92j
-	 WbpGpWlz16il8CsPDdNDdfaFKDnxnmCs2lQTJFvh/3JP1OZdGZ7iHjuUHpUrUGdsJA
-	 51iZor/MdTWm+cYiVl0aGm8Z4LUThenrkRKq5LcUZASXtX9EFezOkMnomtSQdKF+Zw
-	 mudMQnyMAvSAo90T18FyiCQd8Y2nX95y2ck5rMLQMcwU21e/nlDoRr00NG2fMPNtQC
-	 ZSpAzG37ytciw==
+	b=HGQTv4/xbwrHUCGq5jVgYRciuDrwk5AeeIZFfv5qGrBduSikkoVaj92bxjSBkOmP7
+	 sbhz5iorliMty5BBtOVjEL9sIESZDFgqhjsvyyMjtLl0Kuvf8GX7cZF9tRB/dBC0Nu
+	 JZ3W0Y7cH4HzbMI46i3M7peOKFSv432zY757qfJzTYo5fOeLaHZlXpgMd9MCsDLQy5
+	 I365xJHG4r4rniCIviqkJbuhqbj25EHdk/bGeq96QWxQXfefNSn5kwTnCpHZEHXiWC
+	 C5Ngu9MPoxeVMy8IZpEYN+hJ1EKBC9CKI88ihOVXMcvnEKxMpt1f0hYE7QHpaR8LO+
+	 AWHO924L/KlOA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tim Harvey <tharvey@gateworks.com>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Manorit Chawdhry <m-chawdhry@ti.com>,
+	Andrew Davis <afd@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 177/638] arm64: dts: imx8mm-venice-gw71xx: fix USB OTG VBUS
-Date: Sun, 24 Mar 2024 18:53:34 -0400
-Message-ID: <20240324230116.1348576-178-sashal@kernel.org>
+Subject: [PATCH 6.6 181/638] arm64: dts: ti: k3-j784s4: Fix power domain for VTM node
+Date: Sun, 24 Mar 2024 18:53:38 -0400
+Message-ID: <20240324230116.1348576-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,83 +49,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tim Harvey <tharvey@gateworks.com>
+From: Manorit Chawdhry <m-chawdhry@ti.com>
 
-[ Upstream commit ec2cb52fcfef5d58574f2cfbc9a99ffc20ae5a9d ]
+[ Upstream commit e4d252e6d29208aea56d4c04270523e306b1e3c2 ]
 
-The GW71xx does not have a gpio controlled vbus regulator but it does
-require some pinctrl. Remove the regulator and move the valid pinctrl
-into the usbotg1 node.
+Fix the power domain device ID for wkup_vtm0 node.
 
-Fixes: bd306fdb4e60 ("arm64: dts: imx8mm-venice-gw71xx: fix USB OTG VBUS")
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Link: https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j784s4/devices.html
+Fixes: 64821fbf6738 ("arm64: dts: ti: j784s4: Add VTM node")
+Signed-off-by: Manorit Chawdhry <m-chawdhry@ti.com>
+Reviewed-by: Andrew Davis <afd@ti.com>
+Link: https://lore.kernel.org/r/20240201-b4-upstream-j721s2-fix-vtm-devid-v2-2-85fd568b77e3@ti.com
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/freescale/imx8mm-venice-gw71xx.dtsi   | 29 ++++++-------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+ arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
-index 0ce60ad9c7d50..26d4afdbca6f4 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
-@@ -47,17 +47,6 @@ pps {
- 		gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
- 		status = "okay";
- 	};
--
--	reg_usb_otg1_vbus: regulator-usb-otg1 {
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_reg_usb1_en>;
--		compatible = "regulator-fixed";
--		regulator-name = "usb_otg1_vbus";
--		gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--	};
- };
- 
- /* off-board header */
-@@ -145,9 +134,10 @@ &uart3 {
- };
- 
- &usbotg1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg1>;
- 	dr_mode = "otg";
- 	over-current-active-low;
--	vbus-supply = <&reg_usb_otg1_vbus>;
- 	status = "okay";
- };
- 
-@@ -205,14 +195,6 @@ MX8MM_IOMUXC_GPIO1_IO15_GPIO1_IO15	0x41
- 		>;
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
+index 4ab4018d36953..8d26daf7fa3d1 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
+@@ -616,7 +616,7 @@ wkup_vtm0: temperature-sensor@42040000 {
+ 		compatible = "ti,j7200-vtm";
+ 		reg = <0x00 0x42040000 0x00 0x350>,
+ 		      <0x00 0x42050000 0x00 0x350>;
+-		power-domains = <&k3_pds 154 TI_SCI_PD_SHARED>;
++		power-domains = <&k3_pds 243 TI_SCI_PD_SHARED>;
+ 		#thermal-sensor-cells = <1>;
  	};
  
--	pinctrl_reg_usb1_en: regusb1grp {
--		fsl,pins = <
--			MX8MM_IOMUXC_GPIO1_IO10_GPIO1_IO10	0x41
--			MX8MM_IOMUXC_GPIO1_IO12_GPIO1_IO12	0x141
--			MX8MM_IOMUXC_GPIO1_IO13_USB1_OTG_OC	0x41
--		>;
--	};
--
- 	pinctrl_spi2: spi2grp {
- 		fsl,pins = <
- 			MX8MM_IOMUXC_ECSPI2_SCLK_ECSPI2_SCLK	0xd6
-@@ -235,4 +217,11 @@ MX8MM_IOMUXC_UART3_RXD_UART3_DCE_RX	0x140
- 			MX8MM_IOMUXC_UART3_TXD_UART3_DCE_TX	0x140
- 		>;
- 	};
-+
-+	pinctrl_usbotg1: usbotg1grp {
-+		fsl,pins = <
-+			MX8MM_IOMUXC_GPIO1_IO12_GPIO1_IO12	0x141
-+			MX8MM_IOMUXC_GPIO1_IO13_USB1_OTG_OC	0x41
-+		>;
-+	};
- };
 -- 
 2.43.0
 
