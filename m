@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF79E149C66;
-	Sun, 24 Mar 2024 22:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B3612BF05;
+	Sun, 24 Mar 2024 22:56:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321007; cv=none; b=RUReXQKM1PaI+saLDNOUGVcqXEQn+ABxa8GRptmLbwPCshMsWaRVWLwb5/KoGeI0XqDRCrV0z7YCzAxyaeBeH3nAxEPB07PhKwukvr8pxqgSMgq0k6HgtN0Y7b74DWebzlO4l6HLpvz6FKefp/mUYsmeIC4E3MXfnmThBvBatik=
+	t=1711321010; cv=none; b=BqygOly9poxX16Q3h3QStNPj7/DncNwp8ahS69++30naWSOzC7/DBwDDC4837GckRRGTUHcqpvvoyVzCRZSumWfWzCSkWdBSk/gN445Ow7xUBGrTI1/OGx9Itrq1sJbLmRoeNa5tlZF4iyRH21XaAhxk18fhhbclXGkUecNu+TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321007; c=relaxed/simple;
-	bh=8GbiNBINI7eELsDDxsTJBY9poV2VqsNUaNayQzLsUY0=;
+	s=arc-20240116; t=1711321010; c=relaxed/simple;
+	bh=dvhXGhTDE+MkDsUDeR62i1NkzohWWA44QPfTW05feDA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r/y6e6944OOPGre+eGC6NnXe+HI35TUOdw3YaM8S57v7Bq4y/Lj1hqH1/+8REyfjzmqI/ld/2uPjsIKxO5RyeD6xZTDccm8fWqG0sOH3pd2ZUmaQBzrgD0LzPhKu5SjAJyq2jBSbFuZNC55e/ga30sAVX/sqeFe0JNBi5DMqCjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WIjfAwVm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nPGUXpJLPNIpvsKkQkT7wEN8Ob4uigDLA9pYCPWzMoVsSfR2UXM6CJyKGaEc+l9Uyrfc7reMd3ZSKs4gjclKCYU2SpYXbgKDklOdI/K1OgooD5x8/3lFTLcwo3YwtE9JP2PLhNP/t+vaM5MbFgvOeYh2TUF5mVRRNNkFHW3SeLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j4juPX0f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WIjfAwVm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2445FC43399;
-	Sun, 24 Mar 2024 22:56:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j4juPX0f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E71B0C433F1;
+	Sun, 24 Mar 2024 22:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321005;
-	bh=8GbiNBINI7eELsDDxsTJBY9poV2VqsNUaNayQzLsUY0=;
+	s=k20201202; t=1711321009;
+	bh=dvhXGhTDE+MkDsUDeR62i1NkzohWWA44QPfTW05feDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WIjfAwVmqDJwK6j5DXXAi0IeGrEG+o0iLS0Mx0RyEcgV18DesiSwVdvCI/n/LIJyr
-	 90Fc2c/xx86AF2Qy2naARZd4eM2CHAvF7CV8fPJPZHbGUeJt4ywrdIt67GFQMwXt5e
-	 qYyXGbzvpk2tREnaMbQQ1GC6QxeLchkdlzs1AYHpz4pu7QP2zSkHJ6DEwxNHIfAFZC
-	 pOiFB435RolevDZffRkBu+AG2a3D1NObQNjTZhXcvf2DTFYIsdGVsXiTIrvhZZd6vu
-	 cvqlHL5uBiw2n/ogCPmPnN4Tr9afTrgB+W3JngddLZCKLwmHyMMPf56ewRFuhULTLB
-	 WvUVtbckYGt0A==
+	b=j4juPX0f81jJz6lBHbrCGsMPi4BYM3GQYcaMBvt8tRiCch5Cb4MktZUC+ROWx1Ytl
+	 KmjH8jeYgxWSzCBOLcsh+Z+hb9j4XNnQEFxDjpZvfLeaj18dL9kGoMoe89WZ76XfxZ
+	 SBlwUDXmwL4i87kVaqJYtT4jqJl3PSTCCVmHpwMcG2QmCZ6bv0lAWLAa4S8O8RM1em
+	 jfH9qaG++Q0AoZe07CxwAd5gU2M1j52ZRzd5csXhbTzKm2g6waBzfjqoZY7Q4XV4qQ
+	 /FblPCshzXbYMZmld0wXUiWMLnXF/d4h5yg6KEvoEMCz+RRxH/2q/A+jx4VawSJPFA
+	 /Ss6a0JksmEBQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Chao Yu <chao@kernel.org>,
-	Daeho Jeong <daehojeong@google.com>,
 	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 568/713] f2fs: compress: fix to cover normal cluster write with cp_rwsem
-Date: Sun, 24 Mar 2024 18:44:54 -0400
-Message-ID: <20240324224720.1345309-569-sashal@kernel.org>
+Subject: [PATCH 6.7 572/713] f2fs: introduce get_dnode_addr() to clean up codes
+Date: Sun, 24 Mar 2024 18:44:58 -0400
+Message-ID: <20240324224720.1345309-573-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -51,121 +50,179 @@ Content-Transfer-Encoding: 8bit
 
 From: Chao Yu <chao@kernel.org>
 
-[ Upstream commit fd244524c2cf07b5f4c3fe8abd6a99225c76544b ]
+[ Upstream commit 2020cd48e41cb8470bb1ca0835033d13d3178425 ]
 
-When we overwrite compressed cluster w/ normal cluster, we should
-not unlock cp_rwsem during f2fs_write_raw_pages(), otherwise data
-will be corrupted if partial blocks were persisted before CP & SPOR,
-due to cluster metadata wasn't updated atomically.
+Just cleanup, no logic changes.
 
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Reviewed-by: Daeho Jeong <daehojeong@google.com>
 Signed-off-by: Chao Yu <chao@kernel.org>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Stable-dep-of: 54607494875e ("f2fs: compress: fix to avoid inconsistence bewteen i_blocks and dnode")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/compress.c | 27 ++++++++++++++++++---------
- fs/f2fs/data.c     |  3 ++-
- 2 files changed, 20 insertions(+), 10 deletions(-)
+ fs/f2fs/data.c  | 11 ++---------
+ fs/f2fs/f2fs.h  | 18 +++++++++++++++---
+ fs/f2fs/file.c  |  8 +-------
+ fs/f2fs/inode.c | 32 ++++++++++++++------------------
+ 4 files changed, 32 insertions(+), 37 deletions(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 8453a06630208..94e0b0aa95e9b 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1445,12 +1445,14 @@ void f2fs_compress_write_end_io(struct bio *bio, struct page *page)
- }
- 
- static int f2fs_write_raw_pages(struct compress_ctx *cc,
--					int *submitted,
-+					int *submitted_p,
- 					struct writeback_control *wbc,
- 					enum iostat_type io_type)
- {
- 	struct address_space *mapping = cc->inode->i_mapping;
--	int _submitted, compr_blocks, ret, i;
-+	struct f2fs_sb_info *sbi = F2FS_M_SB(mapping);
-+	int submitted, compr_blocks, i;
-+	int ret = 0;
- 
- 	compr_blocks = f2fs_compressed_blocks(cc);
- 
-@@ -1465,6 +1467,10 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
- 	if (compr_blocks < 0)
- 		return compr_blocks;
- 
-+	/* overwrite compressed cluster w/ normal cluster */
-+	if (compr_blocks > 0)
-+		f2fs_lock_op(sbi);
-+
- 	for (i = 0; i < cc->cluster_size; i++) {
- 		if (!cc->rpages[i])
- 			continue;
-@@ -1489,7 +1495,7 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
- 		if (!clear_page_dirty_for_io(cc->rpages[i]))
- 			goto continue_unlock;
- 
--		ret = f2fs_write_single_data_page(cc->rpages[i], &_submitted,
-+		ret = f2fs_write_single_data_page(cc->rpages[i], &submitted,
- 						NULL, NULL, wbc, io_type,
- 						compr_blocks, false);
- 		if (ret) {
-@@ -1497,26 +1503,29 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
- 				unlock_page(cc->rpages[i]);
- 				ret = 0;
- 			} else if (ret == -EAGAIN) {
-+				ret = 0;
- 				/*
- 				 * for quota file, just redirty left pages to
- 				 * avoid deadlock caused by cluster update race
- 				 * from foreground operation.
- 				 */
- 				if (IS_NOQUOTA(cc->inode))
--					return 0;
--				ret = 0;
-+					goto out;
- 				f2fs_io_schedule_timeout(DEFAULT_IO_TIMEOUT);
- 				goto retry_write;
- 			}
--			return ret;
-+			goto out;
- 		}
- 
--		*submitted += _submitted;
-+		*submitted_p += submitted;
- 	}
- 
--	f2fs_balance_fs(F2FS_M_SB(mapping), true);
-+out:
-+	if (compr_blocks > 0)
-+		f2fs_unlock_op(sbi);
- 
--	return 0;
-+	f2fs_balance_fs(sbi, true);
-+	return ret;
- }
- 
- int f2fs_write_multi_pages(struct compress_ctx *cc,
 diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 4b0c2ceb5dbfd..b7845be96f6d4 100644
+index aedb5f6bf75ac..d1cccfded001b 100644
 --- a/fs/f2fs/data.c
 +++ b/fs/f2fs/data.c
-@@ -2851,7 +2851,7 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
- 		.encrypted_page = NULL,
- 		.submitted = 0,
- 		.compr_blocks = compr_blocks,
--		.need_lock = LOCK_RETRY,
-+		.need_lock = compr_blocks ? LOCK_DONE : LOCK_RETRY,
- 		.post_read = f2fs_post_read_required(inode) ? 1 : 0,
- 		.io_type = io_type,
- 		.io_wbc = wbc,
-@@ -2935,6 +2935,7 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
- 	if (err == -EAGAIN) {
- 		err = f2fs_do_write_data_page(&fio);
- 		if (err == -EAGAIN) {
-+			f2fs_bug_on(sbi, compr_blocks);
- 			fio.need_lock = LOCK_REQ;
- 			err = f2fs_do_write_data_page(&fio);
+@@ -1182,16 +1182,9 @@ static int f2fs_submit_page_read(struct inode *inode, struct page *page,
+ 
+ static void __set_data_blkaddr(struct dnode_of_data *dn)
+ {
+-	struct f2fs_node *rn = F2FS_NODE(dn->node_page);
+-	__le32 *addr_array;
+-	int base = 0;
++	__le32 *addr = get_dnode_addr(dn->inode, dn->node_page);
+ 
+-	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
+-		base = get_extra_isize(dn->inode);
+-
+-	/* Get physical address of data block */
+-	addr_array = blkaddr_in_node(rn);
+-	addr_array[base + dn->ofs_in_node] = cpu_to_le32(dn->data_blkaddr);
++	addr[dn->ofs_in_node] = cpu_to_le32(dn->data_blkaddr);
+ }
+ 
+ /*
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 27dcda5a237e1..fa38de60c716c 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3271,12 +3271,13 @@ static inline bool f2fs_is_cow_file(struct inode *inode)
+ 	return is_inode_flag_set(inode, FI_COW_FILE);
+ }
+ 
++static inline __le32 *get_dnode_addr(struct inode *inode,
++					struct page *node_page);
+ static inline void *inline_data_addr(struct inode *inode, struct page *page)
+ {
+-	struct f2fs_inode *ri = F2FS_INODE(page);
+-	int extra_size = get_extra_isize(inode);
++	__le32 *addr = get_dnode_addr(inode, page);
+ 
+-	return (void *)&(ri->i_addr[extra_size + DEF_INLINE_RESERVED_SIZE]);
++	return (void *)(addr + DEF_INLINE_RESERVED_SIZE);
+ }
+ 
+ static inline int f2fs_has_inline_dentry(struct inode *inode)
+@@ -3421,6 +3422,17 @@ static inline int get_inline_xattr_addrs(struct inode *inode)
+ 	return F2FS_I(inode)->i_inline_xattr_size;
+ }
+ 
++static inline __le32 *get_dnode_addr(struct inode *inode,
++					struct page *node_page)
++{
++	int base = 0;
++
++	if (IS_INODE(node_page) && f2fs_has_extra_attr(inode))
++		base = get_extra_isize(inode);
++
++	return blkaddr_in_node(F2FS_NODE(node_page)) + base;
++}
++
+ #define f2fs_get_inode_mode(i) \
+ 	((is_inode_flag_set(i, FI_ACL_MODE)) ? \
+ 	 (F2FS_I(i)->i_acl_mode) : ((i)->i_mode))
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 14eecc63dc077..4f07fb0097965 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -557,20 +557,14 @@ static int f2fs_file_open(struct inode *inode, struct file *filp)
+ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
+-	struct f2fs_node *raw_node;
+ 	int nr_free = 0, ofs = dn->ofs_in_node, len = count;
+ 	__le32 *addr;
+-	int base = 0;
+ 	bool compressed_cluster = false;
+ 	int cluster_index = 0, valid_blocks = 0;
+ 	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+ 	bool released = !atomic_read(&F2FS_I(dn->inode)->i_compr_blocks);
+ 
+-	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
+-		base = get_extra_isize(dn->inode);
+-
+-	raw_node = F2FS_NODE(dn->node_page);
+-	addr = blkaddr_in_node(raw_node) + base + ofs;
++	addr = get_dnode_addr(dn->inode, dn->node_page) + ofs;
+ 
+ 	/* Assumption: truncation starts with cluster */
+ 	for (; count > 0; count--, addr++, dn->ofs_in_node++, cluster_index++) {
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 108e3d00028a1..b31410c4afbc1 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -61,35 +61,31 @@ void f2fs_set_inode_flags(struct inode *inode)
+ 			S_ENCRYPTED|S_VERITY|S_CASEFOLD);
+ }
+ 
+-static void __get_inode_rdev(struct inode *inode, struct f2fs_inode *ri)
++static void __get_inode_rdev(struct inode *inode, struct page *node_page)
+ {
+-	int extra_size = get_extra_isize(inode);
++	__le32 *addr = get_dnode_addr(inode, node_page);
+ 
+ 	if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode) ||
+ 			S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
+-		if (ri->i_addr[extra_size])
+-			inode->i_rdev = old_decode_dev(
+-				le32_to_cpu(ri->i_addr[extra_size]));
++		if (addr[0])
++			inode->i_rdev = old_decode_dev(le32_to_cpu(addr[0]));
+ 		else
+-			inode->i_rdev = new_decode_dev(
+-				le32_to_cpu(ri->i_addr[extra_size + 1]));
++			inode->i_rdev = new_decode_dev(le32_to_cpu(addr[1]));
+ 	}
+ }
+ 
+-static void __set_inode_rdev(struct inode *inode, struct f2fs_inode *ri)
++static void __set_inode_rdev(struct inode *inode, struct page *node_page)
+ {
+-	int extra_size = get_extra_isize(inode);
++	__le32 *addr = get_dnode_addr(inode, node_page);
+ 
+ 	if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode)) {
+ 		if (old_valid_dev(inode->i_rdev)) {
+-			ri->i_addr[extra_size] =
+-				cpu_to_le32(old_encode_dev(inode->i_rdev));
+-			ri->i_addr[extra_size + 1] = 0;
++			addr[0] = cpu_to_le32(old_encode_dev(inode->i_rdev));
++			addr[1] = 0;
+ 		} else {
+-			ri->i_addr[extra_size] = 0;
+-			ri->i_addr[extra_size + 1] =
+-				cpu_to_le32(new_encode_dev(inode->i_rdev));
+-			ri->i_addr[extra_size + 2] = 0;
++			addr[0] = 0;
++			addr[1] = cpu_to_le32(new_encode_dev(inode->i_rdev));
++			addr[2] = 0;
  		}
+ 	}
+ }
+@@ -463,7 +459,7 @@ static int do_read_inode(struct inode *inode)
+ 	}
+ 
+ 	/* get rdev by using inline_info */
+-	__get_inode_rdev(inode, ri);
++	__get_inode_rdev(inode, node_page);
+ 
+ 	if (!f2fs_need_inode_block_update(sbi, inode->i_ino))
+ 		fi->last_disk_size = inode->i_size;
+@@ -736,7 +732,7 @@ void f2fs_update_inode(struct inode *inode, struct page *node_page)
+ 		}
+ 	}
+ 
+-	__set_inode_rdev(inode, ri);
++	__set_inode_rdev(inode, node_page);
+ 
+ 	/* deleted inode */
+ 	if (inode->i_nlink == 0)
 -- 
 2.43.0
 
