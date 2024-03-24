@@ -1,42 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDB41DC80A;
-	Sun, 24 Mar 2024 22:51:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87971D7939;
+	Sun, 24 Mar 2024 22:50:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320713; cv=none; b=JEecrSD45ta59mS7Vb0zT3QmXYON2C+vFpP0JBMRGtGjztTllEjfuR+oxBgP/XsbOZSp082alGySnLKzzNhpsPdwy7ubMnqXXJMBsHG9ro+hbUzq74io9nMadqOYuhwia6Ntbx9rOwhSr6lsvGq/IBtuCqtkCwMixbuLgyk4cY4=
+	t=1711320610; cv=none; b=YKEs/2CDkH/CYZspPB1Yc1FWKlvi9je+CfgWqbAUx+V5ghQtvrQs3MyDSp6CEv5KHuWkXUmZ9qY8J4AKThQq9jC7Vri6wlm/6Pn58D38bgbHcHVOSHOwpRqxLZICHWB79OjR5+xjRL7Xx7aFa+BNDzDuxMy4uAaeCyzYUr4SJp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320713; c=relaxed/simple;
-	bh=xZCKW/24TgRh7+E7gd9pRTBVZMgGEG5kgKUeClJxXso=;
+	s=arc-20240116; t=1711320610; c=relaxed/simple;
+	bh=+4AiABqnksxNdiMVZMOXIxNcwiZbJbOVBDo6C4zJjWs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lDGCZDh3k2b+2gXNHPTp9RoJLaXncFzUy6h7WRPZc02twMmPJ6C6obpIJt2dkXfyh69banrP3Tvnr14PEaOx/GQmlbRN4P3Fl9pijWmWBnAExmVvOAnqyF4Dxbv8k+3RkIYKXSq7SHFIBlrLiDhDCwuFXw1/Cf/DcrzzyvwYSZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e0hgrQBi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=afflv5InKsV7SPCRZN4vJjKYydtmmRMGzuTXt5tzkzELpoboOny2aUX+2y6BPPqcFAYeBm9jTW0ZImFjLpaWmL0g81tP4sJlMn0HSE2+Rr1syR4YbquFgG0nNqHRhxy8AdGz6Lj0M11+xKScWj0c330KhxYxKt9hRCTy3MCxywg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RBvSimax; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e0hgrQBi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C048BC43390;
-	Sun, 24 Mar 2024 22:51:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RBvSimax"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29E42C433C7;
+	Sun, 24 Mar 2024 22:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320713;
-	bh=xZCKW/24TgRh7+E7gd9pRTBVZMgGEG5kgKUeClJxXso=;
+	s=k20201202; t=1711320610;
+	bh=+4AiABqnksxNdiMVZMOXIxNcwiZbJbOVBDo6C4zJjWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e0hgrQBid+jtvjw5b2DWQwPxOoIm9lzptNIv29HyG/vvJC7gKtg2496X0GUeabKe4
-	 IvVnPDeSb1rUx+BI3yDdbWOP05CYY/8akcyzbrE/ALBIpDIUuNxv4HuLyYP8tiukTE
-	 q0lBa0Zm8AcOdIL2iYF2EsKswii7ShgOYZ9uJYa4N5buVY2LY84acRrgexeiJJmj4H
-	 VVOfmTlszyK5IugKGTLRbG9ihpTNE0izEs9h2v0dYspRa7l1iQT2Pk8Uo3foZwkZs1
-	 P+6gt+mN7sLr8Vm3CfgEYz5bwMfAW51yEr4QNHy28Z1OoHreM+kVSjBwujtoLJOEP1
-	 cxTGzmrduW5Ew==
+	b=RBvSimaxjM2oSpN317BUiLBVQcyA6d4/Ll6bKB2YbJCCVAglD+gRN5LSiVJyL383S
+	 dpgrzMbLnYXwsfYiV2MiPyA1717UcajMRcp2lM/HqqwXOj+PW0b+t90jbEiD1YlHR1
+	 d/KizqbXqzJ2ie+0vcwZYUfhDhqu8VGEZgq3u/+UmqeWkyKbiko0vfIyh+22Swy6pY
+	 Vn4xmDICYDRG8koFwL8083+0s2ao5DLVJb4KBxegqgloVo48M43JNypOQ2LAHCM8hL
+	 xYIt9c5GkdzqzSKATkDCA+c46ez8aNcBvWQ2QAZ8tMa7nCQoQoKYGau+sA+fmBLr3U
+	 cyKuSiupGUtEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Devarsh Thakkar <devarsht@ti.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 276/713] arm64: dts: ti: Add common1 register space for AM65x SoC
-Date: Sun, 24 Mar 2024 18:40:02 -0400
-Message-ID: <20240324224720.1345309-277-sashal@kernel.org>
+Subject: [PATCH 6.7 171/713] arm64: dts: renesas: r8a779g0: Restore sort order
+Date: Sun, 24 Mar 2024 18:38:17 -0400
+Message-ID: <20240324224720.1345309-172-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,42 +47,124 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Devarsh Thakkar <devarsht@ti.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 1a5010eade10b409d353b770d97b548b0fbdf5d7 ]
+[ Upstream commit 8b93657c976a61726d7ffbe8d019b84b4abfb673 ]
 
-This adds common1 register space for AM65x SoC which is using TI's Keystone
-display hardware and supporting it as described in
-Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+Numerical by unit address, alphabetical by node name.
 
-Fixes: fc539b90eda2 ("arm64: dts: ti: am654: Add DSS node")
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Link: https://lore.kernel.org/r/20240216062426.4170528-3-devarsht@ti.com
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/f00ef274a73c8fd60f940a1649423a8927b9ae8a.1705324708.git.geert+renesas@glider.be
+Stable-dep-of: 08e799f6bce8 ("arm64: dts: renesas: r8a779g0: Add missing SCIF_CLK2")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a779g0.dtsi | 72 +++++++++++------------
+ 1 file changed, 36 insertions(+), 36 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 29048d6577cf6..fa2304a7cb1ec 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -1013,9 +1013,10 @@ dss: dss@4a00000 {
- 		      <0x0 0x04a07000 0x0 0x1000>, /* ovr1 */
- 		      <0x0 0x04a08000 0x0 0x1000>, /* ovr2 */
- 		      <0x0 0x04a0a000 0x0 0x1000>, /* vp1 */
--		      <0x0 0x04a0b000 0x0 0x1000>; /* vp2 */
-+		      <0x0 0x04a0b000 0x0 0x1000>, /* vp2 */
-+		      <0x0 0x04a01000 0x0 0x1000>; /* common1 */
- 		reg-names = "common", "vidl1", "vid",
--			"ovr1", "ovr2", "vp1", "vp2";
-+			"ovr1", "ovr2", "vp1", "vp2", "common1";
+diff --git a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
+index d3d25e077c5d5..3be1159982b20 100644
+--- a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
+@@ -161,11 +161,6 @@ L3_CA76_1: cache-controller-1 {
+ 		};
+ 	};
  
- 		ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
+-	psci {
+-		compatible = "arm,psci-1.0", "arm,psci-0.2";
+-		method = "smc";
+-	};
+-
+ 	extal_clk: extal {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -185,6 +180,11 @@ pmu_a76 {
+ 		interrupts-extended = <&gic GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+ 	};
  
++	psci {
++		compatible = "arm,psci-1.0", "arm,psci-0.2";
++		method = "smc";
++	};
++
+ 	/* External SCIF clock - to be overridden by boards that provide it */
+ 	scif_clk: scif {
+ 		compatible = "fixed-clock";
+@@ -1777,6 +1777,37 @@ ssi0: ssi-0 {
+ 			};
+ 		};
+ 
++		mmc0: mmc@ee140000 {
++			compatible = "renesas,sdhi-r8a779g0",
++				     "renesas,rcar-gen4-sdhi";
++			reg = <0 0xee140000 0 0x2000>;
++			interrupts = <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 706>,
++				 <&cpg CPG_CORE R8A779G0_CLK_SD0H>;
++			clock-names = "core", "clkh";
++			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
++			resets = <&cpg 706>;
++			max-frequency = <200000000>;
++			iommus = <&ipmmu_ds0 32>;
++			status = "disabled";
++		};
++
++		rpc: spi@ee200000 {
++			compatible = "renesas,r8a779g0-rpc-if",
++				     "renesas,rcar-gen4-rpc-if";
++			reg = <0 0xee200000 0 0x200>,
++			      <0 0x08000000 0 0x04000000>,
++			      <0 0xee208000 0 0x100>;
++			reg-names = "regs", "dirmap", "wbuf";
++			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 629>;
++			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
++			resets = <&cpg 629>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		ipmmu_rt0: iommu@ee480000 {
+ 			compatible = "renesas,ipmmu-r8a779g0",
+ 				     "renesas,rcar-gen4-ipmmu-vmsa";
+@@ -1886,37 +1917,6 @@ ipmmu_mm: iommu@eefc0000 {
+ 			#iommu-cells = <1>;
+ 		};
+ 
+-		mmc0: mmc@ee140000 {
+-			compatible = "renesas,sdhi-r8a779g0",
+-				     "renesas,rcar-gen4-sdhi";
+-			reg = <0 0xee140000 0 0x2000>;
+-			interrupts = <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&cpg CPG_MOD 706>,
+-				 <&cpg CPG_CORE R8A779G0_CLK_SD0H>;
+-			clock-names = "core", "clkh";
+-			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
+-			resets = <&cpg 706>;
+-			max-frequency = <200000000>;
+-			iommus = <&ipmmu_ds0 32>;
+-			status = "disabled";
+-		};
+-
+-		rpc: spi@ee200000 {
+-			compatible = "renesas,r8a779g0-rpc-if",
+-				     "renesas,rcar-gen4-rpc-if";
+-			reg = <0 0xee200000 0 0x200>,
+-			      <0 0x08000000 0 0x04000000>,
+-			      <0 0xee208000 0 0x100>;
+-			reg-names = "regs", "dirmap", "wbuf";
+-			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&cpg CPG_MOD 629>;
+-			power-domains = <&sysc R8A779G0_PD_ALWAYS_ON>;
+-			resets = <&cpg 629>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			status = "disabled";
+-		};
+-
+ 		gic: interrupt-controller@f1000000 {
+ 			compatible = "arm,gic-v3";
+ 			#interrupt-cells = <3>;
 -- 
 2.43.0
 
