@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727A412CDBA;
-	Sun, 24 Mar 2024 22:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0935E1F1AC4;
+	Sun, 24 Mar 2024 22:57:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321083; cv=none; b=ok24t+YfL1HjOwk3MTt6YHUqD5t1Y6WT01CdnkWEaBGL2tt0Q+WsvbpqEeqYSqPbkxh67fjEVRMGT+KncUYBctnxg59JuD0AG1WiNmFNbzyO1ppgCTrkcyCejN/8FmrR0A8Z+TOzRQzVuVsjO+KfbHGLNzwl65cgCjRXM+LAFcM=
+	t=1711321079; cv=none; b=FmG2iOg3SjPYYigJkfiZgOkP4fu/EYoYgMg8qAIDOErHSRHgjo5ryL4itgtDtlAQLAZoXLIvjC04T3QxxV2DdU3J8EzuJvVcATY9YoBDbz5u7fZ7qFn/i6gNW/pEO0guIRIRB9WqY9eSmnHmrF+E5jlRcdrnh3DjF9scpi78CW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321083; c=relaxed/simple;
-	bh=B8oGi9dfAaBRt2j+HYNsW/8VQ3WhUGEvKoxAv6ORkPs=;
+	s=arc-20240116; t=1711321079; c=relaxed/simple;
+	bh=q9cK5+CVva2zWZ5121iREcxRFvY+SrqSNGS/pgZCZmo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WBef5YiNEEijvsbKWHhZ7cUJM1N0Xm3OWlu3nu5kYHEZGpPnQ2ENuY3deYWMYwDj9Ocf00mTV2F9MpP33PW43ESEkmaKMQmKRLaQbLJN+YO6X0w8CEHfe+0gFmJIuB091XFqK0MnVZ0SnPx3IHD8hf1MSdTBD7zeOGN0abG1pu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jmRjM/4B; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XIXuwNPByV82tHvhVRw3Tw3qUq0RXrCVgodyY75ggieIVuho5KscM16dr4Hl/ug9y9CVoUb1J5iLAspnUX9qzp/yI6hJCco1PjtKYgCUqLEPbKem8IhK/BfFQ5DvjGBSxOuG+wCn/6DAN1aR4YFGIP7T+rHRxRUo4bMFd6AxVFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CC34KpjX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jmRjM/4B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B427AC433F1;
-	Sun, 24 Mar 2024 22:58:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CC34KpjX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3376AC43394;
+	Sun, 24 Mar 2024 22:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321082;
-	bh=B8oGi9dfAaBRt2j+HYNsW/8VQ3WhUGEvKoxAv6ORkPs=;
+	s=k20201202; t=1711321077;
+	bh=q9cK5+CVva2zWZ5121iREcxRFvY+SrqSNGS/pgZCZmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jmRjM/4BTfwZqoAouo1dJimwM3ssYifppFSN+cjBteK+h+HaqgX8VNQJeeiqjwyqA
-	 TxPspTPFbbW1IV5cuKTqeBHB6XzfI4htqVN7FZcCp7kxAIos8Uc//u2sCyOkvJWKG/
-	 ima8s8oTtkc+gn4RcB+SYCRTewi7lnNEprVEhqwCtmhl0kHcupnYKkfYOX4GPKrpvY
-	 gn/c7qZyVn3W0aG7J1CvSY8+fnBxaLkE2ZikKjNaXJ+A7IsqSjat3AUasImuUCFdAD
-	 8FcUwiZWWtLdpFJ1XdyTWSNOu//nXu5u/x08q+sW+CyZb7K3Dx04fVD0Yw+FOgGiC1
-	 uEBBhitAY6nsw==
+	b=CC34KpjXW3CE5xSHGcA7S3VyFU6Nhho72r+vDmJPob9LYLvW3TeKGiTY0Id5PKGv0
+	 iNkHfsg8QjrSZlVrr8fTaEbqO8hWXyo+bUqmWp09MkKBjHnrcSdDLIrkZaNLvqFFnd
+	 O9TygAex69XkLcpZxdqEUwjJg3IBqY9m1AoTwCugA21TxXm8cJenG3ag2GfhlIk3ac
+	 2g9bwMYyYc98zWLzob6vSdWE5S5iHyA+50tD0i5Sn8JsXIk9MxE5EzoxdEfib8fhxm
+	 +1Aj1oE8YG04kheWXG/gos4XS/yNCe2jZDL4ToYs/a84CrqSFdaGOxSHSucgSCuy1g
+	 BB7b5Iv/FXYuA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Peng Fan <peng.fan@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 646/713] tcp: Fix NEW_SYN_RECV handling in inet_twsk_purge()
-Date: Sun, 24 Mar 2024 18:46:12 -0400
-Message-ID: <20240324224720.1345309-647-sashal@kernel.org>
+Subject: [PATCH 6.7 641/713] thermal/drivers/qoriq: Fix getting tmu range
+Date: Sun, 24 Mar 2024 18:46:07 -0400
+Message-ID: <20240324224720.1345309-642-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,114 +49,78 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit 1c4e97dd2d3c9a3e84f7e26346aa39bc426d3249 ]
+[ Upstream commit 4d0642074c67ed9928e9d68734ace439aa06e403 ]
 
-inet_twsk_purge() uses rcu to find TIME_WAIT and NEW_SYN_RECV
-objects to purge.
+TMU Version 1 has 4 TTRCRs, while TMU Version >=2 has 16 TTRCRs.
+So limit the len to 4 will report "invalid range data" for i.MX93.
 
-These objects use SLAB_TYPESAFE_BY_RCU semantic and need special
-care. We need to use refcount_inc_not_zero(&sk->sk_refcnt).
+This patch drop the local array with allocated ttrcr array and
+able to support larger tmu ranges.
 
-Reuse the existing correct logic I wrote for TIME_WAIT,
-because both structures have common locations for
-sk_state, sk_family, and netns pointer.
-
-If after the refcount_inc_not_zero() the object fields longer match
-the keys, use sock_gen_put(sk) to release the refcount.
-
-Then we can call inet_twsk_deschedule_put() for TIME_WAIT,
-inet_csk_reqsk_queue_drop_and_put() for NEW_SYN_RECV sockets,
-with BH disabled.
-
-Then we need to restart the loop because we had drop rcu_read_lock().
-
-Fixes: 740ea3c4a0b2 ("tcp: Clean up kernel listener's reqsk in inet_twsk_purge()")
-Link: https://lore.kernel.org/netdev/CANn89iLvFuuihCtt9PME2uS1WJATnf5fKjDToa1WzVnRzHnPfg@mail.gmail.com/T/#u
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Link: https://lore.kernel.org/r/20240308200122.64357-2-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: f12d60c81fce ("thermal/drivers/qoriq: Support version 2.1")
+Tested-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20240226003657.3012880-1-peng.fan@oss.nxp.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/inet_timewait_sock.c | 41 ++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 22 deletions(-)
+ drivers/thermal/qoriq_thermal.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
-index dd37a5bf68811..757ae3a4e2f1a 100644
---- a/net/ipv4/inet_timewait_sock.c
-+++ b/net/ipv4/inet_timewait_sock.c
-@@ -278,12 +278,12 @@ void __inet_twsk_schedule(struct inet_timewait_sock *tw, int timeo, bool rearm)
- }
- EXPORT_SYMBOL_GPL(__inet_twsk_schedule);
- 
-+/* Remove all non full sockets (TIME_WAIT and NEW_SYN_RECV) for dead netns */
- void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
- {
--	struct inet_timewait_sock *tw;
--	struct sock *sk;
- 	struct hlist_nulls_node *node;
- 	unsigned int slot;
-+	struct sock *sk;
- 
- 	for (slot = 0; slot <= hashinfo->ehash_mask; slot++) {
- 		struct inet_ehash_bucket *head = &hashinfo->ehash[slot];
-@@ -292,38 +292,35 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
- 		rcu_read_lock();
- restart:
- 		sk_nulls_for_each_rcu(sk, node, &head->chain) {
--			if (sk->sk_state != TCP_TIME_WAIT) {
--				/* A kernel listener socket might not hold refcnt for net,
--				 * so reqsk_timer_handler() could be fired after net is
--				 * freed.  Userspace listener and reqsk never exist here.
--				 */
--				if (unlikely(sk->sk_state == TCP_NEW_SYN_RECV &&
--					     hashinfo->pernet)) {
--					struct request_sock *req = inet_reqsk(sk);
--
--					inet_csk_reqsk_queue_drop_and_put(req->rsk_listener, req);
--				}
-+			int state = inet_sk_state_load(sk);
- 
-+			if ((1 << state) & ~(TCPF_TIME_WAIT |
-+					     TCPF_NEW_SYN_RECV))
- 				continue;
--			}
- 
--			tw = inet_twsk(sk);
--			if ((tw->tw_family != family) ||
--				refcount_read(&twsk_net(tw)->ns.count))
-+			if (sk->sk_family != family ||
-+			    refcount_read(&sock_net(sk)->ns.count))
- 				continue;
- 
--			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
-+			if (unlikely(!refcount_inc_not_zero(&sk->sk_refcnt)))
- 				continue;
- 
--			if (unlikely((tw->tw_family != family) ||
--				     refcount_read(&twsk_net(tw)->ns.count))) {
--				inet_twsk_put(tw);
-+			if (unlikely(sk->sk_family != family ||
-+				     refcount_read(&sock_net(sk)->ns.count))) {
-+				sock_gen_put(sk);
- 				goto restart;
- 			}
- 
- 			rcu_read_unlock();
- 			local_bh_disable();
--			inet_twsk_deschedule_put(tw);
-+			if (state == TCP_TIME_WAIT) {
-+				inet_twsk_deschedule_put(inet_twsk(sk));
-+			} else {
-+				struct request_sock *req = inet_reqsk(sk);
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index ccc2eea7f9f54..404f01cca4dab 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -57,6 +57,9 @@
+ #define REGS_TTRnCR(n)	(0xf10 + 4 * (n)) /* Temperature Range n
+ 					   * Control Register
+ 					   */
++#define NUM_TTRCR_V1	4
++#define NUM_TTRCR_MAX	16
 +
-+				inet_csk_reqsk_queue_drop_and_put(req->rsk_listener,
-+								  req);
-+			}
- 			local_bh_enable();
- 			goto restart_rcu;
- 		}
+ #define REGS_IPBRR(n)		(0xbf8 + 4 * (n)) /* IP Block Revision
+ 						   * Register n
+ 						   */
+@@ -71,6 +74,7 @@ struct qoriq_sensor {
+ 
+ struct qoriq_tmu_data {
+ 	int ver;
++	u32 ttrcr[NUM_TTRCR_MAX];
+ 	struct regmap *regmap;
+ 	struct clk *clk;
+ 	struct qoriq_sensor	sensor[SITES_MAX];
+@@ -182,17 +186,17 @@ static int qoriq_tmu_calibration(struct device *dev,
+ 				 struct qoriq_tmu_data *data)
+ {
+ 	int i, val, len;
+-	u32 range[4];
+ 	const u32 *calibration;
+ 	struct device_node *np = dev->of_node;
+ 
+ 	len = of_property_count_u32_elems(np, "fsl,tmu-range");
+-	if (len < 0 || len > 4) {
++	if (len < 0 || (data->ver == TMU_VER1 && len > NUM_TTRCR_V1) ||
++	    (data->ver > TMU_VER1 && len > NUM_TTRCR_MAX)) {
+ 		dev_err(dev, "invalid range data.\n");
+ 		return len;
+ 	}
+ 
+-	val = of_property_read_u32_array(np, "fsl,tmu-range", range, len);
++	val = of_property_read_u32_array(np, "fsl,tmu-range", data->ttrcr, len);
+ 	if (val != 0) {
+ 		dev_err(dev, "failed to read range data.\n");
+ 		return val;
+@@ -200,7 +204,7 @@ static int qoriq_tmu_calibration(struct device *dev,
+ 
+ 	/* Init temperature range registers */
+ 	for (i = 0; i < len; i++)
+-		regmap_write(data->regmap, REGS_TTRnCR(i), range[i]);
++		regmap_write(data->regmap, REGS_TTRnCR(i), data->ttrcr[i]);
+ 
+ 	calibration = of_get_property(np, "fsl,tmu-calibration", &len);
+ 	if (calibration == NULL || len % 8) {
 -- 
 2.43.0
 
