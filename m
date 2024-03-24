@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F1D12D75C;
-	Sun, 24 Mar 2024 22:58:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314B212D207;
+	Sun, 24 Mar 2024 22:58:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321132; cv=none; b=T3FHAh+m4RrR+MT3NUdAZUrMlq6cSfxII8LLEwpIPJvjN2zafVBFVv8BHVSjSTLbQSlj00sURc+m6L0rH93O4n5rOdPyz9Rxi0+7AG0MlOloUZhD4FiI7C+xCjtT77pSx0l3yqrUvZuwUqRFnxk9203l426BoxcYzbGwrxS8meo=
+	t=1711321112; cv=none; b=Y+xDeyi4VGP8TJJmnBz3uijYinUMSq6Xvbc4mv/i5zcTC6/SWppq99HUv4utYIa+rPrr/oXckOLflOwUEhoaQK8KG1B0J98cT8HUJkiL7s/kZBgBCGI9JiDKnl9OW4AmGfLNYjfDWAWprfNqkBrMgqTD59BmlamNb1VP7C6jBk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321132; c=relaxed/simple;
-	bh=8XXbG/EChvRgni9pSje66q6hAnBQVFirBzqxkCwPY/E=;
+	s=arc-20240116; t=1711321112; c=relaxed/simple;
+	bh=uhXw8P6WBsaJA+O21tFmGpajf1pPctOveMXKAtRJBiA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ia5bRndWDSdbCbvuP0MaCjtgCREf4vcI+3fPLKLSSllNr27+EaMhVTVjycKkLF6n2ucSPp2UBP3sf1XvvaXr9aSrdZQIrPVvXvcQbY/urPV1LqwFAAZm7DIBweCIPVbP6hXE8nDKlbOoSfLmKzvA2usNCmTwqZ3cG6gDZGReU8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a491kQv5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=mO+ZFikaeGs/W7ITtDwJ3BLYXjkSqk9MEEG1UjbWj1xnpd0mibNbgqJhbYrOUw6g0j5TqpxkyQiZTQrwtlT0mpO+O5r0ThpVxIF0QPV0U8ACkwxLiXF3/aLbUJYMv7mFkVWRSR3HdgZe9bzYYEk7aejxOYt0wS/EzpGVoajQJSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WG//65dQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a491kQv5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D853C433C7;
-	Sun, 24 Mar 2024 22:58:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WG//65dQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 558FCC43394;
+	Sun, 24 Mar 2024 22:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321131;
-	bh=8XXbG/EChvRgni9pSje66q6hAnBQVFirBzqxkCwPY/E=;
+	s=k20201202; t=1711321111;
+	bh=uhXw8P6WBsaJA+O21tFmGpajf1pPctOveMXKAtRJBiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a491kQv5P1vwCAlviMKrYUTviSvaOaD2fU42go+tzoJ4HQoQgHbhdIz8KK0Lz+VZB
-	 Eo6N6uszZl/1x9Lfisd76WsDyMv5kHb2OIN/aQF2BcmF0d1i5dK3rdk1xtMBDIyrC7
-	 8e+wrFMEBjB8y10/Hr6bu9/MFETOPeSjgF9VqfP18a5Yd/yU+qwHQYuhzQf/ZEFfVT
-	 FHdrwFPyl8bT5pmupJq6UL8TkhohrKtWjACcPFkW9E5JKE+tl3DWU+6wE+VjCN1u6M
-	 Kf8Z9E5zWK7zkX3O0K+PIDEsy+T+y+qd1BbXbGICFm9MoBatiDe1G3w+e0PhhH7gth
-	 HWK2T2b7dNxvQ==
+	b=WG//65dQPk2Ln+ife7Ym2d0+MQaxboI658Cc+ySqtuv8PYbklB7bRfbLDakBlZ7BW
+	 1itWmkye3/gPtk8VmDHbc4UgLGohpjR0OCq9afAidmspDQwgDsP1aM828M2A7y4IWg
+	 pRZ54bYMuzC07QpvsKUEkV5ELKa0r1SJOo7yVfQtiydiOGsY6g2qcAT5HlbsXoQ1UJ
+	 iHEBvCTkCD7x8h9QhfjyFh0ojtSEeKsl2zMaeWdrr0wwdjV4G5sqzpP0m5/6QxeL8R
+	 kcHRnRhV+y8THsULZduTVAHgGM21dLahldbB3JlCitLj0xs/eRIcnkbmPH+4qaFpZC
+	 MZv5yP9jqiaPg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Subbaraya Sundeep <sbhatta@marvell.com>,
+Cc: Ignat Korchagin <ignat@cloudflare.com>,
+	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 692/713] octeontx2-pf: Use default max_active works instead of one
-Date: Sun, 24 Mar 2024 18:46:58 -0400
-Message-ID: <20240324224720.1345309-693-sashal@kernel.org>
+Subject: [PATCH 6.7 673/713] net: veth: do not manipulate GRO when using XDP
+Date: Sun, 24 Mar 2024 18:46:39 -0400
+Message-ID: <20240324224720.1345309-674-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,54 +45,85 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Subbaraya Sundeep <sbhatta@marvell.com>
+From: Ignat Korchagin <ignat@cloudflare.com>
 
-[ Upstream commit 7558ce0d974ced1dc07edc1197f750fe28c52e57 ]
+[ Upstream commit d7db7775ea2e31502d46427f5efd385afc4ff1eb ]
 
-Only one execution context for the workqueue used for PF and
-VFs mailbox communication is incorrect since multiple works are
-queued simultaneously by all the VFs and PF link UP messages.
-Hence use default number of execution contexts by passing zero
-as max_active to alloc_workqueue function. With this fix in place,
-modify UP messages also to wait until completion.
+Commit d3256efd8e8b ("veth: allow enabling NAPI even without XDP") tried to fix
+the fact that GRO was not possible without XDP, because veth did not use NAPI
+without XDP. However, it also introduced the behaviour that GRO is always
+enabled, when XDP is enabled.
 
-Fixes: d424b6c02415 ("octeontx2-pf: Enable SRIOV and added VF mbox handling")
-Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+While it might be desired for most cases, it is confusing for the user at best
+as the GRO flag suddenly changes, when an XDP program is attached. It also
+introduces some complexities in state management as was partially addressed in
+commit fe9f801355f0 ("net: veth: clear GRO when clearing XDP even when down").
+
+But the biggest problem is that it is not possible to disable GRO at all, when
+an XDP program is attached, which might be needed for some use cases.
+
+Fix this by not touching the GRO flag on XDP enable/disable as the code already
+supports switching to NAPI if either GRO or XDP is requested.
+
+Link: https://lore.kernel.org/lkml/20240311124015.38106-1-ignat@cloudflare.com/
+Fixes: d3256efd8e8b ("veth: allow enabling NAPI even without XDP")
+Fixes: fe9f801355f0 ("net: veth: clear GRO when clearing XDP even when down")
+Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
+Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/veth.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-index 3c8841b35d0f7..f85d38fab3211 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-@@ -584,8 +584,9 @@ static int otx2_pfvf_mbox_init(struct otx2_nic *pf, int numvfs)
- 	if (!pf->mbox_pfvf)
- 		return -ENOMEM;
+diff --git a/drivers/net/veth.c b/drivers/net/veth.c
+index a2e80278eb2f9..2f3fd287378fd 100644
+--- a/drivers/net/veth.c
++++ b/drivers/net/veth.c
+@@ -1533,8 +1533,6 @@ static netdev_features_t veth_fix_features(struct net_device *dev,
+ 		if (peer_priv->_xdp_prog)
+ 			features &= ~NETIF_F_GSO_SOFTWARE;
+ 	}
+-	if (priv->_xdp_prog)
+-		features |= NETIF_F_GRO;
  
--	pf->mbox_pfvf_wq = alloc_ordered_workqueue("otx2_pfvf_mailbox",
--						   WQ_HIGHPRI | WQ_MEM_RECLAIM);
-+	pf->mbox_pfvf_wq = alloc_workqueue("otx2_pfvf_mailbox",
-+					   WQ_UNBOUND | WQ_HIGHPRI |
-+					   WQ_MEM_RECLAIM, 0);
- 	if (!pf->mbox_pfvf_wq)
- 		return -ENOMEM;
- 
-@@ -3146,7 +3147,7 @@ static void otx2_vf_link_event_task(struct work_struct *work)
- 
- 	otx2_mbox_wait_for_zero(&pf->mbox_pfvf[0].mbox_up, vf_idx);
- 
--	otx2_mbox_msg_send_up(&pf->mbox_pfvf[0].mbox_up, vf_idx);
-+	otx2_sync_mbox_up_msg(&pf->mbox_pfvf[0], vf_idx);
- 
- 	mutex_unlock(&pf->mbox.lock);
+ 	return features;
  }
+@@ -1638,14 +1636,6 @@ static int veth_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ 		}
+ 
+ 		if (!old_prog) {
+-			if (!veth_gro_requested(dev)) {
+-				/* user-space did not require GRO, but adding
+-				 * XDP is supposed to get GRO working
+-				 */
+-				dev->features |= NETIF_F_GRO;
+-				netdev_features_change(dev);
+-			}
+-
+ 			peer->hw_features &= ~NETIF_F_GSO_SOFTWARE;
+ 			peer->max_mtu = max_mtu;
+ 		}
+@@ -1661,14 +1651,6 @@ static int veth_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ 			if (dev->flags & IFF_UP)
+ 				veth_disable_xdp(dev);
+ 
+-			/* if user-space did not require GRO, since adding XDP
+-			 * enabled it, clear it now
+-			 */
+-			if (!veth_gro_requested(dev)) {
+-				dev->features &= ~NETIF_F_GRO;
+-				netdev_features_change(dev);
+-			}
+-
+ 			if (peer) {
+ 				peer->hw_features |= NETIF_F_GSO_SOFTWARE;
+ 				peer->max_mtu = ETH_MAX_MTU;
 -- 
 2.43.0
 
