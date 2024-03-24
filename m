@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6501448F9;
-	Sun, 24 Mar 2024 23:12:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB3B145323;
+	Sun, 24 Mar 2024 23:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321966; cv=none; b=gY6qfk3Da7+i9f5RyqhOB3Ie9nP42G1IF2nXxJZGwRL5tBqownFwBR+KB35O4fF3cOI+RwZrO3UisGdPXt5l+JwxAsbei8dcAwtPOkj+E17SjyWUTaQYDXaUOvMPsTz8eL6YXapgn75q9r4LnUWKkcJtb6uudgioZPyRHB35VNU=
+	t=1711321971; cv=none; b=emlWo5wl9mtlMKOkTTLXQhMRf/ttntMxIa+XDZCu58XnRbk/SspAXNxl+f3MMTgdVbQ3aIT2vPjjEsmmbE4Xy61SEpYLCEOLvxbJJ5xrXq4KRNAlSeBSxzjoCJhgPPU2gfIx2Z52bPi2mr8MOqaQubffT4aeRcRl6mSLBe4UBwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321966; c=relaxed/simple;
-	bh=I8eGADWXPdjdnNTSJAoWWwQMWOP7eoIUp9QQbE5rUWA=;
+	s=arc-20240116; t=1711321971; c=relaxed/simple;
+	bh=S9i6rVDTLrc92ZdyKfg4Ixk7H6eGpB3PH6E05e+MPh0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lx2EAcanUzfzl7EueYe+ik8fZBT4/Kouii7Ywzw1qhlbORlaAYTtCaxxRkspkhLQb/wll/9Wr7fBI0jaKbn820bFztYyuvtdNKLx+O9X2PXOSR0GvI+xhyQSPEViB4GL/uGrNbJB6n28YVWuiOX+rv0/TH4P4mH2LcUedI7QIDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M54M4HVv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tXY3jWZT02nggqLbQtAPMnbNXkelSaMYQBtYxFIjzTGTpekjLKuSZNINpADx5wDCopeqCf/BrV6DCXG728FB2FtjDfYPUV6mSyX9g+bzOPI7XF0HZ1T5T32uuI2C4kC3W0G/01bf26/kDwaaon0Is/JjCQwsAO51QlvJ/Ropv64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VbVS5Y98; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M54M4HVv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB735C433C7;
-	Sun, 24 Mar 2024 23:12:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VbVS5Y98"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA4CFC43390;
+	Sun, 24 Mar 2024 23:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321966;
-	bh=I8eGADWXPdjdnNTSJAoWWwQMWOP7eoIUp9QQbE5rUWA=;
+	s=k20201202; t=1711321971;
+	bh=S9i6rVDTLrc92ZdyKfg4Ixk7H6eGpB3PH6E05e+MPh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M54M4HVvGdbg0Poj4jU8CigggmTpTJzTEF3wXBBXHtmXVfN/23uW3bJ7x5DHEfV02
-	 S+KI3vDn28J8rKoiRdxgL91Cn0ptqlb9pKBD2JiH7FujlQohAj9ky2F41VzrpCTTEc
-	 IDr/ToZbjybNdOKTy/G+3vhzM36RS0manpaxIxlNsTd/Qa6FgMcp8/QgPhG4hTXn8/
-	 VRj7Opswj3+MYWd1Z4HuGJOgBpRU/okIds3OEAofnTsP5KXIMACCDmgMABFNZdXKuH
-	 mmm43zK8rquD4y02AAcpQsCn1GMlBJa4QK29QUoYF9nVmMo7AwMKJVZxMFdYUwofpQ
-	 RIax5WFIv6Twg==
+	b=VbVS5Y98jZPtumrEtneMHJXzI8B+VXCF2glZTaDkTLvoBgEFrd/r2lDWIRk8iDiIN
+	 p3DDzv71HwInwf5OVmcU7/hMcaap7DGNhlpMrIUKSezRdQBfGwO6vA2RVtQo01Id5j
+	 q3pOlrQ2xxT7ju6E19+aHsEQYlpZqSkAdkceoUaFnDHtMlWJIFxfiDf/dnyKXTWAqp
+	 CRDcC71XMIXodoy9vaFih8p8SkciI8AUeyu7XLmH8fUZOrE0w6K/Fv3Te2Ls3KQP0C
+	 ZncwH/hfBHfXO+OLrrlSf4ChuUwDp0vAu8A5geMXZPvp6TU8oMAXRZ4IY/C7b9be7P
+	 D68EdQnk4UQqA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mikulas Patocka <mpatocka@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>,
+Cc: Felix Fietkau <nbd@nbd.name>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 038/451] dm-verity, dm-crypt: align "struct bvec_iter" correctly
-Date: Sun, 24 Mar 2024 19:05:14 -0400
-Message-ID: <20240324231207.1351418-39-sashal@kernel.org>
+Subject: [PATCH 6.1 043/451] wifi: mac80211: only call drv_sta_rc_update for uploaded stations
+Date: Sun, 24 Mar 2024 19:05:19 -0400
+Message-ID: <20240324231207.1351418-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,69 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit 787f1b2800464aa277236a66eb3c279535edd460 ]
+[ Upstream commit 413dafc8170fcb925fb17af8842f06af305f8e0b ]
 
-"struct bvec_iter" is defined with the __packed attribute, so it is
-aligned on a single byte. On X86 (and on other architectures that support
-unaligned addresses in hardware), "struct bvec_iter" is accessed using the
-8-byte and 4-byte memory instructions, however these instructions are less
-efficient if they operate on unaligned addresses.
+When a station has not been uploaded yet, receiving SMPS or channel width
+notification action frames can lead to rate_control_rate_update calling
+drv_sta_rc_update with uninitialized driver private data.
+Fix this by adding a missing check for sta->uploaded.
 
-(on RISC machines that don't have unaligned access in hardware, GCC
-generates byte-by-byte accesses that are very inefficient - see [1])
-
-This commit reorders the entries in "struct dm_verity_io" and "struct
-convert_context", so that "struct bvec_iter" is aligned on 8 bytes.
-
-[1] https://lore.kernel.org/all/ZcLuWUNRZadJr0tQ@fedora/T/
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Link: https://msgid.link/20240221140535.16102-1-nbd@nbd.name
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-crypt.c  | 4 ++--
- drivers/md/dm-verity.h | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ net/mac80211/rate.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 3e215aa85b99a..e8c534b5870ac 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -52,11 +52,11 @@
- struct convert_context {
- 	struct completion restart;
- 	struct bio *bio_in;
--	struct bio *bio_out;
- 	struct bvec_iter iter_in;
-+	struct bio *bio_out;
- 	struct bvec_iter iter_out;
--	u64 cc_sector;
- 	atomic_t cc_pending;
-+	u64 cc_sector;
- 	union {
- 		struct skcipher_request *req;
- 		struct aead_request *req_aead;
-diff --git a/drivers/md/dm-verity.h b/drivers/md/dm-verity.h
-index 4620a98c99561..db93a91169d5e 100644
---- a/drivers/md/dm-verity.h
-+++ b/drivers/md/dm-verity.h
-@@ -80,12 +80,12 @@ struct dm_verity_io {
- 	/* original value of bio->bi_end_io */
- 	bio_end_io_t *orig_bi_end_io;
+diff --git a/net/mac80211/rate.c b/net/mac80211/rate.c
+index d5ea5f5bcf3a0..9d33fd2377c88 100644
+--- a/net/mac80211/rate.c
++++ b/net/mac80211/rate.c
+@@ -119,7 +119,8 @@ void rate_control_rate_update(struct ieee80211_local *local,
+ 		rcu_read_unlock();
+ 	}
  
-+	struct bvec_iter iter;
-+
- 	sector_t block;
- 	unsigned int n_blocks;
- 	bool in_tasklet;
+-	drv_sta_rc_update(local, sta->sdata, &sta->sta, changed);
++	if (sta->uploaded)
++		drv_sta_rc_update(local, sta->sdata, &sta->sta, changed);
+ }
  
--	struct bvec_iter iter;
--
- 	struct work_struct work;
- 
- 	char *recheck_buffer;
+ int ieee80211_rate_control_register(const struct rate_control_ops *ops)
 -- 
 2.43.0
 
