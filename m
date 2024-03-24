@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9E821C97F;
-	Sun, 24 Mar 2024 23:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0902621D13B;
+	Sun, 24 Mar 2024 23:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321843; cv=none; b=MsnAeM9XmqFSgj6HSCz2HT+oqUyoVSXp7Lb0BjQp6eyCHnU/MLF9tsk0iMTiik0fS9a2tS1tcHVYx9KWn9L2cvmkfM9/TMDJArIwixTZWyg7AaO6gAARdZMOeH1itWJ+mp2KgUECE6mLluRUekNuP9PYOpNQn1MonGLeXowdmVI=
+	t=1711321850; cv=none; b=mg1bar8CKSNtKMLedWUD3cIm45ALnkc/Wd7G3QjtCZ+dZOLam3R9gAItciY1/xYuzlM4dm39Sl6Z5am59jW6mBSUL2Y/c0E7sPojdqHrjr6FexI8CjnjrbeNf0WZBByjaWh/TNo/zhyHzend3zWX2VhbirkGaRT5fHU2UdNSLcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321843; c=relaxed/simple;
-	bh=15HlHOV6IzS474RV+Rbz5Qqm0CUsJBSJxewEoFBqyFo=;
+	s=arc-20240116; t=1711321850; c=relaxed/simple;
+	bh=Rsjng4VZbTEdnLFlvy0VGTDz/Y89/cZBVxyY0nInXLc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jwSsruJDjOKPO98diUXpKDopKL1i4zOI777MhAhTwHKPdk3kI8DVFyZ/qMRwG2erg75OAxeLIIhiLJRpmpxqQlLpjVSLV+fw3UYP1KCAKTqNUirlvH6tRNQIVIV9jAyInuLaVIFnk4KEBZzjq+0NLcA6jBYFFfgnvF3Ky3dMokw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtfvtE3B; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Q44srPwXBvoEOcBHe/3DGtgrV9dgNc9RueFQym/c8bbr3ZikQZ4LOHR9H5otkl8RD7KQWGELhlK0eDBdv6j8bltRpCVU7k1M7D3m09WDAH1kXk1NMHUXGno4kNjPg9Auvi6LOqbUKFn+gT7gxbmsb3p0+5pV5lsYs/I+RbVEakQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NcuJDtRx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtfvtE3B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DC82C433C7;
-	Sun, 24 Mar 2024 23:10:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NcuJDtRx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D15CC43394;
+	Sun, 24 Mar 2024 23:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321842;
-	bh=15HlHOV6IzS474RV+Rbz5Qqm0CUsJBSJxewEoFBqyFo=;
+	s=k20201202; t=1711321848;
+	bh=Rsjng4VZbTEdnLFlvy0VGTDz/Y89/cZBVxyY0nInXLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KtfvtE3BIqnnSX/xTK/CtZHwANzgbIhTdOWRYV2oo4De9eFLPK1F0mPz+GbGuKnKM
-	 m7PGE/s+Mlb46zHKMndAQ+mYPhg+mEUsEEudsIgMjB9oReOsaEJacouKOzqhtXQkl5
-	 BYVace+FYpNUEDR78oNPtM0KIilZAy5WjP3taBAM90Y7SaQ6+a/fgxP1A20yTzRV0I
-	 59LRGqYjAokqURTwJtplRitDHeDtMdVUn7tDV/N0m/Csx19rcTY5sEOljUrkarifzU
-	 suzYI5phRunJYWa7v7IJcuzmUJmu9tKrcA2HH3LkdJAC+sPY5mDxAbDEbOQSqmduhV
-	 3XSHbKX1qA/Cw==
+	b=NcuJDtRxpykud146VgU0JwuD/tj4gewjTpMABLtjFpWIlyi6bS4PwnhYP8v5A2MRD
+	 V4X3wqdsS4OJaZiGGFh3CUimnqRsaKaow0sn6It5DiU/3ea8BZmZy0P93E1OJNFHxC
+	 gfHuWTH25OkbRFvY5OEw85t0H4/EEiSUlRclIyQ7nhZGGXSkd6Rp1Fs6pc1Jegl/KC
+	 uLZlhzNYgEj3Y58crCYYOvD46KDpBGBXhA4U24gYS0M00pTdSBORdapUKWnyLuYOUv
+	 JverENasIglsEsSX8fa530vRlHp3QPo7uTYczyamZKj96gBKvUuB6pv2AxtrO/0uRs
+	 21iY6YYsWQeDQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 570/638] serial: 8250_exar: Don't remove GPIO device on suspend
-Date: Sun, 24 Mar 2024 19:00:07 -0400
-Message-ID: <20240324230116.1348576-571-sashal@kernel.org>
+Subject: [PATCH 6.6 577/638] io_uring: don't save/restore iowait state
+Date: Sun, 24 Mar 2024 19:00:14 -0400
+Message-ID: <20240324230116.1348576-578-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,45 +47,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 73b5a5c00be39e23b194bad10e1ea8bb73eee176 ]
+[ Upstream commit 6f0974eccbf78baead1735722c4f1ee3eb9422cd ]
 
-It seems a copy&paste mistake that suspend callback removes the GPIO
-device. There is no counterpart of this action, means once suspended
-there is no more GPIO device available untile full unbind-bind cycle
-is performed. Remove suspicious GPIO device removal in suspend.
+This kind of state is per-syscall, and since we're doing the waiting off
+entering the io_uring_enter(2) syscall, there's no way that iowait can
+already be set for this case. Simplify it by setting it if we need to,
+and always clearing it to 0 when done.
 
-Fixes: d0aeaa83f0b0 ("serial: exar: split out the exar code from 8250_pci")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20240219150627.2101198-2-andriy.shevchenko@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 7b72d661f1f2 ("io_uring: gate iowait schedule on having pending requests")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_exar.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ io_uring/io_uring.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-index 8385be846840a..4d20f3aa280cd 100644
---- a/drivers/tty/serial/8250/8250_exar.c
-+++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -718,6 +718,7 @@ static void exar_pci_remove(struct pci_dev *pcidev)
- 	for (i = 0; i < priv->nr; i++)
- 		serial8250_unregister_port(priv->line[i]);
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index 049a163d0fdd0..25e2893320342 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -2501,7 +2501,7 @@ static bool current_pending_io(void)
+ static inline int io_cqring_wait_schedule(struct io_ring_ctx *ctx,
+ 					  struct io_wait_queue *iowq)
+ {
+-	int io_wait, ret;
++	int ret;
  
-+	/* Ensure that every init quirk is properly torn down */
- 	if (priv->board->exit)
- 		priv->board->exit(pcidev);
- }
-@@ -732,10 +733,6 @@ static int __maybe_unused exar_suspend(struct device *dev)
- 		if (priv->line[i] >= 0)
- 			serial8250_suspend_port(priv->line[i]);
- 
--	/* Ensure that every init quirk is properly torn down */
--	if (priv->board->exit)
--		priv->board->exit(pcidev);
--
- 	return 0;
+ 	if (unlikely(READ_ONCE(ctx->check_cq)))
+ 		return 1;
+@@ -2519,7 +2519,6 @@ static inline int io_cqring_wait_schedule(struct io_ring_ctx *ctx,
+ 	 * can take into account that the task is waiting for IO - turns out
+ 	 * to be important for low QD IO.
+ 	 */
+-	io_wait = current->in_iowait;
+ 	if (current_pending_io())
+ 		current->in_iowait = 1;
+ 	ret = 0;
+@@ -2527,7 +2526,7 @@ static inline int io_cqring_wait_schedule(struct io_ring_ctx *ctx,
+ 		schedule();
+ 	else if (!schedule_hrtimeout(&iowq->timeout, HRTIMER_MODE_ABS))
+ 		ret = -ETIME;
+-	current->in_iowait = io_wait;
++	current->in_iowait = 0;
+ 	return ret;
  }
  
 -- 
