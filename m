@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A9212F585;
-	Sun, 24 Mar 2024 23:14:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0313012EBF0;
+	Sun, 24 Mar 2024 23:13:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322062; cv=none; b=R5wzGqhLH61yRz8Kd/E8lqJ0t+kEGaEpFoxPFMcoboURgpfoSdWxAkLDCpCjVwiyYerAi/ZxuqIbce9rBt+vc0ZJ7Sa1yxZG+rEKYiXo+UpFPeLfysRLZDyYtJV5TwDCrzKtzDwVKgbB/eXdr7rE2vXDYSaFounGUXGARVi5cYU=
+	t=1711322024; cv=none; b=jqdHuhqIXCsRsXqTMWpj7f0pD3QkIU44+HWxpU5JWJYOvW6S4zS4esvutt9kPa+Iu+nE4p57K2l9FbcnXBzaTKIjFKDoHeMbMxazeaDiBr+lhYNPsWU9SMPV9RDnQBznj61K+IJ9RyClAzdpxQ4tvDLneDOP9XP/EJ3YYocMAs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322062; c=relaxed/simple;
-	bh=Gk5ghOKl8huWxjY72DczoFbQq9DR3kSonY4D7kMEmy0=;
+	s=arc-20240116; t=1711322024; c=relaxed/simple;
+	bh=c/CyEIJllUPjHqlbq9wDkzDuj6vhPeDRipxiYEF0RWM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yq7nDbTFHUrP7T/mMggAX8hcTU8mJhGXBIRaNfDqPjhlVxVR8+M6RsE9mSzTiypeDM5Esw4jOKv8dl7ttqZiOdUbJepmbzyPrtjNo5tVPqEnTJ8wQVWRrQbiAF8GQxe5ptsYq6BBt4uxGgdH1iXsEHiOV4b6AWeDyw+hrqp2LGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8ysgDK/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=si1da4Ys9TjpE0JIzZ+fnicf5O6jzXSAW4LYWk1uVlBTFOBtYHNZxkPOWgeK45jUHX7Gre79DuWUMK4IApHQ+yq/q2pLYiE3wL9FKokRpTZg2qM9HCfKHjXQ0eQ1DpMMVHv8LbEYfQdMvhBlOxqj+X+1NHmxbj0Mx6rJ5RIpmfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pi1FAxfo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8ysgDK/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8CB9C433F1;
-	Sun, 24 Mar 2024 23:14:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pi1FAxfo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29DCDC43394;
+	Sun, 24 Mar 2024 23:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322062;
-	bh=Gk5ghOKl8huWxjY72DczoFbQq9DR3kSonY4D7kMEmy0=;
+	s=k20201202; t=1711322023;
+	bh=c/CyEIJllUPjHqlbq9wDkzDuj6vhPeDRipxiYEF0RWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=N8ysgDK/ooTaUryYx8rvXggfadFIr2ofzgONovKfo3uU/PpWuC6NxIAxdAXXHg9ya
-	 dIKZ2R0c4iTuSoPyiWnRKvRRfo/y4WK7ahLPGSdWSTD1zljZZIkp6u/Sb65/TLE+N2
-	 qV4UtzysILafhJva+i0ARYykC/W2NcESKfw3Ax2XSepaApAprfV7WwU8qrQttb3dFT
-	 ccOuvzBzawVS4sGYHE+bauGcdIE3s3OdphByiiqHd0iUh3+LWbasXYdMtFhlxKcwqj
-	 W6xSsCmCD7z77faOWrWEpbq56qQTq6lEKHvQK0hj3qiHInH7rvZiHd6Hr2u2ibD+4g
-	 YDsFGdCt9A8qQ==
+	b=pi1FAxfolnoCWnpcnU452f5skcbHConl797bU59eqqL46+1DT21BNAxV8s/zU+VDv
+	 TnGo8QCnEEdfcioOOsRBT0Mpk72k8mlGTmtufUfbCklHapNq8YcwhXfpj2a6Rs+pOx
+	 LAvII3txYA40LmBnNXBI5tZSG9phUakQ0ON9YYMo0h1SXAumeB9rQNk10ibMoI1RIw
+	 561nCf/b94FRfb3JOgq59bouiYbUjKtdyeFz7S3aJ1kQDyno6pj1yuFC/PL/8S7AH/
+	 QFMQf5YipEsNzuWICN4BBhaYLp5JLqorjOjS/P0x3W/IQn4Vxcw01uGUF48g5oY5j6
+	 0OlZBczbHPxlQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+Cc: Rob Herring <robh@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 135/451] wifi: iwlwifi: mvm: don't set replay counters to 0xff
-Date: Sun, 24 Mar 2024 19:06:51 -0400
-Message-ID: <20240324231207.1351418-136-sashal@kernel.org>
+Subject: [PATCH 6.1 096/451] cpufreq: Explicitly include correct DT includes
+Date: Sun, 24 Mar 2024 19:06:12 -0400
+Message-ID: <20240324231207.1351418-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,50 +49,155 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit d5bd4041cd70faf26fc9a54bd6f172537bbe77f3 ]
+[ Upstream commit a70eb93a2477371638ef481aaae7bb7b760d3004 ]
 
-The firmware (later) actually uses the values even for keys
-that are invalid as far as the host is concerned, later in
-rekeying, and then only sets the low 48 bits since the PNs
-are only 48 bits over the air. It does, however, compare the
-full 64 bits later, obviously causing problems.
+The DT of_device.h and of_platform.h date back to the separate
+of_platform_bus_type before it as merged into the regular platform bus.
+As part of that merge prepping Arm DT support 13 years ago, they
+"temporarily" include each other. They also include platform_device.h
+and of.h. As a result, there's a pretty much random mix of those include
+files used throughout the tree. In order to detangle these headers and
+replace the implicit includes with struct declarations, users need to
+explicitly include the correct includes.
 
-Remove the memset and use kzalloc instead to avoid any old
-heap data leaking to the firmware. We already init all the
-other fields in the struct anyway. This leaves the data set
-to zero for any unused fields, so the firmware can look at
-them safely even if they're not used right now.
-
-Fixes: 79e561f0f05a ("iwlwifi: mvm: d3: implement RSC command version 5")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://msgid.link/20240206175739.462101146fef.I10f3855b99417af4247cff04af78dcbc6cb75c9c@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Stable-dep-of: 788715b5f21c ("cpufreq: mediatek-hw: Wait for CPU supplies before probing")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/cpufreq/armada-37xx-cpufreq.c  | 4 +---
+ drivers/cpufreq/mediatek-cpufreq-hw.c  | 3 ++-
+ drivers/cpufreq/ppc_cbe_cpufreq.c      | 2 +-
+ drivers/cpufreq/ppc_cbe_cpufreq_pmi.c  | 1 -
+ drivers/cpufreq/qcom-cpufreq-nvmem.c   | 1 -
+ drivers/cpufreq/scpi-cpufreq.c         | 2 +-
+ drivers/cpufreq/sti-cpufreq.c          | 2 +-
+ drivers/cpufreq/ti-cpufreq.c           | 2 +-
+ drivers/cpufreq/vexpress-spc-cpufreq.c | 1 -
+ 9 files changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-index 2748459d12279..88f4f429d875c 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-@@ -461,12 +461,10 @@ static int iwl_mvm_wowlan_config_rsc_tsc(struct iwl_mvm *mvm,
- 		struct wowlan_key_rsc_v5_data data = {};
- 		int i;
+diff --git a/drivers/cpufreq/armada-37xx-cpufreq.c b/drivers/cpufreq/armada-37xx-cpufreq.c
+index b74289a95a171..bea41ccabf1f0 100644
+--- a/drivers/cpufreq/armada-37xx-cpufreq.c
++++ b/drivers/cpufreq/armada-37xx-cpufreq.c
+@@ -14,10 +14,8 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/mfd/syscon.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+-#include <linux/of_address.h>
+-#include <linux/of_device.h>
+-#include <linux/of_irq.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
+ #include <linux/regmap.h>
+diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
+index f0e0a35c7f217..212bbca8daf32 100644
+--- a/drivers/cpufreq/mediatek-cpufreq-hw.c
++++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
+@@ -10,8 +10,9 @@
+ #include <linux/iopoll.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/of_address.h>
++#include <linux/of.h>
+ #include <linux/of_platform.h>
++#include <linux/platform_device.h>
+ #include <linux/slab.h>
  
--		data.rsc = kmalloc(sizeof(*data.rsc), GFP_KERNEL);
-+		data.rsc = kzalloc(sizeof(*data.rsc), GFP_KERNEL);
- 		if (!data.rsc)
- 			return -ENOMEM;
+ #define LUT_MAX_ENTRIES			32U
+diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.c b/drivers/cpufreq/ppc_cbe_cpufreq.c
+index e3313ce63b388..88afc49941b71 100644
+--- a/drivers/cpufreq/ppc_cbe_cpufreq.c
++++ b/drivers/cpufreq/ppc_cbe_cpufreq.c
+@@ -9,7 +9,7 @@
  
--		memset(data.rsc, 0xff, sizeof(*data.rsc));
--
- 		for (i = 0; i < ARRAY_SIZE(data.rsc->mcast_key_id_map); i++)
- 			data.rsc->mcast_key_id_map[i] =
- 				IWL_MCAST_KEY_MAP_INVALID;
+ #include <linux/cpufreq.h>
+ #include <linux/module.h>
+-#include <linux/of_platform.h>
++#include <linux/of.h>
+ 
+ #include <asm/machdep.h>
+ #include <asm/cell-regs.h>
+diff --git a/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c b/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
+index 4fba3637b115c..6f0c32592416d 100644
+--- a/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
++++ b/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
+@@ -11,7 +11,6 @@
+ #include <linux/types.h>
+ #include <linux/timer.h>
+ #include <linux/init.h>
+-#include <linux/of_platform.h>
+ #include <linux/pm_qos.h>
+ #include <linux/slab.h>
+ 
+diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+index a577586b23be2..cb03bfb0435ea 100644
+--- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
++++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+@@ -22,7 +22,6 @@
+ #include <linux/module.h>
+ #include <linux/nvmem-consumer.h>
+ #include <linux/of.h>
+-#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_opp.h>
+diff --git a/drivers/cpufreq/scpi-cpufreq.c b/drivers/cpufreq/scpi-cpufreq.c
+index fd2c16821d54c..ac719aca49b75 100644
+--- a/drivers/cpufreq/scpi-cpufreq.c
++++ b/drivers/cpufreq/scpi-cpufreq.c
+@@ -14,7 +14,7 @@
+ #include <linux/cpumask.h>
+ #include <linux/export.h>
+ #include <linux/module.h>
+-#include <linux/of_platform.h>
++#include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
+ #include <linux/scpi_protocol.h>
+ #include <linux/slab.h>
+diff --git a/drivers/cpufreq/sti-cpufreq.c b/drivers/cpufreq/sti-cpufreq.c
+index 1a63aeea87112..9c542e723a157 100644
+--- a/drivers/cpufreq/sti-cpufreq.c
++++ b/drivers/cpufreq/sti-cpufreq.c
+@@ -13,7 +13,7 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+-#include <linux/of_platform.h>
++#include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
+ #include <linux/regmap.h>
+ 
+diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+index f64180dd2005b..61ef653bcf56f 100644
+--- a/drivers/cpufreq/ti-cpufreq.c
++++ b/drivers/cpufreq/ti-cpufreq.c
+@@ -12,7 +12,7 @@
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/of.h>
+-#include <linux/of_platform.h>
++#include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+diff --git a/drivers/cpufreq/vexpress-spc-cpufreq.c b/drivers/cpufreq/vexpress-spc-cpufreq.c
+index d295f405c4bb0..865e501648034 100644
+--- a/drivers/cpufreq/vexpress-spc-cpufreq.c
++++ b/drivers/cpufreq/vexpress-spc-cpufreq.c
+@@ -18,7 +18,6 @@
+ #include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+-#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
+ #include <linux/slab.h>
 -- 
 2.43.0
 
