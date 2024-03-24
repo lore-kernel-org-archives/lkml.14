@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E4417A933;
-	Sun, 24 Mar 2024 23:41:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC43D17A91B;
+	Sun, 24 Mar 2024 23:41:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323700; cv=none; b=W5f4YxpaHNpzEqcarUeJh13pwbgFBbVbpxYYvqzWvVz3zOkgjIWzS7KWZMF8Ulv6htlWXrOlsBM1f0fSPSskyvLq0O/ood2woKR5JgaU/mHdm6YBj6xUBsGrpudjKQHcGlTGfjdZbxv5WH9P+wCSSTqXu+zJaO0MIgdJWQpd+qQ=
+	t=1711323696; cv=none; b=k7yZfq74EVrFgngNrxmY+pZjSfbleaXyLILFWIXOL9agqQJfJYpSgRTSV19z7i03XqLyOUt+vzG1X0Fj81PkEwvd1WYucYRvsfAvqjm6u2XBoBHHg7MWRJXFooL6o2TdB0dU+goSTna1H4NeMcRFQ2s1y37rSXIfaaThKQ5PM3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323700; c=relaxed/simple;
-	bh=c0uLUG+mhovqbPr9q1gR4533lawj4gn8WwbkQdk8jMs=;
+	s=arc-20240116; t=1711323696; c=relaxed/simple;
+	bh=fFMCesXUufm2DgbC8slVbgop5cai1GV2Xv4Zvx4ZcJo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AxwpGwzS7dSBkD76a/21q0m2x97y34zQIXhq7z+qfKBGhEj3arP9AY+s3WjlfVEMKKUh7f2fCeIkbfDkyeGrhYNQF0Y3m0d6YsDvMXlJ6niUEgR20SBOO8vhxUsguYX+CFGFGQqxY/+3+h2v0lH9cCKfCXpgBN+MVsBrZ/+/NSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMWQ0O80; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hXO4ktJGrduyUEtw9EiwKm3AygASIYtutgB0OedQ5NaxpAyNtZlLBwqBiORsR06JTnltpmEp49xyyOpN2ZK4O1ceGh+97b8vvkx8QuXWnicP0hTnfXZ+xAuADNprIuvAqIc/26aC7mlEo8iRz3ztYFGeTDbY0vTwATEMAnYAfPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEYwDK/J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMWQ0O80"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C34E7C433F1;
-	Sun, 24 Mar 2024 23:41:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEYwDK/J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E43ECC43390;
+	Sun, 24 Mar 2024 23:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323700;
-	bh=c0uLUG+mhovqbPr9q1gR4533lawj4gn8WwbkQdk8jMs=;
+	s=k20201202; t=1711323696;
+	bh=fFMCesXUufm2DgbC8slVbgop5cai1GV2Xv4Zvx4ZcJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IMWQ0O80/Tq+h9iCYYGJ8XBV1ulVlKo1HpAg2Q41GRXiID5tObNSNdz9JLppl0rMg
-	 6C3iUVg8Q7ec5WsSfy5azd8ni3BgMSoh0BumchkIzzoqzgN8DIUTDx/g4oXsTrLjZs
-	 eTZw2lBJPMWJxUvBCCKXLOizEZ9M7HGhTCUp1d0yB7ZlAwdYVkE100ki27gg/1kxCj
-	 5+mVbdlqbs8wISk32hHStg93UHRHKH9e59dN7wVn+HloWg9hfN4xyFx5znebQC2PfF
-	 bYMaJIjXKHbxGEMR1GFmI/jMHZdeVMLRAIFfSPf9i0HwJ/Z2dpLSB2bF6QKJjTl9ZW
-	 76HsBb+qKFhqA==
+	b=aEYwDK/JNyKgXAh8L6dvpsuzokc5wIm907hZ5Tn7nj/iWrkVg3FIMmayXxWcgz4tb
+	 ZuBbiRyv5KF2gon8nSp6hfsze9TTTLmf+EWPk7fuSTzcEJPmeStNf7ykxpDg6b97Q3
+	 ejwYfcdBU3ZIt1C73keWGhnxgWWcRTlcah33Mv3Lk6zj+UfdXzWgZhv2jWoTebob5w
+	 dYGT+WlXS5F2y32OtASnKhazov0ebQxmwo7cADxK1rjld2L3wS6/AZFsfcOPvF1N62
+	 9EJk0+tJvILvYqiEB4c/c4ZHlOEP2BN0oR4yBOTq47BgFueHPjf4p8knZBhcZJadDR
+	 l94BHkeYyL6rw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joerg Roedel <jroedel@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 073/238] ARM: dts: imx6dl-yapp4: Move phy reset into switch node
-Date: Sun, 24 Mar 2024 19:37:41 -0400
-Message-ID: <20240324234027.1354210-74-sashal@kernel.org>
+Subject: [PATCH 5.10 069/238] iommu/amd: Mark interrupt as managed
+Date: Sun, 24 Mar 2024 19:37:37 -0400
+Message-ID: <20240324234027.1354210-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -44,47 +45,71 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-[ Upstream commit 7da7b84fee58c85a6075022023d31edea40e81a1 ]
+[ Upstream commit 0feda94c868d396fac3b3cb14089d2d989a07c72 ]
 
-Drop the phy-reset-duration and phy-reset-gpios deprecated properties and
-move reset-gpios under the switch node.
+On many systems that have an AMD IOMMU the following sequence of
+warnings is observed during bootup.
 
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Stable-dep-of: 023bd910d3ab ("ARM: dts: imx6dl-yapp4: Fix typo in the QCA switch register address")
+```
+pci 0000:00:00.2  can't derive routing for PCI INT A
+pci 0000:00:00.2: PCI INT A: not connected
+```
+
+This series of events happens because of the IOMMU initialization
+sequence order and the lack of _PRT entries for the IOMMU.
+
+During initialization the IOMMU driver first enables the PCI device
+using pci_enable_device().  This will call acpi_pci_irq_enable()
+which will check if the interrupt is declared in a PCI routing table
+(_PRT) entry. According to the PCI spec [1] these routing entries
+are only required under PCI root bridges:
+	The _PRT object is required under all PCI root bridges
+
+The IOMMU is directly connected to the root complex, so there is no
+parent bridge to look for a _PRT entry. The first warning is emitted
+since no entry could be found in the hierarchy. The second warning is
+then emitted because the interrupt hasn't yet been configured to any
+value.  The pin was configured in pci_read_irq() but the byte in
+PCI_INTERRUPT_LINE return 0xff which means "Unknown".
+
+After that sequence of events pci_enable_msi() is called and this
+will allocate an interrupt.
+
+That is both of these warnings are totally harmless because the IOMMU
+uses MSI for interrupts.  To avoid even trying to probe for a _PRT
+entry mark the IOMMU as IRQ managed. This avoids both warnings.
+
+Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html?highlight=_prt#prt-pci-routing-table [1]
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Fixes: cffe0a2b5a34 ("x86, irq: Keep balance of IOAPIC pin reference count")
+Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
+Link: https://lore.kernel.org/r/20240122233400.1802-1-mario.limonciello@amd.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/iommu/amd/init.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index ebc0892e37c7a..f18da2b70fdc9 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -103,8 +103,6 @@ &fec {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii-id";
--	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
--	phy-reset-duration = <20>;
- 	phy-supply = <&sw2_reg>;
- 	status = "okay";
+diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+index 603f625a74e54..91cc3a5643caf 100644
+--- a/drivers/iommu/amd/init.c
++++ b/drivers/iommu/amd/init.c
+@@ -1827,6 +1827,9 @@ static int __init iommu_init_pci(struct amd_iommu *iommu)
+ 	/* Prevent binding other PCI device drivers to IOMMU devices */
+ 	iommu->dev->match_driver = false;
  
-@@ -128,6 +126,7 @@ phy_port3: phy@2 {
- 		switch@10 {
- 			compatible = "qca,qca8334";
- 			reg = <10>;
-+			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
++	/* ACPI _PRT won't have an IRQ for IOMMU */
++	iommu->dev->irq_managed = 1;
++
+ 	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_CAP_HDR_OFFSET,
+ 			      &iommu->cap);
  
- 			switch_ports: ports {
- 				#address-cells = <1>;
 -- 
 2.43.0
 
