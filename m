@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191FA13793C;
-	Sun, 24 Mar 2024 23:05:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E732092EB;
+	Sun, 24 Mar 2024 23:05:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321554; cv=none; b=rIRRGhxWrIu1vmzpis6N5JtwmnTgWDHk1hDlcZIUmha3/0VRUPfgwZJxG/M5pGgaJUBBMRX7SW4LsUtmIM3ugTHIGx40HvxbVC0ELPKZMG86RNoMHDN0hSZvnh0L+lIIb8oar0Z5i0lyjW9jMI3VR8yRlA0Z+Lif1W8Wn46YPJA=
+	t=1711321557; cv=none; b=lHJhad2wFGLU5NtCGlkVSlHN0PTneOphDytVfHa2q8HJXSe/fo9MYiL0jJLRwjEjCzYKJIIvoZlondrm0cGQAfdBM26YwlCDipERfy5JS0+676hlCumIQ1YYcMqyMRILqWQ9sVDxPdMSTBNn+uiuPU+fHcA4f1QyR8dd6gyFo98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321554; c=relaxed/simple;
-	bh=mqDHnKF4JwaqvMbLj6PvJjzjGLsRXI6R6B2MXr+ey/o=;
+	s=arc-20240116; t=1711321557; c=relaxed/simple;
+	bh=0ZbiRjqbqQPMs4lhJ5vHIlkejiYFnKo63dXZozmQ290=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O25/3o94rHPYzspOv2d0pUG634nDEIVtK2Y0oZUvPH1JCm+F057eH0b05LOUPXJRdyL2+jH5scPFsZedy96prqBiLfZjaqVQf77HQ5HKax2iIBzHJpaS6gXVGyNBaB1F7V9TIqwCl1c0TbuHarv3O4rkzl+s+yAHkJ8p4jiEynY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwhW9kXR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=J7rA52M986rZxALPKrg4YXyqhDbukyeusbOI20tpmeM+gxuyGxMEmBlnK6s7sGBUW9h+FVYLTDUnyjgCGsjyMTZdrvS7fIcH9Lf8kZBKPmX0H2rDrgjrBg/vDf5gCjrUrkNf2pUdcymIUL4LLUzsDYIKvr4TESo/Kb9vcBVefK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EeciWO1O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwhW9kXR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 297E4C43390;
-	Sun, 24 Mar 2024 23:05:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EeciWO1O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B767C433F1;
+	Sun, 24 Mar 2024 23:05:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321553;
-	bh=mqDHnKF4JwaqvMbLj6PvJjzjGLsRXI6R6B2MXr+ey/o=;
+	s=k20201202; t=1711321555;
+	bh=0ZbiRjqbqQPMs4lhJ5vHIlkejiYFnKo63dXZozmQ290=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cwhW9kXR/1oPJfOiqqV3mmtG9j+PjcwFEnEjHbApFsOSKm+m3XPLQzkxfSvhVMnMa
-	 FhMS0XWkiJPLaMvFb/MhS/e5Gz8Q63sMBJtsqHRt5OZIt2sncWKbRboME2O6xW6DhC
-	 sfGtP/b/Iia6wz3B36TGTadQSe8j910I4VPGKz58nQEGENuDN/oDzd+mOT1s3PFG/g
-	 yqmEmgbqXtzBXYj9uGwkT2dmXqEHMf0rApWnlqDSv/s7Dqi34mEoxtWpFwa0QZIxxX
-	 tlOp+HTJbaZN+9XAFDv0Qt9DVt8LHZGKtwHgGdapM9/czfR7MvuOkGHH+gNthUpEUE
-	 16ORbLg/LioIw==
+	b=EeciWO1Oum1BSIQAKgXYPeZBjZGiw+tmPFMJ1nW2jS/KHSHH+t2O0z1EzqBTmqPin
+	 KSAXPffctZU+ldXfDBoJ/leM62mdTsHivW3UXviQY6i0KJtKhm1Wd7lEWsmaokIFk6
+	 sCjz+YL28k3A+04qO3afIM7kzILCZLVDYsbNkSocRGjwWnpgNuAw/b70PauXXVtZ+N
+	 HChC+KdB0AjUQYosvAUoinLz/SYHN8DC453DAS9zu/HmBa+0jmt1M3IsoQgIhNAcdV
+	 CnwFQw/ywMLk2VWFUi9rhshk6nGHnzslkAPa8cN6rUgiW8BOEXl/SoFjKZNQGgTOkA
+	 1jxRS/54vRxgw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
-	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Will Deacon <will@kernel.org>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 281/638] iommu/arm-smmu-v3: Check that the RID domain is S1 in SVA
-Date: Sun, 24 Mar 2024 18:55:18 -0400
-Message-ID: <20240324230116.1348576-282-sashal@kernel.org>
+Subject: [PATCH 6.6 284/638] SUNRPC: fix a memleak in gss_import_v2_context
+Date: Sun, 24 Mar 2024 18:55:21 -0400
+Message-ID: <20240324230116.1348576-285-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,59 +49,57 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jason Gunthorpe <jgg@nvidia.com>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit ae91f6552c301e5e8569667e9d5440d5f75a90c4 ]
+[ Upstream commit e67b652d8e8591d3b1e569dbcdfcee15993e91fa ]
 
-The SVA code only works if the RID domain is a S1 domain and has already
-installed the cdtable.
+The ctx->mech_used.data allocated by kmemdup is not freed in neither
+gss_import_v2_context nor it only caller gss_krb5_import_sec_context,
+which frees ctx on error.
 
-Originally the check for this was in arm_smmu_sva_bind() but when the op
-was removed the test didn't get copied over to the new
-arm_smmu_sva_set_dev_pasid().
+Thus, this patch reform the last call of gss_import_v2_context to the
+gss_krb5_import_ctx_v2, preventing the memleak while keepping the return
+formation.
 
-Without the test wrong usage usually will hit a WARN_ON() in
-arm_smmu_write_ctx_desc() due to a missing ctx table.
-
-However, the next patches wil change things so that an IDENTITY domain is
-not a struct arm_smmu_domain and this will get into memory corruption if
-the struct is wrongly casted.
-
-Fail in arm_smmu_sva_set_dev_pasid() if the STE does not have a S1, which
-is a proxy for the STE having a pointer to the CD table. Write it in a way
-that will be compatible with the next patches.
-
-Fixes: 386fa64fd52b ("arm-smmu-v3/sva: Add SVA domain support")
-Reported-by: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Closes: https://lore.kernel.org/linux-iommu/2a828e481416405fb3a4cceb9e075a59@huawei.com/
-Tested-by: Nicolin Chen <nicolinc@nvidia.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Link: https://lore.kernel.org/r/11-v6-96275f25c39d+2d4-smmuv3_newapi_p1_jgg@nvidia.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 47d848077629 ("gss_krb5: handle new context format from gssd")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ net/sunrpc/auth_gss/gss_krb5_mech.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-index 8a16cd3ef487c..cc33e8297b8d0 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-@@ -352,7 +352,13 @@ __arm_smmu_sva_bind(struct device *dev, struct mm_struct *mm)
- 	struct arm_smmu_bond *bond;
- 	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
- 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
--	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-+	struct arm_smmu_domain *smmu_domain;
-+
-+	if (!(domain->type & __IOMMU_DOMAIN_PAGING))
-+		return -ENODEV;
-+	smmu_domain = to_smmu_domain(domain);
-+	if (smmu_domain->stage != ARM_SMMU_DOMAIN_S1)
-+		return -ENODEV;
+diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
+index e31cfdf7eadcb..f6fc80e1d658b 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_mech.c
++++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
+@@ -398,6 +398,7 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
+ 	u64 seq_send64;
+ 	int keylen;
+ 	u32 time32;
++	int ret;
  
- 	if (!master || !master->sva_enabled)
- 		return ERR_PTR(-ENODEV);
+ 	p = simple_get_bytes(p, end, &ctx->flags, sizeof(ctx->flags));
+ 	if (IS_ERR(p))
+@@ -450,8 +451,16 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
+ 	}
+ 	ctx->mech_used.len = gss_kerberos_mech.gm_oid.len;
+ 
+-	return gss_krb5_import_ctx_v2(ctx, gfp_mask);
++	ret = gss_krb5_import_ctx_v2(ctx, gfp_mask);
++	if (ret) {
++		p = ERR_PTR(ret);
++		goto out_free;
++	}
+ 
++	return 0;
++
++out_free:
++	kfree(ctx->mech_used.data);
+ out_err:
+ 	return PTR_ERR(p);
+ }
 -- 
 2.43.0
 
