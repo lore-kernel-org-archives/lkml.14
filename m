@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2043E48E;
-	Sun, 24 Mar 2024 22:51:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB5F8527B;
+	Sun, 24 Mar 2024 22:51:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320664; cv=none; b=i9rJqh5kzvLsTWnoXH48CDUrZkEpCF66H2OskgQY5wzSv54Ep+vVd11tzTDLfpD6v6oFWOM/zsPBL+pbwJNVLHJfsZ0QFHQCfIX+kcGsnxLvCTTWd7d5wIi0/lm0qCBRElpyKX9aQMMzkJW7CLXFuxCiZDsdySMr8P1QgUS9uuE=
+	t=1711320665; cv=none; b=UK6f8lodqhgiAjZcEatiNXfHxmsdAM/Es7qZcDEI4sHUGj9S4RAkMtRoeK3Gkft5ke5a/YhcQrN/bvjKbxiZZW9sbJAKzAdIizu2v4Hl5WKsfPIvxEilSualdqKje+KThbXkjLpTifEuxfhF5znZ+t5JDPhKIp2q4ixlbIQl/PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320664; c=relaxed/simple;
-	bh=1PGCOGFGQekBR5Mt3AhH2f54nkQPkDJdQWf0hZtQN5M=;
+	s=arc-20240116; t=1711320665; c=relaxed/simple;
+	bh=lzVnQlyO7tR3vPso14hf/vGA5Oj0nELSAcGLnpQb/UU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kuyKQasMkMQw9rdNxyJxgGmCN62CAmaz/dExjt73ha069aGK6z1n3GYsPiXlZq39ibD4F5h3ZAiEmGDKcRbo7kwqykBCPiwUk5f+ov26t5tYvf6HmWcK1ZEsEyf72SJE0QBI/vBr60OgEjs0bNbWu9/xvmVLizUQWqCbUBixOUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SUWF+Tor; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=M2Ar7RB8TUwqysSRURKC4uzbs8G73QXwF0cP7qXsUsYnIL+MaVtkuUgYTE5R6beH7wBwpJcboBtI96PVR9yLLFtgBv+graBUDHrS5TTTssCUwr3AvVmuUGWOnqwQAkLh/I4ErZEPH2pkVAfSYfaKNLzZIExDVxjO9EUMBv52ITg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BbVaYrrJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SUWF+Tor"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19627C4166A;
-	Sun, 24 Mar 2024 22:51:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BbVaYrrJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B13C433C7;
+	Sun, 24 Mar 2024 22:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320663;
-	bh=1PGCOGFGQekBR5Mt3AhH2f54nkQPkDJdQWf0hZtQN5M=;
+	s=k20201202; t=1711320665;
+	bh=lzVnQlyO7tR3vPso14hf/vGA5Oj0nELSAcGLnpQb/UU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SUWF+TorbshlAeGV/s7d/Wx1jPp6yHr9kd3aoabxqSdzKIzfN1vupRj2EPgm6h2r6
-	 0w08ZuZczopFRaOQ0Xrq2xTNW7rJdShlToAg/RIQXTBkD1syZzRH6lqQc/A1YLKOTM
-	 gVg3UzAkY/tEg6eovN/c9foevjOzsbemb5M6TymPh1h3XmhfE3nFFLfkI0f+vVAkU8
-	 UGuKruHOk7rohcJcyaZznWOKCWsZ4meIWkZbZdxXPwxPB4TGkOBiAv1lDadMXnWEDR
-	 RcOtj9XmeiCG20qwG3SFqnAU60QsIXx8iG/5SOp167DtV38vFfCw6kDcOUZ4EZoBqh
-	 RwIo5OeZM13iw==
+	b=BbVaYrrJbN/6frJmUzVpxcnPr/sc7G0i/FTDT8Ln9LUte+QZnwS2lETbDzbs9ivh5
+	 cj3U6ntXJExiKXz9Ot8CgD52xZ7+KbYyTciexVn3IBopIGUO5DMh0rXVNqyHlncf67
+	 mYy0dGSkWic1lHmgjceUFNIEB/eKsXnLSex7i/R/6guyii2cNcvxjf2nHMO6GO5Wm9
+	 GicViLQv5ZzPm6y1gW38vosiL+o/aLv/oE0V7G7i/f/QBbT0HpN6cdxBkaZDJSusn9
+	 5H4EvtnE0Uus/N/iriVRzkl5Wfyctm2NGKGFbZqe7EkCZmwW0JT86crZ7kSx/2J62g
+	 9tqR3C+06g9EA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 226/713] wifi: iwlwifi: support EHT for WH
-Date: Sun, 24 Mar 2024 18:39:12 -0400
-Message-ID: <20240324224720.1345309-227-sashal@kernel.org>
+Subject: [PATCH 6.7 228/713] wifi: iwlwifi: mvm: fix erroneous queue index mask
+Date: Sun, 24 Mar 2024 18:39:14 -0400
+Message-ID: <20240324224720.1345309-229-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,35 +48,66 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit f51d6431824f0afb9f73d68971d154c47c26b86a ]
+[ Upstream commit 2e0e766bd8a7f14f10c3e70b8203c4c1e6d9ec76 ]
 
-sku_cap_11be_enable should be set to true also for WH.
+When retrieving the queue index ("SCD SSN") from the TX response,
+it's currently masked with 0xFFF. However, now that we have queues
+longer than 4k, that became wrong, so make the mask depend on the
+hardware family.
 
-Fixes: e1374ed25324 ("wifi: iwlwifi: Add support for new CNVi (SC)")
+This fixes an issue where if we get a single frame reclaim while
+in the top half of an 8k long queue, we'd reclaim-wrap the queue
+twice (once on this and then again on the next non-single reclaim)
+which at least triggers the WARN_ON_ONCE() in iwl_txq_reclaim(),
+but could have other negative side effects (such as unmapping a
+frame that wasn't transmitted yet, and then taking an IOMMU fault)
+as well.
+
+Fixes: 7b3e42ea2ead ("iwlwifi: support multiple tfd queue max sizes for different devices")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Reviewed-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Link: https://msgid.link/20240204235836.a6d4097cbaca.I8b00fa7b6226b4116cd91f70fb0b15e79b4dee5a@changeid
+Link: https://msgid.link/20240205211151.4148a6ef54e0.I733a70f679c25f9f99097a8dcb3a1f8165da6997@changeid
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-index 678c4a071869f..d85cadd8e16cb 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-@@ -2090,7 +2090,7 @@ struct iwl_nvm_data *iwl_get_nvm(struct iwl_trans *trans,
- 		!!(mac_flags & NVM_MAC_SKU_FLAGS_BAND_5_2_ENABLED);
- 	nvm->sku_cap_mimo_disabled =
- 		!!(mac_flags & NVM_MAC_SKU_FLAGS_MIMO_DISABLED);
--	if (CSR_HW_RFID_TYPE(trans->hw_rf_id) == IWL_CFG_RF_TYPE_FM)
-+	if (CSR_HW_RFID_TYPE(trans->hw_rf_id) >= IWL_CFG_RF_TYPE_FM)
- 		nvm->sku_cap_11be_enable = true;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+index 461f26d9214e4..930742e75c02a 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+ /*
+- * Copyright (C) 2012-2014, 2018-2023 Intel Corporation
++ * Copyright (C) 2012-2014, 2018-2024 Intel Corporation
+  * Copyright (C) 2013-2015 Intel Mobile Communications GmbH
+  * Copyright (C) 2016-2017 Intel Deutschland GmbH
+  */
+@@ -1636,12 +1636,18 @@ static void iwl_mvm_tx_status_check_trigger(struct iwl_mvm *mvm,
+  * of the batch. This is why the SSN of the SCD is written at the end of the
+  * whole struct at a variable offset. This function knows how to cope with the
+  * variable offset and returns the SSN of the SCD.
++ *
++ * For 22000-series and lower, this is just 12 bits. For later, 16 bits.
+  */
+ static inline u32 iwl_mvm_get_scd_ssn(struct iwl_mvm *mvm,
+ 				      struct iwl_mvm_tx_resp *tx_resp)
+ {
+-	return le32_to_cpup((__le32 *)iwl_mvm_get_agg_status(mvm, tx_resp) +
+-			    tx_resp->frame_count) & 0xfff;
++	u32 val = le32_to_cpup((__le32 *)iwl_mvm_get_agg_status(mvm, tx_resp) +
++			       tx_resp->frame_count);
++
++	if (mvm->trans->trans_cfg->device_family >= IWL_DEVICE_FAMILY_AX210)
++		return val & 0xFFFF;
++	return val & 0xFFF;
+ }
  
- 	/* Initialize PHY sku data */
+ static void iwl_mvm_rx_tx_cmd_single(struct iwl_mvm *mvm,
 -- 
 2.43.0
 
