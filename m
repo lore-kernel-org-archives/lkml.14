@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867F614A63E;
-	Sun, 24 Mar 2024 22:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B22712C809;
+	Sun, 24 Mar 2024 22:57:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321029; cv=none; b=kJ3Jj+bbeWKnMKCMT88bIR3lElQD4PdnViSQC116cju4r7lzNhUJaSydnqVRW5pG1vbaBvn9bG46JCN8l2X4yg4hsAkG2sI+AIW3VhXCVCawacSGoGd4fUx9SZ3wGPLim5wTyq9pDvQdl4+78XSZZG8260IWGdxz8SJuf4BwXCY=
+	t=1711321056; cv=none; b=D7iBI/jWCjXm+MttmKUzL77LlGtKsimsJPeo17imEuMk29+3q01ZEzBTTgVNoOdw2vqh0jmth/qXEAj5LxQ2yP2XN49LQ1r+HQ6ts6PY7hxM7MvfCNymPQzXR28HIs32MCSJZ+8Sn5CxaGggFNYIG8qJuQDxnMAG8Xrcl/2KxXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321029; c=relaxed/simple;
-	bh=SPantjYY2aawnQ0TrCYbOico8kL69tU7bw3MKUThvss=;
+	s=arc-20240116; t=1711321056; c=relaxed/simple;
+	bh=AMkb6V5/8OzM2qunQBvo0Q2DSac62dcJLz4Z4OClx3g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DJG0IqmaXYWOK8XLdkvejobsehLNn2qZNEb5997XgLOvd7i+e0BgD4j3kQ3N97X8HwqXdc3LtGB8jzd2kjw2tVIAdkfebbW3KPj6NH95Rn3pe5WGgIAZ5v1s9fuKIvLb03YEp84Sc2trCHRkdoX+QEG2vNsRyxnLf+BGIJI5n2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PN7CqtQU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Qbr2b/KqGBYjukUlTO28U1w4H/n7b164l5pXxFz9ZPF4cf2fDZVwWfJl+gyNk6pWVCTq9mtm6HIW9WSezbIYj7LkF4RfhWvRJe7iKOsC3Q7qL83kgowpOsvkjiS79oEE5bZlvRYaApERSssYT9Fq0TPQJBHnOiQkYu/q7kugaNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6s2ya4o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PN7CqtQU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3535C43394;
-	Sun, 24 Mar 2024 22:57:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6s2ya4o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2AADC433F1;
+	Sun, 24 Mar 2024 22:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321028;
-	bh=SPantjYY2aawnQ0TrCYbOico8kL69tU7bw3MKUThvss=;
+	s=k20201202; t=1711321055;
+	bh=AMkb6V5/8OzM2qunQBvo0Q2DSac62dcJLz4Z4OClx3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PN7CqtQUb2gLclLQfFAeHrajGunFscqiymFrAX7Suj+z38r3AK40+7o04eWYuzxAW
-	 9AdApuEgP4sY833+ahZ7LmxkecOb5ZOZe1YpihBpQlGkKfbrT8qeLOfYsUL+0JgJS2
-	 jgfbIfcqs54LcOi4XSKXMvC26CUOZRTtC4RRlchqJb5R5mRPH0XazA2fbUJAb/5SoK
-	 JHu4jdOfoXFRxYKEY0h1iloEfS6IWZO6F++YKdHgB5/2KcCBVQlm6P5GvYeZtCxuQT
-	 sJJNjhp1U4AnPmtRUeg4M5lpBPyDIh41FXShMi+nNOKwWSol+3dy2Gcna5yrShoZeK
-	 prM8okCZA+Xxw==
+	b=K6s2ya4okzdODZY7T+oqsDP+yE51mKVQ0SuobDKTguNO5eCUrZ99lE0mF78o/IcUL
+	 8IbtHRhX36TAvDQjcx6AxcZQukq/1xCqj8bmv7rkMw7bTsJZZIWFASAkpmVqDrQ3pi
+	 BWGcUm/5hrvSWY921dpyo4z8ewQQ9tBpIfRAFTMRQ8TDxkl0yVE260gNaVBRF1YEto
+	 hg44II+AAjiEzLLcjvTUEG3Lm549S4SzKBqB+nz99Bcuiaj3HPxBFOSUjAfxLNQOb+
+	 H+kIJsoTXuzfNMtVByjh9mTSuegrOgfigj9IwoYAkGDXQeksxcIe/6YxHSR3HQ7hbE
+	 cTY2Lv6BylRcw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
+	kernel test robot <lkp@intel.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 591/713] f2fs: compress: fix to check compress flag w/ .i_sem lock
-Date: Sun, 24 Mar 2024 18:45:17 -0400
-Message-ID: <20240324224720.1345309-592-sashal@kernel.org>
+Subject: [PATCH 6.7 619/713] remoteproc: stm32: Fix incorrect type in assignment for va
+Date: Sun, 24 Mar 2024 18:45:45 -0400
+Message-ID: <20240324224720.1345309-620-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,51 +49,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
 
-[ Upstream commit ea59b12ac69774c08aa95cd5b6100700ea0cce97 ]
+[ Upstream commit 32381bbccba4c21145c571701f8f7fb1d9b3a92e ]
 
-It needs to check compress flag w/ .i_sem lock, otherwise, compressed
-inode may be disabled after the check condition, it's not needed to
-set compress option on non-compress inode.
+The sparse tool complains about the attribute conversion between
+a _iomem void * and a void *:
 
-Fixes: e1e8debec656 ("f2fs: add F2FS_IOC_SET_COMPRESS_OPTION ioctl")
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+stm32_rproc.c:122:12: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *va @@     got void [noderef] __iomem * @@
+stm32_rproc.c:122:12: sparse:     expected void *va
+stm32_rproc.c:122:12: sparse:     got void [noderef] __iomem *
+
+Add '__force' to explicitly specify that the cast is intentional.
+This conversion is necessary to cast to virtual addresses pointer,used,
+by the remoteproc core.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202312150052.HCiNKlqB-lkp@intel.com/
+Fixes: 13140de09cc2 ("remoteproc: stm32: add an ST stm32_rproc driver")
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+Link: https://lore.kernel.org/r/20240117135312.3381936-2-arnaud.pouliquen@foss.st.com
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/remoteproc/stm32_rproc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 762b664ef38b2..a82dc1af16797 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -3989,16 +3989,20 @@ static int f2fs_ioc_set_compress_option(struct file *filp, unsigned long arg)
- 				sizeof(option)))
- 		return -EFAULT;
+diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+index 4f469f0bcf8b2..2c28635219ebf 100644
+--- a/drivers/remoteproc/stm32_rproc.c
++++ b/drivers/remoteproc/stm32_rproc.c
+@@ -120,7 +120,7 @@ static int stm32_rproc_mem_alloc(struct rproc *rproc,
+ 	void *va;
  
--	if (!f2fs_compressed_file(inode) ||
--			option.log_cluster_size < MIN_COMPRESS_LOG_SIZE ||
--			option.log_cluster_size > MAX_COMPRESS_LOG_SIZE ||
--			option.algorithm >= COMPRESS_MAX)
-+	if (option.log_cluster_size < MIN_COMPRESS_LOG_SIZE ||
-+		option.log_cluster_size > MAX_COMPRESS_LOG_SIZE ||
-+		option.algorithm >= COMPRESS_MAX)
- 		return -EINVAL;
+ 	dev_dbg(dev, "map memory: %pad+%zx\n", &mem->dma, mem->len);
+-	va = ioremap_wc(mem->dma, mem->len);
++	va = (__force void *)ioremap_wc(mem->dma, mem->len);
+ 	if (IS_ERR_OR_NULL(va)) {
+ 		dev_err(dev, "Unable to map memory region: %pad+0x%zx\n",
+ 			&mem->dma, mem->len);
+@@ -137,7 +137,7 @@ static int stm32_rproc_mem_release(struct rproc *rproc,
+ 				   struct rproc_mem_entry *mem)
+ {
+ 	dev_dbg(rproc->dev.parent, "unmap memory: %pa\n", &mem->dma);
+-	iounmap(mem->va);
++	iounmap((__force __iomem void *)mem->va);
  
- 	file_start_write(filp);
- 	inode_lock(inode);
- 
- 	f2fs_down_write(&F2FS_I(inode)->i_sem);
-+	if (!f2fs_compressed_file(inode)) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
- 	if (f2fs_is_mmap_file(inode) || get_dirty_pages(inode)) {
- 		ret = -EBUSY;
- 		goto out;
+ 	return 0;
+ }
 -- 
 2.43.0
 
