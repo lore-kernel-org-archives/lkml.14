@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EECB156C6D;
-	Sun, 24 Mar 2024 23:11:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7E122192B;
+	Sun, 24 Mar 2024 23:11:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321899; cv=none; b=FbhAQJWt+kSgf8dq2GzHJfR6fBTipxPiZ+yU0Zm9moJHEzYfkfWB9UiWbU4NhRM/ba50LNpl+cf2TyXfu+6uhD1O22TNvRNgjusm7nMZXnmwQkIqW0MelFG9adzgFZ+7XOdknmI1Yy4O+FRfanKKnGgR4VSw/8lU1BY6bfgZ56g=
+	t=1711321894; cv=none; b=IcrN1Nk9FdUBbshPcB49loDx6mJ+iU1BitVkpHV07QSo89QuZmCHOUD1ZwSL42WKCLcFCW1jD3VMG0L/wcys28uwZ45OY6sQZ4C895RNvYRPI2pjM7+ktl+rVPSMWKkG15cmVHgoVAU0RudHd3YB+S956UrFAlpulMU5xzieToU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321899; c=relaxed/simple;
-	bh=KfwDjXDxUaYF07I39Iz8WI9g83GqG4ln62S9uC3nKm4=;
+	s=arc-20240116; t=1711321894; c=relaxed/simple;
+	bh=KBxM9YEfy6MN0Zj5FWWkO4w/8khireT469bIN4a8cqM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OvkFIr2QRfYClTKA+7pFS6aEYbOj04vQNYfpe7n0kLras/1rtiUj+4O6+tRwJ54QRm34ILkCzvHNVhxEH+n+CTgGJTswY1U8U0RZ1g+BsaKeUYmd7G1unGTubDDvCP+L9DifsI6CyZxjfdb7CfgKUE7Q4ebciyAVxvFSjJtKg3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCPuVmSZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=R1WGqOidc5T/8elLmpJxHW0HaF7TxinD31YGPqtljzJErV4x9oGiTwAOjK6oS/QZZCIwSK6huBtIyKlW27LTRQGqt0L3Y3uNy/i6LAioADDJFshNbHXH3Wcs2gEus1K/rbhw6seLY29bm+pG5wx6NrBz62OoR6Cd72enYiXbsKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K31LhszW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCPuVmSZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9389FC433B1;
-	Sun, 24 Mar 2024 23:11:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K31LhszW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A979C433C7;
+	Sun, 24 Mar 2024 23:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321898;
-	bh=KfwDjXDxUaYF07I39Iz8WI9g83GqG4ln62S9uC3nKm4=;
+	s=k20201202; t=1711321893;
+	bh=KBxM9YEfy6MN0Zj5FWWkO4w/8khireT469bIN4a8cqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sCPuVmSZ4bOw5tLPBpF9Cbw/qdvsNwmPkCXw6JthSsp2Prd0RMEZ6Vbm/rj9ffFYA
-	 dExynvWvpjGgMR1YdE3szLTpm28FXz+Lo9HRYIj9T9hzPTkaG4V2xJdDoP+aWF7RZl
-	 eT0iNtpLKakj6OqmNa7G51cxowfF+LTJXGYxrNRHrjVdJrLIIU1+fqglmn3ZbKRd4W
-	 AV5/jYV91xEZAwSSLHuLNV/gItCDTx19d65zNiyxkHLic1xWITuwH1Dom86g66P9p8
-	 Lcnz7U3KQsyzdLUj9yhEIA2htGbmygWohjmXNRJLWutnP9cpsT0Hd/zgYrgvABJYIE
-	 tBOAUdqlFxcUg==
+	b=K31LhszWLAWA9tXxdzPzVxBjbRA7/NPvP5y7XqyasfUjh6biICSztFUtpINyjOZJN
+	 q0mK067wTWOBMBZjh3nUEBVE9QyFPcGj69BLfDskn/uyaqtW0aV/uy0/6TgYOc0CiY
+	 cMpgfTZD8JJv0qCdG3A5egPREPsh29wGbT8D6bDa5KhqKE/pJ4I6w+MwRD/XKKq8CC
+	 ePJnSakOO5HSs5I10MxU22OoUQnqPA2eomOQKOt2R8w5d1t2cMnUBvh4xzQWHJfZpN
+	 hHr23QfdjUQSbuFpgskB1U50Ny8tXzY6aDB5udOFct7v6a9dBNzeG5qovFaJ3quBbM
+	 iQhWMp/rpoTcQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yan Zhai <yan@cloudflare.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Subbaraya Sundeep <sbhatta@marvell.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 627/638] net: report RCU QS on threaded NAPI repolling
-Date: Sun, 24 Mar 2024 19:01:04 -0400
-Message-ID: <20240324230116.1348576-628-sashal@kernel.org>
+Subject: [PATCH 6.6 622/638] octeontx2-af: Use separate handlers for interrupts
+Date: Sun, 24 Mar 2024 19:00:59 -0400
+Message-ID: <20240324230116.1348576-623-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,85 +48,67 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yan Zhai <yan@cloudflare.com>
+From: Subbaraya Sundeep <sbhatta@marvell.com>
 
-[ Upstream commit d6dbbb11247c71203785a2c9da474c36f4b19eae ]
+[ Upstream commit 50e60de381c342008c0956fd762e1c26408f372c ]
 
-NAPI threads can keep polling packets under load. Currently it is only
-calling cond_resched() before repolling, but it is not sufficient to
-clear out the holdout of RCU tasks, which prevent BPF tracing programs
-from detaching for long period. This can be reproduced easily with
-following set up:
+For PF to AF interrupt vector and VF to AF vector same
+interrupt handler is registered which is causing race condition.
+When two interrupts are raised to two CPUs at same time
+then two cores serve same event corrupting the data.
 
-ip netns add test1
-ip netns add test2
-
-ip -n test1 link add veth1 type veth peer name veth2 netns test2
-
-ip -n test1 link set veth1 up
-ip -n test1 link set lo up
-ip -n test2 link set veth2 up
-ip -n test2 link set lo up
-
-ip -n test1 addr add 192.168.1.2/31 dev veth1
-ip -n test1 addr add 1.1.1.1/32 dev lo
-ip -n test2 addr add 192.168.1.3/31 dev veth2
-ip -n test2 addr add 2.2.2.2/31 dev lo
-
-ip -n test1 route add default via 192.168.1.3
-ip -n test2 route add default via 192.168.1.2
-
-for i in `seq 10 210`; do
- for j in `seq 10 210`; do
-    ip netns exec test2 iptables -I INPUT -s 3.3.$i.$j -p udp --dport 5201
- done
-done
-
-ip netns exec test2 ethtool -K veth2 gro on
-ip netns exec test2 bash -c 'echo 1 > /sys/class/net/veth2/threaded'
-ip netns exec test1 ethtool -K veth1 tso off
-
-Then run an iperf3 client/server and a bpftrace script can trigger it:
-
-ip netns exec test2 iperf3 -s -B 2.2.2.2 >/dev/null&
-ip netns exec test1 iperf3 -c 2.2.2.2 -B 1.1.1.1 -u -l 1500 -b 3g -t 100 >/dev/null&
-bpftrace -e 'kfunc:__napi_poll{@=count();} interval:s:1{exit();}'
-
-Report RCU quiescent states periodically will resolve the issue.
-
-Fixes: 29863d41bb6e ("net: implement threaded-able napi poll loop support")
-Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Signed-off-by: Yan Zhai <yan@cloudflare.com>
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Link: https://lore.kernel.org/r/4c3b0d3f32d3b18949d75b18e5e1d9f13a24f025.1710877680.git.yan@cloudflare.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 7304ac4567bc ("octeontx2-af: Add mailbox IRQ and msg handlers")
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/marvell/octeontx2/af/rvu.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 8ac8b5c561030..1f6c8945f2eca 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -6689,6 +6689,8 @@ static int napi_threaded_poll(void *data)
- 	void *have;
- 
- 	while (!napi_thread_wait(napi)) {
-+		unsigned long last_qs = jiffies;
-+
- 		for (;;) {
- 			bool repoll = false;
- 
-@@ -6713,6 +6715,7 @@ static int napi_threaded_poll(void *data)
- 			if (!repoll)
- 				break;
- 
-+			rcu_softirq_qs_periodic(last_qs);
- 			cond_resched();
- 		}
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+index d82aa6f12f114..32645aefd5934 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+@@ -2528,10 +2528,9 @@ static void rvu_queue_work(struct mbox_wq_info *mw, int first,
  	}
+ }
+ 
+-static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
++static irqreturn_t rvu_mbox_pf_intr_handler(int irq, void *rvu_irq)
+ {
+ 	struct rvu *rvu = (struct rvu *)rvu_irq;
+-	int vfs = rvu->vfs;
+ 	u64 intr;
+ 
+ 	intr = rvu_read64(rvu, BLKADDR_RVUM, RVU_AF_PFAF_MBOX_INT);
+@@ -2545,6 +2544,18 @@ static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
+ 
+ 	rvu_queue_work(&rvu->afpf_wq_info, 0, rvu->hw->total_pfs, intr);
+ 
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
++{
++	struct rvu *rvu = (struct rvu *)rvu_irq;
++	int vfs = rvu->vfs;
++	u64 intr;
++
++	/* Sync with mbox memory region */
++	rmb();
++
+ 	/* Handle VF interrupts */
+ 	if (vfs > 64) {
+ 		intr = rvupf_read64(rvu, RVU_PF_VFPF_MBOX_INTX(1));
+@@ -2882,7 +2893,7 @@ static int rvu_register_interrupts(struct rvu *rvu)
+ 	/* Register mailbox interrupt handler */
+ 	sprintf(&rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], "RVUAF Mbox");
+ 	ret = request_irq(pci_irq_vector(rvu->pdev, RVU_AF_INT_VEC_MBOX),
+-			  rvu_mbox_intr_handler, 0,
++			  rvu_mbox_pf_intr_handler, 0,
+ 			  &rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], rvu);
+ 	if (ret) {
+ 		dev_err(rvu->dev,
 -- 
 2.43.0
 
