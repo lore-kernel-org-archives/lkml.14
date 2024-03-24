@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E931292EE;
-	Sun, 24 Mar 2024 22:54:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333ED1E6F77;
+	Sun, 24 Mar 2024 22:54:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320854; cv=none; b=CGv1uJCeGN3KkRM37xd95vqCXwuIbeLl0HqVzepiVlLOqqNbWNiy9EbvmP56To5I0VKoK3tmruT7B/L3ylJEWURQf07+nNGIrLMJ6rsUeHTwZG8jf6OxDTGh2gooJwA7s2stTxwwXDtAe37INjJSf5+79pIifqy0WpaDx2jOiIE=
+	t=1711320862; cv=none; b=ZvjyFwDwPf3WtMHQ8OBswZo8NNqnh8/TJkGLLmbKHvFnAiJ1Lh0DCixjvVlO+hkdlXRdZ7Yy3bdN5i3/APKvZ4tVNhEzhlbQWbeMuW0GoGHlprrSdsL9TxY5DJXJg60q8uvKxrBJwxasRS6B7J3+INEPGMhn+2MOlL6RCRuiFvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320854; c=relaxed/simple;
-	bh=YNNOWOco7RCQJS1bye+2aEHrtl5dCWSCAkScx6UKIfk=;
+	s=arc-20240116; t=1711320862; c=relaxed/simple;
+	bh=AblLMCLKhGeVcNTlP4GxhDoq/j9RcxhSil5RYWBtqm4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YCho61wIXAxVtdCzWJvFk6+1tO7bcUw2HUXNdLNpYaeGYjcdmc0iJkd6EMe1z37RCkENaUqhWtTxPq3Ebb7hIOVZzZXBlbF3MCB5QOIjn+NuNS6epVjIszSGbHm1xv8QRCAXwf0p/LXJegck3Bjx6sagjXG+FJSA9P1ddGN3H1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQvYU+4v; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=px37Ue0gpuns1c5VCVeynUR1vy3AWO3kg0m1bred6S7mJATi8OhcK9zj6SKqz3Oj8+Lna6ygzb0bfoS8jhUarG2/QFfV+7ZU0ZmSyZOzcvXaDghYd2CfXyUYIu/xp893JvmdFtOYhogCAeQPWK+RhmcRiDd3XeM1Hu2IrKB0O6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hCYDg74F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQvYU+4v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DDBAC433C7;
-	Sun, 24 Mar 2024 22:54:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hCYDg74F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70859C433C7;
+	Sun, 24 Mar 2024 22:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320853;
-	bh=YNNOWOco7RCQJS1bye+2aEHrtl5dCWSCAkScx6UKIfk=;
+	s=k20201202; t=1711320861;
+	bh=AblLMCLKhGeVcNTlP4GxhDoq/j9RcxhSil5RYWBtqm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SQvYU+4vK5pRSIKU1+Oxsf5cJ/e/hZLMxeIBzezuDHznqjV8qtRs8vnbn5SZEcXW+
-	 Wje2eLYwtGbWBAakvX4B6ibejrO5eHo5CHew3AjME7xXloKc/5ZfbCxLn5UDkdfzuM
-	 q7i2d+pm8Uo+oNCgx+3UPqQney+q4koRzP43Ohb9DRpG+Wr+XLAPldaEx1qtHx5qCX
-	 qwMAIHiQVI/e23TMMZHvNjDqwS4mUIUrp23PbK6PTOUVI/Y0TTvRHid/ol+jWnx7u/
-	 biQp1tYljTujQqpE6ChTRv/L7Mya+O+MKuDhv+qdeWnygBbsDuUt17QH67izvUaN2y
-	 AOZmzODUXx6Cw==
+	b=hCYDg74F2NQ1r7E3ucpCFbLwqiEn8G6GRnBqbHcdHHAqIReCmWxHxTHRmf+NX1e8V
+	 3MaqticQZXSOdbAm0DgGir0k7YczphaPyJOR1QyUlPy0Y5UTb0l8pN/WVooO+RUT6Q
+	 B97wfxOOTVFSwrRXzi9EhhJtbsgxxUxkF88jiFUyLNawe4zBOq41NaqWaOC0LKp/X4
+	 RcrAquF7JS+ahlAcY9beG0xh0iSl50/HaxNdKWpHWKfTwMeAGQAfVbRCUJd8BKRlGF
+	 z6aW3FpmxHlsoJtMBhfRpkT/lpOglA24byGmN0R7yszvRyTh+VS4V41zD6mQCbv2sv
+	 96L+mYPwj/tCQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stefan Binding <sbinding@opensource.cirrus.com>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 417/713] ALSA: hda: cs35l41: Set Channel Index correctly when system is missing _DSD
-Date: Sun, 24 Mar 2024 18:42:23 -0400
-Message-ID: <20240324224720.1345309-418-sashal@kernel.org>
+Subject: [PATCH 6.7 425/713] PCI/AER: Fix rootport attribute paths in ABI docs
+Date: Sun, 24 Mar 2024 18:42:31 -0400
+Message-ID: <20240324224720.1345309-426-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,66 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stefan Binding <sbinding@opensource.cirrus.com>
+From: Johan Hovold <johan+linaro@kernel.org>
 
-[ Upstream commit 135096ebfab656823d0037102a00776f3914fee3 ]
+[ Upstream commit 0e7d29a39a546161ea3a49e8e282a43212d7ff68 ]
 
-Current method to set Channel Index when the system is missing _DSD
-assumes that the channels alternate, which is not guaranteed.
-Instead use the same methodology as the main driver does when _DSD
-exists.
+The 'aer_stats' directory never made it into the sixth and final revision
+of the series adding the sysfs AER attributes.
 
-Fixes: 8c4c216db8fb ("ALSA: hda: cs35l41: Add config table to support many laptops without _DSD")
-
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20240126164005.367021-2-sbinding@opensource.cirrus.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20240202131635.11405-2-johan+linaro@kernel.org
+Link: https://lore.kernel.org/lkml/20180621184822.GB14136@bhelgaas-glaptop.roam.corp.google.com/
+Fixes: 12833017e581 ("PCI/AER: Add sysfs attributes for rootport cumulative stats")
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/cs35l41_hda_property.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
-index 5a5f4b499fd94..b5b24fefb20cf 100644
---- a/sound/pci/hda/cs35l41_hda_property.c
-+++ b/sound/pci/hda/cs35l41_hda_property.c
-@@ -207,6 +207,7 @@ static int generic_dsd_config(struct cs35l41_hda *cs35l41, struct device *physde
- 	struct spi_device *spi;
- 	bool dsd_found;
- 	int ret;
-+	int i;
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+index 860db53037a58..24087d5fd417a 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
++++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+@@ -100,19 +100,19 @@ collectors) that are AER capable. These indicate the number of error messages as
+ device, so these counters include them and are thus cumulative of all the error
+ messages on the PCI hierarchy originating at that root port.
  
- 	for (cfg = cs35l41_config_table; cfg->ssid; cfg++) {
- 		if (!strcasecmp(cfg->ssid, cs35l41->acpi_subsystem_id))
-@@ -292,16 +293,6 @@ static int generic_dsd_config(struct cs35l41_hda *cs35l41, struct device *physde
- 			cs35l41->index = id == 0x40 ? 0 : 1;
- 	}
+-What:		/sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_cor
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_cor
+ Date:		July 2018
+ KernelVersion: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ Description:	Total number of ERR_COR messages reported to rootport.
  
--	if (cfg->num_amps == 3)
--		/* 3 amps means a center channel, so no duplicate channels */
--		cs35l41->channel_index = 0;
--	else
--		/*
--		 * if 4 amps, there are duplicate channels, so they need different indexes
--		 * if 2 amps, no duplicate channels, channel_index would be 0
--		 */
--		cs35l41->channel_index = cs35l41->index / 2;
--
- 	cs35l41->reset_gpio = fwnode_gpiod_get_index(acpi_fwnode_handle(cs35l41->dacpi), "reset",
- 						     cs35l41->index, GPIOD_OUT_LOW,
- 						     "cs35l41-reset");
-@@ -309,6 +300,11 @@ static int generic_dsd_config(struct cs35l41_hda *cs35l41, struct device *physde
+-What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_fatal
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_fatal
+ Date:		July 2018
+ KernelVersion: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ Description:	Total number of ERR_FATAL messages reported to rootport.
  
- 	hw_cfg->spk_pos = cfg->channel[cs35l41->index];
- 
-+	cs35l41->channel_index = 0;
-+	for (i = 0; i < cs35l41->index; i++)
-+		if (cfg->channel[i] == hw_cfg->spk_pos)
-+			cs35l41->channel_index++;
-+
- 	if (cfg->boost_type == INTERNAL) {
- 		hw_cfg->bst_type = CS35L41_INT_BOOST;
- 		hw_cfg->bst_ind = cfg->boost_ind_nanohenry;
+-What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_nonfatal
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_nonfatal
+ Date:		July 2018
+ KernelVersion: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
 -- 
 2.43.0
 
