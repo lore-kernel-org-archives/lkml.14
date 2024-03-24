@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314A417A923;
-	Sun, 24 Mar 2024 23:41:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E4417A933;
+	Sun, 24 Mar 2024 23:41:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323696; cv=none; b=i3RVOsc21rLHarrvcpH/pejRndGqeind4yh83jCk1bf9ZWB8yKszxDWjvm57NH5usP3YMxM4Z2r/28isuWLT2uPHqTO7YAtzzNPeyrT+KX6PYotwAmBU68NTCwrpi3Yv8wE9WXU/UmR85mg5GSoiPD8YnPcLMQe4pEKRca4y1n0=
+	t=1711323700; cv=none; b=W5f4YxpaHNpzEqcarUeJh13pwbgFBbVbpxYYvqzWvVz3zOkgjIWzS7KWZMF8Ulv6htlWXrOlsBM1f0fSPSskyvLq0O/ood2woKR5JgaU/mHdm6YBj6xUBsGrpudjKQHcGlTGfjdZbxv5WH9P+wCSSTqXu+zJaO0MIgdJWQpd+qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323696; c=relaxed/simple;
-	bh=INN/gpk51sOf3ovPi5IuavhJHJQYrg/i54zt5o0DS0A=;
+	s=arc-20240116; t=1711323700; c=relaxed/simple;
+	bh=c0uLUG+mhovqbPr9q1gR4533lawj4gn8WwbkQdk8jMs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fZvEObMjS00vtpAOT0U+ChubiAYkQ+MzeQUAECK5jx3rhb8jBLWL4u9I0OjjBRuQ36GRB0uAe2jPr7j19vKQmkIx37uxZu/tnfvrqRrgYApjZksCx7p4D751PMpe47v/FNS76dRs2kn/bWhSrZZrz8OwwCTAvFP1cgwC6uhg0wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eiUWnFJZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=AxwpGwzS7dSBkD76a/21q0m2x97y34zQIXhq7z+qfKBGhEj3arP9AY+s3WjlfVEMKKUh7f2fCeIkbfDkyeGrhYNQF0Y3m0d6YsDvMXlJ6niUEgR20SBOO8vhxUsguYX+CFGFGQqxY/+3+h2v0lH9cCKfCXpgBN+MVsBrZ/+/NSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMWQ0O80; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eiUWnFJZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F8DCC433F1;
-	Sun, 24 Mar 2024 23:41:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMWQ0O80"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C34E7C433F1;
+	Sun, 24 Mar 2024 23:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323694;
-	bh=INN/gpk51sOf3ovPi5IuavhJHJQYrg/i54zt5o0DS0A=;
+	s=k20201202; t=1711323700;
+	bh=c0uLUG+mhovqbPr9q1gR4533lawj4gn8WwbkQdk8jMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eiUWnFJZrXI/+zAjtXQZamNO/OR9fwuCjLEI2N4GN/Yo7Er/VmLRxmfyRifJ+IJgW
-	 6TLz8L2ZbhHFdqTSD0/sHbfNSSu2ziVuFmjW8+GVu0gO4IDNh04fmVNB97KTzGSzEZ
-	 6AmB3GrLrWr9TH2a3ZlUBrpj+7T4kxvo1QpoMGdPSkaebm2Zg6qHhuu8ZVECxdOZNh
-	 2WJc0Jf+rw70rLnMtF8hfenevD0TeAZE6On/wTfeId5FpmG6CyNZo4KSdHNQJav+BV
-	 35qqAkQFDzz7KUjILveRYaUCE0MbGQCM5N3YUn90yC3v6lWbXQS4KXiPtzD6x49Puo
-	 6RFioxXAK/mEw==
+	b=IMWQ0O80/Tq+h9iCYYGJ8XBV1ulVlKo1HpAg2Q41GRXiID5tObNSNdz9JLppl0rMg
+	 6C3iUVg8Q7ec5WsSfy5azd8ni3BgMSoh0BumchkIzzoqzgN8DIUTDx/g4oXsTrLjZs
+	 eTZw2lBJPMWJxUvBCCKXLOizEZ9M7HGhTCUp1d0yB7ZlAwdYVkE100ki27gg/1kxCj
+	 5+mVbdlqbs8wISk32hHStg93UHRHKH9e59dN7wVn+HloWg9hfN4xyFx5znebQC2PfF
+	 bYMaJIjXKHbxGEMR1GFmI/jMHZdeVMLRAIFfSPf9i0HwJ/Z2dpLSB2bF6QKJjTl9ZW
+	 76HsBb+qKFhqA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 067/238] ACPI: processor_idle: Fix memory leak in acpi_processor_power_exit()
-Date: Sun, 24 Mar 2024 19:37:35 -0400
-Message-ID: <20240324234027.1354210-68-sashal@kernel.org>
+Subject: [PATCH 5.10 073/238] ARM: dts: imx6dl-yapp4: Move phy reset into switch node
+Date: Sun, 24 Mar 2024 19:37:41 -0400
+Message-ID: <20240324234027.1354210-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -44,63 +44,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Armin Wolf <W_Armin@gmx.de>
+From: Michal Vokáč <michal.vokac@ysoft.com>
 
-[ Upstream commit e18afcb7b2a12b635ac10081f943fcf84ddacc51 ]
+[ Upstream commit 7da7b84fee58c85a6075022023d31edea40e81a1 ]
 
-After unregistering the CPU idle device, the memory associated with
-it is not freed, leading to a memory leak:
+Drop the phy-reset-duration and phy-reset-gpios deprecated properties and
+move reset-gpios under the switch node.
 
-unreferenced object 0xffff896282f6c000 (size 1024):
-  comm "swapper/0", pid 1, jiffies 4294893170
-  hex dump (first 32 bytes):
-    00 00 00 00 0b 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace (crc 8836a742):
-    [<ffffffff993495ed>] kmalloc_trace+0x29d/0x340
-    [<ffffffff9972f3b3>] acpi_processor_power_init+0xf3/0x1c0
-    [<ffffffff9972d263>] __acpi_processor_start+0xd3/0xf0
-    [<ffffffff9972d2bc>] acpi_processor_start+0x2c/0x50
-    [<ffffffff99805872>] really_probe+0xe2/0x480
-    [<ffffffff99805c98>] __driver_probe_device+0x78/0x160
-    [<ffffffff99805daf>] driver_probe_device+0x1f/0x90
-    [<ffffffff9980601e>] __driver_attach+0xce/0x1c0
-    [<ffffffff99803170>] bus_for_each_dev+0x70/0xc0
-    [<ffffffff99804822>] bus_add_driver+0x112/0x210
-    [<ffffffff99807245>] driver_register+0x55/0x100
-    [<ffffffff9aee4acb>] acpi_processor_driver_init+0x3b/0xc0
-    [<ffffffff990012d1>] do_one_initcall+0x41/0x300
-    [<ffffffff9ae7c4b0>] kernel_init_freeable+0x320/0x470
-    [<ffffffff99b231f6>] kernel_init+0x16/0x1b0
-    [<ffffffff99042e6d>] ret_from_fork+0x2d/0x50
-
-Fix this by freeing the CPU idle device after unregistering it.
-
-Fixes: 3d339dcbb56d ("cpuidle / ACPI : move cpuidle_device field out of the acpi_processor_power structure")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Stable-dep-of: 023bd910d3ab ("ARM: dts: imx6dl-yapp4: Fix typo in the QCA switch register address")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/processor_idle.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index 59781e765e0e2..3deeabb273940 100644
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -1427,6 +1427,8 @@ int acpi_processor_power_exit(struct acpi_processor *pr)
- 		acpi_processor_registered--;
- 		if (acpi_processor_registered == 0)
- 			cpuidle_unregister_driver(&acpi_idle_driver);
-+
-+		kfree(dev);
- 	}
+diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+index ebc0892e37c7a..f18da2b70fdc9 100644
+--- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
++++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+@@ -103,8 +103,6 @@ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+ 	phy-mode = "rgmii-id";
+-	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+-	phy-reset-duration = <20>;
+ 	phy-supply = <&sw2_reg>;
+ 	status = "okay";
  
- 	pr->flags.power_setup_done = 0;
+@@ -128,6 +126,7 @@ phy_port3: phy@2 {
+ 		switch@10 {
+ 			compatible = "qca,qca8334";
+ 			reg = <10>;
++			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+ 
+ 			switch_ports: ports {
+ 				#address-cells = <1>;
 -- 
 2.43.0
 
