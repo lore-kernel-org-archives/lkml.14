@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B5428455B;
-	Sun, 24 Mar 2024 23:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A00B17C6D1;
+	Sun, 24 Mar 2024 23:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323794; cv=none; b=IhNqZusL2hZoyNHeLhTalPVw2s51hJzp500E2zRvVBKlH0vK/YgoqlRyfeLL9WHA3uKmdU3abuJkAHE72RiLiZ4/9nYnZwMdC8/bZRJDf+a9C8bxZDMe1mj6fRXpGOSgxI3es2/AtdaEDQQYVXSvq5Bo6bVxY6pQ3ZyN6D1wVuk=
+	t=1711323803; cv=none; b=trLZ1XVwOavlWm6IMU31X7wi6f+yDXQpiupBUOWgkAnAv97H4t55AdWmzpXkxTQT1exHAKeNS3Jpr6/uBZDU44x3sL7SeWazlMZh0ZzbAfabIHWxHiIXvjA1SY+MNHh3pCU1uDnWZb8b87JKEdd9FbJCjPIvMWjA7BTR+aBwdPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323794; c=relaxed/simple;
-	bh=myIllbPmWSYMqa2z/yZAREFiWRKzaKp/8Lpn3zjJYXM=;
+	s=arc-20240116; t=1711323803; c=relaxed/simple;
+	bh=IgTe3n66YGsLtCAM6MmQvEeSa0QRWAfowfES3Es53+M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WCdjLXVXWnPJbSG1HhMCvv0Y4GbKOdjeaOUSGLYVHAYEgxdHDpX6hTZlrL2r99uycW8cMmxxhJJo9F0PJD5kkKsf1tTYdITMYXX0z1aaap6u8yFuJL4OLp66R5pq2qEGUBWvxLkRmN+VJeVSneRhoFqnsdsGmPzgVQesxkhkBQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aoFhEBLa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fXV/VfLjxjYln0q3+scZcw+NJNs3YKhsNjsHM+J3RUepudkOzg++z3Dls04wChuwE2N4ZkLFri5zR39qSeoWtmCmjWRQHiSciQbt3GzuT185FotrS0I33m2sPz54QqRfE1AWTyScyVmXfswZfqvkFy0XQX08l6i4GV6DDE8QWQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=doycezXX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aoFhEBLa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42892C43390;
-	Sun, 24 Mar 2024 23:43:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="doycezXX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDAC4C433F1;
+	Sun, 24 Mar 2024 23:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323792;
-	bh=myIllbPmWSYMqa2z/yZAREFiWRKzaKp/8Lpn3zjJYXM=;
+	s=k20201202; t=1711323802;
+	bh=IgTe3n66YGsLtCAM6MmQvEeSa0QRWAfowfES3Es53+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aoFhEBLaz4bgpW0DiI7G9IMHj4naRfo3zOJ6CFnOA24tlZeBpc0dBDNvk7cRXb1WY
-	 oqd6D+pcynfNPJF9aWzzNW3BjJtrmPjTHTqfIdKy8HcQmUI48axCBPPJ7oJIxzb7rS
-	 j5mKB6g5WLIWABp3jHejxeyxvlltJRW5KGc82rxoB2kFuPssKHTAEUMVVJbQje/N7M
-	 FTRDQhbsQcSkLlhQpEANoEwHr2PnD8fDIbqEIXalHH/f8mNJfrMoMkQzpT1TfsZub0
-	 4tSFGcrwbS/QKL0U6D3o0Qowh7Z+/P9EaB3xO9X1r/8c9FbdMwYhhX4XVZO+sAkyrS
-	 +q9EjrYZx7SYw==
+	b=doycezXXlvmx/NoUt4de8kgO2N5bO/j0LAXjJWP3ZN+QX2ZswWai5PgJjqSk6WymV
+	 M9iMSpUO5jjbkNtE8xdAgtBXnn/O+zgqgw2cJbgE/zm1PjH/xdSPepRCANvPT1BBQL
+	 yVK8GAp9R2JlfCIhJbnffoMN8pT089w2cwTlel10Tqlj5lP3qrSzywQNhbvhTgJyq8
+	 3gxP4/Waec4p/FM+Gn6aokoPJPf3MBKMGdiWMC49tWEGtfxdq883+alom91KD1O8QK
+	 JsM7GxqQL/FelSutURlJJH/+S9pzgsipzzkP8S1LNZiRy+y22HN58xHMPi2U+aT40l
+	 Vm9O8O3ElSW2w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 170/238] ASoC: meson: axg-tdm-interface: add frame rate constraint
-Date: Sun, 24 Mar 2024 19:39:18 -0400
-Message-ID: <20240324234027.1354210-171-sashal@kernel.org>
+Subject: [PATCH 5.10 180/238] powerpc/embedded6xx: Fix no previous prototype for avr_uart_send() etc.
+Date: Sun, 24 Mar 2024 19:39:28 -0400
+Message-ID: <20240324234027.1354210-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,84 +47,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 59c6a3a43b221cc2a211181b1298e43b2c2df782 ]
+[ Upstream commit 20933531be0577cdd782216858c26150dbc7936f ]
 
-According to Amlogic datasheets for the SoCs supported by this driver, the
-maximum bit clock rate is 100MHz.
+Move the prototypes into mpc10x.h which is included by all the relevant
+C files, fixes:
 
-The tdm interface allows the rates listed by the DAI driver, regardless of
-the number slots or their width. However, these will impact the bit clock
-rate.
+  arch/powerpc/platforms/embedded6xx/ls_uart.c:59:6: error: no previous prototype for 'avr_uart_configure'
+  arch/powerpc/platforms/embedded6xx/ls_uart.c:82:6: error: no previous prototype for 'avr_uart_send'
 
-Hitting the 100MHz limit is very unlikely for most use cases but it is
-possible.
-
-For example with 32 slots / 32 bits wide, the maximum rate is no longer
-384kHz but ~96kHz.
-
-Add the constraint accordingly if the component is not already active.
-If it is active, the rate is already constrained by the first stream rate.
-
-Fixes: d60e4f1e4be5 ("ASoC: meson: add tdm interface driver")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://msgid.link/r/20240223175116.2005407-3-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20240305123410.3306253-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/axg-tdm-interface.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ arch/powerpc/platforms/embedded6xx/linkstation.c | 3 ---
+ arch/powerpc/platforms/embedded6xx/mpc10x.h      | 3 +++
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
-index ac43a7ab7bcf6..60d132ab1ab78 100644
---- a/sound/soc/meson/axg-tdm-interface.c
-+++ b/sound/soc/meson/axg-tdm-interface.c
-@@ -12,6 +12,9 @@
- 
- #include "axg-tdm.h"
- 
-+/* Maximum bit clock frequency according the datasheets */
-+#define MAX_SCLK 100000000 /* Hz */
-+
- enum {
- 	TDM_IFACE_PAD,
- 	TDM_IFACE_LOOPBACK,
-@@ -155,19 +158,27 @@ static int axg_tdm_iface_startup(struct snd_pcm_substream *substream,
- 		return -EINVAL;
- 	}
- 
--	/* Apply component wide rate symmetry */
- 	if (snd_soc_component_active(dai->component)) {
-+		/* Apply component wide rate symmetry */
- 		ret = snd_pcm_hw_constraint_single(substream->runtime,
- 						   SNDRV_PCM_HW_PARAM_RATE,
- 						   iface->rate);
--		if (ret < 0) {
--			dev_err(dai->dev,
--				"can't set iface rate constraint\n");
--			return ret;
--		}
-+
-+	} else {
-+		/* Limit rate according to the slot number and width */
-+		unsigned int max_rate =
-+			MAX_SCLK / (iface->slots * iface->slot_width);
-+		ret = snd_pcm_hw_constraint_minmax(substream->runtime,
-+						   SNDRV_PCM_HW_PARAM_RATE,
-+						   0, max_rate);
- 	}
- 
--	return 0;
-+	if (ret < 0)
-+		dev_err(dai->dev, "can't set iface rate constraint\n");
-+	else
-+		ret = 0;
-+
-+	return ret;
+diff --git a/arch/powerpc/platforms/embedded6xx/linkstation.c b/arch/powerpc/platforms/embedded6xx/linkstation.c
+index f514d5d28cd4f..3f3821eb4c36b 100644
+--- a/arch/powerpc/platforms/embedded6xx/linkstation.c
++++ b/arch/powerpc/platforms/embedded6xx/linkstation.c
+@@ -97,9 +97,6 @@ static void __init linkstation_init_IRQ(void)
+ 	mpic_init(mpic);
  }
  
- static int axg_tdm_iface_set_stream(struct snd_pcm_substream *substream,
+-extern void avr_uart_configure(void);
+-extern void avr_uart_send(const char);
+-
+ static void __noreturn linkstation_restart(char *cmd)
+ {
+ 	local_irq_disable();
+diff --git a/arch/powerpc/platforms/embedded6xx/mpc10x.h b/arch/powerpc/platforms/embedded6xx/mpc10x.h
+index 5ad12023e5628..ebc258fa4858d 100644
+--- a/arch/powerpc/platforms/embedded6xx/mpc10x.h
++++ b/arch/powerpc/platforms/embedded6xx/mpc10x.h
+@@ -156,4 +156,7 @@ int mpc10x_disable_store_gathering(struct pci_controller *hose);
+ /* For MPC107 boards that use the built-in openpic */
+ void mpc10x_set_openpic(void);
+ 
++void avr_uart_configure(void);
++void avr_uart_send(const char c);
++
+ #endif	/* __PPC_KERNEL_MPC10X_H */
 -- 
 2.43.0
 
