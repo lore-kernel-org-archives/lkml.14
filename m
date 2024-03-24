@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D13E17D22C;
-	Sun, 24 Mar 2024 23:43:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD452853C5;
+	Sun, 24 Mar 2024 23:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323818; cv=none; b=C9WauKoiFuzsquICZluT43EgaHwUcK1/2DFOP0UwpqUajXbbUc24d9+gZtKycd0pDQPAW3YAZpwrGBrHoxzaZ7RhsrdDNeSDN8PWMdfcPx7S/SLsMjerrCcAw+BlSw0BCa0M9Z0WSCTHkVc8EyXpO9vkyUGvw5jgcgm3RDapVvo=
+	t=1711323822; cv=none; b=GWOANZvZci3HLEmtkytd1dr1Gu0/aH0nUoLjucuByvwdeyjK/7n+3VNe5NSFF94bOGX2DkL02vdKl76IW8FMS1IAun5XUNIl0AGKriqzRCvVPF7G+Eu79x3cP1eFOykl/Y0vqk5ruk2O47QRltLROeXoVP2pJ2iXZ5OX6y2pxYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323818; c=relaxed/simple;
-	bh=8jCNUSCQiV6GdSVxvCAlC4GVv15l7UjzPayBoviEwoU=;
+	s=arc-20240116; t=1711323822; c=relaxed/simple;
+	bh=LYazFtegKbUQmWF4+002xX2Q9D4Jt0jQN6fweMdHyiQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RsxyjgBiJq49I27zYr9cdgcjLe4/NyMJ7kM3eJvEizA2eOqOAprTQ3RXujR7Hl4ekLy88Pdp1q2KwvPBHNfJjQU5cW6auMfs4q0CXT5tc0uwKXHhljOfAVDgEq5HIR/XtDz9g4+iGX3SIPoKhFdvI0EYEMx+LJuiOL6GeE1O1p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOHSOwP5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UibFkBS3QarJbf/5ExntpZV/dVByI92KDTZLAMULJxot8mcAIRWeP64HR3G0qV32g2bAKfRP/NXxPcKMQtiIPC9031dAQQL97/3J9wMM4oz+jbXfeNRo1FmlfdBqjzohH9pDESy0yH8wMYFJPkIBSipWHdQMMLSrHs5CeBY1Bn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5RUsx/2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOHSOwP5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5787C43390;
-	Sun, 24 Mar 2024 23:43:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5RUsx/2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D21C43390;
+	Sun, 24 Mar 2024 23:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323817;
-	bh=8jCNUSCQiV6GdSVxvCAlC4GVv15l7UjzPayBoviEwoU=;
+	s=k20201202; t=1711323821;
+	bh=LYazFtegKbUQmWF4+002xX2Q9D4Jt0jQN6fweMdHyiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cOHSOwP5aW2gt7Ar9xzsrUeNebYSJWvkQEMiIu5RDSMEop6Xwi/QWFLV3ibezJFoC
-	 Cdn8ozYqSlxrs7pjqiQywQtEDFRmfDr/IxcyoplNcQrBiBW2qYysVrDBzyf8Ufeabg
-	 wSizxVCCyeRyspH24vG6/pYO4cr/MFGgll9oN3TS20U7aIjLmDvvx8/5+9QQlucSgF
-	 yNgrjkzD12dFBtpBksrVYReHT+uKYjniQn06Ya/DwyQQW/pO4nzXUG5wAZYdxvOpRH
-	 D9Menn/0ZU34p7RvA/axaMLRu13F8hDuy0VpCHuWf6A/NeweHCqizENoDv33bBlyon
-	 Tx4GVunRRNe1A==
+	b=j5RUsx/27tYdzHGQF3diTgs2az5Bp9KdnWcYBTcLWzvbReeg7m10N3/F3L6rwuoZB
+	 mI46DfOwjLQXfQGZxL8fDizxhzDxt1pj/gI0TImldlOglIWc23C3S+AgQT2HMcLag3
+	 b5dVApQkasMHVpww0/8m6FEWj2pXzOD46TOzKr6P2e3iJCgPwPymNfYasdo8wQ/eME
+	 61C14WEWIM4YcTYGhuKxmNrFzYGlUFwnhUibYqsFHaeNSmELcCcf7q3fBuqL2d1bww
+	 qG8ASU5bU35pdoR/I3pcvI7ZHJlHpwdJ2P8ZWKRCBUKmGOrfN4qGjr8Ta6ZQFDyT96
+	 66sAWb2O8twDg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shifeng Li <lishifeng@sangfor.com.cn>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jason Gunthorpe <jgg@nvidia.com>,
+Cc: Jorge Mora <jmora1300@gmail.com>,
+	Jorge Mora <mora@netapp.com>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 196/238] RDMA/device: Fix a race between mad_client and cm_client init
-Date: Sun, 24 Mar 2024 19:39:44 -0400
-Message-ID: <20240324234027.1354210-197-sashal@kernel.org>
+Subject: [PATCH 5.10 200/238] NFSv4.2: fix listxattr maximum XDR buffer size
+Date: Sun, 24 Mar 2024 19:39:48 -0400
+Message-ID: <20240324234027.1354210-201-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,131 +50,58 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Shifeng Li <lishifeng@sangfor.com.cn>
+From: Jorge Mora <jmora1300@gmail.com>
 
-[ Upstream commit 7a8bccd8b29c321ac181369b42b04fecf05f98e2 ]
+[ Upstream commit bcac8bff90a6ee1629f90669cdb9d28fb86049b0 ]
 
-The mad_client will be initialized in enable_device_and_get(), while the
-devices_rwsem will be downgraded to a read semaphore. There is a window
-that leads to the failed initialization for cm_client, since it can not
-get matched mad port from ib_mad_port_list, and the matched mad port will
-be added to the list after that.
+Switch order of operations to avoid creating a short XDR buffer:
+e.g., buflen = 12, old xdrlen = 12, new xdrlen = 20.
 
-    mad_client    |                       cm_client
-------------------|--------------------------------------------------------
-ib_register_device|
-enable_device_and_get
-down_write(&devices_rwsem)
-xa_set_mark(&devices, DEVICE_REGISTERED)
-downgrade_write(&devices_rwsem)
-                  |
-                  |ib_cm_init
-                  |ib_register_client(&cm_client)
-                  |down_read(&devices_rwsem)
-                  |xa_for_each_marked (&devices, DEVICE_REGISTERED)
-                  |add_client_context
-                  |cm_add_one
-                  |ib_register_mad_agent
-                  |ib_get_mad_port
-                  |__ib_get_mad_port
-                  |list_for_each_entry(entry, &ib_mad_port_list, port_list)
-                  |return NULL
-                  |up_read(&devices_rwsem)
-                  |
-add_client_context|
-ib_mad_init_device|
-ib_mad_port_open  |
-list_add_tail(&port_priv->port_list, &ib_mad_port_list)
-up_read(&devices_rwsem)
-                  |
+Having a short XDR buffer leads to lxa_maxcount be a few bytes
+less than what is needed to retrieve the whole list when using
+a buflen as returned by a call with size = 0:
+    buflen = listxattr(path, NULL, 0);
+    buf = malloc(buflen);
+    buflen = listxattr(path, buf, buflen);
 
-Fix it by using down_write(&devices_rwsem) in ib_register_client().
+For a file with one attribute (name = '123456'), the first call
+with size = 0 will return buflen = 12 ('user.123456\x00').
+The second call with size = 12, sends LISTXATTRS with
+lxa_maxcount = 12 + 8 (cookie) + 4 (array count) = 24. The
+XDR buffer needs 8 (cookie) + 4 (array count) + 4 (name count)
++ 6 (name len) + 2 (padding) + 4 (eof) = 28 which is 4 bytes
+shorter than the lxa_maxcount provided in the call.
 
-Fixes: d0899892edd0 ("RDMA/device: Provide APIs from the core code to help unregistration")
-Link: https://lore.kernel.org/r/20240203035313.98991-1-lishifeng@sangfor.com.cn
-Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-Signed-off-by: Shifeng Li <lishifeng@sangfor.com.cn>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixes: 04a5da690e8f ("NFSv4.2: define limits and sizes for user xattr handling")
+Signed-off-by: Jorge Mora <mora@netapp.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/device.c | 37 +++++++++++++++++++-------------
- 1 file changed, 22 insertions(+), 15 deletions(-)
+ fs/nfs/nfs42.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index 3c29fd04b3016..94c3bad72cc59 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -1686,7 +1686,7 @@ static int assign_client_id(struct ib_client *client)
+diff --git a/fs/nfs/nfs42.h b/fs/nfs/nfs42.h
+index 0fe5aacbcfdf1..e7192d0eea3de 100644
+--- a/fs/nfs/nfs42.h
++++ b/fs/nfs/nfs42.h
+@@ -54,11 +54,14 @@ int nfs42_proc_removexattr(struct inode *inode, const char *name);
+  * They would be 7 bytes long in the eventual buffer ("user.x\0"), and
+  * 8 bytes long XDR-encoded.
+  *
+- * Include the trailing eof word as well.
++ * Include the trailing eof word as well and make the result a multiple
++ * of 4 bytes.
+  */
+ static inline u32 nfs42_listxattr_xdrsize(u32 buflen)
  {
- 	int ret;
- 
--	down_write(&clients_rwsem);
-+	lockdep_assert_held(&clients_rwsem);
- 	/*
- 	 * The add/remove callbacks must be called in FIFO/LIFO order. To
- 	 * achieve this we assign client_ids so they are sorted in
-@@ -1695,14 +1695,11 @@ static int assign_client_id(struct ib_client *client)
- 	client->client_id = highest_client_id;
- 	ret = xa_insert(&clients, client->client_id, client, GFP_KERNEL);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	highest_client_id++;
- 	xa_set_mark(&clients, client->client_id, CLIENT_REGISTERED);
--
--out:
--	up_write(&clients_rwsem);
--	return ret;
-+	return 0;
- }
- 
- static void remove_client_id(struct ib_client *client)
-@@ -1732,25 +1729,35 @@ int ib_register_client(struct ib_client *client)
- {
- 	struct ib_device *device;
- 	unsigned long index;
-+	bool need_unreg = false;
- 	int ret;
- 
- 	refcount_set(&client->uses, 1);
- 	init_completion(&client->uses_zero);
+-	return ((buflen / (XATTR_USER_PREFIX_LEN + 2)) * 8) + 4;
++	u32 size = 8 * buflen / (XATTR_USER_PREFIX_LEN + 2) + 4;
 +
-+	/*
-+	 * The devices_rwsem is held in write mode to ensure that a racing
-+	 * ib_register_device() sees a consisent view of clients and devices.
-+	 */
-+	down_write(&devices_rwsem);
-+	down_write(&clients_rwsem);
- 	ret = assign_client_id(client);
- 	if (ret)
--		return ret;
-+		goto out;
- 
--	down_read(&devices_rwsem);
-+	need_unreg = true;
- 	xa_for_each_marked (&devices, index, device, DEVICE_REGISTERED) {
- 		ret = add_client_context(device, client);
--		if (ret) {
--			up_read(&devices_rwsem);
--			ib_unregister_client(client);
--			return ret;
--		}
-+		if (ret)
-+			goto out;
- 	}
--	up_read(&devices_rwsem);
--	return 0;
-+	ret = 0;
-+out:
-+	up_write(&clients_rwsem);
-+	up_write(&devices_rwsem);
-+	if (need_unreg && ret)
-+		ib_unregister_client(client);
-+	return ret;
++	return (size + 3) & ~3;
  }
- EXPORT_SYMBOL(ib_register_client);
- 
+ #endif /* CONFIG_NFS_V4_2 */
+ #endif /* __LINUX_FS_NFS_NFS4_2_H */
 -- 
 2.43.0
 
