@@ -1,40 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47EA174ED2;
-	Sun, 24 Mar 2024 23:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88D3272118;
+	Sun, 24 Mar 2024 23:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323326; cv=none; b=kvLzGZ7U81hfbZw2d7iyxqOTdydTFD83zcQ3fntaIQpmgkKkuaSNgeVeDBgAwt0kVjIITwy/iW59FLgd10zk9F6qTkmlMpbsJJf8jWfRCAN0Fb2nUR/hP1v/wUFtPme7EmZWK6afLWjSTzBmNIlp+JlD8SuOq0ZdDNyYi9d3mb0=
+	t=1711323317; cv=none; b=RNz07Aa7Jq41nQY38K+E9DsXB6nq+XBjWMqke0GKcmib+sIMcXSO5saKx7jeRWrz9XNGHDoEHid0aVIxWmDiz4Vz+bD2jc+2yLm9bZc9yut1/GVDoYu6XAxqaVyXFuaTBWDaI2c7E8CTMzL0cPBIcxdMrvvoxJkV39hbYyiqBEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323326; c=relaxed/simple;
-	bh=gAqdm49DZG7gHX8FLf99AYsnKM/Po+UYbJY+eyoQle0=;
+	s=arc-20240116; t=1711323317; c=relaxed/simple;
+	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ln0RZRK8jh3/uPqHe7bL+uMf0qva90BxkC5HbMfES3TMeBr7iUWfOo3hjj7nQCewumaOapW4R/Qr3USrgkffiJDBG0AxarajlXCqNtukyKWyiqbHqNEndRUuYGxljWb9SXJtHBIi4zmO+56mWX7kgJBMIXLICeZVNaTtft3ftEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fptCTFpw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XzC5ZbFpL92Najhzejzcts7ETKZONTsNBD+zprgUf55JGuRFDbPgUL0C03NevkhBq/Dh944bZgAkvyrMZ1jqzZblahD3RZdsp8kzTNrLHq6XhVDReTzgvzfry9Z8AMIg7xSex1p9OOFlSX4eAbDTACUrGuHXddqdRW+uTRFfQUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFEYsxC1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fptCTFpw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A787C433A6;
-	Sun, 24 Mar 2024 23:35:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFEYsxC1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DF75C433C7;
+	Sun, 24 Mar 2024 23:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323324;
-	bh=gAqdm49DZG7gHX8FLf99AYsnKM/Po+UYbJY+eyoQle0=;
+	s=k20201202; t=1711323316;
+	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fptCTFpwxF+yiTOQft/RcW2DAuDJBSfEen6HPrQvJwfvp2/GyvYV0claeDUWvDtG7
-	 0/8SJ2j+5d9eVniS9BRb7ZRKhG9LxWbH6SUsf/LGGrmKIBR7CJU7o/R9FvOAOWsqoJ
-	 atDUjuckdJbKB9NKGR/rlQC3fhaHgSU4erWRjuLMNEgJL4ariIHMO6Td4xJIEILuO1
-	 WRZagIXB2HYWGr5a7p5Vm3TJyTql00o2nNdadlS3Yrdbi4MPMoGbSqBvWE09dpbKP1
-	 uCkIbXEDP/b5C3z9lrjH0D31Ryu+s011sHXViTQK9+E1+0TlMNpDuRAjFQST7P+rRa
-	 t8zxKpwSByLqw==
+	b=nFEYsxC1qTwrB0y3IuJblqdVxWOalFMRROa6uZVmQab4nK9GiIEr0guab1MFk73QW
+	 Ajc0arAXZi1vMjjva+nbl4uBEnI7yVbgpkC9yNDb5GGVG9rWR7fFnF0MaqJ+CCGj14
+	 Dpib13UdzZbYJMgUgAEALUIKQNeJoar+ycnSG0eKZe9iWFa2etpwpu53MDMrRGv3IK
+	 pQ34YdSmHLeBU105y/5n+LPLs3A3UCBiu+CBbwvDkJjMkngS9XcE+KZQKsGJ6Ufh83
+	 w1kv0IZ76x0+W1zZtNAFvYNm2vYPx6c/QCzn/Ch/5zBOpUm6xN940tCpGBJMbYjuoH
+	 8Kv0jGPLiWnVQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Adam Goldman <adamg@pobox.com>,
+Cc: Hou Tao <houtao1@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com,
+	xingwei lee <xrivendell7@gmail.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 025/317] firewire: core: use long bus reset on gap count error
-Date: Sun, 24 Mar 2024 19:30:05 -0400
-Message-ID: <20240324233458.1352854-26-sashal@kernel.org>
+Subject: [PATCH 5.15 016/317] x86/mm: Disallow vsyscall page read for copy_from_kernel_nofault()
+Date: Sun, 24 Mar 2024 19:29:56 -0400
+Message-ID: <20240324233458.1352854-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,63 +52,98 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Hou Tao <houtao1@huawei.com>
 
-[ Upstream commit d0b06dc48fb15902d7da09c5c0861e7f042a9381 ]
+[ Upstream commit 32019c659ecfe1d92e3bf9fcdfbb11a7c70acd58 ]
 
-When resetting the bus after a gap count error, use a long rather than
-short bus reset.
+When trying to use copy_from_kernel_nofault() to read vsyscall page
+through a bpf program, the following oops was reported:
 
-IEEE 1394-1995 uses only long bus resets. IEEE 1394a adds the option of
-short bus resets. When video or audio transmission is in progress and a
-device is hot-plugged elsewhere on the bus, the resulting bus reset can
-cause video frame drops or audio dropouts. Short bus resets reduce or
-eliminate this problem. Accordingly, short bus resets are almost always
-preferred.
+  BUG: unable to handle page fault for address: ffffffffff600000
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 3231067 P4D 3231067 PUD 3233067 PMD 3235067 PTE 0
+  Oops: 0000 [#1] PREEMPT SMP PTI
+  CPU: 1 PID: 20390 Comm: test_progs ...... 6.7.0+ #58
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996) ......
+  RIP: 0010:copy_from_kernel_nofault+0x6f/0x110
+  ......
+  Call Trace:
+   <TASK>
+   ? copy_from_kernel_nofault+0x6f/0x110
+   bpf_probe_read_kernel+0x1d/0x50
+   bpf_prog_2061065e56845f08_do_probe_read+0x51/0x8d
+   trace_call_bpf+0xc5/0x1c0
+   perf_call_bpf_enter.isra.0+0x69/0xb0
+   perf_syscall_enter+0x13e/0x200
+   syscall_trace_enter+0x188/0x1c0
+   do_syscall_64+0xb5/0xe0
+   entry_SYSCALL_64_after_hwframe+0x6e/0x76
+   </TASK>
+  ......
+  ---[ end trace 0000000000000000 ]---
 
-However, on a mixed 1394/1394a bus, a short bus reset can trigger an
-immediate additional bus reset. This double bus reset can be interpreted
-differently by different nodes on the bus, resulting in an inconsistent gap
-count after the bus reset. An inconsistent gap count will cause another bus
-reset, leading to a neverending bus reset loop. This only happens for some
-bus topologies, not for all mixed 1394/1394a buses.
+The oops is triggered when:
 
-By instead sending a long bus reset after a gap count inconsistency, we
-avoid the doubled bus reset, restoring the bus to normal operation.
+1) A bpf program uses bpf_probe_read_kernel() to read from the vsyscall
+page and invokes copy_from_kernel_nofault() which in turn calls
+__get_user_asm().
 
-Signed-off-by: Adam Goldman <adamg@pobox.com>
-Link: https://sourceforge.net/p/linux1394/mailman/message/58741624/
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+2) Because the vsyscall page address is not readable from kernel space,
+a page fault exception is triggered accordingly.
+
+3) handle_page_fault() considers the vsyscall page address as a user
+space address instead of a kernel space address. This results in the
+fix-up setup by bpf not being applied and a page_fault_oops() is invoked
+due to SMAP.
+
+Considering handle_page_fault() has already considered the vsyscall page
+address as a userspace address, fix the problem by disallowing vsyscall
+page read for copy_from_kernel_nofault().
+
+Originally-by: Thomas Gleixner <tglx@linutronix.de>
+Reported-by: syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/bpf/CAG48ez06TZft=ATH1qh2c5mpS5BT8UakwNkzi6nvK5_djC-4Nw@mail.gmail.com
+Reported-by: xingwei lee <xrivendell7@gmail.com>
+Closes: https://lore.kernel.org/bpf/CABOYnLynjBoFZOf3Z4BhaZkc5hx_kHfsjiW+UWLoB=w33LvScw@mail.gmail.com
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240202103935.3154011-3-houtao@huaweicloud.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firewire/core-card.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ arch/x86/mm/maccess.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/firewire/core-card.c b/drivers/firewire/core-card.c
-index be195ba834632..d446a72629414 100644
---- a/drivers/firewire/core-card.c
-+++ b/drivers/firewire/core-card.c
-@@ -500,7 +500,19 @@ static void bm_work(struct work_struct *work)
- 		fw_notice(card, "phy config: new root=%x, gap_count=%d\n",
- 			  new_root_id, gap_count);
- 		fw_send_phy_config(card, new_root_id, generation, gap_count);
--		reset_bus(card, true);
-+		/*
-+		 * Where possible, use a short bus reset to minimize
-+		 * disruption to isochronous transfers. But in the event
-+		 * of a gap count inconsistency, use a long bus reset.
-+		 *
-+		 * As noted in 1394a 8.4.6.2, nodes on a mixed 1394/1394a bus
-+		 * may set different gap counts after a bus reset. On a mixed
-+		 * 1394/1394a bus, a short bus reset can get doubled. Some
-+		 * nodes may treat the double reset as one bus reset and others
-+		 * may treat it as two, causing a gap count inconsistency
-+		 * again. Using a long bus reset prevents this.
-+		 */
-+		reset_bus(card, card->gap_count != 0);
- 		/* Will allocate broadcast channel after the reset. */
- 		goto out;
- 	}
+diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
+index 6993f026adec9..42115ac079cfe 100644
+--- a/arch/x86/mm/maccess.c
++++ b/arch/x86/mm/maccess.c
+@@ -3,6 +3,8 @@
+ #include <linux/uaccess.h>
+ #include <linux/kernel.h>
+ 
++#include <asm/vsyscall.h>
++
+ #ifdef CONFIG_X86_64
+ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
+ {
+@@ -15,6 +17,14 @@ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
+ 	if (vaddr < TASK_SIZE_MAX + PAGE_SIZE)
+ 		return false;
+ 
++	/*
++	 * Reading from the vsyscall page may cause an unhandled fault in
++	 * certain cases.  Though it is at an address above TASK_SIZE_MAX, it is
++	 * usually considered as a user space address.
++	 */
++	if (is_vsyscall_vaddr(vaddr))
++		return false;
++
+ 	/*
+ 	 * Allow everything during early boot before 'x86_virt_bits'
+ 	 * is initialized.  Needed for instruction decoding in early
 -- 
 2.43.0
 
