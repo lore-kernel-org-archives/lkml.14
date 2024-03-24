@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC1020AF62;
-	Sun, 24 Mar 2024 23:06:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE7B152531;
+	Sun, 24 Mar 2024 23:06:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321601; cv=none; b=q1gwruAzFCxdEB0xQ7n3nBnPs1Sb7znWlUAE/M91UDfdnGqfkldgOX3huAX9Cytwu8sCUftowJVRsBtbr7espM9clL9eV4lA1bcoBEHNME9jtcFwgk0rTVX6lkxppKMSlXM+joY81IpqvHkjgdxNA3PWiJeaX2hVfzGNJ5tiujI=
+	t=1711321615; cv=none; b=utWTWp5rY2n6rXRWiNOVOv+/IjcmH/QCYPOX5qdS7TiNaYLgkYFL2vdvcdmdeceleZU3itPpGUoNhCVR5hnpQ+0eZfMfj+wvA5kdzRa5ukSFJHZRn2eP59vp6R9BmRn/lgZx2twl0qYa5NTcbi0hTKEebJ6ARGzZQPiz0KVFkYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321601; c=relaxed/simple;
-	bh=bqhQ8CzGWTTriI8TaVQ625rSdktHGajB4fQc3wcp1no=;
+	s=arc-20240116; t=1711321615; c=relaxed/simple;
+	bh=6PYzZwYgCOek78YwuwPl9iW6KBnvVCcfXpsYYRC/mW0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rH8BOFO0g8zm1BA/9so12XXS8zFev859qpJn0jZIYQNaf3OO1k21wx9a5PCuWytn0Mh+30SIl0ZrJ9qmpnpLLkRmTKg2ta8WpoOOjTpU6gVjDMN3WPlfzUJo17Zw3zOeZqJNZQJDFDKA/XNW1HX760WC3KBiAaGfUvr+/433FWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVXYxUkc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VrxSroojgr5lxkcr9/lPMaiMQAmN6SG/fUgTuvKJ/jYONFDi+bOeh+m+lAkKLbVYjc80lVfWX3tcC8CiHxlweD19NSnSvg8lP6Gj0SwxgjiYbelYmohGurW+voRv5QfPSObERQytBYPALQG8gKCjvDA0ZaUfRhEsEOlh4glIO8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWXzmNgd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVXYxUkc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 129E0C43609;
-	Sun, 24 Mar 2024 23:06:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWXzmNgd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8EC9C43394;
+	Sun, 24 Mar 2024 23:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321600;
-	bh=bqhQ8CzGWTTriI8TaVQ625rSdktHGajB4fQc3wcp1no=;
+	s=k20201202; t=1711321614;
+	bh=6PYzZwYgCOek78YwuwPl9iW6KBnvVCcfXpsYYRC/mW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IVXYxUkcIEsZBESKjz1odEpU1VL07mUtOF4/YF+nRZEy+LEbLuWH9eooOTZfgTV7E
-	 y9ilsVtwiTXbL8KFoSWgnLWukmJ//nqR5xnPsodKp0/U9Baq9DnvxTSLg12kfL6znV
-	 UOKhmWGpy4rb95ny6uSOn3RQoJrORycK1ocj5AnMuy011TJKAYtZWSxp8xjn8G4W56
-	 lb2Cdgo4xdVSAaA+nydyd5MIzV8XyKTRun1qazmPbEC/Qij5Bu76cTaI6ZjJJQ2Cco
-	 /64ukysNC5hHvaVSsaDPBpiQgM5j0foPTTs6QHPTpbVHN+laWjKa1y+/dnnXfTCMQL
-	 hSpKKQC6Mj4ew==
+	b=iWXzmNgd/LJ68FVUhuQa/KrsY/a3IWRwTO14OBPfTQVtGu/WQyPi1E9tmEZxWXZTa
+	 mhQ8oag8gEM8KQshqCqax+UaHWlAIPALTv0wBDJBWPZg+bhSwrGk7ofkbQJ9MOZ4uI
+	 b9JQUWONy4UTNQpYChnTo2mdSnAwZIOw1EuOJ0HLJTSntLbcul1D7DG07osReSwTI4
+	 cO7+Rkp5M4NeftNT6QXZrDes275Fxk7Drf4c7/Xa9Sz5zGGn4Syc6Ri10Lpyn1tfMd
+	 nSxUuf3QvAish0hnVsvAta2nB56HLDx9yX0q6sBQbpYzYUGosw7CPpoCdKDUJv9lt+
+	 FWpmyJuuLO87A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
+Cc: Zhang Shurong <zhang_shurong@foxmail.com>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 330/638] erofs: fix handling kern_mount() failure
-Date: Sun, 24 Mar 2024 18:56:07 -0400
-Message-ID: <20240324230116.1348576-331-sashal@kernel.org>
+Subject: [PATCH 6.6 344/638] drm/tegra: dpaux: Fix PM disable depth imbalance in tegra_dpaux_probe
+Date: Sun, 24 Mar 2024 18:56:21 -0400
+Message-ID: <20240324230116.1348576-345-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -47,41 +48,75 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Zhang Shurong <zhang_shurong@foxmail.com>
 
-[ Upstream commit 2c88c16dc20e88dd54d2f6f4d01ae1dce6cc9654 ]
+[ Upstream commit 0800880f4eb789b7d299db40f2e86e056bd33a4e ]
 
-if you have a variable that holds NULL or  a pointer to live struct mount,
-do not shove ERR_PTR() into it - not if you later treat "not NULL" as
-"holds a pointer to object".
+The pm_runtime_enable function increases the power disable depth,
+which means that we must perform a matching decrement on the error
+handling path to maintain balance within the given context.
+Additionally, we need to address the same issue for pm_runtime_get_sync.
+We fix this by invoking pm_runtime_disable and pm_runtime_put_sync
+when error returns.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Stable-dep-of: 0f28be64d132 ("erofs: fix lockdep false positives on initializing erofs_pseudo_mnt")
+Fixes: 82b81b3ec1a7 ("drm/tegra: dpaux: Implement runtime PM")
+Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/tencent_B13DB7F6C0023C46157250A524966F326A09@qq.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/erofs/fscache.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/tegra/dpaux.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index 87ff35bff8d5b..1052f75d1dfae 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -381,11 +381,12 @@ static int erofs_fscache_init_domain(struct super_block *sb)
- 		goto out;
- 
- 	if (!erofs_pseudo_mnt) {
--		erofs_pseudo_mnt = kern_mount(&erofs_fs_type);
--		if (IS_ERR(erofs_pseudo_mnt)) {
--			err = PTR_ERR(erofs_pseudo_mnt);
-+		struct vfsmount *mnt = kern_mount(&erofs_fs_type);
-+		if (IS_ERR(mnt)) {
-+			err = PTR_ERR(mnt);
- 			goto out;
- 		}
-+		erofs_pseudo_mnt = mnt;
+diff --git a/drivers/gpu/drm/tegra/dpaux.c b/drivers/gpu/drm/tegra/dpaux.c
+index ef02d530f78d7..ae12d001a04bf 100644
+--- a/drivers/gpu/drm/tegra/dpaux.c
++++ b/drivers/gpu/drm/tegra/dpaux.c
+@@ -522,7 +522,7 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
+ 	if (err < 0) {
+ 		dev_err(dpaux->dev, "failed to request IRQ#%u: %d\n",
+ 			dpaux->irq, err);
+-		return err;
++		goto err_pm_disable;
  	}
  
- 	domain->volume = sbi->volume;
+ 	disable_irq(dpaux->irq);
+@@ -542,7 +542,7 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
+ 	 */
+ 	err = tegra_dpaux_pad_config(dpaux, DPAUX_PADCTL_FUNC_I2C);
+ 	if (err < 0)
+-		return err;
++		goto err_pm_disable;
+ 
+ #ifdef CONFIG_GENERIC_PINCONF
+ 	dpaux->desc.name = dev_name(&pdev->dev);
+@@ -555,7 +555,8 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
+ 	dpaux->pinctrl = devm_pinctrl_register(&pdev->dev, &dpaux->desc, dpaux);
+ 	if (IS_ERR(dpaux->pinctrl)) {
+ 		dev_err(&pdev->dev, "failed to register pincontrol\n");
+-		return PTR_ERR(dpaux->pinctrl);
++		err = PTR_ERR(dpaux->pinctrl);
++		goto err_pm_disable;
+ 	}
+ #endif
+ 	/* enable and clear all interrupts */
+@@ -571,10 +572,15 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
+ 	err = devm_of_dp_aux_populate_ep_devices(&dpaux->aux);
+ 	if (err < 0) {
+ 		dev_err(dpaux->dev, "failed to populate AUX bus: %d\n", err);
+-		return err;
++		goto err_pm_disable;
+ 	}
+ 
+ 	return 0;
++
++err_pm_disable:
++	pm_runtime_put_sync(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++	return err;
+ }
+ 
+ static void tegra_dpaux_remove(struct platform_device *pdev)
 -- 
 2.43.0
 
