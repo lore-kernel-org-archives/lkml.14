@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42624176A05;
-	Sun, 24 Mar 2024 23:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB75176FA7;
+	Sun, 24 Mar 2024 23:37:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323460; cv=none; b=VTST10euaBNfxB+dPa8eucWmFYEX9qSJ2fQUz3XfpH4jeSFyjad4gUr9AHPKV+aozcYJ4hPrzLhRIPcqDXRgch3jDdfnmaQv+ltYswRlDuGp27UO9bpfW4t+ZKgS0H5iCWp3CpnHkiNW2ynuiwdRe8dc/oIoQdHiroAmmEkhLmE=
+	t=1711323462; cv=none; b=e6XrlPXvBqWh+OqNl84DUmjELh7YrV1i8dx/WsBmcQ7GP6cXUVS0BJxcp1uzquz/Qputj6rk8PoqBYmgi7fAYAyfUe+rHnybmEJeFJJGdCaU7Y7CC9VyxbVP3ukF03gvmDyVVJDD6e4bVs0e7owc8twGvXdQrMHO5/vqEo2E6fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323460; c=relaxed/simple;
-	bh=nmiQo8635M06RUm0k8y5Xa3XkmqRvGP+aSZCULyn0uY=;
+	s=arc-20240116; t=1711323462; c=relaxed/simple;
+	bh=RZNVU4IURpxBQT1ORogNbGIWkBlDKgL0aWdcsIXGZEw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dCMfx8vOsZD9AfIoFttBEhaVjyRno2Lkg5fVCwNruHPhA8FXHpJ0aaXuyD3SVxBXnF1j3IbxYTsnwCYrPoCXwHMPaEyUAwnFucc8ksKSS/TXAieKXzgOUxYx24N76YuxauofqNytKVKbR/71YLe3h3ZzFfU1dH0MsrvR4vfzND8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8MUZN29; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PX/L898r5uQGrqUu0CMIjDyb0Im0e7VyYHkpOpGHvbgRGgM2jpM/8NZsaNi1e7BZvN8edhGDdpUyjEdlS6Uf8uK/fUlASqGl+FGbKmKhaR53uKfnA84Q/htqk/NmFkY3d93+Z3A7x07w8XCfFTijQgK+Tk5o+COy0rypl8dxt3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8xxxeIn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8MUZN29"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 868D0C433C7;
-	Sun, 24 Mar 2024 23:37:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8xxxeIn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E490C433F1;
+	Sun, 24 Mar 2024 23:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323459;
-	bh=nmiQo8635M06RUm0k8y5Xa3XkmqRvGP+aSZCULyn0uY=;
+	s=k20201202; t=1711323460;
+	bh=RZNVU4IURpxBQT1ORogNbGIWkBlDKgL0aWdcsIXGZEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F8MUZN29FLTlcE8/LD8VUxOxEHd/LepQiuV3JCxn+5s7afOZkAgfHHmwQ92DftEik
-	 9Hbn8qgpNT/vohIa79ue0nppi9oaz/jH0cO6poMEKiYDjQhQRm8OTnQyKJC0Tnd+fh
-	 4CV9Ck7kWZnu04fh4RgPULYdL8CNVwDGrlHDFxsYSLVZD/2y/y0uqsIp2r9kpT+3Xg
-	 Ld0yNL4xAe80P0YASCOkifugHe1BdWp2ZA9Vwt7fY9Os0sRCwyzFPuXEeBssQ+IKmN
-	 CJvVtKn1Qq8bJl1znz1UWIcBASZ6jAiBHSnn1KOneevp099BHohCHW1JRi/DN3ukka
-	 G4OjoX7u9znjA==
+	b=i8xxxeInDtwe73YRfTrq2Z2sNRJGkU3mOCd9a2qQTKs1LcjmDU2rLpLHrd2dgNQXv
+	 hX8XVXS8eTaxZ7F1IYQ6DvVeLYLMe3rNGKF0X2vh8bS3W2bQn/V2+LmSRmyQrlYYlj
+	 e8hqg9WUmhh5meqPJ/WxWR9zdnrUTmAK8I06g4cHb489xMK7Zk8vtaWbjivI6T+fpE
+	 vKtxEZuJSsMWtpx/zthkdCelGTF8zNGBP9fVBvF6E322yCxbWkAQ+xG/Pa9GJbdpNi
+	 lIizmadKQPqx4X8semnR4u22hBco0/ZYPq7d5uDMCXtijYphx8jOW0O7zxL422yXPz
+	 /43bQkmI/DDrA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 163/317] drm/tegra: rgb: Fix some error handling paths in tegra_dc_rgb_probe()
-Date: Sun, 24 Mar 2024 19:32:23 -0400
-Message-ID: <20240324233458.1352854-164-sashal@kernel.org>
+Subject: [PATCH 5.15 165/317] drm/tegra: output: Fix missing i2c_put_adapter() in the error handling paths of tegra_output_probe()
+Date: Sun, 24 Mar 2024 19:32:25 -0400
+Message-ID: <20240324233458.1352854-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,77 +50,70 @@ Content-Transfer-Encoding: 8bit
 
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit bc456b5d93dbfdbd89f2a036f4f3d8026595f9e4 ]
+[ Upstream commit 2db4578ef6ffb2b52115ca0ebf897b60ec559556 ]
 
-If an error occurs after calling tegra_output_probe(),
-tegra_output_remove() should be called as already done in the remove
-function.
+If an error occurs after a successful of_get_i2c_adapter_by_node() call, it
+should be undone by a corresponding i2c_put_adapter().
 
-Fixes: 59d29c0ec93f ("drm/tegra: Allocate resources at probe time")
+Add the missing i2c_put_adapter() call.
+
+Fixes: 9be7d864cf07 ("drm/tegra: Implement panel support")
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/0001f61eb89048bc36241629b564195689cf54b6.1693667005.git.christophe.jaillet@wanadoo.fr
+Link: https://patchwork.freedesktop.org/patch/msgid/b38604178991e1f08b2cda219103be266be2d680.1693667005.git.christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/rgb.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/tegra/output.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
-index a84aee2f4acd0..51144faa70f7c 100644
---- a/drivers/gpu/drm/tegra/rgb.c
-+++ b/drivers/gpu/drm/tegra/rgb.c
-@@ -218,26 +218,28 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
- 	rgb->clk = devm_clk_get(dc->dev, NULL);
- 	if (IS_ERR(rgb->clk)) {
- 		dev_err(dc->dev, "failed to get clock\n");
--		return PTR_ERR(rgb->clk);
-+		err = PTR_ERR(rgb->clk);
-+		goto remove;
- 	}
+diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
+index 47d26b5d99456..7ccd010a821b7 100644
+--- a/drivers/gpu/drm/tegra/output.c
++++ b/drivers/gpu/drm/tegra/output.c
+@@ -139,8 +139,10 @@ int tegra_output_probe(struct tegra_output *output)
+ 						       GPIOD_IN,
+ 						       "HDMI hotplug detect");
+ 	if (IS_ERR(output->hpd_gpio)) {
+-		if (PTR_ERR(output->hpd_gpio) != -ENOENT)
+-			return PTR_ERR(output->hpd_gpio);
++		if (PTR_ERR(output->hpd_gpio) != -ENOENT) {
++			err = PTR_ERR(output->hpd_gpio);
++			goto put_i2c;
++		}
  
- 	rgb->clk_parent = devm_clk_get(dc->dev, "parent");
- 	if (IS_ERR(rgb->clk_parent)) {
- 		dev_err(dc->dev, "failed to get parent clock\n");
--		return PTR_ERR(rgb->clk_parent);
-+		err = PTR_ERR(rgb->clk_parent);
-+		goto remove;
+ 		output->hpd_gpio = NULL;
  	}
- 
- 	err = clk_set_parent(rgb->clk, rgb->clk_parent);
- 	if (err < 0) {
- 		dev_err(dc->dev, "failed to set parent clock: %d\n", err);
--		return err;
-+		goto remove;
- 	}
- 
- 	rgb->pll_d_out0 = clk_get_sys(NULL, "pll_d_out0");
- 	if (IS_ERR(rgb->pll_d_out0)) {
- 		err = PTR_ERR(rgb->pll_d_out0);
- 		dev_err(dc->dev, "failed to get pll_d_out0: %d\n", err);
--		return err;
-+		goto remove;
- 	}
- 
- 	if (dc->soc->has_pll_d2_out0) {
-@@ -245,13 +247,17 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
- 		if (IS_ERR(rgb->pll_d2_out0)) {
- 			err = PTR_ERR(rgb->pll_d2_out0);
- 			dev_err(dc->dev, "failed to get pll_d2_out0: %d\n", err);
+@@ -149,7 +151,7 @@ int tegra_output_probe(struct tegra_output *output)
+ 		err = gpiod_to_irq(output->hpd_gpio);
+ 		if (err < 0) {
+ 			dev_err(output->dev, "gpiod_to_irq(): %d\n", err);
 -			return err;
-+			goto remove;
++			goto put_i2c;
  		}
- 	}
  
- 	dc->rgb = &rgb->output;
+ 		output->hpd_irq = err;
+@@ -162,7 +164,7 @@ int tegra_output_probe(struct tegra_output *output)
+ 		if (err < 0) {
+ 			dev_err(output->dev, "failed to request IRQ#%u: %d\n",
+ 				output->hpd_irq, err);
+-			return err;
++			goto put_i2c;
+ 		}
+ 
+ 		output->connector.polled = DRM_CONNECTOR_POLL_HPD;
+@@ -176,6 +178,12 @@ int tegra_output_probe(struct tegra_output *output)
+ 	}
  
  	return 0;
 +
-+remove:
-+	tegra_output_remove(&rgb->output);
++put_i2c:
++	if (output->ddc)
++		i2c_put_adapter(output->ddc);
++
 +	return err;
  }
  
- int tegra_dc_rgb_remove(struct tegra_dc *dc)
+ void tegra_output_remove(struct tegra_output *output)
 -- 
 2.43.0
 
