@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD60C174EFF;
-	Sun, 24 Mar 2024 23:35:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9718C21955C;
+	Sun, 24 Mar 2024 23:35:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323344; cv=none; b=DwqlejjGhdyQDgMHE9UyiVKqsK6jJn4bkjfCDNRr2RA5YHsWsCmlqRlUVeIqgQushogQppC2XTbnPthewnY4F79XoAkMZw4PBjVRwErr9sVb6LugBYsl7ILBznzqGMx3r5GsyMPLAoo9D0rzwZrj3NxOVYtRyeQDnBsiAye4NtE=
+	t=1711323354; cv=none; b=XRVTCIU1ws+ARmt0lM6L6fYLeGcPkazib2pVeoWUwJSo3/722TysFLusJhO1nGFedvbD/7oqjcL+lk6zKuG3ibRMl7RBw4z8dR3AVcUnFPXpki0wnMUoxNyYk6ZU6D1BPNjiUlH8ub302bkFPG3anWjqPCrJMQJellD97+4FihM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323344; c=relaxed/simple;
-	bh=5C+htp1cj21cUDOBsDFxDwPW3yx1GRI9GjuFvV4teBA=;
+	s=arc-20240116; t=1711323354; c=relaxed/simple;
+	bh=Rj2ijQ4i0yZThypPmZvOKZv3r5j3+FgiUs0tYEWgb0U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PC4mzST8rBBNlBmhb4GhqzORGEsVmwuBxYvN/TmGXsHBv1j8L8wwN3OkT7h0nDk+FWx+gHYqUeHhJucGi48cucDMM2vc1DJQpveLnygamtmVDp+g7tY+kJRlAlOD5/zFjD+AnNoccpHFcPIIyNWIZrsLiSosIP4bHCTG87RWHGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tSiBD3OZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Fxeq5pNUNuS+3NILOHOg1I9OECkMKBXJ8q0b9oUTRmUcUNXW7PieQ9+bdWHUyRtMFPR/foZChHIio4vfXE2mgyb1ekybrHcBqyAjuzUbxuvRpAXw8VDsvUjZpMGpfwWtex/EP4+yPkPU3t/7IeHtmKtZey98Cor+jtkPqB0RqSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTUa7CdL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tSiBD3OZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B031FC433F1;
-	Sun, 24 Mar 2024 23:35:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTUa7CdL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7EC4C43394;
+	Sun, 24 Mar 2024 23:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323344;
-	bh=5C+htp1cj21cUDOBsDFxDwPW3yx1GRI9GjuFvV4teBA=;
+	s=k20201202; t=1711323353;
+	bh=Rj2ijQ4i0yZThypPmZvOKZv3r5j3+FgiUs0tYEWgb0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tSiBD3OZj88DAG+3Q/p1lrEilovdZYivkfsvGXrA2O4bWx2Plh0KKN8KjyRXuc0sJ
-	 L0fSc2UQpQ+QKYDHkVi71wJRNsQgIXaqXJ+toEadmy0t7SPk6/y8T6qFGxMvGuRBnu
-	 W247i/vLlycMTqayVqlKDtx4wQvD8XhNY7mEx8tcodwh5ejUlcDXraRW+jbRRMxaEa
-	 5waE0OqP8LMu+3tysXr7x8HfJB+p98pUEeoaz6+oPtvnXWuodB90RNz8hSjCz0I4MY
-	 16kby4CcJSRSaNe04h3+ESqPPiKPSFT0lQSsm2otv8D39ezNynm0mVLVl6VdqBbjh/
-	 qzLL65o5mn2tw==
+	b=jTUa7CdLWja2sS3844ihUZQmGZ5TiGDCq57juEjMSysiYIrvZV19/NEaYOERiwAky
+	 8wEjFeEy3DzjNST6gCHDknXjdkkVLM+6jDZ8uLlt1vY3j0FLmZ/QzEt8tqWS7VeZ4D
+	 dJMA+Y/FJA8iw/U/hoCdomWfZFZ8HGSKnDSzB4fNPOmdsErCwtMGAtS1N+0MI4D8WQ
+	 jlU0XmtwgiXXjFY94H1syXsOkXnuYFZKjPWsYOVUMA2/GqFZAoVuKFwmcbNuL+3ckJ
+	 pWGK5rmZjsPlvVQFeBf+scUidrRnxmh6WRPlajI5JN1Yd81TOsUTpsrnQ8gvmvYH75
+	 Ca7tvDov1o5pA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: David Gow <davidgow@google.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
+Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
+	Julian Calaby <julian.calaby@gmail.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 044/317] rtc: test: Fix invalid format specifier.
-Date: Sun, 24 Mar 2024 19:30:24 -0400
-Message-ID: <20240324233458.1352854-45-sashal@kernel.org>
+Subject: [PATCH 5.15 053/317] wifi: b43: Stop correct queue in DMA worker when QoS is disabled
+Date: Sun, 24 Mar 2024 19:30:33 -0400
+Message-ID: <20240324233458.1352854-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -51,39 +49,64 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: David Gow <davidgow@google.com>
+From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
 
-[ Upstream commit 8a904a3caa88118744062e872ae90f37748a8fd8 ]
+[ Upstream commit 581c8967d66c4961076dbbee356834e9c6777184 ]
 
-'days' is a s64 (from div_s64), and so should use a %lld specifier.
+When QoS is disabled, the queue priority value will not map to the correct
+ieee80211 queue since there is only one queue. Stop queue 0 when QoS is
+disabled to prevent trying to stop a non-existent queue and failing to stop
+the actual queue instantiated.
 
-This was found by extending KUnit's assertion macros to use gcc's
-__printf attribute.
-
-Fixes: 1d1bb12a8b18 ("rtc: Improve performance of rtc_time64_to_tm(). Add tests.")
-Signed-off-by: David Gow <davidgow@google.com>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: bad691946966 ("b43: avoid packet losses in the dma worker code.")
+Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20231231050300.122806-4-sergeantsagara@protonmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/lib_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/b43/main.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/rtc/lib_test.c b/drivers/rtc/lib_test.c
-index d5caf36c56cdc..225c859d6da55 100644
---- a/drivers/rtc/lib_test.c
-+++ b/drivers/rtc/lib_test.c
-@@ -54,7 +54,7 @@ static void rtc_time64_to_tm_test_date_range(struct kunit *test)
+diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
+index 17bcec5f3ff75..ad38aabfd5972 100644
+--- a/drivers/net/wireless/broadcom/b43/main.c
++++ b/drivers/net/wireless/broadcom/b43/main.c
+@@ -3603,7 +3603,7 @@ static void b43_tx_work(struct work_struct *work)
+ 				err = b43_dma_tx(dev, skb);
+ 			if (err == -ENOSPC) {
+ 				wl->tx_queue_stopped[queue_num] = true;
+-				ieee80211_stop_queue(wl->hw, queue_num);
++				b43_stop_queue(dev, queue_num);
+ 				skb_queue_head(&wl->tx_queue[queue_num], skb);
+ 				break;
+ 			}
+@@ -3627,6 +3627,7 @@ static void b43_op_tx(struct ieee80211_hw *hw,
+ 		      struct sk_buff *skb)
+ {
+ 	struct b43_wl *wl = hw_to_b43_wl(hw);
++	u16 skb_queue_mapping;
  
- 		days = div_s64(secs, 86400);
+ 	if (unlikely(skb->len < 2 + 2 + 6)) {
+ 		/* Too short, this can't be a valid frame. */
+@@ -3635,12 +3636,12 @@ static void b43_op_tx(struct ieee80211_hw *hw,
+ 	}
+ 	B43_WARN_ON(skb_shinfo(skb)->nr_frags);
  
--		#define FAIL_MSG "%d/%02d/%02d (%2d) : %ld", \
-+		#define FAIL_MSG "%d/%02d/%02d (%2d) : %lld", \
- 			year, month, mday, yday, days
+-	skb_queue_tail(&wl->tx_queue[skb->queue_mapping], skb);
+-	if (!wl->tx_queue_stopped[skb->queue_mapping]) {
++	skb_queue_mapping = skb_get_queue_mapping(skb);
++	skb_queue_tail(&wl->tx_queue[skb_queue_mapping], skb);
++	if (!wl->tx_queue_stopped[skb_queue_mapping])
+ 		ieee80211_queue_work(wl->hw, &wl->tx_work);
+-	} else {
+-		ieee80211_stop_queue(wl->hw, skb->queue_mapping);
+-	}
++	else
++		b43_stop_queue(wl->current_dev, skb_queue_mapping);
+ }
  
- 		KUNIT_ASSERT_EQ_MSG(test, year - 1900, result.tm_year, FAIL_MSG);
+ static void b43_qos_params_upload(struct b43_wldev *dev,
 -- 
 2.43.0
 
