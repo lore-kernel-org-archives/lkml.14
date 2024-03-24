@@ -1,40 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936F1147C9B;
-	Sun, 24 Mar 2024 22:54:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9A11E85CB;
+	Sun, 24 Mar 2024 22:54:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320878; cv=none; b=NjwCLzjgki83Z0lp+pD0z+4Afj1GJrZ+fG3uQ5S3wIY31Wea2xRk/Mf5jaNCXUv7pGhEip1zrWwyDHf/LRbP874YzySG/j3rsHB2GWzU4a40e0oOyDnMjPmAQzhQhHctbifnVuzq1gp9RS0wzAScKGJnLpLwYcE9s5g/8tt4uZY=
+	t=1711320884; cv=none; b=sjgImEEObSJIeat7o3aACHBmzSQpLS/lWr+Z41w44T1cEw1fgYtuSJS6R2pENyoqIMfuvJXIpaLX33MLqDeF7m8wcNvd+MbibM2KEdCkFXvMOuuo6umDoVgBKVk3FUUWQGjWi2Hg+Jla/YSFduFVQrMoyiZNI42EWpVAyaHKE3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320878; c=relaxed/simple;
-	bh=+9L2sOYcn70slea3K+0x6ySDW9NT356ZLSJHuWQ40e4=;
+	s=arc-20240116; t=1711320884; c=relaxed/simple;
+	bh=Ks6Rh39f4C3jBfEt62E8rPS/XnqfajC+vnztZG15Mmg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O7qNxNnOoIo8LI9ItAI+A/AX8a8rAhaw5YyaKrmlbFpVDsf3X2RQLo4NVxFk6IoJ+EIQSLGz/9CuFVSkvtcQhtKCWxSWs9qmCfa1N7t5gho/shTIhmjhzx7CvEtuv9LO5Eulhk5awF2VVyL9UTxS8jtYgmLx4tX9GtQXUqSUXww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mD7Ge3zx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VKDTfkgxV5qRdQhv2GdGPlp1oT06NwUEsZ6NdnhReiF1V7dkKsMn+B+ubIcvJFv5Lv576BO5YxqCZdr624cQheyQYbXPGlnty2Z8Wc7+/cKMWabIb+CdahenIgcT/UmsraYqUTyDGqAGIpGoKrEQ7RQvFh1knUaDqhlHwnabBP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQVfH6FP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mD7Ge3zx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D577CC43390;
-	Sun, 24 Mar 2024 22:54:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQVfH6FP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B076C433B2;
+	Sun, 24 Mar 2024 22:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320877;
-	bh=+9L2sOYcn70slea3K+0x6ySDW9NT356ZLSJHuWQ40e4=;
+	s=k20201202; t=1711320882;
+	bh=Ks6Rh39f4C3jBfEt62E8rPS/XnqfajC+vnztZG15Mmg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mD7Ge3zxfnR0HTIjAfJVbgHOBY0OmqZxhMOMlGgX8ktvEEX2fcdycsI01/b4vGnET
-	 axkmH82/yovHpdSRyRZElzdIKgqnp6PwLieP3+2Xh6R/LI7noD5FtmHyodKjvO2kSK
-	 Z1AKjvvHriWHc0xHTZ97N3mEZxBf3O3jqAUxXGTFfcXpJLvxmIrznPX6xHeTOy8pvY
-	 EvBgrFqZ+L0B+uy134Ez5X/R2Wm63ltwv/Yq/E9UY1zanCauHpLvnlr9fy92P24xP2
-	 QPJMnXOGl+8wKAiGyWBN05QrmyY2cWisJy6gV1G0wW5yAYS7Yn0XWIl8FSDnsuhBle
-	 toaih+QKxV5Xw==
+	b=uQVfH6FPH4EtYn/ciLExQZiJX9KixBGr9/a+Qf3mwVzBYQ3FF+To2C8G+2migTHuF
+	 t0RMbhboq0iyAVFLrW01pHR5zfZUMTnrm8B2zAUbnQcjEH49Gj2PKczNTaESz8gaAa
+	 zuVZloWP2leEpxq6zEqYX/N4cSV5KMHIz/U/pj9NRkhlDU0ggd9ZP7LrUdiIpuihzN
+	 7/ChllUJoPqlQGPlnvZMKVFb+rn26+irm4s8qryyJxOt+zKgQBLkIgB2WQokowAkYr
+	 qlBcp3NZFos9BqbIAi3a+X4LHknq8hQbKhqMyTi4Iyo0+1ZDpvb5FY54fjPM9okX9Y
+	 HbCgYUwnsX/Tg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Ian Rogers <irogers@google.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	James Clark <james.clark@arm.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Tom Rix <trix@redhat.com>,
+	llvm@lists.linux.dev,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 442/713] PCI: switchtec: Fix an error handling path in switchtec_pci_probe()
-Date: Sun, 24 Mar 2024 18:42:48 -0400
-Message-ID: <20240324224720.1345309-443-sashal@kernel.org>
+Subject: [PATCH 6.7 446/713] perf srcline: Add missed addr2line closes
+Date: Sun, 24 Mar 2024 18:42:52 -0400
+Message-ID: <20240324224720.1345309-447-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,49 +56,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit dec529b0b0572b32f9eb91c882dd1f08ca657efb ]
+[ Upstream commit c7ba9d18ae47924a6ea6a47ca139779f58eb83c0 ]
 
-The commit in Fixes changed the logic on how resources are released and
-introduced a new switchtec_exit_pci() that need to be called explicitly in
-order to undo a corresponding switchtec_init_pci().
+The child_process for addr2line sets in and out to -1 so that pipes
+get created. It is the caller's responsibility to close the pipes,
+finish_command doesn't do it. Add the missed closes.
 
-This was done in the remove function, but not in the probe.
-
-Fix the probe now.
-
-Fixes: df25461119d9 ("PCI: switchtec: Fix stdev_release() crash after surprise hot remove")
-Link: https://lore.kernel.org/r/01446d2ccb91a578239915812f2b7dfbeb2882af.1703428183.git.christophe.jaillet@wanadoo.fr
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: b3801e791231 ("perf srcline: Simplify addr2line subprocess")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: John Garry <john.g.garry@oracle.com>
+Cc: Tom Rix <trix@redhat.com>
+Cc: llvm@lists.linux.dev
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240201001504.1348511-8-irogers@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/srcline.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 1804794d0e686..5a4adf6c04cf8 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -1672,7 +1672,7 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
- 	rc = switchtec_init_isr(stdev);
- 	if (rc) {
- 		dev_err(&stdev->dev, "failed to init isr.\n");
--		goto err_put;
-+		goto err_exit_pci;
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index 034b496df2978..7addc34afcf5d 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -399,6 +399,8 @@ static void addr2line_subprocess_cleanup(struct child_process *a2l)
+ 		kill(a2l->pid, SIGKILL);
+ 		finish_command(a2l); /* ignore result, we don't care */
+ 		a2l->pid = -1;
++		close(a2l->in);
++		close(a2l->out);
  	}
  
- 	iowrite32(SWITCHTEC_EVENT_CLEAR |
-@@ -1693,6 +1693,8 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
- 
- err_devadd:
- 	stdev_kill(stdev);
-+err_exit_pci:
-+	switchtec_exit_pci(stdev);
- err_put:
- 	ida_free(&switchtec_minor_ida, MINOR(stdev->dev.devt));
- 	put_device(&stdev->dev);
+ 	free(a2l);
 -- 
 2.43.0
 
