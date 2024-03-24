@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13561EBD24;
-	Sun, 24 Mar 2024 23:07:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B50420DD56;
+	Sun, 24 Mar 2024 23:07:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321648; cv=none; b=qkyju48pSb9c6i0sXthRAme36wNVQXm6m91jtN6AzXBqBCLX9DAA3F+6voFjyZScT00CKrxA59xDWMOHHfo//0DNUCVmUy8ZwiOlYZKFu9ije6hj0vWauKs2hwx4CVYDlMCgNxQqqxV1rUp+ZvxyBy5UdUYXOC5p3QB7exIs6Yw=
+	t=1711321657; cv=none; b=DBuHHcblmmxfs6wy8Cr1Fymkzx90+cKTRCSDU/cWaK9NZUMwtan1t5Dhxgr1f8nHn5Vnsxd7JdRGqQ452SD6TSiIR3JEI4e4tzsQ32FMExqdIt4PtKHAzTjImdSVC+Eqpf5o/SfR6zW0gRfkyNpYJSSUfICioKpkmw4KLZbv8HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321648; c=relaxed/simple;
-	bh=i6qbJ0YigLE3yuZNNmqK6Rf7CvUlWxagcLz5SoaV904=;
+	s=arc-20240116; t=1711321657; c=relaxed/simple;
+	bh=ScxSW6UgPUsVoztvMsj+KZEAdBvd7VPwubsif2s549w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AXUEQeQ1CrUSwmA70EPGESIK//gM2u6CQwhTUObCWWS/NU227Tm72JNp7lX03kiksG8qqT3bmI1PKLTvOtTPz7r+H0ONK9wMTs+mLqhKK0YeH4UcGs1bGsMW4qTpV078qqfpMWtSY9SVOe3TdtRM2ewDTbfTmw8+Bz5sPi1mplA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/DgLJio; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XR/03zSpXM3bo5XmzNoXZpjBM5MNAw4HorrlkyVqde7AqRFfzFmx34QSHC1PrGzc6izewjYwKu0gqZK+Ne+Ir8S4CY2up+AHNzihk97x2OQdibaHpWDMDnPoeqyUM8coW18ZVayA74wRrjy5TZmjsqfyg6Hzpttu5uZuwQjJvfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IbZxKwRy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/DgLJio"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C270C433C7;
-	Sun, 24 Mar 2024 23:07:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IbZxKwRy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AF91C43394;
+	Sun, 24 Mar 2024 23:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321646;
-	bh=i6qbJ0YigLE3yuZNNmqK6Rf7CvUlWxagcLz5SoaV904=;
+	s=k20201202; t=1711321656;
+	bh=ScxSW6UgPUsVoztvMsj+KZEAdBvd7VPwubsif2s549w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W/DgLJiooIa9qG0qSUzXfIyYeOBLiAfMTSU8P+Ex/mRpGHcXiD+2aMsGySNmZB7B3
-	 gRK6iS1iOPQDIo+/2gdIwJahv6cSiYXt/gJbTsfvtU8tYfS2fdwNFGm2XEco0rJwEx
-	 MGzLUiVqsbf6uH2kfqJEWpCi9gkJGktwBueU/jP2cxf5jsDYqmK83HMtXYTBDA75YL
-	 lI+cHsiCVeR2KLgf3zR0VWUBQ0bZXi00PDuIE4vnA574KZQDwK588qEad8m3lThcH+
-	 IIDP2xi9Gq3ifa9oIkvHlyxuHAyC8/BaoYFLVkDrTdY9OcZfsEnWHzT1LEidpsLBv5
-	 OOmyWyV4d5hwg==
+	b=IbZxKwRyCBTrQqQYHxNDHJfmqjqI4+6vyZrdkV2HxhciMVGOhO6us9rXp32JSWPP8
+	 dCaNvjz37L74qlCf4o+VWA3t+oFCa2LahM45lyq7EsamWEmKTjxepXFgTBgfUBRLFd
+	 75cPujZY9B6OT1uZzQy8d7ssiag5CL8ZkoCxS0hfwVsty94XDcwII0Hthrluuf7zIH
+	 OMzhv2P8j/BeiuoTBy16uoyQrC73y776QK9153xoA/vrp6gDjqSlhV0Hn6Zi/Z9vkK
+	 eCSsymiM+B1dNy3eRdNJogRVZF5+aX7SNSjpxld4MAKgnyhuzCDkRA2Eg0WT8R6ZT9
+	 WExR1peD+HlMw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Julien Massot <julien.massot@collabora.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 376/638] media: v4l2: cci: print leading 0 on error
-Date: Sun, 24 Mar 2024 18:56:53 -0400
-Message-ID: <20240324230116.1348576-377-sashal@kernel.org>
+Subject: [PATCH 6.6 385/638] media: edia: dvbdev: fix a use-after-free
+Date: Sun, 24 Mar 2024 18:57:02 -0400
+Message-ID: <20240324230116.1348576-386-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,45 +48,82 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Julien Massot <julien.massot@collabora.com>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 58ab1f9e140006e9e5686640f1773260038fe889 ]
+[ Upstream commit 8c64f4cdf4e6cc5682c52523713af8c39c94e6d5 ]
 
-In some error cases leading '0' for register address
-were missing.
+In dvb_register_device, *pdvbdev is set equal to dvbdev, which is freed
+in several error-handling paths. However, *pdvbdev is not set to NULL
+after dvbdev's deallocation, causing use-after-frees in many places,
+for example, in the following call chain:
 
-Fixes: 613cbb91e9ce ("media: Add MIPI CCI register access helper functions")
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+budget_register
+  |-> dvb_dmxdev_init
+        |-> dvb_register_device
+  |-> dvb_dmxdev_release
+        |-> dvb_unregister_device
+              |-> dvb_remove_device
+                    |-> dvb_device_put
+                          |-> kref_put
+
+When calling dvb_unregister_device, dmxdev->dvbdev (i.e. *pdvbdev in
+dvb_register_device) could point to memory that had been freed in
+dvb_register_device. Thereafter, this pointer is transferred to
+kref_put and triggering a use-after-free.
+
+Link: https://lore.kernel.org/linux-media/20240203134046.3120099-1-alexious@zju.edu.cn
+Fixes: b61901024776 ("V4L/DVB (5244): Dvbdev: fix illegal re-usage of fileoperations struct")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
 Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/v4l2-core/v4l2-cci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/dvb-core/dvbdev.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-cci.c b/drivers/media/v4l2-core/v4l2-cci.c
-index 10005c80f43b5..ee3475bed37fa 100644
---- a/drivers/media/v4l2-core/v4l2-cci.c
-+++ b/drivers/media/v4l2-core/v4l2-cci.c
-@@ -32,7 +32,7 @@ int cci_read(struct regmap *map, u32 reg, u64 *val, int *err)
- 
- 	ret = regmap_bulk_read(map, reg, buf, len);
- 	if (ret) {
--		dev_err(regmap_get_device(map), "Error reading reg 0x%4x: %d\n",
-+		dev_err(regmap_get_device(map), "Error reading reg 0x%04x: %d\n",
- 			reg, ret);
- 		goto out;
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index 49f0eb7d0b9d3..733d0bc4b4cc3 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -490,6 +490,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		dvbdevfops = kmemdup(template->fops, sizeof(*dvbdevfops), GFP_KERNEL);
+ 		if (!dvbdevfops) {
+ 			kfree(dvbdev);
++			*pdvbdev = NULL;
+ 			mutex_unlock(&dvbdev_register_lock);
+ 			return -ENOMEM;
+ 		}
+@@ -498,6 +499,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		if (!new_node) {
+ 			kfree(dvbdevfops);
+ 			kfree(dvbdev);
++			*pdvbdev = NULL;
+ 			mutex_unlock(&dvbdev_register_lock);
+ 			return -ENOMEM;
+ 		}
+@@ -531,6 +533,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		}
+ 		list_del(&dvbdev->list_head);
+ 		kfree(dvbdev);
++		*pdvbdev = NULL;
+ 		up_write(&minor_rwsem);
+ 		mutex_unlock(&dvbdev_register_lock);
+ 		return -EINVAL;
+@@ -553,6 +556,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		dvb_media_device_free(dvbdev);
+ 		list_del(&dvbdev->list_head);
+ 		kfree(dvbdev);
++		*pdvbdev = NULL;
+ 		mutex_unlock(&dvbdev_register_lock);
+ 		return ret;
  	}
-@@ -131,7 +131,7 @@ int cci_write(struct regmap *map, u32 reg, u64 val, int *err)
- 
- 	ret = regmap_bulk_write(map, reg, buf, len);
- 	if (ret)
--		dev_err(regmap_get_device(map), "Error writing reg 0x%4x: %d\n",
-+		dev_err(regmap_get_device(map), "Error writing reg 0x%04x: %d\n",
- 			reg, ret);
- 
- out:
+@@ -571,6 +575,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		dvb_media_device_free(dvbdev);
+ 		list_del(&dvbdev->list_head);
+ 		kfree(dvbdev);
++		*pdvbdev = NULL;
+ 		mutex_unlock(&dvbdev_register_lock);
+ 		return PTR_ERR(clsdev);
+ 	}
 -- 
 2.43.0
 
