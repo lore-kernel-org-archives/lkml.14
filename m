@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B82174979;
-	Sun, 24 Mar 2024 23:35:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41820275504;
+	Sun, 24 Mar 2024 23:36:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323357; cv=none; b=u7NAhxN7Fhc3GEf1sFfiT0LAvBjWw6Q90+KOI+Y+kmhHtcYlgN3vU9ky/S6ficJKdpFLTWgQ5RRccjIEl2GYuXy8IOmTDNC2OBXMtFUmrYoTtszXNGV9CHiNXOa5ilx7WqcOiVxEmXfMe/UbLtD0vcqbmHzaZfAzEgSTqirBckY=
+	t=1711323361; cv=none; b=juOHLGIjX73EMqhngHqnngv8UOCRcxPdhda8PrKf5eQqiudGleRpmvfmpAGjS3bKhjG64gCOXBCwh9zPwmspUDoQZmyxEFTQ2jXMuCtseztIXUrhkbHUrizuzRNA7CDEfxH25bkX6Egl5wwrTyoIUk8hHDEAb0cAT+sS22jSve8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323357; c=relaxed/simple;
-	bh=lk9a3sR+Gf80Nc1LTDgoNyiixBCKAWQX3ANl8n28usg=;
+	s=arc-20240116; t=1711323361; c=relaxed/simple;
+	bh=3v2u52gHV9cGUvW7r3oyCpl4u5Lb7Ipc60LXIYLcw5Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YGshLRtJrXtbz11oQLc5oekvTF6/D/b79l3ButC6HYILFhymjkEt/+/CoY/kl0swjI3ZvnTagy+c1+Ak9ttPW4+id7FKfY57S3XJMbaCsN6+KKZsBp2lTAC3aL39gElskgpdhe4t5MrxWgF+2tLB2XSOqaUjdGy26dajTN/Nz1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZRuh9tCw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FoQfvQ9uIdqJBB3G2Q9LKtIxSNEUVN7/fq7o9Wet2w72Sn0I6Ij+VsGPBR8W54qpc8qNPguUAL8si2Dce1IL88cadcNx79Y6XYud7fOLbzU0I+GNmhR6UjjHWO3X09dh3HHZqPphiOUjwWQs08sAazSxh6qX3VJWBTmGz0fgjFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rDEn8gUj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZRuh9tCw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A78C43394;
-	Sun, 24 Mar 2024 23:35:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rDEn8gUj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EC87C43394;
+	Sun, 24 Mar 2024 23:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323357;
-	bh=lk9a3sR+Gf80Nc1LTDgoNyiixBCKAWQX3ANl8n28usg=;
+	s=k20201202; t=1711323361;
+	bh=3v2u52gHV9cGUvW7r3oyCpl4u5Lb7Ipc60LXIYLcw5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZRuh9tCwhWRvpVA1jNAKN8jBggeF6Kp5Npy9D6GiRiOUpvW3mhmM4qu2Lbmd7P8WS
-	 mlvJeR+c6OVadYCmiRlZkdvWutROMzTYNPvt6sYdGRSnMhcvlQVdQzncnNjd2/Lqo3
-	 gly6/UPRioLlOHpyynFy+DsjO8tymGgTuwYR95b3uudAvG3iy55Ijhyf6TzvoNwDTx
-	 msAoFYAm2AdOUxllr4KWYVk6IbaSuv9zlWX4EmWd0VFSbTxNlgF0ygScBGBCqS4xRF
-	 zRAP8mlitK/oEgV7kE4aNou7rSOIH5tVhHfNTcfY9I+OTgIlT3Q8b2DHVD8PmGrp1a
-	 YkyLYBVBk9Wxw==
+	b=rDEn8gUjqpicwmrst9gr7sgS7M73kTq75DswU0f+TSZ1+fAniFHUsnAXMLhuJB0Ql
+	 2SRkfDCp/YOJmcsrntsMxw0bVX1dTBE3ySnfNbXPk3Z+eN4Upzc96jTXc38NpmXWP9
+	 kasywgceejvH0PjH7lcRQ2llvSwnHCIr3H/CZ3ph+Z82EypnEOk9HWOfvjwAtap3OL
+	 UMe/s1kv9IMhvV1hiX7J8oK6KDt94IVTIMeFeNvp8fJUJLsEI0oUBiG8evZMryTSh4
+	 TOwtegRP2YjbiV9lntxpbK743Xhnuhst5WEd1e8gg+62VJtluCHxVQ/7nGh6povRF7
+	 0OaD1O2z2kgRQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Martin Kaistra <martin.kaistra@linutronix.de>,
-	Ping-Ke Shih <pkshih@realtek.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 057/317] wifi: rtl8xxxu: add cancel_work_sync() for c2hcmd_work
-Date: Sun, 24 Mar 2024 19:30:37 -0400
-Message-ID: <20240324233458.1352854-58-sashal@kernel.org>
+Subject: [PATCH 5.15 061/317] cpufreq: brcmstb-avs-cpufreq: add check for cpufreq_cpu_get's return value
+Date: Sun, 24 Mar 2024 19:30:41 -0400
+Message-ID: <20240324233458.1352854-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -49,35 +48,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Martin Kaistra <martin.kaistra@linutronix.de>
+From: Anastasia Belova <abelova@astralinux.ru>
 
-[ Upstream commit 1213acb478a7181cd73eeaf00db430f1e45b1361 ]
+[ Upstream commit f661017e6d326ee187db24194cabb013d81bc2a6 ]
 
-The workqueue might still be running, when the driver is stopped. To
-avoid a use-after-free, call cancel_work_sync() in rtl8xxxu_stop().
+cpufreq_cpu_get may return NULL. To avoid NULL-dereference check it
+and return 0 in case of error.
 
-Fixes: e542e66b7c2e ("rtl8xxxu: add bluetooth co-existence support for single antenna")
-Signed-off-by: Martin Kaistra <martin.kaistra@linutronix.de>
-Reviewed-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240111163628.320697-2-martin.kaistra@linutronix.de
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-index 30d9a195c6fb5..3536b9f8470f4 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -6484,6 +6484,7 @@ static void rtl8xxxu_stop(struct ieee80211_hw *hw)
- 	if (priv->usb_interrupts)
- 		rtl8xxxu_write32(priv, REG_USB_HIMR, 0);
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index f644c5e325fb2..38ec0fedb247f 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -481,6 +481,8 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
+ static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
+ {
+ 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
++	if (!policy)
++		return 0;
+ 	struct private_data *priv = policy->driver_data;
  
-+	cancel_work_sync(&priv->c2hcmd_work);
- 	cancel_delayed_work_sync(&priv->ra_watchdog);
- 
- 	rtl8xxxu_free_rx_resources(priv);
+ 	cpufreq_cpu_put(policy);
 -- 
 2.43.0
 
