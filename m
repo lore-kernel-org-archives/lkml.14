@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C1A17D247;
-	Sun, 24 Mar 2024 23:43:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DD217DC06;
+	Sun, 24 Mar 2024 23:44:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323834; cv=none; b=YdaPuwdVRNswhLQyRqnKA5ksxqFOSMFrkRNbZJnkrk+MCL+hiMOlWrS/Z0nPxmotvY1p4xc184g6TjwxQdqJ4KK2UVNbB43bUMl6MbVnzz3DtLwBxvii4y2LS+8t1f+4RccLrVzj7pQt8NiPAWAXEICIJf7TgP6bbBUw68nLhPk=
+	t=1711323840; cv=none; b=iMjeQTyX8Ta6ZuCqfhS+ZPbiOqgdHuvNaYPl3ftZL1xV7H7sWmKmahmqpqAi2nPgPAwtSU8XZhozYGTbNfiQY/b7bVwFadCpVd6XuSu6pA5SN6w8jNlJBdCOdPWbznOL+XsMLF7mOnXvnKV3Hvur6+3ynERp7wbY13bEzOHJ3ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323834; c=relaxed/simple;
-	bh=HsUg5S/3AqL4buyV0K0NxnhMGaC2KNaoIWRU8mW7eOA=;
+	s=arc-20240116; t=1711323840; c=relaxed/simple;
+	bh=c8yoc+gw3+doOP2QyCyd0FANFcQliti7oGbe3TbzbFc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sSiC4LqTjC4sDfBz5bA81HQjz/yRpgy2hwZgrusI6wGj9m5pe2TZMr35RFd0lr2BW7JTJl+b4DxgNdUTA2z7vIbkGaEw0dwwkxoo8FJ1cdl3eHZxJxjz4orGJemRXeUZezVasL6nWyONS5ISagOvOj4S/XmG+Wmqd1zhxywegmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dv5QYpF6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cYSWpaPglIwV4MCdbLswnxaeGcxP3PsPEmdcVEbg+3HdGIG6q4JjFtpmz8PAVWMYRd4kPkwNKarZMzZMbzmAPbTp7tWfVybF6arRDx8qqnN2Tvrn8XOFoN2FqFOtK5W80Dzd1ZSFnHJi7x92PCjQX9982QU0NxPM1Fq7Od3eCqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tmgQ1KsC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dv5QYpF6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E91BEC433C7;
-	Sun, 24 Mar 2024 23:43:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tmgQ1KsC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FEF2C433C7;
+	Sun, 24 Mar 2024 23:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323834;
-	bh=HsUg5S/3AqL4buyV0K0NxnhMGaC2KNaoIWRU8mW7eOA=;
+	s=k20201202; t=1711323840;
+	bh=c8yoc+gw3+doOP2QyCyd0FANFcQliti7oGbe3TbzbFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dv5QYpF6LqdRqVUTpqYITd4jLS0G43jTz60d82SbgXKEJj8aA63vfA+vnLq2VsdSH
-	 oTtgS6RBVAa3LONJ7QKzYh4yirDplOw7RPQEZVHAPD+1IADgpm065lN6AbX0ukKB5V
-	 x+vEbDZw7R2M8yYCMbAnDzjrW4o6p1bphmrJ8snprLK8OMl9dfK7quCeVMt1JeNsDl
-	 tJ7+6m1IbKd7reUg3Bn2Dt5zDi8u5KdOIv1AneGv8TLTMBSGH5WEY4VEjgMVA+Qg+Z
-	 sMXcDLYDz3EN7WHJ7gtxXyWfRk9M68BQ58XGzpcyF0G88/eNyLVTlcYJMW8Zc2Eg+z
-	 vwQsBlIP2kaqw==
+	b=tmgQ1KsCWAvDOfqfttSmMTj8c6PUJj5SeNYT1WIRsf9yKJjxZTfI31diPrdiJY13n
+	 4qmZqU3w9lxKO6pLf8VCic+onFdL9b6BELumvN9dHzyBLqxc72Um5E0FTSCl+pIhyd
+	 cCJCd0LWLeMsFUqDZ1z8vgFVgefUwHVANpMiNlbpKytTWV9u9jbd9BA1YAl/RGAM9M
+	 pp4g5Uro7fttCvqRwtEoJfZav3yhIe3c2Z0F1lTHOeJyayh+AvHD9OViLx05fkyIfa
+	 MMCJuFwMdBxqfx04FiwdxYoM5luJDcc8JfpJ36/AYm3//q7RwOaUpAD0d/x28FtlCB
+	 nYGpCNV9yGTCA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
+Cc: Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 213/238] kconfig: fix infinite loop when expanding a macro at the end of file
-Date: Sun, 24 Mar 2024 19:40:01 -0400
-Message-ID: <20240324234027.1354210-214-sashal@kernel.org>
+Subject: [PATCH 5.10 218/238] io_uring: don't save/restore iowait state
+Date: Sun, 24 Mar 2024 19:40:06 -0400
+Message-ID: <20240324234027.1354210-219-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -47,45 +47,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit af8bbce92044dc58e4cc039ab94ee5d470a621f5 ]
+[ Upstream commit 6f0974eccbf78baead1735722c4f1ee3eb9422cd ]
 
-A macro placed at the end of a file with no newline causes an infinite
-loop.
+This kind of state is per-syscall, and since we're doing the waiting off
+entering the io_uring_enter(2) syscall, there's no way that iowait can
+already be set for this case. Simplify it by setting it if we need to,
+and always clearing it to 0 when done.
 
-[Test Kconfig]
-  $(info,hello)
-  \ No newline at end of file
-
-I realized that flex-provided input() returns 0 instead of EOF when it
-reaches the end of a file.
-
-Fixes: 104daea149c4 ("kconfig: reference environment variables directly and remove 'option env='")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 7b72d661f1f2 ("io_uring: gate iowait schedule on having pending requests")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/lexer.l | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ io_uring/io_uring.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
-index 240109f965aeb..72e5e9ac52bb4 100644
---- a/scripts/kconfig/lexer.l
-+++ b/scripts/kconfig/lexer.l
-@@ -305,8 +305,11 @@ static char *expand_token(const char *in, size_t n)
- 	new_string();
- 	append_string(in, n);
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index 67a355f27ad80..fc60396c90396 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -7640,7 +7640,7 @@ static inline int io_cqring_wait_schedule(struct io_ring_ctx *ctx,
+ 					  struct io_wait_queue *iowq,
+ 					  ktime_t *timeout)
+ {
+-	int io_wait, ret;
++	int ret;
  
--	/* get the whole line because we do not know the end of token. */
--	while ((c = input()) != EOF) {
-+	/*
-+	 * get the whole line because we do not know the end of token.
-+	 * input() returns 0 (not EOF!) when it reachs the end of file.
-+	 */
-+	while ((c = input()) != 0) {
- 		if (c == '\n') {
- 			unput(c);
- 			break;
+ 	/* make sure we run task_work before checking for signals */
+ 	ret = io_run_task_work_sig();
+@@ -7655,13 +7655,12 @@ static inline int io_cqring_wait_schedule(struct io_ring_ctx *ctx,
+ 	 * can take into account that the task is waiting for IO - turns out
+ 	 * to be important for low QD IO.
+ 	 */
+-	io_wait = current->in_iowait;
+ 	if (current_pending_io())
+ 		current->in_iowait = 1;
+ 	ret = 1;
+ 	if (!schedule_hrtimeout(timeout, HRTIMER_MODE_ABS))
+ 		ret = -ETIME;
+-	current->in_iowait = io_wait;
++	current->in_iowait = 0;
+ 	return ret;
+ }
+ 
 -- 
 2.43.0
 
