@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B6A1E307A;
-	Sun, 24 Mar 2024 22:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1421E2562;
+	Sun, 24 Mar 2024 22:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320796; cv=none; b=fYOWyz5Bfm8flL2JdAbqOrPYNLtEHz33dDXToVuvZZUGESqQc31WmR+7eOpSzLfjAPI6J5Meoy8nESd/6OxghfUzhOaomi5EwneSm+trIxB/nR3ocySSpI1ehUdZkXpgjD4ld/4Dn05kcYKy+ov8fD/l2NxuIIrkexyBPgeT6aQ=
+	t=1711320787; cv=none; b=HMPiDgoED8VvZ6x3vb5nxcpDSrRk9TjWlg3epS7GJpoJyJubtI8uBipPf/jzh0j6GyzP1WDJd3nphKuBiJdbjtwcM0hcFIWj23ddbJbhQ8npaGiG1a03jpUe9C1TaVWxKyOfxARGRKuvGMOedpJZudNh2PCsUDgGfW/Ti1PPR50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320796; c=relaxed/simple;
-	bh=1CZXj3ZSEJhTLO9kDaryueK7/Emi8Jki56hPONpCagg=;
+	s=arc-20240116; t=1711320787; c=relaxed/simple;
+	bh=tRgyfE1J4Fe3Y0cCshJvvPBauQhSZVEKNuiHqQIpNmI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cuFkdTSkizYl6YQAP4UXxQh1OQnNNfQsCEdShN45X0VYE0M20DRNeml5a5Y4RVgmxWm/EqFe2R56pePk1MbsJ+MIRO7ACpxamk9dpjjTduQ+CE6z0FgMYIsarnar5+dgGbEmt+znRUWiXyLiJNasvUIHxDtaL+S0hLQHDGXS14g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owHhWoPQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DQguc1tnYoVRr9HcacGe5L35qp+oN/UtwkWM75HYSRGyEBSFZazRbwMshvA0hcBE6JcrQamaQZQ/Gke20Xm5i5x8CG5t66lylxG1nF49SN8Kk8D/dtIAAjKX1ZRVJHGAESGzm6vDXw5nzb9IB/CQOJjwneGYbVFBtIqARK7yzkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CvCE0toy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owHhWoPQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB1A5C433C7;
-	Sun, 24 Mar 2024 22:53:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CvCE0toy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36D82C433F1;
+	Sun, 24 Mar 2024 22:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320795;
-	bh=1CZXj3ZSEJhTLO9kDaryueK7/Emi8Jki56hPONpCagg=;
+	s=k20201202; t=1711320785;
+	bh=tRgyfE1J4Fe3Y0cCshJvvPBauQhSZVEKNuiHqQIpNmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=owHhWoPQI/AM4SRq5ki9OlWo1RfmwZI5X7i0M+aNahMpa4p+llUnY0FNuO413MF8V
-	 4uW4Hm4hLiE1j1mZw8RptT3MGiDuh2QlUzWSIcUXdaVoE3XBWlsZoKML0rbPLu7/ie
-	 33Sw6PFR72UrFOOJjCE4nQqK6ubqGZZ5bhkrkNkXOlHfSK6pMAdav+lwX8BznW3OkE
-	 lzOm18Di2zbLY6AGi1GH2pesSPu7AIL8AXfzbUhlhmjn6HrnpfsXxjF8Fvc570ElXG
-	 zVs2ybldZywlZOoTJ9/90PK0tl6fQ3vsMsMcnRsv1P3bKgpE6D6qSUtJ/qgHf6SZqZ
-	 x/1uRf8c+Yq+g==
+	b=CvCE0toycz3jDkENuZb9KRi/u2xX0ZykpMdmiNKIltt89oPYsroliwqiUZ050QzfZ
+	 ePOf7kMjcG9EO2L1VN0kBNJiGG995hdIJQNFyz8Mxbz72ibYL6MgnHKrM+K1350WaJ
+	 jX2awdKhcdih2SWJCqPyTjcj8R/xnTtJum1IeK3UbH8mvB/KOxC7GQ3FemxQyU0+84
+	 V2dA4E83UvHuzuLpZRE3S2tYfH2c1zPaSKruMGkzUJ4t7ObqjRcWZHgPcLe7ItuMTH
+	 6aPkCSxrSDrN/HSTSxtYn9gmBWE2PMWPU68P5pS0YPfjJd4WE2E6l3sxqGQtx3TL8P
+	 Jo8CP6c+S09Tg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Heiko Carstens <hca@linux.ibm.com>,
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 359/713] s390/cache: prevent rebuild of shared_cpu_list
-Date: Sun, 24 Mar 2024 18:41:25 -0400
-Message-ID: <20240324224720.1345309-360-sashal@kernel.org>
+Subject: [PATCH 6.7 348/713] Bluetooth: hci_qca: don't use IS_ERR_OR_NULL() with gpiod_get_optional()
+Date: Sun, 24 Mar 2024 18:41:14 -0400
+Message-ID: <20240324224720.1345309-349-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -47,47 +48,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Heiko Carstens <hca@linux.ibm.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-[ Upstream commit cb0cd4ee11142339f2d47eef6db274290b7a482d ]
+[ Upstream commit 56d074d26c5828773b00b2185dd7e1d08273b8e8 ]
 
-With commit 36bbc5b4ffab ("cacheinfo: Allow early detection and population
-of cache attributes") the shared cpu list for each cache level higher than
-L1 is rebuilt even if the list already has been set up.
+The optional variants for the gpiod_get() family of functions return NULL
+if the GPIO in question is not associated with this device. They return
+ERR_PTR() on any other error. NULL descriptors are graciously handled by
+GPIOLIB and can be safely passed to any of the GPIO consumer interfaces
+as they will return 0 and act as if the function succeeded. If one is
+using the optional variant, then there's no point in checking for NULL.
 
-This is caused by the removal of the cpumask_empty() check within
-cache_shared_cpu_map_setup().
-
-However architectures can enforce that the shared cpu list is not rebuilt
-by simply setting cpu_map_populated of the per cpu cache info structure to
-true, which is also the fix for this problem.
-
-Before:
-$ cat /sys/devices/system/cpu/cpu1/cache/index2/shared_cpu_list
-0-7
-
-After:
-$ cat /sys/devices/system/cpu/cpu1/cache/index2/shared_cpu_list
-1
-
-Fixes: 36bbc5b4ffab ("cacheinfo: Allow early detection and population of cache attributes")
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Fixes: 6845667146a2 ("Bluetooth: hci_qca: Fix NULL vs IS_ERR_OR_NULL check in qca_serdev_probe")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/cache.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/bluetooth/hci_qca.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/kernel/cache.c b/arch/s390/kernel/cache.c
-index 56254fa06f990..4f26690302209 100644
---- a/arch/s390/kernel/cache.c
-+++ b/arch/s390/kernel/cache.c
-@@ -166,5 +166,6 @@ int populate_cache_leaves(unsigned int cpu)
- 			ci_leaf_init(this_leaf++, pvt, ctype, level, cpu);
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index a65de7309da4c..bb69b7ea8119d 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -2304,7 +2304,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 
+ 		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+ 					       GPIOD_OUT_LOW);
+-		if (IS_ERR_OR_NULL(qcadev->bt_en) &&
++		if (IS_ERR(qcadev->bt_en) &&
+ 		    (data->soc_type == QCA_WCN6750 ||
+ 		     data->soc_type == QCA_WCN6855)) {
+ 			dev_err(&serdev->dev, "failed to acquire BT_EN gpio\n");
+@@ -2313,7 +2313,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 
+ 		qcadev->sw_ctrl = devm_gpiod_get_optional(&serdev->dev, "swctrl",
+ 					       GPIOD_IN);
+-		if (IS_ERR_OR_NULL(qcadev->sw_ctrl) &&
++		if (IS_ERR(qcadev->sw_ctrl) &&
+ 		    (data->soc_type == QCA_WCN6750 ||
+ 		     data->soc_type == QCA_WCN6855 ||
+ 		     data->soc_type == QCA_WCN7850))
+@@ -2335,7 +2335,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 	default:
+ 		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+ 					       GPIOD_OUT_LOW);
+-		if (IS_ERR_OR_NULL(qcadev->bt_en)) {
++		if (IS_ERR(qcadev->bt_en)) {
+ 			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
+ 			power_ctrl_enabled = false;
  		}
- 	}
-+	this_cpu_ci->cpu_map_populated = true;
- 	return 0;
- }
 -- 
 2.43.0
 
