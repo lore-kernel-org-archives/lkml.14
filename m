@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5E41E5F57;
-	Sun, 24 Mar 2024 23:01:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF7D1E5F65;
+	Sun, 24 Mar 2024 23:01:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321295; cv=none; b=ch7bE/Den6lGgJG/kLQoI+cKMQVlypR598q9MOX1mRZyXcNkuIDKVlueMtvecjbqG+vWqv14gHKruDRd4FaMQF0Rk+n7AgZuz9C3Y2kayaW9qb+R7Ssxsvea51OIADApOWotBT2kc0YQFtQGX29YpluNEWDiFjKbyrKVBlQV4sw=
+	t=1711321297; cv=none; b=btRjn9jEXeuXJQd8jyi+qUjHDI1SWXVrd4FDfzpqgYxuZVoklwLny1y/VqyroXOO05pzToSnsuA7r8WjcPlqaDlp1QP5W6K5YajAnPRHYp3aOIUx/H17iBk4clCmeeN3oPx/KJubx6/WaTKle7Xx+vZY2uTAD7t5isAQ/1CsqA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321295; c=relaxed/simple;
-	bh=h7vZhE/3zNxbW/raux5GMr5zWcoQY2up1hIwKwdJiis=;
+	s=arc-20240116; t=1711321297; c=relaxed/simple;
+	bh=gIBzsxEfqCELs+orQBkAqqxwLcIB/dzP3lehUdOAuRs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XkHVXY4HcozmC77dD0GO2qI3fMRAqabDs4KNAXnc6wNMSKxRPa6WZ/ojN35cC3hDj9/UL+gpQ6T1mW7hzg2gMyfr16ZjAI0Is4KW5qbJN2mFKC40exUp6VwQH/YBjdProBMkbCBwz9yDWU+ItwunbIk4bpVUmnH2AWvzNo6Dlog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfaAVWgV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iO2K3ugOPj15grBDvMYctiCzjbaKi8ggQnmbrBMSwQUgnlGB3qbSgr5QEuo/mTG/qg4drMofNzrDLDSoXkXEny+HbX/gueAMoPap2vuktQebZknQe0XgvGVCKFg/F1kU1qv9CT1j+RjC/qB/URmsv94+GUq2aoF2AZ8CjbUN8ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uYAfcsho; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfaAVWgV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1571AC43390;
-	Sun, 24 Mar 2024 23:01:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uYAfcsho"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 291C6C43399;
+	Sun, 24 Mar 2024 23:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321294;
-	bh=h7vZhE/3zNxbW/raux5GMr5zWcoQY2up1hIwKwdJiis=;
+	s=k20201202; t=1711321296;
+	bh=gIBzsxEfqCELs+orQBkAqqxwLcIB/dzP3lehUdOAuRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZfaAVWgV/klIaQKULmM65NGqaANg8vq6TAC/L3XkbrdgZG8oq7f9fnijcv3GlzvIx
-	 Dkf5ULEwUhj+hv2KtPxJeBla54XSLGolmqpw3VazHxrcrFFf437kae01fmNbEMQCxT
-	 YVEGmJCBVMob0qA3BvcpbQ2V6M9CsCBx+AMDllTdyEBD7jLHfw9tv8E1yTNZv7Z/7+
-	 mghGceDNQZbUmxHCfrbcpPW7/5tK9rpihpsFQhQ66+940ymQWzp78aw63bU7uvRtxv
-	 O7GLQmMiTPHymLnxXZySKMfO1U3K+72G+T/o9wyUO3mss90txTBO1+puOZfRge9GvY
-	 Q9IuKrC7IoeLQ==
+	b=uYAfcshoB2ixfBStZKMNi24jYwPAZHXZyoZ4Xv1CZP62Hb3Em2s05josGDSPHFcll
+	 Lj8XXNioblGS/nHK2qQMGJ7hkz8pqmeJtXzhJeNznDjUIGOp4JQT8OOCT1nusmrZRv
+	 TP5iaxreTL+M3YZCVz1wo0Ps/HWelWPLB5hYzlAANdtyW7CRWmsUERjlBAy+tuhV+D
+	 HjfvWEK6FYUctcqzOzixsedbIp3CV1v7qhsFGk+Wj0GH2zmOmcgFZvgxqbiqSj5IxB
+	 Fv4+hEmjl4MldfgalmiPdvoj7BUjovfkbzXSvdBsJP7B7JSdH59aPggKDvNWI5lA8c
+	 2Vzdnn2fIq2ow==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Manuel Fombuena <fombuena@outlook.com>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Andrew Ballance <andrewjballance@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 017/638] HID: multitouch: Add required quirk for Synaptics 0xcddc device
-Date: Sun, 24 Mar 2024 18:50:54 -0400
-Message-ID: <20240324230116.1348576-18-sashal@kernel.org>
+Subject: [PATCH 6.6 019/638] gen_compile_commands: fix invalid escape sequence warning
+Date: Sun, 24 Mar 2024 18:50:56 -0400
+Message-ID: <20240324230116.1348576-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,38 +49,34 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Manuel Fombuena <fombuena@outlook.com>
+From: Andrew Ballance <andrewjballance@gmail.com>
 
-[ Upstream commit 1741a8269e1c51fa08d4bfdf34667387a6eb10ec ]
+[ Upstream commit dae4a0171e25884787da32823b3081b4c2acebb2 ]
 
-Add support for the pointing stick (Accupoint) and 2 mouse buttons.
+With python 3.12, '\#' results in this warning
+    SyntaxWarning: invalid escape sequence '\#'
 
-Present on some Toshiba/dynabook Portege X30 and X40 laptops.
-
-It should close https://bugzilla.kernel.org/show_bug.cgi?id=205817
-
-Signed-off-by: Manuel Fombuena <fombuena@outlook.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-multitouch.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ scripts/clang-tools/gen_compile_commands.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 5ec1f174127a3..3816fd06bc953 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -2153,6 +2153,10 @@ static const struct hid_device_id mt_devices[] = {
- 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
- 			USB_VENDOR_ID_SYNAPTICS, 0xcd7e) },
+diff --git a/scripts/clang-tools/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+index a84cc5737c2c6..bc005cac19441 100755
+--- a/scripts/clang-tools/gen_compile_commands.py
++++ b/scripts/clang-tools/gen_compile_commands.py
+@@ -170,7 +170,7 @@ def process_line(root_directory, command_prefix, file_path):
+     # escape the pound sign '#', either as '\#' or '$(pound)' (depending on the
+     # kernel version). The compile_commands.json file is not interepreted
+     # by Make, so this code replaces the escaped version with '#'.
+-    prefix = command_prefix.replace('\#', '#').replace('$(pound)', '#')
++    prefix = command_prefix.replace(r'\#', '#').replace('$(pound)', '#')
  
-+	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-+		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-+			USB_VENDOR_ID_SYNAPTICS, 0xcddc) },
-+
- 	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
- 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
- 			USB_VENDOR_ID_SYNAPTICS, 0xce08) },
+     # Use os.path.abspath() to normalize the path resolving '.' and '..' .
+     abs_path = os.path.abspath(os.path.join(root_directory, file_path))
 -- 
 2.43.0
 
