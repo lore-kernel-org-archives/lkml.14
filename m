@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D23E1422BE;
-	Sun, 24 Mar 2024 22:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1681D697E;
+	Sun, 24 Mar 2024 22:49:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320545; cv=none; b=WeiAxAz/lfF35PEBgxWbN6jeT1fsmbmJcBnYlzCGF6v9e2a7zVwLLofWp9TGP+3w2UNcXtCHIEUgj7VjQO9KSfzHUJchwmkrb/cGOp8B02E4Xur2DluwvrIYKziMV2sqtLhST1aqSBIo8uo139dYWcwJd4lK9ylf0m/mASPWGM4=
+	t=1711320582; cv=none; b=UcFyULC1oB4p7RcyVfSAuro/yYDUiwxag2BR9l3lW1vntUf4nUXVKXgHoENcFxhK3J2h1lf5evnnq1yx3/+X6Wv43D672JEn3GX0BXYwgMmTmsdoswyyWN9diu3YVcecP2Knzxewq+6koE9mqUQYyUgaUeHcsnzPUtE44ROADEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320545; c=relaxed/simple;
-	bh=TqbdMatSwzqhA9SLehDS7UjFj034MU3eHyuNpAN4Ps8=;
+	s=arc-20240116; t=1711320582; c=relaxed/simple;
+	bh=YEPz7/LV8rFX1YoEpidCsvFq2drnraVPp+Gh9O1b24A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eZjY8PYFsLmm+Kd/TwrwXe8CYBcSqUEwhbrr1z1aGRq0VRer7bI96zYI88jbbryMHsjpYg24xbkL0ZoUpD+9k14LA3Zr75yS4O0rC8pabXElZ8QVRKqYJGqc+s/FE6LTRLeEORO+JwSn0tNNihQquvOVRZG3ScCBFrZ0WILZJOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RIqyzooz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CqRnvHXI7qy+4N1lMXu4IBF3EVBX402moRbBQ6W+2DtViq2eNcO/YL2MkOS4TKyizTLFvyIomSkf5rjX0AkuKf39tsHB+yEnSdZkAzFt4ZJZL0gmFJWUfsBJivEsgjwjqCBp/0EdoQnfknQus6PQwHsi1MFbYiv9RKLRXipNGco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mKSJxQ/Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RIqyzooz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 531E9C433F1;
-	Sun, 24 Mar 2024 22:49:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mKSJxQ/Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2C7C43390;
+	Sun, 24 Mar 2024 22:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320544;
-	bh=TqbdMatSwzqhA9SLehDS7UjFj034MU3eHyuNpAN4Ps8=;
+	s=k20201202; t=1711320581;
+	bh=YEPz7/LV8rFX1YoEpidCsvFq2drnraVPp+Gh9O1b24A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RIqyzoozJ25rN2HeXZWkW9kxregwj9EFm2XxP2BrpmXA4/jG5P0LD370+mxgrtkqi
-	 VWbCgXZNZMFGSHa9urvHXGa/MWYjkp4SRCDo6zvxkOfll/1jGTWu6kP0QqgC/1gG3o
-	 BKzL7OPyzg1kXJEPNdHLofmKJJqlf4rgh+f+d05u2ebNeENUSFibwS42NKbmuh3jJ8
-	 E/tWhhTEVocuh+n04X2t8WwZBJHRVLam7TGg6p5zIfmRRb511gykSk5Tj794RenFtC
-	 6+eEtMCJZHNEb3/wDuoi+Ayht9elqakrgSiQT8NpccZXPKs2EWHUq18JXIaKpGHMi9
-	 WI8AuRWmf6ZDg==
+	b=mKSJxQ/Z9c77KAVY+R+6SlawyA/iquiKlSo6TkqlRHZOhLZmvkvINCvSJLjV3Mmue
+	 U2tmr8X37Hts8ABKWS9h8sNXBgGfJxHaGG2ioOw3TuY8zZPPXHUn10IIreE7jH9NVL
+	 DTJ7nXnB+e7oaYqlMCaYfCkKvwywnJRhRdzKfk4nlTs77tLUgAzjKCuSDRrRmsqYnn
+	 7E624wSg9BHJQp4MfkkBzWDegQ5jYy7OMjy7AQ3WubIUlQXkrrhf3p6u41xetPX44q
+	 mZFZ9/1nttoeQDlRh7I/c6f1MpMz0iNEDkRsIt0XlocO/1LeDO+ljcGacW9fQLBonL
+	 AkwQqb4QdK4HQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gabriel Krisman Bertazi <krisman@suse.de>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Eric Biggers <ebiggers@google.com>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 105/713] ovl: Always reject mounting over case-insensitive directories
-Date: Sun, 24 Mar 2024 18:37:11 -0400
-Message-ID: <20240324224720.1345309-106-sashal@kernel.org>
+Subject: [PATCH 6.7 142/713] ARM: dts: renesas: r8a73a4: Fix external clocks and clock rate
+Date: Sun, 24 Mar 2024 18:37:48 -0400
+Message-ID: <20240324224720.1345309-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,100 +44,82 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gabriel Krisman Bertazi <krisman@suse.de>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 2824083db76cb9d4b7910607b367e93b02912865 ]
+[ Upstream commit 090c4094574705b0afc7d37825cdc5d06f0e7e02 ]
 
-overlayfs relies on the filesystem setting DCACHE_OP_HASH or
-DCACHE_OP_COMPARE to reject mounting over case-insensitive directories.
+External clocks should be defined as zero-Hz clocks in the SoC .dtsi,
+and overridden in the board .dts when present.
 
-Since commit bb9cd9106b22 ("fscrypt: Have filesystems handle their
-d_ops"), we set ->d_op through a hook in ->d_lookup, which
-means the root dentry won't have them, causing the mount to accidentally
-succeed.
+Correct the clock rate of extal1 from 25 to 26 MHz, to match the crystal
+oscillator present on the APE6-EVM board.
 
-In v6.7-rc7, the following sequence will succeed to mount, but any
-dentry other than the root dentry will be a "weird" dentry to ovl and
-fail with EREMOTE.
-
-  mkfs.ext4 -O casefold lower.img
-  mount -O loop lower.img lower
-  mount -t overlay -o lowerdir=lower,upperdir=upper,workdir=work ovl /mnt
-
-Mounting on a subdirectory fails, as expected, because DCACHE_OP_HASH
-and DCACHE_OP_COMPARE are properly set by ->lookup.
-
-Fix by explicitly rejecting superblocks that allow case-insensitive
-dentries. Yes, this will be solved when we move d_op configuration back
-to ->s_d_op. Yet, we better have an explicit fix to avoid messing up
-again.
-
-While there, re-sort the entries to have more descriptive error messages
-first.
-
-Fixes: bb9cd9106b22 ("fscrypt: Have filesystems handle their d_ops")
-Acked-by: Amir Goldstein <amir73il@gmail.com>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20240221171412.10710-2-krisman@suse.de
-Signed-off-by: Gabriel Krisman Bertazi <krisman@suse.de>
+Fixes: a76809a329d6ebae ("ARM: shmobile: r8a73a4: Common clock framework DT description")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Link: https://lore.kernel.org/r/1692bc8cd465d62168cbf110522ad62a7af3f606.1705315614.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/params.c | 14 +++++++++++---
- include/linux/fs.h    |  9 +++++++++
- 2 files changed, 20 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/renesas/r8a73a4-ape6evm.dts | 12 ++++++++++++
+ arch/arm/boot/dts/renesas/r8a73a4.dtsi        |  9 ++++++---
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/fs/overlayfs/params.c b/fs/overlayfs/params.c
-index 3fe2dde1598f9..488f920f79d28 100644
---- a/fs/overlayfs/params.c
-+++ b/fs/overlayfs/params.c
-@@ -280,12 +280,20 @@ static int ovl_mount_dir_check(struct fs_context *fc, const struct path *path,
- {
- 	struct ovl_fs_context *ctx = fc->fs_private;
+diff --git a/arch/arm/boot/dts/renesas/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/renesas/r8a73a4-ape6evm.dts
+index ed75c01dbee10..3d02f065f71c2 100644
+--- a/arch/arm/boot/dts/renesas/r8a73a4-ape6evm.dts
++++ b/arch/arm/boot/dts/renesas/r8a73a4-ape6evm.dts
+@@ -209,6 +209,18 @@ &cmt1 {
+ 	status = "okay";
+ };
  
--	if (ovl_dentry_weird(path->dentry))
--		return invalfc(fc, "filesystem on %s not supported", name);
--
- 	if (!d_is_dir(path->dentry))
- 		return invalfc(fc, "%s is not a directory", name);
- 
-+	/*
-+	 * Root dentries of case-insensitive capable filesystems might
-+	 * not have the dentry operations set, but still be incompatible
-+	 * with overlayfs.  Check explicitly to prevent post-mount
-+	 * failures.
-+	 */
-+	if (sb_has_encoding(path->mnt->mnt_sb))
-+		return invalfc(fc, "case-insensitive capable filesystem on %s not supported", name);
++&extal1_clk {
++	clock-frequency = <26000000>;
++};
 +
-+	if (ovl_dentry_weird(path->dentry))
-+		return invalfc(fc, "filesystem on %s not supported", name);
- 
- 	/*
- 	 * Check whether upper path is read-only here to report failures
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 7f659c26794b5..98c718b0fe532 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3205,6 +3205,15 @@ extern int generic_check_addressable(unsigned, u64);
- 
- extern void generic_set_encrypted_ci_d_ops(struct dentry *dentry);
- 
-+static inline bool sb_has_encoding(const struct super_block *sb)
-+{
-+#if IS_ENABLED(CONFIG_UNICODE)
-+	return !!sb->s_encoding;
-+#else
-+	return false;
-+#endif
-+}
++&extal2_clk {
++	clock-frequency = <48000000>;
++};
 +
- int may_setattr(struct mnt_idmap *idmap, struct inode *inode,
- 		unsigned int ia_valid);
- int setattr_prepare(struct mnt_idmap *, struct dentry *, struct iattr *);
++&extalr_clk {
++	clock-frequency = <32768>;
++};
++
+ &pfc {
+ 	scifa0_pins: scifa0 {
+ 		groups = "scifa0_data";
+diff --git a/arch/arm/boot/dts/renesas/r8a73a4.dtsi b/arch/arm/boot/dts/renesas/r8a73a4.dtsi
+index c39066967053f..d1f4cbd099efb 100644
+--- a/arch/arm/boot/dts/renesas/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/renesas/r8a73a4.dtsi
+@@ -450,17 +450,20 @@ clocks {
+ 		extalr_clk: extalr {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+-			clock-frequency = <32768>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
+ 		};
+ 		extal1_clk: extal1 {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+-			clock-frequency = <25000000>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
+ 		};
+ 		extal2_clk: extal2 {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+-			clock-frequency = <48000000>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
+ 		};
+ 		fsiack_clk: fsiack {
+ 			compatible = "fixed-clock";
 -- 
 2.43.0
 
