@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87EB1EC654;
-	Sun, 24 Mar 2024 22:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3300E12AAFF;
+	Sun, 24 Mar 2024 22:55:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320954; cv=none; b=MMOm3EgPnBN3f/O+yKFUSyIi4Xonf2v665urCU0Cv4PMXp8z7lLpPGWVTZCdMLnRwO4uIdeNNEa/M93L1EGaXiW87uWBXG17ml7w0gOSVCvWFGZyJmwA2/XZlJZMhdb/zP4iDr8ldonlsV87eToGeSLkE/mxiF+w+dsXptLCL/U=
+	t=1711320957; cv=none; b=Y8EHQRLuq4uYBxEtoddx37WubpfLnMqtjKTATqXrjvDt98tpDSGgyIjDx9DzPNAiRu845w1h26WrLpYnSSweXSUTrkZghqy5kKg+f4yC0WNIQXufxrxinXybnM+Ck6z5qy+71ipSwUOe83e1+kTF5LDb3BkTypeJpy8VTNoDW0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320954; c=relaxed/simple;
-	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
+	s=arc-20240116; t=1711320957; c=relaxed/simple;
+	bh=TLyEqfyntQ6dgjomKdKwyWv+EdNOs2VIapsu7gTdO5I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X0Ni4zuzJMpVkyXjpE6CU/megvg7Pni4aEWYSnHbLlhrD6TMPVLZCUvbhksc2KbvTSJOyPD8R2MsstmTrpx3dzwxy7WUtXAmtyvXcQRqL6skqsbmtIzMvEneDLHEsvG2S2plnj7fHDTIrJFBVIeJsJkzByPUgpZ4nCTc3rh9Ixc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUm+XMmb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rdjJRoDHG8xyFchlyJiYIXyi0O7xxiaZEzvyZNY4Q+uAEmSL9ruIqDyjMtacLUf4wtQiYDiocSLLNdcJ9MJsCqAIMfLLrKxslyEzNQeicA6vl29KppukbVjpHqfADW3+AxYOb68h9SvJQG9RgnN8hNTFs1Je9/kXf/nI98V/s9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qNsVyuYk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUm+XMmb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5412C43390;
-	Sun, 24 Mar 2024 22:55:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qNsVyuYk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5392FC433C7;
+	Sun, 24 Mar 2024 22:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320953;
-	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
+	s=k20201202; t=1711320956;
+	bh=TLyEqfyntQ6dgjomKdKwyWv+EdNOs2VIapsu7gTdO5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fUm+XMmbmR8zVSGNRnzVpTVVqGqnd7HLqmqtFjgRvRYHhx9puTt8iCosfuvYWKy5M
-	 AoBe/lNDwP7qAdJ0zqjFB8PfYFW9u7nssZVuEqhE+sGTDCDGd5Jq9d++VNYK+oWFQF
-	 lHmdIDFCqZmM+HLWZZcn8MKD0NL8ZVrNzkGyFTKSwBxF1FB5vNpcm4mN4BmhO8zuvW
-	 l88LYtcvT9o9w2U0dbOwnpU4DaTYlBZ3ENX+HhA7ArNfsh9aHty7t3O67bCI94mZGJ
-	 sXNAIsOn8OFmAXXwqFzasvwKt+koXYMw2WUyB1jExn2s9CWrzyxySCR+3rkTBZT4dq
-	 JffUgBO+wld6g==
+	b=qNsVyuYk7dSXxPifUiIV/PNwjLkogfke11OH3EcgK+CGoMGgk0UBycw6n07Wx8J2T
+	 jylewWH/VninvW5AN1VFUSfMAk28MH+lT36bAAiCtwIjkkNbVqhbXYt5kfLQG0kmGy
+	 CHCH/Iyht3zDsN47eiNXgG2zyh/GihKBPEoZnvlbzro1Pjz6syY6XmVTUqL2+vfOJx
+	 NkFJgTfqioB4czrvoL6KGNNXfvMMfG3XdEhcPWX8YdMnscle2AuY685YYlho/Qt6+U
+	 jDzj8HOyEZ7tXdPrWTN12Np7AEpGBsLZsCN1fCMAAcvBBfvKRAiUFtEu57XNo8Bya0
+	 9SCBWM4M50NDQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Edward Adam Davis <eadavis@qq.com>,
-	syzbot+ce750e124675d4599449@syzkaller.appspotmail.com,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 517/713] media: pvrusb2: fix uaf in pvr2_context_set_notify
-Date: Sun, 24 Mar 2024 18:44:03 -0400
-Message-ID: <20240324224720.1345309-518-sashal@kernel.org>
+Subject: [PATCH 6.7 519/713] media: go7007: fix a memleak in go7007_load_encoder
+Date: Sun, 24 Mar 2024 18:44:05 -0400
+Message-ID: <20240324224720.1345309-520-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,73 +48,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Edward Adam Davis <eadavis@qq.com>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 0a0b79ea55de8514e1750884e5fec77f9fdd01ee ]
+[ Upstream commit b9b683844b01d171a72b9c0419a2d760d946ee12 ]
 
-[Syzbot reported]
-BUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
-Read of size 4 at addr ffff888113aeb0d8 by task kworker/1:1/26
+In go7007_load_encoder, bounce(i.e. go->boot_fw), is allocated without
+a deallocation thereafter. After the following call chain:
 
-CPU: 1 PID: 26 Comm: kworker/1:1 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0xc4/0x620 mm/kasan/report.c:488
- kasan_report+0xda/0x110 mm/kasan/report.c:601
- pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
- pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]
- pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272
+saa7134_go7007_init
+  |-> go7007_boot_encoder
+        |-> go7007_load_encoder
+  |-> kfree(go)
 
-Freed by task 906:
-kasan_save_stack+0x33/0x50 mm/kasan/common.c:47
-kasan_save_track+0x14/0x30 mm/kasan/common.c:68
-kasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640
-poison_slab_object mm/kasan/common.c:241 [inline]
-__kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257
-kasan_slab_free include/linux/kasan.h:184 [inline]
-slab_free_hook mm/slub.c:2121 [inline]
-slab_free mm/slub.c:4299 [inline]
-kfree+0x105/0x340 mm/slub.c:4409
-pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]
-pvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+go is freed and thus bounce is leaked.
 
-[Analyze]
-Task A set disconnect_flag = !0, which resulted in Task B's condition being met
-and releasing mp, leading to this issue.
-
-[Fix]
-Place the disconnect_flag assignment operation after all code in pvr2_context_disconnect()
-to avoid this issue.
-
-Reported-and-tested-by: syzbot+ce750e124675d4599449@syzkaller.appspotmail.com
-Fixes: e5be15c63804 ("V4L/DVB (7711): pvrusb2: Fix race on module unload")
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Fixes: 95ef39403f89 ("[media] go7007: remember boot firmware")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-context.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/usb/go7007/go7007-driver.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-index 58f2f3ff10ee2..73c95ba2328a4 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-@@ -267,9 +267,9 @@ static void pvr2_context_exit(struct pvr2_context *mp)
- void pvr2_context_disconnect(struct pvr2_context *mp)
- {
- 	pvr2_hdw_disconnect(mp->hdw);
--	mp->disconnect_flag = !0;
- 	if (!pvr2_context_shutok())
- 		pvr2_context_notify(mp);
-+	mp->disconnect_flag = !0;
+diff --git a/drivers/media/usb/go7007/go7007-driver.c b/drivers/media/usb/go7007/go7007-driver.c
+index 0c24e29843048..eb03f98b2ef11 100644
+--- a/drivers/media/usb/go7007/go7007-driver.c
++++ b/drivers/media/usb/go7007/go7007-driver.c
+@@ -80,7 +80,7 @@ static int go7007_load_encoder(struct go7007 *go)
+ 	const struct firmware *fw_entry;
+ 	char fw_name[] = "go7007/go7007fw.bin";
+ 	void *bounce;
+-	int fw_len, rv = 0;
++	int fw_len;
+ 	u16 intr_val, intr_data;
+ 
+ 	if (go->boot_fw == NULL) {
+@@ -109,9 +109,11 @@ static int go7007_load_encoder(struct go7007 *go)
+ 	    go7007_read_interrupt(go, &intr_val, &intr_data) < 0 ||
+ 			(intr_val & ~0x1) != 0x5a5a) {
+ 		v4l2_err(go, "error transferring firmware\n");
+-		rv = -1;
++		kfree(go->boot_fw);
++		go->boot_fw = NULL;
++		return -1;
+ 	}
+-	return rv;
++	return 0;
  }
  
- 
+ MODULE_FIRMWARE("go7007/go7007fw.bin");
 -- 
 2.43.0
 
