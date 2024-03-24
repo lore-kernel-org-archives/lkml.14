@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B0912FB17;
-	Sun, 24 Mar 2024 23:01:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6AA1FA83B;
+	Sun, 24 Mar 2024 23:01:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321300; cv=none; b=RfmgQSM3m4vFsb20woHiky13zV2HSmlQBYFw2Z/cm6vPdbFP9FSd7dl2DJ+BpZi0iowSTh+hn/fKZ239tzfZCbqKkFiS1p/arTbkobxIiErRfW4kZNB8wAMdwSsFSkg1KBVJ5h3r8LahBJMULJ7sE4m5MphSfxKgHeX3ZN7XOpo=
+	t=1711321291; cv=none; b=GO2ZUH7iY9I78S/jP3xA7Ur6IxgPLPwCC13ZWpzniS0JBPSxhx0XeFbsQYDA90bCbAo5t3cZhRZqSlxM2j0ZmVLgOL6qkp7Hzoy6FgXIhbbN94e3/ZPt/4kn/j11DDuWrEjdwndIG0FYPXGTYccVGOviljsQSn7l6XlkeZzcmdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321300; c=relaxed/simple;
-	bh=FkzDlT8ctDyCauDA5oCuwo7gENN9bz4/MUbxBdnuFjM=;
+	s=arc-20240116; t=1711321291; c=relaxed/simple;
+	bh=nFdvnctb3HwjwC3YYHCe4RQV74wIoxZXlt0S3wnnHOQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lo+FA53DnUyhsBR0Wp3dq0tPDt+2CJmHwI95BWtouBfyZV58sqrJoi2j1JdVaCtQi/r5/LeRF4okBAh0CQwLa/hOIMMxLbWAvt6CvqtAyyMuZoCD+UOU9zqZf3tfTs2SSgzZEehWzyAngxcbLHJ8qMhj8q+szT6H10kwrarcO6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6rH/Igy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hpPgc5ccCxoeD7Myz9p152XM1z9HpjR9/svV7JW52RWtzq5Less74KpRiDo3Qw/G4QVMBr8HaQPn5p1WJwJmy9EVK25UCMUp5eYPr25IyvkxRzT77yVSi9JFz5d3Ld6+I46yDEIaBJ6ln1i6yvKppZXce5k4Ugd+WOu+DUGlPzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7c1aSj6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6rH/Igy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FCFDC433A6;
-	Sun, 24 Mar 2024 23:01:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7c1aSj6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E18BC433F1;
+	Sun, 24 Mar 2024 23:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321298;
-	bh=FkzDlT8ctDyCauDA5oCuwo7gENN9bz4/MUbxBdnuFjM=;
+	s=k20201202; t=1711321291;
+	bh=nFdvnctb3HwjwC3YYHCe4RQV74wIoxZXlt0S3wnnHOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U6rH/IgyYAtU6ihcspC2Fsp3TS5+2jM7qR8qFXbTMnd8Hw9UN62Q37Q9nTWRVNsYF
-	 8OaSfwuhhuD+L/KHrxZswDYIoQIqlG4IewwEm1MPYI4HaHLPNC0IbQbK98JXS/uglb
-	 JBCpGnIP4oGinzKTyYZemXS+6iNDMawBrAG+zLoYAvGOAceMajHPQRQpG7xJqTOD55
-	 tOUi1+iYvPX3Tf35NMR3HhTDZCY3kCwn+1UW8jH0NepQSe++Iqo2zi0YbXwduHWKMO
-	 inwMaPkqdwb7ykj4Xnr2Z4OBIORx/E/QM7JJT03zitVC8o2gxsuNhhz82b47eH6aka
-	 0qdR42QSwADGA==
+	b=a7c1aSj6gHqD3EX0j5SyAAAgt8YiYb4QPLdtOyp1zif9KdXqsEvte/VvO5uEEop9d
+	 Dzyzp4efMQ47YPthjFwwLGSlLtlLrv7AnUQfA3iSDCJmFv8xANqBMxowB4YcBFKuOg
+	 Qo8WsCFQfa/WZWIbzvvtHLALvNXzB96DICpIdFTgtKY+6jdcSV9JkraLmCmmJgbS88
+	 vgQBrxyoJ+9bMssKFTwox80Za4Or1oFtE7mVTrWGOxbAOIBvvndkLGMToPvqHrFMjc
+	 61ujfc8G8fGc1TgntKYPX590aaoodyYEQIv4zkU7LP/gJi4DlzhEbsGJYXNR3lKIxr
+	 FNw4w5xZjMp5Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Conor Dooley <conor.dooley@microchip.com>,
+Cc: Mark Brown <broonie@kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 021/638] soc: microchip: Fix POLARFIRE_SOC_SYS_CTRL input prompt
-Date: Sun, 24 Mar 2024 18:50:58 -0400
-Message-ID: <20240324230116.1348576-22-sashal@kernel.org>
+Subject: [PATCH 6.6 013/638] regmap: kunit: Ensure that changed bytes are actually different
+Date: Sun, 24 Mar 2024 18:50:50 -0400
+Message-ID: <20240324230116.1348576-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,31 +48,144 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Mark Brown <broonie@kernel.org>
 
-[ Upstream commit 6dd9a236042e305d7b69ee92db7347bf5943e7d3 ]
+[ Upstream commit 2f0dbb24f78a333433a2b875c0b76bf55c119cd4 ]
 
-The symbol's prompt should be a one-line description, instead of just
-duplicating the symbol name.
+During the cache sync test we verify that values we expect to have been
+written only to the cache do not appear in the hardware. This works most
+of the time but since we randomly generate both the original and new values
+there is a low probability that these values may actually be the same.
+Wrap get_random_bytes() to ensure that the values are different, there
+are other tests which should have similar verification that we actually
+changed something.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+While we're at it refactor the test to use three changed values rather
+than attempting to use one of them twice, that just complicates checking
+that our new values are actually new.
+
+We use random generation to try to avoid data dependencies in the tests.
+
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://msgid.link/r/20240211-regmap-kunit-random-change-v3-1-e387a9ea4468@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/microchip/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/base/regmap/regmap-kunit.c | 54 +++++++++++++++++++++---------
+ 1 file changed, 38 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/soc/microchip/Kconfig b/drivers/soc/microchip/Kconfig
-index eb656b33156ba..f19e74d342aa2 100644
---- a/drivers/soc/microchip/Kconfig
-+++ b/drivers/soc/microchip/Kconfig
-@@ -1,5 +1,5 @@
- config POLARFIRE_SOC_SYS_CTRL
--	tristate "POLARFIRE_SOC_SYS_CTRL"
-+	tristate "Microchip PolarFire SoC (MPFS) system controller support"
- 	depends on POLARFIRE_SOC_MAILBOX
- 	help
- 	  This driver adds support for the PolarFire SoC (MPFS) system controller.
+diff --git a/drivers/base/regmap/regmap-kunit.c b/drivers/base/regmap/regmap-kunit.c
+index 264d29b3fced0..5f1e914646cd9 100644
+--- a/drivers/base/regmap/regmap-kunit.c
++++ b/drivers/base/regmap/regmap-kunit.c
+@@ -9,6 +9,23 @@
+ 
+ #define BLOCK_TEST_SIZE 12
+ 
++static void get_changed_bytes(void *orig, void *new, size_t size)
++{
++	char *o = orig;
++	char *n = new;
++	int i;
++
++	get_random_bytes(new, size);
++
++	/*
++	 * This could be nicer and more efficient but we shouldn't
++	 * super care.
++	 */
++	for (i = 0; i < size; i++)
++		while (n[i] == o[i])
++			get_random_bytes(&n[i], 1);
++}
++
+ static const struct regmap_config test_regmap_config = {
+ 	.max_register = BLOCK_TEST_SIZE,
+ 	.reg_stride = 1,
+@@ -1131,7 +1148,7 @@ static void raw_sync(struct kunit *test)
+ 	struct regmap *map;
+ 	struct regmap_config config;
+ 	struct regmap_ram_data *data;
+-	u16 val[2];
++	u16 val[3];
+ 	u16 *hw_buf;
+ 	unsigned int rval;
+ 	int i;
+@@ -1145,17 +1162,13 @@ static void raw_sync(struct kunit *test)
+ 
+ 	hw_buf = (u16 *)data->vals;
+ 
+-	get_random_bytes(&val, sizeof(val));
++	get_changed_bytes(&hw_buf[2], &val[0], sizeof(val));
+ 
+ 	/* Do a regular write and a raw write in cache only mode */
+ 	regcache_cache_only(map, true);
+-	KUNIT_EXPECT_EQ(test, 0, regmap_raw_write(map, 2, val, sizeof(val)));
+-	if (config.val_format_endian == REGMAP_ENDIAN_BIG)
+-		KUNIT_EXPECT_EQ(test, 0, regmap_write(map, 6,
+-						      be16_to_cpu(val[0])));
+-	else
+-		KUNIT_EXPECT_EQ(test, 0, regmap_write(map, 6,
+-						      le16_to_cpu(val[0])));
++	KUNIT_EXPECT_EQ(test, 0, regmap_raw_write(map, 2, val,
++						  sizeof(u16) * 2));
++	KUNIT_EXPECT_EQ(test, 0, regmap_write(map, 4, val[2]));
+ 
+ 	/* We should read back the new values, and defaults for the rest */
+ 	for (i = 0; i < config.max_register + 1; i++) {
+@@ -1164,24 +1177,34 @@ static void raw_sync(struct kunit *test)
+ 		switch (i) {
+ 		case 2:
+ 		case 3:
+-		case 6:
+ 			if (config.val_format_endian == REGMAP_ENDIAN_BIG) {
+ 				KUNIT_EXPECT_EQ(test, rval,
+-						be16_to_cpu(val[i % 2]));
++						be16_to_cpu(val[i - 2]));
+ 			} else {
+ 				KUNIT_EXPECT_EQ(test, rval,
+-						le16_to_cpu(val[i % 2]));
++						le16_to_cpu(val[i - 2]));
+ 			}
+ 			break;
++		case 4:
++			KUNIT_EXPECT_EQ(test, rval, val[i - 2]);
++			break;
+ 		default:
+ 			KUNIT_EXPECT_EQ(test, config.reg_defaults[i].def, rval);
+ 			break;
+ 		}
+ 	}
++
++	/*
++	 * The value written via _write() was translated by the core,
++	 * translate the original copy for comparison purposes.
++	 */
++	if (config.val_format_endian == REGMAP_ENDIAN_BIG)
++		val[2] = cpu_to_be16(val[2]);
++	else
++		val[2] = cpu_to_le16(val[2]);
+ 	
+ 	/* The values should not appear in the "hardware" */
+-	KUNIT_EXPECT_MEMNEQ(test, &hw_buf[2], val, sizeof(val));
+-	KUNIT_EXPECT_MEMNEQ(test, &hw_buf[6], val, sizeof(u16));
++	KUNIT_EXPECT_MEMNEQ(test, &hw_buf[2], &val[0], sizeof(val));
+ 
+ 	for (i = 0; i < config.max_register + 1; i++)
+ 		data->written[i] = false;
+@@ -1192,8 +1215,7 @@ static void raw_sync(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, 0, regcache_sync(map));
+ 
+ 	/* The values should now appear in the "hardware" */
+-	KUNIT_EXPECT_MEMEQ(test, &hw_buf[2], val, sizeof(val));
+-	KUNIT_EXPECT_MEMEQ(test, &hw_buf[6], val, sizeof(u16));
++	KUNIT_EXPECT_MEMEQ(test, &hw_buf[2], &val[0], sizeof(val));
+ 
+ 	regmap_exit(map);
+ }
 -- 
 2.43.0
 
