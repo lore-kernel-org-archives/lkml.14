@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562841E61F8;
-	Sun, 24 Mar 2024 22:53:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C6C1292DC;
+	Sun, 24 Mar 2024 22:54:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320838; cv=none; b=BzkWDkS1cY7ZdwjUG3/aHMnY89sCyj18HgXPoQ/Ol+EJ59dCF8YU166sEmuinBVt+h7QjBsZZuXBPcVNpeeNSTzT7LIEwvO2YXj0SEJTxq00CXt/9URLUX3hakckOG6Uf6s6+TzDZM5mkSqbNq+5/6g/UqqLuc3TXrucoiM6nII=
+	t=1711320845; cv=none; b=MNalWw+J28NOSB+PLnVAGrx736hBihIfYdy+yTw3SUuCieiOcKGk329BuCqSvc0h8B9Y2pdgy6UrNv8kquOg2U3ArYS3xtbsZG6VN/5Svd92gx9gl+1kmAGFj4GkMJDgcC3SUHV/3a66XzMVEC1Z7HaClOQ5QFvC1SAgH6S7Tws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320838; c=relaxed/simple;
-	bh=MoV3PrzF8eB1c5ICEbjAs9c9Zmtha4fDS5vYVtWkFGc=;
+	s=arc-20240116; t=1711320845; c=relaxed/simple;
+	bh=Bi+CbrTK4iD6H6njG6um+soEi21PZdr3qsucuDdlk/w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b4RP/Dj3nk4yzs8APUtvAJNv1gSxEQ9fxUSvPleTiJtGTDDc7dDwjYaapb7uPhG8k6hRfDfQYBBCC4OVxdnaP4ja/MjQDG2+PZVBji/6FWQbYioogVRv5oxB44ot1yrrhFOi+h7YKm1dZ1HjgHLwgugfYE1Hxj5O4zMxeqG1E2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/H8ud4m; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=MhhqJ+k4aNCgR3qyrHbyuNK/J/TKNDsztDVDp2lzWBucaN6iFsEimmtjCSEiXrTT0dSDJkBb99QR8SrBmF6IQNt6P5Z7VFJfzAMuh9juadlr5i2Ip8eYFf0E6/N/eHPGYcgsI026Lcbeayuo7VAT+ilxM2Q4wZyppWmbNfjf/k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ac27vTSh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/H8ud4m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E7AC43390;
-	Sun, 24 Mar 2024 22:53:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ac27vTSh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A871C433C7;
+	Sun, 24 Mar 2024 22:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320837;
-	bh=MoV3PrzF8eB1c5ICEbjAs9c9Zmtha4fDS5vYVtWkFGc=;
+	s=k20201202; t=1711320844;
+	bh=Bi+CbrTK4iD6H6njG6um+soEi21PZdr3qsucuDdlk/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S/H8ud4mqrnPykiqYk2YgphjjBZntPuHzujlk/NDjEUfTNa+dpGAbs+sUQOsxVSye
-	 C9dVD4yrVzguVSmEYz0yx35oLADg54/6UJ8o61/wMRN8f2yXM2ipbHsFmEcCn/5Ayd
-	 okmiWs8woZIqU4ab5LghC5NMXlmNcZaeqRCC73yl/FH1i9JcQ7Ry3aE/qhlpOR6uav
-	 2wflAwVn16J8N869E5EKKOKCxEB7srtWCIU5XlQpjGoWJJINiy6VARV0mI4dIr65TY
-	 9ikeqcHYm3eBoWk5Am+HDp1iUiP1KXJVJCE9eQztf6PSvj9DVKNFmpqFnI6WAv5Yxb
-	 +vfNCR8nIxY+w==
+	b=ac27vTShsFsPZu1VGC4xKsI2Jeiawi3CJxFIjHf02PwouBZCapobLcsL9lCX+TaTu
+	 nwlP7OfteQkV0HTy+Km3NZDENZCZ4wSs4NIdtwIMmPEIbp3hczzLvmTLa+ZWVPakC7
+	 AM07e/d/VzQffJOhlEZJOXXV0i4WJ7qet1+wSZqDxK5v4oMMersPyzqUchTdXckR4L
+	 dX1178k2Wz9a4NFnQWQQLTLUalEl/HLM/rRd2f8USBSoZKRlBzvohjQ25O4dITuboc
+	 8FzW0tGcqYMQMyz3XsrWvGV0Io6A13nhRS3Ci9tfch/PafK/OpqZxT4T08HVRdxN7s
+	 bORo+cjdu0CKg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-	Quentin Schulz <foss+kernel@0leil.net>,
-	Heiko Stuebner <heiko@sntech.de>,
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 402/713] drm/rockchip: lvds: do not print scary message when probing defer
-Date: Sun, 24 Mar 2024 18:42:08 -0400
-Message-ID: <20240324224720.1345309-403-sashal@kernel.org>
+Subject: [PATCH 6.7 410/713] PCI/DPC: Print all TLP Prefixes, not just the first
+Date: Sun, 24 Mar 2024 18:42:16 -0400
+Message-ID: <20240324224720.1345309-411-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,43 +44,45 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-[ Upstream commit 52d11c863ac92e36a0365249f7f6d27ac48c78bc ]
+[ Upstream commit 6568d82512b0a64809acff3d7a747362fa4288c8 ]
 
-This scary message can misled the user into thinking something bad has
-happened and needs to be fixed, however it could simply be part of a
-normal boot process where EPROBE_DEFER is taken into account. Therefore,
-let's use dev_err_probe so that this message doesn't get shown (by
-default) when the return code is EPROBE_DEFER.
+The TLP Prefix Log Register consists of multiple DWORDs (PCIe r6.1 sec
+7.9.14.13) but the loop in dpc_process_rp_pio_error() keeps reading from
+the first DWORD, so we print only the first PIO TLP Prefix (duplicated
+several times), and we never print the second, third, etc., Prefixes.
 
-Fixes: 34cc0aa25456 ("drm/rockchip: Add support for Rockchip Soc LVDS")
-Cc: Quentin Schulz <foss+kernel@0leil.net>
-Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231120-rk-lvds-defer-msg-v2-2-9c59a5779cf9@theobroma-systems.com
+Add the iteration count based offset calculation into the config read.
+
+Fixes: f20c4ea49ec4 ("PCI/DPC: Add eDPC support")
+Link: https://lore.kernel.org/r/20240118110815.3867-1-ilpo.jarvinen@linux.intel.com
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+[bhelgaas: add user-visible details to commit log]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/rockchip_lvds.c | 2 +-
+ drivers/pci/pcie/dpc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-index 17d8fc797151a..f2831d304e7bd 100644
---- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-@@ -577,7 +577,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		ret = -EINVAL;
- 		goto err_put_port;
- 	} else if (ret) {
--		DRM_DEV_ERROR(dev, "failed to find panel and bridge node\n");
-+		dev_err_probe(dev, ret, "failed to find panel and bridge node\n");
- 		goto err_put_port;
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 94111e4382413..e5d7c12854fa0 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -234,7 +234,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+ 
+ 	for (i = 0; i < pdev->dpc_rp_log_size - 5; i++) {
+ 		pci_read_config_dword(pdev,
+-			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
++			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG + i * 4, &prefix);
+ 		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
  	}
- 	if (lvds->panel)
+  clear_status:
 -- 
 2.43.0
 
