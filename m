@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E353B1F23EF;
-	Sun, 24 Mar 2024 22:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D9783CA7;
+	Sun, 24 Mar 2024 22:58:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321108; cv=none; b=u8se+M1a8VAMTGMG+INUaglb4/ZFcDP03BDSAqGvHARsEXuooMeJ1eS8ylH0XTyLcG/Su0j10t9t0tqj+9O3fvwLLOg/NVrmh0qLt7VcdD4XjH9hRN+u56ra3Ic39mL3+EHE1jh1+bhBJfenRL7coNwR7MW4scXTOxfnvqsxlLk=
+	t=1711321110; cv=none; b=YEk3S0AlmhnOUGw2nE+k7mwslz0tBM7H4j3M5dSxhU+pxC8NgnMRIzvPP1fbcTj4s31gY8FfCdvdIVgAIGVfluqj6g7VfJisLilt4At1jvtyK6VUQnATPNV4a2wGsiUk/Er9U+K5fTwOdu82y8u7/4pT1DMQB1INPmAQzidSWUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321108; c=relaxed/simple;
-	bh=9yc9RzzNYFFCXj9TA2BrTsYbnJHVTSRf/XwLJhzcGW8=;
+	s=arc-20240116; t=1711321110; c=relaxed/simple;
+	bh=IPQUPry+ITtcAdi3zYmL9JlqymXhYmP6surBfz44xq4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t2rWOzegf2To3wGDlh2cJdkWh7AZCO4wfoW0NMlKqQyZrEFkWeZpZm1n4+ebYQ+eg4jtQtQtauZqsXJYdtl42HtnNDoRVJmR1Jd93RFnwFL4eZNAPVeA3nYLLse2hZtnUvMYR1MgSaDgsS77xePkl1fpNaPpgEXJYQ4lZU1Emy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlzCmjPL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RHrOsKrDJ+RQDvdiJnR9qjt0OiT2XJ252NkNJN6OahALQhliq25LnP9HjomgIgOXKYtDt0ecsS2pQnAemGg5hYyoFMUaSxdcAPTCxvPju7IU2HdVWq9ARU0vvnNDPdNlWEccbqQ9QQfH0P2JwwWAAZsZ5I9gvI7c4eYs2uF87pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwreHUGw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlzCmjPL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C916C43399;
-	Sun, 24 Mar 2024 22:58:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwreHUGw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57E2DC43390;
+	Sun, 24 Mar 2024 22:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321107;
-	bh=9yc9RzzNYFFCXj9TA2BrTsYbnJHVTSRf/XwLJhzcGW8=;
+	s=k20201202; t=1711321110;
+	bh=IPQUPry+ITtcAdi3zYmL9JlqymXhYmP6surBfz44xq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jlzCmjPLsBHQLSwrHQEEi/j4FH0maDyvrWBBt+KnPZm6GJgTroilHuuN3OjYNAeId
-	 ktyeNQIZnP5YeBjx8CnoRHpHVfVlBHftM4fYz6T2EewKReBoVWN3h2N9aeSppo9mI3
-	 UMf94b17/JmjhQ1rw/YyGCLSjQS/PXesjRMnX7oA2yWSvAdL4kaA5oxLrC5W9PVjkG
-	 U0lUW4fYzVQHA05v5k/RsUXxHZfB2g6vf4Xvtw6ddNmUgjqLp5xAfyLmkOUQXIwZDd
-	 Jgw1bpP4VloFC3I3pX1+CCi6IbA7ngcgpkRBRDejV0hIb3Q0cMfciqbbJvsFTfPB9z
-	 AnZvACrPK/Qxg==
+	b=dwreHUGwzQffQbBvgp6oPebceT42PxFLF1bpHTpj2sBRA9xH5YaLhzn7Bi0kAOswM
+	 7aFegeJkoBaJvu5GXUtGstSleDOXnvEKfAt0IoSpqStyPRVe4TgR4tQMx7hcmGJc3R
+	 GzYkOTOuQFqUre1nxPyDg8a73E7biXbYCTFcIFNRN2eD1Upfjwtbetf84Z3PBjS0ev
+	 4WZLHDHyEiH2c+RboUlKhS2U3wPD0l3o4fKBQK2fI05/kStIZNm+tZMiL+tyRjgHmC
+	 PbZDv885qFDmGmjGpmExhiTNHOB7fJ1pZxh6TThSCPO06SnB9Wvw6ETAKFTutv9Oza
+	 4toIQ8NE64Zfw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+Cc: Leon Romanovsky <leonro@nvidia.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 670/713] xen/events: increment refcnt only if event channel is refcounted
-Date: Sun, 24 Mar 2024 18:46:36 -0400
-Message-ID: <20240324224720.1345309-671-sashal@kernel.org>
+Subject: [PATCH 6.7 672/713] xfrm: Allow UDP encapsulation only in offload modes
+Date: Sun, 24 Mar 2024 18:46:38 -0400
+Message-ID: <20240324224720.1345309-673-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,113 +49,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Juergen Gross <jgross@suse.com>
+From: Leon Romanovsky <leonro@nvidia.com>
 
-[ Upstream commit d277f9d82802223f242cd9b60c988cfdda1d6be0 ]
+[ Upstream commit 773bb766ca4a05bf363203030b72b10088869224 ]
 
-In bind_evtchn_to_irq_chip() don't increment the refcnt of the event
-channel blindly. In case the event channel is NOT refcounted, issue a
-warning instead.
+The missing check of x->encap caused to the situation where GSO packets
+were created with UDP encapsulation.
 
-Add an additional safety net by doing the refcnt increment only if the
-caller has specified IRQF_SHARED in the irqflags parameter.
+As a solution return the encap check for non-offloaded SA.
 
-Fixes: 9e90e58c11b7 ("xen: evtchn: Allow shared registration of IRQ handers")
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Link: https://lore.kernel.org/r/20240313071409.25913-3-jgross@suse.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Fixes: 983a73da1f99 ("xfrm: Pass UDP encapsulation in TX packet offload")
+Closes: https://lore.kernel.org/all/a650221ae500f0c7cf496c61c96c1b103dcb6f67.camel@redhat.com
+Reported-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/events/events_base.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ net/xfrm/xfrm_device.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
-index 3b9f080109d7e..27553673e46bc 100644
---- a/drivers/xen/events/events_base.c
-+++ b/drivers/xen/events/events_base.c
-@@ -1190,7 +1190,7 @@ int xen_pirq_from_irq(unsigned irq)
- EXPORT_SYMBOL_GPL(xen_pirq_from_irq);
+diff --git a/net/xfrm/xfrm_device.c b/net/xfrm/xfrm_device.c
+index 653e51ae39648..6346690d5c699 100644
+--- a/net/xfrm/xfrm_device.c
++++ b/net/xfrm/xfrm_device.c
+@@ -407,7 +407,8 @@ bool xfrm_dev_offload_ok(struct sk_buff *skb, struct xfrm_state *x)
+ 	struct xfrm_dst *xdst = (struct xfrm_dst *)dst;
+ 	struct net_device *dev = x->xso.dev;
  
- static int bind_evtchn_to_irq_chip(evtchn_port_t evtchn, struct irq_chip *chip,
--				   struct xenbus_device *dev)
-+				   struct xenbus_device *dev, bool shared)
- {
- 	int ret = -ENOMEM;
- 	struct irq_info *info;
-@@ -1224,7 +1224,8 @@ static int bind_evtchn_to_irq_chip(evtchn_port_t evtchn, struct irq_chip *chip,
- 		 */
- 		bind_evtchn_to_cpu(info, 0, false);
- 	} else if (!WARN_ON(info->type != IRQT_EVTCHN)) {
--		info->refcnt++;
-+		if (shared && !WARN_ON(info->refcnt < 0))
-+			info->refcnt++;
- 	}
+-	if (!x->type_offload)
++	if (!x->type_offload ||
++	    (x->xso.type == XFRM_DEV_OFFLOAD_UNSPECIFIED && x->encap))
+ 		return false;
  
- 	ret = info->irq;
-@@ -1237,13 +1238,13 @@ static int bind_evtchn_to_irq_chip(evtchn_port_t evtchn, struct irq_chip *chip,
- 
- int bind_evtchn_to_irq(evtchn_port_t evtchn)
- {
--	return bind_evtchn_to_irq_chip(evtchn, &xen_dynamic_chip, NULL);
-+	return bind_evtchn_to_irq_chip(evtchn, &xen_dynamic_chip, NULL, false);
- }
- EXPORT_SYMBOL_GPL(bind_evtchn_to_irq);
- 
- int bind_evtchn_to_irq_lateeoi(evtchn_port_t evtchn)
- {
--	return bind_evtchn_to_irq_chip(evtchn, &xen_lateeoi_chip, NULL);
-+	return bind_evtchn_to_irq_chip(evtchn, &xen_lateeoi_chip, NULL, false);
- }
- EXPORT_SYMBOL_GPL(bind_evtchn_to_irq_lateeoi);
- 
-@@ -1295,7 +1296,8 @@ static int bind_ipi_to_irq(unsigned int ipi, unsigned int cpu)
- 
- static int bind_interdomain_evtchn_to_irq_chip(struct xenbus_device *dev,
- 					       evtchn_port_t remote_port,
--					       struct irq_chip *chip)
-+					       struct irq_chip *chip,
-+					       bool shared)
- {
- 	struct evtchn_bind_interdomain bind_interdomain;
- 	int err;
-@@ -1307,14 +1309,14 @@ static int bind_interdomain_evtchn_to_irq_chip(struct xenbus_device *dev,
- 					  &bind_interdomain);
- 
- 	return err ? : bind_evtchn_to_irq_chip(bind_interdomain.local_port,
--					       chip, dev);
-+					       chip, dev, shared);
- }
- 
- int bind_interdomain_evtchn_to_irq_lateeoi(struct xenbus_device *dev,
- 					   evtchn_port_t remote_port)
- {
- 	return bind_interdomain_evtchn_to_irq_chip(dev, remote_port,
--						   &xen_lateeoi_chip);
-+						   &xen_lateeoi_chip, false);
- }
- EXPORT_SYMBOL_GPL(bind_interdomain_evtchn_to_irq_lateeoi);
- 
-@@ -1430,7 +1432,8 @@ static int bind_evtchn_to_irqhandler_chip(evtchn_port_t evtchn,
- {
- 	int irq, retval;
- 
--	irq = bind_evtchn_to_irq_chip(evtchn, chip, NULL);
-+	irq = bind_evtchn_to_irq_chip(evtchn, chip, NULL,
-+				      irqflags & IRQF_SHARED);
- 	if (irq < 0)
- 		return irq;
- 	retval = request_irq(irq, handler, irqflags, devname, dev_id);
-@@ -1471,7 +1474,8 @@ static int bind_interdomain_evtchn_to_irqhandler_chip(
- {
- 	int irq, retval;
- 
--	irq = bind_interdomain_evtchn_to_irq_chip(dev, remote_port, chip);
-+	irq = bind_interdomain_evtchn_to_irq_chip(dev, remote_port, chip,
-+						  irqflags & IRQF_SHARED);
- 	if (irq < 0)
- 		return irq;
- 
+ 	if (x->xso.type == XFRM_DEV_OFFLOAD_PACKET ||
 -- 
 2.43.0
 
