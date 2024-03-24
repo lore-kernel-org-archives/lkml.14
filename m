@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF13175C84;
-	Sun, 24 Mar 2024 23:36:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF65175C81;
+	Sun, 24 Mar 2024 23:36:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323389; cv=none; b=Pmh37daldGYkf602kHvqoSzEn5LFiM4uwVM3YxF99aJF5Lyk4gLUiho3MtI4jpN/cAr7zLMB1qmSInnpMbxDevVlTbc84e24GNNU4HBmmDRcWSQvcWOOckK/Ri+Gf/sqIoPfs/HPoHXVpZ7tMI2Y0pGER2ggFE6uAa4EZJI55go=
+	t=1711323389; cv=none; b=K199zAPDhWIrnJdoKbWH2gJe/HxccOdnHADSOKemQcahaKapCEGf95AmKdTskSzafSb3EsQIJm1lnTNNWNO3zrnUI57S+NW/CmM3Dh66Nyou92l3Gz4wvMkLniu2oWIx9V2sw/UdYzsWcFyY5Jj50t/+GxNsPFwmgZhE6Bx8sIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711323389; c=relaxed/simple;
-	bh=MyT7mOET00kWAGJobb86ugKpx4ruCR/LeO1Hr6qS+UY=;
+	bh=Fy2IfXuEmyWDKc8aoG+7VxfO1DUFtWc51famz17+kRk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JWEDVcVkJAktCgTZp+6pl44Tt5plGbuV7G5qbfsvf/0ppEV8C6WyPrvpFN87559/CrWbr+oe7c5Hfmt57b3IgGZCTn29enHGncU9T3ttbxWG/BovBECn09dI4RanWDb4M83GcPFyM/Y+zEHHCnPmb6lQE+59YP5GAQKmmdbL6O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3L3Rcv6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CbUd1SsajblpbiUnFClMZW6tDwFuDbp77vdzTOp9K7byfrKH5WHjRynCh5p8949qu1pOdirj+Kexk3FTKUxrdqVTX4VD7tRqicg4aUzrywjcNmwkBQUfm1w1saMxMmtoXOi/+qk7bnjr/xJEVZ30XPWnM6ug2alCcr1+v+t0ZK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u7Jd84PE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3L3Rcv6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41492C433F1;
-	Sun, 24 Mar 2024 23:36:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u7Jd84PE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B627C43399;
+	Sun, 24 Mar 2024 23:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323389;
-	bh=MyT7mOET00kWAGJobb86ugKpx4ruCR/LeO1Hr6qS+UY=;
+	s=k20201202; t=1711323388;
+	bh=Fy2IfXuEmyWDKc8aoG+7VxfO1DUFtWc51famz17+kRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U3L3Rcv6UxaDpCWDZR3jnqsf+VFs+21lBDjvRyVcvcHVMiAlxg0+T3r97fxURbovn
-	 7EJNhwh6Y/RuvAC84z9rzPRcesXoFQYK9Cb7MSG6t7JA7qOQm1RWFOA2iAZlg/L7PS
-	 o9Awii2NaKq+TxgQIfzh+MclwF55Y/3H70GfdJdDD15cKya20yKVkZUoqJjkLUVNQQ
-	 q1caXwgo/m2WZqBAY3/IPKkupAyGIMF5iAWiM4L/mJW7MblwjyQyj/Sc2yOoGp2BQR
-	 3uskDqG7iTqU1/T7BrrMyG/3Rxl68YlZ2BM1G6tgb2Ga1E+nUkrJIY2LFZdMV4jfUM
-	 VGc2GrV2hm8Gg==
+	b=u7Jd84PEVkgel6U9uOrq2NpJ8IPrV6C7xtb4gJ3JCfhSIY1gKjXvnMPop7VZzwrDb
+	 aVZbz1BxQsw4E4ObJ6PHtNTYsCMQIgl5IHjsPEK67bnMWJMFNlLY3L5ECSjn/s/h6J
+	 SLFUKeXqmOXBFU832/ysEQVEtYudu7HtZCWxM/s2n+CIYEd3yzsLebyLLw/SlqX45C
+	 +axmeKa3jbx7D+oVRZLwakt+lIChZd5ecSvDXQzyOp5zz25Xy8SDbgry13ssnj/05e
+	 Em25YA/pyVIM4hunbfjJfoKDx8IsvVtzLSTSTRQIkcoV2h5nTQMnhZH/MhfngRa27f
+	 SU1MwFwWq1mjw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Jeffrey Hugo <quic_jhugo@quicinc.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 089/317] arm64: dts: qcom: msm8998: declare VLS CLAMP register for USB3 PHY
-Date: Sun, 24 Mar 2024 19:31:09 -0400
-Message-ID: <20240324233458.1352854-90-sashal@kernel.org>
+Subject: [PATCH 5.15 088/317] arm64: dts: qcom: msm8998: switch USB QMP PHY to new style of bindings
+Date: Sun, 24 Mar 2024 19:31:08 -0400
+Message-ID: <20240324233458.1352854-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -52,49 +50,80 @@ Content-Transfer-Encoding: 8bit
 
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-[ Upstream commit fc835b2311d4deb85d776c1d73562338462aa7ac ]
+[ Upstream commit b7efebfeb2e8ad8187cdabba5f0212ba2e6c1069 ]
 
-The USB3 PHY on the MSM8998 platform doesn't have built-in
-PCS_MISC_CLAMP_ENABLE register. Instead clamping is handled separately
-via the register in the TCSR space. Declare corresponding register.
+Change the USB QMP PHY to use newer style of QMP PHY bindings (single
+resource region, no per-PHY subnodes).
 
-Fixes: 026dad8f5873 ("arm64: dts: qcom: msm8998: Add USB-related nodes")
-Cc: Jeffrey Hugo <quic_jhugo@quicinc.com>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
-Link: https://lore.kernel.org/r/20240117-usbc-phy-vls-clamp-v2-4-a950c223f10f@linaro.org
+Link: https://lore.kernel.org/r/20230824211952.1397699-11-dmitry.baryshkov@linaro.org
 Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Stable-dep-of: fc835b2311d4 ("arm64: dts: qcom: msm8998: declare VLS CLAMP register for USB3 PHY")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 35 +++++++++++----------------
+ 1 file changed, 14 insertions(+), 21 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index b3b1258f2d6f8..3d32bf0986e1e 100644
+index e1b744d76251d..b3b1258f2d6f8 100644
 --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -1081,6 +1081,11 @@ tcsr_mutex_regs: syscon@1f40000 {
- 			reg = <0x01f40000 0x40000>;
+@@ -1982,7 +1982,7 @@ usb3_dwc3: dwc3@a800000 {
+ 				interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+ 				snps,dis_u2_susphy_quirk;
+ 				snps,dis_enblslpm_quirk;
+-				phys = <&qusb2phy>, <&usb1_ssphy>;
++				phys = <&qusb2phy>, <&usb3phy>;
+ 				phy-names = "usb2-phy", "usb3-phy";
+ 				snps,has-lpm-erratum;
+ 				snps,hird-threshold = /bits/ 8 <0x10>;
+@@ -1991,33 +1991,26 @@ usb3_dwc3: dwc3@a800000 {
+ 
+ 		usb3phy: phy@c010000 {
+ 			compatible = "qcom,msm8998-qmp-usb3-phy";
+-			reg = <0x0c010000 0x18c>;
+-			status = "disabled";
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
++			reg = <0x0c010000 0x1000>;
+ 
+ 			clocks = <&gcc GCC_USB3_PHY_AUX_CLK>,
++				 <&gcc GCC_USB3_CLKREF_CLK>,
+ 				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+-				 <&gcc GCC_USB3_CLKREF_CLK>;
+-			clock-names = "aux", "cfg_ahb", "ref";
++				 <&gcc GCC_USB3_PHY_PIPE_CLK>;
++			clock-names = "aux",
++				      "ref",
++				      "cfg_ahb",
++				      "pipe";
++			clock-output-names = "usb3_phy_pipe_clk_src";
++			#clock-cells = <0>;
++			#phy-cells = <0>;
+ 
+ 			resets = <&gcc GCC_USB3_PHY_BCR>,
+ 				 <&gcc GCC_USB3PHY_PHY_BCR>;
+-			reset-names = "phy", "common";
++			reset-names = "phy",
++				      "phy_phy";
+ 
+-			usb1_ssphy: phy@c010200 {
+-				reg = <0xc010200 0x128>,
+-				      <0xc010400 0x200>,
+-				      <0xc010c00 0x20c>,
+-				      <0xc010600 0x128>,
+-				      <0xc010800 0x200>;
+-				#phy-cells = <0>;
+-				#clock-cells = <0>;
+-				clocks = <&gcc GCC_USB3_PHY_PIPE_CLK>;
+-				clock-names = "pipe0";
+-				clock-output-names = "usb3_phy_pipe_clk_src";
+-			};
++			status = "disabled";
  		};
  
-+		tcsr_regs_2: syscon@1fc0000 {
-+			compatible = "qcom,msm8998-tcsr", "syscon";
-+			reg = <0x01fc0000 0x26000>;
-+		};
-+
- 		tlmm: pinctrl@3400000 {
- 			compatible = "qcom,msm8998-pinctrl";
- 			reg = <0x03400000 0xc00000>;
-@@ -2010,6 +2015,8 @@ usb3phy: phy@c010000 {
- 			reset-names = "phy",
- 				      "phy_phy";
- 
-+			qcom,tcsr-reg = <&tcsr_regs_2 0xb244>;
-+
- 			status = "disabled";
- 		};
- 
+ 		qusb2phy: phy@c012000 {
 -- 
 2.43.0
 
