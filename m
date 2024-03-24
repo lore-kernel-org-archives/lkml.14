@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30B2202392;
-	Sun, 24 Mar 2024 23:03:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD0E4D595;
+	Sun, 24 Mar 2024 23:03:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321427; cv=none; b=Y8Sc2fI705jSx34k3PXyRNcNra8CD8pF/ttqJVTi/jQPLuQ9gh8iexkV5LrnLeNkiNf46FceB4UUrKNiUFiWVVZcMsa/vp7sV296pqE1u0JQbU5qXT/zawzA+cc2YOU9zs8SEi6YxVD1VsZXWZLx4P4NnRQWOX887bj55ZCJZTE=
+	t=1711321430; cv=none; b=ksPPVsYK7bbninpiTq3X1SwEZviiA/KZsMcaKa/P0xq6JLQF5HPMbL5XGWkWxOk2PkJ53WIFYrpW0XUbjQ5plhyQas1AFznyWOxNSYe+rbVQfPYGVrGfqQDAEgZKZ2VG7Dolj9g7KrSiyl+BpHvF+EZgI6qC3HQc+ZNSb1dvxm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321427; c=relaxed/simple;
-	bh=OkXGC5MFg/57UAjfdYlyaez1Sc+KpouGnh0grG91cqo=;
+	s=arc-20240116; t=1711321430; c=relaxed/simple;
+	bh=UcRpu7p1jKQyG+pfEXtk4kRecvA2V6BI+5dODNtRxC4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nLqvU0Axjq29s7sU0W7MSCCOdoZbabBWxSp7NcDBCMeNNzzpaeGk4yubOCgMa6PBqd3vHhH8XzxeN0PqZqRQhKTv4QXAD7XfQaPQrQrf2sWJcO8luEPk+krM301r/zbugPJJ96AFISJpjGyAYoYqD6QG5CyH6TAkPFuQ73fhUZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLnZ6B7u; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=H0zRAmYL+GyxoALCOf1g/kZZPKxmYAIgCZr/efo5k+zEeLm1Vs4UAWiCdaiCqwr4itEjAwT0D6RskMc/BwIshJKGvXSqjyM+icQTHC7TYE1wrnGhOuFeebG+HBSaMJ8Kfemhg7KG9ZLe4Hl3W6t0wDz1rHIgXWCmXpHiheBgLrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIKNwS0M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLnZ6B7u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7724C433F1;
-	Sun, 24 Mar 2024 23:03:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIKNwS0M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06D03C43390;
+	Sun, 24 Mar 2024 23:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321426;
-	bh=OkXGC5MFg/57UAjfdYlyaez1Sc+KpouGnh0grG91cqo=;
+	s=k20201202; t=1711321428;
+	bh=UcRpu7p1jKQyG+pfEXtk4kRecvA2V6BI+5dODNtRxC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TLnZ6B7uJBR7+zqDqg/upQJADq9cC4m01ieIIfrq2Yv7nHXGUIYpEkpG7RzQEyv/T
-	 ud1z4hvWmqGguJIp456VCcOqajjenRZtOmuI/R/AMepW80jE9EjX+Zt51BtQB0XUJG
-	 dCmB7qFnh3puz36CCa8qXJKkTU6I8Jnv3J0dt7NTjUEEVUzO8cyHhmrk5B0BPWp5OT
-	 ktkF+7s6QbamY4tb6tWw717cAlhLmIkKoSVgMcJN2XQVPJjXlU4jPkyTP2szUuJE0F
-	 91UL+xfz1KORjDkjOLGyfc6KrJ3raMJQvriBV5hd2ahVVosAHFfZP/oz0+CiDA5o6F
-	 0dBUrstJ5LviA==
+	b=sIKNwS0M3m02bpBbeWmg3P5pvIsC0zYwq2gtzfhXSDR5GdUOMrL1yRHZzs+jNeUPn
+	 OAybEgl5PqMMCwpUSMxqSGuEmH51HOxzHxWBYVhDazz52hGww/7KKFf2qs4dzoZsrC
+	 cnDEGC8aCR9HoSof1rD9gmxHY/MemtI0rp9mxvL5xLo0TerDcJNgaDUn2LwYPD6k0w
+	 LAq4ZvXXMVF/KjAEfIaXmTQtW55sJ0Io1chuDapW65oAKQ2fL2XyVGAWiD+qNGWEBm
+	 jWzleSDcmWpi2rX9zkTOD48c2Caevva+z76e7AEhh431HTd7C3KezdsBDHloYb5KKa
+	 7tGkV5HztrVrQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jiri Olsa <jolsa@kernel.org>,
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 150/638] libbpf: Fix faccessat() usage on Android
-Date: Sun, 24 Mar 2024 18:53:07 -0400
-Message-ID: <20240324230116.1348576-151-sashal@kernel.org>
+Subject: [PATCH 6.6 152/638] arm64: dts: qcom: sa8540p: Drop gfx.lvl as power-domain for gpucc
+Date: Sun, 24 Mar 2024 18:53:09 -0400
+Message-ID: <20240324230116.1348576-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,53 +50,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andrii Nakryiko <andrii@kernel.org>
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-[ Upstream commit ad57654053805bf9a62602aaec74cc78edb6f235 ]
+[ Upstream commit fd5821a1a83c969ed2dcc72fef885f3a82c1d978 ]
 
-Android implementation of libc errors out with -EINVAL in faccessat() if
-passed AT_EACCESS ([0]), this leads to ridiculous issue with libbpf
-refusing to load /sys/kernel/btf/vmlinux on Androids ([1]). Fix by
-detecting Android and redefining AT_EACCESS to 0, it's equivalent on
-Android.
+The SA8295P and SA8540P uses an external regulator (max20411), and
+gfx.lvl is not provided by rpmh. Drop the power-domains property of the
+gpucc node to reflect this.
 
-  [0] https://android.googlesource.com/platform/bionic/+/refs/heads/android13-release/libc/bionic/faccessat.cpp#50
-  [1] https://github.com/libbpf/libbpf-bootstrap/issues/250#issuecomment-1911324250
-
-Fixes: 6a4ab8869d0b ("libbpf: Fix the case of running as non-root with capabilities")
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: https://lore.kernel.org/bpf/20240126220944.2497665-1-andrii@kernel.org
+Fixes: eec51ab2fd6f ("arm64: dts: qcom: sc8280xp: Add GPU related nodes")
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+Link: https://lore.kernel.org/r/20240125-sa8295p-gpu-v4-5-7011c2a63037@quicinc.com
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf_internal.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/boot/dts/qcom/sa8540p.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/lib/bpf/libbpf_internal.h b/tools/lib/bpf/libbpf_internal.h
-index f0f08635adb0d..57dec645d6878 100644
---- a/tools/lib/bpf/libbpf_internal.h
-+++ b/tools/lib/bpf/libbpf_internal.h
-@@ -18,6 +18,20 @@
- #include <libelf.h>
- #include "relo_core.h"
+diff --git a/arch/arm64/boot/dts/qcom/sa8540p.dtsi b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
+index 96b2c59ad02b4..23888029cc117 100644
+--- a/arch/arm64/boot/dts/qcom/sa8540p.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
+@@ -168,6 +168,9 @@ opp-2592000000 {
+ };
  
-+/* Android's libc doesn't support AT_EACCESS in faccessat() implementation
-+ * ([0]), and just returns -EINVAL even if file exists and is accessible.
-+ * See [1] for issues caused by this.
-+ *
-+ * So just redefine it to 0 on Android.
-+ *
-+ * [0] https://android.googlesource.com/platform/bionic/+/refs/heads/android13-release/libc/bionic/faccessat.cpp#50
-+ * [1] https://github.com/libbpf/libbpf-bootstrap/issues/250#issuecomment-1911324250
-+ */
-+#ifdef __ANDROID__
-+#undef AT_EACCESS
-+#define AT_EACCESS 0
-+#endif
+ &gpucc {
++	/* SA8295P and SA8540P doesn't provide gfx.lvl */
++	/delete-property/ power-domains;
 +
- /* make sure libbpf doesn't use kernel-only integer typedefs */
- #pragma GCC poison u8 u16 u32 u64 s8 s16 s32 s64
+ 	status = "disabled";
+ };
  
 -- 
 2.43.0
