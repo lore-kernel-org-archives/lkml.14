@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C8D1D7900;
-	Sun, 24 Mar 2024 22:49:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699211D7917;
+	Sun, 24 Mar 2024 22:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320600; cv=none; b=VQR5Cy8nt1/qxoIIHjYbXxXVSgfF0/4NxjTpvjV+3opyCOtPg7sUfNx3il8wbioT7QvEKVDuqNb6P0c7LF5WEHHzkpY2HEdL/zzDipFFqSxaKf72Mr9y0VJt/d4X3oRpxmJw3brD/R6pZe/zt365AuiVwkQjt6XsRN9lT81OPpg=
+	t=1711320604; cv=none; b=NkmQnsowV54LNvnvxEEEPVfVWZZzQCAJcpSK4oseFdhtsxP88sBaQEPdosAPHm2lyqjANsCcVpyo6uf3t6/DkiEusp7j+o490tYPfhOVWf6qUD7ORWZ4a3SMekr1fcfURfKp4TEUmo+bAy9xLSTro7BMpiUZDamTU3vj4SqVWsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320600; c=relaxed/simple;
-	bh=K757j1h2gj/8YT/wZT3TO9lwrI+Py+jNR2IhmZioBqg=;
+	s=arc-20240116; t=1711320604; c=relaxed/simple;
+	bh=90XilqNwKsvj6KfNoaZh4D0UAY+EEfN938ceSpFwJeU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mypN/sHa2xltggE4rysaMkJDmbc5P148IsWrJdSI2iybP7Roty5KwGBl0uNV01+JIn7UvOUl+CbyH+cOnvIqMKA8wiriC8ldEw+MquZQ+UNXYSPjSsM9wiu1srdONqtyWW3kOvdURuEw5KjmSxgjojAJRiAuKnwIFxY7XF3aNpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZ5GhHTl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LcuHFlVEfxddJn29sa6oSwYzHxNGowZ772xNMOvLgSxTY+1CqtHux/aJtLdEYy+4KL2b6l0SifrflH+ixEJGhFBVTr2Tt82VlwY16yg1sdWmh/fN5bxD7DEqNrPiA5metpeGPyRs6qijSjjegcnlmIbfHjR5uqYKR+7aEE/oEKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H7QMaUtJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZ5GhHTl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB48C433F1;
-	Sun, 24 Mar 2024 22:49:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H7QMaUtJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 798B7C433A6;
+	Sun, 24 Mar 2024 22:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320599;
-	bh=K757j1h2gj/8YT/wZT3TO9lwrI+Py+jNR2IhmZioBqg=;
+	s=k20201202; t=1711320603;
+	bh=90XilqNwKsvj6KfNoaZh4D0UAY+EEfN938ceSpFwJeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MZ5GhHTlKNflZ6Uau2xiXLIjngMRH5FR52jLhnK8eB18XszB1KzTChAObXXuIZRSg
-	 PNnov9rVkcIYFw7etvShD0b4mXvTA5NyTNdtzf+vFLhSEKLmv1Z3PL8QsG6X+UEH1S
-	 TwqLz9xD/jDeyUmClWI6HCR6AZfV918K87WqNMb1GEGuiTt48IV1/LZIGWyRHck8Tj
-	 X84Z5NqSwadOVQ1aaoGeD+ipXkT7+KXoYgex0oiH2ZeIxo9fE2fPZKqrnKnZ/hZycu
-	 1pgBi+rt0nmuDzm94Tdg2xO/7vF8D9W8DQ6L46PA6zr2xnFXIiWVJy6A+PVo/r/vYC
-	 4JVrnS6zngwiA==
+	b=H7QMaUtJ7jRGEr4yVYnBve39E5pQWg17FliMGoxA4o7XIEPUF9NPH5x2SHY8rsYf9
+	 Ke/HQltUWq8sntKWcrkOvGIF8hng9tjrfSDJ5rR2dMFv7I20rqPi/m2d386O8T4mhr
+	 pRSqlV0aSh0MAsIv/FVEr0B5eID8TYJc3PphMNq1EnVw5cDxn3RGTrM/6xmHYFnJng
+	 yjFT875Dnr3owccQ4vu69IlfKt2zYj5t4oI7iXPxifIFdrKN14S5As2CWRCscwE6p0
+	 yw04jTUXk0OOlkUqF+WN0zxnTnByYOiqYmapiRj01JzfCG4n9nI5JNABTlIWKERAvC
+	 RUlko8LLqza0Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Martin KaFai Lau <martin.lau@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Georgi Djakov <djakov@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 160/713] selftests/bpf: Wait for the netstamp_needed_key static key to be turned on
-Date: Sun, 24 Mar 2024 18:38:06 -0400
-Message-ID: <20240324224720.1345309-161-sashal@kernel.org>
+Subject: [PATCH 6.7 164/713] arm64: dts: qcom: sm8450: Add missing interconnects to serial
+Date: Sun, 24 Mar 2024 18:38:10 -0400
+Message-ID: <20240324224720.1345309-165-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,183 +50,57 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Martin KaFai Lau <martin.lau@kernel.org>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-[ Upstream commit ce6f6cffaeaa0a3bcdafcae7fe03c68c3afae631 ]
+[ Upstream commit 6e115b75b43bd12d4061e53c8ff175e387783d8a ]
 
-After the previous patch that speeded up the test (by avoiding neigh
-discovery in IPv6), the BPF CI occasionally hits this error:
+The serial ports did not have their interconnect paths specified when
+they were first introduced. Fix that.
 
-rcv tstamp unexpected pkt rcv tstamp: actual 0 == expected 0
-
-The test complains about the cmsg returned from the recvmsg() does not
-have the rcv timestamp. Setting skb->tstamp or not is
-controlled by a kernel static key "netstamp_needed_key". The static
-key is enabled whenever this is at least one sk with the SOCK_TIMESTAMP
-set.
-
-The test_redirect_dtime does use setsockopt() to turn on
-the SOCK_TIMESTAMP for the reading sk. In the kernel
-net_enable_timestamp() has a delay to enable the "netstamp_needed_key"
-when CONFIG_JUMP_LABEL is set. This potential delay is the likely reason
-for packet missing rcv timestamp occasionally.
-
-This patch is to create udp sockets with SOCK_TIMESTAMP set.
-It sends and receives some packets until the received packet
-has a rcv timestamp. It currently retries at most 5 times with 1s
-in between. This should be enough to wait for the "netstamp_needed_key".
-It then holds on to the socket and only closes it at the end of the test.
-This guarantees that the test has the "netstamp_needed_key" key turned
-on from the beginning.
-
-To simplify the udp sockets setup, they are sending/receiving packets
-in the same netns (ns_dst is used) and communicate over the "lo" dev.
-Hence, the patch enables the "lo" dev in the ns_dst.
-
-Fixes: c803475fd8dd ("bpf: selftests: test skb->tstamp in redirect_neigh")
-Signed-off-by: Martin KaFai Lau <martin.lau@kernel.org>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Link: https://lore.kernel.org/bpf/20240120060518.3604920-2-martin.lau@linux.dev
+Fixes: 5188049c9b36 ("arm64: dts: qcom: Add base SM8450 DTSI")
+Fixes: f5837418479a ("arm64: dts: qcom: sm8450: add uart20 node")
+Reported-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Suggested-by: Georgi Djakov <djakov@kernel.org>
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Tested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Link: https://lore.kernel.org/r/20240116-topic-8450serial-v1-1-b685e6a5ad78@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/bpf/prog_tests/tc_redirect.c    | 79 ++++++++++++++++++-
- 1 file changed, 75 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/sm8450.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/tc_redirect.c b/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
-index 610887157fd85..dbe06aeaa2b27 100644
---- a/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
-+++ b/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
-@@ -291,6 +291,7 @@ static int netns_setup_links_and_routes(struct netns_setup_result *result)
- 	SYS(fail, "ip addr add " IP4_DST "/32 dev dst");
- 	SYS(fail, "ip addr add " IP6_DST "/128 dev dst nodad");
- 	SYS(fail, "ip link set dev dst up");
-+	SYS(fail, "ip link set dev lo up");
+diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+index f82480570d4b6..9d06fb0d4d1fd 100644
+--- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+@@ -1026,6 +1026,12 @@ uart20: serial@894000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&qup_uart20_default>;
+ 				interrupts = <GIC_SPI 587 IRQ_TYPE_LEVEL_HIGH>;
++				interconnects = <&clk_virt MASTER_QUP_CORE_2 QCOM_ICC_TAG_ALWAYS
++						 &clk_virt SLAVE_QUP_CORE_2 QCOM_ICC_TAG_ALWAYS>,
++						<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
++						 &config_noc SLAVE_QUP_2 QCOM_ICC_TAG_ALWAYS>;
++				interconnect-names = "qup-core",
++						     "qup-config";
+ 				status = "disabled";
+ 			};
  
- 	SYS(fail, "ip route add " IP4_SRC "/32 dev dst scope global");
- 	SYS(fail, "ip route add " IP4_NET "/16 dev dst scope global");
-@@ -468,7 +469,7 @@ static int set_forwarding(bool enable)
- 	return 0;
- }
- 
--static void rcv_tstamp(int fd, const char *expected, size_t s)
-+static int __rcv_tstamp(int fd, const char *expected, size_t s, __u64 *tstamp)
- {
- 	struct __kernel_timespec pkt_ts = {};
- 	char ctl[CMSG_SPACE(sizeof(pkt_ts))];
-@@ -489,7 +490,7 @@ static void rcv_tstamp(int fd, const char *expected, size_t s)
- 
- 	ret = recvmsg(fd, &msg, 0);
- 	if (!ASSERT_EQ(ret, s, "recvmsg"))
--		return;
-+		return -1;
- 	ASSERT_STRNEQ(data, expected, s, "expected rcv data");
- 
- 	cmsg = CMSG_FIRSTHDR(&msg);
-@@ -498,6 +499,12 @@ static void rcv_tstamp(int fd, const char *expected, size_t s)
- 		memcpy(&pkt_ts, CMSG_DATA(cmsg), sizeof(pkt_ts));
- 
- 	pkt_ns = pkt_ts.tv_sec * NSEC_PER_SEC + pkt_ts.tv_nsec;
-+	if (tstamp) {
-+		/* caller will check the tstamp itself */
-+		*tstamp = pkt_ns;
-+		return 0;
-+	}
-+
- 	ASSERT_NEQ(pkt_ns, 0, "pkt rcv tstamp");
- 
- 	ret = clock_gettime(CLOCK_REALTIME, &now_ts);
-@@ -507,6 +514,60 @@ static void rcv_tstamp(int fd, const char *expected, size_t s)
- 	if (ASSERT_GE(now_ns, pkt_ns, "check rcv tstamp"))
- 		ASSERT_LT(now_ns - pkt_ns, 5 * NSEC_PER_SEC,
- 			  "check rcv tstamp");
-+	return 0;
-+}
-+
-+static void rcv_tstamp(int fd, const char *expected, size_t s)
-+{
-+	__rcv_tstamp(fd, expected, s, NULL);
-+}
-+
-+static int wait_netstamp_needed_key(void)
-+{
-+	int opt = 1, srv_fd = -1, cli_fd = -1, nretries = 0, err, n;
-+	char buf[] = "testing testing";
-+	struct nstoken *nstoken;
-+	__u64 tstamp = 0;
-+
-+	nstoken = open_netns(NS_DST);
-+	if (!nstoken)
-+		return -1;
-+
-+	srv_fd = start_server(AF_INET6, SOCK_DGRAM, "::1", 0, 0);
-+	if (!ASSERT_GE(srv_fd, 0, "start_server"))
-+		goto done;
-+
-+	err = setsockopt(srv_fd, SOL_SOCKET, SO_TIMESTAMPNS_NEW,
-+			 &opt, sizeof(opt));
-+	if (!ASSERT_OK(err, "setsockopt(SO_TIMESTAMPNS_NEW)"))
-+		goto done;
-+
-+	cli_fd = connect_to_fd(srv_fd, TIMEOUT_MILLIS);
-+	if (!ASSERT_GE(cli_fd, 0, "connect_to_fd"))
-+		goto done;
-+
-+again:
-+	n = write(cli_fd, buf, sizeof(buf));
-+	if (!ASSERT_EQ(n, sizeof(buf), "send to server"))
-+		goto done;
-+	err = __rcv_tstamp(srv_fd, buf, sizeof(buf), &tstamp);
-+	if (!ASSERT_OK(err, "__rcv_tstamp"))
-+		goto done;
-+	if (!tstamp && nretries++ < 5) {
-+		sleep(1);
-+		printf("netstamp_needed_key retry#%d\n", nretries);
-+		goto again;
-+	}
-+
-+done:
-+	if (!tstamp && srv_fd != -1) {
-+		close(srv_fd);
-+		srv_fd = -1;
-+	}
-+	if (cli_fd != -1)
-+		close(cli_fd);
-+	close_netns(nstoken);
-+	return srv_fd;
- }
- 
- static void snd_tstamp(int fd, char *b, size_t s)
-@@ -843,11 +904,20 @@ static void test_tc_redirect_dtime(struct netns_setup_result *setup_result)
- {
- 	struct test_tc_dtime *skel;
- 	struct nstoken *nstoken;
--	int err;
-+	int hold_tstamp_fd, err;
-+
-+	/* Hold a sk with the SOCK_TIMESTAMP set to ensure there
-+	 * is no delay in the kernel net_enable_timestamp().
-+	 * This ensures the following tests must have
-+	 * non zero rcv tstamp in the recvmsg().
-+	 */
-+	hold_tstamp_fd = wait_netstamp_needed_key();
-+	if (!ASSERT_GE(hold_tstamp_fd, 0, "wait_netstamp_needed_key"))
-+		return;
- 
- 	skel = test_tc_dtime__open();
- 	if (!ASSERT_OK_PTR(skel, "test_tc_dtime__open"))
--		return;
-+		goto done;
- 
- 	skel->rodata->IFINDEX_SRC = setup_result->ifindex_src_fwd;
- 	skel->rodata->IFINDEX_DST = setup_result->ifindex_dst_fwd;
-@@ -892,6 +962,7 @@ static void test_tc_redirect_dtime(struct netns_setup_result *setup_result)
- 
- done:
- 	test_tc_dtime__destroy(skel);
-+	close(hold_tstamp_fd);
- }
- 
- static void test_tc_redirect_neigh_fib(struct netns_setup_result *setup_result)
+@@ -1418,6 +1424,12 @@ uart7: serial@99c000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&qup_uart7_tx>, <&qup_uart7_rx>;
+ 				interrupts = <GIC_SPI 608 IRQ_TYPE_LEVEL_HIGH>;
++				interconnects = <&clk_virt MASTER_QUP_CORE_2 QCOM_ICC_TAG_ALWAYS
++						 &clk_virt SLAVE_QUP_CORE_2 QCOM_ICC_TAG_ALWAYS>,
++						<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
++						 &config_noc SLAVE_QUP_2 QCOM_ICC_TAG_ALWAYS>;
++				interconnect-names = "qup-core",
++						     "qup-config";
+ 				status = "disabled";
+ 			};
+ 		};
 -- 
 2.43.0
 
