@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1952417B4E4;
-	Sun, 24 Mar 2024 23:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E0417AF96;
+	Sun, 24 Mar 2024 23:41:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323717; cv=none; b=VUOOiH8cPBKGDlIfQtw31bRHDtJ5ScAr8AN4QjMnTldZZbE4DDd7QbGo9nUszt9DgStN1QL4dPsth39P/qsVjyIWqFih8N1bBhoWzOoXG4DiWTBoD952mSX5R3BlH0op/LLaPwrY3b5YWOk0oPmwLnH7/RJ0R/yQJKAb4UudDiY=
+	t=1711323714; cv=none; b=fvVYG5IKWO1laSnpbikj6DRzX7/9/DVQbfW2NNyqntQc1O3p+jgu6NkbBPKrlNm7kHeLD2cdUPvyhdS3uT4x1LNsNOF5YgyDr1ONYgyjBOu+71xx1tCiGZunKIOvVbsJRiVHBC6+VPRbw3/Z6E/u1yMpOqWCNr4RvDz4PG6RGQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323717; c=relaxed/simple;
-	bh=UMvKY0wk5C7zCqIQwVCdsZgWyc39Rvq8mbRFlU1ZrN8=;
+	s=arc-20240116; t=1711323714; c=relaxed/simple;
+	bh=zIHIDGYrNQow1bY9+uueUFMQRpndkPOjwaPDjx2YMEo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BdbILkoS6Mkx0yaNGuhrQK4yS9qH2UXZ4zCyO1jatHYTlF1XJ1nGrX5M0Y9cJwu7TDaYEuUsd8Y9dF/Vl1//5wl/rDR9RW3gPIvuOj0jO8KFZLTY6Cd8qzykmivH487jdTZMBEstbnpw5guongTFjltAEVnGF6XGD7jGvpifyrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ECprwjQg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ky+Oqx44g80sHWZygT7QHLHdFXnwFwvy+5QkjBGWqZFbph/VoqgdH/2mkXuSyTWUf9DSsGrmXeLG4Qbl1zybTb4L8KD5mTT6lFGA0v6rqIYlhHiRF94KRaUGi2IM1x11H4Zwg0HrP/JTRd2lfN2o7fIj2X8MTySSihzOjOiJ0EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+7kqFEB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ECprwjQg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 408F6C43399;
-	Sun, 24 Mar 2024 23:41:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+7kqFEB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7967EC433F1;
+	Sun, 24 Mar 2024 23:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323717;
-	bh=UMvKY0wk5C7zCqIQwVCdsZgWyc39Rvq8mbRFlU1ZrN8=;
+	s=k20201202; t=1711323714;
+	bh=zIHIDGYrNQow1bY9+uueUFMQRpndkPOjwaPDjx2YMEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ECprwjQgfmnO/dv51l6VoFOEQyGgE7OA9lA5ybAfaKwOJCathq3HW6odfxcBll/9O
-	 +RCO4EKpxSWbRDPA04K2XzVvHPb9W/C1HpjGWOMZRitGYgJGscFXV3UvPPAxMQjCy2
-	 S1sCo57vviTGE2zxCqltA3O4zFVYesTZLMoEAU8gDp6otLWokV45u1vI48jLQ0Mcv7
-	 bSZDfxLlkztEFBwTRDed9zEbeY39oNwXcKY2XBtEZvrvtXwL6DB8B7uW9v90rKUR8F
-	 C3wpNuYUiyv6UrVaow2LtfsCmlqGQhP0nPiXBk/fB12NUI6yj+jMC3wvAQaevc98/E
-	 G8cf102Dt4EpQ==
+	b=a+7kqFEBdAp67vwgqEq1Akidu/W0XrmgOvrVL6R6vfjEDS88rGjqu4zxti15fNYRB
+	 8a7K+D0ak3h3+vH4SUX/ZR4OUhyX6Jwd6QtiA6RSN+FwKFB+g1EGa7UMgdAWKA5Mzd
+	 NBS6+UyMCxrQKKWE/HO6AHpEoWJQ+4T0P6tzAId49MBDgF5RLrIGJy9FhzrQoJxIcB
+	 RYf+0FmTpsWrdzjLmdjtMHquP3kgAjLT8h1hfFHDgkTaDtpl+Wn4Wl81mHgqFbXr9P
+	 OBl9iOAobosBw6qDUjFQ0D9nkgNT2y31WqeazzSa5R+6He98TdzYvYa9ErJ1Rn9FRv
+	 J2wYh3QKuCB8g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	syzbot+8cd36f6b65f3cafd400a@syzkaller.appspotmail.com,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 090/238] bpf: Fix DEVMAP_HASH overflow check on 32-bit arches
-Date: Sun, 24 Mar 2024 19:37:58 -0400
-Message-ID: <20240324234027.1354210-91-sashal@kernel.org>
+Subject: [PATCH 5.10 087/238] Bluetooth: hci_core: Fix possible buffer overflow
+Date: Sun, 24 Mar 2024 19:37:55 -0400
+Message-ID: <20240324234027.1354210-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -45,66 +43,38 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit 281d464a34f540de166cee74b723e97ac2515ec3 ]
+[ Upstream commit 81137162bfaa7278785b24c1fd2e9e74f082e8e4 ]
 
-The devmap code allocates a number hash buckets equal to the next power
-of two of the max_entries value provided when creating the map. When
-rounding up to the next power of two, the 32-bit variable storing the
-number of buckets can overflow, and the code checks for overflow by
-checking if the truncated 32-bit value is equal to 0. However, on 32-bit
-arches the rounding up itself can overflow mid-way through, because it
-ends up doing a left-shift of 32 bits on an unsigned long value. If the
-size of an unsigned long is four bytes, this is undefined behaviour, so
-there is no guarantee that we'll end up with a nice and tidy 0-value at
-the end.
+struct hci_dev_info has a fixed size name[8] field so in the event that
+hdev->name is bigger than that strcpy would attempt to write past its
+size, so this fixes this problem by switching to use strscpy.
 
-Syzbot managed to turn this into a crash on arm32 by creating a
-DEVMAP_HASH with max_entries > 0x80000000 and then trying to update it.
-Fix this by moving the overflow check to before the rounding up
-operation.
-
-Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
-Link: https://lore.kernel.org/r/000000000000ed666a0611af6818@google.com
-Reported-and-tested-by: syzbot+8cd36f6b65f3cafd400a@syzkaller.appspotmail.com
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Message-ID: <20240307120340.99577-2-toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: dcda165706b9 ("Bluetooth: hci_core: Fix build warnings")
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/devmap.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/bluetooth/hci_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index ca2cade2871b8..07b5edb2c70f5 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -129,13 +129,14 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- 	bpf_map_init_from_attr(&dtab->map, attr);
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 5f1fbf86e0ceb..b9cf5bc9364c1 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -2175,7 +2175,7 @@ int hci_get_dev_info(void __user *arg)
+ 	else
+ 		flags = hdev->flags;
  
- 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
--		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
--
--		if (!dtab->n_buckets) /* Overflow check */
-+		/* hash table size must be power of 2; roundup_pow_of_two() can
-+		 * overflow into UB on 32-bit arches, so check that first
-+		 */
-+		if (dtab->map.max_entries > 1UL << 31)
- 			return -EINVAL;
--	}
- 
--	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
-+		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
-+
- 		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets,
- 							   dtab->map.numa_node);
- 		if (!dtab->dev_index_head)
+-	strcpy(di.name, hdev->name);
++	strscpy(di.name, hdev->name, sizeof(di.name));
+ 	di.bdaddr   = hdev->bdaddr;
+ 	di.type     = (hdev->bus & 0x0f) | ((hdev->dev_type & 0x03) << 4);
+ 	di.flags    = flags;
 -- 
 2.43.0
 
