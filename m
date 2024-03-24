@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE9217DC1D;
-	Sun, 24 Mar 2024 23:44:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AD117D234;
+	Sun, 24 Mar 2024 23:43:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323844; cv=none; b=nrMjeWM7aGMcPBkofU636cleL4Mk+ZwplnYoRd20ln4b2HaisxuA+jfsOLMESRU3KtchBJIT/fRF3J7T5aRI8RgZelLt6fBpUNX6F8gYGPKKs0LLF5peORUOtfeZcdsy4gj8sAmV5QVlJAQDX58ORBNQLvpPX3F/cD+tRC+3GUg=
+	t=1711323819; cv=none; b=U62BpQ6OCABwBnIeStoQu3DDFjdBJwih1BT/5Rr4TbM9+4jKuHfGlNNEA1SlrkfIGqkGTdpInDYZGD11Ksc0ADz2bkzDCoab8c8UAUEOo5dFTxjsj9wGW7XS47ue2gkK1OqvTS3ermikGdL2xEWHVbz4jY0v90q5lsriQmLcNdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323844; c=relaxed/simple;
-	bh=5X8S5ybhvWZig025ctYVfTowCUD3Su5evdmdXKPRrx8=;
+	s=arc-20240116; t=1711323819; c=relaxed/simple;
+	bh=yBqERcpyWskwwz1YMuo3DL45sg9I+O1BrvP6QsuFxqU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rGpjUSdvV28n0buwONiuWQ0SJ4Nf+Q/FScyZxI9NrOcNqPSQs6QS6Q3xgTWMEEr2STMSor3/Q0ZVfm/5qqUZkeNZZUfYXHMxYczZKfJ8HnxnLg974NhC1tNlMUwH/UxKn5Zv1ImVsCp2cCIQ+g+ZrJa0SgpVJ8bzTV7jX2dkmxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=miv0UUYP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=l7L6nh3Y28ctl3fr1AR12ZQvMkDKCEVfHKCrADU1JBMDfq6POl2fN1140fahotqzKPixR0ZGvr6AByLk5S4eCE+SX6fUXqsli41J59KRrKGPixS0UrXQ3Qeo3Lp7QWuvrg/uG4gRkXHbJ8vITgNIAsAVjfwn/TjQk3Z/UKN9rGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSw/8eXL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="miv0UUYP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 660F9C433F1;
-	Sun, 24 Mar 2024 23:44:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSw/8eXL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2EFBC433F1;
+	Sun, 24 Mar 2024 23:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323844;
-	bh=5X8S5ybhvWZig025ctYVfTowCUD3Su5evdmdXKPRrx8=;
+	s=k20201202; t=1711323818;
+	bh=yBqERcpyWskwwz1YMuo3DL45sg9I+O1BrvP6QsuFxqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=miv0UUYPyoP1ZPda54z6P2CHLB3Ob/CLnSZLytxaSsrTRTIhrZhlgEP7aQl/HcpU6
-	 Rjc6xlV58NbQb16mEIpwPjvj0u92Fn94lSddmwJ5HD+KoLKjoKLF11jBAgkXBOsza8
-	 WlUWmASowDMFzKcH3k4bV0I94dI0IXGqLOfaxxqHpZCiri7mKjcZotDioNgFiV/1hS
-	 hF3jaThj0nuFL3+xWo65xuG8fq1/iNWbuuBtA3EsYczwELYJfKNvrY6ACc8AYhhQ5V
-	 9VJiT7HlUnpwZkRLZm24LFIY1mGpNH2A6UCwtnnm7LFGsSa6bheemqm7bkKPYdQmDp
-	 qcJkeBVb/zjkw==
+	b=uSw/8eXLoEqGxTf3Mf2Fn/CNYp22sjVpn9BdEmgNIUT0ijxrkLWp/1B9zHTQ5tNsG
+	 8Or8oHyvqXGZkN1nlSKNDrX05ntaVWccI3WqqDu47jMLmoF2yS66Tea/pbSQiYeYA7
+	 Mf6pyNTKHKWgOaNRHwYqiCfh+fi4+TmhlVXmkI+pXmZ5mm2WxGLBJgU+TE+J7ZvfR3
+	 vBWyQqvXog4PgJgCGuzPf4vMnoNTh3iwMpl5SfS5QREDbw4dAX36Y/Sl9TYOa/4AQo
+	 essYXbb30jsFJ3ySNvSmw7QRRKuNC5ifTT6430xGI1raRgc6b4B6zREoDP1tdv9b2l
+	 GjJLxr7a7BEUA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shigeru Yoshida <syoshida@redhat.com>,
-	syzbot+2ef3a8ce8e91b5a50098@syzkaller.appspotmail.com,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Kees Cook <keescook@chromium.org>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 222/238] hsr: Fix uninit-value access in hsr_get_node()
-Date: Sun, 24 Mar 2024 19:40:10 -0400
-Message-ID: <20240324234027.1354210-223-sashal@kernel.org>
+Subject: [PATCH 5.10 197/238] scsi: bfa: Fix function pointer type mismatch for hcb_qe->cbfn
+Date: Sun, 24 Mar 2024 19:39:45 -0400
+Message-ID: <20240324234027.1354210-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,96 +49,150 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Shigeru Yoshida <syoshida@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit ddbec99f58571301679addbc022256970ca3eac6 ]
+[ Upstream commit b69600231f751304db914c63b937f7098ed2895c ]
 
-KMSAN reported the following uninit-value access issue [1]:
+Some callback functions used here take a boolean argument, others take a
+status argument. This breaks KCFI type checking, so clang now warns about
+the function pointer cast:
 
-=====================================================
-BUG: KMSAN: uninit-value in hsr_get_node+0xa2e/0xa40 net/hsr/hsr_framereg.c:246
- hsr_get_node+0xa2e/0xa40 net/hsr/hsr_framereg.c:246
- fill_frame_info net/hsr/hsr_forward.c:577 [inline]
- hsr_forward_skb+0xe12/0x30e0 net/hsr/hsr_forward.c:615
- hsr_dev_xmit+0x1a1/0x270 net/hsr/hsr_device.c:223
- __netdev_start_xmit include/linux/netdevice.h:4940 [inline]
- netdev_start_xmit include/linux/netdevice.h:4954 [inline]
- xmit_one net/core/dev.c:3548 [inline]
- dev_hard_start_xmit+0x247/0xa10 net/core/dev.c:3564
- __dev_queue_xmit+0x33b8/0x5130 net/core/dev.c:4349
- dev_queue_xmit include/linux/netdevice.h:3134 [inline]
- packet_xmit+0x9c/0x6b0 net/packet/af_packet.c:276
- packet_snd net/packet/af_packet.c:3087 [inline]
- packet_sendmsg+0x8b1d/0x9f30 net/packet/af_packet.c:3119
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- __sys_sendto+0x735/0xa10 net/socket.c:2191
- __do_sys_sendto net/socket.c:2203 [inline]
- __se_sys_sendto net/socket.c:2199 [inline]
- __x64_sys_sendto+0x125/0x1c0 net/socket.c:2199
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
+drivers/scsi/bfa/bfad_bsg.c:2138:29: error: cast from 'void (*)(void *, enum bfa_status)' to 'bfa_cb_cbfn_t' (aka 'void (*)(void *, enum bfa_boolean)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
 
-Uninit was created at:
- slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
- slab_alloc_node mm/slub.c:3478 [inline]
- kmem_cache_alloc_node+0x5e9/0xb10 mm/slub.c:3523
- kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:560
- __alloc_skb+0x318/0x740 net/core/skbuff.c:651
- alloc_skb include/linux/skbuff.h:1286 [inline]
- alloc_skb_with_frags+0xc8/0xbd0 net/core/skbuff.c:6334
- sock_alloc_send_pskb+0xa80/0xbf0 net/core/sock.c:2787
- packet_alloc_skb net/packet/af_packet.c:2936 [inline]
- packet_snd net/packet/af_packet.c:3030 [inline]
- packet_sendmsg+0x70e8/0x9f30 net/packet/af_packet.c:3119
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- __sys_sendto+0x735/0xa10 net/socket.c:2191
- __do_sys_sendto net/socket.c:2203 [inline]
- __se_sys_sendto net/socket.c:2199 [inline]
- __x64_sys_sendto+0x125/0x1c0 net/socket.c:2199
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
+Assuming the code is actually correct here and the callers always match the
+argument types of the callee, rework this to replace the explicit cast with
+a union of the two pointer types. This does not change the behavior of the
+code, so if something is actually broken here, a larger rework may be
+necessary.
 
-CPU: 1 PID: 5033 Comm: syz-executor334 Not tainted 6.7.0-syzkaller-00562-g9f8413c4a66f #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-=====================================================
-
-If the packet type ID field in the Ethernet header is either ETH_P_PRP or
-ETH_P_HSR, but it is not followed by an HSR tag, hsr_get_skb_sequence_nr()
-reads an invalid value as a sequence number. This causes the above issue.
-
-This patch fixes the issue by returning NULL if the Ethernet header is not
-followed by an HSR tag.
-
-Fixes: f266a683a480 ("net/hsr: Better frame dispatch")
-Reported-and-tested-by: syzbot+2ef3a8ce8e91b5a50098@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=2ef3a8ce8e91b5a50098 [1]
-Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
-Link: https://lore.kernel.org/r/20240312152719.724530-1-syoshida@redhat.com
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: 37ea0558b87a ("[SCSI] bfa: Added support to collect and reset fcport stats")
+Fixes: 3ec4f2c8bff2 ("[SCSI] bfa: Added support to configure QOS and collect stats.")
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20240222124433.2046570-1-arnd@kernel.org
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/hsr/hsr_framereg.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/bfa/bfa.h      |  9 ++++++++-
+ drivers/scsi/bfa/bfa_core.c |  4 +---
+ drivers/scsi/bfa/bfa_ioc.h  |  8 ++++++--
+ drivers/scsi/bfa/bfad_bsg.c | 11 ++++-------
+ 4 files changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
-index 87fc86aade5c9..fc9fb3e5ae3e2 100644
---- a/net/hsr/hsr_framereg.c
-+++ b/net/hsr/hsr_framereg.c
-@@ -237,6 +237,10 @@ struct hsr_node *hsr_get_node(struct hsr_port *port, struct list_head *node_db,
- 	 */
- 	if (ethhdr->h_proto == htons(ETH_P_PRP) ||
- 	    ethhdr->h_proto == htons(ETH_P_HSR)) {
-+		/* Check if skb contains hsr_ethhdr */
-+		if (skb->mac_len < sizeof(struct hsr_ethhdr))
-+			return NULL;
+diff --git a/drivers/scsi/bfa/bfa.h b/drivers/scsi/bfa/bfa.h
+index 7bd2ba1ad4d11..f30fe324e6ecc 100644
+--- a/drivers/scsi/bfa/bfa.h
++++ b/drivers/scsi/bfa/bfa.h
+@@ -20,7 +20,6 @@
+ struct bfa_s;
+ 
+ typedef void (*bfa_isr_func_t) (struct bfa_s *bfa, struct bfi_msg_s *m);
+-typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
+ 
+ /*
+  * Interrupt message handlers
+@@ -437,4 +436,12 @@ struct bfa_cb_pending_q_s {
+ 	(__qe)->data = (__data);				\
+ } while (0)
+ 
++#define bfa_pending_q_init_status(__qe, __cbfn, __cbarg, __data) do {	\
++	bfa_q_qe_init(&((__qe)->hcb_qe.qe));			\
++	(__qe)->hcb_qe.cbfn_status = (__cbfn);			\
++	(__qe)->hcb_qe.cbarg = (__cbarg);			\
++	(__qe)->hcb_qe.pre_rmv = BFA_TRUE;			\
++	(__qe)->data = (__data);				\
++} while (0)
 +
- 		/* Use the existing sequence_nr from the tag as starting point
- 		 * for filtering duplicate frames.
- 		 */
+ #endif /* __BFA_H__ */
+diff --git a/drivers/scsi/bfa/bfa_core.c b/drivers/scsi/bfa/bfa_core.c
+index 6846ca8f7313c..3438d0b8ba062 100644
+--- a/drivers/scsi/bfa/bfa_core.c
++++ b/drivers/scsi/bfa/bfa_core.c
+@@ -1907,15 +1907,13 @@ bfa_comp_process(struct bfa_s *bfa, struct list_head *comp_q)
+ 	struct list_head		*qe;
+ 	struct list_head		*qen;
+ 	struct bfa_cb_qe_s	*hcb_qe;
+-	bfa_cb_cbfn_status_t	cbfn;
+ 
+ 	list_for_each_safe(qe, qen, comp_q) {
+ 		hcb_qe = (struct bfa_cb_qe_s *) qe;
+ 		if (hcb_qe->pre_rmv) {
+ 			/* qe is invalid after return, dequeue before cbfn() */
+ 			list_del(qe);
+-			cbfn = (bfa_cb_cbfn_status_t)(hcb_qe->cbfn);
+-			cbfn(hcb_qe->cbarg, hcb_qe->fw_status);
++			hcb_qe->cbfn_status(hcb_qe->cbarg, hcb_qe->fw_status);
+ 		} else
+ 			hcb_qe->cbfn(hcb_qe->cbarg, BFA_TRUE);
+ 	}
+diff --git a/drivers/scsi/bfa/bfa_ioc.h b/drivers/scsi/bfa/bfa_ioc.h
+index 933a1c3890ff5..5e568d6d7b261 100644
+--- a/drivers/scsi/bfa/bfa_ioc.h
++++ b/drivers/scsi/bfa/bfa_ioc.h
+@@ -361,14 +361,18 @@ struct bfa_reqq_wait_s {
+ 	void	*cbarg;
+ };
+ 
+-typedef void	(*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
++typedef void (*bfa_cb_cbfn_t) (void *cbarg, bfa_boolean_t complete);
++typedef void (*bfa_cb_cbfn_status_t) (void *cbarg, bfa_status_t status);
+ 
+ /*
+  * Generic BFA callback element.
+  */
+ struct bfa_cb_qe_s {
+ 	struct list_head	qe;
+-	bfa_cb_cbfn_t	cbfn;
++	union {
++		bfa_cb_cbfn_status_t	cbfn_status;
++		bfa_cb_cbfn_t		cbfn;
++	};
+ 	bfa_boolean_t	once;
+ 	bfa_boolean_t	pre_rmv;	/* set for stack based qe(s) */
+ 	bfa_status_t	fw_status;	/* to access fw status in comp proc */
+diff --git a/drivers/scsi/bfa/bfad_bsg.c b/drivers/scsi/bfa/bfad_bsg.c
+index fc515424ca88d..eb589f9e8cfb5 100644
+--- a/drivers/scsi/bfa/bfad_bsg.c
++++ b/drivers/scsi/bfa/bfad_bsg.c
+@@ -2135,8 +2135,7 @@ bfad_iocmd_fcport_get_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_cb_pending_q_s cb_qe;
+ 
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, &iocmd->stats);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	iocmd->status = bfa_fcport_get_stats(&bfad->bfa, &cb_qe);
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
+@@ -2159,7 +2158,7 @@ bfad_iocmd_fcport_reset_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_cb_pending_q_s cb_qe;
+ 
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp, &fcomp, NULL);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
+ 
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	iocmd->status = bfa_fcport_clear_stats(&bfad->bfa, &cb_qe);
+@@ -2443,8 +2442,7 @@ bfad_iocmd_qos_get_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
+ 
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, &iocmd->stats);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, &iocmd->stats);
+ 
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
+@@ -2474,8 +2472,7 @@ bfad_iocmd_qos_reset_stats(struct bfad_s *bfad, void *cmd)
+ 	struct bfa_fcport_s *fcport = BFA_FCPORT_MOD(&bfad->bfa);
+ 
+ 	init_completion(&fcomp.comp);
+-	bfa_pending_q_init(&cb_qe, (bfa_cb_cbfn_t)bfad_hcb_comp,
+-			   &fcomp, NULL);
++	bfa_pending_q_init_status(&cb_qe, bfad_hcb_comp, &fcomp, NULL);
+ 
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	WARN_ON(!bfa_ioc_get_fcmode(&bfad->bfa.ioc));
 -- 
 2.43.0
 
