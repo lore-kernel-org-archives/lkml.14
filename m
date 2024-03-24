@@ -1,46 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6F7200107;
-	Sun, 24 Mar 2024 23:02:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D6B130E30;
+	Sun, 24 Mar 2024 23:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321381; cv=none; b=To4jWL82pRDH2/yKCZiK7ZBGs69OV0O6KSYH4Gl4XXTjOzDxouIft+bI8cGNTbYJ8tZvGZGIseryFe/ni/etDoZT/DfSLnR+VtGX94WFhffJFp4NznrStnLHVNA3vzoKbS1MLvkY1axeNUq4X9AG+qva5kLtJH1PjrWN8cT6ZV0=
+	t=1711321397; cv=none; b=t9WK4sGFUx7ToS1RkbOPASau0dk7JmWNMOxmmA1nXAmuU02QV/rvWkh0qvofwq/w1edMTCAnlfjS7Jo6KjVqibz/JcvFSaMfFz/0rUrmlYwlJdsDVSBkx7PZkq7XmjfT60aK2G1qIomlpwOeNULjnD1Tn9h/iKc5CUfXjjI3JwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321381; c=relaxed/simple;
-	bh=vYYFwKto6yg6woV1Hr3fxCR11bex2S34Ri9YamTHIhE=;
+	s=arc-20240116; t=1711321397; c=relaxed/simple;
+	bh=PV95sVDzH0x/NSKCwRKFhOR/8HyXkMLE2m1FQByzsUw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JTIwG0xuKOCaXghKpkLvlxrisnb0WEswK44TVfe/Q2l34cs34ZAgklqjQi4unrFfK4BEDXYuYpY5Q0Te1C3PsQ66ajUVUyEQvkVEL2J+Y/1PL6PE5+JbcTtNlLgp0EGo423SVNowNVK9hPSDPyJgbzX0cS+qp9+iBcn9AoGsM64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ttYXBpoq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=S7/EBxWJQ2SoRa+XJfYaAp7vKFBkK78wmBjR+b1EhkwNLh7hhw3BpARWF+3GzgxESShN7bR/SiHdUar1TLpPYhm1XCrfKByUjb2sFO6N3z0d4RAuLTeRkl3dXHd7ApQE0FOEMXgf73XBy2tyrVv3ELBFkwsPLm9f7xOq303XxgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YgD7aPkG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ttYXBpoq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45515C43390;
-	Sun, 24 Mar 2024 23:02:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YgD7aPkG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4204C43399;
+	Sun, 24 Mar 2024 23:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321379;
-	bh=vYYFwKto6yg6woV1Hr3fxCR11bex2S34Ri9YamTHIhE=;
+	s=k20201202; t=1711321396;
+	bh=PV95sVDzH0x/NSKCwRKFhOR/8HyXkMLE2m1FQByzsUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ttYXBpoqRjWDW6tWwo6DeWmQYeEnEzL2oQvOeJzdCbXpPsWf9hy9udskdkAfOU6vK
-	 ioD+lHV8smO8KUM62tyX4hgu5RUHcU+OMq8dJ6Q0CWrJcWZoigyJaSuGvc4iYSzY7x
-	 Ge5KhQrClMBRTWeeArp1ufnjNxqNvdVMepL7f2i2AIgB0hDnqb9Cmap73ty8hJSSJV
-	 kY75m8FIM/qUzL6y8G5EiaYCq9JTZxN6ktunh8s4tGyHmkVwpSGdjvc1epvu7zeJGH
-	 oZJKwM0bVRzpYy1UG09MTi9+UAGpCIZLe914Le/apnnsNR8WOk4Tu+rvt3yWhEjnDk
-	 nMwcaVc7f4kBw==
+	b=YgD7aPkGmk4089evKvIM/Ii+aa9TuOTiFRY01zGlBmVVC5FlNJx8BtOFBb2P9jPZT
+	 ingHhuvxO2J3VSGf5V1oMDuZTYFI801xz2Dkj6NswRg2oQvx0DLiHQZxnm/yjN6K82
+	 EvgFbQP4kixxmaeQF28z2/cHk5FtNOb7m6hjduVANU0v3YBi73K2T9XpvEbOltq+RR
+	 lDtx2ISjg3e8zMDQONPKgAqTKGCeyCu+BsGJChQ9T4n5WqPxk2igfkwjSJijmkBnN5
+	 /FbrFy9/lBTfoksWxDOO9geXV2v2ixo1BUZmypT1PpL1X8ae9acbXFfqeuDzzECMP5
+	 wS97bs4G8Tv3g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Michael Roth <michael.roth@amd.com>,
-	Dave Hansen <dave.hansen@intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rik van Riel <riel@surriel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
+Cc: Martin Kaistra <martin.kaistra@linutronix.de>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 103/638] x86/mm: Ensure input to pfn_to_kaddr() is treated as a 64-bit type
-Date: Sun, 24 Mar 2024 18:52:20 -0400
-Message-ID: <20240324230116.1348576-104-sashal@kernel.org>
+Subject: [PATCH 6.6 120/638] wifi: rtl8xxxu: add cancel_work_sync() for c2hcmd_work
+Date: Sun, 24 Mar 2024 18:52:37 -0400
+Message-ID: <20240324230116.1348576-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -54,71 +49,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michael Roth <michael.roth@amd.com>
+From: Martin Kaistra <martin.kaistra@linutronix.de>
 
-[ Upstream commit 8e5647a723c49d73b9f108a8bb38e8c29d3948ea ]
+[ Upstream commit 1213acb478a7181cd73eeaf00db430f1e45b1361 ]
 
-On 64-bit platforms, the pfn_to_kaddr() macro requires that the input
-value is 64 bits in order to ensure that valid address bits don't get
-lost when shifting that input by PAGE_SHIFT to calculate the physical
-address to provide a virtual address for.
+The workqueue might still be running, when the driver is stopped. To
+avoid a use-after-free, call cancel_work_sync() in rtl8xxxu_stop().
 
-One such example is in pvalidate_pages() (used by SEV-SNP guests), where
-the GFN in the struct used for page-state change requests is a 40-bit
-bit-field, so attempts to pass this GFN field directly into
-pfn_to_kaddr() ends up causing guest crashes when dealing with addresses
-above the 1TB range due to the above.
-
-Fix this issue with SEV-SNP guests, as well as any similar cases that
-might cause issues in current/future code, by using an inline function,
-instead of a macro, so that the input is implicitly cast to the
-expected 64-bit input type prior to performing the shift operation.
-
-While it might be argued that the issue is on the caller side, other
-archs/macros have taken similar approaches to deal with instances like
-this, such as ARM explicitly casting the input to phys_addr_t:
-
-  e48866647b48 ("ARM: 8396/1: use phys_addr_t in pfn_to_kaddr()")
-
-A C inline function is even better though.
-
-[ mingo: Refined the changelog some more & added __always_inline. ]
-
-Fixes: 6c3211796326 ("x86/sev: Add SNP-specific unaccepted memory support")
-Suggested-by: Dave Hansen <dave.hansen@intel.com>
-Suggested-by: H. Peter Anvin <hpa@zytor.com>
-Signed-off-by: Michael Roth <michael.roth@amd.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20231122163700.400507-1-michael.roth@amd.com
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: e542e66b7c2e ("rtl8xxxu: add bluetooth co-existence support for single antenna")
+Signed-off-by: Martin Kaistra <martin.kaistra@linutronix.de>
+Reviewed-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240111163628.320697-2-martin.kaistra@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/page.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
-index d18e5c332cb9f..1b93ff80b43bc 100644
---- a/arch/x86/include/asm/page.h
-+++ b/arch/x86/include/asm/page.h
-@@ -66,10 +66,14 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
-  * virt_addr_valid(kaddr) returns true.
-  */
- #define virt_to_page(kaddr)	pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
--#define pfn_to_kaddr(pfn)      __va((pfn) << PAGE_SHIFT)
- extern bool __virt_addr_valid(unsigned long kaddr);
- #define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long) (kaddr))
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 77b356fedd82a..0e74ba630a8e8 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -7304,6 +7304,7 @@ static void rtl8xxxu_stop(struct ieee80211_hw *hw)
+ 	if (priv->usb_interrupts)
+ 		rtl8xxxu_write32(priv, REG_USB_HIMR, 0);
  
-+static __always_inline void *pfn_to_kaddr(unsigned long pfn)
-+{
-+	return __va(pfn << PAGE_SHIFT);
-+}
-+
- static __always_inline u64 __canonical_address(u64 vaddr, u8 vaddr_bits)
- {
- 	return ((s64)vaddr << (64 - vaddr_bits)) >> (64 - vaddr_bits);
++	cancel_work_sync(&priv->c2hcmd_work);
+ 	cancel_delayed_work_sync(&priv->ra_watchdog);
+ 
+ 	rtl8xxxu_free_rx_resources(priv);
 -- 
 2.43.0
 
