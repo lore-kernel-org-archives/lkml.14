@@ -1,52 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E795628ECDD;
-	Sun, 24 Mar 2024 23:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B734E28ECA5;
+	Sun, 24 Mar 2024 23:49:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324174; cv=none; b=qlrUG+NxoVXgitvF5sh9LaVvjM71aGtyo9DeL0RpHt81HsP8IsINduMzwqFJREQnUM/mrdqolNxzOdlbt+usGtW8C3x032/V0cHRtnhNTAQ3sG1qULJZsUlAegbxnmVU9O3fUdxJzCthrn9b6dzNyhofwh2lkOu9oTFKGDUwWik=
+	t=1711324169; cv=none; b=sV7WbPP/vJhz7Z96waArRF9FjyOFys5tCnwbBsZ80vLBcT8CkbmT0Dz+aOo3aDufVZzQ74pDC1iZspoz+NePVHbJUrOwZE6lPQg48rYsaiHGcT4WeJDAjXJlWlwU4bxYv43O3HdBr2nWpifX74V4Ug6dooQf7RDEB6lnG1HkEVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324174; c=relaxed/simple;
-	bh=B16OLgDJ2vIDMaCBoBbJgafklwHkdpKCJzzjn0IAS6c=;
+	s=arc-20240116; t=1711324169; c=relaxed/simple;
+	bh=xjEeStySw6cG5R87KJGT5mOzpahIShC3/rZ9tuhw6uM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VLwrjMv3TBne6Tc6M11axuVkkUZY31FAwo/GLCuUA7mZsNLvSXt0ZWzjwTEKFOz2BrhhG6GKWlkCa/nXy6tCFdEYbg5Bnc7fYZISYobZXAbxhtXu+nQKsdPRB4yrURrU3JjnG4Sb7gZIWqAQd4tpg2NC8Jsyz+Ofe+w54VwbEDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTGxOBzM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bQhjGePTFdtJiwAZp9vyTiWFi0Sq5XtF6HEeXwplgamhxxrvvhdn7uq8SzziDSrkDlKtwBib4urY/JbjMXuL8HbZMrft3Ceyl0VCJdW6MRBYMe4/8BSKsS7wJXW6j1TSVHadkC6IlKvXb/BykPVN6PkQcrZyNOxuMn2voXQC2ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QF0xfnIp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTGxOBzM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14243C433F1;
-	Sun, 24 Mar 2024 23:49:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QF0xfnIp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6113C43143;
+	Sun, 24 Mar 2024 23:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324173;
-	bh=B16OLgDJ2vIDMaCBoBbJgafklwHkdpKCJzzjn0IAS6c=;
+	s=k20201202; t=1711324169;
+	bh=xjEeStySw6cG5R87KJGT5mOzpahIShC3/rZ9tuhw6uM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LTGxOBzMQH2xTbfCgoS4925pRK7nr+plYw08rDdgxol5GLFzNP4g6F3f1TSqWdCO2
-	 x9ly+e2pv/Yzc5puTC3VhB/Gz9L9MKBovVRE3JLAgVCm9uz+AWKKxtHgEEypXV/vwf
-	 R6v9v/ejnQ7m/Nqt2wkHgpfQsU20GxjHSvqe3Yqg0lVX8yGTn/Tzhek+cV94ICDOri
-	 iL6XXLU3JG47rA2wxwLo+3ukrbnOrmn/0ZUQt4D1SOa8tfYgHr5IJFZBCb3QrPs8q1
-	 t6/wwrRBwuD9meYUntA8wJ10x8KLFQ2un9PybQHV7LF0fThAPgm128PBoAv0GKLBCB
-	 Pu8GahqTyQCHA==
+	b=QF0xfnIpqxkiSJdOtWW9EawaJqRzvnIj0sLfhZG2ffQXeiH7gsPA+pRgwB23zWiVG
+	 2UO/AEkZvzrgXXq8zcBwRbJQ+JTvESRasmPWjXXtv0FzLmZh472fcaW7w7AlFaLUCm
+	 Ytgv8/GTqbVUeL5hiRNwVvwL3f8ByMAz0Xsj73G4dKqreveUFCTSxtK2Vl4sbYYPWp
+	 xvWIj/s0axIa00O0ZtyA2ZwFY+Bz1WCzHYYiCNWDiWdAnkDb9jp7+T9yf67h7kGsML
+	 8JfjOjAkVrUI8w/1xj/W5uMH/0rt69vVYkNsid/rI+yEANGOf+eIIzvJ7MT5Av25MU
+	 6cocPXYGA6AZQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Eddie Huang <eddie.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Peter Rosin <peda@axentia.se>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 165/183] rtc: mt6397: select IRQ_DOMAIN instead of depending on it
-Date: Sun, 24 Mar 2024 19:46:18 -0400
-Message-ID: <20240324234638.1355609-166-sashal@kernel.org>
+Subject: [PATCH 5.4 162/183] serial: max310x: fix syntax error in IRQ error message
+Date: Sun, 24 Mar 2024 19:46:15 -0400
+Message-ID: <20240324234638.1355609-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -60,57 +49,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-[ Upstream commit 544c42f798e1651dcb04fb0395219bf0f1c2607e ]
+[ Upstream commit 8ede8c6f474255b2213cccd7997b993272a8e2f9 ]
 
-IRQ_DOMAIN is a hidden (not user visible) symbol. Users cannot set
-it directly thru "make *config", so drivers should select it instead
-of depending on it if they need it.
-Relying on it being set for a dependency is risky.
+Replace g with q.
 
-Consistently using "select" or "depends on" can also help reduce
-Kconfig circular dependency issues.
+Helpful when grepping thru source code or logs for
+"request" keyword.
 
-Therefore, change the use of "depends on" for IRQ_DOMAIN to
-"select" for RTC_DRV_MT6397.
-
-Fixes: 04d3ba70a3c9 ("rtc: mt6397: add IRQ domain dependency")
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Sean Wang <sean.wang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Peter Rosin <peda@axentia.se>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20240213050258.6167-1-rdunlap@infradead.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: f65444187a66 ("serial: New serial driver MAX310X")
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Link: https://lore.kernel.org/r/20240118152213.2644269-6-hugo@hugovil.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/serial/max310x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 0ad8d84aeb339..22638878c9819 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1811,7 +1811,8 @@ config RTC_DRV_MOXART
+diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
+index 2f88eae8a55a1..5570fd3b84e15 100644
+--- a/drivers/tty/serial/max310x.c
++++ b/drivers/tty/serial/max310x.c
+@@ -1460,7 +1460,7 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
+ 	if (!ret)
+ 		return 0;
  
- config RTC_DRV_MT6397
- 	tristate "MediaTek PMIC based RTC"
--	depends on MFD_MT6397 || (COMPILE_TEST && IRQ_DOMAIN)
-+	depends on MFD_MT6397 || COMPILE_TEST
-+	select IRQ_DOMAIN
- 	help
- 	  This selects the MediaTek(R) RTC driver. RTC is part of MediaTek
- 	  MT6397 PMIC. You should enable MT6397 PMIC MFD before select
+-	dev_err(dev, "Unable to reguest IRQ %i\n", irq);
++	dev_err(dev, "Unable to request IRQ %i\n", irq);
+ 
+ out_uart:
+ 	for (i = 0; i < devtype->nr; i++) {
 -- 
 2.43.0
 
