@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFE313280B;
-	Sun, 24 Mar 2024 23:51:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9600296179;
+	Sun, 24 Mar 2024 23:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324310; cv=none; b=hi/D5U+gEKwg1Qspr24idqLuBXE2sUNsX+T84Jix01sahGYqAUWBORzM9a+O1IduJxyiEc6McXT+1oK+qsqH883Md9OIODy/W26u7xB7PeT8ngvDntHToJyMcS/5Yuvb0++2VuHslzmlZZ0g+3Kax0v86nkxtCwXsqw7qaRqG5Y=
+	t=1711324315; cv=none; b=au3RKugZPvUwCwYWXHi7MG8pCUkjD2KfOhXPjAS4ZlUs3SIOTC9mc2TiCXNqTBOITdPZQmZ0ZxOBqSfTtk06VGc/ZEXSk9k1Dwq/tnzGPUYkUoNrxLJgr9xZ70Oqpz4kXqf7tXtaU4qpTBEGhSZgoRlNLmenYBFjJSTh9b2SJfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324310; c=relaxed/simple;
-	bh=E3ev4s0/MWK6GrCYFP2vej+WNCRhvaN5iAa8vNsJbHU=;
+	s=arc-20240116; t=1711324315; c=relaxed/simple;
+	bh=VZsBu+Ttvi19cA8CEXfjnmf7ujuFCHpyubcJGasIOGY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V6khlqh9iWJbzLZS1/I3XLqpeqiQzE208WCo4dA5UjwMf/QSDZnCUhcmO1RVpdKBUe5EeAF/xKduFZPAvzzybVhahRkkm0eD8LiXbxJCvhj8QFJ5UzVAhL/2sKnk5DVKszTVnol8b52sIaMP/sNOCAd5Kx4BKLpppf3NjeEBaIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMqX1Vz+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mk4j9xg8tdftPXWqCXcW6miwbLVRSabpQs3Cbl594jXWt4S+5zRNFrkUWmvqVhPC9tp2PHOwcB1acirqlf4uYDCy527CgBQn+XxuHf4dFkWSpoqfYrYcloV05q2hngTD+RX7mhmnLoR2R9dChQN9M+FSPwjP5OAo3cJ2arR8Nak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOKw251n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMqX1Vz+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C39EC43399;
-	Sun, 24 Mar 2024 23:51:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOKw251n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AEC0C433C7;
+	Sun, 24 Mar 2024 23:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324310;
-	bh=E3ev4s0/MWK6GrCYFP2vej+WNCRhvaN5iAa8vNsJbHU=;
+	s=k20201202; t=1711324313;
+	bh=VZsBu+Ttvi19cA8CEXfjnmf7ujuFCHpyubcJGasIOGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nMqX1Vz+xQtUaYwh4PadyzErvDFF60iTgL18lEd28FWyR+04ABCeb6Qv/pu8QW2N2
-	 6QIWisSyyrJBgVfDkvPlOkeY6cxO+nkRggbS8Tu+sGfVWnWdXLh8m8jC8HMpAhbQUf
-	 IMqsqwwNpxoho8KHo1xGD6/JRnvM/ltnxcRnHCiUK6JeoN4jNinDgT+QzrMWhKBwOd
-	 UY8mDNykoAjmRn0FaiQRE0zu74kFM0EmIfnPOuvjYgVEsWJPKLs0FPGbb2fqezadKY
-	 SrOxn8cCj/ECcA2HLuOi8CF+DFSZy/3j29lFjDjgyTZ91g2/hE9XU5WnyfpQEr/jk6
-	 2g5dbMBw0uIoA==
+	b=MOKw251nRLFNpD6o1huTBcELobLN1/O5zsvyF2zjHbslyYGSGwKXvYjLqw6x39f+w
+	 SMzOAr1+QLjVayGpsN20yDcP7Jp9BT9UkNmm94eR2lr7yWDHHfDOFyIjoiZq02Vpl3
+	 FckXOdLSoZNwwygPwZRDI7X+Tq0Wa1g9deJRZy8g4Tu4iHEDSy5C/bOBRD18J7CIey
+	 K4jcVqayrkob4S5nS4Uqtmw716KbjavKa9NuT3cGujOxY5dP7lud4L1/oZaRmN5kS4
+	 YIGEF9ytIQ9PXzzo1MZVjK5G3Z5rh2PZMmdaHSGgeMjk6c1HSzFC+Ci7XCGRuhBgdP
+	 3eXtqJ6raS1QQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 082/148] media: dvbdev: remove double-unlock
-Date: Sun, 24 Mar 2024 19:49:06 -0400
-Message-ID: <20240324235012.1356413-83-sashal@kernel.org>
+Subject: [PATCH 4.19 085/148] media: dvbdev: fix error logic at dvb_register_device()
+Date: Sun, 24 Mar 2024 19:49:09 -0400
+Message-ID: <20240324235012.1356413-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,33 +47,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-[ Upstream commit 122d0e8dd050cc5dc3fb9e9b5f2dee3c5276ce35 ]
+[ Upstream commit 1fec2ecc252301110e4149e6183fa70460d29674 ]
 
-As warned by smatch:
-	drivers/media/dvb-core/dvbdev.c: drivers/media/dvb-core/dvbdev.c:529 dvb_register_device() error: double unlock 'sem:&minor_rwsem'
+As reported by smatch:
 
-Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+	drivers/media/dvb-core/dvbdev.c: drivers/media/dvb-core/dvbdev.c:510 dvb_register_device() warn: '&dvbdev->list_head' not removed from list
+	drivers/media/dvb-core/dvbdev.c: drivers/media/dvb-core/dvbdev.c:530 dvb_register_device() warn: '&dvbdev->list_head' not removed from list
+	drivers/media/dvb-core/dvbdev.c: drivers/media/dvb-core/dvbdev.c:545 dvb_register_device() warn: '&dvbdev->list_head' not removed from list
+
+The error logic inside dvb_register_device() doesn't remove
+devices from the dvb_adapter_list in case of errors.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Stable-dep-of: 8c64f4cdf4e6 ("media: edia: dvbdev: fix a use-after-free")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-core/dvbdev.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/media/dvb-core/dvbdev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index b8335ede66264..1f80c4fa31c9b 100644
+index 8273c969358e6..cf0c428f5776b 100644
 --- a/drivers/media/dvb-core/dvbdev.c
 +++ b/drivers/media/dvb-core/dvbdev.c
-@@ -536,7 +536,6 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		dvb_media_device_free(dvbdev);
+@@ -513,6 +513,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 			break;
+ 
+ 	if (minor == MAX_DVB_MINORS) {
++		list_del (&dvbdev->list_head);
  		kfree(dvbdevfops);
  		kfree(dvbdev);
--		up_write(&minor_rwsem);
+ 		up_write(&minor_rwsem);
+@@ -533,6 +534,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		      __func__);
+ 
+ 		dvb_media_device_free(dvbdev);
++		list_del (&dvbdev->list_head);
+ 		kfree(dvbdevfops);
+ 		kfree(dvbdev);
  		mutex_unlock(&dvbdev_register_lock);
- 		return ret;
- 	}
+@@ -548,6 +550,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		pr_err("%s: failed to create device dvb%d.%s%d (%ld)\n",
+ 		       __func__, adap->num, dnames[type], id, PTR_ERR(clsdev));
+ 		dvb_media_device_free(dvbdev);
++		list_del (&dvbdev->list_head);
+ 		kfree(dvbdevfops);
+ 		kfree(dvbdev);
+ 		return PTR_ERR(clsdev);
 -- 
 2.43.0
 
