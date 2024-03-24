@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DA117BB25;
-	Sun, 24 Mar 2024 23:42:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389EC17BB36;
+	Sun, 24 Mar 2024 23:42:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323766; cv=none; b=UJp6GzY6WJrqdkNnBHwD8fMq7Jnvmlh0gFVF990JeDCRdCHVfsJ4RyBQI1te8SD5Xf6XXA5bk0O6/QKqfyyqLr0Wn4tSkBQcPBI4REciS87myTcLsQpMpCpOuHSfy+mENi0Xcl0KjYr5ZlqdpfcEQxD1rkco1PRo2KGFgr0xV+o=
+	t=1711323768; cv=none; b=IjbZPBZTL6MFprLtFqu7Sf01AiEs29WzYThyGbvRmo+s2FU4KPOs2PhNysgzgg1RJyBrVkMMOa4yjfnStmFXfDPcC/xq+KwoKmSTLaJxK5sg8clFgMXsq4yxFHavlcBPChhP8qp60T/gx0Licin4SsDSWv9gfOnFFBJ7PSRmu2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323766; c=relaxed/simple;
-	bh=pWTdEafqnwz0t2R//u3qHlLZPkTkESyZ/4bwNpLUyX4=;
+	s=arc-20240116; t=1711323768; c=relaxed/simple;
+	bh=hwQzLx+b0pzbl2REzzGMcPpe4qgg4cQhQTmzuqjgsrI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GpfOS8ut4RT1G68xQR6d7w3oXCJS2FMe3YU4+BShzryI3+RgKKjGP5nk2OS04RAQk8QpwYl0B+I23c0PLdubhTYSn1AC8vXjd3tLubdk8lhvzSzeBymyxjIAd5XIY7+RqmHgUly0FrvJqrH53x7CZuAY674LjVXdkAetdb1MlLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HpJE57HJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fqT60pIPgH1IhXyi4deUnWKmVPGrS8g2dpqTKE6n5bzXo+EcMZLcahXJ8Opd0pjWIZTa/YUKHymbcnGRZ9o8PwXlvMmoAL8OLCJ46mRDv4xv4snsLgfxusQqLAvARG/mrolB4vlUsP3ga/N2PkdqlGabyZromAwF9oILtxn5oFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nW1YkfrB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HpJE57HJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63EF8C43394;
-	Sun, 24 Mar 2024 23:42:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nW1YkfrB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 264CFC43390;
+	Sun, 24 Mar 2024 23:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323765;
-	bh=pWTdEafqnwz0t2R//u3qHlLZPkTkESyZ/4bwNpLUyX4=;
+	s=k20201202; t=1711323766;
+	bh=hwQzLx+b0pzbl2REzzGMcPpe4qgg4cQhQTmzuqjgsrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HpJE57HJRk7d2Bz78b86SmdGVXGearzsRZekfYKI6xEd7x+E0gjRwlz+z3NUTbC2c
-	 ehf1smbObfp8NWD+Cdpa8oZt13WYff9XMOiH9sC2hyCpGuVnjhA29sgS/t6mDpYaxH
-	 Lw6liLEANCTA0kdbdkG9GVjm6FessSAczPiddgLLwFdcBSD7F55MEQSZaSwEFWdLBn
-	 szVOT0J9vKeJzRn0ZW8REauwDEHPros/bQw3EX0jlFIPH/SfrnozK1U5w8sej8KQLj
-	 ril+Ankx17VnC8hooFUgu4gnRkXsu7DrUVwUatLZJwXVBbaP4Tw7dtfnHZkaQNINfr
-	 jzZw/kcldNQrg==
+	b=nW1YkfrB1Jw0rWBg1UlGKQHC32UQrbBTtC3ggg/FyFWcQd7V1EtOC57FrqsUIR8BK
+	 6/1aLOvaxc+bFzcgEeKr3TKEI3+6HCaW2DobYvgl+qWs/HFq4NJP1pBqxZ1c6vI7wt
+	 LVLf9Rz9qi9cOGc/byF0kILCrvyb67OYFFavVmfYAPMRLKts3Al39hrdcWiKXsEOMJ
+	 KPeFSawgGHoxMNzKz2KLy12CCAZbD5Hl2ulo5E7/OI09kytQDJpqbK1tZ6HxLNKvIl
+	 /uoii+kqWq3Ewz8nBRyUe4gCo/MY+r5bqYdzVlT/cw8Uo+QerFjFH47A+fsAgu5n5r
+	 qFLJnVFKNOwkw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Wang Jianjian <wangjianjian3@huawei.com>,
-	Jan Kara <jack@suse.cz>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 140/238] quota: Fix potential NULL pointer dereference
-Date: Sun, 24 Mar 2024 19:38:48 -0400
-Message-ID: <20240324234027.1354210-141-sashal@kernel.org>
+Subject: [PATCH 5.10 142/238] PCI: switchtec: Fix an error handling path in switchtec_pci_probe()
+Date: Sun, 24 Mar 2024 19:38:50 -0400
+Message-ID: <20240324234027.1354210-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,276 +48,49 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Wang Jianjian <wangjianjian3@huawei.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit d0aa72604fbd80c8aabb46eda00535ed35570f1f ]
+[ Upstream commit dec529b0b0572b32f9eb91c882dd1f08ca657efb ]
 
-Below race may cause NULL pointer dereference
+The commit in Fixes changed the logic on how resources are released and
+introduced a new switchtec_exit_pci() that need to be called explicitly in
+order to undo a corresponding switchtec_init_pci().
 
-P1					P2
-dquot_free_inode			quota_off
-					  drop_dquot_ref
-					   remove_dquot_ref
-					   dquots = i_dquot(inode)
-  dquots = i_dquot(inode)
-  srcu_read_lock
-  dquots[cnt]) != NULL (1)
-					     dquots[type] = NULL (2)
-  spin_lock(&dquots[cnt]->dq_dqb_lock) (3)
-   ....
+This was done in the remove function, but not in the probe.
 
-If dquot_free_inode(or other routines) checks inode's quota pointers (1)
-before quota_off sets it to NULL(2) and use it (3) after that, NULL pointer
-dereference will be triggered.
+Fix the probe now.
 
-So let's fix it by using a temporary pointer to avoid this issue.
-
-Signed-off-by: Wang Jianjian <wangjianjian3@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Message-Id: <20240202081852.2514092-1-wangjianjian3@huawei.com>
-Stable-dep-of: 179b8c97ebf6 ("quota: Fix rcu annotations of inode dquot pointers")
+Fixes: df25461119d9 ("PCI: switchtec: Fix stdev_release() crash after surprise hot remove")
+Link: https://lore.kernel.org/r/01446d2ccb91a578239915812f2b7dfbeb2882af.1703428183.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/quota/dquot.c | 98 ++++++++++++++++++++++++++++--------------------
- 1 file changed, 57 insertions(+), 41 deletions(-)
+ drivers/pci/switch/switchtec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index 77578332e35ae..3f19ef2cc186d 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -401,15 +401,17 @@ int dquot_mark_dquot_dirty(struct dquot *dquot)
- EXPORT_SYMBOL(dquot_mark_dquot_dirty);
- 
- /* Dirtify all the dquots - this can block when journalling */
--static inline int mark_all_dquot_dirty(struct dquot * const *dquot)
-+static inline int mark_all_dquot_dirty(struct dquot * const *dquots)
- {
- 	int ret, err, cnt;
-+	struct dquot *dquot;
- 
- 	ret = err = 0;
- 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
--		if (dquot[cnt])
-+		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
-+		if (dquot)
- 			/* Even in case of error we have to continue */
--			ret = mark_dquot_dirty(dquot[cnt]);
-+			ret = mark_dquot_dirty(dquot);
- 		if (!err)
- 			err = ret;
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 5cea3ad290c54..9aa230c3208ab 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1615,7 +1615,7 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
+ 	rc = switchtec_init_isr(stdev);
+ 	if (rc) {
+ 		dev_err(&stdev->dev, "failed to init isr.\n");
+-		goto err_put;
++		goto err_exit_pci;
  	}
-@@ -1686,6 +1688,7 @@ int __dquot_alloc_space(struct inode *inode, qsize_t number, int flags)
- 	struct dquot_warn warn[MAXQUOTAS];
- 	int reserve = flags & DQUOT_SPACE_RESERVE;
- 	struct dquot **dquots;
-+	struct dquot *dquot;
  
- 	if (!inode_quota_active(inode)) {
- 		if (reserve) {
-@@ -1705,27 +1708,26 @@ int __dquot_alloc_space(struct inode *inode, qsize_t number, int flags)
- 	index = srcu_read_lock(&dquot_srcu);
- 	spin_lock(&inode->i_lock);
- 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
--		if (!dquots[cnt])
-+		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
-+		if (!dquot)
- 			continue;
- 		if (reserve) {
--			ret = dquot_add_space(dquots[cnt], 0, number, flags,
--					      &warn[cnt]);
-+			ret = dquot_add_space(dquot, 0, number, flags, &warn[cnt]);
- 		} else {
--			ret = dquot_add_space(dquots[cnt], number, 0, flags,
--					      &warn[cnt]);
-+			ret = dquot_add_space(dquot, number, 0, flags, &warn[cnt]);
- 		}
- 		if (ret) {
- 			/* Back out changes we already did */
- 			for (cnt--; cnt >= 0; cnt--) {
--				if (!dquots[cnt])
-+				dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
-+				if (!dquot)
- 					continue;
--				spin_lock(&dquots[cnt]->dq_dqb_lock);
-+				spin_lock(&dquot->dq_dqb_lock);
- 				if (reserve)
--					dquot_free_reserved_space(dquots[cnt],
--								  number);
-+					dquot_free_reserved_space(dquot, number);
- 				else
--					dquot_decr_space(dquots[cnt], number);
--				spin_unlock(&dquots[cnt]->dq_dqb_lock);
-+					dquot_decr_space(dquot, number);
-+				spin_unlock(&dquot->dq_dqb_lock);
- 			}
- 			spin_unlock(&inode->i_lock);
- 			goto out_flush_warn;
-@@ -1756,6 +1758,7 @@ int dquot_alloc_inode(struct inode *inode)
- 	int cnt, ret = 0, index;
- 	struct dquot_warn warn[MAXQUOTAS];
- 	struct dquot * const *dquots;
-+	struct dquot *dquot;
+ 	iowrite32(SWITCHTEC_EVENT_CLEAR |
+@@ -1636,6 +1636,8 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
  
- 	if (!inode_quota_active(inode))
- 		return 0;
-@@ -1766,17 +1769,19 @@ int dquot_alloc_inode(struct inode *inode)
- 	index = srcu_read_lock(&dquot_srcu);
- 	spin_lock(&inode->i_lock);
- 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
--		if (!dquots[cnt])
-+		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
-+		if (!dquot)
- 			continue;
--		ret = dquot_add_inodes(dquots[cnt], 1, &warn[cnt]);
-+		ret = dquot_add_inodes(dquot, 1, &warn[cnt]);
- 		if (ret) {
- 			for (cnt--; cnt >= 0; cnt--) {
--				if (!dquots[cnt])
-+				dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
-+				if (!dquot)
- 					continue;
- 				/* Back out changes we already did */
--				spin_lock(&dquots[cnt]->dq_dqb_lock);
--				dquot_decr_inodes(dquots[cnt], 1);
--				spin_unlock(&dquots[cnt]->dq_dqb_lock);
-+				spin_lock(&dquot->dq_dqb_lock);
-+				dquot_decr_inodes(dquot, 1);
-+				spin_unlock(&dquot->dq_dqb_lock);
- 			}
- 			goto warn_put_all;
- 		}
-@@ -1798,6 +1803,7 @@ EXPORT_SYMBOL(dquot_alloc_inode);
- int dquot_claim_space_nodirty(struct inode *inode, qsize_t number)
- {
- 	struct dquot **dquots;
-+	struct dquot *dquot;
- 	int cnt, index;
- 
- 	if (!inode_quota_active(inode)) {
-@@ -1813,9 +1819,8 @@ int dquot_claim_space_nodirty(struct inode *inode, qsize_t number)
- 	spin_lock(&inode->i_lock);
- 	/* Claim reserved quotas to allocated quotas */
- 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
--		if (dquots[cnt]) {
--			struct dquot *dquot = dquots[cnt];
--
-+		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
-+		if (dquot) {
- 			spin_lock(&dquot->dq_dqb_lock);
- 			if (WARN_ON_ONCE(dquot->dq_dqb.dqb_rsvspace < number))
- 				number = dquot->dq_dqb.dqb_rsvspace;
-@@ -1840,6 +1845,7 @@ EXPORT_SYMBOL(dquot_claim_space_nodirty);
- void dquot_reclaim_space_nodirty(struct inode *inode, qsize_t number)
- {
- 	struct dquot **dquots;
-+	struct dquot *dquot;
- 	int cnt, index;
- 
- 	if (!inode_quota_active(inode)) {
-@@ -1855,9 +1861,8 @@ void dquot_reclaim_space_nodirty(struct inode *inode, qsize_t number)
- 	spin_lock(&inode->i_lock);
- 	/* Claim reserved quotas to allocated quotas */
- 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
--		if (dquots[cnt]) {
--			struct dquot *dquot = dquots[cnt];
--
-+		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
-+		if (dquot) {
- 			spin_lock(&dquot->dq_dqb_lock);
- 			if (WARN_ON_ONCE(dquot->dq_dqb.dqb_curspace < number))
- 				number = dquot->dq_dqb.dqb_curspace;
-@@ -1884,6 +1889,7 @@ void __dquot_free_space(struct inode *inode, qsize_t number, int flags)
- 	unsigned int cnt;
- 	struct dquot_warn warn[MAXQUOTAS];
- 	struct dquot **dquots;
-+	struct dquot *dquot;
- 	int reserve = flags & DQUOT_SPACE_RESERVE, index;
- 
- 	if (!inode_quota_active(inode)) {
-@@ -1904,17 +1910,18 @@ void __dquot_free_space(struct inode *inode, qsize_t number, int flags)
- 		int wtype;
- 
- 		warn[cnt].w_type = QUOTA_NL_NOWARN;
--		if (!dquots[cnt])
-+		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
-+		if (!dquot)
- 			continue;
--		spin_lock(&dquots[cnt]->dq_dqb_lock);
--		wtype = info_bdq_free(dquots[cnt], number);
-+		spin_lock(&dquot->dq_dqb_lock);
-+		wtype = info_bdq_free(dquot, number);
- 		if (wtype != QUOTA_NL_NOWARN)
--			prepare_warning(&warn[cnt], dquots[cnt], wtype);
-+			prepare_warning(&warn[cnt], dquot, wtype);
- 		if (reserve)
--			dquot_free_reserved_space(dquots[cnt], number);
-+			dquot_free_reserved_space(dquot, number);
- 		else
--			dquot_decr_space(dquots[cnt], number);
--		spin_unlock(&dquots[cnt]->dq_dqb_lock);
-+			dquot_decr_space(dquot, number);
-+		spin_unlock(&dquot->dq_dqb_lock);
- 	}
- 	if (reserve)
- 		*inode_reserved_space(inode) -= number;
-@@ -1939,6 +1946,7 @@ void dquot_free_inode(struct inode *inode)
- 	unsigned int cnt;
- 	struct dquot_warn warn[MAXQUOTAS];
- 	struct dquot * const *dquots;
-+	struct dquot *dquot;
- 	int index;
- 
- 	if (!inode_quota_active(inode))
-@@ -1949,16 +1957,16 @@ void dquot_free_inode(struct inode *inode)
- 	spin_lock(&inode->i_lock);
- 	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
- 		int wtype;
--
- 		warn[cnt].w_type = QUOTA_NL_NOWARN;
--		if (!dquots[cnt])
-+		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
-+		if (!dquot)
- 			continue;
--		spin_lock(&dquots[cnt]->dq_dqb_lock);
--		wtype = info_idq_free(dquots[cnt], 1);
-+		spin_lock(&dquot->dq_dqb_lock);
-+		wtype = info_idq_free(dquot, 1);
- 		if (wtype != QUOTA_NL_NOWARN)
--			prepare_warning(&warn[cnt], dquots[cnt], wtype);
--		dquot_decr_inodes(dquots[cnt], 1);
--		spin_unlock(&dquots[cnt]->dq_dqb_lock);
-+			prepare_warning(&warn[cnt], dquot, wtype);
-+		dquot_decr_inodes(dquot, 1);
-+		spin_unlock(&dquot->dq_dqb_lock);
- 	}
- 	spin_unlock(&inode->i_lock);
- 	mark_all_dquot_dirty(dquots);
-@@ -1985,7 +1993,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 	qsize_t rsv_space = 0;
- 	qsize_t inode_usage = 1;
- 	struct dquot *transfer_from[MAXQUOTAS] = {};
--	int cnt, ret = 0;
-+	int cnt, index, ret = 0;
- 	char is_valid[MAXQUOTAS] = {};
- 	struct dquot_warn warn_to[MAXQUOTAS];
- 	struct dquot_warn warn_from_inodes[MAXQUOTAS];
-@@ -2074,8 +2082,16 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 	spin_unlock(&inode->i_lock);
- 	spin_unlock(&dq_data_lock);
- 
-+	/*
-+	 * These arrays are local and we hold dquot references so we don't need
-+	 * the srcu protection but still take dquot_srcu to avoid warning in
-+	 * mark_all_dquot_dirty().
-+	 */
-+	index = srcu_read_lock(&dquot_srcu);
- 	mark_all_dquot_dirty(transfer_from);
- 	mark_all_dquot_dirty(transfer_to);
-+	srcu_read_unlock(&dquot_srcu, index);
-+
- 	flush_warnings(warn_to);
- 	flush_warnings(warn_from_inodes);
- 	flush_warnings(warn_from_space);
+ err_devadd:
+ 	stdev_kill(stdev);
++err_exit_pci:
++	switchtec_exit_pci(stdev);
+ err_put:
+ 	ida_simple_remove(&switchtec_minor_ida, MINOR(stdev->dev.devt));
+ 	put_device(&stdev->dev);
 -- 
 2.43.0
 
