@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01897137758;
-	Sun, 24 Mar 2024 23:05:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C0B137767;
+	Sun, 24 Mar 2024 23:05:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321520; cv=none; b=D0JjSuIS2DyHZstSEXK9/7rmbTDCYinBYkzRYyxmdt7lMIppGRkVQ3iHOatXlX1ShVvdDIWeWb6p3+qxnuXZ/fpamKPOwYZeFI9oTzbwEXvffZBFNWV/To/LiV3kFNSp60Q4+nlxYhmYLd0DFHMBaJYpc59MgCMu0Po027wlAVY=
+	t=1711321522; cv=none; b=hIOGzpNGNZvohVOQXzgyI8a+3C02Br4WOjsNNz6WnG2cHp7P2bzPI/Qm8JJcnduwkX8b5ACxgsiPIiKU976Z56VZA/moH5PPJIFWzaVrp+N1oJt0ZS4VZhs89NZnAWxjCjcdIObAaeR00etUFG2XHURNNGAlTFnYVm10swhhb0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321520; c=relaxed/simple;
-	bh=5W25tBCsJNoKUVIgqMhNPlMepXpG4H0pEB0O1W0SAxU=;
+	s=arc-20240116; t=1711321522; c=relaxed/simple;
+	bh=qgjDD4+v1GbaGVNaQ8KO5jjN0cQJtYQc3ceXmRvpMAo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hbGXTVVhs+Yq4iwubOzAAcAj6gwzP+NdVZX6JsAMghRPDCjKBewehpKvT4C/i+H+tMWf/6IJ/JpXovHbeaf1/dN3XKRI5BDU9Tnzl8/eCCftoCfRRsZZaDX+ZUlRGtfsqoJKFnCgHqgQOLXouMmYUiD/PXYvY6WOe/kHlWbplfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xmxp02pA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=u38dsaaUyCVI3krKTKR9kbtQeadr3hl/UJMtIkaFd2bVWbx6eYXJ3UVWohL10cf6YSeN9WtBAtUvkPL4BRDiykp8STKw5eUcnkH/HX90oISD1ZJjyIhY2NPg/kZYJPGwUCsjfM07ErP+4ErUrljG4p48OMH/kghAlo94FkJ7OnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxXFbDgR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xmxp02pA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F07C43394;
-	Sun, 24 Mar 2024 23:05:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxXFbDgR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21EA7C43390;
+	Sun, 24 Mar 2024 23:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321519;
-	bh=5W25tBCsJNoKUVIgqMhNPlMepXpG4H0pEB0O1W0SAxU=;
+	s=k20201202; t=1711321521;
+	bh=qgjDD4+v1GbaGVNaQ8KO5jjN0cQJtYQc3ceXmRvpMAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Xmxp02pABNsH5pVOFv0od8tDJlik/TZiRYbGBOjsozmU8AG+5UwShF9s4sr7UPUiQ
-	 mMtwBVHoUr+QKxZDlvAJrkP8fMaefMWdFMZRMj3yFXyC6b48o1tCQdszFFBIcAHXgi
-	 A5+1NePDFqwux0a2GAcd5oLVFOo6tC+iuNb2k8uxYLdUe4ZgGGiAMfiPdfG5MpYVn8
-	 /RC2IlJDK4Pb2QV9SVKD/vWsfLHbQ9BVO0DK8uaK+V7824ccHXqeOyelK2owHyXhZY
-	 nM1+qEdlkkLTXh/C2REAFEYpep+pkEMT5qCRDT4ehVu5Y9ddzhkpTMSm+VMmEdHh02
-	 J2eapeF7E12IA==
+	b=CxXFbDgRudVaVnppYLjuLd6g9DKTdeTeSLLRHdCLjbz1v8K3rJI/T0SQIYr+kdyuP
+	 ENPtIW8n7s1iQbsmlb7BOWPqSNaQ3gZwximoeMVD04Iv+QjvdVbHDTYZLHF4VkoycL
+	 kMqhYWF0FA94EDTAkHkOCiykAGH1B26o2g18YOxmBU2714+Dmp44TcOP6XGuC5uFKv
+	 0szWswsqQ9OHlowgweJqVuQ9ysN6q4f/bVjTiyRj+KmzeHgBp+bCUk5/r5WT2g6qxG
+	 dT3pNVEzEOy4ciA6hU5JHKH4p/dmVVvBpAq783w2mkYa12a/qPJp8DV9WppP3Tg297
+	 an0bHbAWRUKPg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Devarsh Thakkar <devarsht@ti.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
+Cc: Jai Luthra <j-luthra@ti.com>,
+	Vaishnav Achath <vaishnav.a@ti.com>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 246/638] arm64: dts: ti: Add common1 register space for AM62x SoC
-Date: Sun, 24 Mar 2024 18:54:43 -0400
-Message-ID: <20240324230116.1348576-247-sashal@kernel.org>
+Subject: [PATCH 6.6 248/638] arm64: dts: ti: k3-am62p: Fix memory ranges for DMSS
+Date: Sun, 24 Mar 2024 18:54:45 -0400
+Message-ID: <20240324230116.1348576-249-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,42 +49,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Devarsh Thakkar <devarsht@ti.com>
+From: Jai Luthra <j-luthra@ti.com>
 
-[ Upstream commit 7d8ee2c3b8a2aabb9ce75795bad20773bfe1ba13 ]
+[ Upstream commit 90a67583171f213711de662fab9f8d24a2d291a9 ]
 
-This adds common1 register space for AM62x SoC which is using TI's Keystone
-display hardware and supporting it as described in
-Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+The INTR module for DMASS1 (CSI specific DMASS) is outside the currently
+available ranges, as it starts at 0x4e400000. So fix the ranges property
+to enable programming the interrupts correctly.
 
-Fixes: 8ccc1073c7bb ("arm64: dts: ti: k3-am62-main: Add node for DSS")
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Link: https://lore.kernel.org/r/20240216062426.4170528-4-devarsht@ti.com
+Fixes: 29075cc09f43 ("arm64: dts: ti: Introduce AM62P5 family of SoCs")
+Reviewed-by: Vaishnav Achath <vaishnav.a@ti.com>
+Signed-off-by: Jai Luthra <j-luthra@ti.com>
+Link: https://lore.kernel.org/r/20240220-am62p_csi-v2-1-3e71d9945571@ti.com
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am62p.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-index 6d125c86c2d35..a9b47ab92a02c 100644
---- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-@@ -747,9 +747,10 @@ dss: dss@30200000 {
- 		      <0x00 0x30207000 0x00 0x1000>, /* ovr1 */
- 		      <0x00 0x30208000 0x00 0x1000>, /* ovr2 */
- 		      <0x00 0x3020a000 0x00 0x1000>, /* vp1: Used for OLDI */
--		      <0x00 0x3020b000 0x00 0x1000>; /* vp2: Used as DPI Out */
-+		      <0x00 0x3020b000 0x00 0x1000>, /* vp2: Used as DPI Out */
-+		      <0x00 0x30201000 0x00 0x1000>; /* common1 */
- 		reg-names = "common", "vidl1", "vid",
--			    "ovr1", "ovr2", "vp1", "vp2";
-+			    "ovr1", "ovr2", "vp1", "vp2", "common1";
- 		power-domains = <&k3_pds 186 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 186 6>,
- 			 <&dss_vp1_clk>,
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p.dtsi b/arch/arm64/boot/dts/ti/k3-am62p.dtsi
+index 294ab73ec98b7..dc0a8e94e9ace 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p.dtsi
+@@ -71,7 +71,7 @@ cbass_main: bus@f0000 {
+ 			 <0x00 0x43600000 0x00 0x43600000 0x00 0x00010000>, /* SA3 sproxy data */
+ 			 <0x00 0x44043000 0x00 0x44043000 0x00 0x00000fe0>, /* TI SCI DEBUG */
+ 			 <0x00 0x44860000 0x00 0x44860000 0x00 0x00040000>, /* SA3 sproxy config */
+-			 <0x00 0x48000000 0x00 0x48000000 0x00 0x06400000>, /* DMSS */
++			 <0x00 0x48000000 0x00 0x48000000 0x00 0x06408000>, /* DMSS */
+ 			 <0x00 0x60000000 0x00 0x60000000 0x00 0x08000000>, /* FSS0 DAT1 */
+ 			 <0x00 0x70000000 0x00 0x70000000 0x00 0x00010000>, /* OCSRAM */
+ 			 <0x01 0x00000000 0x01 0x00000000 0x00 0x00310000>, /* A53 PERIPHBASE */
 -- 
 2.43.0
 
