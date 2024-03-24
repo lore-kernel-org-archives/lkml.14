@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDA920012B;
-	Sun, 24 Mar 2024 23:03:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1BB20012F;
+	Sun, 24 Mar 2024 23:03:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321383; cv=none; b=EVfq/+wxn0pzBR+uGHZxH3XR3ximQLOdtaS/KEfBXVfPb3PCgW7tZLjer7kmgy2WjoCTLMC5qopl/OSQLAKALvbPQucyOGOK+/uevoCluX/dEx+bCO/My6CE9USVmeyVfMMz7O4OgPRDLz9RWv5lB3XfoPlIbcrrCdbAkoCX4QM=
+	t=1711321387; cv=none; b=d5RhJC4hJdxtaI/6yDPhngwlEEV435dKfRVKbhIfFI5Tu7znYnz3UyizhzDW8jYiRHKXBMqJncdTGYARxMnj1WyBOg60WDtR7XC6bvEivtUKuCceeTX2yaGO/sWsuhgotOUKPgcciZ9s/4Y8DzexfaBAtOIAwtWaWI73tZQOGQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321383; c=relaxed/simple;
-	bh=jdfu/KH7YL1zTK/NxSGJU5Hr4wSQlNuG4dX03k2hbfQ=;
+	s=arc-20240116; t=1711321387; c=relaxed/simple;
+	bh=Zi18348681HHYzgRbflhzZPKMScdvghDeS/vYLjkrvw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BwORdkvJFKPJ/P7gNEYy6iRfX1LoKVxEkINtJTuM6XOxfLmWeLnXbmLmkR2LbJN7jY74P3ZlFGFcUG7ReBquPWtPU2s7wt/0DGeL/YDCbAabD5MV+bjHqhRz2BXhSkG82X9+y9fIAAh3uP0L3cfpDWyxipKoIql6mrxO4bQAOgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDXC/tIG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mwhqSqEY8jt1ptCKuWfAbJ80W+flyTSLooRIf0nRl6mQG1v7N9JdTJo3K5NY0j8E/yctZ0gfLQSNwkA7TyDMQ4rUAeUjdLKUb5urHfLt655gSFIHagIqz/Ari57x5+/P/BaAdAndn36ly3/yPDRP7nGJfcID+aGKhOZKTfKtlxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrcTduna; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDXC/tIG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA8CDC43390;
-	Sun, 24 Mar 2024 23:03:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZrcTduna"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BDAFC43399;
+	Sun, 24 Mar 2024 23:03:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321383;
-	bh=jdfu/KH7YL1zTK/NxSGJU5Hr4wSQlNuG4dX03k2hbfQ=;
+	s=k20201202; t=1711321387;
+	bh=Zi18348681HHYzgRbflhzZPKMScdvghDeS/vYLjkrvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dDXC/tIGky079L/UosVv4QFeDFDvQJk5hyHNQJ5wz0sQH0u+ZKMrqx7YeQldMk/zA
-	 ojKr7vQpK6XvYoCEPcPk+aNPmbj1eg8eUmuDg2U+Z1koKrkfqcdKSdk+iHGbExSrDm
-	 m2ORNiNpFTchPhYTe9SACEd9jyQ5Djfh2rHb5QgbRwuRMQyfarmmvqgAnoKqTseiLg
-	 nsQXwbkvF55efwV55Rnmq8aWqPa73mPyeem24N8hzBNQHLxtsMBLw2vce2ymUc/zVf
-	 8ZT9hykABIPdc/1HAuG1SqRjnMFbx3ftMvR0ymhlfTu333V5Ssi8qSfz3LTIkr4QNG
-	 fa+cLzguE4WBw==
+	b=ZrcTdunac0/KjsCMAYzPLa5kDeilJ3ahckO/yrZykdIjq0z/40DyvrM3S/DKpPcJO
+	 TFoMrdZbbsFNMRbeWZbzaz5y68+ElDVpTvGikrsQx5g5I1XDFd6dA8XmG14QPiBW9Y
+	 74oOA1LnCXzq1K2Mbp2CXJKrkuXn57ZobrFLuFxBDoJ18XJgNZPg3rd1OxqWq4SpUv
+	 w/9osB9oHXGPyRFTD8vwbKSz7V7Z3lOl7RYYQArVUzI8OF45mUMh4WGZqUDw+kCSQV
+	 dRYtOP5tcf2PcGspnaB1vNiZiKBz6uq91lD/sWm0Z7Cd+RAZL2Q+p4VaAhJnEhpgAt
+	 eyM6zuP9Umt2w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
+Cc: Keisuke Nishimura <keisuke.nishimura@inria.fr>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Ingo Molnar <mingo@kernel.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 107/638] x86/sme: Fix memory encryption setting if enabled by default and not overridden
-Date: Sun, 24 Mar 2024 18:52:24 -0400
-Message-ID: <20240324230116.1348576-108-sashal@kernel.org>
+Subject: [PATCH 6.6 111/638] sched/fair: Take the scheduling domain into account in select_idle_smt()
+Date: Sun, 24 Mar 2024 18:52:28 -0400
+Message-ID: <20240324230116.1348576-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,79 +50,84 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Keisuke Nishimura <keisuke.nishimura@inria.fr>
 
-[ Upstream commit e814b59e6c2b11f5a3d007b2e61f7d550c354c3a ]
+[ Upstream commit 8aeaffef8c6eceab0e1498486fdd4f3dc3b7066c ]
 
-Commit
+When picking a CPU on task wakeup, select_idle_smt() has to take
+into account the scheduling domain of @target. This is because the
+"isolcpus" kernel command line option can remove CPUs from the domain to
+isolate them from other SMT siblings.
 
-  cbebd68f59f0 ("x86/mm: Fix use of uninitialized buffer in sme_enable()")
+This fix checks if the candidate CPU is in the target scheduling domain.
 
-'fixed' an issue in sme_enable() detected by static analysis, and broke
-the common case in the process.
+Commit:
 
-cmdline_find_option() will return < 0 on an error, or when the command
-line argument does not appear at all. In this particular case, the
-latter is not an error condition, and so the early exit is wrong.
+  df3cb4ea1fb6 ("sched/fair: Fix wrong cpu selecting from isolated domain")
 
-Instead, without mem_encrypt= on the command line, the compile time
-default should be honoured, which could be to enable memory encryption,
-and this is currently broken.
+... originally introduced this fix by adding the check of the scheduling
+domain in the loop.
 
-Fix it by setting sme_me_mask to a preliminary value based on the
-compile time default, and only omitting the command line argument test
-when cmdline_find_option() returns an error.
+However, commit:
 
-  [ bp: Drop active_by_default while at it. ]
+  3e6efe87cd5cc ("sched/fair: Remove redundant check in select_idle_smt()")
 
-Fixes: cbebd68f59f0 ("x86/mm: Fix use of uninitialized buffer in sme_enable()")
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Link: https://lore.kernel.org/r/20240126163918.2908990-2-ardb+git@google.com
+... accidentally removed the check. Bring it back.
+
+Fixes: 3e6efe87cd5c ("sched/fair: Remove redundant check in select_idle_smt()")
+Signed-off-by: Keisuke Nishimura <keisuke.nishimura@inria.fr>
+Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lore.kernel.org/r/20240110131707.437301-1-keisuke.nishimura@inria.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/mem_encrypt_identity.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ kernel/sched/fair.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
-index d73aeb16417fc..7f72472a34d6d 100644
---- a/arch/x86/mm/mem_encrypt_identity.c
-+++ b/arch/x86/mm/mem_encrypt_identity.c
-@@ -507,7 +507,6 @@ void __init sme_enable(struct boot_params *bp)
- 	const char *cmdline_ptr, *cmdline_arg, *cmdline_on, *cmdline_off;
- 	unsigned int eax, ebx, ecx, edx;
- 	unsigned long feature_mask;
--	bool active_by_default;
- 	unsigned long me_mask;
- 	char buffer[16];
- 	bool snp;
-@@ -593,22 +592,19 @@ void __init sme_enable(struct boot_params *bp)
- 	     : "p" (sme_cmdline_off));
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index d336af9cba134..fed669ec72bce 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7206,13 +7206,19 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
+ /*
+  * Scan the local SMT mask for idle CPUs.
+  */
+-static int select_idle_smt(struct task_struct *p, int target)
++static int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
+ {
+ 	int cpu;
  
- 	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT))
--		active_by_default = true;
--	else
--		active_by_default = false;
-+		sme_me_mask = me_mask;
+ 	for_each_cpu_and(cpu, cpu_smt_mask(target), p->cpus_ptr) {
+ 		if (cpu == target)
+ 			continue;
++		/*
++		 * Check if the CPU is in the LLC scheduling domain of @target.
++		 * Due to isolcpus, there is no guarantee that all the siblings are in the domain.
++		 */
++		if (!cpumask_test_cpu(cpu, sched_domain_span(sd)))
++			continue;
+ 		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
+ 			return cpu;
+ 	}
+@@ -7236,7 +7242,7 @@ static inline int select_idle_core(struct task_struct *p, int core, struct cpuma
+ 	return __select_idle_cpu(core, p);
+ }
  
- 	cmdline_ptr = (const char *)((u64)bp->hdr.cmd_line_ptr |
- 				     ((u64)bp->ext_cmd_line_ptr << 32));
+-static inline int select_idle_smt(struct task_struct *p, int target)
++static inline int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
+ {
+ 	return -1;
+ }
+@@ -7498,7 +7504,7 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+ 		has_idle_core = test_idle_cores(target);
  
- 	if (cmdline_find_option(cmdline_ptr, cmdline_arg, buffer, sizeof(buffer)) < 0)
--		return;
-+		goto out;
- 
- 	if (!strncmp(buffer, cmdline_on, sizeof(buffer)))
- 		sme_me_mask = me_mask;
- 	else if (!strncmp(buffer, cmdline_off, sizeof(buffer)))
- 		sme_me_mask = 0;
--	else
--		sme_me_mask = active_by_default ? me_mask : 0;
-+
- out:
- 	if (sme_me_mask) {
- 		physical_mask &= ~sme_me_mask;
+ 		if (!has_idle_core && cpus_share_cache(prev, target)) {
+-			i = select_idle_smt(p, prev);
++			i = select_idle_smt(p, sd, prev);
+ 			if ((unsigned int)i < nr_cpumask_bits)
+ 				return i;
+ 		}
 -- 
 2.43.0
 
