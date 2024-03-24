@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3438884A2A;
-	Sun, 24 Mar 2024 22:58:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7144512D200;
+	Sun, 24 Mar 2024 22:58:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321110; cv=none; b=V8+/lMQ+WDEuDLUqKiIq6n2AVNBZiC2Zjc6AdHqg/82B54z9GqXczwYx3joSFdUTAc+NWhU+i8Bk8NmuPoepLosWsF8v+313XJS5lQJH2ypMlUFr0MGOvl4VGeIoj+3q9XTqEtt0Ec1CyKCdec7aqaATaEAuT+9g0eK0tD3/3cU=
+	t=1711321112; cv=none; b=iho4RhUd+ZgVcnv4RmiG8K1pj7WEHr/FlDcWoPePt3PB14ay8ND7qikSRURAp3d7O94DPhYkLQA8JEs+75u6aMnTWgj+xetXyDPzDgVoNzBBObjkGNVVjRh6i+ykUGEXaXBQvehAggQVg9L1A4BsKjd8s6ubNPO2DChzwgCVwDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321110; c=relaxed/simple;
-	bh=Dp88QjJycL9O///jxsVX1zMexcjm0ffDPULwA+9/ycw=;
+	s=arc-20240116; t=1711321112; c=relaxed/simple;
+	bh=gsijijHuL8k/2URhzGDGPWXGIQ/LVdjwwfI/TcUCJOc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=omiMHr3kz2EbmAcfKDSPkOawVDopwIhUX4Jk15/N0BFHxl2BNZcBzWcjwUuOGdK8+SUp8CqxY3Y/dnSa+htY98hakw9rBLKc8nnwJoCcP9rpR+vX4zp+TsFMNl6/+ODA4kc+Qqu6XIzFHsdBCmgeuQNDcWYxAPr+bJvPhvcUZ/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5+z5IZE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=WnHjn7odOaEopQD9KnQgfdrqgaWzXzJQ2pIt1Es65TyYQv13GSgZ40AcoSKLcT268i0aI4dwUTJRkFRXmjYuZ3lhFKlPQ91ZPdDNukdqV/Xrh3EhjRHwS1UxO6JjUplWfVBoS8IzqQGfTbm8Sg1ouTEzUjqB8sgzJ/qiOC4wsTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0Yn8tEK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5+z5IZE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12747C433C7;
-	Sun, 24 Mar 2024 22:58:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0Yn8tEK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5204CC433F1;
+	Sun, 24 Mar 2024 22:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321109;
-	bh=Dp88QjJycL9O///jxsVX1zMexcjm0ffDPULwA+9/ycw=;
+	s=k20201202; t=1711321112;
+	bh=gsijijHuL8k/2URhzGDGPWXGIQ/LVdjwwfI/TcUCJOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K5+z5IZEJ0DDm1BxjjJXU+IrvEF6OhqhcIYtWTU7HK0VqEPBQZaB+BSsHMj0tqbfT
-	 I97mlQ5x2Dup6QpSLQtsNDO/3mLYKAJJhn96X7KLElJLtS+3kn9PUQD1oTHl/dPMVt
-	 pRS54mSF8WUq7JBoOq0aXUqbyvE+aSJNVdpWfiYY/blPNrO/mTsUbEPitxQDm/oZkQ
-	 DoVEIQ5ElzKfx9OtH04OiN3nV4pUsL9MUg+EMoHP7bftRSIEeZGWdTMz50a5SjSHR0
-	 CLHsOtJlt4HJruXZ0lxchYxTP8EwCROHoj81w9dClnVQ1UYGsRoEflJX/POiSbOr6t
-	 qBMRURJXWMudw==
+	b=O0Yn8tEKgl17adV5nQQL5PZg+ESHEpPFwtvsXzL1wSumY3mfojgOYRgY1NCOZUSqF
+	 Zo0QKYWEbUJsEUFQrQ56b+5vp5hAKZbbgQwUQyiMwC5wAxENgWiiYdE4ccXErcur/x
+	 EQ/MTxViotDEz97KcewzuELUq/w2DAeyJM/SG6JvFaioyu64oZyVEv+f7f/qSDnpVi
+	 IkbrascuBS8ofzx/ZmKEEDnQR+jvBVEUn/rJhnk8N0tC6DltjECMdIydWxu3iRMtpA
+	 W5K/K4zgEkf9KGxg1EgtdGhhpv1WGnrdYm+HQ35Ir5DX1AspxjF5TrHElw8d4B9JF1
+	 FgoI3DWt0oDEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	syzbot+c669c1136495a2e7c31f@syzkaller.appspotmail.com,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Jason Xing <kerneljasonxing@gmail.com>,
+Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+	Justin Swartz <justin.swartz@risingedge.co.za>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 671/713] packet: annotate data-races around ignore_outgoing
-Date: Sun, 24 Mar 2024 18:46:37 -0400
-Message-ID: <20240324224720.1345309-672-sashal@kernel.org>
+Subject: [PATCH 6.7 674/713] net: dsa: mt7530: prevent possible incorrect XTAL frequency selection
+Date: Sun, 24 Mar 2024 18:46:40 -0400
+Message-ID: <20240324224720.1345309-675-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,107 +45,178 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-[ Upstream commit 6ebfad33161afacb3e1e59ed1c2feefef70f9f97 ]
+[ Upstream commit f490c492e946d8ffbe65ad4efc66de3c5ede30a4 ]
 
-ignore_outgoing is read locklessly from dev_queue_xmit_nit()
-and packet_getsockopt()
+On MT7530, the HT_XTAL_FSEL field of the HWTRAP register stores a 2-bit
+value that represents the frequency of the crystal oscillator connected to
+the switch IC. The field is populated by the state of the ESW_P4_LED_0 and
+ESW_P4_LED_0 pins, which is done right after reset is deasserted.
 
-Add appropriate READ_ONCE()/WRITE_ONCE() annotations.
+  ESW_P4_LED_0    ESW_P3_LED_0    Frequency
+  -----------------------------------------
+  0               0               Reserved
+  0               1               20MHz
+  1               0               40MHz
+  1               1               25MHz
 
-syzbot reported:
+On MT7531, the XTAL25 bit of the STRAP register stores this. The LAN0LED0
+pin is used to populate the bit. 25MHz when the pin is high, 40MHz when
+it's low.
 
-BUG: KCSAN: data-race in dev_queue_xmit_nit / packet_setsockopt
+These pins are also used with LEDs, therefore, their state can be set to
+something other than the bootstrapping configuration. For example, a link
+may be established on port 3 before the DSA subdriver takes control of the
+switch which would set ESW_P3_LED_0 to high.
 
-write to 0xffff888107804542 of 1 bytes by task 22618 on cpu 0:
- packet_setsockopt+0xd83/0xfd0 net/packet/af_packet.c:4003
- do_sock_setsockopt net/socket.c:2311 [inline]
- __sys_setsockopt+0x1d8/0x250 net/socket.c:2334
- __do_sys_setsockopt net/socket.c:2343 [inline]
- __se_sys_setsockopt net/socket.c:2340 [inline]
- __x64_sys_setsockopt+0x66/0x80 net/socket.c:2340
- do_syscall_64+0xd3/0x1d0
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
+Currently on mt7530_setup() and mt7531_setup(), 1000 - 1100 usec delay is
+described between reset assertion and deassertion. Some switch ICs in real
+life conditions cannot always have these pins set back to the bootstrapping
+configuration before reset deassertion in this amount of delay. This causes
+wrong crystal frequency to be selected which puts the switch in a
+nonfunctional state after reset deassertion.
 
-read to 0xffff888107804542 of 1 bytes by task 27 on cpu 1:
- dev_queue_xmit_nit+0x82/0x620 net/core/dev.c:2248
- xmit_one net/core/dev.c:3527 [inline]
- dev_hard_start_xmit+0xcc/0x3f0 net/core/dev.c:3547
- __dev_queue_xmit+0xf24/0x1dd0 net/core/dev.c:4335
- dev_queue_xmit include/linux/netdevice.h:3091 [inline]
- batadv_send_skb_packet+0x264/0x300 net/batman-adv/send.c:108
- batadv_send_broadcast_skb+0x24/0x30 net/batman-adv/send.c:127
- batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:392 [inline]
- batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:420 [inline]
- batadv_iv_send_outstanding_bat_ogm_packet+0x3f0/0x4b0 net/batman-adv/bat_iv_ogm.c:1700
- process_one_work kernel/workqueue.c:3254 [inline]
- process_scheduled_works+0x465/0x990 kernel/workqueue.c:3335
- worker_thread+0x526/0x730 kernel/workqueue.c:3416
- kthread+0x1d1/0x210 kernel/kthread.c:388
- ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+The tests below are conducted on an MT7530 with a 40MHz crystal oscillator
+by Justin Swartz.
 
-value changed: 0x00 -> 0x01
+With a cable from an active peer connected to port 3 before reset, an
+incorrect crystal frequency (0b11 = 25MHz) is selected:
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 27 Comm: kworker/u8:1 Tainted: G        W          6.8.0-syzkaller-08073-g480e035fc4c7 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
-Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
+                      [1]                  [3]     [5]
+                      :                    :       :
+              _____________________________         __________________
+ESW_P4_LED_0                               |_______|
+              _____________________________
+ESW_P3_LED_0                               |__________________________
 
-Fixes: fa788d986a3a ("packet: add sockopt to ignore outgoing packets")
-Reported-by: syzbot+c669c1136495a2e7c31f@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/netdev/CANn89i+Z7MfbkBLOv=p7KZ7=K1rKHO4P1OL5LYDCtBiyqsa9oQ@mail.gmail.com/T/#t
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+                       :                  : :     :
+                       :                  : [4]...:
+                       :                  :
+                       [2]................:
+
+[1] Reset is asserted.
+[2] Period of 1000 - 1100 usec.
+[3] Reset is deasserted.
+[4] Period of 315 usec. HWTRAP register is populated with incorrect
+    XTAL frequency.
+[5] Signals reflect the bootstrapped configuration.
+
+Increase the delay between reset_control_assert() and
+reset_control_deassert(), and gpiod_set_value_cansleep(priv->reset, 0) and
+gpiod_set_value_cansleep(priv->reset, 1) to 5000 - 5100 usec. This amount
+ensures a higher possibility that the switch IC will have these pins back
+to the bootstrapping configuration before reset deassertion.
+
+With a cable from an active peer connected to port 3 before reset, the
+correct crystal frequency (0b10 = 40MHz) is selected:
+
+                      [1]        [2-1]     [3]     [5]
+                      :          :         :       :
+              _____________________________         __________________
+ESW_P4_LED_0                               |_______|
+              ___________________           _______
+ESW_P3_LED_0                     |_________|       |__________________
+
+                       :          :       : :     :
+                       :          [2-2]...: [4]...:
+                       [2]................:
+
+[1] Reset is asserted.
+[2] Period of 5000 - 5100 usec.
+[2-1] ESW_P3_LED_0 goes low.
+[2-2] Remaining period of 5000 - 5100 usec.
+[3] Reset is deasserted.
+[4] Period of 310 usec. HWTRAP register is populated with bootstrapped
+    XTAL frequency.
+[5] Signals reflect the bootstrapped configuration.
+
+ESW_P3_LED_0 low period before reset deassertion:
+
+              5000 usec
+            - 5100 usec
+    TEST     RESET HOLD
+       #         (usec)
+  ---------------------
+       1           5410
+       2           5440
+       3           4375
+       4           5490
+       5           5475
+       6           4335
+       7           4370
+       8           5435
+       9           4205
+      10           4335
+      11           3750
+      12           3170
+      13           4395
+      14           4375
+      15           3515
+      16           4335
+      17           4220
+      18           4175
+      19           4175
+      20           4350
+
+     Min           3170
+     Max           5490
+
+  Median       4342.500
+     Avg       4466.500
+
+Revert commit 2920dd92b980 ("net: dsa: mt7530: disable LEDs before reset").
+Changing the state of pins via reset assertion is simpler and more
+efficient than doing so by setting the LED controller off.
+
+Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
+Fixes: c288575f7810 ("net: dsa: mt7530: Add the support of MT7531 switch")
+Co-developed-by: Justin Swartz <justin.swartz@risingedge.co.za>
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c         | 2 +-
- net/packet/af_packet.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/dsa/mt7530.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index add22ca0dff95..ae898594690f7 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -2262,7 +2262,7 @@ void dev_queue_xmit_nit(struct sk_buff *skb, struct net_device *dev)
- 	rcu_read_lock();
- again:
- 	list_for_each_entry_rcu(ptype, ptype_list, list) {
--		if (ptype->ignore_outgoing)
-+		if (READ_ONCE(ptype->ignore_outgoing))
- 			continue;
- 
- 		/* Never send packets back to the socket
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 7adf48549a3b7..f017d7d33da39 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4004,7 +4004,7 @@ packet_setsockopt(struct socket *sock, int level, int optname, sockptr_t optval,
- 		if (val < 0 || val > 1)
- 			return -EINVAL;
- 
--		po->prot_hook.ignore_outgoing = !!val;
-+		WRITE_ONCE(po->prot_hook.ignore_outgoing, !!val);
- 		return 0;
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 2333f6383b542..940ca59585568 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -2243,11 +2243,11 @@ mt7530_setup(struct dsa_switch *ds)
+ 	 */
+ 	if (priv->mcm) {
+ 		reset_control_assert(priv->rstc);
+-		usleep_range(1000, 1100);
++		usleep_range(5000, 5100);
+ 		reset_control_deassert(priv->rstc);
+ 	} else {
+ 		gpiod_set_value_cansleep(priv->reset, 0);
+-		usleep_range(1000, 1100);
++		usleep_range(5000, 5100);
+ 		gpiod_set_value_cansleep(priv->reset, 1);
  	}
- 	case PACKET_TX_HAS_OFF:
-@@ -4135,7 +4135,7 @@ static int packet_getsockopt(struct socket *sock, int level, int optname,
- 		       0);
- 		break;
- 	case PACKET_IGNORE_OUTGOING:
--		val = po->prot_hook.ignore_outgoing;
-+		val = READ_ONCE(po->prot_hook.ignore_outgoing);
- 		break;
- 	case PACKET_ROLLOVER_STATS:
- 		if (!po->rollover)
+ 
+@@ -2449,11 +2449,11 @@ mt7531_setup(struct dsa_switch *ds)
+ 	 */
+ 	if (priv->mcm) {
+ 		reset_control_assert(priv->rstc);
+-		usleep_range(1000, 1100);
++		usleep_range(5000, 5100);
+ 		reset_control_deassert(priv->rstc);
+ 	} else {
+ 		gpiod_set_value_cansleep(priv->reset, 0);
+-		usleep_range(1000, 1100);
++		usleep_range(5000, 5100);
+ 		gpiod_set_value_cansleep(priv->reset, 1);
+ 	}
+ 
 -- 
 2.43.0
 
