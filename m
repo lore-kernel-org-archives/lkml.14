@@ -1,48 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A0F21731A;
-	Sun, 24 Mar 2024 23:09:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A56521733D;
+	Sun, 24 Mar 2024 23:09:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321770; cv=none; b=XoXRT7BKATQGOFkLnKz19ftiJcbDrHIiPsiI5E28asxF5XmT2oVBWc5GBnOrZ5okUpXQHTVEY5SSHdESX5mfXbiFbTWYtP0qMxhQ+RqsrqyrEM2Oz/hdwcHC1rpGw82f9QrFH4pWcwfTOp7ocwVxaddYG+xORll5R6XJZsfDzfM=
+	t=1711321776; cv=none; b=ZWWKcEjVO3BEav+Lfw1R6RdLvQtCBknLaqz1hMPtZdYTTquVDB7kLnNGcSbZPYgn3wUobkMYE8Tmbgk8tmVUhZbJX5opRPuhOGYYExIG05BmUDMslxOR9XLu5yDfHdx9bF2Qm4reRHt3bfYgJsScbG3jXrrtVr4th5jmgQXl7CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321770; c=relaxed/simple;
-	bh=XAPFzGb1sl2VWk/bnvkz1Ec81SxdjoxCg3bMh16LBlw=;
+	s=arc-20240116; t=1711321776; c=relaxed/simple;
+	bh=NscB8Hb75iHlIWlZdTBzabvJYmQiMpj8CO1/I7bIhLA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yr5DDx869Mfx41liT/i+q45aFOJuHabc35ruj3WOCaKA8nhoXocHLCU50GWEZWnofDwDh1bzCRuWbAq9qjaEsT2Lm7uYnPXmqPmwr1UBO/O1ilqv+jyMQ/AFsxWk+ABwVC83F9A5m8CFz/LmYzntjRfsMFyBEES/ay/3VBvGbLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dl1UvfUY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YfFhiKEqwA4ftPf5eeZe97j9IJs+wC/SHrnLxvsymzP3kGrO5XxGSO+mVRTgqRlgaf7+IdC2F3G+jzg6QNqeZn0SS3DDYZ89EgDnzdBeGiHMEKFDRO1KALesNS2JuMnFNamoo8q1ZT73ipIkyDpiB0zzRGM11zjmyNBCGL3oeI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTpmdVZE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dl1UvfUY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F415C43394;
-	Sun, 24 Mar 2024 23:09:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTpmdVZE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 665A4C43390;
+	Sun, 24 Mar 2024 23:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321768;
-	bh=XAPFzGb1sl2VWk/bnvkz1Ec81SxdjoxCg3bMh16LBlw=;
+	s=k20201202; t=1711321776;
+	bh=NscB8Hb75iHlIWlZdTBzabvJYmQiMpj8CO1/I7bIhLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dl1UvfUY39RRYBowjIQMDWxgDQF9PoLcA7HojiqaIRV94iG3/A8d5CuK5kTYAFWw/
-	 oXQ++64WkQP85FsXjWB86ck0l8rr5GThWcP5V2pq+doKKXZOy2zmiKVVXziKgrmS+D
-	 yriSHQeC6xVsqs+CpGtb54nnh77Zi1yaL+e56bXpJdLKXC+bt9tHtpWORTz/df1jDe
-	 FaHYylc/ovWrQjmhQWxz/chd68FKCzPyJBQYNfs+L4QtIBnY45YPJokfTrr3f47pB4
-	 7w8bi5gtLnekjqjfmtFtBjL/vpKor5MBkF5t88jIohsW2GxS1cPWFl55YGkq8P/1SC
-	 n/71NXXBKQ+3A==
+	b=hTpmdVZEmduP9fXmGHBLwFkhW6JhLwwc+jTvnkqs+Yf77vQqBZhYbXreHyaw4Q3h5
+	 XUcxiMLxAA6v6iQAMu76HEYMnOQJFO3AFrpnBRRJfqORHT7Cj7wyu2pRtAGC1smkc3
+	 JFGyCzsLYyduIanEsHY3cs/B7fAERHSAbf8jGNWoHvyDQWoy/mKh7HsZASGON90Bhm
+	 /0Jp3vE2BI7zzlFfzAkPENxsL/54W3SROyC2hZXpScv8ptKr7q8UDDn2VY3wau5dp1
+	 oV+TfYmtd3Mn/x1A86M4jEHugvrPD2aNGjWDkcwKgnNeDb+b7R6UOxkOd/Xvz+Vcje
+	 +6QCjhLJ7BnKw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Steve French <sfrench@samba.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Ronnie Sahlberg <lsahlber@redhat.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	linux-cifs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
+Cc: Gergo Koteles <soyer@irl.hu>,
+	Takashi Iwai <tiwai@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 496/638] cifs: Don't use certain unnecessary folio_*() functions
-Date: Sun, 24 Mar 2024 18:58:53 -0400
-Message-ID: <20240324230116.1348576-497-sashal@kernel.org>
+Subject: [PATCH 6.6 503/638] ALSA: hda/tas2781: do not call pm_runtime_force_* in system_resume/suspend
+Date: Sun, 24 Mar 2024 18:59:00 -0400
+Message-ID: <20240324230116.1348576-504-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -56,85 +48,61 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: David Howells <dhowells@redhat.com>
+From: Gergo Koteles <soyer@irl.hu>
 
-[ Upstream commit c40497d82387188f14d9adc4caa58ee1cb1999e1 ]
+[ Upstream commit 5f51de7e30c7282162a631af8a425b54a4576346 ]
 
-Filesystems should use folio->index and folio->mapping, instead of
-folio_index(folio), folio_mapping() and folio_file_mapping() since
-they know that it's in the pagecache.
+The runtime_resume function calls prmg_load and apply_calibration
+functions, but system_resume also calls them, so calling
+pm_runtime_force_resume before reset is unnecessary.
 
-Change this automagically with:
+For consistency, do not call the pm_runtime_force_suspend in
+system_suspend, as runtime_suspend does the same.
 
-perl -p -i -e 's/folio_mapping[(]([^)]*)[)]/\1->mapping/g' fs/smb/client/*.c
-perl -p -i -e 's/folio_file_mapping[(]([^)]*)[)]/\1->mapping/g' fs/smb/client/*.c
-perl -p -i -e 's/folio_index[(]([^)]*)[)]/\1->index/g' fs/smb/client/*.c
-
-Reported-by: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: Steve French <sfrench@samba.org>
-cc: Paulo Alcantara <pc@manguebit.com>
-cc: Ronnie Sahlberg <lsahlber@redhat.com>
-cc: Shyam Prasad N <sprasad@microsoft.com>
-cc: Tom Talpey <tom@talpey.com>
-cc: linux-cifs@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
-Stable-dep-of: f3dc1bdb6b0b ("cifs: Fix writeback data corruption")
+Fixes: 5be27f1e3ec9 ("ALSA: hda/tas2781: Add tas2781 HDA driver")
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Message-ID: <d0b4cc1248b9d375d59c009563da42d60d69eac3.1709918447.git.soyer@irl.hu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/smb/client/file.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ sound/pci/hda/tas2781_hda_i2c.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
-index 043bee4020a91..7320272ef0074 100644
---- a/fs/smb/client/file.c
-+++ b/fs/smb/client/file.c
-@@ -87,7 +87,7 @@ void cifs_pages_written_back(struct inode *inode, loff_t start, unsigned int len
- 			continue;
- 		if (!folio_test_writeback(folio)) {
- 			WARN_ONCE(1, "bad %x @%llx page %lx %lx\n",
--				  len, start, folio_index(folio), end);
-+				  len, start, folio->index, end);
- 			continue;
- 		}
+diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
+index 663a7a56832fa..57070a1364dd0 100644
+--- a/sound/pci/hda/tas2781_hda_i2c.c
++++ b/sound/pci/hda/tas2781_hda_i2c.c
+@@ -781,14 +781,9 @@ static int tas2781_runtime_resume(struct device *dev)
+ static int tas2781_system_suspend(struct device *dev)
+ {
+ 	struct tas2781_hda *tas_hda = dev_get_drvdata(dev);
+-	int ret;
  
-@@ -120,7 +120,7 @@ void cifs_pages_write_failed(struct inode *inode, loff_t start, unsigned int len
- 			continue;
- 		if (!folio_test_writeback(folio)) {
- 			WARN_ONCE(1, "bad %x @%llx page %lx %lx\n",
--				  len, start, folio_index(folio), end);
-+				  len, start, folio->index, end);
- 			continue;
- 		}
+ 	dev_dbg(tas_hda->priv->dev, "System Suspend\n");
  
-@@ -151,7 +151,7 @@ void cifs_pages_write_redirty(struct inode *inode, loff_t start, unsigned int le
- 	xas_for_each(&xas, folio, end) {
- 		if (!folio_test_writeback(folio)) {
- 			WARN_ONCE(1, "bad %x @%llx page %lx %lx\n",
--				  len, start, folio_index(folio), end);
-+				  len, start, folio->index, end);
- 			continue;
- 		}
+-	ret = pm_runtime_force_suspend(dev);
+-	if (ret)
+-		return ret;
+-
+ 	mutex_lock(&tas_hda->priv->codec_lock);
  
-@@ -2652,7 +2652,7 @@ static void cifs_extend_writeback(struct address_space *mapping,
- 				continue;
- 			if (xa_is_value(folio))
- 				break;
--			if (folio_index(folio) != index)
-+			if (folio->index != index)
- 				break;
- 			if (!folio_try_get_rcu(folio)) {
- 				xas_reset(&xas);
-@@ -2900,7 +2900,7 @@ static int cifs_writepages_region(struct address_space *mapping,
- 					goto skip_write;
- 			}
+ 	/* Shutdown chip before system suspend */
+@@ -806,14 +801,10 @@ static int tas2781_system_suspend(struct device *dev)
+ static int tas2781_system_resume(struct device *dev)
+ {
+ 	struct tas2781_hda *tas_hda = dev_get_drvdata(dev);
+-	int i, ret;
++	int i;
  
--			if (folio_mapping(folio) != mapping ||
-+			if (folio->mapping != mapping ||
- 			    !folio_test_dirty(folio)) {
- 				start += folio_size(folio);
- 				folio_unlock(folio);
+ 	dev_dbg(tas_hda->priv->dev, "System Resume\n");
+ 
+-	ret = pm_runtime_force_resume(dev);
+-	if (ret)
+-		return ret;
+-
+ 	mutex_lock(&tas_hda->priv->codec_lock);
+ 
+ 	for (i = 0; i < tas_hda->priv->ndev; i++) {
 -- 
 2.43.0
 
