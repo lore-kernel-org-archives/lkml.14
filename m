@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD43146A7C;
-	Sun, 24 Mar 2024 22:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBC01E4A31;
+	Sun, 24 Mar 2024 22:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320804; cv=none; b=CP1Afz9y/yY37p7gNINPkBU1XTQvfty+NEZ5mjFLVSXsl64j5IO4tQUkMcp0lnnz1mk482dOEeWoJALFnWHsC45euMjd6SA6is3lhztW14mTgFEl5B2hJogWBFxWAxZkX48N8AVvgC6R2Hr/7FL/XjaCmUyVM9656ZhvCJPk+64=
+	t=1711320812; cv=none; b=ZdrDhs8oHky6Ikp+aUAlZAy2H4NV9sj7WRrpRDJK6CKQnjZn758J5OT/rxlihe0lWaMMlJdbKFjJUg4OinjtR9ANZGLo+eWytHrjnJglOYdxSUdajfmo29hxEr2HXQ6vmZzVuOUldeIOv8hRhX239SxHj/EF05xD8bRA7Z59b5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320804; c=relaxed/simple;
-	bh=+QkvvFUsfzJGAOfFG7l43e6uK8qVL5kgLn0QxLrcRik=;
+	s=arc-20240116; t=1711320812; c=relaxed/simple;
+	bh=/wkUrVURaFW6PhpN42GU6CG4bO+YUQVvcwI8FwqBU1g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gHDZqhm7Hf4KaZuqVAcATSWszkvxR0IkqzYzZfWEGZAKptFouJ6gnMVQmKgctkllRW4y0eAs94lVCqHzlELs2id85P9c0/d7G36xNTm6TVw3M2OEziczWN52WdqB0JboXyxwPdWUb5LJ9vb2XFRDFrSmozYbZmR+gDsFUBOGKiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GxFx3VEM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X4PdzmOhjC5yWk30KUC4WGhoPAF/5EbrM+UCKlb4NAKDFHFt7ZYmMY4Q6l2HWQ60RXZpmU0E2Qg071UoyRtS1Hm0f9ZzmQQgdMfZTHm+vyr7aiu9EzGjDzB2xifFX8jwG5vR21f1b5tsez5dIoV8WYztBsCMoqTsy4oXgGIvJ3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gx1hcfnL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GxFx3VEM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438F4C433C7;
-	Sun, 24 Mar 2024 22:53:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gx1hcfnL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8020C43399;
+	Sun, 24 Mar 2024 22:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320803;
-	bh=+QkvvFUsfzJGAOfFG7l43e6uK8qVL5kgLn0QxLrcRik=;
+	s=k20201202; t=1711320811;
+	bh=/wkUrVURaFW6PhpN42GU6CG4bO+YUQVvcwI8FwqBU1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GxFx3VEMYrGo13mKf6IK4lz6DX63CK1L0OK0a2nFNMlWQYrgvOv00F7rdY7TMFJOW
-	 +SKTnZ4ReV+Zg/7EItFCKaCbjlY/dlY6SMDLbtXKpjYGGOBBT8/b5Pi7QReydh/Y+7
-	 x7x6T0AFixn/WK+Ve1t+51VqC4W+6bn9+PvQxcu49DkjepZK3uXNeVbCXruCNSKA6p
-	 q20wmo51VfpPhOAgEfrF6kBBSo1LdIOaVX54N3hcxipt07yBLmEOQsIaVjLzbA1fk+
-	 7XnFWxzZOZyE2BLYSnWiWWryI/B28hf8NnVyfAhHbqazVSQLdWsKTJzXOtYow+b5/A
-	 uryT0I5i2Qfcw==
+	b=Gx1hcfnLaPT+uoSFSJAxEUrM12PEPKrsq99KNW5AfWRSRcztAj5vTMboGBqTFhrJ+
+	 aH4V/0Zm1bKBEhj3+MwZUbO3pGPEkaJRdHyvUuMgNUqSCTDZ3eYYH7sEhn91CpeZVs
+	 O78IdNmyM1ND8fkOUY2uH2G3He6mHNwvq/ys1MDRv/BJOfvqjfls24nWG9LqjB7hC6
+	 yxFugiUuPjsAf4ijhOXwHlv6QKpzVjSO7P5sSyGiZu6cqijM/q4X6dxqLN3tDglAu3
+	 2TWGS4QWhY+I5dTiI3S93YL5p0oQdtER3sLnf7bCp6s7EuYzPq0Hf6gH+trN3+8SdG
+	 HbEL2zoRWeyTA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	syzbot <syzkaller@googlegroups.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Baokun Li <libaokun1@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Jingbo Xu <jefflexu@linux.alibaba.com>,
+	Yang Erkun <yangerkun@huawei.com>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 367/713] net: ip_tunnel: make sure to pull inner header in ip_tunnel_rcv()
-Date: Sun, 24 Mar 2024 18:41:33 -0400
-Message-ID: <20240324224720.1345309-368-sashal@kernel.org>
+Subject: [PATCH 6.7 376/713] erofs: fix lockdep false positives on initializing erofs_pseudo_mnt
+Date: Sun, 24 Mar 2024 18:41:42 -0400
+Message-ID: <20240324224720.1345309-377-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,123 +51,213 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Baokun Li <libaokun1@huawei.com>
 
-[ Upstream commit b0ec2abf98267f14d032102551581c833b0659d3 ]
+[ Upstream commit 0f28be64d132aaf95d06375c8002ad9ecea69d71 ]
 
-Apply the same fix than ones found in :
+Lockdep reported the following issue when mounting erofs with a domain_id:
 
-8d975c15c0cd ("ip6_tunnel: make sure to pull inner header in __ip6_tnl_rcv()")
-1ca1ba465e55 ("geneve: make sure to pull inner header in geneve_rx()")
+============================================
+WARNING: possible recursive locking detected
+6.8.0-rc7-xfstests #521 Not tainted
+--------------------------------------------
+mount/396 is trying to acquire lock:
+ffff907a8aaaa0e0 (&type->s_umount_key#50/1){+.+.}-{3:3},
+						at: alloc_super+0xe3/0x3d0
 
-We have to save skb->network_header in a temporary variable
-in order to be able to recompute the network_header pointer
-after a pskb_inet_may_pull() call.
+but task is already holding lock:
+ffff907a8aaa90e0 (&type->s_umount_key#50/1){+.+.}-{3:3},
+						at: alloc_super+0xe3/0x3d0
 
-pskb_inet_may_pull() makes sure the needed headers are in skb->head.
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-syzbot reported:
-BUG: KMSAN: uninit-value in __INET_ECN_decapsulate include/net/inet_ecn.h:253 [inline]
- BUG: KMSAN: uninit-value in INET_ECN_decapsulate include/net/inet_ecn.h:275 [inline]
- BUG: KMSAN: uninit-value in IP_ECN_decapsulate include/net/inet_ecn.h:302 [inline]
- BUG: KMSAN: uninit-value in ip_tunnel_rcv+0xed9/0x2ed0 net/ipv4/ip_tunnel.c:409
-  __INET_ECN_decapsulate include/net/inet_ecn.h:253 [inline]
-  INET_ECN_decapsulate include/net/inet_ecn.h:275 [inline]
-  IP_ECN_decapsulate include/net/inet_ecn.h:302 [inline]
-  ip_tunnel_rcv+0xed9/0x2ed0 net/ipv4/ip_tunnel.c:409
-  __ipgre_rcv+0x9bc/0xbc0 net/ipv4/ip_gre.c:389
-  ipgre_rcv net/ipv4/ip_gre.c:411 [inline]
-  gre_rcv+0x423/0x19f0 net/ipv4/ip_gre.c:447
-  gre_rcv+0x2a4/0x390 net/ipv4/gre_demux.c:163
-  ip_protocol_deliver_rcu+0x264/0x1300 net/ipv4/ip_input.c:205
-  ip_local_deliver_finish+0x2b8/0x440 net/ipv4/ip_input.c:233
-  NF_HOOK include/linux/netfilter.h:314 [inline]
-  ip_local_deliver+0x21f/0x490 net/ipv4/ip_input.c:254
-  dst_input include/net/dst.h:461 [inline]
-  ip_rcv_finish net/ipv4/ip_input.c:449 [inline]
-  NF_HOOK include/linux/netfilter.h:314 [inline]
-  ip_rcv+0x46f/0x760 net/ipv4/ip_input.c:569
-  __netif_receive_skb_one_core net/core/dev.c:5534 [inline]
-  __netif_receive_skb+0x1a6/0x5a0 net/core/dev.c:5648
-  netif_receive_skb_internal net/core/dev.c:5734 [inline]
-  netif_receive_skb+0x58/0x660 net/core/dev.c:5793
-  tun_rx_batched+0x3ee/0x980 drivers/net/tun.c:1556
-  tun_get_user+0x53b9/0x66e0 drivers/net/tun.c:2009
-  tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2055
-  call_write_iter include/linux/fs.h:2087 [inline]
-  new_sync_write fs/read_write.c:497 [inline]
-  vfs_write+0xb6b/0x1520 fs/read_write.c:590
-  ksys_write+0x20f/0x4c0 fs/read_write.c:643
-  __do_sys_write fs/read_write.c:655 [inline]
-  __se_sys_write fs/read_write.c:652 [inline]
-  __x64_sys_write+0x93/0xd0 fs/read_write.c:652
-  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
+       CPU0
+       ----
+  lock(&type->s_umount_key#50/1);
+  lock(&type->s_umount_key#50/1);
 
-Uninit was created at:
-  __alloc_pages+0x9a6/0xe00 mm/page_alloc.c:4590
-  alloc_pages_mpol+0x62b/0x9d0 mm/mempolicy.c:2133
-  alloc_pages+0x1be/0x1e0 mm/mempolicy.c:2204
-  skb_page_frag_refill+0x2bf/0x7c0 net/core/sock.c:2909
-  tun_build_skb drivers/net/tun.c:1686 [inline]
-  tun_get_user+0xe0a/0x66e0 drivers/net/tun.c:1826
-  tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2055
-  call_write_iter include/linux/fs.h:2087 [inline]
-  new_sync_write fs/read_write.c:497 [inline]
-  vfs_write+0xb6b/0x1520 fs/read_write.c:590
-  ksys_write+0x20f/0x4c0 fs/read_write.c:643
-  __do_sys_write fs/read_write.c:655 [inline]
-  __se_sys_write fs/read_write.c:652 [inline]
-  __x64_sys_write+0x93/0xd0 fs/read_write.c:652
-  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
+ *** DEADLOCK ***
 
-Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ May be due to missing lock nesting notation
+
+2 locks held by mount/396:
+ #0: ffff907a8aaa90e0 (&type->s_umount_key#50/1){+.+.}-{3:3},
+			at: alloc_super+0xe3/0x3d0
+ #1: ffffffffc00e6f28 (erofs_domain_list_lock){+.+.}-{3:3},
+			at: erofs_fscache_register_fs+0x3d/0x270 [erofs]
+
+stack backtrace:
+CPU: 1 PID: 396 Comm: mount Not tainted 6.8.0-rc7-xfstests #521
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x64/0xb0
+ validate_chain+0x5c4/0xa00
+ __lock_acquire+0x6a9/0xd50
+ lock_acquire+0xcd/0x2b0
+ down_write_nested+0x45/0xd0
+ alloc_super+0xe3/0x3d0
+ sget_fc+0x62/0x2f0
+ vfs_get_super+0x21/0x90
+ vfs_get_tree+0x2c/0xf0
+ fc_mount+0x12/0x40
+ vfs_kern_mount.part.0+0x75/0x90
+ kern_mount+0x24/0x40
+ erofs_fscache_register_fs+0x1ef/0x270 [erofs]
+ erofs_fc_fill_super+0x213/0x380 [erofs]
+
+This is because the file_system_type of both erofs and the pseudo-mount
+point of domain_id is erofs_fs_type, so two successive calls to
+alloc_super() are considered to be using the same lock and trigger the
+warning above.
+
+Therefore add a nodev file_system_type called erofs_anon_fs_type in
+fscache.c to silence this complaint. Because kern_mount() takes a
+pointer to struct file_system_type, not its (string) name. So we don't
+need to call register_filesystem(). In addition, call init_pseudo() in
+erofs_anon_init_fs_context() as suggested by Al Viro, so that we can
+remove erofs_fc_fill_pseudo_super(), erofs_fc_anon_get_tree(), and
+erofs_anon_context_ops.
+
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: a9849560c55e ("erofs: introduce a pseudo mnt to manage shared cookies")
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Reviewed-and-tested-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Reviewed-by: Yang Erkun <yangerkun@huawei.com>
+Link: https://lore.kernel.org/r/20240307101018.2021925-1-libaokun1@huawei.com
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_tunnel.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ fs/erofs/fscache.c  | 15 ++++++++++++++-
+ fs/erofs/internal.h |  1 -
+ fs/erofs/super.c    | 30 +-----------------------------
+ 3 files changed, 15 insertions(+), 31 deletions(-)
 
-diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
-index 2d29fce7c5606..b1b6dcf2161fb 100644
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -378,7 +378,7 @@ int ip_tunnel_rcv(struct ip_tunnel *tunnel, struct sk_buff *skb,
- 		  bool log_ecn_error)
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index 1052f75d1dfae..afc37c9029ce7 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2022, Alibaba Cloud
+  * Copyright (C) 2022, Bytedance Inc. All rights reserved.
+  */
++#include <linux/pseudo_fs.h>
+ #include <linux/fscache.h>
+ #include "internal.h"
+ 
+@@ -12,6 +13,18 @@ static LIST_HEAD(erofs_domain_list);
+ static LIST_HEAD(erofs_domain_cookies_list);
+ static struct vfsmount *erofs_pseudo_mnt;
+ 
++static int erofs_anon_init_fs_context(struct fs_context *fc)
++{
++	return init_pseudo(fc, EROFS_SUPER_MAGIC) ? 0 : -ENOMEM;
++}
++
++static struct file_system_type erofs_anon_fs_type = {
++	.owner		= THIS_MODULE,
++	.name           = "pseudo_erofs",
++	.init_fs_context = erofs_anon_init_fs_context,
++	.kill_sb        = kill_anon_super,
++};
++
+ struct erofs_fscache_request {
+ 	struct erofs_fscache_request *primary;
+ 	struct netfs_cache_resources cache_resources;
+@@ -381,7 +394,7 @@ static int erofs_fscache_init_domain(struct super_block *sb)
+ 		goto out;
+ 
+ 	if (!erofs_pseudo_mnt) {
+-		struct vfsmount *mnt = kern_mount(&erofs_fs_type);
++		struct vfsmount *mnt = kern_mount(&erofs_anon_fs_type);
+ 		if (IS_ERR(mnt)) {
+ 			err = PTR_ERR(mnt);
+ 			goto out;
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index b0409badb0172..410f5af623540 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -385,7 +385,6 @@ struct erofs_map_dev {
+ 	unsigned int m_deviceid;
+ };
+ 
+-extern struct file_system_type erofs_fs_type;
+ extern const struct super_operations erofs_sops;
+ 
+ extern const struct address_space_operations erofs_raw_access_aops;
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 3789d62245136..8a82d5cec16da 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -573,13 +573,6 @@ static const struct export_operations erofs_export_ops = {
+ 	.get_parent = erofs_get_parent,
+ };
+ 
+-static int erofs_fc_fill_pseudo_super(struct super_block *sb, struct fs_context *fc)
+-{
+-	static const struct tree_descr empty_descr = {""};
+-
+-	return simple_fill_super(sb, EROFS_SUPER_MAGIC, &empty_descr);
+-}
+-
+ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
  {
- 	const struct iphdr *iph = ip_hdr(skb);
--	int err;
-+	int nh, err;
+ 	struct inode *inode;
+@@ -706,11 +699,6 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	return 0;
+ }
  
- #ifdef CONFIG_NET_IPGRE_BROADCAST
- 	if (ipv4_is_multicast(iph->daddr)) {
-@@ -404,8 +404,21 @@ int ip_tunnel_rcv(struct ip_tunnel *tunnel, struct sk_buff *skb,
- 		tunnel->i_seqno = ntohl(tpi->seq) + 1;
- 	}
+-static int erofs_fc_anon_get_tree(struct fs_context *fc)
+-{
+-	return get_tree_nodev(fc, erofs_fc_fill_pseudo_super);
+-}
+-
+ static int erofs_fc_get_tree(struct fs_context *fc)
+ {
+ 	struct erofs_fs_context *ctx = fc->fs_private;
+@@ -783,20 +771,10 @@ static const struct fs_context_operations erofs_context_ops = {
+ 	.free		= erofs_fc_free,
+ };
  
-+	/* Save offset of outer header relative to skb->head,
-+	 * because we are going to reset the network header to the inner header
-+	 * and might change skb->head.
-+	 */
-+	nh = skb_network_header(skb) - skb->head;
-+
- 	skb_set_network_header(skb, (tunnel->dev->type == ARPHRD_ETHER) ? ETH_HLEN : 0);
+-static const struct fs_context_operations erofs_anon_context_ops = {
+-	.get_tree       = erofs_fc_anon_get_tree,
+-};
+-
+ static int erofs_init_fs_context(struct fs_context *fc)
+ {
+ 	struct erofs_fs_context *ctx;
  
-+	if (!pskb_inet_may_pull(skb)) {
-+		DEV_STATS_INC(tunnel->dev, rx_length_errors);
-+		DEV_STATS_INC(tunnel->dev, rx_errors);
-+		goto drop;
-+	}
-+	iph = (struct iphdr *)(skb->head + nh);
-+
- 	err = IP_ECN_decapsulate(iph, skb);
- 	if (unlikely(err)) {
- 		if (log_ecn_error)
+-	/* pseudo mount for anon inodes */
+-	if (fc->sb_flags & SB_KERNMOUNT) {
+-		fc->ops = &erofs_anon_context_ops;
+-		return 0;
+-	}
+-
+ 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+ 	if (!ctx)
+ 		return -ENOMEM;
+@@ -818,12 +796,6 @@ static void erofs_kill_sb(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi;
+ 
+-	/* pseudo mount for anon inodes */
+-	if (sb->s_flags & SB_KERNMOUNT) {
+-		kill_anon_super(sb);
+-		return;
+-	}
+-
+ 	if (erofs_is_fscache_mode(sb))
+ 		kill_anon_super(sb);
+ 	else
+@@ -862,7 +834,7 @@ static void erofs_put_super(struct super_block *sb)
+ 	erofs_fscache_unregister_fs(sb);
+ }
+ 
+-struct file_system_type erofs_fs_type = {
++static struct file_system_type erofs_fs_type = {
+ 	.owner          = THIS_MODULE,
+ 	.name           = "erofs",
+ 	.init_fs_context = erofs_init_fs_context,
 -- 
 2.43.0
 
