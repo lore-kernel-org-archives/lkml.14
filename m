@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C781F23FA;
-	Sun, 24 Mar 2024 22:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F1D12D75C;
+	Sun, 24 Mar 2024 22:58:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321108; cv=none; b=trtPgwda58/MF9MYcmA3kPL+1DwTvRRm0V5TkSywHKreLxkPUKNdBChbqruxOTSaW+9ptYuAchrmrz93/oqZEmTE7h+kCV+levlsNlDaKBNB5Nzkol+fyNXS8vJD6cpSgUFTp7PEjDMs6naBkwKj9pFmtNzfzTgQWNoFlO6nCh4=
+	t=1711321132; cv=none; b=T3FHAh+m4RrR+MT3NUdAZUrMlq6cSfxII8LLEwpIPJvjN2zafVBFVv8BHVSjSTLbQSlj00sURc+m6L0rH93O4n5rOdPyz9Rxi0+7AG0MlOloUZhD4FiI7C+xCjtT77pSx0l3yqrUvZuwUqRFnxk9203l426BoxcYzbGwrxS8meo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321108; c=relaxed/simple;
-	bh=HF7/g01MyF5usS4jtmaXCrXMB/637THnKn0KAttJEFY=;
+	s=arc-20240116; t=1711321132; c=relaxed/simple;
+	bh=8XXbG/EChvRgni9pSje66q6hAnBQVFirBzqxkCwPY/E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CD6r74XjCc/tpWeIKNuMo+7uxwAxD4IX1jTaa9DwJ2JA9d3y1Nw9kwgQbKRe+1eVyR1hw+Vk9uxTMJR6+ha8/z2lnPM3/Ey62QagOel43YTuAyUc9zWjMCeOwoKLMEpyWWHUDxsAsu4eSof4f8lBVrlDUSimVyCFmB4dvhuPgwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J1v77yAS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ia5bRndWDSdbCbvuP0MaCjtgCREf4vcI+3fPLKLSSllNr27+EaMhVTVjycKkLF6n2ucSPp2UBP3sf1XvvaXr9aSrdZQIrPVvXvcQbY/urPV1LqwFAAZm7DIBweCIPVbP6hXE8nDKlbOoSfLmKzvA2usNCmTwqZ3cG6gDZGReU8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a491kQv5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J1v77yAS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C4BBC43390;
-	Sun, 24 Mar 2024 22:58:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a491kQv5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D853C433C7;
+	Sun, 24 Mar 2024 22:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321106;
-	bh=HF7/g01MyF5usS4jtmaXCrXMB/637THnKn0KAttJEFY=;
+	s=k20201202; t=1711321131;
+	bh=8XXbG/EChvRgni9pSje66q6hAnBQVFirBzqxkCwPY/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J1v77yASM7g7c/v2nLvAx+6IdkKTUe/1v/vDlWcc9eKERChh9bXg2nXyu9W8URety
-	 5DFDo+OqHfSu8gYUcFOUINLkyESQrlqSZqC0mSR8bvk7MaQjZh6QxXNZag8YQhAU4f
-	 GcmzfGx3zFQwtlViSZESmOaBTCV1OtuBGRiPmPhexV4dD0IGoHKDTHU2PEEXiBMGPF
-	 F8oOrcWW8o8zxdqtJ48wE1PWJI4bcvFsS+VsZtRSUJSn2a+9t/t52aRtr6tzftLnV3
-	 sTaDyRKwWnEDr2sbt/8dB54METDphwMC0hmE0yJCmOO1TIUyuI2pit540XhVrUYuOO
-	 Zfj4HmCEUtxvA==
+	b=a491kQv5P1vwCAlviMKrYUTviSvaOaD2fU42go+tzoJ4HQoQgHbhdIz8KK0Lz+VZB
+	 Eo6N6uszZl/1x9Lfisd76WsDyMv5kHb2OIN/aQF2BcmF0d1i5dK3rdk1xtMBDIyrC7
+	 8e+wrFMEBjB8y10/Hr6bu9/MFETOPeSjgF9VqfP18a5Yd/yU+qwHQYuhzQf/ZEFfVT
+	 FHdrwFPyl8bT5pmupJq6UL8TkhohrKtWjACcPFkW9E5JKE+tl3DWU+6wE+VjCN1u6M
+	 Kf8Z9E5zWK7zkX3O0K+PIDEsy+T+y+qd1BbXbGICFm9MoBatiDe1G3w+e0PhhH7gth
+	 HWK2T2b7dNxvQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Demi Marie Obenour <demi@invisiblethingslab.com>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+Cc: Subbaraya Sundeep <sbhatta@marvell.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 669/713] xen/evtchn: avoid WARN() when unbinding an event channel
-Date: Sun, 24 Mar 2024 18:46:35 -0400
-Message-ID: <20240324224720.1345309-670-sashal@kernel.org>
+Subject: [PATCH 6.7 692/713] octeontx2-pf: Use default max_active works instead of one
+Date: Sun, 24 Mar 2024 18:46:58 -0400
+Message-ID: <20240324224720.1345309-693-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,60 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Juergen Gross <jgross@suse.com>
+From: Subbaraya Sundeep <sbhatta@marvell.com>
 
-[ Upstream commit 51c23bd691c0f1fb95b29731c356c6fd69925d17 ]
+[ Upstream commit 7558ce0d974ced1dc07edc1197f750fe28c52e57 ]
 
-When unbinding a user event channel, the related handler might be
-called a last time in case the kernel was built with
-CONFIG_DEBUG_SHIRQ. This might cause a WARN() in the handler.
+Only one execution context for the workqueue used for PF and
+VFs mailbox communication is incorrect since multiple works are
+queued simultaneously by all the VFs and PF link UP messages.
+Hence use default number of execution contexts by passing zero
+as max_active to alloc_workqueue function. With this fix in place,
+modify UP messages also to wait until completion.
 
-Avoid that by adding an "unbinding" flag to struct user_event which
-will short circuit the handler.
-
-Fixes: 9e90e58c11b7 ("xen: evtchn: Allow shared registration of IRQ handers")
-Reported-by: Demi Marie Obenour <demi@invisiblethingslab.com>
-Tested-by: Demi Marie Obenour <demi@invisiblethingslab.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Link: https://lore.kernel.org/r/20240313071409.25913-2-jgross@suse.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Fixes: d424b6c02415 ("octeontx2-pf: Enable SRIOV and added VF mbox handling")
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/evtchn.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/xen/evtchn.c b/drivers/xen/evtchn.c
-index 59717628ca42b..f6a2216c2c870 100644
---- a/drivers/xen/evtchn.c
-+++ b/drivers/xen/evtchn.c
-@@ -85,6 +85,7 @@ struct user_evtchn {
- 	struct per_user_data *user;
- 	evtchn_port_t port;
- 	bool enabled;
-+	bool unbinding;
- };
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+index 3c8841b35d0f7..f85d38fab3211 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+@@ -584,8 +584,9 @@ static int otx2_pfvf_mbox_init(struct otx2_nic *pf, int numvfs)
+ 	if (!pf->mbox_pfvf)
+ 		return -ENOMEM;
  
- static void evtchn_free_ring(evtchn_port_t *ring)
-@@ -164,6 +165,10 @@ static irqreturn_t evtchn_interrupt(int irq, void *data)
- 	struct per_user_data *u = evtchn->user;
- 	unsigned int prod, cons;
+-	pf->mbox_pfvf_wq = alloc_ordered_workqueue("otx2_pfvf_mailbox",
+-						   WQ_HIGHPRI | WQ_MEM_RECLAIM);
++	pf->mbox_pfvf_wq = alloc_workqueue("otx2_pfvf_mailbox",
++					   WQ_UNBOUND | WQ_HIGHPRI |
++					   WQ_MEM_RECLAIM, 0);
+ 	if (!pf->mbox_pfvf_wq)
+ 		return -ENOMEM;
  
-+	/* Handler might be called when tearing down the IRQ. */
-+	if (evtchn->unbinding)
-+		return IRQ_HANDLED;
-+
- 	WARN(!evtchn->enabled,
- 	     "Interrupt for port %u, but apparently not enabled; per-user %p\n",
- 	     evtchn->port, u);
-@@ -421,6 +426,7 @@ static void evtchn_unbind_from_user(struct per_user_data *u,
+@@ -3146,7 +3147,7 @@ static void otx2_vf_link_event_task(struct work_struct *work)
  
- 	BUG_ON(irq < 0);
+ 	otx2_mbox_wait_for_zero(&pf->mbox_pfvf[0].mbox_up, vf_idx);
  
-+	evtchn->unbinding = true;
- 	unbind_from_irqhandler(irq, evtchn);
+-	otx2_mbox_msg_send_up(&pf->mbox_pfvf[0].mbox_up, vf_idx);
++	otx2_sync_mbox_up_msg(&pf->mbox_pfvf[0], vf_idx);
  
- 	del_evtchn(u, evtchn);
+ 	mutex_unlock(&pf->mbox.lock);
+ }
 -- 
 2.43.0
 
