@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CF81FB6F5;
-	Sun, 24 Mar 2024 23:01:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D4212FB38;
+	Sun, 24 Mar 2024 23:01:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321305; cv=none; b=q9VZkmv0IS8RenfdQh/Ez9yUJRzkgM5jw3o5SRrQ2f9vAxeshLXkqrt2MkC7sl5ndw9Tj+U5Ub2ZDwj3+9MSUifEfPajGeiLMSWiroXtCRhtg+UQWWItGe38YIwZAkWUVZphGJtN0uR6HhCpv7lMHi7nNFz6YgkyByUzL/eQKjY=
+	t=1711321310; cv=none; b=hEhIHvrdHCjG0oxd0QSnLEwnXeKUnCiELfXJjHVG48mKoSSmXM5IkLRWBlSfySTRPCg3d2YqOIv2iC01AeJ0n5pUo4HN2my5HgAd5YgRMZTVnpQtbQ0nBfliNgWr4Bb7irJ5hDzsK+UxVh/KTma11lKfFqbJbg9RfjDiAWCOeBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321305; c=relaxed/simple;
-	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
+	s=arc-20240116; t=1711321310; c=relaxed/simple;
+	bh=qB4HappnWK8PlV2MzfcXsXtLknPnzx6f5UGJ670ViNM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FL/RvRYz/1sP8l378Avp6Usef8cmFOzLsTrwX7JmlejwvOS5jKC/XRB2jndtrDeiJwiVKw899u1AB0Am9tKsu7LzRFkqtliVMJP3J1SAmTbY3HtPkDFDTKRHxVuI5EyyfZefy72qLaZ6OXozHRb26YmjDS/bgk/6OxbtdR4Vdb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlOvhtQz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KlWd37l5G9jRn9kLw614NawYvFX0L6JRkxgVPr042MY70v9iizSgmV9R64avl+fN2u0agG0Oy4O6yt1ilZ8syTwfom012Z64j9hJLOunKPzdnniRbFp/ix/hsHhymPK1DTyMPzz+BSpCoVskar4uyVxTm4UFpotv80gY6Mc8HX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I069xcfC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlOvhtQz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9455AC43399;
-	Sun, 24 Mar 2024 23:01:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I069xcfC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E3F5C43390;
+	Sun, 24 Mar 2024 23:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321305;
-	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
+	s=k20201202; t=1711321309;
+	bh=qB4HappnWK8PlV2MzfcXsXtLknPnzx6f5UGJ670ViNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WlOvhtQzK+ugJiw/wBKBbdGoeypg0ThXWeHRDLpFTy+LE4vQRr62hKYgfz5iCBsG0
-	 sMTeX6IvtVgXM+A9TQGzsuc663Orxzby0DDkT8l4Je5+KhSYazclCMjYqs5xNKd11w
-	 JwAfT3pgrF3Xiz1+XflDCxZxlnlh/wZzhD1YLfoeIlrn15ogCZkD944jdET51NdxOs
-	 qGodsRQIuThSV8n168xrLJzWRcegkXvT5LJHY3oxIolzxGUPeN9VyZQs2uRT0aeGm4
-	 kruqIm/sVmQE85/etlMrnTOxsQ7o8oZea6h02QoiEJv6Lc50h7iRXEsQLNpgMYr0rg
-	 FdHc5fe9i1ndQ==
+	b=I069xcfCcZ5neASeNm9qjOctdNAtlna/1Ho2ow5PYK2ubM1lbAB+pPAaiFPouIyZi
+	 5QLXsIJvJXN8jmtF2toAyadBTD6bKAqcM9MggLx74g8b+LrSADjZQRUctEuS3q9Au5
+	 DN+ghAj/Guok7yeEHPnAGEFn56cTE3gbcm4KpMA6GD/Wu55IEUicaOZt/KwsKz+Ix5
+	 bkphwN8nnsLqt7ODthFgMULH2euZ1sX0s1OOwXIvb9TURVOOmo88gTLHfvWvP1nJTe
+	 hKbZpMIx3scnrcGbFCHVJ1BvCQwEbjlU2Sken0NfIq/xmEfwV8aksUCUet3sNsLOxM
+	 FLbIw9l6YrqUA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hou Tao <houtao1@huawei.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com,
-	xingwei lee <xrivendell7@gmail.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Wonjae Lee <wj28.lee@samsung.com>,
+	Dan Williams <dan.j.williams@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 028/638] x86/mm: Disallow vsyscall page read for copy_from_kernel_nofault()
-Date: Sun, 24 Mar 2024 18:51:05 -0400
-Message-ID: <20240324230116.1348576-29-sashal@kernel.org>
+Subject: [PATCH 6.6 032/638] cxl/region: Handle endpoint decoders in cxl_region_find_decoder()
+Date: Sun, 24 Mar 2024 18:51:09 -0400
+Message-ID: <20240324230116.1348576-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -52,98 +49,63 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hou Tao <houtao1@huawei.com>
+From: Alison Schofield <alison.schofield@intel.com>
 
-[ Upstream commit 32019c659ecfe1d92e3bf9fcdfbb11a7c70acd58 ]
+[ Upstream commit 453a7fde8031a5192ed2f9646ad048c1a5e930dc ]
 
-When trying to use copy_from_kernel_nofault() to read vsyscall page
-through a bpf program, the following oops was reported:
+In preparation for adding a new caller of cxl_region_find_decoders()
+teach it to find a decoder from a cxl_endpoint_decoder structure.
 
-  BUG: unable to handle page fault for address: ffffffffff600000
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 3231067 P4D 3231067 PUD 3233067 PMD 3235067 PTE 0
-  Oops: 0000 [#1] PREEMPT SMP PTI
-  CPU: 1 PID: 20390 Comm: test_progs ...... 6.7.0+ #58
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996) ......
-  RIP: 0010:copy_from_kernel_nofault+0x6f/0x110
-  ......
-  Call Trace:
-   <TASK>
-   ? copy_from_kernel_nofault+0x6f/0x110
-   bpf_probe_read_kernel+0x1d/0x50
-   bpf_prog_2061065e56845f08_do_probe_read+0x51/0x8d
-   trace_call_bpf+0xc5/0x1c0
-   perf_call_bpf_enter.isra.0+0x69/0xb0
-   perf_syscall_enter+0x13e/0x200
-   syscall_trace_enter+0x188/0x1c0
-   do_syscall_64+0xb5/0xe0
-   entry_SYSCALL_64_after_hwframe+0x6e/0x76
-   </TASK>
-  ......
-  ---[ end trace 0000000000000000 ]---
+Combining switch and endpoint decoder lookup in one function prevents
+code duplication in call sites.
 
-The oops is triggered when:
+Update the existing caller.
 
-1) A bpf program uses bpf_probe_read_kernel() to read from the vsyscall
-page and invokes copy_from_kernel_nofault() which in turn calls
-__get_user_asm().
-
-2) Because the vsyscall page address is not readable from kernel space,
-a page fault exception is triggered accordingly.
-
-3) handle_page_fault() considers the vsyscall page address as a user
-space address instead of a kernel space address. This results in the
-fix-up setup by bpf not being applied and a page_fault_oops() is invoked
-due to SMAP.
-
-Considering handle_page_fault() has already considered the vsyscall page
-address as a userspace address, fix the problem by disallowing vsyscall
-page read for copy_from_kernel_nofault().
-
-Originally-by: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/bpf/CAG48ez06TZft=ATH1qh2c5mpS5BT8UakwNkzi6nvK5_djC-4Nw@mail.gmail.com
-Reported-by: xingwei lee <xrivendell7@gmail.com>
-Closes: https://lore.kernel.org/bpf/CABOYnLynjBoFZOf3Z4BhaZkc5hx_kHfsjiW+UWLoB=w33LvScw@mail.gmail.com
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240202103935.3154011-3-houtao@huaweicloud.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Tested-by: Wonjae Lee <wj28.lee@samsung.com>
+Link: https://lore.kernel.org/r/79ae6d72978ef9f3ceec9722e1cb793820553c8e.1706736863.git.alison.schofield@intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/maccess.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/cxl/core/region.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
-index 6993f026adec9..42115ac079cfe 100644
---- a/arch/x86/mm/maccess.c
-+++ b/arch/x86/mm/maccess.c
-@@ -3,6 +3,8 @@
- #include <linux/uaccess.h>
- #include <linux/kernel.h>
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 6ebd12f7970bc..a3d82ef5599e8 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -729,12 +729,17 @@ static int match_auto_decoder(struct device *dev, void *data)
+ 	return 0;
+ }
  
-+#include <asm/vsyscall.h>
-+
- #ifdef CONFIG_X86_64
- bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
+-static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
+-						   struct cxl_region *cxlr)
++static struct cxl_decoder *
++cxl_region_find_decoder(struct cxl_port *port,
++			struct cxl_endpoint_decoder *cxled,
++			struct cxl_region *cxlr)
  {
-@@ -15,6 +17,14 @@ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
- 	if (vaddr < TASK_SIZE_MAX + PAGE_SIZE)
- 		return false;
+ 	struct device *dev;
+ 	int id = 0;
  
-+	/*
-+	 * Reading from the vsyscall page may cause an unhandled fault in
-+	 * certain cases.  Though it is at an address above TASK_SIZE_MAX, it is
-+	 * usually considered as a user space address.
-+	 */
-+	if (is_vsyscall_vaddr(vaddr))
-+		return false;
++	if (port == cxled_to_port(cxled))
++		return &cxled->cxld;
 +
- 	/*
- 	 * Allow everything during early boot before 'x86_virt_bits'
- 	 * is initialized.  Needed for instruction decoding in early
+ 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
+ 		dev = device_find_child(&port->dev, &cxlr->params,
+ 					match_auto_decoder);
+@@ -852,10 +857,7 @@ static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+ {
+ 	struct cxl_decoder *cxld;
+ 
+-	if (port == cxled_to_port(cxled))
+-		cxld = &cxled->cxld;
+-	else
+-		cxld = cxl_region_find_decoder(port, cxlr);
++	cxld = cxl_region_find_decoder(port, cxled, cxlr);
+ 	if (!cxld) {
+ 		dev_dbg(&cxlr->dev, "%s: no decoder available\n",
+ 			dev_name(&port->dev));
 -- 
 2.43.0
 
