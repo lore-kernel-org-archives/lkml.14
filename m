@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F912922BF;
-	Sun, 24 Mar 2024 23:50:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328BC22BC16;
+	Sun, 24 Mar 2024 23:50:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324248; cv=none; b=l8W0hPD5ZgiO56JkKdk22wV/i6VuON9gSySRO8+hMvM+fcbA6mnoYaM/vaF6ldD7ZD1eUtbJGqEw6V/RbsLXHCJECCYFCZ9EwonWQczBuvNz7Abzv+C92XV9Wh3xye/tW5Tz+Beti5Y1pvOsknQIx3ami/Mn+g0EQwIRZ2P1JAM=
+	t=1711324250; cv=none; b=f1K2tCL23HzsBlF+vWloacF6VGRcgYy0P4VWJL50qXV2D3P1t13M02ScxHHPp+QqzfjJvY/0exUFhF4cK5W1u+L92WlaaYimIA+GBLpoNG7Zp8UPTCHBn/rGtsGH3zOT5kqFy7M0rQugi6pa6Ld+XXWN3FLZqWCgpoihynBF2ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324248; c=relaxed/simple;
-	bh=smshtFHAwlVcTOQX9VhkAJrOCcm3yVbANEIS75plS4o=;
+	s=arc-20240116; t=1711324250; c=relaxed/simple;
+	bh=5z5T5U+rc/bIpLonhsBzQWnhc990gxEqPP+rxRuF7gU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AD/45oBV2GomjwcRK1QgucrSHDDiGhbVQQWl0lVzb7WWdJrTxSl6MdKqv8Yr8N6ULIq+4Y9snov0IDGd55KukyVlqIC/2qe5XXy30CyFxPCTv1IrFrgL+773wb7se2p+L1CzdRMGA3bi4R0s75b7MH5DPlJUSYghsPV8hcQsvaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQ+r9d05; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RGpbY5H130kWMYQbbxT5N7LP0lKzqbieG3n9Vs4BpCV5z7Pl+0s89GLGGxqan4xWnSgjyt9Zlx3i9j4gflUkXuaaPxaohTD5hFVNhXBGebsdbVbT9+sCLS7KT45L0PfR44oZqGuKrbpNDua6g4Ifl/XOCKkarTjshCeo113Szws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDU4ByJS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQ+r9d05"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500B5C43390;
-	Sun, 24 Mar 2024 23:50:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDU4ByJS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 547C0C433C7;
+	Sun, 24 Mar 2024 23:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324247;
-	bh=smshtFHAwlVcTOQX9VhkAJrOCcm3yVbANEIS75plS4o=;
+	s=k20201202; t=1711324250;
+	bh=5z5T5U+rc/bIpLonhsBzQWnhc990gxEqPP+rxRuF7gU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DQ+r9d05rrL2NeNrkKsEyy07w5EZBopIRyelaCBTwC7flMe5gIB8FLshuiUjU0FRq
-	 99nMCFbJltrTvaL61IDzdj/qI47YX4bk0wjFL4ceQGvALF00pjgjiZN8HBeNeCaK/X
-	 Ia09rqPuWUGt/YnzQg7Fz27G2tP7mIo0Hpz0Z0upJlq+v8/VEQY1pB7nnmpp2xdEfD
-	 36VcstCSDNnBCWZ3Py9OrauCF+xl8Zu2LURK4CJ1R3EswH01U4uOPRWcAop45WaIUZ
-	 N0D8fnOAE5qwhwUjO4sEkW+96ZJUmZFrWEeha8E2JojLKcm0967HpMQVZ1L9GDuFPs
-	 sjrHa5Xct9C2Q==
+	b=eDU4ByJSiaqxFXDA2FMKC2wYiV/tdX4lFedwZexGVYxLcQ4xyDPDKZBX5JegDENup
+	 JCz7L6IpQHEimL4dhalte/bF5nAjRLQ7YkduEiQazZNh01tElmBtUxuXfl7YvBUgZJ
+	 vtGa2fMeHq/fYxLNR7K2xGU/h+l29NGuC3iL1Lv+LwJs9BgCuXoPHj2a4F+vnO6GFS
+	 19jCN28LRKVHXYOiKtdxld1Ht6o2IvZq4X40D4gTP+M4vQ2z0A1lKDg23KE6I5fY8Q
+	 9+fO2xD88sJcsjYsYTmyotldW90ouSkJguG8/xtPq+xVjiGgZ4/MgzA3m4l5qmV+gw
+	 pXpiewryUBLQA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Saurav Girepunje <saurav.girepunje@gmail.com>,
-	Kalle Valo <kvalo@codeaurora.org>,
+Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
+	Julian Calaby <julian.calaby@gmail.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 029/148] b43: dma: Fix use true/false for bool type variable
-Date: Sun, 24 Mar 2024 19:48:13 -0400
-Message-ID: <20240324235012.1356413-30-sashal@kernel.org>
+Subject: [PATCH 4.19 031/148] wifi: b43: Stop/wake correct queue in PIO Tx path when QoS is disabled
+Date: Sun, 24 Mar 2024 19:48:15 -0400
+Message-ID: <20240324235012.1356413-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -48,42 +49,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Saurav Girepunje <saurav.girepunje@gmail.com>
+From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
 
-[ Upstream commit a9160bb35ad9ada8428a4d48426f7fc128db40cc ]
+[ Upstream commit 77135a38f6c2f950d2306ac3d37cbb407e6243f2 ]
 
-use true/false for bool type variables assignment.
+When QoS is disabled, the queue priority value will not map to the correct
+ieee80211 queue since there is only one queue. Stop/wake queue 0 when QoS
+is disabled to prevent trying to stop/wake a non-existent queue and failing
+to stop/wake the actual queue instantiated.
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Stable-dep-of: 9636951e4468 ("wifi: b43: Stop/wake correct queue in DMA Tx path when QoS is disabled")
+Fixes: 5100d5ac81b9 ("b43: Add PIO support for PCMCIA devices")
+Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20231231050300.122806-3-sergeantsagara@protonmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43/dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/b43/pio.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/b43/dma.c b/drivers/net/wireless/broadcom/b43/dma.c
-index 06139835055fa..cd809d5e46791 100644
---- a/drivers/net/wireless/broadcom/b43/dma.c
-+++ b/drivers/net/wireless/broadcom/b43/dma.c
-@@ -1462,7 +1462,7 @@ int b43_dma_tx(struct b43_wldev *dev, struct sk_buff *skb)
- 		/* This TX ring is full. */
- 		unsigned int skb_mapping = skb_get_queue_mapping(skb);
- 		ieee80211_stop_queue(dev->wl->hw, skb_mapping);
--		dev->wl->tx_queue_stopped[skb_mapping] = 1;
-+		dev->wl->tx_queue_stopped[skb_mapping] = true;
- 		ring->stopped = true;
- 		if (b43_debug(dev, B43_DBG_DMAVERBOSE)) {
- 			b43dbg(dev->wl, "Stopped TX ring %d\n", ring->index);
-@@ -1628,7 +1628,7 @@ void b43_dma_handle_txstatus(struct b43_wldev *dev,
+diff --git a/drivers/net/wireless/broadcom/b43/pio.c b/drivers/net/wireless/broadcom/b43/pio.c
+index a4ff5e2a42b95..b5126edcdc803 100644
+--- a/drivers/net/wireless/broadcom/b43/pio.c
++++ b/drivers/net/wireless/broadcom/b43/pio.c
+@@ -538,7 +538,7 @@ int b43_pio_tx(struct b43_wldev *dev, struct sk_buff *skb)
+ 	if (total_len > (q->buffer_size - q->buffer_used)) {
+ 		/* Not enough memory on the queue. */
+ 		err = -EBUSY;
+-		ieee80211_stop_queue(dev->wl->hw, skb_get_queue_mapping(skb));
++		b43_stop_queue(dev, skb_get_queue_mapping(skb));
+ 		q->stopped = true;
+ 		goto out;
+ 	}
+@@ -565,7 +565,7 @@ int b43_pio_tx(struct b43_wldev *dev, struct sk_buff *skb)
+ 	if (((q->buffer_size - q->buffer_used) < roundup(2 + 2 + 6, 4)) ||
+ 	    (q->free_packet_slots == 0)) {
+ 		/* The queue is full. */
+-		ieee80211_stop_queue(dev->wl->hw, skb_get_queue_mapping(skb));
++		b43_stop_queue(dev, skb_get_queue_mapping(skb));
+ 		q->stopped = true;
  	}
  
- 	if (dev->wl->tx_queue_stopped[ring->queue_prio]) {
--		dev->wl->tx_queue_stopped[ring->queue_prio] = 0;
-+		dev->wl->tx_queue_stopped[ring->queue_prio] = false;
- 	} else {
- 		/* If the driver queue is running wake the corresponding
- 		 * mac80211 queue. */
+@@ -600,7 +600,7 @@ void b43_pio_handle_txstatus(struct b43_wldev *dev,
+ 	list_add(&pack->list, &q->packets_list);
+ 
+ 	if (q->stopped) {
+-		ieee80211_wake_queue(dev->wl->hw, q->queue_prio);
++		b43_wake_queue(dev, q->queue_prio);
+ 		q->stopped = false;
+ 	}
+ }
 -- 
 2.43.0
 
