@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF791F23D8;
-	Sun, 24 Mar 2024 22:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003901F23CB;
+	Sun, 24 Mar 2024 22:58:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321102; cv=none; b=nLCMWkW99Hzq1cDHRH9CwGOwX+L8z6r7BbKzOLCodfWL8Qgwx/JskWwI4ExF853fmodNvk+J0UCfEqoUP++lCZtrk0UL9NWHKaQrtHXNw/NdtuIXBMlt2iNJJEpBvjGa15aFg5BP4e935sHD4oIO8oi/aKba3Zu3T0bMKjUU++M=
+	t=1711321099; cv=none; b=QV9TLCMCEOtGnPYMHpj/FYpOKZ3rQ6r70IK4QrK/DvZUyqwg4bvTpDZlVHXQKzHgysXB8iH6b1TjXlJhyTRTiJn+0WSeIXW+6wd8RbGWgAw4YaaSO+P09z1zO041551b8Pi0YSpACVf5xU6duus9K5C7QCBQeqPXgaV7kTVe9zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321102; c=relaxed/simple;
-	bh=9123jR0gyQTTvHkC+QjmGNgnRZ6KOlFUFXuEXV9RdQw=;
+	s=arc-20240116; t=1711321099; c=relaxed/simple;
+	bh=lHXQ2K8+8QPy1rd/IpDoX2dRit57EmurvmqurFZMb7w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GRwn93KibEc9DpXF7W3z1ChSf2LZB/gXLD0Ac0XPAiTY2U4EagBPStoR+gaLWISRGsRwTGmgqh48YOxqjKmCxTc5OduLUYNQzLDIuHTavvnhCPAWaubEMrRU8Q4glcc/npOqV7vTG9Zwlv/fFtb4qgOQt2MyhMBx8l9q2V4Q30s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=joZ5xb6l; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JpOgS+kRF7IFNu2Y+YYr5VlT5uBbFpOuoHhzyHYzjLXekNeJWTAFUut/tfOqLHt8jtpE8/SFOkgrOPEvm1rjAsMB7Ko1nWkquwzz87ioJjnsctWeSMSSYnKIoyvYu9WxubREf7BSKcl90//3kNzgy99MoAMzg1Xj6nFd4MCbN/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQURhXbq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="joZ5xb6l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2082DC433C7;
-	Sun, 24 Mar 2024 22:58:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQURhXbq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11BF6C43390;
+	Sun, 24 Mar 2024 22:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321100;
-	bh=9123jR0gyQTTvHkC+QjmGNgnRZ6KOlFUFXuEXV9RdQw=;
+	s=k20201202; t=1711321097;
+	bh=lHXQ2K8+8QPy1rd/IpDoX2dRit57EmurvmqurFZMb7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=joZ5xb6lTXn26jRWYpVJ1N6H4ejBAg1NTRyMSwVhwKz8Qcen02G2RHkUmHiyZx7k3
-	 ZH0ddsAhNIQKcr34FNUpBxfI378R5P2CNAQ7XUvSqZXY8diYXsRh0mLFoPSgLjrA0I
-	 pUG8iMiri6FIUCDhpt5UFros1X4JjYzgh+A8uZyg4APItcd40sWiZbU69sBWr569Ge
-	 qh3aB/1wmz0mRTmG6PwaGttD/Zum9RNg4O8PgoP+Mbec8N3rkMKvVoGQUguc+5kGg8
-	 h+4q87h3cohUbt7pnXGn34LFUYG9bctrTCK6QVa4ua5l5uvZI7njQ4ZM+0B2QMCLJH
-	 4480qwsYRH86w==
+	b=DQURhXbqiHL950laaFMWjBSh7Dj6A7sDyckd9irL1wS6l6D3ime2dTq03Ieo4QkxG
+	 yO5Vws6HPUxYorijoXIYNmGII2KccYMQnopVwV4LrCN4YoIDIveTehKdeeOBvFoEiF
+	 JTWySMrrMiHm1iyiy1+/2jX21gH/4fg4Px3BV6TbGyGJQMYwDq5ipKCtcexGgljUwo
+	 94/QHTRPE+h93qp3fJve0mTBJ1+LwWYdk2rfGqW8nplipuuBZmxPmUHa/c+zCzbs9b
+	 G39RyTnlZZK/Zv5TRxQ70RjeJXU0lu72QaL+I5V0+TYe0NmSIfS+Uz1RnHHbfMxprl
+	 Ln1hau0FnMi5w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Duanqiang Wen <duanqiangwen@net-swift.com>,
-	Michal Kubiak <michal.kubiak@intel.com>,
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>,
+	syzbot+12c506c1aae251e70449@syzkaller.appspotmail.com,
+	Eric Dumazet <edumazet@google.com>,
 	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 663/713] net: txgbe: fix clk_name exceed MAX_DEV_ID limits
-Date: Sun, 24 Mar 2024 18:46:29 -0400
-Message-ID: <20240324224720.1345309-664-sashal@kernel.org>
+Subject: [PATCH 6.7 660/713] tcp: Fix refcnt handling in __inet_hash_connect().
+Date: Sun, 24 Mar 2024 18:46:26 -0400
+Message-ID: <20240324224720.1345309-661-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,39 +50,90 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Duanqiang Wen <duanqiangwen@net-swift.com>
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-[ Upstream commit e30cef001da259e8df354b813015d0e5acc08740 ]
+[ Upstream commit 04d9d1fc428ac9f581d55118d67e0cb546701feb ]
 
-txgbe register clk which name is i2c_designware.pci_dev_id(),
-clk_name will be stored in clk_lookup_alloc. If PCIe bus number
-is larger than 0x39, clk_name size will be larger than 20 bytes.
-It exceeds clk_lookup_alloc MAX_DEV_ID limits. So the driver
-shortened clk_name.
+syzbot reported a warning in sk_nulls_del_node_init_rcu().
 
-Fixes: b63f20485e43 ("net: txgbe: Register fixed rate clock")
-Signed-off-by: Duanqiang Wen <duanqiangwen@net-swift.com>
-Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
-Link: https://lore.kernel.org/r/20240313080634.459523-1-duanqiangwen@net-swift.com
+The commit 66b60b0c8c4a ("dccp/tcp: Unhash sk from ehash for tb2 alloc
+failure after check_estalblished().") tried to fix an issue that an
+unconnected socket occupies an ehash entry when bhash2 allocation fails.
+
+In such a case, we need to revert changes done by check_established(),
+which does not hold refcnt when inserting socket into ehash.
+
+So, to revert the change, we need to __sk_nulls_add_node_rcu() instead
+of sk_nulls_add_node_rcu().
+
+Otherwise, sock_put() will cause refcnt underflow and leak the socket.
+
+[0]:
+WARNING: CPU: 0 PID: 23948 at include/net/sock.h:799 sk_nulls_del_node_init_rcu+0x166/0x1a0 include/net/sock.h:799
+Modules linked in:
+CPU: 0 PID: 23948 Comm: syz-executor.2 Not tainted 6.8.0-rc6-syzkaller-00159-gc055fc00c07b #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+RIP: 0010:sk_nulls_del_node_init_rcu+0x166/0x1a0 include/net/sock.h:799
+Code: e8 7f 71 c6 f7 83 fb 02 7c 25 e8 35 6d c6 f7 4d 85 f6 0f 95 c0 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 1b 6d c6 f7 90 <0f> 0b 90 eb b2 e8 10 6d c6 f7 4c 89 e7 be 04 00 00 00 e8 63 e7 d2
+RSP: 0018:ffffc900032d7848 EFLAGS: 00010246
+RAX: ffffffff89cd0035 RBX: 0000000000000001 RCX: 0000000000040000
+RDX: ffffc90004de1000 RSI: 000000000003ffff RDI: 0000000000040000
+RBP: 1ffff1100439ac26 R08: ffffffff89ccffe3 R09: 1ffff1100439ac28
+R10: dffffc0000000000 R11: ffffed100439ac29 R12: ffff888021cd6140
+R13: dffffc0000000000 R14: ffff88802a9bf5c0 R15: ffff888021cd6130
+FS:  00007f3b823f16c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f3b823f0ff8 CR3: 000000004674a000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __inet_hash_connect+0x140f/0x20b0 net/ipv4/inet_hashtables.c:1139
+ dccp_v6_connect+0xcb9/0x1480 net/dccp/ipv6.c:956
+ __inet_stream_connect+0x262/0xf30 net/ipv4/af_inet.c:678
+ inet_stream_connect+0x65/0xa0 net/ipv4/af_inet.c:749
+ __sys_connect_file net/socket.c:2048 [inline]
+ __sys_connect+0x2df/0x310 net/socket.c:2065
+ __do_sys_connect net/socket.c:2075 [inline]
+ __se_sys_connect net/socket.c:2072 [inline]
+ __x64_sys_connect+0x7a/0x90 net/socket.c:2072
+ do_syscall_64+0xf9/0x240
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7f3b8167dda9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f3b823f10c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 00007f3b817abf80 RCX: 00007f3b8167dda9
+RDX: 000000000000001c RSI: 0000000020000040 RDI: 0000000000000003
+RBP: 00007f3b823f1120 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 000000000000000b R14: 00007f3b817abf80 R15: 00007ffd3beb57b8
+ </TASK>
+
+Reported-by: syzbot+12c506c1aae251e70449@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=12c506c1aae251e70449
+Fixes: 66b60b0c8c4a ("dccp/tcp: Unhash sk from ehash for tb2 alloc failure after check_estalblished().")
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Link: https://lore.kernel.org/r/20240308201623.65448-1-kuniyu@amazon.com
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c | 2 +-
+ net/ipv4/inet_hashtables.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-index b6c06adb86560..b95187a0847f7 100644
---- a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-+++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-@@ -551,7 +551,7 @@ static int txgbe_clock_register(struct txgbe *txgbe)
- 	char clk_name[32];
- 	struct clk *clk;
+diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+index 9456bf9e2705b..7967ff7e02f79 100644
+--- a/net/ipv4/inet_hashtables.c
++++ b/net/ipv4/inet_hashtables.c
+@@ -1137,7 +1137,7 @@ int __inet_hash_connect(struct inet_timewait_death_row *death_row,
+ 		sock_prot_inuse_add(net, sk->sk_prot, -1);
  
--	snprintf(clk_name, sizeof(clk_name), "i2c_designware.%d",
-+	snprintf(clk_name, sizeof(clk_name), "i2c_dw.%d",
- 		 pci_dev_id(pdev));
+ 		spin_lock(lock);
+-		sk_nulls_del_node_init_rcu(sk);
++		__sk_nulls_del_node_init_rcu(sk);
+ 		spin_unlock(lock);
  
- 	clk = clk_register_fixed_rate(NULL, clk_name, NULL, 0, 156250000);
+ 		sk->sk_hash = 0;
 -- 
 2.43.0
 
