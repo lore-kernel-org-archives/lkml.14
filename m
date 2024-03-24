@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D904913F422;
-	Sun, 24 Mar 2024 23:10:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB38915574D;
+	Sun, 24 Mar 2024 23:10:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321829; cv=none; b=V83aReekkv24FCRcAUN1jVg9A+yhst00XjtFT8UiSKa5ZlUfGf4Q3xyp8L5v/iciSjrtQPC2MvUgHBJHec/XxKBwb/J1VVUVxfN3ygkT2hiBXuRxigSbmWRRjVOQixoCUSwKM9CMuIzzw3B9cqY71Ld9EFQ5V+LVHCN5WunxX0M=
+	t=1711321833; cv=none; b=uguN1UBGcIsrghxe8/ks/cgJOmFHoSczlDRfEyYEDgTLmhD1DanN8sIMLeGoQLKqjO5ciNcKRG9As3JyEbw/v3wjnMJ+nFJmiH/01NEgB5FiQ5yKy4UiGo3GDNh0y6PBE4/j0udenDbv5jJ3l4AiVpGr9B8ht68jxH3kI73/cSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321829; c=relaxed/simple;
-	bh=YKSk4417jnkaegNrpdi4LwpmOOlK3FepNJNTBW4pIRU=;
+	s=arc-20240116; t=1711321833; c=relaxed/simple;
+	bh=f2WAONAyaGu/mywiSi78/xx1tKvqBV4wdKArYHGhmSU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KHJjEF2oZJW2awmEF9frQbDAkbgLNT+CYGXdNSXAzxaJqBgcaFqnpJ0FcWJ8CfAKO4B8mvxAHuhoTN9pE+uAbWjN7yO5hwFCs7r0PYePawFHICjYtF8cY8GdGDDvm19gGwNer0TlP+vBJaEXsYI5uXNsBjBwvXClxATV06iCkzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8g7lh46; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=St0ow7ZvxUXzDKjmC12/o3XPqUIe0VxuIIyDAuNzXAHEmTpgrzA7XDAcDMIpu2QZSJdC4aOI3HBYT3PA8mGpEPblJxyW6U2T0MCxBLOmvw84bUnThRcI5F4YSqPSRRnMn0wqadwYTebKxINYbudt604HN4HaphhIcmi7slAKjtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5ferkp1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8g7lh46"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FC54C43394;
-	Sun, 24 Mar 2024 23:10:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5ferkp1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EECE1C433F1;
+	Sun, 24 Mar 2024 23:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321828;
-	bh=YKSk4417jnkaegNrpdi4LwpmOOlK3FepNJNTBW4pIRU=;
+	s=k20201202; t=1711321832;
+	bh=f2WAONAyaGu/mywiSi78/xx1tKvqBV4wdKArYHGhmSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J8g7lh46du48XnVdh6RKZyYrXqECCKqt+m2P4gwrjMLZ0GlPVZ+WH1kKm8FXKTySk
-	 RxUriwd2RhvaNERnUGjBu8JmfoNdNtjndfHNtYkN369BHVTEHpWLN7EtztBlKg2QF/
-	 Iwzu5azLwS9I7cd+KimM9CqaDQjlLinC8cyDyGbyMDjgacUYnAJNVjstmqSkWnM6HT
-	 ROJoyJzZVJkCF0jzijKdCDJXicp4mI2yPzDW1P0RUJRZMUjrQeJTjpIi4gDVoWmNAD
-	 CSr7CNPw7tnKPuQcjFe7V97ZFnNxyiV5jxY25hD8bH1RTNoh793HNrA+EuSz1MzgPm
-	 vAhF5o39CNXMg==
+	b=f5ferkp1P3o6f72XU/g1ZXH5d/H3I3AkDU7B9cBSfvwswxRWGNhJlZMX9JVU6+2Fd
+	 //s7VQBcIUjYb+d58nEOva0OTKRZvCDmejVYSikhYYORDmKqnH3Gq3u/2UH3xy/+bV
+	 bOePidO1ZvFPyVYaGN+72cIOgzgFhmEmdIQHmSMGo4LCT/UGpVzl0MSubdYgU62JTg
+	 YVlANU5WlXv3EcU+Z5U9Pw34xEzzA5gIP3Qmec48aMwePGNsLUcnmYHQAcj2Ptn6KC
+	 2JwGakDzmFsYvIgRcev/ftK5UmFB151Ur9ehQO0rBV1SwPI21xCoOzp95f9fF5A6h9
+	 +Ph+G/rcp315A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Petre Rodan <petre.rodan@subdimension.ro>,
-	Andreas Klinger <ak@it-klinger.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Sam Protsenko <semen.protsenko@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 557/638] iio: pressure: mprls0025pa fix off-by-one enum
-Date: Sun, 24 Mar 2024 18:59:54 -0400
-Message-ID: <20240324230116.1348576-558-sashal@kernel.org>
+Subject: [PATCH 6.6 561/638] tty: serial: samsung: fix tx_empty() to return TIOCSER_TEMT
+Date: Sun, 24 Mar 2024 18:59:58 -0400
+Message-ID: <20240324230116.1348576-562-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,50 +49,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Petre Rodan <petre.rodan@subdimension.ro>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
 
-[ Upstream commit 9e65506ca9c7ff716c8441a33417820ad61d3a16 ]
+[ Upstream commit 314c2b399288f0058a8c5b6683292cbde5f1531b ]
 
-Fix off-by-one error in transfer-function property.
-The honeywell,transfer-function property takes values between 1-3 so
-make sure the proper enum gets used.
+The core expects for tx_empty() either TIOCSER_TEMT when the tx is
+empty or 0 otherwise. s3c24xx_serial_txempty_nofifo() might return
+0x4, and at least uart_get_lsr_info() tries to clear exactly
+TIOCSER_TEMT (BIT(1)). Fix tx_empty() to return TIOCSER_TEMT.
 
-Fixes: 713337d9143ed ("iio: pressure: Honeywell mprls0025pa pressure sensor")
-Co-developed-by: Andreas Klinger <ak@it-klinger.de>
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
-Link: https://lore.kernel.org/r/20231229092445.30180-5-petre.rodan@subdimension.ro
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+Link: https://lore.kernel.org/r/20240119104526.1221243-2-tudor.ambarus@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/pressure/mprls0025pa.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/tty/serial/samsung_tty.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/pressure/mprls0025pa.c b/drivers/iio/pressure/mprls0025pa.c
-index 30fb2de368210..e3f0de020a40c 100644
---- a/drivers/iio/pressure/mprls0025pa.c
-+++ b/drivers/iio/pressure/mprls0025pa.c
-@@ -323,6 +323,7 @@ static int mpr_probe(struct i2c_client *client)
- 	struct iio_dev *indio_dev;
- 	struct device *dev = &client->dev;
- 	s64 scale, offset;
-+	u32 func;
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 07fb8a9dac633..5a4d88e134715 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -990,11 +990,10 @@ static unsigned int s3c24xx_serial_tx_empty(struct uart_port *port)
+ 		if ((ufstat & info->tx_fifomask) != 0 ||
+ 		    (ufstat & info->tx_fifofull))
+ 			return 0;
+-
+-		return 1;
++		return TIOCSER_TEMT;
+ 	}
  
- 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_READ_BYTE))
- 		return dev_err_probe(dev, -EOPNOTSUPP,
-@@ -362,10 +363,11 @@ static int mpr_probe(struct i2c_client *client)
- 			return dev_err_probe(dev, ret,
- 				"honeywell,pmax-pascal could not be read\n");
- 		ret = device_property_read_u32(dev,
--				"honeywell,transfer-function", &data->function);
-+				"honeywell,transfer-function", &func);
- 		if (ret)
- 			return dev_err_probe(dev, ret,
- 				"honeywell,transfer-function could not be read\n");
-+		data->function = func - 1;
- 		if (data->function > MPR_FUNCTION_C)
- 			return dev_err_probe(dev, -EINVAL,
- 				"honeywell,transfer-function %d invalid\n",
+-	return s3c24xx_serial_txempty_nofifo(port);
++	return s3c24xx_serial_txempty_nofifo(port) ? TIOCSER_TEMT : 0;
+ }
+ 
+ /* no modem control lines */
 -- 
 2.43.0
 
