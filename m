@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3FF142630;
-	Sun, 24 Mar 2024 23:11:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DD32210CD;
+	Sun, 24 Mar 2024 23:11:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321884; cv=none; b=qF6RxfrtzAfYmJONEeJTiIr5rzarCnX+1/46Dviu25bUAlmxoniYVFg3zkLM1TgDdeB3RdJ9P0/Au4/uYcbOrxu9pUxdW0akaZZ6TrZOWSahviAG7P0TCtMjaDrjBf0tB78hdXyaRUdEJ6sWKzi2X8r3kyTlrqmYpn7ROQ1801o=
+	t=1711321889; cv=none; b=uRPltM4QRQdG6mOVulMxtT13/G70+kFz6Lx9xhemhZN2rXkkatW2CXOjeG4MtyFAUOj0/Be+MaQg9KCSOqVo52iNFYRMPNSIvekZiNqNMkCzKKTLUp3aqmi5iSkkk0oczdKDijr1c5vgqQ8A84+yjpcNj502Hzja/sny4q44H9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321884; c=relaxed/simple;
-	bh=S0PMReYb6l7p0sdA4GoWVHr8+NH+kZJ9hEbl4Q0itqc=;
+	s=arc-20240116; t=1711321889; c=relaxed/simple;
+	bh=ImYJx3//S3lb8pzEBjnxmyZSCu8/oqDudWFtAKGWTJA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=epP1CnUPQNMfIx7PT/2YhvwTupdvynJWa3dxKs7o+XUpAVvxVvL50WVFWDY2bd+wsqM1AJZiU5+CLlvu1wQR2yzyT5jbLewexWLnnkwj2waoehpyfMah84RqJSNnOUM/5Js8C7p1kMEfsNSYrwYWyPZX1SpxmLkqfDYnQHCNN8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ALvCAI7d; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nckTc/MfkB1M7YnuJgdsYCeBIj7fvVPKe4RzWZfIEgDf602NkXM3O4Z8aiJzYYk1Ih8HOzkMCRq0FZeMREFAHXLXom/ZeLZGxtjJy4yRjBmoLRfVs+LkTS5Dq2GhdFD6YnZmY+6QqGzPILoXw96xRFHg0BwBCIvYrimIHohCLJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ryd1Nomo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ALvCAI7d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 930B0C43390;
-	Sun, 24 Mar 2024 23:11:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ryd1Nomo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77085C433C7;
+	Sun, 24 Mar 2024 23:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321884;
-	bh=S0PMReYb6l7p0sdA4GoWVHr8+NH+kZJ9hEbl4Q0itqc=;
+	s=k20201202; t=1711321888;
+	bh=ImYJx3//S3lb8pzEBjnxmyZSCu8/oqDudWFtAKGWTJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ALvCAI7d0c6BruBVtOHzYyf+RRTq+oBogaunwx3qIBzpluxPwO8h/UnFsYAE943pV
-	 7SZhyIv8TfSyyUuY52ufTe6DhbC7SBxNkQc9urhj67nQX+W+mL+3G+AoGbFh3xaupK
-	 J2IMwDrTT5oD+E/xPkkzkDbqyg6Xkyz/iOaJNYRW9PZN2logUirSQo0F6tG3OHHB9W
-	 o3rOp5wR71EBEs8DTDEJideps1gDt3w/Jiu3XCqd/W6ZY8oh0k5M7Ch9Y2La8OWwOY
-	 RUYWkGdn2MM7wNeOXDghrWe8/cIsWstnD4MmujewycIOgxrIcnr+W2Xqxzkn7m3kYx
-	 +r2sHPxbxakOg==
+	b=Ryd1NomoC8HE8FMl5wgGm1lw95TyaagkEHtarjIExRJNioGW8OSrTrMWfkOjWX+WE
+	 AWXssRB1u33pjIVqkBl9F7t5ttTIZlS/6F5xoqxU09YcZE3iwGZq8HK9wbNadM9eAq
+	 NqDI57V5JrJ5H4XugunfDAt0C+coWaF2WzFRY2EU5MnTjVASMGKx3Cq1nn7yXa1jWR
+	 Fb0jkk/gly36nmr7fMZBk0GgribbwsiCW9zcFUXqNbZKj7nl9Ro9kaS4gn3bFYdvXl
+	 arJK458qrt9WEAtCPd1/qDgdj7rUN46v8d2PE5hGK4mKyUMIejXfaTp7DljDwqJYqe
+	 NK3Er9MTIECWw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tobias Brunner <tobias@strongswan.org>,
-	David Ahern <dsahern@kernel.org>,
-	Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Thinh Tran <thinhtr@linux.ibm.com>,
+	Jiri Pirko <jiri@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 612/638] ipv4: raw: Fix sending packets from raw sockets via IPsec tunnels
-Date: Sun, 24 Mar 2024 19:00:49 -0400
-Message-ID: <20240324230116.1348576-613-sashal@kernel.org>
+Subject: [PATCH 6.6 616/638] net/bnx2x: Prevent access to a freed page in page_pool
+Date: Sun, 24 Mar 2024 19:00:53 -0400
+Message-ID: <20240324230116.1348576-617-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,42 +49,87 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tobias Brunner <tobias@strongswan.org>
+From: Thinh Tran <thinhtr@linux.ibm.com>
 
-[ Upstream commit c9b3b81716c5b92132a6c1d4ac3c48a7b44082ab ]
+[ Upstream commit d27e2da94a42655861ca4baea30c8cd65546f25d ]
 
-Since the referenced commit, the xfrm_inner_extract_output() function
-uses the protocol field to determine the address family.  So not setting
-it for IPv4 raw sockets meant that such packets couldn't be tunneled via
-IPsec anymore.
+Fix race condition leading to system crash during EEH error handling
 
-IPv6 raw sockets are not affected as they already set the protocol since
-9c9c9ad5fae7 ("ipv6: set skb->protocol on tcp, raw and ip6_append_data
-genereated skbs").
+During EEH error recovery, the bnx2x driver's transmit timeout logic
+could cause a race condition when handling reset tasks. The
+bnx2x_tx_timeout() schedules reset tasks via bnx2x_sp_rtnl_task(),
+which ultimately leads to bnx2x_nic_unload(). In bnx2x_nic_unload()
+SGEs are freed using bnx2x_free_rx_sge_range(). However, this could
+overlap with the EEH driver's attempt to reset the device using
+bnx2x_io_slot_reset(), which also tries to free SGEs. This race
+condition can result in system crashes due to accessing freed memory
+locations in bnx2x_free_rx_sge()
 
-Fixes: f4796398f21b ("xfrm: Remove inner/outer modes from output path")
-Signed-off-by: Tobias Brunner <tobias@strongswan.org>
-Reviewed-by: David Ahern <dsahern@kernel.org>
-Reviewed-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Link: https://lore.kernel.org/r/c5d9a947-eb19-4164-ac99-468ea814ce20@strongswan.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+799  static inline void bnx2x_free_rx_sge(struct bnx2x *bp,
+800				struct bnx2x_fastpath *fp, u16 index)
+801  {
+802	struct sw_rx_page *sw_buf = &fp->rx_page_ring[index];
+803     struct page *page = sw_buf->page;
+....
+where sw_buf was set to NULL after the call to dma_unmap_page()
+by the preceding thread.
+
+    EEH: Beginning: 'slot_reset'
+    PCI 0011:01:00.0#10000: EEH: Invoking bnx2x->slot_reset()
+    bnx2x: [bnx2x_io_slot_reset:14228(eth1)]IO slot reset initializing...
+    bnx2x 0011:01:00.0: enabling device (0140 -> 0142)
+    bnx2x: [bnx2x_io_slot_reset:14244(eth1)]IO slot reset --> driver unload
+    Kernel attempted to read user page (0) - exploit attempt? (uid: 0)
+    BUG: Kernel NULL pointer dereference on read at 0x00000000
+    Faulting instruction address: 0xc0080000025065fc
+    Oops: Kernel access of bad area, sig: 11 [#1]
+    .....
+    Call Trace:
+    [c000000003c67a20] [c00800000250658c] bnx2x_io_slot_reset+0x204/0x610 [bnx2x] (unreliable)
+    [c000000003c67af0] [c0000000000518a8] eeh_report_reset+0xb8/0xf0
+    [c000000003c67b60] [c000000000052130] eeh_pe_report+0x180/0x550
+    [c000000003c67c70] [c00000000005318c] eeh_handle_normal_event+0x84c/0xa60
+    [c000000003c67d50] [c000000000053a84] eeh_event_handler+0xf4/0x170
+    [c000000003c67da0] [c000000000194c58] kthread+0x1c8/0x1d0
+    [c000000003c67e10] [c00000000000cf64] ret_from_kernel_thread+0x5c/0x64
+
+To solve this issue, we need to verify page pool allocations before
+freeing.
+
+Fixes: 4cace675d687 ("bnx2x: Alloc 4k fragment for each rx ring buffer element")
+Signed-off-by: Thinh Tran <thinhtr@linux.ibm.com>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Link: https://lore.kernel.org/r/20240315205535.1321-1-thinhtr@linux.ibm.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/raw.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/ipv4/raw.c b/net/ipv4/raw.c
-index c0ef81f0bceeb..ee55d0cbe4e63 100644
---- a/net/ipv4/raw.c
-+++ b/net/ipv4/raw.c
-@@ -350,6 +350,7 @@ static int raw_send_hdrinc(struct sock *sk, struct flowi4 *fl4,
- 		goto error;
- 	skb_reserve(skb, hlen);
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
+index d8b1824c334d3..0bc1367fd6492 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
+@@ -1002,9 +1002,6 @@ static inline void bnx2x_set_fw_mac_addr(__le16 *fw_hi, __le16 *fw_mid,
+ static inline void bnx2x_free_rx_mem_pool(struct bnx2x *bp,
+ 					  struct bnx2x_alloc_pool *pool)
+ {
+-	if (!pool->page)
+-		return;
+-
+ 	put_page(pool->page);
  
-+	skb->protocol = htons(ETH_P_IP);
- 	skb->priority = READ_ONCE(sk->sk_priority);
- 	skb->mark = sockc->mark;
- 	skb->tstamp = sockc->transmit_time;
+ 	pool->page = NULL;
+@@ -1015,6 +1012,9 @@ static inline void bnx2x_free_rx_sge_range(struct bnx2x *bp,
+ {
+ 	int i;
+ 
++	if (!fp->page_pool.page)
++		return;
++
+ 	if (fp->mode == TPA_MODE_DISABLED)
+ 		return;
+ 
 -- 
 2.43.0
 
