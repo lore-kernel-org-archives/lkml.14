@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A161E6F64;
-	Sun, 24 Mar 2024 22:54:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CC51DB082;
+	Sun, 24 Mar 2024 22:54:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320860; cv=none; b=gYicsmg1kgkDd8psNP+EhXfCdHZqZzZ0uDhcNXdeChA+3B7VOLQP6VjcH1mq87Ek3MDhCUxCOweBFdJib8bBx4BJLGF3Kq4SQQojN0yjc1zFdBaRIj1W2q8O+oAwjqGStAYeuolSiwcHE0Jir7/OvXCLGWwt+w/Y9rdr0xPYHYc=
+	t=1711320849; cv=none; b=fvHA5VAtECnYILmZeqakU4KqGa34Jk3V4ga9vre47T2IXM5tckccZKU5N537nBRqXm/Xc88mp3nHi2gScPbSDXpzzI04CeYKKDLkmtU6TUqgLYMj8i0+i+nlz6l5G9OqooarakZpy0ZDvCS645ebShLCF3PLZiw0tOFD/pWLpts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320860; c=relaxed/simple;
-	bh=jx0xK9bQSIqIXUTuzqS9ze3n8taOEz3hd/Ivco0cQfc=;
+	s=arc-20240116; t=1711320849; c=relaxed/simple;
+	bh=5+ECUaLZ+MoXu77/a9hjEoo4afKWWLYY3fUE4SSgu74=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D2O/h93hMHmmlwgkYtqo62G6oVJA03tlDkyaCbkdf/mnDBh2+6NxMid/BkCC2fC7vnjC5GKuTtWv3z81v+ciQFnWSkE+6NVUVVoA3KLP5yKpZyd5qiza2dryOVTLlj9baih0CkPZlT5ndrA/Ob4dlavA5YzGYqqYBMYcTxouTW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hr6WlFqm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Htu2thTqycmoYKncLxtF/usbCik5dagcGlBksa89I50ZWhoMmaa+ngha2NxrECzgsA3XmbesXhQORMypcAHRm7txU7RAnDc5+ZU345R1ibl5kfbz9QSaI/gEF5HCKl3w3uHZhC6uGdJjpECy7Gvp3onBVR4znLbic4w9AWSxUrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DEOqvpE/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hr6WlFqm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A457C433F1;
-	Sun, 24 Mar 2024 22:54:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DEOqvpE/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D58AC43399;
+	Sun, 24 Mar 2024 22:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320860;
-	bh=jx0xK9bQSIqIXUTuzqS9ze3n8taOEz3hd/Ivco0cQfc=;
+	s=k20201202; t=1711320848;
+	bh=5+ECUaLZ+MoXu77/a9hjEoo4afKWWLYY3fUE4SSgu74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hr6WlFqmvzUteE+tg1DnH4t1M7RR+n0/NshgTFciMMVPnYvX1GglTK9eSmligqoQs
-	 th/T4895wKtWE2I5Up7oBde4neKNN0zIHGzQAM0U+zapRWnqvVl1luCysmVSsqwPbi
-	 dttmdcmtEdNdn1FyPjlq4RJOoidKp1qt63w9INtsxQzKXJDdwke4FTRFA37AVzK7/I
-	 y17+utY9xQeoNeZUeNdpak7arg8wf95F+V9uJf6+c0XiseyShmguV5/S2tqmAJH2k/
-	 wFwok1Xz2saUdWtCpsPY/cxjNbCOQ3Gitr1V1t9YjjMYDamB4XNqbt4BHd9vVwH2FT
-	 rDsn5jnQlaCSA==
+	b=DEOqvpE/FmSaVtsFgG+mwO7XE4yPxfskpGiO3JC5pIGnz9+gDWKEH9E3bJ/KEGIQE
+	 avcaZzHXCvgPkoaiNvmLqhuE0QZ4GJ9ZkuK827JfwJE9tOwgUwAf8/4hMG8OpYyHkv
+	 0q4R2lONAi7VHjRmkNS8d/VpywsCAvLI/E4tAj4QtaBUhiXLofGZpcKeYElV7ERFLI
+	 D4PvJ7axn6c2d2VuNvgyLTF6HWwBoFZFh8HJB2/F9MTiGyXHTfTqOjn1dvmtscj3W9
+	 eT6enpoefX2A27d5Ph+r0UrFwqE5kJEyCCPWis6PHwZC4zrtLjjKSHlxfL0l0IDJ4Z
+	 hNs44TQ+7hU3w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Yang Jihong <yangjihong1@huawei.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Ian Rogers <irogers@google.com>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 424/713] perf evsel: Fix duplicate initialization of data->id in evsel__parse_sample()
-Date: Sun, 24 Mar 2024 18:42:30 -0400
-Message-ID: <20240324224720.1345309-425-sashal@kernel.org>
+Subject: [PATCH 6.7 413/713] perf record: Check conflict between '--timestamp-filename' option and pipe mode before recording
+Date: Sun, 24 Mar 2024 18:42:19 -0400
+Message-ID: <20240324224720.1345309-414-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -52,32 +50,97 @@ Content-Transfer-Encoding: 8bit
 
 From: Yang Jihong <yangjihong1@huawei.com>
 
-[ Upstream commit 4962aec0d684c8edb14574ccd0da53e4926ff834 ]
+[ Upstream commit 02f9b50e04812782fd006ed21c6da1c5e3e373da ]
 
-data->id has been initialized at line 2362, remove duplicate initialization.
+In pipe mode, no need to switch perf data output, therefore,
+'--timestamp-filename' option should not take effect.
+Check the conflict before recording and output WARNING.
+In this case, the check pipe mode in perf_data__switch() can be removed.
 
-Fixes: 3ad31d8a0df2 ("perf evsel: Centralize perf_sample initialization")
+Before:
+
+  # perf record --timestamp-filename -o- perf test -w noploop | perf report -i- --percent-limit=1
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Dump -.2024011812110182 ]
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 4K of event 'cycles:P'
+  # Event count (approx.): 2176784359
+  #
+  # Overhead  Command  Shared Object         Symbol
+  # ........  .......  ....................  ......................................
+  #
+      97.83%  perf     perf                  [.] noploop
+
+  #
+  # (Tip: Print event counts in CSV format with: perf stat -x,)
+  #
+
+After:
+
+  # perf record --timestamp-filename -o- perf test -w noploop | perf report -i- --percent-limit=1
+  WARNING: --timestamp-filename option is not available in pipe mode.
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.000 MB - ]
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 4K of event 'cycles:P'
+  # Event count (approx.): 2185575421
+  #
+  # Overhead  Command  Shared Object          Symbol
+  # ........  .......  .....................  .............................................
+  #
+      97.75%  perf     perf                   [.] noploop
+
+  #
+  # (Tip: Profiling branch (mis)predictions with: perf record -b / perf report)
+  #
+
+Fixes: ecfd7a9c044e ("perf record: Add '--timestamp-filename' option to append timestamp to output file name")
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240119040304.3708522-3-yangjihong1@huawei.com
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240127025756.4041808-1-yangjihong1@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/evsel.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/builtin-record.c | 5 +++++
+ tools/perf/util/data.c      | 2 --
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 72a5dfc38d380..1fb24ca8aea52 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2340,7 +2340,6 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	data->period = evsel->core.attr.sample_period;
- 	data->cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
- 	data->misc    = event->header.misc;
--	data->id = -1ULL;
- 	data->data_src = PERF_MEM_DATA_SRC_NONE;
- 	data->vcpu = -1;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index b7f8c94d052d0..5d86aa5ff5367 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2449,6 +2449,11 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	if (data->is_pipe && rec->evlist->core.nr_entries == 1)
+ 		rec->opts.sample_id = true;
+ 
++	if (rec->timestamp_filename && perf_data__is_pipe(data)) {
++		rec->timestamp_filename = false;
++		pr_warning("WARNING: --timestamp-filename option is not available in pipe mode.\n");
++	}
++
+ 	evlist__uniquify_name(rec->evlist);
+ 
+ 	/* Debug message used by test scripts */
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index c29d8a382b196..550675ce0b787 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -430,8 +430,6 @@ int perf_data__switch(struct perf_data *data,
+ {
+ 	int ret;
+ 
+-	if (check_pipe(data))
+-		return -EINVAL;
+ 	if (perf_data__is_read(data))
+ 		return -EINVAL;
  
 -- 
 2.43.0
