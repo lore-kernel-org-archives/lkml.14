@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA12146003;
-	Sun, 24 Mar 2024 23:14:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A34A14601D;
+	Sun, 24 Mar 2024 23:14:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322075; cv=none; b=fILy6OSQvVj55jZ/++2CSKkEstWMfb06c8THEyRavkQAIdIsBeSrA81TIfb2IlrFPtIIrCNhL76ZS4pNrS/KBOOgkIlrSMlMko/Jh5DbJ9uwAioQGSKNLp4Fx4Dx3GjZBX78TvnIpTyje8CeYnS5nVI80fEuQZJHdgneKPB1k6U=
+	t=1711322079; cv=none; b=nZ9Iq78QYuxDt5BQg1baR4FYDnm9NAm3ncdmwY2Z7UMQcRD32TtXLbbk68M123Ji4D/iEHs6QNoAEgsxSN3BL5xQ+X9Za9qquPThK0bS8fWx5Tvy+7auiqhlHf/qwJP5mSlSpQ6xDxJSI4f6rx26HDUDW0LJh90Da2v/hsJdz/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322075; c=relaxed/simple;
-	bh=7foTnQmDJHqJbOmlYZaWww4yelruftK70Wcbpl6/S4s=;
+	s=arc-20240116; t=1711322079; c=relaxed/simple;
+	bh=XPaa/mrroDUfMDpkjAsvH2WF2Yb7bzR0M63O/5YR8l4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mtkTv/BcQN9NGnpuJTVWNsnmeHa1FOnGkHtQLl/hCSu0C8hkQQr8KjKVRWpQh5X0+rr+wBAWegkkFzwkr+SqX2KV7hJ8DOFrGG2Hct6ApI/j0RorsPTTjWPolbWKGJYJRcEJ9Ws6oO1TzkWQGrjvJOwXMVYD+/siFu8ha5/WqJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gy78UtxB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=T1v5L1nipqwGYM+sMsIBVuc0ryLCT7zb246xLGfXWtpSZcu+f+w5diCllTiuFBZaZOOzi45nIpUwbN+KZLnXI9sse+XfUY01T4EZ6Kz5u10BvKST7bJnMpigeoFilGVo3vKqsodMfnLy4ADNN3mhWKk/0D4Ybx3tY1ogHLvPVMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciyyJTap; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gy78UtxB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 766DCC433A6;
-	Sun, 24 Mar 2024 23:14:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciyyJTap"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6559FC433C7;
+	Sun, 24 Mar 2024 23:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322075;
-	bh=7foTnQmDJHqJbOmlYZaWww4yelruftK70Wcbpl6/S4s=;
+	s=k20201202; t=1711322079;
+	bh=XPaa/mrroDUfMDpkjAsvH2WF2Yb7bzR0M63O/5YR8l4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gy78UtxBN81QNZoN06OsBQSStF16qRZ3PCCIXWQBIkicFHpib/3o5ie9S4LvO9/Od
-	 z4qdi7ulq9FSmRs2sDGZSBDSJgH4TxHBnYJxo92aqDeWQ2nEoyCiQPg7l5jXlCEFns
-	 Y9Guf0i1q77FtKnM2aBYZ/WVr9gvSFyafHeMByOkiyST2gU9Ge/MsQRb70dmoPm7BP
-	 Fuvx/67LSHfZIIPC4e8sk+zkNJtS+UknSzyaoKTCFQu8VR7lN0cWBNZOpMvgqq3Yl4
-	 I6fGvonN2wvS2UTJ1XE/h4Vf1Ar0tBbT+hvdes9rHScIB9CKEIuOGukcPU/0rbVOWr
-	 MaBtfS8K/QsfQ==
+	b=ciyyJTapkRaPTmE3Yo5ZJku523Dk2dkQVaCNiyBlY2n89Ar4Hu6+SkhbpTK0tKXH8
+	 QPK9Ij+lxbz5WpojeTiYXA8uMCyXrVmMP1BCefMMa2eUGR4rn2YsVK3g0Rs3MY1ZSg
+	 wAGoG0fJN0Xg43wTYVOkhfX0vqNJchyl/2YsOJRvNTECxOFDWVNTTyx9ss8tD+/nwC
+	 F/XEh617VcyEHQ3FbWFuMp9OqYZlUtg/V+SKTUJ0TmD4R3gqOafm/I0fApNEn9sT00
+	 KxfLS+5RYgzlTrzgLJaHs+iKkbtKZ8prKxUTP6nB6wIg5ht2e40OIP2qnwloaZysfb
+	 HO8fkdpORyjmA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Stanislav Fomichev <sdf@google.com>,
+Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 148/451] selftests/bpf: Convert test_global_funcs test to test_loader framework
-Date: Sun, 24 Mar 2024 19:07:04 -0400
-Message-ID: <20240324231207.1351418-149-sashal@kernel.org>
+Subject: [PATCH 6.1 152/451] wifi: wilc1000: prevent use-after-free on vif when cleaning up all interfaces
+Date: Sun, 24 Mar 2024 19:07:08 -0400
+Message-ID: <20240324231207.1351418-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,648 +44,171 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Andrii Nakryiko <andrii@kernel.org>
+From: Alexis Lothoré <alexis.lothore@bootlin.com>
 
-[ Upstream commit 95ebb376176c52382293e05e63f142114a5e40ef ]
+[ Upstream commit cb5942b77c05d54310a0420cac12935e9b6aa21c ]
 
-Convert 17 test_global_funcs subtests into test_loader framework for
-easier maintenance and more declarative way to define expected
-failures/successes.
+wilc_netdev_cleanup currently triggers a KASAN warning, which can be
+observed on interface registration error path, or simply by
+removing the module/unbinding device from driver:
 
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Stanislav Fomichev <sdf@google.com>
-Link: https://lore.kernel.org/bpf/20230216045954.3002473-3-andrii@kernel.org
-Stable-dep-of: 879bbe7aa4af ("bpf: don't infer PTR_TO_CTX for programs with unnamed context type")
+echo spi0.1 > /sys/bus/spi/drivers/wilc1000_spi/unbind
+
+==================================================================
+BUG: KASAN: slab-use-after-free in wilc_netdev_cleanup+0x508/0x5cc
+Read of size 4 at addr c54d1ce8 by task sh/86
+
+CPU: 0 PID: 86 Comm: sh Not tainted 6.8.0-rc1+ #117
+Hardware name: Atmel SAMA5
+ unwind_backtrace from show_stack+0x18/0x1c
+ show_stack from dump_stack_lvl+0x34/0x58
+ dump_stack_lvl from print_report+0x154/0x500
+ print_report from kasan_report+0xac/0xd8
+ kasan_report from wilc_netdev_cleanup+0x508/0x5cc
+ wilc_netdev_cleanup from wilc_bus_remove+0xc8/0xec
+ wilc_bus_remove from spi_remove+0x8c/0xac
+ spi_remove from device_release_driver_internal+0x434/0x5f8
+ device_release_driver_internal from unbind_store+0xbc/0x108
+ unbind_store from kernfs_fop_write_iter+0x398/0x584
+ kernfs_fop_write_iter from vfs_write+0x728/0xf88
+ vfs_write from ksys_write+0x110/0x1e4
+ ksys_write from ret_fast_syscall+0x0/0x1c
+
+[...]
+
+Allocated by task 1:
+ kasan_save_track+0x30/0x5c
+ __kasan_kmalloc+0x8c/0x94
+ __kmalloc_node+0x1cc/0x3e4
+ kvmalloc_node+0x48/0x180
+ alloc_netdev_mqs+0x68/0x11dc
+ alloc_etherdev_mqs+0x28/0x34
+ wilc_netdev_ifc_init+0x34/0x8ec
+ wilc_cfg80211_init+0x690/0x910
+ wilc_bus_probe+0xe0/0x4a0
+ spi_probe+0x158/0x1b0
+ really_probe+0x270/0xdf4
+ __driver_probe_device+0x1dc/0x580
+ driver_probe_device+0x60/0x140
+ __driver_attach+0x228/0x5d4
+ bus_for_each_dev+0x13c/0x1a8
+ bus_add_driver+0x2a0/0x608
+ driver_register+0x24c/0x578
+ do_one_initcall+0x180/0x310
+ kernel_init_freeable+0x424/0x484
+ kernel_init+0x20/0x148
+ ret_from_fork+0x14/0x28
+
+Freed by task 86:
+ kasan_save_track+0x30/0x5c
+ kasan_save_free_info+0x38/0x58
+ __kasan_slab_free+0xe4/0x140
+ kfree+0xb0/0x238
+ device_release+0xc0/0x2a8
+ kobject_put+0x1d4/0x46c
+ netdev_run_todo+0x8fc/0x11d0
+ wilc_netdev_cleanup+0x1e4/0x5cc
+ wilc_bus_remove+0xc8/0xec
+ spi_remove+0x8c/0xac
+ device_release_driver_internal+0x434/0x5f8
+ unbind_store+0xbc/0x108
+ kernfs_fop_write_iter+0x398/0x584
+ vfs_write+0x728/0xf88
+ ksys_write+0x110/0x1e4
+ ret_fast_syscall+0x0/0x1c
+ [...]
+
+David Mosberger-Tan initial investigation [1] showed that this
+use-after-free is due to netdevice unregistration during vif list
+traversal. When unregistering a net device, since the needs_free_netdev has
+been set to true during registration, the netdevice object is also freed,
+and as a consequence, the corresponding vif object too, since it is
+attached to it as private netdevice data. The next occurrence of the loop
+then tries to access freed vif pointer to the list to move forward in the
+list.
+
+Fix this use-after-free thanks to two mechanisms:
+- navigate in the list with list_for_each_entry_safe, which allows to
+  safely modify the list as we go through each element. For each element,
+  remove it from the list with list_del_rcu
+- make sure to wait for RCU grace period end after each vif removal to make
+  sure it is safe to free the corresponding vif too (through
+  unregister_netdev)
+
+Since we are in a RCU "modifier" path (not a "reader" path), and because
+such path is expected not to be concurrent to any other modifier (we are
+using the vif_mutex lock), we do not need to use RCU list API, that's why
+we can benefit from list_for_each_entry_safe.
+
+[1] https://lore.kernel.org/linux-wireless/ab077dbe58b1ea5de0a3b2ca21f275a07af967d2.camel@egauge.net/
+
+Fixes: 8399918f3056 ("staging: wilc1000: use RCU list to maintain vif interfaces list")
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240212-wilc_rework_deinit-v1-1-9203ae56c27f@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../bpf/prog_tests/test_global_funcs.c        | 131 +++++-------------
- .../selftests/bpf/progs/test_global_func1.c   |   6 +-
- .../selftests/bpf/progs/test_global_func10.c  |   4 +-
- .../selftests/bpf/progs/test_global_func11.c  |   4 +-
- .../selftests/bpf/progs/test_global_func12.c  |   4 +-
- .../selftests/bpf/progs/test_global_func13.c  |   4 +-
- .../selftests/bpf/progs/test_global_func14.c  |   4 +-
- .../selftests/bpf/progs/test_global_func15.c  |   4 +-
- .../selftests/bpf/progs/test_global_func16.c  |   4 +-
- .../selftests/bpf/progs/test_global_func17.c  |   4 +-
- .../selftests/bpf/progs/test_global_func2.c   |  43 +++++-
- .../selftests/bpf/progs/test_global_func3.c   |  10 +-
- .../selftests/bpf/progs/test_global_func4.c   |  55 +++++++-
- .../selftests/bpf/progs/test_global_func5.c   |   4 +-
- .../selftests/bpf/progs/test_global_func6.c   |   4 +-
- .../selftests/bpf/progs/test_global_func7.c   |   4 +-
- .../selftests/bpf/progs/test_global_func8.c   |   4 +-
- .../selftests/bpf/progs/test_global_func9.c   |   4 +-
- 18 files changed, 174 insertions(+), 123 deletions(-)
+ .../net/wireless/microchip/wilc1000/netdev.c  | 28 +++++--------------
+ 1 file changed, 7 insertions(+), 21 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c b/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
-index 7295cc60f7248..2ff4d5c7abfce 100644
---- a/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
-+++ b/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
-@@ -1,104 +1,41 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright (c) 2020 Facebook */
- #include <test_progs.h>
+diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
+index 0e6eeeed2e086..b714da48eaa17 100644
+--- a/drivers/net/wireless/microchip/wilc1000/netdev.c
++++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
+@@ -878,8 +878,7 @@ static const struct net_device_ops wilc_netdev_ops = {
+ 
+ void wilc_netdev_cleanup(struct wilc *wilc)
+ {
+-	struct wilc_vif *vif;
+-	int srcu_idx, ifc_cnt = 0;
++	struct wilc_vif *vif, *vif_tmp;
+ 
+ 	if (!wilc)
+ 		return;
+@@ -889,32 +888,19 @@ void wilc_netdev_cleanup(struct wilc *wilc)
+ 		wilc->firmware = NULL;
+ 	}
+ 
+-	srcu_idx = srcu_read_lock(&wilc->srcu);
+-	list_for_each_entry_rcu(vif, &wilc->vif_list, list) {
++	list_for_each_entry_safe(vif, vif_tmp, &wilc->vif_list, list) {
++		mutex_lock(&wilc->vif_mutex);
++		list_del_rcu(&vif->list);
++		wilc->vif_num--;
++		mutex_unlock(&wilc->vif_mutex);
++		synchronize_srcu(&wilc->srcu);
+ 		if (vif->ndev)
+ 			unregister_netdev(vif->ndev);
+ 	}
+-	srcu_read_unlock(&wilc->srcu, srcu_idx);
+ 
+ 	wilc_wfi_deinit_mon_interface(wilc, false);
+ 	destroy_workqueue(wilc->hif_workqueue);
+ 
+-	while (ifc_cnt < WILC_NUM_CONCURRENT_IFC) {
+-		mutex_lock(&wilc->vif_mutex);
+-		if (wilc->vif_num <= 0) {
+-			mutex_unlock(&wilc->vif_mutex);
+-			break;
+-		}
+-		vif = wilc_get_wl_to_vif(wilc);
+-		if (!IS_ERR(vif))
+-			list_del_rcu(&vif->list);
 -
--const char *err_str;
--bool found;
--
--static int libbpf_debug_print(enum libbpf_print_level level,
--			      const char *format, va_list args)
--{
--	char *log_buf;
--
--	if (level != LIBBPF_WARN ||
--	    strcmp(format, "libbpf: \n%s\n")) {
--		vprintf(format, args);
--		return 0;
+-		wilc->vif_num--;
+-		mutex_unlock(&wilc->vif_mutex);
+-		synchronize_srcu(&wilc->srcu);
+-		ifc_cnt++;
 -	}
 -
--	log_buf = va_arg(args, char *);
--	if (!log_buf)
--		goto out;
--	if (err_str && strstr(log_buf, err_str) == 0)
--		found = true;
--out:
--	printf(format, log_buf);
--	return 0;
--}
--
--extern int extra_prog_load_log_flags;
--
--static int check_load(const char *file)
--{
--	struct bpf_object *obj = NULL;
--	struct bpf_program *prog;
--	int err;
--
--	found = false;
--
--	obj = bpf_object__open_file(file, NULL);
--	err = libbpf_get_error(obj);
--	if (err)
--		return err;
--
--	prog = bpf_object__next_program(obj, NULL);
--	if (!prog) {
--		err = -ENOENT;
--		goto err_out;
--	}
--
--	bpf_program__set_flags(prog, BPF_F_TEST_RND_HI32);
--	bpf_program__set_log_level(prog, extra_prog_load_log_flags);
--
--	err = bpf_object__load(obj);
--
--err_out:
--	bpf_object__close(obj);
--	return err;
--}
--
--struct test_def {
--	const char *file;
--	const char *err_str;
--};
-+#include "test_global_func1.skel.h"
-+#include "test_global_func2.skel.h"
-+#include "test_global_func3.skel.h"
-+#include "test_global_func4.skel.h"
-+#include "test_global_func5.skel.h"
-+#include "test_global_func6.skel.h"
-+#include "test_global_func7.skel.h"
-+#include "test_global_func8.skel.h"
-+#include "test_global_func9.skel.h"
-+#include "test_global_func10.skel.h"
-+#include "test_global_func11.skel.h"
-+#include "test_global_func12.skel.h"
-+#include "test_global_func13.skel.h"
-+#include "test_global_func14.skel.h"
-+#include "test_global_func15.skel.h"
-+#include "test_global_func16.skel.h"
-+#include "test_global_func17.skel.h"
- 
- void test_test_global_funcs(void)
- {
--	struct test_def tests[] = {
--		{ "test_global_func1.bpf.o", "combined stack size of 4 calls is 544" },
--		{ "test_global_func2.bpf.o" },
--		{ "test_global_func3.bpf.o", "the call stack of 8 frames" },
--		{ "test_global_func4.bpf.o" },
--		{ "test_global_func5.bpf.o", "expected pointer to ctx, but got PTR" },
--		{ "test_global_func6.bpf.o", "modified ctx ptr R2" },
--		{ "test_global_func7.bpf.o", "foo() doesn't return scalar" },
--		{ "test_global_func8.bpf.o" },
--		{ "test_global_func9.bpf.o" },
--		{ "test_global_func10.bpf.o", "invalid indirect read from stack" },
--		{ "test_global_func11.bpf.o", "Caller passes invalid args into func#1" },
--		{ "test_global_func12.bpf.o", "invalid mem access 'mem_or_null'" },
--		{ "test_global_func13.bpf.o", "Caller passes invalid args into func#1" },
--		{ "test_global_func14.bpf.o", "reference type('FWD S') size cannot be determined" },
--		{ "test_global_func15.bpf.o", "At program exit the register R0 has value" },
--		{ "test_global_func16.bpf.o", "invalid indirect read from stack" },
--		{ "test_global_func17.bpf.o", "Caller passes invalid args into func#1" },
--	};
--	libbpf_print_fn_t old_print_fn = NULL;
--	int err, i, duration = 0;
--
--	old_print_fn = libbpf_set_print(libbpf_debug_print);
--
--	for (i = 0; i < ARRAY_SIZE(tests); i++) {
--		const struct test_def *test = &tests[i];
--
--		if (!test__start_subtest(test->file))
--			continue;
--
--		err_str = test->err_str;
--		err = check_load(test->file);
--		CHECK_FAIL(!!err ^ !!err_str);
--		if (err_str)
--			CHECK(found, "", "expected string '%s'", err_str);
--	}
--	libbpf_set_print(old_print_fn);
-+	RUN_TESTS(test_global_func1);
-+	RUN_TESTS(test_global_func2);
-+	RUN_TESTS(test_global_func3);
-+	RUN_TESTS(test_global_func4);
-+	RUN_TESTS(test_global_func5);
-+	RUN_TESTS(test_global_func6);
-+	RUN_TESTS(test_global_func7);
-+	RUN_TESTS(test_global_func8);
-+	RUN_TESTS(test_global_func9);
-+	RUN_TESTS(test_global_func10);
-+	RUN_TESTS(test_global_func11);
-+	RUN_TESTS(test_global_func12);
-+	RUN_TESTS(test_global_func13);
-+	RUN_TESTS(test_global_func14);
-+	RUN_TESTS(test_global_func15);
-+	RUN_TESTS(test_global_func16);
-+	RUN_TESTS(test_global_func17);
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func1.c b/tools/testing/selftests/bpf/progs/test_global_func1.c
-index 7b42dad187b89..23970a20b3249 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func1.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func1.c
-@@ -3,10 +3,9 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
--#ifndef MAX_STACK
- #define MAX_STACK (512 - 3 * 32 + 8)
--#endif
- 
- static __attribute__ ((noinline))
- int f0(int var, struct __sk_buff *skb)
-@@ -39,7 +38,8 @@ int f3(int val, struct __sk_buff *skb, int var)
- }
- 
- SEC("tc")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("combined stack size of 4 calls is 544")
-+int global_func1(struct __sk_buff *skb)
- {
- 	return f0(1, skb) + f1(skb) + f2(2, skb) + f3(3, skb, 4);
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func10.c b/tools/testing/selftests/bpf/progs/test_global_func10.c
-index 97b7031d0e227..98327bdbbfd24 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func10.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func10.c
-@@ -2,6 +2,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- struct Small {
- 	int x;
-@@ -21,7 +22,8 @@ __noinline int foo(const struct Big *big)
- }
- 
- SEC("cgroup_skb/ingress")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("invalid indirect read from stack")
-+int global_func10(struct __sk_buff *skb)
- {
- 	const struct Small small = {.x = skb->len };
- 
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func11.c b/tools/testing/selftests/bpf/progs/test_global_func11.c
-index ef5277d982d92..283e036dc401e 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func11.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func11.c
-@@ -2,6 +2,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- struct S {
- 	int x;
-@@ -13,7 +14,8 @@ __noinline int foo(const struct S *s)
- }
- 
- SEC("cgroup_skb/ingress")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("Caller passes invalid args into func#1")
-+int global_func11(struct __sk_buff *skb)
- {
- 	return foo((const void *)skb);
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func12.c b/tools/testing/selftests/bpf/progs/test_global_func12.c
-index 62343527cc598..7f159d83c6f67 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func12.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func12.c
-@@ -2,6 +2,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- struct S {
- 	int x;
-@@ -13,7 +14,8 @@ __noinline int foo(const struct S *s)
- }
- 
- SEC("cgroup_skb/ingress")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("invalid mem access 'mem_or_null'")
-+int global_func12(struct __sk_buff *skb)
- {
- 	const struct S s = {.x = skb->len };
- 
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func13.c b/tools/testing/selftests/bpf/progs/test_global_func13.c
-index ff8897c1ac22b..02ea80da75b57 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func13.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func13.c
-@@ -2,6 +2,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- struct S {
- 	int x;
-@@ -16,7 +17,8 @@ __noinline int foo(const struct S *s)
- }
- 
- SEC("cgroup_skb/ingress")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("Caller passes invalid args into func#1")
-+int global_func13(struct __sk_buff *skb)
- {
- 	const struct S *s = (const struct S *)(0xbedabeda);
- 
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func14.c b/tools/testing/selftests/bpf/progs/test_global_func14.c
-index 698c77199ebf7..33b7d5efd7b26 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func14.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func14.c
-@@ -2,6 +2,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- struct S;
- 
-@@ -14,7 +15,8 @@ __noinline int foo(const struct S *s)
- }
- 
- SEC("cgroup_skb/ingress")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("reference type('FWD S') size cannot be determined")
-+int global_func14(struct __sk_buff *skb)
- {
- 
- 	return foo(NULL);
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func15.c b/tools/testing/selftests/bpf/progs/test_global_func15.c
-index c19c435988d55..b512d6a6c75e5 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func15.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func15.c
-@@ -2,6 +2,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- __noinline int foo(unsigned int *v)
- {
-@@ -12,7 +13,8 @@ __noinline int foo(unsigned int *v)
- }
- 
- SEC("cgroup_skb/ingress")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("At program exit the register R0 has value")
-+int global_func15(struct __sk_buff *skb)
- {
- 	unsigned int v = 1;
- 
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func16.c b/tools/testing/selftests/bpf/progs/test_global_func16.c
-index 0312d1e8d8c06..e7206304632e1 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func16.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func16.c
-@@ -2,6 +2,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- __noinline int foo(int (*arr)[10])
- {
-@@ -12,7 +13,8 @@ __noinline int foo(int (*arr)[10])
- }
- 
- SEC("cgroup_skb/ingress")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("invalid indirect read from stack")
-+int global_func16(struct __sk_buff *skb)
- {
- 	int array[10];
- 
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func17.c b/tools/testing/selftests/bpf/progs/test_global_func17.c
-index 2b8b9b8ba0183..a32e11c7d933e 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func17.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func17.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- #include <vmlinux.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- __noinline int foo(int *p)
- {
-@@ -10,7 +11,8 @@ __noinline int foo(int *p)
- const volatile int i;
- 
- SEC("tc")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("Caller passes invalid args into func#1")
-+int global_func17(struct __sk_buff *skb)
- {
- 	return foo((int *)&i);
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func2.c b/tools/testing/selftests/bpf/progs/test_global_func2.c
-index 2c18d82923a2d..3dce97fb52a4b 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func2.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func2.c
-@@ -1,4 +1,45 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /* Copyright (c) 2020 Facebook */
-+#include <stddef.h>
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
-+
- #define MAX_STACK (512 - 3 * 32)
--#include "test_global_func1.c"
-+
-+static __attribute__ ((noinline))
-+int f0(int var, struct __sk_buff *skb)
-+{
-+	return skb->len;
-+}
-+
-+__attribute__ ((noinline))
-+int f1(struct __sk_buff *skb)
-+{
-+	volatile char buf[MAX_STACK] = {};
-+
-+	return f0(0, skb) + skb->len;
-+}
-+
-+int f3(int, struct __sk_buff *skb, int);
-+
-+__attribute__ ((noinline))
-+int f2(int val, struct __sk_buff *skb)
-+{
-+	return f1(skb) + f3(val, skb, 1);
-+}
-+
-+__attribute__ ((noinline))
-+int f3(int val, struct __sk_buff *skb, int var)
-+{
-+	volatile char buf[MAX_STACK] = {};
-+
-+	return skb->ifindex * val * var;
-+}
-+
-+SEC("tc")
-+__success
-+int global_func2(struct __sk_buff *skb)
-+{
-+	return f0(1, skb) + f1(skb) + f2(2, skb) + f3(3, skb, 4);
-+}
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func3.c b/tools/testing/selftests/bpf/progs/test_global_func3.c
-index 01bf8275dfd64..142b682d3c2f0 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func3.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func3.c
-@@ -3,6 +3,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- __attribute__ ((noinline))
- int f1(struct __sk_buff *skb)
-@@ -46,20 +47,15 @@ int f7(struct __sk_buff *skb)
- 	return f6(skb);
- }
- 
--#ifndef NO_FN8
- __attribute__ ((noinline))
- int f8(struct __sk_buff *skb)
- {
- 	return f7(skb);
- }
--#endif
- 
- SEC("tc")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("the call stack of 8 frames")
-+int global_func3(struct __sk_buff *skb)
- {
--#ifndef NO_FN8
- 	return f8(skb);
--#else
--	return f7(skb);
--#endif
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func4.c b/tools/testing/selftests/bpf/progs/test_global_func4.c
-index 610f75edf2764..1733d87ad3f3e 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func4.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func4.c
-@@ -1,4 +1,55 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /* Copyright (c) 2020 Facebook */
--#define NO_FN8
--#include "test_global_func3.c"
-+#include <stddef.h>
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
-+
-+__attribute__ ((noinline))
-+int f1(struct __sk_buff *skb)
-+{
-+	return skb->len;
-+}
-+
-+__attribute__ ((noinline))
-+int f2(int val, struct __sk_buff *skb)
-+{
-+	return f1(skb) + val;
-+}
-+
-+__attribute__ ((noinline))
-+int f3(int val, struct __sk_buff *skb, int var)
-+{
-+	return f2(var, skb) + val;
-+}
-+
-+__attribute__ ((noinline))
-+int f4(struct __sk_buff *skb)
-+{
-+	return f3(1, skb, 2);
-+}
-+
-+__attribute__ ((noinline))
-+int f5(struct __sk_buff *skb)
-+{
-+	return f4(skb);
-+}
-+
-+__attribute__ ((noinline))
-+int f6(struct __sk_buff *skb)
-+{
-+	return f5(skb);
-+}
-+
-+__attribute__ ((noinline))
-+int f7(struct __sk_buff *skb)
-+{
-+	return f6(skb);
-+}
-+
-+SEC("tc")
-+__success
-+int global_func4(struct __sk_buff *skb)
-+{
-+	return f7(skb);
-+}
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func5.c b/tools/testing/selftests/bpf/progs/test_global_func5.c
-index 9248d03e0d06f..cc55aedaf82d5 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func5.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func5.c
-@@ -3,6 +3,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- __attribute__ ((noinline))
- int f1(struct __sk_buff *skb)
-@@ -25,7 +26,8 @@ int f3(int val, struct __sk_buff *skb)
- }
- 
- SEC("tc")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("expected pointer to ctx, but got PTR")
-+int global_func5(struct __sk_buff *skb)
- {
- 	return f1(skb) + f2(2, skb) + f3(3, skb);
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func6.c b/tools/testing/selftests/bpf/progs/test_global_func6.c
-index af8c78bdfb257..46c38c8f2cf03 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func6.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func6.c
-@@ -3,6 +3,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- __attribute__ ((noinline))
- int f1(struct __sk_buff *skb)
-@@ -25,7 +26,8 @@ int f3(int val, struct __sk_buff *skb)
- }
- 
- SEC("tc")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("modified ctx ptr R2")
-+int global_func6(struct __sk_buff *skb)
- {
- 	return f1(skb) + f2(2, skb) + f3(3, skb);
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func7.c b/tools/testing/selftests/bpf/progs/test_global_func7.c
-index 6cb8e2f5254cf..f182febfde3c0 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func7.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func7.c
-@@ -3,6 +3,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- __attribute__ ((noinline))
- void foo(struct __sk_buff *skb)
-@@ -11,7 +12,8 @@ void foo(struct __sk_buff *skb)
- }
- 
- SEC("tc")
--int test_cls(struct __sk_buff *skb)
-+__failure __msg("foo() doesn't return scalar")
-+int global_func7(struct __sk_buff *skb)
- {
- 	foo(skb);
- 	return 0;
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func8.c b/tools/testing/selftests/bpf/progs/test_global_func8.c
-index d55a6544b1abd..9b9c57fa2dd34 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func8.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func8.c
-@@ -3,6 +3,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- __noinline int foo(struct __sk_buff *skb)
- {
-@@ -10,7 +11,8 @@ __noinline int foo(struct __sk_buff *skb)
- }
- 
- SEC("cgroup_skb/ingress")
--int test_cls(struct __sk_buff *skb)
-+__success
-+int global_func8(struct __sk_buff *skb)
- {
- 	if (!foo(skb))
- 		return 0;
-diff --git a/tools/testing/selftests/bpf/progs/test_global_func9.c b/tools/testing/selftests/bpf/progs/test_global_func9.c
-index bd233ddede98a..1f2cb0159b8d8 100644
---- a/tools/testing/selftests/bpf/progs/test_global_func9.c
-+++ b/tools/testing/selftests/bpf/progs/test_global_func9.c
-@@ -2,6 +2,7 @@
- #include <stddef.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "bpf_misc.h"
- 
- struct S {
- 	int x;
-@@ -74,7 +75,8 @@ __noinline int quuz(int **p)
- }
- 
- SEC("cgroup_skb/ingress")
--int test_cls(struct __sk_buff *skb)
-+__success
-+int global_func9(struct __sk_buff *skb)
- {
- 	int result = 0;
- 
+ 	wilc_wlan_cfg_deinit(wilc);
+ 	wlan_deinit_locks(wilc);
+ 	wiphy_unregister(wilc->wiphy);
 -- 
 2.43.0
 
