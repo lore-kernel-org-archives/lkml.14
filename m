@@ -1,136 +1,175 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC35924A899;
-	Sun, 24 Mar 2024 23:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAF42716DB;
+	Sun, 24 Mar 2024 23:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322547; cv=none; b=Agsj4QlORW1UWFl/bSqBJXKOcGM49TeKqTsbvn5zg3jzx6j6YE0+fz+vUyi+WziMBkdoGFKts+mNUCbxInhkW4rF2MNs8aRxVgkfmuOGAKiBKEakH2pP7qRKXlOyaKWbcbNpSvtPTObZclvXeyIG7pcjP/8V1AoyPKwbRXeUgms=
+	t=1711323301; cv=none; b=pk1wibud46OMD2PWgmmBx/C7QFQ2ddgmAJdpQbZqSlh7ah63HmGDJ+/eliNKlyRyTzvn9npqwTLc/VuSXzG+/mYxC4dMfBNEoYDplMbLp+HyQ1w751AhxJzpNp2H9/at3E5C6AgegKgE2C3J5nP2ighCjHGtackS4TeegTfwepA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322547; c=relaxed/simple;
-	bh=QD2J7s+PbQMl/4TLX0Q9/+FJg4j9efgCpQRUHwRCQyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ysn1E/vkAvIpQQdhL/buj0v+IHKqkpgM6yHYp1jGB5CPiljkxWOEFqZT8cv6LIXCuc1R8xyUwEq7TxJo9Xgq9Yx882MCZLashOUeInZZHj/4F8SdUmK33jqUKxbkyjE2SbbE6SbQ9qXDIHPRSJbf655mYinhN+SfSHsvwKo6fa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 08B4F68D0F; Mon, 25 Mar 2024 00:22:16 +0100 (CET)
-Date: Mon, 25 Mar 2024 00:22:15 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"jack@suse.com" <jack@suse.com>, Zhu Yanjun <zyjzyj2000@gmail.com>
-Subject: Re: [RFC RESEND 00/16] Split IOMMU DMA mapping operation to two
- steps
-Message-ID: <20240324232215.GC20765@lst.de>
-References: <20240306221400.GA8663@lst.de> <20240307000036.GP9225@ziepe.ca> <20240307150505.GA28978@lst.de> <20240307210116.GQ9225@ziepe.ca> <20240308164920.GA17991@lst.de> <20240308202342.GZ9225@ziepe.ca> <20240309161418.GA27113@lst.de> <20240319153620.GB66976@ziepe.ca> <20240321223910.GA22663@lst.de> <20240322184330.GL66976@ziepe.ca>
+	s=arc-20240116; t=1711323301; c=relaxed/simple;
+	bh=ELzVn+rRe6bS2yKeO1yNV5To5LEEcDbleSatoALaGSo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RFrzAAwUZkFiGMQyL1OxokPjwowrsVp2irJryeEMKUSiPChEbfrkrder+jacxMMhS1IyC1zHgims65Vmp9Uf9PnmyFD7OmZHqPdJADAlFaN4VD0rLJ+J8vcbkJn4Lv680S/JI3iQbWg/pqB3S391j65IBX/7r7XFKpbtokQiIw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkGynwkz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkGynwkz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBFD8C43390;
+	Sun, 24 Mar 2024 23:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711323301;
+	bh=ELzVn+rRe6bS2yKeO1yNV5To5LEEcDbleSatoALaGSo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TkGynwkzZ3DL3PjeKqXAsTDEMIwgXNRPc5rba1NVxbXbu15hEjeETmzTXw8mZfp08
+	 HhMV2w0L1j9g0ALepIXR2/IQn2KFIRvHbG58PV8+BuECOJVKwH0OeNunVf49rzf14G
+	 v8Hr/EMXmYOGP1Pmvr9YyjNvBJpNhYSaHhmnLK4CtJY6fkniV9sYzrAw2e92c34EIR
+	 PcGVPU9zq3DQfosUA6OSo+8HwdnkV7jDCfDmZ+U8oAkYaylB4FgU4UUe7lLsrJzQfH
+	 5NP0yWy4CXreYAF+wmXQRiotPb0U8rb5Su31QbVDezHgz09SpCr27SgXhl0G2RsfoA
+	 ALtS5g7rotzxQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.15 001/317] io_uring/unix: drop usage of io_uring socket
+Date: Sun, 24 Mar 2024 19:29:41 -0400
+Message-ID: <20240324233458.1352854-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
+References: <20240324233458.1352854-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240322184330.GL66976@ziepe.ca>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 22, 2024 at 03:43:30PM -0300, Jason Gunthorpe wrote:
-> If we are going to make caller provided uniformity a requirement, lets
-> imagine a formal memory type idea to help keep this a little
-> abstracted?
-> 
->  DMA_MEMORY_TYPE_NORMAL
->  DMA_MEMORY_TYPE_P2P_NOT_ACS
->  DMA_MEMORY_TYPE_ENCRYPTED
->  DMA_MEMORY_TYPE_BOUNCE_BUFFER  // ??
-> 
-> Then maybe the driver flow looks like:
-> 
-> 	if (transaction.memory_type == DMA_MEMORY_TYPE_NORMAL && dma_api_has_iommu(dev)) {
+From: Jens Axboe <axboe@kernel.dk>
 
-Add a nice helper to make this somewhat readable, but yes.
+Commit a4104821ad651d8a0b374f0b2474c345bbb42f82 upstream.
 
-> 	} else if (transaction.memory_type == DMA_MEMORY_TYPE_P2P_NOT_ACS) {
-> 		num_hwsgls = transcation.num_sgls;
-> 		for_each_range(transaction, range) {
-> 			hwsgl[i].addr = dma_api_p2p_not_acs_map(range.start_physical, range.length, p2p_memory_provider);
-> 			hwsgl[i].len = range.size;
-> 		}
-> 	} else {
-> 		/* Must be DMA_MEMORY_TYPE_NORMAL, DMA_MEMORY_TYPE_ENCRYPTED, DMA_MEMORY_TYPE_BOUNCE_BUFFER? */
-> 		num_hwsgls = transcation.num_sgls;
-> 		for_each_range(transaction, range) {
-> 			hwsgl[i].addr = dma_api_map_cpu_page(range.start_page, range.length);
-> 			hwsgl[i].len = range.size;
-> 		}
->
+Since we no longer allow sending io_uring fds over SCM_RIGHTS, move to
+using io_is_uring_fops() to detect whether this is a io_uring fd or not.
+With that done, kill off io_uring_get_socket() as nobody calls it
+anymore.
 
-And these two are really the same except that we call a different map
-helper underneath.  So I think as far as the driver is concerned
-they should be the same, the DMA API just needs to key off the
-memory tap.
+This is in preparation to yanking out the rest of the core related to
+unix gc with io_uring.
 
-> And the hmm_range_fault case is sort of like:
-> 
-> 		struct dma_api_iommu_state state;
-> 		dma_api_iommu_start(&state, mr.num_pages);
-> 
-> 		[..]
-> 		hmm_range_fault(...)
-> 		if (present)
-> 			dma_link_page(&state, faulting_address_offset, page);
-> 		else
-> 			dma_unlink_page(&state, faulting_address_offset, page);
-> 
-> Is this looking closer?
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/io_uring.h | 10 +++++-----
+ io_uring/io_uring.c      | 18 +++++-------------
+ net/core/scm.c           |  2 +-
+ net/unix/scm.c           |  4 +---
+ 4 files changed, 12 insertions(+), 22 deletions(-)
 
-Yes.
+diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
+index 649a4d7c241bc..55d09f594cd14 100644
+--- a/include/linux/io_uring.h
++++ b/include/linux/io_uring.h
+@@ -6,9 +6,9 @@
+ #include <linux/xarray.h>
+ 
+ #if defined(CONFIG_IO_URING)
+-struct sock *io_uring_get_socket(struct file *file);
+ void __io_uring_cancel(bool cancel_all);
+ void __io_uring_free(struct task_struct *tsk);
++bool io_is_uring_fops(struct file *file);
+ 
+ static inline void io_uring_files_cancel(void)
+ {
+@@ -26,10 +26,6 @@ static inline void io_uring_free(struct task_struct *tsk)
+ 		__io_uring_free(tsk);
+ }
+ #else
+-static inline struct sock *io_uring_get_socket(struct file *file)
+-{
+-	return NULL;
+-}
+ static inline void io_uring_task_cancel(void)
+ {
+ }
+@@ -39,6 +35,10 @@ static inline void io_uring_files_cancel(void)
+ static inline void io_uring_free(struct task_struct *tsk)
+ {
+ }
++static inline bool io_is_uring_fops(struct file *file)
++{
++	return false;
++}
+ #endif
+ 
+ #endif
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index 55fd6d98fe121..541e6a6985ecc 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -1116,19 +1116,6 @@ static struct kmem_cache *req_cachep;
+ 
+ static const struct file_operations io_uring_fops;
+ 
+-struct sock *io_uring_get_socket(struct file *file)
+-{
+-#if defined(CONFIG_UNIX)
+-	if (file->f_op == &io_uring_fops) {
+-		struct io_ring_ctx *ctx = file->private_data;
+-
+-		return ctx->ring_sock->sk;
+-	}
+-#endif
+-	return NULL;
+-}
+-EXPORT_SYMBOL(io_uring_get_socket);
+-
+ static inline void io_tw_lock(struct io_ring_ctx *ctx, bool *locked)
+ {
+ 	if (!*locked) {
+@@ -10445,6 +10432,11 @@ static const struct file_operations io_uring_fops = {
+ #endif
+ };
+ 
++bool io_is_uring_fops(struct file *file)
++{
++	return file->f_op == &io_uring_fops;
++}
++
+ static int io_allocate_scq_urings(struct io_ring_ctx *ctx,
+ 				  struct io_uring_params *p)
+ {
+diff --git a/net/core/scm.c b/net/core/scm.c
+index e762a4b8a1d22..a877c4ef4c256 100644
+--- a/net/core/scm.c
++++ b/net/core/scm.c
+@@ -105,7 +105,7 @@ static int scm_fp_copy(struct cmsghdr *cmsg, struct scm_fp_list **fplp)
+ 		if (fd < 0 || !(file = fget_raw(fd)))
+ 			return -EBADF;
+ 		/* don't allow io_uring files */
+-		if (io_uring_get_socket(file)) {
++		if (io_is_uring_fops(file)) {
+ 			fput(file);
+ 			return -EINVAL;
+ 		}
+diff --git a/net/unix/scm.c b/net/unix/scm.c
+index e8e2a00bb0f58..d1048b4c2baaf 100644
+--- a/net/unix/scm.c
++++ b/net/unix/scm.c
+@@ -34,10 +34,8 @@ struct sock *unix_get_socket(struct file *filp)
+ 		/* PF_UNIX ? */
+ 		if (s && sock->ops && sock->ops->family == PF_UNIX)
+ 			u_sock = s;
+-	} else {
+-		/* Could be an io_uring instance */
+-		u_sock = io_uring_get_socket(filp);
+ 	}
++
+ 	return u_sock;
+ }
+ EXPORT_SYMBOL(unix_get_socket);
+-- 
+2.43.0
 
-> > > So I take it as a requirement that RDMA MUST make single MR's out of a
-> > > hodgepodge of page types. RDMA MRs cannot be split. Multiple MR's are
-> > > not a functional replacement for a single MR.
-> > 
-> > But MRs consolidate multiple dma addresses anyway.
-> 
-> I'm not sure I understand this?
-
-The RDMA MRs take a a list of PFNish address, (or SGLs with the
-enhanced MRs from Mellanox) and give you back a single rkey/lkey.
-
-> To go back to my main thesis - I would like a high performance low
-> level DMA API that is capable enough that it could implement
-> scatterlist dma_map_sg() and thus also implement any future
-> scatterlist_v2, bio, hmm_range_fault or any other thing we come up
-> with on top of it. This is broadly what I thought we agreed to at LSF
-> last year.
-
-I think the biggest underlying problem of the scatterlist based
-DMA implementation for IOMMUs is that it's trying to handle to much,
-that is magic coalescing even if the segments boundaries don't align
-with the IOMMU page size.  If we can get rid of that misfeature I
-think we'd greatly simply the API and implementation.
