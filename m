@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94656146012;
-	Sun, 24 Mar 2024 23:14:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6558414830D;
+	Sun, 24 Mar 2024 23:15:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322070; cv=none; b=Edjh2b9U+GwouW7gUKdWVrNO3y+EHAovLRD/+SftMc1bdd4WXTnyeLJIgE36LyX9rujV1UGJM5zt7EBeGlD75xMPRJDOd7BNtaSEG79lwlQ4HDWuVGv0p6TrEBqLnLhrX6T7XXjWL+/eKEYGBNXLH5KB7v9FPG5wRZEStnJ032g=
+	t=1711322107; cv=none; b=I6Nu9eHdx4pmPz47khoxAMa2AvpaTPlpZ3xNlDVhvOfEaJCpnGwpx5guCGm3Lky7puTxORDB/wtXlx2xZV1lySLiZdfKriS1YqTnd80nCZiSd+G6mTOp/BROdQEAsw5KFcGqhQYxb8NJ7oU+ezBlj7jjg7cEZ74YhwVsZCo4ZSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322070; c=relaxed/simple;
-	bh=ngHgQOKVmVf0SQhFU+gN0jqHkAr9BsZEUrD2Y21ZIjU=;
+	s=arc-20240116; t=1711322107; c=relaxed/simple;
+	bh=IHleBqfgzxhVRg4DT3RAVWHeDYHXt5XC/UbFXbs1LYQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T781g2s1RQsQTG5KYJA7Z+ZYi1s2dUmFiAb+Jm30vVHKU/H3WBv57ecm85LjvbBtSI1HZHfZ62NLc8Z3o5RREngVh/vuLERFWQGP+B+6EL/2JQTn4FVZaGXwx3FOsCxbfjbtfHVoaqfTiv1q7+iy/7if7WkZeTqeSupfcie7iR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CA20uJpV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LSEqOtXgAg6VT91wzMMDcuM8Cr9BRCeaFZlyPJxSMk9eWtmO2G0NW37oIzRJyFrpvlaJ2xMGDdmvQqXVvk+JWfU3rYAQFt57LqkeixFekLlwZRsLsegrSar9EhRiTvF5QAosbz6ykCaupKWoGw/QkybWrtcKooMsNaPZaCWbvpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AlY/GwEs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CA20uJpV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2441C43394;
-	Sun, 24 Mar 2024 23:14:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AlY/GwEs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84B11C433F1;
+	Sun, 24 Mar 2024 23:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322070;
-	bh=ngHgQOKVmVf0SQhFU+gN0jqHkAr9BsZEUrD2Y21ZIjU=;
+	s=k20201202; t=1711322107;
+	bh=IHleBqfgzxhVRg4DT3RAVWHeDYHXt5XC/UbFXbs1LYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CA20uJpVkB5exbLqDKZfpWwfZYKuRzo76fHBNGU/0wGq+tjfj7LIpohBWeLpwN3Nx
-	 tCXID3oI/rGukhaVQukEZeC7KP7E7aVwXZq9Cf0T6uMsrct3Wd3sbBg/lj0I+jIAS4
-	 WPNHWBSqeS/CE8Hre3ewQ6mAhcg4UIsUaJOVKnFt4F2WvMXXhpJ9eg04Bg3mAjVo7t
-	 xdv45EsDHNjlHN/XKUm9W7/canhW3zOejsrTDzZRkTaVcvSuqi3RkAc33NDirfMYNN
-	 cBJl6+M+c/tlIug1snCQK4/A38Jyg7JFvN3hY6s8rEgP01M2XEV0dlYxsRsrfNAicr
-	 IYwGaWkMWR5Kg==
+	b=AlY/GwEsScQeJXgc3fIymg7QKuwy/tl6XMsy6xU/XF6aFe/D+OEMW/ZCmk/X4eIsu
+	 31J0KqiNtsRsyw37bSSr01SEu4Yf6rvVtVQSMRbaCiXcuFkA2GCp6U5BZmDGLldOZf
+	 nJbVaqP3tocngaXM6tL9zWFonpHmCYCQ0bY0Hz1foNQr1I6TczkzmwpQyHwbSqDeWB
+	 6kajA0FYOPu0uDnJJ0AfDv6cxsjk3MoJ8Deapg53QRh8pbf+qjsIlovHWMZ8K3LmT2
+	 QVQaKpdJwaq1slj4twUN5r17wtLhYvYyZCjRWzCM5oP/YOqgvMPMeSjZVDCFTjzRln
+	 f5/1Kq78yC6hQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Sam Shih <sam.shih@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+Cc: Maxim Kudinov <m.kudinovv@gmail.com>,
+	Maxim Trofimov <maxvereschagin@gmail.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 143/451] arm64: dts: mediatek: mt7986: add "#reset-cells" to infracfg
-Date: Sun, 24 Mar 2024 19:06:59 -0400
-Message-ID: <20240324231207.1351418-144-sashal@kernel.org>
+Subject: [PATCH 6.1 182/451] ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override
+Date: Sun, 24 Mar 2024 19:07:38 -0400
+Message-ID: <20240324231207.1351418-183-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -46,47 +45,51 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Maxim Kudinov <m.kudinovv@gmail.com>
 
-[ Upstream commit d993daff5962b2dd08f32a83bb1c0e5fa75732ea ]
+[ Upstream commit 021a67d096154893cd1d883c7be0097e2ee327fd ]
 
-MT7986's Infrastructure System Configuration Controller includes reset
-controller. It can reset blocks as specified in the
-include/dt-bindings/reset/mt7986-resets.h . Add #reset-cells so it can
-be referenced properly.
+A known issue on some Zen laptops, keyboard stopped working due to commit
+9946e39fe8d0 fael@kernel.org("ACPI: resource: skip IRQ override on AMD
+Zen platforms") on kernel 5.19.10.
 
-This fixes:
-arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dtb: infracfg@10001000: '#reset-cells' is a required property
-        from schema $id: http://devicetree.org/schemas/arm/mediatek/mediatek,infracfg.yaml#
+The ACPI IRQ override is required for this board due to buggy DSDT, thus
+adding the board vendor and name to irq1_edge_low_force_override fixes
+the issue.
 
-Fixes: 1f9986b258c2 ("arm64: dts: mediatek: add clock support for mt7986a")
-Cc: Sam Shih <sam.shih@mediatek.com>
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Link: https://lore.kernel.org/r/20240101182040.28538-2-zajec5@gmail.com
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Fixes: 9946e39fe8d0 ("ACPI: resource: skip IRQ override on AMD Zen platforms")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217394
+Link: https://lore.kernel.org/linux-acpi/20231006123304.32686-1-hdegoede@redhat.com/
+Tested-by: Maxim Trofimov <maxvereschagin@gmail.com>
+Signed-off-by: Maxim Kudinov <m.kudinovv@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7986a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/acpi/resource.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-index fc338bd497f51..108931e796465 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
-@@ -110,6 +110,7 @@ infracfg: infracfg@10001000 {
- 			compatible = "mediatek,mt7986-infracfg", "syscon";
- 			reg = <0 0x10001000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index 8420d97287f86..1c5c1a269fbee 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -569,6 +569,13 @@ static const struct dmi_system_id lg_laptop[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "LL6FA"),
+ 		},
+ 	},
++	{
++		/* MAIBENBEN X577 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MAIBENBEN"),
++			DMI_MATCH(DMI_BOARD_NAME, "X577"),
++		},
++	},
+ 	{ }
+ };
  
- 		wed_pcie: wed-pcie@10003000 {
 -- 
 2.43.0
 
