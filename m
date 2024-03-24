@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08472282A7E;
-	Sun, 24 Mar 2024 23:42:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BE21311B1;
+	Sun, 24 Mar 2024 23:41:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323741; cv=none; b=A9OxDF9sDTFvFUkY7Fpl32xkI0h9DNI771Jf115WHz8RMIll/tkHLlq0HiaYIBGsIwy0Jgj8Cj4thlrZ9lxUNrYMorAV2UsGnY7y2ymOZRT+G2vOqPRLHtQga/9bFrflGHSSJ7+gFnCF6BTwbRDYGceaLlSkv9/oIN005ZdN1vA=
+	t=1711323705; cv=none; b=qb63XLbyeN6RQ2x9PiQIJpHJSUFOqzd+lerjSJ/BParhZFkm5+cXOYhXYyGIh8S/shuq7hilv5EoyJqV9YpHXF4Tz4TZX+clk+xm3XPaAoxuZeR7VKIUhwGrxpHsbD0l7rOlt2S0DYNUIlcXZruSbrt3vqDn2luRLrZ74LJCMz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323741; c=relaxed/simple;
-	bh=I5IZLXRovJJX137SJGnoEbJCPVfKKUehgGid1mWVd0k=;
+	s=arc-20240116; t=1711323705; c=relaxed/simple;
+	bh=8lg0zeAncBldALqSh3pqQu0z65I0wQjs983ZY90vK1Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PR0ERkfl6R3mdNc9wJwIGKDu/9DUbpWWyY9dXf7jplY83/fBNb8/kK5C8pngU9goRXOFnQ0aPU8+Mt5P+X01NflR+UO9iTlXg5u+mEAvA9kAZejE6X+QvvW9mYcDWR/bh3y7F2JYrVg/0Ze7svBDa57ZIK2ePYMxE8EAJPYHKgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpjWn1He; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ngR/8860hoRsLZuALjxJKdp/6pJaaE+ymxouA2+mt/4qEZ++fZSq9HQTCgQTxTUyI6YaV3StnBS7JOQ8eu2W0LB1JDWcfHTdOr09VsWdzrw7m/QouNmHm8uLqYPvhRBcafXQUInKLY5ynpNgRHlxqdODfQn0QJiDP/HXGvUMo2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HodcedeH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpjWn1He"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4021DC433F1;
-	Sun, 24 Mar 2024 23:42:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HodcedeH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F3F8C43394;
+	Sun, 24 Mar 2024 23:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323739;
-	bh=I5IZLXRovJJX137SJGnoEbJCPVfKKUehgGid1mWVd0k=;
+	s=k20201202; t=1711323705;
+	bh=8lg0zeAncBldALqSh3pqQu0z65I0wQjs983ZY90vK1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fpjWn1HeBpRT2Xa3SrDwriHklg+50ND2hjK3SCvw7tNPjaDszT87zMm4oA0DIWDhQ
-	 9/d2tucCOdMVfjTnpIwZk7g9YTExrG1kJX8l+wyTyS2B23McfViRYzBIVwsljOIYnP
-	 KZImFvD3ZIea4IqOX95rpmzH5CgEEFpHCrNvzyMxGUPgwgaKx3HHL58Gu75H48bFdt
-	 G7T7096P2VOViH31A9Ghr6ZdQdKJ0jTUxkiJqMfNvHWPUcn9QY0gPOb0siR36OnsKt
-	 Tm1m47Xr+zXmliFLBU6uahHu84YZJbKN7BWoZ25AQNsgd7AB7Lg1zRE7vUXdbv6T3c
-	 hLiezGhbxWL6A==
+	b=HodcedeHwNQyH/wa2c9kNUuMl6hE6XIRDbDnuS5FJBTuMT68egRFmyoh+a/UjX5IR
+	 iqU4B1E8J3F5a3oJQpvCIpkD3gcf3D7VdTgjVKP2y7kXn6hXMkHCnwgTxp4vqLVXFC
+	 1r1NerGfHgB7QDqQhJ28UKzUPytoOBH2fTcLztydganR/wetxnrucg1p4ul/9XzBYN
+	 n9QNdlEKQZCbCspYLJVq1WfDbKE0FCaVHOB9hyUDDddfOLjVNhvx8AHsmyl1IFJymJ
+	 s+fYZ3VTwcMzsn2FH7XyxTtKaEQ/ruJMvLZqziEKwqtts0d7GS9Irk9ymnjMvO2PIx
+	 TKBTApW6h9V+Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Cai Huoqing <caihuoqing@baidu.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Kees Cook <keescook@chromium.org>,
+	Guixiong Wei <guixiongwei@gmail.com>,
+	Juergen Gross <jgross@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 114/238] drm/tegra: dsi: Make use of the helper function dev_err_probe()
-Date: Sun, 24 Mar 2024 19:38:22 -0400
-Message-ID: <20240324234027.1354210-115-sashal@kernel.org>
+Subject: [PATCH 5.10 078/238] x86, relocs: Ignore relocations in .notes section
+Date: Sun, 24 Mar 2024 19:37:46 -0400
+Message-ID: <20240324234027.1354210-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,69 +49,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Cai Huoqing <caihuoqing@baidu.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit fc75e4fcbd1e4252a0481ebb23cd4516c127a8e2 ]
+[ Upstream commit aaa8736370db1a78f0e8434344a484f9fd20be3b ]
 
-When possible use dev_err_probe help to properly deal with the
-PROBE_DEFER error, the benefit is that DEFER issue will be logged
-in the devices_deferred debugfs file.
-And using dev_err_probe() can reduce code size, the error value
-gets printed.
+When building with CONFIG_XEN_PV=y, .text symbols are emitted into
+the .notes section so that Xen can find the "startup_xen" entry point.
+This information is used prior to booting the kernel, so relocations
+are not useful. In fact, performing relocations against the .notes
+section means that the KASLR base is exposed since /sys/kernel/notes
+is world-readable.
 
-Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Stable-dep-of: 830c1ded3563 ("drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()")
+To avoid leaking the KASLR base without breaking unprivileged tools that
+are expecting to read /sys/kernel/notes, skip performing relocations in
+the .notes section. The values readable in .notes are then identical to
+those found in System.map.
+
+Reported-by: Guixiong Wei <guixiongwei@gmail.com>
+Closes: https://lore.kernel.org/all/20240218073501.54555-1-guixiongwei@gmail.com/
+Fixes: 5ead97c84fa7 ("xen: Core Xen implementation")
+Fixes: da1a679cde9b ("Add /sys/kernel/notes")
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dsi.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ arch/x86/tools/relocs.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 0adce882f157b..6cbba2adb6e5a 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1591,28 +1591,24 @@ static int tegra_dsi_probe(struct platform_device *pdev)
- 	}
- 
- 	dsi->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(dsi->clk)) {
--		dev_err(&pdev->dev, "cannot get DSI clock\n");
--		return PTR_ERR(dsi->clk);
--	}
-+	if (IS_ERR(dsi->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
-+				     "cannot get DSI clock\n");
- 
- 	dsi->clk_lp = devm_clk_get(&pdev->dev, "lp");
--	if (IS_ERR(dsi->clk_lp)) {
--		dev_err(&pdev->dev, "cannot get low-power clock\n");
--		return PTR_ERR(dsi->clk_lp);
--	}
-+	if (IS_ERR(dsi->clk_lp))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
-+				     "cannot get low-power clock\n");
- 
- 	dsi->clk_parent = devm_clk_get(&pdev->dev, "parent");
--	if (IS_ERR(dsi->clk_parent)) {
--		dev_err(&pdev->dev, "cannot get parent clock\n");
--		return PTR_ERR(dsi->clk_parent);
--	}
-+	if (IS_ERR(dsi->clk_parent))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
-+				     "cannot get parent clock\n");
- 
- 	dsi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
--	if (IS_ERR(dsi->vdd)) {
--		dev_err(&pdev->dev, "cannot get VDD supply\n");
--		return PTR_ERR(dsi->vdd);
--	}
-+	if (IS_ERR(dsi->vdd))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
-+				     "cannot get VDD supply\n");
- 
- 	err = tegra_dsi_setup_clocks(dsi);
- 	if (err < 0) {
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index 1c3a1962cade6..0043fd374a62f 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -596,6 +596,14 @@ static void print_absolute_relocs(void)
+ 		if (!(sec_applies->shdr.sh_flags & SHF_ALLOC)) {
+ 			continue;
+ 		}
++		/*
++		 * Do not perform relocations in .notes section; any
++		 * values there are meant for pre-boot consumption (e.g.
++		 * startup_xen).
++		 */
++		if (sec_applies->shdr.sh_type == SHT_NOTE) {
++			continue;
++		}
+ 		sh_symtab  = sec_symtab->symtab;
+ 		sym_strtab = sec_symtab->link->strtab;
+ 		for (j = 0; j < sec->shdr.sh_size/sizeof(Elf_Rel); j++) {
 -- 
 2.43.0
 
