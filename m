@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A108215EFDD;
-	Sun, 24 Mar 2024 23:18:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF833238F1C;
+	Sun, 24 Mar 2024 23:18:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322324; cv=none; b=FbWUPr5kX9GOZ7unFBI25W3f1thuIhvchmr4pJs3ugIYJtKeaFn9gNf5s3sclb/P3f8KikthO0QYqNKsG7dbLc4y9bcXLhAg+IXfYnHKhmef5TsV//6inAjPkECPKMKUyiRA84fcR8NYYXBzD8Q6+6iI0fnpcOj5AgSjcWgaNmg=
+	t=1711322330; cv=none; b=NnIJx5u7S8ofqDt3YZ28Zzj++WLpR5USdBGN7z+o7ptMpAUg9iH9yFvcwpMCWhy/tuOSqIn59h2WvFvQ87uVnUeCEDXtU/RTy9FrCeY1cgt85mmq7jqmOeIHuJDQffJDYY5meXDsm15P+YUpEOU0UaYeI1HgrVxrux7vBgr04kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322324; c=relaxed/simple;
-	bh=OwtCJvgFm1joD9dGpHgZjvWy/3NSqXfs5fo7EoGkYmw=;
+	s=arc-20240116; t=1711322330; c=relaxed/simple;
+	bh=ZFgXoB+8n6Zrm64r3QBen7eSSIdqIg53Ge4PVdKtACA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mFtLrGHvGhwI2z5X5EPt+83gq1W9iVDJb/dG1k0vsMdG2K+/NOTbHAI1SdUrG5x+/Ee72HMQikdjpPk5A81nuWjt4pFWAPMEkrmU7mOGI4Po9s1N3LnAnwe7tFRjhUx1nRYt3nnnvbvYMP8wz2rIJmUHEMehKz3CJSJqvBZuzo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVd5plhy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RBjSFSlG1BTHRhffnut/ShjalukJgKhM1jJSFMKM8TEUeDQukeEEFTECuyKfMoF4k/21aDVQDydqY1sJw+9SgLL4siVAtW2m++2lXW9WC5qHepl34szFianVWp/sfkxBvT0rlg63KzrYGvbkWFS7aPsg7zneh3H94EUypasRTLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMzuknSK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVd5plhy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E412FC433F1;
-	Sun, 24 Mar 2024 23:18:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMzuknSK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD40C433A6;
+	Sun, 24 Mar 2024 23:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322324;
-	bh=OwtCJvgFm1joD9dGpHgZjvWy/3NSqXfs5fo7EoGkYmw=;
+	s=k20201202; t=1711322330;
+	bh=ZFgXoB+8n6Zrm64r3QBen7eSSIdqIg53Ge4PVdKtACA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dVd5plhyWkF1TPH7GeQnlbvCqU3W8JnmTpXDSjVrvwnftjsPOoDZqRcPQZh+QYviA
-	 /KO10gpI3E2p011A95oCpSG68BiMzlerIF+O4SR2SMHosSeO4WBmn+9Et1Zu2AW+ZC
-	 fl0u4Ymxf/VQ/JCQGBLygWxDrcZuFEBgXHAeovswO+BG6X+WV/ETo2HfTY/ia/04NC
-	 uBHQ7lJ2BZC7vHRcMTk0BO8nNnYDcnEEF1tJaVzFl662DJdtZ9wcTaUHuyfMJD2J4r
-	 WFVsltnHiyVGQxf/OFMz5H/ED8vDn6XbkzbFhhzkcjN/K1gkVaWJX8VoFOvXwQ4f/c
-	 mTo18qKziaHEw==
+	b=JMzuknSKL+j+E6IpgSkaI8DOeNL/++6eu1Hpng/NDWKbENKALeBxCHDqlDF9RIlu8
+	 dZmdRX12O5kkAxW5R7ooAYYHNav0LOdl+5KedkV2jx7i3cqaPFM10umkOeJLC+Orjb
+	 STuqUIdjWewR2xe6kndM+sKoUf8Ff6B14A0pOx69+7v7W/e1eCV0zFKVFm9zwAkgIh
+	 vUlaNlhwnqgHu8YT4AMfk6y4LjX2y+7JAtpORNrQpxM75j7As6AJKvAYkRyt+maxUo
+	 /C+QQWqins5j+EtXryksxZ6wPxJUuRyntu6UXUsAalYQI4/Luim77oiY7e+4YfkLp2
+	 aSQ7BYF84go/w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Dmitry Antipov <dmantipov@yandex.ru>,
+Cc: Daniel Golle <daniel@makrotopia.org>,
+	Mason-cw Chang <Mason-cw.Chang@mediatek.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 407/451] soc: fsl: dpio: fix kcalloc() argument order
-Date: Sun, 24 Mar 2024 19:11:23 -0400
-Message-ID: <20240324231207.1351418-408-sashal@kernel.org>
+Subject: [PATCH 6.1 413/451] net: mediatek: mtk_eth_soc: clear MAC_MCR_FORCE_LINK only when MAC is up
+Date: Sun, 24 Mar 2024 19:11:29 -0400
+Message-ID: <20240324231207.1351418-414-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,44 +49,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Daniel Golle <daniel@makrotopia.org>
 
-[ Upstream commit 72ebb41b88f9d7c10c5e159e0507074af0a22fe2 ]
+[ Upstream commit f1b85ef15a99f06ed48871ce933d591127d2dcc0 ]
 
-A previous bugfix added a call to kcalloc(), which starting in gcc-14
-causes a harmless warning about the argument order:
+Clearing bit MAC_MCR_FORCE_LINK which forces the link down too early
+can result in MAC ending up in a broken/blocked state.
 
-drivers/soc/fsl/dpio/dpio-service.c: In function 'dpaa2_io_service_enqueue_multiple_desc_fq':
-drivers/soc/fsl/dpio/dpio-service.c:526:29: error: 'kcalloc' sizes specified with 'sizeof' in the earlier argument and not in the later argument [-Werror=calloc-transposed-args]
-  526 |         ed = kcalloc(sizeof(struct qbman_eq_desc), 32, GFP_KERNEL);
-      |                             ^~~~~~
-drivers/soc/fsl/dpio/dpio-service.c:526:29: note: earlier argument should specify number of elements, later size of each element
+Fix this by handling this bit in the .mac_link_up and .mac_link_down
+calls instead of in .mac_finish.
 
-Since the two are only multiplied, the order does not change the
-behavior, so just fix it now to shut up the compiler warning.
-
-Dmity independently came up with the same fix.
-
-Fixes: 5c4a5999b245 ("soc: fsl: dpio: avoid stack usage warning")
-Reported-by: Dmitry Antipov <dmantipov@yandex.ru>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: b8fc9f30821e ("net: ethernet: mediatek: Add basic PHYLINK support")
+Suggested-by: Mason-cw Chang <Mason-cw.Chang@mediatek.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/fsl/dpio/dpio-service.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/soc/fsl/dpio/dpio-service.c b/drivers/soc/fsl/dpio/dpio-service.c
-index 1d2b27e3ea63f..b811446e0fa55 100644
---- a/drivers/soc/fsl/dpio/dpio-service.c
-+++ b/drivers/soc/fsl/dpio/dpio-service.c
-@@ -523,7 +523,7 @@ int dpaa2_io_service_enqueue_multiple_desc_fq(struct dpaa2_io *d,
- 	struct qbman_eq_desc *ed;
- 	int i, ret;
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 17e6ac4445afc..fecf3dd22dfaa 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -561,8 +561,7 @@ static int mtk_mac_finish(struct phylink_config *config, unsigned int mode,
+ 	mcr_cur = mtk_r32(mac->hw, MTK_MAC_MCR(mac->id));
+ 	mcr_new = mcr_cur;
+ 	mcr_new |= MAC_MCR_IPG_CFG | MAC_MCR_FORCE_MODE |
+-		   MAC_MCR_BACKOFF_EN | MAC_MCR_BACKPR_EN | MAC_MCR_FORCE_LINK |
+-		   MAC_MCR_RX_FIFO_CLR_DIS;
++		   MAC_MCR_BACKOFF_EN | MAC_MCR_BACKPR_EN | MAC_MCR_RX_FIFO_CLR_DIS;
  
--	ed = kcalloc(sizeof(struct qbman_eq_desc), 32, GFP_KERNEL);
-+	ed = kcalloc(32, sizeof(struct qbman_eq_desc), GFP_KERNEL);
- 	if (!ed)
- 		return -ENOMEM;
+ 	/* Only update control register when needed! */
+ 	if (mcr_new != mcr_cur)
+@@ -610,7 +609,7 @@ static void mtk_mac_link_down(struct phylink_config *config, unsigned int mode,
+ 					   phylink_config);
+ 	u32 mcr = mtk_r32(mac->hw, MTK_MAC_MCR(mac->id));
+ 
+-	mcr &= ~(MAC_MCR_TX_EN | MAC_MCR_RX_EN);
++	mcr &= ~(MAC_MCR_TX_EN | MAC_MCR_RX_EN | MAC_MCR_FORCE_LINK);
+ 	mtk_w32(mac->hw, mcr, MTK_MAC_MCR(mac->id));
+ }
+ 
+@@ -649,7 +648,7 @@ static void mtk_mac_link_up(struct phylink_config *config,
+ 	if (rx_pause)
+ 		mcr |= MAC_MCR_FORCE_RX_FC;
+ 
+-	mcr |= MAC_MCR_TX_EN | MAC_MCR_RX_EN;
++	mcr |= MAC_MCR_TX_EN | MAC_MCR_RX_EN | MAC_MCR_FORCE_LINK;
+ 	mtk_w32(mac->hw, mcr, MTK_MAC_MCR(mac->id));
+ }
  
 -- 
 2.43.0
