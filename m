@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FA71428E3;
-	Sun, 24 Mar 2024 23:47:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391A018131D;
+	Sun, 24 Mar 2024 23:47:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324074; cv=none; b=A1CdolaeXMdSALaAA2FkZmesPMNH+kAEf3oqTCbm50SSixNk0Gt4EOm6fD+mNt5tEaW96o1uQ6dbapswU1oYGtWKk7gvFyaUCBi5VSzREzMd//x1xrWrG0uxZtp/MkPlkF2SQM5knZVSpNzpTntPaVQr7ijTT7F0whFDoUoQs0E=
+	t=1711324079; cv=none; b=W3ROHds3qi9kch64IK4A+kASq27pYfiFh/AsmQKmWACpyrqylsKd0Uv8Hw0gs6kYfwpLkD8gl5mUrmiHlMxCZQRoiYIJNY1Rym8B5j3bIBiMw3Het7c4SVcwDjvfGCR45KyOcJaCqwj0pvkquFQtSSgh7rnQ2G0QKyG1gIjF9ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324074; c=relaxed/simple;
-	bh=haepUSdHZ5S5zXDOWWKLJiizzLp2HB7y+ELmu0P1SgE=;
+	s=arc-20240116; t=1711324079; c=relaxed/simple;
+	bh=ailGeBSfJgMzEpZuwHurgRKPqnFr2eQF5sRu0J0sxfo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ke+vLq3tnBSPrVCIGuF+e4IIpvNWT9NZ/o5MO2/14usjZZCIVclsX3FVAhvazJcyoLndpqF8MAzfN7blco55FqX+1euuoWhw6XpfRrJCJtETe2wo3+Mj0pAgiZnzk0+SIpSmCg0fPr0FzISNNR2zs9SVQZ9l3MGtKMT4RMAPMMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sve8yJ3Z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=K2oC5YQn43vTz18o98PfoLqHgDtn8WUOOGzsv+QtTSLNHqveVuzK0Rls9S6JI5Jgo0NwraQbQ/anZBrr5eN3KGpFAfw2KCaRDeCzPDtvRM4QYq2mV0qQoAC3QxWV67DfCMdlaEk4/wxe9+8WKBorkxP266WQjmDPS0YiXgmfwxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHW+FS6w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sve8yJ3Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A44BC43390;
-	Sun, 24 Mar 2024 23:47:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHW+FS6w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BD6C433C7;
+	Sun, 24 Mar 2024 23:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324073;
-	bh=haepUSdHZ5S5zXDOWWKLJiizzLp2HB7y+ELmu0P1SgE=;
+	s=k20201202; t=1711324078;
+	bh=ailGeBSfJgMzEpZuwHurgRKPqnFr2eQF5sRu0J0sxfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sve8yJ3Z79Mn3McbtbM0qkHxNtVkg3jx4W/q7CaRRFRyCflVpSNIN1/U/Jbve8tCd
-	 flF8FDZeh6iQvrFhEpAJADCzH1iSOCUrzlIQHKiqaenEjzC7gdeR1VqLhg+aQ6+F+3
-	 dA6nUzoNaExITEsziCTlm1Iq81oWd0IT0116ByFngJeuq8rbKlNnzXDI/xOeuLos1D
-	 ZyvPVaUGI62RzvDke6mkoLhzUwHRypIXQUsUc/8M3o9sbHvQmTd7E6x4eXXvHG86pm
-	 ZzfBXbD3F9DM0/dHtPGwnLHsrpyyguT0W8ZQ8dqiwyk/sEHieK6SAlq2PImvxWyg+D
-	 px7KYF15KNPrg==
+	b=DHW+FS6wEW1n7BGGcMXlFcsce8jk9rFzn/j+0u09Ov09mUbnkcuIzjtTD8Imxes3q
+	 WsmU8v2ESkMCk6GYU0ratLOGOjnX2vnfEY23XxcEIJp2rZ74GqHLBkn+5og0oL9R9D
+	 V8crDozKdJTxghI/rdCzfwxszeXTsGLZu6tfFjeI79c9HIinjOMqxnKnhlzFUhVrpF
+	 I2TTmhEpCOSEUbdvnsdaPY+7q5Dx1wb1QZO69ySxTCyP0P7ZqjwT8LXHOm8t+fn4rY
+	 fgDK4pQHhbxFWSySbgWQFr+QSDopiCCiTeA0sZM94OZAoHPVs+b++BAXh+jUFy3g6S
+	 MsWJ0i6iKct6w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	Bui Quang Minh <minhquangbui99@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+	Tom Parkin <tparkin@katalix.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 073/183] bpf: Fix stackmap overflow check on 32-bit arches
-Date: Sun, 24 Mar 2024 19:44:46 -0400
-Message-ID: <20240324234638.1355609-74-sashal@kernel.org>
+Subject: [PATCH 5.4 078/183] l2tp: fix incorrect parameter validation in the pppol2tp_getsockopt() function
+Date: Sun, 24 Mar 2024 19:44:51 -0400
+Message-ID: <20240324234638.1355609-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -45,61 +45,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit 7a4b21250bf79eef26543d35bd390448646c536b ]
+[ Upstream commit 955e9876ba4ee26eeaab1b13517f5b2c88e73d55 ]
 
-The stackmap code relies on roundup_pow_of_two() to compute the number
-of hash buckets, and contains an overflow check by checking if the
-resulting value is 0. However, on 32-bit arches, the roundup code itself
-can overflow by doing a 32-bit left-shift of an unsigned long value,
-which is undefined behaviour, so it is not guaranteed to truncate
-neatly. This was triggered by syzbot on the DEVMAP_HASH type, which
-contains the same check, copied from the hashtab code.
+The 'len' variable can't be negative when assigned the result of
+'min_t' because all 'min_t' parameters are cast to unsigned int,
+and then the minimum one is chosen.
 
-The commit in the fixes tag actually attempted to fix this, but the fix
-did not account for the UB, so the fix only works on CPUs where an
-overflow does result in a neat truncation to zero, which is not
-guaranteed. Checking the value before rounding does not have this
-problem.
+To fix the logic, check 'len' as read from 'optlen',
+where the types of relevant variables are (signed) int.
 
-Fixes: 6183f4d3a0a2 ("bpf: Check for integer overflow when using roundup_pow_of_two()")
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Reviewed-by: Bui Quang Minh <minhquangbui99@gmail.com>
-Message-ID: <20240307120340.99577-4-toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
+Reviewed-by: Tom Parkin <tparkin@katalix.com>
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/stackmap.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/l2tp/l2tp_ppp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index 811071c227f11..bd8516d967453 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -111,11 +111,14 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
- 	} else if (value_size / 8 > sysctl_perf_event_max_stack)
- 		return ERR_PTR(-EINVAL);
+diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
+index c54cb59593ef8..7d3c782e5ab1e 100644
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -1375,11 +1375,11 @@ static int pppol2tp_getsockopt(struct socket *sock, int level, int optname,
+ 	if (get_user(len, optlen))
+ 		return -EFAULT;
  
--	/* hash table size must be power of 2 */
--	n_buckets = roundup_pow_of_two(attr->max_entries);
--	if (!n_buckets)
-+	/* hash table size must be power of 2; roundup_pow_of_two() can overflow
-+	 * into UB on 32-bit arches, so check that first
-+	 */
-+	if (attr->max_entries > 1UL << 31)
- 		return ERR_PTR(-E2BIG);
+-	len = min_t(unsigned int, len, sizeof(int));
+-
+ 	if (len < 0)
+ 		return -EINVAL;
  
-+	n_buckets = roundup_pow_of_two(attr->max_entries);
++	len = min_t(unsigned int, len, sizeof(int));
 +
- 	cost = n_buckets * sizeof(struct stack_map_bucket *) + sizeof(*smap);
- 	err = bpf_map_charge_init(&mem, cost + attr->max_entries *
- 			   (sizeof(struct stack_map_bucket) + (u64)value_size));
+ 	err = -ENOTCONN;
+ 	if (sk->sk_user_data == NULL)
+ 		goto end;
 -- 
 2.43.0
 
