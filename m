@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269A0143861;
-	Sun, 24 Mar 2024 22:50:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE628143874;
+	Sun, 24 Mar 2024 22:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320619; cv=none; b=KPLETmsr6UzbgDMt8tnljm3r72TVNBlNba/T6mtsYtPAvNH866s5Lwcp+4MLRpYttgoSxY2mKCovt9w7sQYrHKJpZhl8INLk7hZSAtNeXgwPh1l/XPDVuJDLz9x4/sggCNawP3wfuS0Yhq+KaH5TJuZOreFbBDoyVuw09IeBqlI=
+	t=1711320623; cv=none; b=WBwQk5HaDHfM4q1AnZYYinFQy1XPZs08CQHgngtaopz90jM+Ksp96AL6CxMR1CoWkEsbJOn4N7WfJrOEg/fwJzVdI8QyN6LSWw/BIJkBLEETm3t/LTPGAGxcbs/x4/5ZTdulOTDzoHl66RroXgzYI/C9sL/Vws0qMn8y/8sIEiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320619; c=relaxed/simple;
-	bh=aMDo02VAK1zjVAZyROahyTo3LEtSa9UVeeqPFxBRTII=;
+	s=arc-20240116; t=1711320623; c=relaxed/simple;
+	bh=v7G71XpAS4tiF9hc66eXK5SwNfvpgF8Od1uEjij+cHg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r+bpIxcxUTO45b1vb6mpRfSVUySXNCpR8m2yawAlaFsRoGY3RmEhh9e9kkT5nFULrOGqTBqmFa1yf04s8lR0uv317xXweAdxupmQepQIOO+55o1E/xM/3YrsByrfOnBCfqILsOYv8lNSq8Gb2DXlGP19HVQJCXXd0Zn/iDppTr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JuSPH9wG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VY1P4GS56byhIu0OV5mArLnMIHGai2QJJa5B4+dQBFpoB+g9DpwpjzaW2nEfCge6RlhP16JmEl7M/e5ZGXYxyx9Q8npI6BoSV7isgG17wpX6crLT6XAl0gWGHTxQYp9jyZoWN3B+6BeDJ1iMP3cZBQAKtuF87fzO1o4899RjVY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RcXTrY3k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JuSPH9wG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60607C433F1;
-	Sun, 24 Mar 2024 22:50:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RcXTrY3k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1058EC433F1;
+	Sun, 24 Mar 2024 22:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320619;
-	bh=aMDo02VAK1zjVAZyROahyTo3LEtSa9UVeeqPFxBRTII=;
+	s=k20201202; t=1711320621;
+	bh=v7G71XpAS4tiF9hc66eXK5SwNfvpgF8Od1uEjij+cHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JuSPH9wGq1ioo/kItxiECVSiXBWf/dO0nzLCHTRSAjB6F0u6QcE8An7erD8GXv1QO
-	 ofOTd8o68MpKg2xEVmlc7tVFsXC2vep0rKFuAPNpiQpl0nGjlbaZTzClKg0AxP1J3h
-	 +i9FosGdpR88tD2JQeE01FcF/j41skylrLIGKqBOlG4FFieH2gyoH+l0gTGV7Yb+Re
-	 PulLGWxK2KhoxJyFsuD2EVevUsl2JPTW9VTKvUkujME4kx/dNqvEwXVQ0SPe+fyoXd
-	 msPIEwW2eR5aGT0YG9+GC9MWwydzoZL8SGZQsbsZtFaPzOLg0CM8XLaC/2P0FOTXvJ
-	 Ohc5psiXINCrQ==
+	b=RcXTrY3kfVFlpbB7mQ1y+tXPIlX3N0ZpqL4cmp+jDwdxO9/WMc9Jp/fG/gVcYPWi5
+	 oKZOI/EW6v67Z2sBorCyYPO3qwngPNpS83S3Gn4fyNArQ37uiL6ydZKAW5GEkea1xJ
+	 F1oUGwRMA5rRF+d+0Wum0YRYn4GfshcWFBHXlJRlC0DVtDErnCKQxodnUpmZKQXoFR
+	 enNXLKVivCX6aeLRkxKyhFCmtgKssUxqV72+qBwv/Wi5e17qSDFFRiGRuSDbVm6gPZ
+	 sQ64se6xMrAOh36iR2DMfDyS5PRd7pzYCsEidABPvwGA7NU5/WXegcRf1U5QKb7Mr4
+	 38uK9YvQ8YLJw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Eduard Zingerman <eddyz87@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 180/713] arm64: dts: imx8mm-kontron: Fix interrupt for RTC on OSM-S i.MX8MM module
-Date: Sun, 24 Mar 2024 18:38:26 -0400
-Message-ID: <20240324224720.1345309-181-sashal@kernel.org>
+Subject: [PATCH 6.7 183/713] libbpf: Add missing LIBBPF_API annotation to libbpf_set_memlock_rlim API
+Date: Sun, 24 Mar 2024 18:38:29 -0400
+Message-ID: <20240324224720.1345309-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,33 +49,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Andrii Nakryiko <andrii@kernel.org>
 
-[ Upstream commit 8d0f39b7d04d864e89b84063b124fd10aa4b8809 ]
+[ Upstream commit 93ee1eb85e28d1e35bb059c1f5965d65d5fc83c2 ]
 
-The level of the interrupt signal is active low instead. Fix this.
+LIBBPF_API annotation seems missing on libbpf_set_memlock_rlim API, so
+add it to make this API callable from libbpf's shared library version.
 
-Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: e542f2c4cd16 ("libbpf: Auto-bump RLIMIT_MEMLOCK if kernel needs it for BPF")
+Fixes: ab9a5a05dc48 ("libbpf: fix up few libbpf.map problems")
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Eduard Zingerman <eddyz87@gmail.com>
+Link: https://lore.kernel.org/bpf/20240201172027.604869-3-andrii@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi | 2 +-
+ tools/lib/bpf/bpf.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
-index 3e7db968f7e64..60abcb636cedf 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
-@@ -210,7 +210,7 @@ rv3028: rtc@52 {
- 		reg = <0x52>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_rtc>;
--		interrupts-extended = <&gpio4 1 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts-extended = <&gpio4 1 IRQ_TYPE_LEVEL_LOW>;
- 		trickle-diode-disable;
- 	};
- };
+diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
+index d0f53772bdc02..dad7917903d19 100644
+--- a/tools/lib/bpf/bpf.h
++++ b/tools/lib/bpf/bpf.h
+@@ -35,7 +35,7 @@
+ extern "C" {
+ #endif
+ 
+-int libbpf_set_memlock_rlim(size_t memlock_bytes);
++LIBBPF_API int libbpf_set_memlock_rlim(size_t memlock_bytes);
+ 
+ struct bpf_map_create_opts {
+ 	size_t sz; /* size of this struct for forward/backward compatibility */
 -- 
 2.43.0
 
