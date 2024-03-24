@@ -1,46 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1478B1448E5;
-	Sun, 24 Mar 2024 23:13:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5C3145FEA;
+	Sun, 24 Mar 2024 23:14:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321987; cv=none; b=I3rTV07d1ZNZNIFQwZiN/T+Rvj60R8v/m304UodNLIG/WAkFgfaCss2aEIsE8dQQKapLr1e3pVS5RsQfeHGvjqXO0aTWAD+2DX2Sd3Ytby1KsrRJe/jUBD9jAb/KHdyT+mn/x9I791uva05Uz2D8oiz3EPZHU7sOuoRKBDjoElo=
+	t=1711322045; cv=none; b=uc6urG5ZGRkmfQmgSSz+WrVK6bMlYJ37NIs0rRhcChhKuIjUV2zWa72aMi+ZOUuGu1U6LCHIRpO7MK327rD50wF/NdsGM2mMr2YRpKmehPW44h5fFK4KqpB0uEt3yDj7KjqT8mtyBpCXk5Q7Zii4a39z3lgS8/500lC6MmNLiBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321987; c=relaxed/simple;
-	bh=mucHz+Zr6Fkl4kHASezKHfkPzv7eULYOavvfoTfoUzg=;
+	s=arc-20240116; t=1711322045; c=relaxed/simple;
+	bh=0gpEjk4YZQFCV1DSJKnqukAGxncbpdcnwebr9pyXTSQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uj2Cgshvg0WUf8qkzL0Oa2IFDL7zcMrwvUnihbcQVXpu3NmerCGfZVwOqa1n+898rUy4WKrBLBU887fQSd39g6hf6KuLAtSLipu9rIPhPfTBJe/IqxijMHcDo7YjGqdJQGlPH8uTsECNYqFtjrGLV6R33HieXPOan0rKCTGY1lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fzNoI+Ly; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=vD3od4dZavstQT8VQ25vp+JKr9NCzmGt305NYABih4gAuMnQINM687qn3NXtcoSr0dVvi09krRGTi7l02cdjWrjAQlNL0QD3kkkuzNcoJr2Zr1dyN6opS6poD3sqbF4GfgFqDM/kjI5paKT4TW+ZrdI4N9Ajdc6S82jpRHhJ0WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cC5UmFtf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fzNoI+Ly"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD916C43394;
-	Sun, 24 Mar 2024 23:13:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cC5UmFtf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42DEBC43390;
+	Sun, 24 Mar 2024 23:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321986;
-	bh=mucHz+Zr6Fkl4kHASezKHfkPzv7eULYOavvfoTfoUzg=;
+	s=k20201202; t=1711322044;
+	bh=0gpEjk4YZQFCV1DSJKnqukAGxncbpdcnwebr9pyXTSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fzNoI+Lyo3qVE8rzxc9I1/yeNblOnD1veY4nKpgL6yr1SpLBv3i2eWF9e2OUCVbuk
-	 TrPw+4ZwkrYANl9yMmRgI49bZ3sxj7gjciOOYJDgJ3sa62whu5fJb4ygteC1mfp/GL
-	 pPkgz3DBWGZpDef5DxTtcK3szQw633TJ4x1yyUfQnrIt55PW1hBPEKcmRs9iewO/KA
-	 KCO14j+S/d/NvcRfQ8ilwqcPG9RPThT3Ft6kUd/XiRQABh6tSLLILQryo6sjrxECoq
-	 iC0A1a+KmT+r5LshB3rzcUydxGbz/8x1Z03F4TO2dxCGtbU2eIMYZ1OPPt3WntdIuB
-	 T3Kold60e4EJw==
+	b=cC5UmFtfVQkjPcNdTfCUd5Cv3YkOsSwVkWrF05IoYK1cuAQKAPsMcez8rjOicgoHn
+	 3YY0JrsmVpAIZwwT0/gTuvEdZozmTzqsfc6BylkIH/o7BvlBPc+XNeQmhL+EKyfTFU
+	 8z/URSaq+ySQhSp+jqyHZNFWUf9BYW/70igLOOO3UzJDpa7mRTtwYFS0pu1460oDCx
+	 9CXoEvWPUicQmBvtyXUk/89bkIyp3mu3V61yieR+jF9J3/DE7jcdcDKbkmD8u5q7ap
+	 Pyw+35dnI+pT/JuIqsLdOTnThL1DM/GiQ1zFQidRU+SPCwF8IIqhbBmNZxQzsl+A7F
+	 CdzmFLsfpci4Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bart Van Assche <bvanassche@acm.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 059/451] fs: Fix rw_hint validation
-Date: Sun, 24 Mar 2024 19:05:35 -0400
-Message-ID: <20240324231207.1351418-60-sashal@kernel.org>
+Subject: [PATCH 6.1 116/451] wifi: iwlwifi: mvm: report beacon protection failures
+Date: Sun, 24 Mar 2024 19:06:32 -0400
+Message-ID: <20240324231207.1351418-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -54,65 +50,103 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit ec16b147a55bfa14e858234eb7b1a7c8e7cd5021 ]
+[ Upstream commit 91380f768d7f6e3d003755defa792e9a00a1444a ]
 
-Reject values that are valid rw_hints after truncation but not before
-truncation by passing an untruncated value to rw_hint_valid().
+Andrei reports that we just silently drop beacons after we
+report the key counters, but never report to userspace, so
+wpa_supplicant cannot send the WNM action frame. Fix that.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Kanchan Joshi <joshi.k@samsung.com>
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 5657cb0797c4 ("fs/fcntl: use copy_to/from_user() for u64 types")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Link: https://lore.kernel.org/r/20240202203926.2478590-2-bvanassche@acm.org
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Fixes: b1fdc2505abc ("iwlwifi: mvm: advertise BIGTK client support if available")
+Reported-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Gregory Greenman <gregory.greenman@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://msgid.link/20240128084842.7d855442cdce.Iba90b26f893dc8c49bfb8be65373cd0a138af12c@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fcntl.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c | 26 +++++++++++--------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 146c9ab0cd4b7..0964e5dbf0cac 100644
---- a/fs/fcntl.c
-+++ b/fs/fcntl.c
-@@ -267,7 +267,7 @@ static int f_getowner_uids(struct file *filp, unsigned long arg)
- }
- #endif
- 
--static bool rw_hint_valid(enum rw_hint hint)
-+static bool rw_hint_valid(u64 hint)
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+index f268a31ce26d9..105f283b777d2 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+@@ -299,6 +299,7 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 				u32 status,
+ 				struct ieee80211_rx_status *stats)
  {
- 	switch (hint) {
- 	case RWH_WRITE_LIFE_NOT_SET:
-@@ -287,19 +287,17 @@ static long fcntl_rw_hint(struct file *file, unsigned int cmd,
- {
- 	struct inode *inode = file_inode(file);
- 	u64 __user *argp = (u64 __user *)arg;
--	enum rw_hint hint;
--	u64 h;
-+	u64 hint;
- 
- 	switch (cmd) {
- 	case F_GET_RW_HINT:
--		h = inode->i_write_hint;
--		if (copy_to_user(argp, &h, sizeof(*argp)))
-+		hint = inode->i_write_hint;
-+		if (copy_to_user(argp, &hint, sizeof(*argp)))
- 			return -EFAULT;
++	struct wireless_dev *wdev;
+ 	struct iwl_mvm_sta *mvmsta;
+ 	struct iwl_mvm_vif *mvmvif;
+ 	u8 keyid;
+@@ -320,9 +321,15 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 	if (!ieee80211_is_beacon(hdr->frame_control))
  		return 0;
- 	case F_SET_RW_HINT:
--		if (copy_from_user(&h, argp, sizeof(h)))
-+		if (copy_from_user(&hint, argp, sizeof(hint)))
- 			return -EFAULT;
--		hint = (enum rw_hint) h;
- 		if (!rw_hint_valid(hint))
- 			return -EINVAL;
  
++	if (!sta)
++		return -1;
++
++	mvmsta = iwl_mvm_sta_from_mac80211(sta);
++	mvmvif = iwl_mvm_vif_from_mac80211(mvmsta->vif);
++
+ 	/* key mismatch - will also report !MIC_OK but we shouldn't count it */
+ 	if (!(status & IWL_RX_MPDU_STATUS_KEY_VALID))
+-		return -1;
++		goto report;
+ 
+ 	/* good cases */
+ 	if (likely(status & IWL_RX_MPDU_STATUS_MIC_OK &&
+@@ -331,13 +338,6 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 		return 0;
+ 	}
+ 
+-	if (!sta)
+-		return -1;
+-
+-	mvmsta = iwl_mvm_sta_from_mac80211(sta);
+-
+-	mvmvif = iwl_mvm_vif_from_mac80211(mvmsta->vif);
+-
+ 	/*
+ 	 * both keys will have the same cipher and MIC length, use
+ 	 * whichever one is available
+@@ -346,11 +346,11 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 	if (!key) {
+ 		key = rcu_dereference(mvmvif->bcn_prot.keys[1]);
+ 		if (!key)
+-			return -1;
++			goto report;
+ 	}
+ 
+ 	if (len < key->icv_len + IEEE80211_GMAC_PN_LEN + 2)
+-		return -1;
++		goto report;
+ 
+ 	/* get the real key ID */
+ 	keyid = frame[len - key->icv_len - IEEE80211_GMAC_PN_LEN - 2];
+@@ -364,7 +364,7 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 			return -1;
+ 		key = rcu_dereference(mvmvif->bcn_prot.keys[keyid - 6]);
+ 		if (!key)
+-			return -1;
++			goto report;
+ 	}
+ 
+ 	/* Report status to mac80211 */
+@@ -372,6 +372,10 @@ static int iwl_mvm_rx_mgmt_prot(struct ieee80211_sta *sta,
+ 		ieee80211_key_mic_failure(key);
+ 	else if (status & IWL_RX_MPDU_STATUS_REPLAY_ERROR)
+ 		ieee80211_key_replay(key);
++report:
++	wdev = ieee80211_vif_to_wdev(mvmsta->vif);
++	if (wdev->netdev)
++		cfg80211_rx_unprot_mlme_mgmt(wdev->netdev, (void *)hdr, len);
+ 
+ 	return -1;
+ }
 -- 
 2.43.0
 
