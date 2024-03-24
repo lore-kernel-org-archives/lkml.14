@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CCF1774ED;
-	Sun, 24 Mar 2024 23:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B8D1774CA;
+	Sun, 24 Mar 2024 23:38:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323486; cv=none; b=o8xu01W7Ex0xyV51W/iput1lLd6bgNCEAWIyxTyjQ8ePRJ/pIq/Hhd1FCF3NUd3d+NV4QTadZbYOei9uvC1z4CfpN+peq0FNMCdoqWN+OZQ0oaDm7xI/s5x6GPDpayKOeDF4DBMv3WhoQioY0Kj2l11jJIWpKKM9DPV7bPB3ALs=
+	t=1711323480; cv=none; b=ESyiyVI1Dz7dT1kMZzVca+XbG6JznUPp9Aim9P3izuenmEA4Msup0Kr+cq21BI91c2GA65vHrRbETLbFcmjgG4t3OcHi5w8FvsaN/xNOFRxl85KMrRpmO2Ji3EYT9h7+hleBa7R8a5isnrzhGdjwQ4StkKAavCSJoh3Whu6y/g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323486; c=relaxed/simple;
-	bh=BH/Oe6Za7hwJSjCNdDO1HHW6sU+06qst04XA7RxXClw=;
+	s=arc-20240116; t=1711323480; c=relaxed/simple;
+	bh=LqNuI54SZG/j3JOM/Yao4FqRkZ3a3sKSz8TdXZ2yarI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DBE3OWUoaD9GUc5PbmgAk3D3Gt2X84SZmAgCVOdy8R2/LSBkxrhUapeo5WD+3Px0vLthV5fOzplY7+PyOlAXLmrBKPt7fEa3cpUjEsfc5SgGdsFQAcJmWe0gZRpMnSCsEcQ9tJaRKCIRWN1eldqmR53K6lUpweRHB7uhovsdM2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERfjF/ia; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=i3xHUUJSUXMXujX3RhMF7/O16NcM9fwoS5J3UFAo0P24uGoOrAiToNZbD5f5JAJokFuvxOWwXmGALM3VGjj6hQvDONJUk90hwOEERl4o/Hq4jDm8+9WA2dLanwyPfCZQ4yLc/xEYfo7fzDv6BrZH3ZxvZQKeuzdN6gyyW8VLFbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=quPfKd+t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERfjF/ia"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B79FEC43390;
-	Sun, 24 Mar 2024 23:38:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quPfKd+t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F9BC433F1;
+	Sun, 24 Mar 2024 23:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323485;
-	bh=BH/Oe6Za7hwJSjCNdDO1HHW6sU+06qst04XA7RxXClw=;
+	s=k20201202; t=1711323480;
+	bh=LqNuI54SZG/j3JOM/Yao4FqRkZ3a3sKSz8TdXZ2yarI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ERfjF/ia6pPCjyscUNTzBzYaUCJqTE3v+nvKlXAumwYy3lzJaqW+9P5tMytQmUEz1
-	 grblSTqeDXZrTSLkbP8i+TrVSdcL41jVPBoxCYn0m3b6H+fgZ7gQBNXVip5N6fPyZW
-	 7M7SPOd7P7Qmq/pns1K4eYtmSMlNLKi3ssGEr9e7gjaguxqwoAIg4gxY8zURLBV/Rn
-	 rGEATx+ejrg5+r+3+doHWS5yBr7x0LbHyTEf9AiDAeE4OSnIEjloP62XnlpH5bzhiz
-	 7tegW+2O8slpgICb8DQDin2+Jc90rK9DJizBzRPRD04lVdeL7iRl0q+y5RuIZ0jIjR
-	 XcndrAu62WAcA==
+	b=quPfKd+t2cwKZWMc0Ij+1yXyLeH7QiibMbPZ9+cFRNNqmIy58YfjBIDHORQRLZv5t
+	 0lM/Yt9/LP0G7j2XFLQOa0E52LFUCuuYEGsCOOi1J+BlxxQFMvqBhmm32/AQIbVXit
+	 FGcGFlc9XLwwsOZxTF1I9oZtJeHKs+wwzF4y/xK2K67EItM/ILQqp192dD0513iDFz
+	 bSD36vxzScsiNxEkLA4h+0IbZKV+sLnfdCL5o/5ba1bbOJlxCjYcrRcY4SLxAvEie7
+	 ZDT4SxEPZoWaqV7sLgCGiThVjMlk5reoy9bTVkB60bUHyOfjSe6BsD7uKod1EqCTae
+	 NcyvfzRZuYXyQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Baokun Li <libaokun1@huawei.com>,
-	Jan Kara <jack@suse.cz>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 190/317] quota: simplify drop_dquot_ref()
-Date: Sun, 24 Mar 2024 19:32:50 -0400
-Message-ID: <20240324233458.1352854-191-sashal@kernel.org>
+Subject: [PATCH 5.15 185/317] media: v4l2-mem2mem: fix a memleak in v4l2_m2m_register_entity
+Date: Sun, 24 Mar 2024 19:32:45 -0400
+Message-ID: <20240324233458.1352854-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,130 +48,46 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Baokun Li <libaokun1@huawei.com>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit 7bce48f0fec602b3b6c335963b26d9eefa417788 ]
+[ Upstream commit 8f94b49a5b5d386c038e355bef6347298aabd211 ]
 
-As Honza said, remove_inode_dquot_ref() currently does not release the
-last dquot reference but instead adds the dquot to tofree_head list. This
-is because dqput() can sleep while dropping of the last dquot reference
-(writing back the dquot and calling ->release_dquot()) and that must not
-happen under dq_list_lock. Now that dqput() queues the final dquot cleanup
-into a workqueue, remove_inode_dquot_ref() can call dqput() unconditionally
-and we can significantly simplify it.
+The entity->name (i.e. name) is allocated in v4l2_m2m_register_entity
+but isn't freed in its following error-handling paths. This patch
+adds such deallocation to prevent memleak of entity->name.
 
-Here we open code the simplified code of remove_inode_dquot_ref() into
-remove_dquot_ref() and remove the function put_dquot_list() which is no
-longer used.
-
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Message-Id: <20230630110822.3881712-6-libaokun1@huawei.com>
-Stable-dep-of: 179b8c97ebf6 ("quota: Fix rcu annotations of inode dquot pointers")
+Fixes: be2fff656322 ("media: add helpers for memory-to-memory media controller")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/quota/dquot.c | 70 +++++++-----------------------------------------
- 1 file changed, 9 insertions(+), 61 deletions(-)
+ drivers/media/v4l2-core/v4l2-mem2mem.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index 75e593b1c03e8..b7d8cd84df576 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -1084,59 +1084,7 @@ static int add_dquot_ref(struct super_block *sb, int type)
- 	return err;
- }
+diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
+index 8aeed39c415f2..5677bccd583e9 100644
+--- a/drivers/media/v4l2-core/v4l2-mem2mem.c
++++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+@@ -1062,11 +1062,17 @@ static int v4l2_m2m_register_entity(struct media_device *mdev,
+ 	entity->function = function;
  
--/*
-- * Remove references to dquots from inode and add dquot to list for freeing
-- * if we have the last reference to dquot
-- */
--static void remove_inode_dquot_ref(struct inode *inode, int type,
--				   struct list_head *tofree_head)
--{
--	struct dquot **dquots = i_dquot(inode);
--	struct dquot *dquot = dquots[type];
--
--	if (!dquot)
--		return;
--
--	dquots[type] = NULL;
--	if (list_empty(&dquot->dq_free)) {
--		/*
--		 * The inode still has reference to dquot so it can't be in the
--		 * free list
--		 */
--		spin_lock(&dq_list_lock);
--		list_add(&dquot->dq_free, tofree_head);
--		spin_unlock(&dq_list_lock);
--	} else {
--		/*
--		 * Dquot is already in a list to put so we won't drop the last
--		 * reference here.
--		 */
--		dqput(dquot);
--	}
--}
--
--/*
-- * Free list of dquots
-- * Dquots are removed from inodes and no new references can be got so we are
-- * the only ones holding reference
-- */
--static void put_dquot_list(struct list_head *tofree_head)
--{
--	struct list_head *act_head;
--	struct dquot *dquot;
--
--	act_head = tofree_head->next;
--	while (act_head != tofree_head) {
--		dquot = list_entry(act_head, struct dquot, dq_free);
--		act_head = act_head->next;
--		/* Remove dquot from the list so we won't have problems... */
--		list_del_init(&dquot->dq_free);
--		dqput(dquot);
--	}
--}
--
--static void remove_dquot_ref(struct super_block *sb, int type,
--		struct list_head *tofree_head)
-+static void remove_dquot_ref(struct super_block *sb, int type)
- {
- 	struct inode *inode;
- #ifdef CONFIG_QUOTA_DEBUG
-@@ -1153,11 +1101,16 @@ static void remove_dquot_ref(struct super_block *sb, int type,
- 		 */
- 		spin_lock(&dq_data_lock);
- 		if (!IS_NOQUOTA(inode)) {
-+			struct dquot **dquots = i_dquot(inode);
-+			struct dquot *dquot = dquots[type];
-+
- #ifdef CONFIG_QUOTA_DEBUG
- 			if (unlikely(inode_get_rsv_space(inode) > 0))
- 				reserved = 1;
- #endif
--			remove_inode_dquot_ref(inode, type, tofree_head);
-+			dquots[type] = NULL;
-+			if (dquot)
-+				dqput(dquot);
- 		}
- 		spin_unlock(&dq_data_lock);
- 	}
-@@ -1174,13 +1127,8 @@ static void remove_dquot_ref(struct super_block *sb, int type,
- /* Gather all references from inodes and drop them */
- static void drop_dquot_ref(struct super_block *sb, int type)
- {
--	LIST_HEAD(tofree_head);
--
--	if (sb->dq_op) {
--		remove_dquot_ref(sb, type, &tofree_head);
--		synchronize_srcu(&dquot_srcu);
--		put_dquot_list(&tofree_head);
--	}
-+	if (sb->dq_op)
-+		remove_dquot_ref(sb, type);
- }
+ 	ret = media_entity_pads_init(entity, num_pads, pads);
+-	if (ret)
++	if (ret) {
++		kfree(entity->name);
++		entity->name = NULL;
+ 		return ret;
++	}
+ 	ret = media_device_register_entity(mdev, entity);
+-	if (ret)
++	if (ret) {
++		kfree(entity->name);
++		entity->name = NULL;
+ 		return ret;
++	}
  
- static inline
+ 	return 0;
+ }
 -- 
 2.43.0
 
