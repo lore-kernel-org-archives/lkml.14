@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5864B13CFAD;
-	Sun, 24 Mar 2024 22:44:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB6A1B5DC5;
+	Sun, 24 Mar 2024 22:44:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320281; cv=none; b=h5Zc/J2nf6wsbaNVClC3SpnBmO5FlFdL3QH2vh90R9+dpHiBqjPGDTFG9as9OgzniJRDQtzJd0MaCaN8FRW8tCxiGkySTcTW9XUR+PGaOKaoDvdfSqQdyHHMjkRdXXvr4vFCfPatVhbGTUk9hnA07I0KbDJDumbnAdAIMlkmn98=
+	t=1711320283; cv=none; b=Xd+LD92REjh9oSdBMmAd2StFgpXdiqt2xbZMKnO5GDjN9sUaSe1kZdHk6wOK4eXUvET1hQkwGZ+7KRFdN3y5vXhlaLHg5MDJEb3a3YMHRxhDxXC+END1bmBuJizeQhrLebDsF7GjbtecK7uW2BzMYNOWW4q++tmZH5NWFaXK1vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320281; c=relaxed/simple;
-	bh=yjLYgT5qBCA+qUBcthLTka4Zl8Zq8SMNFOCI+pGEgHA=;
+	s=arc-20240116; t=1711320283; c=relaxed/simple;
+	bh=HldJHJkre/YvtXCW8jZdXx0k5vWaYJ2xREmVbn7+8sU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kgPatP+0EJdo5O0Iwsb7shAZHiV+TuxYBjWeyFP5UcWxY7iFU/Grx09jI1etdBAd3Bx/xSFZQICaa0jAomruh1fDIHqrvM2EEq7VczHZEAORTLV5UBookfV3uS0iz3mxNvRYf3lGn1Iluzx1SGO0a2CL1Khk43obWVWaN+ZWMfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHIa8154; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OjKBG3Y7JfQnUiiiU637fswIVB9DNbf2I61PJK9NEbAGjWoh0DnDzORNDFkQTBkTSAZacpjsJR5A9Tm4VqBm/usN3wuEySp+O+VUFigNQJeIXehJxec7hsO9IzRYKgB8v2OqkClNFvtMvIatq1zC+ue623hg4rtB85UEvQria3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VEPTqepQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHIa8154"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27177C43394;
-	Sun, 24 Mar 2024 22:44:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VEPTqepQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61755C433F1;
+	Sun, 24 Mar 2024 22:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320281;
-	bh=yjLYgT5qBCA+qUBcthLTka4Zl8Zq8SMNFOCI+pGEgHA=;
+	s=k20201202; t=1711320283;
+	bh=HldJHJkre/YvtXCW8jZdXx0k5vWaYJ2xREmVbn7+8sU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kHIa8154sFPH0ED9r8XzRjziYIIRwZSskvTIqp8xxd6BbkfPUzcbqO0y21G0Xkb38
-	 X6PQAmgTv2tYklbkiwhbpX/HUX2LEcSHtAavXTsszPC9zZldptT4b/DDsh5FKXuy/g
-	 efha8XhspHr2PsdyQtD/7GHGP7yjEDxqQW+nO2Ii2dsT6z8lebTRR6pFNcv4XzOc3o
-	 Je71JkaLF/IxzLbyXAwh9GVLhgTxqhMS0Oyj5ZS0yVjtT683vAW0HyLNqG6iOqnzHf
-	 x75xEb9BXb+b4g94Dw/cPpOI3dTVGxXHP2apjfsJpdzuOqdw4VqfMePcrnw9irMYTU
-	 oWsL9CNcRE97w==
+	b=VEPTqepQwC1EFzylNq9oMQa/rkOtHFL6Dg1mKqxr6ZC0E8pxcY9eQA6P6Wz+eJBdQ
+	 ynhxq5206GEGipvitxrcGfx6Q3lOAaZMMOpIRwaXn58pmGhVitQ6yiL7GHDfehLSFh
+	 BzcwyxdjiDVZHAXuT7yLrDcwB7pv5ZkHS0Ep855Ibqm1XZ3SQznSGzxc0UJuu3D6QH
+	 p0uPPIEiVp/OMXosSTlmL+S7ZbUm34LfT2ai8+d2sAQvSkKbG/LG9EmhzOithiIWoB
+	 zTTKbgkNuj1VmnPkuIu0do5acSKCaZa9ZverHg9C/qvpYuZQqZAuI3JWJGRbBCDCyR
+	 FiubKCvyIw6gA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Konstantin Taranov <kotaranov@microsoft.com>,
-	Zhu Yanjun <yanjun.zhu@linux.dev>,
-	Leon Romanovsky <leon@kernel.org>,
+Cc: Dave Wysochanski <dwysocha@redhat.com>,
+	Jeff Layton <jlayton@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 589/715] RDMA/mana_ib: Use virtual address in dma regions for MRs
-Date: Sun, 24 Mar 2024 18:32:48 -0400
-Message-ID: <20240324223455.1342824-590-sashal@kernel.org>
+Subject: [PATCH 6.8 591/715] NFS: Fix nfs_netfs_issue_read() xarray locking for writeback interrupt
+Date: Sun, 24 Mar 2024 18:32:50 -0400
+Message-ID: <20240324223455.1342824-592-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
 References: <20240324223455.1342824-1-sashal@kernel.org>
@@ -49,214 +51,154 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
+From: Dave Wysochanski <dwysocha@redhat.com>
 
-[ Upstream commit 2d5c00815778ec4f4e0a84e405e3e157b7815db1 ]
+[ Upstream commit fd5860ab6341506004219b080aea40213b299d2e ]
 
-Introduce mana_ib_create_dma_region() to create dma regions with iova
-for MRs. It allows creating MRs with any page offset. Previously,
-only page-aligned addresses worked.
+The loop inside nfs_netfs_issue_read() currently does not disable
+interrupts while iterating through pages in the xarray to submit
+for NFS read.  This is not safe though since after taking xa_lock,
+another page in the mapping could be processed for writeback inside
+an interrupt, and deadlock can occur.  The fix is simple and clean
+if we use xa_for_each_range(), which handles the iteration with RCU
+while reducing code complexity.
 
-For dma regions that must have a zero dma offset (e.g., for queues),
-mana_ib_create_zero_offset_dma_region() is added.
-To get the zero offset, ib_umem_find_best_pgoff() is used with zero
-pgoff_bitmask.
+The problem is easily reproduced with the following test:
+ mount -o vers=3,fsc 127.0.0.1:/export /mnt/nfs
+ dd if=/dev/zero of=/mnt/nfs/file1.bin bs=4096 count=1
+ echo 3 > /proc/sys/vm/drop_caches
+ dd if=/mnt/nfs/file1.bin of=/dev/null
+ umount /mnt/nfs
 
-Fixes: 0266a177631d ("RDMA/mana_ib: Add a driver for Microsoft Azure Network Adapter")
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
-Link: https://lore.kernel.org/r/1709560361-26393-3-git-send-email-kotaranov@linux.microsoft.com
-Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
+On the console with a lockdep-enabled kernel a message similar to
+the following will be seen:
+
+ ================================
+ WARNING: inconsistent lock state
+ 6.7.0-lockdbg+ #10 Not tainted
+ --------------------------------
+ inconsistent {IN-SOFTIRQ-W} -> {SOFTIRQ-ON-W} usage.
+ test5/1708 [HC0[0]:SC0[0]:HE1:SE1] takes:
+ ffff888127baa598 (&xa->xa_lock#4){+.?.}-{3:3}, at:
+nfs_netfs_issue_read+0x1b2/0x4b0 [nfs]
+ {IN-SOFTIRQ-W} state was registered at:
+   lock_acquire+0x144/0x380
+   _raw_spin_lock_irqsave+0x4e/0xa0
+   __folio_end_writeback+0x17e/0x5c0
+   folio_end_writeback+0x93/0x1b0
+   iomap_finish_ioend+0xeb/0x6a0
+   blk_update_request+0x204/0x7f0
+   blk_mq_end_request+0x30/0x1c0
+   blk_complete_reqs+0x7e/0xa0
+   __do_softirq+0x113/0x544
+   __irq_exit_rcu+0xfe/0x120
+   irq_exit_rcu+0xe/0x20
+   sysvec_call_function_single+0x6f/0x90
+   asm_sysvec_call_function_single+0x1a/0x20
+   pv_native_safe_halt+0xf/0x20
+   default_idle+0x9/0x20
+   default_idle_call+0x67/0xa0
+   do_idle+0x2b5/0x300
+   cpu_startup_entry+0x34/0x40
+   start_secondary+0x19d/0x1c0
+   secondary_startup_64_no_verify+0x18f/0x19b
+ irq event stamp: 176891
+ hardirqs last  enabled at (176891): [<ffffffffa67a0be4>]
+_raw_spin_unlock_irqrestore+0x44/0x60
+ hardirqs last disabled at (176890): [<ffffffffa67a0899>]
+_raw_spin_lock_irqsave+0x79/0xa0
+ softirqs last  enabled at (176646): [<ffffffffa515d91e>]
+__irq_exit_rcu+0xfe/0x120
+ softirqs last disabled at (176633): [<ffffffffa515d91e>]
+__irq_exit_rcu+0xfe/0x120
+
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
+
+        CPU0
+        ----
+   lock(&xa->xa_lock#4);
+   <Interrupt>
+     lock(&xa->xa_lock#4);
+
+  *** DEADLOCK ***
+
+ 2 locks held by test5/1708:
+  #0: ffff888127baa498 (&sb->s_type->i_mutex_key#22){++++}-{4:4}, at:
+      nfs_start_io_read+0x28/0x90 [nfs]
+  #1: ffff888127baa650 (mapping.invalidate_lock#3){.+.+}-{4:4}, at:
+      page_cache_ra_unbounded+0xa4/0x280
+
+ stack backtrace:
+ CPU: 6 PID: 1708 Comm: test5 Kdump: loaded Not tainted 6.7.0-lockdbg+
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-1.fc39
+04/01/2014
+ Call Trace:
+  dump_stack_lvl+0x5b/0x90
+  mark_lock+0xb3f/0xd20
+  __lock_acquire+0x77b/0x3360
+  _raw_spin_lock+0x34/0x80
+  nfs_netfs_issue_read+0x1b2/0x4b0 [nfs]
+  netfs_begin_read+0x77f/0x980 [netfs]
+  nfs_netfs_readahead+0x45/0x60 [nfs]
+  nfs_readahead+0x323/0x5a0 [nfs]
+  read_pages+0xf3/0x5c0
+  page_cache_ra_unbounded+0x1c8/0x280
+  filemap_get_pages+0x38c/0xae0
+  filemap_read+0x206/0x5e0
+  nfs_file_read+0xb7/0x140 [nfs]
+  vfs_read+0x2a9/0x460
+  ksys_read+0xb7/0x140
+
+Fixes: 000dbe0bec05 ("NFS: Convert buffered read paths to use netfs when fscache is enabled")
+Suggested-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mana/cq.c      |  4 +--
- drivers/infiniband/hw/mana/main.c    | 40 +++++++++++++++++++++-------
- drivers/infiniband/hw/mana/mana_ib.h |  7 +++--
- drivers/infiniband/hw/mana/mr.c      |  4 +--
- drivers/infiniband/hw/mana/qp.c      |  6 ++---
- drivers/infiniband/hw/mana/wq.c      |  4 +--
- 6 files changed, 45 insertions(+), 20 deletions(-)
+ fs/nfs/fscache.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mana/cq.c b/drivers/infiniband/hw/mana/cq.c
-index 83d20c3f048df..4a71e678d09c1 100644
---- a/drivers/infiniband/hw/mana/cq.c
-+++ b/drivers/infiniband/hw/mana/cq.c
-@@ -48,7 +48,7 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 		return err;
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index 2d1bfee225c36..ddc1ee0319554 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -301,11 +301,11 @@ static void nfs_netfs_issue_read(struct netfs_io_subrequest *sreq)
+ 	struct inode *inode = sreq->rreq->inode;
+ 	struct nfs_open_context *ctx = sreq->rreq->netfs_priv;
+ 	struct page *page;
++	unsigned long idx;
+ 	int err;
+ 	pgoff_t start = (sreq->start + sreq->transferred) >> PAGE_SHIFT;
+ 	pgoff_t last = ((sreq->start + sreq->len -
+ 			 sreq->transferred - 1) >> PAGE_SHIFT);
+-	XA_STATE(xas, &sreq->rreq->mapping->i_pages, start);
+ 
+ 	nfs_pageio_init_read(&pgio, inode, false,
+ 			     &nfs_async_read_completion_ops);
+@@ -316,19 +316,14 @@ static void nfs_netfs_issue_read(struct netfs_io_subrequest *sreq)
+ 
+ 	pgio.pg_netfs = netfs; /* used in completion */
+ 
+-	xas_lock(&xas);
+-	xas_for_each(&xas, page, last) {
++	xa_for_each_range(&sreq->rreq->mapping->i_pages, idx, page, start, last) {
+ 		/* nfs_read_add_folio() may schedule() due to pNFS layout and other RPCs  */
+-		xas_pause(&xas);
+-		xas_unlock(&xas);
+ 		err = nfs_read_add_folio(&pgio, ctx, page_folio(page));
+ 		if (err < 0) {
+ 			netfs->error = err;
+ 			goto out;
+ 		}
+-		xas_lock(&xas);
  	}
- 
--	err = mana_ib_gd_create_dma_region(mdev, cq->umem, &cq->gdma_region);
-+	err = mana_ib_create_zero_offset_dma_region(mdev, cq->umem, &cq->gdma_region);
- 	if (err) {
- 		ibdev_dbg(ibdev,
- 			  "Failed to create dma region for create cq, %d\n",
-@@ -57,7 +57,7 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 	}
- 
- 	ibdev_dbg(ibdev,
--		  "mana_ib_gd_create_dma_region ret %d gdma_region 0x%llx\n",
-+		  "create_dma_region ret %d gdma_region 0x%llx\n",
- 		  err, cq->gdma_region);
- 
- 	/*
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index dd570832d61ea..71e33feee61bb 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -301,8 +301,8 @@ mana_ib_gd_add_dma_region(struct mana_ib_dev *dev, struct gdma_context *gc,
- 	return 0;
- }
- 
--int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
--				 mana_handle_t *gdma_region)
-+static int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
-+					mana_handle_t *gdma_region, unsigned long page_sz)
- {
- 	struct gdma_dma_region_add_pages_req *add_req = NULL;
- 	size_t num_pages_processed = 0, num_pages_to_handle;
-@@ -314,7 +314,6 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 	size_t max_pgs_create_cmd;
- 	struct gdma_context *gc;
- 	size_t num_pages_total;
--	unsigned long page_sz;
- 	unsigned int tail = 0;
- 	u64 *page_addr_list;
- 	void *request_buf;
-@@ -323,12 +322,6 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 	gc = mdev_to_gc(dev);
- 	hwc = gc->hwc.driver_data;
- 
--	/* Hardware requires dma region to align to chosen page size */
--	page_sz = ib_umem_find_best_pgsz(umem, PAGE_SZ_BM, 0);
--	if (!page_sz) {
--		ibdev_dbg(&dev->ib_dev, "failed to find page size.\n");
--		return -ENOMEM;
--	}
- 	num_pages_total = ib_umem_num_dma_blocks(umem, page_sz);
- 
- 	max_pgs_create_cmd =
-@@ -414,6 +407,35 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 	return err;
- }
- 
-+int mana_ib_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
-+			      mana_handle_t *gdma_region, u64 virt)
-+{
-+	unsigned long page_sz;
-+
-+	page_sz = ib_umem_find_best_pgsz(umem, PAGE_SZ_BM, virt);
-+	if (!page_sz) {
-+		ibdev_dbg(&dev->ib_dev, "Failed to find page size.\n");
-+		return -EINVAL;
-+	}
-+
-+	return mana_ib_gd_create_dma_region(dev, umem, gdma_region, page_sz);
-+}
-+
-+int mana_ib_create_zero_offset_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
-+					  mana_handle_t *gdma_region)
-+{
-+	unsigned long page_sz;
-+
-+	/* Hardware requires dma region to align to chosen page size */
-+	page_sz = ib_umem_find_best_pgoff(umem, PAGE_SZ_BM, 0);
-+	if (!page_sz) {
-+		ibdev_dbg(&dev->ib_dev, "Failed to find page size.\n");
-+		return -EINVAL;
-+	}
-+
-+	return mana_ib_gd_create_dma_region(dev, umem, gdma_region, page_sz);
-+}
-+
- int mana_ib_gd_destroy_dma_region(struct mana_ib_dev *dev, u64 gdma_region)
- {
- 	struct gdma_context *gc = mdev_to_gc(dev);
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index 6a03ae645c012..f83390eebb7d7 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -160,8 +160,11 @@ static inline struct net_device *mana_ib_get_netdev(struct ib_device *ibdev, u32
- 
- int mana_ib_install_cq_cb(struct mana_ib_dev *mdev, struct mana_ib_cq *cq);
- 
--int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
--				 mana_handle_t *gdma_region);
-+int mana_ib_create_zero_offset_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
-+					  mana_handle_t *gdma_region);
-+
-+int mana_ib_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
-+			      mana_handle_t *gdma_region, u64 virt);
- 
- int mana_ib_gd_destroy_dma_region(struct mana_ib_dev *dev,
- 				  mana_handle_t gdma_region);
-diff --git a/drivers/infiniband/hw/mana/mr.c b/drivers/infiniband/hw/mana/mr.c
-index ee4d4f83467c8..b70b13484f097 100644
---- a/drivers/infiniband/hw/mana/mr.c
-+++ b/drivers/infiniband/hw/mana/mr.c
-@@ -127,7 +127,7 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
- 		goto err_free;
- 	}
- 
--	err = mana_ib_gd_create_dma_region(dev, mr->umem, &dma_region_handle);
-+	err = mana_ib_create_dma_region(dev, mr->umem, &dma_region_handle, iova);
- 	if (err) {
- 		ibdev_dbg(ibdev, "Failed create dma region for user-mr, %d\n",
- 			  err);
-@@ -135,7 +135,7 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
- 	}
- 
- 	ibdev_dbg(ibdev,
--		  "mana_ib_gd_create_dma_region ret %d gdma_region %llx\n", err,
-+		  "create_dma_region ret %d gdma_region %llx\n", err,
- 		  dma_region_handle);
- 
- 	mr_params.pd_handle = pd->pd_handle;
-diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-index 5d4c05dcd0032..6e7627745c957 100644
---- a/drivers/infiniband/hw/mana/qp.c
-+++ b/drivers/infiniband/hw/mana/qp.c
-@@ -357,8 +357,8 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
- 	}
- 	qp->sq_umem = umem;
- 
--	err = mana_ib_gd_create_dma_region(mdev, qp->sq_umem,
--					   &qp->sq_gdma_region);
-+	err = mana_ib_create_zero_offset_dma_region(mdev, qp->sq_umem,
-+						    &qp->sq_gdma_region);
- 	if (err) {
- 		ibdev_dbg(&mdev->ib_dev,
- 			  "Failed to create dma region for create qp-raw, %d\n",
-@@ -367,7 +367,7 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
- 	}
- 
- 	ibdev_dbg(&mdev->ib_dev,
--		  "mana_ib_gd_create_dma_region ret %d gdma_region 0x%llx\n",
-+		  "create_dma_region ret %d gdma_region 0x%llx\n",
- 		  err, qp->sq_gdma_region);
- 
- 	/* Create a WQ on the same port handle used by the Ethernet */
-diff --git a/drivers/infiniband/hw/mana/wq.c b/drivers/infiniband/hw/mana/wq.c
-index 372d361510e0c..7c9c699625734 100644
---- a/drivers/infiniband/hw/mana/wq.c
-+++ b/drivers/infiniband/hw/mana/wq.c
-@@ -46,7 +46,7 @@ struct ib_wq *mana_ib_create_wq(struct ib_pd *pd,
- 	wq->wq_buf_size = ucmd.wq_buf_size;
- 	wq->rx_object = INVALID_MANA_HANDLE;
- 
--	err = mana_ib_gd_create_dma_region(mdev, wq->umem, &wq->gdma_region);
-+	err = mana_ib_create_zero_offset_dma_region(mdev, wq->umem, &wq->gdma_region);
- 	if (err) {
- 		ibdev_dbg(&mdev->ib_dev,
- 			  "Failed to create dma region for create wq, %d\n",
-@@ -55,7 +55,7 @@ struct ib_wq *mana_ib_create_wq(struct ib_pd *pd,
- 	}
- 
- 	ibdev_dbg(&mdev->ib_dev,
--		  "mana_ib_gd_create_dma_region ret %d gdma_region 0x%llx\n",
-+		  "create_dma_region ret %d gdma_region 0x%llx\n",
- 		  err, wq->gdma_region);
- 
- 	/* WQ ID is returned at wq_create time, doesn't know the value yet */
+-	xas_unlock(&xas);
+ out:
+ 	nfs_pageio_complete_read(&pgio);
+ 	nfs_netfs_put(netfs);
 -- 
 2.43.0
 
