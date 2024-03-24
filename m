@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFA217C1AC;
-	Sun, 24 Mar 2024 23:42:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB41317C641;
+	Sun, 24 Mar 2024 23:42:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323762; cv=none; b=P5K/vTXI3qNNxcLYH4bOB5W9sh2SvCOKL0Zb5lqqflMiEwiOQXEOdq1Yxc9lxY/hflL+5e9lpJf4P1+8paNzLKt9NaFJlhb2/ot0nCQ0uoRVIyWSDzrgIua8WM2FzW+ErRHrRcJ8OLLcXRMwOSVxIq2M3q6ng521OIMHl3LXt8I=
+	t=1711323774; cv=none; b=DMzKg3UVRrt4TkKg5wBC+b7xBL6cz0jrWZqVcKU96Uke5BFaTDTG2YWYthYSS1bvaLoBTNdigQ2qTJeTcIdN3+G9xNd8OJaeqxgQ/xXYSjGfYsPRFsKeI+0CtvdajvzjGZ5r7Mh4CMv/MjQDvPDt7XdtnMBw85/C32EWvGwp7w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323762; c=relaxed/simple;
-	bh=uIDSKaGEKevri4m+701P4fwqcj5BZkuhrTLKSp6QbB8=;
+	s=arc-20240116; t=1711323774; c=relaxed/simple;
+	bh=S8Yjdnpevw2WVZxIsS5jm3Cwfo/mtdicJ9k3Caczv4Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fY9d7MuLAmVuH4l9EWzt//wFWl8yQtLmc7/KaR3m7aW7DSTwUWZKQ6P3QS6TginTgoTQbw4TIzS9/X46hdfLsHEmxSQvwNzalcH3Qcmeq2xdyyOg3nozLjoTkKS4on1DPFfA6v4SqW9BPt+DPnk9EvMXKC7BJ4Giu24Wxqtxqxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l1ljm1ou; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=o4nUcHBDTADIA2ZqrK0dVP86WZ5WmxocQehMsW2MZ6WFPXwpYPD7W2zgTjGISxfgNqcLwK4C0R/a9RdcIgAFoxfAoGY82ltkpP5b215BJV8hLjoC6imFGmmLMM9klsWXpl2JT8+4rRWeTRTBUeSaH1dIjLPPy87uimkB49lpQOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TC+P/fvJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l1ljm1ou"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA850C433C7;
-	Sun, 24 Mar 2024 23:42:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TC+P/fvJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEBB0C433C7;
+	Sun, 24 Mar 2024 23:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323762;
-	bh=uIDSKaGEKevri4m+701P4fwqcj5BZkuhrTLKSp6QbB8=;
+	s=k20201202; t=1711323774;
+	bh=S8Yjdnpevw2WVZxIsS5jm3Cwfo/mtdicJ9k3Caczv4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l1ljm1ouMtN0l3hyUpyA635vgThspR333XAgRIBT7mBl1GEeR2CUnFv/hGHlZGIjS
-	 LgNfEn7dA3u+rifoG7PAwYFlI4HEXCA0q6bpusRccqxOM7O02Fa1y0V4PprIiEelyT
-	 70+IYgg+ES8FUrGyvTjKXHBaBkVeLJH6oWPhqAQtboujAFd1EpRcl9Z/BuoRUu5/7s
-	 lr5wf62/HEQYmxumKlhOgSaKV+Q+hDIy2UiQHDqS8zzIxxfc6ef6MH0TGr4gQq8jls
-	 X6nI3FPYbyRXD2DW2IgZKs7wGcNziTEcZoZxuvXDLoNZiJXnHdrpfFM4mzHxu4J1rf
-	 p/IVvoAcuGD3Q==
+	b=TC+P/fvJp9NLSaNhcSR/QpPwkXL4nC9oA0UijMt0bSRnfYDCLGMr/vxEDcOEcIbaN
+	 Gdjn7fVmg5tpn8aA7phVE52ucMlwAxjuN0oAq7AO/dOhEZGxWDlR1Q0FBwtMh7mwol
+	 1UfsBKRFCeuXeO98PEZRpztyUmd0ahFiQsO3VLam+UZp9cbI4LpGbmOUZ/fCdIlylL
+	 zGTZsS/kMLybhmDA3T/kbr80Miou0LapEumfmLxlkXQIUnkx4ymNSAsc8ESzJ8mGiS
+	 QdRcQbxz+EHzEJEx6klAcGnv5gustVTzyzb9AzV2f+4Y995RlcF+BvBGCEPGTx5YVZ
+	 3smEH9IS5Ykcw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 137/238] clk: qcom: reset: Commonize the de/assert functions
-Date: Sun, 24 Mar 2024 19:38:45 -0400
-Message-ID: <20240324234027.1354210-138-sashal@kernel.org>
+Subject: [PATCH 5.10 150/238] ASoC: meson: t9015: fix function pointer type mismatch
+Date: Sun, 24 Mar 2024 19:38:58 -0400
+Message-ID: <20240324234027.1354210-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,67 +50,81 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit eda40d9c583e95e0b6ac69d2950eec10f802e0e8 ]
+[ Upstream commit 5ad992c71b6a8e8a547954addc7af9fbde6ca10a ]
 
-They do the same thing, except the last argument of the last function
-call differs. Commonize them.
+clang-16 warns about casting functions to incompatible types, as is done
+here to call clk_disable_unprepare:
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20240105-topic-venus_reset-v2-2-c37eba13b5ce@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
-Stable-dep-of: 2f8cf2c3f3e3 ("clk: qcom: reset: Ensure write completion on reset de/assertion")
+sound/soc/meson/t9015.c:274:4: error: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  274 |                         (void(*)(void *))clk_disable_unprepare,
+
+The pattern of getting, enabling and setting a disable callback for a
+clock can be replaced with devm_clk_get_enabled(), which also fixes
+this warning.
+
+Fixes: 33901f5b9b16 ("ASoC: meson: add t9015 internal DAC driver")
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Link: https://msgid.link/r/20240213215807.3326688-3-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/reset.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+ sound/soc/meson/t9015.c | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/clk/qcom/reset.c b/drivers/clk/qcom/reset.c
-index e45e32804d2c7..20d1d35aaf229 100644
---- a/drivers/clk/qcom/reset.c
-+++ b/drivers/clk/qcom/reset.c
-@@ -22,8 +22,8 @@ static int qcom_reset(struct reset_controller_dev *rcdev, unsigned long id)
- 	return 0;
- }
+diff --git a/sound/soc/meson/t9015.c b/sound/soc/meson/t9015.c
+index cb1eaf678fc3f..b085aa65c688c 100644
+--- a/sound/soc/meson/t9015.c
++++ b/sound/soc/meson/t9015.c
+@@ -48,7 +48,6 @@
+ #define POWER_CFG	0x10
  
--static int
--qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
-+static int qcom_reset_set_assert(struct reset_controller_dev *rcdev,
-+				 unsigned long id, bool assert)
- {
- 	struct qcom_reset_controller *rst;
- 	const struct qcom_reset_map *map;
-@@ -33,21 +33,17 @@ qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
- 	map = &rst->reset_map[id];
- 	mask = map->bitmask ? map->bitmask : BIT(map->bit);
+ struct t9015 {
+-	struct clk *pclk;
+ 	struct regulator *avdd;
+ };
  
--	return regmap_update_bits(rst->regmap, map->reg, mask, mask);
-+	return regmap_update_bits(rst->regmap, map->reg, mask, assert ? mask : 0);
- }
+@@ -250,6 +249,7 @@ static int t9015_probe(struct platform_device *pdev)
+ 	struct t9015 *priv;
+ 	void __iomem *regs;
+ 	struct regmap *regmap;
++	struct clk *pclk;
+ 	int ret;
  
--static int
--qcom_reset_deassert(struct reset_controller_dev *rcdev, unsigned long id)
-+static int qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
- {
--	struct qcom_reset_controller *rst;
--	const struct qcom_reset_map *map;
--	u32 mask;
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+@@ -257,26 +257,14 @@ static int t9015_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	platform_set_drvdata(pdev, priv);
+ 
+-	priv->pclk = devm_clk_get(dev, "pclk");
+-	if (IS_ERR(priv->pclk))
+-		return dev_err_probe(dev, PTR_ERR(priv->pclk), "failed to get core clock\n");
++	pclk = devm_clk_get_enabled(dev, "pclk");
++	if (IS_ERR(pclk))
++		return dev_err_probe(dev, PTR_ERR(pclk), "failed to get core clock\n");
+ 
+ 	priv->avdd = devm_regulator_get(dev, "AVDD");
+ 	if (IS_ERR(priv->avdd))
+ 		return dev_err_probe(dev, PTR_ERR(priv->avdd), "failed to AVDD\n");
+ 
+-	ret = clk_prepare_enable(priv->pclk);
+-	if (ret) {
+-		dev_err(dev, "core clock enable failed\n");
+-		return ret;
+-	}
 -
--	rst = to_qcom_reset_controller(rcdev);
--	map = &rst->reset_map[id];
--	mask = map->bitmask ? map->bitmask : BIT(map->bit);
-+	return qcom_reset_set_assert(rcdev, id, true);
-+}
- 
--	return regmap_update_bits(rst->regmap, map->reg, mask, 0);
-+static int qcom_reset_deassert(struct reset_controller_dev *rcdev, unsigned long id)
-+{
-+	return qcom_reset_set_assert(rcdev, id, false);
- }
- 
- const struct reset_control_ops qcom_reset_ops = {
+-	ret = devm_add_action_or_reset(dev,
+-			(void(*)(void *))clk_disable_unprepare,
+-			priv->pclk);
+-	if (ret)
+-		return ret;
+-
+ 	ret = device_reset(dev);
+ 	if (ret) {
+ 		dev_err(dev, "reset failed\n");
 -- 
 2.43.0
 
