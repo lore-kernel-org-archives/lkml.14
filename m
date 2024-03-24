@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A5C131738;
-	Sun, 24 Mar 2024 23:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C601E7DF7;
+	Sun, 24 Mar 2024 23:03:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321404; cv=none; b=BkAAe01gjCwxhEkjtdGdkPqNvPsO0CXdnRARA8PGfdt4WH7Rvs3+MKzFQikCxxBEeztfZqBA0QqUvW5GtXCE5n8C9N/uXH7HWPauHx6MCljpN1o8v9P8FZ3oPl7r5+o3bLE/gZXdTRGRMWOAm1vBxPR/miSxDaFPlFe2jx1mQ8o=
+	t=1711321414; cv=none; b=Pn8fEqIOOHLjeiBkTa3y2sdaJRMXsVL3pn2PVuvv5K/iWM8KhgMkcJoDCN0wbRGh0CRtSSUwVCfcCP7VB0wp1g9ypZOwtPLDybn6OkusbVw1nowE//xz0YI/XFSaoHVi2Uh1PXdFKyme6rnU2GwcI+z0HO3T2VvTXCHnw1Yb1MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321404; c=relaxed/simple;
-	bh=+PQn2Xt32PVXtxetymmoxToLCcedOoj6FzicUSmW7zE=;
+	s=arc-20240116; t=1711321414; c=relaxed/simple;
+	bh=PlfCxDYpw0F+l+BRPeezDpLk0I8AsZhrEJWzjT0IJjg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fnjtDmqlc69U3jrZsF77bpjFajO5B4FkH3bvl/fTuIYoEuiAhwCPZ0gK2CLtGKkyWLZaKWqNn2g0KVrqUdpKLTICFqxDpkgcsnyLLceosAChNhYnxrAJGVPr6nSxFi6s6azauc0d5PbRpFw63ujdlf+l82abfRYjfrpWfgcYAoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYDXMWod; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rmsiJP5+5b7wSMSMnxsXrqzTASmGESLFR6fG14iPKffbhnEUmRFUTNFPYIIVm9yln4A2OewR4F84AbUN5WzLpRkzzKGDEagNhkUiXc9s18lnZF0uXvYhNyxU48I1QYnmvn801imEw8kY1YVSf6v5jEJFHfvJuNoC+wEnu7f10mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePp24iTw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYDXMWod"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 540BCC433C7;
-	Sun, 24 Mar 2024 23:03:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePp24iTw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D523C433C7;
+	Sun, 24 Mar 2024 23:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321403;
-	bh=+PQn2Xt32PVXtxetymmoxToLCcedOoj6FzicUSmW7zE=;
+	s=k20201202; t=1711321414;
+	bh=PlfCxDYpw0F+l+BRPeezDpLk0I8AsZhrEJWzjT0IJjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CYDXMWodb/CoFGUU67/fY3fERpc18Lv2EqHbK0+5rOqQvPjepvqFnJ1BzpoqK4VRu
-	 XptdgrfHOk0yJ9y7fkFtjtRDsbeyjLwCyhlJBYCJhK7nismPhga4o4T/DbOH5ebvOf
-	 VWdJB6GksxFTXP4VhT7hQtN93MZw8h3VcTIc8SF/OqqYU6n3s4CgjteHNZrcPWJyuU
-	 6CH/hPBclVMbwlQ7kXqF7E6+AJ/Tivu+mzJkdtiGSAcU7Rhg8MuMu4qfZim4GdgbFk
-	 xLdGF8Nd8G+ieAoqm1YSmyfyF460BhOrviwNCBV+hoAwO7qpV8UABQu3plXYDizwlf
-	 34z1fcES0MY1Q==
+	b=ePp24iTwAn1lu2nyxvyqc3NK+NgqNYmGmwtnMeRDINeF7Rkv3M6peqc5lyt8orakd
+	 8uXdaMFIKE2AS5bDybydsHmpvWJ18/vIafxE3tBdMsjP/y71WmpdsyIPPztm1mKOUK
+	 dP5ypE/MM2PVv3/bWFvkqX8gfLJt7d57oE9L4jIb/R713GnbWkvb0YNjMftDCdaRpK
+	 FUFxDfFD1UuSFeS952pZle5IEMVsrmFCekwyE8/c/cEuN9B+XXcXDyM8vsl39yfO5u
+	 W8DEgdvyBxle4k98dwIoln7PuuC3J+DZba1L2oTHosuo1UFNKxA/g+Dbw0N/8MWFn1
+	 I6xJOkywbIpcQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Andrey Grafin <conquistador@yandex-team.ru>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Hou Tao <houtao1@huawei.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 128/638] arm64: dts: qcom: sc8180x: Fix eDP PHY power-domains
-Date: Sun, 24 Mar 2024 18:52:45 -0400
-Message-ID: <20240324230116.1348576-129-sashal@kernel.org>
+Subject: [PATCH 6.6 138/638] libbpf: Apply map_set_def_max_entries() for inner_maps on creation
+Date: Sun, 24 Mar 2024 18:52:55 -0400
+Message-ID: <20240324230116.1348576-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,35 +51,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
+From: Andrey Grafin <conquistador@yandex-team.ru>
 
-[ Upstream commit 24e98cb3d5e2c86565680e00008a794b4eac0040 ]
+[ Upstream commit f04deb90e516e8e48bf8693397529bc942a9e80b ]
 
-The (e)DP PHYs are powered by the MX line, not through the MDSS GDSC.
-Fix that up.
+This patch allows to auto create BPF_MAP_TYPE_ARRAY_OF_MAPS and
+BPF_MAP_TYPE_HASH_OF_MAPS with values of BPF_MAP_TYPE_PERF_EVENT_ARRAY
+by bpf_object__load().
 
-Fixes: 494dec9b6f54 ("arm64: dts: qcom: sc8180x: Add display and gpu nodes")
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20231230-topic-8180_more_fixes-v1-5-93b5c107ed43@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Previous behaviour created a zero filled btf_map_def for inner maps and
+tried to use it for a map creation but the linux kernel forbids to create
+a BPF_MAP_TYPE_PERF_EVENT_ARRAY map with max_entries=0.
+
+Fixes: 646f02ffdd49 ("libbpf: Add BTF-defined map-in-map support")
+Signed-off-by: Andrey Grafin <conquistador@yandex-team.ru>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Acked-by: Yonghong Song <yonghong.song@linux.dev>
+Acked-by: Hou Tao <houtao1@huawei.com>
+Link: https://lore.kernel.org/bpf/20240117130619.9403-1-conquistador@yandex-team.ru
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sc8180x.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/bpf/libbpf.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-index e15f4facc0021..548dbeaf823e4 100644
---- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-@@ -3194,7 +3194,7 @@ edp_phy: phy@aec2a00 {
- 				 <&dispcc DISP_CC_MDSS_AHB_CLK>;
- 			clock-names = "aux", "cfg_ahb";
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index de08b920a149d..e238e6b824393 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -70,6 +70,7 @@
  
--			power-domains = <&dispcc MDSS_GDSC>;
-+			power-domains = <&rpmhpd SC8180X_MX>;
+ static struct bpf_map *bpf_object__add_map(struct bpf_object *obj);
+ static bool prog_is_subprog(const struct bpf_object *obj, const struct bpf_program *prog);
++static int map_set_def_max_entries(struct bpf_map *map);
  
- 			#clock-cells = <1>;
- 			#phy-cells = <0>;
+ static const char * const attach_type_name[] = {
+ 	[BPF_CGROUP_INET_INGRESS]	= "cgroup_inet_ingress",
+@@ -5121,6 +5122,9 @@ static int bpf_object__create_map(struct bpf_object *obj, struct bpf_map *map, b
+ 
+ 	if (bpf_map_type__is_map_in_map(def->type)) {
+ 		if (map->inner_map) {
++			err = map_set_def_max_entries(map->inner_map);
++			if (err)
++				return err;
+ 			err = bpf_object__create_map(obj, map->inner_map, true);
+ 			if (err) {
+ 				pr_warn("map '%s': failed to create inner map: %d\n",
 -- 
 2.43.0
 
