@@ -1,40 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE6D1E7712;
-	Sun, 24 Mar 2024 22:54:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362BD1E85A3;
+	Sun, 24 Mar 2024 22:54:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320866; cv=none; b=ncTZDpLzl7r8OPecYlbX9VdP+RtsUK2aoZK5KAUNCi7auMSGtN2aVuohf/ALFqkJJFsy1gQQOUzT5FnEN7eF7Bc0xXiQ0+piqX4wU5t5qrqb4mpMRA7jQdc5wFmZwkhl8ZQ1RAPhFUkoV7aRk7k0iq5HlYHtDuUshfXPCT5FUiI=
+	t=1711320881; cv=none; b=HAUQQn+mf264rB9JF2iLLrP87bf0K9mu1D51e1Ruhsx2IxaK/yAQrTT3srum8FPMJRVp7Y5/WhpSWsvg1qHkmrNUAZ1TK56uhhfUhWp8Pdqdtl+/hwmAkhpiPxmjRR0DgkyBj+bzps8HdQVwwZm5/dHaPtML7ec1ueoQv/ZFMfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320866; c=relaxed/simple;
-	bh=EWgKnN4Jo0bf+oXAc5grq6JHSvSF9OfBeXnKDb9HOws=;
+	s=arc-20240116; t=1711320881; c=relaxed/simple;
+	bh=Vql+8js91BRX0rn5qU3meYIvkq3/iZebYzGwS509XTc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oDvOMDPqq1wUmDzAknzozDGzN1bc0gmCGUC1RZpvr55EEHTrIMavR6xnGfYdllgQnt8OPF0WYlZOBM++mh/uphVmEOByiCFDIxQQENa9NB0+BlAZ/4Pk48enLBcHwv1VnbinX8h9MCB0Vf+mauDkC9NpcaEDxOmrPFe8BYYlq+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BzwexvH+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BIW+fn+wkDUQ14UxBMnnSv/lmzmkAd0TOzONmb+7XWehLInjjyG6JytsUUbSSaGByhMbg573kKrDqyrSbEdFas94f54D/ELf+yEZme9Hp+n+ENgLDHv+MTBdk27U6yUNJbaN5HDbVBrYcWoxeJ/8SCJoaMoUsmUu1pej+zsp5o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XH0PZUU/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BzwexvH+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF602C43394;
-	Sun, 24 Mar 2024 22:54:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XH0PZUU/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F9E0C43330;
+	Sun, 24 Mar 2024 22:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320865;
-	bh=EWgKnN4Jo0bf+oXAc5grq6JHSvSF9OfBeXnKDb9HOws=;
+	s=k20201202; t=1711320880;
+	bh=Vql+8js91BRX0rn5qU3meYIvkq3/iZebYzGwS509XTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BzwexvH+GQIdZBtm0Ht2GRegtBRAivvnSrvTxxRIL7ap63otfj4LQ3JtFS9O3JeM+
-	 xUDOxtXDFTXFSXeJ123Tew/ZP6gfo2aP/kxD/+nk/LUweWyriVxVz+ZYleu6p23v8p
-	 x6FzAS3Jbnwov4oMTJRW+Cu5bKD3P2cXvoUKADDjWlwzKXn81cOrAxeOF1tJKXKFDc
-	 ttDf3mQw7a/zBpwLzCYHc4R3oFfh1lv3+Bu3RleuMQXOeTFmcYoLDnbNpU9zlHoWnX
-	 8AUykiV6Xjm4k6cvXh5xzUFyre5sGQh/2dDF7hAM+L74ZeOmb70Hzd/t12+JqQHMIK
-	 q05nHzK8lR6ew==
+	b=XH0PZUU/46IFy8sp/+S5J2rWTXJcondn8GwtpQ6j2PcAO4JftmUyhtMoBm8y8xmZr
+	 nJT1PggckArlgyaFJseQHRKMSTLT8Q8EMeu4O0EFrsYIcCWIaS+qQCtAOV+MDe7I9s
+	 Fww8XlgD3i5NEG9pax/uQeuiF0Dok6MDFkHzgPnNgVFCfMtcQQFS9L/pSK/lzTNifm
+	 eVHba0MMrcPYWG+yjUmp1SwXOab8LmJEAMRW3OElxQ9gNLGq8dnicv+otg1UJD562O
+	 w1bX2UbvY8YajhxVPWIrYyX62G+w81kp/BTkgWZlbLcGQcrSfYL8N7ovfr/WXq7s36
+	 zQ+z3p4GVRdow==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Geoff Levand <geoff@infradead.org>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 429/713] media: v4l2-tpg: fix some memleaks in tpg_alloc
-Date: Sun, 24 Mar 2024 18:42:35 -0400
-Message-ID: <20240324224720.1345309-430-sashal@kernel.org>
+Subject: [PATCH 6.7 444/713] drivers/ps3: select VIDEO to provide cmdline functions
+Date: Sun, 24 Mar 2024 18:42:50 -0400
+Message-ID: <20240324224720.1345309-445-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,110 +57,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 8cf9c5051076e0eb958f4361d50d8b0c3ee6691c ]
+[ Upstream commit 7edd06233958d9086a9e3eb723a8768d3c5a9ce1 ]
 
-In tpg_alloc, resources should be deallocated in each and every
-error-handling paths, since they are allocated in for statements.
-Otherwise there would be memleaks because tpg_free is called only when
-tpg_alloc return 0.
+When VIDEO is not set, there is a build error. Fix that by selecting
+VIDEO for PS3_PS3AV.
 
-Fixes: 63881df94d3e ("[media] vivid: add the Test Pattern Generator")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+ERROR: modpost: ".video_get_options" [drivers/ps3/ps3av_mod.ko] undefined!
+
+Fixes: dae7fbf43fd0 ("driver/ps3: Include <video/cmdline.h> for mode parsing")
+Fixes: a3b6792e990d ("video/cmdline: Introduce CONFIG_VIDEO for video= parameter")
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Geoff Levand <geoff@infradead.org>
+Acked-by: Geoff Levand <geoff@infradead.org>
+Cc: linux-fbdev@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20240207161322.8073-1-rdunlap@infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 52 +++++++++++++++----
- 1 file changed, 42 insertions(+), 10 deletions(-)
+ arch/powerpc/platforms/ps3/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-index a366566f22c3b..642c48e8c1f58 100644
---- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-+++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-@@ -113,6 +113,7 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- {
- 	unsigned pat;
- 	unsigned plane;
-+	int ret = 0;
- 
- 	tpg->max_line_width = max_w;
- 	for (pat = 0; pat < TPG_MAX_PAT_LINES; pat++) {
-@@ -121,14 +122,18 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- 
- 			tpg->lines[pat][plane] =
- 				vzalloc(array3_size(max_w, 2, pixelsz));
--			if (!tpg->lines[pat][plane])
--				return -ENOMEM;
-+			if (!tpg->lines[pat][plane]) {
-+				ret = -ENOMEM;
-+				goto free_lines;
-+			}
- 			if (plane == 0)
- 				continue;
- 			tpg->downsampled_lines[pat][plane] =
- 				vzalloc(array3_size(max_w, 2, pixelsz));
--			if (!tpg->downsampled_lines[pat][plane])
--				return -ENOMEM;
-+			if (!tpg->downsampled_lines[pat][plane]) {
-+				ret = -ENOMEM;
-+				goto free_lines;
-+			}
- 		}
- 	}
- 	for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-@@ -136,18 +141,45 @@ int tpg_alloc(struct tpg_data *tpg, unsigned max_w)
- 
- 		tpg->contrast_line[plane] =
- 			vzalloc(array_size(pixelsz, max_w));
--		if (!tpg->contrast_line[plane])
--			return -ENOMEM;
-+		if (!tpg->contrast_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
-+		}
- 		tpg->black_line[plane] =
- 			vzalloc(array_size(pixelsz, max_w));
--		if (!tpg->black_line[plane])
--			return -ENOMEM;
-+		if (!tpg->black_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
-+		}
- 		tpg->random_line[plane] =
- 			vzalloc(array3_size(max_w, 2, pixelsz));
--		if (!tpg->random_line[plane])
--			return -ENOMEM;
-+		if (!tpg->random_line[plane]) {
-+			ret = -ENOMEM;
-+			goto free_contrast_line;
-+		}
- 	}
- 	return 0;
-+
-+free_contrast_line:
-+	for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-+		vfree(tpg->contrast_line[plane]);
-+		vfree(tpg->black_line[plane]);
-+		vfree(tpg->random_line[plane]);
-+		tpg->contrast_line[plane] = NULL;
-+		tpg->black_line[plane] = NULL;
-+		tpg->random_line[plane] = NULL;
-+	}
-+free_lines:
-+	for (pat = 0; pat < TPG_MAX_PAT_LINES; pat++)
-+		for (plane = 0; plane < TPG_MAX_PLANES; plane++) {
-+			vfree(tpg->lines[pat][plane]);
-+			tpg->lines[pat][plane] = NULL;
-+			if (plane == 0)
-+				continue;
-+			vfree(tpg->downsampled_lines[pat][plane]);
-+			tpg->downsampled_lines[pat][plane] = NULL;
-+		}
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(tpg_alloc);
- 
+diff --git a/arch/powerpc/platforms/ps3/Kconfig b/arch/powerpc/platforms/ps3/Kconfig
+index a44869e5ea70f..1bd1b0b49bc62 100644
+--- a/arch/powerpc/platforms/ps3/Kconfig
++++ b/arch/powerpc/platforms/ps3/Kconfig
+@@ -67,6 +67,7 @@ config PS3_VUART
+ config PS3_PS3AV
+ 	depends on PPC_PS3
+ 	tristate "PS3 AV settings driver" if PS3_ADVANCED
++	select VIDEO
+ 	select PS3_VUART
+ 	default y
+ 	help
 -- 
 2.43.0
 
