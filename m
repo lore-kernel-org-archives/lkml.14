@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB68130A70;
-	Sun, 24 Mar 2024 23:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893001769E7;
+	Sun, 24 Mar 2024 23:37:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323432; cv=none; b=teei2xF1sZmwJJjsk/ADEgSL9QmbvsCvggvo6mA8k61zSFX9Q1VghjymwFLDew67GYGbUJxp+l/W1pnkFn/CcZ6/xV70LzrMFugfPW19ZwpRZ6+NRt0c2zJa/SGFZwIustSov2RHXqmZL57pogaUxL+2hpT6vqx9KE8UeS8JZgc=
+	t=1711323446; cv=none; b=nBGs2X43px6XRFhxyIr5I0KcynGenQGfyl2eX02hAeXecEqgaRMMoWB2FxHwFY+0QnW0T+4Kfu+S1FxopGeq6ryZpt61pEFKcfVTGdwOwJOantFTZzEjhE6D3On1YAzgMZwhSARk6Jn8LkYWi8W0tg0MhWtWs/GEIQg8eVQAV58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323432; c=relaxed/simple;
-	bh=VCSP0Hvz9yW0LzCbR2GPdE6hk29eu4AHO+aWWY50kDw=;
+	s=arc-20240116; t=1711323446; c=relaxed/simple;
+	bh=SsSv/d1AqjxdLmdNQv7XU4Xc7XOK/CXqj/W6WILv7OE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LnrQgymgnp1i0DVV2JMPEp5sWtTQ3nAmCwMtMi6AeTwesUs2pJSogNDQSbnfB/3bGCkLv88wrqYD0rFK3Iwv1tRxtqFWnbOb3LW2zWODgjVXrNX0QdsIF1csDd8CKDy7+ZpUoxaTQnC2WQLrApKZBUWE+BtKCTNivVywPBzw7Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcamVFpr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dV9yBkZFn6wKSDdy/A9gtyZxsKe4ifuznXnnGN260D8xTaaHeMwevEjHSPVG9EqvqdevpKJNabcpEVqOC1tHfox7fw2tUrgtFQwJKmH00xdpXxgNfgyydFZANNDaYFtJ6Qd4FdjzoxqvYaVDjowhnGeerCRCVEZvtnPt9BLFu/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WebdqqqQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcamVFpr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B397C43390;
-	Sun, 24 Mar 2024 23:37:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WebdqqqQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C76E1C43390;
+	Sun, 24 Mar 2024 23:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323432;
-	bh=VCSP0Hvz9yW0LzCbR2GPdE6hk29eu4AHO+aWWY50kDw=;
+	s=k20201202; t=1711323445;
+	bh=SsSv/d1AqjxdLmdNQv7XU4Xc7XOK/CXqj/W6WILv7OE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dcamVFpr5FQFnCRYiVFrfrG0aYirA6MZQ4sudQQE+Vtjo6KnfuSDzKznbsP08Vh4r
-	 ORESt6ZL03O7T/np2mSBjNtju9s+GK4o/R5BruV0lBF0tJYYtKCWbFqJCV/gfk2xgc
-	 Iyo+4N3yElFnQ5FN2Vfw6vDQzo5fj2PfDPxsCC67KESXJtA1ZSiMCxPHmUdCN9dRN7
-	 ZkYTnRPe3K9KSdZFBcyTNDxzH3BM/EnE6jii+Z2WVPT3eN7ft/us1h8JckOX3c4NI2
-	 OIn+KsRWkPK5Q6D+aQFJFhtquNLkfMkjo0tlcIAzglDJJvH9QxQGRw564SGxIlXuBN
-	 fjU4oBcdwa0Tw==
+	b=WebdqqqQ6OsXiCq1CbtaOBYyWHtvOZ32L6c9TC8FSoWjSOYHMJz/gWa8cu5/ZySNM
+	 IvMylsB0oU4N4PdP1P74dhAf4qXPymMekjfdhHYgLJNeoB83NtEk2u+6o2LFzoCKfu
+	 iA6wT+qS2GnevJ4Yth6Y7xy7n2QmeHX2Q4fOq0s7ADNU5VWdHhMUxn8jY/mQmmpOVc
+	 s2Nd0QAWBUFF9XGqpWhuI+qQDZkXVaFogScxhNKMOX10y2xJOXxpN+qjwmV7rdAg1M
+	 n74lidck4xmpAR/zd/bUSMhWJk/lkygHF97JgVOUr01K0v6smXkeHDxSlFCJy4v4vZ
+	 RYGy6+1hmiY7g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	Bui Quang Minh <minhquangbui99@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 135/317] bpf: Fix stackmap overflow check on 32-bit arches
-Date: Sun, 24 Mar 2024 19:31:55 -0400
-Message-ID: <20240324233458.1352854-136-sashal@kernel.org>
+Subject: [PATCH 5.15 148/317] ipmr: fix incorrect parameter validation in the ip_mroute_getsockopt() function
+Date: Sun, 24 Mar 2024 19:32:08 -0400
+Message-ID: <20240324233458.1352854-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -45,61 +44,46 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit 7a4b21250bf79eef26543d35bd390448646c536b ]
+[ Upstream commit 5c3be3e0eb44b7f978bb6cbb20ad956adb93f736 ]
 
-The stackmap code relies on roundup_pow_of_two() to compute the number
-of hash buckets, and contains an overflow check by checking if the
-resulting value is 0. However, on 32-bit arches, the roundup code itself
-can overflow by doing a 32-bit left-shift of an unsigned long value,
-which is undefined behaviour, so it is not guaranteed to truncate
-neatly. This was triggered by syzbot on the DEVMAP_HASH type, which
-contains the same check, copied from the hashtab code.
+The 'olr' variable can't be negative when assigned the result of
+'min_t' because all 'min_t' parameters are cast to unsigned int,
+and then the minimum one is chosen.
 
-The commit in the fixes tag actually attempted to fix this, but the fix
-did not account for the UB, so the fix only works on CPUs where an
-overflow does result in a neat truncation to zero, which is not
-guaranteed. Checking the value before rounding does not have this
-problem.
+To fix the logic, check 'olr' as read from 'optlen',
+where the types of relevant variables are (signed) int.
 
-Fixes: 6183f4d3a0a2 ("bpf: Check for integer overflow when using roundup_pow_of_two()")
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Reviewed-by: Bui Quang Minh <minhquangbui99@gmail.com>
-Message-ID: <20240307120340.99577-4-toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/stackmap.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/ipv4/ipmr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index f8587abef73c1..e04571c1833f6 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -113,11 +113,14 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
- 	} else if (value_size / 8 > sysctl_perf_event_max_stack)
- 		return ERR_PTR(-EINVAL);
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index eb3c09340aef8..c9a633559258c 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -1574,9 +1574,11 @@ int ip_mroute_getsockopt(struct sock *sk, int optname, sockptr_t optval,
  
--	/* hash table size must be power of 2 */
--	n_buckets = roundup_pow_of_two(attr->max_entries);
--	if (!n_buckets)
-+	/* hash table size must be power of 2; roundup_pow_of_two() can overflow
-+	 * into UB on 32-bit arches, so check that first
-+	 */
-+	if (attr->max_entries > 1UL << 31)
- 		return ERR_PTR(-E2BIG);
- 
-+	n_buckets = roundup_pow_of_two(attr->max_entries);
+ 	if (copy_from_sockptr(&olr, optlen, sizeof(int)))
+ 		return -EFAULT;
+-	olr = min_t(unsigned int, olr, sizeof(int));
+ 	if (olr < 0)
+ 		return -EINVAL;
 +
- 	cost = n_buckets * sizeof(struct stack_map_bucket *) + sizeof(*smap);
- 	smap = bpf_map_area_alloc(cost, bpf_map_attr_numa_node(attr));
- 	if (!smap)
++	olr = min_t(unsigned int, olr, sizeof(int));
++
+ 	if (copy_to_sockptr(optlen, &olr, sizeof(int)))
+ 		return -EFAULT;
+ 	if (copy_to_sockptr(optval, &val, olr))
 -- 
 2.43.0
 
