@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6E02853F6;
-	Sun, 24 Mar 2024 23:43:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C1A17D247;
+	Sun, 24 Mar 2024 23:43:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323830; cv=none; b=tYIEaEJVw8iN2dLOlTq96PlwQGCu8+lgMABUOCkBzmwdzAICZKZYuLEPUyWb+sC7/w/mNjWJhVQwIGssOfepNxcPx+N6S2qXe7Gf1QvvPnAUmmJv07Nk6Fh9SBwBt1C1lIkHq5y9tTvnE9sOD3a2lwxeZ1KL9ZvoWlCAuKxnP3g=
+	t=1711323834; cv=none; b=YdaPuwdVRNswhLQyRqnKA5ksxqFOSMFrkRNbZJnkrk+MCL+hiMOlWrS/Z0nPxmotvY1p4xc184g6TjwxQdqJ4KK2UVNbB43bUMl6MbVnzz3DtLwBxvii4y2LS+8t1f+4RccLrVzj7pQt8NiPAWAXEICIJf7TgP6bbBUw68nLhPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323830; c=relaxed/simple;
-	bh=gso14qdhcLYmuzqsGSlhn50akIu/WBnOxsTxJ7leCmg=;
+	s=arc-20240116; t=1711323834; c=relaxed/simple;
+	bh=HsUg5S/3AqL4buyV0K0NxnhMGaC2KNaoIWRU8mW7eOA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RipyKd0kFIHw/4PQPDlaxrF7JUMndFxuNKNyhmKkdN2H+Ky5ycI5ZBFu/N/dXlzUW4ts0KO8Gu0b66Wehl4YKKtKUwvFfaosO2JKJ0h3CCKb4/pPlthyDuG/qlDul39+fBJQZODwl+3Kamvp1u8eQZCjOiPUQMgYTgO0dxR29zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=acJe5k3v; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sSiC4LqTjC4sDfBz5bA81HQjz/yRpgy2hwZgrusI6wGj9m5pe2TZMr35RFd0lr2BW7JTJl+b4DxgNdUTA2z7vIbkGaEw0dwwkxoo8FJ1cdl3eHZxJxjz4orGJemRXeUZezVasL6nWyONS5ISagOvOj4S/XmG+Wmqd1zhxywegmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dv5QYpF6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acJe5k3v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12454C433C7;
-	Sun, 24 Mar 2024 23:43:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dv5QYpF6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E91BEC433C7;
+	Sun, 24 Mar 2024 23:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323828;
-	bh=gso14qdhcLYmuzqsGSlhn50akIu/WBnOxsTxJ7leCmg=;
+	s=k20201202; t=1711323834;
+	bh=HsUg5S/3AqL4buyV0K0NxnhMGaC2KNaoIWRU8mW7eOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=acJe5k3vIVk8c2/o9YIk3j/XPrusln6ohXTU4oHd29bx43C4lrLng05RU0OOc8bjA
-	 xl9CowsvXQu6hdk+JjrG9MrTpiLm2C4qQv0s+EJr079Bz+7/azHaSO7Llrb5XJUah9
-	 lzFRK+bqhDpbW83fVqop2Im7L9b/f3OxOa7zITWzMMUSUrONebwMsWPPUyGfzvk2HA
-	 c153AtUWbS5D4UEYiFrTUA5tYZgsul5ImBNr2k1B3W6QmrUI7Yzt02HsTcR2og+xK0
-	 5qGJJz3OgLidKwOwvZQ/kiHRrBNNdEIHjRco6oaClOAOpGk91CkdaMVQa7vmCD/GkI
-	 DrKm69u7q9H7Q==
+	b=dv5QYpF6LqdRqVUTpqYITd4jLS0G43jTz60d82SbgXKEJj8aA63vfA+vnLq2VsdSH
+	 oTtgS6RBVAa3LONJ7QKzYh4yirDplOw7RPQEZVHAPD+1IADgpm065lN6AbX0ukKB5V
+	 x+vEbDZw7R2M8yYCMbAnDzjrW4o6p1bphmrJ8snprLK8OMl9dfK7quCeVMt1JeNsDl
+	 tJ7+6m1IbKd7reUg3Bn2Dt5zDi8u5KdOIv1AneGv8TLTMBSGH5WEY4VEjgMVA+Qg+Z
+	 sMXcDLYDz3EN7WHJ7gtxXyWfRk9M68BQ58XGzpcyF0G88/eNyLVTlcYJMW8Zc2Eg+z
+	 vwQsBlIP2kaqw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 207/238] remoteproc: stm32: use correct format strings on 64-bit
-Date: Sun, 24 Mar 2024 19:39:55 -0400
-Message-ID: <20240324234027.1354210-208-sashal@kernel.org>
+Subject: [PATCH 5.10 213/238] kconfig: fix infinite loop when expanding a macro at the end of file
+Date: Sun, 24 Mar 2024 19:40:01 -0400
+Message-ID: <20240324234027.1354210-214-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,91 +47,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 03bd158e1535e68bcd2b1e095b0ebcad7c84bd20 ]
+[ Upstream commit af8bbce92044dc58e4cc039ab94ee5d470a621f5 ]
 
-With CONFIG_ARCH_STM32 making it into arch/arm64, a couple of format
-strings no longer work, since they rely on size_t being compatible
-with %x, or they print an 'int' using %z:
+A macro placed at the end of a file with no newline causes an infinite
+loop.
 
-drivers/remoteproc/stm32_rproc.c: In function 'stm32_rproc_mem_alloc':
-drivers/remoteproc/stm32_rproc.c:122:22: error: format '%x' expects argument of type 'unsigned int', but argument 5 has type 'size_t' {aka 'long unsigned int'} [-Werror=format=]
-drivers/remoteproc/stm32_rproc.c:122:40: note: format string is defined here
-  122 |         dev_dbg(dev, "map memory: %pa+%x\n", &mem->dma, mem->len);
-      |                                       ~^
-      |                                        |
-      |                                        unsigned int
-      |                                       %lx
-drivers/remoteproc/stm32_rproc.c:125:30: error: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'size_t' {aka 'long unsigned int'} [-Werror=format=]
-drivers/remoteproc/stm32_rproc.c:125:65: note: format string is defined here
-  125 |                 dev_err(dev, "Unable to map memory region: %pa+%x\n",
-      |                                                                ~^
-      |                                                                 |
-      |                                                                 unsigned int
-      |                                                                %lx
-drivers/remoteproc/stm32_rproc.c: In function 'stm32_rproc_get_loaded_rsc_table':
-drivers/remoteproc/stm32_rproc.c:646:30: error: format '%zx' expects argument of type 'size_t', but argument 4 has type 'int' [-Werror=format=]
-drivers/remoteproc/stm32_rproc.c:646:66: note: format string is defined here
-  646 |                 dev_err(dev, "Unable to map memory region: %pa+%zx\n",
-      |                                                                ~~^
-      |                                                                  |
-      |                                                                  long unsigned int
-      |                                                                %x
+[Test Kconfig]
+  $(info,hello)
+  \ No newline at end of file
 
-Fix up all three instances to work across architectures, and enable
-compile testing for this driver to ensure it builds everywhere.
+I realized that flex-provided input() returns 0 instead of EOF when it
+reaches the end of a file.
 
-Reviewed-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Stable-dep-of: 32381bbccba4 ("remoteproc: stm32: Fix incorrect type in assignment for va")
+Fixes: 104daea149c4 ("kconfig: reference environment variables directly and remove 'option env='")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/Kconfig       | 2 +-
- drivers/remoteproc/stm32_rproc.c | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ scripts/kconfig/lexer.l | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-index d99548fb5ddef..6dbf6ed10ea49 100644
---- a/drivers/remoteproc/Kconfig
-+++ b/drivers/remoteproc/Kconfig
-@@ -249,7 +249,7 @@ config ST_SLIM_REMOTEPROC
+diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
+index 240109f965aeb..72e5e9ac52bb4 100644
+--- a/scripts/kconfig/lexer.l
++++ b/scripts/kconfig/lexer.l
+@@ -305,8 +305,11 @@ static char *expand_token(const char *in, size_t n)
+ 	new_string();
+ 	append_string(in, n);
  
- config STM32_RPROC
- 	tristate "STM32 remoteproc support"
--	depends on ARCH_STM32
-+	depends on ARCH_STM32 || COMPILE_TEST
- 	depends on REMOTEPROC
- 	select MAILBOX
- 	help
-diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index b410684c3aa90..8f7fb1baed10d 100644
---- a/drivers/remoteproc/stm32_rproc.c
-+++ b/drivers/remoteproc/stm32_rproc.c
-@@ -117,10 +117,10 @@ static int stm32_rproc_mem_alloc(struct rproc *rproc,
- 	struct device *dev = rproc->dev.parent;
- 	void *va;
- 
--	dev_dbg(dev, "map memory: %pa+%x\n", &mem->dma, mem->len);
-+	dev_dbg(dev, "map memory: %pad+%zx\n", &mem->dma, mem->len);
- 	va = ioremap_wc(mem->dma, mem->len);
- 	if (IS_ERR_OR_NULL(va)) {
--		dev_err(dev, "Unable to map memory region: %pa+%x\n",
-+		dev_err(dev, "Unable to map memory region: %pad+0x%zx\n",
- 			&mem->dma, mem->len);
- 		return -ENOMEM;
- 	}
-@@ -608,7 +608,7 @@ stm32_rproc_get_loaded_rsc_table(struct rproc *rproc, size_t *table_sz)
- 
- 	ddata->rsc_va = devm_ioremap_wc(dev, rsc_pa, RSC_TBL_SIZE);
- 	if (IS_ERR_OR_NULL(ddata->rsc_va)) {
--		dev_err(dev, "Unable to map memory region: %pa+%zx\n",
-+		dev_err(dev, "Unable to map memory region: %pa+%x\n",
- 			&rsc_pa, RSC_TBL_SIZE);
- 		ddata->rsc_va = NULL;
- 		return ERR_PTR(-ENOMEM);
+-	/* get the whole line because we do not know the end of token. */
+-	while ((c = input()) != EOF) {
++	/*
++	 * get the whole line because we do not know the end of token.
++	 * input() returns 0 (not EOF!) when it reachs the end of file.
++	 */
++	while ((c = input()) != 0) {
+ 		if (c == '\n') {
+ 			unput(c);
+ 			break;
 -- 
 2.43.0
 
