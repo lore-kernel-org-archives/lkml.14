@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0251EBD59;
-	Sun, 24 Mar 2024 22:55:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3AD1EC644;
+	Sun, 24 Mar 2024 22:55:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320938; cv=none; b=qSCw4jhA1+P+9FMxMkf9hkWpVvqqHJC6PzJWiO0MNy5kSbxHttDD4196bwD/liG00jWM0vnYGGTMKpe1p4/ZFn5PSExu+BItLnRSZv6/zY7BSlmpwrSEclH1jGQhhNDK7KQ42NL+lqq7C+2MOeXilNaaFAUW5aDDCodCWTROHmo=
+	t=1711320950; cv=none; b=OWIywDq0/FaTxNWwh3QT8LcZaLXtzzC0xU9oHvxMboqAyXosgQfsd65sseGBg2ekFPWIMt6BNQzDFxNyuYwNCZs7pmbZ4szVRHzEAF1cWe261Tqn7Unj/rNej94jIQwJn5g7LSsvlv6p4vd8ls/chlei6rutqk/pmaNF1cdnFUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320938; c=relaxed/simple;
-	bh=6NKZ+nns2FDi5/2LhPWcehmggKBZIPf/gzGtIL9UKCE=;
+	s=arc-20240116; t=1711320950; c=relaxed/simple;
+	bh=XxGmLl6+DooQ9xpblrIj6cmIex0vd08lyEIDlpuMsCk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Uhk6+dshx11VMIFP9y0To44M11PcI9mupMc8jVaLcnWW27gTfuFy/BrDf0GiPfGwWeI6tBL2kAquz0VXBQ4CNJWlkq0cw06O7JnZzVTFcu338bFA+5xm6nEVb+ZRUCscPo2zCtYNsxlMQmtQGQ5G+o1OqqtrnXdP64Cq72Db4rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2iKSEyp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lXe3iiNGV4Wp45msyMNnUZWg55hEl85NtPF91CtblA8foZHK5HfMytsSmGXbZnAoDzMGtLw5yvs3porKzoB2XlyR+ZW5xPx/LL/SUO+mj5JJwDRJ1ZWzWnuZuKDGgVeKkNhYWLIk9W48ZubIz8mVRpGCX0nRsEyqpquGZGiApXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZaRzE56Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2iKSEyp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF7AC43390;
-	Sun, 24 Mar 2024 22:55:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZaRzE56Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D243DC433C7;
+	Sun, 24 Mar 2024 22:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320937;
-	bh=6NKZ+nns2FDi5/2LhPWcehmggKBZIPf/gzGtIL9UKCE=;
+	s=k20201202; t=1711320948;
+	bh=XxGmLl6+DooQ9xpblrIj6cmIex0vd08lyEIDlpuMsCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E2iKSEypyV4lE9wITaGCoKtewfcAIZt1PLVbg0i3pj5ZMhBvScpEuD9M7I6PCtozI
-	 f0WlicexwB7FgKP8Nmp3yH83kUN+8o51N1zz1TayjJRuoLIYFnDNo91GT2UoUn5JRj
-	 EQZ3ClX0flsGrmXga0ca2almXGDrkrpeRuZWugurWiUwXxbRoyxHl1QkOdXdZsvpUd
-	 AxPGPuYXLEXaOjoi3oN9C7HlMrjo393cxLBnFriPTjRqnWPnobI8RLUh9aPlVSOC2X
-	 dC5bQ63LWsftnsEZ9RarDmsM0NEqM0NERoQS1mGc7trO7DCVT4BHHAhuSf2Vba153L
-	 05Lh6+rVxpwpA==
+	b=ZaRzE56Q3HFkS7qkLsS2TI+x2Y7gx/Ve3TTZdLsb/sxHFWvWujXESqAUiZ46GzUHR
+	 ujOocNRaXuSIzppm8Ht1HhbjEhJhcOTrn2+rxpNskflgV8beyZa3tXDSH302VFC0Uy
+	 RK8egHKYACuALxmwgZ9AK4ODlb31wusryH1Qft4x+uhpJSmPW3Hh/L036eWs1sTykO
+	 SRy3luDUqqrdG7RVcByrZfd2w7M+ErFcCM3+ysejkETaRzAdfmuh/R/japYl2GkR0s
+	 rAaTyf1s7Q2qqF3G31f2VwktiFap7lgqNtx4+cstrwhjoyKOwT4OMKuobK6F48OemM
+	 SUwuzTNokSwxg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Adam Guerin <adam.guerin@intel.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
+Cc: Rob Clark <robdclark@chromium.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 500/713] crypto: qat - avoid division by zero
-Date: Sun, 24 Mar 2024 18:43:46 -0400
-Message-ID: <20240324224720.1345309-501-sashal@kernel.org>
+Subject: [PATCH 6.7 512/713] drm/msm/a7xx: Fix LLC typo
+Date: Sun, 24 Mar 2024 18:43:58 -0400
+Message-ID: <20240324224720.1345309-513-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,43 +48,34 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Adam Guerin <adam.guerin@intel.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit f99fb7d660f7c818105803f1f1915396a14d18ad ]
+[ Upstream commit 0776ad9274d96d132131af66a5941df45b9d46b4 ]
 
-Check if delta_us is not zero and return -EINVAL if it is.
-delta_us is unlikely to be zero as there is a sleep between the reads of
-the two timestamps.
+We'd miss actually activating LLC.
 
-This is to fix the following warning when compiling the QAT driver
-using clang scan-build:
-    drivers/crypto/intel/qat/qat_common/adf_clock.c:87:9: warning: Division by zero [core.DivideZero]
-       87 |         temp = DIV_ROUND_CLOSEST_ULL(temp, delta_us);
-          |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Fixes: e2980ba57e79 ("crypto: qat - add measure clock frequency")
-Signed-off-by: Adam Guerin <adam.guerin@intel.com>
-Reviewed-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Fixes: af66706accdf ("drm/msm/a6xx: Add skeleton A7xx support")
+Patchwork: https://patchwork.freedesktop.org/patch/573043/
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/intel/qat/qat_common/adf_clock.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/intel/qat/qat_common/adf_clock.c b/drivers/crypto/intel/qat/qat_common/adf_clock.c
-index 01e0a389e462b..cf89f57de2a70 100644
---- a/drivers/crypto/intel/qat/qat_common/adf_clock.c
-+++ b/drivers/crypto/intel/qat/qat_common/adf_clock.c
-@@ -83,6 +83,9 @@ static int measure_clock(struct adf_accel_dev *accel_dev, u32 *frequency)
- 	}
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index 500ed2d183fcc..edc1eeef844ef 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -2416,7 +2416,7 @@ static int a6xx_gmu_pm_resume(struct msm_gpu *gpu)
  
- 	delta_us = timespec_to_us(&ts3) - timespec_to_us(&ts1);
-+	if (!delta_us)
-+		return -EINVAL;
-+
- 	temp = (timestamp2 - timestamp1) * ME_CLK_DIVIDER * 10;
- 	temp = DIV_ROUND_CLOSEST_ULL(temp, delta_us);
- 	/*
+ 	msm_devfreq_resume(gpu);
+ 
+-	adreno_is_a7xx(adreno_gpu) ? a7xx_llc_activate : a6xx_llc_activate(a6xx_gpu);
++	adreno_is_a7xx(adreno_gpu) ? a7xx_llc_activate(a6xx_gpu) : a6xx_llc_activate(a6xx_gpu);
+ 
+ 	return ret;
+ }
 -- 
 2.43.0
 
