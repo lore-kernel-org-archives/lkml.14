@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7DC1EC649;
-	Sun, 24 Mar 2024 22:55:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87EB1EC654;
+	Sun, 24 Mar 2024 22:55:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320952; cv=none; b=VFxaOLUml/27Q8UIAufrUYVML/NDB85RKIU48uG4CenlQaGk/fyj7MTLjwms/Db1tJfFudfw/P0wrkcCkoj0qLagAMXKy05LfxV52iM/ZJQJFOmH7oCw1DH56BzvGFGUYWk/5J3Ulwhk7Q0tRIiFGySxy12PP9fOSQG55kB+vvo=
+	t=1711320954; cv=none; b=MMOm3EgPnBN3f/O+yKFUSyIi4Xonf2v665urCU0Cv4PMXp8z7lLpPGWVTZCdMLnRwO4uIdeNNEa/M93L1EGaXiW87uWBXG17ml7w0gOSVCvWFGZyJmwA2/XZlJZMhdb/zP4iDr8ldonlsV87eToGeSLkE/mxiF+w+dsXptLCL/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320952; c=relaxed/simple;
-	bh=Fh4E4z39r7oA0cEzec0Z79XrPswQA0teNAo3fCt4Zg4=;
+	s=arc-20240116; t=1711320954; c=relaxed/simple;
+	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KeJqJfid/UhoD1rUFrBOQSEK3zcfSALipanmDwagtlCwt/w1MiWmk2QBDeARYxV5IJQS1KiDSEQmxTmCW2y++qfOAn0U+yLeb8dZnAYbFWJOcsgSECy8woZ+NmsUVZ33SFJwr3dy97TOUTZ5LgTcSZPrfyyOTv75qglQpEaxrVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n5Z9nU22; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X0Ni4zuzJMpVkyXjpE6CU/megvg7Pni4aEWYSnHbLlhrD6TMPVLZCUvbhksc2KbvTSJOyPD8R2MsstmTrpx3dzwxy7WUtXAmtyvXcQRqL6skqsbmtIzMvEneDLHEsvG2S2plnj7fHDTIrJFBVIeJsJkzByPUgpZ4nCTc3rh9Ixc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUm+XMmb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n5Z9nU22"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1684C433F1;
-	Sun, 24 Mar 2024 22:55:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUm+XMmb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5412C43390;
+	Sun, 24 Mar 2024 22:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320951;
-	bh=Fh4E4z39r7oA0cEzec0Z79XrPswQA0teNAo3fCt4Zg4=;
+	s=k20201202; t=1711320953;
+	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n5Z9nU22MGN1ISNOwgRwY65zg9gFx/o1Rnmau110n6UFiyaDCvTISr/jJPhnynpli
-	 JVThTvW4yCh91I8YtEJ1cmid0Awk+4YwSOokDVb9VOcICDalZlxWbGEEKuTdcYOpcL
-	 f/O585Knh+QSP41yS+OxqJhtkqaN1Ocru9R/1DBsX4rHAF73Q0bd9SxuHpjIjPoR/B
-	 hPz8t7gdjw5ydSHBDjnyJypvJQGRVIuMhLCLRYAdUtamuJyl10Q/LAuRqjg4tf+/Nh
-	 chMNYpJQA+HN43jT3urI6Ljvuf9zvn0yzS6ZgshTdKSSbK40nQDiZce8//NbemNEYX
-	 94KWv0KO3R6dw==
+	b=fUm+XMmbmR8zVSGNRnzVpTVVqGqnd7HLqmqtFjgRvRYHhx9puTt8iCosfuvYWKy5M
+	 AoBe/lNDwP7qAdJ0zqjFB8PfYFW9u7nssZVuEqhE+sGTDCDGd5Jq9d++VNYK+oWFQF
+	 lHmdIDFCqZmM+HLWZZcn8MKD0NL8ZVrNzkGyFTKSwBxF1FB5vNpcm4mN4BmhO8zuvW
+	 l88LYtcvT9o9w2U0dbOwnpU4DaTYlBZ3ENX+HhA7ArNfsh9aHty7t3O67bCI94mZGJ
+	 sXNAIsOn8OFmAXXwqFzasvwKt+koXYMw2WUyB1jExn2s9CWrzyxySCR+3rkTBZT4dq
+	 JffUgBO+wld6g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-	Akshata MukundShetty <akshata.mukundshetty@amd.com>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Edward Adam Davis <eadavis@qq.com>,
+	syzbot+ce750e124675d4599449@syzkaller.appspotmail.com,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 515/713] HID: amd_sfh: Avoid disabling the interrupt
-Date: Sun, 24 Mar 2024 18:44:01 -0400
-Message-ID: <20240324224720.1345309-516-sashal@kernel.org>
+Subject: [PATCH 6.7 517/713] media: pvrusb2: fix uaf in pvr2_context_set_notify
+Date: Sun, 24 Mar 2024 18:44:03 -0400
+Message-ID: <20240324224720.1345309-518-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,101 +49,73 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+From: Edward Adam Davis <eadavis@qq.com>
 
-[ Upstream commit c1db0073212ef39d5a46c2aea5e49bf884375ce4 ]
+[ Upstream commit 0a0b79ea55de8514e1750884e5fec77f9fdd01ee ]
 
-HP ProBook x360 435 G7 using older version of firmware which doesn't
-support disabling the interrupt for all commands. Hence avoid disabling
-the interrupt for that particular model.
+[Syzbot reported]
+BUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
+Read of size 4 at addr ffff888113aeb0d8 by task kworker/1:1/26
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218104
-Fixes: b300667b33b2 ("HID: amd_sfh: Disable the interrupt for all command")
-Co-developed-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
-Signed-off-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
-Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+CPU: 1 PID: 26 Comm: kworker/1:1 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc4/0x620 mm/kasan/report.c:488
+ kasan_report+0xda/0x110 mm/kasan/report.c:601
+ pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
+ pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]
+ pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272
+
+Freed by task 906:
+kasan_save_stack+0x33/0x50 mm/kasan/common.c:47
+kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+kasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640
+poison_slab_object mm/kasan/common.c:241 [inline]
+__kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257
+kasan_slab_free include/linux/kasan.h:184 [inline]
+slab_free_hook mm/slub.c:2121 [inline]
+slab_free mm/slub.c:4299 [inline]
+kfree+0x105/0x340 mm/slub.c:4409
+pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]
+pvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+
+[Analyze]
+Task A set disconnect_flag = !0, which resulted in Task B's condition being met
+and releasing mp, leading to this issue.
+
+[Fix]
+Place the disconnect_flag assignment operation after all code in pvr2_context_disconnect()
+to avoid this issue.
+
+Reported-and-tested-by: syzbot+ce750e124675d4599449@syzkaller.appspotmail.com
+Fixes: e5be15c63804 ("V4L/DVB (7711): pvrusb2: Fix race on module unload")
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/amd-sfh-hid/amd_sfh_pcie.c | 30 +++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+ drivers/media/usb/pvrusb2/pvrusb2-context.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-index 2530fa98b568b..ce449da08e9ba 100644
---- a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-+++ b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-@@ -35,6 +35,8 @@ static int sensor_mask_override = -1;
- module_param_named(sensor_mask, sensor_mask_override, int, 0444);
- MODULE_PARM_DESC(sensor_mask, "override the detected sensors mask");
- 
-+static bool intr_disable = true;
-+
- static int amd_sfh_wait_response_v2(struct amd_mp2_dev *mp2, u8 sid, u32 sensor_sts)
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+index 58f2f3ff10ee2..73c95ba2328a4 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+@@ -267,9 +267,9 @@ static void pvr2_context_exit(struct pvr2_context *mp)
+ void pvr2_context_disconnect(struct pvr2_context *mp)
  {
- 	union cmd_response cmd_resp;
-@@ -55,7 +57,7 @@ static void amd_start_sensor_v2(struct amd_mp2_dev *privdata, struct amd_mp2_sen
- 
- 	cmd_base.ul = 0;
- 	cmd_base.cmd_v2.cmd_id = ENABLE_SENSOR;
--	cmd_base.cmd_v2.intr_disable = 1;
-+	cmd_base.cmd_v2.intr_disable = intr_disable;
- 	cmd_base.cmd_v2.period = info.period;
- 	cmd_base.cmd_v2.sensor_id = info.sensor_idx;
- 	cmd_base.cmd_v2.length = 16;
-@@ -73,7 +75,7 @@ static void amd_stop_sensor_v2(struct amd_mp2_dev *privdata, u16 sensor_idx)
- 
- 	cmd_base.ul = 0;
- 	cmd_base.cmd_v2.cmd_id = DISABLE_SENSOR;
--	cmd_base.cmd_v2.intr_disable = 1;
-+	cmd_base.cmd_v2.intr_disable = intr_disable;
- 	cmd_base.cmd_v2.period = 0;
- 	cmd_base.cmd_v2.sensor_id = sensor_idx;
- 	cmd_base.cmd_v2.length  = 16;
-@@ -87,7 +89,7 @@ static void amd_stop_all_sensor_v2(struct amd_mp2_dev *privdata)
- 	union sfh_cmd_base cmd_base;
- 
- 	cmd_base.cmd_v2.cmd_id = STOP_ALL_SENSORS;
--	cmd_base.cmd_v2.intr_disable = 1;
-+	cmd_base.cmd_v2.intr_disable = intr_disable;
- 	cmd_base.cmd_v2.period = 0;
- 	cmd_base.cmd_v2.sensor_id = 0;
- 
-@@ -292,6 +294,26 @@ int amd_sfh_irq_init(struct amd_mp2_dev *privdata)
- 	return 0;
+ 	pvr2_hdw_disconnect(mp->hdw);
+-	mp->disconnect_flag = !0;
+ 	if (!pvr2_context_shutok())
+ 		pvr2_context_notify(mp);
++	mp->disconnect_flag = !0;
  }
  
-+static int mp2_disable_intr(const struct dmi_system_id *id)
-+{
-+	intr_disable = false;
-+	return 0;
-+}
-+
-+static const struct dmi_system_id dmi_sfh_table[] = {
-+	{
-+		/*
-+		 * https://bugzilla.kernel.org/show_bug.cgi?id=218104
-+		 */
-+		.callback = mp2_disable_intr,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP ProBook x360 435 G7"),
-+		},
-+	},
-+	{}
-+};
-+
- static const struct dmi_system_id dmi_nodevs[] = {
- 	{
- 		/*
-@@ -315,6 +337,8 @@ static int amd_mp2_pci_probe(struct pci_dev *pdev, const struct pci_device_id *i
- 	if (dmi_first_match(dmi_nodevs))
- 		return -ENODEV;
  
-+	dmi_check_system(dmi_sfh_table);
-+
- 	privdata = devm_kzalloc(&pdev->dev, sizeof(*privdata), GFP_KERNEL);
- 	if (!privdata)
- 		return -ENOMEM;
 -- 
 2.43.0
 
