@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F0D1FA817;
-	Sun, 24 Mar 2024 23:01:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990E31FA809;
+	Sun, 24 Mar 2024 23:01:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321286; cv=none; b=sUyLOOFT9GfipJ/ejOHTQ6GRL+Sranctk971St+kEHEEjdsVcbz7oekfDTJ9YWnogJdACDVE7pNAF9ynAnA0eJ6XnoRv15mIMoofuiGE8dfyDfHmDv7kZBcqj7bhbbj6FooELfOGz87o0vyIQ3MQDFwk2q/ADd9ZJey+VUmmNhk=
+	t=1711321284; cv=none; b=h1KEvhrTrhOwIG+M+8omXMgZt0FRhpPDBqQ7wrqeV6ErDPdWa3Fb4IysHxG0QEI2+1nSaVwvLpmyny9nLQ/kx6/6t12H175x75UBOhaEmcLMRRqTgHo9q0bc6Wa9IyKCNgiWBo/5/CUjkAo36ik7V5pBnDod6JMTj1M8VLe6AO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321286; c=relaxed/simple;
-	bh=/UDMCO+p3pTN0o3VKH882mj3piAL34bvPIkXm2pXWnI=;
+	s=arc-20240116; t=1711321284; c=relaxed/simple;
+	bh=JvLxDW07Gt/27exbqBLUQLZ3ITh8Gwx3ZVFx5ssdy/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KqncQHCrtA2XG23WIztOeCit9v0OFlOEqY81LpmARj1pI1ltQy36x6CZf4K7zT5dhjVa7fzbMZzl7q2n8kmXAO799XbEKY3rMehVlcIMQIaOwOQqyTYNrb5woNWPGKEevXARzK8AuPJW0LexxqXC7OUiAGQB2QCKEWXLKhKdIEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=loCGWy7H; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lG7l8adNEnADSrDpQyjgHXHVdOWJkI9bJKp+dHuuvbmtg1h5vhEhM+kWDnevFkcqZCY9prpew+HDFWxe7ntajr4Klc0IVyM+HX8pk7PAbuOeQqt3NRoJtHipo9mqcAgqU8PS6XWvIzJm7cMfvkIFN0AZakB3LFe+Jub3bF4wGSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVULR1W+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="loCGWy7H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CAEDC43394;
-	Sun, 24 Mar 2024 23:01:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVULR1W+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0914C43394;
+	Sun, 24 Mar 2024 23:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321286;
-	bh=/UDMCO+p3pTN0o3VKH882mj3piAL34bvPIkXm2pXWnI=;
+	s=k20201202; t=1711321283;
+	bh=JvLxDW07Gt/27exbqBLUQLZ3ITh8Gwx3ZVFx5ssdy/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=loCGWy7HzCr9mqumtQY3rIO5FfxoIfuZaJyS/U7+id+IKFruIir01lfAOBbSjlkDJ
-	 HpvD2nG8HEfUV0rmdT2/JMptYtOHdfeG/kHbdIQSgwEC/77snhy7h3O2VhfKuFw2mT
-	 eD0a30i9tmsTRuZxo/T1r30p4fNtDJ78qzEwqT4dKKikc6Iyx3skmiz1/PU6y+O2mA
-	 eqfzhC9hwp/lW3fw4zGRanQB3EnN+ffBbYv0j9j9ND6ngj7Lc/FByDaRW4hwjHIp7N
-	 Cei/Gzpy5eJIXCKGpH6Lz6KhbXFdyQ0h0F33nLrc7kXj/z2zhJXQWLDvoFVLdts8EX
-	 gnC85ovM2F5eA==
+	b=hVULR1W+CXCvbuQFrL10qg1Uj+2Hg75RNLz3rkPU2gem7jaZ94dWpS/b5OcqBOvHb
+	 fM+RCx+GbSqAL10nFqYtVmgSGcrn2NL0xLwrqfGK32yDQQc7f64qy9bzgwCA+OWoyg
+	 fdr0/9EgO+ZFmw0Tr9ShulrNdA/dhph2LG7ujCW2iMYA1FgfLpKKq48e6ZuQA0GkqW
+	 m43iEHviiSnAMImt3hE+B6QV2pkPNUEn5gUsQsml0x09xnqGxHr2R/ZINtdico82Nk
+	 b/wvnRvTq5p16KWVmcV1vxV1WEGYaBpNQdxcAujjAYy2M9hIHe3cVQjngSg1a91OmM
+	 rLX49l49wsoEw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Will Deacon <will@kernel.org>,
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 008/638] perf/arm-cmn: Workaround AmpereOneX errata AC04_MESH_1 (incorrect child count)
-Date: Sun, 24 Mar 2024 18:50:45 -0400
-Message-ID: <20240324230116.1348576-9-sashal@kernel.org>
+Subject: [PATCH 6.6 005/638] media: rkisp1: Fix IRQ handling due to shared interrupts
+Date: Sun, 24 Mar 2024 18:50:42 -0400
+Message-ID: <20240324230116.1348576-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,51 +49,138 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-[ Upstream commit 50572064ec7109b00eef8880e905f55861c8b3de ]
+[ Upstream commit ffb635bb398fc07cb38f8a7b4a82cbe5f412f08e ]
 
-AmpereOneX mesh implementation has a bug in HN-P nodes that makes them
-report incorrect child count. The failing crosspoints report 8 children
-while they only have two.
+The driver requests the interrupts as IRQF_SHARED, so the interrupt
+handlers can be called at any time. If such a call happens while the ISP
+is powered down, the SoC will hang as the driver tries to access the
+ISP registers.
 
-When the driver tries to access the inexistent child nodes, it believes it
-has reached an invalid node type and probing fails. The workaround is to
-ignore those incorrect child nodes and continue normally.
+This can be reproduced even without the platform sharing the IRQ line:
+Enable CONFIG_DEBUG_SHIRQ and unload the driver, and the board will
+hang.
 
-Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-[ rm: rewrote simpler generalised version ]
-Tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/ce4b1442135fe03d0de41859b04b268c88c854a3.1707498577.git.robin.murphy@arm.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Fix this by adding a new field, 'irqs_enabled', which is used to bail
+out from the interrupt handler when the ISP is not operational.
+
+Link: https://lore.kernel.org/r/20231218-rkisp-shirq-fix-v1-2-173007628248@ideasonboard.com
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm-cmn.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../platform/rockchip/rkisp1/rkisp1-capture.c |  3 +++
+ .../platform/rockchip/rkisp1/rkisp1-common.h  |  2 ++
+ .../platform/rockchip/rkisp1/rkisp1-csi.c     |  3 +++
+ .../platform/rockchip/rkisp1/rkisp1-dev.c     | 22 +++++++++++++++++++
+ .../platform/rockchip/rkisp1/rkisp1-isp.c     |  3 +++
+ 5 files changed, 33 insertions(+)
 
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index 6404b17d3aeb0..2c684e49a6fc7 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -2301,6 +2301,17 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 				dev_dbg(cmn->dev, "ignoring external node %llx\n", reg);
- 				continue;
- 			}
-+			/*
-+			 * AmpereOneX erratum AC04_MESH_1 makes some XPs report a bogus
-+			 * child count larger than the number of valid child pointers.
-+			 * A child offset of 0 can only occur on CMN-600; otherwise it
-+			 * would imply the root node being its own grandchild, which
-+			 * we can safely dismiss in general.
-+			 */
-+			if (reg == 0 && cmn->part != PART_CMN600) {
-+				dev_dbg(cmn->dev, "bogus child pointer?\n");
-+				continue;
-+			}
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
+index 8f3cba3197623..c584bb6d31998 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
+@@ -723,6 +723,9 @@ irqreturn_t rkisp1_capture_isr(int irq, void *ctx)
+ 	unsigned int i;
+ 	u32 status;
  
- 			arm_cmn_init_node_info(cmn, reg & CMN_CHILD_NODE_ADDR, dn);
++	if (!rkisp1->irqs_enabled)
++		return IRQ_NONE;
++
+ 	status = rkisp1_read(rkisp1, RKISP1_CIF_MI_MIS);
+ 	if (!status)
+ 		return IRQ_NONE;
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+index 104a1dbeff433..e9bc6c155d2fc 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+@@ -467,6 +467,7 @@ struct rkisp1_debug {
+  * @debug:	   debug params to be exposed on debugfs
+  * @info:	   version-specific ISP information
+  * @irqs:          IRQ line numbers
++ * @irqs_enabled:  the hardware is enabled and can cause interrupts
+  */
+ struct rkisp1_device {
+ 	void __iomem *base_addr;
+@@ -488,6 +489,7 @@ struct rkisp1_device {
+ 	struct rkisp1_debug debug;
+ 	const struct rkisp1_info *info;
+ 	int irqs[RKISP1_NUM_IRQS];
++	bool irqs_enabled;
+ };
  
+ /*
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-csi.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-csi.c
+index 0a67eb96402cb..1537dccbd2e28 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-csi.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-csi.c
+@@ -211,6 +211,9 @@ irqreturn_t rkisp1_csi_isr(int irq, void *ctx)
+ 	struct rkisp1_device *rkisp1 = dev_get_drvdata(dev);
+ 	u32 val, status;
+ 
++	if (!rkisp1->irqs_enabled)
++		return IRQ_NONE;
++
+ 	status = rkisp1_read(rkisp1, RKISP1_CIF_MIPI_MIS);
+ 	if (!status)
+ 		return IRQ_NONE;
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
+index acc559652d6eb..73cf08a740118 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
+@@ -305,6 +305,24 @@ static int __maybe_unused rkisp1_runtime_suspend(struct device *dev)
+ {
+ 	struct rkisp1_device *rkisp1 = dev_get_drvdata(dev);
+ 
++	rkisp1->irqs_enabled = false;
++	/* Make sure the IRQ handler will see the above */
++	mb();
++
++	/*
++	 * Wait until any running IRQ handler has returned. The IRQ handler
++	 * may get called even after this (as it's a shared interrupt line)
++	 * but the 'irqs_enabled' flag will make the handler return immediately.
++	 */
++	for (unsigned int il = 0; il < ARRAY_SIZE(rkisp1->irqs); ++il) {
++		if (rkisp1->irqs[il] == -1)
++			continue;
++
++		/* Skip if the irq line is the same as previous */
++		if (il == 0 || rkisp1->irqs[il - 1] != rkisp1->irqs[il])
++			synchronize_irq(rkisp1->irqs[il]);
++	}
++
+ 	clk_bulk_disable_unprepare(rkisp1->clk_size, rkisp1->clks);
+ 	return pinctrl_pm_select_sleep_state(dev);
+ }
+@@ -321,6 +339,10 @@ static int __maybe_unused rkisp1_runtime_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	rkisp1->irqs_enabled = true;
++	/* Make sure the IRQ handler will see the above */
++	mb();
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c
+index 2239fb6c7d393..8fc9c1c116f1d 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c
+@@ -1027,6 +1027,9 @@ irqreturn_t rkisp1_isp_isr(int irq, void *ctx)
+ 	struct rkisp1_device *rkisp1 = dev_get_drvdata(dev);
+ 	u32 status, isp_err;
+ 
++	if (!rkisp1->irqs_enabled)
++		return IRQ_NONE;
++
+ 	status = rkisp1_read(rkisp1, RKISP1_CIF_ISP_MIS);
+ 	if (!status)
+ 		return IRQ_NONE;
 -- 
 2.43.0
 
