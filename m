@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8835D14532A;
-	Sun, 24 Mar 2024 23:12:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA970143C5F;
+	Sun, 24 Mar 2024 23:12:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321975; cv=none; b=QSbzYWs+sk5va0aqDzaFOO2WVyDhp30uQPxtpNVw5A66aVqIsnExNXwe7hofKMix6IcaGaFMfgAUdSXRcB3vhsUkjaADO1z5qs+2bjQFjc6Z6UU76ahLoa6LiEDCbz8yWxeQpl16y4QLC/5MT0Uh5F4kkAdFScuSADBW/PkVU/w=
+	t=1711321979; cv=none; b=sdM5357HXqsCBCGEt2i1ZlnR2AmLoZzcj89yNrltwBavhp3X8PMIZwhk10t60aTGv+DlnheMpMmBvQcMwkfpSDKDBu6Io+dBeWXuJoq2O1tF4BiH1luyH0+ci9+nT37bAcZd/myRGGnmcRJiM9OIEod9HV0cl7CSo7O2W2aaJsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321975; c=relaxed/simple;
-	bh=RGrOirHE3j084FyDubnAZGEumOuMaqgWe3b9VZ19Iww=;
+	s=arc-20240116; t=1711321979; c=relaxed/simple;
+	bh=swJwg6DjneyFGIi5z+YW+S1cskoZNEJxEN6z/gFE+oQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dgIkJmjouQs1RJ5PL3eYB/SXjLSAqzfzQv0AC7/C/3UKvO5Sk6uP4JVipVlqkHLYrFGV937QqbHDuSWgLpb6lRlp3ornfGcyf6pqqF91ZOMKe9Q8bUUXMT4fs1G8n4gnK0GwZntpMLKyQLLLUSNhIkGoVGNfLMLndP885y+ZUb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMQBbWs7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=s60RWmKiy+AZfjPrNOAKgB6FtHGxYiCDslKXg/uMMpPr+kC+rm72mGA6Gum+3XORXiXQRoQsPVEgKg/nmuUIGJ8lsTR/eeVfPxZaCOYfZeH3/r2OKE7MXmk7aULBV0vEgo35OfG4WKODPjY+aepHlkDb9axz1mTth/g6O/N3dC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TB3jVqwi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMQBbWs7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA8CC43390;
-	Sun, 24 Mar 2024 23:12:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TB3jVqwi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEFE0C43390;
+	Sun, 24 Mar 2024 23:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321974;
-	bh=RGrOirHE3j084FyDubnAZGEumOuMaqgWe3b9VZ19Iww=;
+	s=k20201202; t=1711321979;
+	bh=swJwg6DjneyFGIi5z+YW+S1cskoZNEJxEN6z/gFE+oQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kMQBbWs7d+/Ix+Tnf7TpRNcKAP43FE7J+yCpWQHhuO9NI3ZzPnYE40VnYRBp6/0+3
-	 Y5HS5MSyMpAfE5Dz9hHPwRDxwnDmYBvEAjY+o0kb/j4OS1q0OZNc45GBWK2eoyf7NE
-	 Fu83u/v4udAq+YfRJQjRdH7KqXMT9b6vUbSq1GVEPkMEnzwrFZcZA3f/VHGQPv9ocD
-	 uV1DCEDs+vAt8YwWBq96pQH/5P4IzU8a5TbkM3Y9yZdMGA1ImbbauiKyQwDe8wkCOT
-	 rcWAW01681DyaaPLI9U/AZOj8DONwSwGWHbuyju+wDocVJxA7qnD//tQjwtAZCR3of
-	 LqFA3su1dgJHA==
+	b=TB3jVqwiWWCmI0QnHwuriWws7Cit9QQpFRwCZu0oQOd86oDCdifvkUOMQIxLprNiA
+	 TkgLXkT7m8CaOYLFw0MYaWnaXqQK8iwxGSO/byurr2qaFsPBDu2UR4KRAFR/cpTVc3
+	 Sf2bnAP8tKsaV8XvA/zbHLChiCnFNxck3l7YZ0fsVeWWligopo8xB8rjB6jy39/W0J
+	 owWJ2/MaFrh4ZoLRy5+eN2ZqSmAmOKrDwXqah2hpnyajVXUp0fuF0FX8KWg6ArCwyX
+	 XTa4JTbXcJSjP0vRXaHh3EXYR6Q9LMfV1ai2SH2zW7NfpZtF8K6woQz0NOl/eK9aOh
+	 VfAVLhMiUTCiQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kailang Yang <kailang@realtek.com>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: Thierry Reding <treding@nvidia.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 046/451] ALSA: hda/realtek - ALC285 reduce pop noise from Headphone port
-Date: Sun, 24 Mar 2024 19:05:22 -0400
-Message-ID: <20240324231207.1351418-47-sashal@kernel.org>
+Subject: [PATCH 6.1 052/451] arm64: tegra: Set the correct PHY mode for MGBE
+Date: Sun, 24 Mar 2024 19:05:28 -0400
+Message-ID: <20240324231207.1351418-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,33 +48,33 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Kailang Yang <kailang@realtek.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit b34bf65838f7c6e785f62681605a538b73c2808c ]
+[ Upstream commit 4c892121d43bc2b45896ca207b54f39a8fa6b852 ]
 
-It had pop noise from Headphone port when system reboot state.
-If NID 58h Index 0x0 to fill default value, it will reduce pop noise.
+The PHY is configured in 10GBASE-R, so make sure to reflect that in DT.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Link: https://lore.kernel.org/r/7493e207919a4fb3a0599324fd010e3e@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 75bd7b2fa4ee6..ede3f8b273d79 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -3681,6 +3681,7 @@ static void alc285_hp_init(struct hda_codec *codec)
- 	int i, val;
- 	int coef38, coef0d, coef36;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
+index f094011be9ed9..8099dc04ed2e1 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
+@@ -2024,7 +2024,7 @@ ethernet@6800000 {
+ 			status = "okay";
  
-+	alc_write_coefex_idx(codec, 0x58, 0x00, 0x1888); /* write default value */
- 	alc_update_coef_idx(codec, 0x4a, 1<<15, 1<<15); /* Reset HP JD */
- 	coef38 = alc_read_coef_idx(codec, 0x38); /* Amp control */
- 	coef0d = alc_read_coef_idx(codec, 0x0d); /* Digital Misc control */
+ 			phy-handle = <&mgbe0_phy>;
+-			phy-mode = "usxgmii";
++			phy-mode = "10gbase-r";
+ 
+ 			mdio {
+ 				#address-cells = <1>;
 -- 
 2.43.0
 
