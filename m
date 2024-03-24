@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFDC18148A;
-	Sun, 24 Mar 2024 23:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E99181476;
+	Sun, 24 Mar 2024 23:48:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324108; cv=none; b=DdFTK0h46L1SF7bdCZjos8c9Vo9jc3ALzK87sRP/ztrK3qeEKsuN7WtIH2fvaH5NSRIo2Vih8pN1C+dGBytPLb0cUmTUPjBf4qt79RCNubP+KS9/7MBHSLbXxJv5MKsz9bl128Kkh+y/9qqiC+C1Z/j+voZlJ7RSBL99XbdJA3U=
+	t=1711324098; cv=none; b=iFInKKRFA3WsU+ygVAf+9UTeI8aLLIH46aicaoAjyI6aKbSBP4V8kHGFl2UckGR1AN313+jHeec55/Bq2G0bCf0fIMmCn6KUICNoBq2WgiAK1JBucSRAJ0HpZMh3i9nYJei2dhF3sYwxLn+YzRtCou0PrQiZJydlRJ9frKAkN6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324108; c=relaxed/simple;
-	bh=xrN0NI/UzUokrl36YEZidI4lp+eL3iyinCugmIvfvhw=;
+	s=arc-20240116; t=1711324098; c=relaxed/simple;
+	bh=sJQ8UZ4SBoO1+vqNVm8qn6td0Err00uTMoDvqacQoPQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RbAr93t2GqY3q9kfbwrpdwfneXvhKC0GH67hhW4CfSpi5yq3oVTwAl1tkDmybohSIgdEVpnxRxhxdGpKDtxmUicILsvAiYgMLALoVWWyJ52PtgHKnv/REJ79rRocACAr5XDLvotei3yDHnmJWCJCQBCqN5VclreNmYAuHISbUlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TVMRGc6i; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=qcjSyf0BRl0ADdAihSQ0wOi9MYmcBp/QijeI0iniCOst80XTFbubHJcnDLdIvy2Z55rnD4kENQgh7AGWvSOkRhSOVj6DdeJYGmWgewtIkwrayjWQhfsBn+q/0AzJvGvCne4IWrgQPHnz56DbLlHXMfkjbiGzRVptXhWLqI7O8JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ydr9DINa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TVMRGc6i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C343C433A6;
-	Sun, 24 Mar 2024 23:48:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ydr9DINa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9A80C433C7;
+	Sun, 24 Mar 2024 23:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324107;
-	bh=xrN0NI/UzUokrl36YEZidI4lp+eL3iyinCugmIvfvhw=;
+	s=k20201202; t=1711324097;
+	bh=sJQ8UZ4SBoO1+vqNVm8qn6td0Err00uTMoDvqacQoPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TVMRGc6iXCylAl2ULexLmI87qAW4hrivSFR+Ko7msITgWstkCpfl0rLGQyoyssQRS
-	 xxpTsobDePYmFm/d1ZXRXKxB1Dk9jLEgxAKFiZH58q6rPO7IXGoU/P4TohCsTYlcts
-	 Q7e0WT8z0SnJFU4DxckOeuFGVWXPSOGo5T+Hl4ztM5u2vHIyGcoGCFa7C7INF7Ylww
-	 /JdsGtf0FFwKu0b6oHzheznrSybnnkHr4l1FPdlwdG6s/+yUuSjfsOQ/V2XZQISwE9
-	 Hy6KL8BZApBU/5EQYUKj0Mp/LbXIu0O+M2zy9hWQ7RPoNmVMsfkL+TyKNx2TgMM4de
-	 7KmlXruXVCmaQ==
+	b=Ydr9DINanPRQpHpb5N1DNptWHKYj8/5lep5kqpf6JI7MgzUFVm19J+XguDcw5FH/3
+	 Vt2HYacXMdBsl0BegJzxhZWxiNWgGc/DLS1dXa2MlmECKPEmWoBTGxTy+RhhDrG7p3
+	 FfTNpWbZjberV+0nce1QBKe1Ul7DUaefsc3hvf3Umv0ZmxqDeZaHNe8NlvKqdTZ8Zx
+	 1bvbSFGr2R5zxZnKhicvbDkUBBqh8Csaeft6Pw1U2nxYCix66cPW4pi6KOjQ1hHM+6
+	 mcXsi7rahGV7gNk5k984r6gd3DpTNxHFSDI762ce5IyFKqRw5CVt3s05pAAjLFLQyc
+	 Ia8CYHXxV7KuQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Robert Marko <robimarko@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 106/183] clk: qcom: reset: support resetting multiple bits
-Date: Sun, 24 Mar 2024 19:45:19 -0400
-Message-ID: <20240324234638.1355609-107-sashal@kernel.org>
+Subject: [PATCH 5.4 096/183] PCI/DPC: Print all TLP Prefixes, not just the first
+Date: Sun, 24 Mar 2024 19:45:09 -0400
+Message-ID: <20240324234638.1355609-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -44,74 +44,45 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Robert Marko <robimarko@gmail.com>
+From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-[ Upstream commit 4a5210893625f89723ea210d7c630b730abb37ad ]
+[ Upstream commit 6568d82512b0a64809acff3d7a747362fa4288c8 ]
 
-This patch adds the support for giving the complete bitmask
-in reset structure and reset operation will use this bitmask
-for all reset operations.
+The TLP Prefix Log Register consists of multiple DWORDs (PCIe r6.1 sec
+7.9.14.13) but the loop in dpc_process_rp_pio_error() keeps reading from
+the first DWORD, so we print only the first PIO TLP Prefix (duplicated
+several times), and we never print the second, third, etc., Prefixes.
 
-Currently, reset structure only takes a single bit for each reset
-and then calculates the bitmask by using the BIT() macro.
+Add the iteration count based offset calculation into the config read.
 
-However, this is not sufficient anymore for newer SoC-s like IPQ8074,
-IPQ6018 and more, since their networking resets require multiple bits
-to be asserted in order to properly reset the HW block completely.
-
-So, in order to allow asserting multiple bits add "bitmask" field to
-qcom_reset_map, and then use that bitmask value if its populated in the
-driver, if its not populated, then we just default to existing behaviour
-and calculate the bitmask on the fly.
-
-Signed-off-by: Robert Marko <robimarko@gmail.com>
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
-Link: https://lore.kernel.org/r/20221107132901.489240-1-robimarko@gmail.com
-Stable-dep-of: 2f8cf2c3f3e3 ("clk: qcom: reset: Ensure write completion on reset de/assertion")
+Fixes: f20c4ea49ec4 ("PCI/DPC: Add eDPC support")
+Link: https://lore.kernel.org/r/20240118110815.3867-1-ilpo.jarvinen@linux.intel.com
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+[bhelgaas: add user-visible details to commit log]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/reset.c | 4 ++--
- drivers/clk/qcom/reset.h | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/pcie/dpc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/reset.c b/drivers/clk/qcom/reset.c
-index 2a16adb572d2b..0e914ec7aeae1 100644
---- a/drivers/clk/qcom/reset.c
-+++ b/drivers/clk/qcom/reset.c
-@@ -30,7 +30,7 @@ qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index a32ec3487a8d0..d5734a83606fb 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -195,7 +195,7 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
  
- 	rst = to_qcom_reset_controller(rcdev);
- 	map = &rst->reset_map[id];
--	mask = BIT(map->bit);
-+	mask = map->bitmask ? map->bitmask : BIT(map->bit);
- 
- 	return regmap_update_bits(rst->regmap, map->reg, mask, mask);
- }
-@@ -44,7 +44,7 @@ qcom_reset_deassert(struct reset_controller_dev *rcdev, unsigned long id)
- 
- 	rst = to_qcom_reset_controller(rcdev);
- 	map = &rst->reset_map[id];
--	mask = BIT(map->bit);
-+	mask = map->bitmask ? map->bitmask : BIT(map->bit);
- 
- 	return regmap_update_bits(rst->regmap, map->reg, mask, 0);
- }
-diff --git a/drivers/clk/qcom/reset.h b/drivers/clk/qcom/reset.h
-index b8c113582072b..9a47c838d9b1b 100644
---- a/drivers/clk/qcom/reset.h
-+++ b/drivers/clk/qcom/reset.h
-@@ -12,6 +12,7 @@ struct qcom_reset_map {
- 	unsigned int reg;
- 	u8 bit;
- 	u8 udelay;
-+	u32 bitmask;
- };
- 
- struct regmap;
+ 	for (i = 0; i < dpc->rp_log_size - 5; i++) {
+ 		pci_read_config_dword(pdev,
+-			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
++			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG + i * 4, &prefix);
+ 		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
+ 	}
+  clear_status:
 -- 
 2.43.0
 
