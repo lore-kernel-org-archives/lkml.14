@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994E7145348;
-	Sun, 24 Mar 2024 23:13:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFAD145FF5;
+	Sun, 24 Mar 2024 23:14:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322005; cv=none; b=eZGAQiYtH1wsT7qbo1CxiCAz6k9gxlqCWAo9205tTtH73ho03Fez6Neqna54oAAj/5L8aHiQoO1ge/24RvJ4+FWddL6RwbkruMqgrKEXUDzv39FSbm0cHl9hVX5Gv7DtkC1Xllbp62G/J28NEg9sLthVleXVAM/8wsK0TZgAbVg=
+	t=1711322059; cv=none; b=Onr6ES1Z0ICAPvXSPOtumO0Q9WA4s4si6aiK6oFioMNDU4v7Ijiield9ECbKWSsnVnDS9Mj5daBb9QOBbwp8DQGE/pFYd33JntbCKs/4iem4V0Hf9FD1oXLqIsW/YMNFP3lcZ7JxqfE5qJm6W/qIcqK8X0ZSCF+Yrd+xuSTIEy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322005; c=relaxed/simple;
-	bh=2sp9ApPNB1kvNVmUlb6c0/k+nkdH4tr6ck10HNGkcfU=;
+	s=arc-20240116; t=1711322059; c=relaxed/simple;
+	bh=tuaO+TMyNegk7atL+7siquVjQWrQBQOb9fB6/Uozhyg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SJIj0gu6JV5Tfouone1oEXltlBWDZ2WuWXSo/uHXjkmEtl8REfSsg3BKiS3HS26tjEBb3qXEu77eR2MhjJ4lCWfgQFILst7VFtQiq/yZrREwezYLNpIksNSUV39XVPioif6n4HgCwPRW/T+AW6wHx+xGS1yDShrXLFF2Gdn345A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjLyp6aA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=TEzbPYhli9bFtZtzKB1jfPiEwyM63zF7K70wcyyrGajqat5r/C5ICbUW4mMbuku6ihODSXkn3/uC0Yu9P8H9NHwNwTjjlygKZaB3H1GuoGL/b3xEXW6m+aOX2MRR4SKCxuGFeR7S2EmBJr3gxkv7a+G4K7Owe6D2N4PuCtrTJd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LK4AuACZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjLyp6aA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE74FC433F1;
-	Sun, 24 Mar 2024 23:13:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LK4AuACZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFB9DC433C7;
+	Sun, 24 Mar 2024 23:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322005;
-	bh=2sp9ApPNB1kvNVmUlb6c0/k+nkdH4tr6ck10HNGkcfU=;
+	s=k20201202; t=1711322059;
+	bh=tuaO+TMyNegk7atL+7siquVjQWrQBQOb9fB6/Uozhyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cjLyp6aAd8e2LEV37haPSw/r9S0AhIMUBQ28sdV1eCa40ka2/vco/xeO3AQI7SPT7
-	 O6JyiPHJix6apqfteTuxVuG5MDW4tax+EAOvoF9m85edEnIo7vmMsQkF+IkbkFzxBv
-	 g2PQ9W8Dx2wIme8HhYW/Z+Utg2sxA+bBeLkLmy7BaptB5oBhcA7knz+ZMJPk2TU31t
-	 BFqw1V4KKfcZQ73ljRGGZAOB2fSpip/Wi1U5PHDFXO0Y1b6od+hpB5ElScTV+9lJ3j
-	 nMB1PDIhPBMyT0+NWT8acixQYL2j3Vwje/YoPGtey/BvpLvOrSLNE6tHc9QwF2wkzw
-	 FRIQcEArp+CZQ==
+	b=LK4AuACZP4B9zEPgoUoen4y9dDXRWqGYkCXOknYzxtqc5CjW7CIjkQG8hnQltZUKZ
+	 w+AnfUTZAZQIazdN6mEX0KjZ8AzGM+jyDf1MnNaVBw8ABP7Xtxo6z/viom4080E+AK
+	 hKmggEedLJPOHbtDqBO5EcAiR7Ol2aEpsLcoj7zfCa7dHLUH8h7R4rsajkgJ6ZQkXA
+	 oM20Gh88WV7E8Eojl2oc1j1BGyG4HVTl8LUsBSvcB3ay/jvdVI/NJDpoCZT8WnuWrY
+	 X6gmIzBH2UoaWJyaiNsfnVZuibQRvOZtDoyuR9mo8l1dZ5jxbU0HWSU0dqcNvxuUIw
+	 1mo2TkYnQyhhg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 077/451] x86/sme: Fix memory encryption setting if enabled by default and not overridden
-Date: Sun, 24 Mar 2024 19:05:53 -0400
-Message-ID: <20240324231207.1351418-78-sashal@kernel.org>
+Subject: [PATCH 6.1 132/451] pwm: sti: Fix capture for st,pwm-num-chan < st,capture-num-chan
+Date: Sun, 24 Mar 2024 19:06:48 -0400
+Message-ID: <20240324231207.1351418-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,83 +43,62 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit e814b59e6c2b11f5a3d007b2e61f7d550c354c3a ]
+[ Upstream commit 5f623835584f1c8d1030666796f40c47a448ce0b ]
 
-Commit
+The driver only used the number of pwm channels to set the pwm_chip's
+npwm member. The result is that if there are more capture channels than
+PWM channels specified in the device tree, only a part of the capture
+channel is usable. Fix that by passing the bigger channel count to the
+pwm framework. This makes it possible that the .apply() callback is
+called with .hwpwm >= pwm_num_devs, catch that case and return an error
+code.
 
-  cbebd68f59f0 ("x86/mm: Fix use of uninitialized buffer in sme_enable()")
-
-'fixed' an issue in sme_enable() detected by static analysis, and broke
-the common case in the process.
-
-cmdline_find_option() will return < 0 on an error, or when the command
-line argument does not appear at all. In this particular case, the
-latter is not an error condition, and so the early exit is wrong.
-
-Instead, without mem_encrypt= on the command line, the compile time
-default should be honoured, which could be to enable memory encryption,
-and this is currently broken.
-
-Fix it by setting sme_me_mask to a preliminary value based on the
-compile time default, and only omitting the command line argument test
-when cmdline_find_option() returns an error.
-
-  [ bp: Drop active_by_default while at it. ]
-
-Fixes: cbebd68f59f0 ("x86/mm: Fix use of uninitialized buffer in sme_enable()")
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Link: https://lore.kernel.org/r/20240126163918.2908990-2-ardb+git@google.com
+Fixes: c97267ae831d ("pwm: sti: Add PWM capture callback")
+Link: https://lore.kernel.org/r/20240204212043.2951852-2-u.kleine-koenig@pengutronix.de
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/mem_encrypt_identity.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/pwm/pwm-sti.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
-index d94ebd8acdfde..a11a6ebbf5ecf 100644
---- a/arch/x86/mm/mem_encrypt_identity.c
-+++ b/arch/x86/mm/mem_encrypt_identity.c
-@@ -507,7 +507,6 @@ void __init sme_enable(struct boot_params *bp)
- 	const char *cmdline_ptr, *cmdline_arg, *cmdline_on, *cmdline_off;
- 	unsigned int eax, ebx, ecx, edx;
- 	unsigned long feature_mask;
--	bool active_by_default;
- 	unsigned long me_mask;
- 	char buffer[16];
- 	bool snp;
-@@ -593,22 +592,19 @@ void __init sme_enable(struct boot_params *bp)
- 	     : "p" (sme_cmdline_off));
+diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
+index 652fdb8dc7bfa..0a7920cbd4949 100644
+--- a/drivers/pwm/pwm-sti.c
++++ b/drivers/pwm/pwm-sti.c
+@@ -395,8 +395,17 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
+ static int sti_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			 const struct pwm_state *state)
+ {
++	struct sti_pwm_chip *pc = to_sti_pwmchip(chip);
++	struct sti_pwm_compat_data *cdata = pc->cdata;
++	struct device *dev = pc->dev;
+ 	int err;
  
- 	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT))
--		active_by_default = true;
--	else
--		active_by_default = false;
-+		sme_me_mask = me_mask;
- 
- 	cmdline_ptr = (const char *)((u64)bp->hdr.cmd_line_ptr |
- 				     ((u64)bp->ext_cmd_line_ptr << 32));
- 
- 	if (cmdline_find_option(cmdline_ptr, cmdline_arg, buffer, sizeof(buffer)) < 0)
--		return;
-+		goto out;
- 
- 	if (!strncmp(buffer, cmdline_on, sizeof(buffer)))
- 		sme_me_mask = me_mask;
- 	else if (!strncmp(buffer, cmdline_off, sizeof(buffer)))
- 		sme_me_mask = 0;
--	else
--		sme_me_mask = active_by_default ? me_mask : 0;
++	if (pwm->hwpwm >= cdata->pwm_num_devs) {
++		dev_err(dev, "device %u is not valid for pwm mode\n",
++			pwm->hwpwm);
++		return -EINVAL;
++	}
 +
- out:
- 	if (sme_me_mask) {
- 		physical_mask &= ~sme_me_mask;
+ 	if (state->polarity != PWM_POLARITY_NORMAL)
+ 		return -EINVAL;
+ 
+@@ -647,7 +656,7 @@ static int sti_pwm_probe(struct platform_device *pdev)
+ 
+ 	pc->chip.dev = dev;
+ 	pc->chip.ops = &sti_pwm_ops;
+-	pc->chip.npwm = pc->cdata->pwm_num_devs;
++	pc->chip.npwm = max(cdata->pwm_num_devs, cdata->cpt_num_devs);
+ 
+ 	for (i = 0; i < cdata->cpt_num_devs; i++) {
+ 		struct sti_cpt_ddata *ddata = &cdata->ddata[i];
 -- 
 2.43.0
 
