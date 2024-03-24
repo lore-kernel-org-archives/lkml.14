@@ -1,138 +1,149 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2C36FB1;
-	Sun, 24 Mar 2024 18:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DBEC2FD
+	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 18:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711305153; cv=none; b=iQauoCGEPdFeO6OpQ+pgeWsPehW/q0dDV/siTPqgTDgwiXUh3q9oqvdnI6LqlzirJr0X27anukRcrnZO1jhK8lOcCQvlMWoOgdua0RhvTKJnw+LbTcY+xhlKvLa9/JtJQ3EZiXlPJR/fdDvEUk5kpqioUm1d2RQDVlzWXxRU7jE=
+	t=1711306240; cv=none; b=bmYRnszwaEWOmXUjxINva2Rx66lMyG+qfBY8MIcx1iUg6M7nyRDf8pfpDjnlIRfQYRBsNJLeG4MbiXLQ+Jlk93IvDg/5VG33G0C0fCwyJHrEUeK8M6MXkGj/U+L+Njql5pOqGaIi3Kd6aJDYyV3h2JKNDSsNoY+dxowAB9tmAUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711305153; c=relaxed/simple;
-	bh=xACiWGSfAwPijodTq1yeqLhtB8lO5Blz7Pu5eoZFipM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iJgXW7g3lKMojXMGw7IFstBz6LGmV3WVIkQcVdV1rYfYr9PeLsJRHeysgmSkYfXercGR1ZkDBhBEeJsaiQEU2lhCrf109uutGAgQmThbXPy/+x7k0y0tLWa3X5SloniqpzIBdMb+iwZSx+ULaGowbEpsZLo03r+riT+DeoKpgHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RHG3XvMQ; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711306240; c=relaxed/simple;
+	bh=O0xVY+gl/fPHcB6WhFKWsogdWZR6lFHePZT39lrEaZQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=A2rKLbeHgYFlB3cfxe3yP3vdYfYBdF6rDJQFIlsT2m+nj7CqxI8eNWSSOxs/Wtqe34u5jAfW669/m9Nxuqqy+lQ2UTuaTIjpuPd4qDZed5M94++dld94QWPbEselRsiHnHvqm30lHlnVtUvaE588bS11pV8aO8C1lF674Y5YWeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LfI71te/; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RHG3XvMQ"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4146e9e45c8so23581235e9.1;
-        Sun, 24 Mar 2024 11:32:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LfI71te/"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a4715991c32so423244066b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 11:50:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711305150; x=1711909950; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YgFoPDahBoX9a3c+u51n6JSDl+OQcVW6qMPz/uDOO3s=;
-        b=RHG3XvMQF//UNKZMYYtjyMH0kAtFATKdI1PcRj75D+j772sB4yQy6losGIRhkw7RWg
-         ZKlN6hbavbB7uIEjnc+/ipXA9Q4CEJ27m8zJlTwGf/Hk1xFpJZA6Jz34+XjKa/b8bdVe
-         7ArLfVOlHGyvZFHGfdmvPQuumDHO7pdLTcZlyontgPH3dPO4b7MDGRJ3bwlrKt+idwX1
-         qZu0MrvVhwfCfnyu/kt/WvqVimtBWrEoUxA2GLhwEGyoWtX1Hffd3G7cOlq/DQuJjtoq
-         dmxo4l1MnOg7DEKjM9/9dJa4wKk9BdD/FMtEQZ2XizElZZLvUV9zUNFosWQQJ/S3zBX2
-         WzLw==
+        d=linaro.org; s=google; t=1711306237; x=1711911037; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jh7WIPngChgpb6/wT2qnSquscN8CZ3uMdGD+jaJxYv8=;
+        b=LfI71te/lri8tXBfg3FoFdN2qhR2tcloWhWukiXBsS6Odqk2kdmaluKFNsbr/CKBez
+         LqeNqxdAB/2TJLKJvcLZUKOr5Uu0HTz6bl2IWb/IDjeHa71HR7Evd1TPGdC4G0Au3VOR
+         gQd22VXXlrRA24oQx2nneysc7RgWtHZe/XJzXaWA268j9bMbHyWeuV+e2Rn+GcAOh20W
+         QhHIkCj8vsB43eGofApyaDcLngK+ug8z2H2hxBnTvoqySBSyEBvmnK1hkKCmOOCoJk48
+         NJGHcje7if2LddZm1D6ex8tk6YAayyWG7+qKAhCEvUrIIL8XY2g8iq7XBE8aFhU6gVWJ
+         mV8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711305150; x=1711909950;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1711306237; x=1711911037;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YgFoPDahBoX9a3c+u51n6JSDl+OQcVW6qMPz/uDOO3s=;
-        b=T+MAwR2JClCaspD7vrTaJ4bj19PHbW+jyYo4akZP+Jinaqrm9UL/g/m/0grfIKjG7G
-         uZhGRjJY2XwoL8MDUx34KA/nO94kI5LqCSoWmuq1O+WTLr7cM8rliWThEL+fN1MHAIfy
-         F5QK1Iu5cSCROZVtkXvoY9hRt5RkVaMo3sXAA6TQWGK9ZDgAiI4lWW+e119/lQjGHq75
-         dLtuLIWsHba+mKER3Z/EIRm1sdpqqJYFaHD1eA/ppYS6FaTdmJsbZKxeY6HItShDFuBW
-         lkN5f5o8AlGWuJNEDwZut95wBmAMsLduQWFOAmoHZ+Q4tkqv93n12S1k083WR8F5upRS
-         wKUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZs3bmtcx6jiHT4aJwp8ZfwKZR16pZqFLo+pYd289Yia1BJNeMa+6GmlcToXHBKAlx8ury4feJoufqWKfgXryghxblN3rsTc3p4TDchdUY/xXl9VWIpHH08ZCS87/oS1DZBvcAwJtCwfet2BwC7iKJ0TEWAl+2+wu0
-X-Gm-Message-State: AOJu0YyGEEnvMfFdLI3vLJC+X7npks109GZwR0GRv+5eyS4WWK/25V0X
-	ZkwqdttSyHg/kqcNcM2+cgvR2VuvsXHARno5qD8v27h7jlDV+V1e
-X-Google-Smtp-Source: AGHT+IGM53m/kDUbq4T3NKJK2jcfwadv9V6wq5bIhWTQF7ZAq8xCTABqtr0XCIKZPrN42QueJyRoIQ==
-X-Received: by 2002:a05:6000:4012:b0:341:cb34:780a with SMTP id cp18-20020a056000401200b00341cb34780amr1386181wrb.28.1711305150093;
-        Sun, 24 Mar 2024 11:32:30 -0700 (PDT)
-Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
-        by smtp.gmail.com with ESMTPSA id t13-20020a5d42cd000000b0033ec312cd8asm7374018wrr.33.2024.03.24.11.32.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2024 11:32:29 -0700 (PDT)
-From: Puranjay Mohan <puranjay12@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: puranjay12@gmail.com
-Subject: [PATCH bpf-next] bpf: implement insn_is_cast_user() helper for JITs
-Date: Sun, 24 Mar 2024 18:32:26 +0000
-Message-Id: <20240324183226.29674-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.40.1
+        bh=Jh7WIPngChgpb6/wT2qnSquscN8CZ3uMdGD+jaJxYv8=;
+        b=ogb2dT0O4xfgCu1B6t1/c41zgp6ftR9VQ77KLXIk145/K20asmnQfAeuKiXtSARGXG
+         Dl9lk0eUDhakrMca3yz1gAYoO4ur8/x6l+hN8EDorMiXHa4y/921VJsVTiQskceiQAvE
+         zgi/X6fSHEsDFDPUmNinCJ2wqYp4Z59cJBUMlWuDs1+mFNEqjF1f8rSG/J8au9H291rT
+         dqnBPKlkK3LFXZBaCiZC60S5roa7OxxKTavGfumE07lmRy+josvLVWd+pT2/Jq445XPj
+         ltJnH9pdmOrvfLa0ShNTgOyWC7+SiV6YkeliqemS/oLM/qWN3CyL4RK0lYujUagWTGHy
+         aC6g==
+X-Forwarded-Encrypted: i=1; AJvYcCWLX+8TnU48t+MdmXFxvFA4pbpB5TeWRqbeb/dTq5EeKD2KU54vR812vvtztnTioQwwsIGSzrndlgI+YpKVWgPM1kPmtAblsw1/QbYP
+X-Gm-Message-State: AOJu0YwTrf7S01KkebMfI130zX4b+8jF/cABPAtTEa9ryuzfNpk7pHWs
+	JyPyOEwNtGmoMa/gRcIQF2iDNSDLgdeLkbAj6p5gLyJ0MK3I6k9YWPTMXcKNVJE=
+X-Google-Smtp-Source: AGHT+IE7YzZVq4H0/yCqXg4Z63bK4KbtfqOS7Jf4EbizVXqQY6dIiXsth6aZPv2MfP3+lLsWDN16ZQ==
+X-Received: by 2002:a17:906:1796:b0:a47:3b6a:a29b with SMTP id t22-20020a170906179600b00a473b6aa29bmr3095023eje.13.1711306236616;
+        Sun, 24 Mar 2024 11:50:36 -0700 (PDT)
+Received: from [127.0.1.1] ([79.114.172.194])
+        by smtp.gmail.com with ESMTPSA id kn5-20020a170906aa4500b00a46524d06afsm2188136ejb.8.2024.03.24.11.50.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Mar 2024 11:50:36 -0700 (PDT)
+From: Abel Vesa <abel.vesa@linaro.org>
+Subject: [PATCH RESEND v5 0/2] phy: qcom: edp: Allow eDP/DP configuring via
+ set_mode op
+Date: Sun, 24 Mar 2024 20:50:16 +0200
+Message-Id: <20240324-x1e80100-phy-edp-compatible-refactor-v5-0-a0db5f3150bc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Johan Hovold <johan@kernel.org>
+Cc: linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ Abel Vesa <abel.vesa@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2478; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=O0xVY+gl/fPHcB6WhFKWsogdWZR6lFHePZT39lrEaZQ=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmAHXupd+aX9jJ71rkl3EKxdf9VYRDpb/da92OQ
+ qn8lHUFCE2JAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZgB17gAKCRAbX0TJAJUV
+ VrvREACwrHiaD6PwIQtmnkqeVgB4JTXBJY1d3DFw4JlKGgOPs1vt4XIrCdM6vXnftUL4GSfCLwc
+ muGOAhE7nPqs2eI7WGJvCUT0tu/4zmPTMm4BFJumTjPIRPLd83wRv38r/YdInH0RLvdwQpHezMB
+ 7xPkkn0yoj5BBa05aGQH96uSDpvfpk1dcI4kQ0TkUSKzm/SvqdNN/uVEq4utV9aOWTxQCZX3dE7
+ j3T0GrGAI0CvsW6NC6nWYHfXa/6jgmo5Ex7EWNnqLM3umPS0mYweBQCz69lcWFzUhw/wFIWN3eL
+ c+NBUX5hb0Tstet0/pXnRm2Rad9qAhJwE0sNRgnxf+AfrGDoiIJys0t2DKFiLmW/miG2imbv6nb
+ pBRTZk2i4fYlmhj8TghwGDM1D9XYi3OwkmWtwqsRu8e1fbn1zAOgBYPZb9ah5sAve3njTpFOPTs
+ skefZtRU5xXqPelVXOi05FjngLy8PsdG1Ef33nVAAjhSWiSiBNGTeL1olN2AD60iAlmektibpwo
+ UZu1w09t6jF6t4BE6zyiwpz/fRA2aBeqQ6tLHTPIbNq9LWEoXw5PrCOEa2Jcnxjdvs4AvvrqkI1
+ +yqljOqtyH6L60/WHeqCyTSgy9HwvHkRuNafIAdlC4y3yw3J0b8VQz9GHDZQltUxF82J6+bYUk0
+ QxfmgqD8Yw/exMg==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-Implement a helper function to check if an instruction is
-addr_space_cast from as(0) to as(1). Use this helper in the x86 JIT.
+Until now, all platform that supported both eDP and DP had different
+compatibles for each mode. Using different compatibles for basically
+the same IP block but for a different configuration is bad way all
+around. There is a new compute platform from Qualcomm that supports
+both eDP and DP with the same PHY. So instead of following the old
+method, we should allow the submode to be configured via set_mode from
+the controller driver.
 
-Other JITs can use this helper when they add support for this instruction.
+The controller part will follow after we conclude the PHY part first.
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
- arch/x86/net/bpf_jit_comp.c |  3 +--
- include/linux/filter.h      | 10 ++++++++++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+Changes in v5:
+- Dropped the unnecessary ternary operator.
+- Link to v4: https://lore.kernel.org/r/20240216-x1e80100-phy-edp-compatible-refactor-v4-0-c07fd1a52186@linaro.org
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index 9b3136187938..98349d11fae2 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -1350,8 +1350,7 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image, u8 *rw_image
- 			break;
- 
- 		case BPF_ALU64 | BPF_MOV | BPF_X:
--			if (insn->off == BPF_ADDR_SPACE_CAST &&
--			    insn->imm == 1U << 16) {
-+			if (insn_is_cast_user(insn)) {
- 				if (dst_reg != src_reg)
- 					/* 32-bit mov */
- 					emit_mov_reg(&prog, false, dst_reg, src_reg);
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index cf12bfa2a78c..42dbceb04ca6 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -228,6 +228,16 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
- 	return insn->code == (BPF_ALU | BPF_MOV | BPF_X) && insn->imm == 1;
- }
- 
-+/* addr_space_cast from as(0) to as(1) is for converting bpf arena pointers
-+ * to pointers in user vma.
-+ */
-+static inline bool insn_is_cast_user(const struct bpf_insn *insn)
-+{
-+	return insn->code == (BPF_ALU64 | BPF_MOV | BPF_X) &&
-+			      insn->off == BPF_ADDR_SPACE_CAST &&
-+			      insn->imm == 1U << 16;
-+}
-+
- /* BPF_LD_IMM64 macro encodes single 'load 64-bit immediate' insn */
- #define BPF_LD_IMM64(DST, IMM)					\
- 	BPF_LD_IMM64_RAW(DST, 0, IMM)
+Changes in v4:
+- Added todo comment about setting the value of cfg8 based on swing
+  pre-emph availability, like Konrad suggested
+- Fixed the condition in qcom_edp_phy_power_on, reported by Dmitry
+- Link to v3: https://lore.kernel.org/r/20240129-x1e80100-phy-edp-compatible-refactor-v3-0-e71f3359c535@linaro.org
+
+Changes in v3:
+- Dropped needs_swing_pre_emph_cfg as we store the table instead
+- Picking the table based on is_edp instead of overriding.
+- Link to v2: https://lore.kernel.org/r/20231222-x1e80100-phy-edp-compatible-refactor-v2-0-ab5786c2359f@linaro.org
+
+Changes in v2:
+- Dropped the dedicated xlate function and added set_mode op instead
+- Dropped the eDP PHY type and mode addition
+- Added the DP PHY submodes (eDP and DP)
+- Removed the device match data storing from the container struct
+- Link to v1: https://lore.kernel.org/r/20231219-x1e80100-phy-edp-compatible-refactor-v1-0-f9e77752953d@linaro.org
+
+Initial attepmpt was here:
+https://lore.kernel.org/all/20231122-phy-qualcomm-edp-x1e80100-v3-3-576fc4e9559d@linaro.org/
+Compared to that version, this one uses the phy-cells method and drops
+the X1E80100 support. The X1E80100 support will be a separate patchset.
+
+---
+Abel Vesa (2):
+      phy: Add Embedded DisplayPort and DisplayPort submodes
+      phy: qcom: edp: Add set_mode op for configuring eDP/DP submode
+
+ drivers/phy/qualcomm/phy-qcom-edp.c | 76 +++++++++++++++++++++++++++----------
+ include/linux/phy/phy-dp.h          |  3 ++
+ 2 files changed, 59 insertions(+), 20 deletions(-)
+---
+base-commit: 2d5c7b7eb345249cb34d42cbc2b97b4c57ea944e
+change-id: 20231219-x1e80100-phy-edp-compatible-refactor-8733eca7ccda
+
+Best regards,
 -- 
-2.40.1
+Abel Vesa <abel.vesa@linaro.org>
 
