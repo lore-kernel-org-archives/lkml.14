@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CA21E6F63;
-	Sun, 24 Mar 2024 22:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625E71E6F50;
+	Sun, 24 Mar 2024 22:54:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320860; cv=none; b=E9X4XT8Ih25m1vST10XaMPtg9Nhc7Y9S7cUQcmyYzL426I77rN82auvORnrnht6bbnViwq8sqvsZSMW36zjsCEAGBLyjJDRu1nM8f2OmLJwfEiv/P0W033R/MOpsSJlwfO2dOYjjJ5jvnLC+9QDgkixdigxRti057iZ29vnQBdI=
+	t=1711320856; cv=none; b=Y8oaCwRk5dCBp0NC3cckkpv0kbAPKV2+3DotEyhiQ6v9K6a6UeM54vWEpqq/+MY+9cIG/8d6sh5ANDRtaFbnhoYIlioZ5DaT/3577qbWSZ+FW2xqix9gcx+w0Dxnm9xPHYlFHqFWatOnYAUkcXjEGDK+UjAY2rzQr4bMianhVts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320860; c=relaxed/simple;
-	bh=i6qbJ0YigLE3yuZNNmqK6Rf7CvUlWxagcLz5SoaV904=;
+	s=arc-20240116; t=1711320856; c=relaxed/simple;
+	bh=15la2HOP4BZJOz/HljR3aeBvlmkYLsdL1e3Rm1CDSGo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YKoFhu6V79oZnKkzmawiA8u5VUQw9qdvJ8okaM80osXiQLDwy8CHFdTP3HaSHoGj9aDR1rQDNMA20d/e+0Nh72MjN37AH1EJoS0fSb2NBiBh04f8/A/UwPNyzpyLQG7Urs8DkTC12H+eWX1JdFQM+TmE1cVE0eAYfXNfY0OQMZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kp3/y+vi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LqM2CHcPmDv799Gr1CtcFTaqE66IlIhwxjVNGjtcPAgm699H0NA5j9/P1z3cUIfbFOAf/KNERw7Rm8Hyg08KTC9e6uiOQFNOigsvQ2/YzJhDDqZyXzYpm+7hH+KdKGgYPdxG+c//R0CbgDSkDWdbAOtiIAZsyOzT8tG7BJVoH1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8dVn4gI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kp3/y+vi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F1EC433C7;
-	Sun, 24 Mar 2024 22:54:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8dVn4gI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D08CC433C7;
+	Sun, 24 Mar 2024 22:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320859;
-	bh=i6qbJ0YigLE3yuZNNmqK6Rf7CvUlWxagcLz5SoaV904=;
+	s=k20201202; t=1711320855;
+	bh=15la2HOP4BZJOz/HljR3aeBvlmkYLsdL1e3Rm1CDSGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kp3/y+viON++vhJ5pyj6xUu/81TrwiduBEBIr4ED8nMuXi2Sz0NVB6eRupWRP6jrv
-	 kY6Xb54H+TSX40jy8a9Yn9JvpUU5u899dDEssvf0IfFXMM8iVvynQ5iCYGCys9jmNq
-	 s2T54/0Tnn2cfhBCrd3LFZWlDfiAUcrNf7qR6MtRKSWTV0iHx8I+EPCeJxPEFIR5b2
-	 IzCdo4PA5fRuvU9byy/1P43OcKv5r5KSon+2j5oEBQQCgg0ijj1yne08GRkfn9ivIj
-	 e3HpXt8MVSqULnMYnOJGz9wqfPuXJKjatW9+z9G8AR3haknMRiIA1+L+C62YAiiFlt
-	 3lEetsEhbDWNA==
+	b=I8dVn4gISlcmW9uGs4vdG/eBtwz1/LuGk4PLlwcWp5xkW60GM3FcwrzsuHbALxpCz
+	 IFZ3BL/ml5J1tB1gdDPVTZNG4c4RQsE4BaVsOnIjMyUdW49UkaODTfc3A207GGKOHs
+	 z5vWHXgM/yqy0mKbKDLFoLuSUiXxyUM5+NBqn9dOBf/gBFemPg6k9oeAMOeLbVr+lp
+	 5ErgZNfdGFoNpuUASr3cuVo8kTRQbNNkam1qnXTblOwifj6vqNBmB7O5Xoj8sUN+ve
+	 fRG4JkSn55TOV+mYH7wl1rZ+FZI9AFgac4V4dF/oAz2WCSSoBUhY+BcgYY7JMHm3Wl
+	 NAbZ1oJxN4l6w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Julien Massot <julien.massot@collabora.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
+Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 423/713] media: v4l2: cci: print leading 0 on error
-Date: Sun, 24 Mar 2024 18:42:29 -0400
-Message-ID: <20240324224720.1345309-424-sashal@kernel.org>
+Subject: [PATCH 6.7 419/713] ASoC: sh: rz-ssi: Fix error message print
+Date: Sun, 24 Mar 2024 18:42:25 -0400
+Message-ID: <20240324224720.1345309-420-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,45 +49,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Julien Massot <julien.massot@collabora.com>
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-[ Upstream commit 58ab1f9e140006e9e5686640f1773260038fe889 ]
+[ Upstream commit 9a6d7c4fb2801b675a9c31a7ceb78c84b8c439bc ]
 
-In some error cases leading '0' for register address
-were missing.
+The devm_request_irq() call is done for "dma_rt" interrupt but the error
+message printed "dma_tx" interrupt on failure, fix this by updating
+dma_tx -> dma_rt in dev_err_probe() message. While at it aligned the code.
 
-Fixes: 613cbb91e9ce ("media: Add MIPI CCI register access helper functions")
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Fixes: 38c042b59af0248a ("ASoC: sh: rz-ssi: Update interrupt handling for half duplex channels")
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://msgid.link/r/20240130150822.327434-1-prabhakar.mahadev-lad.rj@bp.renesas.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/v4l2-core/v4l2-cci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/sh/rz-ssi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-cci.c b/drivers/media/v4l2-core/v4l2-cci.c
-index 10005c80f43b5..ee3475bed37fa 100644
---- a/drivers/media/v4l2-core/v4l2-cci.c
-+++ b/drivers/media/v4l2-core/v4l2-cci.c
-@@ -32,7 +32,7 @@ int cci_read(struct regmap *map, u32 reg, u64 *val, int *err)
- 
- 	ret = regmap_bulk_read(map, reg, buf, len);
- 	if (ret) {
--		dev_err(regmap_get_device(map), "Error reading reg 0x%4x: %d\n",
-+		dev_err(regmap_get_device(map), "Error reading reg 0x%04x: %d\n",
- 			reg, ret);
- 		goto out;
- 	}
-@@ -131,7 +131,7 @@ int cci_write(struct regmap *map, u32 reg, u64 val, int *err)
- 
- 	ret = regmap_bulk_write(map, reg, buf, len);
- 	if (ret)
--		dev_err(regmap_get_device(map), "Error writing reg 0x%4x: %d\n",
-+		dev_err(regmap_get_device(map), "Error writing reg 0x%04x: %d\n",
- 			reg, ret);
- 
- out:
+diff --git a/sound/soc/sh/rz-ssi.c b/sound/soc/sh/rz-ssi.c
+index 14cf1a41fb0d1..9d103646973ad 100644
+--- a/sound/soc/sh/rz-ssi.c
++++ b/sound/soc/sh/rz-ssi.c
+@@ -1015,7 +1015,7 @@ static int rz_ssi_probe(struct platform_device *pdev)
+ 					       dev_name(&pdev->dev), ssi);
+ 			if (ret < 0)
+ 				return dev_err_probe(&pdev->dev, ret,
+-						"irq request error (dma_tx)\n");
++						     "irq request error (dma_rt)\n");
+ 		} else {
+ 			if (ssi->irq_tx < 0)
+ 				return ssi->irq_tx;
 -- 
 2.43.0
 
