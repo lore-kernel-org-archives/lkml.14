@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35579233184;
-	Sun, 24 Mar 2024 23:17:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B66814E2D1;
+	Sun, 24 Mar 2024 23:18:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322271; cv=none; b=S8cN7TweSXjoxxVK/AzKhdhDXzrIWp4u+PLegWku3rqfUxrJfZLh+hXU62szJJzfVyOdoMXhnX8pTdlj3QQZwgVodZ0G/7AyjljQ7IoZ9UiJcstPDNbNyF+Cln183fVqmdGvPrqEi94UyUWOCmQbA7IwTLMZg60TBnQMyH9om+Q=
+	t=1711322281; cv=none; b=Sr9kwztiXfKll6ZrmQJVCuLTJAHMu7ImB7UCjX0zcgzCyyuX4b+saW13OxQS7s5nivnpaOfVzvS+aHYrlkCWwc96lyrsn+p7dESs7Ghar86wYFQ7gFmUdlfudJVrQsk/jEudc7Kp89sJQmM1TMSZWTqzp1TkvXRbZw1v7Km4HHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322271; c=relaxed/simple;
-	bh=DwCMz2uXk6M8mM5ruK1Qds5vlGqW1SETmxn0BZcIYDQ=;
+	s=arc-20240116; t=1711322281; c=relaxed/simple;
+	bh=AS+JGYpUDsPlHwpiNSjJhMQhjdqKCPCQtDNBzfmKuyQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Lb9DIHclIkXHjL4DOJnFaaPqorx4tddTV7cUjvWJBcEMXyang2FHnYqAciW1cmaheEa6GgaMhKlKM/L8w7jqyrC+iU9dYtvjdO7LUtksAKW+lpZpRvC5802KtNJtItc07hBxiQnEp7+H3WSonzGIQMD7VS0CBr8kKdhDiY3AQ6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GlgV7q06; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jVn4eNClFQ/sSPbjvHxbk8JvXd7ZFv4LtS5SOdKevJQb0I0oF8i36Ld/HPnkFnWbQUbOwtZWV9htQe4ZBKfwIoxKBGUoPTgCmzJIUGwIARpvGpTZ23XM9MvkuVDeywe1xxhb5KJkHOzHsyK3VThrQcoabO/RhP9228zFLjkpvJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mt2lZwhl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GlgV7q06"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECA5FC433F1;
-	Sun, 24 Mar 2024 23:17:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mt2lZwhl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91ADEC43394;
+	Sun, 24 Mar 2024 23:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322270;
-	bh=DwCMz2uXk6M8mM5ruK1Qds5vlGqW1SETmxn0BZcIYDQ=;
+	s=k20201202; t=1711322281;
+	bh=AS+JGYpUDsPlHwpiNSjJhMQhjdqKCPCQtDNBzfmKuyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GlgV7q06oXXBDic8KNukCWjYxmk9rEB3Lwjfn4/B94ljUX9ZwmHyImStgIRZeSRKo
-	 AB+Yj4+BdFuCifaVcXsPGNyfsbJmUZyziym8ckvWetOxxFvc1zK2xMJwF+cq+ZHowN
-	 SprZOFWODSbYLzyKn2aKvJVR2p/SAGOOpMtSgdkY0N7h/vZnvOYu/1cD5bYcK4SdVk
-	 AblBZquEZ5yXXJj7ef/kN3mKeq/o3GLbAqe81eoWyXhk85MSd4pr/8PqH/Ng0cPVmy
-	 FY7/G+ARoBtYLVQE4/8zVe+XLQg2BMFBrR1z+EPgXT7gYDwCqibaI6ZNQrnePnjRJx
-	 y6LJC0dQYj9pg==
+	b=Mt2lZwhlwbRI1NOlbWrr0C4Z6Ad4f39k41bubtwDW/PN5IyqXiLz2TFGtxWZrPCg+
+	 YzfHxqxFpA+FkD3AkwIw4aVjvPCv36W1sKL95QuT2eHMh7Q0AbLn7I3OATUgYMzz82
+	 ewbiPbqRpYS14TLU7YKeVItiX3OcZT84d3V2EF37PVEqc0Q36WYvrZgOJ+Qrdkm229
+	 0hTELRbmMYSeE8YG7j2O1k44J8pW+/1RBL/Bq3dcNPKdqo+WdddQxXHYfIrDW1D4bF
+	 pezqWEgkyoHhxYnkoRWDC/bSJEzoLqZZkZ2fIW9hXvfu/RlH2jm5QhTXniOwXzTT4y
+	 FzUS2U5j1LuBg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Daeho Jeong <daehojeong@google.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 353/451] f2fs: compress: fix to guarantee persisting compressed blocks by CP
-Date: Sun, 24 Mar 2024 19:10:29 -0400
-Message-ID: <20240324231207.1351418-354-sashal@kernel.org>
+Subject: [PATCH 6.1 364/451] scsi: csiostor: Avoid function pointer casts
+Date: Sun, 24 Mar 2024 19:10:40 -0400
+Message-ID: <20240324231207.1351418-365-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,146 +48,133 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 8a430dd49e9cb021372b0ad91e60aeef9c6ced00 ]
+[ Upstream commit 9f3dbcb5632d6876226031d552ef6163bb3ad215 ]
 
-If data block in compressed cluster is not persisted with metadata
-during checkpoint, after SPOR, the data may be corrupted, let's
-guarantee to write compressed page by checkpoint.
+csiostor uses function pointer casts to keep the csio_ln_ev state machine
+hidden, but this causes warnings about control flow integrity (KCFI)
+violations in clang-16 and higher:
 
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Reviewed-by: Daeho Jeong <daehojeong@google.com>
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+drivers/scsi/csiostor/csio_lnode.c:1098:33: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1098 |         return (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready));
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/csiostor/csio_lnode.c:1369:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1369 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_uninit)) {
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/csiostor/csio_lnode.c:1373:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1373 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready)) {
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/csiostor/csio_lnode.c:1377:29: error: cast from 'void (*)(struct csio_lnode *, enum csio_ln_ev)' to 'csio_sm_state_t' (aka 'void (*)(void *, unsigned int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1377 |         if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_offline)) {
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Move the enum into a shared header so the correct types can be used without
+the need for casts.
+
+Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20240213100518.457623-1-arnd@kernel.org
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/compress.c |  4 +++-
- fs/f2fs/data.c     | 17 +++++++++--------
- fs/f2fs/f2fs.h     |  4 +++-
- 3 files changed, 15 insertions(+), 10 deletions(-)
+ drivers/scsi/csiostor/csio_defs.h  | 18 ++++++++++++++++--
+ drivers/scsi/csiostor/csio_lnode.c |  8 ++++----
+ drivers/scsi/csiostor/csio_lnode.h | 13 -------------
+ 3 files changed, 20 insertions(+), 19 deletions(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 7d85db7208e14..459bf10f297a2 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1437,6 +1437,8 @@ void f2fs_compress_write_end_io(struct bio *bio, struct page *page)
- 	struct f2fs_sb_info *sbi = bio->bi_private;
- 	struct compress_io_ctx *cic =
- 			(struct compress_io_ctx *)page_private(page);
-+	enum count_type type = WB_DATA_TYPE(page,
-+				f2fs_is_compressed_page(page));
- 	int i;
+diff --git a/drivers/scsi/csiostor/csio_defs.h b/drivers/scsi/csiostor/csio_defs.h
+index c38017b4af982..e50e93e7fe5a1 100644
+--- a/drivers/scsi/csiostor/csio_defs.h
++++ b/drivers/scsi/csiostor/csio_defs.h
+@@ -73,7 +73,21 @@ csio_list_deleted(struct list_head *list)
+ #define csio_list_prev(elem)	(((struct list_head *)(elem))->prev)
  
- 	if (unlikely(bio->bi_status))
-@@ -1444,7 +1446,7 @@ void f2fs_compress_write_end_io(struct bio *bio, struct page *page)
+ /* State machine */
+-typedef void (*csio_sm_state_t)(void *, uint32_t);
++struct csio_lnode;
++
++/* State machine evets */
++enum csio_ln_ev {
++	CSIO_LNE_NONE = (uint32_t)0,
++	CSIO_LNE_LINKUP,
++	CSIO_LNE_FAB_INIT_DONE,
++	CSIO_LNE_LINK_DOWN,
++	CSIO_LNE_DOWN_LINK,
++	CSIO_LNE_LOGO,
++	CSIO_LNE_CLOSE,
++	CSIO_LNE_MAX_EVENT,
++};
++
++typedef void (*csio_sm_state_t)(struct csio_lnode *ln, enum csio_ln_ev evt);
  
- 	f2fs_compress_free_page(page);
- 
--	dec_page_count(sbi, F2FS_WB_DATA);
-+	dec_page_count(sbi, type);
- 
- 	if (atomic_dec_return(&cic->pending_pages))
- 		return;
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 7b3eb192f9c03..6f649a60859fc 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -50,7 +50,7 @@ void f2fs_destroy_bioset(void)
- 	bioset_exit(&f2fs_bioset);
+ struct csio_sm {
+ 	struct list_head	sm_list;
+@@ -83,7 +97,7 @@ struct csio_sm {
+ static inline void
+ csio_set_state(void *smp, void *state)
+ {
+-	((struct csio_sm *)smp)->sm_state = (csio_sm_state_t)state;
++	((struct csio_sm *)smp)->sm_state = state;
  }
  
--static bool __is_cp_guaranteed(struct page *page)
-+bool f2fs_is_cp_guaranteed(struct page *page)
+ static inline void
+diff --git a/drivers/scsi/csiostor/csio_lnode.c b/drivers/scsi/csiostor/csio_lnode.c
+index d5ac938970232..5b3ffefae476d 100644
+--- a/drivers/scsi/csiostor/csio_lnode.c
++++ b/drivers/scsi/csiostor/csio_lnode.c
+@@ -1095,7 +1095,7 @@ csio_handle_link_down(struct csio_hw *hw, uint8_t portid, uint32_t fcfi,
+ int
+ csio_is_lnode_ready(struct csio_lnode *ln)
  {
- 	struct address_space *mapping = page->mapping;
- 	struct inode *inode;
-@@ -67,8 +67,6 @@ static bool __is_cp_guaranteed(struct page *page)
- 			S_ISDIR(inode->i_mode))
- 		return true;
+-	return (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready));
++	return (csio_get_state(ln) == csio_lns_ready);
+ }
  
--	if (f2fs_is_compressed_page(page))
--		return false;
- 	if ((S_ISREG(inode->i_mode) && IS_NOQUOTA(inode)) ||
- 			page_private_gcing(page))
- 		return true;
-@@ -327,7 +325,7 @@ static void f2fs_write_end_io(struct bio *bio)
+ /*****************************************************************************/
+@@ -1366,15 +1366,15 @@ csio_free_fcfinfo(struct kref *kref)
+ void
+ csio_lnode_state_to_str(struct csio_lnode *ln, int8_t *str)
+ {
+-	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_uninit)) {
++	if (csio_get_state(ln) == csio_lns_uninit) {
+ 		strcpy(str, "UNINIT");
+ 		return;
+ 	}
+-	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_ready)) {
++	if (csio_get_state(ln) == csio_lns_ready) {
+ 		strcpy(str, "READY");
+ 		return;
+ 	}
+-	if (csio_get_state(ln) == ((csio_sm_state_t)csio_lns_offline)) {
++	if (csio_get_state(ln) == csio_lns_offline) {
+ 		strcpy(str, "OFFLINE");
+ 		return;
+ 	}
+diff --git a/drivers/scsi/csiostor/csio_lnode.h b/drivers/scsi/csiostor/csio_lnode.h
+index 372a67d122d38..607698a0f0631 100644
+--- a/drivers/scsi/csiostor/csio_lnode.h
++++ b/drivers/scsi/csiostor/csio_lnode.h
+@@ -53,19 +53,6 @@
+ extern int csio_fcoe_rnodes;
+ extern int csio_fdmi_enable;
  
- 	bio_for_each_segment_all(bvec, bio, iter_all) {
- 		struct page *page = bvec->bv_page;
--		enum count_type type = WB_DATA_TYPE(page);
-+		enum count_type type = WB_DATA_TYPE(page, false);
- 
- 		if (page_private_dummy(page)) {
- 			clear_page_private_dummy(page);
-@@ -733,7 +731,7 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
- 		wbc_account_cgroup_owner(fio->io_wbc, fio->page, PAGE_SIZE);
- 
- 	inc_page_count(fio->sbi, is_read_io(fio->op) ?
--			__read_io_type(page) : WB_DATA_TYPE(fio->page));
-+			__read_io_type(page) : WB_DATA_TYPE(fio->page, false));
- 
- 	__submit_bio(fio->sbi, bio, fio->type);
- 	return 0;
-@@ -941,7 +939,7 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
- 	if (fio->io_wbc)
- 		wbc_account_cgroup_owner(fio->io_wbc, fio->page, PAGE_SIZE);
- 
--	inc_page_count(fio->sbi, WB_DATA_TYPE(page));
-+	inc_page_count(fio->sbi, WB_DATA_TYPE(page, false));
- 
- 	*fio->last_block = fio->new_blkaddr;
- 	*fio->bio = bio;
-@@ -955,6 +953,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
- 	enum page_type btype = PAGE_TYPE_OF_BIO(fio->type);
- 	struct f2fs_bio_info *io = sbi->write_io[btype] + fio->temp;
- 	struct page *bio_page;
-+	enum count_type type;
- 
- 	f2fs_bug_on(sbi, is_read_io(fio->op));
- 
-@@ -984,7 +983,8 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
- 	/* set submitted = true as a return value */
- 	fio->submitted = 1;
- 
--	inc_page_count(sbi, WB_DATA_TYPE(bio_page));
-+	type = WB_DATA_TYPE(bio_page, fio->compressed_page);
-+	inc_page_count(sbi, type);
- 
- 	if (io->bio &&
- 	    (!io_is_mergeable(sbi, io->bio, io, fio, io->last_block_in_bio,
-@@ -997,7 +997,8 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
- 		if (F2FS_IO_ALIGNED(sbi) &&
- 				(fio->type == DATA || fio->type == NODE) &&
- 				fio->new_blkaddr & F2FS_IO_SIZE_MASK(sbi)) {
--			dec_page_count(sbi, WB_DATA_TYPE(bio_page));
-+			dec_page_count(sbi, WB_DATA_TYPE(bio_page,
-+						fio->compressed_page));
- 			fio->retry = 1;
- 			goto skip;
- 		}
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 1d78bca5037f4..16dacf811481c 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1067,7 +1067,8 @@ struct f2fs_sm_info {
-  * f2fs monitors the number of several block types such as on-writeback,
-  * dirty dentry blocks, dirty node blocks, and dirty meta blocks.
-  */
--#define WB_DATA_TYPE(p)	(__is_cp_guaranteed(p) ? F2FS_WB_CP_DATA : F2FS_WB_DATA)
-+#define WB_DATA_TYPE(p, f)			\
-+	(f || f2fs_is_cp_guaranteed(p) ? F2FS_WB_CP_DATA : F2FS_WB_DATA)
- enum count_type {
- 	F2FS_DIRTY_DENTS,
- 	F2FS_DIRTY_DATA,
-@@ -3761,6 +3762,7 @@ void f2fs_init_ckpt_req_control(struct f2fs_sb_info *sbi);
-  */
- int __init f2fs_init_bioset(void);
- void f2fs_destroy_bioset(void);
-+bool f2fs_is_cp_guaranteed(struct page *page);
- int f2fs_init_bio_entry_cache(void);
- void f2fs_destroy_bio_entry_cache(void);
- void f2fs_submit_bio(struct f2fs_sb_info *sbi,
+-/* State machine evets */
+-enum csio_ln_ev {
+-	CSIO_LNE_NONE = (uint32_t)0,
+-	CSIO_LNE_LINKUP,
+-	CSIO_LNE_FAB_INIT_DONE,
+-	CSIO_LNE_LINK_DOWN,
+-	CSIO_LNE_DOWN_LINK,
+-	CSIO_LNE_LOGO,
+-	CSIO_LNE_CLOSE,
+-	CSIO_LNE_MAX_EVENT,
+-};
+-
+-
+ struct csio_fcf_info {
+ 	struct list_head	list;
+ 	uint8_t			priority;
 -- 
 2.43.0
 
