@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3F9182755;
-	Sun, 24 Mar 2024 23:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7CE182747;
+	Sun, 24 Mar 2024 23:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324163; cv=none; b=cs5ygR6NgPdUtVTF1arBW+giR1gc8hCQcNDO2pE1FpEbjRLNzY09tnEvq/Gb4y8Ik5l22bbcW5N61PJEb10tNIwtRgsvDLFBVhPzESqcrN68UVrJ9BdAokd7J8GzSAjNvbmIaKkiZEBs8fSYoQcHOgCykU3Myvw5mgMXb6MBBNg=
+	t=1711324162; cv=none; b=FZv+RngouE8gMYsL9g2tWEJekaOY9Qgqvmj9K/0uy5P7sTHRvQNO0WbmLNiIQg00VuEy3h35BsgLdYeUS/y7uHKncPx+ViCC0WzqAv7TKxVm5+62RfiR9OMcnoEImnIzgl1NJ/o2DlxeVWmwxlEMY1z0my9kuweO/20TbXTWtFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324163; c=relaxed/simple;
-	bh=G1pmVYTlKYB2evp2UH26aRIMP5vTOXvwujH5BaIMyP8=;
+	s=arc-20240116; t=1711324162; c=relaxed/simple;
+	bh=pP09BQR5vGUKD4rX+sTintaCEvicXfwuzCjxTMxtbw8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VhK7Ii0UnkBZqSgZewrceu8/QSMlDZLR9bS3z+FRTwJYTb+dbBJTwlOeHXZP3r7w670h0jqa9/cJMkC9i+1NZQksN/iWt686QxADYklJntI+6Z2OdjbE3WUdQ2AbwSYWf4Jvs36tjH9kcvQOUunonz26xhAWOMVjS7LvNzsAA30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tv20Lb52; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=patv23yqtj8R37DUdubo7eW5OxFZYPvSZrdgd21PBqWb3qppahvcAVsqQ/EGLekysxxesTkb5pmTAXOZv6kLz5VYNoGOKBOTsJ9jWD9dEvZ02VmJyM6iEJSgKOJqK/FvXtNOSMwDLrbr4oKHd/1HDi6HsjDuJwawZYeZiPj+W/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVEazqfl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tv20Lb52"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D098C43399;
-	Sun, 24 Mar 2024 23:49:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVEazqfl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB693C433C7;
+	Sun, 24 Mar 2024 23:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324163;
-	bh=G1pmVYTlKYB2evp2UH26aRIMP5vTOXvwujH5BaIMyP8=;
+	s=k20201202; t=1711324161;
+	bh=pP09BQR5vGUKD4rX+sTintaCEvicXfwuzCjxTMxtbw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tv20Lb52KjcYxYKwFRd+1g8iEWrVxIPlvBU+iCPNe6S3c27rWpG33AGSzHnWss/4f
-	 YbEqKqEcwAI6XZDb0R0q790MdrvKAt7lKRvN3THva9Jy7yDMGr0Q84M9UjJ5Nh9hfJ
-	 rv5TpPB+yRrfMpNkKAXYpO4fFYdUIYOcCAPjJuiJAc3QYWvNpOCA4YzAOifz57cpLT
-	 O3WX5bfVamRmM+7XnBzfQPReRe5LurTL2YaSKc5BIQcDn9Gfv9zNzp7NND7W5d29mE
-	 db/VlTpSejAzLae8cXfW+57BsKDHkJyLi4A1iQE9JlbuYhn5NbxZ9WoyjFYl3/+d3K
-	 N4V1AcMUCOLdA==
+	b=CVEazqflDcVyh31Wk1pKFKwC4o7ja4ux4QCoOH85y2HfbV/fRQnZq7l7QOHv6GiMl
+	 d7oR8fMkv25UTVJ+8RphTJlGST7aUL608+ghgk7cv/efPccX7iqv9nhyBWjdqij7Vm
+	 OK6slo9ngj3bJV30QSHr4HtoG6eLxQdIfYUeI8ElnWOe8ZMVCbEAYJVC3uuKg2UGMR
+	 t/DNESetryKemoctEMeMsCDQONLrC8jhXrcP7Tw4IZ37MNVHNFIQC3QUYM2KcLqFkl
+	 JkCsfJgwhYYgGr6eV3OcueVJKMvNi/kodyu7ebpuw8jDLkhE5gSvUrTlqy8pBvjZHB
+	 BPPY5xDMtchvg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -33,9 +33,9 @@ Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	Benjamin Coddington <bcodding@redhat.com>,
 	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 158/183] NFS: Fix an off by one in root_nfs_cat()
-Date: Sun, 24 Mar 2024 19:46:11 -0400
-Message-ID: <20240324234638.1355609-159-sashal@kernel.org>
+Subject: [PATCH 5.4 156/183] net: sunrpc: Fix an off by one in rpc_sockaddr2uaddr()
+Date: Sun, 24 Mar 2024 19:46:09 -0400
+Message-ID: <20240324234638.1355609-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -51,38 +51,38 @@ Content-Transfer-Encoding: 8bit
 
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 698ad1a538da0b6bf969cfee630b4e3a026afb87 ]
+[ Upstream commit d6f4de70f73a106986ee315d7d512539f2f3303a ]
 
-The intent is to check if 'dest' is truncated or not. So, >= should be
-used instead of >, because strlcat() returns the length of 'dest' and 'src'
-excluding the trailing NULL.
+The intent is to check if the strings' are truncated or not. So, >= should
+be used instead of >, because strlcat() and snprintf() return the length of
+the output, excluding the trailing NULL.
 
-Fixes: 56463e50d1fc ("NFS: Use super.c for NFSROOT mount option parsing")
+Fixes: a02d69261134 ("SUNRPC: Provide functions for managing universal addresses")
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfsroot.c | 4 ++--
+ net/sunrpc/addr.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
-index effaa4247b912..c0f2e1751c33e 100644
---- a/fs/nfs/nfsroot.c
-+++ b/fs/nfs/nfsroot.c
-@@ -169,10 +169,10 @@ static int __init root_nfs_cat(char *dest, const char *src,
- 	size_t len = strlen(dest);
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index 0d4a2bb09589c..be2fc88f5bde1 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -288,10 +288,10 @@ char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
+ 	}
  
- 	if (len && dest[len - 1] != ',')
--		if (strlcat(dest, ",", destlen) > destlen)
-+		if (strlcat(dest, ",", destlen) >= destlen)
- 			return -1;
+ 	if (snprintf(portbuf, sizeof(portbuf),
+-		     ".%u.%u", port >> 8, port & 0xff) > (int)sizeof(portbuf))
++		     ".%u.%u", port >> 8, port & 0xff) >= (int)sizeof(portbuf))
+ 		return NULL;
  
--	if (strlcat(dest, src, destlen) > destlen)
-+	if (strlcat(dest, src, destlen) >= destlen)
- 		return -1;
- 	return 0;
- }
+-	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) > sizeof(addrbuf))
++	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) >= sizeof(addrbuf))
+ 		return NULL;
+ 
+ 	return kstrdup(addrbuf, gfp_flags);
 -- 
 2.43.0
 
