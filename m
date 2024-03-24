@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D03E181329;
-	Sun, 24 Mar 2024 23:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB58628BD41;
+	Sun, 24 Mar 2024 23:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324078; cv=none; b=JZTMWi0WFhpMFEWxSbicAci8K4mHi2GAhslEvZJXwTs7IzajeUFcPRPDPp2DaiYiBfNZLHFI69317CrQbM8JnbbNhaZBdRZoBie3kkBfUBg4p299rsDrhhGxzLuBtpMz4wthlKw1twSU5XX0k6lMCphNcoDk2t2xqky+kcxke9I=
+	t=1711324084; cv=none; b=a/RKY9ZupltgAUDW511Fo3ISCZG9ghXXzu6wfn1D/WYH30zkwYMmqi8O+UDwMiHeJyXIjG7fRoU2xZDz/RqbAarFv3loy7+oniHUndp4647YuEnEGppK6xzKt2qtd+Z6IgEu27oCqatAAYNvQ5vC7y9yDwnP7p6ZRM98k5qOWz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324078; c=relaxed/simple;
-	bh=4DaxpUzWlRp6+J1iAwHH9aJOrxqrNkhArjxWeuBu49s=;
+	s=arc-20240116; t=1711324084; c=relaxed/simple;
+	bh=JHlJe7dynY8RwxF97K0HHSqIimBBSR+N9Lxy8Bd9G48=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iiWsPcHBuKjPIhxwjKdwXWAHcx9KJ4j7ZaQfqmbs6KPyUHvi7joxOz5RJt2C1QQFwhZiWm7IYuRnieZakGRykZg/E4yuZOy+w3lq6WYJtERTw8GkR/8Vm5IweHDJKZflXoWlIQtnd0Ga/blataoRJE6FrYnvsd6XVSGgQ3kFUYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nvHL5XmM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=U3VjT1llgwtgG1B4GqaG2oLtSnCq8/mNzsqf85Ml6bkSVdvhWR5g/zEsjtDfMneSoj7aEBTpRFdxNBF2rjy/OZxCzgleKYS7dCEkwMM5yXOXTzqia2xiNALAff0NUa564lxiPW/ZnzDiQkl0eQKfWZJI0ljc3ksSvvL6Jw8GC9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uzpbaXl7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nvHL5XmM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65BA1C433F1;
-	Sun, 24 Mar 2024 23:47:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uzpbaXl7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D8DDC433F1;
+	Sun, 24 Mar 2024 23:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324077;
-	bh=4DaxpUzWlRp6+J1iAwHH9aJOrxqrNkhArjxWeuBu49s=;
+	s=k20201202; t=1711324083;
+	bh=JHlJe7dynY8RwxF97K0HHSqIimBBSR+N9Lxy8Bd9G48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nvHL5XmMnCuKAEA2sj3NISX+y55TToVoWak5z7DEs/m1eVwl+5tt462xuVH8MpzX5
-	 mDPXdOu/9cdh/lXj58dg9QlA8KWLcvXK8ib1JkvNuQvS1bLmYj1qRW6YmJfottBTna
-	 28KR30CDOE8Y+iAsCYBkAfEQza7tVLqMfO11MmGDqQgGoY5RrNrukGRbkN6eB7WXuu
-	 kM/V51tmdTasz1nbqSOSkJCfwgwjMiRyrefw7HtbkH/3spIMq6b8hUpkeaZZShx09n
-	 at8rY6n2QP8903f85ZS263aM+/N1ghgViTwl/w7vnGnlFUEvzrPdd6LgTLbW7ETXic
-	 xhL0c4cNs0tPQ==
+	b=uzpbaXl7I4riUuyO7AOB8SQSp6GnuM1YNc4xbAtsS+J8ScPiQZ66xesA6hW566EzT
+	 DLOdIw+5aY+OsAIOV0dgBEEVOIoWHY153mPjnIeRLNjip+NhMHMWb0HNOhU+VPfuqB
+	 CxcN/jjluZWEFrC6tGGHbF0942ig9BPjTXp6geeIfepWYxFUv7YELWIq2neI10huXZ
+	 qf1g1OUl5jAdfqV9ojdbY0g+qj6/bq6aHYIj5W2wWdynB+SpGXapQ6qXfw30BBzK+F
+	 zaeoVtbtVhr6SQoB+vA0DnGL3U1UAHa6GL96gDQk2UXcUTeymRMC2z2LTDa8pDgeSg
+	 6DqsSoslhfs5g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
-	Jason Xing <kerneljasonxing@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Ming Lei <ming.lei@redhat.com>,
+	Patrick Plenefisch <simonpatp@gmail.com>,
+	Mike Snitzer <snitzer@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 077/183] tcp: fix incorrect parameter validation in the do_tcp_getsockopt() function
-Date: Sun, 24 Mar 2024 19:44:50 -0400
-Message-ID: <20240324234638.1355609-78-sashal@kernel.org>
+Subject: [PATCH 5.4 083/183] dm raid: fix false positive for requeue needed during reshape
+Date: Sun, 24 Mar 2024 19:44:56 -0400
+Message-ID: <20240324234638.1355609-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -49,44 +49,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 716edc9706deb3bb2ff56e2eeb83559cea8f22db ]
+[ Upstream commit b25b8f4b8ecef0f48c05f0c3572daeabefe16526 ]
 
-The 'len' variable can't be negative when assigned the result of
-'min_t' because all 'min_t' parameters are cast to unsigned int,
-and then the minimum one is chosen.
+An empty flush doesn't have a payload, so it should never be looked at
+when considering to possibly requeue a bio for the case when a reshape
+is in progress.
 
-To fix the logic, check 'len' as read from 'optlen',
-where the types of relevant variables are (signed) int.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 9dbd1aa3a81c ("dm raid: add reshaping support to the target")
+Reported-by: Patrick Plenefisch <simonpatp@gmail.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp.c | 4 ++--
+ drivers/md/dm-raid.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 8d7933989de0e..8ebcff40bc5ac 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -3451,11 +3451,11 @@ static int do_tcp_getsockopt(struct sock *sk, int level,
- 	if (get_user(len, optlen))
- 		return -EFAULT;
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index 9f05ae2b90191..1ccd765fad938 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -3343,14 +3343,14 @@ static int raid_map(struct dm_target *ti, struct bio *bio)
+ 	struct mddev *mddev = &rs->md;
  
--	len = min_t(unsigned int, len, sizeof(int));
--
- 	if (len < 0)
- 		return -EINVAL;
+ 	/*
+-	 * If we're reshaping to add disk(s)), ti->len and
++	 * If we're reshaping to add disk(s), ti->len and
+ 	 * mddev->array_sectors will differ during the process
+ 	 * (ti->len > mddev->array_sectors), so we have to requeue
+ 	 * bios with addresses > mddev->array_sectors here or
+ 	 * there will occur accesses past EOD of the component
+ 	 * data images thus erroring the raid set.
+ 	 */
+-	if (unlikely(bio_end_sector(bio) > mddev->array_sectors))
++	if (unlikely(bio_has_data(bio) && bio_end_sector(bio) > mddev->array_sectors))
+ 		return DM_MAPIO_REQUEUE;
  
-+	len = min_t(unsigned int, len, sizeof(int));
-+
- 	switch (optname) {
- 	case TCP_MAXSEG:
- 		val = tp->mss_cache;
+ 	md_handle_request(mddev, bio);
 -- 
 2.43.0
 
