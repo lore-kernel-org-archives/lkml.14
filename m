@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C59B535D6;
-	Sun, 24 Mar 2024 23:14:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFA7146002;
+	Sun, 24 Mar 2024 23:14:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322068; cv=none; b=tRdgUdKMYLykBI6VxQaCwsZDW3G+xdWWxvLlcHxr+T82ggMjnST2bmngqyFLmnUG44N8/ZA19WNxYcoG5Lab2nkrNK1amDsxPopJ1YDoKgD1TPGpbtcpVGYQQycumwdDFTKR4KvsyiNRmkvF0xbJ3tWBY2PwLIcmh7N9tDIJr8c=
+	t=1711322064; cv=none; b=WH2e9XG71HjEMcD+A7lUZcbt72LZKy8yjk9S0qhhBmxSBr9lLPxO3gCBARdaLcvwJ1EkJt7XWMjAdeubENh9/5agJ4beyYfn7LZzpGIYU4PsQO/N8d9/cxr26DA+YnDD7g0QzEQEmblSTsFqBCCqI/ozkQClXP11muMROelMetc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322068; c=relaxed/simple;
-	bh=k/1149o3J3CwTsV927N69j7If6yH6EDi0cJzlDfc+/0=;
+	s=arc-20240116; t=1711322064; c=relaxed/simple;
+	bh=Ty54UJkyHxXnxmNG3U9Di3z28hRX9+NIx75utLzM6ws=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HvMKcdAGJ98Gb1sEGqnuUcCdieIVvXwAJ2Op5X3P3dWFNJisKibHPWQO49OFr4kzmMGf82DomvlhKi1/Y0DPJgbKwXFeTDHa11XUO9Y4liLVnQw6Oy7lrRphM+Ho4GzlVIc2QVNjbxBoNHThlv2UsSfOtsODcr/8j4ouFbBilM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkWgnL6m; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qAUWLBYfCSPedqTnnqLwlOIIC0K2wKcMJS90E+h7djzh/q7SbzoASyclC+fnHZVKwGxK57FRWkC5JsVgCCUqbZmmllERQB7HSrdrXCq0UGdgTY09P54NmdPndR/bu+dPi2xYn14nbNruR8X9wwEK0Xs8KlSmXz3+vjL1d6bURY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYdkDIzI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkWgnL6m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAE56C43399;
-	Sun, 24 Mar 2024 23:14:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYdkDIzI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5C8CC43399;
+	Sun, 24 Mar 2024 23:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322068;
-	bh=k/1149o3J3CwTsV927N69j7If6yH6EDi0cJzlDfc+/0=;
+	s=k20201202; t=1711322064;
+	bh=Ty54UJkyHxXnxmNG3U9Di3z28hRX9+NIx75utLzM6ws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TkWgnL6mwEYQgcNj/huZv4InXfMrswmSziZNo9/vRSjyUY9AzTLH1H641BLFlmQ3c
-	 3K8BySz26V3lQjwg8Tt0TeCe428hB2o3RHcXjUkLc5fmr3iVqiS32p7AoyfaYCJwho
-	 4Lb6hQMHM1knRdZ/q7Q02xHGijvlQJCvH05vPS9mQDvW+r5zcwz13XhoA9nRpunNmH
-	 zFGG6dtDld2fZz0U1CVadiRrUJGTKvy+v7gxwG3JpJBKAIrqDc0vGsNBeP5eUaNJ9R
-	 oaJKcOd++OB1z40AvtGzeMthvBFJI18HB3ATCCAhYkPV/mJ6y/vCS3f1C3ID1DVvmi
-	 sf+tQlS6k0LWQ==
+	b=bYdkDIzIUmPa56PY2k4ekwyr1LcmPKLvCjRb8sSfB7lnOJCWjg3gz/MY0EVnedY68
+	 fDdSBTqfh+nO8FXUM9WBOnM11EKacLAoQpdDkbCkme71qHes6gtqbd5GMcWTbu+O6e
+	 o1+ffpSLtzXZVqSnhom8Xcm1reGmuuSBnkBthM/wWW7TULBc2GemCWL82ccAXyh1Ig
+	 /gX5SpWHCtZjq+FzrfWxdug4DKGT/fopnKTVl8+2HhU05k2gVqGpbsGKLGJerHAKK4
+	 cKlQTDLW1Lt1xlGl5Fh/v5QRtuyf8q4XdPN4QxWxAlEUYF0ADio8YQXpywtr7l0i8h
+	 9uzUoTr+kqLSw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Fangrui Song <maskray@google.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 141/451] arm64: dts: mt8183: kukui: Split out keyboard node and describe detachables
-Date: Sun, 24 Mar 2024 19:06:57 -0400
-Message-ID: <20240324231207.1351418-142-sashal@kernel.org>
+Subject: [PATCH 6.1 137/451] s390/vdso: drop '-fPIC' from LDFLAGS
+Date: Sun, 24 Mar 2024 19:06:53 -0400
+Message-ID: <20240324231207.1351418-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,104 +49,64 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Nathan Chancellor <nathan@kernel.org>
 
-[ Upstream commit 82492c4ef8f65f93cd4a35c4b52518935acbb2fa ]
+[ Upstream commit 0628c03934187be33942580e10bb9afcc61adeed ]
 
-Kukui devices krane, kodana, and kakadu use detachable keyboards, which
-only have switches to be registered.
+'-fPIC' as an option to the linker does not do what it seems like it
+should. With ld.bfd, it is treated as '-f PIC', which does not make
+sense based on the meaning of '-f':
 
-Change the keyboard node's compatible of those boards to the newly
-introduced "google,cros-ec-keyb-switches", which won't include matrix
-properties.
+  -f SHLIB, --auxiliary SHLIB Auxiliary filter for shared object symbol table
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Link: https://lore.kernel.org/r/20220527045353.2483042-1-hsinyi@chromium.org
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Stable-dep-of: 04bd6411f506 ("arm64: dts: mt8183: Move CrosEC base detection node to kukui-based DTs")
+When building with ld.lld (currently under review in a GitHub pull
+request), it just errors out because '-f' means nothing and neither does
+'-fPIC':
+
+  ld.lld: error: unknown argument '-fPIC'
+
+'-fPIC' was blindly copied from CFLAGS when the vDSO stopped being
+linked with '$(CC)', it should not be needed. Remove it to clear up the
+build failure with ld.lld.
+
+Fixes: 2b2a25845d53 ("s390/vdso: Use $(LD) instead of $(CC) to link vDSO")
+Link: https://github.com/llvm/llvm-project/pull/75643
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Link: https://lore.kernel.org/r/20240130-s390-vdso-drop-fpic-from-ldflags-v1-1-094ad104fc55@kernel.org
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi | 2 ++
- arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi  | 6 ++++++
- arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi  | 6 ++++++
- arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi   | 6 ++++++
- arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi         | 1 -
- 5 files changed, 20 insertions(+), 1 deletion(-)
+ arch/s390/kernel/vdso32/Makefile | 2 +-
+ arch/s390/kernel/vdso64/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
-index dccf367c7ec6c..3d95625f1b0b4 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
-@@ -4,6 +4,8 @@
-  */
+diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/Makefile
+index 245bddfe9bc0e..cc513add48eb5 100644
+--- a/arch/s390/kernel/vdso32/Makefile
++++ b/arch/s390/kernel/vdso32/Makefile
+@@ -22,7 +22,7 @@ KBUILD_AFLAGS_32 += -m31 -s
+ KBUILD_CFLAGS_32 := $(filter-out -m64,$(KBUILD_CFLAGS))
+ KBUILD_CFLAGS_32 += -m31 -fPIC -shared -fno-common -fno-builtin
  
- #include "mt8183-kukui.dtsi"
-+/* Must come after mt8183-kukui.dtsi to modify cros_ec */
-+#include <arm/cros-ec-keyboard.dtsi>
+-LDFLAGS_vdso32.so.dbg += -fPIC -shared -soname=linux-vdso32.so.1 \
++LDFLAGS_vdso32.so.dbg += -shared -soname=linux-vdso32.so.1 \
+ 	--hash-style=both --build-id=sha1 -melf_s390 -T
  
- / {
- 	panel: panel {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-index 50a0dd36b5fb3..a11adeb29b1f2 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-@@ -372,6 +372,12 @@ pen_eject {
- 	};
- };
+ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_32)
+diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+index 1605ba45ac4c0..42d918d50a1ff 100644
+--- a/arch/s390/kernel/vdso64/Makefile
++++ b/arch/s390/kernel/vdso64/Makefile
+@@ -26,7 +26,7 @@ KBUILD_AFLAGS_64 += -m64 -s
  
-+&cros_ec {
-+	keyboard-controller {
-+		compatible = "google,cros-ec-keyb-switches";
-+	};
-+};
-+
- &qca_wifi {
- 	qcom,ath10k-calibration-variant = "GO_KAKADU";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-index 06f8c80bf5536..4864c39e53a4f 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-@@ -339,6 +339,12 @@ touch_pin_reset: pin_reset {
- 	};
- };
+ KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
+ KBUILD_CFLAGS_64 += -m64 -fPIC -fno-common -fno-builtin
+-ldflags-y := -fPIC -shared -soname=linux-vdso64.so.1 \
++ldflags-y := -shared -soname=linux-vdso64.so.1 \
+ 	     --hash-style=both --build-id=sha1 -T
  
-+&cros_ec {
-+	keyboard-controller {
-+		compatible = "google,cros-ec-keyb-switches";
-+	};
-+};
-+
- &qca_wifi {
- 	qcom,ath10k-calibration-variant = "GO_KODAMA";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-index a7b0cb3ff7b0a..d5f41c6c98814 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-@@ -343,6 +343,12 @@ rst_pin {
- 	};
- };
- 
-+&cros_ec {
-+	keyboard-controller {
-+		compatible = "google,cros-ec-keyb-switches";
-+	};
-+};
-+
- &qca_wifi {
- 	qcom,ath10k-calibration-variant = "LE_Krane";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-index a428a581c93a8..de610874a9125 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-@@ -999,5 +999,4 @@ hub@1 {
- 	};
- };
- 
--#include <arm/cros-ec-keyboard.dtsi>
- #include <arm/cros-ec-sbs.dtsi>
+ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
 -- 
 2.43.0
 
