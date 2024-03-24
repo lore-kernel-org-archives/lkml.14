@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A92D14B09A;
-	Sun, 24 Mar 2024 22:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EB31F1AD5;
+	Sun, 24 Mar 2024 22:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321066; cv=none; b=OsXZji2WDFoUeNnN7tJmKmdnO+i/Sp0/+34oXHduT3bgul0RtMTmZovnXpX0+aqHuOalba74FD9gMwQaUG5R8oUDF0X56HEoXPb7WwLwuhRqTJLo5MvreYRsrQyndbyHQC6RXhU/ogjoHoAeuRt6Txh9JQwHc07mwa5JdDQcwj8=
+	t=1711321080; cv=none; b=WDZZ+ooKtsVejXw1FpxLeXiPNPKOKwTCPJ/f9VkXeT7TOrAEerZSPFttzrRlp2q2860euICCVAFYjUMKraakZymyCztJ/d/IywJnuBEs31THAJEQcK491wBCLgL+2GQU5k0ZD6EbDAFsfYpLbX3ukRCPY7TeAemsFCjSsoj9XVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321066; c=relaxed/simple;
-	bh=vYDrj65XbguCNZEvMXtOEcXUTXcfMV3g0dkmYc1mhQ8=;
+	s=arc-20240116; t=1711321080; c=relaxed/simple;
+	bh=etuvMnhU1Yw1AqFeBdAgKEHh4IM1KJV2ySH1nskxOcI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YzgfLEmISWtuZ4qeahfNAOjWgdALp2vChvrircHeR7KdZI0TVQyw0/AJeoamdv0y72xU5aJ1cHIwpTyAcli2+vrPHBbk85DWsOMV6UKbofObkUkmFYjaunnN0ZMhaYkFaTzMxLD/W18omUIqtgDAri0pSysE7eV/6vLbUP4hwBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0GDI0j3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=f1hadH+dSnmUXPHGGI53VPfC2YZjtrcii7ytv3adV14I61DMwObNoD7AheQoYf5++dmhqJTADrHs+r4IMjJ1B4nGE4FhYIMk8tm1A/DLDjgb/ujtrDdLFXiK24FRZY8Fy/kxX3IGwdYMxOTY/+PAngb3YP8toYBtP3Z/RwBlAk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8/YTR0f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0GDI0j3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A40C433C7;
-	Sun, 24 Mar 2024 22:57:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8/YTR0f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC2C6C43399;
+	Sun, 24 Mar 2024 22:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321065;
-	bh=vYDrj65XbguCNZEvMXtOEcXUTXcfMV3g0dkmYc1mhQ8=;
+	s=k20201202; t=1711321079;
+	bh=etuvMnhU1Yw1AqFeBdAgKEHh4IM1KJV2ySH1nskxOcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i0GDI0j3jN0rQnMzODqIs+wlSL/owagVY1XSOQ/yv9ygxIOoob7/GLY/I7RQXphHR
-	 fDkAmpcAN0IyReu1YmhuMZKNHo5S2AWBZMY9HIn6eTL66KrxmNTCpANMGRSze+GtnD
-	 l9im6Y0hDEfAllmrE3LH7iCZKBtAqs+o+LnEh9z7YShrwb4asia7o9A2PAHp5xWXEq
-	 k665lFbZBnxaPsp2KOPFDXqEh8gPlaufh5w8IfLWouQYGlESArXC3b0L1dbRVl2TXG
-	 5wxespjbcD5HTRXT2KJkpNR1bKH0vF6Ns6K8qtyXxVq6LK7Q+8HwhL8Wexv1eTU9CC
-	 1wpQes1KeydkQ==
+	b=D8/YTR0fR+aNOCTSJOOSn606CvHVK1t0W32LNJyb8unH5Y4qZeHuiBjoIYwah/Kav
+	 rqMqr04i2gfzMMgvNXLA0SVJQShiT4yOHf/tcJm972ox2h7j87FJNB9kz6Ue0Ze3lT
+	 pDY717IFIVEbuvn3AVom4Y6PoyIDsbQ1jbnPPa0e5hxd7IvcZCV0qjI+Cp6mRBAtrb
+	 CEEvlb9K7+/dUvKCSehCkJli3wME9dD7GrNmi4Tk9JALBj+NXBvNSqcGuRV4Yjwaa1
+	 5rtWgzGtJvGCfsDEgZakOd0W3JosQSGDpz1nF4FwgvlOvkFn/40NkTM3abhLYhi6d+
+	 k1cbd0PyTFmFw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
+Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 629/713] kconfig: fix infinite loop when expanding a macro at the end of file
-Date: Sun, 24 Mar 2024 18:45:55 -0400
-Message-ID: <20240324224720.1345309-630-sashal@kernel.org>
+Subject: [PATCH 6.7 643/713] spi: lpspi: Avoid potential use-after-free in probe()
+Date: Sun, 24 Mar 2024 18:46:09 -0400
+Message-ID: <20240324224720.1345309-644-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -47,45 +48,72 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 
-[ Upstream commit af8bbce92044dc58e4cc039ab94ee5d470a621f5 ]
+[ Upstream commit 2ae0ab0143fcc06190713ed81a6486ed0ad3c861 ]
 
-A macro placed at the end of a file with no newline causes an infinite
-loop.
+fsl_lpspi_probe() is allocating/disposing memory manually with
+spi_alloc_host()/spi_alloc_target(), but uses
+devm_spi_register_controller(). In case of error after the latter call the
+memory will be explicitly freed in the probe function by
+spi_controller_put() call, but used afterwards by "devm" management outside
+probe() (spi_unregister_controller() <- devm_spi_unregister() below).
 
-[Test Kconfig]
-  $(info,hello)
-  \ No newline at end of file
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000070
+...
+Call trace:
+ kernfs_find_ns
+ kernfs_find_and_get_ns
+ sysfs_remove_group
+ sysfs_remove_groups
+ device_remove_attrs
+ device_del
+ spi_unregister_controller
+ devm_spi_unregister
+ release_nodes
+ devres_release_all
+ really_probe
+ driver_probe_device
+ __device_attach_driver
+ bus_for_each_drv
+ __device_attach
+ device_initial_probe
+ bus_probe_device
+ deferred_probe_work_func
+ process_one_work
+ worker_thread
+ kthread
+ ret_from_fork
 
-I realized that flex-provided input() returns 0 instead of EOF when it
-reaches the end of a file.
-
-Fixes: 104daea149c4 ("kconfig: reference environment variables directly and remove 'option env='")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 5314987de5e5 ("spi: imx: add lpspi bus driver")
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+Link: https://msgid.link/r/20240312112050.2503643-1-alexander.sverdlin@siemens.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/lexer.l | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/spi/spi-fsl-lpspi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
-index cc386e4436834..2c2b3e6f248ca 100644
---- a/scripts/kconfig/lexer.l
-+++ b/scripts/kconfig/lexer.l
-@@ -302,8 +302,11 @@ static char *expand_token(const char *in, size_t n)
- 	new_string();
- 	append_string(in, n);
+diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
+index 11991eb126364..079035db7dd85 100644
+--- a/drivers/spi/spi-fsl-lpspi.c
++++ b/drivers/spi/spi-fsl-lpspi.c
+@@ -830,11 +830,11 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
  
--	/* get the whole line because we do not know the end of token. */
--	while ((c = input()) != EOF) {
-+	/*
-+	 * get the whole line because we do not know the end of token.
-+	 * input() returns 0 (not EOF!) when it reachs the end of file.
-+	 */
-+	while ((c = input()) != 0) {
- 		if (c == '\n') {
- 			unput(c);
- 			break;
+ 	is_target = of_property_read_bool((&pdev->dev)->of_node, "spi-slave");
+ 	if (is_target)
+-		controller = spi_alloc_target(&pdev->dev,
+-					      sizeof(struct fsl_lpspi_data));
++		controller = devm_spi_alloc_target(&pdev->dev,
++						   sizeof(struct fsl_lpspi_data));
+ 	else
+-		controller = spi_alloc_host(&pdev->dev,
+-					    sizeof(struct fsl_lpspi_data));
++		controller = devm_spi_alloc_host(&pdev->dev,
++						 sizeof(struct fsl_lpspi_data));
+ 
+ 	if (!controller)
+ 		return -ENOMEM;
 -- 
 2.43.0
 
