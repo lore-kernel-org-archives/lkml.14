@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F5681207;
-	Sun, 24 Mar 2024 22:49:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825861D5662;
+	Sun, 24 Mar 2024 22:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320575; cv=none; b=SaDffVCNvGQeOuc9sIefO3IJPFqXFXBwnx0EOYztoXrqtmGwdf9l5I+WgWY0MmsvNaV1kj8oHrHHCJE70NXddIxP/M1rQxFswJcfmqg+I6/3clmQfgXKEVta5g/Z4Vpjyxr5UGxTm6QmFjePCUU9Hf3OU/HdLgQSTNCtrgMbzgg=
+	t=1711320565; cv=none; b=aYJbMHO4LKHfDisPbD0n8UYy7175ZAPx9tLYpIOLKaACCCyQYFjlmYTmibWR66+Qr9NEavrYh+pZ7e0PMknWOfGAqgq4NIic2Q7eKHp9ub8FNewFtPqyJP7Ven3rufcPc8zTXpj54avtnj6KQRjeF7FKC1M3AsP+VKtsiazudd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320575; c=relaxed/simple;
-	bh=CsAMiHQAXIh3ppx29hoMWB2i85+/qOx9nZjiv2Urp3o=;
+	s=arc-20240116; t=1711320565; c=relaxed/simple;
+	bh=jdfu/KH7YL1zTK/NxSGJU5Hr4wSQlNuG4dX03k2hbfQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IyKP5untXYlYX9GbW9wI9OrqP6i7iQPp1viJDA/go2eoiV2zP2lY67gm3uUnj6u2tdAr6OY+GoMYZamE3iNxiZAzsisfGtO45Y2zJzNehMDBAk1N/FudYy2YLkNzngXA4vxkDWDY+RKugvnP4rgCO7t2VgX83o5zcQrI8o0SX4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z1Guap+C; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GyRbH4LXwQ3SKg533yJZLCNye2gb2GYUrkGYlLEGKOw4poVMP4LvTSVboAe2/liKEOni/D+IsS9xLrhw7J78hDaMST4A9LDjzjEQjDD+11veMOQgfaXckIFSHE/Z83Q5Wv9SBCuhKUC4zBn7aE8SzmIWwU9YrSMFdM/i5DklO8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sdmdcf5Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z1Guap+C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D825DC43399;
-	Sun, 24 Mar 2024 22:49:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sdmdcf5Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8C8FC43394;
+	Sun, 24 Mar 2024 22:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320574;
-	bh=CsAMiHQAXIh3ppx29hoMWB2i85+/qOx9nZjiv2Urp3o=;
+	s=k20201202; t=1711320564;
+	bh=jdfu/KH7YL1zTK/NxSGJU5Hr4wSQlNuG4dX03k2hbfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z1Guap+CPbFdRLR/sjHHW4ujwOlcKOGF4opCpipXnEu3pamG1Ydgi4NS+8MPCMhgp
-	 7ncbZ4cFAoLTODGRjuAiIid25eBA78959zjuDiL6Z/+jqQ3hh6DGwUerhmhhkPoUvs
-	 SxCtZazBWdX1JUepKpctu6SQOSYZkyU/NlYcbifWGxXCYMzmg+2axKYrVqy5FF11YV
-	 G6TJf48vtgv3vWMDaK0QYESKnz6NvcYnCxyNQK/Oc0U4md6hY6sk17y/r23h5Pw8Ss
-	 twIL7F+OaXZ1vAtjx+FT9PM6M3Pq+JozIcpYef37ZIZJPGMJJZxAD4iK/57I1nTWGJ
-	 AyFZPg8vcZ2Rg==
+	b=Sdmdcf5QLWbtMx8AoTZ5Ao9cd2IG3nAsBSfgodkwAdaU4BdHQ1s9491aUU0uMZTAP
+	 XnSVE/w/Obi138qBxwaMRefKbaQr0VCm7WcxWXkVMJLHaBDRq+E6CLq/TvJZzQwuQj
+	 KjEj08QDUuJUSFnRaGjq/IVD0HWUxBowRaeRvDQZUzsK3NYQcPR6MTWyHQU6jp6hot
+	 BlZpVyDvJMQfj6Sjwg9ZHx1WK0MUbLwUKo3HfRpQlxflwV9qAhNk+CpULdqLpQkBZP
+	 CKBPmBbbxVxosuGYBbqKl30pUoDqNyfJXysnzpcW2379WhVHRyb5s0Jv/zFYW0Ujf7
+	 /+vLL2XQflU5A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
-	Julian Calaby <julian.calaby@gmail.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 135/713] wifi: b43: Disable QoS for bcm4331
-Date: Sun, 24 Mar 2024 18:37:41 -0400
-Message-ID: <20240324224720.1345309-136-sashal@kernel.org>
+Subject: [PATCH 6.7 125/713] x86/sme: Fix memory encryption setting if enabled by default and not overridden
+Date: Sun, 24 Mar 2024 18:37:31 -0400
+Message-ID: <20240324224720.1345309-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,66 +49,79 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 09795bded2e725443fe4a4803cae2079cdaf7b26 ]
+[ Upstream commit e814b59e6c2b11f5a3d007b2e61f7d550c354c3a ]
 
-bcm4331 seems to not function correctly with QoS support. This may be due
-to issues with currently available firmware or potentially a device
-specific issue.
+Commit
 
-When queues that are not of the default "best effort" priority are
-selected, traffic appears to not transmit out of the hardware while no
-errors are returned. This behavior is present among all the other priority
-queues: video, voice, and background. While this can be worked around by
-setting a kernel parameter, the default behavior is problematic for most
-users and may be difficult to debug. This patch offers a working out-of-box
-experience for bcm4331 users.
+  cbebd68f59f0 ("x86/mm: Fix use of uninitialized buffer in sme_enable()")
 
-Log of the issue (using ssh low-priority traffic as an example):
-    ssh -T -vvvv git@github.com
-    OpenSSH_9.6p1, OpenSSL 3.0.12 24 Oct 2023
-    debug1: Reading configuration data /etc/ssh/ssh_config
-    debug2: checking match for 'host * exec "/nix/store/q1c2flcykgr4wwg5a6h450hxbk4ch589-bash-5.2-p15/bin/bash -c '/nix/store/c015armnkhr6v18za0rypm7sh1i8js8w-gnupg-2.4.1/bin/gpg-connect-agent --quiet updatestartuptty /bye >/dev/null 2>&1'"' host github.com originally github.com
-    debug3: /etc/ssh/ssh_config line 5: matched 'host "github.com"'
-    debug1: Executing command: '/nix/store/q1c2flcykgr4wwg5a6h450hxbk4ch589-bash-5.2-p15/bin/bash -c '/nix/store/c015armnkhr6v18za0rypm7sh1i8js8w-gnupg-2.4.1/bin/gpg-connect-agent --quiet updatestartuptty /bye >/dev/null 2>&1''
-    debug3: command returned status 0
-    debug3: /etc/ssh/ssh_config line 5: matched 'exec "/nix/store/q1c2flcykgr4wwg5a6h450hxbk4ch589-bash-5.2-p15/bin/bash -c '/nix/store/c015armnkhr6v18za0r"'
-    debug2: match found
-    debug1: /etc/ssh/ssh_config line 9: Applying options for *
-    debug3: expanded UserKnownHostsFile '~/.ssh/known_hosts' -> '/home/binary-eater/.ssh/known_hosts'
-    debug3: expanded UserKnownHostsFile '~/.ssh/known_hosts2' -> '/home/binary-eater/.ssh/known_hosts2'
-    debug2: resolving "github.com" port 22
-    debug3: resolve_host: lookup github.com:22
-    debug3: channel_clear_timeouts: clearing
-    debug3: ssh_connect_direct: entering
-    debug1: Connecting to github.com [192.30.255.113] port 22.
-    debug3: set_sock_tos: set socket 3 IP_TOS 0x48
+'fixed' an issue in sme_enable() detected by static analysis, and broke
+the common case in the process.
 
-Fixes: e6f5b934fba8 ("b43: Add QOS support")
-Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20231231050300.122806-5-sergeantsagara@protonmail.com
+cmdline_find_option() will return < 0 on an error, or when the command
+line argument does not appear at all. In this particular case, the
+latter is not an error condition, and so the early exit is wrong.
+
+Instead, without mem_encrypt= on the command line, the compile time
+default should be honoured, which could be to enable memory encryption,
+and this is currently broken.
+
+Fix it by setting sme_me_mask to a preliminary value based on the
+compile time default, and only omitting the command line argument test
+when cmdline_find_option() returns an error.
+
+  [ bp: Drop active_by_default while at it. ]
+
+Fixes: cbebd68f59f0 ("x86/mm: Fix use of uninitialized buffer in sme_enable()")
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Link: https://lore.kernel.org/r/20240126163918.2908990-2-ardb+git@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43/main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/mm/mem_encrypt_identity.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
-index 97d8bdeaa06cb..effb6c23f8257 100644
---- a/drivers/net/wireless/broadcom/b43/main.c
-+++ b/drivers/net/wireless/broadcom/b43/main.c
-@@ -2587,7 +2587,8 @@ static void b43_request_firmware(struct work_struct *work)
+diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
+index d73aeb16417fc..7f72472a34d6d 100644
+--- a/arch/x86/mm/mem_encrypt_identity.c
++++ b/arch/x86/mm/mem_encrypt_identity.c
+@@ -507,7 +507,6 @@ void __init sme_enable(struct boot_params *bp)
+ 	const char *cmdline_ptr, *cmdline_arg, *cmdline_on, *cmdline_off;
+ 	unsigned int eax, ebx, ecx, edx;
+ 	unsigned long feature_mask;
+-	bool active_by_default;
+ 	unsigned long me_mask;
+ 	char buffer[16];
+ 	bool snp;
+@@ -593,22 +592,19 @@ void __init sme_enable(struct boot_params *bp)
+ 	     : "p" (sme_cmdline_off));
  
- start_ieee80211:
- 	wl->hw->queues = B43_QOS_QUEUE_NUM;
--	if (!modparam_qos || dev->fw.opensource)
-+	if (!modparam_qos || dev->fw.opensource ||
-+	    dev->dev->chip_id == BCMA_CHIP_ID_BCM4331)
- 		wl->hw->queues = 1;
+ 	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT))
+-		active_by_default = true;
+-	else
+-		active_by_default = false;
++		sme_me_mask = me_mask;
  
- 	err = ieee80211_register_hw(wl->hw);
+ 	cmdline_ptr = (const char *)((u64)bp->hdr.cmd_line_ptr |
+ 				     ((u64)bp->ext_cmd_line_ptr << 32));
+ 
+ 	if (cmdline_find_option(cmdline_ptr, cmdline_arg, buffer, sizeof(buffer)) < 0)
+-		return;
++		goto out;
+ 
+ 	if (!strncmp(buffer, cmdline_on, sizeof(buffer)))
+ 		sme_me_mask = me_mask;
+ 	else if (!strncmp(buffer, cmdline_off, sizeof(buffer)))
+ 		sme_me_mask = 0;
+-	else
+-		sme_me_mask = active_by_default ? me_mask : 0;
++
+ out:
+ 	if (sme_me_mask) {
+ 		physical_mask &= ~sme_me_mask;
 -- 
 2.43.0
 
