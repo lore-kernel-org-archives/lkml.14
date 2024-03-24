@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7104527A85F;
-	Sun, 24 Mar 2024 23:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1923413C69D;
+	Sun, 24 Mar 2024 23:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323497; cv=none; b=upGtmsRvkUneNIRsK/UyrnVtbAWEk5H0d1w5JbxSZaFr4FdqV6hlCX6/zboKplL/5xE/89h5Zg60x09DyK2kWjlpTuux3BOhNxi0FT8o/HgcAToz08003uN+gMHdgZ+hhynVLlBl/cjRmfra40nksP0TA6nEti4zVEXYhZsZ+fI=
+	t=1711323501; cv=none; b=d70tAt2/GlH/A5oZcFIIM2O8WLEv9/Z1whRsuzuS7AWZVe6lR6ElszWCeO9u5/3dFOQbRRjTNezQj02BJrP5cZXhqjDmZ94YZh/1dYswIWZLBAuao13nF0Tk9VJKxyC0v+/Hv/wOYNEU/e7xLpy407ZikkzG/sqbx4O9B1oZHug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323497; c=relaxed/simple;
-	bh=TcBsGfVcMD3EtPVOIGdNV8dQNmF63mnpU6DYFDlur2k=;
+	s=arc-20240116; t=1711323501; c=relaxed/simple;
+	bh=Mxp24LmxsCqh2e6gTaltUkJ8wrb/zpt0VG+Im8hGxx4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=okLurgk3GLBJ1Cw68YDUPrwP1hQSqXQXckBnVFRfcuD7WMBX7LlVhA6AATSwpTQW6qeE8cu3FGFEZqbylWge2vIWgP9SkAC5Xtw5AGyG8XVh8gtEBufPAaYwdhBdYEmbTS7sjKSK9Geq4nMIxRxH+FqcTN8kb0RVaind3jq+c1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWR8/jT/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZB3rFkRi+bT6d5xxYU+h3btKcEgMa1MoQbkR9cz8/s6rIP+fMafe+w055kVQstcPRkV4McgZAoNcFbsmbfzrGGpcIShINzZwwespFslYjt8zNGdEE3BrKYMFT69HGG8roN2URfEtdhaDFi8+bsqHe6Z1BQuJpW3h8sQP2RTfYhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BglFJyU/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWR8/jT/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E11C43390;
-	Sun, 24 Mar 2024 23:38:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BglFJyU/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54270C43390;
+	Sun, 24 Mar 2024 23:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323496;
-	bh=TcBsGfVcMD3EtPVOIGdNV8dQNmF63mnpU6DYFDlur2k=;
+	s=k20201202; t=1711323500;
+	bh=Mxp24LmxsCqh2e6gTaltUkJ8wrb/zpt0VG+Im8hGxx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kWR8/jT/GufWMu0nRZmYF+Y82fs4yuF5b24Bm0rrLGUhd0KqyiL6eDIS5etSyjkx0
-	 JNpODIINhy2SSRJsPPj1BCnWlstzWF/sm30YqDF85fcL179N9tLyGlazdWfD3wOeGB
-	 NBOuUht1AvSKH4KcvbFX74NXfzEO5lhcsPOLFCJUmfgTRObsLKvNuTxD+9dF6gfmu0
-	 Twy0m03zJ2oZM1nuuZCmaBxIcz63m40ql09Ux/fGeLGi6Ih4NHV558oWZ73ILl4U4g
-	 QDuB00qFPOkfRvt13l1lkBqUp+z48kFPb8AWSDBZBc/Ab6oZfskvFJ7jBhLpdpxgVI
-	 CFnP7R98jbKjQ==
+	b=BglFJyU/zOm5IFKvuBFfzr5hjsdioNUKaADWxvF0pU4T7PoBXMuNnNfd+6CRJGSh2
+	 yRgcpOgYI7l0z5kOeecmDYbPD1JktmxQBwprUgBkAO6uMNtHR11lilLFFVS/PFS/AQ
+	 vJHtcO0Blke89NH81jbGje329zAL6usLNN/pe+Q6WJSg642ZVS7zoK1DoCCQbeenxN
+	 ZMQkTAIxBBTK4I/M9sUYmC71MOMFn6B1XyXH4ClyAf1rnbrhL6ujOTN+TDegKaqQE5
+	 dzjm+aDVViHGgVcs9arnvMizPxhnkR+IMV0uOyrTWZa3dk8HNsrYl9FE2kDfB+0eCD
+	 U0RmZ2/v2I1tw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Justin Stitt <justinstitt@google.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: ruanjinjie <ruanjinjie@huawei.com>,
+	Jon Mason <jdmason@kudzu.us>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 201/317] ASoC: meson: aiu: fix function pointer type mismatch
-Date: Sun, 24 Mar 2024 19:33:01 -0400
-Message-ID: <20240324233458.1352854-202-sashal@kernel.org>
+Subject: [PATCH 5.15 205/317] NTB: EPF: fix possible memory leak in pci_vntb_probe()
+Date: Sun, 24 Mar 2024 19:33:05 -0400
+Message-ID: <20240324233458.1352854-206-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,83 +48,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: ruanjinjie <ruanjinjie@huawei.com>
 
-[ Upstream commit 98ac85a00f31d2e9d5452b825a9ed0153d934043 ]
+[ Upstream commit 956578e3d397e00d6254dc7b5194d28587f98518 ]
 
-clang-16 warns about casting functions to incompatible types, as is done
-here to call clk_disable_unprepare:
+As ntb_register_device() don't handle error of device_register(),
+if ntb_register_device() returns error in pci_vntb_probe(), name of kobject
+which is allocated in dev_set_name() called in device_add() is leaked.
 
-sound/soc/meson/aiu.c:243:12: error: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-  243 |                                        (void(*)(void *))clk_disable_unprepare,
+As comment of device_add() says, it should call put_device() to drop the
+reference count that was set in device_initialize()
+when it fails, so the name can be freed in kobject_cleanup().
 
-The pattern of getting, enabling and setting a disable callback for a
-clock can be replaced with devm_clk_get_enabled(), which also fixes
-this warning.
-
-Fixes: 6ae9ca9ce986 ("ASoC: meson: aiu: add i2s and spdif support")
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-Link: https://msgid.link/r/20240213215807.3326688-2-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: ruanjinjie <ruanjinjie@huawei.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Stable-dep-of: aebfdfe39b93 ("NTB: fix possible name leak in ntb_register_device()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/aiu.c | 19 ++++---------------
- sound/soc/meson/aiu.h |  1 -
- 2 files changed, 4 insertions(+), 16 deletions(-)
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
-index d299a70db7e59..a164ca2446ecd 100644
---- a/sound/soc/meson/aiu.c
-+++ b/sound/soc/meson/aiu.c
-@@ -215,11 +215,12 @@ static const char * const aiu_spdif_ids[] = {
- static int aiu_clk_get(struct device *dev)
- {
- 	struct aiu *aiu = dev_get_drvdata(dev);
-+	struct clk *pclk;
- 	int ret;
+diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+index 1466dd1904175..138742af51707 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+@@ -1249,6 +1249,7 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
  
--	aiu->pclk = devm_clk_get(dev, "pclk");
--	if (IS_ERR(aiu->pclk))
--		return dev_err_probe(dev, PTR_ERR(aiu->pclk), "Can't get the aiu pclk\n");
-+	pclk = devm_clk_get_enabled(dev, "pclk");
-+	if (IS_ERR(pclk))
-+		return dev_err_probe(dev, PTR_ERR(pclk), "Can't get the aiu pclk\n");
- 
- 	aiu->spdif_mclk = devm_clk_get(dev, "spdif_mclk");
- 	if (IS_ERR(aiu->spdif_mclk))
-@@ -236,18 +237,6 @@ static int aiu_clk_get(struct device *dev)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Can't get the spdif clocks\n");
- 
--	ret = clk_prepare_enable(aiu->pclk);
--	if (ret) {
--		dev_err(dev, "peripheral clock enable failed\n");
--		return ret;
--	}
--
--	ret = devm_add_action_or_reset(dev,
--				       (void(*)(void *))clk_disable_unprepare,
--				       aiu->pclk);
--	if (ret)
--		dev_err(dev, "failed to add reset action on pclk");
--
- 	return ret;
+ err_register_dev:
++	put_device(&ndev->ntb.dev);
+ 	return -EINVAL;
  }
  
-diff --git a/sound/soc/meson/aiu.h b/sound/soc/meson/aiu.h
-index 393b6c2307e49..0f94c8bf60818 100644
---- a/sound/soc/meson/aiu.h
-+++ b/sound/soc/meson/aiu.h
-@@ -33,7 +33,6 @@ struct aiu_platform_data {
- };
- 
- struct aiu {
--	struct clk *pclk;
- 	struct clk *spdif_mclk;
- 	struct aiu_interface i2s;
- 	struct aiu_interface spdif;
 -- 
 2.43.0
 
