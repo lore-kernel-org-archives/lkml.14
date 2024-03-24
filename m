@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877A6148301;
-	Sun, 24 Mar 2024 23:15:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500F41487D3;
+	Sun, 24 Mar 2024 23:15:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322105; cv=none; b=tEOoY6i/3r2cSvPtMm590WNYWytgNGGnL1McnfvHbQZfoZreM6HV2aErTscPJpn0RfV0DKHYFf7VLqPt6jv7nayaeZ6f2ovQUV+0SOjiY5elQz3rzIcOgQz25m0fn4/OiRxVKzWL/U+2blwZ4VqyFozKbWRygLAiWXxBUOB05FE=
+	t=1711322111; cv=none; b=QXB7y0/JtTHbeBSVtxHCvwtQIgrIsUf0x7PnBlxyYxPbXLYxHpoy17JrdkZMSw8Fy2uo7v9MG/DVv5f7cavgeK4uM86UJ+qETCXZuTJTCs4RWrDWYW587+wFOGILAD5QgRbubfxgeOkV+dVzbDP8wq+bmAErTyM3szoz2kuSWcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322105; c=relaxed/simple;
-	bh=5QHypYvv7lO4d7Abg3P4AAedmMuA2mFkZo5AS5AWX+Y=;
+	s=arc-20240116; t=1711322111; c=relaxed/simple;
+	bh=LtomxvTbkuJMqcMhjCYFUcOFgg5TJNgDVGGS6PHtBKU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ko5tI5HtFRYubtHHVa2GnnDySr2eluPhgvSEcwqiE00IB+o5l2xCVUnUa+vSkHgHPV/GX+LfPtW8WBnfmZBcPdsl0vMxVf/7N9D7GHhwuo28kuyUQBaP43gJrg3N54Bmhzw/6XWbWMXFTmcO5dQzhaIHwQjo/DoKMa9jGQJYYh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGozU9n4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=icZvDnd9h2fNCC3UCTq8iibAX6F4QMZDQFt6qDCeOOCfTFe0RJR3trhpH4lZqb2v1TaWZKZ7r+u9cz39NvrIyW01FmPw4lcct6VahReHuNcQfBNVx/3lx4KZ6M+SXFSuysWqdnJZUn44weyIUkY1oENVJZWbV9RZuEAFHCafxS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ujx3ucZw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGozU9n4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6493C43390;
-	Sun, 24 Mar 2024 23:15:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ujx3ucZw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F63C433F1;
+	Sun, 24 Mar 2024 23:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322104;
-	bh=5QHypYvv7lO4d7Abg3P4AAedmMuA2mFkZo5AS5AWX+Y=;
+	s=k20201202; t=1711322110;
+	bh=LtomxvTbkuJMqcMhjCYFUcOFgg5TJNgDVGGS6PHtBKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EGozU9n48TM+uCNC1iHbLEl0s9onPQPgYECA20tud5DXLc9ZbM2P8oOzt2Kz8urJa
-	 JXk1luWf95GX3Cju+PrgmZWwt1MeRI9e0ngb97tz+vKwXGBRdI1QJwjB1fPRLClo5L
-	 zXdbKzRRsAjwNj6vJ7nZ2PodKA+YCRJ7yhSLojPKeqzxSfrQB5/mjbLIixGdaOY8yC
-	 5HCtPCfdY9zgo77jkn3vk/sJmVmThrb8UcoiSMhhq3cWspiaJE1E1e9KsPTBEIGLnu
-	 kYvbgp71URLscy1JFlnPi2qQahMCcnZniWPJndIjfvYM4AWipweosBlrvbtRHly0pW
-	 UgWB3hspfsgKg==
+	b=Ujx3ucZwzOEx8xv6u+dLc7ZBkFJaWP2Osu1juxgSj/LRwGRMVsiLB4XONU2an9ANx
+	 2dFakzvttHbNzZg84Qy2LQp/Q24JZu0VT18hASHbV7uNPP0NzCK9yuIJn/OJS0NLce
+	 6t96TloiuCgwZlMqHA27HnfQqUPWl9udKKrPBWUZINaz8srNmoIXkoQyK3uJxwxUWO
+	 lzcVMiajFyoWr6wIbnmtLS4EpoPtoR5BL2HDSTlWwCSSf+k0AcrGZe1976vNaP5+wk
+	 ET5RgzU1btRIOFDWxBA8bL8UXAr19TsfZ0IdU7+vnoXgY42HxHbFwzICfnqxhn5A/1
+	 KPN1boKmjgm9Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
+Cc: Kees Cook <keescook@chromium.org>,
+	Guixiong Wei <guixiongwei@gmail.com>,
+	Juergen Gross <jgross@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 179/451] arm64: dts: marvell: reorder crypto interrupts on Armada SoCs
-Date: Sun, 24 Mar 2024 19:07:35 -0400
-Message-ID: <20240324231207.1351418-180-sashal@kernel.org>
+Subject: [PATCH 6.1 185/451] x86, relocs: Ignore relocations in .notes section
+Date: Sun, 24 Mar 2024 19:07:41 -0400
+Message-ID: <20240324231207.1351418-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,88 +45,56 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit ec55a22149d64f9ac41845d923b884d4a666bf4d ]
+[ Upstream commit aaa8736370db1a78f0e8434344a484f9fd20be3b ]
 
-Match order specified in binding documentation. It says "mem" should be
-the last interrupt.
+When building with CONFIG_XEN_PV=y, .text symbols are emitted into
+the .notes section so that Xen can find the "startup_xen" entry point.
+This information is used prior to booting the kernel, so relocations
+are not useful. In fact, performing relocations against the .notes
+section means that the KASLR base is exposed since /sys/kernel/notes
+is world-readable.
 
-This fixes:
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:0: 'ring0' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:1: 'ring1' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:2: 'ring2' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:3: 'ring3' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:4: 'eip' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:5: 'mem' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
+To avoid leaking the KASLR base without breaking unprivileged tools that
+are expecting to read /sys/kernel/notes, skip performing relocations in
+the .notes section. The values readable in .notes are then identical to
+those found in System.map.
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Reported-by: Guixiong Wei <guixiongwei@gmail.com>
+Closes: https://lore.kernel.org/all/20240218073501.54555-1-guixiongwei@gmail.com/
+Fixes: 5ead97c84fa7 ("xen: Core Xen implementation")
+Fixes: da1a679cde9b ("Add /sys/kernel/notes")
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi  | 10 +++++-----
- arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 10 +++++-----
- 2 files changed, 10 insertions(+), 10 deletions(-)
+ arch/x86/tools/relocs.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index df152c72276b8..cd28e1c45b70a 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -426,14 +426,14 @@ xor11 {
- 			crypto: crypto@90000 {
- 				compatible = "inside-secure,safexcel-eip97ies";
- 				reg = <0x90000 0x20000>;
--				interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
--					     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-+				interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
--					     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
--				interrupt-names = "mem", "ring0", "ring1",
--						  "ring2", "ring3", "eip";
-+					     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "ring0", "ring1", "ring2",
-+						  "ring3", "eip", "mem";
- 				clocks = <&nb_periph_clk 15>;
- 			};
- 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-index d6c0990a267d9..218c059b16d9c 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-@@ -506,14 +506,14 @@ CP11X_LABEL(sdhci0): mmc@780000 {
- 		CP11X_LABEL(crypto): crypto@800000 {
- 			compatible = "inside-secure,safexcel-eip197b";
- 			reg = <0x800000 0x200000>;
--			interrupts = <87 IRQ_TYPE_LEVEL_HIGH>,
--				<88 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupts = <88 IRQ_TYPE_LEVEL_HIGH>,
- 				<89 IRQ_TYPE_LEVEL_HIGH>,
- 				<90 IRQ_TYPE_LEVEL_HIGH>,
- 				<91 IRQ_TYPE_LEVEL_HIGH>,
--				<92 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "mem", "ring0", "ring1",
--				"ring2", "ring3", "eip";
-+				<92 IRQ_TYPE_LEVEL_HIGH>,
-+				<87 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ring0", "ring1", "ring2", "ring3",
-+					  "eip", "mem";
- 			clock-names = "core", "reg";
- 			clocks = <&CP11X_LABEL(clk) 1 26>,
- 				 <&CP11X_LABEL(clk) 1 17>;
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index 2925074b9a588..9a5b101c45023 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -653,6 +653,14 @@ static void print_absolute_relocs(void)
+ 		if (!(sec_applies->shdr.sh_flags & SHF_ALLOC)) {
+ 			continue;
+ 		}
++		/*
++		 * Do not perform relocations in .notes section; any
++		 * values there are meant for pre-boot consumption (e.g.
++		 * startup_xen).
++		 */
++		if (sec_applies->shdr.sh_type == SHT_NOTE) {
++			continue;
++		}
+ 		sh_symtab  = sec_symtab->symtab;
+ 		sym_strtab = sec_symtab->link->strtab;
+ 		for (j = 0; j < sec->shdr.sh_size/sizeof(Elf_Rel); j++) {
 -- 
 2.43.0
 
