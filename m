@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347E115ECEA;
-	Sun, 24 Mar 2024 23:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76A115ECE9;
+	Sun, 24 Mar 2024 23:18:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322312; cv=none; b=WOhiMhWWRgWA+NOE+dJ5YNX2cTYwUT0anKUxRlFhufsV+ZQ8o6321UK9h4XWjqNI4JpYpTfq+BUu0VNB1ijq+7WNwFf0SpjRTk7P/6Qo2FLaac9e+Sr5pSqtM/S6au5d9Pn3+AD+ls9cxhXptCccdW/j6FP9KsK09qF1RYD0kuA=
+	t=1711322314; cv=none; b=dflRtMKFxe7z0gC2Xo8SIVjO7eWJxGRxAXic+F5T7rjuEdr6YaTi7u7J1aUgMKqVfhDQ3YxIvX0w7Di/QRzlNnOjiPJZG1oYl7mmBYrzRRLR00dqXWX0CN9peh07JaeIaJKshAx/9m0+4JEuW6NXN9quvNzMMRf2pIIWYf1wEFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322312; c=relaxed/simple;
-	bh=vYDrj65XbguCNZEvMXtOEcXUTXcfMV3g0dkmYc1mhQ8=;
+	s=arc-20240116; t=1711322314; c=relaxed/simple;
+	bh=YhXWoF7MepfCPXmij53sRzwCZ61K0EVZc8y16yRySjI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fUuj6vusmzNFheW4G0tcfdTN1SBV01F/EMlLuHQCoU+Y/I4YL9Zgsbgsc+ZDmE0VJT61NmzjS9q2ijfafJK+w/XISOlFiDbc/Ar8CzWFjTeWlE81YmN1GU67Q6BQMmKQtYSqOiRVNt42eGDUXSUstWSTC1cCHsfeU+ArV+tQ/A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4EkFEyr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Im7/L+yqrK27DwTN8kCZZlaukwOCmeKI6b6prB7mQXJXp01z4leJ9KN0h2UrhfeaeFOSuL/V2TFpF2GG24zr5MtscR5nN/KXmR5qqNyJqWbDszY7DGA3G9hG9EQ6Yj/b7aqnIlE27n4krefimuD/iFfcI8bmenFWLdAMqBPo1RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1iFticn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4EkFEyr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4746DC433F1;
-	Sun, 24 Mar 2024 23:18:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1iFticn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F82C433C7;
+	Sun, 24 Mar 2024 23:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322310;
-	bh=vYDrj65XbguCNZEvMXtOEcXUTXcfMV3g0dkmYc1mhQ8=;
+	s=k20201202; t=1711322314;
+	bh=YhXWoF7MepfCPXmij53sRzwCZ61K0EVZc8y16yRySjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a4EkFEyrQJ7BPmVgFFuKRvBrNolcvOb1SmXbMLacN1dOtKqyYSwXQDx1y2dkebRUQ
-	 azMM4lGRlVM6RKkg5Q7w1Vtjfo47L/TmXkA5GyuWu76ILZNQhYhEcM6wCAmLqUfIxX
-	 vB7UbVhN1MsFLRD/4ZDLodY9Kscq60wC4F06NIE34QrcHJHutUK2xJ8Wsw7i8P0ziq
-	 MYZLtNqvDYFJoFl2mas64QjcC/6B8eouCPZzoGrFUoMuTXIz9gKhFdhpHJo6XHzAXv
-	 dDdarFAtqOIuccN06Yh8R125Nl5avCTk39XffASImasEGhu3BCEb0nfsv/66URQouN
-	 McIH4YjD7G19A==
+	b=h1iFticnfZeKhZagLKoBQiVki0pIJ5whTmj9OhMCfb8YE8xYKlEZto9RMPd3JCf39
+	 3tj7/kyKkqO52JTZppidQiiAfUJ+5Qipw1GpVQrPgM6UMw/WA1qnNwkZqiZg6uIf+m
+	 tV7cir7Z6TgmuN24WTKLKIqb34erDJCV1xf2IXNygdRfnQ0cAerXM1VGqadKN04Z1t
+	 wW75smKwinsel2QISeDpDN7/cVcn4UfyeplfO7pJcU7nHRdw3cCPLjIu+NXSilLYMy
+	 CRDVBXuSEDK+NzdvtMkdcRGykoG1cGDr3xVBtaPIhfOPN8wf0AWlc4qm2U5+xYltK8
+	 EnFH/kl0ypIeQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 394/451] kconfig: fix infinite loop when expanding a macro at the end of file
-Date: Sun, 24 Mar 2024 19:11:10 -0400
-Message-ID: <20240324231207.1351418-395-sashal@kernel.org>
+Subject: [PATCH 6.1 397/451] serial: 8250_exar: Don't remove GPIO device on suspend
+Date: Sun, 24 Mar 2024 19:11:13 -0400
+Message-ID: <20240324231207.1351418-398-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -47,45 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit af8bbce92044dc58e4cc039ab94ee5d470a621f5 ]
+[ Upstream commit 73b5a5c00be39e23b194bad10e1ea8bb73eee176 ]
 
-A macro placed at the end of a file with no newline causes an infinite
-loop.
+It seems a copy&paste mistake that suspend callback removes the GPIO
+device. There is no counterpart of this action, means once suspended
+there is no more GPIO device available untile full unbind-bind cycle
+is performed. Remove suspicious GPIO device removal in suspend.
 
-[Test Kconfig]
-  $(info,hello)
-  \ No newline at end of file
-
-I realized that flex-provided input() returns 0 instead of EOF when it
-reaches the end of a file.
-
-Fixes: 104daea149c4 ("kconfig: reference environment variables directly and remove 'option env='")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: d0aeaa83f0b0 ("serial: exar: split out the exar code from 8250_pci")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20240219150627.2101198-2-andriy.shevchenko@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/lexer.l | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/tty/serial/8250/8250_exar.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
-index cc386e4436834..2c2b3e6f248ca 100644
---- a/scripts/kconfig/lexer.l
-+++ b/scripts/kconfig/lexer.l
-@@ -302,8 +302,11 @@ static char *expand_token(const char *in, size_t n)
- 	new_string();
- 	append_string(in, n);
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+index dca1abe363248..55451ff846520 100644
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -714,6 +714,7 @@ static void exar_pci_remove(struct pci_dev *pcidev)
+ 	for (i = 0; i < priv->nr; i++)
+ 		serial8250_unregister_port(priv->line[i]);
  
--	/* get the whole line because we do not know the end of token. */
--	while ((c = input()) != EOF) {
-+	/*
-+	 * get the whole line because we do not know the end of token.
-+	 * input() returns 0 (not EOF!) when it reachs the end of file.
-+	 */
-+	while ((c = input()) != 0) {
- 		if (c == '\n') {
- 			unput(c);
- 			break;
++	/* Ensure that every init quirk is properly torn down */
+ 	if (priv->board->exit)
+ 		priv->board->exit(pcidev);
+ }
+@@ -728,10 +729,6 @@ static int __maybe_unused exar_suspend(struct device *dev)
+ 		if (priv->line[i] >= 0)
+ 			serial8250_suspend_port(priv->line[i]);
+ 
+-	/* Ensure that every init quirk is properly torn down */
+-	if (priv->board->exit)
+-		priv->board->exit(pcidev);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.43.0
 
