@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320612092F7;
-	Sun, 24 Mar 2024 23:05:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007882092FE;
+	Sun, 24 Mar 2024 23:06:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321559; cv=none; b=p3Yd+CuuO2se08U21L+FQXSquwkLm4KSDOwrq87Ocrf5S+laHL1Yts5X2N993qehd7RCUHY5piZIK4zSh/HSthkRPW6ShY3oI+U1EEgjkseNgFCZKSRHyVGMAjZ+PlnQZeEt5ErdIFct76fzlqpHcX7sHvHUXm4K/bmx9xw+0q4=
+	t=1711321561; cv=none; b=PCG/qV0I+zS1CV7Fp8UbWke90vu7iQsdsVCIFaoedc7OlaB3d12zw42Bav3EnJwg3f6RVQEWdIUFPF60IRTDgKx8A47vt8bU5cqkhrOUVgfivlSI6WzTed75LmpKnjDJWc8sXGr+D1q2lzl0nNPBcpknSmu/JWvjQ0YHHlFlaZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321559; c=relaxed/simple;
-	bh=SABHHO5iWkeJQHPBFzdh88YsNhXLEezPk/RzQRrTY9I=;
+	s=arc-20240116; t=1711321561; c=relaxed/simple;
+	bh=k9fXtCbqXNZ0AnUWWV++CufZSs17sIiecx+63pb9vlI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cr1egLt1rNlLNuJU1oKpGcKukgNTDv7cQEAqojOnXu7UMOIZftx8lYYfxbpAz4NO9+RFsSXNiOFjjprhxh4rPcMYxmtvRI3yZ7ZyAMHVyXHoZdtn2HSN96rjtRtXKoHjExtp9mvsbj7uBiN1ekI9Iq+7Ot/CFcph9F2e3tVVz3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWOAXrYJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KO52f8X9R7Cjm+sTWGU4KdMc3CGpAI0p/eJHS6Hh6ilUgc/OaQjWaTK/PV2MrBvweq9pQFM1tMpRRpxEWDYztzmmw2K+CDrLsadHw3XmCUpooxI9veF2lHNaKhHx0WTjAktn/w4nWjE1E4wPxSstNBJHgSDCJgEQ4njYkgaJtCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LlIJ3Zzk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWOAXrYJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A91C43394;
-	Sun, 24 Mar 2024 23:05:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LlIJ3Zzk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A4C8C433C7;
+	Sun, 24 Mar 2024 23:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321557;
-	bh=SABHHO5iWkeJQHPBFzdh88YsNhXLEezPk/RzQRrTY9I=;
+	s=k20201202; t=1711321560;
+	bh=k9fXtCbqXNZ0AnUWWV++CufZSs17sIiecx+63pb9vlI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gWOAXrYJj3vwbdUqNZMBzyy/4m8KDXPdXTAxeou/I8eCCaxTomAR1vHo5q/Nv0GFC
-	 3XLdCqM06loEI4SrxxFDDyQLReDyPVKIGshrz0BjbMMupuz/+oochSMfpwKpz0yc/2
-	 hKyRWmoA7BOR083Tmznhi6ozMkGXOtlI7cm80XotKUjf9RQa1pEhNaLGU6XV3MMrn5
-	 rPBYhqLhgaBT8ulWpbVYb5xxmAJtblg2lEqnFMGCPf8/IAe+OovTSojXBthnyst1Fm
-	 U5HxyPE43WqimHXJMwQ+Tx2iKjjRyaEGy7Zs0srrOvwwDsXF8nWCez0KKDjpoZLX5U
-	 Hv/K0hsvFz1BQ==
+	b=LlIJ3ZzkCtuxsQ0Obxk7HF0tK5XCrBAuirZyAfjAGK+R0lcLatkQh4CO5I3Z0ogAk
+	 n9AMbqBB1ZbZlpvUGi+V/0BG9TOB108duq0ieaL0RtRolpyJZZCzIcPx4aYKTBpi4D
+	 RovtCuI2P3ppo85OjupInX4TtA9DJShg9zEKclKVDbnyRtLg1dJfb9sGFVFcOCbDpU
+	 CCXWYHKhrof3OSjPjPzB/y49oT3WNu3lUAqAMwCA/aQG48T+nnJvJ82YGak0+q+6GA
+	 VjFnN/DWCkbStfCnUivuAIeiWSyPYbfgop2vYbEf2ODOKMmaV+kCWg7q2wpMtJSh6y
+	 TplLhgHKUaL8g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Abel Vesa <abel.vesa@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 286/638] arm64: dts: qcom: sm8550: Fix SPMI channels size
-Date: Sun, 24 Mar 2024 18:55:23 -0400
-Message-ID: <20240324230116.1348576-287-sashal@kernel.org>
+Subject: [PATCH 6.6 289/638] wifi: rtw88: 8821cu: Fix firmware upload fail
+Date: Sun, 24 Mar 2024 18:55:26 -0400
+Message-ID: <20240324230116.1348576-290-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,42 +49,94 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Abel Vesa <abel.vesa@linaro.org>
+From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
 
-[ Upstream commit 77dd1e50ffcba33c3195ae4fc78f354368ddacb2 ]
+[ Upstream commit 41a7acb7dde8395f52a707bbba7712a898dfafb0 ]
 
-The actual size of the channels registers region is 4MB, according to the
-documentation. This issue was not caught until now because the driver was
-supposed to allow same regions being mapped multiple times for supporting
-multiple buses. Thie driver is using platform_get_resource_byname() and
-devm_ioremap() towards that purpose, which intentionally avoids
-devm_request_mem_region() altogether.
+RTL8822CU, RTL8822BU, and RTL8821CU need an extra register write after
+reading and writing certain addresses.
 
-Fixes: ffc50b2d3828 ("arm64: dts: qcom: Add base SM8550 dtsi")
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
-Link: https://lore.kernel.org/r/20240221-dts-qcom-sm8550-fix-spmi-chnls-size-v2-1-72b5efd9dc4f@linaro.org
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Without this, the firmware upload fails approximately more than 50% of
+the time.
+
+Tested with RTL8811CU (Tenda U9 V2.0) which is the same as RTL8821CU
+but without Bluetooth.
+
+Fixes: a82dfd33d123 ("wifi: rtw88: Add common USB chip support")
+Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/f12ed39d-28e8-4b8b-8d22-447bcf295afc@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm8550.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtw88/usb.c | 40 ++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-index 076715ef09d56..90e6cd239f569 100644
---- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-@@ -3017,7 +3017,7 @@ sram@c3f0000 {
- 		spmi_bus: spmi@c400000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0 0x0c400000 0 0x3000>,
--			      <0 0x0c500000 0 0x4000000>,
-+			      <0 0x0c500000 0 0x400000>,
- 			      <0 0x0c440000 0 0x80000>,
- 			      <0 0x0c4c0000 0 0x20000>,
- 			      <0 0x0c42d000 0 0x4000>;
+diff --git a/drivers/net/wireless/realtek/rtw88/usb.c b/drivers/net/wireless/realtek/rtw88/usb.c
+index e6ab1ac6d7093..a0188511099a1 100644
+--- a/drivers/net/wireless/realtek/rtw88/usb.c
++++ b/drivers/net/wireless/realtek/rtw88/usb.c
+@@ -33,6 +33,36 @@ static void rtw_usb_fill_tx_checksum(struct rtw_usb *rtwusb,
+ 	rtw_tx_fill_txdesc_checksum(rtwdev, &pkt_info, skb->data);
+ }
+ 
++static void rtw_usb_reg_sec(struct rtw_dev *rtwdev, u32 addr, __le32 *data)
++{
++	struct rtw_usb *rtwusb = rtw_get_usb_priv(rtwdev);
++	struct usb_device *udev = rtwusb->udev;
++	bool reg_on_section = false;
++	u16 t_reg = 0x4e0;
++	u8 t_len = 1;
++	int status;
++
++	/* There are three sections:
++	 * 1. on (0x00~0xFF; 0x1000~0x10FF): this section is always powered on
++	 * 2. off (< 0xFE00, excluding "on" section): this section could be
++	 *    powered off
++	 * 3. local (>= 0xFE00): usb specific registers section
++	 */
++	if (addr <= 0xff || (addr >= 0x1000 && addr <= 0x10ff))
++		reg_on_section = true;
++
++	if (!reg_on_section)
++		return;
++
++	status = usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
++				 RTW_USB_CMD_REQ, RTW_USB_CMD_WRITE,
++				 t_reg, 0, data, t_len, 500);
++
++	if (status != t_len && status != -ENODEV)
++		rtw_err(rtwdev, "%s: reg 0x%x, usb write %u fail, status: %d\n",
++			__func__, t_reg, t_len, status);
++}
++
+ static u32 rtw_usb_read(struct rtw_dev *rtwdev, u32 addr, u16 len)
+ {
+ 	struct rtw_usb *rtwusb = rtw_get_usb_priv(rtwdev);
+@@ -58,6 +88,11 @@ static u32 rtw_usb_read(struct rtw_dev *rtwdev, u32 addr, u16 len)
+ 		rtw_err(rtwdev, "read register 0x%x failed with %d\n",
+ 			addr, ret);
+ 
++	if (rtwdev->chip->id == RTW_CHIP_TYPE_8822C ||
++	    rtwdev->chip->id == RTW_CHIP_TYPE_8822B ||
++	    rtwdev->chip->id == RTW_CHIP_TYPE_8821C)
++		rtw_usb_reg_sec(rtwdev, addr, data);
++
+ 	return le32_to_cpu(*data);
+ }
+ 
+@@ -102,6 +137,11 @@ static void rtw_usb_write(struct rtw_dev *rtwdev, u32 addr, u32 val, int len)
+ 	if (ret < 0 && ret != -ENODEV && count++ < 4)
+ 		rtw_err(rtwdev, "write register 0x%x failed with %d\n",
+ 			addr, ret);
++
++	if (rtwdev->chip->id == RTW_CHIP_TYPE_8822C ||
++	    rtwdev->chip->id == RTW_CHIP_TYPE_8822B ||
++	    rtwdev->chip->id == RTW_CHIP_TYPE_8821C)
++		rtw_usb_reg_sec(rtwdev, addr, data);
+ }
+ 
+ static void rtw_usb_write8(struct rtw_dev *rtwdev, u32 addr, u8 val)
 -- 
 2.43.0
 
