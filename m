@@ -1,98 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD7C16F8F4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1E416F8E4;
 	Sun, 24 Mar 2024 22:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319952; cv=none; b=QB240lkFu+Kk3aGRwH4F53vImoFjSJofzXeE286Gec2AYq37xWp1LaOHMP2L/s5feFS+mHqy7ia6Glfu7kp0YBfpJu6Y3jrKS73bRYb6ilDPaJwt2/wszsfnsPz37ToOZennT/+F6TnEDCkBr7NnXQQwUc0cYLtSZGY2BoJcTxs=
+	t=1711319953; cv=none; b=W/c0V9xfJ4IGPiCwSn3lCy3vdoF1wgffgcC61A0lxuVSGlGeJ+JwmMe+fGsUHJ4hGbpjnMUQGsNQ9y14epGl6ab0JFQi9lQrDln8NGXGDWDagLaIOLNQcwtCS07oqln7M3hyE4+5KDype4LsYwUs5puzC108PVdMUmxIKmlB4e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319952; c=relaxed/simple;
-	bh=UdODhsLqPh/+m5k338G4uLy8cOv40xr96gGPJ/2rmNY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H894S9J2jdF/iCFORXDmk4QrM2r7j90Z7FNLRlLx0ofnsDrkGuJFsYy/3PmkvK7fFZ4yrDT2g+URl81aLI1qbWbp2QooWyV/1ixsDPULiaFE3G/wpSWfZE386mFh8vheCzomeSWIZP+bDR+rXBHf1pIZLaa5i1sxghcXBo43vdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTk+so1d; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTk+so1d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8109BC433C7;
-	Sun, 24 Mar 2024 22:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711319951;
-	bh=UdODhsLqPh/+m5k338G4uLy8cOv40xr96gGPJ/2rmNY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pTk+so1d+9s7DAPsWnRobkROLQdLHKg+nP5nEm+Ql9PHjxQbT9XIhcnh70ikRlXBT
-	 BJDXAl2Ley/y47IRrwnSMJJsgdYBNzzccoO4+VGjC5XtbXIEIw67Cik9LDQ/Vebo/v
-	 8WKR11acCVzY1nlWilUrBognR7hwNx8WbtKJlvXNPJUNTZR4pTyMPBJl4MVDRLAtzE
-	 RbvnzJpM6OXfL2STLhGzbHvyqAOD39zXI9zFVO7QwpCBFeLH/a+EQ/D24mbAnONORT
-	 TghoAiPXNo6izOkHW0dC88kqzHl+kt8UZtNrF1dE67tOZwLiaL9JwDNm6KNzofql7Z
-	 tVPp51ayDSkdw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 257/715] arm64: dts: renesas: r9a08g045: Add missing interrupts to IRQC node
-Date: Sun, 24 Mar 2024 18:27:16 -0400
-Message-ID: <20240324223455.1342824-258-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
-References: <20240324223455.1342824-1-sashal@kernel.org>
+	s=arc-20240116; t=1711319953; c=relaxed/simple;
+	bh=YBBrOOVm0QiVbvlKLxwCTvyT1oPnkka44VZl1bf1EYk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pYBOnBheWBqi681QESUIxXy6cC2CXjBnpkTxbKXt8fX7L7exzbjDgHaIuN8kMgyMPS2icnyrZPfcSmn/M97UOC6RxOfZRLiDC9VLZKP7C6iehZpQV/h3E0KCO8Ff83XXTvdJuptIZjuTGlJE6k5CLQ9rjRm09xMiH8BqGWCXb8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875a9e.versanet.de ([83.135.90.158] helo=phil.lan)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1roWUX-0007sn-4U; Sun, 24 Mar 2024 23:39:01 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Rob Herring <robh+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Quentin Schulz <foss+kernel@0leil.net>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Dragan Simic <dsimic@manjaro.org>,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Klaus Goger <klaus.goger@theobroma-systems.com>
+Subject: Re: [PATCH v2 0/3] rockchip: small DTS fixes for RK3399 Puma
+Date: Sun, 24 Mar 2024 23:38:55 +0100
+Message-Id: <171131986744.918919.9548916004778456551.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240308-puma-diode-pu-v2-0-309f83da110a@theobroma-systems.com>
+References: <20240308-puma-diode-pu-v2-0-309f83da110a@theobroma-systems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Fri, 08 Mar 2024 16:46:06 +0100, Quentin Schulz wrote:
+> There's a pull-up missing on a pin that is used as GPIO input for PCIe
+> which will make the diode/level-shifter not let voltage pass and thus
+> not allowing the state of the pin to change.
+> 
+> Also add the missing regulators for the PCIe PHY+connector though this
+> is purely cosmetic.
+> 
+> [...]
 
-[ Upstream commit bf7e37716d995c54630c30540db5642f58ea037a ]
+Applied, thanks!
 
-The IRQC block on the RZ/G3S (R9A08G045) SoC supports ECCRAM error
-interrupts too.  Add those missing interrupts to the IRQC node.
+[1/3] arm64: dts: rockchip: enable internal pull-up on Q7_USB_ID for RK3399 Puma
+      commit: e6b1168f37e3f86d9966276c5a3fff9eb0df3e5f
+[2/3] arm64: dts: rockchip: enable internal pull-up on PCIE_WAKE# for RK3399 Puma
+      commit: 945a7c8570916650a415757d15d83e0fa856a686
+[3/3] arm64: dts: rockchip: add regulators for PCIe on RK3399 Puma Haikou
+      commit: d7ed698abc28b2886c9fc71d17ca6b023fcf47f3
 
-Fixes: 837918aa3fdd ("arm64: dts: renesas: r9a08g045: Add IA55 interrupt controller node")
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20240205144421.51195-4-prabhakar.mahadev-lad.rj@bp.renesas.com
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/renesas/r9a08g045.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-index 5facfad961583..6315ffa6c1bb9 100644
---- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-@@ -152,7 +152,10 @@ irqc: interrupt-controller@11050000 {
- 				     <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 459 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 460 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+				     <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "nmi",
- 					  "irq0", "irq1", "irq2", "irq3",
- 					  "irq4", "irq5", "irq6", "irq7",
-@@ -164,7 +167,8 @@ irqc: interrupt-controller@11050000 {
- 					  "tint20", "tint21", "tint22", "tint23",
- 					  "tint24", "tint25", "tint26", "tint27",
- 					  "tint28", "tint29", "tint30", "tint31",
--					  "bus-err";
-+					  "bus-err", "ec7tie1-0", "ec7tie2-0",
-+					  "ec7tiovf-0";
- 			clocks = <&cpg CPG_MOD R9A08G045_IA55_CLK>,
- 				 <&cpg CPG_MOD R9A08G045_IA55_PCLK>;
- 			clock-names = "clk", "pclk";
+Best regards,
 -- 
-2.43.0
-
+Heiko Stuebner <heiko@sntech.de>
