@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987701448D8;
-	Sun, 24 Mar 2024 23:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49316145B23;
+	Sun, 24 Mar 2024 23:13:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322004; cv=none; b=fggow5wjOvxXNcdLTN/5DZFWC/gHVEQ1fl46yy2vdSFaCTne4rxw6opqAGZztMcor1srEDzXytBfdy4+RiLxkMrwkY1U9mi9BUNLbfNC2MYSHzDeX5smYJPIve1dz3ZXYjeckYDKdgHSPSuZdm05yGFiasgOjnG4xoxeKvS6V1c=
+	t=1711322026; cv=none; b=MsHr2yJUyTw9IHh0PYCN4X4ovqeIfvc7psAs/r3DEdjKOPT2EIpKi3YrcCX08UnZpGOD6kV4NQNeoBeoAgYnWj94y0cXnCp9pHRo00rkIeh0Y/wb1hybyw/KQViQi3CHqA3UsQSAr1NVn3xOGXtpFnKY1Uf3mTH/+qSjA2xHNDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322004; c=relaxed/simple;
-	bh=XvK46rz6Hp0mt2DuXjya7gi/E8zzB+miQ7tCc0eqrHw=;
+	s=arc-20240116; t=1711322026; c=relaxed/simple;
+	bh=4znchTOCYaUr/IgrKzKS6ujbqx5EWo0s2CArLmL8vzg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Lkc0dBc+nf2TiM7kL9hzmnKRLtcRBaUvjr/hXqNSHvibOQNsCE3EfhxEuf3NvhBixW2OkEvsw6lOMt8DHctdcG2nrp/BQgvSOVTXSZVwnCzToFBSjX/z3pqHuxWYh/Nmfpu7Wx4rbF4Ur8OuTI4WNUY1Of8pqkse/m+t4EbWvBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qsOcafNZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dT/TDFCFW1uc6m4by7Djn+TmQerYxLdIlxsGkrexLo3NlwSr0OcLK4K4Xw6lVplZb+6Rr1Lvi8RA5TUhN3tE8UgOKhEaRLMHSkZSmVlCqzaDay2YpdsVTGFCW/10QjxYbfrmVhPDnamK2QYiipmsVfN/McM6aV4FC3zOQCUSfDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sBhB7dBm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qsOcafNZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69DCC433C7;
-	Sun, 24 Mar 2024 23:13:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sBhB7dBm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DAEAC433F1;
+	Sun, 24 Mar 2024 23:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322004;
-	bh=XvK46rz6Hp0mt2DuXjya7gi/E8zzB+miQ7tCc0eqrHw=;
+	s=k20201202; t=1711322026;
+	bh=4znchTOCYaUr/IgrKzKS6ujbqx5EWo0s2CArLmL8vzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qsOcafNZN8zVaZ4ODoDul3Q0Uhj86UTkh+hM8jkAVkULcxz/aSttRcr6mz6hPn/nd
-	 hHME1lpiJyXWF9pt5W3jqz2RUk3xxQXuoHdVleNqdtep4rYDYEXxAFAgs7+AxkbL6R
-	 E+lcpbODm9eO1K8a6MGZlF7Cu7LXqw4fA3z9pMVP+JwX9pBwefEHtkW4VFwg2cucJH
-	 RPbNKkb7wB7QHNhMUQuKridkJCy2IWtgoqvNA+VBmz2qkkLnG1P4GC1RomkbvCJKe0
-	 mAH93QfWef42DtqN5klmgWY6PwtuNM2yewUDpr1Th5fGdW4BIiwUNyngQ9DFy1VyjG
-	 ZbQWvp7VT1UPA==
+	b=sBhB7dBmF82uzsE/PkNg0MJl4ujD6H7leU5pU/R5EiTRkC6ApQNyHdDIzn3t6Kkf3
+	 /0KkOyBCjQzuZ+leyskgpROijoUj39AiS9s0bZrbDf3iuqR+a7X22PbTD/dAML8G+o
+	 yyItpEV+XQLr5Szn6IQ/4fSHaopU3uFtYoXo1gGH8xUrtktFjpwK1Eo4uk/z2+lRVa
+	 1sZDYWxqfXLc+cVV1qNOZvYyfK1RXv4a6MKp/2tz80fi8a6JsCnGevdcWu00TFxf85
+	 5S3PqfIwA2/52auN9W42pbcgPlRnWbg3GMx8yUPUPVo9ek7TqFeF2Ij/25oU1v6Ket
+	 2fSFdl/Dwwf4A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tony Luck <tony.luck@intel.com>,
-	Xiaochen Shen <xiaochen.shen@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Reinette Chatre <reinette.chatre@intel.com>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	Guillaume Nault <gnault@redhat.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 076/451] x86/resctrl: Implement new mba_MBps throttling heuristic
-Date: Sun, 24 Mar 2024 19:05:52 -0400
-Message-ID: <20240324231207.1351418-77-sashal@kernel.org>
+Subject: [PATCH 6.1 098/451] sock_diag: annotate data-races around sock_diag_handlers[family]
+Date: Sun, 24 Mar 2024 19:06:14 -0400
+Message-ID: <20240324231207.1351418-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -50,160 +51,72 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tony Luck <tony.luck@intel.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit c2427e70c1630d98966375fffc2b713ab9768a94 ]
+[ Upstream commit efd402537673f9951992aea4ef0f5ff51d858f4b ]
 
-The mba_MBps feedback loop increases throttling when a group is using
-more bandwidth than the target set by the user in the schemata file, and
-decreases throttling when below target.
+__sock_diag_cmd() and sock_diag_bind() read sock_diag_handlers[family]
+without a lock held.
 
-To avoid possibly stepping throttling up and down on every poll a flag
-"delta_comp" is set whenever throttling is changed to indicate that the
-actual change in bandwidth should be recorded on the next poll in
-"delta_bw". Throttling is only reduced if the current bandwidth plus
-delta_bw is below the user target.
+Use READ_ONCE()/WRITE_ONCE() annotations to avoid potential issues.
 
-This algorithm works well if the workload has steady bandwidth needs.
-But it can go badly wrong if the workload moves to a different phase
-just as the throttling level changed. E.g. if the workload becomes
-essentially idle right as throttling level is increased, the value
-calculated for delta_bw will be more or less the old bandwidth level.
-If the workload then resumes, Linux may never reduce throttling because
-current bandwidth plus delta_bw is above the target set by the user.
-
-Implement a simpler heuristic by assuming that in the worst case the
-currently measured bandwidth is being controlled by the current level of
-throttling. Compute how much it may increase if throttling is relaxed to
-the next higher level. If that is still below the user target, then it
-is ok to reduce the amount of throttling.
-
-Fixes: ba0f26d8529c ("x86/intel_rdt/mba_sc: Prepare for feedback loop")
-Reported-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Tested-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Link: https://lore.kernel.org/r/20240122180807.70518-1-tony.luck@intel.com
+Fixes: 8ef874bfc729 ("sock_diag: Move the sock_ code to net/core/")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/resctrl/internal.h |  4 ---
- arch/x86/kernel/cpu/resctrl/monitor.c  | 42 ++++++--------------------
- 2 files changed, 10 insertions(+), 36 deletions(-)
+ net/core/sock_diag.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 0b5c6c76f6f7b..4761d489a117a 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -281,14 +281,10 @@ struct rftype {
-  * struct mbm_state - status for each MBM counter in each domain
-  * @prev_bw_bytes: Previous bytes value read for bandwidth calculation
-  * @prev_bw:	The most recent bandwidth in MBps
-- * @delta_bw:	Difference between the current and previous bandwidth
-- * @delta_comp:	Indicates whether to compute the delta_bw
-  */
- struct mbm_state {
- 	u64	prev_bw_bytes;
- 	u32	prev_bw;
--	u32	delta_bw;
--	bool	delta_comp;
- };
+diff --git a/net/core/sock_diag.c b/net/core/sock_diag.c
+index f7cf74cdd3db1..e6ea6764d10ab 100644
+--- a/net/core/sock_diag.c
++++ b/net/core/sock_diag.c
+@@ -190,7 +190,7 @@ int sock_diag_register(const struct sock_diag_handler *hndl)
+ 	if (sock_diag_handlers[hndl->family])
+ 		err = -EBUSY;
+ 	else
+-		sock_diag_handlers[hndl->family] = hndl;
++		WRITE_ONCE(sock_diag_handlers[hndl->family], hndl);
+ 	mutex_unlock(&sock_diag_table_mutex);
  
- /**
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 77538abeb72af..b9adb707750c6 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -428,9 +428,6 @@ static void mbm_bw_count(u32 rmid, struct rmid_read *rr)
+ 	return err;
+@@ -206,7 +206,7 @@ void sock_diag_unregister(const struct sock_diag_handler *hnld)
  
- 	cur_bw = bytes / SZ_1M;
- 
--	if (m->delta_comp)
--		m->delta_bw = abs(cur_bw - m->prev_bw);
--	m->delta_comp = false;
- 	m->prev_bw = cur_bw;
+ 	mutex_lock(&sock_diag_table_mutex);
+ 	BUG_ON(sock_diag_handlers[family] != hnld);
+-	sock_diag_handlers[family] = NULL;
++	WRITE_ONCE(sock_diag_handlers[family], NULL);
+ 	mutex_unlock(&sock_diag_table_mutex);
  }
+ EXPORT_SYMBOL_GPL(sock_diag_unregister);
+@@ -224,7 +224,7 @@ static int __sock_diag_cmd(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 		return -EINVAL;
+ 	req->sdiag_family = array_index_nospec(req->sdiag_family, AF_MAX);
  
-@@ -508,11 +505,11 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
- {
- 	u32 closid, rmid, cur_msr_val, new_msr_val;
- 	struct mbm_state *pmbm_data, *cmbm_data;
--	u32 cur_bw, delta_bw, user_bw;
- 	struct rdt_resource *r_mba;
- 	struct rdt_domain *dom_mba;
- 	struct list_head *head;
- 	struct rdtgroup *entry;
-+	u32 cur_bw, user_bw;
+-	if (sock_diag_handlers[req->sdiag_family] == NULL)
++	if (READ_ONCE(sock_diag_handlers[req->sdiag_family]) == NULL)
+ 		sock_load_diag_module(req->sdiag_family, 0);
  
- 	if (!is_mbm_local_enabled())
- 		return;
-@@ -531,7 +528,6 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
- 
- 	cur_bw = pmbm_data->prev_bw;
- 	user_bw = dom_mba->mbps_val[closid];
--	delta_bw = pmbm_data->delta_bw;
- 
- 	/* MBA resource doesn't support CDP */
- 	cur_msr_val = resctrl_arch_get_config(r_mba, dom_mba, closid, CDP_NONE);
-@@ -543,49 +539,31 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
- 	list_for_each_entry(entry, head, mon.crdtgrp_list) {
- 		cmbm_data = &dom_mbm->mbm_local[entry->mon.rmid];
- 		cur_bw += cmbm_data->prev_bw;
--		delta_bw += cmbm_data->delta_bw;
+ 	mutex_lock(&sock_diag_table_mutex);
+@@ -283,12 +283,12 @@ static int sock_diag_bind(struct net *net, int group)
+ 	switch (group) {
+ 	case SKNLGRP_INET_TCP_DESTROY:
+ 	case SKNLGRP_INET_UDP_DESTROY:
+-		if (!sock_diag_handlers[AF_INET])
++		if (!READ_ONCE(sock_diag_handlers[AF_INET]))
+ 			sock_load_diag_module(AF_INET, 0);
+ 		break;
+ 	case SKNLGRP_INET6_TCP_DESTROY:
+ 	case SKNLGRP_INET6_UDP_DESTROY:
+-		if (!sock_diag_handlers[AF_INET6])
++		if (!READ_ONCE(sock_diag_handlers[AF_INET6]))
+ 			sock_load_diag_module(AF_INET6, 0);
+ 		break;
  	}
- 
- 	/*
- 	 * Scale up/down the bandwidth linearly for the ctrl group.  The
- 	 * bandwidth step is the bandwidth granularity specified by the
- 	 * hardware.
--	 *
--	 * The delta_bw is used when increasing the bandwidth so that we
--	 * dont alternately increase and decrease the control values
--	 * continuously.
--	 *
--	 * For ex: consider cur_bw = 90MBps, user_bw = 100MBps and if
--	 * bandwidth step is 20MBps(> user_bw - cur_bw), we would keep
--	 * switching between 90 and 110 continuously if we only check
--	 * cur_bw < user_bw.
-+	 * Always increase throttling if current bandwidth is above the
-+	 * target set by user.
-+	 * But avoid thrashing up and down on every poll by checking
-+	 * whether a decrease in throttling is likely to push the group
-+	 * back over target. E.g. if currently throttling to 30% of bandwidth
-+	 * on a system with 10% granularity steps, check whether moving to
-+	 * 40% would go past the limit by multiplying current bandwidth by
-+	 * "(30 + 10) / 30".
- 	 */
- 	if (cur_msr_val > r_mba->membw.min_bw && user_bw < cur_bw) {
- 		new_msr_val = cur_msr_val - r_mba->membw.bw_gran;
- 	} else if (cur_msr_val < MAX_MBA_BW &&
--		   (user_bw > (cur_bw + delta_bw))) {
-+		   (user_bw > (cur_bw * (cur_msr_val + r_mba->membw.min_bw) / cur_msr_val))) {
- 		new_msr_val = cur_msr_val + r_mba->membw.bw_gran;
- 	} else {
- 		return;
- 	}
- 
- 	resctrl_arch_update_one(r_mba, dom_mba, closid, CDP_NONE, new_msr_val);
--
--	/*
--	 * Delta values are updated dynamically package wise for each
--	 * rdtgrp every time the throttle MSR changes value.
--	 *
--	 * This is because (1)the increase in bandwidth is not perfectly
--	 * linear and only "approximately" linear even when the hardware
--	 * says it is linear.(2)Also since MBA is a core specific
--	 * mechanism, the delta values vary based on number of cores used
--	 * by the rdtgrp.
--	 */
--	pmbm_data->delta_comp = true;
--	list_for_each_entry(entry, head, mon.crdtgrp_list) {
--		cmbm_data = &dom_mbm->mbm_local[entry->mon.rmid];
--		cmbm_data->delta_comp = true;
--	}
- }
- 
- static void mbm_update(struct rdt_resource *r, struct rdt_domain *d, int rmid)
 -- 
 2.43.0
 
