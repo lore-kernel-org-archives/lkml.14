@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFC75C612;
-	Sun, 24 Mar 2024 23:42:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A5D4502F;
+	Sun, 24 Mar 2024 23:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323735; cv=none; b=DYSt9AjuyiUM5WcRj7mJ52M2c29r5ytwppC6vkHSWaqyugFEtVDK/kt/P7CMG6jMdobu4OFG2FBjIzbZ0f6IH/3WCKJ4zQH71II3yaYQGh3GleDxwKfbsNomh/b5r27vpNYLkbsA1KryXmpXhN2bX5jCj+TpK6uClRt5K+Vq8Xo=
+	t=1711323732; cv=none; b=OiT8ee4EoHgkP8D1NXYRjsxCYprnmYupVeRdxaXnPzfApykRXcy34kLwlDqsyyuqAjJHFJ3Ax3YhrSLOixu/RxMPkTmNg728X2m66bZSF3NKLpyVV1b8wS40LscLxT+yFd9dcc+PfrDPkstUrjWNyKt4cDE97hMkM4HE8BHDzPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323735; c=relaxed/simple;
-	bh=b/wMywr+EGLN30fL09KtdBNQj6X+lx9C77tGafzwHN4=;
+	s=arc-20240116; t=1711323732; c=relaxed/simple;
+	bh=v2Qyu6q2veWbVwn5KD8cFkjNZD8lTAkqpln0vQw4LS0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hvEBCjgF6FdAMy/GoXSa8+nANadheNsC4+iscOJ6jH96hHUIgbmSx3vnb8LL4rtGE/m0A8wx645rTrXOac2z31UkYIt8hApH5DfIClJblY5gnxXCpPUpg1uPwz/DeVZJC48LEuZDsaY6g7InxgFgeAGhiVuGOkRk4hMKZFHxJBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JdnD/51P; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JRM+Qdj6WnmrAeXikyfB2b3WxIXcXmyl3mStjW9cQEbfbADvTMwBqgnKgJmB/KXwoE7u5xB6cQ2dcBy+qFmr49u8zTPluMMHX62C4t0rsLHwgSKqltKvqkvE0MT4yrAjvpNDM0ycqy2eFRuOAn1T50VNU5no7qcI+CkXKXxW5p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqygQOFO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JdnD/51P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99C3CC43394;
-	Sun, 24 Mar 2024 23:42:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqygQOFO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD915C43330;
+	Sun, 24 Mar 2024 23:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323735;
-	bh=b/wMywr+EGLN30fL09KtdBNQj6X+lx9C77tGafzwHN4=;
+	s=k20201202; t=1711323731;
+	bh=v2Qyu6q2veWbVwn5KD8cFkjNZD8lTAkqpln0vQw4LS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JdnD/51P+w4MtdeO1ws9YnDqYwClXEDlI/a5ggIqLhig8feQwPA6KGZ/lbC0+vd12
-	 x+axgdKVVerc+/t+qqBVuooBEx1Sc4UBEj0n6Fw+49THq9/KBJQCFHALgIHCbgxLE3
-	 pku61c39wRD4xDJVnVvh1jKqaMs9AoFfNWDj+KpLigGKmGnRRvXQVrPXtEu4gz7SXv
-	 dBeemMiSOeRG9cRQILef78WawyrBJLgNdAtigb3psPIlLi8w8N0B76hl89MnbyF+4A
-	 srbqf4Op7qhPYg4QLBmehCdztR4JPXJezlHL0UDtFmUm6mg8mpGxiIF2ayqeK5+ZQk
-	 xEDgxheJN0kmg==
+	b=RqygQOFOSIwsmWUGU9F95A9LXBTTGXe0XQ3NUXSOwCqMi+Y0LK3SxDmLxQuOsbK7n
+	 6oJTQf0vl+WjtpQryOVVcOOsq45xljRtolBLOSzEATHzQctc2EsyXcy3eQ9wsam2oS
+	 4/ygA+RJtOdJh6q3q0VwkDvjtqBYzpmrtTB/xr5C/0cjdJ8JKMqwUswplx8qX0ZrSJ
+	 gAlPlIUoJo0SYPr8STl4Rj5Ms/EXt3OYjDhKHXN/Aejp0nutGiXev1b3kgYcfhK0fV
+	 8Ty8HPaRHjax/vtVXEzXf2HI+EDdb0D8yC7F8/ciKae3zdliXm1ZLsHmb9NsyYNcAi
+	 MMp+OG++b89GA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 109/238] net/x25: fix incorrect parameter validation in the x25_getsockopt() function
-Date: Sun, 24 Mar 2024 19:38:17 -0400
-Message-ID: <20240324234027.1354210-110-sashal@kernel.org>
+Subject: [PATCH 5.10 105/238] ipmr: fix incorrect parameter validation in the ip_mroute_getsockopt() function
+Date: Sun, 24 Mar 2024 19:38:13 -0400
+Message-ID: <20240324234027.1354210-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -50,13 +50,13 @@ Content-Transfer-Encoding: 8bit
 
 From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit d6eb8de2015f0c24822e47356f839167ebde2945 ]
+[ Upstream commit 5c3be3e0eb44b7f978bb6cbb20ad956adb93f736 ]
 
-The 'len' variable can't be negative when assigned the result of
+The 'olr' variable can't be negative when assigned the result of
 'min_t' because all 'min_t' parameters are cast to unsigned int,
 and then the minimum one is chosen.
 
-To fix the logic, check 'len' as read from 'optlen',
+To fix the logic, check 'olr' as read from 'optlen',
 where the types of relevant variables are (signed) int.
 
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
@@ -64,28 +64,26 @@ Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/x25/af_x25.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/ipmr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
-index 161dc194e6342..a7ecf2956cdd6 100644
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -470,12 +470,12 @@ static int x25_getsockopt(struct socket *sock, int level, int optname,
- 	if (get_user(len, optlen))
- 		goto out;
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index cdc0a1781fd28..db184cb826b95 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -1574,9 +1574,11 @@ int ip_mroute_getsockopt(struct sock *sk, int optname, sockptr_t optval,
  
--	len = min_t(unsigned int, len, sizeof(int));
--
- 	rc = -EINVAL;
- 	if (len < 0)
- 		goto out;
- 
-+	len = min_t(unsigned int, len, sizeof(int));
+ 	if (copy_from_sockptr(&olr, optlen, sizeof(int)))
+ 		return -EFAULT;
+-	olr = min_t(unsigned int, olr, sizeof(int));
+ 	if (olr < 0)
+ 		return -EINVAL;
 +
- 	rc = -EFAULT;
- 	if (put_user(len, optlen))
- 		goto out;
++	olr = min_t(unsigned int, olr, sizeof(int));
++
+ 	if (copy_to_sockptr(optlen, &olr, sizeof(int)))
+ 		return -EFAULT;
+ 	if (copy_to_sockptr(optval, &val, olr))
 -- 
 2.43.0
 
