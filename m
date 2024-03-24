@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F48179FBD;
-	Sun, 24 Mar 2024 23:40:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2A617A387;
+	Sun, 24 Mar 2024 23:40:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323649; cv=none; b=fK9HfEEAdsAzfKhw4LikKtLBIc5Dv/6CdI6Aiyg3cvCt9QwZfLYjHP1HBmDLX9nD2jXW5tHqj2wJ4HmxNuMGpsYijLKXjzJ+Ek1S4Z/+Z1RR8xvRuZ7EaXcU1E9832RovSd/xpsTUKZtJyTOTxgPkuTVP14kw+xOrceQoibijv8=
+	t=1711323657; cv=none; b=Ar9TDigdg/Gp40/A4/RlDX1XMl/wuEaKXHJgCfMrqz+bCA05b1xUR/+Uk1kWx7S58oGs8Epx5bLY0jYVH6ahn/ADfkho9G8Y1Wpn9XzyKkWO0G2WLz2LxZ0i221KvLzZ7GWdBDedq8BOr0s6Or6mMhuZkl4KhYaL7YFODoK2KxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323649; c=relaxed/simple;
-	bh=Du80a8081lcmLcIyq1r2JOmgELaCBxEoYXMTEtF6bGQ=;
+	s=arc-20240116; t=1711323657; c=relaxed/simple;
+	bh=h4lItqMeOzYnNgZPMXZ1qCGx/yc3jP4yGmrQlDOCSYw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J7WMEBdDhZrXZUdUq8CpYoOE/jdLCD4pJkrgWkPufn88mzAxIkKeA3oL3sys9AnuUFGL5zPBGqbSb9EjUcEcmDwu0KtXmdhWYWGhhVsHVr8UVt46QHI4g+Yz9hk+hm2MvNtCMpIba8MG/qaOThFIiXNzr0VlAAaORtmEiecakpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kXZL/o7I; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Rn6cGF/EkGtwQMi8qYvtSNF4CMkqFs3M+3hAwSnPsCD7Rzgc7fhN4bm6eKyMbgep4Z1zNeJZ9ncLuxGoU0mS387Kfj6Pu1sH3mu9mYBDHSVCdqxb5RDgqjKKK6xHXG+ifcD8NQ4O1RhxlGIA7zj13JB+rZ2TVmVW3G3UNPLORxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=goxU7WUm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kXZL/o7I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D1A2C433C7;
-	Sun, 24 Mar 2024 23:40:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="goxU7WUm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FAC1C433F1;
+	Sun, 24 Mar 2024 23:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323649;
-	bh=Du80a8081lcmLcIyq1r2JOmgELaCBxEoYXMTEtF6bGQ=;
+	s=k20201202; t=1711323656;
+	bh=h4lItqMeOzYnNgZPMXZ1qCGx/yc3jP4yGmrQlDOCSYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kXZL/o7IT25/uBFUTxGGnKVy1i7IIJO/iGfzogMkVm9W5RG/V8mC5rcXydJSOCKce
-	 DrsvMU2z2iHm5ZLvaSaph4UsLEEqNetSX2+7LUUzrWRKx0pjVgTFHwVnUUNAIo8UvK
-	 SzZWUN9OM7ljQCArGpalsIp0+rWXPdl8McjjxAhmmmsxSeSAY1eN7JlSRmK47UKLwA
-	 v7JKYatbQTEFzpghkwQAT8ftEgDX9hpwaZBTH+mm0yRFpn9S2x5Ox057QHsOIjFwuw
-	 +lNxWV69WtuBkOCCSrFeMbxIonUMAfv4nvEv9QMeZOnC76o4wdOKGj7AXDZCNOG4/p
-	 m8TRXxNNCDb4A==
+	b=goxU7WUmE17Xr0I9m+si5NqF0ckHae5ATLZocolopuZz7YzcHlkB+rUZXY6ICTlKu
+	 0I5octrrZQIK5h9xe65x/41R/GTG49CekkGVf3NggzOsWR3vQg1uaiLaE3ONA1O/Hl
+	 v73Jit3D2KHgFCteslR54FY8e8y6ceVLQjLB6HZUyezild/uDEu7lcpSy2eSleAlg+
+	 p9o+VPuoQmolSEGGNeMFI5VcBe/pxhSPytQI5Tl4mhj2dIiDD4AVFzBSyoRZuXpIUs
+	 TRAB6FpBjXzjN5rgHGUjN4kqIG7Kj6Am1F8tRivx1Y1nbedkts6k0y/3/keH7NSZJa
+	 r7xZghNk40K8w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yuxuan Hu <20373622@buaa.edu.cn>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>,
+	Omar Sandoval <osandov@osandov.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 021/238] Bluetooth: rfcomm: Fix null-ptr-deref in rfcomm_check_security
-Date: Sun, 24 Mar 2024 19:36:49 -0400
-Message-ID: <20240324234027.1354210-22-sashal@kernel.org>
+Subject: [PATCH 5.10 028/238] x86/paravirt: Fix build due to __text_gen_insn() backport
+Date: Sun, 24 Mar 2024 19:36:56 -0400
+Message-ID: <20240324234027.1354210-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,56 +48,40 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yuxuan Hu <20373622@buaa.edu.cn>
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-[ Upstream commit 2535b848fa0f42ddff3e5255cf5e742c9b77bb26 ]
+The Link tag has all the details but basically due to missing upstream
+commits, the header which contains __text_gen_insn() is not in the
+includes in paravirt.c, leading to:
 
-During our fuzz testing of the connection and disconnection process at the
-RFCOMM layer, we discovered this bug. By comparing the packets from a
-normal connection and disconnection process with the testcase that
-triggered a KASAN report. We analyzed the cause of this bug as follows:
+  arch/x86/kernel/paravirt.c: In function 'paravirt_patch_call':
+  arch/x86/kernel/paravirt.c:65:9: error: implicit declaration of function '__text_gen_insn' \
+  [-Werror=implicit-function-declaration]
+   65 |         __text_gen_insn(insn_buff, CALL_INSN_OPCODE,
+      |         ^~~~~~~~~~~~~~~
 
-1. In the packets captured during a normal connection, the host sends a
-`Read Encryption Key Size` type of `HCI_CMD` packet
-(Command Opcode: 0x1408) to the controller to inquire the length of
-encryption key.After receiving this packet, the controller immediately
-replies with a Command Completepacket (Event Code: 0x0e) to return the
-Encryption Key Size.
+Add the missing include.
 
-2. In our fuzz test case, the timing of the controller's response to this
-packet was delayed to an unexpected point: after the RFCOMM and L2CAP
-layers had disconnected but before the HCI layer had disconnected.
-
-3. After receiving the Encryption Key Size Response at the time described
-in point 2, the host still called the rfcomm_check_security function.
-However, by this time `struct l2cap_conn *conn = l2cap_pi(sk)->chan->conn;`
-had already been released, and when the function executed
-`return hci_conn_security(conn->hcon, d->sec_level, auth_type, d->out);`,
-specifically when accessing `conn->hcon`, a null-ptr-deref error occurred.
-
-To fix this bug, check if `sk->sk_state` is BT_CLOSED before calling
-rfcomm_recv_frame in rfcomm_process_rx.
-
-Signed-off-by: Yuxuan Hu <20373622@buaa.edu.cn>
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Reported-by: Omar Sandoval <osandov@osandov.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/ZeYXvd1-rVkPGvvW@telecaster
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/rfcomm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/paravirt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
-index 8d6fce9005bdd..4f54c7df3a94f 100644
---- a/net/bluetooth/rfcomm/core.c
-+++ b/net/bluetooth/rfcomm/core.c
-@@ -1937,7 +1937,7 @@ static struct rfcomm_session *rfcomm_process_rx(struct rfcomm_session *s)
- 	/* Get data directly from socket receive queue without copying it. */
- 	while ((skb = skb_dequeue(&sk->sk_receive_queue))) {
- 		skb_orphan(skb);
--		if (!skb_linearize(skb)) {
-+		if (!skb_linearize(skb) && sk->sk_state != BT_CLOSED) {
- 			s = rfcomm_recv_frame(s, skb);
- 			if (!s)
- 				break;
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index 5bea8d93883a2..f0e4ad8595ca7 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -31,6 +31,7 @@
+ #include <asm/special_insns.h>
+ #include <asm/tlb.h>
+ #include <asm/io_bitmap.h>
++#include <asm/text-patching.h>
+ 
+ /*
+  * nop stub, which must not clobber anything *including the stack* to
 -- 
 2.43.0
 
