@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5898D1272DE;
-	Sun, 24 Mar 2024 22:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A292B1E0E2E;
+	Sun, 24 Mar 2024 22:52:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320766; cv=none; b=QcDUL7vrssCVXJusZFKAMJjgm+x3QCnlc+8hLKoEerP5AG+a8JwGHVP3kXa3fsAtHAQY8Mk0VkoOiD1SW+ODbF2qt066nlpXxc7xhfVOFjp2T22umPRgGeDMRpHKEVaP8jA2HsmUt0MmdGgYW7TxGv6Hg45TjoyVDcEWOzGK+Ik=
+	t=1711320768; cv=none; b=jUrbJ7qJ5ub38Y+8MGlVwuXVu8hMfKIZLEbuVmdtsBHeAGhDC2XOX9FbkyiVEP4ylNqPH7YrMRPhFDPwWhKN6Yw2jhAnWgrpoO7XOP1jgKRx89488IEadMkFl0chqyQCU2IAYrjjuHsfwgGXFm+jEjRhPpZLzGfARl0Bl/wlm7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320766; c=relaxed/simple;
-	bh=0ZbiRjqbqQPMs4lhJ5vHIlkejiYFnKo63dXZozmQ290=;
+	s=arc-20240116; t=1711320768; c=relaxed/simple;
+	bh=qfiltWF1DjBz/PYTLyHlIKycekeTw9i4OTfCTEjgtGo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L/tNO2TlMcN1pls49Wz64Bj5+BeOplExEquvjsv7pNUtlq9nfaEST/YKnj3Qu6+UsSz3Hq9IOcp8o+dHcc0zdbrgmexCmXtKp7/SX0YEJaz/dRIKK5sH9A3VfpVYmkmD0Ok16xqIRmI2I7NRXnFWBhPDSxBuN63jW7xt7k3vONM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9W8QL0i; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=R8zE+8Vp+HUSSc0IBePO3LG8hdFQ82AOjc2df8MR9Peh/b0f8Q7HTwULM2zQNaJUz5DO2NiYnmYDC49FAfD7IQHCq9siPc+azTEES9zRgj8/LqCD69wVPXa2JKbYWlu0fq27M+jIWVFrJmQppf5ZOzk7iAltmhv/UW6K8xFu/WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L59r0u7z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9W8QL0i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F474C43394;
-	Sun, 24 Mar 2024 22:52:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L59r0u7z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6939FC43390;
+	Sun, 24 Mar 2024 22:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320765;
-	bh=0ZbiRjqbqQPMs4lhJ5vHIlkejiYFnKo63dXZozmQ290=;
+	s=k20201202; t=1711320767;
+	bh=qfiltWF1DjBz/PYTLyHlIKycekeTw9i4OTfCTEjgtGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A9W8QL0inziEMLnsyaP3lNea/VYnYNAB2e3Eujj/i2UrDn32VnaoStLagSShKU3UE
-	 SiUxL8WQZ4yOFrJxZXIiWSg7lzLqj7kSLafZdQdooxfC2ZLSJmv+wshIzbJzDS39le
-	 XVBJDgaNMXJNWuFo8ppJK9jDNznwBKR+GoaHVih0PadgIdUeHpp5k1Cb4rCoyJu5HE
-	 4FpziHfz8rK58ZnbG24Gqd/eZV4+F9ah7fpWmp3xa67ajfdEzZmptuEFEn+JIlpPRW
-	 /40AoNnWarzm/BAXn/JosT6zeS3QGkU5M/qH5ooy4GY5L+Xi+zoEYSocPjOYgYUbys
-	 1ht2XBoQMuHMQ==
+	b=L59r0u7zguT5yyHCuM1gH79xB2g2EulImJ7liYeHlQB7VjeHnC4g4WwrcjiHXbgwB
+	 InY1FViwrR4kejH2XQSgHa9xKCn10vH8xdcFGGelE244m27s4Y0KY/cpY6twTI7xM+
+	 iieCEW/ork/zbUtPNJwRMD2J6Zo5NrLgOtbC01/NsFtN6y5NqDOAQNWRO74QyXV6/+
+	 sYcZDjzJZ7uew8veS9NkPiP5VoYBBbzx76gs9a0OqTifV+u/LXugUeM5cgXYQi7emd
+	 JhpMNcmJTmbYKzNfxUNP478JvLN70k+1Wf9jOEoebXCewrNi34OagiOlow7guBAyqS
+	 Hf874fgqsEVUQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
+Cc: Abel Vesa <abel.vesa@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 329/713] SUNRPC: fix a memleak in gss_import_v2_context
-Date: Sun, 24 Mar 2024 18:40:55 -0400
-Message-ID: <20240324224720.1345309-330-sashal@kernel.org>
+Subject: [PATCH 6.7 331/713] arm64: dts: qcom: sm8550: Fix SPMI channels size
+Date: Sun, 24 Mar 2024 18:40:57 -0400
+Message-ID: <20240324224720.1345309-332-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,57 +50,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Abel Vesa <abel.vesa@linaro.org>
 
-[ Upstream commit e67b652d8e8591d3b1e569dbcdfcee15993e91fa ]
+[ Upstream commit 77dd1e50ffcba33c3195ae4fc78f354368ddacb2 ]
 
-The ctx->mech_used.data allocated by kmemdup is not freed in neither
-gss_import_v2_context nor it only caller gss_krb5_import_sec_context,
-which frees ctx on error.
+The actual size of the channels registers region is 4MB, according to the
+documentation. This issue was not caught until now because the driver was
+supposed to allow same regions being mapped multiple times for supporting
+multiple buses. Thie driver is using platform_get_resource_byname() and
+devm_ioremap() towards that purpose, which intentionally avoids
+devm_request_mem_region() altogether.
 
-Thus, this patch reform the last call of gss_import_v2_context to the
-gss_krb5_import_ctx_v2, preventing the memleak while keepping the return
-formation.
-
-Fixes: 47d848077629 ("gss_krb5: handle new context format from gssd")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Fixes: ffc50b2d3828 ("arm64: dts: qcom: Add base SM8550 dtsi")
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
+Link: https://lore.kernel.org/r/20240221-dts-qcom-sm8550-fix-spmi-chnls-size-v2-1-72b5efd9dc4f@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/auth_gss/gss_krb5_mech.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sm8550.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
-index e31cfdf7eadcb..f6fc80e1d658b 100644
---- a/net/sunrpc/auth_gss/gss_krb5_mech.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
-@@ -398,6 +398,7 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
- 	u64 seq_send64;
- 	int keylen;
- 	u32 time32;
-+	int ret;
- 
- 	p = simple_get_bytes(p, end, &ctx->flags, sizeof(ctx->flags));
- 	if (IS_ERR(p))
-@@ -450,8 +451,16 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
- 	}
- 	ctx->mech_used.len = gss_kerberos_mech.gm_oid.len;
- 
--	return gss_krb5_import_ctx_v2(ctx, gfp_mask);
-+	ret = gss_krb5_import_ctx_v2(ctx, gfp_mask);
-+	if (ret) {
-+		p = ERR_PTR(ret);
-+		goto out_free;
-+	}
- 
-+	return 0;
-+
-+out_free:
-+	kfree(ctx->mech_used.data);
- out_err:
- 	return PTR_ERR(p);
- }
+diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+index e15564ed54cef..d7e68e0f57131 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+@@ -3047,7 +3047,7 @@ sram@c3f0000 {
+ 		spmi_bus: spmi@c400000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0 0x0c400000 0 0x3000>,
+-			      <0 0x0c500000 0 0x4000000>,
++			      <0 0x0c500000 0 0x400000>,
+ 			      <0 0x0c440000 0 0x80000>,
+ 			      <0 0x0c4c0000 0 0x20000>,
+ 			      <0 0x0c42d000 0 0x4000>;
 -- 
 2.43.0
 
