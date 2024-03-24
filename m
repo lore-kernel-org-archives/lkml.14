@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8B017A39F;
-	Sun, 24 Mar 2024 23:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE61817A90A;
+	Sun, 24 Mar 2024 23:41:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323660; cv=none; b=V4JssnGr36UWCeJJPSCA454V4WQrv9DTdl6vDOMeO0qJ/6Exn0dK451lqAQtvtv3JFSl0/M7lMERvZ7XP86yrT/zXSbmVk1dUpb7qn+D5GwpUe3U7yXV/gowRIakAEE/IEiYio2dTsDNNEdOREf439VME57o+jMJ1Wa/GZCRFLQ=
+	t=1711323691; cv=none; b=rzNWSEfOX1HUlUtOfUl3zZTakB9BfWE2kbZCNIpP8Gp2m6D2q/lp921UjvkxMzsi2Pu6lqZnGarqPfZAb5RVxqK8+k4NKUoINHtkUxqOkPwLFKhmcEde/FYT6/4dHp/8bkIAtVxhTVnZ4y0b7YmAVUqIn5U9ur8A1mSFeqrOKcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323660; c=relaxed/simple;
-	bh=2QmnBqFaoclGLhXwzEZp6wAs7/ysaG7ABlc3lWoqZTU=;
+	s=arc-20240116; t=1711323691; c=relaxed/simple;
+	bh=21kd0MNS3pEpDqW586UDWv2efJv8oqkhwV370kyKQdc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IwoZRafgYBeoeDXBWK2rJk856VZjU+hMtKbrjeqrPf9J5Fm0WHkcBxrbTufFVMrKqXnYUn22drYAVZtvCmSvqf6hzq3SIh101Hf0YitBgxUQ+lL91o3tfp6tGMNY9tbp68J3WjBgD1J/7/R3KyiJ8YX57daqHq70xrk+1XM6i6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SNT3HR9V; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=mk7mwDSXmVmapEFFxFrCg9QafFVsSntTCnSjgxCYA2d4UCQKOK2pJnwH3dVu5dJ6+VRzphprmqM7m6ZfaFN1uskjwFnzKaCtTHxonRWYEJBX35bQmD7w0YGp+vXrc4HuGewlI+V8Bh4qewVt0YiiT3hC9oK8FX2jiKZRv7NmorI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbIK+w/G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SNT3HR9V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4050C43390;
-	Sun, 24 Mar 2024 23:40:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbIK+w/G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 229E5C43390;
+	Sun, 24 Mar 2024 23:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323659;
-	bh=2QmnBqFaoclGLhXwzEZp6wAs7/ysaG7ABlc3lWoqZTU=;
+	s=k20201202; t=1711323689;
+	bh=21kd0MNS3pEpDqW586UDWv2efJv8oqkhwV370kyKQdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SNT3HR9VFsSlI3G+PwfxNK4DD2xvT9Jc4FjJcQ19QZQIBnVIauTLVmHjhCW1H1iUH
-	 mDKZV3SY6D+pRvWOrCb18kIPri9AHVoBGWmBj0dX9dpO1yWMg5lgm+Py+yw9nNLI7v
-	 L6iBZenLZUylEj7qeJqYgJUYJxn/bkXAjiZaZHem6PMEg+6d91mzKA/L+9C43NZCn1
-	 wDCunvi4Rr+tQlRQIQ2RgSPbETbpuPLoTQx+A6WQ58bXBWmflx2QBX/SOtYmebSvxe
-	 AbTGCSCQx/rRJmOVifZkKH035uHB5OOQfUx9XXOmrUhU/RMQqtdlL1inXJzPecXTQ+
-	 uuQBd1o0JvhwQ==
+	b=fbIK+w/G54Iq57eXBzzygICPdwZcEalFLT9tvWL3/Gw1sLSkp/f8yksXw/3GenKaH
+	 u5gBAlMAZqY44BB+0ZZCZ8QQY3OgSJBFXfyKRoVPLnUFQbqhhwMyMaTsb0RvaNDCc6
+	 cr0/+KV7VFxV6IioVB1IGOlxWrEmF4VMGcNwC/83GnQEBlWxcFQvCPw67eVIzaJhDf
+	 ONdasOnrBqdRx1OlNN71TUSCRIuFoemUPBi+htYeJE3c10pK3y/3HDyMn8rJohTVCz
+	 uyDAB+JpoyalNHnKBtPvO7wZe7P0svr8fX5xIPGgOFNVFJ/nHQiFCAXDS87EVNNWt6
+	 i9TIR8/mdktxg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Kees Cook <keescook@chromium.org>,
-	Andi Kleen <ak@linux.intel.com>,
-	Jan Kara <jack@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 031/238] fs/select: rework stack allocation hack for clang
-Date: Sun, 24 Mar 2024 19:36:59 -0400
-Message-ID: <20240324234027.1354210-32-sashal@kernel.org>
+Subject: [PATCH 5.10 062/238] arm64: dts: mediatek: mt7622: add missing "device_type" to memory nodes
+Date: Sun, 24 Mar 2024 19:37:30 -0400
+Message-ID: <20240324234027.1354210-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -47,69 +45,56 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Rafał Miłecki <rafal@milecki.pl>
 
-[ Upstream commit ddb9fd7a544088ed70eccbb9f85e9cc9952131c1 ]
+[ Upstream commit 99d100e00144bc01b49a697f4bc4398f2f7e7ce4 ]
 
-A while ago, we changed the way that select() and poll() preallocate
-a temporary buffer just under the size of the static warning limit of
-1024 bytes, as clang was frequently going slightly above that limit.
+This fixes:
+arch/arm64/boot/dts/mediatek/mt7622-rfb1.dtb: /: memory@40000000: 'device_type' is a required property
+        from schema $id: http://devicetree.org/schemas/memory.yaml#
+arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dtb: /: memory@40000000: 'device_type' is a required property
+        from schema $id: http://devicetree.org/schemas/memory.yaml#
 
-The warnings have recently returned and I took another look. As it turns
-out, clang is not actually inherently worse at reserving stack space,
-it just happens to inline do_select() into core_sys_select(), while gcc
-never inlines it.
-
-Annotate do_select() to never be inlined and in turn remove the special
-case for the allocation size. This should give the same behavior for
-both clang and gcc all the time and once more avoids those warnings.
-
-Fixes: ad312f95d41c ("fs/select: avoid clang stack usage warning")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20240216202352.2492798-1-arnd@kernel.org
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://lore.kernel.org/r/20240122132357.31264-1-zajec5@gmail.com
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/select.c          | 2 +-
- include/linux/poll.h | 4 ----
- 2 files changed, 1 insertion(+), 5 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts | 1 +
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts             | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/fs/select.c b/fs/select.c
-index 5edffee1162c2..668a5200503ae 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -475,7 +475,7 @@ static inline void wait_key_set(poll_table *wait, unsigned long in,
- 		wait->_key |= POLLOUT_SET;
- }
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+index 7e6cffdc5a551..778174a7d649b 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+@@ -71,6 +71,7 @@ red {
  
--static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
-+static noinline_for_stack int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
- {
- 	ktime_t expire, *to = NULL;
- 	struct poll_wqueues table;
-diff --git a/include/linux/poll.h b/include/linux/poll.h
-index 1cdc32b1f1b08..7e0fdcf905d2e 100644
---- a/include/linux/poll.h
-+++ b/include/linux/poll.h
-@@ -16,11 +16,7 @@
- extern struct ctl_table epoll_table[]; /* for sysctl */
- /* ~832 bytes of stack space used max in sys_select/sys_poll before allocating
-    additional memory. */
--#ifdef __clang__
--#define MAX_STACK_ALLOC 768
--#else
- #define MAX_STACK_ALLOC 832
--#endif
- #define FRONTEND_STACK_ALLOC	256
- #define SELECT_STACK_ALLOC	FRONTEND_STACK_ALLOC
- #define POLL_STACK_ALLOC	FRONTEND_STACK_ALLOC
+ 	memory@40000000 {
+ 		reg = <0 0x40000000 0 0x40000000>;
++		device_type = "memory";
+ 	};
+ 
+ 	reg_1p8v: regulator-1p8v {
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+index 993f033d0bf04..810575de66702 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -57,6 +57,7 @@ wps {
+ 
+ 	memory@40000000 {
+ 		reg = <0 0x40000000 0 0x20000000>;
++		device_type = "memory";
+ 	};
+ 
+ 	reg_1p8v: regulator-1p8v {
 -- 
 2.43.0
 
