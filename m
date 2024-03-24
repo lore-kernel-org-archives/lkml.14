@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CEB83A1F;
-	Sun, 24 Mar 2024 22:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D843F1D8BBC;
+	Sun, 24 Mar 2024 22:50:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320639; cv=none; b=ask6HEjn0TMSpetrrPJvnNyCxMboBkvKYSm3rsmy77g+cGgsk2f5+aAy3oapqydqFv0EyT3WUE/jbUy/ZVi1waKtp4udJsvMz3fqgE7QkcO6uGKD0PEyy8TDARymi/PbgrDiHBKg8qn8ijSbnNRbHYPhbJNrLr73ceNfCj1u4t4=
+	t=1711320645; cv=none; b=p+X2suZhtOP/UbAIV6YJO4WWGde6Vo3jtHopg3D3quypwoajsyUgsLgHkuJlE1cyU7krOgBZxlnqVZwrHoXMWO+1WQJJhVOVFZ2U3EtX9UgoC+M/zqltRUl/XM5Ekh8nATbohEyCFak5FddVmky1EpMmzyx8oA7EoK/PKf//iqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320639; c=relaxed/simple;
-	bh=LokX5o72x0ED+b2JNMAGsU0bHH90SPf3RnjM0uqF/ys=;
+	s=arc-20240116; t=1711320645; c=relaxed/simple;
+	bh=RQrolhc/4neGjp94YqluMsQFQZd5V1OjoECo2SmYWsM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RpqcwtjFevHR4R9LDiQO4Zstzi2BWYjrjDRX9eXQou7dzs2G+NI13hwtagvxQ4ScI+JP6ImJyTaj2ADPT5PcIbX5T5NsP0KH48igwBerSDqpxu6LhwBNaWk2F4uBDYwe3nzqSSsTvh24iaolnEvj9wQ1luNMDUDeHwKAsyXul9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehJkzSIt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Gmjz5YCoywLd1/jFDnqJvtUDbk0Pd5JXB5c+3r+AxTlIw/u86aLjqBpgW1tZgLiOXE+dh6XHRi331CZ524HpV3g1jbYl/ictimJPqnLCaNQ/ItYF0BJZEptUkjPAsm2SPSKfXWVOuhLU+wXAVv21W23FlVSaZ+yTbqN+BU+BAZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LONUrSd7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehJkzSIt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3722EC433C7;
-	Sun, 24 Mar 2024 22:50:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LONUrSd7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23034C433C7;
+	Sun, 24 Mar 2024 22:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320638;
-	bh=LokX5o72x0ED+b2JNMAGsU0bHH90SPf3RnjM0uqF/ys=;
+	s=k20201202; t=1711320644;
+	bh=RQrolhc/4neGjp94YqluMsQFQZd5V1OjoECo2SmYWsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ehJkzSIt3V3b4dXBUnMMSMdU7EsSG6SjHKkK7g7a8KkBjpli+JsdkyvY0dY6XyUo+
-	 iocBQEDryV0rce1USQaiLTCmlJr8MsMxTj88BZ79NVDhCsqRa8m962+EN+FwmfA08d
-	 n0hP/6fP7XA5uTYFQWT5rogDlf8LyVTh3q2OoaZyTIJPGFe49kvqxsugNno3z6pPh5
-	 mGx1scHc/RqtH0KiH3fo9r5ODyTQhVlD6dKwWK2iZoTiE8KOC+1Pi2aDSRJ4ZmBZvo
-	 hP0342OBCs8TMgsdj32f5xjwgZxzBvY/7faSmoE2IhCrljHCEr1Yl/BxOmbyk1++5Y
-	 zsbwMfxKobi8Q==
+	b=LONUrSd7d6pPoqBDP/ig0MCnFCnPvu8hBf9jWMFzWHkn4FbhmxQqSgp6AhI/HS7Pr
+	 CgDGUiAYvk/qlsVv5Ry2L6hLXQuGpey/a25dv3vfMexjY9jBtRhYJGLBKBA1AADfVX
+	 t8zmNeHaoZ7A1gHbyyqtATCe+RxuYFxCdMXwgtLAccg2X3wMVOVLIe3KMKMkbJINF3
+	 visNqmXLFlVGjgVPwaNzx5W1qsl1HT7yIBUOZeqPqeA96PHDMuVnKOm5Vu7rHSTy5t
+	 b7ZdOnSi7FqL/HgufA+X7+i7mPoQWr8kjh4PEdlayO2yiYOdfu0IOrTMeBdaqOwG3o
+	 1yCQUIY62Amag==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 200/713] pwm: atmel-hlcdc: Fix clock imbalance related to suspend support
-Date: Sun, 24 Mar 2024 18:38:46 -0400
-Message-ID: <20240324224720.1345309-201-sashal@kernel.org>
+Subject: [PATCH 6.7 206/713] wifi: libertas: fix some memleaks in lbs_allocate_cmd_buffer()
+Date: Sun, 24 Mar 2024 18:38:52 -0400
+Message-ID: <20240324224720.1345309-207-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,41 +44,59 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit e25ac87d3f831fed002c34aadddaf4ebb4ea45ec ]
+[ Upstream commit 5f0e4aede01cb01fa633171f0533affd25328c3a ]
 
-The suspend callback disables the periph clock when the PWM is enabled
-and resume reenables this clock if the PWM was disabled before. Judging
-from the code comment it's suspend that is wrong here. Fix accordingly.
+In the for statement of lbs_allocate_cmd_buffer(), if the allocation of
+cmdarray[i].cmdbuf fails, both cmdarray and cmdarray[i].cmdbuf needs to
+be freed. Otherwise, there will be memleaks in lbs_allocate_cmd_buffer().
 
-Fixes: f9bb9da7c09d ("pwm: atmel-hlcdc: Implement the suspend/resume hooks")
-Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Link: https://lore.kernel.org/r/b51ea92b0a45eff3dc83b08adefd43d930df996c.1706269232.git.u.kleine-koenig@pengutronix.de
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Fixes: 876c9d3aeb98 ("[PATCH] Marvell Libertas 8388 802.11b/g USB driver")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240126075336.2825608-1-alexious@zju.edu.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-atmel-hlcdc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/libertas/cmd.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
-index 07920e0347575..584288d8c0503 100644
---- a/drivers/pwm/pwm-atmel-hlcdc.c
-+++ b/drivers/pwm/pwm-atmel-hlcdc.c
-@@ -186,7 +186,7 @@ static int atmel_hlcdc_pwm_suspend(struct device *dev)
- 	struct atmel_hlcdc_pwm *atmel = dev_get_drvdata(dev);
+diff --git a/drivers/net/wireless/marvell/libertas/cmd.c b/drivers/net/wireless/marvell/libertas/cmd.c
+index 104d2b6dc9af6..5a525da434c28 100644
+--- a/drivers/net/wireless/marvell/libertas/cmd.c
++++ b/drivers/net/wireless/marvell/libertas/cmd.c
+@@ -1132,7 +1132,7 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
+ 		if (!cmdarray[i].cmdbuf) {
+ 			lbs_deb_host("ALLOC_CMD_BUF: ptempvirtualaddr is NULL\n");
+ 			ret = -1;
+-			goto done;
++			goto free_cmd_array;
+ 		}
+ 	}
  
- 	/* Keep the periph clock enabled if the PWM is still running. */
--	if (pwm_is_enabled(&atmel->chip.pwms[0]))
-+	if (!pwm_is_enabled(&atmel->chip.pwms[0]))
- 		clk_disable_unprepare(atmel->hlcdc->periph_clk);
+@@ -1140,8 +1140,17 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
+ 		init_waitqueue_head(&cmdarray[i].cmdwait_q);
+ 		lbs_cleanup_and_insert_cmd(priv, &cmdarray[i]);
+ 	}
+-	ret = 0;
++	return 0;
  
- 	return 0;
++free_cmd_array:
++	for (i = 0; i < LBS_NUM_CMD_BUFFERS; i++) {
++		if (cmdarray[i].cmdbuf) {
++			kfree(cmdarray[i].cmdbuf);
++			cmdarray[i].cmdbuf = NULL;
++		}
++	}
++	kfree(priv->cmd_array);
++	priv->cmd_array = NULL;
+ done:
+ 	return ret;
+ }
 -- 
 2.43.0
 
