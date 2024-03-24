@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15901E4A25;
-	Sun, 24 Mar 2024 22:53:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B551E4A0F;
+	Sun, 24 Mar 2024 22:53:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320811; cv=none; b=ZdUu9bhIbJmcB/3X4qr/yhhhz4Yhte/3p8jsypDg9o9mcyODR11MuMF92daA3TT/SrgojbdOB4x5FBrLoYMdqm17trNdP2Yicg3/MxW6JmcQXk7S3OGjeHbTnOoN44OUnZIeonJ8PSMUqcEUDnamMV2z8rvowx+8cPGMn+IfloE=
+	t=1711320809; cv=none; b=HKmCa12h6IZ9AI2+eOj5ubJi3S0doeJffLJtuRs8/iD0rw3KlsS5SAtNPXGrS10B83Mmhb685N79cI9e3wP9U79gTVy+sjhn5J26jt/BLSgMkfallySR93UtaBollQe3WyyhzNrKTyvBD3ER3gIcLE1/r93AOYtqMDAxft3SU1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320811; c=relaxed/simple;
-	bh=bqhQ8CzGWTTriI8TaVQ625rSdktHGajB4fQc3wcp1no=;
+	s=arc-20240116; t=1711320809; c=relaxed/simple;
+	bh=LHMGvFVwf3Qcf/aIqresdD78FYxbY6AGHTVAdf9r6kw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lSajhmYbVaw3p/TuWG/jNSjwvXh1gWumFhvYR4pZT9VyxqKhjiEw4HLIFjLSDTd5fuv5L1F1+stnD7Xam0gC9QgHcA9vo7DNYprPG4GUzClC6zRMYhlG7vKWJrxkL0xTR+onY6sdhvVjJSDUiKIAl4wWY+78+iRGYj5YKbxhqQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhF+6pDi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=p7V/PN0n7cp61PXxV6UvmbhJpGuCIU8/WBzYyxR43xtqiK+i670XT1OPSeyelg4qqeZIr+0/PRyJEp6KNXzPLvMyrX9zYcSEQpqM5/hQuB5gHXx8i+kPiFngRRmIqdUe8FjcKY2omhFzbsnejkUcGmJdpz/GhX+MyDPy1sZjzBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJofyGxH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhF+6pDi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01DE9C433F1;
-	Sun, 24 Mar 2024 22:53:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJofyGxH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EBC0C43390;
+	Sun, 24 Mar 2024 22:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320810;
-	bh=bqhQ8CzGWTTriI8TaVQ625rSdktHGajB4fQc3wcp1no=;
+	s=k20201202; t=1711320808;
+	bh=LHMGvFVwf3Qcf/aIqresdD78FYxbY6AGHTVAdf9r6kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GhF+6pDibVZLR33hA/ohFaxIUoAtlA6hUkT0mtlVvqnngzuoRglKaLE4ktNoRy0d8
-	 Qs748lxiXhTp3JSZMLTFc9kejhEuw6AO04SJxNtnfVERDWbvEuYI+Vy4ApvihayAio
-	 MlCk4q+6IaRlIqzQQuPgkblDgVanyv/Ahq3kJ5OfgcJZqfxwEL+kx9CRhc/WeLsvqm
-	 N9PcTV0RbtHKK9s1C8d9IxLL/JzGdkPLVtye3npy73m7B0cWm0N+uzQUd8TChSXwNE
-	 aXgD4LzALfjtVxwzDFcHECGq7c/3Y3220HRE7VVfymReU8JEI+uACMEvfuytoU6Cjl
-	 VuY1WmtusYV5w==
+	b=cJofyGxHyqS/k6Om29Ybq66YwhakmwtJbn2Vaj3CHwNA34byrkCfa6roTNgddGg5Q
+	 VX6N4VVFfgJ6rcrvF/Xwhe+AnQNuIPB1MQ7Kdu/FJC4VvQ1/e/W7DEAhACeDBhlnkR
+	 tLjbT6kJx3rveMfSYD4JgSf8osi/1gUZiBkyXXk9nxLkLhVGTG4Oph5XoF+zlzQAh7
+	 VlRnb3P79/A8SUdvqGqKMr6n3+gqUX10Yl2/etP3Q4qzMusmfP47YVWxD7J3thigpi
+	 ArVJufqQ79D9h/tJomqD2nlDDWFth3O1FGWum5jiyuBWjaNHjx3sC77tvyPq+sLwyl
+	 9bYPidXw94hvA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
+Cc: =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Danis?= <frederic.danis@collabora.com>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 375/713] erofs: fix handling kern_mount() failure
-Date: Sun, 24 Mar 2024 18:41:41 -0400
-Message-ID: <20240324224720.1345309-376-sashal@kernel.org>
+Subject: [PATCH 6.7 373/713] Bluetooth: Fix eir name length
+Date: Sun, 24 Mar 2024 18:41:39 -0400
+Message-ID: <20240324224720.1345309-374-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -43,45 +44,106 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Frédéric Danis <frederic.danis@collabora.com>
 
-[ Upstream commit 2c88c16dc20e88dd54d2f6f4d01ae1dce6cc9654 ]
+[ Upstream commit 2ab3e8d67fc1d4a7638b769cf83023ec209fc0a9 ]
 
-if you have a variable that holds NULL or  a pointer to live struct mount,
-do not shove ERR_PTR() into it - not if you later treat "not NULL" as
-"holds a pointer to object".
+According to Section 1.2 of Core Specification Supplement Part A the
+complete or short name strings are defined as utf8s, which should not
+include the trailing NULL for variable length array as defined in Core
+Specification Vol1 Part E Section 2.9.3.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Stable-dep-of: 0f28be64d132 ("erofs: fix lockdep false positives on initializing erofs_pseudo_mnt")
+Removing the trailing NULL allows PTS to retrieve the random address based
+on device name, e.g. for SM/PER/KDU/BV-02-C, SM/PER/KDU/BV-08-C or
+GAP/BROB/BCST/BV-03-C.
+
+Fixes: f61851f64b17 ("Bluetooth: Fix append max 11 bytes of name to scan rsp data")
+Signed-off-by: Frédéric Danis <frederic.danis@collabora.com>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/erofs/fscache.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ net/bluetooth/eir.c  | 29 +++++++----------------------
+ net/bluetooth/mgmt.c |  2 +-
+ 2 files changed, 8 insertions(+), 23 deletions(-)
 
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index 87ff35bff8d5b..1052f75d1dfae 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -381,11 +381,12 @@ static int erofs_fscache_init_domain(struct super_block *sb)
- 		goto out;
+diff --git a/net/bluetooth/eir.c b/net/bluetooth/eir.c
+index 9214189279e80..1bc51e2b05a34 100644
+--- a/net/bluetooth/eir.c
++++ b/net/bluetooth/eir.c
+@@ -13,48 +13,33 @@
  
- 	if (!erofs_pseudo_mnt) {
--		erofs_pseudo_mnt = kern_mount(&erofs_fs_type);
--		if (IS_ERR(erofs_pseudo_mnt)) {
--			err = PTR_ERR(erofs_pseudo_mnt);
-+		struct vfsmount *mnt = kern_mount(&erofs_fs_type);
-+		if (IS_ERR(mnt)) {
-+			err = PTR_ERR(mnt);
- 			goto out;
- 		}
-+		erofs_pseudo_mnt = mnt;
- 	}
+ #define PNP_INFO_SVCLASS_ID		0x1200
  
- 	domain->volume = sbi->volume;
+-static u8 eir_append_name(u8 *eir, u16 eir_len, u8 type, u8 *data, u8 data_len)
+-{
+-	u8 name[HCI_MAX_SHORT_NAME_LENGTH + 1];
+-
+-	/* If data is already NULL terminated just pass it directly */
+-	if (data[data_len - 1] == '\0')
+-		return eir_append_data(eir, eir_len, type, data, data_len);
+-
+-	memcpy(name, data, HCI_MAX_SHORT_NAME_LENGTH);
+-	name[HCI_MAX_SHORT_NAME_LENGTH] = '\0';
+-
+-	return eir_append_data(eir, eir_len, type, name, sizeof(name));
+-}
+-
+ u8 eir_append_local_name(struct hci_dev *hdev, u8 *ptr, u8 ad_len)
+ {
+ 	size_t short_len;
+ 	size_t complete_len;
+ 
+-	/* no space left for name (+ NULL + type + len) */
+-	if ((max_adv_len(hdev) - ad_len) < HCI_MAX_SHORT_NAME_LENGTH + 3)
++	/* no space left for name (+ type + len) */
++	if ((max_adv_len(hdev) - ad_len) < HCI_MAX_SHORT_NAME_LENGTH + 2)
+ 		return ad_len;
+ 
+ 	/* use complete name if present and fits */
+ 	complete_len = strnlen(hdev->dev_name, sizeof(hdev->dev_name));
+ 	if (complete_len && complete_len <= HCI_MAX_SHORT_NAME_LENGTH)
+-		return eir_append_name(ptr, ad_len, EIR_NAME_COMPLETE,
+-				       hdev->dev_name, complete_len + 1);
++		return eir_append_data(ptr, ad_len, EIR_NAME_COMPLETE,
++				       hdev->dev_name, complete_len);
+ 
+ 	/* use short name if present */
+ 	short_len = strnlen(hdev->short_name, sizeof(hdev->short_name));
+ 	if (short_len)
+-		return eir_append_name(ptr, ad_len, EIR_NAME_SHORT,
++		return eir_append_data(ptr, ad_len, EIR_NAME_SHORT,
+ 				       hdev->short_name,
+-				       short_len == HCI_MAX_SHORT_NAME_LENGTH ?
+-				       short_len : short_len + 1);
++				       short_len);
+ 
+ 	/* use shortened full name if present, we already know that name
+ 	 * is longer then HCI_MAX_SHORT_NAME_LENGTH
+ 	 */
+ 	if (complete_len)
+-		return eir_append_name(ptr, ad_len, EIR_NAME_SHORT,
++		return eir_append_data(ptr, ad_len, EIR_NAME_SHORT,
+ 				       hdev->dev_name,
+ 				       HCI_MAX_SHORT_NAME_LENGTH);
+ 
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 2ffda2ffdbda8..92fd3786bbdff 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -8400,7 +8400,7 @@ static int read_adv_features(struct sock *sk, struct hci_dev *hdev,
+ 
+ static u8 calculate_name_len(struct hci_dev *hdev)
+ {
+-	u8 buf[HCI_MAX_SHORT_NAME_LENGTH + 3];
++	u8 buf[HCI_MAX_SHORT_NAME_LENGTH + 2]; /* len + type + name */
+ 
+ 	return eir_append_local_name(hdev, buf, 0);
+ }
 -- 
 2.43.0
 
