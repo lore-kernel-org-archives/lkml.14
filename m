@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6C812D760;
-	Sun, 24 Mar 2024 22:58:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA82E14BF92;
+	Sun, 24 Mar 2024 22:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321133; cv=none; b=Pr1+cUpfgXm0G3a4+nlt6SXnscdiMD9bKG3EmgPBRXrCfRZeTZ08e+LullDAYy1/2gzlpBw7kMgrcgslq1FkjUTrnXBXyRMnz1p9eKYCt7Dx9qFZJ11jWoF8Mo3ZtCI0SfPQoTZTuAYo7ovtYA6Me8ukdRTIy1TJZVXjzmTvdVI=
+	t=1711321136; cv=none; b=kB7/7CE1EvKmbZ/1EvvAWxjXlqcZ4SMmX0Z18r8aDZUYEBsrv8lu+cWJAnm39UzZ3cYRANI4kJmIGHxeLIqk9kdpb/7P0CgZyg7NREvk6Xn+ZAyDldHH2vbKbIKDJIXCEi/3n8LmFcuzeQUi0G6qOdBdbhqnqbYL4tMT3ujF94U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321133; c=relaxed/simple;
-	bh=D0aVCUchj4fSjHjaibxfDzG7yWzsW9jxSYg7diF+IBc=;
+	s=arc-20240116; t=1711321136; c=relaxed/simple;
+	bh=+QcmLcmnjuhqAeaN6Zyve029BFTLrip7akLENzC+Dls=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mXSSSG/pafnOOcHAbSRoOadlfYa2PP2fuSd/j2Vdnly1hCyeauNkricjs+Jb0/XrXj3XYwQ/2h/t9Hn63XPm9MaJDTrpme81lTjgpESAB9PuNMALw/MJLaU7qUXIxc6c4D4luNGUaPj3RBzT3FKY0GmMw0Ih3LiBQQk31v1bcy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TszrOKqw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Kg+xTn5NGJ4q7ZkKuWTx54te3E/XHmsoK06ord8P6IpGna3Ml5RLh7V5aPEvx2NDblT6MEpfDiV1gThuDjJLZEI8bzGFJ7Y7i7WJWWMepz+fmShrzKeL4ouAN71uWaXsY2fwh8wyZ8foavwDdCzkTGsWipdhcK3g+94sL/FurvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iOmWUHzg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TszrOKqw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68C24C433F1;
-	Sun, 24 Mar 2024 22:58:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iOmWUHzg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F0EAC43394;
+	Sun, 24 Mar 2024 22:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321132;
-	bh=D0aVCUchj4fSjHjaibxfDzG7yWzsW9jxSYg7diF+IBc=;
+	s=k20201202; t=1711321135;
+	bh=+QcmLcmnjuhqAeaN6Zyve029BFTLrip7akLENzC+Dls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TszrOKqwTYdRgLaH3FpL5xHgnWQmzvY24SD/LKhEWpqnPPfNdLx/+iWr7cE4yYpon
-	 Tjkd6u7Lj8WIEh6fD/NNNgtZ+85xJTequKKy2qSR3EvtaPzYyV6+DHx7voEF+ajLxh
-	 S45mQ6zCTAxCSrpGDD3bkjV3NEU649pfgMsMd1eFYVEGX5JA4x8B+Ye9hQPtDbq2YZ
-	 IsPyUWFUMxxD28pH7f8oEUp26tk7n+JjZB45w+eZseLl5SKy8ES8KZn8/t3X7vbZpO
-	 qSbqlYycw00DidiMxtPnrNiwQ1HF2t7jTPaqp0gA8G0GNqkxmhikvKSFQNQ+zhRcjX
-	 N5NUieQrY/d5g==
+	b=iOmWUHzgQl3SvGF7qCF05cUlRfkw8IJ9ZDcGqOeZqFfKiN/VxMG3fqfmyExz1DlC9
+	 saYyaBOqqJA5WHpoTU86hGO5nLNfFLRoEHCA8m6Q8LbejktTivJVqLoo1Vw2jfe4vV
+	 55ENByI5pqwbCFrd29/cvi42PsqHjMc88F8bddHzNwc/VsgiyHPrNuBBMxg79/OCdP
+	 81wveHfrhRZv1VTi6dcpG1hrj2/WNgPLz/KJgy+rIFp4DQu1VxL97cgf/NUONKwy6/
+	 kmHgVqvyWjxoO+PTtX06oYaB+YUWNwvn4HT2Fw49udVk3A2Khc9GaeBJTe3NS9KP9V
+	 OTPQXwNxbsHMQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Subbaraya Sundeep <sbhatta@marvell.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Le Ma <le.ma@amd.com>,
+	Hawking Zhang <Hawking.Zhang@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 693/713] octeontx2-pf: Send UP messages to VF only when VF is up.
-Date: Sun, 24 Mar 2024 18:46:59 -0400
-Message-ID: <20240324224720.1345309-694-sashal@kernel.org>
+Subject: [PATCH 6.7 697/713] drm/amdgpu: drop setting buffer funcs in sdma442
+Date: Sun, 24 Mar 2024 18:47:03 -0400
+Message-ID: <20240324224720.1345309-698-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,37 +49,79 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Subbaraya Sundeep <sbhatta@marvell.com>
+From: Le Ma <le.ma@amd.com>
 
-[ Upstream commit dfcf6355f53b1796cf7fd50a4f27b18ee6a3497a ]
+[ Upstream commit ad550dbe8ae4ba833371a018265c1c3ae88559f0 ]
 
-When PF sending link status messages to VF, it is possible
-that by the time link_event_task work function is executed
-VF might have brought down. Hence before sending VF link
-status message check whether VF is up to receive it.
+To fix the entity rq NULL issue. This setting has been moved
+to upper level.
 
-Fixes: ad513ed938c9 ("octeontx2-vf: Link event notification support")
-Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b70438004a14 ("drm/amdgpu: move buffer funcs setting up a level")
+Signed-off-by: Le Ma <le.ma@amd.com>
+Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c | 23 +----------------------
+ 1 file changed, 1 insertion(+), 22 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-index f85d38fab3211..b40bd0e467514 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-@@ -3122,6 +3122,9 @@ static void otx2_vf_link_event_task(struct work_struct *work)
- 	vf_idx = config - config->pf->vf_configs;
- 	pf = config->pf;
+diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c b/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c
+index 0f24af6f28102..8eed9a73d0355 100644
+--- a/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c
++++ b/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c
+@@ -429,16 +429,11 @@ static void sdma_v4_4_2_inst_gfx_stop(struct amdgpu_device *adev,
+ 	struct amdgpu_ring *sdma[AMDGPU_MAX_SDMA_INSTANCES];
+ 	u32 doorbell_offset, doorbell;
+ 	u32 rb_cntl, ib_cntl;
+-	int i, unset = 0;
++	int i;
  
-+	if (config->intf_down)
-+		return;
-+
- 	mutex_lock(&pf->mbox.lock);
+ 	for_each_inst(i, inst_mask) {
+ 		sdma[i] = &adev->sdma.instance[i].ring;
  
- 	dwork = &config->link_event_work;
+-		if ((adev->mman.buffer_funcs_ring == sdma[i]) && unset != 1) {
+-			amdgpu_ttm_set_buffer_funcs_status(adev, false);
+-			unset = 1;
+-		}
+-
+ 		rb_cntl = RREG32_SDMA(i, regSDMA_GFX_RB_CNTL);
+ 		rb_cntl = REG_SET_FIELD(rb_cntl, SDMA_GFX_RB_CNTL, RB_ENABLE, 0);
+ 		WREG32_SDMA(i, regSDMA_GFX_RB_CNTL, rb_cntl);
+@@ -485,20 +480,10 @@ static void sdma_v4_4_2_inst_rlc_stop(struct amdgpu_device *adev,
+ static void sdma_v4_4_2_inst_page_stop(struct amdgpu_device *adev,
+ 				       uint32_t inst_mask)
+ {
+-	struct amdgpu_ring *sdma[AMDGPU_MAX_SDMA_INSTANCES];
+ 	u32 rb_cntl, ib_cntl;
+ 	int i;
+-	bool unset = false;
+ 
+ 	for_each_inst(i, inst_mask) {
+-		sdma[i] = &adev->sdma.instance[i].page;
+-
+-		if ((adev->mman.buffer_funcs_ring == sdma[i]) &&
+-			(!unset)) {
+-			amdgpu_ttm_set_buffer_funcs_status(adev, false);
+-			unset = true;
+-		}
+-
+ 		rb_cntl = RREG32_SDMA(i, regSDMA_PAGE_RB_CNTL);
+ 		rb_cntl = REG_SET_FIELD(rb_cntl, SDMA_PAGE_RB_CNTL,
+ 					RB_ENABLE, 0);
+@@ -948,13 +933,7 @@ static int sdma_v4_4_2_inst_start(struct amdgpu_device *adev,
+ 			r = amdgpu_ring_test_helper(page);
+ 			if (r)
+ 				return r;
+-
+-			if (adev->mman.buffer_funcs_ring == page)
+-				amdgpu_ttm_set_buffer_funcs_status(adev, true);
+ 		}
+-
+-		if (adev->mman.buffer_funcs_ring == ring)
+-			amdgpu_ttm_set_buffer_funcs_status(adev, true);
+ 	}
+ 
+ 	return r;
 -- 
 2.43.0
 
