@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A292C1D2A9A;
-	Sun, 24 Mar 2024 22:48:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DB01D1D50;
+	Sun, 24 Mar 2024 22:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320538; cv=none; b=sNscjdui/GB4EcaNewcRZkw5mz4Eovu9yWiZJM+K+XJ4AoUUfLENUPNTCeAGxshgY4gS0m6r8mJCiwj3jCk+CpxcMFL03JBzL+LDrtlW1fewk9qynDCSof9CndXqblI+u7uCbQ2th0hgbgAlKZmWCIJaohQHN5kKZcyIvCgvMR8=
+	t=1711320531; cv=none; b=eBC/BvHpKHC7sLqh/tpgLZL/k3CQLic2dUry/quSc8b8o6F3TepmN5vsnF8DIctGlIZLGlpY/ICqJBRe0kEu6Bv/flC0AGDSMO/bHrkAwRkZsGtZrRJJfGi6oLzS/6FWLMJkGc6cDrq4o3F4qvtjcaFwTlAnxZvsQeKDQTLEGkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320538; c=relaxed/simple;
-	bh=OMAk9UOGghL2sUqX40h2Jrbj1lwl32TZ1AeXnBhK4Nk=;
+	s=arc-20240116; t=1711320531; c=relaxed/simple;
+	bh=Vk4HTc/xRaVdkDvNcdfvdHv7Ol25Px/EUYYf8d2Z9es=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S+u9JyDb3zyx/1VpW4d2lwt+AtUocVbNx33q0HwoF5qVkYoJjVQYR145bCdSfJTf2A0KCKE41WTe1iRZR/2Z/3IMdaIfpzNQ23KjpXEdDIky15Rr7h24daufrfHqS1ik4Tb3qO9wTSzH93rvyexa8TAXtEJ0mk1nFg9vq1qdIKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0iAlah1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uAknNExHsyNVflEkFN/DQjXW8U5mKIxYwAeexll/WWYx411bEei62ynjfmxvSpL2Bkdjm49OhJbH1StFS3A+aJv58AEwcqHl5KAC5sZqIa7KT3JHyaBRvwtgi6kukFEZMkHdsOhm5s1P+A1VK6YMpgaGzxTn+1cyITg4caWa/tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7+7wRMs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0iAlah1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B82EDC43399;
-	Sun, 24 Mar 2024 22:48:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7+7wRMs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D467EC433A6;
+	Sun, 24 Mar 2024 22:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320537;
-	bh=OMAk9UOGghL2sUqX40h2Jrbj1lwl32TZ1AeXnBhK4Nk=;
+	s=k20201202; t=1711320530;
+	bh=Vk4HTc/xRaVdkDvNcdfvdHv7Ol25Px/EUYYf8d2Z9es=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B0iAlah1CQ2WQ6y4F6XWKUMiNr8nKJthtAfVz4UeEC/a3unvRZm8jfMZutLahJYKC
-	 YoLMVWUQ1lfp1DiDxg1s02pBb7uTveYBTSgPVP3QPftLNh/dMjGtszUqh+EpiNt4VF
-	 0iXw0fkIJ6N8yz3SeURMVH6q4SZvkHJTX4LBBCYe96SKx5XKQDyZE+WHPv6Ghelydu
-	 tpslXlHkNUqUb/mFtJjEsU0Ux45nOZdz6AgDsrDo7nps1f3ih0ApPcFvY+u48DzF+F
-	 DTO+SzABeaYkwfNxLWgEecyNxPHOY8SRPIC/9idrjc/Jw2ltnOXLm9AA0dY/DUkJHd
-	 JcYTHMPNaXerg==
+	b=j7+7wRMscMY0O3YollNuqTrM8dhJve9wHnQ7syTlL18OalNagT0XyLM+bu46vSnPH
+	 0DnnYGMFidFjfm5F25yTklt/C1M2xauSy6h83dsKlUJtI2Q3NQKhSbhSx85o8RLfjs
+	 BX10a3tCbzbcUVSF6xd5vM6zQLNOrj8fs6hUwerzB9bP+mzxF9LWqwqOjHHxcwQ5lZ
+	 MXm0bF+M0mZZAISPNuBbAoIwDoTuEfLJUJC//iGoTRuh68sp2jlXn/FYwvpgccvV2F
+	 mb33k0Dtq/Ws19CVH+inKyzIXA4wpQyEK6dtzXPd9Ap51VG4tDeNMRVCWrWC+yxxhB
+	 lsUM4+mnRszBA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Kalesh Singh <kaleshsingh@google.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
+Cc: Christoph Hellwig <hch@lst.de>,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 099/713] rcu/exp: Fix RCU expedited parallel grace period kworker allocation failure recovery
-Date: Sun, 24 Mar 2024 18:37:05 -0400
-Message-ID: <20240324224720.1345309-100-sashal@kernel.org>
+Subject: [PATCH 6.7 092/713] iomap: clear the per-folio dirty bits on all writeback failures
+Date: Sun, 24 Mar 2024 18:36:58 -0400
+Message-ID: <20240324224720.1345309-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,43 +48,69 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit a636c5e6f8fc34be520277e69c7c6ee1d4fc1d17 ]
+[ Upstream commit 7ea1d9b4a840c2dd01d1234663d4a8ef256cfe39 ]
 
-Under CONFIG_RCU_EXP_KTHREAD=y, the nodes initialization for expedited
-grace periods is queued to a kworker. However if the allocation of that
-kworker failed, the nodes initialization is performed synchronously by
-the caller instead.
+write_cache_pages always clear the page dirty bit before calling into the
+file systems, and leaves folios with a writeback failure without the
+dirty bit after return.  We also clear the per-block writeback bits for
+writeback failures unless no I/O has submitted, which will leave the
+folio in an inconsistent state where it doesn't have the folio dirty,
+but one or more per-block dirty bits.  This seems to be due the place
+where the iomap_clear_range_dirty call was inserted into the existing
+not very clearly structured code when adding per-block dirty bit support
+and not actually intentional.  Switch to always clearing the dirty on
+writeback failure.
 
-Now the check for kworker initialization failure relies on the kworker
-pointer to be NULL while its value might actually encapsulate an
-allocation failure error.
-
-Make sure to handle this case.
-
-Reviewed-by: Kalesh Singh <kaleshsingh@google.com>
-Fixes: 9621fbee44df ("rcu: Move expedited grace period (GP) work to RT kthread_worker")
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Fixes: 4ce02c679722 ("iomap: Add per-block dirty state tracking to improve performance")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/20231207072710.176093-2-hch@lst.de
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/tree.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/iomap/buffered-io.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 157f3ca2a9b56..fc318477877ba 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -4747,6 +4747,7 @@ static void __init rcu_start_exp_gp_kworkers(void)
- 	rcu_exp_par_gp_kworker = kthread_create_worker(0, par_gp_kworker_name);
- 	if (IS_ERR_OR_NULL(rcu_exp_par_gp_kworker)) {
- 		pr_err("Failed to create %s!\n", par_gp_kworker_name);
-+		rcu_exp_par_gp_kworker = NULL;
- 		kthread_destroy_worker(rcu_exp_gp_kworker);
- 		return;
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index f72df2babe561..fc5c64712318a 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -1843,16 +1843,10 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+ 	if (unlikely(error)) {
+ 		/*
+ 		 * Let the filesystem know what portion of the current page
+-		 * failed to map. If the page hasn't been added to ioend, it
+-		 * won't be affected by I/O completion and we must unlock it
+-		 * now.
++		 * failed to map.
+ 		 */
+ 		if (wpc->ops->discard_folio)
+ 			wpc->ops->discard_folio(folio, pos);
+-		if (!count) {
+-			folio_unlock(folio);
+-			goto done;
+-		}
  	}
+ 
+ 	/*
+@@ -1861,6 +1855,16 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+ 	 * all the dirty bits in the folio here.
+ 	 */
+ 	iomap_clear_range_dirty(folio, 0, folio_size(folio));
++
++	/*
++	 * If the page hasn't been added to the ioend, it won't be affected by
++	 * I/O completion and we must unlock it now.
++	 */
++	if (error && !count) {
++		folio_unlock(folio);
++		goto done;
++	}
++
+ 	folio_start_writeback(folio);
+ 	folio_unlock(folio);
+ 
 -- 
 2.43.0
 
