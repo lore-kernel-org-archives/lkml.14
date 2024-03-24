@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F52182EF0;
-	Sun, 24 Mar 2024 23:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C73182F08;
+	Sun, 24 Mar 2024 23:49:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324182; cv=none; b=SyL1zDlnl9NSj4JMWkkWT4eu2RgsXAy9l4TRGMwZHnnWwXZTjifsrsDn1Xt6IepKKBipv7KhzF341ohhGL9uC5S9iaMLJREaI312akP5fAgcA30KusRvpSVbHV5iC7WD/Ii53Bixp0Pf3TZy9NPK+OG0an9pdEM9K9QMiponRjw=
+	t=1711324186; cv=none; b=cC0qo4gSkCgC/MeS9g7TjRNObBt6imz9UhF6kAIpYdzDiIfNdxziAR+oWD28c/cTBXh3NJFdemhdHWoOy55JUn6Qm2YTJC354ZEHAADIL6PL4igRWxlrhljaR6NV8wOGncQ/yVqIsAaLiqUmYSSbM/05XE+Knav6AMJYlLnogFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324182; c=relaxed/simple;
-	bh=qmj2KgxguVqrS/xpYluBOAnYcsDcleF5kcZvmiK2JG0=;
+	s=arc-20240116; t=1711324186; c=relaxed/simple;
+	bh=WKRm0SsyDJX7e+dk7G/AvnUAR+AksSTMbih9I2vwC+A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lYXeSQH8uNz6T4dHYvS9g6GNFqAWs9b5Fa2Ap6cF8yaBFtinLkaMkFpZXDJdI2IDuAHHvu7C9N46fE1mGY9fb27rc7lBpR9F/KJEycvdfTLo/twLh9wbuRVqIfYx53COBGCoxzJAmCWdz3P+ws1bOPDyNNIsCxgdQ2/YyusjoT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORXU6Lzt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YhqdnuXcyzeot+j2j0w0p/ksWDdMr1fnH+RuUxwiRanmfAwUu2ukU8yj5CNOhosAidnN77sKun3Om8SywJhk2uggVFkqX5qXGQG3M/QjW6BFdotxs8LpeQgKnLfQRXF2axEU+Z2RIyO753Xf5iZyHqkRiSURvHDWuog60IAyT6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFt9C6jR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORXU6Lzt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11345C433F1;
-	Sun, 24 Mar 2024 23:49:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFt9C6jR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C71C433F1;
+	Sun, 24 Mar 2024 23:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324182;
-	bh=qmj2KgxguVqrS/xpYluBOAnYcsDcleF5kcZvmiK2JG0=;
+	s=k20201202; t=1711324184;
+	bh=WKRm0SsyDJX7e+dk7G/AvnUAR+AksSTMbih9I2vwC+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ORXU6Lzt4+fwhX4UngL7272vhCFo2fFXbK5BrSxJUKmZ9GQLg4RwiSSHSS9P9AnyM
-	 UYvSWU1YoVFENXMjv1yDb72BrbXY8Rkz3b1c0vcXjhByCBvQni3zyv0+o9xcJ5+zjC
-	 /ifpiIABq6MFGSCUUqOQsIKf14s9xqd3uiiiosd3MbuCVG4SxYsxqpo8zk0oInpTTv
-	 1SgoiiVwosgTYO14vz8Zykbf+uAFssyQzgp2NOMGYZK5g4/a78feWd/UN5AeTXJpJ1
-	 WZuE6ghMltSWmjsnT6jNdlhDj+0HNgjRqahys0Ee8F1LVeazMg202lYa4oWypRaKXr
-	 JrS+AxC8jqghQ==
+	b=bFt9C6jRz17Jt31GLn//+F6N4Ik9/1+1ayqEVSEMk3XaFVDvrZ03Yk/7oEfrRGDTJ
+	 S3ZY0d5ubDvYuPV2Gl5R4V9Ktp2rzULyq1kKMKOSCb7aidnkeDcW5cDMxAnDaGpT7j
+	 YQtaEGRG79W2FpFtfnplYJshMzNizZeoDrs87QUeAtyUZHjhtLAy0w/4QjI/v2VJnb
+	 dLr1XbutU0f7lKWLy+nCrdo/F8RBzjIjX6WWE4dc1qheVUNZfU7WVZ9ERXkCEbr8Ry
+	 SFpesB9K6LIeyTq6mbnTm23+SzBCMVwQGg+jxZDkGkZqaRpz5m3zPGO/dOEz7Q9HbS
+	 p3/s+yHm97ikA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	syzbot+c669c1136495a2e7c31f@syzkaller.appspotmail.com,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Jason Xing <kerneljasonxing@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Felix Maurer <fmaurer@redhat.com>,
+	Shigeru Yoshida <syoshida@redhat.com>,
+	Breno Leitao <leitao@debian.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 172/183] packet: annotate data-races around ignore_outgoing
-Date: Sun, 24 Mar 2024 19:46:25 -0400
-Message-ID: <20240324234638.1355609-173-sashal@kernel.org>
+Subject: [PATCH 5.4 174/183] hsr: Handle failures in module init
+Date: Sun, 24 Mar 2024 19:46:27 -0400
+Message-ID: <20240324234638.1355609-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -52,103 +50,59 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Felix Maurer <fmaurer@redhat.com>
 
-[ Upstream commit 6ebfad33161afacb3e1e59ed1c2feefef70f9f97 ]
+[ Upstream commit 3cf28cd492308e5f63ed00b29ea03ca016264376 ]
 
-ignore_outgoing is read locklessly from dev_queue_xmit_nit()
-and packet_getsockopt()
+A failure during registration of the netdev notifier was not handled at
+all. A failure during netlink initialization did not unregister the netdev
+notifier.
 
-Add appropriate READ_ONCE()/WRITE_ONCE() annotations.
+Handle failures of netdev notifier registration and netlink initialization.
+Both functions should only return negative values on failure and thereby
+lead to the hsr module not being loaded.
 
-syzbot reported:
-
-BUG: KCSAN: data-race in dev_queue_xmit_nit / packet_setsockopt
-
-write to 0xffff888107804542 of 1 bytes by task 22618 on cpu 0:
- packet_setsockopt+0xd83/0xfd0 net/packet/af_packet.c:4003
- do_sock_setsockopt net/socket.c:2311 [inline]
- __sys_setsockopt+0x1d8/0x250 net/socket.c:2334
- __do_sys_setsockopt net/socket.c:2343 [inline]
- __se_sys_setsockopt net/socket.c:2340 [inline]
- __x64_sys_setsockopt+0x66/0x80 net/socket.c:2340
- do_syscall_64+0xd3/0x1d0
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-
-read to 0xffff888107804542 of 1 bytes by task 27 on cpu 1:
- dev_queue_xmit_nit+0x82/0x620 net/core/dev.c:2248
- xmit_one net/core/dev.c:3527 [inline]
- dev_hard_start_xmit+0xcc/0x3f0 net/core/dev.c:3547
- __dev_queue_xmit+0xf24/0x1dd0 net/core/dev.c:4335
- dev_queue_xmit include/linux/netdevice.h:3091 [inline]
- batadv_send_skb_packet+0x264/0x300 net/batman-adv/send.c:108
- batadv_send_broadcast_skb+0x24/0x30 net/batman-adv/send.c:127
- batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:392 [inline]
- batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:420 [inline]
- batadv_iv_send_outstanding_bat_ogm_packet+0x3f0/0x4b0 net/batman-adv/bat_iv_ogm.c:1700
- process_one_work kernel/workqueue.c:3254 [inline]
- process_scheduled_works+0x465/0x990 kernel/workqueue.c:3335
- worker_thread+0x526/0x730 kernel/workqueue.c:3416
- kthread+0x1d1/0x210 kernel/kthread.c:388
- ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
-
-value changed: 0x00 -> 0x01
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 27 Comm: kworker/u8:1 Tainted: G        W          6.8.0-syzkaller-08073-g480e035fc4c7 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
-Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
-
-Fixes: fa788d986a3a ("packet: add sockopt to ignore outgoing packets")
-Reported-by: syzbot+c669c1136495a2e7c31f@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/netdev/CANn89i+Z7MfbkBLOv=p7KZ7=K1rKHO4P1OL5LYDCtBiyqsa9oQ@mail.gmail.com/T/#t
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Felix Maurer <fmaurer@redhat.com>
+Reviewed-by: Shigeru Yoshida <syoshida@redhat.com>
+Reviewed-by: Breno Leitao <leitao@debian.org>
+Link: https://lore.kernel.org/r/3ce097c15e3f7ace98fc7fd9bcbf299f092e63d1.1710504184.git.fmaurer@redhat.com
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c         | 2 +-
- net/packet/af_packet.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ net/hsr/hsr_main.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 5e043e6f09476..4f39d97209811 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -1940,7 +1940,7 @@ void dev_queue_xmit_nit(struct sk_buff *skb, struct net_device *dev)
- 	rcu_read_lock();
- again:
- 	list_for_each_entry_rcu(ptype, ptype_list, list) {
--		if (ptype->ignore_outgoing)
-+		if (READ_ONCE(ptype->ignore_outgoing))
- 			continue;
+diff --git a/net/hsr/hsr_main.c b/net/hsr/hsr_main.c
+index 9e389accbfc7e..ea627e532aab8 100644
+--- a/net/hsr/hsr_main.c
++++ b/net/hsr/hsr_main.c
+@@ -113,14 +113,21 @@ static struct notifier_block hsr_nb = {
  
- 		/* Never send packets back to the socket
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 451f9c43b34b8..9fc020fd7ecc1 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -3921,7 +3921,7 @@ packet_setsockopt(struct socket *sock, int level, int optname, char __user *optv
- 		if (val < 0 || val > 1)
- 			return -EINVAL;
+ static int __init hsr_init(void)
+ {
+-	int res;
++	int err;
  
--		po->prot_hook.ignore_outgoing = !!val;
-+		WRITE_ONCE(po->prot_hook.ignore_outgoing, !!val);
- 		return 0;
- 	}
- 	case PACKET_TX_HAS_OFF:
-@@ -4053,7 +4053,7 @@ static int packet_getsockopt(struct socket *sock, int level, int optname,
- 		       0);
- 		break;
- 	case PACKET_IGNORE_OUTGOING:
--		val = po->prot_hook.ignore_outgoing;
-+		val = READ_ONCE(po->prot_hook.ignore_outgoing);
- 		break;
- 	case PACKET_ROLLOVER_STATS:
- 		if (!po->rollover)
+ 	BUILD_BUG_ON(sizeof(struct hsr_tag) != HSR_HLEN);
+ 
+-	register_netdevice_notifier(&hsr_nb);
+-	res = hsr_netlink_init();
++	err = register_netdevice_notifier(&hsr_nb);
++	if (err)
++		return err;
++
++	err = hsr_netlink_init();
++	if (err) {
++		unregister_netdevice_notifier(&hsr_nb);
++		return err;
++	}
+ 
+-	return res;
++	return 0;
+ }
+ 
+ static void __exit hsr_exit(void)
 -- 
 2.43.0
 
