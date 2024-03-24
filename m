@@ -1,185 +1,344 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD3B179646;
-	Sun, 24 Mar 2024 23:40:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080C02801F6;
+	Sun, 24 Mar 2024 23:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323608; cv=none; b=F7ropFOfG9lPZn+JoqBLI0oEAvFsp8WdNFfKGjya9VGXMvlGlE6MuKg2oT0B8tkAsSfaMJOV+FyUn/8WGaDTp9T+0vY9Q4SUYUrne5NS3Ij0dFR8nyKKFjk+1VdOUYRflrcN5gJ+72WQLuR9Fwg6KnQiDVjzxHb/daOiQLpSD5Y=
+	t=1711323632; cv=none; b=UYXrP9YGSeL8cXIplv0WUmz2FqO0S+ysZIiibU3U71XD00GUiClT2NpqImdlS/mW1b4qhPhDBvk4ut2LpVxQ/uXv/1kBwKN7XFtBMihLxt9pvBJxnPhbwYeOQvmrmpQQyIdl8zJZZRzzDaJaQ+zbN47e5VamcfNeIKpTA0+1gbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323608; c=relaxed/simple;
-	bh=UA6yHe7AjiCpnNsB6/awa3N4u3CNokgehRkPBtewLtE=;
+	s=arc-20240116; t=1711323632; c=relaxed/simple;
+	bh=J+kza5llwUr7p0ALHqCiykreV4U0IS3mZ8uq84k+KVc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YyUFWyrm2/MPOBZjwbgdRFtShNhDmIp9kGsEfRPB6gS2ucxzKR49zv6rv9JkJXS3+VT00leC7X5kSxgZLRGs2C8QNV/88qQIglleM9Isu/YB0D14NbDiq7GTnkXOoQUMG5NPmIqOdhWr0imaCm9C/yNY+lj4qgmhmqlue5fOW/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sD7ErK0W; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iYRH/MW6lEoNrYtnkpp9yc91x0Ee1H9k94ms+TxWblws0W/yzEU3gALpPndDDWA+RCkViZVgYAttSryyRohOSYTLbSTOT82MfAKMsduXlVI62fY5htrW2GWZdBLcN5e38UN0WRDOGuL8Ph8Mthr1gGssaRTXp9VE+LLj1JJn7mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQhydWND; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sD7ErK0W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288C3C433C7;
-	Sun, 24 Mar 2024 23:40:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQhydWND"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 593BCC43390;
+	Sun, 24 Mar 2024 23:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323607;
-	bh=UA6yHe7AjiCpnNsB6/awa3N4u3CNokgehRkPBtewLtE=;
+	s=k20201202; t=1711323630;
+	bh=J+kza5llwUr7p0ALHqCiykreV4U0IS3mZ8uq84k+KVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sD7ErK0WhDWhD639FPdXrDlRrTBw5vpjS/t0DbAs7KX9xAUnK/tL0m7p0Jve/z6Q/
-	 HPN5fDMog8PgDWZX6Grdp4/X1mroYfRqJKNX73RV26r/63tjut7OUs8c8ZGd+6gQIW
-	 HBY2IRqCY0kuVlgJnoP2xnWUdg3k26BH5irD9f+C7zxt+sYUUZZSSWf7s/3mxytanS
-	 XJVJFWXSCjo+IC4NbM+dYZri5i1G38alrP2Fkjv18G4eTbqA1u+BFpeW2NNexM144V
-	 D9pvW7/P2fVdAjrwS9hrmOSRRS/oeQGUA4bu58uz2A5BCtF3UUdZKRAAzkaDu9JCjT
-	 FOwOuYNLRvDxA==
+	b=aQhydWNDKs/dGOn8VrUJl5b/KRokv5+CqzWDfrvryfUq64s9sT0pi79WH5k91YCA9
+	 Q0bTfnc9bHdgwWvN5PyEdC//hyxdl7szV8s+GABLM5QeipVLQDWjJMQhknq3daeV5n
+	 nMOVMlsu2hTk2oeX6bBIwe0XgIeqEZa9TVUwGoFbZsz8K7qjOUhnSal9gXbpGcZk/w
+	 SDPaO9oYmysm3rM5i6cLp6XB7sRnSUFu3peqpaq2H88vhgu2gBkIzo6BPeD7lSqjYz
+	 tfz3Kpfn2W45VVpwxJVMEQw9LH/pGHrNUYRYwNWLBwoBLq5DuQ1ewQVyQNxvwtsBdq
+	 GkEm/4zYU1L0A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 314/317] net: dsa: mt7530: fix handling of all link-local frames
-Date: Sun, 24 Mar 2024 19:34:54 -0400
-Message-ID: <20240324233458.1352854-315-sashal@kernel.org>
+Subject: [PATCH 5.10 002/238] io_uring: drop any code related to SCM_RIGHTS
+Date: Sun, 24 Mar 2024 19:36:30 -0400
+Message-ID: <20240324234027.1354210-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
-References: <20240324233458.1352854-1-sashal@kernel.org>
+In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
+References: <20240324234027.1354210-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 69ddba9d170bdaee1dc0eb4ced38d7e4bb7b92af ]
+Commit 6e5e6d274956305f1fc0340522b38f5f5be74bdb upstream.
 
-Currently, the MT753X switches treat frames with :01-0D and :0F MAC DAs as
-regular multicast frames, therefore flooding them to user ports.
+This is dead code after we dropped support for passing io_uring fds
+over SCM_RIGHTS, get rid of it.
 
-On page 205, section "8.6.3 Frame filtering" of the active standard, IEEE
-Std 802.1Q™-2022, it is stated that frames with 01:80:C2:00:00:00-0F as MAC
-DA must only be propagated to C-VLAN and MAC Bridge components. That means
-VLAN-aware and VLAN-unaware bridges. On the switch designs with CPU ports,
-these frames are supposed to be processed by the CPU (software). So we make
-the switch only forward them to the CPU port. And if received from a CPU
-port, forward to a single port. The software is responsible of making the
-switch conform to the latter by setting a single port as destination port
-on the special tag.
-
-This switch intellectual property cannot conform to this part of the
-standard fully. Whilst the REV_UN frame tag covers the remaining :04-0D and
-:0F MAC DAs, it also includes :22-FF which the scope of propagation is not
-supposed to be restricted for these MAC DAs.
-
-Set frames with :01-03 MAC DAs to be trapped to the CPU port(s). Add a
-comment for the remaining MAC DAs.
-
-Note that the ingress port must have a PVID assigned to it for the switch
-to forward untagged frames. A PVID is set by default on VLAN-aware and
-VLAN-unaware ports. However, when the network interface that pertains to
-the ingress port is attached to a vlan_filtering enabled bridge, the user
-can remove the PVID assignment from it which would prevent the link-local
-frames from being trapped to the CPU port. I am yet to see a way to forward
-link-local frames while preventing other untagged frames from being
-forwarded too.
-
-Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mt7530.c | 37 +++++++++++++++++++++++++++++++++----
- drivers/net/dsa/mt7530.h | 13 +++++++++++++
- 2 files changed, 46 insertions(+), 4 deletions(-)
+ io_uring/io_uring.c | 211 +-------------------------------------------
+ 1 file changed, 3 insertions(+), 208 deletions(-)
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 834bcb9d44fd7..f36aacebb1bc6 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -993,6 +993,21 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
- 	mutex_unlock(&priv->reg_mutex);
- }
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index a80c808d3a0ef..67a355f27ad80 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -62,7 +62,6 @@
+ #include <linux/net.h>
+ #include <net/sock.h>
+ #include <net/af_unix.h>
+-#include <net/scm.h>
+ #include <linux/anon_inodes.h>
+ #include <linux/sched/mm.h>
+ #include <linux/uaccess.h>
+@@ -440,9 +439,6 @@ struct io_ring_ctx {
  
-+/* On page 205, section "8.6.3 Frame filtering" of the active standard, IEEE Std
-+ * 802.1Q™-2022, it is stated that frames with 01:80:C2:00:00:00-0F as MAC DA
-+ * must only be propagated to C-VLAN and MAC Bridge components. That means
-+ * VLAN-aware and VLAN-unaware bridges. On the switch designs with CPU ports,
-+ * these frames are supposed to be processed by the CPU (software). So we make
-+ * the switch only forward them to the CPU port. And if received from a CPU
-+ * port, forward to a single port. The software is responsible of making the
-+ * switch conform to the latter by setting a single port as destination port on
-+ * the special tag.
-+ *
-+ * This switch intellectual property cannot conform to this part of the standard
-+ * fully. Whilst the REV_UN frame tag covers the remaining :04-0D and :0F MAC
-+ * DAs, it also includes :22-FF which the scope of propagation is not supposed
-+ * to be restricted for these MAC DAs.
-+ */
- static void
- mt753x_trap_frames(struct mt7530_priv *priv)
+ 	/* Keep this last, we don't need it for the fast path */
+ 	struct {
+-		#if defined(CONFIG_UNIX)
+-			struct socket		*ring_sock;
+-		#endif
+ 		/* hashed buffered write serialization */
+ 		struct io_wq_hash		*hash_map;
+ 
+@@ -7976,15 +7972,6 @@ static void io_free_file_tables(struct io_file_table *table)
+ 
+ static void __io_sqe_files_unregister(struct io_ring_ctx *ctx)
  {
-@@ -1007,13 +1022,27 @@ mt753x_trap_frames(struct mt7530_priv *priv)
- 		   MT753X_BPDU_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
- 		   MT753X_BPDU_CPU_ONLY);
+-#if defined(CONFIG_UNIX)
+-	if (ctx->ring_sock) {
+-		struct sock *sock = ctx->ring_sock->sk;
+-		struct sk_buff *skb;
+-
+-		while ((skb = skb_dequeue(&sock->sk_receive_queue)) != NULL)
+-			kfree_skb(skb);
+-	}
+-#else
+ 	int i;
  
--	/* Trap LLDP frames with :0E MAC DA to the CPU port(s) and egress them
--	 * VLAN-untagged.
-+	/* Trap frames with :01 and :02 MAC DAs to the CPU port(s) and egress
-+	 * them VLAN-untagged.
-+	 */
-+	mt7530_rmw(priv, MT753X_RGAC1, MT753X_R02_EG_TAG_MASK |
-+		   MT753X_R02_PORT_FW_MASK | MT753X_R01_EG_TAG_MASK |
-+		   MT753X_R01_PORT_FW_MASK,
-+		   MT753X_R02_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
-+		   MT753X_R02_PORT_FW(MT753X_BPDU_CPU_ONLY) |
-+		   MT753X_R01_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
-+		   MT753X_BPDU_CPU_ONLY);
-+
-+	/* Trap frames with :03 and :0E MAC DAs to the CPU port(s) and egress
-+	 * them VLAN-untagged.
- 	 */
- 	mt7530_rmw(priv, MT753X_RGAC2, MT753X_R0E_EG_TAG_MASK |
--		   MT753X_R0E_PORT_FW_MASK,
-+		   MT753X_R0E_PORT_FW_MASK | MT753X_R03_EG_TAG_MASK |
-+		   MT753X_R03_PORT_FW_MASK,
- 		   MT753X_R0E_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
--		   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY));
-+		   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY) |
-+		   MT753X_R03_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
-+		   MT753X_BPDU_CPU_ONLY);
+ 	for (i = 0; i < ctx->nr_user_files; i++) {
+@@ -7994,7 +7981,6 @@ static void __io_sqe_files_unregister(struct io_ring_ctx *ctx)
+ 		if (file)
+ 			fput(file);
+ 	}
+-#endif
+ 	io_free_file_tables(&ctx->file_table);
+ 	io_rsrc_data_free(ctx->file_data);
+ 	ctx->file_data = NULL;
+@@ -8146,170 +8132,11 @@ static struct io_sq_data *io_get_sq_data(struct io_uring_params *p,
+ 	return sqd;
  }
  
- static int
-diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index 7c0820d341db7..03598f9ae288c 100644
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -72,12 +72,25 @@ enum mt753x_id {
- #define  MT753X_BPDU_EG_TAG(x)		FIELD_PREP(MT753X_BPDU_EG_TAG_MASK, x)
- #define  MT753X_BPDU_PORT_FW_MASK	GENMASK(2, 0)
+-#if defined(CONFIG_UNIX)
+-/*
+- * Ensure the UNIX gc is aware of our file set, so we are certain that
+- * the io_uring can be safely unregistered on process exit, even if we have
+- * loops in the file referencing.
+- */
+-static int __io_sqe_files_scm(struct io_ring_ctx *ctx, int nr, int offset)
+-{
+-	struct sock *sk = ctx->ring_sock->sk;
+-	struct scm_fp_list *fpl;
+-	struct sk_buff *skb;
+-	int i, nr_files;
+-
+-	fpl = kzalloc(sizeof(*fpl), GFP_KERNEL);
+-	if (!fpl)
+-		return -ENOMEM;
+-
+-	skb = alloc_skb(0, GFP_KERNEL);
+-	if (!skb) {
+-		kfree(fpl);
+-		return -ENOMEM;
+-	}
+-
+-	skb->sk = sk;
+-	skb->scm_io_uring = 1;
+-
+-	nr_files = 0;
+-	fpl->user = get_uid(current_user());
+-	for (i = 0; i < nr; i++) {
+-		struct file *file = io_file_from_index(ctx, i + offset);
+-
+-		if (!file)
+-			continue;
+-		fpl->fp[nr_files] = get_file(file);
+-		unix_inflight(fpl->user, fpl->fp[nr_files]);
+-		nr_files++;
+-	}
+-
+-	if (nr_files) {
+-		fpl->max = SCM_MAX_FD;
+-		fpl->count = nr_files;
+-		UNIXCB(skb).fp = fpl;
+-		skb->destructor = unix_destruct_scm;
+-		refcount_add(skb->truesize, &sk->sk_wmem_alloc);
+-		skb_queue_head(&sk->sk_receive_queue, skb);
+-
+-		for (i = 0; i < nr; i++) {
+-			struct file *file = io_file_from_index(ctx, i + offset);
+-
+-			if (file)
+-				fput(file);
+-		}
+-	} else {
+-		kfree_skb(skb);
+-		free_uid(fpl->user);
+-		kfree(fpl);
+-	}
+-
+-	return 0;
+-}
+-
+-/*
+- * If UNIX sockets are enabled, fd passing can cause a reference cycle which
+- * causes regular reference counting to break down. We rely on the UNIX
+- * garbage collection to take care of this problem for us.
+- */
+-static int io_sqe_files_scm(struct io_ring_ctx *ctx)
+-{
+-	unsigned left, total;
+-	int ret = 0;
+-
+-	total = 0;
+-	left = ctx->nr_user_files;
+-	while (left) {
+-		unsigned this_files = min_t(unsigned, left, SCM_MAX_FD);
+-
+-		ret = __io_sqe_files_scm(ctx, this_files, total);
+-		if (ret)
+-			break;
+-		left -= this_files;
+-		total += this_files;
+-	}
+-
+-	if (!ret)
+-		return 0;
+-
+-	while (total < ctx->nr_user_files) {
+-		struct file *file = io_file_from_index(ctx, total);
+-
+-		if (file)
+-			fput(file);
+-		total++;
+-	}
+-
+-	return ret;
+-}
+-#else
+-static int io_sqe_files_scm(struct io_ring_ctx *ctx)
+-{
+-	return 0;
+-}
+-#endif
+-
+ static void io_rsrc_file_put(struct io_ring_ctx *ctx, struct io_rsrc_put *prsrc)
+ {
+ 	struct file *file = prsrc->file;
+-#if defined(CONFIG_UNIX)
+-	struct sock *sock = ctx->ring_sock->sk;
+-	struct sk_buff_head list, *head = &sock->sk_receive_queue;
+-	struct sk_buff *skb;
+-	int i;
  
-+/* Register for :01 and :02 MAC DA frame control */
-+#define MT753X_RGAC1			0x28
-+#define  MT753X_R02_EG_TAG_MASK		GENMASK(24, 22)
-+#define  MT753X_R02_EG_TAG(x)		FIELD_PREP(MT753X_R02_EG_TAG_MASK, x)
-+#define  MT753X_R02_PORT_FW_MASK	GENMASK(18, 16)
-+#define  MT753X_R02_PORT_FW(x)		FIELD_PREP(MT753X_R02_PORT_FW_MASK, x)
-+#define  MT753X_R01_EG_TAG_MASK		GENMASK(8, 6)
-+#define  MT753X_R01_EG_TAG(x)		FIELD_PREP(MT753X_R01_EG_TAG_MASK, x)
-+#define  MT753X_R01_PORT_FW_MASK	GENMASK(2, 0)
-+
- /* Register for :03 and :0E MAC DA frame control */
- #define MT753X_RGAC2			0x2c
- #define  MT753X_R0E_EG_TAG_MASK		GENMASK(24, 22)
- #define  MT753X_R0E_EG_TAG(x)		FIELD_PREP(MT753X_R0E_EG_TAG_MASK, x)
- #define  MT753X_R0E_PORT_FW_MASK	GENMASK(18, 16)
- #define  MT753X_R0E_PORT_FW(x)		FIELD_PREP(MT753X_R0E_PORT_FW_MASK, x)
-+#define  MT753X_R03_EG_TAG_MASK		GENMASK(8, 6)
-+#define  MT753X_R03_EG_TAG(x)		FIELD_PREP(MT753X_R03_EG_TAG_MASK, x)
-+#define  MT753X_R03_PORT_FW_MASK	GENMASK(2, 0)
+-	__skb_queue_head_init(&list);
+-
+-	/*
+-	 * Find the skb that holds this file in its SCM_RIGHTS. When found,
+-	 * remove this entry and rearrange the file array.
+-	 */
+-	skb = skb_dequeue(head);
+-	while (skb) {
+-		struct scm_fp_list *fp;
+-
+-		fp = UNIXCB(skb).fp;
+-		for (i = 0; i < fp->count; i++) {
+-			int left;
+-
+-			if (fp->fp[i] != file)
+-				continue;
+-
+-			unix_notinflight(fp->user, fp->fp[i]);
+-			left = fp->count - 1 - i;
+-			if (left) {
+-				memmove(&fp->fp[i], &fp->fp[i + 1],
+-						left * sizeof(struct file *));
+-			}
+-			fp->count--;
+-			if (!fp->count) {
+-				kfree_skb(skb);
+-				skb = NULL;
+-			} else {
+-				__skb_queue_tail(&list, skb);
+-			}
+-			fput(file);
+-			file = NULL;
+-			break;
+-		}
+-
+-		if (!file)
+-			break;
+-
+-		__skb_queue_tail(&list, skb);
+-
+-		skb = skb_dequeue(head);
+-	}
+-
+-	if (skb_peek(&list)) {
+-		spin_lock_irq(&head->lock);
+-		while ((skb = __skb_dequeue(&list)) != NULL)
+-			__skb_queue_tail(head, skb);
+-		spin_unlock_irq(&head->lock);
+-	}
+-#else
+ 	fput(file);
+-#endif
+ }
  
- enum mt753x_bpdu_port_fw {
- 	MT753X_BPDU_FOLLOW_MFC,
+ static void __io_rsrc_put_work(struct io_rsrc_node *ref_node)
+@@ -8420,12 +8247,6 @@ static int io_sqe_files_register(struct io_ring_ctx *ctx, void __user *arg,
+ 		io_fixed_file_set(io_fixed_file_slot(&ctx->file_table, i), file);
+ 	}
+ 
+-	ret = io_sqe_files_scm(ctx);
+-	if (ret) {
+-		__io_sqe_files_unregister(ctx);
+-		return ret;
+-	}
+-
+ 	io_rsrc_node_switch(ctx, NULL);
+ 	return ret;
+ out_fput:
+@@ -9382,12 +9203,6 @@ static void io_ring_ctx_free(struct io_ring_ctx *ctx)
+ 	WARN_ON_ONCE(!list_empty(&ctx->rsrc_ref_list));
+ 	WARN_ON_ONCE(!llist_empty(&ctx->rsrc_put_llist));
+ 
+-#if defined(CONFIG_UNIX)
+-	if (ctx->ring_sock) {
+-		ctx->ring_sock->file = NULL; /* so that iput() is called */
+-		sock_release(ctx->ring_sock);
+-	}
+-#endif
+ 	WARN_ON_ONCE(!list_empty(&ctx->ltimeout_list));
+ 
+ 	if (ctx->mm_account) {
+@@ -10329,32 +10144,12 @@ static int io_uring_install_fd(struct io_ring_ctx *ctx, struct file *file)
+ /*
+  * Allocate an anonymous fd, this is what constitutes the application
+  * visible backing of an io_uring instance. The application mmaps this
+- * fd to gain access to the SQ/CQ ring details. If UNIX sockets are enabled,
+- * we have to tie this fd to a socket for file garbage collection purposes.
++ * fd to gain access to the SQ/CQ ring details.
+  */
+ static struct file *io_uring_get_file(struct io_ring_ctx *ctx)
+ {
+-	struct file *file;
+-#if defined(CONFIG_UNIX)
+-	int ret;
+-
+-	ret = sock_create_kern(&init_net, PF_UNIX, SOCK_RAW, IPPROTO_IP,
+-				&ctx->ring_sock);
+-	if (ret)
+-		return ERR_PTR(ret);
+-#endif
+-
+-	file = anon_inode_getfile("[io_uring]", &io_uring_fops, ctx,
+-					O_RDWR | O_CLOEXEC);
+-#if defined(CONFIG_UNIX)
+-	if (IS_ERR(file)) {
+-		sock_release(ctx->ring_sock);
+-		ctx->ring_sock = NULL;
+-	} else {
+-		ctx->ring_sock->file = file;
+-	}
+-#endif
+-	return file;
++	return anon_inode_getfile("[io_uring]", &io_uring_fops, ctx,
++				  O_RDWR | O_CLOEXEC);
+ }
+ 
+ static int io_uring_create(unsigned entries, struct io_uring_params *p,
 -- 
 2.43.0
 
