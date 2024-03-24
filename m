@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8760814A611;
-	Sun, 24 Mar 2024 22:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881B014A627;
+	Sun, 24 Mar 2024 22:57:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321024; cv=none; b=lbRj6wui8XEK6yszkTf0w7hOe/HbCVUVaEvXiZwVa62pesWFrJc2VkxR81nu+zjpBSxwL71FaJ0jLDGXTQMPfUsoc0Lk8t6oNVSfczU+O/43GNKi0cb4/n0EX2Lq0iLAomWRYI2+ps+vuzUCDdN4FQCURnhfxegiLFsvOMdpUJE=
+	t=1711321026; cv=none; b=cCLybeVuyDTqrYgqS8amPZBn1VW6iJH5JRQGB+fpsGPGdtoDaxJ4idhCs3BSte0qV1bo8kfHSLmXZg20JFTsZKqrmVL9s/XFm25H7g7dvOkhKClbqhpYD6scOtylJ9rcL+Oelx63GlWukN4FSn7nW8RPDLoJ2cKfKZrSEst4v/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321024; c=relaxed/simple;
-	bh=dVQDY0+MQj8P3UOvJkNC+ZHiMUxAk+kHIchL/X2PMSY=;
+	s=arc-20240116; t=1711321026; c=relaxed/simple;
+	bh=qM1U2wXCsRZOl0yJeh2zTqlMsGMvm1pacSCvynlzoqM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UoP23juF5xAwYU62GO6cwCA7QL+rBXExLgB2DhTQGeTr9Rif+vkB0vnMb2TTitKqXkp7s5JG/jaNsdGIlul5rLYIu4ghgXMhaRR85oykS+MfzbQuSR8ynWJV1DhfDdEmlGVGCq9QiEIeYhCLkSwOhj3rjxB+bwIXcFnrgkP6g0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r1vR6gs8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZV/3B2C4iKQuc/FIUG6eo2EAQ6OR+QShz/234Z/yoaf5YbAM3LuyXTPJFu4HjIOD0wkqkBJhoqeEZxqCbFFgQa88LK6s2r+aFQZg5701f4DhUEF4Guh8TZCjoDimYGJlrSqE5YNg0cVHZf8q02EeJVy5QuYOi4PmeULgXGLcHzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhiiUd6J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1vR6gs8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5630C43394;
-	Sun, 24 Mar 2024 22:57:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhiiUd6J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9654AC433C7;
+	Sun, 24 Mar 2024 22:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321023;
-	bh=dVQDY0+MQj8P3UOvJkNC+ZHiMUxAk+kHIchL/X2PMSY=;
+	s=k20201202; t=1711321026;
+	bh=qM1U2wXCsRZOl0yJeh2zTqlMsGMvm1pacSCvynlzoqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r1vR6gs8qDhnXn9yA+Avk+TcXoac1e7rSzBXlhnfF7oD7kd+GVpupXMGYmDrfjY/r
-	 k8gvZAhEAqw81ebWY0kH5oraGcs16dDZL5dBSG1XQ1/epwLFnEK4IDrIz8+ZDeuNsm
-	 MSLMioocLF8d+SgAXJbzfZQFB+Fd/CnWbJRvq+MGzi5wPR5kWl7HUe/3TAgz+uzQmz
-	 sHs13B/igsCWPd6tVebSb+HmhPuZXK3w68VBz+mDoXcyfgHxpP6vnHIoXBbvElZkHV
-	 I+9lNDHp2XvMJ0hbETdTWaJyxT79ItjXIa33L7wSBggS1GRAVdqVdpq4p9e+Wt9FG5
-	 e6FCOuD7PyTnQ==
+	b=BhiiUd6JZIDlylKX4S/sQRp/pJB6ahQ3i1hDcU1h7pmrwN6p9yD0PKCupSkbqegff
+	 dWJva1clcfMm+zJEMadJQFMAg0bnY1cmASz/7P8zyL4JAMr+H9apu2kkxb6C15SeCv
+	 iTkzkm4bsTCTNkITRu5QGHNf/wCD2y8elWkcsFPFlmqntZ3Rc7t4/QJllrUUSo1myC
+	 5nOJcigQrBdxiZiLYTSGgy1mM9RrrU7poHCBRjbdttmLKA+kJ496g+yJkRdj1waRJ1
+	 WYv5cAKL2cbmT+KZeUEaKD5rGX615NPoOQ80iZ1H0A5/PrPZQqYKCHb8cRQeRqpLpr
+	 WZX9tucJE2zHQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Jorge Mora <jmora1300@gmail.com>,
+	Jorge Mora <mora@netapp.com>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 586/713] f2fs: fix to create selinux label during whiteout initialization
-Date: Sun, 24 Mar 2024 18:45:12 -0400
-Message-ID: <20240324224720.1345309-587-sashal@kernel.org>
+Subject: [PATCH 6.7 589/713] NFSv4.2: fix nfs4_listxattr kernel BUG at mm/usercopy.c:102
+Date: Sun, 24 Mar 2024 18:45:15 -0400
+Message-ID: <20240324224720.1345309-590-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,140 +50,97 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Jorge Mora <jmora1300@gmail.com>
 
-[ Upstream commit 40b2d55e045222dd6de2a54a299f682e0f954b03 ]
+[ Upstream commit 251a658bbfceafb4d58c76b77682c8bf7bcfad65 ]
 
-#generic/700       - output mismatch (see /media/fstests/results//generic/700.out.bad)
-#    --- tests/generic/700.out	2023-03-28 10:40:42.735529223 +0000
-#    +++ /media/fstests/results//generic/700.out.bad	2024-02-06 04:37:56.000000000 +0000
-#    @@ -1,2 +1,4 @@
-#     QA output created by 700
-#    +/mnt/scratch_f2fs/f1: security.selinux: No such attribute
-#    +/mnt/scratch_f2fs/f2: security.selinux: No such attribute
-#     Silence is golden
-#    ...
-#    (Run 'diff -u /media/fstests/tests/generic/700.out /media/fstests/results//generic/700.out.bad'  to see the entire diff)
+A call to listxattr() with a buffer size = 0 returns the actual
+size of the buffer needed for a subsequent call. When size > 0,
+nfs4_listxattr() does not return an error because either
+generic_listxattr() or nfs4_listxattr_nfs4_label() consumes
+exactly all the bytes then size is 0 when calling
+nfs4_listxattr_nfs4_user() which then triggers the following
+kernel BUG:
 
-HINT: You _MAY_ be missing kernel fix:
-      70b589a37e1a xfs: add selinux labels to whiteout inodes
+  [   99.403778] kernel BUG at mm/usercopy.c:102!
+  [   99.404063] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
+  [   99.408463] CPU: 0 PID: 3310 Comm: python3 Not tainted 6.6.0-61.fc40.aarch64 #1
+  [   99.415827] Call trace:
+  [   99.415985]  usercopy_abort+0x70/0xa0
+  [   99.416227]  __check_heap_object+0x134/0x158
+  [   99.416505]  check_heap_object+0x150/0x188
+  [   99.416696]  __check_object_size.part.0+0x78/0x168
+  [   99.416886]  __check_object_size+0x28/0x40
+  [   99.417078]  listxattr+0x8c/0x120
+  [   99.417252]  path_listxattr+0x78/0xe0
+  [   99.417476]  __arm64_sys_listxattr+0x28/0x40
+  [   99.417723]  invoke_syscall+0x78/0x100
+  [   99.417929]  el0_svc_common.constprop.0+0x48/0xf0
+  [   99.418186]  do_el0_svc+0x24/0x38
+  [   99.418376]  el0_svc+0x3c/0x110
+  [   99.418554]  el0t_64_sync_handler+0x120/0x130
+  [   99.418788]  el0t_64_sync+0x194/0x198
+  [   99.418994] Code: aa0003e3 d000a3e0 91310000 97f49bdb (d4210000)
 
-Previously, it missed to create selinux labels during whiteout inode
-initialization, fix this issue.
+Issue is reproduced when generic_listxattr() returns 'system.nfs4_acl',
+thus calling lisxattr() with size = 16 will trigger the bug.
 
-Fixes: 7e01e7ad746b ("f2fs: support RENAME_WHITEOUT")
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Add check on nfs4_listxattr() to return ERANGE error when it is
+called with size > 0 and the return value is greater than size.
+
+Fixes: 012a211abd5d ("NFSv4.2: hook in the user extended attribute handlers")
+Signed-off-by: Jorge Mora <mora@netapp.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/dir.c   |  5 +++--
- fs/f2fs/f2fs.h  |  3 ++-
- fs/f2fs/namei.c | 25 +++++++++++++++++--------
- 3 files changed, 22 insertions(+), 11 deletions(-)
+ fs/nfs/nfs4proc.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-index 042593aed1ec0..1b937f7d0414f 100644
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -830,13 +830,14 @@ int f2fs_do_add_link(struct inode *dir, const struct qstr *name,
- 	return err;
- }
- 
--int f2fs_do_tmpfile(struct inode *inode, struct inode *dir)
-+int f2fs_do_tmpfile(struct inode *inode, struct inode *dir,
-+					struct f2fs_filename *fname)
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 23819a7565085..b2ff8c7a21494 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -10615,29 +10615,33 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
+ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
  {
- 	struct page *page;
- 	int err = 0;
+ 	ssize_t error, error2, error3;
++	size_t left = size;
  
- 	f2fs_down_write(&F2FS_I(inode)->i_sem);
--	page = f2fs_init_inode_metadata(inode, dir, NULL, NULL);
-+	page = f2fs_init_inode_metadata(inode, dir, fname, NULL);
- 	if (IS_ERR(page)) {
- 		err = PTR_ERR(page);
- 		goto fail;
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 007f39ff99b20..655e27e7bef9c 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3572,7 +3572,8 @@ int f2fs_do_add_link(struct inode *dir, const struct qstr *name,
- 			struct inode *inode, nid_t ino, umode_t mode);
- void f2fs_delete_entry(struct f2fs_dir_entry *dentry, struct page *page,
- 			struct inode *dir, struct inode *inode);
--int f2fs_do_tmpfile(struct inode *inode, struct inode *dir);
-+int f2fs_do_tmpfile(struct inode *inode, struct inode *dir,
-+					struct f2fs_filename *fname);
- bool f2fs_empty_dir(struct inode *dir);
- 
- static inline int f2fs_add_link(struct dentry *dentry, struct inode *inode)
-diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-index 7f71bae2c83b5..9cdf3f36d1b90 100644
---- a/fs/f2fs/namei.c
-+++ b/fs/f2fs/namei.c
-@@ -853,7 +853,7 @@ static int f2fs_mknod(struct mnt_idmap *idmap, struct inode *dir,
- 
- static int __f2fs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
- 			  struct file *file, umode_t mode, bool is_whiteout,
--			  struct inode **new_inode)
-+			  struct inode **new_inode, struct f2fs_filename *fname)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(dir);
- 	struct inode *inode;
-@@ -881,7 +881,7 @@ static int __f2fs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
- 	if (err)
- 		goto out;
- 
--	err = f2fs_do_tmpfile(inode, dir);
-+	err = f2fs_do_tmpfile(inode, dir, fname);
- 	if (err)
- 		goto release_out;
- 
-@@ -932,22 +932,24 @@ static int f2fs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
- 	if (!f2fs_is_checkpoint_ready(sbi))
- 		return -ENOSPC;
- 
--	err = __f2fs_tmpfile(idmap, dir, file, mode, false, NULL);
-+	err = __f2fs_tmpfile(idmap, dir, file, mode, false, NULL, NULL);
- 
- 	return finish_open_simple(file, err);
- }
- 
- static int f2fs_create_whiteout(struct mnt_idmap *idmap,
--				struct inode *dir, struct inode **whiteout)
-+				struct inode *dir, struct inode **whiteout,
-+				struct f2fs_filename *fname)
- {
--	return __f2fs_tmpfile(idmap, dir, NULL,
--				S_IFCHR | WHITEOUT_MODE, true, whiteout);
-+	return __f2fs_tmpfile(idmap, dir, NULL, S_IFCHR | WHITEOUT_MODE,
-+						true, whiteout, fname);
- }
- 
- int f2fs_get_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
- 		     struct inode **new_inode)
- {
--	return __f2fs_tmpfile(idmap, dir, NULL, S_IFREG, false, new_inode);
-+	return __f2fs_tmpfile(idmap, dir, NULL, S_IFREG,
-+				false, new_inode, NULL);
- }
- 
- static int f2fs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
-@@ -990,7 +992,14 @@ static int f2fs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+-	error = generic_listxattr(dentry, list, size);
++	error = generic_listxattr(dentry, list, left);
+ 	if (error < 0)
+ 		return error;
+ 	if (list) {
+ 		list += error;
+-		size -= error;
++		left -= error;
  	}
  
- 	if (flags & RENAME_WHITEOUT) {
--		err = f2fs_create_whiteout(idmap, old_dir, &whiteout);
-+		struct f2fs_filename fname;
-+
-+		err = f2fs_setup_filename(old_dir, &old_dentry->d_name,
-+							0, &fname);
-+		if (err)
-+			return err;
-+
-+		err = f2fs_create_whiteout(idmap, old_dir, &whiteout, &fname);
- 		if (err)
- 			return err;
+-	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, size);
++	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, left);
+ 	if (error2 < 0)
+ 		return error2;
+ 
+ 	if (list) {
+ 		list += error2;
+-		size -= error2;
++		left -= error2;
  	}
+ 
+-	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, size);
++	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
+ 	if (error3 < 0)
+ 		return error3;
+ 
+-	return error + error2 + error3;
++	error += error2 + error3;
++	if (size && error > size)
++		return -ERANGE;
++	return error;
+ }
+ 
+ static void nfs4_enable_swap(struct inode *inode)
 -- 
 2.43.0
 
