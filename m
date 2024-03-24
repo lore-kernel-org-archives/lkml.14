@@ -1,44 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCBB148FE7;
-	Sun, 24 Mar 2024 23:15:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B875227E15;
+	Sun, 24 Mar 2024 23:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322116; cv=none; b=t7+fGtfhwY0iyuDCtpJ6VMCTYFZm8nnRS0HphMIFyNcP9zOwGNxCi+nnIcB34JVIy/tUPjMfiGboLaMZPSY/0CRm4DfZ/k7i2hKwhPYbecFXaybXYspiopf1sWaqqkea9EFMI24Bem+gdb8hZf4dPRlmnawpkPX7gsKrF9P3YIg=
+	t=1711322123; cv=none; b=hQU3mYzs6Otbq2KaVewWFUb9ykf0swlt3jCpctAZ0gxFP0tko/gOLQf7UR4BOvgs8LGelcp3StBJzsdH3lqeQzc8Ox8aaTXrSxTfJYiqy6Jw0BJS5jM5BEUoL/y/WvEWV5LIBQIFbj0fTe9P/L8BioXdOHVlEPCK/RakS/tgSJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322116; c=relaxed/simple;
-	bh=fX6AZ+UGxnxJZMDeWsDLp4MrCDnpwCiiPlfQdIChI+0=;
+	s=arc-20240116; t=1711322123; c=relaxed/simple;
+	bh=7SWI23WUhAkr2nCTc7cnWgEVIPpewP0e2j/EvO2BqdA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U3/cj0zxeObYLZZA3tWOWHEphz2gneTWz9mErUDoyKrfu8b319AxGdVyBZR8QmK2kXZiHo1PvCmQkYtHCGmQs6hYdrh4vUVxyp2rRQioeeeHNxmWd4CMaecbhBhfiTSJCVYi27BzHEBvJ9BdkCxvG8KixVW4+3YYOsZQGPQXwyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ot5afAK3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nL/QTx9XN4iHDs3FP2sX9kvsMGU53LwgnYZXBztLezblr7jJIay1hPCofnIwcceDZv/zcBGr8/EKwVf7iJau5cpnrJWii0NSGHqjd2UZvraSmhnfkaq2YA7neLPoF4hoR3TKAZRK/ZwTICZWVUdMzs54sEpqRCjPyCbhgiPniGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHDDKc+n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ot5afAK3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC06C433F1;
-	Sun, 24 Mar 2024 23:15:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHDDKc+n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95CFAC433F1;
+	Sun, 24 Mar 2024 23:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322116;
-	bh=fX6AZ+UGxnxJZMDeWsDLp4MrCDnpwCiiPlfQdIChI+0=;
+	s=k20201202; t=1711322122;
+	bh=7SWI23WUhAkr2nCTc7cnWgEVIPpewP0e2j/EvO2BqdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ot5afAK3BvbRPMuPd2JwU9n0WQr/I3R1DpQgghZP+OmoGZHaoRYpOyuM3Q+MOeiIi
-	 H/1ZulEvXKDGB9CfqMOqDg++gTTWWBYymLGLhGL7UnECvysj1KotTldRcG1fYrwvP5
-	 JKrvHWNMO8e6blzTTvJ7WxUmqjKSmU8c2kJ5cTawo0aYbiMBuVK764m6ExiInyG3T1
-	 72QPJkAaTAFVPqZTIcszZJjgVxa3pcN0RUWlC1XO0VGin+qhLyuwiUJptncUtDRT1H
-	 Jj20yTHYoF0GJCMlQ+wqc6j43n28tYRFdKt8jfRjZvnlv/pkuLtjahNrRK+WDOkz/x
-	 1d6GnWCkQw2aA==
+	b=GHDDKc+n6JDLCHupfHPpgqN6V0yq4uYFPTbcs8DCZkcM2wbFeV7c/xTMl6/gN0+JP
+	 0zuYCStep9pkr+nOWki9arRIBcrklxdvReqEmrCozC52df5PmOJ6cBKWgH7cDVR3MM
+	 4FpSpug4VSRXtZgrlwFBDpirHVkN/a/QcPZHyKEml8a+SoMouhX0EELmE3NaosP02S
+	 1IhK9ymH6O4DRt5djhDWIU42v00bqN1HPcYvvpShLI3+JnJqIJSm65XWoGAIC+rQfw
+	 4y1y6/95rhd3XkkI/LHBo0JXPLW26emLJvGUXWt6cgUK0HbjvuVmBEzbiq0TPPcTPj
+	 4X/9stprLujAg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Haorong Ye <yehaorong@bytedance.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Joerg Roedel <jroedel@suse.de>,
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 191/451] PCI: Make pci_dev_is_disconnected() helper public for other drivers
-Date: Sun, 24 Mar 2024 19:07:47 -0400
-Message-ID: <20240324231207.1351418-192-sashal@kernel.org>
+Subject: [PATCH 6.1 197/451] Bluetooth: hci_qca: don't use IS_ERR_OR_NULL() with gpiod_get_optional()
+Date: Sun, 24 Mar 2024 19:07:53 -0400
+Message-ID: <20240324231207.1351418-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -52,65 +48,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-[ Upstream commit 39714fd73c6b60a8d27bcc5b431afb0828bf4434 ]
+[ Upstream commit 56d074d26c5828773b00b2185dd7e1d08273b8e8 ]
 
-Make pci_dev_is_disconnected() public so that it can be called from
-Intel VT-d driver to quickly fix/workaround the surprise removal
-unplug hang issue for those ATS capable devices on PCIe switch downstream
-hotplug capable ports.
+The optional variants for the gpiod_get() family of functions return NULL
+if the GPIO in question is not associated with this device. They return
+ERR_PTR() on any other error. NULL descriptors are graciously handled by
+GPIOLIB and can be safely passed to any of the GPIO consumer interfaces
+as they will return 0 and act as if the function succeeded. If one is
+using the optional variant, then there's no point in checking for NULL.
 
-Beside pci_device_is_present() function, this one has no config space
-space access, so is light enough to optimize the normal pure surprise
-removal and safe removal flow.
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
-Tested-by: Haorong Ye <yehaorong@bytedance.com>
-Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Link: https://lore.kernel.org/r/20240301080727.3529832-2-haifeng.zhao@linux.intel.com
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Stable-dep-of: 4fc82cd907ac ("iommu/vt-d: Don't issue ATS Invalidation request when device is disconnected")
+Fixes: 6845667146a2 ("Bluetooth: hci_qca: Fix NULL vs IS_ERR_OR_NULL check in qca_serdev_probe")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.h   | 5 -----
- include/linux/pci.h | 5 +++++
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/bluetooth/hci_qca.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index e1d02b7c60294..9950deeb047a7 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -357,11 +357,6 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
- 	return 0;
- }
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 8bfef7f81b417..2acda547f4f3e 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -2254,7 +2254,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
  
--static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
--{
--	return dev->error_state == pci_channel_io_perm_failure;
--}
--
- /* pci_dev priv_flags */
- #define PCI_DEV_ADDED 0
- #define PCI_DPC_RECOVERED 1
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index eccaf1abea79d..f5d89a4b811f1 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2355,6 +2355,11 @@ static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
- 	return NULL;
- }
+ 		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+ 					       GPIOD_OUT_LOW);
+-		if (IS_ERR_OR_NULL(qcadev->bt_en) &&
++		if (IS_ERR(qcadev->bt_en) &&
+ 		    (data->soc_type == QCA_WCN6750 ||
+ 		     data->soc_type == QCA_WCN6855)) {
+ 			dev_err(&serdev->dev, "failed to acquire BT_EN gpio\n");
+@@ -2263,7 +2263,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
  
-+static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
-+{
-+	return dev->error_state == pci_channel_io_perm_failure;
-+}
-+
- void pci_request_acs(void);
- bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags);
- bool pci_acs_path_enabled(struct pci_dev *start,
+ 		qcadev->sw_ctrl = devm_gpiod_get_optional(&serdev->dev, "swctrl",
+ 					       GPIOD_IN);
+-		if (IS_ERR_OR_NULL(qcadev->sw_ctrl) &&
++		if (IS_ERR(qcadev->sw_ctrl) &&
+ 		    (data->soc_type == QCA_WCN6750 ||
+ 		     data->soc_type == QCA_WCN6855 ||
+ 		     data->soc_type == QCA_WCN7850))
+@@ -2285,7 +2285,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 	default:
+ 		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+ 					       GPIOD_OUT_LOW);
+-		if (IS_ERR_OR_NULL(qcadev->bt_en)) {
++		if (IS_ERR(qcadev->bt_en)) {
+ 			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
+ 			power_ctrl_enabled = false;
+ 		}
 -- 
 2.43.0
 
