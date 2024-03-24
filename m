@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963BB1494B2;
-	Sun, 24 Mar 2024 22:56:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210011494A9;
+	Sun, 24 Mar 2024 22:56:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320973; cv=none; b=TUnKYf4235hiUC0tJi1JQB87bSN7czFlPklvyE/+HtW2M9bvQg/7/yfS7Lf8zre8cLlEy+7MhS0HzzPvGYS42VdLLew713pDFVOBINPeqPsZCTmNkqAg0IgO3lYUOF7meoBVOS+pQJHQZpDlqTlPKNF9frknLpns9QLv45NEDzA=
+	t=1711320977; cv=none; b=UJhOygJFrSjuqtGAl3ctynDdEq2EVOR4G+k1SM7rl87+F6ynMc4pCatsnkSrdh7jrFifS8PMsEe6IrKaiNf/AjOmBHclGteLABX2UdVdbTlH6zbxm0qmyJu2Z92B+q9Ay0jiBbxZih0iEx/b+afwXEpOBlJ7qD5jOvQ6J8xe3l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320973; c=relaxed/simple;
-	bh=FfAkLR82zNo8vXgN3x469UcnQzAZ56OYmk6OGgnHwmA=;
+	s=arc-20240116; t=1711320977; c=relaxed/simple;
+	bh=mvaQi4rBDSOnIPPLAudxamhpMufrPv08bZt49wXE+sY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OVwOW/bf1wQ4YMcGwywesqtOyuGALi5+N0cqwOW4EfxUlIYoMvEx9fq+ZZwnOnP1Lcsl6FfBw+qx5TS0kWCNG+mRg1coR9ZfNreJSeWz33Vc6qeK4Ahqnuz3+VDjCggY5pWfQ4Th4XZHkRXdrqi1+mJFzHBkwAcj/NxD5qaW2xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWwG1vxP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QDgWXrWMa86oLrLJrzHJveWA4CwFHY6Nna/D1KxVcsGQVA8cFLD0+6o9uWY/543hzNj+aksTHEY2nTN41JaRuwx/sq13yT3wUX8uHWpyeqlXRJq63GAQGxkR53K/oC069ME+RnTB8cJt/43MNMfliZB6bh0Mnefv06hr8pmLJWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KyEGi7sJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dWwG1vxP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADF70C43609;
-	Sun, 24 Mar 2024 22:56:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KyEGi7sJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60BA3C433F1;
+	Sun, 24 Mar 2024 22:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320973;
-	bh=FfAkLR82zNo8vXgN3x469UcnQzAZ56OYmk6OGgnHwmA=;
+	s=k20201202; t=1711320977;
+	bh=mvaQi4rBDSOnIPPLAudxamhpMufrPv08bZt49wXE+sY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dWwG1vxPwChTraVyU1vlUpFvYpntmxHywL3ZRGuL/ZRw1HDHmn1dWBRsH0OcLNK0h
-	 hKs1/isrDRcSf7rJ7d15qMUW/ZwsrliaGTMYh6VJ6PlRFR9KZCxyBXOnRPdsKuAmA5
-	 TDHieLWOjHjvK8NW+SHZUWwRNZNK/kpAeCjIUliDcNlzq3kH0E7Jv/WmhtBX/0rpa1
-	 NvXI1XBqL/+hlINP3iUWuej2MK3a+jyYmi25TPsma3hChcax1X3KumGq2rvuJA0Sbk
-	 H0fjwYfjuqQE2uSP/4T/N/xKZcnIPgQv5RrgPCrfYwOUWQf689rtiUxaG/8TAq260N
-	 FAE6br1l1wnEA==
+	b=KyEGi7sJ2UWXLrCD9T6TdhQi28nLlq+pXPgoGM061u2iCTx0yhWni2pmuHfpzKV5V
+	 uT4xZZGXT5GLSr7td3T4kPfS5WffwEI9FSofoFYlyJmSqAf+Eo8R9QcxTVFodhzTNE
+	 AqnYBgW5Dy+ERL1FN3YF7yFhoCzN6JpzAa4vjdk5xIHAALUp02LOGl7UOITDmkoI5u
+	 9fjUwXdy1tYQWxbGOZ1GOOcC9f7J2z+qkL9LeDQZLW+nS88xEM7gUaoD9Wgoo8ROgJ
+	 /gMoqX9HqrxucIjfVOY54Y9UwwMO67xRCWZ7tbrG0l+cypjOIuEgAlqHvuqzFj4PvT
+	 0OR4gyfhuJIDQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Maciej Strozek <mstrozek@opensource.cirrus.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
+Cc: Ondrej Jirman <megi@xff.cz>,
 	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 536/713] mfd: cs42l43: Fix wrong GPIO_FN_SEL and SPI_CLK_CONFIG1 defaults
-Date: Sun, 24 Mar 2024 18:44:22 -0400
-Message-ID: <20240324224720.1345309-537-sashal@kernel.org>
+Subject: [PATCH 6.7 540/713] leds: sgm3140: Add missing timer cleanup and flash gpio control
+Date: Sun, 24 Mar 2024 18:44:26 -0400
+Message-ID: <20240324224720.1345309-541-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,46 +48,39 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Maciej Strozek <mstrozek@opensource.cirrus.com>
+From: Ondrej Jirman <megi@xff.cz>
 
-[ Upstream commit 78334c343bef528b911da83a6b041d15a1a72efb ]
+[ Upstream commit 205c29887a333ee4b37596e6533373e38cb23947 ]
 
-Two regs have wrong values in existing fields, change them to match
-the datasheet.
+Enabling strobe and then setting brightness to 0 causes the driver to enter
+invalid state after strobe end timer fires. We should cancel strobe mode
+resources when changing brightness (aka torch mode).
 
-Fixes: ace6d1448138 ("mfd: cs42l43: Add support for cs42l43 core driver")
-
-Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20240301101547.2136948-1-mstrozek@opensource.cirrus.com
+Fixes: cef8ec8cbd21 ("leds: add sgm3140 driver")
+Signed-off-by: Ondrej Jirman <megi@xff.cz>
+Link: https://lore.kernel.org/r/20240217191133.1757553-1-megi@xff.cz
 Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/cs42l43.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/leds/flash/leds-sgm3140.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mfd/cs42l43.c b/drivers/mfd/cs42l43.c
-index 73c88ee6a866c..1cea3f8f467d4 100644
---- a/drivers/mfd/cs42l43.c
-+++ b/drivers/mfd/cs42l43.c
-@@ -84,7 +84,7 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
- 	{ CS42L43_DRV_CTRL_5,				0x136C00C0 },
- 	{ CS42L43_GPIO_CTRL1,				0x00000707 },
- 	{ CS42L43_GPIO_CTRL2,				0x00000000 },
--	{ CS42L43_GPIO_FN_SEL,				0x00000000 },
-+	{ CS42L43_GPIO_FN_SEL,				0x00000004 },
- 	{ CS42L43_MCLK_SRC_SEL,				0x00000000 },
- 	{ CS42L43_SAMPLE_RATE1,				0x00000003 },
- 	{ CS42L43_SAMPLE_RATE2,				0x00000003 },
-@@ -217,7 +217,7 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
- 	{ CS42L43_CTRL_REG,				0x00000006 },
- 	{ CS42L43_FDIV_FRAC,				0x40000000 },
- 	{ CS42L43_CAL_RATIO,				0x00000080 },
--	{ CS42L43_SPI_CLK_CONFIG1,			0x00000000 },
-+	{ CS42L43_SPI_CLK_CONFIG1,			0x00000001 },
- 	{ CS42L43_SPI_CONFIG1,				0x00000000 },
- 	{ CS42L43_SPI_CONFIG2,				0x00000000 },
- 	{ CS42L43_SPI_CONFIG3,				0x00000001 },
+diff --git a/drivers/leds/flash/leds-sgm3140.c b/drivers/leds/flash/leds-sgm3140.c
+index eb648ff54b4e5..db0ac6641954e 100644
+--- a/drivers/leds/flash/leds-sgm3140.c
++++ b/drivers/leds/flash/leds-sgm3140.c
+@@ -114,8 +114,11 @@ static int sgm3140_brightness_set(struct led_classdev *led_cdev,
+ 				"failed to enable regulator: %d\n", ret);
+ 			return ret;
+ 		}
++		gpiod_set_value_cansleep(priv->flash_gpio, 0);
+ 		gpiod_set_value_cansleep(priv->enable_gpio, 1);
+ 	} else {
++		del_timer_sync(&priv->powerdown_timer);
++		gpiod_set_value_cansleep(priv->flash_gpio, 0);
+ 		gpiod_set_value_cansleep(priv->enable_gpio, 0);
+ 		ret = regulator_disable(priv->vin_regulator);
+ 		if (ret) {
 -- 
 2.43.0
 
