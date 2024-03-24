@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F39219542;
-	Sun, 24 Mar 2024 23:35:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CF421955A;
+	Sun, 24 Mar 2024 23:35:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323350; cv=none; b=st3gsPTb74AiTLGGeEl/NH07NL7TdPSdzZPxtKl/Svus16snX1SKblne9sLBa9p9BfKbkblEJpFj9QJ7dbuaDP51PdnpWmv+TwEu88IxAFP0vGI117qYQW2R2jRFuInxC4e0QbonFLGdqgLO2HkFPuSPDDWr4WTvavxNp0myIu4=
+	t=1711323356; cv=none; b=Ev5TAV+pc/BEiEvuAp0zCsDfYGheUMUc3pALEytyJc1tZjUkE3els7oifmfNRAcW5Afd3XSn6q+LNXQJgYp+9vF8ZT1aUOOmgA4jaN/grm/TvF1RAenRTlT2AcWqwNhpUBb79QbkauFmaV/qFd4RNncH+JP8fyKOZVGT+B5crTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323350; c=relaxed/simple;
-	bh=Pym40Mvyrep7NQDgHM/rPOEdnrvgk4WaB7EzFAhrMDA=;
+	s=arc-20240116; t=1711323356; c=relaxed/simple;
+	bh=eeE4eirE6rYXh0hPl5NvtThXQHpMfWfr+Z/2hnUr1nA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AIHN/GmjGgOusZ0WGpHyBD1fQjSWJAjO13V9m0PyXnQ87ITFNiue0QzPMkyOpIKb0jW6qSa6MQYqB9sBzjiFudQix9SWtarM7u3o/Q6ESpcznKuRKB5E0KhdptyYwik++k5kqnJaNe3blzXPoHGJWTSMcWJqKYIsM9Rje9jb9XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKvp1USC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=qY0LNMfz6hksFyTwUEVIUjP8tIuM+9UyDKiYm+hdjbhgxKyeAJBg+flAaNwThjd2oNbYw9+16nlqndqPFAjgp+qR4P5f5926L+z+YAjrzaKaAiweHeHri+i9V+vOAxf6Me1AjodtJ/ZB1mhSDx4usahT7/6iXzQgXdu5NhkDsTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EQ3Rwf9N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKvp1USC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B65C7C433C7;
-	Sun, 24 Mar 2024 23:35:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EQ3Rwf9N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEDC2C433C7;
+	Sun, 24 Mar 2024 23:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323349;
-	bh=Pym40Mvyrep7NQDgHM/rPOEdnrvgk4WaB7EzFAhrMDA=;
+	s=k20201202; t=1711323355;
+	bh=eeE4eirE6rYXh0hPl5NvtThXQHpMfWfr+Z/2hnUr1nA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cKvp1USCugjwSb5gECxI7l3u3cQIdzqFo/JZ9XDB6AQZHvc55lT0+aYhXUi45ymFW
-	 xtNOsa5iqdO93gQ3koE48Ck11jQJf5iRdtqGCSpCPhuxzKZuauY9Sc7lmtoC0Bg6vJ
-	 xd9WWTxmnlQXfhf+mm+9QtyYlp3T0V+sPXP5DA74dGJFAHzYQUvlsv4hncJjkRMabF
-	 aL9ce+izv/nAqCQmc1WSY2xLDdeP6nY4xuqmZU/CCvm5aj+fdcqJA2v6YUuW56oIfT
-	 JnHJqg5qpC7TJ6c12lKr62ohnLAgACW3NTLWc19r0nBrRZjFpnpx8w7jupZ7mHcARk
-	 TT8A/y0Pxi5Vw==
+	b=EQ3Rwf9NsaRt5j7Q/MhdDeSDed2m9m6oFhY/8ON2BPj6wFX6iOr2oV4Aa159Dh7UL
+	 jzZgKeMQptzGKKoJVa7DpxtlhrbQbfnOPuRlg0FqmWg3Y6DMyi7op3MgFvNOU6Ft4E
+	 cpAzkGrImTYAMcHQVbU3wqG/8j+6VcCTC3m8vhGig6rZaMcVA+xGjviCiXdAeJjxRh
+	 D6N0YVI2COEzH6mWnQQ8PaldVNk8a7uIwJN5rDPJpideh6y5LqBRnhP33Ed1ckd50c
+	 /VGXBOX2WxwNIF7EnOXTFf6obfku+WcrOO/QzuGlKlDp40EbbyA5W4/Mxl3fCvoq81
+	 RVxayimi4nlBw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Ingo Molnar <mingo@kernel.org>,
+Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 049/317] sched/fair: Take the scheduling domain into account in select_idle_core()
-Date: Sun, 24 Mar 2024 19:30:29 -0400
-Message-ID: <20240324233458.1352854-50-sashal@kernel.org>
+Subject: [PATCH 5.15 055/317] wifi: wilc1000: fix declarations ordering
+Date: Sun, 24 Mar 2024 19:30:35 -0400
+Message-ID: <20240324233458.1352854-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -45,56 +44,49 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Keisuke Nishimura <keisuke.nishimura@inria.fr>
+From: Alexis Lothoré <alexis.lothore@bootlin.com>
 
-[ Upstream commit 23d04d8c6b8ec339057264659b7834027f3e6a63 ]
+[ Upstream commit 535733e90e5d8912ebeccebb05b354a2d06ff459 ]
 
-When picking a CPU on task wakeup, select_idle_core() has to take
-into account the scheduling domain where the function looks for the CPU.
+Reorder parameters declaration in wilc_parse_join_bss_param to enforce
+reverse christmas tree
 
-This is because the "isolcpus" kernel command line option can remove CPUs
-from the domain to isolate them from other SMT siblings.
-
-This change replaces the set of CPUs allowed to run the task from
-p->cpus_ptr by the intersection of p->cpus_ptr and sched_domain_span(sd)
-which is stored in the 'cpus' argument provided by select_idle_cpu().
-
-Fixes: 9fe1f127b913 ("sched/fair: Merge select_idle_core/cpu()")
-Signed-off-by: Keisuke Nishimura <keisuke.nishimura@inria.fr>
-Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20240110131707.437301-2-keisuke.nishimura@inria.fr
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240105075733.36331-2-alexis.lothore@bootlin.com
+Stable-dep-of: 205c50306acf ("wifi: wilc1000: fix RCU usage in connect path")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/microchip/wilc1000/hif.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index b55d51b4105cd..4a1393405a6fe 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6394,7 +6394,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
- 		if (!available_idle_cpu(cpu)) {
- 			idle = false;
- 			if (*idle_cpu == -1) {
--				if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, p->cpus_ptr)) {
-+				if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, cpus)) {
- 					*idle_cpu = cpu;
- 					break;
- 				}
-@@ -6402,7 +6402,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
- 			}
- 			break;
- 		}
--		if (*idle_cpu == -1 && cpumask_test_cpu(cpu, p->cpus_ptr))
-+		if (*idle_cpu == -1 && cpumask_test_cpu(cpu, cpus))
- 			*idle_cpu = cpu;
- 	}
+diff --git a/drivers/net/wireless/microchip/wilc1000/hif.c b/drivers/net/wireless/microchip/wilc1000/hif.c
+index a7bca0475e1ee..edd51592a82da 100644
+--- a/drivers/net/wireless/microchip/wilc1000/hif.c
++++ b/drivers/net/wireless/microchip/wilc1000/hif.c
+@@ -359,13 +359,13 @@ static void handle_connect_timeout(struct work_struct *work)
+ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
+ 				struct cfg80211_crypto_settings *crypto)
+ {
+-	struct wilc_join_bss_param *param;
+-	struct ieee80211_p2p_noa_attr noa_attr;
+-	u8 rates_len = 0;
++	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
+ 	const u8 *tim_elm, *ssid_elm, *rates_ie, *supp_rates_ie;
+ 	const u8 *ht_ie, *wpa_ie, *wmm_ie, *rsn_ie;
++	struct ieee80211_p2p_noa_attr noa_attr;
++	struct wilc_join_bss_param *param;
++	u8 rates_len = 0;
+ 	int ret;
+-	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
  
+ 	param = kzalloc(sizeof(*param), GFP_KERNEL);
+ 	if (!param)
 -- 
 2.43.0
 
