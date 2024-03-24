@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210011494A9;
-	Sun, 24 Mar 2024 22:56:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402991494C9;
+	Sun, 24 Mar 2024 22:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320977; cv=none; b=UJhOygJFrSjuqtGAl3ctynDdEq2EVOR4G+k1SM7rl87+F6ynMc4pCatsnkSrdh7jrFifS8PMsEe6IrKaiNf/AjOmBHclGteLABX2UdVdbTlH6zbxm0qmyJu2Z92B+q9Ay0jiBbxZih0iEx/b+afwXEpOBlJ7qD5jOvQ6J8xe3l0=
+	t=1711320975; cv=none; b=MCOV1bXpYMyW5wqEuZ6tr5sO6MbkvbtHq2H5Kbs9oSlu/gMBIA5k+ix5fhnorGyfAvTI3Q5p45NBQx4i3Q63PnRqp2pz0oRbtliLJNlfprQxiWYatew5rAYRGAc7vGb86aO94ndR6ixo490p/AC++pfob9K2CDro9m/+7aLguLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320977; c=relaxed/simple;
-	bh=mvaQi4rBDSOnIPPLAudxamhpMufrPv08bZt49wXE+sY=;
+	s=arc-20240116; t=1711320975; c=relaxed/simple;
+	bh=BVxqDOGkjiqVTfeT64Ga21KsBYVD4zSSNx+FiG8WTA4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QDgWXrWMa86oLrLJrzHJveWA4CwFHY6Nna/D1KxVcsGQVA8cFLD0+6o9uWY/543hzNj+aksTHEY2nTN41JaRuwx/sq13yT3wUX8uHWpyeqlXRJq63GAQGxkR53K/oC069ME+RnTB8cJt/43MNMfliZB6bh0Mnefv06hr8pmLJWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KyEGi7sJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lYq+hKoJ0i9EnFB8jWnsWqxQTQRrD38g93oXpFTBfc7l4KyESg4HHW22lzXhGg+9Bnl1LoC9XI1ER/o6HZEAvJdhqHGJEPiOKsZqQfe+B9/WiTVcJPoqyehZWX4pDPwacdyGTSBtQoSmxc10jqBLOixjnHNnk6fQfT7oFKU84PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/RNymGR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KyEGi7sJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60BA3C433F1;
-	Sun, 24 Mar 2024 22:56:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/RNymGR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95BCDC433C7;
+	Sun, 24 Mar 2024 22:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320977;
-	bh=mvaQi4rBDSOnIPPLAudxamhpMufrPv08bZt49wXE+sY=;
+	s=k20201202; t=1711320975;
+	bh=BVxqDOGkjiqVTfeT64Ga21KsBYVD4zSSNx+FiG8WTA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KyEGi7sJ2UWXLrCD9T6TdhQi28nLlq+pXPgoGM061u2iCTx0yhWni2pmuHfpzKV5V
-	 uT4xZZGXT5GLSr7td3T4kPfS5WffwEI9FSofoFYlyJmSqAf+Eo8R9QcxTVFodhzTNE
-	 AqnYBgW5Dy+ERL1FN3YF7yFhoCzN6JpzAa4vjdk5xIHAALUp02LOGl7UOITDmkoI5u
-	 9fjUwXdy1tYQWxbGOZ1GOOcC9f7J2z+qkL9LeDQZLW+nS88xEM7gUaoD9Wgoo8ROgJ
-	 /gMoqX9HqrxucIjfVOY54Y9UwwMO67xRCWZ7tbrG0l+cypjOIuEgAlqHvuqzFj4PvT
-	 0OR4gyfhuJIDQ==
+	b=O/RNymGRjEe9zCrwC2qK/AzHRc36hMRvh3zL8dnFg8hW9Mb6OnJ6Cl0VUIg0ydnIT
+	 YbIs6TNMR6XkGzQVtU1L1q+ZVKRx1JKcyLH0clDsgkaTgFXWm+BFndNf4x0yZeTjzw
+	 iDSxKs8zXV81tJ5wrfzjjzQhliBFafRU9rnQHlA1JrDxwuG/jSrH6WRvmt6Jwq/Lr5
+	 +tJL4GuweOK7YTKx4uYnvfINcxotZ0anv4mFcUhO1cdTggxgxhpGDqzeY42JBxDej2
+	 K4w+GDxKYJ9KAGmd/dp2OQRVLlE5w3CQ+XW/gGqc1RvnDW/9FTrrPiJST5Ld0uTNN8
+	 jk74jsDBkPsYQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ondrej Jirman <megi@xff.cz>,
-	Lee Jones <lee@kernel.org>,
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 540/713] leds: sgm3140: Add missing timer cleanup and flash gpio control
-Date: Sun, 24 Mar 2024 18:44:26 -0400
-Message-ID: <20240324224720.1345309-541-sashal@kernel.org>
+Subject: [PATCH 6.7 538/713] powerpc/embedded6xx: Fix no previous prototype for avr_uart_send() etc.
+Date: Sun, 24 Mar 2024 18:44:24 -0400
+Message-ID: <20240324224720.1345309-539-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,39 +47,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ondrej Jirman <megi@xff.cz>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 205c29887a333ee4b37596e6533373e38cb23947 ]
+[ Upstream commit 20933531be0577cdd782216858c26150dbc7936f ]
 
-Enabling strobe and then setting brightness to 0 causes the driver to enter
-invalid state after strobe end timer fires. We should cancel strobe mode
-resources when changing brightness (aka torch mode).
+Move the prototypes into mpc10x.h which is included by all the relevant
+C files, fixes:
 
-Fixes: cef8ec8cbd21 ("leds: add sgm3140 driver")
-Signed-off-by: Ondrej Jirman <megi@xff.cz>
-Link: https://lore.kernel.org/r/20240217191133.1757553-1-megi@xff.cz
-Signed-off-by: Lee Jones <lee@kernel.org>
+  arch/powerpc/platforms/embedded6xx/ls_uart.c:59:6: error: no previous prototype for 'avr_uart_configure'
+  arch/powerpc/platforms/embedded6xx/ls_uart.c:82:6: error: no previous prototype for 'avr_uart_send'
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20240305123410.3306253-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/flash/leds-sgm3140.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/platforms/embedded6xx/linkstation.c | 3 ---
+ arch/powerpc/platforms/embedded6xx/mpc10x.h      | 3 +++
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/leds/flash/leds-sgm3140.c b/drivers/leds/flash/leds-sgm3140.c
-index eb648ff54b4e5..db0ac6641954e 100644
---- a/drivers/leds/flash/leds-sgm3140.c
-+++ b/drivers/leds/flash/leds-sgm3140.c
-@@ -114,8 +114,11 @@ static int sgm3140_brightness_set(struct led_classdev *led_cdev,
- 				"failed to enable regulator: %d\n", ret);
- 			return ret;
- 		}
-+		gpiod_set_value_cansleep(priv->flash_gpio, 0);
- 		gpiod_set_value_cansleep(priv->enable_gpio, 1);
- 	} else {
-+		del_timer_sync(&priv->powerdown_timer);
-+		gpiod_set_value_cansleep(priv->flash_gpio, 0);
- 		gpiod_set_value_cansleep(priv->enable_gpio, 0);
- 		ret = regulator_disable(priv->vin_regulator);
- 		if (ret) {
+diff --git a/arch/powerpc/platforms/embedded6xx/linkstation.c b/arch/powerpc/platforms/embedded6xx/linkstation.c
+index 9c10aac40c7b1..e265f026eee2a 100644
+--- a/arch/powerpc/platforms/embedded6xx/linkstation.c
++++ b/arch/powerpc/platforms/embedded6xx/linkstation.c
+@@ -99,9 +99,6 @@ static void __init linkstation_init_IRQ(void)
+ 	mpic_init(mpic);
+ }
+ 
+-extern void avr_uart_configure(void);
+-extern void avr_uart_send(const char);
+-
+ static void __noreturn linkstation_restart(char *cmd)
+ {
+ 	local_irq_disable();
+diff --git a/arch/powerpc/platforms/embedded6xx/mpc10x.h b/arch/powerpc/platforms/embedded6xx/mpc10x.h
+index 5ad12023e5628..ebc258fa4858d 100644
+--- a/arch/powerpc/platforms/embedded6xx/mpc10x.h
++++ b/arch/powerpc/platforms/embedded6xx/mpc10x.h
+@@ -156,4 +156,7 @@ int mpc10x_disable_store_gathering(struct pci_controller *hose);
+ /* For MPC107 boards that use the built-in openpic */
+ void mpc10x_set_openpic(void);
+ 
++void avr_uart_configure(void);
++void avr_uart_send(const char c);
++
+ #endif	/* __PPC_KERNEL_MPC10X_H */
 -- 
 2.43.0
 
