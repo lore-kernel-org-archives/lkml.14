@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898AD76413;
-	Sun, 24 Mar 2024 22:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2CA1D1D6E;
+	Sun, 24 Mar 2024 22:48:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320460; cv=none; b=W/rl3mTzlKT7iDstc91rwlqd+8U+ZC6FjDvXTofBekCVmr3BNPrRcjsRk5ZvZGGnXSjkZllAdUFXUMXBC/zQ8eQmptZIQUhlwWa9+DaZ5yKQXusFvVCLsWHncbVnBLLW0/UQzgYeWILbkRYbRU8D7UDS5DszQ3Gk10qlbagMR5U=
+	t=1711320534; cv=none; b=tB54kGbDQgJKVBYAcnFElsCQ9K8gFW39GPblKCYUbBy5AyrbX48lwfSemWn9gr7JDBqh3arU4AbaQoCke7Y1rExxOnMSEIBNDBQQTmzgfAGYmaoxYcj8jn2WMtuCFaTL3d6t9GHm9EJ0MTTohqErpL7cX4u/wWke4SD2Zm5L45g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320460; c=relaxed/simple;
-	bh=VyzNqOFQS62GncXZLcr0NESX0J1naNhNSZOilaqAki8=;
+	s=arc-20240116; t=1711320534; c=relaxed/simple;
+	bh=YuQu28a5lAbixqa1lNZGvoJPKlxcFiJ0I8TNlgF/XUg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d3zPJN9/S8ac35rRp2Am5Bt0V8M2SretlUYo8k/tWoo1I0tdk5bXj/nvktqh+KC/795248Vn2AqeCdkBSVZ68Me+NqzGFQrDoC3xeP8+xPPwv51CqNQ82T8n/fn+j7UVZp64NEU8GAetJWRUyCIe7944TtvCfpww9ynV1TEpTUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BBg2N3Dr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BHQxysr+KA9/kKUKpofoXSG8EopAEubjZzgZeFet/njyFOw+iMPOBe0dpOY18a2ItC58YLm84U69opZGtUJPMunb/D668KElzLHbwezwsj7Rngiraq4gRTvbx8tqdmI0S45d0ZMoyBsUDE1ASuZSe3mfIXa1+hvJUIifxABdwp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTrm2bDG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBg2N3Dr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0AD1C433F1;
-	Sun, 24 Mar 2024 22:47:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTrm2bDG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 018B9C43394;
+	Sun, 24 Mar 2024 22:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320460;
-	bh=VyzNqOFQS62GncXZLcr0NESX0J1naNhNSZOilaqAki8=;
+	s=k20201202; t=1711320533;
+	bh=YuQu28a5lAbixqa1lNZGvoJPKlxcFiJ0I8TNlgF/XUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BBg2N3DrfODrjTdZRQo3YutF4uBw5X0+kL2EoE9fjKU9sZa/tRAE6tlygsIhzwtDo
-	 wOQp4Hq6BVnAbqzNvfpFwY84Oz6TZDctzSScRgIvhez7p4KJd2hwxT2TGJBe8nx39A
-	 bF54l02MWNBv2WcXgbFVshrAt96qSxAwo1k1qa4OvaLQdeUJ3UFaaWCthJtBHSoli9
-	 kV00Rmb9wWQ6INUxy3P3exBsNs873tk0Wm0w3jJbrRbfI+DmKii6SzmSkwepIG5KPY
-	 mKIUKx/MNqlzqVQTFxKJnVvMzdyan+MzXKtrSQtDH9XALcwXHrVuJapoO9peSjJVNa
-	 G4a9nOAh2xdSQ==
+	b=VTrm2bDGeN661ZXQlCzSMFTWsWrvu+j3/0hW+Z2FilGCbq95PX3dF76ifzDxyHtUA
+	 MHvh8932bWmkd0UyaUp+qEZnQi7gxhha6azBcx/yTwYyI500QDcStR/+HiKLXHcxqv
+	 RQhqsbcC7I8W5I3gKEdhaLxry+M16sStACv8TVCAWJAW0lpfhx24ejhAdFe/+NONxi
+	 WkUUnNtTBO1oJJxWN2Lz0uF51ieF8chO4LTs3VYkh2WSqEy8yqZiHQUVhI/MoLdJUY
+	 ApgfOnQoUY2PU/E9bYizQ7GBWt4I24937gu3JIWyKiz52pnRKOYQ6u6fTF0gExqV5+
+	 DnIJ5OF6l/j3Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Xiubo Li <xiubli@redhat.com>,
-	Milind Changire <mchangir@redhat.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
+Cc: Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 019/713] ceph: add ceph_cap_unlink_work to fire check_caps() immediately
-Date: Sun, 24 Mar 2024 18:35:45 -0400
-Message-ID: <20240324224720.1345309-20-sashal@kernel.org>
+Subject: [PATCH 6.7 095/713] io_uring: remove unconditional looping in local task_work handling
+Date: Sun, 24 Mar 2024 18:37:01 -0400
+Message-ID: <20240324224720.1345309-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,166 +47,163 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit dbc347ef7f0c53aa4a5383238a804d7ebbb0b5ca ]
+[ Upstream commit 9fe3eaea4a3530ca34a8d8ff00b1848c528789ca ]
 
-When unlinking a file the check caps could be delayed for more than
-5 seconds, but in MDS side it maybe waiting for the clients to
-release caps.
+If we have a ton of notifications coming in, we can be looping in here
+for a long time. This can be problematic for various reasons, mostly
+because we can starve userspace. If the application is waiting on N
+events, then only re-run if we need more events.
 
-This will use the cap_wq work queue and a dedicated list to help
-fire the check_caps() and dirty buffer flushing immediately.
-
-Link: https://tracker.ceph.com/issues/50223
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Milind Changire <mchangir@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: c0e0d6ba25f1 ("io_uring: add IORING_SETUP_DEFER_TASKRUN")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/caps.c       | 17 +++++++++++++++-
- fs/ceph/mds_client.c | 48 ++++++++++++++++++++++++++++++++++++++++++++
- fs/ceph/mds_client.h |  5 +++++
- 3 files changed, 69 insertions(+), 1 deletion(-)
+ io_uring/io_uring.c | 44 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 29 insertions(+), 15 deletions(-)
 
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index bce3a840f15c2..7fb4aae974124 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -4772,7 +4772,22 @@ int ceph_drop_caps_for_unlink(struct inode *inode)
- 		if (__ceph_caps_dirty(ci)) {
- 			struct ceph_mds_client *mdsc =
- 				ceph_inode_to_fs_client(inode)->mdsc;
--			__cap_delay_requeue_front(mdsc, ci);
-+
-+			doutc(mdsc->fsc->client, "%p %llx.%llx\n", inode,
-+			      ceph_vinop(inode));
-+			spin_lock(&mdsc->cap_unlink_delay_lock);
-+			ci->i_ceph_flags |= CEPH_I_FLUSH;
-+			if (!list_empty(&ci->i_cap_delay_list))
-+				list_del_init(&ci->i_cap_delay_list);
-+			list_add_tail(&ci->i_cap_delay_list,
-+				      &mdsc->cap_unlink_delay_list);
-+			spin_unlock(&mdsc->cap_unlink_delay_lock);
-+
-+			/*
-+			 * Fire the work immediately, because the MDS maybe
-+			 * waiting for caps release.
-+			 */
-+			ceph_queue_cap_unlink_work(mdsc);
- 		}
- 	}
- 	spin_unlock(&ci->i_ceph_lock);
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 2eb66dd7d01b2..950360b07536b 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -2470,6 +2470,50 @@ void ceph_reclaim_caps_nr(struct ceph_mds_client *mdsc, int nr)
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index 763ef8fff614f..b658ba6703cc2 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -1370,7 +1370,20 @@ static void __cold io_move_task_work_from_local(struct io_ring_ctx *ctx)
  	}
  }
  
-+void ceph_queue_cap_unlink_work(struct ceph_mds_client *mdsc)
+-static int __io_run_local_work(struct io_ring_ctx *ctx, struct io_tw_state *ts)
++static bool io_run_local_work_continue(struct io_ring_ctx *ctx, int events,
++				       int min_events)
 +{
-+	struct ceph_client *cl = mdsc->fsc->client;
-+	if (mdsc->stopping)
-+		return;
-+
-+        if (queue_work(mdsc->fsc->cap_wq, &mdsc->cap_unlink_work)) {
-+                doutc(cl, "caps unlink work queued\n");
-+        } else {
-+                doutc(cl, "failed to queue caps unlink work\n");
-+        }
++	if (llist_empty(&ctx->work_llist))
++		return false;
++	if (events < min_events)
++		return true;
++	if (ctx->flags & IORING_SETUP_TASKRUN_FLAG)
++		atomic_or(IORING_SQ_TASKRUN, &ctx->rings->sq_flags);
++	return false;
 +}
 +
-+static void ceph_cap_unlink_work(struct work_struct *work)
-+{
-+	struct ceph_mds_client *mdsc =
-+		container_of(work, struct ceph_mds_client, cap_unlink_work);
-+	struct ceph_client *cl = mdsc->fsc->client;
-+
-+	doutc(cl, "begin\n");
-+	spin_lock(&mdsc->cap_unlink_delay_lock);
-+	while (!list_empty(&mdsc->cap_unlink_delay_list)) {
-+		struct ceph_inode_info *ci;
-+		struct inode *inode;
-+
-+		ci = list_first_entry(&mdsc->cap_unlink_delay_list,
-+				      struct ceph_inode_info,
-+				      i_cap_delay_list);
-+		list_del_init(&ci->i_cap_delay_list);
-+
-+		inode = igrab(&ci->netfs.inode);
-+		if (inode) {
-+			spin_unlock(&mdsc->cap_unlink_delay_lock);
-+			doutc(cl, "on %p %llx.%llx\n", inode,
-+			      ceph_vinop(inode));
-+			ceph_check_caps(ci, CHECK_CAPS_FLUSH);
-+			iput(inode);
-+			spin_lock(&mdsc->cap_unlink_delay_lock);
-+		}
-+	}
-+	spin_unlock(&mdsc->cap_unlink_delay_lock);
-+	doutc(cl, "done\n");
-+}
-+
- /*
-  * requests
-  */
-@@ -5345,6 +5389,8 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
- 	INIT_LIST_HEAD(&mdsc->cap_delay_list);
- 	INIT_LIST_HEAD(&mdsc->cap_wait_list);
- 	spin_lock_init(&mdsc->cap_delay_lock);
-+	INIT_LIST_HEAD(&mdsc->cap_unlink_delay_list);
-+	spin_lock_init(&mdsc->cap_unlink_delay_lock);
- 	INIT_LIST_HEAD(&mdsc->snap_flush_list);
- 	spin_lock_init(&mdsc->snap_flush_lock);
- 	mdsc->last_cap_flush_tid = 1;
-@@ -5353,6 +5399,7 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
- 	spin_lock_init(&mdsc->cap_dirty_lock);
- 	init_waitqueue_head(&mdsc->cap_flushing_wq);
- 	INIT_WORK(&mdsc->cap_reclaim_work, ceph_cap_reclaim_work);
-+	INIT_WORK(&mdsc->cap_unlink_work, ceph_cap_unlink_work);
- 	err = ceph_metric_init(&mdsc->metric);
- 	if (err)
- 		goto err_mdsmap;
-@@ -5626,6 +5673,7 @@ void ceph_mdsc_close_sessions(struct ceph_mds_client *mdsc)
- 	ceph_cleanup_global_and_empty_realms(mdsc);
++static int __io_run_local_work(struct io_ring_ctx *ctx, struct io_tw_state *ts,
++			       int min_events)
+ {
+ 	struct llist_node *node;
+ 	unsigned int loops = 0;
+@@ -1399,18 +1412,20 @@ static int __io_run_local_work(struct io_ring_ctx *ctx, struct io_tw_state *ts)
+ 	}
+ 	loops++;
  
- 	cancel_work_sync(&mdsc->cap_reclaim_work);
-+	cancel_work_sync(&mdsc->cap_unlink_work);
- 	cancel_delayed_work_sync(&mdsc->delayed_work); /* cancel timer */
- 
- 	doutc(cl, "done\n");
-diff --git a/fs/ceph/mds_client.h b/fs/ceph/mds_client.h
-index 40560af388272..03f8ff00874f7 100644
---- a/fs/ceph/mds_client.h
-+++ b/fs/ceph/mds_client.h
-@@ -462,6 +462,8 @@ struct ceph_mds_client {
- 	unsigned long    last_renew_caps;  /* last time we renewed our caps */
- 	struct list_head cap_delay_list;   /* caps with delayed release */
- 	spinlock_t       cap_delay_lock;   /* protects cap_delay_list */
-+	struct list_head cap_unlink_delay_list;  /* caps with delayed release for unlink */
-+	spinlock_t       cap_unlink_delay_lock;  /* protects cap_unlink_delay_list */
- 	struct list_head snap_flush_list;  /* cap_snaps ready to flush */
- 	spinlock_t       snap_flush_lock;
- 
-@@ -475,6 +477,8 @@ struct ceph_mds_client {
- 	struct work_struct cap_reclaim_work;
- 	atomic_t	   cap_reclaim_pending;
- 
-+	struct work_struct cap_unlink_work;
+-	if (!llist_empty(&ctx->work_llist))
++	if (io_run_local_work_continue(ctx, ret, min_events))
+ 		goto again;
+ 	if (ts->locked) {
+ 		io_submit_flush_completions(ctx);
+-		if (!llist_empty(&ctx->work_llist))
++		if (io_run_local_work_continue(ctx, ret, min_events))
+ 			goto again;
+ 	}
 +
- 	/*
- 	 * Cap reservations
- 	 *
-@@ -574,6 +578,7 @@ extern void ceph_flush_cap_releases(struct ceph_mds_client *mdsc,
- 				    struct ceph_mds_session *session);
- extern void ceph_queue_cap_reclaim_work(struct ceph_mds_client *mdsc);
- extern void ceph_reclaim_caps_nr(struct ceph_mds_client *mdsc, int nr);
-+extern void ceph_queue_cap_unlink_work(struct ceph_mds_client *mdsc);
- extern int ceph_iterate_session_caps(struct ceph_mds_session *session,
- 				     int (*cb)(struct inode *, int mds, void *),
- 				     void *arg);
+ 	trace_io_uring_local_work_run(ctx, ret, loops);
+ 	return ret;
+ }
+ 
+-static inline int io_run_local_work_locked(struct io_ring_ctx *ctx)
++static inline int io_run_local_work_locked(struct io_ring_ctx *ctx,
++					   int min_events)
+ {
+ 	struct io_tw_state ts = { .locked = true, };
+ 	int ret;
+@@ -1418,20 +1433,20 @@ static inline int io_run_local_work_locked(struct io_ring_ctx *ctx)
+ 	if (llist_empty(&ctx->work_llist))
+ 		return 0;
+ 
+-	ret = __io_run_local_work(ctx, &ts);
++	ret = __io_run_local_work(ctx, &ts, min_events);
+ 	/* shouldn't happen! */
+ 	if (WARN_ON_ONCE(!ts.locked))
+ 		mutex_lock(&ctx->uring_lock);
+ 	return ret;
+ }
+ 
+-static int io_run_local_work(struct io_ring_ctx *ctx)
++static int io_run_local_work(struct io_ring_ctx *ctx, int min_events)
+ {
+ 	struct io_tw_state ts = {};
+ 	int ret;
+ 
+ 	ts.locked = mutex_trylock(&ctx->uring_lock);
+-	ret = __io_run_local_work(ctx, &ts);
++	ret = __io_run_local_work(ctx, &ts, min_events);
+ 	if (ts.locked)
+ 		mutex_unlock(&ctx->uring_lock);
+ 
+@@ -1627,7 +1642,7 @@ static int io_iopoll_check(struct io_ring_ctx *ctx, long min)
+ 		    io_task_work_pending(ctx)) {
+ 			u32 tail = ctx->cached_cq_tail;
+ 
+-			(void) io_run_local_work_locked(ctx);
++			(void) io_run_local_work_locked(ctx, min);
+ 
+ 			if (task_work_pending(current) ||
+ 			    wq_list_empty(&ctx->iopoll_list)) {
+@@ -2470,7 +2485,7 @@ int io_run_task_work_sig(struct io_ring_ctx *ctx)
+ {
+ 	if (!llist_empty(&ctx->work_llist)) {
+ 		__set_current_state(TASK_RUNNING);
+-		if (io_run_local_work(ctx) > 0)
++		if (io_run_local_work(ctx, INT_MAX) > 0)
+ 			return 0;
+ 	}
+ 	if (io_run_task_work() > 0)
+@@ -2538,7 +2553,7 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 	if (!io_allowed_run_tw(ctx))
+ 		return -EEXIST;
+ 	if (!llist_empty(&ctx->work_llist))
+-		io_run_local_work(ctx);
++		io_run_local_work(ctx, min_events);
+ 	io_run_task_work();
+ 	io_cqring_overflow_flush(ctx);
+ 	/* if user messes with these they will just get an early return */
+@@ -2576,11 +2591,10 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 
+ 	trace_io_uring_cqring_wait(ctx, min_events);
+ 	do {
++		int nr_wait = (int) iowq.cq_tail - READ_ONCE(ctx->rings->cq.tail);
+ 		unsigned long check_cq;
+ 
+ 		if (ctx->flags & IORING_SETUP_DEFER_TASKRUN) {
+-			int nr_wait = (int) iowq.cq_tail - READ_ONCE(ctx->rings->cq.tail);
+-
+ 			atomic_set(&ctx->cq_wait_nr, nr_wait);
+ 			set_current_state(TASK_INTERRUPTIBLE);
+ 		} else {
+@@ -2599,7 +2613,7 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 		 */
+ 		io_run_task_work();
+ 		if (!llist_empty(&ctx->work_llist))
+-			io_run_local_work(ctx);
++			io_run_local_work(ctx, nr_wait);
+ 
+ 		/*
+ 		 * Non-local task_work will be run on exit to userspace, but
+@@ -3322,7 +3336,7 @@ static __cold bool io_uring_try_cancel_requests(struct io_ring_ctx *ctx,
+ 
+ 	if ((ctx->flags & IORING_SETUP_DEFER_TASKRUN) &&
+ 	    io_allowed_defer_tw_run(ctx))
+-		ret |= io_run_local_work(ctx) > 0;
++		ret |= io_run_local_work(ctx, INT_MAX) > 0;
+ 	ret |= io_cancel_defer_files(ctx, task, cancel_all);
+ 	mutex_lock(&ctx->uring_lock);
+ 	ret |= io_poll_remove_all(ctx, task, cancel_all);
+@@ -3684,7 +3698,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ 			 * it should handle ownership problems if any.
+ 			 */
+ 			if (ctx->flags & IORING_SETUP_DEFER_TASKRUN)
+-				(void)io_run_local_work_locked(ctx);
++				(void)io_run_local_work_locked(ctx, min_complete);
+ 		}
+ 		mutex_unlock(&ctx->uring_lock);
+ 	}
 -- 
 2.43.0
 
