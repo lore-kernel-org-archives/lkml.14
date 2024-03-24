@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F20482EE;
-	Sun, 24 Mar 2024 22:35:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D5C4D9E3;
+	Sun, 24 Mar 2024 22:35:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319703; cv=none; b=Zm6HlFtw6B5LB6tAbHHJgQws7xZLxfWtfCYv8/UdmpC0c7auyMUKHy8xJTCeWBOcLndPksIBH/WVSibTGiMG9wRkvWtO5ykVzsMAT2WaSkVrpSawVfYErAj36HazHIp/FgVGmyrEBRI168IPK/yy1pQUbXJGHC5Fn8iD2agtwZ4=
+	t=1711319705; cv=none; b=msHSRqlohzZ24PQ10anM6Lukahf/4GCAbT+IosT736BluMBeVMsna4igb23wjqlKGjV5VTCQzBvI4oDRkHQKbPXuh9I8EoRz19XrKWDM12MGOO9qN7jVSWn/6E+cTirf1bgxS11ZD162vHVRj+DRkLsPddTzFfrXmSAxTQbkf0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319703; c=relaxed/simple;
-	bh=l9ny8GqDQj32iNYYIqnbkFSzH/g8eVE5gNxj0kXzuP8=;
+	s=arc-20240116; t=1711319705; c=relaxed/simple;
+	bh=VNKgCdf+8XLDqyA5oqNOYsgu4Nyq48Fer9bqXElncUQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dJU6+EZgVL0QXzQvmiKCoBumf3A7sJqEvY/be+dj9di//Woqgy/7FA85aQS6G89e90oyGLFkhvRencVImrqw5QeoVAChURz/5+f9VmSpN9NU+w/b/P67rtAWkpqCgQhLb7PnxcjmZnWidQE1eKyqUJsxFtOG0fiYJoBMbnq5ERE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJLP1LCD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EVuyZ5tPjxVZ0iUydL0WxGfTBejyDBVkUOcW6Tk6U19PLSvNDMRTZ9zEdGllMeUmWd35K1mvgBxSKnQF6Clc7tWnos5N+CP8A2bdHo91ZDUR6fQu+rEjhEQKaO/WSCE2+fNVJKxOhGlZpU4MPAcIsm1csZqASdZ1sOHsRgZmK5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pg+dLDYb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJLP1LCD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28FF3C43141;
-	Sun, 24 Mar 2024 22:35:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pg+dLDYb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE1E6C43390;
+	Sun, 24 Mar 2024 22:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711319702;
-	bh=l9ny8GqDQj32iNYYIqnbkFSzH/g8eVE5gNxj0kXzuP8=;
+	s=k20201202; t=1711319704;
+	bh=VNKgCdf+8XLDqyA5oqNOYsgu4Nyq48Fer9bqXElncUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SJLP1LCDjQP7y7uc9trefJRox+5Gv3503nkVtvmd0FqfuyTwU18BQJMErWFWWqc7e
-	 o/Hw8cEG6CqI6l6qCwvI2kw98oGbUq+m3OK/xKemd6Fn1Pf7w6o6mRSLn6FQX2LszT
-	 XrGtPA1bVTugQhFfZDXcdCGNcXu+z5BowdqDJM7x/QZb6dW6G6tYNlv5JDv1JpnX9J
-	 B1etjlCocOifxGxR4xGROmxFLEw0jYmOJAG85Gww30pukKw9PIrN/rf3xqmRLyEWQG
-	 98liLEqmerQQxOg26RQjV6VT5YZGI+lbUg6yo8Fr2dvxxida96/BttfgtuUzCMwB7h
-	 TVMt4UAZXWCEA==
+	b=Pg+dLDYbWAMz1BG5G6M8A4hcMF2vvphlJJ2x3atYexdIf2bHBEgYuCf24XsVKfIwJ
+	 rWPcUW2tFuH3QJ4Yaoc6Xqa27z4VugpPkPYqqxJlzbC4bZLzsIrEY8SGrwKpEmDDV+
+	 OrYh1DEsgFutwnSjAqOwqvE5Dt2tioPTOLDBCxVfRjexN5R32j/mmc6sXBIjGInJ2S
+	 Azad9ySTFD73hqo+diEO0fGPQ2Kk+2oatsKrhchPxMjFLZZI7mblKcCmfriHX9B212
+	 ndjcpTfmpjYt2y3tzKtUZvwaTZzS7np3Rzl2BxqwNbN+B9WZkd1Wnc0NNxCXvJ1D+c
+	 AWWrkGeWm1RrA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Tejun Heo <tj@kernel.org>,
 	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 005/715] workqueue: Replace pwq_activate_inactive_work() with [__]pwq_activate_work()
-Date: Sun, 24 Mar 2024 18:23:04 -0400
-Message-ID: <20240324223455.1342824-6-sashal@kernel.org>
+Subject: [PATCH 6.8 007/715] workqueue: Make wq_adjust_max_active() round-robin pwqs while activating
+Date: Sun, 24 Mar 2024 18:23:06 -0400
+Message-ID: <20240324223455.1342824-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
 References: <20240324223455.1342824-1-sashal@kernel.org>
@@ -50,88 +50,77 @@ Content-Transfer-Encoding: 8bit
 
 From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 4c6380305d21e36581b451f7337a36c93b64e050 ]
+[ Upstream commit c5404d4e6df6faba1007544b5f4e62c7c14416dd ]
 
-To prepare for unbound nr_active handling improvements, move work activation
-part of pwq_activate_inactive_work() into __pwq_activate_work() and add
-pwq_activate_work() which tests WORK_STRUCT_INACTIVE and updates nr_active.
+wq_adjust_max_active() needs to activate work items after max_active is
+increased. Previously, it did that by visiting each pwq once activating all
+that could be activated. While this makes sense with per-pwq nr_active,
+nr_active will be shared across multiple pwqs for unbound wqs. Then, we'd
+want to round-robin through pwqs to be fairer.
 
-pwq_activate_first_inactive() and try_to_grab_pending() are updated to use
-pwq_activate_work(). The latter conversion is functionally identical. For
-the former, this conversion adds an unnecessary WORK_STRUCT_INACTIVE
-testing. This is temporary and will be removed by the next patch.
+In preparation, this patch makes wq_adjust_max_active() round-robin pwqs
+while activating. While the activation ordering changes, this shouldn't
+cause user-noticeable behavior changes.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
 Stable-dep-of: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/workqueue.c | 31 +++++++++++++++++++++++++------
- 1 file changed, 25 insertions(+), 6 deletions(-)
+ kernel/workqueue.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
 diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 6d0f64b5918ba..7e1b0238158ea 100644
+index 80733046ee012..1659cd4a36c62 100644
 --- a/kernel/workqueue.c
 +++ b/kernel/workqueue.c
-@@ -1461,16 +1461,36 @@ static bool pwq_is_empty(struct pool_workqueue *pwq)
- 	return !pwq->nr_active && list_empty(&pwq->inactive_works);
- }
- 
--static void pwq_activate_inactive_work(struct work_struct *work)
-+static void __pwq_activate_work(struct pool_workqueue *pwq,
-+				struct work_struct *work)
+@@ -4703,7 +4703,7 @@ static int init_rescuer(struct workqueue_struct *wq)
+  */
+ static void wq_adjust_max_active(struct workqueue_struct *wq)
  {
--	struct pool_workqueue *pwq = get_work_pwq(work);
+-	struct pool_workqueue *pwq;
++	bool activated;
+ 
+ 	lockdep_assert_held(&wq->mutex);
+ 
+@@ -4723,19 +4723,26 @@ static void wq_adjust_max_active(struct workqueue_struct *wq)
+ 	 */
+ 	WRITE_ONCE(wq->max_active, wq->saved_max_active);
+ 
+-	for_each_pwq(pwq, wq) {
+-		unsigned long flags;
 -
- 	trace_workqueue_activate_work(work);
- 	if (list_empty(&pwq->pool->worklist))
- 		pwq->pool->watchdog_ts = jiffies;
- 	move_linked_works(work, &pwq->pool->worklist, NULL);
- 	__clear_bit(WORK_STRUCT_INACTIVE_BIT, work_data_bits(work));
-+}
-+
-+/**
-+ * pwq_activate_work - Activate a work item if inactive
-+ * @pwq: pool_workqueue @work belongs to
-+ * @work: work item to activate
-+ *
-+ * Returns %true if activated. %false if already active.
-+ */
-+static bool pwq_activate_work(struct pool_workqueue *pwq,
-+			      struct work_struct *work)
-+{
-+	struct worker_pool *pool = pwq->pool;
-+
-+	lockdep_assert_held(&pool->lock);
-+
-+	if (!(*work_data_bits(work) & WORK_STRUCT_INACTIVE))
-+		return false;
-+
- 	pwq->nr_active++;
-+	__pwq_activate_work(pwq, work);
-+	return true;
+-		/* this function can be called during early boot w/ irq disabled */
+-		raw_spin_lock_irqsave(&pwq->pool->lock, flags);
+-
+-		while (pwq_activate_first_inactive(pwq))
+-			;
++	/*
++	 * Round-robin through pwq's activating the first inactive work item
++	 * until max_active is filled.
++	 */
++	do {
++		struct pool_workqueue *pwq;
+ 
+-		kick_pool(pwq->pool);
++		activated = false;
++		for_each_pwq(pwq, wq) {
++			unsigned long flags;
+ 
+-		raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
+-	}
++			/* can be called during early boot w/ irq disabled */
++			raw_spin_lock_irqsave(&pwq->pool->lock, flags);
++			if (pwq_activate_first_inactive(pwq)) {
++				activated = true;
++				kick_pool(pwq->pool);
++			}
++			raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
++		}
++	} while (activated);
  }
  
- static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
-@@ -1478,7 +1498,7 @@ static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
- 	struct work_struct *work = list_first_entry(&pwq->inactive_works,
- 						    struct work_struct, entry);
- 
--	pwq_activate_inactive_work(work);
-+	pwq_activate_work(pwq, work);
- }
- 
- /**
-@@ -1616,8 +1636,7 @@ static int try_to_grab_pending(struct work_struct *work, bool is_dwork,
- 		 * management later on and cause stall.  Make sure the work
- 		 * item is activated before grabbing.
- 		 */
--		if (*work_data_bits(work) & WORK_STRUCT_INACTIVE)
--			pwq_activate_inactive_work(work);
-+		pwq_activate_work(pwq, work);
- 
- 		list_del_init(&work->entry);
- 		pwq_dec_nr_in_flight(pwq, *work_data_bits(work));
+ __printf(1, 4)
 -- 
 2.43.0
 
