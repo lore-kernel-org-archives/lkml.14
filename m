@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B530179FB0;
-	Sun, 24 Mar 2024 23:40:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9384217A37B;
+	Sun, 24 Mar 2024 23:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323647; cv=none; b=dX+hjyWBbFnLs1W6G5xYWH8Y46zxG2Y5ad8DSCsbH6WBFMBndiNwsHJOyI91VhilWFdj2m9euDMRTaR8UTuKj6ASnD/WEg/YWwlAjYKIjTcMlATU8VmYGHolOn8z/UUdm3NreROSmwMIweoZznCyQh8w1Sgzn0/JiaHvs5sseq8=
+	t=1711323655; cv=none; b=SmCp/cK0Jnjx2MleUP0L/Qbf4roVPnBylpM1qR1M7RNvOk77RY2o2BzDILIf5a8G5MpSsynwDlkVRgzpjbM7E2sMvmw/hIP9zl9NDOzWbFqS0a2OEIYr1VMZzdVhs1wlM1MkEHZ2LfNDAka1eodxxySPOpcQIDh0v+kj+4i/pAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323647; c=relaxed/simple;
-	bh=Fg21IVBdDngt1etfWcnPSEvzp7Y5DXNt8psD2PSobPY=;
+	s=arc-20240116; t=1711323655; c=relaxed/simple;
+	bh=Cjgf2sMW+/k4oUUOWGb0uZEJXtYf0V9CBZX0SvVIgmo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OMo+9XLUQaVug4SVtbIa3XVk9bFvwtqtFw7tZk5Z59DcFNiPLA1bnHjQetmQm3cBl+HlLPl/+vc+1ygDWTlx85M8hptL6rq/Zb19fyLDBc14hN4dULxBxZ8OpJ35iki35/JrpSrBTw9uk2dOqv8BYUJ5E8dse7uEnvo4rlaN6+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=toZ1DJzr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GEtsgw3zFg1Bw+cNABRup6dzAOkS4dRreOib0UmCgMs9NGKXBXyjKAt/RIfGehgTVqQ++QQWmMIKFLSRrjaM+DdJboMd/Xwsgw5KyUcSDKIU6du3micvPHmd+EFysir0WbLHgAKgjtCIp1Lyg2vUm3nYZJbybclNc7Cdjwhof8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TZgoMHDq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="toZ1DJzr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51235C433C7;
-	Sun, 24 Mar 2024 23:40:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TZgoMHDq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE5AAC433C7;
+	Sun, 24 Mar 2024 23:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323646;
-	bh=Fg21IVBdDngt1etfWcnPSEvzp7Y5DXNt8psD2PSobPY=;
+	s=k20201202; t=1711323654;
+	bh=Cjgf2sMW+/k4oUUOWGb0uZEJXtYf0V9CBZX0SvVIgmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=toZ1DJzr/oAPjR7bv+gznv8iFYQTtX+5vpnQ33zAWbWclWK8avxJeP7L30ynIDxCp
-	 mGgC3qK5bjVBLF2nLi4HG+gjHvqA/EuqaDJBAYYQ7O/XXP3zpC+4RMzJ1nPL/HLZUA
-	 xQy8p42ZdG2THxnNOss1uS/AEOyaLg6bGkC77ktb+OZ32ulGjFLsDXpNIfITWlN1Ul
-	 kDFutl4fHHVt4DBJ5m90hG9ETo/r7pSTUqgcLU4Ocx6BaD/fIkTlsWVJmKmhXWf/Zy
-	 mzbdG8azNG+jm/Gr+Uxvm6DnO8tbCHhszS3eu4lweO0a+FZ7HqUiBMm47tYYYZIUJG
-	 ur+bYfi1ayTdQ==
+	b=TZgoMHDqRvFfwMupmRvVHVv+DjYcaBCM590RBUf8ztiX/WKau2XydHOI+QQA6PIR9
+	 u8CwilfLlUTlVNzl/IbHjRAfZESCWgAnEhijLMOHo87EV2tQXmzKoKo7kliCh6VI4C
+	 ZZG/BtgVBhR5AWV32FK5aAUvM4CapED6qxPj8DFVCTMwBORIOEzv3x449ALyeenGSw
+	 0XE8EKS8TrGHOB8ggQEhxytvRQJI4014rWcD2Tb52lSq/xTPRDJ/2NtpUeHPfTNtDu
+	 1nMN0q/Tdgw5VlKskiOW9SFKOpxg1aZWMwfAa4JhetCTpjUena5/CVNPcanexggG1y
+	 nQSbcE5WPp4Gg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>,
-	Helge Deller <deller@gmx.de>,
+Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 017/238] parisc/ftrace: add missing CONFIG_DYNAMIC_FTRACE check
-Date: Sun, 24 Mar 2024 19:36:45 -0400
-Message-ID: <20240324234027.1354210-18-sashal@kernel.org>
+Subject: [PATCH 5.10 026/238] ASoC: wm8962: Enable both SPKOUTR_ENA and SPKOUTL_ENA in mono mode
+Date: Sun, 24 Mar 2024 19:36:54 -0400
+Message-ID: <20240324234027.1354210-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,40 +48,74 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Max Kellermann <max.kellermann@ionos.com>
+From: Stuart Henderson <stuarth@opensource.cirrus.com>
 
-[ Upstream commit 250f5402e636a5cec9e0e95df252c3d54307210f ]
+[ Upstream commit 6fa849e4d78b880e878138bf238e4fd2bac3c4fa ]
 
-Fixes a bug revealed by -Wmissing-prototypes when
-CONFIG_FUNCTION_GRAPH_TRACER is enabled but not CONFIG_DYNAMIC_FTRACE:
-
- arch/parisc/kernel/ftrace.c:82:5: error: no previous prototype for 'ftrace_enable_ftrace_graph_caller' [-Werror=missing-prototypes]
-    82 | int ftrace_enable_ftrace_graph_caller(void)
-       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- arch/parisc/kernel/ftrace.c:88:5: error: no previous prototype for 'ftrace_disable_ftrace_graph_caller' [-Werror=missing-prototypes]
-    88 | int ftrace_disable_ftrace_graph_caller(void)
-       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
+Link: https://msgid.link/r/20240306161439.1385643-2-stuarth@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/kernel/ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/wm8962.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-index 63e3ecb9da812..8538425cc43e0 100644
---- a/arch/parisc/kernel/ftrace.c
-+++ b/arch/parisc/kernel/ftrace.c
-@@ -81,7 +81,7 @@ void notrace __hot ftrace_function_trampoline(unsigned long parent,
- #endif
- }
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index d6efc85f966b0..030471248e0e4 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -2219,6 +2219,9 @@ SND_SOC_DAPM_PGA_E("HPOUT", SND_SOC_NOPM, 0, 0, NULL, 0, hp_event,
  
--#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+#if defined(CONFIG_DYNAMIC_FTRACE) && defined(CONFIG_FUNCTION_GRAPH_TRACER)
- int ftrace_enable_ftrace_graph_caller(void)
- {
- 	return 0;
+ SND_SOC_DAPM_OUTPUT("HPOUTL"),
+ SND_SOC_DAPM_OUTPUT("HPOUTR"),
++
++SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
++SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
+ };
+ 
+ static const struct snd_soc_dapm_widget wm8962_dapm_spk_mono_widgets[] = {
+@@ -2226,7 +2229,6 @@ SND_SOC_DAPM_MIXER("Speaker Mixer", WM8962_MIXER_ENABLES, 1, 0,
+ 		   spkmixl, ARRAY_SIZE(spkmixl)),
+ SND_SOC_DAPM_MUX_E("Speaker PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
+ 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
+-SND_SOC_DAPM_PGA("Speaker Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
+ SND_SOC_DAPM_OUTPUT("SPKOUT"),
+ };
+ 
+@@ -2241,9 +2243,6 @@ SND_SOC_DAPM_MUX_E("SPKOUTL PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
+ SND_SOC_DAPM_MUX_E("SPKOUTR PGA", WM8962_PWR_MGMT_2, 3, 0, &spkoutr_mux,
+ 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
+ 
+-SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
+-SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
+-
+ SND_SOC_DAPM_OUTPUT("SPKOUTL"),
+ SND_SOC_DAPM_OUTPUT("SPKOUTR"),
+ };
+@@ -2353,12 +2352,18 @@ static const struct snd_soc_dapm_route wm8962_spk_mono_intercon[] = {
+ 	{ "Speaker PGA", "Mixer", "Speaker Mixer" },
+ 	{ "Speaker PGA", "DAC", "DACL" },
+ 
+-	{ "Speaker Output", NULL, "Speaker PGA" },
+-	{ "Speaker Output", NULL, "SYSCLK" },
+-	{ "Speaker Output", NULL, "TOCLK" },
+-	{ "Speaker Output", NULL, "TEMP_SPK" },
++	{ "SPKOUTL Output", NULL, "Speaker PGA" },
++	{ "SPKOUTL Output", NULL, "SYSCLK" },
++	{ "SPKOUTL Output", NULL, "TOCLK" },
++	{ "SPKOUTL Output", NULL, "TEMP_SPK" },
++
++	{ "SPKOUTR Output", NULL, "Speaker PGA" },
++	{ "SPKOUTR Output", NULL, "SYSCLK" },
++	{ "SPKOUTR Output", NULL, "TOCLK" },
++	{ "SPKOUTR Output", NULL, "TEMP_SPK" },
+ 
+-	{ "SPKOUT", NULL, "Speaker Output" },
++	{ "SPKOUT", NULL, "SPKOUTL Output" },
++	{ "SPKOUT", NULL, "SPKOUTR Output" },
+ };
+ 
+ static const struct snd_soc_dapm_route wm8962_spk_stereo_intercon[] = {
 -- 
 2.43.0
 
