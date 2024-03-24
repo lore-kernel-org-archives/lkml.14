@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B681D143C5F;
-	Sun, 24 Mar 2024 22:37:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572801448D9;
+	Sun, 24 Mar 2024 22:37:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319860; cv=none; b=AmV/K4O9JKIOvyj6dvq0apqa0M7QxPF/LJ9HqvQLjjjqa7vRGy4wXXJk6cEE41snDmbmAx0A0cV0NpFY2i1EHq1QqiNFkBsiSxYAHm6FrnKg9NvWl8/t1gXK/ivMNajwPb5FQlBjrV0xFkfvBop+A6+zUHUHDdj8Pu5q/3GpSFI=
+	t=1711319862; cv=none; b=XQ3MWu0nm7fXtt/wY8PzfNWPovkjvoU9/eMDIqBSgzQjjixYRe4nWWpsB1q+Oq+Ku5EWSaLHXXQdqe2OH4pbq2hbia+/YtH/j2rXFbXVrQgdY/waKmB/mi42swwCL6IePmk2lZUzT2MBZD1uXkpBjhnH2dIlFv3PGMTUjgkldo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319860; c=relaxed/simple;
-	bh=RN/Gjmnw+EceYASHDrod4BrDl4PiVcldLWDVe0b9138=;
+	s=arc-20240116; t=1711319862; c=relaxed/simple;
+	bh=U7UUfpnSunlKz2k+7C0ZDRf/QE5Hl7pDxKb9sSrtVZw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SwuJJDL8StOCS26Mo9x8vb0ulG8u5TeGk51ju5IlW+8uCrdA/zBAjsvYQeHu96v6a/IJX8nT32fZbb93JEcr4Kwd0XGeMHjDngAfRYJLVYDvY2RQO8m98fplHaz9mcmGRL1i2JmNYikL0sjtCZEGBTVuB4rN6Ai02pIVQi8nNIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSCkxZ4Y; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=rXxexc/75e7BE5R1kxhNaM0NM3nrZlr++l/l9bl6ghu1bs96r+yIwJBuwhGSG0aXi/8YR5+eBypuC+kzVh+IcrMsDsA0R23s8pY1YCWB2HZ1dPg8iVUSp9Ns0QktMSl3H8JYFmUrTUk9BLKQ5tMOAuLyV4DNNCFl81oapQ7gayY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MHY00jqq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSCkxZ4Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE66CC43390;
-	Sun, 24 Mar 2024 22:37:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MHY00jqq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7397BC43390;
+	Sun, 24 Mar 2024 22:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711319860;
-	bh=RN/Gjmnw+EceYASHDrod4BrDl4PiVcldLWDVe0b9138=;
+	s=k20201202; t=1711319862;
+	bh=U7UUfpnSunlKz2k+7C0ZDRf/QE5Hl7pDxKb9sSrtVZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dSCkxZ4Yr7a4dCWC1uYRvK6OvlvtdYtDVugxSlUpGGXAjfNJdXNYjQ60bLEsHmRwE
-	 GScy7NgVvUsgHla8H75nHeAlOnyFId1BKmKzwr5YSKpopRFsJ+c7bmIZwWU93yKeop
-	 SBm2stQY6XgHix61gv2l+CyOvtkK29U76P48SvjzK4aRPgkivOPXum/5DmBlsnK2cq
-	 +tBpjyy4TEofbuk/6PuoxRygpeDcqda4Wm2dJ1vWVv7AmlBSdVRnSwrDbOgg+RDuiE
-	 +bYkvhQYMcoSj/YXyv6R6A6vRfoEMtr6rQXx5EB1SYlUaK+a/tCi2jxadM+aoBEJkN
-	 53shRrln8SNLA==
+	b=MHY00jqqh2+xD9zV5lhTnLrd62JqMOLBc10EdCADxHLV9oplNPyf7J0Y7+TP6tdK2
+	 YR8R2AC1f3tCL/Xhzn+BSzHQ1WWl9EmQ+olGP8wpiSXirjt2WumIhdh/bGizQ6PR/X
+	 zoltIKYA1rK7XiPGWT6z0dRZ5itHHg3yWJL7JC/+0zcJEsv3P9lmOFWav05Mrs/1kp
+	 GfLcvQEr7oUGUCLDEy7iv9N1rwJwgGVOhPHXZ2uLMwBreuV1cULwN+M6ZqDn8vmEA8
+	 asbBuMtKLD46t10N4OHqsGA+w4djQH/lLMfN8Eexi2sRjI0F7GK1dTWwbuk0DPgyDx
+	 /JymRIKvUI6yg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: John Ogness <john.ogness@linutronix.de>,
-	Petr Mladek <pmladek@suse.com>,
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 164/715] printk: ringbuffer: Skip non-finalized records in panic
-Date: Sun, 24 Mar 2024 18:25:43 -0400
-Message-ID: <20240324223455.1342824-165-sashal@kernel.org>
+Subject: [PATCH 6.8 166/715] pwm: sti: Fix capture for st,pwm-num-chan < st,capture-num-chan
+Date: Sun, 24 Mar 2024 18:25:45 -0400
+Message-ID: <20240324223455.1342824-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
 References: <20240324223455.1342824-1-sashal@kernel.org>
@@ -44,81 +43,62 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: John Ogness <john.ogness@linutronix.de>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit b1c4c67a5e90db8fbdb5b5504fe16e17b564cca8 ]
+[ Upstream commit 5f623835584f1c8d1030666796f40c47a448ce0b ]
 
-Normally a reader will stop once reaching a non-finalized
-record. However, when a panic happens, writers from other CPUs
-(or an interrupted context on the panic CPU) may have been
-writing a record and were unable to finalize it. The panic CPU
-will reserve/commit/finalize its panic records, but these will
-be located after the non-finalized records. This results in
-panic() not flushing the panic messages.
+The driver only used the number of pwm channels to set the pwm_chip's
+npwm member. The result is that if there are more capture channels than
+PWM channels specified in the device tree, only a part of the capture
+channel is usable. Fix that by passing the bigger channel count to the
+pwm framework. This makes it possible that the .apply() callback is
+called with .hwpwm >= pwm_num_devs, catch that case and return an error
+code.
 
-Extend _prb_read_valid() to skip over non-finalized records if
-on the panic CPU.
-
-Fixes: 896fbe20b4e2 ("printk: use the lockless ringbuffer")
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Link: https://lore.kernel.org/r/20240207134103.1357162-11-john.ogness@linutronix.de
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Fixes: c97267ae831d ("pwm: sti: Add PWM capture callback")
+Link: https://lore.kernel.org/r/20240204212043.2951852-2-u.kleine-koenig@pengutronix.de
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk_ringbuffer.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-sti.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index 97ec25d227976..3d98232902cfd 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -2087,6 +2087,10 @@ u64 prb_next_reserve_seq(struct printk_ringbuffer *rb)
-  *
-  * On failure @seq is updated to a record that is not yet available to the
-  * reader, but it will be the next record available to the reader.
-+ *
-+ * Note: When the current CPU is in panic, this function will skip over any
-+ *       non-existent/non-finalized records in order to allow the panic CPU
-+ *       to print any and all records that have been finalized.
-  */
- static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
- 			    struct printk_record *r, unsigned int *line_count)
-@@ -2109,8 +2113,28 @@ static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
- 			(*seq)++;
+diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
+index 6cf55cf34d39f..69b1113c6b821 100644
+--- a/drivers/pwm/pwm-sti.c
++++ b/drivers/pwm/pwm-sti.c
+@@ -395,8 +395,17 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
+ static int sti_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			 const struct pwm_state *state)
+ {
++	struct sti_pwm_chip *pc = to_sti_pwmchip(chip);
++	struct sti_pwm_compat_data *cdata = pc->cdata;
++	struct device *dev = pc->dev;
+ 	int err;
  
- 		} else {
--			/* Non-existent/non-finalized record. Must stop. */
--			return false;
-+			/*
-+			 * Non-existent/non-finalized record. Must stop.
-+			 *
-+			 * For panic situations it cannot be expected that
-+			 * non-finalized records will become finalized. But
-+			 * there may be other finalized records beyond that
-+			 * need to be printed for a panic situation. If this
-+			 * is the panic CPU, skip this
-+			 * non-existent/non-finalized record unless it is
-+			 * at or beyond the head, in which case it is not
-+			 * possible to continue.
-+			 *
-+			 * Note that new messages printed on panic CPU are
-+			 * finalized when we are here. The only exception
-+			 * might be the last message without trailing newline.
-+			 * But it would have the sequence number returned
-+			 * by "prb_next_reserve_seq() - 1".
-+			 */
-+			if (this_cpu_in_panic() && ((*seq + 1) < prb_next_reserve_seq(rb)))
-+				(*seq)++;
-+			else
-+				return false;
- 		}
- 	}
++	if (pwm->hwpwm >= cdata->pwm_num_devs) {
++		dev_err(dev, "device %u is not valid for pwm mode\n",
++			pwm->hwpwm);
++		return -EINVAL;
++	}
++
+ 	if (state->polarity != PWM_POLARITY_NORMAL)
+ 		return -EINVAL;
  
+@@ -646,7 +655,7 @@ static int sti_pwm_probe(struct platform_device *pdev)
+ 
+ 	pc->chip.dev = dev;
+ 	pc->chip.ops = &sti_pwm_ops;
+-	pc->chip.npwm = pc->cdata->pwm_num_devs;
++	pc->chip.npwm = max(cdata->pwm_num_devs, cdata->cpt_num_devs);
+ 
+ 	for (i = 0; i < cdata->cpt_num_devs; i++) {
+ 		struct sti_cpt_ddata *ddata = &cdata->ddata[i];
 -- 
 2.43.0
 
