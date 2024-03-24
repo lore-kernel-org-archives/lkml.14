@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F0A14291E;
-	Sun, 24 Mar 2024 23:12:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927721448E8;
+	Sun, 24 Mar 2024 23:12:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321968; cv=none; b=IOXKba29fF/bNMYnxXWe7uK4pRLwHoruo/YvxEPbWJh4VaBepbLvFr4VWJF1B18DWhbiNBwJuQYjBMFRFhdXeD2SryVB+9U05hp3R2kVX2snskMDY4EBbx34E5E8xIkZk/7yvTXQFXesEznWH8AqHVHsnHj2m+xzrqQCiq6+uow=
+	t=1711321957; cv=none; b=nfeo4AKOyxmPEwHR4WJ7KGlRFhCeMGECO5Kb0+lUUVzR/MHVgMJE0yaDKcH9D7ATzAz08OkD2sgmG4fLUqngZy4iy9/Au50SHFUOSVzAyiXV16jq9IdJsvCMDoDVu+ku/CF5HbScLIsV4L0ymXsgfLSSaDvbZ2s1Lk8Yok4g0xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321968; c=relaxed/simple;
-	bh=9VfXSt1NiGcVAed46Ql4jw8lhSZWuC2t0JpuV/8gLi0=;
+	s=arc-20240116; t=1711321957; c=relaxed/simple;
+	bh=ie+Tc0KhPh5wwb6RKvdIyC9JkGOdmJhObcTYVygG/wU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r1QHnoZy/mIx/VH+Eki+bYCm/WX7ocDcEFoRJ3/GbFkwMfguCIZRkrdluXnTiFh11FBfegM6RNZ0U91zaTPTAXoBvTdH96qFN7yx41VY0L/5Ty31J1zUOctj41U5prk8qaceMNZTaBJzL65RFUIYG8i46rOOZKpYbgrSWrL+/70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUTtHwhv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EdmHseCIykqZ2fpGQ1nz9zAYawE7lVoTjfzYCm8HEdUN8N2e2cF5geRjGUgw9Qq8UfxMA7Y0daihAV9NLUprNqYroSc7Fh2+C9wyHQznsOdc0qqwZXxCjp/apVPtI/15VyFzMt0BY4G8P/J3Jm2UXy/7neW8c21W6//1olby0DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ouIozN6v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUTtHwhv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E75C43394;
-	Sun, 24 Mar 2024 23:12:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ouIozN6v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB0EC433C7;
+	Sun, 24 Mar 2024 23:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321967;
-	bh=9VfXSt1NiGcVAed46Ql4jw8lhSZWuC2t0JpuV/8gLi0=;
+	s=k20201202; t=1711321956;
+	bh=ie+Tc0KhPh5wwb6RKvdIyC9JkGOdmJhObcTYVygG/wU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AUTtHwhviq+I1zNT+ZOL0sLwIy/35gB2xiJ1Qf3gCXnDbfSkoO4dw7tuAaSa2k03Z
-	 gFqLcU/N53g3W9tyIwo32+mEyRznYR8eMC5RtgjcNffIKu8+R+EDkbMPA8yEDuWXg+
-	 RyLWawwXccYp2B7U+tgC1jle6DSWNBO++HQlIm6cpE0dUq6zRZHI1CI/IXy094DBJp
-	 I3NX34sPGTT4PpY8f6G4aZWtlVui0QWqKnY0YdPXZl++2TkHsprc75B0fQqaeYnst9
-	 QkjjNs+pJP8ixHOBlTFea+w/kZym5TTSF5Tl+7TBu26unAQ4l/rLCEFY0FVgJqXQSv
-	 1NLCfwYxiSLeQ==
+	b=ouIozN6vuspw4VkPPT1lixBqwkhi7Rov7aM6cFsEcc4owrZ8xRLbKltr5iWzZzx9o
+	 bFFm6xN0eYG6b60B3wrS1F6luas7LB4zy0KwbacmadmQocuqNTHNtEY1NxcXp+sYIk
+	 ko6d/mZS25wCb92Jhyd49zBclm/0VtkxxYdF/TpTBpUrVSwaMOdL53BLwJzJ9hLn3c
+	 2hBFAXrfo99Jq3amoLYK7g3xtFlafF6UHYMxDs9j0fXS0oAUkhY850JgCx8U8HQgdk
+	 3w8eFSxfH3MkkbRdjBEnmm2mV+Qu00gulsqcVCocGfPbjLcFnd2UBAdGwJ2k6PZb6v
+	 AI9i7F8SSSgJg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Chanho Min <chanho.min@lge.com>,
-	Arnd Bergmann <arnd@arndb.de>,
+Cc: Mark Brown <broonie@kernel.org>,
+	Doug Anderson <dianders@chromium.org>,
+	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 039/451] arm64: dts: Fix dtc interrupt_provider warnings
-Date: Sun, 24 Mar 2024 19:05:15 -0400
-Message-ID: <20240324231207.1351418-40-sashal@kernel.org>
+Subject: [PATCH 6.1 028/451] arm64/sve: Lower the maximum allocation for the SVE ptrace regset
+Date: Sun, 24 Mar 2024 19:05:04 -0400
+Message-ID: <20240324231207.1351418-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -52,166 +49,97 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rob Herring <robh@kernel.org>
+From: Mark Brown <broonie@kernel.org>
 
-[ Upstream commit 91adecf911e5df78ea3e8f866e69db2c33416a5c ]
+[ Upstream commit 2813926261e436d33bc74486b51cce60b76edf78 ]
 
-The dtc interrupt_provider warning is off by default. Fix all the warnings
-so it can be enabled.
+Doug Anderson observed that ChromeOS crashes are being reported which
+include failing allocations of order 7 during core dumps due to ptrace
+allocating storage for regsets:
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Reviewed-By: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> #
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Florian Fainelli <florian.fainelli@broadcom.com> #Broadcom
-Acked-by: Chanho Min <chanho.min@lge.com>
-Link: https://lore.kernel.org/r/20240213-arm-dt-cleanups-v1-3-f2dee1292525@kernel.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+  chrome: page allocation failure: order:7,
+          mode:0x40dc0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO),
+          nodemask=(null),cpuset=urgent,mems_allowed=0
+   ...
+  regset_get_alloc+0x1c/0x28
+  elf_core_dump+0x3d8/0xd8c
+  do_coredump+0xeb8/0x1378
+
+with further investigation showing that this is:
+
+   [   66.957385] DOUG: Allocating 279584 bytes
+
+which is the maximum size of the SVE regset. As Doug observes it is not
+entirely surprising that such a large allocation of contiguous memory might
+fail on a long running system.
+
+The SVE regset is currently sized to hold SVE registers with a VQ of
+SVE_VQ_MAX which is 512, substantially more than the architectural maximum
+of 16 which we might see even in a system emulating the limits of the
+architecture. Since we don't expose the size we tell the regset core
+externally let's define ARCH_SVE_VQ_MAX with the actual architectural
+maximum and use that for the regset, we'll still overallocate most of the
+time but much less so which will be helpful even if the core is fixed to
+not require contiguous allocations.
+
+Specify ARCH_SVE_VQ_MAX in terms of the maximum value that can be written
+into ZCR_ELx.LEN (where this is set in the hardware). For consistency
+update the maximum SME vector length to be specified in the same style
+while we are at it.
+
+We could also teach the ptrace core about runtime discoverable regset sizes
+but that would be a more invasive change and this is being observed in
+practical systems.
+
+Reported-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20240213-arm64-sve-ptrace-regset-size-v2-1-c7600ca74b9b@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amazon/alpine-v2.dtsi           | 1 -
- arch/arm64/boot/dts/amazon/alpine-v3.dtsi           | 1 -
- arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi    | 1 +
- arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi | 1 +
- arch/arm64/boot/dts/lg/lg1312.dtsi                  | 1 -
- arch/arm64/boot/dts/lg/lg1313.dtsi                  | 1 -
- arch/arm64/boot/dts/marvell/armada-ap80x.dtsi       | 1 -
- arch/arm64/boot/dts/mediatek/mt8195-demo.dts        | 1 +
- arch/arm64/boot/dts/renesas/ulcb-kf.dtsi            | 4 ++++
- 9 files changed, 7 insertions(+), 5 deletions(-)
+ arch/arm64/include/asm/fpsimd.h | 12 ++++++------
+ arch/arm64/kernel/ptrace.c      |  3 ++-
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amazon/alpine-v2.dtsi b/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
-index 4eb2cd14e00b0..9b6da84deae7a 100644
---- a/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
-+++ b/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
-@@ -145,7 +145,6 @@ pci@fbc00000 {
- 		msix: msix@fbe00000 {
- 			compatible = "al,alpine-msix";
- 			reg = <0x0 0xfbe00000 0x0 0x100000>;
--			interrupt-controller;
- 			msi-controller;
- 			al,msi-base-spi = <160>;
- 			al,msi-num-spis = <160>;
-diff --git a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-index 73a352ea8fd5c..b30014d4dc29c 100644
---- a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-+++ b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-@@ -351,7 +351,6 @@ pcie@fbd00000 {
- 		msix: msix@fbe00000 {
- 			compatible = "al,alpine-msix";
- 			reg = <0x0 0xfbe00000 0x0 0x100000>;
--			interrupt-controller;
- 			msi-controller;
- 			al,msi-base-spi = <336>;
- 			al,msi-num-spis = <959>;
-diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-index fda97c47f4e97..d5778417455c0 100644
---- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-@@ -584,6 +584,7 @@ gpio_g: gpio@660a0000 {
- 			#gpio-cells = <2>;
- 			gpio-controller;
- 			interrupt-controller;
-+			#interrupt-cells = <2>;
- 			interrupts = <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
+index da18413712c04..930b0e6c94622 100644
+--- a/arch/arm64/include/asm/fpsimd.h
++++ b/arch/arm64/include/asm/fpsimd.h
+@@ -36,13 +36,13 @@
+  * When we defined the maximum SVE vector length we defined the ABI so
+  * that the maximum vector length included all the reserved for future
+  * expansion bits in ZCR rather than those just currently defined by
+- * the architecture. While SME follows a similar pattern the fact that
+- * it includes a square matrix means that any allocations that attempt
+- * to cover the maximum potential vector length (such as happen with
+- * the regset used for ptrace) end up being extremely large. Define
+- * the much lower actual limit for use in such situations.
++ * the architecture.  Using this length to allocate worst size buffers
++ * results in excessively large allocations, and this effect is even
++ * more pronounced for SME due to ZA.  Define more suitable VLs for
++ * these situations.
+  */
+-#define SME_VQ_MAX	16
++#define ARCH_SVE_VQ_MAX ((ZCR_ELx_LEN_MASK >> ZCR_ELx_LEN_SHIFT) + 1)
++#define SME_VQ_MAX	((SMCR_ELx_LEN_MASK >> SMCR_ELx_LEN_SHIFT) + 1)
  
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index 8f8c25e51194d..473d7d0ddf369 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -442,6 +442,7 @@ gpio_hsls: gpio@d0000 {
- 			#gpio-cells = <2>;
- 			gpio-controller;
- 			interrupt-controller;
-+			#interrupt-cells = <2>;
- 			interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
- 			gpio-ranges = <&pinmux 0 0 16>,
- 					<&pinmux 16 71 2>,
-diff --git a/arch/arm64/boot/dts/lg/lg1312.dtsi b/arch/arm64/boot/dts/lg/lg1312.dtsi
-index 78ae73d0cf365..98ff17b14b2a5 100644
---- a/arch/arm64/boot/dts/lg/lg1312.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1312.dtsi
-@@ -124,7 +124,6 @@ eth0: ethernet@c1b00000 {
- 	amba {
- 		#address-cells = <2>;
- 		#size-cells = <1>;
--		#interrupt-cells = <3>;
+ struct task_struct;
  
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
-diff --git a/arch/arm64/boot/dts/lg/lg1313.dtsi b/arch/arm64/boot/dts/lg/lg1313.dtsi
-index 2173316573bee..8e9410d8f46c0 100644
---- a/arch/arm64/boot/dts/lg/lg1313.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1313.dtsi
-@@ -124,7 +124,6 @@ eth0: ethernet@c3700000 {
- 	amba {
- 		#address-cells = <2>;
- 		#size-cells = <1>;
--		#interrupt-cells = <3>;
- 
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
-index a06a0a889c43f..73d8803b54d8b 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
-@@ -133,7 +133,6 @@ pmu {
- 
- 			odmi: odmi@300000 {
- 				compatible = "marvell,odmi-controller";
--				interrupt-controller;
- 				msi-controller;
- 				marvell,odmi-frames = <4>;
- 				reg = <0x300000 0x4000>,
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-demo.dts b/arch/arm64/boot/dts/mediatek/mt8195-demo.dts
-index 5117b2e7985af..998c2e78168a6 100644
---- a/arch/arm64/boot/dts/mediatek/mt8195-demo.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-demo.dts
-@@ -111,6 +111,7 @@ mt6360: pmic@34 {
- 		compatible = "mediatek,mt6360";
- 		reg = <0x34>;
- 		interrupt-controller;
-+		#interrupt-cells = <1>;
- 		interrupts-extended = <&pio 101 IRQ_TYPE_EDGE_FALLING>;
- 		interrupt-names = "IRQB";
- 
-diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-index 588b14b66b6fb..f37abfc13fe59 100644
---- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-+++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-@@ -251,6 +251,7 @@ gpio_exp_74: gpio@74 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 		interrupt-parent = <&gpio6>;
- 		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
- 
-@@ -311,6 +312,7 @@ gpio_exp_75: gpio@75 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 		interrupt-parent = <&gpio6>;
- 		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
- 	};
-@@ -331,6 +333,7 @@ gpio_exp_76: gpio@76 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 		interrupt-parent = <&gpio7>;
- 		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
- 	};
-@@ -341,6 +344,7 @@ gpio_exp_77: gpio@77 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-controller;
-+		#interrupt-cells = <2>;
- 		interrupt-parent = <&gpio5>;
- 		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
- 	};
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index e1f6366b7ccdf..d02dd2be17b3b 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1450,7 +1450,8 @@ static const struct user_regset aarch64_regsets[] = {
+ #ifdef CONFIG_ARM64_SVE
+ 	[REGSET_SVE] = { /* Scalable Vector Extension */
+ 		.core_note_type = NT_ARM_SVE,
+-		.n = DIV_ROUND_UP(SVE_PT_SIZE(SVE_VQ_MAX, SVE_PT_REGS_SVE),
++		.n = DIV_ROUND_UP(SVE_PT_SIZE(ARCH_SVE_VQ_MAX,
++					      SVE_PT_REGS_SVE),
+ 				  SVE_VQ_BYTES),
+ 		.size = SVE_VQ_BYTES,
+ 		.align = SVE_VQ_BYTES,
 -- 
 2.43.0
 
