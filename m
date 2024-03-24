@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7B6130AC7;
-	Sun, 24 Mar 2024 23:02:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEA514F131;
+	Sun, 24 Mar 2024 23:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321341; cv=none; b=IfxpfbMOFkuyIk9t3M88rAg18YqaG3jpIPqGbFmZGcKAejY7PZ+kWWwo7n38jfz19j/PHyiXxqqUlfe8YSyUj/j9MHWq7u1N4ZaCm7EMTwfdQMjeWCmR9jK6SHCGAS3tUlysFBpSKqrqUUAThY6kPBhzituUhEOHfgyl6LJD66I=
+	t=1711321348; cv=none; b=gqhGjgZ1gD8A9Y6XArYPow+kc/h0Gfc8OkbM1dfcLhQ0p/NNVATBSxBTorrEjo3nBp+iJSWdZc14KWfNsF3XotMbTzZ0NR74yyuoDMv4NgwsqfQr+aVB96r9l7YNxnbZ8kL65B4kgSgLdZ0Ylv9B+VbxC/C/7BQpEAYkmuecSJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321341; c=relaxed/simple;
-	bh=ArqBZbZhefIxwbraxACefImVik8nTnkU/EWw5Mm15V8=;
+	s=arc-20240116; t=1711321348; c=relaxed/simple;
+	bh=EvH3SPEWqAXMvuGevgVNS69+E2/o6n7RXD3FQR983OI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KfldKy77r16H8aQcFSRbQyTGu7uR2Fb3GUPsUydCB0KNvS/ad9Xx1K4xcBCUZ3H9Xy8Cf598oM8ArqQ8wieSZKzPnU+Gb0xbuoeLY6ZFyUIAAEbZh19f29W7QYEnR8V/DrJjHTpDeOGvgq043/i9/AKMCKCBg70aJ0EJZ+JPcm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7g6Turq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SiGpd/XqI2mj8zSwCjLfiVIVZGx1idC7PIAmZV+2k06TssBL15sg09gPDnmxyK+lLtiOgT+b8lK4bvnvBqOm9lBOS2wCrHy5kZm+buewFTmxwRWeWLIk80AgZIdyH0zjiOKIG5NoZrzpp3zxHEaXk1d4I6BLXs/uZwAkhwnf/Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWjh4A7z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7g6Turq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE0F8C43399;
-	Sun, 24 Mar 2024 23:02:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWjh4A7z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B128C43394;
+	Sun, 24 Mar 2024 23:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321341;
-	bh=ArqBZbZhefIxwbraxACefImVik8nTnkU/EWw5Mm15V8=;
+	s=k20201202; t=1711321347;
+	bh=EvH3SPEWqAXMvuGevgVNS69+E2/o6n7RXD3FQR983OI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m7g6TurqdFrVrdD1QQiD5z3Mlt5D+HVMXMBLOod0NmQai/tNFM7Ir9ZiM6aeUFZRq
-	 QHojEa4jc1hIpcmmxaZXzAW8fYoIn+fQmfQKGYlg9r7IXotCejsrWiS9eslE6DxSjG
-	 f7qFJIZdm8/hR7O14aHqfEj0fxkynQP72Jjf34QDKyuPxRCHt3DubAyq3DGHdsSZTS
-	 +RybYhzQadRmmdT2daFEzD0kdcvlobu7OfZg7ewRXWSUtSFOlXxuvcDisRn+iQf8A/
-	 j5E0C28vM9c71YyzioF0oNgnKxIr3viVgtm5WEVjxyyvKqo/bmlvG5Nx0b9KM0Agam
-	 uVwPSgbSzkwGg==
+	b=jWjh4A7zkyEisVzWVr0XfLbYsuK611qII6sW/LEPRrZ2HarCZokg2yt3ypB34N0Mc
+	 XCEkkJdo30YOefCES3H+F8EzJleFTV/kROAcwfVGWTVCFSrwMr3BdacBV2K3I6jSr3
+	 EDeylfTjuZ060zBQv9mMBLP6qFxtCDbvG9CpAlG7krc5LjB28gWyAT0er7BHhfIlBS
+	 eETENioOORau5zF1L0TDobSZnNQI72GRN4OHcq0NSJ/2fJSahgju7oKsHr2XQrv2K/
+	 o/CWKVycTRErBV7V0sgZf/6dD/+8D88SfporYuEXAua063lS+yEiXRKs9qrHQEVNkt
+	 o7eCSrNU44l+A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 065/638] ASoC: wm8962: Enable both SPKOUTR_ENA and SPKOUTL_ENA in mono mode
-Date: Sun, 24 Mar 2024 18:51:42 -0400
-Message-ID: <20240324230116.1348576-66-sashal@kernel.org>
+Subject: [PATCH 6.6 071/638] workqueue: Replace pwq_activate_inactive_work() with [__]pwq_activate_work()
+Date: Sun, 24 Mar 2024 18:51:48 -0400
+Message-ID: <20240324230116.1348576-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,74 +48,90 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stuart Henderson <stuarth@opensource.cirrus.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 6fa849e4d78b880e878138bf238e4fd2bac3c4fa ]
+[ Upstream commit 4c6380305d21e36581b451f7337a36c93b64e050 ]
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-Link: https://msgid.link/r/20240306161439.1385643-2-stuarth@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+To prepare for unbound nr_active handling improvements, move work activation
+part of pwq_activate_inactive_work() into __pwq_activate_work() and add
+pwq_activate_work() which tests WORK_STRUCT_INACTIVE and updates nr_active.
+
+pwq_activate_first_inactive() and try_to_grab_pending() are updated to use
+pwq_activate_work(). The latter conversion is functionally identical. For
+the former, this conversion adds an unnecessary WORK_STRUCT_INACTIVE
+testing. This is temporary and will be removed by the next patch.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
+Stable-dep-of: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ kernel/workqueue.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index d444b7776ece1..914f8eb418357 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2229,6 +2229,9 @@ SND_SOC_DAPM_PGA_E("HPOUT", SND_SOC_NOPM, 0, 0, NULL, 0, hp_event,
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 3eb0408133ada..3436fd266cde0 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1455,16 +1455,36 @@ static bool pwq_is_empty(struct pool_workqueue *pwq)
+ 	return !pwq->nr_active && list_empty(&pwq->inactive_works);
+ }
  
- SND_SOC_DAPM_OUTPUT("HPOUTL"),
- SND_SOC_DAPM_OUTPUT("HPOUTR"),
-+
-+SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
- };
- 
- static const struct snd_soc_dapm_widget wm8962_dapm_spk_mono_widgets[] = {
-@@ -2236,7 +2239,6 @@ SND_SOC_DAPM_MIXER("Speaker Mixer", WM8962_MIXER_ENABLES, 1, 0,
- 		   spkmixl, ARRAY_SIZE(spkmixl)),
- SND_SOC_DAPM_MUX_E("Speaker PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
- 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
--SND_SOC_DAPM_PGA("Speaker Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
- SND_SOC_DAPM_OUTPUT("SPKOUT"),
- };
- 
-@@ -2251,9 +2253,6 @@ SND_SOC_DAPM_MUX_E("SPKOUTL PGA", WM8962_PWR_MGMT_2, 4, 0, &spkoutl_mux,
- SND_SOC_DAPM_MUX_E("SPKOUTR PGA", WM8962_PWR_MGMT_2, 3, 0, &spkoutr_mux,
- 		   out_pga_event, SND_SOC_DAPM_POST_PMU),
- 
--SND_SOC_DAPM_PGA("SPKOUTR Output", WM8962_CLASS_D_CONTROL_1, 7, 0, NULL, 0),
--SND_SOC_DAPM_PGA("SPKOUTL Output", WM8962_CLASS_D_CONTROL_1, 6, 0, NULL, 0),
+-static void pwq_activate_inactive_work(struct work_struct *work)
++static void __pwq_activate_work(struct pool_workqueue *pwq,
++				struct work_struct *work)
+ {
+-	struct pool_workqueue *pwq = get_work_pwq(work);
 -
- SND_SOC_DAPM_OUTPUT("SPKOUTL"),
- SND_SOC_DAPM_OUTPUT("SPKOUTR"),
- };
-@@ -2366,12 +2365,18 @@ static const struct snd_soc_dapm_route wm8962_spk_mono_intercon[] = {
- 	{ "Speaker PGA", "Mixer", "Speaker Mixer" },
- 	{ "Speaker PGA", "DAC", "DACL" },
- 
--	{ "Speaker Output", NULL, "Speaker PGA" },
--	{ "Speaker Output", NULL, "SYSCLK" },
--	{ "Speaker Output", NULL, "TOCLK" },
--	{ "Speaker Output", NULL, "TEMP_SPK" },
-+	{ "SPKOUTL Output", NULL, "Speaker PGA" },
-+	{ "SPKOUTL Output", NULL, "SYSCLK" },
-+	{ "SPKOUTL Output", NULL, "TOCLK" },
-+	{ "SPKOUTL Output", NULL, "TEMP_SPK" },
+ 	trace_workqueue_activate_work(work);
+ 	if (list_empty(&pwq->pool->worklist))
+ 		pwq->pool->watchdog_ts = jiffies;
+ 	move_linked_works(work, &pwq->pool->worklist, NULL);
+ 	__clear_bit(WORK_STRUCT_INACTIVE_BIT, work_data_bits(work));
++}
 +
-+	{ "SPKOUTR Output", NULL, "Speaker PGA" },
-+	{ "SPKOUTR Output", NULL, "SYSCLK" },
-+	{ "SPKOUTR Output", NULL, "TOCLK" },
-+	{ "SPKOUTR Output", NULL, "TEMP_SPK" },
++/**
++ * pwq_activate_work - Activate a work item if inactive
++ * @pwq: pool_workqueue @work belongs to
++ * @work: work item to activate
++ *
++ * Returns %true if activated. %false if already active.
++ */
++static bool pwq_activate_work(struct pool_workqueue *pwq,
++			      struct work_struct *work)
++{
++	struct worker_pool *pool = pwq->pool;
++
++	lockdep_assert_held(&pool->lock);
++
++	if (!(*work_data_bits(work) & WORK_STRUCT_INACTIVE))
++		return false;
++
+ 	pwq->nr_active++;
++	__pwq_activate_work(pwq, work);
++	return true;
+ }
  
--	{ "SPKOUT", NULL, "Speaker Output" },
-+	{ "SPKOUT", NULL, "SPKOUTL Output" },
-+	{ "SPKOUT", NULL, "SPKOUTR Output" },
- };
+ static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
+@@ -1472,7 +1492,7 @@ static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
+ 	struct work_struct *work = list_first_entry(&pwq->inactive_works,
+ 						    struct work_struct, entry);
  
- static const struct snd_soc_dapm_route wm8962_spk_stereo_intercon[] = {
+-	pwq_activate_inactive_work(work);
++	pwq_activate_work(pwq, work);
+ }
+ 
+ /**
+@@ -1610,8 +1630,7 @@ static int try_to_grab_pending(struct work_struct *work, bool is_dwork,
+ 		 * management later on and cause stall.  Make sure the work
+ 		 * item is activated before grabbing.
+ 		 */
+-		if (*work_data_bits(work) & WORK_STRUCT_INACTIVE)
+-			pwq_activate_inactive_work(work);
++		pwq_activate_work(pwq, work);
+ 
+ 		list_del_init(&work->entry);
+ 		pwq_dec_nr_in_flight(pwq, *work_data_bits(work));
 -- 
 2.43.0
 
