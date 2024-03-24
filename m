@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C666A20AF80;
-	Sun, 24 Mar 2024 23:06:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC731152502;
+	Sun, 24 Mar 2024 23:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321605; cv=none; b=oF6oPCBkPsNDClH41OwL94nQc4jdTzBH0ONeHr/h5Ne4UwrPrqRVh+Prk3IzKX7ZzWxzD6o9zVi+y7Z8nC0SB2Frvc1GM65y9rKyKJMUXJtzQ+VWZGow5bwXvpMvgsengUUzZFFDfYl123IAvm7dLf95c1dslMApyCwLjnALTF4=
+	t=1711321610; cv=none; b=oSnQlHFN2uz4H2sBDyc98o/4YlhrS5753NxzmbUZeb2WW+XYja0LbjGodBr/gG76PTt5pJMY62vqQ2VvuADBU9UzQ8HIUNlIVGl1YX+CSaooWs36gz0GCS4LxCZodEY/aZsnTaAER5lwSup3NyMg2/BzvpPrQNERI2354cKJfrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321605; c=relaxed/simple;
-	bh=OQsM+h49KmJCuY/Vc4xjJEjsD2hIGGvvSko+Q3j56jk=;
+	s=arc-20240116; t=1711321610; c=relaxed/simple;
+	bh=2JQCxS1z38ooUBpwC41Iatakm1a1oaQ5/Tw7+s0wzd0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PvIzmTb8CaQG6Fs5+d+IfFnk1IvpIDu/qCm5Wsxe7dNeXMU5dQea3voVJRR/yOy3Qqk3LJOo+Ap6xGVKD45ka9Y2AqCDLr5NRF4usUpjhvVKjeR/bFGtn+FIGtX9sJJu9JBAUt/+duUY09W6WC8BwCD0KWRWuaJz2b1bL9Qdpns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IpzwtXUc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RV2tp25/yqU7FbSsvXQgJAoWLVEMnH6y3LB4CBC6lnf1aapjS7atmqXr26OPm7F8Sn8neG1qWVnSZW+dINdzUtj8ehYPPOycrJCdMLAMALvlPJW9Q83tdWzZV2KIsBI3iFow+L5GmNB3s0pQRFLJv5T6HMEeGgEZATdPZKJ6PSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O79t4HXg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IpzwtXUc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDFC3C43399;
-	Sun, 24 Mar 2024 23:06:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O79t4HXg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C23BCC43394;
+	Sun, 24 Mar 2024 23:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321605;
-	bh=OQsM+h49KmJCuY/Vc4xjJEjsD2hIGGvvSko+Q3j56jk=;
+	s=k20201202; t=1711321610;
+	bh=2JQCxS1z38ooUBpwC41Iatakm1a1oaQ5/Tw7+s0wzd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IpzwtXUciKLlUeNeKSpZEs7pPH08FsjHB4n6Lha4NTKTsstPntV5G6RWeUm89ZTlf
-	 myIEM/8lamIAERO4kCZvfapre6rnZfPUnHWrzAkvcBM1VEzrRC+O17xOU6fokTzUXa
-	 IgduMBf2qk5F3K3smDAu3gxk+nCeXOI7dwMtSIJ2PGlXQaUnsiOdaVKqVYrEPb8tI3
-	 MAQ0DW6MsIU35SpxdhjFcAvHNmH3sadotJjW33H68hulAxBYkjXNUUIeuZ2v3KWsm5
-	 8XwB6GmzVxzoD0VBKRxrSLFzfkbllwrtYl2ChYEDvtwpka6QzGYlFUYAM3rNrjyLQk
-	 O24PjJ8h6HORw==
+	b=O79t4HXggfg8CQiTT60YOuhsaCIGtjvx1V7D/3LWRsHixMgCEyB9Jsrh5ogEGKCk6
+	 naoaJnh/7/xktSwkrYui0H8ecKTo6F9M7DCBsrSjUVT6bGSv8l+/4VvHRxtyLsNs5L
+	 vWE8bdSqSC0OqGv8uqcfWZvdaFVbueuYKcfZYVl/SFDVNNqB3EL68cuvIAubKMx8e0
+	 by31e3/Y7m/xfED+0rGmHllH3iw2GyDlhrl0OWuZTAK/ySZEKQubEUqxZa8OYv4j5+
+	 LS+kFDh5771kz+FX816k4FUHlU+POpcbICuND0vABHLB84mCrWOoChLQwoW4fMzUsU
+	 YMzbLqvClJx/g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
-	Tom Parkin <tparkin@katalix.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Puranjay Mohan <puranjay12@gmail.com>,
+	"kernelci.org bot" <bot@kernelci.org>,
+	kernel test robot <lkp@intel.com>,
+	Song Liu <song@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 335/638] l2tp: fix incorrect parameter validation in the pppol2tp_getsockopt() function
-Date: Sun, 24 Mar 2024 18:56:12 -0400
-Message-ID: <20240324230116.1348576-336-sashal@kernel.org>
+Subject: [PATCH 6.6 340/638] bpf: hardcode BPF_PROG_PACK_SIZE to 2MB * num_possible_nodes()
+Date: Sun, 24 Mar 2024 18:56:17 -0400
+Message-ID: <20240324230116.1348576-341-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,44 +51,51 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+From: Puranjay Mohan <puranjay12@gmail.com>
 
-[ Upstream commit 955e9876ba4ee26eeaab1b13517f5b2c88e73d55 ]
+[ Upstream commit d6170e4aaf86424c24ce06e355b4573daa891b17 ]
 
-The 'len' variable can't be negative when assigned the result of
-'min_t' because all 'min_t' parameters are cast to unsigned int,
-and then the minimum one is chosen.
+On some architectures like ARM64, PMD_SIZE can be really large in some
+configurations. Like with CONFIG_ARM64_64K_PAGES=y the PMD_SIZE is
+512MB.
 
-To fix the logic, check 'len' as read from 'optlen',
-where the types of relevant variables are (signed) int.
+Use 2MB * num_possible_nodes() as the size for allocations done through
+the prog pack allocator. On most architectures, PMD_SIZE will be equal
+to 2MB in case of 4KB pages and will be greater than 2MB for bigger page
+sizes.
 
-Fixes: 3557baabf280 ("[L2TP]: PPP over L2TP driver core")
-Reviewed-by: Tom Parkin <tparkin@katalix.com>
-Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ea2babac63d4 ("bpf: Simplify bpf_prog_pack_[size|mask]")
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Closes: https://lore.kernel.org/all/7e216c88-77ee-47b8-becc-a0f780868d3c@sirena.org.uk/
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202403092219.dhgcuz2G-lkp@intel.com/
+Suggested-by: Song Liu <song@kernel.org>
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+Message-ID: <20240311122722.86232-1-puranjay12@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/l2tp/l2tp_ppp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/bpf/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
-index f011af6601c9c..6146e4e67bbb5 100644
---- a/net/l2tp/l2tp_ppp.c
-+++ b/net/l2tp/l2tp_ppp.c
-@@ -1356,11 +1356,11 @@ static int pppol2tp_getsockopt(struct socket *sock, int level, int optname,
- 	if (get_user(len, optlen))
- 		return -EFAULT;
- 
--	len = min_t(unsigned int, len, sizeof(int));
--
- 	if (len < 0)
- 		return -EINVAL;
- 
-+	len = min_t(unsigned int, len, sizeof(int));
-+
- 	err = -ENOTCONN;
- 	if (!sk->sk_user_data)
- 		goto end;
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 5d1efe5200ba3..1333273a71ded 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -863,7 +863,12 @@ static LIST_HEAD(pack_list);
+  * CONFIG_MMU=n. Use PAGE_SIZE in these cases.
+  */
+ #ifdef PMD_SIZE
+-#define BPF_PROG_PACK_SIZE (PMD_SIZE * num_possible_nodes())
++/* PMD_SIZE is really big for some archs. It doesn't make sense to
++ * reserve too much memory in one allocation. Hardcode BPF_PROG_PACK_SIZE to
++ * 2MiB * num_possible_nodes(). On most architectures PMD_SIZE will be
++ * greater than or equal to 2MB.
++ */
++#define BPF_PROG_PACK_SIZE (SZ_2M * num_possible_nodes())
+ #else
+ #define BPF_PROG_PACK_SIZE PAGE_SIZE
+ #endif
 -- 
 2.43.0
 
