@@ -1,16 +1,16 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBF916EC04;
-	Sun, 24 Mar 2024 22:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A8516F27B;
+	Sun, 24 Mar 2024 22:39:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319951; cv=none; b=nS8U4+psogbVSQVJIyclIs9g3Frb0MxZ2NtnAvEtEPTpD7VWmiMQYHvyL903f1Yei1GDS5VAO4MmydoKb2p8ZkCPdtfohalCmKcJOJ8fEUW27sprFsA7H73x5eg1gnGRAkyiW8N4Vd6xvVDUHGkm38bzrZ+Dr0r3WNGXUjkbeLY=
+	t=1711319952; cv=none; b=JlvgOaEmILgv0bDupDKZDgmhfnbMp/J/YFmIWMYhj21PD5K/FyAT5oLw+mtIq7TsIlZjkRdWZSTjNYmQAAg9/M0jEHgRmxTa7Q2jW0BNbDt/pbXbRR16XRYjp18QYQ3n/xcgvWhN4a7bj9ZRHeqGp9Qtc9hwB9uPeyFtlHsWoEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319951; c=relaxed/simple;
-	bh=8a8yUbpxmH47E3+zw0R/B+Uv/KODFRMskQlpXkg9AKE=;
+	s=arc-20240116; t=1711319952; c=relaxed/simple;
+	bh=I0mhYcl8koJcmMr0smHHtwWOzozd5ZColjHDquYJP78=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UNE/WnYM8tkEkVX9N22e1mtrsh4EVextQ62eN9SNEvHt5GbxpySOtZd/YBwxECdwXethPNJTP2iK7oFMa9OXcqOP2CmmWeDisB87rKNJHaYASGiZNZndMMg0JpyxYao/CPCd5ZS+r9IO9Ek+QTgoXfQbMyySUrNThaFsFj7qaNE=
+	 MIME-Version:Content-Type; b=tfwQib2Obx+DcqBO+qKGUWeDxT3nYkQD/fOxs/MKT4lB6WLVMQmkSUJu8rfaA40pEvYLujS0vas+grFmBiSlY0INAydoIWuu6+7iDLeSEBCuht03ckeJsZ92zC5lwsEC9b1Bc6USDQVndReHkSbammWIvrJVoGhBzvkfau11Qmc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
@@ -18,25 +18,28 @@ Received: from i53875a9e.versanet.de ([83.135.90.158] helo=phil.lan)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1roWUV-0007sn-Gi; Sun, 24 Mar 2024 23:38:59 +0100
+	id 1roWUX-0007sn-QW; Sun, 24 Mar 2024 23:39:01 +0100
 From: Heiko Stuebner <heiko@sntech.de>
-To: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Heiko Stuebner <heiko@sntech.de>,
+To: Iskander Amara <iskander.amara@theobroma-systems.com>,
+	krzysztof.kozlowski+dt@linaro.org,
 	linux-kernel@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
+	conor+dt@kernel.org,
+	angelogioacchino.delregno@collabora.com,
 	devicetree@vger.kernel.org,
+	robh+dt@kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	erkin.bozoglu@xeront.com,
-	mithat.guner@xeront.com
-Subject: Re: [PATCH] arm64: dts: rockchip: set PHY address of MT7531 switch to 0x1f
-Date: Sun, 24 Mar 2024 23:38:52 +0100
-Message-Id: <171131986741.918919.17715253575566956746.b4-ty@sntech.de>
+	dsimic@manjaro.org,
+	alexander.stein@ew.tq-group.com,
+	vahe.grigoryan@theobroma-systems.com
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	quentin.schulz@theobroma-systems.com
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: enable internal pull-up for Q7_THRM# on RK3399 Puma
+Date: Sun, 24 Mar 2024 23:38:56 +0100
+Message-Id: <171131986743.918919.2940634887265030927.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240314-for-rockchip-mt7531-phy-address-v1-1-743b5873358f@arinc9.com>
-References: <20240314-for-rockchip-mt7531-phy-address-v1-1-743b5873358f@arinc9.com>
+In-Reply-To: <20240308085243.69903-1-iskander.amara@theobroma-systems.com>
+References: <20240308085243.69903-1-iskander.amara@theobroma-systems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,22 +49,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Thu, 14 Mar 2024 15:24:35 +0300, Arınç ÜNAL wrote:
-> The MT7531 switch listens on PHY address 0x1f on an MDIO bus. I've got two
-> findings that support this. There's no bootstrapping option to change the
-> PHY address of the switch. The Linux driver hardcodes 0x1f as the PHY
-> address of the switch. So the reg property on the device tree is currently
-> ignored by the Linux driver.
+On Fri, 8 Mar 2024 09:52:42 +0100, Iskander Amara wrote:
+> Q7_THRM# pin is connected to a diode on the module which is used
+> as a level shifter, and the pin have a pull-down enabled by
+> default. We need to configure it to internal pull-up, other-
+> wise whenever the pin is configured as INPUT and we try to
+> control it externally the value will always remain zero.
 > 
-> Therefore, describe the correct PHY address on Banana Pi BPI-R2 Pro that
-> has this switch.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: rockchip: set PHY address of MT7531 switch to 0x1f
-      commit: a2ac2a1b02590a22a236c43c455f421cdede45f5
+[1/2] arm64: dts: rockchip: enable internal pull-up for Q7_THRM# on RK3399 Puma
+      commit: 0ac417b8f124427c90ec8c2ef4f632b821d924cc
+[2/2] arm64: dts: rockchip: fix alphabetical ordering RK3399 puma
+      commit: f0abb4b2c7acf3c3e4130dc3f54cd90cf2ae62bc
 
 Best regards,
 -- 
