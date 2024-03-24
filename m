@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F49317C1A4;
-	Sun, 24 Mar 2024 23:42:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673EF17C1AB;
+	Sun, 24 Mar 2024 23:42:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323761; cv=none; b=SHuoF4RkmXlYWs0SayILJVOPokgT5aDcBilWymwE8/XaUw4j06HV9GsNemQz4rqRJOr49DicexG8H7ZqkGOhN28YZV12dDU03pfa7IERA2G6nbhn0nGOOikZKC17uL88RgVmnSS/cQZNjA3t5npnPP9qdU5QNxddu6Genk9y0po=
+	t=1711323764; cv=none; b=naWNleIEOmp+4gke59IKHThJ45NXJH/wYiyXax8gQcIeFJ0iONy1kKkxwLlx5mCBOfqPh59DmXS6ZjPe0JAs2stgerxBdCpiPw95XP8nLnVKprHh2u9uGkdIgQHP+hHHZR9EXaPf3pJNxJElSqTwG54KnzusypGU9XouCI12pD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323761; c=relaxed/simple;
-	bh=AMhjcr4iHcg/uPkM3R5hsZYfMAcH9jNbS1n+IIKneoc=;
+	s=arc-20240116; t=1711323764; c=relaxed/simple;
+	bh=pCc5yRqiW7zrM8WJbTTAP0OTtZg+beqdp63g2hcZTaQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tbeYsJqRbYYR6B4jxYkvXKhyhvSoxAyyPSP2cKtvxuqnu7QLPSuUTbYpaIFlcYRNq2R1JpG5wVqRv5/Q+/qCxmQrO0RpETqJm0xOJ9EvxeuWluTXOoFRGJu/ZsifqbPtZ+BvTqWr5H2jGt+HBcB10w5G3B92Cd6ozFdIaTPrNiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QE/XbbGc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=a8RWV6hMl/KQmOmkz/ZhnKu0PIJ7g6l3hzAbTZRZMoEDmPvfFvwuvhxfv+swC3FRJkOUqj0vL6WXk7kEQYe30T9l/0eKZqSh36IdS9NmeXhzsmj12vcxY1Sd3cn7HnINuSPgJxPWb2a/kt3ZvZd7COvzHr680X/iwHJN9AUY6NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7QOd7Ye; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QE/XbbGc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0F89C433A6;
-	Sun, 24 Mar 2024 23:42:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7QOd7Ye"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23C3C433F1;
+	Sun, 24 Mar 2024 23:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323760;
-	bh=AMhjcr4iHcg/uPkM3R5hsZYfMAcH9jNbS1n+IIKneoc=;
+	s=k20201202; t=1711323763;
+	bh=pCc5yRqiW7zrM8WJbTTAP0OTtZg+beqdp63g2hcZTaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QE/XbbGcMhSFnlR6mkqOX9OYVH0Tv85WCTB9rmgg1TenjvVPV+sJ/rdcE3SS77TMK
-	 HAjLtTRegKFLWokP8J/emyi0QyUN/CguI0SZaUJtQWBpmjEk9lBhi0HvxPFct7aDOo
-	 13Q8cov9vAVdYKZzHHOVoEm1Wrs48rKtEJuU3ZWSvQtqxR+ByMDDvQyQddJpLSAQIe
-	 BuIVLLh5w7GXGzncSjul2Je4+HQxMUaasl1cTMeXPXd3oBV/TN+Y+6pa7lawx+3ZiV
-	 9c6VTPPP3SdUqiWW6D4tnaak7YT3GRCBAzkzMb23ObsHRZF8Fc3Yx5whzhi5pUNkQj
-	 z/CTIh0Kj8ihQ==
+	b=T7QOd7Yen92fPiIdUlknPOd3QHtUW5L1+UKJ5/+gtJM/9nN0mNG2wxBnKy7prLs5d
+	 DHy8oIHGIPVmBh2csMNjQGPbOjBQyjAInToMBKRQiKwAw6yGe2sFYrtBzPgOlwZD2p
+	 UOA8iy9h4gPH7741l58ZscxsdqmqSWqOx9pXNDrP+f9I2zl3PCdj02c2bYYwhT00FU
+	 woiMbYBJLdfTID/oEmSI7jG+s1UjJm/z08FmuMXWM8VmLIGf0cg4iHXMNV0M/v65IS
+	 54PnshexYF31xm8vpn0rWYbAhHgCjVfnx6KF4QYC5LIp7zCTuU/HoPr7Mdg89GbYFH
+	 vjXmnzzuuwyvQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 135/238] media: edia: dvbdev: fix a use-after-free
-Date: Sun, 24 Mar 2024 19:38:43 -0400
-Message-ID: <20240324234027.1354210-136-sashal@kernel.org>
+Subject: [PATCH 5.10 138/238] clk: qcom: reset: Ensure write completion on reset de/assertion
+Date: Sun, 24 Mar 2024 19:38:46 -0400
+Message-ID: <20240324234027.1354210-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,82 +48,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-[ Upstream commit 8c64f4cdf4e6cc5682c52523713af8c39c94e6d5 ]
+[ Upstream commit 2f8cf2c3f3e3f7ef61bd19abb4b0bb797ad50aaf ]
 
-In dvb_register_device, *pdvbdev is set equal to dvbdev, which is freed
-in several error-handling paths. However, *pdvbdev is not set to NULL
-after dvbdev's deallocation, causing use-after-frees in many places,
-for example, in the following call chain:
+Trying to toggle the resets in a rapid fashion can lead to the changes
+not actually arriving at the clock controller block when we expect them
+to. This was observed at least on SM8250.
 
-budget_register
-  |-> dvb_dmxdev_init
-        |-> dvb_register_device
-  |-> dvb_dmxdev_release
-        |-> dvb_unregister_device
-              |-> dvb_remove_device
-                    |-> dvb_device_put
-                          |-> kref_put
+Read back the value after regmap_update_bits to ensure write completion.
 
-When calling dvb_unregister_device, dmxdev->dvbdev (i.e. *pdvbdev in
-dvb_register_device) could point to memory that had been freed in
-dvb_register_device. Thereafter, this pointer is transferred to
-kref_put and triggering a use-after-free.
-
-Link: https://lore.kernel.org/linux-media/20240203134046.3120099-1-alexious@zju.edu.cn
-Fixes: b61901024776 ("V4L/DVB (5244): Dvbdev: fix illegal re-usage of fileoperations struct")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: b36ba30c8ac6 ("clk: qcom: Add reset controller support")
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20240105-topic-venus_reset-v2-3-c37eba13b5ce@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-core/dvbdev.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/clk/qcom/reset.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index 3a83e8e092568..23a0c209744dc 100644
---- a/drivers/media/dvb-core/dvbdev.c
-+++ b/drivers/media/dvb-core/dvbdev.c
-@@ -504,6 +504,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		dvbdevfops = kmemdup(template->fops, sizeof(*dvbdevfops), GFP_KERNEL);
- 		if (!dvbdevfops) {
- 			kfree(dvbdev);
-+			*pdvbdev = NULL;
- 			mutex_unlock(&dvbdev_register_lock);
- 			return -ENOMEM;
- 		}
-@@ -512,6 +513,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		if (!new_node) {
- 			kfree(dvbdevfops);
- 			kfree(dvbdev);
-+			*pdvbdev = NULL;
- 			mutex_unlock(&dvbdev_register_lock);
- 			return -ENOMEM;
- 		}
-@@ -545,6 +547,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		}
- 		list_del (&dvbdev->list_head);
- 		kfree(dvbdev);
-+		*pdvbdev = NULL;
- 		up_write(&minor_rwsem);
- 		mutex_unlock(&dvbdev_register_lock);
- 		return -EINVAL;
-@@ -567,6 +570,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		dvb_media_device_free(dvbdev);
- 		list_del (&dvbdev->list_head);
- 		kfree(dvbdev);
-+		*pdvbdev = NULL;
- 		mutex_unlock(&dvbdev_register_lock);
- 		return ret;
- 	}
-@@ -585,6 +589,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
- 		dvb_media_device_free(dvbdev);
- 		list_del (&dvbdev->list_head);
- 		kfree(dvbdev);
-+		*pdvbdev = NULL;
- 		mutex_unlock(&dvbdev_register_lock);
- 		return PTR_ERR(clsdev);
- 	}
+diff --git a/drivers/clk/qcom/reset.c b/drivers/clk/qcom/reset.c
+index 20d1d35aaf229..d96c96a9089f4 100644
+--- a/drivers/clk/qcom/reset.c
++++ b/drivers/clk/qcom/reset.c
+@@ -33,7 +33,12 @@ static int qcom_reset_set_assert(struct reset_controller_dev *rcdev,
+ 	map = &rst->reset_map[id];
+ 	mask = map->bitmask ? map->bitmask : BIT(map->bit);
+ 
+-	return regmap_update_bits(rst->regmap, map->reg, mask, assert ? mask : 0);
++	regmap_update_bits(rst->regmap, map->reg, mask, assert ? mask : 0);
++
++	/* Read back the register to ensure write completion, ignore the value */
++	regmap_read(rst->regmap, map->reg, &mask);
++
++	return 0;
+ }
+ 
+ static int qcom_reset_assert(struct reset_controller_dev *rcdev, unsigned long id)
 -- 
 2.43.0
 
