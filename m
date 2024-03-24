@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA52156862;
-	Sun, 24 Mar 2024 23:11:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA7D156C6E;
+	Sun, 24 Mar 2024 23:11:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321880; cv=none; b=ujWoLzacoFUW+Ccj68IM3cWjQgpLMdRyJ1yUoJG7wbdTkPPM4rgEQ/vIXjJdwQMIbo7USi4zTujX1SGIqnWtpXeRhPDFY87K7Qx40u5ghGTw++uf1D83tlyfpON5T6BNzLNTIgCAPG6Oyc4NrLEgJe3AdZrtNh7yinWKVkGrO5I=
+	t=1711321899; cv=none; b=bRocXA4LU1brXfo1XI3CuL4f/d49gsBsOqLms3dPg0/HyLeVPc8DcpmTja26Bx90ti6Bfn8DQmrDWFCbrb+7d274M31nnsGgJdnBx6PuzcQ73zQk7TyG0apTDMfdxPEh61a0ESe4FLkPZhNRhNtHKKt8RMnzk225M00NX/235UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321880; c=relaxed/simple;
-	bh=rbPa+Ctn/YI4xgNS41/BQYk1owmjhkNPLW58UozUyrQ=;
+	s=arc-20240116; t=1711321899; c=relaxed/simple;
+	bh=Lm58yLj4CP4NhjAUo2FqJTK/ATsFSEnj/2hVBaANo48=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JCIu835tg94Dj8mMlb9HPEG6UyeSjYvhCQs26AIcm4O49HtTNwRZSRDRASefgx9fCRc5Xzg9/onxAHY4ZJK171XO4aqHiXXb9gKSXVD0dr3hMYSzeAzEj8S0FGyPkqHRVoEyKuvWK+MOCZAOXWmi3PT45YCvmJXPdo5MHRkwXgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LGsKbzye; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ckBTiO9gnxxWPj1EYm6puTTTGDY0zp6V1IIBoOlNGWX0BFJS9QEmFUkYBDl12HIBK5xTmgeEgeWx2kzsXB8sz+vcwx+9NvMMA1Y+EMsGK2mJ1IGjMNxuaezEfkGXp9URCDK5Y/wsTpXmDAL9a+ozVnN+luOT8cBwdSSbOZ4s9WQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3G1zpWm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LGsKbzye"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D678C433F1;
-	Sun, 24 Mar 2024 23:11:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3G1zpWm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B00C433C7;
+	Sun, 24 Mar 2024 23:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321880;
-	bh=rbPa+Ctn/YI4xgNS41/BQYk1owmjhkNPLW58UozUyrQ=;
+	s=k20201202; t=1711321899;
+	bh=Lm58yLj4CP4NhjAUo2FqJTK/ATsFSEnj/2hVBaANo48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LGsKbzyeb7frF48g5njNLnK9/XS0EAq7Nm2PJ7r4YI6F0LudB+OzDXJT4NiazUFa8
-	 jGWsyOPVHS6VcW7i39taxewBaqbryWXRfE21mREmPIGf2AyqQ0bW02M0cIMYAkfJ2g
-	 FKx96slEGmBT3D5p5cxaqmVpOOC9xB/qcF9skRM7gBSsQrfVWtrjwzI40ZCdr9CcSq
-	 jkPiAGnhTCSC/7m+dQ4yoLwLC/8CUvObRYwciSo3tnH2ZZExI+ZUPhuE3IxvKRUNPp
-	 6ZBc8Hq3pw6HEWNFQN3A+UJHMX7DtjhR0/fVPlZLybwo5mFCxt7t17DhKG54Jgr0lx
-	 GTovLAiWAvReA==
+	b=g3G1zpWmZSvpYGIKlJBMMzocw54S6v5LnVPAiybF+JEoaoFbyZYPVie/sJB6K7BsA
+	 vzAWTZJdwxtW858Uvry/eUBzP/l0nwC9Tds4wEyMTtPgGoLrhvOeByr5sQMbc3FKbT
+	 mIbX/XIzUIklT94RQHsI3G9WyPl3ZQfUIamCekhJIShNijyegI46NmwMCCJhKmU6XH
+	 FfIAxPRj/1SRss3IYFuRd6yGuTJ+VooWvyoSP8M0oL7qkIB1yuOZTc0xHn0ENuUXGV
+	 Ibb4iyVumnadd0r+KOdzTSHyMkNO6DPMIke8cjkfXb9mEOKYU8s5EMGZz4KRRy1ZjO
+	 vvapN88pE+xtg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>,
+Cc: Yan Zhai <yan@cloudflare.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 608/638] virtio: packed: fix unmap leak for indirect desc table
-Date: Sun, 24 Mar 2024 19:00:45 -0400
-Message-ID: <20240324230116.1348576-609-sashal@kernel.org>
+Subject: [PATCH 6.6 628/638] bpf: report RCU QS in cpumap kthread
+Date: Sun, 24 Mar 2024 19:01:05 -0400
+Message-ID: <20240324230116.1348576-629-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,72 +50,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+From: Yan Zhai <yan@cloudflare.com>
 
-[ Upstream commit d5c0ed17fea60cca9bc3bf1278b49ba79242bbcd ]
+[ Upstream commit 00bf63122459e87193ee7f1bc6161c83a525569f ]
 
-When use_dma_api and premapped are true, then the do_unmap is false.
+When there are heavy load, cpumap kernel threads can be busy polling
+packets from redirect queues and block out RCU tasks from reaching
+quiescent states. It is insufficient to just call cond_resched() in such
+context. Periodically raise a consolidated RCU QS before cond_resched
+fixes the problem.
 
-Because the do_unmap is false, vring_unmap_extra_packed is not called by
-detach_buf_packed.
-
-  if (unlikely(vq->do_unmap)) {
-                curr = id;
-                for (i = 0; i < state->num; i++) {
-                        vring_unmap_extra_packed(vq,
-                                                 &vq->packed.desc_extra[curr]);
-                        curr = vq->packed.desc_extra[curr].next;
-                }
-  }
-
-So the indirect desc table is not unmapped. This causes the unmap leak.
-
-So here, we check vq->use_dma_api instead. Synchronously, dma info is
-updated based on use_dma_api judgment
-
-This bug does not occur, because no driver use the premapped with
-indirect.
-
-Fixes: b319940f83c2 ("virtio_ring: skip unmap for premapped")
-Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Message-Id: <20240223071833.26095-1-xuanzhuo@linux.alibaba.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Fixes: 6710e1126934 ("bpf: introduce new bpf cpu map type BPF_MAP_TYPE_CPUMAP")
+Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
+Signed-off-by: Yan Zhai <yan@cloudflare.com>
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+Link: https://lore.kernel.org/r/c17b9f1517e19d813da3ede5ed33ee18496bb5d8.1710877680.git.yan@cloudflare.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_ring.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/bpf/cpumap.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index 49299b1f9ec74..6f7e5010a6735 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -1340,7 +1340,7 @@ static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
- 				sizeof(struct vring_packed_desc));
- 	vq->packed.vring.desc[head].id = cpu_to_le16(id);
+diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
+index 9140b8bff9c04..df03e66a687c1 100644
+--- a/kernel/bpf/cpumap.c
++++ b/kernel/bpf/cpumap.c
+@@ -262,6 +262,7 @@ static int cpu_map_bpf_prog_run(struct bpf_cpu_map_entry *rcpu, void **frames,
+ static int cpu_map_kthread_run(void *data)
+ {
+ 	struct bpf_cpu_map_entry *rcpu = data;
++	unsigned long last_qs = jiffies;
  
--	if (vq->do_unmap) {
-+	if (vq->use_dma_api) {
- 		vq->packed.desc_extra[id].addr = addr;
- 		vq->packed.desc_extra[id].len = total_sg *
- 				sizeof(struct vring_packed_desc);
-@@ -1481,7 +1481,7 @@ static inline int virtqueue_add_packed(struct virtqueue *_vq,
- 			desc[i].len = cpu_to_le32(sg->length);
- 			desc[i].id = cpu_to_le16(id);
+ 	complete(&rcpu->kthread_running);
+ 	set_current_state(TASK_INTERRUPTIBLE);
+@@ -287,10 +288,12 @@ static int cpu_map_kthread_run(void *data)
+ 			if (__ptr_ring_empty(rcpu->queue)) {
+ 				schedule();
+ 				sched = 1;
++				last_qs = jiffies;
+ 			} else {
+ 				__set_current_state(TASK_RUNNING);
+ 			}
+ 		} else {
++			rcu_softirq_qs_periodic(last_qs);
+ 			sched = cond_resched();
+ 		}
  
--			if (unlikely(vq->do_unmap)) {
-+			if (unlikely(vq->use_dma_api)) {
- 				vq->packed.desc_extra[curr].addr = addr;
- 				vq->packed.desc_extra[curr].len = sg->length;
- 				vq->packed.desc_extra[curr].flags =
-@@ -1615,7 +1615,7 @@ static void detach_buf_packed(struct vring_virtqueue *vq,
- 	vq->free_head = id;
- 	vq->vq.num_free += state->num;
- 
--	if (unlikely(vq->do_unmap)) {
-+	if (unlikely(vq->use_dma_api)) {
- 		curr = id;
- 		for (i = 0; i < state->num; i++) {
- 			vring_unmap_extra_packed(vq,
 -- 
 2.43.0
 
