@@ -1,39 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAF42716DB;
-	Sun, 24 Mar 2024 23:35:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A892720F8;
+	Sun, 24 Mar 2024 23:35:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323301; cv=none; b=pk1wibud46OMD2PWgmmBx/C7QFQ2ddgmAJdpQbZqSlh7ah63HmGDJ+/eliNKlyRyTzvn9npqwTLc/VuSXzG+/mYxC4dMfBNEoYDplMbLp+HyQ1w751AhxJzpNp2H9/at3E5C6AgegKgE2C3J5nP2ighCjHGtackS4TeegTfwepA=
+	t=1711323306; cv=none; b=rxlHktep2/V8BTCC8t+l0FqqjnZwK/1Mpyyid1h5Oy0isVDsjXFRf5HTg0MLYoBaKOXKKQ94uwMSuV6DKT3YtMTBr4Nlzt5AgPQ/3N4qDKygAtTVflTLlSkZwPsbCT+spzHvGkI9lN0IFXah9MS/JYgGuc+TtH6jbGLdJiM+Oe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323301; c=relaxed/simple;
-	bh=ELzVn+rRe6bS2yKeO1yNV5To5LEEcDbleSatoALaGSo=;
+	s=arc-20240116; t=1711323306; c=relaxed/simple;
+	bh=jyUcNQ9GntSGfERNYUd4qRk75zDk8r3yKu0X3vCk3eo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RFrzAAwUZkFiGMQyL1OxokPjwowrsVp2irJryeEMKUSiPChEbfrkrder+jacxMMhS1IyC1zHgims65Vmp9Uf9PnmyFD7OmZHqPdJADAlFaN4VD0rLJ+J8vcbkJn4Lv680S/JI3iQbWg/pqB3S391j65IBX/7r7XFKpbtokQiIw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkGynwkz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VKTUWszvMzkTz+gd292Y2Do9QRj86IxaWP8a/w+YUID4XvJqa7O7trDFSX/OR6qrKWDPAjSfebV7laEp8sF9u8bjkXQLbcTLxdu8fFuDseananRgmrU2lUHY78FIj+qx2x3F42Jby2shzsILB+CokbCHrxSxffHVj4ZmhZzGatA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Po35YmbI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkGynwkz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBFD8C43390;
-	Sun, 24 Mar 2024 23:35:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Po35YmbI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C66EC43390;
+	Sun, 24 Mar 2024 23:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323301;
-	bh=ELzVn+rRe6bS2yKeO1yNV5To5LEEcDbleSatoALaGSo=;
+	s=k20201202; t=1711323305;
+	bh=jyUcNQ9GntSGfERNYUd4qRk75zDk8r3yKu0X3vCk3eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TkGynwkzZ3DL3PjeKqXAsTDEMIwgXNRPc5rba1NVxbXbu15hEjeETmzTXw8mZfp08
-	 HhMV2w0L1j9g0ALepIXR2/IQn2KFIRvHbG58PV8+BuECOJVKwH0OeNunVf49rzf14G
-	 v8Hr/EMXmYOGP1Pmvr9YyjNvBJpNhYSaHhmnLK4CtJY6fkniV9sYzrAw2e92c34EIR
-	 PcGVPU9zq3DQfosUA6OSo+8HwdnkV7jDCfDmZ+U8oAkYaylB4FgU4UUe7lLsrJzQfH
-	 5NP0yWy4CXreYAF+wmXQRiotPb0U8rb5Su31QbVDezHgz09SpCr27SgXhl0G2RsfoA
-	 ALtS5g7rotzxQ==
+	b=Po35YmbI1RBBrl3w7JjcGXsa0lPOaHsn4XeLGYlyq2ePr7TKba+Mr/KiicCc3K8OF
+	 DfmLNP5/Mm20FZgmkQJolz3uYAaq3Kn7uX5Lq/qHuNXPA8dofUx3eLDX+T8t1JgWQu
+	 twVmEkB21AfMPGKH8DHk7MsW+x6SwXPVx+IRjSx+gP9bw6f84nUpAVjKpkcwVlqrl4
+	 1BI7zpShvW4k9KBpYt22Bmp3WLHIoepijp/KpFufGeCtBsW1+qi4CgnCJ5yst9DQ5o
+	 YwtqqVxNKi6udVk/SQDg1oMl5+6jD6wbQiaGhFzrCcS0LQiia9ruc1STOTb3n+hYI7
+	 la6mTH5rCIUhw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>,
+Cc: Filipe Manana <fdmanana@suse.com>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Boris Burkov <boris@bur.io>,
+	David Sterba <dsterba@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 001/317] io_uring/unix: drop usage of io_uring socket
-Date: Sun, 24 Mar 2024 19:29:41 -0400
-Message-ID: <20240324233458.1352854-2-sashal@kernel.org>
+Subject: [PATCH 5.15 005/317] btrfs: add and use helper to check if block group is used
+Date: Sun, 24 Mar 2024 19:29:45 -0400
+Message-ID: <20240324233458.1352854-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -47,129 +51,58 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Filipe Manana <fdmanana@suse.com>
 
-Commit a4104821ad651d8a0b374f0b2474c345bbb42f82 upstream.
+[ Upstream commit 1693d5442c458ae8d5b0d58463b873cd879569ed ]
 
-Since we no longer allow sending io_uring fds over SCM_RIGHTS, move to
-using io_is_uring_fops() to detect whether this is a io_uring fd or not.
-With that done, kill off io_uring_get_socket() as nobody calls it
-anymore.
+Add a helper function to determine if a block group is being used and make
+use of it at btrfs_delete_unused_bgs(). This helper will also be used in
+future code changes.
 
-This is in preparation to yanking out the rest of the core related to
-unix gc with io_uring.
-
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Boris Burkov <boris@bur.io>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/io_uring.h | 10 +++++-----
- io_uring/io_uring.c      | 18 +++++-------------
- net/core/scm.c           |  2 +-
- net/unix/scm.c           |  4 +---
- 4 files changed, 12 insertions(+), 22 deletions(-)
+ fs/btrfs/block-group.c | 3 +--
+ fs/btrfs/block-group.h | 7 +++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
-index 649a4d7c241bc..55d09f594cd14 100644
---- a/include/linux/io_uring.h
-+++ b/include/linux/io_uring.h
-@@ -6,9 +6,9 @@
- #include <linux/xarray.h>
- 
- #if defined(CONFIG_IO_URING)
--struct sock *io_uring_get_socket(struct file *file);
- void __io_uring_cancel(bool cancel_all);
- void __io_uring_free(struct task_struct *tsk);
-+bool io_is_uring_fops(struct file *file);
- 
- static inline void io_uring_files_cancel(void)
- {
-@@ -26,10 +26,6 @@ static inline void io_uring_free(struct task_struct *tsk)
- 		__io_uring_free(tsk);
- }
- #else
--static inline struct sock *io_uring_get_socket(struct file *file)
--{
--	return NULL;
--}
- static inline void io_uring_task_cancel(void)
- {
- }
-@@ -39,6 +35,10 @@ static inline void io_uring_files_cancel(void)
- static inline void io_uring_free(struct task_struct *tsk)
- {
- }
-+static inline bool io_is_uring_fops(struct file *file)
-+{
-+	return false;
-+}
- #endif
- 
- #endif
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 55fd6d98fe121..541e6a6985ecc 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -1116,19 +1116,6 @@ static struct kmem_cache *req_cachep;
- 
- static const struct file_operations io_uring_fops;
- 
--struct sock *io_uring_get_socket(struct file *file)
--{
--#if defined(CONFIG_UNIX)
--	if (file->f_op == &io_uring_fops) {
--		struct io_ring_ctx *ctx = file->private_data;
--
--		return ctx->ring_sock->sk;
--	}
--#endif
--	return NULL;
--}
--EXPORT_SYMBOL(io_uring_get_socket);
--
- static inline void io_tw_lock(struct io_ring_ctx *ctx, bool *locked)
- {
- 	if (!*locked) {
-@@ -10445,6 +10432,11 @@ static const struct file_operations io_uring_fops = {
- #endif
- };
- 
-+bool io_is_uring_fops(struct file *file)
-+{
-+	return file->f_op == &io_uring_fops;
-+}
-+
- static int io_allocate_scq_urings(struct io_ring_ctx *ctx,
- 				  struct io_uring_params *p)
- {
-diff --git a/net/core/scm.c b/net/core/scm.c
-index e762a4b8a1d22..a877c4ef4c256 100644
---- a/net/core/scm.c
-+++ b/net/core/scm.c
-@@ -105,7 +105,7 @@ static int scm_fp_copy(struct cmsghdr *cmsg, struct scm_fp_list **fplp)
- 		if (fd < 0 || !(file = fget_raw(fd)))
- 			return -EBADF;
- 		/* don't allow io_uring files */
--		if (io_uring_get_socket(file)) {
-+		if (io_is_uring_fops(file)) {
- 			fput(file);
- 			return -EINVAL;
+diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+index 4ca6828586af5..a2bac7196d18b 100644
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -1330,8 +1330,7 @@ void btrfs_delete_unused_bgs(struct btrfs_fs_info *fs_info)
  		}
-diff --git a/net/unix/scm.c b/net/unix/scm.c
-index e8e2a00bb0f58..d1048b4c2baaf 100644
---- a/net/unix/scm.c
-+++ b/net/unix/scm.c
-@@ -34,10 +34,8 @@ struct sock *unix_get_socket(struct file *filp)
- 		/* PF_UNIX ? */
- 		if (s && sock->ops && sock->ops->family == PF_UNIX)
- 			u_sock = s;
--	} else {
--		/* Could be an io_uring instance */
--		u_sock = io_uring_get_socket(filp);
- 	}
-+
- 	return u_sock;
+ 
+ 		spin_lock(&block_group->lock);
+-		if (block_group->reserved || block_group->pinned ||
+-		    block_group->used || block_group->ro ||
++		if (btrfs_is_block_group_used(block_group) || block_group->ro ||
+ 		    list_is_singular(&block_group->list)) {
+ 			/*
+ 			 * We want to bail if we made new allocations or have
+diff --git a/fs/btrfs/block-group.h b/fs/btrfs/block-group.h
+index a15868d607a92..f042c1c85a255 100644
+--- a/fs/btrfs/block-group.h
++++ b/fs/btrfs/block-group.h
+@@ -211,6 +211,13 @@ static inline u64 btrfs_block_group_end(struct btrfs_block_group *block_group)
+ 	return (block_group->start + block_group->length);
  }
- EXPORT_SYMBOL(unix_get_socket);
+ 
++static inline bool btrfs_is_block_group_used(const struct btrfs_block_group *bg)
++{
++	lockdep_assert_held(&bg->lock);
++
++	return (bg->used > 0 || bg->reserved > 0 || bg->pinned > 0);
++}
++
+ static inline bool btrfs_is_block_group_data_only(
+ 					struct btrfs_block_group *block_group)
+ {
 -- 
 2.43.0
 
