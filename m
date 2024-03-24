@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE0A1EEEF3;
-	Sun, 24 Mar 2024 23:09:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C8C13BACA;
+	Sun, 24 Mar 2024 23:09:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321745; cv=none; b=Srlw7w9oFarplnMaMPjbjYrLtVHNUkbC/W/AL7SsV8RfnVcKMNUo4vUNbjGcZ6va2CcGdYfHqGdR6Zm3TQdC1Kd/3kP3g0CATLPkHiFwKT807GP01j/YMFKBSV6Gm2Pgd/8MCCvbzVo5b4EWcaDd3nwcelitgunB+hSwXwdNgus=
+	t=1711321754; cv=none; b=JZBuvCfZ5K9ELkhPfR1Qe2GRFrX6Wkheen2mIvlPVIia5/rA9Ve/A2ObXDgZelQOLMwbyYaScw9SZnHmykIT6zEdK3Vbcr/WyZOLQYXZeU6Fnog3e0HTjHzBSKL/7jTUIhYUmKSeivrn9X8LtRIBmCIsy3hkF1wGQ34SLv4fzgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321745; c=relaxed/simple;
-	bh=/OkvdvR70NnVfY2Fr/0spMghmmbQzum0lIGGLUM9FCI=;
+	s=arc-20240116; t=1711321754; c=relaxed/simple;
+	bh=FfAkLR82zNo8vXgN3x469UcnQzAZ56OYmk6OGgnHwmA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PgsxlaclU/Na0e4kM2Jyyk/R59Riq/iRxwBhquMdLujQFcDjmnoD4+X4B9ILuUVdNqXzrP5f7RAb0TLDaAf+oevV2DUGwmX2Qfqds+ZcTmhExvNQeqJokBm7sS9IMMklXXL56AwA72hPnea4wUoHU1cbN32O+6PrpAxsdl6aB/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E0QCSfgl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WNxtfe/jHQZuM/eoRx4wFC3ZcneJ4DzaSLXhFiC4z1AfR0UuQRCdzPqRTazTG8nSAbnT/eD3WiuA6B9iCFJdJDsXc/q22fu3xkNDakliFuroi06HPjI6mcyhibbvLZAQYM/VxxZy8nyqQNqmepaq5U6wwpDceO50Nv+aMrjbccM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M7Do2yvw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0QCSfgl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8D04C43394;
-	Sun, 24 Mar 2024 23:09:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M7Do2yvw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E8BFC433C7;
+	Sun, 24 Mar 2024 23:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321744;
-	bh=/OkvdvR70NnVfY2Fr/0spMghmmbQzum0lIGGLUM9FCI=;
+	s=k20201202; t=1711321752;
+	bh=FfAkLR82zNo8vXgN3x469UcnQzAZ56OYmk6OGgnHwmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E0QCSfglGrO1kaxJwjX5a3KM/z+oAtzPdZrnR8N/hUCGM7ciCELiWFgakmzaND/hL
-	 eywijjfzV1iwy96XUspxQJaDUNekpoQtbJ4vmHqJIXTsWB1Q1s0miRbQkJxTPhDQLC
-	 jRsJ9vprFYGYuJY3KLFTyRxd6SY/gcGAJZZuO5nvm1i0QW9KRFXO9hObWaWrM9zXqC
-	 28QELGlBh/i2Vqs3ClrD8nB1M4Inv/FAs3Ebn6JjNr+gOoklXOj9zI5o7dxDo5hleO
-	 yZMYCF4jNl840dX27JpjmuPTaqN941vkp2mgMZS8F1unT+HMt8xnS9bLr83zcEZBLR
-	 WJX0H9AkpM4mQ==
+	b=M7Do2yvwhhmHdhwje7PFFXI4GJu4z1yNAYCHDAXCCeYCcQOdpfTmeQNEZDPdXz+yv
+	 4/SkmAJcn2V61c7/Fccw1dXj+1y0Xx3ISKKsqB3HWPTYR9cm3kF1myX3dZN7BXDf41
+	 km9QjB0TR1NALQZWb6MmKUX2mvk6A/xniE6s+ykETdH+p76m8WPiPktnioP5kkku9r
+	 uhkzllsqDBw68rsTjOyWzSkoQu8ihhSYcnwYFzqpPSgXVZe0/7aOoP/Y3/1qQnqdV+
+	 EQkA8aDaIUgs8vjgR06U6GDXK3DqlSlFuE9RMxQjPC9nrFBR2Ay/rZXJM9YGtyoXaZ
+	 PqkhDfZY1N4GA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Maciej Strozek <mstrozek@opensource.cirrus.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
 	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 472/638] mfd: cs42l43: Fix wrong register defaults
-Date: Sun, 24 Mar 2024 18:58:29 -0400
-Message-ID: <20240324230116.1348576-473-sashal@kernel.org>
+Subject: [PATCH 6.6 480/638] mfd: cs42l43: Fix wrong GPIO_FN_SEL and SPI_CLK_CONFIG1 defaults
+Date: Sun, 24 Mar 2024 18:58:37 -0400
+Message-ID: <20240324230116.1348576-481-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,107 +51,44 @@ Content-Transfer-Encoding: 8bit
 
 From: Maciej Strozek <mstrozek@opensource.cirrus.com>
 
-[ Upstream commit c9e1e505cde1a8ddd0968b4d54ec2ea1937dfe00 ]
+[ Upstream commit 78334c343bef528b911da83a6b041d15a1a72efb ]
 
-A few regs have unnecessary values in defaults, change them to match the
-datasheet
+Two regs have wrong values in existing fields, change them to match
+the datasheet.
 
 Fixes: ace6d1448138 ("mfd: cs42l43: Add support for cs42l43 core driver")
 
 Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20240229155616.118457-1-mstrozek@opensource.cirrus.com
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20240301101547.2136948-1-mstrozek@opensource.cirrus.com
 Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/cs42l43.c | 68 +++++++++++++++++++++----------------------
- 1 file changed, 34 insertions(+), 34 deletions(-)
+ drivers/mfd/cs42l43.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mfd/cs42l43.c b/drivers/mfd/cs42l43.c
-index 7b6d07cbe6fc6..73c88ee6a866c 100644
+index 73c88ee6a866c..1cea3f8f467d4 100644
 --- a/drivers/mfd/cs42l43.c
 +++ b/drivers/mfd/cs42l43.c
-@@ -131,38 +131,38 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
- 	{ CS42L43_ASP_TX_CH4_CTRL,			0x00170091 },
- 	{ CS42L43_ASP_TX_CH5_CTRL,			0x001700C1 },
- 	{ CS42L43_ASP_TX_CH6_CTRL,			0x001700F1 },
--	{ CS42L43_ASPTX1_INPUT,				0x00800000 },
--	{ CS42L43_ASPTX2_INPUT,				0x00800000 },
--	{ CS42L43_ASPTX3_INPUT,				0x00800000 },
--	{ CS42L43_ASPTX4_INPUT,				0x00800000 },
--	{ CS42L43_ASPTX5_INPUT,				0x00800000 },
--	{ CS42L43_ASPTX6_INPUT,				0x00800000 },
--	{ CS42L43_SWIRE_DP1_CH1_INPUT,			0x00800000 },
--	{ CS42L43_SWIRE_DP1_CH2_INPUT,			0x00800000 },
--	{ CS42L43_SWIRE_DP1_CH3_INPUT,			0x00800000 },
--	{ CS42L43_SWIRE_DP1_CH4_INPUT,			0x00800000 },
--	{ CS42L43_SWIRE_DP2_CH1_INPUT,			0x00800000 },
--	{ CS42L43_SWIRE_DP2_CH2_INPUT,			0x00800000 },
--	{ CS42L43_SWIRE_DP3_CH1_INPUT,			0x00800000 },
--	{ CS42L43_SWIRE_DP3_CH2_INPUT,			0x00800000 },
--	{ CS42L43_SWIRE_DP4_CH1_INPUT,			0x00800000 },
--	{ CS42L43_SWIRE_DP4_CH2_INPUT,			0x00800000 },
--	{ CS42L43_ASRC_INT1_INPUT1,			0x00800000 },
--	{ CS42L43_ASRC_INT2_INPUT1,			0x00800000 },
--	{ CS42L43_ASRC_INT3_INPUT1,			0x00800000 },
--	{ CS42L43_ASRC_INT4_INPUT1,			0x00800000 },
--	{ CS42L43_ASRC_DEC1_INPUT1,			0x00800000 },
--	{ CS42L43_ASRC_DEC2_INPUT1,			0x00800000 },
--	{ CS42L43_ASRC_DEC3_INPUT1,			0x00800000 },
--	{ CS42L43_ASRC_DEC4_INPUT1,			0x00800000 },
--	{ CS42L43_ISRC1INT1_INPUT1,			0x00800000 },
--	{ CS42L43_ISRC1INT2_INPUT1,			0x00800000 },
--	{ CS42L43_ISRC1DEC1_INPUT1,			0x00800000 },
--	{ CS42L43_ISRC1DEC2_INPUT1,			0x00800000 },
--	{ CS42L43_ISRC2INT1_INPUT1,			0x00800000 },
--	{ CS42L43_ISRC2INT2_INPUT1,			0x00800000 },
--	{ CS42L43_ISRC2DEC1_INPUT1,			0x00800000 },
--	{ CS42L43_ISRC2DEC2_INPUT1,			0x00800000 },
-+	{ CS42L43_ASPTX1_INPUT,				0x00000000 },
-+	{ CS42L43_ASPTX2_INPUT,				0x00000000 },
-+	{ CS42L43_ASPTX3_INPUT,				0x00000000 },
-+	{ CS42L43_ASPTX4_INPUT,				0x00000000 },
-+	{ CS42L43_ASPTX5_INPUT,				0x00000000 },
-+	{ CS42L43_ASPTX6_INPUT,				0x00000000 },
-+	{ CS42L43_SWIRE_DP1_CH1_INPUT,			0x00000000 },
-+	{ CS42L43_SWIRE_DP1_CH2_INPUT,			0x00000000 },
-+	{ CS42L43_SWIRE_DP1_CH3_INPUT,			0x00000000 },
-+	{ CS42L43_SWIRE_DP1_CH4_INPUT,			0x00000000 },
-+	{ CS42L43_SWIRE_DP2_CH1_INPUT,			0x00000000 },
-+	{ CS42L43_SWIRE_DP2_CH2_INPUT,			0x00000000 },
-+	{ CS42L43_SWIRE_DP3_CH1_INPUT,			0x00000000 },
-+	{ CS42L43_SWIRE_DP3_CH2_INPUT,			0x00000000 },
-+	{ CS42L43_SWIRE_DP4_CH1_INPUT,			0x00000000 },
-+	{ CS42L43_SWIRE_DP4_CH2_INPUT,			0x00000000 },
-+	{ CS42L43_ASRC_INT1_INPUT1,			0x00000000 },
-+	{ CS42L43_ASRC_INT2_INPUT1,			0x00000000 },
-+	{ CS42L43_ASRC_INT3_INPUT1,			0x00000000 },
-+	{ CS42L43_ASRC_INT4_INPUT1,			0x00000000 },
-+	{ CS42L43_ASRC_DEC1_INPUT1,			0x00000000 },
-+	{ CS42L43_ASRC_DEC2_INPUT1,			0x00000000 },
-+	{ CS42L43_ASRC_DEC3_INPUT1,			0x00000000 },
-+	{ CS42L43_ASRC_DEC4_INPUT1,			0x00000000 },
-+	{ CS42L43_ISRC1INT1_INPUT1,			0x00000000 },
-+	{ CS42L43_ISRC1INT2_INPUT1,			0x00000000 },
-+	{ CS42L43_ISRC1DEC1_INPUT1,			0x00000000 },
-+	{ CS42L43_ISRC1DEC2_INPUT1,			0x00000000 },
-+	{ CS42L43_ISRC2INT1_INPUT1,			0x00000000 },
-+	{ CS42L43_ISRC2INT2_INPUT1,			0x00000000 },
-+	{ CS42L43_ISRC2DEC1_INPUT1,			0x00000000 },
-+	{ CS42L43_ISRC2DEC2_INPUT1,			0x00000000 },
- 	{ CS42L43_EQ1MIX_INPUT1,			0x00800000 },
- 	{ CS42L43_EQ1MIX_INPUT2,			0x00800000 },
- 	{ CS42L43_EQ1MIX_INPUT3,			0x00800000 },
-@@ -171,8 +171,8 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
- 	{ CS42L43_EQ2MIX_INPUT2,			0x00800000 },
- 	{ CS42L43_EQ2MIX_INPUT3,			0x00800000 },
- 	{ CS42L43_EQ2MIX_INPUT4,			0x00800000 },
--	{ CS42L43_SPDIF1_INPUT1,			0x00800000 },
--	{ CS42L43_SPDIF2_INPUT1,			0x00800000 },
-+	{ CS42L43_SPDIF1_INPUT1,			0x00000000 },
-+	{ CS42L43_SPDIF2_INPUT1,			0x00000000 },
- 	{ CS42L43_AMP1MIX_INPUT1,			0x00800000 },
- 	{ CS42L43_AMP1MIX_INPUT2,			0x00800000 },
- 	{ CS42L43_AMP1MIX_INPUT3,			0x00800000 },
+@@ -84,7 +84,7 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
+ 	{ CS42L43_DRV_CTRL_5,				0x136C00C0 },
+ 	{ CS42L43_GPIO_CTRL1,				0x00000707 },
+ 	{ CS42L43_GPIO_CTRL2,				0x00000000 },
+-	{ CS42L43_GPIO_FN_SEL,				0x00000000 },
++	{ CS42L43_GPIO_FN_SEL,				0x00000004 },
+ 	{ CS42L43_MCLK_SRC_SEL,				0x00000000 },
+ 	{ CS42L43_SAMPLE_RATE1,				0x00000003 },
+ 	{ CS42L43_SAMPLE_RATE2,				0x00000003 },
+@@ -217,7 +217,7 @@ const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS] = {
+ 	{ CS42L43_CTRL_REG,				0x00000006 },
+ 	{ CS42L43_FDIV_FRAC,				0x40000000 },
+ 	{ CS42L43_CAL_RATIO,				0x00000080 },
+-	{ CS42L43_SPI_CLK_CONFIG1,			0x00000000 },
++	{ CS42L43_SPI_CLK_CONFIG1,			0x00000001 },
+ 	{ CS42L43_SPI_CONFIG1,				0x00000000 },
+ 	{ CS42L43_SPI_CONFIG2,				0x00000000 },
+ 	{ CS42L43_SPI_CONFIG3,				0x00000001 },
 -- 
 2.43.0
 
