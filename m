@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB1217C64D;
-	Sun, 24 Mar 2024 23:42:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4F917AF97;
+	Sun, 24 Mar 2024 23:42:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323776; cv=none; b=sEyLVZS2vj0p+4o26s2vC5fcmg2Wb399KERHect2FbWKZ2UYJPOgP8kDAFDcIpnCmfITVXk/ngN1s9Cs4RSQ8OUiABMU9sQlcd2htqXxVfZrLG1kJfejsjoqEufHTRl3jIuGFqMTcIBRkOMt1ZClIp2zuusypIF4ArN0J8KtsE0=
+	t=1711323779; cv=none; b=AmZH+z0HR69AGhc46ObCUbW2ugyxBLepvDTQgXwSFMK49xzIiCwMxOn4iQZfG3XB45ny+FRumPYnhIpWDHuWQHF147R7KiBJ93llAjk/qoMPmvZsFGU7xkqYM9qnrGCUFg40ahr7DyzbPTDEvPuatQer0JOEUpvqlyBnwhYuMWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323776; c=relaxed/simple;
-	bh=hFawXazSgOWDX4ODepUPpjqmDoz/ldmHApyQjv8C9yo=;
+	s=arc-20240116; t=1711323779; c=relaxed/simple;
+	bh=Yjr34TEgyp7PzJaC3I+2zo5LTxg0MGz/MCnfuX7bBrE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MITnuLd5UQXxS8x5Cu5YLd3k+JhCrDQ4Cb5HqeaVANmzWtO+UA571rpUqz+Jah4eB4JWPUGkIF2bw54oOCUinj5I1jNOwBmzYFGH7ZlRxM0BJSfo7j93nLnKeX10Vj8cGNJg0apa9Wzmkav7kFfljUD7ZI8c5gapFljWu7n5AOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fHM6zAPH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BFHIFh5+dfQVcqGqDzK2G+kdRzaLmpm1Po0yhHKGZSPEOWYxXuym8/0b/UZHRCZEVn6Hwl9itFqRkRgdUZ+7p0RVMCQrlQb7r55NUI0+LSMWmIvpN99nBZCneEmdDajoy4cyz9oknNVVgpCAGqVumQrFCqsGZPgK//5NZAYzvjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nd8YSegg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fHM6zAPH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B33CC43609;
-	Sun, 24 Mar 2024 23:42:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nd8YSegg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7B41C43390;
+	Sun, 24 Mar 2024 23:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323775;
-	bh=hFawXazSgOWDX4ODepUPpjqmDoz/ldmHApyQjv8C9yo=;
+	s=k20201202; t=1711323778;
+	bh=Yjr34TEgyp7PzJaC3I+2zo5LTxg0MGz/MCnfuX7bBrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fHM6zAPHg9873zVLQEBQAtCjzhJ2Vfi+1aWtqyzwp2yEJWZr2mfrLxwQFlmxt547q
-	 1oHzPAiwP4e+atcUtm8GX98F9xXEaxVRwViGxtwTsuxg7x4ytRBUOQJryZzPZSKugT
-	 9LE/FMRNctSeIoVz8U3VYiVfv1E7mayim0SJftAjI/xf9g62i5bSKL4oRAwXAxVEaI
-	 9/k1caaF9yfwhnOX7zT8Ich6otjXRvQZwMV3awePrestdwBNcNXtzHEst+Cqy2oTg+
-	 Y/V9A0D6ZeTugMfW5YaZmPZHDjzv3pwYKxse0wKIVqovdYCSeE05O/OuIxXzs+TXU+
-	 xg6GqTgkNIkfg==
+	b=nd8YSegg7SFa63979CKMDGNWhszdExIMEztbL/j6hXyei+3v8lUOflyj8SnYBk665
+	 fog/K+ti74oL8H/SFCJc6GyyDjpgER4nct08uQq2NuPaN3U3Ehvl10e66iKJuOSGC/
+	 r57UOgrKzH/x8R0CURBVuLibPS7YPhnofvPiJEOz0rOim1cN2c4y+tBAkJIWRMlyCy
+	 qAsI4hPmCaDz+5nKeGp328bPvteoPlyRXReRs+CQbS2CjC3ZHFQXR6XLyHSlTK3VPj
+	 ujXB9YC6xEd6SFuTMTTfnoCoQlMkI3Wk5b4Df9AEn3ZDb7fsqz/bOenyHwejyurP7N
+	 U08oxskwA6KNw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jernej Skrabec <jernej.skrabec@gmail.com>,
+Cc: Lucas Stach <l.stach@pengutronix.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 151/238] media: sun8i-di: Fix coefficient writes
-Date: Sun, 24 Mar 2024 19:38:59 -0400
-Message-ID: <20240324234027.1354210-152-sashal@kernel.org>
+Subject: [PATCH 5.10 154/238] media: imx: csc/scaler: fix v4l2_ctrl_handler memory leak
+Date: Sun, 24 Mar 2024 19:39:02 -0400
+Message-ID: <20240324234027.1354210-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,100 +49,33 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jernej Skrabec <jernej.skrabec@gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 794b581f8c6eb7b60fe468ccb96dd3cd38ff779f ]
+[ Upstream commit 4797a3dd46f220e6d83daf54d70c5b33db6deb01 ]
 
-Currently coefficients are applied only once, since they don't change.
-However, this is done before enable bit is set and thus it doesn't get
-applied properly.
+Free the memory allocated in v4l2_ctrl_handler_init on release.
 
-Fix that by applying coefficients after enable bit is set. While this
-means that it will be done evey time, it doesn't bring much time
-penalty.
-
-Fixes: a4260ea49547 ("media: sun4i: Add H3 deinterlace driver")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Fixes: a8ef0488cc59 ("media: imx: add csc/scaler mem2mem device")
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 42 +++++++++----------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ drivers/staging/media/imx/imx-media-csc-scaler.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-index 2c159483c56ba..a9d3272940be0 100644
---- a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-+++ b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-@@ -66,6 +66,7 @@ static void deinterlace_device_run(void *priv)
- 	struct vb2_v4l2_buffer *src, *dst;
- 	unsigned int hstep, vstep;
- 	dma_addr_t addr;
-+	int i;
+diff --git a/drivers/staging/media/imx/imx-media-csc-scaler.c b/drivers/staging/media/imx/imx-media-csc-scaler.c
+index 63a0204502a8b..939843b895440 100644
+--- a/drivers/staging/media/imx/imx-media-csc-scaler.c
++++ b/drivers/staging/media/imx/imx-media-csc-scaler.c
+@@ -803,6 +803,7 @@ static int ipu_csc_scaler_release(struct file *file)
  
- 	src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-@@ -160,6 +161,26 @@ static void deinterlace_device_run(void *priv)
- 	deinterlace_write(dev, DEINTERLACE_CH1_HORZ_FACT, hstep);
- 	deinterlace_write(dev, DEINTERLACE_CH1_VERT_FACT, vstep);
+ 	dev_dbg(priv->dev, "Releasing instance %p\n", ctx);
  
-+	/* neutral filter coefficients */
-+	deinterlace_set_bits(dev, DEINTERLACE_FRM_CTRL,
-+			     DEINTERLACE_FRM_CTRL_COEF_ACCESS);
-+	readl_poll_timeout(dev->base + DEINTERLACE_STATUS, val,
-+			   val & DEINTERLACE_STATUS_COEF_STATUS, 2, 40);
-+
-+	for (i = 0; i < 32; i++) {
-+		deinterlace_write(dev, DEINTERLACE_CH0_HORZ_COEF0 + i * 4,
-+				  DEINTERLACE_IDENTITY_COEF);
-+		deinterlace_write(dev, DEINTERLACE_CH0_VERT_COEF + i * 4,
-+				  DEINTERLACE_IDENTITY_COEF);
-+		deinterlace_write(dev, DEINTERLACE_CH1_HORZ_COEF0 + i * 4,
-+				  DEINTERLACE_IDENTITY_COEF);
-+		deinterlace_write(dev, DEINTERLACE_CH1_VERT_COEF + i * 4,
-+				  DEINTERLACE_IDENTITY_COEF);
-+	}
-+
-+	deinterlace_clr_set_bits(dev, DEINTERLACE_FRM_CTRL,
-+				 DEINTERLACE_FRM_CTRL_COEF_ACCESS, 0);
-+
- 	deinterlace_clr_set_bits(dev, DEINTERLACE_FIELD_CTRL,
- 				 DEINTERLACE_FIELD_CTRL_FIELD_CNT_MSK,
- 				 DEINTERLACE_FIELD_CTRL_FIELD_CNT(ctx->field));
-@@ -248,7 +269,6 @@ static irqreturn_t deinterlace_irq(int irq, void *data)
- static void deinterlace_init(struct deinterlace_dev *dev)
- {
- 	u32 val;
--	int i;
- 
- 	deinterlace_write(dev, DEINTERLACE_BYPASS,
- 			  DEINTERLACE_BYPASS_CSC);
-@@ -285,26 +305,6 @@ static void deinterlace_init(struct deinterlace_dev *dev)
- 	deinterlace_clr_set_bits(dev, DEINTERLACE_CHROMA_DIFF,
- 				 DEINTERLACE_CHROMA_DIFF_TH_MSK,
- 				 DEINTERLACE_CHROMA_DIFF_TH(5));
--
--	/* neutral filter coefficients */
--	deinterlace_set_bits(dev, DEINTERLACE_FRM_CTRL,
--			     DEINTERLACE_FRM_CTRL_COEF_ACCESS);
--	readl_poll_timeout(dev->base + DEINTERLACE_STATUS, val,
--			   val & DEINTERLACE_STATUS_COEF_STATUS, 2, 40);
--
--	for (i = 0; i < 32; i++) {
--		deinterlace_write(dev, DEINTERLACE_CH0_HORZ_COEF0 + i * 4,
--				  DEINTERLACE_IDENTITY_COEF);
--		deinterlace_write(dev, DEINTERLACE_CH0_VERT_COEF + i * 4,
--				  DEINTERLACE_IDENTITY_COEF);
--		deinterlace_write(dev, DEINTERLACE_CH1_HORZ_COEF0 + i * 4,
--				  DEINTERLACE_IDENTITY_COEF);
--		deinterlace_write(dev, DEINTERLACE_CH1_VERT_COEF + i * 4,
--				  DEINTERLACE_IDENTITY_COEF);
--	}
--
--	deinterlace_clr_set_bits(dev, DEINTERLACE_FRM_CTRL,
--				 DEINTERLACE_FRM_CTRL_COEF_ACCESS, 0);
- }
- 
- static inline struct deinterlace_ctx *deinterlace_file2ctx(struct file *file)
++	v4l2_ctrl_handler_free(&ctx->ctrl_hdlr);
+ 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
+ 	v4l2_fh_del(&ctx->fh);
+ 	v4l2_fh_exit(&ctx->fh);
 -- 
 2.43.0
 
