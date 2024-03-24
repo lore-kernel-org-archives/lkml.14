@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46A4811F8;
-	Sun, 24 Mar 2024 22:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3300180C16;
+	Sun, 24 Mar 2024 22:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320527; cv=none; b=j2s1KnEqjJfKwrDd3m8uvXe4dgQY7cEWBRMpG2CF1gx194iazxvbkUens8T7wMWbeClsSBHmWYbGNhJB5xMUTkLMxi0x0O9RgMrKPjpYsIP/kwvGAV7v+ZtL/0noKfuSZPbvqnSnYEZv0SWkT2LO/BiMZdf65GmqzvrOD0byJao=
+	t=1711320525; cv=none; b=Z9btAb2z3I5k9yAzt0Yp0b19DzoxxnCEcBbEH96+298k7nlDdya6kqLx4eGkDCjtwt98Anc0qyIwlXPmSAiDGsm1keyvzqftC/bSFIDAgJbgzMIzniUBkjxO+ENXDv9I/jMGzNNI4FuDcFEqcui5jsZwEAgWDt9/zlngZgQJkn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320527; c=relaxed/simple;
-	bh=6+SYbOYNnKPwultYmz4ENRnWG3XaQXiJHsyiff95gzg=;
+	s=arc-20240116; t=1711320525; c=relaxed/simple;
+	bh=+mlHzEBUPNqfokPIaT4uJRapE/C8RmPnz2gA32qU8Nk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ECeuK2Z3WH15yZBnwtHSPOayH4GPXXIJPprbjT24C88K5pBZBxkGlPsj6L9rPGRQVIDUs/nQCXP/MqfH8sr6YKmw5vrY2/3WEo5Vkibs37rHGjD/0oYaFISkDoNkYlLQFIzZ6yel2+u7VDFARsLgBg8NGQ0M3K354wx5b6v4vik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qpi1LjGz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PTeVjaohntESE1ZKp0fmCdwNNXQdR7LLOcuCtp7neQFXqLlXVtc9HQqAJMJirJRaZCgYjHytwC1f0O2gMCwJXEqwb4EM85ybOzLFhjqeiWrdJqjuSb9/7B3PMUEWkBM+ApUrBTlTb9305rvHCZjRuuGY4LCvQvj4fa3gpCxiEso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNPzw0ed; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qpi1LjGz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00797C43399;
-	Sun, 24 Mar 2024 22:48:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNPzw0ed"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F0BDC433C7;
+	Sun, 24 Mar 2024 22:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320527;
-	bh=6+SYbOYNnKPwultYmz4ENRnWG3XaQXiJHsyiff95gzg=;
+	s=k20201202; t=1711320524;
+	bh=+mlHzEBUPNqfokPIaT4uJRapE/C8RmPnz2gA32qU8Nk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qpi1LjGzm278bcC+eo1HJi7kM09//MDqElwYSOHWqpbJc6PRJaTJX6XcnciLc0wfg
-	 SWBoDClKLSH2PbdKm3lPGltXHv1GE5ZtLKTybncW4jsOjR5saLCy7JofNL4hjMWNln
-	 oKKNIxVWSXk75wHaIqeOZ6meuWjt8oHhSXtpWjfeJ5/jbksf3IOIF6NQfdQY+Id9UC
-	 wt/tAK8/mWBQCnBs/BGWqRXXbTa4B/9XOY6zIY6vZKmeABiGgrCZ2I2EQDHbuoupg+
-	 NImfYmbfWVHGL7px4QYc0cp2cMXrUcC96gW7/ZaDAorbRukOD5YVLHa9lUhZwRG7Xf
-	 8qhqCpzcXjgPQ==
+	b=aNPzw0edclHUb4Xfmdi6PHKGZsQJGk3CFOqGJibEFGj5g2G8ysO9DA7LXaH84k6r2
+	 RFIFll6hSTrODr2F1gTBCfhtdpBz96gnIJ6ywXaAqtQGDQZXYpoZWWlrHyZ8KSnGEC
+	 lpgGT+9VLcH/mzC+XyKnBrsrmvZ6HGzuOLg/DOLrrRGVj9lmNHnEcjh6aINGfNiIna
+	 Ma0UDo+sTesZfGC670dr+1xwcfWdZoxAE3hZv6X4JzAp0yUsaHXwBkoBhoopqkL4Wz
+	 HqZnOxQj7MFNDQ0Jbbe3pHBrdvcAzQNya9rq0ZplzVq2uzT1dDxol1wii/ZtJM+BLQ
+	 EJkaf+USxI8qw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Tejun Heo <tj@kernel.org>,
 	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 089/713] workqueue: Introduce struct wq_node_nr_active
-Date: Sun, 24 Mar 2024 18:36:55 -0400
-Message-ID: <20240324224720.1345309-90-sashal@kernel.org>
+Subject: [PATCH 6.7 085/713] workqueue: Replace pwq_activate_inactive_work() with [__]pwq_activate_work()
+Date: Sun, 24 Mar 2024 18:36:51 -0400
+Message-ID: <20240324224720.1345309-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,302 +50,88 @@ Content-Transfer-Encoding: 8bit
 
 From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 91ccc6e7233bb10a9c176aa4cc70d6f432a441a5 ]
+[ Upstream commit 4c6380305d21e36581b451f7337a36c93b64e050 ]
 
-Currently, for both percpu and unbound workqueues, max_active applies
-per-cpu, which is a recent change for unbound workqueues. The change for
-unbound workqueues was a significant departure from the previous behavior of
-per-node application. It made some use cases create undesirable number of
-concurrent work items and left no good way of fixing them. To address the
-problem, workqueue is implementing a NUMA node segmented global nr_active
-mechanism, which will be explained further in the next patch.
+To prepare for unbound nr_active handling improvements, move work activation
+part of pwq_activate_inactive_work() into __pwq_activate_work() and add
+pwq_activate_work() which tests WORK_STRUCT_INACTIVE and updates nr_active.
 
-As a preparation, this patch introduces struct wq_node_nr_active. It's a
-data structured allocated for each workqueue and NUMA node pair and
-currently only tracks the workqueue's number of active work items on the
-node. This is split out from the next patch to make it easier to understand
-and review.
-
-Note that there is an extra wq_node_nr_active allocated for the invalid node
-nr_node_ids which is used to track nr_active for pools which don't have NUMA
-node associated such as the default fallback system-wide pool.
-
-This doesn't cause any behavior changes visible to userland yet. The next
-patch will expand to implement the control mechanism on top.
-
-v4: - Fixed out-of-bound access when freeing per-cpu workqueues.
-
-v3: - Use flexible array for wq->node_nr_active as suggested by Lai.
-
-v2: - wq->max_active now uses WRITE/READ_ONCE() as suggested by Lai.
-
-    - Lai pointed out that pwq_tryinc_nr_active() incorrectly dropped
-      pwq->max_active check. Restored. As the next patch replaces the
-      max_active enforcement mechanism, this doesn't change the end result.
+pwq_activate_first_inactive() and try_to_grab_pending() are updated to use
+pwq_activate_work(). The latter conversion is functionally identical. For
+the former, this conversion adds an unnecessary WORK_STRUCT_INACTIVE
+testing. This is temporary and will be removed by the next patch.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
 Stable-dep-of: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/workqueue.c | 142 ++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 135 insertions(+), 7 deletions(-)
+ kernel/workqueue.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 53bebd8c8b457..be1fc91b9851c 100644
+index 4674b45620e74..861d8c7d6449a 100644
 --- a/kernel/workqueue.c
 +++ b/kernel/workqueue.c
-@@ -280,6 +280,16 @@ struct wq_flusher {
- 
- struct wq_device;
- 
-+/*
-+ * Unlike in a per-cpu workqueue where max_active limits its concurrency level
-+ * on each CPU, in an unbound workqueue, max_active applies to the whole system.
-+ * As sharing a single nr_active across multiple sockets can be very expensive,
-+ * the counting and enforcement is per NUMA node.
-+ */
-+struct wq_node_nr_active {
-+	atomic_t		nr;		/* per-node nr_active count */
-+};
-+
- /*
-  * The externally visible workqueue.  It relays the issued work items to
-  * the appropriate worker_pool through its pool_workqueues.
-@@ -326,6 +336,7 @@ struct workqueue_struct {
- 	/* hot fields used during command issue, aligned to cacheline */
- 	unsigned int		flags ____cacheline_aligned; /* WQ: WQ_* flags */
- 	struct pool_workqueue __percpu __rcu **cpu_pwq; /* I: per-cpu pwqs */
-+	struct wq_node_nr_active *node_nr_active[]; /* I: per-node nr_active */
- };
- 
- static struct kmem_cache *pwq_cache;
-@@ -1415,6 +1426,31 @@ work_func_t wq_worker_last_func(struct task_struct *task)
- 	return worker->last_func;
+@@ -1455,16 +1455,36 @@ static bool pwq_is_empty(struct pool_workqueue *pwq)
+ 	return !pwq->nr_active && list_empty(&pwq->inactive_works);
  }
  
-+/**
-+ * wq_node_nr_active - Determine wq_node_nr_active to use
-+ * @wq: workqueue of interest
-+ * @node: NUMA node, can be %NUMA_NO_NODE
-+ *
-+ * Determine wq_node_nr_active to use for @wq on @node. Returns:
-+ *
-+ * - %NULL for per-cpu workqueues as they don't need to use shared nr_active.
-+ *
-+ * - node_nr_active[nr_node_ids] if @node is %NUMA_NO_NODE.
-+ *
-+ * - Otherwise, node_nr_active[@node].
-+ */
-+static struct wq_node_nr_active *wq_node_nr_active(struct workqueue_struct *wq,
-+						   int node)
-+{
-+	if (!(wq->flags & WQ_UNBOUND))
-+		return NULL;
-+
-+	if (node == NUMA_NO_NODE)
-+		node = nr_node_ids;
-+
-+	return wq->node_nr_active[node];
+-static void pwq_activate_inactive_work(struct work_struct *work)
++static void __pwq_activate_work(struct pool_workqueue *pwq,
++				struct work_struct *work)
+ {
+-	struct pool_workqueue *pwq = get_work_pwq(work);
+-
+ 	trace_workqueue_activate_work(work);
+ 	if (list_empty(&pwq->pool->worklist))
+ 		pwq->pool->watchdog_ts = jiffies;
+ 	move_linked_works(work, &pwq->pool->worklist, NULL);
+ 	__clear_bit(WORK_STRUCT_INACTIVE_BIT, work_data_bits(work));
 +}
 +
- /**
-  * get_pwq - get an extra reference on the specified pool_workqueue
-  * @pwq: pool_workqueue to get
-@@ -1496,12 +1532,17 @@ static bool pwq_activate_work(struct pool_workqueue *pwq,
- 			      struct work_struct *work)
- {
- 	struct worker_pool *pool = pwq->pool;
-+	struct wq_node_nr_active *nna;
- 
- 	lockdep_assert_held(&pool->lock);
- 
- 	if (!(*work_data_bits(work) & WORK_STRUCT_INACTIVE))
- 		return false;
- 
-+	nna = wq_node_nr_active(pwq->wq, pool->node);
-+	if (nna)
-+		atomic_inc(&nna->nr);
++/**
++ * pwq_activate_work - Activate a work item if inactive
++ * @pwq: pool_workqueue @work belongs to
++ * @work: work item to activate
++ *
++ * Returns %true if activated. %false if already active.
++ */
++static bool pwq_activate_work(struct pool_workqueue *pwq,
++			      struct work_struct *work)
++{
++	struct worker_pool *pool = pwq->pool;
++
++	lockdep_assert_held(&pool->lock);
++
++	if (!(*work_data_bits(work) & WORK_STRUCT_INACTIVE))
++		return false;
 +
  	pwq->nr_active++;
- 	__pwq_activate_work(pwq, work);
- 	return true;
-@@ -1518,14 +1559,18 @@ static bool pwq_tryinc_nr_active(struct pool_workqueue *pwq)
- {
- 	struct workqueue_struct *wq = pwq->wq;
- 	struct worker_pool *pool = pwq->pool;
-+	struct wq_node_nr_active *nna = wq_node_nr_active(wq, pool->node);
- 	bool obtained;
- 
- 	lockdep_assert_held(&pool->lock);
- 
- 	obtained = pwq->nr_active < READ_ONCE(wq->max_active);
- 
--	if (obtained)
-+	if (obtained) {
- 		pwq->nr_active++;
-+		if (nna)
-+			atomic_inc(&nna->nr);
-+	}
- 	return obtained;
++	__pwq_activate_work(pwq, work);
++	return true;
  }
  
-@@ -1562,10 +1607,26 @@ static bool pwq_activate_first_inactive(struct pool_workqueue *pwq)
- static void pwq_dec_nr_active(struct pool_workqueue *pwq)
- {
- 	struct worker_pool *pool = pwq->pool;
-+	struct wq_node_nr_active *nna = wq_node_nr_active(pwq->wq, pool->node);
+ static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
+@@ -1472,7 +1492,7 @@ static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
+ 	struct work_struct *work = list_first_entry(&pwq->inactive_works,
+ 						    struct work_struct, entry);
  
- 	lockdep_assert_held(&pool->lock);
- 
-+	/*
-+	 * @pwq->nr_active should be decremented for both percpu and unbound
-+	 * workqueues.
-+	 */
- 	pwq->nr_active--;
-+
-+	/*
-+	 * For a percpu workqueue, it's simple. Just need to kick the first
-+	 * inactive work item on @pwq itself.
-+	 */
-+	if (!nna) {
-+		pwq_activate_first_inactive(pwq);
-+		return;
-+	}
-+
-+	atomic_dec(&nna->nr);
- 	pwq_activate_first_inactive(pwq);
+-	pwq_activate_inactive_work(work);
++	pwq_activate_work(pwq, work);
  }
  
-@@ -4020,11 +4081,63 @@ static void wq_free_lockdep(struct workqueue_struct *wq)
- }
- #endif
+ /**
+@@ -1610,8 +1630,7 @@ static int try_to_grab_pending(struct work_struct *work, bool is_dwork,
+ 		 * management later on and cause stall.  Make sure the work
+ 		 * item is activated before grabbing.
+ 		 */
+-		if (*work_data_bits(work) & WORK_STRUCT_INACTIVE)
+-			pwq_activate_inactive_work(work);
++		pwq_activate_work(pwq, work);
  
-+static void free_node_nr_active(struct wq_node_nr_active **nna_ar)
-+{
-+	int node;
-+
-+	for_each_node(node) {
-+		kfree(nna_ar[node]);
-+		nna_ar[node] = NULL;
-+	}
-+
-+	kfree(nna_ar[nr_node_ids]);
-+	nna_ar[nr_node_ids] = NULL;
-+}
-+
-+static void init_node_nr_active(struct wq_node_nr_active *nna)
-+{
-+	atomic_set(&nna->nr, 0);
-+}
-+
-+/*
-+ * Each node's nr_active counter will be accessed mostly from its own node and
-+ * should be allocated in the node.
-+ */
-+static int alloc_node_nr_active(struct wq_node_nr_active **nna_ar)
-+{
-+	struct wq_node_nr_active *nna;
-+	int node;
-+
-+	for_each_node(node) {
-+		nna = kzalloc_node(sizeof(*nna), GFP_KERNEL, node);
-+		if (!nna)
-+			goto err_free;
-+		init_node_nr_active(nna);
-+		nna_ar[node] = nna;
-+	}
-+
-+	/* [nr_node_ids] is used as the fallback */
-+	nna = kzalloc_node(sizeof(*nna), GFP_KERNEL, NUMA_NO_NODE);
-+	if (!nna)
-+		goto err_free;
-+	init_node_nr_active(nna);
-+	nna_ar[nr_node_ids] = nna;
-+
-+	return 0;
-+
-+err_free:
-+	free_node_nr_active(nna_ar);
-+	return -ENOMEM;
-+}
-+
- static void rcu_free_wq(struct rcu_head *rcu)
- {
- 	struct workqueue_struct *wq =
- 		container_of(rcu, struct workqueue_struct, rcu);
- 
-+	if (wq->flags & WQ_UNBOUND)
-+		free_node_nr_active(wq->node_nr_active);
-+
- 	wq_free_lockdep(wq);
- 	free_percpu(wq->cpu_pwq);
- 	free_workqueue_attrs(wq->unbound_attrs);
-@@ -4776,7 +4889,8 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- {
- 	va_list args;
- 	struct workqueue_struct *wq;
--	int len;
-+	size_t wq_size;
-+	int name_len;
- 
- 	/*
- 	 * Unbound && max_active == 1 used to imply ordered, which is no longer
-@@ -4792,7 +4906,12 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 		flags |= WQ_UNBOUND;
- 
- 	/* allocate wq and format name */
--	wq = kzalloc(sizeof(*wq), GFP_KERNEL);
-+	if (flags & WQ_UNBOUND)
-+		wq_size = struct_size(wq, node_nr_active, nr_node_ids + 1);
-+	else
-+		wq_size = sizeof(*wq);
-+
-+	wq = kzalloc(wq_size, GFP_KERNEL);
- 	if (!wq)
- 		return NULL;
- 
-@@ -4803,11 +4922,12 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 	}
- 
- 	va_start(args, max_active);
--	len = vsnprintf(wq->name, sizeof(wq->name), fmt, args);
-+	name_len = vsnprintf(wq->name, sizeof(wq->name), fmt, args);
- 	va_end(args);
- 
--	if (len >= WQ_NAME_LEN)
--		pr_warn_once("workqueue: name exceeds WQ_NAME_LEN. Truncating to: %s\n", wq->name);
-+	if (name_len >= WQ_NAME_LEN)
-+		pr_warn_once("workqueue: name exceeds WQ_NAME_LEN. Truncating to: %s\n",
-+			     wq->name);
- 
- 	max_active = max_active ?: WQ_DFL_ACTIVE;
- 	max_active = wq_clamp_max_active(max_active, flags, wq->name);
-@@ -4826,8 +4946,13 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 	wq_init_lockdep(wq);
- 	INIT_LIST_HEAD(&wq->list);
- 
-+	if (flags & WQ_UNBOUND) {
-+		if (alloc_node_nr_active(wq->node_nr_active) < 0)
-+			goto err_unreg_lockdep;
-+	}
-+
- 	if (alloc_and_link_pwqs(wq) < 0)
--		goto err_unreg_lockdep;
-+		goto err_free_node_nr_active;
- 
- 	if (wq_online && init_rescuer(wq) < 0)
- 		goto err_destroy;
-@@ -4852,6 +4977,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 
- 	return wq;
- 
-+err_free_node_nr_active:
-+	if (wq->flags & WQ_UNBOUND)
-+		free_node_nr_active(wq->node_nr_active);
- err_unreg_lockdep:
- 	wq_unregister_lockdep(wq);
- 	wq_free_lockdep(wq);
+ 		list_del_init(&work->entry);
+ 		pwq_dec_nr_in_flight(pwq, *work_data_bits(work));
 -- 
 2.43.0
 
