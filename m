@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE46C1FC99E;
-	Sun, 24 Mar 2024 23:16:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF78722EAA9;
+	Sun, 24 Mar 2024 23:16:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322187; cv=none; b=lstYZxbe5J9qVp6F0mr9HUohfMZfZMQwzziv7brE1DwqTapTsUARLqEF/owZktME710gTjdZMl4SO+iJCjLS1ZipX5JzCfv5BFD+15h0WO6kKRGEWUy/nhMXezxh8MlU/c7rcGluHKXlffGoX71DimkekmGwDzuCW35PqkWv004=
+	t=1711322202; cv=none; b=a6dQUHB8gYadrQwCBi4dSLsvw1ZWBeZivJs4VEX+R0YiFKvYXa4wp9/jDKahd+xS+wqbAx2FCChQO4rxWNzB+iYD5NzomC5VgRte91/gRw0Nm+8KJc25VfcRJaPxhexHMS0N485+NyXhltJ7qrPznmTYdyXO72rPLpxh08mvbbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322187; c=relaxed/simple;
-	bh=CwWwXVhHyKnLQ10moKJIyAHUeLsBYRK/aKO6LwRtc0U=;
+	s=arc-20240116; t=1711322202; c=relaxed/simple;
+	bh=KRp+A+nr0NEQH9RosGC8lfVIpinzALJfOYpKT6tSyWU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e6hXsHZqSkvds9lMb8fq+ghSwFoL7OZrM3qK+prGcAHEEcQfI5n7BmfDv/eve9be2+hpWYPVvSHKJkKVG6+W5I76XXnwRCQcA/yhwwG0lNjNasMdNNAYcJWNvQsWih6peMSJ0EbJx+C+kEdu006YsqsAC+pFXbuLoSr2hhutbIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IsBzCO/G; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KEpnEq9Or7LeFNrlt7F81kAL33rh5YWOYchcplpTcQqnWol9A2vBeNp1mE8B3o0fEGXYMd3J2Fifk9F2madlF7xvMyZStWieBR18BcR5m2rPt0YQ+pwybhHbBS6yhIv048WsyGfFfqTV4xzvf9t9qFwol5tIYL1ESk6zmSv8Dmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NzMv1kPE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IsBzCO/G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4148C433A6;
-	Sun, 24 Mar 2024 23:16:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NzMv1kPE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEA15C43394;
+	Sun, 24 Mar 2024 23:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322186;
-	bh=CwWwXVhHyKnLQ10moKJIyAHUeLsBYRK/aKO6LwRtc0U=;
+	s=k20201202; t=1711322202;
+	bh=KRp+A+nr0NEQH9RosGC8lfVIpinzALJfOYpKT6tSyWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IsBzCO/GYnkCY9U/SDgvnivtAroLNV1SsdTzvK+15+gOa8naqgQrt3biuRGHvvXCT
-	 8ICq9TYwIJqD/qGx3zhvM7uFSiS/VHnKuA+zzZV9wErBzU7b+RfwYKr8Ge3N30OPOj
-	 Gtr6J5sy4sCArD4VgUXFoKOwJa0QBf8TJCjxH7xW7Ibk4DGa5ykzfxXafNKKoyw0HW
-	 GGFXzkHPMppBbdknEOW6qfYuJ7oYGmt8Sd/GYKsK/gWCnp3dUr9dw+dfRp+kRTaijK
-	 5hb+JselbRb6GcX5vqXhZpB29LUkU2ACZNGpMPOOX5q+YaqoFVkrWoAf9Rf+OZ6s6j
-	 /aBrSclmvc7VQ==
+	b=NzMv1kPEyg1XT3KHZSIJAsf0YoYdyz8UwubWQYz/moIocbv3zCqRnUYPfPw5ndsUH
+	 ckEbZDFJvOvtJ5kBCfHW7AMCl8n3RMBLSSZ5QdJtk0CpyfDhEB+/lU8gLYEypTxxK1
+	 /M0xgN5OhnMOw7r5ROJzGjLNhGavZT3xHgV/IkgvBVMhnKBwYq+UK2thghE8wDIjE7
+	 6UGhmo8DQBbfDe3SXqM58ioUa8fi13YKCuADo8YxiL8yP47RqkCIo80YwcgECSv/kw
+	 AdEXVKcVPxx/W54EvFVOj1X561nFJWvpg9U+KN82fJHoD2wK7xBhSJqela8/eLKo6P
+	 +s0SgKQwYvsKA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 265/451] media: em28xx: annotate unchecked call to media_device_register()
-Date: Sun, 24 Mar 2024 19:09:01 -0400
-Message-ID: <20240324231207.1351418-266-sashal@kernel.org>
+Subject: [PATCH 6.1 282/451] clk: renesas: r8a779g0: Add CMT clocks
+Date: Sun, 24 Mar 2024 19:09:18 -0400
+Message-ID: <20240324231207.1351418-283-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,40 +48,34 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit fd61d77a3d28444b2635f0c8b5a2ecd6a4d94026 ]
+[ Upstream commit 523ed9442b997c39220ee364b07a8773623e3a58 ]
 
-Static analyzers generate alerts for an unchecked call to
-`media_device_register()`. However, in this case, the device will work
-reliably without the media controller API.
-
-Add a comment above the call to prevent future unnecessary changes.
-
-Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Fixes: 37ecc7b1278f ("[media] em28xx: add media controller support")
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Link: https://lore.kernel.org/r/20221104151135.4706-2-wsa+renesas@sang-engineering.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Stable-dep-of: abb3fa662b8f ("clk: renesas: r8a779g0: Correct PFC/GPIO parent clocks")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/em28xx/em28xx-cards.c | 4 ++++
+ drivers/clk/renesas/r8a779g0-cpg-mssr.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
-index 4d037c92af7c5..bae76023cf71d 100644
---- a/drivers/media/usb/em28xx/em28xx-cards.c
-+++ b/drivers/media/usb/em28xx/em28xx-cards.c
-@@ -4094,6 +4094,10 @@ static int em28xx_usb_probe(struct usb_interface *intf,
- 	 * topology will likely change after the load of the em28xx subdrivers.
- 	 */
- #ifdef CONFIG_MEDIA_CONTROLLER
-+	/*
-+	 * No need to check the return value, the device will still be
-+	 * usable without media controller API.
-+	 */
- 	retval = media_device_register(dev->media_dev);
- #endif
- 
+diff --git a/drivers/clk/renesas/r8a779g0-cpg-mssr.c b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
+index d5b325e3c5398..f89cda70f2cbb 100644
+--- a/drivers/clk/renesas/r8a779g0-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
+@@ -169,6 +169,10 @@ static const struct mssr_mod_clk r8a779g0_mod_clks[] __initconst = {
+ 	DEF_MOD("i2c4",		522,	R8A779G0_CLK_S0D6_PER),
+ 	DEF_MOD("i2c5",		523,	R8A779G0_CLK_S0D6_PER),
+ 	DEF_MOD("wdt1:wdt0",	907,	R8A779G0_CLK_R),
++	DEF_MOD("cmt0",		910,	R8A779G0_CLK_R),
++	DEF_MOD("cmt1",		911,	R8A779G0_CLK_R),
++	DEF_MOD("cmt2",		912,	R8A779G0_CLK_R),
++	DEF_MOD("cmt3",		913,	R8A779G0_CLK_R),
+ 	DEF_MOD("pfc0",		915,	R8A779G0_CLK_CL16M),
+ 	DEF_MOD("pfc1",		916,	R8A779G0_CLK_CL16M),
+ 	DEF_MOD("pfc2",		917,	R8A779G0_CLK_CL16M),
 -- 
 2.43.0
 
