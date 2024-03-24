@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F251292D5;
-	Sun, 24 Mar 2024 22:54:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A161E6F64;
+	Sun, 24 Mar 2024 22:54:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320844; cv=none; b=ZdUvcnUv7ZOmGtmu49FkbcsSiBQw4RItbMSjYdMZrsmwSR6U08Mc7Xav/goBemPTjjqDTsgLj19FrHBubNdXz59gcLXdFlxA0pMlG1zvgVfbDRpZpdZH2md04WOJ+78ZqjTrWv4zwxI8xR7/Vx6v94+yTdYoPcLw6X/GIPtG1uY=
+	t=1711320860; cv=none; b=gYicsmg1kgkDd8psNP+EhXfCdHZqZzZ0uDhcNXdeChA+3B7VOLQP6VjcH1mq87Ek3MDhCUxCOweBFdJib8bBx4BJLGF3Kq4SQQojN0yjc1zFdBaRIj1W2q8O+oAwjqGStAYeuolSiwcHE0Jir7/OvXCLGWwt+w/Y9rdr0xPYHYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320844; c=relaxed/simple;
-	bh=OHkauVxwhGFcSzxmwXCt6W4KQ6WVPYd3XE4W4dRigWM=;
+	s=arc-20240116; t=1711320860; c=relaxed/simple;
+	bh=jx0xK9bQSIqIXUTuzqS9ze3n8taOEz3hd/Ivco0cQfc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qr+FZJmc7wrpsFVga6dWHdG4wTbAeQtfVYui8/aU15OSf923wAkMEwypVkOB7y1XDgC5/e9pSJVAb5uFnVwR3RG3MjUHg03/6NokHpdYYOJncqOcPZPAKs6UAxh7RIKXhoqzC3qf1OYSetdw+FTzJxv3daFERtMFRVpnTlnsOu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=im7aYSxw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=D2O/h93hMHmmlwgkYtqo62G6oVJA03tlDkyaCbkdf/mnDBh2+6NxMid/BkCC2fC7vnjC5GKuTtWv3z81v+ciQFnWSkE+6NVUVVoA3KLP5yKpZyd5qiza2dryOVTLlj9baih0CkPZlT5ndrA/Ob4dlavA5YzGYqqYBMYcTxouTW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hr6WlFqm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="im7aYSxw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3345FC433F1;
-	Sun, 24 Mar 2024 22:54:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hr6WlFqm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A457C433F1;
+	Sun, 24 Mar 2024 22:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320844;
-	bh=OHkauVxwhGFcSzxmwXCt6W4KQ6WVPYd3XE4W4dRigWM=;
+	s=k20201202; t=1711320860;
+	bh=jx0xK9bQSIqIXUTuzqS9ze3n8taOEz3hd/Ivco0cQfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=im7aYSxw03Kb5heYEb9iQKbQtYURYsGBoI8XH+qK/PNOPXqQMPHcPpamrO1HpfQYn
-	 FXQcSRMxmMLSzQRE0pajn4yeFL4N4dzsDntAOIS+xmQ2NUHXLGeHs8K3UAOBiGhX+5
-	 pv3qykkrdZtTp+DLFQjsZfqQRwzSGAzrW9OKKtejAdG2gulFqEZK0W/bzYYj0/q1dM
-	 uY48vOW25T9T1s0AQ6ow5E09sd163LhimyoW9KKxIvv7EG5MAcdIOIEq1BkFOMo3X2
-	 IgNPGEz6SwLYIv7ouMgPb24RGryrVVp90yDRd1eZ5l7dsLtTEdnUtr//R2mEXuOnnz
-	 S7yxVK+r4P45g==
+	b=Hr6WlFqmvzUteE+tg1DnH4t1M7RR+n0/NshgTFciMMVPnYvX1GglTK9eSmligqoQs
+	 th/T4895wKtWE2I5Up7oBde4neKNN0zIHGzQAM0U+zapRWnqvVl1luCysmVSsqwPbi
+	 dttmdcmtEdNdn1FyPjlq4RJOoidKp1qt63w9INtsxQzKXJDdwke4FTRFA37AVzK7/I
+	 y17+utY9xQeoNeZUeNdpak7arg8wf95F+V9uJf6+c0XiseyShmguV5/S2tqmAJH2k/
+	 wFwok1Xz2saUdWtCpsPY/cxjNbCOQ3Gitr1V1t9YjjMYDamB4XNqbt4BHd9vVwH2FT
+	 rDsn5jnQlaCSA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Julien Massot <julien.massot@collabora.com>,
-	Jai Luthra <j-luthra@ti.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Yang Jihong <yangjihong1@huawei.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 409/713] media: cadence: csi2rx: use match fwnode for media link
-Date: Sun, 24 Mar 2024 18:42:15 -0400
-Message-ID: <20240324224720.1345309-410-sashal@kernel.org>
+Subject: [PATCH 6.7 424/713] perf evsel: Fix duplicate initialization of data->id in evsel__parse_sample()
+Date: Sun, 24 Mar 2024 18:42:30 -0400
+Message-ID: <20240324224720.1345309-425-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,38 +50,35 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Julien Massot <julien.massot@collabora.com>
+From: Yang Jihong <yangjihong1@huawei.com>
 
-[ Upstream commit 448699c522af9e3266f168c3f51f4c3713c7bee1 ]
+[ Upstream commit 4962aec0d684c8edb14574ccd0da53e4926ff834 ]
 
-Since commit 1029939b3782 ("media: v4l: async: Simplify async sub-device fwnode matching"),
-async connections are matched using the async sub-device fwnode, not that
-of the endpoint. Fix this by using the fwnode of the connection match to
-find the pad.
+data->id has been initialized at line 2362, remove duplicate initialization.
 
-Fixes: 1029939b3782 ("media: v4l: async: Simplify async sub-device fwnode matching")
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
-Reviewed-by: Jai Luthra <j-luthra@ti.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: 3ad31d8a0df2 ("perf evsel: Centralize perf_sample initialization")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240127025756.4041808-1-yangjihong1@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/cadence/cdns-csi2rx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/evsel.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
-index 889f4fbbafb3c..c2a979397b39f 100644
---- a/drivers/media/platform/cadence/cdns-csi2rx.c
-+++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-@@ -465,7 +465,7 @@ static int csi2rx_async_bound(struct v4l2_async_notifier *notifier,
- 	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 72a5dfc38d380..1fb24ca8aea52 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2340,7 +2340,6 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 	data->period = evsel->core.attr.sample_period;
+ 	data->cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
+ 	data->misc    = event->header.misc;
+-	data->id = -1ULL;
+ 	data->data_src = PERF_MEM_DATA_SRC_NONE;
+ 	data->vcpu = -1;
  
- 	csi2rx->source_pad = media_entity_get_fwnode_pad(&s_subdev->entity,
--							 s_subdev->fwnode,
-+							 asd->match.fwnode,
- 							 MEDIA_PAD_FL_SOURCE);
- 	if (csi2rx->source_pad < 0) {
- 		dev_err(csi2rx->dev, "Couldn't find output pad for subdev %s\n",
 -- 
 2.43.0
 
