@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2931DF0E5;
-	Sun, 24 Mar 2024 22:52:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6DE1E0621;
+	Sun, 24 Mar 2024 22:52:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320743; cv=none; b=oBh2BSr8X+cfJPJ8wdSco/9fPSpcDkaWi7SWiSxAYX206rZMA/pTEhnn9hWTb7NoBwO5nM7boI2IWrulb3c0GtIUHBm5yZuk/9VA1Jz2AvxwNH3qXyOSqZjU9Vqr4DFV+E5oC36e/a7LKtjaDpQmpwTcF2W9D7YTBJogIh0wPms=
+	t=1711320759; cv=none; b=hOvjpuM/KtqQGwaEA4iNUxQWvLppPEs0kwl8um2woBvdJz19VzMkgzSncy6FonMps06Ahyhpfu9eo1HCV6voomZwnxQ3X1h9kvWCz+5RmUoWLE1BOe3fC50Zb+HygLntfT4FPVeWlefRzz0WrhTL3qVg5E2aYPy0TwDwCSJx0DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320743; c=relaxed/simple;
-	bh=iBV/5/Z+cGNqIANUq+vBJr418QFN4hXW/Rfok5Qg3Zw=;
+	s=arc-20240116; t=1711320759; c=relaxed/simple;
+	bh=lqQQQTexJ/MMhl+mj3ydgYMv1bw4L4LJ//0o9zshRDc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ep8GFK3D1sZEOMQuWX6xUpGI9CPE9ZAP7hYAowgFs/lf14fJKer6eZ25RYqw156BNyAUhfdVzrzitIsoLbGUqKdi9rCMmuownJPqL7UIwQ7dZ3qQtyy35xkpYm01C9a9weO+kqQ8xwr/ykrURoPdYRbdBYWexGPaQfhyfDY81Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvLpDPdV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HdWXZse72MnZ7HoD6MfesYzb6VCGJLpqbO54v4tZx0DYswQf80s23VR4IQwT4gfl7pYC9VIhMNuOy8k0fg/7+ovErREB7UToXdw/Kffm1BntDb+a2macNXxeG8+V9IJrNMs155VbxRykbAamiIls7Rn6I5qGRNCKjG1RNWfLhQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dholJIfY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvLpDPdV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 504DEC43399;
-	Sun, 24 Mar 2024 22:52:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dholJIfY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69558C43141;
+	Sun, 24 Mar 2024 22:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320742;
-	bh=iBV/5/Z+cGNqIANUq+vBJr418QFN4hXW/Rfok5Qg3Zw=;
+	s=k20201202; t=1711320758;
+	bh=lqQQQTexJ/MMhl+mj3ydgYMv1bw4L4LJ//0o9zshRDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hvLpDPdVzmiEwTprydTM200Ay7VX3X/t5NTDDdrerQKdeU/wlUTfbj069rWIdB0r2
-	 VeGesQsai3JbpRVcymjM2ounSOptEjTblrK5ZwleGA/wR0mIRtZm1vNy8a6BiZ+RFr
-	 mHc995Twzu0M/WA5HOsNvfKNenF6LeBSrFPsFCh+vpezN1/CYFFYizoBbAD5z7t7EQ
-	 PtGT7hlHAH2f5SolpUz1xUDbP7KOFEL1nRi39gqXshmll2BB9TKvLVoLS7W3F4wEFJ
-	 NbfDUURLGXG7dz4LX+tKSX5/sWK9ixzW55Lo/81BkAk5WUd/J9qunxpAfN5O2zcAds
-	 QKj2q74lC6biQ==
+	b=dholJIfYo3IRwtSqaYSBK03V3DjyXlNWvHfFHE76PBS1YQYfiPPA8QHxE9ytIY7DR
+	 1j8MKJZ9M2GfDjBzCeCmtJhD/ned5SejyAQYPZWAXqTK5p1Z+m/SgWrLSInLsYTUEu
+	 bvveTLrU3tMkBOTv9cWs0N0SupJknUCy7WgZdXSpB24fAX7q0Tahgsy0gmHClIpsUD
+	 eZmElhPAjgGSQyazRutoo4DTngHVb7oEiiVLl9HdmqEY3U8KkOqqEsiMeSMjNn/Gbz
+	 fMn6urUXonIyrwgX42gNrC0Fe8Q8IR1n+Z+UijL4Cg2bXD71Y0xTFAQGYQ+n6eLXhr
+	 KRh9GZ7lfntsQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 305/713] arm64: dts: renesas: rzg2l: Add missing interrupts to IRQC nodes
-Date: Sun, 24 Mar 2024 18:40:31 -0400
-Message-ID: <20240324224720.1345309-306-sashal@kernel.org>
+Subject: [PATCH 6.7 322/713] ACPI: scan: Fix device check notification handling
+Date: Sun, 24 Mar 2024 18:40:48 -0400
+Message-ID: <20240324224720.1345309-323-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,129 +48,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 14fe225dd5fcd5928583b0bcc34398a581f51602 ]
+[ Upstream commit 793551c965116d9dfaf0550dacae1396a20efa69 ]
 
-The IRQC IP block supports Bus error and ECCRAM interrupts on RZ/G2L and
-alike SoC's (listed below).  Update the IRQC nodes with the missing
-interrupts, and additionally, include the 'interrupt-names' properties
-in the IRQC nodes so that the driver can parse interrupts by name.
+It is generally invalid to fail a Device Check notification if the scan
+handler has not been attached to the given device after a bus rescan,
+because there may be valid reasons for the scan handler to refuse
+attaching to the device (for example, the device is not ready).
 
-  - R9A07G043U              - RZ/G2UL
-  - R9A07G044L/R9A07G044LC  - RZ/{G2L,G2LC}
-  - R9A07G054               - RZ/V2L
+For this reason, modify acpi_scan_device_check() to return 0 in that
+case without printing a warning.
 
-Fixes: 5edc51af5b30 ("arm64: dts: renesas: r9a07g044: Add IRQC node")
-Fixes: 48ab6eddd8bb ("arm64: dts: renesas: r9a07g043u: Add IRQC node")
-Fixes: 379478ab09e0 ("arm64: dts: renesas: r9a07g054: Add IRQC node")
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20240205144421.51195-3-prabhakar.mahadev-lad.rj@bp.renesas.com
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+While at it, reduce the log level of the "already enumerated" message
+in the same function, because it is only interesting when debugging
+notification handling
+
+Fixes: 443fc8202272 ("ACPI / hotplug: Rework generic code to handle suprise removals")
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r9a07g043u.dtsi | 12 +++++++++--
- arch/arm64/boot/dts/renesas/r9a07g044.dtsi  | 22 ++++++++++++++++++++-
- arch/arm64/boot/dts/renesas/r9a07g054.dtsi  | 22 ++++++++++++++++++++-
- 3 files changed, 52 insertions(+), 4 deletions(-)
+ drivers/acpi/scan.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi b/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi
-index 2ab231572d95f..b3f83d0ebcbb5 100644
---- a/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi
-@@ -109,7 +109,13 @@ irqc: interrupt-controller@110a0000 {
- 			     <SOC_PERIPHERAL_IRQ(473) IRQ_TYPE_LEVEL_HIGH>,
- 			     <SOC_PERIPHERAL_IRQ(474) IRQ_TYPE_LEVEL_HIGH>,
- 			     <SOC_PERIPHERAL_IRQ(475) IRQ_TYPE_LEVEL_HIGH>,
--			     <SOC_PERIPHERAL_IRQ(25) IRQ_TYPE_EDGE_RISING>;
-+			     <SOC_PERIPHERAL_IRQ(25) IRQ_TYPE_EDGE_RISING>,
-+			     <SOC_PERIPHERAL_IRQ(34) IRQ_TYPE_EDGE_RISING>,
-+			     <SOC_PERIPHERAL_IRQ(35) IRQ_TYPE_EDGE_RISING>,
-+			     <SOC_PERIPHERAL_IRQ(36) IRQ_TYPE_EDGE_RISING>,
-+			     <SOC_PERIPHERAL_IRQ(37) IRQ_TYPE_EDGE_RISING>,
-+			     <SOC_PERIPHERAL_IRQ(38) IRQ_TYPE_EDGE_RISING>,
-+			     <SOC_PERIPHERAL_IRQ(39) IRQ_TYPE_EDGE_RISING>;
- 		interrupt-names = "nmi",
- 				  "irq0", "irq1", "irq2", "irq3",
- 				  "irq4", "irq5", "irq6", "irq7",
-@@ -121,7 +127,9 @@ irqc: interrupt-controller@110a0000 {
- 				  "tint20", "tint21", "tint22", "tint23",
- 				  "tint24", "tint25", "tint26", "tint27",
- 				  "tint28", "tint29", "tint30", "tint31",
--				  "bus-err";
-+				  "bus-err", "ec7tie1-0", "ec7tie2-0",
-+				  "ec7tiovf-0", "ec7tie1-1", "ec7tie2-1",
-+				  "ec7tiovf-1";
- 		clocks = <&cpg CPG_MOD R9A07G043_IA55_CLK>,
- 			<&cpg CPG_MOD R9A07G043_IA55_PCLK>;
- 		clock-names = "clk", "pclk";
-diff --git a/arch/arm64/boot/dts/renesas/r9a07g044.dtsi b/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
-index 66f68fc2b2411..081d8f49db879 100644
---- a/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
-@@ -905,7 +905,27 @@ irqc: interrupt-controller@110a0000 {
- 				     <GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>;
-+				     <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 37 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 38 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 39 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "nmi", "irq0", "irq1", "irq2", "irq3",
-+					  "irq4", "irq5", "irq6", "irq7",
-+					  "tint0", "tint1", "tint2", "tint3",
-+					  "tint4", "tint5", "tint6", "tint7",
-+					  "tint8", "tint9", "tint10", "tint11",
-+					  "tint12", "tint13", "tint14", "tint15",
-+					  "tint16", "tint17", "tint18", "tint19",
-+					  "tint20", "tint21", "tint22", "tint23",
-+					  "tint24", "tint25", "tint26", "tint27",
-+					  "tint28", "tint29", "tint30", "tint31",
-+					  "bus-err", "ec7tie1-0", "ec7tie2-0",
-+					  "ec7tiovf-0", "ec7tie1-1", "ec7tie2-1",
-+					  "ec7tiovf-1";
- 			clocks = <&cpg CPG_MOD R9A07G044_IA55_CLK>,
- 				 <&cpg CPG_MOD R9A07G044_IA55_PCLK>;
- 			clock-names = "clk", "pclk";
-diff --git a/arch/arm64/boot/dts/renesas/r9a07g054.dtsi b/arch/arm64/boot/dts/renesas/r9a07g054.dtsi
-index 1f1d481dc7830..0d327464d2baf 100644
---- a/arch/arm64/boot/dts/renesas/r9a07g054.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a07g054.dtsi
-@@ -912,7 +912,27 @@ irqc: interrupt-controller@110a0000 {
- 				     <GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>;
-+				     <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 37 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 38 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 39 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "nmi", "irq0", "irq1", "irq2", "irq3",
-+					  "irq4", "irq5", "irq6", "irq7",
-+					  "tint0", "tint1", "tint2", "tint3",
-+					  "tint4", "tint5", "tint6", "tint7",
-+					  "tint8", "tint9", "tint10", "tint11",
-+					  "tint12", "tint13", "tint14", "tint15",
-+					  "tint16", "tint17", "tint18", "tint19",
-+					  "tint20", "tint21", "tint22", "tint23",
-+					  "tint24", "tint25", "tint26", "tint27",
-+					  "tint28", "tint29", "tint30", "tint31",
-+					  "bus-err", "ec7tie1-0", "ec7tie2-0",
-+					  "ec7tiovf-0", "ec7tie1-1", "ec7tie2-1",
-+					  "ec7tiovf-1";
- 			clocks = <&cpg CPG_MOD R9A07G054_IA55_CLK>,
- 				 <&cpg CPG_MOD R9A07G054_IA55_PCLK>;
- 			clock-names = "clk", "pclk";
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 02bb2cce423f4..35ad5781f0a5e 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -314,18 +314,14 @@ static int acpi_scan_device_check(struct acpi_device *adev)
+ 		 * again).
+ 		 */
+ 		if (adev->handler) {
+-			dev_warn(&adev->dev, "Already enumerated\n");
+-			return -EALREADY;
++			dev_dbg(&adev->dev, "Already enumerated\n");
++			return 0;
+ 		}
+ 		error = acpi_bus_scan(adev->handle);
+ 		if (error) {
+ 			dev_warn(&adev->dev, "Namespace scan failure\n");
+ 			return error;
+ 		}
+-		if (!adev->handler) {
+-			dev_warn(&adev->dev, "Enumeration failure\n");
+-			error = -ENODEV;
+-		}
+ 	} else {
+ 		error = acpi_scan_device_not_enumerated(adev);
+ 	}
 -- 
 2.43.0
 
