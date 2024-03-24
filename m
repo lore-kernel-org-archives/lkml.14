@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031341EC4A5;
-	Sun, 24 Mar 2024 23:07:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4251EC4B1;
+	Sun, 24 Mar 2024 23:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321637; cv=none; b=jqlpHjGMzaLFSoeHZAhNUrgJU9nDbOhyvhh0oQX3Dbvydh7Pwkqb4S3DFhmiyZC7YOR7vCX21bhlfWUNp4THTgpXLs4U/xctdriDp+wvYPxGkm/jLN8ax/4Uy1F6r6NKNbZgV4BJ5wjczrOJ5KuR0Zq9z5GL/OEi9sz/7z3Tjqc=
+	t=1711321635; cv=none; b=CCFGIBjGNDcfH5XDoNcn/0O1v90XuU79owbw3pue12Jqy93YTc5nDXsOvRvgYiYClg5osMhoEACh1clbiknjKKQGnGDYausRGEz8QblTE/TmFVVYk61h0/yTOpMrpb6nINeRqAyG3YeDUDRwwyU+DBAxOmGKbS29QTqG0xXRbbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321637; c=relaxed/simple;
-	bh=on5rA5lUDHzMSR8tAIoz2HkHMwVZeJD5y2m+BoZ5Ieo=;
+	s=arc-20240116; t=1711321635; c=relaxed/simple;
+	bh=5hAiO/oE23Dfr/v/1rIlZy338PxP8Tq6DlQNvV4pUs8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GkqXyTwujJZXq6nYioxp9F0MdsGu2oGBRXvTwCU3A/cIUpwJRrHrxvjKc2KZBV/5wF+9PNtYSz9+aBTbJgsLggSraJE87xhQJy8uhuIH57mJN0qpRP6lahnFvsXTgxR87IiALJ/DhpL0GbfZtDVwoljQFiUY4MKpDoD3x7Z/I24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4Ea0iFu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=D2TA+SKF/lX6R56DcvpQwkLBVamRq7In3/LNrLbCR8//X8LowYZG+t4217scdgNgUmiTgbAoMRybjpXaIaSoQ7fuwnLF9MeTErnUMU498QkRKIUvrINylP1EkZAUXAaLaZFvM1rRIp6sjxFckxD+3pIP/vWLq+kC4+vnTG6wrb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqgbUfly; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4Ea0iFu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4256EC433A6;
-	Sun, 24 Mar 2024 23:07:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqgbUfly"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 061A8C43399;
+	Sun, 24 Mar 2024 23:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321636;
-	bh=on5rA5lUDHzMSR8tAIoz2HkHMwVZeJD5y2m+BoZ5Ieo=;
+	s=k20201202; t=1711321634;
+	bh=5hAiO/oE23Dfr/v/1rIlZy338PxP8Tq6DlQNvV4pUs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t4Ea0iFu1DcnSvHW3QWLYk49VqZ10bWwhIFgxIyfIi2G0oxHXYG9PYrWm4/IJvRpC
-	 00U6NaQGEh8Sni9b95XUjiaIliaLZinEyUCBhV0Co7GU/5C/EsJajc6nWdtn7c8fYc
-	 0JmRrnyVivGdBcI5aF+BLbtMzyEfywSCF3RBRwk0znELtkdUMzeVNXbvuYqjiZF/q1
-	 Vw2fV7OZQMa4nPZ27KXkr1xjmm93iVoGyYlbmcH2sYthgIKbWoE4B525y5ix4gRK97
-	 1xp2ljbJhk6uVuQ2yuhchm8s4ccz9LE65ivqQnfIg+aTl2lncWgSNrA91LSLPL2txR
-	 DZaO5Ejsf6hYg==
+	b=JqgbUflyE7e55moqs7N23qXDb+3LDeDVJHiFq6W9VeaHc47BBepqnB5z+cJMfWei3
+	 EeOgsO1ZjcwTcd7DudRi67BEJmaSv32R+N+MAjdcU/pbY5LJnVf9/kaaGkUGALpsf8
+	 mOg6h2Cc19+NYynFtBmHG+0n67552jZ/P49ItTcy7AEuPaItCUUOZ2ZIEuMttVxz2S
+	 CHSkqtPJuoDymo/neNQph4dTKEtVMhnHtnKYyAv6r8gt4/Yhk87tR9PTUuYiyAeF+N
+	 sE9yLlYx+pqFyqab9tytW0JpY5DhPkJRM7ZCMIX52MeO2zsTTCN/WHTjV3eVCV5J6N
+	 dEaPFi7SOXpuw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Yang Jihong <yangjihong1@huawei.com>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 367/638] perf record: Check conflict between '--timestamp-filename' option and pipe mode before recording
-Date: Sun, 24 Mar 2024 18:56:44 -0400
-Message-ID: <20240324230116.1348576-368-sashal@kernel.org>
+Subject: [PATCH 6.6 365/638] perf record: Fix possible incorrect free in record__switch_output()
+Date: Sun, 24 Mar 2024 18:56:42 -0400
+Message-ID: <20240324230116.1348576-366-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,98 +50,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Yang Jihong <yangjihong1@huawei.com>
 
-[ Upstream commit 02f9b50e04812782fd006ed21c6da1c5e3e373da ]
+[ Upstream commit aff10a165201f6f60cff225083ce301ad3f5d8f1 ]
 
-In pipe mode, no need to switch perf data output, therefore,
-'--timestamp-filename' option should not take effect.
-Check the conflict before recording and output WARNING.
-In this case, the check pipe mode in perf_data__switch() can be removed.
+perf_data__switch() may not assign a legal value to 'new_filename'.
+In this case, 'new_filename' uses the on-stack value, which may cause a
+incorrect free and unexpected result.
 
-Before:
-
-  # perf record --timestamp-filename -o- perf test -w noploop | perf report -i- --percent-limit=1
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Dump -.2024011812110182 ]
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 4K of event 'cycles:P'
-  # Event count (approx.): 2176784359
-  #
-  # Overhead  Command  Shared Object         Symbol
-  # ........  .......  ....................  ......................................
-  #
-      97.83%  perf     perf                  [.] noploop
-
-  #
-  # (Tip: Print event counts in CSV format with: perf stat -x,)
-  #
-
-After:
-
-  # perf record --timestamp-filename -o- perf test -w noploop | perf report -i- --percent-limit=1
-  WARNING: --timestamp-filename option is not available in pipe mode.
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.000 MB - ]
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 4K of event 'cycles:P'
-  # Event count (approx.): 2185575421
-  #
-  # Overhead  Command  Shared Object          Symbol
-  # ........  .......  .....................  .............................................
-  #
-      97.75%  perf     perf                   [.] noploop
-
-  #
-  # (Tip: Profiling branch (mis)predictions with: perf record -b / perf report)
-  #
-
-Fixes: ecfd7a9c044e ("perf record: Add '--timestamp-filename' option to append timestamp to output file name")
+Fixes: 03724b2e9c45 ("perf record: Allow to limit number of reported perf.data files")
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240119040304.3708522-3-yangjihong1@huawei.com
+Link: https://lore.kernel.org/r/20240119040304.3708522-2-yangjihong1@huawei.com
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-record.c | 5 +++++
- tools/perf/util/data.c      | 2 --
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/builtin-record.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 69d2d71e16ee8..c40460e936ccd 100644
+index 34bb31f08bb52..cd1725643ef77 100644
 --- a/tools/perf/builtin-record.c
 +++ b/tools/perf/builtin-record.c
-@@ -2417,6 +2417,11 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	if (data->is_pipe && rec->evlist->core.nr_entries == 1)
- 		rec->opts.sample_id = true;
- 
-+	if (rec->timestamp_filename && perf_data__is_pipe(data)) {
-+		rec->timestamp_filename = false;
-+		pr_warning("WARNING: --timestamp-filename option is not available in pipe mode.\n");
-+	}
-+
- 	evlist__uniquify_name(rec->evlist);
- 
- 	/* Debug message used by test scripts */
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index fc16299c915f9..851a9cd32c4a2 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -418,8 +418,6 @@ int perf_data__switch(struct perf_data *data,
+@@ -1786,8 +1786,8 @@ static int
+ record__switch_output(struct record *rec, bool at_exit)
  {
- 	int ret;
+ 	struct perf_data *data = &rec->data;
++	char *new_filename = NULL;
+ 	int fd, err;
+-	char *new_filename;
  
--	if (check_pipe(data))
--		return -EINVAL;
- 	if (perf_data__is_read(data))
- 		return -EINVAL;
- 
+ 	/* Same Size:      "2015122520103046"*/
+ 	char timestamp[] = "InvalidTimestamp";
 -- 
 2.43.0
 
