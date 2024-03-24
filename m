@@ -1,39 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D7D27DE00;
-	Sun, 24 Mar 2024 23:39:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCC627DE03;
+	Sun, 24 Mar 2024 23:39:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323575; cv=none; b=HjybBquQ26EzOfi9HhDrdoyGv0TZoGpB8FxkLmI1RYMunOuvFlqu6loFUYWQCILlAEc4xLuhyR7VQALr6Scjf9WKnH4Sgwf5EE0bp3qK0TisJ4y5iqf7/tEnn08zXVJfqAroMPFr58N0sKFmEFd7HX5B/LaOMLfZRIEEWIVM9lc=
+	t=1711323572; cv=none; b=JMvoTOBWXSUzGUyICxV5/7X40K59gkxU3Y19Y/Pdvw8Wu/XdJqN5T3DbP5oBKCgMy30/O1s43PEY64j1jQ6Cj3bBHTMtkGhphC8bQeTL0pYy3HyNSSX5p/Za97r/9pMsOhpvs29RF+6RtNPT7wlMj2f4ZmT8su+gFw4fNHCYdbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323575; c=relaxed/simple;
-	bh=0WGbgIFNty86zl6mmKVRqxpL+QHsdqQA9wez7Xo7orA=;
+	s=arc-20240116; t=1711323572; c=relaxed/simple;
+	bh=haI25pQhwibAlMtUHP3+8VFUK+05ciCLNtXIXuVN0M0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eaSWsRGbJGXDeN6exJ9+JdLFhuTNfmgu+oKJIYXq5S1f0acQcpvGHuqBZB2GU2pamFCpgJvaBs0j9J7J0lq/cHnbOOn/2nNV1WcvrbZ6yYg/TDI65J/7bo+9aPrFYfdpqOJD5LpaWV7v/xvvoLBzR50zfouF5IDhvYi+nVRaSYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZy/dW1u; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GdSYkrmKYftV6AhdGw1f4HqijLrQPgpZpFzr/KgW79W/7KMdLhwAgQMDvwGKNrXjhsJjliIH2RckygSVrZPokORcD2+m+8OnVwWdVMvVPhuY4wmO8ulwbIKQpfJAqpuR3jh9enWf5u56ohFqKvGGtFMiZmH8nGPPXc4SY3P6FSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3Q+RvvU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZy/dW1u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C3BFC43394;
-	Sun, 24 Mar 2024 23:39:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3Q+RvvU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92C2AC43394;
+	Sun, 24 Mar 2024 23:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323575;
-	bh=0WGbgIFNty86zl6mmKVRqxpL+QHsdqQA9wez7Xo7orA=;
+	s=k20201202; t=1711323571;
+	bh=haI25pQhwibAlMtUHP3+8VFUK+05ciCLNtXIXuVN0M0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nZy/dW1uBDsQ0XPWnC7O97M/ghTB0cB78ake1oAgypi2PR9XvtDMNIgyQUjaSFoYY
-	 uV+n+gl+ARMjyHez2EZns5cXpPGVsNwWBthkUPCD2MdyUTcVukRb3FK6dRPeqwb6wn
-	 uxti/YwVjJcj5XQAAYvY/BvUo2OGe82p7PzRnJkkpkmXKIo3/jaJCPMwfFkTXMzhSr
-	 bqANG42hHEuU20MqKE7G27JnuPrSIlEcguXANwj2uA2gz7w8wAoAaeOgBMrzAiux/i
-	 qyY1IZW+wpQ7Ks5WcTiscTx2Jx0GYu+LSMDM2QRjUSY/UC+X8TKqMFV/3sCikSWrZb
-	 IFG7lr+85C00A==
+	b=K3Q+RvvU4cEiN4bE3a9EKd+q+iOwZyc4WRuyKuNqlPr72H2l3pCw2f6FoKCqHMupt
+	 TxTK/0Ylx3BMDyNwYezA2srqWVMCYSZA41vQQzEGYrOGUCgMgdzd+Vt5UeKdzwHMwf
+	 wHx0Rue539CujF0vVplhxp83SHnIZUH7LOw6/3vK1B484ViylL5CT/QwHO/k6PN9Y/
+	 jgb2VERJqsEPxtKXVTRz8IJ8kTCCyIHlfNetZp2uPzNOhC6FdnrC0YrFmxXJ5rd45R
+	 L3qDjQLkNlb9yxnkgI95FQYF+VeUTKG8YxddqR8TfaLIyw96Sh9jDPFe+/I61t2Qld
+	 tMD2/7yi9lbnA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Martin Hostettler <textshell@uchuujin.de>,
+	Helge Deller <deller@gmx.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 282/317] kconfig: fix infinite loop when expanding a macro at the end of file
-Date: Sun, 24 Mar 2024 19:34:22 -0400
-Message-ID: <20240324233458.1352854-283-sashal@kernel.org>
+Subject: [PATCH 5.15 278/317] tty: vt: fix 20 vs 0x20 typo in EScsiignore
+Date: Sun, 24 Mar 2024 19:34:18 -0400
+Message-ID: <20240324233458.1352854-279-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -47,45 +50,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 
-[ Upstream commit af8bbce92044dc58e4cc039ab94ee5d470a621f5 ]
+[ Upstream commit 0e6a92f67c8a94707f7bb27ac29e2bdf3e7c167d ]
 
-A macro placed at the end of a file with no newline causes an infinite
-loop.
+The if (c >= 20 && c <= 0x3f) test added in commit 7a99565f8732 is
+wrong.  20 is DC4 in ascii and it makes no sense to consider that as the
+bottom limit. Instead, it should be 0x20 as in the other test in
+the commit above. This is supposed to NOT change anything as we handle
+interesting 20-0x20 asciis far before this if.
 
-[Test Kconfig]
-  $(info,hello)
-  \ No newline at end of file
+So for sakeness, change to 0x20 (which is SPACE).
 
-I realized that flex-provided input() returns 0 instead of EOF when it
-reaches the end of a file.
-
-Fixes: 104daea149c4 ("kconfig: reference environment variables directly and remove 'option env='")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Fixes: 7a99565f8732 ("vt: ignore csi sequences with intermediate characters.")
+Cc: Martin Hostettler <textshell@uchuujin.de>
+Link: https://lore.kernel.org/all/ZaP45QY2WEsDqoxg@neutronstar.dyndns.org/
+Tested-by: Helge Deller <deller@gmx.de> # parisc STI console
+Link: https://lore.kernel.org/r/20240122110401.7289-4-jirislaby@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/lexer.l | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/tty/vt/vt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
-index 312cbad2d34d4..2a76393d52b5b 100644
---- a/scripts/kconfig/lexer.l
-+++ b/scripts/kconfig/lexer.l
-@@ -301,8 +301,11 @@ static char *expand_token(const char *in, size_t n)
- 	new_string();
- 	append_string(in, n);
- 
--	/* get the whole line because we do not know the end of token. */
--	while ((c = input()) != EOF) {
-+	/*
-+	 * get the whole line because we do not know the end of token.
-+	 * input() returns 0 (not EOF!) when it reachs the end of file.
-+	 */
-+	while ((c = input()) != 0) {
- 		if (c == '\n') {
- 			unput(c);
- 			break;
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index b8f5bc19416d9..442579f087c7c 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -2515,7 +2515,7 @@ static void do_con_trol(struct tty_struct *tty, struct vc_data *vc, int c)
+ 		}
+ 		return;
+ 	case EScsiignore:
+-		if (c >= 20 && c <= 0x3f)
++		if (c >= 0x20 && c <= 0x3f)
+ 			return;
+ 		vc->vc_state = ESnormal;
+ 		return;
 -- 
 2.43.0
 
