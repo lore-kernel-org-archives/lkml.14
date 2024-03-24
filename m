@@ -1,45 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0233D21087B;
-	Sun, 24 Mar 2024 23:08:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDFD15380D;
+	Sun, 24 Mar 2024 23:08:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321699; cv=none; b=F21CFsv/HWrKk+2qMx2+j5u/f/VEH7mB/j8Nm28yd1rto9v/L1qSOCnDKU9CX05xuKmlAfI+Bc+qhVVQLPapm9Ec6r7jFD9mYSiX7Co1HCGbQGx4tE7j1MfeXiajerfNI/3bg/GE/4VOv40S9GbgA/8Z5KthbD5CWj5B6CC+jz4=
+	t=1711321701; cv=none; b=IaLX6/fe4u4g6hl+HeQIS36f1ODjSFO9rD6/8HEdvCyFB9lDuolKJ7F6iDXqLSTujuybrABRwnc7lCkP2pi1bnfiXGYLmNTJ2yOvDCb21vLqvhMOYMLjPp+FDiNRqVwzIZe6Zrl9HZHzV6HvMO4ov37YRk3Qy5HUd/ynJ17Qo3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321699; c=relaxed/simple;
-	bh=0robPL3ORU/kdT281CZW4S42KKfCnq5JV9Z1hIIsSwE=;
+	s=arc-20240116; t=1711321701; c=relaxed/simple;
+	bh=da0v28uYIBgfQoka5OnAj9jwTvwhT7/5iIL5RdHgY+s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T6BKnkiD6YCNxY0KnruI05aWf77/RP/U3iOrXOvT8IYLISSBFW5h6uxX0LpnEJUZebl/Jz1DQBUp1eDSE3FWEtDQu596OnRP8LCfoqSHT4/6WWtNF55nseg8T1xcR67/UXMqGnDGWRApFpdsRxRcXh+tG6ctb+5UU/0m2UQ+mx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3Rj4L4Z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Qwzsd4eB6tX8xRRvyfxT2PPc5rKJoyPkByiB2hYSjkZquwEg2R2TGXp5GqmFETCXIqBM98BoEUJU6bBmzrELeaB63P045UCwsR/d5raiaRGtiArA5wwPBSBLurbsh1AvNpyScYFQNgcqPsHvQS9m7jVgO8ZQLODlWKktbjhs/X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jslfhdTy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3Rj4L4Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC982C433B1;
-	Sun, 24 Mar 2024 23:08:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jslfhdTy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DD32C43399;
+	Sun, 24 Mar 2024 23:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321697;
-	bh=0robPL3ORU/kdT281CZW4S42KKfCnq5JV9Z1hIIsSwE=;
+	s=k20201202; t=1711321700;
+	bh=da0v28uYIBgfQoka5OnAj9jwTvwhT7/5iIL5RdHgY+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t3Rj4L4Z30NccqUfgjbd3uBmKA2U7qwNORPu3SehzJLYYwEeMUWLclTNIMjuJaHAn
-	 51SGphk42wvQ20xndge+cJuxBWCNZgVkQU/EY7nUFIl6ekcyIjGH7JY23XIPIMHhIl
-	 gWGLhs89IW3wrIoQu+XUt/8AQHemqMWDAyQIEts/aRbrG9P6P4nHUyQxE+Oceq9kSI
-	 V5VYcGGF2HpTR355LBkuOhDSW96ACJpaV16o9gtoTbbQlCCkZgTXNuTsMuscMpxF+g
-	 +QGRDMrHmVPe7H/0WF7t6yaz/gdC2XcaQDGZoR1aLqVg152DJ8kl1OKAIU+DOflGNr
-	 U+5pd5n6qEHSQ==
+	b=jslfhdTy5UghOruz09HuuTekAHTw3waSHU/rQaUeFxenoSGwxstZdOIcJDcyXmuB+
+	 0F0faT2sEM2cjL2UtjaZXZjT9HUHkuVCw9VnwewZa3LbsSkpaUIbDyQF+aA1BLcqTL
+	 FNAu/b8wrBjOwP/MT+tWa2cGtlnmvp6Tah7HJNfHn2Q6TCtIs9fWdcOO4+3CNuKuW+
+	 3fl2iti6xP/ixlYLxA5WuL37jbwqjxvbRGADnGVtxHBcxSDfUdjylB0BYs5tA2q2WG
+	 ROtdFUYq1A/jdbROSChhAOOr94zopDMY9f6Lr0qbdGgYZHp8qmdCGSc1Xjo2K5WgES
+	 myfenCU/4QHWA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-	Roman Li <roman.li@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Tom Chung <chiahsuan.chung@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: =?UTF-8?q?J=C3=B6rg=20Wedekind?= <joerg@wedekind.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 426/638] drm/amd/display: Add 'replay' NULL check in 'edp_set_replay_allow_active()'
-Date: Sun, 24 Mar 2024 18:57:43 -0400
-Message-ID: <20240324230116.1348576-427-sashal@kernel.org>
+Subject: [PATCH 6.6 429/638] PCI: Mark 3ware-9650SE Root Port Extended Tags as broken
+Date: Sun, 24 Mar 2024 18:57:46 -0400
+Message-ID: <20240324230116.1348576-430-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,63 +44,56 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+From: Jörg Wedekind <joerg@wedekind.de>
 
-[ Upstream commit f6aed043ee5d75b3d1bfc452b1a9584b63c8f76b ]
+[ Upstream commit baf67aefbe7d7deafa59ca49612d163f8889934c ]
 
-In the first if statement, we're checking if 'replay' is NULL. But in
-the second if statement, we're not checking if 'replay' is NULL again
-before calling replay->funcs->replay_set_power_opt().
+Per PCIe r6.1, sec 2.2.6.2 and 7.5.3.4, a Requester may not use 8-bit Tags
+unless its Extended Tag Field Enable is set, but all Receivers/Completers
+must handle 8-bit Tags correctly regardless of their Extended Tag Field
+Enable.
 
-if (replay == NULL && force_static)
-    return false;
+Some devices do not handle 8-bit Tags as Completers, so add a quirk for
+them.  If we find such a device, we disable Extended Tags for the entire
+hierarchy to make peer-to-peer DMA possible.
 
-...
+The 3ware 9650SE seems to have issues with handling 8-bit tags. Mark it as
+broken.
 
-if (link->replay_settings.replay_feature_enabled &&
-    replay->funcs->replay_set_power_opt) {
-	replay->funcs->replay_set_power_opt(replay, *power_opts, panel_inst);
-	link->replay_settings.replay_power_opt_active = *power_opts;
-}
+This fixes PCI Parity Errors like :
 
-If 'replay' is NULL, this will cause a null pointer dereference.
+  3w-9xxx: scsi0: ERROR: (0x06:0x000C): PCI Parity Error: clearing.
+  3w-9xxx: scsi0: ERROR: (0x06:0x000D): PCI Abort: clearing.
+  3w-9xxx: scsi0: ERROR: (0x06:0x000E): Controller Queue Error: clearing.
+  3w-9xxx: scsi0: ERROR: (0x06:0x0010): Microcontroller Error: clearing.
 
-Fixes the below found by smatch:
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_edp_panel_control.c:895 edp_set_replay_allow_active() error: we previously assumed 'replay' could be null (see line 887)
-
-Fixes: c7ddc0a800bc ("drm/amd/display: Add Functions to enable Freesync Panel Replay")
-Cc: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Cc: Roman Li <roman.li@amd.com>
-Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Cc: Tom Chung <chiahsuan.chung@amd.com>
-Suggested-by: Tom Chung <chiahsuan.chung@amd.com>
-Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Reviewed-by: Tom Chung <chiahsuan.chung@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lore.kernel.org/r/20240219132811.8351-1-joerg@wedekind.de
+Fixes: 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if supported")
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=202425
+Signed-off-by: Jörg Wedekind <joerg@wedekind.de>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/display/dc/link/protocols/link_edp_panel_control.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c
-index 6f64aab18f07b..13104d000b9e0 100644
---- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c
-+++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c
-@@ -882,7 +882,8 @@ bool edp_set_replay_allow_active(struct dc_link *link, const bool *allow_active,
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index b5b96d2a9f4ba..1739fd54a3106 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5520,6 +5520,7 @@ static void quirk_no_ext_tags(struct pci_dev *pdev)
  
- 	/* Set power optimization flag */
- 	if (power_opts && link->replay_settings.replay_power_opt_active != *power_opts) {
--		if (link->replay_settings.replay_feature_enabled && replay->funcs->replay_set_power_opt) {
-+		if (replay != NULL && link->replay_settings.replay_feature_enabled &&
-+		    replay->funcs->replay_set_power_opt) {
- 			replay->funcs->replay_set_power_opt(replay, *power_opts, panel_inst);
- 			link->replay_settings.replay_power_opt_active = *power_opts;
- 		}
+ 	pci_walk_bus(bridge->bus, pci_configure_extended_tags, NULL);
+ }
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_3WARE, 0x1004, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0132, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0140, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0141, quirk_no_ext_tags);
 -- 
 2.43.0
 
