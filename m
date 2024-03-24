@@ -1,105 +1,203 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAEC7F9;
-	Sun, 24 Mar 2024 11:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDAD1759E;
+	Sun, 24 Mar 2024 11:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711280722; cv=none; b=nl/A3qi2Cn2r9aLUbzMy8xNMtbZhO6u3y4CwpaAm9+nvYHiq5gZ/uJfHo+/xxMBNvXHnvQdEAvVtCcyIe1Ms/du0kSeFu3au4GpRT4L/orbc+wzz56SCEYhv0so8T/61mGZKpQuCtZc7RRnL62KAew6nASfhvI0wbRN+X2DTbnY=
+	t=1711281363; cv=none; b=Rv+irXh5rcH9xnaPXKO9xSywYx2h5JN1VzxUaiPyyUT8NxbLtnCpXIPZYfUvWTQPGG+XKtxordUTXN6DV6jWHbW000PXKPu9QraLUEV2xa7SB5JG6Pb2QKJouZLHKlX1DmyBBVmhFSpBXa5/FG6eSdpkmh8CLp/IPiBUoJc5UXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711280722; c=relaxed/simple;
-	bh=jd+UbPt7tUCSxeIh9tTddpbwhPczChNxIGuCykK8/Rg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hPI8rzMDi51gqNRo23iPq82d4ZTLKzf1LMpmKULI7ZjxNLio8C3/DWgemoEIrcAFnTKRZ74DkRRF89F68DUL0y/1Mpbo3LLL5dKetavao2TUkytSDgD13Uu9FZKkXYQWLyAe3PuninAwLThJQu4ItyrWHYAaWi9pNKv/QzvTtps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=bpzbnkW+; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1711281363; c=relaxed/simple;
+	bh=uFc5xOYMorRP4iyAhVgBe+McyNhmHUYOH62YqMisnBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y04x3mo4xL37Vk9bWjys16pPaDwQvRIZzIMbQITYt7QsJLQdQ8I8Us+/hmrWkC9ZZcVCLOBYNUzml9s7f5uBBSWtpwTJLqxqYikafu+TYX2FA/VpABCtSP0Tn0hFCUn6R4+x3CqwTkwaBmFXmzxbjWXq5eFSOJXts1xmBnLDxDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHPS1b+h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="bpzbnkW+"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F374F40005;
-	Sun, 24 Mar 2024 11:45:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1711280717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SHd06vSLOzCjmoLwufibD7173gHP8W2NTfMUYQWalTM=;
-	b=bpzbnkW+EWJftWZQUvb7X+yE7kOgudmqCMAGz9gTfHD8MP9UhA3pt9hXoju4h7iZQU6n8N
-	WuzWRoFQvg3dhQCl9IoZlpcsomANxCZyClQw9a4ty5iYVHJFcDk2dp6cz2KQSAVVtkWlaZ
-	h1/cJ/dqh7RGlekrYdfRlnLnFx3AGQqD6+vEMOLdugXKLLmgjHqIfl1PF9UafOVlzd1JAn
-	LZq6kL1/ry7H4AfLzpOfwuh1q8smC8NbaeUOzXo+6mlgiF/08sBUkA/nF3MmXntk5+5aM7
-	vfYrY1+OOwbZ2kOO4ruLevXHWCPRJoqa53doSxGBFptLMhC+3sUq0qFbTiRMpg==
-Message-ID: <6db6a339-e402-472f-b640-523ced553354@arinc9.com>
-Date: Sun, 24 Mar 2024 14:45:11 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHPS1b+h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A5E7C433C7;
+	Sun, 24 Mar 2024 11:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711281363;
+	bh=uFc5xOYMorRP4iyAhVgBe+McyNhmHUYOH62YqMisnBQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EHPS1b+htFbdIdhUpG07yQ+GSFFX2ipaeESGWCCw77WlyieKqBpo7yFph22STMKV7
+	 U2BpzZra0RMtZbbrzU28LCGiXIDNE0YHe4mpKPaJKNmEXdXuJwcgCHn8t+rxKS33aL
+	 SNfkb1WnI5yf1l9Kaz+YVUvMVbMiE/Swhp+FBDpMHgygMpUYaPQzMVDgDs9hz3WtCK
+	 lvaSlbmdbPDk7t9K+CWrZjszamWpDwTT8kP8RjVj+DT5YxhPPqeVqgVMN+GftdsFUN
+	 JfGVCVbSvMS+Ipsh7bUpiqkhtloCaHQvCLdhAqNSUCHudb+cIeS9D9lOSqA72AN1Xo
+	 IHk4dRJ4XavFg==
+Date: Sun, 24 Mar 2024 11:55:46 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, lars@metafoo.de,
+ ang.iglesiasg@gmail.com, mazziesaccount@gmail.com, ak@it-klinger.de,
+ petre.rodan@subdimension.ro, phil@raspberrypi.com, 579lpy@gmail.com,
+ linus.walleij@linaro.org, semen.protsenko@linaro.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] iio: pressure: Add triggered buffer support for
+ BMP280 driver
+Message-ID: <20240324115546.695d3e33@jic23-huawei>
+In-Reply-To: <20240320174602.GA36450@vamoiridPC>
+References: <20240319002925.2121016-1-vassilisamir@gmail.com>
+	<20240319002925.2121016-7-vassilisamir@gmail.com>
+	<ZfrFc9GF0_Jix5YT@smile.fi.intel.com>
+	<20240320174602.GA36450@vamoiridPC>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Fix EEE support for MT7531 and MT7988 SoC switch
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
- Daniel Golle <daniel@makrotopia.org>, Andrew Lunn <andrew@lunn.ch>,
- DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
- SkyLake Huang <SkyLake.Huang@mediatek.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com,
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240318-for-net-mt7530-fix-eee-for-mt7531-mt7988-v>
- <ZfnYkuzuvwLepIfC@makrotopia.org>
- <00ec9779-19ce-4005-83f0-f4abf37350fc@arinc9.com>
- <6cb585f6-6da8-45a2-a28b-2fb556f95672@lunn.ch>
- <Zfn1DxkEa3u-f7l2@makrotopia.org>
- <38798882-c033-4949-9446-4c6f15c25ebe@gmail.com>
- <0fbe7ba2-6529-4118-b050-8ea76d28b712@arinc9.com>
- <11b2a4d1-66d8-4bcf-b1a8-20a635b99cc4@gmail.com>
- <5a4c0436-cd78-419f-af14-9c4e0c0435e3@arinc9.com>
- <ZgAQ4Ihsn6RCk7xx@shell.armlinux.org.uk>
-Content-Language: en-US
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <ZgAQ4Ihsn6RCk7xx@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: yes
-X-Spam-Level: **************************
-X-GND-Spam-Score: 400
-X-GND-Status: SPAM
-X-GND-Sasl: arinc.unal@arinc9.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 24.03.2024 14:39, Russell King (Oracle) wrote:
-> On Sun, Mar 24, 2024 at 12:47:08PM +0300, Arınç ÜNAL wrote:
->> I've tested with switch ports interfaces' tx-timer from 0 to 40, same
->> tx-timer for both interfaces. Loss is still there.
-> 
-> EEE implementations tend to be a mess in the way drivers implement the
-> API, so one can't at the moment rely on what ethtool says about the
-> status. Sadly, this is what happens when driver authors are left to
-> their own ends. :(
-> 
->> I suppose the MT7531 switch PHYs need calibration for EEE that is currently
->> missing from the mediatek-ge driver.
-> 
-> EEE is quite simple from the software point of view. There is software
-> negotiation of the modules that EEE supports, and then there is are
-> one or more timers that affect the behaviour of EEE. The LPI timer is
-> "how long the link needs to be idle for before _this_ end signals that
-> it _can_ enter low power state". The link only enters low power state
-> when *both* ends of the link signal that they can enter low power
-> state.
-> 
-> What calibration would be necessary?
+On Wed, 20 Mar 2024 18:46:02 +0100
+Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
 
-Check out mt798x_phy_eee() on drivers/net/phy/mediatek-ge-soc.c.
+> On Wed, Mar 20, 2024 at 01:16:03PM +0200, Andy Shevchenko wrote:
+> > On Tue, Mar 19, 2024 at 01:29:25AM +0100, Vasileios Amoiridis wrote:  
+> > > BMP2xx, BMP3xx, and BMP5xx use consecutive buffers for their
+> > > temperature, pressure and humidity readings. This facilitates
+> > > the use of burst reads in order to acquire data much faster
+> > > and in a different way from the one used in oneshot captures.
+> > > 
+> > > BMP085 and BMP180 use a completely different measurement
+> > > process that is well defined and is used in their buffer_handler().  
+> > 
+> > ...
+> >   
+> > >  	ret = regmap_bulk_read(data->regmap, BMP280_REG_TEMP_MSB,
+> > > -			       data->buf, sizeof(data->buf));
+> > > +			       data->buf, BMP280_NUM_TEMP_BYTES);  
+> >   
+> > >  	ret = regmap_bulk_read(data->regmap, BMP280_REG_PRESS_MSB,
+> > > -			       data->buf, sizeof(data->buf));
+> > > +			       data->buf, BMP280_NUM_PRESS_BYTES);  
+> >   
+> > >  	ret = regmap_bulk_read(data->regmap, BMP280_REG_HUMIDITY_MSB,
+> > > -			       &data->be16, sizeof(data->be16));
+> > > +			       &data->be16, BME280_NUM_HUMIDITY_BYTES);  
+> >   
+> > > -	adc_humidity = be16_to_cpu(data->be16);
+> > > +	adc_humidity = get_unaligned_be16(&data->be16);  
+> >   
+> > >  	ret = regmap_bulk_read(data->regmap, BMP380_REG_TEMP_XLSB,
+> > > -			       data->buf, sizeof(data->buf));
+> > > +			       data->buf, BMP280_NUM_TEMP_BYTES);  
+> >   
+> > >  	ret = regmap_bulk_read(data->regmap, BMP380_REG_PRESS_XLSB,
+> > > -			       data->buf, sizeof(data->buf));
+> > > +			       data->buf, BMP280_NUM_PRESS_BYTES);  
+> >   
+> > >  	ret = regmap_bulk_read(data->regmap, BMP580_REG_TEMP_XLSB, data->buf,
+> > > -			       sizeof(data->buf));
+> > > +			       BMP280_NUM_TEMP_BYTES);  
+> >   
+> > >  	ret = regmap_bulk_read(data->regmap, BMP580_REG_PRESS_XLSB, data->buf,
+> > > -			       sizeof(data->buf));
+> > > +			       BMP280_NUM_PRESS_BYTES);  
+> > 
+> > These smell to me as candidates to a separate patch with more explanation why.
+> > (Yes, with the definitions you introduced.) But I leave it to Jonathan to
+> > decide if we need to split.
 
-Arınç
+The are somewhat confusing, though only when you start doing bulk reads
+to do these makes sense - so I'm not sure how to do it as 2 patches.
+
+Pity we don't have sizeof(be24) available.
+
+> > 
+> > ...
+> > 
+> > The below are applicable to the bmp280_buffer_handler(),
+> > bmp380_buffer_handler() implementations as well.
+> > 
+> > ...
+> >   
+> > > +	/* Burst read data registers */
+> > > +	ret = regmap_bulk_read(data->regmap, BMP580_REG_TEMP_XLSB,
+> > > +			       data->buf, 6);  
+> > 
+> > Magic size.
+> >   
+> 
+> Hi Andy,
+> 
+> Thank you again for your feedback. When I was writing it, it was 
+> looking as a magic number to me as well but then I though that 
+> since I put the comment above it could be obvious. Now that I see 
+> it again, I think it was not a good idea and maybe some type of 
+> definition like
+> 
+> 	#define BMP280_BURST_READ_NUM_BYTES 6
+> 	#define BME280_BURST_READ_NUM_BYTES 8
+I think these are sums of the other quantities.  Better to
+express them as such if possible.
+
+> 
+> could look better and be more intuitive.
+> 
+> > ...
+> >   
+> > > +	/* Temperature calculations */
+> > > +	memcpy(&chan_value, &data->buf[3], 3);  
+> > 
+> > _le24() + sign_extend32()?
+> >   
+> 
+> In the next line from your comment the _le24 or _be24 takes place.
+I think you can get that data directly rather than bouncing it via
+a memcpy.
+e.g.
+adc_temp = FIELD_GET(BMP280_MEAS_TRIM_MASK, get_unaligned_be24(&data->buf[3]);
+
+> If the sign_extend32() is needed here, shouldn't it also be used
+> in all the oneshot captures as well?
+
+Is this actually signed?  Compensated values are, but at this point
+it's just a raw adc count.  So I'm not seeing why we'd sign extend it
+(unless the device is returning a signed be24 - I haven't checked.)
+
+
+> 
+> > ...
+> >   
+> > > +	/* Pressure calculations */
+> > > +	memcpy(&chan_value, &data->buf[0], 3);  
+> > 
+> > _le24() + sign_extend32()?
+> > 
+> > ...
+> >   
+> > >  	/*
+> > > -	 * Maximum number of consecutive bytes read for a temperature or
+> > > -	 * pressure measurement is 3.
+> > > +	 * Maximum number of a burst read for temperature, pressure, humidity
+> > > +	 * is 8 bytes.
+> > >  	 */
+> > > -	if (val_size > 3)
+> > > +	if (val_size > 8)  
+> > 
+> > sizeof() / new definition for the buf[] size?
+> >   
+> 
+> In a previous commit that I was fixing this SPI driver, Jonathan had mentioned
+> that there is no need for a specific definition since it will only be used
+> here so that's why I kept it as is.
+
+Never trust me ;)  Size of the buf is sensible here.
+
+Jonathan
+
+> 
+> Cheers,
+> Vasilis
+> > >  		return -EINVAL;  
+> > 
+> > -- 
+> > With Best Regards,
+> > Andy Shevchenko
+> > 
+> >   
+
