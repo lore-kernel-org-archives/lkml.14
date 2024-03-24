@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0231CE99B;
-	Sun, 24 Mar 2024 22:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4362880049;
+	Sun, 24 Mar 2024 22:48:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320527; cv=none; b=Hqozh9vETmpRcAVxgzjc/wtuYf35gSe7O/V95L447eRaK8gKzpysA5YNlLhlbvxJ+UUYE69zLMAqfP4zdF3gCU1qR7yF7zZyx8cgDX/2OpJcBJ0ZQhj3kBuEi755MaTLsxhmE6EbkfNCuA3FRdwyHugZPapQeIF5d/d2iLTYUgA=
+	t=1711320510; cv=none; b=HhyzqSp0MRqfshG4k1bSrg92ILubl73faCmC/jmcht8s9qOjy8NRUR4qx9YZaBhUhIVGgqVZhpb8PxNXNZ67JfygsxtsHL+MukMtE85A/fdYu8SWKT0Y62L7gzgZ8sj5VbCWPFmcFRB1zWRSzUf7ymrVrlhuH9wrJzTLALHUrHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320527; c=relaxed/simple;
-	bh=MMQ1PVr+DULjkb6hUdVFC51M9t05DhNVZVRYlp2BvVA=;
+	s=arc-20240116; t=1711320510; c=relaxed/simple;
+	bh=9ccDM9c454YdhVODsmOP14BtRqS2+UqRY7429uin5Oc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GT8avEoLH7y4i1gUKBT8kGlRmdJO4lKhVAEj8N6mJee0Wzv02kL6nFAC/J/cGxdFt+czVbuUU/a06rL6Zjjy4MySwLIws/jOnnpRXaIcLnQy47TfDurUV5Ao/QlGFMS8bUnyHsKSAVPWrlN3+nU+/dP1yi3bLcMSDMeKV10Jtww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KYqEGVS/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=b34kgGSDOZBjlNWRgTfXkn4/qDd/SyNKwDu822wO8PrIWO8JRw3Bv1LIBFiLLRZnCNc87kln8VV4V72gxYqB2HV+6lM9i/2Z1I2dLy21O2EPb/EVAGTuZCFHAV0pZA7PkTPTwXXRSJYwMkDxn2zAqq6c7D8NstsKP+10/U4o3pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmcOMpYQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KYqEGVS/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39232C433A6;
-	Sun, 24 Mar 2024 22:48:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmcOMpYQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49EC5C433F1;
+	Sun, 24 Mar 2024 22:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320525;
-	bh=MMQ1PVr+DULjkb6hUdVFC51M9t05DhNVZVRYlp2BvVA=;
+	s=k20201202; t=1711320510;
+	bh=9ccDM9c454YdhVODsmOP14BtRqS2+UqRY7429uin5Oc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KYqEGVS/F89y0xNHFtiIo5Hd0lgC3MIru8XJ1xCNIJ4wqNpUZZEaQPdOy78XcyrxT
-	 6vzCFRaDMTXto4h/z+dub+cEidNwciFRRwswnjqSh292NtcgnbzyNyWiOerzE0wsAB
-	 5JBwV/VOepQp3lxIUerycykZdq3yxx5jaNKGs6/FAaViLV2hwn1GksqXlIhwcIJ9l+
-	 uDemwdV3KksXoagbJoVFnCPa+fmSmfPQjjBib/iBQXstIv/LXsTMsiciFYey7r2OQ1
-	 zs2h22tE7ncCn075TOlJind6F8U3sn+onHKZuYZE5HVizbyRL5IQXvjA6YPWV6ku7/
-	 U4yg0ZE6VrIbw==
+	b=VmcOMpYQY/YB3BBDi3seKzBd9+ulzJZuP5c9/dM0zceTJICPHnT8qwFCVSEwmRUoq
+	 UNslcs8lHjW9lyA1bbSPxkIBqUydtXUMHszNuYFfR1HPsasABdKNV9t4o0Znqi1vd8
+	 05w//WwGoLBDee1i7SUFGN+XOmZZ+LnWh1LHh79mZ7OQ56AeE/+bjuIhP2S2WIlIln
+	 vWzq659vwaZDIOrr3+Ke87GtTAXfDwEdxZZjcmLGe4pmp7Jw9r0Y0jFcKcCQpe7/oz
+	 FS3Fk2mZjdzrqzWjf6KB3SSeZYfOU4Q9RM2/IR7Ce/Ftp92WtGnAmpgdzz9b0sZaBl
+	 eEIfiNNFtappQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
+Cc: =?UTF-8?q?Alban=20Boy=C3=A9?= <alban.boye@protonmail.com>,
+	Cezary Rojewski <cezary.rojewski@intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 087/713] workqueue: Make wq_adjust_max_active() round-robin pwqs while activating
-Date: Sun, 24 Mar 2024 18:36:53 -0400
-Message-ID: <20240324224720.1345309-88-sashal@kernel.org>
+Subject: [PATCH 6.7 070/713] ASoC: Intel: bytcr_rt5640: Add an extra entry for the Chuwi Vi8 tablet
+Date: Sun, 24 Mar 2024 18:36:36 -0400
+Message-ID: <20240324224720.1345309-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,83 +46,51 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tejun Heo <tj@kernel.org>
+From: Alban Boyé <alban.boye@protonmail.com>
 
-[ Upstream commit c5404d4e6df6faba1007544b5f4e62c7c14416dd ]
+[ Upstream commit f8b0127aca8c60826e7354e504a12d4a46b1c3bb ]
 
-wq_adjust_max_active() needs to activate work items after max_active is
-increased. Previously, it did that by visiting each pwq once activating all
-that could be activated. While this makes sense with per-pwq nr_active,
-nr_active will be shared across multiple pwqs for unbound wqs. Then, we'd
-want to round-robin through pwqs to be fairer.
+The bios version can differ depending if it is a dual-boot variant of the tablet.
+Therefore another DMI match is required.
 
-In preparation, this patch makes wq_adjust_max_active() round-robin pwqs
-while activating. While the activation ordering changes, this shouldn't
-cause user-noticeable behavior changes.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
-Stable-dep-of: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
+Signed-off-by: Alban Boyé <alban.boye@protonmail.com>
+Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://msgid.link/r/20240228192807.15130-1-alban.boye@protonmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/workqueue.c | 31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 78b4f4e3e41dd..059f122563def 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -4710,7 +4710,7 @@ static int init_rescuer(struct workqueue_struct *wq)
-  */
- static void wq_adjust_max_active(struct workqueue_struct *wq)
- {
--	struct pool_workqueue *pwq;
-+	bool activated;
- 
- 	lockdep_assert_held(&wq->mutex);
- 
-@@ -4730,19 +4730,26 @@ static void wq_adjust_max_active(struct workqueue_struct *wq)
- 	 */
- 	WRITE_ONCE(wq->max_active, wq->saved_max_active);
- 
--	for_each_pwq(pwq, wq) {
--		unsigned long flags;
--
--		/* this function can be called during early boot w/ irq disabled */
--		raw_spin_lock_irqsave(&pwq->pool->lock, flags);
--
--		while (pwq_activate_first_inactive(pwq))
--			;
-+	/*
-+	 * Round-robin through pwq's activating the first inactive work item
-+	 * until max_active is filled.
-+	 */
-+	do {
-+		struct pool_workqueue *pwq;
- 
--		kick_pool(pwq->pool);
-+		activated = false;
-+		for_each_pwq(pwq, wq) {
-+			unsigned long flags;
- 
--		raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
--	}
-+			/* can be called during early boot w/ irq disabled */
-+			raw_spin_lock_irqsave(&pwq->pool->lock, flags);
-+			if (pwq_activate_first_inactive(pwq)) {
-+				activated = true;
-+				kick_pool(pwq->pool);
-+			}
-+			raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
-+		}
-+	} while (activated);
- }
- 
- __printf(1, 4)
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index 42466b4b1ca45..a290f498ba823 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -685,6 +685,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_SSP0_AIF1 |
+ 					BYT_RT5640_MCLK_EN),
+ 	},
++	{	/* Chuwi Vi8 dual-boot (CWI506) */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "i86"),
++			/* The above are too generic, also match BIOS info */
++			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI2.D86JHBNR02"),
++		},
++		.driver_data = (void *)(BYTCR_INPUT_DEFAULTS |
++					BYT_RT5640_MONO_SPEAKER |
++					BYT_RT5640_SSP0_AIF1 |
++					BYT_RT5640_MCLK_EN),
++	},
+ 	{
+ 		/* Chuwi Vi10 (CWI505) */
+ 		.matches = {
 -- 
 2.43.0
 
