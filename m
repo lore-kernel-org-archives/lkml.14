@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6356B20896D;
-	Sun, 24 Mar 2024 23:05:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BC920896F;
+	Sun, 24 Mar 2024 23:05:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321545; cv=none; b=aBChNZXYKvSC0W4Y8ukVJ9JBNF+jVoQBY/e7G1vEdrQ+2Wr4vZJX4gS9nnl25rcCW+UsUJX/LxHECjQUL+8Slh4e4g06qPvD2oj5IV0DSv0YcBkGK4ReujYvktqe5qr0juRFmcwoXgC7dX339Dvh+wFbFTCLfSxbrJp4/aSy1kc=
+	t=1711321550; cv=none; b=D2wZJbqo/eOw9kuCy9t/49jp1ddHLDfZWRlAMQp7dLppPTk/MK9HUZtXYINgC7POMzYS9wD8EcbeSsBgAEVzHEDz/0jzc6nDrqAi/gVMTQzLIg7tMDjR4YFW37Jyauh9147yVx45CWw7XN8Y3A9NCdGYcZrZoGn9Nh2YqH/LctQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321545; c=relaxed/simple;
-	bh=bTdSv5L7VcN31a4nlJmxGo8AQdF1ZSbWH60gaYXbq3U=;
+	s=arc-20240116; t=1711321550; c=relaxed/simple;
+	bh=z901vsT93gAMo7P7wHc1SqImBhKlT8ttrHj/M2zhTDg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RYZrbnv7uJbWdeEx/mI3FOvT+/13MRMTR8rVtrHTVzqa9y/nx6XxTLcR96V3XwdBMb+BZBd6/cTphA9GrecNRkjF3GUWc04ItiaQbC/5hyMrIXuFHp83CMs6YtcGFO6TVb4ndbRwmAcEQdpzFPpylMcLAJzWRplkdiLfwTcMSG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/NgIM08; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=IO1vJef3FyEHLyaAsi+fIDXsZIrR3YvihwPAhIltlHpbKmha8EVDfGVOll4w69BsP1BoRmTQ3EW9ObhHZBdm2nIidcwNGxHK1TnGrJtBiPmL/6ARUUzViIMYh/2hfTxYL0MT1+B6TJK9+afytFBv0+Z7r08Sto9PkkbIeVoFiDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOUgBjsJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/NgIM08"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E861C433C7;
-	Sun, 24 Mar 2024 23:05:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOUgBjsJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AAB5C43399;
+	Sun, 24 Mar 2024 23:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321544;
-	bh=bTdSv5L7VcN31a4nlJmxGo8AQdF1ZSbWH60gaYXbq3U=;
+	s=k20201202; t=1711321549;
+	bh=z901vsT93gAMo7P7wHc1SqImBhKlT8ttrHj/M2zhTDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O/NgIM084Xj7w/U9prJ492AEbbYUNEOKSWFcFUMHC/vINqKgQzpcrcHzkkE1hp7xP
-	 z9xBvREyPIOXUu8eHX8wIDNC2tQLu9bn2cGQXz0PenfV4VIqQKEZ86wbbozpk40BNI
-	 l6lZJnBfP/OYORSKHAZfORep95Xd1LkbOmfyxUHi/wRqIEGAgdeKXAJEgEZqzjXMW+
-	 wbvEH08IKZpzO20IofLCI9VMTVvXZUaYu0hqPAa9V2Bxy/oXG/8r8s2yJyRqIhl4N+
-	 VvFDmoSfJccprJxo/madDswwTOAX0Zw11v/0bQJNfQabOi0EN3ByK6VNHmRHAsxX06
-	 8UI6IVFSCsz6A==
+	b=eOUgBjsJGZouvLfUQmxd+Jo1ylI/Tt2QL4Isv9UFPmlUGhBqKfXD6B8+c/z7aAWRF
+	 8aQSaAv4ZV8L4/h78LDdlnx2FP8V+kvPuPJgyjcPAI8tjBwTGGUlb04qMQcUhIhcvD
+	 FcabbLY36Bk7QyX1Fvm/sPUyC0boQPoSzcn43E6o2p5m9dCn8sM757W0dkvblwrNnP
+	 UuA6wLB/jxYCny5GfW09nPGsNlT90byMV5X0eJXMmixtHrAtBDJSDYeFXoGs5BYBDn
+	 i4PnRwDdaimE73LhyiuZEjBEN9fhEmKFk2YMEUeXp5oNB2nN3c0Vh6WcvUrbxJxcTj
+	 ePAc732GWh9Fw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stephen Boyd <swboyd@chromium.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 272/638] gpiolib: Pass consumer device through to core in devm_fwnode_gpiod_get_index()
-Date: Sun, 24 Mar 2024 18:55:09 -0400
-Message-ID: <20240324230116.1348576-273-sashal@kernel.org>
+Subject: [PATCH 6.6 278/638] arm64: dts: rockchip: add missing interrupt-names for rk356x vdpu
+Date: Sun, 24 Mar 2024 18:55:15 -0400
+Message-ID: <20240324230116.1348576-279-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -45,98 +45,40 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Heiko Stuebner <heiko@sntech.de>
 
-[ Upstream commit 0d776cfd5e5b559fdf2e38285c2aea4b7048acbd ]
+[ Upstream commit d1c44d9afa6f89aa0e10a191f30868eb12cd719f ]
 
-This devm API takes a consumer device as an argument to setup the devm
-action, but throws it away when calling further into gpiolib. This leads
-to odd debug messages like this:
+The video-codec@fdea0400 was missing the interrupt-names property that is
+part of the binding. Add it.
 
- (NULL device *): using DT '/gpio-keys/switch-pen-insert' for '(null)' GPIO lookup
-
-Let's pass the consumer device down, by directly calling what
-fwnode_gpiod_get_index() calls but pass the device used for devm. This
-changes the message to look like this instead:
-
- gpio-keys gpio-keys: using DT '/gpio-keys/switch-pen-insert' for '(null)' GPIO lookup
-
-Note that callers of fwnode_gpiod_get_index() will still see the NULL
-device pointer debug message, but there's not much we can do about that
-because the API doesn't take a struct device.
-
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Fixes: 944be6fba401 ("arm64: dts: rockchip: Add VPU support for RK3568/RK3566")
+Cc: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Acked-by: Uwe Kleine-König <ukleinek@debian.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/20240227173526.710056-1-heiko@sntech.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-devres.c |  2 +-
- drivers/gpio/gpiolib.c        | 14 +++++++-------
- drivers/gpio/gpiolib.h        |  8 ++++++++
- 3 files changed, 16 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk356x.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index fe9ce6b19f15c..4987e62dcb3d1 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -158,7 +158,7 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 	if (!dr)
- 		return ERR_PTR(-ENOMEM);
- 
--	desc = fwnode_gpiod_get_index(fwnode, con_id, index, flags, label);
-+	desc = gpiod_find_and_request(dev, fwnode, con_id, index, flags, label, false);
- 	if (IS_ERR(desc)) {
- 		devres_free(dr);
- 		return desc;
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index deca1d43de9ca..1c512ed3fa6d9 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4021,13 +4021,13 @@ static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
- 	return desc;
- }
- 
--static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
--						struct fwnode_handle *fwnode,
--						const char *con_id,
--						unsigned int idx,
--						enum gpiod_flags flags,
--						const char *label,
--						bool platform_lookup_allowed)
-+struct gpio_desc *gpiod_find_and_request(struct device *consumer,
-+					 struct fwnode_handle *fwnode,
-+					 const char *con_id,
-+					 unsigned int idx,
-+					 enum gpiod_flags flags,
-+					 const char *label,
-+					 bool platform_lookup_allowed)
- {
- 	unsigned long lookupflags = GPIO_LOOKUP_FLAGS_DEFAULT;
- 	struct gpio_desc *desc;
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index aa19260836893..9bbde38238d33 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -207,6 +207,14 @@ static inline int gpiod_request_user(struct gpio_desc *desc, const char *label)
- 	return ret;
- }
- 
-+struct gpio_desc *gpiod_find_and_request(struct device *consumer,
-+					 struct fwnode_handle *fwnode,
-+					 const char *con_id,
-+					 unsigned int idx,
-+					 enum gpiod_flags flags,
-+					 const char *label,
-+					 bool platform_lookup_allowed);
-+
- int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
- 		unsigned long lflags, enum gpiod_flags dflags);
- int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce);
+diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+index b7e2b475f0707..3cd097adb3686 100644
+--- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+@@ -597,6 +597,7 @@ vpu: video-codec@fdea0400 {
+ 		compatible = "rockchip,rk3568-vpu";
+ 		reg = <0x0 0xfdea0000 0x0 0x800>;
+ 		interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "vdpu";
+ 		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
+ 		clock-names = "aclk", "hclk";
+ 		iommus = <&vdpu_mmu>;
 -- 
 2.43.0
 
