@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B1D22286A;
-	Sun, 24 Mar 2024 23:11:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BFF156F42;
+	Sun, 24 Mar 2024 23:11:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321901; cv=none; b=NMTxDUnoCi/0N0h3CVaSfjy32jupKEY6C7tfWD7VPhQqmXqhUuaVnyYQzVjkw0Ua/o4hHoIKsmnUHpkCSHQsM72PLuZOBlIzupv/ytO/xqj3HnXlNEJFW3ZQll8+oMGQdifxE05P3e7FFpujLqD+PvvNIz96hoWuKkvmtjojlEg=
+	t=1711321907; cv=none; b=nmX7vHW2o8rN2T6rzxVZBjQFZsBDjTszIxERZ1vJMBic5lYYuFlYriLmvd1IXnZkvUu77yjvU+r/LgwtzKJwSFFlEAc/xHH85sCDrRewBZ3vQcka5Kd4yXS6cDkShTi7t0HfON2uvDsmqbGttF5mvFGS+S/Y9dZMaofUmINnRLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321901; c=relaxed/simple;
-	bh=LU5RtrVwv6oDNllBQy66uXZDs7SmEFvrcluDBbhrrOQ=;
+	s=arc-20240116; t=1711321907; c=relaxed/simple;
+	bh=tXFAWqv6MhFIQ98BBI18+hDNN0x8isGTpay6NA+WcEI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AbdHQ3+CiWlj2iftMQhLNwR4jhXei9UU0XpmVdPiQA+yDHg4z6oR5rB6+57JZYcdK5btqlvdCnbCeTop6QXM45ITx79DWHoOE3Ig8RcdI73wBo7VOkSFAHqs6tZ7g3m4gqXywvga+WogeEm0nOajgJae/SOHhqbpFBz0d7wmC/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GvGmjcqc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Bmz8WKQ57oxUw+Ttq4yEy1CNVb+8fezvSNWRR0hl06A6ohBvaUuhm0o7a3ZW7f1O9bh7vyQ3QuI7E+xyvqDKZbawWy6OTNZjHTgnWSpaS0xAP6PM6onoh2cDcySF9tT/RmHk0P9YVf6kHYawDhW/zhkgWDSeofRtFnacn3sH+OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gts48/zJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GvGmjcqc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93576C433C7;
-	Sun, 24 Mar 2024 23:11:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gts48/zJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90B98C433C7;
+	Sun, 24 Mar 2024 23:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321901;
-	bh=LU5RtrVwv6oDNllBQy66uXZDs7SmEFvrcluDBbhrrOQ=;
+	s=k20201202; t=1711321906;
+	bh=tXFAWqv6MhFIQ98BBI18+hDNN0x8isGTpay6NA+WcEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GvGmjcqcsJ8t5oOFanSF9+3AHoiViDX4PFA1kiyP31whUr2VszsjlCoNhXPZRUOVs
-	 sT040LHeIVqXZ1Jz5+XmRh32V12Si8bC8LXwWy7IpE1ndGGFVRVAGf3aGK/UZurmjH
-	 JEAWzsTiHLumE1atv9YA/FOgvXHufX3eZFf2GQVc36hf1QBMU7PZK5qnDfOacZa7+Q
-	 nQIPBbDITq1LWG+BXn0kJ71Tpn4oF2rXUoghwsYGGr1WM2N1mGJswgKLcVFtGcTffq
-	 Kjhhezt5XrSF5f/S71fswIWCF7hYBM+ImqFmPq9DbrWNyTKOkXPeH776zehdMP5tRf
-	 pSn1yeCAFJbSA==
+	b=gts48/zJuI8+zTvFUprBFAd0VlY0I9qW9efPxNWz8SCSXms8DRNddzqzrNjtIrP2/
+	 CxwmXR737zJIH40THFZwYOOkesPAlyT2LahosXHjHiyfjU8Spv1Ql/EBLk6XDUiTOY
+	 ommjAbhmKykDOqS4uFfY8btRnMzfFfxcWPKv46A2V3tgLB5XoMN+El+ClwtgLgdfw5
+	 rsOYrLCQR2UHAAQ3gkc7jDHWhS/x8rRJMeIipCAM98Xzu9GyIBIivO/rSdF5EsFm3C
+	 Z3s6Uti+RlYqNYievKeKOL3lCIF2V3gahIlWDhnC0+8r9TbKc4tR6Zxrzry7QrqzQE
+	 D/ytWgw5bLyFQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Mikulas Patocka <mpatocka@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 630/638] net: dsa: mt7530: fix handling of all link-local frames
-Date: Sun, 24 Mar 2024 19:01:07 -0400
-Message-ID: <20240324230116.1348576-631-sashal@kernel.org>
+Subject: [PATCH 6.6 635/638] dm-integrity: align the outgoing bio in integrity_recheck
+Date: Sun, 24 Mar 2024 19:01:12 -0400
+Message-ID: <20240324230116.1348576-636-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,142 +44,81 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit 69ddba9d170bdaee1dc0eb4ced38d7e4bb7b92af ]
+[ Upstream commit b4d78cfeb30476239cf08f4f40afc095c173d6e3 ]
 
-Currently, the MT753X switches treat frames with :01-0D and :0F MAC DAs as
-regular multicast frames, therefore flooding them to user ports.
+It is possible to set up dm-integrity with smaller sector size than
+the logical sector size of the underlying device. In this situation,
+dm-integrity guarantees that the outgoing bios have the same alignment as
+incoming bios (so, if you create a filesystem with 4k block size,
+dm-integrity would send 4k-aligned bios to the underlying device).
 
-On page 205, section "8.6.3 Frame filtering" of the active standard, IEEE
-Std 802.1Q™-2022, it is stated that frames with 01:80:C2:00:00:00-0F as MAC
-DA must only be propagated to C-VLAN and MAC Bridge components. That means
-VLAN-aware and VLAN-unaware bridges. On the switch designs with CPU ports,
-these frames are supposed to be processed by the CPU (software). So we make
-the switch only forward them to the CPU port. And if received from a CPU
-port, forward to a single port. The software is responsible of making the
-switch conform to the latter by setting a single port as destination port
-on the special tag.
+This guarantee was broken when integrity_recheck was implemented.
+integrity_recheck sends bio that is aligned to ic->sectors_per_block. So
+if we set up integrity with 512-byte sector size on a device with logical
+block size 4k, we would be sending unaligned bio. This triggered a bug in
+one of our internal tests.
 
-This switch intellectual property cannot conform to this part of the
-standard fully. Whilst the REV_UN frame tag covers the remaining :04-0D and
-:0F MAC DAs, it also includes :22-FF which the scope of propagation is not
-supposed to be restricted for these MAC DAs.
+This commit fixes it by determining the actual alignment of the
+incoming bio and then makes sure that the outgoing bio in
+integrity_recheck has the same alignment.
 
-Set frames with :01-03 MAC DAs to be trapped to the CPU port(s). Add a
-comment for the remaining MAC DAs.
-
-Note that the ingress port must have a PVID assigned to it for the switch
-to forward untagged frames. A PVID is set by default on VLAN-aware and
-VLAN-unaware ports. However, when the network interface that pertains to
-the ingress port is attached to a vlan_filtering enabled bridge, the user
-can remove the PVID assignment from it which would prevent the link-local
-frames from being trapped to the CPU port. I am yet to see a way to forward
-link-local frames while preventing other untagged frames from being
-forwarded too.
-
-Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: c88f5e553fe3 ("dm-integrity: recheck the integrity tag after a failure")
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mt7530.c | 37 +++++++++++++++++++++++++++++++++----
- drivers/net/dsa/mt7530.h | 13 +++++++++++++
- 2 files changed, 46 insertions(+), 4 deletions(-)
+ drivers/md/dm-integrity.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index d46025a63b696..f529bc6f56801 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -999,6 +999,21 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
- 	mutex_unlock(&priv->reg_mutex);
- }
+diff --git a/drivers/md/dm-integrity.c b/drivers/md/dm-integrity.c
+index 71c3b891c4df5..e7cd27e387df1 100644
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -1709,7 +1709,6 @@ static noinline void integrity_recheck(struct dm_integrity_io *dio, char *checks
+ 	struct bio_vec bv;
+ 	sector_t sector, logical_sector, area, offset;
+ 	struct page *page;
+-	void *buffer;
  
-+/* On page 205, section "8.6.3 Frame filtering" of the active standard, IEEE Std
-+ * 802.1Q™-2022, it is stated that frames with 01:80:C2:00:00:00-0F as MAC DA
-+ * must only be propagated to C-VLAN and MAC Bridge components. That means
-+ * VLAN-aware and VLAN-unaware bridges. On the switch designs with CPU ports,
-+ * these frames are supposed to be processed by the CPU (software). So we make
-+ * the switch only forward them to the CPU port. And if received from a CPU
-+ * port, forward to a single port. The software is responsible of making the
-+ * switch conform to the latter by setting a single port as destination port on
-+ * the special tag.
-+ *
-+ * This switch intellectual property cannot conform to this part of the standard
-+ * fully. Whilst the REV_UN frame tag covers the remaining :04-0D and :0F MAC
-+ * DAs, it also includes :22-FF which the scope of propagation is not supposed
-+ * to be restricted for these MAC DAs.
-+ */
- static void
- mt753x_trap_frames(struct mt7530_priv *priv)
- {
-@@ -1013,13 +1028,27 @@ mt753x_trap_frames(struct mt7530_priv *priv)
- 		   MT753X_BPDU_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
- 		   MT753X_BPDU_CPU_ONLY);
+ 	get_area_and_offset(ic, dio->range.logical_sector, &area, &offset);
+ 	dio->metadata_block = get_metadata_sector_and_offset(ic, area, offset,
+@@ -1718,13 +1717,14 @@ static noinline void integrity_recheck(struct dm_integrity_io *dio, char *checks
+ 	logical_sector = dio->range.logical_sector;
  
--	/* Trap LLDP frames with :0E MAC DA to the CPU port(s) and egress them
--	 * VLAN-untagged.
-+	/* Trap frames with :01 and :02 MAC DAs to the CPU port(s) and egress
-+	 * them VLAN-untagged.
-+	 */
-+	mt7530_rmw(priv, MT753X_RGAC1, MT753X_R02_EG_TAG_MASK |
-+		   MT753X_R02_PORT_FW_MASK | MT753X_R01_EG_TAG_MASK |
-+		   MT753X_R01_PORT_FW_MASK,
-+		   MT753X_R02_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
-+		   MT753X_R02_PORT_FW(MT753X_BPDU_CPU_ONLY) |
-+		   MT753X_R01_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
-+		   MT753X_BPDU_CPU_ONLY);
+ 	page = mempool_alloc(&ic->recheck_pool, GFP_NOIO);
+-	buffer = page_to_virt(page);
+ 
+ 	__bio_for_each_segment(bv, bio, iter, dio->bio_details.bi_iter) {
+ 		unsigned pos = 0;
+ 
+ 		do {
++			sector_t alignment;
+ 			char *mem;
++			char *buffer = page_to_virt(page);
+ 			int r;
+ 			struct dm_io_request io_req;
+ 			struct dm_io_region io_loc;
+@@ -1737,6 +1737,14 @@ static noinline void integrity_recheck(struct dm_integrity_io *dio, char *checks
+ 			io_loc.sector = sector;
+ 			io_loc.count = ic->sectors_per_block;
+ 
++			/* Align the bio to logical block size */
++			alignment = dio->range.logical_sector | bio_sectors(bio) | (PAGE_SIZE >> SECTOR_SHIFT);
++			alignment &= -alignment;
++			io_loc.sector = round_down(io_loc.sector, alignment);
++			io_loc.count += sector - io_loc.sector;
++			buffer += (sector - io_loc.sector) << SECTOR_SHIFT;
++			io_loc.count = round_up(io_loc.count, alignment);
 +
-+	/* Trap frames with :03 and :0E MAC DAs to the CPU port(s) and egress
-+	 * them VLAN-untagged.
- 	 */
- 	mt7530_rmw(priv, MT753X_RGAC2, MT753X_R0E_EG_TAG_MASK |
--		   MT753X_R0E_PORT_FW_MASK,
-+		   MT753X_R0E_PORT_FW_MASK | MT753X_R03_EG_TAG_MASK |
-+		   MT753X_R03_PORT_FW_MASK,
- 		   MT753X_R0E_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
--		   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY));
-+		   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY) |
-+		   MT753X_R03_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
-+		   MT753X_BPDU_CPU_ONLY);
- }
- 
- static int
-diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index cef2af3f24d58..75bc9043c8c0a 100644
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -73,12 +73,25 @@ enum mt753x_id {
- #define  MT753X_BPDU_EG_TAG(x)		FIELD_PREP(MT753X_BPDU_EG_TAG_MASK, x)
- #define  MT753X_BPDU_PORT_FW_MASK	GENMASK(2, 0)
- 
-+/* Register for :01 and :02 MAC DA frame control */
-+#define MT753X_RGAC1			0x28
-+#define  MT753X_R02_EG_TAG_MASK		GENMASK(24, 22)
-+#define  MT753X_R02_EG_TAG(x)		FIELD_PREP(MT753X_R02_EG_TAG_MASK, x)
-+#define  MT753X_R02_PORT_FW_MASK	GENMASK(18, 16)
-+#define  MT753X_R02_PORT_FW(x)		FIELD_PREP(MT753X_R02_PORT_FW_MASK, x)
-+#define  MT753X_R01_EG_TAG_MASK		GENMASK(8, 6)
-+#define  MT753X_R01_EG_TAG(x)		FIELD_PREP(MT753X_R01_EG_TAG_MASK, x)
-+#define  MT753X_R01_PORT_FW_MASK	GENMASK(2, 0)
-+
- /* Register for :03 and :0E MAC DA frame control */
- #define MT753X_RGAC2			0x2c
- #define  MT753X_R0E_EG_TAG_MASK		GENMASK(24, 22)
- #define  MT753X_R0E_EG_TAG(x)		FIELD_PREP(MT753X_R0E_EG_TAG_MASK, x)
- #define  MT753X_R0E_PORT_FW_MASK	GENMASK(18, 16)
- #define  MT753X_R0E_PORT_FW(x)		FIELD_PREP(MT753X_R0E_PORT_FW_MASK, x)
-+#define  MT753X_R03_EG_TAG_MASK		GENMASK(8, 6)
-+#define  MT753X_R03_EG_TAG(x)		FIELD_PREP(MT753X_R03_EG_TAG_MASK, x)
-+#define  MT753X_R03_PORT_FW_MASK	GENMASK(2, 0)
- 
- enum mt753x_bpdu_port_fw {
- 	MT753X_BPDU_FOLLOW_MFC,
+ 			r = dm_io(&io_req, 1, &io_loc, NULL, IOPRIO_DEFAULT);
+ 			if (unlikely(r)) {
+ 				dio->bi_status = errno_to_blk_status(r);
 -- 
 2.43.0
 
