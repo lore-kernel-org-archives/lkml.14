@@ -1,39 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CBB22EADD;
-	Sun, 24 Mar 2024 23:16:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8026B1FD5D7;
+	Sun, 24 Mar 2024 23:16:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322206; cv=none; b=Q+iLPrsEI1fvJpCs9AfWEV8JBZUtw+IT+RJGyWBU1NQhOXr7k9GhbxpccxuXaVdWMqqesh4YkNiu+Q3f5kdFc4Yw6HOUArz8IO+LOfgEmeX0oREoVbY6uSaKhRe5UgHSAoA6kAEy12itIMNuCHOOnK1t8K9Ocr5tHxEB/EilOD8=
+	t=1711322211; cv=none; b=IPB4YNLRKBW/Fjh7xeHU/BxuvOB68NduCyukajqm5UqkULolfIKsvufY9bamfXpWivxamAsM4h/XR2IRo+Nn7V2rZ57Sx5DBwDBezYgfjQiWEOPtOr1idB/yUOrA9fSCs2k6s3V4JzffrNuM3yTyFK/HlclYmp9Grc6IEVq5T/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322206; c=relaxed/simple;
-	bh=EG9/Oj0L1ljMvDNRIG5H90uu4piB+73R/COY7CvO3Y8=;
+	s=arc-20240116; t=1711322211; c=relaxed/simple;
+	bh=32Gku5sbfFWN/XgXjEhBLHodUGyYu8Wv1FUmnhm2HPQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gq6+sGD7n/hmS15heQYxnqSTFEwkVcsvkbO1mmHu8AZNTiwv5NbFlY259M4GC4bVTqryOEyRF814HWYMwhO08ximbRrVUZwW2RPu/dzdi/arI8o8hXkxdDUhs98kntmDRMrAdXFbgkR1nBf5RYNRWwGDxAAKcXUUoAky4k3Uot0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1rztALv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YeaTLS2WIILAjHMp/hj6/53ataGKBJaXqhJDOMy9iCDnZIW7RQZkrhpOJ2vnMjhiTlkJQ4kF7wMkAM36gZwZO/jaij6UPHl6qflX4LMYIRfbfJ3LF6vmzt0fRVErMCKIi2biUSGzZl4TAi91qeKhjerplGyMNHF5QUYddtxxJCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHCRL/n4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1rztALv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B146C43394;
-	Sun, 24 Mar 2024 23:16:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHCRL/n4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D962C433C7;
+	Sun, 24 Mar 2024 23:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322205;
-	bh=EG9/Oj0L1ljMvDNRIG5H90uu4piB+73R/COY7CvO3Y8=;
+	s=k20201202; t=1711322210;
+	bh=32Gku5sbfFWN/XgXjEhBLHodUGyYu8Wv1FUmnhm2HPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m1rztALv6oH4Qb7ZmD1sd5JiCeGvPmVRfdoxHel1gurW2T3SbDx7SCTypJdRIATDr
-	 o7qvgV+q/uT5o0VYxTjVdrzYC2h7blZphZymjf3AdC6jvCOc7Nq9mKHDT9To2IH1sb
-	 eN1hyoumc29JHV80tzM8B5mXDZeZBiiNQE7T0vtAEmeLet5jNMh/JLHkBX6YhsICRc
-	 Koh9yRyt4ERFNVfcWKyJZRhOeWHZWlrZBkCKcp/2ebXnq29rIqy7ADnRhExdjyOUH4
-	 o6Q1PNzLr0MpPzKBxvNkSrQYS0XiaB+fuytX3dvF+yKhrUelv4/EyF+Gqb+oH33i6x
-	 qMoCuScb4gndA==
+	b=FHCRL/n4cp1aOKZIdhe6GGZGkBwKTtS3qvW2SZ/C5argmjCGG0ENJOD8lgX9x7yok
+	 OJ1OiswoXnQqii+DRX/608dHPMBJM+v2JNFaKE2ESXvJ0S9bWEDCKx1iBOqnQVpNVq
+	 THIGAiQeEU3wMBxL4pu5QdxLuvZYTuGiH+Xwc7JfIcyzzMgvwj65u06CtCgXtq8IcO
+	 51ah/aZQh4VYSyH4ZMI7fKo5IIQ1gceEQbKry1o0MC5tx/T0uTIC6yulF04JaoYA1z
+	 sKzQ81DbNmAwFmKKxe1SvSoxPpf8sm7xmZLQkfeL+stidywmremd1sXm0XWlDph+fi
+	 94Qi2zsD25RwQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 285/451] clk: renesas: r8a779g0: Correct PFC/GPIO parent clocks
-Date: Sun, 24 Mar 2024 19:09:21 -0400
-Message-ID: <20240324231207.1351418-286-sashal@kernel.org>
+Subject: [PATCH 6.1 290/451] ASoC: meson: t9015: fix function pointer type mismatch
+Date: Sun, 24 Mar 2024 19:09:26 -0400
+Message-ID: <20240324231207.1351418-291-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -43,78 +46,85 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit abb3fa662b8f8eaed1590b0e7a4e19eda467cdd3 ]
+[ Upstream commit 5ad992c71b6a8e8a547954addc7af9fbde6ca10a ]
 
-According to the R-Car V4H Series Hardware User’s Manual Rev.1.00, the
-parent clock of the Pin Function (PFC/GPIO) module clocks is the CP
-clock.
+clang-16 warns about casting functions to incompatible types, as is done
+here to call clk_disable_unprepare:
 
-Fix this by adding the missing CP clock, and correcting the PFC parents.
+sound/soc/meson/t9015.c:274:4: error: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  274 |                         (void(*)(void *))clk_disable_unprepare,
 
-Fixes: f2afa78d5a0c0b0b ("dt-bindings: clock: Add r8a779g0 CPG Core Clock Definitions")
-Fixes: 36ff366033f0dde1 ("clk: renesas: r8a779g0: Add PFC/GPIO clocks")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/5401fccd204dc90b44f0013e7f53b9eff8df8214.1706197297.git.geert+renesas@glider.be
+The pattern of getting, enabling and setting a disable callback for a
+clock can be replaced with devm_clk_get_enabled(), which also fixes
+this warning.
+
+Fixes: 33901f5b9b16 ("ASoC: meson: add t9015 internal DAC driver")
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Link: https://msgid.link/r/20240213215807.3326688-3-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/r8a779g0-cpg-mssr.c       | 11 ++++++-----
- include/dt-bindings/clock/r8a779g0-cpg-mssr.h |  1 +
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ sound/soc/meson/t9015.c | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/clk/renesas/r8a779g0-cpg-mssr.c b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
-index aace98c0c4735..e4c616921e5ea 100644
---- a/drivers/clk/renesas/r8a779g0-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a779g0-cpg-mssr.c
-@@ -22,7 +22,7 @@
+diff --git a/sound/soc/meson/t9015.c b/sound/soc/meson/t9015.c
+index 9c6b4dac68932..571f65788c592 100644
+--- a/sound/soc/meson/t9015.c
++++ b/sound/soc/meson/t9015.c
+@@ -48,7 +48,6 @@
+ #define POWER_CFG	0x10
  
- enum clk_ids {
- 	/* Core Clock Outputs exported to DT */
--	LAST_DT_CORE_CLK = R8A779G0_CLK_R,
-+	LAST_DT_CORE_CLK = R8A779G0_CLK_CP,
+ struct t9015 {
+-	struct clk *pclk;
+ 	struct regulator *avdd;
+ };
  
- 	/* External Input Clocks */
- 	CLK_EXTAL,
-@@ -139,6 +139,7 @@ static const struct cpg_core_clk r8a779g0_core_clks[] __initconst = {
- 	DEF_FIXED("svd2_vip",	R8A779G0_CLK_SVD2_VIP,	CLK_SV_VIP,	2, 1),
- 	DEF_FIXED("cbfusa",	R8A779G0_CLK_CBFUSA,	CLK_EXTAL,	2, 1),
- 	DEF_FIXED("cpex",	R8A779G0_CLK_CPEX,	CLK_EXTAL,	2, 1),
-+	DEF_FIXED("cp",		R8A779G0_CLK_CP,	CLK_EXTAL,	2, 1),
- 	DEF_FIXED("viobus",	R8A779G0_CLK_VIOBUS,	CLK_VIO,	1, 1),
- 	DEF_FIXED("viobusd2",	R8A779G0_CLK_VIOBUSD2,	CLK_VIO,	2, 1),
- 	DEF_FIXED("vcbus",	R8A779G0_CLK_VCBUS,	CLK_VC,		1, 1),
-@@ -173,10 +174,10 @@ static const struct mssr_mod_clk r8a779g0_mod_clks[] __initconst = {
- 	DEF_MOD("cmt1",		911,	R8A779G0_CLK_R),
- 	DEF_MOD("cmt2",		912,	R8A779G0_CLK_R),
- 	DEF_MOD("cmt3",		913,	R8A779G0_CLK_R),
--	DEF_MOD("pfc0",		915,	R8A779G0_CLK_CL16M),
--	DEF_MOD("pfc1",		916,	R8A779G0_CLK_CL16M),
--	DEF_MOD("pfc2",		917,	R8A779G0_CLK_CL16M),
--	DEF_MOD("pfc3",		918,	R8A779G0_CLK_CL16M),
-+	DEF_MOD("pfc0",		915,	R8A779G0_CLK_CP),
-+	DEF_MOD("pfc1",		916,	R8A779G0_CLK_CP),
-+	DEF_MOD("pfc2",		917,	R8A779G0_CLK_CP),
-+	DEF_MOD("pfc3",		918,	R8A779G0_CLK_CP),
- 	DEF_MOD("tsc",		919,	R8A779G0_CLK_CL16M),
- 	DEF_MOD("ssiu",		2926,	R8A779G0_CLK_S0D6_PER),
- 	DEF_MOD("ssi",		2927,	R8A779G0_CLK_S0D6_PER),
-diff --git a/include/dt-bindings/clock/r8a779g0-cpg-mssr.h b/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
-index 754c54a6eb06a..7850cdc62e285 100644
---- a/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
-+++ b/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
-@@ -86,5 +86,6 @@
- #define R8A779G0_CLK_CPEX		74
- #define R8A779G0_CLK_CBFUSA		75
- #define R8A779G0_CLK_R			76
-+#define R8A779G0_CLK_CP			77
+@@ -249,6 +248,7 @@ static int t9015_probe(struct platform_device *pdev)
+ 	struct t9015 *priv;
+ 	void __iomem *regs;
+ 	struct regmap *regmap;
++	struct clk *pclk;
+ 	int ret;
  
- #endif /* __DT_BINDINGS_CLOCK_R8A779G0_CPG_MSSR_H__ */
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+@@ -256,26 +256,14 @@ static int t9015_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	platform_set_drvdata(pdev, priv);
+ 
+-	priv->pclk = devm_clk_get(dev, "pclk");
+-	if (IS_ERR(priv->pclk))
+-		return dev_err_probe(dev, PTR_ERR(priv->pclk), "failed to get core clock\n");
++	pclk = devm_clk_get_enabled(dev, "pclk");
++	if (IS_ERR(pclk))
++		return dev_err_probe(dev, PTR_ERR(pclk), "failed to get core clock\n");
+ 
+ 	priv->avdd = devm_regulator_get(dev, "AVDD");
+ 	if (IS_ERR(priv->avdd))
+ 		return dev_err_probe(dev, PTR_ERR(priv->avdd), "failed to AVDD\n");
+ 
+-	ret = clk_prepare_enable(priv->pclk);
+-	if (ret) {
+-		dev_err(dev, "core clock enable failed\n");
+-		return ret;
+-	}
+-
+-	ret = devm_add_action_or_reset(dev,
+-			(void(*)(void *))clk_disable_unprepare,
+-			priv->pclk);
+-	if (ret)
+-		return ret;
+-
+ 	ret = device_reset(dev);
+ 	if (ret) {
+ 		dev_err(dev, "reset failed\n");
 -- 
 2.43.0
 
