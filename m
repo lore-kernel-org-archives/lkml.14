@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07CE1514E1;
-	Sun, 24 Mar 2024 23:05:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03542081DC;
+	Sun, 24 Mar 2024 23:05:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321530; cv=none; b=or+YRr3azBydzHSWTZpJBw8OR0XWxZN01nHpLGF7CgiepjeXih8GkLfDFORuDGNdQKz2MeCtkVjGHRhjoIsnIPZB5A7/sjJW+jc8GP4XniIGiaksTjy/nPny0cSSGT9SvpqCImfp+1x1hj3pa5oybhy8FaeWKhY7EZYN1TgEpBA=
+	t=1711321538; cv=none; b=VUmeFvCtVLP2PQS1RuL67UZcM7n8j506SR74eYvZxTKucItULk46vCAYAztrlcMfrwW/HroNFYZAOKfK/zX5ceJ24nYkZVuFZv0dG/1qonCr/ax2wHg00ms8nVf/8scNouSa5glLCF881+PAUA8ETVgi0LHJc5O8Gwgl9fRSYVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321530; c=relaxed/simple;
-	bh=sOnFWM7/W5GNbO/a/LDuUceaCzlQt2n5kgO6W1Y1mog=;
+	s=arc-20240116; t=1711321538; c=relaxed/simple;
+	bh=PSfaJaGHfeh9RYxvNOEV3FNhCqWgQCV/Di0zLdoOfeM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mEDNvL9h7lVpB+X0+9yjq2r+W0PdY87Nksm9zxNGNLy9VCYc2DcIJORmKUa/PgGHkfz31yVqzUjD1N+BZ1zadvx2gRxEnq4uqKoWwzOR8owSKbkV7WX1NXBrn3vNEerb7Yc0jXZ+2uE8OaGZUUpjJqqsG9N3yDZS4HujZ8LyR/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pkv6PfLV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hKpZxkxQlhFHpauQYN0rSb6+Hsull7X2l40gT4bxw+rm9EnafqfsEBaCT7dIMIEJTc0ZEBcwINJ9xiAHaFoGks/0GeAZLHZZMhzI8PIUo9l6EEY0Fk1tNHyjTcxxC52/PrCdKz+BHneHZ+Ceh25cQVJLlI2J0hw33uQfAWFPUL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P6uzc96q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pkv6PfLV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9331C43390;
-	Sun, 24 Mar 2024 23:05:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P6uzc96q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A833C43394;
+	Sun, 24 Mar 2024 23:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321529;
-	bh=sOnFWM7/W5GNbO/a/LDuUceaCzlQt2n5kgO6W1Y1mog=;
+	s=k20201202; t=1711321538;
+	bh=PSfaJaGHfeh9RYxvNOEV3FNhCqWgQCV/Di0zLdoOfeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Pkv6PfLVIkag/SAd217v5yBVWyh1/zccGRLX5UlvSqFDBUnjsaCjwys4iSlWhLEAT
-	 OliafYusjXi3Asc78xAyF+x6fnnoSibfNHYuZl1fDdtEfpNu1uN0mrWzsg+msxBk7D
-	 /PIG/shOAmR+7hiDIkVwQNXl9y+9oMM3gNSV+ESvMA5CLukFvlmAqvSEPhFidz0PXi
-	 CmuuZkgiv7Xvrr4MV021QrMF2UOc/QdXmMFWyTWQlrOx5UTjiIl35Ds0fXlzhVeMIu
-	 e0ayvco0ATrU7uFW0D8Uq5C7nmknvCVGls5wx+GcwavqQPcNi1i8NfXp6g1J3hVmDn
-	 ID32u2xUh50aw==
+	b=P6uzc96q7+idQJ76ZOcqXXWYFmAOGqI85rfmD3xZERWNTAD4XN7fgGQdwEQrV4ji1
+	 lbbvsNSzOclNTOZn1Pnq8XVaOnop7cv2LFiOtMXt2L+wNVZIIc4VFjN/9dhXGQNFgA
+	 rQpohrh4u0Sh4LmxcAa7uglZQNBZ/AMR933SATd/v4UGMbPvGkVSTPnIW14d+iKUoP
+	 nsBODQ7u3gIjggBJp9rQXOwpOmPl5gcVIjet8kWyTEHhrYGPwFiGK/KXsOkXozNKXB
+	 lRkw1R9qYGW3uM565k3tPJRMW29wwq5cZx64Qk7AXe6TYNNz/3XPleNcbkuNDFunCT
+	 nglKmVrGQu9aA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Benjamin Lin <benjamin-jw.lin@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
-	Felix Fietkau <nbd@nbd.name>,
+Cc: Chen-Yu Tsai <wens@csie.org>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 256/638] wifi: mt76: mt7996: fix HIF_TXD_V2_1 value
-Date: Sun, 24 Mar 2024 18:54:53 -0400
-Message-ID: <20240324230116.1348576-257-sashal@kernel.org>
+Subject: [PATCH 6.6 266/638] arm64: dts: allwinner: h6: Add RX DMA channel for SPDIF
+Date: Sun, 24 Mar 2024 18:55:03 -0400
+Message-ID: <20240324230116.1348576-267-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,35 +49,81 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Benjamin Lin <benjamin-jw.lin@mediatek.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit de8882775156682ba358afc82cb575c92cf3d092 ]
+[ Upstream commit 7b59348c11f3355e284d77bbe3d33632ddadcfc2 ]
 
-Sync the value of HIF_TXD_V2_1 with firmware to let it correctly fill
-TXD values for HW path.
+The SPDIF hardware found on the H6 supports both transmit and receive
+functions. However it is missing the RX DMA channel.
 
-Fixes: 98686cd21624 ("wifi: mt76: mt7996: add driver for MediaTek Wi-Fi 7 (802.11be) devices")
-Signed-off-by: Benjamin Lin <benjamin-jw.lin@mediatek.com>
-Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Add the SPDIF hardware block's RX DMA channel. Also remove the
+by-default pinmux, since the end device can choose to implement
+either or both functionalities.
+
+Fixes: f95b598df419 ("arm64: dts: allwinner: Add SPDIF node for Allwinner H6")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Link: https://lore.kernel.org/r/20240127163247.384439-6-wens@kernel.org
+Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7996/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 2 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi      | 2 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi            | 7 +++----
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/init.c b/drivers/net/wireless/mediatek/mt76/mt7996/init.c
-index e843d40df5bb4..2016ed9197fe3 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7996/init.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7996/init.c
-@@ -276,7 +276,7 @@ static void mt7996_mac_init_basic_rates(struct mt7996_dev *dev)
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 9ec49ac2f6fd5..381d58cea092d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -291,6 +291,8 @@ sw {
+ };
  
- void mt7996_mac_init(struct mt7996_dev *dev)
- {
--#define HIF_TXD_V2_1	4
-+#define HIF_TXD_V2_1	0x21
- 	int i;
+ &spdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spdif_tx_pin>;
+ 	status = "okay";
+ };
  
- 	mt76_clear(dev, MT_MDP_DCR2, MT_MDP_DCR2_RX_TRANS_SHORT);
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
+index 4903d6358112d..855b7d43bc503 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
+@@ -166,6 +166,8 @@ &r_ir {
+ };
+ 
+ &spdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spdif_tx_pin>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index ca1d287a0a01d..d11e5041bae9a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -406,6 +406,7 @@ spi1_cs_pin: spi1-cs-pin {
+ 				function = "spi1";
+ 			};
+ 
++			/omit-if-no-ref/
+ 			spdif_tx_pin: spdif-tx-pin {
+ 				pins = "PH7";
+ 				function = "spdif";
+@@ -655,10 +656,8 @@ spdif: spdif@5093000 {
+ 			clocks = <&ccu CLK_BUS_SPDIF>, <&ccu CLK_SPDIF>;
+ 			clock-names = "apb", "spdif";
+ 			resets = <&ccu RST_BUS_SPDIF>;
+-			dmas = <&dma 2>;
+-			dma-names = "tx";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&spdif_tx_pin>;
++			dmas = <&dma 2>, <&dma 2>;
++			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.43.0
 
