@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0652B229BE4;
-	Sun, 24 Mar 2024 23:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC481FB093;
+	Sun, 24 Mar 2024 23:48:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324130; cv=none; b=p64Eb7ElusAC8DaGIKXktLzJjDHNxHJNROygF2RuzgElLRqgT9Iv+MUKi2FmdypAS84WPVg4hnFCu1+KZGVXiU9XGB533ixi0Lm0eXXm7/S9yJgAZWhP9nhACf4wZIviIrIeA7RA7FjJZgx0s2KHvBwc3Njwnypgx+1va73sc4I=
+	t=1711324128; cv=none; b=VJ7YLShyJs1wRlZt6H6fcY78i+/z5TK95mPTtDBrynqwIg0ac/vCmhRJYwHrQgwuaZMvWabB8DBbXxXVVNTJDmbd1jpUTNRX6P0UACXNRYOLvIadY3EtO0z89Vi9hbMutnzalo/bj8QsUAIev+tRTqmQAcWDrHc5btT4+pKCt80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324130; c=relaxed/simple;
-	bh=7MrEm1QVokqmLB43b20sXLc56N+gXSom4+OqZ57+/do=;
+	s=arc-20240116; t=1711324128; c=relaxed/simple;
+	bh=7zVaDgT2dMSkrpsp3xzqYvEZpVYt/GwYB4YhIWzsABs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ToQSjpOjhujLOtOj7vxxC4JrYeuyT4O03qPCtldd72UV8abZmxG084goQDVo3xicGJ8yF8KtXc9rRAjFBvKfVIHysuqoD+4IjD5Ff/FHvnJn/W554VqV52DYhod5jhAd5Q9W20z2BSoutCq43cL/k1LNaFx6NS7p3Zp+ByjL54g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+xABXX6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HF8+wygbkqM9a7SCag2WeUQ6HIf3WwkKyDrg2bML4fj1KX8epkb19m6mUu/1Z9mFfi3Sspae1wXF3TfpUYeufogcJ0UWDY6a5GxNSqzb1YKGvW4D01GjxyKaIM0vtfKnVhle9cbGTDWlooH7GxW7vw145wKreuAWh6ZoZwfuVwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jiJf0NDU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+xABXX6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F39EAC433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jiJf0NDU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183C7C43390;
 	Sun, 24 Mar 2024 23:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324128;
-	bh=7MrEm1QVokqmLB43b20sXLc56N+gXSom4+OqZ57+/do=;
+	s=k20201202; t=1711324127;
+	bh=7zVaDgT2dMSkrpsp3xzqYvEZpVYt/GwYB4YhIWzsABs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W+xABXX6FK98LaOJ0wMt1E81AP2zkRNrFTvMG9gJ4iZZlHzrOam3b95LyF0P1yhxC
-	 KeOdkdnPTOZxFUeA5dqb4wgVL8fcOHWSHpIJlv9ijkU08NCSOQ+hb8fAcQkooAzI0/
-	 aQgY2cNE96X7o1z4X1suY4E2rQcBtdEAqHNjQmiMnKGEawhz+u4II+DtXp1KGreWAf
-	 z9a7L7R1dtENvp/yZVx9ZRQEkx//XKhGnPwFxwTHnfk7UxUcsgWGBm0DAnLfnyYaTR
-	 5ZkEMt0QQZvuXfM2VFwzjy65IOR576ssnpDgTCWzk87O1g/4d2XUVPIokjENbBfEsO
-	 qbMgs5xwEex/w==
+	b=jiJf0NDUc7DjBlORm63rE193IlUw8dVcl4yc+m/a7p/vhlLeYz4XkoH0mlPAK0O/X
+	 t6NKl5yaxRulv55WaCb/RzpAQRJAvuHNjSrWr1dso1EEnEwia0bYx8PN5ieAC3YV9o
+	 ckhspUHv7une2FUIGujrhQvHaFbcnGZ1pzft5BM0GGSzi5POSs0yl2H0cUKgjfrAfO
+	 HSzKrOwuuSNYxX2XCpWuMCf93CzpPVCzwUqQv0lT+cpMPPxNTpalSjGNv+j4MGFWx3
+	 Or2c0m5AOcCnWnsCfbEUwN5bIkiTmEty+NqK+L1ZvFiDjsf0WoBV2WNDHFjI6ewyYg
+	 ZUJPoakBrVOtw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Griffin <peter.griffin@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 126/183] mfd: syscon: Call of_node_put() only when of_parse_phandle() takes a ref
-Date: Sun, 24 Mar 2024 19:45:39 -0400
-Message-ID: <20240324234638.1355609-127-sashal@kernel.org>
+Subject: [PATCH 5.4 125/183] drm/tegra: put drm_gem_object ref on error in tegra_fb_create
+Date: Sun, 24 Mar 2024 19:45:38 -0400
+Message-ID: <20240324234638.1355609-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,39 +48,38 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Griffin <peter.griffin@linaro.org>
+From: Fedor Pchelkin <pchelkin@ispras.ru>
 
-[ Upstream commit d2b0680cf3b05490b579e71b0df6e07451977745 ]
+[ Upstream commit 32e5a120a5105bce01561978ee55aee8e40ac0dc ]
 
-of_parse_phandle() returns a device_node with refcount incremented, which
-the callee needs to call of_node_put() on when done. We should only call
-of_node_put() when the property argument is provided though as otherwise
-nothing has taken a reference on the node.
+Inside tegra_fb_create(), drm_gem_object_lookup() increments ref count of
+the found object. But if the following size check fails then the last
+found object's ref count should be put there as the unreferencing loop
+can't detect this situation.
 
-Fixes: 45330bb43421 ("mfd: syscon: Allow property as NULL in syscon_regmap_lookup_by_phandle")
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Link: https://lore.kernel.org/r/20240220115012.471689-2-peter.griffin@linaro.org
-Signed-off-by: Lee Jones <lee@kernel.org>
+Found by Linux Verification Center (linuxtesting.org).
+
+Fixes: de2ba664c30f ("gpu: host1x: drm: Add memory manager and fb")
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231215093356.12067-1-pchelkin@ispras.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/syscon.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/tegra/fb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index 660723276481c..9ec90ce12f4d7 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -219,7 +219,9 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
- 		return ERR_PTR(-ENODEV);
+diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
+index e34325c83d28e..361e67e4cd984 100644
+--- a/drivers/gpu/drm/tegra/fb.c
++++ b/drivers/gpu/drm/tegra/fb.c
+@@ -155,6 +155,7 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
  
- 	regmap = syscon_node_to_regmap(syscon_np);
--	of_node_put(syscon_np);
-+
-+	if (property)
-+		of_node_put(syscon_np);
+ 		if (gem->size < size) {
+ 			err = -EINVAL;
++			drm_gem_object_put(gem);
+ 			goto unreference;
+ 		}
  
- 	return regmap;
- }
 -- 
 2.43.0
 
