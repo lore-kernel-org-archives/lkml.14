@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E0417AF96;
-	Sun, 24 Mar 2024 23:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E9E17B4EC;
+	Sun, 24 Mar 2024 23:41:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323714; cv=none; b=fvVYG5IKWO1laSnpbikj6DRzX7/9/DVQbfW2NNyqntQc1O3p+jgu6NkbBPKrlNm7kHeLD2cdUPvyhdS3uT4x1LNsNOF5YgyDr1ONYgyjBOu+71xx1tCiGZunKIOvVbsJRiVHBC6+VPRbw3/Z6E/u1yMpOqWCNr4RvDz4PG6RGQs=
+	t=1711323719; cv=none; b=nydaFNAewMx0jOfQujNoPsRBo3ULgTz55JiKMSIGelgAjsSO8FGdWP+zBJZza5RDe0dH+lgAFB5b8WcRE2C9NiVHzIQtk5rGAxdSayNQO8xQ/NsTZCPcyyx/HKVsASruCoTZiAy5hqaIVR4IbO04zym2EDtX6Y6s1NrtFLRHpCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323714; c=relaxed/simple;
-	bh=zIHIDGYrNQow1bY9+uueUFMQRpndkPOjwaPDjx2YMEo=;
+	s=arc-20240116; t=1711323719; c=relaxed/simple;
+	bh=6iUDn5w6RDH9Plp/mSGm62Klq1xCk1zCrBh/vNrD6aw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ky+Oqx44g80sHWZygT7QHLHdFXnwFwvy+5QkjBGWqZFbph/VoqgdH/2mkXuSyTWUf9DSsGrmXeLG4Qbl1zybTb4L8KD5mTT6lFGA0v6rqIYlhHiRF94KRaUGi2IM1x11H4Zwg0HrP/JTRd2lfN2o7fIj2X8MTySSihzOjOiJ0EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+7kqFEB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=J5rN0f4mR0WyLVx+TRbzBe0Ukx49nD/3ljk5pSY4JuKppiNBz6lIKUueY39S2fLIYycPxW498FJRzxsdCljfoUlj4l1E6bOEgHSQnBBmQI4iiHtfM0oMZgT2v+g9HmaMRaOus1PW0mVL6I1YdvdzmbvcbsF2EgLR014Rw6Kzgpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PdeQKA3S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+7kqFEB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7967EC433F1;
-	Sun, 24 Mar 2024 23:41:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PdeQKA3S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24FC5C433F1;
+	Sun, 24 Mar 2024 23:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323714;
-	bh=zIHIDGYrNQow1bY9+uueUFMQRpndkPOjwaPDjx2YMEo=;
+	s=k20201202; t=1711323718;
+	bh=6iUDn5w6RDH9Plp/mSGm62Klq1xCk1zCrBh/vNrD6aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a+7kqFEBdAp67vwgqEq1Akidu/W0XrmgOvrVL6R6vfjEDS88rGjqu4zxti15fNYRB
-	 8a7K+D0ak3h3+vH4SUX/ZR4OUhyX6Jwd6QtiA6RSN+FwKFB+g1EGa7UMgdAWKA5Mzd
-	 NBS6+UyMCxrQKKWE/HO6AHpEoWJQ+4T0P6tzAId49MBDgF5RLrIGJy9FhzrQoJxIcB
-	 RYf+0FmTpsWrdzjLmdjtMHquP3kgAjLT8h1hfFHDgkTaDtpl+Wn4Wl81mHgqFbXr9P
-	 OBl9iOAobosBw6qDUjFQ0D9nkgNT2y31WqeazzSa5R+6He98TdzYvYa9ErJ1Rn9FRv
-	 J2wYh3QKuCB8g==
+	b=PdeQKA3SnS/v95QyFaScyv4lehmBss8v6JivBCaVj3ytMDsmF4Tm5wI3IyIcl6tPF
+	 cpIsECQ6MGE83XEIcYG0qCq8DCV6dSintxXIqkpos8IzmkCyxaULNVJ8tEJfXtk1fC
+	 k11hbNw8w5j6mC1TkwBmbz1Fgz9Ez0cCXvbyVls+6bkKHyQ8xFmdWfnXDWIQtVKE0L
+	 IGtdHrmYOvKujgGuUbU6KPkRt7AjgTAAgLUvEDbF6n7yNSpoYpI6DF00k1w2MadSuo
+	 U5nHLluzUy1xfjCeulyWK9eOq1cwevjXE7jat6FbvjCBunxqIcE544h5hklEaPBnv5
+	 eYXATf3mxvvfg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Bui Quang Minh <minhquangbui99@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 087/238] Bluetooth: hci_core: Fix possible buffer overflow
-Date: Sun, 24 Mar 2024 19:37:55 -0400
-Message-ID: <20240324234027.1354210-88-sashal@kernel.org>
+Subject: [PATCH 5.10 092/238] bpf: Fix stackmap overflow check on 32-bit arches
+Date: Sun, 24 Mar 2024 19:38:00 -0400
+Message-ID: <20240324234027.1354210-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -43,38 +45,61 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 81137162bfaa7278785b24c1fd2e9e74f082e8e4 ]
+[ Upstream commit 7a4b21250bf79eef26543d35bd390448646c536b ]
 
-struct hci_dev_info has a fixed size name[8] field so in the event that
-hdev->name is bigger than that strcpy would attempt to write past its
-size, so this fixes this problem by switching to use strscpy.
+The stackmap code relies on roundup_pow_of_two() to compute the number
+of hash buckets, and contains an overflow check by checking if the
+resulting value is 0. However, on 32-bit arches, the roundup code itself
+can overflow by doing a 32-bit left-shift of an unsigned long value,
+which is undefined behaviour, so it is not guaranteed to truncate
+neatly. This was triggered by syzbot on the DEVMAP_HASH type, which
+contains the same check, copied from the hashtab code.
 
-Fixes: dcda165706b9 ("Bluetooth: hci_core: Fix build warnings")
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+The commit in the fixes tag actually attempted to fix this, but the fix
+did not account for the UB, so the fix only works on CPUs where an
+overflow does result in a neat truncation to zero, which is not
+guaranteed. Checking the value before rounding does not have this
+problem.
+
+Fixes: 6183f4d3a0a2 ("bpf: Check for integer overflow when using roundup_pow_of_two()")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Reviewed-by: Bui Quang Minh <minhquangbui99@gmail.com>
+Message-ID: <20240307120340.99577-4-toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/bpf/stackmap.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 5f1fbf86e0ceb..b9cf5bc9364c1 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -2175,7 +2175,7 @@ int hci_get_dev_info(void __user *arg)
- 	else
- 		flags = hdev->flags;
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index b8afea2ceeeb1..3ec76cb5f240d 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -115,11 +115,14 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
+ 	} else if (value_size / 8 > sysctl_perf_event_max_stack)
+ 		return ERR_PTR(-EINVAL);
  
--	strcpy(di.name, hdev->name);
-+	strscpy(di.name, hdev->name, sizeof(di.name));
- 	di.bdaddr   = hdev->bdaddr;
- 	di.type     = (hdev->bus & 0x0f) | ((hdev->dev_type & 0x03) << 4);
- 	di.flags    = flags;
+-	/* hash table size must be power of 2 */
+-	n_buckets = roundup_pow_of_two(attr->max_entries);
+-	if (!n_buckets)
++	/* hash table size must be power of 2; roundup_pow_of_two() can overflow
++	 * into UB on 32-bit arches, so check that first
++	 */
++	if (attr->max_entries > 1UL << 31)
+ 		return ERR_PTR(-E2BIG);
+ 
++	n_buckets = roundup_pow_of_two(attr->max_entries);
++
+ 	cost = n_buckets * sizeof(struct stack_map_bucket *) + sizeof(*smap);
+ 	err = bpf_map_charge_init(&mem, cost + attr->max_entries *
+ 			   (sizeof(struct stack_map_bucket) + (u64)value_size));
 -- 
 2.43.0
 
