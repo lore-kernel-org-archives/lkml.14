@@ -1,169 +1,120 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D666145027;
-	Sun, 24 Mar 2024 22:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AEE14A8B;
+	Sun, 24 Mar 2024 22:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319666; cv=none; b=okneP21+0SEIkBYrJlKFIvuSyTVJ7y6rIfZOJCkbGO6DWv6fWgzUQjhS30suEDyXwEaDXhPhaw4qt/9NLYMsW7GHwjUye5CBbvZH6x+SOTMHcOQSGlNISE6nEI83pcmXpV1whIo8cwzLwXMvTltitpq81jFw/r1oofqCFA37kQ8=
+	t=1711319699; cv=none; b=S6bDbWqZPgdaO+FQu7zsAldyC3NeWKO6eub2jXjvKro4uN5S8c7AZCRATneKEe49tEeAmq2vmMQ4K83Vjx2pcd7vfdT0p5tBRw4zbNbiGJ+U78wyVQvKweTSPxTcwPDkWoH11Z1oQHPauZqv7KyO1jTMapIBsscTt6wcBAummsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319666; c=relaxed/simple;
-	bh=lTwVdmQCrScr7m5mI/A+ln2I0q5l4JBsQMRgmXUoJ3I=;
+	s=arc-20240116; t=1711319699; c=relaxed/simple;
+	bh=cjoyQ1faXxRarwNjQiwL0MuY+lSCvlUxadrZlLQ452M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pyLRWzQmWC/Bk97TlZTnbmC9uJ2mn+eEHRs8g+rIMAWFVsKYX45Ap2LfGdeoDfTgyHdpKULXZHcK4xVhnZ+qEhThDMrkqqYMDuohMMoI4qVi/PUEiesmsiI55vz0+8AYsNMuaUu8/PTFld7oG8QOZHJzbW8i1C+uVPra23hH9U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KnMexYax; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=LOkdK4e28PrDmmCeEpj3cq/3DLnLk5bvq5qhsiyiBBwqDsOKqI3AZjvvfEC72zfMLRKBxRaAVmGt1wZZUujx+BD9VF/k4XnPUjFuUtuoacYZKEo9lrVb/KzK3wvE7k8EhuXcaBlyEUr9NPgTVeVW1xtwpa219xlsG15Xp+HbV8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B4APUedv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnMexYax"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-42a9c21f9ecso16186301cf.0;
-        Sun, 24 Mar 2024 15:34:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711319664; x=1711924464; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZEa8g/haIngtd9EpZwnZ7Ys0qyF84K/G4/YzTdjByEo=;
-        b=KnMexYaxRUU0FeoWJcoYitFZWyJ1dMQ88xehbhuXXND3KT6/krUGhm7R+I5ZrKKz5C
-         c50Sa7EBBe7S8HalDnDE6bLEtc9mWJ24LzsDQl1vaYIqDyFAMQAP5hj8ZFijQoEqi0iB
-         zzZXCxH/eFsPaoVYkuVkvCEjE98PIBiDc/Rg5oipcsRFa1FQDYzSBAQsQ3Gc0bSnBN7b
-         xuj8yM9Gh8R/vrUwhB0Zh10FBuHHMJTPF0F4lKGNzKcP84nfPMzXlBT0LxXv8jwkfHAe
-         PQmWS3XucQNjrmGNoFutJaTXCLeKE8kvINsinu5BTppGcWsVZakwrjDETQuQlAXltgPf
-         /+VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711319664; x=1711924464;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZEa8g/haIngtd9EpZwnZ7Ys0qyF84K/G4/YzTdjByEo=;
-        b=Ah1uAFrddukajt6zuAN7ECjRsmhOUE1KjwtK9x00Rxh6fhupnpiAI+U2kzIlRIcE1Z
-         clbBx522wmRFi1NS8f1b2ukxMfp69dXT/mEMYkA0Ad7pEvN3hPXaRkSF0a29WTdXsggp
-         UD2IZVu66RmZfOuvq0IxaDrUwjWu9WJYStgpavw7bFInGXDN5L+Zy2j741G181wACgIs
-         7qhCaEk8bE8k9ApX1xc8eZb7prfWk8GOuMsR9/4y3aX2GP9fcsiNEA6s9Sq/0yfVMHl7
-         8r70mRvE0z6YE2ORzCNG9X1TomWpRo6ZA31SUNw0Q0ex9ieI1plJGzLAtj6LsJ2aStxT
-         K7Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCVeUH+RVmNSOyMkSsj6Qv8tPpZHDVsdKJMPgaW3wCgMPOVYhVW/dX54VkzKofj/T/gcUdwshA5xAchW4XH3tyajdrpPe+aoLtuCkDEM
-X-Gm-Message-State: AOJu0YwLoJpKleGOazJu2PTAaobedEjv/EwVxnWmN8waS5GULl8ConEU
-	1ymrDQREbtemKePP+A3Jlz1TMnudcOCLGSC860SSbtQHpGhO1rwH
-X-Google-Smtp-Source: AGHT+IHTDI1JEoCUmChP9SyqwdtkgaX+JR845mvTO/Rmz18qw2TzjG+FQ3+khfqZhaaZOZ9wobjYgA==
-X-Received: by 2002:a05:622a:4e85:b0:431:3df7:6fd4 with SMTP id dj5-20020a05622a4e8500b004313df76fd4mr6891381qtb.2.1711319663869;
-        Sun, 24 Mar 2024 15:34:23 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id hg1-20020a05622a610100b00430b5dcac34sm1980354qtb.8.2024.03.24.15.34.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Mar 2024 15:34:23 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 052F21200043;
-	Sun, 24 Mar 2024 18:34:23 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Sun, 24 Mar 2024 18:34:23 -0400
-X-ME-Sender: <xms:bqoAZjzH91fseOcpxyUqnkOJaUCxxQ5d_PYCx41sxsIebXoG6WvMeg>
-    <xme:bqoAZrTYxQzq1o-0E08galIBFp1gpwgATthEH9mT5F4KbPwBhyYfSO8MVn9yCBHqh
-    9SNt-i_UwsAhH92ng>
-X-ME-Received: <xmr:bqoAZtVUPwam5-ivfFZPRvzJ0fIN5bOEN4VbcbeayhjPI5tAym1AFgIWfOo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtjedgudeihecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhq
-    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnheptdehvdeivdfhieffgeegleetfefgjeefgfevvdfhteeljeehhfdtvdfg
-    tdehfeetnecuffhomhgrihhnpegvlhgrphhsvggurdhtohenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhht
-    hhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquh
-    hnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:bqoAZtjobb75JV_rmbMOvzJdBAQkIwS_qeDMpVaXCFlOTGgBwXOpxA>
-    <xmx:bqoAZlD4YQeo0HZjhyzI8Bu3__J9-3aHSAw3ohc5ThY2GKYm-iDuQQ>
-    <xmx:bqoAZmI2dfTbWT6ecO_hI-UDMZ2q58BMgrJurie2P59ankTWshkXvA>
-    <xmx:bqoAZkDFufUuHpVjmW2wiJRph1SpNVUrBE5brpQ8MFL2xHPdQ6fjjA>
-    <xmx:b6oAZp2D1xOUuT11qoUJw_XseWiMlVPQUZDYsKqzmhY7S9zglGgVKXENNmc>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 24 Mar 2024 18:34:22 -0400 (EDT)
-From: Boqun Feng <boqun.feng@gmail.com>
-To: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: Alice Ryhl <aliceryhl@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	benno.lossin@proton.me,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Valentin Obst <kernel@valentinobst.de>,
-	Heghedus Razvan <heghedus.razvan@protonmail.com>,
-	Asahi Lina <lina@asahilina.net>
-Subject: [PATCH 5/5] rust: time: Add Instant::elapsed() for monotonic clocks
-Date: Sun, 24 Mar 2024 15:33:39 -0700
-Message-ID: <20240324223339.971934-6-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240324223339.971934-1-boqun.feng@gmail.com>
-References: <20240324223339.971934-1-boqun.feng@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B4APUedv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 419C5C43390;
+	Sun, 24 Mar 2024 22:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711319699;
+	bh=cjoyQ1faXxRarwNjQiwL0MuY+lSCvlUxadrZlLQ452M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=B4APUedvHZX3hC0xherGQISjWD6U90vZ5tA8OI7OZhS16Jaio/ZK5yxC7m5pMxiJ8
+	 U2aCkTs6R6Gahyyio3qq/OVroibSNPioFKY+wOkpT395wbUOQTXxSh9Xw6q7UmpMTr
+	 vps/KCEYCcZQ54aUD7BYOkxUPdyl4xTmIqbfc4aqENw8Lu8kYrKoI+o3S2CJE7V3RJ
+	 sKX35E8doMN3IEPxqA71F887f/0dBY4UWXB8lq3xMqbIMYaPpYWH2xJI4BqwTaD/W1
+	 8nR7zewzAC4vEM93A3nrn8GnV9nY9nrfIp1l7qOxiauz7kSDpCLTWfN4c7RzJzOGlw
+	 3xn14kxmLXOTg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Chuck Lever III <chuck.lever@oracle.com>,
+	syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com,
+	Jan Kara <jack@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.8 001/715] do_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak
+Date: Sun, 24 Mar 2024 18:23:00 -0400
+Message-ID: <20240324223455.1342824-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
+References: <20240324223455.1342824-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-This is a convenient way to do:
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-	t1 = Clock::now();
-	...
-	delta =  Clock::now() - t1;
+[ Upstream commit 3948abaa4e2be938ccdfc289385a27342fb13d43 ]
 
-Hence add it.
+syzbot identified a kernel information leak vulnerability in
+do_sys_name_to_handle() and issued the following report [1].
 
-Co-developed-by: Heghedus Razvan <heghedus.razvan@protonmail.com>
-Signed-off-by: Heghedus Razvan <heghedus.razvan@protonmail.com>
-Co-developed-by: Asahi Lina <lina@asahilina.net>
-Signed-off-by: Asahi Lina <lina@asahilina.net>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+[1]
+"BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40
+ instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+ _copy_to_user+0xbc/0x100 lib/usercopy.c:40
+ copy_to_user include/linux/uaccess.h:191 [inline]
+ do_sys_name_to_handle fs/fhandle.c:73 [inline]
+ __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
+ __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94
+ __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
+ ...
+
+Uninit was created at:
+ slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
+ slab_alloc_node mm/slub.c:3478 [inline]
+ __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517
+ __do_kmalloc_node mm/slab_common.c:1006 [inline]
+ __kmalloc+0x121/0x3c0 mm/slab_common.c:1020
+ kmalloc include/linux/slab.h:604 [inline]
+ do_sys_name_to_handle fs/fhandle.c:39 [inline]
+ __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
+ __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94
+ __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
+ ...
+
+Bytes 18-19 of 20 are uninitialized
+Memory access of size 20 starts at ffff888128a46380
+Data copied to user address 0000000020000240"
+
+Per Chuck Lever's suggestion, use kzalloc() instead of kmalloc() to
+solve the problem.
+
+Fixes: 990d6c2d7aee ("vfs: Add name to file handle conversion support")
+Suggested-by: Chuck Lever III <chuck.lever@oracle.com>
+Reported-and-tested-by: <syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com>
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Link: https://lore.kernel.org/r/20240119153906.4367-1-n.zhandarovich@fintech.ru
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- rust/kernel/time.rs | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ fs/fhandle.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-index 5cd669cbea01..cd1e45169517 100644
---- a/rust/kernel/time.rs
-+++ b/rust/kernel/time.rs
-@@ -114,6 +114,31 @@ fn sub(self, other: Self) -> Self::Output {
-     }
- }
+diff --git a/fs/fhandle.c b/fs/fhandle.c
+index 18b3ba8dc8ead..57a12614addfd 100644
+--- a/fs/fhandle.c
++++ b/fs/fhandle.c
+@@ -36,7 +36,7 @@ static long do_sys_name_to_handle(const struct path *path,
+ 	if (f_handle.handle_bytes > MAX_HANDLE_SZ)
+ 		return -EINVAL;
  
-+impl<T: Clock + Monotonic> Instant<T> {
-+    /// Returns the time elapsed since this [`Instant`].
-+    ///
-+    /// This provides a convenient way to calculate time elapsed since a previous [`Clock::now`].
-+    /// Note even though the function only exists for monotonic clocks, it could still return
-+    /// negative [`Duration`] if the current time is earlier than the time of `&self`, and this
-+    /// could happen if `&self` is a timestamp generated by a [`Instant`] + [`Duration`].
-+    ///
-+    /// But for typical usages, it should always return non-negative [`Duration`]:
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// use kernel::time::{Clock, clock::KernelTime};
-+    ///
-+    /// let ts = KernelTime::now();
-+    ///
-+    /// // `KernelTime` is monotonic.
-+    /// assert!(ts.elapsed().to_ns() >= 0);
-+    /// ```
-+    pub fn elapsed(&self) -> Duration {
-+        T::now() - *self
-+    }
-+}
-+
- /// Contains the various clock source types available to the kernel.
- pub mod clock {
-     use super::*;
+-	handle = kmalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
++	handle = kzalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
+ 			 GFP_KERNEL);
+ 	if (!handle)
+ 		return -ENOMEM;
 -- 
-2.44.0
+2.43.0
 
