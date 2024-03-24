@@ -1,40 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB605823C3;
-	Sun, 24 Mar 2024 22:49:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3251D4C65;
+	Sun, 24 Mar 2024 22:49:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320553; cv=none; b=WG9FbSDr2Jo9H3zEslUXjrmH5iWwsrNHLWODrmYn1yQsumZaxfNx8mGMq0/h5JJNp7z9GdbsovqJSvY+hPrwpPw22XYYyE69D+FHtuPxi7qmDLDWdOtV+X8OkK50injOU5TzaZxOKb9uS946QjkaPZzZs+fQJD8afZnGJ7y1sUw=
+	t=1711320560; cv=none; b=ZMbQl6Am//HAqjgBI/HgLvBf5kA26FAwEcrz9KYgzanEayiN5lOqfH91xrnwm6INZRfeBKYoYvId+n9b1DmPNh0/zb8lqX7SjoscuR+PMZ8MIBssZL55deIb5ZiM/B8ZLGodRAFnaDMZ3oRkTr6EMaPfpl+6uyAmMqAsqP/JD+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320553; c=relaxed/simple;
-	bh=1+ikIWtWHRXR0kk5lqirv4izK6JE6ku88jJ6P99LoZY=;
+	s=arc-20240116; t=1711320560; c=relaxed/simple;
+	bh=vYYFwKto6yg6woV1Hr3fxCR11bex2S34Ri9YamTHIhE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rft56q9AfHT1SkPoPt1SP4D1sRFCariFKQGIfS65X+W6MeIWHtokOOPUkPgrm4fzCixJNdeiUtoG4bFllsZlab3VhxKyk0P3kUnIG/QDxuuRrPEpUi8ylnvnzD6p+MPEizBioSe3IyXEgEPgHg6Pomn8ZVHTHrRzbp3zqQ9C6Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxTZn1aN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Hujw/wOfurpkS7Vy0ZgC7AcOfudnnPka6pDT2h+CLBv4Zq2TJo8Z6Vk9GANZtkRfEU8bb0QhXkZGC/sqRhCnILWg/cXkUS/555c1NFMm0XsfiiCqrqbgd0256+dULODrkLlWVKFqJpuJpgyVql+Ln2VNNl2UXhk8bEEbfwYjsA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxxV5vmq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxTZn1aN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E955FC433F1;
-	Sun, 24 Mar 2024 22:49:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxxV5vmq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33937C433C7;
+	Sun, 24 Mar 2024 22:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320552;
-	bh=1+ikIWtWHRXR0kk5lqirv4izK6JE6ku88jJ6P99LoZY=;
+	s=k20201202; t=1711320560;
+	bh=vYYFwKto6yg6woV1Hr3fxCR11bex2S34Ri9YamTHIhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AxTZn1aNEZOUEOw3EQOJE7IUgZLcIR16eFwfIcSzVLiKotZpgfe68DC3smD/PMQR0
-	 xeapOTFehevEibj7K5DgwguttWRs/naz6b5JP9t+387TomsC2L1wmWbj9s5Z+1LKin
-	 y6IY3YP+GkQs4bWrQ70ohyUQRrIL15f85sb/U6CQXiPs2ARKcw28ZdwZF0SpRo0K8h
-	 TeC9dJJzdIuWhn53NrfbNJ8m6Umrv9nwlKQggeLvIWmmiEY6NzIK3PahmyBTr8IvA0
-	 V6nGI9r1Mb8RcXCS72I8HXbaEf0FV5Sdx4qCkHEjn14W+vqJQtud+M8ggoG+vwmWCL
-	 jUl7NJkPAOyGA==
+	b=PxxV5vmq+V3sQ+vubbe08K9s/fSge8IgY+om1uM7rxwtOGBj06775ZTU0NVwCC4Z/
+	 PQ3fevCjVEvXkHbysvfMoeCUKmx+T71SnrTB7WQGr9TXlxrX+cC6ti7WbBir//Emgr
+	 snlfcq3o6Yj6EcJC+AuMqFUdeBN942bCe+TxX5CRYcLxujRthkiY1OLhHAikOhWnM2
+	 VBltzxT17fNe4iwec0WF3eKXJzC/aBGB1iEwxlClgl9qWFMgiAkTrtj0ga3915CCS3
+	 RLXiZ/H9oYPcT8rxXbdK7Ky6lsmyx7CUjujRXMlcY/GKMZNGMkqLgYCEqIfaZVovHw
+	 BYXaeXAzpj2BA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yu Kuai <yukuai3@huawei.com>,
-	Song Liu <song@kernel.org>,
+Cc: Michael Roth <michael.roth@amd.com>,
+	Dave Hansen <dave.hansen@intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rik van Riel <riel@surriel.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 113/713] md/raid1: remove rcu protection to access rdev from conf
-Date: Sun, 24 Mar 2024 18:37:19 -0400
-Message-ID: <20240324224720.1345309-114-sashal@kernel.org>
+Subject: [PATCH 6.7 121/713] x86/mm: Ensure input to pfn_to_kaddr() is treated as a 64-bit type
+Date: Sun, 24 Mar 2024 18:37:27 -0400
+Message-ID: <20240324224720.1345309-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,278 +54,71 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Michael Roth <michael.roth@amd.com>
 
-[ Upstream commit 2d32777d60de81aa020a2431567020af26564c71 ]
+[ Upstream commit 8e5647a723c49d73b9f108a8bb38e8c29d3948ea ]
 
-Because it's safe to accees rdev from conf:
- - If any spinlock is held, because synchronize_rcu() from
-   md_kick_rdev_from_array() will prevent 'rdev' to be freed until
-   spinlock is released;
- - If 'reconfig_lock' is held, because rdev can't be added or removed from
-   array;
- - If there is normal IO inflight, because mddev_suspend() will prevent
-   rdev to be added or removed from array;
- - If there is sync IO inflight, because 'MD_RECOVERY_RUNNING' is
-   checked in remove_and_add_spares().
+On 64-bit platforms, the pfn_to_kaddr() macro requires that the input
+value is 64 bits in order to ensure that valid address bits don't get
+lost when shifting that input by PAGE_SHIFT to calculate the physical
+address to provide a virtual address for.
 
-And these will cover all the scenarios in raid1.
+One such example is in pvalidate_pages() (used by SEV-SNP guests), where
+the GFN in the struct used for page-state change requests is a 40-bit
+bit-field, so attempts to pass this GFN field directly into
+pfn_to_kaddr() ends up causing guest crashes when dealing with addresses
+above the 1TB range due to the above.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Song Liu <song@kernel.org>
-Link: https://lore.kernel.org/r/20231125081604.3939938-4-yukuai1@huaweicloud.com
-Stable-dep-of: 257ac239ffcf ("md/raid1: fix choose next idle in read_balance()")
+Fix this issue with SEV-SNP guests, as well as any similar cases that
+might cause issues in current/future code, by using an inline function,
+instead of a macro, so that the input is implicitly cast to the
+expected 64-bit input type prior to performing the shift operation.
+
+While it might be argued that the issue is on the caller side, other
+archs/macros have taken similar approaches to deal with instances like
+this, such as ARM explicitly casting the input to phys_addr_t:
+
+  e48866647b48 ("ARM: 8396/1: use phys_addr_t in pfn_to_kaddr()")
+
+A C inline function is even better though.
+
+[ mingo: Refined the changelog some more & added __always_inline. ]
+
+Fixes: 6c3211796326 ("x86/sev: Add SNP-specific unaccepted memory support")
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
+Suggested-by: H. Peter Anvin <hpa@zytor.com>
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20231122163700.400507-1-michael.roth@amd.com
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid1.c | 62 +++++++++++++++++-----------------------------
- 1 file changed, 23 insertions(+), 39 deletions(-)
+ arch/x86/include/asm/page.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 6bd42ccbea9c4..71bd372c14e2c 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -609,7 +609,6 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 	int choose_first;
- 	int choose_next_idle;
+diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
+index d18e5c332cb9f..1b93ff80b43bc 100644
+--- a/arch/x86/include/asm/page.h
++++ b/arch/x86/include/asm/page.h
+@@ -66,10 +66,14 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
+  * virt_addr_valid(kaddr) returns true.
+  */
+ #define virt_to_page(kaddr)	pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
+-#define pfn_to_kaddr(pfn)      __va((pfn) << PAGE_SHIFT)
+ extern bool __virt_addr_valid(unsigned long kaddr);
+ #define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long) (kaddr))
  
--	rcu_read_lock();
- 	/*
- 	 * Check if we can balance. We can balance on the whole
- 	 * device if no resync is going on, or below the resync window.
-@@ -642,7 +641,7 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 		unsigned int pending;
- 		bool nonrot;
- 
--		rdev = rcu_dereference(conf->mirrors[disk].rdev);
-+		rdev = conf->mirrors[disk].rdev;
- 		if (r1_bio->bios[disk] == IO_BLOCKED
- 		    || rdev == NULL
- 		    || test_bit(Faulty, &rdev->flags))
-@@ -773,7 +772,7 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 	}
- 
- 	if (best_disk >= 0) {
--		rdev = rcu_dereference(conf->mirrors[best_disk].rdev);
-+		rdev = conf->mirrors[best_disk].rdev;
- 		if (!rdev)
- 			goto retry;
- 		atomic_inc(&rdev->nr_pending);
-@@ -784,7 +783,6 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 
- 		conf->mirrors[best_disk].next_seq_sect = this_sector + sectors;
- 	}
--	rcu_read_unlock();
- 	*max_sectors = sectors;
- 
- 	return best_disk;
-@@ -1235,14 +1233,12 @@ static void raid1_read_request(struct mddev *mddev, struct bio *bio,
- 
- 	if (r1bio_existed) {
- 		/* Need to get the block device name carefully */
--		struct md_rdev *rdev;
--		rcu_read_lock();
--		rdev = rcu_dereference(conf->mirrors[r1_bio->read_disk].rdev);
-+		struct md_rdev *rdev = conf->mirrors[r1_bio->read_disk].rdev;
++static __always_inline void *pfn_to_kaddr(unsigned long pfn)
++{
++	return __va(pfn << PAGE_SHIFT);
++}
 +
- 		if (rdev)
- 			snprintf(b, sizeof(b), "%pg", rdev->bdev);
- 		else
- 			strcpy(b, "???");
--		rcu_read_unlock();
- 	}
- 
- 	/*
-@@ -1396,10 +1392,9 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 
- 	disks = conf->raid_disks * 2;
- 	blocked_rdev = NULL;
--	rcu_read_lock();
- 	max_sectors = r1_bio->sectors;
- 	for (i = 0;  i < disks; i++) {
--		struct md_rdev *rdev = rcu_dereference(conf->mirrors[i].rdev);
-+		struct md_rdev *rdev = conf->mirrors[i].rdev;
- 
- 		/*
- 		 * The write-behind io is only attempted on drives marked as
-@@ -1465,7 +1460,6 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 		}
- 		r1_bio->bios[i] = bio;
- 	}
--	rcu_read_unlock();
- 
- 	if (unlikely(blocked_rdev)) {
- 		/* Wait for this device to become unblocked */
-@@ -1617,15 +1611,16 @@ static void raid1_status(struct seq_file *seq, struct mddev *mddev)
- 	struct r1conf *conf = mddev->private;
- 	int i;
- 
-+	lockdep_assert_held(&mddev->lock);
-+
- 	seq_printf(seq, " [%d/%d] [", conf->raid_disks,
- 		   conf->raid_disks - mddev->degraded);
--	rcu_read_lock();
- 	for (i = 0; i < conf->raid_disks; i++) {
--		struct md_rdev *rdev = rcu_dereference(conf->mirrors[i].rdev);
-+		struct md_rdev *rdev = READ_ONCE(conf->mirrors[i].rdev);
-+
- 		seq_printf(seq, "%s",
- 			   rdev && test_bit(In_sync, &rdev->flags) ? "U" : "_");
- 	}
--	rcu_read_unlock();
- 	seq_printf(seq, "]");
- }
- 
-@@ -1691,16 +1686,15 @@ static void print_conf(struct r1conf *conf)
- 	pr_debug(" --- wd:%d rd:%d\n", conf->raid_disks - conf->mddev->degraded,
- 		 conf->raid_disks);
- 
--	rcu_read_lock();
-+	lockdep_assert_held(&conf->mddev->reconfig_mutex);
- 	for (i = 0; i < conf->raid_disks; i++) {
--		struct md_rdev *rdev = rcu_dereference(conf->mirrors[i].rdev);
-+		struct md_rdev *rdev = conf->mirrors[i].rdev;
- 		if (rdev)
- 			pr_debug(" disk %d, wo:%d, o:%d, dev:%pg\n",
- 				 i, !test_bit(In_sync, &rdev->flags),
- 				 !test_bit(Faulty, &rdev->flags),
- 				 rdev->bdev);
- 	}
--	rcu_read_unlock();
- }
- 
- static void close_sync(struct r1conf *conf)
-@@ -1810,7 +1804,7 @@ static int raid1_add_disk(struct mddev *mddev, struct md_rdev *rdev)
- 			 */
- 			if (rdev->saved_raid_disk < 0)
- 				conf->fullsync = 1;
--			rcu_assign_pointer(p->rdev, rdev);
-+			WRITE_ONCE(p->rdev, rdev);
- 			break;
- 		}
- 		if (test_bit(WantReplacement, &p->rdev->flags) &&
-@@ -1826,7 +1820,7 @@ static int raid1_add_disk(struct mddev *mddev, struct md_rdev *rdev)
- 		rdev->raid_disk = repl_slot;
- 		err = 0;
- 		conf->fullsync = 1;
--		rcu_assign_pointer(p[conf->raid_disks].rdev, rdev);
-+		WRITE_ONCE(p[conf->raid_disks].rdev, rdev);
- 	}
- 
- 	print_conf(conf);
-@@ -1862,7 +1856,7 @@ static int raid1_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
- 			err = -EBUSY;
- 			goto abort;
- 		}
--		p->rdev = NULL;
-+		WRITE_ONCE(p->rdev, NULL);
- 		if (conf->mirrors[conf->raid_disks + number].rdev) {
- 			/* We just removed a device that is being replaced.
- 			 * Move down the replacement.  We drain all IO before
-@@ -1883,7 +1877,7 @@ static int raid1_remove_disk(struct mddev *mddev, struct md_rdev *rdev)
- 				goto abort;
- 			}
- 			clear_bit(Replacement, &repl->flags);
--			p->rdev = repl;
-+			WRITE_ONCE(p->rdev, repl);
- 			conf->mirrors[conf->raid_disks + number].rdev = NULL;
- 			unfreeze_array(conf);
- 		}
-@@ -2281,8 +2275,7 @@ static void fix_read_error(struct r1conf *conf, int read_disk,
- 			sector_t first_bad;
- 			int bad_sectors;
- 
--			rcu_read_lock();
--			rdev = rcu_dereference(conf->mirrors[d].rdev);
-+			rdev = conf->mirrors[d].rdev;
- 			if (rdev &&
- 			    (test_bit(In_sync, &rdev->flags) ||
- 			     (!test_bit(Faulty, &rdev->flags) &&
-@@ -2290,15 +2283,14 @@ static void fix_read_error(struct r1conf *conf, int read_disk,
- 			    is_badblock(rdev, sect, s,
- 					&first_bad, &bad_sectors) == 0) {
- 				atomic_inc(&rdev->nr_pending);
--				rcu_read_unlock();
- 				if (sync_page_io(rdev, sect, s<<9,
- 					 conf->tmppage, REQ_OP_READ, false))
- 					success = 1;
- 				rdev_dec_pending(rdev, mddev);
- 				if (success)
- 					break;
--			} else
--				rcu_read_unlock();
-+			}
-+
- 			d++;
- 			if (d == conf->raid_disks * 2)
- 				d = 0;
-@@ -2317,29 +2309,24 @@ static void fix_read_error(struct r1conf *conf, int read_disk,
- 			if (d==0)
- 				d = conf->raid_disks * 2;
- 			d--;
--			rcu_read_lock();
--			rdev = rcu_dereference(conf->mirrors[d].rdev);
-+			rdev = conf->mirrors[d].rdev;
- 			if (rdev &&
- 			    !test_bit(Faulty, &rdev->flags)) {
- 				atomic_inc(&rdev->nr_pending);
--				rcu_read_unlock();
- 				r1_sync_page_io(rdev, sect, s,
- 						conf->tmppage, REQ_OP_WRITE);
- 				rdev_dec_pending(rdev, mddev);
--			} else
--				rcu_read_unlock();
-+			}
- 		}
- 		d = start;
- 		while (d != read_disk) {
- 			if (d==0)
- 				d = conf->raid_disks * 2;
- 			d--;
--			rcu_read_lock();
--			rdev = rcu_dereference(conf->mirrors[d].rdev);
-+			rdev = conf->mirrors[d].rdev;
- 			if (rdev &&
- 			    !test_bit(Faulty, &rdev->flags)) {
- 				atomic_inc(&rdev->nr_pending);
--				rcu_read_unlock();
- 				if (r1_sync_page_io(rdev, sect, s,
- 						conf->tmppage, REQ_OP_READ)) {
- 					atomic_add(s, &rdev->corrected_errors);
-@@ -2350,8 +2337,7 @@ static void fix_read_error(struct r1conf *conf, int read_disk,
- 						rdev->bdev);
- 				}
- 				rdev_dec_pending(rdev, mddev);
--			} else
--				rcu_read_unlock();
-+			}
- 		}
- 		sectors -= s;
- 		sect += s;
-@@ -2732,7 +2718,6 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 
- 	r1_bio = raid1_alloc_init_r1buf(conf);
- 
--	rcu_read_lock();
- 	/*
- 	 * If we get a correctably read error during resync or recovery,
- 	 * we might want to read from a different device.  So we
-@@ -2753,7 +2738,7 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 		struct md_rdev *rdev;
- 		bio = r1_bio->bios[i];
- 
--		rdev = rcu_dereference(conf->mirrors[i].rdev);
-+		rdev = conf->mirrors[i].rdev;
- 		if (rdev == NULL ||
- 		    test_bit(Faulty, &rdev->flags)) {
- 			if (i < conf->raid_disks)
-@@ -2811,7 +2796,6 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 				bio->bi_opf |= MD_FAILFAST;
- 		}
- 	}
--	rcu_read_unlock();
- 	if (disk < 0)
- 		disk = wonly;
- 	r1_bio->read_disk = disk;
+ static __always_inline u64 __canonical_address(u64 vaddr, u8 vaddr_bits)
+ {
+ 	return ((s64)vaddr << (64 - vaddr_bits)) >> (64 - vaddr_bits);
 -- 
 2.43.0
 
