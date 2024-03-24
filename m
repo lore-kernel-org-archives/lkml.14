@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C721EAD29;
-	Sun, 24 Mar 2024 22:55:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FA01E9F7D;
+	Sun, 24 Mar 2024 22:55:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320917; cv=none; b=ewXK9/QCw9wMyWoSbi0IfikaKQkxCwYiz6jX7Kqsbup73Elz0e40AET6n9xSWzk+IuO2dnd9WDtgLldbKgPr9NMC/hu2PrkltznNb1EViADgYCqlnWm9juqBatUTfLcmOyXpxIp5XFoqR1EFv+cwhIrpvITbMVyRMX+8qfzp5ig=
+	t=1711320904; cv=none; b=EDYocDMKdVdlw3Xhl3Cw9M1ZymwBzFPgEA+94DJycO3F9Rpzpew8006+OE0mi4bf3oTRFznSpX3vWGR82bgLRrufQZqkEaiH0m0r+Khp8BgyldjCGlAyCWcLZcFzAiQ0EXrPD8pQMj9+3Q8bgIxX+t//gyvsrXHWlBF29kE4SvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320917; c=relaxed/simple;
-	bh=LWuvjGXmSIv+FW+AijAYZOvNO/xI0y8Az5kY4SNjsaw=;
+	s=arc-20240116; t=1711320904; c=relaxed/simple;
+	bh=c5uf/Q9F27X3x1EsJkrtqlk02vwMsZglIgOetVWKTvA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XtFt3aBdjcqlYXEluNNfts2FpapbUfzt1ctM3EiA6RoCs5s5DDbiQGanUlcjub0MwYq3IeCc+wsixxLuA5NQ+9Ao5oTfCPl3lYeE4nz59khi1esxOhJeaVaBgNmwwR6y0FjPiKc7Ush+B14/jy2Zf0WzL8aMEY7vYJsvtpQnG4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfXRedf5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gI5oELKpQB0jyxgM+0swgf6Qmjje7R8u2o/qL600fztrK33jqiMVSulnSZhtlN9waUp7DDTyc8bkuIc78jfh8LMQ5LtmkWKwt1KbxjzWVslpwGPaTTAy1GSX5lJvcstCMi8PstrH0AwWJEyxKrVMdb+NXjzEs/wJY/t30I4J+70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jI2J5+qt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AfXRedf5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1671C433C7;
-	Sun, 24 Mar 2024 22:55:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jI2J5+qt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 995CDC43399;
+	Sun, 24 Mar 2024 22:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320915;
-	bh=LWuvjGXmSIv+FW+AijAYZOvNO/xI0y8Az5kY4SNjsaw=;
+	s=k20201202; t=1711320902;
+	bh=c5uf/Q9F27X3x1EsJkrtqlk02vwMsZglIgOetVWKTvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AfXRedf5IBqhUMTX0RyY8swWVgmd0I4xUpg+GX2BZomhEbf230QBcEclv0JFYMRtg
-	 ZG5jPzOt0lGS6hRnRMkANHXGV5ehrI16mTA7dmewnHe4226kT0H/r2/CiEE0034xUX
-	 LuLZ+EvB6UEnTsdbgCZ/DearlNFsCj6hejAGd4bc+kVyZT/v9z3nxxCaivWkKKVUJx
-	 p4nlSdOzmwcjjQDXygUQkGbdar8ABmsotEFcl9OS0Mx0G1qurhGYWXMY3XRp403xDx
-	 JqHtelADP1FruZqtBlfgDao5vjsfE9x1iSrp7uOr14R+2WBwh/pTrTBibsT95PH1KT
-	 T/faS7tePjr1w==
+	b=jI2J5+qtLDkkgi5TMkulqkZ7tnBnYj9910atRh9pMdSqztXKM+HefNEYLteEstLYc
+	 KRNahw5o3vLqOdDWXh2hra6oIgZpMKJvohNZNmYxEFO016Cki1fxnTpbZEnkaeCI1T
+	 JDr/2dcOyGfYFBzOXGI4M0EhhPBNPfk6nz288r5z92XmfGF9JBD9ddSZVRXvHFH41V
+	 ouemB4ymJwu6k0F2Nbc/DKKpX47UlrtD8MogurHKdeCDLRKxgTLd+8paPlht2guevh
+	 5eakKgY4qfR7hjFB5YGbYdOvnMoGItUBf4MBB9d0d931buhg3gv3VHceI9LcwWzJ02
+	 AKtgz+TKtiXPA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Alexandre Mergnat <amergnat@baylibre.com>,
-	CK Hu <ck.hu@mediatek.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+Cc: Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 479/713] drm/mediatek: dsi: Fix DSI RGB666 formats and definitions
-Date: Sun, 24 Mar 2024 18:43:25 -0400
-Message-ID: <20240324224720.1345309-480-sashal@kernel.org>
+Subject: [PATCH 6.7 465/713] media: cedrus: h265: Fix configuring bitstream size
+Date: Sun, 24 Mar 2024 18:43:11 -0400
+Message-ID: <20240324224720.1345309-466-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,76 +49,70 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+From: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-[ Upstream commit fae6f815505301b92d9113764f4d76d0bfe45607 ]
+[ Upstream commit 3a11887f7f11a6bb1f05e7f67b3ea20dadfec443 ]
 
-The register bits definitions for RGB666 formats are wrong in multiple
-ways: first, in the DSI_PS_SEL bits region, the Packed 18-bits RGB666
-format is selected with bit 1, while the Loosely Packed one is bit 2,
-and second - the definition name "LOOSELY_PS_18BIT_RGB666" is wrong
-because the loosely packed format is 24 bits instead!
+bit_size field holds size of slice, not slice + header. Because of HW
+quirks, driver can't program in just slice, but also preceding header.
+But that means that currently used bit_size is wrong (too small).
+Instead, just use size of whole buffer. There is no harm in doing this.
 
-Either way, functions mtk_dsi_ps_control_vact() and mtk_dsi_ps_control()
-do not even agree on the DSI_PS_SEL bit to set in DSI_PSCTRL: one sets
-loosely packed (24) on RGB666, the other sets packed (18), and the other
-way around for RGB666_PACKED.
-
-Fixing this entire stack of issues is done in one go:
- - Use the correct bit for the Loosely Packed RGB666 definition
- - Rename LOOSELY_PS_18BIT_RGB666 to LOOSELY_PS_24BIT_RGB666
- - Change ps_bpp_mode in mtk_dsi_ps_control_vact() to set:
-    - Loosely Packed, 24-bits for MIPI_DSI_FMT_RGB666
-    - Packed, 18-bits for MIPI_DSI_FMT_RGB666_PACKED
-
-Fixes: 2e54c14e310f ("drm/mediatek: Add DSI sub driver")
-Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://patchwork.kernel.org/project/dri-devel/patch/20240215085316.56835-3-angelogioacchino.delregno@collabora.com/
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Fixes: 86caab29da78 ("media: cedrus: Add HEVC/H.265 decoding support")
+Suggested-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/staging/media/sunxi/cedrus/cedrus_h265.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index a2fdfc8ddb153..cd19885ee017f 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -71,8 +71,8 @@
- #define DSI_PS_WC			0x3fff
- #define DSI_PS_SEL			(3 << 16)
- #define PACKED_PS_16BIT_RGB565		(0 << 16)
--#define LOOSELY_PS_18BIT_RGB666		(1 << 16)
--#define PACKED_PS_18BIT_RGB666		(2 << 16)
-+#define PACKED_PS_18BIT_RGB666		(1 << 16)
-+#define LOOSELY_PS_24BIT_RGB666		(2 << 16)
- #define PACKED_PS_24BIT_RGB888		(3 << 16)
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+index fc9297232456f..16c822637dc6e 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+@@ -427,11 +427,11 @@ static int cedrus_h265_setup(struct cedrus_ctx *ctx, struct cedrus_run *run)
+ 	unsigned int ctb_addr_x, ctb_addr_y;
+ 	struct cedrus_buffer *cedrus_buf;
+ 	dma_addr_t src_buf_addr;
+-	dma_addr_t src_buf_end_addr;
+ 	u32 chroma_log2_weight_denom;
+ 	u32 num_entry_point_offsets;
+ 	u32 output_pic_list_index;
+ 	u32 pic_order_cnt[2];
++	size_t slice_bytes;
+ 	u8 padding;
+ 	int count;
+ 	u32 reg;
+@@ -443,6 +443,7 @@ static int cedrus_h265_setup(struct cedrus_ctx *ctx, struct cedrus_run *run)
+ 	pred_weight_table = &slice_params->pred_weight_table;
+ 	num_entry_point_offsets = slice_params->num_entry_point_offsets;
+ 	cedrus_buf = vb2_to_cedrus_buffer(&run->dst->vb2_buf);
++	slice_bytes = vb2_get_plane_payload(&run->src->vb2_buf, 0);
  
- #define DSI_VSA_NL		0x20
-@@ -369,10 +369,10 @@ static void mtk_dsi_ps_control_vact(struct mtk_dsi *dsi)
- 		ps_bpp_mode |= PACKED_PS_24BIT_RGB888;
- 		break;
- 	case MIPI_DSI_FMT_RGB666:
--		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
-+		ps_bpp_mode |= LOOSELY_PS_24BIT_RGB666;
- 		break;
- 	case MIPI_DSI_FMT_RGB666_PACKED:
--		ps_bpp_mode |= LOOSELY_PS_18BIT_RGB666;
-+		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
- 		break;
- 	case MIPI_DSI_FMT_RGB565:
- 		ps_bpp_mode |= PACKED_PS_16BIT_RGB565;
-@@ -426,7 +426,7 @@ static void mtk_dsi_ps_control(struct mtk_dsi *dsi)
- 		dsi_tmp_buf_bpp = 3;
- 		break;
- 	case MIPI_DSI_FMT_RGB666:
--		tmp_reg = LOOSELY_PS_18BIT_RGB666;
-+		tmp_reg = LOOSELY_PS_24BIT_RGB666;
- 		dsi_tmp_buf_bpp = 3;
- 		break;
- 	case MIPI_DSI_FMT_RGB666_PACKED:
+ 	/*
+ 	 * If entry points offsets are present, we should get them
+@@ -490,7 +491,7 @@ static int cedrus_h265_setup(struct cedrus_ctx *ctx, struct cedrus_run *run)
+ 
+ 	cedrus_write(dev, VE_DEC_H265_BITS_OFFSET, 0);
+ 
+-	reg = slice_params->bit_size;
++	reg = slice_bytes * 8;
+ 	cedrus_write(dev, VE_DEC_H265_BITS_LEN, reg);
+ 
+ 	/* Source beginning and end addresses. */
+@@ -504,10 +505,7 @@ static int cedrus_h265_setup(struct cedrus_ctx *ctx, struct cedrus_run *run)
+ 
+ 	cedrus_write(dev, VE_DEC_H265_BITS_ADDR, reg);
+ 
+-	src_buf_end_addr = src_buf_addr +
+-			   DIV_ROUND_UP(slice_params->bit_size, 8);
+-
+-	reg = VE_DEC_H265_BITS_END_ADDR_BASE(src_buf_end_addr);
++	reg = VE_DEC_H265_BITS_END_ADDR_BASE(src_buf_addr + slice_bytes);
+ 	cedrus_write(dev, VE_DEC_H265_BITS_END_ADDR, reg);
+ 
+ 	/* Coding tree block address */
 -- 
 2.43.0
 
