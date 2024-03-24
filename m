@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47071138494;
-	Sun, 24 Mar 2024 23:06:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEB015217C;
+	Sun, 24 Mar 2024 23:06:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321590; cv=none; b=h1RQdpHpQDgnd30yKG4sGg2JTB08eTW6YbQkg/FW4AOwMETfQnEfP1GCYmDl8lYFc8RB59PFVWDBcCV+Mfu0PnIKDC/HtI3YI/P62pfq6ri/i7K3hQkvymJvHdtxxgtao4/gPmNbMgp2HGx6t4NjW9KUAUOTl+mmjwqeL/6YK40=
+	t=1711321595; cv=none; b=UM/WiVX0TtGh9yRFDgdw6Pj437MV6cs6AD0SdlpTP/Ld4jhYhEbEW+QJo0DS9PGjHz8+rDbMAV6nJOvjMrFMC+dKA8dDXE1qloxdnigaFA+izMZP7RgBJRWlDWd6B4emBmdiyn/JwcRdx9Psi5z/yjlRaJQOc/u7TctECg/9Ytg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321590; c=relaxed/simple;
-	bh=5IHzwXFEDLmKBoZe6jt3RYoOyPNjtFhnX/jOGOlGnzo=;
+	s=arc-20240116; t=1711321595; c=relaxed/simple;
+	bh=i8GOse0XXSOTUuw/dmIRAVxphC44VuT3GLlF3HCDOdA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MnJWAHmt/kjFactpOxFsu6ElGMEaBOhfaT/pe0Ewh0lZ6d5u0nNId3o+TRl028sKDJFFzjpeCcwW/KYbvcphfI9ZLEt4a6tU7E2h2pSAnc6fxMnPwOmtb++P10T/gE5xriRU6wj56ngrtc2cpcjVUeOwkFCULm7Z+pvCXrnKEoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GEo92aax; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=D3gS/evJIfZnASY6TOvugSqNaT15ot5fso7p2nSnc909e/iI9tcW6X9upqvVJTfCyFoJadhBWg54gmGJMpIRz6gCjE/assUAEdIuqbNpoafNRYBt/GBwrEU5FFKNvGjdJZKHXT4yMyvk5ZlTI5m/ojlx6Hug1MH19GoxwbxQtGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqkLk4vg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GEo92aax"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EBEDC433C7;
-	Sun, 24 Mar 2024 23:06:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqkLk4vg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAC6BC43399;
+	Sun, 24 Mar 2024 23:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321589;
-	bh=5IHzwXFEDLmKBoZe6jt3RYoOyPNjtFhnX/jOGOlGnzo=;
+	s=k20201202; t=1711321595;
+	bh=i8GOse0XXSOTUuw/dmIRAVxphC44VuT3GLlF3HCDOdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GEo92aaxd0UdlXAV00WMoM8g2lK24nwKFyV5Vi7CJCBavA9vOIinVT96zxDeU9gSH
-	 WIawAX/tivb/8TJKdXUafBFrMBa2dwGak/WnqF9UH7At3c6ODMWllvv8cSg8nzm4xj
-	 QkpSEHaLt/n+qWkVKQ0GLLVxYN9MdzrttGshmmEP/7Z8zyQnN88UwxI1s/YCtJg+Kr
-	 JPw1D7ehfutUp0H13W3TA1nnma0k6M8JnVBfN9Uzf2lPX8bpnuZaYlE1EYfk97UXKb
-	 1kzPUdcPoGQVizX3XO93wFJMWM+ZjPG274GJSXS4POn0cy71FOL/923v8f8dMFnvpd
-	 kY6+m8tfdybZA==
+	b=oqkLk4vg4QFWPVdT7CK14fM7jQu39Y7b6axFWsC56WhMEgXj/e3vmGgZgr2tukJoQ
+	 O/uxtZHcLg4FnwKdDqCEaNOK7F9O8Moo3VkB9sN3QGTMBQ0FM+92HJZNDfBt2BDefN
+	 fsztcGAzskMR/y6ytbPqt0wWGHETaCkAungFLXkaUICiKCaS0WpJbg02fLnapoh2M0
+	 fJbUnmykiK0B9IRAtguUbUiAZyPJyo8o1rDwg+MLztTHyyVfDLSTr200memh89MKiI
+	 u4a3aPsKKXwsUaIOPRJBobtkt9lSKXs5IwxKusMGwjnqFJRK8ug96KvRubbXTZ42VB
+	 no80d69UHyj6w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Joerg Roedel <jroedel@suse.de>,
+Cc: Jie Wang <wangjie125@huawei.com>,
+	Jijie Shao <shaojijie@huawei.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 319/638] iommu: Fix compilation without CONFIG_IOMMU_INTEL
-Date: Sun, 24 Mar 2024 18:55:56 -0400
-Message-ID: <20240324230116.1348576-320-sashal@kernel.org>
+Subject: [PATCH 6.6 325/638] net: hns3: fix port duplex configure error in IMP reset
+Date: Sun, 24 Mar 2024 18:56:02 -0400
+Message-ID: <20240324230116.1348576-326-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,66 +49,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bert Karwatzki <spasswolf@web.de>
+From: Jie Wang <wangjie125@huawei.com>
 
-[ Upstream commit 70bad345e622c23bb530016925c936ab04a646ac ]
+[ Upstream commit 11d80f79dd9f871a52feba4bf24b5ac39f448eb7 ]
 
-When the kernel is comiled with CONFIG_IRQ_REMAP=y but without
-CONFIG_IOMMU_INTEL compilation fails since commit def054b01a8678 with an
-undefined reference to device_rbtree_find(). This patch makes sure that
-intel specific code is only compiled with CONFIG_IOMMU_INTEL=y.
+Currently, the mac port is fixed to configured as full dplex mode in
+hclge_mac_init() when driver initialization or reset restore. Users may
+change the mode to half duplex with ethtool,  so it may cause the user
+configuration dropped after reset.
 
-Signed-off-by: Bert Karwatzki <spasswolf@web.de>
-Fixes: 80a9b50c0b9e ("iommu/vt-d: Improve ITE fault handling if target  device isn't present")
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-Link: https://lore.kernel.org/r/20240307194419.15801-1-spasswolf@web.de
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+To fix it, don't change the duplex mode when resetting.
+
+Fixes: 2d03eacc0b7e ("net: hns3: Only update mac configuation when necessary")
+Signed-off-by: Jie Wang <wangjie125@huawei.com>
+Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/Kconfig         | 2 +-
- drivers/iommu/intel/Makefile  | 2 ++
- drivers/iommu/irq_remapping.c | 3 ++-
- 3 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 2b12b583ef4b1..d57c5adf932e3 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -191,7 +191,7 @@ source "drivers/iommu/iommufd/Kconfig"
- config IRQ_REMAP
- 	bool "Support for Interrupt Remapping"
- 	depends on X86_64 && X86_IO_APIC && PCI_MSI && ACPI
--	select DMAR_TABLE
-+	select DMAR_TABLE if INTEL_IOMMU
- 	help
- 	  Supports Interrupt remapping for IO-APIC and MSI devices.
- 	  To use x2apic mode in the CPU's which support x2APIC enhancements or
-diff --git a/drivers/iommu/intel/Makefile b/drivers/iommu/intel/Makefile
-index 7af3b8a4f2a00..29d26a4371327 100644
---- a/drivers/iommu/intel/Makefile
-+++ b/drivers/iommu/intel/Makefile
-@@ -5,5 +5,7 @@ obj-$(CONFIG_DMAR_TABLE) += trace.o cap_audit.o
- obj-$(CONFIG_DMAR_PERF) += perf.o
- obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += debugfs.o
- obj-$(CONFIG_INTEL_IOMMU_SVM) += svm.o
-+ifdef CONFIG_INTEL_IOMMU
- obj-$(CONFIG_IRQ_REMAP) += irq_remapping.o
-+endif
- obj-$(CONFIG_INTEL_IOMMU_PERF_EVENTS) += perfmon.o
-diff --git a/drivers/iommu/irq_remapping.c b/drivers/iommu/irq_remapping.c
-index 83314b9d8f38b..ee59647c20501 100644
---- a/drivers/iommu/irq_remapping.c
-+++ b/drivers/iommu/irq_remapping.c
-@@ -99,7 +99,8 @@ int __init irq_remapping_prepare(void)
- 	if (disable_irq_remap)
- 		return -ENOSYS;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index a61d9fd732b96..f1ca2cda2961e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -2892,7 +2892,10 @@ static int hclge_mac_init(struct hclge_dev *hdev)
+ 	int ret;
  
--	if (intel_irq_remap_ops.prepare() == 0)
-+	if (IS_ENABLED(CONFIG_INTEL_IOMMU) &&
-+	    intel_irq_remap_ops.prepare() == 0)
- 		remap_ops = &intel_irq_remap_ops;
- 	else if (IS_ENABLED(CONFIG_AMD_IOMMU) &&
- 		 amd_iommu_irq_ops.prepare() == 0)
+ 	hdev->support_sfp_query = true;
+-	hdev->hw.mac.duplex = HCLGE_MAC_FULL;
++
++	if (!test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
++		hdev->hw.mac.duplex = HCLGE_MAC_FULL;
++
+ 	ret = hclge_cfg_mac_speed_dup_hw(hdev, hdev->hw.mac.speed,
+ 					 hdev->hw.mac.duplex, hdev->hw.mac.lane_num);
+ 	if (ret)
 -- 
 2.43.0
 
