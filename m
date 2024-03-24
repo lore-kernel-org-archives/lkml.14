@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5295182D9D;
-	Sun, 24 Mar 2024 22:50:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB43414387C;
+	Sun, 24 Mar 2024 22:50:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320617; cv=none; b=VoHl0mOg1P2SQg4OVhjTWap+Z4qaOIPW/7nxp1OTyGnKdtciIJ1fvuP34Fvr4RXvelgAQJ+gkbGVgrOQjlGhz8FQuDdHSJRN3fwwaUlxAdGJHGHl8hsgmUy3c9Aiq22lsxrk+bzAUsyv7DH5FlHSwRoEndPILGqxA2HnuWDFfCE=
+	t=1711320624; cv=none; b=I3nQnaldxsDvu0GF/V9Xo8ET/yGVEVPa2PXrwLV3LTBA/n9l2oHBMXlX6M9MoweCY/65APjlm8Um3q58gfDsIa8nmmmw49FFoR+6jMzl+AHK/KocGmdtNGh7lE0/Qz8D+JoubzMdPwtJntuQqBplnOe6utg25UYwb4R7OhA5cJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320617; c=relaxed/simple;
-	bh=C5+iWgv1WmZKo9V89Vlt5pXL8s+c771eDGwih5584Qk=;
+	s=arc-20240116; t=1711320624; c=relaxed/simple;
+	bh=7GM/pytsgj8kxhDRcFKWylMScpplQ4ixLOmw8qcrzZg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ud8Q0RyQ2biONdYImyZtcTYQtX2ULsPiIFZou6RxGUW4jsjTMlnvG2nQLKovFfhzUTMkW76hPfnw/vOpaa4D1kz0sBgd1/dGx6pPvaGORcSQTyYWHYsdlQ0K5VS/jIH6PZ8qXEgYpynGtLB/b6WnEkAUXJGgZzZzAZpfrmNxeuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=df0x2crB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=untlGjpZxKY04XicNJqUZve2vEwvaDg0rVrh9MVBBuUJBm6hltrjb9kDYibJk+SjuiDmqfkJ4k6+khDLDHptoMeJqq/8Yn29BezFGhNrYWUu7seK2d1/AIDabhrFuLjXW5J5FlyxrsFJfzNF3Z9Gh8MpBXQEb3fVjS6w2zr55C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCtFj62l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="df0x2crB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90523C433F1;
-	Sun, 24 Mar 2024 22:50:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCtFj62l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07CEEC43399;
+	Sun, 24 Mar 2024 22:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320617;
-	bh=C5+iWgv1WmZKo9V89Vlt5pXL8s+c771eDGwih5584Qk=;
+	s=k20201202; t=1711320623;
+	bh=7GM/pytsgj8kxhDRcFKWylMScpplQ4ixLOmw8qcrzZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=df0x2crBjfHqi68pJTaL0yoTTX/tShBPF8f2IGnMlR9slxKPct8FdTl7z21GA9L8o
-	 ERmvaug+wBWvKoJEEQkg8WN6e/pn7dRH2zJlxizSpkyvWhaEMXHzBg94edovW1qEqI
-	 4rnJZySNl0Zd06d+O3ydXQ1USrI3JmTwamLbXZVp/M5UFbpXjt6sbBUMBqExwUuzh6
-	 lF5RldGaZ5Df9ByT/s4NYruwr5YoEPqeJbvCiy0Kc3peLIX3WidGhIcNAf1opR7vRZ
-	 BiNZngJPoZqse5Z27olh/uvRiyPDLmspY1gvcfKn15JxMcz8OcApiULrxsRudxOQ/R
-	 b9h86GLCgGKkQ==
+	b=gCtFj62laAj/V/Xoyjqu3BJrAydq3COSajbVZGsefEI0EBY0K/QINt2l5P/O1bx2g
+	 UENDtNVJLk03VdWRYdxot76Z58Ek/9c8t58sHwHexMV93YIOls7UhDf2ftOB4dkBf9
+	 XqSGs+EF2R8Ft6f2GuoTtIAf8Wv4xDd2PxCCdNttwR8hS6nXT+zWrB37qNmwtUgYcp
+	 KEAwVPI9PyBC63b2OXoBfTxZMhAYwy7AoYYWfMKjlSkVHpPwxa214fMVhSUvviFPRF
+	 +Gk7SLhjkAzwr9UuuVNF3EpDJ0ArZlv6LLyk/xJRhRBJvJU8D/en+G2wk1A0Gin0UL
+	 eJa3F5hDc0gyw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Wen Gong <quic_wgong@quicinc.com>,
+	Baochen Qiang <quic_bqiang@quicinc.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Kalle Valo <quic_kvalo@quicinc.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 178/713] arm64: dts: imx8mm-kontron: Disable pull resistors for SD card signals on BL OSM-S board
-Date: Sun, 24 Mar 2024 18:38:24 -0400
-Message-ID: <20240324224720.1345309-179-sashal@kernel.org>
+Subject: [PATCH 6.7 185/713] wifi: ath11k: change to move WMI_VDEV_PARAM_SET_HEMU_MODE before WMI_PEER_ASSOC_CMDID
+Date: Sun, 24 Mar 2024 18:38:31 -0400
+Message-ID: <20240324224720.1345309-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,77 +50,95 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Wen Gong <quic_wgong@quicinc.com>
 
-[ Upstream commit 5a940ba3e4d7c8710c9073ff5d0ca4644d4da9db ]
+[ Upstream commit 413e20e82ee78f142cb5194fd317db514f012602 ]
 
-Some signals have external pullup resistors on the board and don't need
-the internal ones to be enabled. Due to silicon errata ERR050080 let's
-disable the internal pull resistors whererever possible and prevent
-any unwanted behavior in case they wear out.
+Currently when connecting to an AP with 11AX-HE phy mode, host sends
+WMI_VDEV_PARAM_SET_HEMU_MODE parameter to firmware after
+WMI_PEER_ASSOC_CMDID command. This results in TXBF not working, because
+firmware calculates TXBF values while handling WMI_PEER_ASSOC_CMDID,
+however at that time WMI_VDEV_PARAM_SET_HEMU_MODE has not been sent yet.
+See below log:
 
-Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+AP sends "VHT/HE/EHT NDP Announcement" to station, and station sends
+"Action no Ack" of category code HE to AP, the "Nc Index" and
+"Codebook Information" are wrong:
+
+Issued action:
+IEEE 802.11 Action No Ack, Flags: ........
+IEEE 802.11 wireless LAN
+    Fixed parameters
+        Category code: HE (30)
+        HE Action: HE Compressed Beamforming And CQI (0)
+            Total length: 152
+            HE MIMO Control: 0x0004008018
+                .... .... .... .... .... .... .... .... .... .000 = Nc Index: 1 Column (0)
+                .... .... .... .... .... .... .... ..0. .... .... = Codebook Information: 0
+
+Change to send WMI_VDEV_PARAM_SET_HEMU_MODE before WMI_PEER_ASSOC_CMDID,
+then firmware will calculate the TXBF values with valid parameters
+instead of empty values. TXBF works well and throughput performance is
+improved from 80 Mbps to 130 Mbps with this patch.
+
+Good action after this patch:
+IEEE 802.11 Action No Ack, Flags: ........
+IEEE 802.11 wireless LAN
+    Fixed parameters
+        Category code: HE (30)
+        HE Action: HE Compressed Beamforming And CQI (0)
+            Total length: 409
+            HE MIMO Control: 0x0004008219
+                .... .... .... .... .... .... .... .... .... .001 = Nc Index: 2 Columns (1)
+                .... .... .... .... .... .... .... ..1. .... .... = Codebook Information: 1
+
+This change applies to all chipsets.
+
+Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.23
+
+Fixes: 38dfe775d0ab ("wifi: ath11k: push MU-MIMO params from hostapd to hardware")
+Signed-off-by: Wen Gong <quic_wgong@quicinc.com>
+Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
+Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+Link: https://msgid.link/20240131021832.17298-1-quic_bqiang@quicinc.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/freescale/imx8mm-kontron-bl-osm-s.dts  | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/net/wireless/ath/ath11k/mac.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-index 1dd03ef0a7835..d9fa0deea7002 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
-@@ -337,40 +337,40 @@ MX8MM_IOMUXC_NAND_CE1_B_GPIO3_IO2		0x19
+diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
+index 71c6dab1aedba..e09b21a82c20f 100644
+--- a/drivers/net/wireless/ath/ath11k/mac.c
++++ b/drivers/net/wireless/ath/ath11k/mac.c
+@@ -3026,7 +3026,14 @@ static void ath11k_bss_assoc(struct ieee80211_hw *hw,
  
- 	pinctrl_usdhc2: usdhc2grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x190
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x90
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d0
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d0
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d0
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
+ 	rcu_read_unlock();
  
- 	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x194
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x94
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d4
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d4
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d4
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
++	if (!ath11k_mac_vif_recalc_sta_he_txbf(ar, vif, &he_cap)) {
++		ath11k_warn(ar->ab, "failed to recalc he txbf for vdev %i on bss %pM\n",
++			    arvif->vdev_id, bss_conf->bssid);
++		return;
++	}
++
+ 	peer_arg.is_assoc = true;
++
+ 	ret = ath11k_wmi_send_peer_assoc_cmd(ar, &peer_arg);
+ 	if (ret) {
+ 		ath11k_warn(ar->ab, "failed to run peer assoc for %pM vdev %i: %d\n",
+@@ -3049,12 +3056,6 @@ static void ath11k_bss_assoc(struct ieee80211_hw *hw,
+ 		return;
+ 	}
  
- 	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x196
-+			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK			0x96
- 			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD			0x1d6
- 			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2		0x1d6
- 			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3		0x1d6
--			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x019
--			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0x1d0
-+			MX8MM_IOMUXC_SD2_CD_B_GPIO2_IO12		0x19
-+			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xd0
- 		>;
- 	};
- };
+-	if (!ath11k_mac_vif_recalc_sta_he_txbf(ar, vif, &he_cap)) {
+-		ath11k_warn(ar->ab, "failed to recalc he txbf for vdev %i on bss %pM\n",
+-			    arvif->vdev_id, bss_conf->bssid);
+-		return;
+-	}
+-
+ 	WARN_ON(arvif->is_up);
+ 
+ 	arvif->aid = vif->cfg.aid;
 -- 
 2.43.0
 
