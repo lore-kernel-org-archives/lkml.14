@@ -1,45 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0FE12AAF6;
-	Sun, 24 Mar 2024 22:55:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C9314882B;
+	Sun, 24 Mar 2024 22:55:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320942; cv=none; b=KfbRelJRdqSv2GAyJR0aWvt9YhkhkVAs8VMJYBVAJwWkOtBHEnLxcTSAz7Qx8+vOf+h+nq3vi/rmbHZ+UmVdSm8ffyMLFK1UVdCQJ19ImF8UmyB4VCJHVcLMklzsMSLE846sYiceuWw78ouikGq+0FsJNfMlUNJ8HAnW5L9m6qA=
+	t=1711320923; cv=none; b=MEjToMk52EJnx6BbGpGQ58kQXm2HH2m7bEsYWaxDyqzwXx31h6hiyRIugzI4PRRj7jvkd15NXL8K3sJn2r5Sb3A+3DlUgETV3pzPgAv1nIRZ5d+OWUp254Gc3WlaJumjDzM+C6mB6opKWG5TYIy4F+pm/nHegIEbc+5oLo2JCvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320942; c=relaxed/simple;
-	bh=Q5PokMvx+yqsVWZoRFasbAauWNKXBiHyG0ZpRTC1A9U=;
+	s=arc-20240116; t=1711320923; c=relaxed/simple;
+	bh=I0ftkpg1auOYnQ2mH1Az1FoRNSu97/FiJb83KHbPwCQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GiKoXVl+BW1W7QKdHTyFPXM8RefqvcxzZ3DnJI+zqbv0nqVLVXia8MPgLhe41JurPN96qd0IrGb3eolzRVyK2RaBmXpLBp4sBehLtlIH/LQl2cTYbEdrVapG14x+kwYrS8GRXr6UZDcsv7sl53ft2n0FQwCTz0OhVPBhkccj59k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBxtaOfL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fM707+6q4x/zDNmunyKrM0gI5ivme31NfUd14q/vy7tNs/Y1qxpq+8zy9YdeWjHRa/rPhWoslZxPwfAojNaLauwdswKLd8V0SeQPfEE7K9az30u37XGZfkz15IDBdpfiRaBjNgkux6DsO9E4DA3PxSHgUxCFPyM448UxReCMsaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJNLIM/D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBxtaOfL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA0EC433F1;
-	Sun, 24 Mar 2024 22:55:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJNLIM/D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1670C433A6;
+	Sun, 24 Mar 2024 22:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320941;
-	bh=Q5PokMvx+yqsVWZoRFasbAauWNKXBiHyG0ZpRTC1A9U=;
+	s=k20201202; t=1711320922;
+	bh=I0ftkpg1auOYnQ2mH1Az1FoRNSu97/FiJb83KHbPwCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HBxtaOfLmkPuvG1b5dHW4lLRj8k+T7LStBowGV6SqLXMOehCyWc8N3LaMKgCXgEwn
-	 hp05lZuzwjQMiiETOSUmHBYj4TJTRgUEQLex75V86Y9C7arfvBF8mLagwcU41twZsX
-	 5Z5B1DVCrUIDFDcMmKXru1UymsPnwibpgkg3qO1E5cD8mgqPWYkNH1nOJ+Ue9y9l0R
-	 KWN1nmWhouGDoUvHIEmoW3DOL73Y2QuuGO3hCgIL8xDfB3RbTaUEF4+fkC+8+jk5yv
-	 BsVozLp8snTaWmOmFQ2lUz+2HboBmKGOAPVPQp6QDfDJ/Fg1yM7sT+dcUUXgvjUQsT
-	 FU4nTvCH0uBqg==
+	b=oJNLIM/D8BdcYZCp0cUGaxMpDZ3NH0pFYl0eJkLkC6mgPDnBZAUkQZAekGKUQtCnO
+	 lUFT67Mdcc4YreinJwn4oInDXy+I4em+gF4pPAr5QDeDH8cf3xj4TBoTNv0oWugxCX
+	 Ff0sm4Aw8Tx1UL+HMP+PftYvsACaFTjgSTalfQOqE+XkSmyJ6IGSZV5eNJCGw5NOYr
+	 /TZuLsjeKn6aptSSDFgX4fXfvgNcWaFYgBqOgMd4sYtlMIm0x2HR7lGsDFSfmos7vw
+	 FVjtmLnfCKcRm5szcKRCVWKC5wjY+WwenX2qSVqt9OHtoeTzWAG8aNBFRp9TozGdIH
+	 +EiYo2e+cNh3w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Robert Elliott <elliott@hpe.com>,
-	Christoph Biedl <bugzilla.kernel.bpeb@manchmal.in-ulm.de>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-crypto@vger.kernel.org,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 504/713] crypto: jitter - fix CRYPTO_JITTERENTROPY help text
-Date: Sun, 24 Mar 2024 18:43:50 -0400
-Message-ID: <20240324224720.1345309-505-sashal@kernel.org>
+Subject: [PATCH 6.7 486/713] clk: mediatek: mt8135: Fix an error handling path in clk_mt8135_apmixed_probe()
+Date: Sun, 24 Mar 2024 18:43:32 -0400
+Message-ID: <20240324224720.1345309-487-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -53,49 +49,45 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit e63df1ec9a16dd9e13e9068243e64876de06f795 ]
+[ Upstream commit 03c1c51eba6be49b42816af9db114553131af6c8 ]
 
-Correct various small problems in the help text:
-a. change 2 spaces to ", "
-b. finish an incomplete sentence
-c. change non-working URL to working URL
+If an error occurs after mtk_alloc_clk_data(), mtk_free_clk_data() should
+be called, as already done in the remove function.
 
-Fixes: a9a98d49da52 ("crypto: Kconfig - simplify compression/RNG entries")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218458
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Robert Elliott <elliott@hpe.com>
-Cc: Christoph Biedl <bugzilla.kernel.bpeb@manchmal.in-ulm.de>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-crypto@vger.kernel.org
-Acked-by: Bagas Sanjaya <bagasdotme@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 54b7026f011e ("clk: mediatek: mt8135-apmixedsys: Convert to platform_driver and module")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/6cd6af61e5a91598068227f1f68cfcfde1507453.1704615011.git.christophe.jaillet@wanadoo.fr
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/clk/mediatek/clk-mt8135-apmixedsys.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 70661f58ee41c..dd5353c5eb24d 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -1292,10 +1292,11 @@ config CRYPTO_JITTERENTROPY
+diff --git a/drivers/clk/mediatek/clk-mt8135-apmixedsys.c b/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
+index d1239b4b3db74..41bb2d2e2ea74 100644
+--- a/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
++++ b/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
+@@ -59,7 +59,7 @@ static int clk_mt8135_apmixed_probe(struct platform_device *pdev)
  
- 	  A non-physical non-deterministic ("true") RNG (e.g., an entropy source
- 	  compliant with NIST SP800-90B) intended to provide a seed to a
--	  deterministic RNG (e.g.  per NIST SP800-90C).
-+	  deterministic RNG (e.g., per NIST SP800-90C).
- 	  This RNG does not perform any cryptographic whitening of the generated
-+	  random numbers.
+ 	ret = mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+ 	if (ret)
+-		return ret;
++		goto free_clk_data;
  
--	  See https://www.chronox.de/jent.html
-+	  See https://www.chronox.de/jent/
+ 	ret = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (ret)
+@@ -69,6 +69,8 @@ static int clk_mt8135_apmixed_probe(struct platform_device *pdev)
  
- if CRYPTO_JITTERENTROPY
- if CRYPTO_FIPS && EXPERT
+ unregister_plls:
+ 	mtk_clk_unregister_plls(plls, ARRAY_SIZE(plls), clk_data);
++free_clk_data:
++	mtk_free_clk_data(clk_data);
+ 
+ 	return ret;
+ }
 -- 
 2.43.0
 
