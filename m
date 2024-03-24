@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D031474A9;
-	Sun, 24 Mar 2024 23:14:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC43F1474AC;
+	Sun, 24 Mar 2024 23:14:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322085; cv=none; b=GtUzuaSbN9a+3TDFs9eMgnbVgCUYaOHetA/W0h1cUolc/+2X+ondSSwnLSohUJTsIa8XjMbtqxrQaK+7Md8VhqBHITe5lK5mbWT58QR9S7HBHgJ0zTWbRDZGpD+mGzq6bBdM2iODDvrf6f9aTpVWR3aVdMZWmNQoUyrKWqgAbUw=
+	t=1711322085; cv=none; b=YSzpSwSPifKspb/UrGTkNEIXDx2CRBJUw8q520+5fwori0MLW550KNEnT7Zu7xXRqXPrJj8Z7Xt9it1Dz1+97NX/HPqTuyV15Op8XNKaqaxl+e5V/m5cU5NknyvhdY76GnoSoUSKJhU3EneSCJlrJCRQpgBX4TkauKyr0zUN9Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711322085; c=relaxed/simple;
-	bh=KAHO7zjgVIVu6W25Q0ZwuI0wfkUUhs8BewBCkPDZx9U=;
+	bh=UZAYXkfvvB/QGOL6+hIBVYFS/RefZKckd0oTyPYTS9k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QwdwGpDBvdpvruGaNpOpVS5OxvpbAdtG6JvG9xJTAomKYUdjwEr1RqVmfuFO8owiMXGtr+JfyROgrrNxt0OJyCoDqzbhWnuLF6jBpWU+Qe/jfaHuNPWQn8wRbE7yoigBKz1O+FNcEimnVdQCTPg+ulL22fJFavZg4Kra9vUFMv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kA4uoB1U; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Oqhjg+E3tbNKdJF1G+5pTVOe4mUo1SP08iNHtlfKW8rL3FKhdTr7mZhF26J2B2WRwxm0xiZ8vYlbIAwY0Gjo7MNOaJXD+G46Z+oJL/WvWQRs8U2GYm2pMRZo/9lOaCrP4RZj4cU/f/udVDuJmJgDi1AakLjhEjqV2OXTXxPEfRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYJLJzZt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kA4uoB1U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29FADC433A6;
-	Sun, 24 Mar 2024 23:14:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYJLJzZt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5C6C433F1;
+	Sun, 24 Mar 2024 23:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322083;
-	bh=KAHO7zjgVIVu6W25Q0ZwuI0wfkUUhs8BewBCkPDZx9U=;
+	s=k20201202; t=1711322085;
+	bh=UZAYXkfvvB/QGOL6+hIBVYFS/RefZKckd0oTyPYTS9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kA4uoB1Upyson1QPTNah1Mtu0ijQcA+nhBG9U74XqKIrDcm8QLBBA/TJ2fnNB31/h
-	 M6WjHXv9JRHJnJRT7CT7b+s6Ol5kGft5Kl588cv6F/8iAc/eeY1OlOretpiUvfWd0y
-	 ZRO0RCBiE3jqgCB9fAe6qfCo3oKrwkxZYJvHTZ1eezlQHwaUhxnpeSeSbA3PxrogS7
-	 s6A7aDOr2osWp9D0ZlKDuwxJ71Y5GRYDRDM4pbFdh0ZuSHzr4PsKubhS9gByaSbzjb
-	 /WCesb/zLdJmMnIlG/k5z0vxjrTqxBvqn++Ptnl+4ajHbktm3pxaTm1idEo8KKP4IC
-	 SbM4EOUg8gX7w==
+	b=hYJLJzZtTeLOgIbLAd9ch7iPzuNi4GKN/vMunzRrO5/87t/4uCgEnntR4VCxlmmvr
+	 ZMK985MJXxeGmRpSWgrVCaQ9Hoftpr3rs4b8R3BVIXS2R6gOHDV0I/OfJ4ekd4T1zw
+	 K/6dim3rgQl46gOtXhJUJDVF1c6L5aryZvLOp3OGTOiYyUWTw2X6sqVoVugoUJMwby
+	 e1h5ShWx4cmemYcJ375a9p+7NENg78G0BM9Oft7z/BLzigwmpO597efhH0ZN19OMFW
+	 ke18Xq8fpOjbngEn/YrxeI870yF29Wyg2yGYPYQR+DblWBtlyTi0dmCT+NFoTCUMrO
+	 2B+gtYafXt7zQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -33,9 +33,9 @@ Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 157/451] arm64: dts: qcom: sdm845-db845c: correct PCIe wake-gpios
-Date: Sun, 24 Mar 2024 19:07:13 -0400
-Message-ID: <20240324231207.1351418-158-sashal@kernel.org>
+Subject: [PATCH 6.1 159/451] arm64: dts: qcom: sm8150: correct PCIe wake-gpios
+Date: Sun, 24 Mar 2024 19:07:15 -0400
+Message-ID: <20240324231207.1351418-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -51,36 +51,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-[ Upstream commit 584a327c5cffc36369b2a8953d9448826240f1ac ]
+[ Upstream commit 7c38989d0f7a35c83e7c4781271d42662903fa8d ]
 
 Bindings allow a "wake", not "enable", GPIO.  Schematics also use WAKE
 name for the pin:
 
-  sdm845-db845c.dtb: pcie@1c00000: Unevaluated properties are not allowed ('enable-gpio' was unexpected)
+  sa8155p-adp.dtb: pcie@1c00000: Unevaluated properties are not allowed ('enable-gpio' was unexpected)
 
-Fixes: 4a657c264b78 ("arm64: dts: qcom: db845c: Enable PCIe controllers")
+Fixes: a1c86c680533 ("arm64: dts: qcom: sm8150: Add PCIe nodes")
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Link: https://lore.kernel.org/r/20240108131216.53867-1-krzysztof.kozlowski@linaro.org
+Link: https://lore.kernel.org/r/20240108131216.53867-2-krzysztof.kozlowski@linaro.org
 Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 +-
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index 135ff4368c4a6..5c04c91b0ee2b 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -532,7 +532,7 @@ &mss_pil {
- &pcie0 {
- 	status = "okay";
- 	perst-gpios = <&tlmm 35 GPIO_ACTIVE_LOW>;
--	enable-gpio = <&tlmm 134 GPIO_ACTIVE_HIGH>;
-+	wake-gpios = <&tlmm 134 GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index b829a9ebc5670..9dccecd9fcaef 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -1823,7 +1823,7 @@ pcie0: pci@1c00000 {
+ 			phy-names = "pciephy";
  
- 	vddpe-3v3-supply = <&pcie0_3p3v_dual>;
+ 			perst-gpios = <&tlmm 35 GPIO_ACTIVE_HIGH>;
+-			enable-gpio = <&tlmm 37 GPIO_ACTIVE_HIGH>;
++			wake-gpios = <&tlmm 37 GPIO_ACTIVE_HIGH>;
  
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pcie0_default_state>;
 -- 
 2.43.0
 
