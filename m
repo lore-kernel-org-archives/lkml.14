@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EFE1311A6;
-	Sun, 24 Mar 2024 23:41:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B425B15689D;
+	Sun, 24 Mar 2024 23:42:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323703; cv=none; b=L+5diZMC7HztgLqkttKQC4x8oH+GWIWOsFnN2wV/jSnmyWf35kBH41Nu310MJnCFDGvfzwtFTWC+0tNkT6f+Hkp0UeX3qdEOUyPXM1quM4PKZNQmaIvDz4DSEwmhVb3bawwXA1vGUHGMaF1l9VCFxH+cMvMQlXSi2g1k0XjhlGA=
+	t=1711323745; cv=none; b=YGXBZ8cOwtuJgnvjaFfVHZzYmhnW/i+p8rV+R2BXs3JaPF+FSCT30qjcmIfeNk2q9Ren3QWJcrf6rhRsDpip6df/NEXqc2+jaq3F3z5nHI9zFtquYIm2hNUv/+YX1ftSL1jtAlNE6wdqAdJ8AYEBmyMdicVEERG92lA2ZRGpAKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323703; c=relaxed/simple;
-	bh=fxBXclm5odU7MS1XP/p5zvVRiI/LKuoAIK+l4yHfNVI=;
+	s=arc-20240116; t=1711323745; c=relaxed/simple;
+	bh=gbU2EowSPlHE2x6WXeXSsOfbfUQE1IU/R3YYLu6N2co=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MeJvD51fbKYjfRb9B13G8fA+8qlEu4h455RS4Vk9jYiy4NxYGa55b6mYCBWlLzgEWNLV6Syh07jNotfPAW1IYb/J2fn7+lotoskf+7ZGXQ8QSm3aZtBXWw4dzGjBn8d1bTWZWXb+AS/ROM1os1sMibHjU6qOcYQA8UFa7fi+8Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ezFbTXUJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SPpdbLQou+WsfpCq1juX4ZPmteGPEGmBuz25emy7QWBm1J02YuZxn7ivMOUgvqKPxA1m/97f+nhIiqlBDa5ZHfdhkzEdvh8W+EkeNTcAPX3HlnPCFCAEZQ454yYVX+ChEuCVYmN/nWeWGUdCQ1L28YSjoLxzsohyB5VxqW/lfM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCT9kuaH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ezFbTXUJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A169C433F1;
-	Sun, 24 Mar 2024 23:41:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCT9kuaH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C40E6C43390;
+	Sun, 24 Mar 2024 23:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323703;
-	bh=fxBXclm5odU7MS1XP/p5zvVRiI/LKuoAIK+l4yHfNVI=;
+	s=k20201202; t=1711323744;
+	bh=gbU2EowSPlHE2x6WXeXSsOfbfUQE1IU/R3YYLu6N2co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ezFbTXUJqfuHL9mvr82WCSEeTtV4toPH90Cw6RidElE36NveteNm0R+EuU9pRIZHi
-	 DTgZ7IzGX3ixroBA2sGKgg/gcJD4XjOYvUFOD0qZJh365LqkUxKJ054WefyDDpj90w
-	 omwWhZZVWsfKpdtJLTWDnAxfQH8TiUTxn3tAXfvS90RzvBDP383UUDFwGo5g/NqH5F
-	 hOhKRQE0Uwd4m3/syNAVCw8W4l+Br4HUiH9JEOPBAvBkF4C3qMisG8COq8rNuPgDTH
-	 9vWaIBu/9k9M9fLkBT/lR/YeWGfe0g9h/t90Oh5GbW6nOfle7KpfQCv/jO+VudLXIQ
-	 Gmcx0qj3BqRMw==
+	b=iCT9kuaH0zaxfnhYMDw4HEBk1ilFHGUEL4UzQD2NglkcttBRnOz+JThqYNNY6jhX8
+	 OgpKa/z1gb2fmZokyJeVCEwbB1sCNfMOOw+vx5cNMZ2wwYVd+4b5HaOs7Jn//l6c2R
+	 ysL+nBo7bTBb7ZzkNeEGtoGCVZAvwQOViQixxKqOK6hdp6WUtSy5hD1lQBf8gL4rSD
+	 7ekyHa3O1LL9s2UKIY6pjb0vOBouIRQZTH3CzVJ7VmtSJl02B5hNrwt9Zf4dqZYut6
+	 8dbE6lXPO2aIgco2tgbTHIoM6sS5ZsPoxZ9UyPOUJkKzxobhRCeg6drErPrhijwcfg
+	 G2B39iBFFI9Gg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
+Cc: Harry Wentland <harry.wentland@amd.com>,
+	Simon Ser <contact@emersion.fr>,
+	Melissa Wen <mwen@igalia.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 076/238] arm64: dts: marvell: reorder crypto interrupts on Armada SoCs
-Date: Sun, 24 Mar 2024 19:37:44 -0400
-Message-ID: <20240324234027.1354210-77-sashal@kernel.org>
+Subject: [PATCH 5.10 119/238] drm: Don't treat 0 as -1 in drm_fixp2int_ceil
+Date: Sun, 24 Mar 2024 19:38:27 -0400
+Message-ID: <20240324234027.1354210-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -44,88 +46,43 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Harry Wentland <harry.wentland@amd.com>
 
-[ Upstream commit ec55a22149d64f9ac41845d923b884d4a666bf4d ]
+[ Upstream commit cf8837d7204481026335461629b84ac7f4538fa5 ]
 
-Match order specified in binding documentation. It says "mem" should be
-the last interrupt.
+Unit testing this in VKMS shows that passing 0 into
+this function returns -1, which is highly counter-
+intuitive. Fix it by checking whether the input is
+>= 0 instead of > 0.
 
-This fixes:
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:0: 'ring0' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:1: 'ring1' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:2: 'ring2' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:3: 'ring3' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:4: 'eip' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:5: 'mem' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Fixes: 64566b5e767f ("drm: Add drm_fixp_from_fraction and drm_fixp2int_ceil")
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Reviewed-by: Simon Ser <contact@emersion.fr>
+Reviewed-by: Melissa Wen <mwen@igalia.com>
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231108163647.106853-2-harry.wentland@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi  | 10 +++++-----
- arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 10 +++++-----
- 2 files changed, 10 insertions(+), 10 deletions(-)
+ include/drm/drm_fixed.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 0f4bcd15d8580..086c3cc7d055c 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -414,14 +414,14 @@ xor11 {
- 			crypto: crypto@90000 {
- 				compatible = "inside-secure,safexcel-eip97ies";
- 				reg = <0x90000 0x20000>;
--				interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
--					     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-+				interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
--					     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
--				interrupt-names = "mem", "ring0", "ring1",
--						  "ring2", "ring3", "eip";
-+					     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "ring0", "ring1", "ring2",
-+						  "ring3", "eip", "mem";
- 				clocks = <&nb_periph_clk 15>;
- 			};
+diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
+index 553210c02ee0f..627efa56e59fb 100644
+--- a/include/drm/drm_fixed.h
++++ b/include/drm/drm_fixed.h
+@@ -88,7 +88,7 @@ static inline int drm_fixp2int(s64 a)
  
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-index 9dcf16beabf5d..da83bfdbe8432 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-@@ -477,14 +477,14 @@ CP11X_LABEL(sdhci0): sdhci@780000 {
- 		CP11X_LABEL(crypto): crypto@800000 {
- 			compatible = "inside-secure,safexcel-eip197b";
- 			reg = <0x800000 0x200000>;
--			interrupts = <87 IRQ_TYPE_LEVEL_HIGH>,
--				<88 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupts = <88 IRQ_TYPE_LEVEL_HIGH>,
- 				<89 IRQ_TYPE_LEVEL_HIGH>,
- 				<90 IRQ_TYPE_LEVEL_HIGH>,
- 				<91 IRQ_TYPE_LEVEL_HIGH>,
--				<92 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "mem", "ring0", "ring1",
--				"ring2", "ring3", "eip";
-+				<92 IRQ_TYPE_LEVEL_HIGH>,
-+				<87 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ring0", "ring1", "ring2", "ring3",
-+					  "eip", "mem";
- 			clock-names = "core", "reg";
- 			clocks = <&CP11X_LABEL(clk) 1 26>,
- 				 <&CP11X_LABEL(clk) 1 17>;
+ static inline int drm_fixp2int_ceil(s64 a)
+ {
+-	if (a > 0)
++	if (a >= 0)
+ 		return drm_fixp2int(a + DRM_FIXED_ALMOST_ONE);
+ 	else
+ 		return drm_fixp2int(a - DRM_FIXED_ALMOST_ONE);
 -- 
 2.43.0
 
