@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4007A80055;
-	Sun, 24 Mar 2024 22:48:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A20D76059;
+	Sun, 24 Mar 2024 22:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320511; cv=none; b=Mlkfun4GE42+PGB/7Ao2BaZyZMcaEqm1Ec/lb3bkei66KEAMUnM0bJlZqJX+l6eWmDo1GoO16wFg14aPITWjf+/90+Zd06mISmdlHSNSY09yQoVLcVgByvBTECl1Knsg/bmTNWvFt48MWkGoPqc8LcUXHCB6zwIkOyb9l8e4l7Y=
+	t=1711320485; cv=none; b=MMyU9I5IUBbOyF9/X3XOIvunQkiUmUw2cQtW3xS6TRZs4M6GQU9UXW7ZZbkSZOKqTr16gmTVEjCQj1WB9VItX29SrMPiGjCF2zTrZ3mmSWNG7VcXWi88hixn7q9P8poEj4UxbAke9lWzELboA6HSymw19xcTUzKvWV8ltNdCzEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320511; c=relaxed/simple;
-	bh=d3YjCGegKBiNlaqnlaRwjobA7R6W5+YKEQ2B++yBx3M=;
+	s=arc-20240116; t=1711320485; c=relaxed/simple;
+	bh=00qCi/EnUJckOaChnHXcooFvowMzbyuYGrV7xG0Hu8A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dFfk2MsR2R0AGSrPV9ppBhde5cdAvvq44W4+jGoXn7T4Ho0+f0WHlI9l+uUWRwzGwSJDD9ukZotR91XOeoT/MBUhI3UnVn26SDT16+n8pFwxUY7ACkT6Z2bfdTPfhEstQ0xn4epOj2ho+rRoWYhQJK1zdRHN5ROZlaCDMhLyC9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a63LtQ44; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Yi4JIRPO0KXOsc4vjvEGLRfkY64O+ipiDhXxxgJzoYFFlViqBmbtg1MPVRAETFjgtr99R5gIS06Dc4DBnSNh/+bkaGFsam0LCNHKV26EXtUY6ZJ8N7PYIYQzyR9KoO+0UdHQyX3Ng82ymf0RJ8roTIhSS2ZiOEDz/enEYS6ItF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+FVra/V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a63LtQ44"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60A1BC433C7;
-	Sun, 24 Mar 2024 22:48:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+FVra/V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C58FC43390;
+	Sun, 24 Mar 2024 22:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320511;
-	bh=d3YjCGegKBiNlaqnlaRwjobA7R6W5+YKEQ2B++yBx3M=;
+	s=k20201202; t=1711320485;
+	bh=00qCi/EnUJckOaChnHXcooFvowMzbyuYGrV7xG0Hu8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a63LtQ44XNG1WBdCJadl0NmlZG0y9zcmAlUtVbAly1Ba4VOpN5S3CqpDGRaZdOnuV
-	 DMWNcrGh9gLYL79v2ft54s22xynCF8zAIE10JjHUBczIrFUUYmuUYngGDhHWL+MMKH
-	 zUZtv4eAxpf/mgP9jtPP7J1w2hkFHVUJfuOLRVnK2LR8Tok+/s4GO1keMCIhYMuiZu
-	 T2PkwIYF90cmGMuZMMSgXQFw7AsaTZZxXXUSrIAfaObcbgMBdpz72iCG/nFK+sc37j
-	 wF/UzsUXxKwQVoXg5znBQ5Ig2XQK+yg7D+oCCaiCFrEhH1OTRYZXfcMsBi3X/pyjdW
-	 +ULDwC2idf/xw==
+	b=d+FVra/Vv/As+Lkt6l2ILTpllumfeziVeUPYgUYMoL1KKU78MvrpCL6TA0T6We4Oy
+	 Vu19E//F5p5u5t/O7ZVRa+5fzhPBOSkdNXHnZzej7XhdnfAhmy5DpRqxVP+sYH5pol
+	 GFtl2s2pwmVAdAjYgeRP7RIGHVafYGOE8w5UKQajpAh3Sk3W4pm3PUUIZVlTsSX8W0
+	 GH3SSrwj3lCPfLGiGWb/lGw6a2C7UEB8fgh/fxaemDJ13iOF9jzNkAqRmGzPtdCLFX
+	 7KPgBSKDvfXjVqfN1nko8JBG/hB8ZJ7rmP68Y88lYKFcOlAe5OK03Xqdub724aGdOX
+	 gmctXIKtt+L+Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Wei Liu <wei.liu@kernel.org>,
+Cc: Rob Herring <robh@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 071/713] x86/hyperv: Allow 15-bit APIC IDs for VTL platforms
-Date: Sun, 24 Mar 2024 18:36:37 -0400
-Message-ID: <20240324224720.1345309-72-sashal@kernel.org>
+Subject: [PATCH 6.7 044/713] arm: dts: Fix dtc interrupt_map warnings
+Date: Sun, 24 Mar 2024 18:36:10 -0400
+Message-ID: <20240324224720.1345309-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,56 +49,70 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Saurabh Sengar <ssengar@linux.microsoft.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 0d63e4c0ebc2b5c329babde44fd61d3f08db814d ]
+[ Upstream commit f02b0f0dc26fbb77fe47b6e47cc5c211f0432c37 ]
 
-The current method for signaling the compatibility of a Hyper-V host
-with MSIs featuring 15-bit APIC IDs relies on a synthetic cpuid leaf.
-However, for higher VTLs, this leaf is not reported, due to the absence
-of an IO-APIC.
+The dtc interrupt_map warning is off because its dependency,
+interrupt_provider, is off by default. Fix all the warnings so it can be
+enabled.
 
-As an alternative, assume that when running at a high VTL, the host
-supports 15-bit APIC IDs. This assumption is safe, as Hyper-V does not
-employ any architectural MSIs at higher VTLs
-
-This unblocks startup of VTL2 environments with more than 256 CPUs.
-
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Link: https://lore.kernel.org/r/1705341460-18394-1-git-send-email-ssengar@linux.microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Message-ID: <1705341460-18394-1-git-send-email-ssengar@linux.microsoft.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20240213-arm-dt-cleanups-v1-4-f2dee1292525@kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/hyperv/hv_vtl.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/intel/ixp/intel-ixp42x-gateway-7001.dts | 2 ++
+ .../boot/dts/intel/ixp/intel-ixp42x-goramo-multilink.dts  | 2 ++
+ arch/arm/boot/dts/qcom/qcom-sdx55.dtsi                    | 8 ++++----
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 96e6c51515f50..cf1b78cb2d043 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -16,6 +16,11 @@
- extern struct boot_params boot_params;
- static struct real_mode_header hv_vtl_real_mode_header;
+diff --git a/arch/arm/boot/dts/intel/ixp/intel-ixp42x-gateway-7001.dts b/arch/arm/boot/dts/intel/ixp/intel-ixp42x-gateway-7001.dts
+index 4d70f6afd13ab..6d5e69035f94d 100644
+--- a/arch/arm/boot/dts/intel/ixp/intel-ixp42x-gateway-7001.dts
++++ b/arch/arm/boot/dts/intel/ixp/intel-ixp42x-gateway-7001.dts
+@@ -60,6 +60,8 @@ pci@c0000000 {
+ 			 * We have slots (IDSEL) 1 and 2 with one assigned IRQ
+ 			 * each handling all IRQs.
+ 			 */
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0xf800 0 0 7>;
+ 			interrupt-map =
+ 			/* IDSEL 1 */
+ 			<0x0800 0 0 1 &gpio0 11 IRQ_TYPE_LEVEL_LOW>, /* INT A on slot 1 is irq 11 */
+diff --git a/arch/arm/boot/dts/intel/ixp/intel-ixp42x-goramo-multilink.dts b/arch/arm/boot/dts/intel/ixp/intel-ixp42x-goramo-multilink.dts
+index 9ec0169bacf8c..5f4c849915db7 100644
+--- a/arch/arm/boot/dts/intel/ixp/intel-ixp42x-goramo-multilink.dts
++++ b/arch/arm/boot/dts/intel/ixp/intel-ixp42x-goramo-multilink.dts
+@@ -89,6 +89,8 @@ pci@c0000000 {
+ 			 * The slots have Ethernet, Ethernet, NEC and MPCI.
+ 			 * The IDSELs are 11, 12, 13, 14.
+ 			 */
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0xf800 0 0 7>;
+ 			interrupt-map =
+ 			/* IDSEL 11 - Ethernet A */
+ 			<0x5800 0 0 1 &gpio0 4 IRQ_TYPE_LEVEL_LOW>, /* INT A on slot 11 is irq 4 */
+diff --git a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
+index a976370264fcf..fb6764b2dcde8 100644
+--- a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
+@@ -345,10 +345,10 @@ pcie_rc: pcie@1c00000 {
+ 					  "msi8";
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+-			interrupt-map = <0 0 0 1 &intc 0 0 0 141 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-					<0 0 0 2 &intc 0 0 0 142 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-					<0 0 0 3 &intc 0 0 0 143 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-					<0 0 0 4 &intc 0 0 0 144 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++			interrupt-map = <0 0 0 1 &intc 0 141 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
++					<0 0 0 2 &intc 0 142 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
++					<0 0 0 3 &intc 0 143 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
++					<0 0 0 4 &intc 0 144 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
  
-+static bool __init hv_vtl_msi_ext_dest_id(void)
-+{
-+	return true;
-+}
-+
- void __init hv_vtl_init_platform(void)
- {
- 	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
-@@ -38,6 +43,8 @@ void __init hv_vtl_init_platform(void)
- 	x86_platform.legacy.warm_reset = 0;
- 	x86_platform.legacy.reserve_bios_regions = 0;
- 	x86_platform.legacy.devices.pnpbios = 0;
-+
-+	x86_init.hyper.msi_ext_dest_id = hv_vtl_msi_ext_dest_id;
- }
- 
- static inline u64 hv_vtl_system_desc_base(struct ldttss_desc *desc)
+ 			clocks = <&gcc GCC_PCIE_PIPE_CLK>,
+ 				 <&gcc GCC_PCIE_AUX_CLK>,
 -- 
 2.43.0
 
