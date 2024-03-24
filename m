@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3013B13C681;
-	Sun, 24 Mar 2024 23:38:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A021927BBD1;
+	Sun, 24 Mar 2024 23:38:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323498; cv=none; b=UEIosC+otVD8lAGGSK6hq/Y4LFnvJ9reOI1RnrZx1fWuMMozYLJShYjCCK859ae+QoKYs8tovOyBLy+q3mYYTg+mly1pa5sVSj/QF2U6tt+UxTqPVJ0EfIRM5Uy5ZQtbjLHqkoZJgoK5NAv8ogt5wavn+DMSfTtsaczdrVXaCzg=
+	t=1711323524; cv=none; b=hUSTyP3Nf62c9AL+XDeWyWDF2u69JJ8Npu2b8fm0iDjCtEXnB5dL4tzEFD0XCQ9p4kOk0C89mvHMBMn51GUQ4Ap5e2iSS1Xmh5s8kkubVseygDtAQtFtac26Eo3bXeFP140lzglrZFyUAf/l57XxK1InbUvgjoahxM9Qrv1qUMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323498; c=relaxed/simple;
-	bh=7hbWTUPCJquy2fKqhgCABsd6LUQRy3Rai4i++CpOixM=;
+	s=arc-20240116; t=1711323524; c=relaxed/simple;
+	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MEhfEE/ddLFvTs5PXzUUgEyOBOAxLRl+XPmE5ZDW19oKls9mTz3XLIrtcgATiuGd5ooAmR9hkXMQiWKaITv6aJcbxNn+P1OZRJBFk9LO9tQzD2kZk4CVl/HLzfRO4aiM3qrqAEba3vxDtwfk7tcN4MT7GmtvsaYd6LnbP6nbpZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ByPB6DLU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BPl+lrh7e5FKRW3GijbiZEbw4tu0MYF7+SzNrZMKHWu/wcclp1K2G68zzcjRULXFGUrexi4d3jyKmT2eQHliWq5ko18JpbOkgABv60JRZVc+O0Q8Yxy3cIX7KwIfohkjvP3R31pDWOZDkLeEkrr2NxOAbfHfuC+bM9AryWnlTtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AhCtBoBZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ByPB6DLU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40879C43399;
-	Sun, 24 Mar 2024 23:38:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AhCtBoBZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0EAC433F1;
+	Sun, 24 Mar 2024 23:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323497;
-	bh=7hbWTUPCJquy2fKqhgCABsd6LUQRy3Rai4i++CpOixM=;
+	s=k20201202; t=1711323523;
+	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ByPB6DLUY4kiHgXrE9VSOb68IhEzayxVZqgjyJ47Drageec9g0DixAQEiJ14MMuUY
-	 iy48fUvUEMtZQfLAToPy5a8OsVmudB/ZciMF1CRuvUJhb0uW1Yg66QYad0m8BtpVoG
-	 Z7iV2v/WPsRd1aNI0LP9ff10MS34fMtz1b3IpTjoXmh75GNQeihbhVj6UN+YO5Z4Rm
-	 10E267NUssQ3RGb+hs6O7uiRqzeAKyKnpBiYNquAcLD6tYwAUuM3ofZMWAhAAvY5v+
-	 w6Q+H8yW+b3w7SqBRcyE3TT+pUrUQ3G8Y6uGdP85GFwyyWEni4VO/sEcdM07L2KuQy
-	 OjpFqCHTcX0Fw==
+	b=AhCtBoBZn12zpybvI1StIZK92wML9auuW4Qnl5VhZo4xu33SB80wErC2TdMNDtn8a
+	 qJfWeFr2Yiy4Uuwj8BaBwfphyERCoEK88DOolOUJXLkFOqU39mEZ0ze/AlhukaJIgR
+	 SASgsbpDwm+PkTDfIoj+/Tpo7lC8CroL6TdoEf586e0Sc2tbhT204DqOMysSzG7uK0
+	 NOJXtZh3T1NLHfTbSt9JuPjIabCX5ccJR9ONl4+0s23C+yLD68qwpBVFhAXo3gy+xc
+	 88PUgLgrglpcjrm9FVFc6O5gngOxGKBXQWwGRMvYUsMgF01F22/Qa0pjGr4LuFCwjW
+	 GD8TFsDmbh5pA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Justin Stitt <justinstitt@google.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Edward Adam Davis <eadavis@qq.com>,
+	syzbot+ce750e124675d4599449@syzkaller.appspotmail.com,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 202/317] ASoC: meson: t9015: fix function pointer type mismatch
-Date: Sun, 24 Mar 2024 19:33:02 -0400
-Message-ID: <20240324233458.1352854-203-sashal@kernel.org>
+Subject: [PATCH 5.15 230/317] media: pvrusb2: fix uaf in pvr2_context_set_notify
+Date: Sun, 24 Mar 2024 19:33:30 -0400
+Message-ID: <20240324233458.1352854-231-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -50,81 +49,73 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Edward Adam Davis <eadavis@qq.com>
 
-[ Upstream commit 5ad992c71b6a8e8a547954addc7af9fbde6ca10a ]
+[ Upstream commit 0a0b79ea55de8514e1750884e5fec77f9fdd01ee ]
 
-clang-16 warns about casting functions to incompatible types, as is done
-here to call clk_disable_unprepare:
+[Syzbot reported]
+BUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
+Read of size 4 at addr ffff888113aeb0d8 by task kworker/1:1/26
 
-sound/soc/meson/t9015.c:274:4: error: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-  274 |                         (void(*)(void *))clk_disable_unprepare,
+CPU: 1 PID: 26 Comm: kworker/1:1 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc4/0x620 mm/kasan/report.c:488
+ kasan_report+0xda/0x110 mm/kasan/report.c:601
+ pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
+ pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]
+ pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272
 
-The pattern of getting, enabling and setting a disable callback for a
-clock can be replaced with devm_clk_get_enabled(), which also fixes
-this warning.
+Freed by task 906:
+kasan_save_stack+0x33/0x50 mm/kasan/common.c:47
+kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+kasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640
+poison_slab_object mm/kasan/common.c:241 [inline]
+__kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257
+kasan_slab_free include/linux/kasan.h:184 [inline]
+slab_free_hook mm/slub.c:2121 [inline]
+slab_free mm/slub.c:4299 [inline]
+kfree+0x105/0x340 mm/slub.c:4409
+pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]
+pvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
 
-Fixes: 33901f5b9b16 ("ASoC: meson: add t9015 internal DAC driver")
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-Link: https://msgid.link/r/20240213215807.3326688-3-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+[Analyze]
+Task A set disconnect_flag = !0, which resulted in Task B's condition being met
+and releasing mp, leading to this issue.
+
+[Fix]
+Place the disconnect_flag assignment operation after all code in pvr2_context_disconnect()
+to avoid this issue.
+
+Reported-and-tested-by: syzbot+ce750e124675d4599449@syzkaller.appspotmail.com
+Fixes: e5be15c63804 ("V4L/DVB (7711): pvrusb2: Fix race on module unload")
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/t9015.c | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+ drivers/media/usb/pvrusb2/pvrusb2-context.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/meson/t9015.c b/sound/soc/meson/t9015.c
-index a9b8c4e77d405..0571549a88206 100644
---- a/sound/soc/meson/t9015.c
-+++ b/sound/soc/meson/t9015.c
-@@ -48,7 +48,6 @@
- #define POWER_CFG	0x10
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+index 58f2f3ff10ee2..73c95ba2328a4 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
+@@ -267,9 +267,9 @@ static void pvr2_context_exit(struct pvr2_context *mp)
+ void pvr2_context_disconnect(struct pvr2_context *mp)
+ {
+ 	pvr2_hdw_disconnect(mp->hdw);
+-	mp->disconnect_flag = !0;
+ 	if (!pvr2_context_shutok())
+ 		pvr2_context_notify(mp);
++	mp->disconnect_flag = !0;
+ }
  
- struct t9015 {
--	struct clk *pclk;
- 	struct regulator *avdd;
- };
  
-@@ -250,6 +249,7 @@ static int t9015_probe(struct platform_device *pdev)
- 	struct t9015 *priv;
- 	void __iomem *regs;
- 	struct regmap *regmap;
-+	struct clk *pclk;
- 	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-@@ -257,26 +257,14 @@ static int t9015_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	platform_set_drvdata(pdev, priv);
- 
--	priv->pclk = devm_clk_get(dev, "pclk");
--	if (IS_ERR(priv->pclk))
--		return dev_err_probe(dev, PTR_ERR(priv->pclk), "failed to get core clock\n");
-+	pclk = devm_clk_get_enabled(dev, "pclk");
-+	if (IS_ERR(pclk))
-+		return dev_err_probe(dev, PTR_ERR(pclk), "failed to get core clock\n");
- 
- 	priv->avdd = devm_regulator_get(dev, "AVDD");
- 	if (IS_ERR(priv->avdd))
- 		return dev_err_probe(dev, PTR_ERR(priv->avdd), "failed to AVDD\n");
- 
--	ret = clk_prepare_enable(priv->pclk);
--	if (ret) {
--		dev_err(dev, "core clock enable failed\n");
--		return ret;
--	}
--
--	ret = devm_add_action_or_reset(dev,
--			(void(*)(void *))clk_disable_unprepare,
--			priv->pclk);
--	if (ret)
--		return ret;
--
- 	ret = device_reset(dev);
- 	if (ret) {
- 		dev_err(dev, "reset failed\n");
 -- 
 2.43.0
 
