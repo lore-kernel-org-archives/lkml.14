@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61B6131BAA;
-	Sun, 24 Mar 2024 23:44:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FAC131BB9;
+	Sun, 24 Mar 2024 23:44:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323855; cv=none; b=sTq/9LDR6MzC8t38UGuHLNNYpWY/dhICCyZ0j/BGwoo7fLZm9SmCdKLpNgUMWY+0MhaEj+9bEI9ad9c3Rnx7P9OQFRJ0/PPaxA0yBCqnZijAYi71O9MW3FxwR1drDmcbPv8IEjSp4BKnykRHkymj94U0y5I4E7DMatLz7Ld17nc=
+	t=1711323859; cv=none; b=k30I33XS4QOv7EHIhsG1HMHkWd80atCZzamwVyrjilNKPnNi0ZderY9doKgx+2+3mXjVyARnX9PfIOz7k5LZQryRdDZJX8ohzgQDvWkZE7eitCwXS3S6+kjvNjv6PV5B7sV0bAldoLCicitVNWbIDFxaZ0I+yPKuDDOL1xQjtZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323855; c=relaxed/simple;
-	bh=nmx0U2KmulJ7xDHIJW5s6GGwnezIqUNiH+3mH1f/4gk=;
+	s=arc-20240116; t=1711323859; c=relaxed/simple;
+	bh=h8WYk4IY25Zdo9U9OK/FvAwySZFHCNhp72itS0ZUoF8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hJLIwPqykVKLh+CBTGoP7Ud/C2cBzMprscXCw0Ri3JUhY47kt8oLWTbwQsGMqN84g/a/t08N40liwEty1LGb8fwAgD1sxvNWQiOb3WRhooRuBhKEkqYETmXoeqrWrGesXALrwnOkLAPkCgQ1yvUAxid6J/oj6djNmy3Htiaq2KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQir3qqX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Unl89JBW8wH6XylTbRBvTqIZtY0YnslVq7oo7JSf2mgATV2CGHJR5zuqnZBHvGKzcaZXDBXrEtoY158LpeN0YWw6XrSICcRSbQpqK8a88L8zB7cJkqRHywAgAvZmS9zhh7yIr6/MtTmLA2PN3P3yYGp9Oeng4URKopuwvVaeCag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZtbsq3X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQir3qqX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B24C433C7;
-	Sun, 24 Mar 2024 23:44:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZtbsq3X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E478C433B1;
+	Sun, 24 Mar 2024 23:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323854;
-	bh=nmx0U2KmulJ7xDHIJW5s6GGwnezIqUNiH+3mH1f/4gk=;
+	s=k20201202; t=1711323858;
+	bh=h8WYk4IY25Zdo9U9OK/FvAwySZFHCNhp72itS0ZUoF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DQir3qqXfXvlwnw180fdZ3eQdwh4aVrSrlorMAPdkRk2Yps8wrEbCbA92FgGDG2jB
-	 qGIcE3zFPqgJPnOMLIcrW7Kq7kX8nbm1x/jWces/9TKZsnBzHoSzR1qusTFVfX6SuP
-	 3b7ZW42FqhXeKoPASWJU5yevCkNU6f8WInG4ez8tejzJLymaepbv3cbywtZmjEcFCd
-	 LnGsY3rdBYhsePTRuY8l6u7lmLT7T913FhT2UKNaOAO88X7P40Uu8fKn1gE1EQD9i9
-	 Ze8Juxx/GEKft1vAa6kAFkHW6lgHJN1TgRnlPAfp8nuAsyK7Da4Oq9nQ23qv5Z+QEV
-	 1LHo8soBJyEJw==
+	b=aZtbsq3XyejFkHywZYZcuPqK4yu9W/ueFn/9Gjs0DeYDsd8JKPtBwzlchaAL24d6a
+	 o+XnbrBgAQr/PnTRYMy5VXRy0a4q/oWXknsLLmYMtCALn2SD3FOOZNF4Rkuz4Z0sZH
+	 anitlznLa2WjlpBx4XfndU2NsBeHqbWXc7p+k+HIQRWtlA+8bZU/OER9LJivCjONaL
+	 T2FnoW0APeoNdXvevXZlZLiqArrxO5Rdt51DfcXvchfw69kAvKqBkHxDgQO8Mo/3ZD
+	 nhQpUCqOMlzIVRoafqPMYnpftesnCosCl06MuxE7nSNTlDk0jQBWHkY3ECiLDeJHNP
+	 MTEeKrmjctKIg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Michael Klein <michael@fossekall.de>,
-	Maxime Ripard <maxime@cerno.tech>,
+Cc: Fei Shao <fshao@chromium.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 232/238] ARM: dts: sun8i-h2-plus-bananapi-m2-zero: add regulator nodes vcc-dram and vcc1v2
-Date: Sun, 24 Mar 2024 19:40:20 -0400
-Message-ID: <20240324234027.1354210-233-sashal@kernel.org>
+Subject: [PATCH 5.10 236/238] spi: spi-mt65xx: Fix NULL pointer access in interrupt handler
+Date: Sun, 24 Mar 2024 19:40:24 -0400
+Message-ID: <20240324234027.1354210-237-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,59 +49,59 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michael Klein <michael@fossekall.de>
+From: Fei Shao <fshao@chromium.org>
 
-[ Upstream commit 23e85be1ec81647374055f731488cc9a7c013a5c ]
+[ Upstream commit a20ad45008a7c82f1184dc6dee280096009ece55 ]
 
-Add regulator nodes vcc-dram and vcc1v2 to the devicetree. These
-regulators correspond to U4 and U5 in the schematics:
+The TX buffer in spi_transfer can be a NULL pointer, so the interrupt
+handler may end up writing to the invalid memory and cause crashes.
 
-http://forum.banana-pi.org/t/bpi-m2-zero-schematic-diagram-public/4111
+Add a check to trans->tx_buf before using it.
 
-Signed-off-by: Michael Klein <michael@fossekall.de>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://lore.kernel.org/r/20201130183841.136708-1-michael@fossekall.de
-Stable-dep-of: 4a0e7f2decbf ("netfilter: nf_tables: do not compare internal table flags on updates")
+Fixes: 1ce24864bff4 ("spi: mediatek: Only do dma for 4-byte aligned buffers")
+Signed-off-by: Fei Shao <fshao@chromium.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://msgid.link/r/20240321070942.1587146-2-fshao@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/spi/spi-mt65xx.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-index 4c6704e4c57ec..74d5732c412ba 100644
---- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-@@ -62,6 +62,30 @@ reg_vdd_cpux: vdd-cpux-regulator {
- 		states = <1100000 0>, <1300000 1>;
- 	};
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 92a09dfb99a8e..0bcf4a28132ad 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -566,17 +566,19 @@ static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
+ 		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, len);
+ 		mtk_spi_setup_packet(master);
  
-+	reg_vcc_dram: vcc-dram {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc-dram";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		enable-active-high;
-+		gpio = <&r_pio 0 9 GPIO_ACTIVE_HIGH>; /* PL9 */
-+		vin-supply = <&reg_vcc5v0>;
-+	};
-+
-+	reg_vcc1v2: vcc1v2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc1v2";
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		enable-active-high;
-+		gpio = <&r_pio 0 8 GPIO_ACTIVE_HIGH>; /* PL8 */
-+		vin-supply = <&reg_vcc5v0>;
-+	};
-+
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+-		cnt = mdata->xfer_len / 4;
+-		iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
+-				trans->tx_buf + mdata->num_xfered, cnt);
++		if (trans->tx_buf) {
++			cnt = mdata->xfer_len / 4;
++			iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
++					trans->tx_buf + mdata->num_xfered, cnt);
+ 
+-		remainder = mdata->xfer_len % 4;
+-		if (remainder > 0) {
+-			reg_val = 0;
+-			memcpy(&reg_val,
+-				trans->tx_buf + (cnt * 4) + mdata->num_xfered,
+-				remainder);
+-			writel(reg_val, mdata->base + SPI_TX_DATA_REG);
++			remainder = mdata->xfer_len % 4;
++			if (remainder > 0) {
++				reg_val = 0;
++				memcpy(&reg_val,
++					trans->tx_buf + (cnt * 4) + mdata->num_xfered,
++					remainder);
++				writel(reg_val, mdata->base + SPI_TX_DATA_REG);
++			}
+ 		}
+ 
+ 		mtk_spi_enable_transfer(master);
 -- 
 2.43.0
 
