@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC8514B08D;
-	Sun, 24 Mar 2024 22:57:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAA41F1ADA;
+	Sun, 24 Mar 2024 22:58:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321064; cv=none; b=llEp0VmLYRxbA8GbjfV5mxeqHPaolHGQkgSKIz9dF4UdI5BfWpDlCZcjrNgPaS/VJTSLrhjLhSi09A8oUUG5O4EwnONhvi8PJ8rt/4EEZ6ANQiRwgO8qQfr6zB0qUh7qRUD9wvzVxU4jAh5fHMw6Ll5gkCcO03Sjff7fVYHhDSY=
+	t=1711321085; cv=none; b=RokX0JOhxu4Jptjo98tHaOrKyx591sVsHCUp+wRED1znLcmOJJLy2UO1KXtJe4MnqnsZHEBUSMnPlDIRu1Y2FZEMBeufisYFLSrNj/KOXVjO5ZVuR1TMLhR8ZAsJvJRGhv408clYQ13I/deNMt4CHKIZRyZgb6jvZ/YXbx7OadM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321064; c=relaxed/simple;
-	bh=GmA85pVNgXfICJsOgFzqtfBOM3XZ/b6jZoewaOK83m0=;
+	s=arc-20240116; t=1711321085; c=relaxed/simple;
+	bh=PYENx02CKZGs2pTnzPJ7cRTd7xeRIal9wjJ8Gx4KiIY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GmVmrHD67RUjX3v7fDsrmt7tQ3SeYDghtCX07QEaxGcxAvXTVaEPhWDB+8r8ev0o8v66qN1P42ECMlQMXznk1jGgxbQZ+s4NHUMFMXSfiF+NHq38rWdUtsd327vp+yjfRbTG75q4pDoNSvwJ40jvMJEJt1ZNmgip4djsDIN4MRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mt0EwLVO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Kh5MeMWl20bkdOxgCsKtz00lWnli+bIZPm3B+CFnAPc+J/yBf4G0zg8b79GJ2deOd57I2XFXgNmtn4GDvk6oQXH9ta8QEz10F9b5b2Jgzc6q8hHLQ9ZCQIq9u7j7dUDtX4j4O/UKowbvMn0EKlDgA/bt+CmR3DmZ2TwYArr6fG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OduZTzPI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mt0EwLVO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC90FC433F1;
-	Sun, 24 Mar 2024 22:57:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OduZTzPI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB3BDC433F1;
+	Sun, 24 Mar 2024 22:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321063;
-	bh=GmA85pVNgXfICJsOgFzqtfBOM3XZ/b6jZoewaOK83m0=;
+	s=k20201202; t=1711321084;
+	bh=PYENx02CKZGs2pTnzPJ7cRTd7xeRIal9wjJ8Gx4KiIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Mt0EwLVOoAxVQ66tBK81ant3K0Wqb2K0ia+UhUYkz7odhqLZJiOjeVi6t7r+/+Kuk
-	 lQZsdpccgOt/q5RoU556sfo9dsAR5YeYzHlYOr/MO4ue2S/Aj+Za3X5jPl0WxPNpyI
-	 5uXa7kjegMXg7ckafpZAxQtiT/81k9A1tjowqrjzzUEvqTnb61SrN+FjHPJ/ajDyoa
-	 zTgT3t3Hvx8ibotHRdnij0oAVZzrk0x5KGwEFe99nbfeGFqnQxaAHDQdoKSjRYgphn
-	 UzJj66VlJcOkjrn1xcnynHDizhuufvOPV/VrYYiyOf+UIOAt4QB+SlJ01Zdm+U2Ts1
-	 a0OSjCfWPno8w==
+	b=OduZTzPIljbhxU1LLhwNTFwAm3j7apx+5BfdsxsMHnvhq3+lgG42avD/i92nMUUPx
+	 lumt7GMgcb2+KrmUe+ptxeNCJAxwARw857tDMc0CkSXEzH2Oz4p9ov7acAkW2WXoH7
+	 JDBPP0FcuK7fl9iDZC0gdtwXzKQgRAkL9Z2y5TeBePPRDHO7spJ/GsSyLld4MCNvTe
+	 NNj9VoXAxZ7AxiY0PAa4nc2qJms3rOcqzLVT0Gi/BBX8VAwLVzfjvD2Va08xSDVA3/
+	 9zfhuPDGxC2w942i3u0AkxSkk3/fKNenc3bvO/iwyMXzh/aBhGKI+7v3lbGOZVMKnn
+	 +gVMWduRpTIyQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: James Clark <james.clark@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
+Cc: Linu Cherian <lcherian@marvell.com>,
+	Sunil Goutham <sgoutham@marvell.com>,
+	Subbaraya Sundeep <sbhatta@marvell.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 627/713] coresight: Fix issue where a source device's helpers aren't disabled
-Date: Sun, 24 Mar 2024 18:45:53 -0400
-Message-ID: <20240324224720.1345309-628-sashal@kernel.org>
+Subject: [PATCH 6.7 648/713] octeontx2-af: Use matching wake_up API variant in CGX command interface
+Date: Sun, 24 Mar 2024 18:46:14 -0400
+Message-ID: <20240324224720.1345309-649-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,118 +50,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: James Clark <james.clark@arm.com>
+From: Linu Cherian <lcherian@marvell.com>
 
-[ Upstream commit f68bbe4dcfa303164922bc331d2e8d38ed2d4f23 ]
+[ Upstream commit e642921dfeed1e15e73f78f2c3b6746f72b6deb2 ]
 
-The linked commit reverts the change that accidentally used some sysfs
-enable/disable functions from Perf which broke the refcounting, but it
-also removes the fact that the sysfs disable function disabled the
-helpers.
+Use wake_up API instead of wake_up_interruptible, since
+wait_event_timeout API is used for waiting on command completion.
 
-Add a new wrapper function that does both which is used by both Perf and
-sysfs, and label the sysfs disable function appropriately. The naming of
-all of the functions will be tidied up later to avoid this happening
-again.
-
-Fixes: 287e82cf69aa ("coresight: Fix crash when Perf and sysfs modes are used concurrently")
-Signed-off-by: James Clark <james.clark@arm.com>
-Link: https://lore.kernel.org/r/20240129154050.569566-2-james.clark@arm.com
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Fixes: 1463f382f58d ("octeontx2-af: Add support for CGX link management")
+Signed-off-by: Linu Cherian <lcherian@marvell.com>
+Signed-off-by: Sunil Goutham <sgoutham@marvell.com>
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-core.c  | 30 ++++++++++++++-----
- .../hwtracing/coresight/coresight-etm-perf.c  |  2 +-
- drivers/hwtracing/coresight/coresight-priv.h  |  2 +-
- 3 files changed, 25 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/marvell/octeontx2/af/cgx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index 9fabe00a40d6a..4b80026db1ab6 100644
---- a/drivers/hwtracing/coresight/coresight-core.c
-+++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -441,8 +441,26 @@ static void coresight_disable_helpers(struct coresight_device *csdev)
- 	}
- }
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/cgx.c b/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
+index 6c70c84986904..3c0f55b3e48ea 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
+@@ -1338,7 +1338,7 @@ static irqreturn_t cgx_fwi_event_handler(int irq, void *data)
  
-+/*
-+ * Helper function to call source_ops(csdev)->disable and also disable the
-+ * helpers.
-+ *
-+ * There is an imbalance between coresight_enable_path() and
-+ * coresight_disable_path(). Enabling also enables the source's helpers as part
-+ * of the path, but disabling always skips the first item in the path (which is
-+ * the source), so sources and their helpers don't get disabled as part of that
-+ * function and we need the extra step here.
-+ */
-+void coresight_disable_source(struct coresight_device *csdev, void *data)
-+{
-+	if (source_ops(csdev)->disable)
-+		source_ops(csdev)->disable(csdev, data);
-+	coresight_disable_helpers(csdev);
-+}
-+EXPORT_SYMBOL_GPL(coresight_disable_source);
-+
- /**
-- *  coresight_disable_source - Drop the reference count by 1 and disable
-+ *  coresight_disable_source_sysfs - Drop the reference count by 1 and disable
-  *  the device if there are no users left.
-  *
-  *  @csdev: The coresight device to disable
-@@ -451,17 +469,15 @@ static void coresight_disable_helpers(struct coresight_device *csdev)
-  *
-  *  Returns true if the device has been disabled.
-  */
--bool coresight_disable_source(struct coresight_device *csdev, void *data)
-+static bool coresight_disable_source_sysfs(struct coresight_device *csdev,
-+					   void *data)
- {
- 	if (atomic_dec_return(&csdev->refcnt) == 0) {
--		if (source_ops(csdev)->disable)
--			source_ops(csdev)->disable(csdev, data);
--		coresight_disable_helpers(csdev);
-+		coresight_disable_source(csdev, data);
- 		csdev->enable = false;
- 	}
- 	return !csdev->enable;
- }
--EXPORT_SYMBOL_GPL(coresight_disable_source);
- 
- /*
-  * coresight_disable_path_from : Disable components in the given path beyond
-@@ -1202,7 +1218,7 @@ void coresight_disable(struct coresight_device *csdev)
- 	if (ret)
- 		goto out;
- 
--	if (!csdev->enable || !coresight_disable_source(csdev, NULL))
-+	if (!csdev->enable || !coresight_disable_source_sysfs(csdev, NULL))
- 		goto out;
- 
- 	switch (csdev->subtype.source_subtype) {
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 89e8ed214ea49..58b32b399fac2 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -587,7 +587,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
- 		return;
- 
- 	/* stop tracer */
--	source_ops(csdev)->disable(csdev, event);
-+	coresight_disable_source(csdev, event);
- 
- 	/* tell the core */
- 	event->hw.state = PERF_HES_STOPPED;
-diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-index 767076e079701..30c051055e54b 100644
---- a/drivers/hwtracing/coresight/coresight-priv.h
-+++ b/drivers/hwtracing/coresight/coresight-priv.h
-@@ -233,6 +233,6 @@ void coresight_set_percpu_sink(int cpu, struct coresight_device *csdev);
- struct coresight_device *coresight_get_percpu_sink(int cpu);
- int coresight_enable_source(struct coresight_device *csdev, enum cs_mode mode,
- 			    void *data);
--bool coresight_disable_source(struct coresight_device *csdev, void *data);
-+void coresight_disable_source(struct coresight_device *csdev, void *data);
- 
- #endif
+ 		/* Release thread waiting for completion  */
+ 		lmac->cmd_pend = false;
+-		wake_up_interruptible(&lmac->wq_cmd_cmplt);
++		wake_up(&lmac->wq_cmd_cmplt);
+ 		break;
+ 	case CGX_EVT_ASYNC:
+ 		if (cgx_event_is_linkevent(event))
 -- 
 2.43.0
 
