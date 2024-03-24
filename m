@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0615815B546;
-	Sun, 24 Mar 2024 23:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A503915B142;
+	Sun, 24 Mar 2024 23:15:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322161; cv=none; b=O+feteILn3tnRO5CLYFQyrRllOIjM19oTQ6aQ0WwSNtbTDYiDiNf9Y1kqoobmfHOjwc9ATKSSLwXhCNuBXtrZ3/P7n2OS6TcnsZ8JGNouLLAJmK4F+wk9u1lbXs9J968IBY7eF49I2Pp+VwQmdAL9yEFx/jkt9UQi3OowGoagwA=
+	t=1711322148; cv=none; b=fJKM9/h8zJmlHiK75CYVtQn1C6RxHFKYTz+eQcGCxc/7pvDM2ommMJWWFdneCa+rLj0bwF//8ay0sZq7yv75fe4bywKuvFb4Mka4gQ/KRksO91XgBL7s1LOmIrAZZVXrS1C6ITq8Ua7BWfUKuIIwpUOeRYIRSvfaPr6+Bb4ZRAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322161; c=relaxed/simple;
-	bh=IwqCgXVVD8OsANwC37VO12HTPFTbTHFU2IzrVP1h6pE=;
+	s=arc-20240116; t=1711322148; c=relaxed/simple;
+	bh=iBFdlvoaK/4k9N28EWGDTW5mTR6JAbLH0cIeNaIIj3A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S0gWCOum6uQrr7EHv229q7pFbN1/pPOrO2IPTYose5L6W8/RlgtUR1JBoAkY6iWlsQ4+90BDQBnSdJy9zH+lMXqCkqszQroSp/jks4A9C9qGp/cUHDZk8pRYXcPExdaocESGy0sG2AxwrbnM1XxHIgpJJMYdb/BFw8XKa88JEDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHulbNd3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hJhX+mBHOHLDaxCx8Zqut8uLKFltUsf419BtqXnMYz4+o9CRq00TlKFZja3z2cHqGjuZ2Ai1/bAtHdXX53KZcSRV1K10WczZkp3J5XC+qX9UiOaQNCJRt+zDXAu5GoZXdyCKPxFlnOBUNFe8t9KGfFO7daUJFgX/O+WmTxaa7Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ub99mFR9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHulbNd3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 035FDC43390;
-	Sun, 24 Mar 2024 23:15:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ub99mFR9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F963C433F1;
+	Sun, 24 Mar 2024 23:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322159;
-	bh=IwqCgXVVD8OsANwC37VO12HTPFTbTHFU2IzrVP1h6pE=;
+	s=k20201202; t=1711322147;
+	bh=iBFdlvoaK/4k9N28EWGDTW5mTR6JAbLH0cIeNaIIj3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rHulbNd3FtwgCywICO7eyGYFoWgZm9099Gvakpu2v8wYOC1EQjU8yaiMwcDoP5t2e
-	 3az9G9ruVL55MddjgLAtA939h6omymoT1JjpBMj3KfXH56SzYT+ByQU3vWbAYD0gKV
-	 Ne4Xnrld84TnYA73mS6clQM64dNLqYgr00PnJxMidUJ2f4kw0VobY0Fz9soTQgklg1
-	 a1qTy5Z93+DQRSAZTiAKEV5o7YEwqAoyfI2NUkhsdSaxBsulNQlVISmaGL7Dfey19Z
-	 rnSwjjoeS7b6J+Kgpjz4QQPEmoLPggQ3KxEMx9xEGucXaXaPU/Ax+15e0inDcU6FDT
-	 9xUnZSz8howEw==
+	b=Ub99mFR9VMz+tpvPUb82F4E9AQDplG2QLQrpL39fRJRYM8lcaXkN1oaZFfovNo4US
+	 tlWnEuGvmgdYVjKbOnrHHvmWvC/+0VR2XghU22UDaPbQD5CJZ4QtLvmhUELdG3Nadu
+	 PVPSZrV+o70Jdj2Y5iaabtgvSSm/kbPBuEIVBxcifaHUldzurvzEsmu46VQ/kwBTof
+	 GO6DmjL54DMMJUBymBwqS2oyvN5P9EGbPTevCLCRxPRJCkLWiKxziXygCHsr4nbm0i
+	 rN9u+7JsJyGLW0AfUf1mw/2Y0T+QlPZ6xbOLBAgNf0iCMvkHaBbZYEUchHoyhJ3LEG
+	 me2jcXZJMRYGA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 237/451] drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()
-Date: Sun, 24 Mar 2024 19:08:33 -0400
-Message-ID: <20240324231207.1351418-238-sashal@kernel.org>
+Subject: [PATCH 6.1 224/451] tcp: fix incorrect parameter validation in the do_tcp_getsockopt() function
+Date: Sun, 24 Mar 2024 19:08:20 -0400
+Message-ID: <20240324231207.1351418-225-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,114 +49,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit 830c1ded356369cd1303e8bb87ce3fea6e744de8 ]
+[ Upstream commit 716edc9706deb3bb2ff56e2eeb83559cea8f22db ]
 
-If an error occurs after calling tegra_output_probe(),
-tegra_output_remove() should be called as already done in the remove
-function.
+The 'len' variable can't be negative when assigned the result of
+'min_t' because all 'min_t' parameters are cast to unsigned int,
+and then the minimum one is chosen.
 
-Fixes: dec727399a4b ("drm/tegra: Add DSI support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/16820073278d031f6c474a08d5f22a255158585e.1693667005.git.christophe.jaillet@wanadoo.fr
+To fix the logic, check 'len' as read from 'optlen',
+where the types of relevant variables are (signed) int.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dsi.c | 54 ++++++++++++++++++++++++-------------
- 1 file changed, 35 insertions(+), 19 deletions(-)
+ net/ipv4/tcp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 6cbba2adb6e5a..815e32e05f600 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -1586,44 +1586,58 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 86e7695d91adf..5a165e29f7be4 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -4102,11 +4102,11 @@ int do_tcp_getsockopt(struct sock *sk, int level,
+ 	if (copy_from_sockptr(&len, optlen, sizeof(int)))
+ 		return -EFAULT;
  
- 	if (!pdev->dev.pm_domain) {
- 		dsi->rst = devm_reset_control_get(&pdev->dev, "dsi");
--		if (IS_ERR(dsi->rst))
--			return PTR_ERR(dsi->rst);
-+		if (IS_ERR(dsi->rst)) {
-+			err = PTR_ERR(dsi->rst);
-+			goto remove;
-+		}
- 	}
+-	len = min_t(unsigned int, len, sizeof(int));
+-
+ 	if (len < 0)
+ 		return -EINVAL;
  
- 	dsi->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(dsi->clk))
--		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
--				     "cannot get DSI clock\n");
-+	if (IS_ERR(dsi->clk)) {
-+		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
-+				    "cannot get DSI clock\n");
-+		goto remove;
-+	}
- 
- 	dsi->clk_lp = devm_clk_get(&pdev->dev, "lp");
--	if (IS_ERR(dsi->clk_lp))
--		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
--				     "cannot get low-power clock\n");
-+	if (IS_ERR(dsi->clk_lp)) {
-+		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
-+				    "cannot get low-power clock\n");
-+		goto remove;
-+	}
- 
- 	dsi->clk_parent = devm_clk_get(&pdev->dev, "parent");
--	if (IS_ERR(dsi->clk_parent))
--		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
--				     "cannot get parent clock\n");
-+	if (IS_ERR(dsi->clk_parent)) {
-+		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
-+				    "cannot get parent clock\n");
-+		goto remove;
-+	}
- 
- 	dsi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
--	if (IS_ERR(dsi->vdd))
--		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
--				     "cannot get VDD supply\n");
-+	if (IS_ERR(dsi->vdd)) {
-+		err = dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
-+				    "cannot get VDD supply\n");
-+		goto remove;
-+	}
- 
- 	err = tegra_dsi_setup_clocks(dsi);
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "cannot setup clocks\n");
--		return err;
-+		goto remove;
- 	}
- 
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	dsi->regs = devm_ioremap_resource(&pdev->dev, regs);
--	if (IS_ERR(dsi->regs))
--		return PTR_ERR(dsi->regs);
-+	if (IS_ERR(dsi->regs)) {
-+		err = PTR_ERR(dsi->regs);
-+		goto remove;
-+	}
- 
- 	dsi->mipi = tegra_mipi_request(&pdev->dev, pdev->dev.of_node);
--	if (IS_ERR(dsi->mipi))
--		return PTR_ERR(dsi->mipi);
-+	if (IS_ERR(dsi->mipi)) {
-+		err = PTR_ERR(dsi->mipi);
-+		goto remove;
-+	}
- 
- 	dsi->host.ops = &tegra_dsi_host_ops;
- 	dsi->host.dev = &pdev->dev;
-@@ -1654,6 +1668,8 @@ static int tegra_dsi_probe(struct platform_device *pdev)
- 	mipi_dsi_host_unregister(&dsi->host);
- mipi_free:
- 	tegra_mipi_free(dsi->mipi);
-+remove:
-+	tegra_output_remove(&dsi->output);
- 	return err;
- }
- 
++	len = min_t(unsigned int, len, sizeof(int));
++
+ 	switch (optname) {
+ 	case TCP_MAXSEG:
+ 		val = tp->mss_cache;
 -- 
 2.43.0
 
