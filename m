@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522961487C7;
-	Sun, 24 Mar 2024 23:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386021487C5;
+	Sun, 24 Mar 2024 23:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322110; cv=none; b=XZred8QyF24qjw34Rvh6aalS+cPU8GEOF/fa+vazgfBPtYgL0IgGPtzj3+p4BahfCqqV4Zn6NM+ndKU8OCh9BHQXeKmg7fSPHNQEfbkZiaXqfyhaAmYoCljskXJ9Uae8PmyJidxfKQiPU0tpnv94KbMOfIqmxu638OT5Pq3k7po=
+	t=1711322112; cv=none; b=Ix8AomSfOUDdpo0m6NjHAzktVT+3Yu127izN7PoNZD2IfuYR3yyncaD005lhFS/+fKZJToIiS54r1qfpEiDC7HYQmn8Xuc5ag174F7EdJhWSLHFgVd8h3ZiBVGf2WbcZX4IVHySE7GoRpzInssyTa6iXVqCP0qaRU4uD/83MM/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322110; c=relaxed/simple;
-	bh=dNHR4eclNy+wmS+rjR+g78dsaberhhM17L5AFfz9j4k=;
+	s=arc-20240116; t=1711322112; c=relaxed/simple;
+	bh=uRoRsaHWAWpKpAmF0MLAb2S1bcEcuSVKZ2mxImqiWlo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZbGSTHftc2P+F9njnWWMOGohTGaeLvIs1EDYJSg9FCMDW9SdjtLfkzvUKR4GlK94b/UwCNVJhh9RbNEtw58FrfG0cXegZ3tV60w/OLaukX2zdTU94vl1nF/slaX4mFZyDFy1V6NQFVH1d5hvP9uzddlmZNLl6xaP5ZOD0WjgClE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fRUAl82f; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=O5KhXph0XkfNJfTbSsELgq7G1jVnfvAGRWdKFWY32kBZIvWCv3wwRqJ45W/6SB0e5J14WQDeZTeArdHsoYKoFqXN7qAPrgstXC26kz3ureaRiBd40CrTUHivo7jJWQbF5pgQb1oCcvWcRivtV2JX6SNLc7/Iz6adbT3sUwGPSyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSMoKyOO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fRUAl82f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75D0EC43390;
-	Sun, 24 Mar 2024 23:15:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSMoKyOO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76A80C433C7;
+	Sun, 24 Mar 2024 23:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322109;
-	bh=dNHR4eclNy+wmS+rjR+g78dsaberhhM17L5AFfz9j4k=;
+	s=k20201202; t=1711322111;
+	bh=uRoRsaHWAWpKpAmF0MLAb2S1bcEcuSVKZ2mxImqiWlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fRUAl82fdIdI91iPU4F4ll9w/gr3p4EoHgsHqRSpZbKaYwRzNudeB1s/7kjwn69mY
-	 HrmLMpvL8AssnurGYRO5aKbK9jgHotM3RXOhLbLBhmuUmAAlCdJKPopKiLK9a9q83k
-	 04F18XRbhYhKvk8vWR1Nw7LX2F7xJNoimuHjtvEdnI9sQuNokMheMFWVhWY0fK1giL
-	 ghc6Nhfj6UomcY1O3+s2Vpx5Cjj1REdTUdC21gnYTAPp1y5fBaxizB36wIFiTrzU0q
-	 JxwWZ7fm12mF3PmabBq4KzOhVqwFXog15LW58ykvtbC4ZKQi2LMhmRBMvA6WCnxqsL
-	 aG6kmukoWNJWA==
+	b=NSMoKyOOSw26R2vSQRKXUWXNn3aLbSfyUnpm3qCVwXrzqqI7zmPQc4ZnkrpWBXp47
+	 sV5mWHhkKiTbnfQkiXdDKpO5pjCO/4ZiRXo3YHL8KHpauqmhsLwzs+lnE6rt1Yn7U7
+	 sibOorirpvAKIUfSylD5ivxadVsSaltsnh1cSil9ai3gsl1nGFyEO4e6dVrt61aqPK
+	 SkzQQWtSu6eAAFN87QHgxW2RDPe87arOPNKJnCDbOHioByJ/veCjCJwmXxFJUib5b3
+	 0YWutrETKatjn0Ez0d7yZa4rdB1nrTvztGwi6FjpFqZ6GZwyJl5IHMoJXlUHOtF+Rn
+	 0wfSlYY8kFuRQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 184/451] arm64: dts: rockchip: add missing interrupt-names for rk356x vdpu
-Date: Sun, 24 Mar 2024 19:07:40 -0400
-Message-ID: <20240324231207.1351418-185-sashal@kernel.org>
+Subject: [PATCH 6.1 186/451] SUNRPC: fix some memleaks in gssx_dec_option_array
+Date: Sun, 24 Mar 2024 19:07:42 -0400
+Message-ID: <20240324231207.1351418-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,40 +44,88 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Heiko Stuebner <heiko@sntech.de>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit d1c44d9afa6f89aa0e10a191f30868eb12cd719f ]
+[ Upstream commit 3cfcfc102a5e57b021b786a755a38935e357797d ]
 
-The video-codec@fdea0400 was missing the interrupt-names property that is
-part of the binding. Add it.
+The creds and oa->data need to be freed in the error-handling paths after
+their allocation. So this patch add these deallocations in the
+corresponding paths.
 
-Fixes: 944be6fba401 ("arm64: dts: rockchip: Add VPU support for RK3568/RK3566")
-Cc: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-Acked-by: Uwe Kleine-König <ukleinek@debian.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20240227173526.710056-1-heiko@sntech.de
+Fixes: 1d658336b05f ("SUNRPC: Add RPC based upcall mechanism for RPCGSS auth")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk356x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ net/sunrpc/auth_gss/gss_rpc_xdr.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
-index f4d6dbbbddcd4..99ad6fc51b584 100644
---- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
-@@ -596,6 +596,7 @@ vpu: video-codec@fdea0400 {
- 		compatible = "rockchip,rk3568-vpu";
- 		reg = <0x0 0xfdea0000 0x0 0x800>;
- 		interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vdpu";
- 		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
- 		clock-names = "aclk", "hclk";
- 		iommus = <&vdpu_mmu>;
+diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+index d79f12c2550ac..cb32ab9a83952 100644
+--- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
++++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
+@@ -250,8 +250,8 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
+ 
+ 	creds = kzalloc(sizeof(struct svc_cred), GFP_KERNEL);
+ 	if (!creds) {
+-		kfree(oa->data);
+-		return -ENOMEM;
++		err = -ENOMEM;
++		goto free_oa;
+ 	}
+ 
+ 	oa->data[0].option.data = CREDS_VALUE;
+@@ -265,29 +265,40 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
+ 
+ 		/* option buffer */
+ 		p = xdr_inline_decode(xdr, 4);
+-		if (unlikely(p == NULL))
+-			return -ENOSPC;
++		if (unlikely(p == NULL)) {
++			err = -ENOSPC;
++			goto free_creds;
++		}
+ 
+ 		length = be32_to_cpup(p);
+ 		p = xdr_inline_decode(xdr, length);
+-		if (unlikely(p == NULL))
+-			return -ENOSPC;
++		if (unlikely(p == NULL)) {
++			err = -ENOSPC;
++			goto free_creds;
++		}
+ 
+ 		if (length == sizeof(CREDS_VALUE) &&
+ 		    memcmp(p, CREDS_VALUE, sizeof(CREDS_VALUE)) == 0) {
+ 			/* We have creds here. parse them */
+ 			err = gssx_dec_linux_creds(xdr, creds);
+ 			if (err)
+-				return err;
++				goto free_creds;
+ 			oa->data[0].value.len = 1; /* presence */
+ 		} else {
+ 			/* consume uninteresting buffer */
+ 			err = gssx_dec_buffer(xdr, &dummy);
+ 			if (err)
+-				return err;
++				goto free_creds;
+ 		}
+ 	}
+ 	return 0;
++
++free_creds:
++	kfree(creds);
++free_oa:
++	kfree(oa->data);
++	oa->data = NULL;
++	return err;
+ }
+ 
+ static int gssx_dec_status(struct xdr_stream *xdr,
 -- 
 2.43.0
 
