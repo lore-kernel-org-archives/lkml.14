@@ -1,142 +1,264 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F66A26AD92;
-	Sun, 24 Mar 2024 23:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E52172645
+	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 23:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323132; cv=none; b=QZNyqUGYz1Sg266J8dGpNVRE0Z0kEYB6o+YbOCFeijKjhSCL03fgrBYaSFFMfrX7DAtnGebxnkgff/aP3GpvaCRWQu5whSEj/EkZkpNiCX/FSsOIz42DFUZASdbCJBclABVL2UvjoKqOlYASdSymAgvp59luXNeFlwXkGbfGCDU=
+	t=1711323161; cv=none; b=dtnerl7wfIm1pcvDirhJXY+/gCfcUdhmF4yzL8tM6UGGxuTKsKq8618LPrBhQuJ8+mSD8vPX5rjttQSrw39HAY16YYQTR6m5B8iD4eC52Z8z7qdw1h2vvfKC9AF8/Yum8Ayp2iDzaP+4tkr2MUxs6Kr+82i1Hqq6O7x4MLOM9sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323132; c=relaxed/simple;
-	bh=2P6scc4KU+tG+nkHQIrTUE8fAAVrGxhoScJqp0MsypI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=G8R6wXcGN0HfietLAJK18AhIGYn2cL6ytjy2DO+un1DFXn77rMscj+JfbRxUlMtssx3lntwBXs5mjnvcOrvxGLfwH8p2VZhcNX2KfaO7zVIJUFQKlXEOTOkusPtIRFbjdF7XxIuWey2i7csdQPcGJhqM4Bus0HsvczFuJiR8wX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kI1vfql3; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kI1vfql3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding
-	:Content-ID:Content-Description:References;
-	bh=n/NjUq2bb1cMCrwf6KYJS5oPTzhOkpr05aucpVrqgaQ=; b=kI1vfql3b3NyH8HE9Loo1gSeCs
-	YPq+9flBPldV35nuIjLa3piIGoOqSHRtTqXHQA714mhtJGwD9jkAWCqVuaY7SBXLSc5CeKAZgQwHm
-	HvIYhg+Z9kNZ3zd215kchdSlLAomH1Jk9QgNBQBZ8bunkDUA0TJ7IFldQruZw5bT98TMGjLKUQHTk
-	wtTMthmP8DNsqLOUwMGJPYZX3Xd8PkzSsCMuTwVVpimKsndUf8VqegzU//rv+9MzlNDucJMp2q0Nt
-	kuefXPjkdiLl8YFBDPqi4L9cdCMZFdN6uvT9AxO+mMYiTgjPE9jNv7+zWS67nE59pPzTMNAcgVPlj
-	PxzGSK4g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1roXJo-0000000DsrL-3lYS;
-	Sun, 24 Mar 2024 23:32:00 +0000
-Date: Sun, 24 Mar 2024 16:32:00 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dave Chinner <david@fromorbit.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 1/1] mm: vmalloc: Bail out early in find_vmap_area() if
- vmap is not init
-Message-ID: <ZgC38GfEZYpYGUU9@infradead.org>
+	s=arc-20240116; t=1711323161; c=relaxed/simple;
+	bh=MR6LiyqvdzJQOZPGvyqmUcabXsb6JiaKTN2J7yPF1+M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IssHswRJA8grgbv0cDUrAM9kH/+jEWt93HpaczTV+a104cEbWmQ4WnpAKrspzUsWGeJB4bLrSnGB+CAzDYBvVJYIDhZJZsBa0lXyba3zuwfLv/AlmWJ74LpClsByj4WRGKmLfSu3/CfSKy5ZG0jF29ei7w+lWoWL7hQbwDu713w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1roXKN-0007qh-Ea; Mon, 25 Mar 2024 00:32:35 +0100
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1roXKM-008JQl-QP; Mon, 25 Mar 2024 00:32:34 +0100
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1roXKM-00FsDT-2S;
+	Mon, 25 Mar 2024 00:32:34 +0100
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Date: Mon, 25 Mar 2024 00:32:30 +0100
+Subject: [PATCH] usb: gadget: uvc: Improve error checking and tagging
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240323141544.4150-1-urezki@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240324-uvc-gadget-errorcheck-v1-1-5538c57bbeba@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAA24AGYC/x2NywqDMBAAf0X23AWTBiz9ldLDZrN5UIllU0UQ/
+ 73B4wwMc0ATLdLgORygspVWltrB3AbgTDUJltAZ7GjdeLcO140xUUjyQ1FdlLPwB53xDzNRjM4
+ F6K2nJuiVKude13Weu/yqxLJfs9f7PP8ir+1yfAAAAA==
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Daniel Scally <dan.scally@ideasonboard.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7088;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=MR6LiyqvdzJQOZPGvyqmUcabXsb6JiaKTN2J7yPF1+M=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBmALgSL9zCLOcFouQ2WqIZ76dmrdygu07rc5KnE
+ WytqzTr1t6JAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZgC4EgAKCRC/aVhE+XH0
+ q3wlD/4uVVTJGFEIGn/Hde+HACmjdT839upbn0Qf3YKQpGAlNpalz0XN1jyEu+C25dvUHXTA+NL
+ wBB9TkAwlXPCD0mdlLWqWqjvzFskGGS0yJnBZeQkaKaj0qRg4qGwB4IXIK4fOCcqSaOzN1GADpc
+ z1RQDRLOuIS7acCxPQ3jdl7gb9VGTP6ApEIi1PJ63MMyNgFLLlov6gHhXD1Dxtb4BVU4diGIJ68
+ C66qwD08HJEIXn5SYfpnvtK+Ye+pwAOmwUo3qGcGmR+7b1QzWxCRyG6Zs882/TKPWrsRvRcghm0
+ W5rGL0/e9ApIDCMBWG8igQ1814pPq+Z3kHhAbxUFDRCbxkxMb9qm4xm9/+rxPCh5nVzZCqolDcr
+ IZ/lDHoXCoqqRi7G4dC3ICPiAdns+ZNxbCiriSipz0TzalldcPt4lVoa9fZqLo+E2ZlT5qxEqnR
+ SJ7juHdj3baui6VYZQpec3QKjFN8qcd/rQX59OXikAUXxAK/cFL2jy7z2rYthyUT+UwF/BIEVkm
+ ZmZoHa2Z8Z2HNwAVBmSnC6kuxT9NlAv4NtBkSn51UG/zBfZ6uHW4eo4gBBxojI0FmRlkHVrjkg4
+ pUwK7Klhl25aqxdsQ7VGDFNSfUEYzTmymohFcgsC+brZtXUZFLFx7hKWqfbuQdoi2RzVGFlHim6
+ 1iLNAJkNYpua50w==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-I guess this is ok as an urgend bandaid to get s390 booting again,
-but calling find_vmap_area before the vmap area is initialized
-seems an actual issue in the s390 mm init code.
+Right now after one transfer was completed with EXDEV the currently
+encoded frame will get the UVC_STREAM_ERR tag attached. Since the
+complete and encode path are handling separate requests from different
+threads, there is no direct correspondence between the missed transfer
+of one request and the currently encoded request which might already
+belong to an completely different frame.
 
-Adding the s390 maintainers to see if they have and idea how this could
-get fixed in a better way.
+When queueing requests into the hardware by calling ep_queue the
+underlying ringbuffer of the usb driver will be filled. However when
+one of these requests will have some issue while transfer the hardware
+will trigger an interrupt but will continue transferring the pending
+requests in the ringbuffer. This interrupt-latency will make it
+impossible to react in time to tag the fully enqueued frame with the
+UVC_STREAM_ERR in the header.
 
+This patch is also addressing this particular issue by delaying the
+transmit of the EOF/ERR tagged header by waiting for the last enqueued
+buffer of the frame to be completed. This way it is possible to react to
+send the EOF/ERR tag depending on the whole frame transfer status.
 
-On Sat, Mar 23, 2024 at 03:15:44PM +0100, Uladzislau Rezki (Sony) wrote:
-> During the boot the s390 system triggers "spinlock bad magic" messages
-> if the spinlock debugging is enabled:
-> 
-> [    0.465445] BUG: spinlock bad magic on CPU#0, swapper/0
-> [    0.465490]  lock: single+0x1860/0x1958, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
-> [    0.466067] CPU: 0 PID: 0 Comm: swapper Not tainted 6.8.0-12955-g8e938e398669 #1
-> [    0.466188] Hardware name: QEMU 8561 QEMU (KVM/Linux)
-> [    0.466270] Call Trace:
-> [    0.466470]  [<00000000011f26c8>] dump_stack_lvl+0x98/0xd8
-> [    0.466516]  [<00000000001dcc6a>] do_raw_spin_lock+0x8a/0x108
-> [    0.466545]  [<000000000042146c>] find_vmap_area+0x6c/0x108
-> [    0.466572]  [<000000000042175a>] find_vm_area+0x22/0x40
-> [    0.466597]  [<000000000012f152>] __set_memory+0x132/0x150
-> [    0.466624]  [<0000000001cc0398>] vmem_map_init+0x40/0x118
-> [    0.466651]  [<0000000001cc0092>] paging_init+0x22/0x68
-> [    0.466677]  [<0000000001cbbed2>] setup_arch+0x52a/0x708
-> [    0.466702]  [<0000000001cb6140>] start_kernel+0x80/0x5c8
-> [    0.466727]  [<0000000000100036>] startup_continue+0x36/0x40
-> 
-> it happens because such system tries to access some vmap areas
-> whereas the vmalloc initialization is not even yet done:
-> 
-> [    0.465490] lock: single+0x1860/0x1958, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
-> [    0.466067] CPU: 0 PID: 0 Comm: swapper Not tainted 6.8.0-12955-g8e938e398669 #1
-> [    0.466188] Hardware name: QEMU 8561 QEMU (KVM/Linux)
-> [    0.466270] Call Trace:
-> [    0.466470] dump_stack_lvl (lib/dump_stack.c:117)
-> [    0.466516] do_raw_spin_lock (kernel/locking/spinlock_debug.c:87 kernel/locking/spinlock_debug.c:115)
-> [    0.466545] find_vmap_area (mm/vmalloc.c:1059 mm/vmalloc.c:2364)
-> [    0.466572] find_vm_area (mm/vmalloc.c:3150)
-> [    0.466597] __set_memory (arch/s390/mm/pageattr.c:360 arch/s390/mm/pageattr.c:393)
-> [    0.466624] vmem_map_init (./arch/s390/include/asm/set_memory.h:55 arch/s390/mm/vmem.c:660)
-> [    0.466651] paging_init (arch/s390/mm/init.c:97)
-> [    0.466677] setup_arch (arch/s390/kernel/setup.c:972)
-> [    0.466702] start_kernel (init/main.c:899)
-> [    0.466727] startup_continue (arch/s390/kernel/head64.S:35)
-> [    0.466811] INFO: lockdep is turned off.
-> ...
-> [    0.718250] vmalloc init - busy lock init 0000000002871860
-> [    0.718328] vmalloc init - busy lock init 00000000028731b8
-> 
-> Some background. It worked before because the lock that is in question
-> was statically defined and initialized. As of now, the locks and data
-> structures are initialized in the vmalloc_init() function.
-> 
-> To address that issue add the check whether the "vmap_initialized"
-> variable is set, if not find_vmap_area() bails out on entry returning NULL.
-> 
-> Fixes: 72210662c5a2 ("mm: vmalloc: offload free_vmap_area_lock lock")
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> ---
->  mm/vmalloc.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 22aa63f4ef63..0d77d171b5d9 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -2343,6 +2343,9 @@ struct vmap_area *find_vmap_area(unsigned long addr)
->  	struct vmap_area *va;
->  	int i, j;
->  
-> +	if (unlikely(!vmap_initialized))
-> +		return NULL;
-> +
->  	/*
->  	 * An addr_to_node_id(addr) converts an address to a node index
->  	 * where a VA is located. If VA spans several zones and passed
-> -- 
-> 2.39.2
-> 
----end quoted text---
+As this is patch is adding latency to the enqueuing path of the frames
+we make this errorcheck optional by adding an extra module parameter.
+
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+ drivers/usb/gadget/function/f_uvc.c     |  4 ++
+ drivers/usb/gadget/function/uvc.h       |  3 ++
+ drivers/usb/gadget/function/uvc_video.c | 69 +++++++++++++++++++++++++++++----
+ 3 files changed, 68 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/usb/gadget/function/f_uvc.c b/drivers/usb/gadget/function/f_uvc.c
+index 929666805bd23..6a7ca8ccaf360 100644
+--- a/drivers/usb/gadget/function/f_uvc.c
++++ b/drivers/usb/gadget/function/f_uvc.c
+@@ -33,6 +33,10 @@ unsigned int uvc_gadget_trace_param;
+ module_param_named(trace, uvc_gadget_trace_param, uint, 0644);
+ MODULE_PARM_DESC(trace, "Trace level bitmask");
+ 
++bool uvc_gadget_errorcheck_param = true;
++module_param_named(errorcheck, uvc_gadget_errorcheck_param, bool, 0644);
++MODULE_PARM_DESC(errorcheck, "Check and mark errors in the transfer of a frame");
++
+ /* --------------------------------------------------------------------------
+  * Function descriptors
+  */
+diff --git a/drivers/usb/gadget/function/uvc.h b/drivers/usb/gadget/function/uvc.h
+index cb35687b11e7e..e21fea6784597 100644
+--- a/drivers/usb/gadget/function/uvc.h
++++ b/drivers/usb/gadget/function/uvc.h
+@@ -46,6 +46,7 @@ struct uvc_device;
+ #define UVC_WARN_PROBE_DEF			1
+ 
+ extern unsigned int uvc_gadget_trace_param;
++extern bool uvc_gadget_errorcheck_param;
+ 
+ #define uvc_trace(flag, msg...) \
+ 	do { \
+@@ -91,6 +92,8 @@ struct uvc_video {
+ 	struct work_struct pump;
+ 	struct workqueue_struct *async_wq;
+ 
++	struct usb_request *last_req;
++
+ 	/* Frame parameters */
+ 	u8 bpp;
+ 	u32 fcc;
+diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
+index d41f5f31dadd5..8e9ec21b5154b 100644
+--- a/drivers/usb/gadget/function/uvc_video.c
++++ b/drivers/usb/gadget/function/uvc_video.c
+@@ -35,9 +35,6 @@ uvc_video_encode_header(struct uvc_video *video, struct uvc_buffer *buf,
+ 
+ 	data[1] = UVC_STREAM_EOH | video->fid;
+ 
+-	if (video->queue.flags & UVC_QUEUE_DROP_INCOMPLETE)
+-		data[1] |= UVC_STREAM_ERR;
+-
+ 	if (video->queue.buf_used == 0 && ts.tv_sec) {
+ 		/* dwClockFrequency is 48 MHz */
+ 		u32 pts = ((u64)ts.tv_sec * USEC_PER_SEC + ts.tv_nsec / NSEC_PER_USEC) * 48;
+@@ -62,7 +59,8 @@ uvc_video_encode_header(struct uvc_video *video, struct uvc_buffer *buf,
+ 
+ 	data[0] = pos;
+ 
+-	if (buf->bytesused - video->queue.buf_used <= len - pos)
++	if (!uvc_gadget_errorcheck_param &&
++	    (buf->bytesused - video->queue.buf_used <= len - pos))
+ 		data[1] |= UVC_STREAM_EOF;
+ 
+ 	return pos;
+@@ -366,6 +364,32 @@ static void uvc_video_ep_queue_initial_requests(struct uvc_video *video)
+ 	spin_unlock_irqrestore(&video->req_lock, flags);
+ }
+ 
++static void
++uvc_video_fixup_header(struct usb_request *next, struct usb_request *done,
++		       bool error)
++{
++	struct uvc_request *next_ureq = next->context;
++	struct uvc_request *done_ureq = done->context;
++	struct uvc_video *video = next_ureq->video;
++	struct uvc_video_queue *queue = &video->queue;
++
++	u8 header = UVC_STREAM_EOF;
++
++	if (error)
++		header |= UVC_STREAM_ERR;
++
++	if (queue->use_sg) {
++		memcpy(next_ureq->header, done_ureq->header,
++				UVCG_REQUEST_HEADER_LEN);
++
++		((u8 *)next_ureq->header)[1] |= header;
++	} else {
++		memcpy(next->buf, done->buf, UVCG_REQUEST_HEADER_LEN);
++
++		((u8 *)next->buf)[1] |= header;
++	}
++}
++
+ static void
+ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
+ {
+@@ -377,6 +401,7 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
+ 	unsigned long flags;
+ 	bool is_bulk = video->max_payload_size;
+ 	int ret = 0;
++	bool error = false;
+ 
+ 	spin_lock_irqsave(&video->req_lock, flags);
+ 	if (!video->is_enabled) {
+@@ -419,6 +444,8 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
+ 
+ 	if (last_buf) {
+ 		spin_lock_irqsave(&queue->irqlock, flags);
++		if (queue->flags & UVC_QUEUE_DROP_INCOMPLETE)
++			error = true;
+ 		uvcg_complete_buffer(queue, last_buf);
+ 		spin_unlock_irqrestore(&queue->irqlock, flags);
+ 	}
+@@ -449,11 +476,37 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
+ 	 * requests and cannot recover.
+ 	 */
+ 	to_queue->length = 0;
++
++	/* If the last request was queued the just copy the previous
++	 * header without payload to the empty request and fixup the
++	 * tags with ERR/EOF to finish the frame.
++	 */
++	if (uvc_gadget_errorcheck_param && (video->last_req == req)) {
++		uvc_video_fixup_header(to_queue, req, error);
++		to_queue->length = UVCG_REQUEST_HEADER_LEN;
++		video->last_req = NULL;
++	}
++
+ 	if (!list_empty(&video->req_ready)) {
+-		to_queue = list_first_entry(&video->req_ready,
+-			struct usb_request, list);
+-		list_del(&to_queue->list);
+-		list_add_tail(&req->list, &video->req_free);
++		struct usb_request *next_req =
++				list_first_entry(&video->req_ready,
++						 struct usb_request, list);
++		struct uvc_request *next_ureq = next_req->context;
++
++		/* If the last request of the frame will be queued, we delay
++		 * the enqueueing of every next request. This way it is
++		 * possible to react to send the EOF/ERR tag depending
++		 * on the whole frame transfer status.
++		 */
++		if (!video->last_req && !to_queue->length) {
++			if (uvc_gadget_errorcheck_param && next_ureq->last_buf)
++				video->last_req = next_req;
++
++			to_queue = next_req;
++			list_del(&to_queue->list);
++			list_add_tail(&req->list, &video->req_free);
++		}
++
+ 		/*
+ 		 * Queue work to the wq as well since it is possible that a
+ 		 * buffer may not have been completely encoded with the set of
+
+---
+base-commit: bfa8f18691ed2e978e4dd51190569c434f93e268
+change-id: 20240324-uvc-gadget-errorcheck-41b817aff44d
+
+Best regards,
+-- 
+Michael Grzeschik <m.grzeschik@pengutronix.de>
+
