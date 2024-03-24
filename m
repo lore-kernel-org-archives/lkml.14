@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F0D1EBD3E;
-	Sun, 24 Mar 2024 22:55:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1881EBD47;
+	Sun, 24 Mar 2024 22:55:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320934; cv=none; b=of/Tl2BDhA2crAT3YAF8H35iSuYIiw7UF/2N18sQ54zB4JBEJuCz5j4bnnXQ1wRQVacuADJ+IrzdF6wEIjq/qiiaqaiPcc9flHdrKlA0Al9a+uzJwZI6LTPTeClFdVjpa4MtA9yV0kzQLLYkH9uoXVwFMLkPu48zyGcHPv1eADA=
+	t=1711320936; cv=none; b=PKSTH8COAZhI4e0NdSrozo8RBSuNGqTFQXql8c2OM1udW0xiR6zgX5pO8u/I6c8sX4NiBPyfOdXxjdH68zdzWpEJSyN33uExBnMOrRI3IhTrcbzzEc1A8foIF+nZvc28WKYYIzOdTw3pVGL6VOZwynkYmL+Ypg6MICDisoGKi24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320934; c=relaxed/simple;
-	bh=8NG5ryWG5HYBva078aNyd9BCSi5cg3Cn9gXeZNtAs18=;
+	s=arc-20240116; t=1711320936; c=relaxed/simple;
+	bh=eFw53uz7Utyd3JbrNXm2U9OSaLEXN0g6S7t/oGiM3VE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tfKFSigS4J207MYEs5701RJupoKci5uuCoSWmXNo7jkC3hxp/jkbVZ/68LScM8RSkyVp5Ee5IbOi6JeKGkV6qWM2+9oSYcq+bZE0zM5KHAahOD+OWl85P6ShWQywUZlF6zqMAOX9vQb3K4NwkJulgMon3sRUFG0QEO6dqhWHhow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FG+8msFS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QOnrzDExGH0J+nkZmqOn0pyD1ly6E7h0gYIx9EnL+nyjFsiVy1aTfFT9aOVVgA3lDKq8O47MEggcxjtSAsv1/CvkDlA4+EbD66C3x3aHPvKHpigmEl6AXeyEp0XPEv9nzSVAsbGtjhfANLFQt+iiHTmstzEmAU/oOz1GQRDYuBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dY7sS0Gh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FG+8msFS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E5A8C433C7;
-	Sun, 24 Mar 2024 22:55:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dY7sS0Gh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AAC1C433C7;
+	Sun, 24 Mar 2024 22:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320933;
-	bh=8NG5ryWG5HYBva078aNyd9BCSi5cg3Cn9gXeZNtAs18=;
+	s=k20201202; t=1711320934;
+	bh=eFw53uz7Utyd3JbrNXm2U9OSaLEXN0g6S7t/oGiM3VE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FG+8msFSiizair3Wx1TSUDCNJ+y7u7y0JPo2QXYxt5RxtlZq9FwDN+YxiLclGzWpZ
-	 zJPZmNWj8mV78rcSrzBwtnBySnsNcYzox4ElevC72RT/e3jux4NXvAZkGbLuVu5XhB
-	 zlDnGCaQEzFfEWcmgR3S9V4R2Vfk2XTiRwCbcpfwmg/JCPxO6aqDSvj3Nbhz3/ia6L
-	 YtfEYb2oz9avYGYzXJX4FEAAkbZCTefTSv0DMYbcraastuXkdmcR+yppB+6nn6KUwx
-	 EN0W0di4bFi34fbb2EL1p1vb96lyeB6hC3Jez/m8bvLTghRjF+hX5/KjXgqTxwvi4G
-	 OsGyn03EsiaWg==
+	b=dY7sS0GhVOJZRpvZAB+nRE5F6i8hhTPvoVgmYQ025hPks6lDnrOBeYooOFgxEnZsm
+	 vjKgMwjjeXGFNenRrqc0EXkdWfHc3iE4f38nqDtqfaOD9Gz/nZMj66prTu3VtFe7Uh
+	 MUVrkNmyux9G6nRUaxeX4daXbJmNFHVLLJOnOF7fDDoYE3zgJxEjuP2RJeNF8e78ns
+	 Q78C3cMG096IiiJ7+1rqLsY/eWQPnubfkt19yr1M/IgLefkKEyGrdWhliOqOjeL+D7
+	 MuWLo3JSYV1GYbSUXcBwt2GiB0LCa+S6d+mIpLF1qtyoKplUIWeEqqaNs2gjJpxbEj
+	 DWzROcAnCa9SA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
+Cc: Adam Guerin <adam.guerin@intel.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
 	Herbert Xu <herbert@gondor.apana.org.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 496/713] crypto: arm/sha - fix function cast warnings
-Date: Sun, 24 Mar 2024 18:43:42 -0400
-Message-ID: <20240324224720.1345309-497-sashal@kernel.org>
+Subject: [PATCH 6.7 498/713] crypto: qat - remove unused macros in qat_comp_alg.c
+Date: Sun, 24 Mar 2024 18:43:44 -0400
+Message-ID: <20240324224720.1345309-499-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,112 +49,68 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Adam Guerin <adam.guerin@intel.com>
 
-[ Upstream commit 53cc9baeb9bc2a187eb9c9790d30995148852b12 ]
+[ Upstream commit dfff0e35fa5dd84ae75052ba129b0219d83e46dc ]
 
-clang-16 warns about casting between incompatible function types:
+As a result of the removal of qat_zlib_deflate, some defines where not
+removed. Remove them.
 
-arch/arm/crypto/sha256_glue.c:37:5: error: cast from 'void (*)(u32 *, const void *, unsigned int)' (aka 'void (*)(unsigned int *, const void *, unsigned int)') to 'sha256_block_fn *' (aka 'void (*)(struct sha256_state *, const unsigned char *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-   37 |                                 (sha256_block_fn *)sha256_block_data_order);
-      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm/crypto/sha512-glue.c:34:3: error: cast from 'void (*)(u64 *, const u8 *, int)' (aka 'void (*)(unsigned long long *, const unsigned char *, int)') to 'sha512_block_fn *' (aka 'void (*)(struct sha512_state *, const unsigned char *, int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-   34 |                 (sha512_block_fn *)sha512_block_data_order);
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is to fix the following warning when compiling the QAT driver
+using the clang compiler with CC=clang W=2:
+    drivers/crypto/intel/qat/qat_common/qat_comp_algs.c:21:9: warning: macro is not used [-Wunused-macros]
+       21 | #define QAT_RFC_1950_CM_OFFSET 4
+          |         ^
+    drivers/crypto/intel/qat/qat_common/qat_comp_algs.c:16:9: warning: macro is not used [-Wunused-macros]
+       16 | #define QAT_RFC_1950_HDR_SIZE 2
+          |         ^
+    drivers/crypto/intel/qat/qat_common/qat_comp_algs.c:17:9: warning: macro is not used [-Wunused-macros]
+       17 | #define QAT_RFC_1950_FOOTER_SIZE 4
+          |         ^
+    drivers/crypto/intel/qat/qat_common/qat_comp_algs.c:22:9: warning: macro is not used [-Wunused-macros]
+       22 | #define QAT_RFC_1950_DICT_MASK 0x20
+          |         ^
+    drivers/crypto/intel/qat/qat_common/qat_comp_algs.c:18:9: warning: macro is not used [-Wunused-macros]
+       18 | #define QAT_RFC_1950_CM_DEFLATE 8
+          |         ^
+    drivers/crypto/intel/qat/qat_common/qat_comp_algs.c:20:9: warning: macro is not used [-Wunused-macros]
+       20 | #define QAT_RFC_1950_CM_MASK 0x0f
+          |         ^
+    drivers/crypto/intel/qat/qat_common/qat_comp_algs.c:23:9: warning: macro is not used [-Wunused-macros]
+       23 | #define QAT_RFC_1950_COMP_HDR 0x785e
+          |         ^
+    drivers/crypto/intel/qat/qat_common/qat_comp_algs.c:19:9: warning: macro is not used [-Wunused-macros]
+       19 | #define QAT_RFC_1950_CM_DEFLATE_CINFO_32K 7
+          |         ^
 
-Fix the prototypes for the assembler functions to match the typedef.
-The code already relies on the digest being the first part of the
-state structure, so there is no change in behavior.
-
-Fixes: c80ae7ca3726 ("crypto: arm/sha512 - accelerated SHA-512 using ARM generic ASM and NEON")
-Fixes: b59e2ae3690c ("crypto: arm/sha256 - move SHA-224/256 ASM/NEON implementation to base layer")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Fixes: e9dd20e0e5f6 ("crypto: qat - Remove zlib-deflate")
+Signed-off-by: Adam Guerin <adam.guerin@intel.com>
+Reviewed-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/sha256_glue.c | 13 +++++--------
- arch/arm/crypto/sha512-glue.c | 12 +++++-------
- 2 files changed, 10 insertions(+), 15 deletions(-)
+ drivers/crypto/intel/qat/qat_common/qat_comp_algs.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/arch/arm/crypto/sha256_glue.c b/arch/arm/crypto/sha256_glue.c
-index 433ee4ddce6c8..f85933fdec75f 100644
---- a/arch/arm/crypto/sha256_glue.c
-+++ b/arch/arm/crypto/sha256_glue.c
-@@ -24,8 +24,8 @@
+diff --git a/drivers/crypto/intel/qat/qat_common/qat_comp_algs.c b/drivers/crypto/intel/qat/qat_common/qat_comp_algs.c
+index bf8c0ee629175..2ba4aa22e0927 100644
+--- a/drivers/crypto/intel/qat/qat_common/qat_comp_algs.c
++++ b/drivers/crypto/intel/qat/qat_common/qat_comp_algs.c
+@@ -13,15 +13,6 @@
+ #include "qat_compression.h"
+ #include "qat_algs_send.h"
  
- #include "sha256_glue.h"
- 
--asmlinkage void sha256_block_data_order(u32 *digest, const void *data,
--					unsigned int num_blks);
-+asmlinkage void sha256_block_data_order(struct sha256_state *state,
-+					const u8 *data, int num_blks);
- 
- int crypto_sha256_arm_update(struct shash_desc *desc, const u8 *data,
- 			     unsigned int len)
-@@ -33,23 +33,20 @@ int crypto_sha256_arm_update(struct shash_desc *desc, const u8 *data,
- 	/* make sure casting to sha256_block_fn() is safe */
- 	BUILD_BUG_ON(offsetof(struct sha256_state, state) != 0);
- 
--	return sha256_base_do_update(desc, data, len,
--				(sha256_block_fn *)sha256_block_data_order);
-+	return sha256_base_do_update(desc, data, len, sha256_block_data_order);
- }
- EXPORT_SYMBOL(crypto_sha256_arm_update);
- 
- static int crypto_sha256_arm_final(struct shash_desc *desc, u8 *out)
- {
--	sha256_base_do_finalize(desc,
--				(sha256_block_fn *)sha256_block_data_order);
-+	sha256_base_do_finalize(desc, sha256_block_data_order);
- 	return sha256_base_finish(desc, out);
- }
- 
- int crypto_sha256_arm_finup(struct shash_desc *desc, const u8 *data,
- 			    unsigned int len, u8 *out)
- {
--	sha256_base_do_update(desc, data, len,
--			      (sha256_block_fn *)sha256_block_data_order);
-+	sha256_base_do_update(desc, data, len, sha256_block_data_order);
- 	return crypto_sha256_arm_final(desc, out);
- }
- EXPORT_SYMBOL(crypto_sha256_arm_finup);
-diff --git a/arch/arm/crypto/sha512-glue.c b/arch/arm/crypto/sha512-glue.c
-index 0635a65aa488b..1be5bd498af36 100644
---- a/arch/arm/crypto/sha512-glue.c
-+++ b/arch/arm/crypto/sha512-glue.c
-@@ -25,27 +25,25 @@ MODULE_ALIAS_CRYPTO("sha512");
- MODULE_ALIAS_CRYPTO("sha384-arm");
- MODULE_ALIAS_CRYPTO("sha512-arm");
- 
--asmlinkage void sha512_block_data_order(u64 *state, u8 const *src, int blocks);
-+asmlinkage void sha512_block_data_order(struct sha512_state *state,
-+					u8 const *src, int blocks);
- 
- int sha512_arm_update(struct shash_desc *desc, const u8 *data,
- 		      unsigned int len)
- {
--	return sha512_base_do_update(desc, data, len,
--		(sha512_block_fn *)sha512_block_data_order);
-+	return sha512_base_do_update(desc, data, len, sha512_block_data_order);
- }
- 
- static int sha512_arm_final(struct shash_desc *desc, u8 *out)
- {
--	sha512_base_do_finalize(desc,
--		(sha512_block_fn *)sha512_block_data_order);
-+	sha512_base_do_finalize(desc, sha512_block_data_order);
- 	return sha512_base_finish(desc, out);
- }
- 
- int sha512_arm_finup(struct shash_desc *desc, const u8 *data,
- 		     unsigned int len, u8 *out)
- {
--	sha512_base_do_update(desc, data, len,
--		(sha512_block_fn *)sha512_block_data_order);
-+	sha512_base_do_update(desc, data, len, sha512_block_data_order);
- 	return sha512_arm_final(desc, out);
- }
+-#define QAT_RFC_1950_HDR_SIZE 2
+-#define QAT_RFC_1950_FOOTER_SIZE 4
+-#define QAT_RFC_1950_CM_DEFLATE 8
+-#define QAT_RFC_1950_CM_DEFLATE_CINFO_32K 7
+-#define QAT_RFC_1950_CM_MASK 0x0f
+-#define QAT_RFC_1950_CM_OFFSET 4
+-#define QAT_RFC_1950_DICT_MASK 0x20
+-#define QAT_RFC_1950_COMP_HDR 0x785e
+-
+ static DEFINE_MUTEX(algs_lock);
+ static unsigned int active_devs;
  
 -- 
 2.43.0
