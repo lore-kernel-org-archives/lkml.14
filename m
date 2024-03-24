@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26DE13DBBF;
-	Sun, 24 Mar 2024 23:09:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5D01F0966;
+	Sun, 24 Mar 2024 23:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321793; cv=none; b=qlGUU5/gK0tqY0kQrHgNot/4kbNZaco9sESLUcaO08xYl9ecn1jKX6M6KGorp1xlBsKPzvGbVCC2O7ltxQq3EBzx3JFKSbDgtpNAzJAyb9HcI8CA6tU/kezIsHuQ3w9auXB1DcLdrEP/u56gTdTBzK7dDipKpz9r7oioexM0tM0=
+	t=1711321816; cv=none; b=M+ViqMwHKRHrI/o5hwa4HDecuCu5TX6Wnx1LWbH2COj+17Kg+lhYI0Zal+z3pkZxxWlepkFft89PfT9bUhAe4CkZ3JXsd9U/n30fbgRKvxkKBHEV+l/weS6thX8ZBxkIhh7abfpIahU0NQ9/CkXfe5miOEpWkh4Aany462D2hP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321793; c=relaxed/simple;
-	bh=hLjy4XuyL+3wLhEljcWF/6T+M7qSWfl8AC6m+cEEF14=;
+	s=arc-20240116; t=1711321816; c=relaxed/simple;
+	bh=DfOoZsIT4CceyDNQSJzOMOwj8RU1jaP12MR59o7D7JM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sGSv+lZG9fbVjLWpczrgaNmXTPk5o9JDNJcf50OP8eLPLLxM9KK4s8bqytoygTUydwqbQEsuqDz9Y+8JjkpB0Ys2tI1jho9wiHMi6yh1X/it91dRDZUuVddeU3e9Et3k5fmz/m+G5t9LXTDVkfIh0adWT7/DqIARbr2rNS1Pl8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oaKDFUEH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GKqBjytGvmSaWAFqNWhVqbquS6J4Zlh1y8M4cAuUu7klsUCbRll0XhbbnSQv4JKayqgiotD2vZGoylzy7fXop+72x4fttO3/GYpH+v0uHL7K1VRL0pKy4pjH3+zNajQOpRUZ0Z/4nvOiBVrAMxZlxHJv5mINUyV5v4XMsZ4TuS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqKkgPYR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oaKDFUEH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF85AC43399;
-	Sun, 24 Mar 2024 23:09:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqKkgPYR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62F24C433C7;
+	Sun, 24 Mar 2024 23:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321792;
-	bh=hLjy4XuyL+3wLhEljcWF/6T+M7qSWfl8AC6m+cEEF14=;
+	s=k20201202; t=1711321815;
+	bh=DfOoZsIT4CceyDNQSJzOMOwj8RU1jaP12MR59o7D7JM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oaKDFUEHIjH1604zkf2odtLCA+mSuNhzIzYjW2WgXCGJx91qZAW+VozFFatZuwq14
-	 Lpp8Ia6gmrVqQmKYmbfs9fd4wOGi6EnR8CsjQssqFMHM8jorC//HWKzh8yO7gp95TX
-	 0EtPH7hLBl00QIs17rUC67ofGeZG27A9FN6tcK/rvwzgtyMSapPsjdIhKymukTRghy
-	 eUoP/HdGOeWkJkWcbMQtNfEVOzFfS6u64o0I6t1epTdzY+pykCuRMNpQ+3EVR5yNn2
-	 4Jp0AU38QdoomB6S3EjDKhsqDeHArhdytIcC9To2X9GFQ1NHbuXQzO8yWWdlcliZ7m
-	 HFsJLaUbk9xlA==
+	b=nqKkgPYR5xlL3K82Ank+OpXPH8EYkt84aTujKU8Kb43T3cJriTeQNuMIztUAN8IM6
+	 pchZlKkYQBoBaCohSWjgN7OKwFfnsjo5WZ24tF/VrP2ufcU5TW+vh6m/x7NgvALmj1
+	 4P7R61ydYu6s83FYYwYFywu+JoFOonsYOiQUwMyour/+cR8E4uitFlgYBALYo/9v4f
+	 k9I0D+1qJ5hQb7wJvsIXPrl4YUgd2j1LpPTMYIwaOC8bkiRY1ajz6Bf0mpIl6XqMBs
+	 Dc0xXW9LKNpJ+cjSPBUyQT2kkkwAnrfI+f2EP7uQo3Kqr8+fEvy4pJx3RF6xAyr8Zp
+	 NBPQ6YkEHWWvg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Olga Kornievskaia <kolga@netapp.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 520/638] f2fs: compress: fix to cover f2fs_disable_compressed_file() w/ i_sem
-Date: Sun, 24 Mar 2024 18:59:17 -0400
-Message-ID: <20240324230116.1348576-521-sashal@kernel.org>
+Subject: [PATCH 6.6 543/638] NFSv4.1/pnfs: fix NFS with TLS in pnfs
+Date: Sun, 24 Mar 2024 18:59:40 -0400
+Message-ID: <20240324230116.1348576-544-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,61 +48,110 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit 2f9420d3a94aeebd92db88f00f4f2f1a3bd3f6cf ]
+[ Upstream commit a35518cae4b325632840bc8c3aa9ad9bac430038 ]
 
-- f2fs_disable_compressed_file
-  - check inode_has_data
-					- f2fs_file_mmap
-					- mkwrite
-					 - f2fs_get_block_locked
-					 : update metadata in compressed
-					   inode's disk layout
-  - fi->i_flags &= ~F2FS_COMPR_FL
-  - clear_inode_flag(inode, FI_COMPRESSED_FILE);
+Currently, even though xprtsec=tls is specified and used for operations
+to MDS, any operations that go to DS travel over unencrypted connection.
+Or additionally, if more than 1 DS can serve the data, then trunked
+connections are also done unencrypted.
 
-we should use i_sem lock to prevent above race case.
+IN GETDEVINCEINFO, we get an entry for the DS which carries a protocol
+type (which is TCP), then nfs4_set_ds_client() gets called with TCP
+instead of TCP with TLS.
 
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Currently, each trunked connection is created and uses clp->cl_hostname
+value which if TLS is used would get passed up in the handshake upcall,
+but instead we need to pass in the appropriate trunked address value.
+
+Fixes: c8407f2e560c ("NFS: Add an "xprtsec=" NFS mount option")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ fs/nfs/pnfs_nfs.c | 44 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 2e2792a49de0f..95fa1f7a89707 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -4396,15 +4396,24 @@ static inline bool f2fs_disable_compressed_file(struct inode *inode)
- {
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
+diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
+index afd23910f3bff..88e061bd711b7 100644
+--- a/fs/nfs/pnfs_nfs.c
++++ b/fs/nfs/pnfs_nfs.c
+@@ -919,6 +919,8 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 	dprintk("--> %s DS %s\n", __func__, ds->ds_remotestr);
  
--	if (!f2fs_compressed_file(inode))
-+	f2fs_down_write(&F2FS_I(inode)->i_sem);
+ 	list_for_each_entry(da, &ds->ds_addrs, da_node) {
++		char servername[48];
 +
-+	if (!f2fs_compressed_file(inode)) {
-+		f2fs_up_write(&F2FS_I(inode)->i_sem);
- 		return true;
--	if (S_ISREG(inode->i_mode) && F2FS_HAS_BLOCKS(inode))
-+	}
-+	if (f2fs_is_mmap_file(inode) ||
-+		(S_ISREG(inode->i_mode) && F2FS_HAS_BLOCKS(inode))) {
-+		f2fs_up_write(&F2FS_I(inode)->i_sem);
- 		return false;
-+	}
+ 		dprintk("%s: DS %s: trying address %s\n",
+ 			__func__, ds->ds_remotestr, da->da_remotestr);
  
- 	fi->i_flags &= ~F2FS_COMPR_FL;
- 	stat_dec_compr_inode(inode);
- 	clear_inode_flag(inode, FI_COMPRESSED_FILE);
- 	f2fs_mark_inode_dirty_sync(inode, true);
+@@ -929,6 +931,7 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 				.dstaddr = (struct sockaddr *)&da->da_addr,
+ 				.addrlen = da->da_addrlen,
+ 				.servername = clp->cl_hostname,
++				.xprtsec = clp->cl_xprtsec,
+ 			};
+ 			struct nfs4_add_xprt_data xprtdata = {
+ 				.clp = clp,
+@@ -938,10 +941,45 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 				.data = &xprtdata,
+ 			};
+ 
+-			if (da->da_transport != clp->cl_proto)
++			if (da->da_transport != clp->cl_proto &&
++					clp->cl_proto != XPRT_TRANSPORT_TCP_TLS)
+ 				continue;
++			if (da->da_transport == XPRT_TRANSPORT_TCP &&
++				mds_srv->nfs_client->cl_proto ==
++					XPRT_TRANSPORT_TCP_TLS) {
++				struct sockaddr *addr =
++					(struct sockaddr *)&da->da_addr;
++				struct sockaddr_in *sin =
++					(struct sockaddr_in *)&da->da_addr;
++				struct sockaddr_in6 *sin6 =
++					(struct sockaddr_in6 *)&da->da_addr;
 +
-+	f2fs_up_write(&F2FS_I(inode)->i_sem);
- 	return true;
- }
- 
++				/* for NFS with TLS we need to supply a correct
++				 * servername of the trunked transport, not the
++				 * servername of the main transport stored in
++				 * clp->cl_hostname. And set the protocol to
++				 * indicate to use TLS
++				 */
++				servername[0] = '\0';
++				switch(addr->sa_family) {
++				case AF_INET:
++					snprintf(servername, sizeof(servername),
++						"%pI4", &sin->sin_addr.s_addr);
++					break;
++				case AF_INET6:
++					snprintf(servername, sizeof(servername),
++						"%pI6", &sin6->sin6_addr);
++					break;
++				default:
++					/* do not consider this address */
++					continue;
++				}
++				xprt_args.ident = XPRT_TRANSPORT_TCP_TLS;
++				xprt_args.servername = servername;
++			}
+ 			if (da->da_addr.ss_family != clp->cl_addr.ss_family)
+ 				continue;
++
+ 			/**
+ 			* Test this address for session trunking and
+ 			* add as an alias
+@@ -953,6 +991,10 @@ static int _nfs4_pnfs_v4_ds_connect(struct nfs_server *mds_srv,
+ 			if (xprtdata.cred)
+ 				put_cred(xprtdata.cred);
+ 		} else {
++			if (da->da_transport == XPRT_TRANSPORT_TCP &&
++				mds_srv->nfs_client->cl_proto ==
++					XPRT_TRANSPORT_TCP_TLS)
++				da->da_transport = XPRT_TRANSPORT_TCP_TLS;
+ 			clp = nfs4_set_ds_client(mds_srv,
+ 						&da->da_addr,
+ 						da->da_addrlen,
 -- 
 2.43.0
 
