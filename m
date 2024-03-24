@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F39179FB5;
-	Sun, 24 Mar 2024 23:40:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79F717A36A;
+	Sun, 24 Mar 2024 23:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323648; cv=none; b=juGK8dX/+SwGyF6BJNZOMmg635b6vcQdiUFeLQw4c7Lod4TDmMJJnz9ZosFUj3H1vbmBWGZrzwAoIltuZd8oDNTTm61zmo17MREdncbugoX+81kUx5eFyc9F7mnmD1FUb8O94sQEjvOGBv+HvJQY/nfgb51Sfd/zOWPcki9s0vc=
+	t=1711323652; cv=none; b=Iru3fVdOBRZvgwJ0+8F1Inbjt1+Cju3FfGD/ZNGYzipSIWBRcSRlcTlJTAE7O9zUqh6QB5E8+lgbz4lDUCuhJZKcRN+twjkrk2zJInxUTeENQZ0DnWKvPS4PUafFsm61s7JQYtPuEYITox5/X0DjJum/9ySY7yQJqIGvB61/yIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323648; c=relaxed/simple;
-	bh=/asW2tftmwjIBrAfKoCxa3oRNne3RxOit1L2BaOZ8Jg=;
+	s=arc-20240116; t=1711323652; c=relaxed/simple;
+	bh=YEz4yne20Y+PXJLPWPogO6ruSXDx1kKR8hKUaO0QDu8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MAw/rwmbEN4kLlRTuKnWwSJgJFRQELsBG80sBACX3RM3qFcWovjhE2CRcYNuokyu9Eqph4HjTgtF8PoV8d8mGRZ49DoFvg2Al2SIudM2q8MrB2ZsmXImrFpTqzEowfvQWbGSTRWhIHnJJLYy43KMB8HlurnS/iPJmva6JkcXIRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBa9bbE5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=PqY0k39/BYLUVpwRCuXJadcDYiu12XzZe/Uafn8KzhfzqqrCoqwsIe9oDeXAOlVF9BY3R2LoxHQ2axGjhG1MJQT/uiKxJVMq170Z6W9uCEHoXcGgLU0b7bVzYhccDst8obXtg/h941V7/46sBH+MeLAvOK3I3BK7h//VYR7JbU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUO3XcNI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBa9bbE5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D68AC43394;
-	Sun, 24 Mar 2024 23:40:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUO3XcNI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC833C433C7;
+	Sun, 24 Mar 2024 23:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323646;
-	bh=/asW2tftmwjIBrAfKoCxa3oRNne3RxOit1L2BaOZ8Jg=;
+	s=k20201202; t=1711323652;
+	bh=YEz4yne20Y+PXJLPWPogO6ruSXDx1kKR8hKUaO0QDu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jBa9bbE5Oyrf7BlqoHreKOT3CDDJ8lG7TbT9+QTPwY4y5BWbhj0/9NqpO6qiRDNJJ
-	 iMBBivkjuMoEWA/pLR03VEpF4EXsTXRLZYF1d/HhwQ9BR4GthDJoIpa/hCAMjuMDJR
-	 NfLaMrBhUgBFvC8oxo2GR65F8SbYsjNY78S6LNEF5nHBZ12hKYWOCxUrlhxNEg57dG
-	 Oj57Zq+g15swndc8bxaob/I+OJLRu9eSEKVljfyJW34V9WOh7REsVp/3Fa6/of+vQ6
-	 /GJWe6ii+jTrrQ7EsA49MZhiYbuyAGOs+msgffJ59pPQr01z9KoZBkMBTFiJ0S3HB6
-	 S8yem5TvDPpoQ==
+	b=CUO3XcNI6fEqHqNlbPCqkke34sA+455eUNfFW766WWkTXoRwaNpkjSKuqZo9MA75o
+	 NRLBIDRJrrDn7x4LdeeG7lKtkwN1x/qYsHCqXJ01q5mMZJNQbacF9AM0ttyxQM2fBA
+	 H/yO+GpfODctYGkxRBpRHqV5VFdUYljPhrusn4pzWRy2+ohOpxK66kiOjfsoWmDQx/
+	 7BXTP67wu8ub9EGRA1gz2KKmwwlQT0TkBqp679VxONpzscajPRllMLevA7krZafzDe
+	 1c8ClYlgXVoB5MRGL0ioqvD6lHTfQ5FM0vM5HckMlOw3faoyjMfCax/9wtmre2fvZa
+	 BKLXX4OOmvn3Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Greg Joyce <gjoyce@linux.ibm.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 018/238] block: sed-opal: handle empty atoms when parsing response
-Date: Sun, 24 Mar 2024 19:36:46 -0400
-Message-ID: <20240324234027.1354210-19-sashal@kernel.org>
+Subject: [PATCH 5.10 024/238] Input: gpio_keys_polled - suppress deferred probe error for gpio
+Date: Sun, 24 Mar 2024 19:36:52 -0400
+Message-ID: <20240324234027.1354210-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -44,67 +45,55 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Greg Joyce <gjoyce@linux.ibm.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 5429c8de56f6b2bd8f537df3a1e04e67b9c04282 ]
+[ Upstream commit 963465a33141d0d52338e77f80fe543d2c9dc053 ]
 
-The SED Opal response parsing function response_parse() does not
-handle the case of an empty atom in the response. This causes
-the entry count to be too high and the response fails to be
-parsed. Recognizing, but ignoring, empty atoms allows response
-handling to succeed.
+On a PC Engines APU our admins are faced with:
 
-Signed-off-by: Greg Joyce <gjoyce@linux.ibm.com>
-Link: https://lore.kernel.org/r/20240216210417.3526064-2-gjoyce@linux.ibm.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+	$ dmesg | grep -c "gpio-keys-polled gpio-keys-polled: unable to claim gpio 0, err=-517"
+	261
+
+Such a message always appears when e.g. a new USB device is plugged in.
+
+Suppress this message which considerably clutters the kernel log for
+EPROBE_DEFER (i.e. -517).
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20240305101042.10953-2-u.kleine-koenig@pengutronix.de
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/opal_proto.h | 1 +
- block/sed-opal.c   | 6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/input/keyboard/gpio_keys_polled.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/block/opal_proto.h b/block/opal_proto.h
-index b486b3ec7dc41..a50191bddbc26 100644
---- a/block/opal_proto.h
-+++ b/block/opal_proto.h
-@@ -66,6 +66,7 @@ enum opal_response_token {
- #define SHORT_ATOM_BYTE  0xBF
- #define MEDIUM_ATOM_BYTE 0xDF
- #define LONG_ATOM_BYTE   0xE3
-+#define EMPTY_ATOM_BYTE  0xFF
+diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+index c3937d2fc7446..a0f9978c68f55 100644
+--- a/drivers/input/keyboard/gpio_keys_polled.c
++++ b/drivers/input/keyboard/gpio_keys_polled.c
+@@ -319,12 +319,10 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
  
- #define OPAL_INVAL_PARAM 12
- #define OPAL_MANUFACTURED_INACTIVE 0x08
-diff --git a/block/sed-opal.c b/block/sed-opal.c
-index 0ac5a4f3f2261..00e4d23ac49e7 100644
---- a/block/sed-opal.c
-+++ b/block/sed-opal.c
-@@ -895,16 +895,20 @@ static int response_parse(const u8 *buf, size_t length,
- 			token_length = response_parse_medium(iter, pos);
- 		else if (pos[0] <= LONG_ATOM_BYTE) /* long atom */
- 			token_length = response_parse_long(iter, pos);
-+		else if (pos[0] == EMPTY_ATOM_BYTE) /* empty atom */
-+			token_length = 1;
- 		else /* TOKEN */
- 			token_length = response_parse_token(iter, pos);
+ 			error = devm_gpio_request_one(dev, button->gpio,
+ 					flags, button->desc ? : DRV_NAME);
+-			if (error) {
+-				dev_err(dev,
+-					"unable to claim gpio %u, err=%d\n",
+-					button->gpio, error);
+-				return error;
+-			}
++			if (error)
++				return dev_err_probe(dev, error,
++						     "unable to claim gpio %u\n",
++						     button->gpio);
  
- 		if (token_length < 0)
- 			return token_length;
- 
-+		if (pos[0] != EMPTY_ATOM_BYTE)
-+			num_entries++;
-+
- 		pos += token_length;
- 		total -= token_length;
- 		iter++;
--		num_entries++;
- 	}
- 
- 	resp->num = num_entries;
+ 			bdata->gpiod = gpio_to_desc(button->gpio);
+ 			if (!bdata->gpiod) {
 -- 
 2.43.0
 
