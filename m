@@ -1,44 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C11279894;
-	Sun, 24 Mar 2024 23:37:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FC827989F;
+	Sun, 24 Mar 2024 23:37:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323476; cv=none; b=Cl0D9QShVgM/YZU6HSs2thjiRAzdWvv2pj7NFEGSEGucGrcccAtXZKjnDaDO5Zl/38sfN5ldk9L8sy9HYdCZ6EKyEe8mUulQRUsara+hO+VpYAs3qwStAWBKp4iVm1TaF3Z5WANdakKbIECQ2E9R5SFTVW1C4ea1ja7R4J2b4Tw=
+	t=1711323477; cv=none; b=g/5ZYvsDPt51EByhwbTUWZxXfP2hlOKl7Chq4+sjl3HHdqLP8W8cRSaEWegzSqaKI9ttr4CTVDjPdsosu8syldVrUmxAWDOgX18tpg5d/Su5xkUL3/4Ssp+IGOu1335rNRNxrtzDap1/xSxH75FPSG5H77uNuILrK4outnONUjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323476; c=relaxed/simple;
-	bh=Yd4pCZJ/C+Dzzm1hAAzMvgaigAz9I454/3rbKAWfS+I=;
+	s=arc-20240116; t=1711323477; c=relaxed/simple;
+	bh=AblLMCLKhGeVcNTlP4GxhDoq/j9RcxhSil5RYWBtqm4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ifJusGJMUVUqQq+KTOZCb1KfMI40QHKp2ioLYHIL7jjRlLziVpVMD34FUuACHjwvCTC2Nr6vUYYAjpQ1jDrYf+yGnkL5uR8JJkztXmJIRdzwVLehVYpsb5olnAOL8/6xOFlKtZGAcZjBpkcaQUxEwvQ5BSDZYcy/gRhZgMO6sT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTZ5KG+z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RDzjl1E929UvK+jgLn07w4Yx2uJnXza69TOZG8J+1IzpO0FjtYLKDEIl2k7Mj0Xmj5bPcDFcxTCqQj/ESK5THcTy113cNi04L8vGqEnKR+TU7Ul7GU2NaZK73zkIKou4ngwvf7IUurzfw/G2YBOo3FJOmGogdIKnhmvSfGGlZcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nA5qcW+Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTZ5KG+z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 164B2C43394;
-	Sun, 24 Mar 2024 23:37:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nA5qcW+Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6844CC43394;
+	Sun, 24 Mar 2024 23:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323475;
-	bh=Yd4pCZJ/C+Dzzm1hAAzMvgaigAz9I454/3rbKAWfS+I=;
+	s=k20201202; t=1711323477;
+	bh=AblLMCLKhGeVcNTlP4GxhDoq/j9RcxhSil5RYWBtqm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CTZ5KG+zavQ+qcTb8iCwqjyQxDcXYe9U0bj6NLm8v7C2/b2NhWDRznk328n0WE1YD
-	 pbswHgvEqPbXu9NxE65yUunq6VA8ZZ3FwNxK+8Hrch48Pav/mRBHoCZjbst1d/pQMM
-	 znowU8N4wYcatU2h66e3AAvOCYy4eSSXCTtjkO/v9DYqLjhaOzMEIXnJDncgGd/D6R
-	 cfK8DYNdlzE+velz7mqRwbq63cK/zGDeQfRxJmo2hGvtMaVyGI+ZbzQoKGk6YGG01e
-	 9/BOVa6ZxwqtfL/HrLtHPutp8WWP23kc4CdwvdhRE2+sW1WoVuUAs4N0n/IV0bU83A
-	 lGiPI83J9D0Cg==
+	b=nA5qcW+QJjQJxagNJp9qOf5RPxBDa9FLsURO1TKEk8SXhoYgu6UXcHtiVdZgf3BYH
+	 kc3ChXtGlrKhpSzccp9PEApgYC2j21fpiEVI/ukq9R6k9mSjWKBQzpp102YHm7DVUL
+	 PT5zYe4qOmwujsXIwmgT7O3pHswDUVgzZYGr0TUXlbo84YshJE47YSx8QzjZ8CwQ7K
+	 0ebSPHhqpt3ZMQj46OXfZ2mRQJu701L0SidNet/mSh2rXo0dr1xYtf3W1QuAau8KP/
+	 9aRv8qhuXAmHmmYJvMorVrHkaPRR6qY8aLMSefwpdTsp3aadI/xYG2Clbano/i9KZG
+	 HFPGXvQ1Xh7sA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Wyatt Wood <wyatt.wood@amd.com>,
-	Anthony Koo <Anthony.Koo@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 179/317] drm/amd/display: Fix potential NULL pointer dereferences in 'dcn10_set_output_transfer_func()'
-Date: Sun, 24 Mar 2024 19:32:39 -0400
-Message-ID: <20240324233458.1352854-180-sashal@kernel.org>
+Subject: [PATCH 5.15 181/317] PCI/AER: Fix rootport attribute paths in ABI docs
+Date: Sun, 24 Mar 2024 19:32:41 -0400
+Message-ID: <20240324233458.1352854-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -52,54 +48,50 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+From: Johan Hovold <johan+linaro@kernel.org>
 
-[ Upstream commit 9ccfe80d022df7c595f1925afb31de2232900656 ]
+[ Upstream commit 0e7d29a39a546161ea3a49e8e282a43212d7ff68 ]
 
-The 'stream' pointer is used in dcn10_set_output_transfer_func() before
-the check if 'stream' is NULL.
+The 'aer_stats' directory never made it into the sixth and final revision
+of the series adding the sysfs AER attributes.
 
-Fixes the below:
-drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:1892 dcn10_set_output_transfer_func() warn: variable dereferenced before check 'stream' (see line 1875)
-
-Fixes: ddef02de0d71 ("drm/amd/display: add null checks before logging")
-Cc: Wyatt Wood <wyatt.wood@amd.com>
-Cc: Anthony Koo <Anthony.Koo@amd.com>
-Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lore.kernel.org/r/20240202131635.11405-2-johan+linaro@kernel.org
+Link: https://lore.kernel.org/lkml/20180621184822.GB14136@bhelgaas-glaptop.roam.corp.google.com/
+Fixes: 12833017e581 ("PCI/AER: Add sysfs attributes for rootport cumulative stats")
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index aa5a1fa68da05..bc603c8af3b66 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -1745,6 +1745,9 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
- {
- 	struct dpp *dpp = pipe_ctx->plane_res.dpp;
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+index 860db53037a58..24087d5fd417a 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
++++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+@@ -100,19 +100,19 @@ collectors) that are AER capable. These indicate the number of error messages as
+ device, so these counters include them and are thus cumulative of all the error
+ messages on the PCI hierarchy originating at that root port.
  
-+	if (!stream)
-+		return false;
-+
- 	if (dpp == NULL)
- 		return false;
+-What:		/sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_cor
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_cor
+ Date:		July 2018
+ KernelVersion: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ Description:	Total number of ERR_COR messages reported to rootport.
  
-@@ -1767,8 +1770,8 @@ bool dcn10_set_output_transfer_func(struct dc *dc, struct pipe_ctx *pipe_ctx,
- 	} else
- 		dpp->funcs->dpp_program_regamma_pwl(dpp, NULL, OPP_REGAMMA_BYPASS);
+-What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_fatal
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_fatal
+ Date:		July 2018
+ KernelVersion: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+ Description:	Total number of ERR_FATAL messages reported to rootport.
  
--	if (stream != NULL && stream->ctx != NULL &&
--			stream->out_transfer_func != NULL) {
-+	if (stream->ctx &&
-+	    stream->out_transfer_func) {
- 		log_tf(stream->ctx,
- 				stream->out_transfer_func,
- 				dpp->regamma_params.hw_points_num);
+-What:	    /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_nonfatal
++What:		/sys/bus/pci/devices/<dev>/aer_rootport_total_err_nonfatal
+ Date:		July 2018
+ KernelVersion: 4.19.0
+ Contact:	linux-pci@vger.kernel.org, rajatja@google.com
 -- 
 2.43.0
 
