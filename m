@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5953B14EC6E;
-	Sun, 24 Mar 2024 23:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0582212F588;
+	Sun, 24 Mar 2024 23:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321324; cv=none; b=FyBcKeAsq8LREPANyB5WJSyJUKwzr1lYvpY3vd1AcEGVnfrc5ciYuALuiqo7Sa+7gjE6eelxcgkazI8S3RLqXjN/PZqaRuzGTpapP1x+XRwDC5IuZWyOYEU//fbfYKkuhrTdAAQygPE/ukTxmj3t+C7x8JkPKiDoYlJz3z2PI1Q=
+	t=1711321318; cv=none; b=Mns85/67dgUInKYgpJO6vTGQ6imqxvNn/IPr2lCc+ritF4OXOispxPiPTSin4hRl9IltNnvOfpOaP/QpyAvOu5NQj2PA206xJb4ujpy5OzptKtNfkNOG6jEEYH2wcEAv+wbnnbSkyatC50fTNkh48nbkxQwgy0ntfmL21ERYNhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321324; c=relaxed/simple;
-	bh=S9i6rVDTLrc92ZdyKfg4Ixk7H6eGpB3PH6E05e+MPh0=;
+	s=arc-20240116; t=1711321318; c=relaxed/simple;
+	bh=+VkSfxLjq9zTh2Um2OakZb7sD8Gj8u1Q9eEf/0H2ymo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m9V5ERgnMijAd9vB4prs9mllnDYQC+SjJstWjz0WO4wysPV1NJ5zq/V1aKOUlAUtmVD4A6Pv6JoMZZrdUvTKonvtB59lMNwz8cEpGB64wG/FrF09EauNBBHjuMKmsJOQqLS+tiuiSYSS2LI+xP7SlMoS4BrxgBmCdoyWygzZKHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXjzIX/i; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FLuxAw2dOKMR35+t2tNPg5G9WWn1dp0ZkAAna774P1VNZpXC7gY7SmhKPuTg1NBsY8qfuhVORhK7N1kW2ZcM0nJyszgY/oQO3olNaRuln/f2l1J1iwAuS/ZWUc1ZjWV4uk7VM4KPnkQBwZsIbwE8RED7fqfFodVs1lcggE2DBls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3E1/dhe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXjzIX/i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A3D4C43394;
-	Sun, 24 Mar 2024 23:02:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3E1/dhe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F461C433F1;
+	Sun, 24 Mar 2024 23:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321323;
-	bh=S9i6rVDTLrc92ZdyKfg4Ixk7H6eGpB3PH6E05e+MPh0=;
+	s=k20201202; t=1711321317;
+	bh=+VkSfxLjq9zTh2Um2OakZb7sD8Gj8u1Q9eEf/0H2ymo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SXjzIX/iH6QFscj9a1f9+LtfwqGB/fwcUqRBJIGZravSle0gLegkGHzFqfn9rZ7Qc
-	 T/k+r7vm+9wOgsJekqivTXUHhGB99SMTwCB4WJ2LB0+6oHbOz5BOGsQSImikE5UGTO
-	 54o/45L2TssKziCLToJ3tNHWlBpAdin7H0Nlutk9bzOqXh1zE9TxZUYww9BpvQy+GA
-	 RoTZVrKO578aW3CeaBQKLZUQ21Q3v8Cmul4U6UkarpQ5srTxsY95VnWaRow6ty2c5b
-	 h2kMqMX1G1Y31f6SehJWYmQFAmaz1/6Q1RrNe2jp8mDHtGmJALjbAVB3OCdRksdFQF
-	 pzQgJHEUsc2jw==
+	b=d3E1/dheSAM/ztS54kBsTbCXI65COyxirTPgjHxnClFDROfvhGtUY3LNcyBfEcez7
+	 /253nlMhv8uo/37Xtg22+70ElfYkw5FR/g8+ZEVeLI5MSMbkrty0o/P38CBOWNMXEA
+	 UAJQDK15RxGfxBI2oqvE8v6gF44w1MiSGQgBRbUPwdfwdqS599FqNkcMPMbSl3zW78
+	 Nmt4tQ0vpslaqldRYxUpZyYTavkgIQo5bSCtKUAtqttQRzHOvX1ig76pYepGyChjOG
+	 OgaRhVe9eD3j5LEOhDrHEFasXVQO4W5PdkIwrV52NBk2vTQBrcDSa1zjFV+Mfvnbho
+	 MB9NXdx59otbg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Felix Fietkau <nbd@nbd.name>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Rob Herring <robh@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 046/638] wifi: mac80211: only call drv_sta_rc_update for uploaded stations
-Date: Sun, 24 Mar 2024 18:51:23 -0400
-Message-ID: <20240324230116.1348576-47-sashal@kernel.org>
+Subject: [PATCH 6.6 040/638] arm64: dts: qcom: Fix interrupt-map cell sizes
+Date: Sun, 24 Mar 2024 18:51:17 -0400
+Message-ID: <20240324230116.1348576-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,37 +48,84 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 413dafc8170fcb925fb17af8842f06af305f8e0b ]
+[ Upstream commit 704dccec0d490f2ad06f3f16ebed254d81906c3a ]
 
-When a station has not been uploaded yet, receiving SMPS or channel width
-notification action frames can lead to rate_control_rate_update calling
-drv_sta_rc_update with uninitialized driver private data.
-Fix this by adding a missing check for sta->uploaded.
+The PCI node interrupt-map properties have the wrong size as #address-cells
+in the interrupt parent are not accounted for.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Link: https://msgid.link/20240221140535.16102-1-nbd@nbd.name
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+The dtc interrupt_map check catches this, but the warning is off because
+its dependency, interrupt_provider, is off by default.
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20240213-arm-dt-cleanups-v1-5-f2dee1292525@kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rate.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi |  8 ++++----
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi | 16 ++++++++--------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/net/mac80211/rate.c b/net/mac80211/rate.c
-index d5ea5f5bcf3a0..9d33fd2377c88 100644
---- a/net/mac80211/rate.c
-+++ b/net/mac80211/rate.c
-@@ -119,7 +119,8 @@ void rate_control_rate_update(struct ieee80211_local *local,
- 		rcu_read_unlock();
- 	}
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+index fc907afe5174c..4294a5405c012 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+@@ -767,10 +767,10 @@ pcie0: pci@20000000 {
  
--	drv_sta_rc_update(local, sta->sdata, &sta->sta, changed);
-+	if (sta->uploaded)
-+		drv_sta_rc_update(local, sta->sdata, &sta->sta, changed);
- }
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+-			interrupt-map = <0 0 0 1 &intc 0 75 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-					<0 0 0 2 &intc 0 78 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-					<0 0 0 3 &intc 0 79 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-					<0 0 0 4 &intc 0 83 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++			interrupt-map = <0 0 0 1 &intc 0 0 0 75 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
++					<0 0 0 2 &intc 0 0 0 78 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
++					<0 0 0 3 &intc 0 0 0 79 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
++					<0 0 0 4 &intc 0 0 0 83 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
  
- int ieee80211_rate_control_register(const struct rate_control_ops *ops)
+ 			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
+ 				 <&gcc GCC_PCIE0_AXI_M_CLK>,
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+index 92fd924bbdbe5..5effd8180cc41 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+@@ -817,13 +817,13 @@ pcie1: pci@10000000 {
+ 			interrupt-names = "msi";
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+-			interrupt-map = <0 0 0 1 &intc 0 142
++			interrupt-map = <0 0 0 1 &intc 0 0 142
+ 					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-					<0 0 0 2 &intc 0 143
++					<0 0 0 2 &intc 0 0 143
+ 					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-					<0 0 0 3 &intc 0 144
++					<0 0 0 3 &intc 0 0 144
+ 					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-					<0 0 0 4 &intc 0 145
++					<0 0 0 4 &intc 0 0 145
+ 					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+ 
+ 			clocks = <&gcc GCC_SYS_NOC_PCIE1_AXI_CLK>,
+@@ -879,13 +879,13 @@ pcie0: pci@20000000 {
+ 			interrupt-names = "msi";
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+-			interrupt-map = <0 0 0 1 &intc 0 75
++			interrupt-map = <0 0 0 1 &intc 0 0 75
+ 					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-					<0 0 0 2 &intc 0 78
++					<0 0 0 2 &intc 0 0 78
+ 					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-					<0 0 0 3 &intc 0 79
++					<0 0 0 3 &intc 0 0 79
+ 					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-					<0 0 0 4 &intc 0 83
++					<0 0 0 4 &intc 0 0 83
+ 					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+ 
+ 			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
 -- 
 2.43.0
 
