@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A355E146D49;
-	Sun, 24 Mar 2024 22:53:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5A212839D;
+	Sun, 24 Mar 2024 22:53:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320816; cv=none; b=U1o65CuTCO/71y5D+gNCcDGIp0wyCyk3q0pGOWTyYsv5jDfqLg0F0p104WkGKdfwn8/w2lxUYM3fUmDPyrLYOAq5ITqlWovCIQ9Y3NJDAgvMzEmYT+Nwot9A6FuMl5p8mrGKmHuyRvda47urZNNJrf6myRtYJ6qoL3FxoUo3DsU=
+	t=1711320814; cv=none; b=tgsZJVuChHNmyA4zduEWPWYbFe+ll4bATASfwr8hpgjFL5zOMR41ddYsR8msoiKNmu3LagHQkXgapnxs8L7NewGOfntddETJGcMu49Jmj2y6Nr+13A6B8pThVRD5EQCZDnWOsHnhSciBoIXkFLMiQb9UH2kxMgRePqoM3HPlhEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320816; c=relaxed/simple;
-	bh=v11nOk9WMIawSUi2NTo75pwxYN0u6dGKGLF3hwTXg3Y=;
+	s=arc-20240116; t=1711320814; c=relaxed/simple;
+	bh=lZLSFq1iJp+1yqZH6jxlI2/fDatifOXhw/hTEBOsvak=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hZzGmHiRvRLR86mAXymS/H3G0SOSF+ygR2hynArtUPjKveypJ00ARJCyk2P2o9XS1kk9vagLS/E6RePgxXabSzR6+aPGBx2qVRPo2re0u4caRM1wwtEQijZ3ogiMyP7PLZN71tPASVEAXsQQZpiQ/5bqKbBCIjm9yU6YWseNgFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NsK0BcCH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KYzcYwR2x4SDaQEw+hjccncFCrt8gPXubeG7zm+/NH7mFBypIa/tAtHSdCRRtcZi1ROm3dbyeHEHUVKSHHBMgBa3y0cXORib8xH83yQO+MJE/aGrBjDj04mvSmXh83vk4gZXjyeaw1pcgsaW+uylFieoYzLXigzsjTFS+tRdKlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RAwiXl2P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NsK0BcCH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD6AC43143;
-	Sun, 24 Mar 2024 22:53:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RAwiXl2P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F27E2C43390;
+	Sun, 24 Mar 2024 22:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320816;
-	bh=v11nOk9WMIawSUi2NTo75pwxYN0u6dGKGLF3hwTXg3Y=;
+	s=k20201202; t=1711320813;
+	bh=lZLSFq1iJp+1yqZH6jxlI2/fDatifOXhw/hTEBOsvak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NsK0BcCHblUep+n9Ds8LFMp0WTIfpJk8YdRNvfd2dgnBlxHYPHVxsqyb/6nCbudLX
-	 2cLW3yc+5s0rZuqnAvIXLneJdHbMXodykLq2BFhxP6FkcA9rCYU4c5gNwJWtMAlOr2
-	 3p6LQyq03tXi/1zwf6YEJpxG0pbWxiUG07ZShnTbYF+ia6OvT9vAI9R3HxX5z8sQUS
-	 +fnSQHKR54id2VgoTHkDjTwpg2dz0yq+GQaTGQNAeYojy9ax2uUI+jxLyhMxtwvf+p
-	 ioDaJy7LecKaCRIZp6QOfXKI2JTFoBjdqIdZsGK+Vjfc/pzXm4r1/wvtYQ7JiNRKhd
-	 6Im3EAz0MVeKQ==
+	b=RAwiXl2PmbgRTIlJtTxVSulzOFS9p8MYJOUHmiJbaU+nFBgC+/bLyF0S4KfU8n1e6
+	 kvOvoVUCV2xvBTglWdSWYGWMCSUekVHfxj6TLMSMVbiTqjnI06q7Ww30QGoY+aSaoC
+	 WEqyG5XjkG15IWCIPQSMdUSn1go6iNx+iAnGxqZQ/tzfcelQpTAXqbQxHorpb3V76n
+	 QsZcRX/lCHDmMV30BmXW+MotR6YEAwSfRHP80ec25zQgeobPQCH1XXWHFBY4b3fX8+
+	 i598s+m8UItWVFht11kjqvRfU/J+8/6PAfAQJLTiDBtMQSloE4eFXZ3plauHppVU4X
+	 BYUh3L0+9kcHA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
-	Willem de Bruijn <willemb@google.com>,
+	Jason Xing <kerneljasonxing@gmail.com>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 381/713] udp: fix incorrect parameter validation in the udp_lib_getsockopt() function
-Date: Sun, 24 Mar 2024 18:41:47 -0400
-Message-ID: <20240324224720.1345309-382-sashal@kernel.org>
+Subject: [PATCH 6.7 378/713] tcp: fix incorrect parameter validation in the do_tcp_getsockopt() function
+Date: Sun, 24 Mar 2024 18:41:44 -0400
+Message-ID: <20240324224720.1345309-379-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -51,7 +51,7 @@ Content-Transfer-Encoding: 8bit
 
 From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
 
-[ Upstream commit 4bb3ba7b74fceec6f558745b25a43c6521cf5506 ]
+[ Upstream commit 716edc9706deb3bb2ff56e2eeb83559cea8f22db ]
 
 The 'len' variable can't be negative when assigned the result of
 'min_t' because all 'min_t' parameters are cast to unsigned int,
@@ -61,20 +61,20 @@ To fix the logic, check 'len' as read from 'optlen',
 where the types of relevant variables are (signed) int.
 
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reviewed-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/udp.c | 4 ++--
+ net/ipv4/tcp.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index e474b201900f9..17231c0f88302 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -2792,11 +2792,11 @@ int udp_lib_getsockopt(struct sock *sk, int level, int optname,
- 	if (get_user(len, optlen))
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index b30ef770a6cca..0d03d48702a4e 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -4011,11 +4011,11 @@ int do_tcp_getsockopt(struct sock *sk, int level,
+ 	if (copy_from_sockptr(&len, optlen, sizeof(int)))
  		return -EFAULT;
  
 -	len = min_t(unsigned int, len, sizeof(int));
@@ -85,8 +85,8 @@ index e474b201900f9..17231c0f88302 100644
 +	len = min_t(unsigned int, len, sizeof(int));
 +
  	switch (optname) {
- 	case UDP_CORK:
- 		val = udp_test_bit(CORK, sk);
+ 	case TCP_MAXSEG:
+ 		val = tp->mss_cache;
 -- 
 2.43.0
 
