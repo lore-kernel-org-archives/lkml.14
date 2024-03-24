@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1000A284554;
-	Sun, 24 Mar 2024 23:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B5428455B;
+	Sun, 24 Mar 2024 23:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323795; cv=none; b=olEyakix9BRGriVinvTTCyMN0Y1aSOjFqG1PNDiaWCJUL3Ph35ATNQwcaXzgion/QCiQajKpchQJNrMjcfyPr6Rx035iz6HtBQ/GrPXppx5YrET/X/KPhOUaIPIEg4v3Nhx0xv2trK6CMd4vOPaG7NGGbAHGaaHYFGIHICE/bjM=
+	t=1711323794; cv=none; b=IhNqZusL2hZoyNHeLhTalPVw2s51hJzp500E2zRvVBKlH0vK/YgoqlRyfeLL9WHA3uKmdU3abuJkAHE72RiLiZ4/9nYnZwMdC8/bZRJDf+a9C8bxZDMe1mj6fRXpGOSgxI3es2/AtdaEDQQYVXSvq5Bo6bVxY6pQ3ZyN6D1wVuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323795; c=relaxed/simple;
-	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
+	s=arc-20240116; t=1711323794; c=relaxed/simple;
+	bh=myIllbPmWSYMqa2z/yZAREFiWRKzaKp/8Lpn3zjJYXM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PDXZpmnt3Deldw4ZsqQgM66rZRCJwsxxksBydFC19SIEk4F+XerBZDzK/c3zmSQ5p0XnBRGUDiqtX9VaqJRveiByWPkcAf4gNo2hm++J/rAEY+N3g41t6hbTTiaL2SsKVvXp/pNexZ6HynaCERIbUH3hlNBKHlTXJuSVhkl0KM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=crriO9WD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WCdjLXVXWnPJbSG1HhMCvv0Y4GbKOdjeaOUSGLYVHAYEgxdHDpX6hTZlrL2r99uycW8cMmxxhJJo9F0PJD5kkKsf1tTYdITMYXX0z1aaap6u8yFuJL4OLp66R5pq2qEGUBWvxLkRmN+VJeVSneRhoFqnsdsGmPzgVQesxkhkBQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aoFhEBLa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="crriO9WD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A36EC43390;
-	Sun, 24 Mar 2024 23:43:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aoFhEBLa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42892C43390;
+	Sun, 24 Mar 2024 23:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323794;
-	bh=zIzrS9FnuADVM5W+mS2X8Ece0Bn7nG81SCezXMUw+EM=;
+	s=k20201202; t=1711323792;
+	bh=myIllbPmWSYMqa2z/yZAREFiWRKzaKp/8Lpn3zjJYXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=crriO9WDUiyYIpP/wGhgS3jj442814iw/PR/loPMdZlnXIG/AoGJf2r2L/kcw83Pt
-	 Fi0caMANeSsWtWIEGBXqUHfEn5rDTYlHUumrjRUgkqIcp5ER4v8quOUzOr1AsI/ANP
-	 d+dhDJaGF0G41kT+RkZBfHd1sGfq6E4fo4JioHa529cNiBr86IMerVOjeieBw6IdZn
-	 7EGsE6ARG3uNpNUcYQDB5prZl9h2gIoG7Uwl89WO5ElpwKtZyOlYQ6R5bkGsJ/T5Cc
-	 LBwdAB0Bru4ZlrmDlJUFcsH444BZGQojKpkn7jHLQJW9+KNrFXfzT54ENOPfnW7Y1J
-	 9iAKs4SyawciA==
+	b=aoFhEBLaz4bgpW0DiI7G9IMHj4naRfo3zOJ6CFnOA24tlZeBpc0dBDNvk7cRXb1WY
+	 oqd6D+pcynfNPJF9aWzzNW3BjJtrmPjTHTqfIdKy8HcQmUI48axCBPPJ7oJIxzb7rS
+	 j5mKB6g5WLIWABp3jHejxeyxvlltJRW5KGc82rxoB2kFuPssKHTAEUMVVJbQje/N7M
+	 FTRDQhbsQcSkLlhQpEANoEwHr2PnD8fDIbqEIXalHH/f8mNJfrMoMkQzpT1TfsZub0
+	 4tSFGcrwbS/QKL0U6D3o0Qowh7Z+/P9EaB3xO9X1r/8c9FbdMwYhhX4XVZO+sAkyrS
+	 +q9EjrYZx7SYw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Edward Adam Davis <eadavis@qq.com>,
-	syzbot+ce750e124675d4599449@syzkaller.appspotmail.com,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 172/238] media: pvrusb2: fix uaf in pvr2_context_set_notify
-Date: Sun, 24 Mar 2024 19:39:20 -0400
-Message-ID: <20240324234027.1354210-173-sashal@kernel.org>
+Subject: [PATCH 5.10 170/238] ASoC: meson: axg-tdm-interface: add frame rate constraint
+Date: Sun, 24 Mar 2024 19:39:18 -0400
+Message-ID: <20240324234027.1354210-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,73 +48,84 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Edward Adam Davis <eadavis@qq.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 0a0b79ea55de8514e1750884e5fec77f9fdd01ee ]
+[ Upstream commit 59c6a3a43b221cc2a211181b1298e43b2c2df782 ]
 
-[Syzbot reported]
-BUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
-Read of size 4 at addr ffff888113aeb0d8 by task kworker/1:1/26
+According to Amlogic datasheets for the SoCs supported by this driver, the
+maximum bit clock rate is 100MHz.
 
-CPU: 1 PID: 26 Comm: kworker/1:1 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0xc4/0x620 mm/kasan/report.c:488
- kasan_report+0xda/0x110 mm/kasan/report.c:601
- pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
- pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]
- pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272
+The tdm interface allows the rates listed by the DAI driver, regardless of
+the number slots or their width. However, these will impact the bit clock
+rate.
 
-Freed by task 906:
-kasan_save_stack+0x33/0x50 mm/kasan/common.c:47
-kasan_save_track+0x14/0x30 mm/kasan/common.c:68
-kasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640
-poison_slab_object mm/kasan/common.c:241 [inline]
-__kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257
-kasan_slab_free include/linux/kasan.h:184 [inline]
-slab_free_hook mm/slub.c:2121 [inline]
-slab_free mm/slub.c:4299 [inline]
-kfree+0x105/0x340 mm/slub.c:4409
-pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]
-pvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+Hitting the 100MHz limit is very unlikely for most use cases but it is
+possible.
 
-[Analyze]
-Task A set disconnect_flag = !0, which resulted in Task B's condition being met
-and releasing mp, leading to this issue.
+For example with 32 slots / 32 bits wide, the maximum rate is no longer
+384kHz but ~96kHz.
 
-[Fix]
-Place the disconnect_flag assignment operation after all code in pvr2_context_disconnect()
-to avoid this issue.
+Add the constraint accordingly if the component is not already active.
+If it is active, the rate is already constrained by the first stream rate.
 
-Reported-and-tested-by: syzbot+ce750e124675d4599449@syzkaller.appspotmail.com
-Fixes: e5be15c63804 ("V4L/DVB (7711): pvrusb2: Fix race on module unload")
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: d60e4f1e4be5 ("ASoC: meson: add tdm interface driver")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://msgid.link/r/20240223175116.2005407-3-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-context.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/meson/axg-tdm-interface.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-index 58f2f3ff10ee2..73c95ba2328a4 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-@@ -267,9 +267,9 @@ static void pvr2_context_exit(struct pvr2_context *mp)
- void pvr2_context_disconnect(struct pvr2_context *mp)
- {
- 	pvr2_hdw_disconnect(mp->hdw);
--	mp->disconnect_flag = !0;
- 	if (!pvr2_context_shutok())
- 		pvr2_context_notify(mp);
-+	mp->disconnect_flag = !0;
+diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
+index ac43a7ab7bcf6..60d132ab1ab78 100644
+--- a/sound/soc/meson/axg-tdm-interface.c
++++ b/sound/soc/meson/axg-tdm-interface.c
+@@ -12,6 +12,9 @@
+ 
+ #include "axg-tdm.h"
+ 
++/* Maximum bit clock frequency according the datasheets */
++#define MAX_SCLK 100000000 /* Hz */
++
+ enum {
+ 	TDM_IFACE_PAD,
+ 	TDM_IFACE_LOOPBACK,
+@@ -155,19 +158,27 @@ static int axg_tdm_iface_startup(struct snd_pcm_substream *substream,
+ 		return -EINVAL;
+ 	}
+ 
+-	/* Apply component wide rate symmetry */
+ 	if (snd_soc_component_active(dai->component)) {
++		/* Apply component wide rate symmetry */
+ 		ret = snd_pcm_hw_constraint_single(substream->runtime,
+ 						   SNDRV_PCM_HW_PARAM_RATE,
+ 						   iface->rate);
+-		if (ret < 0) {
+-			dev_err(dai->dev,
+-				"can't set iface rate constraint\n");
+-			return ret;
+-		}
++
++	} else {
++		/* Limit rate according to the slot number and width */
++		unsigned int max_rate =
++			MAX_SCLK / (iface->slots * iface->slot_width);
++		ret = snd_pcm_hw_constraint_minmax(substream->runtime,
++						   SNDRV_PCM_HW_PARAM_RATE,
++						   0, max_rate);
+ 	}
+ 
+-	return 0;
++	if (ret < 0)
++		dev_err(dai->dev, "can't set iface rate constraint\n");
++	else
++		ret = 0;
++
++	return ret;
  }
  
- 
+ static int axg_tdm_iface_set_stream(struct snd_pcm_substream *substream,
 -- 
 2.43.0
 
