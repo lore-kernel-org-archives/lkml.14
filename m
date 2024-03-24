@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0902621D13B;
-	Sun, 24 Mar 2024 23:10:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E1D21C997;
+	Sun, 24 Mar 2024 23:10:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321850; cv=none; b=mg1bar8CKSNtKMLedWUD3cIm45ALnkc/Wd7G3QjtCZ+dZOLam3R9gAItciY1/xYuzlM4dm39Sl6Z5am59jW6mBSUL2Y/c0E7sPojdqHrjr6FexI8CjnjrbeNf0WZBByjaWh/TNo/zhyHzend3zWX2VhbirkGaRT5fHU2UdNSLcg=
+	t=1711321845; cv=none; b=CNWH/vCtbxDZz0/u1hZoVYGd1dWj4cxYY71P2+KU6sVTfnVy3gFJxdeNUd1eUEa5SmRmF/xsT2uI9oBLg2jzKMisFecj6RACcoq2eGFv7NkMsGokPZQQ2GU3swwpsz1JeT2YRN4NBok3GfclWAY6hTadVud+HgrCNyKWrWuB2aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321850; c=relaxed/simple;
-	bh=Rsjng4VZbTEdnLFlvy0VGTDz/Y89/cZBVxyY0nInXLc=;
+	s=arc-20240116; t=1711321845; c=relaxed/simple;
+	bh=UC4iSRp+k3B2QXRMpvz/N5o6qCS5pztBlHZU2CKkeCE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q44srPwXBvoEOcBHe/3DGtgrV9dgNc9RueFQym/c8bbr3ZikQZ4LOHR9H5otkl8RD7KQWGELhlK0eDBdv6j8bltRpCVU7k1M7D3m09WDAH1kXk1NMHUXGno4kNjPg9Auvi6LOqbUKFn+gT7gxbmsb3p0+5pV5lsYs/I+RbVEakQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NcuJDtRx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=p2G/Fx6VP8pF5zxeIOTE63TEYOcFi/A1e+kKCSGAMQVIZmtkQJ1tNoy5ybO16JDSBioNAVpG2FwJfzASvQ0aOe/Oy40x9N5ChJIjlspIWVASrcleyOZtgPiI3vPUZkIEgWiMMPDegTo9nptQwY6ycZeyHYpkBkzlfL2UAgCpIVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJNjvzxt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NcuJDtRx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D15CC43394;
-	Sun, 24 Mar 2024 23:10:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJNjvzxt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F679C43394;
+	Sun, 24 Mar 2024 23:10:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321848;
-	bh=Rsjng4VZbTEdnLFlvy0VGTDz/Y89/cZBVxyY0nInXLc=;
+	s=k20201202; t=1711321844;
+	bh=UC4iSRp+k3B2QXRMpvz/N5o6qCS5pztBlHZU2CKkeCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NcuJDtRxpykud146VgU0JwuD/tj4gewjTpMABLtjFpWIlyi6bS4PwnhYP8v5A2MRD
-	 V4X3wqdsS4OJaZiGGFh3CUimnqRsaKaow0sn6It5DiU/3ea8BZmZy0P93E1OJNFHxC
-	 gfHuWTH25OkbRFvY5OEw85t0H4/EEiSUlRclIyQ7nhZGGXSkd6Rp1Fs6pc1Jegl/KC
-	 uLZlhzNYgEj3Y58crCYYOvD46KDpBGBXhA4U24gYS0M00pTdSBORdapUKWnyLuYOUv
-	 JverENasIglsEsSX8fa530vRlHp3QPo7uTYczyamZKj96gBKvUuB6pv2AxtrO/0uRs
-	 21iY6YYsWQeDQ==
+	b=nJNjvzxt7Y9zH7z4QC3Vo2DXARFG72TjdtiM14EVdeq2rFhqP4q6v6P+HnG3knzAs
+	 sVmVYxBVZhW7yuF1wYXdKYLSTv8BM+dLa64/6c3FIgSavKNMrTUdesVHH3HB1MX4OQ
+	 XKIA/ls+ugwe8LGMn2ycRYqOw/+KFND0mLnjBajqPLr0EwDEzzAJfnexhfCnyuHq7x
+	 v0ANtqUy8B6jz6za70dAbx2/omxclj8s4/tr3qr8OQZevLzxY7zob6PenfXVhNxRa2
+	 2G60Tec4D/9J0ulyNxdld6wsPVt0/+qQYRfLNbO/UkADfg1mg8Fi6hQwh9lNHTEe1m
+	 /0bZIApE5vw7A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>,
+Cc: Colin Ian King <colin.i.king@gmail.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 577/638] io_uring: don't save/restore iowait state
-Date: Sun, 24 Mar 2024 19:00:14 -0400
-Message-ID: <20240324230116.1348576-578-sashal@kernel.org>
+Subject: [PATCH 6.6 572/638] usb: gadget: net2272: Use irqflags in the call to net2272_probe_fin
+Date: Sun, 24 Mar 2024 19:00:09 -0400
+Message-ID: <20240324230116.1348576-573-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -43,55 +45,46 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Colin Ian King <colin.i.king@gmail.com>
 
-[ Upstream commit 6f0974eccbf78baead1735722c4f1ee3eb9422cd ]
+[ Upstream commit 600556809f04eb3bbccd05218215dcd7b285a9a9 ]
 
-This kind of state is per-syscall, and since we're doing the waiting off
-entering the io_uring_enter(2) syscall, there's no way that iowait can
-already be set for this case. Simplify it by setting it if we need to,
-and always clearing it to 0 when done.
+Currently the variable irqflags is being set but is not being used,
+it appears it should be used in the call to net2272_probe_fin
+rather than IRQF_TRIGGER_LOW being used. Kudos to Uwe Kleine-König
+for suggesting the fix.
 
-Fixes: 7b72d661f1f2 ("io_uring: gate iowait schedule on having pending requests")
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cleans up clang scan build warning:
+drivers/usb/gadget/udc/net2272.c:2610:15: warning: variable 'irqflags'
+set but not used [-Wunused-but-set-variable]
+
+Fixes: ceb80363b2ec ("USB: net2272: driver for PLX NET2272 USB device controller")
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20240307181734.2034407-1-colin.i.king@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- io_uring/io_uring.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/udc/net2272.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 049a163d0fdd0..25e2893320342 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -2501,7 +2501,7 @@ static bool current_pending_io(void)
- static inline int io_cqring_wait_schedule(struct io_ring_ctx *ctx,
- 					  struct io_wait_queue *iowq)
- {
--	int io_wait, ret;
-+	int ret;
+diff --git a/drivers/usb/gadget/udc/net2272.c b/drivers/usb/gadget/udc/net2272.c
+index 12e76bb62c209..19bbc38f3d35d 100644
+--- a/drivers/usb/gadget/udc/net2272.c
++++ b/drivers/usb/gadget/udc/net2272.c
+@@ -2650,7 +2650,7 @@ net2272_plat_probe(struct platform_device *pdev)
+ 		goto err_req;
+ 	}
  
- 	if (unlikely(READ_ONCE(ctx->check_cq)))
- 		return 1;
-@@ -2519,7 +2519,6 @@ static inline int io_cqring_wait_schedule(struct io_ring_ctx *ctx,
- 	 * can take into account that the task is waiting for IO - turns out
- 	 * to be important for low QD IO.
- 	 */
--	io_wait = current->in_iowait;
- 	if (current_pending_io())
- 		current->in_iowait = 1;
- 	ret = 0;
-@@ -2527,7 +2526,7 @@ static inline int io_cqring_wait_schedule(struct io_ring_ctx *ctx,
- 		schedule();
- 	else if (!schedule_hrtimeout(&iowq->timeout, HRTIMER_MODE_ABS))
- 		ret = -ETIME;
--	current->in_iowait = io_wait;
-+	current->in_iowait = 0;
- 	return ret;
- }
+-	ret = net2272_probe_fin(dev, IRQF_TRIGGER_LOW);
++	ret = net2272_probe_fin(dev, irqflags);
+ 	if (ret)
+ 		goto err_io;
  
 -- 
 2.43.0
