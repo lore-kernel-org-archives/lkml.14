@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2BF22BBE4;
-	Sun, 24 Mar 2024 23:16:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BA422BBFD;
+	Sun, 24 Mar 2024 23:16:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322170; cv=none; b=LjtKlc020cAEdGyGfQgbZcIz805l8Q8srP1qN1ZBKyaNEoS/7gOC9PxXj+J37Gi4hiD/9wdqyAk4mljeyW+OFk/NRYBIU0S787Nw08Y3GbSGVZJaAqEgbAaP1T0BE4S7wVlmXycd/gnrlMw04ND+sXb4iawNNkMpORpvEKvmdQU=
+	t=1711322171; cv=none; b=d7cdYFcH7sx47Z+Blrd+t1G1GyrJMQivg0ZoCf/HLbvOee/c6ZpkY4R5fk8UalUE6UU2QWYe5/gq66tCsS/PI1cKKuQI4LK58i+bAZHuLRd8oXoi7dnbfpdrbR7X/FsluSh9TfSfcWN3gX2rLXG6/VKgY8E+GKv9MDQnTRf4byE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322170; c=relaxed/simple;
-	bh=4aNxRsQip9VxH0hLR7pozAeJ63vcgxQPhA9hbcz95Lc=;
+	s=arc-20240116; t=1711322171; c=relaxed/simple;
+	bh=913GoMK36PT+jGJN6eA4lIn3nEjpZjuN7+RaXAOia38=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=klMSZ5qi5X3eorahvzQY1dedN5WksS3WRvIlgxURd457tkzU8Np9rjYctqLF+H17Ic1w2Do5hMuN+ekapDukoRJwxC7kbi+U6zuHxwKT6o/6AMH45g17oNFMmaoxMSyB8khN0vPYEUUslO8kFCN9rx13uAzOw5qVK1dOZeqNDI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ezkxc+Tf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Um5Qowg2w4SXuHKpcZbb45ug8dPSWobnv+R9Ng3GdRI8k7DJ/atR8c2GUGAUgYkXEFcigu738BxpLKN48U7NZIlZ1O5Y2zYWBqKph/92zt6EVRMbMv+TznTCPU2UssqDd7Vmw2Q0/nghBVpHxjfXn3I6lleJP76Fjkz3bXaAiFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqwh4oRO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ezkxc+Tf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22511C433F1;
-	Sun, 24 Mar 2024 23:16:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqwh4oRO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13BA5C43394;
+	Sun, 24 Mar 2024 23:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322168;
-	bh=4aNxRsQip9VxH0hLR7pozAeJ63vcgxQPhA9hbcz95Lc=;
+	s=k20201202; t=1711322170;
+	bh=913GoMK36PT+jGJN6eA4lIn3nEjpZjuN7+RaXAOia38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ezkxc+Tfh9y8bnXL+8wrKmvj1okWca6IcZR0fFfydRz5dwsfFDVGQbQBZtqYHWroP
-	 TF0lbUmSGNc6AIjoe/QyFlXoT6LnvBhVYn0YnfU+kyLKueHLXflGUXMqGoxIbitYnc
-	 FZh5aQhqZHeIHxIhtPY9ix6la6GHDNiZV6rtJS0NI2nNsedtQqfwpuslRW8R1527yD
-	 og8JT644PcFez8PQslcC8t5LYS/yHiZWkoc86P92BNdm9wUXg1WTCRZDxEeGeuNAHl
-	 tEgC5AE/GNx2X1ojGBPNF/4hr+ERdHuzeQcnWC/FQYDccjws0qVuLjznc9Jbv6KkS4
-	 oKWlAwrsPNRwg==
+	b=rqwh4oROV+OI1CfRseyJ0NVlEngV6Rp8umyMC6WlEA7HwmGimP3UEBFXiF8e7EzgJ
+	 lDZGV+10HtNAsZDirSUu9ErVD4x/MFonRT+SAYV0JNGCBLLSTo5Rcqz+3clx5ruti+
+	 aVG6NUxTJd1vJMpQNdFrpuxUFtJd3mP5cKLvgLPDydGGdNmlDjuE4jpsEGZRyr5mzR
+	 e+ztgSSCqq22Y82Jx+dQm3IIHJ1qZNZwTf+3p5/wcTcVfNn2mFP5pFZhaDZl4rML7L
+	 oiRbsAO5f3DkXfjkAbMZdnop8cPZVWLRh31WiCDPkrwFmMffh3AgtCJebkV+upV15K
+	 6vKUY1YyrBrtA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-	Quentin Schulz <foss+kernel@0leil.net>,
-	Heiko Stuebner <heiko@sntech.de>,
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>,
+	Douglas Anderson <dianders@chromium.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 247/451] drm/rockchip: lvds: do not overwrite error code
-Date: Sun, 24 Mar 2024 19:08:43 -0400
-Message-ID: <20240324231207.1351418-248-sashal@kernel.org>
+Subject: [PATCH 6.1 249/451] drm/panel-edp: use put_sync in unprepare
+Date: Sun, 24 Mar 2024 19:08:45 -0400
+Message-ID: <20240324231207.1351418-250-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,36 +48,42 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit 79b09453c4e369ca81cfb670d0136d089e3b92f0 ]
+[ Upstream commit 49ddab089611ae5ddd0201ddbbf633da75bfcc25 ]
 
-ret variable stores the return value of drm_of_find_panel_or_bridge
-which can return error codes different from EPROBE_DEFER. Therefore,
-let's just return that error code instead of forcing it to EPROBE_DEFER.
+Some edp panel requires T10 (Delay from end of valid video data transmitted
+by the Source device to power-off) less than 500ms. Using autosuspend with
+delay set as 1000 violates this requirement.
 
-Fixes: 34cc0aa25456 ("drm/rockchip: Add support for Rockchip Soc LVDS")
-Cc: Quentin Schulz <foss+kernel@0leil.net>
-Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231120-rk-lvds-defer-msg-v2-1-9c59a5779cf9@theobroma-systems.com
+Use put_sync_suspend in unprepare to meet the spec. For other cases (such
+as getting EDID), it still uses autosuspend.
+
+Suggested-by: Douglas Anderson <dianders@chromium.org>
+Fixes: 3235b0f20a0a ("drm/panel: panel-simple: Use runtime pm to avoid excessive unprepare / prepare")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231220221418.2610185-1-hsinyi@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/rockchip_lvds.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/panel/panel-edp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-index 68f6ebb33460b..1fde888cdd827 100644
---- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-@@ -578,7 +578,6 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		goto err_put_port;
- 	} else if (ret) {
- 		DRM_DEV_ERROR(dev, "failed to find panel and bridge node\n");
--		ret = -EPROBE_DEFER;
- 		goto err_put_port;
- 	}
- 	if (lvds->panel)
+diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+index 42584d8a9aeb6..bfcddd4aa9322 100644
+--- a/drivers/gpu/drm/panel/panel-edp.c
++++ b/drivers/gpu/drm/panel/panel-edp.c
+@@ -413,8 +413,7 @@ static int panel_edp_unprepare(struct drm_panel *panel)
+ 	if (!p->prepared)
+ 		return 0;
+ 
+-	pm_runtime_mark_last_busy(panel->dev);
+-	ret = pm_runtime_put_autosuspend(panel->dev);
++	ret = pm_runtime_put_sync_suspend(panel->dev);
+ 	if (ret < 0)
+ 		return ret;
+ 	p->prepared = false;
 -- 
 2.43.0
 
