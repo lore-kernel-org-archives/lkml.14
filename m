@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350F5184F0A;
-	Sun, 24 Mar 2024 23:52:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BE3297D4E;
+	Sun, 24 Mar 2024 23:52:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324340; cv=none; b=pZH4+WDsoktXrHoPoN/jtlJl/DYOdzyWPZ+3Rd9aNnD2TSk5ptbEqDqkCx6swUUBDFdWhbagKToJvjg3bjyFhYHr9O6/XkBvmGDkJt9GsY3VMA2J74972g7v0ZOOMHgkrpFHwQXUhYn26QQnvjqTw3TfLaYVwmS8V4jtHtUIhfE=
+	t=1711324344; cv=none; b=X8F1WYTFOOnoprz4mEbbWcamuK7e4DNEf2OWV+glthgnCOUsQ4DlCz67LUXo5MUriQJyR6XbeipO2enyv49uJD/eKlzpwEI8oayjW++p0bXaJZion6WOBiEa7s9sOzefz5NAJbbHjJAWgE7bmYFwXxvS7y1TblGXXVlZtUikPSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324340; c=relaxed/simple;
-	bh=5bMpDei5pQBV7TFItVqG+PgNFyz4lHjg/J19IK10tro=;
+	s=arc-20240116; t=1711324344; c=relaxed/simple;
+	bh=ZAT3ncz812PIt8v3RzdCC/9OCXWgUcc+8Gwq9u9p1Bo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L9o6FW4yUOlJbz5/R8bDL5aazHjuKIABpjuz6HiwKVcBdFoUsdVyVfdKqid+qwY1Yu0pHRFmVFT2zN3uj1vQzFJR3jvJZd4lRLKEkPiP4jlIuI/SliFAwjtRz0W5uvpvplLdAu2PHx4jRnw+msnuvhma1koiQ37x26QzOeVO4iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPi/vjOW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=K26bO6bceTTqK+G+PppssoPQ31KyQ720hpGUDvTnFsAsyRFqicBl4K9g0t9/lxXhrwqtjb4L86H6UxaXkFOT75ZxM7bj67L+lojIGjiA25Rq9HB4BgMecBSx/2+tot64RVjXHgEuYWgf6BSoaec7hwqgQ7EsDRh6YGgvgnmigZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oarQq/B0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPi/vjOW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76538C433C7;
-	Sun, 24 Mar 2024 23:52:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oarQq/B0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4267C433F1;
+	Sun, 24 Mar 2024 23:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324340;
-	bh=5bMpDei5pQBV7TFItVqG+PgNFyz4lHjg/J19IK10tro=;
+	s=k20201202; t=1711324344;
+	bh=ZAT3ncz812PIt8v3RzdCC/9OCXWgUcc+8Gwq9u9p1Bo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sPi/vjOWoDdkz8HlmaIZrC3Zg9MG0POta1VI8MFT4IMwgAcrGrS1umb3LDw6bNw2O
-	 JzHV4mDqWpeFbP+MPtgUtbjyEAEbLE01dQ3EtrnuwkW3+i/87H4KHE+nlrtyO032LX
-	 +RVEu18AJ7pfngedLQzlwEOhTOOqzSZPSv0o5nuGIS/K09uxQhpoj41TQvbrjRTR6e
-	 l6QuYm8WgpZQkcKa0nNC2Rzh+M6Fo6pcRwsEVzXE/ecq7tE/ZxEX4UY9n6/liH5PDX
-	 s5dMV4yL+ReF1+UT+fBJKmvqb6n+3VUl6F/mJggw2J2dfmLAJvKxcbRy1/CWfJfhR3
-	 f/xXgdG4U8dbg==
+	b=oarQq/B0brE161VG/TPRIiPhXgwb6fPiRzeWbp2c6HLA6D+7Ypa4+7A93wK0rA7OW
+	 mKGq48um7U8sILyfDEM6/laqTlbnwF9HTfjHBiDd5JPNaoZjdcWFk58CzoJt+b8fye
+	 Ol8+o75tYKrcuBbFKqimiX2Hz41EaJbRxG5m9xrxQvzKU85EJ9J14SxbIw3HG2OR9T
+	 1A2/f2CxrmLOr/PyVvYMKYYVNw708Ki4ZDN7KsvgTOv/YK7Z9puLHqNpzC1J7RA+qG
+	 Q7EuVTH6f49xn2+T+INgjWVq77ATZxMjItRoqmG6sKYq90I8lieHTQnHyBdd87hbQG
+	 z233azaJN1MiA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Jammy Zhou <Jammy.Zhou@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 110/148] crypto: arm - Rename functions to avoid conflict with crypto/sha256.h
-Date: Sun, 24 Mar 2024 19:49:34 -0400
-Message-ID: <20240324235012.1356413-111-sashal@kernel.org>
+Subject: [PATCH 4.19 114/148] drm/amdgpu: Fix missing break in ATOM_ARG_IMM Case of atom_get_src_int()
+Date: Sun, 24 Mar 2024 19:49:38 -0400
+Message-ID: <20240324235012.1356413-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -44,130 +46,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[ Upstream commit e4dcc1be15268b6d34de3968f906577591521bd5 ]
+[ Upstream commit 7cf1ad2fe10634238b38442a851d89514cb14ea2 ]
 
-Rename static / file-local functions so that they do not conflict with
-the functions declared in crypto/sha256.h.
+Missing break statement in the ATOM_ARG_IMM case of a switch statement,
+adds the missing break statement, ensuring that the program's control
+flow is as intended.
 
-This is a preparation patch for folding crypto/sha256.h into crypto/sha.h.
+Fixes the below:
+drivers/gpu/drm/amd/amdgpu/atom.c:323 atom_get_src_int() warn: ignoring unreachable code.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Stable-dep-of: 53cc9baeb9bc ("crypto: arm/sha - fix function cast warnings")
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Cc: Jammy Zhou <Jammy.Zhou@amd.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/sha256_glue.c      |  8 ++++----
- arch/arm/crypto/sha256_neon_glue.c | 24 ++++++++++++------------
- 2 files changed, 16 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/atom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/crypto/sha256_glue.c b/arch/arm/crypto/sha256_glue.c
-index 0ae900e778f3b..040c744ef9f50 100644
---- a/arch/arm/crypto/sha256_glue.c
-+++ b/arch/arm/crypto/sha256_glue.c
-@@ -44,7 +44,7 @@ int crypto_sha256_arm_update(struct shash_desc *desc, const u8 *data,
- }
- EXPORT_SYMBOL(crypto_sha256_arm_update);
- 
--static int sha256_final(struct shash_desc *desc, u8 *out)
-+static int crypto_sha256_arm_final(struct shash_desc *desc, u8 *out)
- {
- 	sha256_base_do_finalize(desc,
- 				(sha256_block_fn *)sha256_block_data_order);
-@@ -56,7 +56,7 @@ int crypto_sha256_arm_finup(struct shash_desc *desc, const u8 *data,
- {
- 	sha256_base_do_update(desc, data, len,
- 			      (sha256_block_fn *)sha256_block_data_order);
--	return sha256_final(desc, out);
-+	return crypto_sha256_arm_final(desc, out);
- }
- EXPORT_SYMBOL(crypto_sha256_arm_finup);
- 
-@@ -64,7 +64,7 @@ static struct shash_alg algs[] = { {
- 	.digestsize	=	SHA256_DIGEST_SIZE,
- 	.init		=	sha256_base_init,
- 	.update		=	crypto_sha256_arm_update,
--	.final		=	sha256_final,
-+	.final		=	crypto_sha256_arm_final,
- 	.finup		=	crypto_sha256_arm_finup,
- 	.descsize	=	sizeof(struct sha256_state),
- 	.base		=	{
-@@ -78,7 +78,7 @@ static struct shash_alg algs[] = { {
- 	.digestsize	=	SHA224_DIGEST_SIZE,
- 	.init		=	sha224_base_init,
- 	.update		=	crypto_sha256_arm_update,
--	.final		=	sha256_final,
-+	.final		=	crypto_sha256_arm_final,
- 	.finup		=	crypto_sha256_arm_finup,
- 	.descsize	=	sizeof(struct sha256_state),
- 	.base		=	{
-diff --git a/arch/arm/crypto/sha256_neon_glue.c b/arch/arm/crypto/sha256_neon_glue.c
-index 1d82c6cd31a41..8d296529c8ba7 100644
---- a/arch/arm/crypto/sha256_neon_glue.c
-+++ b/arch/arm/crypto/sha256_neon_glue.c
-@@ -29,8 +29,8 @@
- asmlinkage void sha256_block_data_order_neon(u32 *digest, const void *data,
- 					     unsigned int num_blks);
- 
--static int sha256_update(struct shash_desc *desc, const u8 *data,
--			 unsigned int len)
-+static int crypto_sha256_neon_update(struct shash_desc *desc, const u8 *data,
-+				     unsigned int len)
- {
- 	struct sha256_state *sctx = shash_desc_ctx(desc);
- 
-@@ -46,8 +46,8 @@ static int sha256_update(struct shash_desc *desc, const u8 *data,
- 	return 0;
- }
- 
--static int sha256_finup(struct shash_desc *desc, const u8 *data,
--			unsigned int len, u8 *out)
-+static int crypto_sha256_neon_finup(struct shash_desc *desc, const u8 *data,
-+				    unsigned int len, u8 *out)
- {
- 	if (!may_use_simd())
- 		return crypto_sha256_arm_finup(desc, data, len, out);
-@@ -63,17 +63,17 @@ static int sha256_finup(struct shash_desc *desc, const u8 *data,
- 	return sha256_base_finish(desc, out);
- }
- 
--static int sha256_final(struct shash_desc *desc, u8 *out)
-+static int crypto_sha256_neon_final(struct shash_desc *desc, u8 *out)
- {
--	return sha256_finup(desc, NULL, 0, out);
-+	return crypto_sha256_neon_finup(desc, NULL, 0, out);
- }
- 
- struct shash_alg sha256_neon_algs[] = { {
- 	.digestsize	=	SHA256_DIGEST_SIZE,
- 	.init		=	sha256_base_init,
--	.update		=	sha256_update,
--	.final		=	sha256_final,
--	.finup		=	sha256_finup,
-+	.update		=	crypto_sha256_neon_update,
-+	.final		=	crypto_sha256_neon_final,
-+	.finup		=	crypto_sha256_neon_finup,
- 	.descsize	=	sizeof(struct sha256_state),
- 	.base		=	{
- 		.cra_name	=	"sha256",
-@@ -85,9 +85,9 @@ struct shash_alg sha256_neon_algs[] = { {
- }, {
- 	.digestsize	=	SHA224_DIGEST_SIZE,
- 	.init		=	sha224_base_init,
--	.update		=	sha256_update,
--	.final		=	sha256_final,
--	.finup		=	sha256_finup,
-+	.update		=	crypto_sha256_neon_update,
-+	.final		=	crypto_sha256_neon_final,
-+	.finup		=	crypto_sha256_neon_finup,
- 	.descsize	=	sizeof(struct sha256_state),
- 	.base		=	{
- 		.cra_name	=	"sha224",
+diff --git a/drivers/gpu/drm/amd/amdgpu/atom.c b/drivers/gpu/drm/amd/amdgpu/atom.c
+index 0222bb7ea49b4..805ac556635d1 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atom.c
++++ b/drivers/gpu/drm/amd/amdgpu/atom.c
+@@ -306,7 +306,7 @@ static uint32_t atom_get_src_int(atom_exec_context *ctx, uint8_t attr,
+ 				DEBUG("IMM 0x%02X\n", val);
+ 			return val;
+ 		}
+-		return 0;
++		break;
+ 	case ATOM_ARG_PLL:
+ 		idx = U8(*ptr);
+ 		(*ptr)++;
 -- 
 2.43.0
 
