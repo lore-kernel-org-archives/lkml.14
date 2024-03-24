@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9D4180A65;
-	Sun, 24 Mar 2024 23:47:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9F51448C0;
+	Sun, 24 Mar 2024 23:47:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324051; cv=none; b=b2GY8MY96WIyffaC7ZYfOkf6gP9h4hd+j1HvM0O3eaQdzIApWPC8NEfq+1v0K8RP7s5F9WyQhGI0mA4BlgP+9r5/kWxCqRxm3YcTZJedLSRUtNCVerwXFWrHxW5wQ3rzWcM7s69uigXpwM3TEECvNdtQK6V5y89NwuMYldLIKfk=
+	t=1711324047; cv=none; b=i/kqAogsrfZ2vbwafDVjyjzutGgfPjG2IpBBtlTv1qBaRmOxAtvEUydrc5qiiD53WPUISvHdvDDxCkG95Rd8IGKBT1v43QL5s/x5eQ7M3jdakg+60dOABKcgoOHEW6NwcIMBI/Ed+WfyGO3ssLzfbAhSWPax7zkCWvvC+wZ3bLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324051; c=relaxed/simple;
-	bh=KRSv81TwsExJ0F2eGrzklWLug+2TnfZgZsSX2hbjJL4=;
+	s=arc-20240116; t=1711324047; c=relaxed/simple;
+	bh=IU3AvUhoUKQzZLdgLjENwdVUYdXucV+7GjJRGg9khUU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mlioxP781NOd2BAwpA3TqPOPoURytLRaVI6frWQzm9eSG8Q7C2ulzv0+ZYPr6oXGvUe5+tAw94SxBJ7Py9Weg0vkV/lDZ1uJpbn1malJVP/dWO6/EAt+TZCS23RJXSy82Lgkw+ZCBqkPa3Nd0Do1mLRhALCybqkCjHILZE9G0GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jePNKDMC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=P/fjMazHY8nAkVuXD4zRt5/kt2wrLVaIiD2KYue9BF9MQ40Dxo9gYzCZJeQ6T/yqzRtyrSu7ia7sDN3y0fPoPXFMwYxDSu1iiDbmLR2SN15XSQPDHKzQ7vbkVM1UpwKiIsjQT5IskBzgjZn2LP6vy/+SQNhgUylOUCCCuZcC/WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZRThhl+y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jePNKDMC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2930AC43399;
-	Sun, 24 Mar 2024 23:47:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZRThhl+y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10B6FC433F1;
+	Sun, 24 Mar 2024 23:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324050;
-	bh=KRSv81TwsExJ0F2eGrzklWLug+2TnfZgZsSX2hbjJL4=;
+	s=k20201202; t=1711324047;
+	bh=IU3AvUhoUKQzZLdgLjENwdVUYdXucV+7GjJRGg9khUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jePNKDMCD76bPHDbiVVgk7bnuaZvxsne5H6IR4Gsztmb69BKjjIKpYcSb7Yp/kGIA
-	 Fs1Uxz4RWopD5L5U5QTCDvNqekN5SLQt5OOFRiCxgb7NKFwGx5xOc0SRAtci1leJXe
-	 bcC6pBret2fb2acvZijWT75jUo/4Hc5cxw3LlwVZDKZZj+woBDTDgt5PixjxkjMfVr
-	 ohtQN6lxT0/yhtaKQIq90h4zHpMqR2AIDOt3DpHD/XPI5REmJTlI2XL/+CNIaaOLCW
-	 l1Px4hiPRZMma5ug9OD4zMOPsYFVUzj7l+vZ/OioGIO5B4U5kclx4nzf/rAdZfXF1I
-	 +CX/xy0SCkKpg==
+	b=ZRThhl+y2c7McaFvsfydy3obMV4plB1DmDzL8X270aHKcxCHc83xwQnIg9K2U6fna
+	 MUbaF70+L/eLOJu3Fe1AQIKklys+/8PBBlzOVC/w2Q8y0VOThSi4TTIyI5M8GigLvA
+	 Hndh12omXL2dIlEzgHbyb2Hm6DA8WFNSO4ZeCHq+KV0Lx+sX5U+6OuOzUObwlNIvl8
+	 YEss07I+vN6LvuB14xcoTCcbYMwfbbN5EcE/3XAyRReCyY4PG4FZahB5lO5hgt1fjo
+	 NPf0k14KRMwD9XsbAOIhYip1huBHyVc75iklpN78C4n8ag4qz3mPJm5eNxfLKdd2vX
+	 l25RRwmzB85Zg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>,
-	Vinod Koul <vkoul@kernel.org>,
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <kafai@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/183] arm64: dts: qcom: msm8996: Move regulator consumers to db820c
-Date: Sun, 24 Mar 2024 19:44:24 -0400
-Message-ID: <20240324234638.1355609-52-sashal@kernel.org>
+Subject: [PATCH 5.4 047/183] bpf: Factor out bpf_spin_lock into helpers.
+Date: Sun, 24 Mar 2024 19:44:20 -0400
+Message-ID: <20240324234638.1355609-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -44,260 +47,86 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Alexei Starovoitov <ast@kernel.org>
 
-[ Upstream commit 80884431430995254257848d1a05266a2b791c58 ]
+[ Upstream commit c1b3fed319d32a721d4b9c17afaeb430444ff773 ]
 
-Supplies for the various components in the SoC depends on board layout,
-so move the supply definitions to db820c.dtsi instead of carrying them
-in the platform dtsi.
+Move ____bpf_spin_lock/unlock into helpers to make it more clear
+that quadruple underscore bpf_spin_lock/unlock are irqsave/restore variants.
 
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Stable-dep-of: 68c4c20848d7 ("arm64: dts: qcom: msm8996: Define UFS UniPro clock limits")
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Link: https://lore.kernel.org/bpf/20210715005417.78572-3-alexei.starovoitov@gmail.com
+Stable-dep-of: 178c54666f9c ("bpf: Mark bpf_spin_{lock,unlock}() helpers with notrace correctly")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 44 ++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8996.dtsi        | 44 --------------------
- 2 files changed, 44 insertions(+), 44 deletions(-)
+ kernel/bpf/helpers.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 44ec3eb1c8e85..21e029afb27bb 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -142,6 +142,10 @@ &blsp2_spi5 {
- 	status = "okay";
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index a77d2814cac5d..4ba3dc621a345 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -262,13 +262,18 @@ static inline void __bpf_spin_unlock(struct bpf_spin_lock *lock)
+ 
+ static DEFINE_PER_CPU(unsigned long, irqsave_flags);
+ 
+-notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
++static inline void __bpf_spin_lock_irqsave(struct bpf_spin_lock *lock)
+ {
+ 	unsigned long flags;
+ 
+ 	local_irq_save(flags);
+ 	__bpf_spin_lock(lock);
+ 	__this_cpu_write(irqsave_flags, flags);
++}
++
++notrace BPF_CALL_1(bpf_spin_lock, struct bpf_spin_lock *, lock)
++{
++	__bpf_spin_lock_irqsave(lock);
+ 	return 0;
+ }
+ 
+@@ -279,13 +284,18 @@ const struct bpf_func_proto bpf_spin_lock_proto = {
+ 	.arg1_type	= ARG_PTR_TO_SPIN_LOCK,
  };
  
-+&camss {
-+	vdda-supply = <&pm8994_l2>;
-+};
+-notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
++static inline void __bpf_spin_unlock_irqrestore(struct bpf_spin_lock *lock)
+ {
+ 	unsigned long flags;
+ 
+ 	flags = __this_cpu_read(irqsave_flags);
+ 	__bpf_spin_unlock(lock);
+ 	local_irq_restore(flags);
++}
 +
- &sdhc2 {
- 	/* External SD card */
- 	pinctrl-names = "default", "sleep";
-@@ -155,10 +159,28 @@ &sdhc2 {
++notrace BPF_CALL_1(bpf_spin_unlock, struct bpf_spin_lock *, lock)
++{
++	__bpf_spin_unlock_irqrestore(lock);
+ 	return 0;
+ }
  
- &ufsphy {
- 	status = "okay";
-+
-+	vdda-phy-supply = <&pm8994_l28>;
-+	vdda-pll-supply = <&pm8994_l12>;
-+
-+	vdda-phy-max-microamp = <18380>;
-+	vdda-pll-max-microamp = <9440>;
-+
-+	vddp-ref-clk-supply = <&pm8994_l25>;
-+	vddp-ref-clk-max-microamp = <100>;
-+	vddp-ref-clk-always-on;
- };
+@@ -306,9 +316,9 @@ void copy_map_value_locked(struct bpf_map *map, void *dst, void *src,
+ 	else
+ 		lock = dst + map->spin_lock_off;
+ 	preempt_disable();
+-	____bpf_spin_lock(lock);
++	__bpf_spin_lock_irqsave(lock);
+ 	copy_map_value(map, dst, src);
+-	____bpf_spin_unlock(lock);
++	__bpf_spin_unlock_irqrestore(lock);
+ 	preempt_enable();
+ }
  
- &ufshc {
- 	status = "okay";
-+
-+	vcc-supply = <&pm8994_l20>;
-+	vccq-supply = <&pm8994_l25>;
-+	vccq2-supply = <&pm8994_s4>;
-+
-+	vcc-max-microamp = <600000>;
-+	vccq-max-microamp = <450000>;
-+	vccq2-max-microamp = <450000>;
- };
- 
- &msmgpio {
-@@ -369,18 +391,31 @@ &pmi8994_gpios {
- 
- &pcie_phy {
- 	status = "okay";
-+
-+	vdda-phy-supply = <&pm8994_l28>;
-+	vdda-pll-supply = <&pm8994_l12>;
- };
- 
- &usb3phy {
- 	status = "okay";
-+
-+	vdda-phy-supply = <&pm8994_l28>;
-+	vdda-pll-supply = <&pm8994_l12>;
-+
- };
- 
- &hsusb_phy1 {
- 	status = "okay";
-+
-+	vdda-pll-supply = <&pm8994_l12>;
-+	vdda-phy-dpdm-supply = <&pm8994_l24>;
- };
- 
- &hsusb_phy2 {
- 	status = "okay";
-+
-+	vdda-pll-supply = <&pm8994_l12>;
-+	vdda-phy-dpdm-supply = <&pm8994_l24>;
- };
- 
- &usb3 {
-@@ -408,22 +443,31 @@ &pcie0 {
- 	status = "okay";
- 	perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
- 	vddpe-3v3-supply = <&wlan_en>;
-+	vdda-supply = <&pm8994_l28>;
- };
- 
- &pcie1 {
- 	status = "okay";
- 	perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
-+	vdda-supply = <&pm8994_l28>;
- };
- 
- &pcie2 {
- 	status = "okay";
- 	perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
-+	vdda-supply = <&pm8994_l28>;
- };
- 
- &wcd9335 {
- 	clock-names = "mclk", "slimbus";
- 	clocks = <&div1_mclk>,
- 		 <&rpmcc RPM_SMD_BB_CLK1>;
-+
-+	vdd-buck-supply = <&pm8994_s4>;
-+	vdd-buck-sido-supply = <&pm8994_s4>;
-+	vdd-tx-supply = <&pm8994_s4>;
-+	vdd-rx-supply = <&pm8994_s4>;
-+	vdd-io-supply = <&pm8994_s4>;
- };
- 
- &mdss {
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index bbdb0fcd818e9..bcadbdf2690e3 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1343,16 +1343,6 @@ ufsphy: phy@627000 {
- 			reg-names = "phy_mem";
- 			#phy-cells = <0>;
- 
--			vdda-phy-supply = <&pm8994_l28>;
--			vdda-pll-supply = <&pm8994_l12>;
--
--			vdda-phy-max-microamp = <18380>;
--			vdda-pll-max-microamp = <9440>;
--
--			vddp-ref-clk-supply = <&pm8994_l25>;
--			vddp-ref-clk-max-microamp = <100>;
--			vddp-ref-clk-always-on;
--
- 			clock-names = "ref_clk_src", "ref_clk";
- 			clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
- 				 <&gcc GCC_UFS_CLKREF_CLK>;
-@@ -1368,14 +1358,6 @@ ufshc: ufshc@624000 {
- 			phys = <&ufsphy>;
- 			phy-names = "ufsphy";
- 
--			vcc-supply = <&pm8994_l20>;
--			vccq-supply = <&pm8994_l25>;
--			vccq2-supply = <&pm8994_s4>;
--
--			vcc-max-microamp = <600000>;
--			vccq-max-microamp = <450000>;
--			vccq2-max-microamp = <450000>;
--
- 			power-domains = <&gcc UFS_GDSC>;
- 
- 			clock-names =
-@@ -1477,9 +1459,6 @@ pcie_phy: phy@34000 {
- 				<&gcc GCC_PCIE_CLKREF_CLK>;
- 			clock-names = "aux", "cfg_ahb", "ref";
- 
--			vdda-phy-supply = <&pm8994_l28>;
--			vdda-pll-supply = <&pm8994_l12>;
--
- 			resets = <&gcc GCC_PCIE_PHY_BCR>,
- 				<&gcc GCC_PCIE_PHY_COM_BCR>,
- 				<&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
-@@ -1539,9 +1518,6 @@ usb3phy: phy@7410000 {
- 				<&gcc GCC_USB3_CLKREF_CLK>;
- 			clock-names = "aux", "cfg_ahb", "ref";
- 
--			vdda-phy-supply = <&pm8994_l28>;
--			vdda-pll-supply = <&pm8994_l12>;
--
- 			resets = <&gcc GCC_USB3_PHY_BCR>,
- 				<&gcc GCC_USB3PHY_PHY_BCR>;
- 			reset-names = "phy", "common";
-@@ -1568,9 +1544,6 @@ hsusb_phy1: phy@7411000 {
- 				<&gcc GCC_RX1_USB2_CLKREF_CLK>;
- 			clock-names = "cfg_ahb", "ref";
- 
--			vdda-pll-supply = <&pm8994_l12>;
--			vdda-phy-dpdm-supply = <&pm8994_l24>;
--
- 			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
- 			nvmem-cells = <&qusb2p_hstx_trim>;
- 			status = "disabled";
-@@ -1585,9 +1558,6 @@ hsusb_phy2: phy@7412000 {
- 				<&gcc GCC_RX2_USB2_CLKREF_CLK>;
- 			clock-names = "cfg_ahb", "ref";
- 
--			vdda-pll-supply = <&pm8994_l12>;
--			vdda-phy-dpdm-supply = <&pm8994_l24>;
--
- 			resets = <&gcc GCC_QUSB2PHY_SEC_BCR>;
- 			nvmem-cells = <&qusb2s_hstx_trim>;
- 			status = "disabled";
-@@ -1795,7 +1765,6 @@ camss: camss@a00000 {
- 				"vfe1_stream",
- 				"vfe_ahb",
- 				"vfe_axi";
--			vdda-supply = <&pm8994_l2>;
- 			iommus = <&vfe_smmu 0>,
- 				 <&vfe_smmu 1>,
- 				 <&vfe_smmu 2>,
-@@ -1907,9 +1876,6 @@ pcie0: pcie@600000 {
- 				pinctrl-0 = <&pcie0_clkreq_default &pcie0_perst_default &pcie0_wake_default>;
- 				pinctrl-1 = <&pcie0_clkreq_sleep &pcie0_perst_default &pcie0_wake_sleep>;
- 
--
--				vdda-supply = <&pm8994_l28>;
--
- 				linux,pci-domain = <0>;
- 
- 				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
-@@ -1962,8 +1928,6 @@ pcie1: pcie@608000 {
- 				pinctrl-0 = <&pcie1_clkreq_default &pcie1_perst_default &pcie1_wake_default>;
- 				pinctrl-1 = <&pcie1_clkreq_sleep &pcie1_perst_default &pcie1_wake_sleep>;
- 
--
--				vdda-supply = <&pm8994_l28>;
- 				linux,pci-domain = <1>;
- 
- 				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-@@ -2015,8 +1979,6 @@ pcie2: pcie@610000 {
- 				pinctrl-0 = <&pcie2_clkreq_default &pcie2_perst_default &pcie2_wake_default>;
- 				pinctrl-1 = <&pcie2_clkreq_sleep &pcie2_perst_default &pcie2_wake_sleep >;
- 
--				vdda-supply = <&pm8994_l28>;
--
- 				linux,pci-domain = <2>;
- 				clocks = <&gcc GCC_PCIE_2_PIPE_CLK>,
- 					<&gcc GCC_PCIE_2_AUX_CLK>,
-@@ -2081,12 +2043,6 @@ wcd9335: codec@1{
- 
- 					slim-ifc-dev  = <&tasha_ifd>;
- 
--					vdd-buck-supply = <&pm8994_s4>;
--					vdd-buck-sido-supply = <&pm8994_s4>;
--					vdd-tx-supply = <&pm8994_s4>;
--					vdd-rx-supply = <&pm8994_s4>;
--					vdd-io-supply = <&pm8994_s4>;
--
- 					#sound-dai-cells = <1>;
- 				};
- 			};
 -- 
 2.43.0
 
