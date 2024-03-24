@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4169517F393;
-	Sun, 24 Mar 2024 23:47:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9B31802AA;
+	Sun, 24 Mar 2024 23:47:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324021; cv=none; b=ufIsygVek+viVR9at5KqRkszSXSlPZTQkNj7fNfHPgmwWcgR8eE0bRFHfht8mA6ocLw6cka8cq+KrUDsfdFWdy3OopAjbFTKEozVkRR890hqldU5CKIdMGGW3g2gtl9A9DGsTDjm5KXbN92y3I/OyWbiMnwexnEin1lWbGN/BIs=
+	t=1711324023; cv=none; b=dlCnO3j2MN9+ecdlsrzCDMCgIekyhf9qkGx2asjpQ3UdySDN/9L4VJ2GMvpqDZ4Yp6vyvcbGTT+ptYlCdDmT1f0AKAPr+SkcjuBUepQArNKHENhUSMiYQpCTyj+TNgkTuCowaa0vC1BWhMdcNRQYPXTZuz/ICkCXirtUCKCk6Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324021; c=relaxed/simple;
-	bh=mmN/SZR6PmFIvbIsDtMtfVjVtr8+wCKe8berH2El920=;
+	s=arc-20240116; t=1711324023; c=relaxed/simple;
+	bh=xKI0iG25BjEWQ1gvRDyg2KrUPAy82Y04LM+HtejJhYA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gpMheJ7sG0eQ+GxKjA8ZYfSBPPVsWTHO1NKrW7kswk1PJQArpjArce7RX1mKq4BPJaK8doHfpSSzabt+gSlLFQ0D8GZe0di9Ii2G0rDi1SX8i9EdI32qMiqySJRQRW3wLR1BJgJZiPgI5enBGtfR5wYeMRtnho+6otJFYpS8Dp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdBl9UmA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RDmiDjn5w7tN7h1O+ree8ToJ9jVhiEYnL2CUlpZ4xDvw2/vlRFBMonS5gXAeEsUFSypTIIQdjUwaupWFbagKSL72vPqdGJrb9fDDaDsWjEpoUAxi1KRTtxAaModFFv2buYQkzCgurqEKTwjFBjYuiQdbXnJr7dqbg+GrIHnyMkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tgH3HhFv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdBl9UmA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79907C433F1;
-	Sun, 24 Mar 2024 23:46:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tgH3HhFv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA54C43399;
+	Sun, 24 Mar 2024 23:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324020;
-	bh=mmN/SZR6PmFIvbIsDtMtfVjVtr8+wCKe8berH2El920=;
+	s=k20201202; t=1711324022;
+	bh=xKI0iG25BjEWQ1gvRDyg2KrUPAy82Y04LM+HtejJhYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mdBl9UmAEGHVa5iTO0ggtJ6ztgYcxVFoZ9mrKltaMiBAdUXrv0yCVaaDS2iMrlI/o
-	 K2etTUy/enOle0vKON/ZZYWJv5kBFs5/fHAnEs6WFaTpPGjV8rZc8mDGrwrxF4fVsu
-	 dcx47vfNZQxqePHCY/hpgUFXaSETB67OC+3aNX0nJVC3L9a4kCdnG35W0Zjc3dnLzX
-	 bocstqcPFQ37iT6/g2g6X+6NDGG2IEHb3hlfGxw1rDcjrtDsCEWg8S1OzXAGOKgcFK
-	 TSwp22PBDMhSa1klr6G3kT7bpmWsLDG72VWwWBtSXz0vF4Xl+V/LovkkJuHZnDlQA0
-	 f89PR8msGzmuQ==
+	b=tgH3HhFvUtPfnfdC+OJHNirsoN1VoD4aEDqgfs8LDIX+Xoqg64X2Ena06JdhQ03Bd
+	 87o673uw3L9LiH9e9vqAz12nEmYdHS/f1//TCeSrJg4QlYQAgfkoZotnhajKz8RvC7
+	 41ZsJw4is+BcUxeK0fHamb131S2EzhiLKWup8+6ozJUGpNdmzQGaIOwZsRTadThxwK
+	 vWRJuzmSNTZKWHDrCn5HZPsZkcNC3lJifdtDw9YWz43rzuGyVfBUMoUCppGV51trUE
+	 EOYYnK0hBX1xKHQlc82iZLzM37ANCeXF4lY32e8oi4Tdv52czg9SRO3lKEsTJVzKXk
+	 9nCBujIWFkpdA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Navid Emamdoost <navid.emamdoost@gmail.com>,
+	Michal Kubecek <mkubecek@suse.cz>,
+	Kees Cook <keescook@chromium.org>,
+	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 021/183] ASoC: wm8962: Fix up incorrect error message in wm8962_set_fll
-Date: Sun, 24 Mar 2024 19:43:54 -0400
-Message-ID: <20240324234638.1355609-22-sashal@kernel.org>
+Subject: [PATCH 5.4 023/183] nbd: null check for nla_nest_start
+Date: Sun, 24 Mar 2024 19:43:56 -0400
+Message-ID: <20240324234638.1355609-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,34 +50,41 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stuart Henderson <stuarth@opensource.cirrus.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 96e202f8c52ac49452f83317cf3b34cd1ad81e18 ]
+[ Upstream commit 31edf4bbe0ba27fd03ac7d87eb2ee3d2a231af6d ]
 
-Use source instead of ret, which seems to be unrelated and will always
-be zero.
+nla_nest_start() may fail and return NULL. Insert a check and set errno
+based on other call sites within the same source code.
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-Link: https://msgid.link/r/20240306161439.1385643-5-stuarth@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Fixes: 47d902b90a32 ("nbd: add a status netlink command")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20240218042534.it.206-kees@kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/nbd.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index 9ccec511352a0..15828ae62f9de 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2908,7 +2908,7 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
- 				    WM8962_FLL_FRC_NCO, WM8962_FLL_FRC_NCO);
- 		break;
- 	default:
--		dev_err(component->dev, "Unknown FLL source %d\n", ret);
-+		dev_err(component->dev, "Unknown FLL source %d\n", source);
- 		return -EINVAL;
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 37994a7a1b6f4..f2d847ffcbc75 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -2313,6 +2313,12 @@ static int nbd_genl_status(struct sk_buff *skb, struct genl_info *info)
  	}
  
+ 	dev_list = nla_nest_start_noflag(reply, NBD_ATTR_DEVICE_LIST);
++	if (!dev_list) {
++		nlmsg_free(reply);
++		ret = -EMSGSIZE;
++		goto out;
++	}
++
+ 	if (index == -1) {
+ 		ret = idr_for_each(&nbd_index_idr, &status_cb, reply);
+ 		if (ret) {
 -- 
 2.43.0
 
