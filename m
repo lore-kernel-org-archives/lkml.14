@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03F11474D6;
-	Sun, 24 Mar 2024 23:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49197148300;
+	Sun, 24 Mar 2024 23:15:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322101; cv=none; b=BwjuH8OhKFtjqNtweGZ/bWWoPTNkKg+UwpH5CjvALvm9qYX/KSGveoI/jOTFeUoo1ojvYVos0Q/JA/HmGBRQUIAEzUsFr99c8T9dDddVf9qMCuRbEI1st0Am+91jNRgFY3jItCO3greaWcWNoC8pDYyj6h0FJno5860kJyyIS0g=
+	t=1711322114; cv=none; b=ZdW4rnzVMDHJuAScexGkMkEEHeQE7K9/fvIV1lUvpiIOPOOSZnyCOenWK4EufYPm+45Kx98nlAHm8C9g8tKWnAZ+OF0TvT20pJVKICZH7fmr7yxYh5x/p4Kvbys0qrPSmDS0AjgaUEojO5b+0RTgOdB0OUQ0gpTfojKzdoGcNMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322101; c=relaxed/simple;
-	bh=SAn/tLgeSLUD3wp0VC/x3bw16DmDfH3DFah+D7EV1po=;
+	s=arc-20240116; t=1711322114; c=relaxed/simple;
+	bh=xlo68ZFskLrQUsfDtn3csgWoSo1hwwHJodwFfU9RdeI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j6XfNS0fbkvdyD1BfWuXrhp3ozWeeGTHMQtYBJDWJcgYnD26tVTB26ANnytsSSMUCWB/T/l22IdUfsC9+CM+7TX0xGNSz+wST/dZrV8XuavC3ODUjognzYEBF8fREscRz/7tnjARVh4XQL2LvhhjhFgFJjAdUlcxH5nsR5Qk25U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+NP8EU5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=h7uyEMeHAgTrG78Lbk4gWidqIoXssrA8b2UdaT7nvclKL75nhhEuCqOkuMzpyfuhM82/kBnCcEwssnOw8zzMhjkAh9aCJw7XEGLy0ue2rS1RJ7zqnMNOOcjt1pONMKtkMnx9IXOWoJUD8QcM1z7C0BfuH52uIkZFqzehaXMmp7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIvfxVyN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+NP8EU5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB4E9C43399;
-	Sun, 24 Mar 2024 23:15:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIvfxVyN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71FF2C433B2;
+	Sun, 24 Mar 2024 23:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322101;
-	bh=SAn/tLgeSLUD3wp0VC/x3bw16DmDfH3DFah+D7EV1po=;
+	s=k20201202; t=1711322114;
+	bh=xlo68ZFskLrQUsfDtn3csgWoSo1hwwHJodwFfU9RdeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T+NP8EU5wW5Yb9isouumurva2zguQXBASbU3GfOlm268W0x3nW/ygVVYK/ELrH9z7
-	 YtdX4zlB31MNyq6lOMPzchLhiQ1sE4QGjhrQI9d73UFBOjE2Qj3RR0gyRXxgakIpxi
-	 flN5zayiPNs69FyuLL11RfdecMLRTiiCHdGP/Jp0ROzLWPTqtVCHG2tZIXTbh3vmwa
-	 caGcBFZ7aPFwx+qgGaDOEuSzCkyc2E2uMB7as8c8EVv6IRvAld+Z8WHF6ADNg77nFl
-	 AVWNjEa/KW1YLBVFBbtEY9TFygTrMuUiJycGVWAoW/7pAUuVze3bdNxdUsQqog41BZ
-	 jR/JQEa9TpbTw==
+	b=BIvfxVyNlvC/yV+j66HvbmvaPK6vXXUmXq2plH6c+LZ5R+wxNWJTzBMkvrgLtbMYZ
+	 amhX8mtrLCYwQY/fJr1qXe4waur0UVf5sR5xrztHB2pEurfo/DyoOtlRzhWmEsdZ1H
+	 5e+Sry1AwTqXdPJ1oteVV199KhCESwSqvV3SvhxEZI9bexhuNOrbUukidmNE1MGj4n
+	 b0VvUfMD2G8SaqAImOGcc1jT42Wzyu7uj5dD0vH8zGpfyLVDV7j+vbZYt8WLq0+oH+
+	 bJIIs4QBVc9WsriZXnuH4G+oa4aLlU9TAXrsSrFj7NkwZznGMSW66EYN1/GXbbOnjO
+	 /L+fwgMR2ryPg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 176/451] ARM: dts: imx6dl-yapp4: Move phy reset into switch node
-Date: Sun, 24 Mar 2024 19:07:32 -0400
-Message-ID: <20240324231207.1351418-177-sashal@kernel.org>
+Subject: [PATCH 6.1 189/451] wifi: rtw88: 8821c: Fix beacon loss and disconnect
+Date: Sun, 24 Mar 2024 19:07:45 -0400
+Message-ID: <20240324231207.1351418-190-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -44,47 +45,88 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
 
-[ Upstream commit 7da7b84fee58c85a6075022023d31edea40e81a1 ]
+[ Upstream commit e1dfa21427baeb813f9a2f9ceab6b7d32c3ca425 ]
 
-Drop the phy-reset-duration and phy-reset-gpios deprecated properties and
-move reset-gpios under the switch node.
+Tenda U9 V2.0, which contains RTL8811CU, is practically unusable because
+of frequent disconnections:
 
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Stable-dep-of: 023bd910d3ab ("ARM: dts: imx6dl-yapp4: Fix typo in the QCA switch register address")
+Feb 23 14:46:45 ideapad2 wpa_supplicant[427]: wlp3s0f3u2: CTRL-EVENT-BEACON-LOSS
+Feb 23 14:46:46 ideapad2 wpa_supplicant[427]: wlp3s0f3u2: CTRL-EVENT-DISCONNECTED
+	bssid=90:55:de:__:__:__ reason=4 locally_generated=1
+
+Feb 23 14:46:52 ideapad2 wpa_supplicant[427]: wlp3s0f3u2: CTRL-EVENT-CONNECTED
+	- Connection to 90:55:de:__:__:__ completed [id=0 id_str=]
+Feb 23 14:46:54 ideapad2 wpa_supplicant[427]: wlp3s0f3u2: CTRL-EVENT-BEACON-LOSS
+Feb 23 14:46:55 ideapad2 wpa_supplicant[427]: wlp3s0f3u2: CTRL-EVENT-DISCONNECTED
+	bssid=90:55:de:__:__:__ reason=4 locally_generated=1
+
+Feb 23 14:47:01 ideapad2 wpa_supplicant[427]: wlp3s0f3u2: CTRL-EVENT-CONNECTED
+	- Connection to 90:55:de:__:__:__ completed [id=0 id_str=]
+Feb 23 14:47:04 ideapad2 wpa_supplicant[427]: wlp3s0f3u2: CTRL-EVENT-BEACON-LOSS
+Feb 23 14:47:05 ideapad2 wpa_supplicant[427]: wlp3s0f3u2: CTRL-EVENT-DISCONNECTED
+	bssid=90:55:de:__:__:__ reason=4 locally_generated=1
+
+This is caused by a mistake in the chip initialisation. This version of
+the chip requires loading an extra AGC table right after the main one,
+but the extra table is being loaded at the wrong time, in
+rtw_chip_board_info_setup().
+
+Move the extra AGC table loading to the right place, in
+rtw_phy_load_tables().
+
+The rtw_chip_board_info_setup() can only do "software" things, and
+rtw_phy_load_tables() can really do IO.
+
+Fixes: 5d6651fe8583 ("rtw88: 8821c: support RFE type2 wifi NIC")
+Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/276c31d8-b9a8-4e54-a3ac-09b74657aff7@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtw88/main.c | 2 --
+ drivers/net/wireless/realtek/rtw88/phy.c  | 3 +++
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index aacbf317feea6..cb1972f8e8d27 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -106,8 +106,6 @@ &fec {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii-id";
--	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
--	phy-reset-duration = <20>;
- 	phy-supply = <&sw2_reg>;
- 	status = "okay";
+diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
+index 4c8164db4a9e4..81f3112923f1c 100644
+--- a/drivers/net/wireless/realtek/rtw88/main.c
++++ b/drivers/net/wireless/realtek/rtw88/main.c
+@@ -1989,8 +1989,6 @@ static int rtw_chip_board_info_setup(struct rtw_dev *rtwdev)
+ 	rtw_phy_setup_phy_cond(rtwdev, 0);
  
-@@ -131,6 +129,7 @@ phy_port3: phy@2 {
- 		switch@10 {
- 			compatible = "qca,qca8334";
- 			reg = <10>;
-+			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+ 	rtw_phy_init_tx_power(rtwdev);
+-	if (rfe_def->agc_btg_tbl)
+-		rtw_load_table(rtwdev, rfe_def->agc_btg_tbl);
+ 	rtw_load_table(rtwdev, rfe_def->phy_pg_tbl);
+ 	rtw_load_table(rtwdev, rfe_def->txpwr_lmt_tbl);
+ 	rtw_phy_tx_power_by_rate_config(hal);
+diff --git a/drivers/net/wireless/realtek/rtw88/phy.c b/drivers/net/wireless/realtek/rtw88/phy.c
+index bd7d05e080848..fde7b532bc07e 100644
+--- a/drivers/net/wireless/realtek/rtw88/phy.c
++++ b/drivers/net/wireless/realtek/rtw88/phy.c
+@@ -1761,12 +1761,15 @@ static void rtw_load_rfk_table(struct rtw_dev *rtwdev)
  
- 			switch_ports: ports {
- 				#address-cells = <1>;
+ void rtw_phy_load_tables(struct rtw_dev *rtwdev)
+ {
++	const struct rtw_rfe_def *rfe_def = rtw_get_rfe_def(rtwdev);
+ 	const struct rtw_chip_info *chip = rtwdev->chip;
+ 	u8 rf_path;
+ 
+ 	rtw_load_table(rtwdev, chip->mac_tbl);
+ 	rtw_load_table(rtwdev, chip->bb_tbl);
+ 	rtw_load_table(rtwdev, chip->agc_tbl);
++	if (rfe_def->agc_btg_tbl)
++		rtw_load_table(rtwdev, rfe_def->agc_btg_tbl);
+ 	rtw_load_rfk_table(rtwdev);
+ 
+ 	for (rf_path = 0; rf_path < rtwdev->hal.rf_path_num; rf_path++) {
 -- 
 2.43.0
 
