@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE2215B54B;
-	Sun, 24 Mar 2024 23:16:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD7922ABA9;
+	Sun, 24 Mar 2024 23:15:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322161; cv=none; b=KBre6xeOgIpK1XSCHNfADa05X4oyZxIMQdkhS7nlYNpXcviFJpczDrxvEgjxocnbYBbFG+rUNHrwKkXBQHMKj+SWV6wfGXkWWaGv5+OH4oZuO10JReAE/8TLeO9O/NIhKb4PAzmctRlUrM1I3o615dLfNrU9m5L4V3yDZvPD59g=
+	t=1711322155; cv=none; b=nlWDE85XecBdq1mJeT5eAbb4hoLCt7oyju4rl+vNCxSZECOAMayhCDukc4IjWqIyiZVbhczpNMHWN/B6iBcwRqGTILb8GX1cK6rzB6fnCXjCMiO37ur2noL2Tl84pA63RkvD297koJs2tz9TFcA5FZMfyOB8OnTUpZqp2JVblR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322161; c=relaxed/simple;
-	bh=8KG5Kv9xE8+BSzUzijXLHGU0DSDjDPk4VPFVL8rFUuk=;
+	s=arc-20240116; t=1711322155; c=relaxed/simple;
+	bh=jWb1taSDWnnlYNcsDY4Fytf5GGYRBq3hGAnoWhXCiNo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YrsCYPtLRFilVxXkroLSleKZ+SUJ9Jwr+XMy2LIpe76KsjXFFjDmQ9t54eZgI/dg49IRDjAQZlXssiGw2v04OewyHwoywN3td3uIyioaMv6b+U0ZD3x72JhscYcfJn5uZEfJlXwlgE7Z3lKOYhacgrywq/Jx4YrDj5mJj0g3oZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9P/0/6w; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JdgCgxxMoA9k714xvjW1o5e8HLtsb2SgZzwZFkUtPWyMTCohA+mbkmhdIbh98q/hf074Kglc1FYwakd3B7j/AkbkbFvAtmE6rqhibVPMgcgbQL1fum/24+MZpAbb7H6o5kFmPtBWZTHb+ZU7OnB+1e2KuxAfBKWsIyYibDLxf3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmYQJlS3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9P/0/6w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BF3C43394;
-	Sun, 24 Mar 2024 23:16:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmYQJlS3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 600E9C43390;
+	Sun, 24 Mar 2024 23:15:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322161;
-	bh=8KG5Kv9xE8+BSzUzijXLHGU0DSDjDPk4VPFVL8rFUuk=;
+	s=k20201202; t=1711322155;
+	bh=jWb1taSDWnnlYNcsDY4Fytf5GGYRBq3hGAnoWhXCiNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q9P/0/6wwhrj7QPYP100FqNnsnE7LS5A5htXRnpgonGZ9agymHxkX8oWeO6M2MUS6
-	 w5691TzeBKRi0Nzz66owVkZ7mGTTEcxdadktHYvXA++YSswUOEN5E0bI8levmtO7m9
-	 2XkPfxLiYQB7KNwjkQvIADInUV1pn0Lz3MPU2dV4d3zTqRxZnSTiAnzlurLtw2NT65
-	 8KEn+VLepRNCMEoA3pIe8xkAgquwF5MwNVP6f2YH5yEsNyTsZgJ8DbUysugkfRxQ3W
-	 3UsSDySPgqvD4ouumPR/JVdPJM4VYGko1Y87aHnCNf7+ZObns1Ez+su+IvtTrjJUQ9
-	 a/86jOQfZ/2ZA==
+	b=VmYQJlS3kAaS4F7h6KFpC4RLa1WBlLAegL7mSZ7dq+mZXVZMj/2AzncsvjAUMuXkX
+	 g/MXbKPRK300lI4dHHqs8kkqdlr/FQaSPJf67wgCWfmdWg1hplG4HcfiTMHEDkX+WG
+	 5+OlZ6E5aOtYyAfgyZGqjulmc73mM0McwxzcgieKLA82Ht03lUtNqxpdR/vL2cQWeS
+	 tIxXOya//bdtqSkXKkyw4RwlHibxJK+kLICDiTnCNF+hz/DTAJLEv+3Z436w9QTZew
+	 rjYcH8kBHnQfHjKtAMcbo+Zeko9p0atwc8ZzhX9p8xfSNK7tVQFKRP8vX+NDLMzCrl
+	 kDqcFNxkTIfWg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yangtao Li <frank.li@vivo.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Ming Lei <ming.lei@redhat.com>,
+	Patrick Plenefisch <simonpatp@gmail.com>,
+	Mike Snitzer <snitzer@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 239/451] drm/tegra: hdmi: Convert to devm_platform_ioremap_resource()
-Date: Sun, 24 Mar 2024 19:08:35 -0400
-Message-ID: <20240324231207.1351418-240-sashal@kernel.org>
+Subject: [PATCH 6.1 232/451] dm raid: fix false positive for requeue needed during reshape
+Date: Sun, 24 Mar 2024 19:08:28 -0400
+Message-ID: <20240324231207.1351418-233-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,43 +49,44 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yangtao Li <frank.li@vivo.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit faae5646c13f4697fd2ba29b10e38f9be5aa890a ]
+[ Upstream commit b25b8f4b8ecef0f48c05f0c3572daeabefe16526 ]
 
-Use devm_platform_ioremap_resource() to simplify code.
+An empty flush doesn't have a payload, so it should never be looked at
+when considering to possibly requeue a bio for the case when a reshape
+is in progress.
 
-Signed-off-by: Yangtao Li <frank.li@vivo.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20230710032355.72914-5-frank.li@vivo.com
-Stable-dep-of: 643ae131b859 ("drm/tegra: hdmi: Fix some error handling paths in tegra_hdmi_probe()")
+Fixes: 9dbd1aa3a81c ("dm raid: add reshaping support to the target")
+Reported-by: Patrick Plenefisch <simonpatp@gmail.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/hdmi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/md/dm-raid.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdmi.c
-index bf240767dad9f..f83d9041327f0 100644
---- a/drivers/gpu/drm/tegra/hdmi.c
-+++ b/drivers/gpu/drm/tegra/hdmi.c
-@@ -1776,7 +1776,6 @@ static irqreturn_t tegra_hdmi_irq(int irq, void *data)
- static int tegra_hdmi_probe(struct platform_device *pdev)
- {
- 	struct tegra_hdmi *hdmi;
--	struct resource *regs;
- 	int err;
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index 4b7528dc2fd08..7fbce214e00f5 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -3325,14 +3325,14 @@ static int raid_map(struct dm_target *ti, struct bio *bio)
+ 	struct mddev *mddev = &rs->md;
  
- 	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
-@@ -1838,8 +1837,7 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
- 	if (err < 0)
- 		return err;
+ 	/*
+-	 * If we're reshaping to add disk(s)), ti->len and
++	 * If we're reshaping to add disk(s), ti->len and
+ 	 * mddev->array_sectors will differ during the process
+ 	 * (ti->len > mddev->array_sectors), so we have to requeue
+ 	 * bios with addresses > mddev->array_sectors here or
+ 	 * there will occur accesses past EOD of the component
+ 	 * data images thus erroring the raid set.
+ 	 */
+-	if (unlikely(bio_end_sector(bio) > mddev->array_sectors))
++	if (unlikely(bio_has_data(bio) && bio_end_sector(bio) > mddev->array_sectors))
+ 		return DM_MAPIO_REQUEUE;
  
--	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	hdmi->regs = devm_ioremap_resource(&pdev->dev, regs);
-+	hdmi->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(hdmi->regs))
- 		return PTR_ERR(hdmi->regs);
- 
+ 	md_handle_request(mddev, bio);
 -- 
 2.43.0
 
