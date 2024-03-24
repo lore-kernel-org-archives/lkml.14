@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5366317CF4B;
-	Sun, 24 Mar 2024 23:43:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2E417CF62;
+	Sun, 24 Mar 2024 23:43:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323806; cv=none; b=qIuq+pOK5DnqpRuFE7O2kWzMnYxw6yM96n8dN/ZBTxgucpbO8tftOOZtCT1h4h+zH6WN0+lo0OoX46zJTYHohtkH0LDM4pQ6fB0z4f1B5bo+1rUQQFXSqfH6y8pzXMfkSJ2dEvDW6De9r1j+WnHXjYfydvDHD7yH+1BgsvDCqW4=
+	t=1711323812; cv=none; b=oZlGZmxjAyOk5T3R5ZLOKVntxYKrQxbPffZyuZnCHCJnF2oNCASZNG1ZUw7RbX/UkOIx2cRjGBOmklCmWrnedQeV23s5WAKF7HwSwzkzxUBxvXfkPn1wj6e/efVjubrAJkBj6GRNCRdEBOAZLvQPBDMQ4qdTNnFfrNRSrQME3u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323806; c=relaxed/simple;
-	bh=GjnkixaYReP4YOiLR6rVD7j38RgaCnm3GMPZmZvMefg=;
+	s=arc-20240116; t=1711323812; c=relaxed/simple;
+	bh=c11w0jzUesCGbhTP5ywTHIqFThlwXA1KhgSKdpQ7Dq8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=amMSKSvOoscDrd0bFryZUf9LrvCmQYKSuCX/oBy+4twVhaYgsLNS9nQffzIu37o4F8h9I7KQSKUVwSVFcD6t0Juo7q3fokgUCXQJINQ2POe5dCsPSZX22KfJ4EeOJsNfhfUPjn449SGT613/tsZSVzBBde29LwghslGZKoTbTrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OcUbY8Xq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=l5MpuEv2Z19H3yZSXTaIgluoeASk9ELXyOpfku5aNgt5bQ4wEVAOkrO1pYVLueRjedFq0Wm29SryGEZCqsgLfd1yFw44rX84F7iKIi1JBUwWeJXtW6E6NTp9wAQh8WHLnD/cDeovO9xw66xd0xdYNyYRkWxsxqxWOdYQNYn8bsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ahdN6Q4i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OcUbY8Xq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 787BBC433C7;
-	Sun, 24 Mar 2024 23:43:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ahdN6Q4i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34203C433C7;
+	Sun, 24 Mar 2024 23:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323806;
-	bh=GjnkixaYReP4YOiLR6rVD7j38RgaCnm3GMPZmZvMefg=;
+	s=k20201202; t=1711323811;
+	bh=c11w0jzUesCGbhTP5ywTHIqFThlwXA1KhgSKdpQ7Dq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OcUbY8Xqo/lwdFkWGsON7qSkri1HItutfMmU7mXcP8P8Hp3Rc60LGRTS380CJUsmS
-	 YC4ykzxRg/N5+TFrq03+ijSTcHKbnB0U3DbKAW/QWtw0jblvHyddJnjlCI2mZw+uou
-	 +vEkckc11Ar9jkwSV1Dx6XYlmvNtQ9qjbvXo4ytWByd4wZDlwQk9w3bDJ3WH5nGK9P
-	 M+Ua/xIDV4WOs7JKrJKPnE2TVDPFqGQuMamLaR0u42gxuC48GKgEK2S1sBLcAzsayq
-	 8jnxTG/YhK/ztnBSi7dPe1AhcXGXRNa9c5BViR2VEZBW0lR8XTIF3VNryKhCV2+wJC
-	 KppxcafWaO6MA==
+	b=ahdN6Q4itJe8ZqizwOqIxSJ1aa8MLBflVzQRIz2oXOzCVfFFWumJlnYPSf/BFIk68
+	 fDxlT8CqX6LVU/5F1wRCTkYZG/DNAAS8TsQPzyjcf8Fh7D9xSe/nybQnGGBWMbh+sd
+	 ahaQ3wlapafgS62nJpCeF9NEiOJsP8QlXulR+gD3jIk/SqmfMbOMViG9AFE0bLch1w
+	 9XWzDWZdw5JAimqeY8WnXOSkWFwPtW52MOAi9KDJOPjqhmOAam582uMUe1fCuJgro3
+	 2L2tV7VrYUXSkmiSUIxZr7selLRCiLXmYa+9/5d+GSYfvHacrl4NvP0ndCuETIFZEd
+	 wG6vduBCI3GAw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Luca Weiss <luca@z3ntu.xyz>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Lee Jones <lee@kernel.org>,
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 184/238] backlight: lm3630a: Don't set bl->props.brightness in get_brightness
-Date: Sun, 24 Mar 2024 19:39:32 -0400
-Message-ID: <20240324234027.1354210-185-sashal@kernel.org>
+Subject: [PATCH 5.10 190/238] clk: Fix clk_core_get NULL dereference
+Date: Sun, 24 Mar 2024 19:39:38 -0400
+Message-ID: <20240324234027.1354210-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -49,75 +48,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Luca Weiss <luca@z3ntu.xyz>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-[ Upstream commit 4bf7ddd2d2f0f8826f25f74c7eba4e2c323a1446 ]
+[ Upstream commit e97fe4901e0f59a0bfd524578fe3768f8ca42428 ]
 
-There's no need to set bl->props.brightness, the get_brightness function
-is just supposed to return the current brightness and not touch the
-struct.
+It is possible for clk_core_get to dereference a NULL in the following
+sequence:
 
-With that done we can also remove the 'goto out' and just return the
-value.
+clk_core_get()
+    of_clk_get_hw_from_clkspec()
+        __of_clk_get_hw_from_provider()
+            __clk_get_hw()
 
-Fixes: 0c2a665a648e ("backlight: add Backlight driver for lm3630 chip")
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20240220-lm3630a-fixups-v1-2-9ca62f7e4a33@z3ntu.xyz
-Signed-off-by: Lee Jones <lee@kernel.org>
+__clk_get_hw() can return NULL which is dereferenced by clk_core_get() at
+hw->core.
+
+Prior to commit dde4eff47c82 ("clk: Look for parents with clkdev based
+clk_lookups") the check IS_ERR_OR_NULL() was performed which would have
+caught the NULL.
+
+Reading the description of this function it talks about returning NULL but
+that cannot be so at the moment.
+
+Update the function to check for hw before dereferencing it and return NULL
+if hw is NULL.
+
+Fixes: dde4eff47c82 ("clk: Look for parents with clkdev based clk_lookups")
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Link: https://lore.kernel.org/r/20240302-linux-next-24-03-01-simple-clock-fixes-v1-1-25f348a5982b@linaro.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lm3630a_bl.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ drivers/clk/clk.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 2aade66db3cf4..2134342c2c97d 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -229,7 +229,7 @@ static int lm3630a_bank_a_get_brightness(struct backlight_device *bl)
- 		if (rval < 0)
- 			goto out_i2c_err;
- 		brightness |= rval;
--		goto out;
-+		return brightness;
- 	}
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 62572d59e7e38..aa2f1f8aa2994 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -425,6 +425,9 @@ static struct clk_core *clk_core_get(struct clk_core *core, u8 p_index)
+ 	if (IS_ERR(hw))
+ 		return ERR_CAST(hw);
  
- 	/* disable sleep */
-@@ -240,11 +240,8 @@ static int lm3630a_bank_a_get_brightness(struct backlight_device *bl)
- 	rval = lm3630a_read(pchip, REG_BRT_A);
- 	if (rval < 0)
- 		goto out_i2c_err;
--	brightness = rval;
-+	return rval;
++	if (!hw)
++		return NULL;
++
+ 	return hw->core;
+ }
  
--out:
--	bl->props.brightness = brightness;
--	return bl->props.brightness;
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access register\n");
- 	return 0;
-@@ -306,7 +303,7 @@ static int lm3630a_bank_b_get_brightness(struct backlight_device *bl)
- 		if (rval < 0)
- 			goto out_i2c_err;
- 		brightness |= rval;
--		goto out;
-+		return brightness;
- 	}
- 
- 	/* disable sleep */
-@@ -317,11 +314,8 @@ static int lm3630a_bank_b_get_brightness(struct backlight_device *bl)
- 	rval = lm3630a_read(pchip, REG_BRT_B);
- 	if (rval < 0)
- 		goto out_i2c_err;
--	brightness = rval;
-+	return rval;
- 
--out:
--	bl->props.brightness = brightness;
--	return bl->props.brightness;
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access register\n");
- 	return 0;
 -- 
 2.43.0
 
