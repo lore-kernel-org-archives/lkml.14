@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13231CF8BD;
-	Sun, 24 Mar 2024 22:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BEBC1CF8C7;
+	Sun, 24 Mar 2024 22:47:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320443; cv=none; b=TQpftWnv+tQtpwMPKArA1lpWgBKfh8fTOJ4ML3jlRSOhesYckSakjhcdR42fBKVgYQibCJizIrJEvE7jcqj7uxx/mXxBQb8MS7xbdQSjRVVfKPs7M+lQxTziXtUB9N9WErgfhUKznayIoNvsv8vzewsLcNUYuGAAljyClpr/EWk=
+	t=1711320445; cv=none; b=CfvtBe7+Tcf572/3o3zm/FDBRWH7qOO+El/iiSccL2Nt07LRI6LJak+dVPUaUrxArcAI5+PRXb/NWgA/tVq8VjNz7LHABTz1myfbrKZd/jc09cF9YvnI/GtNXUTXoVgFmRrIsEVLUYi1PHDYuXTbVduQ7yaKyA//Q6jxPwPbS8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320443; c=relaxed/simple;
-	bh=69h97DXk3sezN9njqO4oxBgBj5oS7i0ELO2Bz6h1VXk=;
+	s=arc-20240116; t=1711320445; c=relaxed/simple;
+	bh=IZbq5HUkhxH3MQ9aM84C+3nzr/4tIiw7CaHmyfCCK0g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sDXLT6iWExHbIyskGUG6sEdQU4T6iuNRhIrfQ4hGCRH/UI/J/2FpDecyuRpz9O483qUzRbNia4f0t6qc890jEYuWt3XFoQbKV5FZXadkJT2sW7D75iCr9PyyAzULBfQYBCTKngpkC4B5gjcLLLI32/u/55Ra5Aea4STBUVLKGg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SbAxdgMX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Veq/UEbmpDgMubjpNb8CKP56y1A0H2iFsS6/qns2xcoW2G/7qAasLURHb6eqOAYJpROGUIXYbuQUTmegR+n7QV5W5XEDBoRo7VgUMJwHf7U0wD87bubOJF7WVuKva5O+9FnMgkJdJqe+X9laNP83fxqJhRXTuB4tpp6GN2HQhR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSWYL22O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SbAxdgMX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05EB3C43399;
-	Sun, 24 Mar 2024 22:47:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSWYL22O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA512C433F1;
+	Sun, 24 Mar 2024 22:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320443;
-	bh=69h97DXk3sezN9njqO4oxBgBj5oS7i0ELO2Bz6h1VXk=;
+	s=k20201202; t=1711320445;
+	bh=IZbq5HUkhxH3MQ9aM84C+3nzr/4tIiw7CaHmyfCCK0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SbAxdgMXPcpWqWPwfmc2tYY/3G0Qn6iiyLi/tU43tjx/1p00RSOyHdqX0CuyzwCED
-	 nTpsWtkW33rV3NeiyffmWZIWCqgXxYlOqunR7Ccf42LXIjQjzhrBGL0IiNdPSq9Th4
-	 lwfRx+NMOeSQVVJLWsO2GdA1C2C8CNyv0p3C2qkS2PUPMnAvmj/i+vXvXyH7eKc+7h
-	 fBF9trOXnaQXgdlCzunVP4mfeiNZe1NSGf8t+zj2w5F08tOHttNc41NvuFGKXAzeQD
-	 xWuLm2mSOl5/Au3p8RNBBfWh0B+WLZz8SU0yb7Xm3QqZ7Rbxaeq57lbFb32cDkwtor
-	 TBfRTY0Y2HO4Q==
+	b=TSWYL22O/0dmZlrrO4ZBhsoZTiiNoHVFTdq6L6hVPP5+NBDYEvsf1UP5ShIEXan5Q
+	 EqprM80LB8YR8QlsR17OO5RKCS2Yfd5+Rz1wyBUVtoxQ5ZlKmp12avLg2ciodvDPY+
+	 pmPSd0Xv8vi4RtqaPx66jlBxWcAgZUqUqGR2sFo3CKEMky60yGbeoG0Gf8BNORzX7U
+	 ehVyrA4Z4+/xKwgMMZYCVEhhIjbyMpSMn1fAMbPSpkz+YO8jMacqGLXQTarrvZAZW9
+	 vScddHeS2WOrvFw+GAv3O4A+PbnyccnUdvCNd928Pf3NgUwiaqhmcUCl8gQrMxZsDx
+	 USdEdDLhLp+7A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Danil Rybakov <danilrybakov249@gmail.com>,
+Cc: Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 001/713] platform/x86: p2sb: On Goldmont only cache P2SB and SPI devfn BAR
-Date: Sun, 24 Mar 2024 18:35:27 -0400
-Message-ID: <20240324224720.1345309-2-sashal@kernel.org>
+Subject: [PATCH 6.7 003/713] io_uring: drop any code related to SCM_RIGHTS
+Date: Sun, 24 Mar 2024 18:35:29 -0400
+Message-ID: <20240324224720.1345309-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,79 +47,377 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit aec7d25b497ce4a8d044e9496de0aa433f7f8f06 ]
+Commit 6e5e6d274956305f1fc0340522b38f5f5be74bdb upstream.
 
-On Goldmont p2sb_bar() only ever gets called for 2 devices, the actual P2SB
-devfn 13,0 and the SPI controller which is part of the P2SB, devfn 13,2.
+This is dead code after we dropped support for passing io_uring fds
+over SCM_RIGHTS, get rid of it.
 
-But the current p2sb code tries to cache BAR0 info for all of
-devfn 13,0 to 13,7 . This involves calling pci_scan_single_device()
-for device 13 functions 0-7 and the hw does not seem to like
-pci_scan_single_device() getting called for some of the other hidden
-devices. E.g. on an ASUS VivoBook D540NV-GQ065T this leads to continuous
-ACPI errors leading to high CPU usage.
-
-Fix this by only caching BAR0 info and thus only calling
-pci_scan_single_device() for the P2SB and the SPI controller.
-
-Fixes: 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe")
-Reported-by: Danil Rybakov <danilrybakov249@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218531
-Tested-by: Danil Rybakov <danilrybakov249@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20240304134356.305375-2-hdegoede@redhat.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/p2sb.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+ include/linux/io_uring_types.h |   3 -
+ io_uring/filetable.c           |  11 +--
+ io_uring/io_uring.c            |  32 +------
+ io_uring/rsrc.c                | 169 +--------------------------------
+ io_uring/rsrc.h                |  15 ---
+ 5 files changed, 10 insertions(+), 220 deletions(-)
 
-diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-index 17cc4b45e0239..a64f56ddd4a44 100644
---- a/drivers/platform/x86/p2sb.c
-+++ b/drivers/platform/x86/p2sb.c
-@@ -20,9 +20,11 @@
- #define P2SBC_HIDE		BIT(8)
+diff --git a/include/linux/io_uring_types.h b/include/linux/io_uring_types.h
+index 239a4f68801bb..335eca49dc8b0 100644
+--- a/include/linux/io_uring_types.h
++++ b/include/linux/io_uring_types.h
+@@ -358,9 +358,6 @@ struct io_ring_ctx {
+ 	struct wait_queue_head		rsrc_quiesce_wq;
+ 	unsigned			rsrc_quiesce;
  
- #define P2SB_DEVFN_DEFAULT	PCI_DEVFN(31, 1)
-+#define P2SB_DEVFN_GOLDMONT	PCI_DEVFN(13, 0)
-+#define SPI_DEVFN_GOLDMONT	PCI_DEVFN(13, 2)
+-	#if defined(CONFIG_UNIX)
+-		struct socket		*ring_sock;
+-	#endif
+ 	/* hashed buffered write serialization */
+ 	struct io_wq_hash		*hash_map;
  
- static const struct x86_cpu_id p2sb_cpu_ids[] = {
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	PCI_DEVFN(13, 0)),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT, P2SB_DEVFN_GOLDMONT),
- 	{}
+diff --git a/io_uring/filetable.c b/io_uring/filetable.c
+index e7d749991de42..6e86e6188dbee 100644
+--- a/io_uring/filetable.c
++++ b/io_uring/filetable.c
+@@ -87,13 +87,10 @@ static int io_install_fixed_file(struct io_ring_ctx *ctx, struct file *file,
+ 		io_file_bitmap_clear(&ctx->file_table, slot_index);
+ 	}
+ 
+-	ret = io_scm_file_account(ctx, file);
+-	if (!ret) {
+-		*io_get_tag_slot(ctx->file_data, slot_index) = 0;
+-		io_fixed_file_set(file_slot, file);
+-		io_file_bitmap_set(&ctx->file_table, slot_index);
+-	}
+-	return ret;
++	*io_get_tag_slot(ctx->file_data, slot_index) = 0;
++	io_fixed_file_set(file_slot, file);
++	io_file_bitmap_set(&ctx->file_table, slot_index);
++	return 0;
+ }
+ 
+ int __io_fixed_fd_install(struct io_ring_ctx *ctx, struct file *file,
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index 06bd8795a87d1..f8d145fb40bbc 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -60,7 +60,6 @@
+ #include <linux/net.h>
+ #include <net/sock.h>
+ #include <net/af_unix.h>
+-#include <net/scm.h>
+ #include <linux/anon_inodes.h>
+ #include <linux/sched/mm.h>
+ #include <linux/uaccess.h>
+@@ -2939,13 +2938,6 @@ static __cold void io_ring_ctx_free(struct io_ring_ctx *ctx)
+ 		io_rsrc_node_destroy(ctx, ctx->rsrc_node);
+ 
+ 	WARN_ON_ONCE(!list_empty(&ctx->rsrc_ref_list));
+-
+-#if defined(CONFIG_UNIX)
+-	if (ctx->ring_sock) {
+-		ctx->ring_sock->file = NULL; /* so that iput() is called */
+-		sock_release(ctx->ring_sock);
+-	}
+-#endif
+ 	WARN_ON_ONCE(!list_empty(&ctx->ltimeout_list));
+ 
+ 	io_alloc_cache_free(&ctx->rsrc_node_cache, io_rsrc_node_cache_free);
+@@ -3867,32 +3859,12 @@ static int io_uring_install_fd(struct file *file)
+ /*
+  * Allocate an anonymous fd, this is what constitutes the application
+  * visible backing of an io_uring instance. The application mmaps this
+- * fd to gain access to the SQ/CQ ring details. If UNIX sockets are enabled,
+- * we have to tie this fd to a socket for file garbage collection purposes.
++ * fd to gain access to the SQ/CQ ring details.
+  */
+ static struct file *io_uring_get_file(struct io_ring_ctx *ctx)
+ {
+-	struct file *file;
+-#if defined(CONFIG_UNIX)
+-	int ret;
+-
+-	ret = sock_create_kern(&init_net, PF_UNIX, SOCK_RAW, IPPROTO_IP,
+-				&ctx->ring_sock);
+-	if (ret)
+-		return ERR_PTR(ret);
+-#endif
+-
+-	file = anon_inode_getfile_secure("[io_uring]", &io_uring_fops, ctx,
++	return anon_inode_getfile_secure("[io_uring]", &io_uring_fops, ctx,
+ 					 O_RDWR | O_CLOEXEC, NULL);
+-#if defined(CONFIG_UNIX)
+-	if (IS_ERR(file)) {
+-		sock_release(ctx->ring_sock);
+-		ctx->ring_sock = NULL;
+-	} else {
+-		ctx->ring_sock->file = file;
+-	}
+-#endif
+-	return file;
+ }
+ 
+ static __cold int io_uring_create(unsigned entries, struct io_uring_params *p,
+diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
+index f521c5965a933..4818b79231ddb 100644
+--- a/io_uring/rsrc.c
++++ b/io_uring/rsrc.c
+@@ -24,7 +24,6 @@ struct io_rsrc_update {
  };
  
-@@ -98,21 +100,12 @@ static void p2sb_scan_and_cache_devfn(struct pci_bus *bus, unsigned int devfn)
+ static void io_rsrc_buf_put(struct io_ring_ctx *ctx, struct io_rsrc_put *prsrc);
+-static void io_rsrc_file_put(struct io_ring_ctx *ctx, struct io_rsrc_put *prsrc);
+ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, struct iovec *iov,
+ 				  struct io_mapped_ubuf **pimu,
+ 				  struct page **last_hpage);
+@@ -157,7 +156,7 @@ static void io_rsrc_put_work(struct io_rsrc_node *node)
  
- static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
- {
--	unsigned int slot, fn;
+ 	switch (node->type) {
+ 	case IORING_RSRC_FILE:
+-		io_rsrc_file_put(node->ctx, prsrc);
++		fput(prsrc->file);
+ 		break;
+ 	case IORING_RSRC_BUFFER:
+ 		io_rsrc_buf_put(node->ctx, prsrc);
+@@ -402,23 +401,13 @@ static int __io_sqe_files_update(struct io_ring_ctx *ctx,
+ 				break;
+ 			}
+ 			/*
+-			 * Don't allow io_uring instances to be registered. If
+-			 * UNIX isn't enabled, then this causes a reference
+-			 * cycle and this instance can never get freed. If UNIX
+-			 * is enabled we'll handle it just fine, but there's
+-			 * still no point in allowing a ring fd as it doesn't
+-			 * support regular read/write anyway.
++			 * Don't allow io_uring instances to be registered.
+ 			 */
+ 			if (io_is_uring_fops(file)) {
+ 				fput(file);
+ 				err = -EBADF;
+ 				break;
+ 			}
+-			err = io_scm_file_account(ctx, file);
+-			if (err) {
+-				fput(file);
+-				break;
+-			}
+ 			*io_get_tag_slot(data, i) = tag;
+ 			io_fixed_file_set(file_slot, file);
+ 			io_file_bitmap_set(&ctx->file_table, i);
+@@ -675,22 +664,12 @@ void __io_sqe_files_unregister(struct io_ring_ctx *ctx)
+ 	for (i = 0; i < ctx->nr_user_files; i++) {
+ 		struct file *file = io_file_from_index(&ctx->file_table, i);
+ 
+-		/* skip scm accounted files, they'll be freed by ->ring_sock */
+-		if (!file || io_file_need_scm(file))
++		if (!file)
+ 			continue;
+ 		io_file_bitmap_clear(&ctx->file_table, i);
+ 		fput(file);
+ 	}
+ 
+-#if defined(CONFIG_UNIX)
+-	if (ctx->ring_sock) {
+-		struct sock *sock = ctx->ring_sock->sk;
+-		struct sk_buff *skb;
 -
--	if (PCI_FUNC(devfn) == 0) {
--		/*
--		 * When function number of the P2SB device is zero, scan it and
--		 * other function numbers, and if devices are available, cache
--		 * their BAR0s.
--		 */
--		slot = PCI_SLOT(devfn);
--		for (fn = 0; fn < NR_P2SB_RES_CACHE; fn++)
--			p2sb_scan_and_cache_devfn(bus, PCI_DEVFN(slot, fn));
--	} else {
--		/* Scan the P2SB device and cache its BAR0 */
--		p2sb_scan_and_cache_devfn(bus, devfn);
+-		while ((skb = skb_dequeue(&sock->sk_receive_queue)) != NULL)
+-			kfree_skb(skb);
 -	}
-+	/* Scan the P2SB device and cache its BAR0 */
-+	p2sb_scan_and_cache_devfn(bus, devfn);
-+
-+	/* On Goldmont p2sb_bar() also gets called for the SPI controller */
-+	if (devfn == P2SB_DEVFN_GOLDMONT)
-+		p2sb_scan_and_cache_devfn(bus, SPI_DEVFN_GOLDMONT);
+-#endif
+ 	io_free_file_tables(&ctx->file_table);
+ 	io_file_table_set_alloc_range(ctx, 0, 0);
+ 	io_rsrc_data_free(ctx->file_data);
+@@ -718,137 +697,6 @@ int io_sqe_files_unregister(struct io_ring_ctx *ctx)
+ 	return ret;
+ }
  
- 	if (!p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res))
- 		return -ENOENT;
+-/*
+- * Ensure the UNIX gc is aware of our file set, so we are certain that
+- * the io_uring can be safely unregistered on process exit, even if we have
+- * loops in the file referencing. We account only files that can hold other
+- * files because otherwise they can't form a loop and so are not interesting
+- * for GC.
+- */
+-int __io_scm_file_account(struct io_ring_ctx *ctx, struct file *file)
+-{
+-#if defined(CONFIG_UNIX)
+-	struct sock *sk = ctx->ring_sock->sk;
+-	struct sk_buff_head *head = &sk->sk_receive_queue;
+-	struct scm_fp_list *fpl;
+-	struct sk_buff *skb;
+-
+-	if (likely(!io_file_need_scm(file)))
+-		return 0;
+-
+-	/*
+-	 * See if we can merge this file into an existing skb SCM_RIGHTS
+-	 * file set. If there's no room, fall back to allocating a new skb
+-	 * and filling it in.
+-	 */
+-	spin_lock_irq(&head->lock);
+-	skb = skb_peek(head);
+-	if (skb && UNIXCB(skb).fp->count < SCM_MAX_FD)
+-		__skb_unlink(skb, head);
+-	else
+-		skb = NULL;
+-	spin_unlock_irq(&head->lock);
+-
+-	if (!skb) {
+-		fpl = kzalloc(sizeof(*fpl), GFP_KERNEL);
+-		if (!fpl)
+-			return -ENOMEM;
+-
+-		skb = alloc_skb(0, GFP_KERNEL);
+-		if (!skb) {
+-			kfree(fpl);
+-			return -ENOMEM;
+-		}
+-
+-		fpl->user = get_uid(current_user());
+-		fpl->max = SCM_MAX_FD;
+-		fpl->count = 0;
+-
+-		UNIXCB(skb).fp = fpl;
+-		skb->sk = sk;
+-		skb->destructor = io_uring_destruct_scm;
+-		refcount_add(skb->truesize, &sk->sk_wmem_alloc);
+-	}
+-
+-	fpl = UNIXCB(skb).fp;
+-	fpl->fp[fpl->count++] = get_file(file);
+-	unix_inflight(fpl->user, file);
+-	skb_queue_head(head, skb);
+-	fput(file);
+-#endif
+-	return 0;
+-}
+-
+-static __cold void io_rsrc_file_scm_put(struct io_ring_ctx *ctx, struct file *file)
+-{
+-#if defined(CONFIG_UNIX)
+-	struct sock *sock = ctx->ring_sock->sk;
+-	struct sk_buff_head list, *head = &sock->sk_receive_queue;
+-	struct sk_buff *skb;
+-	int i;
+-
+-	__skb_queue_head_init(&list);
+-
+-	/*
+-	 * Find the skb that holds this file in its SCM_RIGHTS. When found,
+-	 * remove this entry and rearrange the file array.
+-	 */
+-	skb = skb_dequeue(head);
+-	while (skb) {
+-		struct scm_fp_list *fp;
+-
+-		fp = UNIXCB(skb).fp;
+-		for (i = 0; i < fp->count; i++) {
+-			int left;
+-
+-			if (fp->fp[i] != file)
+-				continue;
+-
+-			unix_notinflight(fp->user, fp->fp[i]);
+-			left = fp->count - 1 - i;
+-			if (left) {
+-				memmove(&fp->fp[i], &fp->fp[i + 1],
+-						left * sizeof(struct file *));
+-			}
+-			fp->count--;
+-			if (!fp->count) {
+-				kfree_skb(skb);
+-				skb = NULL;
+-			} else {
+-				__skb_queue_tail(&list, skb);
+-			}
+-			fput(file);
+-			file = NULL;
+-			break;
+-		}
+-
+-		if (!file)
+-			break;
+-
+-		__skb_queue_tail(&list, skb);
+-
+-		skb = skb_dequeue(head);
+-	}
+-
+-	if (skb_peek(&list)) {
+-		spin_lock_irq(&head->lock);
+-		while ((skb = __skb_dequeue(&list)) != NULL)
+-			__skb_queue_tail(head, skb);
+-		spin_unlock_irq(&head->lock);
+-	}
+-#endif
+-}
+-
+-static void io_rsrc_file_put(struct io_ring_ctx *ctx, struct io_rsrc_put *prsrc)
+-{
+-	struct file *file = prsrc->file;
+-
+-	if (likely(!io_file_need_scm(file)))
+-		fput(file);
+-	else
+-		io_rsrc_file_scm_put(ctx, file);
+-}
+-
+ int io_sqe_files_register(struct io_ring_ctx *ctx, void __user *arg,
+ 			  unsigned nr_args, u64 __user *tags)
+ {
+@@ -897,21 +745,12 @@ int io_sqe_files_register(struct io_ring_ctx *ctx, void __user *arg,
+ 			goto fail;
+ 
+ 		/*
+-		 * Don't allow io_uring instances to be registered. If UNIX
+-		 * isn't enabled, then this causes a reference cycle and this
+-		 * instance can never get freed. If UNIX is enabled we'll
+-		 * handle it just fine, but there's still no point in allowing
+-		 * a ring fd as it doesn't support regular read/write anyway.
++		 * Don't allow io_uring instances to be registered.
+ 		 */
+ 		if (io_is_uring_fops(file)) {
+ 			fput(file);
+ 			goto fail;
+ 		}
+-		ret = io_scm_file_account(ctx, file);
+-		if (ret) {
+-			fput(file);
+-			goto fail;
+-		}
+ 		file_slot = io_fixed_file_slot(&ctx->file_table, i);
+ 		io_fixed_file_set(file_slot, file);
+ 		io_file_bitmap_set(&ctx->file_table, i);
+diff --git a/io_uring/rsrc.h b/io_uring/rsrc.h
+index 08ac0d8e07ef8..7238b9cfe33b6 100644
+--- a/io_uring/rsrc.h
++++ b/io_uring/rsrc.h
+@@ -75,21 +75,6 @@ int io_sqe_files_unregister(struct io_ring_ctx *ctx);
+ int io_sqe_files_register(struct io_ring_ctx *ctx, void __user *arg,
+ 			  unsigned nr_args, u64 __user *tags);
+ 
+-int __io_scm_file_account(struct io_ring_ctx *ctx, struct file *file);
+-
+-static inline bool io_file_need_scm(struct file *filp)
+-{
+-	return false;
+-}
+-
+-static inline int io_scm_file_account(struct io_ring_ctx *ctx,
+-				      struct file *file)
+-{
+-	if (likely(!io_file_need_scm(file)))
+-		return 0;
+-	return __io_scm_file_account(ctx, file);
+-}
+-
+ int io_register_files_update(struct io_ring_ctx *ctx, void __user *arg,
+ 			     unsigned nr_args);
+ int io_register_rsrc_update(struct io_ring_ctx *ctx, void __user *arg,
 -- 
 2.43.0
 
