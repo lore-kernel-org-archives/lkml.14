@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A7C18411E;
-	Sun, 24 Mar 2024 23:51:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1388184121;
+	Sun, 24 Mar 2024 23:51:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324263; cv=none; b=oPmuQkGFe1cLqrwI8HI0OtPf/RYmx8Xt/inHzisBifOPIGo5MU7hA+fv3pgJglTsbmomeiVCnM+xIabmFHseTrSrXI1IowZNFXk27l16/iRABP0nqv7plC8h4Vv7z+sloUjoZD4So/+pwLNEfqDtXnRYr+LJulGG0JsUukU3gM8=
+	t=1711324265; cv=none; b=W6LT+5g8EodjFXJv/ZDUUgNbK444cWWNS2D4QW+cYTRp92eEmGQVrMyFpy4qkoSNuD9WtKj69xJIP5l/ZfsH5Db/T5+GUssfS9kwA9bzajjPztL7iRFlJk7dUrKBNvkYvhQg7ZapWRXhXgukFSs/oDiZTra4G9/Ieni7rLaY8MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324263; c=relaxed/simple;
-	bh=9wwExgAB4sB/tBUpT+ZhNtlqdGcbolB8jF8LTbKf1yA=;
+	s=arc-20240116; t=1711324265; c=relaxed/simple;
+	bh=bFIW337YZEgPJGcH3SHvm6AhFeA3r3vl6XB2wyPDraM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=soWqe8UZxltqo4B7Ajn/NvMjBjPJOvZjN5yG5hwjHgKPIqg7qDTwqCMyCpguyugwIvwQ+bHvOZo58Z1MDhU3VBA7w/44pbiPF9KYCkpvSzXBY+eoTu0Z6M/RzILRz37LMd2nbB8Vi5LF7wPEW+gO6E9jn6i3Y2wQjKQuXkMFSBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CsP/CEda; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OeOTCpxgAuZmbIA0UKNIlWJMAMXRULv/qIRZmuSLeufreKy7ro/nVp+a4t3b/jYLMHc/3YtvyhWyyoAbSS70xgF/FNxDytDGoI1fKSTjJbhyLnSruNYTfcnv6Qc+TqjCvbyhofPA9YO9PoFINYYpaIRgja9lCTSibJjR8il/K1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKvs4eCw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CsP/CEda"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBC53C433C7;
-	Sun, 24 Mar 2024 23:51:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKvs4eCw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD884C433C7;
+	Sun, 24 Mar 2024 23:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324262;
-	bh=9wwExgAB4sB/tBUpT+ZhNtlqdGcbolB8jF8LTbKf1yA=;
+	s=k20201202; t=1711324264;
+	bh=bFIW337YZEgPJGcH3SHvm6AhFeA3r3vl6XB2wyPDraM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CsP/CEdasFcakEVxb4HKdpWdMLdvYRHESFHF+uA10W8pcgepUUWM3NBAD/TVtpK9J
-	 buix/SUBFVOVyinKJPLhv39Nhfd3/qhOgwgmC8Rl5S6AZZX7COLEnxm5gX6W++KwPT
-	 GmiRhsComdgRNHE+De7a/OGbiN728mhTjrNl6YvjpxvRsSZs9tbLe6FGZRsVbPds0T
-	 TEUfxhG+2tj50JjB/tuV/7dQUizf9KqzSFvfTTjCH1di46y2QiEsrCznK4uioZwQEK
-	 Z5EE781sIg7I3n56gt8C0ZuP64lbLArA6Caua7NkMwG64KoHiFdl+ZYPK4+WIld+3N
-	 7xRpdMGaGWNBA==
+	b=sKvs4eCwJNycwuAK+gUJ48A3KdXbau3D7+iHualN/aOEBd7wudtdTK7S10H2Hv2VX
+	 1qkkiBsLCbh7h3CNjgc2iesP/Rx9zsb+urNiPh0V2PQ3qF2RaJqxVqzJ/wmms75oO4
+	 sFQHWJRy5HpPkZ4g+chEal0qyy3ssU4jLGEL0WPiNAuyswftJ4ig5FG7cUG2oZJX9z
+	 GKlrpupLKsstJv0aIPSUh6LxO8UzCuAwC+l4laU9besVbp5IgGmgNfFDo8DIDTv/KY
+	 txNbojdxKdV3lcl8ZbuDRPQtyMSskTKLuVzIh13Gyr++b80vRTEUbf49qeoeTZo28+
+	 5A3sOeXAHn8IA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Robinson <pbrobinson@gmail.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 042/148] bus: tegra-aconnect: Update dependency to ARCH_TEGRA
-Date: Sun, 24 Mar 2024 19:48:26 -0400
-Message-ID: <20240324235012.1356413-43-sashal@kernel.org>
+Subject: [PATCH 4.19 044/148] wifi: brcmsmac: avoid function pointer casts
+Date: Sun, 24 Mar 2024 19:48:28 -0400
+Message-ID: <20240324235012.1356413-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -49,46 +49,79 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Robinson <pbrobinson@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 4acd21a45c1446277e2abaece97d7fa7c2e692a9 ]
+[ Upstream commit e1ea6db35fc3ba5ff063f097385e9f7a88c25356 ]
 
-Update the architecture dependency to be the generic Tegra
-because the driver works on the four latest Tegra generations
-not just Tegra210, if you build a kernel with a specific
-ARCH_TEGRA_xxx_SOC option that excludes Tegra210 you don't get
-this driver.
+An old cleanup went a little too far and causes a warning with clang-16
+and higher as it breaks control flow integrity (KCFI) rules:
 
-Fixes: 46a88534afb59 ("bus: Add support for Tegra ACONNECT")
-Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c:64:34: error: cast from 'void (*)(struct brcms_phy *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+   64 |                         brcms_init_timer(physhim->wl, (void (*)(void *))fn,
+      |                                                       ^~~~~~~~~~~~~~~~~~~~
+
+Change this one instance back to passing a void pointer so it can be
+used with the timer callback interface.
+
+Fixes: d89a4c80601d ("staging: brcm80211: removed void * from softmac phy")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240213100548.457854-1-arnd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c   | 3 ++-
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c  | 5 ++---
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h  | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 1851112ccc294..02ef3399bf810 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -126,12 +126,13 @@ config SUNXI_RSB
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
+index 35e3b101e5cf0..bedb1f73ef24e 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_cmn.c
+@@ -394,8 +394,9 @@ struct shared_phy *wlc_phy_shared_attach(struct shared_phy_params *shp)
+ 	return sh;
+ }
  
- config TEGRA_ACONNECT
- 	tristate "Tegra ACONNECT Bus Driver"
--	depends on ARCH_TEGRA_210_SOC
-+	depends on ARCH_TEGRA
- 	depends on OF && PM
- 	select PM_CLK
- 	help
- 	  Driver for the Tegra ACONNECT bus which is used to interface with
--	  the devices inside the Audio Processing Engine (APE) for Tegra210.
-+	  the devices inside the Audio Processing Engine (APE) for
-+	  Tegra210 and later.
+-static void wlc_phy_timercb_phycal(struct brcms_phy *pi)
++static void wlc_phy_timercb_phycal(void *ptr)
+ {
++	struct brcms_phy *pi = ptr;
+ 	uint delay = 5;
  
- config TEGRA_GMI
- 	tristate "Tegra Generic Memory Interface bus driver"
+ 	if (PHY_PERICAL_MPHASE_PENDING(pi)) {
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
+index a0de5db0cd646..b723817915365 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.c
+@@ -57,12 +57,11 @@ void wlc_phy_shim_detach(struct phy_shim_info *physhim)
+ }
+ 
+ struct wlapi_timer *wlapi_init_timer(struct phy_shim_info *physhim,
+-				     void (*fn)(struct brcms_phy *pi),
++				     void (*fn)(void *pi),
+ 				     void *arg, const char *name)
+ {
+ 	return (struct wlapi_timer *)
+-			brcms_init_timer(physhim->wl, (void (*)(void *))fn,
+-					 arg, name);
++			brcms_init_timer(physhim->wl, fn, arg, name);
+ }
+ 
+ void wlapi_free_timer(struct wlapi_timer *t)
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
+index dd8774717adee..27d0934e600ed 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy_shim.h
+@@ -131,7 +131,7 @@ void wlc_phy_shim_detach(struct phy_shim_info *physhim);
+ 
+ /* PHY to WL utility functions */
+ struct wlapi_timer *wlapi_init_timer(struct phy_shim_info *physhim,
+-				     void (*fn)(struct brcms_phy *pi),
++				     void (*fn)(void *pi),
+ 				     void *arg, const char *name);
+ void wlapi_free_timer(struct wlapi_timer *t);
+ void wlapi_add_timer(struct wlapi_timer *t, uint ms, int periodic);
 -- 
 2.43.0
 
