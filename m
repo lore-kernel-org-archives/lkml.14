@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143A115B56D;
-	Sun, 24 Mar 2024 23:16:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913CB22E141;
+	Sun, 24 Mar 2024 23:16:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322165; cv=none; b=RYC/mmPhKDvp3GYXOap1moPJPKkERYsvzEDpMO2j1HpSuFfC6ANd9tni9mL7dYezdA0Xj5Ye27ZPJfjKPYbLy8ZRaQgspHiVQOVAtSBX+oxzsAykaPJdwBHU+CqisybhyHn1dWde9OxOndThGDDnpNGFwDDdpm2qUKBSroxNg6c=
+	t=1711322195; cv=none; b=QPETgAH64KI0f7V0PtYvL2SpNLFMBVfj3YFyJ/sOaKNlAuteFBxWNKffRgodKlJkHijbJF7zdJEqHRKxLeLMbsgabS6u2NeaepIV8pLrK0TxURnXj1p/FYThatCT+7CZ+92/cFEbXh1vzfZSZjAXEnBKey/8ZJemcSh6tQ2XUfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322165; c=relaxed/simple;
-	bh=RZNVU4IURpxBQT1ORogNbGIWkBlDKgL0aWdcsIXGZEw=;
+	s=arc-20240116; t=1711322195; c=relaxed/simple;
+	bh=KER8bZzciCHbeBCuGOVRIdNqfbhATTMUIsmkFhl/6ec=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ShpPZcMqwm6hh1MviGFZNviwv4W9LDiLtKyraMnBiPT/Y/p7Ow2nifnlonPzpPYHaN0Iq4OgF601pM6jrcnalTx4XXUyINblnXB4eVyNRPZK9zH4U9qr1uMeODaneqA0Eft1P+7pdZX2PZS34Y9FfM6mHPeWdMIM0qfPlVg2+Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SytYU7oR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bl3zlYrj6otP1TF3MlJUjuLcrzndULnBsAqVcX89qIqeTkHvhXvnguEzNYjiwgnUT1fXdNFUv4+Mi45UTfqFKMqa+cmKDftcKEz9fRqIxFos1IxK4Eq45+3HcHmAPRpRhCGAP9bg7jOoxy+GnF5R1Ni8cR/NXGz45BH2zNOLUpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+1zoBQg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SytYU7oR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53E40C433C7;
-	Sun, 24 Mar 2024 23:16:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+1zoBQg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2BECC43390;
+	Sun, 24 Mar 2024 23:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322164;
-	bh=RZNVU4IURpxBQT1ORogNbGIWkBlDKgL0aWdcsIXGZEw=;
+	s=k20201202; t=1711322194;
+	bh=KER8bZzciCHbeBCuGOVRIdNqfbhATTMUIsmkFhl/6ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SytYU7oR30Z56Nk3nCvPv8NxKzYNROdJmui4VTEPLuDvMMT/wiJOIV2Ap33b0ZrJK
-	 Hbw7icTmT7sQrOLvU2LwSRWDDNM+j9+k/IRMhMDidUG9d8ECLttZn2hMtnqasXJy+s
-	 3nQxlmTgHudqu1ALTAoWawXeAWWAm0ryRB0xcJ5Tyod53TQkgQI2ny2w36/nDUJxXv
-	 lC1tEUsdsqIqElEbklai2JctSMkYYaEOlwJpw09BnWFr1H+5tQLyMOXmDmhg4HNsLn
-	 7qV7uJKYVQB9NJ3jtG1KvMp4NxQysFS7KtFpJucmltw8sLNqoSLN8+SLpg1cOSqnjW
-	 U39s+4mrYpsnQ==
+	b=s+1zoBQgWUo28BJCVw3xwVU/g6NjN1J3+sLiE4EgElMYsTMnzgyOksvLI/5tj1h7h
+	 2XYOdt3obJXszCsWdobjHR3ct3JsjLCxJnotf6yj0Wn61q8gwUlCp8a8kbwEChgIit
+	 oNc7uDgIS3DUIA6nDSQdf64gpWpsbffNJsNxWIzQdua1L83E/pb7R06i98gsl9FxII
+	 k7wPK3WCWV1V8TF4M78imnBZLHEa47Oi9TuT74Z6BD92xE6WSPTloXfsMpizfbKUSY
+	 xMoGBLzeCM9dY6v49H1PCNYSrBV19lt6uSEWmC3LY3k2dkpJF8wqLF5+eWd+nERyEm
+	 rtpMBXVDFtcBA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Baokun Li <libaokun1@huawei.com>,
+	Jan Kara <jack@suse.cz>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 243/451] drm/tegra: output: Fix missing i2c_put_adapter() in the error handling paths of tegra_output_probe()
-Date: Sun, 24 Mar 2024 19:08:39 -0400
-Message-ID: <20240324231207.1351418-244-sashal@kernel.org>
+Subject: [PATCH 6.1 273/451] quota: simplify drop_dquot_ref()
+Date: Sun, 24 Mar 2024 19:09:09 -0400
+Message-ID: <20240324231207.1351418-274-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,72 +48,130 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Baokun Li <libaokun1@huawei.com>
 
-[ Upstream commit 2db4578ef6ffb2b52115ca0ebf897b60ec559556 ]
+[ Upstream commit 7bce48f0fec602b3b6c335963b26d9eefa417788 ]
 
-If an error occurs after a successful of_get_i2c_adapter_by_node() call, it
-should be undone by a corresponding i2c_put_adapter().
+As Honza said, remove_inode_dquot_ref() currently does not release the
+last dquot reference but instead adds the dquot to tofree_head list. This
+is because dqput() can sleep while dropping of the last dquot reference
+(writing back the dquot and calling ->release_dquot()) and that must not
+happen under dq_list_lock. Now that dqput() queues the final dquot cleanup
+into a workqueue, remove_inode_dquot_ref() can call dqput() unconditionally
+and we can significantly simplify it.
 
-Add the missing i2c_put_adapter() call.
+Here we open code the simplified code of remove_inode_dquot_ref() into
+remove_dquot_ref() and remove the function put_dquot_list() which is no
+longer used.
 
-Fixes: 9be7d864cf07 ("drm/tegra: Implement panel support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/b38604178991e1f08b2cda219103be266be2d680.1693667005.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Message-Id: <20230630110822.3881712-6-libaokun1@huawei.com>
+Stable-dep-of: 179b8c97ebf6 ("quota: Fix rcu annotations of inode dquot pointers")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/output.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ fs/quota/dquot.c | 70 +++++++-----------------------------------------
+ 1 file changed, 9 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-index 47d26b5d99456..7ccd010a821b7 100644
---- a/drivers/gpu/drm/tegra/output.c
-+++ b/drivers/gpu/drm/tegra/output.c
-@@ -139,8 +139,10 @@ int tegra_output_probe(struct tegra_output *output)
- 						       GPIOD_IN,
- 						       "HDMI hotplug detect");
- 	if (IS_ERR(output->hpd_gpio)) {
--		if (PTR_ERR(output->hpd_gpio) != -ENOENT)
--			return PTR_ERR(output->hpd_gpio);
-+		if (PTR_ERR(output->hpd_gpio) != -ENOENT) {
-+			err = PTR_ERR(output->hpd_gpio);
-+			goto put_i2c;
-+		}
- 
- 		output->hpd_gpio = NULL;
- 	}
-@@ -149,7 +151,7 @@ int tegra_output_probe(struct tegra_output *output)
- 		err = gpiod_to_irq(output->hpd_gpio);
- 		if (err < 0) {
- 			dev_err(output->dev, "gpiod_to_irq(): %d\n", err);
--			return err;
-+			goto put_i2c;
- 		}
- 
- 		output->hpd_irq = err;
-@@ -162,7 +164,7 @@ int tegra_output_probe(struct tegra_output *output)
- 		if (err < 0) {
- 			dev_err(output->dev, "failed to request IRQ#%u: %d\n",
- 				output->hpd_irq, err);
--			return err;
-+			goto put_i2c;
- 		}
- 
- 		output->connector.polled = DRM_CONNECTOR_POLL_HPD;
-@@ -176,6 +178,12 @@ int tegra_output_probe(struct tegra_output *output)
- 	}
- 
- 	return 0;
-+
-+put_i2c:
-+	if (output->ddc)
-+		i2c_put_adapter(output->ddc);
-+
-+	return err;
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index b0cf3869d3bf5..730d8ffc4928a 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -1084,59 +1084,7 @@ static int add_dquot_ref(struct super_block *sb, int type)
+ 	return err;
  }
  
- void tegra_output_remove(struct tegra_output *output)
+-/*
+- * Remove references to dquots from inode and add dquot to list for freeing
+- * if we have the last reference to dquot
+- */
+-static void remove_inode_dquot_ref(struct inode *inode, int type,
+-				   struct list_head *tofree_head)
+-{
+-	struct dquot **dquots = i_dquot(inode);
+-	struct dquot *dquot = dquots[type];
+-
+-	if (!dquot)
+-		return;
+-
+-	dquots[type] = NULL;
+-	if (list_empty(&dquot->dq_free)) {
+-		/*
+-		 * The inode still has reference to dquot so it can't be in the
+-		 * free list
+-		 */
+-		spin_lock(&dq_list_lock);
+-		list_add(&dquot->dq_free, tofree_head);
+-		spin_unlock(&dq_list_lock);
+-	} else {
+-		/*
+-		 * Dquot is already in a list to put so we won't drop the last
+-		 * reference here.
+-		 */
+-		dqput(dquot);
+-	}
+-}
+-
+-/*
+- * Free list of dquots
+- * Dquots are removed from inodes and no new references can be got so we are
+- * the only ones holding reference
+- */
+-static void put_dquot_list(struct list_head *tofree_head)
+-{
+-	struct list_head *act_head;
+-	struct dquot *dquot;
+-
+-	act_head = tofree_head->next;
+-	while (act_head != tofree_head) {
+-		dquot = list_entry(act_head, struct dquot, dq_free);
+-		act_head = act_head->next;
+-		/* Remove dquot from the list so we won't have problems... */
+-		list_del_init(&dquot->dq_free);
+-		dqput(dquot);
+-	}
+-}
+-
+-static void remove_dquot_ref(struct super_block *sb, int type,
+-		struct list_head *tofree_head)
++static void remove_dquot_ref(struct super_block *sb, int type)
+ {
+ 	struct inode *inode;
+ #ifdef CONFIG_QUOTA_DEBUG
+@@ -1153,11 +1101,16 @@ static void remove_dquot_ref(struct super_block *sb, int type,
+ 		 */
+ 		spin_lock(&dq_data_lock);
+ 		if (!IS_NOQUOTA(inode)) {
++			struct dquot **dquots = i_dquot(inode);
++			struct dquot *dquot = dquots[type];
++
+ #ifdef CONFIG_QUOTA_DEBUG
+ 			if (unlikely(inode_get_rsv_space(inode) > 0))
+ 				reserved = 1;
+ #endif
+-			remove_inode_dquot_ref(inode, type, tofree_head);
++			dquots[type] = NULL;
++			if (dquot)
++				dqput(dquot);
+ 		}
+ 		spin_unlock(&dq_data_lock);
+ 	}
+@@ -1174,13 +1127,8 @@ static void remove_dquot_ref(struct super_block *sb, int type,
+ /* Gather all references from inodes and drop them */
+ static void drop_dquot_ref(struct super_block *sb, int type)
+ {
+-	LIST_HEAD(tofree_head);
+-
+-	if (sb->dq_op) {
+-		remove_dquot_ref(sb, type, &tofree_head);
+-		synchronize_srcu(&dquot_srcu);
+-		put_dquot_list(&tofree_head);
+-	}
++	if (sb->dq_op)
++		remove_dquot_ref(sb, type);
+ }
+ 
+ static inline
 -- 
 2.43.0
 
