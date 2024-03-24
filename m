@@ -1,193 +1,142 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBB51759E
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 12:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B11C175A9;
+	Sun, 24 Mar 2024 12:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711281752; cv=none; b=QXsv++mAa77jNLUY5BoYL3mAoKn4tKpVEiw+Cdr/8tgtHzixVeml5F9oNRrtvFwpD7jXxj/HDx7lYWVccFZNnQ3Wn4xrok854Vi6D6Uekg3qgK5UGPf+Dr5k/Tb7sDjV2UfqyBkq4TzGWpJVE7CI7LYt5ilv6gHpdm614LC9CaU=
+	t=1711281853; cv=none; b=KfLYKXnPmDA0xlAnOSbaDd9rDmn8N3oEPzXcjXvjl1qkfZQ8cKoxfmtIeg5XEwjxd9U8i3EBUdWuVM4D3iiG9HnRXF+RvGvpXiy5IZE9dOeBVdiD8VCgbrXQFFGhnKoJg4pg3uQrQMfRW2Y+5KfiBf1nckFsJ5SJVk7mdZbLViU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711281752; c=relaxed/simple;
-	bh=uswSHN8gM7EHW19tuezUmRw7mtMd+UG2/e+TbNplN5o=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LjIVGMX8qtLamXd8nUWxxVuTm+Yrx7bYHVZMHgnVIsL3HOhIx4Ag3SaR40cXHYeH1YLTMvcrh0MzV29fhPU+Kp1Lit72QlVXdQiO1XrdcdszOFegEmRc0qwlH4vNKcK3zKIUXpv3yzPmrwgv/2QMnd+6DGjOd4acsa2r+1J7KKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4V2ZQ44bs9z1xs6Y;
-	Sun, 24 Mar 2024 20:00:28 +0800 (CST)
-Received: from dggpemd200001.china.huawei.com (unknown [7.185.36.224])
-	by mail.maildlp.com (Postfix) with ESMTPS id E11ED140381;
-	Sun, 24 Mar 2024 20:02:25 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by dggpemd200001.china.huawei.com
- (7.185.36.224) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Sun, 24 Mar
- 2024 20:02:25 +0800
-From: ZhaoLong Wang <wangzhaolong1@huawei.com>
-To: <richard@nod.at>, <miquel.raynal@bootlin.com>, <vigneshr@ti.com>,
-	<ada@thorsis.com>, <error27@gmail.com>, <Artem.Bityutskiy@nokia.com>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<chengzhihao1@huawei.com>, <wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>
-Subject: [PATCH] ubifs: fix incorrect UBIFS_DFS_DIR_LEN macro definition
-Date: Sun, 24 Mar 2024 20:03:33 +0800
-Message-ID: <20240324120333.3837837-1-wangzhaolong1@huawei.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1711281853; c=relaxed/simple;
+	bh=a7LNXZGyhTHnJdRFDQFiEyndGv76THAe6Z6KbddtEB4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hUV1VTKcTJM8FmrknEIFXQMK+5nbWsifMl5rtgxhAzv/hm8o899d0ZH0BpB1pMJ3UmU+ixnbYFpeZPSxwTxX8WsMxuGmX2LklAV5NswuyAFEQcIMMtcv5xUdzjh5mlPocVerkxRZSgCDSTk1uTmCAAVRS+aEmR6TsV09pez6qRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bigler.one; spf=pass smtp.mailfrom=bigler.one; dkim=pass (2048-bit key) header.d=bigler.one header.i=@bigler.one header.b=Bbvs2KiV; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bigler.one
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bigler.one
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bigler.one header.i=@bigler.one header.b="Bbvs2KiV"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4V2ZJZ0JBpz810r;
+	Sun, 24 Mar 2024 12:55:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bigler.one; s=key2;
+	t=1711281342; bh=a7LNXZGyhTHnJdRFDQFiEyndGv76THAe6Z6KbddtEB4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Bbvs2KiVc2rRfF8yA37KDFw+fEJ3kIEcife3kStcavleVNza/wVp/sjF6LfNkHRCa
+	 7fCe8KE6MyFhZb8N+hvmKpCemytQZBLq/rCSeK/mYI0lHNOMYqK2DtvPNYXc4Knp3N
+	 TpvlNy8mPlWq2Fk2Z/a8IPzNJUYbm42rhOdEVLziH5+K6lp0lEk5l9zgdSQFT0NN3Q
+	 12/vpyqxzR5Qp0V9T1DThtnY0erF3ysnThWAvcnmtFEw2sglSMNfqck71MvmZRnWSQ
+	 j8sPdxmLlJNFQW/3puTq48Udt8oZ+1jhQIh7IQ+HrEeDamoOaI3HJrlwQ5opFjE1UF
+	 +QDVIsxdRoIgw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4V2ZJY700fz810G;
+	Sun, 24 Mar 2024 12:55:41 +0100 (CET)
+Received: from mx2fc6.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4V2ZJW4Rp1z8sb7;
+	Sun, 24 Mar 2024 12:55:39 +0100 (CET)
+Received: from [192.168.1.24] (xdsl-188-155-38-242.adslplus.ch [188.155.38.242])
+	by mx2fc6.netcup.net (Postfix) with ESMTPSA id 5B868405C9;
+	Sun, 24 Mar 2024 12:55:34 +0100 (CET)
+Authentication-Results: mx2fc6;
+        spf=pass (sender IP is 188.155.38.242) smtp.mailfrom=benjamin@bigler.one smtp.helo=[192.168.1.24]
+Received-SPF: pass (mx2fc6: connection is authenticated)
+Message-ID: <ea86159bb555336ae21311770e3a1a6374092e64.camel@bigler.one>
+Subject: Re: [PATCH net-next v2 0/9] Add support for OPEN Alliance
+ 10BASE-T1x MACPHY Serial Interface
+From: Benjamin Bigler <benjamin@bigler.one>
+To: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ horatiu.vultur@microchip.com, Woojung.Huh@microchip.com,
+ Nicolas.Ferre@microchip.com, UNGLinuxDriver@microchip.com,
+ Thorsten.Kummermehr@microchip.com, davem@davemloft.net,
+ edumazet@google.com,  kuba@kernel.org, pabeni@redhat.com,
+ robh+dt@kernel.org,  krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, corbet@lwn.net,  steen.hegelund@microchip.com,
+ rdunlap@infradead.org, horms@kernel.org,  casper.casan@gmail.com,
+ andrew@lunn.ch
+Date: Sun, 24 Mar 2024 12:55:34 +0100
+In-Reply-To: <20231023154649.45931-1-Parthiban.Veerasooran@microchip.com>
+References: <20231023154649.45931-1-Parthiban.Veerasooran@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemd200001.china.huawei.com (7.185.36.224)
+X-PPP-Message-ID: <171128133508.28970.8297446260616691683@mx2fc6.netcup.net>
+X-Rspamd-Queue-Id: 5B868405C9
+X-Rspamd-Server: rspamd-worker-8404
+X-NC-CID: v2WY1NJuJOavqDS6N+mo2HKZCu2cke6cX3NwrAx0Pn64kxU=
 
-The UBIFS_DFS_DIR_LEN macro, which defines the maximum length of the UBIFS
-debugfs directory name, is incorrectly calculated. The current formula is
-(3 + 1 + 2*2 + 1), which assumes that both UBI device number and volume ID
-are limited to 2 characters. However, UBI device number ranges from 0 to
-37 (2 characters), and volume ID ranges from 0 to 127 (up to 3 characters).
+Hi Parthiban
 
-This incorrect definition leads to a buffer overflow issue when the device
-number is 31 and volume ID is 127, causing the dbg_debugfs_init_fs() function
-to return prematurely without creating debugfs directory in the stable branch
-linux-5.10.y.
+I hope I send this in the right context as it is not related to just one pa=
+tch or
+some specific code.
 
-A previous attempt to fix this issue in commit be076fdf8369 ("ubifs: fix
-snprintf() checking") by modifying the snprintf return value check range is
-insufficient. It avoids the premature function return but does not address
-the root cause of the problem. If the buffer length is inadequate, snprintf
-will truncate the output string, resulting in incorrect directory names
-during filesystem debugging.
+I conducted UDP load testing using three i.MX8MM boards in conjunction with=
+ the
+LAN8651. The setup involved one board functioning as a server, which is jus=
+t
+echoing back received data, while the remaining two boards acted as clients=
+,
+sending UDP packets of different sizes in various bursts to the server.
+Due to hardware constraints, the SPI bus speed was limited to 15 MHz, which=
+ might
+have influenced the results.
 
-The proper solution is to correct the UBIFS_DFS_DIR_LEN macro definition to
-(3 + 1 + 2 + 3 + 1), accommodating the maximum lengths of both UBI device
-number and volume ID, plus the separators and null terminator.
+During the tests I experienced some issues:
 
-Additionally, the original equality check for snprintf return value strictly
-adheres to the function definition. Although it may seem rigid, it is a good
-programming practice to prevent introducing subtle bugs.
+- The boards just start receiving after first sending something (ping anoth=
+er board).
+  Some measurements showed that the irq stays asserted after init. This mak=
+es sense
+  as far as I understand the chapter 7.7 of the specification, the irq is d=
+easserted
+  on reception of the first data header following CSn being asserted. As a =
+workaround
+  I trigger the thread at the end of oa_tc6_init.
 
-This patch makes the following changes:
+- If there is a lot of traffic, the receive buffer overflow error spams the=
+ log.
 
-1. Corrects the UBIFS_DFS_DIR_LEN macro definition to (3 + 1 + 2 + 3 + 1).
-2. Updates the snprintf calls to use UBIFS_DFS_DIR_LEN instead of
-    UBIFS_DFS_DIR_LEN + 1.
-3. Modifies the error checks to compare against UBIFS_DFS_DIR_LEN using >=
-    instead of >.
-4. Removes the redundant UBIFS_DFS_DIR_LEN definition in ubifs.h.
-5. Updates the relevant comments to reflect the correct maximum length
-    calculation.
+- If there is a lot of traffic, I got various kernel panics in oa_tc6_updat=
+e_rx_skb.
+  Mostly because more data to rx_skb is added than allocated and sometimes =
+because
+  rx_skb is null in oa_tc6_update_rx_skb or oa_tc6_prcs_rx_frame_end. Some =
+debugging
+  with a logic analyzer showed that the chip is not behave correctly. There=
+ is more
+  bytes between start_valid and end_valid than there should be. Also there
+  seems to be 2 end_valid without a start_valid between. What is common is =
+that the incorrect
+  frame starts in a chunk where end_valid and start_valid is set.
+  In my opinion its a problem in the chip (maybe related to the errata in t=
+he next point)
+  but the driver should be resilent and just drop the packet and not cause =
+a kernel panic.
 
-With these changes, the buffer overflow issue is thoroughly resolved, and the
-code is made more robust and maintainable.
+- Sometimes the chip stops working. It always asserts the irq but there is =
+no data (rca=3D0)
+  and also exst is not active. I found out that there is an errata (DS80001=
+075) point s3
+  that explains this. I set the ZARFE bit in CONFIG0. This also fixes the p=
+oint above.
+  The driver now works since about 2.5 weeks with various load with just on=
+e loss of frame
+  error where I had to reboot the system after about 4 days.
 
-Fixes: be076fdf8369 ("ubifs: fix snprintf() checking")
-Fixes: ae380ce04731 ("UBIFS: lessen the size of debugging info data structure")
-Fixes: 2a734bb8d502 ("UBI: use debugfs for the extra checks knobs")
-Signed-off-by: ZhaoLong Wang <wangzhaolong1@huawei.com>
----
- drivers/mtd/ubi/debug.c | 4 ++--
- drivers/mtd/ubi/ubi.h   | 2 +-
- fs/ubifs/debug.c        | 4 ++--
- fs/ubifs/debug.h        | 9 +++++----
- fs/ubifs/ubifs.h        | 7 -------
- 5 files changed, 10 insertions(+), 16 deletions(-)
+Is there a reason why you removed the netdev watchdog which was active in v=
+2?
 
-diff --git a/drivers/mtd/ubi/debug.c b/drivers/mtd/ubi/debug.c
-index d57f52bd2ff3..9ec3b8b6a0aa 100644
---- a/drivers/mtd/ubi/debug.c
-+++ b/drivers/mtd/ubi/debug.c
-@@ -598,9 +598,9 @@ int ubi_debugfs_init_dev(struct ubi_device *ubi)
- 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
- 		return 0;
- 
--	n = snprintf(d->dfs_dir_name, UBI_DFS_DIR_LEN + 1, UBI_DFS_DIR_NAME,
-+	n = snprintf(d->dfs_dir_name, UBI_DFS_DIR_LEN, UBI_DFS_DIR_NAME,
- 		     ubi->ubi_num);
--	if (n > UBI_DFS_DIR_LEN) {
-+	if (n >= UBI_DFS_DIR_LEN) {
- 		/* The array size is too small */
- 		return -EINVAL;
- 	}
-diff --git a/drivers/mtd/ubi/ubi.h b/drivers/mtd/ubi/ubi.h
-index 32009a24869e..da4e53ef5b0a 100644
---- a/drivers/mtd/ubi/ubi.h
-+++ b/drivers/mtd/ubi/ubi.h
-@@ -420,7 +420,7 @@ struct ubi_debug_info {
- 	unsigned int power_cut_min;
- 	unsigned int power_cut_max;
- 	unsigned int emulate_failures;
--	char dfs_dir_name[UBI_DFS_DIR_LEN + 1];
-+	char dfs_dir_name[UBI_DFS_DIR_LEN];
- 	struct dentry *dfs_dir;
- 	struct dentry *dfs_chk_gen;
- 	struct dentry *dfs_chk_io;
-diff --git a/fs/ubifs/debug.c b/fs/ubifs/debug.c
-index ac77ac1fd73e..d91cec93d968 100644
---- a/fs/ubifs/debug.c
-+++ b/fs/ubifs/debug.c
-@@ -2827,9 +2827,9 @@ void dbg_debugfs_init_fs(struct ubifs_info *c)
- 	const char *fname;
- 	struct ubifs_debug_info *d = c->dbg;
- 
--	n = snprintf(d->dfs_dir_name, UBIFS_DFS_DIR_LEN + 1, UBIFS_DFS_DIR_NAME,
-+	n = snprintf(d->dfs_dir_name, UBIFS_DFS_DIR_LEN, UBIFS_DFS_DIR_NAME,
- 		     c->vi.ubi_num, c->vi.vol_id);
--	if (n > UBIFS_DFS_DIR_LEN) {
-+	if (n >= UBIFS_DFS_DIR_LEN) {
- 		/* The array size is too small */
- 		return;
- 	}
-diff --git a/fs/ubifs/debug.h b/fs/ubifs/debug.h
-index ed966108da80..bbcb2bf41f83 100644
---- a/fs/ubifs/debug.h
-+++ b/fs/ubifs/debug.h
-@@ -18,11 +18,12 @@ typedef int (*dbg_znode_callback)(struct ubifs_info *c,
- 				  struct ubifs_znode *znode, void *priv);
- 
- /*
-- * The UBIFS debugfs directory name pattern and maximum name length (3 for "ubi"
-- * + 1 for "_" and plus 2x2 for 2 UBI numbers and 1 for the trailing zero byte.
-+ * The UBIFS sysfs directory name pattern and maximum name length (3 for "ubi"
-+ * + 1 for "_" and 2 for UBI device numbers and 3 for volume number and 1 for
-+ * the trailing zero byte.
-  */
- #define UBIFS_DFS_DIR_NAME "ubi%d_%d"
--#define UBIFS_DFS_DIR_LEN  (3 + 1 + 2*2 + 1)
-+#define UBIFS_DFS_DIR_LEN  (3 + 1 + 2 + 3 + 1)
- 
- /**
-  * ubifs_debug_info - per-FS debugging information.
-@@ -103,7 +104,7 @@ struct ubifs_debug_info {
- 	unsigned int chk_fs:1;
- 	unsigned int tst_rcvry:1;
- 
--	char dfs_dir_name[UBIFS_DFS_DIR_LEN + 1];
-+	char dfs_dir_name[UBIFS_DFS_DIR_LEN];
- 	struct dentry *dfs_dir;
- 	struct dentry *dfs_dump_lprops;
- 	struct dentry *dfs_dump_budg;
-diff --git a/fs/ubifs/ubifs.h b/fs/ubifs/ubifs.h
-index 1f3ea879d93a..7b6be3fb4f62 100644
---- a/fs/ubifs/ubifs.h
-+++ b/fs/ubifs/ubifs.h
-@@ -157,13 +157,6 @@
- #define UBIFS_HMAC_ARR_SZ 0
- #endif
- 
--/*
-- * The UBIFS sysfs directory name pattern and maximum name length (3 for "ubi"
-- * + 1 for "_" and plus 2x2 for 2 UBI numbers and 1 for the trailing zero byte.
-- */
--#define UBIFS_DFS_DIR_NAME "ubi%d_%d"
--#define UBIFS_DFS_DIR_LEN  (3 + 1 + 2*2 + 1)
--
- /*
-  * Lockdep classes for UBIFS inode @ui_mutex.
-  */
--- 
-2.31.1
+Thanks,
+Benjamin Bigler
 
