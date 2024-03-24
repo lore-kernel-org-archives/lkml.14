@@ -1,82 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEAD13C3D2;
-	Sun, 24 Mar 2024 22:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319949; cv=none; b=rwMXYVNyI5vTag/Dgp5uXEK2SIDkWyOYSpAXCUksuHSXJq8/mda0T0HDYiOlgfQOfOmZpsbqqXRD/3HBcqziv+2AsJjwKJmwIEPdLXrM+0cxUHGiWezJmFL1cxb5HKeocdIz+YL1PPJf3m+GLzezu+Q+2Yg7kwMhk8LObOE1htI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319949; c=relaxed/simple;
-	bh=NexbagmyqgKdVb4XpfNijJu/lL6hIr1kSEOaWacCw/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dC/pxSCgYUt53U4hxY7QCJR1ADU391oAAmbgjpn7dKNO++LFlZHZ+qXlq/B/fqtL8d77kbQmt2HC8C/uX1G8cU29W0kPetsixT6YU0srHgFPx1d+3kfqb0ffutz/5Bg1PX03sqBmO4Zq6BnNWDV5YSpjc4URhBodk2SAN5Zla0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ru6Pmuwf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ru6Pmuwf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B76C433A6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBF916EC04;
 	Sun, 24 Mar 2024 22:39:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711319949;
-	bh=NexbagmyqgKdVb4XpfNijJu/lL6hIr1kSEOaWacCw/0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ru6Pmuwfdko1BREqzTAb0r8/TcwrvDjxQkaaj0stU6H47USgjIj+NGj9kgCm/5K6n
-	 Bl7EhL7R/9ga3iiCZtFek/z9QGjlTACU52G5RIZ4Hw11lROGwpLDudvW3IJZv/hCgx
-	 ZPz+4mnbeW68ngn9Leg40m8WbHWhnBLdTF03R0RWjSPp01f6NgRbRhRdkEaqQQcIIH
-	 tqaersiiXPEYgLUHaQSdUQWwWhWsOb+bjmT+5lO83TG2Y0hiPUbkK1XDOeNOh8xImv
-	 LVH7ZJ4qmts84DUA+u209CjXRWWFzXlHyYjEQ1Mjbr/2uIbaRAMkYEa/utoXpc9yab
-	 VD0WfXFV/imjA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,
-	Felix Fietkau <nbd@nbd.name>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 255/715] wifi: mt76: fix the issue of missing txpwr settings from ch153 to ch177
-Date: Sun, 24 Mar 2024 18:27:14 -0400
-Message-ID: <20240324223455.1342824-256-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
-References: <20240324223455.1342824-1-sashal@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711319951; cv=none; b=nS8U4+psogbVSQVJIyclIs9g3Frb0MxZ2NtnAvEtEPTpD7VWmiMQYHvyL903f1Yei1GDS5VAO4MmydoKb2p8ZkCPdtfohalCmKcJOJ8fEUW27sprFsA7H73x5eg1gnGRAkyiW8N4Vd6xvVDUHGkm38bzrZ+Dr0r3WNGXUjkbeLY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711319951; c=relaxed/simple;
+	bh=8a8yUbpxmH47E3+zw0R/B+Uv/KODFRMskQlpXkg9AKE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UNE/WnYM8tkEkVX9N22e1mtrsh4EVextQ62eN9SNEvHt5GbxpySOtZd/YBwxECdwXethPNJTP2iK7oFMa9OXcqOP2CmmWeDisB87rKNJHaYASGiZNZndMMg0JpyxYao/CPCd5ZS+r9IO9Ek+QTgoXfQbMyySUrNThaFsFj7qaNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875a9e.versanet.de ([83.135.90.158] helo=phil.lan)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1roWUV-0007sn-Gi; Sun, 24 Mar 2024 23:38:59 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	erkin.bozoglu@xeront.com,
+	mithat.guner@xeront.com
+Subject: Re: [PATCH] arm64: dts: rockchip: set PHY address of MT7531 switch to 0x1f
+Date: Sun, 24 Mar 2024 23:38:52 +0100
+Message-Id: <171131986741.918919.17715253575566956746.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240314-for-rockchip-mt7531-phy-address-v1-1-743b5873358f@arinc9.com>
+References: <20240314-for-rockchip-mt7531-phy-address-v1-1-743b5873358f@arinc9.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
+On Thu, 14 Mar 2024 15:24:35 +0300, Arınç ÜNAL wrote:
+> The MT7531 switch listens on PHY address 0x1f on an MDIO bus. I've got two
+> findings that support this. There's no bootstrapping option to change the
+> PHY address of the switch. The Linux driver hardcodes 0x1f as the PHY
+> address of the switch. So the reg property on the device tree is currently
+> ignored by the Linux driver.
+> 
+> Therefore, describe the correct PHY address on Banana Pi BPI-R2 Pro that
+> has this switch.
+> 
+> [...]
 
-[ Upstream commit e9a46175a79fbc591c48d433020444b8fa2750ee ]
+Applied, thanks!
 
-Because the number of channels to be configured is calculated using the %,
-and it results in 0 when there's an exact division, this leads to some
-channels not having their tx power configured.
+[1/1] arm64: dts: rockchip: set PHY address of MT7531 switch to 0x1f
+      commit: a2ac2a1b02590a22a236c43c455f421cdede45f5
 
-Fixes: 7801da338856 ("wifi: mt76: mt7921: enable set txpower for UNII-4")
-Signed-off-by: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c
-index ea7ffa16a4b12..ae19174b46ee5 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c
-@@ -2101,7 +2101,7 @@ mt76_connac_mcu_rate_txpower_band(struct mt76_phy *phy,
- 		int j, msg_len, num_ch;
- 		struct sk_buff *skb;
- 
--		num_ch = i == batch_size - 1 ? n_chan % batch_len : batch_len;
-+		num_ch = i == batch_size - 1 ? n_chan - i * batch_len : batch_len;
- 		msg_len = sizeof(tx_power_tlv) + num_ch * sizeof(sku_tlbv);
- 		skb = mt76_mcu_msg_alloc(dev, NULL, msg_len);
- 		if (!skb) {
+Best regards,
 -- 
-2.43.0
-
+Heiko Stuebner <heiko@sntech.de>
