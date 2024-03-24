@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B425B15689D;
-	Sun, 24 Mar 2024 23:42:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08472282A7E;
+	Sun, 24 Mar 2024 23:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323745; cv=none; b=YGXBZ8cOwtuJgnvjaFfVHZzYmhnW/i+p8rV+R2BXs3JaPF+FSCT30qjcmIfeNk2q9Ren3QWJcrf6rhRsDpip6df/NEXqc2+jaq3F3z5nHI9zFtquYIm2hNUv/+YX1ftSL1jtAlNE6wdqAdJ8AYEBmyMdicVEERG92lA2ZRGpAKg=
+	t=1711323741; cv=none; b=A9OxDF9sDTFvFUkY7Fpl32xkI0h9DNI771Jf115WHz8RMIll/tkHLlq0HiaYIBGsIwy0Jgj8Cj4thlrZ9lxUNrYMorAV2UsGnY7y2ymOZRT+G2vOqPRLHtQga/9bFrflGHSSJ7+gFnCF6BTwbRDYGceaLlSkv9/oIN005ZdN1vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323745; c=relaxed/simple;
-	bh=gbU2EowSPlHE2x6WXeXSsOfbfUQE1IU/R3YYLu6N2co=;
+	s=arc-20240116; t=1711323741; c=relaxed/simple;
+	bh=I5IZLXRovJJX137SJGnoEbJCPVfKKUehgGid1mWVd0k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SPpdbLQou+WsfpCq1juX4ZPmteGPEGmBuz25emy7QWBm1J02YuZxn7ivMOUgvqKPxA1m/97f+nhIiqlBDa5ZHfdhkzEdvh8W+EkeNTcAPX3HlnPCFCAEZQ454yYVX+ChEuCVYmN/nWeWGUdCQ1L28YSjoLxzsohyB5VxqW/lfM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCT9kuaH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PR0ERkfl6R3mdNc9wJwIGKDu/9DUbpWWyY9dXf7jplY83/fBNb8/kK5C8pngU9goRXOFnQ0aPU8+Mt5P+X01NflR+UO9iTlXg5u+mEAvA9kAZejE6X+QvvW9mYcDWR/bh3y7F2JYrVg/0Ze7svBDa57ZIK2ePYMxE8EAJPYHKgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpjWn1He; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCT9kuaH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C40E6C43390;
-	Sun, 24 Mar 2024 23:42:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpjWn1He"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4021DC433F1;
+	Sun, 24 Mar 2024 23:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323744;
-	bh=gbU2EowSPlHE2x6WXeXSsOfbfUQE1IU/R3YYLu6N2co=;
+	s=k20201202; t=1711323739;
+	bh=I5IZLXRovJJX137SJGnoEbJCPVfKKUehgGid1mWVd0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iCT9kuaH0zaxfnhYMDw4HEBk1ilFHGUEL4UzQD2NglkcttBRnOz+JThqYNNY6jhX8
-	 OgpKa/z1gb2fmZokyJeVCEwbB1sCNfMOOw+vx5cNMZ2wwYVd+4b5HaOs7Jn//l6c2R
-	 ysL+nBo7bTBb7ZzkNeEGtoGCVZAvwQOViQixxKqOK6hdp6WUtSy5hD1lQBf8gL4rSD
-	 7ekyHa3O1LL9s2UKIY6pjb0vOBouIRQZTH3CzVJ7VmtSJl02B5hNrwt9Zf4dqZYut6
-	 8dbE6lXPO2aIgco2tgbTHIoM6sS5ZsPoxZ9UyPOUJkKzxobhRCeg6drErPrhijwcfg
-	 G2B39iBFFI9Gg==
+	b=fpjWn1HeBpRT2Xa3SrDwriHklg+50ND2hjK3SCvw7tNPjaDszT87zMm4oA0DIWDhQ
+	 9/d2tucCOdMVfjTnpIwZk7g9YTExrG1kJX8l+wyTyS2B23McfViRYzBIVwsljOIYnP
+	 KZImFvD3ZIea4IqOX95rpmzH5CgEEFpHCrNvzyMxGUPgwgaKx3HHL58Gu75H48bFdt
+	 G7T7096P2VOViH31A9Ghr6ZdQdKJ0jTUxkiJqMfNvHWPUcn9QY0gPOb0siR36OnsKt
+	 Tm1m47Xr+zXmliFLBU6uahHu84YZJbKN7BWoZ25AQNsgd7AB7Lg1zRE7vUXdbv6T3c
+	 hLiezGhbxWL6A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Harry Wentland <harry.wentland@amd.com>,
-	Simon Ser <contact@emersion.fr>,
-	Melissa Wen <mwen@igalia.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
+Cc: Cai Huoqing <caihuoqing@baidu.com>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 119/238] drm: Don't treat 0 as -1 in drm_fixp2int_ceil
-Date: Sun, 24 Mar 2024 19:38:27 -0400
-Message-ID: <20240324234027.1354210-120-sashal@kernel.org>
+Subject: [PATCH 5.10 114/238] drm/tegra: dsi: Make use of the helper function dev_err_probe()
+Date: Sun, 24 Mar 2024 19:38:22 -0400
+Message-ID: <20240324234027.1354210-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -50,39 +48,69 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Harry Wentland <harry.wentland@amd.com>
+From: Cai Huoqing <caihuoqing@baidu.com>
 
-[ Upstream commit cf8837d7204481026335461629b84ac7f4538fa5 ]
+[ Upstream commit fc75e4fcbd1e4252a0481ebb23cd4516c127a8e2 ]
 
-Unit testing this in VKMS shows that passing 0 into
-this function returns -1, which is highly counter-
-intuitive. Fix it by checking whether the input is
->= 0 instead of > 0.
+When possible use dev_err_probe help to properly deal with the
+PROBE_DEFER error, the benefit is that DEFER issue will be logged
+in the devices_deferred debugfs file.
+And using dev_err_probe() can reduce code size, the error value
+gets printed.
 
-Fixes: 64566b5e767f ("drm: Add drm_fixp_from_fraction and drm_fixp2int_ceil")
-Signed-off-by: Harry Wentland <harry.wentland@amd.com>
-Reviewed-by: Simon Ser <contact@emersion.fr>
-Reviewed-by: Melissa Wen <mwen@igalia.com>
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231108163647.106853-2-harry.wentland@amd.com
+Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Stable-dep-of: 830c1ded3563 ("drm/tegra: dsi: Fix some error handling paths in tegra_dsi_probe()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_fixed.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/tegra/dsi.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
-index 553210c02ee0f..627efa56e59fb 100644
---- a/include/drm/drm_fixed.h
-+++ b/include/drm/drm_fixed.h
-@@ -88,7 +88,7 @@ static inline int drm_fixp2int(s64 a)
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index 0adce882f157b..6cbba2adb6e5a 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -1591,28 +1591,24 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+ 	}
  
- static inline int drm_fixp2int_ceil(s64 a)
- {
--	if (a > 0)
-+	if (a >= 0)
- 		return drm_fixp2int(a + DRM_FIXED_ALMOST_ONE);
- 	else
- 		return drm_fixp2int(a - DRM_FIXED_ALMOST_ONE);
+ 	dsi->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(dsi->clk)) {
+-		dev_err(&pdev->dev, "cannot get DSI clock\n");
+-		return PTR_ERR(dsi->clk);
+-	}
++	if (IS_ERR(dsi->clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk),
++				     "cannot get DSI clock\n");
+ 
+ 	dsi->clk_lp = devm_clk_get(&pdev->dev, "lp");
+-	if (IS_ERR(dsi->clk_lp)) {
+-		dev_err(&pdev->dev, "cannot get low-power clock\n");
+-		return PTR_ERR(dsi->clk_lp);
+-	}
++	if (IS_ERR(dsi->clk_lp))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_lp),
++				     "cannot get low-power clock\n");
+ 
+ 	dsi->clk_parent = devm_clk_get(&pdev->dev, "parent");
+-	if (IS_ERR(dsi->clk_parent)) {
+-		dev_err(&pdev->dev, "cannot get parent clock\n");
+-		return PTR_ERR(dsi->clk_parent);
+-	}
++	if (IS_ERR(dsi->clk_parent))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->clk_parent),
++				     "cannot get parent clock\n");
+ 
+ 	dsi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
+-	if (IS_ERR(dsi->vdd)) {
+-		dev_err(&pdev->dev, "cannot get VDD supply\n");
+-		return PTR_ERR(dsi->vdd);
+-	}
++	if (IS_ERR(dsi->vdd))
++		return dev_err_probe(&pdev->dev, PTR_ERR(dsi->vdd),
++				     "cannot get VDD supply\n");
+ 
+ 	err = tegra_dsi_setup_clocks(dsi);
+ 	if (err < 0) {
 -- 
 2.43.0
 
