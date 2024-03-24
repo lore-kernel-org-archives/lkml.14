@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F31E142E87;
-	Sun, 24 Mar 2024 22:49:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AD11D790A;
+	Sun, 24 Mar 2024 22:50:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320589; cv=none; b=amGfwpqR3YyyQYIz/NI3+ZbSmkLSx63YN9tb5+PCQnnlxUsZOjouKzgFqTPuqIki5KBZUAIy9/hNWPwnt4tvirYoFDLbHsJMHbPZaOC3Mxy3cTF2xSI0+cMIicNkFMwyDyUqD5SLck8T0oA/yvgNdZP2IQwOUlNxQebglIpvp9Q=
+	t=1711320602; cv=none; b=Kx3pjmczg4BJTWRYcxIyoDkLTUKixqUWinmqIdULJHxKgUxo4xy/axvtMi8DfTUOEf9xvwkmi0zCDTREo/FdHV7yzR/8il6qCjAPcDrVCF4x1z5ukqIcXGZo1c0vWNyRudAgzVPpoHk7l/2BhxaHo8SkrPUl1XSBFEbskT3H1rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320589; c=relaxed/simple;
-	bh=yo2Z2RP8nH+NEKT0SUBmtftPM/25colUC9zO2Yovi1w=;
+	s=arc-20240116; t=1711320602; c=relaxed/simple;
+	bh=i/ETv3Z0+14MObVPjWUndDksu7lvCqc1LjL8w6W1XSQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GixN6oq42Wxva0wxCVbc8OVKJbMJAoziv+BMgpHhZ10zfN5kVCfPy4Mm+AgXDm5we6g0npnvKox7X+g8wgiyBnRJ4AGryqhOwn6B12dqFWM4TIUREVuA9eujC8ofesqDskSk63qIjGT+uXgzLj1aEBbKNC4ZQo4w89Amxz3bd4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PeholQze; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hU1VbFSBezBM2ZjOQzCVYVvyz9fCQGgdt2P9+uWEoN8uC6gd2f/YIKP7ICWSwEN36F5eVcsm8JjoWX/CIRwHb/aoOw5kE7J+UxD26UbTMI9zWcmjNbN0Jwpyw4Jt4hfsFBSsAdUY8wY/7jqN/YdVgS9wnuXZ1CwhB5itHKWYVp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iw/fi6sh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PeholQze"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0615C433F1;
-	Sun, 24 Mar 2024 22:49:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iw/fi6sh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BFFEC43390;
+	Sun, 24 Mar 2024 22:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320589;
-	bh=yo2Z2RP8nH+NEKT0SUBmtftPM/25colUC9zO2Yovi1w=;
+	s=k20201202; t=1711320602;
+	bh=i/ETv3Z0+14MObVPjWUndDksu7lvCqc1LjL8w6W1XSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PeholQzeA+RAG7yyB+zDJCH9NOPBGYXFFE4stTux1rKPVaw5uN1yJUuB0iNmRMxcD
-	 9GKqyeZGW96h8PP2kIs2+CSbJPRKbgg8GfCdxf5HtfqTlwn/0XVWtpCJlELg6cRulG
-	 nqIVdjpI4F8dBe6pItymDyP2kjJ46QdgAEgfDCSNZeXhAG94x1LGE1g091AAwzzSyc
-	 utSZC5tSAj9R4w65nuJZl4unw/Vv0z7bIEvbbUMFgGiK5EiybM28jUVJwv3QXXAN28
-	 PHFcY6q/jP2ZkO2Izx5pF5nkvGJKOP5RK9IQz+CAPJ8TktYdApdG3zyjUMvwbhBEtt
-	 DwHeiKdOh62Og==
+	b=Iw/fi6shBX+wHjW+PMmQAh1JmlXhfsrhc1uFES+Udtv3pzPZqXydoRLIbP3FUQdIc
+	 wYHypBzRD3iTnOVqqzxuFmmq0wA6sAMoDIAvnoh2UlYncRO+Dmke6ZRQp31sLawqfL
+	 a6J/4YCRJmzUyUmpOhyaOjzkhACThHNuRgV3GMWkA6x5wDhRUC2R/793NXc3YCBA1i
+	 INYxJ9GSxiXdLd1l0lcPcXwR87EWhM6MMghJ8X7rLL1pFzGfrIJBZekV+j9Ulfk6s+
+	 fGIj0C6bOqrXtqHTiUVfMcC0Of7EklHQceng+HiKgPZIrGLJhaL7dm+3N+t+E97WnF
+	 icTXH3uWukPGg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 151/713] cpufreq: mediatek-hw: Wait for CPU supplies before probing
-Date: Sun, 24 Mar 2024 18:37:57 -0400
-Message-ID: <20240324224720.1345309-152-sashal@kernel.org>
+Subject: [PATCH 6.7 163/713] af_unix: Annotate data-race of gc_in_progress in wait_for_unix_gc().
+Date: Sun, 24 Mar 2024 18:38:09 -0400
+Message-ID: <20240324224720.1345309-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -46,72 +44,41 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-[ Upstream commit 788715b5f21c6455264fe00a1779e61bec407fe2 ]
+[ Upstream commit 31e03207119a535d0b0e3b3a7f91983aeb2cb14d ]
 
-Before proceeding with the probe and enabling frequency scaling for the
-CPUs, make sure that all supplies feeding the CPUs have probed.
+gc_in_progress is changed under spin_lock(&unix_gc_lock),
+but wait_for_unix_gc() reads it locklessly.
 
-This fixes an issue observed on MT8195-Tomato where if the
-mediatek-cpufreq-hw driver enabled the hardware (by writing to
-REG_FREQ_ENABLE) before the SPMI controller driver (spmi-mtk-pmif),
-behind which lies the big CPU supply, probed the platform would hang
-shortly after with "rcu: INFO: rcu_preempt detected stalls on
-CPUs/tasks" being printed in the log.
+Let's use READ_ONCE().
 
-Fixes: 4855e26bcf4d ("cpufreq: mediatek-hw: Add support for CPUFREQ HW")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Fixes: 5f23b734963e ("net: Fix soft lockups/OOM issues w/ unix garbage collector")
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Link: https://lore.kernel.org/r/20240123170856.41348-2-kuniyu@amazon.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/mediatek-cpufreq-hw.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ net/unix/garbage.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
-index d46afb3c00923..a1aa9385980ae 100644
---- a/drivers/cpufreq/mediatek-cpufreq-hw.c
-+++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
-@@ -13,6 +13,7 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
+diff --git a/net/unix/garbage.c b/net/unix/garbage.c
+index 2a81880dac7b7..027c86e804f8a 100644
+--- a/net/unix/garbage.c
++++ b/net/unix/garbage.c
+@@ -198,7 +198,7 @@ void wait_for_unix_gc(void)
+ 	if (READ_ONCE(unix_tot_inflight) > UNIX_INFLIGHT_TRIGGER_GC &&
+ 	    !READ_ONCE(gc_in_progress))
+ 		unix_gc();
+-	wait_event(unix_gc_wait, gc_in_progress == false);
++	wait_event(unix_gc_wait, !READ_ONCE(gc_in_progress));
+ }
  
- #define LUT_MAX_ENTRIES			32U
-@@ -300,7 +301,23 @@ static struct cpufreq_driver cpufreq_mtk_hw_driver = {
- static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
- {
- 	const void *data;
--	int ret;
-+	int ret, cpu;
-+	struct device *cpu_dev;
-+	struct regulator *cpu_reg;
-+
-+	/* Make sure that all CPU supplies are available before proceeding. */
-+	for_each_possible_cpu(cpu) {
-+		cpu_dev = get_cpu_device(cpu);
-+		if (!cpu_dev)
-+			return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
-+					     "Failed to get cpu%d device\n", cpu);
-+
-+		cpu_reg = devm_regulator_get_optional(cpu_dev, "cpu");
-+		if (IS_ERR(cpu_reg))
-+			return dev_err_probe(&pdev->dev, PTR_ERR(cpu_reg),
-+					     "CPU%d regulator get failed\n", cpu);
-+	}
-+
- 
- 	data = of_device_get_match_data(&pdev->dev);
- 	if (!data)
+ /* The external entry point: unix_gc() */
 -- 
 2.43.0
 
