@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C6E1856D5;
-	Sun, 24 Mar 2024 23:52:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBB71FD5C5;
+	Sun, 24 Mar 2024 23:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324367; cv=none; b=VdfgEodc8szRgzYtc9tlQDCxyHtoiZDEwvCZOIydzmSs1npK4ZLdLHli6Q6W8t7NiQnU67RTbcUagcfxu28ETd7Oj9ZNNZko/mODsKKnbAAy6LksVCBVecoQERsEMgzHAWS6g9yf3+6MTLAn7gOc8djft58D+ETuAuJK3IEBmTE=
+	t=1711324369; cv=none; b=Sn6NrSPYJrQ49vvaksbCEiJj0q0f11QIW/kNSeu4wUdNoQSBNFRPNRIz6Lnke+HF2NijDv814nAKYlN4E72VjxKGj7agcQcn2Pz4apxTVL9zB9XV3jTapMEJ5Sq//a7mASKMpGnveZNzxglZ1SFy5mFhgx+tYV574Z5Bn8lrLAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324367; c=relaxed/simple;
-	bh=9MZHMgR8QlDiSQ81BInBmmb7tp3DJW0f2NAZceSm0qk=;
+	s=arc-20240116; t=1711324369; c=relaxed/simple;
+	bh=06xuqTypK2d+lu+sZouf0JkP/CjeANELuavDeS4nOX8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rlgzvIAYBg7PFbUr7FTqpLmZ+3BT16toVhGq7cry6SZdWG0gmorsazgUMOV2CCxle3yM8Omnhno0Hfaw6Dz/8KKwcUmEu2weB1expojTm7jDNlCAh4BM3x4TH/UxLmg1nrWtvKQXxLUmFMMItnNh57NJb6/gIIeubP50WSZAG4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvKsXw0v; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NTLZ6WgUK1GL16X6RiqDtM37IKd87DyCH8SpV45zTr5DzC4VQYltA+wbhNuRILc0IVgwU7CBMgJcRDtr+2sbYf3pvHnX4Yw2YLR1tjj1460471dUnRzCW/1xQ3crZRHNe0I3KLBIoYEqm6gxKGovA94YR2jV29lYzU6LVQFjvxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0nVSGV9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvKsXw0v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF3E3C43394;
-	Sun, 24 Mar 2024 23:52:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0nVSGV9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E415DC433C7;
+	Sun, 24 Mar 2024 23:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324366;
-	bh=9MZHMgR8QlDiSQ81BInBmmb7tp3DJW0f2NAZceSm0qk=;
+	s=k20201202; t=1711324369;
+	bh=06xuqTypK2d+lu+sZouf0JkP/CjeANELuavDeS4nOX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lvKsXw0vFiuZlWNTkkZUzDCC6FH0a7wk+6G0pMohOpNLhpEHRmse5tA395BuObXiX
-	 OXRAgnaB9Sa4m6O2+qWvEcG1I5fAzyU+juMAszq4dHJs6kQhkAcTfpgb78OMyYoE0z
-	 VAKgXfGbTX7qas8EPpB1aRtU1oeg/iHIyVuLs0JpfxsAu4/QFOXRaEUUS/Zh6l/NFz
-	 xAus/PVDTBzrt8s25K1pNk8L2hpgaMmbx16ypta4BhibqT1Yr+xb3OtZPP7GpLgXuI
-	 KuXb604OsxljFwgrtHgw6jR9iiPqlulFLbieXSn+6fZLRaoRuf9q9vYssG5MXhok0X
-	 Zd9kqJWyeVZog==
+	b=M0nVSGV9DT26Kfn6OZ3R9g5qKJcagoOzQJrufx70nMxRUc7+ugckzjZYylgbmf+Kj
+	 h0kQh6F24ovfKb0Y2qtzIJxp7qD2qkSPZ3rc2bPKFE3rGaOaludjTbIErPrdL6lK/w
+	 ENcB+MJLjjDkH7VzhA1/g5K5lATe5/OXOgBlJGZ2j2MaRniKcWLUwXz+zJWgUp/XCc
+	 GZ9fY/x3KBKiFXU1NmaIqt+Y0ecX5Z3FCHu3h51o5riIQZAAyaVPZTFWGn/3agk+B2
+	 HtcWvIrRT+XsA6KpPB4iT9NvFHAfaAiPlHynqlYEMXfgFfGSzuGAQvba/hakcX+DtH
+	 HHrWbfE7Hzz7g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Taniya Das <tdas@codeaurora.org>,
-	Bjorn Andersson <bjorn.andersson@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>,
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Sam Protsenko <semen.protsenko@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 133/148] clk: qcom: gdsc: Add support to update GDSC transition delay
-Date: Sun, 24 Mar 2024 19:49:57 -0400
-Message-ID: <20240324235012.1356413-134-sashal@kernel.org>
+Subject: [PATCH 4.19 136/148] tty: serial: samsung: fix tx_empty() to return TIOCSER_TEMT
+Date: Sun, 24 Mar 2024 19:50:00 -0400
+Message-ID: <20240324235012.1356413-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -49,116 +49,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Taniya Das <tdas@codeaurora.org>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
 
-[ Upstream commit 4e7c4d3652f96f41179aab3ff53025c7a550d689 ]
+[ Upstream commit 314c2b399288f0058a8c5b6683292cbde5f1531b ]
 
-GDSCs have multiple transition delays which are used for the GDSC FSM
-states. Older targets/designs required these values to be updated from
-gdsc code to certain default values for the FSM state to work as
-expected. But on the newer targets/designs the values updated from the
-GDSC driver can hamper the FSM state to not work as expected.
+The core expects for tx_empty() either TIOCSER_TEMT when the tx is
+empty or 0 otherwise. s3c24xx_serial_txempty_nofifo() might return
+0x4, and at least uart_get_lsr_info() tries to clear exactly
+TIOCSER_TEMT (BIT(1)). Fix tx_empty() to return TIOCSER_TEMT.
 
-On SC7180 we observe black screens because the gdsc is being
-enabled/disabled very rapidly and the GDSC FSM state does not work as
-expected. This is due to the fact that the GDSC reset value is being
-updated from SW.
-
-Thus add support to update the transition delay from the clock
-controller gdscs as required.
-
-Fixes: 45dd0e55317cc ("clk: qcom: Add support for GDSCs)
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
-Link: https://lore.kernel.org/r/20220223185606.3941-1-tdas@codeaurora.org
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Stable-dep-of: 117e7dc697c2 ("clk: qcom: dispcc-sdm845: Adjust internal GDSC wait times")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+Link: https://lore.kernel.org/r/20240119104526.1221243-2-tudor.ambarus@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gdsc.c | 26 +++++++++++++++++++++-----
- drivers/clk/qcom/gdsc.h |  8 +++++++-
- 2 files changed, 28 insertions(+), 6 deletions(-)
+ drivers/tty/serial/samsung.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
-index a077133c7ce38..83541e9d50701 100644
---- a/drivers/clk/qcom/gdsc.c
-+++ b/drivers/clk/qcom/gdsc.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2015, 2017-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2015, 2017-2018, 2022, The Linux Foundation. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 and
-@@ -39,9 +39,14 @@
- #define CFG_GDSCR_OFFSET		0x4
+diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
+index 5f1f52cc63951..c76bf1c11e6fd 100644
+--- a/drivers/tty/serial/samsung.c
++++ b/drivers/tty/serial/samsung.c
+@@ -800,11 +800,10 @@ static unsigned int s3c24xx_serial_tx_empty(struct uart_port *port)
+ 		if ((ufstat & info->tx_fifomask) != 0 ||
+ 		    (ufstat & info->tx_fifofull))
+ 			return 0;
+-
+-		return 1;
++		return TIOCSER_TEMT;
+ 	}
  
- /* Wait 2^n CXO cycles between all states. Here, n=2 (4 cycles). */
--#define EN_REST_WAIT_VAL	(0x2 << 20)
--#define EN_FEW_WAIT_VAL		(0x8 << 16)
--#define CLK_DIS_WAIT_VAL	(0x2 << 12)
-+#define EN_REST_WAIT_VAL	0x2
-+#define EN_FEW_WAIT_VAL		0x8
-+#define CLK_DIS_WAIT_VAL	0x2
-+
-+/* Transition delay shifts */
-+#define EN_REST_WAIT_SHIFT	20
-+#define EN_FEW_WAIT_SHIFT	16
-+#define CLK_DIS_WAIT_SHIFT	12
+-	return s3c24xx_serial_txempty_nofifo(port);
++	return s3c24xx_serial_txempty_nofifo(port) ? TIOCSER_TEMT : 0;
+ }
  
- #define RETAIN_MEM		BIT(14)
- #define RETAIN_PERIPH		BIT(13)
-@@ -314,7 +319,18 @@ static int gdsc_init(struct gdsc *sc)
- 	 */
- 	mask = HW_CONTROL_MASK | SW_OVERRIDE_MASK |
- 	       EN_REST_WAIT_MASK | EN_FEW_WAIT_MASK | CLK_DIS_WAIT_MASK;
--	val = EN_REST_WAIT_VAL | EN_FEW_WAIT_VAL | CLK_DIS_WAIT_VAL;
-+
-+	if (!sc->en_rest_wait_val)
-+		sc->en_rest_wait_val = EN_REST_WAIT_VAL;
-+	if (!sc->en_few_wait_val)
-+		sc->en_few_wait_val = EN_FEW_WAIT_VAL;
-+	if (!sc->clk_dis_wait_val)
-+		sc->clk_dis_wait_val = CLK_DIS_WAIT_VAL;
-+
-+	val = sc->en_rest_wait_val << EN_REST_WAIT_SHIFT |
-+		sc->en_few_wait_val << EN_FEW_WAIT_SHIFT |
-+		sc->clk_dis_wait_val << CLK_DIS_WAIT_SHIFT;
-+
- 	ret = regmap_update_bits(sc->regmap, sc->gdscr, mask, val);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
-index bd1f2c780d0af..a31d3dc36f2f2 100644
---- a/drivers/clk/qcom/gdsc.h
-+++ b/drivers/clk/qcom/gdsc.h
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2015, 2017-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2015, 2017-2018, 2022, The Linux Foundation. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 and
-@@ -29,6 +29,9 @@ struct reset_controller_dev;
-  * @cxcs: offsets of branch registers to toggle mem/periph bits in
-  * @cxc_count: number of @cxcs
-  * @pwrsts: Possible powerdomain power states
-+ * @en_rest_wait_val: transition delay value for receiving enr ack signal
-+ * @en_few_wait_val: transition delay value for receiving enf ack signal
-+ * @clk_dis_wait_val: transition delay value for halting clock
-  * @resets: ids of resets associated with this gdsc
-  * @reset_count: number of @resets
-  * @rcdev: reset controller
-@@ -42,6 +45,9 @@ struct gdsc {
- 	unsigned int			clamp_io_ctrl;
- 	unsigned int			*cxcs;
- 	unsigned int			cxc_count;
-+	unsigned int			en_rest_wait_val;
-+	unsigned int			en_few_wait_val;
-+	unsigned int			clk_dis_wait_val;
- 	const u8			pwrsts;
- /* Powerdomain allowable state bitfields */
- #define PWRSTS_OFF		BIT(0)
+ /* no modem control lines */
 -- 
 2.43.0
 
