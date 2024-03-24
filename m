@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11819133420;
-	Sun, 24 Mar 2024 23:04:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402EE1E8903;
+	Sun, 24 Mar 2024 23:04:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321452; cv=none; b=kunmURJnWXics1rAJRPktNwGglhS/SdMtYrIJnw+XOosXq3+cBakufia+Ec0EKmIaYo7M1sTasiMmwv2AERGjCByqPZWhU+eJxvt1+zxfQZoW+T0lANsbyxNVgZn2wwqkTqfFF3N6nTyXa5awxqxhJGUliNQFK1YR9mD1iHuY3I=
+	t=1711321462; cv=none; b=SEkobX5P3DhILzQEmPyJO1aaaeQ+sGm3tYvx0Fy4OVUDEMqWu2t3mRr83tQUtAZFri/I7QfH4jk+KplWc8ABg4/VGALS27pu1TuWxmeQp4Q8xKJt/NqOxHSK7nyhOayPsgabjpAkVvLq5JCNTsZijLmURbYN5KryyKgzev1NuZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321452; c=relaxed/simple;
-	bh=R5MgffQAqsovV9p+t6iCvXpyZJGJXls0j6QgS0aphW8=;
+	s=arc-20240116; t=1711321462; c=relaxed/simple;
+	bh=HIz6lpAW2cZWfxHJSA17HWSGt89XDQWTK4RqSqCl6G8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GdKyntdK9TfF4KEpvud4jIW8VpPpG8goq4/Ix8/VA4dt/+zqzYOdmNv1LnEK+pOmIk74Ct9svKUphHkXmFggI6mJqvhw3t+6VBKPBYs2H8NWNPh5F1M99CPQ2HCL1u0y0dQ8w6WB4srmw2GfFOnRwQWrivJe9Uhlzyi15giAnfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OeYFv661; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=gTBhYXMB6Gp80ApBs0iYEi/Vt5RfBYqhu0wn6hMh/yx6lryd0W9J8DaIGeH2looSiutfOr+rJTP8vPe195A38vmETJqhVuqTc1RqztQo+99A26V+Ldr6glx7POZfbFyMbQDBVuLDcH1P5c/7WwvkJq39SOSTtcq7nNt0rGZczLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfewfY+e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OeYFv661"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D8FFC43394;
-	Sun, 24 Mar 2024 23:04:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfewfY+e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DCEFC43399;
+	Sun, 24 Mar 2024 23:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321450;
-	bh=R5MgffQAqsovV9p+t6iCvXpyZJGJXls0j6QgS0aphW8=;
+	s=k20201202; t=1711321460;
+	bh=HIz6lpAW2cZWfxHJSA17HWSGt89XDQWTK4RqSqCl6G8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OeYFv661/ftj6rJjwduF2Sc9MfvDd1RFxHiDZNUZzYDsXW9QiHO3ETH+fAN5FoiBJ
-	 sqrwNKQ5VA7OK+LCh5IAG9mGBo4lsIHb16G1hqAUDfQ0ZO89M7yhzkKB589tHQax3y
-	 IRH8wkRwBGbubWlhqsJqcaufnHOT9/1FyGqfim3t87wMGNNG7WMx7Ahfdm+E+Tw0+J
-	 CQxR4WGNmCXSYBIVRh2jfP48R01d2MmJdxcpVuTWkB3vsBR4b8DPlZ7XQCBMbYBo/t
-	 1rp3Mg58WylZPRWHnPgMbzErUv0CCn7VEZw3NqcE/7PizC4Hb3Fl0DGrmifonlCa3M
-	 r+QQ3thmo2LpQ==
+	b=QfewfY+ecIVvxodf2LP/blUeysw7ZIDAd1B5SJeIqYZR/Ud4JUHe9zultKr43nLTi
+	 maai0P9edelKrKT9+nOKUwaRO9wJMG++fSYORHv/lYb6+w42cKly8OCUwOcsDBSl71
+	 hCWeDKQKlHiaffQLqA5m+z6CzmmKvdD+02oq9hLDWZ3hSNeMS/MocbcGvVQtwrUIpA
+	 Xt4xK1qBfe8VelbDOWxRHhcYCdgfYjuirQS0qrzVOj/3Oyit43BQyxTZkPjBKrOAhJ
+	 kbf+bSMlipB8Udy26qTpzvihE+MhuybpL3YkQYBITa3O6zU5kfDUOvNp5ha3zZwUKT
+	 WfSmMGoAUqhhQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Gregory Greenman <gregory.greenman@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= <jerome.pouiller@silabs.com>,
+	Ulrich Mohr <u.mohr@semex-engcon.com>,
+	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 175/638] wifi: iwlwifi: read BIOS PNVM only for non-Intel SKU
-Date: Sun, 24 Mar 2024 18:53:32 -0400
-Message-ID: <20240324230116.1348576-176-sashal@kernel.org>
+Subject: [PATCH 6.6 185/638] wifi: wfx: fix memory leak when starting AP
+Date: Sun, 24 Mar 2024 18:53:42 -0400
+Message-ID: <20240324230116.1348576-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -45,72 +45,123 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-[ Upstream commit c868a189ecfe8cc0b3173c2eaa7f0b659326c151 ]
+[ Upstream commit b8cfb7c819dd39965136a66fe3a7fde688d976fc ]
 
-The driver is supposed to read the PNVM from BIOS only for non-Intel
-SKUs. For Intel SKUs the OEM ID will be 0.
-Read BIOS PNVM only when a non-Intel SKU is indicated.
+Kmemleak reported this error:
 
-Fixes: b99e32cbfdf6 ("wifi: iwlwifi: Take loading and setting of pnvm image out of parsing part")
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Reviewed-by: Gregory Greenman <gregory.greenman@intel.com>
-Link: https://msgid.link/20240131091413.3625cf1223d3.Ieffda5f506713b1c979388dd7a0e1c1a0145cfca@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+    unreferenced object 0xd73d1180 (size 184):
+      comm "wpa_supplicant", pid 1559, jiffies 13006305 (age 964.245s)
+      hex dump (first 32 bytes):
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 1e 00 01 00 00 00 00 00  ................
+      backtrace:
+        [<5ca11420>] kmem_cache_alloc+0x20c/0x5ac
+        [<127bdd74>] __alloc_skb+0x144/0x170
+        [<fb8a5e38>] __netdev_alloc_skb+0x50/0x180
+        [<0f9fa1d5>] __ieee80211_beacon_get+0x290/0x4d4 [mac80211]
+        [<7accd02d>] ieee80211_beacon_get_tim+0x54/0x18c [mac80211]
+        [<41e25cc3>] wfx_start_ap+0xc8/0x234 [wfx]
+        [<93a70356>] ieee80211_start_ap+0x404/0x6b4 [mac80211]
+        [<a4a661cd>] nl80211_start_ap+0x76c/0x9e0 [cfg80211]
+        [<47bd8b68>] genl_rcv_msg+0x198/0x378
+        [<453ef796>] netlink_rcv_skb+0xd0/0x130
+        [<6b7c977a>] genl_rcv+0x34/0x44
+        [<66b2d04d>] netlink_unicast+0x1b4/0x258
+        [<f965b9b6>] netlink_sendmsg+0x1e8/0x428
+        [<aadb8231>] ____sys_sendmsg+0x1e0/0x274
+        [<d2b5212d>] ___sys_sendmsg+0x80/0xb4
+        [<69954f45>] __sys_sendmsg+0x64/0xa8
+    unreferenced object 0xce087000 (size 1024):
+      comm "wpa_supplicant", pid 1559, jiffies 13006305 (age 964.246s)
+      hex dump (first 32 bytes):
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        10 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
+      backtrace:
+        [<9a993714>] __kmalloc_track_caller+0x230/0x600
+        [<f83ea192>] kmalloc_reserve.constprop.0+0x30/0x74
+        [<a2c61343>] __alloc_skb+0xa0/0x170
+        [<fb8a5e38>] __netdev_alloc_skb+0x50/0x180
+        [<0f9fa1d5>] __ieee80211_beacon_get+0x290/0x4d4 [mac80211]
+        [<7accd02d>] ieee80211_beacon_get_tim+0x54/0x18c [mac80211]
+        [<41e25cc3>] wfx_start_ap+0xc8/0x234 [wfx]
+        [<93a70356>] ieee80211_start_ap+0x404/0x6b4 [mac80211]
+        [<a4a661cd>] nl80211_start_ap+0x76c/0x9e0 [cfg80211]
+        [<47bd8b68>] genl_rcv_msg+0x198/0x378
+        [<453ef796>] netlink_rcv_skb+0xd0/0x130
+        [<6b7c977a>] genl_rcv+0x34/0x44
+        [<66b2d04d>] netlink_unicast+0x1b4/0x258
+        [<f965b9b6>] netlink_sendmsg+0x1e8/0x428
+        [<aadb8231>] ____sys_sendmsg+0x1e0/0x274
+        [<d2b5212d>] ___sys_sendmsg+0x80/0xb4
+
+However, since the kernel is build optimized, it seems the stack is not
+accurate. It appears the issue is related to wfx_set_mfp_ap(). The issue
+is obvious in this function: memory allocated by ieee80211_beacon_get()
+is never released. Fixing this leak makes kmemleak happy.
+
+Reported-by: Ulrich Mohr <u.mohr@semex-engcon.com>
+Co-developed-by: Ulrich Mohr <u.mohr@semex-engcon.com>
+Signed-off-by: Ulrich Mohr <u.mohr@semex-engcon.com>
+Fixes: 268bceec1684 ("staging: wfx: fix BA when device is AP and MFP is enabled")
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Signed-off-by: Kalle Valo <kvalo@kernel.org>
+Link: https://msgid.link/20240202164213.1606145-1-jerome.pouiller@silabs.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/fw/pnvm.c | 30 ++++++++++++--------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ drivers/net/wireless/silabs/wfx/sta.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/pnvm.c b/drivers/net/wireless/intel/iwlwifi/fw/pnvm.c
-index 650e4bde9c17b..56ee0ceed78ab 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/pnvm.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/pnvm.c
-@@ -255,21 +255,27 @@ static u8 *iwl_get_pnvm_image(struct iwl_trans *trans_p, size_t *len)
- 	struct pnvm_sku_package *package;
- 	u8 *image = NULL;
+diff --git a/drivers/net/wireless/silabs/wfx/sta.c b/drivers/net/wireless/silabs/wfx/sta.c
+index 073e870b26415..871667650dbef 100644
+--- a/drivers/net/wireless/silabs/wfx/sta.c
++++ b/drivers/net/wireless/silabs/wfx/sta.c
+@@ -362,6 +362,7 @@ static int wfx_set_mfp_ap(struct wfx_vif *wvif)
+ 	const int pairwise_cipher_suite_count_offset = 8 / sizeof(u16);
+ 	const int pairwise_cipher_suite_size = 4 / sizeof(u16);
+ 	const int akm_suite_size = 4 / sizeof(u16);
++	int ret = -EINVAL;
+ 	const u16 *ptr;
  
--	/* First attempt to get the PNVM from BIOS */
--	package = iwl_uefi_get_pnvm(trans_p, len);
--	if (!IS_ERR_OR_NULL(package)) {
--		if (*len >= sizeof(*package)) {
--			/* we need only the data */
--			*len -= sizeof(*package);
--			image = kmemdup(package->data, *len, GFP_KERNEL);
-+	/* Get PNVM from BIOS for non-Intel SKU */
-+	if (trans_p->sku_id[2]) {
-+		package = iwl_uefi_get_pnvm(trans_p, len);
-+		if (!IS_ERR_OR_NULL(package)) {
-+			if (*len >= sizeof(*package)) {
-+				/* we need only the data */
-+				*len -= sizeof(*package);
-+				image = kmemdup(package->data,
-+						*len, GFP_KERNEL);
-+			}
-+			/*
-+			 * free package regardless of whether kmemdup
-+			 * succeeded
-+			 */
-+			kfree(package);
-+			if (image)
-+				return image;
- 		}
--		/* free package regardless of whether kmemdup succeeded */
--		kfree(package);
--		if (image)
--			return image;
- 	}
+ 	if (unlikely(!skb))
+@@ -370,22 +371,26 @@ static int wfx_set_mfp_ap(struct wfx_vif *wvif)
+ 	ptr = (u16 *)cfg80211_find_ie(WLAN_EID_RSN, skb->data + ieoffset,
+ 				      skb->len - ieoffset);
+ 	if (unlikely(!ptr))
+-		return -EINVAL;
++		goto free_skb;
  
--	/* If it's not available, try from the filesystem */
-+	/* If it's not available, or for Intel SKU, try from the filesystem */
- 	if (iwl_pnvm_get_from_fs(trans_p, &image, len))
- 		return NULL;
- 	return image;
+ 	ptr += pairwise_cipher_suite_count_offset;
+ 	if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
+-		return -EINVAL;
++		goto free_skb;
+ 
+ 	ptr += 1 + pairwise_cipher_suite_size * *ptr;
+ 	if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
+-		return -EINVAL;
++		goto free_skb;
+ 
+ 	ptr += 1 + akm_suite_size * *ptr;
+ 	if (WARN_ON(ptr > (u16 *)skb_tail_pointer(skb)))
+-		return -EINVAL;
++		goto free_skb;
+ 
+ 	wfx_hif_set_mfp(wvif, *ptr & BIT(7), *ptr & BIT(6));
+-	return 0;
++	ret = 0;
++
++free_skb:
++	dev_kfree_skb(skb);
++	return ret;
+ }
+ 
+ int wfx_start_ap(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 -- 
 2.43.0
 
