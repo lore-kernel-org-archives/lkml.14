@@ -1,41 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9331D131724;
-	Sun, 24 Mar 2024 23:03:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6F7200107;
+	Sun, 24 Mar 2024 23:02:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321398; cv=none; b=JBq3L5ioVVJalq94TjSk0Ev7Lg9zVu43iDSwYtO1+5TB5qJaGjghfv6+wqbQ5wwKDXUgVJfgTBmLXGDSaMDvncfScEbfTrkLtIIolNzyUB0JSg39J2VaYyjIgbrT1zL/eud7ss7RbE8kMM5i4j0xfL5dFmyKAIqkGDHQqm2XSM8=
+	t=1711321381; cv=none; b=To4jWL82pRDH2/yKCZiK7ZBGs69OV0O6KSYH4Gl4XXTjOzDxouIft+bI8cGNTbYJ8tZvGZGIseryFe/ni/etDoZT/DfSLnR+VtGX94WFhffJFp4NznrStnLHVNA3vzoKbS1MLvkY1axeNUq4X9AG+qva5kLtJH1PjrWN8cT6ZV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321398; c=relaxed/simple;
-	bh=rM/a6NXuhaaDJxRNqFU+vOj3znGsfhW1ZP19rBQIkT4=;
+	s=arc-20240116; t=1711321381; c=relaxed/simple;
+	bh=vYYFwKto6yg6woV1Hr3fxCR11bex2S34Ri9YamTHIhE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=owDInt3wJn0JORvydZ6Dv2egW/2ob7gRDzlI1FyjYv3cjpI//ttBemZTCMgZX7jWAmVrUbh7o/57Sh84NRv41CnISlScQJR98Jxwp97yRtQR9e4yHAYh72UC3meg0CRNOc1bkb7SgWXEGKadD9xE0tq4U3wCoSRYTALsoWJ0YmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1p5DUbZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JTIwG0xuKOCaXghKpkLvlxrisnb0WEswK44TVfe/Q2l34cs34ZAgklqjQi4unrFfK4BEDXYuYpY5Q0Te1C3PsQ66ajUVUyEQvkVEL2J+Y/1PL6PE5+JbcTtNlLgp0EGo423SVNowNVK9hPSDPyJgbzX0cS+qp9+iBcn9AoGsM64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ttYXBpoq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1p5DUbZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE2EFC433A6;
-	Sun, 24 Mar 2024 23:03:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ttYXBpoq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45515C43390;
+	Sun, 24 Mar 2024 23:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321397;
-	bh=rM/a6NXuhaaDJxRNqFU+vOj3znGsfhW1ZP19rBQIkT4=;
+	s=k20201202; t=1711321379;
+	bh=vYYFwKto6yg6woV1Hr3fxCR11bex2S34Ri9YamTHIhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c1p5DUbZtPHFNM/Hade8SlGI21T1MJtgwwJgwNZZxtuRkqoFOMrBvmlbNbHOQbG98
-	 Q6kv9ddueyZ53kO2vVe7wgr8l0nKKMLddr1p2iYSIArH5kQrpUBI57uMI1p7eM6lYC
-	 IUQjDsm05NOYPjoAp0SgKgKJlfDz/DdVd+HhnYXbFhqHYyDj0TAU61uhbHvxkWWPx9
-	 4MGH9eKVvnLP3Z2oGO9357FTVftnWuQZwPQQLr6XXQ0pWLYrHH2W0fqS6RgUzc5EVP
-	 via4BnNcjRQ2qDF4Pqlo/coeghzIcHBzWVabUzEkMebpMaaBqTj1JkJ9nbeGWerbZf
-	 TpNHuPorkwKbQ==
+	b=ttYXBpoqRjWDW6tWwo6DeWmQYeEnEzL2oQvOeJzdCbXpPsWf9hy9udskdkAfOU6vK
+	 ioD+lHV8smO8KUM62tyX4hgu5RUHcU+OMq8dJ6Q0CWrJcWZoigyJaSuGvc4iYSzY7x
+	 Ge5KhQrClMBRTWeeArp1ufnjNxqNvdVMepL7f2i2AIgB0hDnqb9Cmap73ty8hJSSJV
+	 kY75m8FIM/qUzL6y8G5EiaYCq9JTZxN6ktunh8s4tGyHmkVwpSGdjvc1epvu7zeJGH
+	 oZJKwM0bVRzpYy1UG09MTi9+UAGpCIZLe914Le/apnnsNR8WOk4Tu+rvt3yWhEjnDk
+	 nMwcaVc7f4kBw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ajay Singh <ajay.kathat@microchip.com>,
-	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Michael Roth <michael.roth@amd.com>,
+	Dave Hansen <dave.hansen@intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rik van Riel <riel@surriel.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 121/638] wifi: wilc1000: do not realloc workqueue everytime an interface is added
-Date: Sun, 24 Mar 2024 18:52:38 -0400
-Message-ID: <20240324230116.1348576-122-sashal@kernel.org>
+Subject: [PATCH 6.6 103/638] x86/mm: Ensure input to pfn_to_kaddr() is treated as a 64-bit type
+Date: Sun, 24 Mar 2024 18:52:20 -0400
+Message-ID: <20240324230116.1348576-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -45,122 +50,75 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Michael Roth <michael.roth@amd.com>
 
-[ Upstream commit 328efda22af81130c2ad981c110518cb29ff2f1d ]
+[ Upstream commit 8e5647a723c49d73b9f108a8bb38e8c29d3948ea ]
 
-Commit 09ed8bfc5215 ("wilc1000: Rename workqueue from "WILC_wq" to
-"NETDEV-wq"") moved workqueue creation in wilc_netdev_ifc_init in order to
-set the interface name in the workqueue name. However, while the driver
-needs only one workqueue, the wilc_netdev_ifc_init is called each time we
-add an interface over a phy, which in turns overwrite the workqueue with a
-new one. This can be observed with the following commands:
+On 64-bit platforms, the pfn_to_kaddr() macro requires that the input
+value is 64 bits in order to ensure that valid address bits don't get
+lost when shifting that input by PAGE_SHIFT to calculate the physical
+address to provide a virtual address for.
 
-for i in $(seq 0 10)
-do
-  iw phy phy0 interface add wlan1 type managed
-  iw dev wlan1 del
-done
-ps -eo pid,comm|grep wlan
+One such example is in pvalidate_pages() (used by SEV-SNP guests), where
+the GFN in the struct used for page-state change requests is a 40-bit
+bit-field, so attempts to pass this GFN field directly into
+pfn_to_kaddr() ends up causing guest crashes when dealing with addresses
+above the 1TB range due to the above.
 
- 39 kworker/R-wlan0
- 98 kworker/R-wlan1
-102 kworker/R-wlan1
-105 kworker/R-wlan1
-108 kworker/R-wlan1
-111 kworker/R-wlan1
-114 kworker/R-wlan1
-117 kworker/R-wlan1
-120 kworker/R-wlan1
-123 kworker/R-wlan1
-126 kworker/R-wlan1
-129 kworker/R-wlan1
+Fix this issue with SEV-SNP guests, as well as any similar cases that
+might cause issues in current/future code, by using an inline function,
+instead of a macro, so that the input is implicitly cast to the
+expected 64-bit input type prior to performing the shift operation.
 
-Fix this leakage by putting back hif_workqueue allocation in
-wilc_cfg80211_init. Regarding the workqueue name, it is indeed relevant to
-set it lowercase, however it is not  attached to a specific netdev, so
-enforcing netdev name in the name is not so relevant. Still, enrich the
-name with the wiphy name to make it clear which phy is using the workqueue.
+While it might be argued that the issue is on the caller side, other
+archs/macros have taken similar approaches to deal with instances like
+this, such as ARM explicitly casting the input to phys_addr_t:
 
-Fixes: 09ed8bfc5215 ("wilc1000: Rename workqueue from "WILC_wq" to "NETDEV-wq"")
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Co-developed-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240115-wilc_1000_fixes-v1-3-54d29463a738@bootlin.com
+  e48866647b48 ("ARM: 8396/1: use phys_addr_t in pfn_to_kaddr()")
+
+A C inline function is even better though.
+
+[ mingo: Refined the changelog some more & added __always_inline. ]
+
+Fixes: 6c3211796326 ("x86/sev: Add SNP-specific unaccepted memory support")
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
+Suggested-by: H. Peter Anvin <hpa@zytor.com>
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20231122163700.400507-1-michael.roth@amd.com
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/microchip/wilc1000/cfg80211.c | 11 ++++++++++-
- drivers/net/wireless/microchip/wilc1000/netdev.c   | 10 +---------
- 2 files changed, 11 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/page.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/cfg80211.c b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-index b545d93c6e374..2f75dc4b47975 100644
---- a/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-+++ b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-@@ -1810,15 +1810,24 @@ int wilc_cfg80211_init(struct wilc **wilc, struct device *dev, int io_type,
- 	INIT_LIST_HEAD(&wl->rxq_head.list);
- 	INIT_LIST_HEAD(&wl->vif_list);
+diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
+index d18e5c332cb9f..1b93ff80b43bc 100644
+--- a/arch/x86/include/asm/page.h
++++ b/arch/x86/include/asm/page.h
+@@ -66,10 +66,14 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
+  * virt_addr_valid(kaddr) returns true.
+  */
+ #define virt_to_page(kaddr)	pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
+-#define pfn_to_kaddr(pfn)      __va((pfn) << PAGE_SHIFT)
+ extern bool __virt_addr_valid(unsigned long kaddr);
+ #define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long) (kaddr))
  
-+	wl->hif_workqueue = alloc_ordered_workqueue("%s", WQ_MEM_RECLAIM,
-+						    wiphy_name(wl->wiphy));
-+	if (!wl->hif_workqueue) {
-+		ret = -ENOMEM;
-+		goto free_cfg;
-+	}
- 	vif = wilc_netdev_ifc_init(wl, "wlan%d", WILC_STATION_MODE,
- 				   NL80211_IFTYPE_STATION, false);
- 	if (IS_ERR(vif)) {
- 		ret = PTR_ERR(vif);
--		goto free_cfg;
-+		goto free_hq;
- 	}
- 
- 	return 0;
- 
-+free_hq:
-+	destroy_workqueue(wl->hif_workqueue);
++static __always_inline void *pfn_to_kaddr(unsigned long pfn)
++{
++	return __va(pfn << PAGE_SHIFT);
++}
 +
- free_cfg:
- 	wilc_wlan_cfg_deinit(wl);
- 
-diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
-index e9f59de31b0b9..0e6eeeed2e086 100644
---- a/drivers/net/wireless/microchip/wilc1000/netdev.c
-+++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
-@@ -977,13 +977,6 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
- 		goto error;
- 	}
- 
--	wl->hif_workqueue = alloc_ordered_workqueue("%s-wq", WQ_MEM_RECLAIM,
--						    ndev->name);
--	if (!wl->hif_workqueue) {
--		ret = -ENOMEM;
--		goto unregister_netdev;
--	}
--
- 	ndev->needs_free_netdev = true;
- 	vif->iftype = vif_type;
- 	vif->idx = wilc_get_available_idx(wl);
-@@ -996,12 +989,11 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
- 
- 	return vif;
- 
--unregister_netdev:
-+error:
- 	if (rtnl_locked)
- 		cfg80211_unregister_netdevice(ndev);
- 	else
- 		unregister_netdev(ndev);
--  error:
- 	free_netdev(ndev);
- 	return ERR_PTR(ret);
- }
+ static __always_inline u64 __canonical_address(u64 vaddr, u8 vaddr_bits)
+ {
+ 	return ((s64)vaddr << (64 - vaddr_bits)) >> (64 - vaddr_bits);
 -- 
 2.43.0
 
