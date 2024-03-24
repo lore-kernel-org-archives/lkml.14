@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525541E5866;
-	Sun, 24 Mar 2024 22:53:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211D11E61E6;
+	Sun, 24 Mar 2024 22:53:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320829; cv=none; b=Bic71f6+jXtuVSW88U0NDDiKt49ZhmKrnqEHHp1xVDiPAxAqzoiWi7Y2Na+D5GHBLEOFbwCM19mCVxFqNRJ4gp9ymPUVK2C3C0fR27W6Dc0Yhudrx5g94s0Zuui/FRe4oBuxyYk7SdaQP2YwDlvxsJlk071z1vdY85fLFnIYOJ8=
+	t=1711320836; cv=none; b=j151zVkc30AalDqkAhQDb7BLIduuFwqv00clbwRwsCJKrUTSSyJ8sIrLn9zXtJLhV9hHhobyO3ya6ISrnkrvA0XH5wJMTui/46AQODiiU3VdWzRxPofGxire8GH3vf4deNWQtYuhj/gQuvHXkrBMkjYr1aFq2eIj0YRG1UPr6ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320829; c=relaxed/simple;
-	bh=+vKf/AD+EU5ShwD9w5bCge7Hc87d+rNN8o9xeCJe6BY=;
+	s=arc-20240116; t=1711320836; c=relaxed/simple;
+	bh=m30wCZoV79dMVizD2Gw9W9KU/gugpO1FkI8VgtWsYKY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eOMm1wN9r3YgzrzjooUf6d22QYRYX5FPaV4mXqKkvlxgNwV7kXwaVlduXnFC54yWnfWVq93YcYpXUpqDWdFdnJs+6kWb1R+fFm9RvOZVjAP0uQBa2uh5K3UOKEvR025OIx80nydt289OMiX6v4qc06KUcZumc5A0xiTwRg39CZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WmFuq9WS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=THjkqX1bpWEr9hTl2OFecX/MXBIsZgAb4dSuHrck8WsC622tpGWKvnBdy6L4TN+OPLTcjLBw/VwnTDeoEcSzLO7kjXzW6/a4EVT9L2+qYS71QuxivUwQ8aEj7S6dWrvA929zg2RxHreyGOPEq+eoS+xwb0dHdUL9cfelsDNZu4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Su5kOIGj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WmFuq9WS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B68EC43390;
-	Sun, 24 Mar 2024 22:53:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Su5kOIGj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A18AC43394;
+	Sun, 24 Mar 2024 22:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320829;
-	bh=+vKf/AD+EU5ShwD9w5bCge7Hc87d+rNN8o9xeCJe6BY=;
+	s=k20201202; t=1711320836;
+	bh=m30wCZoV79dMVizD2Gw9W9KU/gugpO1FkI8VgtWsYKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WmFuq9WSaAZ1clZgm/acDvKyC+9ISbUwVx9doA7IuNW0+y41yaRnWwr+8jk22MbSV
-	 KtsfDKiqEznCbkteE71/tF6hJKWO7wwl+6Gtaz3n7BKR40cIuK/SsFo39FTScOSi8W
-	 lnDnO89JDf3xeL7H8BVXOjgfrDXIo8aomPaQsGnLM0zrBTn0UehBJVK146RlsMAunN
-	 bYIEFwo871abyupC/T000QTzOLePdhjagRpnMaYhdOX6LQ0TxAYDYKZOdEht1v4kNY
-	 LDFsUEMRbAXQ/TjXluRL6t9AmShItlAbuMdS2UYyqs8WVO/ibAf9NSGVdAoaYGmCLo
-	 3QeOUFV+jiC1g==
+	b=Su5kOIGj/4DHtUq3oH5jmLYesX3+nGmsOcmm/u5uvTyH/NNHoqxov2oELEjH593KQ
+	 UiZuogk+4THLVnobxeSSrxVHK6ArDkPnwh4+oPudl9Xn2u0jC+VUtnTSHRELTajUEs
+	 2PaPedbcg8pxyAJcHKP3Ig2r0OE6SxteZSXhbXINKS5vmewAz2oJCPKHuvUQXTYQyi
+	 dZoPpfmj7o62EQnUOXuMer69KyMIclpYusdWvm22DysUGnvljf720pU9Q/UmLeQwQF
+	 XlmQCv7Y7nKjnwdtQw4oDIT3GFv/eFXg/eEYZc99ACXh4UsTSHnIvarJq3ruw2iI9C
+	 1oWZXznws6cQg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+	Quentin Schulz <foss+kernel@0leil.net>,
+	Heiko Stuebner <heiko@sntech.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 394/713] drm/tegra: rgb: Fix some error handling paths in tegra_dc_rgb_probe()
-Date: Sun, 24 Mar 2024 18:42:00 -0400
-Message-ID: <20240324224720.1345309-395-sashal@kernel.org>
+Subject: [PATCH 6.7 401/713] drm/rockchip: lvds: do not overwrite error code
+Date: Sun, 24 Mar 2024 18:42:07 -0400
+Message-ID: <20240324224720.1345309-402-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,79 +49,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-[ Upstream commit bc456b5d93dbfdbd89f2a036f4f3d8026595f9e4 ]
+[ Upstream commit 79b09453c4e369ca81cfb670d0136d089e3b92f0 ]
 
-If an error occurs after calling tegra_output_probe(),
-tegra_output_remove() should be called as already done in the remove
-function.
+ret variable stores the return value of drm_of_find_panel_or_bridge
+which can return error codes different from EPROBE_DEFER. Therefore,
+let's just return that error code instead of forcing it to EPROBE_DEFER.
 
-Fixes: 59d29c0ec93f ("drm/tegra: Allocate resources at probe time")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/0001f61eb89048bc36241629b564195689cf54b6.1693667005.git.christophe.jaillet@wanadoo.fr
+Fixes: 34cc0aa25456 ("drm/rockchip: Add support for Rockchip Soc LVDS")
+Cc: Quentin Schulz <foss+kernel@0leil.net>
+Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231120-rk-lvds-defer-msg-v2-1-9c59a5779cf9@theobroma-systems.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/rgb.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/rockchip/rockchip_lvds.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
-index fc66bbd913b24..53c492b13d129 100644
---- a/drivers/gpu/drm/tegra/rgb.c
-+++ b/drivers/gpu/drm/tegra/rgb.c
-@@ -225,26 +225,28 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
- 	rgb->clk = devm_clk_get(dc->dev, NULL);
- 	if (IS_ERR(rgb->clk)) {
- 		dev_err(dc->dev, "failed to get clock\n");
--		return PTR_ERR(rgb->clk);
-+		err = PTR_ERR(rgb->clk);
-+		goto remove;
+diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+index f0f47e9abf5aa..17d8fc797151a 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
++++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+@@ -578,7 +578,6 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
+ 		goto err_put_port;
+ 	} else if (ret) {
+ 		DRM_DEV_ERROR(dev, "failed to find panel and bridge node\n");
+-		ret = -EPROBE_DEFER;
+ 		goto err_put_port;
  	}
- 
- 	rgb->clk_parent = devm_clk_get(dc->dev, "parent");
- 	if (IS_ERR(rgb->clk_parent)) {
- 		dev_err(dc->dev, "failed to get parent clock\n");
--		return PTR_ERR(rgb->clk_parent);
-+		err = PTR_ERR(rgb->clk_parent);
-+		goto remove;
- 	}
- 
- 	err = clk_set_parent(rgb->clk, rgb->clk_parent);
- 	if (err < 0) {
- 		dev_err(dc->dev, "failed to set parent clock: %d\n", err);
--		return err;
-+		goto remove;
- 	}
- 
- 	rgb->pll_d_out0 = clk_get_sys(NULL, "pll_d_out0");
- 	if (IS_ERR(rgb->pll_d_out0)) {
- 		err = PTR_ERR(rgb->pll_d_out0);
- 		dev_err(dc->dev, "failed to get pll_d_out0: %d\n", err);
--		return err;
-+		goto remove;
- 	}
- 
- 	if (dc->soc->has_pll_d2_out0) {
-@@ -252,13 +254,17 @@ int tegra_dc_rgb_probe(struct tegra_dc *dc)
- 		if (IS_ERR(rgb->pll_d2_out0)) {
- 			err = PTR_ERR(rgb->pll_d2_out0);
- 			dev_err(dc->dev, "failed to get pll_d2_out0: %d\n", err);
--			return err;
-+			goto remove;
- 		}
- 	}
- 
- 	dc->rgb = &rgb->output;
- 
- 	return 0;
-+
-+remove:
-+	tegra_output_remove(&rgb->output);
-+	return err;
- }
- 
- void tegra_dc_rgb_remove(struct tegra_dc *dc)
+ 	if (lvds->panel)
 -- 
 2.43.0
 
