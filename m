@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94B11DBF23;
-	Sun, 24 Mar 2024 22:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EAC86AE9;
+	Sun, 24 Mar 2024 22:51:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320699; cv=none; b=gyT0QsSMFxixL/+kwx0k6KlOVZfbeAb1svhRWDozXCOb+lbASQ4Gw7v7Ko1GuNtp/CAtbdwvyA+U1wJWHkM7bbwCI7kVK6n1Rk3eX4QIwHV25SSJQ2wUld+U7h2Y0YNqhpwBwjoGnqjC9W18Yuhts++FdhtN1j8Ep3bu2rZrhto=
+	t=1711320712; cv=none; b=XHJmDkjyVuJIg92rUcYqwzxz9ycOeQAtlNM52ywgL3FaZ9SeVLqt3H8b66M+nIVrHizAdxSWVAWEm7g3WMubgrkDgyAHaSDs7WFDNbkfLj8UGLZT20bg6VuecPiCT+u8nfT+oS5wGph31deOq+Msg80Z7jyHdIIGWlPm+asC6zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320699; c=relaxed/simple;
-	bh=4FNTlPBsr7Z7V1+dAD2XdYCPyICn4BPhFJMGPZUBfg0=;
+	s=arc-20240116; t=1711320712; c=relaxed/simple;
+	bh=NWPrkaaaSy9kKYxmurUP9GafqEG7VJh8Z50d+eN03o8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=enI5jkRLK/OqjP/aPWc6MfuXli9/7Or3CiFFI+uddVKoSIVVxFIS4tmsEw2ea1vSxyjofWddqKfZtzg5pFECqBAtmQQ4zxOdGcVj03pFfhD6tQFcY4SHOkU5Nm1mIYapBwvxUb3H0rG79zNuxhUl3N5VqSohq8MGWE4PGEYWzCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AqJup6m5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZrULZkaBP/hI2HLgt7hWy2TezJGTArBQWSo743SJWbzv0o7Lks0DysUoSrygIXkkvL8V1DwauL5iQ8Ie+tG1j3LmU3IGUEm0opF/13SsmB60+GqD7oY0WP2HXWXwtHG1gBbUxDqCYYqNNTn2gWgkha82SC4Qlt2Cda5Bwu92fw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rB9LzNIu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AqJup6m5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1642DC433C7;
-	Sun, 24 Mar 2024 22:51:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rB9LzNIu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4168C433C7;
+	Sun, 24 Mar 2024 22:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320698;
-	bh=4FNTlPBsr7Z7V1+dAD2XdYCPyICn4BPhFJMGPZUBfg0=;
+	s=k20201202; t=1711320712;
+	bh=NWPrkaaaSy9kKYxmurUP9GafqEG7VJh8Z50d+eN03o8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AqJup6m58Ixi5CfHBPcumCk7KGD36qnUeIHlHEj/2vT0fxvDZH10s1kYh8M7Cri55
-	 /HegPtTOXLp023k0KmI02K+niMkB4BK4tJDZG2zkr+zdzkfEptEMmrq+aG3tjxtOHx
-	 L81JHz4ZHZ19wYCRKuHQbmBIXTGQR3uNQ7+ZkIzpvimLVoQYdGvmOnlap1Sj7NwE38
-	 yF87l5VJaUFatlx69MVWCvSsnGuEt4jLszj3fj5mLsXO3Mv4AQCH0v/V0vhBX7vRqe
-	 QDXUOscxOdSzl1h7iq2Gcjo8G+aO2rh0S4DWb+J4jfu3uem9ErFCDJnL336X5MGCmC
-	 9fMnK0QZ+fWuw==
+	b=rB9LzNIuGdl4fYSbkx7xXO1Y+kXqaWfx1FwIQPe6dLxL/OUl5T3Gl4hoY3h2fXeAE
+	 D1TP5PnePu9DJLbYpeLlF1MAjAOnnaUi4j1KefqNq4yshh5IOwa13JV3VTyEbyOQ0D
+	 xOiIr9mIIwBLyDpJjgZWCsMdlIDzcz6JCx33Q5zTJHWrrQCNUSRxYiQ+kwV3saWeO1
+	 EzBtpj8ZqtQDwu4K+Pko103t3SGvEYtu9RRvgeFssQb7GKESVHewIX5mwxhA/dslXR
+	 vuta00/eRj6L6KWHzLbt3XpmynBcv8xy7XyA2a7zS/n5L2W6kwlTYLU2cvap1nDT9C
+	 xeSCYhWTO/ZCg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Robinson <pbrobinson@gmail.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Hsin-Te Yuan <yuanhsinte@google.com>,
+	Hsin-Te Yuan <yuanhsinte@chromium.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 261/713] bus: tegra-aconnect: Update dependency to ARCH_TEGRA
-Date: Sun, 24 Mar 2024 18:39:47 -0400
-Message-ID: <20240324224720.1345309-262-sashal@kernel.org>
+Subject: [PATCH 6.7 275/713] arm64: dts: mt8195-cherry-tomato: change watchdog reset boot flow
+Date: Sun, 24 Mar 2024 18:40:01 -0400
+Message-ID: <20240324224720.1345309-276-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,45 +49,64 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Peter Robinson <pbrobinson@gmail.com>
+From: Hsin-Te Yuan <yuanhsinte@google.com>
 
-[ Upstream commit 4acd21a45c1446277e2abaece97d7fa7c2e692a9 ]
+[ Upstream commit ef569d5db50e7edd709e482157769a5b3c367e22 ]
 
-Update the architecture dependency to be the generic Tegra
-because the driver works on the four latest Tegra generations
-not just Tegra210, if you build a kernel with a specific
-ARCH_TEGRA_xxx_SOC option that excludes Tegra210 you don't get
-this driver.
+The external output reset signal was originally disabled and sent from
+firmware. However, an unfixed bug in the firmware on tomato prevents
+the signal from being sent, causing the device to fail to boot. To fix
+this, enable external output reset signal to allow the device to reboot
+normally.
 
-Fixes: 46a88534afb59 ("bus: Add support for Tegra ACONNECT")
-Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: 5eb2e303ec6b ("arm64: dts: mediatek: Introduce MT8195 Cherry platform's Tomato")
+Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://lore.kernel.org/r/20240124-send-upstream-v3-1-5097c9862a73@chromium.org
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts | 4 ++++
+ arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts | 4 ++++
+ arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts | 4 ++++
+ 3 files changed, 12 insertions(+)
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index e6742998f372c..d5e7fa9173a16 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -186,11 +186,12 @@ config SUNXI_RSB
- 
- config TEGRA_ACONNECT
- 	tristate "Tegra ACONNECT Bus Driver"
--	depends on ARCH_TEGRA_210_SOC
-+	depends on ARCH_TEGRA
- 	depends on OF && PM
- 	help
- 	  Driver for the Tegra ACONNECT bus which is used to interface with
--	  the devices inside the Audio Processing Engine (APE) for Tegra210.
-+	  the devices inside the Audio Processing Engine (APE) for
-+	  Tegra210 and later.
- 
- config TEGRA_GMI
- 	tristate "Tegra Generic Memory Interface bus driver"
+diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
+index 2d5e8f371b6de..a82d716f10d44 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
+@@ -23,3 +23,7 @@ &sound {
+ &ts_10 {
+ 	status = "okay";
+ };
++
++&watchdog {
++	/delete-property/ mediatek,disable-extrst;
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
+index 2586c32ce6e6f..2fe20e0dad836 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
+@@ -43,3 +43,7 @@ &sound {
+ &ts_10 {
+ 	status = "okay";
+ };
++
++&watchdog {
++	/delete-property/ mediatek,disable-extrst;
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
+index f54f9477b99da..dd294ca98194c 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
+@@ -44,3 +44,7 @@ &sound {
+ &ts_10 {
+ 	status = "okay";
+ };
++
++&watchdog {
++	/delete-property/ mediatek,disable-extrst;
++};
 -- 
 2.43.0
 
