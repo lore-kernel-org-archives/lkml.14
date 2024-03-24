@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BFE1DB08C;
-	Sun, 24 Mar 2024 22:54:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E931292EE;
+	Sun, 24 Mar 2024 22:54:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320850; cv=none; b=qy2wL8DuATcLwG7j+yX96FD5vaO64HwxNgESxh6O1OovfUJReAqF3CNCC1DFtuy5ZcaC9LiEsd91VoJL1bllIDMa2RDSb1xN1ixQu5bGdJJjqbf4eemApkAv9L0kxicDUP5BBzaxZLZDlvSyZtu44zD4hMGSEhycmM/YnsPDg8U=
+	t=1711320854; cv=none; b=CGv1uJCeGN3KkRM37xd95vqCXwuIbeLl0HqVzepiVlLOqqNbWNiy9EbvmP56To5I0VKoK3tmruT7B/L3ylJEWURQf07+nNGIrLMJ6rsUeHTwZG8jf6OxDTGh2gooJwA7s2stTxwwXDtAe37INjJSf5+79pIifqy0WpaDx2jOiIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320850; c=relaxed/simple;
-	bh=k0CHCQeQYAxizY/a36oGNxW78++AXdIg+U+sNWUr7Wc=;
+	s=arc-20240116; t=1711320854; c=relaxed/simple;
+	bh=YNNOWOco7RCQJS1bye+2aEHrtl5dCWSCAkScx6UKIfk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K6G98fHla1Q1OqDQv+KdVdScNdh0ZmsbOFxzjJcZE2vDUHXvUElDGUMUOu1fV+ccDP0VcLLpYeiUsUfmp82HXw/pe2BP7RxSUAJdHYMFoaKAsk32FxV6ollwMGFN5tZ/kjDCCh8OBJQcayzQtYuFSjL0gY7gk1Epg+L3FosXLTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=De74/UMD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YCho61wIXAxVtdCzWJvFk6+1tO7bcUw2HUXNdLNpYaeGYjcdmc0iJkd6EMe1z37RCkENaUqhWtTxPq3Ebb7hIOVZzZXBlbF3MCB5QOIjn+NuNS6epVjIszSGbHm1xv8QRCAXwf0p/LXJegck3Bjx6sagjXG+FJSA9P1ddGN3H1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQvYU+4v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="De74/UMD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5441BC433F1;
-	Sun, 24 Mar 2024 22:54:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQvYU+4v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DDBAC433C7;
+	Sun, 24 Mar 2024 22:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320849;
-	bh=k0CHCQeQYAxizY/a36oGNxW78++AXdIg+U+sNWUr7Wc=;
+	s=k20201202; t=1711320853;
+	bh=YNNOWOco7RCQJS1bye+2aEHrtl5dCWSCAkScx6UKIfk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=De74/UMDBEBoP7sJj0l0xXGMZfAhFZVUP9P6Ms3fXjtgCRUOPVajRqHAPhFTvxd3q
-	 MTtp/bPs8WKVYD5xizLf7JrXUoFMg5zaIGmtaMsU4+bH+BgXOqzBCV1vIY+Bzf9V0d
-	 J5Maokb1v82coCxqMOhAR00Jt2FB2GwE9J4V5x3S2yT+OJ5mpEKs8ln97sj3FQu6S+
-	 mfkLqbMER0kgLcUXRhWN9WLUuJsTCkPl+guTANUhGhzvVlRYmm82Y6z1TtJHGrpww4
-	 FWolErcM4j7npvfCGK+r5Fve9cQ4fO8RllFRTC8Fxb/8ifdMATj+rLAgO9g041yHrn
-	 OokkL1n580y7A==
+	b=SQvYU+4vK5pRSIKU1+Oxsf5cJ/e/hZLMxeIBzezuDHznqjV8qtRs8vnbn5SZEcXW+
+	 Wje2eLYwtGbWBAakvX4B6ibejrO5eHo5CHew3AjME7xXloKc/5ZfbCxLn5UDkdfzuM
+	 q7i2d+pm8Uo+oNCgx+3UPqQney+q4koRzP43Ohb9DRpG+Wr+XLAPldaEx1qtHx5qCX
+	 qwMAIHiQVI/e23TMMZHvNjDqwS4mUIUrp23PbK6PTOUVI/Y0TTvRHid/ol+jWnx7u/
+	 biQp1tYljTujQqpE6ChTRv/L7Mya+O+MKuDhv+qdeWnygBbsDuUt17QH67izvUaN2y
+	 AOZmzODUXx6Cw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mikhail Khvainitski <me@khvoinitsky.org>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Stefan Binding <sbinding@opensource.cirrus.com>,
+	Takashi Iwai <tiwai@suse.de>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 414/713] HID: lenovo: Add middleclick_workaround sysfs knob for cptkbd
-Date: Sun, 24 Mar 2024 18:42:20 -0400
-Message-ID: <20240324224720.1345309-415-sashal@kernel.org>
+Subject: [PATCH 6.7 417/713] ALSA: hda: cs35l41: Set Channel Index correctly when system is missing _DSD
+Date: Sun, 24 Mar 2024 18:42:23 -0400
+Message-ID: <20240324224720.1345309-418-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,132 +48,66 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mikhail Khvainitski <me@khvoinitsky.org>
+From: Stefan Binding <sbinding@opensource.cirrus.com>
 
-[ Upstream commit 2814646f76f8518326964f12ff20aaee70ba154d ]
+[ Upstream commit 135096ebfab656823d0037102a00776f3914fee3 ]
 
-Previous attempt to autodetect well-behaving patched firmware
-introduced in commit 46a0a2c96f0f ("HID: lenovo: Detect quirk-free fw
-on cptkbd and stop applying workaround") has shown that there are
-false-positives on original firmware (on both 1st gen and 2nd gen
-keyboards) which causes the middle button click workaround to be
-mistakenly disabled.
+Current method to set Channel Index when the system is missing _DSD
+assumes that the channels alternate, which is not guaranteed.
+Instead use the same methodology as the main driver does when _DSD
+exists.
 
-This commit adds explicit parameter to sysfs to control this
-workaround.
+Fixes: 8c4c216db8fb ("ALSA: hda: cs35l41: Add config table to support many laptops without _DSD")
 
-Fixes: 46a0a2c96f0f ("HID: lenovo: Detect quirk-free fw on cptkbd and stop applying workaround")
-Fixes: 43527a0094c1 ("HID: lenovo: Restrict detection of patched firmware only to USB cptkbd")
-Signed-off-by: Mikhail Khvainitski <me@khvoinitsky.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20240126164005.367021-2-sbinding@opensource.cirrus.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-lenovo.c | 57 +++++++++++++++++++++++++++-------------
- 1 file changed, 39 insertions(+), 18 deletions(-)
+ sound/pci/hda/cs35l41_hda_property.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
-index 149a3c74346b4..f86c1ea83a037 100644
---- a/drivers/hid/hid-lenovo.c
-+++ b/drivers/hid/hid-lenovo.c
-@@ -54,10 +54,10 @@ struct lenovo_drvdata {
- 	/* 0: Up
- 	 * 1: Down (undecided)
- 	 * 2: Scrolling
--	 * 3: Patched firmware, disable workaround
- 	 */
- 	u8 middlebutton_state;
- 	bool fn_lock;
-+	bool middleclick_workaround_cptkbd;
- };
+diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
+index 5a5f4b499fd94..b5b24fefb20cf 100644
+--- a/sound/pci/hda/cs35l41_hda_property.c
++++ b/sound/pci/hda/cs35l41_hda_property.c
+@@ -207,6 +207,7 @@ static int generic_dsd_config(struct cs35l41_hda *cs35l41, struct device *physde
+ 	struct spi_device *spi;
+ 	bool dsd_found;
+ 	int ret;
++	int i;
  
- #define map_key_clear(c) hid_map_usage_clear(hi, usage, bit, max, EV_KEY, (c))
-@@ -621,6 +621,36 @@ static ssize_t attr_sensitivity_store_cptkbd(struct device *dev,
- 	return count;
- }
+ 	for (cfg = cs35l41_config_table; cfg->ssid; cfg++) {
+ 		if (!strcasecmp(cfg->ssid, cs35l41->acpi_subsystem_id))
+@@ -292,16 +293,6 @@ static int generic_dsd_config(struct cs35l41_hda *cs35l41, struct device *physde
+ 			cs35l41->index = id == 0x40 ? 0 : 1;
+ 	}
  
-+static ssize_t attr_middleclick_workaround_show_cptkbd(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	struct hid_device *hdev = to_hid_device(dev);
-+	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
-+
-+	return snprintf(buf, PAGE_SIZE, "%u\n",
-+		cptkbd_data->middleclick_workaround_cptkbd);
-+}
-+
-+static ssize_t attr_middleclick_workaround_store_cptkbd(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf,
-+		size_t count)
-+{
-+	struct hid_device *hdev = to_hid_device(dev);
-+	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
-+	int value;
-+
-+	if (kstrtoint(buf, 10, &value))
-+		return -EINVAL;
-+	if (value < 0 || value > 1)
-+		return -EINVAL;
-+
-+	cptkbd_data->middleclick_workaround_cptkbd = !!value;
-+
-+	return count;
-+}
-+
- 
- static struct device_attribute dev_attr_fn_lock =
- 	__ATTR(fn_lock, S_IWUSR | S_IRUGO,
-@@ -632,10 +662,16 @@ static struct device_attribute dev_attr_sensitivity_cptkbd =
- 			attr_sensitivity_show_cptkbd,
- 			attr_sensitivity_store_cptkbd);
- 
-+static struct device_attribute dev_attr_middleclick_workaround_cptkbd =
-+	__ATTR(middleclick_workaround, S_IWUSR | S_IRUGO,
-+			attr_middleclick_workaround_show_cptkbd,
-+			attr_middleclick_workaround_store_cptkbd);
-+
- 
- static struct attribute *lenovo_attributes_cptkbd[] = {
- 	&dev_attr_fn_lock.attr,
- 	&dev_attr_sensitivity_cptkbd.attr,
-+	&dev_attr_middleclick_workaround_cptkbd.attr,
- 	NULL
- };
- 
-@@ -686,23 +722,7 @@ static int lenovo_event_cptkbd(struct hid_device *hdev,
- {
- 	struct lenovo_drvdata *cptkbd_data = hid_get_drvdata(hdev);
- 
--	if (cptkbd_data->middlebutton_state != 3) {
--		/* REL_X and REL_Y events during middle button pressed
--		 * are only possible on patched, bug-free firmware
--		 * so set middlebutton_state to 3
--		 * to never apply workaround anymore
+-	if (cfg->num_amps == 3)
+-		/* 3 amps means a center channel, so no duplicate channels */
+-		cs35l41->channel_index = 0;
+-	else
+-		/*
+-		 * if 4 amps, there are duplicate channels, so they need different indexes
+-		 * if 2 amps, no duplicate channels, channel_index would be 0
 -		 */
--		if (hdev->product == USB_DEVICE_ID_LENOVO_CUSBKBD &&
--				cptkbd_data->middlebutton_state == 1 &&
--				usage->type == EV_REL &&
--				(usage->code == REL_X || usage->code == REL_Y)) {
--			cptkbd_data->middlebutton_state = 3;
--			/* send middle button press which was hold before */
--			input_event(field->hidinput->input,
--				EV_KEY, BTN_MIDDLE, 1);
--			input_sync(field->hidinput->input);
--		}
+-		cs35l41->channel_index = cs35l41->index / 2;
 -
-+	if (cptkbd_data->middleclick_workaround_cptkbd) {
- 		/* "wheel" scroll events */
- 		if (usage->type == EV_REL && (usage->code == REL_WHEEL ||
- 				usage->code == REL_HWHEEL)) {
-@@ -1166,6 +1186,7 @@ static int lenovo_probe_cptkbd(struct hid_device *hdev)
- 	cptkbd_data->middlebutton_state = 0;
- 	cptkbd_data->fn_lock = true;
- 	cptkbd_data->sensitivity = 0x05;
-+	cptkbd_data->middleclick_workaround_cptkbd = true;
- 	lenovo_features_set_cptkbd(hdev);
+ 	cs35l41->reset_gpio = fwnode_gpiod_get_index(acpi_fwnode_handle(cs35l41->dacpi), "reset",
+ 						     cs35l41->index, GPIOD_OUT_LOW,
+ 						     "cs35l41-reset");
+@@ -309,6 +300,11 @@ static int generic_dsd_config(struct cs35l41_hda *cs35l41, struct device *physde
  
- 	ret = sysfs_create_group(&hdev->dev.kobj, &lenovo_attr_group_cptkbd);
+ 	hw_cfg->spk_pos = cfg->channel[cs35l41->index];
+ 
++	cs35l41->channel_index = 0;
++	for (i = 0; i < cs35l41->index; i++)
++		if (cfg->channel[i] == hw_cfg->spk_pos)
++			cs35l41->channel_index++;
++
+ 	if (cfg->boost_type == INTERNAL) {
+ 		hw_cfg->bst_type = CS35L41_INT_BOOST;
+ 		hw_cfg->bst_ind = cfg->boost_ind_nanohenry;
 -- 
 2.43.0
 
