@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05568181D0A;
-	Sun, 24 Mar 2024 23:50:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDD71836FC;
+	Sun, 24 Mar 2024 23:50:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324221; cv=none; b=swP4X6fJYHHe+hebB8h+QF/L+s8tn2z7gubv94rU0bis6hOsrsM/EVR4XVhnez4wtInB0bLywy+iWt92N+ZF1GWPHBFKVP9+XThq6Bk2XaeYI1LirfNUqVkcbLJWHH5/nL2tg22fy6uVIOm5OGwM3q6/9O18aNY+zm47pxCxP5g=
+	t=1711324227; cv=none; b=GiThF+dWifKgzxep77Bre804yTRgH4853YNfv68KJpY/J1UKcEBSrqRjuf3QsfSeUgY9WHSmuR87zxCSu9E6wXtelvKld6E+S7z37dl69zWCFS2Yi25HT8cH6FRgEijnPv8Jn6wIrOAQqC1WTwUTdt+5is6B7MZ0P0lf1UvoTnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324221; c=relaxed/simple;
-	bh=/nChahqELmINXvbQzfOoAMqupqs+JnDqhzIcM9K/gI8=;
+	s=arc-20240116; t=1711324227; c=relaxed/simple;
+	bh=uNcha0HaSrS1R7aswxavoG+kOXCMFOfXe9i+/jnZIug=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ngqkYV5XFG7I8zR5ppc8aovrc5/a1iDJUapmPnR1bnvY8UZFIXDBxWQzhcCx3VQswWmL3FHiI+ZFIe8XcI9UzPWx3Q+klH+n6T/BVfBFJbYL38GMIz2e9l6hWHRnXMUm6GJBCZ08U8fQRkCi8Tisk1SknXtbL/mdf94cb9XLz88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pgfAWwYZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=p+kKOCnnsEFbpLNwqkwDFsZEwg92VgmRep1ZlZSPzo8vxXeTY1hX8GPnjhQo5sPWxNp/ydFDsLdmqC1QN9c6SJVd9bs0ln7wfPv0Ccq1k5jFdx2fdFs9goe2DB4GiKwPbAwhgipnGdE7cYInOc3wHq58IuTMsOpw9VaiH0D0D3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TrSwQyEE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pgfAWwYZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401ACC433F1;
-	Sun, 24 Mar 2024 23:50:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TrSwQyEE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9608C433B1;
+	Sun, 24 Mar 2024 23:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324219;
-	bh=/nChahqELmINXvbQzfOoAMqupqs+JnDqhzIcM9K/gI8=;
+	s=k20201202; t=1711324226;
+	bh=uNcha0HaSrS1R7aswxavoG+kOXCMFOfXe9i+/jnZIug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pgfAWwYZGbIJE12neJQOZJQckuLLTebkE/wQJJBgPsFrC5grSXmQUxEd+r/sUcssA
-	 0EUzAwueRJ9Xf6nBta74fLX51q542KgCDA7Dk3CNgs0carUZ77lDbEt9Pqc0OdXOQ6
-	 vYqUSqPbnAaBerDYdYuTHHQR5enJNZYhhRk/gv3y7WvkbfDtDiKDoR4OEIiL0NeEaL
-	 Iaov/2zgGzK2pKuVuTdGbdED2gwYMI2sZqmQ9baBCywB71gKcqaMUyr9f6a//vY6PR
-	 hEU/B/1dAYF/USaaKJKWpzzOf1FwVLOl7oCqKMHvEA5dEZulWWV/aXxYmUIwCSCg/K
-	 YyoLju+FqUggg==
+	b=TrSwQyEENYsQegAVF3dqqQQAIjvfed3+o7jXyTJgcMw1DjyZ4xl8tkDCx8/ZJmrc2
+	 3yI1Yr83Q8UzNmlP46oCx5p/ZqyiTkL+6RJ/KGIfEeGQ4UpvdTaUR9hDwnGFydKuEg
+	 9DgbjFJ+POnaUUNkkuEE4kpWoshco+Rje1d891kZE6F7qh/xedbeh22Qod8MGByzwr
+	 QK+gwn6Ppr1gVc5L6jVaTcEOQacMWgH0pBZbFAC0IEssTggWogy4SFStWSz/QDStiF
+	 iTPa4qeEtxyAJqKNxi5lqJXCHzgzUH9xgZx9Q6HP20TRaE/uDpOq9YlVwgL/Ze6TbC
+	 lQ6EcSKRx/VlQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+Cc: =?UTF-8?q?Alban=20Boy=C3=A9?= <alban.boye@protonmail.com>,
+	Cezary Rojewski <cezary.rojewski@intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 003/148] MIPS: Clear Cause.BD in instruction_pointer_set
-Date: Sun, 24 Mar 2024 19:47:47 -0400
-Message-ID: <20240324235012.1356413-4-sashal@kernel.org>
+Subject: [PATCH 4.19 010/148] ASoC: Intel: bytcr_rt5640: Add an extra entry for the Chuwi Vi8 tablet
+Date: Sun, 24 Mar 2024 19:47:54 -0400
+Message-ID: <20240324235012.1356413-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
 References: <20240324235012.1356413-1-sashal@kernel.org>
@@ -44,41 +46,51 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Alban Boyé <alban.boye@protonmail.com>
 
-[ Upstream commit 9d6e21ddf20293b3880ae55b9d14de91c5891c59 ]
+[ Upstream commit f8b0127aca8c60826e7354e504a12d4a46b1c3bb ]
 
-Clear Cause.BD after we use instruction_pointer_set to override
-EPC.
+The bios version can differ depending if it is a dual-boot variant of the tablet.
+Therefore another DMI match is required.
 
-This can prevent exception_epc check against instruction code at
-new return address.
-It won't be considered as "in delay slot" after epc being overridden
-anyway.
-
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Alban Boyé <alban.boye@protonmail.com>
+Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://msgid.link/r/20240228192807.15130-1-alban.boye@protonmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/ptrace.h | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/ptrace.h
-index b6578611dddbf..e45c082e12316 100644
---- a/arch/mips/include/asm/ptrace.h
-+++ b/arch/mips/include/asm/ptrace.h
-@@ -65,6 +65,7 @@ static inline void instruction_pointer_set(struct pt_regs *regs,
-                                            unsigned long val)
- {
- 	regs->cp0_epc = val;
-+	regs->cp0_cause &= ~CAUSEF_BD;
- }
- 
- /* Query offset/name of register from its name/offset */
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index d27dd170bedaf..19f425eb4a40f 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -523,6 +523,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_SSP0_AIF1 |
+ 					BYT_RT5640_MCLK_EN),
+ 	},
++	{	/* Chuwi Vi8 dual-boot (CWI506) */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "i86"),
++			/* The above are too generic, also match BIOS info */
++			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI2.D86JHBNR02"),
++		},
++		.driver_data = (void *)(BYTCR_INPUT_DEFAULTS |
++					BYT_RT5640_MONO_SPEAKER |
++					BYT_RT5640_SSP0_AIF1 |
++					BYT_RT5640_MCLK_EN),
++	},
+ 	{
+ 		/* Chuwi Vi10 (CWI505) */
+ 		.matches = {
 -- 
 2.43.0
 
