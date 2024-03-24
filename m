@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2616C17EB7A;
-	Sun, 24 Mar 2024 23:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2F617EB84;
+	Sun, 24 Mar 2024 23:46:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324008; cv=none; b=IGRXn2PToLk3saSO6QiEv2Nfz7eXOTaNfpxF2ZQE5xPygC1mb4EbUGYBu8+0booPL/4lhcR978aSkXhKjt9+Z/0g7VR7y1aAI1BmvaLK+WpJ40Jj9CuDnIT3Y7/sf6t0bGR5R2/vBkSZTYGxUWFnEcOlGtlJ4vl1PAeP9C2p7rU=
+	t=1711324011; cv=none; b=oS1UaZr5xy3yFIc9a0sHwM3FciaEPuGcST46DMWJNJJC8sI0ArmziqkRWNpLxSXj+lGIaZ+uwNDJh9k6ivYUtuRcjU6Dj9zT3x/1ruKuKcFKawn0h0vN+xV5LdkXV/vAN/UITXacK+gKGN5mygBwSSrFRMXPgKG2Laq+XDCB3RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324008; c=relaxed/simple;
-	bh=6zsh90FjlNz03vkNYYf8ZUIghWHUOsxZgTKLCL4hVMM=;
+	s=arc-20240116; t=1711324011; c=relaxed/simple;
+	bh=CoV07kSb/A/ldhgRhAX040faYNYxN/IJ9SXNczYn0wc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ja1lqz7a+bjYR3gUaDv0mbBeMNKE4P6yPOBNsrzxn04YrI/mW0HjQR6FhXHeUBKN75IKPx3AMoXaZTMfr4siFpKPmgj7CvQQEWMDRx4097M/pwzqy5J9mkSyIZprSilHraNpxgGnmlgsr0xuu8Pzcau+UEJnDf5KJIkfQ7BG+mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MXDyNkkl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CWRfwEnXp+Nu8y3CxxMJVCPgYjmQ98ZLhXq/hp40/hYxC4WC2VOKg67i5PGFRUWy4YUDiQeSBKT2t8cRiJdXyKtQf/IXnyAG74ck4gdGDZHpYvD50ZMSbJxDn2rbnwtdQSOFbrXq5ylIQuBV5mTR1qAvlbCc4/0IxWVS5OMImVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abvjcbrf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MXDyNkkl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BBBDC433F1;
-	Sun, 24 Mar 2024 23:46:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abvjcbrf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECE56C433C7;
+	Sun, 24 Mar 2024 23:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324006;
-	bh=6zsh90FjlNz03vkNYYf8ZUIghWHUOsxZgTKLCL4hVMM=;
+	s=k20201202; t=1711324010;
+	bh=CoV07kSb/A/ldhgRhAX040faYNYxN/IJ9SXNczYn0wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MXDyNkklRmk52bcbitSxR/aF337OSF+q6tFmarZR9rvz7BNR5kPHrJ7PQx6UxJDDv
-	 kGznPmjiRKrySsTcox+XO52wehabY/gvr1DV8928DqZ3jJCuEKqA9Hxf1elLZAFB5R
-	 N88M3gcrBFDCYDOhyRaEI/A+1gL0m136YQyAP2CE54melwnt6SIzjWsJBZGkn9SN3O
-	 piFE/UWHMKjKIaz15PA0o+izfYpqXnl/ptCzykWW3fbpIhFfNvLJyPKwJK+HLrYspu
-	 BkMr2wz8f0RMCfHhJwSvpSDpQOTXyhUX5Zrp6mBmB7cwqZc5S5KPeiBDoyeXQtifU8
-	 Tb8Bi10vo2NxQ==
+	b=abvjcbrfC3UgM81KbND2tLP/WDYDljgExCssu8S2rPzZlQ7myHfQGZUFXflcS7e4/
+	 kHJ4s81a9eYHHD7G4UfTMX2Asv/Az7HpuBLHgbk7ujMA0kNyXARJp0BAb8QRabQN+W
+	 vUVvDNkGM9wcRJukPwIDSTrwzW1FsIhl+k/Ru7BE2qsSpYp5LqxqSA8i7TV+Fklerk
+	 XywPD2sZrlxdoM5+Z754wwjqXf6EPNEAQCzvhhLavf6H+0uT7oV5Ssq8J5okyd/pa2
+	 0JNhcsdMzjRrOOLJ5gKuNMFCUcYw46p1xP0+W8lkn1zYONdEx33JGo/yZ6mP8cCM5m
+	 je/nyEnQs4NDw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Manuel Fombuena <fombuena@outlook.com>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Greg Joyce <gjoyce@linux.ibm.com>,
+	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 007/183] HID: multitouch: Add required quirk for Synaptics 0xcddc device
-Date: Sun, 24 Mar 2024 19:43:40 -0400
-Message-ID: <20240324234638.1355609-8-sashal@kernel.org>
+Subject: [PATCH 5.4 011/183] block: sed-opal: handle empty atoms when parsing response
+Date: Sun, 24 Mar 2024 19:43:44 -0400
+Message-ID: <20240324234638.1355609-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -48,38 +48,63 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Manuel Fombuena <fombuena@outlook.com>
+From: Greg Joyce <gjoyce@linux.ibm.com>
 
-[ Upstream commit 1741a8269e1c51fa08d4bfdf34667387a6eb10ec ]
+[ Upstream commit 5429c8de56f6b2bd8f537df3a1e04e67b9c04282 ]
 
-Add support for the pointing stick (Accupoint) and 2 mouse buttons.
+The SED Opal response parsing function response_parse() does not
+handle the case of an empty atom in the response. This causes
+the entry count to be too high and the response fails to be
+parsed. Recognizing, but ignoring, empty atoms allows response
+handling to succeed.
 
-Present on some Toshiba/dynabook Portege X30 and X40 laptops.
-
-It should close https://bugzilla.kernel.org/show_bug.cgi?id=205817
-
-Signed-off-by: Manuel Fombuena <fombuena@outlook.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Signed-off-by: Greg Joyce <gjoyce@linux.ibm.com>
+Link: https://lore.kernel.org/r/20240216210417.3526064-2-gjoyce@linux.ibm.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-multitouch.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ block/opal_proto.h | 1 +
+ block/sed-opal.c   | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index c37399f61c67b..c3810e7140a55 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -2090,6 +2090,10 @@ static const struct hid_device_id mt_devices[] = {
- 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
- 			USB_VENDOR_ID_SYNAPTICS, 0xcd7e) },
+diff --git a/block/opal_proto.h b/block/opal_proto.h
+index 5532412d567c0..354b4e93bf63e 100644
+--- a/block/opal_proto.h
++++ b/block/opal_proto.h
+@@ -65,6 +65,7 @@ enum opal_response_token {
+ #define SHORT_ATOM_BYTE  0xBF
+ #define MEDIUM_ATOM_BYTE 0xDF
+ #define LONG_ATOM_BYTE   0xE3
++#define EMPTY_ATOM_BYTE  0xFF
  
-+	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-+		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-+			USB_VENDOR_ID_SYNAPTICS, 0xcddc) },
+ #define OPAL_INVAL_PARAM 12
+ #define OPAL_MANUFACTURED_INACTIVE 0x08
+diff --git a/block/sed-opal.c b/block/sed-opal.c
+index 401d33ae01580..1a08762515291 100644
+--- a/block/sed-opal.c
++++ b/block/sed-opal.c
+@@ -893,16 +893,20 @@ static int response_parse(const u8 *buf, size_t length,
+ 			token_length = response_parse_medium(iter, pos);
+ 		else if (pos[0] <= LONG_ATOM_BYTE) /* long atom */
+ 			token_length = response_parse_long(iter, pos);
++		else if (pos[0] == EMPTY_ATOM_BYTE) /* empty atom */
++			token_length = 1;
+ 		else /* TOKEN */
+ 			token_length = response_parse_token(iter, pos);
+ 
+ 		if (token_length < 0)
+ 			return token_length;
+ 
++		if (pos[0] != EMPTY_ATOM_BYTE)
++			num_entries++;
 +
- 	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
- 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
- 			USB_VENDOR_ID_SYNAPTICS, 0xce08) },
+ 		pos += token_length;
+ 		total -= token_length;
+ 		iter++;
+-		num_entries++;
+ 	}
+ 
+ 	resp->num = num_entries;
 -- 
 2.43.0
 
