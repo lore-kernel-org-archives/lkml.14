@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702241411EC;
-	Sun, 24 Mar 2024 22:48:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F161D1D4C;
+	Sun, 24 Mar 2024 22:48:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320519; cv=none; b=Vn5ZKxLqCoET0mqxlBxNeR+/4PdoHmyOYsBpWkVJgYHMTgKwCepgs+o5cVwSssg56yO4mIo5glyAGr9yyrXbEXmvzhu1eCGE4YFVj8xr1hV+lYdnLSB3TUU31QAdrXUUpjJNBqhrI5r6eGMbUmeviVeeRRHy8sQBba/o8rFBSww=
+	t=1711320531; cv=none; b=prKENz6XOcm/xKTXm/83VxsrEbG9dxFcd/TbbVyI5gPKGtUNl9huieCK/VOpxyHuKOKbQDwVsrz3Qq19S0cAlp6Dcxu7GNf4OvpBvh/Rw77Z+XMU1tg0iLLxbOvAt5SNqTqWBWTEY5SD4Dkf6a8hK9FhBvCVp+1PpPVFbhSfq+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320519; c=relaxed/simple;
-	bh=KK0r7HLEGlnhN25/A0rpX5LySpg3lS7iiWtkuou51PM=;
+	s=arc-20240116; t=1711320531; c=relaxed/simple;
+	bh=kfUHX9dNA6VHlvW4hx4foa6phsP6hWb01o+wTBPm9Go=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZXK3VMfp1aoR8LwJZFhvVsd0XmvHxuiux1fgZtCuU5PvsMBjGp2VBCrshRLgrZi96v1oEZeSNrbfLnH/7udoME61l3x5+4V/l4/1UHbay5Ej/mgXkF55zLm9I4vJINi97AMPNZmN1q7Ybgg6Lvh306u4BVurjxWlSXlPX5ZWZFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGRpm29b; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GZHdBiVxDNilBG0av1D9jEOdEg/66jiwxYw+v5jiPi1z/jFYB0vOKyJ+/rWeBG5PEIzuaUptYuGvTf6/AMheXaJ0GGW63D4eoGKSYvcDBi3tRZ3Amj06g2kUowyBoitHSiDfQo1BdyDedrWEmeUD43ms0eTNPWTVRHsRndldZeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2zbLnis; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGRpm29b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD7E0C433C7;
-	Sun, 24 Mar 2024 22:48:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2zbLnis"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D84AFC433C7;
+	Sun, 24 Mar 2024 22:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320519;
-	bh=KK0r7HLEGlnhN25/A0rpX5LySpg3lS7iiWtkuou51PM=;
+	s=k20201202; t=1711320529;
+	bh=kfUHX9dNA6VHlvW4hx4foa6phsP6hWb01o+wTBPm9Go=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aGRpm29b1+o44XAddPtujYuo3fsWO20xR013CHD/4nHES6Wd0mBxjK9po7Zgw0LDI
-	 3nL+vL7Gp/Xz4CXjA0JOa/y+JvIjpPvRJ3sIigyAJE7++IWNIYNCe8Yd10rrTZMLPJ
-	 CiLxgkLkp9W9/TLEoSHPfZRv/A3sZQk5uplB2JI3TyzX8b8IQOQrWNyrRaUNCQqWtC
-	 MJlEf8DavKJrD8Tl9Q2M62bxN2PfvNXT2GQ9arqWLG4AuiF5LUdtNyfDG5oyxd8ckG
-	 ObREQFDVDKl4UosBrg2LV19lzA/Uu8/JGkclzzzYOD5L9XHSNZknHJfy8E0715XuFP
-	 FPR/ZC5+zReZA==
+	b=G2zbLnisKCPx8QmRkESBRKXOA6LyQdlXvV6U4ueTzvKoPpSBFloi4LnvPMuGuaonU
+	 I/18z5kt7OpqVOBEh3nQMBMtEUoxTyVscebYSQ/wRHAcgLrmhWJmhaGNlHAZd3QRDv
+	 UgGf5gWRXk7aMFYc37Dzn6NpcsGKiF7s3WRi9pkWBro6q9COXL/BN+nxxRMN5uTTNi
+	 nDCSATDzueCtEpcDAc18wLwv/oIt5dp1r4SiK2wZ7UwgTESR9Nf9fHnwkHwxjocQt2
+	 hFAfUvl+WfJ7ZQPD6B7PhS2bUtCWh1qaMwKqqFtwGnPHOKADFkzyzpCcCozuuGNu7Q
+	 TiQUqC8CvyYSA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stuart Henderson <stuarth@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Tejun Heo <tj@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Nathan Chancellor <nathan@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 080/713] ASoC: wm8962: Fix up incorrect error message in wm8962_set_fll
-Date: Sun, 24 Mar 2024 18:36:46 -0400
-Message-ID: <20240324224720.1345309-81-sashal@kernel.org>
+Subject: [PATCH 6.7 091/713] workqueue: Don't call cpumask_test_cpu() with -1 CPU in wq_update_node_max_active()
+Date: Sun, 24 Mar 2024 18:36:57 -0400
+Message-ID: <20240324224720.1345309-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,34 +49,58 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stuart Henderson <stuarth@opensource.cirrus.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 96e202f8c52ac49452f83317cf3b34cd1ad81e18 ]
+[ Upstream commit 15930da42f8981dc42c19038042947b475b19f47 ]
 
-Use source instead of ret, which seems to be unrelated and will always
-be zero.
+For wq_update_node_max_active(), @off_cpu of -1 indicates that no CPU is
+going down. The function was incorrectly calling cpumask_test_cpu() with -1
+CPU leading to oopses like the following on some archs:
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-Link: https://msgid.link/r/20240306161439.1385643-5-stuarth@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  Unable to handle kernel paging request at virtual address ffff0002100296e0
+  ..
+  pc : wq_update_node_max_active+0x50/0x1fc
+  lr : wq_update_node_max_active+0x1f0/0x1fc
+  ...
+  Call trace:
+    wq_update_node_max_active+0x50/0x1fc
+    apply_wqattrs_commit+0xf0/0x114
+    apply_workqueue_attrs_locked+0x58/0xa0
+    alloc_workqueue+0x5ac/0x774
+    workqueue_init_early+0x460/0x540
+    start_kernel+0x258/0x684
+    __primary_switched+0xb8/0xc0
+  Code: 9100a273 35000d01 53067f00 d0016dc1 (f8607a60)
+  ---[ end trace 0000000000000000 ]---
+  Kernel panic - not syncing: Attempted to kill the idle task!
+  ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+
+Fix it.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+Link: http://lkml.kernel.org/r/91eacde0-df99-4d5c-a980-91046f66e612@samsung.com
+Fixes: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 2 +-
+ kernel/workqueue.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index 2256cc0a37ebd..7c6ed29831285 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2933,7 +2933,7 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
- 				    WM8962_FLL_FRC_NCO, WM8962_FLL_FRC_NCO);
- 		break;
- 	default:
--		dev_err(component->dev, "Unknown FLL source %d\n", ret);
-+		dev_err(component->dev, "Unknown FLL source %d\n", source);
- 		return -EINVAL;
- 	}
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 6b18926cf3523..6f7cb619aa5e4 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1500,7 +1500,7 @@ static void wq_update_node_max_active(struct workqueue_struct *wq, int off_cpu)
  
+ 	lockdep_assert_held(&wq->mutex);
+ 
+-	if (!cpumask_test_cpu(off_cpu, effective))
++	if (off_cpu >= 0 && !cpumask_test_cpu(off_cpu, effective))
+ 		off_cpu = -1;
+ 
+ 	total_cpus = cpumask_weight_and(effective, cpu_online_mask);
 -- 
 2.43.0
 
