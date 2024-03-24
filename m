@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE2227F0AB;
-	Sun, 24 Mar 2024 23:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BCF280206;
+	Sun, 24 Mar 2024 23:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323603; cv=none; b=RCSR5IhuBMbfR65x3gJrbBDOExj+ccHrhcOSrux9cgBdpmAD0ww45FvPae53/axHnsAxRVjWuLT9HngsFqvH7ZW3wFBW8xqLVNPHOQXJ/RTLEP7XfAC4XknuzQAX2e57OdobUqrGZulDEEECsHO3XclyYY1dH3lTpnQ7SnRAdDA=
+	t=1711323635; cv=none; b=DSZo3O6/PCaLS+CP6xGw+Vti4hq5RojBFIISMZM/Oq6TkqNo//+nNWGXjjOpboCAU6812FyDR1da+BO2N//lS12h74OTKNBfceGrFqyo6HrMWzQ22C+D9cQBXiOIgAylVlqlkiw3vA1wg+JA+ow+ufArDjTK0XSepTxGeozmewc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323603; c=relaxed/simple;
-	bh=eaBrFbHF+JPRxuw1dYGmnkADjKnB0DW7CmbTKBFaTfk=;
+	s=arc-20240116; t=1711323635; c=relaxed/simple;
+	bh=W7EFPrddAiARLEIxEX/jN7SMYuIy9OT780TTtwsJlAg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bqn+UVk2LpbDFzmm46ONOEgqghZYzowCgb1j7r0LO+FmFbnhoZth5KyZtA9/h4pfSGhbk7odnbpx1MrfIMqIDw50ar4fAsqg3R/b0g7tTyX4hMLvhjotNwrWZrcOSLYVgeTX10OOJ13zAjsdW4E0iOPqEHvwVAeZeH/s7MkRFn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/sWTlzV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=N5qyY9r2ABA88lajLaPhGn4gUDa/OyLMyem5tiPDOv4yzCJIhtcJnNaJQu7Gz6DE5P+sqHkaU0E4AppAz3xl5orPfYUcZc/g8844YOD6m+10/aeGwIolJ+h3h9ir5iMupioJSwmcVpMXhj8T/hg+7bzVxk/vFPMXOWZLSpz1yJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fgx1sQ1B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/sWTlzV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E604EC43394;
-	Sun, 24 Mar 2024 23:40:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fgx1sQ1B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E80C43390;
+	Sun, 24 Mar 2024 23:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323602;
-	bh=eaBrFbHF+JPRxuw1dYGmnkADjKnB0DW7CmbTKBFaTfk=;
+	s=k20201202; t=1711323634;
+	bh=W7EFPrddAiARLEIxEX/jN7SMYuIy9OT780TTtwsJlAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D/sWTlzVkEbbf/qrnUws9DHMN6wFkiEMxpFCJlT60YVfgV7Sxe3ivoLwLBpUDntXC
-	 ZKqqacRk6kOg3CGFSWCDFNnrdZSK4W1YlSfbNEEue1/MWvo8XwhCAhVeohrxP0T02I
-	 1sN4ySrhGzqwUk/hQSW/i/jPupJrMHArhP+S8JlP+zc9t2qXAbXSG0yik8a/5cbbyJ
-	 /ZvXcd0mLPVr0lp3iEo3KELk3eopYXx9TT4p3CT+Dj7PIfVYxzNThhSU556lHPlQ4P
-	 e5doJhMgvlrBpDFZ5ePE+Nr6y2LRILyOZtCAoF84+CBg8deiuMYuJmKwkoM3umpV/T
-	 YQdFNJfMVIjbA==
+	b=Fgx1sQ1BIn1VV4XNaxQ4Ws8WTDJ9mdA+BsALOGIRlA/iAzst5JIQUv8Br72n9VHdG
+	 LRD+pkTXS4/tFcbYjCs1UDKR+Orcj62s2oq4Q1c6dxvlMPSAxMoywbrI3S6Fy0TaKl
+	 83MwBsPi9BiHTKp8t5IH8zvbsFKxvNrFZ0EuNc9zD41wI6V/38N+wy1C7d3kY8n1H/
+	 89YErQ/hg8U7v4m9Pxl2lqqiYC9D9QG/ex5nt5lb4IReU4oY0ZCsgo1lxafIBWpkSK
+	 rJ9jT2z53xUYG/RmO/rozKXCqF6BucNAHi/BGlAU+l0kVlBMb+aYrXhFWhl3hfuMMt
+	 73+MiqE5s9NGQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yan Zhai <yan@cloudflare.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Filipe Manana <fdmanana@suse.com>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Boris Burkov <boris@bur.io>,
+	David Sterba <dsterba@suse.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 309/317] net: report RCU QS on threaded NAPI repolling
-Date: Sun, 24 Mar 2024 19:34:49 -0400
-Message-ID: <20240324233458.1352854-310-sashal@kernel.org>
+Subject: [PATCH 5.10 005/238] btrfs: add and use helper to check if block group is used
+Date: Sun, 24 Mar 2024 19:36:33 -0400
+Message-ID: <20240324234027.1354210-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
-References: <20240324233458.1352854-1-sashal@kernel.org>
+In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
+References: <20240324234027.1354210-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,85 +51,58 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yan Zhai <yan@cloudflare.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit d6dbbb11247c71203785a2c9da474c36f4b19eae ]
+[ Upstream commit 1693d5442c458ae8d5b0d58463b873cd879569ed ]
 
-NAPI threads can keep polling packets under load. Currently it is only
-calling cond_resched() before repolling, but it is not sufficient to
-clear out the holdout of RCU tasks, which prevent BPF tracing programs
-from detaching for long period. This can be reproduced easily with
-following set up:
+Add a helper function to determine if a block group is being used and make
+use of it at btrfs_delete_unused_bgs(). This helper will also be used in
+future code changes.
 
-ip netns add test1
-ip netns add test2
-
-ip -n test1 link add veth1 type veth peer name veth2 netns test2
-
-ip -n test1 link set veth1 up
-ip -n test1 link set lo up
-ip -n test2 link set veth2 up
-ip -n test2 link set lo up
-
-ip -n test1 addr add 192.168.1.2/31 dev veth1
-ip -n test1 addr add 1.1.1.1/32 dev lo
-ip -n test2 addr add 192.168.1.3/31 dev veth2
-ip -n test2 addr add 2.2.2.2/31 dev lo
-
-ip -n test1 route add default via 192.168.1.3
-ip -n test2 route add default via 192.168.1.2
-
-for i in `seq 10 210`; do
- for j in `seq 10 210`; do
-    ip netns exec test2 iptables -I INPUT -s 3.3.$i.$j -p udp --dport 5201
- done
-done
-
-ip netns exec test2 ethtool -K veth2 gro on
-ip netns exec test2 bash -c 'echo 1 > /sys/class/net/veth2/threaded'
-ip netns exec test1 ethtool -K veth1 tso off
-
-Then run an iperf3 client/server and a bpftrace script can trigger it:
-
-ip netns exec test2 iperf3 -s -B 2.2.2.2 >/dev/null&
-ip netns exec test1 iperf3 -c 2.2.2.2 -B 1.1.1.1 -u -l 1500 -b 3g -t 100 >/dev/null&
-bpftrace -e 'kfunc:__napi_poll{@=count();} interval:s:1{exit();}'
-
-Report RCU quiescent states periodically will resolve the issue.
-
-Fixes: 29863d41bb6e ("net: implement threaded-able napi poll loop support")
-Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Signed-off-by: Yan Zhai <yan@cloudflare.com>
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-Link: https://lore.kernel.org/r/4c3b0d3f32d3b18949d75b18e5e1d9f13a24f025.1710877680.git.yan@cloudflare.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Boris Burkov <boris@bur.io>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/btrfs/block-group.c | 3 +--
+ fs/btrfs/block-group.h | 7 +++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 1e41971c06177..f80bc2ca888aa 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -7143,6 +7143,8 @@ static int napi_threaded_poll(void *data)
- 	void *have;
- 
- 	while (!napi_thread_wait(napi)) {
-+		unsigned long last_qs = jiffies;
-+
- 		for (;;) {
- 			bool repoll = false;
- 
-@@ -7157,6 +7159,7 @@ static int napi_threaded_poll(void *data)
- 			if (!repoll)
- 				break;
- 
-+			rcu_softirq_qs_periodic(last_qs);
- 			cond_resched();
+diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+index c4e3c1a5de059..9a7c7e0f7c233 100644
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -1393,8 +1393,7 @@ void btrfs_delete_unused_bgs(struct btrfs_fs_info *fs_info)
  		}
- 	}
+ 
+ 		spin_lock(&block_group->lock);
+-		if (block_group->reserved || block_group->pinned ||
+-		    block_group->used || block_group->ro ||
++		if (btrfs_is_block_group_used(block_group) || block_group->ro ||
+ 		    list_is_singular(&block_group->list)) {
+ 			/*
+ 			 * We want to bail if we made new allocations or have
+diff --git a/fs/btrfs/block-group.h b/fs/btrfs/block-group.h
+index 4c7614346f724..0d02b75f9e7e3 100644
+--- a/fs/btrfs/block-group.h
++++ b/fs/btrfs/block-group.h
+@@ -196,6 +196,13 @@ static inline u64 btrfs_block_group_end(struct btrfs_block_group *block_group)
+ 	return (block_group->start + block_group->length);
+ }
+ 
++static inline bool btrfs_is_block_group_used(const struct btrfs_block_group *bg)
++{
++	lockdep_assert_held(&bg->lock);
++
++	return (bg->used > 0 || bg->reserved > 0 || bg->pinned > 0);
++}
++
+ static inline bool btrfs_is_block_group_data_only(
+ 					struct btrfs_block_group *block_group)
+ {
 -- 
 2.43.0
 
