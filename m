@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08C81474BE;
-	Sun, 24 Mar 2024 23:14:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522961487C7;
+	Sun, 24 Mar 2024 23:15:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322096; cv=none; b=F9sBOUrD4tL7pct2Vb6rWr3wSz8gYvm1oz/br/EMKhZTxOeXVDKmx5ksVxQ2DdBRWM1Ap3s+RlDUoIz1wnlGMCkV2Rqe7IavSn8ZQr2liZ0NsODr3pLVuxVAAMe3lPdJ7uk9oxpG90NQjtaahLRxaO2CZvHT68SEuv2zkgUskKc=
+	t=1711322110; cv=none; b=XZred8QyF24qjw34Rvh6aalS+cPU8GEOF/fa+vazgfBPtYgL0IgGPtzj3+p4BahfCqqV4Zn6NM+ndKU8OCh9BHQXeKmg7fSPHNQEfbkZiaXqfyhaAmYoCljskXJ9Uae8PmyJidxfKQiPU0tpnv94KbMOfIqmxu638OT5Pq3k7po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322096; c=relaxed/simple;
-	bh=eX17tDOpR4/sNwJlQ8hJbVc+M0Lq/73SvbuHje2/F5E=;
+	s=arc-20240116; t=1711322110; c=relaxed/simple;
+	bh=dNHR4eclNy+wmS+rjR+g78dsaberhhM17L5AFfz9j4k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=awhafaC7egKt4iPWERsIC5C6eIHtqJfFf9AXOZaf7gQGhSHpAiDVu54ekkUccnA/0qwd6kKda/LO1bUQShGoXO7lYbnabZfY2kO1DqEk/MX1vPCrEVVOvpDN+8TvSLej70iX27stIVgQBVkhpqWwM1gc/6WxR1PUoQm6Icw3uAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iNPQDeoO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ZbGSTHftc2P+F9njnWWMOGohTGaeLvIs1EDYJSg9FCMDW9SdjtLfkzvUKR4GlK94b/UwCNVJhh9RbNEtw58FrfG0cXegZ3tV60w/OLaukX2zdTU94vl1nF/slaX4mFZyDFy1V6NQFVH1d5hvP9uzddlmZNLl6xaP5ZOD0WjgClE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fRUAl82f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iNPQDeoO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32D61C43399;
-	Sun, 24 Mar 2024 23:14:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fRUAl82f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75D0EC43390;
+	Sun, 24 Mar 2024 23:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322096;
-	bh=eX17tDOpR4/sNwJlQ8hJbVc+M0Lq/73SvbuHje2/F5E=;
+	s=k20201202; t=1711322109;
+	bh=dNHR4eclNy+wmS+rjR+g78dsaberhhM17L5AFfz9j4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iNPQDeoOn1l2nNoQE/u6lJk7mmQooRy1vaxPcAS0CwHMOFZEtllT7lFi/2g5e8FTX
-	 44rGncMIuDFOlT5i3yb6lf5qoq7elnn9eGOJbbKTH7+fSzQa2ro/nnolA4QafnZSIw
-	 xP+abBOJPdr2IA0CPm+Q+EKoBJnAb8awTzyoYdm/w+2y4DKUo3Wqa+ODTjzHytnKnk
-	 H0aq7/mackDDVJXxHDqc8d9MIknyUUXig9QtMZAaU/+fei1wlsttKJGpQeIwDM8e+c
-	 xopYrTQcaDvUpb99cEMyDwEVFTHXPisQXXfEEQ+G0eO9OKL3VYe5L4+KOzFCK+qjsY
-	 zT5yI77Ci25sA==
+	b=fRUAl82fdIdI91iPU4F4ll9w/gr3p4EoHgsHqRSpZbKaYwRzNudeB1s/7kjwn69mY
+	 HrmLMpvL8AssnurGYRO5aKbK9jgHotM3RXOhLbLBhmuUmAAlCdJKPopKiLK9a9q83k
+	 04F18XRbhYhKvk8vWR1Nw7LX2F7xJNoimuHjtvEdnI9sQuNokMheMFWVhWY0fK1giL
+	 ghc6Nhfj6UomcY1O3+s2Vpx5Cjj1REdTUdC21gnYTAPp1y5fBaxizB36wIFiTrzU0q
+	 JxwWZ7fm12mF3PmabBq4KzOhVqwFXog15LW58ykvtbC4ZKQi2LMhmRBMvA6WCnxqsL
+	 aG6kmukoWNJWA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 171/451] arm64: dts: renesas: r8a779g0: Correct avb[01] reg sizes
-Date: Sun, 24 Mar 2024 19:07:27 -0400
-Message-ID: <20240324231207.1351418-172-sashal@kernel.org>
+Subject: [PATCH 6.1 184/451] arm64: dts: rockchip: add missing interrupt-names for rk356x vdpu
+Date: Sun, 24 Mar 2024 19:07:40 -0400
+Message-ID: <20240324231207.1351418-185-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -43,50 +45,40 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Heiko Stuebner <heiko@sntech.de>
 
-[ Upstream commit 7edbb5880dc3317a5eaec2166de71ff394598e6b ]
+[ Upstream commit d1c44d9afa6f89aa0e10a191f30868eb12cd719f ]
 
-All Ethernet AVB instances on R-Car V4H have registers related to UDP/IP
-support, but the declared register blocks for the first two instances
-are too small to cover them.
+The video-codec@fdea0400 was missing the interrupt-names property that is
+part of the binding. Add it.
 
-Fix this by extending the register block sizes.
-
-Fixes: 848c82db56923a8b ("arm64: dts: renesas: r8a779g0: Add RAVB nodes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/83437778614a7c96f4d8f1be98dffeee29bb4a0b.1707660323.git.geert+renesas@glider.be
+Fixes: 944be6fba401 ("arm64: dts: rockchip: Add VPU support for RK3568/RK3566")
+Cc: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Acked-by: Uwe Kleine-König <ukleinek@debian.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/20240227173526.710056-1-heiko@sntech.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a779g0.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk356x.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-index d58b18802cb01..868d1a3cbdf61 100644
---- a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-@@ -337,7 +337,7 @@ hscif0: serial@e6540000 {
- 		avb0: ethernet@e6800000 {
- 			compatible = "renesas,etheravb-r8a779g0",
- 				     "renesas,etheravb-rcar-gen4";
--			reg = <0 0xe6800000 0 0x800>;
-+			reg = <0 0xe6800000 0 0x1000>;
- 			interrupts = <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
-@@ -384,7 +384,7 @@ avb0: ethernet@e6800000 {
- 		avb1: ethernet@e6810000 {
- 			compatible = "renesas,etheravb-r8a779g0",
- 				     "renesas,etheravb-rcar-gen4";
--			reg = <0 0xe6810000 0 0x800>;
-+			reg = <0 0xe6810000 0 0x1000>;
- 			interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 362 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+index f4d6dbbbddcd4..99ad6fc51b584 100644
+--- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+@@ -596,6 +596,7 @@ vpu: video-codec@fdea0400 {
+ 		compatible = "rockchip,rk3568-vpu";
+ 		reg = <0x0 0xfdea0000 0x0 0x800>;
+ 		interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "vdpu";
+ 		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
+ 		clock-names = "aclk", "hclk";
+ 		iommus = <&vdpu_mmu>;
 -- 
 2.43.0
 
