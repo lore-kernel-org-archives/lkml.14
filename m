@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CDF12EBDE;
-	Sun, 24 Mar 2024 22:36:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DAF12F36C;
+	Sun, 24 Mar 2024 22:36:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711319806; cv=none; b=MC2WoPZW6s2RRkphHneXzSBkzkUbKLNqXSdS6V35Cj9f+a+HDNyaOEo9Xz8MxVTodE/jitQANavU0SkD/NQAZl+1VlCieDu9LhmD16UPt9go8OPhFlS1GeGP4WRGPYtKXAU7Sb32JuoKzXtjgOAlW1Tx3v/b2kyAn/LwinNuWY8=
+	t=1711319808; cv=none; b=LTD7ZbxLT9gIWd+TjlSznxIkRLawMMRUUZgaqYYSZZtdFvnvyhXItsGZa18+yZJoKARjEc9tyIJAPR8qbKqkCvO/gw8voM9Ba8L8upDpx939CLDmEnOOSvOkaRkbnM3J+NCjuX2naPQA2eQyPNf3luENXK9PkuZSsQW0mFjQR4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711319806; c=relaxed/simple;
-	bh=9Qq1iVEdw0G3vZVt9MiiXBeQOuukWCru2oMuL3av5NQ=;
+	s=arc-20240116; t=1711319808; c=relaxed/simple;
+	bh=ze5NvR4EfcKhR0fNuwbdLlByKeSoQS9yq6vaY4x24bQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oDoZSD2pXg46VrCNQ9WZxZc5EFA+Tow6nhQSffASZDxLSHHJHABDKARBJ7WWsuj0UH/fLJQPFBj4At5w3qooK1B5eFd4xMcHx5eyjGYb+2PexvQS3wQsOvF3R6RJmNZD90lGxihcJdRKdUQD7LLmcJBI2Uzm0Cjuis4NZROT4rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxQH8enf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uEpKREpWXvjpqVYOIt2bBut1MtwclqW4K/dSdvmVPg0fYcui1BAzaTIT5iYqhn7cQ+UfseyEkapPgPGFCbJr/oXlEvdUbvxEmxtL+vWrRUA1T4p7PPMV3xdTusvAcqk6oV1sNvySOeqlcRkGTKABnWYHwt2jPpf3qxqCrPhQlg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=grZW4DR2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxQH8enf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9088C433B1;
-	Sun, 24 Mar 2024 22:36:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="grZW4DR2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F3A6C433B1;
+	Sun, 24 Mar 2024 22:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711319806;
-	bh=9Qq1iVEdw0G3vZVt9MiiXBeQOuukWCru2oMuL3av5NQ=;
+	s=k20201202; t=1711319808;
+	bh=ze5NvR4EfcKhR0fNuwbdLlByKeSoQS9yq6vaY4x24bQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jxQH8enfb875uJ1vHGeKYZle4JBzMO84OnRGVqThYqZ4BP8AO2Xtp2Is8CO/Eq3zb
-	 +DoPE24T7XEeHM25AMZcwjtbZ+geO2EhzGWGA1ToSvLtShFyO31S3BzzWhlEWeUqFW
-	 EivMIH61aVshrv3luiNNnxmKuEyEpqQKxNnvKuJYveh/cdkCCOMwtsI3hfW8rQxwe/
-	 F638sFHRWj8SNXAze/jHtOsVthUhz62PyE3jMo6myz6oLZLudsECsFaQAdqcQ/2hTa
-	 5ppgiF5pYazxYgT/xbzSyPQ+DOBnBCIEQs+tnNYV/QhKcC+jPrxlXZahm14FEb4kCz
-	 YXswy5HCT9XvA==
+	b=grZW4DR2kbhdyzj46djI3pGg1e++JjTkVlvQY8ZS5CCAQaV37xSKFX1K9hRQPYTo2
+	 Y+nvgmuITf9mHjsQ2mQ9IrDKkQdPkdsds4VQCRjsjb7hMKhH/BlY4a9QUX24TGgJdG
+	 Oc30unItB+AEdOgpvojkZUW/KKG6H3DqQ29b+udouVV1bDuehB0Sx5tbJ0+8hO9wi5
+	 bslqeapz9GVgKcZZ3yNT78UY9S23109ifFojfr1H2mh/9mfAd48Zckas9rAUFdODdc
+	 GqJ4uuPzi78H6rYL6FyCyQ9NgbZqEM3zU6RQmna0feDbeJvl3gOU6mFITmJhPt923p
+	 MwZi1Bmw8QX+Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 107/715] arm64: dts: renesas: r8a779g0: Add missing SCIF_CLK2
-Date: Sun, 24 Mar 2024 18:24:46 -0400
-Message-ID: <20240324223455.1342824-108-sashal@kernel.org>
+Subject: [PATCH 6.8 109/715] arm64: dts: imx8mm-kontron: Disable pullups for I2C signals on OSM-S i.MX8MM
+Date: Sun, 24 Mar 2024 18:24:48 -0400
+Message-ID: <20240324223455.1342824-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
 References: <20240324223455.1342824-1-sashal@kernel.org>
@@ -47,65 +48,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-[ Upstream commit 08e799f6bce80dd63c174d8d0fc61d1a6149960b ]
+[ Upstream commit 96293af54f6aa859015d8ca40a1437d3115ad50c ]
 
-R-Car V4H actually has two SCIF_CLK pins.
-The second pin provides the SCIF_CLK signal for HSCIF2 and SCIF4.
+There are external pullup resistors on the board and due to silicon
+errata ERR050080 let's disable the internal ones to prevent any
+unwanted behavior in case they wear out.
 
-Fixes: a4c31c56d2d35641 ("arm64: dts: renesas: r8a779g0: Add SCIF nodes")
-Fixes: 39d9dfc6fbe1860e ("arm64: dts: renesas: r8a779g0: Add remaining HSCIF nodes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/72f20c1bf32187bd30a963cafe27252907d661f9.1705589612.git.geert+renesas@glider.be
+Fixes: de9618e84f76 ("arm64: dts: Add support for Kontron SL/BL i.MX8MM OSM-S")
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a779g0.dtsi | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts | 4 ++--
+ arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi   | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-index 3be1159982b20..0c83940b3d8a1 100644
---- a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
-@@ -185,13 +185,19 @@ psci {
- 		method = "smc";
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
+index 8b16bd68576c0..0730c22e5b6b9 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts
+@@ -294,8 +294,8 @@ MX8MM_IOMUXC_SAI3_MCLK_GPIO5_IO2		0x19
+ 
+ 	pinctrl_i2c4: i2c4grp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL			0x400001c3
+-			MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA			0x400001c3
++			MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL			0x40000083
++			MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA			0x40000083
+ 		>;
  	};
  
--	/* External SCIF clock - to be overridden by boards that provide it */
-+	/* External SCIF clocks - to be overridden by boards that provide them */
- 	scif_clk: scif {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <0>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
+index 6e75ab879bf59..3e7db968f7e64 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-osm-s.dtsi
+@@ -252,8 +252,8 @@ MX8MM_IOMUXC_ECSPI1_SS0_GPIO5_IO9		0x19
+ 
+ 	pinctrl_i2c1: i2c1grp {
+ 		fsl,pins = <
+-			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL			0x400001c3
+-			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA			0x400001c3
++			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL			0x40000083
++			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA			0x40000083
+ 		>;
  	};
  
-+	scif_clk2: scif2 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
- 	soc: soc {
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
-@@ -681,7 +687,7 @@ hscif2: serial@e6560000 {
- 			interrupts = <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 516>,
- 				 <&cpg CPG_CORE R8A779G0_CLK_SASYNCPERD1>,
--				 <&scif_clk>;
-+				 <&scif_clk2>;
- 			clock-names = "fck", "brg_int", "scif_clk";
- 			dmas = <&dmac0 0x35>, <&dmac0 0x34>,
- 			       <&dmac1 0x35>, <&dmac1 0x34>;
-@@ -1057,7 +1063,7 @@ scif4: serial@e6c40000 {
- 			interrupts = <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 705>,
- 				 <&cpg CPG_CORE R8A779G0_CLK_SASYNCPERD1>,
--				 <&scif_clk>;
-+				 <&scif_clk2>;
- 			clock-names = "fck", "brg_int", "scif_clk";
- 			dmas = <&dmac0 0x59>, <&dmac0 0x58>,
- 			       <&dmac1 0x59>, <&dmac1 0x58>;
 -- 
 2.43.0
 
