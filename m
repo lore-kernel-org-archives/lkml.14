@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DBC21852E;
-	Sun, 24 Mar 2024 23:09:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9000113F004;
+	Sun, 24 Mar 2024 23:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321788; cv=none; b=JHTSOe9zFw1o/so+1v68ZAAETnhxZ5B79WtAWlcl6NokBqJL33kT8NxhYtmSVK4d/B4l134ZlsGnsqAGHqiOLldQm6UDintxSmB495U5MZhOVoSm7ojvfaNxgc8NO+enXgDNN1NBHzERCuBCei5TdMrPPVkG1wrrEG450Msln80=
+	t=1711321796; cv=none; b=qjVyZwI7fEjUBIxzpQwIUB0IyU1ey824UhonX6HdQ3gogeU0CuRliLa16h2a7I8tOGcRewQdCrZY9hN3OSuum7THJM8oGYTUA0VmeeLlJFwxmYazgPhme9e1SRfbZmr36rpE/V4oryiWTn4VqojqXGykc5Q8Wb7OJNS7/1L0Y4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321788; c=relaxed/simple;
-	bh=q4s74LRAulqbBGBVjJ/MODzsiqmDvD3V81+Owdlc6Is=;
+	s=arc-20240116; t=1711321796; c=relaxed/simple;
+	bh=2487uyEWYMiG1zqA3cbS9DBoal7pOEM20MTlnBXdtQY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ahf8RLbMW6cTKizL+tzeaOXb+UYmM9RXdo5z040eIAm1//oQyeifNCJPehEY5f7VzCa5HcOKbDPc1BM6zccfbPvK7jwYLHKBZXgkFbY9reHeKI/3K77yT8gJgfURlp0czpYYEr+mNGcBk2Zy1b+Xf3N6wK19pb5HiqZknHQ5ryg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vR8yrIqK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=amETzBBl/x7NCFDZ8B236vRqxuX9D0QI9/qGniUkm4VMfBGca/QvZCqBPPWo2WuQgnwaVbMmVW1ePMSAYoUvy6EC4cLZTuOKfNyFshcaWXZ9eEld7keNoryFsJZuxZvs+9R1voY7q0Oca6mpY5mB26wKDdUY1NXVwOZYlhZ57zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0U4fWA0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vR8yrIqK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF64C433C7;
-	Sun, 24 Mar 2024 23:09:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0U4fWA0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA352C43394;
+	Sun, 24 Mar 2024 23:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321787;
-	bh=q4s74LRAulqbBGBVjJ/MODzsiqmDvD3V81+Owdlc6Is=;
+	s=k20201202; t=1711321796;
+	bh=2487uyEWYMiG1zqA3cbS9DBoal7pOEM20MTlnBXdtQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vR8yrIqK4m7HCZinkRbbrz/djVG39INQAOwDQ3taOIuzTt0CxAHwxMmVy9yv3SSFi
-	 3AjG2t6GtJ/FenAjvDSTe+T+/jt8VqHSoY40jDLS655PSf1vX6Qe0flTvDR3udBQgZ
-	 xhJOJjXOCWVEtEhTIDgwTYykV1HtlDwQIklKn2MKh2oBqJ6GcPg4gr6ndTFDRvpQFg
-	 vCga1cMnodU4GWwJ4fqolZMzPAnMkZRbo9oB2GZlB8gJIWNFpFre9i6wCPginNWugJ
-	 mmGOL3jU9MSPCt2eSF80mpC0XEq7a+uMCEPWa/ctmEvGhbKQHZ8ztiNCSLY1Hml+++
-	 x0xd0GXlWKUYg==
+	b=S0U4fWA0LPXuTLCt2UbIeyqYg0+hO2SfZiKz1lZR+kYgv5OIr3VBhhKFJ7nY25Rp0
+	 /hwJi+tXJVb4q8H3YoNqTYYHuX9q0swBtqJqcYtK0WY8nytVj4KYmieMVVwzws6Xn5
+	 xwi9+7z9mZ6PZCILK/gXTadKnlgz7K8Fwk84lsNGtZ3RUH27FqNWpzo+4Uyrn1x1g8
+	 5oCcVCiv8HgW5MDjTx1iFG3eENaST8AcAuUt9S+vysyH2zFvl647o8oEK5+XlLHwvt
+	 wcCadyOkTK29KvzyOYM856n5pua6G+PAHZMwwpL20Ctq2U6EWGimLTYav7k6LbP/Z1
+	 4HGW4JGFajd7Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Luoyouming <luoyouming@huawei.com>,
+	Junxian Huang <huangjunxian6@hisilicon.com>,
+	Leon Romanovsky <leon@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 515/638] f2fs: update blkaddr in __set_data_blkaddr() for cleanup
-Date: Sun, 24 Mar 2024 18:59:12 -0400
-Message-ID: <20240324230116.1348576-516-sashal@kernel.org>
+Subject: [PATCH 6.6 524/638] RDMA/hns: Fix mis-modifying default congestion control algorithm
+Date: Sun, 24 Mar 2024 18:59:21 -0400
+Message-ID: <20240324230116.1348576-525-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,132 +49,132 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Luoyouming <luoyouming@huawei.com>
 
-[ Upstream commit 59d0d4c3eae0f3dd8886ed59f89f21fa09e324f5 ]
+[ Upstream commit d20a7cf9f714f0763efb56f0f2eeca1cb91315ed ]
 
-This patch allows caller to pass blkaddr to f2fs_set_data_blkaddr()
-and let __set_data_blkaddr() inside f2fs_set_data_blkaddr() to update
-dn->data_blkaddr w/ last value of blkaddr.
+Commit 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured
+with DCQCN") adds a check of congest control alorithm for UD. But
+that patch causes a problem: hr_dev->caps.congest_type is global,
+used by all QPs, so modifying this field to DCQCN for UD QPs causes
+other QPs unable to use any other algorithm except DCQCN.
 
-Just cleanup, no logic changes.
+Revert the modification in commit 27c5fd271d8b ("RDMA/hns: The UD
+mode can only be configured with DCQCN"). Add a new field cong_type
+to struct hns_roce_qp and configure DCQCN for UD QPs.
 
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Stable-dep-of: 54607494875e ("f2fs: compress: fix to avoid inconsistence bewteen i_blocks and dnode")
+Fixes: 27c5fd271d8b ("RDMA/hns: The UD mode can only be configured with DCQCN")
+Fixes: f91696f2f053 ("RDMA/hns: Support congestion control type selection according to the FW")
+Signed-off-by: Luoyouming <luoyouming@huawei.com>
+Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
+Link: https://lore.kernel.org/r/20240219061805.668170-1-huangjunxian6@hisilicon.com
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c | 13 ++++++-------
- fs/f2fs/f2fs.h |  2 +-
- fs/f2fs/file.c | 12 ++++--------
- 3 files changed, 11 insertions(+), 16 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_device.h | 17 +++++++++--------
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 16 ++++++++++------
+ 2 files changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index ec5088f814cab..a961288daafcb 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1180,10 +1180,11 @@ static int f2fs_submit_page_read(struct inode *inode, struct page *page,
- 	return 0;
- }
+diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
+index 7f0d0288beb1e..82066859cc113 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_device.h
++++ b/drivers/infiniband/hw/hns/hns_roce_device.h
+@@ -581,6 +581,13 @@ struct hns_roce_work {
+ 	u32 queue_num;
+ };
  
--static void __set_data_blkaddr(struct dnode_of_data *dn)
-+static void __set_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr)
++enum hns_roce_cong_type {
++	CONG_TYPE_DCQCN,
++	CONG_TYPE_LDCP,
++	CONG_TYPE_HC3,
++	CONG_TYPE_DIP,
++};
++
+ struct hns_roce_qp {
+ 	struct ib_qp		ibqp;
+ 	struct hns_roce_wq	rq;
+@@ -624,6 +631,7 @@ struct hns_roce_qp {
+ 	struct list_head	sq_node; /* all send qps are on a list */
+ 	struct hns_user_mmap_entry *dwqe_mmap_entry;
+ 	u32			config;
++	enum hns_roce_cong_type	cong_type;
+ };
+ 
+ struct hns_roce_ib_iboe {
+@@ -695,13 +703,6 @@ struct hns_roce_eq_table {
+ 	struct hns_roce_eq	*eq;
+ };
+ 
+-enum cong_type {
+-	CONG_TYPE_DCQCN,
+-	CONG_TYPE_LDCP,
+-	CONG_TYPE_HC3,
+-	CONG_TYPE_DIP,
+-};
+-
+ struct hns_roce_caps {
+ 	u64		fw_ver;
+ 	u8		num_ports;
+@@ -831,7 +832,7 @@ struct hns_roce_caps {
+ 	u16		default_aeq_period;
+ 	u16		default_aeq_arm_st;
+ 	u16		default_ceq_arm_st;
+-	enum cong_type	cong_type;
++	enum hns_roce_cong_type cong_type;
+ };
+ 
+ enum hns_roce_device_state {
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 3c62a0042da48..b4799c83282e2 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -4728,12 +4728,15 @@ static int check_cong_type(struct ib_qp *ibqp,
+ 			   struct hns_roce_congestion_algorithm *cong_alg)
  {
- 	__le32 *addr = get_dnode_addr(dn->inode, dn->node_page);
+ 	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
++	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
  
-+	dn->data_blkaddr = blkaddr;
- 	addr[dn->ofs_in_node] = cpu_to_le32(dn->data_blkaddr);
- }
+-	if (ibqp->qp_type == IB_QPT_UD)
+-		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
++	if (ibqp->qp_type == IB_QPT_UD || ibqp->qp_type == IB_QPT_GSI)
++		hr_qp->cong_type = CONG_TYPE_DCQCN;
++	else
++		hr_qp->cong_type = hr_dev->caps.cong_type;
  
-@@ -1193,18 +1194,17 @@ static void __set_data_blkaddr(struct dnode_of_data *dn)
-  *  ->node_page
-  *    update block addresses in the node page
-  */
--void f2fs_set_data_blkaddr(struct dnode_of_data *dn)
-+void f2fs_set_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr)
- {
- 	f2fs_wait_on_page_writeback(dn->node_page, NODE, true, true);
--	__set_data_blkaddr(dn);
-+	__set_data_blkaddr(dn, blkaddr);
- 	if (set_page_dirty(dn->node_page))
- 		dn->node_changed = true;
- }
+ 	/* different congestion types match different configurations */
+-	switch (hr_dev->caps.cong_type) {
++	switch (hr_qp->cong_type) {
+ 	case CONG_TYPE_DCQCN:
+ 		cong_alg->alg_sel = CONG_DCQCN;
+ 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
+@@ -4761,8 +4764,8 @@ static int check_cong_type(struct ib_qp *ibqp,
+ 	default:
+ 		ibdev_warn(&hr_dev->ib_dev,
+ 			   "invalid type(%u) for congestion selection.\n",
+-			   hr_dev->caps.cong_type);
+-		hr_dev->caps.cong_type = CONG_TYPE_DCQCN;
++			   hr_qp->cong_type);
++		hr_qp->cong_type = CONG_TYPE_DCQCN;
+ 		cong_alg->alg_sel = CONG_DCQCN;
+ 		cong_alg->alg_sub_sel = UNSUPPORT_CONG_LEVEL;
+ 		cong_alg->dip_vld = DIP_INVALID;
+@@ -4781,6 +4784,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
+ 	struct hns_roce_congestion_algorithm cong_field;
+ 	struct ib_device *ibdev = ibqp->device;
+ 	struct hns_roce_dev *hr_dev = to_hr_dev(ibdev);
++	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
+ 	u32 dip_idx = 0;
+ 	int ret;
  
- void f2fs_update_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr)
- {
--	dn->data_blkaddr = blkaddr;
--	f2fs_set_data_blkaddr(dn);
-+	f2fs_set_data_blkaddr(dn, blkaddr);
- 	f2fs_update_read_extent_cache(dn);
- }
+@@ -4793,7 +4797,7 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
+ 		return ret;
  
-@@ -1231,8 +1231,7 @@ int f2fs_reserve_new_blocks(struct dnode_of_data *dn, blkcnt_t count)
- 		block_t blkaddr = f2fs_data_blkaddr(dn);
- 
- 		if (blkaddr == NULL_ADDR) {
--			dn->data_blkaddr = NEW_ADDR;
--			__set_data_blkaddr(dn);
-+			__set_data_blkaddr(dn, NEW_ADDR);
- 			count--;
- 		}
- 	}
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 1155790892b13..a768722f26b65 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3814,7 +3814,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio);
- struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
- 		block_t blk_addr, sector_t *sector);
- int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr);
--void f2fs_set_data_blkaddr(struct dnode_of_data *dn);
-+void f2fs_set_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr);
- void f2fs_update_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr);
- int f2fs_reserve_new_blocks(struct dnode_of_data *dn, blkcnt_t count);
- int f2fs_reserve_new_block(struct dnode_of_data *dn);
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 9cfb0bce52c4b..73e1df8d584fb 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -582,8 +582,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
- 		if (blkaddr == NULL_ADDR)
- 			continue;
- 
--		dn->data_blkaddr = NULL_ADDR;
--		f2fs_set_data_blkaddr(dn);
-+		f2fs_set_data_blkaddr(dn, NULL_ADDR);
- 
- 		if (__is_valid_data_blkaddr(blkaddr)) {
- 			if (!f2fs_is_valid_blkaddr(sbi, blkaddr,
-@@ -1479,8 +1478,7 @@ static int f2fs_do_zero_range(struct dnode_of_data *dn, pgoff_t start,
- 		}
- 
- 		f2fs_invalidate_blocks(sbi, dn->data_blkaddr);
--		dn->data_blkaddr = NEW_ADDR;
--		f2fs_set_data_blkaddr(dn);
-+		f2fs_set_data_blkaddr(dn, NEW_ADDR);
- 	}
- 
- 	f2fs_update_read_extent_cache_range(dn, start, 0, index - start);
-@@ -3460,8 +3458,7 @@ static int release_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
- 			if (blkaddr != NEW_ADDR)
- 				continue;
- 
--			dn->data_blkaddr = NULL_ADDR;
--			f2fs_set_data_blkaddr(dn);
-+			f2fs_set_data_blkaddr(dn, NULL_ADDR);
- 		}
- 
- 		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, false);
-@@ -3633,8 +3630,7 @@ static int reserve_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
- 				continue;
- 			}
- 
--			dn->data_blkaddr = NEW_ADDR;
--			f2fs_set_data_blkaddr(dn);
-+			f2fs_set_data_blkaddr(dn, NEW_ADDR);
- 		}
- 
- 		reserved = cluster_size - compr_blocks;
+ 	hr_reg_write(context, QPC_CONG_ALGO_TMPL_ID, hr_dev->cong_algo_tmpl_id +
+-		     hr_dev->caps.cong_type * HNS_ROCE_CONG_SIZE);
++		     hr_qp->cong_type * HNS_ROCE_CONG_SIZE);
+ 	hr_reg_clear(qpc_mask, QPC_CONG_ALGO_TMPL_ID);
+ 	hr_reg_write(&context->ext, QPCEX_CONG_ALG_SEL, cong_field.alg_sel);
+ 	hr_reg_clear(&qpc_mask->ext, QPCEX_CONG_ALG_SEL);
 -- 
 2.43.0
 
