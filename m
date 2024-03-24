@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BBF21A82E;
-	Sun, 24 Mar 2024 23:36:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9052762BE;
+	Sun, 24 Mar 2024 23:36:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323373; cv=none; b=fCgTqGED4IjpxIXe/oHAFRjnYsdDy505Izdziq241m44j7jV58w4+/8islCofyA+JU6JDTCRVI+vLbPS+tUDFTXmM/u7O1yJRg7EePdK8hBlbZXLSE7brwF8QuMmqjfD9uukM60xz1FkYJXAnulNogsRt4+soJyQAvIOSgiiqpU=
+	t=1711323388; cv=none; b=eRT+y5Bn+jCF/GU7Vz5H2DcCtEB78C1uaGREvcRnFO7Xa4fKnFqY2pknflNx5y5TOdXGm8vPVQn53qy6gU4OfvYoALCukAh6Zpmd1py9Bpn94CbQq5TyenroXcRr+T89z2hWS83IwovaQ2qMgt8kLNvKAmTwxif7ZlpvkIzsvus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323373; c=relaxed/simple;
-	bh=t4VgZYcbk0X9lwkENC4ESyD43JJVmn4mAQAetzW2wAU=;
+	s=arc-20240116; t=1711323388; c=relaxed/simple;
+	bh=pIl9FtZqut4b3vzp0F8W5d2QAW/HQiF2glpiPmUwTBY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gVHib0NW9eAfTx4Om8NkHFpnTMuaEM24Qge0DNyX8XQVdEyqkN/8gqemOatQnrYlF1Ip9jNdhGxvYv7/bDDsfMs+VyDgol5LTgWJjX3SWRFjVsSprTX2K1ZRDwHu5124+zOSEQAznQA3dJGFtg87J7pYjkwm+v410VOCUUW+A0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uBtGziih; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=m3N+TomN9zUCaNtL8YPdozVLByEvaLuc2Ch8ewfjpkgbKHa+EwJi6+dN7o+LSUPwfL7mPg9tGXgE5wYrSJZfhmSn2OAJr2+ureb5RV+Ij/+VsdW37E11OXWh17o5GE7vXIVjKFKzmoZ2hH8ybQtSm2pKSirwtuOqhsev5M5rCJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iENJbFK7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uBtGziih"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ED98C433C7;
-	Sun, 24 Mar 2024 23:36:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iENJbFK7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 618CFC433B1;
+	Sun, 24 Mar 2024 23:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323372;
-	bh=t4VgZYcbk0X9lwkENC4ESyD43JJVmn4mAQAetzW2wAU=;
+	s=k20201202; t=1711323387;
+	bh=pIl9FtZqut4b3vzp0F8W5d2QAW/HQiF2glpiPmUwTBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uBtGziihNVTnkR/31z9CAhTMut1o/Pagmw1Q/HntNSELLARYPQk0kCZmtXqlNNkm+
-	 DjtYOwBEXoirm33qltwzmljDPGCn9rzZdWu9v3IRwbZxXPovjEV6X+JVgpyRNaZgBN
-	 tWLlCxqUrGZsgQTUgH2en5Rxd5lFuAjhwxp9JSvMgMRbQLdQpPHV70J1NHpHTzUkWq
-	 0ivw8ZIAQgn7yVsrbonIq9KUoMmqLiOeRJfccB+DC/fjsH+/egqzKLR/eJmMEOX20T
-	 T0hIIeIaL6UPXmp3uUiUOPhd7L0vKSlPzTqpmkEFkPprKiZyVPkWOREsxYj2gc/vpZ
-	 JbQvlfugaqO/w==
+	b=iENJbFK7PFHE0D2GfJw3Y/N5QFelPaS37E0AUrLUKhfXa4qPaihWcVOIMwvzJnDWp
+	 lbcXAh0bYGZ672a/zpQXhn2P3bqqMmeubg+ge11k3hdzRoHUOdZ2xEceFYhyFqA15L
+	 ZrVlxN7+eeDvTQp0W+kPIItNQIPEbKEtbQvcl/JiA78sKWhN2wXzrVsnmLRGXj6g+T
+	 yeKLuO+Xjbg4YM9MwBgpqZV+fSRhldlvOOHYoX51y432OpXCCoWxdJZOhGx8yrcprZ
+	 WfroISQQ0AGaRHCitWd/p3sAkqRt9X9IbjdrArwYVKgRUxQiWZ+VA/Jbo+gmBT70TK
+	 3n7BQsgFGCi0w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Shawn Guo <shawnguo@kernel.org>,
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Bjorn Andersson <bjorn.andersson@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 072/317] arm64: dts: imx8mm-kontron: Disable pullups for onboard UART signals on BL board
-Date: Sun, 24 Mar 2024 19:30:52 -0400
-Message-ID: <20240324233458.1352854-73-sashal@kernel.org>
+Subject: [PATCH 5.15 087/317] arm64: dts: qcom: msm8998: drop USB PHY clock index
+Date: Sun, 24 Mar 2024 19:31:07 -0400
+Message-ID: <20240324233458.1352854-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,55 +49,36 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Johan Hovold <johan+linaro@kernel.org>
 
-[ Upstream commit 162aadaa0df8217b0cc49d919dd00022fef65e78 ]
+[ Upstream commit ed9cbbcb8c6a1925db7995214602c6a8983ff870 ]
 
-These signals are actively driven by the SoC or by the onboard
-transceiver. There's no need to enable the internal pull resistors
-and due to silicon errata ERR050080 let's disable the internal ones
-to prevent any unwanted behavior in case they wear out.
+The QMP USB PHY provides a single clock so drop the redundant clock
+index.
 
-Fixes: 8668d8b2e67f ("arm64: dts: Add the Kontron i.MX8M Mini SoMs and baseboards")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20220705114032.22787-7-johan+linaro@kernel.org
+Stable-dep-of: fc835b2311d4 ("arm64: dts: qcom: msm8998: declare VLS CLAMP register for USB3 PHY")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/freescale/imx8mm-kontron-n801x-s.dts     | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-kontron-n801x-s.dts b/arch/arm64/boot/dts/freescale/imx8mm-kontron-n801x-s.dts
-index 362f9360b4a51..67e768032320a 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-kontron-n801x-s.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-kontron-n801x-s.dts
-@@ -288,19 +288,19 @@ MX8MM_IOMUXC_SPDIF_RX_PWM2_OUT			0x19
- 
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SAI2_RXC_UART1_DCE_RX		0x140
--			MX8MM_IOMUXC_SAI2_RXFS_UART1_DCE_TX		0x140
--			MX8MM_IOMUXC_SAI2_RXD0_UART1_DCE_RTS_B		0x140
--			MX8MM_IOMUXC_SAI2_TXFS_UART1_DCE_CTS_B		0x140
-+			MX8MM_IOMUXC_SAI2_RXC_UART1_DCE_RX		0x0
-+			MX8MM_IOMUXC_SAI2_RXFS_UART1_DCE_TX		0x0
-+			MX8MM_IOMUXC_SAI2_RXD0_UART1_DCE_RTS_B		0x0
-+			MX8MM_IOMUXC_SAI2_TXFS_UART1_DCE_CTS_B		0x0
- 		>;
- 	};
- 
- 	pinctrl_uart2: uart2grp {
- 		fsl,pins = <
--			MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX		0x140
--			MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX		0x140
--			MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B		0x140
--			MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B		0x140
-+			MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX		0x0
-+			MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX		0x0
-+			MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B		0x0
-+			MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B		0x0
- 		>;
- 	};
- 
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 6dbed85fa53e5..e1b744d76251d 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -2013,7 +2013,7 @@ usb1_ssphy: phy@c010200 {
+ 				      <0xc010600 0x128>,
+ 				      <0xc010800 0x200>;
+ 				#phy-cells = <0>;
+-				#clock-cells = <1>;
++				#clock-cells = <0>;
+ 				clocks = <&gcc GCC_USB3_PHY_PIPE_CLK>;
+ 				clock-names = "pipe0";
+ 				clock-output-names = "usb3_phy_pipe_clk_src";
 -- 
 2.43.0
 
