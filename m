@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52015153576;
-	Sun, 24 Mar 2024 23:08:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AB3153587;
+	Sun, 24 Mar 2024 23:08:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321690; cv=none; b=WWB25nMh3zvn/WP6iRiLQd+vqC4LlvgOoK1qpWUrlgIIaF8zcLt5IfxcVokDav14pM0TZR5/ruVvK2UjLXj93ZCUpkQCbhf6Bf6ZlRDOAkwbNkKjSoh6+KQs1uITA82Vqwt1gaNQZXxkYVqG8G2b28gt/cXn77q3FST/GsmUIF8=
+	t=1711321692; cv=none; b=jYV2IrbMJdjavOlwEwFXd3geWHkX6uZLmvMxdWXCUh6s2d4yJ6bb3cIPL09IUrteNMAmOJreZ/a/dB1DWkiMN94fe9hTyGT1V/go2DNz0uzC41evbqFeQ2CtddEtwjCQpK5RGrw1B3xh3kDAhgxRVi2hTHFh1B/lQCo/axFh2SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321690; c=relaxed/simple;
-	bh=c5uf/Q9F27X3x1EsJkrtqlk02vwMsZglIgOetVWKTvA=;
+	s=arc-20240116; t=1711321692; c=relaxed/simple;
+	bh=fHnzwmobOYNha3Um/3eYLDkuCg4PAOwPxx5h/dlW7Kc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=URBPheiYWCu/jyv3oqV3m2K+YaZ1/S6tiiEBd8S6O+DbAdEykH5Dl/yLWH5mgwu7NKw9S49r3vU2BJDLo5FKFWVWoYnT2giWJodyhJUAH5hb4CR6XWMW0f43KTZXcf4tpc/pKeavPZTVM0DXyhmOD5nnlGliLMLvu82dWuXlFyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/mHW+Fn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eAVhs1IfMLc8YWa2tz7CCCo0OwoIgk1YZXvPu7Px9DGrrjRNp5/Q0ZJDqphPt9HWDp5SkKNA1G5b2OUasco0QPc37NFLBlKz4UY0aFvBt2hzTI2HwN7b5vUgb4OR0oMdhQ2gsGSBI0/HwUDzHSPAHuhZzGnjaMe/1o4tGLv6JOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eTMPxiXe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/mHW+Fn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76CF1C433C7;
-	Sun, 24 Mar 2024 23:08:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eTMPxiXe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B789C43394;
+	Sun, 24 Mar 2024 23:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321689;
-	bh=c5uf/Q9F27X3x1EsJkrtqlk02vwMsZglIgOetVWKTvA=;
+	s=k20201202; t=1711321691;
+	bh=fHnzwmobOYNha3Um/3eYLDkuCg4PAOwPxx5h/dlW7Kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p/mHW+FnTiO8FFlm02dcRs/OzpjFeX2/DhEuztdejTfiXtU3IfzGL1CtdpIUSCiTF
-	 WW87wImE4iGU0FT5K5nN97+5I6QgehWSkHduixsn0d2eTguAuc49XDAH1k3LnIBlcz
-	 NIK35lkeUsH5bkU2IDlgaBDqims/NwcGJ/8rs5duT9npaPo1ULymlGan8Rf4P+zHw3
-	 8vfH5sr0XXPxrGdoHrdokVMUBrXrzYOJlc9arMvpAwaXjcxlUNNGtYkEa3CWithn+R
-	 hOShB0QTwKe5Wy0shHGvtFYOJ3D2oUcxWDfTCV2D9GgJApl3h4YyjZmNcqidbYZ+GZ
-	 h+oHM81t6hzqg==
+	b=eTMPxiXecwtJUStumnfWJiAdNWqxoJheQwZh8z61pjnP4MK10SSBsLNe2lEhwItQD
+	 /TgoQRpXTzIyTwdm1sqayxQrUH4dgJJt+GaZ8zb5TVx0FreB9eNwvF4JoP+L+ZwKub
+	 LuftCPbIdM1BpI48JvkPy6iz2tVLv3ImT6bJ1T/TSgjtKLjLNe+wy35QU4BgYnoejk
+	 1unkM5Kf1hGlSD8x34AZqYXFY1d6QMwbzHVzuByY7p//vv1jFs8GiUsLudFEGIF27F
+	 jnW7V79fOs/nU8acctAvfxHzNApae/ew8floIehYHS9x8pkFJpIewkuAo93CpLzQCT
+	 xCER8ExLcUJzQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 417/638] media: cedrus: h265: Fix configuring bitstream size
-Date: Sun, 24 Mar 2024 18:57:34 -0400
-Message-ID: <20240324230116.1348576-418-sashal@kernel.org>
+Subject: [PATCH 6.6 419/638] media: sun8i-di: Fix power on/off sequences
+Date: Sun, 24 Mar 2024 18:57:36 -0400
+Message-ID: <20240324230116.1348576-420-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -51,68 +50,84 @@ Content-Transfer-Encoding: 8bit
 
 From: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-[ Upstream commit 3a11887f7f11a6bb1f05e7f67b3ea20dadfec443 ]
+[ Upstream commit cff104e33bad38f4b2c8d58816a7accfaa2879f9 ]
 
-bit_size field holds size of slice, not slice + header. Because of HW
-quirks, driver can't program in just slice, but also preceding header.
-But that means that currently used bit_size is wrong (too small).
-Instead, just use size of whole buffer. There is no harm in doing this.
+According to user manual, reset line should be deasserted before clocks
+are enabled. Also fix power down sequence to be reverse of that.
 
-Fixes: 86caab29da78 ("media: cedrus: Add HEVC/H.265 decoding support")
-Suggested-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Fixes: a4260ea49547 ("media: sun4i: Add H3 deinterlace driver")
 Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/sunxi/cedrus/cedrus_h265.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 25 ++++++++++---------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-index fc9297232456f..16c822637dc6e 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-@@ -427,11 +427,11 @@ static int cedrus_h265_setup(struct cedrus_ctx *ctx, struct cedrus_run *run)
- 	unsigned int ctb_addr_x, ctb_addr_y;
- 	struct cedrus_buffer *cedrus_buf;
- 	dma_addr_t src_buf_addr;
--	dma_addr_t src_buf_end_addr;
- 	u32 chroma_log2_weight_denom;
- 	u32 num_entry_point_offsets;
- 	u32 output_pic_list_index;
- 	u32 pic_order_cnt[2];
-+	size_t slice_bytes;
- 	u8 padding;
- 	int count;
- 	u32 reg;
-@@ -443,6 +443,7 @@ static int cedrus_h265_setup(struct cedrus_ctx *ctx, struct cedrus_run *run)
- 	pred_weight_table = &slice_params->pred_weight_table;
- 	num_entry_point_offsets = slice_params->num_entry_point_offsets;
- 	cedrus_buf = vb2_to_cedrus_buffer(&run->dst->vb2_buf);
-+	slice_bytes = vb2_get_plane_payload(&run->src->vb2_buf, 0);
+diff --git a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+index 34e0999392842..f253a40cc04f8 100644
+--- a/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
++++ b/drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+@@ -929,11 +929,18 @@ static int deinterlace_runtime_resume(struct device *device)
+ 		return ret;
+ 	}
  
- 	/*
- 	 * If entry points offsets are present, we should get them
-@@ -490,7 +491,7 @@ static int cedrus_h265_setup(struct cedrus_ctx *ctx, struct cedrus_run *run)
++	ret = reset_control_deassert(dev->rstc);
++	if (ret) {
++		dev_err(dev->dev, "Failed to apply reset\n");
++
++		goto err_exclusive_rate;
++	}
++
+ 	ret = clk_prepare_enable(dev->bus_clk);
+ 	if (ret) {
+ 		dev_err(dev->dev, "Failed to enable bus clock\n");
  
- 	cedrus_write(dev, VE_DEC_H265_BITS_OFFSET, 0);
+-		goto err_exclusive_rate;
++		goto err_rst;
+ 	}
  
--	reg = slice_params->bit_size;
-+	reg = slice_bytes * 8;
- 	cedrus_write(dev, VE_DEC_H265_BITS_LEN, reg);
+ 	ret = clk_prepare_enable(dev->mod_clk);
+@@ -950,23 +957,16 @@ static int deinterlace_runtime_resume(struct device *device)
+ 		goto err_mod_clk;
+ 	}
  
- 	/* Source beginning and end addresses. */
-@@ -504,10 +505,7 @@ static int cedrus_h265_setup(struct cedrus_ctx *ctx, struct cedrus_run *run)
- 
- 	cedrus_write(dev, VE_DEC_H265_BITS_ADDR, reg);
- 
--	src_buf_end_addr = src_buf_addr +
--			   DIV_ROUND_UP(slice_params->bit_size, 8);
+-	ret = reset_control_deassert(dev->rstc);
+-	if (ret) {
+-		dev_err(dev->dev, "Failed to apply reset\n");
 -
--	reg = VE_DEC_H265_BITS_END_ADDR_BASE(src_buf_end_addr);
-+	reg = VE_DEC_H265_BITS_END_ADDR_BASE(src_buf_addr + slice_bytes);
- 	cedrus_write(dev, VE_DEC_H265_BITS_END_ADDR, reg);
+-		goto err_ram_clk;
+-	}
+-
+ 	deinterlace_init(dev);
  
- 	/* Coding tree block address */
+ 	return 0;
+ 
+-err_ram_clk:
+-	clk_disable_unprepare(dev->ram_clk);
+ err_mod_clk:
+ 	clk_disable_unprepare(dev->mod_clk);
+ err_bus_clk:
+ 	clk_disable_unprepare(dev->bus_clk);
++err_rst:
++	reset_control_assert(dev->rstc);
+ err_exclusive_rate:
+ 	clk_rate_exclusive_put(dev->mod_clk);
+ 
+@@ -977,11 +977,12 @@ static int deinterlace_runtime_suspend(struct device *device)
+ {
+ 	struct deinterlace_dev *dev = dev_get_drvdata(device);
+ 
+-	reset_control_assert(dev->rstc);
+-
+ 	clk_disable_unprepare(dev->ram_clk);
+ 	clk_disable_unprepare(dev->mod_clk);
+ 	clk_disable_unprepare(dev->bus_clk);
++
++	reset_control_assert(dev->rstc);
++
+ 	clk_rate_exclusive_put(dev->mod_clk);
+ 
+ 	return 0;
 -- 
 2.43.0
 
