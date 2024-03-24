@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CB41482E6;
-	Sun, 24 Mar 2024 23:15:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67991474DE;
+	Sun, 24 Mar 2024 23:14:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322102; cv=none; b=er7bg/zg4BGCbA81tN5TRG6i4Z5RwyIojaNCM6ZX531b6KnWr7F+Z8QAgxq7HeDDo0H4Qu64EjyRId4pTvlKQ3jurIp1yTAUgGeSIN4M3vwn+tbzZBcf72z8AjB+WTwlQPc2+wntVzGUbP5NpbPcnuHeOAatciQfZiCWSfE/DQc=
+	t=1711322100; cv=none; b=QtL3jGBZfSJ605dJUmb2UJfmvqbYWL+cV0weq8KHRC+5yRXTqQp3pgC48zhgcqRBAW8VpHRQyfPzUhd7gNce/mI+sMNOclakpEjxEbRM1b9sq9rARnRby+j96JgQYT8BF/9N/p64r5ojWKyePXxXb1mGaAeoQKUqHkX1w0HNEFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322102; c=relaxed/simple;
-	bh=sHtN40JvDFTt2XNwSm8S+WPSShk14dHW8olqtlUGZOA=;
+	s=arc-20240116; t=1711322100; c=relaxed/simple;
+	bh=Z4UyzSmW/8uH+6qS/EING1uxO1ywCsCPu6rZOXSGNbA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LQHjKQHJKSJs0UsCpxllkBYVDAToPeensMgrP7rR7p/PqLOCe1O/0plkDhSN2dYw+dUTAYkLC+nTQB8xXYWvP9FCDZTNz0vjICVEAhD36l0Ih0Z7j2PYY4JTonatsS0blZ7LoN6fagM6wX5H7ydZOBXVGZGpPF/XHX+Foy50G4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uYSe3BA4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=McGuCyI/3PzjmdjYctxnucKBU/C0s5xRFQsqJRzjiifk36md0tWbckhTkxf9Q0KGKDqii35TZ/9872Vo6bgzPF6yo0FriY2MXGVKz0lE6QR47IcEr3uepmeLUNU6MpnUOEBCRqk5lXVl1/YfrR4XWUKJIUgNJU5JzKlHCVqBtx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3G9dm70; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uYSe3BA4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7302C43394;
-	Sun, 24 Mar 2024 23:15:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3G9dm70"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26AC5C43394;
+	Sun, 24 Mar 2024 23:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322102;
-	bh=sHtN40JvDFTt2XNwSm8S+WPSShk14dHW8olqtlUGZOA=;
+	s=k20201202; t=1711322099;
+	bh=Z4UyzSmW/8uH+6qS/EING1uxO1ywCsCPu6rZOXSGNbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uYSe3BA4WibJ3514nJhIabuY8NQRmPIVfmEvxzPmk9hyo/0RRQmyPMR28pRHYZFJT
-	 cD7z4TAKppl9+RuF0wb2t2B6U1upWPQIl82c2v0VnPFrmtngd6qoGf+8YtayLsKHHv
-	 J0+w+G/VvkRzi5D5OQlZPhIL6zcDE6gm+t15wxwLQ7YCXGwKK2xERmAPr6aOLCL1bt
-	 vEk1VD4AmNBjAmo52loTMoQyfXGbKvO0VRXOvgr3C+llIknShSPi3bErOxHQUKJNgB
-	 Kxa0CRqS/pdbLFv5XtWC605wHWE3SfwS1d12v75jSzz3IH6Gqi8EKIMt3yGSOtPx7Y
-	 2/B1Wjv+c+aMQ==
+	b=K3G9dm70vAxB/D4sNv5K6BNtEl+ctWisXWKB3W0baENDqQAGzrDamXuQ/zXagve05
+	 HG6U5bmJmuYL4L+MNavny0eauzWBl1PHdRZ58K5r35yCfVg9ZU2oEjI52cpWXkLnF/
+	 RTVjqsb8AUpa+IKik0raPNno3DDCRZFABAO70lNn1LTCTxOfauwnNuf9ltuN/RKBHd
+	 GXSIwKPPSqW5cy69tvQquxszskiA43qfL1rrjqH4lt/sc2q2uEnT+pu7k5VH5rUn/T
+	 HZU4/H8uXzoPYwScbpWO4/KQ+Zufb6hmxzNexRKcY9a+WgsIhAoMho5IDqc56jfJNY
+	 sWZnXagKAP9qw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 177/451] ARM: dts: imx6dl-yapp4: Fix typo in the QCA switch register address
-Date: Sun, 24 Mar 2024 19:07:33 -0400
-Message-ID: <20240324231207.1351418-178-sashal@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 6.1 174/451] pstore: inode: Only d_invalidate() is needed
+Date: Sun, 24 Mar 2024 19:07:30 -0400
+Message-ID: <20240324231207.1351418-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,42 +43,67 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 023bd910d3ab735459f84b22bb99fb9e00bd9d76 ]
+[ Upstream commit a43e0fc5e9134a46515de2f2f8d4100b74e50de3 ]
 
-This change does not have any functional effect. The switch works just
-fine without this patch as it has full access to all the addresses
-on the bus. This is simply a clean-up to set the node name address
-and reg address to the same value.
+Unloading a modular pstore backend with records in pstorefs would
+trigger the dput() double-drop warning:
 
-Fixes: 15b43e497ffd ("ARM: dts: imx6dl-yapp4: Use correct pseudo PHY address for the switch")
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  WARNING: CPU: 0 PID: 2569 at fs/dcache.c:762 dput.part.0+0x3f3/0x410
+
+Using the combo of d_drop()/dput() (as mentioned in
+Documentation/filesystems/vfs.rst) isn't the right approach here, and
+leads to the reference counting problem seen above. Use d_invalidate()
+and update the code to not bother checking for error codes that can
+never happen.
+
+Suggested-by: Alexander Viro <viro@zeniv.linux.org.uk>
+Fixes: 609e28bb139e ("pstore: Remove filesystem records when backend is unregistered")
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/pstore/inode.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index cb1972f8e8d27..a655b945bf2df 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -128,7 +128,7 @@ phy_port3: phy@2 {
+diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+index 05ddfb37b15e1..ea3f104371d62 100644
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -306,7 +306,6 @@ int pstore_put_backend_records(struct pstore_info *psi)
+ {
+ 	struct pstore_private *pos, *tmp;
+ 	struct dentry *root;
+-	int rc = 0;
  
- 		switch@10 {
- 			compatible = "qca,qca8334";
--			reg = <10>;
-+			reg = <0x10>;
- 			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+ 	root = psinfo_lock_root();
+ 	if (!root)
+@@ -316,11 +315,8 @@ int pstore_put_backend_records(struct pstore_info *psi)
+ 		list_for_each_entry_safe(pos, tmp, &records_list, list) {
+ 			if (pos->record->psi == psi) {
+ 				list_del_init(&pos->list);
+-				rc = simple_unlink(d_inode(root), pos->dentry);
+-				if (WARN_ON(rc))
+-					break;
+-				d_drop(pos->dentry);
+-				dput(pos->dentry);
++				d_invalidate(pos->dentry);
++				simple_unlink(d_inode(root), pos->dentry);
+ 				pos->dentry = NULL;
+ 			}
+ 		}
+@@ -328,7 +324,7 @@ int pstore_put_backend_records(struct pstore_info *psi)
  
- 			switch_ports: ports {
+ 	inode_unlock(d_inode(root));
+ 
+-	return rc;
++	return 0;
+ }
+ 
+ /*
 -- 
 2.43.0
 
