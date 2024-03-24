@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8A028ECB8;
-	Sun, 24 Mar 2024 23:49:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B908828ECCC;
+	Sun, 24 Mar 2024 23:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324168; cv=none; b=f2N8ntp+5KygwmvZM/clYMowsMJ1pSv9RDVt8uKmOPdtO6SzSrPpLcW/rmNIjeiVQdqOyDQeFXN1Tf+F4FyDzd03EPjcYL/LT+Nd5UBBs9m/Qn4Qu09KhuNdkBb3bBb5OYSrkKzDZbsYVd0PkO/3QKklL/m34dNOViXGL/w8uoo=
+	t=1711324171; cv=none; b=LUMi7BsFbLoinhZS1ckVZKMc7mmppRu4aXYzHedpKknF8L+n6iWdeE3hJkjhLGl7cSAYYXR2FxxQhgqCHy5i1oUP85SProLvSA/lNRFso3bCMaLt28uQstSM291Ojd2w2rjulBReBzCH8BXfSoJNbHRMwQpMm+RGkbN/x1sLKd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324168; c=relaxed/simple;
-	bh=gMFzpn1jyb7rl/dKq/99t1tj5Qd5u5a6enc5p97cM3E=;
+	s=arc-20240116; t=1711324171; c=relaxed/simple;
+	bh=6++RCpH2hCFj5OF3LzO27qxjf79fu8qDIIPUQYtLPu8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=REZrAhil+eK2GKWoQ2EIkdbjQ7f9iNueV4999AbSbny9rfqPsMEogefG5Ff54Qv8QnuI/9IhJhGu+7xdCjXFA8VGdXBhRMDPWmZVRAvzQO7tQ6aeZHFmO+C5KORe7v3l4m+6ICqAy1tC6tNYRBMrDLWtCBzYqlwG2fymBi6uGmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxsCuMxy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bnNYWb1dzSVS1S5NkFP3ZINfwyIrMUHUZaEnbx6Fez5gNtSkERm+7SOqhJv6UXUuyP63HwQdzgBapZP/b1/oJaUPSg27+rh9vv1pzE6FrhRZsobAwlqUXwRBFA2UrYU6+XiCHxsv4JoD3JZSwrxKi4jbBrvKRjB7zQ2diOBJlLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxdJ04Uv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxsCuMxy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BE60C433F1;
-	Sun, 24 Mar 2024 23:49:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxdJ04Uv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF73BC433F1;
+	Sun, 24 Mar 2024 23:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324168;
-	bh=gMFzpn1jyb7rl/dKq/99t1tj5Qd5u5a6enc5p97cM3E=;
+	s=k20201202; t=1711324170;
+	bh=6++RCpH2hCFj5OF3LzO27qxjf79fu8qDIIPUQYtLPu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JxsCuMxywsjjIl018z6ny5TiM4mx3Jw7s4HXAa0sF5cYUe3TQyLGIFsLiPZdv/3Ut
-	 szmOPc9TInVLn2Fl3lzwWFqbvHditzV9at3bxC0PY/eJBWWnj/QiWXiV6XCrntIRvh
-	 zUpW59GgvySv3Vw6sQji3pOmQEHBvk9i1CDlO/MfKeHofl8nhHmEqIFvtggeczMK8I
-	 i6UKhqvyXJXLi1/p5VemKtfq5iG7m06dwwCehPzHWQ6me/SjJZfPSOgHnQ/TdOcjhC
-	 bydN39+a/7dI95HLTjplQyPOOdUn104pns1rYZ0hu0MzIRaS1agQnekqKIJsnubbJo
-	 sVmzmovbP14Aw==
+	b=rxdJ04UvI/8GHFUMp4kM2v28LZSlHMM0Be1SZUvaB1GA9SVwYVkbI67xgYcY71hAO
+	 hSj1bCM2MlgBHNBv+zHZ4jfJhsGt/urP4PU5LR0rpDF+ZF65zebqT9CDgU2PokSJiL
+	 RIh0hVBynb7z9a3UinK6OnUwTia6YjqB4G221hslqDuvlmuMC+b4M8JRkr3JVRXEZ3
+	 up8f43N/sq+Ie6aGw4xYKkIUDwnvEKyXq8WcH40pkFqDXFxLFGevZzaspd2Fxirfyc
+	 E/fJwJC4+z9eW9UfARkkezexUplZpLJBo4H2mMspcffA/o/7PmPIOv4TjBfzZn8VqH
+	 BaK52XixxRofw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Martin Hostettler <textshell@uchuujin.de>,
-	Helge Deller <deller@gmx.de>,
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Sam Protsenko <semen.protsenko@linaro.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 161/183] tty: vt: fix 20 vs 0x20 typo in EScsiignore
-Date: Sun, 24 Mar 2024 19:46:14 -0400
-Message-ID: <20240324234638.1355609-162-sashal@kernel.org>
+Subject: [PATCH 5.4 163/183] tty: serial: samsung: fix tx_empty() to return TIOCSER_TEMT
+Date: Sun, 24 Mar 2024 19:46:16 -0400
+Message-ID: <20240324234638.1355609-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234638.1355609-1-sashal@kernel.org>
 References: <20240324234638.1355609-1-sashal@kernel.org>
@@ -50,43 +49,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
 
-[ Upstream commit 0e6a92f67c8a94707f7bb27ac29e2bdf3e7c167d ]
+[ Upstream commit 314c2b399288f0058a8c5b6683292cbde5f1531b ]
 
-The if (c >= 20 && c <= 0x3f) test added in commit 7a99565f8732 is
-wrong.  20 is DC4 in ascii and it makes no sense to consider that as the
-bottom limit. Instead, it should be 0x20 as in the other test in
-the commit above. This is supposed to NOT change anything as we handle
-interesting 20-0x20 asciis far before this if.
+The core expects for tx_empty() either TIOCSER_TEMT when the tx is
+empty or 0 otherwise. s3c24xx_serial_txempty_nofifo() might return
+0x4, and at least uart_get_lsr_info() tries to clear exactly
+TIOCSER_TEMT (BIT(1)). Fix tx_empty() to return TIOCSER_TEMT.
 
-So for sakeness, change to 0x20 (which is SPACE).
-
-Signed-off-by: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Fixes: 7a99565f8732 ("vt: ignore csi sequences with intermediate characters.")
-Cc: Martin Hostettler <textshell@uchuujin.de>
-Link: https://lore.kernel.org/all/ZaP45QY2WEsDqoxg@neutronstar.dyndns.org/
-Tested-by: Helge Deller <deller@gmx.de> # parisc STI console
-Link: https://lore.kernel.org/r/20240122110401.7289-4-jirislaby@kernel.org
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+Link: https://lore.kernel.org/r/20240119104526.1221243-2-tudor.ambarus@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/vt/vt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/samsung.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index e00ebda492198..171e643cf200e 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -2508,7 +2508,7 @@ static void do_con_trol(struct tty_struct *tty, struct vc_data *vc, int c)
- 		}
- 		return;
- 	case EScsiignore:
--		if (c >= 20 && c <= 0x3f)
-+		if (c >= 0x20 && c <= 0x3f)
- 			return;
- 		vc->vc_state = ESnormal;
- 		return;
+diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
+index 24f9bd9101662..78d97dbfc18a8 100644
+--- a/drivers/tty/serial/samsung.c
++++ b/drivers/tty/serial/samsung.c
+@@ -800,11 +800,10 @@ static unsigned int s3c24xx_serial_tx_empty(struct uart_port *port)
+ 		if ((ufstat & info->tx_fifomask) != 0 ||
+ 		    (ufstat & info->tx_fifofull))
+ 			return 0;
+-
+-		return 1;
++		return TIOCSER_TEMT;
+ 	}
+ 
+-	return s3c24xx_serial_txempty_nofifo(port);
++	return s3c24xx_serial_txempty_nofifo(port) ? TIOCSER_TEMT : 0;
+ }
+ 
+ /* no modem control lines */
 -- 
 2.43.0
 
