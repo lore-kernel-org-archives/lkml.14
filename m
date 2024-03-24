@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE8512D1FA;
-	Sun, 24 Mar 2024 22:58:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2554D1F23E8;
+	Sun, 24 Mar 2024 22:58:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321095; cv=none; b=XeHH2aGZAMFtzAtBKkPs3iC3zOWnhBHJrfg8p4vc5cyKTY7Lm8VecaPX+WLqVImdOaKWeGY3rYV92vpkcyj8N/NQzLhSrVzFR46+KsuMXtGY00PE0waJtsrhNkkFkUlfvaUsEWUAwkkKEdI7QSZXFpiYwZpHOe2Eh4ySd2Ec/qs=
+	t=1711321104; cv=none; b=r5xvcJwS/AKwxiJ/Wo+8Rfck4nuYYVX9NrUv1jyUDO7w++e3cANfk9Q1qU7ziNo3wHXMhGN0Q7bupiwNXtrmXymW6bl1TmvPziOrg9s7AMnpwZmGjpjFd9NyiiOUMTD15MAwCYwg56T+qDhwlUe1WD7L8UhT++Tx0dgLatSmRfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321095; c=relaxed/simple;
-	bh=p65xs8vC9CJdrFtATSUTKtFfuO2Na/xsx+WT/DECHWM=;
+	s=arc-20240116; t=1711321104; c=relaxed/simple;
+	bh=BZgmDLd5CDQduRA26abkoxL+t5neX5ePidXSOkpF1Qw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aAptNlXJE7xmczuzL1gXbhYCm2gAXNJ41c8IpWYGHRYvKj7ufKbaz8vBtDkNX9vkYuS4Uryro9vqXu9dYbO5T4fo3vzdEKW3eBSZZiTWqJLShhQcxTRtUSWH5jGXRfCN732aUU/FUxKWHPJpc3zg5HCdOI82BJL6VLsfcVo5Qe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jm7lNIKf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mJrOWhKdW2dyOFNFLPPWW+ce7kauPyqRpfTPwHLIkcs8qhfVPjMkh5SXaQ78r0+avKGGHRI21037aRYEk+uApqomzYcCk0yiCQ5Tdhzp7cfVwqlLfOR0Psd9+BItrKMuKAkQWKQVUgizU/8FwOM0ZQEXfwk5wQ9ovGk7pvqKdLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PRZ+6A0M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jm7lNIKf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D018C433F1;
-	Sun, 24 Mar 2024 22:58:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PRZ+6A0M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4929EC43399;
+	Sun, 24 Mar 2024 22:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321095;
-	bh=p65xs8vC9CJdrFtATSUTKtFfuO2Na/xsx+WT/DECHWM=;
+	s=k20201202; t=1711321103;
+	bh=BZgmDLd5CDQduRA26abkoxL+t5neX5ePidXSOkpF1Qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jm7lNIKf9zakiaVdEtlMgakXJddYJ3/jiEzW3fj/kyg41Ehe3gBfRE7FEoWYIVY8j
-	 O4cIjKCBoir6h80cJC3I5v6p+g+Tn319usLQ8yUMLNrrWQCjZ7qQ8XBJd51VadhOL0
-	 h6ty1eENvoPNh6dO+x/7112MkvFs4mEltp0PJA5hethEA6Wp3+l+5Dp+3pJlgygNmT
-	 A10JEfGBBfg8wHS8MxOh1vWH1e86V2Fn9HMK2KBZ7HOEiZqKAgvc0ShFeeOv8I27TY
-	 pZS6n/mL3aUQ8DUv0uJAzUpgEmUmqtm/+Mpja7mTX3qk+GFkCYwE7LAWdVR61umCye
-	 W9CcZIemHAzqg==
+	b=PRZ+6A0MxSRfT7fYSlFKvVEP9sy4XJPhSDF4Lf5MP6l1/Wifz5nUPkel9NzEmQj42
+	 pyarGwtTLbRywBusjIrlJb89HYvmNDj1z0j1EMkmpIYVo8sIVH+8sOwUM2lXbQEfy5
+	 E0FGSRl05kfC23ijXELJl3kdgQiC0NIJtVmP3bE3+Fj4+JdjYbwfMw38bp+DV4vcKg
+	 PV43FFgNQx15ZCFUraVFqQfxoZ1aVlF+nOsnFC7ItyPf54fLjpZkp5czMIZ9p0barL
+	 OI9dfW1d7P+829eGz3kr+hIyehUmRezn6o7Lyt6vtVuALp1i9fF8eZeaMlC5pjHqc+
+	 zBYU2nHqXs9qA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sibi Sankar <quic_sibis@quicinc.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Dhruva Gole <d-gole@ti.com>,
-	Yipeng Zou <zouyipeng@huawei.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: Daniel Golle <daniel@makrotopia.org>,
+	Mason-cw Chang <Mason-cw.Chang@mediatek.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 658/713] cpufreq: Fix per-policy boost behavior on SoCs using cpufreq_boost_set_sw()
-Date: Sun, 24 Mar 2024 18:46:24 -0400
-Message-ID: <20240324224720.1345309-659-sashal@kernel.org>
+Subject: [PATCH 6.7 665/713] net: mediatek: mtk_eth_soc: clear MAC_MCR_FORCE_LINK only when MAC is up
+Date: Sun, 24 Mar 2024 18:46:31 -0400
+Message-ID: <20240324224720.1345309-666-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -52,95 +49,56 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Sibi Sankar <quic_sibis@quicinc.com>
+From: Daniel Golle <daniel@makrotopia.org>
 
-[ Upstream commit f37a4d6b4a2c77414e8b9d25dd5ee31537ce9b00 ]
+[ Upstream commit f1b85ef15a99f06ed48871ce933d591127d2dcc0 ]
 
-In the existing code, per-policy flags don't have any impact i.e.
-if cpufreq_driver boost is enabled and boost is disabled for one or
-more of the policies, the cpufreq driver will behave as if boost is
-enabled.
+Clearing bit MAC_MCR_FORCE_LINK which forces the link down too early
+can result in MAC ending up in a broken/blocked state.
 
-Fix this by incorporating per-policy boost flag in the policy->max
-computation used in cpufreq_frequency_table_cpuinfo and setting the
-default per-policy boost to mirror the cpufreq_driver boost flag.
+Fix this by handling this bit in the .mac_link_up and .mac_link_down
+calls instead of in .mac_finish.
 
-Fixes: 218a06a79d9a ("cpufreq: Support per-policy performance boost")
-Reported-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
-Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
-Tested-by:Yipeng Zou <zouyipeng@huawei.com> <mailto:zouyipeng@huawei.com>
-Reviewed-by: Yipeng Zou <zouyipeng@huawei.com> <mailto:zouyipeng@huawei.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: b8fc9f30821e ("net: ethernet: mediatek: Add basic PHYLINK support")
+Suggested-by: Mason-cw Chang <Mason-cw.Chang@mediatek.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c    | 18 ++++++++++++------
- drivers/cpufreq/freq_table.c |  2 +-
- 2 files changed, 13 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 934d35f570b7a..5104f853a923e 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -644,14 +644,16 @@ static ssize_t store_local_boost(struct cpufreq_policy *policy,
- 	if (policy->boost_enabled == enable)
- 		return count;
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index d2c039f830195..a1231203ecf3d 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -677,8 +677,7 @@ static int mtk_mac_finish(struct phylink_config *config, unsigned int mode,
+ 	mcr_cur = mtk_r32(mac->hw, MTK_MAC_MCR(mac->id));
+ 	mcr_new = mcr_cur;
+ 	mcr_new |= MAC_MCR_IPG_CFG | MAC_MCR_FORCE_MODE |
+-		   MAC_MCR_BACKOFF_EN | MAC_MCR_BACKPR_EN | MAC_MCR_FORCE_LINK |
+-		   MAC_MCR_RX_FIFO_CLR_DIS;
++		   MAC_MCR_BACKOFF_EN | MAC_MCR_BACKPR_EN | MAC_MCR_RX_FIFO_CLR_DIS;
  
-+	policy->boost_enabled = enable;
-+
- 	cpus_read_lock();
- 	ret = cpufreq_driver->set_boost(policy, enable);
- 	cpus_read_unlock();
+ 	/* Only update control register when needed! */
+ 	if (mcr_new != mcr_cur)
+@@ -694,7 +693,7 @@ static void mtk_mac_link_down(struct phylink_config *config, unsigned int mode,
+ 					   phylink_config);
+ 	u32 mcr = mtk_r32(mac->hw, MTK_MAC_MCR(mac->id));
  
--	if (ret)
-+	if (ret) {
-+		policy->boost_enabled = !policy->boost_enabled;
- 		return ret;
--
--	policy->boost_enabled = enable;
-+	}
- 
- 	return count;
+-	mcr &= ~(MAC_MCR_TX_EN | MAC_MCR_RX_EN);
++	mcr &= ~(MAC_MCR_TX_EN | MAC_MCR_RX_EN | MAC_MCR_FORCE_LINK);
+ 	mtk_w32(mac->hw, mcr, MTK_MAC_MCR(mac->id));
  }
-@@ -1419,6 +1421,9 @@ static int cpufreq_online(unsigned int cpu)
- 			goto out_free_policy;
- 		}
  
-+		/* Let the per-policy boost flag mirror the cpufreq_driver boost during init */
-+		policy->boost_enabled = cpufreq_boost_enabled() && policy_has_boost_freq(policy);
-+
- 		/*
- 		 * The initialization has succeeded and the policy is online.
- 		 * If there is a problem with its frequency table, take it
-@@ -2755,11 +2760,12 @@ int cpufreq_boost_trigger_state(int state)
+@@ -803,7 +802,7 @@ static void mtk_mac_link_up(struct phylink_config *config,
+ 	if (rx_pause)
+ 		mcr |= MAC_MCR_FORCE_RX_FC;
  
- 	cpus_read_lock();
- 	for_each_active_policy(policy) {
-+		policy->boost_enabled = state;
- 		ret = cpufreq_driver->set_boost(policy, state);
--		if (ret)
-+		if (ret) {
-+			policy->boost_enabled = !policy->boost_enabled;
- 			goto err_reset_state;
--
--		policy->boost_enabled = state;
-+		}
- 	}
- 	cpus_read_unlock();
- 
-diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
-index c4d4643b6ca65..c17dc51a5a022 100644
---- a/drivers/cpufreq/freq_table.c
-+++ b/drivers/cpufreq/freq_table.c
-@@ -40,7 +40,7 @@ int cpufreq_frequency_table_cpuinfo(struct cpufreq_policy *policy,
- 	cpufreq_for_each_valid_entry(pos, table) {
- 		freq = pos->frequency;
- 
--		if (!cpufreq_boost_enabled()
-+		if ((!cpufreq_boost_enabled() || !policy->boost_enabled)
- 		    && (pos->flags & CPUFREQ_BOOST_FREQ))
- 			continue;
+-	mcr |= MAC_MCR_TX_EN | MAC_MCR_RX_EN;
++	mcr |= MAC_MCR_TX_EN | MAC_MCR_RX_EN | MAC_MCR_FORCE_LINK;
+ 	mtk_w32(mac->hw, mcr, MTK_MAC_MCR(mac->id));
+ }
  
 -- 
 2.43.0
