@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A653A17DC2E;
-	Sun, 24 Mar 2024 23:44:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBF517DC1B;
+	Sun, 24 Mar 2024 23:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323847; cv=none; b=Gpe7hWFSz8G7eht9082NaxfL00ZaCLeGWTAGnuT64XJGyKs4g4BsieHYeVRwnkUvQmWn6NzCxpiL0MjU0IYhvRO9mREdwpkHl6RmWny4+IxCIwrK36CXinG07DQzfT76VAXntMli3urKhWoleUh0B9XugKATtKBIXk9wQsig/xk=
+	t=1711323843; cv=none; b=tjephUuUNGcdVnlq/xIdJN7Ka/7Xg70nSzO4wQM35jX40Af22nVpVLXqhR91EZGyrkdHRazbaCw2DZl3F+Qu8O8ADFxM0X72S0lmIIZJH2uTUAFcfBhETe6vlWVcv1xzzgjJZ8lJ10isWqa2afFwor7oVFuukZEQ1RMdjzWI410=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323847; c=relaxed/simple;
-	bh=iIIFuO3IyF+GToWNPBx+wb1MtQRgrsvlGd8f4fiHbJY=;
+	s=arc-20240116; t=1711323843; c=relaxed/simple;
+	bh=W0aSp3rIAkXDSRRDV929dU0asFR/emNu7jE6ME/72Rg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AAvuEywGg3ly5MI3cfEqk0X821sYYsCuXmcClQyNAVU+266kAOcInAxxaJqnx0CmFpKqvGLRK9155awkFYfVz0daLOcn1LHKJijn1PaTYqy/fsXCZ/JMCUAUFj6OEdLI8rqIhhGBHzA0nR/TlI5jC8KOFKBeOw6+f4zbUZnEITo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQUgcjYs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OCNoB1mljkFlIPf1aVC+ZwvupRhYmNpNluonKp9IV3ehTRHbAOEubMK1T2eJ83lUdTe/hOPAyGEkqjFADhao4eW5JZLfUuZ6HTjlmqzgbl1I3WprrhJztBOafxrJI20lA7JhJibpLq+TuCicRtj1Qe27yyCvCoTMuv9CrwSMoPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZmug1Yh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQUgcjYs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA27C433C7;
-	Sun, 24 Mar 2024 23:44:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZmug1Yh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83286C433C7;
+	Sun, 24 Mar 2024 23:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323847;
-	bh=iIIFuO3IyF+GToWNPBx+wb1MtQRgrsvlGd8f4fiHbJY=;
+	s=k20201202; t=1711323842;
+	bh=W0aSp3rIAkXDSRRDV929dU0asFR/emNu7jE6ME/72Rg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QQUgcjYsTuZSn6w+1nQunsLme3VV/I2iJr4ltg/WcjTZaUrSaTCxHrKN3UDslgHHT
-	 ZTmf7INXxDgm9cZ+QZKcMkiGH4pXz1WQ3CuP1qk5VZdXtEGdYZicET5gNeTFeuh1Pk
-	 HbLOS/IAxHBXqsiqjvRJ8aBgm5XffytKsJ9HbwJcKZKet+nV5G//3CyOZJzdo53T+l
-	 ROTL7XASyFxz2YqenR27hnn5h1ENDGBmvqwdeQMdzSkJtkt/QgF+xhATBg6tnsSe8u
-	 WT1Mo9IIm0pufX+uZmCEDXNRvaHnOPM+568Fl7X4jNtgi+7DYPUYTxOpCs4waGEF8y
-	 xqksujhh8TbvQ==
+	b=XZmug1YheXygnwAz2OCGJhBVsG6JEht3hNAT2MGfnXU97vS8lPJLuXjLecn6TODFz
+	 wpr6/Y5V0YO9RIg5hU9LRdGGZ105sIweBzwPQexk1Y1h/1hCYba+vufUQNgDkJtJAr
+	 JOimnxoUNdGxGZS4dU7jh0k4Qs4LyZdCCep3uEgRRKQh2G/DHRzrPYYLQDEqhozx68
+	 HidtzHs8mCT152HTUynC1ZoTA9PKYZI2IA3D9qSjF8D1lrNynB39aTLxvcVujiCrey
+	 ExpNt4w79sLmqZMwnSr0Xc1HEQFgbTfaHaqnbEZgW+XHE16kZ3HYcrIwjwYr0nKakp
+	 ri7I4ip/78Uyw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	syzbot+d1de830e4ecdaac83d89@syzkaller.appspotmail.com,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Jiri Pirko <jiri@nvidia.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Mete Durlu <meted@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 225/238] wireguard: receive: annotate data-race around receiving_counter.counter
-Date: Sun, 24 Mar 2024 19:40:13 -0400
-Message-ID: <20240324234027.1354210-226-sashal@kernel.org>
+Subject: [PATCH 5.10 220/238] s390/vtime: fix average steal time calculation
+Date: Sun, 24 Mar 2024 19:40:08 -0400
+Message-ID: <20240324234027.1354210-221-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -51,83 +49,62 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+From: Mete Durlu <meted@linux.ibm.com>
 
-[ Upstream commit bba045dc4d996d03dce6fe45726e78a1a1f6d4c3 ]
+[ Upstream commit 367c50f78451d3bd7ad70bc5c89f9ba6dec46ca9 ]
 
-Syzkaller with KCSAN identified a data-race issue when accessing
-keypair->receiving_counter.counter. Use READ_ONCE() and WRITE_ONCE()
-annotations to mark the data race as intentional.
+Current average steal timer calculation produces volatile and inflated
+values. The only user of this value is KVM so far and it uses that to
+decide whether or not to yield the vCPU which is seeing steal time.
+KVM compares average steal timer to a threshold and if the threshold
+is past then it does not allow CPU polling and yields it to host, else
+it keeps the CPU by polling.
+Since KVM's steal time threshold is very low by default (%10) it most
+likely is not effected much by the bloated average steal timer values
+because the operating region is pretty small. However there might be
+new users in the future who might rely on this number. Fix average
+steal timer calculation by changing the formula from:
 
-    BUG: KCSAN: data-race in wg_packet_decrypt_worker / wg_packet_rx_poll
+	avg_steal_timer = avg_steal_timer / 2 + steal_timer;
 
-    write to 0xffff888107765888 of 8 bytes by interrupt on cpu 0:
-     counter_validate drivers/net/wireguard/receive.c:321 [inline]
-     wg_packet_rx_poll+0x3ac/0xf00 drivers/net/wireguard/receive.c:461
-     __napi_poll+0x60/0x3b0 net/core/dev.c:6536
-     napi_poll net/core/dev.c:6605 [inline]
-     net_rx_action+0x32b/0x750 net/core/dev.c:6738
-     __do_softirq+0xc4/0x279 kernel/softirq.c:553
-     do_softirq+0x5e/0x90 kernel/softirq.c:454
-     __local_bh_enable_ip+0x64/0x70 kernel/softirq.c:381
-     __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:167 [inline]
-     _raw_spin_unlock_bh+0x36/0x40 kernel/locking/spinlock.c:210
-     spin_unlock_bh include/linux/spinlock.h:396 [inline]
-     ptr_ring_consume_bh include/linux/ptr_ring.h:367 [inline]
-     wg_packet_decrypt_worker+0x6c5/0x700 drivers/net/wireguard/receive.c:499
-     process_one_work kernel/workqueue.c:2633 [inline]
-     ...
+to the following:
 
-    read to 0xffff888107765888 of 8 bytes by task 3196 on cpu 1:
-     decrypt_packet drivers/net/wireguard/receive.c:252 [inline]
-     wg_packet_decrypt_worker+0x220/0x700 drivers/net/wireguard/receive.c:501
-     process_one_work kernel/workqueue.c:2633 [inline]
-     process_scheduled_works+0x5b8/0xa30 kernel/workqueue.c:2706
-     worker_thread+0x525/0x730 kernel/workqueue.c:2787
-     ...
+	avg_steal_timer = (avg_steal_timer + steal_timer) / 2;
 
-Fixes: a9e90d9931f3 ("wireguard: noise: separate receive counter from send counter")
-Reported-by: syzbot+d1de830e4ecdaac83d89@syzkaller.appspotmail.com
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+This ensures that avg_steal_timer is actually a naive average of steal
+timer values. It now closely follows steal timer values but of course
+in a smoother manner.
+
+Fixes: 152e9b8676c6 ("s390/vtime: steal time exponential moving average")
+Signed-off-by: Mete Durlu <meted@linux.ibm.com>
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireguard/receive.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/s390/kernel/vtime.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireguard/receive.c b/drivers/net/wireguard/receive.c
-index d38b24339a1f9..ed274e9bdf3ce 100644
---- a/drivers/net/wireguard/receive.c
-+++ b/drivers/net/wireguard/receive.c
-@@ -258,7 +258,7 @@ static bool decrypt_packet(struct sk_buff *skb, struct noise_keypair *keypair)
+diff --git a/arch/s390/kernel/vtime.c b/arch/s390/kernel/vtime.c
+index 579ec3a8c816f..bd65ff88c5baa 100644
+--- a/arch/s390/kernel/vtime.c
++++ b/arch/s390/kernel/vtime.c
+@@ -214,13 +214,13 @@ void vtime_flush(struct task_struct *tsk)
+ 		virt_timer_expire();
  
- 	if (unlikely(!READ_ONCE(keypair->receiving.is_valid) ||
- 		  wg_birthdate_has_expired(keypair->receiving.birthdate, REJECT_AFTER_TIME) ||
--		  keypair->receiving_counter.counter >= REJECT_AFTER_MESSAGES)) {
-+		  READ_ONCE(keypair->receiving_counter.counter) >= REJECT_AFTER_MESSAGES)) {
- 		WRITE_ONCE(keypair->receiving.is_valid, false);
- 		return false;
+ 	steal = S390_lowcore.steal_timer;
+-	avg_steal = S390_lowcore.avg_steal_timer / 2;
++	avg_steal = S390_lowcore.avg_steal_timer;
+ 	if ((s64) steal > 0) {
+ 		S390_lowcore.steal_timer = 0;
+ 		account_steal_time(cputime_to_nsecs(steal));
+ 		avg_steal += steal;
  	}
-@@ -325,7 +325,7 @@ static bool counter_validate(struct noise_replay_counter *counter, u64 their_cou
- 		for (i = 1; i <= top; ++i)
- 			counter->backtrack[(i + index_current) &
- 				((COUNTER_BITS_TOTAL / BITS_PER_LONG) - 1)] = 0;
--		counter->counter = their_counter;
-+		WRITE_ONCE(counter->counter, their_counter);
- 	}
+-	S390_lowcore.avg_steal_timer = avg_steal;
++	S390_lowcore.avg_steal_timer = avg_steal / 2;
+ }
  
- 	index &= (COUNTER_BITS_TOTAL / BITS_PER_LONG) - 1;
-@@ -470,7 +470,7 @@ int wg_packet_rx_poll(struct napi_struct *napi, int budget)
- 			net_dbg_ratelimited("%s: Packet has invalid nonce %llu (max %llu)\n",
- 					    peer->device->dev->name,
- 					    PACKET_CB(skb)->nonce,
--					    keypair->receiving_counter.counter);
-+					    READ_ONCE(keypair->receiving_counter.counter));
- 			goto next;
- 		}
- 
+ /*
 -- 
 2.43.0
 
