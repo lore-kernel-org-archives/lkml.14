@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8B822ABA8;
-	Sun, 24 Mar 2024 23:15:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6684315B55F;
+	Sun, 24 Mar 2024 23:16:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322155; cv=none; b=Q3CD/dJ8IMcdSzsQYpntFpvFTGpNhd7dVsZN67Zsdxn+X/KC4J77kvXQszADioJA59pCglQ3cKEgd4pI+ZMxmHL1+vr4GB+JHwH20mQfq4w+9CxR8Li8MUMTS8OSZxJf2r+qDcAq/oLaJVCyRhlh9MLN/6afjpGus2WkyTQJEsQ=
+	t=1711322163; cv=none; b=a2pfV3718tWFjiOhYQGvBl/gk9MhSMhJHTXte/wqmWr+gvY2Zhwy9KSWqsJusdwRQuz+6LMwdcazhJDtjW22mjIeKPUZb6tcNLy5YoUeshavJFlQnTbFSkWjKzna/RlQHSmlXakHZQRoW2hA105mmrPhj1E4ahhk88fbZHL/lCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322155; c=relaxed/simple;
-	bh=vHSIdueeSDo7C/bjgb9QuLxCxrm26+NVsjz4z8tTlkM=;
+	s=arc-20240116; t=1711322163; c=relaxed/simple;
+	bh=v247/Hb3yhEX1HNbDArwsiEY4dTdkSbhRPLRkNWVN98=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TnQbd3cpWbq91aUZ15owXwrb6llOELzGhYxD3J79uWnjtavefsvmQRtuFVEpzXqxj5ZhdogBKCdUcWCAdrNkhadQ6aWcUCL5LTBEnjnzh3flUiDnTz11cWViD9qaXBU9BCiHYr2saN+87EQsPWg5W6VJeiEap1wIfbCLVE258y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyO+ZK2S; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gMKhxlQsrkjknyfMFEK1QG4FZM1oWIdbjy61db2LldgKc3duo9PmlnCUCnRZncuc1IeY/8IiWw6FBHsxAFmVrahPXnUsGze+ihD6FmrslrzRhdHqe6zKMbqcMeEL6QGrR1sgNxcFwPVdWKZnjqL4R3cvgqOF0+uhHiPdISmu9PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltu4Ve8D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyO+ZK2S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32B85C433C7;
-	Sun, 24 Mar 2024 23:15:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltu4Ve8D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6310C433C7;
+	Sun, 24 Mar 2024 23:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322154;
-	bh=vHSIdueeSDo7C/bjgb9QuLxCxrm26+NVsjz4z8tTlkM=;
+	s=k20201202; t=1711322162;
+	bh=v247/Hb3yhEX1HNbDArwsiEY4dTdkSbhRPLRkNWVN98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZyO+ZK2S4YmXG/Bx/Rr/NWJnEjYu6INQGCk5Qza6SgbujpdGjUk1XRY55Oq5a68lc
-	 gxBlA2k96o7x88EE7pQEbVL8iXmeV8XzJy9qmISj0vyuGZ6yoWEBgcCEAn3YKiLMGb
-	 HrGp/pn9utDbxBBvSA9wJpnT+0wFgCRpxxRTChLAV5EXrCPBe+9gzXfILkE7jljLYB
-	 tzwplbtDMWpBBNnH934BrNqnuwMTBFrJjNg+u9qDR0e6oQduDazpykMZBze+oSRDO4
-	 7nX+FmZ1bb8U9fQV9P2KP3JtetJN/Roeam0zWpJDpCRlRu77hAE1d3WJPXArHJ8yOJ
-	 ojxlMymDHgMsw==
+	b=ltu4Ve8DzDUXvUZQpIH8J/5U4enyzESPUa4gL412Uqd1G6alUiL6ubl8F2qJ4Q5eG
+	 DZgerSuQNpjrME2P8t/SD5hLdkaDAZnc0JWtfY2PAmfOFOXfHispkX4mNqE+g3J3LX
+	 Wrk8Rrj5T81MgVdOejhHznF7M8jiFBii9fJGB8xguLi9fOvgVAIMb/8ksZqXEPBflh
+	 5Fwo3FISH0S/0L2KlJxyqd5b01HbOx+z2py4HGv8Noib4ZklA6DLzjcDpEaL/xrJT5
+	 g2aLHL8qoybXSiWvKE3DJR7Zzk63cLjmzxGORpkFRv4tTxlmYboMbYp7UiK30TGFfW
+	 /4bAszAJIf7qQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Puranjay Mohan <puranjay12@gmail.com>,
-	"kernelci.org bot" <bot@kernelci.org>,
-	kernel test robot <lkp@intel.com>,
-	Song Liu <song@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 231/451] bpf: hardcode BPF_PROG_PACK_SIZE to 2MB * num_possible_nodes()
-Date: Sun, 24 Mar 2024 19:08:27 -0400
-Message-ID: <20240324231207.1351418-232-sashal@kernel.org>
+Subject: [PATCH 6.1 240/451] drm/tegra: hdmi: Fix some error handling paths in tegra_hdmi_probe()
+Date: Sun, 24 Mar 2024 19:08:36 -0400
+Message-ID: <20240324231207.1351418-241-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -51,51 +48,83 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Puranjay Mohan <puranjay12@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit d6170e4aaf86424c24ce06e355b4573daa891b17 ]
+[ Upstream commit 643ae131b8598fb2940c92c7d23fe62823a119c8 ]
 
-On some architectures like ARM64, PMD_SIZE can be really large in some
-configurations. Like with CONFIG_ARM64_64K_PAGES=y the PMD_SIZE is
-512MB.
+If an error occurs after calling tegra_output_probe(),
+tegra_output_remove() should be called as already done in the remove
+function.
 
-Use 2MB * num_possible_nodes() as the size for allocations done through
-the prog pack allocator. On most architectures, PMD_SIZE will be equal
-to 2MB in case of 4KB pages and will be greater than 2MB for bigger page
-sizes.
-
-Fixes: ea2babac63d4 ("bpf: Simplify bpf_prog_pack_[size|mask]")
-Reported-by: "kernelci.org bot" <bot@kernelci.org>
-Closes: https://lore.kernel.org/all/7e216c88-77ee-47b8-becc-a0f780868d3c@sirena.org.uk/
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202403092219.dhgcuz2G-lkp@intel.com/
-Suggested-by: Song Liu <song@kernel.org>
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-Message-ID: <20240311122722.86232-1-puranjay12@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 59d29c0ec93f ("drm/tegra: Allocate resources at probe time")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/9b7c564eb71977678b20abd73ee52001a51cf327.1693667005.git.christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/tegra/hdmi.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 76bf1de261152..44abf88e1bb0d 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -857,7 +857,12 @@ static LIST_HEAD(pack_list);
-  * CONFIG_MMU=n. Use PAGE_SIZE in these cases.
-  */
- #ifdef PMD_SIZE
--#define BPF_PROG_PACK_SIZE (PMD_SIZE * num_possible_nodes())
-+/* PMD_SIZE is really big for some archs. It doesn't make sense to
-+ * reserve too much memory in one allocation. Hardcode BPF_PROG_PACK_SIZE to
-+ * 2MiB * num_possible_nodes(). On most architectures PMD_SIZE will be
-+ * greater than or equal to 2MB.
-+ */
-+#define BPF_PROG_PACK_SIZE (SZ_2M * num_possible_nodes())
- #else
- #define BPF_PROG_PACK_SIZE PAGE_SIZE
- #endif
+diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdmi.c
+index f83d9041327f0..c66764c0bd250 100644
+--- a/drivers/gpu/drm/tegra/hdmi.c
++++ b/drivers/gpu/drm/tegra/hdmi.c
+@@ -1838,12 +1838,14 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
+ 		return err;
+ 
+ 	hdmi->regs = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(hdmi->regs))
+-		return PTR_ERR(hdmi->regs);
++	if (IS_ERR(hdmi->regs)) {
++		err = PTR_ERR(hdmi->regs);
++		goto remove;
++	}
+ 
+ 	err = platform_get_irq(pdev, 0);
+ 	if (err < 0)
+-		return err;
++		goto remove;
+ 
+ 	hdmi->irq = err;
+ 
+@@ -1852,18 +1854,18 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to request IRQ#%u: %d\n",
+ 			hdmi->irq, err);
+-		return err;
++		goto remove;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, hdmi);
+ 
+ 	err = devm_pm_runtime_enable(&pdev->dev);
+ 	if (err)
+-		return err;
++		goto remove;
+ 
+ 	err = devm_tegra_core_dev_init_opp_table_common(&pdev->dev);
+ 	if (err)
+-		return err;
++		goto remove;
+ 
+ 	INIT_LIST_HEAD(&hdmi->client.list);
+ 	hdmi->client.ops = &hdmi_client_ops;
+@@ -1873,10 +1875,14 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to register host1x client: %d\n",
+ 			err);
+-		return err;
++		goto remove;
+ 	}
+ 
+ 	return 0;
++
++remove:
++	tegra_output_remove(&hdmi->output);
++	return err;
+ }
+ 
+ static int tegra_hdmi_remove(struct platform_device *pdev)
 -- 
 2.43.0
 
