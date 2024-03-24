@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EAC1F30AF;
-	Sun, 24 Mar 2024 22:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0364E1F30A1;
+	Sun, 24 Mar 2024 22:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321120; cv=none; b=iKilXud0+J+nNXLmjpyCyon8EbP8d32lLDEk9OBRRYscVohQUUyULGf8rUfI0+OW0RhMCzzsx1KugenlqRNoxIgC5X9THSFid4weS4B9NGY6eR+U8Fc7ZWaXwQJ2CfPuWkDliLvojyWSxpVUKrqXl5lwyey1mMjHTnGtAefg1UE=
+	t=1711321118; cv=none; b=BctExuRT/XVQ4N/9oUhIfNqHk9hU9SV9PtbpdoWFw6WjF1QfHzKqM24TdzS2X3m7x5pmWU9aUoiLmVJHFoNr4N4FO5sbuRMAjcJ/Txa4Jl8q4qQLvxQFj1SrFMn/ZFTz3m6cCLhoO7DJ9jdU+q3JONBV+t4KMI1+tBQkbldxOIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321120; c=relaxed/simple;
-	bh=BjRnn2uAci+SuwZsSH8Z6eRxLJRWal9cId1CxlbJEoA=;
+	s=arc-20240116; t=1711321118; c=relaxed/simple;
+	bh=8XzqLeiFcOKmwXfmSkRrnmW1w/T117hHKhhGH5WdNRY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iSK6NnkSFQz8GNtUtFjr2o8/YEaxxzlefYZdKB5xeuXcJz0dIYxxUYMXpPWgDoIot4ZZFL/uU/cmL/C4PspA7LqQ8y78NBexXDHEFo0xLQHaryZYgbtWQ4hrT15NSE8VPWX00MwHms2GEmabzfL7fDwcK4AEtr1KdIlUqEbyM3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xp14ZP0J; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=fZ4AAVKw8eGukpk0VWsMrpe2xB8JDJH5qCqPJrzEQKrTglhIVpfTGhX7gyuY7ZeZ8d6I0rmHmVCHz+WQOFtGLf9LhqEMa1mLopvhstAMBgHr11dnPsIQmaJXV4YxtkNFkn/1VuXjVudCP3hWZuQHUhpdvQBExjbn5f+hsTYK4mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5i50yAy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xp14ZP0J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AFBEC433C7;
-	Sun, 24 Mar 2024 22:58:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5i50yAy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D6F4C433F1;
+	Sun, 24 Mar 2024 22:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321119;
-	bh=BjRnn2uAci+SuwZsSH8Z6eRxLJRWal9cId1CxlbJEoA=;
+	s=k20201202; t=1711321116;
+	bh=8XzqLeiFcOKmwXfmSkRrnmW1w/T117hHKhhGH5WdNRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Xp14ZP0JOi4yeqIsJ4lmheeS0nfNKCyrlayaOBFzgKxUgVtjWTL7+QKoLtmeLASNE
-	 xb8yr/Y4mlm3iFYWhehPfnBYfZFahmTigRzLdxvgSB7CzBoNIWX53CAy9Ya5DGV9Xr
-	 e+XTDBrDdBeVJmHa3OYfjym8HEG1FXcDcwa8HKOcbDOG3mUPYDZDeqpKwlpBeJHdQ0
-	 kqgjKhhjiduYg1ZMq+KhMFQUMkQT/7SGUXyk/Au0NzqN4eaMuuBHAixQA4ftY+ARS7
-	 Q4NVe9dXT3DhiS/pDMVuyUAytMm7LF6Q+DWak+YTwUe4t6uoCfPdIFjmgn+S5irP+5
-	 wFxUF4D3ws3jg==
+	b=D5i50yAyrgMCZBhTl8ytIoWvav7nTrZG9F8A1OzMeM9NKX0K6TMpXj4C8y1mbGJsX
+	 3745ZzQbdddIPAsARlSEbI/G0hEbEh3FMJhJ0/miQP4jOxYSGyzSqYSB9x/NBNs1pb
+	 JArk3XxmTy3nPK0Y5srXQIapSMjOIO12kor2YvQvaRbz5zsMkKjy6ZGzBJVo1dW/G9
+	 Th/6j4xNsZ11S0gPP38l75XCMmaFtQXZhPL4G83j0TgSIXDX9PVT6VznXAnZjpA75X
+	 ly63ssBCGKWXh2zvd3QHrTA2QeyqcykoDxfCgxWa7mal7iMQVMJYY1aGDdyXfADKxx
+	 IJLaRR5CE239g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yewon Choi <woni9911@gmail.com>,
-	Michal Kubiak <michal.kubiak@intel.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Jonah Palmer <jonah.palmer@oracle.com>,
+	Dragos Tatulea <dtatulea@nvidia.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	"Michael S . Tsirkin" <mst@redhat.com>,
+	Lei Yang <leiyang@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 681/713] rds: introduce acquire/release ordering in acquire/release_in_xmit()
-Date: Sun, 24 Mar 2024 18:46:47 -0400
-Message-ID: <20240324224720.1345309-682-sashal@kernel.org>
+Subject: [PATCH 6.7 678/713] vdpa/mlx5: Allow CVQ size changes
+Date: Sun, 24 Mar 2024 18:46:44 -0400
+Message-ID: <20240324224720.1345309-679-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -45,53 +47,83 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yewon Choi <woni9911@gmail.com>
+From: Jonah Palmer <jonah.palmer@oracle.com>
 
-[ Upstream commit 1422f28826d2a0c11e5240b3e951c9e214d8656e ]
+[ Upstream commit 749a4016839270163efc36ecddddd01de491a16b ]
 
-acquire/release_in_xmit() work as bit lock in rds_send_xmit(), so they
-are expected to ensure acquire/release memory ordering semantics.
-However, test_and_set_bit/clear_bit() don't imply such semantics, on
-top of this, following smp_mb__after_atomic() does not guarantee release
-ordering (memory barrier actually should be placed before clear_bit()).
+The MLX driver was not updating its control virtqueue size at set_vq_num
+and instead always initialized to MLX5_CVQ_MAX_ENT (16) at
+setup_cvq_vring.
 
-Instead, we use clear_bit_unlock/test_and_set_bit_lock() here.
+Qemu would try to set the size to 64 by default, however, because the
+CVQ size always was initialized to 16, an error would be thrown when
+sending >16 control messages (as used-ring entry 17 is initialized to 0).
+For example, starting a guest with x-svq=on and then executing the
+following command would produce the error below:
 
-Fixes: 0f4b1c7e89e6 ("rds: fix rds_send_xmit() serialization")
-Fixes: 1f9ecd7eacfd ("RDS: Pass rds_conn_path to rds_send_xmit()")
-Signed-off-by: Yewon Choi <woni9911@gmail.com>
-Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
-Link: https://lore.kernel.org/r/ZfQUxnNTO9AJmzwc@libra05
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ # for i in {1..20}; do ifconfig eth0 hw ether XX:xx:XX:xx:XX:XX; done
+
+ qemu-system-x86_64: Insufficient written data (0)
+ [  435.331223] virtio_net virtio0: Failed to set mac address by vq command.
+ SIOCSIFHWADDR: Invalid argument
+
+Acked-by: Dragos Tatulea <dtatulea@nvidia.com>
+Acked-by: Eugenio Pérez <eperezma@redhat.com>
+Signed-off-by: Jonah Palmer <jonah.palmer@oracle.com>
+Message-Id: <20240216142502.78095-1-jonah.palmer@oracle.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Tested-by: Lei Yang <leiyang@redhat.com>
+Fixes: 5262912ef3cf ("vdpa/mlx5: Add support for control VQ and MAC setting")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rds/send.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/vdpa/mlx5/net/mlx5_vnet.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/net/rds/send.c b/net/rds/send.c
-index 2899def23865f..09a2801106549 100644
---- a/net/rds/send.c
-+++ b/net/rds/send.c
-@@ -103,13 +103,12 @@ EXPORT_SYMBOL_GPL(rds_send_path_reset);
+diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+index 26ba7da6b4106..7795d2b7fcd1c 100644
+--- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
++++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+@@ -145,8 +145,6 @@ static void teardown_driver(struct mlx5_vdpa_net *ndev);
  
- static int acquire_in_xmit(struct rds_conn_path *cp)
- {
--	return test_and_set_bit(RDS_IN_XMIT, &cp->cp_flags) == 0;
-+	return test_and_set_bit_lock(RDS_IN_XMIT, &cp->cp_flags) == 0;
+ static bool mlx5_vdpa_debug;
+ 
+-#define MLX5_CVQ_MAX_ENT 16
+-
+ #define MLX5_LOG_VIO_FLAG(_feature)                                                                \
+ 	do {                                                                                       \
+ 		if (features & BIT_ULL(_feature))                                                  \
+@@ -2147,9 +2145,16 @@ static void mlx5_vdpa_set_vq_num(struct vdpa_device *vdev, u16 idx, u32 num)
+ 	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
+ 	struct mlx5_vdpa_virtqueue *mvq;
+ 
+-	if (!is_index_valid(mvdev, idx) || is_ctrl_vq_idx(mvdev, idx))
++	if (!is_index_valid(mvdev, idx))
+ 		return;
+ 
++        if (is_ctrl_vq_idx(mvdev, idx)) {
++                struct mlx5_control_vq *cvq = &mvdev->cvq;
++
++                cvq->vring.vring.num = num;
++                return;
++        }
++
+ 	mvq = &ndev->vqs[idx];
+ 	mvq->num_ent = num;
  }
+@@ -2819,7 +2824,7 @@ static int setup_cvq_vring(struct mlx5_vdpa_dev *mvdev)
+ 		u16 idx = cvq->vring.last_avail_idx;
  
- static void release_in_xmit(struct rds_conn_path *cp)
- {
--	clear_bit(RDS_IN_XMIT, &cp->cp_flags);
--	smp_mb__after_atomic();
-+	clear_bit_unlock(RDS_IN_XMIT, &cp->cp_flags);
- 	/*
- 	 * We don't use wait_on_bit()/wake_up_bit() because our waking is in a
- 	 * hot path and finding waiters is very rare.  We don't want to walk
+ 		err = vringh_init_iotlb(&cvq->vring, mvdev->actual_features,
+-					MLX5_CVQ_MAX_ENT, false,
++					cvq->vring.vring.num, false,
+ 					(struct vring_desc *)(uintptr_t)cvq->desc_addr,
+ 					(struct vring_avail *)(uintptr_t)cvq->driver_addr,
+ 					(struct vring_used *)(uintptr_t)cvq->device_addr);
 -- 
 2.43.0
 
