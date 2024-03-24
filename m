@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7834B12BE96;
-	Sun, 24 Mar 2024 22:56:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F531494A1;
+	Sun, 24 Mar 2024 22:56:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320996; cv=none; b=R+ILK0euXvKikK8+7Jx6/CZHg1Qoib8tRhnywlTnG3pKWZUKxuLA956Po7hSD5FsQlivxLYMfG9laEHAVrZlP1413wsISGynvnSJJ1H2S9rRyawryQjZ/OMoNJQdHxUOGUlmoAgwEgKpeBdQvDuWHWzuNx72AGBiTrlJjKWCK8Y=
+	t=1711320969; cv=none; b=tQgrS2/OKrUH5tHdQsgY2q2OHacE5zwAUhA/INbjxikFLHykEb8NofNXpYDswFp/3LgEB3wRPOXYK32W9JDd3il+17SzRA6AseCSz+kReL66oDGGSzebVUMafMMCuoUNDju9MZTO2VbfpllGXhPDb1itrDJyolpknDnQa3IQt+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320996; c=relaxed/simple;
-	bh=7wj8ZEH9eF/rvciTwJY3fQEtLoBzj6aYEvY8TxBcH3I=;
+	s=arc-20240116; t=1711320969; c=relaxed/simple;
+	bh=uudrhNqYTKl+5oPWr560nyF2+A8KIYZ0yK+KN9k+7a4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U/wQFNCyLzLjYcJwxFfYDCKNveMIL4R5tAgO2X+cLEy4rpOfiSctv75Ovfv9pAPQo3D3gJioYc8tioEPZ0Nc4DDmz3gbk5nmefyFNzum0J5mPHyiorWmbVxUs5eiFwsBqs6PlH9Fi0PzQ/1UdXMeWwn4sDJpQHhXrJSyDsIWyFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6M55cjF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LscNZvpc24VLFC5g9pVZx8CsjLovaxgEN3wiR67kqParOmuN33Dx4tem18xCCpCYRj22a+EfuWkibq3Lj4ZGxNV7kztkK9K18vlDHlPZz4TFIiOHL6o73YXC1Y3GhwReft1TwNQMPIl6kWdIVXbxXzxrYewzelqRR2ylsw5sRQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EdzbubYJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6M55cjF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B51EEC433F1;
-	Sun, 24 Mar 2024 22:56:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EdzbubYJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77806C43390;
+	Sun, 24 Mar 2024 22:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320995;
-	bh=7wj8ZEH9eF/rvciTwJY3fQEtLoBzj6aYEvY8TxBcH3I=;
+	s=k20201202; t=1711320969;
+	bh=uudrhNqYTKl+5oPWr560nyF2+A8KIYZ0yK+KN9k+7a4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e6M55cjFo5Cm9avtKnHygvM+NuMKtHKCHwgjAEwBrCuCVGRNT/ziXkQm1FSIj5ujZ
-	 aX/jdSpVxe3CR+bJGXFyz3qvQyZxZlL+KYW9yXr3r7LGzFXuD50Dbe7oXWB35LPU43
-	 sclULqYSLEpv+zA1LBNi3gHFV7lwBulhsDLcoUDLRV4gs5IXnp+VDzN8rzTSdJa4Gb
-	 zLfKyyq/RvfrRh7XRlv9/KQg9HkZLOq+yoFjEfZYioIwvHAdk1LOijdWeRaMG6d6Ww
-	 iHxY97Y46OwCpOL21mn0PcKukYCon+mypIYbQkXPhh0lhwtN3XivJTcNRyKE0Q3zMt
-	 lzfP0HaKojwFw==
+	b=EdzbubYJk3T6kZr398JSBb7FuGdK7Gy58w/+7++M57W9QYWgjiaYjUKETze7qpj62
+	 4vWbwJnICV+ZKcIXaxxO1+NP/Q1qVT1u4FauHzk0CMqVg3/cum74XsJAR924A8eP4d
+	 rSQxzPortBh4H1ItGpTxfl4Dm++TwNSg4hoOsEtGZBIFnuZ/9dAvuxTr+AKbxCHTuE
+	 h3AcTwkIMW9wxYp1Sk6yLmLRE9FFrDQHtlDkd1+BEuPz98Bg3JOGOYouXidnTWSJ0g
+	 jxdGvv7596SkzcX4Z0HGk37I8pKXxXEfaxDozPj4y9wAYJrIl7anQSudUvOvFstKVa
+	 MrOp3aggtI8kA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gergo Koteles <soyer@irl.hu>,
-	Takashi Iwai <tiwai@suse.de>,
+Cc: Gabor Juhos <j4g8y7@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 557/713] ALSA: hda/tas2781: add lock to system_suspend
-Date: Sun, 24 Mar 2024 18:44:43 -0400
-Message-ID: <20240324224720.1345309-558-sashal@kernel.org>
+Subject: [PATCH 6.7 532/713] clk: qcom: gcc-ipq5018: fix 'halt_reg' offset of 'gcc_pcie1_pipe_clk'
+Date: Sun, 24 Mar 2024 18:44:18 -0400
+Message-ID: <20240324224720.1345309-533-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,39 +50,68 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gergo Koteles <soyer@irl.hu>
+From: Gabor Juhos <j4g8y7@gmail.com>
 
-[ Upstream commit c58e6ed55a1bb9811d6d936d001b068bb0419467 ]
+[ Upstream commit 11b752ac5a07cbfd95592fac5237a02f45662926 ]
 
-Add the missing lock around tasdevice_tuning_switch().
+The following table shows the values of the 'halt_reg' and the
+'enable_reg' fields from the pcie clocks defined in the current
+driver:
 
-Fixes: 5be27f1e3ec9 ("ALSA: hda/tas2781: Add tas2781 HDA driver")
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Message-ID: <c666da13d4bc48cd1ab1357479e0c6096541372c.1709918447.git.soyer@irl.hu>
+  clock                        halt_reg    enable_reg
+
+  gcc_pcie0_ahb_clk            0x75010     0x75010
+  gcc_pcie0_aux_clk            0x75014     0x75014
+  gcc_pcie0_axi_m_clk          0x75008     0x75008
+  gcc_pcie0_axi_s_bridge_clk   0x75048     0x75048
+  gcc_pcie0_axi_s_clk          0x7500c     0x7500c
+  gcc_pcie0_pipe_clk           0x75018     0x75018
+
+  gcc_pcie1_ahb_clk            0x76010     0x76010
+  gcc_pcie1_aux_clk            0x76014     0x76014
+  gcc_pcie1_axi_m_clk          0x76008     0x76008
+  gcc_pcie1_axi_s_bridge_clk   0x76048     0x76048
+  gcc_pcie1_axi_s_clk          0x7600c     0x7600c
+  gcc_pcie1_pipe_clk                 8*    0x76018
+
+Based on the table, it is quite likely that the pcie0 and the pci1
+clocks are using the same register layout, however it seems that
+the value of the 'halt_reg' field in the 'gcc_pcie1_pipe_clk' clock
+is wrong.
+
+In the downstream driver [1], the same '0x76018' value is used for
+both the 'halt_reg' and for the 'enable_reg' fields of the
+'gcc_pcie1_pipe_clk' clock.
+
+Update the current driver to use the same value used downstream as
+probably that is the correct value.
+
+1. https://git.codelinaro.org/clo/qsdk/oss/kernel/linux-ipq-5.4/-/blob/NHSS.QSDK.12.4.r4/drivers/clk/qcom/gcc-ipq5018.c?ref_type=heads#L2316
+
+Fixes: e3fdbef1bab8 ("clk: qcom: Add Global Clock controller (GCC) driver for IPQ5018")
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+Link: https://lore.kernel.org/r/20240225-gcc-ipq5018-register-fixes-v1-2-3c191404d9f0@gmail.com
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/tas2781_hda_i2c.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clk/qcom/gcc-ipq5018.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
-index c39a5404fb392..10b5624b1f1f0 100644
---- a/sound/pci/hda/tas2781_hda_i2c.c
-+++ b/sound/pci/hda/tas2781_hda_i2c.c
-@@ -796,9 +796,13 @@ static int tas2781_system_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq5018.c
+index cef9a1e7c9fdb..5e81cfa77293a 100644
+--- a/drivers/clk/qcom/gcc-ipq5018.c
++++ b/drivers/clk/qcom/gcc-ipq5018.c
+@@ -2180,7 +2180,7 @@ static struct clk_branch gcc_pcie1_axi_s_clk = {
+ };
  
-+	mutex_lock(&tas_hda->priv->codec_lock);
-+
- 	/* Shutdown chip before system suspend */
- 	tasdevice_tuning_switch(tas_hda->priv, 1);
- 
-+	mutex_unlock(&tas_hda->priv->codec_lock);
-+
- 	/*
- 	 * Reset GPIO may be shared, so cannot reset here.
- 	 * However beyond this point, amps may be powered down.
+ static struct clk_branch gcc_pcie1_pipe_clk = {
+-	.halt_reg = 8,
++	.halt_reg = 0x76018,
+ 	.halt_check = BRANCH_HALT_DELAY,
+ 	.halt_bit = 31,
+ 	.clkr = {
 -- 
 2.43.0
 
