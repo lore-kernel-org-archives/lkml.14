@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8DC146583;
-	Sun, 24 Mar 2024 22:52:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D761E0E4C;
+	Sun, 24 Mar 2024 22:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320778; cv=none; b=sDWReW5GENWjuHyKBAtuM2btd7eHwRJiER75+wyNVLQUjBVIsyszGMF0553MC4TS2bAOlzBht+0dBMuh+ax2/zSVY0GJHHYJFlkjpOAd50i+8rC3g73nvwxKXFLbEl73YGuWVwCAZRIWTTQP2VFZMxbHORgUQa4nYIxT8kQBoDM=
+	t=1711320769; cv=none; b=WXOGMuY0aDUxzin82MmXGCgv6a5OdIgOS/jE78dnsYSzcB1SCW7hYbmmDaGt2Pd0XbSzTtk8kMOkW57WP5bW6tZfu/4nGEFTiq8yrpQ8n2j3YToCQ/FAlz2TI39Q25uXYUNoFZUF92DhHCDI15yTHvLUiKzLYPBr3QwJNMoCk+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320778; c=relaxed/simple;
-	bh=SyyvxpOBiscFYM8hG/1wtsgj6jCx4t5ztVWGGSs0e6k=;
+	s=arc-20240116; t=1711320769; c=relaxed/simple;
+	bh=bu/cLGl0Ou6FdE2ZToeEYLdGrXcfFHwS3SKibvwNMpo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hVQ5rv8nTaNrRpkBV6qMPopbEG1qS3lw0HdiUbMyAsnMctp2LVerjWDSvtzwDsKNZkdMCNtFozNPu/xE8Nm3vSfNBqhhI/0nIDI4KKRTK/hQLGz5I/bXYgVgEIMtrcl0OzxDuZWjecJDbh7PzX/ExOZUWqBIjxvbzbEaDv29fm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfiAkPN3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=T9KcsYdeIwM2mEnX0wtkxVhaSfr911TMF/gvS9SsQRWltPhFWtpvQ9dLEJ4HT7CS1+ndIG29gQckuKV36Za+GEYK/bwxq54iBZSp+Heb8m+Rtaqo07VPyo04XZfkhW0OLNjxrDB4aYMtXh4jIHikk1dUjvLClfbhiGVCXTYD4/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZeE0Esa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfiAkPN3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EFCAC43394;
-	Sun, 24 Mar 2024 22:52:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZeE0Esa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80C8EC433C7;
+	Sun, 24 Mar 2024 22:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320776;
-	bh=SyyvxpOBiscFYM8hG/1wtsgj6jCx4t5ztVWGGSs0e6k=;
+	s=k20201202; t=1711320768;
+	bh=bu/cLGl0Ou6FdE2ZToeEYLdGrXcfFHwS3SKibvwNMpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gfiAkPN3Me1MXd5XYxHY5yGuQVjiHB4tMWEs93n6xdpZ14fUJboS8H5U1EEOLio5b
-	 rQCHLqjOcUiLsTwkK09HkNN+StjmpPSTxByO7oauSODgwsDkyj8s1XrKHdgH06A8Wu
-	 darwpCFJYsRcPW/z4uGmb4g+BqDVAcLM82zk5sKamivzF8VaZ+aqMMtuQNFxgyr4V+
-	 xkT/anZiWGmOUnHBo9bJSgcGVaa8IV/ud4w2k3MXE/8w1nJ0ig32zh32rmR5R2wnzA
-	 VO5wnHeTd9WP9CYcZxajEgDmKEPM0IW0hhRbg40E7dZBkYCTa9rIh15rsaL8rTdhXq
-	 gStPCswK79E4w==
+	b=WZeE0Esam30q83VhVPet4u2JrRWJEdrBDQ44jQfpzX9luzq0pDGWtR+QxI1nVSYK4
+	 56WtL/VkoXspyKvB2AxJN86JVg8Ai2DdWclDv4ktDDpJGeqwA+5tVs7VHFBT68hSRn
+	 irV2op3JeyXnQvgOnbzNcNmuwedYV8PVIhj1BRMMjNmFSjeev42CPF+CkVq67bWWjq
+	 07Syogbt0J9ql/Thwgo8lUuy04zwMAwB9XyonvWJzKOgiuf9VAfmHjKKrnyvhR4m6S
+	 /bUgvXHIWQ05CTx6iwBkVr2tfqvNNmH4DhGETbbIL8N8kU//j/82IQ4YTAst8fW2Yq
+	 v5Jz4AlBd/szw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	Kurt Kanzenbach <kurt@linutronix.de>,
-	Naama Meir <naamax.meir@linux.intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 340/713] igc: Fix missing time sync events
-Date: Sun, 24 Mar 2024 18:41:06 -0400
-Message-ID: <20240324224720.1345309-341-sashal@kernel.org>
+Subject: [PATCH 6.7 332/713] mmc: wmt-sdmmc: remove an incorrect release_mem_region() call in the .remove function
+Date: Sun, 24 Mar 2024 18:40:58 -0400
+Message-ID: <20240324224720.1345309-333-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -50,106 +48,47 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 244ae992e3e80e5c9c272c77324c831148457f95 ]
+[ Upstream commit ae5004a40a262d329039b99b62bd3fe7645b66ad ]
 
-Fix "double" clearing of interrupts, which can cause external events
-or timestamps to be missed.
+This looks strange to call release_mem_region() in a remove function
+without any request_mem_region() in the probe or "struct resource"
+somewhere.
 
-The IGC_TSIRC Time Sync Interrupt Cause register can be cleared in two
-ways, by either reading it or by writing '1' into the specific cause
-bit. This is documented in section 8.16.1.
+So remove the corresponding code.
 
-The following flow was used:
- 1. read IGC_TSIRC into 'tsicr';
- 2. handle the interrupts present in 'tsirc' and mark them in 'ack';
- 3. write 'ack' into IGC_TSICR;
-
-As both (1) and (3) will clear the interrupt cause, if the same
-interrupt happens again between (1) and (3) it will be ignored,
-causing events to be missed.
-
-Remove the extra clear in (3).
-
-Fixes: 2c344ae24501 ("igc: Add support for TX timestamping")
-Reviewed-by: Kurt Kanzenbach <kurt@linutronix.de>
-Tested-by: Kurt Kanzenbach <kurt@linutronix.de> # Intel i225
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Tested-by: Naama Meir <naamax.meir@linux.intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Fixes: 3a96dff0f828 ("mmc: SD/MMC Host Controller for Wondermedia WM8505/WM8650")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/bb0bb1ed1e18de55e8c0547625bde271e64b8c31.1708983064.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igc/igc_main.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ drivers/mmc/host/wmt-sdmmc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 58ffddc6419ad..45716d271d955 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -5304,25 +5304,22 @@ igc_features_check(struct sk_buff *skb, struct net_device *dev,
- 
- static void igc_tsync_interrupt(struct igc_adapter *adapter)
+diff --git a/drivers/mmc/host/wmt-sdmmc.c b/drivers/mmc/host/wmt-sdmmc.c
+index 77d5f1d244899..860380931b6cd 100644
+--- a/drivers/mmc/host/wmt-sdmmc.c
++++ b/drivers/mmc/host/wmt-sdmmc.c
+@@ -883,7 +883,6 @@ static void wmt_mci_remove(struct platform_device *pdev)
  {
--	u32 ack, tsauxc, sec, nsec, tsicr;
- 	struct igc_hw *hw = &adapter->hw;
-+	u32 tsauxc, sec, nsec, tsicr;
- 	struct ptp_clock_event event;
- 	struct timespec64 ts;
+ 	struct mmc_host *mmc;
+ 	struct wmt_mci_priv *priv;
+-	struct resource *res;
+ 	u32 reg_tmp;
  
- 	tsicr = rd32(IGC_TSICR);
--	ack = 0;
+ 	mmc = platform_get_drvdata(pdev);
+@@ -911,9 +910,6 @@ static void wmt_mci_remove(struct platform_device *pdev)
+ 	clk_disable_unprepare(priv->clk_sdmmc);
+ 	clk_put(priv->clk_sdmmc);
  
- 	if (tsicr & IGC_TSICR_SYS_WRAP) {
- 		event.type = PTP_CLOCK_PPS;
- 		if (adapter->ptp_caps.pps)
- 			ptp_clock_event(adapter->ptp_clock, &event);
--		ack |= IGC_TSICR_SYS_WRAP;
- 	}
- 
- 	if (tsicr & IGC_TSICR_TXTS) {
- 		/* retrieve hardware timestamp */
- 		igc_ptp_tx_tstamp_event(adapter);
--		ack |= IGC_TSICR_TXTS;
- 	}
- 
- 	if (tsicr & IGC_TSICR_TT0) {
-@@ -5336,7 +5333,6 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
- 		wr32(IGC_TSAUXC, tsauxc);
- 		adapter->perout[0].start = ts;
- 		spin_unlock(&adapter->tmreg_lock);
--		ack |= IGC_TSICR_TT0;
- 	}
- 
- 	if (tsicr & IGC_TSICR_TT1) {
-@@ -5350,7 +5346,6 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
- 		wr32(IGC_TSAUXC, tsauxc);
- 		adapter->perout[1].start = ts;
- 		spin_unlock(&adapter->tmreg_lock);
--		ack |= IGC_TSICR_TT1;
- 	}
- 
- 	if (tsicr & IGC_TSICR_AUTT0) {
-@@ -5360,7 +5355,6 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
- 		event.index = 0;
- 		event.timestamp = sec * NSEC_PER_SEC + nsec;
- 		ptp_clock_event(adapter->ptp_clock, &event);
--		ack |= IGC_TSICR_AUTT0;
- 	}
- 
- 	if (tsicr & IGC_TSICR_AUTT1) {
-@@ -5370,11 +5364,7 @@ static void igc_tsync_interrupt(struct igc_adapter *adapter)
- 		event.index = 1;
- 		event.timestamp = sec * NSEC_PER_SEC + nsec;
- 		ptp_clock_event(adapter->ptp_clock, &event);
--		ack |= IGC_TSICR_AUTT1;
- 	}
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	release_mem_region(res->start, resource_size(res));
 -
--	/* acknowledge the interrupts */
--	wr32(IGC_TSICR, ack);
- }
+ 	mmc_free_host(mmc);
  
- /**
+ 	dev_info(&pdev->dev, "WMT MCI device removed\n");
 -- 
 2.43.0
 
