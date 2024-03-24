@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C250E150986;
-	Sun, 24 Mar 2024 23:18:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DDE15EFCC;
+	Sun, 24 Mar 2024 23:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322332; cv=none; b=QKbXoSHOUwVhim49SFfwoztoFE5nSTfkHbYFiDcl0CRZQbSKdZAUVgSEBWvr6waPq2/U+97ziJMR+i2wsnAh76/CvW6DUd+vc1n22sOZF59b4GoiTpp+oEqc2HxxgtR8mP/2Ernh1DUMO7a/tcWD/rn42moXuttXM10TgPKDaoc=
+	t=1711322323; cv=none; b=ErBV0JSw1Ksz0iDszrfkFP+meLUkqjVcREX6AzntzI5p3rKza9DzMujqSKyziUvfN7TQ18q37A7picdKNoupWQddc4NIui+z/zowhRuBMcibaHjSViD+cxhRgVyS0z0yb+b4jYwlObVd06RcuOIdRNty+0ONKQzhuxiREZi3YwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322332; c=relaxed/simple;
-	bh=jw48APu9/AC1L2Kf9urEVuSt8JpHSmRbH3Pc1+RPOgI=;
+	s=arc-20240116; t=1711322323; c=relaxed/simple;
+	bh=H3C/e9LPxDsGq4x7d69RR5gOb8J7WJXrI4sS8HZ57EU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YrNtFqWubv+kpnb45pADjSc+Ja4eiWfFPqwslrkLfFEnbbBE3r0OEuqCB8pK80eywQvz7NWIfsrwSErkHA2Uey66cCC5NItYzJlDFQoFZmuz9W0nkXEJlT20UTtRzFz3OHK0Fsmp6IjU4YmOWGLzNkY+tzgcu/ngfu03+PLWyyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9GKCzbk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZzxVuzh/KtCFwW8B6D5uWI7ZeKTA0kc+/0MJubXtCGgYZOTsffFl/dmaJF1pUlDFEfrb/mq+j7YpZexLZq1t3QDn1I9/MCde3myYOyDyn75oAu9mixKJBYBknbpHH1pQe8H3kC8g4W4eKA9/iQBbColfHL/GGLgs4yLasL1CRKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PnuRTfMH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9GKCzbk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6784C43390;
-	Sun, 24 Mar 2024 23:18:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PnuRTfMH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB4A8C43394;
+	Sun, 24 Mar 2024 23:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322331;
-	bh=jw48APu9/AC1L2Kf9urEVuSt8JpHSmRbH3Pc1+RPOgI=;
+	s=k20201202; t=1711322323;
+	bh=H3C/e9LPxDsGq4x7d69RR5gOb8J7WJXrI4sS8HZ57EU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C9GKCzbkz0jH93JA10d6P+cWhesC/SPEvmN+B6T2FxcVU3gn2sA/8MDgSoa9QG9yi
-	 H40eKKax3o/jf/EgKGnAR5E81sTqvaAF24PZyJonMrsXmq5UCwjaKNua/tZnwCQo3Q
-	 q/cMH98DsjtgYfulSxjbmZ3gidQxX06g907Lj86tjC7xInCMEbu5+PpFKw3yX1aTa3
-	 TB8lQA9xnZgn7C9BpZEQyiEUpHWnClJiFxiBY2CV8dTKMPuHXJThNLXoRx9+O+8umB
-	 PZUI50WcqQvPq6WDqON7FmXiR4ews3M7Oh/AGKf0mbifEK2LwfDlT3k6HnjYwVlNPT
-	 bWtlMohP0RwJA==
+	b=PnuRTfMHKyDkXaPiv6Hvq1N3VYLZDpsKkV0zGVZWth8L1DbpPnGygewqiaVoiopne
+	 GtjotN31rrdVFBucPCsoM1P+v0f0x5DqTFcOt8/D3duaS7rRK3mvTGqhKLtPLXZn4B
+	 fjN5bXA12TZaBXxyZmTmKn8+0bFrBgrtdbArEXMj+cIi+zuPM517ijfR681fEeFo4W
+	 9NfnHpAWvQhPVXUgT7AD/K1wWN2AFYzY7gmh3ueCE1Tt8ih7heENWxi9MifWZro6nJ
+	 8vsLjuRLHSr04xno6/pLDccjRWJjwQFZQ4qWCOZ65haNvr0lI+jtW+6zCiyGN7RsIJ
+	 FkcLH2DJsOO7Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Golle <daniel@makrotopia.org>,
-	Bc-bocun Chen <bc-bocun.chen@mediatek.com>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	syzbot+a340daa06412d6028918@syzkaller.appspotmail.com,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Michal Kubiak <michal.kubiak@intel.com>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 414/451] net: ethernet: mtk_eth_soc: fix PPE hanging issue
-Date: Sun, 24 Mar 2024 19:11:30 -0400
-Message-ID: <20240324231207.1351418-415-sashal@kernel.org>
+Subject: [PATCH 6.1 406/451] net/sched: taprio: proper TCA_TAPRIO_TC_ENTRY_INDEX check
+Date: Sun, 24 Mar 2024 19:11:22 -0400
+Message-ID: <20240324231207.1351418-407-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -49,68 +51,85 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Golle <daniel@makrotopia.org>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit ea80e3ed09ab2c2b75724faf5484721753e92c31 ]
+[ Upstream commit 343041b59b7810f9cdca371f445dd43b35c740b1 ]
 
-A patch to resolve an issue was found in MediaTek's GPL-licensed SDK:
-In the mtk_ppe_stop() function, the PPE scan mode is not disabled before
-disabling the PPE. This can potentially lead to a hang during the process
-of disabling the PPE.
+taprio_parse_tc_entry() is not correctly checking
+TCA_TAPRIO_TC_ENTRY_INDEX attribute:
 
-Without this patch, the PPE may experience a hang during the reboot test.
+	int tc; // Signed value
 
-Link: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/b40da332dfe763932a82f9f62a4709457a15dd6c
-Fixes: ba37b7caf1ed ("net: ethernet: mtk_eth_soc: add support for initializing the PPE")
-Suggested-by: Bc-bocun Chen <bc-bocun.chen@mediatek.com>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+	tc = nla_get_u32(tb[TCA_TAPRIO_TC_ENTRY_INDEX]);
+	if (tc >= TC_QOPT_MAX_QUEUE) {
+		NL_SET_ERR_MSG_MOD(extack, "TC entry index out of range");
+		return -ERANGE;
+	}
+
+syzbot reported that it could fed arbitary negative values:
+
+UBSAN: shift-out-of-bounds in net/sched/sch_taprio.c:1722:18
+shift exponent -2147418108 is negative
+CPU: 0 PID: 5066 Comm: syz-executor367 Not tainted 6.8.0-rc7-syzkaller-00136-gc8a5c731fd12 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+Call Trace:
+ <TASK>
+  __dump_stack lib/dump_stack.c:88 [inline]
+  dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+  ubsan_epilogue lib/ubsan.c:217 [inline]
+  __ubsan_handle_shift_out_of_bounds+0x3c7/0x420 lib/ubsan.c:386
+  taprio_parse_tc_entry net/sched/sch_taprio.c:1722 [inline]
+  taprio_parse_tc_entries net/sched/sch_taprio.c:1768 [inline]
+  taprio_change+0xb87/0x57d0 net/sched/sch_taprio.c:1877
+  taprio_init+0x9da/0xc80 net/sched/sch_taprio.c:2134
+  qdisc_create+0x9d4/0x1190 net/sched/sch_api.c:1355
+  tc_modify_qdisc+0xa26/0x1e40 net/sched/sch_api.c:1776
+  rtnetlink_rcv_msg+0x885/0x1040 net/core/rtnetlink.c:6617
+  netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
+  netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]
+  netlink_unicast+0x7ea/0x980 net/netlink/af_netlink.c:1367
+  netlink_sendmsg+0xa3b/0xd70 net/netlink/af_netlink.c:1908
+  sock_sendmsg_nosec net/socket.c:730 [inline]
+  __sock_sendmsg+0x221/0x270 net/socket.c:745
+  ____sys_sendmsg+0x525/0x7d0 net/socket.c:2584
+  ___sys_sendmsg net/socket.c:2638 [inline]
+  __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2667
+ do_syscall_64+0xf9/0x240
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7f1b2dea3759
+Code: 48 83 c4 28 c3 e8 d7 19 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd4de452f8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f1b2def0390 RCX: 00007f1b2dea3759
+RDX: 0000000000000000 RSI: 00000000200007c0 RDI: 0000000000000004
+RBP: 0000000000000003 R08: 0000555500000000 R09: 0000555500000000
+R10: 0000555500000000 R11: 0000000000000246 R12: 00007ffd4de45340
+R13: 00007ffd4de45310 R14: 0000000000000001 R15: 00007ffd4de45340
+
+Fixes: a54fc09e4cba ("net/sched: taprio: allow user input of per-tc max SDU")
+Reported-and-tested-by: syzbot+a340daa06412d6028918@syzkaller.appspotmail.com
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_ppe.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ net/sched/sch_taprio.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.c b/drivers/net/ethernet/mediatek/mtk_ppe.c
-index d6eed204574a9..c64211e22ae70 100644
---- a/drivers/net/ethernet/mediatek/mtk_ppe.c
-+++ b/drivers/net/ethernet/mediatek/mtk_ppe.c
-@@ -811,7 +811,7 @@ void mtk_ppe_start(struct mtk_ppe *ppe)
- 			 MTK_PPE_KEEPALIVE_DISABLE) |
- 	      FIELD_PREP(MTK_PPE_TB_CFG_HASH_MODE, 1) |
- 	      FIELD_PREP(MTK_PPE_TB_CFG_SCAN_MODE,
--			 MTK_PPE_SCAN_MODE_KEEPALIVE_AGE) |
-+			 MTK_PPE_SCAN_MODE_CHECK_AGE) |
- 	      FIELD_PREP(MTK_PPE_TB_CFG_ENTRY_NUM,
- 			 MTK_PPE_ENTRIES_SHIFT);
- 	if (MTK_HAS_CAPS(ppe->eth->soc->caps, MTK_NETSYS_V2))
-@@ -895,17 +895,21 @@ int mtk_ppe_stop(struct mtk_ppe *ppe)
+diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
+index 8d5eebb2dd1b1..1d4638aa4254f 100644
+--- a/net/sched/sch_taprio.c
++++ b/net/sched/sch_taprio.c
+@@ -765,7 +765,8 @@ static const struct nla_policy entry_policy[TCA_TAPRIO_SCHED_ENTRY_MAX + 1] = {
+ };
  
- 	mtk_ppe_cache_enable(ppe, false);
+ static const struct nla_policy taprio_tc_policy[TCA_TAPRIO_TC_ENTRY_MAX + 1] = {
+-	[TCA_TAPRIO_TC_ENTRY_INDEX]	   = { .type = NLA_U32 },
++	[TCA_TAPRIO_TC_ENTRY_INDEX]	   = NLA_POLICY_MAX(NLA_U32,
++							    TC_QOPT_MAX_QUEUE),
+ 	[TCA_TAPRIO_TC_ENTRY_MAX_SDU]	   = { .type = NLA_U32 },
+ };
  
--	/* disable offload engine */
--	ppe_clear(ppe, MTK_PPE_GLO_CFG, MTK_PPE_GLO_CFG_EN);
--	ppe_w32(ppe, MTK_PPE_FLOW_CFG, 0);
--
- 	/* disable aging */
- 	val = MTK_PPE_TB_CFG_AGE_NON_L4 |
- 	      MTK_PPE_TB_CFG_AGE_UNBIND |
- 	      MTK_PPE_TB_CFG_AGE_TCP |
- 	      MTK_PPE_TB_CFG_AGE_UDP |
--	      MTK_PPE_TB_CFG_AGE_TCP_FIN;
-+	      MTK_PPE_TB_CFG_AGE_TCP_FIN |
-+		  MTK_PPE_TB_CFG_SCAN_MODE;
- 	ppe_clear(ppe, MTK_PPE_TB_CFG, val);
- 
--	return mtk_ppe_wait_busy(ppe);
-+	if (mtk_ppe_wait_busy(ppe))
-+		return -ETIMEDOUT;
-+
-+	/* disable offload engine */
-+	ppe_clear(ppe, MTK_PPE_GLO_CFG, MTK_PPE_GLO_CFG_EN);
-+	ppe_w32(ppe, MTK_PPE_FLOW_CFG, 0);
-+
-+	return 0;
- }
 -- 
 2.43.0
 
