@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFAD145FF5;
-	Sun, 24 Mar 2024 23:14:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F59145357;
+	Sun, 24 Mar 2024 23:13:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322059; cv=none; b=Onr6ES1Z0ICAPvXSPOtumO0Q9WA4s4si6aiK6oFioMNDU4v7Ijiield9ECbKWSsnVnDS9Mj5daBb9QOBbwp8DQGE/pFYd33JntbCKs/4iem4V0Hf9FD1oXLqIsW/YMNFP3lcZ7JxqfE5qJm6W/qIcqK8X0ZSCF+Yrd+xuSTIEy8=
+	t=1711322003; cv=none; b=JbYAf+wI6V3svjy6alcXR7vsuRMsheeuqM37cMtEXyT/sdZzEkpQFklSqixMxSSJMxQlFjADyXaEL1Kv9gavRIG3YJymU7Ly1vuR4IR0FTWVpnO0IPm3qXyVUN2I2Kepq9FxbBjxm8kv2Yxlul1o4AJoguY1hj5rR/QyW0XYvHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322059; c=relaxed/simple;
-	bh=tuaO+TMyNegk7atL+7siquVjQWrQBQOb9fB6/Uozhyg=;
+	s=arc-20240116; t=1711322003; c=relaxed/simple;
+	bh=MQ8BlB4JG1jjZwfj5Rva8ULNhjxYa7cmFF0KVqjjOCo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TEzbPYhli9bFtZtzKB1jfPiEwyM63zF7K70wcyyrGajqat5r/C5ICbUW4mMbuku6ihODSXkn3/uC0Yu9P8H9NHwNwTjjlygKZaB3H1GuoGL/b3xEXW6m+aOX2MRR4SKCxuGFeR7S2EmBJr3gxkv7a+G4K7Owe6D2N4PuCtrTJd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LK4AuACZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=T0MwoscRgmQqophvRjPm9oZUz4+MX3Iwy85ObRtKBQMMM+jMPYeq3z6ZPzYI7gwKMpgi9xpjy1i7GCKp2s7IzEkfpYC2Ghg1hasGUR6HnYsJ1EG64ejob19gZCRLHh4PQvP7wgn7YengEk9z8GWn5k4S1axmK2igq53pBX69W14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WwiYv+Ph; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LK4AuACZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFB9DC433C7;
-	Sun, 24 Mar 2024 23:14:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WwiYv+Ph"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2EB1C43399;
+	Sun, 24 Mar 2024 23:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322059;
-	bh=tuaO+TMyNegk7atL+7siquVjQWrQBQOb9fB6/Uozhyg=;
+	s=k20201202; t=1711322003;
+	bh=MQ8BlB4JG1jjZwfj5Rva8ULNhjxYa7cmFF0KVqjjOCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LK4AuACZP4B9zEPgoUoen4y9dDXRWqGYkCXOknYzxtqc5CjW7CIjkQG8hnQltZUKZ
-	 w+AnfUTZAZQIazdN6mEX0KjZ8AzGM+jyDf1MnNaVBw8ABP7Xtxo6z/viom4080E+AK
-	 hKmggEedLJPOHbtDqBO5EcAiR7Ol2aEpsLcoj7zfCa7dHLUH8h7R4rsajkgJ6ZQkXA
-	 oM20Gh88WV7E8Eojl2oc1j1BGyG4HVTl8LUsBSvcB3ay/jvdVI/NJDpoCZT8WnuWrY
-	 X6gmIzBH2UoaWJyaiNsfnVZuibQRvOZtDoyuR9mo8l1dZ5jxbU0HWSU0dqcNvxuUIw
-	 1mo2TkYnQyhhg==
+	b=WwiYv+Phx1la0tp5hbhgALGo40PZ1f7GYzd8pj+nKBxEhCTHEe0FpBlgTV+Vyzy0E
+	 NlLq1vXlpu61iN5nbZSXebfE9IhOLKqMO3J76V2y/Yej6yKTap50WvOdsoGRTJNcdy
+	 7NaOdClHkloyBnLfu79BsNhibEg+4P7Cs+GJJoHqUNd4UyQZVCdHXokRXhSEnZXoun
+	 a7s/aeToGvFKSSreV3iYQaPsagswveJgfn0mklXEe/HEXW7bBBUMBHFahdzdJ/n+71
+	 7u9Prs4ktafOafN2Ji3mIZNw3SChoQXAJFlwSqzEnlSs7EyLx3siqgRs+7y9FP+OPE
+	 wWNsd5gP0D5xg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+Cc: Chun-Yi Lee <jlee@suse.com>,
+	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 132/451] pwm: sti: Fix capture for st,pwm-num-chan < st,capture-num-chan
-Date: Sun, 24 Mar 2024 19:06:48 -0400
-Message-ID: <20240324231207.1351418-133-sashal@kernel.org>
+Subject: [PATCH 6.1 075/451] aoe: fix the potential use-after-free problem in aoecmd_cfg_pkts
+Date: Sun, 24 Mar 2024 19:05:51 -0400
+Message-ID: <20240324231207.1351418-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -43,62 +44,90 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Chun-Yi Lee <jlee@suse.com>
 
-[ Upstream commit 5f623835584f1c8d1030666796f40c47a448ce0b ]
+[ Upstream commit f98364e926626c678fb4b9004b75cacf92ff0662 ]
 
-The driver only used the number of pwm channels to set the pwm_chip's
-npwm member. The result is that if there are more capture channels than
-PWM channels specified in the device tree, only a part of the capture
-channel is usable. Fix that by passing the bigger channel count to the
-pwm framework. This makes it possible that the .apply() callback is
-called with .hwpwm >= pwm_num_devs, catch that case and return an error
-code.
+This patch is against CVE-2023-6270. The description of cve is:
 
-Fixes: c97267ae831d ("pwm: sti: Add PWM capture callback")
-Link: https://lore.kernel.org/r/20240204212043.2951852-2-u.kleine-koenig@pengutronix.de
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+  A flaw was found in the ATA over Ethernet (AoE) driver in the Linux
+  kernel. The aoecmd_cfg_pkts() function improperly updates the refcnt on
+  `struct net_device`, and a use-after-free can be triggered by racing
+  between the free on the struct and the access through the `skbtxq`
+  global queue. This could lead to a denial of service condition or
+  potential code execution.
+
+In aoecmd_cfg_pkts(), it always calls dev_put(ifp) when skb initial
+code is finished. But the net_device ifp will still be used in
+later tx()->dev_queue_xmit() in kthread. Which means that the
+dev_put(ifp) should NOT be called in the success path of skb
+initial code in aoecmd_cfg_pkts(). Otherwise tx() may run into
+use-after-free because the net_device is freed.
+
+This patch removed the dev_put(ifp) in the success path in
+aoecmd_cfg_pkts(), and added dev_put() after skb xmit in tx().
+
+Link: https://nvd.nist.gov/vuln/detail/CVE-2023-6270
+Fixes: 7562f876cd93 ("[NET]: Rework dev_base via list_head (v3)")
+Signed-off-by: Chun-Yi Lee <jlee@suse.com>
+Link: https://lore.kernel.org/r/20240305082048.25526-1-jlee@suse.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-sti.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/block/aoe/aoecmd.c | 12 ++++++------
+ drivers/block/aoe/aoenet.c |  1 +
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
-index 652fdb8dc7bfa..0a7920cbd4949 100644
---- a/drivers/pwm/pwm-sti.c
-+++ b/drivers/pwm/pwm-sti.c
-@@ -395,8 +395,17 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
- static int sti_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			 const struct pwm_state *state)
- {
-+	struct sti_pwm_chip *pc = to_sti_pwmchip(chip);
-+	struct sti_pwm_compat_data *cdata = pc->cdata;
-+	struct device *dev = pc->dev;
- 	int err;
+diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
+index d7317425be510..cc9077b588d7e 100644
+--- a/drivers/block/aoe/aoecmd.c
++++ b/drivers/block/aoe/aoecmd.c
+@@ -419,13 +419,16 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
+ 	rcu_read_lock();
+ 	for_each_netdev_rcu(&init_net, ifp) {
+ 		dev_hold(ifp);
+-		if (!is_aoe_netif(ifp))
+-			goto cont;
++		if (!is_aoe_netif(ifp)) {
++			dev_put(ifp);
++			continue;
++		}
  
-+	if (pwm->hwpwm >= cdata->pwm_num_devs) {
-+		dev_err(dev, "device %u is not valid for pwm mode\n",
-+			pwm->hwpwm);
-+		return -EINVAL;
-+	}
-+
- 	if (state->polarity != PWM_POLARITY_NORMAL)
- 		return -EINVAL;
- 
-@@ -647,7 +656,7 @@ static int sti_pwm_probe(struct platform_device *pdev)
- 
- 	pc->chip.dev = dev;
- 	pc->chip.ops = &sti_pwm_ops;
--	pc->chip.npwm = pc->cdata->pwm_num_devs;
-+	pc->chip.npwm = max(cdata->pwm_num_devs, cdata->cpt_num_devs);
- 
- 	for (i = 0; i < cdata->cpt_num_devs; i++) {
- 		struct sti_cpt_ddata *ddata = &cdata->ddata[i];
+ 		skb = new_skb(sizeof *h + sizeof *ch);
+ 		if (skb == NULL) {
+ 			printk(KERN_INFO "aoe: skb alloc failure\n");
+-			goto cont;
++			dev_put(ifp);
++			continue;
+ 		}
+ 		skb_put(skb, sizeof *h + sizeof *ch);
+ 		skb->dev = ifp;
+@@ -440,9 +443,6 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
+ 		h->major = cpu_to_be16(aoemajor);
+ 		h->minor = aoeminor;
+ 		h->cmd = AOECMD_CFG;
+-
+-cont:
+-		dev_put(ifp);
+ 	}
+ 	rcu_read_unlock();
+ }
+diff --git a/drivers/block/aoe/aoenet.c b/drivers/block/aoe/aoenet.c
+index 63773a90581dd..1e66c7a188a12 100644
+--- a/drivers/block/aoe/aoenet.c
++++ b/drivers/block/aoe/aoenet.c
+@@ -64,6 +64,7 @@ tx(int id) __must_hold(&txlock)
+ 			pr_warn("aoe: packet could not be sent on %s.  %s\n",
+ 				ifp ? ifp->name : "netif",
+ 				"consider increasing tx_queue_len");
++		dev_put(ifp);
+ 		spin_lock_irq(&txlock);
+ 	}
+ 	return 0;
 -- 
 2.43.0
 
