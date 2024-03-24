@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968DA1F1AE5;
-	Sun, 24 Mar 2024 22:58:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCC71F1AF4;
+	Sun, 24 Mar 2024 22:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321085; cv=none; b=LXo4uJdLQ2ApkmAy3Jc6nP4km9MALo42m8sTLmTirgqKl4zIfOo9ohuQK7SEKcGQOdp13yiHydhro8cJpmmTgw2ot4ui6il8bX9DLrcaqmkisebiYIOElLXrqCPhccX1F27Vkn4wBAHUF+Bvctj1M1beDk/jWBLYGP6iOWa15Gw=
+	t=1711321089; cv=none; b=Q/71a8FP5bXI0ZTbV9cLGRbimoYJi6Lt6CdkreeiikYTRz3TjNAa+qRMdyp1uzvmYD+XMBLHbUIHWS+3MVaCGX2RGgdXOClr9xGi94c8M452jqBka5I2M3q6Ev0bo2G16u7bCBj1OFQcTlOgd3kEB7BYxdGrURGbDPRtstniUVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321085; c=relaxed/simple;
-	bh=pIMAx/5guFWCXZz7a5DmmTIE8rbWEEKno25pg9I15Mo=;
+	s=arc-20240116; t=1711321089; c=relaxed/simple;
+	bh=KCdEeAzHYRbBp8014JNKSfgbZL0yss104STtYKpL/DU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Uai0CrcIz+ZlNe7sBx3ZvOdvdhf99556s3llfk7oULPp3pb0wELKbYE7uVPhtqdsPMzdtOIzNBDadPfPyOdTcwSMWJxmdEzZi/cP1VW+qNNcZycSJYLLbTYcVo7X1OThqHYh5OJfAJIViRCXuJmw0JbKPM29ITvpyJBvEjFE1Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exXZorgK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DFa62RhtMWycAimFbBFYe6dFtfRbZPFtgivqUqzWz4Sx9XFj7jKhx9dZVUJxVBm9/oqUE0RHynHd30NvOkn7cp/qjWKkes/dSbPF+EOu57M7xNflARJ3u/imiM60iXDslW5KXcRjlzmESV2WRS7n8x8yYksXZxE9EpAhVgTjfEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aIQXDyM1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exXZorgK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA629C43394;
-	Sun, 24 Mar 2024 22:58:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aIQXDyM1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17166C43399;
+	Sun, 24 Mar 2024 22:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321085;
-	bh=pIMAx/5guFWCXZz7a5DmmTIE8rbWEEKno25pg9I15Mo=;
+	s=k20201202; t=1711321089;
+	bh=KCdEeAzHYRbBp8014JNKSfgbZL0yss104STtYKpL/DU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=exXZorgKhtOFdh5rlX1Ds6wM+LZVCBnvfll7SdhBldW/wEbdFhrpZnMk+xtsy3IVY
-	 AsEOfBOIQcqiSRgJDb7pCdJRCiHdGCZGFJye7G0InaQibEyY4+AQXQSh6zhhGWkq00
-	 VEsI0dLbBFiXtVd6DtQxs7NeddoSGW+w7eo0Y+RW4wT25ny4ZI2G9Chii3PFWsUScB
-	 n41vDC4GwZBRQicVrb2QKxmf1QSdK5Guh/3zJ9oWpE/bQMq/mYlFzCPdB8z6troCAz
-	 WKHEX1aOkPI5h4LB8/Bxo30IEnskjAbm0iuVbrXLGM4UOUML1+Jv8Hwq/Z8hD1fpCK
-	 3gx5fbruVeUkw==
+	b=aIQXDyM1bRqHu28/b5XjafnW/0RYSKgIzbHMXGLxWNBWVTD+GFSrkrXzLXju9J5YB
+	 ez4bUvGz9r+ttMBWp8+NrkjoSM5mbcUEv4+EkQ/Bt6riHjehfT/W0sXRoaK2z/ZyM4
+	 z6++OHSpxQPgZUu1ZpB845k98Se1HpqbeWzhxXv9Kk6PmSCMc5I+hEwcR5uhFyWqbX
+	 q92gSpqqmAhBuR5kvP9LHexokbFLBTxkwd/t4KGTwR+y9MoT3bdfIS1+qIT6/S7NuK
+	 y0kS213sgsn7q/1lGd5Kdd+9QyipBWas7HMxMJx906Qzs+zSLt4QaCkX61adZoldG1
+	 mqxWqaq9GuPSA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mete Durlu <meted@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
+Cc: Ido Schimmel <idosch@nvidia.com>,
+	Jiri Pirko <jiri@nvidia.com>,
+	Petr Machata <petrm@nvidia.com>,
+	Simon Horman <horms@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 649/713] s390/vtime: fix average steal time calculation
-Date: Sun, 24 Mar 2024 18:46:15 -0400
-Message-ID: <20240324224720.1345309-650-sashal@kernel.org>
+Subject: [PATCH 6.7 652/713] devlink: Acquire device lock during netns dismantle
+Date: Sun, 24 Mar 2024 18:46:18 -0400
+Message-ID: <20240324224720.1345309-653-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,62 +51,103 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Mete Durlu <meted@linux.ibm.com>
+From: Ido Schimmel <idosch@nvidia.com>
 
-[ Upstream commit 367c50f78451d3bd7ad70bc5c89f9ba6dec46ca9 ]
+[ Upstream commit e21c52d7814f5768f05224e773644629fe124af2 ]
 
-Current average steal timer calculation produces volatile and inflated
-values. The only user of this value is KVM so far and it uses that to
-decide whether or not to yield the vCPU which is seeing steal time.
-KVM compares average steal timer to a threshold and if the threshold
-is past then it does not allow CPU polling and yields it to host, else
-it keeps the CPU by polling.
-Since KVM's steal time threshold is very low by default (%10) it most
-likely is not effected much by the bloated average steal timer values
-because the operating region is pretty small. However there might be
-new users in the future who might rely on this number. Fix average
-steal timer calculation by changing the formula from:
+Device drivers register with devlink from their probe routines (under
+the device lock) by acquiring the devlink instance lock and calling
+devl_register().
 
-	avg_steal_timer = avg_steal_timer / 2 + steal_timer;
+Drivers that support a devlink reload usually implement the
+reload_{down, up}() operations in a similar fashion to their remove and
+probe routines, respectively.
 
-to the following:
+However, while the remove and probe routines are invoked with the device
+lock held, the reload operations are only invoked with the devlink
+instance lock held. It is therefore impossible for drivers to acquire
+the device lock from their reload operations, as this would result in
+lock inversion.
 
-	avg_steal_timer = (avg_steal_timer + steal_timer) / 2;
+The motivating use case for invoking the reload operations with the
+device lock held is in mlxsw which needs to trigger a PCI reset as part
+of the reload. The driver cannot call pci_reset_function() as this
+function acquires the device lock. Instead, it needs to call
+__pci_reset_function_locked which expects the device lock to be held.
 
-This ensures that avg_steal_timer is actually a naive average of steal
-timer values. It now closely follows steal timer values but of course
-in a smoother manner.
+To that end, adjust devlink to always acquire the device lock before the
+devlink instance lock when performing a reload.
 
-Fixes: 152e9b8676c6 ("s390/vtime: steal time exponential moving average")
-Signed-off-by: Mete Durlu <meted@linux.ibm.com>
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
-Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+For now, only do that when reload is triggered as part of netns
+dismantle. Subsequent patches will handle the case where reload is
+explicitly triggered by user space.
+
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Signed-off-by: Petr Machata <petrm@nvidia.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Stable-dep-of: d7d75124965a ("devlink: Fix devlink parallel commands processing")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/vtime.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/devlink/core.c          |  4 ++--
+ net/devlink/devl_internal.h | 15 +++++++++++++++
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/vtime.c b/arch/s390/kernel/vtime.c
-index e0a88dcaf5cb7..24a18e5ef6e8e 100644
---- a/arch/s390/kernel/vtime.c
-+++ b/arch/s390/kernel/vtime.c
-@@ -210,13 +210,13 @@ void vtime_flush(struct task_struct *tsk)
- 		virt_timer_expire();
+diff --git a/net/devlink/core.c b/net/devlink/core.c
+index bc3d265fe2d6e..7f0b093208d75 100644
+--- a/net/devlink/core.c
++++ b/net/devlink/core.c
+@@ -503,14 +503,14 @@ static void __net_exit devlink_pernet_pre_exit(struct net *net)
+ 	 * all devlink instances from this namespace into init_net.
+ 	 */
+ 	devlinks_xa_for_each_registered_get(net, index, devlink) {
+-		devl_lock(devlink);
++		devl_dev_lock(devlink, true);
+ 		err = 0;
+ 		if (devl_is_registered(devlink))
+ 			err = devlink_reload(devlink, &init_net,
+ 					     DEVLINK_RELOAD_ACTION_DRIVER_REINIT,
+ 					     DEVLINK_RELOAD_LIMIT_UNSPEC,
+ 					     &actions_performed, NULL);
+-		devl_unlock(devlink);
++		devl_dev_unlock(devlink, true);
+ 		devlink_put(devlink);
+ 		if (err && err != -EOPNOTSUPP)
+ 			pr_warn("Failed to reload devlink instance into init_net\n");
+diff --git a/net/devlink/devl_internal.h b/net/devlink/devl_internal.h
+index 2a9b263300a4b..178abaf74a107 100644
+--- a/net/devlink/devl_internal.h
++++ b/net/devlink/devl_internal.h
+@@ -3,6 +3,7 @@
+  * Copyright (c) 2016 Jiri Pirko <jiri@mellanox.com>
+  */
  
- 	steal = S390_lowcore.steal_timer;
--	avg_steal = S390_lowcore.avg_steal_timer / 2;
-+	avg_steal = S390_lowcore.avg_steal_timer;
- 	if ((s64) steal > 0) {
- 		S390_lowcore.steal_timer = 0;
- 		account_steal_time(cputime_to_nsecs(steal));
- 		avg_steal += steal;
- 	}
--	S390_lowcore.avg_steal_timer = avg_steal;
-+	S390_lowcore.avg_steal_timer = avg_steal / 2;
++#include <linux/device.h>
+ #include <linux/etherdevice.h>
+ #include <linux/mutex.h>
+ #include <linux/netdevice.h>
+@@ -96,6 +97,20 @@ static inline bool devl_is_registered(struct devlink *devlink)
+ 	return xa_get_mark(&devlinks, devlink->index, DEVLINK_REGISTERED);
  }
  
- static u64 vtime_delta(void)
++static inline void devl_dev_lock(struct devlink *devlink, bool dev_lock)
++{
++	if (dev_lock)
++		device_lock(devlink->dev);
++	devl_lock(devlink);
++}
++
++static inline void devl_dev_unlock(struct devlink *devlink, bool dev_lock)
++{
++	devl_unlock(devlink);
++	if (dev_lock)
++		device_unlock(devlink->dev);
++}
++
+ typedef void devlink_rel_notify_cb_t(struct devlink *devlink, u32 obj_index);
+ typedef void devlink_rel_cleanup_cb_t(struct devlink *devlink, u32 obj_index,
+ 				      u32 rel_index);
 -- 
 2.43.0
 
