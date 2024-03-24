@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DD71514DA;
-	Sun, 24 Mar 2024 23:05:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBE1208984;
+	Sun, 24 Mar 2024 23:05:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321529; cv=none; b=GGKtjAX6UQhKYw8L1gG8U+ysr8lHWJx3epk953IGKBD1rDMx1SyjRU2TwxEN6wn2HCpeW4UTycguaJlWQYIS6f68GQW8FyhH8l41vovdTZjsyuou0rDIMgiAg2MF7kTAh6qt2xcUofvFzkMvK3N9cbjffCVwf/TZXXQTo7DSa2M=
+	t=1711321548; cv=none; b=ItYeGaOV2q4gkcCgm4IZZbwHFWBFq+bSLakGw109j1SboALlIXaWNRYuQX20TfKMnvFxbL0XtxO4KZ3JReOhSKF1jioicHF1JySUgP6c42uEXk28k9kz16iGqF6UEg6gytkuIwUv1tBvrAnyvlPVJtUJdbJc+4jPzEtCSPlGBaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321529; c=relaxed/simple;
-	bh=gG4NPeaHHJJjbHXioBGh7gKVMITJeUNeahrHehClb3U=;
+	s=arc-20240116; t=1711321548; c=relaxed/simple;
+	bh=vSXBLHwVf5dgt++K+6k96qdHTcUOWapdasyCUaiH4Eg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WYkGo1Q6miM9DHO3a7QZPIzJXenPYX5iXaTURUDpsfmdH1E5Fw+kU0KYmQpI0teEzQ4sAN20tbRPQwJcmgfvcfzAFB1RmXnZo+fJv9VhBnfGNRLCBGOZEt45hICKPzCLhWJ9xyw3afzvTCXBMTuP3qI3YOXcelgaPk2USXVxlwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EMxCwyDa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Z6a119hdSmLrCF+Y/fzZwZGbXFW3j3w3xdBtugmRYDdooKeNWC7bq0dzqWmffr3PBz9syzmOWusmbe5Yxy2A2t4FyWo21sXZ95TBT9ivTJHOyr3fDzqD0dZ0PHliAMQlxj19DA7qEM+l1ycskFf3FzLzb/1J0hLYsHDqGbAIVRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hBj3r0RT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EMxCwyDa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10FFC433C7;
-	Sun, 24 Mar 2024 23:05:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBj3r0RT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5265BC43394;
+	Sun, 24 Mar 2024 23:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321528;
-	bh=gG4NPeaHHJJjbHXioBGh7gKVMITJeUNeahrHehClb3U=;
+	s=k20201202; t=1711321546;
+	bh=vSXBLHwVf5dgt++K+6k96qdHTcUOWapdasyCUaiH4Eg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EMxCwyDaB6l8KERJ0ozR1tITGGx8y0IcMBZXfMqtZ6Dre/7yWJKmRCsv7Mn4sUDj+
-	 mLiNftG6hGhfovf4nWkvBnqzaFV1H/JBGqNn1XxehBj95I23eXalQ0FCjoG/24kmdJ
-	 Q3R2zoL537Zi+QlL1Fpomj4eeO3fIwj5t8AN/bssd7IZq0Evym1ddb6xLMCHsMZEfo
-	 oTadtazCIpS39D/da0muHThjg+J6lqBpJ3ZezG0i1zTdeCVYK6xNigbCfFXELOLypf
-	 xeOtidrgDM7BYzdHXuaRQhVjpy1gTokMvO5eoUaxdUh3k5/jBUI64sZIU9UyOVCHPU
-	 zPCPzIcvoNM+A==
+	b=hBj3r0RTClPapeNs/f9uL0524enuCO5Dgiuwc9vKlFdAQrYTtIwBbxefutJBFAZvc
+	 BR1f/vNz6btXKC1Nxdcwv20tgHXtDdYL2UX7QMAoz1rGbZxAM7lfZ5TK29kSPfBgLh
+	 wiBgnfuv9/oNxBMozx7+JdX+AqLN0dwWeBK4OUW7kGL1ngjyeY0S8EA4JH0twEjtF1
+	 mmmJr3ONT40hxOkC9R+3wkZnjsEdSoUXjUgLxRXsvg24gManTCecSSkG6/7MG6kka4
+	 CdGsZF7WPJcnfh1a6n6Q9vvOWhfNKP9J8c2AsE51YxKcKPDyGno4FOnDvTpn0TLXdW
+	 XfG9iiaAHyF5w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: StanleyYP Wang <StanleyYP.Wang@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
-	Felix Fietkau <nbd@nbd.name>,
+Cc: "Alexey I. Froloff" <raorn@raorn.name>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 255/638] wifi: mt76: mt7996: fix efuse reading issue
-Date: Sun, 24 Mar 2024 18:54:52 -0400
-Message-ID: <20240324230116.1348576-256-sashal@kernel.org>
+Subject: [PATCH 6.6 275/638] ACPI: resource: Do IRQ override on Lunnen Ground laptops
+Date: Sun, 24 Mar 2024 18:55:12 -0400
+Message-ID: <20240324230116.1348576-276-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -49,34 +48,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: StanleyYP Wang <StanleyYP.Wang@mediatek.com>
+From: "Alexey I. Froloff" <raorn@raorn.name>
 
-[ Upstream commit d3ad99be7cc2d174126d908addd6bea2b157aa75 ]
+[ Upstream commit e23ad54fef186aa66007895be1382c88f1ee2bf7 ]
 
-The efuse data starts from the 48th bytes instead of 64th bytes in the
-returned event skb.
+The Lunnen Ground 15 and 16 needs IRQ overriding for the keyboard to
+work.
 
-Fixes: 98686cd21624 ("wifi: mt76: mt7996: add driver for MediaTek Wi-Fi 7 (802.11be) devices")
-Signed-off-by: StanleyYP Wang <StanleyYP.Wang@mediatek.com>
-Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Adding an entries for these laptops to the override_table makes the
+internal keyboard functional.
+
+Signed-off-by: Alexey I. Froloff <raorn@raorn.name>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Stable-dep-of: 021a67d09615 ("ACPI: resource: Add MAIBENBEN X577 to irq1_edge_low_force_override")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7996/mcu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/resource.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c
-index 650c43cb899f7..b4ea7d0a7f5a0 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7996/mcu.c
-@@ -3100,7 +3100,7 @@ int mt7996_mcu_get_eeprom(struct mt7996_dev *dev, u32 offset)
- 		u32 addr = le32_to_cpu(*(__le32 *)(skb->data + 12));
- 		u8 *buf = (u8 *)dev->mt76.eeprom.data + addr;
- 
--		skb_pull(skb, 64);
-+		skb_pull(skb, 48);
- 		memcpy(buf, skb->data, MT7996_EEPROM_BLOCK_SIZE);
- 	}
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index b8378033117d4..ab1865e22864b 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -562,6 +562,20 @@ static const struct dmi_system_id pcspecialist_laptop[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "GM5RGEE0016COM"),
+ 		},
+ 	},
++	{
++		/* Lunnen Ground 15 / AMD Ryzen 5 5500U */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Lunnen"),
++			DMI_MATCH(DMI_BOARD_NAME, "LLL5DAW"),
++		},
++	},
++	{
++		/* Lunnen Ground 16 / AMD Ryzen 7 5800U */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Lunnen"),
++			DMI_MATCH(DMI_BOARD_NAME, "LL6FA"),
++		},
++	},
+ 	{ }
+ };
  
 -- 
 2.43.0
