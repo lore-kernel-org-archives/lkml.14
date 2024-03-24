@@ -1,40 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4222817DC1E;
-	Sun, 24 Mar 2024 23:44:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B80C17DC29;
+	Sun, 24 Mar 2024 23:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323844; cv=none; b=TPCTcnZVUeTadOERO9Fmm20xVX9bRKCbnVC94OzyY/RHHviQedPofF6KqTBYuSYUM3cC37MU382OBpsdgTu/pyApal25Wuo2dhpsi1NIjeN/tovSjA0pKdUR9ZyCYoCWL+F0mm09NoPaiWj5tMQZcB2tJplBpXku9etUr0HTZ2A=
+	t=1711323846; cv=none; b=uxwjJVQCgSEyZvMlst59djfPGb1Yi3yIAUVlqoD0Tecplt55tLiFugUy6Szscd/luSJpua7ilktLlae/HSBci9/zeFaR03Ff5mE8et3KiRQeeDItFeV1vDPY7NOm77Qtrb4UHI8PwrZOIXIa53TkiLntAiJvQQTjMXwaoU/WjQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323844; c=relaxed/simple;
-	bh=CBebaG+0xbdd5y6jn27EFF7OtljaxvopzEok4XjCYh4=;
+	s=arc-20240116; t=1711323846; c=relaxed/simple;
+	bh=vSWO8Ia70MpTB/CB7poLlvBQQF4GDp6Lw1oukCFxiEM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MQemNIU0t7FqcnSAWv3WnYvSHmlLQHHaxgycM8egW/vKVBLL8Y8pAjwJ0IAWc8ypYcZUX+rJuhxBPGfZMlGaXJTGIKLtk1v2Jj6kUUrJ3vaIaIba2A83l9QgSgBeH6QylIv3NcUoLh3CSZ2WpiehDVk7OQCpE+R9rx+JL7+XD+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZvd0NKQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tbqPfqzo7cW5sU32HsjsbrWlvZTKL+cVEnW9X1+nSalmM/eVmahv8kPxo+YgP06ocFCsWuPug+nbpA/BUMzds7wdtrAIbQZwCqDJnGtm5Ta8fgeWUAEC6P1TzHLZKEnYmZyZ+9cYrCJrC8FNyDgZQtQOX2s8J8c9D2ST+F2TGNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RayjSnhz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZvd0NKQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB28C43399;
-	Sun, 24 Mar 2024 23:44:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RayjSnhz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA4EC43390;
+	Sun, 24 Mar 2024 23:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323843;
-	bh=CBebaG+0xbdd5y6jn27EFF7OtljaxvopzEok4XjCYh4=;
+	s=k20201202; t=1711323845;
+	bh=vSWO8Ia70MpTB/CB7poLlvBQQF4GDp6Lw1oukCFxiEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kZvd0NKQ+gUCZPSaqH9LHE5L02tnyvuOlYudjUYk6xjbW8KXrOS7YWft+mR+g4L4x
-	 zORy6RW68KqBli0W3MCeKa3JaTul+Bum1CYpMettWSJDThzcMUK9d9v2hFaUPU/KgH
-	 bVT7ypB/ZgKrz2Yyy/vGEvTiVRC3j/61toLsaEy4EfmzzlxzWzZr80FrmKSUFiGMIg
-	 MoB4/esZ6aM8biG78FXHuDdNUeIPH2m5a9V5yyqMV3LbG3Sf1A4D7gZxEsxDEMeB2I
-	 3d9KA2QRbPVSx8hwYQzVYvC+gmGCdjR1oPN5w0fgGuy0cg/OowWgpd+f15jCoaqhtD
-	 oiceCQduEpJjA==
+	b=RayjSnhzHDa9xYSyRA01VArLPscu+/396jKs2n/nEhcMfMdHuPol/0c8IJtPM52KR
+	 GdzoYMj2oD6qNB4BZFQWHDTTB+LVTtZXbKS8YXDdIV69gKU2nNS6hKL3NzGjY7GyVv
+	 6lErOv1OlYdw0U2DOC4fTbykI7WQDA7xZ/m+mL9r/JUauWm/5O+o67rjImewVzeOD2
+	 Dz18+2pOZfzipUbDAJLz38Lq3STMGISu9xbzBnpU4MvDndD5S+/7/pgLKRM8zDQr8Z
+	 KYZeUVTU7J32Cxk1Rg6+8XNvSt+bqbhhzl1urXo6f2bDPFr557azZlp9jmU9n5QGWG
+	 Ld//priTYuYCw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Dmitry Antipov <dmantipov@yandex.ru>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	syzbot+c669c1136495a2e7c31f@syzkaller.appspotmail.com,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 221/238] soc: fsl: dpio: fix kcalloc() argument order
-Date: Sun, 24 Mar 2024 19:40:09 -0400
-Message-ID: <20240324234027.1354210-222-sashal@kernel.org>
+Subject: [PATCH 5.10 223/238] packet: annotate data-races around ignore_outgoing
+Date: Sun, 24 Mar 2024 19:40:11 -0400
+Message-ID: <20240324234027.1354210-224-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
 References: <20240324234027.1354210-1-sashal@kernel.org>
@@ -48,45 +52,103 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 72ebb41b88f9d7c10c5e159e0507074af0a22fe2 ]
+[ Upstream commit 6ebfad33161afacb3e1e59ed1c2feefef70f9f97 ]
 
-A previous bugfix added a call to kcalloc(), which starting in gcc-14
-causes a harmless warning about the argument order:
+ignore_outgoing is read locklessly from dev_queue_xmit_nit()
+and packet_getsockopt()
 
-drivers/soc/fsl/dpio/dpio-service.c: In function 'dpaa2_io_service_enqueue_multiple_desc_fq':
-drivers/soc/fsl/dpio/dpio-service.c:526:29: error: 'kcalloc' sizes specified with 'sizeof' in the earlier argument and not in the later argument [-Werror=calloc-transposed-args]
-  526 |         ed = kcalloc(sizeof(struct qbman_eq_desc), 32, GFP_KERNEL);
-      |                             ^~~~~~
-drivers/soc/fsl/dpio/dpio-service.c:526:29: note: earlier argument should specify number of elements, later size of each element
+Add appropriate READ_ONCE()/WRITE_ONCE() annotations.
 
-Since the two are only multiplied, the order does not change the
-behavior, so just fix it now to shut up the compiler warning.
+syzbot reported:
 
-Dmity independently came up with the same fix.
+BUG: KCSAN: data-race in dev_queue_xmit_nit / packet_setsockopt
 
-Fixes: 5c4a5999b245 ("soc: fsl: dpio: avoid stack usage warning")
-Reported-by: Dmitry Antipov <dmantipov@yandex.ru>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+write to 0xffff888107804542 of 1 bytes by task 22618 on cpu 0:
+ packet_setsockopt+0xd83/0xfd0 net/packet/af_packet.c:4003
+ do_sock_setsockopt net/socket.c:2311 [inline]
+ __sys_setsockopt+0x1d8/0x250 net/socket.c:2334
+ __do_sys_setsockopt net/socket.c:2343 [inline]
+ __se_sys_setsockopt net/socket.c:2340 [inline]
+ __x64_sys_setsockopt+0x66/0x80 net/socket.c:2340
+ do_syscall_64+0xd3/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+read to 0xffff888107804542 of 1 bytes by task 27 on cpu 1:
+ dev_queue_xmit_nit+0x82/0x620 net/core/dev.c:2248
+ xmit_one net/core/dev.c:3527 [inline]
+ dev_hard_start_xmit+0xcc/0x3f0 net/core/dev.c:3547
+ __dev_queue_xmit+0xf24/0x1dd0 net/core/dev.c:4335
+ dev_queue_xmit include/linux/netdevice.h:3091 [inline]
+ batadv_send_skb_packet+0x264/0x300 net/batman-adv/send.c:108
+ batadv_send_broadcast_skb+0x24/0x30 net/batman-adv/send.c:127
+ batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:392 [inline]
+ batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:420 [inline]
+ batadv_iv_send_outstanding_bat_ogm_packet+0x3f0/0x4b0 net/batman-adv/bat_iv_ogm.c:1700
+ process_one_work kernel/workqueue.c:3254 [inline]
+ process_scheduled_works+0x465/0x990 kernel/workqueue.c:3335
+ worker_thread+0x526/0x730 kernel/workqueue.c:3416
+ kthread+0x1d1/0x210 kernel/kthread.c:388
+ ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+
+value changed: 0x00 -> 0x01
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 27 Comm: kworker/u8:1 Tainted: G        W          6.8.0-syzkaller-08073-g480e035fc4c7 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
+
+Fixes: fa788d986a3a ("packet: add sockopt to ignore outgoing packets")
+Reported-by: syzbot+c669c1136495a2e7c31f@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/netdev/CANn89i+Z7MfbkBLOv=p7KZ7=K1rKHO4P1OL5LYDCtBiyqsa9oQ@mail.gmail.com/T/#t
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/fsl/dpio/dpio-service.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/dev.c         | 2 +-
+ net/packet/af_packet.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soc/fsl/dpio/dpio-service.c b/drivers/soc/fsl/dpio/dpio-service.c
-index 779c319a4b820..6cdd2c517ba68 100644
---- a/drivers/soc/fsl/dpio/dpio-service.c
-+++ b/drivers/soc/fsl/dpio/dpio-service.c
-@@ -485,7 +485,7 @@ int dpaa2_io_service_enqueue_multiple_desc_fq(struct dpaa2_io *d,
- 	struct qbman_eq_desc *ed;
- 	int i, ret;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 0619d2253aa24..0e2c433bebcd4 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -2324,7 +2324,7 @@ void dev_queue_xmit_nit(struct sk_buff *skb, struct net_device *dev)
+ 	rcu_read_lock();
+ again:
+ 	list_for_each_entry_rcu(ptype, ptype_list, list) {
+-		if (ptype->ignore_outgoing)
++		if (READ_ONCE(ptype->ignore_outgoing))
+ 			continue;
  
--	ed = kcalloc(sizeof(struct qbman_eq_desc), 32, GFP_KERNEL);
-+	ed = kcalloc(32, sizeof(struct qbman_eq_desc), GFP_KERNEL);
- 	if (!ed)
- 		return -ENOMEM;
+ 		/* Never send packets back to the socket
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 6cc054dd53b6e..db5d16c5d5b11 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3951,7 +3951,7 @@ packet_setsockopt(struct socket *sock, int level, int optname, sockptr_t optval,
+ 		if (val < 0 || val > 1)
+ 			return -EINVAL;
  
+-		po->prot_hook.ignore_outgoing = !!val;
++		WRITE_ONCE(po->prot_hook.ignore_outgoing, !!val);
+ 		return 0;
+ 	}
+ 	case PACKET_TX_HAS_OFF:
+@@ -4083,7 +4083,7 @@ static int packet_getsockopt(struct socket *sock, int level, int optname,
+ 		       0);
+ 		break;
+ 	case PACKET_IGNORE_OUTGOING:
+-		val = po->prot_hook.ignore_outgoing;
++		val = READ_ONCE(po->prot_hook.ignore_outgoing);
+ 		break;
+ 	case PACKET_ROLLOVER_STATS:
+ 		if (!po->rollover)
 -- 
 2.43.0
 
