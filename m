@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20BF179215;
-	Sun, 24 Mar 2024 23:39:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFD727F08A;
+	Sun, 24 Mar 2024 23:39:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323592; cv=none; b=njYmXjgmziW9Iv0qQj74al4qcXhzJPdjQhSt+ujAlN/MOOCSCqNEoGF8/ybPLw5r/xC2xkUaDesldPMVRO/VrxDPssvl4hqQcku8wi3dzT5ty3tZYcsNwHGWumOEAkb+jjqX+a2Tp+gf/w7fPULmo9kaVs61xTDPFt8IKWbSa+E=
+	t=1711323598; cv=none; b=JFTqaSpOuxPaSaERkPiSzpq6rGVu9hj7RgzCpZLTMrtpSgA4KQ+5HhYVK3fbHM9UZFgUprJzweamJCkRC6kSbigpk4PE/6MybB3WyeXKc6VaY3dVRRwXKvEmWBiDWpQ70OQL/E1OZly0mjTNXZqi0yh5Ie/jqTb0sBrK11jMYxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323592; c=relaxed/simple;
-	bh=1iSWyDGqMjAOjyD45RQQNwJCnJjHhCq9814UWAMzE/0=;
+	s=arc-20240116; t=1711323598; c=relaxed/simple;
+	bh=etXXV4qNNutSWaDORYaLYIuQPxSlpzv4WX/vG6Vg7ns=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VKO+9RMBtyGdZRlE025r+ryO6Xh92F1zVx8dCc/5H3fc/CvdLMcF2cy2xHD/FU0YqoLFzfZ3HbAnSyWBhXr5h9pTH+6S/56Bzk/66H033ViC1hwoeJojZ1v/M86PY3k+a94Gj8sEPuLpZ75s+mJ8IzKk9jRqzPzYE3iPGZcr4TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A+ZpfALu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nWKSoDp77Q949XXKKtMlcgBL3ME8RkubmO6J5DQtX6UjsG3N1c7yaHQ6J6D59GZyjzOH+Wk3L4YaZLPvKGZVQ/rfhS4/1I1cCa7MzMEt6aZw0egWewaUTC5MRk9Qjx455ErzGAYLfbMEVzmKhktgXpIcWtsu9cM9+6yH0WkcFpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPP9qTv+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A+ZpfALu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DB25C43394;
-	Sun, 24 Mar 2024 23:39:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPP9qTv+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67E35C433C7;
+	Sun, 24 Mar 2024 23:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323590;
-	bh=1iSWyDGqMjAOjyD45RQQNwJCnJjHhCq9814UWAMzE/0=;
+	s=k20201202; t=1711323597;
+	bh=etXXV4qNNutSWaDORYaLYIuQPxSlpzv4WX/vG6Vg7ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A+ZpfALuYGP5jydpPFFQQ2GN7NuID8NkUpulGCqwTB7wHSe/nnu4+euzrDrgflc5v
-	 TugVBBMimIvZSD5i4KaBFDst2H7VHLOO6RunilJ1iFvz7aGWOJkFYw1AUjKNsodZLL
-	 R8mY+JCKoNpNVmLWfJP0FZipkolpBdj45ucAJSyM+6GvSJ7oS+Vr1CwDcs2nUK1Lk/
-	 wn/MVQqFyqwATvz1WXAU6eUzIakoMaT/GnAhZbcJ2kyQy3dUa6NhbB4gejdikNBlSe
-	 80a9MvIewQmDL7YyOEIdwmWVGjVx0o+ohSb4Zt38feG+ZzYt+Rjku4rgH8+K6bywB6
-	 2HHfpXSMUCSQQ==
+	b=lPP9qTv+GF5/FPYgt6GzkyGdGtXO+t1duGuNjKs84GkHAZWLmqmPZBwFxkTSTgzpu
+	 S59FWTiQXowhZuCH9TshP0ECz7VNLhGK3aCs9ANFCWCK2bYq5ex72gOx6bkwsTzb7S
+	 /rny5/JMf/phuxY+S6vVL/lSGYU4dPufITopr/p4OL1iqro8M6dacKZHFJ0kScgJaf
+	 eWglMPPmnbPwolH8/AJlJTZ5rHYWGfbsUwC0WIGcf8CCzWeDASIC28XYdk2aw0TXRl
+	 w5WyVPwCh+poZn80h6EL0TrKPuC04Bmnnr7oTwhP2h79YAGS1W9kWxGV8OkhRaoHeR
+	 mVp6VhucUsGzw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ignat Korchagin <ignat@cloudflare.com>,
-	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Nikita Kiryushin <kiryushin@ancud.ru>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 297/317] net: veth: do not manipulate GRO when using XDP
-Date: Sun, 24 Mar 2024 19:34:37 -0400
-Message-ID: <20240324233458.1352854-298-sashal@kernel.org>
+Subject: [PATCH 5.15 303/317] net: phy: fix phy_read_poll_timeout argument type in genphy_loopback
+Date: Sun, 24 Mar 2024 19:34:43 -0400
+Message-ID: <20240324233458.1352854-304-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -45,85 +45,55 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ignat Korchagin <ignat@cloudflare.com>
+From: Nikita Kiryushin <kiryushin@ancud.ru>
 
-[ Upstream commit d7db7775ea2e31502d46427f5efd385afc4ff1eb ]
+[ Upstream commit 32fa4366cc4da1c97b725a0066adf43c6b298f37 ]
 
-Commit d3256efd8e8b ("veth: allow enabling NAPI even without XDP") tried to fix
-the fact that GRO was not possible without XDP, because veth did not use NAPI
-without XDP. However, it also introduced the behaviour that GRO is always
-enabled, when XDP is enabled.
+read_poll_timeout inside phy_read_poll_timeout can set val negative
+in some cases (for example, __mdiobus_read inside phy_read can return
+-EOPNOTSUPP).
 
-While it might be desired for most cases, it is confusing for the user at best
-as the GRO flag suddenly changes, when an XDP program is attached. It also
-introduces some complexities in state management as was partially addressed in
-commit fe9f801355f0 ("net: veth: clear GRO when clearing XDP even when down").
+Supposedly, commit 4ec732951702 ("net: phylib: fix phy_read*_poll_timeout()")
+should fix problems with wrong-signed vals, but I do not see how
+as val is sent to phy_read as is and __val = phy_read (not val)
+is checked for sign.
 
-But the biggest problem is that it is not possible to disable GRO at all, when
-an XDP program is attached, which might be needed for some use cases.
+Change val type for signed to allow better error handling as done in other
+phy_read_poll_timeout callers. This will not fix any error handling
+by itself, but allows, for example, to modify cond with appropriate
+sign check or check resulting val separately.
 
-Fix this by not touching the GRO flag on XDP enable/disable as the code already
-supports switching to NAPI if either GRO or XDP is requested.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Link: https://lore.kernel.org/lkml/20240311124015.38106-1-ignat@cloudflare.com/
-Fixes: d3256efd8e8b ("veth: allow enabling NAPI even without XDP")
-Fixes: fe9f801355f0 ("net: veth: clear GRO when clearing XDP even when down")
-Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
-Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 014068dcb5b1 ("net: phy: genphy_loopback: add link speed configuration")
+Signed-off-by: Nikita Kiryushin <kiryushin@ancud.ru>
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Link: https://lore.kernel.org/r/20240315175052.8049-1-kiryushin@ancud.ru
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/veth.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+ drivers/net/phy/phy_device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-index 0102f86d48676..cfacf8965bc59 100644
---- a/drivers/net/veth.c
-+++ b/drivers/net/veth.c
-@@ -1388,8 +1388,6 @@ static netdev_features_t veth_fix_features(struct net_device *dev,
- 		if (peer_priv->_xdp_prog)
- 			features &= ~NETIF_F_GSO_SOFTWARE;
- 	}
--	if (priv->_xdp_prog)
--		features |= NETIF_F_GRO;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index c1d6ebf12ec74..523436690adef 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2645,8 +2645,8 @@ EXPORT_SYMBOL(genphy_resume);
+ int genphy_loopback(struct phy_device *phydev, bool enable)
+ {
+ 	if (enable) {
+-		u16 val, ctl = BMCR_LOOPBACK;
+-		int ret;
++		u16 ctl = BMCR_LOOPBACK;
++		int ret, val;
  
- 	return features;
- }
-@@ -1481,14 +1479,6 @@ static int veth_xdp_set(struct net_device *dev, struct bpf_prog *prog,
- 		}
- 
- 		if (!old_prog) {
--			if (!veth_gro_requested(dev)) {
--				/* user-space did not require GRO, but adding
--				 * XDP is supposed to get GRO working
--				 */
--				dev->features |= NETIF_F_GRO;
--				netdev_features_change(dev);
--			}
--
- 			peer->hw_features &= ~NETIF_F_GSO_SOFTWARE;
- 			peer->max_mtu = max_mtu;
- 		}
-@@ -1499,14 +1489,6 @@ static int veth_xdp_set(struct net_device *dev, struct bpf_prog *prog,
- 			if (dev->flags & IFF_UP)
- 				veth_disable_xdp(dev);
- 
--			/* if user-space did not require GRO, since adding XDP
--			 * enabled it, clear it now
--			 */
--			if (!veth_gro_requested(dev)) {
--				dev->features &= ~NETIF_F_GRO;
--				netdev_features_change(dev);
--			}
--
- 			if (peer) {
- 				peer->hw_features |= NETIF_F_GSO_SOFTWARE;
- 				peer->max_mtu = ETH_MAX_MTU;
+ 		if (phydev->speed == SPEED_1000)
+ 			ctl |= BMCR_SPEED1000;
 -- 
 2.43.0
 
