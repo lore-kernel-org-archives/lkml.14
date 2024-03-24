@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0112B219521;
-	Sun, 24 Mar 2024 23:35:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F39219542;
+	Sun, 24 Mar 2024 23:35:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323346; cv=none; b=trI5K1Cp4UFdfW2OX9s28hLUAhVBPF0A2fEtTZlhr7zzSJczneJTVT3yv32LOo02JXz6sZsdSI4QMItl9eHwORlU3wNoaEmUHOpXewH0q72MQZoFj1EdHetzmxbzcmiqPn3wHsvIJWzj0M5iKuichaXsL0QnTo72mCJdUyZtZWI=
+	t=1711323350; cv=none; b=st3gsPTb74AiTLGGeEl/NH07NL7TdPSdzZPxtKl/Svus16snX1SKblne9sLBa9p9BfKbkblEJpFj9QJ7dbuaDP51PdnpWmv+TwEu88IxAFP0vGI117qYQW2R2jRFuInxC4e0QbonFLGdqgLO2HkFPuSPDDWr4WTvavxNp0myIu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323346; c=relaxed/simple;
-	bh=tR+/pQgPNGlMpnpUddcw+FzraRN/IlRHOrQOqXly7Sk=;
+	s=arc-20240116; t=1711323350; c=relaxed/simple;
+	bh=Pym40Mvyrep7NQDgHM/rPOEdnrvgk4WaB7EzFAhrMDA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HTUcp+5MS1J9tEsAelIHspZVjcJngGbyA7QCeTzNyK71t66zhJsIf5+GONk9y+/FUONHZKltH+hoMWGIA8vdXUko/MN7vlYN5Mp3pfe+ADVpyrZZ1k0du9Y3BHPIs++ex1BquY2QyR+WxHnKs4o0NynEX7n4hWfOGWXARqhlRmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l4c7SHC5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AIHN/GmjGgOusZ0WGpHyBD1fQjSWJAjO13V9m0PyXnQ87ITFNiue0QzPMkyOpIKb0jW6qSa6MQYqB9sBzjiFudQix9SWtarM7u3o/Q6ESpcznKuRKB5E0KhdptyYwik++k5kqnJaNe3blzXPoHGJWTSMcWJqKYIsM9Rje9jb9XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKvp1USC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4c7SHC5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2BE7C433C7;
-	Sun, 24 Mar 2024 23:35:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKvp1USC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B65C7C433C7;
+	Sun, 24 Mar 2024 23:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323345;
-	bh=tR+/pQgPNGlMpnpUddcw+FzraRN/IlRHOrQOqXly7Sk=;
+	s=k20201202; t=1711323349;
+	bh=Pym40Mvyrep7NQDgHM/rPOEdnrvgk4WaB7EzFAhrMDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l4c7SHC5XyYU7AGsVjZJHuLjUjVfW8huSzBMg4NM3QGPeF/sEo3T9UwGLItubwT4p
-	 3TTSGU+lXq/woEuRcF0O0zg0+BVyKxYNIHjxkahfBHtvK3vhqLkrWL56P4z7mZOfnj
-	 iaREIn3R3bXPN1SJVeUro2IgBkUFOpct9fBRxAytadabkx+75Njtv1lEoZo6ZmWJ/f
-	 vamW9eAboujTU3goS3ctjanRgir+ozTxoJ/R96kwDRpfRkD2/7k0wIB0SNr91QlSQd
-	 zFtN/B6tcpEiBsY2o02GssG3X/X9DOVXgbe90L2iDbO2M4cBQ9Ms+n2DySn6bbN/6F
-	 djGO6e4e6O5aQ==
+	b=cKvp1USCugjwSb5gECxI7l3u3cQIdzqFo/JZ9XDB6AQZHvc55lT0+aYhXUi45ymFW
+	 xtNOsa5iqdO93gQ3koE48Ck11jQJf5iRdtqGCSpCPhuxzKZuauY9Sc7lmtoC0Bg6vJ
+	 xd9WWTxmnlQXfhf+mm+9QtyYlp3T0V+sPXP5DA74dGJFAHzYQUvlsv4hncJjkRMabF
+	 aL9ce+izv/nAqCQmc1WSY2xLDdeP6nY4xuqmZU/CCvm5aj+fdcqJA2v6YUuW56oIfT
+	 JnHJqg5qpC7TJ6c12lKr62ohnLAgACW3NTLWc19r0nBrRZjFpnpx8w7jupZ7mHcARk
+	 TT8A/y0Pxi5Vw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chun-Yi Lee <jlee@suse.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Keisuke Nishimura <keisuke.nishimura@inria.fr>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Ingo Molnar <mingo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 045/317] aoe: fix the potential use-after-free problem in aoecmd_cfg_pkts
-Date: Sun, 24 Mar 2024 19:30:25 -0400
-Message-ID: <20240324233458.1352854-46-sashal@kernel.org>
+Subject: [PATCH 5.15 049/317] sched/fair: Take the scheduling domain into account in select_idle_core()
+Date: Sun, 24 Mar 2024 19:30:29 -0400
+Message-ID: <20240324233458.1352854-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,86 +49,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Chun-Yi Lee <jlee@suse.com>
+From: Keisuke Nishimura <keisuke.nishimura@inria.fr>
 
-[ Upstream commit f98364e926626c678fb4b9004b75cacf92ff0662 ]
+[ Upstream commit 23d04d8c6b8ec339057264659b7834027f3e6a63 ]
 
-This patch is against CVE-2023-6270. The description of cve is:
+When picking a CPU on task wakeup, select_idle_core() has to take
+into account the scheduling domain where the function looks for the CPU.
 
-  A flaw was found in the ATA over Ethernet (AoE) driver in the Linux
-  kernel. The aoecmd_cfg_pkts() function improperly updates the refcnt on
-  `struct net_device`, and a use-after-free can be triggered by racing
-  between the free on the struct and the access through the `skbtxq`
-  global queue. This could lead to a denial of service condition or
-  potential code execution.
+This is because the "isolcpus" kernel command line option can remove CPUs
+from the domain to isolate them from other SMT siblings.
 
-In aoecmd_cfg_pkts(), it always calls dev_put(ifp) when skb initial
-code is finished. But the net_device ifp will still be used in
-later tx()->dev_queue_xmit() in kthread. Which means that the
-dev_put(ifp) should NOT be called in the success path of skb
-initial code in aoecmd_cfg_pkts(). Otherwise tx() may run into
-use-after-free because the net_device is freed.
+This change replaces the set of CPUs allowed to run the task from
+p->cpus_ptr by the intersection of p->cpus_ptr and sched_domain_span(sd)
+which is stored in the 'cpus' argument provided by select_idle_cpu().
 
-This patch removed the dev_put(ifp) in the success path in
-aoecmd_cfg_pkts(), and added dev_put() after skb xmit in tx().
-
-Link: https://nvd.nist.gov/vuln/detail/CVE-2023-6270
-Fixes: 7562f876cd93 ("[NET]: Rework dev_base via list_head (v3)")
-Signed-off-by: Chun-Yi Lee <jlee@suse.com>
-Link: https://lore.kernel.org/r/20240305082048.25526-1-jlee@suse.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 9fe1f127b913 ("sched/fair: Merge select_idle_core/cpu()")
+Signed-off-by: Keisuke Nishimura <keisuke.nishimura@inria.fr>
+Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20240110131707.437301-2-keisuke.nishimura@inria.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/aoe/aoecmd.c | 12 ++++++------
- drivers/block/aoe/aoenet.c |  1 +
- 2 files changed, 7 insertions(+), 6 deletions(-)
+ kernel/sched/fair.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
-index 588889bea7c30..a6e5306f725b3 100644
---- a/drivers/block/aoe/aoecmd.c
-+++ b/drivers/block/aoe/aoecmd.c
-@@ -420,13 +420,16 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
- 	rcu_read_lock();
- 	for_each_netdev_rcu(&init_net, ifp) {
- 		dev_hold(ifp);
--		if (!is_aoe_netif(ifp))
--			goto cont;
-+		if (!is_aoe_netif(ifp)) {
-+			dev_put(ifp);
-+			continue;
-+		}
- 
- 		skb = new_skb(sizeof *h + sizeof *ch);
- 		if (skb == NULL) {
- 			printk(KERN_INFO "aoe: skb alloc failure\n");
--			goto cont;
-+			dev_put(ifp);
-+			continue;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index b55d51b4105cd..4a1393405a6fe 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6394,7 +6394,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
+ 		if (!available_idle_cpu(cpu)) {
+ 			idle = false;
+ 			if (*idle_cpu == -1) {
+-				if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, p->cpus_ptr)) {
++				if (sched_idle_cpu(cpu) && cpumask_test_cpu(cpu, cpus)) {
+ 					*idle_cpu = cpu;
+ 					break;
+ 				}
+@@ -6402,7 +6402,7 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
+ 			}
+ 			break;
  		}
- 		skb_put(skb, sizeof *h + sizeof *ch);
- 		skb->dev = ifp;
-@@ -441,9 +444,6 @@ aoecmd_cfg_pkts(ushort aoemajor, unsigned char aoeminor, struct sk_buff_head *qu
- 		h->major = cpu_to_be16(aoemajor);
- 		h->minor = aoeminor;
- 		h->cmd = AOECMD_CFG;
--
--cont:
--		dev_put(ifp);
+-		if (*idle_cpu == -1 && cpumask_test_cpu(cpu, p->cpus_ptr))
++		if (*idle_cpu == -1 && cpumask_test_cpu(cpu, cpus))
+ 			*idle_cpu = cpu;
  	}
- 	rcu_read_unlock();
- }
-diff --git a/drivers/block/aoe/aoenet.c b/drivers/block/aoe/aoenet.c
-index 63773a90581dd..1e66c7a188a12 100644
---- a/drivers/block/aoe/aoenet.c
-+++ b/drivers/block/aoe/aoenet.c
-@@ -64,6 +64,7 @@ tx(int id) __must_hold(&txlock)
- 			pr_warn("aoe: packet could not be sent on %s.  %s\n",
- 				ifp ? ifp->name : "netif",
- 				"consider increasing tx_queue_len");
-+		dev_put(ifp);
- 		spin_lock_irq(&txlock);
- 	}
- 	return 0;
+ 
 -- 
 2.43.0
 
