@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E178178313;
-	Sun, 24 Mar 2024 23:40:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2033D27F095;
+	Sun, 24 Mar 2024 23:39:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323606; cv=none; b=Q8vXHE1J1HrgYw9N8yy+56GWTVkSKbNClf6xBl4saDRVKcFOr7908VCYm8gDkcPwXKl56QhwCI/01FfUH7JAP205OUFRCN85kUj8nlZ2N66W4mCnME2D5dq1cjvNk2sWO8UUQV4gkHfmuC5fK6Q+/ZKeCAFIzvl7vJoSArkIbeo=
+	t=1711323600; cv=none; b=cW+F+LRwKdjhsRrKW9hPkE6jJ/O9AiqFsOEmr0jLeXhZoHzrv9SgaOkbovTq1v2yONG43yqgLI7M7O4aNzzKcOrPpXzquNNE5WjFkQGAu2l/iPPtaRRmult14ITn/pVRbfsVyDSR192ZP5OamVxhg28bmmt1Ji0dHoTGto6ARlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323606; c=relaxed/simple;
-	bh=ATmspV2YRL0zGBJBt/KTvjwdHW4rqFDudFRNPbL94fY=;
+	s=arc-20240116; t=1711323600; c=relaxed/simple;
+	bh=XRGuTil339vx5L3x3APITUtg4LgUNQ85iCV4CT+4v1w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A3Wz6FaYiJF+NZDaso+Tb8fHB6ZfuJgDy9CCMo7/PyXhrG8+eEc4l77H1Y/cE8eQtTUxT/0m3EB9RIcC8gR1yxF4v+1yRMDwWXX/ilfPqPbp+vXmdcN9gCjM0SH9KrjfsrzZ/25JUFS+w6wGgRc4OKNOCWA+S+Cs4b+taAx5Z/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8PQoBTw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=V3wMG+GDkrbOIWbkXEIEAqIXJThyKeQlF108AEw3m66oyobmC2r1Cf5tT5pkXdEGXzWUR3YVf60ITnNx7Q8jWBxt/6vRx4bxb87gC/9fa7vfd12A1Mq+ox21oY/RCSJybmsgF9SUx6wX2avrncxg2DYDns+HkFUv9TTzFNEkVLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=diiEXJF8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8PQoBTw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46629C43390;
-	Sun, 24 Mar 2024 23:40:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="diiEXJF8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60A4BC433C7;
+	Sun, 24 Mar 2024 23:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323606;
-	bh=ATmspV2YRL0zGBJBt/KTvjwdHW4rqFDudFRNPbL94fY=;
+	s=k20201202; t=1711323599;
+	bh=XRGuTil339vx5L3x3APITUtg4LgUNQ85iCV4CT+4v1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q8PQoBTw4HrfXQwbOdqrojqRwHDRFAzcRaxAZHAEKHFuiAEFtoJfIAv6xOkFCgE1m
-	 s2REp1Fk+zckLjIHz94YCAvRol6/ZKo8ayKv/NxBlpqNF7DJipfN5nSPkSOilH+5ud
-	 xxb9vmfxOF5o/+03ZHtcBRqvciJpHEP+LyxmtCoWcHMvQjlnb3syBMW5SZI/hCNuuv
-	 8baJ0B1zNE1p95skUadN44suAWdPVQMGZY0pqIg6nPYz98zgxzSPOcFD3zTn1wPx8e
-	 v7Mt7zT5XLDtuyelMs6cAq76qwgB8rbvK60ZToxmsEpKNvMH0+dWkYocAToZl4v5QF
-	 cIAO+PDMuiwGg==
+	b=diiEXJF80GVHrRfSWnrUBqjFSyPSYfufgi5SeoZ4fcSIemSc/ivorwepnjLQQKRHg
+	 H3iKDjvAYQOaiRnz3wsW1XBHswoMjfcSlUL2M1tvOuHMI4K+G2pHxlwD66xORcetBg
+	 wLdKuV7W6tlW9WX5oxkjkxlGlPTTvxmObMRNy+ArGHqLebFikF9aZzE8NWyZR3Jkbg
+	 BGaLj28k6g/JVQnj7MQX+y13foC1HhrZveakmD1X1v5lJ2Vo6V8oMrkMtTLC75MBXv
+	 Zff/51HJYTkJf9d2mmMX21aGzRFEgbPDj7gxdVafrHRkGIKpJL7DqZCw0jDhr2/f6w
+	 3WRfnC2FyqydA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
+Cc: Subbaraya Sundeep <sbhatta@marvell.com>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 312/317] net: dsa: mt7530: fix handling of 802.1X PAE frames
-Date: Sun, 24 Mar 2024 19:34:52 -0400
-Message-ID: <20240324233458.1352854-313-sashal@kernel.org>
+Subject: [PATCH 5.15 305/317] octeontx2-af: Use separate handlers for interrupts
+Date: Sun, 24 Mar 2024 19:34:45 -0400
+Message-ID: <20240324233458.1352854-306-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -45,59 +44,71 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+From: Subbaraya Sundeep <sbhatta@marvell.com>
 
-[ Upstream commit e94b590abfff2cdbf0bdaa7d9904364c8d480af5 ]
+[ Upstream commit 50e60de381c342008c0956fd762e1c26408f372c ]
 
-802.1X PAE frames are link-local frames, therefore they must be trapped to
-the CPU port. Currently, the MT753X switches treat 802.1X PAE frames as
-regular multicast frames, therefore flooding them to user ports. To fix
-this, set 802.1X PAE frames to be trapped to the CPU port(s).
+For PF to AF interrupt vector and VF to AF vector same
+interrupt handler is registered which is causing race condition.
+When two interrupts are raised to two CPUs at same time
+then two cores serve same event corrupting the data.
 
-Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Fixes: 7304ac4567bc ("octeontx2-af: Add mailbox IRQ and msg handlers")
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Stable-dep-of: e8bf353577f3 ("net: dsa: mt7530: fix link-local frames that ingress vlan filtering ports")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mt7530.c | 4 ++++
- drivers/net/dsa/mt7530.h | 2 ++
- 2 files changed, 6 insertions(+)
+ drivers/net/ethernet/marvell/octeontx2/af/rvu.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 252e8eaa92767..30570b9dc88f2 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -1000,6 +1000,10 @@ mt753x_trap_frames(struct mt7530_priv *priv)
- 	mt7530_rmw(priv, MT753X_BPC, MT753X_BPDU_PORT_FW_MASK,
- 		   MT753X_BPDU_CPU_ONLY);
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+index f64509b1d120c..bac42e0065c6c 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+@@ -2435,10 +2435,9 @@ static void rvu_queue_work(struct mbox_wq_info *mw, int first,
+ 	}
+ }
  
-+	/* Trap 802.1X PAE frames to the CPU port(s) */
-+	mt7530_rmw(priv, MT753X_BPC, MT753X_PAE_PORT_FW_MASK,
-+		   MT753X_PAE_PORT_FW(MT753X_BPDU_CPU_ONLY));
+-static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
++static irqreturn_t rvu_mbox_pf_intr_handler(int irq, void *rvu_irq)
+ {
+ 	struct rvu *rvu = (struct rvu *)rvu_irq;
+-	int vfs = rvu->vfs;
+ 	u64 intr;
+ 
+ 	intr = rvu_read64(rvu, BLKADDR_RVUM, RVU_AF_PFAF_MBOX_INT);
+@@ -2452,6 +2451,18 @@ static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
+ 
+ 	rvu_queue_work(&rvu->afpf_wq_info, 0, rvu->hw->total_pfs, intr);
+ 
++	return IRQ_HANDLED;
++}
 +
- 	/* Trap LLDP frames with :0E MAC DA to the CPU port(s) */
- 	mt7530_rmw(priv, MT753X_RGAC2, MT753X_R0E_PORT_FW_MASK,
- 		   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY));
-diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index 8cee462d5f1cb..2c895f35383e2 100644
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -65,6 +65,8 @@ enum mt753x_id {
- /* Registers for BPDU and PAE frame control*/
- #define MT753X_BPC			0x24
- #define  MT753X_BPDU_PORT_FW_MASK	GENMASK(2, 0)
-+#define  MT753X_PAE_PORT_FW_MASK	GENMASK(18, 16)
-+#define  MT753X_PAE_PORT_FW(x)		FIELD_PREP(MT753X_PAE_PORT_FW_MASK, x)
- 
- /* Register for :03 and :0E MAC DA frame control */
- #define MT753X_RGAC2			0x2c
++static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
++{
++	struct rvu *rvu = (struct rvu *)rvu_irq;
++	int vfs = rvu->vfs;
++	u64 intr;
++
++	/* Sync with mbox memory region */
++	rmb();
++
+ 	/* Handle VF interrupts */
+ 	if (vfs > 64) {
+ 		intr = rvupf_read64(rvu, RVU_PF_VFPF_MBOX_INTX(1));
+@@ -2779,7 +2790,7 @@ static int rvu_register_interrupts(struct rvu *rvu)
+ 	/* Register mailbox interrupt handler */
+ 	sprintf(&rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], "RVUAF Mbox");
+ 	ret = request_irq(pci_irq_vector(rvu->pdev, RVU_AF_INT_VEC_MBOX),
+-			  rvu_mbox_intr_handler, 0,
++			  rvu_mbox_pf_intr_handler, 0,
+ 			  &rvu->irq_name[RVU_AF_INT_VEC_MBOX * NAME_SIZE], rvu);
+ 	if (ret) {
+ 		dev_err(rvu->dev,
 -- 
 2.43.0
 
