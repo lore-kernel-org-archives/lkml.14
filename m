@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C39380C1D;
-	Sun, 24 Mar 2024 22:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9540A80612;
+	Sun, 24 Mar 2024 22:49:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320523; cv=none; b=k2HYFceJZpthhgSB7WimAtekCqpTDQeZPGC2V3Nbcg/LPWbmPPlSFkUvrB+7wQJY/rgFzU7TD76/6Bj/dB/OR1hpxzSot0boUGk6OkKmSxBzILiu/UoIAzUFkiinEmDMUjQ8wa1vyqlWQMwht4dAzDyiTI2Z56M0E1jQN0VtSvo=
+	t=1711320547; cv=none; b=ouj5wKG91iePJdukynrN42OPwuWxbdHRlfD2+ItCJXoJXqt0oNiqMYJxFdLLsnUhaEsoIoNzNJSPD/M0gnjgC9/CFMV3mcahQ69+TF6NuNPx4vmpJ2kDk+tx/ld49iE86yLYdpVz16oL4SVi/kw7PRYgXsMzdOiJX/sM/uaDCag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320523; c=relaxed/simple;
-	bh=+lUh1ZDYkp6OBBsf4J9qRbpTilQcTdUi93yE2v0DY50=;
+	s=arc-20240116; t=1711320547; c=relaxed/simple;
+	bh=//otllxWTZARqxoMNJaZWiaXPi8swLKbFrMrfBueuy4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CD+/pv+c3LTIui9NJGHPm88hHcPMfuoOiE+6x+3key3U0+o9x4lq4v3yNDhHf3fz6MbBqllBuNnzj19JVId3kLmn5EpmLB5Ci9qtVLejsHNa5QLxcLPKqg17pYTmuyub+F3fk1TlTGTPfpuC9PPWAYneBAW3LZdEDjN5ziWQK/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WTHSGf/x; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RHIBCPrPVNrdnXHDiCPECouP0ojwU/QUPA3H4GytM8mjB734krPMdTXPkM1jOX7gaw8ph6wqrXQmC7txnmzIh2iTwLx8FcOzbvohXsjFQCSadcGAxUKK3qrb5xM7HXHQe1dMytqNPIta/HhnKp8imfIDSwcMkf9xunvl0ffr8hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cGIUOnfm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WTHSGf/x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5078C433F1;
-	Sun, 24 Mar 2024 22:48:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cGIUOnfm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A4DC433F1;
+	Sun, 24 Mar 2024 22:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320522;
-	bh=+lUh1ZDYkp6OBBsf4J9qRbpTilQcTdUi93yE2v0DY50=;
+	s=k20201202; t=1711320547;
+	bh=//otllxWTZARqxoMNJaZWiaXPi8swLKbFrMrfBueuy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WTHSGf/xvNE7D8Usamv4SbY76w039UEKdL8rm+CNhexFGo/JbbzvV37t1sSPiRB4D
-	 WMPf6HcQpyYPWbyuOluyfT21w8XQFE8TjrOu0Kiz42cLkqqySiTwXt4FUnIqpq1Jx7
-	 6PLNJ4moAdYpjUYXLHQiIGqN3mn3QwZsR6Bc2LQcJ3BQZ06Q7EEq0UtFgsc2PhMe4c
-	 K3h1beHnc+zy5bpY265OxbNFFWH9pk9q7ZSyFG/UqSPlmS/ZCDTrjjxafet497ZQPi
-	 tFt6cQO1Bme5dhzMFU1vPoM9yesig/52T2ogJHgNYIqvqkdgvRk4T2bDk60/Ei7gf8
-	 BcJftXCkP5WXQ==
+	b=cGIUOnfmCIreTtQW5eMttoK7GtJJtmZ+7W7kTCVPCwTv/HRe5wiI5CNs4MxrDOlhm
+	 mn7c91LQq2U4jqllR35ADCYZFWp5xUDBtRmAGpR0jhUA1S6yJOf8kxjSLDS4e/7L/P
+	 nKY2FtjGROavrBmKHJvFKe7tQ3UNrgHkxLMVFj7SoU/jAqodod95HWkuYxCxm5ZeqT
+	 ZT5eunTm5N4wz4zMTs/dzBAWObkKCD1xVCMhv8yF9mLsmlg/Yu9cGT0tmH8HPxrBYa
+	 pY846/RO+SfVpfopT2mbKa2U7tmj1Zky0pP/I4uaP30+4z2KwwH/zU2Sp77A/B1zdH
+	 zyEVqpsHJZCjQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
+Cc: David Gow <davidgow@google.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Justin Stitt <justinstitt@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 083/713] workqueue: Move pwq->max_active to wq->max_active
-Date: Sun, 24 Mar 2024 18:36:49 -0400
-Message-ID: <20240324224720.1345309-84-sashal@kernel.org>
+Subject: [PATCH 6.7 108/713] lib: memcpy_kunit: Fix an invalid format specifier in an assertion msg
+Date: Sun, 24 Mar 2024 18:37:14 -0400
+Message-ID: <20240324224720.1345309-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -48,297 +50,48 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Tejun Heo <tj@kernel.org>
+From: David Gow <davidgow@google.com>
 
-[ Upstream commit a045a272d887575da17ad86d6573e82871b50c27 ]
+[ Upstream commit 0a549ed22c3c7cc6da5c5f5918efd019944489a5 ]
 
-max_active is a workqueue-wide setting and the configured value is stored in
-wq->saved_max_active; however, the effective value was stored in
-pwq->max_active. While this is harmless, it makes max_active update process
-more complicated and gets in the way of the planned max_active semantic
-updates for unbound workqueues.
+The 'i' passed as an assertion message is a size_t, so should use '%zu',
+not '%d'.
 
-This patches moves pwq->max_active to wq->max_active. This simplifies the
-code and makes freezing and noop max_active updates cheaper too. No
-user-visible behavior change is intended.
+This was found by annotating the _MSG() variants of KUnit's assertions
+to let gcc validate the format strings.
 
-As wq->max_active is updated while holding wq mutex but read without any
-locking, it now uses WRITE/READ_ONCE(). A new locking locking rule WO is
-added for it.
-
-v2: wq->max_active now uses WRITE/READ_ONCE() as suggested by Lai.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
-Stable-dep-of: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
+Fixes: bb95ebbe89a7 ("lib: Introduce CONFIG_MEMCPY_KUNIT_TEST")
+Signed-off-by: David Gow <davidgow@google.com>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/workqueue.c | 133 ++++++++++++++++++++++-----------------------
- 1 file changed, 66 insertions(+), 67 deletions(-)
+ lib/memcpy_kunit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 1c72a616b9888..f67eb40203ffc 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -143,6 +143,9 @@ enum {
-  *
-  * WR: wq->mutex protected for writes.  RCU protected for reads.
-  *
-+ * WO: wq->mutex protected for writes. Updated with WRITE_ONCE() and can be read
-+ *     with READ_ONCE() without locking.
-+ *
-  * MD: wq_mayday_lock protected.
-  *
-  * WD: Used internally by the watchdog.
-@@ -250,7 +253,6 @@ struct pool_workqueue {
- 	 * is marked with WORK_STRUCT_INACTIVE iff it is in pwq->inactive_works.
- 	 */
- 	int			nr_active;	/* L: nr of active works */
--	int			max_active;	/* L: max active works */
- 	struct list_head	inactive_works;	/* L: inactive works */
- 	struct list_head	pwqs_node;	/* WR: node on wq->pwqs */
- 	struct list_head	mayday_node;	/* MD: node on wq->maydays */
-@@ -298,7 +300,8 @@ struct workqueue_struct {
- 	struct worker		*rescuer;	/* MD: rescue worker */
- 
- 	int			nr_drainers;	/* WQ: drain in progress */
--	int			saved_max_active; /* WQ: saved pwq max_active */
-+	int			max_active;	/* WO: max active works */
-+	int			saved_max_active; /* WQ: saved max_active */
- 
- 	struct workqueue_attrs	*unbound_attrs;	/* PW: only for unbound wqs */
- 	struct pool_workqueue	*dfl_pwq;	/* PW: only for unbound wqs */
-@@ -1486,7 +1489,7 @@ static void pwq_dec_nr_in_flight(struct pool_workqueue *pwq, unsigned long work_
- 		pwq->nr_active--;
- 		if (!list_empty(&pwq->inactive_works)) {
- 			/* one down, submit an inactive one */
--			if (pwq->nr_active < pwq->max_active)
-+			if (pwq->nr_active < READ_ONCE(pwq->wq->max_active))
- 				pwq_activate_first_inactive(pwq);
- 		}
- 	}
-@@ -1787,7 +1790,13 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
- 	pwq->nr_in_flight[pwq->work_color]++;
- 	work_flags = work_color_to_flags(pwq->work_color);
- 
--	if (likely(pwq->nr_active < pwq->max_active)) {
-+	/*
-+	 * Limit the number of concurrently active work items to max_active.
-+	 * @work must also queue behind existing inactive work items to maintain
-+	 * ordering when max_active changes. See wq_adjust_max_active().
-+	 */
-+	if (list_empty(&pwq->inactive_works) &&
-+	    pwq->nr_active < READ_ONCE(pwq->wq->max_active)) {
- 		if (list_empty(&pool->worklist))
- 			pool->watchdog_ts = jiffies;
- 
-@@ -4136,50 +4145,6 @@ static void pwq_release_workfn(struct kthread_work *work)
- 	}
- }
- 
--/**
-- * pwq_adjust_max_active - update a pwq's max_active to the current setting
-- * @pwq: target pool_workqueue
-- *
-- * If @pwq isn't freezing, set @pwq->max_active to the associated
-- * workqueue's saved_max_active and activate inactive work items
-- * accordingly.  If @pwq is freezing, clear @pwq->max_active to zero.
-- */
--static void pwq_adjust_max_active(struct pool_workqueue *pwq)
--{
--	struct workqueue_struct *wq = pwq->wq;
--	bool freezable = wq->flags & WQ_FREEZABLE;
--	unsigned long flags;
--
--	/* for @wq->saved_max_active */
--	lockdep_assert_held(&wq->mutex);
--
--	/* fast exit for non-freezable wqs */
--	if (!freezable && pwq->max_active == wq->saved_max_active)
--		return;
--
--	/* this function can be called during early boot w/ irq disabled */
--	raw_spin_lock_irqsave(&pwq->pool->lock, flags);
--
--	/*
--	 * During [un]freezing, the caller is responsible for ensuring that
--	 * this function is called at least once after @workqueue_freezing
--	 * is updated and visible.
--	 */
--	if (!freezable || !workqueue_freezing) {
--		pwq->max_active = wq->saved_max_active;
--
--		while (!list_empty(&pwq->inactive_works) &&
--		       pwq->nr_active < pwq->max_active)
--			pwq_activate_first_inactive(pwq);
--
--		kick_pool(pwq->pool);
--	} else {
--		pwq->max_active = 0;
--	}
--
--	raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
--}
--
- /* initialize newly allocated @pwq which is associated with @wq and @pool */
- static void init_pwq(struct pool_workqueue *pwq, struct workqueue_struct *wq,
- 		     struct worker_pool *pool)
-@@ -4212,9 +4177,6 @@ static void link_pwq(struct pool_workqueue *pwq)
- 	/* set the matching work_color */
- 	pwq->work_color = wq->work_color;
- 
--	/* sync max_active to the current setting */
--	pwq_adjust_max_active(pwq);
--
- 	/* link in @pwq */
- 	list_add_rcu(&pwq->pwqs_node, &wq->pwqs);
- }
-@@ -4665,6 +4627,52 @@ static int init_rescuer(struct workqueue_struct *wq)
- 	return 0;
- }
- 
-+/**
-+ * wq_adjust_max_active - update a wq's max_active to the current setting
-+ * @wq: target workqueue
-+ *
-+ * If @wq isn't freezing, set @wq->max_active to the saved_max_active and
-+ * activate inactive work items accordingly. If @wq is freezing, clear
-+ * @wq->max_active to zero.
-+ */
-+static void wq_adjust_max_active(struct workqueue_struct *wq)
-+{
-+	struct pool_workqueue *pwq;
-+
-+	lockdep_assert_held(&wq->mutex);
-+
-+	if ((wq->flags & WQ_FREEZABLE) && workqueue_freezing) {
-+		WRITE_ONCE(wq->max_active, 0);
-+		return;
-+	}
-+
-+	if (wq->max_active == wq->saved_max_active)
-+		return;
-+
-+	/*
-+	 * Update @wq->max_active and then kick inactive work items if more
-+	 * active work items are allowed. This doesn't break work item ordering
-+	 * because new work items are always queued behind existing inactive
-+	 * work items if there are any.
-+	 */
-+	WRITE_ONCE(wq->max_active, wq->saved_max_active);
-+
-+	for_each_pwq(pwq, wq) {
-+		unsigned long flags;
-+
-+		/* this function can be called during early boot w/ irq disabled */
-+		raw_spin_lock_irqsave(&pwq->pool->lock, flags);
-+
-+		while (!list_empty(&pwq->inactive_works) &&
-+		       pwq->nr_active < wq->max_active)
-+			pwq_activate_first_inactive(pwq);
-+
-+		kick_pool(pwq->pool);
-+
-+		raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
-+	}
-+}
-+
- __printf(1, 4)
- struct workqueue_struct *alloc_workqueue(const char *fmt,
- 					 unsigned int flags,
-@@ -4672,7 +4680,6 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- {
- 	va_list args;
- 	struct workqueue_struct *wq;
--	struct pool_workqueue *pwq;
- 	int len;
- 
- 	/*
-@@ -4711,6 +4718,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 
- 	/* init wq */
- 	wq->flags = flags;
-+	wq->max_active = max_active;
- 	wq->saved_max_active = max_active;
- 	mutex_init(&wq->mutex);
- 	atomic_set(&wq->nr_pwqs_to_flush, 0);
-@@ -4739,8 +4747,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 	mutex_lock(&wq_pool_mutex);
- 
- 	mutex_lock(&wq->mutex);
--	for_each_pwq(pwq, wq)
--		pwq_adjust_max_active(pwq);
-+	wq_adjust_max_active(wq);
- 	mutex_unlock(&wq->mutex);
- 
- 	list_add_tail_rcu(&wq->list, &workqueues);
-@@ -4878,8 +4885,6 @@ EXPORT_SYMBOL_GPL(destroy_workqueue);
-  */
- void workqueue_set_max_active(struct workqueue_struct *wq, int max_active)
- {
--	struct pool_workqueue *pwq;
--
- 	/* disallow meddling with max_active for ordered workqueues */
- 	if (WARN_ON(wq->flags & __WQ_ORDERED_EXPLICIT))
- 		return;
-@@ -4890,9 +4895,7 @@ void workqueue_set_max_active(struct workqueue_struct *wq, int max_active)
- 
- 	wq->flags &= ~__WQ_ORDERED;
- 	wq->saved_max_active = max_active;
--
--	for_each_pwq(pwq, wq)
--		pwq_adjust_max_active(pwq);
-+	wq_adjust_max_active(wq);
- 
- 	mutex_unlock(&wq->mutex);
- }
-@@ -5139,8 +5142,8 @@ static void show_pwq(struct pool_workqueue *pwq)
- 	pr_info("  pwq %d:", pool->id);
- 	pr_cont_pool_info(pool);
- 
--	pr_cont(" active=%d/%d refcnt=%d%s\n",
--		pwq->nr_active, pwq->max_active, pwq->refcnt,
-+	pr_cont(" active=%d refcnt=%d%s\n",
-+		pwq->nr_active, pwq->refcnt,
- 		!list_empty(&pwq->mayday_node) ? " MAYDAY" : "");
- 
- 	hash_for_each(pool->busy_hash, bkt, worker, hentry) {
-@@ -5688,7 +5691,6 @@ EXPORT_SYMBOL_GPL(work_on_cpu_safe_key);
- void freeze_workqueues_begin(void)
- {
- 	struct workqueue_struct *wq;
--	struct pool_workqueue *pwq;
- 
- 	mutex_lock(&wq_pool_mutex);
- 
-@@ -5697,8 +5699,7 @@ void freeze_workqueues_begin(void)
- 
- 	list_for_each_entry(wq, &workqueues, list) {
- 		mutex_lock(&wq->mutex);
--		for_each_pwq(pwq, wq)
--			pwq_adjust_max_active(pwq);
-+		wq_adjust_max_active(wq);
- 		mutex_unlock(&wq->mutex);
- 	}
- 
-@@ -5763,7 +5764,6 @@ bool freeze_workqueues_busy(void)
- void thaw_workqueues(void)
- {
- 	struct workqueue_struct *wq;
--	struct pool_workqueue *pwq;
- 
- 	mutex_lock(&wq_pool_mutex);
- 
-@@ -5775,8 +5775,7 @@ void thaw_workqueues(void)
- 	/* restore max_active and repopulate worklist */
- 	list_for_each_entry(wq, &workqueues, list) {
- 		mutex_lock(&wq->mutex);
--		for_each_pwq(pwq, wq)
--			pwq_adjust_max_active(pwq);
-+		wq_adjust_max_active(wq);
- 		mutex_unlock(&wq->mutex);
- 	}
- 
+diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+index 440aee705ccca..30e00ef0bf2e0 100644
+--- a/lib/memcpy_kunit.c
++++ b/lib/memcpy_kunit.c
+@@ -32,7 +32,7 @@ struct some_bytes {
+ 	BUILD_BUG_ON(sizeof(instance.data) != 32);	\
+ 	for (size_t i = 0; i < sizeof(instance.data); i++) {	\
+ 		KUNIT_ASSERT_EQ_MSG(test, instance.data[i], v, \
+-			"line %d: '%s' not initialized to 0x%02x @ %d (saw 0x%02x)\n", \
++			"line %d: '%s' not initialized to 0x%02x @ %zu (saw 0x%02x)\n", \
+ 			__LINE__, #instance, v, i, instance.data[i]);	\
+ 	}	\
+ } while (0)
+@@ -41,7 +41,7 @@ struct some_bytes {
+ 	BUILD_BUG_ON(sizeof(one) != sizeof(two)); \
+ 	for (size_t i = 0; i < sizeof(one); i++) {	\
+ 		KUNIT_EXPECT_EQ_MSG(test, one.data[i], two.data[i], \
+-			"line %d: %s.data[%d] (0x%02x) != %s.data[%d] (0x%02x)\n", \
++			"line %d: %s.data[%zu] (0x%02x) != %s.data[%zu] (0x%02x)\n", \
+ 			__LINE__, #one, i, one.data[i], #two, i, two.data[i]); \
+ 	}	\
+ 	kunit_info(test, "ok: " TEST_OP "() " name "\n");	\
 -- 
 2.43.0
 
