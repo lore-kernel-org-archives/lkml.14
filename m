@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9CA20897B;
-	Sun, 24 Mar 2024 23:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA08137914;
+	Sun, 24 Mar 2024 23:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321546; cv=none; b=HhLy0V0rgJkRkDg5HvvIBvdV0tPCT0BCri2/QZpkqNwKFOFsS42KTVcLcpkkLbQKRXbBO3lOfauVjejMvBeB/fzUZH2zYJGgLEzHJxQ2S/0cAfnJMNQNNt1crr+CeGyhtPRl75Ze7ewLWTF5pvasCjr8b2G4FbB3bF+16TuehrQ=
+	t=1711321536; cv=none; b=nfZbwC8SyXG3uzp1uwYTuh3b18FUXSwhZeXjy1diV0+5zpttv7hM4P67rEK15i2WcQ56eHMEKgsXDbpevtLTd+G5QF7ZNKDxdNyq/Kkj1oEsYySm3M9O4A3TQexbKWyKyC8PEDmUBII8FzqIUOE/hlDDop5XJDEV576usPUV6/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321546; c=relaxed/simple;
-	bh=SshzBxQWI3HSxD262UrFfxJZBE5bBzCQvEdLf58jmno=;
+	s=arc-20240116; t=1711321536; c=relaxed/simple;
+	bh=hmQWRWL7arDI/JH7/+hDhSSggeI1GZPVqcl3qHGLP78=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=stUMSUhUnQCGQS4lugSGoKLMtQZGQdf0bpwNbBayNV7x51W3Z/e53qeAbMJgPBPpv9hRwoLZJ7pMqSX+7GOizg/Qo+sMtAKSW5tOE1Ouwcl1C7DQLr4ulYIS2QgiK9pfDELkC3QjNZpOAsqUrxlmNhPo7QWqqnht4FGANeU3+Yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHNczzss; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Jo2bfwKaHyGyEWZw9PMF2g3dkX5WJ5IHRDBdCRP/J06bq6lWwIuy8vLENL8ndNAgc9L0MNdLmB4XL2guzVbKM7yBDvn+WZpYg5wN+GInFDStw/Wr9FfrEMOiKfTy0dYTY5Y8ZrtNsDKZiaXwm/1SMriel9c1GDnY70I7dUSDLDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SMqS4Cf9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHNczzss"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B124C43390;
-	Sun, 24 Mar 2024 23:05:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SMqS4Cf9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64756C433C7;
+	Sun, 24 Mar 2024 23:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321545;
-	bh=SshzBxQWI3HSxD262UrFfxJZBE5bBzCQvEdLf58jmno=;
+	s=k20201202; t=1711321534;
+	bh=hmQWRWL7arDI/JH7/+hDhSSggeI1GZPVqcl3qHGLP78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kHNczzss6K4FyRx+WY+lPAf05CwnBi69ONgilUAW5L9+XY/1HLwYp6eXpd9ICvxax
-	 V7Evnb3qb0K2VAfqRBMDxzNXqEkPVAVRTFgHY0YFVIi18OXU/e+Nd8uYJxU+ZlGCIF
-	 O4LHaEsTD6+WlOljckZBSMB72D/ZcHr0ecW/fs77Fb6IzDPh4kNEAiOCtHAv1tpIn0
-	 slFWqPwSjDHfZ9JJxWlw/rXGPNEDE6sq1EbHz2fOYA9L4vVw6TkGna3unT7KiAexC6
-	 sjynlpP4/HkiOptKeA2VmsRuXPTYA18cas2/Up3of3k+DOKcwTYkDHar1+QGEmUMLN
-	 Umc3E6dF4YzKA==
+	b=SMqS4Cf9zD8J2Bmio6ZM7rWv+1CBbUmtmL7VeJie1Ynn7vXTcV7iDzL5mGKgji7kK
+	 XnNKNNchy5p5KLGapqDrJx6pfb/AqvHIjOZexIruzMWm29ZYY41GyXRvTdbFDF6Fcr
+	 RhuU4Kr4HLGeeimSXqCLicNupc3L5dMmUtaxBJm4SNkVJGvYycalfebHmeb05yjvUX
+	 XisOEMMMNMzrn0j9/eQRPsnrnwdP0LSQIUb5htWT+7m1LnNyt+3hN1mpTwGqO1yvms
+	 d0tk0P2wx6A61yJswaXqrvnebkzIj3qLmkMo5CWXYBSlJublLE+9NbSMKT6SJ7J+07
+	 V4Ij8fW4tlNDA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 273/638] arm64: dts: marvell: reorder crypto interrupts on Armada SoCs
-Date: Sun, 24 Mar 2024 18:55:10 -0400
-Message-ID: <20240324230116.1348576-274-sashal@kernel.org>
+Subject: [PATCH 6.6 262/638] arm64: dts: renesas: r8a779g0: Correct avb[01] reg sizes
+Date: Sun, 24 Mar 2024 18:54:59 -0400
+Message-ID: <20240324230116.1348576-263-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,88 +43,50 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit ec55a22149d64f9ac41845d923b884d4a666bf4d ]
+[ Upstream commit 7edbb5880dc3317a5eaec2166de71ff394598e6b ]
 
-Match order specified in binding documentation. It says "mem" should be
-the last interrupt.
+All Ethernet AVB instances on R-Car V4H have registers related to UDP/IP
+support, but the declared register blocks for the first two instances
+are too small to cover them.
 
-This fixes:
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:0: 'ring0' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:1: 'ring1' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:2: 'ring2' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:3: 'ring3' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:4: 'eip' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/armada-3720-db.dtb: crypto@90000: interrupt-names:5: 'mem' was expected
-        from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
+Fix this by extending the register block sizes.
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Fixes: 848c82db56923a8b ("arm64: dts: renesas: r8a779g0: Add RAVB nodes")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/83437778614a7c96f4d8f1be98dffeee29bb4a0b.1707660323.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi  | 10 +++++-----
- arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 10 +++++-----
- 2 files changed, 10 insertions(+), 10 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a779g0.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index e300145ad1a6f..1cc3fa1c354de 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -431,14 +431,14 @@ xor11 {
- 			crypto: crypto@90000 {
- 				compatible = "inside-secure,safexcel-eip97ies";
- 				reg = <0x90000 0x20000>;
--				interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
--					     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-+				interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
--					     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
--				interrupt-names = "mem", "ring0", "ring1",
--						  "ring2", "ring3", "eip";
-+					     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "ring0", "ring1", "ring2",
-+						  "ring3", "eip", "mem";
- 				clocks = <&nb_periph_clk 15>;
- 			};
- 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-index 4ec1aae0a3a9c..7e595ac80043a 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-@@ -511,14 +511,14 @@ CP11X_LABEL(sdhci0): mmc@780000 {
- 		CP11X_LABEL(crypto): crypto@800000 {
- 			compatible = "inside-secure,safexcel-eip197b";
- 			reg = <0x800000 0x200000>;
--			interrupts = <87 IRQ_TYPE_LEVEL_HIGH>,
--				<88 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupts = <88 IRQ_TYPE_LEVEL_HIGH>,
- 				<89 IRQ_TYPE_LEVEL_HIGH>,
- 				<90 IRQ_TYPE_LEVEL_HIGH>,
- 				<91 IRQ_TYPE_LEVEL_HIGH>,
--				<92 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "mem", "ring0", "ring1",
--				"ring2", "ring3", "eip";
-+				<92 IRQ_TYPE_LEVEL_HIGH>,
-+				<87 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ring0", "ring1", "ring2", "ring3",
-+					  "eip", "mem";
- 			clock-names = "core", "reg";
- 			clocks = <&CP11X_LABEL(clk) 1 26>,
- 				 <&CP11X_LABEL(clk) 1 17>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
+index 0c83940b3d8a1..d7677595204dc 100644
+--- a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
+@@ -767,7 +767,7 @@ channel7 {
+ 		avb0: ethernet@e6800000 {
+ 			compatible = "renesas,etheravb-r8a779g0",
+ 				     "renesas,etheravb-rcar-gen4";
+-			reg = <0 0xe6800000 0 0x800>;
++			reg = <0 0xe6800000 0 0x1000>;
+ 			interrupts = <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
+@@ -814,7 +814,7 @@ avb0: ethernet@e6800000 {
+ 		avb1: ethernet@e6810000 {
+ 			compatible = "renesas,etheravb-r8a779g0",
+ 				     "renesas,etheravb-rcar-gen4";
+-			reg = <0 0xe6810000 0 0x800>;
++			reg = <0 0xe6810000 0 0x1000>;
+ 			interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 362 IRQ_TYPE_LEVEL_HIGH>,
 -- 
 2.43.0
 
