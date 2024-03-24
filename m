@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022C327BBDF;
-	Sun, 24 Mar 2024 23:38:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5915927B137;
+	Sun, 24 Mar 2024 23:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323527; cv=none; b=YM4W1DGvq/V0o0jWif7lAvB9AyWyuvoTu+DrpohprHgwQwowDbY7MTgIXv2kyWdle+2Cg2ySIhsbgbdrmjb+vogilnLHFr2PdhdAsaZGXO/ExIBrLBulKdoa7S09xZgcbm7wGZ1SxwbzxHtETBQavdlxyMZyZucaV5q+sXTRThU=
+	t=1711323511; cv=none; b=T+BhH5Tz7pnC846bLbqLAlqBhEmlcwAlovlMCBlbaIoYybBwo19MrMc3eeh0ECbXt2/u4i/QfFGM9o1sYwlhFkddlwHXSPXaDRV/WHxvKgOIcfOLVD7Z7HCBuzssI/G1L6yLNoUykP20MFKXWkt9ZmaadCPpvIdwTfdCQwO7KkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323527; c=relaxed/simple;
-	bh=ieKy/hv6bciQ6MqgyuqOGf6/YtMkhtBG+HDbPucQycQ=;
+	s=arc-20240116; t=1711323511; c=relaxed/simple;
+	bh=ISOVR7lUtvRg3YD0g46BrpkVoBWzXCBG3j54mlxcGQ0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RSdyt7XHmDRubuSxIb42VvxHK3J3Ul8+jKyPPE6EIdjRnQcxvDrosrlsnNAWDQoR2UaQ+6UBTtIx8GODxW/8Rg9apTjXlwFpC8YLqiCDV51Oag5Fi98W3xVDord6x1EPDEOE0k1qpINzddEftzto42ZGjJcNm30FskuC7vGhmoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=al2Yv0Vq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=J0BAqsUXw9s3F8Osim8w6ytT1eugriqsrT2wu1SavoJFZxvQIkJ7QukI3ef4qOab9Rl7gmsj/T4+3vWE8Ql6MTV2xnam7dHfX5g25/K4rjbkFIjyHLMiKXqjYF9DGNhl8PUmp27tQMG3OczVcYKIdW0mAw6lJMoqYBoZw1MkpAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCmzni6d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="al2Yv0Vq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FDE7C43390;
-	Sun, 24 Mar 2024 23:38:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCmzni6d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA06C433C7;
+	Sun, 24 Mar 2024 23:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323525;
-	bh=ieKy/hv6bciQ6MqgyuqOGf6/YtMkhtBG+HDbPucQycQ=;
+	s=k20201202; t=1711323510;
+	bh=ISOVR7lUtvRg3YD0g46BrpkVoBWzXCBG3j54mlxcGQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=al2Yv0Vq9/KeQ2rR7azYtDKoj1WNiB2p+QLnFkpw28gjTXSR44MrVpF8NQCtmtuNP
-	 H+E9DIOqVao+rjxG0wYbJsnQuK62vSrtR7RVWu2jPJGhMVHI9rIgWCdTvwCxGIgXy4
-	 F/TDYedLw++7sbPhp2VLAMBKPmB3J8Tt9Yi/nwkGfi884rlqD/boC+zoi1colP1q1w
-	 9ojnOIy3tgyiDVxtO+e+x5FjVgtbP/ARZnoGPhlCz7+QRePE04M3P9egwURYB5VnIs
-	 1n9k7NXFeVhWFMoY+D/rhblaThDVczih8q4WjlbnspzOiepVSy/TdNAns4e8iTi40j
-	 1mfbOdMa3khDA==
+	b=RCmzni6dkjfuqktUkziYg37jsq8Xgq5BXAASGD3fXISXJUFvbIcfKYBvA9nhzumKV
+	 irafNipPPlHQOhOLo55jI/oZu0ALuSeMKKKAROzZ8KMHcqjfzKVy1ZORGRYgomlwnC
+	 8hHXfff25eVYmAKxlVf1ki9qhI+PEyZFGceqlFalegzLKos014DJHVUt64cDedCLlQ
+	 YhqryynDx25ASfhw+RBGtCS/VixWypuKygiDTw7aQ8hc4dgUaXMghXVLnJy1piry9K
+	 GaKg/5cVMWkTm/5LpvKmaais7IMlzEjz+pRm/vMETQcMgzgrY+CsYBw1H2PL97ZL8a
+	 1PgFimP5ECfIA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc: =?UTF-8?q?J=C3=B6rg=20Wedekind?= <joerg@wedekind.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 233/317] media: ttpci: fix two memleaks in budget_av_attach
-Date: Sun, 24 Mar 2024 19:33:33 -0400
-Message-ID: <20240324233458.1352854-234-sashal@kernel.org>
+Subject: [PATCH 5.15 216/317] PCI: Mark 3ware-9650SE Root Port Extended Tags as broken
+Date: Sun, 24 Mar 2024 19:33:16 -0400
+Message-ID: <20240324233458.1352854-217-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -44,54 +44,56 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Jörg Wedekind <joerg@wedekind.de>
 
-[ Upstream commit d0b07f712bf61e1a3cf23c87c663791c42e50837 ]
+[ Upstream commit baf67aefbe7d7deafa59ca49612d163f8889934c ]
 
-When saa7146_register_device and saa7146_vv_init fails, budget_av_attach
-should free the resources it allocates, like the error-handling of
-ttpci_budget_init does. Besides, there are two fixme comment refers to
-such deallocations.
+Per PCIe r6.1, sec 2.2.6.2 and 7.5.3.4, a Requester may not use 8-bit Tags
+unless its Extended Tag Field Enable is set, but all Receivers/Completers
+must handle 8-bit Tags correctly regardless of their Extended Tag Field
+Enable.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Some devices do not handle 8-bit Tags as Completers, so add a quirk for
+them.  If we find such a device, we disable Extended Tags for the entire
+hierarchy to make peer-to-peer DMA possible.
+
+The 3ware 9650SE seems to have issues with handling 8-bit tags. Mark it as
+broken.
+
+This fixes PCI Parity Errors like :
+
+  3w-9xxx: scsi0: ERROR: (0x06:0x000C): PCI Parity Error: clearing.
+  3w-9xxx: scsi0: ERROR: (0x06:0x000D): PCI Abort: clearing.
+  3w-9xxx: scsi0: ERROR: (0x06:0x000E): Controller Queue Error: clearing.
+  3w-9xxx: scsi0: ERROR: (0x06:0x0010): Microcontroller Error: clearing.
+
+Link: https://lore.kernel.org/r/20240219132811.8351-1-joerg@wedekind.de
+Fixes: 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if supported")
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=202425
+Signed-off-by: Jörg Wedekind <joerg@wedekind.de>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/ttpci/budget-av.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/pci/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/pci/ttpci/budget-av.c b/drivers/media/pci/ttpci/budget-av.c
-index 3cb83005cf09b..519f85e0a397d 100644
---- a/drivers/media/pci/ttpci/budget-av.c
-+++ b/drivers/media/pci/ttpci/budget-av.c
-@@ -1462,7 +1462,8 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
- 		budget_av->has_saa7113 = 1;
- 		err = saa7146_vv_init(dev, &vv_data);
- 		if (err != 0) {
--			/* fixme: proper cleanup here */
-+			ttpci_budget_deinit(&budget_av->budget);
-+			kfree(budget_av);
- 			ERR("cannot init vv subsystem\n");
- 			return err;
- 		}
-@@ -1471,9 +1472,10 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
- 		vv_data.vid_ops.vidioc_s_input = vidioc_s_input;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index fcdc17bbcc8ee..1b6484c906094 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5390,6 +5390,7 @@ static void quirk_no_ext_tags(struct pci_dev *pdev)
  
- 		if ((err = saa7146_register_device(&budget_av->vd, dev, "knc1", VFL_TYPE_VIDEO))) {
--			/* fixme: proper cleanup here */
--			ERR("cannot register capture v4l2 device\n");
- 			saa7146_vv_release(dev);
-+			ttpci_budget_deinit(&budget_av->budget);
-+			kfree(budget_av);
-+			ERR("cannot register capture v4l2 device\n");
- 			return err;
- 		}
- 
+ 	pci_walk_bus(bridge->bus, pci_configure_extended_tags, NULL);
+ }
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_3WARE, 0x1004, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0132, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0140, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0141, quirk_no_ext_tags);
 -- 
 2.43.0
 
