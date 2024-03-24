@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFF21ED0DC;
-	Sun, 24 Mar 2024 23:07:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965D220F246;
+	Sun, 24 Mar 2024 23:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321666; cv=none; b=HkIxobVbO0kQFv6NfCWEETQEKMpWeiP8da99ghKpMlYowej9MGj87CD+gpkTeOQShPHP1cjvtLRcIxj+7pAN4B//oeEuk1Cf8MdGvoCuJTSlCvbeDLAeR6g94od9EOgaqjMmTBXf0IAMTDxpC+YOhH0rFukWWqIcJ2+r3aS8uqM=
+	t=1711321675; cv=none; b=hPJ7x6zG6Suf2QcFiYtIOTajBsgkRxP7xlVtLq5j9vuEFWEJBGYq4E/OwmeUK9mniGJAEzD4yqaND8HAmWuKDY4roeadRF38vLnet2Ni/RAIse7DwYtCspEOUjkKD4kWt1wctdPr7dXDoDLSTYfxBle/k5/mXU0NE6KzpVw9BqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321666; c=relaxed/simple;
-	bh=+9L2sOYcn70slea3K+0x6ySDW9NT356ZLSJHuWQ40e4=;
+	s=arc-20240116; t=1711321675; c=relaxed/simple;
+	bh=CrBC/CpoMhZxoAj0Biazm+a1TGHdkEOePqPGa6jE8wc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NPhlhHCjtIyzlZbS6NsJMVs3KcHFYakg2FJvUEwt7tHwecEjmGM9GNRpaTorHsZC+gG/O1i4Hm7EkW3dc3Tw6sItEl4f5mZSr+l79ItAZuzNZu4if5N3AagTUmTjvfLbIVpFup9jnC/f9Sl2NOWgRs8wR+OdwT+apxAOWDNDAD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oa3r22Ff; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=c2oxKvpjnP5xr3Pwew5uVpyc6hPzIrGqf4dzIQKcTfpUezGVDG/ZKhYWlbEdDTQ11Ilv65FOFQjGvm6sfmqzrMDDjIdbtiBYNwIOu5g7Jspg8cTorEcMjZEI0cv3ghnhmwpyR7v6lun8l+qjGn+QRwmhsXrKCof9TtU1EHJJJko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHv+svm2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oa3r22Ff"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9BBBC433F1;
-	Sun, 24 Mar 2024 23:07:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHv+svm2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC7A8C433F1;
+	Sun, 24 Mar 2024 23:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321665;
-	bh=+9L2sOYcn70slea3K+0x6ySDW9NT356ZLSJHuWQ40e4=;
+	s=k20201202; t=1711321674;
+	bh=CrBC/CpoMhZxoAj0Biazm+a1TGHdkEOePqPGa6jE8wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oa3r22FfKiaVFBd7hzDb880k3zcQlVMWbhdnEPpjbVnRHzjaB84EZIJ+sc/TT7spt
-	 JfEeH54ik8v5y/ohXpxPqcyGe10F2D0jn07ai0agIfFhhD9UZZsAcpQ3JA97PdFM9H
-	 o4MkwhPMtbspFb/R5/lMy6XmwyB06vHYEFVbLAsF09mg2b9cf/uErYrh/TEe1+M/8i
-	 KN3UcQtapYIAT2SRqv46AkSOOknCO5ncaMo0GcdbQsSKUTcpovYGnPMeDNVyySm6mW
-	 BDLj6j4q9moG+ulX1fOuQtddHrKK4r7QM2bVSCmWz7sUkvAOvon7KmCXLgHDirsDwe
-	 EQrUHE+GGT3xw==
+	b=SHv+svm2qu6gdr5uzLH6aMapIDWVtIaaFmnNyZHjmSgnddvQOAck5OnJiqLyWKFHe
+	 SLnX9yz9FcF5ZfPU7Ukg1FDOq7Q+plPEMv8OvZHOnH938ub/8/ZYHfoJJga/WT2UrF
+	 /rkz1WdP63e2WbHh0WyvEUG6ghVRq5xePiMpPvKOIDjRmLBDdwXWJPPrkugOB89BBr
+	 ZXt2snaxc/M8Ny2fZxkFP5zTqUH097F8ZiYK17JQV91nvO8qGZpQ4/kaAwLeZxCajW
+	 tlwkbZZyrKmGDKFUXVAlXVSzzy6/SMKm+0U2NYWp/63zxj0yq6kOrbFIzVfMZGzTVo
+	 ZwM+CvNYsjkEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 395/638] PCI: switchtec: Fix an error handling path in switchtec_pci_probe()
-Date: Sun, 24 Mar 2024 18:57:12 -0400
-Message-ID: <20240324230116.1348576-396-sashal@kernel.org>
+Subject: [PATCH 6.6 403/638] drm/radeon/ni: Fix wrong firmware size logging in ni_init_microcode()
+Date: Sun, 24 Mar 2024 18:57:20 -0400
+Message-ID: <20240324230116.1348576-404-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,49 +48,37 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-[ Upstream commit dec529b0b0572b32f9eb91c882dd1f08ca657efb ]
+[ Upstream commit c4891d979c7668b195a0a75787967ec95a24ecef ]
 
-The commit in Fixes changed the logic on how resources are released and
-introduced a new switchtec_exit_pci() that need to be called explicitly in
-order to undo a corresponding switchtec_init_pci().
+Clean up a typo in pr_err() erroneously printing NI MC 'rdev->mc_fw->size'
+during SMC firmware load. Log 'rdev->smc_fw->size' instead.
 
-This was done in the remove function, but not in the probe.
+Found by Linux Verification Center (linuxtesting.org) with static
+analysis tool SVACE.
 
-Fix the probe now.
-
-Fixes: df25461119d9 ("PCI: switchtec: Fix stdev_release() crash after surprise hot remove")
-Link: https://lore.kernel.org/r/01446d2ccb91a578239915812f2b7dfbeb2882af.1703428183.git.christophe.jaillet@wanadoo.fr
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 6596afd48af4 ("drm/radeon/kms: add dpm support for btc (v3)")
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/ni.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 1804794d0e686..5a4adf6c04cf8 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -1672,7 +1672,7 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
- 	rc = switchtec_init_isr(stdev);
- 	if (rc) {
- 		dev_err(&stdev->dev, "failed to init isr.\n");
--		goto err_put;
-+		goto err_exit_pci;
+diff --git a/drivers/gpu/drm/radeon/ni.c b/drivers/gpu/drm/radeon/ni.c
+index 927e5f42e97d0..3e48cbb522a1c 100644
+--- a/drivers/gpu/drm/radeon/ni.c
++++ b/drivers/gpu/drm/radeon/ni.c
+@@ -813,7 +813,7 @@ int ni_init_microcode(struct radeon_device *rdev)
+ 			err = 0;
+ 		} else if (rdev->smc_fw->size != smc_req_size) {
+ 			pr_err("ni_mc: Bogus length %zu in firmware \"%s\"\n",
+-			       rdev->mc_fw->size, fw_name);
++			       rdev->smc_fw->size, fw_name);
+ 			err = -EINVAL;
+ 		}
  	}
- 
- 	iowrite32(SWITCHTEC_EVENT_CLEAR |
-@@ -1693,6 +1693,8 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
- 
- err_devadd:
- 	stdev_kill(stdev);
-+err_exit_pci:
-+	switchtec_exit_pci(stdev);
- err_put:
- 	ida_free(&switchtec_minor_ida, MINOR(stdev->dev.devt));
- 	put_device(&stdev->dev);
 -- 
 2.43.0
 
