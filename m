@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0582212F588;
-	Sun, 24 Mar 2024 23:01:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4128F14EC77;
+	Sun, 24 Mar 2024 23:02:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321318; cv=none; b=Mns85/67dgUInKYgpJO6vTGQ6imqxvNn/IPr2lCc+ritF4OXOispxPiPTSin4hRl9IltNnvOfpOaP/QpyAvOu5NQj2PA206xJb4ujpy5OzptKtNfkNOG6jEEYH2wcEAv+wbnnbSkyatC50fTNkh48nbkxQwgy0ntfmL21ERYNhg=
+	t=1711321325; cv=none; b=PRQngbX28afKO7vU2dO5L/0ihmXzLX/N4Df1iy9pvikt9N0+6u62nbIvLq9Oz3XQRuCeSg7dpL4fv6Q9spwJppeW6rL7LuFXJM2Xho5H15tvobeUMTYGtm9vhYrwaktVtS7Cbq2vi6HNzQGdNvkWFRSzsz4Uue4bjqwB8NDPwNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321318; c=relaxed/simple;
-	bh=+VkSfxLjq9zTh2Um2OakZb7sD8Gj8u1Q9eEf/0H2ymo=;
+	s=arc-20240116; t=1711321325; c=relaxed/simple;
+	bh=DnBTn8M9ECog35VLJPBV08nJCttgdumjnhsnix40o/U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FLuxAw2dOKMR35+t2tNPg5G9WWn1dp0ZkAAna774P1VNZpXC7gY7SmhKPuTg1NBsY8qfuhVORhK7N1kW2ZcM0nJyszgY/oQO3olNaRuln/f2l1J1iwAuS/ZWUc1ZjWV4uk7VM4KPnkQBwZsIbwE8RED7fqfFodVs1lcggE2DBls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3E1/dhe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CEDawQThyWXi7s+Krra24874NORFqQ6pGmxZKn70yGpGq4iDWwFHGw3Cx5Z+1T5zFvs8kRE70G1nrnyXsWBgoS3EY1Vhj6nGLuh9L9wmYnC2R0boVmWRFP7Uiiu/WJRLtaIU5zCnMVyTJaIhx7sq7FpbaTAFmah3E9kiYuAw13c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dc8kF34V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3E1/dhe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F461C433F1;
-	Sun, 24 Mar 2024 23:01:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dc8kF34V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C3A5C433F1;
+	Sun, 24 Mar 2024 23:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321317;
-	bh=+VkSfxLjq9zTh2Um2OakZb7sD8Gj8u1Q9eEf/0H2ymo=;
+	s=k20201202; t=1711321324;
+	bh=DnBTn8M9ECog35VLJPBV08nJCttgdumjnhsnix40o/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=d3E1/dheSAM/ztS54kBsTbCXI65COyxirTPgjHxnClFDROfvhGtUY3LNcyBfEcez7
-	 /253nlMhv8uo/37Xtg22+70ElfYkw5FR/g8+ZEVeLI5MSMbkrty0o/P38CBOWNMXEA
-	 UAJQDK15RxGfxBI2oqvE8v6gF44w1MiSGQgBRbUPwdfwdqS599FqNkcMPMbSl3zW78
-	 Nmt4tQ0vpslaqldRYxUpZyYTavkgIQo5bSCtKUAtqttQRzHOvX1ig76pYepGyChjOG
-	 OgaRhVe9eD3j5LEOhDrHEFasXVQO4W5PdkIwrV52NBk2vTQBrcDSa1zjFV+Mfvnbho
-	 MB9NXdx59otbg==
+	b=dc8kF34V1fYgDjHGPa9qJ3HnjWIMF1snem8ixnJXIJEKKqtHvIUPR1xM0YxzQ2ZRN
+	 GHHOB07nYgjICyraqtPW6kSJZvvSNxk8R/huarlZCclU3A8u0p6UQeiGrT/XNxvthR
+	 hlFf+JN1Gel+8bjWwBiLPCfnHEedMrZX6FZylLN2aVGKk1golZQhQLtkkwbREUfDYg
+	 mYjv8ZzJa96lykzXtwBRC8AUK7zp2AbOWCmdPT2s5A4QRFa08l8n7ePAigqVfCP9nQ
+	 4p3OtEIyOpfXmVyxKE9Wgdo9JmVa5pToSTcVbmN5QelzOw64yj5niZjttiti7dJcdb
+	 TbMyVXBfpfENA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
+Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 040/638] arm64: dts: qcom: Fix interrupt-map cell sizes
-Date: Sun, 24 Mar 2024 18:51:17 -0400
-Message-ID: <20240324230116.1348576-41-sashal@kernel.org>
+Subject: [PATCH 6.6 047/638] drm/ttm/tests: depend on UML || COMPILE_TEST
+Date: Sun, 24 Mar 2024 18:51:24 -0400
+Message-ID: <20240324230116.1348576-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -44,88 +44,50 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rob Herring <robh@kernel.org>
+From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit 704dccec0d490f2ad06f3f16ebed254d81906c3a ]
+[ Upstream commit 9d3f8a723c7950e56e0b95ab84b572caee29e065 ]
 
-The PCI node interrupt-map properties have the wrong size as #address-cells
-in the interrupt parent are not accounted for.
+At least the device test requires that no other driver using TTM is
+loaded. So make those unit tests depend on UML || COMPILE_TEST to
+prevent people from trying them on bare metal.
 
-The dtc interrupt_map check catches this, but the warning is off because
-its dependency, interrupt_provider, is off by default.
-
-Signed-off-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20240213-arm-dt-cleanups-v1-5-f2dee1292525@kernel.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lore.kernel.org/all/20240219230116.77b8ad68@yea/
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/ipq6018.dtsi |  8 ++++----
- arch/arm64/boot/dts/qcom/ipq8074.dtsi | 16 ++++++++--------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index fc907afe5174c..4294a5405c012 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -767,10 +767,10 @@ pcie0: pci@20000000 {
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 3caa020391c75..ec4abf9ff47b5 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -198,7 +198,7 @@ config DRM_TTM
+ config DRM_TTM_KUNIT_TEST
+         tristate "KUnit tests for TTM" if !KUNIT_ALL_TESTS
+         default n
+-        depends on DRM && KUNIT && MMU
++        depends on DRM && KUNIT && MMU && (UML || COMPILE_TEST)
+         select DRM_TTM
+         select DRM_EXPORT_FOR_TESTS if m
+         select DRM_KUNIT_TEST_HELPERS
+@@ -206,7 +206,8 @@ config DRM_TTM_KUNIT_TEST
+         help
+           Enables unit tests for TTM, a GPU memory manager subsystem used
+           to manage memory buffers. This option is mostly useful for kernel
+-          developers.
++          developers. It depends on (UML || COMPILE_TEST) since no other driver
++          which uses TTM can be loaded while running the tests.
  
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
--			interrupt-map = <0 0 0 1 &intc 0 75 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
--					<0 0 0 2 &intc 0 78 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
--					<0 0 0 3 &intc 0 79 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
--					<0 0 0 4 &intc 0 83 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+			interrupt-map = <0 0 0 1 &intc 0 0 0 75 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+					<0 0 0 2 &intc 0 0 0 78 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+					<0 0 0 3 &intc 0 0 0 79 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+					<0 0 0 4 &intc 0 0 0 83 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+           If in doubt, say "N".
  
- 			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
- 				 <&gcc GCC_PCIE0_AXI_M_CLK>,
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-index 92fd924bbdbe5..5effd8180cc41 100644
---- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-@@ -817,13 +817,13 @@ pcie1: pci@10000000 {
- 			interrupt-names = "msi";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
--			interrupt-map = <0 0 0 1 &intc 0 142
-+			interrupt-map = <0 0 0 1 &intc 0 0 142
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
--					<0 0 0 2 &intc 0 143
-+					<0 0 0 2 &intc 0 0 143
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
--					<0 0 0 3 &intc 0 144
-+					<0 0 0 3 &intc 0 0 144
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
--					<0 0 0 4 &intc 0 145
-+					<0 0 0 4 &intc 0 0 145
- 					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
- 
- 			clocks = <&gcc GCC_SYS_NOC_PCIE1_AXI_CLK>,
-@@ -879,13 +879,13 @@ pcie0: pci@20000000 {
- 			interrupt-names = "msi";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
--			interrupt-map = <0 0 0 1 &intc 0 75
-+			interrupt-map = <0 0 0 1 &intc 0 0 75
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
--					<0 0 0 2 &intc 0 78
-+					<0 0 0 2 &intc 0 0 78
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
--					<0 0 0 3 &intc 0 79
-+					<0 0 0 3 &intc 0 0 79
- 					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
--					<0 0 0 4 &intc 0 83
-+					<0 0 0 4 &intc 0 0 83
- 					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
- 
- 			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
 -- 
 2.43.0
 
