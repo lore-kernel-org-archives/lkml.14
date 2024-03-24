@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6319A12A157;
-	Sun, 24 Mar 2024 22:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533A31E8E58;
+	Sun, 24 Mar 2024 22:54:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320901; cv=none; b=czz1WgYhI5DCFZSbpl+9qBJiyFc4mX6avaNGKQ1WFrTo+MbY7hBv4BR4fm9saC3QSP0MWICOIApfSH4twlurkjklil9cKfUfKCmcWPlhxW1Y2zmjVQtYAL4otqt1amPZpGY/0ChENitUCtq9InXjBq5OyB3E3jE1ZhuYGVon2IY=
+	t=1711320893; cv=none; b=eCkUO6nyFP3wrg6nkJeNngaROwGrnZO99oajUBi0vXTBjVZlMFWJGm74MNnG+NxfgT7ZuUkYgZ/FCN8br1lHWu00P3QRcGHGzL3ciDMRPj31tCeDVMpbYdDixMb1xnEG5CyrcGSgkgGVv0WIlHOfoNPJTH3bagtQ6RRv7Q1i2+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320901; c=relaxed/simple;
-	bh=c6VDLxSsF1fqG8uFy6YnuqSbnZ/4/24pxuGoEg5Vdkg=;
+	s=arc-20240116; t=1711320893; c=relaxed/simple;
+	bh=V4NVh05WyemHL5wZcJ0nlItQbZj2IaY9CQKDxk9qkGg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WzTR6ZIxzAO427e4aJrBfcNfJ90mS1ZgBuwy3/lmD2RNfc8Vz6iZguLN1Sl2K9jYhkcb4uIDOIK7ifarPFrMGtZsm0qEypkv/tPWYoXc/EcZhULhmzfcUadbmGDJ5nGfgl8Gxrv1j+2nYyrU4z9hFxpT7D1vxpwwyEl3itanGhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCKtz4yY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AAKIUpj3gi1xGc81HSqIoKfkXN7x6K7dgX1jbe2HuEd+O/ZmBhSwb0yKIiYKccVxJuVOOd3ANwEYs9JC3UdWFLc6rxs8FAAhAfJOXGeNJjhwsFUYVzOroudX7MFt3G/T9TiMPPhC4q4Ly0FlpTZ04cQq80Snl6guHxwShl+pzkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mQuUhfXK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCKtz4yY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E359C43143;
-	Sun, 24 Mar 2024 22:54:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mQuUhfXK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0555AC43399;
+	Sun, 24 Mar 2024 22:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320900;
-	bh=c6VDLxSsF1fqG8uFy6YnuqSbnZ/4/24pxuGoEg5Vdkg=;
+	s=k20201202; t=1711320892;
+	bh=V4NVh05WyemHL5wZcJ0nlItQbZj2IaY9CQKDxk9qkGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WCKtz4yYGymUyiR8ZbABDXeXUUuBhvUqIbH8iZU6QnxeouJdbAx7n+Pgl50AswMbV
-	 eOh8PdXIzZAJBsKG3H48vsTcnVSt9JdvV4l3VBxMZDugli7rgMkXrexGKHrMO2ZLA/
-	 Gcwxy2JJTA88B8eVisy6U/iTSEt+MSJYCOh7QN9Tv0YfgibOcJfbSc5zrBMJTSYZqG
-	 5e5VzzLYpeHuKZZmoAZzgyhIyiit0p1kD4qJVxWsGO7NLooWdK+Umh6UMnk3lC/Q3U
-	 Slx6qtTf0j5f16OF0ejMjyW4P/YjNChO2nGxcOpNgN//oW850Tr+TeH063MfGw8JAj
-	 4KueaJ4mILT0Q==
+	b=mQuUhfXKlk9cX9FuU/puVWBAuw6WLSNeD9u5M4SKPO8C8TgHafQ2/w3khGTX81Eny
+	 JFMTclhj39GAnnOybZ+5HZwwEX3vgPefDMjlUBtPfS+AA5mR3PWXqI67sih2FZz5ha
+	 mjEmM5EaTKShHx2xBDrbw+APr6AW5baayN2dubjZajzpE4oVZ9qOYrARQEvNmgMx4/
+	 TioKlVS4qHHnHsj+b81lnPmqhUMtAajwZVRNdRW5UuLnK8eExUIOI552XBB+BFDC8O
+	 o4JHoxLbilJwjj2rL+fdxzCf/HlQ12JvBa9dsyyMIZ6UkL3MAhQX5CcgyWuX58uIhk
+	 12NQ/dC0bOlNA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Helen Koike <helen.koike@collabora.com>,
+Cc: Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	James Clark <james.clark@arm.com>,
+	Kaige Ye <ye@kaige.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 463/713] drm: ci: use clk_ignore_unused for apq8016
-Date: Sun, 24 Mar 2024 18:43:09 -0400
-Message-ID: <20240324224720.1345309-464-sashal@kernel.org>
+Subject: [PATCH 6.7 456/713] perf expr: Fix "has_event" function for metric style events
+Date: Sun, 24 Mar 2024 18:43:02 -0400
+Message-ID: <20240324224720.1345309-457-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -49,47 +53,60 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit aa1267e673fe5307cf00d02add4017d2878598b6 ]
+[ Upstream commit 6dd76680b925228312756c13b9b983661b552a64 ]
 
-If the ADV7511 bridge driver is compiled as a module, while DRM_MSM is
-built-in, the clk_disable_unused congests with the runtime PM handling
-of the DSI PHY for the clk_prepare_lock(). This causes apq8016 runner to
-fail without completing any jobs ([1]). Drop the BM_CMDLINE which
-duplicate the command line from the .baremetal-igt-arm64 clause and
-enforce the clk_ignore_unused kernelarg instead to make apq8016 runner
-work.
+Events in metrics cannot use '/' as a separator, it would be
+recognized as a divide, so they use '@'. The '@' is recognized in the
+metricgroups code and changed to '/', do the same in the has_event
+function so that the parsing is only tried without the @s.
 
-[1] https://gitlab.freedesktop.org/drm/msm/-/jobs/54990475
-
-Fixes: 0119c894ab0d ("drm: Add initial ci/ subdirectory")
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Acked-by: Helen Koike <helen.koike@collabora.com>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240214083708.2323967-1-dmitry.baryshkov@linaro.org
+Fixes: 4a4a9bf9075f ("perf expr: Add has_event function")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Kaige Ye <ye@kaige.org>
+Cc: John Garry <john.g.garry@oracle.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/r/20240209204947.3873294-3-irogers@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ci/test.yml | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/util/expr.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-index f285ed67eb3d8..2aa4b19166c06 100644
---- a/drivers/gpu/drm/ci/test.yml
-+++ b/drivers/gpu/drm/ci/test.yml
-@@ -104,7 +104,10 @@ msm:apq8016:
-     DRIVER_NAME: msm
-     BM_DTB: https://${PIPELINE_ARTIFACTS_BASE}/arm64/apq8016-sbc.dtb
-     GPU_VERSION: apq8016
--    BM_CMDLINE: "ip=dhcp console=ttyMSM0,115200n8 $BM_KERNEL_EXTRA_ARGS root=/dev/nfs rw nfsrootdebug nfsroot=,tcp,nfsvers=4.2 init=/init $BM_KERNELARGS"
-+    # disabling unused clocks congests with the MDSS runtime PM trying to
-+    # disable those clocks and causes boot to fail.
-+    # Reproducer: DRM_MSM=y, DRM_I2C_ADV7511=m
-+    BM_KERNEL_EXTRA_ARGS: clk_ignore_unused
-     RUNNER_TAG: google-freedreno-db410c
-   script:
-     - ./install/bare-metal/fastboot.sh
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 7be23b3ac0821..b8875aac8f870 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -500,7 +500,25 @@ double expr__has_event(const struct expr_parse_ctx *ctx, bool compute_ids, const
+ 	tmp = evlist__new();
+ 	if (!tmp)
+ 		return NAN;
+-	ret = parse_event(tmp, id) ? 0 : 1;
++
++	if (strchr(id, '@')) {
++		char *tmp_id, *p;
++
++		tmp_id = strdup(id);
++		if (!tmp_id) {
++			ret = NAN;
++			goto out;
++		}
++		p = strchr(tmp_id, '@');
++		*p = '/';
++		p = strrchr(tmp_id, '@');
++		*p = '/';
++		ret = parse_event(tmp, tmp_id) ? 0 : 1;
++		free(tmp_id);
++	} else {
++		ret = parse_event(tmp, id) ? 0 : 1;
++	}
++out:
+ 	evlist__delete(tmp);
+ 	return ret;
+ }
 -- 
 2.43.0
 
