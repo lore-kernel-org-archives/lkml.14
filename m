@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2266B22AB83;
-	Sun, 24 Mar 2024 23:15:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A78522AB97;
+	Sun, 24 Mar 2024 23:15:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322152; cv=none; b=kqytF4+xFaqCPx2UkXJhmfXL7UyWk2LXHXd/63MkCc8ewLUgsIphhfFwBCHZ6df0yoivxHvrJyl879YlcBNaj3tN4zmDL4bftH62IKZ3x6hhU7CukrFyCHqjbJpKy1vhQGOKdrtMX3s0zSf3x75E3G4wKyxGIYzAHZPH/lvqmE4=
+	t=1711322154; cv=none; b=bn3exQPSH6b1PhMZpmT8ZYKOmAr0/+x4G9MTWe9CMKcNh3tXunhDjKp67wA7JdoV9fzEf/Ux7+c2Jad51Y9o7AsvLC7RHOJproUWWwCLynF7OnsNY8xIpwu8zpYEbZ+cZkNHEw967SipF8TB9S4beaJ7gyMvHlgbR5p7toHUhHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322152; c=relaxed/simple;
-	bh=6x6msOVMKp0/WxQjJkJWGJR+nmYrvvXpeCfppaZ6xwM=;
+	s=arc-20240116; t=1711322154; c=relaxed/simple;
+	bh=gwobMM9/9qbaSInsdF01UBeLUAeQfgP6FuCZ2TJ+iXo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XsGx8dAU22LDXfbXGnj6N7O40TcBoYhbqcuVBrwYqz3rqJd1rbnjBXywej5ZmjfwpPZ2O4eU9RREJ7N++aYiogCeqRg2d4BOky5r7uRcwCkE+U6hD5DkVggSL82CyDE83iK4MKDkUNhPmdSn7Pz9QN1bNW9wl3gi+2Gk15U5Q0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDq70iqd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MO9a7+p0P3RPdYMmZfQPMxEotCPAOqQ73Kaa7dHvSApjOmmARplYYXIYNZk4LW5LOzBronH4s4WMI4Qg/kahbOWxMksthiB2G+EgUFO9KBDJ4lHTEmNNPeDhoupJvaG3boo6iTn4sSU5zcSPS1T3WuPgC25hJqqreG2/uX+kP6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pa9VHCWp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDq70iqd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6136AC43390;
-	Sun, 24 Mar 2024 23:15:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pa9VHCWp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34280C433B2;
+	Sun, 24 Mar 2024 23:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322151;
-	bh=6x6msOVMKp0/WxQjJkJWGJR+nmYrvvXpeCfppaZ6xwM=;
+	s=k20201202; t=1711322152;
+	bh=gwobMM9/9qbaSInsdF01UBeLUAeQfgP6FuCZ2TJ+iXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HDq70iqdpfyRZR32Gz23/3RlhFT8vBohO4Rtaq/VyKVzHAB1oodNCThzH9ZP+HTTS
-	 MRuiLvEBYpxw4BMREV8NQHwl5/4MjbEtM2E+U7SHLaiRX/nIrJ6l6hgxNmDC4l4uzC
-	 Gt9Jhy+jDuZxu71O/efHO3ap3jXfzKbhZLGf26SxPlRQU41eL7Y+KUKvJE6l1cAo20
-	 1rIuqaaXDYHTH9OYbEOjGxQBslOppIiF5noIeeS1+ckcZHpzaGUQGNeKFSDuDwBXD8
-	 Xp0nwn/8quglNrv8BUtp4krAqfnaBahK5Th+lc0ERBEqaDhTk0I+bsLkkWEwFPuzUJ
-	 biWMH/lJIa89w==
+	b=Pa9VHCWp7xTj+B1GvCAGGdzLmHCRtfC/Sfl3nBUKmsJIqKoE0bvRwJAYbHqZO1DYf
+	 kVifqG+0nqKO7qwTxtxaaOpP7fZBwMU60wMkIP3dQWvjj6Z4vcx8wEhIi2EVqeBY70
+	 JO2YJKlyE5sQYgjUz3MKuP95M53nVMXxZdCp6rCI8rCOH9JTO8vw6JtfG5/MKIU4rd
+	 rE+QVfw/OwfA8Pj72QzDaRYRI9aWle5B4BatwaxgCMC1paK1kcFoL/Yt/RdpzLYm1C
+	 OOeBdIxThjsbSDqf/oUEly3v5FL87Ia4BoyXVbp+XuEUAGtn4G89c3DunBjSkjVwZi
+	 zUgtusRNUDqhA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Duoming Zhou <duoming@zju.edu.cn>,
+	Louis Peens <louis.peens@corigine.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 228/451] net: kcm: fix incorrect parameter validation in the kcm_getsockopt) function
-Date: Sun, 24 Mar 2024 19:08:24 -0400
-Message-ID: <20240324231207.1351418-229-sashal@kernel.org>
+Subject: [PATCH 6.1 230/451] nfp: flower: handle acti_netdevs allocation failure
+Date: Sun, 24 Mar 2024 19:08:26 -0400
+Message-ID: <20240324231207.1351418-231-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -48,42 +49,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+From: Duoming Zhou <duoming@zju.edu.cn>
 
-[ Upstream commit 3ed5f415133f9b7518fbe55ba9ae9a3f5e700929 ]
+[ Upstream commit 84e95149bd341705f0eca6a7fcb955c548805002 ]
 
-The 'len' variable can't be negative when assigned the result of
-'min_t' because all 'min_t' parameters are cast to unsigned int,
-and then the minimum one is chosen.
+The kmalloc_array() in nfp_fl_lag_do_work() will return null, if
+the physical memory has run out. As a result, if we dereference
+the acti_netdevs, the null pointer dereference bugs will happen.
 
-To fix the logic, check 'len' as read from 'optlen',
-where the types of relevant variables are (signed) int.
+This patch adds a check to judge whether allocation failure occurs.
+If it happens, the delayed work will be rescheduled and try again.
 
-Fixes: ab7ac4eb9832 ("kcm: Kernel Connection Multiplexor module")
-Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: bb9a8d031140 ("nfp: flower: monitor and offload LAG groups")
+Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+Reviewed-by: Louis Peens <louis.peens@corigine.com>
+Link: https://lore.kernel.org/r/20240308142540.9674-1-duoming@zju.edu.cn
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/kcm/kcmsock.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/netronome/nfp/flower/lag_conf.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
-index 65845c59c0655..7d37bf4334d26 100644
---- a/net/kcm/kcmsock.c
-+++ b/net/kcm/kcmsock.c
-@@ -1274,10 +1274,11 @@ static int kcm_getsockopt(struct socket *sock, int level, int optname,
- 	if (get_user(len, optlen))
- 		return -EFAULT;
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c b/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
+index e92860e20a24a..c6a2c302a8c8b 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/lag_conf.c
+@@ -308,6 +308,11 @@ static void nfp_fl_lag_do_work(struct work_struct *work)
  
--	len = min_t(unsigned int, len, sizeof(int));
- 	if (len < 0)
- 		return -EINVAL;
+ 		acti_netdevs = kmalloc_array(entry->slave_cnt,
+ 					     sizeof(*acti_netdevs), GFP_KERNEL);
++		if (!acti_netdevs) {
++			schedule_delayed_work(&lag->work,
++					      NFP_FL_LAG_DELAY);
++			continue;
++		}
  
-+	len = min_t(unsigned int, len, sizeof(int));
-+
- 	switch (optname) {
- 	case KCM_RECV_DISABLE:
- 		val = kcm->rx_disabled;
+ 		/* Include sanity check in the loop. It may be that a bond has
+ 		 * changed between processing the last notification and the
 -- 
 2.43.0
 
