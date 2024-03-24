@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3F4145B15;
-	Sun, 24 Mar 2024 23:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42880145B1D;
+	Sun, 24 Mar 2024 23:13:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711322014; cv=none; b=kjV8/+MIaW1HgLJSGYFhi7zCElSTKoTlHkYsGjrExzmleyqOk7wa2R2tKwj25D+rUsp+dEzCwfPQNXmHQJ6wLPjPKuwuMrhXxf0DLqyW8QaEJtUvajiYVrDVnydYGeAiLb58bCJRmaHf0I620bGBhVzGCwiDv7UjnIzuQYORVzA=
+	t=1711322020; cv=none; b=e2krg7GEpM5x2iSFtAayqL1FmYxl4k2eWk5XJBtJ/43SrLPBDCZlcRAGwcK+cecR6YAHNPC1xpf99C2XA+/FDkOZ3ExsvirSspLCzYA+R3r4BoRPzUw2GVnAPZmY3uyH/N/JsqQi3yZS4NHyUv9QuYL30iXESwsCuDRuZeK/ORw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711322014; c=relaxed/simple;
-	bh=JormID0mpDAoMktOmH3B7X1mZ+zkwgsuNBGDq22flRY=;
+	s=arc-20240116; t=1711322020; c=relaxed/simple;
+	bh=LOdq1mNqCD1OLC2zN1bxNCWDll0+7fgycknYNHN/tG0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hcw089HhE/WTBDci73CFFPEZO/Ut7G1WCw6KuWuHRIesQDTVLwDqc9TtFGTFij96t0WyVUFjgUPXHMKtqeex1Nc7kK23raXX8PofaO/1c1kgOYyYOs5Un8xG5xKJvSl631gdyn2YH2tOZr7csesIXamgslhITDjemd+j67bIn0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=crcVQpjY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=LXe+Mvlt906xbGc9pyaA+Hrm0imp7966Do8B3/J2mD9RXQkWQ+N1DlJneC1AjdVz2VPJhoOw545dC9LR6ioxzWAGAk9WmwA+RvRrwI1hf9ML5gvcCLzqjSBDUIo8O+YQgisZs7XM+1hb0T2Y26JX8fUBPnmChtzYA6qxv8EQwe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQs6+edn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="crcVQpjY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEA0DC43394;
-	Sun, 24 Mar 2024 23:13:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQs6+edn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DDD0C433C7;
+	Sun, 24 Mar 2024 23:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711322014;
-	bh=JormID0mpDAoMktOmH3B7X1mZ+zkwgsuNBGDq22flRY=;
+	s=k20201202; t=1711322020;
+	bh=LOdq1mNqCD1OLC2zN1bxNCWDll0+7fgycknYNHN/tG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=crcVQpjY10H6qXFoqL3nCt6nbAeg/KHKzTmVDnT4gqLFJ/WDwn1DJ0Q+AXN6HC4KB
-	 +Bxr5xbeJlBzaA4jWr9IPtThfxImWUji+YySsASMISWEHRFLeX/pxPFYlG7owCt+jS
-	 n0UWBoVC9jWgMqKgPoqxWnZOt15JXjJh5/ogAcUiyDgiZ3V7+T32jmqCaSuIXwwftW
-	 i8Wfstm8XusuV+p77BLAfCckq9wB+8yZiFM6XlCefGW4mJnSM9/zsWMdeN2Wf89R2p
-	 yCS0aCslJmc1tQCCAPAYA5rReiPMTlpqlIVSnMvDVFu2QT20YkTi5DMLi4ZBS0D52V
-	 vvYNSxY5VOaLA==
+	b=rQs6+ednZ8g7vYVKrXlocmMWbS/dwgPipez23y34FkC4upMwFeUZ9dNyU1OcbgG95
+	 PJtY7oppTonrZb2dxZZvLr6MgE0cxkOgPPSg6USxG/OwwScpI1Wr9cf1EIAdwqmbPn
+	 YQ9cTVdZ7IcAhX7hguMwOOGpX6TYb9CUZFaOMmQ1dg3VSGdFGqCIqIOshJQ2i4LoA+
+	 iXzRMXrVWrJ6is4nHZE95uP6zmNzPZBfni32RVAf4EOJmcTwQRy3BpipLdXUcSxiwe
+	 w7vmLKirBTSVDHMj4GDhUky2sNwZo/I6O7Pe3dGlKlNFeYIRJG2B36zMMcxCwcnWLq
+	 dYG2FB+y7CVDg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>,
-	Julian Calaby <julian.calaby@gmail.com>,
+Cc: Ajay Singh <ajay.kathat@microchip.com>,
+	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
 	Kalle Valo <kvalo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 086/451] wifi: b43: Stop correct queue in DMA worker when QoS is disabled
-Date: Sun, 24 Mar 2024 19:06:02 -0400
-Message-ID: <20240324231207.1351418-87-sashal@kernel.org>
+Subject: [PATCH 6.1 092/451] wifi: wilc1000: fix multi-vif management when deleting a vif
+Date: Sun, 24 Mar 2024 19:06:08 -0400
+Message-ID: <20240324231207.1351418-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
 References: <20240324231207.1351418-1-sashal@kernel.org>
@@ -45,68 +45,54 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+From: Ajay Singh <ajay.kathat@microchip.com>
 
-[ Upstream commit 581c8967d66c4961076dbbee356834e9c6777184 ]
+[ Upstream commit 12cfc9c8d3faf887a202c89bc312202445fca7e8 ]
 
-When QoS is disabled, the queue priority value will not map to the correct
-ieee80211 queue since there is only one queue. Stop queue 0 when QoS is
-disabled to prevent trying to stop a non-existent queue and failing to stop
-the actual queue instantiated.
+Adding then removing a second vif currently makes the first vif not working
+anymore. This is visible for example when we have a first interface
+connected to some access point:
+- create a wpa_supplicant.conf with some AP credentials
+- wpa_supplicant -Dnl80211 -c /etc/wpa_supplicant.conf -i wlan0
+- dhclient wlan0
+- iw phy phy0 interface add wlan1 type managed
+- iw dev wlan1 del
+wlan0 does not manage properly traffic anymore (eg: ping not working)
 
-Fixes: bad691946966 ("b43: avoid packet losses in the dma worker code.")
-Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+This is due to vif mode being incorrectly reconfigured with some default
+values in del_virtual_intf, affecting by default first vif.
+
+Prevent first vif from being affected on second vif removal by removing vif
+mode change command in del_virtual_intf
+
+Fixes: 9bc061e88054 ("staging: wilc1000: added support to dynamically add/remove interfaces")
+Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
+Co-developed-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20231231050300.122806-4-sergeantsagara@protonmail.com
+Link: https://msgid.link/20240115-wilc_1000_fixes-v1-5-54d29463a738@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43/main.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/net/wireless/microchip/wilc1000/cfg80211.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
-index b2539a916fd04..c75f294ca1bc9 100644
---- a/drivers/net/wireless/broadcom/b43/main.c
-+++ b/drivers/net/wireless/broadcom/b43/main.c
-@@ -3603,7 +3603,7 @@ static void b43_tx_work(struct work_struct *work)
- 				err = b43_dma_tx(dev, skb);
- 			if (err == -ENOSPC) {
- 				wl->tx_queue_stopped[queue_num] = true;
--				ieee80211_stop_queue(wl->hw, queue_num);
-+				b43_stop_queue(dev, queue_num);
- 				skb_queue_head(&wl->tx_queue[queue_num], skb);
- 				break;
- 			}
-@@ -3627,6 +3627,7 @@ static void b43_op_tx(struct ieee80211_hw *hw,
- 		      struct sk_buff *skb)
- {
- 	struct b43_wl *wl = hw_to_b43_wl(hw);
-+	u16 skb_queue_mapping;
+diff --git a/drivers/net/wireless/microchip/wilc1000/cfg80211.c b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
+index 2f75dc4b47975..6f3245a43aef1 100644
+--- a/drivers/net/wireless/microchip/wilc1000/cfg80211.c
++++ b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
+@@ -1615,7 +1615,6 @@ static int del_virtual_intf(struct wiphy *wiphy, struct wireless_dev *wdev)
+ 	cfg80211_unregister_netdevice(vif->ndev);
+ 	vif->monitor_flag = 0;
  
- 	if (unlikely(skb->len < 2 + 2 + 6)) {
- 		/* Too short, this can't be a valid frame. */
-@@ -3635,12 +3636,12 @@ static void b43_op_tx(struct ieee80211_hw *hw,
- 	}
- 	B43_WARN_ON(skb_shinfo(skb)->nr_frags);
- 
--	skb_queue_tail(&wl->tx_queue[skb->queue_mapping], skb);
--	if (!wl->tx_queue_stopped[skb->queue_mapping]) {
-+	skb_queue_mapping = skb_get_queue_mapping(skb);
-+	skb_queue_tail(&wl->tx_queue[skb_queue_mapping], skb);
-+	if (!wl->tx_queue_stopped[skb_queue_mapping])
- 		ieee80211_queue_work(wl->hw, &wl->tx_work);
--	} else {
--		ieee80211_stop_queue(wl->hw, skb->queue_mapping);
--	}
-+	else
-+		b43_stop_queue(wl->current_dev, skb_queue_mapping);
- }
- 
- static void b43_qos_params_upload(struct b43_wldev *dev,
+-	wilc_set_operation_mode(vif, 0, 0, 0);
+ 	mutex_lock(&wl->vif_mutex);
+ 	list_del_rcu(&vif->list);
+ 	wl->vif_num--;
 -- 
 2.43.0
 
