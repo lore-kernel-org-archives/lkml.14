@@ -1,42 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CBC1E6F50;
-	Sun, 24 Mar 2024 23:03:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94762023AF;
+	Sun, 24 Mar 2024 23:03:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321409; cv=none; b=ZKIdT3jAZjuNkU2SwHsUZUyiZZF6gW9aizCzMms3L/LaHTFwIuFKwgUTOLw3c9YxFI8dGTFbupgM7m/R6vBY0FUnpUE4kjOK9n7nl+Fs0Z8ML48DjqYydkBTNvmoHAQyfXj5JUOa8cUmrE+jvpOT8qo+kGdtjkRAqpPyahPD8l4=
+	t=1711321431; cv=none; b=I3nq+OCcXaBDnQWsKinSIsAtERAMosyhVffS7JjeY1/fnNUGEm+ZGuuMqtb9HFgfW42s1mZ5u+caZhvRu5B8q+ZDWDxUzruKx71MWQ5pfBc4PJv6aOtDE1ohA45bT4O5lz1hCYHOAtCJ8QHSQcf0k1Dg1oWwcUPbNtYNzkhBY64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321409; c=relaxed/simple;
-	bh=yo2Z2RP8nH+NEKT0SUBmtftPM/25colUC9zO2Yovi1w=;
+	s=arc-20240116; t=1711321431; c=relaxed/simple;
+	bh=9Qq1iVEdw0G3vZVt9MiiXBeQOuukWCru2oMuL3av5NQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i/3I87akRIfE8ki43xK7ZQQrJPhmi8Km0dldwuJwY+ef5OmA+kGF6e/XRZbgs7qOW/DCvQWlup1MtwIhW6JJjJefER25DEjCxqqivMPYar40BROtPHVZQOQe978ZAq+MwerDWI5qvE2i/nwrO6JOYKSw57q4qH2OiDl1MeJJCdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFtKYZm4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=a+vQIpBDjF3bxVDz0MTvOQbRV9zxOfoT/hilFLW3wIZjdq8sOtUfP827M9Qxv/xG009h62qtJ5VYRhEyhH3zA5tJRyorKYjTripuSl8I9tmlcijCenbWIUvhP/acVrqsTnu9Hr5JM0fhKGwqN5XoAvCmkY0EyfDK96al7KpyQlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tps8sW4u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFtKYZm4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF7BC43390;
-	Sun, 24 Mar 2024 23:03:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tps8sW4u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE697C433C7;
+	Sun, 24 Mar 2024 23:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321408;
-	bh=yo2Z2RP8nH+NEKT0SUBmtftPM/25colUC9zO2Yovi1w=;
+	s=k20201202; t=1711321430;
+	bh=9Qq1iVEdw0G3vZVt9MiiXBeQOuukWCru2oMuL3av5NQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mFtKYZm4Mb/iIGSo5f/wldRkU31ZmM7bnDBri9Jw+Nsui4owbDfTuGt6H2QX9Fe/o
-	 KCKBX4k7yfiHgdxJTgBp8TIWUWpi7KSFnRflEZz/PZI+Q6dynJWipA/NIkZ1frfsOF
-	 ALbI+WfxbaRqCRm4Fq2anYofcZy4Mpdl5nit23jtfF0dFxlm1WnFlZSMzjN9vC6b7V
-	 jVXeEg0S0uZ9+DLTg6m3swVqki44Np+1lFgel7B261YLVQW67l7XwPHpVtlP21xsCc
-	 ZyogS4nqnuLqxFshuf9gh2AxdX4qyqgMNQDsNjyuNkkWg3zetbNk//HVQeWdm+8vbZ
-	 5g0Qcj3U3HJwQ==
+	b=Tps8sW4uBPt5+DA2quxbtwJJp2Dp44tGCbt+gJtA7gIcIzQP3oyGxpGORVa0hV4dO
+	 qIyvcwT4lMnblzz6ogsGfyiw1za8AZOpmQE4t5Ilknagy7Feab8t+EZ6VVGeNJ/gYS
+	 7dlZiAZ5dKTEvbiO5H5wJrzm4911BXWF+Py9YIeIuAWYbJuC/aywgujHtDAGsi4pwR
+	 FlJ3/B32La3wDYeBaP9hA+8Ypt34jZDcE5wfnM75BP+E2BSnQdDE57I/FR08qoCo30
+	 f3sj2VW0z/uxsy4hzs37BooORpghzPcKlo5D5e222pdsV7PbVoeg341yeQQeIOJr0J
+	 qax8qCGUtOGWw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 133/638] cpufreq: mediatek-hw: Wait for CPU supplies before probing
-Date: Sun, 24 Mar 2024 18:52:50 -0400
-Message-ID: <20240324230116.1348576-134-sashal@kernel.org>
+Subject: [PATCH 6.6 154/638] arm64: dts: renesas: r8a779g0: Add missing SCIF_CLK2
+Date: Sun, 24 Mar 2024 18:53:11 -0400
+Message-ID: <20240324230116.1348576-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -46,72 +43,69 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 788715b5f21c6455264fe00a1779e61bec407fe2 ]
+[ Upstream commit 08e799f6bce80dd63c174d8d0fc61d1a6149960b ]
 
-Before proceeding with the probe and enabling frequency scaling for the
-CPUs, make sure that all supplies feeding the CPUs have probed.
+R-Car V4H actually has two SCIF_CLK pins.
+The second pin provides the SCIF_CLK signal for HSCIF2 and SCIF4.
 
-This fixes an issue observed on MT8195-Tomato where if the
-mediatek-cpufreq-hw driver enabled the hardware (by writing to
-REG_FREQ_ENABLE) before the SPMI controller driver (spmi-mtk-pmif),
-behind which lies the big CPU supply, probed the platform would hang
-shortly after with "rcu: INFO: rcu_preempt detected stalls on
-CPUs/tasks" being printed in the log.
-
-Fixes: 4855e26bcf4d ("cpufreq: mediatek-hw: Add support for CPUFREQ HW")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Fixes: a4c31c56d2d35641 ("arm64: dts: renesas: r8a779g0: Add SCIF nodes")
+Fixes: 39d9dfc6fbe1860e ("arm64: dts: renesas: r8a779g0: Add remaining HSCIF nodes")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/72f20c1bf32187bd30a963cafe27252907d661f9.1705589612.git.geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/mediatek-cpufreq-hw.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/r8a779g0.dtsi | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
-index d46afb3c00923..a1aa9385980ae 100644
---- a/drivers/cpufreq/mediatek-cpufreq-hw.c
-+++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
-@@ -13,6 +13,7 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
+diff --git a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
+index 3be1159982b20..0c83940b3d8a1 100644
+--- a/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a779g0.dtsi
+@@ -185,13 +185,19 @@ psci {
+ 		method = "smc";
+ 	};
  
- #define LUT_MAX_ENTRIES			32U
-@@ -300,7 +301,23 @@ static struct cpufreq_driver cpufreq_mtk_hw_driver = {
- static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
- {
- 	const void *data;
--	int ret;
-+	int ret, cpu;
-+	struct device *cpu_dev;
-+	struct regulator *cpu_reg;
-+
-+	/* Make sure that all CPU supplies are available before proceeding. */
-+	for_each_possible_cpu(cpu) {
-+		cpu_dev = get_cpu_device(cpu);
-+		if (!cpu_dev)
-+			return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
-+					     "Failed to get cpu%d device\n", cpu);
-+
-+		cpu_reg = devm_regulator_get_optional(cpu_dev, "cpu");
-+		if (IS_ERR(cpu_reg))
-+			return dev_err_probe(&pdev->dev, PTR_ERR(cpu_reg),
-+					     "CPU%d regulator get failed\n", cpu);
-+	}
-+
+-	/* External SCIF clock - to be overridden by boards that provide it */
++	/* External SCIF clocks - to be overridden by boards that provide them */
+ 	scif_clk: scif {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <0>;
+ 	};
  
- 	data = of_device_get_match_data(&pdev->dev);
- 	if (!data)
++	scif_clk2: scif2 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++
+ 	soc: soc {
+ 		compatible = "simple-bus";
+ 		interrupt-parent = <&gic>;
+@@ -681,7 +687,7 @@ hscif2: serial@e6560000 {
+ 			interrupts = <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 516>,
+ 				 <&cpg CPG_CORE R8A779G0_CLK_SASYNCPERD1>,
+-				 <&scif_clk>;
++				 <&scif_clk2>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			dmas = <&dmac0 0x35>, <&dmac0 0x34>,
+ 			       <&dmac1 0x35>, <&dmac1 0x34>;
+@@ -1057,7 +1063,7 @@ scif4: serial@e6c40000 {
+ 			interrupts = <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 705>,
+ 				 <&cpg CPG_CORE R8A779G0_CLK_SASYNCPERD1>,
+-				 <&scif_clk>;
++				 <&scif_clk2>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			dmas = <&dmac0 0x59>, <&dmac0 0x58>,
+ 			       <&dmac1 0x59>, <&dmac1 0x58>;
 -- 
 2.43.0
 
