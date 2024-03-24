@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D020212D31;
-	Sun, 24 Mar 2024 23:08:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41678212548;
+	Sun, 24 Mar 2024 23:08:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321726; cv=none; b=BC78DUlW93KxjLaPB1wTFmiYz+vPKs+70AYQZxOGHcD+H4A8c6z8UGB4clm2mnu7caW5WX1uA3Th3WPwsWAADJrcH7GIwh6vbBD8ktWlHoc6zN+zzf+y6ywrhOqBnEu4B6UNt4zWWaQT0knbafQo6CFv6j75kq+OLpwVqVmPOuE=
+	t=1711321718; cv=none; b=lAjDQ/F0iyC3wgYFoQ1B/nkdv4p43iF6z1o0n+iK/ynvI412Vsae1wzxwAfAxBImlFgCBLL/nKFw3Yw6gmSQx1b62Jnwx4/jUBgiG3NU/jdYeGcU3Nwr7zgepFDeqwoQ/psvn4nmSv4nDaOPwhMznlBvNeJNcNeq9ogqKRkyV9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321726; c=relaxed/simple;
-	bh=7zR0BrWM9FieUe0Q38iXkPk2VIsJeZQPb9NcsHR1SBU=;
+	s=arc-20240116; t=1711321718; c=relaxed/simple;
+	bh=tkufBR9raGvxU8c3aH3i6ldwN0hrm/x4DjtThUr85q8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jl0nvm7gZanvHnp9nCSSNSuA4rjQNHYEs8PIfVHgsTleHw5p7fYzbKdy0yZPl0lhmcso3cCBZgxLCD/2QF3n0eS6aTec8H3DgpXRyxmSIvqp+6ew1LL82dLoquMyBox3DVRM3bUyK9CdDTvNLeuvxvrJW3wDKkQYzWIQTrDMC6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eTF9YXCG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VV84yWdZf6v57W8+jLeb23hhRmlCbxmpiXNvQLZLQZHtILcyDgBG3pf6Ig5igVPzPMvSbj/xGLWnJpDrxJJkddkn3i1em2vvpoO9U5xitnLq6aEt9R59M667gxRRxmCIF3S0a31JFRIqoIBQhnLejvw8ewltu0DRJn0KXdEeC+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ulfllgwi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eTF9YXCG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74CBAC43394;
-	Sun, 24 Mar 2024 23:08:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ulfllgwi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69454C43399;
+	Sun, 24 Mar 2024 23:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321725;
-	bh=7zR0BrWM9FieUe0Q38iXkPk2VIsJeZQPb9NcsHR1SBU=;
+	s=k20201202; t=1711321717;
+	bh=tkufBR9raGvxU8c3aH3i6ldwN0hrm/x4DjtThUr85q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eTF9YXCG0NDmHpI1o3ZoPne0cA3sgsZB1UJcY1WKBueheoZMOx77xh1nPvdPGjYgg
-	 iEcisN2dBpnGoJLFgNMovBg7bGXxJAraDfAOK6g/5/OTwE+2mHxGgV4x49zug4VSL9
-	 5nwFxXRatBTPXkgx807LSmPpyIsngGVvQMpfz5vWqSpMB3yaX8wAfJxnyyD3g/eu5y
-	 LzjF53zvwH2U6uDlXljhClDpg8EKhJeVjqBH21iIp9SKAdovRekon9C3CxIphUJkGs
-	 ijn5dWORO7/hZvTABBE/9/2MzrqlqeTDHUn9u2+pIAZY9y8Fq0R+RVNS2Ygo/6RLA2
-	 12Hi9Yw3SfEfA==
+	b=UlfllgwiLHob+yd6ZhmEQEwb7tMA6TO/nJJJ2z4P/1zVrjWxoe9nNmLUlIoeSX3Zr
+	 ZGxkqZW5YGHWGmvs3Nx95Zq9NptmYNNJrVGdgga209kOcfk+aaYN7zppr3qwDn6d68
+	 Q0Vk5+jG7G27U/i2CjzBvSB1zv9qBmS4ZfzRsx1Z7PSPAec+HUReJSmpWhjm5xsAgq
+	 ixH1ZveaQzUmZ0/0XO+NUh/C/mCBt/srZBGUa67rZ4LmqL+eMtoTxCJqXJYs9q9z/9
+	 5hGvXS+rrc3Nr6b9nM3tpE8y3SeJXguPYFGdE+b7dhZ5ww96hzHDMYj9lyEDa4Bfuw
+	 a2yEWRhMZnGnA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>,
-	Abel Vesa <abel.vesa@linaro.org>,
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Tim Van Patten <timvp@google.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 453/638] clk: imx: imx8mp: Fix SAI_MCLK_SEL definition
-Date: Sun, 24 Mar 2024 18:58:10 -0400
-Message-ID: <20240324230116.1348576-454-sashal@kernel.org>
+Subject: [PATCH 6.6 445/638] crypto: ccp - Avoid discarding errors in psp_send_platform_access_msg()
+Date: Sun, 24 Mar 2024 18:58:02 -0400
+Message-ID: <20240324230116.1348576-446-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -48,60 +49,53 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-[ Upstream commit 13269dc6c70444528f0093585e3559cd2f38850a ]
+[ Upstream commit 0e8fca2f12ceb77c3a6b6f210135031f264aa612 ]
 
-There is SAI1, SAI2, SAI3, SAI5, SAI6, SAI7 existing in this block
-control, the order is discontinuous. The definition of SAI_MCLK_SEL(n)
-is not match with the usage of CLK_SAIn(n).
+Errors can potentially occur in the "processing" of PSP commands or
+commands can be processed successfully but still return an error code in
+the header.
 
-So define SAI##n##_MCLK_SEL separately to fix the issue.
+This second case was being discarded because PSP communication worked but
+the command returned an error code in the payload header.
 
-Fixes: 6cd95f7b151c ("clk: imx: imx8mp: Add audiomix block control")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
-Link: https://lore.kernel.org/r/1708683351-8504-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+Capture both cases and return them to the caller as -EIO for the caller
+to investigate. The caller can detect the latter by looking at
+`req->header->status`.
+
+Reported-and-tested-by: Tim Van Patten <timvp@google.com>
+Fixes: 7ccc4f4e2e50 ("crypto: ccp - Add support for an interface for platform features")
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-imx8mp-audiomix.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/crypto/ccp/platform-access.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
-index e4300df88f1ac..55ed211a5e0b1 100644
---- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-+++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-@@ -18,7 +18,12 @@
+diff --git a/drivers/crypto/ccp/platform-access.c b/drivers/crypto/ccp/platform-access.c
+index 94367bc49e35b..1b8ed33897332 100644
+--- a/drivers/crypto/ccp/platform-access.c
++++ b/drivers/crypto/ccp/platform-access.c
+@@ -118,9 +118,16 @@ int psp_send_platform_access_msg(enum psp_platform_access_msg msg,
+ 		goto unlock;
+ 	}
  
- #define CLKEN0			0x000
- #define CLKEN1			0x004
--#define SAI_MCLK_SEL(n)		(0x300 + 4 * (n))	/* n in 0..5 */
-+#define SAI1_MCLK_SEL		0x300
-+#define SAI2_MCLK_SEL		0x304
-+#define SAI3_MCLK_SEL		0x308
-+#define SAI5_MCLK_SEL		0x30C
-+#define SAI6_MCLK_SEL		0x310
-+#define SAI7_MCLK_SEL		0x314
- #define PDM_SEL			0x318
- #define SAI_PLL_GNRL_CTL	0x400
- 
-@@ -95,13 +100,13 @@ static const struct clk_parent_data clk_imx8mp_audiomix_pll_bypass_sels[] = {
- 		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK1_SEL, {},		\
- 		clk_imx8mp_audiomix_sai##n##_mclk1_parents,		\
- 		ARRAY_SIZE(clk_imx8mp_audiomix_sai##n##_mclk1_parents), \
--		SAI_MCLK_SEL(n), 1, 0					\
-+		SAI##n##_MCLK_SEL, 1, 0					\
- 	}, {								\
- 		"sai"__stringify(n)"_mclk2_sel",			\
- 		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK2_SEL, {},		\
- 		clk_imx8mp_audiomix_sai_mclk2_parents,			\
- 		ARRAY_SIZE(clk_imx8mp_audiomix_sai_mclk2_parents),	\
--		SAI_MCLK_SEL(n), 4, 1					\
-+		SAI##n##_MCLK_SEL, 4, 1					\
- 	}, {								\
- 		"sai"__stringify(n)"_ipg_cg",				\
- 		IMX8MP_CLK_AUDIOMIX_SAI##n##_IPG,			\
+-	/* Store the status in request header for caller to investigate */
++	/*
++	 * Read status from PSP. If status is non-zero, it indicates an error
++	 * occurred during "processing" of the command.
++	 * If status is zero, it indicates the command was "processed"
++	 * successfully, but the result of the command is in the payload.
++	 * Return both cases to the caller as -EIO to investigate.
++	 */
+ 	cmd_reg = ioread32(cmd);
+-	req->header.status = FIELD_GET(PSP_CMDRESP_STS, cmd_reg);
++	if (FIELD_GET(PSP_CMDRESP_STS, cmd_reg))
++		req->header.status = FIELD_GET(PSP_CMDRESP_STS, cmd_reg);
+ 	if (req->header.status) {
+ 		ret = -EIO;
+ 		goto unlock;
 -- 
 2.43.0
 
