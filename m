@@ -1,48 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E42121485D;
-	Sun, 24 Mar 2024 23:08:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2A021413D;
+	Sun, 24 Mar 2024 23:08:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321740; cv=none; b=pV/WVetzKlzuBNWidZVaVHSu30Fiee5B3eaC9V0/yCh2CpswzAKDNI7zeNC7LhtV3Whz0SvtRBw2dWlgus77Aw/GpLCbWDxeIqN2UTlMhbIJiG8PKYf/2LpjZlXF+fm6au/1E7ag3GhikjQk3I8pytvghMQoaDaKJCviNLdpPnQ=
+	t=1711321737; cv=none; b=gU3oXHFfKw9DCgQB1lcjNtdbnDIOaxnQi46IuqbVPl8kIUQnh+KR1MMDuzGHWRBGYBV7IRY9cftDYf2ldiJ2VrYC8Q4xQYE4jFA2n3dmgHGIAzjtIfgqCGr/Xet5a8jfDJhn7Yah6KahX99wxMCN1XtoRnq/2jDA4I7JiOQyxnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321740; c=relaxed/simple;
-	bh=gFwAlKTfqXWNZTGG/o2AQGLpEbs15X5IP2Rzpw4hAEE=;
+	s=arc-20240116; t=1711321737; c=relaxed/simple;
+	bh=TLyEqfyntQ6dgjomKdKwyWv+EdNOs2VIapsu7gTdO5I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nPk0bezjARdTPT6X8GKNPZoFnzN6gJ9RKcOoyNFVhSZppdP2zYQsPSQHq+wZenKjuQ1asuZ4pOiX9Or3WnYIuqYxbiC/Bd3ILYITtRaC0Uz4HHcxsXqjlIWV6vLv48rRLwRIqtw3Ip3UZMVs8Gg+kZ56g3uYxel5kYm2HhtGYaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZU/mGRb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=L3L6HNCRRBwr2FpX353QLwrrXuHX0i+k6dOAt+v0YS07SYXWW3YxK+McmmqfXMArg5SXjVHudrWJhXa4PXwsOxR/AiFEWsxbHjTfFTkyt4H5Wcs6qVJJe1Odbx5a6H+tDc7M6mPhuDrYJVbo6U6rx72HMeECRdvH/6phbXyj86c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WI6XOu9b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZU/mGRb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52BD8C433C7;
-	Sun, 24 Mar 2024 23:08:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WI6XOu9b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B6E4C43399;
+	Sun, 24 Mar 2024 23:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321739;
-	bh=gFwAlKTfqXWNZTGG/o2AQGLpEbs15X5IP2Rzpw4hAEE=;
+	s=k20201202; t=1711321736;
+	bh=TLyEqfyntQ6dgjomKdKwyWv+EdNOs2VIapsu7gTdO5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OZU/mGRb7AH2o1/5dWl8pT2fOuQBmV1t0yZv5WX18JTmN753sMfJbujq07F7+0L2z
-	 jb8O26eaMXg9F+KgIImKbYnVlJUlDsf1yOXXiNtHh3OwmOTDoDzu5J4JgUdq8YD/Aq
-	 gVMUiRxHRZMxEFYFviI6pBqkzMM9JH3IzXkc3k1FDODdxcziiC2FzeDxmaqbWgtWVf
-	 i509lDQYr6UJry3y9djiocVRg8Hyglt8gUnF5g9yc+KN03nfgTA0U5MRi7YO53ybCV
-	 TAAPyN+YTkRGOou7kr0hN4vUU8Ud4IKERck5UuFfjl4bobAcBFS6qSOcfsi28ExDN2
-	 iskygwZIH+3bw==
+	b=WI6XOu9bzLb0GHcmGXPA5dkpImKZ3Da8E2St0sOgFcCbtPppjzyPLMdtuRZcXJMTq
+	 98PUVZymOVZcdkn4YT6tS6EJhILm7JyMqjmmNvjnKY49NxPB6TpQx20IsCEGdJ4bbU
+	 veR5fkBSiYMPZri20gCO1v0dK0TeKDYIpZ1ztAOBqS1Kr6vKRrJLOUsU+5HlYOWUzw
+	 HfxCVCoK0bXtkHwr9wJWPy6lRT7vxDcx/gBHu3mQ2WmSwzmlV1C9yfAPRwBNZVV7yW
+	 lQS+gE7HhGEHIA1sPCKwBlbWA8xRTOEq6H+YLHpV3eDoR5koaZjBBZSdR5/mVOH7hJ
+	 hV10Ym1H0iH7A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stephen Boyd <swboyd@chromium.org>,
-	Jason Ling <jasonling@chromium.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	llvm@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
+Cc: Zhipeng Lu <alexious@zju.edu.cn>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 467/638] arm64: ftrace: Don't forbid CALL_OPS+CC_OPTIMIZE_FOR_SIZE with Clang
-Date: Sun, 24 Mar 2024 18:58:24 -0400
-Message-ID: <20240324230116.1348576-468-sashal@kernel.org>
+Subject: [PATCH 6.6 464/638] media: go7007: fix a memleak in go7007_load_encoder
+Date: Sun, 24 Mar 2024 18:58:21 -0400
+Message-ID: <20240324230116.1348576-465-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -56,50 +48,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Zhipeng Lu <alexious@zju.edu.cn>
 
-[ Upstream commit a743f26d03a96593c0f3d05dc26b388f45de67c9 ]
+[ Upstream commit b9b683844b01d171a72b9c0419a2d760d946ee12 ]
 
-Per commit b3f11af9b2ce ("arm64: ftrace: forbid CALL_OPS with
-CC_OPTIMIZE_FOR_SIZE"), GCC is silently ignoring `-falign-functions=N`
-when passed `-Os`, causing functions to be improperly aligned. This
-doesn't seem to be a problem with Clang though, where enabling CALL_OPS
-with CC_OPTIMIZE_FOR_SIZE doesn't spit out any warnings at boot about
-misaligned patch-sites. Only forbid CALL_OPS if GCC is used and we're
-optimizing for size so that CALL_OPS can be used with clang optimizing
-for size.
+In go7007_load_encoder, bounce(i.e. go->boot_fw), is allocated without
+a deallocation thereafter. After the following call chain:
 
-Cc: Jason Ling <jasonling@chromium.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Bill Wendling <morbo@google.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: llvm@lists.linux.dev
-Fixes: b3f11af9b2ce ("arm64: ftrace: forbid CALL_OPS with CC_OPTIMIZE_FOR_SIZE")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Link: https://lore.kernel.org/r/20240223064032.3463229-1-swboyd@chromium.org
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+saa7134_go7007_init
+  |-> go7007_boot_encoder
+        |-> go7007_load_encoder
+  |-> kfree(go)
+
+go is freed and thus bounce is leaked.
+
+Fixes: 95ef39403f89 ("[media] go7007: remember boot firmware")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/usb/go7007/go7007-driver.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index b5df38c2a0067..f9777ce2ccb2d 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -196,7 +196,7 @@ config ARM64
- 		if DYNAMIC_FTRACE_WITH_ARGS && DYNAMIC_FTRACE_WITH_CALL_OPS
- 	select HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS \
- 		if (DYNAMIC_FTRACE_WITH_ARGS && !CFI_CLANG && \
--		    !CC_OPTIMIZE_FOR_SIZE)
-+		    (CC_IS_CLANG || !CC_OPTIMIZE_FOR_SIZE))
- 	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
- 		if DYNAMIC_FTRACE_WITH_ARGS
- 	select HAVE_SAMPLE_FTRACE_DIRECT
+diff --git a/drivers/media/usb/go7007/go7007-driver.c b/drivers/media/usb/go7007/go7007-driver.c
+index 0c24e29843048..eb03f98b2ef11 100644
+--- a/drivers/media/usb/go7007/go7007-driver.c
++++ b/drivers/media/usb/go7007/go7007-driver.c
+@@ -80,7 +80,7 @@ static int go7007_load_encoder(struct go7007 *go)
+ 	const struct firmware *fw_entry;
+ 	char fw_name[] = "go7007/go7007fw.bin";
+ 	void *bounce;
+-	int fw_len, rv = 0;
++	int fw_len;
+ 	u16 intr_val, intr_data;
+ 
+ 	if (go->boot_fw == NULL) {
+@@ -109,9 +109,11 @@ static int go7007_load_encoder(struct go7007 *go)
+ 	    go7007_read_interrupt(go, &intr_val, &intr_data) < 0 ||
+ 			(intr_val & ~0x1) != 0x5a5a) {
+ 		v4l2_err(go, "error transferring firmware\n");
+-		rv = -1;
++		kfree(go->boot_fw);
++		go->boot_fw = NULL;
++		return -1;
+ 	}
+-	return rv;
++	return 0;
+ }
+ 
+ MODULE_FIRMWARE("go7007/go7007fw.bin");
 -- 
 2.43.0
 
