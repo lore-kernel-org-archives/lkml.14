@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1231D5F8F;
-	Sun, 24 Mar 2024 22:49:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C636F1D5F65;
+	Sun, 24 Mar 2024 22:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320576; cv=none; b=qfuaGONWgdJqnM4GPFSQU6CEhiEwAKJzq2HHEjGj3t+tyfRgpSbQlIznV8nsxYJSd17bSKO/82FMsokJWPKY+DKm7qbFVKShDB2hY1VHaxqfZI1CeLMvp4eQ0HxPwbPQ1XKI22elH79DAsLZ5uCrqVj3Y3fh8me59IubD6j0L8o=
+	t=1711320569; cv=none; b=NX3d6KlwZVYqNqlSsjd2G/DSzDEMNh5spxI+smeLK0ge52URCP2KnIH+wPMUhfORTv33+AcB8WRrEBSuX/zq0sprcpy5uoIv9vigoMUdfG2N3jjqyAKvD+KbXNAbseXzVld2hOcfVxqgKlfffPahWlm2aDF0TyiVCfNhos+nt9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320576; c=relaxed/simple;
-	bh=G+hduV/IVdxX36FY9MOF6jITJo3Fxej2/2NW473H1lw=;
+	s=arc-20240116; t=1711320569; c=relaxed/simple;
+	bh=+5YPbWjlptl8hmfAMIJeiodU22MkYKtuc8lSZTYliSg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jAXPVqMF9SCh7fPqxIYKtc6XHS6Bpvk2Eastaba1Ex+WJ9RzLa8wlY1ab9xtr7T+H50CynVOoiBarD6zhNREGrkS0FYRgVR/lses9C4Mz34N+j8Nr8eulHSHffbiIPInFUHOs3uB0+D7Fai097tl34X7jjwImvbu/zcFysGHBOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mbarqa6P; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Te2E2/ZYuuYf5Ob8TTd5sXBCNhJU4JsCcrcqt2eyx3dvw3pRu/YMVoNF28atg986LpX6a5sNB68yoigsAHlfia7MSBD7qJCn1u/t5Vw+1edcmMrL9s0BcRFLesEcwh8NYM7xt8kNzG4+7nKeKjqXfbiYNKWuRbxo46bqF7B+C4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rkev0qVk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mbarqa6P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5347C43601;
-	Sun, 24 Mar 2024 22:49:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rkev0qVk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F513C433C7;
+	Sun, 24 Mar 2024 22:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320575;
-	bh=G+hduV/IVdxX36FY9MOF6jITJo3Fxej2/2NW473H1lw=;
+	s=k20201202; t=1711320568;
+	bh=+5YPbWjlptl8hmfAMIJeiodU22MkYKtuc8lSZTYliSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Mbarqa6PXi1JBnqckkqHNGH8x9QG/NlM7VMZIY4x/+dOyuWWeYOrBhXIyT7dshDBI
-	 13mdqxhwMOuGnPsOBBZej1HTbKv59ICi7WK0mdHMFBnnco4BQiGb6EWKNbj0SGRTbc
-	 fk7jYLg6YZj1rqVWADtNhlWuOsclLN44IaVX8YqBbdmH58wXqGnR0vNoXyI9ryL03t
-	 4QzKkOt6wc3hnbHSfOjvCHWKS+cIfAq331BrgMwKEOWXAUNnxzuJN9cU4ov1PyzuLA
-	 23cT8QHAoceVeLwngitOYEEFftrWLgiKXcX/15tpdg+aKxBnK/raFqXS/rAcaojlZx
-	 d/1yOtY5k24+w==
+	b=Rkev0qVkQ79UVnVS6CdX6SQKNPinMtq8j7FpCq3RA+x9ApJWXkrKx+YH75Ygj+JBC
+	 inWBA2+UQ51KddxQ94VYj8UNnvYnh/YxY1TfmP+76dFEfX70BJB8WD+aHz3jTRvs6A
+	 eFAJnQbaB3Typx4dZwgCbQbZKPN3OTRb1Gl31MDhB2e064hipemQMUBtXlWynyAicZ
+	 0RS+qoSLjFO5eAxBXDis7IMcL7bnzCr6AD1xHbIahPEfJaMBROCJAqyxgsH0TeXeHb
+	 VM1NNHzvOBDhKCNwq454qlm0nbh+CbA/4OO+YLbWu0OWZF+jphgY4wkJrrE+3nzIQr
+	 ejg2l4onA+HyQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Keisuke Nishimura <keisuke.nishimura@inria.fr>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Ingo Molnar <mingo@kernel.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 136/713] wifi: wilc1000: fix declarations ordering
-Date: Sun, 24 Mar 2024 18:37:42 -0400
-Message-ID: <20240324224720.1345309-137-sashal@kernel.org>
+Subject: [PATCH 6.7 129/713] sched/fair: Take the scheduling domain into account in select_idle_smt()
+Date: Sun, 24 Mar 2024 18:37:35 -0400
+Message-ID: <20240324224720.1345309-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
 References: <20240324224720.1345309-1-sashal@kernel.org>
@@ -44,49 +46,88 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Alexis Lothoré <alexis.lothore@bootlin.com>
+From: Keisuke Nishimura <keisuke.nishimura@inria.fr>
 
-[ Upstream commit 535733e90e5d8912ebeccebb05b354a2d06ff459 ]
+[ Upstream commit 8aeaffef8c6eceab0e1498486fdd4f3dc3b7066c ]
 
-Reorder parameters declaration in wilc_parse_join_bss_param to enforce
-reverse christmas tree
+When picking a CPU on task wakeup, select_idle_smt() has to take
+into account the scheduling domain of @target. This is because the
+"isolcpus" kernel command line option can remove CPUs from the domain to
+isolate them from other SMT siblings.
 
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240105075733.36331-2-alexis.lothore@bootlin.com
-Stable-dep-of: 205c50306acf ("wifi: wilc1000: fix RCU usage in connect path")
+This fix checks if the candidate CPU is in the target scheduling domain.
+
+Commit:
+
+  df3cb4ea1fb6 ("sched/fair: Fix wrong cpu selecting from isolated domain")
+
+... originally introduced this fix by adding the check of the scheduling
+domain in the loop.
+
+However, commit:
+
+  3e6efe87cd5cc ("sched/fair: Remove redundant check in select_idle_smt()")
+
+... accidentally removed the check. Bring it back.
+
+Fixes: 3e6efe87cd5c ("sched/fair: Remove redundant check in select_idle_smt()")
+Signed-off-by: Keisuke Nishimura <keisuke.nishimura@inria.fr>
+Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lore.kernel.org/r/20240110131707.437301-1-keisuke.nishimura@inria.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/microchip/wilc1000/hif.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/sched/fair.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/hif.c b/drivers/net/wireless/microchip/wilc1000/hif.c
-index a28da59384813..2f8b9e9c393ce 100644
---- a/drivers/net/wireless/microchip/wilc1000/hif.c
-+++ b/drivers/net/wireless/microchip/wilc1000/hif.c
-@@ -374,13 +374,13 @@ static void handle_connect_timeout(struct work_struct *work)
- void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 				struct cfg80211_crypto_settings *crypto)
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 7ac9f4b1d955c..68bd1102133ef 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7318,13 +7318,19 @@ static int select_idle_core(struct task_struct *p, int core, struct cpumask *cpu
+ /*
+  * Scan the local SMT mask for idle CPUs.
+  */
+-static int select_idle_smt(struct task_struct *p, int target)
++static int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
  {
--	struct wilc_join_bss_param *param;
--	struct ieee80211_p2p_noa_attr noa_attr;
--	u8 rates_len = 0;
-+	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
- 	const u8 *tim_elm, *ssid_elm, *rates_ie, *supp_rates_ie;
- 	const u8 *ht_ie, *wpa_ie, *wmm_ie, *rsn_ie;
-+	struct ieee80211_p2p_noa_attr noa_attr;
-+	struct wilc_join_bss_param *param;
-+	u8 rates_len = 0;
- 	int ret;
--	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
+ 	int cpu;
  
- 	param = kzalloc(sizeof(*param), GFP_KERNEL);
- 	if (!param)
+ 	for_each_cpu_and(cpu, cpu_smt_mask(target), p->cpus_ptr) {
+ 		if (cpu == target)
+ 			continue;
++		/*
++		 * Check if the CPU is in the LLC scheduling domain of @target.
++		 * Due to isolcpus, there is no guarantee that all the siblings are in the domain.
++		 */
++		if (!cpumask_test_cpu(cpu, sched_domain_span(sd)))
++			continue;
+ 		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
+ 			return cpu;
+ 	}
+@@ -7348,7 +7354,7 @@ static inline int select_idle_core(struct task_struct *p, int core, struct cpuma
+ 	return __select_idle_cpu(core, p);
+ }
+ 
+-static inline int select_idle_smt(struct task_struct *p, int target)
++static inline int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
+ {
+ 	return -1;
+ }
+@@ -7598,7 +7604,7 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+ 		has_idle_core = test_idle_cores(target);
+ 
+ 		if (!has_idle_core && cpus_share_cache(prev, target)) {
+-			i = select_idle_smt(p, prev);
++			i = select_idle_smt(p, sd, prev);
+ 			if ((unsigned int)i < nr_cpumask_bits)
+ 				return i;
+ 		}
 -- 
 2.43.0
 
