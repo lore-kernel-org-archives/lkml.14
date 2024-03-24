@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1964B1AE02F;
-	Sun, 24 Mar 2024 22:44:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC1F1AE8CD;
+	Sun, 24 Mar 2024 22:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320250; cv=none; b=GSSdqfuk/4sTdye5Uxp6MLzlgV5yaIGvT/HDCN2P2GV3f9pfynVn9xMKpVs7xEwFv0dDNngluswAgkkAnY4kfxBJd0wsaVKHzA/CyNVZiOBXMGPol5S9dP6E9QhIjCl4Pqzr1swomp8WQTjfpjsEGhn3HUYwmsV7LA9BPK2fuQA=
+	t=1711320252; cv=none; b=mkKX0gew3xn0Y/ZPIUxoclcQY0QtoZyIU0F4SGGayqFNOTuobFAvZGtKxzEoo2e5hoiL7KBe4KF3lMUblmhZw1V9j7cB9DAhJGj+rhyCMX+ahDKUxDNY8ZW3sNOSA6acjISf3lGOkNTGv00Ycu8eH38gTajrO22Pxs1Guog1XMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320250; c=relaxed/simple;
-	bh=XJdMnQgXD90zhNAK03LGBoZ6NzzvmlXp1ppP5ajCa6E=;
+	s=arc-20240116; t=1711320252; c=relaxed/simple;
+	bh=OL/nnTz4eR3VfyoniYVBW5CLME8rWWSikfF8Vp0ue4g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KzvetlzaupTxmAR/gWpFM1A5F1W8HSp/kYqpFG0V3v0e+veNsQNUqTw3rNtGHBFTOCN4n17w3C2aEs/SE8x0N2An9e54VUHN/n8cFEkBZVPiDcp5T7bw9XD3rufxYP6fQzV/4Daka8rgXdCtmGfiyU6zYyl3Go9SVhotZec72OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YfIXJATy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TFRm7O5q46z1QUKJS1mnGwYcx7iU/Yyj2f9vODtTGWzgcqOrTKI8J9ZRHbXBi9gWcUcUxMTO7OxZ1bG1vTaND8/d2sqOodMP8sjnGt+8wSPPrpJfcT6BpSqPanYV8USJ5QOnp9sI9eDOseuyZ0m2y5Bl3JaVozksMXxMX0HtBDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PpMHdPr0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YfIXJATy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E1E5C43390;
-	Sun, 24 Mar 2024 22:44:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PpMHdPr0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27AE7C433A6;
+	Sun, 24 Mar 2024 22:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320248;
-	bh=XJdMnQgXD90zhNAK03LGBoZ6NzzvmlXp1ppP5ajCa6E=;
+	s=k20201202; t=1711320251;
+	bh=OL/nnTz4eR3VfyoniYVBW5CLME8rWWSikfF8Vp0ue4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YfIXJATyS/CUwVRhUvw+jN52XJl1AgubkJ/RtHtCTUt4XRtSBnE+FcJDnuTkulpe+
-	 KhaxcmVjTwHvNYJcNnCAyO3oxnBJlCl+AKP8lG5MSnx6WuiyVvUSCcb2KF7ujBenXR
-	 cGCtFve+CL3vDB3V27UWkXm06Fx+JNjrdRHPOCltHS4tdqnjchJRDS1dcahscjYmiM
-	 wOUkL5ti2WCSuszTyrmPnhlS7kMc8ZFhoB8MFYzObGCPagGTRtMD8dcdT7X6JdhWgS
-	 XOrQ9Q+yCzUbQW3bWlAYHNG1grokW1jWF/vvlta72TAoKH7vbzngi0F8/qdcDZLN5g
-	 A0M3UnBIOvhVQ==
+	b=PpMHdPr0rCuZ0SZYzVdRyIatEhuMfXnB6fPj1eux36UnColpo1yLi0gQINNpVTMxw
+	 BFLxsoVjNWySt+4zNO0jhtQVBT1EF4oNpYyxf164ITStw5BL9UA+le77nMUOelu0yt
+	 Nw5DeG9bjqW9p+sC05oDXI7rEzhnsZNJ9DGXUoa9nhoEOsANeuXU1ZXE9AzOozHLBv
+	 DBPMQStYg0p2iJ1KQ7/N56NDZ1aptCV+CjQaSdJYd+5aVhognzW3yLChoA8GchptKZ
+	 QJfXcVo48K3NT2X/ctYe6fDWzVu/o+NwXORLUZOJcrgHeJpt2ZB0TRzbmH0ohuF73l
+	 LV9OOy1s5yKEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yihang Li <liyihang9@huawei.com>,
-	Xiang Chen <chenxiang66@hisilicon.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Chao Yu <chao@kernel.org>,
+	Daeho Jeong <daehojeong@google.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 556/715] scsi: hisi_sas: Fix a deadlock issue related to automatic dump
-Date: Sun, 24 Mar 2024 18:32:15 -0400
-Message-ID: <20240324223455.1342824-557-sashal@kernel.org>
+Subject: [PATCH 6.8 559/715] f2fs: compress: fix to guarantee persisting compressed blocks by CP
+Date: Sun, 24 Mar 2024 18:32:18 -0400
+Message-ID: <20240324223455.1342824-560-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
 References: <20240324223455.1342824-1-sashal@kernel.org>
@@ -49,123 +49,146 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Yihang Li <liyihang9@huawei.com>
+From: Chao Yu <chao@kernel.org>
 
-[ Upstream commit 3c4f53b2c341ec6428b98cb51a89a09b025d0953 ]
+[ Upstream commit 8a430dd49e9cb021372b0ad91e60aeef9c6ced00 ]
 
-If we issue a disabling PHY command, the device attached with it will go
-offline, if a 2 bit ECC error occurs at the same time, a hung task may be
-found:
+If data block in compressed cluster is not persisted with metadata
+during checkpoint, after SPOR, the data may be corrupted, let's
+guarantee to write compressed page by checkpoint.
 
-[ 4613.652388] INFO: task kworker/u256:0:165233 blocked for more than 120 seconds.
-[ 4613.666297] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 4613.674809] task:kworker/u256:0  state:D stack:    0 pid:165233 ppid:     2 flags:0x00000208
-[ 4613.683959] Workqueue: 0000:74:02.0_disco_q sas_revalidate_domain [libsas]
-[ 4613.691518] Call trace:
-[ 4613.694678]  __switch_to+0xf8/0x17c
-[ 4613.698872]  __schedule+0x660/0xee0
-[ 4613.703063]  schedule+0xac/0x240
-[ 4613.706994]  schedule_timeout+0x500/0x610
-[ 4613.711705]  __down+0x128/0x36c
-[ 4613.715548]  down+0x240/0x2d0
-[ 4613.719221]  hisi_sas_internal_abort_timeout+0x1bc/0x260 [hisi_sas_main]
-[ 4613.726618]  sas_execute_internal_abort+0x144/0x310 [libsas]
-[ 4613.732976]  sas_execute_internal_abort_dev+0x44/0x60 [libsas]
-[ 4613.739504]  hisi_sas_internal_task_abort_dev.isra.0+0xbc/0x1b0 [hisi_sas_main]
-[ 4613.747499]  hisi_sas_dev_gone+0x174/0x250 [hisi_sas_main]
-[ 4613.753682]  sas_notify_lldd_dev_gone+0xec/0x2e0 [libsas]
-[ 4613.759781]  sas_unregister_common_dev+0x4c/0x7a0 [libsas]
-[ 4613.765962]  sas_destruct_devices+0xb8/0x120 [libsas]
-[ 4613.771709]  sas_do_revalidate_domain.constprop.0+0x1b8/0x31c [libsas]
-[ 4613.778930]  sas_revalidate_domain+0x60/0xa4 [libsas]
-[ 4613.784716]  process_one_work+0x248/0x950
-[ 4613.789424]  worker_thread+0x318/0x934
-[ 4613.793878]  kthread+0x190/0x200
-[ 4613.797810]  ret_from_fork+0x10/0x18
-[ 4613.802121] INFO: task kworker/u256:4:316722 blocked for more than 120 seconds.
-[ 4613.816026] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 4613.824538] task:kworker/u256:4  state:D stack:    0 pid:316722 ppid:     2 flags:0x00000208
-[ 4613.833670] Workqueue: 0000:74:02.0 hisi_sas_rst_work_handler [hisi_sas_main]
-[ 4613.841491] Call trace:
-[ 4613.844647]  __switch_to+0xf8/0x17c
-[ 4613.848852]  __schedule+0x660/0xee0
-[ 4613.853052]  schedule+0xac/0x240
-[ 4613.856984]  schedule_timeout+0x500/0x610
-[ 4613.861695]  __down+0x128/0x36c
-[ 4613.865542]  down+0x240/0x2d0
-[ 4613.869216]  hisi_sas_controller_prereset+0x58/0x1fc [hisi_sas_main]
-[ 4613.876324]  hisi_sas_rst_work_handler+0x40/0x8c [hisi_sas_main]
-[ 4613.883019]  process_one_work+0x248/0x950
-[ 4613.887732]  worker_thread+0x318/0x934
-[ 4613.892204]  kthread+0x190/0x200
-[ 4613.896118]  ret_from_fork+0x10/0x18
-[ 4613.900423] INFO: task kworker/u256:1:348985 blocked for more than 121 seconds.
-[ 4613.914341] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 4613.922852] task:kworker/u256:1  state:D stack:    0 pid:348985 ppid:     2 flags:0x00000208
-[ 4613.931984] Workqueue: 0000:74:02.0_event_q sas_port_event_worker [libsas]
-[ 4613.939549] Call trace:
-[ 4613.942702]  __switch_to+0xf8/0x17c
-[ 4613.946892]  __schedule+0x660/0xee0
-[ 4613.951083]  schedule+0xac/0x240
-[ 4613.955015]  schedule_timeout+0x500/0x610
-[ 4613.959725]  wait_for_common+0x200/0x610
-[ 4613.964349]  wait_for_completion+0x3c/0x5c
-[ 4613.969146]  flush_workqueue+0x198/0x790
-[ 4613.973776]  sas_porte_broadcast_rcvd+0x1e8/0x320 [libsas]
-[ 4613.979960]  sas_port_event_worker+0x54/0xa0 [libsas]
-[ 4613.985708]  process_one_work+0x248/0x950
-[ 4613.990420]  worker_thread+0x318/0x934
-[ 4613.994868]  kthread+0x190/0x200
-[ 4613.998800]  ret_from_fork+0x10/0x18
-
-This is because when the device goes offline, we obtain the hisi_hba
-semaphore and send the ABORT_DEV command to the device. However, the
-internal abort timed out due to the 2 bit ECC error and triggers automatic
-dump. In addition, since the hisi_hba semaphore has been obtained, the dump
-cannot be executed and the controller cannot be reset.
-
-Therefore, the deadlocks occur on the following circular dependencies:
-hisi_sas_dev_gone() -> down() -> hisi_sas_internal_task_abort_dev() -> ...
--> hisi_sas_internal_abort_timeout() -> down().
-
-The deadlock is triggered only when the timeout occurs during device goes
-offline. To fix this issue, use .rst_ha_timeout to distinguish the scenario
-where a device goes offline from other scenarios.
-
-Fixes: 2ff07b5c6fe9 ("scsi: hisi_sas: Directly call register snapshot instead of using workqueue")
-Signed-off-by: Yihang Li <liyihang9@huawei.com>
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Link: https://lore.kernel.org/r/1705904747-62186-2-git-send-email-chenxiang66@hisilicon.com
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+Reviewed-by: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ fs/f2fs/compress.c |  4 +++-
+ fs/f2fs/data.c     | 17 +++++++++--------
+ fs/f2fs/f2fs.h     |  4 +++-
+ 3 files changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index bbb7b2d9ffcfb..1abc62b07d24c 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -1962,9 +1962,17 @@ static bool hisi_sas_internal_abort_timeout(struct sas_task *task,
- 	struct hisi_sas_internal_abort_data *timeout = data;
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 531517dac0796..3a8d8a213b406 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1418,6 +1418,8 @@ void f2fs_compress_write_end_io(struct bio *bio, struct page *page)
+ 	struct f2fs_sb_info *sbi = bio->bi_private;
+ 	struct compress_io_ctx *cic =
+ 			(struct compress_io_ctx *)page_private(page);
++	enum count_type type = WB_DATA_TYPE(page,
++				f2fs_is_compressed_page(page));
+ 	int i;
  
- 	if (hisi_sas_debugfs_enable && hisi_hba->debugfs_itct[0].itct) {
--		down(&hisi_hba->sem);
-+		/*
-+		 * If timeout occurs in device gone scenario, to avoid
-+		 * circular dependency like:
-+		 * hisi_sas_dev_gone() -> down() -> ... ->
-+		 * hisi_sas_internal_abort_timeout() -> down().
-+		 */
-+		if (!timeout->rst_ha_timeout)
-+			down(&hisi_hba->sem);
- 		hisi_hba->hw->debugfs_snapshot_regs(hisi_hba);
--		up(&hisi_hba->sem);
-+		if (!timeout->rst_ha_timeout)
-+			up(&hisi_hba->sem);
- 	}
+ 	if (unlikely(bio->bi_status))
+@@ -1425,7 +1427,7 @@ void f2fs_compress_write_end_io(struct bio *bio, struct page *page)
  
- 	if (task->task_state_flags & SAS_TASK_STATE_DONE) {
+ 	f2fs_compress_free_page(page);
+ 
+-	dec_page_count(sbi, F2FS_WB_DATA);
++	dec_page_count(sbi, type);
+ 
+ 	if (atomic_dec_return(&cic->pending_pages))
+ 		return;
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 26e317696b338..d00e92b6c9025 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -48,7 +48,7 @@ void f2fs_destroy_bioset(void)
+ 	bioset_exit(&f2fs_bioset);
+ }
+ 
+-static bool __is_cp_guaranteed(struct page *page)
++bool f2fs_is_cp_guaranteed(struct page *page)
+ {
+ 	struct address_space *mapping = page->mapping;
+ 	struct inode *inode;
+@@ -65,8 +65,6 @@ static bool __is_cp_guaranteed(struct page *page)
+ 			S_ISDIR(inode->i_mode))
+ 		return true;
+ 
+-	if (f2fs_is_compressed_page(page))
+-		return false;
+ 	if ((S_ISREG(inode->i_mode) && IS_NOQUOTA(inode)) ||
+ 			page_private_gcing(page))
+ 		return true;
+@@ -338,7 +336,7 @@ static void f2fs_write_end_io(struct bio *bio)
+ 
+ 	bio_for_each_segment_all(bvec, bio, iter_all) {
+ 		struct page *page = bvec->bv_page;
+-		enum count_type type = WB_DATA_TYPE(page);
++		enum count_type type = WB_DATA_TYPE(page, false);
+ 
+ 		if (page_private_dummy(page)) {
+ 			clear_page_private_dummy(page);
+@@ -762,7 +760,7 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
+ 		wbc_account_cgroup_owner(fio->io_wbc, fio->page, PAGE_SIZE);
+ 
+ 	inc_page_count(fio->sbi, is_read_io(fio->op) ?
+-			__read_io_type(page) : WB_DATA_TYPE(fio->page));
++			__read_io_type(page) : WB_DATA_TYPE(fio->page, false));
+ 
+ 	if (is_read_io(bio_op(bio)))
+ 		f2fs_submit_read_bio(fio->sbi, bio, fio->type);
+@@ -973,7 +971,7 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+ 	if (fio->io_wbc)
+ 		wbc_account_cgroup_owner(fio->io_wbc, fio->page, PAGE_SIZE);
+ 
+-	inc_page_count(fio->sbi, WB_DATA_TYPE(page));
++	inc_page_count(fio->sbi, WB_DATA_TYPE(page, false));
+ 
+ 	*fio->last_block = fio->new_blkaddr;
+ 	*fio->bio = bio;
+@@ -1007,6 +1005,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+ 	enum page_type btype = PAGE_TYPE_OF_BIO(fio->type);
+ 	struct f2fs_bio_info *io = sbi->write_io[btype] + fio->temp;
+ 	struct page *bio_page;
++	enum count_type type;
+ 
+ 	f2fs_bug_on(sbi, is_read_io(fio->op));
+ 
+@@ -1046,7 +1045,8 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+ 	/* set submitted = true as a return value */
+ 	fio->submitted = 1;
+ 
+-	inc_page_count(sbi, WB_DATA_TYPE(bio_page));
++	type = WB_DATA_TYPE(bio_page, fio->compressed_page);
++	inc_page_count(sbi, type);
+ 
+ 	if (io->bio &&
+ 	    (!io_is_mergeable(sbi, io->bio, io, fio, io->last_block_in_bio,
+@@ -1059,7 +1059,8 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+ 		if (F2FS_IO_ALIGNED(sbi) &&
+ 				(fio->type == DATA || fio->type == NODE) &&
+ 				fio->new_blkaddr & F2FS_IO_SIZE_MASK(sbi)) {
+-			dec_page_count(sbi, WB_DATA_TYPE(bio_page));
++			dec_page_count(sbi, WB_DATA_TYPE(bio_page,
++						fio->compressed_page));
+ 			fio->retry = 1;
+ 			goto skip;
+ 		}
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 31554e2a0a320..99511d9a92c0c 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1080,7 +1080,8 @@ struct f2fs_sm_info {
+  * f2fs monitors the number of several block types such as on-writeback,
+  * dirty dentry blocks, dirty node blocks, and dirty meta blocks.
+  */
+-#define WB_DATA_TYPE(p)	(__is_cp_guaranteed(p) ? F2FS_WB_CP_DATA : F2FS_WB_DATA)
++#define WB_DATA_TYPE(p, f)			\
++	(f || f2fs_is_cp_guaranteed(p) ? F2FS_WB_CP_DATA : F2FS_WB_DATA)
+ enum count_type {
+ 	F2FS_DIRTY_DENTS,
+ 	F2FS_DIRTY_DATA,
+@@ -3804,6 +3805,7 @@ void f2fs_init_ckpt_req_control(struct f2fs_sb_info *sbi);
+  */
+ int __init f2fs_init_bioset(void);
+ void f2fs_destroy_bioset(void);
++bool f2fs_is_cp_guaranteed(struct page *page);
+ int f2fs_init_bio_entry_cache(void);
+ void f2fs_destroy_bio_entry_cache(void);
+ void f2fs_submit_read_bio(struct f2fs_sb_info *sbi, struct bio *bio,
 -- 
 2.43.0
 
