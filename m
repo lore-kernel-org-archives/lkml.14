@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8CC2762B2;
-	Sun, 24 Mar 2024 23:36:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF13175C84;
+	Sun, 24 Mar 2024 23:36:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711323386; cv=none; b=Ws5OYnI7faqnMydUAiSMFv03vkHcyo4f0q3gmQnzduzJDR4U2jNe2lPNHvL5epy1XtswZSZfxZ2KyoRk6XPQ5eI5rOL8rcRsvnvhK7CZSgooiDGsgkMqgl5sJm6Wn7M/bt9v0U3W+npUmk9uSYG1KyF4r1gzB6mlCYfs1gehQfI=
+	t=1711323389; cv=none; b=Pmh37daldGYkf602kHvqoSzEn5LFiM4uwVM3YxF99aJF5Lyk4gLUiho3MtI4jpN/cAr7zLMB1qmSInnpMbxDevVlTbc84e24GNNU4HBmmDRcWSQvcWOOckK/Ri+Gf/sqIoPfs/HPoHXVpZ7tMI2Y0pGER2ggFE6uAa4EZJI55go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711323386; c=relaxed/simple;
-	bh=eTI9IOKkvtOB8T26gH1qSqbthfn8ohH424sihv1I7Fk=;
+	s=arc-20240116; t=1711323389; c=relaxed/simple;
+	bh=MyT7mOET00kWAGJobb86ugKpx4ruCR/LeO1Hr6qS+UY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QZaWU36lUmxwtCnjELLAzzEbG8ebZye9U88jUj+lvgnLX33SZt3W8msuKhGz2kGCEbVIEo28ibMK5bNbRn7sLXiCJay6ep1/GBpAPcmxHOv9jg9lenydhnytBHqv8ULCp0wnrkEh+MeAcLcszzrNJFWuwnKgGFNaXalgqWGDzNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tEsbj28x; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JWEDVcVkJAktCgTZp+6pl44Tt5plGbuV7G5qbfsvf/0ppEV8C6WyPrvpFN87559/CrWbr+oe7c5Hfmt57b3IgGZCTn29enHGncU9T3ttbxWG/BovBECn09dI4RanWDb4M83GcPFyM/Y+zEHHCnPmb6lQE+59YP5GAQKmmdbL6O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3L3Rcv6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tEsbj28x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ABC5C43399;
-	Sun, 24 Mar 2024 23:36:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3L3Rcv6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41492C433F1;
+	Sun, 24 Mar 2024 23:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711323385;
-	bh=eTI9IOKkvtOB8T26gH1qSqbthfn8ohH424sihv1I7Fk=;
+	s=k20201202; t=1711323389;
+	bh=MyT7mOET00kWAGJobb86ugKpx4ruCR/LeO1Hr6qS+UY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tEsbj28xp7FODlhEqitMa5fswOPRrLiZ01WPNxZVMbtdqxldSuOWyeSD6fdTGTF0D
-	 DT7D5yH9paIkhmisT/rWdeaud7s7pGATCTGNMeO3qj3rLEmwp7wd+dC0cMCIHGzGqM
-	 ZuSJCGIcOp6aUDGuATIjcJM7teaZC2enzF7ygzI2fxfiWpLAAkTBKeLmFiqbFXNPP1
-	 W4/8lslv4W++YixO08NsxL0ZZZxUPEhtysVZTj/hfUmJ4qcXAtFgXVQPD/9fsNMFN1
-	 NSIz+mKXR8MAGE4tgJrMd6USd04JOIBL1tPQ+iN53K0ZTXxfc1SuQqldADow0Eh2ZQ
-	 rYJcRISiKKB9w==
+	b=U3L3Rcv6UxaDpCWDZR3jnqsf+VFs+21lBDjvRyVcvcHVMiAlxg0+T3r97fxURbovn
+	 7EJNhwh6Y/RuvAC84z9rzPRcesXoFQYK9Cb7MSG6t7JA7qOQm1RWFOA2iAZlg/L7PS
+	 o9Awii2NaKq+TxgQIfzh+MclwF55Y/3H70GfdJdDD15cKya20yKVkZUoqJjkLUVNQQ
+	 q1caXwgo/m2WZqBAY3/IPKkupAyGIMF5iAWiM4L/mJW7MblwjyQyj/Sc2yOoGp2BQR
+	 3uskDqG7iTqU1/T7BrrMyG/3Rxl68YlZ2BM1G6tgb2Ga1E+nUkrJIY2LFZdMV4jfUM
+	 VGc2GrV2hm8Gg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhipeng Lu <alexious@zju.edu.cn>,
-	Kalle Valo <kvalo@kernel.org>,
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Jeffrey Hugo <quic_jhugo@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 085/317] wifi: libertas: fix some memleaks in lbs_allocate_cmd_buffer()
-Date: Sun, 24 Mar 2024 19:31:05 -0400
-Message-ID: <20240324233458.1352854-86-sashal@kernel.org>
+Subject: [PATCH 5.15 089/317] arm64: dts: qcom: msm8998: declare VLS CLAMP register for USB3 PHY
+Date: Sun, 24 Mar 2024 19:31:09 -0400
+Message-ID: <20240324233458.1352854-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
 References: <20240324233458.1352854-1-sashal@kernel.org>
@@ -48,55 +50,51 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhipeng Lu <alexious@zju.edu.cn>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-[ Upstream commit 5f0e4aede01cb01fa633171f0533affd25328c3a ]
+[ Upstream commit fc835b2311d4deb85d776c1d73562338462aa7ac ]
 
-In the for statement of lbs_allocate_cmd_buffer(), if the allocation of
-cmdarray[i].cmdbuf fails, both cmdarray and cmdarray[i].cmdbuf needs to
-be freed. Otherwise, there will be memleaks in lbs_allocate_cmd_buffer().
+The USB3 PHY on the MSM8998 platform doesn't have built-in
+PCS_MISC_CLAMP_ENABLE register. Instead clamping is handled separately
+via the register in the TCSR space. Declare corresponding register.
 
-Fixes: 876c9d3aeb98 ("[PATCH] Marvell Libertas 8388 802.11b/g USB driver")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Signed-off-by: Kalle Valo <kvalo@kernel.org>
-Link: https://msgid.link/20240126075336.2825608-1-alexious@zju.edu.cn
+Fixes: 026dad8f5873 ("arm64: dts: qcom: msm8998: Add USB-related nodes")
+Cc: Jeffrey Hugo <quic_jhugo@quicinc.com>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+Link: https://lore.kernel.org/r/20240117-usbc-phy-vls-clamp-v2-4-a950c223f10f@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas/cmd.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/libertas/cmd.c b/drivers/net/wireless/marvell/libertas/cmd.c
-index a4d9dd73b2588..db9a852fa58a3 100644
---- a/drivers/net/wireless/marvell/libertas/cmd.c
-+++ b/drivers/net/wireless/marvell/libertas/cmd.c
-@@ -1133,7 +1133,7 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
- 		if (!cmdarray[i].cmdbuf) {
- 			lbs_deb_host("ALLOC_CMD_BUF: ptempvirtualaddr is NULL\n");
- 			ret = -1;
--			goto done;
-+			goto free_cmd_array;
- 		}
- 	}
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index b3b1258f2d6f8..3d32bf0986e1e 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -1081,6 +1081,11 @@ tcsr_mutex_regs: syscon@1f40000 {
+ 			reg = <0x01f40000 0x40000>;
+ 		};
  
-@@ -1141,8 +1141,17 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
- 		init_waitqueue_head(&cmdarray[i].cmdwait_q);
- 		lbs_cleanup_and_insert_cmd(priv, &cmdarray[i]);
- 	}
--	ret = 0;
-+	return 0;
++		tcsr_regs_2: syscon@1fc0000 {
++			compatible = "qcom,msm8998-tcsr", "syscon";
++			reg = <0x01fc0000 0x26000>;
++		};
++
+ 		tlmm: pinctrl@3400000 {
+ 			compatible = "qcom,msm8998-pinctrl";
+ 			reg = <0x03400000 0xc00000>;
+@@ -2010,6 +2015,8 @@ usb3phy: phy@c010000 {
+ 			reset-names = "phy",
+ 				      "phy_phy";
  
-+free_cmd_array:
-+	for (i = 0; i < LBS_NUM_CMD_BUFFERS; i++) {
-+		if (cmdarray[i].cmdbuf) {
-+			kfree(cmdarray[i].cmdbuf);
-+			cmdarray[i].cmdbuf = NULL;
-+		}
-+	}
-+	kfree(priv->cmd_array);
-+	priv->cmd_array = NULL;
- done:
- 	return ret;
- }
++			qcom,tcsr-reg = <&tcsr_regs_2 0xb244>;
++
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.43.0
 
