@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4CB1FF5BC;
-	Sun, 24 Mar 2024 23:02:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32440130E2F;
+	Sun, 24 Mar 2024 23:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711321372; cv=none; b=jFKMar00oAAQZCISQBGx3k4WjEFV5ZmQZW6/gckq5xPB4LhyRZdMSQFH6epDzfeWiLgSw9r5cm8YiJaoVSsJ8eD5w3DXW8bIRCKa1ZD259rvtkqhCo1+VCw+cmi1jylmYUKDt9R7cvxhVoZdJPjlcUEtNEG6ZP7yBr2Iu4l3wP8=
+	t=1711321378; cv=none; b=F6jVQiv78XVOCXZVdmzv1D3yqK5KOPAFFdsrGaFLrUqaGk+KKYJ/odvg++B6+H5L4dSneZBeXQPI0Wz+rIbD4a8GdttWkiyZbREEpxS/b7yeb+RiH8GqB7Ezbd4E88Pev7AtHa+8pqG79deeWush2lzPehxCVoAvTMn5CwoAuz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711321372; c=relaxed/simple;
-	bh=UtPbFHo8lwti70qwLux/kF9zRmuI2UztEodfyyPfoCg=;
+	s=arc-20240116; t=1711321378; c=relaxed/simple;
+	bh=+mRypTj2AN+uFrmsMst73xXavbGCXAj069qIzrAjzZE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jWNkXmKZP61RPXRVIr20F0LsivrJ2fFeZojEeYkmVUA9WPo9+wX9BE7Aauf4quIfSSGqfJGeyCNywzGXxy/2MaWH1+KWJHO9Q22V1FYsk45kC9dJYufJzqN0fEHrIJlflevHv/l86Yzzwd4THfLDn8AJmvwft3ZZ4+ILrBQQjG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azoMfycP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PTcDxpVu5cL1/zPS4lkI/X60JVQWaSBBFIZgM8cHbS9jTWHxP4vEGTSDllM5mDkCbYiswIWpShc4fFK8y3ISZ/ys1jjVLudwpFy4uqfhdcGCJcqiOiIUDGAS+/qtjTxTcm2Dc1Vtq6clirSniENqltaJ65tvQgtQRpoMkANd0z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9tnF1r1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azoMfycP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EB0EC43394;
-	Sun, 24 Mar 2024 23:02:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9tnF1r1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B4DCC433F1;
+	Sun, 24 Mar 2024 23:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711321371;
-	bh=UtPbFHo8lwti70qwLux/kF9zRmuI2UztEodfyyPfoCg=;
+	s=k20201202; t=1711321377;
+	bh=+mRypTj2AN+uFrmsMst73xXavbGCXAj069qIzrAjzZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=azoMfycPXNz+Z37QfLDbfCLmCJ8PDI9aB/9s70LvmjqlKyez4Gixtp8+QMQYhp90G
-	 r47Y3P/Rt+kiVO/qvnYuLbBSHf/vlbFGy3oKjvLuPV3jxeaD3LfdT0oekHts5GEtlf
-	 hdOsRpggZWpFOhakLuZFtlBcrNWUmL+FgzOs9CEr+5fb43u9Hi3F46/oUI2NlRWV+0
-	 B3nLBfOBaKhnweS5WTBd9bK3f9wRBDsQsCCa5xTt/EO0ob4MpCyn930lrSaHRC16hl
-	 C6d4GMV+M+j3QxsJJ12oHLEZlVEDQbp+yxa1eQuccNX1JaAtpDX1o1l+sW7w61FUHI
-	 y7I92lE+8mL8Q==
+	b=V9tnF1r1584Y1EcuAt4aL7iexq9/ad6hKhe/88OJhjKRpHFsdLEdteAIlBIk8h5xA
+	 09XJqwCkwpa3bPoBnk5ERj25eELiLAF6LOMJHnHbK0WQy+DTyr6cCaPpO2anx4DYig
+	 UT0qi2mgh4sUP7Ba747SqVhlERLaIn1JZn0rTI5KdKJOiKK2sJ/CVkeZgso6VUO9Az
+	 6GDGmle2hqbHChgpGw3nYvxBODFkv+bbb+vlOf5Bq7onLYnTyn0+5dEVYOE5eoG04G
+	 Ypar0QQQqAHRWvZxIDQ0AjkgmgIYUZfYkx+23NRR2qutwhBD2lNkVTyoxuRGNsh7/f
+	 x1pL3FA62wIpw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: David Gow <davidgow@google.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Daniel Latypov <dlatypov@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 095/638] lib/cmdline: Fix an invalid format specifier in an assertion msg
-Date: Sun, 24 Mar 2024 18:52:12 -0400
-Message-ID: <20240324230116.1348576-96-sashal@kernel.org>
+Subject: [PATCH 6.6 101/638] io_uring/net: fix overflow check in io_recvmsg_mshot_prep()
+Date: Sun, 24 Mar 2024 18:52:18 -0400
+Message-ID: <20240324230116.1348576-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
 References: <20240324230116.1348576-1-sashal@kernel.org>
@@ -50,41 +48,52 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: David Gow <davidgow@google.com>
+From: Dan Carpenter <dan.carpenter@linaro.org>
 
-[ Upstream commit d2733a026fc7247ba42d7a8e1b737cf14bf1df21 ]
+[ Upstream commit 8ede3db5061bb1fe28e2c9683329aafa89d2b1b4 ]
 
-The correct format specifier for p - n (both p and n are pointers) is
-%td, as the type should be ptrdiff_t.
+The "controllen" variable is type size_t (unsigned long).  Casting it
+to int could lead to an integer underflow.
 
-This was discovered by annotating KUnit assertion macros with gcc's
-printf specifier, but note that gcc incorrectly suggested a %d or %ld
-specifier (depending on the pointer size of the architecture being
-built).
+The check_add_overflow() function considers the type of the destination
+which is type int.  If we add two positive values and the result cannot
+fit in an integer then that's counted as an overflow.
 
-Fixes: 0ea09083116d ("lib/cmdline: Allow get_options() to take 0 to validate the input")
-Signed-off-by: David Gow <davidgow@google.com>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Daniel Latypov <dlatypov@google.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+However, if we cast "controllen" to an int and it turns negative, then
+negative values *can* fit into an int type so there is no overflow.
+
+Good: 100 + (unsigned long)-4 = 96  <-- overflow
+ Bad: 100 + (int)-4 = 96 <-- no overflow
+
+I deleted the cast of the sizeof() as well.  That's not a bug but the
+cast is unnecessary.
+
+Fixes: 9b0fc3c054ff ("io_uring: fix types in io_recvmsg_multishot_overflow")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Link: https://lore.kernel.org/r/138bd2e2-ede8-4bcc-aa7b-f3d9de167a37@moroto.mountain
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/cmdline_kunit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ io_uring/net.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/cmdline_kunit.c b/lib/cmdline_kunit.c
-index d4572dbc91453..705b82736be08 100644
---- a/lib/cmdline_kunit.c
-+++ b/lib/cmdline_kunit.c
-@@ -124,7 +124,7 @@ static void cmdline_do_one_range_test(struct kunit *test, const char *in,
- 			    n, e[0], r[0]);
+diff --git a/io_uring/net.c b/io_uring/net.c
+index 1d9bfde71809a..058e04ea68c04 100644
+--- a/io_uring/net.c
++++ b/io_uring/net.c
+@@ -544,10 +544,10 @@ static int io_recvmsg_mshot_prep(struct io_kiocb *req,
  
- 	p = memchr_inv(&r[1], 0, sizeof(r) - sizeof(r[0]));
--	KUNIT_EXPECT_PTR_EQ_MSG(test, p, NULL, "in test %u at %u out of bound", n, p - r);
-+	KUNIT_EXPECT_PTR_EQ_MSG(test, p, NULL, "in test %u at %td out of bound", n, p - r);
- }
+ 		if (unlikely(namelen < 0))
+ 			return -EOVERFLOW;
+-		if (check_add_overflow((int)sizeof(struct io_uring_recvmsg_out),
++		if (check_add_overflow(sizeof(struct io_uring_recvmsg_out),
+ 					namelen, &hdr))
+ 			return -EOVERFLOW;
+-		if (check_add_overflow(hdr, (int)controllen, &hdr))
++		if (check_add_overflow(hdr, controllen, &hdr))
+ 			return -EOVERFLOW;
  
- static void cmdline_test_range(struct kunit *test)
+ 		iomsg->namelen = namelen;
 -- 
 2.43.0
 
