@@ -1,580 +1,190 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFFF73504;
-	Mon, 25 Mar 2024 13:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE0B4779D
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 13:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711372416; cv=none; b=HJxoOuQb0FgNmI5KbKuelakaGCKFK5U4q9UzfHkti+Aj/VpYu0sAveR4LPm7tQegJF82gdx3aadBcWqhH2K9dqczYy5tNr9JMV878M6zsk51FiqvXxbeVj0z2hA1L7DhW2FT4ZHXnTPdOTnqU8IvfbN7IkVT0O8TsgkSFyYnPgU=
+	t=1711372435; cv=none; b=VPJt+umiakwHKnU1sk96ZEp680K23pRbGM9KMsb6CWTzBqpEYELYo7gR/ejbVADJIooFzsdE2UrABDuoKXoPxlfp4hE+7D4vRhnfVMQrqV2raFSvbSaolhfVKX+pWfrIIbAPpVjgIQTiUnmAi9+BocCVtpQkpul8v+Af1yrPjLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711372416; c=relaxed/simple;
-	bh=Ehgjquf1MebGhIKempZtPJ1lmbsOJ2Z5c5gxukc/OGM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dUXk5hfxLVzyhniz8pMTUHwH5WCGnsGDH3EG4nlH3CZmM2XR/6GaJKSVx9pKqk0KDc1FacPArln1CsCbj7dxuV5l05sYNRPSmXOMLp//nnwsc4+PPEgb7XWvf1KYWUx/s8JGuOKAL+88Z6VMQEvf4L3MLfXrxOvpq2bK4CZOGik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=gkyrb6MI reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1711372435; c=relaxed/simple;
+	bh=HHojtjcoZd6Q92y03PdxY4XWhtuABkdvaPBeZKDCoIU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LDRoYtFJOjQy/jZ+iddrwp/kRHSQ0M5Ui1k1aPodmwLjnHKyx0Uldwoy/JJ0HQ36X3tW2EHV+J8iU7P1JJn/srXwMCOt57zoB1ZzY6E1CM6DqaLVHkxkKF7ugCXxsEg0qPsJ931NTS3z5Tb1Nfx94Z6FvUGcTWXQSRk2nZ+Oxx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=i4Ze7Gi9; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="gkyrb6MI"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
- id 3be38fa7daf82832; Mon, 25 Mar 2024 14:13:31 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id A618166BCBC;
-	Mon, 25 Mar 2024 14:13:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1711372411;
-	bh=Ehgjquf1MebGhIKempZtPJ1lmbsOJ2Z5c5gxukc/OGM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gkyrb6MIx+NoLxqjjy96EtPu86jOwwnugIRGRkOysQQ9S3ZLBSlhdaaRnhqDK+yp5
-	 C8U0NN9uHERttEM1bPqV1yE9+741cOU/DQdXV1qBLjRagY5QD8oq/e582YzlrMzH16
-	 Lgjo+1IvKurQX70uxoxMGbtCxS7Wp2kxE3UTBib6K+Ztoo86aYA4X8rs+5d9xWG8gg
-	 3oBa6D7jB211rKTxCVdtQUZqoIkO0YoMxyB6rk/a8AmDIPOMAerpGvyjT2TVsPBwJo
-	 vP/azYaeAOnlqCQnrElK2p7f4ZIyCEyZXKfYYN/ZdqHQ3jJmcSZjzBPp5B85mrza0d
-	 DP51aMS/Gt/ZQ==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Lukasz Luba <lukasz.luba@arm.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject:
- [PATCH v2 1/3] thermal: core: Move threshold out of struct thermal_trip
-Date: Mon, 25 Mar 2024 14:11:45 +0100
-Message-ID: <1894658.tdWV9SEqCh@kreacher>
-In-Reply-To: <2331888.ElGaqSPkdT@kreacher>
-References: <2331888.ElGaqSPkdT@kreacher>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="i4Ze7Gi9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=GcBGVLj2NcFTwaJ3wGR3716q37F9N27/ERujNnx/sdk=; b=i4Ze7Gi9i97w6QoI5KITzD7bbf
+	1BNC5gzeTHM7hUDOI/4sd5ungwm8OX6/I5VU5k0sff1cBRttPd1z+z3E1LIl3Zn7NhTscAQv5Tv9K
+	vn3GZFzf2zud+QXY7lx9R45jJ4t/LgR9/M+lS3I7u9B55iYCdOlxrnRUn+F+s4PxWM3FGhyBoPn9y
+	5vZ2x/I8pkWM+5LWUT5Nd1/N5zCBPsa6ql5SNsdFvjPRobUbcpINzNgDDlv+gydCBbcSANonctgTU
+	LZF/nxZRL1oDSrqyg8PRKSFrnPWJMtRT1kG+KmQqDajupDI1kL6DqD1Uy4ZH1ExZxG+anRUTpC6w4
+	5cay/iPQ==;
+Received: from [177.34.169.255] (helo=[192.168.0.139])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1rok8U-00F4Ot-3f; Mon, 25 Mar 2024 14:13:10 +0100
+Message-ID: <780d7dfb-3a91-4cd7-95a7-528877c9ad33@igalia.com>
+Date: Mon, 25 Mar 2024 10:13:01 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledruddutddgvdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtqhertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnheptddvfeegledvfedvveevhedvteeffeehvdeuiedukeeiledttefgvdeihffgteetnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepjedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrhhinhhivhgrshdrphgrnhgurhhuvhgruggrsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepshhtrghnihhslhgrfidrghhruhhsiihkrgeslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/16] drm/vkms: Code formatting
+To: Louis Chauvet <louis.chauvet@bootlin.com>,
+ Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+ Melissa Wen <melissa.srw@gmail.com>,
+ Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
+ Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+ thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com,
+ nicolejadeyee@google.com
+References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
+ <20240313-yuv-v5-1-e610cbd03f52@bootlin.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+Autocrypt: addr=mcanal@igalia.com; keydata=
+ xjMEZIsaeRYJKwYBBAHaRw8BAQdAGU6aY8oojw61KS5rGGMrlcilFqR6p6ID45IZ6ovX0h3N
+ H01haXJhIENhbmFsIDxtY2FuYWxAaWdhbGlhLmNvbT7CjwQTFggANxYhBDMCqFtIvFKVRJZQ
+ hDSPnHLaGFVuBQJkixp5BQkFo5qAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQNI+cctoYVW5u
+ GAEAwpaC5rI3wD8zqETKwGVoXd6+AbmGfZuVD40xepy7z/8BAM5w95/oyPsHUqOsg/xUTlNp
+ rlbhA+WWoaOXA3XgR+wCzjgEZIsaeRIKKwYBBAGXVQEFAQEHQGoOK0jgh0IorMAacx6WUUWb
+ s3RLiJYWUU6iNrk5wWUbAwEIB8J+BBgWCAAmFiEEMwKoW0i8UpVEllCENI+cctoYVW4FAmSL
+ GnkFCQWjmoACGwwACgkQNI+cctoYVW6cqwD/Q9R98msvkhgRvi18fzUPFDwwogn+F+gQJJ6o
+ pwpgFkAA/R2zOfla3IT6G3SBoV5ucdpdCpnIXFpQLbmfHK7dXsAC
+In-Reply-To: <20240313-yuv-v5-1-e610cbd03f52@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-=46rom: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 3/13/24 14:44, Louis Chauvet wrote:
+> Few no-op changes to remove double spaces and fix wrong alignments.
+> 
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 
-The threshold field in struct thermal_trip is only used internally by
-the thermal core and it is better to prevent drivers from misusing it.
-It also takes some space unnecessarily in the trip tables passed by
-drivers to the core during thermal zone registration.
+Reviewed-by: Maíra Canal <mcanal@igalia.com>
 
-=46or this reason, introduce struct thermal_trip_desc as a wrapper around
-struct thermal_trip, move the threshold field directly into it and make
-the thermal core store struct thermal_trip_desc objects in the internal
-thermal zone trip tables.  Adjust all of the code using trip tables in
-the thermal core accordingly.
+Best Regards,
+- Maíra
 
-No intentional function impact.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-=2D--
-
-v1 -> v2: No changes
-
-=2D--
- drivers/thermal/gov_fair_share.c      |    7 +++--
- drivers/thermal/gov_power_allocator.c |    6 ++--
- drivers/thermal/thermal_core.c        |   46 +++++++++++++++++++----------=
-=2D----
- drivers/thermal/thermal_core.h        |    7 +++--
- drivers/thermal/thermal_debugfs.c     |    6 ++--
- drivers/thermal/thermal_helpers.c     |    8 +++--
- drivers/thermal/thermal_netlink.c     |    6 ++--
- drivers/thermal/thermal_sysfs.c       |   20 +++++++-------
- drivers/thermal/thermal_trip.c        |   15 +++++------
- include/linux/thermal.h               |    9 ++++--
- 10 files changed, 78 insertions(+), 52 deletions(-)
-
-Index: linux-pm/include/linux/thermal.h
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/include/linux/thermal.h
-+++ linux-pm/include/linux/thermal.h
-@@ -61,7 +61,6 @@ enum thermal_notify_event {
-  * struct thermal_trip - representation of a point in temperature domain
-  * @temperature: temperature value in miliCelsius
-  * @hysteresis: relative hysteresis in miliCelsius
-=2D * @threshold: trip crossing notification threshold miliCelsius
-  * @type: trip point type
-  * @priv: pointer to driver data associated with this trip
-  * @flags: flags representing binary properties of the trip
-@@ -69,12 +68,16 @@ enum thermal_notify_event {
- struct thermal_trip {
- 	int temperature;
- 	int hysteresis;
-=2D	int threshold;
- 	enum thermal_trip_type type;
- 	u8 flags;
- 	void *priv;
- };
-=20
-+struct thermal_trip_desc {
-+	struct thermal_trip trip;
-+	int threshold;
-+};
-+
- #define THERMAL_TRIP_FLAG_RW_TEMP	BIT(0)
- #define THERMAL_TRIP_FLAG_RW_HYST	BIT(1)
-=20
-@@ -203,7 +206,7 @@ struct thermal_zone_device {
- #ifdef CONFIG_THERMAL_DEBUGFS
- 	struct thermal_debugfs *debugfs;
- #endif
-=2D	struct thermal_trip trips[] __counted_by(num_trips);
-+	struct thermal_trip_desc trips[] __counted_by(num_trips);
- };
-=20
- /**
-Index: linux-pm/drivers/thermal/thermal_core.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/thermal_core.c
-+++ linux-pm/drivers/thermal/thermal_core.c
-@@ -361,17 +361,19 @@ static void handle_critical_trips(struct
- }
-=20
- static void handle_thermal_trip(struct thermal_zone_device *tz,
-=2D				struct thermal_trip *trip)
-+				struct thermal_trip_desc *td)
- {
-+	const struct thermal_trip *trip =3D &td->trip;
-+
- 	if (trip->temperature =3D=3D THERMAL_TEMP_INVALID)
- 		return;
-=20
- 	if (tz->last_temperature =3D=3D THERMAL_TEMP_INVALID) {
- 		/* Initialization. */
-=2D		trip->threshold =3D trip->temperature;
-=2D		if (tz->temperature >=3D trip->threshold)
-=2D			trip->threshold -=3D trip->hysteresis;
-=2D	} else if (tz->last_temperature < trip->threshold) {
-+		td->threshold =3D trip->temperature;
-+		if (tz->temperature >=3D td->threshold)
-+			td->threshold -=3D trip->hysteresis;
-+	} else if (tz->last_temperature < td->threshold) {
- 		/*
- 		 * The trip threshold is equal to the trip temperature, unless
- 		 * the latter has changed in the meantime.  In either case,
-@@ -382,9 +384,9 @@ static void handle_thermal_trip(struct t
- 		if (tz->temperature >=3D trip->temperature) {
- 			thermal_notify_tz_trip_up(tz, trip);
- 			thermal_debug_tz_trip_up(tz, trip);
-=2D			trip->threshold =3D trip->temperature - trip->hysteresis;
-+			td->threshold =3D trip->temperature - trip->hysteresis;
- 		} else {
-=2D			trip->threshold =3D trip->temperature;
-+			td->threshold =3D trip->temperature;
- 		}
- 	} else {
- 		/*
-@@ -400,9 +402,9 @@ static void handle_thermal_trip(struct t
- 		if (tz->temperature < trip->temperature - trip->hysteresis) {
- 			thermal_notify_tz_trip_down(tz, trip);
- 			thermal_debug_tz_trip_down(tz, trip);
-=2D			trip->threshold =3D trip->temperature;
-+			td->threshold =3D trip->temperature;
- 		} else {
-=2D			trip->threshold =3D trip->temperature - trip->hysteresis;
-+			td->threshold =3D trip->temperature - trip->hysteresis;
- 		}
- 	}
-=20
-@@ -458,7 +460,7 @@ static void thermal_zone_device_init(str
- void __thermal_zone_device_update(struct thermal_zone_device *tz,
- 				  enum thermal_notify_event event)
- {
-=2D	struct thermal_trip *trip;
-+	struct thermal_trip_desc *td;
-=20
- 	if (tz->suspended)
- 		return;
-@@ -472,8 +474,8 @@ void __thermal_zone_device_update(struct
-=20
- 	tz->notify_event =3D event;
-=20
-=2D	for_each_trip(tz, trip)
-=2D		handle_thermal_trip(tz, trip);
-+	for_each_trip_desc(tz, td)
-+		handle_thermal_trip(tz, td);
-=20
- 	monitor_thermal_zone(tz);
- }
-@@ -766,7 +768,7 @@ int thermal_zone_bind_cooling_device(str
- 	if (trip_index < 0 || trip_index >=3D tz->num_trips)
- 		return -EINVAL;
-=20
-=2D	return thermal_bind_cdev_to_trip(tz, &tz->trips[trip_index], cdev,
-+	return thermal_bind_cdev_to_trip(tz, &tz->trips[trip_index].trip, cdev,
- 					 upper, lower, weight);
- }
- EXPORT_SYMBOL_GPL(thermal_zone_bind_cooling_device);
-@@ -825,7 +827,7 @@ int thermal_zone_unbind_cooling_device(s
- 	if (trip_index < 0 || trip_index >=3D tz->num_trips)
- 		return -EINVAL;
-=20
-=2D	return thermal_unbind_cdev_from_trip(tz, &tz->trips[trip_index], cdev);
-+	return thermal_unbind_cdev_from_trip(tz, &tz->trips[trip_index].trip, cde=
-v);
- }
- EXPORT_SYMBOL_GPL(thermal_zone_unbind_cooling_device);
-=20
-@@ -1221,16 +1223,19 @@ static void thermal_set_delay_jiffies(un
-=20
- int thermal_zone_get_crit_temp(struct thermal_zone_device *tz, int *temp)
- {
-=2D	int i, ret =3D -EINVAL;
-+	const struct thermal_trip_desc *td;
-+	int ret =3D -EINVAL;
-=20
- 	if (tz->ops.get_crit_temp)
- 		return tz->ops.get_crit_temp(tz, temp);
-=20
- 	mutex_lock(&tz->lock);
-=20
-=2D	for (i =3D 0; i < tz->num_trips; i++) {
-=2D		if (tz->trips[i].type =3D=3D THERMAL_TRIP_CRITICAL) {
-=2D			*temp =3D tz->trips[i].temperature;
-+	for_each_trip_desc(tz, td) {
-+		const struct thermal_trip *trip =3D &td->trip;
-+
-+		if (trip->type =3D=3D THERMAL_TRIP_CRITICAL) {
-+			*temp =3D trip->temperature;
- 			ret =3D 0;
- 			break;
- 		}
-@@ -1274,7 +1279,9 @@ thermal_zone_device_register_with_trips(
- 					const struct thermal_zone_params *tzp,
- 					int passive_delay, int polling_delay)
- {
-+	const struct thermal_trip *trip =3D trips;
- 	struct thermal_zone_device *tz;
-+	struct thermal_trip_desc *td;
- 	int id;
- 	int result;
- 	struct thermal_governor *governor;
-@@ -1339,7 +1346,8 @@ thermal_zone_device_register_with_trips(
- 	tz->device.class =3D thermal_class;
- 	tz->devdata =3D devdata;
- 	tz->num_trips =3D num_trips;
-=2D	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
-+	for_each_trip_desc(tz, td)
-+		td->trip =3D *trip++;
-=20
- 	thermal_set_delay_jiffies(&tz->passive_delay_jiffies, passive_delay);
- 	thermal_set_delay_jiffies(&tz->polling_delay_jiffies, polling_delay);
-Index: linux-pm/drivers/thermal/thermal_core.h
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/thermal_core.h
-+++ linux-pm/drivers/thermal/thermal_core.h
-@@ -120,8 +120,11 @@ void thermal_governor_update_tz(struct t
- 				enum thermal_notify_event reason);
-=20
- /* Helpers */
-=2D#define for_each_trip(__tz, __trip)	\
-=2D	for (__trip =3D __tz->trips; __trip - __tz->trips < __tz->num_trips; __=
-trip++)
-+#define for_each_trip_desc(__tz, __td)	\
-+	for (__td =3D __tz->trips; __td - __tz->trips < __tz->num_trips; __td++)
-+
-+#define trip_to_trip_desc(__trip)	\
-+	container_of(__trip, struct thermal_trip_desc, trip)
-=20
- void __thermal_zone_set_trips(struct thermal_zone_device *tz);
- int thermal_zone_trip_id(const struct thermal_zone_device *tz,
-Index: linux-pm/drivers/thermal/thermal_sysfs.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/thermal_sysfs.c
-+++ linux-pm/drivers/thermal/thermal_sysfs.c
-@@ -88,7 +88,7 @@ trip_point_type_show(struct device *dev,
- 	if (sscanf(attr->attr.name, "trip_point_%d_type", &trip_id) !=3D 1)
- 		return -EINVAL;
-=20
-=2D	switch (tz->trips[trip_id].type) {
-+	switch (tz->trips[trip_id].trip.type) {
- 	case THERMAL_TRIP_CRITICAL:
- 		return sprintf(buf, "critical\n");
- 	case THERMAL_TRIP_HOT:
-@@ -120,7 +120,7 @@ trip_point_temp_store(struct device *dev
-=20
- 	mutex_lock(&tz->lock);
-=20
-=2D	trip =3D &tz->trips[trip_id];
-+	trip =3D &tz->trips[trip_id].trip;
-=20
- 	if (temp !=3D trip->temperature) {
- 		if (tz->ops.set_trip_temp) {
-@@ -150,7 +150,7 @@ trip_point_temp_show(struct device *dev,
- 	if (sscanf(attr->attr.name, "trip_point_%d_temp", &trip_id) !=3D 1)
- 		return -EINVAL;
-=20
-=2D	return sprintf(buf, "%d\n", tz->trips[trip_id].temperature);
-+	return sprintf(buf, "%d\n", tz->trips[trip_id].trip.temperature);
- }
-=20
- static ssize_t
-@@ -171,7 +171,7 @@ trip_point_hyst_store(struct device *dev
-=20
- 	mutex_lock(&tz->lock);
-=20
-=2D	trip =3D &tz->trips[trip_id];
-+	trip =3D &tz->trips[trip_id].trip;
-=20
- 	if (hyst !=3D trip->hysteresis) {
- 		trip->hysteresis =3D hyst;
-@@ -194,7 +194,7 @@ trip_point_hyst_show(struct device *dev,
- 	if (sscanf(attr->attr.name, "trip_point_%d_hyst", &trip_id) !=3D 1)
- 		return -EINVAL;
-=20
-=2D	return sprintf(buf, "%d\n", tz->trips[trip_id].hysteresis);
-+	return sprintf(buf, "%d\n", tz->trips[trip_id].trip.hysteresis);
- }
-=20
- static ssize_t
-@@ -393,7 +393,7 @@ static const struct attribute_group *the
-  */
- static int create_trip_attrs(struct thermal_zone_device *tz)
- {
-=2D	const struct thermal_trip *trip;
-+	const struct thermal_trip_desc *td;
- 	struct attribute **attrs;
-=20
- 	/* This function works only for zones with at least one trip */
-@@ -429,8 +429,8 @@ static int create_trip_attrs(struct ther
- 		return -ENOMEM;
- 	}
-=20
-=2D	for_each_trip(tz, trip) {
-=2D		int indx =3D thermal_zone_trip_id(tz, trip);
-+	for_each_trip_desc(tz, td) {
-+		int indx =3D thermal_zone_trip_id(tz, &td->trip);
-=20
- 		/* create trip type attribute */
- 		snprintf(tz->trip_type_attrs[indx].name, THERMAL_NAME_LENGTH,
-@@ -452,7 +452,7 @@ static int create_trip_attrs(struct ther
- 						tz->trip_temp_attrs[indx].name;
- 		tz->trip_temp_attrs[indx].attr.attr.mode =3D S_IRUGO;
- 		tz->trip_temp_attrs[indx].attr.show =3D trip_point_temp_show;
-=2D		if (trip->flags & THERMAL_TRIP_FLAG_RW_TEMP) {
-+		if (td->trip.flags & THERMAL_TRIP_FLAG_RW_TEMP) {
- 			tz->trip_temp_attrs[indx].attr.attr.mode |=3D S_IWUSR;
- 			tz->trip_temp_attrs[indx].attr.store =3D
- 							trip_point_temp_store;
-@@ -467,7 +467,7 @@ static int create_trip_attrs(struct ther
- 					tz->trip_hyst_attrs[indx].name;
- 		tz->trip_hyst_attrs[indx].attr.attr.mode =3D S_IRUGO;
- 		tz->trip_hyst_attrs[indx].attr.show =3D trip_point_hyst_show;
-=2D		if (trip->flags & THERMAL_TRIP_FLAG_RW_HYST) {
-+		if (td->trip.flags & THERMAL_TRIP_FLAG_RW_HYST) {
- 			tz->trip_hyst_attrs[indx].attr.attr.mode |=3D S_IWUSR;
- 			tz->trip_hyst_attrs[indx].attr.store =3D
- 					trip_point_hyst_store;
-Index: linux-pm/drivers/thermal/thermal_debugfs.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/thermal_debugfs.c
-+++ linux-pm/drivers/thermal/thermal_debugfs.c
-@@ -744,7 +744,7 @@ static void tze_seq_stop(struct seq_file
- static int tze_seq_show(struct seq_file *s, void *v)
- {
- 	struct thermal_zone_device *tz =3D s->private;
-=2D	struct thermal_trip *trip;
-+	struct thermal_trip_desc *td;
- 	struct tz_episode *tze;
- 	const char *type;
- 	int trip_id;
-@@ -757,7 +757,9 @@ static int tze_seq_show(struct seq_file
-=20
- 	seq_printf(s, "| trip |     type | temp(=C2=B0mC) | hyst(=C2=B0mC) |  dur=
-ation  |  avg(=C2=B0mC) |  min(=C2=B0mC) |  max(=C2=B0mC) |\n");
-=20
-=2D	for_each_trip(tz, trip) {
-+	for_each_trip_desc(tz, td) {
-+		const struct thermal_trip *trip =3D &td->trip;
-+
- 		/*
- 		 * There is no possible mitigation happening at the
- 		 * critical trip point, so the stats will be always
-Index: linux-pm/drivers/thermal/thermal_netlink.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/thermal_netlink.c
-+++ linux-pm/drivers/thermal/thermal_netlink.c
-@@ -445,7 +445,7 @@ out_cancel_nest:
- static int thermal_genl_cmd_tz_get_trip(struct param *p)
- {
- 	struct sk_buff *msg =3D p->msg;
-=2D	const struct thermal_trip *trip;
-+	const struct thermal_trip_desc *td;
- 	struct thermal_zone_device *tz;
- 	struct nlattr *start_trip;
- 	int id;
-@@ -465,7 +465,9 @@ static int thermal_genl_cmd_tz_get_trip(
-=20
- 	mutex_lock(&tz->lock);
-=20
-=2D	for_each_trip(tz, trip) {
-+	for_each_trip_desc(tz, td) {
-+		const struct thermal_trip *trip =3D &td->trip;
-+
- 		if (nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_TRIP_ID,
- 				thermal_zone_trip_id(tz, trip)) ||
- 		    nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_TRIP_TYPE, trip->type) ||
-Index: linux-pm/drivers/thermal/thermal_trip.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/thermal_trip.c
-+++ linux-pm/drivers/thermal/thermal_trip.c
-@@ -13,11 +13,11 @@ int for_each_thermal_trip(struct thermal
- 			  int (*cb)(struct thermal_trip *, void *),
- 			  void *data)
- {
-=2D	struct thermal_trip *trip;
-+	struct thermal_trip_desc *td;
- 	int ret;
-=20
-=2D	for_each_trip(tz, trip) {
-=2D		ret =3D cb(trip, data);
-+	for_each_trip_desc(tz, td) {
-+		ret =3D cb(&td->trip, data);
- 		if (ret)
- 			return ret;
- 	}
-@@ -63,7 +63,7 @@ EXPORT_SYMBOL_GPL(thermal_zone_get_num_t
-  */
- void __thermal_zone_set_trips(struct thermal_zone_device *tz)
- {
-=2D	const struct thermal_trip *trip;
-+	const struct thermal_trip_desc *td;
- 	int low =3D -INT_MAX, high =3D INT_MAX;
- 	bool same_trip =3D false;
- 	int ret;
-@@ -73,7 +73,8 @@ void __thermal_zone_set_trips(struct the
- 	if (!tz->ops.set_trips)
- 		return;
-=20
-=2D	for_each_trip(tz, trip) {
-+	for_each_trip_desc(tz, td) {
-+		const struct thermal_trip *trip =3D &td->trip;
- 		bool low_set =3D false;
- 		int trip_low;
-=20
-@@ -125,7 +126,7 @@ int __thermal_zone_get_trip(struct therm
- 	if (!tz || trip_id < 0 || trip_id >=3D tz->num_trips || !trip)
- 		return -EINVAL;
-=20
-=2D	*trip =3D tz->trips[trip_id];
-+	*trip =3D tz->trips[trip_id].trip;
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(__thermal_zone_get_trip);
-@@ -150,7 +151,7 @@ int thermal_zone_trip_id(const struct th
- 	 * Assume the trip to be located within the bounds of the thermal
- 	 * zone's trips[] table.
- 	 */
-=2D	return trip - tz->trips;
-+	return trip_to_trip_desc(trip) - tz->trips;
- }
- void thermal_zone_trip_updated(struct thermal_zone_device *tz,
- 			       const struct thermal_trip *trip)
-Index: linux-pm/drivers/thermal/gov_fair_share.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/gov_fair_share.c
-+++ linux-pm/drivers/thermal/gov_fair_share.c
-@@ -17,10 +17,13 @@
-=20
- static int get_trip_level(struct thermal_zone_device *tz)
- {
-=2D	const struct thermal_trip *trip, *level_trip =3D NULL;
-+	const struct thermal_trip *level_trip =3D NULL;
-+	const struct thermal_trip_desc *td;
- 	int trip_level =3D -1;
-=20
-=2D	for_each_trip(tz, trip) {
-+	for_each_trip_desc(tz, td) {
-+		const struct thermal_trip *trip =3D &td->trip;
-+
- 		if (trip->temperature >=3D tz->temperature)
- 			continue;
-=20
-Index: linux-pm/drivers/thermal/gov_power_allocator.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/gov_power_allocator.c
-+++ linux-pm/drivers/thermal/gov_power_allocator.c
-@@ -496,9 +496,11 @@ static void get_governor_trips(struct th
- 	const struct thermal_trip *first_passive =3D NULL;
- 	const struct thermal_trip *last_passive =3D NULL;
- 	const struct thermal_trip *last_active =3D NULL;
-=2D	const struct thermal_trip *trip;
-+	const struct thermal_trip_desc *td;
-+
-+	for_each_trip_desc(tz, td) {
-+		const struct thermal_trip *trip =3D &td->trip;
-=20
-=2D	for_each_trip(tz, trip) {
- 		switch (trip->type) {
- 		case THERMAL_TRIP_PASSIVE:
- 			if (!first_passive) {
-Index: linux-pm/drivers/thermal/thermal_helpers.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/thermal_helpers.c
-+++ linux-pm/drivers/thermal/thermal_helpers.c
-@@ -50,7 +50,7 @@ get_thermal_instance(struct thermal_zone
- 	mutex_lock(&tz->lock);
- 	mutex_lock(&cdev->lock);
-=20
-=2D	trip =3D &tz->trips[trip_index];
-+	trip =3D &tz->trips[trip_index].trip;
-=20
- 	list_for_each_entry(pos, &tz->thermal_instances, tz_node) {
- 		if (pos->tz =3D=3D tz && pos->trip =3D=3D trip && pos->cdev =3D=3D cdev)=
- {
-@@ -82,7 +82,7 @@ EXPORT_SYMBOL(get_thermal_instance);
-  */
- int __thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp)
- {
-=2D	const struct thermal_trip *trip;
-+	const struct thermal_trip_desc *td;
- 	int crit_temp =3D INT_MAX;
- 	int ret =3D -EINVAL;
-=20
-@@ -91,7 +91,9 @@ int __thermal_zone_get_temp(struct therm
- 	ret =3D tz->ops.get_temp(tz, temp);
-=20
- 	if (IS_ENABLED(CONFIG_THERMAL_EMULATION) && tz->emul_temperature) {
-=2D		for_each_trip(tz, trip) {
-+		for_each_trip_desc(tz, td) {
-+			const struct thermal_trip *trip =3D &td->trip;
-+
- 			if (trip->type =3D=3D THERMAL_TRIP_CRITICAL) {
- 				crit_temp =3D trip->temperature;
- 				break;
-
-
-
+> ---
+>   drivers/gpu/drm/vkms/vkms_composer.c | 10 +++++-----
+>   drivers/gpu/drm/vkms/vkms_crtc.c     |  6 ++----
+>   drivers/gpu/drm/vkms/vkms_drv.c      |  3 +--
+>   drivers/gpu/drm/vkms/vkms_plane.c    |  8 ++++----
+>   4 files changed, 12 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> index e7441b227b3c..c6d9b4a65809 100644
+> --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> @@ -96,7 +96,7 @@ static u16 lerp_u16(u16 a, u16 b, s64 t)
+>   	s64 a_fp = drm_int2fixp(a);
+>   	s64 b_fp = drm_int2fixp(b);
+>   
+> -	s64 delta = drm_fixp_mul(b_fp - a_fp,  t);
+> +	s64 delta = drm_fixp_mul(b_fp - a_fp, t);
+>   
+>   	return drm_fixp2int(a_fp + delta);
+>   }
+> @@ -302,8 +302,8 @@ static int compose_active_planes(struct vkms_writeback_job *active_wb,
+>   void vkms_composer_worker(struct work_struct *work)
+>   {
+>   	struct vkms_crtc_state *crtc_state = container_of(work,
+> -						struct vkms_crtc_state,
+> -						composer_work);
+> +							  struct vkms_crtc_state,
+> +							  composer_work);
+>   	struct drm_crtc *crtc = crtc_state->base.crtc;
+>   	struct vkms_writeback_job *active_wb = crtc_state->active_writeback;
+>   	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
+> @@ -328,7 +328,7 @@ void vkms_composer_worker(struct work_struct *work)
+>   		crtc_state->gamma_lut.base = (struct drm_color_lut *)crtc->state->gamma_lut->data;
+>   		crtc_state->gamma_lut.lut_length =
+>   			crtc->state->gamma_lut->length / sizeof(struct drm_color_lut);
+> -		max_lut_index_fp = drm_int2fixp(crtc_state->gamma_lut.lut_length  - 1);
+> +		max_lut_index_fp = drm_int2fixp(crtc_state->gamma_lut.lut_length - 1);
+>   		crtc_state->gamma_lut.channel_value2index_ratio = drm_fixp_div(max_lut_index_fp,
+>   									       u16_max_fp);
+>   
+> @@ -367,7 +367,7 @@ void vkms_composer_worker(struct work_struct *work)
+>   		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
+>   }
+>   
+> -static const char * const pipe_crc_sources[] = {"auto"};
+> +static const char *const pipe_crc_sources[] = { "auto" };
+>   
+>   const char *const *vkms_get_crc_sources(struct drm_crtc *crtc,
+>   					size_t *count)
+> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> index 61e500b8c9da..7586ae2e1dd3 100644
+> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> @@ -191,8 +191,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
+>   		return ret;
+>   
+>   	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
+> -		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,
+> -								  plane);
+> +		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state, plane);
+>   		WARN_ON(!plane_state);
+>   
+>   		if (!plane_state->visible)
+> @@ -208,8 +207,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
+>   
+>   	i = 0;
+>   	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
+> -		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,
+> -								  plane);
+> +		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state, plane);
+>   
+>   		if (!plane_state->visible)
+>   			continue;
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+> index dd0af086e7fa..83e6c9b9ff46 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> @@ -81,8 +81,7 @@ static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
+>   	drm_atomic_helper_wait_for_flip_done(dev, old_state);
+>   
+>   	for_each_old_crtc_in_state(old_state, crtc, old_crtc_state, i) {
+> -		struct vkms_crtc_state *vkms_state =
+> -			to_vkms_crtc_state(old_crtc_state);
+> +		struct vkms_crtc_state *vkms_state = to_vkms_crtc_state(old_crtc_state);
+>   
+>   		flush_work(&vkms_state->composer_work);
+>   	}
+> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+> index e5c625ab8e3e..5a8d295e65f2 100644
+> --- a/drivers/gpu/drm/vkms/vkms_plane.c
+> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
+> @@ -117,10 +117,10 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
+>   	memcpy(&frame_info->map, &shadow_plane_state->data, sizeof(frame_info->map));
+>   	drm_framebuffer_get(frame_info->fb);
+>   	frame_info->rotation = drm_rotation_simplify(new_state->rotation, DRM_MODE_ROTATE_0 |
+> -						     DRM_MODE_ROTATE_90 |
+> -						     DRM_MODE_ROTATE_270 |
+> -						     DRM_MODE_REFLECT_X |
+> -						     DRM_MODE_REFLECT_Y);
+> +									  DRM_MODE_ROTATE_90 |
+> +									  DRM_MODE_ROTATE_270 |
+> +									  DRM_MODE_REFLECT_X |
+> +									  DRM_MODE_REFLECT_Y);
+>   
+>   	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
+>   			drm_rect_height(&frame_info->rotated), frame_info->rotation);
+> 
