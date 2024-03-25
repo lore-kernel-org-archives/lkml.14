@@ -1,37 +1,61 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8BB13CF99;
-	Mon, 25 Mar 2024 13:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164E31EF1D
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 13:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711375080; cv=none; b=dnPTGbfPj2xrjRcl5XvyxJJ8hHuhWfRqR6VR51swW5UwerF8M9dcVcmrtWNS/3I2thEHTse97oqq2nD/Es2N4SZh6ze/skGIs9vCZ5s6+DMCckA+8eZqklk6m3uEAyVjq0hZchS9sUJ6lYTcf6M2Z1m5tOc6pK4GzcEMuUiXwyk=
+	t=1711375158; cv=none; b=AxWVF2FYCiacIT0btBgqBWDqBhge5OezH6nD0t4IM5fJfsblBSmzCTCr6QpjHo++KETNoBPxlJXuV/etAtlYo3m0IgaNWCGpQ3tulrFbq01ii/rVxY8MRKwZ+5V+UsGl28Hw1O82ha+hUFPzHXqNBzxR9A5lW7B6Eoph66f6yQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711375080; c=relaxed/simple;
-	bh=SLkYKf7P/7HX8XrRjqY8I+HwX6HiSpxlmzsrBdk+4vY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fveS+5Ay3vNWzaeW/KF+KVv8djuByRs1YV1vMfDQ3z5qt5VqF55/RL0KwWxb+QSgZPS7vpzUgreV285s7k+e1UJp9to8l6VMWM/L2sSoEKnOfEUS9LDdG5SHTwkWq6M2UN/SfsPb93rswfIy8xkqMpxCCuki3pPu+UH4SqeMjbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cJtsiE3T; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1711375158; c=relaxed/simple;
+	bh=WR5SxWgx/LTb3HTn+PdO6vyr0dqAg3Nsb7L4BanAvaE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=DpounUC8gqj0u2hMuUrdCeGLhEWlEJWykV1MB/ZaVQjGr0IDqOat/sdVSOLimyCZwpGsJVAmSF2vKuWifeFQ5dQmv57KzPErchDRHvOtMh/909ZzczcsWGJKHh4PWXVkArdGdmf93AGpUN2jg9iAM3/609DH18IJKwxDC76QqQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NmW5D+s8; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cJtsiE3T"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=zXzI4MBpAZyeY9dZ4v2b6WShvnTo9KadIGopnBs+80c=;
-	t=1711375078; x=1711807078; b=cJtsiE3TGuC5YtQ1tMLq3RnwS2MGlMhDQ4k7J3TWJRf4cE6
-	A79jR8SDckNHuindHSKkmgZC1qt35FVHJ757Y3O/n00+2u38CnJk4juZ8EDPetaVXfXprg4swI9si
-	5JiA7OgxowznlInN76ZJ7+7wZQ7qU5RebYMf48QmP/FkM6bIIxJkWEyaLUgLID3F+GIiKGXticj3+
-	ZU6g+b3toeMz5Z/lERuD/oBpb0N8G8LP7RREaQXmisije3Bzc3l2/wWjEc715MdBsVSilgx8OsfWU
-	w2InjtJWYfhp0LPXy4YhvjblUnzSsV5wKb3mks4nw6SR5cDDVNsaiMNighIG38gQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rokpn-0004yx-OJ; Mon, 25 Mar 2024 14:57:55 +0100
-Message-ID: <964131ff-293d-47d1-8119-a389fa21f385@leemhuis.info>
-Date: Mon, 25 Mar 2024 14:57:55 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NmW5D+s8"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-221ce6cac3aso2321078fac.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 06:59:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711375154; x=1711979954; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o2nH4XziCYvGEfh77M5FceKvirEwgjnZOT2AT2yGomg=;
+        b=NmW5D+s8GUsbrksm/mCmYGkGC/PQVATPio6IeF9s5reqdGNgxvX2HPpoOyS9u5W29j
+         XAhtSekEqP2i8hXtxOPUDdtLbK1iruv64IdOBEPRvGjoB1oJct9jhHHXbi0iOXIfrAkN
+         zPart1s3pTGr7V7Ol3+g3oZoa0jS9d+i3QvkMeVmJxRjj/HUJnnszHeea3TtThbb3UEH
+         sA9K02wT5u2M/lcT7Ag/3BnKlxragoTMdutgmtYU8tPK4KRzr42rXdz5wWVZvbgXpX9M
+         iuUn3aYmTwTfHURfylGxstgd7ErfN5DQq12gRjzs8vvyRlB1bzS+4jGb7mg2/ztBD7VL
+         MqAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711375154; x=1711979954;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=o2nH4XziCYvGEfh77M5FceKvirEwgjnZOT2AT2yGomg=;
+        b=lsE7MRKk1qcpZoswU6NA4MIaXS/Y7u4JYwlshZjhhaqD+D4201hlaeVbjMXHE9YM/m
+         b52KWkPRJhM7Assy8NTGrawKNexk6ovlnepPuUFNB6vfjxRHAvIal7wp3fz8ZoCBZ7HO
+         cY94xp725T+I2d0MXTHabKLeZDSEpUWUpR+5HDyElU/3Sd1Uu5QPtiqvmZuUcptSE6wp
+         XgZSHiT3A/5JVUY/J2kuFDoMkOv59wv81Sm96h7oBbMhVNdLzigyIBJNMnmpbyOfyyQH
+         3stgH6CbllUPzlE0A7BYbNTng54jSzyUXBxIvs8JNT2MsihQT8EUXNE+FObXQ6D33LcD
+         zgrw==
+X-Forwarded-Encrypted: i=1; AJvYcCXyWmgvdI1IP+13Sq/T9mjK6enw02qDMWDt7LHpTzY2bvOFA9NhDDj1OTREIUBWQPrkRR69GpXczg8t0HRfiRp0obT15aR9EiaYSRwl
+X-Gm-Message-State: AOJu0Yy1Cdb329/fyaVhAdnOhOqYJ2hBGuwLNmGHqC/1JGZRyvFhFORK
+	0W5D0NgBOxCiRJEWZMFs3VL3HDLUjhXgLOibfv8ggbgU9/Z7t7M3PcUNvKShJXE=
+X-Google-Smtp-Source: AGHT+IE2VDeedGd/lWEvKcxCaB+MJdMhfHfLWl5rj7Bz4qfMhTELtOe0PG8xP2LlKdqWw+EAGM3gLg==
+X-Received: by 2002:a05:6870:4205:b0:229:8236:ae9 with SMTP id u5-20020a056870420500b0022982360ae9mr7453175oac.59.1711375154177;
+        Mon, 25 Mar 2024 06:59:14 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:5176:2c0a:cfc0:1ada? ([2a01:e0a:982:cbb0:5176:2c0a:cfc0:1ada])
+        by smtp.gmail.com with ESMTPSA id c20-20020a63d514000000b005dc4da2121fsm5969750pgg.6.2024.03.25.06.59.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 06:59:13 -0700 (PDT)
+Message-ID: <82e09104-8006-4074-9700-2dec08194ac4@linaro.org>
+Date: Mon, 25 Mar 2024 14:59:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,90 +63,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
- exists in DT"
-Content-Language: en-US, de-DE
-To: Johan Hovold <johan@kernel.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
- Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Janaki Ramaiah Thota <quic_janathot@quicinc.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240314084412.1127-1-johan+linaro@kernel.org>
- <CABBYNZJV1htg46Gyu=7_iUWdukM+rHLitsLjxmWWYFGXty3tVw@mail.gmail.com>
- <ZfMStHjwtCT1SW3z@hovoldconsulting.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <ZfMStHjwtCT1SW3z@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711375078;17de2c7d;
-X-HE-SMSGID: 1rokpn-0004yx-OJ
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2] pinctrl/meson: fix typo in PDM's pin name
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman
+ <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240325113058.248022-1-jan.dakinevich@salutedevices.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240325113058.248022-1-jan.dakinevich@salutedevices.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Bluetooth Maintainers, what's...
+On 25/03/2024 12:30, Jan Dakinevich wrote:
+> Other pins have _a or _x suffix, but this one doesn't have any. Most
+> likely this is a typo.
+> 
+> Fixes: dabad1ff8561 ("pinctrl: meson: add pinctrl driver support for Meson-A1 SoC")
+> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+> ---
+> Links:
+> 
+>   [1] https://lore.kernel.org/lkml/20240314232201.2102178-1-jan.dakinevich@salutedevices.com/
+> 
+> Changes:
+>    v1 -> v2: Detached from v1's series (patch 15)
+> 
+>   drivers/pinctrl/meson/pinctrl-meson-a1.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson-a1.c b/drivers/pinctrl/meson/pinctrl-meson-a1.c
+> index 79f5d753d7e1..50a87d9618a8 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson-a1.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson-a1.c
+> @@ -250,7 +250,7 @@ static const unsigned int pdm_dclk_x_pins[]		= { GPIOX_10 };
+>   static const unsigned int pdm_din2_a_pins[]		= { GPIOA_6 };
+>   static const unsigned int pdm_din1_a_pins[]		= { GPIOA_7 };
+>   static const unsigned int pdm_din0_a_pins[]		= { GPIOA_8 };
+> -static const unsigned int pdm_dclk_pins[]		= { GPIOA_9 };
+> +static const unsigned int pdm_dclk_a_pins[]		= { GPIOA_9 };
+>   
+>   /* gen_clk */
+>   static const unsigned int gen_clk_x_pins[]		= { GPIOX_7 };
+> @@ -591,7 +591,7 @@ static struct meson_pmx_group meson_a1_periphs_groups[] = {
+>   	GROUP(pdm_din2_a,		3),
+>   	GROUP(pdm_din1_a,		3),
+>   	GROUP(pdm_din0_a,		3),
+> -	GROUP(pdm_dclk,			3),
+> +	GROUP(pdm_dclk_a,		3),
+>   	GROUP(pwm_c_a,			3),
+>   	GROUP(pwm_b_a,			3),
+>   
+> @@ -755,7 +755,7 @@ static const char * const spi_a_groups[] = {
+>   
+>   static const char * const pdm_groups[] = {
+>   	"pdm_din0_x", "pdm_din1_x", "pdm_din2_x", "pdm_dclk_x", "pdm_din2_a",
+> -	"pdm_din1_a", "pdm_din0_a", "pdm_dclk",
+> +	"pdm_din1_a", "pdm_din0_a", "pdm_dclk_a",
+>   };
+>   
+>   static const char * const gen_clk_groups[] = {
 
-On 14.03.24 16:07, Johan Hovold wrote:
-> On Thu, Mar 14, 2024 at 10:30:36AM -0400, Luiz Augusto von Dentz wrote:
->> On Thu, Mar 14, 2024 at 4:44 AM Johan Hovold <johan+linaro@kernel.org> wrote:
-> 
->>> This reverts commit 7dcd3e014aa7faeeaf4047190b22d8a19a0db696.
->>>
->>> Qualcomm Bluetooth controllers like WCN6855 do not have persistent
->>> storage for the Bluetooth address and must therefore start as
->>> unconfigured to allow the user to set a valid address unless one has
->>> been provided by the boot firmware in the devicetree.
->>>
->>> A recent change snuck into v6.8-rc7 and incorrectly started marking the
->>> default (non-unique) address as valid. This specifically also breaks the
->>> Bluetooth setup for some user of the Lenovo ThinkPad X13s.
->>>
->>> Note that this is the second time Qualcomm breaks the driver this way
->>> and that this was fixed last year by commit 6945795bc81a ("Bluetooth:
->>> fix use-bdaddr-property quirk"), which also has some further details.
->>>
->>> Fixes: 7dcd3e014aa7 ("Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in DT")
->>> Cc: stable@vger.kernel.org      # 6.8
->>> Cc: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
->>> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
->>
->> Well I guess I will need to start asking for evidence that this works
->> on regular Linux distros then, because it looks like that is not the
->> environment Janaki and others Qualcomm folks are testing with.
->>
->> What I probably would consider as evidence is bluetoothd logs showing
->> that the controller has been configured correctly or perhaps there is
->> a simpler way?
-> 
-> Well, in this case we actually want the controller to remain
-> unconfigured (e.g. to avoid having every user of the X13s unknowingly
-> use the same default address). 
-> 
-> I'm not sure why Qualcomm insists on breaking these quirks, but I guess
-> they just haven't understood why they exist. It's of course convenient
-> to be able to use the default address during development without first
-> having to provide an address, but that's not a valid reason to break the
-> driver.
-> 
-> From what I hear the Qualcomm developers only care about Android and I
-> believe they have some out-of-tree hack for retrieving the device
-> address directly from the rootfs.
-> 
-> For the X13s, and as I think I've mentioned before, we have been trying
-> to get Qualcomm to tell us how to access the assigned addresses that are
-> stored in some secure world storage so that we can set it directly from
-> the driver. But until we figure that out, users will need to continue
-> setting the address manually.
-
-...the plan forward here? This to me sounds like a case where a quick
-revert is the right (interim?) solution, but nevertheless nothing
-happened for ~10 days now afaics. Or am I missing something?
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
