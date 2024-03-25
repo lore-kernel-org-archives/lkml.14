@@ -1,156 +1,181 @@
-Received: from wfhigh1-smtp.messagingengine.com (wfhigh1-smtp.messagingengine.com [64.147.123.152])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FD21BB063
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88491BB756;
+	Mon, 25 Mar 2024 11:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711365336; cv=none; b=DLXacpNsVvHB9hYRmrru0IrKdzwl6JKLC9e5HacpTtHXd83IKcgFXqLBrxM6rfwatsXWRL7r5BRc/SVVR9Je/oQAGQ8/NfVv+mJNA+OWi61Zyui/B64CekNkV8zf8L5FQqPlUYlw2I8orX4GGhtE268uggShGk1syNqeOt386hY=
+	t=1711365481; cv=none; b=lXXlgoU0ZtroVf98LV9oY5nMAI54zWGq8OSveZIfP4R/cWfiY2KkWaGHO9wlkglhtryl12yEjoLj5+lwCld88VAuJFDr0kE3PGRkJ+uO12Hbx2EenfVMGjw/tnNcCjFIfvt9ZzmtGBYSHPOdx41XAkYn6mV0nkO4mo5L/Col+Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711365336; c=relaxed/simple;
-	bh=opKIsZlMHtQnbJCvVr82tpAN2qU/VqAhSCB8KlJlM5M=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ImG1wXXcb5T/QaZJ3258vm8A1M+xmwZmssxQzea1xs15d2q6gbkFHwjbUcRigFXy66USx5XTop5h8db0fgFGjg6ft4zsGeuccTtzdlhHk6aCDVNRh1tF0Xg/iouYoGNSI5zSCRvVa5USDCEYCWHOQ4U/09rwyFAu4l327WlLO2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=OK/isPdT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qv+awkv1; arc=none smtp.client-ip=64.147.123.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1711365481; c=relaxed/simple;
+	bh=lTVg3fc6MdE/fo1cwqrDYHPkWi51KMLwn/j+U7Nw9ZA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=un7set2OnJ/pTzC21eX13ISCu2lR6Y9kfCRCRdrRrz1tZd35dnzByPHNXZPXHKnCMe/8Q58m16O/bqhoywrgji6a+IxEO6Z/YLGtNffBvM6vkA99bdYpVwEG1oQiM9oOe1ByH/fLciRkYcloF21rfN6FXfmFA/Vh7G1tStlvhWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=1/2Y4Lmm; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="OK/isPdT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qv+awkv1"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 0646718000B9;
-	Mon, 25 Mar 2024 07:15:31 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 25 Mar 2024 07:15:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1711365331; x=1711451731; bh=z4Kn3pYXpg
-	iAUzuK6QDRYyQRhLD9Dn62eTCOSq5cUP0=; b=OK/isPdTFrqQI/4cMYOrrqmGXY
-	50PVXN4faVpZIDcM+nQKPpcJsp8HKY6A9pBrXO25gQi+mYZ4l5Q4806IAHF61oe6
-	vYdvO37FtnvSCUNe5a/4Z1MNY7hoJeXyKtWc67mhdln7SQLItMMxArbqaU9LN4Kf
-	BTeyDytZXE798uApFj79OBg/0EAduNeiSLTZkWADUBGZyjLKzJ1eTOSDvo761KeS
-	iCJkRAEtxRB6m051iHakUQ5tVjstrcpLVuMHAVRuQQ7qPL6EPTmKGfFJ9x8dzq2w
-	jI9k6qR7nfTjEml7e8cc4AjeEwpv2ffj//ESIkh7r2OALMAelwzZC0gC7dKA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1711365331; x=1711451731; bh=z4Kn3pYXpgiAUzuK6QDRYyQRhLD9
-	Dn62eTCOSq5cUP0=; b=qv+awkv1sbrET62JITAJj90ptP70MGbPz7R3Gjx4kMkc
-	cl2bPh7jZ8YuPY3qLCzYTTX/TzqNJjKeAP+eEBHzGfomJd6PcC0dLfEUUlaxui8l
-	gTK14QDH8bkmPJ7yk+LuZ8gRtpuX+8XnRBjI5AxvEJcIXJvrLvWfBVl1ZEUITyT5
-	/UmJ3BDZQHoNWi/WWcv9visDEDgFXxghMrfBH791hSWJlKGIFrEMci+d8/rNPb/P
-	Td6RUt9NUsKD4sKU8ybS8GiKybSzzr2K0pMKfMnbQ1Z+alinCTYDcTA/3Hh8BEhN
-	F4ruMTa6bkaZvYLcf+c7FIOkUb9gedPC+Buh2OTrVg==
-X-ME-Sender: <xms:0lwBZtFlkc1Qusdnb7X2qc5O0CWLEcLcEBVz8OlPKUaCbcGqsekPzw>
-    <xme:0lwBZiU8BIvpw8bBNAUhMi8oIO_Ic0R5pZdW6LgrSzenfIXwDAVYhzSfWSJd714kK
-    78uKdQlMT8eje1xaso>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddutddgtddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:0lwBZvIxU3418h9r7_7_YGXQCVYmdnfBlE3H_f4MCoT8-b-nocsmwA>
-    <xmx:0lwBZjEcR7SytizyU22xpbU8_2_DAUqKXq-Uarh7GAkD9xsFaFu8Cg>
-    <xmx:0lwBZjXLCl1abgLtHWhjhGIrmxqsqxmcUNBzteNe55B7idOBI1plJg>
-    <xmx:0lwBZuO_7Btlq_JCa03ENVLAqth5_XaUIJX8CVB7X5ZR7h7Nq75iUQ>
-    <xmx:01wBZla5cOtoDHFvE1nxDg54FdptwvAiX3FXDwD3x8cpjOZP958RLMOmAn8>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 8969FB6008D; Mon, 25 Mar 2024 07:15:30 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-332-gdeb4194079-fm-20240319.002-gdeb41940
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="1/2Y4Lmm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=0I8AaUTcrQp55wpf5askd+06931BKAoEDY7FD5BFLeQ=; t=1711365479;
+	x=1711797479; b=1/2Y4LmmZD2hQLf8n1wMhik4twLS9AWFxSYWazx+REOmDC9QWupPl4IxynzMH
+	QZpe8z2NdoxMyS38mF6NcTBYRa9ICN9CdV6K2cBYeii+AdkWR3iKKM2a0QgVnt05ddhb1JhhXH/ZJ
+	Hd8IVdxk6KRazNibW/PkWjma6pbGaNPnG9DKG6ZOIcaI+TpwULoIdy4P5JyrTzJHNO0mfmPxKj/TF
+	4NhXSiDf3Ta+cS7ladp0w9pJXA6ojpRp/+V0k0f80H2ClDWPQdhC66DRl/F2nnrBDtussunVDzEmX
+	nw2Q2/8rthNnuiHkUQLV4rXbgE29mP3Kw+tEL9O8n4G0eMq9Vw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1roiKy-0002OP-Mb; Mon, 25 Mar 2024 12:17:56 +0100
+Message-ID: <c89f9cc6-9676-46a4-8f8e-01d8dbf41aa8@leemhuis.info>
+Date: Mon, 25 Mar 2024 12:17:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <eaa73bca-1e81-4a6f-a89f-e63329d359f9@app.fastmail.com>
-In-Reply-To: <1883cf6b-7756-405b-a843-d8ae31e01d61@ghiti.fr>
-References: <20240313180010.295747-1-samuel.holland@sifive.com>
- <CAHVXubjLWZkjSapnsWJzimWg_2swEy7tQ-DQ6ri8yMk8-Qsc-A@mail.gmail.com>
- <88de4a1a-047e-4be9-b5b0-3e53434dc022@sifive.com>
- <b5624bba-9917-421b-8ef0-4515d442f80b@ghiti.fr>
- <b0a07878-a9f1-40aa-b177-423b05137d2e@app.fastmail.com>
- <1883cf6b-7756-405b-a843-d8ae31e01d61@ghiti.fr>
-Date: Mon, 25 Mar 2024 12:15:10 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Alexandre Ghiti" <alex@ghiti.fr>,
- "Samuel Holland" <samuel.holland@sifive.com>,
- "Alexandre Ghiti" <alexghiti@rivosinc.com>
-Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
- "Albert Ou" <aou@eecs.berkeley.edu>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Charlie Jenkins" <charlie@rivosinc.com>, guoren <guoren@kernel.org>,
- "Jisheng Zhang" <jszhang@kernel.org>,
- "Kemeng Shi" <shikemeng@huaweicloud.com>,
- "Matthew Wilcox" <willy@infradead.org>, "Mike Rapoport" <rppt@kernel.org>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Xiao W Wang" <xiao.w.wang@intel.com>, "Yangyu Chen" <cyy@cyyself.name>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Define TASK_SIZE_MAX for __access_ok()
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.8 119/715] libbpf: Add bpf_token_create() API
+Content-Language: en-US, de-DE
+To: Jiri Slaby <jirislaby@kernel.org>, Sasha Levin <sashal@kernel.org>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>
+References: <20240324223455.1342824-1-sashal@kernel.org>
+ <20240324223455.1342824-120-sashal@kernel.org>
+ <e35cc021-7f17-479c-bd7c-ea6df836a04b@kernel.org>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <e35cc021-7f17-479c-bd7c-ea6df836a04b@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1711365479;ae128cdd;
+X-HE-SMSGID: 1roiKy-0002OP-Mb
 
-On Mon, Mar 25, 2024, at 08:25, Alexandre Ghiti wrote:
-> On 24/03/2024 23:05, Arnd Bergmann wrote:
->> On Tue, Mar 19, 2024, at 17:51, Alexandre Ghiti wrote:
->>>
->>> The use of alternatives allows to return right away if the buffer is
->>> beyond the usable user address space, and it's not just "slightly
->>> faster" for some cases (a very large buffer with only a few bytes being
->>> beyond the limit or someone could fault-in all the user pages and fail
->>> very late...etc). access_ok() is here to guarantee that such situations
->>> don't happen, so actually it makes more sense to use an alternative to
->>> avoid that.
->> The access_ok() function really wants a compile-time constant
->> value for TASK_SIZE_MAX so it can do constant folding for
->> repeated calls inside of one function, so for configurations
->> with a boot-time selected TASK_SIZE_64 it's already not ideal,
->> with or without alternatives.
+A quick "me too" from my side below:
+
+On 25.03.24 06:40, Jiri Slaby wrote:
+> On 24. 03. 24, 23:24, Sasha Levin wrote:
+>> From: Andrii Nakryiko <andrii@kernel.org>
 >>
->> If I read the current code correctly, riscv doesn't even
->> have a way to build with a compile-time selected
->> VA_BITS/PGDIR_SIZE, which is probably a better place to
->> start optimizing, since this rarely needs to be selected
->> dynamically.
->
->
-> Indeed, we do not support compile-time fixed VA_BITS! We could, but that 
-> would only be used for custom kernels. I don't think distro kernels will 
-> ever (?) propose 3 different kernels for sv39, sv48 and sv57 because the 
-> cost of dynamically choosing the address space width is not big enough 
-> to me (and the burden of maintaining 3 different kernels is).
->
-> Let me know if I'm wrong, I'd be happy to work on that.
+>> [ Upstream commit 639ecd7d6247c48a0175f5b458b648f5d4b6dc34 ]
+>>
+>> Add low-level wrapper API for BPF_TOKEN_CREATE command in bpf() syscall.
+>>
+>> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+>> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+>> Link:
+>> https://lore.kernel.org/bpf/20240124022127.2379740-13-andrii@kernel.org
+>> Stable-dep-of: c81a8ab196b5 ("libbpf: Add btf__new_split() API that
+>> was declared but not implemented")
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>   tools/lib/bpf/bpf.c      | 17 +++++++++++++++++
+>>   tools/lib/bpf/bpf.h      | 24 ++++++++++++++++++++++++
+>>   tools/lib/bpf/libbpf.map |  1 +
+>>   3 files changed, 42 insertions(+)
+>>
+>> diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+>> index 9dc9625651dcf..d4019928a8646 100644
+>> --- a/tools/lib/bpf/bpf.c
+>> +++ b/tools/lib/bpf/bpf.c
+>> @@ -1287,3 +1287,20 @@ int bpf_prog_bind_map(int prog_fd, int map_fd,
+>>       ret = sys_bpf(BPF_PROG_BIND_MAP, &attr, attr_sz);
+>>       return libbpf_err_errno(ret);
+>>   }
+>> +
+>> +int bpf_token_create(int bpffs_fd, struct bpf_token_create_opts *opts)
+>> +{
+>> +    const size_t attr_sz = offsetofend(union bpf_attr, token_create);
+>> +    union bpf_attr attr;
+>> +    int fd;
+>> +
+>> +    if (!OPTS_VALID(opts, bpf_token_create_opts))
+>> +        return libbpf_err(-EINVAL);
+>> +
+>> +    memset(&attr, 0, attr_sz);
+>> +    attr.token_create.bpffs_fd = bpffs_fd;
+>> +    attr.token_create.flags = OPTS_GET(opts, flags, 0);
+> 
+> With openSUSE config [1], I see:
+> bpf.c:1293:60: error: ‘union bpf_attr’ has no member named
+> ‘token_create’; did you mean ‘iter_create’?
+> bpf.c:1293:60: error: ‘union bpf_attr’ has no member named
+> ‘token_create’; did you mean ‘iter_create’?
+> bpf.c:1301:14: error: ‘union bpf_attr’ has no member named
+> ‘token_create’; did you mean ‘iter_create’?
+> bpf.c:1302:14: error: ‘union bpf_attr’ has no member named
+> ‘token_create’; did you mean ‘iter_create’?
+> 
+> 
+> [1]
+> https://github.com/openSUSE/kernel-source/blob/master/config/x86_64/default
+> 
+>> +    fd = sys_bpf_fd(BPF_TOKEN_CREATE, &attr, attr_sz);
+> 
+> And:
+> 
+> bpf.c:1304:25: error: ‘BPF_TOKEN_CREATE’ undeclared (first use in this
+> function); did you mean ‘BPF_ITER_CREATE’?
+> 
+> They are added by:
+> commit 35f96de04127d332a5c5e8a155d31f452f88c76d
+> Author: Andrii Nakryiko <andrii@kernel.org>
+> Date:   Tue Jan 23 18:21:00 2024 -0800
+> 
+>     bpf: Introduce BPF token object
+> 
+> 
+> But if you should take it or drop this all, I don't know...
 
-My feeling is that in most cases, users are better off with a
-compile-time default, given that the addressable memory has
-a factor of 512 between each step. With sv39, I think you are
-limited to having all RAM in the first 128GB of physical
-address space, and each process is limited to 256GB virtual
-addressing, but this is already covers pretty much anything
-you want to do on small systems that run a custom kernel.
+I ran into the same problems while building 6.8.2-rc1 for Fedora using
+the Fedora 39 config and its RPM spec file (with minor modifications):
 
-On most desktop/server/cloud distros, hardwiring sv48 is
-probably sufficient if all general purpose machines support
-this, and it should be enough even for commercial databases
-that micro-optimize 100TB datasets through a permanent mmap(),
-as well as most NUMA systems with discontiguous memory.
-This adds a little cost over hardcoded sv39, but is still
-faster than a boot-time sv39/sv48 config that most users
-will not be aware of.
+https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/stable-rc/fedora-39-x86_64/07210895-stablerc-stablerc-releases/builder-live.log.gz
 
-Once enterprise distros certify systems beyond a few dozen
-TB of RAM, they probably need to enable the boot time
-detection, until then I think the few users with gigantic
-systems will probably be fine running a custom sv57
-kernel. At that point, that distro can start shipping a
-kernel with boot-time detected page table sizes.
-
-     Arnd
+Ciao, Thorsten
