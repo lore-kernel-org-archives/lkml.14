@@ -1,140 +1,145 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579AE6F51D;
-	Mon, 25 Mar 2024 20:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDBBC5D725;
+	Mon, 25 Mar 2024 20:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711399496; cv=none; b=GIQAAh7FJ9/yXzi0fwsI8X3R4Xf1nSKmJZ0rBbvVvWHEVNNJPLtV+agxs5KersnbE9bJ1h2+q6LXm/xLhg5XfFze4E6Sv+k1PSTmedrEJAVefRmqUTp2pe0dZrVfAgA5911sEOv+xCmC33tOAcLxPCW5/JIhXyUOzgdOWaenN6I=
+	t=1711399498; cv=none; b=ddX9yq3l/XwVcz0VuLr6APj32dbUtCO5lHKTQkxPu5Si02izTi1HfWtBsWEK16IrqbeTeKLIoYbbkqDlJNJYAKxKTD8lUkEG4jBV2d/4ksefTrPVWQcfhPBMtd7tJWFFwZdk/s7/vPnY5z8VQWNMmqbmBKoDd/ySbS63tq4X/po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711399496; c=relaxed/simple;
-	bh=LN4dT4d7P8qQBwedPyFT2jT5dVKTs6A7A2F7zwpITOc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k05N8UxtkdGy5sxOsq/Rj0gCetrZZiMae1F6G4zDYTeWnQWFKY7F9g5S+pENvvi16+YC4wFrMxPm0jKIqbsVOrDFy6iOX9+FANoasINM6GoOuZUQyMZdjl65DM97tJ/T3aRQxpU7W01DTA27HYUxzIZ30oJzc201e91sDnplz3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KVk5gxma; arc=none smtp.client-ip=209.85.167.49
+	s=arc-20240116; t=1711399498; c=relaxed/simple;
+	bh=SZAzcMIK7i3P4s4qLrG+0au4O9rvfOdsoCETN86sg8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hds7TfgzBX3V3ypy87JTT+i1tpniau0/FH2jvLdIg7Uh9ztJWkF0wGEU0rrSyl3JAwaCw3FgbECUrdj20LQs0l9kwUO6cnTEzk62pG8rKAZhTwsyvZ5b/GAJxZWrpRdUaMFHnnPUuZc6gNR+MT4iAybeXkCs5M/iAnDvWJTQWFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bOYJ9sBi; arc=none smtp.client-ip=209.85.222.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVk5gxma"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-515a86daf09so2438341e87.3;
-        Mon, 25 Mar 2024 13:44:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bOYJ9sBi"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7db44846727so1030366241.0;
+        Mon, 25 Mar 2024 13:44:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711399492; x=1712004292; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1711399496; x=1712004296; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kdX7GSsZnXTSylOv9Y3Ibi+HXBYjvkvffIzYw5Muc/4=;
-        b=KVk5gxmaOVB/NIwEAAcFSgfbxyXza7T6cOeCiNR6fMVCg57F5+Onh5vLv/77ZAUXi9
-         BzS2tRSGpFyOUtCdMwzS2eB6WzYYk1wB2FQhSaakI1Kp6th1Inu+Op8AY9vn7P2HYRhV
-         /UZ9EY6wwUqp8xnQCpbgnTMCu0lmQGfUdvhEFdHSvSIcvcT3fTtaRltOVPCK9/1UmVaI
-         QEf1eSPWsKsKarahnxx6WkwED6mccvdwzGK0P6j+wTy/ZXKrLqXDfGy4iDjO2rMDUK6E
-         vaSHkMiTD7+4eF50KLgIoQXCSkFffuBnJ4nGZK07mkF9xLNx6dHPvdfvf0xn6SdyM7Qm
-         BB6A==
+        bh=4DEZYFsrrJ3tXkcdN4NmU+Au67F0Ql9JXSFSSgEu1ho=;
+        b=bOYJ9sBiCVMBgeppLoLHCOXf3wVSmonTPF5apo0FCFjze0HdJNFIO3pJVsEAZMOl7v
+         tXFi32d3pHjj4ydp6I5PbodxWFz/yIz1IIr9yEXFw33dxln7ATsRx1s3B4EQKmBxDGjS
+         cOgsYqvt+GO8RW8gPjEaz0du3YDe6oIJvdwAOpUhOOou10BWeuExxrxxXrvbl+2RTrG6
+         819mpzFsiM5A/ZugHjsQxm1outZs9XcW1Y7fzYegxhbY2+fU1YP1kzsKayvDCwLAgn1l
+         tqSkPN4zu605dKJ3jB68zuXMxYTHGnyjYbV47ySpGlv1E5p/1QLx/gUa3LTLEvtLHk+g
+         +/0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711399492; x=1712004292;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711399496; x=1712004296;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kdX7GSsZnXTSylOv9Y3Ibi+HXBYjvkvffIzYw5Muc/4=;
-        b=AQDKu0Aj/Zk2Ak3hpCsLHGw9FK2An2bzRlvunwHoKRnaMIO+5CNLxy27TC88ZBMARA
-         AbWId058r/y3kt1VM1z9NqBFQRL11WSoBla4Zq0WpPSXn9mzyijKNZhckPcDmF5CykwU
-         Ty13TZhUtPzurFcKDZJkAXVCwzcUnheBgMWFfRRQAfw8STQVUv8Dqf+XNh6NTazlM0iJ
-         K3WgcYSQYf9GuALwSrOQaTc+DWwQYpN2MxBAaehT38h2FVTCJxYSIdgiaZoxKHSJ9KLB
-         X69Py+yYsVzlCIz8iECLshD8MN1zi2O4b/qG6kxtz/N7GuFUc3Hp4eRk6zm1Xy92VkVM
-         m0qg==
-X-Forwarded-Encrypted: i=1; AJvYcCXtdVzpe2kaPAfNC1NP7nTWOGz8CaPNgjUmE/U5uGEb6R9AvaZ5gkpkI/SUurBeIG8iLHkIkKhGmIQeBN9DacXFibYXi9YA/5x7Yk69
-X-Gm-Message-State: AOJu0YwmE1HOXW7vCHf6+PzFXkailr9dsBaaHdz1pjF/D1mRFZHOQKRq
-	n5H2wkm0vxIQV1/Ps97hwofpYFrsbZOYff9Entk+1Fkx2wZ0ICbITqyEHN5VLko=
-X-Google-Smtp-Source: AGHT+IGR99AwEcs60I5LaFb36uz4ABm53DTgzPKYSJ5bOBquRnnhOw0ax9pVqsAi3sbZ2H26EjFTGA==
-X-Received: by 2002:a05:6512:535:b0:515:a58e:82e with SMTP id o21-20020a056512053500b00515a58e082emr5233083lfc.62.1711399492034;
-        Mon, 25 Mar 2024 13:44:52 -0700 (PDT)
-Received: from WBEC325.dom.lan ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id k18-20020a056402049200b0056c1cba8480sm591751edv.25.2024.03.25.13.44.51
+        bh=4DEZYFsrrJ3tXkcdN4NmU+Au67F0Ql9JXSFSSgEu1ho=;
+        b=WXK6T9YN4utyK0wLcMAzXniqwhIzPrYc0phJ51ldtNhPFnTh1I1c9s8Y+XPwGWmy98
+         V3mbIfGPrAz/DOkOK3U4yvqcTHHNJ9Moi6Opb8OcNVpjoaFZ4X4X9f9DCZjZqYlGXMYg
+         nI60HICNdBI7/B06h6m1Byr1QW6SW1G8CxeOHb7t3YuLdzUT20VBEPAQwOSDMvOfQghv
+         PVd/ThzwKugVWwbQ0+cDxGayD1HbFvqHDzG6FNL2ErprqlUGtPRT7cdhzHa970n/EN2/
+         YKQ03ZDgFTw2nlwvlPM+cQWWn41KpiZrvrDkvySRmiOUHlV90MhxCQDfLZeWQyF8T8E7
+         CaIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGzT3YRzu2/hq1DyEBuT4AVtisyWz+m1q+PG1+rcHa79x4g7ZI82Y6YlCBu8c5eidGDxBmiZH5IaxHb9TjIAJBdElmFPDY5GBZMmtR
+X-Gm-Message-State: AOJu0YyDmCc0cr2whVluImlu0H5hRNIo6oEKrZ9IPuONxi7tVM7z/mJK
+	fg0nvWjav0PKNKY+r2SgrreBul1G6sgmhlKPtail6IY0YYqanKTm
+X-Google-Smtp-Source: AGHT+IEWYnFxZLLkDrEyIi/t2Q5S4gSo26mW90rdu9+xogc74glHDUYiwZXSXl46l2pV13sKjDwMJA==
+X-Received: by 2002:a05:6102:3561:b0:476:e1f5:43b8 with SMTP id bh1-20020a056102356100b00476e1f543b8mr4071235vsb.25.1711399495737;
+        Mon, 25 Mar 2024 13:44:55 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id v26-20020a05620a091a00b007887583762csm2423631qkv.94.2024.03.25.13.44.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 13:44:51 -0700 (PDT)
-From: Pawel Dembicki <paweldembicki@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Simon Horman <horms@kernel.org>,
-	Pawel Dembicki <paweldembicki@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	UNGLinuxDriver@microchip.com,
-	Russell King <linux@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v7 05/16] net: dsa: vsc73xx: add structure descriptions
-Date: Mon, 25 Mar 2024 21:43:30 +0100
-Message-Id: <20240325204344.2298241-6-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240325204344.2298241-1-paweldembicki@gmail.com>
-References: <20240325204344.2298241-1-paweldembicki@gmail.com>
+        Mon, 25 Mar 2024 13:44:55 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id ABB561200066;
+	Mon, 25 Mar 2024 16:44:54 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Mon, 25 Mar 2024 16:44:54 -0400
+X-ME-Sender: <xms:RuIBZlakNYXySYRQ_KiIPQJqSrUHe6-ONcckjEfiaeJpIjmkKiy6bQ>
+    <xme:RuIBZsZYukQJB8BNEducDLT4LOvzn5Uh3pMwc4ZTAb6n-jiwczvXQJYSSOfW2bcJB
+    tv4KromCPrhQ9MNVQ>
+X-ME-Received: <xmr:RuIBZn8IAjEN5_OOKZtocdSGVUeRIm4VGvTmzo6wx4kkuWSeW6LSmKwzRLx0WQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudduuddgkedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeduveeijeehvdekjeeffeethefhgeevvdeuvdekueeileeuleehleeuledt
+    hfdthfenucffohhmrghinheprhhushhtqdhlrghnghdrohhrghdpshhprghrvggptggrph
+    grtghithihpghmuhhtrdgrshenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhith
+    ihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgr
+    ihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:RuIBZjokd-02NW17Y5RVkrmPAr76oZRlBMrM_z7l1hqzc-1FiXOR-Q>
+    <xmx:RuIBZgpNAhQe1_k1op2-vJ5-TOb4V6bn7oFzofrBYFkd_h6LS0oMaQ>
+    <xmx:RuIBZpRlUMgojKBKEOZsVwu2brF6SPzUb3yFFVpUDq_frOhhLafekw>
+    <xmx:RuIBZorJi_QEhoeSDfuC708eTUfKZ0MSZUAcUywaULUNImwfcNQggg>
+    <xmx:RuIBZmhARegcYcjy0jFaPm6VwhctnZNga5jkSuc2XIU9p9H-BaXsSuQa8Qo>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 25 Mar 2024 16:44:54 -0400 (EDT)
+Date: Mon, 25 Mar 2024 13:44:23 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Wedson Almeida Filho <wedsonaf@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>, linux-kernel@vger.kernel.org,
+	Wedson Almeida Filho <walmeida@microsoft.com>
+Subject: Re: [PATCH 07/10] rust: alloc: update `VecExt` to take allocation
+ flags
+Message-ID: <ZgHiJ23TdOmnSGe9@boqun-archlinux>
+References: <20240325195418.166013-1-wedsonaf@gmail.com>
+ <20240325195418.166013-8-wedsonaf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325195418.166013-8-wedsonaf@gmail.com>
 
-This commit adds updates to the documentation describing the structures
-used in vsc73xx. This will help prevent kdoc-related issues in the future.
+On Mon, Mar 25, 2024 at 04:54:15PM -0300, Wedson Almeida Filho wrote:
+[...]
+> +    fn push(&mut self, v: T, flags: Flags) -> Result<(), AllocError> {
+> +        <Self as VecExt<_>>::reserve(self, 1, flags)?;
+> +        let (ptr, len, cap) = destructure(self);
+> +        // SAFETY: ptr is valid for `cap` elements. And `cap` is greater (by at least 1) than
+> +        // `len` because of the call to `reserve` above. So the pointer after offsetting by `len`
+> +        // elements is valid for write.
+> +        unsafe { ptr.wrapping_add(len).write(v) };
+> +
+> +        // SAFETY: The only difference from the values returned by `destructure` is that `length`
+> +        // is incremented by 1, which is fine because we have just initialised the element at
+> +        // offset `length`.
+> +        unsafe { rebuild(self, ptr, len + 1, cap) };
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
----
-v7,v6:
-  - resend only
-v5:
-  - improved description and stick to 80 characters per line
-v4:
-  - introduced patch
+probably use spare_capacity_mut() here to avoid `destructure` and
+`rebuild`?
+	
+	https://doc.rust-lang.org/std/vec/struct.Vec.html#method.spare_capacity_mut
 
- drivers/net/dsa/vitesse-vsc73xx.h | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+	// .. after reserve succeed.
+	// there must be room for adding one more.
+	self.spare_capacity_mut()[0].write(v);
+	// or unsafe { self.spare_capacity_mut().as_mut_ptr().cast().write(v); }
 
-diff --git a/drivers/net/dsa/vitesse-vsc73xx.h b/drivers/net/dsa/vitesse-vsc73xx.h
-index fee1378508b5..e7b08599a625 100644
---- a/drivers/net/dsa/vitesse-vsc73xx.h
-+++ b/drivers/net/dsa/vitesse-vsc73xx.h
-@@ -15,7 +15,16 @@
- #define VSC73XX_MAX_NUM_PORTS	8
- 
- /**
-- * struct vsc73xx - VSC73xx state container
-+ * struct vsc73xx - VSC73xx state container: main data structure
-+ * @dev: The device pointer
-+ * @reset: The descriptor for the GPIO line tied to the reset pin
-+ * @ds: Pointer to the DSA core structure
-+ * @gc: Main structure of the GPIO controller
-+ * @chipid: Storage for the Chip ID value read from the CHIPID register of the
-+ *	sswitch
-+ * @addr: MAC address used in flow control frames
-+ * @ops: Structure with hardware-dependent operations
-+ * @priv: Pointer to the configuration interface structure
-  */
- struct vsc73xx {
- 	struct device			*dev;
-@@ -28,6 +37,11 @@ struct vsc73xx {
- 	void				*priv;
- };
- 
-+/**
-+ * struct vsc73xx_ops - VSC73xx methods container
-+ * @read: Method for register reading over the hardware-dependent interface
-+ * @write: Method for register writing over the hardware-dependent interface
-+ */
- struct vsc73xx_ops {
- 	int (*read)(struct vsc73xx *vsc, u8 block, u8 subblock, u8 reg,
- 		    u32 *val);
--- 
-2.34.1
+	unsafe {
+		self.set_len(self.len() + 1);
+	}
 
+Thoughts?
+
+Regards,
+Boqun
+
+>          Ok(())
+>      }
+>  
+[...]
