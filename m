@@ -1,249 +1,107 @@
-Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7573B4AEEF;
-	Mon, 25 Mar 2024 19:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B226C224DB;
+	Mon, 25 Mar 2024 19:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711396436; cv=none; b=uTkBMmy3ObVMfhtLeC/4+3s1m0cVJYNeXHcdwDVnHC4cGlwb2iWz9Q6UbfKA98HuuqjTgtmdE32orneTdbkDZa2/4qwrPg+dlRSOo8cSfgQdbuYO2OoLNMNpG/c2j4R1JpKzki06Ktek0T16NGVKv5I1YFOfLSSYJieRgJuzpBk=
+	t=1711396466; cv=none; b=IGk6lOxxqdOEmQ2770ShU/Ncbd4Msd8VrLXoztLNswHlw8G8O/1GZ8itGsVhy3RZLZ9MuIqVbFnxXXVDJvKyFZIHVEhMZv2INJc3Z5vyYvZ471zmtdQFIGQgDrCoZoQoHDQ8wsGw5Yo9w//5fRjHFjtdJNNdBpjGM+HUpIRtb2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711396436; c=relaxed/simple;
-	bh=++m9N0MCieE6cSYPHOMl1yqT3JI/VESso5nM1BQnBe8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S5K0OytHh4/nL7Sckk8CfMiS1HfKVI9+W9sHmQ7mJLBJ5LOj2EPDB4Lvf4KboTG3PoVN+DD1E7MEOu4MKOY2pu+odQFwaZAYI3fNk6evRyQCfoqsm/FmeRqNJ7ZmLrbond4SUl7Ixd/YYU6nri+d7yA5L/uZE1kcZugokIKf5MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=IsrbFAkm; arc=none smtp.client-ip=207.171.190.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1711396466; c=relaxed/simple;
+	bh=Hy2D4JJqgBzY08cEDq6AeRjSKFZX+A9Y1A28xMMdobI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T0KMKLpyYA9iN6zduEoj9+eSx1QCfjbm1uVPSaAvO8MnwdBvLyZ7CQ+dhzzQNi3cOT6nRXeC7n/1gqOHX/1kPDRMtN590PoahF7/eo4hd1KOH7JRGA+oZtjuPbFCvBr6v7DMexvK7gCWbileVobyVKaP8L/LHP0nFGwLoXpSzmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=jGiLYVk0; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="IsrbFAkm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1711396435; x=1742932435;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9tccM5MnneqoFu3JC/qRsGHXetyTwu2/OTI1HpvUe7k=;
-  b=IsrbFAkmNZEyvt/oJJQV/qpt68SwRdptgJ9qf52BWnJu3hjAFmn+yYvM
-   yMIlI/9d+VcLc0KA6eS5MX+H7p0RGi3xQ4Nl/UT2mi61VD05uOTTGLZ+D
-   JAp+Oa09VlWEHe7fmsOFKp4dI6NQelBmiag9Cda9PWAHhr/R3so3KAK5H
-   0=;
-X-IronPort-AV: E=Sophos;i="6.07,154,1708387200"; 
-   d="scan'208";a="335105095"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 19:53:48 +0000
-Received: from EX19MTAEUB002.ant.amazon.com [10.0.10.100:36564]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.33.239:2525] with esmtp (Farcaster)
- id 76e9f19c-adbd-4c42-aecc-51f4614478ad; Mon, 25 Mar 2024 19:53:46 +0000 (UTC)
-X-Farcaster-Flow-ID: 76e9f19c-adbd-4c42-aecc-51f4614478ad
-Received: from EX19D036EUC002.ant.amazon.com (10.252.61.191) by
- EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 25 Mar 2024 19:53:45 +0000
-Received: from bcd074994f7f.amazon.com (10.106.83.11) by
- EX19D036EUC002.ant.amazon.com (10.252.61.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 25 Mar 2024 19:53:40 +0000
-From: Sudan Landge <sudanl@amazon.com>
-To: <tytso@mit.edu>, <Jason@zx2c4.com>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<sudanl@amazon.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<thomas.lendacky@amd.com>, <dan.j.williams@intel.com>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <graf@amazon.de>, <dwmw@amazon.co.uk>, <bchalios@amazon.es>,
-	<xmarcalx@amazon.co.uk>
-Subject: [PATCH v3 4/4] virt: vmgenid: add support for devicetree bindings
-Date: Mon, 25 Mar 2024 19:53:06 +0000
-Message-ID: <20240325195306.13133-5-sudanl@amazon.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20240325195306.13133-1-sudanl@amazon.com>
-References: <20240325195306.13133-1-sudanl@amazon.com>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="jGiLYVk0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=btW7kQnjDmUmvNE23NH4vh6GdFNyilpMQ7GM8BLzUxo=; b=jGiLYVk075whzTFEz9PjZ7Cig8
+	Dvb2S2yw90zt5tTY3q69uUjfk13fVEeAeZy1pXgZMT6w+Q5JMTI1zPmBfjTg/XaofApLcyBbQWSA8
+	BVET1D7c4X+8z5pg3MGJFvycQpgEsTHkjWmAxVURxIEiLuE61OO/mGHw5mB83tIXQq6zVNLxQzY6O
+	108aP6tkrjQnM3o9HBiEWi/+76kphM7w1dxx2b2m/lyNq2iOY5/+tcIoZ4A7OORJ4iNEQVsGWuQgh
+	XmlRUNi1ntn7Rp02pLQ7n1w0SR257tR1VSpJeo9oZQwwutFSlXs7ZEetTdicVH7o0BYiSTmq15WmM
+	fdUEKH7g==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1roqOb-00GXMi-0K;
+	Mon, 25 Mar 2024 19:54:13 +0000
+Date: Mon, 25 Mar 2024 19:54:13 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Steve French <smfrench@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	CIFS <linux-cifs@vger.kernel.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Christian Brauner <christian@brauner.io>,
+	Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
+	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>
+Subject: Re: kernel crash in mknod
+Message-ID: <20240325195413.GW538574@ZenIV>
+References: <CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com>
+ <20240324054636.GT538574@ZenIV>
+ <3441a4a1140944f5b418b70f557bca72@huawei.com>
+ <20240325-beugen-kraftvoll-1390fd52d59c@brauner>
+ <CAH2r5muL4NEwLxq_qnPOCTHunLB_vmDA-1jJ152POwBv+aTcXg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D039UWB001.ant.amazon.com (10.13.138.119) To
- EX19D036EUC002.ant.amazon.com (10.252.61.191)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH2r5muL4NEwLxq_qnPOCTHunLB_vmDA-1jJ152POwBv+aTcXg@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-- Extend the vmgenid platform driver to support devicetree bindings.
-  With this support, hypervisors can send vmgenid notifications to
-  the virtual machine without the need to enable ACPI. The bindings
-  are located at: Documentation/devicetree/bindings/rng/vmgenid.yaml
+On Mon, Mar 25, 2024 at 11:26:59AM -0500, Steve French wrote:
 
-- Use proper FLAGS to compile with and without ACPI and/or devicetree.
+> A loosely related question.  Do I need to change cifs.ko to return the
+> pointer to inode on mknod now?  dentry->inode is NULL in the case of mknod
+> from cifs.ko (and presumably some other fs as Al noted), unlike mkdir and
+> create where it is filled in.   Is there a perf advantage in filling in the
+> dentry->inode in the mknod path in the fs or better to leave it as is?  Is
+> there a good example to borrow from on this?
 
-Signed-off-by: Sudan Landge <sudanl@amazon.com>
----
- drivers/virt/Kconfig   |  1 -
- drivers/virt/vmgenid.c | 85 +++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 80 insertions(+), 6 deletions(-)
+AFAICS, that case in in CIFS is the only instance of ->mknod() that does this
+"skip lookups, just unhash and return 0" at the moment.
 
-diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
-index 40129b6f0eca..d8c848cf09a6 100644
---- a/drivers/virt/Kconfig
-+++ b/drivers/virt/Kconfig
-@@ -16,7 +16,6 @@ if VIRT_DRIVERS
- config VMGENID
- 	tristate "Virtual Machine Generation ID driver"
- 	default y
--	depends on ACPI
- 	help
- 	  Say Y here to use the hypervisor-provided Virtual Machine Generation ID
- 	  to reseed the RNG when the VM is cloned. This is highly recommended if
-diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
-index d5394c706bd9..a648465bea43 100644
---- a/drivers/virt/vmgenid.c
-+++ b/drivers/virt/vmgenid.c
-@@ -2,7 +2,7 @@
- /*
-  * Copyright (C) 2022 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-  *
-- * The "Virtual Machine Generation ID" is exposed via ACPI and changes when a
-+ * The "Virtual Machine Generation ID" is exposed via ACPI or DT and changes when a
-  * virtual machine forks or is cloned. This driver exists for shepherding that
-  * information to random.c.
-  */
-@@ -21,6 +21,7 @@ enum { VMGENID_SIZE = 16 };
- struct vmgenid_state {
- 	u8 *next_id;
- 	u8 this_id[VMGENID_SIZE];
-+	unsigned int irq;
- };
- 
- static void vmgenid_notify(struct device *device)
-@@ -37,10 +38,24 @@ static void vmgenid_notify(struct device *device)
- 	kobject_uevent_env(&device->kobj, KOBJ_CHANGE, envp);
- }
- 
-+#if IS_ENABLED(CONFIG_ACPI)
- static void vmgenid_acpi_handler(acpi_handle handle, u32 event, void *dev)
- {
-+	(void)handle;
-+	(void)event;
- 	vmgenid_notify(dev);
- }
-+#endif
-+
-+#if IS_ENABLED(CONFIG_OF)
-+static irqreturn_t vmgenid_of_irq_handler(int irq, void *dev)
-+{
-+	(void)irq;
-+	vmgenid_notify(dev);
-+
-+	return IRQ_HANDLED;
-+}
-+#endif
- 
- static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
- {
-@@ -55,6 +70,7 @@ static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
- 
- static int vmgenid_add_acpi(struct device *dev, struct vmgenid_state *state)
- {
-+#if IS_ENABLED(CONFIG_ACPI)
- 	struct acpi_device *device = ACPI_COMPANION(dev);
- 	struct acpi_buffer parsed = { ACPI_ALLOCATE_BUFFER };
- 	union acpi_object *obj;
-@@ -96,6 +112,49 @@ static int vmgenid_add_acpi(struct device *dev, struct vmgenid_state *state)
- out:
- 	ACPI_FREE(parsed.pointer);
- 	return ret;
-+#else
-+	(void)dev;
-+	(void)state;
-+	return -EINVAL;
-+#endif
-+}
-+
-+static int vmgenid_add_of(struct platform_device *pdev, struct vmgenid_state *state)
-+{
-+#if IS_ENABLED(CONFIG_OF)
-+	void __iomem *remapped_ptr;
-+	int ret = 0;
-+
-+	remapped_ptr = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
-+	if (IS_ERR(remapped_ptr)) {
-+		ret = PTR_ERR(remapped_ptr);
-+		goto out;
-+	}
-+
-+	ret = setup_vmgenid_state(state, remapped_ptr);
-+	if (ret)
-+		goto out;
-+
-+	state->irq = platform_get_irq(pdev, 0);
-+	if (state->irq < 0) {
-+		ret = state->irq;
-+		goto out;
-+	}
-+	pdev->dev.driver_data = state;
-+
-+	ret =  devm_request_irq(&pdev->dev, state->irq,
-+				vmgenid_of_irq_handler,
-+				IRQF_SHARED, "vmgenid", &pdev->dev);
-+	if (ret)
-+		pdev->dev.driver_data = NULL;
-+
-+out:
-+	return ret;
-+#else
-+	(void)dev;
-+	(void)state;
-+	return -EINVAL;
-+#endif
- }
- 
- static int vmgenid_add(struct platform_device *pdev)
-@@ -108,7 +167,10 @@ static int vmgenid_add(struct platform_device *pdev)
- 	if (!state)
- 		return -ENOMEM;
- 
--	ret = vmgenid_add_acpi(dev, state);
-+	if (dev->of_node)
-+		ret = vmgenid_add_of(pdev, state);
-+	else
-+		ret = vmgenid_add_acpi(dev, state);
- 
- 	if (ret)
- 		devm_kfree(dev, state);
-@@ -116,18 +178,31 @@ static int vmgenid_add(struct platform_device *pdev)
- 	return ret;
- }
- 
--static const struct acpi_device_id vmgenid_ids[] = {
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id vmgenid_of_ids[] = {
-+	{ .compatible = "linux,vmgenctr", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, vmgenid_of_ids);
-+#endif
-+
-+#if IS_ENABLED(CONFIG_ACPI)
-+static const struct acpi_device_id vmgenid_acpi_ids[] = {
- 	{ "VMGENCTR", 0 },
- 	{ "VM_GEN_COUNTER", 0 },
- 	{ }
- };
--MODULE_DEVICE_TABLE(acpi, vmgenid_ids);
-+MODULE_DEVICE_TABLE(acpi, vmgenid_acpi_ids);
-+#endif
- 
- static struct platform_driver vmgenid_plaform_driver = {
- 	.probe      = vmgenid_add,
- 	.driver     = {
- 		.name   = "vmgenid",
--		.acpi_match_table = ACPI_PTR(vmgenid_ids),
-+		.acpi_match_table = ACPI_PTR(vmgenid_acpi_ids),
-+#if IS_ENABLED(CONFIG_OF)
-+		.of_match_table = vmgenid_of_ids,
-+#endif
- 		.owner = THIS_MODULE,
- 	},
- };
--- 
-2.40.1
+What's more, it really had been broken all along for one important case -
+AF_UNIX bind(2) with address (== socket pathname) being on the filesystem
+in question.
 
+Options:
+	1) make vfs_mknod() callers aware of the possibility, have the ones
+that care do lookup in case when return value is 0 and dentry is unhashed.
+That's similar to what we do for vfs_mkdir().  No changes needed for CIFS
+or fs/namei.c (i.e. do_mknodat()), unix_bind() definitely needs a change,
+ecryptfs can stay as-is, overlayfs just needs to stop complaining when it sees
+that situation, nfsd might or might not need a change - hadn't checked yet.
+In that case we document ->mknod() as "may unhash and return 0 if it wants
+to save a lookup".
+	2) make vfs_mknod() check for that case and have it call ->lookup()
+if it sees that.  I don't see any benefits to that, TBH - no performance
+benefits anywhere and no real simplification for ->mknod() instances.  It
+does avoid the need to change anything in CIFS, though.
+	3) require ->mknod() instances to make dentry positive on success.
+CIFS needs a fix, documentation gets updated to explicitly require that.
+AFAICS, nothing else would need to be touched, except possibly adding
+a warning in vfs_mknod() to catch violation of that rule.
 
+Note that cifs_sfu_make_node() is the only case in CIFS where that happens -
+other codepaths (both in cifs_make_node() and in smb2_make_node()) will
+instantiate.  How painful would it be for cifs_sfu_make_node()?
+AFAICS, you do open/sync_write/close there; would it be hard to do
+an eqiuvalent of fstat and set the inode up?  No need to reread the
+file contents (as cifs_sfu_type() does), and you do have full path
+anyway, so it's less work than for full ->lookup() even if you need
+a path-based protocol operations...
+
+Does that thing have an equivalent of fstat() that would return the
+metadata of opened file?
