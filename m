@@ -1,172 +1,147 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC431CD2C
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 18:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54F03FE37;
+	Mon, 25 Mar 2024 18:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711391603; cv=none; b=L6uYQUCw9NWkB3lz9rSO3VF9lqwo9EsQixNvNU317tnVVZeQGkoOnrypL6mnCgLDSffDrPuUP+BCAJB4csVdFDPRxbqgpCrrahCPCxISOLjP+6gezLMhdGbe4p6StzWOPRlpfGasXzfDogXkXUaAUWfNFtgObAZhBR99APkRnlw=
+	t=1711391605; cv=none; b=Eq407QjVt4VNumtJ5MUS/dRoJL4dNt8ue6zroN09tIGDYQhTNitccLIkj3zWWydNFb3bh9ZNm3w+GS/LveIxtEXcf1rcyaQBUbGjb+mvB99GPqJ+mlJLcYJbtCq+tTT+HezKNYsPgK961oHhszUzEfS0HQ3HEbcMamAJodJFeh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711391603; c=relaxed/simple;
-	bh=HWdvhNPgrstx/BUrWC1u1UqDiilqsgTE26Vvt7s0P/I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C5yCq8YRzrceEhay9dp/pLEyQRCIKnV5nH2ClkvarH9f/xp4djlPEitmP/vxnt85BLizyU20Mo6M2alh/wZUSDD1UYpaqxwyOYpn4jDrjmpKchg/qwLMQgoLc2QoGJCIAUn6c8rpk06gEUzNCds+37j+QtvntWq/dtfzv5HHTvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dUmVUhni; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711391605; c=relaxed/simple;
+	bh=Yxk4m8d7LalfSXRRRG03wdvuw+sqOeO1OkoHBbeW0AQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dOjrse/AxBs0Bqcda2uk13HQpbOXuumhJeBIvH6vogDX42oFtCj/tk1QtNeJSVvdJucTN4RWVNCd1eBBYQ+8VO3QIslQbF88E8aca1f11XqF2UcgU/me8H+wxlGcq5c3C+TkiaCwtm4hw5e9ADvZp6l9ycxqenNOUzFsjbgLndg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dojTplWF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=phLqAdzQ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dojTplWF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=phLqAdzQ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dUmVUhni"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-566e869f631so5028278a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711391600; x=1711996400; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=NgO7vAuYX5jq97ULE5hbiw/+oxyfYjBm6vYk2epADpM=;
-        b=dUmVUhni96kpz6sskhXmAmHKP3ap7z+gR/5/J7wbNuQkB8hspVKS6QKO54Qc4ld59b
-         OtIjjEDXl4/y8ivISvrRC/9K/rM2gbTF6SSiVIkd7WnvdjE3aA5PbgA3UB/vBD3uTWGT
-         BZtVbtrsVMUmLnL+JFSBHOg/t9KGSmuS/PvhPXh7ER8wlfR1Jn35/1gAC9CinyLF8mMw
-         y7knchyMATbWsw+6Az4vxNmdZU3Tz7buupheXa35fPXStSI9myhiSd9D9BfQfXDqMHzq
-         l5jGgQ66C8Ce3ycUysQe/KNo+G0KckZMIcdV76+AgjY6P7zSzg1C+nfFFLipuB0xAfMD
-         O11A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711391600; x=1711996400;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NgO7vAuYX5jq97ULE5hbiw/+oxyfYjBm6vYk2epADpM=;
-        b=NO4NNKGI+ZPYP72vpGSHAE21Lribj5ow6plgK+5QLOWyXPgsifpi9ym5C/C4qfTKKo
-         EW5UA974edCIRfpAxQwSYrKKq8dkaXx79V3ZNXnNh7KRvQwixRVp3/EGcQJQKumq28Ft
-         FiQjb3j/pJcA0NevQjp+h15NWmxz8vf8P+04ao7NJxihofOwn6WR4Pn0WwiTHVIUpumY
-         2cgeJyg/DaNbk/tZWf/71e2p+ZyzZmdzLgQjvo+sUBFN3NSNHtUzkqQD9Os9uI9narUD
-         pQStz+7SSPI5xwDNnEVhCZTC/q2+ZnO7uE/rhChF7Tb19nLLYiN1Rd60EWHJiBo5A0Uh
-         /Dew==
-X-Forwarded-Encrypted: i=1; AJvYcCVLqJKw3XTulrWM76ZBe/NsI52pxaJB2GazBHH3lSRFkb5OohCrgU/Ew+zJSBSkmQ4ISrgbBpeX73MFZkH55gDvK3ynadjdYDUFSk1/
-X-Gm-Message-State: AOJu0YxKATHbhIBznwNRYAFmG4wGxJyv6zRXI7Z8ktyb9Vt08cp/sh4U
-	d5HxwzhSvtkbl3xMgcDr2rzf8l83wUw3KIzkHgGpjitrORFcO6T4+cLD3LmoI6ktrXjZ57AAsN/
-	h
-X-Google-Smtp-Source: AGHT+IFH4cdw8myry61DUei8kq5J8A4kYg+VfMED08uh8VvI6JyUZMfHsboLkXHLlkhwR7Jr0iTW2A==
-X-Received: by 2002:a50:9b58:0:b0:566:2aff:2d38 with SMTP id a24-20020a509b58000000b005662aff2d38mr5157681edj.26.1711391599858;
-        Mon, 25 Mar 2024 11:33:19 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id da12-20020a056402176c00b0056b816e253esm3258733edb.13.2024.03.25.11.33.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 11:33:18 -0700 (PDT)
-Message-ID: <614b3240-00ee-478f-b797-0d50b7456903@linaro.org>
-Date: Mon, 25 Mar 2024 19:33:16 +0100
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dojTplWF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="phLqAdzQ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dojTplWF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="phLqAdzQ"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2C8AB224D7;
+	Mon, 25 Mar 2024 18:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711391598;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Of8gQ3uWJx2XPDmOVf+BHc8HVH3ZTHXn91pmh2Ulgok=;
+	b=dojTplWFbBvoLH7kOKwYnCRFTRAxAR0cFLxtolz87OZcY/em4P3kRMLRISyRiRoS5vxnGb
+	93v2z7oFMpW0NToz9Lu0ZMaHE4VfDxIgNdsdwEqtVB07RebNp8jUPdwyx+iaVD2W2U4Y4y
+	mv5wCEAQ5EPNCUxMuGmIbziIcWD8jdA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711391598;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Of8gQ3uWJx2XPDmOVf+BHc8HVH3ZTHXn91pmh2Ulgok=;
+	b=phLqAdzQwb/yMrwO8xUj5nhhD6NfgFzm3jLYruL6DMAlvew5EfHHWXmkmlYa908cI11vnX
+	W7WuSIV88/rGB6Bg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711391598;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Of8gQ3uWJx2XPDmOVf+BHc8HVH3ZTHXn91pmh2Ulgok=;
+	b=dojTplWFbBvoLH7kOKwYnCRFTRAxAR0cFLxtolz87OZcY/em4P3kRMLRISyRiRoS5vxnGb
+	93v2z7oFMpW0NToz9Lu0ZMaHE4VfDxIgNdsdwEqtVB07RebNp8jUPdwyx+iaVD2W2U4Y4y
+	mv5wCEAQ5EPNCUxMuGmIbziIcWD8jdA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711391598;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Of8gQ3uWJx2XPDmOVf+BHc8HVH3ZTHXn91pmh2Ulgok=;
+	b=phLqAdzQwb/yMrwO8xUj5nhhD6NfgFzm3jLYruL6DMAlvew5EfHHWXmkmlYa908cI11vnX
+	W7WuSIV88/rGB6Bg==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 19F2013A2E;
+	Mon, 25 Mar 2024 18:33:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id xmctBm7DAWa4XwAAn2gu4w
+	(envelope-from <dsterba@suse.cz>); Mon, 25 Mar 2024 18:33:18 +0000
+Date: Mon, 25 Mar 2024 19:25:56 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Filipe Manana <fdmanana@suse.com>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	Josef Bacik <josef@toxicpanda.com>, Boris Burkov <boris@bur.io>,
+	David Sterba <dsterba@suse.com>
+Subject: Re: [PATCH 5.15 005/317] btrfs: add and use helper to check if block
+ group is used
+Message-ID: <20240325182556.GN14596@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20240324233458.1352854-1-sashal@kernel.org>
+ <20240324233458.1352854-6-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] dt-bindings: arm: rockchip: add wolfvision pf5
- mainboard
-To: Michael Riesch <michael.riesch@wolfvision.net>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-References: <20240325-feature-wolfvision-pf5-v1-0-5725445f792a@wolfvision.net>
- <20240325-feature-wolfvision-pf5-v1-2-5725445f792a@wolfvision.net>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240325-feature-wolfvision-pf5-v1-2-5725445f792a@wolfvision.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240324233458.1352854-6-sashal@kernel.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=dojTplWF;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=phLqAdzQ
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	 ARC_NA(0.00)[];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-1.59)[92.40%]
+X-Spam-Score: -2.80
+X-Rspamd-Queue-Id: 2C8AB224D7
+X-Spam-Flag: NO
 
-On 25/03/2024 15:22, Michael Riesch wrote:
-> Add the WolfVision PF5 mainboard, which serves as base for recent
-> WolfVision products. It features the Rockchip RK3568 SoC and can
-> be extended with several different extension boards.
+On Sun, Mar 24, 2024 at 07:29:45PM -0400, Sasha Levin wrote:
+> From: Filipe Manana <fdmanana@suse.com>
 > 
-> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
-> ---
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
+> [ Upstream commit 1693d5442c458ae8d5b0d58463b873cd879569ed ]
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index fcf7316ecd74..99bd5e2c76a0 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -927,6 +927,11 @@ properties:
->            - const: turing,rk1
->            - const: rockchip,rk3588
->  
-> +      - description: WolfVision PF5 mainboard
-> +        items:
-> +          - const: wolfvision,rk3568-pf5
-> +          - const: rockchip,rk3568
+> Add a helper function to determine if a block group is being used and make
+> use of it at btrfs_delete_unused_bgs(). This helper will also be used in
+> future code changes.
+> 
+> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Boris Burkov <boris@bur.io>
+> Signed-off-by: Filipe Manana <fdmanana@suse.com>
+> Reviewed-by: David Sterba <dsterba@suse.com>
+> Signed-off-by: David Sterba <dsterba@suse.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Assuming you keep existing order of entries (whatever it is):
-
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-
----
-
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions, under or above your Signed-off-by tag. Tag is "received", when
-provided in a message replied to you on the mailing list. Tools like b4
-can help here. However, there's no need to repost patches *only* to add
-the tags. The upstream maintainer will do that for tags received on the
-version they apply.
-
-https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
-
-Best regards,
-Krzysztof
-
+Please drop this patch from all stable branches unless it's a
+prerequisite for some other patch. This is clearly a cleanup.
