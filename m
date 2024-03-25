@@ -1,147 +1,109 @@
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2106.outbound.protection.outlook.com [40.107.104.106])
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF85E2F2D;
-	Mon, 25 Mar 2024 20:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1550359B70;
+	Mon, 25 Mar 2024 20:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711400262; cv=fail; b=LTp2C5+NK/stUlE2ePo9tkwFSje7bWJ0guNWMOL72kf7lJltNdYbY/qNJptDMC+SP9Q7kijq22coDxVlghrRUwa8EOkMKquKrKIkL9QuDT0i/O+hwNJBNdNAj2A+rFV3iUKRnU0Tq0jBk+fYrvrONtzwse77m7St4Ex4fAwisk0=
+	t=1711400293; cv=pass; b=oeboe9FxNM+iH4szWegnoHe7W+zE+jywIzQwHRTG+1GldeDEKbjN83Tv5q3Q9zeMVXWXXTuVZXOQv7RZUtGyqOkeJZDhDvNka2TgZg7YW8q4YvVlP+cH+AunVGfGqm8cpj8jwVki+S2m8McTcJmYD3lR5XdLB83HEO+3ErjBgCk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711400262; c=relaxed/simple;
-	bh=qbSy/LzfO0Aa2fX/UlxMbL06aEWKscXwhgd4FEV6B88=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YLZeK6F9QgmPyLkZxC00ktQfDb/zH2ysTEFksHf1U4U0Q9k6YoDhY0ltpUcxr1GTG93CDTkF7Tex77IxVG4Dy6BQFVhw3hGtuULSi8wIWqcf/W1ZvYQEur43jPZf1lq5vlnZsX8hsVmo+VQVuONZOe6cRmwiXspZes1qex65GEg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=cKy1vRsL; arc=fail smtp.client-ip=40.107.104.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	s=arc-20240116; t=1711400293; c=relaxed/simple;
+	bh=76tSERWslhopEOc4u8fRhhRiUnP40jVe+hwo51dCKeo=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=q0Xz3o5rUKCGcPyZ1su+qZwz3F0j+FGB52VWhxHr1dRpzno8cMWnXtDL+ZljWgC9CLqut2XzCJE+hSCWFHs4c3XVqBF9CwXTmYxpBYnBIscnBBTKpqrLGhx4Q9Ft/dA/ZQY3/zsoWjO5nKVFh7zDtLn8QJqzDC48sBBusyRMUWE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=RgjwET4G; arc=pass smtp.client-ip=167.235.159.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="cKy1vRsL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UZT915TioH4VwHnZpWfdGWnNR4GLaU6LTXG1zzaqo88X2CuUPb8aqSQZMV6dUJav6Xhqp9wrd3v4Hcg1O6B11gfkUzTocfVKq/5Z52cNtmyDU70yt6MrLqYH+hQR+QgzMilA6JKsG970vxvG7NqnelpUlX+bavHzI6P9267iVYKQVoXxP6P3igyOSHD1ExCtf1wtGZgjz6eoT+ChiqXhvhBcep/GQlhIucEhfYdycbvos35PSTnPfWDY+LM0lVYF8Gq5qO8Gr4/DNtzL9r4rgSCLgj4fDcV3Txk4VjuREpWDZ7L1HIUViMcBFv8jG04eqw0h/oYWK53FsawyCH9WDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qbSy/LzfO0Aa2fX/UlxMbL06aEWKscXwhgd4FEV6B88=;
- b=g5/4fTOv9NkA5TRcKq7HZLZQAz2SSi3kJ1tWaBRt9mNUhSd4C07idkYtIcM3jJKtdManDJNtCoeCSCNMF9WzR9hMN7lyS1aIaCQMGVNQwQurWi3utPceqWwMN/y5B2RKRjhwsiXmsz3D1LGA6WUqbFtGW0S3EySDyST5xZmp/ylDc4q1toFP+E+nMX/OvcPvJAGzo1wB5luOveUTGSkqFHbc/knPvgMMmPHWiq6DtwhZ6aNiBiCp520j0TD2Y+IxFkvGtOGCRTpIQ8NHZGLSGlOKZc9QQIDQ1vlmk2YlEmAZlH/Pm0HFaieF1wztyUAhh72oI66//HXl2DQzpUezIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qbSy/LzfO0Aa2fX/UlxMbL06aEWKscXwhgd4FEV6B88=;
- b=cKy1vRsLVcPUw2vJ/vhF37MYrspinaqjm45Y3qXHjpBNq3sroY7jg8xorFF+1EuFX2fVB50vbrZKFg9XPwu/OaPTV7Xf6pBF14T7uaDSccxJF1hxrVbB1XWCPLsDI/UyuhXh+poS+aKSi43I8pu9zvRd2grZrbNR5Cmn/WZ32Lg=
-Received: from AS1PR83MB0543.EURPRD83.prod.outlook.com (2603:10a6:20b:482::15)
- by PA6PR83MB0599.EURPRD83.prod.outlook.com (2603:10a6:102:3d3::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7430.19; Mon, 25 Mar
- 2024 20:57:36 +0000
-Received: from AS1PR83MB0543.EURPRD83.prod.outlook.com
- ([fe80::f9c5:4f1f:d3a9:2432]) by AS1PR83MB0543.EURPRD83.prod.outlook.com
- ([fe80::f9c5:4f1f:d3a9:2432%6]) with mapi id 15.20.7430.017; Mon, 25 Mar 2024
- 20:57:36 +0000
-From: Konstantin Taranov <kotaranov@microsoft.com>
-To: Long Li <longli@microsoft.com>, Konstantin Taranov
-	<kotaranov@linux.microsoft.com>, "sharmaajay@microsoft.com"
-	<sharmaajay@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, "leon@kernel.org"
-	<leon@kernel.org>
-CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH rdma-next v2 4/4] RDMA/mana_ib: Use struct mana_ib_queue
- for RAW QPs
-Thread-Topic: [PATCH rdma-next v2 4/4] RDMA/mana_ib: Use struct mana_ib_queue
- for RAW QPs
-Thread-Index: AQHaeh7y6nDPqyfnDUGtka/+kAc0x7FI5HkAgAAUIZA=
-Date: Mon, 25 Mar 2024 20:57:36 +0000
-Message-ID:
- <AS1PR83MB05435D612E76C1F4488FE99CB4362@AS1PR83MB0543.EURPRD83.prod.outlook.com>
-References: <1710867613-4798-1-git-send-email-kotaranov@linux.microsoft.com>
- <1710867613-4798-5-git-send-email-kotaranov@linux.microsoft.com>
- <SJ1PR21MB345735033DFA7CFF14B7BBD5CE362@SJ1PR21MB3457.namprd21.prod.outlook.com>
-In-Reply-To:
- <SJ1PR21MB345735033DFA7CFF14B7BBD5CE362@SJ1PR21MB3457.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1de6e87c-a583-43bc-aa2c-c97facb0b9ad;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-03-25T19:38:12Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS1PR83MB0543:EE_|PA6PR83MB0599:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 9AlwuKdTgsOmtH1MnvJ2P3rwaXdMdw59cBkCpPm5GqBxVfU1OT/AmNGLJ0z/EnWPmvJUdggAg1OtK1D7pKcRB9IUTfD9ukRwy2bqkOaDb5HeoudOunXoYVTecgKg4Ep9sRvJGQLgPbm8mH02l0nvGLhJ7bU6fc85I1CgRSO6NXEsODMsGQmRFEoUSS7MRqI0C9eHwnbZgI8rdZ2oWglzH2HAXkebb79swBmDyDBVJxrCCikmONhp5fAb3Ru8pV8UNEj2AdytbCMjnMH+q+zpYuoirUKMiTnDUkqsE4+F2wLAx8cH+ftmt/MuUxD5onO6ppR9pYb821T5evYnWCTaUuRIqz3kBtVrRmrlSL3P2uCZDQfHUxwl9/7NJOX4yvv2noxo0AC9VIp5KMuGnQ1OPUfBm3wSokJNpA14iT4ugKnL9KlHcPr9WQdFKBCZDUwiA07fdPXHwpHs9xi3goCrUF0qCT5mpKJif27eSVdAJNKW3jSsXNNrUI0CmzsVQEbhyzUQ1gjuJoM3qB5/7cvWP/gq+uViRn1Db81myBV5OVSiM2+VIhHcWmhAuhclA/U/tPchoITEkqGc6ycZsSr07l1f/BOLJ4YGQpgc4AfYO7hX1ajEblkDYgrEUv5ZGpU+xxfaCbEUIjZKQB9miUlryS/GWpxU/UaeSc08mngRcR0=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS1PR83MB0543.EURPRD83.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?cGh1Ykx4OW5zRjJXSkJ3VTQzUmhpT2dmNHVyeVJjUlFoTC9kbmVCRWlkak90?=
- =?utf-8?B?dFNwWWE1WnhSdjBhZ240TCtRNUJWSE5iTWJYc3ducmF6VXloZEdsWmZVV29W?=
- =?utf-8?B?Unh4YWEvanYyd2RNZkd2cGltNmpXSnpnT20zRjJiZWdHcHYyWXJHWEsvOTFP?=
- =?utf-8?B?OTYwR0ErYzJwTi9VTkM0SEhDaEJkOEJFek82aXBENWJJNHlnYjAwS0hWdjBq?=
- =?utf-8?B?LzlkK1VQM3N6RzBkTHFTaldKRzI1N2Q5aWNNd1dwT0N1RWtQcHRGTUtXalB0?=
- =?utf-8?B?RHZ0Mk5LL1pNLzBrVkhvTi9FNmZUaHVmcmkzdjgySVRKZ3h1ZU50Z3dHYUw1?=
- =?utf-8?B?TWZqK1o4M1RNcVBSbUhISVl1cnc1d1hzNWFOZjhTVFJ6aVc4RitYQU4zL251?=
- =?utf-8?B?U0pqUWdYaXRmQnp3dlhqU3kzWE1oVTliVEVQckl2UWlPaEdCeVdXSDdFK3V1?=
- =?utf-8?B?cnFTQm1RR0xmcGg4Y3VLTGVBS2VWL05ubGNLVzZWK3FmNlZIb3ZOZm81NWln?=
- =?utf-8?B?bUw4YmNJUitQdXJEdlQvR1FDL29UN1d4SFlSeENmRmQ1YmcrVi9SNEZsdnBQ?=
- =?utf-8?B?c0dsZTF1QlF0T3JOdGdLMGs1NkJuT2wwbGtiVmNWUStQS1pYV1MxUG5YV2U5?=
- =?utf-8?B?ejRwb3h5QzhFdFJTdWZEZGhWNGg2OVZCeGNLZ3BEWDZvYnhIQTN1dUMzR2pS?=
- =?utf-8?B?YXRsanBNdllqVXZNNFhEeGNROHNjVlY5YUxranpreGVUbVFaSGR4Vm9JWGtn?=
- =?utf-8?B?dzRKdVlkcDJDckU0azBWTnNIeWE5dmhWcmJ5SkREcmNzZ2VVb29CMithUEhW?=
- =?utf-8?B?N3ZBZDBsSkVJZkRVZHY3eFFVd3pPRjc3d3NDTElUcG1uNFhDa3dtN0xmN1c5?=
- =?utf-8?B?OC9vdFZnYjhNT1NZWFBCenB6QzBZQjdzNnZRZzhLRjBTZDgyREtCeXdzWENZ?=
- =?utf-8?B?T3pkMGV2emRoYzg3eE5oSlRGMFN4WldYWHRzTlJaTTJtdmI1citmaGI0elJ4?=
- =?utf-8?B?aHBHTWhQcUF6QlBjT1ZXdFVwV2VlZFl1aWZ2SkV0NVJsTDJwOTNSblNiZXV1?=
- =?utf-8?B?YmxTakN1YnZqbjNTb0l6RHRWV0NPRU1pU3pyOGtSZ3lMdzRuaGVlckxnM2lI?=
- =?utf-8?B?RzliR09mVXlNZk5KVlFHYkxVbWg0U012UVdqb2xKNXppYzR0ZlcxYmo2VVBv?=
- =?utf-8?B?dXJSc1ExWFMvbTd6YTZVZldZUC9zOEFzbWtEWUZuWW9KMDBRczRjOExhVDlh?=
- =?utf-8?B?WjBlRVluVDdKTnl3cFZEdWpwaWx5bUN5S1NDcTRId29OeTk2blB6U05oMTgr?=
- =?utf-8?B?dmdyZ0xBaUFoT2srMk5Eb04zUWtJb0Nka3BGaCtaakFjWVFnTjY4U000MHBF?=
- =?utf-8?B?L092TW0wcjUrZ1FmWTB0Z2V1aTAxMHEzaVBzcWtVNFVseEdZcVFjeHNRZ0dY?=
- =?utf-8?B?TjIwaFFkTXNqV3hCb1p1OERDOXFJR3hGc0RlbXc1SWpILzREZXhMUlJjQjdB?=
- =?utf-8?B?VjBncmQ0bE1yeW15T3FDTEFUd0c5ME5FVmM5N3I5czc1cys1T2N3ZjFuTTk2?=
- =?utf-8?B?STlLYWxhV3FUVUtsNDRLMnlORFJVMHgyVFJHRWR0K01UcFhZaWZoVk1xYWRW?=
- =?utf-8?B?aEVWRldJZFhuREJPVTdOemx2dnYwMGlqNTNJajM4dUlPSjc2ZGExMFBPUzRO?=
- =?utf-8?B?MVlHMFdwVVBZZDY3MHZCMmM3eEhoWHpHODNkSHMwNFg3dHBTemZmMy9lb0JZ?=
- =?utf-8?B?bW0wWjJEV1FBUWhDOXZHWi9zS3hCeGNYTVkvTmdyeXBudWhyNjJCdjZ1N1dR?=
- =?utf-8?B?MW9VNFJBSXRMM0k1RGR5Nkl1K2JjYy9adGxnMEl2NW5ibDFUWVhvT01vSFdy?=
- =?utf-8?B?VGc1NUdlZWhJTTV1UWMvTmo0bDVjSFR5Vk5TM213WklCVS8yMm9wRTQzTXl2?=
- =?utf-8?B?NC85S2ZkWkdXQTJaenZSbmJQeHdLRGNOc1hVNzU0Vmd6TUROMVZiWURZSzBS?=
- =?utf-8?B?UFJzNXB5Y2lOQzBJN3VBU3ovbjVycEs3YzBIeU9la0twbGkyYWVvdWdKb0hq?=
- =?utf-8?Q?TbUXG9?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="RgjwET4G"
+Message-ID: <a5d0ee8c54ec2f80cb71cd72e3b4aec3@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1711399640;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/MvYkEvJaEDaTgzwXlfM3JjLexNKp+ZD+YKnxgQvNvo=;
+	b=RgjwET4GT2LPkB3kXDJcBckngZwYEgONKnEF6H/uBX2L/FYUh2ER2kLLnvfXCAgcWZWkWP
+	QLKd4xRY+JWMn3+u88vfL1PXEyTZMcal9eMFiqDCjo7VOvxo/AXclOOZQwpK+9HlN36QE1
+	9eF2q5+5y9v+g2nOuWpfdKo8ndO0+DVtvFVV8P08QS1v0CHvDriLaIVowB1wJSn+tCJZmz
+	DF+b/2h+y+9PXA0SaRj3DJpCKPjp3jEHm6QjdaBfBxEnGyVlX5h/S0Mnef8xi09aoheARe
+	bAQf9wm14PDUCkUO7OudaG9uQ71lLlRIORyCeMe7RNI+f+jtzRkOYKi2r4DfTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1711399640; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/MvYkEvJaEDaTgzwXlfM3JjLexNKp+ZD+YKnxgQvNvo=;
+	b=WS1iOrWs1eb+MxY1dQd/82e124OrdEijARV75JqHo+hWaA2Ne7Sz9YEm3Knw9ow3zkLbUJ
+	+mDGgam3XUX/bJFFhj6yXX02oCoM35iOGavtxAXZbOkCFxvzWZRiQ+h45TqW2qV1IzCGbQ
+	WOpMphq+e9AN40niw2tH6hCv43SEgxQT9VwV7u2QGBBhKGpgUxBP6LwqZAmif9u9ZldhmE
+	pu4iAR2dwpd2+5ZrLdlbaMFE2dobmkYjNVLx2DGn6liXRkpmADw2RNaOlc9eD2QHP4Dq9H
+	a7jHf0WrfeVTJDm2kroWoyTiKtbgUe+89gy5pz7DRG57j2ahl0Exn7ucxpyH8A==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.mailfrom=pc@manguebit.com
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1711399640; a=rsa-sha256;
+	cv=none;
+	b=cpJ7+g7T28hOqVFhxBw2OZo5TAOgf0/kRogSfzCHCssax9p7NKZa4nuHQZhSxRrHxdE3qh
+	NYg7lWIz58OMdVyPZVA0SpVC/bmyPyVV5icox1wUgiqz8+8+BZR8tSCE5BZVdQT9qnlp1Q
+	6KNy3SbHkElj9HGWipQf67e4qpyLlbmlaWI/7HPrG5fGiVPUmmoxR80sCoZVF8WULK7i7B
+	kj+YowgVal9BZvbLR6jqDTDTBymhtK1HV7UivfIPPU1+yblEoV/2UOOjCRkQ9QQr9Jgqc1
+	OBxXKOC6B7uKL39obFYICrKij5TvV85ZI67FMv8JUJ+ISxcEthWAdzUQq8IB/g==
+From: Paulo Alcantara <pc@manguebit.com>
+To: Al Viro <viro@zeniv.linux.org.uk>, Steve French <smfrench@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>, Roberto Sassu
+ <roberto.sassu@huawei.com>, LKML <linux-kernel@vger.kernel.org>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>, CIFS
+ <linux-cifs@vger.kernel.org>, Christian Brauner <christian@brauner.io>,
+ Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
+ "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+ "linux-security-module@vger.kernel.org"
+ <linux-security-module@vger.kernel.org>
+Subject: Re: kernel crash in mknod
+In-Reply-To: <20240325195413.GW538574@ZenIV>
+References: <CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com>
+ <20240324054636.GT538574@ZenIV>
+ <3441a4a1140944f5b418b70f557bca72@huawei.com>
+ <20240325-beugen-kraftvoll-1390fd52d59c@brauner>
+ <CAH2r5muL4NEwLxq_qnPOCTHunLB_vmDA-1jJ152POwBv+aTcXg@mail.gmail.com>
+ <20240325195413.GW538574@ZenIV>
+Date: Mon, 25 Mar 2024 17:47:16 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS1PR83MB0543.EURPRD83.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e06ffb1-e09b-4df5-0add-08dc4d0e330a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2024 20:57:36.0610
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: p8GGunQiEwCqg0e1NTGeUhbVo3b6rryC7xtQRulSRweO4o/KGrdHoIsQUPn1y94a3tlExfWdoCYlh4UD30CZsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA6PR83MB0599
+Content-Type: text/plain
 
-PiBGcm9tOiBMb25nIExpIDxsb25nbGlAbWljcm9zb2Z0LmNvbT4NCj4gU3ViamVjdDogUkU6IFtQ
-QVRDSCByZG1hLW5leHQgdjIgNC80XSBSRE1BL21hbmFfaWI6IFVzZSBzdHJ1Y3QNCj4gbWFuYV9p
-Yl9xdWV1ZSBmb3IgUkFXIFFQcw0KPiANCj4gPiAgc3RydWN0IG1hbmFfaWJfcXAgew0KPiA+ICAJ
-c3RydWN0IGliX3FwIGlicXA7DQo+ID4NCj4gPiAtCS8qIFdvcmsgcXVldWUgaW5mbyAqLw0KPiA+
-IC0Jc3RydWN0IGliX3VtZW0gKnNxX3VtZW07DQo+ID4gLQlpbnQgc3FlOw0KPiA+IC0JdTY0IHNx
-X2dkbWFfcmVnaW9uOw0KPiA+IC0JdTY0IHNxX2lkOw0KPiA+IC0JbWFuYV9oYW5kbGVfdCB0eF9v
-YmplY3Q7DQo+ID4gKwlzdHJ1Y3QgbWFuYV9pYl9yYXdfc3Egc3E7DQo+IA0KPiBBcmUgeW91IHBs
-YW5uaW5nIHRvIGFkZCBhbm90aGVyIHR5cGUgb2Ygc3EgZm9yIFJDIGhlcmU/DQo+IA0KDQpUaGVy
-ZSB3aWxsIGJlIG5vIG1vcmUgU1FzLiBUaGVyZSB3aWxsIGJlIHJjX3FwLCB1ZF9xcCwgdWNfcXAs
-IHdoaWNoIGhhdmUgc2V2ZXJhbCBxdWV1ZXMgaW5zaWRlLg0KU2hvdWxkIEkgc3RpbGwgcmVuYW1l
-ICJzdHJ1Y3QgbWFuYV9pYl9yYXdfc3Egc3E7IiB0byAic3RydWN0IG1hbmFfaWJfcmF3X3NxIHJh
-d19zcTsiID8NCg0KS29uc3RhbnRpbg0KPiBJZiB5ZXMsIHVzZSByYXdfc3EgYW5kIHJjX3NxIGlu
-IHN0cnVjdCBmaWVsZHMuDQo+IA0KPiBMb25nDQo=
+Al Viro <viro@zeniv.linux.org.uk> writes:
+
+> On Mon, Mar 25, 2024 at 11:26:59AM -0500, Steve French wrote:
+>
+>> A loosely related question.  Do I need to change cifs.ko to return the
+>> pointer to inode on mknod now?  dentry->inode is NULL in the case of mknod
+>> from cifs.ko (and presumably some other fs as Al noted), unlike mkdir and
+>> create where it is filled in.   Is there a perf advantage in filling in the
+>> dentry->inode in the mknod path in the fs or better to leave it as is?  Is
+>> there a good example to borrow from on this?
+>
+> AFAICS, that case in in CIFS is the only instance of ->mknod() that does this
+> "skip lookups, just unhash and return 0" at the moment.
+>
+> What's more, it really had been broken all along for one important case -
+> AF_UNIX bind(2) with address (== socket pathname) being on the filesystem
+> in question.
+
+Yes, except that we currently return -EPERM for such cases.  I don't
+even know if this SFU thing supports sockets.
+
+> Note that cifs_sfu_make_node() is the only case in CIFS where that happens -
+> other codepaths (both in cifs_make_node() and in smb2_make_node()) will
+> instantiate.  How painful would it be for cifs_sfu_make_node()?
+> AFAICS, you do open/sync_write/close there; would it be hard to do
+> an eqiuvalent of fstat and set the inode up?
+
+This should be pretty straightforward as it would only require an extra
+query info call and then {smb311_posix,cifs}_get_inode_info() ->
+d_instantiate().  We could even make it a single compound request of
+open/write/getinfo/close for SMB2+ case.
