@@ -1,48 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9A41411FC;
-	Mon, 25 Mar 2024 05:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719AF1422DE
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711345447; cv=none; b=W/gReED8O/RMV4Pp6nzeD6nlCGCnDRzdSiffvUfh7NlS2HgQ09Y9w1wdr9JoeO+/mmrpp0D+kFN3YZQAzonySp7TsJvLcm8v8A8K+0LE2EQaen3uEfCz6dp2yrc+ttl3VHQvbPkcMxrQY2ti+77AGvx8VlM7yDTF2MFQbTG6J8U=
+	t=1711345532; cv=none; b=U6/MN0rHTEYNo4AzYmF3VG0qjebCi/8SPurKI/ozjHyZ5H3ymn11d4m/pl2G1s71fcLseqsxmGNr6LljE0/P0XSKbXoiAP/MR0ibwvvoHjUs1rpLg0i7koDrmEQ/sqGcs2R3ZS7untw67zrEqFFauIkhl1Mq1e6DOblPuy9puOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711345447; c=relaxed/simple;
-	bh=lkc2RyhKB3Ohrmn0AqbF/FYYu10q2X/SHFxdhanpvfA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HbQJKoz9XfGr2+ARE2bgeA6Ln3vt7jJCwKYTVq40I3LAH89cvcGCB4uqL0LKEriP8AB96yCNGj1aTHk6tb63jdtfQ4adS8HjiQoN5S3Az6d1PohqzGkD3FVgda3wIhSeA+LXUMK4GfWtfWeg8kIoKFEcFV7Dc4Qm9z0ihkIhVQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7mADxyi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711345532; c=relaxed/simple;
+	bh=3003hjwxlKjpdM/HTmVW3IjXQTa9b3lBarRdaHkd+Ak=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VBBwwenRfoFxPOvyqhGOc6AEce+2t/eRDw7aeiZ2+jnMYdqoQZgNxKmsqpWf3+wKJtarVJVgEJAUAMFPLOek2IKpPp0ZC9ohoLQxjsSGMX0wYtZB3POnw2gnzVZ5QHTGOE4NT6omtDqPomuIr58phdWEWlumN7mc8fcJ2pp0NcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Def8TlyZ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7mADxyi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A189EC433F1;
-	Mon, 25 Mar 2024 05:44:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711345447;
-	bh=lkc2RyhKB3Ohrmn0AqbF/FYYu10q2X/SHFxdhanpvfA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t7mADxyirxumlhpzyGcpkVupFe6FlPjfwhspvZaZcxEgDosS17kVTemB0J77eHA4H
-	 /RrEpgSNUQcUQ5P3rPh9x3CI9Un58LDJGM7N0C9nhfEw16T5UqCfOGrVnvlLUqdgK7
-	 wSu/na+DNhf3FnxYpxHJrQ12m3qouTlKCREcqYJMeu9U/kzkYM2JWw6x464YIeklhL
-	 xO0+oZGw0VOzEZmf6QK0dmczNbT/wTznZ8zPeZ4UYkKBZ3EWDN1o6w4zZUHSdfj7+Z
-	 qE9N6WK1x+HABcwg1vAFpSjILvtuZNi/wXbXPc+0+0cGvI/UKTzYplkDqZCpdPFQJD
-	 9vlBFd8QTjynA==
-From: Stephen Boyd <sboyd@kernel.org>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org,
-	Douglas Anderson <dianders@chromium.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4/5] clk: Get runtime PM before walking tree during disable_unused
-Date: Sun, 24 Mar 2024 22:44:01 -0700
-Message-ID: <20240325054403.592298-5-sboyd@kernel.org>
-X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-In-Reply-To: <20240325054403.592298-1-sboyd@kernel.org>
-References: <20240325054403.592298-1-sboyd@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Def8TlyZ"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42ONoMxG030563;
+	Mon, 25 Mar 2024 05:45:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=YlGXSj5DSsi3seogjbHk3vlyDbRmRCvlpJOwGGPesu4=;
+ b=Def8TlyZH4eVrCQJUWHbfBj6SY+kQVKgR74D5iDwMODCFTbL6ikpYXruGFZr4Y5XcqKD
+ cc9yh/RSZrh1ZnQvR0E1PbyGPFAntD+m4AmgmHV1fvVo9l6R/J37zVYz7tN0Z2yrBlz2
+ ePGHlZo6pUID5rHz3fszE1uipySmX5nHSuzbfzy2BZx3ihU0UwZlVvfW6Axgn1piKrdQ
+ TIgfZwuklNB45VF4U7BSFah1P0DmQfi1rpuahNrgqd8faEJ1hVTPuZTHCDCCiz4ORPf4
+ 9j46fO+8XeFHNIUdS040SSabiYAuQbdGGQ9xY15ZxhLklBJI2VwzJTK3mpdUXGLa90R9 uw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2h6t1hbg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 05:45:19 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42P5jJNN024195;
+	Mon, 25 Mar 2024 05:45:19 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2h6t1hbe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 05:45:19 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42P3giWA011233;
+	Mon, 25 Mar 2024 05:45:18 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x2bmkpp1d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 05:45:18 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42P5jECW27984134
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 25 Mar 2024 05:45:16 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AC5702004B;
+	Mon, 25 Mar 2024 05:45:14 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0E52920043;
+	Mon, 25 Mar 2024 05:45:13 +0000 (GMT)
+Received: from li-c1fdab4c-355a-11b2-a85c-ef242fe9efb4.in.ibm.com (unknown [9.109.201.126])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 25 Mar 2024 05:45:12 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
+Cc: sshegde@linux.ibm.com, dietmar.eggemann@arm.com, qyousef@layalina.io,
+        linux-kernel@vger.kernel.org, vschneid@redhat.com
+Subject: [PATCH v3 1/2] sched/fair: Check rd->overload value before update
+Date: Mon, 25 Mar 2024 11:15:04 +0530
+Message-Id: <20240325054505.201995-2-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240325054505.201995-1-sshegde@linux.ibm.com>
+References: <20240325054505.201995-1-sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,291 +76,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: zL1M1edLB8lmiCnn293hjeN7-TR5UjCG
+X-Proofpoint-ORIG-GUID: B63sQfFj_90BstVCm4XSra9KUhUIbVXY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_02,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 suspectscore=0
+ clxscore=1015 phishscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0
+ mlxscore=0 mlxlogscore=646 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403250029
 
-Doug reported [1] the following hung task:
+Overload is an indicator used to inform if there is any rq in the root
+domain has 2 or more running tasks. Root domain is a global structure per
+cpuset island.
 
- INFO: task swapper/0:1 blocked for more than 122 seconds.
-       Not tainted 5.15.149-21875-gf795ebc40eb8 #1
- "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
- task:swapper/0       state:D stack:    0 pid:    1 ppid:     0 flags:0x00000008
- Call trace:
-  __switch_to+0xf4/0x1f4
-  __schedule+0x418/0xb80
-  schedule+0x5c/0x10c
-  rpm_resume+0xe0/0x52c
-  rpm_resume+0x178/0x52c
-  __pm_runtime_resume+0x58/0x98
-  clk_pm_runtime_get+0x30/0xb0
-  clk_disable_unused_subtree+0x58/0x208
-  clk_disable_unused_subtree+0x38/0x208
-  clk_disable_unused_subtree+0x38/0x208
-  clk_disable_unused_subtree+0x38/0x208
-  clk_disable_unused_subtree+0x38/0x208
-  clk_disable_unused+0x4c/0xe4
-  do_one_initcall+0xcc/0x2d8
-  do_initcall_level+0xa4/0x148
-  do_initcalls+0x5c/0x9c
-  do_basic_setup+0x24/0x30
-  kernel_init_freeable+0xec/0x164
-  kernel_init+0x28/0x120
-  ret_from_fork+0x10/0x20
- INFO: task kworker/u16:0:9 blocked for more than 122 seconds.
-       Not tainted 5.15.149-21875-gf795ebc40eb8 #1
- "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
- task:kworker/u16:0   state:D stack:    0 pid:    9 ppid:     2 flags:0x00000008
- Workqueue: events_unbound deferred_probe_work_func
- Call trace:
-  __switch_to+0xf4/0x1f4
-  __schedule+0x418/0xb80
-  schedule+0x5c/0x10c
-  schedule_preempt_disabled+0x2c/0x48
-  __mutex_lock+0x238/0x488
-  __mutex_lock_slowpath+0x1c/0x28
-  mutex_lock+0x50/0x74
-  clk_prepare_lock+0x7c/0x9c
-  clk_core_prepare_lock+0x20/0x44
-  clk_prepare+0x24/0x30
-  clk_bulk_prepare+0x40/0xb0
-  mdss_runtime_resume+0x54/0x1c8
-  pm_generic_runtime_resume+0x30/0x44
-  __genpd_runtime_resume+0x68/0x7c
-  genpd_runtime_resume+0x108/0x1f4
-  __rpm_callback+0x84/0x144
-  rpm_callback+0x30/0x88
-  rpm_resume+0x1f4/0x52c
-  rpm_resume+0x178/0x52c
-  __pm_runtime_resume+0x58/0x98
-  __device_attach+0xe0/0x170
-  device_initial_probe+0x1c/0x28
-  bus_probe_device+0x3c/0x9c
-  device_add+0x644/0x814
-  mipi_dsi_device_register_full+0xe4/0x170
-  devm_mipi_dsi_device_register_full+0x28/0x70
-  ti_sn_bridge_probe+0x1dc/0x2c0
-  auxiliary_bus_probe+0x4c/0x94
-  really_probe+0xcc/0x2c8
-  __driver_probe_device+0xa8/0x130
-  driver_probe_device+0x48/0x110
-  __device_attach_driver+0xa4/0xcc
-  bus_for_each_drv+0x8c/0xd8
-  __device_attach+0xf8/0x170
-  device_initial_probe+0x1c/0x28
-  bus_probe_device+0x3c/0x9c
-  deferred_probe_work_func+0x9c/0xd8
-  process_one_work+0x148/0x518
-  worker_thread+0x138/0x350
-  kthread+0x138/0x1e0
-  ret_from_fork+0x10/0x20
+Overload status is updated when adding a task to the runqueue.
+It is cleared in update_sd_lb_stats during load balance, if none of the
+rq has 2 or more running task. It is used during to newidle
+balance to see if its worth doing load balance. If it is set, then
+newidle balance will try aggressively to pull a task.
 
-The first thread is walking the clk tree and calling
-clk_pm_runtime_get() to power on devices required to read the clk
-hardware via struct clk_ops::is_enabled(). This thread holds the clk
-prepare_lock, and is trying to runtime PM resume a device, when it finds
-that the device is in the process of resuming so the thread schedule()s
-away waiting for the device to finish resuming before continuing. The
-second thread is runtime PM resuming the same device, but the runtime
-resume callback is calling clk_prepare(), trying to grab the
-prepare_lock waiting on the first thread.
+Since commit 630246a06ae2 ("sched/fair: Clean-up update_sg_lb_stats
+parameters"), overload is being updated unconditionally. The change in
+value of this depends on the workload. On typical workloads, it is
+likely that this value doesn't change often. Write causes the
+cacheline to be invalidated. This would cause true sharing when the same
+variable is accessed in sched_balance_newidle. On large systems this would
+cause more CPU bus traffic.
 
-This is a classic ABBA deadlock. To properly fix the deadlock, we must
-never runtime PM resume or suspend a device with the clk prepare_lock
-held. Actually doing that is near impossible today because the global
-prepare_lock would have to be dropped in the middle of the tree, the
-device runtime PM resumed/suspended, and then the prepare_lock grabbed
-again to ensure consistency of the clk tree topology. If anything
-changes with the clk tree in the meantime, we've lost and will need to
-start the operation all over again.
+Perf probe stats for reference. Detailed info on perf probe can be found
+in the cover letter. With Patch while running hackbench.
+1M probe:sched_balance_newidle_L38
+139 probe:update_sd_lb_stats_L53
+129K probe:add_nr_running_L12
+74 probe:add_nr_running_L13
+54K probe:update_sd_lb_stats_L50
 
-Luckily, most of the time we're simply incrementing or decrementing the
-runtime PM count on an active device, so we don't have the chance to
-schedule away with the prepare_lock held. Let's fix this immediate
-problem that can be triggered more easily by simply booting on Qualcomm
-sc7180.
+Perf probes prove that actual change in value is less often. L50 vs L53.
+So it would be better to check the value before updating it. CPU bus
+traffic reduces with the patch.
 
-Introduce a list of clk_core structures that have been registered, or
-are in the process of being registered, that require runtime PM to
-operate. Iterate this list and call clk_pm_runtime_get() on each of them
-without holding the prepare_lock during clk_disable_unused(). This way
-we can be certain that the runtime PM state of the devices will be
-active and resumed so we can't schedule away while walking the clk tree
-with the prepare_lock held. Similarly, call clk_pm_runtime_put() without
-the prepare_lock held to properly drop the runtime PM reference.
-
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Closes: https://lore.kernel.org/all/20220922084322.RFC.2.I375b6b9e0a0a5348962f004beb3dafee6a12dfbb@changeid/ [1]
-Closes: https://issuetracker.google.com/328070191
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Fixes: 9a34b45397e5 ("clk: Add support for runtime PM")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+Reviewed-by: Qais Yousef <qyousef@layalina.io>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- drivers/clk/clk.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 92 insertions(+), 2 deletions(-)
+ kernel/sched/fair.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index ee80b21f2824..31998ca67b1e 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -37,6 +37,10 @@ static HLIST_HEAD(clk_root_list);
- static HLIST_HEAD(clk_orphan_list);
- static LIST_HEAD(clk_notifier_list);
- 
-+/* List of registered clks that use runtime PM */
-+static HLIST_HEAD(clk_rpm_list);
-+static DEFINE_MUTEX(clk_rpm_list_lock);
-+
- static const struct hlist_head *all_lists[] = {
- 	&clk_root_list,
- 	&clk_orphan_list,
-@@ -59,6 +63,7 @@ struct clk_core {
- 	struct clk_hw		*hw;
- 	struct module		*owner;
- 	struct device		*dev;
-+	struct hlist_node	rpm_node;
- 	struct device_node	*of_node;
- 	struct clk_core		*parent;
- 	struct clk_parent_map	*parents;
-@@ -122,6 +127,19 @@ static void clk_pm_runtime_put(struct clk_core *core)
- 	pm_runtime_put_sync(core->dev);
- }
- 
-+static void clk_core_rpm_init(struct clk_core *core)
-+{
-+	struct device *dev = core->dev;
-+
-+	if (dev && pm_runtime_enabled(dev)) {
-+		core->rpm_enabled = true;
-+
-+		mutex_lock(&clk_rpm_list_lock);
-+		hlist_add_head(&core->rpm_node, &clk_rpm_list);
-+		mutex_unlock(&clk_rpm_list_lock);
-+	}
-+}
-+
- /***           locking             ***/
- static void clk_prepare_lock(void)
- {
-@@ -191,6 +209,63 @@ static void clk_enable_unlock(unsigned long flags)
- 	spin_unlock_irqrestore(&enable_lock, flags);
- }
- 
-+/*
-+ * Call clk_pm_runtime_get() on all runtime PM enabled clks in the clk tree so
-+ * that disabling unused clks avoids a deadlock where a device is runtime PM
-+ * resuming/suspending and the runtime PM callback is trying to grab the
-+ * prepare_lock for something like clk_prepare_enable() while
-+ * clk_disable_unused_subtree() holds the prepare_lock and is trying to runtime
-+ * PM resume/suspend the device as well.
-+ */
-+static int clk_pm_runtime_get_all(void)
-+{
-+	int ret;
-+	struct clk_core *core, *failed;
-+
-+	/*
-+	 * Grab the list lock to avoid any new clks from being registered
-+	 * or unregistered.
-+	 */
-+	mutex_lock(&clk_rpm_list_lock);
-+
-+	/*
-+	 * Runtime PM "get" all the devices that are needed for the clks
-+	 * currently registered. Do this without holding the prepare_lock, to
-+	 * avoid the deadlock.
-+	 */
-+	hlist_for_each_entry(core, &clk_rpm_list, rpm_node) {
-+		ret = clk_pm_runtime_get(core);
-+		if (ret) {
-+			failed = core;
-+			pr_err("clk: Failed to runtime PM get '%s' for clk '%s'\n",
-+			       failed->name, dev_name(failed->dev));
-+			goto out;
-+		}
-+	}
-+
-+	return 0;
-+
-+out:
-+	hlist_for_each_entry(core, &clk_rpm_list, rpm_node) {
-+		if (core == failed)
-+			break;
-+
-+		clk_pm_runtime_put(core);
-+	}
-+	mutex_unlock(&clk_rpm_list_lock);
-+
-+	return ret;
-+}
-+
-+static void clk_pm_runtime_put_all(void)
-+{
-+	struct clk_core *core;
-+
-+	hlist_for_each_entry(core, &clk_rpm_list, rpm_node)
-+		clk_pm_runtime_put(core);
-+	mutex_unlock(&clk_rpm_list_lock);
-+}
-+
- static bool clk_core_rate_is_protected(struct clk_core *core)
- {
- 	return core->protect_count;
-@@ -1431,6 +1506,7 @@ __setup("clk_ignore_unused", clk_ignore_unused_setup);
- static int __init clk_disable_unused(void)
- {
- 	struct clk_core *core;
-+	int ret;
- 
- 	if (clk_ignore_unused) {
- 		pr_warn("clk: Not disabling unused clocks\n");
-@@ -1439,6 +1515,13 @@ static int __init clk_disable_unused(void)
- 
- 	pr_info("clk: Disabling unused clocks\n");
- 
-+	ret = clk_pm_runtime_get_all();
-+	if (ret)
-+		return ret;
-+	/*
-+	 * Grab the prepare lock to keep the clk topology stable while iterating
-+	 * over clks.
-+	 */
- 	clk_prepare_lock();
- 
- 	hlist_for_each_entry(core, &clk_root_list, child_node)
-@@ -1455,6 +1538,8 @@ static int __init clk_disable_unused(void)
- 
- 	clk_prepare_unlock();
- 
-+	clk_pm_runtime_put_all();
-+
- 	return 0;
- }
- late_initcall_sync(clk_disable_unused);
-@@ -4192,6 +4277,12 @@ static void __clk_release(struct kref *ref)
- {
- 	struct clk_core *core = container_of(ref, struct clk_core, ref);
- 
-+	if (core->rpm_enabled) {
-+		mutex_lock(&clk_rpm_list_lock);
-+		hlist_del(&core->rpm_node);
-+		mutex_unlock(&clk_rpm_list_lock);
-+	}
-+
- 	clk_core_free_parent_map(core);
- 	kfree_const(core->name);
- 	kfree(core);
-@@ -4231,9 +4322,8 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
- 	}
- 	core->ops = init->ops;
- 
--	if (dev && pm_runtime_enabled(dev))
--		core->rpm_enabled = true;
- 	core->dev = dev;
-+	clk_core_rpm_init(core);
- 	core->of_node = np;
- 	if (dev && dev->driver)
- 		core->owner = dev->driver->owner;
--- 
-https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
-https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 02d4d224b436..eeebadd7d9ae 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10621,7 +10621,8 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+
+ 	if (!env->sd->parent) {
+ 		/* update overload indicator if we are at root domain */
+-		WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
++		if (READ_ONCE(env->dst_rq->rd->overload) != (sg_status & SG_OVERLOAD))
++			WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
+
+ 		/* Update over-utilization (tipping point, U >= 0) indicator */
+ 		set_rd_overutilized_status(env->dst_rq->rd,
+--
+2.39.3
 
