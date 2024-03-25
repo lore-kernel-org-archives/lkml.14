@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE8413E6CC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255601C257C
 	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711341755; cv=none; b=agXZzeP6VA0Y8PwR4l6r4kCgACtzbB7dFda11vQhep3Chh/rv80dYafGpKo567k3sI1XrB0oew93FCWNIyKzHrFXGGQL19aZWPQzEOcFbTLw02nmPhNa5q8ZB8rT3V0DgKIemmGA2Bcci6Lg00f/P1wxykH58nkKe2V+MYgK8vQ=
+	t=1711341756; cv=none; b=SV6ywo9CLPrUwYazIY9HKIHmsItEcb3/kqMA2Bg8tSgnBcyloQaIj4AV4XRzLPQDyHiS1J+rhNG6qDw/bi3kvGMEKlUTFc5uuRvsL7vn8Q7LCZFfu3R3e0R0WWYxFDiwGFqy1cItZ6ovDkQ1wa2Bwf1s/IzpOVjADuq7lQtG21M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711341755; c=relaxed/simple;
-	bh=YdL2mOIr3NlfgP6sy3cQZt2wKvb73NuUct/fQ8gw+wo=;
+	s=arc-20240116; t=1711341756; c=relaxed/simple;
+	bh=bOCUeLS1C7wpm9pu8FD1Zt59GN4cTLuXNPaR2yCkUEQ=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=JDEANK0emFs8sXBxDNq+m7MScfVjcpShdpY2W+nYK++O5BelzNrQMlwYc4b9McszErAVMo0XXEsx+GNQuTV0MrIAr8uf5UFmpRYOuXJL2d4RoGOv8G71h8zShYYYwoVVARQQ6KZDRXXj8mBB8uFLGTIjl02wyIdd1f9G1dJmXo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hyW3I9qa; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ADfEKQofSrtprd3VddR7lEXC/nEIAIae/yPHBXNVdQs9vLEsHHeabc45kdSXfr7ZAWM5PtHi6PGtD/GeH0DL5MVFAZcHvCau1f6cuJLvdn+vlTd8YR3caH79+oByfYgaNIdf9aIJ2/6guDFuZM3IW8PD/e3rbx+gvvjxsWNBV+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5Q0lIA0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hyW3I9qa"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A81F4C433F1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5Q0lIA0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C1667C433B1;
 	Mon, 25 Mar 2024 04:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711341754;
-	bh=YdL2mOIr3NlfgP6sy3cQZt2wKvb73NuUct/fQ8gw+wo=;
+	bh=bOCUeLS1C7wpm9pu8FD1Zt59GN4cTLuXNPaR2yCkUEQ=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hyW3I9qaDGbspbhpix74t7gfdEo1sveTew3DjnMt0ZAq3sY/coVNVi6/3u55HLXNK
-	 vzByJhq3ut4mAzLPPWqIk24QB0wfqD1HnBCIH5lCGVkWJ7aJWYTwwPC31Kab+vkenA
-	 SEBh3Iu5z4JRfGHgpDEq51ruoTZ+llxyXps4ld4DBTWqp1s5v51z48Vmlv3m/ILTFp
-	 xikKVbaAsWz03cvxujv1VNVjWDf6zQYQzQfSPV/KocEjuHmR00tmZHCNjzR8deIi63
-	 1Dx+FsMSafpFQZvqqg7MUbkSKlRROuQfZDvHV4SjINKFWq6x5BCLXm9BtnhIZmPl80
-	 qwz+3RUCSNIKA==
+	b=C5Q0lIA0AlWK7xzVNsghEMI2APioXYG4HH5Y+1Y2mU0nEtw3fCA5PRb0epP6MDuSP
+	 OpPj40tc1RwWtS+G3X6Fylw6q6ZgCp6RmNcRoChBtYRudEB/Sy+Z0AOXDKlBg1f3BZ
+	 BXbSseLeWfZKLCAUhSy7uiRF+/IqqMEYGB94GSmPcNv+0ambj/ibblarTxwzEptowg
+	 3PsG4sUDEMcT9BocxJz8U/NFBPOokp5twbzSEJ3JUGsZ1saomvFUZpAGLZLzX8dYSJ
+	 OWEgct6i9Cc7V4tvqAhbPaAZi9QDOcVpUP8XXmHjIfRUPBVkC2F9rjA6Q08TnOzXoM
+	 QJI+TqltJCkpA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8F525D8BD1C;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B30BCD2D0E0;
 	Mon, 25 Mar 2024 04:42:34 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,36 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [GIT PULL] RISC-V Patches for the 6.9 Merge Window
+Subject: Re: [PATCH] irqchip/riscv-intc: Fix use of AIA IRQs 32-63 on riscv32
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171134175458.18749.15620721210284247678.git-patchwork-notify@kernel.org>
+ <171134175473.18749.6561888891935488179.git-patchwork-notify@kernel.org>
 Date: Mon, 25 Mar 2024 04:42:34 +0000
-References: <mhng-105d6a21-7483-4a20-a9e7-8e72770737d8@palmer-ri-x1c9>
-In-Reply-To: <mhng-105d6a21-7483-4a20-a9e7-8e72770737d8@palmer-ri-x1c9>
-To: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, torvalds@linux-foundation.org,
+References: <20240312212813.2323841-1-samuel.holland@sifive.com>
+In-Reply-To: <20240312212813.2323841-1-samuel.holland@sifive.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, anup@brainfault.org, tglx@linutronix.de,
+ aou@eecs.berkeley.edu, palmer@dabbelt.com, paul.walmsley@sifive.com,
  linux-kernel@vger.kernel.org
 
 Hello:
 
-This pull request was applied to riscv/linux.git (fixes)
-by Linus Torvalds <torvalds@linux-foundation.org>:
+This patch was applied to riscv/linux.git (fixes)
+by Thomas Gleixner <tglx@linutronix.de>:
 
-On Fri, 22 Mar 2024 07:22:06 -0700 (PDT) you wrote:
-> The following changes since commit e0fe5ab4192c171c111976dbe90bbd37d3976be0:
+On Tue, 12 Mar 2024 14:28:08 -0700 you wrote:
+> riscv_intc_custom_base is initialized to BITS_PER_LONG, so the second
+> check passes even though AIA provides 64 IRQs. Adjust the condition to
+> only check the custom IRQ range for IRQs outside the standard range, and
+> adjust the standard range when AIA is available.
 > 
->   riscv: Fix pte_leaf_size() for NAPOT (2024-02-29 10:21:23 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.9-mw2
+> Fixes: bb7921cdea12 ("irqchip/riscv-intc: Add support for RISC-V AIA")
+> Fixes: e6bd9b966dc8 ("irqchip/riscv-intc: Fix low-level interrupt handler setup for AIA")
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [GIT,PULL] RISC-V Patches for the 6.9 Merge Window
-    https://git.kernel.org/riscv/c/c150b809f7de
+  - irqchip/riscv-intc: Fix use of AIA IRQs 32-63 on riscv32
+    https://git.kernel.org/riscv/c/ca5b0b717b75
 
 You are awesome, thank you!
 -- 
