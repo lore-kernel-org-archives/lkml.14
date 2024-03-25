@@ -1,86 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FB958135;
-	Mon, 25 Mar 2024 14:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DBE155756;
+	Mon, 25 Mar 2024 14:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711377409; cv=none; b=b0kObiX+gqydCXN2jPxbA62x4n0s/7bn54hbhRYbUWAOXEAWopejF7TPPcM9Kwgdcw/Z2PLKhHRelwIm+H1cf9JDWV4pwYOyx6ZNk/zEEfr5ahbilk3JqrTjsp086cBlAH4lXhWxTym2CTeAwQh31NOqy1QjFhtFTksp22p7WBY=
+	t=1711377421; cv=none; b=sjV+mPtlYmJ0cSPZ0KmPTcFxE95Xa3bUlz2ccoOsq8UFm4czQShu3Ilzx7jkOZ+xyZOQMV8AFpXxVYmjMqqKj1AYIc+bSU6egR/VL+CnQaIS3qFjzRL5PLCfjgh2gfiX4d7vpWHfrjBK/kqjLxgWDG5g/A1n1XZKmT0piPp494Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711377409; c=relaxed/simple;
-	bh=9Qe/3gikq2clmRBfjTNKgor6Y6DhAn8an5PiAqL/lqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qfxUTOFw+B/U1rTvSym+JGV0IJpilqxOMs+tWxFKgviBbCFxpVL/I0N6FhxAvJIiXkdzSOCywHPiIE2OpqiKSyMeBYHnHljnxIZTC2o2GGDEIYuYKqzjOZyB2ClxGAN9ryv0IZQgLAFq/nud/CHgZtACCmGz5osRYviecM01GUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBu3GFHg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711377421; c=relaxed/simple;
+	bh=4aIDgEXJp9CJ/1kTSz+yIr/23FqqJgqh4VDseMLsP8o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h0txUEZuhA4AFqxuWlKaRJM/1pP4hOqfYYA5p84dxBYDov2PIqVsI7ooE7w6eJf8XAKmEeLQRx30wyZbiCw8y1Jz8MeLN1D7IJMDDx8/Ko4j+491Z3PnPhYkQUtfSn7OA6mdiBKUKPUzdMIlJYy3uVIRnShlHTJi0cnNix9hAVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fvs2yDWa; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBu3GFHg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 409D1C433F1;
-	Mon, 25 Mar 2024 14:36:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711377408;
-	bh=9Qe/3gikq2clmRBfjTNKgor6Y6DhAn8an5PiAqL/lqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cBu3GFHgd64EEQ6NHJ6CqPTLWLLzUk1XuaHt9Ll03UYJR+IqIMELoRgvmKxNiw0xO
-	 Cba4oOz+nYXiGyZoJtbVOPY8qJ5JFSMGY5gMFUmwpAhqWNYZH8iZkQIoHYoywnBjlV
-	 BAxfA1HE1NWYaSv0WbE2RtLX8LbnglngBbBgYkqQlUydIBKvF3v+nMn5xna2ahYU2k
-	 AfpNyiBPzEdH1tRV/RniYF9F74eokbYmjZRzk1IcT+s7GJH8PYAsjQ8PQGnuo4t+0i
-	 A7ODhZOGKH+bKdebrMBNXMstZZYr7IwDpoUwQPt20sykp37tvqjoleOGhGGT8jUXRo
-	 GTOVpjgQwT71w==
-Date: Mon, 25 Mar 2024 09:36:46 -0500
-From: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Inki Dae <inki.dae@samsung.com>, devicetree@vger.kernel.org,
-	Seung-Woo Kim <sw0312.kim@samsung.com>,
-	linux-samsung-soc@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fvs2yDWa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711377420; x=1742913420;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4aIDgEXJp9CJ/1kTSz+yIr/23FqqJgqh4VDseMLsP8o=;
+  b=Fvs2yDWa0rLiaWxENBoyNDIJ7OKge1DpKkUXVeJ0mRheuEXY9+OIvDei
+   z7+l7V6bALLzcqW6GGPoU5NqnfJsqTofNJ7QOYkoxj9aZs+k+PbnCM2PE
+   83tSNaeSv2ZUdvYH30dM+PvBL3m7pEIq6Bz5fQK6fekQBAbPE4uuDLIzH
+   6Bg5mof6QL//fMRWNeVH7zTV3e9DLJxHwmnDg5JuKye+c4PxBKVFKz0vk
+   3OCpRDTpvHzEFODDLS1qi+rqNwRb3z73f/bbsQxY3PETTqKKcClBg3TjC
+   dZOB5h+kTF+A5oxcgI0lbSiv5HrrPax+JSGWc84WNudRCP/2NUkE4Kai4
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6511058"
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="6511058"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 07:37:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="937070504"
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="937070504"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2024 07:36:56 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id E42B0101; Mon, 25 Mar 2024 16:36:55 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: display: samsung,exynos5-dp: convert to
- DT Schema
-Message-ID: <171137740493.3330504.1269871894633902325.robh@kernel.org>
-References: <20240313182855.14140-1-krzysztof.kozlowski@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Subject: [PATCH v2 1/1] ASoC: soc-jack: Get rid of legacy GPIO support
+Date: Mon, 25 Mar 2024 16:33:50 +0200
+Message-ID: <20240325143654.3305498-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240313182855.14140-1-krzysztof.kozlowski@linaro.org>
+Content-Transfer-Encoding: 8bit
 
+No more users.
 
-On Wed, 13 Mar 2024 19:28:55 +0100, Krzysztof Kozlowski wrote:
-> Convert Samsung Exynos5250/5420 SoC Display Port Controller bindings to
-> DT schema with a change: add power-domains, already used in DTS.
-> 
-> This Display Port controller is actually variant of Analogix Display
-> Port bridge, however new DT Schema does not reference analogix,dp.yaml,
-> because of incompatibilities in the driver.  The analogix,dp.yaml
-> expects two ports, input and output, but Linux Exynos DP DRM driver and
-> DTS use only one port: output.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Changes in v2:
-> 1. Document deprecated samsung,hpd-gpios
-> ---
->  .../bindings/display/exynos/exynos_dp.txt     | 112 ------------
->  .../display/samsung/samsung,exynos5-dp.yaml   | 163 ++++++++++++++++++
->  2 files changed, 163 insertions(+), 112 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
->  create mode 100644 Documentation/devicetree/bindings/display/samsung/samsung,exynos5-dp.yaml
-> 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: updated dependent driver as well (Mark)
+ include/sound/soc-jack.h              |  2 --
+ sound/soc/generic/simple-card-utils.c |  2 --
+ sound/soc/soc-jack.c                  | 23 ++++-------------------
+ 3 files changed, 4 insertions(+), 23 deletions(-)
 
-Applied, thanks!
+diff --git a/include/sound/soc-jack.h b/include/sound/soc-jack.h
+index a0abb1ee5110..3a81d4b8ca8a 100644
+--- a/include/sound/soc-jack.h
++++ b/include/sound/soc-jack.h
+@@ -44,7 +44,6 @@ struct snd_soc_jack_zone {
+ /**
+  * struct snd_soc_jack_gpio - Describes a gpio pin for jack detection
+  *
+- * @gpio:         legacy gpio number
+  * @idx:          gpio descriptor index within the function of the GPIO
+  *                consumer device
+  * @gpiod_dev:    GPIO consumer device
+@@ -59,7 +58,6 @@ struct snd_soc_jack_zone {
+  *		       ADC).
+  */
+ struct snd_soc_jack_gpio {
+-	unsigned int gpio;
+ 	unsigned int idx;
+ 	struct device *gpiod_dev;
+ 	const char *name;
+diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+index 81077d16d22f..b4876b4f259d 100644
+--- a/sound/soc/generic/simple-card-utils.c
++++ b/sound/soc/generic/simple-card-utils.c
+@@ -752,8 +752,6 @@ int simple_util_init_jack(struct snd_soc_card *card,
+ 	if (!prefix)
+ 		prefix = "";
+ 
+-	sjack->gpio.gpio = -ENOENT;
+-
+ 	if (is_hp) {
+ 		snprintf(prop, sizeof(prop), "%shp-det", prefix);
+ 		pin_name	= pin ? pin : "Headphones";
+diff --git a/sound/soc/soc-jack.c b/sound/soc/soc-jack.c
+index b2cc13b9c77b..63971396b708 100644
+--- a/sound/soc/soc-jack.c
++++ b/sound/soc/soc-jack.c
+@@ -8,7 +8,6 @@
+ 
+ #include <sound/jack.h>
+ #include <sound/soc.h>
+-#include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/workqueue.h>
+@@ -345,21 +344,9 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
+ 				goto undo;
+ 			}
+ 		} else {
+-			/* legacy GPIO number */
+-			if (!gpio_is_valid(gpios[i].gpio)) {
+-				dev_err(jack->card->dev,
+-					"ASoC: Invalid gpio %d\n",
+-					gpios[i].gpio);
+-				ret = -EINVAL;
+-				goto undo;
+-			}
+-
+-			ret = gpio_request_one(gpios[i].gpio, GPIOF_IN,
+-					       gpios[i].name);
+-			if (ret)
+-				goto undo;
+-
+-			gpios[i].desc = gpio_to_desc(gpios[i].gpio);
++			dev_err(jack->card->dev, "ASoC: Invalid gpio at index %d\n", i);
++		        ret = -EINVAL;
++		        goto undo;
+ 		}
+ got_gpio:
+ 		INIT_DELAYED_WORK(&gpios[i].work, gpio_work);
+@@ -373,7 +360,7 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
+ 					      gpios[i].name,
+ 					      &gpios[i]);
+ 		if (ret < 0)
+-			goto err;
++			goto undo;
+ 
+ 		if (gpios[i].wake) {
+ 			ret = irq_set_irq_wake(gpiod_to_irq(gpios[i].desc), 1);
+@@ -401,8 +388,6 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
+ 	devres_add(jack->card->dev, tbl);
+ 	return 0;
+ 
+-err:
+-	gpio_free(gpios[i].gpio);
+ undo:
+ 	jack_free_gpios(jack, i, gpios);
+ 	devres_free(tbl);
+-- 
+2.43.0.rc1.1.gbec44491f096
 
