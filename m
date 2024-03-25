@@ -1,139 +1,96 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0661311AA
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [20.231.56.155])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C26A1185F27;
+	Mon, 25 Mar 2024 03:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.231.56.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711336960; cv=none; b=iJhcF5rMPVVq8OVsc9T0Zg/3EvMJph0b9EGrG8MxVm8lKh6YgLHCSze3tlytbFENscfVeGOxuyNi5fUXc+K5Y4G3ctKhupLtTevvYhnMtCl/y2FH7MIwaqW3IgwLAXD5P78j/3/mLASfqJu0c6lKHXbiSRgKSNPitGmoAFcJxqg=
+	t=1711338023; cv=none; b=rPxJOMs0swrdxtOBfJ6YmCo8Eif14NUT8je4waZ9DfaViMJQgB+aF3LPxVofx8ldyN1/FeRcwJmmR5vFzKULvdGRmwGQ76jQkBvz8s5WSlZ+mTePj+Hm3Rea82CLY6yTG7SxdZier5oDvL71hY17J4+9+hH6bsL0QmT5pILhvyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711336960; c=relaxed/simple;
-	bh=i80VoZMqBoYXLl9VuHTIymeFBZ6nqwDeIFzNjjVljJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rZTTmgxEFyv7FXsobNBvtmeCbFae2g733muSS1MpUvdjYiRmjrTYFGdtZLY6gZRE3fZkkavwTdXoIFbkM8M/aDk6L8rmfwU1QCGKutgrQvJ3V+v1tv7462wIptEYRxNT7XHUfDbRGareZIHj2J9e2UxzOSZvVCXWcIxwkUwfYhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TOkzjnL6; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TOkzjnL6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=iqc52fNCJobqUzERbW40WnlDTkGcB7WwGc1zVlyZKvQ=; b=TOkzjnL6BUv7T92lJO5XntAlUY
-	KsDq4bgdcc08zQCTrImHMntACEY4Wg1uzkw4ZyBude71X+tFe9pNWd5tIewIriDl/MPkVDG9FQ8KF
-	kEwc42NZDXGkM+Yizn5h6IZ87AIt61Y9lNeSJ7IvwF83GoGrNK4UL10MSISSo0hl2k9M6U3WcMaKD
-	pi+cF81QoD63cqjDpj5x3KC5YVi343PdsYXlSlbObk1SSnOIlM21k4OzDtCrmTxxLS1+1jlZZa0CR
-	3u4JcxK8uA5e6qPgVIA39JEAVlsHNHgdSn6PGQENQRSi5b4hlC289YznYRMQcjWtueOjqB8f5VnRy
-	SHA6Dccg==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1roaut-0000000FYNr-0Ljl;
-	Mon, 25 Mar 2024 03:22:31 +0000
-Date: Mon, 25 Mar 2024 03:22:30 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Zhaoyang Huang <huangzhaoyang@gmail.com>
-Cc: =?utf-8?B?6buE5pyd6ZizIChaaGFveWFuZyBIdWFuZyk=?= <zhaoyang.huang@unisoc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	=?utf-8?B?5bq357qq5ruoIChTdGV2ZSBLYW5nKQ==?= <Steve.Kang@unisoc.com>
-Subject: Re: summarize all information again at bottom//reply: reply: [PATCH]
- mm: fix a race scenario in folio_isolate_lru
-Message-ID: <ZgDt9mwN-Py5Y-xr@casper.infradead.org>
-References: <be75859d7e4245939d825da5e881902c@BJMBX01.spreadtrum.com>
- <Zfg0WLrcOmCtdn_M@casper.infradead.org>
- <CAGWkznGhiuzkqfeewNq-ykKehvFTBjH2v_==xAS2_7iFqsFk5A@mail.gmail.com>
- <Zfj_-LbiIsAVWcPX@casper.infradead.org>
- <CAGWkznHOWVPpKHOuvvDF2zppkTT0_x4WyJ5S75j+EghhZmEDdg@mail.gmail.com>
- <ZfwpuRjAZV07_lc3@casper.infradead.org>
- <CAGWkznFtez1fj2L2CtFnA5k-Tn4WtxmDOw=fjOWPg-ZGJX=VWw@mail.gmail.com>
- <Zfz4_GJAHRInB8ul@casper.infradead.org>
- <CAGWkznEzpcWi4oXVn_WFahnQj3dHcwc_4VW6m1Ss-KJ8mD3F3Q@mail.gmail.com>
+	s=arc-20240116; t=1711338023; c=relaxed/simple;
+	bh=cm6ZnN81c2x49XQx/b2mFqGyUdAzRwWF8NYiQkUhL2c=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=DgxNrLw6RcfuntButEW9Gfzx0aZqQDJbuEMz0j/dJmMhiyKGppcasHlkeD9tmiekx7SWtve8HttJHUsUkcXksv2lqy754Vhx+w8YjxFy5tFM26iSTSGdoqawlaRoGILdRCkfmo9psbRHc7ImYdppvKdwaw32AMILiVAhcv+h4Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=20.231.56.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from ubuntu.localdomain (unknown [218.12.19.154])
+	by mail-app4 (Coremail) with SMTP id cS_KCgBXeb0C8gBmkGxFAQ--.46008S2;
+	Mon, 25 Mar 2024 11:39:56 +0800 (CST)
+From: Duoming Zhou <duoming@zju.edu.cn>
+To: linux-sound@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	tiwai@suse.com,
+	perex@perex.cz,
+	Duoming Zhou <duoming@zju.edu.cn>
+Subject: [PATCH] ALSA: sh: aica: reorder cleanup operations to avoid UAF bug
+Date: Mon, 25 Mar 2024 11:39:46 +0800
+Message-Id: <20240325033946.47052-1-duoming@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:cS_KCgBXeb0C8gBmkGxFAQ--.46008S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr4UZw1kZFWxuFWDCrykXwb_yoW8Ar1fpF
+	Z8WF93KFn7KFyvkFWUZrn2gryxGw1fta1Dtw45J3yjvFs3Xr1Fka45K3ySgFW3trZ5u39r
+	tw45Xw1avr90va7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUjuHq7UUUU
+	U==
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwMJAWX+3hkBYwBgsW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGWkznEzpcWi4oXVn_WFahnQj3dHcwc_4VW6m1Ss-KJ8mD3F3Q@mail.gmail.com>
 
-On Sun, Mar 24, 2024 at 07:14:27PM +0800, Zhaoyang Huang wrote:
-> ok. It seems like madvise is robust enough to leave no BUGs. I presume
-> another two scenarios which call folio_isloate_lru by any other ways
-> but PTE. Besides, scenario 2 reminds me of a previous bug reported by
-> me as find_get_entry entered in a livelock where the folio's refcnt ==
-> 0 but remains at xarray which causes the reset->retry loops forever. I
-> would like to reply in that thread for more details.
-> 
-> Scenario 1:
-> 0. Thread_bad gets the folio by find_get_entry and preempted before
-> folio_lock (could be the second round scan of
-> truncate_inode_pages_range)
->     refcnt == 2(page_cache, fbatch_bad), PG_lru == true, PG_lock == false
->         folio = find_get_entry
->         folio_try_get_rcu
->         <preempted>
->         folio_try_lock
-> 
-> 1. Thread_truncate get the folio via
-> truncate_inode_pages_range->find_lock_entries
->     refcnt == 3(page_cache, fbatch_bad, fbatch_truncate), PG_lru ==
-> true, PG_lock == true
+The dreamcastcard->timer could schedule the spu_dma_work and the
+spu_dma_work could also arm the dreamcastcard->timer.
 
-Hang on, you can't have two threads in truncate_inode_pages_range()
-at the same time.  I appreciate that we don't have any documentation
-of that, but if it were possible, we'd see other crashes.  Removing
-the folio from the page cache sets folio->mapping to NULL.  And
-__filemap_remove_folio() uses folio->mapping in
-filemap_unaccount_folio() and page_cache_delete(), so we'd get NULL
-pointer dereferences.
+When the Yamaha AICA card is closing, the dreamcastcard->channel
+will be deallocated. But it could still be dereferenced in the
+worker thread. The reason is that del_timer() will return directly
+regardless of whether the timer handler is running or not and the
+worker could be rescheduled in the timer handler. As a result, the
+UAF bug will happen. The racy situation is shown below:
 
-I see a hint in the DAX code that it's an fs-dependent lock:
+      (Thread 1)                 |      (Thread 2)
+snd_aicapcm_pcm_close()          |
+ ...                             |  run_spu_dma() //worker
+                                 |    mod_timer()
+  flush_work()                   |
+  del_timer()                    |  aica_period_elapsed() //timer
+  kfree(dreamcastcard->channel)  |    schedule_work()
+                                 |  run_spu_dma() //worker
+  ...                            |    dreamcastcard->channel-> //USE
 
-        /*
-         * This gets called from truncate / punch_hole path. As such, the caller
-         * must hold locks protecting against concurrent modifications of the
-         * page cache (usually fs-private i_mmap_sem for writing). Since the
-         * caller has seen a DAX entry for this index, we better find it
-         * at that index as well...
-         */
+In order to mitigate this bug, use timer_shutdown_sync() to shutdown
+the timer and then use flush_work() to cancel the worker.
 
-so maybe that's why there's no lockdep_assert() in
-truncate_inode_pages_range(), but there should be a comment.
+Fixes: 198de43d758c ("[ALSA] Add ALSA support for the SEGA Dreamcast PCM device")
+Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+---
+ sound/sh/aica.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Scenario 2:
-> 0. Thread_bad gets the folio by find_get_entry and preempted before
-> folio_lock (could be the second round scan of
-> truncate_inode_pages_range)
->     refcnt == 2(page_cache, fbatch_bad), PG_lru == true, PG_lock == false
->         folio = find_get_entry
->         folio_try_get_rcu
->         <preempted>
->         folio_try_lock
-> 
-> 1. Thread_readahead remove the folio from page cache and drop one
-> refcnt by filemap_remove_folio(get rid of the folios which failed to
-> launch IO during readahead)
->     refcnt == 1(fbatch_bad), PG_lru == true, PG_lock == true
+diff --git a/sound/sh/aica.c b/sound/sh/aica.c
+index 320ac792c7f..bc68a3903f2 100644
+--- a/sound/sh/aica.c
++++ b/sound/sh/aica.c
+@@ -354,8 +354,8 @@ static int snd_aicapcm_pcm_close(struct snd_pcm_substream
+ 				 *substream)
+ {
+ 	struct snd_card_aica *dreamcastcard = substream->pcm->private_data;
++	timer_shutdown_sync(&dreamcastcard->timer);
+ 	flush_work(&(dreamcastcard->spu_dma_work));
+-	del_timer(&dreamcastcard->timer);
+ 	dreamcastcard->substream = NULL;
+ 	kfree(dreamcastcard->channel);
+ 	spu_disable();
+-- 
+2.17.1
 
-So readaahead inserts the folio locked, and then calls
-filemap_remove_folio() without having unlocked it.
-filemap_remove_folio() sets folio->mapping to NULL in
-page_cache_delete().  When "Thread_bad" wakes up, it gets the
-folio lock, calls truncate_inode_folio() and sees that
-folio->mapping != mapping, so it doesn't call filemap_remove_folio().
-
-> 4. Thread_bad schedule back from step 0 and clear one refcnt wrongly
-> when doing truncate_inode_folio->filemap_remove_folio as it take this
-> refcnt as the page cache one
->     refcnt == 1'(thread_isolate), PG_lru == false, PG_lock == false
->         find_get_entries
->             folio = find_get_entry
->             folio_try_get_rcu
->         folio_lock
->         <no check as folio->mapping != mapping as folio_lock_entries does>
->         truncate_inode_folio
->             filemap_remove_folio
->             <preempted>
