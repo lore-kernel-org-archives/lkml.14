@@ -1,119 +1,146 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED6116F298
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4421514291F
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711360210; cv=none; b=hnx/JwmMm9gBYUrMr3TXApwJOJ5rvjtzQNIJue5fg+ijwbi3/cWpfd99xcsbjIcMngmaT6piKyXOL/kXHb+3HvE1xIiKmLgF+nIFdmt4THQg9sgrRLnhdfULy0LDXD+Dtt7uOWd3Jdk8N1hse8Imr6tDEPTU1dD4UbTCxLeu0z8=
+	t=1711362715; cv=none; b=pUAjjfB0E+Pkms5h9YcF0HjI5QQdIPoh0YSGoTSB5qeCVacGANR6EQOizpDnc/JZOVsV0JwBmDyDr422ALBowIV70XLxbvojcgtZXnXX+9ygXTMiiGmD9CIMW9NQWFB6PphsVUGkkXoYfxaiULFrjchpZny3j+jRpcADqy/Uz3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711360210; c=relaxed/simple;
-	bh=RguhNyq8VKCcqdMobDZ5d8KWbokBDnm4sDXkSJhbkaY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hTGxegXj9/fFEOQPtqgyVBFoIHVkt3pCtkOnOzcbGiUWBw5JGo2QI5ESHqLtW1lfbOJDo9p1cWZG4Wdfal4M/HWWIIFFlidZ3oIzFsNOYj1UXQr8U7vjeuvKulGeau5nh0oJ/uZLLRQBMJBI+A2NY2xsMMTD1d9TO3njskUOB84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pMKOMEoi; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711362715; c=relaxed/simple;
+	bh=Dbdkld9EIn5mxEib8xVsWINte3+ADKN1z1yj3vCs6Rg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=is2Tcq8F6YnxOQop160tzDTIK90Goyv2BZQQKl/MYlOHcK99p7+CILchdjxHpdSfANfb0qhJGzjCL7nQ3OozTwEqgwQgNED13w6y1zT516jr5OvXx6S1IGgGXOL49H1C5BTQbB033n253Y/+yr+tVC/Tk9f+gF0GD2RxsLeTNAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fdJOxvQj; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pMKOMEoi"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a472f8c6a55so328301666b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:50:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdJOxvQj"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d6a1ad08b8so57687431fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711360207; x=1711965007; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lAVXzsVvl26kQg1gDZQrqcIA6gVD8tK0rGgKzqQmaOA=;
-        b=pMKOMEoivbp9/FKScjJ72xNj4UuqjyHwykaVRHq5z9tJsXuF4KFqopKf0IdT+XtvNV
-         cppvkxhnVcdHtqGQA3CRkvVyaBY5ZWRWuJ42dU5nQSZputR0q41iDhGlozzSe+1OcRRh
-         wmUeJVGbe35pzVXZ0RqIXCZ+gyUanFO59NACX9siLc9WM3FuDbAsC3FxogbZiW9v8JrN
-         CwN/PwgQDoF3tKNTQWrAYcqx/a/p37nBGh1IGIiwhU65VSS2A1FFWkNxPgWiLDJzBAuV
-         iMElz3NO3eSZ6q9NF7bct3TriHPLVh/nBYu8Hl7kSYG7BE/V6IfbrNty7l8kPf8iYVQ/
-         MqwQ==
+        d=gmail.com; s=20230601; t=1711362712; x=1711967512; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dbdkld9EIn5mxEib8xVsWINte3+ADKN1z1yj3vCs6Rg=;
+        b=fdJOxvQjOuqBc9SlPG/Iv3WsJoOB0of/o04JDnaOPHyL24BQ2bFr+9QbuHS6h6QNtX
+         qqckSBI9YDFk0zLEl/DMnMsFw5J3B/TpFDAqlXuquAVSIifAbh+pml1HnJ6fYxHSDg04
+         R7Yhwyfr114kyRYc82tCBmZlXMk/J+gGqQRrwHy5URfrdTe5W/n6DHM4bKz+5nKreKAi
+         PuIC5r3ZTrQKLaLG/1S24NfaBjupykdHgEKFdTVJZ8vL9OTSJUOh4vHU9f7DZbXf9TaV
+         ii3MnkKqHCZ5sbtc/gGA5gRvsV4a2pamSOyEXK0KyxKu0o9olDivzpeK50+2CGk45MG+
+         0dEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711360207; x=1711965007;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lAVXzsVvl26kQg1gDZQrqcIA6gVD8tK0rGgKzqQmaOA=;
-        b=DI5bNdBWggXlb9ayUgDxBwrTWBLkZxpxx8s8n9xMoG3AC/6dTHqaTsEZnq2DZBQk+o
-         YJ4c47OB5Zq5lU6c7mnOs8R2zUmQHwvSdNRi7Zd4HSSWTY3eKxFnOcZH1DYaRrXAJZQz
-         mfavGbDu1JWteeKbonrepbSPiSKiDi4keRWAe0J1BdGJ1XTc6p0PCP7eGejfaInIF/qZ
-         AT9VvHd0GE+DlaESthkIG+LLZa2zpsnzhttMATr0pcNcFFnZzvZ1rS7RsJk5rwT1SZE0
-         FtoPEngDTWER0tvTcJfmlIU4LLNbO1diM2ZKpI9fQ2IsFkdoRC0p4imyaRiwhir65pCy
-         N1ow==
-X-Forwarded-Encrypted: i=1; AJvYcCVDBpKCNRGBMErvrWvHRYa3h4D6G2AZTpX5wEO+oLFHRtjhIvRMShX615n60QKJ8LJV2FpA6YO71EcHitXw3LZOtPH1Ysmg/dZeBQuy
-X-Gm-Message-State: AOJu0YzsReXVEVF42LF6IFMxDDoYJBY5PS3PEfmuH3n45tqGcthhsF/v
-	PuSb+2skKhg8+tobMre60+vE3NdD+WJwJUso568I152N0Gt9J68t3c3GmdXPR38=
-X-Google-Smtp-Source: AGHT+IFdHnqwTXF7AWbNNmY2g7WJshW/L6qIT7jU5SUKjSfolEmDSj+P9BTccpZWBEOh+YFvHtm2Uw==
-X-Received: by 2002:a17:906:7154:b0:a4a:33e4:bcae with SMTP id z20-20020a170906715400b00a4a33e4bcaemr1509262ejj.30.1711360207053;
-        Mon, 25 Mar 2024 02:50:07 -0700 (PDT)
-Received: from [192.168.2.107] ([79.115.63.252])
-        by smtp.gmail.com with ESMTPSA id qy34-20020a17090768a200b00a4623030893sm2854174ejc.126.2024.03.25.02.50.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 02:50:06 -0700 (PDT)
-Message-ID: <d55f1809-3977-4942-8137-d1fa1895ddf1@linaro.org>
-Date: Mon, 25 Mar 2024 09:50:05 +0000
+        d=1e100.net; s=20230601; t=1711362712; x=1711967512;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Dbdkld9EIn5mxEib8xVsWINte3+ADKN1z1yj3vCs6Rg=;
+        b=D+ksiMrrVcyTQdotznVkLShggjOO6FxvlXurVs8I0iq+mD/eGIemZYz9C8LPtl0DBg
+         cUn/biIq8KntBC9o2nfjMZwJInpYsXt1HiGZetDqiw+GTj6DHLkQlA68fPLOBJepytIf
+         n2UmlQkoSC50AeOQWZSEGZ9j0Hw7b2v1gbpMxA2PVsbCpNzbYVVIDq7dn0UkRp0KUHUc
+         q1bEe6CvuE2fFYHdXJz9Q1pSD0aPfMgGT+pgWgdVc249kgBmyqq6+tELiqLTiiG2JWHg
+         1wSqkSIfUKRTbKAQQ/p6q/AudNR34rTSuILlhOwY4FZMptnC+bknPhCcJmIiREMnVERQ
+         g00w==
+X-Forwarded-Encrypted: i=1; AJvYcCUUDTy0pkl73Tr600YakhVX7n3yWQTMtiHVA2TJvA+RsqRLntWaxBqju5AddaUqDbtPwN/3mJSKkJTVf5XPhkFIS4aqbCsuyEs/5hBu
+X-Gm-Message-State: AOJu0YxqoKwYceit+ZfntHNDJ6SgewUxW+MovXRvcWOOA3W26Uy6twZw
+	Z/pDs7sbD61AvksOptp4Yo5ZokZ5QQzlaqdXdLLwBfhXZrtBFar/tMuEmUiFPFK4UDVdyxtC0+b
+	zahi8Wpc6yWGsk3+peeQIjUxDBdLP8VV772YciA==
+X-Google-Smtp-Source: AGHT+IEZrrW3vOVJicf/LJWc1jJKfh8xwURLN0NHHA7XVSrGGSYNh2jxYmNV4jLkP8w4dTUVhg8Kf7G/bCr+8tPPfmE=
+X-Received: by 2002:a2e:a714:0:b0:2d6:dac4:7d4f with SMTP id
+ s20-20020a2ea714000000b002d6dac47d4fmr1068288lje.4.1711362712188; Mon, 25 Mar
+ 2024 03:31:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: dt-bindings: add missing address/size-cells to
- example
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240325091139.18602-1-krzysztof.kozlowski@linaro.org>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20240325091139.18602-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <202403251658.8e92a8bc-lkp@intel.com>
+In-Reply-To: <202403251658.8e92a8bc-lkp@intel.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Mon, 25 Mar 2024 11:31:40 +0100
+Message-ID: <CAFULd4bFbhOQ+mx2=pKqLbLznR-UFZamS4HhdUYZF2qFKNcDVg@mail.gmail.com>
+Subject: Re: [linus:master] [x86/percpu] ca42563486: BUG:unable_to_handle_page_fault_for_address
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org, 
+	Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>, 
+	Brian Gerst <brgerst@gmail.com>, Denys Vlasenko <dvlasenk@redhat.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Josh Poimboeuf <jpoimboe@redhat.com>, linux-mm@kvack.org
+Content-Type: multipart/mixed; boundary="0000000000008ad00d061479ae18"
 
-Hi, Krzysztof,
+--0000000000008ad00d061479ae18
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Mar 25, 2024 at 9:50=E2=80=AFAM kernel test robot <oliver.sang@inte=
+l.com> wrote:
+>
+>
+> hi, Uros Bizjak,
+>
+> we reported an early crash issue for this commit last Oct.
+> https://lore.kernel.org/all/202310071301.a5113890-oliver.sang@intel.com/
+>
+> as you mentioned at that time
+> "It is KASAN that is not compatible with named address spaces [1]."
+>
+> now we noticed the commit is merged into mainline, and we observed a diff=
+erent
+> issue related with kcsan_setup_watchpoint. below detail report FYI.
+>
+> [1] https://lore.kernel.org/lkml/CAHk-=3Dwi6U-O1wdPOESuCE6QO2OaPu0hEzaig0=
+uDOU4L5CREhug@mail.gmail.com/
+>
 
-On 3/25/24 09:11, Krzysztof Kozlowski wrote:
-> Complete the example of recommended order of properties by adding
-> missing address/size-cells.  They are not necessary to illustrate the
-> style, but lack of them us bit really correct DTS code which might
+Yes, it is the same issue, but with KCSAN.
 
-some typo here
+> Hello,
+>
+> kernel test robot noticed "BUG:unable_to_handle_page_fault_for_address" o=
+n:
+>
+> commit: ca4256348660cb2162668ec3d13d1f921d05374a ("x86/percpu: Use C for =
+percpu read/write accessors")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>
+> [test failed on linus/master b3603fcb79b1036acae10602bffc4855a4b9af80]
+> [test failed on linux-next/master 226d3c72fcde130a99d760895ebdd20e78e02cb=
+5]
+>
+> in testcase: boot
+>
+> compiler: gcc-12
+> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 1=
+6G
 
-> confuse readers.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Cc: Tudor Ambarus <tudor.ambarus@linaro.org>
-> ---
->  Documentation/devicetree/bindings/dts-coding-style.rst | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dts-coding-style.rst b/Documentation/devicetree/bindings/dts-coding-style.rst
-> index a9bdd2b59dca..8a68331075a0 100644
-> --- a/Documentation/devicetree/bindings/dts-coding-style.rst
-> +++ b/Documentation/devicetree/bindings/dts-coding-style.rst
-> @@ -144,6 +144,8 @@ Example::
->  		#dma-cells = <1>;
->  		clocks = <&clock_controller 0>, <&clock_controller 1>;
->  		clock-names = "bus", "host";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
+We already have the candidate fix for GCC [1], the fix will be in gcc-13.3+=
+.
 
-I propose having #address-cells and #size-cells after ranges, because
-they are related:
-https://devicetree-specification.readthedocs.io/en/stable/devicetree-basics.html#ranges
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D111736
 
-Looking good:
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Please find attached an emergency patch for mainline that disables
+named address spaces when KCSAN is enabled. I'll post a formal patch
+submission in a moment. The named AS will be re-enabled with KCSAN
+with a patch via -tip tree.
 
->  		vendor,custom-property = <2>;
->  		status = "disabled";
->  
+Thanks,
+Uros.
+
+--0000000000008ad00d061479ae18
+Content-Type: text/plain; charset="US-ASCII"; name="p.diff.txt"
+Content-Disposition: attachment; filename="p.diff.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lu6t4s5d0>
+X-Attachment-Id: f_lu6t4s5d0
+
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L0tjb25maWcgYi9hcmNoL3g4Ni9LY29uZmlnCmluZGV4IDM5
+ODg2YmFiOTQzYS4uNGZmZjZlZDQ2ZTkwIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9LY29uZmlnCisr
+KyBiL2FyY2gveDg2L0tjb25maWcKQEAgLTI0MzksNiArMjQzOSw4IEBAIGNvbmZpZyBVU0VfWDg2
+X1NFR19TVVBQT1JUCiAJIyB3aXRoIG5hbWVkIGFkZHJlc3Mgc3BhY2VzIC0gc2VlIEdDQyBQUiBz
+YW5pdGl6ZXIvMTExNzM2LgogCSMKIAlkZXBlbmRzIG9uICFLQVNBTgorCSMgLWZzYW5pdGl6ZT10
+aHJlYWQgKEtDU0FOKSBpcyBhbHNvIGluY29tcGF0aWJsZS4KKwlkZXBlbmRzIG9uICFLQ1NBTgog
+CiBjb25maWcgQ0NfSEFTX1NMUwogCWRlZl9ib29sICQoY2Mtb3B0aW9uLC1taGFyZGVuLXNscz1h
+bGwpCg==
+--0000000000008ad00d061479ae18--
