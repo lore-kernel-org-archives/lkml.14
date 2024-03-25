@@ -1,57 +1,57 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4575196694
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1041619668C
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711361053; cv=none; b=F0UwcnbgkLtN9FVrn32PdBJpayxWCirraypGD921ZyiNO8rpLQjcu5Enokp4WCGQ7Xg7xbRTrMk1bh6dYSAmwCt7af9AnXcFSMG4wryxjFo7sKGFY5fscNSlh+PD+puwwZP9iTOJ5EaGfFN2s3iWLNSfgTDfyXUEH6bpfSJGXNk=
+	t=1711361050; cv=none; b=Ze4ma2ZaktrZ5p1Ff6pTMlfCPTzXLFTIHJpPpGs02QnmFGM4vtgio2OWXQINhVgI4LrKSYHTDPK8+4qvfuRBJdnslvoi/tRQMZWxQnNLcoBSSUQgz3LZw4QAcyPPM61cPdJXstMLbcqeH4mby5c62zk6WKn7p+dUQkt6azTGkRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711361053; c=relaxed/simple;
-	bh=Xu1f+RPnvEjBRa3DS5LFCyEe2cJ9nWGA+wJiNMQI+rs=;
+	s=arc-20240116; t=1711361050; c=relaxed/simple;
+	bh=J5hF2soPC/xdLEap/3kEcAFYRK03cvoZcKZ5nHiJHE0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q9Mm59Dqz3v4eae/kIGd+KDMV8iWqaMaxCegrMlfDa7fjEDDP01HR8C4HPWRE31n1xuqhZsHVebQP3WqbSKaBcAMViduH9AGQkEhrt1yQp2/sR+bjOUtuaDghc1ABjB0XwLvo2p8yCsYsW2V5ZCgistKT7TXer1nOuYb5YcKba8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=mX+EpAHb; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version; b=WIXW7tRMwpcyO7OLWBsmhW9iobwb3vVWvAnaZURApJDMUqQuoL13NvW4rd8ZPbEAQ+9NWiy8NZAplMnDrpfBm113rn2pLOqhe9cC6cRId0px4Lhik4FemRrER+uJi6HkMPlV5WJ+qzFaqf758IxibxX+fKbVodik4Un16WehWYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CZR1ftg5; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="mX+EpAHb"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-341cf77b86bso355274f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:04:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CZR1ftg5"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5101cd91017so4998195e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:04:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711361050; x=1711965850; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711361047; x=1711965847; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8fl37vGRYSy2kvf67OGkupfqZ+uqFGGpfw8NF9/514Q=;
-        b=mX+EpAHbM6wART6kFGrGyie3b+83UlT/m431IWSyrQT/ktQ/hCO9Ba1BqfJcCIqolS
-         zgZMv5hQUNLDor5Ef+QgPyRQWGwhoYdkBdYjH1ZDYDpgQQlCq+mbfO86gAhxwmUPYcDu
-         Y3z9W5rINGQAEW0biEnfQ1+g9I++8ts3ybxh42oFRs7/JWzy2cH0pdYz3GOwOMaOG9Nd
-         I0tPrwYypTQHXpTUfOwj+NsZBsb0jfv+tQ+EbDklhXUrp1qP075wSm5pnoNMHtd367e1
-         +Rt6v+eg0Q2i0j5T7mIqWhjHRIj0YouDTZHX5sfvcYTTN9g8II/SHK/XdqZcXRp/DUDR
-         PA/A==
+        bh=Ng5BrcKH2u1PepcO4ehhcz1HLdaVac5+yYLHKNMA3sg=;
+        b=CZR1ftg5D2Wko1j1swtb3f+OZ5PR0ioF1xiO8ZDMfPFBjuWxd8styaXrbVmFe7pzMg
+         5oQnXKs5SYekWuPiquItREQsil+rJHOd7GJrOk1ZESR61VYYbMPSuGGXMl5R7KDGdqK+
+         dT2R0Q1d3UNFMhgv2NQAXUGz0fuFv7v07wFztOaoMKinLfuo3GZCK0qC3ln8WsxjbwPy
+         kICNqWdOewo8kVMN1rwHVz65hrUYHVuwg7+8cKsJWjZULtu2WT+QiYWWn802g2CvLvgJ
+         VFyzGhTU4BpWY1EoQbDnFNIGrvW3BBvjtrbTP3YVaNi3TFz2PKarpIud4HRZaLGjV6Ws
+         nrgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711361050; x=1711965850;
+        d=1e100.net; s=20230601; t=1711361047; x=1711965847;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8fl37vGRYSy2kvf67OGkupfqZ+uqFGGpfw8NF9/514Q=;
-        b=haEWhUFaXTdYualgswp1XocbemouRdyDUkt3EJzFBkSpUShJLsCTDt135Al5EjXLXj
-         fJsdGX1nyTrJ5EQNPSKNLioSTvlVP7tgotmB9xezGqbM6n2fZvGn6BfH5Ktp7j/BbSed
-         Qr8D0inyjkVAOoplvkIvKe0OaURx4fwsaZL/MgefOMdUGk+BDA9uqFTuhLGAIyd0wmG0
-         b4dRkgwl68p4kfvRNS1g14M37QLyqBGJoh1faR1P/7L0JQtiIck73Kvkk4BSi8FeEhxp
-         B/0zU3kBmWMFxo7RDpEs5F63/GpFotPnLBf982QbDbeeyeP/ZQ3ADCrWF49fKhaqIsrW
-         BQHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtqHAgqDcv2ZEtWxr/7HaMCUbLpqfX/6aMBXKwgVplW3WJMu4TLG/i1FiINU6Qon0oKdKQOf7TfRQR9N0JqDaUoIdNbFZKpnR9uRiU
-X-Gm-Message-State: AOJu0YwPftGl9Xwmz2OZCj0U8yRm82DxY8XY+o1A/pKj2CGgwJQ3+Twp
-	tvBV7WJTiZ8NY2dvIPW4L3FCuyIG7Q0DGxKFv5wC1R8vyglfGcHHWCKrct12PrQ=
-X-Google-Smtp-Source: AGHT+IH+hhp3hOA7UiKIPybzE1EoKjoYoyhlQKM6glQr3E4kR6w3ftf3S8vD8LlexgRD9oDYqvKJUA==
-X-Received: by 2002:a5d:4084:0:b0:33e:c924:5486 with SMTP id o4-20020a5d4084000000b0033ec9245486mr4958754wrp.46.1711361050341;
-        Mon, 25 Mar 2024 03:04:10 -0700 (PDT)
+        bh=Ng5BrcKH2u1PepcO4ehhcz1HLdaVac5+yYLHKNMA3sg=;
+        b=tIRFo7QZXf7Hr6SHaxx64QUewDqPAZ2vgA15NKx79veQZhK5UH9p8Xw2imo3Dpf6f8
+         nzkOLb5+I/tu0cI3OzflBer0Z81za7r4WG6RyEVVw+fECSTQCRq7r8z0lYdYDNBwTHGD
+         FNJR7md8pNa9kcttnoE5xd0dR2zo71A4AkGxM3woRq5u65ToG5Ly3E/QPBj3n9AuAPPs
+         5KadXYFTQOviPsciX2KjKBnaVwKsRYOT3kY291wc5LmB0uE1GvC/eC+5lrz9jk3iKLhs
+         Yv+PNnxg+afWov0cuCUA8USfhCJ+mI+YPCpU2vlglh8qvJr36/Ng3veJr6zNhWpNzajK
+         OwKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrCaVRBhmE2buERnUrUPvNiY/LK2zOQ0SfSmB75RKYUvh1+3QA/Jjl2eRsac8vNVosv7HH+hxwotD+xxyPJqCRL3iWTjgpt6NwpcS8
+X-Gm-Message-State: AOJu0YwQHp+ZbLBjED8O5fIc1SS5gJmZhQhlfAcAsZ8PNP1+8RIAnyEF
+	VyYlT8mctwev0wOW8ZbwFAnepVVr6dEzJYXMY1bgn+KS1zUr3gZDpHg4hGEaPs4=
+X-Google-Smtp-Source: AGHT+IFEJpqqE6ui66dDlnqFDRywEMJTVQ3MapnxjqRVVRpO8lm8MMBDsWCpEajgc0lhG+7z2EIHIQ==
+X-Received: by 2002:a19:8c04:0:b0:513:cff2:fe4e with SMTP id o4-20020a198c04000000b00513cff2fe4emr3935924lfd.8.1711361047092;
+        Mon, 25 Mar 2024 03:04:07 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:861d:8b72:a859:4ce9])
-        by smtp.gmail.com with ESMTPSA id dv13-20020a0560000d8d00b0033e25c39ac3sm9086874wrb.80.2024.03.25.03.04.09
+        by smtp.gmail.com with ESMTPSA id dv13-20020a0560000d8d00b0033e25c39ac3sm9086874wrb.80.2024.03.25.03.04.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 03:04:09 -0700 (PDT)
+        Mon, 25 Mar 2024 03:04:06 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Andy Gross <agross@kernel.org>,
 	Bjorn Andersson <andersson@kernel.org>,
@@ -70,9 +70,9 @@ Cc: linux-arm-msm@vger.kernel.org,
 	kernel@quicinc.com,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Deepti Jaggi <quic_djaggi@quicinc.com>
-Subject: [PATCH v9 05/13] firmware: qcom: scm: make qcom_scm_ice_set_key() use the TZ allocator
-Date: Mon, 25 Mar 2024 11:03:51 +0100
-Message-Id: <20240325100359.17001-6-brgl@bgdev.pl>
+Subject: [PATCH v9 02/13] firmware: qcom: scm: enable the TZ mem allocator
+Date: Mon, 25 Mar 2024 11:03:48 +0100
+Message-Id: <20240325100359.17001-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240325100359.17001-1-brgl@bgdev.pl>
 References: <20240325100359.17001-1-brgl@bgdev.pl>
@@ -86,8 +86,16 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Let's use the new TZ memory allocator to obtain a buffer for this call
-instead of using dma_alloc_coherent().
+Select the TrustZone memory allocator in Kconfig and create a pool of
+memory shareable with the TrustZone when probing the SCM driver.
+
+This will allow a gradual conversion of all relevant SCM calls to using
+the dedicated allocator.
+
+The policy used for the pool is "on-demand" and the initial size is 0
+as - depending on the config - it's possible that no SCM calls needing
+to allocate memory will be called. The sizes of possible allocations also
+vary substiantially further warranting the "on-demand" approach.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Reviewed-by: Andrew Halaney <ahalaney@redhat.com>
@@ -95,51 +103,88 @@ Tested-by: Andrew Halaney <ahalaney@redhat.com> # sc8280xp-lenovo-thinkpad-x13s
 Tested-by: Deepti Jaggi <quic_djaggi@quicinc.com> #sa8775p-ride
 Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/firmware/qcom/qcom_scm.c | 21 +++++----------------
- 1 file changed, 5 insertions(+), 16 deletions(-)
+ drivers/firmware/qcom/Kconfig    |  1 +
+ drivers/firmware/qcom/qcom_scm.c | 22 ++++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
+diff --git a/drivers/firmware/qcom/Kconfig b/drivers/firmware/qcom/Kconfig
+index 3c495f8698e1..4634f8cecc7b 100644
+--- a/drivers/firmware/qcom/Kconfig
++++ b/drivers/firmware/qcom/Kconfig
+@@ -7,6 +7,7 @@
+ menu "Qualcomm firmware drivers"
+ 
+ config QCOM_SCM
++	select QCOM_TZMEM
+ 	tristate
+ 
+ config QCOM_TZMEM
 diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-index cd47389ac80c..de66319cbfb9 100644
+index 49ddbcab0680..ebb1141f8be4 100644
 --- a/drivers/firmware/qcom/qcom_scm.c
 +++ b/drivers/firmware/qcom/qcom_scm.c
-@@ -1200,32 +1200,21 @@ int qcom_scm_ice_set_key(u32 index, const u8 *key, u32 key_size,
- 		.args[4] = data_unit_size,
- 		.owner = ARM_SMCCC_OWNER_SIP,
- 	};
--	void *keybuf;
--	dma_addr_t key_phys;
+@@ -8,8 +8,10 @@
+ #include <linux/completion.h>
+ #include <linux/cpumask.h>
+ #include <linux/dma-mapping.h>
++#include <linux/err.h>
+ #include <linux/export.h>
+ #include <linux/firmware/qcom/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_tzmem.h>
+ #include <linux/init.h>
+ #include <linux/interconnect.h>
+ #include <linux/interrupt.h>
+@@ -20,9 +22,11 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset-controller.h>
++#include <linux/sizes.h>
+ #include <linux/types.h>
+ 
+ #include "qcom_scm.h"
++#include "qcom_tzmem.h"
+ 
+ static bool download_mode = IS_ENABLED(CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT);
+ module_param(download_mode, bool, 0);
+@@ -41,6 +45,8 @@ struct qcom_scm {
+ 	int scm_vote_count;
+ 
+ 	u64 dload_mode_addr;
 +
- 	int ret;
++	struct qcom_tzmem_pool *mempool;
+ };
  
--	/*
--	 * 'key' may point to vmalloc()'ed memory, but we need to pass a
--	 * physical address that's been properly flushed.  The sanctioned way to
--	 * do this is by using the DMA API.  But as is best practice for crypto
--	 * keys, we also must wipe the key after use.  This makes kmemdup() +
--	 * dma_map_single() not clearly correct, since the DMA API can use
--	 * bounce buffers.  Instead, just use dma_alloc_coherent().  Programming
--	 * keys is normally rare and thus not performance-critical.
--	 */
--
--	keybuf = dma_alloc_coherent(__scm->dev, key_size, &key_phys,
--				    GFP_KERNEL);
-+	void *keybuf __free(qcom_tzmem) = qcom_tzmem_alloc(__scm->mempool,
-+							   key_size,
-+							   GFP_KERNEL);
- 	if (!keybuf)
- 		return -ENOMEM;
- 	memcpy(keybuf, key, key_size);
--	desc.args[1] = key_phys;
-+	desc.args[1] = qcom_tzmem_to_phys(keybuf);
+ struct qcom_scm_current_perm_info {
+@@ -1815,6 +1821,7 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
  
- 	ret = qcom_scm_call(__scm->dev, &desc, NULL);
+ static int qcom_scm_probe(struct platform_device *pdev)
+ {
++	struct qcom_tzmem_pool_config pool_config;
+ 	struct qcom_scm *scm;
+ 	int irq, ret;
  
- 	memzero_explicit(keybuf, key_size);
+@@ -1890,6 +1897,21 @@ static int qcom_scm_probe(struct platform_device *pdev)
+ 	if (of_property_read_bool(pdev->dev.of_node, "qcom,sdi-enabled"))
+ 		qcom_scm_disable_sdi();
  
--	dma_free_coherent(__scm->dev, key_size, keybuf, key_phys);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(qcom_scm_ice_set_key);
++	ret = qcom_tzmem_enable(__scm->dev);
++	if (ret)
++		return dev_err_probe(__scm->dev, ret,
++				     "Failed to enable the TrustZone memory allocator\n");
++
++	memset(&pool_config, 0, sizeof(pool_config));
++	pool_config.initial_size = 0;
++	pool_config.policy = QCOM_TZMEM_POLICY_ON_DEMAND;
++	pool_config.max_size = SZ_256K;
++
++	__scm->mempool = devm_qcom_tzmem_pool_new(__scm->dev, &pool_config);
++	if (IS_ERR(__scm->mempool))
++		return dev_err_probe(__scm->dev, PTR_ERR(__scm->mempool),
++				     "Failed to create the SCM memory pool\n");
++
+ 	/*
+ 	 * Initialize the QSEECOM interface.
+ 	 *
 -- 
 2.40.1
 
