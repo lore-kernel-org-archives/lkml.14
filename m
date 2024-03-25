@@ -1,54 +1,57 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEE212E6A;
-	Mon, 25 Mar 2024 18:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A242F129E67;
+	Mon, 25 Mar 2024 18:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711391207; cv=none; b=KTm/M8LlaWjX/L3qL+GCw1O1HDzACKWZgzZ6bfCUomG51a19ClVC07QqebQqNEkFa8ktqAg/TheCi+YFLhv/2dz9QANFD58Obo+8HcxuNC0ITXk8g6THlw1UkoZyK6H+VzcERS86Y0SKrFqBhhjYUXdsbMAOHyJXAttX/Xamg+Q=
+	t=1711391226; cv=none; b=TJH4ZjQ0Kj0ejdoEabOVOc+ic8qt2FznKnkEA5ClHhlP9hxr35NF+dhfP9Y7EXfb+gnvNXHjsi2KapfjAvF89IOP+tNXpzF2Pq5vhCMo3MAknZ+HY7PPmMW1qcovpPtD359JkEeRHoRCmfV4wOWR5U1T5BhkERa9SYPSlJBze7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711391207; c=relaxed/simple;
-	bh=alToMwgx8F4x0ok8bQUuFA0DjFg6nUSwo0GbUNoR+Y4=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=Yh0CE/i4pCHxJNo6GFYq5z+dIqJziF9JtQxDFYHSW27ZFfWT81S8P9BWm7L1ESwjfRD62wPqr86WSeD6sCycwkZoyQzB7cHZh2wrp4EHvv4cqHbFOFQdjBTyYsae5ENrzAhkBoxxRO3HG49qD1I5DPH/fNz6maysr3eFGyJu1DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y9O+uwX7; arc=none smtp.client-ip=209.85.208.169
+	s=arc-20240116; t=1711391226; c=relaxed/simple;
+	bh=NrcAerk47w27oWd1NCrR1BDGPLWNDfTO1kj4vuxU04c=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=P9VXsGoM7oCzcYJtu5etBfRfxm73Qffcfe8aL9Pw2nd2iOrMO0HO5FsHxABMmclBQ451eG1xxZQLPWE1P/XyJ7iVd4rpbxZEmftio+gr/zLHTrWGnxSst5S/QCD4RVSI8PtW8xLLrQUyh/Drbtm/wOI/1zdrdG/Nfp6MdoDP6QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fXne0SNI; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9O+uwX7"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d52e65d4a8so62254541fa.0;
-        Mon, 25 Mar 2024 11:26:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXne0SNI"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4148c95db1fso1909935e9.0;
+        Mon, 25 Mar 2024 11:27:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711391204; x=1711996004; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=olLxRakxTUSwwI2bXiG7lgWcNd9XDiHnHMSgPu9OGUM=;
-        b=Y9O+uwX72Qh9SYkInPsX1u6sR5p44/JwT5JVdyE7YmbewS42Bgwi4S6B5OuvoPP2MA
-         K1a/PHgbIa0f//GskYXchrYxRJhYXcVxeziyXkimMPtTuRS64AdF2sofUFoPDRvjEQ8U
-         UGivsw/xM2tY2PcqwAfzqiLZuPzEJ5Ispfx2Y5hs3cTSjJ2FcfXxOmrK/EQ3GiNWqkD3
-         EfsAQV9G2aoRx3KYbtnYJT2kQRLJBg/3GpXmr0D+JwlDExXcYlQWc8gvcXgULEIBDBCr
-         dVYxPlv7BtgzQl/iy/kV7+ygxXfwX1Urywcip+GPkf+uMgtp8Ab0Ub7PCqTQW7Og3vjb
-         esEg==
+        d=gmail.com; s=20230601; t=1711391223; x=1711996023; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fjur1Hg//VxIhCvXN4J/88F6wnM642w5BcLBrjCUoY0=;
+        b=fXne0SNIKAmtMVUO/DUtvKfM5srsT9ZHA0AaJfwgwXausdNr6LfVrrW7uLd/FfY/N9
+         93S+in5bc5j04hOnm0NO3wJB0TyxqknKOyn91Rd7QOl32C3HeDSR6CLBLfFJ+VZbya+I
+         hNB+x8H4g1ujYHLDOtRAHFcRQibp4XOnNKt3lqA7Oli8qlwCbE0lkrYW4i5pQSi2PJ1t
+         D0RuDGpzjVQzNkH4sVXsjDhv0mp7g68KcSULBI/Xdy37/6WEXyLBGTslPCGKOJe09BF7
+         UbYowS2DhOB5pWaCFkFGt2YTSbMFHslKL4v7tCVU7STQ8sBKz3IMZ8uAi4JXpfnGCfgz
+         4pZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711391204; x=1711996004;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=olLxRakxTUSwwI2bXiG7lgWcNd9XDiHnHMSgPu9OGUM=;
-        b=YW9/Xp53iTrzowoPiAJcfjrpmXJVYLON9gUcT4uELnl56KQDEZL4vuTvpyt57GCFaO
-         kvUDFEAgF6lKpFlyNBWW0UHzrLywDoRpSERkL/LVGTL0LRd2C6BRc3ueTPIcnwu26Ahm
-         kli06fGo+QnTbYSoEySxSipXJf1gbFQljBgCA4SBrDH2YtSNVXAWXS91YAVn64tDS6NW
-         d8n/tA21ljQ79ZUG4MWDbX7W/lacsV35iDmH6IUyroFBcxqbyvfW95FxO78pkjj80osI
-         prgPjDVjtNAFnF2k/kbJKPs2R7vqIE84h3PhmTUocQvVgdncSaSd9D23utPsceNlfc1U
-         CoQw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7zOgV+sScWVlds+ZApMr5Yx1jl9GuWPa0bAYVORPgAOIF29uTaG1Su+z+8XA1enYqWve2JV8AMR91DJwDSPbUBBteT9c2XkYoRLk8Jm1agS5HfnTzvN5TWOGb0NjfMsPVrlpF/3t0M2WFIfKHFMAfa+isqRkrWpK1rTIRoi5gB3AOQTRG
-X-Gm-Message-State: AOJu0Yy3T2Hvr88df2mnwwU+Hov6Tadju2EBfQtBW9dSp4zq/5YaHBr8
-	pA1r7I3DR82DdBaMsljZjnxDY8ZDTAOGGBtdPi/NQ9wz26UabG3L
-X-Google-Smtp-Source: AGHT+IGkr9xEaWrbpwvTksrMxwc7O+nLPCMPgTZT/0FSruWW9Qp8zNzF8aG5i68YvH31sBzy2fp04w==
-X-Received: by 2002:a05:651c:b06:b0:2d6:d9cd:ac8c with SMTP id b6-20020a05651c0b0600b002d6d9cdac8cmr2496722ljr.43.1711391204062;
-        Mon, 25 Mar 2024 11:26:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711391223; x=1711996023;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fjur1Hg//VxIhCvXN4J/88F6wnM642w5BcLBrjCUoY0=;
+        b=Z6HFQlBaA2GVWErqm8feAiYZ0bYfw8TYUXJMysT5uJI7bnR4ydikYPpc0pRhPEoFMm
+         RH+O8tZE7CYjOU9bgvH+YqiMj0LZcZM+T0l60w3dSLLnJC6l0EDbJ+pWInRyR0Xku3Sp
+         IhJ1x99g1gCfKvSXBxHxDNMkbaKQvAI+uckGDo+5egf2yIkFLksjb9o0pLUdCw80shK3
+         CSS1Yirt67mGQnVXLohUr+0INviEJG2NyL3POr/LVYXoVR17VVISgtYqyQW0dL8m4YzO
+         rbVlzc1enqbestn9o+KenWPPW0ZkNPZvrrlHUWv1JU9sbU1xEzJFQPGHvZbUqif1FsIK
+         m+Og==
+X-Forwarded-Encrypted: i=1; AJvYcCWQU1PhwyuRlci3QTUxgcmuaW2a9I+lO+ZHgEff7Y+1Un9SF8mJRZLv4PEh3rdWRteLUDvM7nFmfi6niIYRyzC92mi/zV4wzA24CTLIpFbZcKSYVi8KgJUYF0EL5WrY0AXMc6UJdcpt2VpYhCVPnHymGQNOEttW5iT8k4cgmnWaPRT6Litx
+X-Gm-Message-State: AOJu0YxDVjqJ8rrLziDIemVsmj1xnk+rhe3TFLOmiBtT5XTdJx8JRwWy
+	YTw4UmSsICotjTwSYg0AOKjrHl6pE07C4iNvXSvK2vedyqwRUOje
+X-Google-Smtp-Source: AGHT+IG4X6gQBBS5WMmkuTXpBuhscwtyPphY8z0vjMtllUvIPwyGhqcvpadmfaGOQWCnYo0h2XxdkQ==
+X-Received: by 2002:a05:600c:3582:b0:414:8889:5a65 with SMTP id p2-20020a05600c358200b0041488895a65mr3677558wmq.30.1711391223005;
+        Mon, 25 Mar 2024 11:27:03 -0700 (PDT)
 Received: from localhost ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id m9-20020a5d4a09000000b00341bdecdae3sm7954758wrq.117.2024.03.25.11.26.42
+        by smtp.gmail.com with ESMTPSA id w9-20020a05600c474900b00414896b61e4sm4233172wmo.16.2024.03.25.11.27.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 11:26:43 -0700 (PDT)
+        Mon, 25 Mar 2024 11:27:02 -0700 (PDT)
 From: Richard Gobert <richardbgobert@gmail.com>
 To: davem@davemloft.net,
 	edumazet@google.com,
@@ -72,9 +75,11 @@ To: davem@davemloft.net,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH net-next v4 0/4] net: gro: encapsulation bug fix and flush checks improvements
-Date: Mon, 25 Mar 2024 19:25:39 +0100
-Message-Id: <20240325182543.87683-1-richardbgobert@gmail.com>
+Subject: [PATCH net-next v4 2/4] selftests/net: add local address bind in vxlan selftest
+Date: Mon, 25 Mar 2024 19:25:41 +0100
+Message-Id: <20240325182543.87683-3-richardbgobert@gmail.com>
+In-Reply-To: <20240325182543.87683-1-richardbgobert@gmail.com>
+References: <20240325182543.87683-1-richardbgobert@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,68 +88,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series fixes a bug in the complete phase of UDP in GRO, in which
-socket lookup fails due to using network_header when parsing encapsulated
-packets. The fix is to pass p_off parameter in *_gro_complete.
+Add local address bind support to existing udpgro_fwd.sh vxlan selftest, to
+ensure UDP socket lookup in GRO is working.
 
-Next, the fields network_offset and inner_network_offset are added to
-napi_gro_cb, and are both set during the receive phase of GRO. This is then
-leveraged in the next commit to remove flush_id state from napi_gro_cb, and
-stateful code in {ipv6,inet}_gro_receive which may be unnecessarily
-complicated due to encapsulation support in GRO.
+Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+---
+ tools/testing/selftests/net/udpgro_fwd.sh | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-In addition, udpgro_fwd selftest is adjusted to include the socket lookup
-case for vxlan. This selftest will test its supposed functionality once
-local bind support is merged (https://lore.kernel.org/netdev/df300a49-7811-4126-a56a-a77100c8841b@gmail.com/).
-
-v3 -> v4:
- - Fix code comment and commit message typos
- - v3:
-   https://lore.kernel.org/all/f939c84a-2322-4393-a5b0-9b1e0be8ed8e@gmail.com/
-
-v2 -> v3:
- - Use napi_gro_cb instead of skb->{offset}
- - v2:
-   https://lore.kernel.org/netdev/2ce1600b-e733-448b-91ac-9d0ae2b866a4@gmail.com/
-
-v1 -> v2:
- - Pass p_off in *_gro_complete to fix UDP bug
- - Remove more conditionals and memory fetches from inet_gro_flush
- - v1:
-   https://lore.kernel.org/netdev/e1d22505-c5f8-4c02-a997-64248480338b@gmail.com/
-
-Richard Gobert (4):
-  net: gro: add p_off param in *_gro_complete
-  selftests/net: add local address bind in vxlan selftest
-  net: gro: add {inner_}network_offset to napi_gro_cb
-  net: gro: move L3 flush checks to tcp_gro_receive
-
- drivers/net/geneve.c                      |  7 +-
- drivers/net/vxlan/vxlan_core.c            | 11 ++--
- include/linux/etherdevice.h               |  2 +-
- include/linux/netdevice.h                 |  3 +-
- include/linux/udp.h                       |  2 +-
- include/net/gro.h                         | 36 +++++++----
- include/net/inet_common.h                 |  2 +-
- include/net/tcp.h                         |  6 +-
- include/net/udp.h                         |  8 +--
- include/net/udp_tunnel.h                  |  2 +-
- net/8021q/vlan_core.c                     |  6 +-
- net/core/gro.c                            |  6 +-
- net/ethernet/eth.c                        |  5 +-
- net/ipv4/af_inet.c                        | 49 ++------------
- net/ipv4/fou_core.c                       |  9 +--
- net/ipv4/gre_offload.c                    |  6 +-
- net/ipv4/tcp_offload.c                    | 79 ++++++++++++++++++-----
- net/ipv4/udp.c                            |  3 +-
- net/ipv4/udp_offload.c                    | 26 ++++----
- net/ipv6/ip6_offload.c                    | 41 +++++-------
- net/ipv6/tcpv6_offload.c                  |  7 +-
- net/ipv6/udp.c                            |  3 +-
- net/ipv6/udp_offload.c                    | 13 ++--
- tools/testing/selftests/net/udpgro_fwd.sh | 10 ++-
- 24 files changed, 187 insertions(+), 155 deletions(-)
-
+diff --git a/tools/testing/selftests/net/udpgro_fwd.sh b/tools/testing/selftests/net/udpgro_fwd.sh
+index 380cb15e942e..0541c5da571d 100755
+--- a/tools/testing/selftests/net/udpgro_fwd.sh
++++ b/tools/testing/selftests/net/udpgro_fwd.sh
+@@ -62,11 +62,13 @@ create_vxlan_endpoint() {
+ 	local -r bm_rem_addr=$3
+ 	local -r vxlan_dev=$4
+ 	local -r vxlan_id=$5
++	local -r bm_local_addr=$6
+ 	local -r vxlan_port=4789
+ 
+ 	ip -n $netns link set dev $bm_dev up
+ 	ip -n $netns link add dev $vxlan_dev type vxlan id $vxlan_id \
+-				dstport $vxlan_port remote $bm_rem_addr
++				dstport $vxlan_port local $bm_local_addr \
++				remote $bm_rem_addr
+ 	ip -n $netns link set dev $vxlan_dev up
+ }
+ 
+@@ -77,11 +79,13 @@ create_vxlan_pair() {
+ 
+ 	for ns in $SRC $DST; do
+ 		# note that 3 - $SRC == $DST and 3 - $DST == $SRC
+-		create_vxlan_endpoint $BASE$ns veth$ns $BM_NET_V4$((3 - $ns)) vxlan$ns 4
++		create_vxlan_endpoint $BASE$ns veth$ns $BM_NET_V4$((3 - $ns)) \
++					vxlan$ns 4 $BM_NET_V4$ns
+ 		ip -n $BASE$ns addr add dev vxlan$ns $OL_NET_V4$ns/24
+ 	done
+ 	for ns in $SRC $DST; do
+-		create_vxlan_endpoint $BASE$ns veth$ns $BM_NET_V6$((3 - $ns)) vxlan6$ns 6
++		create_vxlan_endpoint $BASE$ns veth$ns $BM_NET_V6$((3 - $ns)) \
++					vxlan6$ns 6 $BM_NET_V6$ns
+ 		ip -n $BASE$ns addr add dev vxlan6$ns $OL_NET_V6$ns/24 nodad
+ 	done
+ 
 -- 
 2.36.1
 
