@@ -1,49 +1,70 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DA9137C21
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 15:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BC03DABE3
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 15:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711380007; cv=none; b=Jdhz2gTCcxkSUHtlPHcDtu00JKHh05RmUmTCrrWpnXUgt44+gRUeRWYu5l1B1auVeuizE3qimTSYJ14OUQCJ0n7V+HeV3I/XhhnOfQfFiGdsQPWc+iGFNR3NClxnSOsJiBm3cb6zcOn5/Y77+AT0A/gjSXId0l5wUXncewpAJxk=
+	t=1711380043; cv=none; b=NxfANbNRF9f/z4sGNvbBcV15QWdFw5p6a0/KKtcUAp8kiGMVGrn9Z3BwLDY0RP7bY7X0cmaSyZtF80VewoPdd/myxWPUxFuiZVT9WeoEUx0wiiGwRiOER4RmdOZUoQLja4YX76FYsyr0BaIKrpk9mgMnjBx3BJ7sPBCX9z2CH2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711380007; c=relaxed/simple;
-	bh=1QUfp3pSHGOWHPlUD77voOXNtRwi/Hp1Mh0eHpyYI3M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WXCEYKuc2FKpVw4kqBvy2Ai2dQYN4NvFJ8Z1waJFPAIIIHYVFpLaNDju55fw45E/HcGllqfEhp0uO+MTX8V9D5tzdaneIP2sw4WQn1e26k4uSSxpbC8S6NP4BIt5Y2GHO2sd+P/vIDxrzVJdIu1RmZOT3Kxp5Au+h6Zjee/Pon0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4V3GGL3yshz9sq1;
-	Mon, 25 Mar 2024 15:56:10 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id D0GLhUgBDpEJ; Mon, 25 Mar 2024 15:56:10 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4V3GGK1NtXz9sTD;
-	Mon, 25 Mar 2024 15:56:09 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 2BF598B770;
-	Mon, 25 Mar 2024 15:56:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id ILrl3yQG2tup; Mon, 25 Mar 2024 15:56:09 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [172.25.230.108])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0882E8B765;
-	Mon, 25 Mar 2024 15:56:09 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Peter Xu <peterx@redhat.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	s=arc-20240116; t=1711380043; c=relaxed/simple;
+	bh=bgyGK7bGXEYpHNZArJAr+JJTuU63jb+O2QoR/6ryyHk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NyUlXtbHMu4RhwufyIYjFbOET9cMiwNpgnb9air+bfrD03P+zM20XuZGzWwEEpPhr0vFgNEjQo6NKXJzDhdQC0/JnoR+zij7NLUyqXKHWQPQFH3hU7fqj0xFnZyE3K/ZFECp9Ca/oZxqOTh8/05/p5vpAnsONBUsT+R53r3uX5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QEtbUPNn; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QEtbUPNn"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4148c72db39so1184945e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711380040; x=1711984840; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FKzbShfGtzdIS/VyL12PvryFnw68mWp0aCeGhStJmzA=;
+        b=QEtbUPNnv9dozuZ+3K5hwvQSEpYJkNOsh5+KRDTTb7yAosGR0e15JsBkgjZPSFVpQl
+         Vs+VNP7ZVq84CaPr+xmTBmtYsyMdg5Nc/EpapIwNqIJwNwPz9Z4+f1PMlLHg/dik07x2
+         2lD/dnuGAYcVwW2LYeQlA71MoK5JjDNulrBQxQPDHoPnYnKFpvB7Xj8mZBnsU35SX/k1
+         k4VfM39oOSuj0bbNDlliPwkeoQCVsDKc+oxYSSKcBa1z8sScbbeVY4VDADt4BDJd8/WX
+         2w0OTmvPqsAjGqZQFwsihmY+JRpEn3jyMJ2dDo/d+726HzOBDQjLE4cNx/46EJ8B9HJW
+         JVLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711380040; x=1711984840;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FKzbShfGtzdIS/VyL12PvryFnw68mWp0aCeGhStJmzA=;
+        b=wZs+b2LB/zM7b6J2ZtD86iY9unOqfu4huxp+ZaowQCOj1dsxqTe+rZoFTBd3OmSfrf
+         v2F9NMwYgFzYBVvXluMjS5VGalRFYQtrjXecYK0q78zeZamXnbt368xX6QfO1ZAIwiRW
+         qQ6qf9ukJC6KSC2RA7edqvu3P7MHPgnxjPa6EggtrMjgDt0xWm9qDY7TQwNsZeRrOHVP
+         kZjKIsKisMF0/6Mn3KPKafGBuFKCR15ot9MMBy8QqScMN++tKt16BoS/o48xYPrj0es7
+         FksWaMJp6a8bowVkRZxQjDKsQRF6XLEDYkzlesrUknOyFeFfpN3L/kBw/4SonGp2zKIV
+         rl8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWJIEL7CK/UuHhbs1G7rDgss0x4g6ABFxUL19laRKdJFD3FlEfJ0TKLSrmMOaIgwjQkh7oN3rv0Sou/b4ZpNno6rnTFdfYpILRVSGkw
+X-Gm-Message-State: AOJu0Ywzunc9ua8KFuXo+87A8GSB8u/oty/kfnYD2OtDXQiMezNWpZeq
+	Hb65xFauiO17Pqby+cG9GLlEd5Ljfb3uvWb/np7ugfif6uOGar0KBy2lrzcKWTc=
+X-Google-Smtp-Source: AGHT+IG1csFQ7sX1G/DrVWuHQA//aOJiVFkrjPmHUIfRPjlZmHeidSWlwSMrwzvrR6BE8Rmx+RjSMg==
+X-Received: by 2002:a05:600c:3ba3:b0:414:286:fd1f with SMTP id n35-20020a05600c3ba300b004140286fd1fmr4926293wms.11.1711380040066;
+        Mon, 25 Mar 2024 08:20:40 -0700 (PDT)
+Received: from blmsp.fritz.box ([2001:4091:a246:821e:6f3b:6b50:4762:8343])
+        by smtp.gmail.com with ESMTPSA id d1-20020a05600c34c100b004147dd0915dsm8761954wmq.21.2024.03.25.08.20.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 08:20:39 -0700 (PDT)
+From: Markus Schneider-Pargmann <msp@baylibre.com>
+To: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Anand Gadiyar <gadiyar@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [RFC PATCH 0/8] Reimplement huge pages without hugepd on powerpc 8xx
-Date: Mon, 25 Mar 2024 15:55:53 +0100
-Message-ID: <cover.1711377230.git.christophe.leroy@csgroup.eu>
+	Markus Schneider-Pargmann <msp@baylibre.com>
+Subject: [PATCH] arm64: dts: ti: k3-am62-lp-sk: Remove tps65219 power-button
+Date: Mon, 25 Mar 2024 16:20:29 +0100
+Message-ID: <20240325152029.2933445-1-msp@baylibre.com>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -51,89 +72,30 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711378567; l=4005; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=1QUfp3pSHGOWHPlUD77voOXNtRwi/Hp1Mh0eHpyYI3M=; b=C2sC3KyJ+kZ+6wF7ahqvDmuEGRLy5haI+SS54JsNZwoPEOE39owJkJ0ambGrjV6GLYJixynOt hLZawct1NZMDswMbTvR/oOyV7gzS1FnN6AeaEeEOZQL1j80Ng/rUHOW
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
 
-This series reimplements hugepages with hugepd on powerpc 8xx.
+On am62-lp-sk the PMIC is not wired up to a power button. Remove this
+property. This fixes issues observed when entering a very deep sleep
+state that is not yet available upstream.
 
-Unlike most architectures, powerpc 8xx HW requires a two-level
-pagetable topology for all page sizes. So a leaf PMD-contig approach
-is not feasible as such.
+Fixes: e6a51ffabfc1 ("arm64: ti: dts: Add support for AM62x LP SK")
+Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
+---
+ arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-Possible sizes are 4k, 16k, 512k and 8M.
-
-First level (PGD/PMD) covers 4M per entry. For 8M pages, two PMD entries
-must point to a single entry level-2 page table. Until now that was
-done using hugepd. This series changes it to use standard page tables
-where the entry is replicated 1024 times on each of the two pagetables
-refered by the two associated PMD entries for that 8M page.
-
-At the moment it has to look into each helper to know if the
-hugepage ptep is a PTE or a PMD in order to know it is a 8M page or
-a lower size. I hope this can me handled by core-mm in the future.
-
-There are probably several ways to implement stuff, so feedback is
-very welcome.
-
-Christophe Leroy (8):
-  mm: Provide pagesize to pmd_populate()
-  mm: Provide page size to pte_alloc_huge()
-  mm: Provide pmd to pte_leaf_size()
-  mm: Provide mm_struct and address to huge_ptep_get()
-  powerpc/mm: Allow hugepages without hugepd
-  powerpc/8xx: Fix size given to set_huge_pte_at()
-  powerpc/8xx: Remove support for 8M pages
-  powerpc/8xx: Add back support for 8M pages using contiguous PTE
-    entries
-
- arch/arm64/include/asm/hugetlb.h              |  2 +-
- arch/arm64/include/asm/pgtable.h              |  2 +-
- arch/arm64/mm/hugetlbpage.c                   |  2 +-
- arch/parisc/mm/hugetlbpage.c                  |  2 +-
- arch/powerpc/Kconfig                          |  1 -
- arch/powerpc/include/asm/hugetlb.h            | 13 +++-
- .../include/asm/nohash/32/hugetlb-8xx.h       | 54 ++++++++---------
- arch/powerpc/include/asm/nohash/32/pgalloc.h  |  2 +
- arch/powerpc/include/asm/nohash/32/pte-8xx.h  | 59 +++++++++++++------
- arch/powerpc/include/asm/nohash/pgtable.h     | 12 ++--
- arch/powerpc/include/asm/page.h               |  5 --
- arch/powerpc/include/asm/pgtable.h            |  1 +
- arch/powerpc/kernel/head_8xx.S                | 10 +---
- arch/powerpc/mm/hugetlbpage.c                 | 23 +++++++-
- arch/powerpc/mm/nohash/8xx.c                  | 46 +++++++--------
- arch/powerpc/mm/pgtable.c                     | 26 +++++---
- arch/powerpc/mm/pgtable_32.c                  |  2 +-
- arch/powerpc/platforms/Kconfig.cputype        |  2 +
- arch/riscv/include/asm/pgtable.h              |  2 +-
- arch/riscv/mm/hugetlbpage.c                   |  2 +-
- arch/sh/mm/hugetlbpage.c                      |  2 +-
- arch/sparc/include/asm/pgtable_64.h           |  2 +-
- arch/sparc/mm/hugetlbpage.c                   |  4 +-
- fs/hugetlbfs/inode.c                          |  2 +-
- fs/proc/task_mmu.c                            |  8 +--
- fs/userfaultfd.c                              |  2 +-
- include/asm-generic/hugetlb.h                 |  2 +-
- include/linux/hugetlb.h                       |  4 +-
- include/linux/mm.h                            | 12 ++--
- include/linux/pgtable.h                       |  2 +-
- include/linux/swapops.h                       |  2 +-
- kernel/events/core.c                          |  2 +-
- mm/damon/vaddr.c                              |  6 +-
- mm/filemap.c                                  |  2 +-
- mm/gup.c                                      |  2 +-
- mm/hmm.c                                      |  2 +-
- mm/hugetlb.c                                  | 46 +++++++--------
- mm/internal.h                                 |  2 +-
- mm/memory-failure.c                           |  2 +-
- mm/memory.c                                   | 19 +++---
- mm/mempolicy.c                                |  2 +-
- mm/migrate.c                                  |  4 +-
- mm/mincore.c                                  |  2 +-
- mm/pgalloc-track.h                            |  2 +-
- mm/userfaultfd.c                              |  6 +-
- 45 files changed, 229 insertions(+), 180 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts b/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
+index c4149059a4c5..9a17bd3e59c9 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
+@@ -166,7 +166,6 @@ tps65219: pmic@30 {
+ 
+ 		interrupt-parent = <&gic500>;
+ 		interrupts = <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
+-		ti,power-button;
+ 
+ 		regulators {
+ 			buck1_reg: buck1 {
 -- 
 2.43.0
 
