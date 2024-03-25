@@ -1,116 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFB282D68
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC6018636D
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711360124; cv=none; b=CDDEWYXmNB8mHjfteCr0H6goG8eJGfnt1SruXGuG+bYmG+KSOHlBLVrHEbOGSL9z/KT4foQ3TzU7erJOGj4vVZOFyMzx1e5ipdJVpf1kMgLSN6UGe0e0zARrlRCgoUtsneE3MjkPINFGqoV9DQEDWIMGbZ/88NRx808Gm2xyAPE=
+	t=1711359994; cv=none; b=fV64gERmPCr5UlQyveAI0lDHTQZa3YR+gf6ICSvqpjie07qVp+jUHjjKkBjpVujSxw4xQjy7bj/D9f7wIcfwwDCbOtE+y74flSPU+/BIzDsEqJLWswzeDgIrVMzxmQf74nkp/kiIbn+yYB9InVIaW0cXd6fAzSh++Oa5+0e9hHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711360124; c=relaxed/simple;
-	bh=z7nQ+fuXBBJwghbwTKA/0pe69mO2YVrSsG63TX2xrh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eR49JOdsBC4zbNIbLmZtgsncyjOnc+Ym3TRzCM7JKXWYjJOy6AEdVw3j1eeqfvON+Rq0Kqamg+vgxHBMM9ZiWUp7faYu0sjKALb/sBAqR5A+3mxdUG2BKTRnRjkadErdSL+Uyj08OHzEvDnVRulJHVrM5X3pqMwUxyn44R0asBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d5QAGzkc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711359994; c=relaxed/simple;
+	bh=1iD9rwO2v6dLL4gbGaYi5aDf6QxpcpHrmKpLpxt28nw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kqLTGzcRvfXVWNr9P98La8gs0GqzTNVfjyNqTJ3ErgL/4zLYT2/uKerNeDJnhbetUfJGOYP5bXk3HNAkfE05IMpzRzrAVSeLwSd6Ri047JGrqlOFi5Zu1Gf9UycWKQta8yFUmmNFpDDz9xJr1K4FNFbjfsJ8e2YZ5jn5f4FoXPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TDnhqOlC; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d5QAGzkc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711360121;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TDnhqOlC"
+Message-ID: <339639f3-4334-44a8-a811-d20b3c578f74@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711359990;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BzvHsR0swPhNezye8rUpRIe+AmkradciiszFVdBH2qI=;
-	b=d5QAGzkcFVgfNPW1CO0oLPlhmxGApS7hScJ1cLqq6shPh9CB1aGymZAPlr5DzlZwPD5+xp
-	Gq5w9Iph9qjmesRKdP5Xe57/g8T80D7rcjalpl3kRP7o2ljlY/77P9AcXHokfr03tzhcfG
-	PdcgfvMh0EcJg3d8jU5382ubAFA9ES8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-81-sGBrjBOZPjWGzkRUL_JyGQ-1; Mon,
- 25 Mar 2024 05:48:36 -0400
-X-MC-Unique: sGBrjBOZPjWGzkRUL_JyGQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9B0273C0BE29;
-	Mon, 25 Mar 2024 09:48:35 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.12])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4782E112131D;
-	Mon, 25 Mar 2024 09:48:25 +0000 (UTC)
-Date: Mon, 25 Mar 2024 17:48:18 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-	loongarch@lists.linux.dev, akpm@linux-foundation.org,
-	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
-	viro@zeniv.linux.org.uk
-Subject: Re: [PATCH linux-next v3 02/14] crash: split vmcoreinfo exporting
- code out from crash_core.c
-Message-ID: <ZgFIYuYULrgF1tFG@MiWiFi-R3L-srv>
-References: <20240124051254.67105-1-bhe@redhat.com>
- <20240124051254.67105-3-bhe@redhat.com>
- <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
+	bh=3kW6CpvNLcQN5MKehXI/yVTzkUIvW6nXEzppExY7bng=;
+	b=TDnhqOlCJfkHT730fvX2kvpKxlweFV/uEXDJpP84aMp90lyehm7owaGbrJ+jekWYRCPeG4
+	28hTF/JVa/AjbHIbA+xixil1gG5rENt2vG0wlofv2lGI2y3QOt2UTGSi6NwFIkh8Rbv2Zz
+	wY861xo6ZuEhsRS4oHE4k/lDMJwCCQM=
+Date: Mon, 25 Mar 2024 17:46:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [PATCH] mm: zswap: fix data loss on SWP_SYNCHRONOUS_IO devices
+Content-Language: en-US
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Barry Song <21cnbao@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Zhongkun He <hezhongkun.hzk@bytedance.com>,
+ Chengming Zhou <zhouchengming@bytedance.com>, Chris Li <chrisl@kernel.org>,
+ Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Kairui Song <kasong@tencent.com>
+References: <20240324210447.956973-1-hannes@cmpxchg.org>
+ <CAJD7tkaWQAV=X1pzYG=VkWe7Ue9ZFbjt9uQ5m1NJujtLspWJTA@mail.gmail.com>
+ <CAGsJ_4yeBmNsMGXEWwC+1Hs5zJUP+becq4wG+6CpU7V1=EOvhg@mail.gmail.com>
+ <CAJD7tka5K69q20bxTsBk38JC7mdPr3UsxXpsnggDO_iQA=qxug@mail.gmail.com>
+ <1e7ce417-b9dd-4d62-9f54-0adf1ccdae35@linux.dev>
+ <CAJD7tkYc3oFho5eEkS1zmr_+CC-Ag1HucUTyAy2RJbEb4SqRoQ@mail.gmail.com>
+ <d556ec84-da6a-4486-a68e-5982baf46879@linux.dev>
+ <CAJD7tkbNWeoNnkB7Q1z9-XdrE1L4_2okdjFGvLjnuwoXT9XmwA@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <CAJD7tkbNWeoNnkB7Q1z9-XdrE1L4_2okdjFGvLjnuwoXT9XmwA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+X-Migadu-Flow: FLOW_OUT
 
-On 03/25/24 at 09:24am, Geert Uytterhoeven wrote:
-> Hi Baoquan,
+On 2024/3/25 17:40, Yosry Ahmed wrote:
+> On Mon, Mar 25, 2024 at 2:22 AM Chengming Zhou <chengming.zhou@linux.dev> wrote:
+>>
+>> On 2024/3/25 16:38, Yosry Ahmed wrote:
+>>> On Mon, Mar 25, 2024 at 12:33 AM Chengming Zhou
+>>> <chengming.zhou@linux.dev> wrote:
+>>>>
+>>>> On 2024/3/25 15:06, Yosry Ahmed wrote:
+>>>>> On Sun, Mar 24, 2024 at 9:54 PM Barry Song <21cnbao@gmail.com> wrote:
+>>>>>>
+>>>>>> On Mon, Mar 25, 2024 at 10:23 AM Yosry Ahmed <yosryahmed@google.com> wrote:
+>>>>>>>
+>>>>>>> On Sun, Mar 24, 2024 at 2:04 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>>>>>>>>
+>>>>>>>> Zhongkun He reports data corruption when combining zswap with zram.
+>>>>>>>>
+>>>>>>>> The issue is the exclusive loads we're doing in zswap. They assume
+>>>>>>>> that all reads are going into the swapcache, which can assume
+>>>>>>>> authoritative ownership of the data and so the zswap copy can go.
+>>>>>>>>
+>>>>>>>> However, zram files are marked SWP_SYNCHRONOUS_IO, and faults will try
+>>>>>>>> to bypass the swapcache. This results in an optimistic read of the
+>>>>>>>> swap data into a page that will be dismissed if the fault fails due to
+>>>>>>>> races. In this case, zswap mustn't drop its authoritative copy.
+>>>>>>>>
+>>>>>>>> Link: https://lore.kernel.org/all/CACSyD1N+dUvsu8=zV9P691B9bVq33erwOXNTmEaUbi9DrDeJzw@mail.gmail.com/
+>>>>>>>> Reported-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+>>>>>>>> Fixes: b9c91c43412f ("mm: zswap: support exclusive loads")
+>>>>>>>> Cc: stable@vger.kernel.org      [6.5+]
+>>>>>>>> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+>>>>>>>> Tested-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+>>>>>>
+>>>>>> Acked-by: Barry Song <baohua@kernel.org>
+>>>>>>
+>>>>>>>
+>>>>>>> Do we also want to mention somewhere (commit log or comment) that
+>>>>>>> keeping the entry in the tree is fine because we are still protected
+>>>>>>> from concurrent loads/invalidations/writeback by swapcache_prepare()
+>>>>>>> setting SWAP_HAS_CACHE or so?
+>>>>>>
+>>>>>> It seems that Kairui's patch comprehensively addresses the issue at hand.
+>>>>>> Johannes's solution, on the other hand, appears to align zswap behavior
+>>>>>> more closely with that of a traditional swap device, only releasing an entry
+>>>>>> when the corresponding swap slot is freed, particularly in the sync-io case.
+>>>>>
+>>>>> It actually worked out quite well that Kairui's fix landed shortly
+>>>>> before this bug was reported, as this fix wouldn't have been possible
+>>>>> without it as far as I can tell.
+>>>>>
+>>>>>>
+>>>>>> Johannes' patch has inspired me to consider whether zRAM could achieve
+>>>>>> a comparable outcome by immediately releasing objects in swap cache
+>>>>>> scenarios.  When I have the opportunity, I plan to experiment with zRAM.
+>>>>>
+>>>>> That would be interesting. I am curious if it would be as
+>>>>> straightforward in zram to just mark the folio as dirty in this case
+>>>>> like zswap does, given its implementation as a block device.
+>>>>>
+>>>>
+>>>> This makes me wonder who is responsible for marking folio dirty in this swapcache
+>>>> bypass case? Should we call folio_mark_dirty() after the swap_read_folio()?
+>>>
+>>> In shrink_folio_list(), we try to add anonymous folios to the
+>>> swapcache if they are not there before checking if they are dirty.
+>>> add_to_swap() calls folio_mark_dirty(), so this should take care of
+>>
+>> Right, thanks for your clarification, so should be no problem here.
+>> Although it was a fix just for MADV_FREE case.
+>>
+>>> it. There is an interesting comment there though. It says that PTE
+>>> should be dirty, so unmapping the folio should have already marked it
+>>> as dirty by the time we are adding it to the swapcache, except for the
+>>> MADV_FREE case.
+>>
+>> It seems to say the folio will be dirtied when unmap later, supposing the
+>> PTE is dirty.
 > 
-> On Wed, Jan 24, 2024 at 6:13 AM Baoquan He <bhe@redhat.com> wrote:
-> > Now move the relevant codes into separate files:
-> > kernel/crash_reserve.c, include/linux/crash_reserve.h.
-> >
-> > And add config item CRASH_RESERVE to control its enabling.
-> >
-> > And also update the old ifdeffery of CONFIG_CRASH_CORE, including of
-> > <linux/crash_core.h> and config item dependency on CRASH_CORE
-> > accordingly.
-> >
-> > And also do renaming as follows:
-> >  - arch/xxx/kernel/{crash_core.c => vmcore_info.c}
-> > because they are only related to vmcoreinfo exporting on x86, arm64,
-> > riscv.
-> >
-> > And also Remove config item CRASH_CORE, and rely on CONFIG_KEXEC_CORE to
-> > decide if build in crash_core.c.
-> >
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> > v2->v3:
-> > - There's conflict when rebasing to linux-next in kernel/crash_core.c
-> >   because of below commits from Uladzislau:
-> >   commit 699d9351822e ("mm: vmalloc: Fix a warning in the crash_save_vmcoreinfo_init()")
-> >   commit 5f4c0c1e2a51 (:mm/vmalloc: remove vmap_area_list")
+> Oh yeah it could mean that the folio will be dirted later.
 > 
-> Thanks for your patch, which is now commit 443cbaf9e2fdbef7
-> ("crash: split vmcoreinfo exporting code out from
-> crash_core.c") in v6.9-rc1.
+>>
+>>>
+>>> However, I think we actually unmap the folio after we add it to the
+>>> swapcache in shrink_folio_list(). Also, I don't immediately see why
+>>> the PTE would be dirty. In do_swap_page(), making the PTE dirty seems
+>>
+>> If all anon pages on LRU list are faulted by write, it should be true.
+>> We could just use the zero page if faulted by read, right?
 > 
-> After this, there are still two references left to CRASH_CORE:
-> 
->   1. Documentation/admin-guide/kdump/kdump.rst:
-> 
->          Subsequently, CRASH_CORE is selected by KEXEC_CORE::
-> 
->   2. arch/loongarch/Kconfig
-> 
->          config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
->              def_bool CRASH_CORE
+> This applies for the initial fault that creates the folio, but this is
+> a swap fault. It could be a read fault and in that case we still need
+> to make the folio dirty because it's not in the swapcache and we need
+> to write it out if it's reclaimed, right?
 
-Sure, will post patch to clean them up. Thanks a lot.
+Yes, IMHO I think it should be marked as dirty here.
 
+But it should be no problem with that unconditional folio_mark_dirty()
+in add_to_swap(). Not sure if there are other issues.
+
+> 
+>>
+>>> to be conditional on the fault being a write fault, but I didn't look
+>>> thoroughly, maybe I missed it. It is also possible that the comment is
+>>> just outdated.
+>>
+>> Yeah, dirty is only marked on write fault.
+>>
+>> Thanks.
