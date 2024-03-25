@@ -1,130 +1,496 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E12C7319A
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7FF13D537;
+	Mon, 25 Mar 2024 07:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711350408; cv=none; b=SND2HFQlu9wnounA5WsekeWQ1//uxzxNWBiT8IPU5KgvloVORP3dA+j4km25oTx/h24xBY7rQw4i0pcR7u3FumdCoNriZ/WfxBtPa+sYZVo3Y74w4OjfLawDcXY+Xd55Nw8gY/fe3FosB3UejXYYB4cNwypyaV622xRAg5+elKU=
+	t=1711350242; cv=none; b=GFNr2pt+xcX5z1WN4HXYAziLCea7u6rNJvlrt5rO/B21jYePu7uaVa25TkCdhLJJYPgRZDD5aAyascsuNNY3Ag9el7kRGkTnPWeZ/sVPmdIJhMHDghTnkjVVx1Aepq3Y1dIWqNDAvR/ua/N6DwD7emz7GxZ5nuypPxRXovmb5DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711350408; c=relaxed/simple;
-	bh=tYrE2VriucY8nPiNXG/tOjiZPFifK9utBHez1C3xS9k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KSfdVaeClHiLLfPl5MmmkPu5rB9VFRF+L9Ye9Ibf0WasyzIA5ANFSMjOtQEedy0t5cGrgbaop77eotYoqz080q8c9HQycOs3/4JSMvZWuIm3kkxlGn5vwz4iXH8ajMlFOWAeZfeuWKIMNltrFVNdrLq/wenPnTHTyLwybnXPZqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cHaNVP1l; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711350242; c=relaxed/simple;
+	bh=uC9NdcWG+eF++gzYVjGbn1kwgoH7/dY6ElyA8AKw1fo=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ldwIvBbsmwW6XNO74X6bjh3aFMjJ3i4LdPUaADH4v1cjRWBgNG1NNOxsWFfA3Ut9/8Sx00QHfRT6lQRLFsN4zhMWGmXOvMtiYNjZKUtJQmujA4olTal63NVCz/+wh5OX36/iHU4FrqNVglltEPDZgdMO+27r1IIpNbqZRA6j7EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZLIG976Y; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cHaNVP1l"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56bb22ff7baso4622049a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 00:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711350405; x=1711955205; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bWEJsPySa8D1x2bmugQHj3Wlfs+F7dNk4IRWtijp9Bc=;
-        b=cHaNVP1lEV5e826S6tniwuNQO4Y+21n4eFmatyOp7T5DUEkVyPhdE3jmvCCL0HnEdy
-         DMNrIOfSeRRzAj5iRzmWoteQD/vmfEYdd/mnx2Q+RjPP7i7Lcc2vQB0OvP+XJn2wm6LR
-         aDLKDSFkBMDU4CdPdOad2FWyjB8WwMdEpF8Kq/+A4DyCYKotmeJH4gYQB17duQAP657J
-         Nyj4WOWIbOIEiVZEIrVZjHSonuhCAQk0aWeLy6dfb1f2neuM7ipc3u9KA+b0X7Inv+U/
-         rTlMWZ9Nr3faps7PfTNy9OlK2Lo82y518j9alVso5Sej4SaC5eLzOtbTM30KyecI7Hfc
-         55NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711350405; x=1711955205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bWEJsPySa8D1x2bmugQHj3Wlfs+F7dNk4IRWtijp9Bc=;
-        b=n7L1/YLANTUUlVGCbbR10JwJubBSpHKaPBIGDN7JiCH0kw7wCtjh/qNyjRLTX/QVYL
-         0LQigVAD9x5u4QQBDJa1Ro7KK5qXVXAqzvaseFKEeHw1vzwbA+OV5C9opjb6H5EGW7AX
-         e+XrJ+UKNPhBJxgJ5oO/n1ZbtdCewSJJ7p33avlaV3US2jve3Mrd7g1rbOcOO5ADWLYB
-         QzNHL1vhISU+1gAODH8TFeuv51xItZ74vfpIKcth6m8kYo11v1TEOfYVYfInOSbeUfgK
-         RnXhRU3rcVTSp0m2EVHiJlhNn2MpjA5nR6bB1HW1ljRzh5d3vyoMTu9+1wtRuzQ8g3f2
-         WgUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWc+dTTBxqftvoMdJSAAxkWoW4rFoDIgwZ+zqQgGMMVjTp1t5FjZmECsSUGziWUR4MQq5uuHo3QzBkEcyqSb/FnTJvgCm+lYfpJ/q0y
-X-Gm-Message-State: AOJu0YxEtww1LIAbadcF/qdPi9LJxPyUW8lGzMxikBlXZmixpXlf5IMn
-	B9kuYd7fMpe9HNYvP/U6C4CyPC8MGH/KdDfAv0TvP2LcqWwwuGJJsu2IRLbqjDxxmJVfWIZlu1m
-	aofwiqqubDC5OaTGM3Ij/F1toudYtxRsz7mEP
-X-Google-Smtp-Source: AGHT+IGeh6p7jRrQ5NLQb+ctZ5obvIhMI8r68jI7hSlB3NPaFsjdKNg4oeq+9aK/HqJcrcULfjZpMJ53P8teGIVWNa4=
-X-Received: by 2002:a17:907:1002:b0:a47:35d9:2efc with SMTP id
- ox2-20020a170907100200b00a4735d92efcmr3804422ejb.56.1711350405144; Mon, 25
- Mar 2024 00:06:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZLIG976Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711350238;
+	bh=uC9NdcWG+eF++gzYVjGbn1kwgoH7/dY6ElyA8AKw1fo=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=ZLIG976YgRDaSjW/MQGP8TXBOn0OEjimcZFqFrkf+hSGwnKC/9RzzjeW27ubEaHKC
+	 /CtzHol8efUzCjkBL3kNAnbpdXO7dTGgvqzvTTSeYphvDqEmMa/JtJnR13uHPre4W4
+	 VzU0+H9of68RbKVDtZzo3VqOrWR+GVB7TO88pwZRi/bt4U1leSlq/0//cs4MD10QBy
+	 RD+VoslzKXkPHvVU5cYELj0Quq24Drysg0UpDQ/knmroW4w+4rtT2LhNq3SGSTrKyu
+	 HqeeHwjnye+NANoz1FZlBebC3reAHA4mrNTVRUIXlwX6WPVbtnkJ9lUBwsykQ86DyK
+	 l859TM8kY6Jkg==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5FDAD378148F;
+	Mon, 25 Mar 2024 07:03:55 +0000 (UTC)
+Message-ID: <46879423-a334-4f6d-9098-8a275d78bb5b@collabora.com>
+Date: Mon, 25 Mar 2024 12:04:27 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324210447.956973-1-hannes@cmpxchg.org> <CAJD7tkaWQAV=X1pzYG=VkWe7Ue9ZFbjt9uQ5m1NJujtLspWJTA@mail.gmail.com>
- <CAGsJ_4yeBmNsMGXEWwC+1Hs5zJUP+becq4wG+6CpU7V1=EOvhg@mail.gmail.com>
-In-Reply-To: <CAGsJ_4yeBmNsMGXEWwC+1Hs5zJUP+becq4wG+6CpU7V1=EOvhg@mail.gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 25 Mar 2024 00:06:06 -0700
-Message-ID: <CAJD7tka5K69q20bxTsBk38JC7mdPr3UsxXpsnggDO_iQA=qxug@mail.gmail.com>
-Subject: Re: [PATCH] mm: zswap: fix data loss on SWP_SYNCHRONOUS_IO devices
-To: Barry Song <21cnbao@gmail.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Zhongkun He <hezhongkun.hzk@bytedance.com>, Chengming Zhou <zhouchengming@bytedance.com>, 
-	Chris Li <chrisl@kernel.org>, Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Kairui Song <kasong@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "T.J. Mercier" <tjmercier@google.com>
+Subject: Re: [PATCH v5 1/2] selftests/dmabuf-heap: conform test to TAP format
+ output
+To: Shuah Khan <shuah@kernel.org>
+References: <20240305060848.2478806-1-usama.anjum@collabora.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240305060848.2478806-1-usama.anjum@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Mar 24, 2024 at 9:54=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
-e:
->
-> On Mon, Mar 25, 2024 at 10:23=E2=80=AFAM Yosry Ahmed <yosryahmed@google.c=
-om> wrote:
-> >
-> > On Sun, Mar 24, 2024 at 2:04=E2=80=AFPM Johannes Weiner <hannes@cmpxchg=
-.org> wrote:
-> > >
-> > > Zhongkun He reports data corruption when combining zswap with zram.
-> > >
-> > > The issue is the exclusive loads we're doing in zswap. They assume
-> > > that all reads are going into the swapcache, which can assume
-> > > authoritative ownership of the data and so the zswap copy can go.
-> > >
-> > > However, zram files are marked SWP_SYNCHRONOUS_IO, and faults will tr=
-y
-> > > to bypass the swapcache. This results in an optimistic read of the
-> > > swap data into a page that will be dismissed if the fault fails due t=
-o
-> > > races. In this case, zswap mustn't drop its authoritative copy.
-> > >
-> > > Link: https://lore.kernel.org/all/CACSyD1N+dUvsu8=3DzV9P691B9bVq33erw=
-OXNTmEaUbi9DrDeJzw@mail.gmail.com/
-> > > Reported-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
-> > > Fixes: b9c91c43412f ("mm: zswap: support exclusive loads")
-> > > Cc: stable@vger.kernel.org      [6.5+]
-> > > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> > > Tested-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
->
-> Acked-by: Barry Song <baohua@kernel.org>
->
-> >
-> > Do we also want to mention somewhere (commit log or comment) that
-> > keeping the entry in the tree is fine because we are still protected
-> > from concurrent loads/invalidations/writeback by swapcache_prepare()
-> > setting SWAP_HAS_CACHE or so?
->
-> It seems that Kairui's patch comprehensively addresses the issue at hand.
-> Johannes's solution, on the other hand, appears to align zswap behavior
-> more closely with that of a traditional swap device, only releasing an en=
-try
-> when the corresponding swap slot is freed, particularly in the sync-io ca=
-se.
+Soft reminder
 
-It actually worked out quite well that Kairui's fix landed shortly
-before this bug was reported, as this fix wouldn't have been possible
-without it as far as I can tell.
+On 3/5/24 11:08 AM, Muhammad Usama Anjum wrote:
+> Conform the layout, informational and status messages to TAP. No
+> functional change is intended other than the layout of output messages.
+> 
+> Reviewed-by: T.J. Mercier <tjmercier@google.com>
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> ---
+> Changes since v4:
+> - close fds correctly with code changes added in v3
+> 
+> Chanages since v3:
+> - abort test-case instead of exiting if heap/mem allocation fails
+> - Correct test_alloc_zeroed() test case in case of failure
+> 
+> Changes since v2:
+> - Minor improvements in test_alloc_zeroed() results
+> 
+> Changes since v1:
+> - Update some more error handling code
+> ---
+>  .../selftests/dmabuf-heaps/dmabuf-heap.c      | 246 +++++++-----------
+>  1 file changed, 101 insertions(+), 145 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> index 890a8236a8ba7..e7bd03e0af2ea 100644
+> --- a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/dma-buf.h>
+>  #include <linux/dma-heap.h>
+>  #include <drm/drm.h>
+> +#include "../kselftest.h"
+>  
+>  #define DEVPATH "/dev/dma_heap"
+>  
+> @@ -90,14 +91,13 @@ static int dmabuf_heap_open(char *name)
+>  	char buf[256];
+>  
+>  	ret = snprintf(buf, 256, "%s/%s", DEVPATH, name);
+> -	if (ret < 0) {
+> -		printf("snprintf failed!\n");
+> -		return ret;
+> -	}
+> +	if (ret < 0)
+> +		ksft_exit_fail_msg("snprintf failed!\n");
+>  
+>  	fd = open(buf, O_RDWR);
+>  	if (fd < 0)
+> -		printf("open %s failed!\n", buf);
+> +		ksft_exit_fail_msg("open %s failed: %s\n", buf, strerror(errno));
+> +
+>  	return fd;
+>  }
+>  
+> @@ -140,7 +140,7 @@ static int dmabuf_sync(int fd, int start_stop)
+>  
+>  #define ONE_MEG (1024 * 1024)
+>  
+> -static int test_alloc_and_import(char *heap_name)
+> +static void test_alloc_and_import(char *heap_name)
+>  {
+>  	int heap_fd = -1, dmabuf_fd = -1, importer_fd = -1;
+>  	uint32_t handle = 0;
+> @@ -148,27 +148,19 @@ static int test_alloc_and_import(char *heap_name)
+>  	int ret;
+>  
+>  	heap_fd = dmabuf_heap_open(heap_name);
+> -	if (heap_fd < 0)
+> -		return -1;
+>  
+> -	printf("  Testing allocation and importing:  ");
+> +	ksft_print_msg("Testing allocation and importing:\n");
+>  	ret = dmabuf_heap_alloc(heap_fd, ONE_MEG, 0, &dmabuf_fd);
+>  	if (ret) {
+> -		printf("FAIL (Allocation Failed!)\n");
+> -		ret = -1;
+> -		goto out;
+> +		ksft_test_result_fail("FAIL (Allocation Failed!)\n");
+> +		return;
+>  	}
+> +
+>  	/* mmap and write a simple pattern */
+> -	p = mmap(NULL,
+> -		 ONE_MEG,
+> -		 PROT_READ | PROT_WRITE,
+> -		 MAP_SHARED,
+> -		 dmabuf_fd,
+> -		 0);
+> +	p = mmap(NULL, ONE_MEG, PROT_READ | PROT_WRITE, MAP_SHARED, dmabuf_fd, 0);
+>  	if (p == MAP_FAILED) {
+> -		printf("FAIL (mmap() failed)\n");
+> -		ret = -1;
+> -		goto out;
+> +		ksft_test_result_fail("FAIL (mmap() failed)\n");
+> +		goto close_and_return;
+>  	}
+>  
+>  	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_START);
+> @@ -179,70 +171,64 @@ static int test_alloc_and_import(char *heap_name)
+>  	importer_fd = open_vgem();
+>  	if (importer_fd < 0) {
+>  		ret = importer_fd;
+> -		printf("(Could not open vgem - skipping):  ");
+> +		ksft_test_result_skip("Could not open vgem\n");
+>  	} else {
+>  		ret = import_vgem_fd(importer_fd, dmabuf_fd, &handle);
+> -		if (ret < 0) {
+> -			printf("FAIL (Failed to import buffer)\n");
+> -			goto out;
+> -		}
+> +		ksft_test_result(ret >= 0, "Import buffer\n");
+>  	}
+>  
+>  	ret = dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_START);
+>  	if (ret < 0) {
+> -		printf("FAIL (DMA_BUF_SYNC_START failed!)\n");
+> +		ksft_print_msg("FAIL (DMA_BUF_SYNC_START failed!)\n");
+>  		goto out;
+>  	}
+>  
+>  	memset(p, 0xff, ONE_MEG);
+>  	ret = dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_END);
+>  	if (ret < 0) {
+> -		printf("FAIL (DMA_BUF_SYNC_END failed!)\n");
+> +		ksft_print_msg("FAIL (DMA_BUF_SYNC_END failed!)\n");
+>  		goto out;
+>  	}
+>  
+>  	close_handle(importer_fd, handle);
+> -	ret = 0;
+> -	printf(" OK\n");
+> +	ksft_test_result_pass("%s\n", __func__);
+> +	return;
+> +
+>  out:
+> -	if (p)
+> -		munmap(p, ONE_MEG);
+> -	if (importer_fd >= 0)
+> -		close(importer_fd);
+> -	if (dmabuf_fd >= 0)
+> -		close(dmabuf_fd);
+> -	if (heap_fd >= 0)
+> -		close(heap_fd);
+> +	ksft_test_result_fail("%s\n", __func__);
+> +	munmap(p, ONE_MEG);
+> +	close(importer_fd);
+>  
+> -	return ret;
+> +close_and_return:
+> +	close(dmabuf_fd);
+> +	close(heap_fd);
+>  }
+>  
+> -static int test_alloc_zeroed(char *heap_name, size_t size)
+> +static void test_alloc_zeroed(char *heap_name, size_t size)
+>  {
+>  	int heap_fd = -1, dmabuf_fd[32];
+> -	int i, j, ret;
+> +	int i, j, k, ret;
+>  	void *p = NULL;
+>  	char *c;
+>  
+> -	printf("  Testing alloced %ldk buffers are zeroed:  ", size / 1024);
+> +	ksft_print_msg("Testing alloced %ldk buffers are zeroed:\n", size / 1024);
+>  	heap_fd = dmabuf_heap_open(heap_name);
+> -	if (heap_fd < 0)
+> -		return -1;
+>  
+>  	/* Allocate and fill a bunch of buffers */
+>  	for (i = 0; i < 32; i++) {
+>  		ret = dmabuf_heap_alloc(heap_fd, size, 0, &dmabuf_fd[i]);
+> -		if (ret < 0) {
+> -			printf("FAIL (Allocation (%i) failed)\n", i);
+> -			goto out;
+> +		if (ret) {
+> +			ksft_test_result_fail("FAIL (Allocation (%i) failed)\n", i);
+> +			goto close_and_return;
+>  		}
+> +
+>  		/* mmap and fill with simple pattern */
+>  		p = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, dmabuf_fd[i], 0);
+>  		if (p == MAP_FAILED) {
+> -			printf("FAIL (mmap() failed!)\n");
+> -			ret = -1;
+> -			goto out;
+> +			ksft_test_result_fail("FAIL (mmap() failed!)\n");
+> +			goto close_and_return;
+>  		}
+> +
+>  		dmabuf_sync(dmabuf_fd[i], DMA_BUF_SYNC_START);
+>  		memset(p, 0xff, size);
+>  		dmabuf_sync(dmabuf_fd[i], DMA_BUF_SYNC_END);
+> @@ -251,48 +237,47 @@ static int test_alloc_zeroed(char *heap_name, size_t size)
+>  	/* close them all */
+>  	for (i = 0; i < 32; i++)
+>  		close(dmabuf_fd[i]);
+> +	ksft_test_result_pass("Allocate and fill a bunch of buffers\n");
+>  
+>  	/* Allocate and validate all buffers are zeroed */
+>  	for (i = 0; i < 32; i++) {
+>  		ret = dmabuf_heap_alloc(heap_fd, size, 0, &dmabuf_fd[i]);
+>  		if (ret < 0) {
+> -			printf("FAIL (Allocation (%i) failed)\n", i);
+> -			goto out;
+> +			ksft_test_result_fail("FAIL (Allocation (%i) failed)\n", i);
+> +			goto close_and_return;
+>  		}
+>  
+>  		/* mmap and validate everything is zero */
+>  		p = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, dmabuf_fd[i], 0);
+>  		if (p == MAP_FAILED) {
+> -			printf("FAIL (mmap() failed!)\n");
+> -			ret = -1;
+> -			goto out;
+> +			ksft_test_result_fail("FAIL (mmap() failed!)\n");
+> +			goto close_and_return;
+>  		}
+> +
+>  		dmabuf_sync(dmabuf_fd[i], DMA_BUF_SYNC_START);
+>  		c = (char *)p;
+>  		for (j = 0; j < size; j++) {
+>  			if (c[j] != 0) {
+> -				printf("FAIL (Allocated buffer not zeroed @ %i)\n", j);
+> -				break;
+> +				ksft_print_msg("FAIL (Allocated buffer not zeroed @ %i)\n", j);
+> +				dmabuf_sync(dmabuf_fd[i], DMA_BUF_SYNC_END);
+> +				munmap(p, size);
+> +				goto out;
+>  			}
+>  		}
+>  		dmabuf_sync(dmabuf_fd[i], DMA_BUF_SYNC_END);
+>  		munmap(p, size);
+>  	}
+> -	/* close them all */
+> -	for (i = 0; i < 32; i++)
+> -		close(dmabuf_fd[i]);
+> -
+> -	close(heap_fd);
+> -	printf("OK\n");
+> -	return 0;
+>  
+>  out:
+> -	while (i > 0) {
+> -		close(dmabuf_fd[i]);
+> -		i--;
+> -	}
+> +	ksft_test_result(i == 32, "Allocate and validate all buffers are zeroed\n");
+> +
+> +close_and_return:
+> +	/* close them all */
+> +	for (k = 0; k < i; k++)
+> +		close(dmabuf_fd[k]);
+> +
+>  	close(heap_fd);
+> -	return ret;
+> +	return;
+>  }
+>  
+>  /* Test the ioctl version compatibility w/ a smaller structure then expected */
+> @@ -360,126 +345,97 @@ static int dmabuf_heap_alloc_newer(int fd, size_t len, unsigned int flags,
+>  	return ret;
+>  }
+>  
+> -static int test_alloc_compat(char *heap_name)
+> +static void test_alloc_compat(char *heap_name)
+>  {
+> -	int heap_fd = -1, dmabuf_fd = -1;
+> -	int ret;
+> +	int ret, heap_fd = -1, dmabuf_fd = -1;
+>  
+>  	heap_fd = dmabuf_heap_open(heap_name);
+> -	if (heap_fd < 0)
+> -		return -1;
+>  
+> -	printf("  Testing (theoretical)older alloc compat:  ");
+> +	ksft_print_msg("Testing (theoretical) older alloc compat:\n");
+>  	ret = dmabuf_heap_alloc_older(heap_fd, ONE_MEG, 0, &dmabuf_fd);
+> -	if (ret) {
+> -		printf("FAIL (Older compat allocation failed!)\n");
+> -		ret = -1;
+> -		goto out;
+> -	}
+> -	close(dmabuf_fd);
+> -	printf("OK\n");
+> +	if (dmabuf_fd >= 0)
+> +		close(dmabuf_fd);
+> +	ksft_test_result(!ret, "dmabuf_heap_alloc_older\n");
+>  
+> -	printf("  Testing (theoretical)newer alloc compat:  ");
+> +	ksft_print_msg("Testing (theoretical) newer alloc compat:\n");
+>  	ret = dmabuf_heap_alloc_newer(heap_fd, ONE_MEG, 0, &dmabuf_fd);
+> -	if (ret) {
+> -		printf("FAIL (Newer compat allocation failed!)\n");
+> -		ret = -1;
+> -		goto out;
+> -	}
+> -	printf("OK\n");
+> -out:
+>  	if (dmabuf_fd >= 0)
+>  		close(dmabuf_fd);
+> -	if (heap_fd >= 0)
+> -		close(heap_fd);
+> +	ksft_test_result(!ret, "dmabuf_heap_alloc_newer\n");
+>  
+> -	return ret;
+> +	close(heap_fd);
+>  }
+>  
+> -static int test_alloc_errors(char *heap_name)
+> +static void test_alloc_errors(char *heap_name)
+>  {
+>  	int heap_fd = -1, dmabuf_fd = -1;
+>  	int ret;
+>  
+>  	heap_fd = dmabuf_heap_open(heap_name);
+> -	if (heap_fd < 0)
+> -		return -1;
+>  
+> -	printf("  Testing expected error cases:  ");
+> +	ksft_print_msg("Testing expected error cases:\n");
+>  	ret = dmabuf_heap_alloc(0, ONE_MEG, 0x111111, &dmabuf_fd);
+> -	if (!ret) {
+> -		printf("FAIL (Did not see expected error (invalid fd)!)\n");
+> -		ret = -1;
+> -		goto out;
+> -	}
+> +	ksft_test_result(ret, "Error expected on invalid fd\n");
+>  
+>  	ret = dmabuf_heap_alloc(heap_fd, ONE_MEG, 0x111111, &dmabuf_fd);
+> -	if (!ret) {
+> -		printf("FAIL (Did not see expected error (invalid heap flags)!)\n");
+> -		ret = -1;
+> -		goto out;
+> -	}
+> +	ksft_test_result(ret, "Error expected on invalid heap flags\n");
+>  
+>  	ret = dmabuf_heap_alloc_fdflags(heap_fd, ONE_MEG,
+>  					~(O_RDWR | O_CLOEXEC), 0, &dmabuf_fd);
+> -	if (!ret) {
+> -		printf("FAIL (Did not see expected error (invalid fd flags)!)\n");
+> -		ret = -1;
+> -		goto out;
+> -	}
+> +	ksft_test_result(ret, "Error expected on invalid heap flags\n");
+>  
+> -	printf("OK\n");
+> -	ret = 0;
+> -out:
+>  	if (dmabuf_fd >= 0)
+>  		close(dmabuf_fd);
+> -	if (heap_fd >= 0)
+> -		close(heap_fd);
+> +	close(heap_fd);
+> +}
+>  
+> -	return ret;
+> +static int numer_of_heaps(void)
+> +{
+> +	DIR *d = opendir(DEVPATH);
+> +	struct dirent *dir;
+> +	int heaps = 0;
+> +
+> +	while ((dir = readdir(d))) {
+> +		if (!strncmp(dir->d_name, ".", 2))
+> +			continue;
+> +		if (!strncmp(dir->d_name, "..", 3))
+> +			continue;
+> +		heaps++;
+> +	}
+> +
+> +	return heaps;
+>  }
+>  
+>  int main(void)
+>  {
+> -	DIR *d;
+>  	struct dirent *dir;
+> -	int ret = -1;
+> +	DIR *d;
+> +
+> +	ksft_print_header();
+>  
+>  	d = opendir(DEVPATH);
+>  	if (!d) {
+> -		printf("No %s directory?\n", DEVPATH);
+> -		return -1;
+> +		ksft_print_msg("No %s directory?\n", DEVPATH);
+> +		return KSFT_SKIP;
+>  	}
+>  
+> -	while ((dir = readdir(d)) != NULL) {
+> +	ksft_set_plan(11 * numer_of_heaps());
+> +
+> +	while ((dir = readdir(d))) {
+>  		if (!strncmp(dir->d_name, ".", 2))
+>  			continue;
+>  		if (!strncmp(dir->d_name, "..", 3))
+>  			continue;
+>  
+> -		printf("Testing heap: %s\n", dir->d_name);
+> -		printf("=======================================\n");
+> -		ret = test_alloc_and_import(dir->d_name);
+> -		if (ret)
+> -			break;
+> -
+> -		ret = test_alloc_zeroed(dir->d_name, 4 * 1024);
+> -		if (ret)
+> -			break;
+> -
+> -		ret = test_alloc_zeroed(dir->d_name, ONE_MEG);
+> -		if (ret)
+> -			break;
+> -
+> -		ret = test_alloc_compat(dir->d_name);
+> -		if (ret)
+> -			break;
+> -
+> -		ret = test_alloc_errors(dir->d_name);
+> -		if (ret)
+> -			break;
+> +		ksft_print_msg("Testing heap: %s\n", dir->d_name);
+> +		ksft_print_msg("=======================================\n");
+> +		test_alloc_and_import(dir->d_name);
+> +		test_alloc_zeroed(dir->d_name, 4 * 1024);
+> +		test_alloc_zeroed(dir->d_name, ONE_MEG);
+> +		test_alloc_compat(dir->d_name);
+> +		test_alloc_errors(dir->d_name);
+>  	}
+>  	closedir(d);
+>  
+> -	return ret;
+> +	ksft_finished();
+>  }
 
->
-> Johannes' patch has inspired me to consider whether zRAM could achieve
-> a comparable outcome by immediately releasing objects in swap cache
-> scenarios.  When I have the opportunity, I plan to experiment with zRAM.
-
-That would be interesting. I am curious if it would be as
-straightforward in zram to just mark the folio as dirty in this case
-like zswap does, given its implementation as a block device.
+-- 
+BR,
+Muhammad Usama Anjum
