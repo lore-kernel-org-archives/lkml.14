@@ -1,48 +1,59 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11AC1CA9C;
-	Mon, 25 Mar 2024 12:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49AD433AB
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711369839; cv=none; b=DI5n6szh8r4RKFOctDlRAwTRS24F9YGq5p6rwQwC70gg/rZM8rkFIoUD4DWEOMXaRcXcQvAXGm01SK6cg4vZLSdw+BVGiJ09wt8TOF7PUBXo65lQci7gDTQW/DO8Tk9pm0seWUwEtr8p6T9o/vPUnfSrOcWEmHYJp9ggr/9VDNw=
+	t=1711369855; cv=none; b=TaCnUD6Er/V25sDqk8ZabzXMxUglosv1MVLGrt7nRzTO54XcjjWSh+0lUslvYAc40xYjiNH5gi0QQtoCearpV8PdXL9IOm9c7Iw+usdSmC3mNBCdg+LRB8IiknCGdCfPkr9TUCdlXMtj7YksCj37FA9HgbZHWC2Jb1zr9OhojkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711369839; c=relaxed/simple;
-	bh=RfL040IUPCaWvMIzsN65Z0SyuHQycwJDXZFSUXFyt3g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nkMfPuQwDBcP0bdZEAO8znsEEFwPehxs0YrkcJkBUptnj9Z5rUy+K6CL/mkQeyMYK3wjn/SS6dKvqjEsTmz4NJqRF5F1ytMjT7Ex4CddDK+zsnVurUfW1NjHWZveRN7Sqec5DKIKjcZyeJs31gKp28OhQdYPY4MlAqifLKojUL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Lxfh8rqN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711369855; c=relaxed/simple;
+	bh=I/0ssb9qvsZJ2CesquYjFBsL5CjwMBvCD4gHJOCAmRI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a3xTJ4H7zFo3i6B69ne7QOm4we/LAgwAFh62Y57P9USQtNFKm9wJflkm1rMIF30/CLi0IFxdAvb/vYmX3cdP3FFvxzmRKo2PdhN4Ea6P9tLHe+DXkY2YhsWoyNERJGVtsxv9AR+V87py27rLDbq0o1aM642sUmW2AgqCY1f8RPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WBUrfOtf; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Lxfh8rqN"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42PBLof6012760;
-	Mon, 25 Mar 2024 12:30:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=MbobahLMIL4ZqNXcZPVc+GQ0WZPb5ccx21RBCt3QnQ4=; b=Lx
-	fh8rqNBvlccEmQCsI3OYUytdNcerWrnYjsfMr3R8sLp2G1nlFRq1g+oz2fF13Chc
-	ybnoaRsEAZaQ9s73DkMPpVUlHDJDvT9ZYFKUlnsnyaEgWDGJZdoPfBZeVZt+tUvx
-	bpW6b3G8hob8Nk85d5xSdGOVnpXj2AntFE92uw1xhQV9LkLodXMMyxtWFqwpemeX
-	qawWlCG9Gro79oRhb3IRzUAbl2HJfg9rZdoLI+xW6QTNaw6oV1ZqiTlU/XxMu3NR
-	Vxhr+whGsNMI9WUcaXtnBouLC1DTCsNo+lxPQX33kStFuTN4NkggY/hgtsCLl7Ca
-	Bz+WLtzvTgoNAQVv8IIQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x38am88bn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 12:30:32 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42PCUVCf009852
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 12:30:31 GMT
-Received: from [10.239.96.73] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 25 Mar
- 2024 05:30:28 -0700
-Message-ID: <6d9a093e-ee4f-4f4d-8883-e17dc8dc8210@quicinc.com>
-Date: Mon, 25 Mar 2024 20:30:26 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBUrfOtf"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6ea9a616cc4so955546b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:30:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711369853; x=1711974653; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VAcaRqwrbRM30TKi6X9l/01RCi8ibTxboxlerqqN1jg=;
+        b=WBUrfOtfLI+2O0uxxZ2oEaeu7MHJdp0SGcSjNLHFMKsBDLfO6eBDFKxkQiXkGNQzmY
+         eD5/jchQYgvBNXpxUXrnPBOqx5yo9jd5QL9OxIsqhjWWttPgUUmWA+B+4hlBJzSFMz6U
+         IBYEqVYFmyTG9sDM3mOin+CF9/9XKZTyPt8PY9FhP3OFNQPXscllOJk4O7qpR8T8vJED
+         GufvJLcpte5UyfU8fKNxhjtjdvNVB0ji3NCAnis9vKc6DSB2mtIkYRqQWb/yHcWu8WWY
+         AsYDRR/N+JPnpHvglrVNzEAHPShiB3Wgzy3yXU6Xdfvb/YbHydIw4b8hJr6gmFrsLrjH
+         4Gmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711369853; x=1711974653;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VAcaRqwrbRM30TKi6X9l/01RCi8ibTxboxlerqqN1jg=;
+        b=m1TfyAfewe54zx/W38qcuToUr8NvuqG+gnUIsa9A1ZyuA64Sh+jdDi8Vr9T+ZmHrg4
+         pIkZflIpiuMlG6kx7VEENKgVcA4V1iIuIjUemoDU15OhKzPFFcKGR3CPNb7zIH0XT2/T
+         sHbOAfPJMBRJDTmP1CHu+BhDfRYwTqvgsUUoXD3akWtUT0G1pqCrViRhrVjrAh2xB5bv
+         BcwsD34DGsLsqi9bG7dpqXtgQ3dKngaq8wYjzYrCSCN9FmeMnKY6rYLlgnZAYLIP3TxP
+         HSicNuf+0SdgAlhSXJf3lADGJjbi9f2PoJwgOznM4eI5ZuX6FOxgAHz1vjBcG48v8iGV
+         sXvw==
+X-Forwarded-Encrypted: i=1; AJvYcCVvM8l4AuTw6Ubcd1j58nj/W5mYC8DFba0yrnmAAfzgdlfPhv8rcRE6S9z/5cE+tHdp1C2zefT7XIDD5UeA40T3ssNQsiddvnSLnPFa
+X-Gm-Message-State: AOJu0Yyt3djTd6Ba2Y3haaB3JIhBCG2rHhyL69iSM7Va9N6sz9Icxeqs
+	rpH9dzH891v9d8LET69IoltAkf0aCt2kX11EBbVEyK+No+M/5HEd
+X-Google-Smtp-Source: AGHT+IEat6rsjLdajx4W51QuWs+Y1lh7QaH+sRoXZSCvbdL3bJONNi7oYAq0aJavojZ/C1MnPmm07Q==
+X-Received: by 2002:a05:6a21:3949:b0:1a3:cb4d:3fd7 with SMTP id ac9-20020a056a21394900b001a3cb4d3fd7mr1854408pzc.56.1711369853059;
+        Mon, 25 Mar 2024 05:30:53 -0700 (PDT)
+Received: from [192.168.255.10] ([43.132.141.20])
+        by smtp.gmail.com with ESMTPSA id n12-20020a056a000d4c00b006e6c0895b95sm4039410pfv.7.2024.03.25.05.30.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 05:30:52 -0700 (PDT)
+Message-ID: <a9a84b30-838f-41e6-8faf-b3508d1ba263@gmail.com>
+Date: Mon, 25 Mar 2024 20:30:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,87 +61,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/8] media: qcom: camss: Add new params for csid_device
-To: Krzysztof Kozlowski <krzk@kernel.org>, <rfoss@kernel.org>,
-        <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mchehab@kernel.org>, <quic_yon@quicinc.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-References: <20240320141136.26827-1-quic_depengs@quicinc.com>
- <20240320141136.26827-5-quic_depengs@quicinc.com>
- <f9281370-d3e5-46f7-8031-d5c2c524eeb9@kernel.org>
+Subject: Re: [PATCH v2 05/14] mm/ksm: use folio in stable_node_dup
 Content-Language: en-US
-From: Depeng Shao <quic_depengs@quicinc.com>
-In-Reply-To: <f9281370-d3e5-46f7-8031-d5c2c524eeb9@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Matthew Wilcox <willy@infradead.org>, alexs@kernel.org
+Cc: Andrea Arcangeli <aarcange@redhat.com>,
+ Izik Eidus <izik.eidus@ravellosystems.com>, david@redhat.com,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+ Chris Wright <chrisw@sous-sol.org>
+References: <20240322083703.232364-1-alexs@kernel.org>
+ <20240322083703.232364-6-alexs@kernel.org>
+ <Zf2qcH-bDEgLAP7d@casper.infradead.org>
+From: Alex Shi <seakeel@gmail.com>
+In-Reply-To: <Zf2qcH-bDEgLAP7d@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: t4O9cWBYbSxn_Dj1rl3tlg6UWgxjP6ap
-X-Proofpoint-GUID: t4O9cWBYbSxn_Dj1rl3tlg6UWgxjP6ap
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_08,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- suspectscore=0 adultscore=0 bulkscore=0 priorityscore=1501 mlxscore=0
- clxscore=1011 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403250069
 
-Hi Krzysztof,
 
-On 3/20/2024 11:53 PM, Krzysztof Kozlowski wrote:
-> On 20/03/2024 15:11, Depeng Shao wrote:
->> CSID gen3 has a new register block which is named as
->> CSID top, it controls the output of CSID, since the
->> CSID can connect to SFE or original VFE in CSID gen3.
->> The register update is moved to CSID from VFE in CSID
->> gen3.
->> So, adding top_base and reg_update variables in csid
->> device structure for CSID gen3.
+
+On 3/22/24 11:57 PM, Matthew Wilcox wrote:
+> On Fri, Mar 22, 2024 at 04:36:52PM +0800, alexs@kernel.org wrote:
+>> -static struct page *stable_node_dup(struct ksm_stable_node **_stable_node_dup,
+>> -				    struct ksm_stable_node **_stable_node,
+>> -				    struct rb_root *root,
+>> -				    bool prune_stale_stable_nodes)
+>> +static void *stable_node_dup(struct ksm_stable_node **_stable_node_dup,
+>> +			     struct ksm_stable_node **_stable_node,
+>> +			     struct rb_root *root,
+>> +			     bool prune_stale_stable_nodes)
 > 
-> Please wrap commit message according to Linux coding style / submission
-> process (neither too early nor over the limit):
-> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+> Do we really have to go through this void * stage?
+
+Hi Willy,
+Thank a lot for reminder. Yes, we could keep the 'struct page*' return value here.
+And so we don't need to change indent here.
+
+Thanks!
+
 > 
-
-Thanks, will update it.
-
->>
->> Signed-off-by: Depeng Shao <quic_depengs@quicinc.com>
->> ---
->>   drivers/media/platform/qcom/camss/camss-csid.h | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/media/platform/qcom/camss/camss-csid.h b/drivers/media/platform/qcom/camss/camss-csid.h
->> index 4a9e5a2d1f92..ca654b007441 100644
->> --- a/drivers/media/platform/qcom/camss/camss-csid.h
->> +++ b/drivers/media/platform/qcom/camss/camss-csid.h
->> @@ -162,7 +162,9 @@ struct csid_device {
->>   	struct v4l2_subdev subdev;
->>   	struct media_pad pads[MSM_CSID_PADS_NUM];
->>   	void __iomem *base;
->> +	void __iomem *top_base;
->>   	u32 irq;
->> +	u32 reg_update;
->>   	char irq_name[30];
+> Also, please stop reindenting the arguments.  I tend to just switch to
+> two tabs, but lining them up with the opening bracket leads to extra
+> churn.  Either leave them alone for the entire series or switch _once_.
 > 
-> This is pointless. The are no users of this!
-> 
-> Sorry, don't add random code here or there without concept.
-> 
-
-For the old code, they are new concept, since it is new block in the 
-hardware, I just want to highlight them.
-
-But thanks for the comment, will update the code based on your comment.
-
-> Best regards,
-> Krzysztof
-> 
-
-Thanks,
-Depeng
