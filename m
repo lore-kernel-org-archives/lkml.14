@@ -1,145 +1,89 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E4512E1E5;
-	Mon, 25 Mar 2024 17:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A0F748D
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711387820; cv=none; b=lY7iecpmpuEjhRix9RdfUWOrnw5DWxr790kYXLiYlDpnMRbhiaxvo8C0XP15IRRfexWPWqN5C1t3tp9OmBKFAyNLUdyeKW5xUsuIW+FYR1CY4Qdc3OWfF/+n+o5QMdVnW+rvdj8YeNcUEfuTTSC9iAK+aHHdDghMCc4bK00WbI0=
+	t=1711387880; cv=none; b=c0Y7jMgmgpv8ycDI2CdeNb4BALpu4a7ajV7mGCJhS5xLZIlmad2gby/DMszo4SUggbZ4JJJeoLQyl1DxvqaDQaL1JdHBuKHeJWnj+H7Sim38Qc/Cy19A19FWJ+zQbdIbNxUyH3N/JQEdMMxui/3budB/ZalRRDXLjUb6cblhPnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711387820; c=relaxed/simple;
-	bh=MZEKCbTRYkyqe+9HBejrDZkLY/jTlsFTwN+TfksBPzo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XrxdHuTOdXJQtul1HrtUyL894s0fnR9WRo0ousF5ef+LT43clkIxFcAhu5oMrnok02DWQ2DNZ3RHrBkcPj1/F0n+xVH3qaC/6Jtx17LRGZ2HcPU3ciJdeo6VcVWq2otEbqnrXSfsTFp41l9cX/sjuWMwJPv/Sy7UTDqE4qhbsB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IlJCckWo; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711387880; c=relaxed/simple;
+	bh=ZmBBlj92ew+4dyJE9QDYVvWB1ntdnFoURuEq8j98kjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DvYjV0JVn4nIZ8iQ60+slaxg2h/XAO7wstfwYG0Z1j8eE4vknlrUc5gnKBDqQYrnIpDTgvpBMyHpE1MO4FtGYNcaj0R1Kwh6XW+c5rCCOv5HYAfxnIjspkVVUDEANj3F+bx/4M7eDj2aAJcQZsUHbSAZs3b+Ko2pYQwnOE9nNh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l4TStqLJ; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IlJCckWo"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42PExqJv003871;
-	Mon, 25 Mar 2024 17:30:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=nKJL2glUN1khhJxllTuVn8romkg29EQEStQj/muOjcg=; b=Il
-	JCckWoU67Kqz/FOZCLWvU4Rn+5yl56EFp1UkP+zz/ZHIg+SNYshi3oFgdkpEc6JH
-	xZW4/w11pU2d9PYrNdJzbUo5jTLPw4Jc3FZsOunSXBx7ayv7LgKftX6aZoioodyi
-	4IQpgAnQ/vNRceFOBjTRVDvC09kqPUNNopnCzvcAm32vTphYAsFTn55Lf/tRouG3
-	zunuYK2uYsKTDrqq6eXCoeDm2pbI6iELnj4lUzCJsv8XUOP2NV1Zh8Lk9l/8lAa8
-	vCbIDFt8vx3zDcwsJgWdBtzaHWhDcog2NVddYCHmFiOqFS/FOxGTrHMWJFXR11XH
-	SxwiaNl+Iwt+0viozAbg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x31wssrrf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 17:30:11 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42PHUALv027223
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 17:30:10 GMT
-Received: from [10.216.25.244] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 25 Mar
- 2024 10:30:04 -0700
-Message-ID: <807015d4-c5ed-4e04-9948-fd1ff894a04e@quicinc.com>
-Date: Mon, 25 Mar 2024 22:59:49 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4TStqLJ"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6e695b7391dso2311827a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:31:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711387878; x=1711992678; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Mkvp09FYq+PAaWvbx7V36zt+kReluiBN0d7Gn3PKdvA=;
+        b=l4TStqLJn0JSf82+hdFWKs/Kboe+fZI0spxlB4ToMqHULdtQvQq315dmtWn0X9Gei4
+         bglsI9ZObMc/naPMjRfsOX1yaC0Swr10ElfEuWI8LqV7LPxbcZppADL8qwoQPZ0EzZDb
+         EHlMhuneLDDW0NvFEex2/QwGsqdldcOsRck0P69NsAI4DemnTYVwH68g7K6MrMXYl5KG
+         poPS9yjp/OslQ6aX8TVg8eoVzEYM2BB3OEi2OPCfubY/Pa/FzF4UYNy/4cbnhXci+B71
+         DmS5+hfLtzYjZgso3LFFQUJqwWZvPbYno7OQuRbXJHh9EGecMQv4/XsGKt/CSbxjRUYe
+         q9jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711387878; x=1711992678;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mkvp09FYq+PAaWvbx7V36zt+kReluiBN0d7Gn3PKdvA=;
+        b=AQWQGGNNE1snBToCjcQtVsj0LTsduMloZWY5Ggp1KE63GC1LigxCJ5CZQDxIRyrwTc
+         394RHAhmgp6NFInfr5P44MOeRC/EpjeDdugRPSRiWu/gIla+o5BbnnuyKBc2gpbgXkyU
+         SCvthJRD4LGqp+ulwhTw4aFAid/9xksPZzvEwVO+5FPUJq2f/0n8PDzyPBZuuFd4OISG
+         6PrLmQ16309gOS4D+R0vxzty6TL2p5k4i1Z5G2sz1HrzxLbOxe85iQWisZgZoC3uscLe
+         pEixx3EbxZxiQJPXnbsEYh/B0ZHYgtBdaDYYl6UwQ3/of8cpP4/dETVwNgmwSiWaYPot
+         1zMg==
+X-Forwarded-Encrypted: i=1; AJvYcCWfyXMfp9pz/eFUFBUg1C+c6C4byb1B8VbSkaXYBZhM9bLm76Y1dHf0fBqzwj7UGtAmY/ON+8jrO/2/bDbXesQAY8RMzXH8iU5YSgkS
+X-Gm-Message-State: AOJu0YyI77jHbk5LrHOohKe1LTB6OHbGAiM60sAiTmaAXfoL521hnlX2
+	x/3vEJlNJpFImJItFs/iq9GIHqRXmPsVLD0aS6c27plVXTRNdLrN7vwgpJdn
+X-Google-Smtp-Source: AGHT+IFnQjWzGzMVjfN9Ns9RnTRLqc/CPBB+4KSqCMZT2j8LhlKmRYZXrjZIE1F8jFqBAzCX4odeIA==
+X-Received: by 2002:a05:6870:5250:b0:221:cdf9:2453 with SMTP id o16-20020a056870525000b00221cdf92453mr9131894oai.27.1711387878101;
+        Mon, 25 Mar 2024 10:31:18 -0700 (PDT)
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id h3-20020a655183000000b005e83b3ce8d9sm5220205pgq.8.2024.03.25.10.31.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 10:31:17 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 25 Mar 2024 07:31:16 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+	allen.lkml@gmail.com, kernel-team@meta.com, boqun.feng@gmail.com,
+	tglx@linutronix.de, peterz@infradead.org, romain.perier@gmail.com,
+	mingo@kernel.org
+Subject: Re: [PATCHSET v3 wq/6.10] workqueue: Implement disable/enable_work()
+Message-ID: <ZgG05HtCWZvLPtDA@slm.duckdns.org>
+References: <20240227172852.2386358-1-tj@kernel.org>
+ <CAJhGHyDrhsgBcFyqdJ1w3mHmSGaJXErRppcWy7muHWjnL8q=sg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 7/9] usb: dwc3: qcom: Refactor IRQ handling in glue
- driver
-To: Johan Hovold <johan@kernel.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Wesley Cheng
-	<quic_wcheng@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Felipe Balbi
-	<balbi@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_ppratap@quicinc.com>,
-        <quic_jackp@quicinc.com>
-References: <20240307062052.2319851-1-quic_kriskura@quicinc.com>
- <20240307062052.2319851-8-quic_kriskura@quicinc.com>
- <ZgFyukBXIIwZo7v-@hovoldconsulting.com>
- <50926b91-3c61-4dbf-85c9-7558ab96e628@quicinc.com>
- <ZgF6zvaT2OkrbkHK@hovoldconsulting.com>
-Content-Language: en-US
-From: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-In-Reply-To: <ZgF6zvaT2OkrbkHK@hovoldconsulting.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fv_zp3OmKnWSlRlXye2O5YSOpWEYu8CD
-X-Proofpoint-ORIG-GUID: fv_zp3OmKnWSlRlXye2O5YSOpWEYu8CD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_15,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 priorityscore=1501 phishscore=0 bulkscore=0
- adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=792 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403250101
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJhGHyDrhsgBcFyqdJ1w3mHmSGaJXErRppcWy7muHWjnL8q=sg@mail.gmail.com>
 
-
-
-On 3/25/2024 6:53 PM, Johan Hovold wrote:
-> On Mon, Mar 25, 2024 at 06:45:07PM +0530, Krishna Kurapati PSSNV wrote:
->>>> +static int dwc3_qcom_setup_irq(struct platform_device *pdev)
->>>> +{
->>>> +	struct dwc3_qcom *qcom = platform_get_drvdata(pdev);
->>>> +	bool is_multiport;
->>>> +	int ret;
->>>> +	int i;
->>>> +
->>>> +	qcom->num_ports = dwc3_qcom_find_num_ports(pdev);
->>>> +	if (qcom->num_ports < 0)
->>>> +		return -ENOMEM;
->>>
->>> Just return 'ret' directly.
->>
->> Sure, will init ret to -ENOMEM and return ret here. >
-Hi Johan,
-
-> I meant that you should return whatever error dwc3_qcom_find_num_ports()
-> returns, so perhaps something like:
+On Wed, Feb 28, 2024 at 06:00:22PM +0800, Lai Jiangshan wrote:
+> Hello
 > 
-
-Got it. Any error that might come up in interrupt reading as well.
-> 	
-> 	ret = dwc3_qcom_find_num_ports(pdev);
-> 	if (ret < 0)
-> 		return ret;
+> For patch 1-5:
 > 
-> 	qcom->num_ports = ret;
-> 
-> It looks like dwc3_qcom_find_num_ports() can also return 0 (e.g. on
-> malformed DT), which also needs to be handled somehow. I missed that
-> earlier.
-> 
+> Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
 
- From what I remember, Konrad mentioned that we might not need to 
-support incomplete or improper DT [1]. Also since this is close to 
-getting merged, can we take up any changes for Malformed DT handling 
-later given that only one or two devices are present and less likely to 
-be given a malformed DT.
+Applied 1-5 to wq/for-6.10.
 
-[1]: 
-https://lore.kernel.org/all/c8d77d4f-6696-4dc9-8030-daf1d10b114b@linaro.org/
+Thanks.
 
-Regards,
-Krishna,
+-- 
+tejun
