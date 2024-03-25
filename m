@@ -1,96 +1,117 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F7E1552F6
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FCD131BB8
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711364264; cv=none; b=BO/iSeR+TA+7+mPrM2l58xiv1JnKUSp+wn/bvw15oMgR1pMMwTZ1D3JzbsHKCVjTPlGkCKnv56V+DIoDAJVRWPiAZpOkb6FqCyU2Dt+sXj2/DbltDAvvpdkhWZ6GyTyvIcG4jDo++NsNGhDBW4mOaxod6S+1HK++P6+/DnvTgF8=
+	t=1711364496; cv=none; b=V61aN6VTZOhRHOR67hEp4M/SfwPfVrK8fU0XJgS4T4KuTVv1xr12/pbw+OQ+G7l4IEqsO1G1q8juze5GZGXh8hrTgFLQKIUXPEXD9Tehjbpk7pPw2tp9jZVUCEO25CDx2BXMYrZ3zU+c8tt2SPMN1oswW2HNad+CsN/cCr4Xnm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711364264; c=relaxed/simple;
-	bh=aUNv3OeOJulW7HjCmCxEUuggib7O+wj7HO00r4boY1Y=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Q+TxnEcC8v6fZ4tUGwCLYYr0wXPEKzYdHOMZPSXFgrtPZZspKEW4vbLnzqmkALyx8Fa0ub86JgZgHeu0KFj6gn7B6xOvkWJgahWBLk6qfytD3fjfgh40Z5PtNxBFrllzPbR/gYWrMCpS3t6+jj1tw97zmIrSZ6jc6DyWynf+Xpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Lu6/fIHa; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711364496; c=relaxed/simple;
+	bh=w+tFws1Bi1xV3hntGpTyALeY+3d+ukcMl4+G4jlt5Zc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ERAaqYV15Te8yDZ6UR4NBRexKY7yI3dsOjJZw5Sw2wZtFgiNhr8UC+Lov+HQFW39E9vnSi36XHOGqnUe1Oc4Ws7FBV2gcLpifoMJ7RhUFht9KPAQQ3FkQ3ZNhJ7rYjieje24+6T9epEi7B5J7Co37J3g6gLgbPd9KMbF8tSM39Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GNQmhMTm; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lu6/fIHa"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a468004667aso570357066b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:57:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNQmhMTm"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56c0d1bddc1so1018069a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:01:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711364261; x=1711969061; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0rBY+ZtgTThSfYH8TveS+n2X3mT42fwW+fusHRaeCz0=;
-        b=Lu6/fIHamNXviwvHPbUxBN8amDGOOoElLMJXRTOIxidzo57lxF4SdALMWBacNEQbGH
-         fXWTf82xjrfP3T9Ux0+XSGo4P1ot+YxMS0cIFuftW0h++QR9m1jYU9sg6s5qH01QKahx
-         qomOvuYTbFcnTBxRtcA0FWGgDc028q1Kqz7fqLgBj3hvsUWRSZWaTgT82xivCcGVk4HS
-         DolNeMP7se0ZDICemEdYP9hKFtf5nRgBg7Uj1DcGaM7ejZU7aZjfSAH53qqTEpz8wvS5
-         6z8/zm0BU56l2p5PEbw62IKwf3yNzL3K5JSZPpnKoOpHP25qiu0UvNE99E1ahjnSjcQD
-         yyWw==
+        d=gmail.com; s=20230601; t=1711364492; x=1711969292; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zToQ2s3VZ1f9ao1pi2MnYEMv2dwpUwcL76sBj0wUmpc=;
+        b=GNQmhMTm3SDKGbKL0NDUCTWaoxlTgYWa1r1FQGkpHxLgS2eULuUNyXHPf1fRwna42c
+         SBGJYqoMN0Qju9isQbLxvOJQAAIbgIcRTSmlZNpZsTOaXf2edilFl0n1waMte4b6zZYP
+         zhJqwsBJd+SiytEkZ5NOkK8BpcE6lIRaPsqWokJGS5o0Tt1+V99wL+rr+Jbrcg8b8V/v
+         5pMmjr9Dg9skE4/QcLIneKQrm45XeQbRKXpYfY8ugzB83PrGwmh0Ykys5p+/33CB1ISW
+         wBdtv1Xf+U7XkIhlXubDNe/s2MmX8iSBi+B5bqihs3XHUAt+6v9u4puVyO/pz1wvGAb5
+         3Jog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711364261; x=1711969061;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0rBY+ZtgTThSfYH8TveS+n2X3mT42fwW+fusHRaeCz0=;
-        b=ws+lsQHigaKfL3sDARY9gGXiRXeUQNMg0gWrw66za9mhr/LUuc/pyYkMXWIa8Oa80q
-         +mHSyewQBf23YAe4VN1NKt2AaUxTxJaSwDKOEzefQHw1VTwVh5wCOq7+fdberQjRplOH
-         v2TDeTE9iXxTHhDoTYEDuGoRSLhUMmOCcV+sJCMun1AsYvUQsUPP/YO7NWHU0NJFJoAs
-         QyHkU0ljsnrqYukdrwOvoNIiOBmByPk99nn7iKYx2Ap+tCFprrEWkLr60ZCSnvMQqk8W
-         RtSwuJbwGHnql7UByeX3RV+pggZfIyHOtSFvnWDhCxDWVbfXjfTt/GkKXhNPGnVrt9rZ
-         8Ncw==
-X-Forwarded-Encrypted: i=1; AJvYcCXwCpX33/MrJGhf3LSa0RLuq0Zvn6woMdijUjO6XAoYQcxq31RIKtEmzWtwK/hyE7VxoRbwGoACkFiyCrq50UK3U+Atlk1zj0sEdqIM
-X-Gm-Message-State: AOJu0YxqLK37A64G3kmsONAjoSjopt8kL4pwnTR1p60S0oqaKZhPl4EW
-	Xdn8NT7vhpf+1c3fGos9itSkf0anK0Vw9uelH/MwaWWHoHljJuQAH8igOnDeUf0=
-X-Google-Smtp-Source: AGHT+IFOdFMAv/TvuONST61JGK36DDt/76G+ofjqWazIMNco/I15j6i+NV4Y90Z4Ah54tJDj2etb5g==
-X-Received: by 2002:a17:906:474d:b0:a46:69f2:5219 with SMTP id j13-20020a170906474d00b00a4669f25219mr4114184ejs.65.1711364261290;
-        Mon, 25 Mar 2024 03:57:41 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id c19-20020a1709060fd300b00a45ff5a30cesm2940522ejk.183.2024.03.25.03.57.39
+        d=1e100.net; s=20230601; t=1711364492; x=1711969292;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zToQ2s3VZ1f9ao1pi2MnYEMv2dwpUwcL76sBj0wUmpc=;
+        b=fn1SaLhY4Qe8cP9cVHwX4sZ/2YORaJLuBnD5TbTjAnmgmrWmbRxBwyymw52O0wXjWF
+         peVI7nWs2OEFylmm2iWQVHwimsw2m66uU1WagRlIGDuTlkBm9tsmZEjEmsodu4CkYjOe
+         tFTtA26StSqxi4V8l+GePxv1JYLzSztPMIoSN32TRJdPecwzCynMGpCZBpQ0JmVZJEA/
+         k/VvKdwJIj8NNzQzE+bXKhAcScz2+12bTVLA3Y76pCwO3eCGYs6s7fmbM0wUqwAFAYoX
+         fju+6dseX8+kR/eAtTYsHM1h2yBCmtNuaMcokmFNDAd0oGfu5gMJiMxdLIKq5IwLH0D+
+         X8Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCVwvraVBd2NsQJGpCYmgoQDPZiYhQ2jFO3zi3iVFqbvY2V6Ounce7T0Hokx+pqXx8HJLNLedxkbwMpeubzwiAlrM+wZ9c3JQ3+NJMQ2
+X-Gm-Message-State: AOJu0YxkFxARpRrPzr05i6RVEOwk2R/8aOdlv7LCWzTM4dH76RSt2weu
+	oYzSeNelFse+SC9xBVU1UX3iKcuHzh9ZpoxGVDCl/IbkXQTaP9MU75EFDJSe7aN4Ng==
+X-Google-Smtp-Source: AGHT+IHiPDCwvlzf2VtcAn3yr7PW/gRpWwYiJT0EbMof00PUJPWFxJ95qrebJTL4OYsS3Upd4MXIow==
+X-Received: by 2002:a50:9341:0:b0:566:e3c7:921f with SMTP id n1-20020a509341000000b00566e3c7921fmr5580729eda.22.1711364491654;
+        Mon, 25 Mar 2024 04:01:31 -0700 (PDT)
+Received: from fedora.iskraemeco.si ([193.77.86.250])
+        by smtp.gmail.com with ESMTPSA id y17-20020aa7c251000000b00569a2f698d7sm2891787edo.49.2024.03.25.04.01.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 03:57:40 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240313191148.21792-1-krzysztof.kozlowski@linaro.org>
-References: <20240313191148.21792-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 1/2] ARM: dts: samsung: s5pv210: align onenand node
- name with bindings
-Message-Id: <171136425952.35431.17492812389315210011.b4-ty@linaro.org>
-Date: Mon, 25 Mar 2024 11:57:39 +0100
+        Mon, 25 Mar 2024 04:01:31 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	kernel test robot <oliver.sang@intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	Denys Vlasenko <dvlasenk@redhat.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH] x86/percpu: Disable named address spaces for KCSAN
+Date: Mon, 25 Mar 2024 12:01:09 +0100
+Message-ID: <20240325110128.615933-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
+-fsanitize=thread (KCSAN) is at the moment incompatible
+with named address spaces in a similar way as KASAN -
+see GCC PR sanitizer/111736:
 
-On Wed, 13 Mar 2024 20:11:47 +0100, Krzysztof Kozlowski wrote:
-> Bindings expect NAND controllers to match certain pattern:
-> 
->   s5pv210-fascinate4g.dtb: onenand@b0600000: $nodename:0: 'onenand@b0600000' does not match '^nand-controller(@.*)?'
-> 
-> 
+  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=111736
 
-Applied, thanks!
+The patch disables named address spaces with KCSAN.
 
-[1/2] ARM: dts: samsung: s5pv210: align onenand node name with bindings
-      https://git.kernel.org/krzk/linux/c/e8b41d201f82127b05bee204db92e7f97c65cf8e
-[2/2] ARM: dts: samsung: s5pv210: correct onenand size-cells
-      https://git.kernel.org/krzk/linux/c/3a64e95e1a64a2d4c63c4df28b61cd3cbb63cd92
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Best regards,
+Closes: https://lore.kernel.org/oe-lkp/202403251658.8e92a8bc-lkp@intel.com
+---
+ arch/x86/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 39886bab943a..4fff6ed46e90 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2439,6 +2439,8 @@ config USE_X86_SEG_SUPPORT
+ 	# with named address spaces - see GCC PR sanitizer/111736.
+ 	#
+ 	depends on !KASAN
++	# -fsanitize=thread (KCSAN) is also incompatible.
++	depends on !KCSAN
+ 
+ config CC_HAS_SLS
+ 	def_bool $(cc-option,-mharden-sls=all)
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.44.0
 
