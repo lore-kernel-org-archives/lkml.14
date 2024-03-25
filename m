@@ -1,100 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2116.outbound.protection.outlook.com [40.107.237.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FF011737;
-	Mon, 25 Mar 2024 19:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711394070; cv=none; b=txaCEBHvpFxnlHRAzhWlqvpa+ipLIK5w2DhxG//Ne4w2GCu+BoOXxVjirXhsIf1AADynEpNtLyKy9knFHjp2B0ZFLywWVAtUdVzrwvrAxTvSPz7vYrOavL4Ms4oNR26RMedJq/nUFQenoux6/B81DxDhSUbCY0P4UEHz8/OfMoY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711394070; c=relaxed/simple;
-	bh=S4dR9hMjuyXo+2NLjdCApilcKOOtn4MC+CpSK0tyAkM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GHvQJuo/ROO+1/8tJGGxMZ8e0R7xRbfxdwl+u4RQXWoI04AB+cFy0WCY3GG2ghOtc9xXh6c4cJmgF7ZL94COu3GtiJEhmRZQc7zLwwAyrS79IhB0c1D015vU962OSHOEazHkkiTJ2TlNXW5Yecwxab10S60PPSMM2PIYllpAw6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AMxKADBa; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3044A168A8;
+	Mon, 25 Mar 2024 19:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.116
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711394100; cv=fail; b=p1s1mRotv56xiFDIghxgvCFCy9eORJOdRZzRmu8RC2hy/H+rUFIl2IFIU34353vBQli4DAeE0LwuD6ueJgWicpuVzLgQinKpNny5CcD01sY/hZgdO+uNtnVHGG+JulvTdVOfprYtfs5kRc09+THtxO7Re39oIPkPTzIhNyjtliw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711394100; c=relaxed/simple;
+	bh=tzjvM1GygbFpaAHowRALbIYh4D51ovUbbCv7hUmQ7v4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=I7RjGyc5yfCux8h6yFOYrlPtl0I2oZQLoJ3lJkHv4R5af8SUUj7BRFF+Ri3/Uu5NfUUJgt5ZLcqb/JmuZ68kHNFtjNove54+4JGT/jb8J8Bf9CJkOeAfc9MAkfmKoE8ENoXtIRhOYlEuwEtt4ai6bP1i15ESt56sAb9bJZr6LV0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=B6ao7hxA; arc=fail smtp.client-ip=40.107.237.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AMxKADBa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711394069; x=1742930069;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=S4dR9hMjuyXo+2NLjdCApilcKOOtn4MC+CpSK0tyAkM=;
-  b=AMxKADBaFjLF7rinPZw3jk2vCbfjVFyRaVpYuHkdzF2LXF8wDOtWmHj0
-   Atin8dkll7yRqaWwpIdzRZyLcfZ4SDsw/sT5NoHN+tsVdjQ23lOg7dgzA
-   OYP80H+bbFAoCMYs5hf0rthjgUA0FK5dVC54MlsgXFDhPzqjyP7gO7a9q
-   C857vfNbwFQVILBDO9HwrfDbSv/r10h0if2PP7Z8gj4W3jpHFS/d2Tyq4
-   CbymBVzpdh01NkNS0zkR9ILdTXWJklatFGFG/CpQ+9wAwb4DDp0gellgC
-   D4EPSuuPG5g33LbUh9JtvdNPTCltoFd1RAd7ttQlLVpXmx9VK2e3g3Y/J
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="10213322"
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="10213322"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 12:14:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="937070805"
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="937070805"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2024 12:14:23 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 470F2101; Mon, 25 Mar 2024 21:14:22 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>,
-	Alper Nebi Yasak <alpernebiyasak@gmail.com>,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Shengjiu Wang <shengjiu.wang@gmail.com>,
-	Xiubo Li <Xiubo.Lee@gmail.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Nicolin Chen <nicoleotsuka@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] ASoC: fsl: imx-es8328: Remove leftover gpio initialisation
-Date: Mon, 25 Mar 2024 21:13:41 +0200
-Message-ID: <20240325191341.3977321-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="B6ao7hxA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QtFIm6/j+6n+BI1CIdAKtBIGzNtl9SYHGp/ytm52FEgOSZDypQVhutR2b2mZztz3P5LTQZWaMDczjbA1thK0mVqkIkSQY61TWEmgXr//eWvEf3BJEPrs/HCUU813LSztS1UMK6YUodif1d4Ojma30xv1NziYKA110VqwvAYNG3QKPy4HVhh1dz/6h9/5AGu0ttkzcI32gPwNBxyLIes6mxZZX0tQAZmzlZ5jTfb5POno/wy5MzjRSjmICxfGdenfSPYRqgmmpZAyb3EJ90/hIpPL7o3QZDujuOSAue6QyrotcGZNuRTkX6xW+Q/0Vhx6so9mhnkjVscCy1FNtH5PkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aQc50ntIp+wR3qlbVn8sChxyivknRI46QcXv7CaKnsk=;
+ b=EEJL7MOJFElOvTesJD3BQqhXV/5xmh6NBtmimy/TneDdq/dphbhAy0hO6CoQkviiPgA/ixo7tJ3E2dam7ZF7haZLPid6inQe1O6AD6yLa8ymWW+Q4kfTIryxH1ugatk22vT2fpbvjr6otU3/S+SCecOKRREATteOF1WY8ep68dZqyvAubKuCPX4HgbEWzCTedXccgZJVfkKcIA1MaT+/47ybMMEM2CPHmhYD/19zhk0liw3Y5mVzZjDbXeqaEFPsc/IrWK1kWgyfVaZ9R2VAHlETsF6Gj2wErxppUMmk9MYyiom++9jgttqa+8GRVHv5pGmMXnpFwkA2YRv24z2oEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aQc50ntIp+wR3qlbVn8sChxyivknRI46QcXv7CaKnsk=;
+ b=B6ao7hxAAirC49m8jBSQBGjYwX29oC4JAZyaHUmBzaQjlKtLPQAr2+8pq53JEdEhpK75vbnTPu/ZypW0VCCiz8c6nnVWDadCCeauNWeWKO8uFz4Fx4r+8mjeK1ecHeAaPhvI+VUwQbzaaZyHpQ0/xIlnrOSZBYnEPs4sV+XR5fc=
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ DS0PR12MB7995.namprd12.prod.outlook.com (2603:10b6:8:14e::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7409.31; Mon, 25 Mar 2024 19:14:50 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::815d:4ebf:44b4:6edb]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::815d:4ebf:44b4:6edb%4]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
+ 19:14:50 +0000
+Message-ID: <91d3ed71-025f-4446-837e-89360ad301cf@amd.com>
+Date: Mon, 25 Mar 2024 14:14:46 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 4/6] PCI/AER: Extend RCH RAS error handling to support
+ VH topology case
+Content-Language: en-US
+To: Li Ming <ming4.li@intel.com>, dan.j.williams@intel.com, rrichter@amd.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240313083602.239201-1-ming4.li@intel.com>
+ <20240313083602.239201-5-ming4.li@intel.com>
+From: Terry Bowman <Terry.Bowman@amd.com>
+In-Reply-To: <20240313083602.239201-5-ming4.li@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1PR02CA0016.namprd02.prod.outlook.com
+ (2603:10b6:806:2cf::22) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DS0PR12MB7995:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	E9s+ouhvFIBbH0KEo+++KZEgdBKVFBjNf3YNXB1/81nJUpT0pYChYrqmPnPkQ6q6UJ1VJC4DfFc5acU1IlTcobTUzOliC+17Ig/a3FSqewytBXzMXwkbnzwYKMpREky3kl0VDJeE1/sybL31yk2gzzFhd7udEIQWTsbOnbx9ER86BSOWkMtu7d9n24nfH5xZv7TezY5XxeMVwycgrxzrTbc+b7Oklv2dcPe2TWQkkDiCfJ4sRM86SKlFSA5kYjWZNNDjVdyG3keFz8Zw3BLiYG9u3EfBr156F5WqeRzojwEl7wwdN63cLt0SlHCRJkwHPWyRW+oiu3VAdhhnYUfkD3NWDGKhIHj3sj1SzvjrzcGuXFuggxMO+NNzRiPNvCmNrxcgJl6AZuEx27+xb7yUxIJyvvLO6j/kF8Ihyr2REQgYRETDH1TQ/kJ8sefg/Y60WrDgAHMRTCneIjbmXwQk0tlBGa3kNNpB6yaYtX29BVPKX9v/gdLOIhs+qWFVny20Y4HHOMxxkVc4UQYzvjj9VB1OJcYUAcXMzMeOvjQSY1Ibb5Dz186p1iZSQdWx4Yh6hztguB71ifh3oa35DnJx3GbUHxfRaKQXHKmilWNQpWaFQzjXPAmyptxC5ET/YJChSruQWGjcQz0G1F7YXwMXi8nJtlvgzupWKXOTrEDtVM4=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aFhTT0k1M0FtY0JpdUFrZWpMVE9KeUF2UW1QVUZHZU5tZEEyKzdNSU8vU0E4?=
+ =?utf-8?B?eHFyamQvSStGMUdGYXVVTHR3T0xGVjVmOFpEUGp2MnF0b1pMN2dWdHZUUDlZ?=
+ =?utf-8?B?YVlkbjlzTFYzblh1dXNzQlRBby81R2RKMmlhUDVySmRJMk5OaXlIbWNLbC9m?=
+ =?utf-8?B?eUI0eitoWlJXOU9WOVJHT1JKOHFNVlA2OFJhcE8vY1BPUDc5RHFGenpqRXYw?=
+ =?utf-8?B?K1lRTUx0ZVdXZHNvNVhtWnBNWi9sU28rWUI3anQ0MHZHSUI5QWJ4azk3QzNG?=
+ =?utf-8?B?b0ZDYzhXTnFvUndSekFBT3d3Njh3Umd5ekhvSWlkaEZVMUluRlhuQ0djTTFt?=
+ =?utf-8?B?Q3MwMHpMN0J3WE1QY0ZjVTZiaHlBOWFYZGVpTWZDbmdXaFEzQVNqMHZLbFIw?=
+ =?utf-8?B?RTJmcU5oaDFwbU1lRiswWk5IT0lOVEFpRExuYXJ3MDdtd3ViM0p5Qm5YQUhx?=
+ =?utf-8?B?ejk3M1RHbE9XSXliemExc1Fja2ZGZGNKdnoxckxPdVdNZUU4QitBYzR4c1lx?=
+ =?utf-8?B?Umg1ejhRbDB0WWpsQ29ueUhBNDVyWExBRk4zMjQ2ZCsrSVpQcDlZU2FBYnlJ?=
+ =?utf-8?B?bHZrM1JQTFZ5Z1BiMmZoT3BpdE5hdWhXRXdXVzM3ZE1UY2I2VEcyb1hIb3Zn?=
+ =?utf-8?B?dnRkWWZsODU0VDd4d08wbTRGa2U3dnR3azFIaUZQMjNLNm1vSDQzTkIwdk42?=
+ =?utf-8?B?TmZYMWIzMEFiUmM4cXFyQ0J1NDZ1Mml4bjZMbVlKZ1E5eDY4WTZ5bkNOQ3Jm?=
+ =?utf-8?B?alBDamlnd3ZnclpTcGtiQWhBK25tM1FHeGtkODk4WmpBS0NhZEduWDl2Yzk3?=
+ =?utf-8?B?RjlZQ0lETlhZYXlzZVltQnhIVzBhYmxoRWdBSDFOS1MrckN0UDhCWXJXQ2hX?=
+ =?utf-8?B?MEV6WGpwam0xSkFXWmg3NUplOHhQTTdwRUVRMjBDSng1Tkt6djhaVEVBUkRI?=
+ =?utf-8?B?WFdNYmFuSmtpZUQzYTBNTHVvTFBhazVrSzNRMjU2U1QvcTdrQmgrOHducUJZ?=
+ =?utf-8?B?ZWF1Vk5zSzl6Z2NEbjFKcUdEcEtlTUpQTTI2YmZYeE9kaEgrY3FkZS9MR01m?=
+ =?utf-8?B?TVR0QWY4RGx2NnVpS21vM1JDaWQzMWU3K2sxYTBqV1h0V2hSbHRsdmJBTEI4?=
+ =?utf-8?B?R3RxTTJnZ29RU3JOVlRjemFOcGVIOGdRcjBRYjZQbXozRHkrYXd6M2ZFeGU0?=
+ =?utf-8?B?enRrQ1U1RDRyeTNqSmR3WkZ3Zy9UenBXbGorR1JQaERWdzJaaWo1MXpLWmtD?=
+ =?utf-8?B?YXp3cTFGcUtBbWlGa3liM05hNVovY1NBZmNtdmJ1OUkzZVZmSHlGWm1EWnAv?=
+ =?utf-8?B?bHJmVDFDRThjcW5RYXc4SUE2OFhqMkkyd1NMNmtRYUhEa2FMTmQxT2FkcUIz?=
+ =?utf-8?B?SHdkYVBSK3VIRkhBcjdhR24vdGlZcStkYUZhWkhhUlJZOXR1RnhoY0ZIS0c3?=
+ =?utf-8?B?OW5nUmpnM1dXTTd5NUd6WmNkNld4YVA1L0doRE9TMCttYjRsVVRXUVc5eW5W?=
+ =?utf-8?B?OEdqRjBUVlZQQ2JhaWVmRncvaUYvWE82OG9pV1hvTnhXYThQekJoV2tOQnVn?=
+ =?utf-8?B?OElXV1hvd0ZUY24yZjNONGYyUXVheEcyN1hrbW5acGllVG1mb2c5WmFNYWlz?=
+ =?utf-8?B?UjlYRktHcDFWb1dFdW5aNWlvd3VnYTlQSlloaTlyS3cydFFZbEc5NEpoNDFr?=
+ =?utf-8?B?TDYybWpVRU9ZTXhmMUV5VFBHOEJHcUV2aDNhRDJ0eElPZ0UxQ0ZCT0c3a2E5?=
+ =?utf-8?B?L1VvSzEybVZFVmpBV3hXMlRyUG5ocW1CeElhTlFDV3UzYnNwZWUyK0JFaTFk?=
+ =?utf-8?B?TjFJeStmNVBJYjZiRnFHcjlNUTV2Njl1MGQza3ltakJiWkIraFNMUklnNjFn?=
+ =?utf-8?B?WDdzUUxJQytEOGhnZ2xZVFhNMHk3aTB4TkFqVzhpYmxCelc5VXEvdHB5bGtY?=
+ =?utf-8?B?WnU0RUdCOTl1Mkp3amN0OEtPUWZFNy8rSTlZaTFhaUhRMjR2bU1hNmtNQmpY?=
+ =?utf-8?B?d210Y2ZFdnVoOWRKcVNiOTBwQnV0Q1Juc2tWcGlXa2gyQjBtM3JYUE9DMkE4?=
+ =?utf-8?B?Ny9pOTVBY09weUx0ZGMyRmV3MXhXcDltYlJ0dS9qSWM4by8wcTdNQW5Za2My?=
+ =?utf-8?Q?V0J9TfrwJOs0+jdxGcqtyDMqF?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c13af8dc-3c4d-462b-c743-08dc4cffd7c2
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 19:14:50.1423
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: W54vQ2lUvHDhNo1X2FZTMWl/eqeMtjFWdksZSz8uCsr5mVLoBk3syCRi4IlPJanu9xIPLx1xkG4kZAyFGiLOEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7995
 
-The gpio field is not used anymore, remove the leftover.
-This also fixes the compilation error after the ...
+Hi Li,
 
-Fixes: 9855f05e5536 ("ASoC: fsl: imx-es8328: Switch to using gpiod API")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- sound/soc/fsl/imx-es8328.c | 1 -
- 1 file changed, 1 deletion(-)
+I added comments below
 
-diff --git a/sound/soc/fsl/imx-es8328.c b/sound/soc/fsl/imx-es8328.c
-index d67b8a149bff..5b9648f3b087 100644
---- a/sound/soc/fsl/imx-es8328.c
-+++ b/sound/soc/fsl/imx-es8328.c
-@@ -28,7 +28,6 @@ struct imx_es8328_data {
- 
- static struct snd_soc_jack_gpio headset_jack_gpios[] = {
- 	{
--		.gpio = -1,
- 		.name = "headset-gpio",
- 		.report = SND_JACK_HEADSET,
- 		.invert = 0,
--- 
-2.43.0.rc1.1.gbec44491f096
+On 3/13/24 03:36, Li Ming wrote:
+> When RCEC captures CXL.cachemem protocol errors detected by CXL root
+> port, the recommendation from CXL r3.1 9.18.1.5 is :
+> 
+> 	"Probe all CXL Downstream Ports and determine whether they have logged an
+> 	error in the CXL.io or CXL.cachemem status registers."
+> 
+> The flow is similar with RCH RAS error handling, so reuse it to support
+> above case.
+> 
+> Signed-off-by: Li Ming <ming4.li@intel.com>
+> ---
+>  drivers/pci/pcie/aer.c | 20 ++++++++++++--------
+>  1 file changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 364c74e47273..79bfa5fb78f4 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -996,11 +996,15 @@ static bool is_internal_error(struct aer_err_info *info)
+>  	return info->status & PCI_ERR_UNC_INTN;
+>  }
+>  
+> -static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+> +static int cxl_handle_error_iter(struct pci_dev *dev, void *data)
+>  {
+>  	struct aer_err_info *info = (struct aer_err_info *)data;
+>  	const struct pci_error_handlers *err_handler;
+>  
+> +	/* Skip the RCiEP devices not associating with RCEC */
+> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) &&
+> +	    !dev->rcec)
+> +		return 0>  	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
+>  		return 0;
+>  
+> @@ -1025,16 +1029,16 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  	return 0;
+>  }
+>  
+> -static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+> +static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+>  	/*
+>  	 * Internal errors of an RCEC indicate an AER error in an
+> -	 * RCH's downstream port. Check and handle them in the CXL.mem
+> -	 * device driver.
+> +	 * RCH's downstream port or a CXL root port. Check and handle
+> +	 * them in the CXL.mem device driver.
+>  	 */
 
+"Internal errors of an RCEC indicate an AER error in an RCH's downstream port or a CXL root port."
+
+Might be more correct to restate as:
+
+"AER internal errors are used by root ports and RCECs to indicate AER in downstream CXL ports (RCH, USP, DSP) or devices"
+
+Regards,
+Terry
