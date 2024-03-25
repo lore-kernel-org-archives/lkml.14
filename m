@@ -1,127 +1,83 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCBA210862
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854C412BF05;
+	Mon, 25 Mar 2024 02:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711334252; cv=none; b=XrfEvho0zteS0yh0bR51cycUzhY0Ktfbp86yF3sM+wTcRSEpdfATwJY1QychrDaK6YilIb4X1QWSr7OhD+Z3L9hvVPdGNWAJ9/uHfWQW4+Le7ZgZ86jSe3O7Aj4DbePWOuBlnLK9AJdiqsmxeb+Vs6OmFvjNdsfojMO6poS+l8s=
+	t=1711332012; cv=none; b=dbzKs/B4l56gY1l7jftyTd8FpWABCdSnPgHWvILTEjDK1X2zEnQRcIDWp38H7d31bjaNtQYJ42DZSnmDbuBDkriEnVtDNdxbyoWorYEYWTWCQ2RBYjj3OJ+PDIUfXULRNrW2MAj5cEyoV1MTYsQM1HjK/OHMI3Y0+9qd7aNIB/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711334252; c=relaxed/simple;
-	bh=CUhu4fcoHxot+obl+L/lIB2mjnnCYJgKXU5JhtEOyz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ad7kJKBcXn4QdR4ijfcLoN000P4n/CNxk6mPmYLpu/jl1zHv5un8mD+w4UjheeookQx0idjU78/vvmPklO8h0zyu1Dd5pwiho1+BuwCusUor4R6Fcfg0qaD1ou+pr1+XpV1ICbHP8Kg0K7f0LVf/wq1mRl35xufE/Tg0QixsEsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=2Jz0jA0+; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1711332012; c=relaxed/simple;
+	bh=KoIL+5USzKnAWU5XAMXkfHQPnA0FSgKj//g3Wd9d8fA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=oprO/fu0Fm6WwEKZ/F8G5ARJvRXAFVeWIzJnQPUNMhZ1/ubmz5QC01qL5WNdQVsOvTg+LQkXAlH0aWI5Sp9vhaWGpt490RkmCuq2nW1w7dgizlprCD7D/7jCeCRNLZzYbWC1FyTR/fmm2VwyfN8zLKCxKCZ/xHAa0cO7X1qILuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=qd1pNuzJ; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="2Jz0jA0+"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33ecb04e018so2711349f8f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 19:37:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1711334248; x=1711939048; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=OmGpqFfHYwDGnVVZ3jzAGoFdzesxBNnjTqhjXueHYVY=;
-        b=2Jz0jA0+gY0hPyGeZZI/SS29mN7sv/9v/HpfhXgWqXrc9xBobiybpkROmw1LG7IR6n
-         SD07nDUS2Nu1c8sz/xv+BGN8p9T9xHQLUZd5p0WVk8MOb6hJvau5X8rd2I0T5BenOE+U
-         yedEE1zb2ySqyWfEPZlOfoAyZV5Wh3/MoOLmRNnfVb6lZpD3UMeIRj6JY3ZlTiaOeO6v
-         GROdaPeZVy4uCnbht1zSMf9RKkSXPxkkWm503kszhbMEkS7oT6qH7VUFO66YxFLOR4Gb
-         ELbzWQ+3C28ehNmvr+GwfFsPPhnkQOVVe/qZ9intuoj33pShgVlyIhXq2+E59QbtOnfc
-         //7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711334248; x=1711939048;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OmGpqFfHYwDGnVVZ3jzAGoFdzesxBNnjTqhjXueHYVY=;
-        b=nP+he3LoAIwZg5amedKUhX/oAoiHif0qAY85jhhPBFTbgC6HXiBVoHJiiWlNjXbNZg
-         orVXq5xFHi2YGMzaKUMEsEWUH20S+lrVlHr7dvIHwnk+rEgzR7edPNob7VMhfCB9+QIE
-         K0ZraTM/Wy7Pk644zSHS0UtKFsjqbyVqjbacfUl6taI2LfQJw/MXqNcUEBuotIjEzGp/
-         AjXwlD3rU7CeUQBmFH4YZEeo7SpJLhrLUTUzYEbzr+HxKyqr4LFy+UYGCb0zvq3urY4/
-         I5M+KrRKeJJ6Z4h449qzB5mEufiG39++A35Xo+v7MBphI66Jt5FZndmNyX7sGgEB5M6N
-         k9WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbNHtRFmDdpojdE2mrhkaya1PDonbFUBAqD+EcHzxOxz9JEUD4517Q5ygXGEHA2cJNQH7vIEtHkjy+CSHQ6Rr+V6ZP5BOoONsO80ev
-X-Gm-Message-State: AOJu0Ywp6LX6rzQQAZytzeWwqzTXQIQx4XgPvUgtIRLy7iCtrL9NZS+X
-	vciaAFmHicHcB0weFupTd8JmHjYUHPydjyMjxQ9WGjEBh7l59YC4qCBtPFILMMk=
-X-Google-Smtp-Source: AGHT+IEjg0Dx2wC73NkBfmUP1gPclrGptZkf2D1z3neuXuajn9j5XqsQLarLqd/JDV0rW21mR1/m4A==
-X-Received: by 2002:a05:6000:1d85:b0:341:c9d1:eae5 with SMTP id bk5-20020a0560001d8500b00341c9d1eae5mr2379711wrb.27.1711334248259;
-        Sun, 24 Mar 2024 19:37:28 -0700 (PDT)
-Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id ck19-20020a5d5e93000000b00341c6440c36sm3898009wrb.74.2024.03.24.19.37.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Mar 2024 19:37:27 -0700 (PDT)
-Date: Mon, 25 Mar 2024 02:37:26 +0000
-From: Qais Yousef <qyousef@layalina.io>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Christian Loehle <christian.loehle@arm.com>,
-	linux-kernel@vger.kernel.org, peterz@infradead.org,
-	juri.lelli@redhat.com, mingo@redhat.com, dietmar.eggemann@arm.com,
-	vschneid@redhat.com, vincent.guittot@linaro.org,
-	Johannes.Thumshirn@wdc.com, adrian.hunter@intel.com,
-	ulf.hansson@linaro.org, andres@anarazel.de, asml.silence@gmail.com,
-	linux-pm@vger.kernel.org, linux-block@vger.kernel.org,
-	io-uring@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] cpufreq/schedutil: Remove iowait boost
-Message-ID: <20240325023726.itkhlg66uo5kbljx@airbuntu>
-References: <20240304201625.100619-1-christian.loehle@arm.com>
- <20240304201625.100619-3-christian.loehle@arm.com>
- <CAJZ5v0gMni0QJTBJXoVOav=kOtQ9W--NyXAgq+dXA+m-bciG8w@mail.gmail.com>
- <5060c335-e90a-430f-bca5-c0ee46a49249@arm.com>
- <CAJZ5v0janPrWRkjcLkFeP9gmTC-nVRF-NQCh6CTET6ENy-_knQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qd1pNuzJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1711332007;
+	bh=GuEk/ADpGr81B7YHsE3SVEOslWEIQHwyWnsZdTkTtbA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=qd1pNuzJMJXisLmOwRPjnyp6QgZCPLuQkpYc3H1fb+BmcGT3U4jzyeXoELnEvLZ2S
+	 tidgKz5R1PXlDddZGCeiOKhtp1vAZLU7sBwRw8DGYtizDbiYHxSerly0dSPCMXTLrN
+	 8Lrxn6Y4Y4hl6OkrCwxzywZdSSa09a9bhZH4eVdVL5OrS9TNnbpbFAlCIXhLXSMZLt
+	 JXsnsMMPJSXQrnSaPj2/OHaN3zKSIFXat1PMayUFIL8wSS2Y2ZwdOszaHyYG5mPBJ2
+	 3eezLbb5AVmJFAdT2QR5l73a7dj6zYhdqT81f3Ij0+3uF9rSnkUHnL3UTaFkTLktZ5
+	 TajCaJDQlbU7A==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4V2x2v4vGPz4wZx;
+	Mon, 25 Mar 2024 13:00:07 +1100 (AEDT)
+Date: Mon, 25 Mar 2024 13:00:07 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Gao Xiang <xiang@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the erofs-fixes
+ tree
+Message-ID: <20240325130007.2ed83dbb@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0janPrWRkjcLkFeP9gmTC-nVRF-NQCh6CTET6ENy-_knQ@mail.gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/ZiH5JGq97BdVWOSy9YHMX7q";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 03/18/24 18:08, Rafael J. Wysocki wrote:
-> On Mon, Mar 18, 2024 at 5:40 PM Christian Loehle
-> <christian.loehle@arm.com> wrote:
-> >
-> > On 18/03/2024 14:07, Rafael J. Wysocki wrote:
-> > > On Mon, Mar 4, 2024 at 9:17 PM Christian Loehle
-> > > <christian.loehle@arm.com> wrote:
-> > >>
-> > >> The previous commit provides a new cpu_util_cfs_boost_io interface for
-> > >> schedutil which uses the io boosted utilization of the per-task
-> > >> tracking strategy. Schedutil iowait boosting is therefore no longer
-> > >> necessary so remove it.
-> > >
-> > > I'm wondering about the cases when schedutil is used without EAS.
-> > >
-> > > Are they still going to be handled as before after this change?
-> >
-> > Well they should still get boosted (under the new conditions) and according
-> > to my tests that does work.
-> 
-> OK
-> 
-> > Anything in particular you're worried about?
-> 
-> It is not particularly clear to me how exactly the boost is taken into
-> account without EAS.
-> 
-> > So in terms of throughput I see similar results with EAS and CAS+sugov.
-> > I'm happy including numbers in the cover letter for future versions, too.
-> > So far my intuition was that nobody would care enough to include them
-> > (as long as it generally still works).
-> 
-> Well, IMV clear understanding of the changes is more important.
+--Sig_/ZiH5JGq97BdVWOSy9YHMX7q
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I think the major thing we need to be careful about is the behavior when the
-task is sleeping. I think the boosting will be removed when the task is
-dequeued and I can bet there will be systems out there where the BLOCK softirq
-being boosted when the task is sleeping will matter.
+Hi all,
 
-FWIW I do have an implementation for per-task iowait boost where I went a step
-further and converted intel_pstate too and like Christian didn't notice
-a regression. But I am not sure (rather don't think) I triggered this use case.
-I can't tell when the systems truly have per-cpu cpufreq control or just appear
-so and they are actually shared but not visible at linux level.
+Commit
+
+  77720dfe2cf3 ("MAINTAINERS: erofs: add myself as reviewer")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ZiH5JGq97BdVWOSy9YHMX7q
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYA2qcACgkQAVBC80lX
+0Gz5XQf9Fo+VmcG3TIQTNpdWMpIFJITn7llufYrHZqXNFuq6iL2+Kz8Fjg02hmdr
+fnYrG0Trjt2MTJFgyvT0EsAs7oqyiNYoTKms89tDcpNshzQCaLsjBG/4Dk0nHT1Z
+MfNJjyXVWSOyh0+7IgBj4sLPUtsL4mR8LaAbngl9ZrDJCFkKSHgivRjODsaZQLiU
+b+7iJ66zhfhgFJMC2HLcWjjiKVF/NSylhSlB42Paj+Rsypo9gQtaO43Q61ed/MD7
+3sAADYW9T/mOsHOivYED8oKlxqUzE9flufYej+/tBRz7lyarZYhx893JN8GASdhi
+1iGfTGD1iooSIOsRpcGqNR18eVifaA==
+=ejQb
+-----END PGP SIGNATURE-----
+
+--Sig_/ZiH5JGq97BdVWOSy9YHMX7q--
