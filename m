@@ -1,70 +1,70 @@
-Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
+Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398D6148834;
-	Mon, 25 Mar 2024 05:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78E1148828;
+	Mon, 25 Mar 2024 05:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711345835; cv=none; b=jseezxeemhKSm9MOd552H/xxheXf2h52dIPkybxyho8yFMgJnyEwunG8rVPqa2fhNCOo0Cc1PUTy07+LpI/ZOfoBbvgh1NFq6kd3+QSOGbS/bXGeej2hLg3D9rYlivQ7VeuKZYI/eG25CFg5VnKUkJ91nwhmq2tGQx7ywFgEz4c=
+	t=1711345819; cv=none; b=oLgACZlK4HbR/fklvVLha1uDSvFslyKKTpo5tkyh20Sdfly3R6tsmwMvIv/C8ePJBqKxBMo6lzz7gZc9QjQCOiBzeeWDRpAxLvUGWJh0APL1N17rx/N0tC+ET6HrI9p+kLK7OaeNy012XPbuBMc501yAL/+EF+K6pvTzwIgMcpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711345835; c=relaxed/simple;
-	bh=ZdcfXpihbbQEwKIkgL1dODkb3keZi0sbRmWnhwRmT4Y=;
+	s=arc-20240116; t=1711345819; c=relaxed/simple;
+	bh=KwpUxPjB+e9aDlWPffbROPh7AUKzoxmOitBiQ1q996A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R/uGRCAvGZSm6S4PiQjp0TGkVwHnpC1Co45b2oimScLuhfxt11Y0RBz73u+lUyVtZnRsbCwEhnn0WmG72PlZomcD7LyCGjkt8pphZkekjHv8okbbnz/zib2GI5QPCtZsjGm4HN2gHzMRY4K3uF8zY54VYXTPeBHhEQvlP/Xrodw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=HHXlbh2C; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qDKLBsoq; arc=none smtp.client-ip=103.168.172.150
+	 MIME-Version; b=lTYtTueVsmBGG7ppb8SEtDmNsHaaXJ9/W8A+C9kAngMk5q3DdUSkKwTSIlr3/+JQrr9zJajIHe+X/ZcOIT/Wp4Yhb6g9Wt5M8wo+SratDVGtgkamFkPdB5vzSPeMoTuSVS/9E14ToJkNalSj6F1SMRh7LxLfoY3JaLrm0+fkgjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=a+lvbqni; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xuu7FC5q; arc=none smtp.client-ip=103.168.172.154
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="HHXlbh2C";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qDKLBsoq"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 6D91C13800F7;
-	Mon, 25 Mar 2024 01:50:33 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="a+lvbqni";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xuu7FC5q"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id BD3891140099;
+	Mon, 25 Mar 2024 01:50:16 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Mon, 25 Mar 2024 01:50:33 -0400
+  by compute5.internal (MEProxy); Mon, 25 Mar 2024 01:50:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1711345833; x=
-	1711432233; bh=f3M67v1Lcp0geLZRgsuKjZQbybJOk5gP7WvK57TATWM=; b=H
-	HXlbh2C+J9dIUnGL7LhvVhvIJPzbIn564gJ6NyYZ6DZQFtdtTfgL2Gh5lZ2o+mK0
-	VJYMdW1MlPJ0qNgNf3yyRcI2xeNm9/HgXtufNgCFMIBF54LdXFdqSiOOx/3MEgGd
-	1FbQoXOfjeTbyeNOgsd/daM1tVp1ZzqIx9IUTWscSWecvUfS9IGDAr/ySpUhzgIP
-	xO+1uWBUFiJIxRYCAGx8xiQbw6N0lsxHFl5EJviEWzphdZG/lBm8Fd9RJHJyvG7Q
-	ik3/A02LsuDFy8sqyKzbkalWyDERxIgoSXnj7DJeBZqysgucAB/2iH7fqmG/s/N7
-	gasDEaoppYDxOsRPmQVlA==
+	:reply-to:subject:subject:to:to; s=fm3; t=1711345816; x=
+	1711432216; bh=D9UhyeGa8+IY4DzspNpO/uLthQOKl8Mdkma1pmolh1A=; b=a
+	+lvbqnijnzt/PYFGc4lQcEoQi0hQqWSW+SzoYXVYFpLQGTGr+RTmXJxPMqS9yyGn
+	cucvMvVJMlKoJmT3sRMaqgoAMDoNsKtCIsPGJzt4gcMaYUILj5Wn/HSmEjt7sbEH
+	sPUNle6MFxVoINOQiTzb4H61Fzfz+jo2vQrHW+W8IJZ/i9CGlw/xNfNz0SIFvmmM
+	RdwERCK+t9DV4LVILcfO3EtCE6jM+mBEfECDds/5m2PpHheHDt/1iRWiV2vjp1Yy
+	ayaEVo0FFeKlBfqjlkxED2QiZMAviRfODtlSzbAFJ6IlbbvCnRCatWeYmJVsr7Wy
+	d8m7KA8bIyZdz/YKJ5trw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711345833; x=
-	1711432233; bh=f3M67v1Lcp0geLZRgsuKjZQbybJOk5gP7WvK57TATWM=; b=q
-	DKLBsoqWKWyWuC6KsBZoSsm98GxusIA0hE0KC1N3I7uveEZOYj+ipkASkaR/xqld
-	E5TXINRfhl15xzTMH+QYVjrx5d3Zt8iS6cx93SXIUS7cMTeMB5uzWzKrsIIWXZgl
-	K3jGSlGeQhoKwtPmcuhKZDgwZXz7yCd6J2QODrpC/lqkEInhqFn/g90Y+Y3agt4X
-	0sv7sNu7Mqx6nYB6EAbNuJPO43rYQb8du5zdMkH+o+Gm5Mvs+ZKE48zZCvAtGMq6
-	1a5wmDs0t83rm12x8eMLWjZ4713V2elnc/hX+DPl9I8+nR/2y1CCzgig/AMInLcm
-	esyxoZ109wks0rXSd7gUA==
-X-ME-Sender: <xms:qRABZlS3hHpb7Zq3iGm5TMM8DmFaO3yDmdNC5_Ol30xX1RDYV6iE2g>
-    <xme:qRABZuyinYgBy-xaQPK72PX8RyHYbaP_XIvH3NpbDqJnhqfPQ7w6toYJWtLDlwpTU
-    rmL9VthxCjQrjZOVxo>
-X-ME-Received: <xmr:qRABZq2-bpxTObsvxHSiThFtkE4_M7ysz_UfUui-XvGG2V1_Rz5XCoAY7hwN>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711345816; x=
+	1711432216; bh=D9UhyeGa8+IY4DzspNpO/uLthQOKl8Mdkma1pmolh1A=; b=x
+	uu7FC5qvCxRcCR9QQeeK/mzNjP2sOUObQ1JdsIDwNiv+1aAsWZUhqgGEmquDVKtX
+	vlh9BVL9fuTmEemqXqs36I8y/MYlsExQtiZ1mNHM0MExMbVJ6WdOHiosDXWkjJjY
+	D2Fa6BObHL+z99E8mK9R+4r4f4/GW85OEKK0LltM3ftt4fC9m0zgiZ3QXU5gi+qP
+	Qd2jIugEU7RrYamCFFIEl394bsUqoDevAPkUqybT5Rj/hpwf6MZkqwqgcRPxJKky
+	N5jUGS9IV9/lNXVT9RrnsDBDd2d/D4MLbGjqdkvHmeZRvN7OBSDid6nLR6QQQNgr
+	jP39EqbYaHzSEItlEbDyA==
+X-ME-Sender: <xms:mBABZl7Hpqw6rPnlYfz-rdirb21gtWOXHBbd25Q8gKjGLWchTq5BzA>
+    <xme:mBABZi5zv_COEZT0d8E9Kvd3GwkaH_SFxHlcyTqx8OB6snY9aEPf8lC9nEYK1pnmk
+    nG-rzkoeBtn-PDpaF4>
+X-ME-Received: <xmr:mBABZse2x4z1O9XUQ-9_bHFANY04Thr55YBXsjm_7cp9e9CBNHqcTJzDT-8I>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtkedgledtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
     ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
     jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
-    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgepuden
+    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgeptden
     ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:qRABZtAJ1iyrm4V4rWo_tMbG2zTMHcRHUSCu8ZCqROpajShRFcOoAg>
-    <xmx:qRABZujR9gua83MTWu6Mt3KQ5UkWkZCDwX14U3zYYUNTN5RuqGNVtg>
-    <xmx:qRABZhpsdAvY_c8CBTicmr9NNfsTdVigDCV0qLdDmrET7DSLCPMIew>
-    <xmx:qRABZpj0RiBHtAByov7ZGqFlijIpmaj6-ImUQcLWRX2eKlCo2NBNUw>
-    <xmx:qRABZpWZnmJcRQ30GRCktxF7M2ITSGQnUkoQtprZSkhw9CQO1wZaAA>
+X-ME-Proxy: <xmx:mBABZuIIl7XA2xAQpM7JnjJBazSId11-8Y9zYUYhWm92-z5DTdSf-A>
+    <xmx:mBABZpKY5WsuMa2eV-BUJ5uBLYVgeWtRs5MNxzTdE6uzy2GbiYFpvQ>
+    <xmx:mBABZny-U_uv4KR477qqwQvFOoVQTTdOBTINtcuVRyY_Drestk3NHg>
+    <xmx:mBABZlIUudRIQZBCAEzZYU9kUcZuKxQ2--c5PvPFb3ZBcz1dvDJv4Q>
+    <xmx:mBABZh_A7GVyKGYSzj256h3ZPfnPZKvSa5CjMCUEhffYVyq7uCrYGw>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 25 Mar 2024 01:50:30 -0400 (EDT)
+ 25 Mar 2024 01:50:13 -0400 (EDT)
 From: "Luke D. Jones" <luke@ljones.dev>
 To: hdegoede@redhat.com
 Cc: corentin.chary@gmail.com,
@@ -72,9 +72,9 @@ Cc: corentin.chary@gmail.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH 8/9] platform/x86: asus-wmi: Add support for MCU powersave
-Date: Mon, 25 Mar 2024 18:49:37 +1300
-Message-ID: <20240325054938.489732-9-luke@ljones.dev>
+Subject: [PATCH 3/9] platform/x86: asus-wmi: add support variant of TUF RGB
+Date: Mon, 25 Mar 2024 18:49:32 +1300
+Message-ID: <20240325054938.489732-4-luke@ljones.dev>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240325054938.489732-1-luke@ljones.dev>
 References: <20240325054938.489732-1-luke@ljones.dev>
@@ -86,111 +86,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for an MCU powersave WMI call. This is intended to set the
-MCU in to a low-power mode when sleeping. This mode can cut sleep power
-use by around half.
+Adds support for a second TUF RGB wmi call that some versions of the TUF
+laptop come with. Also adjusts existing support to select whichever is
+available.
 
 Signed-off-by: Luke D. Jones <luke@ljones.dev>
 ---
- .../ABI/testing/sysfs-platform-asus-wmi       | 11 +++-
- drivers/platform/x86/asus-wmi.c               | 50 +++++++++++++++++++
- 2 files changed, 60 insertions(+), 1 deletion(-)
+ drivers/platform/x86/asus-wmi.c            | 13 +++++++++++--
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-index 5645dbac4ce8..ab8e5ab1bba9 100644
---- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-+++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-@@ -202,4 +202,13 @@ Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
- 		Set if the BIOS POST sound is played on boot.
- 			* 0 - False,
--			* 1 - True
-\ No newline at end of file
-+			* 1 - True
-+
-+What:		/sys/devices/platform/<platform>/mcu_powersave
-+Date:		Mar 2023
-+KernelVersion:	6.10
-+Contact:	"Luke Jones" <luke@ljones.dev>
-+Description:
-+		Set if the MCU can go in to low-power mode on system sleep
-+			* 0 - False,
-+			* 1 - True
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index de338f7180e0..9927a48b2dc3 100644
+index 285821ef819b..094a93f24667 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -1293,6 +1293,53 @@ static ssize_t nv_temp_target_show(struct device *dev,
- }
- static DEVICE_ATTR_RW(nv_temp_target);
+@@ -280,6 +280,7 @@ struct asus_wmi {
+ 	bool nv_temp_tgt_available;
  
-+/* Ally MCU Powersave ********************************************************/
-+static ssize_t mcu_powersave_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
+ 	bool kbd_rgb_mode_available;
++	u32 kbd_rgb_dev;
+ 	bool kbd_rgb_state_available;
+ 
+ 	bool throttle_thermal_policy_available;
+@@ -870,6 +871,7 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+ 				 struct device_attribute *attr,
+ 				 const char *buf, size_t count)
+ {
 +	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	int result;
-+
-+	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_MCU_POWERSAVE);
-+	if (result < 0)
-+		return result;
-+
-+	return sysfs_emit(buf, "%d\n", result);
-+}
-+
-+static ssize_t mcu_powersave_store(struct device *dev,
-+				    struct device_attribute *attr,
-+				    const char *buf, size_t count)
-+{
-+	int result, err;
-+	u32 enable;
-+
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	result = kstrtou32(buf, 10, &enable);
-+	if (result)
-+		return result;
-+
-+	if (enable > 1)
-+		return -EINVAL;
-+
-+	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_MCU_POWERSAVE, enable, &result);
-+	if (err) {
-+		pr_warn("Failed to set MCU powersave: %d\n", err);
-+		return err;
+ 	u32 cmd, mode, r, g, b, speed;
+ 	int err;
+ 
+@@ -906,7 +908,7 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+ 		speed = 0xeb;
+ 	}
+ 
+-	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, ASUS_WMI_DEVID_TUF_RGB_MODE,
++	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, asus->kbd_rgb_dev,
+ 			cmd | (mode << 8) | (r << 16) | (g << 24), b | (speed << 8), NULL);
+ 	if (err)
+ 		return err;
+@@ -4539,7 +4541,6 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
+ 	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
+ 	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
+-	asus->kbd_rgb_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE);
+ 	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
+ 	asus->ppt_pl2_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL2_SPPT);
+ 	asus->ppt_pl1_spl_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL1_SPL);
+@@ -4568,6 +4569,14 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX_VIVO;
+ 	}
+ 
++	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE)) {
++		asus->kbd_rgb_mode_available = true;
++		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE;
++	} else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2)) {
++		asus->kbd_rgb_mode_available = true;
++		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
 +	}
 +
-+	if (result > 1) {
-+		pr_warn("Failed to set MCU powersave (result): 0x%x\n", result);
-+		return -EIO;
-+	}
-+
-+	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "mcu_powersave");
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(mcu_powersave);
-+
- /* Battery ********************************************************************/
+ 	err = fan_boost_mode_check_present(asus);
+ 	if (err)
+ 		goto fail_fan_boost_mode;
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index b48b024dd844..3e9a01467c67 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -132,6 +132,7 @@
  
- /* The battery maximum charging percentage */
-@@ -4337,6 +4384,7 @@ static struct attribute *platform_attributes[] = {
- 	&dev_attr_ppt_platform_sppt.attr,
- 	&dev_attr_nv_dynamic_boost.attr,
- 	&dev_attr_nv_temp_target.attr,
-+	&dev_attr_mcu_powersave.attr,
- 	&dev_attr_boot_sound.attr,
- 	&dev_attr_panel_od.attr,
- 	&dev_attr_mini_led_mode.attr,
-@@ -4390,6 +4438,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 		devid = ASUS_WMI_DEVID_NV_DYN_BOOST;
- 	else if (attr == &dev_attr_nv_temp_target.attr)
- 		devid = ASUS_WMI_DEVID_NV_THERM_TARGET;
-+	else if (attr == &dev_attr_mcu_powersave.attr)
-+		devid = ASUS_WMI_DEVID_MCU_POWERSAVE;
- 	else if (attr == &dev_attr_boot_sound.attr)
- 		devid = ASUS_WMI_DEVID_BOOT_SOUND;
- 	else if (attr == &dev_attr_panel_od.attr)
+ /* TUF laptop RGB modes/colours */
+ #define ASUS_WMI_DEVID_TUF_RGB_MODE	0x00100056
++#define ASUS_WMI_DEVID_TUF_RGB_MODE2	0x0010005A
+ 
+ /* TUF laptop RGB power/state */
+ #define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
 -- 
 2.44.0
 
