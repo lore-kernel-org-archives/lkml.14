@@ -1,161 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2115.outbound.protection.outlook.com [40.107.215.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B66F86653
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711352082; cv=none; b=ivnsfdtEDumvZ188EPoJujnj8GAwBvm3TMuLkk2Nz3B1G7AA63sFjMrNPG+dbl9li6seL5i0+ekFjb7DcoqNivbMqA+kEcevDY7X7SoWFOv1XFKkHk0tG95bJ0z4jCV4z3ZakEKAXyBc3ythvu3ytUwPpE9YPH7LOex7skpD/+E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711352082; c=relaxed/simple;
-	bh=BDt3n+MUaCFNO4y3L2tuOOVWGjx2h2RQhyP7NCMw9HY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZQWVRYhW7hosO7chuBbqPvaTLXrt6C5PC45+2379gOil5LHda83DgtrMwHD6KefDES5ZFWKuyHIXxumY2qevBzMRoCa7RdTZ0KJR6pPU/o2LSAfpsDNkeQ0OFuOpECrf6GygU16PuQoiU4yQIk5hgdNxxD16+biNUPRnFm5WsVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i1R2wcGT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CEB12A17C;
+	Mon, 25 Mar 2024 07:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.115
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711352341; cv=fail; b=OXtFsozhwYhmX9eKSXiJomQl5bRMUae+4LJJIjltsC5FcWGfcJDcVRnFR7XJC7LrWFQnecNKbcdz1f3uKweF3StNo7f9SaPMgKo/sS1vj6fu4YwxPhn9f2fTXZcKkqwVm8T57S8s3aZQdwquAGxSz/HwoUTSVevs1sD+LHzfcHI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711352341; c=relaxed/simple;
+	bh=zmN0Ns1vmzhPxJeK4PvjETdW8CrDt66c9/v2cvMnWOA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GG7ceP7cIMbhsXWoWpccfoec7xX9VgeWyWb5PLHltrm3O0rbRKj58E+lDNr8cIj9hR7Vo/bChvE6sx88mWwddZj7o9Qkb3fJUTIVDqEYi2AONM9hdXrBxc17fi84jsV6WNEXkBYSNvstuZhI1bGLmUVqVQss3s5JyPFqkXhWzDY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nuvoton.com; spf=pass smtp.mailfrom=nuvoton.com; dkim=pass (1024-bit key) header.d=nuvoton.com header.i=@nuvoton.com header.b=VaWyFZKq; arc=fail smtp.client-ip=40.107.215.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nuvoton.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nuvoton.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i1R2wcGT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711352080;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6I4mGWtPnXl+rCWErFK37GiocqArlyDhDISrag+E6MY=;
-	b=i1R2wcGTd+Y6Lm1ZGbeZRJxcbz5IFNUilNqnSvsQfwzLjoxRJJENXbZXGDNifelVVvW59g
-	H7w29KRs+hd17UWlOyp3aUhpGbFrp48YHetepjmpKeGhKjI8YSKRx1ZxHy/Qz03Yhhk5vs
-	P3JX6x41/Rq3gf97d1So4gccx34HqCI=
-Received: from mail-oa1-f71.google.com (mail-oa1-f71.google.com
- [209.85.160.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-605-4JoqTjLHOIC8LzM-EWkrhA-1; Mon, 25 Mar 2024 03:34:38 -0400
-X-MC-Unique: 4JoqTjLHOIC8LzM-EWkrhA-1
-Received: by mail-oa1-f71.google.com with SMTP id 586e51a60fabf-22a0191d8f0so1444959fac.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 00:34:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711352077; x=1711956877;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6I4mGWtPnXl+rCWErFK37GiocqArlyDhDISrag+E6MY=;
-        b=ctNJKrYb1ks4f/gPrKCB35L+4jJ3a9R9FBgLHvDW77/GMT75SWiB+isgL+Sa6z/Mv3
-         yqDNrsCzRejoo4eLTS2WJhFbFb6nhaw0YoBg3E3Waz2X1PFpIvHEQ30QBjR2FhhSMCsD
-         5zHvF1JxAsJioUvMB69FPzQGIu3hPkrQGINCIlji5tXlBDxV39Ug0VQrAgt4JjzDANSI
-         eE/HNo76fPrK/cch5a70md3nrog/Ki7jGe1iLgIBY8GwVAvBQIt4KR5KzMBxY5ukL/Xr
-         ioxprG7OgFkt7nwcva8E1dzIJVJ0aD1vw9fzcQc25QH66GA/CujLWR4T5Sk5c/Sx7htq
-         rwqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXRUbRGxoOlXVzdngXm4nkAy8SrgAcmUz4EBuI+F1CYhFXs1DaZBwCA8TAOqlwSzQzMAANOSjDFZo87dM+vwMCst14jF/Ce7ZVmYhl
-X-Gm-Message-State: AOJu0Yx9stKHY439TULYd5WzZrfeyJZxi0/mscrZgr+nCJGBBK91X0fK
-	qm1CxCu6tKJSrs6rvdKR2zrLwBiLsWKneFOlCDt+k/yn9PVW3Y6mn4DCvsfgE14t/p1UkzTBK7v
-	wLiTijiMKI/4EdD/vYOFGYqjEan4KmUd6b1O4C+bXRWhNc6oSM7GyxlXJ4hzQXA==
-X-Received: by 2002:a05:6871:288e:b0:22a:2446:353f with SMTP id bq14-20020a056871288e00b0022a2446353fmr3755172oac.11.1711352077662;
-        Mon, 25 Mar 2024 00:34:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFKY6GYp1/XIaWHrTUl2r4qAWkWvRiG3Ehn1RpYbN3BtHiFYE6R3jh1TKiJs6ZlTqhiC8/SJA==
-X-Received: by 2002:a05:6871:288e:b0:22a:2446:353f with SMTP id bq14-20020a056871288e00b0022a2446353fmr3755157oac.11.1711352077282;
-        Mon, 25 Mar 2024 00:34:37 -0700 (PDT)
-Received: from [192.168.68.51] ([43.252.115.31])
-        by smtp.gmail.com with ESMTPSA id c17-20020aa781d1000000b006e6bfff6085sm3766624pfn.143.2024.03.25.00.34.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 00:34:36 -0700 (PDT)
-Message-ID: <1dcec730-ec26-46f4-ba4c-06101fcc599e@redhat.com>
-Date: Mon, 25 Mar 2024 17:34:29 +1000
+	dkim=pass (1024-bit key) header.d=nuvoton.com header.i=@nuvoton.com header.b="VaWyFZKq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ScNvCwfN4aG07DHwL1aYdqIAaFr49RoBAy74wuUQ3apJ77iBGmII85KddfN08BMBpwNDB7lqWQRMUSwYpVWtAByePaFxxQRV5MCGKrGJlGZaa051lP13iSBIRHDixFmQUxvEqArYPyqYcXX5qf3+e8Pwb/6xIgbeY6DNVqPZ+yxxMrNXlOEO8eHinyAWpqXYcBOo8auTGQI6ZKg5KxMYneGEdil4LWgvoCis/MXHusHXee1qpgOmJjvSgivxF8HsygI/YYkUYh5dPVhfBPTrvOHxYGgPAff01/t1D3asueFtzQhb1fr13KyVyxBPRxLBERp69rlTJAG8KOnzTFl3pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2pDhHdwl/eR8UkTtBlPQazVhEnn1qcmOBaAqzYjST1k=;
+ b=fZTTEY5m+G4PdePxu8MTmMZ5sIJBiTtNbd53hvSVI4ZZjEa8gXY7DfgTDWTrLMSVLeNzUfFomlJKUmXr4DoE6TieVeGSmNm+BDEJHoj2+XHfUBrhAHacx23I25TtyRyn1FdqzcRZAVLYmSCFmJcFIQpczHGP4gYlsUP3OkSu8Y/pJwmUgSNAIDoOO44i22zKq3SfRyoTpjQRlHlI8uYC/m1HVtWYQcDO5OALSiBz8eE1Wlfm3pG7qNBK296z35Npsma9xEAUxQplF+SAKxSLHZkb9QuhlHbUxBkrFqUoI3qUt/7q1jtSHOwIoDMgQYA+VtQuQQzFRH6dtlM/cgPTMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nuvoton.com; dmarc=pass action=none header.from=nuvoton.com;
+ dkim=pass header.d=nuvoton.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nuvoton.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2pDhHdwl/eR8UkTtBlPQazVhEnn1qcmOBaAqzYjST1k=;
+ b=VaWyFZKqj7qEwFmeMUU+QWYvd78FiO+SuMdxA8WBPEjRgl1+rfa6ApKE4CDnUCk++cdJiqprjq59hRJdyHs0zOVNwRtRt8kIW7KtJkN15b/YKknAxGSlaHPZfGu5s/Rd9FNXgkK2Kw0CBXSujudmEurW8kSIQm/w6U7WCJspyIY=
+Received: from SI6PR03MB8987.apcprd03.prod.outlook.com (2603:1096:4:235::7) by
+ SI2PR03MB6485.apcprd03.prod.outlook.com (2603:1096:4:1a4::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7409.31; Mon, 25 Mar 2024 07:38:55 +0000
+Received: from SI6PR03MB8987.apcprd03.prod.outlook.com
+ ([fe80::13be:c406:46ab:8d0e]) by SI6PR03MB8987.apcprd03.prod.outlook.com
+ ([fe80::13be:c406:46ab:8d0e%5]) with mapi id 15.20.7409.010; Mon, 25 Mar 2024
+ 07:38:54 +0000
+Message-ID: <b2907420-70f1-431c-ad94-739b58572ac5@nuvoton.com>
+Date: Mon, 25 Mar 2024 15:38:52 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] ASoC: dt-bindings: Added schema for
+ "nuvoton,nau8325"
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>, broonie@kernel.org
+Cc: lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ robh+dt@kernel.org, conor+dt@kernel.org, YHCHuang@nuvoton.com,
+ KCHSU0@nuvoton.com, CTLIN0@nuvoton.com, SJLIN0@nuvoton.com,
+ scott6986@gmail.com, supercraig0719@gmail.com, dardar923@gmail.com,
+ wtli@nuvoton.com, linux-sound@vger.kernel.org
+References: <20240322025405.3340064-1-wtli@nuvoton.com>
+ <20240322025405.3340064-2-wtli@nuvoton.com>
+ <b8b33dab-809a-47d3-b4a3-cc487a02b5d3@kernel.org>
+From: WTLI <wtli@nuvoton.com>
+In-Reply-To: <b8b33dab-809a-47d3-b4a3-cc487a02b5d3@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: SG2PR02CA0001.apcprd02.prod.outlook.com
+ (2603:1096:3:17::13) To SI6PR03MB8987.apcprd03.prod.outlook.com
+ (2603:1096:4:235::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] virtio_ring: Fix the stale index in available ring
-Content-Language: en-US
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Will Deacon <will@kernel.org>, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org, jasowang@redhat.com,
- xuanzhuo@linux.alibaba.com, yihyu@redhat.com, shan.gavin@gmail.com,
- linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, mochs@nvidia.com
-References: <20240314074923.426688-1-gshan@redhat.com>
- <20240318165924.GA1824@willie-the-truck>
- <35a6bcef-27cf-4626-a41d-9ec0a338fe28@redhat.com>
- <20240319182251.GB3121@willie-the-truck>
- <9500adaf-0075-4ae9-92db-7e310b6598b0@redhat.com>
- <20240319203540-mutt-send-email-mst@kernel.org>
- <3a6c8b23-af9c-47a7-8c22-8e0a78154bd3@redhat.com>
- <20240320030215-mutt-send-email-mst@kernel.org>
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20240320030215-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SI6PR03MB8987:EE_|SI2PR03MB6485:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	34Ox7uPHpjSnZIVU/dGIft/fXR4wP4KdSZD5zWfOfG1mOg7whniMdauS0XckrNR3WEnHzIRq73e1p8BRPlqthQEyo8cvGoWP5VsKfRcKXHNu1s2YEv3MOxkbAA+76qIUXDh0ku+kSFOggGo+U7SNiiJRJR9Q8zC71xbPav1ZqU8Uk+KjHDZVoSR/ZYw81kEwi7NvuhiyIstZNIrT0Xt74eBEEG6Et6Wh6SP8fJ6sOA2MSb57hQ1or+5up1a64ZKzbX2Fo6JQUfOtyG9mVhYOIiShvLkise40qDQaVuIhKz2U8JsNCy10IVxDLZ9eYtuN+bHdLeLad7vo9yaSyhYS7bOv4ahyBYARlb0Q6wctplTWRvGOxzg1P6yDT7CMtDHr0ESzGl//iuhl3aHWHGiSXj0a6vpNKxRaY9GLVqWXNz4NFx3OC+bIK+yGjucNP/sBhvvwD6d/UWeJaq0LCZ3fbrEKJnVjYsHtXHXlc9srFy+OgcmYMm+s0rjeMUse8iBpCJdOrXkwJSiSt4zI3F1QumVQwvSQtezf+FWCtG+SAHKopdotqz4ckRrcGV+AaZ2AUfpg2URBUZexi0g9RkTLPwnSswwhEWFmvlPkh6OkvlV6UgT5J0vK0ARrOlTDndnHl5MjNYkimxr65Wk/GfuF2gj2diy5HEtlcqP8/RbzxvI=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI6PR03MB8987.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UUxGa2ZCTElhRHBsSmw2eVM0V3c1cXBOSkYrUGQ0QzA5emxxVGI5M0ZVWE1w?=
+ =?utf-8?B?ankzZTVVdCtCSDZ1clc3YUlWTmFEWlhZMXNWSHFhdHo1WWlWUDl1UE5BdDNz?=
+ =?utf-8?B?WkdFcTR0WElJR1NlYk44cHQzNmY2N3E2QzltL3hmZlp3b2pHbWhGaG40eFJ0?=
+ =?utf-8?B?Wm5hMk4vcDRObUZNdjNaOEFaRm51UytCUTNoTkJrUFpjeUxrc3lpRjU3bWlU?=
+ =?utf-8?B?THlFSWs2UkRDZVdBWXpNaG1BVXlHNVNRdDdlTjlsaktaNXdQTTNNdXl0UzlG?=
+ =?utf-8?B?cW9SekpxbHdQOWhWU0xwYlU4UTJHK3Njd0J1dkFPN2luWWM3bEZaM0w3VC9G?=
+ =?utf-8?B?UXhIOGJGNkJvVHpiWjd2L2paVTFIWVlMWXQ0UVhPbTMxTmJlc1ZaaVFtZGVX?=
+ =?utf-8?B?SCtZZ3ZVTmswZDdHdTErTGJJMEdqZkhYbDB4WFdObDNyMWZ0L3c0Z0t5cHNN?=
+ =?utf-8?B?SjYva0Y0V1VlTWFnVG1LVzB4ZkFYVnNiaUpNeE1QL0RRMFZncmE5bVpuK1Z3?=
+ =?utf-8?B?YlZJVmpZRjZxbWNrZ09qUlI2ajcwY0U1ZlVRRUhNQUQ2SXAwL2pvNG5wb2VU?=
+ =?utf-8?B?VDVWWWUwV0ZYZWdmS0d0ajducUZRVlZ4UENFdU5TanpEZnlrUE11dDZkRGJP?=
+ =?utf-8?B?bmkwYnVTUWNodUxKSEdodCtheVF5K212OExzcytadVJtY1hPeFRJZkpRK0t3?=
+ =?utf-8?B?UzJLaXJpeHpWS2ZuRXVQUXk0VmhocHViM0NnUVkvcmhhdVowazZOdS91OHFJ?=
+ =?utf-8?B?WlY5TkJGY0RwdXh0UEQrNkhyNWIyM1MybUNDQWRZbzlodVIxZU54R0NuY1Nn?=
+ =?utf-8?B?MnNScWVWblp4SFlEUGowdGhObUlyd1lqbXVYL1IxVFFibjZMV1lwTUphUGlG?=
+ =?utf-8?B?ZFVieWRzckNYbXFFVDNOeEo5clN4c1M5cSswdkpScXViays3Mmw0VnZFTVRV?=
+ =?utf-8?B?cU9FZ0pBOWhkcFZpOUsyZmc0blVlWm5ZNzBwalcxSExiR1MrUVhLL0FJOTkw?=
+ =?utf-8?B?amoxMTdrNDBLaXVwTitoYTNqWFhYZGlJaml4YjZDYlVtVnNYalZXVTc4cXRj?=
+ =?utf-8?B?OXhtd2p0SkcyWU4zczAzR2d3OGZDZmMyZzJ3azVEQXVjUjMyTzBPSE5vK0cx?=
+ =?utf-8?B?TDZjdk1QeW1kMGVWQW5vTG5BOWt0RmVsRW42ZUNRL2Qyais3bWFiZ1E1N2NB?=
+ =?utf-8?B?ZTZoZWx3dW1TaHAwT2tmaU9DbHBLTjAzV2lRa0pDak5qbkJvbFVSNWR3VGF2?=
+ =?utf-8?B?eTVRcnY2andwSmF5MnU1bjJjY0srV2RoZTh4QlVXbmZjdlZpODA1ZndLakNW?=
+ =?utf-8?B?Y3FlNlNBSkYwa0ZvOTVhWjFNWnJtZmFUU3hIcUFqempVTTQ0MGQ4SkozS294?=
+ =?utf-8?B?S1QxY1FpOG41STlLaXpCd0tBcU9uRitUR2ZOOVNmNVhWcXNWQnB6R3JkTWtC?=
+ =?utf-8?B?R1B3Qko2ZWdwVlI0eWs5OWlPZEhxLzZVYjFFTjZMNUhFcDdhbXRiWEg1T0RJ?=
+ =?utf-8?B?Z0NxUVN4QitKeTd3bmFjQUVPTHphNXd2S05HYnhEMGJkTUttMW1KWFM0WnFI?=
+ =?utf-8?B?RWRHWHNzVXo4TklQQXFyeVhNN0ZaZVN4ZGNQazUyb3dQSEFKSG1xVnZlUjVV?=
+ =?utf-8?B?dlp5ZTdxOUFCU3A1U003QXNOdm9CLzI5RDZuOFZqWmlielBsUHFyWTVicUI1?=
+ =?utf-8?B?K2NaY0Y5bVphb3hHbkFHOVpKUDN5ZFBJS0RJZFhpc2tGY1N4eDhlSUNMUDlI?=
+ =?utf-8?B?cCtJcldMaHVkamxkYVZVc0lod3hRZ3I1MndSajY3bzJ0OEVNUVkwdmhScnNo?=
+ =?utf-8?B?K1dQbXpOdEhMZ09vSEdoNzB5MVBVeEIvVThKL0xzdG42MSs3bm01L3lJR3I3?=
+ =?utf-8?B?T2lPejBNNTRNeXlsSldGVmhLakZLeVZkS0hON0NkU0tTdFB5SkxJL0oxUTZC?=
+ =?utf-8?B?Nk42V0d6eFNnRDJvZzJSb3A0Q3U4MjUybERxZU1ONVlFOXpSK2xIejl2YU9S?=
+ =?utf-8?B?dGhZcElsdTlBbTVFZCtTYWdQMnhVL0NGK3lZbGxkKzNBVzNsMnFMRUxNTHpx?=
+ =?utf-8?B?b1VnUVEzTDUrSmdzSGtJWmpmNTJXMG1ZSFR5Q28wdWpCVUNnM2EzNm00RXA2?=
+ =?utf-8?Q?vynsFRcxvLMyeDnZf+iAu4sjo?=
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a366f1f-f9c8-402a-0978-08dc4c9e9f8f
+X-MS-Exchange-CrossTenant-AuthSource: SI6PR03MB8987.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 07:38:54.6518
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aT2fiC3KdU8xglxEi127Vais4bQqRq+HnuFE391PR4yldLtulPkoxRdiaaI4RuZYWtzshi93cu3IOtvo3ONSpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR03MB6485
 
 
-On 3/20/24 17:14, Michael S. Tsirkin wrote:
-> On Wed, Mar 20, 2024 at 03:24:16PM +1000, Gavin Shan wrote:
->> On 3/20/24 10:49, Michael S. Tsirkin wrote:>
->>> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
->>> index 6f7e5010a673..79456706d0bd 100644
->>> --- a/drivers/virtio/virtio_ring.c
->>> +++ b/drivers/virtio/virtio_ring.c
->>> @@ -685,7 +685,8 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
->>>    	/* Put entry in available array (but don't update avail->idx until they
->>>    	 * do sync). */
->>>    	avail = vq->split.avail_idx_shadow & (vq->split.vring.num - 1);
->>> -	vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, head);
->>> +	u16 headwithflag = head | (q->split.avail_idx_shadow & ~(vq->split.vring.num - 1));
->>> +	vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, headwithflag);
->>>    	/* Descriptors and available array need to be set before we expose the
->>>    	 * new available array entries. */
->>>
+Krzysztof Kozlowski =E6=96=BC 3/23/2024 7:05 PM =E5=AF=AB=E9=81=93:
+> CAUTION - External Email: Do not click links or open attachments unless y=
+ou acknowledge the sender and content.
+>
+>
+> On 22/03/2024 03:54, Seven Lee wrote:
+>> Add a DT schema for describing nau8325 audio amplifiers. The key feature=
+s
+>> are as follows:
+>>    - Low SPK_VDD Quiescent Current
+>>    - Gain Setting with 2-wire interface
+>>    - Powerful Stereo Class-D Amplifier
+>>    - Low Output Noise
+>>    - Low Current Shutdown Mode
+>>    - Click-and Pop Suppression
+> Please use scripts/get_maintainers.pl to get a list of necessary people
+> and lists to CC (and consider --no-git-fallback argument). It might
+> happen, that command when run on an older kernel, gives you outdated
+> entries. Therefore please be sure you base your patches on recent Linux
+> kernel.
+>
+> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+> people, so fix your workflow. Tools might also fail if you work on some
+> ancient tree (don't, instead use mainline), work on fork of kernel
+> (don't, instead use mainline) or you ignore some maintainers (really
+> don't). Just use b4 and everything should be fine, although remember
+> about `b4 prep --auto-to-cc` if you added new patches to the patchset.
+>
+> You keep skipping maintainers on almost all your patches. Why?
+>
+> Best regards,
+> Krzysztof
 
-Ok, Michael. I continued with my debugging code. It still looks like a
-hardware bug on NVidia's grace-hopper. I really think NVidia needs to be
-involved for the discussion, as suggested by you.
+I'm so sorry. I will use scripts/get_maintainers.pl. to get a list of
+necessary people for
+check every send e-mail.
 
-Firstly, I bind the vhost process and vCPU thread to CPU#71 and CPU#70.
-Note that I have only one vCPU in my configuration.
-
-Secondly, the debugging code is enhanced so that the available head for
-(last_avail_idx - 1) is read for twice and recorded. It means the available
-head for one specific available index is read for twice. I do see the
-available heads are different from the consecutive reads. More details
-are shared as below.
-
- From the guest side
-===================
-
-virtio_net virtio0: output.0:id 86 is not a head!
-head to be released: 047 062 112
-
-avail_idx:
-000  49665
-001  49666  <--
-  :
-015  49664
-
-avail_head:
-000  062
-001  047  <--
-  :
-015  112
-
- From the host side
-==================
-
-avail_idx
-000  49663
-001  49666  <---
-  :
-
-avail_head
-000  062  (062)
-001  047  (047)  <---
-  :
-015  086  (112)          // head 086 is returned from the first read,
-                          // but head 112 is returned from the second read
-
-vhost_get_vq_desc: Inconsistent head in two read (86 -> 112) for avail_idx 49664
-
-Thanks,
-Gavin
-
-
+>
+________________________________
+________________________________
+ The privileged confidential information contained in this email is intende=
+d for use only by the addressees as indicated by the original sender of thi=
+s email. If you are not the addressee indicated in this email or are not re=
+sponsible for delivery of the email to such a person, please kindly reply t=
+o the sender indicating this fact and delete all copies of it from your com=
+puter and network server immediately. Your cooperation is highly appreciate=
+d. It is advised that any unauthorized use of confidential information of N=
+uvoton is strictly prohibited; and any information in this email irrelevant=
+ to the official business of Nuvoton shall be deemed as neither given nor e=
+ndorsed by Nuvoton.
