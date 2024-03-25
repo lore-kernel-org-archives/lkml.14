@@ -1,126 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D44D3DBBC
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE8982860
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711386221; cv=none; b=hOguBi/QSenRf+oP1lFsj4QWWErslRwSBzJVIT9Jfzyzpbk6FiGPMoSj5pFLDelTeCOG2PmOZ5ATnzge9NMHIv6uLRTwyIgWGkNRStEwcI3Q1rogXIni95bMBqOF6x7wu4YTH1ofoZjhc02yiiG2sxM1aFPyd98a2kQ2r3Jk0bw=
+	t=1711386327; cv=none; b=K+Kwsnp1tVSR3RITbmQizR/bgmJLQNkttKkMw4soG418OBLRVmnMmb5p4fh6xafITqU3wctFsPg+pGk6/Cf6AcKLSLeP2ML8FoxgPjf/0lud9I7n9mmSTZWjt/UKYZIoGqR4BOfdM6SLib7IriuryrEGsI8HCMc1vf3gnX5J/20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711386221; c=relaxed/simple;
-	bh=z/jh+93zuvKqVIQ98MxaG5F4d3axg0Y13zwiWvCIOg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HL/xLY/4HXQeodmW8H3Bng+vM3wcmZIbIyVnhnaPfxSBPkZ7kxyG02OX5OGc0jYhOWnN4lXneBpcdUqTRL3T9fkT49azC2mGZx99odYahj7aYX4oSgU7utJIPJBuAWQ6WqERGhJIjHwzd5XWWkbXqm5XZkyWbNhnjL6hM2fhh+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibllFgBo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711386327; c=relaxed/simple;
+	bh=nlSSMt5mXwqBGalL5blRWfMGpq6ZzxT1oNeGbmu1GWs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hsuvpg9YJq8xOhzddNEm4rQV6DQvELHVQtKUhJOvH6lpctxa1BUjs1UogzhCEOxOaonxCCrfFmG0XVwnmZE0bxWQtuVkNL2oWZoC4ymvRoEDKFgatIsoibtN20LADsYVy8L9W0LYneS8sf3f5RuASrQn98r7Os8dNdIbssb8eT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=W+DFhOgI; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibllFgBo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9590AC433F1;
-	Mon, 25 Mar 2024 17:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711386221;
-	bh=z/jh+93zuvKqVIQ98MxaG5F4d3axg0Y13zwiWvCIOg8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ibllFgBos5TkeQY0PYTM1ISTnrSacPHTnQzJ956kmpo5PD14ze3eBNhs4ozn9Rx5D
-	 rvzt+0JS0lzQyPPLsL0k/BpjypqND0jxIEr2P/fDBujybNLLGZ4H9yrstHvLwm3tfE
-	 oJaHw47t+yvIzTlg3EPJZ2Q0j2Q8Bx9Hudgm8mcRHIkT3kKn1vWP4zdIRHvnyl9PV7
-	 OMwt7BEl44CdyBkmfs7apSOHJ8WDgNIHPq+QoezOzmO1XsXaAC8LGPkCcLJvSgdK+8
-	 FxFJI+7f2GhK/KW+M+gQAw0Kr9j4a+mfHH0sB/S7A39SoCnypVlaeoAwL6dJ/YDVwd
-	 t7TZay50Xoxog==
-Date: Tue, 26 Mar 2024 00:50:14 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] clocksource/drivers/timer-clint: Add T-Head C9xx
- clint support
-Message-ID: <ZgGrRrH0mxoKl90n@xhacker>
-References: <20240325164021.3229-1-jszhang@kernel.org>
- <20240325164021.3229-6-jszhang@kernel.org>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="W+DFhOgI"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-609ff069a40so51822627b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:05:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1711386323; x=1711991123; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VLQn9MYedg2dmO1Rz4dYvveAYrX8Cm/Wfbouj1emns4=;
+        b=W+DFhOgIFhgU0e5uvjoYSBKYPE8a+2gSbUGFb1I6IaMqC6VylewY6tGi2YOx0gxHRu
+         SDX0cr5OLHAVhzjabpfbmac+aJHZms1LJErfHo0J8Ne+tpYHIyCXOMOmY+aM7u9RxlUI
+         I9ZJJgBR5risV2OZmko9gcSKq4r3H3cWk6ZWO4pW9vJByT/m2iumfBET3QuqaFm5xhN9
+         NmfHp7aAorYKPQjlf7TdbKfsqpa+qCfY+fo4eLTbIUn9pA5dU+25vkyKLCTWTlOY0Qe2
+         +2g0W9sVaBHdDyTqm8aI4UgSRDh+Qo4DFB0IguHkwfuBuSOuOSRh9VHsjCRaPUmJSJpj
+         IaUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711386323; x=1711991123;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VLQn9MYedg2dmO1Rz4dYvveAYrX8Cm/Wfbouj1emns4=;
+        b=Ut2JoRrdo5SLhvaqBqHtTpfA4bSivhyCXDaoyTD3nSSkMY4cNFCBdPRedWQhTdeIOl
+         eYFb/juTwGIXXz74ozSK2dC8yVJM2nWkzPvNI7/NvRs6ioeR7AFCbAoIPec5nsQGIhan
+         OtJCFUznXy47SjFZhTkRjw1AvbK8FHu2dbY/6UDJ6TonWAd9lvcjoifCdn3d5jol0Tyn
+         DqpVquG9wRMTsjZnF6/KP34s0s/e92TbqMyntfdB8iMK41uH+HuuqNfABUSFy0zlR7oi
+         FCSYZ89IP3mc6HhesGQKv5ppVS6Q5ZYblbbyQg+HVvj5a0o73txLKmq0ApN3X/2Tgj6I
+         JZZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZ1afJ2UzmGj3jVUMvbdq+KSY+qOtr7O/QLwxVLFEBmOiMisqcDas8qtgfg871VOrsNrjcvNz6/5r6Y1OAUj0CIsDWzqcRf+YTrnHo
+X-Gm-Message-State: AOJu0Yw/7hWy/J/SKMGu1jhraSAgmRUOXRbYmfsJxrehzq4b5TBvV7Re
+	rESEdxuRXSX5FBbURvyyx8FbpMFqC/OMY08EprhJCvUHoGOHIIMlMGF9PzQvNZv95SoqRQRZCWQ
+	urCaXR/PLQGgCRZHgcFg8EdiGmOE6CN31omYTtGK6OSgxR7k=
+X-Google-Smtp-Source: AGHT+IH8SKXcHLa/N0j8oDO0At0piSt20b+qBOvqQCAPOuA8Lr1UL1ce3qGpb4Hy9sFCBalXLz90o5YFvzmCEolwMHE=
+X-Received: by 2002:a0d:f8c2:0:b0:610:1a19:14fa with SMTP id
+ i185-20020a0df8c2000000b006101a1914famr5840753ywf.50.1711386323040; Mon, 25
+ Mar 2024 10:05:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240325164021.3229-6-jszhang@kernel.org>
+References: <CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com>
+ <20240324054636.GT538574@ZenIV> <3441a4a1140944f5b418b70f557bca72@huawei.com>
+In-Reply-To: <3441a4a1140944f5b418b70f557bca72@huawei.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 25 Mar 2024 13:05:12 -0400
+Message-ID: <CAHC9VhQ2OO4M5XRjoUDmtkFVd2LWGUKOj0B=McxD+Mj4gv85nQ@mail.gmail.com>
+Subject: Re: kernel crash in mknod
+To: Roberto Sassu <roberto.sassu@huawei.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Steve French <smfrench@gmail.com>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
+	Paulo Alcantara <pc@manguebit.com>, Christian Brauner <christian@brauner.io>, 
+	Mimi Zohar <zohar@linux.ibm.com>, 
+	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>, 
+	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 26, 2024 at 12:40:21AM +0800, Jisheng Zhang wrote:
-> The mtimecmp in T-Head C9xx clint only supports 32bit read/write,
-> implement such support.
-> 
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> ---
->  drivers/clocksource/timer-clint.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
-> index 4537c77e623c..71188732e8a3 100644
-> --- a/drivers/clocksource/timer-clint.c
-> +++ b/drivers/clocksource/timer-clint.c
-> @@ -34,6 +34,7 @@ static unsigned int clint_ipi_irq;
->  static u64 __iomem *clint_timer_cmp;
->  static unsigned long clint_timer_freq;
->  static unsigned int clint_timer_irq;
-> +static bool is_c900_clint;
->  
->  #ifdef CONFIG_SMP
->  static void clint_send_ipi(unsigned int cpu)
-> @@ -88,6 +89,19 @@ static int clint_clock_next_event(unsigned long delta,
->  	return 0;
->  }
->  
-> +static int c900_clint_clock_next_event(unsigned long delta,
-> +				       struct clock_event_device *ce)
-> +{
-> +	void __iomem *r = clint_timer_cmp +
-> +			  cpuid_to_hartid_map(smp_processor_id());
-> +	u64 val = clint_get_cycles64() + delta;
-> +
-> +	csr_set(CSR_IE, IE_TIE);
-> +	writel_relaxed(val, r);
-> +	writel_relaxed(val >> 32, r + 4);
-> +	return 0;
-> +}
-> +
->  static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) = {
->  	.name		= "clint_clockevent",
->  	.features	= CLOCK_EVT_FEAT_ONESHOT,
-> @@ -99,6 +113,9 @@ static int clint_timer_starting_cpu(unsigned int cpu)
->  {
->  	struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
->  
-> +	if (is_c900_clint)
-> +		ce->set_next_event = c900_clint_clock_next_event;
-> +
->  	ce->cpumask = cpumask_of(cpu);
->  	clockevents_config_and_register(ce, clint_timer_freq, 100, ULONG_MAX);
->  
-> @@ -233,5 +250,12 @@ static int __init clint_timer_init_dt(struct device_node *np)
->  	return rc;
->  }
->  
-> +static int __init c900_clint_timer_init_dt(struct device_node *np)
-> +{
-> +	is_c900_clint = true;
-> +	return clint_timer_init_dt(np);
-> +}
-> +
->  TIMER_OF_DECLARE(clint_timer, "riscv,clint0", clint_timer_init_dt);
->  TIMER_OF_DECLARE(clint_timer1, "sifive,clint0", clint_timer_init_dt);
-> +TIMER_OF_DECLARE(clint_timer2, "thead,c900-clint", clint_timer_init_dt);
+On Sun, Mar 24, 2024 at 12:50=E2=80=AFPM Roberto Sassu <roberto.sassu@huawe=
+i.com> wrote:
+> > From: Al Viro [mailto:viro@ftp.linux.org.uk] On Behalf Of Al Viro
+> > Sent: Sunday, March 24, 2024 6:47 AM
+> > On Sun, Mar 24, 2024 at 12:00:15AM -0500, Steve French wrote:
+> > > Anyone else seeing this kernel crash in do_mknodat (I see it with a
+> > > simple "mkfifo" on smb3 mount).  I started seeing this in 6.9-rc (did
+> > > not see it in 6.8).   I did not see it with the 3/12/23 mainline
+> > > (early in the 6.9-rc merge Window) but I do see it in the 3/22 build
+> > > so it looks like the regression was introduced by:
+> >
+> >       FWIW, successful ->mknod() is allowed to return 0 and unhash
+> > dentry, rather than bothering with lookups.  So commit in question
+> > is bogus - lack of error does *NOT* mean that you have struct inode
+> > existing, let alone attached to dentry.  That kind of behaviour
+> > used to be common for network filesystems more than just for ->mknod(),
+> > the theory being "if somebody wants to look at it, they can bloody
+> > well pay the cost of lookup after dcache miss".
+> >
+> > Said that, the language in D/f/vfs.rst is vague as hell and is very eas=
+y
+> > to misread in direction of "you must instantiate".
+> >
+> > Thankfully, there's no counterpart with mkdir - *there* it's not just
+> > possible, it's inevitable in some cases for e.g. nfs.
+> >
+> > What the hell is that hook doing in non-S_IFREG cases, anyway?  Move it
+> > up and be done with it...
+>
+> Hi Al
+>
+> thanks for the patch. Indeed, it was like that before, when instead of
+> an LSM hook there was an IMA call.
+>
+> However, I thought, since we were promoting it as an LSM hook,
+> we should be as generic possible, and support more usages than
+> what was needed for IMA.
+>
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index ceb9ddf8dfdd..821fe0e3f171 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -4050,6 +4050,8 @@ static int do_mknodat(int dfd, struct filename *n=
+ame, umode_t mode,
+> >               case 0: case S_IFREG:
+> >                       error =3D vfs_create(idmap, path.dentry->d_inode,
+> >                                          dentry, mode, true);
+> > +                     if (!error)
+> > +                             error =3D security_path_post_mknod(idmap,=
+ dentry);
+>
+> Minor issue, security_path_post_mknod() does not return an error.
+>
+> Also, please update the description of security_path_post_mknod() to say
+> that it is not going to be called for non-regular files.
+>
+> Hopefully, Paul also agrees with this change.
+>
+> Other than that, please add my:
+>
+> Reviewed-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-oops, this should be "c900_clint_timer_init_dt", will update in v2.
+No objections here for obvious reasons.
 
-> -- 
-> 2.43.0
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Acked-by: Paul Moore <paul@paul-moore.com>
+
+--=20
+paul-moore.com
