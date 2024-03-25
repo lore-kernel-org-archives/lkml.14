@@ -1,245 +1,204 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3055E18E0E9
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D881181814
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711360740; cv=none; b=dJBpRixxRXbeYPkXeVidx7BL1Gj4iJJu/KM+J4UJdPybggyZ9Zjw9KghPQ6ZJMSO/Mu192jWvP+xGGc2eH+vzFALiKtIZ7+mxy363UWwT1RIOxbGYbbdhifGFdO9cCd+V85xTzCm548uWAumObZFdEyGKt0TyV2jYtJD0pRy6D8=
+	t=1711361048; cv=none; b=Ua+l7bD4KE4J+o1Wdcll389UpLH8xlOSIQAXB54UF7RD5HBSQyDdDgzfuhCieoWULtvylG/MXqyUjfeUaBNivDvdKWQaItNfIioYbXzXN9g7xNk8nLbAfhscRtatCCL6b2S6yABv+ibJ55T8uECTS4KeHmFzjlu8b+CXIm/wxvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711360740; c=relaxed/simple;
-	bh=0HodlRK92+uecruCh4htnK2LTN1iC+38uJY7KjoYeFc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DqcB/NLGLzzqPjcg2fhu59F6XJcxSaJ6lmw88IyzPgoXRfDSjf3ye5Goir6mC3T9Umq6ued5+PzsuF29OJiUNFvOeqIQnyzAa54IGKoTLws5G6kTtHm5Bjl7L6ATUVDbwPEDnJUr25zAnbdsrdfQymjWvNa9PnvTkyGeU9JCF1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IoGuhJrW; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711361048; c=relaxed/simple;
+	bh=MfTLVwBpHmT3NhU5IyU2HA2DGd9BDnhPRzctKeGkWdU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tgskOR0ayV+S1xhT8o6rL/NkWmZRawPYSiLToYR2B3EQr1pAj9a/vc0na7NqCF4nLFiIvfWPJYHItOxhk9dYZRvbVlwQ5hwmOrYCUNRbFbr4CXVPVa3jAc0vJSHSq6t2B2p1CDVvGKfIdCNTpIGdO7pDRSWRBYnyJXyzoz6w9iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JpVBnGXX; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IoGuhJrW"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-512ed314881so2950598e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:58:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JpVBnGXX"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-341cf77b86bso355213f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:04:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711360735; x=1711965535; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qvul6s5HtP/ZlpqUVoqPGz55enL0nlUDBRgMBFp+K5w=;
-        b=IoGuhJrWwts8QDjyyl+JjGcnDGR+kOu7Eev/rHRxxC4ko3+OG7s3L0ld7MjqWpTWJ7
-         /mXqeBJaEjWLnQ2DyG/9uKkkUcdKQ8suAqblcFfMOfe5ibw8juTyE0/UksMjmFAx5oVJ
-         woMgFjxN06osvSDXIbh99De75fJzu574WRXjhwDLB0t3UhjDSTR8GFsrJT9WMFWJh3jT
-         KCnZYREPo10ynXZEiXy76WFMHsE/KdmaEP3HOPkqP4/c56eS+A5+VAJOffU88HiWi4QR
-         beTXvcv47AwGZeQznX7Yf9GRQ/y/k3WF0TMoUlyABxXYSLwx0EZ2E0BJDQJWxnHV9Xbq
-         EySA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711361044; x=1711965844; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sodtg05G0+kvZkJVm8IsH+PblHBiK83uT7JTQwgljWI=;
+        b=JpVBnGXX8Kns4ZaR5LwA5sLy4ES4iGLJHt+AhnGL2s4tJt/VGOkAW/5JGiKqfO/65g
+         +8IT0ujtMFbS3TWEY0fiTi6qFh0fA70eAppEn/g1znNUFYq5aIfGSHC5elFV3j2u0t3s
+         N8E8dcFMXp9yuWBhrI1paXCGOD2R5Y1wykSsSBaj8Q0lp5g/hR5DZ2sPuT4hLTa/t793
+         NkmEv1LGbSBueawBRzNyqNdrcmUEI4eFz6P6eIezMb1iHsRNB3n1eE2q6DrEKVIdZtz8
+         d4JNoZh57rlNSp6uWbnz/JLIIdA/vArRc9bEYCGP7vB7p/EpeQaF8ALQ6MqtrjTy7ijX
+         8m2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711360735; x=1711965535;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qvul6s5HtP/ZlpqUVoqPGz55enL0nlUDBRgMBFp+K5w=;
-        b=v7OGG5YEKxBGqq97fG0o0/Kj4Bvhe1WHxxqNzpzwUCMRfxP2ueAqDk0jAsTCDhoPKz
-         ST+B5m286AT6kk6Gjm06bOPZ3hTWmpEv3v1ComTOCwk9YcrhBOgt9AIT0JCpAQPo1cnw
-         2+WFSn0nqPSBtYNiYYRg3Wv58AkXpL0Y3u1/OUdPiP1RGgwzeP8M73KmS1PRJDTsKZZp
-         cnjhSMOD8IdaWWoBvFWsNb9hBK8aT8jNMKBgKhRsW7gb97dDaTDKWIbbw+NwnPe6bgqz
-         vOfB6xjWkEDX4x6V4oAS0K17pUlsgdcuYADvvUKMxUSt/MvrQ8+lCl3Jz8wgR2VIfHiv
-         /gpA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBtEPx7VT59vupIEINI+7imZuLy3E/HABID5JGG/8hKI1VHBlOHRWKo4kWAcpSNq0Hy+aTaIk3+wHQD9DNDpeJPt70vhrsBhD9BvfG
-X-Gm-Message-State: AOJu0YzVVGzqueb6cnyzgoDFajx0ABinrCn3XN9PFUdPdUfC2DxGpdh6
-	rnj66dY6t1l451LsDdpQxmVKZDCCGgPc/2Ds387jfxhZhKP5rniO+8Vtu1PNIatNeAGF2Ic00/u
-	4
-X-Google-Smtp-Source: AGHT+IGzb3SBz6tSy5Lr7i7F/Sz3cD4j3aUG8XDPJWjEsVe9L0DAU0zPAgHOII3D8qom8JbnUMqTbw==
-X-Received: by 2002:a19:2d41:0:b0:513:cdde:18f9 with SMTP id t1-20020a192d41000000b00513cdde18f9mr4422360lft.54.1711360735218;
-        Mon, 25 Mar 2024 02:58:55 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id a25-20020ac25059000000b005132bf9f8dcsm1011799lfm.303.2024.03.25.02.58.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 02:58:54 -0700 (PDT)
-Message-ID: <178594a2-cd5f-4608-aae6-7d68fd0817e0@linaro.org>
-Date: Mon, 25 Mar 2024 10:58:51 +0100
+        d=1e100.net; s=20230601; t=1711361044; x=1711965844;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sodtg05G0+kvZkJVm8IsH+PblHBiK83uT7JTQwgljWI=;
+        b=PKm9/1PtbXX+1YBGZWrLkDL2lDh37jVlf0j77QvwXtyITFxf5ugnZoyxFs/kuf4uvg
+         higF+RlFgYrpsn4nm5UuGYoqPKsfmxMYRFnR1vsxdfVrs9ptk27mEJ5kzyw4r/s3W2dM
+         UYoIhCHjD388rlkGu/cHOZRyvEiciq70J5h+o/Bb3757INI8LOe9vx5n0+h7F2+4I/Vu
+         MIWxNkAP4ByW5MUtWYs/jv2CW13NPgoZcC0dxKp2cKCADcFhAbsmV5h6fCM/CXGL4hWW
+         oBqpLvsu5q9lCTO319m7Deoqzteoqswunt2rw7NoZ7aJW6ZgFC9dTZ+ajwVppeH5QJX4
+         758Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXv7moSnXmZASNb427bvU4LCelgRruVJWf2oHy0LYfVFcTPlwKk795SYQdO5Iv1IkLvQPQKD1vcqeYtkOsUDs3Nnwcq3zTiEjtg6G9k
+X-Gm-Message-State: AOJu0YyvWICKEVst9SvI7TTmcFjprgxjpOkkUFZxrylnkqHSeHL3/lIQ
+	yyi8YQ1S6F77OxC9ycyUQISyGNlNFLvva0cEJvaAA5P4JZqwI0oV3hAvv+ytsgY=
+X-Google-Smtp-Source: AGHT+IH9hNJMfuKzvyPHJBrng5Xrl9wYKvbD96GFL2/KXJNt3vhICaZtozKnmZTUp0Yy1nmHR4e1Sg==
+X-Received: by 2002:a5d:4612:0:b0:33e:7f51:c2f7 with SMTP id t18-20020a5d4612000000b0033e7f51c2f7mr3962132wrq.52.1711361044516;
+        Mon, 25 Mar 2024 03:04:04 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:861d:8b72:a859:4ce9])
+        by smtp.gmail.com with ESMTPSA id dv13-20020a0560000d8d00b0033e25c39ac3sm9086874wrb.80.2024.03.25.03.04.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 03:04:04 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Elliot Berman <quic_eberman@quicinc.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Guru Das Srinagesh <quic_gurus@quicinc.com>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kernel@quicinc.com,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v9 00/13] firmware: qcom: qseecom: convert to using the TZ allocator
+Date: Mon, 25 Mar 2024 11:03:46 +0100
+Message-Id: <20240325100359.17001-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: nxp,imx93-adc.yaml: Add
- calibration properties
-To: Andrej Picej <andrej.picej@norik.com>, haibo.chen@nxp.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: jic23@kernel.org, lars@metafoo.de, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- upstream@lists.phytec.de
-References: <20240320100407.1639082-1-andrej.picej@norik.com>
- <20240320100407.1639082-3-andrej.picej@norik.com>
- <38637621-1611-4268-ae79-7ac93a72c5ee@linaro.org>
- <e994b756-7f4e-4be3-b8f3-310988174b44@norik.com>
- <7e58bf96-3c38-467f-86b6-06ff5feedb31@linaro.org>
- <40e08a5e-e7e9-47c7-9102-24a2bbba67cf@norik.com>
- <a1b173c0-5120-40f6-9708-cd810b4a2406@linaro.org>
- <1bbd4fdf-59c5-42b2-8698-95f402645c67@norik.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <1bbd4fdf-59c5-42b2-8698-95f402645c67@norik.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 22/03/2024 10:58, Andrej Picej wrote:
-> On 22. 03. 24 09:14, Krzysztof Kozlowski wrote:
->> On 22/03/2024 08:39, Andrej Picej wrote:
->>> On 20. 03. 24 13:15, Krzysztof Kozlowski wrote:
->>>> On 20/03/2024 13:05, Andrej Picej wrote:
->>>>> Hi Krzysztof,
->>>>>
->>>>> On 20. 03. 24 11:26, Krzysztof Kozlowski wrote:
->>>>>> On 20/03/2024 11:04, Andrej Picej wrote:
->>>>>>> Document calibration properties and how to set them.
->>>>>>
->>>>>> Bindings are before users.
->>>>>
->>>>> will change patch order when I send a v2.
->>>>>
->>>>>>
->>>>>> Please use subject prefixes matching the subsystem. You can get them for
->>>>>> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
->>>>>> your patch is touching.
->>>>>> There is no file extension in prefixes.
->>>>>
->>>>> So: dt-bindings: iio/adc: nxp,imx93-adc: Add calibration properties?
->>>>
->>>> Did you run the command I proposed? I don't see much of "/", but except
->>>> that looks good.
->>>
->>> Ok noted.
->>>
->>>>
->>>>>
->>>>>>
->>>>>>>
->>>>>>> Signed-off-by: Andrej Picej <andrej.picej@norik.com>
->>>>>>> ---
->>>>>>>     .../bindings/iio/adc/nxp,imx93-adc.yaml           | 15 +++++++++++++++
->>>>>>>     1 file changed, 15 insertions(+)
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml b/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
->>>>>>> index dacc526dc695..64958be62a6a 100644
->>>>>>> --- a/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
->>>>>>> +++ b/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
->>>>>>> @@ -46,6 +46,21 @@ properties:
->>>>>>>       "#io-channel-cells":
->>>>>>>         const: 1
->>>>>>>     
->>>>>>> +  nxp,calib-avg-en:
->>>>>>> +    description:
->>>>>>> +      Enable or disable averaging of calibration time.
->>>>>>> +    enum: [ 0, 1 ]
->>>>>>> +
->>>>>>> +  nxp,calib-nr-samples:
->>>>>>> +    description:
->>>>>>> +      Selects the number of averaging samples to be used during calibration.
->>>>>>> +    enum: [ 16, 32, 128, 512 ]
->>>>>>> +
->>>>>>> +  nxp,calib-t-samples:
->>>>>>> +    description:
->>>>>>> +      Specifies the sample time of calibration conversions.
->>>>>>> +    enum: [ 8, 16, 22, 32 ]
->>>>>>
->>>>>> No, use existing, generic properties. Open other bindings for this.
->>>>>
->>>>> You mean I should use generic properties for the ADC calibration
->>>>> settings? Is there already something in place? Because as I understand
->>>>> it, these calib-* values only effect the calibration process of the ADC.
->>>>
->>>> Please take a look at other devices and dtschema. We already have some
->>>> properties for this... but maybe they cannot be used?
->>>>
->>>
->>> I did look into other ADC devices, grep across iio/adc, adc bindings
->>> folders and couldn't find anything closely related to what we are
->>> looking for. Could you please point me to the properties that you think
->>> should be used for this?
->>
->> Indeed, there are few device specific like qcom,avg-samples. We have
->> though oversampling-ratio, settling-time-us and min-sample-time (which
->> is not that good because does not use unit suffix).
-> 
-> Ok, these are examples but I think I should not use them, since these 
-> are i.MX93 ADC specific settings, which are used for configuration of 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+SCM calls that take memory buffers as arguments require that they be
+page-aligned, physically continuous and non-cachable. The same
+requirements apply to the buffer used to pass additional arguments to SCM
+calls that take more than 4.
 
-No vendor prefix, so they rather should be generic, not imx93
-specific... But this the binding for imx93, so I don't understand your
-statement.
+To that end drivers typically use dma_alloc_coherent() to allocate memory
+of suitable format which is slow and inefficient space-wise.
 
-> calibration process, and are not related to the standard conversion 
-> process during runtime. Calibration process is the first step that 
-> should be done after every power-on reset.
-> 
->>
->> Then follow up questions:
->>   - nxp,calib-avg-en: Why is it a board-level decision? I would assume
->> this depends on user choice and what kind of input you have (which could
->> be board dependent or could be runtime decision).
-> 
-> Not really sure I get your question, so please elaborate if I missed the 
-> point.
-> This is a user choice, to enable or disable the averaging function in 
-> calibration, but this is a board-level decision, probably relates on 
-> external ADC regulators and input connections. The same options are used 
-> for every ADC channel and this can not be a runtime decision, since 
-> calibration is done before the ADC is even registered.
+SHM Bridge is a safety mechanism that - once enabled - will only allow
+passing buffers to the TrustZone that have been explicitly marked as
+shared. It improves the overall system safety with SCM calls and is
+required by the upcoming scminvoke functionality.
 
-You now mix how Linux driver behaves with hardware. Why you cannot
-recalibrate later, e.g. when something else is being connected to the
-exposed pins?
+The end goal of this series is to enable SHM bridge support for those
+architectures that support it but to that end we first need to unify the
+way memory for SCM calls is allocated. This in itself is beneficial as
+the current approach of using dma_alloc_coherent() in most places is quite
+slow.
 
-Best regards,
-Krzysztof
+First let's add a new TZ Memory allocator that allows users to create
+dynamic memory pools of format suitable for sharing with the TrustZone.
+Make it ready for implementing multiple build-time modes.
+
+Convert all relevant drivers to using it. Add separate pools for SCM core
+and for qseecom.
+
+Finally add support for SHM bridge and make it the default mode of
+operation with the generic allocator as fallback for the platforms that
+don't support SHM bridge.
+
+Tested on db410c, RB5, sm8550-qrd. Previous iteration tested also on
+sa8775p-ride and lenovo X13s (please do retest on those platforms if you
+can).
+
+v8 -> v9:
+- split the qseecom driver rework into two parts: first convert it to using
+  the __free() helper and then make it switch to tzmem
+- use QCOM_SCM_PERM_RW instead of (QCOM_SCM_PERM_WRITE | QCOM_SCM_PERM_READ)
+- add the TZMEM MAINTAINERS entry in correct alphabetical order
+- add a missing break; in a switch case in the tzmem module
+
+v7 -> v8:
+- make the pool size dynamic and add different policies for pool growth
+- improve commit messages and the cover letter: describe what the SHM
+  bridge is and why do we need it and the new allocator, explain why it's
+  useful to merge these changes already, independently from scminvoke
+- improve kerneldoc format
+- improve the comment on the PIL SCM calls
+- fix license tags, drop "or-later" for GPL v2
+- add lockdep and sleeping asserts
+- minor tweaks and improvements
+
+v6 -> v7:
+- fix a Kconfig issue: TZMEM must select GENERIC_ALLOCATOR
+
+v5 -> v6:
+Fixed two issues reported by autobuilders:
+- add a fix for memory leaks in the qseecom driver as the first patch for
+  easier backporting to the v6.6.y branch
+- explicitly cast the bus address stored in a variable of type dma_addr_t
+  to phys_addr_t expected by the genpool API
+
+v4 -> v5:
+- fix the return value from qcom_tzmem_init() if SHM Bridge is not supported
+- remove a comment that's no longer useful
+- collect tags
+
+v3 -> v4:
+- include linux/sizes.h for SZ_X macros
+- use dedicated RCU APIs to dereference radix tree slots
+- fix kerneldocs
+- fix the comment in patch 14/15: it's the hypervisor, not the TrustZone
+  that creates the SHM bridge
+
+v2 -> v3:
+- restore pool management and use separate pools for different users
+- don't use the new allocator in qcom_scm_pas_init_image() as the
+  TrustZone will create an SHM bridge for us here
+- rewrite the entire series again for most part
+
+v1 -> v2:
+- too many changes to list, it's a complete rewrite as explained above
+
+Bartosz Golaszewski (13):
+  firmware: qcom: add a dedicated TrustZone buffer allocator
+  firmware: qcom: scm: enable the TZ mem allocator
+  firmware: qcom: scm: smc: switch to using the SCM allocator
+  firmware: qcom: scm: make qcom_scm_assign_mem() use the TZ allocator
+  firmware: qcom: scm: make qcom_scm_ice_set_key() use the TZ allocator
+  firmware: qcom: scm: make qcom_scm_lmh_dcvsh() use the TZ allocator
+  firmware: qcom: scm: make qcom_scm_qseecom_app_get_id() use the TZ
+    allocator
+  firmware: qcom: qseecom: convert to using the cleanup helpers
+  firmware: qcom: qseecom: convert to using the TZ allocator
+  firmware: qcom: scm: add support for SHM bridge operations
+  firmware: qcom: tzmem: enable SHM Bridge support
+  firmware: qcom: scm: clarify the comment in qcom_scm_pas_init_image()
+  arm64: defconfig: enable SHM Bridge support for the TZ memory
+    allocator
+
+ MAINTAINERS                                   |   8 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/firmware/qcom/Kconfig                 |  31 ++
+ drivers/firmware/qcom/Makefile                |   1 +
+ .../firmware/qcom/qcom_qseecom_uefisecapp.c   | 285 ++++-------
+ drivers/firmware/qcom/qcom_scm-smc.c          |  30 +-
+ drivers/firmware/qcom/qcom_scm.c              | 182 ++++---
+ drivers/firmware/qcom/qcom_scm.h              |   6 +
+ drivers/firmware/qcom/qcom_tzmem.c            | 455 ++++++++++++++++++
+ drivers/firmware/qcom/qcom_tzmem.h            |  13 +
+ include/linux/firmware/qcom/qcom_qseecom.h    |   4 +-
+ include/linux/firmware/qcom/qcom_scm.h        |   6 +
+ include/linux/firmware/qcom/qcom_tzmem.h      |  56 +++
+ 13 files changed, 813 insertions(+), 265 deletions(-)
+ create mode 100644 drivers/firmware/qcom/qcom_tzmem.c
+ create mode 100644 drivers/firmware/qcom/qcom_tzmem.h
+ create mode 100644 include/linux/firmware/qcom/qcom_tzmem.h
+
+-- 
+2.40.1
 
