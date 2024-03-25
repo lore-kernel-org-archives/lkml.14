@@ -1,209 +1,126 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E0476045;
-	Mon, 25 Mar 2024 09:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B847A183BA4
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711359639; cv=none; b=X6CGTfOOCWoGZgISgGzg+G8d38DoYtWl2WtDOR3HmWZ4D9Q6xVeqwtNw3LqKKQffUkUOvlFEsQVg7MXKgoso5yHD0NXiAPTILmow/6JpvDlMuBHKtZDPmyO2NAUnWuHeDpXvBcyYKFoSt8V0/6+ktkvxHHDm5jjX+y6xwENeCLM=
+	t=1711359725; cv=none; b=M9EgEGuRVs2rbXOy6xPZjHqpCGxRZgzIx1DOf71Iygp6Ywmrwg4nOFd9qSTo89e2b/WS6de42t4qLhyEXhBqZF151fKWf1M6FixfAmLMobjzy4BdTOq2lCoBCzEKqs4R5BWxzQ+7PblDXN0OsbdBR6mrWbL1yEi7AxSsRgRuNJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711359639; c=relaxed/simple;
-	bh=XTa/O56XTWdw5ZF7TMRdkm4wmKncpZtw2pKiTC9UVyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lLRssnuxrUn2ztRUW3TCQ6jt/WYsKntAzT6rXudUinU6w8UGERjXB+wRGEQ3z2tlgBVQ4e0G3MwSDo8cBZVnlPxYqH43VxpedtwGRyPnPsSdrfy5aaViolQJ5ZQ+LyB5twhJ7/uilJT7zmeA2eCLoVbAoIY4lSmSxk+e0MSvfnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gDPgmlkW; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1711359725; c=relaxed/simple;
+	bh=mgmBjav3rZynbJ1mYiMRayuXnORVSBOK5ibhz91RhOc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YJudtaPKxwmLcck2XHt1vZDbQ3CwkJ3utqArOQx7zlRC69+eTUtkjr0Y3fRjtIlI08+1Xz0DIG1Wet8CwWd6fNwSl4IVFrWKXiKqhUIATsWe+OdSIum/NerqErkRVZk7qT8wam4iGlMvRBsVHpnzeLvdkfIr3qzvuQTQ+WBi1mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yfL/hraE; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gDPgmlkW"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42P5ua6K001614;
-	Mon, 25 Mar 2024 09:40:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=lbLk1l291cRpU9S2Tsbm27SJWoB+hUfjrtZd/Xy3feI=;
- b=gDPgmlkWNRs6tmUokyl+eLPZ0a2jRGDPaWEEPatE9xDpYmhLwmeEuPJ1lppcoBxVhEaB
- wPz3wtBJO2JsB0dmBs28JVcK1mPiA3DbjynMs1X0bzbVIpDxNgVGxUXcEVyI0OEJgi4E
- YCKrGTZt/qNVKGaGZ1rC4DdOmda7pdYXQ0X9idpnSR0ECD7Tf3Ga9ct+FPlUI6EidrTM
- cZ8By8BlnJL9udeRRtbMHX5MsaV6yEH6x+aEZOOHLAZ4eh7lQOXE4qx13hWvi2GI7AVg
- RqI6eC0ycdgh3Cb2+ghPwJxoSggmdzmfMtOGmTT37DZ1Dofn9kNTajYm4sCkJaRuAXXU 0g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2hh69x12-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 09:40:08 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42P9ZRcQ008400;
-	Mon, 25 Mar 2024 09:40:08 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2hh69x0x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 09:40:07 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42P7Zx2Y016410;
-	Mon, 25 Mar 2024 09:40:07 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x29dtrhms-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 09:40:06 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42P9e1KP22544922
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 25 Mar 2024 09:40:03 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9C6872004E;
-	Mon, 25 Mar 2024 09:40:01 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CED8520040;
-	Mon, 25 Mar 2024 09:40:00 +0000 (GMT)
-Received: from osiris (unknown [9.171.70.91])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 25 Mar 2024 09:40:00 +0000 (GMT)
-Date: Mon, 25 Mar 2024 10:39:59 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dave Chinner <david@fromorbit.com>, Guenter Roeck <linux@roeck-us.net>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 1/1] mm: vmalloc: Bail out early in find_vmap_area() if
- vmap is not init
-Message-ID: <20240325093959.9453-B-hca@linux.ibm.com>
-References: <20240323141544.4150-1-urezki@gmail.com>
- <ZgC38GfEZYpYGUU9@infradead.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yfL/hraE"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4d8804a553dso395088e0c.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:42:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711359721; x=1711964521; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=H3DoSiXc8Yp8uuBDk6EiaF3on1eVJFgP2CMpJotYW4U=;
+        b=yfL/hraE6BrTEM4P7ZNfa+3OMqcksXaARCCw83ABPAjKwpZQem/GWiE3/bYmoVXckS
+         au8iTvwSSIp98a9UCjHsPrBgS8QJPG7IFSzI0UKIQNqXi8Qr3rMu+q/XwFZ72W8escHm
+         NGBR3wQfZ+PWzH+NH8ydUQzEeqC0sLK+zVLKzaShSWLGrKrYXrDwRu9juRIA+UA/1wH+
+         cKe8BKyN5y5J3INNe6V41kGi+K1JmdEut36Munm9lVnI8EDJZlFM9xX4MAguDXSmI3hl
+         BcxV59SLimsVO4A+5rWglSQCpT5Y4gu23ySpbeMdIkfjYqr86XBLkl2AM3S5ZpPhsZQ5
+         SXpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711359721; x=1711964521;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H3DoSiXc8Yp8uuBDk6EiaF3on1eVJFgP2CMpJotYW4U=;
+        b=rK2A9gYPkTv4ERxSaVFhEh65XRxgJAUnMvAZCrQ49wicqWghuB3i3z0I5dMxAMOSR8
+         qWjyX9BghMJOimPHcwwvNkzcMngj1UdXcIkLMsuEb6Ms4vjdTZRKqWsYFCsf33vv0kQm
+         f0Lpn3d1JKZwGCEbJHUz1Rwz+EKhwbCXgQm2Vag3NSFjibX0/Wj3X7GdFPwZNmgfXrUd
+         tZNk+lztk6D9g9nBocTfw6WtyJm7QO/YUmbkqymFD+2cat5m7gLMS7S4PXHvW3sfXCwZ
+         rbeoYzP9WAKqcFNxiuoKH5rr8BN9YvXJzNv9jRoyX8UkIzVSnOumdjlvMu1E0EOvoxBX
+         dJGA==
+X-Gm-Message-State: AOJu0YzbhI5NLV7+FgG8yy7bU6IVVFLwdnLyEOfyHg+wmxOaF1Aq8438
+	Ek39YjnkhHP8gSA1EF5EwDLK/67TDIJBTlaGDxCgiY+cQuitEzly3Ai2mxX+8Bo0TZkw3v4toDI
+	T/9/DEh429blF9aOFDAnezUsVGz9XbVw0KbFcoA==
+X-Google-Smtp-Source: AGHT+IGsnuKrGIgppmDbZ5qB5PCahd/U7K9yFBI8vV7C0Q0Y/IrpHBMv5VHW+jQvIwvalqRtoeVjhf0a3ebzv0+7YqA=
+X-Received: by 2002:a05:6122:1815:b0:4d1:34a1:c892 with SMTP id
+ ay21-20020a056122181500b004d134a1c892mr4401327vkb.13.1711359721603; Mon, 25
+ Mar 2024 02:42:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgC38GfEZYpYGUU9@infradead.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: _9711NiWy7-EsEOQcdt74z12AqRCg_ZC
-X-Proofpoint-GUID: cWCtJLwizTW0fQFZ-RczZfodSfAwtBtC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_07,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 mlxlogscore=778 spamscore=0
- phishscore=0 clxscore=1011 impostorscore=0 suspectscore=0 malwarescore=0
- adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403250052
+References: <20240324231207.1351418-1-sashal@kernel.org>
+In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 25 Mar 2024 15:11:50 +0530
+Message-ID: <CA+G9fYuFh7K4XO+hVyJ59vWbfCaGpNf1ko9bUaZ0qV86wLbreQ@mail.gmail.com>
+Subject: Re: [PATCH 6.1 000/451] 6.1.83-rc1 review
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	florian.fainelli@broadcom.com, pavel@denx.de, 
+	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Mar 24, 2024 at 04:32:00PM -0700, Christoph Hellwig wrote:
-> On Sat, Mar 23, 2024 at 03:15:44PM +0100, Uladzislau Rezki (Sony) wrote:
-> > During the boot the s390 system triggers "spinlock bad magic" messages
-> > if the spinlock debugging is enabled:
-> > 
-> > [    0.465445] BUG: spinlock bad magic on CPU#0, swapper/0
-> > [    0.465490]  lock: single+0x1860/0x1958, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
-> > [    0.466067] CPU: 0 PID: 0 Comm: swapper Not tainted 6.8.0-12955-g8e938e398669 #1
-> > [    0.466188] Hardware name: QEMU 8561 QEMU (KVM/Linux)
-> > [    0.466270] Call Trace:
-> > [    0.466470]  [<00000000011f26c8>] dump_stack_lvl+0x98/0xd8
-> > [    0.466516]  [<00000000001dcc6a>] do_raw_spin_lock+0x8a/0x108
-> > [    0.466545]  [<000000000042146c>] find_vmap_area+0x6c/0x108
-> > [    0.466572]  [<000000000042175a>] find_vm_area+0x22/0x40
-> > [    0.466597]  [<000000000012f152>] __set_memory+0x132/0x150
-> > [    0.466624]  [<0000000001cc0398>] vmem_map_init+0x40/0x118
-> > [    0.466651]  [<0000000001cc0092>] paging_init+0x22/0x68
-> > [    0.466677]  [<0000000001cbbed2>] setup_arch+0x52a/0x708
-> > [    0.466702]  [<0000000001cb6140>] start_kernel+0x80/0x5c8
-> > [    0.466727]  [<0000000000100036>] startup_continue+0x36/0x40
-...
-> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > index 22aa63f4ef63..0d77d171b5d9 100644
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@ -2343,6 +2343,9 @@ struct vmap_area *find_vmap_area(unsigned long addr)
-> >  	struct vmap_area *va;
-> >  	int i, j;
-> >  
-> > +	if (unlikely(!vmap_initialized))
-> > +		return NULL;
-> > +
+On Mon, 25 Mar 2024 at 04:42, Sasha Levin <sashal@kernel.org> wrote:
 >
-> I guess this is ok as an urgend bandaid to get s390 booting again,
-> but calling find_vmap_area before the vmap area is initialized
-> seems an actual issue in the s390 mm init code.
-> 
-> Adding the s390 maintainers to see if they have and idea how this could
-> get fixed in a better way.
+>
+> This is the start of the stable review cycle for the 6.1.83 release.
+> There are 451 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Tue Mar 26 11:11:59 PM UTC 2024.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.1.y&id2=v6.1.82
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+>
+> Thanks,
+> Sasha
 
-I'm going to push the patch below to the s390 git tree later. This is not a
-piece of art, but I wanted to avoid to externalize vmalloc's vmap_initialized,
-or come up with some s390 specific change_page_attr_alias_early() variant where
-sooner or later nobody remembers what "early" means.
+The regression detected while building allmodconfig builds with clang-17
+failed on all the architectures. But gcc-12 builds passed.
 
-So this seems to be "good enough".
+> Andrii Nakryiko (5):
+>   libbpf: Fix faccessat() usage on Android
+>   libbpf: Add missing LIBBPF_API annotation to libbpf_set_memlock_rlim
+>     API
+>   selftests/bpf: Convert test_global_funcs test to test_loader framework
+>   selftests/bpf: Add global subprog context passing tests
+>   bpf: don't infer PTR_TO_CTX for programs with unnamed context type
 
-From 0308cd304fa3b01904c6060e2115234101811e48 Mon Sep 17 00:00:00 2001
-From: Heiko Carstens <hca@linux.ibm.com>
-Date: Thu, 21 Mar 2024 09:41:20 +0100
-Subject: [PATCH] s390/mm,pageattr: avoid early calls into vmalloc code
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-The vmalloc code got changed and doesn't have the global statically
-initialized vmap_area_lock spinlock anymore. This leads to the following
-lockdep splat when find_vm_area() is called before the vmalloc code is
-initialized:
+Build error:
+------------
+kernel/bpf/btf.c:5140:10: error: expression which evaluates to zero
+treated as a null pointer constant of type 'const struct btf_member *'
+[-Werror,-Wnon-literal-null-conversion]
+ 5140 |                 return false;
+      |                        ^~~~~
+1 error generated.
+make[4]: *** [scripts/Makefile.build:250: kernel/bpf/btf.o] Error 1h
 
-BUG: spinlock bad magic on CPU#0, swapper/0
- lock: single+0x1868/0x1978, .magic: 00000000, .owner: swapper/0, .owner_cpu: 0
+Steps to reproduce:
+# tuxmake --runtime podman --target-arch arm64 --toolchain clang-17
+--kconfig allmodconfig LLVM=1 LLVM_IAS=1
 
-CPU: 0 PID: 0 Comm: swapper Not tainted 6.8.0-11767-g23956900041d #1
-Hardware name: IBM 3931 A01 701 (KVM/Linux)
-Call Trace:
- [<00000000010d840a>] dump_stack_lvl+0xba/0x148
- [<00000000001fdf5c>] do_raw_spin_unlock+0x7c/0xd0
- [<000000000111d848>] _raw_spin_unlock+0x38/0x68
- [<0000000000485830>] find_vmap_area+0xb0/0x108
- [<0000000000485ada>] find_vm_area+0x22/0x40
- [<0000000000132bbc>] __set_memory+0xbc/0x140
- [<0000000001a7f048>] vmem_map_init+0x40/0x158
- [<0000000001a7edc8>] paging_init+0x28/0x80
- [<0000000001a7a6e2>] setup_arch+0x4b2/0x6d8
- [<0000000001a74438>] start_kernel+0x98/0x4b0
- [<0000000000100036>] startup_continue+0x36/0x40
-INFO: lockdep is turned off.
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.82-451-ga5b0d68e1b0f/testrun/23155982/suite/build/test/clang-17-allmodconfig/log
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2eAPAL6GZr1JrCuFjUfBrCjccbe/
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.82-451-ga5b0d68e1b0f/testrun/23155982/suite/build/test/clang-17-allmodconfig/history/
 
-Add a slab_is_available() check to change_page_attr_alias() in order to
-avoid early calls into vmalloc code. slab_is_available() is not exactly
-what is needed, but there is currently no other way to tell if the vmalloc
-code is initialized or not, and there is no reason to expose
-e.g. vmap_initialized from vmalloc to achieve the same.
-
-The fixes tag does not mean that the referenced commit is broken, but that
-there is a dependency to this commit if the vmalloc commit should be
-backported.
-
-Fixes: d093602919ad ("mm: vmalloc: remove global vmap_area_root rb-tree")
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
----
- arch/s390/mm/pageattr.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/s390/mm/pageattr.c b/arch/s390/mm/pageattr.c
-index 01bc8fad64d6..b6c6453d66e2 100644
---- a/arch/s390/mm/pageattr.c
-+++ b/arch/s390/mm/pageattr.c
-@@ -344,6 +344,9 @@ static int change_page_attr_alias(unsigned long addr, unsigned long end,
- 	struct vm_struct *area;
- 	int rc = 0;
- 
-+	/* Avoid early calls into not initialized vmalloc code. */
-+	if (!slab_is_available())
-+		return 0;
- 	/*
- 	 * Changes to read-only permissions on kernel VA mappings are also
- 	 * applied to the kernel direct mapping. Execute permissions are
--- 
-2.40.1
-
+--
+Linaro LKFT
+https://lkft.linaro.org
