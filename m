@@ -1,267 +1,124 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A111CA9C
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 19:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C731B59A
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 19:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711394602; cv=none; b=cJZ1318ZqVMXQ9L9yhQwAf9VjEZwvRfpB87x1vyTo7z/ttLo7RsJ97vDLoBR+78WqwZwzQUUwGUp5rA35KJy1LWVb9J1R3XI0jsyQk0x/mwmBT7WWQ9Vg9eFRspZTMy5QXy75BBHl2Rz68XEheVGRfeep1tLaqW+DSx9KvCmCyw=
+	t=1711394607; cv=none; b=leiH/mwMfcO77TsH4aaEV3RxJpwyG9NGSOIloDjHtqBnU531/0d2vJUjKzJJvKZHdJo6/CAr0D9DvLhwYC1xuDD8uJIsbk4ue2fRog8rNWl+1g98H21ITez2Ov9NBqV0Hh940ciiNiiOFImyp6mabAE3LYqUtcaX5mvhpG04PwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711394602; c=relaxed/simple;
-	bh=Q6Z2QQzlHF9I5NpaFnlI0Qths5F3IE0lkEGmARz6L3E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZpCuYySmL58cmsA95wjI6XGh2piFSwz9h+i+9nOX0PEzuLqUZLkXLfZyh+9b+pygqxMS2RafPJByHW1/6eYQItFIjsrfDV7/o7s3wSKxOAAgGhev8ZV6sBHDOzX1fixtHiHruL6dyQMRpTWOPfUfPaS2V7Ztj/CJQ+wagfhZ4UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ys+OZxVH; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1711394607; c=relaxed/simple;
+	bh=FjY4GYVXr3k8uuStxgi4b+AOUxwzWPNNLCmKPoWQjp0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=I9X2kwffK6Cbdqe0Bi3m9w0tn+A6S9o9MY2Ucfw8TPckhmAVg52pIWreRUa4U6j0BPc4Faqo5PuynjBnfSjB03v74XzrsozU09gINP42gls4udmHoqfmKuf4pvRNcgFMZFMdkJgM1SxeCZ70V6Av1XQmO/qx5iFXEDT16VWPjxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zj7iGGjt; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ys+OZxVH"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3c3d70191c7so153141b6e.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:23:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zj7iGGjt"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a474d26fb41so219049066b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:23:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711394598; x=1711999398; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3j5LMJ9YLbVm0kA7lcSoZPxPav8nH8W3FcX3pJtoBsM=;
-        b=Ys+OZxVH68/21TkhTffqzpE/mbx9i0FzC7lXhWMRyTYnh8SUkphQV8Ew6+W44Buygv
-         vehMJSm2GzmvwsQhOpkyxLcOmwXx3D8TQHYLFNSZVCfGncg2bqpG/l26IcAkKalp4suZ
-         JemALtw/ZXJEeLsasTIzCLaLIfYMUur5JX0QTcZHKnDz0tVKiZIWp3XnMqJgKJXt5P1B
-         1mqvWPzcg/Ft6CTijWQbOeiFJeQ8wVVi3Hn8x/YpqECjxo1CGqtg/oRfrMXzMgcqhW0W
-         g4BvZea0h0JaF2VnrIUHLtavcltVdBhfnGGeC2v5NDfJqFHobH/KhuuzL47+EfU36Idb
-         k0mg==
+        d=linaro.org; s=google; t=1711394603; x=1711999403; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=I2AtToWe7Efdj6aJ4/2uX4LyPVqOVDYs0OVfwHkOouk=;
+        b=Zj7iGGjtc/8+nvsIBkYm/TZ9d8oNFmH5XPCDjDecbTfiDWjdJiCkMWvHRHphhcWG35
+         LKZVMOfQZMj+I7uwDUXZ1ApH/mzBDIkyU6WJgXMT9IvOk8YiFwYfhA326i3oKoqQR6Uz
+         lCevjdSgst6xRs8c1HUZW9f/tJcnYRg7hQGPTjVb8stkHf8N5TdqnJs7xgQBpEh/Coks
+         /EYF4G/8tURAZQdOdPUz4YZrSgUukuXQDSOJ8pYCF3u9w4tdx7sB14saJ357EWt/q+Hg
+         S+YfTJNUaoQsqRtIJbk0Xi8ONNe6pboDYtk1uehsq/dfLi8KdAo1B3N4UWFTkQmVMy+d
+         wlfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711394598; x=1711999398;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1711394603; x=1711999403;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3j5LMJ9YLbVm0kA7lcSoZPxPav8nH8W3FcX3pJtoBsM=;
-        b=s1i0O68SDuNnJK+VpQGzfYCNIEDRnJW+JevvTv68jn8UO5wr4j3SaC8tdh+8U459u9
-         Lw3wnePy9x36QX+kUmCp0/OJ59vsxFAGtr39c28dRPqxPBYADj7vxre+hZ/wlWb0bWP/
-         D0AttmKOAgtrVk+hFQM86+Z00DTAXd9jiZsBIOl1yOtQejsBjk7Q/v1gZcS5Fx8wHzYy
-         gC5R7Fowt5O6hYZnnxMm9i9x2UUteJSIykLdkiMHDrVlEmEPkNKstm90I5wUXSUCi7oK
-         nlQBfUasHgLcQv8iLsXnFHa2sfemiOC24yMJykLxfOVkRiVrzkGJc6PiHZYisu8GvJeA
-         9WtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKvQWuesfIJ//ocipWfSDfio5gDCf/KvgjvAIQ4tVia/jGR6dbAHytiqQECT6wn+xrzT8KfTk+W0pUmSaghRg/GI6p6TXY4epSIB7f
-X-Gm-Message-State: AOJu0YxnPeWFk6Fo479eOOLFXpK3uvGMaz/AVC9iUxx/ZL8wo8ci91CE
-	BX77bSaGQpKhP9d11D6a8kzBL9pszxiLQB0J+m6/inNClPZbD9h40hjveh8vmA4=
-X-Google-Smtp-Source: AGHT+IGHn99553cofQdlrQJf3VdYdaDHWchMOXF7/JOZNMZ8wadbxXok1Nh1EAX1o+QkGhiNiUs7Gw==
-X-Received: by 2002:a05:6808:3a0a:b0:3c3:a606:8084 with SMTP id gr10-20020a0568083a0a00b003c3a6068084mr1006102oib.46.1711394598318;
-        Mon, 25 Mar 2024 12:23:18 -0700 (PDT)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id bo16-20020a056808229000b003c3829794d3sm1183052oib.28.2024.03.25.12.23.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 12:23:17 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-To: Mark Brown <broonie@kernel.org>,
-	Ryan Wanner <ryan.wanner@microchip.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: David Lechner <dlechner@baylibre.com>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] spi: remove struct spi_message::is_dma_mapped
-Date: Mon, 25 Mar 2024 14:22:53 -0500
-Message-ID: <20240325-spi-remove-is_dma_mapped-v2-1-d08d62b61f1c@baylibre.com>
-X-Mailer: git-send-email 2.43.2
+        bh=I2AtToWe7Efdj6aJ4/2uX4LyPVqOVDYs0OVfwHkOouk=;
+        b=LDI6A4mEbVMqWx904YsPfEbcA96HhAbRN3ZMw4DrqzhljNqiLrbQBin77CyBBmzXUi
+         U5kblSkWazxaGdCx3eteOJIf0lHdDp8EX+Ewi8hONefKqi5VsJ1n/+GUOAx7ARmEt/vL
+         zXujbcVsKBZoAXtjjnJqcHDBCuz2EQNDKZGZrYJc034h+gIQpzX0J/aqL06n24PAHJfA
+         5N7cL1eBvZIV3teDSOGpq65hozP7VN/zS5vg3uZ3ERpUoKJI+RmBaNOez8S5hOHdYrMK
+         wghJWBiW0INob+l5cj0unVAc38Nk28I503kPgoE8kbKuqHnpSh4RF/Uz+dcJFlr7bCXY
+         tFyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUD4wlVP2vWjyxGTDZZX1KLROX5vnUn5+qV4EMhC7bdBIfNtK0iXOzj69HPsYmD5yqBYBfzi8HreULesFpI1h6exfN+tmfidKsk1FTW
+X-Gm-Message-State: AOJu0YxylDYWO5Ar9iUMgB5Huk27iGIcKt4mlLyowc41qw+d+8RRJkgJ
+	NGMnysBndGJp2bQZD1YWU1p0nLgcH/Puq3ZGFR7Cn5LHAfXPacwERnpBpvfobAM=
+X-Google-Smtp-Source: AGHT+IFJk6SRM+6U3z7hDZmnH7BBwAQIbn/6FyxaLUpn9jAktkYp4Qj6rmfhKfQ1b+g/dKkhdtpYjw==
+X-Received: by 2002:a17:907:1184:b0:a49:fa33:a413 with SMTP id uz4-20020a170907118400b00a49fa33a413mr3016087ejb.69.1711394603570;
+        Mon, 25 Mar 2024 12:23:23 -0700 (PDT)
+Received: from [192.168.92.47] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id jo10-20020a170906f6ca00b00a457a55b814sm3357754ejb.73.2024.03.25.12.23.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 12:23:23 -0700 (PDT)
+Message-ID: <531f7c92-9520-45f2-81b0-a45fa3f472fd@linaro.org>
+Date: Mon, 25 Mar 2024 20:23:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sdx75: add unit address to soc node
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240325102924.26820-1-krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
+ BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
+ HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
+ TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
+ zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
+ MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
+ t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
+ UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
+ aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
+ kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
+ Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
+ R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
+ BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
+ yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
+ xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
+ 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
+ GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
+ mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
+ x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
+ BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
+ mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
+ Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
+ xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
+ AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
+ 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
+ jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
+ cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
+ jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
+ cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
+ bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
+ YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
+ bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
+ nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
+ izWDgYvmBE8=
+In-Reply-To: <20240325102924.26820-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-There are no more users of the deprecated is_dma_mapped in struct
-spi_message so it can be removed.
+On 25.03.2024 11:29 AM, Krzysztof Kozlowski wrote:
+> Soc node has ranges, thus it must have an unit address. This fixes W=1
+> dtc warning:
+> 
+>   sdx75.dtsi:399.11-736.4: Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
 
-References in documentation and comments are also removed.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-A few similar checks if xfer->tx_dma or xfer->rx_dma are not NULL are
-also removed since these are now guaranteed to be NULL because they
-were previously set only if is_dma_mapped was true.
-
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
-Changes in v2:
-- Fix spi-pxa2xx.c:947:29: error: unused variable ‘message’
-- Link to v1: https://lore.kernel.org/r/20240315-spi-remove-is_dma_mapped-v1-1-ca876f9de1c5@baylibre.com
----
- Documentation/spi/pxa2xx.rst      |  3 ---
- Documentation/spi/spi-summary.rst |  4 ----
- drivers/spi/spi-atmel.c           |  8 ++------
- drivers/spi/spi-pxa2xx.c          | 11 -----------
- drivers/spi/spi.c                 |  7 -------
- include/linux/spi/spi.h           | 11 +++--------
- 6 files changed, 5 insertions(+), 39 deletions(-)
-
-diff --git a/Documentation/spi/pxa2xx.rst b/Documentation/spi/pxa2xx.rst
-index 19479b801826..43e0b758803a 100644
---- a/Documentation/spi/pxa2xx.rst
-+++ b/Documentation/spi/pxa2xx.rst
-@@ -194,9 +194,6 @@ The following logic is used to determine the type of I/O to be used on
- a per "spi_transfer" basis::
- 
-   if spi_message.len > 65536 then
--	if spi_message.is_dma_mapped or rx_dma_buf != 0 or tx_dma_buf != 0 then
--		reject premapped transfers
--
- 	print "rate limited" warning
- 	use PIO transfers
- 
-diff --git a/Documentation/spi/spi-summary.rst b/Documentation/spi/spi-summary.rst
-index 546de37d6caf..f7f8b1573f25 100644
---- a/Documentation/spi/spi-summary.rst
-+++ b/Documentation/spi/spi-summary.rst
-@@ -419,10 +419,6 @@ any more such messages.
-     to make extra copies unless the hardware requires it (e.g. working
-     around hardware errata that force the use of bounce buffering).
- 
--    If standard dma_map_single() handling of these buffers is inappropriate,
--    you can use spi_message.is_dma_mapped to tell the controller driver
--    that you've already provided the relevant DMA addresses.
--
-   - The basic I/O primitive is spi_async().  Async requests may be
-     issued in any context (irq handler, task, etc) and completion
-     is reported using a callback provided with the message.
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index bad34998454a..b62f57390d8f 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -987,8 +987,6 @@ static void atmel_spi_pdc_next_xfer(struct spi_controller *host,
-  * For DMA, tx_buf/tx_dma have the same relationship as rx_buf/rx_dma:
-  *  - The buffer is either valid for CPU access, else NULL
-  *  - If the buffer is valid, so is its DMA address
-- *
-- * This driver manages the dma address unless message->is_dma_mapped.
-  */
- static int
- atmel_spi_dma_map_xfer(struct atmel_spi *as, struct spi_transfer *xfer)
-@@ -1374,8 +1372,7 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
- 	 * DMA map early, for performance (empties dcache ASAP) and
- 	 * better fault reporting.
- 	 */
--	if ((!host->cur_msg->is_dma_mapped)
--		&& as->use_pdc) {
-+	if (as->use_pdc) {
- 		if (atmel_spi_dma_map_xfer(as, xfer) < 0)
- 			return -ENOMEM;
- 	}
-@@ -1454,8 +1451,7 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
- 		}
- 	}
- 
--	if (!host->cur_msg->is_dma_mapped
--		&& as->use_pdc)
-+	if (as->use_pdc)
- 		atmel_spi_dma_unmap_xfer(host, xfer);
- 
- 	if (as->use_pdc)
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index f2a856f6a99e..6c2a14418972 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -944,7 +944,6 @@ static int pxa2xx_spi_transfer_one(struct spi_controller *controller,
- 				   struct spi_transfer *transfer)
- {
- 	struct driver_data *drv_data = spi_controller_get_devdata(controller);
--	struct spi_message *message = controller->cur_msg;
- 	struct chip_data *chip = spi_get_ctldata(spi);
- 	u32 dma_thresh = chip->dma_threshold;
- 	u32 dma_burst = chip->dma_burst_size;
-@@ -959,16 +958,6 @@ static int pxa2xx_spi_transfer_one(struct spi_controller *controller,
- 
- 	/* Check if we can DMA this transfer */
- 	if (transfer->len > MAX_DMA_LEN && chip->enable_dma) {
--
--		/* Reject already-mapped transfers; PIO won't always work */
--		if (message->is_dma_mapped
--				|| transfer->rx_dma || transfer->tx_dma) {
--			dev_err(&spi->dev,
--				"Mapped transfer length of %u is greater than %d\n",
--				transfer->len, MAX_DMA_LEN);
--			return -EINVAL;
--		}
--
- 		/* Warn ... we force this to PIO mode */
- 		dev_warn_ratelimited(&spi->dev,
- 				     "DMA disabled for transfer length %u greater than %d\n",
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index ff75838c1b5d..a2f01116ba09 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -3709,9 +3709,6 @@ static int __spi_split_transfer_maxsize(struct spi_controller *ctlr,
- 	 * to the same values as *xferp, so tx_buf, rx_buf and len
- 	 * are all identical (as well as most others)
- 	 * so we just have to fix up len and the pointers.
--	 *
--	 * This also includes support for the depreciated
--	 * spi_message.is_dma_mapped interface.
- 	 */
- 
- 	/*
-@@ -3725,12 +3722,8 @@ static int __spi_split_transfer_maxsize(struct spi_controller *ctlr,
- 		/* Update rx_buf, tx_buf and DMA */
- 		if (xfers[i].rx_buf)
- 			xfers[i].rx_buf += offset;
--		if (xfers[i].rx_dma)
--			xfers[i].rx_dma += offset;
- 		if (xfers[i].tx_buf)
- 			xfers[i].tx_buf += offset;
--		if (xfers[i].tx_dma)
--			xfers[i].tx_dma += offset;
- 
- 		/* Update length */
- 		xfers[i].len = min(maxsize, xfers[i].len - offset);
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index c459809efee4..b589e2547439 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -955,8 +955,8 @@ struct spi_res {
-  * struct spi_transfer - a read/write buffer pair
-  * @tx_buf: data to be written (DMA-safe memory), or NULL
-  * @rx_buf: data to be read (DMA-safe memory), or NULL
-- * @tx_dma: DMA address of tx_buf, if @spi_message.is_dma_mapped
-- * @rx_dma: DMA address of rx_buf, if @spi_message.is_dma_mapped
-+ * @tx_dma: DMA address of tx_buf, currently not for client use
-+ * @rx_dma: DMA address of rx_buf, currently not for client use
-  * @tx_nbits: number of bits used for writing. If 0 the default
-  *      (SPI_NBITS_SINGLE) is used.
-  * @rx_nbits: number of bits used for reading. If 0 the default
-@@ -1066,8 +1066,7 @@ struct spi_transfer {
- 	/*
- 	 * It's okay if tx_buf == rx_buf (right?).
- 	 * For MicroWire, one buffer must be NULL.
--	 * Buffers must work with dma_*map_single() calls, unless
--	 * spi_message.is_dma_mapped reports a pre-existing mapping.
-+	 * Buffers must work with dma_*map_single() calls.
- 	 */
- 	const void	*tx_buf;
- 	void		*rx_buf;
-@@ -1111,8 +1110,6 @@ struct spi_transfer {
-  * struct spi_message - one multi-segment SPI transaction
-  * @transfers: list of transfer segments in this transaction
-  * @spi: SPI device to which the transaction is queued
-- * @is_dma_mapped: if true, the caller provided both DMA and CPU virtual
-- *	addresses for each transfer buffer
-  * @pre_optimized: peripheral driver pre-optimized the message
-  * @optimized: the message is in the optimized state
-  * @prepared: spi_prepare_message was called for the this message
-@@ -1146,8 +1143,6 @@ struct spi_message {
- 
- 	struct spi_device	*spi;
- 
--	unsigned		is_dma_mapped:1;
--
- 	/* spi_optimize_message() was called for this message */
- 	bool			pre_optimized;
- 	/* __spi_optimize_message() was called for this message */
-
----
-base-commit: 10402419f2d60890525f590b54d0eaec3de0d87a
-change-id: 20240315-spi-remove-is_dma_mapped-ac067635662e
+Konrad
