@@ -1,126 +1,79 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913C9289DA3;
-	Mon, 25 Mar 2024 01:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670012FE84D
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 01:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711328493; cv=none; b=oxH/hDl++jEpzsWuAvJdtAh5ATmXCkVaKfb6qJ+I/bsX04bXyBUBG+0pjTkYK1losIfptiEXYkB4NfyFUIJah9ex+VJ90TfHQdiqiDmH45LwZwgW7iWE7nQKdubfgdg5Ia2CAynjexcXP+FMfbhIgNbB6fJ9uDSgxeJNez65jAk=
+	t=1711328672; cv=none; b=J1ulLLAvDDVRa2pLioGa3C9CZBI2gKe72uOnFEvo14R/OHXRRzDJeTUYuRfA/Kmm/3Ck2Q7INl+4LZAoeuSeQnJFM5DJYJR9lB9TtP3+pGm0kQB0i2+ADgNnyy1cy3CYoaFNulYSviVsFYuOJV/Dui8QUjLRRlhw9ENEjxN7pK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711328493; c=relaxed/simple;
-	bh=8Ri/TcnwWROTeTo7/CMOgG9NEBLux/OUQ8AATvx46vI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I+diA82A/xQQEPmewWjaucg7fUACGaLNK9xFuaKS8YsoqT8Q9RhonNPuWjAIzDimYmoER8tfzURDxoa6JDKNWNOvTsHOQtYI63tuNNAzlVjq6esAUSFwXbKerdqbfHpljf9blnNoRatKpbyIE5AtapYh1HS5Bm3EUUrRR8+MCAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Du4BbhMN; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1711328672; c=relaxed/simple;
+	bh=HLX58pQI8SXB83k8TSE9weXRimPojqSZLVQ1p1YQbgI=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:Message-Id; b=dXq50LSsyy8xtlzHo2XRGw3quDFQS7qus8aUquERUcrGks4sXRmb/kjvNsL0epdv/xaOxm3H/x5JAP9yTVVhKmxQ8b0lQhbUS72N/A8qLSYIH+8u49c9hF1yZVnZBRwAKmd/AVqGBsRP6L6L6vbPAeJLPmNHOBGqdgk8HflN9Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mforney.org; spf=pass smtp.mailfrom=mforney.org; dkim=pass (2048-bit key) header.d=mforney.org header.i=@mforney.org header.b=IQE+vdCu; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mforney.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mforney.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Du4BbhMN"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1711328486; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Olj1ljSfg7IgQmSG+StWQZK2MWnbKss3wMKhzeU0r0Y=;
-	b=Du4BbhMNpDTu8vUMiE0mVjHvKtLfM93ce+XXWGCANHBecOtw0M3oYty8Ns2fVBeY6A1q2JFoz1aZUUc0uEafX6oLQaqSGkScrfBkTajVyz0j4hDK1IO8/rMHPbKZRM+cgbIYg6iLu9Dg198UeCF2H1KppW6EiCqadvAZe94favk=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W37sgMN_1711328485;
-Received: from 30.97.56.58(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W37sgMN_1711328485)
-          by smtp.aliyun-inc.com;
-          Mon, 25 Mar 2024 09:01:25 +0800
-Message-ID: <dec01947-6678-43b9-9c83-e1be48e9833e@linux.alibaba.com>
-Date: Mon, 25 Mar 2024 09:01:23 +0800
+	dkim=pass (2048-bit key) header.d=mforney.org header.i=@mforney.org header.b="IQE+vdCu"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dddbe47ac1so30223815ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 18:04:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mforney.org; s=google; t=1711328669; x=1711933469; darn=vger.kernel.org;
+        h=user-agent:message-id:in-reply-to:references:from:subject:cc:to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mpHYqBGYlnixcvfc0J1Ave38pS8nETGdngwvpSQTuLI=;
+        b=IQE+vdCuZCtEiCY60KpIUO9OQh9G++Wknz78+cyc7Ud2o2qUHznuxRpaLwpAGdJ4rd
+         oPDPBZoJdNpoTvUheeUP8nTca9is8fwXXZM96QtWKcTHlwPaukC/wB49eWmtp4YihwBu
+         BFgbcITIZ7zzyINgKYG+bwCKuR9xk0ZwJJzgPU8nugxfik2th0xX+4whX7SnZHPcZqxn
+         63i9agWvooVS+knqlPzdae5Rjs0OmX46FunjOX/z2aH66+ZFBVGgkVYkhTQZcQOm/0Ma
+         J0ASj+MhyjhcFNjoDMOo75f1lw727O7Zwh1a7oAY5ekfmBzb2IuyIRS4ZHAIiQ6Sznkr
+         En5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711328669; x=1711933469;
+        h=user-agent:message-id:in-reply-to:references:from:subject:cc:to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mpHYqBGYlnixcvfc0J1Ave38pS8nETGdngwvpSQTuLI=;
+        b=ZSDAjGTJPN5gcHdIQ8+8T0O/0wJRgyq4RHd0+Omk2urbWDMC91hKj7hCmMvz/EY36K
+         AuKs2Ju9x+6grsrdRv2D1LqA+2JaqastqsqSDi78qapZKvdBmi8dnG5KbC4N49j5u70x
+         Mi5eFtPm6qiGbexCU1wmeNE/Re+iWOig2ytjCR1GRNV8IJ309p9Ou5z9SofhZEF7u1/R
+         G9aVcms0CdiH5HlmrCNitlyNiWS8FtNgslU9q6ULvhmKKyjkXxBQK0HMHitRxa9kJhXV
+         3czVCM5VZZRzDhiIuYWpuDCN+42BAEjGm/U/nZ6NLugSZUunCZ0IGKrBuNWYfxktgCfv
+         lrEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTmeuEFj9frUjtz9660FsnbNQnfUPlFuS0K+Av/u+yXOrxeDgkUcYNY4jaHX+MgJabHMifGCRe5nOYoae57X+vybwfD6S4YSdhnxUx
+X-Gm-Message-State: AOJu0YyjLFYmfvfVsKwGwxFssTQ2YFhYHdS8p09j+pIX9UPrV6sS/bqe
+	dEMDQswg42rFXjPXib8X0KYqJZcfoxUTBwaIliP4xNF1OnlU8fkgyYLn3rGmtu0=
+X-Google-Smtp-Source: AGHT+IF9rqoIR3PNB/TlJ2XWMaPhpL62UD/3LEoox0CR8/qaVG2+VF6WD+iVHRPIggHdqTBzkOszmg==
+X-Received: by 2002:a17:902:ea08:b0:1dd:dcd3:662c with SMTP id s8-20020a170902ea0800b001dddcd3662cmr8076630plg.4.1711328668680;
+        Sun, 24 Mar 2024 18:04:28 -0700 (PDT)
+Received: from localhost ([2601:647:6400:20b0:cab2:9bff:fe88:d09c])
+        by smtp.gmail.com with ESMTPSA id g9-20020a170902740900b001dd3bee3cd6sm3618763pll.219.2024.03.24.18.04.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 24 Mar 2024 18:04:28 -0700 (PDT)
+Date: Sun, 24 Mar 2024 17:22:50 -0700
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, brauner@kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] Revert "ext4: apply umask if ACL support is disabled"
+From: Michael Forney <mforney@mforney.org>
+References: <20240315142956.2420360-1-max.kellermann@ionos.com>
+In-Reply-To: <20240315142956.2420360-1-max.kellermann@ionos.com>
+Message-Id: <3MDOTS1CN0V39.3MG49L9WIC8VM@mforney.org>
+User-Agent: mblaze/1.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 52/64] i2c: sprd: reword according to newest specification
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org
-Cc: Andi Shyti <andi.shyti@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
- Chunyan Zhang <zhang.lyra@gmail.com>, linux-kernel@vger.kernel.org
-References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
- <20240322132619.6389-53-wsa+renesas@sang-engineering.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20240322132619.6389-53-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+Max Kellermann <max.kellermann@ionos.com> wrote:
+> This reverts commit 484fd6c1de13b336806a967908a927cc0356e312.  The
+> commit caused a regression because now the umask was applied to
+> symlinks and the fix is unnecessary because the umask/O_TMPFILE bug
+> has been fixed somewhere else already.
 
+Thanks, Max! I've verified that this fixes symlink modes for me,
+as well as the flatpak corruption error I was getting.
 
-On 2024/3/22 21:25, Wolfram Sang wrote:
-> Match the wording of this driver wrt. the newest I2C v7, SMBus 3.2, I3C
-> specifications and replace "master/slave" with more appropriate terms.
-> They are also more specific because we distinguish now between a remote
-> entity ("client") and a local one ("target").
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Fixes: https://lore.kernel.org/lkml/28DSITL9912E1.2LSZUVTGTO52Q@mforney.org/
+> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 
-LGTM. Thanks.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-
-> ---
->   drivers/i2c/busses/i2c-sprd.c | 14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-sprd.c b/drivers/i2c/busses/i2c-sprd.c
-> index 28c88901d9bc..f1a8375ccc17 100644
-> --- a/drivers/i2c/busses/i2c-sprd.c
-> +++ b/drivers/i2c/busses/i2c-sprd.c
-> @@ -283,7 +283,7 @@ static int sprd_i2c_handle_msg(struct i2c_adapter *i2c_adap,
->   	return i2c_dev->err;
->   }
->   
-> -static int sprd_i2c_master_xfer(struct i2c_adapter *i2c_adap,
-> +static int sprd_i2c_xfer(struct i2c_adapter *i2c_adap,
->   				struct i2c_msg *msgs, int num)
->   {
->   	struct sprd_i2c *i2c_dev = i2c_adap->algo_data;
-> @@ -314,7 +314,7 @@ static u32 sprd_i2c_func(struct i2c_adapter *adap)
->   }
->   
->   static const struct i2c_algorithm sprd_i2c_algo = {
-> -	.master_xfer = sprd_i2c_master_xfer,
-> +	.xfer = sprd_i2c_xfer,
->   	.functionality = sprd_i2c_func,
->   };
->   
-> @@ -378,12 +378,12 @@ static irqreturn_t sprd_i2c_isr_thread(int irq, void *dev_id)
->   		i2c_tran = i2c_dev->count;
->   
->   	/*
-> -	 * If we got one ACK from slave when writing data, and we did not
-> +	 * If we got one ACK from client when writing data, and we did not
->   	 * finish this transmission (i2c_tran is not zero), then we should
->   	 * continue to write data.
->   	 *
->   	 * For reading data, ack is always true, if i2c_tran is not 0 which
-> -	 * means we still need to contine to read data from slave.
-> +	 * means we still need to contine to read data from client.
->   	 */
->   	if (i2c_tran && ack) {
->   		sprd_i2c_data_transfer(i2c_dev);
-> @@ -393,7 +393,7 @@ static irqreturn_t sprd_i2c_isr_thread(int irq, void *dev_id)
->   	i2c_dev->err = 0;
->   
->   	/*
-> -	 * If we did not get one ACK from slave when writing data, we should
-> +	 * If we did not get one ACK from client when writing data, we should
->   	 * return -EIO to notify users.
->   	 */
->   	if (!ack)
-> @@ -422,7 +422,7 @@ static irqreturn_t sprd_i2c_isr(int irq, void *dev_id)
->   		i2c_tran = i2c_dev->count;
->   
->   	/*
-> -	 * If we did not get one ACK from slave when writing data, then we
-> +	 * If we did not get one ACK from client when writing data, then we
->   	 * should finish this transmission since we got some errors.
->   	 *
->   	 * When writing data, if i2c_tran == 0 which means we have writen
-> @@ -653,5 +653,5 @@ static struct platform_driver sprd_i2c_driver = {
->   
->   module_platform_driver(sprd_i2c_driver);
->   
-> -MODULE_DESCRIPTION("Spreadtrum I2C master controller driver");
-> +MODULE_DESCRIPTION("Spreadtrum I2C host controller driver");
->   MODULE_LICENSE("GPL v2");
+Tested-by: Michael Forney <mforney@mforney.org>
