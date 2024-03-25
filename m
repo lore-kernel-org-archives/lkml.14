@@ -1,138 +1,108 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF4B18AFD4
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA32153512
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711354637; cv=none; b=gFcmPgl2sjZbtG+a3AL5smcSbWPSjQpxJB8nt4aTpjjWFaie+1sz1l+L9cKLUyBpIwmBxF7eC+QIjv4L9n1X/oehUlwXfjNy5TeWduRkQ08r8C8a09IJ3FejpK7erjy3F6v+NVIIk6VsjNHaU26MuIZWgpPYkQCbJFHznM0z1ho=
+	t=1711355498; cv=none; b=U4h29D/j6LOoBeVRSVFXCCJ4gt0C2yJQtVBxuGboKtIkUvwvnSJj3mWnNu1TrzVj6KIloTk2AdiDdEgKtGGwpKKRiWhYKEwYMFSn4xr2tCVQd3QTn/489XjEbKSniZ7SIjdYvJBrT9GqEDvjXIIgegN9lQFWZ3PqZ1m8YX0I7fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711354637; c=relaxed/simple;
-	bh=Cdc2lgu11HCTc3NOvQt4Wx11RtkZGRvsRmErAIMTOtA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BspLGAZ1Xpj0FU8MNef8TrGRXft7SwcqBapV/T73CwOOZx4A1qLduhn6O2lHlZKzk+kXf+OgWz7Y7cKciZkQcN935n3+ApybHDG5LhHwyeOg/BSbxmRVqTsgkKCMVwXAebeEjBySWYF9gmEo35MV/KOVG3gAYCEtiefhiTkYTxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vz9d9D50; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vz9d9D50"
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7e101b8fed9so524226241.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 01:17:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711354634; x=1711959434; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ut2Z7NylC1ZjYh0t1gpTkNMYaB0PuQ5lzXOkX20arzk=;
-        b=Vz9d9D509wJCjCcxF/b5OBrp4xTbEoTG3WTyVB32zgG2/i0AQPBnohnwSl7iN35geP
-         CuoIPfk5XMKtw3xz3WwVdvusNrQtDzeGhGnWh4ps2/Azdw/wYwzHO/e8qO9sC16ciGbb
-         BAmmldagosLTULCeEj06LCHyhVVVgZrLa+w298T6qyXCD2MVF4i3ocothKW1KpIM7MKu
-         ZPaJNWkcchmR18ZzBQSJfGl4IXaqjxf2VY1xtx4Rh4QlX8baF13hoVziHesrEH+MHWBm
-         tpW+qtxC35IwFIWw8qecthk75V5IWeh20tRBzEt64nvNmDKsLpkzHs/t/RNMCJL5B8aP
-         mT5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711354634; x=1711959434;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ut2Z7NylC1ZjYh0t1gpTkNMYaB0PuQ5lzXOkX20arzk=;
-        b=BsIWLELM9uqEr7np3bYaLLriBDnOmGMw5rGtbiCcLatYccITfL5Vxonmi7QYsRoeUx
-         o+kFKozjvu3TrQ+omXKuSA/RPdfCNZTgBux2t4IcTCdpsUhZOisdVg4FJDax95/qCAiT
-         8IEvEmFpF49E3C8I4iZCpNVFHQQ1pfBjmbhpyn+ChSurDJDi8VxnqNQohRW4H0XmX2Bw
-         XNiRgegODGJ14+h5S+7OCqqgYuq1v5BNT5ozc9QIHR8N+a3QUK/SRKszy+P4O6AxNmTl
-         aohpzob4QAqI2JEQgRjL7ZsPfSHEey6IAdGUcSKJmwaTcNIEdvPdQBXMwj2Sv4NmK76K
-         EfeA==
-X-Gm-Message-State: AOJu0YyxO/toEO7jQsfNzrmmMl9dl6Y2z/jIJ8UUPHZvwvbxk/6jqVQ1
-	gK9xr5l4yi0kTSw4/V94t/7hk/HpdDjDfkisE00zNEP+1R0v8Z4HYfgWTIV1m5ZtfF1fpiMeOGx
-	6U9Y/XkwnBAoclLDYXcRF2vcRHWzDniuBDvHd7w==
-X-Google-Smtp-Source: AGHT+IHY0fAqHGBuW15a+0qMrjktrDhlfxmxsDUXlC9QCdnmnXZsac9XicGScXZlK0/6xd6Eba/2rMRPS4c5hleF/5Y=
-X-Received: by 2002:a05:6102:34ec:b0:476:de63:c6de with SMTP id
- bi12-20020a05610234ec00b00476de63c6demr4404256vsb.24.1711354634277; Mon, 25
- Mar 2024 01:17:14 -0700 (PDT)
+	s=arc-20240116; t=1711355498; c=relaxed/simple;
+	bh=RQiAwdtoaFczmBg2nAsQJmkj8xlavEoNGQxwoKrZbwc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lEyVfrAC3vq9ONKnjrZ9r55wqq2liK2Z4silpdSdtAjDwHsiYWjLXGhF+wFpUV0P4sJcw04306BFBehWCy7pwxOfkUcxUgOaTDh6xNIChwK6yCr0JTw7ZMkHt/hfBY3oNayDXd4rkOLc+Smlgybmol3Xaf8LI6TvWQcT+ETfeLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4V35Mw42F3z9xGnM
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:15:24 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id E7BF2140496
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:31:20 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.81.223.214])
+	by APP2 (Coremail) with SMTP id GxC2BwB3sCRPNgFmUPztBA--.12038S2;
+	Mon, 25 Mar 2024 09:31:20 +0100 (CET)
+From: Petr Tesarik <petrtesarik@huaweicloud.com>
+To: Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Will Deacon <will@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS)
+Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
+	Petr Tesarik <petr@tesarici.cz>
+Subject: [PATCH v4 0/2] swiotlb: allocate padding slots if necessary
+Date: Mon, 25 Mar 2024 09:31:03 +0100
+Message-Id: <20240325083105.658-1-petrtesarik@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324234027.1354210-1-sashal@kernel.org>
-In-Reply-To: <20240324234027.1354210-1-sashal@kernel.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 25 Mar 2024 13:47:02 +0530
-Message-ID: <CA+G9fYu33d-SfUuHcyxJQZdPXARYjBVUaqbTBc+5k9HZYFjUqg@mail.gmail.com>
-Subject: Re: [PATCH 5.10 000/238] 5.10.214-rc1 review
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
-	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
-	florian.fainelli@broadcom.com, pavel@denx.de, 
-	=?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:GxC2BwB3sCRPNgFmUPztBA--.12038S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw1DWF1Duw1kKr4UZw17GFg_yoW8Xw1DpF
+	1fGrn3JF18tFyxW3ZIk3y0kF1rJw18Ca1UCFsIgryrZr15ZF1kZFyqyr4rGryUJrWIqF42
+	k3W5urWUCF4UJw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBa14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JV
+	W8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc7CjxVAKzI0EY4vE52x082I5MxAIw28Icx
+	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAI
+	cVCF04k26cxKx2IYs7xG6r4j6FyUMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRrOzxUUUUU=
+X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
 
-On Mon, 25 Mar 2024 at 05:10, Sasha Levin <sashal@kernel.org> wrote:
->
->
-> This is the start of the stable review cycle for the 5.10.214 release.
-> There are 238 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Tue Mar 26 11:40:23 PM UTC 2024.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git/patch/?id=3Dlinux-5.10.y&id2=3Dv5.10.213
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.10.y
-> and the diffstat can be found below.
->
-> Thanks,
-> Sasha
+From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 
-We're seeing regressions while building PowerPC with GCC 8 and 12 with
- ppc6xx_defconfig.
+If the allocation alignment is bigger than IO_TLB_SIZE and min_align_mask
+covers some bits in the original address between IO_TLB_SIZE and
+alloc_align_mask, preserve these bits by allocating additional padding
+slots before the actual swiotlb buffer.
 
-> Thomas Zimmermann (1):
->   arch/powerpc: Remove <linux/fb.h> from backlight code
+Changes from v3
+---------------
+* Add a parameter to swiotlb_align_offset(), so it is not open-coded in
+  swiotlb_tbl_map_single().
+* Extend the description of swiotlb_align_offset() and convert it to the
+  kernel-doc format.
+* Use bit operations to calculate number of padding slots and the padding
+  inside a slot. This matches all other such calculations in swiotlb.c.
 
------8<-----
-   /builds/linux/drivers/macintosh/via-pmu-backlight.c:22:20: error:
-'FB_BACKLIGHT_LEVELS' undeclared here (not in a function)
-      22 | static u8 bl_curve[FB_BACKLIGHT_LEVELS];
-         |                    ^~~~~~~~~~~~~~~~~~~
-   In file included from /builds/linux/include/linux/kernel.h:15,
-                    from /builds/linux/include/asm-generic/bug.h:20,
-                    from /builds/linux/arch/powerpc/include/asm/bug.h:109,
-                    from /builds/linux/include/linux/bug.h:5,
-                    from /builds/linux/include/linux/thread_info.h:12,
-                    from /builds/linux/arch/powerpc/include/asm/ptrace.h:26=
-4,
-                    from /builds/linux/drivers/macintosh/via-pmu-backlight.=
-c:11:
------>8-----
+Changes from v2
+---------------
+* Fix assignment of an uninitialized variable to pad_slots.
+* Improve commit message wrt INVALID_PHYS_ADDR.
 
-Bisection points to:
-
-   commit ee550f669e91c4cb0c884f38aa915497bc201585
-   Author: Thomas Zimmermann <tzimmermann@suse.de>
-   Date:   Wed Mar 6 13:28:20 2024 +0100
-       arch/powerpc: Remove <linux/fb.h> from backlight code
+Changes from v1
+---------------
+* Rename padding to pad_slots.
+* Set pad_slots only for the first allocated non-padding slot.
+* Do not bother initializing orig_addr to INVALID_PHYS_ADDR.
+* Change list and pad_slots to unsigned short to avoid growing
+  struct io_tlb_slot on 32-bit targets.
+* Add build-time check that list and pad_slots can hold the maximum
+  allowed value of IO_TLB_SEGSIZE.
 
 
-Reverting that commit made the build pass again.
+Petr Tesarik (2):
+  swiotlb: extend buffer pre-padding to alloc_align_mask if necessary
+  bug: introduce ASSERT_VAR_CAN_HOLD()
 
-Reproducer:
+ include/linux/build_bug.h | 10 +++++++
+ kernel/dma/swiotlb.c      | 61 ++++++++++++++++++++++++++++++---------
+ 2 files changed, 58 insertions(+), 13 deletions(-)
 
-   tuxmake --runtime podman --target-arch powerpc --toolchain gcc-12
---kconfig ppc6xx_defconfig
+-- 
+2.34.1
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-
-Greetings!
-
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
