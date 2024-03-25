@@ -1,68 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB27834DF14
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7001386D3
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711335059; cv=none; b=eicKOxKY9s+uFAfx2Rsumh+CnmjuvdxqOIuNk+IblXbtIX9yN+OCNMt/Oh9qbdDZFp+UxqzAfq/vISL9WPqOJOBFCtFMuAlKcD5/EY1XDXAz/RAVO9xB7IYuC2FHKp6XUggk+n8VT4R7QE8oaOnOOPL8hb+1KLzNZE8QGFx4qBc=
+	t=1711335195; cv=none; b=mdz/q9/MEjjMwuuRoGasjaabW206ZMHK6jZKIjHSXh6DiakVJJ2iVaaRWFFDATNOvNogd4Pc0+Mg86fP0+9iqEhSXG8z4HuhUs11XzE/vWwcl+5B4WjgPIAxcNiqJyjrSbnX6tszKMCd2qVXFbjPI2ka/7BUG8ZmerRA3Usp5a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711335059; c=relaxed/simple;
-	bh=KtDX9c5FQBgaoOD7h5ZI/Q8jd/0Y1KkqpSUWOSPHmPU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=itl8GmflKlELyxqvkg6mwQ9/5ZMRwzi/mOJ/mYYVR2QKFMl+CBP81PEWR4ZxK+dShXZTb0azKpQSsqOMLJn3cM3P1JSyhp4F1uUQULbG0aCUM1eMvR96X7wT4SAQBBLz49KBQiMAjnm+ZJiVQapfK5EWlKm9m7fdIBS0u9Kz+DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZmWakkdl; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711335195; c=relaxed/simple;
+	bh=Iwy35WEKGQaZWaKUprvpCF3gybVRdIbsl3SsAExl21c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dde5srmqZrumkHoNne1TeRbmVTf8o0UlXhHcMsq0YxXY8Wcx9eYTKwuVvqb9N1ljFKXwiTVy/Y1fjJ7SnMDXlQK+6cjmnJhUv9HqEzVMbM3LHlqOO+mMxemsLnADl5/7Yj89EsUkLyh151NrXcNl/CpFOkWwi4bHBjc3bWukBDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=f+W+83Kz; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZmWakkdl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711335058; x=1742871058;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=KtDX9c5FQBgaoOD7h5ZI/Q8jd/0Y1KkqpSUWOSPHmPU=;
-  b=ZmWakkdlJGZkaNC62NgFRkPLbUIHTAkOgP0llQfvKjanfGD4ZC2tMnyg
-   gFHTg/na2Qz7MGWtWFyfZAPZ9617HHyQ8Xu7nnImEDKXCIjsKsB/JH3wK
-   hgcEBXpyZPctmGq9s1G6YZCt/PGRorrRXwxPUa+WDSJl75K/7eLDuvLKg
-   AUCgI4mnMy5tVGdEjvdb2If3EsNZsubHnO6nDeadEVYqdCJxSPaLdDkbf
-   GF8ZsTXaSlWcRq2ehrrTZSkL4MyGWFh9+iepNsFcpDEis/GwpVY3HExWD
-   9UE+MFSeLnQBn4q+l0pPsoCcOQCf+Ebc64Z7aMrwnamWih6o7RC8C4lpq
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="10113200"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="10113200"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 19:50:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="15358991"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 19:50:52 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Donet Tom <donettom@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org,  Aneesh Kumar <aneesh.kumar@kernel.org>,
-  Michal Hocko <mhocko@kernel.org>,  Dave Hansen
- <dave.hansen@linux.intel.com>,  Mel Gorman <mgorman@suse.de>,  Feng Tang
- <feng.tang@intel.com>,  Andrea Arcangeli <aarcange@redhat.com>,  Peter
- Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Rik van
- Riel <riel@surriel.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Matthew
- Wilcox <willy@infradead.org>,  Vlastimil Babka <vbabka@suse.cz>,  Dan
- Williams <dan.j.williams@intel.com>,  Hugh Dickins <hughd@google.com>,
-  Kefeng Wang <wangkefeng.wang@huawei.com>,  Suren Baghdasaryan
- <surenb@google.com>
-Subject: Re: [PATCH v3 2/2] mm/numa_balancing:Allow migrate on protnone
- reference with MPOL_PREFERRED_MANY policy
-In-Reply-To: <e65b4e89-e8a9-475d-abc7-c63db8af435e@linux.ibm.com> (Donet Tom's
-	message of "Fri, 22 Mar 2024 15:35:58 +0530")
-References: <cover.1711002865.git.donettom@linux.ibm.com>
-	<b1599085e1d2f3e48dc71c7991283b8aaa0fe00c.1711002865.git.donettom@linux.ibm.com>
-	<87h6gyr7jf.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<e65b4e89-e8a9-475d-abc7-c63db8af435e@linux.ibm.com>
-Date: Mon, 25 Mar 2024 10:48:58 +0800
-Message-ID: <875xxbqb51.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="f+W+83Kz"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-34175878e30so2770746f8f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 19:53:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1711335190; x=1711939990; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IQSoGNn9foRvk9xNgJy3vvfi1aDXWec9jix0W40tVdQ=;
+        b=f+W+83KzVcFgOnBIYaWOsLNSTXRgX51IOnmNuCNUJmS/2G7HN6h2q2KVBH81do868A
+         TOmAPiVO1AGVIF62bokjqbMA/KLKbR5PYslQgnzkLoBBrjOuTdHNvSWnQazK4Hu0Yvns
+         Tgwss8zuyfX7MPLtdKvSiwV9nP1+OIHceTc3cb2Zzno9rzb7PiCmTQDEqp8SatcPatLe
+         CtYkuXTESqoTwsnpSystKMCNBRpN0TOalAu965meiWNZ4LQOQYKTuDC298uBvHsaDBbJ
+         AHLPidWzdNIvUmy/EQMM3MW4rgPgcms49zh+u9gUAd6q9bOZ+fD/Unisf8TQb+TUEe1d
+         m3cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711335190; x=1711939990;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IQSoGNn9foRvk9xNgJy3vvfi1aDXWec9jix0W40tVdQ=;
+        b=G91PyOKj0//8lSrkl4z9frPRoi1zJiFdOPUzxrKESvBVYc0v/GgorHRdNXCRGKgZym
+         rn9u/KEBJc9UncTvY85Nx95UpjIBO25mAj1XKB3sqBDU45Ag9hrD3cq7/mpM5gf3c5qi
+         Lzcm7ZCVNZZq3rj9FKht8e1dvUz3+L/rve2FnjjGs8yRecm35GlT4ZBxpy520ic5guRj
+         RxUcEfBO7sTBf9BH4y/OAkz9lG5kKsDyfNLOFxOrl1Rkcfl1e5dzJEOS6YGmlLidD3ma
+         QB9E1H664/slCIq17f2gQi4HqPmbSbTo1Ri+/tEb952ftLdgNQjwyn0803CugD2+bGWM
+         QmBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXYGkjSS0cSJkgQ3JiY9OX2b5G9KPbPDwXOLaiBIQm+RXP4XH1j8UGg4OSMzACO4fbcG9ZRoWdd8/HZtX6e56zjfjuEpOwxOav/kxW
+X-Gm-Message-State: AOJu0YwgRdomlxxWb3gpHK8TIwM601dk/h0huYPvk+cXep4PoOanLUSP
+	QxoDkk9kO1tbaDm5M5gvjfMWyWhMuWaFkeIWbYs5V+R+jrmp00EepQGuhPHtziU=
+X-Google-Smtp-Source: AGHT+IG59/Ky716HurdeTVFpnSrvFsweZy84YJGoZ4Hi4NSc7jmRa3TENi3PZTobj8KmtDnOKAn23Q==
+X-Received: by 2002:a05:6000:d8c:b0:33e:7ae6:6f4a with SMTP id dv12-20020a0560000d8c00b0033e7ae66f4amr4380793wrb.23.1711335190261;
+        Sun, 24 Mar 2024 19:53:10 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id t15-20020a5d690f000000b0033e95bf4796sm8123808wru.27.2024.03.24.19.53.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Mar 2024 19:53:09 -0700 (PDT)
+Date: Mon, 25 Mar 2024 02:53:08 +0000
+From: Qais Yousef <qyousef@layalina.io>
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: Bart Van Assche <bvanassche@acm.org>, linux-kernel@vger.kernel.org,
+	peterz@infradead.org, juri.lelli@redhat.com, mingo@redhat.com,
+	rafael@kernel.org, dietmar.eggemann@arm.com, vschneid@redhat.com,
+	vincent.guittot@linaro.org, Johannes.Thumshirn@wdc.com,
+	adrian.hunter@intel.com, ulf.hansson@linaro.org, andres@anarazel.de,
+	asml.silence@gmail.com, linux-pm@vger.kernel.org,
+	linux-block@vger.kernel.org, io-uring@vger.kernel.org,
+	linux-mmc@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] Introduce per-task io utilization boost
+Message-ID: <20240325025308.6uqkhpyba6moxntl@airbuntu>
+References: <20240304201625.100619-1-christian.loehle@arm.com>
+ <86f0af00-8765-4481-9245-1819fb2c6379@acm.org>
+ <0dc6a839-2922-40ac-8854-2884196da9b9@arm.com>
+ <c5b7fc1f-f233-4d25-952b-539607c2a0cc@acm.org>
+ <2784c093-eea1-4b73-87da-1a45f14013c8@arm.com>
+ <20240321123935.zqscwi2aom7lfhts@airbuntu>
+ <1ff973fc-66a4-446e-8590-ec655c686c90@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,162 +78,167 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <1ff973fc-66a4-446e-8590-ec655c686c90@arm.com>
 
-Donet Tom <donettom@linux.ibm.com> writes:
+On 03/21/24 17:57, Christian Loehle wrote:
 
-> On 3/22/24 14:02, Huang, Ying wrote:
->> Donet Tom <donettom@linux.ibm.com> writes:
->>
->>> commit bda420b98505 ("numa balancing: migrate on fault among multiple b=
-ound
->>> nodes") added support for migrate on protnone reference with MPOL_BIND
->>> memory policy. This allowed numa fault migration when the executing node
->>> is part of the policy mask for MPOL_BIND. This patch extends migration
->>> support to MPOL_PREFERRED_MANY policy.
->>>
->>> Currently, we cannot specify MPOL_PREFERRED_MANY with the mempolicy flag
->>> MPOL_F_NUMA_BALANCING. This causes issues when we want to use
->>> NUMA_BALANCING_MEMORY_TIERING. To effectively use the slow memory tier,
->>> the kernel should not allocate pages from the slower memory tier via
->>> allocation control zonelist fallback. Instead, we should move cold pages
->>> from the faster memory node via memory demotion. For a page allocation,
->>> kswapd is only woken up after we try to allocate pages from all nodes in
->>> the allocation zone list. This implies that, without using memory
->>> policies, we will end up allocating hot pages in the slower memory tier.
->>>
->>> MPOL_PREFERRED_MANY was added by commit b27abaccf8e8 ("mm/mempolicy: add
->>> MPOL_PREFERRED_MANY for multiple preferred nodes") to allow better
->>> allocation control when we have memory tiers in the system. With
->>> MPOL_PREFERRED_MANY, the user can use a policy node mask consisting only
->>> of faster memory nodes. When we fail to allocate pages from the faster
->>> memory node, kswapd would be woken up, allowing demotion of cold pages
->>> to slower memory nodes.
->>>
->>> With the current kernel, such usage of memory policies implies we can't
->>> do page promotion from a slower memory tier to a faster memory tier
->>> using numa fault. This patch fixes this issue.
->>>
->>> For MPOL_PREFERRED_MANY, if the executing node is in the policy node
->>> mask, we allow numa migration to the executing nodes. If the executing
->>> node is not in the policy node mask, we do not allow numa migration.
->> Can we provide more information about this?  I suggest to use an
->> example, for instance, pages may be distributed among multiple sockets
->> unexpectedly.
->
-> Thank you for your suggestion. However, this commit message explains all =
-the scenarios.
+> > So you want the hardirq to move to the big core? Unlike softirq, there will be
+> > a single hardirq for the controller (to my limited knowledge), so if there are
+> > multiple requests I'm not sure we can easily match which one relates to which
+> > before it triggers. So we can end up waking up the wrong core.
+> 
+> It would be beneficial to move the hardirq to a big core if the IO task
+> is using it anyway.
+> I'm not sure I actually want to. There are quite a few pitfalls (like you
 
-Yes.  The commit message is correct and covers many cases.  What I
-suggested is to describe why we do that?  An examples can not covers all
-possibility, but it is easy to be understood.  For example, something as
-below?
+I'm actually against it. I think it's too much complexity for not necessasrily
+a big gain. FWIW, one of the design request to get per task iowait boost so
+that we can *disable* it. It wastes power when only a handful of tasks actually
+care about perf.
 
-For example, on a 2-sockets system, there are N0, N1, N2 in socket 0, N3
-in socket 1.  N0, N1, N3 have fast memory and CPU, while N2 has slow
-memory and no CPU.  For a workload, we may use MPOL_PREFERRED_MANY with
-nodemask with N0 and N1 set because the workload runs on CPUs of socket
-0 at most times.  Then, even if the workload runs on CPUs of N3
-occasionally, we will not try to migrate the workload pages from N2 to
-N3 because users may want to avoid cross-socket access as much as
-possible in the long term.
+Caring where the hardirq run for perf is unlikely a problem in practice.
+Softirq should follow the requester already when it matters.
 
-> For example, Consider a system with 3 numa nodes (N0,N1 and N6).
-> N0 and N1 are tier1 DRAM nodes=C2=A0 and N6 is tier 2 PMEM node.
->
-> Scenario 1: The process is executing on N1,
->             If the executing node is in the policy node mask,
->             Curr Loc Pages - The numa node where page present(folio node)
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-> Process=C2=A0=C2=A0=C2=A0   Policy=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 Curr Loc Pages=C2=A0=C2=A0=C2=A0            =C2=A0 Observat=
-ions
-> -------------------------------------------------------------------------=
-----------
-> N1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N0 N1 N6=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 N0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Pages Migrated from N0 to N1
-> N1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N0 N1 N6=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 N6=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Pages Migrated from N6 to N1
-> N1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N0 N1=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0N1=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=
-=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0 Pages Migrated from N1 to N6
+> mentioned) that the scheduler really shouldn't be concerned about.
+> Moving the hardirq, if implemented in the kernel, would have to be done by the
+> host controller driver anyway, which would explode this series.
+> (host controller drivers are quite fragmented e.g. on mmc)
+> 
+> The fact that having a higher capacity CPU available ("running faster") for an
+> IO task doesn't (always) imply higher throughput because of the hardirq staying
+> on some LITTLE CPU is bothering (for this series), though.
+> 
+> > 
+> > Generally this should be a userspace policy. If there's a scenario where the
+> > throughput is that important they can easily move the hardirq to the big core
+> > unconditionally and move it back again once this high throughput scenario is no
+> > longer important.
+> 
+> It also feels wrong to let this be a userspace policy, as the hardirq must be
+> migrated to the perf domain of the task, which userspace isn't aware of.
+> Unless you expect userspace to do
 
-Pages are not Migrating ?
+irq balancer is a userspace policy. For kernel to make an automatic decision
+there are a lot of ifs must be present. Again, I don't see on such system
+maximizing throughput is a concern. And userspace can fix the problem simply
+- they know after all when the throughput really matters to the point where the
+hardirq runs is a bottleneck. In practice, I don't think it is a bottleneck.
+But this is my handwavy judgement. The experts know better. And note, I mean
+use cases that are not benchmarks ;-)
 
-> N1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N0 N1=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0N6=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Pages Migrated=
- from N6 to N1
-> -------------------------------------------------------------------------=
------------
-> Scenario 2:=C2=A0 The process is executing on N1,
->              If the executing node is NOT in the policy node mask,
->              Curr Loc Pages - The numa node where page present(folio node)
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> Process=C2=A0=C2=A0=C2=A0    Policy=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 C=
-urr Loc Pages=C2=A0=C2=A0=C2=A0    Observations
-> -------------------------------------------------------------------------=
-----------
-> N1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N0 N=
-6=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N=
-0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0Pages are not Migrating
-> N1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N0 N=
-6=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N=
-6=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0Pages are not migration,
-> N1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0N0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Pages are not Migrating
-> -------------------------------------------------------------------------=
------------
->
-> Scenario 3: The process is executing on N1,
->             If the executing node and folio nodes are=C2=A0 NOT in the po=
-licy node mask,
->             Curr Loc Pages - The numa node where page present (folio node)
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> Thread=C2=A0=C2=A0=C2=A0 Policy=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Curr =
-Loc Pages=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0    Observations
-> -------------------------------------------------------------------------=
------------
-> N1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0N6=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Pages are not Migrating
-> N1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N6=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0N0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Pages are not Migrating
-> -------------------------------------------------------------------------=
------------
->
-> We can conclude that even if the pages are distributed among multiple soc=
-kets,
-> if the executing node is in the policy node mask, we allow numa migration=
- to the
-> executing nodes. If the executing node is not in the policy node mask,
-> we do not allow numa migration.
->
+> CPU_affinity_task=big_perf_domain_0 && hardirq_affinity=big_perf_domain_0
+> but then you could just as well ask them to set performance governor for
+> big_perf_domain_0 (or uclamp_min=1024) and need neither this series nor
+> any iowait boosting.
+> 
+> Furthermore you can't generally expect userspace to know if their IO will lead
+> to any interrupt at all, much less which one. They ideally don't even know if
+> the file IO they are doing is backed by any physical storage in the first place.
+> (Or even further, that they are doing file IO at all, they might just be
+> e.g. page-faulting.)
 
-[snip]
+The way I see it, it's like gigabit networking. The hardirq will matter once
+you reach such high throughput scenarios. Which are corner cases and not the
+norm?
 
---
-Best Regards,
-Huang, Ying
+> 
+> > 
+> > Or where you describing a different problem?
+> 
+> That is the problem I mentioned in the series and Bart and I were discussing.
+> It's a problem of the series as in "the numbers aren't that impressive".
+> Current iowait boosting on embedded/mobile systems will perform quite well by
+> chance, as the (low util) task will often be on the same perf domain the hardirq
+> will be run on. As can be seen in the cover letter the benefit of running the
+> task on a (2xLITTLE capacity) big CPU therefore are practically non-existent,
+> for tri-gear systems where big CPU is more like 10xLITTLE capacity the benefit
+> will be much greater.
+> I just wanted to point this out. We might just acknowledge the problem and say
+> "don't care" about the potential performance benefits of those scenarios that
+> would require hardirq moving.
+
+I thought the softirq does the bulk of the work. hardirq being such
+a bottleneck is (naively maybe) a red flag for me that it's doing too much than
+a simple interrupt servicing.
+
+You don't boost when the task is sleeping, right? I think this is likely
+a cause of the problem where softirq is not running as fast - where before the
+series the CPU will be iowait boosted regardless the task is blocked or not.
+
+> In the long-term it looks like for UFS the problem will disappear as we are
+> expected to get one queue/hardirq per CPU (as Bart mentioned), on NVMe that
+> is already the case.
+> 
+> I CC'd Uffe and Adrian for mmc, to my knowledge the only subsystem where
+> 'fast' (let's say >10K IOPS) devices are common, but only one queue/hardirq
+> is available (and it doesn't look like this is changing anytime soon).
+> I would also love to hear what Bart or other UFS folks think about it.
+> Furthermore if I forgot any storage subsystem with the same behavior in that
+> regards do tell me.
+> 
+> Lastly, you could consider the IO workload:
+> IO task being in iowait very frequently [1] with just a single IO inflight [2]
+> and only very little time being spent on the CPU in-between iowaits[3],
+> therefore the interrupt handler being on the critical path for IO throughput
+> to a non-negligible degree, to be niche, but it's precisely the use-case where
+> iowait boosting shows it's biggest benefit.
+> 
+> Sorry for the abomination of a sentence, see footnotes for the reasons.
+> 
+> [1] If sugov doesn't see significantly more than 1 iowait per TICK_NSEC it
+> won't apply any significant boost currently.
+
+I CCed you to a patch where I fix this. I've been sleeping on it for too long.
+Maybe I should have split this fix out of the consolidation patch.
+
+> [2] If the storage devices has enough in-flight requests to serve, iowait
+> boosting is unnecessary/wasteful, see cover letter.
+> [3] If the task actually uses the CPU in-between iowaits, it will build up
+> utilization, iowait boosting benefit diminishes.
+
+The current mechanism is very aggressive. It needs to evolve for sure.
+
+> 
+> > 
+> > Glad to see your series by the way :-) I'll get a chance to review it over the
+> > weekend hopefully.
+> 
+> Thank you!
+> Apologies for not CCing you in the first place, I am curious about your opinion
+> on the concept!
+
+I actually had a patch that implements iowait boost per-task (on top of my
+remove uclamp max aggregation series) where I did actually take the extra step
+to remove iowait from intel_pstate. Can share the patches if you think you'll
+find them useful.
+
+Just want to note that this mechanism can end up waste power and this is an
+important direction to consider. It's not about perf only (which matters too).
+
+> 
+> FWIW I did mess up a last-minute, what was supposed to be, cosmetic change that
+> only received a quick smoke test, so 1/2 needs the following:
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 4aaf64023b03..2b6f521be658 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -6824,7 +6824,7 @@ static void dequeue_io_boost(struct cfs_rq *cfs_rq, struct task_struct *p)
+>         } else if (p->io_boost_curr_ios < p->io_boost_threshold_down) {
+>                 /* Reduce boost */
+>                 if (p->io_boost_level > 1)
+> -                       io_boost_scale_interval(p, true);
+> +                       io_boost_scale_interval(p, false);
+>                 else
+>                         p->io_boost_level = 0;
+>         } else if (p->io_boost_level == IO_BOOST_LEVELS) {
+> 
+> 
+> I'll probably send a v2 rebased on 6.9 when it's out anyway, but so far the
+> changes are mostly cosmetic and addressing Bart's comments about the benchmark
+> numbers in the cover letter.
+
+I didn't spend a lot of time on the series, but I can see a number of problems.
+Let us discuss them first and plan a future direction. No need to v2 if it's
+just for this fix IMO.
