@@ -1,185 +1,128 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3D917279F
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CD4179FB8;
+	Mon, 25 Mar 2024 11:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711366622; cv=none; b=ZJjtzwS5f0hRj21r8IyRjXqeHbmVOk1Ap0aEQpBIX8wNAKWuPncbSWwAp5Jg1vCeYBeqGkvtxDwb3Q7nFk9x1JgCn/aOVZsR+KxjhU27KlCjNAvEuZEU2ClLaa9xuMk/YL98k81OC4uhItOKLkYncfoQzezywBFXmnOjYnaVPow=
+	t=1711366951; cv=none; b=N+uu7XiioFr3B8rrWkv3dIe6pa07ZFvZ39U1Us5LI20op0QobY1PBUlxrKunhuXRDxPLN6G606xqVNr7xhOidNGzkbfCoRv2Yix1O4EWerg4V+5pTySiQY6KbnxGnOiGLVrugEerap3a2pbDW5aa5xUx6+XYc5eD0YaXgdVTMeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711366622; c=relaxed/simple;
-	bh=/D52BHvUewCK2GL9Y8W0RqUx68ljr4iQuIDQFK1r6z4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=XVS7l8aLxp1phBkFeHky7uzEeevR1Oiish4wpZCNgODZLoSFTkvJ4VWXz+9jwQDjC9fqS2KVjRUY1gA+KqII5qT35lJbhLRs4/viY/9aDhQT7tRtmjabe+zU4v8Mu27OYy/ZmKiouo/M1R1EJH7RJT5LDqN2qB0UaZ/iAn5pGKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WbkvmD0H; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711366951; c=relaxed/simple;
+	bh=hEabN694l4Vs4GZeNBLusB1rNaW6tug6kVhLmI7YUxs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z2t7qqEkboe80e0ZrnytcBUNIkAr3Jih8fasoiYYgN0PpcGYRoS1H/9Tx8+cGHnzzO2Ep8L1a9cDSWDlTCTQPI2aZGv4HpnozJKxluvDihJNL6amANFONZnEr/zpmhJtE1fHe26dsNHDk905yHRzunEFn/8zHSgTLialFRMj984=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=qXUwugYz; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WbkvmD0H"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a46dd7b4bcbso516388766b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711366619; x=1711971419; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8yYmh9ilGatslqz9nzmGmez9Ks5eyhsXtq+smawLikQ=;
-        b=WbkvmD0HmL1Coxm4keZo8yjEGAQXz/hUd3MFWQX/+04VTaF7SoLePmnVvAT8biu2Sg
-         fDSo0dKULuNLbaxGPolVJyvUtQA051CsxWCcKkmuXQs/9wJgB5g+n5drxad0OIzMZq0f
-         E3RWhtfa74ON01T0PZwSwBsTSheCO0nparCtv05IyxiTapX4jFte7bSC7zBzNnFwqDc0
-         SiEf5/3HjrQIrISvYLP/uSiBpKoD/7H4i0T33hPYBHSyT9NDxfNCee0gGKntZ3SqSYCs
-         lLYueBQPnmX76/XD71jZKtxYUrE9qSV3uk4eqCu+sclE98J0b0EZyK0WNaF6BJ4JYPi+
-         D7Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711366619; x=1711971419;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8yYmh9ilGatslqz9nzmGmez9Ks5eyhsXtq+smawLikQ=;
-        b=tSYHyGJTaI0w49X3W3yVtu5YRiW1lzcI8e6GP6PmnaESj90lxr3AoJFbUgOg41QlN4
-         RdGt6WbUt7RuCZuvhmc/xZJtWCQkdk6Y0DL/sanPi6BTVmJJZzM5ebu6lMyjxQXkZe9E
-         rso1eASkmgATu4MByqwfLB4hsayA45r7U5hkxDglQjQN0/ie6xj8HbuazV7blrjUimew
-         Uibm4AI5hvFxZ0IQ46kCPIlAm1b9SOwgJx3G/eHE9yjkyVZmSi0F5rsm0RfiYCfiUEQa
-         GGTDYMfkjhVwXzvsYLToALQ1pwrWCet2/TmnbETePr4heCtAcKPMp5tZ3aeWWiB3/Ba1
-         rMMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ1KgcbvUVDNBFn7Ci+1FPQ0wQarHEmr/Lu+nZWBGvXnU6fbXWhIao6eEUOgEL/2PhkKn1ndfoVXUTzWNlhTdIJfuW/3DxtLI/O8+n
-X-Gm-Message-State: AOJu0YzRTzoiZ/W6jTRTvRgd/ngv3Dm1ygEpEmSJsm8vYLx1UbSn7QlN
-	8EnZo+XgUQBiZxNXHJ/K6HPeSetWp3hOsFPyXAN8gQTWHW1WyH5kZEjcKmvfbrozQQ==
-X-Google-Smtp-Source: AGHT+IH6c0oCiM6CpSIH3+fOqTkyS+RcmYNisq65V7JULsv8sbnj16RwVvb8LtKycoS2t3mWk74Utw==
-X-Received: by 2002:a17:906:c2d0:b0:a45:5be1:6e20 with SMTP id ch16-20020a170906c2d000b00a455be16e20mr4420850ejb.23.1711366619050;
-        Mon, 25 Mar 2024 04:36:59 -0700 (PDT)
-Received: from smtpclient.apple ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id hj13-20020a170906874d00b00a474ef94fddsm1922774ejb.70.2024.03.25.04.36.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2024 04:36:58 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="qXUwugYz"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 496EA100006;
+	Mon, 25 Mar 2024 14:32:12 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 496EA100006
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1711366332;
+	bh=uIDHjNgEbPo1A4FBxlS0ooHDtdg7rfpWta+TckQZIFQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=qXUwugYzmv8v0s/PRYKUQdHBqGxhVaaB6+K6W2CERbs3JKNCz2ptAEmY+YxXGhdzc
+	 3FlRAf3vRrBBhl0kIM3Vh5bx+yWH/oyFb+Yww5OQ8SK1DwA70vkY5gDIGZTpFGVfRw
+	 mwO5QzxaHntGNV7cRuOe88LEBZAIupf4qTE5rpYWDI8P/Y5FnmPFBvAMEwAOgvwCxM
+	 bwThcocv9amOlXrqY9rkl2djMJtgKn7PJpwjgQusEZ97ai//DjWgQY7LUSNl3QQF6S
+	 3FucUKDm6jyXRCDWT16OdC0kAT3/9y0FXlwZfrcoJaXBp4p42Q9Rlq9JRL50m1Hqcf
+	 joEVjF8FPxMmw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Mon, 25 Mar 2024 14:32:12 +0300 (MSK)
+Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 25 Mar 2024 14:32:11 +0300
+From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Linus Walleij
+	<linus.walleij@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, Kevin
+ Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>,
+	<linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] pinctrl/meson: fix typo in PDM's pin name
+Date: Mon, 25 Mar 2024 14:30:58 +0300
+Message-ID: <20240325113058.248022-1-jan.dakinevich@salutedevices.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
-Subject: Re: [PATCH] drm/panfrost: fix power transition timeout warnings
-From: Christian Hewitt <christianshewitt@gmail.com>
-In-Reply-To: <bad16bba-5469-4f20-bf23-7f3c2953edc5@arm.com>
-Date: Mon, 25 Mar 2024 15:36:40 +0400
-Cc: Boris Brezillon <boris.brezillon@collabora.com>,
- Rob Herring <robh@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- dri-devel@lists.freedesktop.org,
- LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <620A6EF4-4361-4B5F-889B-268091FB72D9@gmail.com>
-References: <20240322164525.2617508-1-christianshewitt@gmail.com>
- <bad16bba-5469-4f20-bf23-7f3c2953edc5@arm.com>
-To: Steven Price <steven.price@arm.com>
-X-Mailer: Apple Mail (2.3774.400.31)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184391 [Mar 25 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 11 0.3.11 5ecf9895443a5066245fcb91e8430edf92b1b594, {Tracking_smtp_not_equal_from}, {Tracking_uf_ne_domains}, 127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1;sberdevices.ru:7.1.1,5.0.1;lore.kernel.org:7.1.1;100.64.160.123:7.1.2, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/03/25 10:32:00
+X-KSMG-LinksScanning: Clean, bases: 2024/03/25 10:32:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/25 07:20:00 #24426778
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-> On 25 Mar 2024, at 2:28=E2=80=AFpm, Steven Price =
-<steven.price@arm.com> wrote:
->=20
-> On 22/03/2024 16:45, Christian Hewitt wrote:
->> Increase the timeout value to prevent system logs on Amlogic boards =
-flooding
->> with power transition warnings:
->>=20
->> [   13.047638] panfrost ffe40000.gpu: shader power transition timeout
->> [   13.048674] panfrost ffe40000.gpu: l2 power transition timeout
->> [   13.937324] panfrost ffe40000.gpu: shader power transition timeout
->> [   13.938351] panfrost ffe40000.gpu: l2 power transition timeout
->> ...
->> [39829.506904] panfrost ffe40000.gpu: shader power transition timeout
->> [39829.507938] panfrost ffe40000.gpu: l2 power transition timeout
->> [39949.508369] panfrost ffe40000.gpu: shader power transition timeout
->> [39949.509405] panfrost ffe40000.gpu: l2 power transition timeout
->>=20
->> The 2000 value has been found through trial and error testing with =
-devices
->> using G52 and G31 GPUs.
->=20
-> How close to 2ms did you need in your trial and error testing? I'm
-> wondering if we should increase it further in case this might still
-> trigger occasionally?
+Other pins have _a or _x suffix, but this one doesn't have any. Most
+likely this is a typo.
 
-I backed it off progressively but still saw occasional messages at 1.6ms
-so padded it a little with 2ms, and those systems haven=E2=80=99t shown =
-errors
-since so I currently see it as a =E2=80=99safe=E2=80=99 value. The one =
-possible wildcard
-is testing with older T820/T628 boards; but that needs to wait until =
-I=E2=80=99m
-back home from a long trip and able to test them. The possible theory
-being that older/slower systems might require more time. Worst case =
-I=E2=80=99ll
-have to send another change.
+Fixes: dabad1ff8561 ("pinctrl: meson: add pinctrl driver support for Meson-A1 SoC")
+Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+---
+Links:
 
-> kbase seems to have a 5s (5000ms!) timeout before it will actually
-> complain. But equally it doesn't busy wait on the registers in the =
-same
-> way as panfrost, so the impact to the rest of the system of a long =
-wait
-> is less.
->=20
-> But 2ms doesn't sound an unreasonable timeout so:
->=20
-> Reviewed-by: Steven Price <steven.price@arm.com>
->=20
->> Fixes: 22aa1a209018 ("drm/panfrost: Really power off GPU cores in =
-panfrost_gpu_power_off()")
->> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>> ---
->> drivers/gpu/drm/panfrost/panfrost_gpu.c | 6 +++---
->> 1 file changed, 3 insertions(+), 3 deletions(-)
->>=20
->> diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c =
-b/drivers/gpu/drm/panfrost/panfrost_gpu.c
->> index 9063ce254642..fd8e44992184 100644
->> --- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
->> +++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
->> @@ -441,19 +441,19 @@ void panfrost_gpu_power_off(struct =
-panfrost_device *pfdev)
->>=20
->> gpu_write(pfdev, SHADER_PWROFF_LO, pfdev->features.shader_present);
->> ret =3D readl_relaxed_poll_timeout(pfdev->iomem + SHADER_PWRTRANS_LO,
->> -  val, !val, 1, 1000);
->> +  val, !val, 1, 2000);
->> if (ret)
->> dev_err(pfdev->dev, "shader power transition timeout");
->>=20
->> gpu_write(pfdev, TILER_PWROFF_LO, pfdev->features.tiler_present);
->> ret =3D readl_relaxed_poll_timeout(pfdev->iomem + TILER_PWRTRANS_LO,
->> -  val, !val, 1, 1000);
->> +  val, !val, 1, 2000);
->> if (ret)
->> dev_err(pfdev->dev, "tiler power transition timeout");
->=20
-> As Angelo points out the tiler probably doesn't need such a long
-> timeout, but I can't see the harm in consistency so I'm happy with =
-this
-> change. If my memory of the hardware is correct then the tiler power =
-off
-> actually does very little and so I wouldn't expect it to take very =
-long.
+ [1] https://lore.kernel.org/lkml/20240314232201.2102178-1-jan.dakinevich@salutedevices.com/
 
-I=E2=80=99ve seen tiler timeouts once I think and thus included it, but =
-not since
-the values were increased. As long as it=E2=80=99s acceptable I won=E2=80=99=
-t over-think
-it but if more testing is needed I can look at it more.
+Changes:
+  v1 -> v2: Detached from v1's series (patch 15)
 
-> Steve
->=20
->> gpu_write(pfdev, L2_PWROFF_LO, pfdev->features.l2_present);
->> ret =3D readl_poll_timeout(pfdev->iomem + L2_PWRTRANS_LO,
->> -  val, !val, 0, 1000);
->> +  val, !val, 0, 2000);
->> if (ret)
->> dev_err(pfdev->dev, "l2 power transition timeout");
->> }
+ drivers/pinctrl/meson/pinctrl-meson-a1.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Christian=
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-a1.c b/drivers/pinctrl/meson/pinctrl-meson-a1.c
+index 79f5d753d7e1..50a87d9618a8 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-a1.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-a1.c
+@@ -250,7 +250,7 @@ static const unsigned int pdm_dclk_x_pins[]		= { GPIOX_10 };
+ static const unsigned int pdm_din2_a_pins[]		= { GPIOA_6 };
+ static const unsigned int pdm_din1_a_pins[]		= { GPIOA_7 };
+ static const unsigned int pdm_din0_a_pins[]		= { GPIOA_8 };
+-static const unsigned int pdm_dclk_pins[]		= { GPIOA_9 };
++static const unsigned int pdm_dclk_a_pins[]		= { GPIOA_9 };
+ 
+ /* gen_clk */
+ static const unsigned int gen_clk_x_pins[]		= { GPIOX_7 };
+@@ -591,7 +591,7 @@ static struct meson_pmx_group meson_a1_periphs_groups[] = {
+ 	GROUP(pdm_din2_a,		3),
+ 	GROUP(pdm_din1_a,		3),
+ 	GROUP(pdm_din0_a,		3),
+-	GROUP(pdm_dclk,			3),
++	GROUP(pdm_dclk_a,		3),
+ 	GROUP(pwm_c_a,			3),
+ 	GROUP(pwm_b_a,			3),
+ 
+@@ -755,7 +755,7 @@ static const char * const spi_a_groups[] = {
+ 
+ static const char * const pdm_groups[] = {
+ 	"pdm_din0_x", "pdm_din1_x", "pdm_din2_x", "pdm_dclk_x", "pdm_din2_a",
+-	"pdm_din1_a", "pdm_din0_a", "pdm_dclk",
++	"pdm_din1_a", "pdm_din0_a", "pdm_dclk_a",
+ };
+ 
+ static const char * const gen_clk_groups[] = {
+-- 
+2.34.1
+
