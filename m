@@ -1,124 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270CC4CE09;
-	Mon, 25 Mar 2024 11:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715AD1C5AB6;
+	Mon, 25 Mar 2024 11:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711366490; cv=none; b=iiIqzBVlRf+ayc14PD6JnD7iOLQ5RvufPA5MpAMdIkBOEWK9+h5RSJqFe/rpVLY/95pdXoEygpCq+Ggzfzf8nCpk0ElgrhPrAzW4jTIZDTEmzed6cMwkL10T5McZA9eBIVBpcnpErkY55y7nvgzga8Y8heyxi1MNyUvP0YcawSg=
+	t=1711366313; cv=none; b=eTonxTBwtpJafamVBR6tPLLbMQ63QPLrsS3H2iN64x6c+KoajhXC6RronJsDspmqAg5yGWCssMMNxNLX3j15cSfoXdiOQrefQHcV6AO/R6yhV4NMpftFPHNY+3eDj/7yHTUgV4J/SfKinTjshxBS7K2HZyqBZYkUZpR+P7aYgLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711366490; c=relaxed/simple;
-	bh=u4R1p+rS+1S1wwSKjEvVMR8WPglN/O5MSJm1Qqv7w94=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KtW5S5IRgNOpyahYkVWHUl9mhymsuv5qGpKQEImADRbzQ5HqO8g1RgI+xb2wrTifSQO9JuKoZ2OHUFTQD6jKtzLS/WzPpQX958Z+mYduw1S0erpyutdwYwVtUZcqir8YHVmx6/r1mEez2EuZqqoetKOFNVKdz1pgjERwAdubpdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M46Y3cLU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711366313; c=relaxed/simple;
+	bh=8wIa6nW1ERiw4t1Ybn1tnOi5l/VyBjBAJ/xBmZH1cd4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QCzzjwlwlueN5ARxAYSPX8yoffMVKmxeoz7K0SyBEMueofQm/W+6JFWfj5zn1c3zbxNhhdkaxTxNziQmBO2ykdl/IMc27ZsAkcNTcftmQVy0/MUIhDXMrHvlFndrx3rKzA3bbNo/4TRmFr55S6/4GbMdRM3QMTBRCbqJSCDiZ/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=c/cQZre1; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M46Y3cLU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E562C433F1;
-	Mon, 25 Mar 2024 11:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711366489;
-	bh=u4R1p+rS+1S1wwSKjEvVMR8WPglN/O5MSJm1Qqv7w94=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M46Y3cLUhPb0+7faDczUcfGtsze+3D5Rxy2OzF2nkFhQNvVN0d1pUi/wDwlExd5EC
-	 v4CazADNswPqsHuVKJ+meFfp37anWmPGs3Gqw0hgZ5b4mTDp/54tKjw/WHVK3asY3p
-	 8NyYW17JlGHkF+v2meQyqnbDZye7SKbly/2puJ8pJbOVQ9Fwyth4JkEkxHp4eLvom0
-	 k5drqZfb7xPVYSEbM99QHvauaGDuda+jZqe+zCdqgU9d8ipCYGG3AM7njenoAyZHp+
-	 rjblSDYC+6KMDd6lsD82MCavGU4pGtrfIpjF43DTg83u6H4zZrJdt3FMnp5B+ritMr
-	 Qz3OfiGWJHJNg==
-Date: Mon, 25 Mar 2024 07:34:48 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, florian.fainelli@broadcom.com,
-	pavel@denx.de,
-	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Will Deacon <will@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCH 6.6 000/638] 6.6.23-rc1 review
-Message-ID: <ZgFhWEyQZpdCaITV@sashalap>
-References: <20240324230116.1348576-1-sashal@kernel.org>
- <CA+G9fYueiBdV-uRVbX+JB2_nt831_+8fnyoQ6v62rAsyLQne6g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="c/cQZre1"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42P4qkf4007553;
+	Mon, 25 Mar 2024 06:31:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PODMain02222019; bh=Ve6q53KNEyaHYsEeYneEssGZ6Wrn16sSu1b7bPPggrU=; b=
+	c/cQZre1an3oq7WNRPOSd+tbcrU3woSndVth5uiXREO/unhZ67BkwsC7nUkoWDVn
+	FkjLlg6HYnSw6CHI9AGZtBO4e8PUfV9Q6kWBG+CUnWpLrePIw9dGN5IP0NHXbLIh
+	oL0RGNzh+KbWLzo4/smOX5PsJr/4J7Rb3ms5vrPVFfpdLgMbHdo06uP8qpv0A5ui
+	OlBRjSdJxEozbRq0RRWpzSyvTAhhwgeancq0I0klLrWlCWHgdtWZOvNv1OqpoSUd
+	u0Bki4VCnetoHTqhaSoe8PeXc3k9M8xISLS7m6GjTo4vrKerGvHZgtOcsFyRaf+K
+	DyPXoNwywMD35K2eigiX/Q==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3x1vfyb6v0-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 06:31:30 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 25 Mar
+ 2024 11:31:27 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4
+ via Frontend Transport; Mon, 25 Mar 2024 11:31:27 +0000
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 3C764820246;
+	Mon, 25 Mar 2024 11:31:27 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: <broonie@kernel.org>, <tiwai@suse.com>
+CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        "Simon
+ Trimmer" <simont@opensource.cirrus.com>,
+        Richard Fitzgerald
+	<rf@opensource.cirrus.com>
+Subject: [PATCH 1/5] firmware: cs_dsp: Add locked wrappers for coeff read and write
+Date: Mon, 25 Mar 2024 11:31:23 +0000
+Message-ID: <20240325113127.112783-2-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240325113127.112783-1-rf@opensource.cirrus.com>
+References: <20240325113127.112783-1-rf@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYueiBdV-uRVbX+JB2_nt831_+8fnyoQ6v62rAsyLQne6g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: W_mGFw0jCLpfl27Iq92J29FYCUk_XLhO
+X-Proofpoint-GUID: W_mGFw0jCLpfl27Iq92J29FYCUk_XLhO
+X-Proofpoint-Spam-Reason: safe
 
-On Mon, Mar 25, 2024 at 03:28:01PM +0530, Naresh Kamboju wrote:
->On Mon, 25 Mar 2024 at 04:31, Sasha Levin <sashal@kernel.org> wrote:
->>
->>
->> This is the start of the stable review cycle for the 6.6.23 release.
->> There are 638 patches in this series, all will be posted as a response
->> to this one.  If anyone has any issues with these being applied, please
->> let me know.
->>
->> Responses should be made by Tue Mar 26 11:01:10 PM UTC 2024.
->> Anything received after that time might be too late.
->>
->> The whole patch series can be found in one patch at:
->>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.6.y&id2=v6.6.22
->> or in the git tree and branch at:
->>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
->> and the diffstat can be found below.
->>
->> Thanks,
->> Sasha
->
->
->The regression detected while building allmodconfig builds with clang-17
->failed on all the architectures.
->
->> Andrii Nakryiko (3):
->>   libbpf: Fix faccessat() usage on Android
->>   libbpf: Add missing LIBBPF_API annotation to libbpf_set_memlock_rlim
->>     API
->>   bpf: don't infer PTR_TO_CTX for programs with unnamed context type
->
->arm64 gcc-13 - FAILED (other architectures passed)
->arm64 clang-17 - FAILED (All other architectures failed))
->
->The 2 errors are only noticed on arm64.
->
->> Jason Gunthorpe (1):
->>   iommu/arm-smmu-v3: Check that the RID domain is S1 in SVA
->
->Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
->Build error:
->------------
->kernel/bpf/btf.c:5660:10: error: expression which evaluates to zero
->treated as a null pointer constant of type 'const struct btf_member *'
->[-Werror,-Wnon-literal-null-conversion]
-> 5660 |                 return false;
->      |                        ^~~~~
->1 error generated.
->
-><trim>
->
->drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c:358:10: error:
->incompatible integer to pointer conversion returning 'int' from a
->function with result type 'struct iommu_sva *' [-Wint-conversion]
->  358 |                 return -ENODEV;
->      |                        ^~~~~~~
->drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c:361:10: error:
->incompatible integer to pointer conversion returning 'int' from a
->function with result type 'struct iommu_sva *' [-Wint-conversion]
->  361 |                 return -ENODEV;
->      |                        ^~~~~~~
->2 errors generated.
+From: Simon Trimmer <simont@opensource.cirrus.com>
 
-Thanks for the report! I've dropped the two offending commits.
+It is a common pattern for functions to take and release the DSP
+pwr_lock over the cs_dsp calls to read and write firmware controls.
+Add wrapper functions to do this sequence so that the calling code can
+be simplified to a single function call..
 
+Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+---
+ drivers/firmware/cirrus/cs_dsp.c       | 54 ++++++++++++++++++++++++++
+ include/linux/firmware/cirrus/cs_dsp.h |  4 ++
+ 2 files changed, 58 insertions(+)
+
+diff --git a/drivers/firmware/cirrus/cs_dsp.c b/drivers/firmware/cirrus/cs_dsp.c
+index 9f3d665cfdcf..0d139e4de37c 100644
+--- a/drivers/firmware/cirrus/cs_dsp.c
++++ b/drivers/firmware/cirrus/cs_dsp.c
+@@ -819,6 +819,33 @@ int cs_dsp_coeff_write_ctrl(struct cs_dsp_coeff_ctl *ctl,
+ }
+ EXPORT_SYMBOL_NS_GPL(cs_dsp_coeff_write_ctrl, FW_CS_DSP);
+ 
++/**
++ * cs_dsp_coeff_lock_and_write_ctrl() - Writes the given buffer to the given coefficient control
++ * @ctl: pointer to coefficient control
++ * @off: word offset at which data should be written
++ * @buf: the buffer to write to the given control
++ * @len: the length of the buffer in bytes
++ *
++ * Same as cs_dsp_coeff_write_ctrl() but takes pwr_lock.
++ *
++ * Return: A negative number on error, 1 when the control value changed and 0 when it has not.
++ */
++int cs_dsp_coeff_lock_and_write_ctrl(struct cs_dsp_coeff_ctl *ctl,
++				     unsigned int off, const void *buf, size_t len)
++{
++	struct cs_dsp *dsp = ctl->dsp;
++	int ret;
++
++	lockdep_assert_not_held(&dsp->pwr_lock);
++
++	mutex_lock(&dsp->pwr_lock);
++	ret = cs_dsp_coeff_write_ctrl(ctl, off, buf, len);
++	mutex_unlock(&dsp->pwr_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(cs_dsp_coeff_lock_and_write_ctrl);
++
+ static int cs_dsp_coeff_read_ctrl_raw(struct cs_dsp_coeff_ctl *ctl,
+ 				      unsigned int off, void *buf, size_t len)
+ {
+@@ -891,6 +918,33 @@ int cs_dsp_coeff_read_ctrl(struct cs_dsp_coeff_ctl *ctl,
+ }
+ EXPORT_SYMBOL_NS_GPL(cs_dsp_coeff_read_ctrl, FW_CS_DSP);
+ 
++/**
++ * cs_dsp_coeff_lock_and_read_ctrl() - Reads the given coefficient control into the given buffer
++ * @ctl: pointer to coefficient control
++ * @off: word offset at which data should be read
++ * @buf: the buffer to store to the given control
++ * @len: the length of the buffer in bytes
++ *
++ * Same as cs_dsp_coeff_read_ctrl() but takes pwr_lock.
++ *
++ * Return: Zero for success, a negative number on error.
++ */
++int cs_dsp_coeff_lock_and_read_ctrl(struct cs_dsp_coeff_ctl *ctl,
++				    unsigned int off, void *buf, size_t len)
++{
++	struct cs_dsp *dsp = ctl->dsp;
++	int ret;
++
++	lockdep_assert_not_held(&dsp->pwr_lock);
++
++	mutex_lock(&dsp->pwr_lock);
++	ret = cs_dsp_coeff_read_ctrl(ctl, off, buf, len);
++	mutex_unlock(&dsp->pwr_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(cs_dsp_coeff_lock_and_read_ctrl);
++
+ static int cs_dsp_coeff_init_control_caches(struct cs_dsp *dsp)
+ {
+ 	struct cs_dsp_coeff_ctl *ctl;
+diff --git a/include/linux/firmware/cirrus/cs_dsp.h b/include/linux/firmware/cirrus/cs_dsp.h
+index 23384a54d575..82687e07a7c2 100644
+--- a/include/linux/firmware/cirrus/cs_dsp.h
++++ b/include/linux/firmware/cirrus/cs_dsp.h
+@@ -238,8 +238,12 @@ void cs_dsp_cleanup_debugfs(struct cs_dsp *dsp);
+ int cs_dsp_coeff_write_acked_control(struct cs_dsp_coeff_ctl *ctl, unsigned int event_id);
+ int cs_dsp_coeff_write_ctrl(struct cs_dsp_coeff_ctl *ctl, unsigned int off,
+ 			    const void *buf, size_t len);
++int cs_dsp_coeff_lock_and_write_ctrl(struct cs_dsp_coeff_ctl *ctl, unsigned int off,
++				     const void *buf, size_t len);
+ int cs_dsp_coeff_read_ctrl(struct cs_dsp_coeff_ctl *ctl, unsigned int off,
+ 			   void *buf, size_t len);
++int cs_dsp_coeff_lock_and_read_ctrl(struct cs_dsp_coeff_ctl *ctl, unsigned int off,
++				    void *buf, size_t len);
+ struct cs_dsp_coeff_ctl *cs_dsp_get_ctl(struct cs_dsp *dsp, const char *name, int type,
+ 					unsigned int alg);
+ 
 -- 
-Thanks,
-Sasha
+2.39.2
+
