@@ -1,138 +1,214 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BD113BACB;
-	Mon, 25 Mar 2024 12:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCBEFC0B;
+	Mon, 25 Mar 2024 12:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711369282; cv=none; b=rDFQ/lYsu6H276MfCNwsUnG2Fa6qNe1vsr611X9hcwXqPRydoUj/keVdjVkG5FSVqW/AqrO+wQH3bhEf0/6aLTixYWeBLXnbSx+3ydo+Iyumv6+OW9lIJbP7BdsEwK6/Ai8e4PJIqaymLE8zgMjp74fh+UHM3cwadod4FRR3jRI=
+	t=1711369386; cv=none; b=K5HMEuOd87sFnhR2tz5BLjXtCPLse+5SPA37bfVAsskXJ9BwgamaP8xoGyneu0vZe/cjzdC5+Mtrhlcq3N6PRCngMw+cFcRpe6gGJnqmA4luS0zQ+Slhz1AA9tdGPn5/Mj1dmUNGxL+qqzi86BdT4fM89OA/FnrHCj1IFwGrm48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711369282; c=relaxed/simple;
-	bh=YPO2WL6qypUgdkyYCnkzqyLMD/CgYwEAAIRUoFlpBGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qCbSz6aBX+3zPtD0yCj85V2aRm8umc3oG00cK8MGlLRoybEr9sa8KkMUDdzwY1O6eLJaYKd74ZjQczzgNmbeLyLFcqH7Rzmt2N9h6+d23jblFt4EmyKhJHczhQo0aFcQOx2wlrgRK95yBVHaZ4KAtzwmFUr1Il0oylNhFP2Fbgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=m94wRtYy; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1711369386; c=relaxed/simple;
+	bh=r8UjA0tzJEdftkavNI7Se+PD9E0z9IJO38kOQGBUvsk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aIFQObGQxIxy/MLrsYhUvkWAIY2rDTybD8loYwiwvVa4NiPP2zbDIzd1vM+kEbwZKv2U+sCcptVdeGvJHkyhj/oqme+EJ0yCFTr20xKQYisLRRPKB+TfhmJSsiDP1d15WZVdTF4orp6o6tL4ridH3GCxsFLRXNiZ/CPsGm57qOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tu9BTNJM; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="m94wRtYy"
-Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PAFnfk019869;
-	Mon, 25 Mar 2024 12:20:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=afp8tIN3gWCl7bSWhWw+40+8io7o5i4DQAiMbDPfbuY=;
- b=m94wRtYycklXwZW7cBCP6SIlP8FfESx6OE4dtbUZZYaHcmdt0AQbS+tJMyFlUQzQ3pZz
- L7am7bvZiPYv65jDipbbQWRju60zEh+vQMmZnjjTEOxLdGXOAvRnsyoCjdSx5HHW7ADq
- NPYunHRPIisKhVerLAnhfwEXixNC6CZnpI1RPZT12GlXNRYBIkwbk5+0qs7qADVpXB1u
- G4pKCb3PjOuv3mdne4vpUjpTYc7cLFw5EmBKErlw7zxr+0pvQ9k8SVroGCcMyHmiEsL9
- olgtC83YK6R+eJVqUqrW/Fp9UK/4EmKsCTm1+vqiq/gmyHGMrwyHy5wAbjxQvuz3zPLy BQ== 
-Received: from p1lg14879.it.hpe.com ([16.230.97.200])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3x37c4rxny-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 12:20:44 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 3BE7D12B5C;
-	Mon, 25 Mar 2024 12:20:43 +0000 (UTC)
-Received: from hpe.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id 6A52F806B55;
-	Mon, 25 Mar 2024 12:20:40 +0000 (UTC)
-Date: Mon, 25 Mar 2024 07:20:37 -0500
-From: Dimitri Sivanich <sivanich@hpe.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
-        linux-kernel@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>
-Subject: Re: [PATCH] Allocate DMAR fault interrupts locally
-Message-ID: <ZgFsFWlGxClzgGEb@hpe.com>
-References: <Ze9r47riIq9ovBCY@hpe.com>
- <87plvjfl9s.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tu9BTNJM"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42PCMUdD063116;
+	Mon, 25 Mar 2024 07:22:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1711369350;
+	bh=4Ss1shl6ukABRr3y/H9h4v6sz1Ou9PsnshxhpL6yX9w=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=tu9BTNJMTl9jPMM0R1Z1d+kPekK7SKeT98y4MBdavEZ9ihtf4a10jtE1rFyStO3HT
+	 a5o/mjNPuNHgNWxIBI+uRtm1RequRSLVkZgCGkJOCo6BwFWnJRfv6K/TOi2dk+Dow8
+	 kKFl2ROGAYHs9TjbiCKQQbkxZsj+9EUPVJ5sKXWk=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42PCMUIF096697
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 25 Mar 2024 07:22:30 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 25
+ Mar 2024 07:22:29 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 25 Mar 2024 07:22:30 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42PCMT8e107758;
+	Mon, 25 Mar 2024 07:22:29 -0500
+Date: Mon, 25 Mar 2024 17:52:28 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Niklas Cassel <cassel@kernel.org>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <manivannan.sadhasivam@linaro.org>, <fancer.lancer@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <dlemoal@kernel.org>,
+        <yoshihiro.shimoda.uh@renesas.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>
+Subject: Re: [PATCH v4] PCI: keystone: Fix pci_ops for AM654x SoC
+Message-ID: <ea0294d4-85d1-4784-acd7-dd247165f69b@ti.com>
+References: <20240325053722.1955433-1-s-vadapalli@ti.com>
+ <ZgFemQ8gHpB8yMef@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <87plvjfl9s.ffs@tglx>
-X-Proofpoint-ORIG-GUID: 0o_zeOy2hiSmRC-D5lD2ShvuDsboQijw
-X-Proofpoint-GUID: 0o_zeOy2hiSmRC-D5lD2ShvuDsboQijw
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_08,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=836
- impostorscore=0 suspectscore=0 mlxscore=0 malwarescore=0
- priorityscore=1501 phishscore=0 clxscore=1015 lowpriorityscore=0
- spamscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2403210000 definitions=main-2403250068
+In-Reply-To: <ZgFemQ8gHpB8yMef@ryzen>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Thomas!
+On Mon, Mar 25, 2024 at 12:23:05PM +0100, Niklas Cassel wrote:
+> On Mon, Mar 25, 2024 at 11:07:22AM +0530, Siddharth Vadapalli wrote:
+> > In the process of converting .scan_bus() callbacks to .add_bus(), the
+> > ks_pcie_v3_65_scan_bus() function was changed to ks_pcie_v3_65_add_bus().
+> > The .scan_bus() method belonged to ks_pcie_host_ops which was specific
+> > to controller version 3.65a, while the .add_bus() method had been added
+> > to ks_pcie_ops which is shared between the controller versions 3.65a and
+> > 4.90a. Neither the older ks_pcie_v3_65_scan_bus() method, nor the newer
+> > ks_pcie_v3_65_add_bus() method are applicable to the controller version
+> > 4.90a which is present in AM654x SoCs.
+> > 
+> > Thus, as a fix, move the contents of "ks_pcie_v3_65_add_bus()" to the
+> > .host_init callback "ks_pcie_host_init()" and execute it only for non
+> > AM654x SoC devices which have the v3.65a DWC PCIe IP Controllers.
+> > 
+> > Fixes: 6ab15b5e7057 ("PCI: dwc: keystone: Convert .scan_bus() callback to use add_bus")
+> > Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+> > Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> > ---
+> > 
+> > Hello,
+> > 
+> > This patch is based on linux-next tagged next-20240325.
+> > This patch is technically the next version for the v3 patch at:
+> > https://patchwork.kernel.org/project/linux-pci/patch/20231019081330.2975470-1-s-vadapalli@ti.com/
+> > but the implementation is based on the RFC patch at:
+> > https://patchwork.kernel.org/project/linux-pci/patch/20231027084159.4166188-1-s-vadapalli@ti.com/
+> > Since the RFC patch mentioned above fixes the same issue being
+> > fixed by the v3 patch, I have dropped the v3 patch and am using
+> > the RFC patch since it is a cleaner implementation and was discussed at:
+> > https://lore.kernel.org/r/20231019220847.GA1413474@bhelgaas/
+> > 
+> > Regards,
+> > Siddharth.
+> > 
+> >  drivers/pci/controller/dwc/pci-keystone.c | 51 ++++++++---------------
+> >  1 file changed, 17 insertions(+), 34 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> > index 844de4418724..f45bdeac520a 100644
+> > --- a/drivers/pci/controller/dwc/pci-keystone.c
+> > +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> > @@ -445,44 +445,10 @@ static struct pci_ops ks_child_pcie_ops = {
+> >  	.write = pci_generic_config_write,
+> >  };
+> >  
+> > -/**
+> > - * ks_pcie_v3_65_add_bus() - keystone add_bus post initialization
+> > - * @bus: A pointer to the PCI bus structure.
+> > - *
+> > - * This sets BAR0 to enable inbound access for MSI_IRQ register
+> > - */
+> > -static int ks_pcie_v3_65_add_bus(struct pci_bus *bus)
+> > -{
+> > -	struct dw_pcie_rp *pp = bus->sysdata;
+> > -	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > -	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
+> > -
+> > -	if (!pci_is_root_bus(bus))
+> > -		return 0;
+> > -
+> > -	/* Configure and set up BAR0 */
+> > -	ks_pcie_set_dbi_mode(ks_pcie);
+> > -
+> > -	/* Enable BAR0 */
+> > -	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
+> > -	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
+> > -
+> > -	ks_pcie_clear_dbi_mode(ks_pcie);
+> > -
+> > -	 /*
+> > -	  * For BAR0, just setting bus address for inbound writes (MSI) should
+> > -	  * be sufficient.  Use physical address to avoid any conflicts.
+> > -	  */
+> > -	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
+> > -
+> > -	return 0;
+> > -}
+> > -
+> >  static struct pci_ops ks_pcie_ops = {
+> >  	.map_bus = dw_pcie_own_conf_map_bus,
+> >  	.read = pci_generic_config_read,
+> >  	.write = pci_generic_config_write,
+> > -	.add_bus = ks_pcie_v3_65_add_bus,
+> >  };
+> >  
+> >  /**
+> > @@ -822,6 +788,23 @@ static int __init ks_pcie_host_init(struct dw_pcie_rp *pp)
+> >  	if (ret < 0)
+> >  		return ret;
+> >
+> 
+> > +	if (!ks_pcie->is_am6) {
+> 
+> Perhaps add a comment here stating WHY this is needed for v3.65a (!is_am6).
+> 
+> From reading the old threads, it appears that v3.65a:
+> -Has no support for iATUs. iATU-specific resource handling code is to be
+>  bypassed for v3.65 h/w. Thus v3.65a has it's own .child_ops implementation,
+>  so that pcie-designware-host.c does not configure the iATUs.
+> -v3.65a has it's own .msi_init implementation, so that pcie-designware-host.c
+>  does not call dw_pcie_msi_host_init() to configure the MSI controller.
+> 
+> While 4.90a:
+> -Does have iATU support.
+> -Does use the generic dw_pcie_msi_host_init().
+> 
+> Considering the major differences (with v3.65a being the outlier) here,
+> I think it would have been a much wiser idea to have two different glue
+> drivers for these two compatibles (ti,keystone-pcie and ti,am654-pcie-rc).
+> 
+> Right now the driver is quite hard to read, most of the functions in this
+> driver exist because v3.65a does not have an iATU and does not use the
+> generic DWC way to handle MSIs. Additionally, you have "if (!ks_pcie->is_am6)"
+> spread out all over the driver, to control quite major things, like if you
+> should overload .child_ops, or if you should set up inbound translation without
+> an iATU. This makes is even harder to see which code is actually used for
+> am654... like the fact that it actually uses the generic way to handle MSIs...
+> 
+> The driver for am654 would be much nicer since many of the functions in
+> this driver would not be needed (and the fact that you have only implemented
+> EP support for am654 and not for v3.65a). All EP related stuff would be in
+> the am654 file/driver.
+> You could keep the quirky stuff for v3.65a in the existing pci-keystone.c
+> driver.
+> 
+> (I guess if there is a function that is identical between the twos, you could
+> have a pci-keystone-common.{c,h}  that can be used by both drivers, but from
+> the looks of it, they seem to share very little code.
 
-On Sun, Mar 24, 2024 at 09:05:35PM +0100, Thomas Gleixner wrote:
-> Dimitri!
-> 
-> On Mon, Mar 11 2024 at 15:38, Dimitri Sivanich wrote:
-> > On Thu, Feb 29, 2024 at 11:18:37PM +0100, Thomas Gleixner wrote:
-> >> What you really want is a cpu hotplug state in the CPUHP_BP_PREPARE_DYN
-> >> space which enables the interrupt for the node _before_ the first AP of
-> >> the node is brought up. That will solve the problem nicely w/o any of
-> >> the above issues.
-> >>
-> >
-> > Initially this sounds like a good approach.  As things currently stand, however,
-> > there are (at least) several problems with attempting to allocate interrupts on
-> > cpus that are not running yet via the existing dmar_set_interrupt path.
-> >
-> > - The code relies on node_to_cpumask_map (cpumask_of_node()), which has been
-> >   allocated, but not populated at the CPUHP_BP_PREPARE_DYN stage.
-> >
-> > - The irq_matrix cpumaps do not indicate being online or initialized yet, except
-> >   for the boot cpu instance, of course.
-> >
-> > So things still revert to boot cpu allocation, until we exhaust the
-> > vectors.
-> 
-> I thought about the following:
-> 
->     CPUHP_BP_PREPARE_DYN allocates the hardware interrupt on the control
->     CPU (the boot CPU during early boot).
->     
->     CPUHP_AP_ONLINE_DYN moves it over to the AP. This needs to set
->     affinity and then retrigger the interrupt so that the horrible
->     non-remapped MSI migration logic is invoked.
-> 
-> Though that does not work for parallel bringup as then the prepare stage
-> is invoked for all CPUs before any of them gets to the online phase,
-> which obviously ends up with the same problem.
-> 
-> > Of course, running the dmar_set_interrupt code from a CPUHP_AP_ONLINE_DYN state
-> > does work (although I believe there is a concurrency issue that could show up
-> > with the current dmar_set_interrupt path).
-> 
-> Which concurrency issue? CPU hotplug is fully serialized.
+Thank you for reviewing the patch. I agree that two drivers will be
+better considering the !ks_pcie->is_am6 present throughout the driver.
+However, I hope you notice the fact that commit:
+6ab15b5e7057 PCI: dwc: keystone: Convert .scan_bus() callback to use add_bus
+introduced a regression in a driver which was working prior to that
+commit for AM654. While there are flaws in the driver and it needs to be
+split to handle v3.65a and other versions in a cleaner manner, I am
+unable to understand why that is a precursor to fixing the regression.
 
-Yes, which allowed a simpler iplementation for V2 of this patch than I first
-thought.
+If splitting the driver is the only way to fix this regression, please
+let me know and I will work on that instead, though it will take up more
+time.
 
-> 
-> > So the code seems to have been designed based on the assumption that it will be
-> > run on an already active (though not necessarily fully onlined?) cpu.  To make
-> > this work, any code based on that assumption would need to be fixed.  Otherwise,
-> > a different approach is needed.
-> 
-> Yes, the interrupt vector code it is designed that way and for the
-> general case this is absolutely the right thing to do.
-> 
-> Thanks,
-> 
->         tglx
+Regards,
+Siddharth.
