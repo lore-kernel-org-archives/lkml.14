@@ -1,87 +1,100 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416F51BC4C;
-	Mon, 25 Mar 2024 19:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FF011737;
+	Mon, 25 Mar 2024 19:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711394054; cv=none; b=dNmtpUNN2mg4RJkul15zT7SW/ly9UXayeTA0xjyOSs+3Bpve/g4oKjF68iIrYEE7206htQ1XNNtTyFXlwb4NIzSqyoHE7KNQhzEwbmXgVZy16VEyxLT82b2d5kSvDQW5OwP0rNrwxhQ3AJa/yzLQD7xxOW9HaalUH6bupKrKRNE=
+	t=1711394070; cv=none; b=txaCEBHvpFxnlHRAzhWlqvpa+ipLIK5w2DhxG//Ne4w2GCu+BoOXxVjirXhsIf1AADynEpNtLyKy9knFHjp2B0ZFLywWVAtUdVzrwvrAxTvSPz7vYrOavL4Ms4oNR26RMedJq/nUFQenoux6/B81DxDhSUbCY0P4UEHz8/OfMoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711394054; c=relaxed/simple;
-	bh=DiLYO+iWodkRJqTOEiNu6GAd3X0dXX8ZaKgOEGopjt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DZuzKUNtGgX4ovBvg+Xjk8oHJNETwbZObQXG/BbsD6EGAVuwmlrvWUJiy5tntIw+ypr88nkjpVSi33G3cE960JsKgmbXfwQx8Yogk62GK0Ql8h2Lb4bA1kbnsk67TaWazU7XkH3D8Xyf/qVPCUsrvU01kggiqFi9LqhxHvoXoXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=sH/zu2q8; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1711394070; c=relaxed/simple;
+	bh=S4dR9hMjuyXo+2NLjdCApilcKOOtn4MC+CpSK0tyAkM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GHvQJuo/ROO+1/8tJGGxMZ8e0R7xRbfxdwl+u4RQXWoI04AB+cFy0WCY3GG2ghOtc9xXh6c4cJmgF7ZL94COu3GtiJEhmRZQc7zLwwAyrS79IhB0c1D015vU962OSHOEazHkkiTJ2TlNXW5Yecwxab10S60PPSMM2PIYllpAw6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AMxKADBa; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="sH/zu2q8"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 709D21C007E; Mon, 25 Mar 2024 20:14:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1711394049;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VTKQMqQ5swI5N8GoYSCrSa5W20pFj2E06/nVThesd4k=;
-	b=sH/zu2q8P4LEeqhQ4rNLPyenXbf/XHR0SlPj+g8f4lMwvbd0M9em7X6ymQmWrtnU/wU9//
-	RBoJuSDfJsWRL5fSXVeZoq10LR0isFSTQ9bK60Kx2a7kfGiZoJQSC73tpanUxsY7ZE99Xj
-	yIPbISfsdBl2SdGVLyR8V+rhqa5PuT0=
-Date: Mon, 25 Mar 2024 20:14:09 +0100
-From: Pavel Machek <pavel@ucw.cz>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, florian.fainelli@broadcom.com,
-	pavel@denx.de
-Subject: Re: [PATCH 6.8 000/715] 6.8.2-rc1 review
-Message-ID: <ZgHNASvv5iZV1kKc@duo.ucw.cz>
-References: <20240324223455.1342824-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AMxKADBa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711394069; x=1742930069;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=S4dR9hMjuyXo+2NLjdCApilcKOOtn4MC+CpSK0tyAkM=;
+  b=AMxKADBaFjLF7rinPZw3jk2vCbfjVFyRaVpYuHkdzF2LXF8wDOtWmHj0
+   Atin8dkll7yRqaWwpIdzRZyLcfZ4SDsw/sT5NoHN+tsVdjQ23lOg7dgzA
+   OYP80H+bbFAoCMYs5hf0rthjgUA0FK5dVC54MlsgXFDhPzqjyP7gO7a9q
+   C857vfNbwFQVILBDO9HwrfDbSv/r10h0if2PP7Z8gj4W3jpHFS/d2Tyq4
+   CbymBVzpdh01NkNS0zkR9ILdTXWJklatFGFG/CpQ+9wAwb4DDp0gellgC
+   D4EPSuuPG5g33LbUh9JtvdNPTCltoFd1RAd7ttQlLVpXmx9VK2e3g3Y/J
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="10213322"
+X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
+   d="scan'208";a="10213322"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 12:14:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="937070805"
+X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
+   d="scan'208";a="937070805"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2024 12:14:23 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 470F2101; Mon, 25 Mar 2024 21:14:22 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>,
+	Alper Nebi Yasak <alpernebiyasak@gmail.com>,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Shengjiu Wang <shengjiu.wang@gmail.com>,
+	Xiubo Li <Xiubo.Lee@gmail.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Nicolin Chen <nicoleotsuka@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] ASoC: fsl: imx-es8328: Remove leftover gpio initialisation
+Date: Mon, 25 Mar 2024 21:13:41 +0200
+Message-ID: <20240325191341.3977321-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xJAgsL7GgeRE9cmy"
-Content-Disposition: inline
-In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
+Content-Transfer-Encoding: 8bit
 
+The gpio field is not used anymore, remove the leftover.
+This also fixes the compilation error after the ...
 
---xJAgsL7GgeRE9cmy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 9855f05e5536 ("ASoC: fsl: imx-es8328: Switch to using gpiod API")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ sound/soc/fsl/imx-es8328.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Hi!
+diff --git a/sound/soc/fsl/imx-es8328.c b/sound/soc/fsl/imx-es8328.c
+index d67b8a149bff..5b9648f3b087 100644
+--- a/sound/soc/fsl/imx-es8328.c
++++ b/sound/soc/fsl/imx-es8328.c
+@@ -28,7 +28,6 @@ struct imx_es8328_data {
+ 
+ static struct snd_soc_jack_gpio headset_jack_gpios[] = {
+ 	{
+-		.gpio = -1,
+ 		.name = "headset-gpio",
+ 		.report = SND_JACK_HEADSET,
+ 		.invert = 0,
+-- 
+2.43.0.rc1.1.gbec44491f096
 
-> This is the start of the stable review cycle for the 6.8.2 release.
-> There are 715 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-
-You submitted ~1500 emails to linux-kernel in few minutes. That's
-quite serious load. Are you sure that's okay with postmasters?
-
-It is convenient for me, but Greg stopped patchbombing linux-kernel
-some time ago, and I guess there were good reasons.
-
-Best regards,
-								Pavel
-
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---xJAgsL7GgeRE9cmy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZgHNAQAKCRAw5/Bqldv6
-8vOUAJ4iQv5wEi3bbhbDeJvEOT+1MrVWtgCfQm9dm46HBY8FicilzHKeOMGILlo=
-=Ol8Q
------END PGP SIGNATURE-----
-
---xJAgsL7GgeRE9cmy--
