@@ -1,214 +1,138 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96922224DB
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 19:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB531C2AC
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 19:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711395619; cv=none; b=Ex9y/ImMHGsy3Msr6WFAC9Z5PV3rChGuEOumMikauH56df2/oXgCB2MmmwwyNpGGq7uOVLVjIl8jcSmUvjsqtZwxmDpeQCSfJjpV0uXgHRmrZkihc/8qw/OE3lws5/wAu+wWSZLC17uLfsB7m+CfIKwF8LoUlnE5n5Gkizq5Sj0=
+	t=1711395645; cv=none; b=ChpTLMzjcpW/5CMSO9VLPwgW5S03DWKhiRLOiOKkc8SOlflOzWDJ8ARN7cSaudrUBZF29yLgmRJZdal4BDKMLwJUfs60aWOYWbT9E1am6v613UBpBi3fPM3N6WxImMqbVG2FEP2LVQ/OcreoTxT1Q2r5t9jvEy/A0SvX+IEwDCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711395619; c=relaxed/simple;
-	bh=/ousucYE9TYn5+7Q7Dy7A/rriEu2QFFESEGREjhOq50=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hGox2oqFezI+m7EsWP1fOfFFgtY5xS1+0CKMUdiUMOyUowFZAFZvwazCdSiw9ZD494+7c9mn0J/dMFfdLzOkRcgMStFrOFF2Dcj1YU5sUPxE0sS4zoyieGdKs6sXoGuFsnLdQlNxy+OOZrYu/K1IcKmrbqoiLqFgINN2GbdupTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H86+MXoo; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711395645; c=relaxed/simple;
+	bh=6zCujOYaTCPgwFb4TRVnXKAm1KvhcyIh/4UUj9uy3D4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I9yZU4maaN7pEYb/TA7iINbx/EmKFSj84L6zvknrbKj29k4DImH9+6yaDlOePeu5MpGfUT0i56NLoRGtbOv9FQP801T0jQJy215xj8kP//uOmCr96uLcvXlkYY8pHDEf7/GSI3BNSgEFHy4wknxxpz+cdpkYFfMQOI2d/RRP4o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ffR0YzS1; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H86+MXoo"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c3d404225dso452682b6e.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:40:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ffR0YzS1"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5a56a5f597dso267625eaf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:40:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711395615; x=1712000415; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rlRxmt+WFCSFHFLoUgXhs0MEn4btGaAaA6pMBaTLtKY=;
-        b=H86+MXooHkFdNpftLxYLTuRgrW8ZO8kca3q7srV2EpFFXNhYw7JeuI7D+C4mwHCxxz
-         uJ0B6LsZydWOQkHyF4XnoJT5vuym7KKe+9CpO6lWPyMflEyd7DsHKckjDMoAr+Gjo7b6
-         OcWxmKZtW4PYCwFq6kpiH9MSAb1xyWjfxOwM4=
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711395640; x=1712000440; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cu4UkxchV2M53KPLFlI+CnD5WRrZCvujRJAKi+5DJjo=;
+        b=ffR0YzS1uosNzzpBcwXyiaIDDNdN5tL4pf3uzGyl1CZ0v9GjtVO6ogBcktRqwyopID
+         aNtUENOXQj+1UBsVfpRcMIx0G3cKU88GtcHHqQjjxuksUcFz0IT87ITgOvEo5TXMktcf
+         /IYJYXLPb/lt8ZoU47RSGwppitfmHDouBF03zHJGcAIOUoXm7oWdXFPtDmSyb1k77wzp
+         GvXUqZFJwjHOYUMTn4KCHAPRI7rvfisu320f2eef1hsHL0cjrSVf8UtcKEgvGtIyoBXk
+         2z78sokDpfaRn6D2sgJwIc6Kyn6nsQXfhH97CHcQ/xgVQyjKdG19ULzJZwGAuYKmicBL
+         DqIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711395615; x=1712000415;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rlRxmt+WFCSFHFLoUgXhs0MEn4btGaAaA6pMBaTLtKY=;
-        b=lR4SrJdoSXH+uK98Clf0zdHOLLBEOpAUAU/KP3shBe0+K9PlDFS1oZ70EPsZwTK25P
-         KcmYZG7T8uORhQtTpUAJtjEPcpfoPaYvGA9Y9/siipasApMePJjiNaSIi37KS/Qdxssx
-         6keN/LyXp78Ic3k1AY/wct1RIKqDWTo5gsSyFEXtjrZvCx7mv7rmT7HSwXzb8V2uiR1w
-         3FfcI9X1LFZ9dd0PxiiDjRFk1rWHrWqxDmQogFcLXpSBuW1pkyIrfEfUDy8WR4PliIGU
-         obQFra3tD5JEg3mI7izgYvydT3Ar5Va2SF3MFTn2Fo1B0eTW4CY52nrBdcw2ck8torjz
-         l7GA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8P/F0j8zeaHCUAgiWQxZX1ATb/RyDN7fmxL+HU1lPH8cGzbmXPMYYi5YlafgU7xpV6KK+9WlF+SL6vHX1vKTXDmyN2jqgkOtpsbmS
-X-Gm-Message-State: AOJu0YxO4dgNcMDMAoZWESe2ZpTVW3GWdjJ8XOLCHe+fAFro4G6WEIHS
-	+Jf2G11WRkUEWq4MDjt4qSmokaDC4MFHCHLfONB9Too1DwT4m51jzuIVt1CtE/Ataph6K7nPM8A
-	=
-X-Google-Smtp-Source: AGHT+IFvRhPWr9Je1gVcrMD21meK0CU77d73hkDj8r1NbWbB3KIyPmFypDji+Fh1NU8DgemloieOmA==
-X-Received: by 2002:a05:6808:3c98:b0:3c3:9949:b457 with SMTP id gs24-20020a0568083c9800b003c39949b457mr12041268oib.22.1711395614945;
-        Mon, 25 Mar 2024 12:40:14 -0700 (PDT)
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com. [209.85.160.179])
-        by smtp.gmail.com with ESMTPSA id ck4-20020a05622a230400b00430dcca3fb5sm2897835qtb.16.2024.03.25.12.40.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 12:40:13 -0700 (PDT)
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-428405a0205so62231cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:40:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXgbePudyWAqMFLA7liq/cBEDid5FkJIJfWGgyqofdNOe6iWJF/Cei2xqwNv5yp0Yn6HmgvGinBe6/U0h/PXZUKcWxzK+e6Ibzt3o2I
-X-Received: by 2002:a05:622a:38d:b0:430:d653:9def with SMTP id
- j13-20020a05622a038d00b00430d6539defmr1213790qtx.5.1711395613116; Mon, 25 Mar
- 2024 12:40:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711395640; x=1712000440;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cu4UkxchV2M53KPLFlI+CnD5WRrZCvujRJAKi+5DJjo=;
+        b=Vhto07R2ZHn0fHWRaC2iYQflUNtE8hJt0uyVZbA5QkJtkwNEjCHQsCIWiYUabAKhQA
+         QU6+WgNzZ7kj7ADNVqNODOFIFyJPAmK3kqSqv7mSheJrBpOg0iJbrj8dCrowBolhZCap
+         lSoacparXsazSGIdzMF16mj0ZzlnKx5bqlH8SjgyEw9UiZnh0NVnkaW4ZELtKnPAV422
+         ZQULjFkmeVOQuCaiyYUJukujP6yqRhsFTQBJ0f6desi8IpuAsk1DdcbkPFnMA2lYB2Xy
+         CfjdxQlauOWpLtU5uQUnqNVpNHvX8pnwf4TYbfRhF+Qq3oe2+G7DObc6hD4SihgEDvTt
+         kXGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUuLW2taKGT5PDrC9M3jAYKKD1JkKkvq07hwtdVVF525btHWt6cGCE4jYPJn1V7Nc//giXNZwiHRSIIwjwj1Q4+INhk56E9zyqvEOw
+X-Gm-Message-State: AOJu0Yxh2a5zOcXbPLUWD5mSA/zaky3mDUZccaJXQ6de9iIaIsMxAdOl
+	IGJfXP5RslwUPCcGnHg96i2sorZ4izYTJj+eurkCAc+2w4RZgWfx19GEou9yztU=
+X-Google-Smtp-Source: AGHT+IGw7NPFevROk+cVlQFzRhkKFe8w6rJLeHSWp9/RPJSgWlvH8NmK4IghYVHNVG1/nnOuFvYSVw==
+X-Received: by 2002:a05:6870:6125:b0:222:3792:d968 with SMTP id s37-20020a056870612500b002223792d968mr8679490oae.4.1711395640637;
+        Mon, 25 Mar 2024 12:40:40 -0700 (PDT)
+Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id bx22-20020a056830601600b006e6d4cffa31sm617068otb.51.2024.03.25.12.40.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 12:40:40 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v3] iio: adc: ad7944: simplify adi,spi-mode property parsing
+Date: Mon, 25 Mar 2024 14:40:36 -0500
+Message-ID: <20240325-ad7944-cleanups-v3-1-3a19120cdd06@baylibre.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325184204.745706-1-sboyd@kernel.org> <20240325184204.745706-5-sboyd@kernel.org>
-In-Reply-To: <20240325184204.745706-5-sboyd@kernel.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 25 Mar 2024 12:39:55 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WBg4cu0rw-yt6-sDaQfeCBNtwqiGKTroB2giM0prHPUQ@mail.gmail.com>
-Message-ID: <CAD=FV=WBg4cu0rw-yt6-sDaQfeCBNtwqiGKTroB2giM0prHPUQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] clk: Get runtime PM before walking tree during disable_unused
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, patches@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 
-Hi,
+This simplifies the adi,spi-mode property parsing by using
+device_property_match_property_string() instead of two separate
+functions. Also, the error return value is now more informative
+in cases where there was a problem parsing the property.
 
-On Mon, Mar 25, 2024 at 11:42=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> wr=
-ote:
->
-> Doug reported [1] the following hung task:
->
->  INFO: task swapper/0:1 blocked for more than 122 seconds.
->        Not tainted 5.15.149-21875-gf795ebc40eb8 #1
->  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message=
-.
->  task:swapper/0       state:D stack:    0 pid:    1 ppid:     0 flags:0x0=
-0000008
->  Call trace:
->   __switch_to+0xf4/0x1f4
->   __schedule+0x418/0xb80
->   schedule+0x5c/0x10c
->   rpm_resume+0xe0/0x52c
->   rpm_resume+0x178/0x52c
->   __pm_runtime_resume+0x58/0x98
->   clk_pm_runtime_get+0x30/0xb0
->   clk_disable_unused_subtree+0x58/0x208
->   clk_disable_unused_subtree+0x38/0x208
->   clk_disable_unused_subtree+0x38/0x208
->   clk_disable_unused_subtree+0x38/0x208
->   clk_disable_unused_subtree+0x38/0x208
->   clk_disable_unused+0x4c/0xe4
->   do_one_initcall+0xcc/0x2d8
->   do_initcall_level+0xa4/0x148
->   do_initcalls+0x5c/0x9c
->   do_basic_setup+0x24/0x30
->   kernel_init_freeable+0xec/0x164
->   kernel_init+0x28/0x120
->   ret_from_fork+0x10/0x20
->  INFO: task kworker/u16:0:9 blocked for more than 122 seconds.
->        Not tainted 5.15.149-21875-gf795ebc40eb8 #1
->  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message=
-.
->  task:kworker/u16:0   state:D stack:    0 pid:    9 ppid:     2 flags:0x0=
-0000008
->  Workqueue: events_unbound deferred_probe_work_func
->  Call trace:
->   __switch_to+0xf4/0x1f4
->   __schedule+0x418/0xb80
->   schedule+0x5c/0x10c
->   schedule_preempt_disabled+0x2c/0x48
->   __mutex_lock+0x238/0x488
->   __mutex_lock_slowpath+0x1c/0x28
->   mutex_lock+0x50/0x74
->   clk_prepare_lock+0x7c/0x9c
->   clk_core_prepare_lock+0x20/0x44
->   clk_prepare+0x24/0x30
->   clk_bulk_prepare+0x40/0xb0
->   mdss_runtime_resume+0x54/0x1c8
->   pm_generic_runtime_resume+0x30/0x44
->   __genpd_runtime_resume+0x68/0x7c
->   genpd_runtime_resume+0x108/0x1f4
->   __rpm_callback+0x84/0x144
->   rpm_callback+0x30/0x88
->   rpm_resume+0x1f4/0x52c
->   rpm_resume+0x178/0x52c
->   __pm_runtime_resume+0x58/0x98
->   __device_attach+0xe0/0x170
->   device_initial_probe+0x1c/0x28
->   bus_probe_device+0x3c/0x9c
->   device_add+0x644/0x814
->   mipi_dsi_device_register_full+0xe4/0x170
->   devm_mipi_dsi_device_register_full+0x28/0x70
->   ti_sn_bridge_probe+0x1dc/0x2c0
->   auxiliary_bus_probe+0x4c/0x94
->   really_probe+0xcc/0x2c8
->   __driver_probe_device+0xa8/0x130
->   driver_probe_device+0x48/0x110
->   __device_attach_driver+0xa4/0xcc
->   bus_for_each_drv+0x8c/0xd8
->   __device_attach+0xf8/0x170
->   device_initial_probe+0x1c/0x28
->   bus_probe_device+0x3c/0x9c
->   deferred_probe_work_func+0x9c/0xd8
->   process_one_work+0x148/0x518
->   worker_thread+0x138/0x350
->   kthread+0x138/0x1e0
->   ret_from_fork+0x10/0x20
->
-> The first thread is walking the clk tree and calling
-> clk_pm_runtime_get() to power on devices required to read the clk
-> hardware via struct clk_ops::is_enabled(). This thread holds the clk
-> prepare_lock, and is trying to runtime PM resume a device, when it finds
-> that the device is in the process of resuming so the thread schedule()s
-> away waiting for the device to finish resuming before continuing. The
-> second thread is runtime PM resuming the same device, but the runtime
-> resume callback is calling clk_prepare(), trying to grab the
-> prepare_lock waiting on the first thread.
->
-> This is a classic ABBA deadlock. To properly fix the deadlock, we must
-> never runtime PM resume or suspend a device with the clk prepare_lock
-> held. Actually doing that is near impossible today because the global
-> prepare_lock would have to be dropped in the middle of the tree, the
-> device runtime PM resumed/suspended, and then the prepare_lock grabbed
-> again to ensure consistency of the clk tree topology. If anything
-> changes with the clk tree in the meantime, we've lost and will need to
-> start the operation all over again.
->
-> Luckily, most of the time we're simply incrementing or decrementing the
-> runtime PM count on an active device, so we don't have the chance to
-> schedule away with the prepare_lock held. Let's fix this immediate
-> problem that can be triggered more easily by simply booting on Qualcomm
-> sc7180.
->
-> Introduce a list of clk_core structures that have been registered, or
-> are in the process of being registered, that require runtime PM to
-> operate. Iterate this list and call clk_pm_runtime_get() on each of them
-> without holding the prepare_lock during clk_disable_unused(). This way
-> we can be certain that the runtime PM state of the devices will be
-> active and resumed so we can't schedule away while walking the clk tree
-> with the prepare_lock held. Similarly, call clk_pm_runtime_put() without
-> the prepare_lock held to properly drop the runtime PM reference. We
-> remove the calls to clk_pm_runtime_{get,put}() in this path because
-> they're superfluous now that we know the devices are runtime resumed.
->
-> Reported-by: Douglas Anderson <dianders@chromium.org>
-> Closes: https://lore.kernel.org/all/20220922084322.RFC.2.I375b6b9e0a0a534=
-8962f004beb3dafee6a12dfbb@changeid/ [1]
-> Closes: https://issuetracker.google.com/328070191
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Fixes: 9a34b45397e5 ("clk: Add support for runtime PM")
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  drivers/clk/clk.c | 117 +++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 105 insertions(+), 12 deletions(-)
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+Changes in v3:
+- Fix "a problem" in commit message.
+- Remove nested if to save a few lines.
+- Link to v2: https://lore.kernel.org/r/20240319-ad7944-cleanups-v2-1-50e77269351b@baylibre.com
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Changes in v2:
+- Reorder error path to avoid else statement
+- Link to v1: https://lore.kernel.org/r/20240318-ad7944-cleanups-v1-1-0cbb0349a14f@baylibre.com
+---
+ drivers/iio/adc/ad7944.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
+index d5ec6b5a41c7..9aa3e98cd75c 100644
+--- a/drivers/iio/adc/ad7944.c
++++ b/drivers/iio/adc/ad7944.c
+@@ -366,7 +366,6 @@ static int ad7944_probe(struct spi_device *spi)
+ 	struct ad7944_adc *adc;
+ 	bool have_refin = false;
+ 	struct regulator *ref;
+-	const char *str_val;
+ 	int ret;
+ 
+ 	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc));
+@@ -382,17 +381,17 @@ static int ad7944_probe(struct spi_device *spi)
+ 
+ 	adc->timing_spec = chip_info->timing_spec;
+ 
+-	if (device_property_read_string(dev, "adi,spi-mode", &str_val) == 0) {
+-		ret = sysfs_match_string(ad7944_spi_modes, str_val);
+-		if (ret < 0)
+-			return dev_err_probe(dev, -EINVAL,
+-					     "unsupported adi,spi-mode\n");
+-
+-		adc->spi_mode = ret;
+-	} else {
+-		/* absence of adi,spi-mode property means default mode */
++	ret = device_property_match_property_string(dev, "adi,spi-mode",
++						    ad7944_spi_modes,
++						    ARRAY_SIZE(ad7944_spi_modes));
++	/* absence of adi,spi-mode property means default mode */
++	if (ret == -EINVAL)
+ 		adc->spi_mode = AD7944_SPI_MODE_DEFAULT;
+-	}
++	else if (ret < 0)
++		return dev_err_probe(dev, ret,
++				     "getting adi,spi-mode property failed\n");
++	else
++		adc->spi_mode = ret;
+ 
+ 	if (adc->spi_mode == AD7944_SPI_MODE_CHAIN)
+ 		return dev_err_probe(dev, -EINVAL,
+
+---
+base-commit: 1446d8ef48196409f811c25071b2cc510a49fc60
+change-id: 20240318-ad7944-cleanups-9f95a7c598b6
