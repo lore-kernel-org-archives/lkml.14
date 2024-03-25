@@ -1,112 +1,185 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF0213AA47
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 01:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5963314BFB3
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711331795; cv=none; b=u0BvkkSSuNzgWbS2xr5lot94Vomq++QEyzdCGr+ypubhQ1ug/08hWYf4EUHhNudLoqHRfWng2NLToJdV+DhVPesVWx1hnIW5aVOAETWtQaABc8BrVyy7cKWsVUur/7NQra2S5z1wTL8riFRdXiLB/EhExjaCpLPooivaJPrt73U=
+	t=1711332174; cv=none; b=klZHRnI9a/N76tO69fXAGvsqoy5Dica/vZqyiFoZotfMYuNucooVJel6QBp7bjeoem4BNa/So2zU6NpCLuOUAbv1MI4mMLqlRuDusry/O1oj2vmC5mE24dsX8arQpZkyMUjOWqroxvr3m36Ql/FlDUfx0pbcJrFP7Q7Y9/dIL50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711331795; c=relaxed/simple;
-	bh=mx/VdD1hq7cRmoLLUg9zTXrB6nghO0otx5ehOvo8wJU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OYl03y7WJsnnw2hboaRnwcBqsPbm2STcBT28WjNhaKe+Btp1R/VI5oZqketZKbW5xJmMjzaJmeUDjs5etoY3cQ98b0SwdgocVzcW+2NQ2aCy8a3/wEHGAu/pjP90j8VGOyFf9GxNdkFgRnezX/yt0OYx293Wml2eAmr/ZI92OJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=lEQLBH0G; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1711332174; c=relaxed/simple;
+	bh=r9B98m2a8dZ0bmDDC3obEW4AWL7V1A9bqVt8onHT71A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oiWXF0GeVW+KlK1rsvqCn/D1Ji+os36vr3I/mIsvp8QcKcXd6vyLOom3Uh2Tv/KNdFVlV/6CTDNO8tk+UFbajZNR8B8ehnrnIHaAOe61hDET7NgPbUcQG79vOMwn/VVgHR8J3QyUejK3WRQtJloVdH/GZHi4QV/DmILER0HImtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=HPoaBkJW; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="lEQLBH0G"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="HPoaBkJW"
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 42D7F2C00C6;
-	Mon, 25 Mar 2024 14:50:49 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1711331449;
-	bh=UvZ22nbi3oBrveYANpJX+eOm9E/q+JnPTDDNwgaPVZ0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lEQLBH0G0p5FfWe/jQ+cXxHsyUp3lqtUIqVcbjwtkWaB9OV5q+2B6GtUFautBhvaF
-	 6Hm2H2VJMpUJ6U8VAcITw39qpvXEBWIkJwoi1d/bjj3p6MpptOD2pMLKn4yG8Gbb3Z
-	 x37wgkYLfck9N0JSToTqGF2zTA+wO0vW7HhiegChBUxQMkDDJQjeVOcysvMIrlViTX
-	 y3iW1457iQlK4O1tWztSthdXAD5Rb3H7ZDqm9n4BQxR3DJ1lwMooPtADa4yiC2osb6
-	 tQ23RTRNzZ1yOHk7+VpgYSoumYI/gGNM0904kbe2N18Jz+QRLZtjEBsUQ61Y3+100j
-	 vGOunsPO0fjFw==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B6600d8790000>; Mon, 25 Mar 2024 14:50:49 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 11EED13ED7B;
-	Mon, 25 Mar 2024 14:50:49 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 0CC26280A41; Mon, 25 Mar 2024 14:50:49 +1300 (NZDT)
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-To: gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] uio_pdrv_genirq: convert to use device_property APIs
-Date: Mon, 25 Mar 2024 14:50:45 +1300
-Message-ID: <20240325015045.778718-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.43.2
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 482F23F1D9
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:02:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1711332161;
+	bh=+mIvzsZciY5ySPQ+G6tsFtbRNob9H1jOM+O8s2gDVJ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=HPoaBkJWaUSAhzG61KIqwhJmEJ3hjwfC/pHM13HADqToVk0L0mmlcAQ/H00ejuLUS
+	 iB/257cAHzylA5wVw8/tdS7OINE8Ho9J7mguQdmnS8C5bqOZRmt9aT9PDuENT+dquE
+	 dyIV7Q29wJd+Q+ZZBIeBBWZm19/vDk+58QJe6IZc8x6W6CbzWquWQokOBccP9g77Jq
+	 R5uYjFi21w/rzWuU/Q7yjQ0LygKaYtSkTk1eYb2nOBdBlmakhOCVfyrZFsFka7J8JO
+	 usm491YRm8kPu+PXYA4bE73x2IHX16UTNHu4X0KaeGXulMVsuvU8jnG/f9TwLgJ+kK
+	 sScLaJU+63QPA==
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-29f96135606so3471349a91.1
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 19:02:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711332160; x=1711936960;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+mIvzsZciY5ySPQ+G6tsFtbRNob9H1jOM+O8s2gDVJ4=;
+        b=PFNQR2WiUkJIz5kNkyXnE5/eB7PrrOPksWtI8PfoGroMGKvga51JJuRUgfkMmdY/Hi
+         uvkT5qRegau1YKOyL+cUDZrIHC20nU9HcHIPc0jXd0PcMOaKODeps7qgRXFmkb6aiJG8
+         x9FM3jOYNRpO48iYZRR9wBNCiWy4gzWcI96CFH/VE/eC+Qt9PJecGAOxsPE83gqFKwPE
+         UTlce/UPgSPos5y4XKw4JndOgTa2Sv10C5tLKExwG5wqtBGIjC3zXQSfTvc7YXiJPHau
+         ehSBvs/0D6B5ZSA2A9a6OEx06QxW3PxbQV2HL4JH8Z4eLxxLnyqkBsPFSKBM/Zkg3uKa
+         FDMA==
+X-Forwarded-Encrypted: i=1; AJvYcCWOxVaL1F+fp/uFoYpms0fX8ifbC2ECLMI+QGu9nC19AurBbebcILVDF6BJdYCQlA/c6PlrZVtkQgY5Yd9gfL+x28Aog069U2X6tSc1
+X-Gm-Message-State: AOJu0YziOj4LNfVgYhVMGAYPdjlZfH5RgcCOpk9Uh/RqLjd3ysj3PAHl
+	5m1VGfwFjfpCT5iH5UjhGWdLprSnpQEFJ6+pWUYNuJqVTn9pgu/m0r0TjECK1umn2o3+Q8HEHIe
+	GSMt1OH8D4dqlXdehALdDl4dNAKolnCX6wZEVNM51XwA101cQhCiqDqLSZ/g3mE57wfA+coNgrh
+	P4B+zq5izmDzbSnVJ3uUxq+SeWdrG4ngugKGmgeygCeGTKFKcSa/qP
+X-Received: by 2002:a17:90a:f305:b0:29d:e004:f8ce with SMTP id ca5-20020a17090af30500b0029de004f8cemr4659458pjb.6.1711332159828;
+        Sun, 24 Mar 2024 19:02:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGdgo5FDJzC6NeqQqpgbGFtMGSoVZp9BqWYX8x2dG/6JMT5Lw6ZI0PR/TgTb83gGW2BD44epryd1XgAsZ7KfBs=
+X-Received: by 2002:a17:90a:f305:b0:29d:e004:f8ce with SMTP id
+ ca5-20020a17090af30500b0029de004f8cemr4659443pjb.6.1711332159386; Sun, 24 Mar
+ 2024 19:02:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CAAd53p52fi_wr3Js9Rqct+i1D3rjrnVZ6tBN=uHqThM7UvzXQA@mail.gmail.com>
+ <20240322164311.GA1367151@bhelgaas>
+In-Reply-To: <20240322164311.GA1367151@bhelgaas>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Mon, 25 Mar 2024 10:02:27 +0800
+Message-ID: <CAAd53p53NjYsYctrb6oknXVTMEq919nfVvrK17EBXwsGCxvtbA@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: sdhci-pci-gli: GL975x: Mask rootport's replay
+ timer timeout during suspend
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, 
+	Victor Shih <victor.shih@genesyslogic.com.tw>, Ben Chuang <benchuanggli@gmail.com>, 
+	linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=KIH5D0Fo c=1 sm=1 tr=0 ts=6600d879 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=K6JAEmCyrfEA:10 a=kuWcMSrzkGJfJYRAjKUA:9 a=3ZKOabzyN94A:10
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
 
-Convert the uio_pdrv_genirq driver to use the device_property_* APIs
-instead of the of_property_* ones. This allows UIO interrupts to be
-defined via an ACPI overlay using the Device Tree namespace linkage.
+On Sat, Mar 23, 2024 at 12:43=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+>
+> On Thu, Mar 21, 2024 at 06:05:33PM +0800, Kai-Heng Feng wrote:
+> > On Sat, Jan 20, 2024 at 6:41=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> > > On Thu, Jan 18, 2024 at 02:40:50PM +0800, Kai-Heng Feng wrote:
+> > > > On Sat, Jan 13, 2024 at 1:37=E2=80=AFAM Bjorn Helgaas <helgaas@kern=
+el.org> wrote:
+> > > > > On Fri, Jan 12, 2024 at 01:14:42PM +0800, Kai-Heng Feng wrote:
+> > > > > > On Sat, Jan 6, 2024 at 5:19=E2=80=AFAM Bjorn Helgaas <helgaas@k=
+ernel.org> wrote:
+> > > > > > > On Thu, Dec 21, 2023 at 11:21:47AM +0800, Kai-Heng Feng wrote=
+:
+> > > > > > > > Spamming `lspci -vv` can still observe the replay timer tim=
+eout error
+> > > > > > > > even after commit 015c9cbcf0ad ("mmc: sdhci-pci-gli: GL9750=
+: Mask the
+> > > > > > > > replay timer timeout of AER"), albeit with a lower reproduc=
+e rate.
+> > > > > > >
+> > > > > > > I'm not sure what this is telling me.  By "spamming `lspci -v=
+v`, do
+> > > > > > > you mean that if you run lspci continually, you still see Rep=
+lay Timer
+> > > > > > > Timeout logged, e.g.,
+> > > > > > >
+> > > > > > >   CESta:        ... Timeout+
+> > > > > >
+> > > > > > Yes it's logged and the AER IRQ is raised.
+> > > > >
+> > > > > IIUC the AER IRQ is the important thing.
+> > > > >
+> > > > > Neither 015c9cbcf0ad nor this patch affects logging in
+> > > > > PCI_ERR_COR_STATUS, so the lspci output won't change and mentioni=
+ng it
+> > > > > here doesn't add useful information.
+> > > >
+> > > > You are right. That's just a way to access config space to reproduc=
+e
+> > > > the issue.
+> > >
+> > > Oh, I think I completely misunderstood you!  I thought you were sayin=
+g
+> > > that suspending the device caused the PCI_ERR_COR_REP_TIMER error, an=
+d
+> > > you happened to see that it was logged when you ran lspci.
+> >
+> > Both running lspci and suspending the device can observe the error,
+> > because both are accessing the config space.
+> >
+> > > But I guess you mean that running lspci actually *causes* the error?
+> > > I.e., lspci does a config access while we're suspending the device
+> > > causes the error, and the config access itself causes the error, whic=
+h
+> > > causes the ERR_COR message and ultimately the AER interrupt, and that
+> > > interrupt prevents the system suspend.
+> >
+> > My point was that any kind of PCI config access can cause the error.
+> > Using lspci is just make the error more easier to reproduce.
+> >
+> > > If that's the case, I wonder if this is a generic problem that could
+> > > happen with *any* device, not just GL975x.
+> >
+> > For now, it's just GL975x.
+> >
+> > > What power state do we put the GL975x in during system suspend?
+> > > D3hot?  D3cold?  Is there anything that prevents config access while
+> > > we suspend it?
+> >
+> > The target device state is D3hot.
+> > However, the issue happens when the devices is in D0, when the PCI
+> > core is saving the device's config space.
+> >
+> > So I think the issue isn't related to the device state.
+> >
+> > > We do have dev->block_cfg_access, and there's a comment that says
+> > > "we're required to prevent config accesses during D-state
+> > > transitions," but I don't see it being used during D-state
+> > > transitions.
+> >
+> > Yes, there isn't any D-state change happens here.
+>
+> So the timeout happens sometimes on any config accesses to the device,
+> no matter what the power state is?
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- drivers/uio/uio_pdrv_genirq.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Yes.
 
-diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.=
-c
-index 63258b6accc4..772ab42a3ba1 100644
---- a/drivers/uio/uio_pdrv_genirq.c
-+++ b/drivers/uio/uio_pdrv_genirq.c
-@@ -23,8 +23,8 @@
- #include <linux/irq.h>
-=20
- #include <linux/of.h>
--#include <linux/of_platform.h>
--#include <linux/of_address.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/property.h>
-=20
- #define DRIVER_NAME "uio_pdrv_genirq"
-=20
-@@ -110,7 +110,7 @@ static void uio_pdrv_genirq_cleanup(void *data)
- static int uio_pdrv_genirq_probe(struct platform_device *pdev)
- {
- 	struct uio_info *uioinfo =3D dev_get_platdata(&pdev->dev);
--	struct device_node *node =3D pdev->dev.of_node;
-+	struct fwnode_handle *node =3D dev_fwnode(&pdev->dev);
- 	struct uio_pdrv_genirq_platdata *priv;
- 	struct uio_mem *uiomem;
- 	int ret =3D -EINVAL;
-@@ -127,11 +127,12 @@ static int uio_pdrv_genirq_probe(struct platform_de=
-vice *pdev)
- 			return -ENOMEM;
- 		}
-=20
--		if (!of_property_read_string(node, "linux,uio-name", &name))
-+
-+		if (!device_property_read_string(&pdev->dev, "linux,uio-name", &name))
- 			uioinfo->name =3D devm_kstrdup(&pdev->dev, name, GFP_KERNEL);
- 		else
- 			uioinfo->name =3D devm_kasprintf(&pdev->dev, GFP_KERNEL,
--						       "%pOFn", node);
-+						       "%pfwP", node);
-=20
- 		uioinfo->version =3D "devicetree";
- 		/* Multiple IRQs are not supported */
---=20
-2.43.2
+> If that's the case, why do the
+> masking in the suspend/resume callbacks?
 
+Because there's no functional impact when the error happens, other
+than suspend/resume.
+
+>
+> If it's not related to a power state change, it sounds like something
+> that should be a quirk or done at probe time.
+
+Sure, I'll change that to be done at probe time.
+
+Kai-Heng
+
+>
+> Bjorn
