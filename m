@@ -1,103 +1,119 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D4B6F060
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C312912C54F;
+	Mon, 25 Mar 2024 16:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711383555; cv=none; b=WmcUfnot6qLmOYYTOlkClmhf2oEJhxdwu0Vc7wtoN7YQ1UdjoexaoxArAj/XKYj+dF8kp1/bbMTX5D1ewd8RuINXv36Qvdskaw7C0Di8B5PEHMKbhYnY/QytMAurX2jN1vEN61Z+Tj2WeCk8r9TRyeYlxSPqtHmg+umy9bxgayg=
+	t=1711383558; cv=none; b=aAJQEwY5aOBxl5iA2X9t3SJ3PyYnbbAi2XsKqvmpB+/O2o6RZPn0a4O66xCnRzc38EUnu3tF3+xcLdJJcU0CAteCUJvdE1T7We4IRkTvq/QT9wblNqBMPQqOWfgE4c6+s94lJJ7JVpcwMIkz0aPwY6SwZzfECLQDDO6N6sMesBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711383555; c=relaxed/simple;
-	bh=C0yANzAlSzgND8qqihTlSMXwQ/R0JMuPRLxdKZ8jvZQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tcgzcqb2UKIdxL3vgBgzv+TVm7cFi32MgIeLwT2sV6/HjBbod+deacq094H3t1H9m6mpWvpWuis2dmZtn5mJFCCWc2j49DIyloMStq56Lh8+V4veao1TmzrBZ8QBmoH19AWEEblxbi6x9gNrDBdsCnfat/37szrmVmhd19/Mnug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=W+mrT5se; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711383558; c=relaxed/simple;
+	bh=IwzaoHW/HagSH6BZIf0SV6u2TapiSTBNzgHXVGJRXNs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b7BRf+xaU45tHjdjs4Fpw9LoDMONb/rDifOp9K4TjQ7Jsbt8fkiD6Jxd25II8otbly1OZ3i21lbrv6LqWBTMoStQtfrEhkqbpuz7ELkGy019APbi91QF67kSuxtfKjQUuopidmKuaxUFXngNFUiAvbmwFbnrnNAZP5rTmXh7KXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=usN4vTLw; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W+mrT5se"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6962a97752eso33006066d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:19:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711383550; x=1711988350; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EKP+i5jnsTv1b1X+grUsnmPFecRRLS4nYrDFL9hNpXg=;
-        b=W+mrT5se5SXV/eaQK3UVwLxVAIcOCDRowUpmtMn0lB9w2c8+LvZXRRQ2KTUFWYnjW7
-         P/eE0vaSXXbgSPvmPF8CUwFeEolCLBA8nKog6EVUn+OaYjoUBxwzCgn69bmDLLskYq9P
-         wdEnXAixjhyiz5HQ6Z0tMw6hMMhgtM/nkEW7k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711383550; x=1711988350;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EKP+i5jnsTv1b1X+grUsnmPFecRRLS4nYrDFL9hNpXg=;
-        b=jkMXi8D75s9WlIbV2nrBooSAa4HFe9BNmtwbubj9EZWQkjWisOpggnVu4+g2zQWqxu
-         utXRe64L1Ih9gmsCLCny8/T2+6STsJfVL3kPM2SFTRnhu6mmU8W4lP037RaI5VOR9QMd
-         WPWV8+O2Go2JWf8WOwo9Y46XAw1o+Rz4RxmNOYAK+0cY83LrhXSdYcavApeORCKih8DR
-         0SzT9PXP2XT13s1uBfC1AFvkHPDzwU4evmxkcVI7Vzoufz/WwuXrAQsXuQCOsAK4Ndfi
-         pwlm6ju4TPhvS7IetTNdWYL3M2gy1kBZOjtVlOzRIgC9EgXVg6G39nwU7pfqqJ8Ck5oD
-         +vOg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbotb0xkouaxKaPS1lO/LCp/S86QoOwvZkP/XfUpOM0yW7ZW/7b1QKzsPa9b95SuQID2EeE1aHr2qB4FQ75ixTL9FU0A8z2WZaPFVg
-X-Gm-Message-State: AOJu0YyBJ0BsMfEHCda/670nZ7wPqdgDHENoYxDSZsqUrHQt6eaeSgIt
-	KD0N1zjr4RejnvnePve4jno2yJf9AXCIAoJM1kabQ6r/YONeVIZQfMrqqjJXtyVvjeTVTLADjtI
-	=
-X-Google-Smtp-Source: AGHT+IG2pcIyOp5sSCKNK5Cx1qUwV/0NTk1E4qtUoGN32smYlwqwRzSgM+sKUhzmriDWXMs6P2iUug==
-X-Received: by 2002:a05:6214:d4a:b0:696:9756:fc44 with SMTP id 10-20020a0562140d4a00b006969756fc44mr1320479qvr.26.1711383549760;
-        Mon, 25 Mar 2024 09:19:09 -0700 (PDT)
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com. [209.85.160.176])
-        by smtp.gmail.com with ESMTPSA id w9-20020a0cb549000000b0069686d63c1esm1948332qvd.69.2024.03.25.09.19.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 09:19:08 -0700 (PDT)
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-430d3fcc511so467401cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:19:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXS3rnJycu/qOpk51Wg3FqdrpT+qSepiyngZqXRWsKI3ZN62IVSlsno9bqpax+15fqzBHJhx42onijf5L1kqofVh1h3liK8MHln20BS
-X-Received: by 2002:a05:622a:5447:b0:431:4eea:ef20 with SMTP id
- eo7-20020a05622a544700b004314eeaef20mr283279qtb.16.1711383548431; Mon, 25 Mar
- 2024 09:19:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="usN4vTLw"
+From: Dragan Simic <dsimic@manjaro.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1711383550;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=eeOca0jbpn3vxiTcP6H4it2Gf901TrwEixbj2YXQxJc=;
+	b=usN4vTLw2BTrm1ZtUsYd9bMu8sefjTpAeJQxdnBsko2UADgccF2naLIgLbsHe/sx/pY5Sf
+	aFhOhb/fgrWjEiEhhi9d7PdhjtFpWi50o4dmgS5XE8SNwSrkhCdyKs6dLOt/XEYoX7A8CR
+	UgyD1T6d3HsvPK9S6eD1KNYNNbDoM6qq3HmN8bG4GHTYukr8aO8YCXScC0bpbqM87D0yCg
+	n6QJOqEwGGkcdF92uy8qsQGXw/Tm5590pjAKU/t2FgECrkXxTfTG1FkVPZOGro7sw1kkH6
+	SLF3EoI0XnRcTS8CZjkjRCKqUj+hn4YDFKb0gfiYJzwObEejr/q+xitu2sr/xA==
+To: linux-rockchip@lists.infradead.org
+Cc: heiko@sntech.de,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	boris.brezillon@collabora.com,
+	linux-kernel@vger.kernel.org,
+	kernel@collabora.com,
+	sebastian.reichel@collabora.com
+Subject: [PATCH] arm64: dts: rockchip: quartzpro64: Enable the GPU
+Date: Mon, 25 Mar 2024 17:19:04 +0100
+Message-Id: <0f3759ee390f245dac447bbee038445ddfecbec0.1711383286.git.dsimic@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325054403.592298-1-sboyd@kernel.org> <20240325054403.592298-2-sboyd@kernel.org>
-In-Reply-To: <20240325054403.592298-2-sboyd@kernel.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 25 Mar 2024 09:18:52 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vo2vpemyH1ChdHtUdaeKnGckBUeqKfL11xn3WsN5+BUw@mail.gmail.com>
-Message-ID: <CAD=FV=Vo2vpemyH1ChdHtUdaeKnGckBUeqKfL11xn3WsN5+BUw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] clk: Remove prepare_lock hold assertion in __clk_release()
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, patches@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Hi,
+Following the approach used to enable the Mali GPU on the rk3588-evb1, [1]
+do the same for the Pine64 QuartzPro64, which uses nearly identical hardware
+design as the RK3588 EVB1.
 
-On Sun, Mar 24, 2024 at 10:44=E2=80=AFPM Stephen Boyd <sboyd@kernel.org> wr=
-ote:
->
-> Removing this assertion lets us move the kref_put() call outside the
-> prepare_lock section. We don't need to hold the prepare_lock here to
-> free memory and destroy the clk_core structure. We've already unlinked
-> the clk from the clk tree and by the time the release function runs
-> nothing holds a reference to the clk_core anymore so anything with the
-> pointer can't access the memory that's being freed anyway. Way back in
-> commit 496eadf821c2 ("clk: Use lockdep asserts to find missing hold of
-> prepare_lock") we didn't need to have this assertion either.
->
-> Fixes: 496eadf821c2 ("clk: Use lockdep asserts to find missing hold of pr=
-epare_lock")
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  drivers/clk/clk.c | 2 --
->  1 file changed, 2 deletions(-)
+The slight disadvantage is that the regulator coupling logic requires the
+regulators to be always on, which is also noted in the comments.  This is
+obviously something to be improved at some point in the future, but should
+be fine for now, especially because the QuartzPro64 isn't a battery-powered
+board, so low power consumption isn't paramount.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+[1] https://lore.kernel.org/linux-rockchip/20240325153850.189128-5-sebastian.reichel@collabora.com/
+
+Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+---
+ .../arm64/boot/dts/rockchip/rk3588-quartzpro64.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts b/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
+index 67414d72e2b6..68d432c61ea5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
+@@ -285,6 +285,12 @@ &gmac0_rgmii_clk
+ 	status = "okay";
+ };
+ 
++&gpu {
++	mali-supply = <&vdd_gpu_s0>;
++	sram-supply = <&vdd_gpu_mem_s0>;
++	status = "okay";
++};
++
+ &i2c2 {
+ 	status = "okay";
+ 
+@@ -491,11 +497,15 @@ rk806_dvs3_null: dvs3-null-pins {
+ 		regulators {
+ 			vdd_gpu_s0: dcdc-reg1 {
+ 				regulator-name = "vdd_gpu_s0";
++				/* regulator coupling requires always-on */
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-enable-ramp-delay = <400>;
+ 				regulator-min-microvolt = <550000>;
+ 				regulator-max-microvolt = <950000>;
+ 				regulator-ramp-delay = <12500>;
++				regulator-coupled-with = <&vdd_gpu_mem_s0>;
++				regulator-coupled-max-spread = <10000>;
+ 
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+@@ -545,11 +555,15 @@ regulator-state-mem {
+ 
+ 			vdd_gpu_mem_s0: dcdc-reg5 {
+ 				regulator-name = "vdd_gpu_mem_s0";
++				/* regulator coupling requires always-on */
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-enable-ramp-delay = <400>;
+ 				regulator-min-microvolt = <675000>;
+ 				regulator-max-microvolt = <950000>;
+ 				regulator-ramp-delay = <12500>;
++				regulator-coupled-with = <&vdd_gpu_s0>;
++				regulator-coupled-max-spread = <10000>;
+ 
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
