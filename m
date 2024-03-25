@@ -1,111 +1,132 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FC71BDCE
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E50B15FCF2
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711339197; cv=none; b=rujyHcQr9cDqzgu2lDMETKU9gfyLpq1ps64IhV9zVFUpQ///hoPE6Xgzg5buHUqP4lRaIjiG6O6rv0mzGRMv299bOoQVeF1r9GMOy6BwEfjw9qDCcBm3RiiNjgu544wfHT9KHC5d/S6/Zcr72w1BOk25ToBePA5yBVQaa4sp6qc=
+	t=1711339423; cv=none; b=gTzDvzPcM9cdVI+GFVN/tnZ0LhKOhd/tuGXYmv/LriSO6xy8nf1d+UpxJqSjZL1k8ISdg12w6WXi9qiATXS41vSpqACE0S10U/W5GVVIEkeu71WAYL+CHrNVTy4ldGzTOyMhm8SnGz+9bzvan3Br2ejYYP66ZEVteTTY83Ya7uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711339197; c=relaxed/simple;
-	bh=mZBZAdxK2BxmYNtPI0ZDmEsamY0wcrZvwum+qSOABcw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JVfuCLItmHGFUuULI7YmFElz5DCIp81w3RBgGwc93EBegd8h+mPScULgDYftIbmtmdnXVPsYEjaX87P4wVAHpr9d8I2Rk5Htl9qpTrI4qsZezxCNDxK+dJWWguMK56Ceb8z4q1hTiLN/oQy9exuhnARFsGpEE+wBliN0A7BJE1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=gAf7kALX; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1711339423; c=relaxed/simple;
+	bh=alvrRycuvN6pDESIAsTl9Hn3uiuLSuA+BX27ZLzTuY0=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iKRDORc75IluM/LzxCraevJbm1hl6oVuWRPwzGwyEKvbiPII/zcjfF4EnE9s0cJknQbLtqdrkKMSrjw2luOtcUhb+Rn7kC9PvggGHrJM0HN/hLIhMJxZN0cr2uVn+EqjGrp44r9qxo26WzrU5aPiECmEs3eXHM1OBEEHeZXgo/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jeNxEWIy; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="gAf7kALX"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2220a3b3871so2017428fac.2
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 20:59:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1711339194; x=1711943994; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mZBZAdxK2BxmYNtPI0ZDmEsamY0wcrZvwum+qSOABcw=;
-        b=gAf7kALXYbYezUJ82yd7B1vTXXvWvixkWeOx0ACF5Bp74UXwTalSKVSeU9Df8pUUxc
-         mGgqEhSLSfX6LJnPGsDVTBlPjePzfmqLpJ1paWNPl9v8M1CA6fUO6B0TG3tPbYUP8k3R
-         /CescorFC6Zqmb1LbDypR3l1yXndoLa17W1Ap1wjO/jws6X1OPqggyfb+RoAf+rWqbbm
-         HBHSdcEd2W6SbK7PfbvuLyhvaTso6DbYVXzoqM8ZWakDtfQjoV/2LNmQdGjgi+ZDJGDa
-         qbOre32VVVo7JS+UbF8baU4muBV21AQ3fN35rVoX7TY2p0rwu0uTw15f6Mdhru4MfXay
-         wSFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711339194; x=1711943994;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mZBZAdxK2BxmYNtPI0ZDmEsamY0wcrZvwum+qSOABcw=;
-        b=WTIwzAVH0tpu0mGFZUD6kr1IihA2BFzXFNLYhxlNIoCOFmoJhmfY4f5zKQkPdEZXMC
-         iiWdvjUd99EJ+oxQw6nEtWk6jxdN5KqF9ooAXv+XvsSXylc8yK+uR+ZzGGTuA71AGLho
-         9bDvkV8uEVJOXs9sqgyk8FsEkysimsPBMoWWvHj7dw5bwC85afkakMkn7VGoFxpggPcm
-         oPN3U13J7y9LaKwQc0vkLShdyDn6RWAcvGsddSk3dGDqnOE3LT2qpyCNmN5zcJcF/Jl7
-         gBiPnpaESWj5ZyJrFW44IC5n1dPA8lR7ZMzztyXbETOQO9yyOOEi8Lj0sJR+K3DDtgDU
-         ufCw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrocUeTrGeiw72QjAcGRLBy20SHMBA14FX0b0t4lYk2OrJT4BQpDArb4P4c5QGRSDSpSbWnH7OauJL6GCpjyyoiJWj0xnoHbCXLZiV
-X-Gm-Message-State: AOJu0YxNy8S25Whebp4Kt0lG1GdfYBIzZ+IuKvuPLYlB0WITwLci5h5r
-	gq4QdgmomNJ4rjfG3CEBcHSGAvNpV7St8hMyk5mfGxQMnNrzROl/K6qxDY+HhyvNDWu1LvDgjTa
-	tA9JopGo5yLPtOjyopUy+TatJKJZGtMUVb72iFw==
-X-Google-Smtp-Source: AGHT+IEvSLOPrvBORb15O7t5WcFvLwtHwr21gOwWhl6ba83FG95/dPss8gUWkSUuH/IqNj/BJ12lEoHWHOFQw32Yq0c=
-X-Received: by 2002:a05:6870:c69e:b0:221:9442:4d58 with SMTP id
- cv30-20020a056870c69e00b0022194424d58mr6705190oab.28.1711339194101; Sun, 24
- Mar 2024 20:59:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jeNxEWIy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711339423; x=1742875423;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=alvrRycuvN6pDESIAsTl9Hn3uiuLSuA+BX27ZLzTuY0=;
+  b=jeNxEWIyYtscQIyDMPLswSlx3doZTocVRmz5xOP1WUqPNXWCcWCIaYCt
+   faU8JcnTkU+Ez8SFTzWJNdJg4U67FEFDPlrpPh0lbuBJv+nBrJ7g5fMRG
+   YS4CdneICKD0n/000DYHg/1HGwObSXJPhnChuhyF9OiOqUmEnrzCMhgLF
+   +esugn42blR7ZlHHyPYy+hcGGUSk3Pl7RLRQk54noVMn/8qo1PF42I/JF
+   hk7jBhCiz2ZBO7zymQgPN1y43K7qOhE+nxyk1KbFbbDC//q5Mab8hoX6F
+   BRNgI/ifstWtuVkRnUjqMvefcS+I/U7vBowKVnUEr+QN5m6ZOcqWczOy0
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="17717927"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="17717927"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 21:03:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="38594548"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
+  by fmviesa002.fm.intel.com with ESMTP; 24 Mar 2024 21:03:38 -0700
+Message-ID: <4c226b87-3716-4987-b6ef-1693733614bd@linux.intel.com>
+Date: Mon, 25 Mar 2024 12:02:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322112629.68170-1-alexghiti@rivosinc.com>
- <20240323062625.2488-1-dqfext@gmail.com> <CAHVXubisa6HQJDbj_GfjwhP1Y4as0DzrxsU0B7N6DSU6HZNaaw@mail.gmail.com>
-In-Reply-To: <CAHVXubisa6HQJDbj_GfjwhP1Y4as0DzrxsU0B7N6DSU6HZNaaw@mail.gmail.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Mon, 25 Mar 2024 11:59:43 +0800
-Message-ID: <CAEEQ3w=mXXTwxph+_ttBLQhvNb66bq9b6Wo-Ka35qpp+3iq2JQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] riscv: Improve sbi_ecall() code generation
- by reordering arguments
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Qingfang Deng <dqfext@gmail.com>, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
-	samuel.holland@sifive.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Kevin Tian <kevin.tian@intel.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Joel Granados <j.granados@samsung.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "virtualization@lists.linux-foundation.org"
+ <virtualization@lists.linux-foundation.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/8] iommufd: Add iommufd fault object
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+ Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+References: <20240122073903.24406-1-baolu.lu@linux.intel.com>
+ <20240122073903.24406-5-baolu.lu@linux.intel.com>
+ <ad4575588dd247fa8beae60963f36404@huawei.com>
+ <20240322172232.GK66976@ziepe.ca>
+ <45fc6507-f077-4626-98cb-96cda1585718@linux.intel.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <45fc6507-f077-4626-98cb-96cda1585718@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Alex,
+On 3/25/24 11:26 AM, Baolu Lu wrote:
+> On 3/23/24 1:22 AM, Jason Gunthorpe wrote:
+>> On Wed, Mar 20, 2024 at 04:18:05PM +0000, Shameerali Kolothum Thodi 
+>> wrote:
+>>> What I have noticed is that,
+>>> -read interface works fine and I can receive struct 
+>>> tiommu_hwpt_pgfault data.
+>>> -But once Guest handles the page faults and returns the page response,
+>>>   the write to fault fd never reaches the kernel. The sequence is 
+>>> like below,
+>>>    sqe = io_uring_get_sqe(ring);
+>>>    io_uring_prep_write(sqe, hwpt->fault_fd, resp, sizeof(*resp), 0);
+>>>    io_uring_sqe_set_data(sqe, resp);
+>>>    io_uring_submit(ring);
+>>>    ret = io_uring_wait_cqe(ring, &cqe);
+>>>    ....
+>>> Please find the function here[2]
+>>>
+>>> The above cqe wait never returns and hardware times out without 
+>>> receiving
+>>> page response. My understanding of io_uring default op is that it 
+>>> tries to
+>>> issue an sqe as non-blocking first. But it looks like the above write 
+>>> sequence
+>>> ends up in kernel poll_wait() as well.Not sure how we can avoid that for
+>>> write.
+>> Ah, right, it is because poll can't be choosy about read/write, it has
+>> to work equally for both directions. iommufd_fault_fops_poll() never
+>> returns EPOLLOUT
+>>
+>> It should just always return EPOLLOUT because we don't have any queue
+>> to manage.
+> 
+> Are you suggesting the poll file operation to be like below?
+> 
+> static __poll_t iommufd_fault_fops_poll(struct file *filep,
+>                                          struct poll_table_struct *wait)
+> {
+>          struct iommufd_fault *fault = filep->private_data;
+>          __poll_t pollflags = EPOLLOUT;
+> 
+>          poll_wait(filep, &fault->wait_queue, wait);
+>          mutex_lock(&fault->mutex);
+>          if (!list_empty(&fault->deliver))
+>                  pollflags = EPOLLIN | EPOLLRDNORM;
 
-On Mon, Mar 25, 2024 at 2:20=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc=
-.com> wrote:
->
-> Hi Qingfang,
->
-> On Sat, Mar 23, 2024 at 7:26=E2=80=AFAM Qingfang Deng <dqfext@gmail.com> =
-wrote:
-> >
-> > Hi Alexandre,
-> >
-> > You can simply make sbi_ecall `__always_inline`, so the C function call
-> > overhead can be fully avoided.
->
-> I understand your point, though I don't think we need to mark
-> sbi_ecall() as inline, it's not in any hot path so it's not worth it.
-> This patch simply gets rid of a really useless overhead, but it does
-> not visibly accelerate anything.
->
-> I hope it makes sense,
->
-> Thanks,
->
-> Alex
->
+If I understood it correctly, here it should be,
 
-The compiler will have inline size restrictions, so I agree with the
-modification of this patch instead of inline.
-Please refer to:
-https://github.com/gcc-mirror/gcc/blob/master/gcc/common.opt,
-"finline-limit-"
+		pollflags |= EPOLLIN | EPOLLRDNORM;
 
-So=EF=BC=9A
-Reviewed-by: Yunhui Cui <cuiyunhui@bytedance.com>
+>          mutex_unlock(&fault->mutex);
+> 
+>          return pollflags;
+> }
 
-Thanks,
-Yunhui
+Best regards,
+baolu
