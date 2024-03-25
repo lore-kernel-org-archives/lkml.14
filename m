@@ -1,89 +1,133 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138A51327FE
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E95366B56;
+	Mon, 25 Mar 2024 17:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711388461; cv=none; b=gkm20rAAQd/j4aL2lLRcRCBQ0Im4tYHVQuf0kV7+aotgYzO1+IeWvx3g3sQPiNX/hi26kH+VWPALgsvaP4DUtVpepPMUa9rBxbd9rS85gZm/9VEJPJ/UgPYfDPueiW2HLzLkXyMbm8Ka4CmTMOqjp/B1N6QhEU2aIJQ9aBhQYBk=
+	t=1711388521; cv=none; b=YO31o/Hpr/UDHM4AtYNVV+64Aodx8vMqdoF6MpD2kfNZ7R024VrqHIKQJ/odK18S+A0dpq2HI+QAw6ssjUMahTxMyMCJo571+2bMlH1QY7MAW4W/3UwhOh5LjsCVwGHf7fEvfzPt8tHueOz8f5DEUWCc2Tc5zoEjo8hqUxVeW1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711388461; c=relaxed/simple;
-	bh=pHokYGdGQkEJ9+IjLb+73a4lmnWUxZDuSDnAyDRJASg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DK/TC3BL8z6agj6V3mCrypCF2TkpG+nnvI4w+Uzx2UqIfN+0nW2bbaWX7ZjXRr4bvyCnIjSs2A6aKZAAiQ2s149/8wEASIW3GlEEo3AlcPuYnk33u6QNV1S5FVvEINpJp14Vqz2jVnvGuWYoPJZU2UXQIqSb+pMQgW6eZox2Gys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aAK6G8El; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bHIDaqqo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1711388521; c=relaxed/simple;
+	bh=GkqZQTc6xFfq4AFBhSlQmqbD3gwDhQPGpPNr+/ScS3c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q+loJOktbGkCMdyPOZfjz30g0QKVyyouHGl1NlJwk97/WsUOlCPxwtPL1xQhcq21vARyGXGVksM3Z3nzKYvnJ5LBqTZUh+XbriJclSBzoc17/b1l45p+citiJ7doR3IqkgTWUXgnfBpj8kRRhEbPPNkvTe4rY6fW2FLzNjpQpLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSeRjP13; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aAK6G8El";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bHIDaqqo"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711388458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xmzb+eW330TUASaWKG2wSZdy0QxEcVUyM2WdEc5Izc0=;
-	b=aAK6G8ElBaGz3aXo/UA9razEyWcBZRcJ+5cVa+60XUd4Jkb1/SO8MesWRi1u3xmAl309ZI
-	0NBJE+ltFsNrs3dMkvkm4APaoaYtVLekPEE2+/7yjJ4/E6i0MVaVWy3EJt0SgseJ8Py0j1
-	CXWms2Gs0CN9cZDUt9yFxlm1OEYGtL3z/wM//Ddld5tJ8jnYhGw4ibN3yDBybuNaFwPe3/
-	OoigBJqrDf4ALjtUn/ASohHwFI2GMEcO8bh3w6Sh0/dUcUqHTKfn0BYgNQ7lu6WNHyyOFU
-	uYzI3otrMBlSbncKt8Vivbm9WREfdZqGzhBHTd0USBELhvvLAJ9F9m/RFgijpg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711388458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xmzb+eW330TUASaWKG2wSZdy0QxEcVUyM2WdEc5Izc0=;
-	b=bHIDaqqoMRjarqEGazNFrdIwC2Fqjk3r89j5otyheYgKoAN2/orw+lrQcUqZ92PNtDl84X
-	biOkOk8IDzh/E3DA==
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Marc
- Zyngier <maz@kernel.org>
-Cc: Bixuan Cui <cuibixuan@huawei.com>, linux-arm-kernel@lists.infradead.org,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Peng Fan
- <peng.fan@nxp.com>
-Subject: Re: [PATCH 2/3] genirq/msi: cache the last msi msg
-In-Reply-To: <20240324-smmu-v3-v1-2-11bc96e156a5@nxp.com>
-References: <20240324-smmu-v3-v1-0-11bc96e156a5@nxp.com>
- <20240324-smmu-v3-v1-2-11bc96e156a5@nxp.com>
-Date: Mon, 25 Mar 2024 18:40:58 +0100
-Message-ID: <878r26fbv9.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSeRjP13"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0E6FC43390;
+	Mon, 25 Mar 2024 17:42:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711388520;
+	bh=GkqZQTc6xFfq4AFBhSlQmqbD3gwDhQPGpPNr+/ScS3c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HSeRjP13D8igM+K0ns0ZSPPQJmz1R1xIkZ3P6MdrVlc5rO/ZAJ1Uq20y/giNfjuNw
+	 4I6ie7v3BzqjFxgYHcZuJ5GrzboQH/gZwTbGurzC2CgMACx/3v5yIsMPnJ0SXdFyXd
+	 HHMsr8SgV9FrPOQNd7KZFDG8uE9Af9/y3SfKcUoIXoZhltlEA8aCLTl1Wo4QS0EJY8
+	 pN8iCFZ0vFZd0liP/qz9S9aPDLS61WqkhDNIaufQaXzmExtS1oGDcy4JNgH0zpdEMD
+	 AFNzsHYv3w3cu8IkBPTjWEBzGxVCa8UOe2fXwMWU1RA01AdpwfD6twFI0aqiA6N3vj
+	 L9I6PKrkFeK5Q==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d48ba4d5ecso51267231fa.1;
+        Mon, 25 Mar 2024 10:42:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVT6SkbwRbZmDMy9p7LBqofibtXrh4BSuYyJ3OPW7DIYTR5vT6BQSxwK+TxhGUwjy1UjqH7pwANTZ6+1NOMtvO9A9iLRhXtQ+kVriB3qWF0CA2JuT7nmPmMrvYm3lBb8mNbr7GF7fFu
+X-Gm-Message-State: AOJu0YxodQiMz/v8WenUWXGrXwIjPQuUuangjhpY0Rs01+n2Qao6RrKJ
+	PEr/uRyFIhloW8ZZX+W9Ghn1fWXXjrTquip+quWUdksFGx3ONPWTNxpgiT18S5QHjiYurJSn1+o
+	hgMFeIm2uGWz+fZCS2vfzNNCloc8=
+X-Google-Smtp-Source: AGHT+IGV+kKuo+pA0XGm/aFf/KK2YAwYBlFP6cUVMlkA7svZ+a9Wq/iBXoxmfIi3k0dbFoN31aGa+FSSFU2X4fLWmTA=
+X-Received: by 2002:a2e:b0ef:0:b0:2d4:535a:e7a with SMTP id
+ h15-20020a2eb0ef000000b002d4535a0e7amr2344870ljl.24.1711388519157; Mon, 25
+ Mar 2024 10:41:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240325083905.13163-2-ardb+git@google.com> <5b32b8c8-0a1b-44cf-aedf-cca1d6c83bd8@redhat.com>
+ <20240325103912.GB6076@craftyguy.net>
+In-Reply-To: <20240325103912.GB6076@craftyguy.net>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 25 Mar 2024 19:41:47 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXE5aunV5RkoDtpSxdmEi+EVB-7_SsdT7+naBwbYb2BxSA@mail.gmail.com>
+Message-ID: <CAMj1kXE5aunV5RkoDtpSxdmEi+EVB-7_SsdT7+naBwbYb2BxSA@mail.gmail.com>
+Subject: Re: [PATCH] x86/efistub: Add missing boot_params for mixed mode
+ compat entry
+To: Clayton Craft <clayton@craftyguy.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Mar 24 2024 at 20:28, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Mon, 25 Mar 2024 at 19:39, Clayton Craft <clayton@craftyguy.net> wrote:
 >
-> Cache the last msi msg which will be used for ARM SMMU V3 resume
+> On Mon, 25 Mar 2024 14:18:01 +0100 Hans de Goede <hdegoede@redhat.com> wrote:
+> > Hi,
+> >
+> > On 3/25/24 9:39 AM, Ard Biesheuvel wrote:
+> > > From: Ard Biesheuvel <ardb@kernel.org>
+> > >
+> > > The native EFI stub entry point does not take a struct boot_params from
+> > > the boot loader, but creates it from scratch, and populates only the
+> > > fields that still have meaning in this context (command line, initrd
+> > > base and size, etc)
+> > >
+> > > The original mixed mode implementation used the EFI handover protocol,
+> > > where the boot loader (i.e., GRUB) populates a struct boot_params and
+> > > passes it to a special EFI entry point that takes the struct boot_params
+> > > pointer as the third argument.
+> > >
+> > > When the new mixed mode implementation was introduced, using a special
+> > > 32-bit PE entrypoint in the 64-bit kernel, it adopted the usual
+> > > prototype, and relied on the EFI stub to create the struct boot_params
+> > > as usual. This is preferred because it makes the bootloader side much
+> > > easier to implement, as it does not need any x86-specific knowledge on
+> > > how struct boot_params and struct setup_header are put together.
+> > >
+> > > However, one thing was missed: EFI mixed mode goes through startup_32()
+> > > *before* entering the 64-bit EFI stub, which is difficult to avoid given
+> > > that 64-bit execution requires page tables, which can only be populated
+> > > using 32-bit code, and this piece is what the mixed mode EFI stub relies
+> > > on. startup_32() accesses a couple of struct boot_params fields to
+> > > decide where to place the page tables.
+> > >
+> > > startup_32() turns out to be quite tolerant to bogus struct boot_params,
+> > > given that ESI used to contain junk when entering via the new mixed mode
+> > > protocol. Only when commit
+> > >
+> > >   e2ab9eab324c ("x86/boot/compressed: Move 32-bit entrypoint code into .text section")
+> > >
+> > > started to zero ESI explicitly when entering via this boot path, boot
+> > > failures started to appear on some systems, presumably ones that unmap
+> > > page 0x0 or map it read-only.
+> > >
+> > > The solution is to pass a special, temporary struct boot_params to
+> > > startup_32() via ESI, one that is sufficient for getting it to create
+> > > the page tables correctly and is discarded right after. This means
+> > > setting a minimal alignment of 4k, only to get the statically allocated
+> > > page tables line up correctly, and setting init_size to the executable
+> > > image size (_end - startup_32). This ensures that the page tables are
+> > > covered by the static footprint of the PE image.
+> > >
+> > > Given that EFI boot no longer calls the decompressor and no longer pads
+> > > the image to permit the decompressor to execute in place, the same
+> > > temporary struct boot_params should be used in the EFI handover protocol
+> > > based mixed mode implementation as well, to prevent the page tables from
+> > > being placed outside of allocated memory.
+> > >
+> > > Cc: Hans de Goede <hdegoede@redhat.com>
+> > > Fixes: e2ab9eab324c ("x86/boot/compressed: Move 32-bit entrypoint code into .text section")
+> > > Closes: https://lore.kernel.org/all/20240321150510.GI8211@craftyguy.net/
+> > > Reported-by: Clayton Craft <clayton@craftyguy.net>
+> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > I have given this a test run (on top of 6.9-rc1) on one of my
+> > Bay Trail mixed mode tablets and the tablet still boots fine:
 >
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  kernel/irq/msi.c | 3 +++
->  1 file changed, 3 insertions(+)
+> I did the same test (with 6.9-rc1) on my Bay Trail tablet & NUC that failed
+> previously, and this fixes booting with EFI mixed mode on them.
 >
-> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-> index f90952ebc494..9d7e0a675089 100644
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -617,6 +617,9 @@ static unsigned int msi_domain_get_hwsize(struct device *dev, unsigned int domid
->  static inline void irq_chip_write_msi_msg(struct irq_data *data,
->  					  struct msi_msg *msg)
->  {
-> +	struct msi_desc *desc = irq_data_get_msi_desc(data);
-> +
-> +	desc->msg = *msg;
->  	data->chip->irq_write_msi_msg(data, msg);
->  }
+> Tested-by: Clayton Craft <clayton@craftyguy.net>
+>
 
-This should remove the very same line in the PCI/MSI code, no?
+Thanks for testing again.
 
-Thanks,
-
-        tglx
-
+I'll get this to Linus in the next week or so, and the fix should make
+its way back through the stable trees in the following weeks.
