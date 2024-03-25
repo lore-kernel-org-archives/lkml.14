@@ -1,131 +1,166 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D4A131185;
-	Mon, 25 Mar 2024 15:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7123A1CD10;
+	Mon, 25 Mar 2024 15:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711380512; cv=none; b=akJ5fUatIxTwM/f0NM3YErd9fYWHJ6JbmGKXXon1AhgLo276BmW2AtW3SkyJYLlhnELM6kAPprlUW8fcgt2GQD1ENp+C2v+kaNyp2/eLGQGwl/jIChVU/EtIOh7mOa4rswuC01WffMFyQIqAEW9m8RXkmHOZWidGOzUGmn3NMSs=
+	t=1711380655; cv=none; b=c5hcslJHlJKtTE7cmt0vUmM2gRI/O+4vAaZ6FkT7wDU7ArRKR6NgaiLwgbGRwcJIJUkegGRtVPwDqgxdfjcVqZ/WVPGsysw+UVMY2NtfW5yishZMr4aReVtyHXZDLr+NmxoyfHE7gOBc5p31Xn+LRzbttXuj5AfhykAiVeYghYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711380512; c=relaxed/simple;
-	bh=yuwjtveKEbaL2UN5MUISEfFsSHypms+Pae4GIvHAq7M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I18g15LN1p2PbLHbK4JBSyxaJ6Kub7kbJwuMnnKrx+whGosrO6sWYe6nVu/rRejN6FFi7HeyWoUgPg/0G0Seo5vAK8MCmrthV2vt+4r5Cjn16JbiP/QEwaRcQ5IV3KB35DDoKztY8Hs2Hqp6KB4QT+bmkj7udw38QRtcfJS1p9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=gqLR18gn; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1711380655; c=relaxed/simple;
+	bh=mfYSa1yfZfPpDq486hekylx6oaxonD6vYQ8tMP9Zlhk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CgIg4MGiXKItLvIR2TgQuX1z+ZekapDxhn+AU45UWHiUR5XCiwi3oKu3aEPcNoQz8SMB8fMLkdXKq7F29bsx80QA3pEs69KkTDMYES4Rr8b/XJRwDRXMDv1rJ2DUxci0+/q7EeFfavefV1LQeUf3gPWYlERSHrGxcddDJBguwmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WJj/a9I1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=M93iyWbg; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WJj/a9I1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=M93iyWbg; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="gqLR18gn"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1roltB-003KDv-0p;
-	Mon, 25 Mar 2024 16:05:29 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=NfgmcINbKPDsoie0JtH7mN1+qoCT0MNsvrJB7mPvdII=; b=gqLR18gnnboPMYwN2nCyKZCucU
-	BjKN5z2jbUjHe/IpT79E1Tn8JdVrsBXlg0duVIrIGIukJjYwdDhhm3BdI5KQSFKs/RK1J308eY3O1
-	BQzCDSZOTZJccfdnPEHgtNkYv/Ek5/WM+CYPzW+TAYrRfoAGZproLSjGmsdJioq5Zn60nMZRJwILx
-	Eklssc9RsdeuSzSg/nW8GECrqZvvHsNXrsUmucqj7htOTvsj+Kqq2KgPPYQf8Mcg98CN9X81eihug
-	BwKULqBCYLP8m/z6LqFCeTuTzpFQdTDkLBj+ABUnKh8IWZA886vmDgHK9fK0diBa6UrOACXitLWWd
-	mmd5xhqg==;
-Received: from p2003010777026a001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:107:7702:6a00:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <andreas@kemnade.info>)
-	id 1roUCV-000Y9r-Fy; Sun, 24 Mar 2024 21:12:14 +0100
-Received: from andi by aktux with local (Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1roUCU-000yRE-1A;
-	Sun, 24 Mar 2024 21:12:14 +0100
-From: Andreas Kemnade <andreas@kemnade.info>
-To: lee@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	mazziesaccount@gmail.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev
-Cc: Andreas Kemnade <andreas@kemnade.info>
-Subject: [RFC PATCH 2/2] mfd: rohm-bd71828: Add power off functionality
-Date: Sun, 24 Mar 2024 21:12:10 +0100
-Message-Id: <20240324201210.232301-3-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240324201210.232301-1-andreas@kemnade.info>
-References: <20240324201210.232301-1-andreas@kemnade.info>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WJj/a9I1";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="M93iyWbg";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WJj/a9I1";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="M93iyWbg"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 76CB23528E;
+	Mon, 25 Mar 2024 15:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711380651; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tRU5JeE7QDiwpvASu5aYR/CLW5bb30H/jTz3LaISFDE=;
+	b=WJj/a9I1uVgRcP9FC5Ea4vyQ0W2lMr0XA/3+uitkkGCHHFiBzSYOCGmpxDsMsgsTY1llTh
+	jRvJaNW4JUiT8HyoiWZLpWfSLQ4EP3OItZTNSIaJp8ZAdwn+uCBJH/NJTCSMdQZ3/Mum8x
+	S+pFySUbwBJOxcibZ5wk69ry50d340E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711380651;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tRU5JeE7QDiwpvASu5aYR/CLW5bb30H/jTz3LaISFDE=;
+	b=M93iyWbgE+MbqzM5gtgY+M4Q+v2vOzq3t2HbC+OB0OODL0nIRpSnwJKdRvAVNKuzRiWlMZ
+	kMcmfDvZFf8pwvBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711380651; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tRU5JeE7QDiwpvASu5aYR/CLW5bb30H/jTz3LaISFDE=;
+	b=WJj/a9I1uVgRcP9FC5Ea4vyQ0W2lMr0XA/3+uitkkGCHHFiBzSYOCGmpxDsMsgsTY1llTh
+	jRvJaNW4JUiT8HyoiWZLpWfSLQ4EP3OItZTNSIaJp8ZAdwn+uCBJH/NJTCSMdQZ3/Mum8x
+	S+pFySUbwBJOxcibZ5wk69ry50d340E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711380651;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tRU5JeE7QDiwpvASu5aYR/CLW5bb30H/jTz3LaISFDE=;
+	b=M93iyWbgE+MbqzM5gtgY+M4Q+v2vOzq3t2HbC+OB0OODL0nIRpSnwJKdRvAVNKuzRiWlMZ
+	kMcmfDvZFf8pwvBQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 682BA13A71;
+	Mon, 25 Mar 2024 15:30:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id tpATGauYAWbNOgAAn2gu4w
+	(envelope-from <jack@suse.cz>); Mon, 25 Mar 2024 15:30:51 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 08088A0812; Mon, 25 Mar 2024 16:30:47 +0100 (CET)
+Date: Mon, 25 Mar 2024 16:30:46 +0100
+From: Jan Kara <jack@suse.cz>
+To: Liu Shixin <liushixin2@huawei.com>
+Cc: Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v2 2/2] mm/readahead: don't decrease mmap_miss when folio
+ has workingset flags
+Message-ID: <20240325153046.5m5xls7emjfa45da@quack3>
+References: <20240322093555.226789-1-liushixin2@huawei.com>
+ <20240322093555.226789-3-liushixin2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240322093555.226789-3-liushixin2@huawei.com>
+X-Spam-Score: -1.06
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-1.06 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.05)[60.05%];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="WJj/a9I1";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=M93iyWbg
+X-Rspamd-Queue-Id: 76CB23528E
 
-Since the chip can power off the system, add the corresponding
-functionality.
-Based on https://github.com/kobolabs/Kobo-Reader/raw/master/hw/imx6sll-clara2e/kernel.tar.bz2
-No information source about the magic numbers found.
+On Fri 22-03-24 17:35:55, Liu Shixin wrote:
+> If there are too many folios that are recently evicted in a file, then
+> they will probably continue to be evicted. In such situation, there is
+> no positive effect to read-ahead this file since it is only a waste of IO.
+> 
+> The mmap_miss is increased in do_sync_mmap_readahead() and decreased in
+> both do_async_mmap_readahead() and filemap_map_pages(). In order to skip
+> read-ahead in above scenario, the mmap_miss have to increased exceed
+> MMAP_LOTSAMISS. This can be done by stop decreased mmap_miss when folio
+> has workingset flags. The async path is not to care because in above
+> scenario, it's hard to run into the async path.
+> 
+> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+...
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 8df4797c5287..753771310127 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -3439,7 +3439,8 @@ static vm_fault_t filemap_map_folio_range(struct vm_fault *vmf,
+>  		if (PageHWPoison(page + count))
+>  			goto skip;
+>  
+> -		(*mmap_miss)++;
+> +		if (!folio_test_workingset(folio))
+> +			(*mmap_miss)++;
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- drivers/mfd/rohm-bd71828.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+Hum, so this means we consider this a 'hit' if the page is completely new
+in the page cache or evicted long time ago. OK, makes sense. It would be
+nice to add a comment in this direction to explain the condition. Frankly
+the whole mmap_miss accounting is broken as I've outlined in my patch
+series. But I guess this works as a fixup for your immediate problem and
+we can make mmap_miss accounting sensible later. So for now feel free to
+add:
 
-diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
-index 594718f7e8e1..5a55aa3620d0 100644
---- a/drivers/mfd/rohm-bd71828.c
-+++ b/drivers/mfd/rohm-bd71828.c
-@@ -464,6 +464,24 @@ static int set_clk_mode(struct device *dev, struct regmap *regmap,
- 				  OUT32K_MODE_CMOS);
- }
- 
-+static struct i2c_client *bd71828_dev;
-+static void bd71828_power_off(void)
-+{
-+	i2c_smbus_write_byte_data(bd71828_dev, 0x03, 0xff);
-+	mdelay(500);
-+	i2c_smbus_write_byte_data(bd71828_dev, BD71828_REG_INT_DCIN2, 0x02);
-+	mdelay(500);
-+	while (true) {
-+		i2c_smbus_write_byte_data(bd71828_dev, BD71828_REG_PS_CTRL_1, 0x02);
-+		mdelay(500);
-+	}
-+}
-+
-+static void bd71828_remove_poweroff(void *data)
-+{
-+	bd71828_dev = NULL;
-+}
-+
- static int bd71828_i2c_probe(struct i2c_client *i2c)
- {
- 	struct regmap_irq_chip_data *irq_data;
-@@ -542,7 +560,18 @@ static int bd71828_i2c_probe(struct i2c_client *i2c)
- 	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO, mfd, cells,
- 				   NULL, 0, regmap_irq_get_domain(irq_data));
- 	if (ret)
--		dev_err_probe(&i2c->dev, ret, "Failed to create subdevices\n");
-+		return	dev_err_probe(&i2c->dev, ret, "Failed to create subdevices\n");
-+
-+	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
-+		if (!pm_power_off) {
-+			bd71828_dev = i2c;
-+			pm_power_off = bd71828_power_off;
-+			ret = devm_add_action_or_reset(&i2c->dev,
-+						       bd71828_remove_poweroff,
-+						       NULL);
-+		} else
-+			dev_warn(&i2c->dev, "Poweroff callback already assigned\n");
-+	}
- 
- 	return ret;
- }
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
 -- 
-2.39.2
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
