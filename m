@@ -1,1183 +1,711 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED65D145350;
-	Mon, 25 Mar 2024 09:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711358925; cv=none; b=f2msR06EA2GlSaZF0ZFUOJs0FlBn9qMEMklFvPaFYatb77XIAhtfi8y4BkXeCn9NTyB6LHBaquQLs4WnEIdUhFeFCHRPEwFyBq/ZDhLpumDCV5Gf3QOfFaJ6imq5TCHz27yl+HdRb2ku7+U1km5ZYQCAC31+9dRyo9VHWuD3bWM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711358925; c=relaxed/simple;
-	bh=bMBT1XAIOPZpYCLWMr00brLgaAb9SXmFX8YQQRl1R2s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mtcqHzHlcOFUqcWOjjZHUNOLIAWqo2CS3o+XH6eYuX+9SuidjAbbiYs0lLTjnxvF5P9No8PFiooNBkYaYleo3vXcLlOdWsD2jJjX0huW7QqHKO/KD713zuc/HoL6hvFH8szsoAH+XNDIbbf4l0u1y5+6ASLAeiPfq2W45iJXSNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AC89152B;
-	Mon, 25 Mar 2024 02:29:16 -0700 (PDT)
-Received: from e120937-lin.. (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5B803F64C;
-	Mon, 25 Mar 2024 02:28:40 -0700 (PDT)
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org
-Cc: sudeep.holla@arm.com,
-	cristian.marussi@arm.com,
-	jassisinghbrar@gmail.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org
-Subject: [PATCH 2/2] mailbox: arm_mhuv3: Add driver
-Date: Mon, 25 Mar 2024 09:28:08 +0000
-Message-Id: <20240325092808.117510-3-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240325092808.117510-1-cristian.marussi@arm.com>
-References: <20240325092808.117510-1-cristian.marussi@arm.com>
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2084.outbound.protection.outlook.com [40.107.104.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C645145FEF;
+	Mon, 25 Mar 2024 09:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711359051; cv=fail; b=dx45/Fys3cHrqxGLYe/SVQYL0FIGwcInGsl0QHFuYIntsizyGlQAr+JL+k4SM0infsLyKopuZD1O0auXZetH0Nx6WLlSkQ2pCn8RP7mQ03R3btIhkIiC3rnIiWtNSqV32DSNTuPLei9UHF/kZJf7bPUC1NSalLJPwV0PMVw/AfM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711359051; c=relaxed/simple;
+	bh=LhPgxUPGakj9gTqPisf5SbjgXey8DqqsGvVoGPCwFEs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GmXfK5kuXuPYcr2HdqItJBkGssuHMcSWqS81fIpaJVTEghyA/0U1qni1xLvHQhI5tfWzxKG8xXReeeiDFKGSBEEgccGJHZg5KDgafQXfBEFRV2tFU4YaOXkYVtTSkXbQYmuVK/Pw/qSx/Bo1TH55yQUxVrjJ6BwWWmDsKbVV6Sk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=F+bSE7f9; arc=fail smtp.client-ip=40.107.104.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="F+bSE7f9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XZEQDhpRDNGG/ZQDuLZ5E/NV6iKc8nPrhROsaJ+5JcUI0R0zDG1Q0N1sJoAPPtRZc2L4OCDJpLpoOr3z+qhP9LlVDdfh7ySxJVEiKVbScl5P1CCAfniTI7kQNQxOQc0uEZftXNpqIdnwU4BCptoF+IRpJyc8Om7tqmmS0pxNJpXjom7wz+56i3JHLTkN8k52l1WD4ipsgqUF0/8/CYfFdjRleSbz45LeQ5D8YShHCJk/ro3QLEFJBnrlcDuq34VQDZdJyKfETpBQiPAN0ZJREWoaiah4wmaKDbmy3RWvCChcj3S0nFS4ZsUiOg060fKkMCcPCMfvoI6DnPgQS9TRgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ao9P702hCeucF2JTfbUpt1+b9eTvi0Bbt4EHqoFw00w=;
+ b=jUeNoz/tBgDBAe/bnQuDrxB78hw2HULoPWlvBpSzz1zPlJ1tW0IXrl/pxJiXjISdSREJ3/rdfuQFZlPh00RB/wNLjAR6i+YNRXn6hebH/bKfkwxmiYdVWrQgqWcnkfvRdUvhOTDU/OHF/rSnUlpCYWfWzlCQ8BLLvs0g04BjDTShf+8quu5gB3TziqlckpSSLRNoBVTYpIzPe1rCDxBJeQxnQ9PTddxbsy9jBqg/jaej1/2WGjwgd1XUuKLr0iBXqed1biZxGlf2FC1BG7LR7pAcCHwMQpf5KaXEBOklQXKPki6w0i5LYUWjFi0rNs8BlFpef1xX+63uY1uoIc6q3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ao9P702hCeucF2JTfbUpt1+b9eTvi0Bbt4EHqoFw00w=;
+ b=F+bSE7f91BgTIgIS9RCFqi3JJRphovUyXEa4DoJy5FGuSiAQ6MchRi9aevq9PcTOpiE73JhY5VQE/6O3qZBM/5/K+wEIwa2yuzd5ewAlRlKgALCpHAK7ajHWZy9wc/GUuOLqAYLHf02C3j63UGVDopOD8ugBeiT9pLK6P/L5jJQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU2PR04MB8582.eurprd04.prod.outlook.com (2603:10a6:10:2d9::24)
+ by VI2PR04MB10167.eurprd04.prod.outlook.com (2603:10a6:800:22c::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.30; Mon, 25 Mar
+ 2024 09:30:43 +0000
+Received: from DU2PR04MB8582.eurprd04.prod.outlook.com
+ ([fe80::6fd2:46ce:25c0:3dd7]) by DU2PR04MB8582.eurprd04.prod.outlook.com
+ ([fe80::6fd2:46ce:25c0:3dd7%4]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
+ 09:30:43 +0000
+Message-ID: <df6f2a09-8125-4c1a-9dfd-3217233dc076@oss.nxp.com>
+Date: Mon, 25 Mar 2024 11:30:38 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/4] arm64: dts: S32G3: Introduce device tree for
+ S32G-VNP-RDB3
+Content-Language: en-US
+To: Wadim Mueller <wafgo01@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Chester Lin <chester62515@gmail.com>,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Matthias Brugger <mbrugger@suse.com>, NXP S32 Linux Team <s32@nxp.com>,
+ Tim Harvey <tharvey@gateworks.com>, Marco Felsch <m.felsch@pengutronix.de>,
+ Marek Vasut <marex@denx.de>,
+ Gregor Herburger <gregor.herburger@ew.tq-group.com>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+ Joao Paulo Goncalves <joao.goncalves@toradex.com>,
+ Markus Niebel <Markus.Niebel@ew.tq-group.com>,
+ Matthias Schiffer <matthias.schiffer@tq-group.com>,
+ Stefan Wahren <stefan.wahren@chargebyte.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Philippe Schenker <philippe.schenker@toradex.com>,
+ Josua Mayer <josua@solid-run.com>, Li Yang <leoyang.li@nxp.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-serial@vger.kernel.org
+References: <20240324214329.29988-1-wafgo01@gmail.com>
+ <20240324214329.29988-5-wafgo01@gmail.com>
+From: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+In-Reply-To: <20240324214329.29988-5-wafgo01@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BE1P281CA0058.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:23::14) To DU2PR04MB8582.eurprd04.prod.outlook.com
+ (2603:10a6:10:2d9::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8582:EE_|VI2PR04MB10167:EE_
+X-MS-Office365-Filtering-Correlation-Id: 315f0faa-46ce-48ed-d5c8-08dc4cae3e36
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+ YZWxNJrTehGM7AGPzBfEQ5fprwMNw1toyTq1QCZgIvw+JdwaWMyQwJCIbU1UpBO2u8G+LeTsGzpjf24WdaoWNOPSHn6XlteZoa0+tGWZ7tOtUuWC3Hiuf2Wu0uD7Zgi8/yG6z56ZZv7N3g3o+dQ3K0EnttYgDMAdtWn5RRzDSA9o7BCSmkf/s6NjB7yvq2RB9P/9av9PT0e69gWNwS6uLGwSK7C7lr7qfY0Zpavr7kQESV5uXC2/BwsoXAp/SYys+4gIvscbRb2BbUkKOKR7a0aZCYGoZGTDCXGiuOCkvMjTC77cjkRiR2zH66d589hScZYiBSVTPDzJk2BLE8VZEHqIM9tdNk1bWK+XPTHeODw9qcF8zenaMgRKDlcnMyunRsyKqvvOkHcT5+mNSqaDcQFxdeChY8ySQt4FOsR2DQNGRMumfpkoSlKBDpG3nGtHetyDSJeAmlYhibjSiwC7zgeSvuUHY1qk7X3/TX0LFK5iMXVg7dTyRgpR26XTdC5Vk5QascZ6rjJrIB4KAkhx6XlARw3Hprfx84hKHORZZwah5FWYlvgMCvbbG06imeMDiZHja6Hg4VzcGX5E86O+dsLIHUGyb9Ox2jUbqThglB0I6DhqTRVZl42VjFbXHnUE
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8582.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?MVhJOE00L0p2MGlYZUhqTlhsZzB6ZFB6UjlEUHMvNGlzZk1UampZT3NwM3JX?=
+ =?utf-8?B?VnZwZ21mdVppUVJhdjJjR25lazNEclNMQ2lsWWpFMjQrT3E3b1VKMC9LWkVV?=
+ =?utf-8?B?MVhCdEJ3Y1I2VitXTk4zZW9YYXFvVytLMHJYbWkvMXlWczVNcHlUbWZHdjgv?=
+ =?utf-8?B?dlhFRkFjYVV4ZDdQYlNYYWpqTmh4K0FFQndwTFR3S3lLbDFENXJqRnFyZ2ND?=
+ =?utf-8?B?TjVnbFRueDc3RFV1ZzBWa3VIdUpuZFJkdmxrZW9vOWc1TXk1c0g0Tm55bVNJ?=
+ =?utf-8?B?eVZGcnV3UndDZlk0YlZ3QUZMOW5BelNjTkRMU1VkbXV3SE4vNGVLRmdPOEt4?=
+ =?utf-8?B?WWdXd2VXYldqSUhRMFhFbTMzMncyWmN5amh0bTlvTlhYdXc4NGpxSEVlejMx?=
+ =?utf-8?B?cGcvWUhZNXR4QnpjSUhmWHNLYTVNZXZBSjE4elhXUm9jeXUzUitadVR1dSts?=
+ =?utf-8?B?U0NrSkpiK2MxTTJZTzNqSUo0eG5jQ0FwSTVacWdqS0VNNHRKYXp4QXBvbWln?=
+ =?utf-8?B?ZWZnR0h4T0xVM0p0NG1YNnR3Wi9xZDl3VnBTV1RBTXNpTFp1RmovaUxsekQ0?=
+ =?utf-8?B?aEZxbUVGVGhCUWNDcjVyalRrVDN5QWM3UHV2L0FLSnlDOXJDMkJ1WUk2YmhC?=
+ =?utf-8?B?ZXZHVTVyMGdpZzJ0M0p2Z2pEanp3VDBMcE5YVFZ6bzBMWm96bGxBYmJsSkJ6?=
+ =?utf-8?B?UXdpako1SWl6b25DRmRrSlpzc3BZSEROdkE5dG9UWjlHekFzTFRJaUdEQUI5?=
+ =?utf-8?B?Y1lCaVNEc2VqN000VVlBTnZucDUvYlMxYXErN3RmZ0sxOVJZTkJ0T2hybUwz?=
+ =?utf-8?B?VnpzMW9Jajg2bDVJWEJFcVJjQUttMGJqVWlzRWJma2RNODAxb0dJK3FkWFlp?=
+ =?utf-8?B?OGF5NVlHL29UNCtMVjVRTHFtenVkYUlnU2pQMFRBQ21MY0YzUlJHbjkya1Ra?=
+ =?utf-8?B?S0dZSUNWT3pnZDQ4dnorUFVwOXVtRmthTEM1QnpzbnJlUENTSTVhVzFEcytX?=
+ =?utf-8?B?UVoxaEhVNkhsR3ltK0gxUEpGTlpwOHVNa3JLaWI0MHF5VGMzaDYvM1N6Vkcv?=
+ =?utf-8?B?ZVFVZUdSU3NLVndCTldOb3l1UkJLblJ1bm90aWdkbnZkWE8wSjNINFFhTkEw?=
+ =?utf-8?B?N3NOaUFFZUo0OElZaFFjUXdqS0JxeXdqTW1kbkY3cjZFUC81WC8wbXJwYVdr?=
+ =?utf-8?B?YmdkRGVaZ0x6RGdXd3M5STRnVzJHTm1icVFjZEdxL0RvS2EzK2hpZXlNNjZU?=
+ =?utf-8?B?bDEwOFVOSlk0SjRpMGRQdSsyRzVVWXhGMHBtVWhFL2tHQzVMTldxbVp0SS9i?=
+ =?utf-8?B?N3RQUU50cVdKdlFOZVB3WmJkQmxkbWV1ZGtwMVRDblRmUnpkaXlncGtOQnlh?=
+ =?utf-8?B?UUw0M2xkWEpLellVTTRkd1hkd1pkZi9lNnBqRG43emJCQ016cUhOOE02MVpP?=
+ =?utf-8?B?QmNkTGFWcnBpaEJPbGtzN2FQSXBYekRnN2I5cE1YTHhMWEJvUWJiOXQ1OVVp?=
+ =?utf-8?B?V0I0QVdZK0VUVXJpMFZSUG12ZEtUYkRtc01SUUZDSDZNMnhrcm1BMUdjRU05?=
+ =?utf-8?B?T29xdmxPcDBNOGFsR3FIQTBlOFVZYm44aGYwaVZaTll3TGo0aEZ3Z1lLMVJM?=
+ =?utf-8?B?QTJvRGQ0ZTdsKytlemNJYi9NL2FRcko0eFNYdzNoKzZBdDFpZUZmRU1EczJQ?=
+ =?utf-8?B?NzFMYk93ZGFncDR5MW5uMjNXWCtNTUI4SkRQWmtHT0FUSkt3WW9STUJCeEta?=
+ =?utf-8?B?T3JxS3JwTURDQnY3dFVqMEpEZGhGbGFXRms5Wml5YUNKYUJNMUxpdGdoZmF1?=
+ =?utf-8?B?eVRFOE5KTEUzZnRzZHN3Mnd6d1VGcHc5WVh6b0hCTnVDTkVzaFdEVVRaQ0l0?=
+ =?utf-8?B?ZmtiRUxvWXNYSlhGM2dvNjRiSDhaSW1hZ3B4eVRzalQ5MUFNbW1NRlJnSUtL?=
+ =?utf-8?B?a0oweHNNcGtuTUdaZDY2VklGSUdpVlQ4bElrWndDRDVReTdhOU11amlCSStq?=
+ =?utf-8?B?Y0ovVGljcFJ0U3ZRT0VBY0tuMWx4blZRS21YU0hWZUlWZVRvOU1pL0RvK0cv?=
+ =?utf-8?B?RXBiS3FHM2RmU3JtWnk3NE1VZjdYU2NUQjBzUlFuL3h0VHZqV2UyenpmLzhh?=
+ =?utf-8?B?QXplMWZwU1FOcWtkbkF5SldSbEJqT1cvL1ZxN3E5RlQ3bW1xZWQ1Q1A5aExK?=
+ =?utf-8?B?RXc9PQ==?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 315f0faa-46ce-48ed-d5c8-08dc4cae3e36
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8582.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 09:30:43.6071
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uq65JNkmFjzXJDPVqqJo+3ohPQKUT2owXzP9dV+pKoKaorlAApNj9HiIPXj4YX351nyfXMpIzA7dJi/2q0BIxfiN+uD7NLGkxvba7Cu3qJU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10167
 
-Add support for ARM MHUv3 mailbox controller.
+On 3/24/24 23:43, Wadim Mueller wrote:
+> This commit adds device tree support for the NXP S32G3-based
+> S32G-VNP-RDB3 Board [1].
+> 
+> The S32G3 features an 8-core ARM Cortex-A53 based SoC developed by NXP.
+> 
+> The device tree files are derived from the official NXP downstream
+> Linux tree [2].
+> 
+> This addition encompasses a limited selection of peripherals that
+> are upstream-supported. Apart from the ARM System Modules
+> (GIC, Generic Timer, etc.), the following IPs have been validated:
+> 
+>     * UART: fsl-linflexuart
+>     * SDHC: fsl-imx-esdhc
+> 
+> Clock settings for the chip rely on ATF Firmware [3].
+> Pin control integration into the device tree is pending and currently
+> relies on Firmware/U-Boot settings [4].
+> 
+> These changes were validated using BSP39 Firmware/U-Boot from NXP [5].
+> 
+> The modifications enable booting the official Ubuntu 22.04 from NXP on
+> the RDB3 with default settings from the SD card and eMMC.
+> 
+> [1] https://www.nxp.com/design/design-center/designs/s32g3-vehicle-networking-reference-design:S32G-VNP-RDB3
+> [2] https://github.com/nxp-auto-linux/linux
+> [3] https://github.com/nxp-auto-linux/arm-trusted-firmware
+> [4] https://github.com/nxp-auto-linux/u-boot
+> [5] https://github.com/nxp-auto-linux/auto_yocto_bsp
+> 
+> Signed-off-by: Wadim Mueller <wafgo01@gmail.com>
+> ---
 
-Support is limited to the MHUv3 Doorbell extension using only the PBX/MBX
-combined interrupts.
+Thank you, Wadim, for bringing up the S32G3RDB3 board! The board boots
+with all 8 cores. The log is attached below.
 
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
- MAINTAINERS                 |    9 +
- drivers/mailbox/Kconfig     |   11 +
- drivers/mailbox/Makefile    |    2 +
- drivers/mailbox/arm_mhuv3.c | 1061 +++++++++++++++++++++++++++++++++++
- 4 files changed, 1083 insertions(+)
- create mode 100644 drivers/mailbox/arm_mhuv3.c
+Tested-by: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+Reviewed-by: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e63133eeaa69..cd8db1544db3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12963,6 +12963,15 @@ F:	Documentation/devicetree/bindings/mailbox/arm,mhuv2.yaml
- F:	drivers/mailbox/arm_mhuv2.c
- F:	include/linux/mailbox/arm_mhuv2_message.h
- 
-+MAILBOX ARM MHUv3
-+M:	Sudeep Holla <sudeep.holla@arm.com>
-+M:	Cristian Marussi <cristian.marussi@arm.com>
-+L:	linux-kernel@vger.kernel.org
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml
-+F:	drivers/mailbox/arm_mhuv3.c
-+
- MAN-PAGES: MANUAL PAGES FOR LINUX -- Sections 2, 3, 4, 5, and 7
- M:	Alejandro Colomar <alx@kernel.org>
- L:	linux-man@vger.kernel.org
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index 42940108a187..d20cdae65cfe 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -23,6 +23,17 @@ config ARM_MHU_V2
- 	  Say Y here if you want to build the ARM MHUv2 controller driver,
- 	  which provides unidirectional mailboxes between processing elements.
- 
-+config ARM_MHU_V3
-+	tristate "ARM MHUv3 Mailbox"
-+	depends on ARM64 || COMPILE_TEST
-+	help
-+	  Say Y here if you want to build the ARM MHUv3 controller driver,
-+	  which provides unidirectional mailboxes between processing elements.
-+
-+	  ARM MHUv3 controllers can implement a varying number of extensions
-+	  that provides different means of transports: supported extensions
-+	  will be discovered and possibly managed at probe-time.
-+
- config IMX_MBOX
- 	tristate "i.MX Mailbox"
- 	depends on ARCH_MXC || COMPILE_TEST
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index 18793e6caa2f..5cf2f54debaf 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -9,6 +9,8 @@ obj-$(CONFIG_ARM_MHU)	+= arm_mhu.o arm_mhu_db.o
- 
- obj-$(CONFIG_ARM_MHU_V2)	+= arm_mhuv2.o
- 
-+obj-$(CONFIG_ARM_MHU_V3)	+= arm_mhuv3.o
-+
- obj-$(CONFIG_IMX_MBOX)	+= imx-mailbox.o
- 
- obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+= armada-37xx-rwtm-mailbox.o
-diff --git a/drivers/mailbox/arm_mhuv3.c b/drivers/mailbox/arm_mhuv3.c
-new file mode 100644
-index 000000000000..79cce8e5bf6f
---- /dev/null
-+++ b/drivers/mailbox/arm_mhuv3.c
-@@ -0,0 +1,1061 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ARM Message Handling Unit Version 3 (MHUv3) driver.
-+ *
-+ * Copyright (C) 2024 ARM Ltd.
-+ *
-+ * Based on ARM MHUv2 driver.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/interrupt.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+
-+/* ====== MHUv3 Registers ====== */
-+
-+/* Maximum number of Doorbell channel windows */
-+#define MHUV3_DBCW_MAX			128
-+/* Number of DBCH combined interrupt status registers */
-+#define MHUV3_DBCH_CMB_INT_ST_REG_CNT	4
-+#define MHUV3_INVALID_DOORBELL		0xFFFFFFFFUL
-+
-+/* Number of FFCH combined interrupt status registers */
-+#define MHUV3_FFCH_CMB_INT_ST_REG_CNT	2
-+
-+#define MHUV3_STAT_BYTES		(sizeof(u32))
-+#define MHUV3_STAT_BITS			(MHUV3_STAT_BYTES * __CHAR_BIT__)
-+
-+/* Not a typo ... */
-+#define MHUV3_MAJOR_VERSION		2
-+
-+enum {
-+	MHUV3_MBOX_CELL_TYPE,
-+	MHUV3_MBOX_CELL_CHWN,
-+	MHUV3_MBOX_CELL_PARAM,
-+	MHUV3_MBOX_CELLS
-+};
-+
-+/* CTRL_Page */
-+
-+struct blk_id {
-+	u32 blk_id : 4;
-+	u32 pad : 28;
-+} __packed;
-+
-+struct feat_spt0 {
-+	u32 dbe_spt : 4;
-+	u32 fe_spt : 4;
-+	u32 fce_spt : 4;
-+	u32 tze_spt : 4;
-+	u32 rme_spt : 4;
-+	u32 rase_spt : 4;
-+	u32 pad: 8;
-+} __packed;
-+
-+struct feat_spt1 {
-+	u32 auto_op_spt : 4;
-+	u32 pad: 28;
-+} __packed;
-+
-+struct dbch_cfg0 {
-+	u32 num_dbch : 8;
-+	u32 pad: 24;
-+} __packed;
-+
-+struct ffch_cfg0 {
-+	u32 num_ffch : 8;
-+	u32 x8ba_spt : 1;
-+	u32 x16ba_spt : 1;
-+	u32 x32ba_spt : 1;
-+	u32 x64ba_spt : 1;
-+	u32 pad : 4;
-+	u32 ffch_depth : 10;
-+	u32 pad2 : 6;
-+} __packed;
-+
-+struct fch_cfg0 {
-+	u32 num_fch : 10;
-+	/* MBX only registers */
-+	u32 fcgi_spt : 1;
-+	/* ------------------ */
-+	u32 num_fcg : 5;
-+	u32 num_fch_per_grp : 5;
-+	u32 fch_ws : 8;
-+	u32 pad : 3;
-+} __packed;
-+
-+struct ctrl {
-+	u32 op_req : 1;
-+	u32 ch_op_mask : 1;
-+	u32 pad : 30;
-+} __packed;
-+
-+struct fch_ctrl {
-+	u32 pad : 2;
-+	u32 int_en : 1;
-+	u32 pad2 : 29;
-+} __packed;
-+
-+struct iidr {
-+	u32 implementer : 12;
-+	u32 revision : 4;
-+	u32 variant : 4;
-+	u32 product_id : 12;
-+} __packed;
-+
-+struct aidr {
-+	u32 arch_minor_rev : 4;
-+	u32 arch_major_rev : 4;
-+	u32 pad : 24;
-+} __packed;
-+
-+struct ctrl_page {
-+	struct blk_id blk_id;
-+	u8 pad[0x10 - 0x4];
-+	struct feat_spt0 feat_spt0;
-+	struct feat_spt1 feat_spt1;
-+	u8 pad1[0x20 - 0x18];
-+	struct dbch_cfg0 dbch_cfg0;
-+	u8 pad2[0x30 - 0x24];
-+	struct ffch_cfg0 ffch_cfg0;
-+	u8 pad3[0x40 - 0x34];
-+	struct fch_cfg0 fch_cfg0;
-+	u8 pad4[0x100 - 0x44];
-+	struct ctrl ctrl;
-+	/* MBX only registers */
-+	u8 pad5[0x140 - 0x104];
-+	struct fch_ctrl fch_ctrl;
-+	u32 fcg_int_en;
-+	u8 pad6[0x400 - 0x148];
-+	/* ------------------ */
-+	u32 dbch_int_st[MHUV3_DBCH_CMB_INT_ST_REG_CNT];
-+	u32 ffch_int_st[MHUV3_FFCH_CMB_INT_ST_REG_CNT];
-+	/* MBX only registers */
-+	u8 pad7[0x470 - 0x418];
-+	u32 fcg_int_st;
-+	u8 pad8[0x480 - 0x474];
-+	u32 fcg_grp_int_st[32];
-+	u8 pad9[0xFC8 - 0x500];
-+	/* ------------------ */
-+	struct iidr iidr;
-+	struct aidr aidr;
-+	u32 imp_def_id[12];
-+} __packed;
-+
-+/* DBCW_Page */
-+
-+struct xbcw_ctrl {
-+	u32 comb_en : 1;
-+	u32 pad : 31;
-+} __packed;
-+
-+struct pdbcw_int {
-+	u32 tfr_ack : 1;
-+	u32 pad : 31;
-+} __packed;
-+
-+struct pdbcw_page {
-+	u32 st;
-+	u8 pad[0xC - 0x4];
-+	u32 set;
-+	struct pdbcw_int int_st;
-+	struct pdbcw_int int_clr;
-+	struct pdbcw_int int_en;
-+	struct xbcw_ctrl ctrl;
-+} __packed;
-+
-+struct mdbcw_page {
-+	u32 st;
-+	u32 st_msk;
-+	u32 clr;
-+	u8 pad[0x10 - 0xC];
-+	u32 msk_st;
-+	u32 msk_set;
-+	u32 msk_clr;
-+	struct xbcw_ctrl ctrl;
-+} __packed;
-+
-+struct dummy_page {
-+	u8 pad[0x1000];
-+} __packed;
-+
-+struct mhu3_pbx_frame_reg {
-+	struct ctrl_page ctrl;
-+	struct pdbcw_page dbcw[MHUV3_DBCW_MAX];
-+	struct dummy_page ffcw;
-+	struct dummy_page fcw;
-+	u8 pad[0xF000 - 0x4000];
-+	struct dummy_page impdef;
-+} __packed;
-+
-+struct mhu3_mbx_frame_reg {
-+	struct ctrl_page ctrl;
-+	struct mdbcw_page dbcw[MHUV3_DBCW_MAX];
-+	struct dummy_page ffcw;
-+	struct dummy_page fcw;
-+	u8 pad[0xF000 - 0x4000];
-+	struct dummy_page impdef;
-+} __packed;
-+
-+/* Macro for reading a bitfield within a physically mapped packed struct */
-+#define readl_relaxed_bitfield(_regptr, _field)				\
-+	({								\
-+		u32 _regval;						\
-+		_regval = readl_relaxed((_regptr));			\
-+		((typeof(_regptr))(&_regval))->_field;			\
-+	})
-+
-+/* Macro for writing a bitfield within a physically mapped packed struct */
-+#define writel_relaxed_bitfield(_value, _regptr, _field)		\
-+	({								\
-+		u32 _regval;						\
-+		_regval = readl_relaxed(_regptr);			\
-+		((typeof(_regptr))(&_regval))->_field = _value;		\
-+		writel_relaxed(_regval, _regptr);			\
-+	})
-+
-+/* ====== MHUv3 data structures ====== */
-+
-+enum mhuv3_frame {
-+	PBX_FRAME,
-+	MBX_FRAME
-+};
-+
-+static char *mhuv3_str[] = {
-+	"PBX",
-+	"MBX"
-+};
-+
-+enum mhuv3_extension_type {
-+	FIRST_EXT = 0,
-+	DBE_EXT = FIRST_EXT,
-+	FCE_EXT,
-+	FE_EXT,
-+	MAX_EXT
-+};
-+
-+struct mhuv3;
-+
-+/**
-+ * struct mhuv3_protocol_ops - MHUv3 operations
-+ *
-+ * @rx_startup: Receiver startup callback.
-+ * @rx_shutdown: Receiver shutdown callback.
-+ * @read_data: Read available Sender in-band LE data (if any).
-+ * @rx_complete: Acknowledge data reception to the Sender. Any out-of-band data
-+ *		 has to have been already retrieved before calling this.
-+ * @tx_startup: Sender startup callback.
-+ * @tx_shutdown: Sender shutdown callback.
-+ * @last_tx_done: Report back to the Sender if the last transfer has completed.
-+ * @send_data: Send data to the receiver.
-+ *
-+ * Each supported transport protocol provides its own implementation of
-+ * these operations.
-+ */
-+struct mhuv3_protocol_ops {
-+	int (*rx_startup)(struct mhuv3 *mhu, struct mbox_chan *chan);
-+	void (*rx_shutdown)(struct mhuv3 *mhu, struct mbox_chan *chan);
-+	void *(*read_data)(struct mhuv3 *mhu, struct mbox_chan *chan);
-+	void (*rx_complete)(struct mhuv3 *mhu, struct mbox_chan *chan);
-+	void (*tx_startup)(struct mhuv3 *mhu, struct mbox_chan *chan);
-+	void (*tx_shutdown)(struct mhuv3 *mhu, struct mbox_chan *chan);
-+	int (*last_tx_done)(struct mhuv3 *mhu, struct mbox_chan *chan);
-+	int (*send_data)(struct mhuv3 *mhu, struct mbox_chan *chan, void *arg);
-+};
-+
-+/**
-+ * struct mhuv3_mbox_chan_priv - MHUv3 channel private information
-+ *
-+ * @ch_idx: Channel window index associated to this mailbox channel.
-+ * @doorbell: Doorbell bit number within the @ch_idx window.
-+ *	      Only relevant to Doorbell transport.
-+ * @ops: Transport protocol specific operations for this channel.
-+ *
-+ * Transport specific data attached to mmailbox channel priv data.
-+ */
-+struct mhuv3_mbox_chan_priv {
-+	u32 ch_idx;
-+	u32 doorbell;
-+	const struct mhuv3_protocol_ops *ops;
-+};
-+
-+/**
-+ * struct mhuv3_extension - MHUv3 extension descriptor
-+ *
-+ * @type: Type of extension
-+ * @max_chans: Max number of channels found for this extension.
-+ * @base_ch_idx: First channel number assigned to this extension, picked from
-+ *		 the set of all mailbox channels descriptors created.
-+ * @mbox_of_xlate: Extension specific helper to parse DT and lookup associated
-+ *		   channel from the related 'mboxes' property.
-+ * @combined_irq_setup: Extension specific helper to setup the combined irq.
-+ * @channels_init: Extension specific helper to initialize channels.
-+ * @chan_from_comb_irq_get: Extension specific helper to lookup which channel
-+ *			    triggered the combined irq.
-+ * @pending_db: Array of per-channel pending doorbells.
-+ * @pending_lock: Protect access to pending_db.
-+ */
-+struct mhuv3_extension {
-+	enum mhuv3_extension_type type;
-+	unsigned int max_chans;
-+	unsigned int base_ch_idx;
-+	struct mbox_chan *(*mbox_of_xlate)(struct mhuv3 *mhu,
-+					   unsigned int channel,
-+					   unsigned int param);
-+	void (*combined_irq_setup)(struct mhuv3 *mhu);
-+	int (*channels_init)(struct mhuv3 *mhu);
-+	struct mbox_chan *(*chan_from_comb_irq_get)(struct mhuv3 *mhu);
-+	u32 pending_db[MHUV3_DBCW_MAX];
-+	/* Protect access to pending_db */
-+	spinlock_t pending_lock;
-+};
-+
-+/**
-+ * struct mhuv3 - MHUv3 mailbox controller data
-+ *
-+ * @frame:	Frame type: MBX_FRAME or PBX_FRAME.
-+ * @auto_op_full: Flag to indicate if the MHU supports AutoOp full mode.
-+ * @major: MHUv3 controller architectural major version.
-+ * @minor: MHUv3 controller architectural minor version.
-+ * @tot_chans: The total number of channnels discovered across all extensions.
-+ * @cmb_irq: Combined IRQ number if any found defined.
-+ * @ctrl: A reference to the MHUv3 control page for this block.
-+ * @pbx: Base address of the PBX register mapping region.
-+ * @mbx: Base address of the MBX register mapping region.
-+ * @ext: Array holding descriptors for any found implemented extension.
-+ * @mbox: Mailbox controller belonging to the MHU frame.
-+ */
-+struct mhuv3 {
-+	enum mhuv3_frame frame;
-+	bool auto_op_full;
-+	unsigned int major;
-+	unsigned int minor;
-+	unsigned int tot_chans;
-+	int cmb_irq;
-+	struct ctrl_page __iomem *ctrl;
-+	union {
-+		struct mhu3_pbx_frame_reg __iomem *pbx;
-+		struct mhu3_mbx_frame_reg __iomem *mbx;
-+	};
-+	struct mhuv3_extension *ext[MAX_EXT];
-+	struct mbox_controller mbox;
-+};
-+
-+#define mhu_from_mbox(_mbox) container_of(_mbox, struct mhuv3, mbox)
-+
-+typedef int (*mhuv3_extension_initializer)(struct mhuv3 *mhu);
-+
-+/* =================== Doorbell transport protocol operations =============== */
-+
-+static void mhuv3_doorbell_tx_startup(struct mhuv3 *mhu, struct mbox_chan *chan)
-+{
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	/* Enable Transfer Acknowledgment events */
-+	writel_relaxed_bitfield(0x1, &mhu->pbx->dbcw[priv->ch_idx].int_en, tfr_ack);
-+}
-+
-+static void mhuv3_doorbell_tx_shutdown(struct mhuv3 *mhu, struct mbox_chan *chan)
-+{
-+	unsigned long flags;
-+	struct mhuv3_extension *e = mhu->ext[DBE_EXT];
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	/* Disable Channel Transfer Ack events */
-+	writel_relaxed_bitfield(0x0, &mhu->pbx->dbcw[priv->ch_idx].int_en, tfr_ack);
-+
-+	/* Clear Channel Transfer Ack and pending doorbells */
-+	writel_relaxed_bitfield(0x1, &mhu->pbx->dbcw[priv->ch_idx].int_clr, tfr_ack);
-+	spin_lock_irqsave(&e->pending_lock, flags);
-+	e->pending_db[priv->ch_idx] = 0;
-+	spin_unlock_irqrestore(&e->pending_lock, flags);
-+}
-+
-+static int mhuv3_doorbell_rx_startup(struct mhuv3 *mhu, struct mbox_chan *chan)
-+{
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	/* Unmask Channel Transfer events */
-+	writel_relaxed(BIT(priv->doorbell), &mhu->mbx->dbcw[priv->ch_idx].msk_clr);
-+
-+	return 0;
-+}
-+
-+static void mhuv3_doorbell_rx_shutdown(struct mhuv3 *mhu,
-+				       struct mbox_chan *chan)
-+{
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	/* Mask Channel Transfer events */
-+	writel_relaxed(BIT(priv->doorbell), &mhu->mbx->dbcw[priv->ch_idx].msk_set);
-+}
-+
-+static void mhuv3_doorbell_rx_complete(struct mhuv3 *mhu, struct mbox_chan *chan)
-+{
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	/* Clearing the pending transfer generates the Channel Transfer Ack */
-+	writel_relaxed(BIT(priv->doorbell), &mhu->mbx->dbcw[priv->ch_idx].clr);
-+}
-+
-+static int mhuv3_doorbell_last_tx_done(struct mhuv3 *mhu,
-+				       struct mbox_chan *chan)
-+{
-+	int done;
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	done = !(readl_relaxed(&mhu->pbx->dbcw[priv->ch_idx].st) &
-+		 BIT(priv->doorbell));
-+	if (done) {
-+		unsigned long flags;
-+		struct mhuv3_extension *e = mhu->ext[DBE_EXT];
-+
-+		/* Take care to clear the pending doorbell also when polling */
-+		spin_lock_irqsave(&e->pending_lock, flags);
-+		e->pending_db[priv->ch_idx] &= ~BIT(priv->doorbell);
-+		spin_unlock_irqrestore(&e->pending_lock, flags);
-+	}
-+
-+	return done;
-+}
-+
-+static int mhuv3_doorbell_send_data(struct mhuv3 *mhu, struct mbox_chan *chan,
-+				    void *arg)
-+{
-+	int ret = 0;
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+	struct mhuv3_extension *e = mhu->ext[DBE_EXT];
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&e->pending_lock, flags);
-+	/* Only one in-flight Transfer is allowed per-doorbell */
-+	if (!(e->pending_db[priv->ch_idx] & BIT(priv->doorbell))) {
-+		e->pending_db[priv->ch_idx] |= BIT(priv->doorbell);
-+		writel_relaxed(BIT(priv->doorbell),
-+			       &mhu->pbx->dbcw[priv->ch_idx].set);
-+	} else {
-+		ret = -EBUSY;
-+	}
-+	spin_unlock_irqrestore(&e->pending_lock, flags);
-+
-+	return ret;
-+}
-+
-+static const struct mhuv3_protocol_ops mhuv3_doorbell_ops = {
-+	.tx_startup = mhuv3_doorbell_tx_startup,
-+	.tx_shutdown = mhuv3_doorbell_tx_shutdown,
-+	.rx_startup = mhuv3_doorbell_rx_startup,
-+	.rx_shutdown = mhuv3_doorbell_rx_shutdown,
-+	.rx_complete = mhuv3_doorbell_rx_complete,
-+	.last_tx_done = mhuv3_doorbell_last_tx_done,
-+	.send_data = mhuv3_doorbell_send_data,
-+};
-+
-+/* Sender and receiver mailbox ops */
-+static bool mhuv3_sender_last_tx_done(struct mbox_chan *chan)
-+{
-+	struct mhuv3 *mhu = mhu_from_mbox(chan->mbox);
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	return priv->ops->last_tx_done(mhu, chan);
-+}
-+
-+static int mhuv3_sender_send_data(struct mbox_chan *chan, void *data)
-+{
-+	struct mhuv3 *mhu = mhu_from_mbox(chan->mbox);
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	if (!priv->ops->last_tx_done(mhu, chan))
-+		return -EBUSY;
-+
-+	return priv->ops->send_data(mhu, chan, data);
-+}
-+
-+static int mhuv3_sender_startup(struct mbox_chan *chan)
-+{
-+	struct mhuv3 *mhu = mhu_from_mbox(chan->mbox);
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	if (priv->ops->tx_startup)
-+		priv->ops->tx_startup(mhu, chan);
-+
-+	return 0;
-+}
-+
-+static void mhuv3_sender_shutdown(struct mbox_chan *chan)
-+{
-+	struct mhuv3 *mhu = mhu_from_mbox(chan->mbox);
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	if (priv->ops->tx_shutdown)
-+		priv->ops->tx_shutdown(mhu, chan);
-+}
-+
-+static const struct mbox_chan_ops mhuv3_sender_ops = {
-+	.send_data = mhuv3_sender_send_data,
-+	.startup = mhuv3_sender_startup,
-+	.shutdown = mhuv3_sender_shutdown,
-+	.last_tx_done = mhuv3_sender_last_tx_done,
-+};
-+
-+static int mhuv3_receiver_startup(struct mbox_chan *chan)
-+{
-+	struct mhuv3 *mhu = mhu_from_mbox(chan->mbox);
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	return priv->ops->rx_startup(mhu, chan);
-+}
-+
-+static void mhuv3_receiver_shutdown(struct mbox_chan *chan)
-+{
-+	struct mhuv3 *mhu = mhu_from_mbox(chan->mbox);
-+	struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+	priv->ops->rx_shutdown(mhu, chan);
-+}
-+
-+static int mhuv3_receiver_send_data(struct mbox_chan *chan, void *data)
-+{
-+	dev_err(chan->mbox->dev,
-+		"Trying to transmit on a MBX MHUv3 frame\n");
-+	return -EIO;
-+}
-+
-+static bool mhuv3_receiver_last_tx_done(struct mbox_chan *chan)
-+{
-+	dev_err(chan->mbox->dev, "Trying to Tx poll on a MBX MHUv3 frame\n");
-+	return true;
-+}
-+
-+static const struct mbox_chan_ops mhuv3_receiver_ops = {
-+	.send_data = mhuv3_receiver_send_data,
-+	.startup = mhuv3_receiver_startup,
-+	.shutdown = mhuv3_receiver_shutdown,
-+	.last_tx_done = mhuv3_receiver_last_tx_done,
-+};
-+
-+static struct mbox_chan *mhuv3_dbe_mbox_of_xlate(struct mhuv3 *mhu,
-+						 unsigned int channel,
-+						 unsigned int doorbell)
-+{
-+	struct mbox_controller *mbox = &mhu->mbox;
-+	struct mbox_chan *chans = mbox->chans;
-+	struct mhuv3_extension *e = mhu->ext[DBE_EXT];
-+
-+	if (channel >= e->max_chans || doorbell >= MHUV3_STAT_BITS) {
-+		dev_err(mbox->dev, "Couldn't xlate to a valid channel (%d: %d)\n",
-+			channel, doorbell);
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	return &chans[e->base_ch_idx + channel * MHUV3_STAT_BITS + doorbell];
-+}
-+
-+static void mhuv3_dbe_combined_irq_setup(struct mhuv3 *mhu)
-+{
-+	int i;
-+	struct mhuv3_extension *e = mhu->ext[DBE_EXT];
-+
-+	if (mhu->frame == PBX_FRAME) {
-+		struct pdbcw_page *dbcw = mhu->pbx->dbcw;
-+
-+		for (i = 0; i < e->max_chans; i++) {
-+			writel_relaxed_bitfield(0x1, &dbcw[i].int_clr, tfr_ack);
-+			writel_relaxed_bitfield(0x0, &dbcw[i].int_en, tfr_ack);
-+			writel_relaxed_bitfield(0x1, &dbcw[i].ctrl, comb_en);
-+		}
-+	} else {
-+		struct mdbcw_page *dbcw = mhu->mbx->dbcw;
-+
-+		for (i = 0; i < e->max_chans; i++) {
-+			writel_relaxed(0xFFFFFFFF, &dbcw[i].clr);
-+			writel_relaxed(0xFFFFFFFF, &dbcw[i].msk_set);
-+			writel_relaxed_bitfield(0x1, &dbcw[i].ctrl, comb_en);
-+		}
-+	}
-+}
-+
-+static int mhuv3_dbe_channels_init(struct mhuv3 *mhu)
-+{
-+	int i;
-+	struct mhuv3_extension *e = mhu->ext[DBE_EXT];
-+	struct mbox_controller *mbox = &mhu->mbox;
-+	struct mbox_chan *chans;
-+
-+	chans = mbox->chans + mbox->num_chans;
-+	e->base_ch_idx = mbox->num_chans;
-+	for (i = 0; i < e->max_chans; i++) {
-+		int k;
-+		struct mhuv3_mbox_chan_priv *priv;
-+
-+		for (k = 0; k < MHUV3_STAT_BITS; k++) {
-+			priv = devm_kmalloc(mbox->dev, sizeof(*priv), GFP_KERNEL);
-+			if (!priv)
-+				return -ENOMEM;
-+
-+			priv->ch_idx = i;
-+			priv->ops = &mhuv3_doorbell_ops;
-+			priv->doorbell = k;
-+			chans++->con_priv = priv;
-+			mbox->num_chans++;
-+		}
-+	}
-+
-+	spin_lock_init(&e->pending_lock);
-+
-+	return 0;
-+}
-+
-+static struct mbox_chan *mhuv3_dbe_chan_from_comb_irq_get(struct mhuv3 *mhu)
-+{
-+	int i;
-+	struct mhuv3_extension *e = mhu->ext[DBE_EXT];
-+	struct device *dev = mhu->mbox.dev;
-+
-+	for (i = 0; i < MHUV3_DBCH_CMB_INT_ST_REG_CNT; i++) {
-+		unsigned int channel, db = MHUV3_INVALID_DOORBELL;
-+		u32 cmb_st, st;
-+
-+		cmb_st = readl_relaxed(&mhu->ctrl->dbch_int_st[i]);
-+		if (!cmb_st)
-+			continue;
-+
-+		channel = i * MHUV3_STAT_BITS + __builtin_ctz(cmb_st);
-+		if (channel >= e->max_chans) {
-+			dev_err(dev, "Invalid %s channel:%d\n",
-+				mhuv3_str[mhu->frame], channel);
-+			break;
-+		}
-+
-+		if (mhu->frame == PBX_FRAME) {
-+			unsigned long flags;
-+			u32 active_dbs, fired_dbs;
-+
-+			st = readl_relaxed_bitfield(&mhu->pbx->dbcw[channel].int_st,
-+						    tfr_ack);
-+			if (!st) {
-+				dev_warn(dev, "Spurios IRQ on %s channel:%d\n",
-+					 mhuv3_str[mhu->frame], channel);
-+				continue;
-+			}
-+
-+			active_dbs = readl_relaxed(&mhu->pbx->dbcw[channel].st);
-+			spin_lock_irqsave(&e->pending_lock, flags);
-+			fired_dbs = e->pending_db[channel] & ~active_dbs;
-+			if (fired_dbs) {
-+				db = __builtin_ctz(fired_dbs);
-+				e->pending_db[channel] &= ~BIT(db);
-+				fired_dbs &= ~BIT(db);
-+			}
-+			spin_unlock_irqrestore(&e->pending_lock, flags);
-+
-+			/* Clear TFR Ack if no more doorbells pending */
-+			if (!fired_dbs)
-+				writel_relaxed_bitfield(0x1,
-+							&mhu->pbx->dbcw[channel].int_clr,
-+							tfr_ack);
-+		} else {
-+			st = readl_relaxed(&mhu->mbx->dbcw[channel].st_msk);
-+			if (!st) {
-+				dev_warn(dev, "Spurios IRQ on %s channel:%d\n",
-+					 mhuv3_str[mhu->frame], channel);
-+				continue;
-+			}
-+			db = __builtin_ctz(st);
-+		}
-+
-+		if (db != MHUV3_INVALID_DOORBELL) {
-+			dev_dbg(dev, "Found %s ch[%d]/db[%d]\n",
-+				mhuv3_str[mhu->frame], channel, db);
-+
-+			return &mhu->mbox.chans[channel * MHUV3_STAT_BITS + db];
-+		}
-+	}
-+
-+	return ERR_PTR(-EIO);
-+}
-+
-+static int mhuv3_dbe_init(struct mhuv3 *mhu)
-+{
-+	struct mhuv3_extension *e;
-+	struct device *dev = mhu->mbox.dev;
-+
-+	if (!readl_relaxed_bitfield(&mhu->ctrl->feat_spt0, dbe_spt))
-+		return 0;
-+
-+	dev_dbg(dev, "%s: Initializing DBE Extension.\n", mhuv3_str[mhu->frame]);
-+
-+	e = devm_kzalloc(dev, sizeof(*e), GFP_KERNEL);
-+	if (!e)
-+		return -ENOMEM;
-+
-+	e->type = DBE_EXT;
-+	/* Note that, by the spec, the number of channels is (num_dbch + 1) */
-+	e->max_chans =
-+		readl_relaxed_bitfield(&mhu->ctrl->dbch_cfg0, num_dbch) + 1;
-+	e->mbox_of_xlate = mhuv3_dbe_mbox_of_xlate;
-+	e->combined_irq_setup = mhuv3_dbe_combined_irq_setup;
-+	e->channels_init = mhuv3_dbe_channels_init;
-+	e->chan_from_comb_irq_get = mhuv3_dbe_chan_from_comb_irq_get;
-+
-+	mhu->tot_chans += e->max_chans * MHUV3_STAT_BITS;
-+	mhu->ext[DBE_EXT] = e;
-+
-+	dev_info(dev, "%s: found %d DBE channels.\n",
-+		 mhuv3_str[mhu->frame], e->max_chans);
-+
-+	return 0;
-+}
-+
-+static int mhuv3_fce_init(struct mhuv3 *mhu)
-+{
-+	struct device *dev = mhu->mbox.dev;
-+
-+	if (!readl_relaxed_bitfield(&mhu->ctrl->feat_spt0, fce_spt))
-+		return 0;
-+
-+	dev_dbg(dev, "%s: FCE Extension not supported by driver.\n",
-+		mhuv3_str[mhu->frame]);
-+
-+	return 0;
-+}
-+
-+static int mhuv3_fe_init(struct mhuv3 *mhu)
-+{
-+	struct device *dev = mhu->mbox.dev;
-+
-+	if (!readl_relaxed_bitfield(&mhu->ctrl->feat_spt0, fe_spt))
-+		return 0;
-+
-+	dev_dbg(dev, "%s: FE Extension not supported by driver.\n",
-+		mhuv3_str[mhu->frame]);
-+
-+	return 0;
-+}
-+
-+static mhuv3_extension_initializer mhuv3_extension_init[MAX_EXT] = {
-+	mhuv3_dbe_init,
-+	mhuv3_fce_init,
-+	mhuv3_fe_init,
-+};
-+
-+static int mhuv3_initialize_channels(struct device *dev, struct mhuv3 *mhu)
-+{
-+	int i, ret = 0;
-+	struct mbox_controller *mbox = &mhu->mbox;
-+
-+	mbox->chans = devm_kcalloc(dev, mhu->tot_chans,
-+				   sizeof(*mbox->chans), GFP_KERNEL);
-+	if (!mbox->chans)
-+		return -ENOMEM;
-+
-+	for (i = FIRST_EXT; i < MAX_EXT && !ret; i++)
-+		if (mhu->ext[i])
-+			ret = mhu->ext[i]->channels_init(mhu);
-+
-+	return ret;
-+}
-+
-+static struct mbox_chan *mhuv3_mbox_of_xlate(struct mbox_controller *mbox,
-+					     const struct of_phandle_args *pa)
-+{
-+	unsigned int type, channel, param;
-+	struct mhuv3 *mhu = mhu_from_mbox(mbox);
-+
-+	if (pa->args_count != MHUV3_MBOX_CELLS)
-+		return ERR_PTR(-EINVAL);
-+
-+	type = pa->args[MHUV3_MBOX_CELL_TYPE];
-+	if (type >= MAX_EXT)
-+		return ERR_PTR(-EINVAL);
-+
-+	channel = pa->args[MHUV3_MBOX_CELL_CHWN];
-+	param = pa->args[MHUV3_MBOX_CELL_PARAM];
-+
-+	return mhu->ext[type]->mbox_of_xlate(mhu, channel, param);
-+}
-+
-+static int mhuv3_frame_init(struct mhuv3 *mhu, void __iomem *regs)
-+{
-+	int i, ret = 0;
-+	struct device *dev = mhu->mbox.dev;
-+
-+	mhu->ctrl = regs;
-+	mhu->frame = readl_relaxed_bitfield(&mhu->ctrl->blk_id, blk_id);
-+	if (mhu->frame > MBX_FRAME) {
-+		dev_err(dev, "Invalid Frame type- %d\n", mhu->frame);
-+		return -EINVAL;
-+	}
-+
-+	mhu->major = readl_relaxed_bitfield(&mhu->ctrl->aidr, arch_major_rev);
-+	mhu->minor = readl_relaxed_bitfield(&mhu->ctrl->aidr, arch_minor_rev);
-+	if (mhu->major != MHUV3_MAJOR_VERSION) {
-+		dev_warn(dev, "Unsupported MHU %s block - major:%d  minor:%d\n",
-+			 mhuv3_str[mhu->frame], mhu->major, mhu->minor);
-+		return -EINVAL;
-+	}
-+	mhu->auto_op_full = !!readl_relaxed_bitfield(&mhu->ctrl->feat_spt1,
-+						     auto_op_spt);
-+	/* Request the PBX/MBX to remain operational */
-+	if (mhu->auto_op_full)
-+		writel_relaxed_bitfield(0x1, &mhu->ctrl->ctrl, op_req);
-+
-+	dev_dbg(dev, "Found MHU %s block - major:%d  minor:%d\n",
-+		mhuv3_str[mhu->frame], mhu->major, mhu->minor);
-+
-+	if (mhu->frame == PBX_FRAME)
-+		mhu->pbx = regs;
-+	else
-+		mhu->mbx = regs;
-+
-+	for (i = FIRST_EXT; i < MAX_EXT && !ret; i++)
-+		ret = mhuv3_extension_init[i](mhu);
-+
-+	return ret;
-+}
-+
-+static irqreturn_t mhuv3_pbx_comb_interrupt(int irq, void *arg)
-+{
-+	int ret = IRQ_NONE;
-+	unsigned int i, found = 0;
-+	struct mhuv3 *mhu = arg;
-+	struct device *dev = mhu->mbox.dev;
-+	struct mbox_chan *chan;
-+
-+	for (i = FIRST_EXT; i < MAX_EXT; i++) {
-+		/* FCE does not participate to the PBX combined */
-+		if (i == FCE_EXT || !mhu->ext[i])
-+			continue;
-+
-+		chan = mhu->ext[i]->chan_from_comb_irq_get(mhu);
-+		if (!IS_ERR(chan)) {
-+			struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+			found++;
-+			if (chan->cl) {
-+				mbox_chan_txdone(chan, 0);
-+				ret = IRQ_HANDLED;
-+			} else {
-+				dev_warn(dev,
-+					 "TX Ack on UNBOUND channel (%u)\n",
-+					 priv->ch_idx);
-+			}
-+		}
-+	}
-+
-+	if (!found)
-+		dev_warn_once(dev, "Failed to find channel for the TX interrupt\n");
-+
-+	return ret;
-+}
-+
-+static irqreturn_t mhuv3_mbx_comb_interrupt(int irq, void *arg)
-+{
-+	int ret = IRQ_NONE;
-+	unsigned int i, found = 0;
-+	struct mhuv3 *mhu = arg;
-+	struct device *dev = mhu->mbox.dev;
-+	struct mbox_chan *chan;
-+
-+	for (i = FIRST_EXT; i < MAX_EXT; i++) {
-+		if (!mhu->ext[i])
-+			continue;
-+
-+		/* Process any extension which could be source of the IRQ */
-+		chan = mhu->ext[i]->chan_from_comb_irq_get(mhu);
-+		if (!IS_ERR(chan)) {
-+			void *data = NULL;
-+			struct mhuv3_mbox_chan_priv *priv = chan->con_priv;
-+
-+			found++;
-+			/* Read and acknowledge optional in-band LE data first. */
-+			if (priv->ops->read_data)
-+				data = priv->ops->read_data(mhu, chan);
-+
-+			if (chan->cl && !IS_ERR(data)) {
-+				mbox_chan_received_data(chan, data);
-+				ret = IRQ_HANDLED;
-+			} else if (!chan->cl) {
-+				dev_warn(dev,
-+					 "RX Data on UNBOUND channel (%u)\n",
-+					 priv->ch_idx);
-+			} else {
-+				dev_err(dev, "Failed to read data: %lu\n",
-+					PTR_ERR(data));
-+			}
-+
-+			if (!IS_ERR(data))
-+				kfree(data);
-+
-+			/*
-+			 * Acknowledge transfer after any possible optional
-+			 * out-of-band data has also been retrieved via
-+			 * mbox_chan_received_data().
-+			 */
-+			if (priv->ops->rx_complete)
-+				priv->ops->rx_complete(mhu, chan);
-+		}
-+	}
-+
-+	if (!found)
-+		dev_warn_once(dev, "Failed to find channel for the RX interrupt\n");
-+
-+	return ret;
-+}
-+
-+static int mhuv3_setup_pbx(struct mhuv3 *mhu)
-+{
-+	struct device *dev = mhu->mbox.dev;
-+
-+	mhu->mbox.ops = &mhuv3_sender_ops;
-+
-+	if (mhu->cmb_irq > 0) {
-+		int ret;
-+
-+		ret = devm_request_threaded_irq(dev, mhu->cmb_irq, NULL,
-+						mhuv3_pbx_comb_interrupt,
-+						IRQF_ONESHOT, "mhuv3-pbx", mhu);
-+		if (!ret) {
-+			int i;
-+
-+			mhu->mbox.txdone_irq = true;
-+			mhu->mbox.txdone_poll = false;
-+
-+			for (i = FIRST_EXT; i < MAX_EXT; i++)
-+				if (mhu->ext[i])
-+					mhu->ext[i]->combined_irq_setup(mhu);
-+
-+			dev_dbg(dev, "MHUv3 PBX IRQs initialized.\n");
-+
-+			return 0;
-+		}
-+
-+		dev_err(dev, "Failed to request PBX IRQ - ret:%d", ret);
-+	}
-+
-+	dev_info(dev, "Using PBX in Tx polling mode.\n");
-+	mhu->mbox.txdone_irq = false;
-+	mhu->mbox.txdone_poll = true;
-+	mhu->mbox.txpoll_period = 1;
-+
-+	return 0;
-+}
-+
-+static int mhuv3_setup_mbx(struct mhuv3 *mhu)
-+{
-+	int ret, i;
-+	struct device *dev = mhu->mbox.dev;
-+
-+	mhu->mbox.ops = &mhuv3_receiver_ops;
-+
-+	if (mhu->cmb_irq <= 0) {
-+		dev_err(dev, "Missing MBX combined IRQ !\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = devm_request_threaded_irq(dev, mhu->cmb_irq, NULL,
-+					mhuv3_mbx_comb_interrupt, IRQF_ONESHOT,
-+					"mhuv3-mbx", mhu);
-+	if (ret) {
-+		dev_err(dev, "Failed to request MBX IRQ - ret:%d\n", ret);
-+		return ret;
-+	}
-+
-+	for (i = FIRST_EXT; i < MAX_EXT; i++)
-+		if (mhu->ext[i])
-+			mhu->ext[i]->combined_irq_setup(mhu);
-+
-+	dev_dbg(dev, "MHUv3 MBX IRQs initialized.\n");
-+
-+	return ret;
-+}
-+
-+static int mhuv3_irqs_init(struct mhuv3 *mhu, struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	dev_dbg(mhu->mbox.dev, "Initializing %s block.\n", mhuv3_str[mhu->frame]);
-+
-+	if (mhu->frame == PBX_FRAME) {
-+		mhu->cmb_irq = platform_get_irq_byname_optional(pdev, "combined");
-+		ret = mhuv3_setup_pbx(mhu);
-+	} else {
-+		mhu->cmb_irq = platform_get_irq_byname(pdev, "combined");
-+		ret = mhuv3_setup_mbx(mhu);
-+	}
-+
-+	return ret;
-+}
-+
-+static int mhuv3_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct mhuv3 *mhu;
-+	void __iomem *regs;
-+	struct device *dev = &pdev->dev;
-+
-+	mhu = devm_kzalloc(dev, sizeof(*mhu), GFP_KERNEL);
-+	if (!mhu)
-+		return -ENOMEM;
-+
-+	regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+
-+	mhu->mbox.dev = dev;
-+	ret = mhuv3_frame_init(mhu, regs);
-+	if (ret)
-+		return ret;
-+
-+	ret = mhuv3_irqs_init(mhu, pdev);
-+	if (ret)
-+		return ret;
-+
-+	mhu->mbox.of_xlate = mhuv3_mbox_of_xlate;
-+	ret = mhuv3_initialize_channels(dev, mhu);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_mbox_controller_register(dev, &mhu->mbox);
-+	if (ret)
-+		dev_err(dev, "failed to register ARM MHUv3 driver %d\n", ret);
-+
-+	platform_set_drvdata(pdev, mhu);
-+
-+	return ret;
-+}
-+
-+static int mhuv3_remove(struct platform_device *pdev)
-+{
-+	struct mhuv3 *mhu = platform_get_drvdata(pdev);
-+
-+	if (mhu->auto_op_full)
-+		writel_relaxed_bitfield(0x0, &mhu->ctrl->ctrl, op_req);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mhuv3_of_match[] = {
-+	{ .compatible = "arm,mhuv3", .data = NULL },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, mhuv3_of_match);
-+
-+static struct platform_driver mhuv3_driver = {
-+	.driver = {
-+		.name = "arm-mhuv3-mailbox",
-+		.of_match_table = mhuv3_of_match,
-+	},
-+	.probe = mhuv3_probe,
-+	.remove = mhuv3_remove,
-+};
-+module_platform_driver(mhuv3_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("ARM MHUv3 Driver");
-+MODULE_AUTHOR("Cristian Marussi <cristian.marussi@arm.com>");
--- 
-2.34.1
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
+[    0.000000] Linux version 6.9.0-rc1-00004-gcb630dd69df3
+(nxa06643@lxl00026) (aarch64-linux-gnu-gcc (Linaro GCC 7.5-2019.12)
+7.5.0, GNU ld (Linaro_Binutils-2019.12) 2.28.2.20170706) #21 SMP PREEMPT
+Mon Mar 25 10:50:16 EET 2024
+[    0.000000] KASLR disabled due to lack of seed
+[    0.000000] Machine model: NXP S32G3 Reference Design Board 3
+(S32G-VNP-RDB3)
+[    0.000000] efi: UEFI not found.
+[    0.000000] OF: reserved mem: 0x00000000d0000000..0x00000000d000007f
+(0 KiB) nomap non-reusable shm@d0000000
+[    0.000000] OF: reserved mem: 0x00000000ff600000..0x00000000ff7fffff
+(2048 KiB) nomap non-reusable atf@ff600000
+[    0.000000] earlycon: linflex0 at MMIO 0x00000000401c8000 (options
+'115200n8')
+[    0.000000] printk: legacy bootconsole [linflex0] enabled
+[    0.000000] NUMA: No NUMA configuration found
+[    0.000000] NUMA: Faking a node at [mem
+0x0000000080000000-0x00000008dfffffff]
+[    0.000000] NUMA: NODE_DATA [mem 0x8df8ff9c0-0x8df901fff]
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000080000000-0x00000000ffffffff]
+[    0.000000]   DMA32    empty
+[    0.000000]   Normal   [mem 0x0000000100000000-0x00000008dfffffff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000080000000-0x00000000cfffffff]
+[    0.000000]   node   0: [mem 0x00000000d0001000-0x00000000ff5fffff]
+[    0.000000]   node   0: [mem 0x00000000ff600000-0x00000000ff7fffff]
+[    0.000000]   node   0: [mem 0x00000000ff800000-0x00000000ffffffff]
+[    0.000000]   node   0: [mem 0x0000000880000000-0x00000008dfffffff]
+[    0.000000] Initmem setup node 0 [mem
+0x0000000080000000-0x00000008dfffffff]
+[    0.000000] On node 0, zone DMA: 1 pages in unavailable ranges
+[    0.000000] cma: Reserved 32 MiB at 0x00000000fd600000 on node -1
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: MIGRATE_INFO_TYPE not supported.
+[    0.000000] psci: SMC Calling Convention v1.2
+[    0.000000] percpu: Embedded 24 pages/cpu s57896 r8192 d32216 u98304
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: detected: GIC system register CPU interface
+[    0.000000] CPU features: detected: ARM erratum 845719
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: console=ttyLF0,115200
+root=/dev/mmcblk0p2 rootwait rw earlycon
+[    0.000000] Dentry cache hash table entries: 524288 (order: 10,
+4194304 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 262144 (order: 9, 2097152
+bytes, linear)
+[    0.000000] Fallback order for Node 0: 0
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 903167
+[    0.000000] Policy zone: Normal
+[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.000000] software IO TLB: area num 8.
+[    0.000000] software IO TLB: mapped [mem
+0x00000000f9600000-0x00000000fd600000] (64MB)
+[    0.000000] Memory: 3451804K/3670012K available (17472K kernel code,
+4790K rwdata, 11432K rodata, 9984K init, 754K bss, 185440K reserved,
+32768K cma-reserved)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+[    0.000000] rcu: Preemptible hierarchical RCU implementation.
+[    0.000000] rcu:     RCU event tracing is enabled.
+[    0.000000] rcu:     RCU restricting CPUs from NR_CPUS=512 to
+nr_cpu_ids=8.
+[    0.000000]  Trampoline variant of Tasks RCU enabled.
+[    0.000000]  Tracing variant of Tasks RCU enabled.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay
+is 25 jiffies.
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=8
+[    0.000000] RCU Tasks: Setting shift to 3 and lim to 1
+rcu_task_cb_adjust=1.
+[    0.000000] RCU Tasks Trace: Setting shift to 3 and lim to 1
+rcu_task_cb_adjust=1.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] GICv3: 544 SPIs implemented
+[    0.000000] GICv3: 0 Extended SPIs implemented
+[    0.000000] Root IRQ handler: gic_handle_irq
+[    0.000000] GICv3: GICv3 features: 16 PPIs
+[    0.000000] GICv3: CPU0: found redistributor 0 region
+0:0x0000000050900000
+[    0.000000] ITS: No ITS available, not enabling LPIs
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on
+contention.
+[    0.000000] arch_timer: cp15 timer(s) running at 5.00MHz (virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff
+max_cycles: 0x127350b88, max_idle_ns: 440795202120 ns
+[    0.000001] sched_clock: 56 bits at 5MHz, resolution 200ns, wraps
+every 4398046511100ns
+[    0.008224] Console: colour dummy device 80x25
+[    0.012493] Calibrating delay loop (skipped), value calculated using
+timer frequency.. 10.00 BogoMIPS (lpj=20000)
+[    0.022661] pid_max: default: 32768 minimum: 301
+[    0.027333] LSM: initializing lsm=capability
+[    0.031604] Mount-cache hash table entries: 8192 (order: 4, 65536
+bytes, linear)
+[    0.038904] Mountpoint-cache hash table entries: 8192 (order: 4,
+65536 bytes, linear)
+[    0.047831] cacheinfo: Unable to detect cache hierarchy for CPU 0
+[    0.054481] rcu: Hierarchical SRCU implementation.
+[    0.058926] rcu:     Max phase no-delay instances is 1000.
+[    0.064746] EFI services will not be available.
+[    0.069258] smp: Bringing up secondary CPUs ...
+[    0.073964] Detected VIPT I-cache on CPU1
+[    0.074018] GICv3: CPU1: found redistributor 1 region
+0:0x0000000050920000
+[    0.074056] CPU1: Booted secondary processor 0x0000000001 [0x410fd034]
+[    0.074630] Detected VIPT I-cache on CPU2
+[    0.074662] GICv3: CPU2: found redistributor 2 region
+0:0x0000000050940000
+[    0.074682] CPU2: Booted secondary processor 0x0000000002 [0x410fd034]
+[    0.075227] Detected VIPT I-cache on CPU3
+[    0.075258] GICv3: CPU3: found redistributor 3 region
+0:0x0000000050960000
+[    0.075277] CPU3: Booted secondary processor 0x0000000003 [0x410fd034]
+[    0.075831] Detected VIPT I-cache on CPU4
+[    0.075885] GICv3: CPU4: found redistributor 100 region
+0:0x0000000050980000
+[    0.075917] CPU4: Booted secondary processor 0x0000000100 [0x410fd034]
+[    0.076492] Detected VIPT I-cache on CPU5
+[    0.076527] GICv3: CPU5: found redistributor 101 region
+0:0x00000000509a0000
+[    0.076547] CPU5: Booted secondary processor 0x0000000101 [0x410fd034]
+[    0.077090] Detected VIPT I-cache on CPU6
+[    0.077127] GICv3: CPU6: found redistributor 102 region
+0:0x00000000509c0000
+[    0.077147] CPU6: Booted secondary processor 0x0000000102 [0x410fd034]
+[    0.077724] Detected VIPT I-cache on CPU7
+[    0.077765] GICv3: CPU7: found redistributor 103 region
+0:0x00000000509e0000
+[    0.077785] CPU7: Booted secondary processor 0x0000000103 [0x410fd034]
+[    0.077896] smp: Brought up 1 node, 8 CPUs
+[    0.203873] SMP: Total of 8 processors activated.
+[    0.208551] CPU: All CPU(s) started at EL1
+[    0.212660] CPU features: detected: 32-bit EL0 Support
+[    0.217751] CPU features: detected: 32-bit EL1 Support
+[    0.222885] CPU features: detected: CRC32 instructions
+[    0.228042] alternatives: applying system-wide alternatives
+[    0.236019] devtmpfs: initialized
+[    0.242628] clocksource: jiffies: mask: 0xffffffff max_cycles:
+0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.252037] futex hash table entries: 2048 (order: 5, 131072 bytes,
+linear)
+[    0.260021] pinctrl core: initialized pinctrl subsystem
+[    0.266046] DMI not present or invalid.
+[    0.272094] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.278654] DMA: preallocated 512 KiB GFP_KERNEL pool for atomic
+allocations
+[    0.285546] DMA: preallocated 512 KiB GFP_KERNEL|GFP_DMA pool for
+atomic allocations
+[    0.293318] DMA: preallocated 512 KiB GFP_KERNEL|GFP_DMA32 pool for
+atomic allocations
+[    0.301019] audit: initializing netlink subsys (disabled)
+[    0.306513] audit: type=2000 audit(0.180:1): state=initialized
+audit_enabled=0 res=1
+[    0.307304] thermal_sys: Registered thermal governor 'step_wise'
+[    0.314096] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.320130] cpuidle: using governor menu
+[    0.330730] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.337396] ASID allocator initialised with 65536 entries
+[    0.344482] Serial: AMBA PL011 UART driver
+[    0.350914] Modules: 21600 pages in range for non-PLT usage
+[    0.350920] Modules: 513120 pages in range for PLT usage
+[    0.356758] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.368493] HugeTLB: 0 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.374744] HugeTLB: registered 32.0 MiB page size, pre-allocated 0 pages
+[    0.381511] HugeTLB: 0 KiB vmemmap can be freed for a 32.0 MiB page
+[    0.387762] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.394531] HugeTLB: 0 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.400784] HugeTLB: registered 64.0 KiB page size, pre-allocated 0 pages
+[    0.407551] HugeTLB: 0 KiB vmemmap can be freed for a 64.0 KiB page
+[    0.414206] Demotion targets for Node 0: null
+[    0.419168] ACPI: Interpreter disabled.
+[    0.423692] iommu: Default domain type: Translated
+[    0.428153] iommu: DMA domain TLB invalidation policy: strict mode
+[    0.434805] SCSI subsystem initialized
+[    0.438513] usbcore: registered new interface driver usbfs
+[    0.443706] usbcore: registered new interface driver hub
+[    0.448995] usbcore: registered new device driver usb
+[    0.454351] pps_core: LinuxPPS API ver. 1 registered
+[    0.458968] pps_core: Software ver. 5.3.6 - Copyright 2005-2007
+Rodolfo Giometti <giometti@linux.it>
+[    0.468095] PTP clock support registered
+[    0.472054] EDAC MC: Ver: 3.0.0
+[    0.475481] scmi_core: SCMI protocol bus registered
+[    0.480546] FPGA manager framework
+[    0.483666] Advanced Linux Sound Architecture Driver Initialized.
+[    0.490590] vgaarb: loaded
+[    0.493333] clocksource: Switched to clocksource arch_sys_counter
+[    0.499297] VFS: Disk quotas dquot_6.6.0
+[    0.503017] VFS: Dquot-cache hash table entries: 512 (order 0, 4096
+bytes)
+[    0.510017] pnp: PnP ACPI: disabled
+[    0.519430] NET: Registered PF_INET protocol family
+[    0.524185] IP idents hash table entries: 65536 (order: 7, 524288
+bytes, linear)
+[    0.533803] tcp_listen_portaddr_hash hash table entries: 2048 (order:
+3, 32768 bytes, linear)
+[    0.542061] Table-perturb hash table entries: 65536 (order: 6, 262144
+bytes, linear)
+[    0.549719] TCP established hash table entries: 32768 (order: 6,
+262144 bytes, linear)
+[    0.557803] TCP bind hash table entries: 32768 (order: 8, 1048576
+bytes, linear)
+[    0.566154] TCP: Hash tables configured (established 32768 bind 32768)
+[    0.572472] UDP hash table entries: 2048 (order: 4, 65536 bytes, linear)
+[    0.579091] UDP-Lite hash table entries: 2048 (order: 4, 65536 bytes,
+linear)
+[    0.586323] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.592198] RPC: Registered named UNIX socket transport module.
+[    0.597778] RPC: Registered udp transport module.
+[    0.602457] RPC: Registered tcp transport module.
+[    0.607143] RPC: Registered tcp-with-tls transport module.
+[    0.612612] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.619048] PCI: CLS 0 bytes, default 64
+[    0.623428] kvm [1]: HYP mode not available
+[    0.628384] Initialise system trusted keyrings
+[    0.632632] workingset: timestamp_bits=42 max_order=20 bucket_order=0
+[    0.639182] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.644948] NFS: Registering the id_resolver key type
+[    0.649780] Key type id_resolver registered
+[    0.653921] Key type id_legacy registered
+[    0.657932] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[    0.664597] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver
+Registering...
+[    0.672111] 9p: Installing v9fs 9p2000 file system support
+[    0.714617] Key type asymmetric registered
+[    0.718368] Asymmetric key parser 'x509' registered
+[    0.723278] Block layer SCSI generic (bsg) driver version 0.4 loaded
+(major 245)
+[    0.730608] io scheduler mq-deadline registered
+[    0.735119] io scheduler kyber registered
+[    0.739144] io scheduler bfq registered
+[    0.764751] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    0.773400] 401c8000.serial: ttyLF0 at MMIO 0x401c8000 (irq = 14,
+base_baud = 0) is a FSL_LINFLEX
+[    0.783976] printk: legacy console [ttyLF0] enabled
+[    0.783976] printk: legacy console [ttyLF0] enabled
+[    0.793930] printk: legacy bootconsole [linflex0] disabled
+[    0.793930] printk: legacy bootconsole [linflex0] disabled
+[    0.809777] 401cc000.serial: ttyLF1 at MMIO 0x401cc000 (irq = 15,
+base_baud = 0) is a FSL_LINFLEX
+[    0.819329] msm_serial: driver initialized
+[    0.823695] SuperH (H)SCI(F) driver initialized
+[    0.828378] STM32 USART driver initialized
+[    0.840105] loop: module loaded
+[    0.844169] megasas: 07.727.03.00-rc1
+[    0.852986] tun: Universal TUN/TAP device driver, 1.6
+[    0.858691] thunder_xcv, ver 1.0
+[    0.862013] thunder_bgx, ver 1.0
+[    0.865323] nicpf, ver 1.0
+[    0.868818] hns3: Hisilicon Ethernet Network Driver for Hip08 Family
+- version
+[    0.876179] hns3: Copyright (c) 2017 Huawei Corporation.
+[    0.881621] hclge is initializing
+[    0.885029] e1000: Intel(R) PRO/1000 Network Driver
+[    0.889999] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[    0.895874] e1000e: Intel(R) PRO/1000 Network Driver
+[    0.900932] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+[    0.906982] igb: Intel(R) Gigabit Ethernet Network Driver
+[    0.912483] igb: Copyright (c) 2007-2014 Intel Corporation.
+[    0.918195] igbvf: Intel(R) Gigabit Virtual Function Network Driver
+[    0.924581] igbvf: Copyright (c) 2009 - 2012 Intel Corporation.
+[    0.930796] sky2: driver version 1.30
+[    0.935382] VFIO - User Level meta-driver version: 0.3
+[    0.942227] usbcore: registered new interface driver usb-storage
+[    0.950179] i2c_dev: i2c /dev entries driver
+[    0.959203] sdhci: Secure Digital Host Controller Interface driver
+[    0.965503] sdhci: Copyright(c) Pierre Ossman
+[    0.970334] Synopsys Designware Multimedia Card Interface Driver
+[    0.976987] sdhci-pltfm: SDHCI platform and OF driver helper
+[    0.983975] ledtrig-cpu: registered to indicate activity on CPUs
+[    0.990556] scmi_protocol scmi_dev.1: Enabled polling mode TX channel
+- prot_id:16
+[    0.998513] arm-scmi firmware:scmi: SCMI Notifications - Core Enabled.
+[    1.005209] arm-scmi firmware:scmi: SCMI Protocol v2.0 'NXP:S32G399A'
+Firmware version 0x0
+[    1.014897] cpu cpu0: EM: only supports uW power values
+[    1.025027] SMCCC: SOC_ID: ARCH_SOC_ID not implemented, skipping ....
+[    1.032401] usbcore: registered new interface driver usbhid
+[    1.038094] usbhid: USB HID core driver
+[    1.044180] hw perfevents: enabled with armv8_cortex_a53 PMU driver,
+7 counters available
+[    1.056194] NET: Registered PF_PACKET protocol family
+[    1.061445] 9pnet: Installing 9P2000 support
+[    1.065867] Key type dns_resolver registered
+[    1.079732] Timer migration: 1 hierarchy levels; 8 children per
+group; 1 crossnode level
+[    1.088206] registered taskstats version 1
+[    1.092820] Loading compiled-in X.509 certificates
+[    1.115627] clk: Disabling unused clocks
+[    1.117662] sdhci-esdhc-imx 402f0000.mmc: could not get pinctrl
+[    1.119704] PM: genpd: Disabling unused power domains
+[    1.130853] ALSA device list:
+[    1.133886]   No soundcards found.
+[    1.157133] mmc0: SDHCI controller on 402f0000.mmc [402f0000.mmc]
+using ADMA
+[    1.164512] Waiting for root device /dev/mmcblk0p2...
+[    1.185787] mmc0: host does not support reading read-only switch,
+assuming write-enable
+[    1.195000] mmc0: new high speed SDHC card at address 5048
+[    1.201102] mmcblk0: mmc0:5048 SD32G 29.7 GiB
+[    1.208397]  mmcblk0: p1 p2
+[    1.238459] EXT4-fs (mmcblk0p2): recovery complete
+[    1.244613] EXT4-fs (mmcblk0p2): mounted filesystem
+52830f5f-ab50-4125-a606-3c65100b7d4a r/w with ordered data mode. Quota
+mode: none.
+[    1.257000] VFS: Mounted root (ext4 filesystem) on device 179:2.
+[    1.264390] devtmpfs: mounted
+[    1.271069] Freeing unused kernel memory: 9984K
+[    1.275760] Run /sbin/init as init process
+[    1.657291] systemd[1]: System time before build time, advancing clock.
+[    1.714423] systemd[1]: systemd 250.5+ running in system mode (+PAM
+-AUDIT -SELINUX -APPARMOR +IMA -SMACK +SECCOMP -GCRYPT -GNUTLS -OPENSSL
++ACL +BLKID -CURL -ELFUTILS -FIDO2 -IDN2 -IDN -IPTC +KMOD -LIBCRYPTSETUP
++LIBFDISK -PCRE2 -PWQUALITY -P11KIT -QRENCODE -BZIP2 -LZ4 -XZ -ZLIB
++ZSTD -BPF_FRAMEWORK +XKBCOMMON +UTMP +SYSVINIT default-hierarchy=hybrid)
+[    1.746891] systemd[1]: Detected architecture arm64.
+
+Welcome to Auto Linux BSP develop (kirkstone)!
+
+[    1.845928] systemd[1]: Hostname set to <s32g399ardb3>.
+[    2.186158] systemd[1]: Binding to IPv6 address not available since
+kernel does not support IPv6.
+[    2.195287] systemd[1]: Binding to IPv6 address not available since
+kernel does not support IPv6.
+[    2.317364] systemd[1]: Queued start job for default target
+Multi-User System.
+[    2.396694] systemd[1]: Created slice Slice /system/getty.
+[  OK  ] Created slice Slice /system/getty.
+[    2.410476] systemd[1]: Created slice Slice /system/modprobe.
+[  OK  ] Created slice Slice /system/modprobe.
+[    2.424209] systemd[1]: Created slice Slice /system/serial-getty.
+[  OK  ] Created slice Slice /system/serial-getty.
+[    2.438389] systemd[1]: Created slice User and Session Slice.
+[  OK  ] Created slice User and Session Slice.
+[    2.450954] systemd[1]: Started Dispatch Password Requests to Console
+Directory Watch.
+[  OK  ] Started Dispatch Password …ts to Console Directory Watch.
+[    2.467638] systemd[1]: Started Forward Password Requests to Wall
+Directory Watch.
+[  OK  ] Started Forward Password R…uests to Wall Directory Watch.
+[    2.484011] systemd[1]: Reached target Path Units.
+[  OK  ] Reached target Path Units.
+[    2.494464] systemd[1]: Reached target Remote File Systems.
+[  OK  ] Reached target Remote File Systems.
+[    2.506485] systemd[1]: Reached target Slice Units.
+[  OK  ] Reached target Slice Units.
+[    2.517119] systemd[1]: Reached target Swaps.
+[  OK  ] Reached target Swaps.
+[    2.586411] systemd[1]: Listening on RPCbind Server Activation Socket.
+[  OK  ] Listening on RPCbind Server Activation Socket.
+[    2.600701] systemd[1]: Reached target RPC Port Mapper.
+[  OK  ] Reached target RPC Port Mapper.
+[    2.612616] systemd[1]: Listening on Syslog Socket.
+[  OK  ] Listening on Syslog Socket.
+[    2.623452] systemd[1]: Listening on initctl Compatibility Named Pipe.
+[  OK  ] Listening on initctl Compatibility Named Pipe.
+[    2.637954] systemd[1]: Listening on Journal Audit Socket.
+[  OK  ] Listening on Journal Audit Socket.
+[    2.650037] systemd[1]: Listening on Journal Socket (/dev/log).
+[  OK  ] Listening on Journal Socket (/dev/log).
+[    2.663102] systemd[1]: Listening on Journal Socket.
+[  OK  ] Listening on Journal Socket.
+[    2.674363] systemd[1]: Listening on Network Service Netlink Socket.
+[  OK  ] Listening on Network Service Netlink Socket.
+[    2.688327] systemd[1]: Listening on udev Control Socket.
+[  OK  ] Listening on udev Control Socket.
+[    2.700193] systemd[1]: Listening on udev Kernel Socket.
+[  OK  ] Listening on udev Kernel Socket.
+[    2.711963] systemd[1]: Listening on User Database Manager Socket.
+[  OK  ] Listening on User Database Manager Socket.
+[    2.749696] systemd[1]: Mounting Huge Pages File System...
+         Mounting Huge Pages File System...
+[    2.764346] systemd[1]: Mounting POSIX Message Queue File System...
+         Mounting POSIX Message Queue File System...
+[    2.780591] systemd[1]: Mounting Kernel Debug File System...
+         Mounting Kernel Debug File System...
+[    2.792560] systemd[1]: Kernel Trace File System was skipped because
+of a failed condition check (ConditionPathExists=/sys/kernel/tracing).
+[    2.805768] systemd[1]: Create List of Static Device Nodes was
+skipped because of a failed condition check
+(ConditionFileNotEmpty=/lib/modules/6.9.0-rc1-00004-gcb630dd69df3/modules.devname).
+[    2.826957] systemd[1]: Starting Load Kernel Module configfs...
+         Starting Load Kernel Module configfs...
+[    2.842860] systemd[1]: Starting Load Kernel Module drm...
+         Starting Load Kernel Module drm...
+[    2.857874] systemd[1]: Starting Load Kernel Module fuse...
+         Starting Load Kernel Module fuse...
+[    2.879679] systemd[1]: Starting RPC Bind...
+         Starting RPC Bind...
+[    2.888514] systemd[1]: File System Check on Root Device was skipped
+because of a failed condition check (ConditionPathIsReadWrite=!/).
+[    2.907067] systemd[1]: Starting Journal Service...
+         Starting Journal Service...
+[    2.925119] systemd[1]: Starting Load Kernel Modules...
+         Starting Load Kernel Modules...
+[    2.940298] systemd[1]: Starting Generate network units from Kernel
+command line...
+         Starting Generate network …ts from Kernel command line...
+[    2.959955] systemd[1]: Starting Remount Root and Kernel File Systems...
+         Starting Remount Root and Kernel File Systems...
+[    2.977958] systemd[1]: Starting Coldplug All udev Devices...
+         Starting Coldplug All udev Devices...
+[    2.995944] systemd[1]: Started RPC Bind.
+[  OK  ] Started RPC Bind.
+[    3.005902] systemd[1]: Mounted Huge Pages File System.
+[  OK  ] Mounted Huge Pages File System.
+[    3.018033] systemd[1]: Mounted POSIX Message Queue File System.
+[  OK  ] Mounted POSIX Message Queue File System.[    3.029658] EXT4-fs
+(mmcblk0p2): re-mounted 52830f5f-ab50-4125-a606-3c65100b7d4a r/w. Quota
+mode: none.
+
+[    3.043175] systemd[1]: Started Journal Service.
+[  OK  ] Started Journal Service.
+[  OK  ] Mounted Kernel Debug File System.
+[  OK  ] Finished Load Kernel Module configfs.
+[  OK  ] Finished Load Kernel Module drm.
+[  OK  ] Finished Load Kernel Module fuse.
+[FAILED] Failed to start Load Kernel Modules.
+See 'systemctl status systemd-modules-load.service' for details.
+[  OK  ] Finished Generate network units from Kernel command line.
+[  OK  ] Finished Remount Root and Kernel File Systems.
+         Mounting Kernel Configuration File System...
+         Starting Flush Journal to Persistent Storage...
+         Starting Apply Kernel Variables...
+         Starting Create Static Device Nodes in /dev...[    3.206617]
+systemd-journald[124]: Received client request to flush runtime journal.
+
+[  OK  ] Mounted Kernel Configuration File System.
+[  OK  ] Finished Flush Journal to Persistent Storage.
+[  OK  ] Finished Apply Kernel Variables.
+[  OK  ] Finished Create Static Device Nodes in /dev.
+[  OK  ] Reached target Preparation for Local File Systems.
+         Mounting /tmp...
+         Mounting /var/volatile...
+[    3.338366] audit: type=1334 audit(1651167746.684:2): prog-id=5 op=LOAD
+[    3.345166] audit: type=1334 audit(1651167746.688:3): prog-id=6 op=LOAD
+         Starting Rule-based Manage…for Device Events and Files...
+[  OK  ] Mounted /tmp.
+[  OK  ] Mounted /var/volatile.
+         Mounting /var/volatile/tmp...
+         Starting Load/Save Random Seed...
+[  OK  ] Mounted /var/volatile/tmp.
+[  OK  ] Reached target Local File Systems.
+         Starting Create Volatile Files and Directories...
+[  OK  ] Finished Create Volatile Files and Directories.
+         Starting Network Time Synchronization...
+         Starting Record System Boot/Shutdown in UTMP...
+[  OK  ] Started Rule-based Manager for Device Events and Files.
+[  OK  ] Finished Coldplug All udev Devices.
+[  OK  ] Finished Record System Boot/Shutdown in UTMP.
+[  OK  ] Started Network Time Synchronization.
+[  OK  ] Reached target System Initialization.
+[  OK  ] Started Daily Cleanup of Temporary Directories.
+[  OK  ] Reached target System Time Set.
+[  OK  ] Started Daily rotation of log files.
+[  OK  ] Reached target Timer Units.
+[  OK  ] Listening on D-Bus System Message Bus Socket.
+         Starting sshd.socket...
+[  OK  ] Listening on sshd.socket.
+[  OK  ] Reached target Socket Units.
+[  OK  ] Reached target Basic System.
+[  OK  ] Started Job spooling tools.
+[  OK  ] Started Periodic Command Scheduler.
+         Starting D-Bus System Message Bus...
+         Starting IPv6 Packet Filtering Framework...
+         Starting IPv4 Packet Filtering Framework...
+[  OK  ] Started irqbalance daemon.
+[  OK  ] Started Hardware RNG Entropy Gatherer Daemon.
+[  OK  ] Started System Logging Service.
+         Starting Resets System Activity Logs...
+[    4.124453] audit: type=1334 audit(1651254541.860:4): prog-id=7 op=LOAD
+[    4.131266] audit: type=1334 audit(1651254541.868:5): prog-id=8 op=LOAD
+         Starting User Login Management...
+         Starting OpenSSH Key Generation...
+[  OK  ] Finished IPv6 Packet Filtering Framework.
+[  OK  ] Finished IPv4 Packet Filtering Framework.
+[  OK  ] Reached target Preparation for Network.
+         Starting Network Configuration...
+[  OK  ] Finished Resets System Activity Logs.
+[  OK  ] Finished OpenSSH Key Generation.
+[  OK  ] Started Network Configuration.
+         Starting Network Name Resolution...
+[  OK  ] Started Network Name Resolution.
+[  OK  ] Reached target Network.
+[  OK  ] Reached target Host and Network Name Lookups.
+[  OK  ] Started Netperf Benchmark Server.
+[  OK  ] Started NFS status monitor for NFSv2/3 locking..
+[  OK  ] Started Respond to IPv6 Node Information Queries.
+[  OK  ] Started Network Router Discovery Daemon.
+         Starting Permit User Sessions...
+[  OK  ] Started Xinetd A Powerful Replacement For Inetd.
+[  OK  ] Finished Permit User Sessions.
+[  OK  ] Started Getty on tty1.
+[  OK  ] Started Serial Getty on ttyLF0.
+[  OK  ] Reached target Login Prompts.
+[  OK  ] Created slice Slice /system/systemd-fsck.
+[  OK  ] Found device /dev/mmcblk0p1.
+         Starting File System Check on /dev/mmcblk0p1...
+[  OK  ] Finished File System Check on /dev/mmcblk0p1.
+         Mounting /run/media/boot_s32g3-mmcblk0p1...
+[  OK  ] Mounted /run/media/boot_s32g3-mmcblk0p1.
+[  OK  ] Finished Load/Save Random Seed.
+[  OK  ] Started D-Bus System Message Bus.
+[  OK  ] Started User Login Management.
+[  OK  ] Reached target Multi-User System.
+         Starting Record Runlevel Change in UTMP...
+[  OK  ] Finished Record Runlevel Change in UTMP.
+
+
+Regards,
+Ghennadi
 
