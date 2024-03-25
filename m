@@ -1,109 +1,79 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED143C2533
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896C83D0104;
+	Mon, 25 Mar 2024 03:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711337740; cv=none; b=dCOdS6dtLK4xyvYVQSBFcHMUww6o1/INTCfuNXzSUWDU/KkoCdqFBsPsgweT54L5IkcdvWsZB/4YYnffIq/Df2rPxk5fZTWaw+vktfutrxQFFhl028axdRo/E+E7XynFKVkHlzIUfwdcAn6f8WWeIUz7qTRlJ1OC/8Uq743l/DE=
+	t=1711337966; cv=none; b=ek6OAC1HdhGSw2dfRBN101Q3+B2HeXAubFfmKGgET9VwphPukDJNwabIvb7nDGOCy1lxJ9tF3ijOkU14YhJRervC33ffC63P8l5IbUCcfGiGbSVw58lL/NUNJevp8TIdauLJ2umAOARBIuPcsJqeft7laLtP1R/0nObbIgjpd5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711337740; c=relaxed/simple;
-	bh=jouLekNDdjgpJm7iHqbiTapCmrWek4QuIWw1G5e8bP4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mASYP/OxSqAgxJCeTgXbWYUhDltr9/QuiBzS8PXxpDi4lgSGpZ0eVkIcC/WZNP9iKTT7KieERGe+2KK7eNO+Qkvy32KoqkW75gLAfL5bJi2xRFRrF+QfpnUDTGtD49TvCzLdI4hsdayt/zzaFFc97p8iYjPMUDSvI11e+EKYWBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HZEz/Wx3; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711337966; c=relaxed/simple;
+	bh=sGIaBtqVxcSLEcbO/RNerhsBc2VftFecwlYKnFirhZo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hlrWkBRiQv659ZB0qOhrQ+6Mjcmrfbllnwcmn1Cx5Q2tu9kz1Vwsj8YzoH0RqI30MZLpCQnOQnZh2pajgBKMWNnCb+iV59CvvxO3vMD4+agtETr3+KsiRNnzvKhcCn1GF9kvs00jhj1uy/EeKF2boAtf1qUQbxGyFL5G4cr3gtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=a5fTqiDr; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZEz/Wx3"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5dbcfa0eb5dso2928187a12.3
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 20:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711337738; x=1711942538; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JsOqF23nizDyVla4cEqGdF84V6TG9vf5xCFejd3HW00=;
-        b=HZEz/Wx3xf/v3MrjBe2jHSbUpvg1Va+WXq1g90+Fni35VJxqcYxx8XjqIRUAygUExf
-         Q+Prwu2au1uhUpl4EBiEY4F/EVFEAuIsfz3k+5PtDmJ84fJz0EtX30rYqFfrwNfP7KMF
-         xeuSeDVjkGcEO6eBYk8TUZQp84HUCxK7OxY9u0fGaMXgEmgIdDcjBW2NTBiE7CJSoIIm
-         W/ZmfyAL6M0KkjiakVtDofpnggfnTuNbG6aeMZRi9VFf6rIWAnrKeMqERxWl0OcJT/5L
-         pWuIkaUUcREyE6F6tff9aAFPtkBkC8Gaw5PmIQbmLCJ+o3V/xB0aFjTxVux5QDXsYxOQ
-         KRmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711337738; x=1711942538;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JsOqF23nizDyVla4cEqGdF84V6TG9vf5xCFejd3HW00=;
-        b=YFCARSh7gM5dDxh4uUQTiTIHVuynEAMfy1gThDkM1zbygcfdpXMdpTuWIc5cX2JPuG
-         dbwxrkek7nhrwH4kmY7J7Y4nB+LXSP2suVplcJN2yGPk19WeZmJDt1BZXWQDhT6OfvPw
-         B7b/X770IvAsorebFXFuvMAsEQNyqciti1oCUKp19aDp5JlZvrvbn7jCPOT4EFVYMOYY
-         sn0Pu4LBXB7+jb9L6k0dGOGGFttDCLLewsub6LQFr8DBPmPiVo7bf2B8G6yY1CE5fOfY
-         OCkZ6fhqwsIubN1U04Svwt3aVyjgqXgoOmOY2Zwv0D0fKzvjQw92dcvUQzSKsJv3CO4H
-         d3BA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkr/LzjodWZctfawmI5+dQfBQgLAuVf3V/ArTLLU4sCs+QRAC3l0vXXDdLvKPPIxE2LXP0LbBzWEVR16MaJNrtxhdq4lcEVMJbjp6y
-X-Gm-Message-State: AOJu0Yzrw8JvXRxOgyCWM6ryINGWDDXFsf6Vue0uMRcjNkZgH4pjYUzc
-	8FvoH0j1m/4am966s1E50CBgrCSdXqr/mhO+waUTaACfOnOEyw3P
-X-Google-Smtp-Source: AGHT+IHKAKPuNbizbOLeilWfOH0Wq1WODiKdBvp4HX4Sqm8mUd+l6HnF45FHhvBSOfzobqhcOf1opA==
-X-Received: by 2002:a17:902:9a48:b0:1dc:79e3:c8ed with SMTP id x8-20020a1709029a4800b001dc79e3c8edmr5420981plv.31.1711337738516;
-        Sun, 24 Mar 2024 20:35:38 -0700 (PDT)
-Received: from JammyHuang-PC.aspeed.com ([118.99.208.177])
-        by smtp.gmail.com with ESMTPSA id j11-20020a170902da8b00b001e0c5be4e2esm366837plx.48.2024.03.24.20.35.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Mar 2024 20:35:38 -0700 (PDT)
-From: Jammy Huang <orbit.huang@gmail.com>
-X-Google-Original-From: Jammy Huang <jammy_huang@aspeedtech.com>
-To: tzimmermann@suse.de,
-	jfalempe@redhat.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	airlied@redhat.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Jammy Huang <jammy_huang@aspeedtech.com>
-Subject: [PATCH] drm/ast: Fix soft lockup
-Date: Mon, 25 Mar 2024 11:35:15 +0800
-Message-Id: <20240325033515.814-1-jammy_huang@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="a5fTqiDr"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42OMRRkr029557;
+	Sun, 24 Mar 2024 20:39:10 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=pfpt0220; bh=dLzwhtfNCY+WZdFgx7FUWY
+	HfsiEqYHSRJavE1/2Ss+M=; b=a5fTqiDrpA0T1ZmjU2PMOmBJB2FcHW7C0Tjo+V
+	8dDQaoocLvjlafShe1irRqA5oyXhmjs+aTV0qYJJ2sp7IivaJac4kU4zePReXHDO
+	+q9iN/9rSjzGo4kGZ8l8qOmg93lnXrO40VfYIGeB1UxqeZ9iBRasOUbHPxJlLaLf
+	txKEWYPO37rMU1eu7D+ia6R3znvtFWXaANr5XuYP1mc/Pv2DrH1XZ1fBRdyj/9eD
+	oOwqtYXg+y1Jv1YuW/n/t/ECHXFuaEwSo+bB3y2BaxtWiG3jyjt/TjCHcmF2lVDG
+	eRVXr2O2JSfGBRGP7N1MQoq81sm34csHF5w5JqTrWI88MHbA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3x1vekpkuw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 24 Mar 2024 20:39:09 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Sun, 24 Mar 2024 20:39:09 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Sun, 24 Mar 2024 20:39:09 -0700
+Received: from IPBU-BLR-SERVER1 (IPBU-BLR-SERVER1.marvell.com [10.28.8.41])
+	by maili.marvell.com (Postfix) with SMTP id 409353F709D;
+	Sun, 24 Mar 2024 20:39:07 -0700 (PDT)
+Date: Mon, 25 Mar 2024 09:09:06 +0530
+From: George Cherian <george.cherian@marvell.com>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+CC: <linux-i2c@vger.kernel.org>, George Cherian <gcherian@marvell.com>,
+        "Andi
+ Shyti" <andi.shyti@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 62/64] i2c: xlp9xx: reword according to newest
+ specification
+Message-ID: <20240325033906.GA987833@IPBU-BLR-SERVER1>
+References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
+ <20240322132619.6389-63-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240322132619.6389-63-wsa+renesas@sang-engineering.com>
+X-Proofpoint-ORIG-GUID: laSvIC-wDHN7I7_Z6uaFHRIXYG_fl0DB
+X-Proofpoint-GUID: laSvIC-wDHN7I7_Z6uaFHRIXYG_fl0DB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-24_18,2024-03-21_02,2023-05-22_02
 
-Avoid infinite-loop in ast_dp_set_on_off().
+On 2024-03-22 at 18:55:55, Wolfram Sang (wsa+renesas@sang-engineering.com) wrote:
+> Match the wording of this driver wrt. the newest I2C v7, SMBus 3.2, I3C
+> specifications and replace "master/slave" with more appropriate terms.
+> They are also more specific because we distinguish now between a remote
+> entity ("client") and a local one ("target").
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
----
- drivers/gpu/drm/ast/ast_dp.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/gpu/drm/ast/ast_dp.c b/drivers/gpu/drm/ast/ast_dp.c
-index ebb6d8ebd44e..1e9259416980 100644
---- a/drivers/gpu/drm/ast/ast_dp.c
-+++ b/drivers/gpu/drm/ast/ast_dp.c
-@@ -180,6 +180,7 @@ void ast_dp_set_on_off(struct drm_device *dev, bool on)
- {
- 	struct ast_device *ast = to_ast_device(dev);
- 	u8 video_on_off = on;
-+	u32 i = 0;
- 
- 	// Video On/Off
- 	ast_set_index_reg_mask(ast, AST_IO_VGACRI, 0xE3, (u8) ~AST_DP_VIDEO_ENABLE, on);
-@@ -192,6 +193,8 @@ void ast_dp_set_on_off(struct drm_device *dev, bool on)
- 						ASTDP_MIRROR_VIDEO_ENABLE) != video_on_off) {
- 			// wait 1 ms
- 			mdelay(1);
-+			if (++i > 200)
-+				break;
- 		}
- 	}
- }
-
-base-commit: b0546776ad3f332e215cebc0b063ba4351971cca
--- 
-2.25.1
-
+Acked-by: George Cherian <george.cherian@marvell.com>
