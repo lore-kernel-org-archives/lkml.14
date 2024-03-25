@@ -1,74 +1,83 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925721422DF
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D35714882E;
+	Mon, 25 Mar 2024 05:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711345538; cv=none; b=E1X3UZsx8U0GgGWNM/rsLrBBiKr/uc1mmH0i79ryOO4NwZO1flxh72OvDI6r70qBBV3YBjAOHrkGnbAqkQ+fDxn/DoGxZoml7vHd0iu4lXtBD21i00tb21bxNs9fXsBCMzVvNXSusqUYTxYD6rFBlH6l55PHAJHD8Or2YpdX+Bc=
+	t=1711345829; cv=none; b=J21EEZ+gbLXjqU4XwS3cb+ewzPpK0ZnwA4NTgJdplt6ZpRey0aDHYLTbXSUQGyQY8NpDgFV9vWdRJXyaitxQYkPPZEQwSx2pDS3IBy6UfQH2GS4H8UmJ1AyowxGSsChZa95dPiJVKYP+RgpeLW3AhE5mqHLWZFgzq7gWoOlc+Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711345538; c=relaxed/simple;
-	bh=Nf9/+absmF2p9Y3Nt6wAdkzbW99RzEk9jOUSMk1Hpj8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Mj17qUn19gwVLejzZhV3yd+PV9HzBDdUV9sQ1yZI95DMxeGA9VLGVcMrVor0mV+wIY0iM+p0fpDcgyDXO3MRZGjBZJfi5ads6Gn1/NMIeNNA1iQgGSTTMjLrV1HIjx7s6nsirvbyIRDzOdQa01hyibNSBf/eVij63MuVbdlbalI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=G8/2feiV; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1711345829; c=relaxed/simple;
+	bh=q7htrRhmIpffAJaSSd/Qrm0hkgm0oq7FbiA9QPXJJOg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q2moGlCu/0Q6HXH0KO0TNph+t4P1XEHTkWyknCj6iqx6modMeXnFmtP1mby++7rYg9joH0LyBdCRRsGWgPptof3uvFi0XOWvht1ZDRrhMeEwUOx6hB3NfG6nJ2kVRf6sKap6wwfh+8vW+VtfjEHK3iUOy3dQWeigXJZPTytO0kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=TdIBOzRk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FXRZgN3l; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="G8/2feiV"
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42P3AFfv011154;
-	Mon, 25 Mar 2024 05:45:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=/Cdxic8Oiq1h4/eSkqGMxCD/okNBm3CJhlovnrT+fWA=;
- b=G8/2feiVkyZOOkAJoKGJjHIM8FXLaZEknIdj5s0hdKM3W+uxW2KIxFhAqXVCVzrQyI+V
- 1luRFrZtvUhsjbgQTnGTFXbRugkA1IjAV6qHeJSDIQoP9gXZ0wxQUV/1G2xZm0fxpooG
- 1ZJqQ3EocbEh3jhjqeT0wx3hNQq/9dvvNfLW2h3mNfCF+Y//sybT5gICVlRcBvF6yOSh
- PLQ71Yew0p8ta8pzYZ8c+sYskKcPPKGzbL8csT2VP2OxAxRsmYu49HVptZnKC29jGmvH
- n9cps3wSSBmTPDVwee4aXC8KlRcxQnUvCs5TJ4CpAoQm6LoGJACDqgaTYo9a/RWIpb19 pQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x28fhtejp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:45:24 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42P5jOxm000615;
-	Mon, 25 Mar 2024 05:45:24 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x28fhtejm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:45:24 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42P5dG27025481;
-	Mon, 25 Mar 2024 05:45:22 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x2awmexch-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:45:22 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42P5jINf36176230
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 25 Mar 2024 05:45:20 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B0C912004D;
-	Mon, 25 Mar 2024 05:45:18 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1262A2004B;
-	Mon, 25 Mar 2024 05:45:17 +0000 (GMT)
-Received: from li-c1fdab4c-355a-11b2-a85c-ef242fe9efb4.in.ibm.com (unknown [9.109.201.126])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 25 Mar 2024 05:45:16 +0000 (GMT)
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-To: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
-Cc: sshegde@linux.ibm.com, dietmar.eggemann@arm.com, qyousef@layalina.io,
-        linux-kernel@vger.kernel.org, vschneid@redhat.com
-Subject: [PATCH v3 2/2] sched/fair: Use helper functions to access rd->overload
-Date: Mon, 25 Mar 2024 11:15:05 +0530
-Message-Id: <20240325054505.201995-3-sshegde@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240325054505.201995-1-sshegde@linux.ibm.com>
-References: <20240325054505.201995-1-sshegde@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="TdIBOzRk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FXRZgN3l"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfout.nyi.internal (Postfix) with ESMTP id B137713800F3;
+	Mon, 25 Mar 2024 01:50:26 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Mon, 25 Mar 2024 01:50:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1711345826; x=
+	1711432226; bh=FCaPLFbPfBeh6lcaDURHJE3JwO/F9VTh2vUzGDfablw=; b=T
+	dIBOzRknhRRQW/a2n9+cN1i6UXjL3ob6mwlDh9Sy7aYcwxz8wwR+/46SDcFnTc7m
+	HSRISNylEIIjdptn6yAGgvCIMpTRIuRdnC+FgBDbuqncP+IL6AEzenF36TDQkVB+
+	3V8HqDNF33Pl8uHNaBG9jXF71Ghh/xJpuqzsK0BoV4f9VWBHsSQ4QMBfCu6sWvnk
+	Wxi3+U+TjOxi73wIQpJFnf9iEhRFwbald/MlGFsmqQylz68juedYN7sH7YZR8Yrk
+	UYNCRfATcslrhkt8AYFxTqxXHKS6GYq2wnxQN5ffqhTKrURF3SMdaX0o8s/M7zD2
+	DzmEASr7BdYlImE2TweOA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711345826; x=
+	1711432226; bh=FCaPLFbPfBeh6lcaDURHJE3JwO/F9VTh2vUzGDfablw=; b=F
+	XRZgN3l/HTnooHCMXEBOwYU7MGxaGc/qVrG1qNVo7LReIRWwx9Zq3xfSBoDjIVo/
+	NOfwXu3t0wxPtiPC4ybmXG/pzGj2MXXVky+Fs/Gj5D0n2Y8SabHwsPwF72ZwbU1t
+	ZVoRWHMeVEoUcBYv4kPMDqCWK6uq5EuFaaFGd/j3jhaz7XqCCTJAyYzLUiYNwy+m
+	4Lp0tVDeCtLa7f+JLf2MUi6XkVJ1yAMmbTXx5LrnedDeqmMRSP+IuIYHroIjPv45
+	QWhrt3EYubsxRWYlo479+1SKu+s3iguTtOSxhAOgmgMkUWnD02GbOUDBdx9VXoA8
+	dKMXyFBvAgbzv67U//Zuw==
+X-ME-Sender: <xms:ohABZtTStNXIc6sJdAqeGvEktAGaTcwu-fwyAESNgF3eUiY22rvjrQ>
+    <xme:ohABZmxYzu6B8WzKfy2hL-vzG3FxSFfeRrq6TWvoZN_9efwoSyyZQvb9-lpqFfWik
+    MRaLEiHhrMg3x9lCA4>
+X-ME-Received: <xmr:ohABZi0GPTS73XbOdxvbF5UupVb1Y63eDWWfS_5PMB6phBGv8GtzOTsa7CTS>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtkedgledtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
+    ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
+    jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
+    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgeptden
+    ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:ohABZlB75w2Fx3T6KY-6-nbsYqK6yU7msg8xVbAXdingo9MfrrtH_Q>
+    <xmx:ohABZmglXS722I4BZrSvRJUXO9wpvcRYBMRyTjey68dwouYclkwzzQ>
+    <xmx:ohABZpr5CprDs6e9NX-nFeqwySZZQe2XbsFbmDWQRWRQKpH0wkecSA>
+    <xmx:ohABZhg0gos5m9y_6N2QBQTwe6q9He-3SckxiOHlj78U_llze4IsDA>
+    <xmx:ohABZhWVDGAdH9WOcVqGjS5wTqBwUCAiST5i6tU1LUvi2JYs_KV78A>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 25 Mar 2024 01:50:24 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: hdegoede@redhat.com
+Cc: corentin.chary@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH 6/9] platform/x86: asus-wmi: adjust formatting of ppt-<name>() functions
+Date: Mon, 25 Mar 2024 18:49:35 +1300
+Message-ID: <20240325054938.489732-7-luke@ljones.dev>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240325054938.489732-1-luke@ljones.dev>
+References: <20240325054938.489732-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,88 +85,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Lc3uyEvxYz45w_H31MU8eWGqDiRwmpWQ
-X-Proofpoint-GUID: _vsCfY0cPeSjIzc2oxU0yB5_4HlhpATB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_03,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 phishscore=0 spamscore=0 clxscore=1015 mlxlogscore=771
- bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403250030
 
-rd->overload is accessed at multiple places. Instead it could use helper
-get/set functions. This would make the code more readable and easy to
-maintain.
+Shift the call to dev_get_drvdata() up to top of the function block
+in all of the ppt_<name>() functions as part of a minor cleanup.
 
-No change in functionality intended.
-
-Suggested-by: Qais Yousef <qyousef@layalina.io>
-Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-Reviewed-by: Qais Yousef <qyousef@layalina.io>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
 ---
- kernel/sched/fair.c  |  5 ++---
- kernel/sched/sched.h | 14 ++++++++++++--
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index eeebadd7d9ae..f00cb66cc479 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10621,8 +10621,7 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
-
- 	if (!env->sd->parent) {
- 		/* update overload indicator if we are at root domain */
--		if (READ_ONCE(env->dst_rq->rd->overload) != (sg_status & SG_OVERLOAD))
--			WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
-+		set_rd_overload_status(env->dst_rq->rd, sg_status & SG_OVERLOAD);
-
- 		/* Update over-utilization (tipping point, U >= 0) indicator */
- 		set_rd_overutilized_status(env->dst_rq->rd,
-@@ -12344,7 +12343,7 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
- 	rcu_read_lock();
- 	sd = rcu_dereference_check_sched_domain(this_rq->sd);
-
--	if (!READ_ONCE(this_rq->rd->overload) ||
-+	if (!is_rd_overloaded(this_rq->rd) ||
- 	    (sd && this_rq->avg_idle < sd->max_newidle_lb_cost)) {
-
- 		if (sd)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 41024c1c49b4..bed5ad8a1827 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -918,6 +918,17 @@ extern void rq_attach_root(struct rq *rq, struct root_domain *rd);
- extern void sched_get_rd(struct root_domain *rd);
- extern void sched_put_rd(struct root_domain *rd);
-
-+static inline int is_rd_overloaded(struct root_domain *rd)
-+{
-+	return READ_ONCE(rd->overload);
-+}
-+
-+static inline void set_rd_overload_status(struct root_domain *rd, int status)
-+{
-+	if (is_rd_overloaded(rd) != status)
-+		WRITE_ONCE(rd->overload, status);
-+}
-+
- #ifdef HAVE_RT_PUSH_IPI
- extern void rto_push_irq_work_func(struct irq_work *work);
- #endif
-@@ -2518,8 +2529,7 @@ static inline void add_nr_running(struct rq *rq, unsigned count)
-
- #ifdef CONFIG_SMP
- 	if (prev_nr < 2 && rq->nr_running >= 2) {
--		if (!READ_ONCE(rq->rd->overload))
--			WRITE_ONCE(rq->rd->overload, 1);
-+		set_rd_overload_status(rq->rd, SG_OVERLOAD);
- 	}
- #endif
-
---
-2.39.3
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 1e369b673a72..11ce6dec31c6 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -998,11 +998,10 @@ static ssize_t ppt_pl2_sppt_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1042,11 +1041,10 @@ static ssize_t ppt_pl1_spl_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1085,11 +1083,10 @@ static ssize_t ppt_fppt_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1129,11 +1126,10 @@ static ssize_t ppt_apu_sppt_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1173,11 +1169,10 @@ static ssize_t ppt_platform_sppt_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1217,11 +1212,10 @@ static ssize_t nv_dynamic_boost_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1261,11 +1255,10 @@ static ssize_t nv_temp_target_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+-- 
+2.44.0
 
