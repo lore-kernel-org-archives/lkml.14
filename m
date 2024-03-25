@@ -1,46 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC40156C4E;
-	Mon, 25 Mar 2024 08:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA08D1292D2
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711356332; cv=none; b=juGrcGJcdSEbqNTiFza+F3y6EH8Ctf/o6yBb3HZ6OY+MpA9x0oTAyQr+JTTamezxaRpUBuKYs7nHuRvcPbXfPsbPXKDBcbE07HoHW6z4BN1d8rgBVirWuzxhA4XgYZ0WuUe2P3kQR3qde71qxMY6ZVHT6gG+1IVXfQ4GnNobdtw=
+	t=1711356487; cv=none; b=l2PZk4hRnuabvyh8dOQMp+8FuMqziMf960Uxu8KxTNzBCE9DOg+If3aKd5if4xSG0LM1uwSA8M5KeVN+j0+rwDhfl7TWUoDg4Dh94otg0x6FB/Ko86dHeDoQeoITHtkm3tdXUe5Fh5+UqPPu21+nLLY7KLJ4mOMjXq9x8lhrvoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711356332; c=relaxed/simple;
-	bh=knUdCX/JOXqL4snKEL002fjNHL5rz0BFYkaGhcfpTvA=;
+	s=arc-20240116; t=1711356487; c=relaxed/simple;
+	bh=Y2V2lDPB8c0lqfJfWoRMPnzYxJksB+we6Ivu66REzwo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=inB2YfXiFArquK4+DBviCWFifZ2UvViaYUUwXtygeLU9uoDolPwAE1vThszhIjjWKo3znwurm/y5yxrVnjiDdoktMK8xU3Aon94BU1PlX+LgJIhGC4kaSyT4l9q5RtEDoS1sdi70+0pF19bU7E9wMgpVwcSGMOqW5UreY/At/U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y6esWeq/; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=Q7ToN37OtqcVzep83Y2V5sxGmnlY1oiGml62dUOH7Zs9jvYFu3ie30oT5NpAF81+/xQkBaUA6X6+Q1+1FFBsxGFOOQqKcGao/6jpRJbVQvc3KXzZRABo/SMqzyqwKDzElHkf/bwNH9ABO9sATizq1ENciHOO/K704H/W/WG78Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VGwolsAz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rzLb8OnV; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=k1GzKVvx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ePNDNeqq; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y6esWeq/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711356331; x=1742892331;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=knUdCX/JOXqL4snKEL002fjNHL5rz0BFYkaGhcfpTvA=;
-  b=Y6esWeq/YL90tUTozZ0miM+/Ui38kyaC33sZrPsi1t0Sjk2JPv84OCo3
-   ZGX7CZhQ7W7g4Ji1WsXOK0KE9/ieHOsnIaFoJaLZCvIQ/4ozOiTAJWADx
-   PLeqhR9XfqutylNOxerrAA3SQMgWzSnouKYEPO2jlO9z6P6mvgC3xAeCm
-   6QxhOLZta1SmIlsWi4UcC7OsMt7fm88D+tb/vAnoQIHTrZl6D3SXm23MD
-   dQSEl2jhlHMb/xZRsHdswcjEjsU3GCvHL/vVzgPkAXlqTVPRdkEMBHvKh
-   qlogBT+9a89eL8TXObBUz37Q5VarXFk0jR+nG9pyAMkcw6sgOkOnpkso2
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="10139249"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="10139249"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 01:45:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="15601892"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.254.215.245]) ([10.254.215.245])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 01:45:27 -0700
-Message-ID: <38601aef-b082-463f-8e41-f73a4307de21@linux.intel.com>
-Date: Mon, 25 Mar 2024 16:45:08 +0800
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VGwolsAz";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rzLb8OnV";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="k1GzKVvx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ePNDNeqq"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D7DDA33E03;
+	Mon, 25 Mar 2024 08:48:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711356484; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UoLCbiPNyGOCHEsF3WOBCQJ3VKUAUZzDN/UCGvN0Zj4=;
+	b=VGwolsAztygtZMuYItfZ+0R2WVWT49VOhj3P2tSEWO3FhFAlKXyamNnbbwCnmvyvWgOoz3
+	ArQoG3KFenhBOrtxdryHfi3LvymSNLIVMgIqC0gIRi1AYqbvza0UPjTU8oi9+Kebo7WOpF
+	ZMrIm3o7Hkicna6zDM7jSLVv+6aKcWw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711356484;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UoLCbiPNyGOCHEsF3WOBCQJ3VKUAUZzDN/UCGvN0Zj4=;
+	b=rzLb8OnVM4UQYwsqzOlyIHVkGC0UTYidqikF9YmGp/wDkCHE0NAFilCAzsoojXO1QY0KNi
+	wy2GfO+sI9uGMwAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711356483; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UoLCbiPNyGOCHEsF3WOBCQJ3VKUAUZzDN/UCGvN0Zj4=;
+	b=k1GzKVvxSSHpmH4xdmdl8I6qFrViYgKLzPnlatUszjAq+8mccB8Nb5VmDR4hJqGcJHHS8z
+	h/VJSFxmaraQecB93ajg0jeq/UsR2AfwVBqmKDPwhIj8PiVk7+JuucrN9mQ198TZrbjrSk
+	mkWttivOGd0l3surpUB2i8sq4qXn4CM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711356483;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UoLCbiPNyGOCHEsF3WOBCQJ3VKUAUZzDN/UCGvN0Zj4=;
+	b=ePNDNeqq9ZILfs2PqwJqT9YgZaAme/yqjfoFR21dHP5WLQRLpZ4P92F5lOYtXQmro+9exh
+	IpD/6g1a9+CKMjDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B924613503;
+	Mon, 25 Mar 2024 08:48:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id voyyLEM6AWYRJQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 25 Mar 2024 08:48:03 +0000
+Message-ID: <8b146695-4ff5-4f9a-ab64-6cbed4168f98@suse.cz>
+Date: Mon, 25 Mar 2024 09:48:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,81 +80,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv3 pci-next 1/2] PCI/AER: correctable error message as
- KERN_INFO
-To: Xi Ruoyao <xry111@xry111.site>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: Grant Grundler <grundler@chromium.org>, bhelgaas@google.com,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, mahesh@linux.ibm.com, oohall@gmail.com,
- rajat.khandelwal@linux.intel.com, rajatja@chromium.org
-References: <20230918193913.GA203601@bhelgaas>
- <0a44fd663e93ac5b36865b0080da52d94252791a.camel@xry111.site>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <0a44fd663e93ac5b36865b0080da52d94252791a.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] mm/slub: mark racy accesses on slab->slabs
+Content-Language: en-US
+To: linke li <lilinke99@qq.com>
+Cc: xujianhao01@gmail.com, Chengming Zhou <chengming.zhou@linux.dev>,
+ Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <tencent_909E215498A54E4E100E456A92A7F13DAD06@qq.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <tencent_909E215498A54E4E100E456A92A7F13DAD06@qq.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -2.79
+X-Spamd-Result: default: False [-2.79 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com,qq.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 BAYES_HAM(-3.00)[100.00%];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email];
+	 FREEMAIL_TO(0.00)[qq.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[gmail.com,linux.dev,linux.com,kernel.org,google.com,lge.com,linux-foundation.org,kvack.org,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-On 3/25/2024 1:19 AM, Xi Ruoyao wrote:
-> On Mon, 2023-09-18 at 14:39 -0500, Bjorn Helgaas wrote:
->> On Mon, Sep 18, 2023 at 07:42:30PM +0800, Xi Ruoyao wrote:
->>> ...
->>> My workstation suffers from too much correctable AER reporting as well
->>> (related to Intel's errata "RPL013: Incorrectly Formed PCIe Packets May
->>> Generate Correctable Errors" and/or the motherboard design, I guess).
->> We should rate-limit correctable error reporting so it's not
->> overwhelming.
->>
->> At the same time, I'm *also* interested in the cause of these errors,
->> in case there's a Linux defect or a hardware erratum that we can work
->> around.  Do you have a bug report with any more details, e.g., a dmesg
->> log and "sudo lspci -vv" output?
-> Hi Bjorn,
->
-> Sorry for the *very* late reply (somehow I didn't see the reply at all
-> before it was removed by my cron job, and now I just savaged it from
-> lore.kernel.org...)
->
-> The dmesg is like:
->
-> [  882.456994] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:00:1c.1
-> [  882.457002] pcieport 0000:00:1c.1: AER: found no error details for 0000:00:1c.1
-> [  882.457003] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:06:00.0
-> [  883.545763] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:00:1c.1
-> [  883.545789] pcieport 0000:00:1c.1: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
-> [  883.545790] pcieport 0000:00:1c.1:   device [8086:7a39] error status/mask=00000001/00002000
-> [  883.545792] pcieport 0000:00:1c.1:    [ 0] RxErr                  (First)
-> [  883.545794] pcieport 0000:00:1c.1: AER:   Error of this Agent is reported first
-> [  883.545798] r8169 0000:06:00.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Transmitter ID)
-> [  883.545799] r8169 0000:06:00.0:   device [10ec:8125] error status/mask=00001101/0000e000
-> [  883.545800] r8169 0000:06:00.0:    [ 0] RxErr                  (First)
-> [  883.545801] r8169 0000:06:00.0:    [ 8] Rollover
-> [  883.545802] r8169 0000:06:00.0:    [12] Timeout
-> [  883.545815] pcieport 0000:00:1c.1: AER: Correctable error message received from 0000:00:1c.1
-> [  883.545823] pcieport 0000:00:1c.1: AER: found no error details for 0000:00:1c.1
-> [  883.545824] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:06:00.0
->
-> lspci output attached.
->
-> Intel has issued an errata "RPL013" saying:
->
-> "Under complex microarchitectural conditions, the PCIe controller may
-> transmit an incorrectly formed Transaction Layer Packet (TLP), which
-> will fail CRC checks. When this erratum occurs, the PCIe end point may
-> record correctable errors resulting in either a NAK or link recovery.
-> Intel® has not observed any functional impact due to this erratum."
->
-> But I'm really unsure if it describes my issue.
->
-> Do you think I have some broken hardware and I should replace the CPU
-> and/or the motherboard (where the r8169 is soldered)?  I've noticed that
-> my 13900K is almost impossible to overclock (despite it's a K), but I've
-> not encountered any issue other than these AER reporting so far after I
-> gave up overclocking.
+On 3/21/24 4:48 AM, linke li wrote:
+> The reads of slab->slabs are racy because it may be changed by
+> put_cpu_partial concurrently. In slabs_cpu_partial_show() and 
+> show_slab_objects(), slab->slabs is only used for showing information.
+> 
+> Data-racy reads from shared variables that are used only for diagnostic
+> purposes should typically use data_race(), since it is normally not a
+> problem if the values are off by a little.
+> 
+> This patch is aimed at reducing the number of benign races reported by
+> KCSAN in order to focus future debugging effort on harmful races.
+> 
+> Signed-off-by: linke li <lilinke99@qq.com>
+> Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
 
-Seems there are two r8169 nics on your board, only 0000:06:00.0 reports
-aer errors, how about another one the 0000:07:00.0 nic ?
+Chengming provided feedback to v1 but not offered a Reviewed-by: AFAICS? Or
+maybe will offer it now? :)
 
+Vlastimil
 
-Thanks,
-Ethan
+> ---
+>  mm/slub.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 2ef88bbf56a3..0d700f6ca547 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -6052,7 +6052,7 @@ static ssize_t show_slab_objects(struct kmem_cache *s,
+>  				else if (flags & SO_OBJECTS)
+>  					WARN_ON_ONCE(1);
+>  				else
+> -					x = slab->slabs;
+> +					x = data_race(slab->slabs);
+>  				total += x;
+>  				nodes[node] += x;
+>  			}
+> @@ -6257,7 +6257,7 @@ static ssize_t slabs_cpu_partial_show(struct kmem_cache *s, char *buf)
+>  		slab = slub_percpu_partial(per_cpu_ptr(s->cpu_slab, cpu));
+>  
+>  		if (slab)
+> -			slabs += slab->slabs;
+> +			slabs += data_race(slab->slabs);
+>  	}
+>  #endif
+>  
+> @@ -6271,7 +6271,7 @@ static ssize_t slabs_cpu_partial_show(struct kmem_cache *s, char *buf)
+>  
+>  		slab = slub_percpu_partial(per_cpu_ptr(s->cpu_slab, cpu));
+>  		if (slab) {
+> -			slabs = READ_ONCE(slab->slabs);
+> +			slabs = data_race(slab->slabs);
+>  			objects = (slabs * oo_objects(s->oo)) / 2;
+>  			len += sysfs_emit_at(buf, len, " C%d=%d(%d)",
+>  					     cpu, objects, slabs);
 
