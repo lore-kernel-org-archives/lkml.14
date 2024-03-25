@@ -1,165 +1,80 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805837441C;
-	Mon, 25 Mar 2024 22:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CF15D737;
+	Mon, 25 Mar 2024 22:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711404593; cv=none; b=oVC/uJlEqx2VPfbZMEUzlrOgDpMzHBJeWoTc/K6ktXObuRVsdBWSxjBmrG/YmfsGOh3rQdq8plW//Ub0L3/eRWTEvfFN/I4wOUXp2p4X1kMg+ehyQkKyJ8CYAvWAhGxjLSwYai0VwX5Dhcy+/wRolLu2Dv7gbuIJNlMFB/tPcx0=
+	t=1711404665; cv=none; b=qEdoCYZEndMCNKoprMYzPEK94zvf0o7SLDe9zfFNmrg2Ez07AbEHnwAzjp3SwQMdGd0aEKgatGU3p8Wnuurord7DNHx3QcwLytSDSI1lZDNe1UjJINObe3abEMcEmGdJR/ZcS2JjdNYNDkwuvae82Ifta9eC0w5cy7Rcfp/syL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711404593; c=relaxed/simple;
-	bh=tyNzq8sMRVHXjs1GnDWzeBNhhdt7M1nl7Y20AhpptkI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K7seTmM+sw0e/5SJOtt7kndZLDXiecTlHtdyf4Jebkb1pYT3H/ESzXgRre/Alz2mbEyCL1T4S1V8cpwa14QCk0+O03u/+CuWUvNsl6LlC7CgdguhNwDxEWI77Ah8I7AZ5wjxwNyu16w9Jq3vzFEh5XDFo4HRPqnQUX6qJLoo4Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZalcUGf; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711404665; c=relaxed/simple;
+	bh=wMUjV0++fHWKNqMEBLYMOOBBH0T2phMvx1BShL5sYM4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Kl/uCiNmljZGJcvfUGLb69dKcOw9OqgBnDoANsuLEwSY9ug5R0UpVeCWLwdSs8y1V65vCbuuHMJV6NzyoLUs84T7OHO8hesGdgwpgsOLmUEcE3jWzkdQhGy1G4QbNYgK+AP96j46KjeN0RCcxJGZ/xBNGSGnQplairGsohCl1fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DIt7/30A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZalcUGf"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-60a046c5262so46286937b3.2;
-        Mon, 25 Mar 2024 15:09:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711404590; x=1712009390; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tyNzq8sMRVHXjs1GnDWzeBNhhdt7M1nl7Y20AhpptkI=;
-        b=OZalcUGfH52tAvHHFEjw0CI7IkpgycHOXbd09y1AG5K18SAoa7cqkUSyor3FGi7CtC
-         pVem2QhsS4lj4KLr76wqm0Wgky1KnnHx+kCcAXYkrFPN8UxQNbukzJBiBSXloEtR/nUK
-         32I6rYJTvTQems5k95V3oyWjE8xhDrphJNNrR20QhUfUgeuWP/KODpz06xYSs2xvVX3d
-         tssQdb54E78EWwmt9NHXskxjg0BeEoc6q5zK/Mww9jB8oPqw4b6OYb1DIilruNz5Eqim
-         CCApgm/FeWZtaZqDSqKaNuupgQnDJyE8CZF2r9+WcNTwCBJqV61KIaxbG9OE18/YzaRo
-         vxQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711404590; x=1712009390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tyNzq8sMRVHXjs1GnDWzeBNhhdt7M1nl7Y20AhpptkI=;
-        b=M6YcnW4KItO/2IbfZoxxIDK32zrrhnYHL8nNThW4JxBRsvwqrdtUOujPD9Aa73ug7e
-         gOpUAH/mKnBhv8EH26J+iy0AE24JUduWGAZbooSzIMcBUkDWWpD3+cJd9PA0pLZeh/8W
-         4CjTIJYwqMciiNuvAcEwghn1/+3vHom14nHjrewH1svTRyq5r3wIaCXC+8j/Qb2Lqea9
-         XloGxvK4YrW/2HM3G6mqhks2ERhsAN8eq7fX9B2K5tWAnA1lPn79RGKKAugQLldyMSyf
-         nxIbmVo8hlK5M71HIL4xNFbdRWsGzxU+NidEOLyUKBQKuZY1CS7D90SZOfKyPz+tP7M0
-         sY7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVDpsc8XxLGvDW626qh99YRBgoB/FcKHJZY5i/KEMi3vXPE8CyPZ3YT6RUKVZ/vWotCI8x/s4nn3n+G25bg1FPIBhhv7xG3KX/qzmJXVctsZZ7ICXoxZlcqFeVmFv6nx8h/VHQBfI7fx6uJVCfSDu6uJ+tzPqsYWLkDIk2y8p2PeKLoCw==
-X-Gm-Message-State: AOJu0Yz4Sy4NfUYUGc1W6O1OjLjEpLmcSuknC/us4vRc9hHCSc2HGY3K
-	ZfIZgMXJ33AGRvtjzjuRBemL9ag+9YacZIsskhH1tksYH8SOmiB9o82bFkMrWQ9Sar89uAq+8+X
-	vmVzjk0xGmf7xEvkMFvfctZ4RyLo=
-X-Google-Smtp-Source: AGHT+IEUnQ61pYOdy6iBI6EKL8f+BYQGPiPimulDGq52iO7ygQltC+cIgsF+VqiTGHc/9ZtzaODGr88cfFatzs3X4o0=
-X-Received: by 2002:a25:8a0f:0:b0:dd0:3a7a:fb70 with SMTP id
- g15-20020a258a0f000000b00dd03a7afb70mr6309495ybl.52.1711404590425; Mon, 25
- Mar 2024 15:09:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIt7/30A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD51EC433F1;
+	Mon, 25 Mar 2024 22:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711404665;
+	bh=wMUjV0++fHWKNqMEBLYMOOBBH0T2phMvx1BShL5sYM4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DIt7/30AHXLnKyiIfIO6YizhTDrl7YBbnyiySR4eYYWh0GNM1sMRJMtEyF3TTFC+o
+	 SZyRhs/3xAPdeTitNf8LLHGKqQgNn9rgCR+7/EsUrgjN182ZRBdFQXFYXPoVswgIrA
+	 KOC8knMyQgVn5ZPE01Xh9urFh3uKzh5/YXtteytkFT5FjUgRIjIJAa6vGp563g8PO6
+	 z7koDb96JjW8zqwKwrjkZ9D7YLmTFw50d+qFfrcTb4ow8wpxlBqr1U7uCeu9+4St4G
+	 A3mMakmcJKJBUYDrC3+WsmVt+/BmCdgv91D4/YmVJUzzlICFhMMcbdeHrlqXuSoEpL
+	 YmO7aa6MsND1g==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <len.brown@intel.com>,
+	Pavel Machek <pavel@ucw.cz>
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] Documentation: PM: Update platform_pci_wakeup_init() reference
+Date: Mon, 25 Mar 2024 17:09:53 -0500
+Message-Id: <20240325220952.1453477-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325153356.46112-1-l.rubusch@gmail.com> <20240325153356.46112-5-l.rubusch@gmail.com>
- <f74a01bd-46a3-46cd-a47a-fcfccd7e4dc6@linaro.org> <CAFXKEHbJ_5unY24aZeutvM-xrjevQ=z7ngDcgwJR=NXzXONx5A@mail.gmail.com>
- <334970e7-2edd-43c8-9f18-b7b3ec5f4d17@linaro.org>
-In-Reply-To: <334970e7-2edd-43c8-9f18-b7b3ec5f4d17@linaro.org>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Mon, 25 Mar 2024 23:09:14 +0100
-Message-ID: <CAFXKEHaEVwiAW9co0+=kZ5w5a8eWg3QL0dmg38bvrmLdnBEA7w@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] dt-bindings: iio: accel: adxl345: Add spi-3wire
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, eraretuya@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 25, 2024 at 10:40=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 25/03/2024 22:05, Lothar Rubusch wrote:
-> > On Mon, Mar 25, 2024 at 7:32=E2=80=AFPM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 25/03/2024 16:33, Lothar Rubusch wrote:
-> >>> Add spi-3wire because the driver optionally supports spi-3wire.
-> >>
-> >> This is a friendly reminder during the review process.
-> >>
-> >> It seems my or other reviewer's previous comments were not fully
-> >> addressed. Maybe the feedback got lost between the quotes, maybe you
-> >> just forgot to apply it. Please go back to the previous discussion and
-> >> either implement all requested changes or keep discussing them.
-> >>
-> >> Thank you.
-> >>
-> >
-> > You refer yourself to the above mentioned wording. Would replacing
-> > "driver" by "device" in the dt-bindings patch comment be sufficient?
-> > Did I miss something else?
->
-> Yes, the wording, but isn't the device require 3-wire mode? Don't just
-> replace one word with another, but write the proper rationale for your
-> hardware.
->
-It does not require 3-wire SPI. By default the device communicates
-regular SPI. It can be configured, though, to communicate 3-wire. The
-given patch offers this as option in the DT.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-> >
-> >>>
-> >>> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> >>> ---
-> >>
-> >> This is a friendly reminder during the review process.
-> >>
-> >> It looks like you received a tag and forgot to add it.
-> >>
-> >> If you do not know the process, here is a short explanation:
-> >> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> >> versions, under or above your Signed-off-by tag. Tag is "received", wh=
-en
-> >> provided in a message replied to you on the mailing list. Tools like b=
-4
-> >> can help here. However, there's no need to repost patches *only* to ad=
-d
-> >
-> > Just for confirmation: when I receive a feedback, requesting a change.
-> > And, I accept the change request. This means, I received a tag
-> > "Reviewed-by" which I have to mention in the upcoming patch version
-> > where this change is implemented and in that particular patch?
->
-> Please go through the docs. Yes, you received a tag which should be
-> included with the change.
->
-> Reviewer's feedback should not be ignored.
->
->
-> >
-> >> the tags. The upstream maintainer will do that for tags received on th=
-e
-> >> version they apply.
-> >>
-> >
-> > I'm pretty sure we will still see further iterations. So, I apply the
-> > tags in the next version, already scheduled. Ok?
-> >
-> >> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process=
-/submitting-patches.rst#L577
-> >>
-> >
-> > Going over the books I feel it does not make sense to still mention
-> > feedback ("Reveiewed-by") for the v1 or v2 of the patch here in a v5,
-> > does it? Your link mentiones "However if the patch has changed
->
-> I don't understand. When did you receive the tag? v3, right? So what do
-> you mean by v1 and v2?
->
+platform_pci_wakeup_init() was removed by d2e5f0c16ad6 ("ACPI / PCI: Rework
+the setup and cleanup of device wakeup") but was still mentioned in the
+documentation.
 
-V1: The first version of the 3wire patch. I have split the single
-patch upon some feedback (yours?!) - V2... So, my current
-interpretation is, that every feedback I need to mention as
-Reviewed-by tag, no?
+Update the doc to refer to pci_acpi_setup(), which does the equivalent
+work.
 
->
-> Best regards,
-> Krzysztof
->
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+
+pci_acpi_setup() is a firmware-specific wart in this otherwise generic
+paragraph, so maybe there's some better way to express this?
+
+ Documentation/power/pci.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/power/pci.rst b/Documentation/power/pci.rst
+index 12070320307e..e2c1fb8a569a 100644
+--- a/Documentation/power/pci.rst
++++ b/Documentation/power/pci.rst
+@@ -333,7 +333,7 @@ struct pci_dev.
+ The PCI subsystem's first task related to device power management is to
+ prepare the device for power management and initialize the fields of struct
+ pci_dev used for this purpose.  This happens in two functions defined in
+-drivers/pci/pci.c, pci_pm_init() and platform_pci_wakeup_init().
++drivers/pci/, pci_pm_init() and pci_acpi_setup().
+ 
+ The first of these functions checks if the device supports native PCI PM
+ and if that's the case the offset of its power management capability structure
+-- 
+2.34.1
+
