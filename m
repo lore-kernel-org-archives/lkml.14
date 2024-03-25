@@ -1,281 +1,136 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D27214A086;
-	Mon, 25 Mar 2024 16:46:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B50E14A4F9;
+	Mon, 25 Mar 2024 16:46:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711385213; cv=none; b=je+Y7Yhn93+8fkuWshEoOgyl3fjA7q4z41TBFmKQRPIr9ZoSQRXxYH/mvDq+kZXDLm4+T48wAIYGGdedhwruJ0mdYywIBR90IhB9SxALIVy7FdCAHVH2bFH5h3qDc9Q8UwgC4Ec11KMb7OP/LvBKg39KIuRMhftiL8o4FD3YFpA=
+	t=1711385216; cv=none; b=eDiEuJzs5sqhDFtaRd2T6R6vLqFU83dTiNvZGKLjCqPhrAd5iypVLxZJasnToOLIpO83fJgEAUJy+CMXEu/cgrzKlyMbWsrDpHCrHEVzMTGiW1rw9yU44YuWGms2f7Wo6clMqz9svZ+1HE2HImQEshAbW+wjyS8PgfJ6ihZ78DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711385213; c=relaxed/simple;
-	bh=xhIq0W/I4V0yoexpOywu6XvIpcQXqJpxEVh0bG9b7aE=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=RleCj+67rZAKwoaXOjWfL1IzV+u1/CYUBqDM2iHJI63JfcxvdAGkjYv7Bt6Pg/8Cv9duaNQ8tYhHOmuIQroqlyEDhr880eb4NBP2W4YYXW0hcr0TTLc8QEX/nAbL/lcvUB/hk6r2a7eLyvD7QZoIYEY8zZSPo8o971dXxKkOg2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eyLrd3vu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nVuYMe/P; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1711385216; c=relaxed/simple;
+	bh=J+36lp0gdXkJUsBG/bMVoEt5BGuwFPhWNWXFyIVqWZU=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=T6DycFmRXTxnAGWSUmZzd5824iGXiroJzK7H6p9w8vFHYhCXMj50/VAeKOsWV6cvcL+ghowefRn8Ij3gzq0lNiRcez+nbfIiTHIRTW+boNuREmFdQ3Fc6X8OfEPMkSKDleJdJUZyYCJcPuxyMwAU5RI5G8xt8bWpZKuX27VFEvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4xWT2khX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pkCHKb17; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eyLrd3vu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nVuYMe/P"
-Date: Mon, 25 Mar 2024 16:46:49 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4xWT2khX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pkCHKb17"
+Date: Mon, 25 Mar 2024 16:46:52 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711385209;
+	s=2020; t=1711385213;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=My5M8jp2lcEnM+1qj5/Vvgxpc82/dTNqTly0JFYzrM8=;
-	b=eyLrd3vut/7TxojCM5pUkE3UUAY9hinTvKxUyW11RqAjwZxxCNrBuC+5KhOTOI9FE1JuHE
-	70pKdgJilofgwBC7abqwpE7+pd7JJfCCJw+4dialish5suu4Lb96tUNRll88E+SwgvsPJs
-	sKRA22jOHYtzvmTOEj4lo4veLAWk5DbiYQrH6+5kBdCAHdKHrHLepaZDk0Uo20qqgOwGHu
-	NFIm3vqlbpGPotZAgnd7naz0YUsEARRjzRd2y5GxeBqqyXkVwp13E6GyfiUW8TSXPvv8YC
-	3aeE2pxcKZkOQAI0wMX1gqpVzCjaqi1r8SH6eR1ZltFQJOKioMgnfnWYeuqRhg==
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=PSl27hYqmhD11De4k++XRL2xdjLPYz8sRLTC4lTNNmY=;
+	b=4xWT2khXRV+wMvS2DS0qKvq6Jaz8rbSWEp9cJqKLrZXXsMW/gFqDLK6+rg3ITBz3m+Czkw
+	7IePGCnz4wWaTsaiZi9jHMZu22DvdHbT+BiHCIkusj+oGx3wfvHZgih8lujhcBL0q44anj
+	SnT/EHQsD+m6c3fxNVhhxnjpNCVCY7/9Sc9A70CWBW9VbGAX0i/9U7fovPu63ItehjNBZ+
+	QydDPFgwqae1BUmJbr18yS//RNOBtN5ISSD1g6w19pX6n4Gxp7lB6T77Sa5T4i3pmkvwDJ
+	4YOHG5f6Hu8RBoBKMtk8RNU5sXoSy4/PemxNy3svwCboNGrQnM4DMu2Y1jHIxA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711385209;
+	s=2020e; t=1711385213;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=My5M8jp2lcEnM+1qj5/Vvgxpc82/dTNqTly0JFYzrM8=;
-	b=nVuYMe/PKVB5xitFV1pZq0heBet43npAHMrUcKDdmomaaL/h/Bb900RW03+VubMYXL2JIu
-	IN8GjSyujbqQU7CA==
-From: "tip-bot2 for Anup Patel" <tip-bot2@linutronix.de>
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=PSl27hYqmhD11De4k++XRL2xdjLPYz8sRLTC4lTNNmY=;
+	b=pkCHKb177HcHjb9t1f8Ixyc0H3MxQGnV/S7YYmk0G/Unp6z1BNWpU3oPMlUxmr8Y8lqFg+
+	hGqkqFODwt1ZYxCA==
+From: "tip-bot2 for Biju Das" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: irq/core] dt-bindings: interrupt-controller: Add RISC-V advanced PLIC
-Cc: Anup Patel <apatel@ventanamicro.com>, Thomas Gleixner <tglx@linutronix.de>,
- bjorn@rivosinc.com, Conor Dooley <conor.dooley@microchip.com>, x86@kernel.org,
+ [tip: irq/core] irqchip/renesas-rzg2l: Simplify rzg2l_irqc_irq_{en,dis}able()
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240307140307.646078-6-apatel@ventanamicro.com>
-References: <20240307140307.646078-6-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171138520913.10875.12939787502719525416.tip-bot2@tip-bot2>
+Message-ID: <171138521269.10875.198902082430228575.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     3b806a5a1a39d593d6fe0def2ef474402f551f91
-Gitweb:        https://git.kernel.org/tip/3b806a5a1a39d593d6fe0def2ef474402f5=
-51f91
-Author:        Anup Patel <apatel@ventanamicro.com>
-AuthorDate:    Thu, 07 Mar 2024 19:33:03 +05:30
+Commit-ID:     46efb3053f4f23357e9e29f8abaa6f801d956a0c
+Gitweb:        https://git.kernel.org/tip/46efb3053f4f23357e9e29f8abaa6f801d956a0c
+Author:        Biju Das <biju.das.jz@bp.renesas.com>
+AuthorDate:    Mon, 18 Mar 2024 08:50:41 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Mon, 25 Mar 2024 17:38:28 +01:00
 
-dt-bindings: interrupt-controller: Add RISC-V advanced PLIC
+irqchip/renesas-rzg2l: Simplify rzg2l_irqc_irq_{en,dis}able()
 
-Add DT bindings document for RISC-V advanced platform level interrupt
-controller (APLIC) defined by the RISC-V advanced interrupt architecture
-(AIA) specification.
+Simplify rzg2l_irqc_irq_{en,dis}able() by moving common code to
+rzg2l_tint_irq_endisable().
 
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
-Link: https://lore.kernel.org/r/20240307140307.646078-6-apatel@ventanamicro.c=
-om
 
 ---
- Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml | 17=
-2 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 172 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ri=
-scv,aplic.yaml
+ drivers/irqchip/irq-renesas-rzg2l.c | 28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,apl=
-ic.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.=
-yaml
-new file mode 100644
-index 0000000..190a649
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
-@@ -0,0 +1,172 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/riscv,aplic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
+index ae67fec..f6484bf 100644
+--- a/drivers/irqchip/irq-renesas-rzg2l.c
++++ b/drivers/irqchip/irq-renesas-rzg2l.c
+@@ -138,7 +138,7 @@ static void rzg2l_irqc_eoi(struct irq_data *d)
+ 	irq_chip_eoi_parent(d);
+ }
+ 
+-static void rzg2l_irqc_irq_disable(struct irq_data *d)
++static void rzg2l_tint_irq_endisable(struct irq_data *d, bool enable)
+ {
+ 	unsigned int hw_irq = irqd_to_hwirq(d);
+ 
+@@ -151,30 +151,24 @@ static void rzg2l_irqc_irq_disable(struct irq_data *d)
+ 
+ 		raw_spin_lock(&priv->lock);
+ 		reg = readl_relaxed(priv->base + TSSR(tssr_index));
+-		reg &= ~(TIEN << TSSEL_SHIFT(tssr_offset));
++		if (enable)
++			reg |= TIEN << TSSEL_SHIFT(tssr_offset);
++		else
++			reg &= ~(TIEN << TSSEL_SHIFT(tssr_offset));
+ 		writel_relaxed(reg, priv->base + TSSR(tssr_index));
+ 		raw_spin_unlock(&priv->lock);
+ 	}
++}
 +
-+title: RISC-V Advanced Platform Level Interrupt Controller (APLIC)
-+
-+maintainers:
-+  - Anup Patel <anup@brainfault.org>
-+
-+description:
-+  The RISC-V advanced interrupt architecture (AIA) defines an advanced
-+  platform level interrupt controller (APLIC) for handling wired interrupts
-+  in a RISC-V platform. The RISC-V AIA specification can be found at
-+  https://github.com/riscv/riscv-aia.
-+
-+  The RISC-V APLIC is implemented as hierarchical APLIC domains where all
-+  interrupt sources connect to the root APLIC domain and a parent APLIC
-+  domain can delegate interrupt sources to it's child APLIC domains. There
-+  is one device tree node for each APLIC domain.
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - qemu,aplic
-+      - const: riscv,aplic
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  interrupts-extended:
-+    minItems: 1
-+    maxItems: 16384
-+    description:
-+      Given APLIC domain directly injects external interrupts to a set of
-+      RISC-V HARTS (or CPUs). Each node pointed to should be a riscv,cpu-intc
-+      node, which has a CPU node (i.e. RISC-V HART) as parent.
-+
-+  msi-parent:
-+    description:
-+      Given APLIC domain forwards wired interrupts as MSIs to a AIA incoming
-+      message signaled interrupt controller (IMSIC). If both "msi-parent" and
-+      "interrupts-extended" properties are present then it means the APLIC
-+      domain supports both MSI mode and Direct mode in HW. In this case, the
-+      APLIC driver has to choose between MSI mode or Direct mode.
-+
-+  riscv,num-sources:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 1023
-+    description:
-+      Specifies the number of wired interrupt sources supported by this
-+      APLIC domain.
-+
-+  riscv,children:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    minItems: 1
-+    maxItems: 1024
-+    items:
-+      maxItems: 1
-+    description:
-+      A list of child APLIC domains for the given APLIC domain. Each child
-+      APLIC domain is assigned a child index in increasing order, with the
-+      first child APLIC domain assigned child index 0. The APLIC domain child
-+      index is used by firmware to delegate interrupts from the given APLIC
-+      domain to a particular child APLIC domain.
-+
-+  riscv,delegation:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    minItems: 1
-+    maxItems: 1024
-+    items:
-+      items:
-+        - description: child APLIC domain phandle
-+        - description: first interrupt number of the parent APLIC domain (in=
-clusive)
-+        - description: last interrupt number of the parent APLIC domain (inc=
-lusive)
-+    description:
-+      A interrupt delegation list where each entry is a triple consisting
-+      of child APLIC domain phandle, first interrupt number of the parent
-+      APLIC domain, and last interrupt number of the parent APLIC domain.
-+      Firmware must configure interrupt delegation registers based on
-+      interrupt delegation list.
-+
-+dependencies:
-+  riscv,delegation: [ "riscv,children" ]
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - riscv,num-sources
-+
-+anyOf:
-+  - required:
-+      - interrupts-extended
-+  - required:
-+      - msi-parent
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    // Example 1 (APLIC domains directly injecting interrupt to HARTs):
-+
-+    interrupt-controller@c000000 {
-+      compatible =3D "qemu,aplic", "riscv,aplic";
-+      interrupts-extended =3D <&cpu1_intc 11>,
-+                            <&cpu2_intc 11>,
-+                            <&cpu3_intc 11>,
-+                            <&cpu4_intc 11>;
-+      reg =3D <0xc000000 0x4080>;
-+      interrupt-controller;
-+      #interrupt-cells =3D <2>;
-+      riscv,num-sources =3D <63>;
-+      riscv,children =3D <&aplic1>, <&aplic2>;
-+      riscv,delegation =3D <&aplic1 1 63>;
-+    };
-+
-+    aplic1: interrupt-controller@d000000 {
-+      compatible =3D "qemu,aplic", "riscv,aplic";
-+      interrupts-extended =3D <&cpu1_intc 9>,
-+                            <&cpu2_intc 9>;
-+      reg =3D <0xd000000 0x4080>;
-+      interrupt-controller;
-+      #interrupt-cells =3D <2>;
-+      riscv,num-sources =3D <63>;
-+    };
-+
-+    aplic2: interrupt-controller@e000000 {
-+      compatible =3D "qemu,aplic", "riscv,aplic";
-+      interrupts-extended =3D <&cpu3_intc 9>,
-+                            <&cpu4_intc 9>;
-+      reg =3D <0xe000000 0x4080>;
-+      interrupt-controller;
-+      #interrupt-cells =3D <2>;
-+      riscv,num-sources =3D <63>;
-+    };
-+
-+  - |
-+    // Example 2 (APLIC domains forwarding interrupts as MSIs):
-+
-+    interrupt-controller@c000000 {
-+      compatible =3D "qemu,aplic", "riscv,aplic";
-+      msi-parent =3D <&imsic_mlevel>;
-+      reg =3D <0xc000000 0x4000>;
-+      interrupt-controller;
-+      #interrupt-cells =3D <2>;
-+      riscv,num-sources =3D <63>;
-+      riscv,children =3D <&aplic3>;
-+      riscv,delegation =3D <&aplic3 1 63>;
-+    };
-+
-+    aplic3: interrupt-controller@d000000 {
-+      compatible =3D "qemu,aplic", "riscv,aplic";
-+      msi-parent =3D <&imsic_slevel>;
-+      reg =3D <0xd000000 0x4000>;
-+      interrupt-controller;
-+      #interrupt-cells =3D <2>;
-+      riscv,num-sources =3D <63>;
-+    };
-+...
++static void rzg2l_irqc_irq_disable(struct irq_data *d)
++{
++	rzg2l_tint_irq_endisable(d, false);
+ 	irq_chip_disable_parent(d);
+ }
+ 
+ static void rzg2l_irqc_irq_enable(struct irq_data *d)
+ {
+-	unsigned int hw_irq = irqd_to_hwirq(d);
+-
+-	if (hw_irq >= IRQC_TINT_START && hw_irq < IRQC_NUM_IRQ) {
+-		struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
+-		u32 offset = hw_irq - IRQC_TINT_START;
+-		u32 tssr_offset = TSSR_OFFSET(offset);
+-		u8 tssr_index = TSSR_INDEX(offset);
+-		u32 reg;
+-
+-		raw_spin_lock(&priv->lock);
+-		reg = readl_relaxed(priv->base + TSSR(tssr_index));
+-		reg |= TIEN << TSSEL_SHIFT(tssr_offset);
+-		writel_relaxed(reg, priv->base + TSSR(tssr_index));
+-		raw_spin_unlock(&priv->lock);
+-	}
++	rzg2l_tint_irq_endisable(d, true);
+ 	irq_chip_enable_parent(d);
+ }
+ 
