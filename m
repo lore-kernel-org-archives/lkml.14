@@ -1,227 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8100C16D32F
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 13:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737BB129E6A
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 13:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711372694; cv=none; b=VpbvbYozMP0XwXx060932DcugQWgssLJ0F0ZG4p2s24cFQHsnSMzjjUpeH7IpEDJm/IASXO8KmPu5AddTvQjqYBEtFOmdV8a9Ipg22GoovuEe5h3Gy7sNwH7tAg1EeOHotMkYd+jV+xQX6B6xbHoWxtY4szgJeRaa7A0ZmCjOrc=
+	t=1711372729; cv=none; b=MJKejnre+en7lEF3AWDUvk3KevqET6T05hBQaNxtEoo/Wkjbr7Bh6FyqB6VwtpL/xCc8IHUNn1IxETEZQ4tdELwC8eX7gEU1ux3thmN93JvOxImhP3kZwoeNxesp1SW9QhCg4yuDP9Z66DM9FcBSJA5JsE9scCQcLLfXmPMbpSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711372694; c=relaxed/simple;
-	bh=ny+/lmW+s523HLVgxuU52GFTaccOdrXZFGeAMu3G6Ck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dLpz8Is6TYREyF0VvyK7rrxSXzeEhwZNenfXf3zx7yzPYBv5OgoO/jaFoMYsQxSXyil1RY9uhZaQSbquhUBj2JWHQDXp+BiCHoMuqCTaS9UOdK66Zd130rvAkbR+CnCMRiSpWAmvUZ7fZsUdPRq+78ol2h4fjZIHty+MR2rz8nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=da/oDJKC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711372729; c=relaxed/simple;
+	bh=/jRdDNHwSEGE3CvNzenljKZrdw33DtVzFmmgraXk5cY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tQ0vkVbktIHvMDta5fuhl9ESfEsrRDucQedDDjMXtLNtOO0j/oJC/4Ad9hY+ztaXEAGWlQ1fCTz3n4c5I7X05l66Uzk67F+Z0Uh3ySI5PeT4z/fS99gtb4N1zUIrtyfeqI+CxTrI7DEqVUXVJpie+E3MKvIEEfIu8ByDMyjE0vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wp5VY1Wf; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="da/oDJKC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711372690;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hZ4xCnKVV4H4Bbt4l6fsZyT3yFsKLmY8H1MMMB/lRws=;
-	b=da/oDJKC5cGXQzFVBkoe/XBxsphN+ySGleHQlDGNcTU0s1dUjRCrOZCK5NLcF/KYhDqdSY
-	mjaGMf58lEwkfc9CKhg7T5mQhXZTgDnl/+aE+Z3LmGQwZ6O2Nv5Fuch2yEuRJ37JuJPyp4
-	1GfsPP/b7KCxorcDo4k46yUC9IVhmpk=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-517-8AS86pm7OHW2AVQX4QxadA-1; Mon, 25 Mar 2024 09:18:05 -0400
-X-MC-Unique: 8AS86pm7OHW2AVQX4QxadA-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-515ab42c302so777488e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 06:18:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wp5VY1Wf"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-611639a0e4eso4886417b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 06:18:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711372726; x=1711977526; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NYNXzQvnM81GzIL8Aewj9RD25qOiiYInoW3gilEhTKQ=;
+        b=wp5VY1Wfm70k4P17Tw+z04AGasIDMo8le8mXybAqh7q05xF6b43soDEJche7GjyrGk
+         ZdVTSLKAdhBfd51jqnssMcnm+YmiMOpF9E0L7M1ub951czdx2t8RepjY8Hl1c1NsL7ut
+         kQOW9b2X9J+Luf8uRCqfF96Esywug2hJIrN5lnGqtYVI6nl4fxeOD7gl6uaPAFsSivzZ
+         CGahPOSapX95UdRhxHxq7qbRv/rz+nAAgnKeMp/lWkt+Cm+Z1djEt23gyIINv9ihsnO/
+         0+TeRZvfqYnf5EeWVAAS27varXrirHOfVkmmY1d6Saahrf6VjxdAydZdhHoV8gbT0qsO
+         PSCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711372683; x=1711977483;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hZ4xCnKVV4H4Bbt4l6fsZyT3yFsKLmY8H1MMMB/lRws=;
-        b=dc4MxlmhtzD12jYu1qx3fuK+plUZSOQe6WTbVfv/23XpAuu7np3uJa9mzaIogZnmg8
-         oJ97a6413VOsyJ0/9ZUJzUJd9MRcUSztbCP9lOrZwmFa7DEC0pX2iQmV0F/a1M/lcEco
-         IDXQnyQmBP+SaRnt5PpjkhmGK3XN6pPWRA5GUhspq9UgWo8NcOm5+azCLGMJes7CC15Z
-         4IV57jUr71EP83VShR6IlZ7CvOHShxr0U3b5KJUjTP7yp9glvbBqvgCZAWd8UJECnxVa
-         vjpqFPfzNBSDB35FtsCumS999dwsUg0IXSJjTwexZG78reJAvrFxvT+SYOcDkkChBCoJ
-         aCnw==
-X-Gm-Message-State: AOJu0YwnM/LvrRcGD+o8Mhb2OcVsf6mI1tx16aMQWqBEwnG175Gzn5N0
-	QLVwnNpgaiEH5AjlwL/nEs2u8dduzlqmXD8hIVAhdgiquOsK9zHmH6MTOLy8TK+ZiqWtoZIZe6y
-	5FfKr1mB8EXbwTJcU8kc5gfsAmpwiRoNHjQYviRT5aGaHgGXexTNEGl2gmDCV3S9vA68S4Q==
-X-Received: by 2002:ac2:59c1:0:b0:515:9ae2:93b0 with SMTP id x1-20020ac259c1000000b005159ae293b0mr4227890lfn.19.1711372683514;
-        Mon, 25 Mar 2024 06:18:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFSTinL2X+dxfG8jdn+IUJTGE3MpMt3TOI7hbbtPSSC0L5vDKdUAa8nk2uzJ5dzrPgTMyJBRw==
-X-Received: by 2002:ac2:59c1:0:b0:515:9ae2:93b0 with SMTP id x1-20020ac259c1000000b005159ae293b0mr4227879lfn.19.1711372683143;
-        Mon, 25 Mar 2024 06:18:03 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id dt12-20020a170906b78c00b00a473a0f3384sm3067842ejb.16.2024.03.25.06.18.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 06:18:02 -0700 (PDT)
-Message-ID: <5b32b8c8-0a1b-44cf-aedf-cca1d6c83bd8@redhat.com>
-Date: Mon, 25 Mar 2024 14:18:01 +0100
+        d=1e100.net; s=20230601; t=1711372726; x=1711977526;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NYNXzQvnM81GzIL8Aewj9RD25qOiiYInoW3gilEhTKQ=;
+        b=C3DCIMt6Rri/xLbUs/FK/ZE8FzZ8DMHmRjlLDV+EPW8Mn00osXn/8aT61THAjLMfF6
+         AvTtX4jr8SYX30bnH2GiUxKYCbBT5KLmeSef42DZ3dxz8zt2MWBmGgGUvAfDetMOZC9r
+         8cQS1VnJSaNCxTwAqV8+lupEArH51XLd47RrsIgklQ962vetF0in4H5S76otFJ6JMJV/
+         AE+WhGVZBjW9/fbi2xbFpCvOwlj+hHfRVIMGGrMpJ6cm2H7mugANZDWVMuPFajq2JTjy
+         UqLan4EPQf+ePIs2Fn7vOykMFFjw8ddmbFYKziq730HfaksN3WU0hJjhA2zImnpgov2y
+         seIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXwy49WwFuhkdOksHAdbGuo8uVRkRsylE8fvW0MqHfKAGzinDnEjre/hM1qiWYfwRycGAzR8P69BqLmmRAGN37lUvbc8JSJ9A8DxGEE
+X-Gm-Message-State: AOJu0YyKAZNw7Y8nxu+HY+ZZQqHpUs43wXoUH/5QP9Xepp5AOL7CO664
+	EacTs7rKH8/i4yASdYy2P8o+MlDqyRzvOMwmn4BFZmQ9GbAHCGs0xKXYoci0+1uJzuYpb/Pdw4L
+	44UJtPisPxgpwTJ09IG1t32Lw8NW77ZsGuoJoKffOefUiya+X
+X-Google-Smtp-Source: AGHT+IGozDfzk/PpYVV3Podxdbcg3FDTwqthJMX3zLNj8qanWGweFd7Xrq4deF/MtbEaepC9/bmv1+SARlRLK2BDQog=
+X-Received: by 2002:a5b:5c9:0:b0:dc6:ab85:ba89 with SMTP id
+ w9-20020a5b05c9000000b00dc6ab85ba89mr2862877ybp.25.1711372726409; Mon, 25 Mar
+ 2024 06:18:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/efistub: Add missing boot_params for mixed mode
- compat entry
-Content-Language: en-US, nl
-To: Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
- Clayton Craft <clayton@craftyguy.net>
-References: <20240325083905.13163-2-ardb+git@google.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240325083905.13163-2-ardb+git@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240307114600.3643948-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240307114600.3643948-1-andriy.shevchenko@linux.intel.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 25 Mar 2024 14:18:10 +0100
+Message-ID: <CAPDyKFrKBiR7vnqPj_0iaAcQu9v0hdn0FHdGLgeCS3ZVYPdodg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] mmc: core: Remove unused of_gpio.h
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+On Thu, 7 Mar 2024 at 12:46, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> of_gpio.h is deprecated and subject to remove.
+> The driver doesn't use it, simply remove the unused header.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 3/25/24 9:39 AM, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> The native EFI stub entry point does not take a struct boot_params from
-> the boot loader, but creates it from scratch, and populates only the
-> fields that still have meaning in this context (command line, initrd
-> base and size, etc)
-> 
-> The original mixed mode implementation used the EFI handover protocol,
-> where the boot loader (i.e., GRUB) populates a struct boot_params and
-> passes it to a special EFI entry point that takes the struct boot_params
-> pointer as the third argument.
-> 
-> When the new mixed mode implementation was introduced, using a special
-> 32-bit PE entrypoint in the 64-bit kernel, it adopted the usual
-> prototype, and relied on the EFI stub to create the struct boot_params
-> as usual. This is preferred because it makes the bootloader side much
-> easier to implement, as it does not need any x86-specific knowledge on
-> how struct boot_params and struct setup_header are put together.
-> 
-> However, one thing was missed: EFI mixed mode goes through startup_32()
-> *before* entering the 64-bit EFI stub, which is difficult to avoid given
-> that 64-bit execution requires page tables, which can only be populated
-> using 32-bit code, and this piece is what the mixed mode EFI stub relies
-> on. startup_32() accesses a couple of struct boot_params fields to
-> decide where to place the page tables.
-> 
-> startup_32() turns out to be quite tolerant to bogus struct boot_params,
-> given that ESI used to contain junk when entering via the new mixed mode
-> protocol. Only when commit
-> 
->   e2ab9eab324c ("x86/boot/compressed: Move 32-bit entrypoint code into .text section")
-> 
-> started to zero ESI explicitly when entering via this boot path, boot
-> failures started to appear on some systems, presumably ones that unmap
-> page 0x0 or map it read-only.
-> 
-> The solution is to pass a special, temporary struct boot_params to
-> startup_32() via ESI, one that is sufficient for getting it to create
-> the page tables correctly and is discarded right after. This means
-> setting a minimal alignment of 4k, only to get the statically allocated
-> page tables line up correctly, and setting init_size to the executable
-> image size (_end - startup_32). This ensures that the page tables are
-> covered by the static footprint of the PE image.
-> 
-> Given that EFI boot no longer calls the decompressor and no longer pads
-> the image to permit the decompressor to execute in place, the same
-> temporary struct boot_params should be used in the EFI handover protocol
-> based mixed mode implementation as well, to prevent the page tables from
-> being placed outside of allocated memory.
-> 
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Fixes: e2ab9eab324c ("x86/boot/compressed: Move 32-bit entrypoint code into .text section")
-> Closes: https://lore.kernel.org/all/20240321150510.GI8211@craftyguy.net/
-> Reported-by: Clayton Craft <clayton@craftyguy.net>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Applied for next, thanks!
 
-I have given this a test run (on top of 6.9-rc1) on one of my
-Bay Trail mixed mode tablets and the tablet still boots fine:
-
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
+Kind regards
+Uffe
 
 
 > ---
->  arch/x86/boot/compressed/efi_mixed.S | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/boot/compressed/efi_mixed.S b/arch/x86/boot/compressed/efi_mixed.S
-> index 07873f269b7b..c7c108c0bcf0 100644
-> --- a/arch/x86/boot/compressed/efi_mixed.S
-> +++ b/arch/x86/boot/compressed/efi_mixed.S
-> @@ -15,10 +15,12 @@
->   */
->  
->  #include <linux/linkage.h>
-> +#include <asm/asm-offsets.h>
->  #include <asm/msr.h>
->  #include <asm/page_types.h>
->  #include <asm/processor-flags.h>
->  #include <asm/segment.h>
-> +#include <asm/setup.h>
->  
->  	.code64
->  	.text
-> @@ -155,6 +157,7 @@ SYM_FUNC_END(__efi64_thunk)
->  SYM_FUNC_START(efi32_stub_entry)
->  	call	1f
->  1:	popl	%ecx
-> +	leal	(efi32_boot_args - 1b)(%ecx), %ebx
->  
->  	/* Clear BSS */
->  	xorl	%eax, %eax
-> @@ -169,6 +172,7 @@ SYM_FUNC_START(efi32_stub_entry)
->  	popl	%ecx
->  	popl	%edx
->  	popl	%esi
-> +	movl	%esi, 8(%ebx)
->  	jmp	efi32_entry
->  SYM_FUNC_END(efi32_stub_entry)
->  #endif
-> @@ -245,8 +249,6 @@ SYM_FUNC_END(efi_enter32)
->   *
->   * Arguments:	%ecx	image handle
->   * 		%edx	EFI system table pointer
-> - *		%esi	struct bootparams pointer (or NULL when not using
-> - *			the EFI handover protocol)
->   *
->   * Since this is the point of no return for ordinary execution, no registers
->   * are considered live except for the function parameters. [Note that the EFI
-> @@ -272,9 +274,18 @@ SYM_FUNC_START_LOCAL(efi32_entry)
->  	leal	(efi32_boot_args - 1b)(%ebx), %ebx
->  	movl	%ecx, 0(%ebx)
->  	movl	%edx, 4(%ebx)
-> -	movl	%esi, 8(%ebx)
->  	movb	$0x0, 12(%ebx)          // efi_is64
->  
-> +	/*
-> +	 * Allocate some memory for a temporary struct boot_params, which only
-> +	 * needs the minimal pieces that will get us through startup_32().
-> +	 */
-> +	subl	$PARAM_SIZE, %esp
-> +	movl	%esp, %esi
-> +	movl	$PAGE_SIZE, BP_kernel_alignment(%esi)
-> +	movl	$_end - 1b, BP_init_size(%esi)
-> +	subl	$startup_32 - 1b, BP_init_size(%esi)
-> +
->  	/* Disable paging */
->  	movl	%cr0, %eax
->  	btrl	$X86_CR0_PG_BIT, %eax
-> @@ -300,8 +311,7 @@ SYM_FUNC_START(efi32_pe_entry)
->  
->  	movl	8(%ebp), %ecx			// image_handle
->  	movl	12(%ebp), %edx			// sys_table
-> -	xorl	%esi, %esi
-> -	jmp	efi32_entry			// pass %ecx, %edx, %esi
-> +	jmp	efi32_entry			// pass %ecx, %edx
->  						// no other registers remain live
->  
->  2:	popl	%edi				// restore callee-save registers
-
+>  drivers/mmc/core/host.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index 8f8781d6c25e..48bda70145ee 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -13,7 +13,6 @@
+>  #include <linux/err.h>
+>  #include <linux/idr.h>
+>  #include <linux/of.h>
+> -#include <linux/of_gpio.h>
+>  #include <linux/pagemap.h>
+>  #include <linux/pm_wakeup.h>
+>  #include <linux/export.h>
+> --
+> 2.43.0.rc1.1.gbec44491f096
+>
