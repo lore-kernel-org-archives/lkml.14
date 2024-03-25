@@ -1,211 +1,200 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779CC1966A4
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B568199E8A
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711361061; cv=none; b=jdQ/hi+GAmK+6pl2G3tzdablIHeSLsqogK/2LgNgzpcdHbDupaOQyHekYc+PLHlqdG+caEyhh0mY/t0Sb4FpnVOAHs3iyRZsSKZKVHQC50XJsoypT0yjlgeWtf5oe3cRcEGorGwOi5Rs/z2iNu7Zzec4zyOhKerqczJnAC6BvJY=
+	t=1711361149; cv=none; b=g9/8Zll0KTYP62/g3Z4YF5Wp+s5N5FzluxO3AzfJHxhucXDUiIWU5+4eKG8InDitT5B+MmiT2VsLBdBStG2AdbGP85ReDoEG2C6UxJ4L0TPbJeQommrFPpyxfTMGmgGr4o03hy1I4nqk9zsB57TNtQEGaNaudTlSOrS3BgpKjYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711361061; c=relaxed/simple;
-	bh=lSgjcgnvH6aUwQLw5EoB/MQVa1YpVl7Vq0vuihO2tqo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aMLpM2dwW5RvaaT30XuiSWWvlzvyVhfZQFxGEWHCg6EOja/+7uKp28Xme47FxSoWQz4IUBtypiv98tMKX1N55m0MqauYS2mzSzeLEbSYOEwLfMRRZbNP/c2riKzqsR9IUb5rDe8gMH5bS/w5QvN1ZQa+R1QlEjydQs9KYo5naOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=F6F4BGRf; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1711361149; c=relaxed/simple;
+	bh=+jhV52bal85mD3CXpudud6EoSW66gCmXp4eqojLaj9E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=trjPE8+kglE1vXoLExVRYEEZv3BUWWzeHzuQokGjRY/sWV4dg36sGF6eFp7PBwUoGGir8AU/SagFmIR6lu2+nPYL0OlIcsGaV7ZXQzGEmqzlJ8JgiSXt7kR8VX8Z+BEHLEL3DR8awh3Vkz48Cfez+BetO37cE7D4HbRePx7GJwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d9LCoRgZ; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="F6F4BGRf"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-341cce3e5f0so795802f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:04:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d9LCoRgZ"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56c1a50b004so2551a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:05:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711361057; x=1711965857; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1711361145; x=1711965945; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+4+dJf6arGYhNMNbnDj3J5bx1sPusy2X6VNsV11mqig=;
-        b=F6F4BGRflLydi5oF0hw0lB9gXq8sZGByqAQO7PgZHIICm1QJroPUN3uCktzlvkDM6Z
-         gp29seOQvuucQeVIYx9oCSEMtMXzmW3KmmOfRZC1yYnsFarp0JSFg8J2gJ8AUXAEXsad
-         s7XyYcnLER3t1UMyQVvQBQQLz8fGPR4s9ACTpL6jiXZTV1LsGwUbdAC40b7WjPavZULV
-         BQJpczIxJiSaeYS6q6gI+Gbi2JAYXJ8xXS7xZiVKU0p9V4LeETEJ5pV23+PKxOz1dd4t
-         2XhYqsBubP7fXjopGKPkG+j1SOL4FjszQ5t/vLST+FUDe/TOkhrNAdPBcPvqSag44oUm
-         F2tQ==
+        bh=IoiT2n6Yi3d00YcHBvfYpjh1CDZ627EZJhhUjywg0l0=;
+        b=d9LCoRgZReFtfie4FC0lmridNgs6RYKsco5RAMuuKlGhc0KA3Lvd13h+NG8rHhPmPs
+         Gny36mXasKRYnk6P5d8+3FqmkQm3pXCrGHLZ3/ERCCaKuSaXbAigGrXjS1d3FF3LFr0c
+         uGgvosmeMlYvaLvrP180CpYXO1NfRzzuJhSiguL4oD/PYIKw36d4gpOKXzsY7hXD8x+a
+         LvJuW7R52/GQqPjriXdSd2GhXfhf6kKlVE7eH1Ym3S3de99b/2DjW5rW4/NwC2+ZabPU
+         BHAgHYzzN7CcfXY8nJhQfabATPz4zjEkZNcS364Mkl1BI7eY4mQvsvg/ktUo8g/V7Jzk
+         ebEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711361057; x=1711965857;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711361145; x=1711965945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+4+dJf6arGYhNMNbnDj3J5bx1sPusy2X6VNsV11mqig=;
-        b=IeflROKI1dDeBw1tcuHBiX1V4xq1M+jm2N+2pL/na5APE3x0MbPsaSVcvRHUSpRmoH
-         vDrwUZM7PTvUxxnSaJMBQSZY5pUbCuagWPTwGPH6yNBgFXEC7boesNdE9TcTAPB4SHv9
-         PAGnMG/m8Sqkcq84+sVoInD63XPqMYJbK6MHByfmSQTSwvBKRvnp7bJDnwRgGtYV9nfR
-         0kUanE5Mifng0ESoAAlQved3RjaI7nd+SxQzdhoCAklhu5jlsZ+SzKbWEuVtFOFAq4ui
-         0en46xeHO0r7WaCS4Zu+UQRIw99IlRA/6G5U5LldnfgMx7N+FvO7zoKGoggeGVE638KJ
-         w2OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhI0WbO43jC0EiM5uI4aDky+XdgoGWfCa6kIQVY1u/Q2p/odt3f+QtcN10ohtYTCnT+fmRJjC0NYho+R7DNwr90P9y+6qFVoOznW33
-X-Gm-Message-State: AOJu0Yz53ORG2K9EAhwD/7XpI+3rMrOYxM3+mRnlocgTcw/s3BZ4xL/Z
-	M1DWkFtWxEBrp2jFt0QVQpoM2UlPzobvcWq0mBA4ziezPIVvCMCpOlEcxW+lcds=
-X-Google-Smtp-Source: AGHT+IEkkZsBnp0pP6MAMwtPkvyKZCO/XD4p9hpMGTvLyBcd5Wa7WEDbnL4tGVoZ/jFZI8OhjLph3Q==
-X-Received: by 2002:adf:cd0b:0:b0:33e:72f4:2ae with SMTP id w11-20020adfcd0b000000b0033e72f402aemr5064875wrm.68.1711361056958;
-        Mon, 25 Mar 2024 03:04:16 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:861d:8b72:a859:4ce9])
-        by smtp.gmail.com with ESMTPSA id dv13-20020a0560000d8d00b0033e25c39ac3sm9086874wrb.80.2024.03.25.03.04.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 03:04:16 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Andy Gross <agross@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Elliot Berman <quic_eberman@quicinc.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Guru Das Srinagesh <quic_gurus@quicinc.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Alex Elder <elder@linaro.org>,
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@quicinc.com,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Deepti Jaggi <quic_djaggi@quicinc.com>
-Subject: [PATCH v9 10/13] firmware: qcom: scm: add support for SHM bridge operations
-Date: Mon, 25 Mar 2024 11:03:56 +0100
-Message-Id: <20240325100359.17001-11-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240325100359.17001-1-brgl@bgdev.pl>
-References: <20240325100359.17001-1-brgl@bgdev.pl>
+        bh=IoiT2n6Yi3d00YcHBvfYpjh1CDZ627EZJhhUjywg0l0=;
+        b=O08iP4YDzw8F+3vHCeLeh2U14V5cq2soly1J8046vOoUeEriG012ePqAcmzqBuRtMP
+         lhxzGBBwt/+fTZLkbpOzN2LPacvLo8QUw5HuqFgrNDpB/qa5b55YsW6ru4RZzyPoYz+s
+         4NmEjKJuErBfHsOQBqLtMXcGmdONa0XhWkUEMCWmtN3ndNhOa0OsmkNo0+iC6cEFB2/G
+         TjG7q9Ewu6/EiaMtKx1fdRBZ0QI2NChYOvWbYhx/bmhhtzJ+5X90TXu535aKll798BkC
+         s5LFQSiHsUFzS2hE57eejYLAz+HAKSBjAhlRmFLjpCf7jZ14C90ZhVUeHiYxN8l2F/Nf
+         aHiA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYn3s2gFBGHUPKfM7g8QqvBIvKinaNT545hwRXQDCzr/rFCw6IFqE+GSMxkNcnprDgFXY7D9AVu9OYQUdpr3onh0Om14KWXrCMG+Ij
+X-Gm-Message-State: AOJu0YzR/6afM/DqdRLmuAmd6gyhCQkG5pCaI+JrkLQlZ2rbHZpUsF6u
+	/mRZ0mrv7b0qF7SaRSAwQXFnjkCx1FvWka7x2GLG+zF4PMWxsedmwehzVL9Zk3041RNAAFTrqKU
+	lYoHIR3AEFSwZ6S+tQq3jeM/fxGSd9n8uddqk
+X-Google-Smtp-Source: AGHT+IH3z0zRq03nVuaQDRwAJwU6dTgc9PGIzVceNPR7LTN/Ml6pDakMuvc7evYIuEtT/XesUJ5MCranpHjm0FIgT4k=
+X-Received: by 2002:aa7:da8b:0:b0:568:7767:14fd with SMTP id
+ q11-20020aa7da8b000000b00568776714fdmr659526eds.7.1711361144563; Mon, 25 Mar
+ 2024 03:05:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240324050554.1609460-1-syoshida@redhat.com> <CANn89iL_Oz58VYNLJ6eB=qgmsgY9juo9xAhaPKKaDqOxrjf+0w@mail.gmail.com>
+ <20240325.183800.473265130872711273.syoshida@redhat.com>
+In-Reply-To: <20240325.183800.473265130872711273.syoshida@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 25 Mar 2024 11:05:33 +0100
+Message-ID: <CANn89i+VZMvm7YpvPatmQuXeBgh78iFvkFSLYR-KYub4aa6PEg@mail.gmail.com>
+Subject: Re: [PATCH net] ipv4: Fix uninit-value access in __ip_make_skb()
+To: Shigeru Yoshida <syoshida@redhat.com>
+Cc: davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, 
+	pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Mar 25, 2024 at 10:38=E2=80=AFAM Shigeru Yoshida <syoshida@redhat.c=
+om> wrote:
+>
+> On Mon, 25 Mar 2024 10:01:25 +0100, Eric Dumazet wrote:
+> > On Sun, Mar 24, 2024 at 6:06=E2=80=AFAM Shigeru Yoshida <syoshida@redha=
+t.com> wrote:
+> >>
+> >> KMSAN reported uninit-value access in __ip_make_skb() [1].  __ip_make_=
+skb()
+> >> tests HDRINCL to know if the skb has icmphdr. However, HDRINCL can cau=
+se a
+> >> race condition. If calling setsockopt(2) with IP_HDRINCL changes HDRIN=
+CL
+> >> while __ip_make_skb() is running, the function will access icmphdr in =
+the
+> >> skb even if it is not included. This causes the issue reported by KMSA=
+N.
+> >>
+> >> Check FLOWI_FLAG_KNOWN_NH on fl4->flowi4_flags instead of testing HDRI=
+NCL
+> >> on the socket.
+> >>
+> >> [1]
+> >
+> > What is the kernel version for this trace ?
+>
+> Sorry, I used the following version:
+>
+> CPU: 1 PID: 15709 Comm: syz-executor.7 Not tainted 6.8.0-11567-gb3603fcb7=
+9b1 #25
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-1.fc39=
+ 04/01/2014
+>
+> >> BUG: KMSAN: uninit-value in __ip_make_skb+0x2b74/0x2d20 net/ipv4/ip_ou=
+tput.c:1481
+> >>  __ip_make_skb+0x2b74/0x2d20 net/ipv4/ip_output.c:1481
+> >>  ip_finish_skb include/net/ip.h:243 [inline]
+> >>  ip_push_pending_frames+0x4c/0x5c0 net/ipv4/ip_output.c:1508
+> >>  raw_sendmsg+0x2381/0x2690 net/ipv4/raw.c:654
+> >>  inet_sendmsg+0x27b/0x2a0 net/ipv4/af_inet.c:851
+> >>  sock_sendmsg_nosec net/socket.c:730 [inline]
+> >>  __sock_sendmsg+0x274/0x3c0 net/socket.c:745
+> >>  __sys_sendto+0x62c/0x7b0 net/socket.c:2191
+> >>  __do_sys_sendto net/socket.c:2203 [inline]
+> >>  __se_sys_sendto net/socket.c:2199 [inline]
+> >>  __x64_sys_sendto+0x130/0x200 net/socket.c:2199
+> >>  do_syscall_64+0xd8/0x1f0 arch/x86/entry/common.c:83
+> >>  entry_SYSCALL_64_after_hwframe+0x6d/0x75
+> >>
+> >> Uninit was created at:
+> >>  slab_post_alloc_hook mm/slub.c:3804 [inline]
+> >>  slab_alloc_node mm/slub.c:3845 [inline]
+> >>  kmem_cache_alloc_node+0x5f6/0xc50 mm/slub.c:3888
+> >>  kmalloc_reserve+0x13c/0x4a0 net/core/skbuff.c:577
+> >>  __alloc_skb+0x35a/0x7c0 net/core/skbuff.c:668
+> >>  alloc_skb include/linux/skbuff.h:1318 [inline]
+> >>  __ip_append_data+0x49ab/0x68c0 net/ipv4/ip_output.c:1128
+> >>  ip_append_data+0x1e7/0x260 net/ipv4/ip_output.c:1365
+> >>  raw_sendmsg+0x22b1/0x2690 net/ipv4/raw.c:648
+> >>  inet_sendmsg+0x27b/0x2a0 net/ipv4/af_inet.c:851
+> >>  sock_sendmsg_nosec net/socket.c:730 [inline]
+> >>  __sock_sendmsg+0x274/0x3c0 net/socket.c:745
+> >>  __sys_sendto+0x62c/0x7b0 net/socket.c:2191
+> >>  __do_sys_sendto net/socket.c:2203 [inline]
+> >>  __se_sys_sendto net/socket.c:2199 [inline]
+> >>  __x64_sys_sendto+0x130/0x200 net/socket.c:2199
+> >>  do_syscall_64+0xd8/0x1f0 arch/x86/entry/common.c:83
+> >>  entry_SYSCALL_64_after_hwframe+0x6d/0x75
+> >>
+> >> Fixes: 99e5acae193e ("ipv4: Fix potential uninit variable access bug i=
+n __ip_make_skb()")
+> >> Reported-by: syzkaller <syzkaller@googlegroups.com>
+> >> Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
+> >> ---
+> >> I think IPv6 has a similar issue. If this patch is accepted, I will se=
+nd
+> >> a patch for IPv6.
+> >> ---
+> >>  net/ipv4/ip_output.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
+> >> index 1fe794967211..39229fd0601a 100644
+> >> --- a/net/ipv4/ip_output.c
+> >> +++ b/net/ipv4/ip_output.c
+> >> @@ -1473,7 +1473,7 @@ struct sk_buff *__ip_make_skb(struct sock *sk,
+> >>                  * by icmp_hdr(skb)->type.
+> >>                  */
+> >>                 if (sk->sk_type =3D=3D SOCK_RAW &&
+> >> -                   !inet_test_bit(HDRINCL, sk))
+> >> +                   !(fl4->flowi4_flags & FLOWI_FLAG_KNOWN_NH))
+> >>                         icmp_type =3D fl4->fl4_icmp_type;
+> >>                 else
+> >>                         icmp_type =3D icmp_hdr(skb)->type;
+> >> --
+> >> 2.44.0
+> >>
+> >
+> > Thanks for your patch.
+> >
+> > I do not think this is enough, as far as syzkaller is concerned.
+> >
+> > raw_probe_proto_opt() can leave garbage in fl4_icmp_type (and fl4_icmp_=
+code)
+>
+> Thank you for your comment. But I don't understand it clearly. What
+> exactly do you mean by "garbage"?
+>
+> raw_probe_proto_opt() immediately returns 0 if fl4->flowi4_proto is
+> not IPPROTO_ICMP:
+>
+> static int raw_probe_proto_opt(struct raw_frag_vec *rfv, struct flowi4 *f=
+l4)
+> {
+>         int err;
+>
+>         if (fl4->flowi4_proto !=3D IPPROTO_ICMP)
+>                 return 0;
+>
+> In this case, the function doesn't set fl4_icmp_type. Do you mean this
+> case?
 
-SHM Bridge is a safety mechanism allowing to limit the amount of memory
-shared between the kernel and the TrustZone to regions explicitly marked
-as such.
+There are multiple ways to return early from this function.
 
-Add low-level primitives for enabling SHM bridge support as well as
-creating and destroying SHM bridges to qcom-scm.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Acked-by: Andrew Halaney <ahalaney@redhat.com>
-Tested-by: Andrew Halaney <ahalaney@redhat.com> # sc8280xp-lenovo-thinkpad-x13s
-Tested-by: Deepti Jaggi <quic_djaggi@quicinc.com> #sa8775p-ride
-Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
----
- drivers/firmware/qcom/qcom_scm.c       | 60 ++++++++++++++++++++++++++
- drivers/firmware/qcom/qcom_scm.h       |  3 ++
- include/linux/firmware/qcom/qcom_scm.h |  6 +++
- 3 files changed, 69 insertions(+)
-
-diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-index f871af4af829..7a8d67c7b71c 100644
---- a/drivers/firmware/qcom/qcom_scm.c
-+++ b/drivers/firmware/qcom/qcom_scm.c
-@@ -1326,6 +1326,66 @@ bool qcom_scm_lmh_dcvsh_available(void)
- }
- EXPORT_SYMBOL_GPL(qcom_scm_lmh_dcvsh_available);
- 
-+int qcom_scm_shm_bridge_enable(void)
-+{
-+	struct qcom_scm_desc desc = {
-+		.svc = QCOM_SCM_SVC_MP,
-+		.cmd = QCOM_SCM_MP_SHM_BRIDGE_ENABLE,
-+		.owner = ARM_SMCCC_OWNER_SIP
-+	};
-+
-+	struct qcom_scm_res res;
-+
-+	if (!__qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_MP,
-+					  QCOM_SCM_MP_SHM_BRIDGE_ENABLE))
-+		return -EOPNOTSUPP;
-+
-+	return qcom_scm_call(__scm->dev, &desc, &res) ?: res.result[0];
-+}
-+EXPORT_SYMBOL_GPL(qcom_scm_shm_bridge_enable);
-+
-+int qcom_scm_shm_bridge_create(struct device *dev, u64 pfn_and_ns_perm_flags,
-+			       u64 ipfn_and_s_perm_flags, u64 size_and_flags,
-+			       u64 ns_vmids, u64 *handle)
-+{
-+	struct qcom_scm_desc desc = {
-+		.svc = QCOM_SCM_SVC_MP,
-+		.cmd = QCOM_SCM_MP_SHM_BRIDGE_CREATE,
-+		.owner = ARM_SMCCC_OWNER_SIP,
-+		.args[0] = pfn_and_ns_perm_flags,
-+		.args[1] = ipfn_and_s_perm_flags,
-+		.args[2] = size_and_flags,
-+		.args[3] = ns_vmids,
-+		.arginfo = QCOM_SCM_ARGS(4, QCOM_SCM_VAL, QCOM_SCM_VAL,
-+					 QCOM_SCM_VAL, QCOM_SCM_VAL),
-+	};
-+
-+	struct qcom_scm_res res;
-+	int ret;
-+
-+	ret = qcom_scm_call(__scm->dev, &desc, &res);
-+
-+	if (handle && !ret)
-+		*handle = res.result[1];
-+
-+	return ret ?: res.result[0];
-+}
-+EXPORT_SYMBOL_GPL(qcom_scm_shm_bridge_create);
-+
-+int qcom_scm_shm_bridge_delete(struct device *dev, u64 handle)
-+{
-+	struct qcom_scm_desc desc = {
-+		.svc = QCOM_SCM_SVC_MP,
-+		.cmd = QCOM_SCM_MP_SHM_BRIDGE_DELETE,
-+		.owner = ARM_SMCCC_OWNER_SIP,
-+		.args[0] = handle,
-+		.arginfo = QCOM_SCM_ARGS(1, QCOM_SCM_VAL),
-+	};
-+
-+	return qcom_scm_call(__scm->dev, &desc, NULL);
-+}
-+EXPORT_SYMBOL_GPL(qcom_scm_shm_bridge_delete);
-+
- int qcom_scm_lmh_profile_change(u32 profile_id)
- {
- 	struct qcom_scm_desc desc = {
-diff --git a/drivers/firmware/qcom/qcom_scm.h b/drivers/firmware/qcom/qcom_scm.h
-index aa7d06939f8e..cb7273aa0a5e 100644
---- a/drivers/firmware/qcom/qcom_scm.h
-+++ b/drivers/firmware/qcom/qcom_scm.h
-@@ -116,6 +116,9 @@ struct qcom_tzmem_pool *qcom_scm_get_tzmem_pool(void);
- #define QCOM_SCM_MP_IOMMU_SET_CP_POOL_SIZE	0x05
- #define QCOM_SCM_MP_VIDEO_VAR			0x08
- #define QCOM_SCM_MP_ASSIGN			0x16
-+#define QCOM_SCM_MP_SHM_BRIDGE_ENABLE		0x1c
-+#define QCOM_SCM_MP_SHM_BRIDGE_DELETE		0x1d
-+#define QCOM_SCM_MP_SHM_BRIDGE_CREATE		0x1e
- 
- #define QCOM_SCM_SVC_OCMEM		0x0f
- #define QCOM_SCM_OCMEM_LOCK_CMD		0x01
-diff --git a/include/linux/firmware/qcom/qcom_scm.h b/include/linux/firmware/qcom/qcom_scm.h
-index ccaf28846054..9b6054813f59 100644
---- a/include/linux/firmware/qcom/qcom_scm.h
-+++ b/include/linux/firmware/qcom/qcom_scm.h
-@@ -115,6 +115,12 @@ int qcom_scm_lmh_dcvsh(u32 payload_fn, u32 payload_reg, u32 payload_val,
- int qcom_scm_lmh_profile_change(u32 profile_id);
- bool qcom_scm_lmh_dcvsh_available(void);
- 
-+int qcom_scm_shm_bridge_enable(void);
-+int qcom_scm_shm_bridge_create(struct device *dev, u64 pfn_and_ns_perm_flags,
-+			       u64 ipfn_and_s_perm_flags, u64 size_and_flags,
-+			       u64 ns_vmids, u64 *handle);
-+int qcom_scm_shm_bridge_delete(struct device *dev, u64 handle);
-+
- #ifdef CONFIG_QCOM_QSEECOM
- 
- int qcom_scm_qseecom_app_get_id(const char *app_name, u32 *app_id);
--- 
-2.40.1
-
+In all of them, fl4->fl4_icmp_type is left uninitialized, so syzbot
+will find ways to trigger a related bug,
+if you assume later that fl4->fl4_icmp_type contains valid (initialized) da=
+ta.
