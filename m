@@ -1,65 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA6F1369BA;
-	Mon, 25 Mar 2024 10:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080966E616;
+	Mon, 25 Mar 2024 10:29:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711362566; cv=none; b=AWSIWpvIdRwtK556y87Mj5ZmCQH/E2NxXIvqbmo54MwrbKM4X752/6fSiH9a2M6HUzagOArLCIh0eoepUiCB5sVZAx6e1MbCYgWKSf55+b66mEg2Gz/QMMs0u3e3Ydors5flgQ6DxFeqEwqRy1aWujH26vvO7sxXTFHwRtmh0PA=
+	t=1711362564; cv=none; b=DxIeMFm5qT+d5rKmrXO47YDJcO+q3Rp3pDJX4actvlcaHXjuglqewechCBKEWzkiPqQZDcA4BuIA2H8HMLQ1/RQCNcprIoNqqCiU3oXVx0VjG/dwYQ0kLU/FXZMOWjKfhbOq1aw477neSrLubaL/9tqMnnpnG32/Tnu29UMw6s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711362566; c=relaxed/simple;
-	bh=exsZ/RlFrlpl7+FM8gvJIdkjzrnMeECp/lur/esR3Yg=;
+	s=arc-20240116; t=1711362564; c=relaxed/simple;
+	bh=mLpBg2nWRyz96DYpNS5I78B+tK+MUUvH4ycRNC28LKY=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=hWGae+NM0uUfo7+CqiNX04foStwRHWLs+/vOli5drhgma0H5i1KEtbA8X0JZkSAhWsUz94PTw9/Woby/kSEfxlsmI/9RPVxvVgtHFQT5W/gc87ZX9NnOObBbMTGIz54WTma2wF2smf5EPc+Zm2JzFfNSP6Wvd/G0+Mboi6fCTw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tPV9YT9u; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GUv6mWS+; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=dS5dyzXoqUVd6ml6Ot1Oa71BqTHiPoKA2d+mVni1HwJlowMJ44uwGv02gDmq0OOIJiYIhC/XnLDW9RYLubUHgZQ3xHAtaTOfE4Hnl72S3DmYWglcE7as5QbxcwHwq2Ahjg95xdE+lmdXK4PoH6K3hTXWFnoiMWAcpGlIT8uHBgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FzNRCvtB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d2HjPGZd; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tPV9YT9u";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GUv6mWS+"
-Date: Mon, 25 Mar 2024 10:29:22 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FzNRCvtB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d2HjPGZd"
+Date: Mon, 25 Mar 2024 10:29:19 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711362562;
+	s=2020; t=1711362560;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pvU+bUjj4JAzflrn+dxjxcxBeNkheAqboGKDVwCtN9M=;
-	b=tPV9YT9u9uxDUlsOS2cFncAUqbtKxgrvfUh0zGfK2LwUMI8cbBITFYDXof0ttP0pLYPKks
-	Zjsh0joCyH5+JuFZfwbAElo6dPjeV0ZFZEcIOvnSxaIXk95YcXXOuaednUzqI4izTP80Rw
-	Jedujfgbc+psgE80iR3TSh0cse18YhlRX5Vj6Csk5SEIvhJWBJCAhH4/HOh0CJhfZrW6VX
-	qEiN++wUymJcF8SraUHUbPff2wr/1Ugqm29UfqajkjXGejl6Gcdp/gZrtjdFSkFMy/NBoe
-	IC/uG4PcZ0cp/JpOUgISQmSg6EdzsguLUPG63qyHthD4/JCTlo0uuVbfam+Z5w==
+	bh=1cBI7Cp1vH/oBUW0wsybTtTvF3/j1JbyDwHKAuM7m2k=;
+	b=FzNRCvtB5/4UyroB0IZ9FPYSZLMQK6VPDQ5cHmKjltRqckY6HBtNYw2qMMudIB2i+YnBJK
+	3tyddrXw0gPRHpGz69H07cWwFhFlam2j9aDapbqp1sAs1T4Kf/+IdlSGuWhnvajCAf+EqB
+	IjxdCeiVf3EzWpEYEtMit35MDkfrX2nlrVqJjYhJgqFioTolp/IpYlqg0/0Gr6U6wCq0fl
+	lJFovWsHETQjAxSAC6Z+ItUMMlKm0pT8TTlwXnjjPynpBOkygafHVwEjxA9NdO1x46vRl/
+	zH2TSA91QZMEYDQsOya0/Bu8mMkxKPq+c7ZRX0mETa6bh77awp+lptSpeXRcmw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711362562;
+	s=2020e; t=1711362560;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pvU+bUjj4JAzflrn+dxjxcxBeNkheAqboGKDVwCtN9M=;
-	b=GUv6mWS+B6+KKmayIKK+DUsUaXZwwQAgYnne91TEBP758a5tkX9dZyFMuSsbcYEtkcL40/
-	jYVbyAjl/0al2pAg==
+	bh=1cBI7Cp1vH/oBUW0wsybTtTvF3/j1JbyDwHKAuM7m2k=;
+	b=d2HjPGZdi2ONkdmVkIGf8TcGCqJs0zcH6E7pTpdP6O/NNRwx4Vv8+4v1TftcSp5AT7RxLy
+	P5OTtEnstvkiDtAw==
 From: "tip-bot2 for Sandipan Das" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: perf/urgent] x86/cpufeatures: Add new word for scattered features
+Subject: [tip: perf/urgent] perf/x86/amd/core: Define a proper ref-cycles
+ event for Zen 4 and later
 Cc: Sandipan Das <sandipan.das@amd.com>, Ingo Molnar <mingo@kernel.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C8380d2a0da469a1f0ad75b8954a79fb689599ff6=2E17110?=
- =?utf-8?q?91584=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
-References: =?utf-8?q?=3C8380d2a0da469a1f0ad75b8954a79fb689599ff6=2E171109?=
- =?utf-8?q?1584=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
+In-Reply-To: =?utf-8?q?=3C089155f19f7c7e65aeb1caa727a882e2ca9b8b04=2E17113?=
+ =?utf-8?q?52180=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
+References: =?utf-8?q?=3C089155f19f7c7e65aeb1caa727a882e2ca9b8b04=2E171135?=
+ =?utf-8?q?2180=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171136256210.10875.7016666652992736521.tip-bot2@tip-bot2>
+Message-ID: <171136255986.10875.1380945659061646748.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,90 +69,51 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     7f274e609f3d5f45c22b1dd59053f6764458b492
-Gitweb:        https://git.kernel.org/tip/7f274e609f3d5f45c22b1dd59053f6764458b492
+Commit-ID:     563bdbac10e5abe49c332b380fedd8ee7dc72b05
+Gitweb:        https://git.kernel.org/tip/563bdbac10e5abe49c332b380fedd8ee7dc72b05
 Author:        Sandipan Das <sandipan.das@amd.com>
-AuthorDate:    Mon, 25 Mar 2024 13:01:44 +05:30
+AuthorDate:    Mon, 25 Mar 2024 13:17:54 +05:30
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 25 Mar 2024 11:16:54 +01:00
+CommitterDate: Mon, 25 Mar 2024 11:19:04 +01:00
 
-x86/cpufeatures: Add new word for scattered features
+perf/x86/amd/core: Define a proper ref-cycles event for Zen 4 and later
 
-Add a new word for scattered features because all free bits among the
-existing Linux-defined auxiliary flags have been exhausted.
+Add the "ref-cycles" event for AMD processors based on Zen 4 and later
+microarchitectures. The backing event is based on PMCx120 which counts
+cycles not in halt state in P0 frequency (same as MPERF).
 
 Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/8380d2a0da469a1f0ad75b8954a79fb689599ff6.1711091584.git.sandipan.das@amd.com
+Link: https://lore.kernel.org/r/089155f19f7c7e65aeb1caa727a882e2ca9b8b04.1711352180.git.sandipan.das@amd.com
 ---
- arch/x86/include/asm/cpufeature.h        | 6 ++++--
- arch/x86/include/asm/cpufeatures.h       | 2 +-
- arch/x86/include/asm/disabled-features.h | 3 ++-
- arch/x86/include/asm/required-features.h | 3 ++-
- 4 files changed, 9 insertions(+), 5 deletions(-)
+ arch/x86/events/amd/core.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index a127369..42157dd 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -91,8 +91,9 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
- 	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 18, feature_bit) ||	\
- 	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 19, feature_bit) ||	\
- 	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 20, feature_bit) ||	\
-+	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 21, feature_bit) ||	\
- 	   REQUIRED_MASK_CHECK					  ||	\
--	   BUILD_BUG_ON_ZERO(NCAPINTS != 21))
-+	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index af8add6..985ef3b 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -273,8 +273,23 @@ static const u64 amd_zen2_perfmon_event_map[PERF_COUNT_HW_MAX] =
+ 	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x00a9,
+ };
  
- #define DISABLED_MASK_BIT_SET(feature_bit)				\
- 	 ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||	\
-@@ -116,8 +117,9 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
- 	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 18, feature_bit) ||	\
- 	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 19, feature_bit) ||	\
- 	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 20, feature_bit) ||	\
-+	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 21, feature_bit) ||	\
- 	   DISABLED_MASK_CHECK					  ||	\
--	   BUILD_BUG_ON_ZERO(NCAPINTS != 21))
-+	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
++static const u64 amd_zen4_perfmon_event_map[PERF_COUNT_HW_MAX] =
++{
++	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
++	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
++	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
++	[PERF_COUNT_HW_CACHE_MISSES]		= 0x0964,
++	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
++	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
++	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x00a9,
++	[PERF_COUNT_HW_REF_CPU_CYCLES]		= 0x100000120,
++};
++
+ static u64 amd_pmu_event_map(int hw_event)
+ {
++	if (cpu_feature_enabled(X86_FEATURE_ZEN4) || boot_cpu_data.x86 >= 0x1a)
++		return amd_zen4_perfmon_event_map[hw_event];
++
+ 	if (cpu_feature_enabled(X86_FEATURE_ZEN2) || boot_cpu_data.x86 >= 0x19)
+ 		return amd_zen2_perfmon_event_map[hw_event];
  
- #define cpu_has(c, bit)							\
- 	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index f0337f7..4d850a7 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -13,7 +13,7 @@
- /*
-  * Defines x86 CPU feature bits
-  */
--#define NCAPINTS			21	   /* N 32-bit words worth of info */
-+#define NCAPINTS			22	   /* N 32-bit words worth of info */
- #define NBUGINTS			2	   /* N 32-bit bug flags */
- 
- /*
-diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
-index da4054f..c492bdc 100644
---- a/arch/x86/include/asm/disabled-features.h
-+++ b/arch/x86/include/asm/disabled-features.h
-@@ -155,6 +155,7 @@
- #define DISABLED_MASK18	(DISABLE_IBT)
- #define DISABLED_MASK19	(DISABLE_SEV_SNP)
- #define DISABLED_MASK20	0
--#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 21)
-+#define DISABLED_MASK21	0
-+#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 22)
- 
- #endif /* _ASM_X86_DISABLED_FEATURES_H */
-diff --git a/arch/x86/include/asm/required-features.h b/arch/x86/include/asm/required-features.h
-index 7ba1726..e9187dd 100644
---- a/arch/x86/include/asm/required-features.h
-+++ b/arch/x86/include/asm/required-features.h
-@@ -99,6 +99,7 @@
- #define REQUIRED_MASK18	0
- #define REQUIRED_MASK19	0
- #define REQUIRED_MASK20	0
--#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 21)
-+#define REQUIRED_MASK21	0
-+#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 22)
- 
- #endif /* _ASM_X86_REQUIRED_FEATURES_H */
