@@ -1,97 +1,95 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D3B61B7F6C;
-	Mon, 25 Mar 2024 11:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3EA140361
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711364827; cv=none; b=YWbFiC2oqB3ZkbsJCdV1w6ODbk69jyu3P/CsppTqDTVUz5Qj1xHI+/0nZM+/2TBMljead5J6FTYx5bjQF8MaVevRgr8CBzAx4K9Kic8nIuoiAcsuczcYmH1qOcHPXPYiNgnjLiCZITOQH5OExDCpbi90777sZM8XV0DMfcXXAvU=
+	t=1711364891; cv=none; b=j3YAGjhSfIxOVvYHcvchfjrkKn2GvuSq84yfbkn52addtxqLt65aMZ9bVSdJiJo4x0ZLxmAkAdEdDMcPIw2lBIsZjpWGmNEhbGmUM89Nbft72K4FUvYoIkCklzrgtZffwBWTAYvXe+Wn7YHWiMj2cV1+Cywn8PtBCGxe9a2YynQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711364827; c=relaxed/simple;
-	bh=CZzaEGr7+ippkmG7UO/ZJeYSrGVNTB6Im466Vs/2dlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TP4LGEfOPtt0MN+lblZ1CwvLaoeBgJHAMaEirLdT/cfKoO/O7gG6ZqjE/ly2izMp2mnyb2EQVtKX/9LAldwhs9pa/DKyFsBdLeUgG2XSdTbS7F87INwHDX0+i4Bhxt9xJwLq0JpyjshOP/4KlG+l1h27rLBS9bHY8eeretdLLOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72CDD1FB;
-	Mon, 25 Mar 2024 04:07:38 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D452C3F67D;
-	Mon, 25 Mar 2024 04:07:02 -0700 (PDT)
-Message-ID: <f3a1325b-4126-42d7-b777-9b511279251f@arm.com>
-Date: Mon, 25 Mar 2024 11:07:01 +0000
+	s=arc-20240116; t=1711364891; c=relaxed/simple;
+	bh=mK+a5fKSHAosIJ1vD42jVSju6aNIvU/ovsSMpFBzTcY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=abNl8W7Ol4W9kndd/p+xuSG+J8cohKCNw3M8Z92zfSSDOhxUS5y5wiQk51c1LcFRvzKw2Xfsj3fPpIk/h9qv95V9L1SpLS/ox5Hm1OpAomsjZf+x7ur1od84UM2+SvIHOQetv3Jx6Hz5Q+40d1ZFqo7UxxzqyMgLbQvJDM6hYzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTNU6iQC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTNU6iQC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1EE0C433F1;
+	Mon, 25 Mar 2024 11:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711364891;
+	bh=mK+a5fKSHAosIJ1vD42jVSju6aNIvU/ovsSMpFBzTcY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XTNU6iQCNHH0nf4EJwPkJQJ4Y7Q2vDWDhLL4ldDBVvtm7CAZBiEHtbrfLEdZTw386
+	 zyDHEF8tzhEyizMK2ln7iZU/WOs3UxnTQ1X9DnCIU5uCtVt2LgFAysBHsTxpvLG8Y5
+	 gZwi1hKkG4TYngUyw67VhKn5NA4kB/uC8/HGJG96dxHFKYoEhYdkTXNCdtldoEO+YF
+	 0s0g5nCKiXvoUZXW/r+1hYRavWDKohfetk+wXYa4/FNmukCVygZYHvsn11XBBp7wQ/
+	 rArulJehFnEQSPpcNIiXQVdjGkGfmhv3UluA3E3QpnndGANNxikA/BLpvuPsJHYeOU
+	 sE161vCVQg7Sw==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Christoph Hellwig <hch@lst.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v2 RESEND] riscv: mm: implement pgprot_nx
+Date: Mon, 25 Mar 2024 18:54:56 +0800
+Message-ID: <20240325105456.1338-1-jszhang@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND 1/2] dt-bindings: arm: qcom,coresight-tpda: drop
- redundant type from ports
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Mao Jinlong <quic_jinlmao@quicinc.com>,
- Tao Zhang <quic_taozha@quicinc.com>, linux-arm-msm@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240325104007.30723-1-krzysztof.kozlowski@linaro.org>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20240325104007.30723-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof
+commit cca98e9f8b5e ("mm: enforce that vmap can't map pages
+executable") enforces the W^X protection by not allowing remapping
+existing pages as executable. Add riscv bits so that riscv can benefit
+the same protection.
 
-On 25/03/2024 10:40, Krzysztof Kozlowski wrote:
-> "in-ports" and "out-ports" are defined by graph schema, so defining its
-> type is redundant.
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+Tested-by: Samuel Holland <samuel.holland@sifive.com>
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
 
-Both patches look good to me. How would you like to pull this ? I could
-queue them for v6.10 via coresight tree.
+Hi Palmer,
 
-If you would like to take them,
+This patch missed two merge window, I.E 6.8-rc1 and 6.9-rc1,
+I'm not sure whether there's something to be done from my side.
 
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Thanks in advance
 
-Suzuki
+since v1:
+ - rebase on v6.8-rc1
+ - collect Reviewed-by and Tested-by tag
 
-> 
 
-> ---
-> 
-> No changes, but patches were split from previous set. First patch in
-> previouis series was being discussed, so let's just make these accepted.
-> 
-> v1: https://lore.kernel.org/all/20231206115332.22712-1-krzysztof.kozlowski@linaro.org/
-> ---
->   Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml | 2 --
->   1 file changed, 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
-> index ea3c5db6b52d..7fbd855a66a0 100644
-> --- a/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
-> +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
-> @@ -66,13 +66,11 @@ properties:
->         - const: apb_pclk
->   
->     in-ports:
-> -    type: object
->       description: |
->         Input connections from TPDM to TPDA
->       $ref: /schemas/graph.yaml#/properties/ports
->   
->     out-ports:
-> -    type: object
->       description: |
->         Output connections from the TPDA to legacy CoreSight trace bus.
->       $ref: /schemas/graph.yaml#/properties/ports
+ arch/riscv/include/asm/pgtable.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 97fcde30e247..9f8ea0e33eb1 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -593,6 +593,12 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
+ 	return ptep_test_and_clear_young(vma, address, ptep);
+ }
+ 
++#define pgprot_nx pgprot_nx
++static inline pgprot_t pgprot_nx(pgprot_t _prot)
++{
++	return __pgprot(pgprot_val(_prot) & ~_PAGE_EXEC);
++}
++
+ #define pgprot_noncached pgprot_noncached
+ static inline pgprot_t pgprot_noncached(pgprot_t _prot)
+ {
+-- 
+2.43.0
 
