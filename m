@@ -1,63 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAF917F360;
-	Mon, 25 Mar 2024 10:47:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391C818D876;
+	Mon, 25 Mar 2024 10:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711363628; cv=none; b=mC0aYT5jthMyrKQtgLFWEMzo5kxq94n3PAT+wIJsupBzxbH8UfnzQ5QHJwhp9Nscn6Y/5k9DnjjxuHqJ+U9rnDLqZkawIGCeMPVr4dkUt1njJ8yk+8MdArLmXGWnp2n1TlnXoJyCAJ15mWCxjz7frFmpzu0z7grV52001f6M1Xs=
+	t=1711363800; cv=none; b=RQEBZl91nt7+4/xwh0omlYlIQk6VGeBHwllkZV7AUpboGYro+eQfC+vWuTAD5QrVnQKjL2X5mBMKqw83Yox/Dlh+bCys6phyc/t33OISws5hIMyDDZWnr74YcZd8vhg3mhbQv47SyR7sI3k52BD/7vog5J6P/scJUTcRruYJahA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711363628; c=relaxed/simple;
-	bh=r31SBBkS3IQnuOXsL/OAJ6hP04pjUORZG5Mw9x9NTps=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=upYCVodHZGfsNqGQFY7OpterR1d2At4oLbmamKtF/fDKwgLiOqZ4jx/S1VgCAsBQl7V7kJfZYytlgxaTM4gKc+5zyEr2FwUy41ueD4dxFWkX1L1Efs9vIlgOt59LbFEMs2ysBFddm99RaHWugQNwZ+vmChbmNvPMuuNh9FAmRb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kc/oiVqO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711363800; c=relaxed/simple;
+	bh=4APY93stsQD/f+BZlZm5PfAh7Rhqxtgpj8c6AP25p3k=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=WlxfEnupdP0tZHf315gLYOyBp6X8eX5j/gzheXfrUj1qHf1L8nrTA7Twyo5yuFtt7Z91YnDxwzYVFEd1D4ZEIvd6AmQnbcDUzr8zVFVb66cYUmW7L46rnGgcsFKmIlGF/ncHf6l4f2dZXtrXxp/3+cnSRs/8qdR5uMEzgfCfrZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iH0CeQlA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kc/oiVqO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02BCEC433C7;
-	Mon, 25 Mar 2024 10:47:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iH0CeQlA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E7EDC433F1;
+	Mon, 25 Mar 2024 10:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711363626;
-	bh=r31SBBkS3IQnuOXsL/OAJ6hP04pjUORZG5Mw9x9NTps=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kc/oiVqO1kdaPxCngGTgEuTZRx8Y+Ojs1SmR2fp3nID5XXQkoQlMVliY8frbY0Yj/
-	 GKB4+E8wU/4J3dgkVBqX6mENGL6NOrJlG9n9DAF+TqPB2RIf6ZSb41cqHdcFlgi07H
-	 vTEwvK06xi7vBRu4cGK/YtAyetBSoZPRo7dmG8RPKJoHx1yE9GZTxlagrtp4lHSzSz
-	 Wxfg7Xq+F6OHeWZ4KnHtlc4MQW2eG9YJXwwvgOFnfUS4e8sd6Am85BYwBtAuihjK85
-	 HQGSTX+yyOKfAL1jfSzXd8Juu2luHou2rDFr63/NqORZ8t1IWcQqyiCWKLDT9lnsvj
-	 vq9w/OLWiE9Rw==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: sashal@kernel.org
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH 6.8 196/715] bpf: don't infer PTR_TO_CTX for programs with unnamed context type
-Date: Mon, 25 Mar 2024 11:46:29 +0100
-Message-ID: <20240325104629.76523-1-ojeda@kernel.org>
-In-Reply-To: <20240324223455.1342824-197-sashal@kernel.org>
-References: <20240324223455.1342824-197-sashal@kernel.org>
+	s=k20201202; t=1711363798;
+	bh=4APY93stsQD/f+BZlZm5PfAh7Rhqxtgpj8c6AP25p3k=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=iH0CeQlApW8aTUVFbZu1b/HMbevfcepTiv36TcCR+vHgR2RzsGJcAAXMusTOj93Sa
+	 e5tsN+k/nkCbm86QSwcKYyySqK5tbBlQi7TMejLo5C83kE3JKcaSizi8GN9341lKPH
+	 OnfZEv5C1nuKWFAt9QvTLPBlKvt6GupcrUbviHoHueVIg+DIIn+75aPn8N5WtmRgsO
+	 tnc5vln5FjMjASrvYKsaaoeJG/Z9PhuVvkP/LIROwqSd2zEFXA6z8nwhbysKad3sQ1
+	 Nbf4H2WNL417ms1KiSSpEgBOvYdsvg6i2TxnA1B1MLtugurRK313lNurYiEj8YTqJM
+	 yOzT5kZxK/Lvw==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 1/3] wifi: ath: Convert sprintf/snprintf to sysfs_emit
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20240315055211.1347548-1-lizhijian@fujitsu.com>
+References: <20240315055211.1347548-1-lizhijian@fujitsu.com>
+To: Li Zhijian <lizhijian@fujitsu.com>
+Cc: linux-kernel@vger.kernel.org, Li Zhijian <lizhijian@fujitsu.com>,
+ Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
+ ath11k@lists.infradead.org, ath10k@lists.infradead.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <171136379518.1022746.15442509873111996623.kvalo@kernel.org>
+Date: Mon, 25 Mar 2024 10:49:56 +0000 (UTC)
 
-Hi Sasha, all,
+Li Zhijian <lizhijian@fujitsu.com> wrote:
 
-I got this one while built-testing 6.8.y for LoongArch with Rust enabled:
+> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
+> or sysfs_emit_at() when formatting the value to be returned to user space.
+> 
+> coccinelle complains that there are still a couple of functions that use
+> snprintf(). Convert them to sysfs_emit().
+> 
+> sprintf() will be converted as weel if they have.
+> 
+> Generally, this patch is generated by
+> make coccicheck M=<path/to/file> MODE=patch \
+> COCCI=scripts/coccinelle/api/device_attr_show.cocci
+> 
+> No functional change intended
+> 
+> CC: Kalle Valo <kvalo@kernel.org>
+> CC: Jeff Johnson <jjohnson@kernel.org>
+> CC: linux-wireless@vger.kernel.org
+> CC: ath11k@lists.infradead.org
+> CC: ath10k@lists.infradead.org
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-    kernel/bpf/btf.c:5690:10: error: expression which evaluates to zero treated as a null pointer constant of type 'const struct btf_type *' [-Werror,-Wnon-literal-null-conversion]
-     5690 |                 return false;
-          |                        ^~~~~
+Patch applied to ath-next branch of ath.git, thanks.
 
-Upstream fb5b86cfd4ef ("bpf: simplify btf_get_prog_ctx_type() into btf_is_prog_ctx_type()") changed the function into another one, including its return type to `bool`, so it seems that one is a stable dep or perhaps making it return `NULL` here.
+fa1a4f15bdca wifi: ath: Convert sprintf/snprintf to sysfs_emit
 
-Hope that helps!
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20240315055211.1347548-1-lizhijian@fujitsu.com/
 
-Cheers,
-Miguel
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
