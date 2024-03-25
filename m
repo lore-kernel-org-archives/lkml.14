@@ -1,135 +1,113 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570EF12C7FC;
-	Mon, 25 Mar 2024 17:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8114C89
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711387269; cv=none; b=rvPP9VVeg7KjNLu+veG2h/RqO2WGsrKNlDvm95CUbnGsY91CWGCQQebrQmy2yoEp9vh8MolvZMtgs9EbYAXRZNLVkGIghRB5F0nRBGXwKSsHJnDcwpUtvIQsWXlP5PueiCOs9JmQORi2eaMOjOHUSUUfOURJhbJDABxyH5/8524=
+	t=1711387293; cv=none; b=RblyGhW2YsQM4NcJdHDY7/E8AJOlVAkpBcbNdN+tyxtbiy9ffXSkfTF2AIZBTD+G/4izmUfbwr31uvZxw/0rRBAm8yYx3uYwXxvsi9vUVF+0Se9/aNQUV99ymIdwzfbyjgzjqRmNM5v8nsiT6T2eVB1AXnNKFUFkysOoEmI1KPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711387269; c=relaxed/simple;
-	bh=R1WUXZH6NvJXZIW+AVDPYVj8JHUdfaLxcMfuJ+Z3tRM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fnqe3l92jCKcmUnV9kWiwzqR5lalttocYS59/XrsyyNjSBvpShrQ3CNeopyg41yrkWtL6WbAGIeWYJnR0/CmShFSs2n5v/4yYgKywXTj1EuwidBKSZlnQpcTC/45+ve6suvn0TVOt6VsLZPQc2PnVjD3yuWJuj0hA2rJIOPMR84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rOsy2nDr; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711387293; c=relaxed/simple;
+	bh=viw5DHYPaObU3U7ujOkzz6hhRTbM8dWi+h/TUtfWHlA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eCejj4i1Wfff3UI01f0BrVCod5flFNQLmbKkmNpoyL4GO2jCVLrYKat8PvAXEcSD9i/M040Vb9o1AuBAALHNA59pH3nLSiyQU8BYW0fty5L2gj9e+b8bWfftdst8ywPvqNDdxKgzGWmvBgwK8xKytxCrBTtRWzWLJIVN6OC/578=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=YTTx+L+K; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rOsy2nDr"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42PHKp1i022688;
-	Mon, 25 Mar 2024 12:20:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711387251;
-	bh=BSjhEIQgB4xQ5LpqF3Ho5CnJ8F2Hjtf+UQHpF8YH8Vg=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=rOsy2nDr9AtpOwUuSJHc56xUGOrQhPzmnjEpqG3Bf2yYp+D470U4O6aqd0R4WEZiI
-	 tYOOoR8nPCqO5nAYSdkq5+DPMe7Ja2A87wJcLwP4lsCnoYi4/MaVdetXtN7/r0Mbyi
-	 fEHQqlu19xnTljca2iqUE73uyBcKyKNwSy0VAtus=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42PHKpU8105045
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 25 Mar 2024 12:20:51 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 25
- Mar 2024 12:20:50 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 25 Mar 2024 12:20:51 -0500
-Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42PHKkYi075282;
-	Mon, 25 Mar 2024 12:20:50 -0500
-From: Andrew Davis <afd@ti.com>
-To: Jassi Brar <jassisinghbrar@gmail.com>, Hari Nagalla <hnagalla@ti.com>,
-        Nick Saulnier <nsaulnier@ti.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Andrew
- Davis <afd@ti.com>
-Subject: [PATCH 12/13] mailbox: omap: Reverse FIFO busy check logic
-Date: Mon, 25 Mar 2024 12:20:44 -0500
-Message-ID: <20240325172045.113047-13-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240325172045.113047-1-afd@ti.com>
-References: <20240325172045.113047-1-afd@ti.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="YTTx+L+K"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-609f1b77728so50897817b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:21:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1711387291; x=1711992091; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GwFJJMO8Y9QW/VnLPngFZc/sbeBlDHZAU2bsUzRDf74=;
+        b=YTTx+L+KKPuBuhxnpXHeUOcGt8Uppef+zkahssJep2AgGWDOHljab1Iv+i3+xFKuEQ
+         AedEqMLV30CVEKseuJCHYMatq/Ao2y29L0rUJ/y7WWgFwHUe9PpUHunZ0iHX7A3pHnVA
+         bu+44E6/EZhSswDywqaK86dGhvY9Ne0QGdhC8bSojLoMxA/AJuRS3IISZG8MOubOfM+q
+         rdiBpQSaVfzt8dRjM3VzPOaEQYn5HnGWC4oRHoIodImVh35IF/sB0aDxFU8YcIo55Px3
+         7iXnPO+oqSCFJb9yS5+/Yewcix0r84Fss4uSeJa9ycsUQo1W/6GTX8cds+XLTV+2DNZS
+         y+vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711387291; x=1711992091;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GwFJJMO8Y9QW/VnLPngFZc/sbeBlDHZAU2bsUzRDf74=;
+        b=cILUxpSv0EjxaqrcSliOTHvuaZYI/viHcetfw5LQ8hdeB1G75h4jS5hHn3Zb6QbMc9
+         QRkM3KxeZgM7aWFVelrE6Lf43J4e6L67/NLOE2OKFrZONq2q89c5IIobuCrqU9SsB979
+         A2HPTKPsHaaIe6MX/fFKUt0vLquwUf5IA5zYySRh9PfWob2HJ3tToNoTwxaO4E2oeu4q
+         9Prt3s2vlTr4qFWFN9CIakl/f6hN7Au9h3qIv77N1aLn4G22euWpqI639Wn2pEVEPDxq
+         tjfzAiq6xbs4wmCYBFXC1K8Zc2SKrgTyyzHRvplxjJQXh5V8j6xEDyrTgzC2WBvqQJOf
+         aHXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXuWuTHbNnzW21rTKCjam2SUJd9F3FAE/OhOkcFFJyDqlbrmf7FUdpski/0JwV10h+QnFAmJ5dw+T7iZqhAdgvHwwybZE4akNoDMhee
+X-Gm-Message-State: AOJu0Yxx+W9dgay4HxzhOFgAFH9hi50uNPSuZ/RnTHw/DC3TAMHXdyoJ
+	Ubmx6nN0J5roF1YJmzqUkTUwaD1uyY8qSdh0lfVQ/g6OW+HORKLoh08N9U/7/z8eUUMYriY+RQW
+	HN//Ryl/9xrymngx6KNoRFIMdNiSlHFn8YizK
+X-Google-Smtp-Source: AGHT+IFMwOQ7JYZ7RIBsL/iaaKoCpBdaov3J7tHg8zqWWrlziSCuAkCo3Xzme8ojXw3lDFimOmE9DPWmLf9w8Ru0nlE=
+X-Received: by 2002:a81:a10e:0:b0:60f:e8ca:4959 with SMTP id
+ y14-20020a81a10e000000b0060fe8ca4959mr6688036ywg.18.1711387291265; Mon, 25
+ Mar 2024 10:21:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com>
+ <20240324054636.GT538574@ZenIV> <3441a4a1140944f5b418b70f557bca72@huawei.com> <20240325-beugen-kraftvoll-1390fd52d59c@brauner>
+In-Reply-To: <20240325-beugen-kraftvoll-1390fd52d59c@brauner>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 25 Mar 2024 13:21:20 -0400
+Message-ID: <CAHC9VhSamu4706AwP1M+3D9vyxrMZgaZmHH8KUmjuG1Jig4aPw@mail.gmail.com>
+Subject: Re: kernel crash in mknod
+To: Christian Brauner <brauner@kernel.org>
+Cc: Roberto Sassu <roberto.sassu@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Steve French <smfrench@gmail.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
+	Paulo Alcantara <pc@manguebit.com>, Christian Brauner <christian@brauner.io>, 
+	Mimi Zohar <zohar@linux.ibm.com>, 
+	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>, 
+	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It is much more clear to check if the hardware FIFO is full and return
-EBUSY if true. This allows us to also remove one level of indention
-from the core of this function. It also makes the similarities between
-omap_mbox_chan_send_noirq() and omap_mbox_chan_send() more obvious.
+On Mon, Mar 25, 2024 at 12:06=E2=80=AFPM Christian Brauner <brauner@kernel.=
+org> wrote:
+> I'm a bit confused now why this is taking a dentry. Nothing in IMA or
+> EVM cares about the dentry for these hooks so it really should have take
+> an inode in the first place?
 
-Signed-off-by: Andrew Davis <afd@ti.com>
----
- drivers/mailbox/omap-mailbox.c | 33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+I don't want to speak for Roberto or Mimi here, but this LSM hook was
+intended to replace the dedicated ima_post_path_mknod() hook as I
+wanted to see IMA/EVM integrated as proper LSMs so we could so away
+with all of the special IMA/EVM hooks and treat everything as a LSM.
+Part of this was creating new LSM hooks where historically we only had
+a IMA and/or EVM hook, the security_path_post_mknod() hook is such a
+case (e.g. /ima_post_path_mknod/security_path_post_mknod/) and the new
+LSM hook kept the same parameters as the old IMA hook.
 
-diff --git a/drivers/mailbox/omap-mailbox.c b/drivers/mailbox/omap-mailbox.c
-index 8e2760d2c5b0c..c5d4083125856 100644
---- a/drivers/mailbox/omap-mailbox.c
-+++ b/drivers/mailbox/omap-mailbox.c
-@@ -375,34 +375,33 @@ static void omap_mbox_chan_shutdown(struct mbox_chan *chan)
- 
- static int omap_mbox_chan_send_noirq(struct omap_mbox *mbox, u32 msg)
- {
--	int ret = -EBUSY;
-+	if (mbox_fifo_full(mbox))
-+		return -EBUSY;
- 
--	if (!mbox_fifo_full(mbox)) {
--		omap_mbox_enable_irq(mbox, IRQ_RX);
--		mbox_fifo_write(mbox, msg);
--		ret = 0;
--		omap_mbox_disable_irq(mbox, IRQ_RX);
-+	omap_mbox_enable_irq(mbox, IRQ_RX);
-+	mbox_fifo_write(mbox, msg);
-+	omap_mbox_disable_irq(mbox, IRQ_RX);
- 
--		/* we must read and ack the interrupt directly from here */
--		mbox_fifo_read(mbox);
--		ack_mbox_irq(mbox, IRQ_RX);
--	}
-+	/* we must read and ack the interrupt directly from here */
-+	mbox_fifo_read(mbox);
-+	ack_mbox_irq(mbox, IRQ_RX);
- 
--	return ret;
-+	return 0;
- }
- 
- static int omap_mbox_chan_send(struct omap_mbox *mbox, u32 msg)
- {
--	int ret = -EBUSY;
--
--	if (!mbox_fifo_full(mbox)) {
--		mbox_fifo_write(mbox, msg);
--		ret = 0;
-+	if (mbox_fifo_full(mbox)) {
-+		/* always enable the interrupt */
-+		omap_mbox_enable_irq(mbox, IRQ_TX);
-+		return -EBUSY;
- 	}
- 
-+	mbox_fifo_write(mbox, msg);
-+
- 	/* always enable the interrupt */
- 	omap_mbox_enable_irq(mbox, IRQ_TX);
--	return ret;
-+	return 0;
- }
- 
- static int omap_mbox_chan_send_data(struct mbox_chan *chan, void *data)
--- 
-2.39.2
+Yes, you are correct that neither IMA and EVM do anything with the
+dentry other than looking at the associated inode.  I'm not the
+IMA/EVM expert in this thread, but I suspect this is simply an old
+vestige of former code, or perhaps an "optimization" to avoid having
+to fetch the inode pointer in cases where IMA/EVM was not enabled
+(although it is used in the vfs_create() call directly above, so who
+knows ...
 
+> And one minor other question I just realized. Why are some of the new
+> hooks called security_path_post_mknod() when they aren't actually taking
+> a path in contrast to say
+> security_path_{chown,chmod,mknod,chroot,truncate}() that do.
+
+Once again, think of this as a
+/ima_post_path_mknod/security_path_post_mknod/ type of replacement and
+you have your answer.  That said, I'm not really against bikeshedding
+LSM hook names if people want to do that, it's not a stable protected
+API so while we try to keep it stable~ish simply for our own sanity,
+I'm happy to see it changed if everyone agrees it makes sense.
+
+--=20
+paul-moore.com
