@@ -1,103 +1,118 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E9F3DAC19
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C308136E1D;
+	Mon, 25 Mar 2024 16:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711385817; cv=none; b=Eksd4Bow8tvd2jBzcaPaTDpatNVMs3aQZIzVtdmCd2hqpUk3FgOpTXyvvP1ZKzUfBaAsLZ6HaRq1v58HVCgH1VmgnyHDpF6vOd9o9/dBV70uZ+pVm4+bu3W171waadV8tvTkzOJUxlQoOkzZGbJysdPhEK9Bdm1iJCMI1j2hWWA=
+	t=1711385834; cv=none; b=rQ85XeHwKiEjCyP2wcS6xMl7WEqlwbeUBnMl7EZcI9MSEeOp+mENRRFcfOJI/JbKa6hsOW2bz1dBHPQOi3rij1XdLQS75pFpl751eOatNZHBauoWdXnxPqi/YKp81h3RQyIRvmX8Ky0SLqe+23gvncuOUJ3qbsrez0Us2hqJMVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711385817; c=relaxed/simple;
-	bh=xPp/RUzgQsiSSqM+nB7eJxXqxjfyHTpV6y11jbU95bc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tLCH/4gXl2YcZVZbRUgBNOh+ohKZ5buF5g8AV41S+TH4XQuCcj7CkvC9mu3gPGp9p90CGthnG9yVPMEKgfFnLHS7FW5TzWH9ajyPPm11ptNeVNc5vHDv793nu00ObdvtsjMxJF55u1D+zcszg9f8EVrkbFtoMennnvrKv4+59SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EvgVHBHB; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711385834; c=relaxed/simple;
+	bh=yGM4irWrOGL/RrRmQtB8pS5xeSrk9c3qzsw0hBez+uQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M0O2yOwGf9mJGB6+MRopany+nCsDt5j803pGt4UKYTCW6LmtRT3Rpjdseu6QvNQKLAFz353a3l/kjeJg1xaDBZhPdpgz8HV7La+2zaRBgVfHLCvQdgtbXJbNQA3teySCYIaAYJD8xxklQEwibdymx6p3p+zM5kkBJXHXioVdotM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=WfV9tcVS; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EvgVHBHB"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ea8ee55812so2360334b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:56:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711385815; x=1711990615; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uv8OSr8XfO/UGe4RvS9k3B7kgKFsdVwGKtydzmzsC34=;
-        b=EvgVHBHBRwrEt62D05wEw2T7SLsjqv/45vVph0Re6SlKCA/NK8PkkFku1AF110yNYg
-         1R4XVPFDWGGnsLwAmuNM3yOurFdVevZpppoyHPTv4xaGPjTUsVg05y8+ok24MpyXg44J
-         Dvzga600PoTDSdcGaOu7QMIi4txFN1m3Q5+E0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711385815; x=1711990615;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uv8OSr8XfO/UGe4RvS9k3B7kgKFsdVwGKtydzmzsC34=;
-        b=tTOlND0cZzSSwTTLpAl3RrHs9xBJFTcZYdRaRNaKJpc26yjHQgsPmnMmdtCjha/y5n
-         /hN9f2HRcvRW7DMjBASnQpu9IeC78gyeszVsPeojLfZubhprphcCqLZJtx85mk5xxJ9v
-         ke3a3Bv97Hkr/n0RJubM+vinQj0A/Xap8aHPEUHxbnQJcSGjUhrMepg5+ZHhr+QZ05F5
-         BHn+Xzh2q5h5zNb1eRMiY8qQiGx/QWEWFcTMCJDQVPe6Z9nRWd4RFRRD7e8+BBTfuShs
-         2B0s1E4vrcTrn5EbJ9CmzTFc7I0Iioxh2k+MRVASjGe3ppdqQ4F1F6tpxY2wPafKjE8m
-         qpRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUT7anq8Ls4nejzJsqzRUO2ZYiDf1a89tep4S6YjGimW0ZMOfxmJOFckcT9Qw82F9ArTUzchNdf68996vcfqQnxhyLrGHJauMNzrN4+
-X-Gm-Message-State: AOJu0YzJBYzTyKoF5Tizog7ncLK9UvqtbW7988UFjwblJbcKurbZ8TVY
-	ZpMW9Iqk+fDaRUgwBeu1w1YOlNk1IDwg4rYMwg8aeezoFOE+tQ06ez4Mq5Pr2Q==
-X-Google-Smtp-Source: AGHT+IFJxDTO0PPcnDj1vjtBLWF+b9VN6OetGp9OFxlLXp0FJcL16ixfPvEZpVS4aubfeA3ZUF7duQ==
-X-Received: by 2002:a05:6a00:2eaa:b0:6e7:29dd:84db with SMTP id fd42-20020a056a002eaa00b006e729dd84dbmr10135239pfb.31.1711385815206;
-        Mon, 25 Mar 2024 09:56:55 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b7-20020a62cf07000000b006e6aee6807dsm4500309pfg.22.2024.03.25.09.56.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 09:56:54 -0700 (PDT)
-Date: Mon, 25 Mar 2024 09:56:53 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Jan Bujak <j@exia.io>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: Recent-ish changes in binfmt_elf made my program segfault
-Message-ID: <202403250949.3ED2F977@keescook>
-References: <c7209e19-89c4-446a-b364-83100e30cc00@exia.io>
- <874jf5co8g.fsf@email.froward.int.ebiederm.org>
- <202401221226.DAFA58B78@keescook>
- <87v87laxrh.fsf@email.froward.int.ebiederm.org>
- <202401221339.85DBD3931@keescook>
- <95eae92a-ecad-4e0e-b381-5835f370a9e7@leemhuis.info>
- <202402041526.23118AD@keescook>
- <51f61874-0567-4b4f-ab06-ecb3b27c9e41@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="WfV9tcVS"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 61553120004;
+	Mon, 25 Mar 2024 19:57:00 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 61553120004
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1711385820;
+	bh=gH+zZTG2XTxDhXno5HnG1q7mVFathfIQiMuRGllPg9I=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=WfV9tcVSItH3bplVNXX82ohdZn7KYBMsDVDQ4jPe7M8TfeG0jKDxbNSk4EJD1x0On
+	 u5SPikbk1cjTo1QfPR3i1P2brE9e6ZOXgFlpR+LIF/tZ4/qagpV3obDnh4TveAp4AY
+	 9sVbMFLTuGAtc9Telf+URL4u1oJ8ETT5jy+nAn+WkBIGs30AJ7uGC3wLhVMWcgxGtY
+	 mKDzIdAm99NuJGtYKdzSeTjLPSncV47IrRzY6t8FrTfzF3UnKQa4xqrSUXkgqNEB32
+	 Vb6YPSAeDgC1C7XQkYF9yU0Gvx3W5kteBl3iTBgXAJBR/14m0pRqOq/y+GUwfexhlz
+	 dW9w5hyRd2zLQ==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Mon, 25 Mar 2024 19:57:00 +0300 (MSK)
+Received: from work.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 25 Mar 2024 19:56:59 +0300
+From: George Stark <gnstark@salutedevices.com>
+To: <jic23@kernel.org>, <lars@metafoo.de>, <harald@ccbib.org>,
+	<gnstark@salutedevices.com>
+CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kernel@salutedevices.com>
+Subject: [PATCH] iio: dht11: set debug log level for parsing error messages
+Date: Mon, 25 Mar 2024 19:54:06 +0300
+Message-ID: <20240325165406.226916-1-gnstark@salutedevices.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51f61874-0567-4b4f-ab06-ecb3b27c9e41@leemhuis.info>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184403 [Mar 25 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 11 0.3.11 5ecf9895443a5066245fcb91e8430edf92b1b594, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/25 14:48:00 #24435619
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Mon, Mar 25, 2024 at 04:26:56PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 05.02.24 00:27, Kees Cook wrote:
-> > On Thu, Feb 01, 2024 at 11:47:02AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> >> for once, to make this easily accessible to everyone.
-> >>
-> >> Eric, what's the status wrt. to this regression? Things from here look
-> >> stalled, but I might be missing something.
-> >>
-> >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> > 
-> > If Eric doesn't beat me to it, I'm hoping to look at this more this
-> > coming week.
-> 
-> Friendly reminder: that was quite a while ago by now and it seems
-> neither you nor Eric looked into this. Or was there some progress and I
-> just missed it?
+Protocol parsing errors could happen due to several reasons like noise
+environment, heavy load on system etc. If to poll the sensor frequently
+and/or for a long period kernel log will become polluted with error
+messages if their log level is err (i.e. on by default). Also some types
+of those messages already have dbg level so use unified log level for
+all such cases.
 
-The original reporter hasn't responded to questions and no one else has
-mentioned this issue, so I think we can remove this from the tracker.
+Signed-off-by: George Stark <gnstark@salutedevices.com>
+---
+I use DHT22 sensor with Raspberry Pi Zero W as a simple home meteo station.
+Even if to poll the sensor once per tens of seconds after month or two dmesg
+may become full of useless parsing error messages. Anyway those errors are caught
+in the user software thru return values.
 
-#regzbot resolve: regression is not visible without manually constructing broken ELF headers
+ drivers/iio/humidity/dht11.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/iio/humidity/dht11.c b/drivers/iio/humidity/dht11.c
+index c97e25448772..e2cbc442177b 100644
+--- a/drivers/iio/humidity/dht11.c
++++ b/drivers/iio/humidity/dht11.c
+@@ -156,7 +156,7 @@ static int dht11_decode(struct dht11 *dht11, int offset)
+ 		dht11->temperature = temp_int * 1000;
+ 		dht11->humidity = hum_int * 1000;
+ 	} else {
+-		dev_err(dht11->dev,
++		dev_dbg(dht11->dev,
+ 			"Don't know how to decode data: %d %d %d %d\n",
+ 			hum_int, hum_dec, temp_int, temp_dec);
+ 		return -EIO;
+@@ -239,7 +239,7 @@ static int dht11_read_raw(struct iio_dev *iio_dev,
+ #endif
 
--- 
-Kees Cook
+ 		if (ret == 0 && dht11->num_edges < DHT11_EDGES_PER_READ - 1) {
+-			dev_err(dht11->dev, "Only %d signal edges detected\n",
++			dev_dbg(dht11->dev, "Only %d signal edges detected\n",
+ 				dht11->num_edges);
+ 			ret = -ETIMEDOUT;
+ 		}
+--
+2.25.1
+
