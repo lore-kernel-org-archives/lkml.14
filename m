@@ -1,83 +1,112 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854C412BF05;
-	Mon, 25 Mar 2024 02:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF0213AA47
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 01:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711332012; cv=none; b=dbzKs/B4l56gY1l7jftyTd8FpWABCdSnPgHWvILTEjDK1X2zEnQRcIDWp38H7d31bjaNtQYJ42DZSnmDbuBDkriEnVtDNdxbyoWorYEYWTWCQ2RBYjj3OJ+PDIUfXULRNrW2MAj5cEyoV1MTYsQM1HjK/OHMI3Y0+9qd7aNIB/g=
+	t=1711331795; cv=none; b=u0BvkkSSuNzgWbS2xr5lot94Vomq++QEyzdCGr+ypubhQ1ug/08hWYf4EUHhNudLoqHRfWng2NLToJdV+DhVPesVWx1hnIW5aVOAETWtQaABc8BrVyy7cKWsVUur/7NQra2S5z1wTL8riFRdXiLB/EhExjaCpLPooivaJPrt73U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711332012; c=relaxed/simple;
-	bh=KoIL+5USzKnAWU5XAMXkfHQPnA0FSgKj//g3Wd9d8fA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=oprO/fu0Fm6WwEKZ/F8G5ARJvRXAFVeWIzJnQPUNMhZ1/ubmz5QC01qL5WNdQVsOvTg+LQkXAlH0aWI5Sp9vhaWGpt490RkmCuq2nW1w7dgizlprCD7D/7jCeCRNLZzYbWC1FyTR/fmm2VwyfN8zLKCxKCZ/xHAa0cO7X1qILuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=qd1pNuzJ; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1711331795; c=relaxed/simple;
+	bh=mx/VdD1hq7cRmoLLUg9zTXrB6nghO0otx5ehOvo8wJU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OYl03y7WJsnnw2hboaRnwcBqsPbm2STcBT28WjNhaKe+Btp1R/VI5oZqketZKbW5xJmMjzaJmeUDjs5etoY3cQ98b0SwdgocVzcW+2NQ2aCy8a3/wEHGAu/pjP90j8VGOyFf9GxNdkFgRnezX/yt0OYx293Wml2eAmr/ZI92OJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=lEQLBH0G; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qd1pNuzJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1711332007;
-	bh=GuEk/ADpGr81B7YHsE3SVEOslWEIQHwyWnsZdTkTtbA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=qd1pNuzJMJXisLmOwRPjnyp6QgZCPLuQkpYc3H1fb+BmcGT3U4jzyeXoELnEvLZ2S
-	 tidgKz5R1PXlDddZGCeiOKhtp1vAZLU7sBwRw8DGYtizDbiYHxSerly0dSPCMXTLrN
-	 8Lrxn6Y4Y4hl6OkrCwxzywZdSSa09a9bhZH4eVdVL5OrS9TNnbpbFAlCIXhLXSMZLt
-	 JXsnsMMPJSXQrnSaPj2/OHaN3zKSIFXat1PMayUFIL8wSS2Y2ZwdOszaHyYG5mPBJ2
-	 3eezLbb5AVmJFAdT2QR5l73a7dj6zYhdqT81f3Ij0+3uF9rSnkUHnL3UTaFkTLktZ5
-	 TajCaJDQlbU7A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="lEQLBH0G"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4V2x2v4vGPz4wZx;
-	Mon, 25 Mar 2024 13:00:07 +1100 (AEDT)
-Date: Mon, 25 Mar 2024 13:00:07 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Gao Xiang <xiang@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the erofs-fixes
- tree
-Message-ID: <20240325130007.2ed83dbb@canb.auug.org.au>
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 42D7F2C00C6;
+	Mon, 25 Mar 2024 14:50:49 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1711331449;
+	bh=UvZ22nbi3oBrveYANpJX+eOm9E/q+JnPTDDNwgaPVZ0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lEQLBH0G0p5FfWe/jQ+cXxHsyUp3lqtUIqVcbjwtkWaB9OV5q+2B6GtUFautBhvaF
+	 6Hm2H2VJMpUJ6U8VAcITw39qpvXEBWIkJwoi1d/bjj3p6MpptOD2pMLKn4yG8Gbb3Z
+	 x37wgkYLfck9N0JSToTqGF2zTA+wO0vW7HhiegChBUxQMkDDJQjeVOcysvMIrlViTX
+	 y3iW1457iQlK4O1tWztSthdXAD5Rb3H7ZDqm9n4BQxR3DJ1lwMooPtADa4yiC2osb6
+	 tQ23RTRNzZ1yOHk7+VpgYSoumYI/gGNM0904kbe2N18Jz+QRLZtjEBsUQ61Y3+100j
+	 vGOunsPO0fjFw==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B6600d8790000>; Mon, 25 Mar 2024 14:50:49 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+	by pat.atlnz.lc (Postfix) with ESMTP id 11EED13ED7B;
+	Mon, 25 Mar 2024 14:50:49 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+	id 0CC26280A41; Mon, 25 Mar 2024 14:50:49 +1300 (NZDT)
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] uio_pdrv_genirq: convert to use device_property APIs
+Date: Mon, 25 Mar 2024 14:50:45 +1300
+Message-ID: <20240325015045.778718-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ZiH5JGq97BdVWOSy9YHMX7q";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/ZiH5JGq97BdVWOSy9YHMX7q
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=KIH5D0Fo c=1 sm=1 tr=0 ts=6600d879 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=K6JAEmCyrfEA:10 a=kuWcMSrzkGJfJYRAjKUA:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-Hi all,
+Convert the uio_pdrv_genirq driver to use the device_property_* APIs
+instead of the of_property_* ones. This allows UIO interrupts to be
+defined via an ACPI overlay using the Device Tree namespace linkage.
 
-Commit
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/uio/uio_pdrv_genirq.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-  77720dfe2cf3 ("MAINTAINERS: erofs: add myself as reviewer")
-
-is missing a Signed-off-by from its committer.
-
+diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.=
+c
+index 63258b6accc4..772ab42a3ba1 100644
+--- a/drivers/uio/uio_pdrv_genirq.c
++++ b/drivers/uio/uio_pdrv_genirq.c
+@@ -23,8 +23,8 @@
+ #include <linux/irq.h>
+=20
+ #include <linux/of.h>
+-#include <linux/of_platform.h>
+-#include <linux/of_address.h>
++#include <linux/mod_devicetable.h>
++#include <linux/property.h>
+=20
+ #define DRIVER_NAME "uio_pdrv_genirq"
+=20
+@@ -110,7 +110,7 @@ static void uio_pdrv_genirq_cleanup(void *data)
+ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+ {
+ 	struct uio_info *uioinfo =3D dev_get_platdata(&pdev->dev);
+-	struct device_node *node =3D pdev->dev.of_node;
++	struct fwnode_handle *node =3D dev_fwnode(&pdev->dev);
+ 	struct uio_pdrv_genirq_platdata *priv;
+ 	struct uio_mem *uiomem;
+ 	int ret =3D -EINVAL;
+@@ -127,11 +127,12 @@ static int uio_pdrv_genirq_probe(struct platform_de=
+vice *pdev)
+ 			return -ENOMEM;
+ 		}
+=20
+-		if (!of_property_read_string(node, "linux,uio-name", &name))
++
++		if (!device_property_read_string(&pdev->dev, "linux,uio-name", &name))
+ 			uioinfo->name =3D devm_kstrdup(&pdev->dev, name, GFP_KERNEL);
+ 		else
+ 			uioinfo->name =3D devm_kasprintf(&pdev->dev, GFP_KERNEL,
+-						       "%pOFn", node);
++						       "%pfwP", node);
+=20
+ 		uioinfo->version =3D "devicetree";
+ 		/* Multiple IRQs are not supported */
 --=20
-Cheers,
-Stephen Rothwell
+2.43.2
 
---Sig_/ZiH5JGq97BdVWOSy9YHMX7q
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYA2qcACgkQAVBC80lX
-0Gz5XQf9Fo+VmcG3TIQTNpdWMpIFJITn7llufYrHZqXNFuq6iL2+Kz8Fjg02hmdr
-fnYrG0Trjt2MTJFgyvT0EsAs7oqyiNYoTKms89tDcpNshzQCaLsjBG/4Dk0nHT1Z
-MfNJjyXVWSOyh0+7IgBj4sLPUtsL4mR8LaAbngl9ZrDJCFkKSHgivRjODsaZQLiU
-b+7iJ66zhfhgFJMC2HLcWjjiKVF/NSylhSlB42Paj+Rsypo9gQtaO43Q61ed/MD7
-3sAADYW9T/mOsHOivYED8oKlxqUzE9flufYej+/tBRz7lyarZYhx893JN8GASdhi
-1iGfTGD1iooSIOsRpcGqNR18eVifaA==
-=ejQb
------END PGP SIGNATURE-----
-
---Sig_/ZiH5JGq97BdVWOSy9YHMX7q--
