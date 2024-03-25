@@ -1,92 +1,87 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57DF170A3F
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FDB1782F2;
+	Mon, 25 Mar 2024 09:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711357777; cv=none; b=gJZpWbRdEIFFQLF/sNicDAQ4d7Uyrq1aoM4ltu3vTelj85AoVRljKdZNyp/HJxgKPRzvOfL+g2ItmpKMbk12OvGdK+j4ZO0hfPnXcQdyxsJVWocvAbKtkxpYKtiWhuKy0jWBFbzlpG44gCn34mTdUp6Fio0o2KTgBm0OIItKLNA=
+	t=1711357878; cv=none; b=YgRiJhRtGsVdiu6Dy+6g6c2teT5BElTmiPnjv7Teo/+iqceRltAqxnQ8dmur67eRVW9pa4KYXOpCQuKeZqFRHoG+FayHky3YVbjbDvx5TAkCbl9+he8YneUqLAVDP7s4VGVvG7e70pL5+FD58VJfv6XWH5SmRM3LPMfEHozbIis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711357777; c=relaxed/simple;
-	bh=myK+VAmTaTPxdQF4/X8FLBK790KZzA6ht2Keg01FX9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L4q9jueYfuBFORlJ4XVRE481dLaT56zC7DlI8xHKpjk0og0qdvbO14ki9qAIyyd+YTqknhPNYPGIZftoZVjjVW/mrAz+Q8FCIL8iebQfiRiEvRBBCgAG55/08nZdt1ghGfivrDT3lBcpW6qzr13QytcrHj0+OIZtyx+c4jLk9Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=enHZmhgK; arc=none smtp.client-ip=217.70.178.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1711357878; c=relaxed/simple;
+	bh=9y0G1BTQ2uSEPU8w/gXoViJAhzs3aCSAw8+ySzYVdsE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Wq6/i5BM1bDW07jXznPlomj9clpQyyJx3kuri/QAT53e0fj99KeIO03otb9mIT3KPYqU1pjzlDh1sICDOHVMofTQCjYhDTl1jeAV8Ec/tHksZsae32Su6WBwC+8Fgr/vGMT8vL8iQnJjWzww7xnfNGd7GZSOM6DMFccxtsLdZBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Gcg29h6F; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="enHZmhgK"
-Received: from relay3-d.mail.gandi.net (unknown [217.70.183.195])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id E80C7C5444
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:09:26 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0770E6000C;
-	Mon, 25 Mar 2024 09:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711357759;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g7SMZhAf4Am0rTnm/eARUporpv8JgZVnopqWzBN3xYo=;
-	b=enHZmhgK7R2eEv2n80yLDfGotfc2qlr6jstwvnMzsZFNaSDo2gaooBLPB2v/FyK+o4h0m1
-	cEgWXNpRUW3UWMFUzE0GcWPhuc2m4hGwUrViLbf8l9jLlrLOUiO6SBpEBtbzPgB6z2yoZB
-	7zR5b0hQQhhCZ39hqL4yLow+YFQ546UeIsdwi1vA4++SOAfGe9uesYToBfwqG0G7rL8kg5
-	ZmaopkO3vG99dpOiw45LCOfJMzmB+hkb97DOi7OfwAXrMsay0OtSmi4pUk29OBOshgcA2U
-	mqhZRUdvyho23ubWuD3o7WzcLT5mO5xmCrw9K5VtZO4Eky11/HA1k7XfQbgAgA==
-Date: Mon, 25 Mar 2024 10:09:16 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Alexander Dahl <ada@thorsis.com>
-Cc: linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
- Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org
-Subject: Re: mtd: nand: raw: Possible bug in nand_onfi_detect()?
-Message-ID: <20240325100917.502c75b7@xps-13>
-In-Reply-To: <20240307181931.440c9c3f@xps-13>
-References: <20240306-shaky-bunion-d28b65ea97d7@thorsis.com>
-	<20240306164831.29eed907@xps-13>
-	<20240307-pantry-deceit-78ce20f47899@thorsis.com>
-	<20240307181931.440c9c3f@xps-13>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Gcg29h6F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711357874;
+	bh=9y0G1BTQ2uSEPU8w/gXoViJAhzs3aCSAw8+ySzYVdsE=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=Gcg29h6Fl6MMWzOHduYzYk3qGVJVOIlA7Btxb3MA7Ws8wZ5QKxYYC3kjmW+uTfSX9
+	 S++sZAm/9uTl6getLAOPLAMWvn1Dz4FdY13NjP28wJz450LZmqLvt9wv0VB3EMEVOf
+	 +VmHMLCqZyhKvAd9UROs0xgm7xl3zCmH0g5xLAYeKHleDMYV8/Ljwl38XrEgHyuyCB
+	 eP4jhkGldACbYxfdU/O9SlOZZbFNtuifz+U2txkjWTMXGaGQnplD9F/fQrU6gzvP0o
+	 NsPcjiNAkucgDSMl1I8EaRdOYZzF91A/zT9YQZYxQ7+CPQhoSrtUsB0nPgS4MXEpIz
+	 T6vMUmKiMkmcQ==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 03062378209C;
+	Mon, 25 Mar 2024 09:11:10 +0000 (UTC)
+Message-ID: <45b4d209-675a-4b42-b62c-6644bafa36c0@collabora.com>
+Date: Mon, 25 Mar 2024 14:11:41 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
+ iommu@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests: iommu: add config needed for iommufd_fail_nth
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>,
+ Shuah Khan <shuah@kernel.org>
+References: <20240325090048.1423908-1-usama.anjum@collabora.com>
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240325090048.1423908-1-usama.anjum@collabora.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 7bit
 
-Hello Alexander,
+On 3/25/24 2:00 PM, Muhammad Usama Anjum wrote:
+> Add FAULT_INJECTION_DEBUG_FS and FAILSLAB configurations which are
+> needed by iommufd_fail_nth test.
+> 
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> ---
+> While building and running these tests on x86, defconfig had these
+> configs enabled. But ARM64's defconfig doesn't enable these configs.
+> Hence the config options are being added explicitly in this patch.
+Please disregard this extra comment. Overall this patch is needed to enable
+these config options of x86 and ARM both.
 
-> > > > The condition is true and nand_change_read_column_op() returns with
-> > > > -EINVAL, because mtd->writesize and mtd->oobsize are not set yet in
-> > > > that code path.  Those are probably initialized later, maybe with
-> > > > parameters read from that ONFI param page?
-> > > >=20
-> > > > Returning with error from nand_change_read_column_op() leads to
-> > > > jumping out of nand_onfi_detect() early, and no ONFI param page is
-> > > > evaluated at all, although the second or third page could be intact.
-> > > >=20
-> > > > I guess this would also fail with any other reason for not matching
-> > > > CRCs in the first page, but I have not faulty NAND flash chip to
-> > > > confirm that.   =20
-> > >=20
-> > > Thanks for the whole report, it is interesting and should lead to fix=
-es:
-> > > - why does the controller refuses the datain op?   =20
-> >=20
-> > See above.
-> >  =20
-> > > - why nand_soft_waitrdy is not enough?   =20
-> >=20
-> > I don't know.  That's one reason I asked here.
-> >  =20
-> > > - changing the condition in nand_change_read_column_op()
-> > >=20
-> > > Can you take care of these?   =20
+> ---
+>  tools/testing/selftests/iommu/config | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/iommu/config b/tools/testing/selftests/iommu/config
+> index 110d73917615d..02a2a1b267c1e 100644
+> --- a/tools/testing/selftests/iommu/config
+> +++ b/tools/testing/selftests/iommu/config
+> @@ -1,3 +1,5 @@
+>  CONFIG_IOMMUFD=y
+> +CONFIG_FAULT_INJECTION_DEBUG_FS=y
+>  CONFIG_FAULT_INJECTION=y
+>  CONFIG_IOMMUFD_TEST=y
+> +CONFIG_FAILSLAB=y
 
-Now would be a perfect time to send these fixes. Could you work on them?
-
-Thanks!
-Miqu=C3=A8l
+-- 
+BR,
+Muhammad Usama Anjum
