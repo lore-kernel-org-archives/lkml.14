@@ -1,183 +1,126 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6F3174979;
-	Mon, 25 Mar 2024 08:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A7918D898;
+	Mon, 25 Mar 2024 08:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711354576; cv=none; b=T5x54mKEE15WAUegRKXk86pE/bYrh4vnlF0TqjFRhrwRp250l3WRtHTH39+9F+jX4yOYVhyG42dJIc1feG4Csw0lGVgK41Pe8HpClodLZ+jHplKH5eJ5jSryEc5dY7xF3OfzaimGceKVg4PIYm/YOeX3ttkmTKKi41ANQxjjd3k=
+	t=1711354792; cv=none; b=g6eb0Sj4S07C87VpqepsyAVoyyR0BUWvAGrZFa4BUej4CR6YIwi7nDSkLUkSQXtSOcJBeH5y0z38/TUzdx7cocDXkdYQ40QjwTWp5SprSqQxgaJfTkoW1ZnVyO0k09NfSqnMUy6eDL/01DHgHts4Ngg1Ex1wNEla1CROAaSi9AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711354576; c=relaxed/simple;
-	bh=zrpt65om+iFNhdhCeiZbSfF3Jv4eME/tnsKBlV+Rodg=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GhjtVY/r3/14tlBBmQBWZ0sljnZSGmOFXaQfQeEW/jI1X1TKSxOALHiM8OVtXvnzdQ1LHzxxB9ATMBhlDTB64VOzNBzwVHaOuwB9GfhAnS+XJM6m1w8veJgy/8n/qAkuyhCCnxNlR+2AreVprfMuRw+hAJeRplyh2pB19EAj1n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h+hSJkiV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hus24AQd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h+hSJkiV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hus24AQd; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1711354792; c=relaxed/simple;
+	bh=lIpUYQJtPvS3BxEqA7zTq9KBEkYJ5PSk/erw1/XkCf4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dTkDwm5dheZsp+spExsWtZqYmO8gKkZm53Xtd+0ORmG3lJq56mKQNI2rWW2dKbXVsZRZLAIv2BejGUjIjKHdlS1py7Q6RV8mVv14ZDNVw0Cqo/eKakDwU0HXUFMZQnPTAOAR0766XQOGUdJSo6GD7Pm3bt2nS4VZwUrYVmAhrA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBkduOB3; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h+hSJkiV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hus24AQd";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h+hSJkiV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hus24AQd"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0C8A65C3F3;
-	Mon, 25 Mar 2024 08:16:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711354571; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uPXGAo84hXrpIzyI362ELzciOl/SodbSHAdeHfFNjKc=;
-	b=h+hSJkiVvjXwku6P6oA6/VC+g9lTw7f4lNaYgy4ony4i60Wap/SkOGZsBHaAzBUCH92Dcz
-	hK+mDB9tR1ihmIyL4DWrXksknR3f5K3bniMgyB4B4gXO/otzI08SbeDbYM/dQ1984Fzn8/
-	qnkDAtPYDqoHVq4tGN6hXzt5ednjjzM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711354571;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uPXGAo84hXrpIzyI362ELzciOl/SodbSHAdeHfFNjKc=;
-	b=hus24AQdlUPGy0yA2MGxReqSDXRkzzagSOFvBTlU0h1d7ct0z9+oDNhtSCO9KZlqSMvUzO
-	72wkBkmPLi6ZD9DA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711354571; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uPXGAo84hXrpIzyI362ELzciOl/SodbSHAdeHfFNjKc=;
-	b=h+hSJkiVvjXwku6P6oA6/VC+g9lTw7f4lNaYgy4ony4i60Wap/SkOGZsBHaAzBUCH92Dcz
-	hK+mDB9tR1ihmIyL4DWrXksknR3f5K3bniMgyB4B4gXO/otzI08SbeDbYM/dQ1984Fzn8/
-	qnkDAtPYDqoHVq4tGN6hXzt5ednjjzM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711354571;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uPXGAo84hXrpIzyI362ELzciOl/SodbSHAdeHfFNjKc=;
-	b=hus24AQdlUPGy0yA2MGxReqSDXRkzzagSOFvBTlU0h1d7ct0z9+oDNhtSCO9KZlqSMvUzO
-	72wkBkmPLi6ZD9DA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C83E713503;
-	Mon, 25 Mar 2024 08:16:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id pnlTLMoyAWZeHQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 25 Mar 2024 08:16:10 +0000
-Date: Mon, 25 Mar 2024 09:16:12 +0100
-Message-ID: <871q7yybeb.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Duoming Zhou <duoming@zju.edu.cn>
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tiwai@suse.com,
-	perex@perex.cz
-Subject: Re: [PATCH] ALSA: sh: aica: reorder cleanup operations to avoid UAF bug
-In-Reply-To: <20240325033946.47052-1-duoming@zju.edu.cn>
-References: <20240325033946.47052-1-duoming@zju.edu.cn>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBkduOB3"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d4a901e284so80715921fa.1;
+        Mon, 25 Mar 2024 01:19:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711354789; x=1711959589; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zyaog/ojigT48JKNMU9i5w4rtbwucwfAGNUHLnrxdoA=;
+        b=HBkduOB3ndsNh8nfO3+gLVUtX2QPdXU2AypbHIJsWdmeO7R6UlSLw/C90CDFWF8IYv
+         nAP2gEbqDc4Hp7JbdAU5HYY8OSKywqEG0K9RDVqX3mh2edPQ28s3ilj0rb2kr2l/FxiW
+         bGxDpee69beInRLjC9V100QhNRHGklhcEDsfawVCHIXBj/gsdAgBqejoBdWYYhnNW9FN
+         cHbH1Z4W/Fe4SbUodGN8r7FKZ43NMHuUM30NlB71dDVbnN0doNFf2QscZ5DpnDBzNVjK
+         lqdUZkNtPI8x9fZG+TxslN26h2IheoJaTh0RDDVik8zsiQdOl27/HpqrBD9vMaGgI4hi
+         /O/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711354789; x=1711959589;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zyaog/ojigT48JKNMU9i5w4rtbwucwfAGNUHLnrxdoA=;
+        b=h5pjVDGS7a3pshpTnJ5dZYrI14qcFR6zo/gCj9GiikOXry/5kDo2oZYUBDa/TFdjHu
+         uVI/W3ckdGwLWdMz4vDq0QAimj+HbxYXGZxUjZ7XZV8W2qgMo352oyKyIkv3I+5cZgwO
+         DFMz89BKwRt2lY5KQzBApJXrQt1hk+JKFgoNFYCpE7eUHqEJnp01Lq/9m0WyjCC1tMjZ
+         k48gxo9vYuHg2aRR+KwVjUjwhTwzTkaZEbUCDHjsBzCsZ2nwArtbflW6vq9zDeMEUIuQ
+         JZcDbAo9xomr1OM4M49pXn7zREMC76DOZwmjRLGU3fcmpSEJVwwuTOwffnrKPnhlpW0l
+         8kcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpLHyp+Gu8SgQIXUBrINAXyfj4c9q9i450Jpl59ph4zjArfgb3SnpisAMWU7O8gjbdnwXOxoPmgkbmenXKdYLNgasL2ZyGbiJ7qIxK
+X-Gm-Message-State: AOJu0YyaP/PnRn6W3nVg8owOC6FiSYglKbrq7LxyHvnw/D+rfSMUFC2o
+	jp/qvK+sS1+LDDHXcUYXOBQCHDLB3dXoSTpJIJJ45YNTPJ2YSAL3XCQ2iTT8PSObNrqczy+SRIp
+	pz9BEw5/sQRsHSyLMHJ9qaJS0KjQJl/Tlfr4=
+X-Google-Smtp-Source: AGHT+IERKZc9n0PabjTyQJRPIveAjnM6cvGj82VJT164+gkS1jNiwYxhEiYn3QgUTnfemm4WlRTNSptza4XrgKro6II=
+X-Received: by 2002:a2e:9048:0:b0:2d4:6cde:fbe3 with SMTP id
+ n8-20020a2e9048000000b002d46cdefbe3mr4579558ljg.24.1711354788449; Mon, 25 Mar
+ 2024 01:19:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -0.30
-X-Spamd-Result: default: False [-0.30 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-0.999];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-0.00)[30.01%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[zju.edu.cn:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Flag: NO
+MIME-Version: 1.0
+References: <20240325024628.101296-1-yang.lee@linux.alibaba.com>
+In-Reply-To: <20240325024628.101296-1-yang.lee@linux.alibaba.com>
+From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Date: Mon, 25 Mar 2024 17:19:31 +0900
+Message-ID: <CAKFNMon5w_AfJmdey-XY+wWK+yCqj9PuHVeJf4qa2TMNv_iPsg@mail.gmail.com>
+Subject: Re: [PATCH -next 2/3 v2] fs: Add kernel-doc comments to nilfs_btree_convert_and_insert()
+To: Yang Li <yang.lee@linux.alibaba.com>
+Cc: linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 25 Mar 2024 04:39:46 +0100,
-Duoming Zhou wrote:
-> 
-> The dreamcastcard->timer could schedule the spu_dma_work and the
-> spu_dma_work could also arm the dreamcastcard->timer.
-> 
-> When the Yamaha AICA card is closing, the dreamcastcard->channel
-> will be deallocated. But it could still be dereferenced in the
-> worker thread. The reason is that del_timer() will return directly
-> regardless of whether the timer handler is running or not and the
-> worker could be rescheduled in the timer handler. As a result, the
-> UAF bug will happen. The racy situation is shown below:
-> 
->       (Thread 1)                 |      (Thread 2)
-> snd_aicapcm_pcm_close()          |
->  ...                             |  run_spu_dma() //worker
->                                  |    mod_timer()
->   flush_work()                   |
->   del_timer()                    |  aica_period_elapsed() //timer
->   kfree(dreamcastcard->channel)  |    schedule_work()
->                                  |  run_spu_dma() //worker
->   ...                            |    dreamcastcard->channel-> //USE
-> 
-> In order to mitigate this bug, use timer_shutdown_sync() to shutdown
-> the timer and then use flush_work() to cancel the worker.
-> 
-> Fixes: 198de43d758c ("[ALSA] Add ALSA support for the SEGA Dreamcast PCM device")
-> Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+On Mon, Mar 25, 2024 at 11:46=E2=80=AFAM Yang Li wrote:
+>
+> This commit adds kernel-doc style comments with complete parameter
+> descriptions for the function nilfs_btree_convert_and_insert.
+>
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 > ---
->  sound/sh/aica.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/sound/sh/aica.c b/sound/sh/aica.c
-> index 320ac792c7f..bc68a3903f2 100644
-> --- a/sound/sh/aica.c
-> +++ b/sound/sh/aica.c
-> @@ -354,8 +354,8 @@ static int snd_aicapcm_pcm_close(struct snd_pcm_substream
->  				 *substream)
->  {
->  	struct snd_card_aica *dreamcastcard = substream->pcm->private_data;
-> +	timer_shutdown_sync(&dreamcastcard->timer);
+>  fs/nilfs2/btree.c | 22 +++++++++++++++-------
+>  1 file changed, 15 insertions(+), 7 deletions(-)
+>
+> diff --git a/fs/nilfs2/btree.c b/fs/nilfs2/btree.c
+> index 65659fa0372e..de38012fd87c 100644
+> --- a/fs/nilfs2/btree.c
+> +++ b/fs/nilfs2/btree.c
+> @@ -1857,13 +1857,21 @@ nilfs_btree_commit_convert_and_insert(struct nilf=
+s_bmap *btree,
+>  }
+>
+>  /**
+> - * nilfs_btree_convert_and_insert -
+> - * @bmap:
+> - * @key:
+> - * @ptr:
+> - * @keys:
+> - * @ptrs:
+> - * @n:
+> + * nilfs_btree_convert_and_insert - Convert and insert entries into a B-=
+tree
+> + * @btree: NILFS B-tree structure
+> + * @key: Key of the new entry to be inserted
+> + * @ptr: Pointer (block number) associated with the key to be inserted
+> + * @keys: Array of keys to be inserted in addition to @key
+> + * @ptrs: Array of pointers associated with @keys
+> + * @n: Number of keys and pointers in @keys and @ptrs
+> + *
+> + * This function is used to insert a new entry specified by @key and @pt=
+r, along
+> + * with additional entries specified by @keys and @ptrs arrays, into a N=
+ILFS B-tree.
+> + * It prepares the necessary changes by allocating the required blocks a=
+nd any
+> + * necessary intermediate nodes. It converts configurations from other f=
+orms of block
+> + * mapping (the one that currently exists is direct mapping) to a B-tree=
+.
+> + *
+> + * Return: 0 on success or a negative error code on failure.
+>   */
+>  int nilfs_btree_convert_and_insert(struct nilfs_bmap *btree,
+>                                    __u64 key, __u64 ptr,
+> --
+> 2.20.1.7.g153144c
+>
 
-I thought this call invalidates the timer object, hence it can't be
-used again; i.e. it breaks when the stream is re-opened, I suppose?
+Thank you for the revised version.  I'll take this one.
 
-In general timer_shutdown*() is used for the code path to clean up the
-driver (or the object the timer belongs to).  The PCM close is only
-about the PCM stream, and it's not the place.
-
-A proper fix would be rather to implement two things:
-- Call mod_timer() conditionally in run_spu_dma()
-- Implement PCM sync_stop op to cancel/flush the work
-
-The former alone should suffice to fix the UAF in your scenario,
-though.  The latter will cover other possible corner cases.
-
-
-thanks,
-
-Takashi
-
-
->  	flush_work(&(dreamcastcard->spu_dma_work));
-> -	del_timer(&dreamcastcard->timer);
->  	dreamcastcard->substream = NULL;
->  	kfree(dreamcastcard->channel);
->  	spu_disable();
-> -- 
-> 2.17.1
-> 
+Ryusuke Konishi
