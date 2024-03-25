@@ -1,80 +1,79 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 942095D731;
-	Mon, 25 Mar 2024 12:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-4317.proton.ch (mail-4317.proton.ch [185.70.43.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C2913C9CA;
+	Mon, 25 Mar 2024 12:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711368387; cv=none; b=amN3wMMKBM6R7th5n2yqIs7xKudbaP/lPS2NJ6+05zXzdRQDp2V9fISJoalpEYyA/4kRmPIlrTg5TozilRXHQnMnc2sq6kufB7h2OQ6qk1XYqjINN8CdBgVGEU5V5zoVvem5mxoSesjA2fad/h/Z/8CuNfyuHU+UKdhNRDrk0T0=
+	t=1711368274; cv=none; b=iaFB5k8blXDTzVb+WVqSlyE71Hnh3+/RLRnQQmQ454KyBYRSlv7eze2hnCjpF9de7AAXhkGaG26X1bvK5l/QyCEjt2+fqP0OOoJ2gEHKcY/VZCqu1KZjazO9SM5qdh/uJmJRoFrFepdroqndCWCEL4x+pf5f4dqUVA6KofRQ5zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711368387; c=relaxed/simple;
-	bh=yPtmna4ptGgXfkbENYERn+NKzVLez4o/N3DCc/GmLKI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h72srGKs/T4g7uwvsBa8cWauYTkJoEsvPUqtLGVWP/voNF6jNcFcOXWb13JclTySmn/7BljPaz8umAXfbRgEM/SI+3KI/dW6hVrFDnh4JxAg9v3xo5OHDBPr4rL9iW/BFX/Ngu0MsUtbNuk+W8Kiqu8McWKbelaNkm/9SUnXTGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 347BF1FB;
-	Mon, 25 Mar 2024 05:06:55 -0700 (PDT)
-Received: from [10.1.25.33] (e133047.arm.com [10.1.25.33])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 330623F67D;
-	Mon, 25 Mar 2024 05:06:18 -0700 (PDT)
-Message-ID: <de1eba3c-2453-4c5c-bd80-dd7d7b33f60d@arm.com>
-Date: Mon, 25 Mar 2024 12:06:16 +0000
+	s=arc-20240116; t=1711368274; c=relaxed/simple;
+	bh=0wWxnhlUgMSZvuwxbr8ru7jSnb5aI6EIzUA0B0gFuCc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LU21OknWzRoNGgp7GMB4Vc9iN/NLaREHFixaN6zyWcycMNWw1ey8bD+po0YIZD9PvWTx5kHZEvPs3BbrpNPLw3Fk6yFJhtJRzp1AhSUzdn5iETkm/0pJeH5wkzb9R8y6+/VIZvcAyX5vR4U39japCrQQxYAIYLVBx6hsGvS6Joc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com; spf=pass smtp.mailfrom=thefossguy.com; dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b=dDM8bDZV; arc=none smtp.client-ip=185.70.43.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thefossguy.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b="dDM8bDZV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thefossguy.com;
+	s=protonmail; t=1711368263; x=1711627463;
+	bh=0wWxnhlUgMSZvuwxbr8ru7jSnb5aI6EIzUA0B0gFuCc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=dDM8bDZVN7ZutsxtsURwCCD4JOFAowowErwOUgEQBTUH1IAzGg019hSmOXdcIkQR1
+	 FI1jQLnP+CyzviPBqxLIanDf3Or2WCx4nRwCYfzRM9639Bs6TzelNSyRDoHKi8dMBM
+	 /OMgRXWKlNOdraNVDhXPQ+IHRoLP8FuFSkISgHbfyt58xEtuGgZwcZRmNe/PR74ixy
+	 nLiN9eOEGk3osD7VeehzK4svY/1MnhYXvVgk7mFiaSp7+DizTFG9qJ3Ohx85SXFzy9
+	 SfvtXTK6A9gqHjw+cYZDeIE+bADez5uClVjklmzxmZpHNs3/ziXMhyzLLxoC8S54T7
+	 Z4mdHB9dPfa5Q==
+Date: Mon, 25 Mar 2024 12:04:10 +0000
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+From: Pratham Patel <prathampatel@thefossguy.com>
+Cc: robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, heiko@sntech.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] arm64: dts: rockchip: disable analog audio for rock-5b
+Message-ID: <CCTOoihgxcoHsOeXW4owCGYEAdaJ7kU3vQg9o0AFJaIvzbIj0EzBYn3To3dakOKjMwmozVEl5hwPD-K_GXYzU-XNK6GvIvRcSCMkOxDDvV4=@thefossguy.com>
+In-Reply-To: <37afb6dc-28a0-46e5-ac39-3443999f3bd0@linaro.org>
+References: <20240324062816.145858-1-prathampatel@thefossguy.com> <0005257d-8022-4a66-a802-0c920d259ccd@linaro.org> <TbQeSy-AWAKVHo2Alb8hXUvplVNvohDJ2ztRM1x3Fo5PMmGLMsJxtHR-OIms9FlUshfUD9x45EghBCB9gVtcUPlxeMRUJQ_C95DVhu3AJrk=@thefossguy.com> <37afb6dc-28a0-46e5-ac39-3443999f3bd0@linaro.org>
+Feedback-ID: 104309535:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] Introduce per-task io utilization boost
-Content-Language: en-US
-To: Bart Van Assche <bvanassche@acm.org>, Qais Yousef <qyousef@layalina.io>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org,
- juri.lelli@redhat.com, mingo@redhat.com, rafael@kernel.org,
- dietmar.eggemann@arm.com, vschneid@redhat.com, vincent.guittot@linaro.org,
- Johannes.Thumshirn@wdc.com, adrian.hunter@intel.com, ulf.hansson@linaro.org,
- andres@anarazel.de, asml.silence@gmail.com, linux-pm@vger.kernel.org,
- linux-block@vger.kernel.org, io-uring@vger.kernel.org,
- linux-mmc@vger.kernel.org
-References: <20240304201625.100619-1-christian.loehle@arm.com>
- <86f0af00-8765-4481-9245-1819fb2c6379@acm.org>
- <0dc6a839-2922-40ac-8854-2884196da9b9@arm.com>
- <c5b7fc1f-f233-4d25-952b-539607c2a0cc@acm.org>
- <2784c093-eea1-4b73-87da-1a45f14013c8@arm.com>
- <20240321123935.zqscwi2aom7lfhts@airbuntu>
- <1ff973fc-66a4-446e-8590-ec655c686c90@arm.com>
- <2ed2dadc-bdc4-4a21-8aca-a2aac0c6479a@acm.org>
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <2ed2dadc-bdc4-4a21-8aca-a2aac0c6479a@acm.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 21/03/2024 19:52, Bart Van Assche wrote:
-> On 3/21/24 10:57, Christian Loehle wrote:
->> In the long-term it looks like for UFS the problem will disappear as we are
->> expected to get one queue/hardirq per CPU (as Bart mentioned), on NVMe that
->> is already the case.
-> 
-> Why the focus on storage controllers with a single completion interrupt?
-> It probably won't take long (one year?) until all new high-end
-> smartphones may have support for multiple completion interrupts.
-> 
-> Thanks,
-> 
-> Bart.
-> 
+On Monday, March 25th, 2024 at 13:18, Krzysztof Kozlowski <krzysztof.kozlow=
+ski@linaro.org> wrote:
 
-Apart from going to "This patch shows significant performance improvements on
-hardware that runs mainline today" to "This patch will have significant
-performance improvements on devices running mainline in a couple years"
-nothing in particular.
-I'm fine with leaving it with having acknowledged the problem.
-Maybe I would just gate the task placement on the task having been in
-UFS (with multiple completion interrupts) or NVMe submission recently to
-avoid regressions to current behavior in future versions. I did have that
-already at some point, although it was a bit hacky.
-Anyway, thank you for your input on that, it is what I wanted to hear!
+>=20
+>=20
+> On 24/03/2024 12:21, Pratham Patel wrote:
+>=20
+> > On Sunday, March 24th, 2024 at 16:15, Krzysztof Kozlowski krzysztof.koz=
+lowski@linaro.org wrote:
+> >=20
+> > > On 24/03/2024 07:28, Pratham Patel wrote:
+> > >=20
+> > > > The addition of `of: property: fw_devlink: Fix stupid bug in remote=
+-endpoint parsing`
+> > >=20
+> > > Please refer to commits using commit sha () syntax, as mentioned in
+> > > submitting patches.
+> >=20
+> > Noticed that in the wiki but didn't do that since the commit hash for t=
+he commit
+> > was different in each branch (of the stable tree). Maybe I should have =
+copied the SHA
+> > from Linus' tree. I will do that.
+>=20
+>=20
+> There is only one tree: master/mainline tree. Commits in stable do not
+> matter outside of stable.
 
-Kind Regards,
-Christian
+Ack, thank you.
+
+ -- Pratham Patel
