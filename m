@@ -1,125 +1,140 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11021007.outbound.protection.outlook.com [40.93.193.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691B843AD2
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 19:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711395659; cv=none; b=H1EWjy/8Opcm8VgfHrbQuRMgAjAq5qIrm543BkJ8PTSXGiTHQcR0O+lNNt9IdCtTyyakCtQBhGVmM6OACjOPzH/IxHqgfEHI4rBDGlI5w2lFSxp/2xcK7D8skWRWBSJDR91IfaQNohqkjqYWyJ08LOPAodxMn7ha5VyVuHwuhnQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711395659; c=relaxed/simple;
-	bh=O3T2ZVnqYmBb98eatEjFmoz6lFq5rPVIXrRZI114ot4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TI1DNJrmGvNUvSEgHMSnx66B2K9SkJNPRvosW9RaWsMxg3MTQCmCJWfm5bGMxPdAhytf9+0EoQVE+zPxPPMBsAfUkDAyPck3mNQyTn30kg3irbGnMeyC9aTF809iIiEp4Nxt5aSZZJaDujCaMGi4eP78xLjE6tIJfRZMCKDvQXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=B1nzWHQz; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E759741C79;
+	Mon, 25 Mar 2024 19:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.193.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711395664; cv=fail; b=OZYcdM8UPsa0XxkOpEW7pMZLze9dWWYzX8ZnKHAAEQWM1AQ4zzUzq1vU0BgtTd81MXq2pAzf+T9n3Swm+wzTMf2UUyakylZiIs5twkNLrRSbNl8uEROujRLvxnqtCsTwJ5GyX9MK8HRZNz5Es9m/knY/TwnQtrfKE7oz69akwBs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711395664; c=relaxed/simple;
+	bh=SEgSyGXIB0M4kJpTzut8i5LwrzwrhfZOq/1f0xewScw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=OlpPU3MLr2hND4/fSqESPkERW+TTyO14gBHMHw4j3amBtQaKvwJhpkVpkQjLynvmtlp208gqG7p2ZsaMhYJh8UX61Ev2j11MbopxJp8+v++ZJ1qM/krLxnlfl1qTf6mc6AwyfeokJFwZjV+mJcHLfTgyB0Y91UAvaBrc9tDOi84=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=IG14MS+U; arc=fail smtp.client-ip=40.93.193.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="B1nzWHQz"
-Date: Mon, 25 Mar 2024 15:40:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711395655;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P/ulXyWKqkzXiOH+Zl+aph4Lwf/XKPejosEhROqYyvU=;
-	b=B1nzWHQz4fk8V3rHqtSVsCx9Y8hVkRHvgrE6Bvb1g36Mh6Av3cmyu8EN7JqrqT14Ci/PLQ
-	N/Hhc46Z68FolOA4BiuHuB+K2LrNr1oASp+HeKbGSrjxoqKtfXzyhSY6z9DQcdp7ihUPY/
-	L5b8cDpzsUZYaoK4mu7IQW4sc2pYXC8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kees Cook <keescook@chromium.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>, 
-	Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, 
-	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>, Xiu Jianfeng <xiujianfeng@huawei.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Jann Horn <jannh@google.com>, 
-	Matteo Rizzo <matteorizzo@google.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 4/9] slab: Introduce kmem_buckets_create()
-Message-ID: <eppzf5gil6izcn6nnvzgzukagdikqnfxdvziga7ipnpl5eeern@i7jfzslklsu6>
-References: <20240305100933.it.923-kees@kernel.org>
- <20240305101026.694758-4-keescook@chromium.org>
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="IG14MS+U"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WnL+23u3f7mRHv8tMkk4U29on4FfWsto/Jrz3STheP7W3aPpM/zszmQMVX4Su0oRpT55plL2DqoL6mzaRMiceITV1VDFhUavrNdiVWkKTNOhfaNofHqZIMNYeKIqzDAdu0Z31Q+Vb67npksrzO5bG8cUHk86vveCYkpJUzdeB0O9K7lk8VX/8bYOsQJyeQ2Lioleacfh0qSGV/ALGGveYtlw9PT58vBvrRKFHT5Bi1OeNI4OM97MTm3l9e+36oxllAFYJ3vR3CcKmInoFbN4Ip+FhQ2oYOSEn11RmBF2piFGNSm4plBaSS0WmUlWRf80zEBW7cnSumHEcNZC5DJfPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Up2MCnchd2ivJNkwnfytVIR1+3ns20QZQNSRjSMNg/M=;
+ b=YUJszhxDYIFc99b0c7lWVCAB0nYS5fq72nu5gL1TPkapkZUfMsJ+cbef8DrJBpIkky4gT6vcv0QHFKf16FlgOycyXg6wuZRXd+IT8I8eMvaE0gtoPXlC/ukKX9dI61gtsgYrwe97L3SbfarQVVldAOPqrhHmxor4DT02fFtrWuJH+pdq2NHMAiHLTa6jwDqtzgjnr99GdyziRKwrqmxY1THtCFlSZiu7FzpJRn0lhSXh4Lvua6hMc5RBaoUMugz6dMto+o7aUSqAelAmRYqtQd3NEub9wJ57eTd3ro3fG9DpMZHjpWbGC0ahNvhMduy0Vfqd4hjXJeTJlHEMNE51yw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Up2MCnchd2ivJNkwnfytVIR1+3ns20QZQNSRjSMNg/M=;
+ b=IG14MS+UuhG/KBt9anLLKfdo47M/nO92Nn4tBYCfYqJvnl++i8Cnpt0038zL7ANDvgDm/a+rXBmBM2qTzPQsXN4pnFl5nZ29bC0dx3ZDEFZXI4AaX9M5afSOjcHSEa6CQgu7Z6JFbuIc+2j2FnzWx2e3OqGXBn/OLAreJlCbf6A=
+Received: from SJ1PR21MB3457.namprd21.prod.outlook.com (2603:10b6:a03:453::5)
+ by BYAPR21MB1319.namprd21.prod.outlook.com (2603:10b6:a03:115::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7430.20; Mon, 25 Mar
+ 2024 19:40:58 +0000
+Received: from SJ1PR21MB3457.namprd21.prod.outlook.com
+ ([fe80::70f:687e:92e6:45b7]) by SJ1PR21MB3457.namprd21.prod.outlook.com
+ ([fe80::70f:687e:92e6:45b7%4]) with mapi id 15.20.7430.017; Mon, 25 Mar 2024
+ 19:40:58 +0000
+From: Long Li <longli@microsoft.com>
+To: Konstantin Taranov <kotaranov@linux.microsoft.com>, Konstantin Taranov
+	<kotaranov@microsoft.com>, "sharmaajay@microsoft.com"
+	<sharmaajay@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, "leon@kernel.org"
+	<leon@kernel.org>
+CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH rdma-next v2 4/4] RDMA/mana_ib: Use struct mana_ib_queue
+ for RAW QPs
+Thread-Topic: [PATCH rdma-next v2 4/4] RDMA/mana_ib: Use struct mana_ib_queue
+ for RAW QPs
+Thread-Index: AQHaeh7xOJCPEnE8T0i7r4Bx7u7kA7FI47Rg
+Date: Mon, 25 Mar 2024 19:40:58 +0000
+Message-ID:
+ <SJ1PR21MB345735033DFA7CFF14B7BBD5CE362@SJ1PR21MB3457.namprd21.prod.outlook.com>
+References: <1710867613-4798-1-git-send-email-kotaranov@linux.microsoft.com>
+ <1710867613-4798-5-git-send-email-kotaranov@linux.microsoft.com>
+In-Reply-To: <1710867613-4798-5-git-send-email-kotaranov@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1de6e87c-a583-43bc-aa2c-c97facb0b9ad;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-03-25T19:38:12Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR21MB3457:EE_|BYAPR21MB1319:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 17H6cSzNhT+qXwV7pkWpbAtukJVmKGf0u9Snz1CjmnRQw2996i9CsVFU6VQwquBHlb95zXWBSfl8+arZq3kIvDxvnPPqiyes8v2hJfaN+CwxtkF+bCuCZ38ZojwWPZnzxWTa3nkcfDYTTX2RNL+Ys51Miv8ye4vwKsEiINLMLyCD9u3rCp5L+8behipnTz+t26vwTbR8vSOk4JMOGDDYq/YEsOT4RyYO1NpTW/aPDx9QsIGr6S8hHzKZEPlQLIOGsThu/Heyk/w1GFKArsSH96FuTzeO10Do44QoLs7mhhCke7ngQgPupHSexCZ9f7I7v8JlvxLM7FVTr59iHBySw9Qj2/L6x5LwQDwTMa8BLozp/J0efDks1G4wZc6GT+uRRCvmaoIumid+7zRxLubydr894b8+FPoAkW6z7ZIGRnUM8lUBvZiAxpZAyKsSOq1IzHC94Xy8fBH2OmZK9ueB30llPk6/jaEq1uj4XalZ4fx4Xs5aK3C02+NopbvjM0Rhor0EEEjOqrA05efLuvW3DscaptjTXTRpHFSx2nN09vLLQ5URxnS1ND4LwbrtBPqOZslWrmQ6gVjr6xZL2tHU0JybmKIUj5W+IB8VE4NUde+J/SJ3kR9cquLNnbnvZrAkDZgJAvEkEt2310JAWM/hHyBv4dHtqxNM8wAJOX0+OnA=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR21MB3457.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?HLF9W0uA0CLMpOa6Ep3dBHf3GyweBxv8cPCoAsKcwg0/aTYpixLuzV/W0FoH?=
+ =?us-ascii?Q?TugpCkeNvXrikB0VC3Td2NrVzl5l+EtsuRDrJn1p6bby7DIjpUySxIrPrQr2?=
+ =?us-ascii?Q?+Cm4VcOzS6YXYvy0uO+dkRRjs6b96atHw2iN/0gEenvP9IkzMLV39ig6uSGe?=
+ =?us-ascii?Q?wN57layC9mMgQWLfmAC6EYf0VS0fbyMi7BvFEJyAq6K0CyowgRB9KBJ5is7U?=
+ =?us-ascii?Q?CURKsSRJiNH9Zt43V2knCUu7da91MbXBY56mUWMsCQ5Z45ydvlfy++GpBgZ+?=
+ =?us-ascii?Q?XpVYJfGn5Ox3MgxO1za9DB3UoV640/uS2RnknoErE7kR0FoL32nJjG/BLicv?=
+ =?us-ascii?Q?RT6p6FXxh93m7aLp5st5xtV7+5HwkvYDNPj6len29dvoG/OmFSRZ/+R7pysY?=
+ =?us-ascii?Q?DasIK3MtFdb8xvQ+fSj/1Vt4YRR6FUYACVms85vohOgIBkfDTJUnv7UizURb?=
+ =?us-ascii?Q?FbyDDKPBOttuCHPpt9hf65lfyMW7nWCPE2AqfE4vFeXJmtk5Gq12aArH9JVV?=
+ =?us-ascii?Q?f6HQ8ZLCSV79YV+P7fc6OiDsZRzVAERLuKBehJaCYlxK0UGsjF2reJN4nqSi?=
+ =?us-ascii?Q?MXpZnU/RNsJG7TLcKWtc/tjVisKsDBR9BdM5tU7J0W8YnANhQnNdJ8AV1OQp?=
+ =?us-ascii?Q?8/HBPJKzlKytE0aTETzxORfYxuQ1S05kMh628+nGy7gWbPrHQRSsCpxEv+bs?=
+ =?us-ascii?Q?o7zFBm8GOCMWobifDDP4DdJpe8afiQOLIBYWkhOy2ExNlisFNZ5Sda5/I8Sb?=
+ =?us-ascii?Q?jxrTYqe5PFuiPv90jT6Il9vlIX5y4BDR8Ds1DlyEJOGvZ652tlCC5XHWjEio?=
+ =?us-ascii?Q?E1yIHDZ+LcnzdoogNMWLJG7SgpysNXnYKrOyFKp1+vMgp1MAx3w2AWwU1Kz0?=
+ =?us-ascii?Q?M8/m+hmv42yc20fT87SpKgAhHWWcOfEIWTtNO2EW7uA9j6pJHDa3tkKjW+fd?=
+ =?us-ascii?Q?01ZnCAE70GABnw9QUuPJ1fawBJljosR0zI2Xg+MRw3c6mzjUbi+gdEUK+HVh?=
+ =?us-ascii?Q?kRWix6Oqnt6/r9CMxvfObj9TcmS1S4JN+X3shkEFquyrcsu/HKApv8ODnNSI?=
+ =?us-ascii?Q?P62kL0s7B38cDUD+nEVHG/Xu+tTT9bdq9/ai4+aZ91dGXfTz7v2B3zMVq4v+?=
+ =?us-ascii?Q?f8C+ICnUjACbMhcOc0dMxtdF8xjBCDJ5Ai/sNMdIhXjebmMkjSuO4WC5ItwD?=
+ =?us-ascii?Q?Al+EqI3nU+Lm7rX6/Jd0PQimrRKIGBtKqL4YtQeH1w25SjMR1mXukPZjb13j?=
+ =?us-ascii?Q?05D6Zi393jKYUmmyn7EGM02dLiadXB8atCUdZPdxRS7qugLmkXsngX2sPMTF?=
+ =?us-ascii?Q?w3YVPVZtHsiIH79aKkamBkvjYfl3h9fLAnhBE47fXH9tyBQnTwj4Lm9DJP0O?=
+ =?us-ascii?Q?7vhpxHfmAqRsRgo9ZJxSdcGnxN0n1UAs++RwF1oiKMFIyAVIzaC87RCs52rG?=
+ =?us-ascii?Q?UdWHTZtd915Ol69NdjL6sHUeO9wOXQMFR+OsmxjOKhlT5oCCR0LbYzABnaYH?=
+ =?us-ascii?Q?ZE+icPt0+doVBggdesrUDtb3Mq587fzGd9ef0ald8VqyQbyPM4D5i93Hb+30?=
+ =?us-ascii?Q?X5B8E7y0OG1sSu3w/K4mnPySac+XvrGA1AlfWtkC?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305101026.694758-4-keescook@chromium.org>
-X-Migadu-Flow: FLOW_OUT
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR21MB3457.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44edc098-8fc8-4738-1921-08dc4d037ed9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2024 19:40:58.7806
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3q3kC2/N13Fp9ANUaDhbTAhr/50o4Umiu9ta+CQIIuAqsk5LcBMQe5Lo+SMMyhk0P2fLorGbOTN+otYtoGWXeg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1319
 
-On Tue, Mar 05, 2024 at 02:10:20AM -0800, Kees Cook wrote:
-> Dedicated caches are available For fixed size allocations via
-> kmem_cache_alloc(), but for dynamically sized allocations there is only
-> the global kmalloc API's set of buckets available. This means it isn't
-> possible to separate specific sets of dynamically sized allocations into
-> a separate collection of caches.
-> 
-> This leads to a use-after-free exploitation weakness in the Linux
-> kernel since many heap memory spraying/grooming attacks depend on using
-> userspace-controllable dynamically sized allocations to collide with
-> fixed size allocations that end up in same cache.
-> 
-> While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
-> against these kinds of "type confusion" attacks, including for fixed
-> same-size heap objects, we can create a complementary deterministic
-> defense for dynamically sized allocations.
-> 
-> In order to isolate user-controllable sized allocations from system
-> allocations, introduce kmem_buckets_create(), which behaves like
-> kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
-> which behaves like kmem_cache_alloc().)
-> 
-> Allows for confining allocations to a dedicated set of sized caches
-> (which have the same layout as the kmalloc caches).
-> 
-> This can also be used in the future once codetag allocation annotations
-> exist to implement per-caller allocation cache isolation[1] even for
-> dynamic allocations.
-> 
-> Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-> Cc: linux-mm@kvack.org
-> ---
->  include/linux/slab.h |  5 +++
->  mm/slab_common.c     | 72 ++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 77 insertions(+)
-> 
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index f26ac9a6ef9f..058d0e3cd181 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -493,6 +493,11 @@ void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
->  			   gfp_t gfpflags) __assume_slab_alignment __malloc;
->  void kmem_cache_free(struct kmem_cache *s, void *objp);
->  
-> +kmem_buckets *kmem_buckets_create(const char *name, unsigned int align,
-> +				  slab_flags_t flags,
-> +				  unsigned int useroffset, unsigned int usersize,
-> +				  void (*ctor)(void *));
+>  struct mana_ib_qp {
+>  	struct ib_qp ibqp;
+>=20
+> -	/* Work queue info */
+> -	struct ib_umem *sq_umem;
+> -	int sqe;
+> -	u64 sq_gdma_region;
+> -	u64 sq_id;
+> -	mana_handle_t tx_object;
+> +	struct mana_ib_raw_sq sq;
 
-I'd prefer an API that initialized an object over one that allocates it
-- that is, prefer
+Are you planning to add another type of sq for RC here?
 
-kmem_buckets_init(kmem_buckets *bucekts, ...)
+If yes, use raw_sq and rc_sq in struct fields.
 
-by forcing it to be separately allocated, you're adding a pointer deref
-to every access.
-
-That would also allow for kmem_buckets to be lazily initialized, which
-would play nicely declaring the kmem_buckets in the alloc_hooks() macro.
-
-I'm curious what all the arguments to kmem_buckets_create() are needed
-for, if this is supposed to be a replacement for kmalloc() users.
+Long
