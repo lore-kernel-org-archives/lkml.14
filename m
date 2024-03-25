@@ -1,66 +1,66 @@
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941AD82C71
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:03:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84114185221
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:01:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711342996; cv=none; b=Tx3DmZlBg6pfjBLowsQv4jtyouHgG4N874una/59TVbM1abGa3fNhfUCq+a86E/ekfDW/4XKgTMCDVziX4eXAc48BEAusxwqyoNlCcvfk5/PIc2IUY7AM2x4tu805CFh1SJFjsUbH3NOZi1fri62t/kmsUrsPqJnZXOTSRRfmg0=
+	t=1711342910; cv=none; b=FgIkKhNDq8pIZg03K8NbRia6pbAY4xTOMHPjON1l8PDjk7LPO5/Swi8TPCMtvjUbphcdVLUJrKGr42OYrOueP85xRu7mDDBoTgrfsjMiSHsRs/tdvtp7MAQsrRXxm065CZ8d2mix7piLVd5F7MA8rRz1GYu0WgJ/zAaFyp8QJ+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711342996; c=relaxed/simple;
-	bh=bzcb9J1zOIuRE+mdB4zKLyWN6R25h6DJb00PiUbZ5EU=;
+	s=arc-20240116; t=1711342910; c=relaxed/simple;
+	bh=7hT4rajj0x8vmFtp0XR/XBXh2yzvt8Zqa1DIIBtVNOA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YQDj/Zuc2PRf03FUpe2zaKYx3F5zoZK2HEBDWIvvyfwl5aJwDrVl9nRrQ6A51yRyL7oiCAuFxXdryzWiL+eyb/jDHGkMwW0+t3KTwi8ASHcD4vdVHkbPUDF0BpjBGgJnscm60lwK5cxXiVljEVN6n2p6NfmmRnH2HLUf6zpQQx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eFwZh5Zu; arc=none smtp.client-ip=148.163.158.5
+	 In-Reply-To:Content-Type; b=mglkRyCOBJZFZcmzjPHL1P+j1NDVA7IRkGul3FjKyGckan2MfttUUhml27AH113FCNHZ8EDUILJ3hna55t5Cc228NGMSBMDZAyUHan+31JXrl+oq4ABeXqNB5XQS6GTGV8n0SoybgHQ/FtSsJiY/M/m3sPMxOlFoLoLZrwDuzoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SJUnY1PO; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eFwZh5Zu"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SJUnY1PO"
 Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42P4jXjk000871;
-	Mon, 25 Mar 2024 05:02:30 GMT
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42P3cDQR000437;
+	Mon, 25 Mar 2024 05:00:46 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=qgEOJHHINd6gVGciNHxGiBy5AgfGlWmbQJemalMcRNo=;
- b=eFwZh5ZuO9jpVW8ovfjsaNj9hGOMHZcC6XrLUtUU+OYtpMDxEUspH5ItkdKc0jnoJlqb
- lz8ZbqIx/gLW7quDO6mILVVkp797WzmGhtHLk8oTeqyZ9bynd6CtXCH64GnFMhfLWbVy
- johlwWIAwoD+CXyjlFRlC5bhWFM/AuwkX97qOX7B6GaOC2tCQyTSQMZfvYn5yKmBPrgd
- xqTVHofgEdJwaIV7IN/OSmkIutd000dFjCErD1H99EZWTFYKR7UGqPDhObK5B+BD7IXD
- iFaOil008VTAt/quS+Ec4ZHAjGSJuskwN9MiSVcQsnhUYhYqnG3kfvnjJwTlesMUpEGo wg== 
+ bh=N2k9wSgo9UX01/19bcUNfkgoAa0/3oF73J+1H/ePw/I=;
+ b=SJUnY1POALicvQsMTys6mELXiORyOS09CCF6slIYipE2NVttlwxLCFsmxgfkzMqCgAlO
+ 2f+HeWG5o/yaUFGqHlgn/2yj8BlgQN/ZbGLbWmmorVsqhrrzpoI4YOQpHsq//Gd0B0fp
+ 20Ak9RZQkRR9FiDwSy0jkRo/kgS8IL5cEmASM4pEb/cGEUDAsC2lZSwGUyJ1wNY0ARb1
+ hIPgoSB96BFMgdoZgDWVS2JDB1SnMFmlUBQpSATJCH+iWODGipFVKVncKTKq4I5kPEZ5
+ 93OdNQ8p0+UTAJYeRhEbO/uQVzhCgqQ05AbWEHYx3xH9t7UoEbaxEkW/hevwt70Q2xqM Yg== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2h6t1feg-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2h6t1fak-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:02:30 +0000
+	Mon, 25 Mar 2024 05:00:45 +0000
 Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42P52TvA027023;
-	Mon, 25 Mar 2024 05:02:29 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42P50iY3023005;
+	Mon, 25 Mar 2024 05:00:44 GMT
 Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2h6t1fef-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2h6t1faj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:02:29 +0000
+	Mon, 25 Mar 2024 05:00:44 +0000
 Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42P4JnWZ016410;
-	Mon, 25 Mar 2024 05:02:28 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x29dtq6u7-1
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42P4JnVh016410;
+	Mon, 25 Mar 2024 05:00:43 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x29dtq6dw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:02:28 +0000
+	Mon, 25 Mar 2024 05:00:43 +0000
 Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42P52Qi527460312
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42P50ebo24707822
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 25 Mar 2024 05:02:28 GMT
+	Mon, 25 Mar 2024 05:00:42 GMT
 Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0ACF258079;
-	Mon, 25 Mar 2024 05:02:26 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 898B958067;
+	Mon, 25 Mar 2024 05:00:40 +0000 (GMT)
 Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6B0B45807D;
-	Mon, 25 Mar 2024 05:02:19 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id EDF4E58077;
+	Mon, 25 Mar 2024 05:00:33 +0000 (GMT)
 Received: from [9.109.245.191] (unknown [9.109.245.191])
 	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 25 Mar 2024 05:02:19 +0000 (GMT)
-Message-ID: <61054afa-9f18-45f1-987d-e6f242012096@linux.ibm.com>
-Date: Mon, 25 Mar 2024 10:32:18 +0530
+	Mon, 25 Mar 2024 05:00:33 +0000 (GMT)
+Message-ID: <29936a4b-95c3-4592-8eae-7d4741e4a51f@linux.ibm.com>
+Date: Mon, 25 Mar 2024 10:30:32 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -96,8 +96,8 @@ In-Reply-To: <875xxbqb51.fsf@yhuang6-desk2.ccr.corp.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: bJuITvuynOeSBj7ytHw3NgXcX9j_qAd2
-X-Proofpoint-ORIG-GUID: u5B-9gb0OMzVfbP0MrJAZF2rGbuMzj1H
+X-Proofpoint-GUID: E2dXiDVVREiPB9wvERfQdEXSxnh3LQXD
+X-Proofpoint-ORIG-GUID: oMUQTqu-LlmdFFm-_qnRf5hDuc3QCurp
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-25_02,2024-03-21_02,2023-05-22_02
@@ -162,6 +162,12 @@ On 3/25/24 08:18, Huang, Ying wrote:
 > occasionally, we will not try to migrate the workload pages from N2 to
 > N3 because users may want to avoid cross-socket access as much as
 > possible in the long term.
+
+Thank you. I will change the commit message and post V4.
+
+Thanks
+Donet Tom
+
 >
 >> For example, Consider a system with 3 numa nodes (N0,N1 and N6).
 >> N0 and N1 are tier1 DRAM nodes  and N6 is tier 2 PMEM node.
@@ -176,12 +182,6 @@ On 3/25/24 08:18, Huang, Ying wrote:
 >> N1           N0 N1 N6              N6                   Pages Migrated from N6 to N1
 >> N1           N0 N1                 N1                   Pages Migrated from N1 to N6
 > Pages are not Migrating ?
-
-Sorry .This is a mistake. In this case Pages are not migrating.
-
-Thanks
-Donet.
-
 >
 >> N1           N0 N1                 N6                   Pages Migrated from N6 to N1
 >> ------------------------------------------------------------------------------------
