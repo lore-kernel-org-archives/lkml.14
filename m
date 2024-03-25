@@ -1,88 +1,207 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36BD149C66
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 14:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50B9481B9;
+	Mon, 25 Mar 2024 14:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711375846; cv=none; b=d7BeXsgo1TeoEdLoebi2EMd8G9LEJ7w0eHlEKw9h2ROGnAGF6GjhMrjdOfBjOPLC0XKBHW8DBSBoO7VvGGOM2Fo951QOPmCMPfPn/YwxTZbG/C/Axs0J+UmNk4N9btCQq4sdyQWxLqUQns7TlpCm3scxMonXItpuz0u5OQEwEpI=
+	t=1711375939; cv=none; b=jxTfu+uXD0FcHmQcq62I546fJEATRQ4rTNTglK7rpHVlQ9qTJVGKHyLNfFP9PGBnbldPzg/8CQ/o8UrXYrsfNTyYup+rDl67Fg7qVATSZ+MkiMhgFtzEN6rK1t8jWaBi4nFQzuvhdnbfFRQ+I9iiFuWEdWuTlGoU/yaTZ1vfl5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711375846; c=relaxed/simple;
-	bh=+QYOdWMPVby5jZqjvQM8+GF5g7s+FSbARSBKiK4+XKU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gT7Z4OitDQnIxqhzRvNeT6Y69jpPbUrlivZBxlGozATU3M4E4apE5W5gohpaSVMZ+jzlHGwUjS+jGpt2yVyDy+q4WQtRm49oCi8MomfIiXB3NbI0mmLn+XTgEEbTuD4EquSInTgauZE5DKvPLL2QIxGT7+8Znnfnu8OOa0ufbQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OLAottkP; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711375939; c=relaxed/simple;
+	bh=TzG/5JvXxF0JUHmaB2rBPKjBsvYfGQMLsovDtlcFUi0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BppaJcXSKNRPEdAgSUbW/CeVZz3setdzq9b2VicsW1WIUUT5j3joIDnT4+7rlrpTWSAJ0r59YjH7sxpnA4jAYm07RCnLJf2xG9ZGOkmIXvfKae+Thy+YbIDqgFeDlAGPAZ6uyjAoVYL+z/403aBJ293vAWSFu9aOJgRpGWavO7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nVnVBm2I; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oF+aZ73H; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yMGnLxgl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5ueDDsZj; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OLAottkP"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dd02fb9a31cso4001476276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:10:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711375844; x=1711980644; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=txFP5jH6roviK6Ext4CLx3t1HKBA8RgvWyQlQ3eWqFA=;
-        b=OLAottkPaWDsRg66TFozTifR3NbFgYiz13RDyldFcH46HyNIE7PIOjpkH6rJrPO+2s
-         hSqZUDRnsrLfA52eSnw8Tr9FyvWO/gPe9slRHkySIXzKPbJfUnqNtakgk3qBwnsIeZx0
-         wWYRCkd+N2YUy2D/c4njD586fY4fPSWUS5QgTjkpi7e57tX3Z2biepWCkyj7mQklMYZJ
-         yX9WTAJg1PmR0nHWpTQuGfJOXRiKC/ARLv6RG6FulWWEv5LKWHfA4vU0lmTpWboX23xD
-         1fH94Ozabua+dEi1qyTwCpe3lkT61muvBTO2QSvWf4mLz09af79j61gHg20ug9Mazwnn
-         Fe5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711375844; x=1711980644;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=txFP5jH6roviK6Ext4CLx3t1HKBA8RgvWyQlQ3eWqFA=;
-        b=nSvMdaa5Pfet5QXlXtIGVXuZzlC0Zjo/CiHRXjoefjUD+ELZfL7a6Nd46HcNcX32cs
-         RwALWlIf5CplIGJ1dTie0mYlAWC08Nb3nvbmn4DECzLxutmmF7mknBWkWrOxPowSip1G
-         Z1/8aZadJZeGagSF6dtPRvVJnX9hj1UX5SrN2gIZwP3mrBFWEAkS7RhU5Tun9rkWG+Et
-         p5+0tu/5ufrh2/bHhHB8y/wX+V/ODrjcRLaJKOTuvt8NW4Rya8tGMMfidPm+zVDLHd62
-         cuGqx14fkP1mUkwRrMMoCulXK5KU6/zL2cdFg3r5LbcLUrQtotnYIzvVFD1kzOEtpSNL
-         135w==
-X-Forwarded-Encrypted: i=1; AJvYcCUb0aOZEo4Vtn+xq+L7T1WhWMhUohUK4FWEZrtdXU+KxHh5MIDa9zu7nyaJnzJYeU43zc3oLxM43zDZa008JxdrNpzUR8ds2BCTCYEH
-X-Gm-Message-State: AOJu0Yxj6HxDZjg3fshKQ/dRLApCUGM9n6oZsnznpCL4VCCd/9Fi98zC
-	pL1TygG4GLOqnil4b3H/ISnE6514KtM5CiMmzZon44ECIAy6rE+j1HEjVQpKkaUXrzSVLcS7pXq
-	iHp1iF4uuS6CLZOttV9yIgz7vdirg9ZK3h24qrw==
-X-Google-Smtp-Source: AGHT+IGK1q4FlEtm2qFSh9/hQncp6/6I/Wk9SmWPqaTVVT5u98SyrANfhyP3OahcZRjZ4NnXsYrWuGfGuMA9EjiBEe4=
-X-Received: by 2002:a25:aab2:0:b0:dc7:acb7:af14 with SMTP id
- t47-20020a25aab2000000b00dc7acb7af14mr5485083ybi.5.1711375844041; Mon, 25 Mar
- 2024 07:10:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nVnVBm2I";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oF+aZ73H";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yMGnLxgl";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5ueDDsZj"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C3BAB5C780;
+	Mon, 25 Mar 2024 14:12:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711375934;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ItTJVT5nAX87K/Z5OvY7omTInh/1LcJz1dpUI80klZk=;
+	b=nVnVBm2I4wmWVWtmOkflWOnei47LnzrZAZ7/Bxk9nmjN+rsjMsF4KcKrAQxAJtO6jA2cKd
+	wolQ4BmWEoSSY6LM3+AhiEgRTlHPxV2gh2a+E9XzM/qPetSj6ZT9HVk3jdO5+p78jTONDv
+	/dPoai3xWdk1nLJBH4oMpaJVajyM5G4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711375934;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ItTJVT5nAX87K/Z5OvY7omTInh/1LcJz1dpUI80klZk=;
+	b=oF+aZ73H8BmSMuL0jjB/nCOTIl8faY1i0GG4RUFj7ys9Iv8lLH2dp4pXpNQRl7CuzkKY7F
+	7CI4qLo4CS9SFHAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711375933;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ItTJVT5nAX87K/Z5OvY7omTInh/1LcJz1dpUI80klZk=;
+	b=yMGnLxgla1G+PnAsNeIHM5sA7XO7oDbhMFE4OxE2uobyUjWSiJWtkFz8gZaGC6dlnxosAa
+	rTvCsXVndoLb2G597bUNfLYaR18R6Atw5YVLS+8raop19WhF6GS/gQYmU4rXouj/+iMAC3
+	JiCnWh0zkrUC58k5M9ySi+5fcac1Frc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711375933;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ItTJVT5nAX87K/Z5OvY7omTInh/1LcJz1dpUI80klZk=;
+	b=5ueDDsZjNlN/UJGUxihSjpSxT4CTGP/UjOTdcUuwUwh+/FpQD2Z3AEIu45vYJPVwu2j6+P
+	eEPTT8hoHfYaxWAw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id A184A13A71;
+	Mon, 25 Mar 2024 14:12:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id UNYQJz2GAWYyKQAAn2gu4w
+	(envelope-from <dsterba@suse.cz>); Mon, 25 Mar 2024 14:12:13 +0000
+Date: Mon, 25 Mar 2024 15:04:52 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Tavian Barnes <tavianator@tavianator.com>
+Cc: linux-btrfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+	Qu Wenruo <wqu@suse.com>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: Fix race in read_extent_buffer_pages()
+Message-ID: <20240325140452.GM14596@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <1ca6e688950ee82b1526bb3098852af99b75e6ba.1710551459.git.tavianator@tavianator.com>
+ <20240322192108.GK14596@twin.jikos.cz>
+ <CABg4E-n=iWjM3K0dvrrwQ9BOEiqTawJ4YUVL6RPWaq2DT2AKvQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325081957.10946-1-johan+linaro@kernel.org> <9b2a7e9f-dbb2-4acb-91a7-fcc64d5cfabd@sirena.org.uk>
-In-Reply-To: <9b2a7e9f-dbb2-4acb-91a7-fcc64d5cfabd@sirena.org.uk>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 25 Mar 2024 16:10:33 +0200
-Message-ID: <CAA8EJpqvYYCFRJVr732VORyHgpU-H2nif+n6hB6pJbXsqCH3_Q@mail.gmail.com>
-Subject: Re: [PATCH] clk: qcom: gdsc: treat optional supplies as optional
-To: Mark Brown <broonie@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-msm@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABg4E-n=iWjM3K0dvrrwQ9BOEiqTawJ4YUVL6RPWaq2DT2AKvQ@mail.gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Score: -3.51
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 NEURAL_HAM_LONG(-0.30)[-0.297];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 MX_GOOD(-0.01)[];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=yMGnLxgl;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=5ueDDsZj
+X-Rspamd-Queue-Id: C3BAB5C780
 
-On Mon, 25 Mar 2024 at 16:01, Mark Brown <broonie@kernel.org> wrote:
->
-> On Mon, Mar 25, 2024 at 09:19:57AM +0100, Johan Hovold wrote:
-> > Since commit deebc79b28d6 ("clk: qcom: gpucc-sc8280xp: Add external
-> > supply for GX gdsc") the GDSC supply must be treated as optional to
-> > avoid warnings like:
+On Fri, Mar 22, 2024 at 06:50:07PM -0400, Tavian Barnes wrote:
+> On Fri, Mar 22, 2024 at 3:28 PM David Sterba <dsterba@suse.cz> wrote:
+> > On Fri, Mar 15, 2024 at 09:14:29PM -0400, Tavian Barnes wrote:
+> > > To prevent concurrent reads for the same extent buffer,
+> > > read_extent_buffer_pages() performs these checks:
+> > >
+> > >     /* (1) */
+> > >     if (test_bit(EXTENT_BUFFER_UPTODATE, &eb->bflags))
+> > >         return 0;
+> > >
+> > >     /* (2) */
+> > >     if (test_and_set_bit(EXTENT_BUFFER_READING, &eb->bflags))
+> > >         goto done;
+> > >
+> > > At this point, it seems safe to start the actual read operation. Once
+> > > that completes, end_bbio_meta_read() does
+> > >
+> > >     /* (3) */
+> > >     set_extent_buffer_uptodate(eb);
+> > >
+> > >     /* (4) */
+> > >     clear_bit(EXTENT_BUFFER_READING, &eb->bflags);
+> > >
+> > > Normally, this is enough to ensure only one read happens, and all other
+> > > callers wait for it to finish before returning.  Unfortunately, there is
+> > > a racey interleaving:
+> > >
+> > >     Thread A | Thread B | Thread C
+> > >     ---------+----------+---------
+> > >        (1)   |          |
+> > >              |    (1)   |
+> > >        (2)   |          |
+> > >        (3)   |          |
+> > >        (4)   |          |
+> > >              |    (2)   |
+> > >              |          |    (1)
+> > >
+> > > When this happens, thread B kicks of an unnecessary read. Worse, thread
+> > > C will see UPTODATE set and return immediately, while the read from
+> > > thread B is still in progress.  This race could result in tree-checker
+> > > errors like this as the extent buffer is concurrently modified:
+> > >
+> > >     BTRFS critical (device dm-0): corrupted node, root=256
+> > >     block=8550954455682405139 owner mismatch, have 11858205567642294356
+> > >     expect [256, 18446744073709551360]
+> > >
+> > > Fix it by testing UPTODATE again after setting the READING bit, and if
+> > > it's been set, skip the unnecessary read.
+> > >
+> > > Fixes: d7172f52e993 ("btrfs: use per-buffer locking for extent_buffer reading")
+> > > Link: https://lore.kernel.org/linux-btrfs/CAHk-=whNdMaN9ntZ47XRKP6DBes2E5w7fi-0U3H2+PS18p+Pzw@mail.gmail.com/
+> > > Link: https://lore.kernel.org/linux-btrfs/f51a6d5d7432455a6a858d51b49ecac183e0bbc9.1706312914.git.wqu@suse.com/
+> > > Link: https://lore.kernel.org/linux-btrfs/c7241ea4-fcc6-48d2-98c8-b5ea790d6c89@gmx.com/
+> > > Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
 > >
-> >       gpu_cc-sc8280xp 3d90000.clock-controller: supply vdd-gfx not found, using dummy regulator
-> >
-> > on SC8280XP.
->
-> Can this device actually run with the supply physically disconnected?
+> > Thank you very much for taking the time to debug the issue and for the
+> > fix. It is a rare occurrence that a tough bug is followed by a fix from
+> > the same person (outside of the developer group) and is certainly
+> > appreciated.
+> 
+> Thank you!
+> 
+> Sorry to nitpick, but the paragraph you added to the commit message
+> [1] has a typo:
+> 
+> > There are reports from tree-checker that detects corrupted nodes,
+> > without any obvious pattern so possibly an overwrite in memory.
+> > After some debugging it turns out there's a race when reading an extent
+> > buffer the uptodate status is can be missed.
+> 
+> s/is can/can/
 
-On SC8280XP this is supplied via power-domain instead of the supply.
-
--- 
-With best wishes
-Dmitry
+I will fix that, thanks.
