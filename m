@@ -1,232 +1,117 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shrimp.cherry.relay.mailchannels.net (shrimp.cherry.relay.mailchannels.net [23.83.223.164])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AE6652;
-	Tue, 26 Mar 2024 00:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711412286; cv=none; b=UNgnvIeeWKFlkGyC14uPG+GeHGw1ADNLS4LJhiV1v77k7PwMV0nHsbFx4747KyOlIZiMCMAavQTlh+jlaBgpZoNBvq5dSl4wi+NhH0SvQIwyAgTxi98WK1oIjms9wRjMaI9UykgQ27WV9+HTHDs5ur2gwko5r9LHELRiuVeerfk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711412286; c=relaxed/simple;
-	bh=5mxENDN2n+SPVgHKjyiptOuKizNcc2aVvP7c/sNAGjc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jcIZh1omlp9Vj9+xhKyrIeKW8M1wQnLUkkIJfUtD6jaGDuqulXWtgZoggs7Ba/1YCOfSeb5TZ300kAvGkoGFaK8WNhSFm+FvXl17EV2KrsKccjEMyT6Uj06T1DQiSCjw0WzqSX5fiaBBaie9vrh2o2kYHJZwJKz48RQGk3kdKTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DWm2c+AE; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437631FC4;
+	Tue, 26 Mar 2024 00:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.164
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711412290; cv=pass; b=uGePIk2s0fpTMDwP6or0q4FmNCgUWG5qYyfqU/kjwKZkUFdn1n95f1A50W3K46g8Q0DAp3fVpLVllmaQlF/QX5znG5gNjpZ1HjyRXp/HOIlvqutE4ECCa8/v7zBkdfoscNJZSMIEE/oD94clO+5NkI73CImlru+TBFxPlrTGchk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711412290; c=relaxed/simple;
+	bh=hqJfcae45ymnqggi0UY6wccelEk8EXZOUkquTZ5mqes=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lBMlIJkVqHro+yZIc/Ksm+NEbxpCQiLvAyeWJVNwm3MOEzPd7jJigNjNTe6aJicHS4RNT37+c53OXAbUdVKk1hSFiYYaEPgqqTM1la5ZUGBco+5a4zblEIKsAe/vjQIlb7lEVje2aYFNBsIBr8o/PevnJbfbNB36HHBCBlERy2Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=li/3jXj1; arc=pass smtp.client-ip=23.83.223.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWm2c+AE"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-60a0579a968so52936287b3.3;
-        Mon, 25 Mar 2024 17:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711412284; x=1712017084; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+liYJF3hfCD+d+hZyHARAb2yKZhPPpj/oeQo7CNC2gM=;
-        b=DWm2c+AExdCUWJf2glftRPrj2lQKvKfXAo1XvV8XVzevSBRYwFNXoBKgEZzqWJQyp4
-         T8cjOZGh36pStkbT1jOM02GF99k5Pe13alFCwMBnwCQDYbjHfbNonC0D7OZmgAYWQuks
-         fA9ktasMpgjwfY58uHUwElUWSXRSpAxt/eKwVmO88tm2kX4R33VNRWfV3Oess7Zc41wT
-         wR8sHd6IW2IpRgDWaj53Aio1b9OIZTeGvmlDPyApL15Zmc1C+Go916q8S/qcEN74OQJ7
-         0nOGkSLunI4Cs6V09KdgqmJuXV8UAnkPHBW8g03G887MggqLMUVfGp4BdEmYIN6t08Rt
-         A5zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711412284; x=1712017084;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+liYJF3hfCD+d+hZyHARAb2yKZhPPpj/oeQo7CNC2gM=;
-        b=I6JAb31KUz7bLUSk+EoNfWtSmSOBfkr3CllhrNdmX50CP2PSkwI8iWr86B4skEDiqo
-         4FaL+mN6XUARkhsXrgkMQipJE0J0JjcOzHM6fb7uRZDoYsmmDH3ZHnh+v0CD/Lg968CP
-         nYijlTRLo9B3scu8NGhw8Z8Td33e/4US7ocojd5/1Ti7zeKDSPOVRAbfTMVlzrVKajjn
-         1aDhqcN8hQurFrtNZbmpwU9Z7bi9KuSONZMT0K3lp61DMCTZugBMJUpBtOPIzWrM23MI
-         0914nmH9khd2y4crpRROk5VZFmw2BG1yiDuSvKIFcyVWfqF3CB+LCf2o+aQpFl0FP7kh
-         jdng==
-X-Forwarded-Encrypted: i=1; AJvYcCWrGZghd20Wp7lJN/Q/ZqOtRGxNJYbWeW0oJgza4+ljs4A76NvlQNBUIa7hqpsJdDZoQ2c+fFbvMveJsTq8dReTs/1h1amtPOQ7KRyR
-X-Gm-Message-State: AOJu0YwZJ5bXw6oLeTsFqXx0q4sYKDrveJ2i98QDnU21q1IiFj14wsm2
-	tXUT9tAFALIHMZGp+onApM00fYQlZqvKxrZwiPX3DYZebtJ6h/8nO5tiSyZYrvT06CO41xlVZe0
-	pH2rCdJFDTcogJtZ9/ripLjLmIfA=
-X-Google-Smtp-Source: AGHT+IG1Tcg6VkC9U+78/C7en4O1adZJtIO9GwVHgAg5hPyBBPv8EJwzDt2rz/TdVXA9XgFuZ5fCJ0U72+mqspHrxKA=
-X-Received: by 2002:a0d:cc16:0:b0:610:f5db:697f with SMTP id
- o22-20020a0dcc16000000b00610f5db697fmr8556739ywd.11.1711412283133; Mon, 25
- Mar 2024 17:18:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="li/3jXj1"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id AC7D2C127A;
+	Mon, 25 Mar 2024 23:40:22 +0000 (UTC)
+Received: from pdx1-sub0-mail-a262.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 2C587C0F14;
+	Mon, 25 Mar 2024 23:40:21 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1711410021; a=rsa-sha256;
+	cv=none;
+	b=TPAkg+JBPtNKJO+AZpRrAHDnQeqLoCC4UuOCAf5YbXfLLouFuSuj3uPGqVZpTWUYY+MJq4
+	uEWUg/+wdqQON/YaabXFRP4g1/0VV7fA5lsCVbZyHcn3gO06D3awRZayXuv9SLorYLo57h
+	BzSEQlLPNO+6uuVoAom+vf202EOcIFKWNaBCHQuglBd1Vcik6iRjq0EE75//PfLdbArceq
+	oZnnRnxICoR5b4MQJ3LZOyz1RzB3bqsafFpyx9o4x0/1zWkXexgOBN72n254mrygkZyv1q
+	n/i+YpjZj5ASyPUW5DysbpWGnVWOn+YQer97S9JnSSrX32Xp7AemE+UMx5Gd8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1711410021;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=mMYNUS1nAHaY9MIkgohtMIfZr6emhTBLCF17GGgwhJQ=;
+	b=mfazkx71M75YovF7PL6l86risNFql1AWRLUZDVeL4bAiU8CuI+16QXhRu201hRW03d0+kH
+	CxNuPV5lXuC5XogYqGcAuFZo4O8BIeDo8pcGjyvqT1YXHMWhkyv7ZcjOWs4212LpMNZhsI
+	Ct9SMVV87DLe670BDrfED7zu42pcPn4y57eXe6qnyNSvNfXX6ErhP83T71eNuZ/P3upNY2
+	9BMxnyS7wPGSK67NGKgABMmqZ3+UDAAu+JbE0u729LSZVG9PlqUQiZBi4D13y0vv1k2Vnk
+	J1y7IA+E+x9zmmJ0nBZJ7UKrNK8ucxPbLyFuocCtzd1CVuM7tCGWMHbzE+C6HA==
+ARC-Authentication-Results: i=1;
+	rspamd-dbbfdf895-ck4qv;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Print-Supply: 3f65cbf05927a7a8_1711410022531_4039963789
+X-MC-Loop-Signature: 1711410022531:1342609886
+X-MC-Ingress-Time: 1711410022530
+Received: from pdx1-sub0-mail-a262.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.123.121.28 (trex/6.9.2);
+	Mon, 25 Mar 2024 23:40:22 +0000
+Received: from offworld (unknown [108.175.208.151])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a262.dreamhost.com (Postfix) with ESMTPSA id 4V3Tv72yW2zLZ;
+	Mon, 25 Mar 2024 16:40:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1711410021;
+	bh=mMYNUS1nAHaY9MIkgohtMIfZr6emhTBLCF17GGgwhJQ=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=li/3jXj1UMi2ph5i3up8ip4QNsfwIf8k+GvR9U9ZcF7ySRPqgRUJqiY5DJG9kGpj5
+	 7SaeLCvC8bPiW7y/+A6h78a+T7MMHF78wXbXz38PlsMbmDmLQ9RkyscSVi8gMtc9vl
+	 nb9JXZKRWE6tyGcNdCxPpyu/EfsB3yzVieynB3+E7AJPneABy14Uqels1toJ0sqa/d
+	 AW7n8hWxMwWIvCfSZnL8MocL8hFq3tP/w0+3qp0IB3/M1Zyz9m4l6FA2PB3ySobc9C
+	 ThzuzgpHaFBFPy9v5MyuI0TJ6KmdAGGwVQ235N5IIWZJjp7BBGGJQXuupAxT+9Z9yX
+	 yThYeUuk9kQrg==
+Date: Mon, 25 Mar 2024 16:40:16 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: ira.weiny@intel.com
+Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Navneet Singh <navneet.singh@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/26] cxl/mem: Expose device dynamic capacity
+ capabilities
+Message-ID: <w4jkueqpvh7hzbywk42m7gxclg56nbgzhaqcgeb3q2b6dt3w6n@5vwicganqpsu>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-8-b7b00d623625@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325195418.166013-1-wedsonaf@gmail.com> <20240325195418.166013-7-wedsonaf@gmail.com>
- <9AmQ4moOGHvMXp-MH65qG1fS7v14hypIjEwsPlYLdLJD2NMVOQFwFvzpETrxHSSMt-Y6Gz_TZfwXgROJys72ZIpB-Je4obAuZ2knpT9R3yo=@proton.me>
-In-Reply-To: <9AmQ4moOGHvMXp-MH65qG1fS7v14hypIjEwsPlYLdLJD2NMVOQFwFvzpETrxHSSMt-Y6Gz_TZfwXgROJys72ZIpB-Je4obAuZ2knpT9R3yo=@proton.me>
-From: Wedson Almeida Filho <wedsonaf@gmail.com>
-Date: Mon, 25 Mar 2024 21:17:52 -0300
-Message-ID: <CANeycqrbuzDwDhUjz+rZv2Q_peK54L1yPG6A1L6-PwjyLKiSAw@mail.gmail.com>
-Subject: Re: [PATCH 06/10] rust: alloc: introduce the `BoxExt` trait
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	linux-kernel@vger.kernel.org, Wedson Almeida Filho <walmeida@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240324-dcd-type2-upstream-v1-8-b7b00d623625@intel.com>
+User-Agent: NeoMutt/20231221
 
-On Mon, 25 Mar 2024 at 19:37, Benno Lossin <benno.lossin@proton.me> wrote:
->
-> On 25.03.24 20:54, Wedson Almeida Filho wrote:
-> > From: Wedson Almeida Filho <walmeida@microsoft.com>
-> >
-> > Make fallible versions of `new` and `new_uninit` methods available in
-> > `Box` even though it doesn't implement them because we build `alloc`
-> > with the `no_global_oom_handling` config.
-> >
-> > They also have an extra `flags` parameter that allows callers to pass
-> > flags to the allocator.
-> >
-> > Signed-off-by: Wedson Almeida Filho <walmeida@microsoft.com>
-> > ---
-> >   rust/kernel/alloc.rs           |  1 +
-> >   rust/kernel/alloc/allocator.rs |  6 +++-
-> >   rust/kernel/alloc/boxext.rs    | 61 ++++++++++++++++++++++++++++++++++
-> >   rust/kernel/init.rs            | 13 ++++----
-> >   rust/kernel/prelude.rs         |  2 +-
-> >   rust/kernel/sync/arc.rs        |  3 +-
-> >   6 files changed, 77 insertions(+), 9 deletions(-)
-> >   create mode 100644 rust/kernel/alloc/boxext.rs
-> >
-> > diff --git a/rust/kernel/alloc.rs b/rust/kernel/alloc.rs
-> > index ad48ac8dc13d..5712c81b1308 100644
-> > --- a/rust/kernel/alloc.rs
-> > +++ b/rust/kernel/alloc.rs
-> > @@ -5,6 +5,7 @@
-> >   #[cfg(not(test))]
-> >   #[cfg(not(testlib))]
-> >   mod allocator;
-> > +pub mod boxext;
-> >   pub mod vecext;
-> >
-> >   /// Flags to be used when allocating memory.
-> > diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
-> > index 01ad139e19bc..fc0439455faa 100644
-> > --- a/rust/kernel/alloc/allocator.rs
-> > +++ b/rust/kernel/alloc/allocator.rs
-> > @@ -15,7 +15,11 @@
-> >   ///
-> >   /// - `ptr` can be either null or a pointer which has been allocated by this allocator.
-> >   /// - `new_layout` must have a non-zero size.
-> > -unsafe fn krealloc_aligned(ptr: *mut u8, new_layout: Layout, flags: bindings::gfp_t) -> *mut u8 {
-> > +pub(crate) unsafe fn krealloc_aligned(
-> > +    ptr: *mut u8,
-> > +    new_layout: Layout,
-> > +    flags: bindings::gfp_t,
-> > +) -> *mut u8 {
-> >       // Customized layouts from `Layout::from_size_align()` can have size < align, so pad first.
-> >       let layout = new_layout.pad_to_align();
-> >
-> > diff --git a/rust/kernel/alloc/boxext.rs b/rust/kernel/alloc/boxext.rs
-> > new file mode 100644
-> > index 000000000000..26a918df7acf
-> > --- /dev/null
-> > +++ b/rust/kernel/alloc/boxext.rs
-> > @@ -0,0 +1,61 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +//! Extensions to [`Box`] for fallible allocations.
-> > +
-> > +use super::Flags;
-> > +use alloc::boxed::Box;
-> > +use core::alloc::AllocError;
-> > +use core::mem::MaybeUninit;
-> > +use core::result::Result;
-> > +
-> > +/// Extensions to [`Box`].
-> > +pub trait BoxExt<T>: Sized {
-> > +    /// Allocates a new box.
-> > +    ///
-> > +    /// The allocation may fail, in which case an error is returned.
-> > +    fn new(x: T, flags: Flags) -> Result<Self, AllocError>;
-> > +
-> > +    /// Allocates a new uninitialised box.
-> > +    ///
-> > +    /// The allocation may fail, in which case an error is returned.
-> > +    fn new_uninit(flags: Flags) -> Result<Box<MaybeUninit<T>>, AllocError>;
-> > +}
-> > +
-> > +impl<T> BoxExt<T> for Box<T> {
-> > +    #[cfg(any(test, testlib))]
-> > +    fn new(x: T, _flags: Flags) -> Result<Self, AllocError> {
-> > +        Ok(Box::new(x))
-> > +    }
->
-> When running under `cfg(test)`, are we using the normal standard
-> library? Or why is this needed?
+On Sun, 24 Mar 2024, ira.weiny@intel.com wrote:
 
-Because it uses 34 other crates that rely on `Box::new` and friends.
+>+What:		/sys/bus/cxl/devices/memX/dc/region_count
+>+Date:		June, 2024
+>+KernelVersion:	v6.10
+>+Contact:	linux-cxl@vger.kernel.org
+>+Description:
+>+		(RO) Number of Dynamic Capacity (DC) regions supported on the
+>+		device.  May be 0 if the device does not support Dynamic
+>+		Capacity.
 
-I discussed this with Miguel recently and once he's done with the
-build system changes, he will think about what to do with tests. It
-may be that we abandon the current method of running standalone tests
-and run everything in kunit, or perhaps we'll find a way to exclude
-code that won't run in standalone tests anyway...
+If dcd is not supported then we should not have the dc/ directory
+altogether.
 
-> > +
-> > +    #[cfg(not(any(test, testlib)))]
-> > +    fn new(x: T, flags: Flags) -> Result<Self, AllocError> {
-> > +        let ptr = if core::mem::size_of::<T>() == 0 {
-> > +            core::ptr::NonNull::<T>::dangling().as_ptr()
-> > +        } else {
-> > +            let layout = core::alloc::Layout::new::<T>();
-> > +
-> > +            // SAFETY: Memory is being allocated (first arg is null). The only other source of
-> > +            // safety issues is sleeping on atomic context, which is addressed by klint.
->
-> The `krealloc_aligned` function states:
->
-> /// # Safety
-> ///
-> /// - `ptr` can be either null or a pointer which has been allocated by this allocator.
-> /// - `new_layout` must have a non-zero size.
->
-> So it should also mention that you checked for `layout.size() > 0`
-> above.
-
-Good point. I mentioned this in the VecExt version but not here. I
-will update this for v2.
-
-> > +            let ptr = unsafe {
-> > +                super::allocator::krealloc_aligned(core::ptr::null_mut(), layout, flags.0)
-> > +            };
-> > +            if ptr.is_null() {
-> > +                return Err(AllocError);
-> > +            }
-> > +
-> > +            let ptr = ptr.cast::<T>();
-> > +
-> > +            // SAFETY: We just allocated the memory above, it is valid for write.
-> > +            unsafe { ptr.write(x) };
-> > +            ptr
-> > +        };
-> > +
-> > +        // SAFETY: For non-zero-sized types, we allocate above using the global allocator. For
-> > +        // zero-sized types, we use `NonNull::dangling`.
-> > +        Ok(unsafe { Box::from_raw(ptr) })
-> > +    }
-> > +
-> > +    fn new_uninit(flags: Flags) -> Result<Box<MaybeUninit<T>>, AllocError> {
-> > +        <Box<_> as BoxExt<_>>::new(MaybeUninit::<T>::uninit(), flags)
->
-> Why do you use the extended syntax? I tried to use `Box::new` and it
-> compiled.
-
-It works when compiling the kernel but fails when compiling for
-userspace with regular (no_global_oom_handling disabled) `alloc` when
-running `make rusttest`. In the latter case, it chooses the inherent
-version of `Box::new` which is infallible and doesn't take flags so it
-fails to compile.
-
-Using the extended syntax allows it always pick the right version,
-regardless of how `alloc` is compiled.
-
-There are 5 places in existing code that required this change and this
-is limited to the kernel crate (e.g., drivers, samples and
-documentation examples can continue to use `Box::new`). So we thought
-it was ok until Miguel figures out what we want to do with tests.
+Thanks,
+Davidlohr
