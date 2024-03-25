@@ -1,95 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1144D5B5;
-	Mon, 25 Mar 2024 14:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB191C2B3;
+	Mon, 25 Mar 2024 14:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711376179; cv=none; b=lhYrGqFqFOOVZZxMWKp5aNki/kLErc5of25gbSwDHF4hrz/o/z225tmoFL2yVUvOt+Ja0hYQ9rnVp+LeK2KTgS2z1usJ+ZhiLDtwbzRp4yILdAZoN7DbRJltdBeqo8K8AcVJwC4ePkdL7AzAghf32dlyLMg64ib0x8jkfLwjY24=
+	t=1711376220; cv=none; b=mxVo2c4ds9TZRG9TtuGc/XwmDea8qUTpTua/JHv0OEKDuHSDFqthXLuIyUzyur1cnsnO6awXpw2ruKKJbNxh1Gbb0SU8be8iXHWqNP6XXYlKLXNUl1BG8JjXOvIzPuXOcLImssWiX3dgEi7TShfqGJxe6a+4EHhiOgYijWBm5TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711376179; c=relaxed/simple;
-	bh=r/XMZ3WXauYvm7sf5LS1SIvevJHJOehk70EFv+rTJIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j/TirBrTeKoF8+DIFoP3rpu2qI5hdfEhgLZqurxHS3iNwnYl/wA0aj6jaPAGkhkyB0ZZ8jcHF2YBhsx5Wemc7KArNC+2VmXx7Kbz0E49BAo9fXdOD0dZCvSsN/7/xqSQB3Gi2+Eozgzibicw+N4/4mooBmg9KbMivW68C6JBMCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PECatv+9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711376220; c=relaxed/simple;
+	bh=T9MvklJg6UVFRQrF868mATr8p8Rs4R1YsfG32amYaZw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Tbv01sEE5RWwA01nDxuOa1iBbGa3L/Z0IltpJT/BIn/HAlSBywR8FGLl+AWUneFBu3KOu08hFEH0JQtR+l6Kyo8LR089R0Aey0syF8aYpB1w17mhuXZdU960onsnEISCehG8VCQpRWFLBDqkmlztrXi1vEdIirxQTVVCiisvZUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=v9tnnnPk; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PECatv+9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBF11C433F1;
-	Mon, 25 Mar 2024 14:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711376179;
-	bh=r/XMZ3WXauYvm7sf5LS1SIvevJHJOehk70EFv+rTJIw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PECatv+9XZy29PUnTXjlhOEIfHdyOmo4E4PPQmBSunU5rDGdGlyOEuLSY4fXBPuvg
-	 q1r4kkHcqsnU08vRkE6XeieITlTxK1/lqd31YsDe0JNLOVBlKd79wm/0ZOw6UNv2X/
-	 qHvr2RhnPsuGAKp594QMz6FA9/JzuXnA4jkQk1pdDxzbJMcC5WZd1UIStavKiHPtF9
-	 GQwLvNdloDVXYzlBLF8MPlhqNyhdonTDUqzuhuaZ1VZDF0EqQZj2AsRMMEPCxa+GTn
-	 2p3xfQBfwsl6/5Lb4ZmaIp/6eESaMlyvih24Ir9F1rC357tB8vVxG9MdBW+EzbFgUs
-	 459IIiBEnrjoQ==
-Date: Mon, 25 Mar 2024 14:16:15 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Subject: Re: [PATCH v1 1/1] ASoC: soc-jack: Get rid of legacy GPIO support
-Message-ID: <e6900b97-c1b7-45a5-bc3c-4a4a2745fdf3@sirena.org.uk>
-References: <20240318202602.182619-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="v9tnnnPk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711376217;
+	bh=T9MvklJg6UVFRQrF868mATr8p8Rs4R1YsfG32amYaZw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=v9tnnnPk8R+UrV96NWXrGQCug8Ot9oV0xSHwfMiaVwTZHKb+YlW7Mj75T6YX5wbvt
+	 SOmJIJfX+/YhwVkOESKnaNVhcUxTOuP+zinmfsG76Wme/E+EGOkyBlUDBo5P2BHizE
+	 cbysbdF4zszhS+mIY1ujYZGE/yCWhVmYhCubW5tDV+9x+ASofXoNBHd/LSFShaI9xe
+	 IWuP2VVwIrKpv4uzQCzYLU5vxHTZzoRpmJg2OkMNTR2OADJH1GkYRkmYzb4tmJX8sw
+	 wizyBN0ZbewPTaieI5uTPoj/dejDXYL1cwYvvH3L15Toe4WKX3v7O9SYtfskSDZXHO
+	 vD4RZv3xBMndg==
+Received: from jupiter.universe (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2898B37820CA;
+	Mon, 25 Mar 2024 14:16:57 +0000 (UTC)
+Received: by jupiter.universe (Postfix, from userid 1000)
+	id 989AD4800D1; Mon, 25 Mar 2024 15:16:56 +0100 (CET)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Heiko Stuebner <heiko@sntech.de>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-rockchip@lists.infradead.org,
+	linux-phy@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	kernel@collabora.com
+Subject: [PATCH v4 04/10] arm64: dts: rockchip: fix usb2phy nodename for rk3588
+Date: Mon, 25 Mar 2024 15:15:34 +0100
+Message-ID: <20240325141653.84910-5-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240325141653.84910-1-sebastian.reichel@collabora.com>
+References: <20240325141653.84910-1-sebastian.reichel@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MR2NRS0l68cHGpCq"
-Content-Disposition: inline
-In-Reply-To: <20240318202602.182619-1-andriy.shevchenko@linux.intel.com>
-X-Cookie: Bus error -- driver executed.
+Content-Transfer-Encoding: 8bit
 
+usb2-phy should be named usb2phy according to the DT binding,
+so let's fix it up accordingly.
 
---MR2NRS0l68cHGpCq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Mon, Mar 18, 2024 at 10:25:16PM +0200, Andy Shevchenko wrote:
-> No more users.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  include/sound/soc-jack.h |  2 --
->=20
-> If I am not mistaken, after
-> https://lore.kernel.org/r/20240318200804.181516-1-andriy.shevchenko@linux=
-=2Eintel.com
-> there is no more users. Hence the above is the only dependency.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+index 87b83c87bd55..5ed0d8c95427 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+@@ -543,7 +543,7 @@ usb2phy2_grf: syscon@fd5d8000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		u2phy2: usb2-phy@8000 {
++		u2phy2: usb2phy@8000 {
+ 			compatible = "rockchip,rk3588-usb2phy";
+ 			reg = <0x8000 0x10>;
+ 			interrupts = <GIC_SPI 391 IRQ_TYPE_LEVEL_HIGH 0>;
+@@ -568,7 +568,7 @@ usb2phy3_grf: syscon@fd5dc000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		u2phy3: usb2-phy@c000 {
++		u2phy3: usb2phy@c000 {
+ 			compatible = "rockchip,rk3588-usb2phy";
+ 			reg = <0xc000 0x10>;
+ 			interrupts = <GIC_SPI 392 IRQ_TYPE_LEVEL_HIGH 0>;
+-- 
+2.43.0
 
-You are mistaken, please try compile tests:
-
-/build/stage/linux/sound/soc/generic/simple-card-utils.c: In function =E2=
-=80=98simple_util_init_jack=E2=80=99:
-/build/stage/linux/sound/soc/generic/simple-card-utils.c:755:20: error: =E2=
-=80=98struct snd_soc_jack_gpio=E2=80=99 has no member named =E2=80=98gpio=
-=E2=80=99
-  755 |         sjack->gpio.gpio =3D -ENOENT;
-      |                    ^
-
-(this is among other things in x86 allmodconfig).
-
---MR2NRS0l68cHGpCq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYBhy4ACgkQJNaLcl1U
-h9BowQf/Rppf7Qjjmtff9y9FS5vz5dJ7RLRz1S6N1JTwV4m4QYjv7YSGaWzHrqwf
-1Eaa8ZzyvZh/6v6C29hamNu0LtlMg9ucT6v+W+KnTa+WkHz6LE1wqOlmhchqypL/
-qRD0cTFjJFyKzM7cLdDeHWyXe+l3M5lr6eeAMG4TRivjecNwului9GuZ2ncVS82a
-DBBJPErDR0In1Ec5dk5CSGWJHe5yzLi0Yv26WaEh8sZJXUwhSiYwlEGfON/jp5yW
-TgZayyfKkrqBjcptdhUPxLaCa5az4CbBrXrSHCD8gfwQaWfi7P33inXgxFl0FBUU
-tL3kTnkC+6lT9/SJ9jJtzPFAKiAJ0Q==
-=5laV
------END PGP SIGNATURE-----
-
---MR2NRS0l68cHGpCq--
