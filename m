@@ -1,111 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50DB178891;
-	Mon, 25 Mar 2024 03:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81D2178304
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711337099; cv=none; b=rFia1D1Ii2+pYkOZkLCn3hlPc99ll0riCFBBJ/uAiJJhY2SQ/O3W7oS3tnQmH36SKDm6ilj3m9L24oMHsfjK6DD9B6L4fciwP344W0tUMJ/nZ+S7BLCm3GcmozrvYxJVznebx4MFX1tHVZF00dtLUkQhAcIytvhxueTjIQy2nPw=
+	t=1711337050; cv=none; b=AASWFN8nzGpj3rwxOq3hbPo2l9DSYSjvTPFjgFaSbK3nXyEMairwtKxyzfAuzH7cUQY8CumKUxkHmYsX+u/klxekuJxn+7DBq16JDht1tHuqxwq9BPAlgGNFZcWY3Y+hansJCisKvo/97UFtcnUsB8BwzihiTLXu0Yh3gjOMbMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711337099; c=relaxed/simple;
-	bh=GakVguLw7Lf5f5Bnjeick8QQQVW5ZbSnjq4ik2Jrhtg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cLnvYO6w0Cu9UtuspORNz4l8Fo98Jmhz/WsF2c7WukkF2SOfpnSSQjQuOr+kKLwA8sjr/H4qFnv/ZIluxaVPQ7bh4yruSNFgjCbyr+gy4pqPblVfIyNwJogQR/dR3hPAxRzsd82zFjVP8cwH/+U0TDF4Y30SWNECLQD3+QQfjOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMsc1e3w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711337050; c=relaxed/simple;
+	bh=orRwZ9kcZJC8yMO1NEBXxCXq9LAMQc3UsRDQLy0IaM0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f6SBhP1NZXm2mNPjnctDGXWxckcLJ+wumDl9JPX42YiSHd7xlOgJKmVfvzxiHZjS2qQSyBychpY4mc6MEXfVvg2SanDc/wCJepZPZKFBu4l0LTs+AYeYtygwUnMegAM3sXOZSfl1vltckAYO/qn3SIvUG7j6szTmNTOI3Tg3nHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dcdZTaXJ; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMsc1e3w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 246EBC433F1;
-	Mon, 25 Mar 2024 03:24:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711337099;
-	bh=GakVguLw7Lf5f5Bnjeick8QQQVW5ZbSnjq4ik2Jrhtg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WMsc1e3wpuTRL3x0WYjsA3UoiisjhwQyJtQPJoqpSZnM+1GvokBtbQ20vuSLEGHlp
-	 wh5NZaQE75OEYKu+O0gro1bHzs/CRzer2IWoS9NIV2eVZyGUJHJU3fDX5KUjGVv8xL
-	 CgYBD+QQ01bsCyZSXzcETKuv8Sm4fw9wPG9TLp8V0JgA7yAnzILTk6llYbZmdRImsF
-	 ZvdOmHxCFy4gUOju0YyYsBc1qMl6f5tmUbIxswIpkfeAumFNZiXg9fVt26FvFvjfQp
-	 dvUR2SmtCrcmkt2O+Mxdp8/YoRFwA82eKqUx56+1ku+hnVojIyCKTo2v/AicAUGJu9
-	 GZj7Vx7MdZfCg==
-Date: Mon, 25 Mar 2024 11:24:56 +0800
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Stephen Horvath <s.horvath@outlook.com.au>
-Cc: Lee Jones <lee@kernel.org>, Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] platform/chrome: cros_kbd_led_backlight:
- Automatically enable keyboard backlight control if feature present in EC
-Message-ID: <ZgDuiEYcgMTuZAeA@google.com>
-References: <20240322102800.1322022-1-s.horvath@outlook.com.au>
- <SY4P282MB306333469B31348E4A25A1A5C5312@SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dcdZTaXJ"
+Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
+	by cmsmtp with ESMTPS
+	id nhh5raRPgQr4SoauurCL4T; Mon, 25 Mar 2024 03:22:32 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id oautr32VWuv6XoautrFQ9W; Mon, 25 Mar 2024 03:22:31 +0000
+X-Authority-Analysis: v=2.4 cv=YbZ25BRf c=1 sm=1 tr=0 ts=6600edf7
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10
+ a=eNdQz-wj4_MDoatRon4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=YOuO9JEjJXNfSgBKj1LiPw0cso3zHCBPu7p7n4bAXp8=; b=dcdZTaXJ8UBns8wJ+bl2v7r+xW
+	VdKDUnj4KW5zlC97s1jUwbzElWLM5xGk2O9qdQGPasJpGAYd4gUpZugXwP+a8l4IdFch4qEYj86FR
+	tOGFx+0+ANM3Bw14KItjkJwzmWCa9ZpaB6xxEleK83WCRRa4UAhisI8BxS2VWYx7s5ynzxE18tAqd
+	z/IJ68wCybmXGM3ux20DolVcY+xGD6rA+CagFMU+YilXW6gmyDyHVztPGIspEY0ozdOwXx3q4bj2z
+	2LLRWHE9PL9hNauhbEmxdBDEYbZtWrHcDy3IIZIzuCCLKggZ8QiuA4dXXMhiDigwfdVzltvgI940N
+	fofVanyw==;
+Received: from [201.172.174.229] (port=50482 helo=[192.168.15.14])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1roaur-0034lI-0F;
+	Sun, 24 Mar 2024 22:22:29 -0500
+Message-ID: <4064c408-3d73-4361-98f0-718f4f5e54a2@embeddedor.com>
+Date: Sun, 24 Mar 2024 21:22:25 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SY4P282MB306333469B31348E4A25A1A5C5312@SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][next] net/smc: Avoid -Wflex-array-member-not-at-end
+ warnings
+Content-Language: en-US
+To: Wen Gu <guwen@linux.alibaba.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
+ "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Kees Cook <keescook@chromium.org>
+References: <ZfCXBykRw5XqBvf0@neat>
+ <f504328f-1fd2-4c85-a657-a14b272c321e@linux.alibaba.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <f504328f-1fd2-4c85-a657-a14b272c321e@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.174.229
+X-Source-L: No
+X-Exim-ID: 1roaur-0034lI-0F
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.14]) [201.172.174.229]:50482
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfJiaTCKWb5FC+Y+mRTru0YfXROH60iO1A+2Im/iaueJBYPT2n9AUZgchm42ytvPKfJWNGfydddlAJ/yp58mK02GQlpKHjmJwB0NzskuEgS/4Y/n2l2vf
+ W8/hi7emJPl8F8lCbgamPKiSbE8pTZrhcFc31cgER2mqWdZP+FomMLZzttUHjBlsZurgVFElTFaJV//3rVZypkCS1wKjRrCyUdA8bzwqKzrGKq9DehLaKhv3
 
-On Fri, Mar 22, 2024 at 08:27:58PM +1000, Stephen Horvath wrote:
-> I also fixed a bug that seemed like there was some confusion between
-> `cros_ec_dev` and `cros_ec_device`, so I'm not sure if this module even
-> worked until now.
 
-If they aren't part of commit message, please put them after "---".  Please
-separate to an independent patch if they fix different things.
+>> diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
+>> index e55026c7529c..63bb5745ab54 100644
+>> --- a/net/smc/smc_clc.c
+>> +++ b/net/smc/smc_clc.c
+>> @@ -853,8 +853,9 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
+>>       pclc_smcd = &pclc->pclc_smcd;
+>>       pclc_prfx = &pclc->pclc_prfx;
+>>       ipv6_prfx = pclc->pclc_prfx_ipv6;
+>> -    v2_ext = &pclc->pclc_v2_ext;
+>> -    smcd_v2_ext = &pclc->pclc_smcd_v2_ext;
+>> +    v2_ext = container_of(&pclc->pclc_v2_ext, struct smc_clc_v2_extension, fixed);
+> checkpatch complained 'WARNING: line length of 86 exceeds 80 columns' here.
 
-> diff --git a/drivers/platform/chrome/cros_kbd_led_backlight.c b/drivers/platform/chrome/cros_kbd_led_backlight.c
-> index 793fd3f1015d..06e9a57536af 100644
-> --- a/drivers/platform/chrome/cros_kbd_led_backlight.c
-> +++ b/drivers/platform/chrome/cros_kbd_led_backlight.c
-> @@ -171,12 +171,15 @@ static int keyboard_led_init_ec_pwm(struct platform_device *pdev)
->  {
->  	struct keyboard_led *keyboard_led = platform_get_drvdata(pdev);
->  
-> -	keyboard_led->ec = dev_get_drvdata(pdev->dev.parent);
-> -	if (!keyboard_led->ec) {
-> +	struct cros_ec_dev *parent_ec = dev_get_drvdata(pdev->dev.parent);
+I could probably change this.
 
-I'm not sure if it really fixes anything.  See [1] or [2].
+> 
+> It can be reproduced by:
+> 
+> ./scripts/checkpatch.pl --strict --max-line-length=80 
+> --ignore=COMMIT_LOG_LONG_LINE,MACRO_ARG_REUSE,ALLOC_SIZEOF_STRUCT,NO_AUTHOR_SIGN_OFF,GIT_COMMIT_ID,CAMELCASE xxx.patch
+> 
+>> +    smcd_v2_ext = container_of(&pclc->pclc_smcd_v2_ext,
+>> +                   struct smc_clc_smcd_v2_extension, fixed);
+>>       gidchids = pclc->pclc_gidchids;
+>>       trl = &pclc->pclc_trl;
+>> diff --git a/net/smc/smc_clc.h b/net/smc/smc_clc.h
+>> index 7cc7070b9772..2bfb51daf468 100644
+>> --- a/net/smc/smc_clc.h
+>> +++ b/net/smc/smc_clc.h
+>> @@ -134,12 +134,14 @@ struct smc_clc_smcd_gid_chid {
+>>                */
+>>   struct smc_clc_v2_extension {
+>> -    struct smc_clnt_opts_area_hdr hdr;
+>> -    u8 roce[16];        /* RoCEv2 GID */
+>> -    u8 max_conns;
+>> -    u8 max_links;
+>> -    __be16 feature_mask;
+>> -    u8 reserved[12];
+>> +    struct_group_tagged(smc_clc_v2_extension_fixed, fixed,
+>> +        struct smc_clnt_opts_area_hdr hdr;
+> 
+> checkpatch: 'CHECK: Alignment should match open parenthesis'
 
-[1]: https://elixir.bootlin.com/linux/v6.8/source/drivers/platform/chrome/cros_ec_lpc.c#L417
-[2]: https://elixir.bootlin.com/linux/v6.8/source/drivers/platform/chrome/cros_ec_spi.c#L759
+I think the code looks better as is --without aligning to match the parenthesis.
 
-> @@ -200,8 +203,10 @@ static int keyboard_led_probe(struct platform_device *pdev)
->  	int error;
->  
->  	drvdata = device_get_match_data(&pdev->dev);
-> -	if (!drvdata)
-> -		return -EINVAL;
-> +	if (!drvdata) {
-> +		/* Assume EC if no match data is provided */
-> +		drvdata = &keyboard_led_drvdata_ec_pwm;
-> +	}
-
-By current design, the `drvdata` should be provided by either ACPI or OF match.
-
-> @@ -236,22 +241,10 @@ static const struct acpi_device_id keyboard_led_acpi_match[] = {
->  MODULE_DEVICE_TABLE(acpi, keyboard_led_acpi_match);
->  #endif
->  
-> -#ifdef CONFIG_OF
-> -static const struct of_device_id keyboard_led_of_match[] = {
-> -	{
-> -		.compatible = "google,cros-kbd-led-backlight",
-> -		.data = &keyboard_led_drvdata_ec_pwm,
-> -	},
-> -	{}
-> -};
-> -MODULE_DEVICE_TABLE(of, keyboard_led_of_match);
-> -#endif
-> -
->  static struct platform_driver keyboard_led_driver = {
->  	.driver		= {
->  		.name	= "chromeos-keyboard-leds",
->  		.acpi_match_table = ACPI_PTR(keyboard_led_acpi_match),
-> -		.of_match_table = of_match_ptr(keyboard_led_of_match),
-
-The patch is ruining the use cases in OF world (e.g. [3]).
-
-[3]: https://elixir.bootlin.com/linux/v6.8/source/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi#L1154
+--
+Gustavo
