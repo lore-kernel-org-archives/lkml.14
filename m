@@ -1,428 +1,450 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05D5170A42
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 14:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C4C170EA9
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 14:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711378613; cv=none; b=ix5EnSCT3x/MmlXAoQMP2yyqFxgT7zSxmPYHLfXANZK+UBDkMUUdNhIYv/nR6CgPIpcNI4b1sx2SmqalLQnTedyDh66/TU2fmeHAa0ZPDsmvnE1BcwrjctBf+uitMNm12TEsMS4MnsnONeeZJPSP8GXaVsgBHq4jsdBBBQHI46o=
+	t=1711378616; cv=none; b=Afak//ltNgCB8PYjVHZ92iVT6psxHhTOyTMg3VEKeSaQaNj9hF9pIe1l8pXeR2xzLXwW+lHG/e0fq/VVwv2SxPxEHQQTKy1HT0uWbhMi/Y8PIZBFkndDUo3LeOl/tuf3ZT1+EBQNsfDvdq788tATH+VaJyhad5vrIMuMna7sWlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711378613; c=relaxed/simple;
-	bh=D0IVRdUxb61cm78RULRVdS2jg7eEG5sG+EM9knh7xic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=T/AbN7+VC8S7dK7LLdMqgktVB9KmZYAakmfzCq3Nn/xW7nWMYm4+4j4+bPeP9YxImAzbwO1jY1cHt69ya378kIroS4yodWibvFUCJ/qoLithhdV1elNF0KFk4xv9dWl1h2VuGlKOYXjJ8IgaJK4GPWFtVVtjBsRNeU0QYh97bZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bVQ6KI1n; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bVQ6KI1n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711378610;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gx0yK0w5kM36eezq6+OwYyZsTKrvUFRREBPBGm2cUJQ=;
-	b=bVQ6KI1nuHV2MtXhKkt+Id/L5sWGOQLaBfky0CcfosH4NdYYt1/GZVpsyH9DAURImDKI1L
-	0ubcOg7JxAcB5B//FlBtBy5d53x7VJM5/Wjs6fjS3R0aBdp8TGll2P0KenJKmlSPAyKVuX
-	bb92nI1/KsUubfTxV1Rxt7r3nJ2onRs=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-92-Dt3_eJrsODaZxfBt9p00-g-1; Mon, 25 Mar 2024 10:56:46 -0400
-X-MC-Unique: Dt3_eJrsODaZxfBt9p00-g-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a473ac9d263so226122866b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:56:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711378601; x=1711983401;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gx0yK0w5kM36eezq6+OwYyZsTKrvUFRREBPBGm2cUJQ=;
-        b=iCrtG7LM+ZtREMHVEY5fUMuk04Pua1wHao/XQsl0SD5/WMs8bN+S+2IG1eCO9RZgND
-         XytfigjtrfddlquRA5mfG1bFiGd7CHovWlW0bAsMBqbWSVTnm3xXryJVFDhuVerMVbdU
-         pslYThVX3E2dD8NneGqcKY50aHRm3Ofbispfk+6KJXIrM06MvFCKGQ3vFkm4zaR78g1z
-         5MqhBpoXHpLm6RfYX3a5u44UDHi4qPIfrNR4hYuBS32IxkT65/SSCOTCbXVlmhYMv8ZG
-         sZ7nFynBsUEsS46JOvDhb8XwSxwtKLu6GkdDSU1cqj0EkQM/j2TZ0ELtyFZYiuYWKPiC
-         dX0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVsXY9PG9Wwq11Nw/vHqq8So70gCx9nh8KoYglwcOuWkYZYH1LSubD7Pg4KKK3ZzJjDf7j2t9gCSPyTntvgz1aTljrSSHcx/3Wsi2lP
-X-Gm-Message-State: AOJu0Ywo8P0yeDhGrq7ZFC9qsv065Vt9o/OTBv+41d007OOKOVh+P66C
-	+ndd7DjGMy5AF+b8gVP7BwNtHbpKeZDx4lrt1TKWISEMxr5ibpJ9dGRaHqcQcMkLpo5PLzx3U2s
-	bFXLcpd6I3fQQGJnFNJoGL2Ga1ItUYoMw9BShtUS7iFs7jrWzCu2TAYdsseNXrA==
-X-Received: by 2002:a17:906:30d0:b0:a47:3632:d30b with SMTP id b16-20020a17090630d000b00a473632d30bmr5089225ejb.37.1711378601362;
-        Mon, 25 Mar 2024 07:56:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF55T1GoUanntAW5p1pLSM7rxO+GN2gxok61HVVPRpB3r2cJsrfTCkC0WKeFICO67DzAnAetA==
-X-Received: by 2002:a17:906:30d0:b0:a47:3632:d30b with SMTP id b16-20020a17090630d000b00a473632d30bmr5089204ejb.37.1711378600921;
-        Mon, 25 Mar 2024 07:56:40 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id q9-20020a170906a08900b00a46d001a259sm3140430ejy.52.2024.03.25.07.56.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 07:56:40 -0700 (PDT)
-Message-ID: <aff161d5-cf6e-421b-8250-35e724397dcf@redhat.com>
-Date: Mon, 25 Mar 2024 15:56:39 +0100
+	s=arc-20240116; t=1711378616; c=relaxed/simple;
+	bh=YOa3daFZCi+KeLNEZDEArooCNTMCHGXoSUjhT3Ixq1k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BIIQSIyMZJ83iDKfeJHsIxensWyS4h3ndVoznvIdryviLmCoJ/YB/OhbmoMw96yINJeX5ZnGrFVI+6pyTyAS6KWF3omxCH6PBH+sYzLLQfmhFCynRA5KFNfCylg+t/TmWd0GhActnGNmYj5YwLQu5uOC36pvNTm3ZFVOJ8Am7Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4V3GGW13Shz9srg;
+	Mon, 25 Mar 2024 15:56:19 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id YV9edRV4Wprd; Mon, 25 Mar 2024 15:56:19 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4V3GGL0SFcz9sps;
+	Mon, 25 Mar 2024 15:56:10 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0B7A98B76C;
+	Mon, 25 Mar 2024 15:56:10 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id YZtrcU0fiEBw; Mon, 25 Mar 2024 15:56:09 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [172.25.230.108])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id D80E18B765;
+	Mon, 25 Mar 2024 15:56:09 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Peter Xu <peterx@redhat.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [RFC PATCH 8/8] powerpc/8xx: Add back support for 8M pages using contiguous PTE entries
+Date: Mon, 25 Mar 2024 15:56:01 +0100
+Message-ID: <57c49d8be1e3f1546474ab7cbe2cce37919305d5.1711377230.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1711377230.git.christophe.leroy@csgroup.eu>
+References: <cover.1711377230.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] platform/surface: platform_profile: add fan
- profile switching
-Content-Language: en-US, nl
-To: Ivor Wanders <ivor@iwanders.net>, Maximilian Luz
- <luzmaximilian@gmail.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240314223733.6236-1-ivor@iwanders.net>
- <20240314223733.6236-2-ivor@iwanders.net>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240314223733.6236-2-ivor@iwanders.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711378567; l=14498; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=YOa3daFZCi+KeLNEZDEArooCNTMCHGXoSUjhT3Ixq1k=; b=EGYoXEf+OsOEXz4DddK0itsdaNhDO9VBOjnNDwnxq13VHxCfcNAlhW9RAs1Wb5Xs70z5bROmg 6uNfeWreaIVDl+r/VjcaqB7O6TkGafYFbKED2RTLpkPfwPTo0l1QFRL
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-Hi,
+In order to fit better with standard Linux page tables layout, add
+support for 8M pages using contiguous PTE entries in a standard
+page table. Page tables will then be populated with 1024 similar
+entries and two PMD entries will point to that page table.
 
-On 3/14/24 11:37 PM, Ivor Wanders wrote:
-> Change naming from tmp to platform profile to clarify the module may
-> interact with both the TMP and FAN subystems. Add functionality that
-> switches the fan profile when the platform profile is changed when
-> a fan is present.
-> 
-> Signed-off-by: Ivor Wanders <ivor@iwanders.net>
-> Link: https://github.com/linux-surface/kernel/pull/145
-> Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+The PMD entries also get a flag to tell it is addressing an 8M page,
+this is required for the HW tablewalk assistance.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/include/asm/hugetlb.h            | 11 ++++-
+ .../include/asm/nohash/32/hugetlb-8xx.h       | 28 +++++++++++-
+ arch/powerpc/include/asm/nohash/32/pgalloc.h  |  2 +
+ arch/powerpc/include/asm/nohash/32/pte-8xx.h  | 43 +++++++++++++++++--
+ arch/powerpc/include/asm/pgtable.h            |  1 +
+ arch/powerpc/kernel/head_8xx.S                |  1 +
+ arch/powerpc/mm/hugetlbpage.c                 | 12 +++++-
+ arch/powerpc/mm/nohash/8xx.c                  | 31 ++++++++++---
+ arch/powerpc/mm/nohash/tlb.c                  |  3 ++
+ arch/powerpc/mm/pgtable.c                     | 24 +++++++----
+ arch/powerpc/mm/pgtable_32.c                  |  2 +-
+ 11 files changed, 134 insertions(+), 24 deletions(-)
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-
-> ---
-> Changes in v2:
->   - Added link entry to commit message.
->   - Use u8 instead of char for the argument of __sam_fan_profile_set.
->   - Made profile and profile_le variable const.
-> ---
-> ---
->  .../surface/surface_aggregator_registry.c     | 36 +++++---
->  .../surface/surface_platform_profile.c        | 88 ++++++++++++++++---
->  2 files changed, 100 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-> index 035d6b4105cd..79e52eddabd0 100644
-> --- a/drivers/platform/surface/surface_aggregator_registry.c
-> +++ b/drivers/platform/surface/surface_aggregator_registry.c
-> @@ -68,12 +68,26 @@ static const struct software_node ssam_node_bat_sb3base = {
->  	.parent = &ssam_node_hub_base,
->  };
->  
-> -/* Platform profile / performance-mode device. */
-> -static const struct software_node ssam_node_tmp_pprof = {
-> +/* Platform profile / performance-mode device without a fan. */
-> +static const struct software_node ssam_node_tmp_perf_profile = {
->  	.name = "ssam:01:03:01:00:01",
->  	.parent = &ssam_node_root,
->  };
->  
-> +/* Platform profile / performance-mode device with a fan, such that
-> + * the fan controller profile can also be switched.
-> + */
-> +static const struct property_entry ssam_node_tmp_perf_profile_has_fan[] = {
-> +	PROPERTY_ENTRY_BOOL("has_fan"),
-> +	{ }
-> +};
-> +
-> +static const struct software_node ssam_node_tmp_perf_profile_with_fan = {
-> +	.name = "ssam:01:03:01:00:01",
-> +	.parent = &ssam_node_root,
-> +	.properties = ssam_node_tmp_perf_profile_has_fan,
-> +};
-> +
->  /* Fan speed function. */
->  static const struct software_node ssam_node_fan_speed = {
->  	.name = "ssam:01:05:01:01:01",
-> @@ -208,7 +222,7 @@ static const struct software_node ssam_node_pos_tablet_switch = {
->   */
->  static const struct software_node *ssam_node_group_gen5[] = {
->  	&ssam_node_root,
-> -	&ssam_node_tmp_pprof,
-> +	&ssam_node_tmp_perf_profile,
->  	NULL,
->  };
->  
-> @@ -219,7 +233,7 @@ static const struct software_node *ssam_node_group_sb3[] = {
->  	&ssam_node_bat_ac,
->  	&ssam_node_bat_main,
->  	&ssam_node_bat_sb3base,
-> -	&ssam_node_tmp_pprof,
-> +	&ssam_node_tmp_perf_profile,
->  	&ssam_node_bas_dtx,
->  	&ssam_node_hid_base_keyboard,
->  	&ssam_node_hid_base_touchpad,
-> @@ -233,7 +247,7 @@ static const struct software_node *ssam_node_group_sl3[] = {
->  	&ssam_node_root,
->  	&ssam_node_bat_ac,
->  	&ssam_node_bat_main,
-> -	&ssam_node_tmp_pprof,
-> +	&ssam_node_tmp_perf_profile,
->  	&ssam_node_hid_main_keyboard,
->  	&ssam_node_hid_main_touchpad,
->  	&ssam_node_hid_main_iid5,
-> @@ -245,7 +259,7 @@ static const struct software_node *ssam_node_group_sl5[] = {
->  	&ssam_node_root,
->  	&ssam_node_bat_ac,
->  	&ssam_node_bat_main,
-> -	&ssam_node_tmp_pprof,
-> +	&ssam_node_tmp_perf_profile,
->  	&ssam_node_hid_main_keyboard,
->  	&ssam_node_hid_main_touchpad,
->  	&ssam_node_hid_main_iid5,
-> @@ -258,7 +272,7 @@ static const struct software_node *ssam_node_group_sls[] = {
->  	&ssam_node_root,
->  	&ssam_node_bat_ac,
->  	&ssam_node_bat_main,
-> -	&ssam_node_tmp_pprof,
-> +	&ssam_node_tmp_perf_profile,
->  	&ssam_node_pos_tablet_switch,
->  	&ssam_node_hid_sam_keyboard,
->  	&ssam_node_hid_sam_penstash,
-> @@ -274,7 +288,7 @@ static const struct software_node *ssam_node_group_slg1[] = {
->  	&ssam_node_root,
->  	&ssam_node_bat_ac,
->  	&ssam_node_bat_main,
-> -	&ssam_node_tmp_pprof,
-> +	&ssam_node_tmp_perf_profile,
->  	NULL,
->  };
->  
-> @@ -283,7 +297,7 @@ static const struct software_node *ssam_node_group_sp7[] = {
->  	&ssam_node_root,
->  	&ssam_node_bat_ac,
->  	&ssam_node_bat_main,
-> -	&ssam_node_tmp_pprof,
-> +	&ssam_node_tmp_perf_profile,
->  	NULL,
->  };
->  
-> @@ -293,7 +307,7 @@ static const struct software_node *ssam_node_group_sp8[] = {
->  	&ssam_node_hub_kip,
->  	&ssam_node_bat_ac,
->  	&ssam_node_bat_main,
-> -	&ssam_node_tmp_pprof,
-> +	&ssam_node_tmp_perf_profile,
->  	&ssam_node_kip_tablet_switch,
->  	&ssam_node_hid_kip_keyboard,
->  	&ssam_node_hid_kip_penstash,
-> @@ -310,7 +324,7 @@ static const struct software_node *ssam_node_group_sp9[] = {
->  	&ssam_node_hub_kip,
->  	&ssam_node_bat_ac,
->  	&ssam_node_bat_main,
-> -	&ssam_node_tmp_pprof,
-> +	&ssam_node_tmp_perf_profile_with_fan,
->  	&ssam_node_fan_speed,
->  	&ssam_node_pos_tablet_switch,
->  	&ssam_node_hid_kip_keyboard,
-> diff --git a/drivers/platform/surface/surface_platform_profile.c b/drivers/platform/surface/surface_platform_profile.c
-> index a5a3941b3f43..3de864bc6610 100644
-> --- a/drivers/platform/surface/surface_platform_profile.c
-> +++ b/drivers/platform/surface/surface_platform_profile.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0+
->  /*
->   * Surface Platform Profile / Performance Mode driver for Surface System
-> - * Aggregator Module (thermal subsystem).
-> + * Aggregator Module (thermal and fan subsystem).
->   *
->   * Copyright (C) 2021-2022 Maximilian Luz <luzmaximilian@gmail.com>
->   */
-> @@ -14,6 +14,7 @@
->  
->  #include <linux/surface_aggregator/device.h>
->  
-> +// Enum for the platform performance profile sent to the TMP module.
->  enum ssam_tmp_profile {
->  	SSAM_TMP_PROFILE_NORMAL             = 1,
->  	SSAM_TMP_PROFILE_BATTERY_SAVER      = 2,
-> @@ -21,15 +22,26 @@ enum ssam_tmp_profile {
->  	SSAM_TMP_PROFILE_BEST_PERFORMANCE   = 4,
->  };
->  
-> +// Enum for the fan profile sent to the FAN module. This fan profile is
-> +// only sent to the EC if the 'has_fan' property is set. The integers are
-> +// not a typo, they differ from the performance profile indices.
-> +enum ssam_fan_profile {
-> +	SSAM_FAN_PROFILE_NORMAL             = 2,
-> +	SSAM_FAN_PROFILE_BATTERY_SAVER      = 1,
-> +	SSAM_FAN_PROFILE_BETTER_PERFORMANCE = 3,
-> +	SSAM_FAN_PROFILE_BEST_PERFORMANCE   = 4,
-> +};
-> +
->  struct ssam_tmp_profile_info {
->  	__le32 profile;
->  	__le16 unknown1;
->  	__le16 unknown2;
->  } __packed;
->  
-> -struct ssam_tmp_profile_device {
-> +struct ssam_platform_profile_device {
->  	struct ssam_device *sdev;
->  	struct platform_profile_handler handler;
-> +	bool has_fan;
->  };
->  
->  SSAM_DEFINE_SYNC_REQUEST_CL_R(__ssam_tmp_profile_get, struct ssam_tmp_profile_info, {
-> @@ -42,6 +54,13 @@ SSAM_DEFINE_SYNC_REQUEST_CL_W(__ssam_tmp_profile_set, __le32, {
->  	.command_id      = 0x03,
->  });
->  
-> +SSAM_DEFINE_SYNC_REQUEST_W(__ssam_fan_profile_set, u8, {
-> +	.target_category = SSAM_SSH_TC_FAN,
-> +	.target_id = SSAM_SSH_TID_SAM,
-> +	.command_id = 0x0e,
-> +	.instance_id = 0x01,
-> +});
-> +
->  static int ssam_tmp_profile_get(struct ssam_device *sdev, enum ssam_tmp_profile *p)
->  {
->  	struct ssam_tmp_profile_info info;
-> @@ -57,12 +76,19 @@ static int ssam_tmp_profile_get(struct ssam_device *sdev, enum ssam_tmp_profile
->  
->  static int ssam_tmp_profile_set(struct ssam_device *sdev, enum ssam_tmp_profile p)
->  {
-> -	__le32 profile_le = cpu_to_le32(p);
-> +	const __le32 profile_le = cpu_to_le32(p);
->  
->  	return ssam_retry(__ssam_tmp_profile_set, sdev, &profile_le);
->  }
->  
-> -static int convert_ssam_to_profile(struct ssam_device *sdev, enum ssam_tmp_profile p)
-> +static int ssam_fan_profile_set(struct ssam_device *sdev, enum ssam_fan_profile p)
-> +{
-> +	const u8 profile = p;
-> +
-> +	return ssam_retry(__ssam_fan_profile_set, sdev->ctrl, &profile);
-> +}
-> +
-> +static int convert_ssam_tmp_to_profile(struct ssam_device *sdev, enum ssam_tmp_profile p)
->  {
->  	switch (p) {
->  	case SSAM_TMP_PROFILE_NORMAL:
-> @@ -83,7 +109,8 @@ static int convert_ssam_to_profile(struct ssam_device *sdev, enum ssam_tmp_profi
->  	}
->  }
->  
-> -static int convert_profile_to_ssam(struct ssam_device *sdev, enum platform_profile_option p)
-> +
-> +static int convert_profile_to_ssam_tmp(struct ssam_device *sdev, enum platform_profile_option p)
->  {
->  	switch (p) {
->  	case PLATFORM_PROFILE_LOW_POWER:
-> @@ -105,20 +132,42 @@ static int convert_profile_to_ssam(struct ssam_device *sdev, enum platform_profi
->  	}
->  }
->  
-> +static int convert_profile_to_ssam_fan(struct ssam_device *sdev, enum platform_profile_option p)
-> +{
-> +	switch (p) {
-> +	case PLATFORM_PROFILE_LOW_POWER:
-> +		return SSAM_FAN_PROFILE_BATTERY_SAVER;
-> +
-> +	case PLATFORM_PROFILE_BALANCED:
-> +		return SSAM_FAN_PROFILE_NORMAL;
-> +
-> +	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-> +		return SSAM_FAN_PROFILE_BETTER_PERFORMANCE;
-> +
-> +	case PLATFORM_PROFILE_PERFORMANCE:
-> +		return SSAM_FAN_PROFILE_BEST_PERFORMANCE;
-> +
-> +	default:
-> +		/* This should have already been caught by platform_profile_store(). */
-> +		WARN(true, "unsupported platform profile");
-> +		return -EOPNOTSUPP;
-> +	}
-> +}
-> +
->  static int ssam_platform_profile_get(struct platform_profile_handler *pprof,
->  				     enum platform_profile_option *profile)
->  {
-> -	struct ssam_tmp_profile_device *tpd;
-> +	struct ssam_platform_profile_device *tpd;
->  	enum ssam_tmp_profile tp;
->  	int status;
->  
-> -	tpd = container_of(pprof, struct ssam_tmp_profile_device, handler);
-> +	tpd = container_of(pprof, struct ssam_platform_profile_device, handler);
->  
->  	status = ssam_tmp_profile_get(tpd->sdev, &tp);
->  	if (status)
->  		return status;
->  
-> -	status = convert_ssam_to_profile(tpd->sdev, tp);
-> +	status = convert_ssam_tmp_to_profile(tpd->sdev, tp);
->  	if (status < 0)
->  		return status;
->  
-> @@ -129,21 +178,32 @@ static int ssam_platform_profile_get(struct platform_profile_handler *pprof,
->  static int ssam_platform_profile_set(struct platform_profile_handler *pprof,
->  				     enum platform_profile_option profile)
->  {
-> -	struct ssam_tmp_profile_device *tpd;
-> +	struct ssam_platform_profile_device *tpd;
->  	int tp;
->  
-> -	tpd = container_of(pprof, struct ssam_tmp_profile_device, handler);
-> +	tpd = container_of(pprof, struct ssam_platform_profile_device, handler);
-> +
-> +	tp = convert_profile_to_ssam_tmp(tpd->sdev, profile);
-> +	if (tp < 0)
-> +		return tp;
->  
-> -	tp = convert_profile_to_ssam(tpd->sdev, profile);
-> +	tp = ssam_tmp_profile_set(tpd->sdev, tp);
->  	if (tp < 0)
->  		return tp;
->  
-> -	return ssam_tmp_profile_set(tpd->sdev, tp);
-> +	if (tpd->has_fan) {
-> +		tp = convert_profile_to_ssam_fan(tpd->sdev, profile);
-> +		if (tp < 0)
-> +			return tp;
-> +		tp = ssam_fan_profile_set(tpd->sdev, tp);
-> +	}
-> +
-> +	return tp;
->  }
->  
->  static int surface_platform_profile_probe(struct ssam_device *sdev)
->  {
-> -	struct ssam_tmp_profile_device *tpd;
-> +	struct ssam_platform_profile_device *tpd;
->  
->  	tpd = devm_kzalloc(&sdev->dev, sizeof(*tpd), GFP_KERNEL);
->  	if (!tpd)
-> @@ -154,6 +214,8 @@ static int surface_platform_profile_probe(struct ssam_device *sdev)
->  	tpd->handler.profile_get = ssam_platform_profile_get;
->  	tpd->handler.profile_set = ssam_platform_profile_set;
->  
-> +	tpd->has_fan = device_property_read_bool(&sdev->dev, "has_fan");
-> +
->  	set_bit(PLATFORM_PROFILE_LOW_POWER, tpd->handler.choices);
->  	set_bit(PLATFORM_PROFILE_BALANCED, tpd->handler.choices);
->  	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, tpd->handler.choices);
+diff --git a/arch/powerpc/include/asm/hugetlb.h b/arch/powerpc/include/asm/hugetlb.h
+index a05657e5701b..bd60ea134f8e 100644
+--- a/arch/powerpc/include/asm/hugetlb.h
++++ b/arch/powerpc/include/asm/hugetlb.h
+@@ -41,7 +41,16 @@ void hugetlb_free_pgd_range(struct mmu_gather *tlb, unsigned long addr,
+ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 					    unsigned long addr, pte_t *ptep)
+ {
+-	return __pte(pte_update(mm, addr, ptep, ~0UL, 0, 1));
++	pmd_t *pmdp = (pmd_t *)ptep;
++	pte_t pte;
++
++	if (pmdp == pmd_off(mm, ALIGN_DOWN(addr, SZ_8M))) {
++		pte = __pte(pte_update(mm, addr, pte_offset_kernel(pmdp, 0), ~0UL, 0, 1));
++		pte_update(mm, addr, pte_offset_kernel(pmdp + 1, 0), ~0UL, 0, 1);
++	} else {
++		pte = __pte(pte_update(mm, addr, ptep, ~0UL, 0, 1));
++	}
++	return pte;
+ }
+ 
+ #define __HAVE_ARCH_HUGE_PTEP_CLEAR_FLUSH
+diff --git a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
+index 178ed9fdd353..1414cfd28987 100644
+--- a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
+@@ -15,6 +15,16 @@ static inline int check_and_get_huge_psize(int shift)
+ 	return shift_to_mmu_psize(shift);
+ }
+ 
++#define __HAVE_ARCH_HUGE_PTEP_GET
++static inline pte_t huge_ptep_get(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
++{
++	pmd_t *pmdp = (pmd_t *)ptep;
++
++	if (pmdp == pmd_off(mm, ALIGN_DOWN(addr, SZ_8M)))
++		ptep = pte_offset_kernel(pmdp, 0);
++	return ptep_get(ptep);
++}
++
+ #define __HAVE_ARCH_HUGE_SET_HUGE_PTE_AT
+ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
+ 		     pte_t pte, unsigned long sz);
+@@ -23,7 +33,14 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
+ static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+ 				  pte_t *ptep, unsigned long sz)
+ {
+-	pte_update(mm, addr, ptep, ~0UL, 0, 1);
++	pmd_t *pmdp = (pmd_t *)ptep;
++
++	if (pmdp == pmd_off(mm, ALIGN_DOWN(addr, SZ_8M))) {
++		pte_update(mm, addr, pte_offset_kernel(pmdp, 0), ~0UL, 0, 1);
++		pte_update(mm, addr, pte_offset_kernel(pmdp + 1, 0), ~0UL, 0, 1);
++	} else {
++		pte_update(mm, addr, ptep, ~0UL, 0, 1);
++	}
+ }
+ 
+ #define __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
+@@ -33,7 +50,14 @@ static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 	unsigned long clr = ~pte_val(pte_wrprotect(__pte(~0)));
+ 	unsigned long set = pte_val(pte_wrprotect(__pte(0)));
+ 
+-	pte_update(mm, addr, ptep, clr, set, 1);
++	pmd_t *pmdp = (pmd_t *)ptep;
++
++	if (pmdp == pmd_off(mm, ALIGN_DOWN(addr, SZ_8M))) {
++		pte_update(mm, addr, pte_offset_kernel(pmdp, 0), clr, set, 1);
++		pte_update(mm, addr, pte_offset_kernel(pmdp + 1, 0), clr, set, 1);
++	} else {
++		pte_update(mm, addr, ptep, clr, set, 1);
++	}
+ }
+ 
+ #ifdef CONFIG_PPC_4K_PAGES
+diff --git a/arch/powerpc/include/asm/nohash/32/pgalloc.h b/arch/powerpc/include/asm/nohash/32/pgalloc.h
+index 11eac371e7e0..ff4f90cfb461 100644
+--- a/arch/powerpc/include/asm/nohash/32/pgalloc.h
++++ b/arch/powerpc/include/asm/nohash/32/pgalloc.h
+@@ -14,6 +14,7 @@
+ #define __pmd_free_tlb(tlb,x,a)		do { } while (0)
+ /* #define pgd_populate(mm, pmd, pte)      BUG() */
+ 
++#ifndef CONFIG_PPC_8xx
+ static inline void pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmdp,
+ 				       pte_t *pte)
+ {
+@@ -31,5 +32,6 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmdp,
+ 	else
+ 		*pmdp = __pmd(__pa(pte_page) | _PMD_USER | _PMD_PRESENT);
+ }
++#endif
+ 
+ #endif /* _ASM_POWERPC_PGALLOC_32_H */
+diff --git a/arch/powerpc/include/asm/nohash/32/pte-8xx.h b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
+index 004d7e825af2..b05cc4f87713 100644
+--- a/arch/powerpc/include/asm/nohash/32/pte-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
+@@ -129,14 +129,23 @@ static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long addr,
+ }
+ #define ptep_set_wrprotect ptep_set_wrprotect
+ 
++static pmd_t *pmd_off(struct mm_struct *mm, unsigned long addr);
++static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address);
++
+ static inline void __ptep_set_access_flags(struct vm_area_struct *vma, pte_t *ptep,
+ 					   pte_t entry, unsigned long address, int psize)
+ {
+ 	unsigned long set = pte_val(entry) & (_PAGE_DIRTY | _PAGE_ACCESSED | _PAGE_EXEC);
+ 	unsigned long clr = ~pte_val(entry) & _PAGE_RO;
+ 	int huge = psize > mmu_virtual_psize ? 1 : 0;
++	pmd_t *pmdp = (pmd_t *)ptep;
+ 
+-	pte_update(vma->vm_mm, address, ptep, clr, set, huge);
++	if (pmdp == pmd_off(vma->vm_mm, ALIGN_DOWN(address, SZ_8M))) {
++		pte_update(vma->vm_mm, address, pte_offset_kernel(pmdp, 0), clr, set, huge);
++		pte_update(vma->vm_mm, address, pte_offset_kernel(pmdp + 1, 0), clr, set, huge);
++	} else {
++		pte_update(vma->vm_mm, address, ptep, clr, set, huge);
++	}
+ 
+ 	flush_tlb_page(vma, address);
+ }
+@@ -146,6 +155,8 @@ static inline unsigned long pte_leaf_size(pmd_t pmd, pte_t pte)
+ {
+ 	pte_basic_t val = pte_val(pte);
+ 
++	if (pmd_val(pmd) & _PMD_PAGE_8M)
++		return SZ_8M;
+ 	if (val & _PAGE_HUGE)
+ 		return SZ_512K;
+ 	if (val & _PAGE_SPS)
+@@ -159,14 +170,16 @@ static inline unsigned long pte_leaf_size(pmd_t pmd, pte_t pte)
+  * On the 8xx, the page tables are a bit special. For 16k pages, we have
+  * 4 identical entries. For 512k pages, we have 128 entries as if it was
+  * 4k pages, but they are flagged as 512k pages for the hardware.
+- * For other page sizes, we have a single entry in the table.
++ * For 8M pages, we have 1024 entries as if it was
++ * 4M pages, but they are flagged as 8M pages for the hardware.
++ * For 4k pages, we have a single entry in the table.
+  */
+-static pmd_t *pmd_off(struct mm_struct *mm, unsigned long addr);
+-
+ static inline int number_of_cells_per_pte(pmd_t *pmd, pte_basic_t val, int huge)
+ {
+ 	if (!huge)
+ 		return PAGE_SIZE / SZ_4K;
++	else if ((pmd_val(*pmd) & _PMD_PAGE_MASK) == _PMD_PAGE_8M)
++		return SZ_4M / SZ_4K;
+ 	else if (IS_ENABLED(CONFIG_PPC_4K_PAGES) && !(val & _PAGE_HUGE))
+ 		return SZ_16K / SZ_4K;
+ 	else
+@@ -209,6 +222,28 @@ static inline pte_t ptep_get(pte_t *ptep)
+ }
+ #endif /* CONFIG_PPC_16K_PAGES */
+ 
++static inline void pmd_populate_kernel_size(struct mm_struct *mm, pmd_t *pmdp,
++					    pte_t *pte, unsigned long sz)
++{
++	if (sz == SZ_8M)
++		*pmdp = __pmd(__pa(pte) | _PMD_PRESENT | _PMD_PAGE_8M);
++	else
++		*pmdp = __pmd(__pa(pte) | _PMD_PRESENT);
++}
++
++static inline void pmd_populate_size(struct mm_struct *mm, pmd_t *pmdp,
++				     pgtable_t pte_page, unsigned long sz)
++{
++	if (sz == SZ_8M)
++		*pmdp = __pmd(__pa(pte_page) | _PMD_USER | _PMD_PRESENT | _PMD_PAGE_8M);
++	else
++		*pmdp = __pmd(__pa(pte_page) | _PMD_USER | _PMD_PRESENT);
++}
++#define pmd_populate_size pmd_populate_size
++
++#define pmd_populate(mm, pmdp, pte) pmd_populate_size(mm, pmdp, pte, PAGE_SIZE)
++#define pmd_populate_kernel(mm, pmdp, pte) pmd_populate_kernel_size(mm, pmdp, pte, PAGE_SIZE)
++
+ #endif
+ 
+ #endif /* __KERNEL__ */
+diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
+index 239709a2f68e..005dad336565 100644
+--- a/arch/powerpc/include/asm/pgtable.h
++++ b/arch/powerpc/include/asm/pgtable.h
+@@ -106,6 +106,7 @@ unsigned long vmalloc_to_phys(void *vmalloc_addr);
+ 
+ void pgtable_cache_add(unsigned int shift);
+ 
++void __init *early_alloc_pgtable(unsigned long size);
+ pte_t *early_pte_alloc_kernel(pmd_t *pmdp, unsigned long va);
+ 
+ #if defined(CONFIG_STRICT_KERNEL_RWX) || defined(CONFIG_PPC32)
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index b53af565b132..43919ae0bd11 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -415,6 +415,7 @@ FixupDAR:/* Entry point for dcbx workaround. */
+ 	oris	r11, r11, (swapper_pg_dir - PAGE_OFFSET)@ha
+ 3:
+ 	lwz	r11, (swapper_pg_dir-PAGE_OFFSET)@l(r11)	/* Get the level 1 entry */
++	rlwinm	r11, r11, 0, ~_PMD_PAGE_8M
+ 	mtspr	SPRN_MD_TWC, r11
+ 	mfspr	r11, SPRN_MD_TWC
+ 	lwz	r11, 0(r11)	/* Get the pte */
+diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+index 4e9fbd5b895d..dd29845ce0ce 100644
+--- a/arch/powerpc/mm/hugetlbpage.c
++++ b/arch/powerpc/mm/hugetlbpage.c
+@@ -195,7 +195,17 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
+ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
+ 		      unsigned long addr, unsigned long sz)
+ {
+-	return pte_alloc_huge(mm, pmd_off(mm, addr), addr, sz);
++	pmd_t *pmd = pmd_off(mm, addr);
++
++	if (sz == SZ_512M)
++		return pte_alloc_huge(mm, pmd, addr, sz);
++	if (sz != SZ_8M)
++		return NULL;
++	if (!pte_alloc_huge(mm, pmd, addr, sz))
++		return NULL;
++	if (!pte_alloc_huge(mm, pmd + 1, addr, sz))
++		return NULL;
++	return (pte_t *)pmd;
+ }
+ #endif
+ 
+diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
+index fc10e08bcb85..b416bfc161d4 100644
+--- a/arch/powerpc/mm/nohash/8xx.c
++++ b/arch/powerpc/mm/nohash/8xx.c
+@@ -54,25 +54,40 @@ static int __ref __early_map_kernel_hugepage(unsigned long va, phys_addr_t pa,
+ 	pmd_t *pmdp = pmd_off_k(va);
+ 	pte_t *ptep;
+ 
+-	if (WARN_ON(psize != MMU_PAGE_512K))
++	if (WARN_ON(psize != MMU_PAGE_512K && psize != MMU_PAGE_8M))
+ 		return -EINVAL;
+ 
+ 	if (new) {
+ 		if (WARN_ON(slab_is_available()))
+ 			return -EINVAL;
+ 
+-		ptep = early_pte_alloc_kernel(pmdp, va);
++		if (psize == MMU_PAGE_8M) {
++			if (WARN_ON(!pmd_none(*pmdp) || !pmd_none(*(pmdp + 1))))
++				return -EINVAL;
++
++			ptep = early_alloc_pgtable(PTE_FRAG_SIZE);
++			pmd_populate_kernel_size(&init_mm, pmdp, ptep, SZ_8M);
++
++			ptep = early_alloc_pgtable(PTE_FRAG_SIZE);
++			pmd_populate_kernel_size(&init_mm, pmdp + 1, ptep, SZ_8M);
++
++			ptep = (pte_t *)pmdp;
++		} else {
++			ptep = early_pte_alloc_kernel(pmdp, va);
++			/* The PTE should never be already present */
++			if (WARN_ON(pte_present(*ptep) && pgprot_val(prot)))
++				return -EINVAL;
++		}
+ 	} else {
+-		ptep = pte_offset_kernel(pmdp, va);
++		if (psize == MMU_PAGE_8M)
++			ptep = (pte_t *)pmdp;
++		else
++			ptep = pte_offset_kernel(pmdp, va);
+ 	}
+ 
+ 	if (WARN_ON(!ptep))
+ 		return -ENOMEM;
+ 
+-	/* The PTE should never be already present */
+-	if (new && WARN_ON(pte_present(*ptep) && pgprot_val(prot)))
+-		return -EINVAL;
+-
+ 	set_huge_pte_at(&init_mm, va, ptep,
+ 			pte_mkhuge(pfn_pte(pa >> PAGE_SHIFT, prot)),
+ 			1UL << mmu_psize_to_shift(psize));
+@@ -110,6 +125,8 @@ static void mmu_mapin_ram_chunk(unsigned long offset, unsigned long top,
+ 
+ 	for (; p < ALIGN(p, SZ_8M) && p < top; p += SZ_512K, v += SZ_512K)
+ 		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
++	for (; p < ALIGN_DOWN(top, SZ_8M) && p < top; p += SZ_8M, v += SZ_8M)
++		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_8M, new);
+ 	for (; p < ALIGN_DOWN(top, SZ_512K) && p < top; p += SZ_512K, v += SZ_512K)
+ 		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
+ 
+diff --git a/arch/powerpc/mm/nohash/tlb.c b/arch/powerpc/mm/nohash/tlb.c
+index cb2afe39cee5..5ffa0af4328a 100644
+--- a/arch/powerpc/mm/nohash/tlb.c
++++ b/arch/powerpc/mm/nohash/tlb.c
+@@ -104,6 +104,9 @@ struct mmu_psize_def mmu_psize_defs[MMU_PAGE_COUNT] = {
+ 	[MMU_PAGE_512K] = {
+ 		.shift	= 19,
+ 	},
++	[MMU_PAGE_8M] = {
++		.shift	= 23,
++	},
+ };
+ #endif
+ 
+diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
+index acdf64c9b93e..59f0d7706d2f 100644
+--- a/arch/powerpc/mm/pgtable.c
++++ b/arch/powerpc/mm/pgtable.c
+@@ -297,11 +297,8 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ }
+ 
+ #if defined(CONFIG_PPC_8xx)
+-void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
+-		     pte_t pte, unsigned long sz)
++static void __set_huge_pte_at(pmd_t *pmd, pte_t *ptep, pte_basic_t val)
+ {
+-	pmd_t *pmd = pmd_off(mm, addr);
+-	pte_basic_t val;
+ 	pte_basic_t *entry = (pte_basic_t *)ptep;
+ 	int num, i;
+ 
+@@ -311,15 +308,26 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
+ 	 */
+ 	VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
+ 
+-	pte = set_pte_filter(pte, addr);
+-
+-	val = pte_val(pte);
+-
+ 	num = number_of_cells_per_pte(pmd, val, 1);
+ 
+ 	for (i = 0; i < num; i++, entry++, val += SZ_4K)
+ 		*entry = val;
+ }
++
++void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
++		     pte_t pte, unsigned long sz)
++{
++	pmd_t *pmdp = pmd_off(mm, addr);
++
++	pte = set_pte_filter(pte, addr);
++
++	if (sz == SZ_8M) {
++		__set_huge_pte_at(pmdp, pte_offset_kernel(pmdp, 0), pte_val(pte));
++		__set_huge_pte_at(pmdp, pte_offset_kernel(pmdp + 1, 0), pte_val(pte) + SZ_4M);
++	} else {
++		__set_huge_pte_at(pmdp, ptep, pte_val(pte));
++	}
++}
+ #endif
+ #endif /* CONFIG_HUGETLB_PAGE */
+ 
+diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
+index face94977cb2..0b1d68ef87cd 100644
+--- a/arch/powerpc/mm/pgtable_32.c
++++ b/arch/powerpc/mm/pgtable_32.c
+@@ -48,7 +48,7 @@ notrace void __init early_ioremap_init(void)
+ 	early_ioremap_setup();
+ }
+ 
+-static void __init *early_alloc_pgtable(unsigned long size)
++void __init *early_alloc_pgtable(unsigned long size)
+ {
+ 	void *ptr = memblock_alloc(size, size);
+ 
+-- 
+2.43.0
 
