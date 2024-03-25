@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6EA1C2581;
-	Mon, 25 Mar 2024 04:42:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38EB61C257E
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:42:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711341756; cv=none; b=Kb82BEw47+ufWUCPP+i6ceakZpz4bpruf22NvZI/N+wN/KbU+bpuoepeYikvN7tsDKGc11xDYuSXGWLbiRK0rnIe2PjTLSJFC+E7eUP+6xC1B/R6vI5HbQI8j1S9O+R1E7zGI6PEryUuvn+kDlE5T8V5g1rYMGDUGLfXQqk+7Gw=
+	t=1711341756; cv=none; b=TpHl7IS07Uhk85tSIGxjpiUgDZ/SPHV49GQE7XrIVzyDutgLmH4Iu5kZOTPmPX+hGY9wW3M+S4Djpy+y1vM9p4WxNKU+WzJu5iL4fbe4V1BfGBPAC3LQkRl+1ts9Ockg3Yv8EUkTOwVbIbc42vOVDpYWnclUz9tS0ZXZ6ickE5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711341756; c=relaxed/simple;
-	bh=4yStfrK4SQVUbj2aqcQE+48u8AfaMFrS4+tHEELssTw=;
+	bh=bBw56LJubXCStxVYQUSiFNc8WgVMrbS3NMqW6gTTz8k=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Km0/Pw3+rlzmRWm1yZs7U3BufIFrLQVQIY1dOQw2eh0hCv+l1QJtCGbfNDd521WK0IA2d8Rn711+7ZMfmSa/gWN3ebCoCQJawYoMHSI64rRyvrmR9UBxgg410k/r2f+Gv1bBmZANE741p6MmsXzEK0/HUEBaPwsg3yGhX2m3wB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZCEzRCyz; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=pzo0U6BD08weHTTpJKqRBX06NX/Kd/RvhQq5WFS0q48MKjEcFeYecqJ7FAUg6I+F431Jv+NbZMyzAZBRRQ5K+vkwfO4jPedx0qJV2BVI1RsPSRnalaMIMW9WLN+uyav6bjjE+5R1TXZzINLc4f7kgzkrL/KtmN3SUHq6iuTXTX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXNezA5J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZCEzRCyz"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B7D52C43141;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXNezA5J"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D1E17C43142;
 	Mon, 25 Mar 2024 04:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711341754;
-	bh=4yStfrK4SQVUbj2aqcQE+48u8AfaMFrS4+tHEELssTw=;
+	bh=bBw56LJubXCStxVYQUSiFNc8WgVMrbS3NMqW6gTTz8k=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ZCEzRCyze7tj2dRAQEKT/yrQWS3Pqn4bPaxgQKZdu9YbhUtZLJD0OydpAcdL20PC4
-	 7iWeNBDav2s+KtOjaj7l27OB0sCln5/g9V5SXAhjhM7EBkT+L/FFYX1S4pcK4XwWRQ
-	 pBtQ6pxqVCSVdLLo8XRAXV45QE85EquJCd+GGNsSq4aDXrJ8fipEZWgCqfrqGbzsa5
-	 oRYEe7vAr9h4RbHDCPMVAVMXcT3uCr2OT6NCXc2+AgDiyEYVn3ZkL0eQXFcRH4bldD
-	 F4bUwh+2thCfZ6iLVZBp6HqT2GbT5c7VdFpeMjQyP5Lvmvg7/udPNRbiMi7Bn4c6f4
-	 XPWJGMvrygDww==
+	b=UXNezA5JyU+tGdGowOVGyO/cxwigyBxXofjJbIlEHctB7kxJVlpjIMY8YGrfzoad+
+	 DNOfdeJOz/E1Hv8J+YYCzXUqryOoYbzjCfZPcO98eEsZLMcEznBlZAG2wk/P2LDP5A
+	 btZesN49bjjxxR7WBR1D/sjk3AzEEMrywqDdLn+h/Ahh9xfdyDvBngI097Q0tH1iMZ
+	 mF6L0MmuePAyOHzJWIT/XWp/RUl00B3tSrybObifexTD4E8gqC2oXaBDKV4LU4fVkC
+	 xtTVhsgYjPmkPbzIEaSCvdUvMYMlLxH3zusNe2o2HoVSWssmW3XgSPLzhWHnlxR3dX
+	 HOApdiMb/gbBA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A971DD2D0ED;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C60C9D8BD1C;
 	Mon, 25 Mar 2024 04:42:34 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,43 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 1/1] arch/arm/mm: fix major fault accounting when retrying
- under per-VMA lock
+Subject: Re: [PATCH v2] MAINTAINERS: Setup proper info for SOPHGO vendor support
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171134175469.18749.11610415936860732367.git-patchwork-notify@kernel.org>
+ <171134175480.18749.10483414416084336702.git-patchwork-notify@kernel.org>
 Date: Mon, 25 Mar 2024 04:42:34 +0000
-References: <20240123064305.2829244-1-surenb@google.com>
-In-Reply-To: <20240123064305.2829244-1-surenb@google.com>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
- willy@infradead.org, will@kernel.org, catalin.marinas@arm.com,
- palmer@dabbelt.com, mpe@ellerman.id.au, christophe.leroy@csgroup.eu,
- agordeev@linux.ibm.com, gerald.schaefer@linux.ibm.com,
- dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
- x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-kernel@vger.kernel.org, rmk+kernel@armlinux.org.uk
+References: <IA1PR20MB4953B158F6F575840F3D4267BB7D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+In-Reply-To: <IA1PR20MB4953B158F6F575840F3D4267BB7D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, unicorn_wang@outlook.com,
+ conor@kernel.org, chao.wei@sophgo.com, linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
-by Andrew Morton <akpm@linux-foundation.org>:
+by Inochi Amaoto <inochiama@outlook.com>:
 
-On Mon, 22 Jan 2024 22:43:05 -0800 you wrote:
-> The change [1] missed ARM architecture when fixing major fault accounting
-> for page fault retry under per-VMA lock. Add missing code to fix ARM
-> architecture fault accounting.
+On Tue, 30 Jan 2024 09:40:42 +0800 you wrote:
+> Add git tree that maintaines sophgo vendor code.
+> Also replace Chao Wei with myself, since he does not have enough time.
+> Since sophgo vendor code is maintained, remove itself from
+> `RISC-V MISC SOC`
 > 
-> [1] 46e714c729c8 ("arch/mm/fault: fix major fault accounting when retrying under per-VMA lock")
-> 
-> Fixes: 12214eba1992 ("mm: handle read faults under the VMA lock")
+> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+> Acked-by: Chao Wei <chao.wei@sophgo.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [1/1] arch/arm/mm: fix major fault accounting when retrying under per-VMA lock
-    https://git.kernel.org/riscv/c/e870920bbe68
+  - [v2] MAINTAINERS: Setup proper info for SOPHGO vendor support
+    https://git.kernel.org/riscv/c/0f46e1339ef1
 
 You are awesome, thank you!
 -- 
