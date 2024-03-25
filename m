@@ -1,157 +1,125 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E955732C;
-	Mon, 25 Mar 2024 18:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC011BF2F
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 18:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711392081; cv=none; b=q4rwcK3AUewMlc8JXA/NM/3mMbUMNcgCgr+zoLgu0+f1UgvLnKwIF/DpXDofWXk3o0vGVODV51GJ7uBGKTGWEh/JnA/G6nk3knUNkn336w/YLd88Hx7OItmAKr3y+4H6DIh1KfQBuFBA929mcCzWJPMkMhq3p1ejrYTzRp1aseg=
+	t=1711392105; cv=none; b=RVPoQ4LZ8bohoQjYci99T5Ij45PNRK8o2MxCDoN5FzKgdOhj/MP6GOJpC4jGX4X42+AbB0EI5WCT4kfnJgPZp/raiMP2dLxqLkiUOaYL1m+NNb5NxLOst8v0u8BurUiL/vBP4DfS1Ms4W7nKQd5tQh6C0UR+sTDC6/WS+j1mh6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711392081; c=relaxed/simple;
-	bh=u5gD4ZQeV3t4IcBYj/PRnzyoByAZznXkR0dNjEvDP8A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u0+COBbqA9is1ub3jLlzHetrkWHSD7yYpa0B5Tw22W8AZNTYgSOJt6zuT5YrgIaw/BD5X7qVqILyzUgQUcg8rbwB6bBLZmBf+TNS07BfD1XA2GCQK2BA6MXSyrYPCL4XQK5Zeyp8kMjCUnGMFu+YxFKOfqZg3eHJyCGVuluCKl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eDmtultU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pajNRA8D; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eDmtultU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pajNRA8D; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1711392105; c=relaxed/simple;
+	bh=PADZhfoWNe7ucPHjarTTNJOD2UnITrDL1AnTL0sLMK4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HpUTZ0F5bg1laTslAhGZc7jHg7Ck+of6odY18YwyWD/wUGcC8WtI/rRuKMWijkcD5kDnAGHBWyp5SBf8FyKEorB8ZhABJK8THE7PzBRIzFUHmBrwB+dNaRTDERRkif+WysZvO+DKj1cTqNOj0KMClaHZ2CYoPyC7Ur66naR12cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nimj4aUM; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eDmtultU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pajNRA8D";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eDmtultU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pajNRA8D"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AD4315CA5C;
-	Mon, 25 Mar 2024 18:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711392076;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ri/DpzN+Z3ys5Xh1rrQ2Y5e66wVy3WieRlnJZNZFLRQ=;
-	b=eDmtultUiqjtOtEwWEcomTHrY0AEyeZiNkkYshbfwM8ktGFeL7LepktsgzPPZKTfKX4u7o
-	s8CZ4uC3LJjzzC1lZVcC5v/TSCQlEgpeFOXWd25BBPr+elF8XRkAjmJ6pR1zn4tcGJUIKN
-	JDu6zl7h3mdJrt8XSuVczd1b88xImXI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711392076;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ri/DpzN+Z3ys5Xh1rrQ2Y5e66wVy3WieRlnJZNZFLRQ=;
-	b=pajNRA8DVUv/y7LRQ8YldD4SpEzCYc6G7p6gY9Esz7mRcA/zPjHtWKXxRQrSYryA018Bwv
-	XLQtsRsI3dacHHCg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711392076;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ri/DpzN+Z3ys5Xh1rrQ2Y5e66wVy3WieRlnJZNZFLRQ=;
-	b=eDmtultUiqjtOtEwWEcomTHrY0AEyeZiNkkYshbfwM8ktGFeL7LepktsgzPPZKTfKX4u7o
-	s8CZ4uC3LJjzzC1lZVcC5v/TSCQlEgpeFOXWd25BBPr+elF8XRkAjmJ6pR1zn4tcGJUIKN
-	JDu6zl7h3mdJrt8XSuVczd1b88xImXI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711392076;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ri/DpzN+Z3ys5Xh1rrQ2Y5e66wVy3WieRlnJZNZFLRQ=;
-	b=pajNRA8DVUv/y7LRQ8YldD4SpEzCYc6G7p6gY9Esz7mRcA/zPjHtWKXxRQrSYryA018Bwv
-	XLQtsRsI3dacHHCg==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 912BA13A2E;
-	Mon, 25 Mar 2024 18:41:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id y9BBI0zFAWYMYQAAn2gu4w
-	(envelope-from <dsterba@suse.cz>); Mon, 25 Mar 2024 18:41:16 +0000
-Date: Mon, 25 Mar 2024 19:33:51 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
-Subject: Re: [PATCH 15/26] range: Add range_overlaps()
-Message-ID: <20240325183351.GP14596@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
- <20240324-dcd-type2-upstream-v1-15-b7b00d623625@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nimj4aUM"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56c12c73ed8so1653736a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:41:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711392102; x=1711996902; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rKvUlcpLk63ACsjKDDZfWCX8E5d/fciiBf5WKGyFmQs=;
+        b=Nimj4aUMyVDSVLZ6gnhT06gm3tlqH+cUqF3OXh07oHVIKSXYr81bnRTfjERY5aTeCN
+         XkfOcE1ha57BucIudlbjcN8rgt4dRluN+dP/xetwN2EPy6pLnAoztkLVHRvueqlx7H1a
+         tHMBQCMkJFPzCEqdB53p9EPSxbMhJrjOsOQUcjO5jfvZPOF9i3E/GcmLmsQOGduWwfXq
+         kj0+K/Jy6mxuaC9QW4HsB9ASJ2qEZTz8e7po420DGogS2a/bIjl1M8xUPHN8aAiOZM/I
+         WE5ffL3QauGyz/9CkAyhsMYe1XFsvDDLUnlLPAwLkWWQTUWhXgKIz6rFyr7HPM9gta4t
+         zKIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711392102; x=1711996902;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rKvUlcpLk63ACsjKDDZfWCX8E5d/fciiBf5WKGyFmQs=;
+        b=SmQ/vDrFuiJDnl6cDTmavgUu1zY5z71+IrXHPNLHFPKrdz8qLK/ITagZhjFYJuVM07
+         TltxwoNG0l7Y9bpm3MYSBG/5ibDRPhN2Z26h9TPMDrKg5k3EcT9luSJNCbsxkaAI7flo
+         KGwg9NUVsqZp86tQtAC7GBaXAbplGF4eU+qtGjRJox+IgzW+0jB+CbC/VlH2eBjl4fzG
+         xnbt9cJvNDJFOAiH1VfjUYIkhqvg2FVDYM47oG4RLPaM41xjUjzO8jYeuR6ktrpQznc9
+         ucQNvMT+FxXrTLCt7c/GBSiWP1MEDtUQLHyx9Wa/EwFcschbO5/gV8XvHNR0N3mmae4w
+         vg/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWwFsxbSOCzQcA0sa3t/VYAKZocAakNqQwAsjf8D08F+NNWmcbbBsf0PxgvhaSs81brNjuVhMp7XfU0DQfT6GYVyou0qbR+wxoLNP0Y
+X-Gm-Message-State: AOJu0YzAl5wLWIphs2/b7JJCRNo1nkijYbcGhx12had40Sgm3GlzzMd5
+	5aMZspUg1eoLb/8JqV+8MdI7yKUWT5a7FMHU32M3vZwUEL41OfPCdhOjXiAAPjN8JeMRobmKUnc
+	ZAqCjdJl8AtE6oWoMPN2vZO2nGZ5plZDoNa2C
+X-Google-Smtp-Source: AGHT+IH7U9MjyZWBEh4R0acUddTJ1Je9zTxp/hmSsCVvU8DHvMTrz/lloebRfL6eyCoYpamLylTm3XvKe8aG84lVarU=
+X-Received: by 2002:a17:906:3993:b0:a46:8c9f:f783 with SMTP id
+ h19-20020a170906399300b00a468c9ff783mr5661833eje.67.1711392101766; Mon, 25
+ Mar 2024 11:41:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240324-dcd-type2-upstream-v1-15-b7b00d623625@intel.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=eDmtultU;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=pajNRA8D
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.77 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BAYES_HAM(-0.56)[80.99%];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_TWELVE(0.00)[15];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,intel.com:email,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Score: -1.77
-X-Rspamd-Queue-Id: AD4315CA5C
-X-Spam-Flag: NO
+References: <20240324210447.956973-1-hannes@cmpxchg.org> <CAJD7tkaWQAV=X1pzYG=VkWe7Ue9ZFbjt9uQ5m1NJujtLspWJTA@mail.gmail.com>
+ <20240325163003.GA42450@cmpxchg.org>
+In-Reply-To: <20240325163003.GA42450@cmpxchg.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Mon, 25 Mar 2024 11:41:05 -0700
+Message-ID: <CAJD7tkakaLzB7TU9kDRLGTCUJ-WdkSTSt1z4eZR5vUfS3-n+ew@mail.gmail.com>
+Subject: Re: [PATCH] mm: zswap: fix data loss on SWP_SYNCHRONOUS_IO devices
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Zhongkun He <hezhongkun.hzk@bytedance.com>, 
+	Chengming Zhou <zhouchengming@bytedance.com>, Barry Song <21cnbao@gmail.com>, 
+	Chris Li <chrisl@kernel.org>, Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 24, 2024 at 04:18:18PM -0700, Ira Weiny wrote:
-> Code to support CXL Dynamic Capacity devices will have extent ranges
-> which need to be compared for intersection not a subset as is being
-> checked in range_contains().
-> 
-> range_overlaps() is defined in btrfs with a different meaning from what
-> is required in the standard range code.  Dan Williams pointed this out
-> in [1].  Adjust the btrfs call according to his suggestion there.
-> 
-> Then add a generic range_overlaps().
-> 
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Chris Mason <clm@fb.com>
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> Cc: David Sterba <dsterba@suse.com>
-> Cc: linux-btrfs@vger.kernel.org
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> [1] https://lore.kernel.org/all/65949f79ef908_8dc68294f2@dwillia2-xfh.jf.intel.com.notmuch/
-> ---
+On Mon, Mar 25, 2024 at 9:30=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
+> wrote:
+>
+> On Sun, Mar 24, 2024 at 02:22:46PM -0700, Yosry Ahmed wrote:
+> > On Sun, Mar 24, 2024 at 2:04=E2=80=AFPM Johannes Weiner <hannes@cmpxchg=
+.org> wrote:
+> > >
+> > > Zhongkun He reports data corruption when combining zswap with zram.
+> > >
+> > > The issue is the exclusive loads we're doing in zswap. They assume
+> > > that all reads are going into the swapcache, which can assume
+> > > authoritative ownership of the data and so the zswap copy can go.
+> > >
+> > > However, zram files are marked SWP_SYNCHRONOUS_IO, and faults will tr=
+y
+> > > to bypass the swapcache. This results in an optimistic read of the
+> > > swap data into a page that will be dismissed if the fault fails due t=
+o
+> > > races. In this case, zswap mustn't drop its authoritative copy.
+> > >
+> > > Link: https://lore.kernel.org/all/CACSyD1N+dUvsu8=3DzV9P691B9bVq33erw=
+OXNTmEaUbi9DrDeJzw@mail.gmail.com/
+> > > Reported-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+> > > Fixes: b9c91c43412f ("mm: zswap: support exclusive loads")
+> > > Cc: stable@vger.kernel.org      [6.5+]
+> > > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > Tested-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+> >
+> > Do we also want to mention somewhere (commit log or comment) that
+> > keeping the entry in the tree is fine because we are still protected
+> > from concurrent loads/invalidations/writeback by swapcache_prepare()
+> > setting SWAP_HAS_CACHE or so?
+>
+> I don't think it's necessary, as zswap isn't doing anything special
+> here. It's up to the caller to follow the generic swap exclusion
+> protocol that zswap also adheres to. So IMO the relevant comment
+> should be, and is, above that swapcache_prepare() in do_swap_page().
 
->  fs/btrfs/ordered-data.c | 10 +++++-----
+From the perspective of someone looking at the zswap code, it isn't
+immediately clear what protects the zswap entry in the non-exclusive
+load case from being freed from under us. At some point we had a
+refcount, then we used to remove it from the tree under lock so others
+wouldn't have access to it. Now it's less clear because we rely on
+protection outside of zswap code.
 
-Acked-by: David Sterba <dsterba@suse.com>
+We also document other places where we rely on the swapcache for
+synchronization, so I think it may be worth briefly mentioning this
+here as well, especially that in this code we explicitly check for the
+folio not being in the swapcache. That said, I don't feel strongly
+about it. Tracking down the SWP_SYNCHRONOUS_IO code should eventually
+make it clear. Also, the commit log will end up having a link to this
+thread anyway so the details are not completely unfindable :)
