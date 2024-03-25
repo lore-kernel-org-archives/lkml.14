@@ -1,142 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF1F70CB5;
-	Mon, 25 Mar 2024 21:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABDF5A4D3;
+	Mon, 25 Mar 2024 21:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711403713; cv=none; b=Ti8xqVdH6oJc7juNCHGj1P0GT4cOJ0W7lShnIW1XRpaiUy7Ih1IsQwUWN0w8KUIqV3i4yOCAreWvYdcspuPFAQzTIyJsVxcLL31BrhkSZUMR7JQjNozef2fWaTmMokKuA7eQi9sPSrD7JHlSYs7AOJUXEoHoLnPW2Bs5gaE5G30=
+	t=1711403804; cv=none; b=Q18Tkmkfo1UjmHsd93HcR2aFnnMudK9qijMHO0QfFOFKRXdIJFAIODIw/r9lrv56mz3C58RRk9ECz0lJNDl2/bDndXWTFLUcORasU7/c+YjGJKjyFej5grNIdDwfH2HO9mkiVr7o8YRoe7TmU+3jaRcECA/qMI/Wb75sqbtc3zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711403713; c=relaxed/simple;
-	bh=bwhKzO7Db7ftntYaf5MwOOW5CKKybR0mc5KmEmU3sgA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B2RsgalCbQKH2J5FiPsqjtFBbO8p77PB6g+XiGU1TL/Pb/EnYd2ppq9DXNTn64VhXG5jqsGX8/ApV/Dge9pkdpuNXsUDpXe+s7o8y7neaMzrbrnYgXuMtHHhHdU4jbj8uMFoYcYP2a0LnRdpkFk1XNrKK/wrBwada+zn3Nwokbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pldJko+7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711403804; c=relaxed/simple;
+	bh=xSuiLJKJgLrr21rIadSu5fyq8t/EMn4wKpn41CCECRI=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M9tKwhdJF5opyaEwsB1qzzVTE1Ml/4u7LXzmRmgh94hMYwlhCC5OtqN7+OQtEyuN1V81WvMIhlW5lvL94Obqg5+tdPix9vSrrkQt5kDOBk+f1Xx47uPmggcopKH8qqiyfmSY9y9OFuzbofjLX89qqKJSmdeFAjqh1K0cas6R5A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=P/3B1GTf; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pldJko+7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 493FBC433F1;
-	Mon, 25 Mar 2024 21:55:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711403712;
-	bh=bwhKzO7Db7ftntYaf5MwOOW5CKKybR0mc5KmEmU3sgA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pldJko+7M1thiYUGHzuWMw9E9STkvm/rTGVgrZt2fOPkOIm3iovANvvPlTaflJFRj
-	 V/0mbHf+ZmzI2Lq28bwBS/dk+v0dsWmrTUb45+UnW6gFimQlJdBb5qJTpv1He2w9mP
-	 73tf3ed4oT8qMi4eHMZFIdpB2PnuH50HtgEqBNR24aUlkHSfRTqZcAdEzOyu3DFnWg
-	 3R3wlcNUPztV7k2aPhik8u1IWkbjXkvsp2lknEiVPg0SwZUUtGhPq9sn9u4UlrFWfM
-	 qv+leIOKzLnovqJ9GbKR8cF7Ivty3ySnxOtnCiqmyXkl2qQUgnYuiK56pd+XjBYYTo
-	 tGhlmAkb0YD/A==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-riscv@lists.infradead.org
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	linux-kernel@vger.kernel.org,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	linux-modules@vger.kernel.org,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v5 2/2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
-Date: Mon, 25 Mar 2024 23:55:02 +0200
-Message-ID: <20240325215502.660-2-jarkko@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240325215502.660-1-jarkko@kernel.org>
-References: <20240325215502.660-1-jarkko@kernel.org>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="P/3B1GTf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=jgurfofczvevtg3jg4ynhn3lsy.protonmail; t=1711403799; x=1711662999;
+	bh=Dz6q83jJ87/t3Ux+v9A/Asnbjs+qqD36qRD+CLPZW0Y=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=P/3B1GTfjq/JZeCR+3RvCiPu+ikuPAfj44GV/OZk4fqTuOlH1BBZ6wflegTV8HuxD
+	 aA0m26FIZxUVVCEQAtwnXs4IjCGNFhcJH1p/DanHmXgOG0sgq8mLud99heF1aN62dI
+	 hxFLj7t7DcH/2XSsmwdILsy3hrAWQLOFe8Hj7/xIiUFrNwacHBUPS7QQ8ok+D2Baqo
+	 9SsPj6ZHxElQGGbDOdZlNPWxdMUcCh9BLpH9kB7KRVgG0QZ3iOwPU9xGIkTidsNZXv
+	 IRHP5BmupgS2U8DuSxie0CsdToFZkWYBNidzQ8DBHCikYW9uprHFLDDUHQNzN1aO2C
+	 YCOwjPyIJUcRQ==
+Date: Mon, 25 Mar 2024 21:56:30 +0000
+To: Wedson Almeida Filho <wedsonaf@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, linux-kernel@vger.kernel.org, Wedson Almeida Filho <walmeida@microsoft.com>
+Subject: Re: [PATCH 01/10] rust: kernel: move `allocator` module under `alloc`
+Message-ID: <-uzW9xCfocYgSqqwoHB8D6k5CKhc5Rxnrmjq9N8XmTTNVZI3CYHIK9uigpGprs7EDYHWkALopDuv7e9w_FVfZW-9iGh3VlV9WpuSAKAWhFc=@proton.me>
+In-Reply-To: <20240325195418.166013-2-wedsonaf@gmail.com>
+References: <20240325195418.166013-1-wedsonaf@gmail.com> <20240325195418.166013-2-wedsonaf@gmail.com>
+Feedback-ID: 71780778:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Tacing with kprobes while running a monolithic kernel is currently
-impossible due the kernel module allocator dependency.
+On 25.03.24 20:54, Wedson Almeida Filho wrote:> From: Wedson Almeida Filho =
+<walmeida@microsoft.com>
+>=20
+> We will add more to the `alloc` module in subsequent patches (e.g.,
+> allocation flags and extension traits).
+>=20
+> Signed-off-by: Wedson Almeida Filho <walmeida@microsoft.com>
 
-Address the issue by implementing textmem API for RISC-V.
+One nit below, but feel free to add:
 
-Link: https://www.sochub.fi # for power on testing new SoC's with a minimal stack
-Link: https://lore.kernel.org/all/20220608000014.3054333-1-jarkko@profian.com/ # continuation
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
-v5:
-- No changes, expect removing alloc_execmem() call which should have
-  been part of the previous patch.
-v4:
-- Include linux/execmem.h.
-v3:
-- Architecture independent parts have been split to separate patches.
-- Do not change arch/riscv/kernel/module.c as it is out of scope for
-  this patch set now.
-v2:
-- Better late than never right? :-)
-- Focus only to RISC-V for now to make the patch more digestable. This
-  is the arch where I use the patch on a daily basis to help with QA.
-- Introduce HAVE_KPROBES_ALLOC flag to help with more gradual migration.
----
- arch/riscv/Kconfig          |  1 +
- arch/riscv/kernel/Makefile  |  3 +++
- arch/riscv/kernel/execmem.c | 22 ++++++++++++++++++++++
- 3 files changed, 26 insertions(+)
- create mode 100644 arch/riscv/kernel/execmem.c
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index e3142ce531a0..499512fb17ff 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -132,6 +132,7 @@ config RISCV
- 	select HAVE_KPROBES if !XIP_KERNEL
- 	select HAVE_KPROBES_ON_FTRACE if !XIP_KERNEL
- 	select HAVE_KRETPROBES if !XIP_KERNEL
-+	select HAVE_ALLOC_EXECMEM if !XIP_KERNEL
- 	# https://github.com/ClangBuiltLinux/linux/issues/1881
- 	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if !LD_IS_LLD
- 	select HAVE_MOVE_PMD
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index 604d6bf7e476..337797f10d3e 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -73,6 +73,9 @@ obj-$(CONFIG_SMP)		+= cpu_ops.o
- 
- obj-$(CONFIG_RISCV_BOOT_SPINWAIT) += cpu_ops_spinwait.o
- obj-$(CONFIG_MODULES)		+= module.o
-+ifeq ($(CONFIG_ALLOC_EXECMEM),y)
-+obj-y				+= execmem.o
-+endif
- obj-$(CONFIG_MODULE_SECTIONS)	+= module-sections.o
- 
- obj-$(CONFIG_CPU_PM)		+= suspend_entry.o suspend.o
-diff --git a/arch/riscv/kernel/execmem.c b/arch/riscv/kernel/execmem.c
-new file mode 100644
-index 000000000000..3e52522ead32
---- /dev/null
-+++ b/arch/riscv/kernel/execmem.c
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/mm.h>
-+#include <linux/execmem.h>
-+#include <linux/vmalloc.h>
-+#include <asm/sections.h>
-+
-+void *alloc_execmem(unsigned long size, gfp_t /* gfp */)
-+{
-+	return __vmalloc_node_range(size, 1, MODULES_VADDR,
-+				    MODULES_END, GFP_KERNEL,
-+				    PAGE_KERNEL, 0, NUMA_NO_NODE,
-+				    __builtin_return_address(0));
-+}
-+
-+void free_execmem(void *region)
-+{
-+	if (in_interrupt())
-+		pr_warn("In interrupt context: vmalloc may not work.\n");
-+
-+	vfree(region);
-+}
--- 
-2.44.0
+> ---
+>   rust/kernel/alloc.rs                 | 7 +++++++
+>   rust/kernel/{ =3D> alloc}/allocator.rs | 0
+>   rust/kernel/lib.rs                   | 4 +---
+>   3 files changed, 8 insertions(+), 3 deletions(-)
+>   create mode 100644 rust/kernel/alloc.rs
+>   rename rust/kernel/{ =3D> alloc}/allocator.rs (100%)
+>=20
+> diff --git a/rust/kernel/alloc.rs b/rust/kernel/alloc.rs
+> new file mode 100644
+> index 000000000000..ccd4149932c3
+> --- /dev/null
+> +++ b/rust/kernel/alloc.rs
+> @@ -0,0 +1,7 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Allocation support.
 
+I think 'Extensions to the `alloc` crate.' fits better.
+
+--=20
+Cheers,
+Benno
+
+> +
+> +#[cfg(not(test))]
+> +#[cfg(not(testlib))]
+> +mod allocator;
+> diff --git a/rust/kernel/allocator.rs b/rust/kernel/alloc/allocator.rs
+> similarity index 100%
+> rename from rust/kernel/allocator.rs
+> rename to rust/kernel/alloc/allocator.rs
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index be68d5e567b1..51f30e55bd00 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -28,9 +28,7 @@
+>   // Allow proc-macros to refer to `::kernel` inside the `kernel` crate (=
+this crate).
+>   extern crate self as kernel;
+>=20
+> -#[cfg(not(test))]
+> -#[cfg(not(testlib))]
+> -mod allocator;
+> +pub mod alloc;
+>   mod build_assert;
+>   pub mod error;
+>   pub mod init;
+> --
+> 2.34.1
+> 
