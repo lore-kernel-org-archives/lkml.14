@@ -1,238 +1,102 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1CE4DA0E
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2A715B7
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711385508; cv=none; b=lC6Z9HHkkDsLZ9Ssc58Z5R3cT9idNSu3kUiD9A8N17cl1JhLOV3MWr+rqdAzlM4GJIQRY2M6+ZQChZDJZCGIGx0FFGLiXMal18P2DeTRrC0n8vdJvHjHEQttALx6eNkA7a2iS0YbFzAMm1uMt04HrPbGFZ4YiPlLYCKHKFMHzCQ=
+	t=1711385539; cv=none; b=FTFffJpP6k+ep2uU86Msh+A0SIVZK4aU83x/DEWI0Lxo/eOWQnohXrZJZ+2Npzuke2RvHLhMxKJ2XGMjzMl6s8MojWHFMGJ6TcNlUXF+lJ4MLeDdx8OeNblT3h+LYzBkJnvrdS0F1KXusrkXd9YzKPtHdp2aIkETnMxajr/PIhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711385508; c=relaxed/simple;
-	bh=R1UgrdHtX7NaBhIlzazKjCiPt8qDyKrwuHqMIduiCrA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Epx9o/ivGBhMZj0Isztahtg7uvWLNpP/hZq/X0xas1Yu9wgHyir5QYQOB0VbChWXMJXa7qS17APlcYOTM+TMqlx7oG3GLQyARpvLg4rwo9MUGUntCn9MjizQ8kkK/jkeLhnS0ly/N2tsI+hMWcXhMwYQq0aYUbBZfaaty0OXBKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vqSN8ykM; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711385539; c=relaxed/simple;
+	bh=exWw2+9um48RdgDdrhFVuOynl/Wnh2SvOhm4Vm4qymY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NWUeXzbFM56ffCZKXRDZJElMONQFQw0/DVt/Alut5fWBv6gmzZ87Cjn7AgtfcpWkm3xM+tvLKfW8oWynaYV9eVMLWj4obhQ7QWMNIxEH1HkdTma9O5sO5vvykBeJDLNIi6d+FHrZ/e17hRIaj4e4KA/5Xv8Vw5JeGxgklwpKHLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUPzqbbN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vqSN8ykM"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e034607879so35610375ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711385506; x=1711990306; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pj8PTKVryqKwwdBoZ+0WnicFRNErWIn69RAMUd5IKdc=;
-        b=vqSN8ykMVrd2oHNvAGS9j0SG0p8EODHibAzv/GO+LRemaM7hMLCowpopYxNYTlQmVH
-         n7y5rZXwnx+5RAY+Gz/+NuYNk7Lm9ktAuVAQa9EXWRPb9W2xPKMvvlQq6qaFjz5SmqXl
-         CwSWRTKHM+DHoEAIz3Gkyy4BcOTyV5suZSdoEy0y8q3ffnviZfgiHoWcDZk8XEGJUawz
-         fWrg6DEixZQVpv2XRklgjQBM5Mz7JEhb9K+uN4UuhVxyPk6lygsocVWDicgvGX8KZKqL
-         nl3L8jnvLywG28l2P0X9ExdesLhCCplB8w8R50k/SDIsYdKp+KIXXXiGkNY8LTJ+G0Uv
-         UJEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711385506; x=1711990306;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pj8PTKVryqKwwdBoZ+0WnicFRNErWIn69RAMUd5IKdc=;
-        b=s2MJnfuvRVfHNp8MLQNWQG0VZg1hjfdLEffrR173YqW6OX6PxJtsSD43/QnlboADvO
-         uoUUuZPBKZzHUli9n48V7UB9QYGdMRdEhBdNV9z2X5oukeP2OqmPA1EbLPsC/cTIuBAE
-         pxZuix9UX2BnMSxJQal2diNPFO96TQFLJfBepmCp+VNcYxgz3CVMZDHgbMEkD8evTZtm
-         UyGDiVDSbPy1vL+m4QoNxnFDGUNT/Mt+4SrUH3/KBUmbklLNemF92B5BG4g+C70JCZeW
-         0E7Dm+/fEIhMrflwBBTXLerwbfI0uUhbjJziV67PBUmr3ZIxthyoS8t2Wh8IsrKNpRu9
-         XeQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWg1d5QMz47mYzxFasfSROhIVR3INkMo6IhE5qgXPJuJPJkTIsry7dDLD/TmCZWjWh6+dzOirAjT5qw9RKA0NdJHGq8Txd3BqoK73rV
-X-Gm-Message-State: AOJu0Yy4xC/sQXDQVQHqnaqKgYWNOnyR8hgx6g0WrGOkYh0q/PGJ0v58
-	3KpHRiw3Ju5tRo2p/dZ5NEW52wz3p/Hyj1J1KL78UtBmkeX+6vwfcb/BkoI4/4sG9JJCHR7flm/
-	9
-X-Google-Smtp-Source: AGHT+IGoV4RhZKceQIINbyMVzRZ5e1HPuju79F8lHHNd/Bx3c+IjzhBFu/0IBlEFjOn25VeKI5qwIA==
-X-Received: by 2002:a17:902:f54c:b0:1de:ff81:f650 with SMTP id h12-20020a170902f54c00b001deff81f650mr12006579plf.10.1711385505732;
-        Mon, 25 Mar 2024 09:51:45 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:4a22:28de:eba3:89d1])
-        by smtp.gmail.com with ESMTPSA id j5-20020a170902da8500b001e0c568ae8fsm1517672plx.192.2024.03.25.09.51.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 09:51:45 -0700 (PDT)
-Date: Mon, 25 Mar 2024 10:51:42 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	op-tee@lists.trustedfirmware.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] remoteproc: stm32: Add support of an OP-TEE TA to
- load the firmware
-Message-ID: <ZgGrnkcebcIQQic6@p14s>
-References: <20240308144708.62362-1-arnaud.pouliquen@foss.st.com>
- <20240308144708.62362-5-arnaud.pouliquen@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUPzqbbN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCADBC433F1;
+	Mon, 25 Mar 2024 16:52:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711385538;
+	bh=exWw2+9um48RdgDdrhFVuOynl/Wnh2SvOhm4Vm4qymY=;
+	h=From:Date:Subject:To:Cc:From;
+	b=ZUPzqbbNGzegLEoTns0RugV3fBWcRLi+K7V6nDcEepxrEqt6uSo1nE1OrxI9VzvEC
+	 COqJ6qmpKCJJFiqDL3Y4nH3mrmXvuc/JJPVqsNZS6syCklIgS+ojQ97HNnEVS3xAwh
+	 RzeLQyEIZZGc1k4lrVhulHEd7A7ANrALp2QZpWlxBukl1jYqCTBsRerhYlcXFn+G9J
+	 By23TpW74cpNIs4WKb2uJEfzUvEVdl6OFbNovf244XOF/ANnh6m8JTy78jy797lGTJ
+	 U0UVlV2qnOiCWX/1ForP08wnuUUYXiMUfu3pdbfe42BQbyWaq6aX0MVu6FwVItEkeO
+	 /LFd1gccvHMAw==
+From: Mark Brown <broonie@kernel.org>
+Date: Mon, 25 Mar 2024 16:51:03 +0000
+Subject: [PATCH v2] reset: gpio: Fix missing gpiolib dependency for GPIO
+ reset controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240308144708.62362-5-arnaud.pouliquen@foss.st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240325-reset-gpiolib-deps-v2-1-3ed2517f5f53@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAHerAWYC/32NQQqDMBBFryKz7pQkWsWuvEdxYXUSh4oJEwkt4
+ t2beoAu34P//g6RhCnCvdhBKHFkv2YwlwLGeVgdIU+ZwShTqdIoFIq0oQvsF37iRCGibWpTt7p
+ t7KggD4OQ5fcZffSZZ46bl8/5kfTP/s0ljRppsLepVHaoq6Z7kay0XL046I/j+AK1YF9wtQAAA
+ A==
+To: Philipp Zabel <p.zabel@pengutronix.de>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1443; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=exWw2+9um48RdgDdrhFVuOynl/Wnh2SvOhm4Vm4qymY=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmAavAduJCjMsYlE3SOF80y6cAWE/8aAA75cbBI16C
+ I2io8KiJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZgGrwAAKCRAk1otyXVSH0I4FB/
+ 9t5Fc4kKD+nskDiozjiXgZf+Bt8OSRCSPgSJiOFR3WtNw171mpNJ2Wx26FA4euI4dxGJnztPu0uDyr
+ a1RQrueT2rr3XnWZKeaFzORUiI7aWAXfwOoaaT3ox61eD+q67hh7jFXETp/f0HScEHX1GnL5dUu/36
+ +8+Qe+phMpuQW7VzkuDC0fo/YuKoPwnaTizeLU2MNXKWcXOlD9vN+cYosVeurbWyEg0iDXY8ikW8ws
+ Z3XT+j51jdpdRiOnNrZnvTQT7k4UFAy/ErroHLmoVT90cxCTZzFatiJNjjnEuSiMmW09gRO8FZppyV
+ g2lFF5nk0zpH39iMc6d/DTTdgpq0PU
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Fri, Mar 08, 2024 at 03:47:08PM +0100, Arnaud Pouliquen wrote:
-> The new TEE remoteproc device is used to manage remote firmware in a
-> secure, trusted context. The 'st,stm32mp1-m4-tee' compatibility is
-> introduced to delegate the loading of the firmware to the trusted
-> execution context. In such cases, the firmware should be signed and
-> adhere to the image format defined by the TEE.
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-> ---
-> Updates from V3:
-> - remove support of the attach use case. Will be addressed in a separate
->   thread,
-> - add st_rproc_tee_ops::parse_fw ops,
-> - inverse call of devm_rproc_alloc()and tee_rproc_register() to manage cross
->   reference between the rproc struct and the tee_rproc struct in tee_rproc.c.
-> ---
->  drivers/remoteproc/stm32_rproc.c | 60 +++++++++++++++++++++++++++++---
->  1 file changed, 56 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-> index 8cd838df4e92..13df33c78aa2 100644
-> --- a/drivers/remoteproc/stm32_rproc.c
-> +++ b/drivers/remoteproc/stm32_rproc.c
-> @@ -20,6 +20,7 @@
->  #include <linux/remoteproc.h>
->  #include <linux/reset.h>
->  #include <linux/slab.h>
-> +#include <linux/tee_remoteproc.h>
->  #include <linux/workqueue.h>
->  
->  #include "remoteproc_internal.h"
-> @@ -49,6 +50,9 @@
->  #define M4_STATE_STANDBY	4
->  #define M4_STATE_CRASH		5
->  
-> +/* Remote processor unique identifier aligned with the Trusted Execution Environment definitions */
+The GPIO reset controller uses gpiolib but there is no Kconfig
+dependency reflecting this fact, add one.
 
-Why is this the case?  At least from the kernel side it is possible to call
-tee_rproc_register() with any kind of value, why is there a need to be any
-kind of alignment with the TEE?
+With the addition of the controller to the arm64 defconfig this is
+causing build breaks for arm64 virtconfig in -next:
 
-> +#define STM32_MP1_M4_PROC_ID    0
-> +
->  struct stm32_syscon {
->  	struct regmap *map;
->  	u32 reg;
-> @@ -257,6 +261,19 @@ static int stm32_rproc_release(struct rproc *rproc)
->  	return 0;
->  }
->  
-> +static int stm32_rproc_tee_stop(struct rproc *rproc)
-> +{
-> +	int err;
-> +
-> +	stm32_rproc_request_shutdown(rproc);
-> +
-> +	err = tee_rproc_stop(rproc);
-> +	if (err)
-> +		return err;
-> +
-> +	return stm32_rproc_release(rproc);
-> +}
-> +
->  static int stm32_rproc_prepare(struct rproc *rproc)
->  {
->  	struct device *dev = rproc->dev.parent;
-> @@ -693,8 +710,19 @@ static const struct rproc_ops st_rproc_ops = {
->  	.get_boot_addr	= rproc_elf_get_boot_addr,
->  };
->  
-> +static const struct rproc_ops st_rproc_tee_ops = {
-> +	.prepare	= stm32_rproc_prepare,
-> +	.start		= tee_rproc_start,
-> +	.stop		= stm32_rproc_tee_stop,
-> +	.kick		= stm32_rproc_kick,
-> +	.load		= tee_rproc_load_fw,
-> +	.parse_fw	= tee_rproc_parse_fw,
-> +	.find_loaded_rsc_table = tee_rproc_find_loaded_rsc_table,
-> +};
-> +
->  static const struct of_device_id stm32_rproc_match[] = {
-> -	{ .compatible = "st,stm32mp1-m4" },
-> +	{.compatible = "st,stm32mp1-m4",},
-> +	{.compatible = "st,stm32mp1-m4-tee",},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, stm32_rproc_match);
-> @@ -853,6 +881,7 @@ static int stm32_rproc_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct stm32_rproc *ddata;
->  	struct device_node *np = dev->of_node;
-> +	struct tee_rproc *trproc = NULL;
->  	struct rproc *rproc;
->  	unsigned int state;
->  	int ret;
-> @@ -861,9 +890,26 @@ static int stm32_rproc_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> -	rproc = devm_rproc_alloc(dev, np->name, &st_rproc_ops, NULL, sizeof(*ddata));
-> -	if (!rproc)
-> -		return -ENOMEM;
-> +	if (of_device_is_compatible(np, "st,stm32mp1-m4-tee")) {
-> +		/*
-> +		 * Delegate the firmware management to the secure context.
-> +		 * The firmware loaded has to be signed.
-> +		 */
-> +		rproc = devm_rproc_alloc(dev, np->name, &st_rproc_tee_ops, NULL, sizeof(*ddata));
-> +		if (!rproc)
-> +			return -ENOMEM;
-> +
-> +		trproc = tee_rproc_register(dev, rproc, STM32_MP1_M4_PROC_ID);
-> +		if (IS_ERR(trproc)) {
-> +			dev_err_probe(dev, PTR_ERR(trproc),
-> +				      "signed firmware not supported by TEE\n");
-> +			return PTR_ERR(trproc);
-> +		}
-> +	} else {
-> +		rproc = devm_rproc_alloc(dev, np->name, &st_rproc_ops, NULL, sizeof(*ddata));
-> +		if (!rproc)
-> +			return -ENOMEM;
-> +	}
->  
->  	ddata = rproc->priv;
->  
-> @@ -915,6 +961,9 @@ static int stm32_rproc_probe(struct platform_device *pdev)
->  		dev_pm_clear_wake_irq(dev);
->  		device_init_wakeup(dev, false);
->  	}
-> +	if (trproc)
+aarch64-linux-gnu-ld: drivers/reset/core.o: in function `__reset_add_reset_gpio_lookup':
+/build/stage/linux/drivers/reset/core.c:861:(.text+0xccc): undefined reference to `gpio_device_find_by_fwnode'
 
-        if (rproc->tee_interface)
+Fixes: cee544a40e44 ("reset: gpio: Add GPIO-based reset controller")
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v2:
+- Rebase onto v6.9-rc1.
+- Link to v1: https://lore.kernel.org/r/20240320-reset-gpiolib-deps-v1-1-eaf5d30fa647@kernel.org
+---
+ drivers/reset/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 85b27c42cf65..f426b4c39179 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -68,6 +68,7 @@ config RESET_BRCMSTB_RESCAL
+ 
+ config RESET_GPIO
+ 	tristate "GPIO reset controller"
++	depends on GPIOLIB
+ 	help
+ 	  This enables a generic reset controller for resets attached via
+ 	  GPIOs.  Typically for OF platforms this driver expects "reset-gpios"
 
-I am done reviewing this set.
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240320-reset-gpiolib-deps-f76269197fc0
 
-Thanks,
-Mathieu
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
-> +		tee_rproc_unregister(trproc);
-> +
->  	return ret;
->  }
->  
-> @@ -935,6 +984,9 @@ static void stm32_rproc_remove(struct platform_device *pdev)
->  		dev_pm_clear_wake_irq(dev);
->  		device_init_wakeup(dev, false);
->  	}
-> +	if (rproc->tee_interface)
-> +		tee_rproc_unregister(rproc->tee_interface);
-> +
->  }
->  
->  static int stm32_rproc_suspend(struct device *dev)
-> -- 
-> 2.25.1
-> 
