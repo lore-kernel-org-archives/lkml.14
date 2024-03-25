@@ -1,99 +1,116 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F44012C7F6;
-	Mon, 25 Mar 2024 07:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC2512BE8F;
+	Mon, 25 Mar 2024 07:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711352542; cv=none; b=IgSWFp9LQY5JSlHKImbNnDoMe+tWR+Wavbj5OEsvtzMJYUU54VkKxDNwJ9l5RwpZwbhAxgEw0hDkjb+uCfMhb2VQZ4GRJp+vX2vtobxbVf1TZbmwmhLUjLJrA9tPCx5J8iqPwJdcnpJFNV84dnjkyG22BDbG0EiYOrrAQOTeX6c=
+	t=1711352392; cv=none; b=gOp4or5Ie3htOfo005O/rVNiqjs80aaLhX/d6MnrBcioNzgPe0wd71h+ZSLeuSC5yAKpZ1S8GMKBLenlEHao3Klwyg0wc2v9I2pD3gqHeZFc+iR38nRJcnghlrLSzWSWa9RsrLs/6jzMCmTnygYxE0OJfZYvs6nFJSbI5ibXrJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711352542; c=relaxed/simple;
-	bh=vdFoUSbKw87TFfNziH/t3xIKevtSzdAVn2OVLXmGMNg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gFMjppBbjAVK5Srr2vcvH7lmUZgPyfkKTNFhWI6AJLYB6MY0XGf3ll0uECvjKagL1fuubXkTQdQWtuRpikseHfpcaCDPw/RCkOaLPdKZLnkejZk8/9T1xcSohvUle6WcyUR3OXHXOLZ5IsE8VuDnlvExjNvrIBJ0DJg2rAXy+Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5E80040002;
-	Mon, 25 Mar 2024 07:42:17 +0000 (UTC)
-Message-ID: <dc1e2be5-73e1-409b-85bd-6c216a8b76bd@ghiti.fr>
-Date: Mon, 25 Mar 2024 08:42:16 +0100
+	s=arc-20240116; t=1711352392; c=relaxed/simple;
+	bh=XFiw51vlECFiOAnFpViM0CRHuQQPdgcCXN8991y13SY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FxXqPeKDFzGZFEq+3o3NUsDbth60GohcADFIVzAyBvhZLlOmtcqEf7tv0/e8xgd/zmmpfkBfMSU6UkKjybLMBBbMVL+AP3DNR2QqNhzXKawEZtQ9fYM1XrbcGR8nMXA/yVpj5cxqYXtitHBy97gjn2AO3vtaLwDglAbvKTHvhI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=dVLgP0FN; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="dVLgP0FN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=NgQWIpjniJT6NNNxu1cRYbeyGqHYyx6QE33+2jP9vIY=; t=1711352388; x=1711957188; 
+	b=dVLgP0FNhsv95kc7Ecck2ksERsUeSooplAGhNHs4FlpukrqRKV82ChK3iGDkM+ZYm+3iUrwa3xm
+	kDH7JCQC7Q0ljK1zzpsQjPQLbvg/Rw7lKXXUnQ00x7EOw/pa0o4dN73yHspeeRnZN1CbBaexC8j8t
+	E5j227o6LC4jxvNm+FvG1GJc2r9f7TbrW2dihnUXaqOzOwMyZM1wB66s0uu1Tu9sZfstf62t7oaIk
+	x6nsT4RcP7e37pp8ZTubpjITJl2GhsS8n9VksuNt3HsztOTE2/C3RKiuW0Dv5wxjfQjLkvZQnqk7b
+	1Cm7rytq+cyoXSfApyeHUNV+NI3n/dY3P9xQ==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1roevj-000000009Wd-3Ixh; Mon, 25 Mar 2024 08:39:39 +0100
+Received: from p5b13a6ce.dip0.t-ipconnect.de ([91.19.166.206] helo=[192.168.178.20])
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1roevj-00000003ImZ-2RWE; Mon, 25 Mar 2024 08:39:39 +0100
+Message-ID: <059d03a5da257660fa0bc188c6cc8d0152e97704.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] Revert "sh: Handle calling csum_partial with misaligned
+ data"
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Guenter Roeck <linux@roeck-us.net>, Yoshinori Sato
+	 <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 25 Mar 2024 08:39:39 +0100
+In-Reply-To: <20240324231804.841099-1-linux@roeck-us.net>
+References: <20240324231804.841099-1-linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: Fix spurious errors from __get/put_kernel_nofault
-Content-Language: en-US
-To: Samuel Holland <samuel.holland@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20240312022030.320789-1-samuel.holland@sifive.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20240312022030.320789-1-samuel.holland@sifive.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-Hi Samuel,
+Hi Guenter,
 
-On 12/03/2024 03:19, Samuel Holland wrote:
-> These macros did not initialize __kr_err, so they could fail even if
-> the access did not fault.
->
-> Cc: stable@vger.kernel.org
-> Fixes: d464118cdc41 ("riscv: implement __get_kernel_nofault and __put_user_nofault")
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> ---
-> Found while testing the unaligned access speed series[1]. The observed
-> behavior was that with RISCV_EFFICIENT_UNALIGNED_ACCESS=y, the
-> copy_from_kernel_nofault() in prepend_copy() failed every time when
-> filling out /proc/self/mounts, so all of the mount points were "xxx".
->
-> I'm surprised this hasn't been seen before. For reference, I'm compiling
-> with clang 18.
->
-> [1]: https://lore.kernel.org/linux-riscv/20240308-disable_misaligned_probe_config-v9-0-a388770ba0ce@rivosinc.com/
->
->   arch/riscv/include/asm/uaccess.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
-> index ec0cab9fbddd..72ec1d9bd3f3 100644
-> --- a/arch/riscv/include/asm/uaccess.h
-> +++ b/arch/riscv/include/asm/uaccess.h
-> @@ -319,7 +319,7 @@ unsigned long __must_check clear_user(void __user *to, unsigned long n)
->   
->   #define __get_kernel_nofault(dst, src, type, err_label)			\
->   do {									\
-> -	long __kr_err;							\
-> +	long __kr_err = 0;						\
->   									\
->   	__get_user_nocheck(*((type *)(dst)), (type *)(src), __kr_err);	\
->   	if (unlikely(__kr_err))						\
-> @@ -328,7 +328,7 @@ do {									\
->   
->   #define __put_kernel_nofault(dst, src, type, err_label)			\
->   do {									\
-> -	long __kr_err;							\
-> +	long __kr_err = 0;						\
->   									\
->   	__put_user_nocheck(*((type *)(src)), (type *)(dst), __kr_err);	\
->   	if (unlikely(__kr_err))						\
+On Sun, 2024-03-24 at 16:18 -0700, Guenter Roeck wrote:
+> This reverts commit cadc4e1a2b4d20d0cc0e81f2c6ba0588775e54e5.
+>=20
+> Commit cadc4e1a2b4d ("sh: Handle calling csum_partial with misaligned
+> data") causes bad checksum calculations on unaligned data. Reverting
+> it fixes the problem.
+>=20
+>     # Subtest: checksum
+>     # module: checksum_kunit
+>     1..5
+>     # test_csum_fixed_random_inputs: ASSERTION FAILED at lib/checksum_kun=
+it.c:500
+>     Expected ( u64)result =3D=3D ( u64)expec, but
+>         ( u64)result =3D=3D 53378 (0xd082)
+>         ( u64)expec =3D=3D 33488 (0x82d0)
+>     # test_csum_fixed_random_inputs: pass:0 fail:1 skip:0 total:1
+>     not ok 1 test_csum_fixed_random_inputs
+>     # test_csum_all_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.=
+c:525
+>     Expected ( u64)result =3D=3D ( u64)expec, but
+>         ( u64)result =3D=3D 65281 (0xff01)
+>         ( u64)expec =3D=3D 65280 (0xff00)
+>     # test_csum_all_carry_inputs: pass:0 fail:1 skip:0 total:1
+>     not ok 2 test_csum_all_carry_inputs
+>     # test_csum_no_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c=
+:573
+>     Expected ( u64)result =3D=3D ( u64)expec, but
+>         ( u64)result =3D=3D 65535 (0xffff)
+>         ( u64)expec =3D=3D 65534 (0xfffe)
+>     # test_csum_no_carry_inputs: pass:0 fail:1 skip:0 total:1
+>     not ok 3 test_csum_no_carry_inputs
+>     # test_ip_fast_csum: pass:1 fail:0 skip:0 total:1
+>     ok 4 test_ip_fast_csum
+>     # test_csum_ipv6_magic: pass:1 fail:0 skip:0 total:1
+>     ok 5 test_csum_ipv6_magic
+>  # checksum: pass:2 fail:3 skip:0 total:5
+>  # Totals: pass:2 fail:3 skip:0 total:5
+> not ok 22 checksum
 
+Can you tell me how the tests are run so I can try to verify this on real h=
+ardware?
 
-That's a good a catch! Surprising indeed that we did not find this 
-before, that's the second bug in the uaccess routines in the last 3 (or 
-4) releases, maybe we should improve our coverage here, I'll see what we 
-can do.
+Adrian
 
-You can add:
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-Thanks,
-
-Alex
-
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
