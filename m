@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E351411FA;
-	Mon, 25 Mar 2024 05:44:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B532F1411FD;
+	Mon, 25 Mar 2024 05:44:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711345446; cv=none; b=kNZPyIFE8ztzNxxgx1f2U/1yxfOh/F4U2pRPxORbYcUSSqBS5OYqrQ4Ueq8YpVtManMYhAli3N0QL7qXPwOqz8TlTPSAKZ3XOohb6+DIzCBqJUCzVSkesxvJcczcr6icCI1epRAWC3CIMTqG9BjBn1zeWIzvBFFJ5tHzNATfoRc=
+	t=1711345447; cv=none; b=NToKzENn9NKRoDyT3zw/za4w4LYDYDz0SPGcEf0lnyUXf25BdeUzNAC+mfSD9pw1IIKNMjYQa+lE/Xx0dg9VF6Td29FHzroruHWKJnKvi3FsB6dbiPUjE2OFTkkETyAAbWx3VjLl7waygnCX/ZccMh4gov1J5ZEQk/NqynGm+P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711345446; c=relaxed/simple;
-	bh=Ebgj0Nt45MSQylBAQb/ipK17BeMfXqqF17IfQS77LBM=;
+	s=arc-20240116; t=1711345447; c=relaxed/simple;
+	bh=k6gn1w20BsWibDDISoF2Gh0s7LZl2+QUPMkufpcBitU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SU1HkUo5vLTnltpwg4YKq/p25hnE58F9syhj9GvUw11Y8gAwi6GbxnCKgjvmeFhS/45YOT+aFgKWWjHN/beZF3uG9kj1ZLdjVFxkC3/8QZOsRvlL3MQrdIe324EB35MwzJWHcgaEiRmLRwRMT//bXqrXHHeANz6DO2SyG5qUaEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j//bXvid; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gyLwyfalodQHDJjUFb8CcnxbFAjC4NlH80cyvSgxYNtNwcHB9As8cPl+MV/7jFv2+lfK7e+ZK6gSEUn3BTHOIU79vlrYRFg0/qU6KkP0NDmt1Y4cZXhNwsmm/4M7BWWZ1aO7JQunclNw1lp813Udmpmh8JvATjc30MN+Oa7/7xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PXHKiDxC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j//bXvid"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A768CC43390;
-	Mon, 25 Mar 2024 05:44:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PXHKiDxC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 417ECC433C7;
+	Mon, 25 Mar 2024 05:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711345446;
-	bh=Ebgj0Nt45MSQylBAQb/ipK17BeMfXqqF17IfQS77LBM=;
+	s=k20201202; t=1711345447;
+	bh=k6gn1w20BsWibDDISoF2Gh0s7LZl2+QUPMkufpcBitU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j//bXvidAIkdDazt0r7y2ZHZ02McaI9rpv2Su0kkHR3ZNbEd8FeCIhG+oqYl/Id27
-	 VOsY9J3JBSk4Vx2dGG393gXdwz/735FaVlXczWX9+G50YICY377hJbjIBKkBNRj+SO
-	 92Tq0HOf4DOWV4PHMZVyf+NKnAaPs/aSgB7cEGUIA5+TBcgk+iZNkaIJnyuZLvFgg/
-	 v7shSq1RQAU8W4M+nH03LUIi0s2xp3jpZykAEsi5u1vYcALx7m97GChU72fWjhURX4
-	 GSa4G7C+C7wR+dXlVZN5RLC9ZNBLLR2YjPt/E0mqVO5ehSRiFBq6R7pOuEvS/jHNRX
-	 QkOOZJRjT3v0g==
+	b=PXHKiDxC8DDhqwCswLVuDncycxPjabiNLHeg8GxEDSaPzhJJ5R3h9tAVPQCgvOxp1
+	 U9rSXCwSv1dWhejrwOOocsBDEhToxq6Bbt/qRpqat0esXLEIODadaAAyTx9xQYhfFR
+	 MEdl8f0OjVpunqF6W6MjRRa74vmJO7A6w+QgNGNZ5M+Nj/HYfBAaIG/TWZVVjCQUA6
+	 BhUbRRWdYVSS/UJR1uqVOJejF6FSiWXPNe9w9wIOpqgfToICk6sSDwAqGlo8ymrGO0
+	 IJM6nejb+yrWIMww0vW/2WZ8yKicUwHyKeb1wxao0rmKES5r/FXImdw+l6qzMUS+Tg
+	 hQFQIKZWQFyBw==
 From: Stephen Boyd <sboyd@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>
@@ -33,10 +33,11 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-clk@vger.kernel.org,
 	patches@lists.linux.dev,
 	linux-arm-msm@vger.kernel.org,
+	Taniya Das <quic_tdas@quicinc.com>,
 	Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 2/5] clk: Don't hold prepare_lock when calling kref_put()
-Date: Sun, 24 Mar 2024 22:43:59 -0700
-Message-ID: <20240325054403.592298-3-sboyd@kernel.org>
+Subject: [PATCH 5/5] clk: Get runtime PM before walking tree for clk_summary
+Date: Sun, 24 Mar 2024 22:44:02 -0700
+Message-ID: <20240325054403.592298-6-sboyd@kernel.org>
 X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
 In-Reply-To: <20240325054403.592298-1-sboyd@kernel.org>
 References: <20240325054403.592298-1-sboyd@kernel.org>
@@ -48,63 +49,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We don't need to hold the prepare_lock when dropping a ref on a struct
-clk_core. The release function is only freeing memory and any code with
-a pointer reference has already unlinked anything pointing to the
-clk_core. This reduces the holding area of the prepare_lock a bit.
+Similar to the previous commit, we should make sure that all devices are
+runtime resumed before printing the clk_summary through debugfs. Failure
+to do so would result in a deadlock if the thread is resuming a device
+to print clk state and that device is also runtime resuming in another
+thread, e.g the screen is turning on and the display driver is starting
+up.
 
-Note that we also don't call free_clk() with the prepare_lock held.
-There isn't any reason to do that.
-
+Fixes: 1bb294a7981c ("clk: Enable/Disable runtime PM for clk_summary")
+Cc: Taniya Das <quic_tdas@quicinc.com>
 Cc: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/clk.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/clk/clk.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 44e71736477d..9fc522c26de8 100644
+index 31998ca67b1e..10792599bec1 100644
 --- a/drivers/clk/clk.c
 +++ b/drivers/clk/clk.c
-@@ -4448,7 +4448,8 @@ void clk_unregister(struct clk *clk)
- 	if (ops == &clk_nodrv_ops) {
- 		pr_err("%s: unregistered clock: %s\n", __func__,
- 		       clk->core->name);
--		goto unlock;
-+		clk_prepare_unlock();
-+		return;
- 	}
- 	/*
- 	 * Assign empty clock ops for consumers that might still hold
-@@ -4482,11 +4483,10 @@ void clk_unregister(struct clk *clk)
- 	if (clk->core->protect_count)
- 		pr_warn("%s: unregistering protected clock: %s\n",
- 					__func__, clk->core->name);
-+	clk_prepare_unlock();
+@@ -3332,7 +3332,7 @@ static int clk_summary_show(struct seq_file *s, void *data)
+ 	seq_puts(s, "   clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id\n");
+ 	seq_puts(s, "---------------------------------------------------------------------------------------------------------------------------------------------\n");
  
- 	kref_put(&clk->core->ref, __clk_release);
- 	free_clk(clk);
--unlock:
--	clk_prepare_unlock();
- }
- EXPORT_SYMBOL_GPL(clk_unregister);
- 
-@@ -4645,13 +4645,11 @@ void __clk_put(struct clk *clk)
- 	if (clk->min_rate > 0 || clk->max_rate < ULONG_MAX)
- 		clk_set_rate_range_nolock(clk, 0, ULONG_MAX);
- 
--	owner = clk->core->owner;
--	kref_put(&clk->core->ref, __clk_release);
 -
++	clk_pm_runtime_get_all();
+ 	clk_prepare_lock();
+ 
+ 	for (; *lists; lists++)
+@@ -3340,6 +3340,7 @@ static int clk_summary_show(struct seq_file *s, void *data)
+ 			clk_summary_show_subtree(s, c, 0);
+ 
  	clk_prepare_unlock();
++	clk_pm_runtime_put_all();
  
-+	owner = clk->core->owner;
-+	kref_put(&clk->core->ref, __clk_release);
- 	module_put(owner);
--
- 	free_clk(clk);
+ 	return 0;
  }
+@@ -3389,6 +3390,8 @@ static int clk_dump_show(struct seq_file *s, void *data)
+ 	struct hlist_head **lists = s->private;
  
+ 	seq_putc(s, '{');
++
++	clk_pm_runtime_get_all();
+ 	clk_prepare_lock();
+ 
+ 	for (; *lists; lists++) {
+@@ -3401,6 +3404,7 @@ static int clk_dump_show(struct seq_file *s, void *data)
+ 	}
+ 
+ 	clk_prepare_unlock();
++	clk_pm_runtime_put_all();
+ 
+ 	seq_puts(s, "}\n");
+ 	return 0;
 -- 
 https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
 https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
