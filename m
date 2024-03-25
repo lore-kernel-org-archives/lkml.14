@@ -1,66 +1,66 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2304B6EB52;
-	Mon, 25 Mar 2024 20:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245D07F477;
+	Mon, 25 Mar 2024 20:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711399499; cv=none; b=DvonoDHM1ZGfe6x/+P5Juk10oxLS+TXLTW5ZX/bdPbDnVrFYGyf9dcXqq6qUhcjFbN2ZzHikjh2JozXqivLLQJMaf/V2rN41Osi9ndoxKZURRWZviVlqzi3O/yP+OazuFwTfwPSD9Z+xwBXLquFinCyM1AsGIJb0IvJmjgdx1xo=
+	t=1711399509; cv=none; b=Y359ynkc4HbUTCRiwchbldsAMhO5RiWlJM/z+LeUYNdxyNHWgYjAS8yMYObo/V0sPkRDOx3IWG2bSrESuG4BkurtJpFYETvjJypc1Ui1NKbgXTo0xyfo44iN9WOCd2z+1T5lKAv6tXFLDxaxb8hNdGTGZLXc46LNIj7Z9OJhlYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711399499; c=relaxed/simple;
-	bh=MNy4a9LrRLFB9UFbrtc1jj60lgKwWYTXEKysX0ELC+U=;
+	s=arc-20240116; t=1711399509; c=relaxed/simple;
+	bh=CzhSfwM+D0WsxonCK8YnLO+vv0g995LbiCsceBJorV0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uKYwdKTmaABhVQCpwGsPnXkj99Et2eLdcBbAzp3zHtdSiaTCYDI+mgDWxihb8+PtEKMpg3e6cyeR0ZjQiMb5LT5OsWaRZSXfEWXIKHQb7SdTpfFgRy7UbmrFfrB8M/fIYIkl/PjziOe5zZkfdeLJJBfdXVZqiUyeMC10lN50scg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IQHE09Uv; arc=none smtp.client-ip=209.85.208.51
+	 MIME-Version; b=ll/sfjDEabpm+ZVrjjj2rdE2CpDc3koy8eEsOG0cGjeGcIsgYwAgam4zOYFU03EksJ4olUp/c/SNRqNWfPRaYF/X2CFc/eOZTxgkwJ8wS0q73i5dCN6bg/2XBblvJYJZuJnM8vqAmh+onH+tQVjcaw8JLZ/NGDTERiNw17cTm34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i7QcUdBj; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQHE09Uv"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56c1a520659so1204813a12.1;
-        Mon, 25 Mar 2024 13:44:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7QcUdBj"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d6a1af9c07so69148761fa.3;
+        Mon, 25 Mar 2024 13:45:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711399496; x=1712004296; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711399505; x=1712004305; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nJOhT/NhfBRNemKHQ4KsvY/IdcyTqEthLWerBC7um4A=;
-        b=IQHE09UvMtYS/4bgybSW88yoXmivpvAm7SnMObYPvZdAkJKxvMvGdwGZGLrQt1DURi
-         iirLh6pvvHvOr+T7ZD0ZfRu7KpC+qi3i1cH7kxFY7wGYK072zCJxXRwMezEh0P3nQ8L/
-         JN/FuindBVgToUt6xhDOrCBkRAS7MTpFCapzORE45hsUeKca4y8tsRqwgK/YMo1yqHlZ
-         glRVeRZdBbnJ/vozb6gaI5fpYUTbS5rFeCdommw0lv8QvYFabd05CT47uALkx0k4XsE6
-         2rVCJ4Xb4yR8Ls2JFVtOQXT3+QE0k0iXaEsp0bkK8wmGm+xC5F1SR+ao/7Ce6Qh3/qua
-         qBvA==
+        bh=EgbZCr1mQfvbcSKQLR8Uuga1LyHUh7mtUpXZJxBAGbw=;
+        b=i7QcUdBjzYaaKCyVvx03tqvDJO5KUA3f9AM4zN8f+DuXCLMlJr/U3JS+ZVcMZq1BDi
+         ulfqcHwKz3bF4F2cJYv2oE4iGLWFwZd7BkmmlmRiXIDrpkphQCmzLEV7WFGQCVcbTAgw
+         6Lrw8N7lENUCQJf2aZkyO/naSBlkAE4jdyYBMlLbLIG8z4HTJhLqcebd6QOW6OgRNVo6
+         SYihBBTejipIC4rprxz/0HncUP3a/CNRKCnEms8wLS3K2nuDvEvRMjoEcm2iC7L2qGrZ
+         WuS7bVPdqJX0y53K9sxuKU+t+4tWaxZCeyhpNLl5tEeIVq2coBoeBQQkNLPRWIeoof7O
+         Hgmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711399496; x=1712004296;
+        d=1e100.net; s=20230601; t=1711399505; x=1712004305;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nJOhT/NhfBRNemKHQ4KsvY/IdcyTqEthLWerBC7um4A=;
-        b=GeTkQBixSMGY4sDFI+e9kmtzccZOJ4rwQcV/q2f+04rC8Zf1USMiaoQnKtZeZtI0cc
-         tDob8+qqtYrsmiQVrC3MFM52NJjbLi0asCCxFWLvkOTgvVu/g500BeSKEJWt5YkWO6hX
-         bKK7oFb+Lm70K6bdzqfyDRcDfWzQK1q4Ib340gNvwW8luGU1CDC4C7Mp6bo4d6LUj4Gj
-         Ayw3bBoG8zDnsOnaXS71CSuCvKwO0CXhLJN6Qi1i0/cA0sOvrBy83qfZQCyJJCQcFPEv
-         CKBuZRP9nKl4oRALK89RDAgzhcIBqXhx5ZtfywR53fXy4I0Hd+2JYYIKsAUbEYrwjDnO
-         DU6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUUuZRnLDYUHcjLHo6LAmUz/3am/tueUpEauJn00sci3Tl+iOuvFa+lmXEJUGyPCKSFdxfuM8wcBT2GOamHq0iLZlJsj6T0cV8dna8E
-X-Gm-Message-State: AOJu0YyiPahc7bvw4Vh3nKC2suj+kZE3jA1lz7TPRFahhEOu0Q+dAU5T
-	T0gd1z4ktcrqYByE5izmpcOhgllbG1AoE2WhgAPcSpHBJEfZfioX1baz85u6JAk=
-X-Google-Smtp-Source: AGHT+IF4lQcHa60qMNikZp1uI7bqrjqUR285+MuN34xZ5raHk3YF2hJBkuhX5/FosFIJ/JWubDlfrg==
-X-Received: by 2002:a50:9eea:0:b0:56b:dcdc:6fad with SMTP id a97-20020a509eea000000b0056bdcdc6fadmr625842edf.13.1711399496230;
-        Mon, 25 Mar 2024 13:44:56 -0700 (PDT)
+        bh=EgbZCr1mQfvbcSKQLR8Uuga1LyHUh7mtUpXZJxBAGbw=;
+        b=wijEL2zpgZY7DcVjJuEs1Nzl36um8JaEPFwJznMSPqKxgaj3kW4aNLYmhqfd783H5D
+         WA9vNF+YioGgIYA+eI8SDO0UktmvK/PkicV7q9l+Z7qoRSf2m2KduD6p5Qp8i0UVGhGD
+         1L51Eqeh/tU9+XNukwvm60TIg5L9jZhqlREumlNFlSwi8sp4rFLFcc9FfV+a2b2veDha
+         KgciYU6azYJSqqeOROTgaTFn7anniUbgPbMFYTDOoSo/R0DKMv8p3udHol/8dt3Bo5XN
+         uoSnbcAPeMEXegeukA0i5Jb6jihre8mbNlgiJAfMJesiT1ooAl5FQXqI/ULL3/3psJRK
+         Wwpw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8kFfgRfK+W1RhUUFERDZ0awZCJSxh97zulF3Npc0P1CQvz9RDYhDQFyEPliy2E+1oJrd9OZhDtc7Px6eXmFC4T6Zcgur/CQM15L/C
+X-Gm-Message-State: AOJu0YxKb0CRnyOJ0sopbBeazXkXl9VeBd7OfcdzXwtzlkaUPEgmji9W
+	FDGBvlUWPxp5THAloiKVYHopn2ltSupJOf4L94ukigQP4hdUqQ5l7pauEOJKUDs=
+X-Google-Smtp-Source: AGHT+IHPLDbb1xiPdMlLKbLxm72JC1Us9Tzj69+k4BbcCuLV6jxvi4hgKO3PFoyNac0BIK85ny1kSQ==
+X-Received: by 2002:a19:5f53:0:b0:513:a88b:3296 with SMTP id a19-20020a195f53000000b00513a88b3296mr4885575lfj.9.1711399504747;
+        Mon, 25 Mar 2024 13:45:04 -0700 (PDT)
 Received: from WBEC325.dom.lan ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id k18-20020a056402049200b0056c1cba8480sm591751edv.25.2024.03.25.13.44.55
+        by smtp.gmail.com with ESMTPSA id k18-20020a056402049200b0056c1cba8480sm591751edv.25.2024.03.25.13.45.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 13:44:55 -0700 (PDT)
+        Mon, 25 Mar 2024 13:45:04 -0700 (PDT)
 From: Pawel Dembicki <paweldembicki@gmail.com>
 To: netdev@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Simon Horman <horms@kernel.org>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
 	Pawel Dembicki <paweldembicki@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
 	Andrew Lunn <andrew@lunn.ch>,
 	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>,
@@ -70,9 +70,9 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	UNGLinuxDriver@microchip.com,
 	Russell King <linux@armlinux.org.uk>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v7 06/16] net: dsa: vsc73xx: add port_stp_state_set function
-Date: Mon, 25 Mar 2024 21:43:31 +0100
-Message-Id: <20240325204344.2298241-7-paweldembicki@gmail.com>
+Subject: [PATCH net-next v7 08/16] net: dsa: tag_sja1105: absorb logic for not overwriting precise info into dsa_8021q_rcv()
+Date: Mon, 25 Mar 2024 21:43:33 +0100
+Message-Id: <20240325204344.2298241-9-paweldembicki@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240325204344.2298241-1-paweldembicki@gmail.com>
 References: <20240325204344.2298241-1-paweldembicki@gmail.com>
@@ -84,178 +84,130 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This isn't a fully functional implementation of 802.1D, but
-port_stp_state_set is required for a future tag8021q operations.
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-This implementation handles properly all states, but vsc73xx doesn't
-forward STP packets.
+In both sja1105_rcv() and sja1110_rcv(), we may have precise source port
+information coming from parallel hardware mechanisms, in addition to the
+tag_8021q header.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Only sja1105_rcv() has extra logic to not overwrite that precise info
+with what's present in the VLAN tag. This is because sja1110_rcv() gets
+by, by having a reversed set of checks when assigning skb->dev. When the
+source port is imprecise (vbid >=1), source_port and switch_id will be
+set to zeroes by dsa_8021q_rcv(), which might be problematic. But by
+checking for vbid >= 1 first, sja1110_rcv() fends that off.
+
+We would like to make more code common between sja1105_rcv() and
+sja1110_rcv(), and for that, we need to make sure that sja1110_rcv()
+also goes through the precise source port preservation logic.
+
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 ---
-v7:
-  - implement 'vsc73xx_refresh_fwd_map' simplification
-v6:
-  - fix inconsistent indenting
+v7, v6:
+  - resend only
 v5:
-  - remove unneeded 'RECVMASK' operations
-  - reorganise vsc73xx_refresh_fwd_map function
+  - add missing SoB
 v4:
-  - fully reworked port_stp_state_set
-v3:
-  - use 'VSC73XX_MAX_NUM_PORTS' define
-  - add 'state == BR_STATE_DISABLED' condition
-  - fix style issues
-v2:
-  - fix kdoc
+  - introduced patch
 
- drivers/net/dsa/vitesse-vsc73xx-core.c | 96 +++++++++++++++++++++++---
- 1 file changed, 85 insertions(+), 11 deletions(-)
+ net/dsa/tag_8021q.c   | 32 +++++++++++++++++++++++++++++---
+ net/dsa/tag_sja1105.c | 23 +++--------------------
+ 2 files changed, 32 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
-index 425999d7bf41..07f982cf62dd 100644
---- a/drivers/net/dsa/vitesse-vsc73xx-core.c
-+++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
-@@ -164,6 +164,10 @@
- #define VSC73XX_AGENCTRL	0xf0
- #define VSC73XX_CAPRST		0xff
- 
-+#define VSC73XX_SRCMASKS_CPU_COPY		BIT(27)
-+#define VSC73XX_SRCMASKS_MIRROR			BIT(26)
-+#define VSC73XX_SRCMASKS_PORTS_MASK		GENMASK(7, 0)
-+
- #define VSC73XX_MACACCESS_CPU_COPY		BIT(14)
- #define VSC73XX_MACACCESS_FWD_KILL		BIT(13)
- #define VSC73XX_MACACCESS_IGNORE_VLAN		BIT(12)
-@@ -623,9 +627,6 @@ static int vsc73xx_setup(struct dsa_switch *ds)
- 	vsc73xx_write(vsc, VSC73XX_BLOCK_SYSTEM, 0, VSC73XX_GMIIDELAY,
- 		      VSC73XX_GMIIDELAY_GMII0_GTXDELAY_2_0_NS |
- 		      VSC73XX_GMIIDELAY_GMII0_RXDELAY_2_0_NS);
--	/* Enable reception of frames on all ports */
--	vsc73xx_write(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_RECVMASK,
--		      0x5f);
- 	/* IP multicast flood mask (table 144) */
- 	vsc73xx_write(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_IFLODMSK,
- 		      0xff);
-@@ -785,10 +786,6 @@ static void vsc73xx_phylink_mac_link_down(struct dsa_switch *ds, int port,
- 	/* Allow backward dropping of frames from this port */
- 	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
- 			    VSC73XX_SBACKWDROP, BIT(port), BIT(port));
--
--	/* Receive mask (disable forwarding) */
--	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
--			    VSC73XX_RECVMASK, BIT(port), 0);
+diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
+index 71b26ae6db39..3cb0293793a5 100644
+--- a/net/dsa/tag_8021q.c
++++ b/net/dsa/tag_8021q.c
+@@ -497,9 +497,21 @@ struct net_device *dsa_tag_8021q_find_port_by_vbid(struct net_device *conduit,
  }
+ EXPORT_SYMBOL_GPL(dsa_tag_8021q_find_port_by_vbid);
  
- static void vsc73xx_phylink_mac_link_up(struct dsa_switch *ds, int port,
-@@ -841,10 +838,6 @@ static void vsc73xx_phylink_mac_link_up(struct dsa_switch *ds, int port,
- 	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
- 			    VSC73XX_ARBDISC, BIT(port), 0);
- 
--	/* Enable port (forwarding) in the receieve mask */
--	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
--			    VSC73XX_RECVMASK, BIT(port), BIT(port));
--
- 	/* Disallow backward dropping of frames from this port */
- 	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
- 			    VSC73XX_SBACKWDROP, BIT(port), 0);
-@@ -1036,6 +1029,86 @@ static void vsc73xx_phylink_get_caps(struct dsa_switch *dsa, int port,
- 	config->mac_capabilities = MAC_SYM_PAUSE | MAC_10 | MAC_100 | MAC_1000;
- }
- 
-+static void vsc73xx_refresh_fwd_map(struct dsa_switch *ds, int port, u8 state)
-+{
-+	struct dsa_port *other_dp, *dp = dsa_to_port(ds, port);
-+	struct vsc73xx *vsc = ds->priv;
-+	u16 mask;
-+
-+	if (state != BR_STATE_FORWARDING) {
-+		/* Ports that aren't in the forwarding state must not
-+		 * forward packets anywhere.
-+		 */
-+		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-+				    VSC73XX_SRCMASKS + port,
-+				    VSC73XX_SRCMASKS_PORTS_MASK, 0);
-+
-+		dsa_switch_for_each_available_port(other_dp, ds) {
-+			if (other_dp == dp)
-+				continue;
-+			vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-+					    VSC73XX_SRCMASKS + other_dp->index,
-+					    BIT(port), 0);
-+		}
-+
-+		return;
-+	}
-+
-+	/* Forwarding ports must forward to the CPU and to other ports
-+	 * in the same bridge
-+	 */
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-+			    VSC73XX_SRCMASKS + CPU_PORT, BIT(port), BIT(port));
-+
-+	mask = BIT(CPU_PORT);
-+
-+	dsa_switch_for_each_user_port(other_dp, ds) {
-+		int other_port = other_dp->index;
-+
-+		if (port == other_port || !dsa_port_bridge_same(dp, other_dp) ||
-+		    other_dp->stp_state != BR_STATE_FORWARDING)
-+			continue;
-+
-+		mask |= BIT(other_port);
-+
-+		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-+				    VSC73XX_SRCMASKS + other_port,
-+				    BIT(port), BIT(port));
-+	}
-+
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-+			    VSC73XX_SRCMASKS + port,
-+			    VSC73XX_SRCMASKS_PORTS_MASK, mask);
-+}
-+
-+/* FIXME: STP frames aren't forwarded at this moment. BPDU frames are
-+ * forwarded only from and to PI/SI interface. For more info see chapter
-+ * 2.7.1 (CPU Forwarding) in datasheet.
-+ * This function is required for tag_8021q operations.
++/**
++ * dsa_8021q_rcv - Decode source information from tag_8021q header
++ * @skb: RX socket buffer
++ * @source_port: pointer to storage for precise source port information.
++ *	If this is known already from outside tag_8021q, the pre-initialized
++ *	value is preserved. If not known, pass -1.
++ * @switch_id: similar to source_port.
++ * @vbid: pointer to storage for imprecise bridge ID. Must be pre-initialized
++ *	with -1. If a positive value is returned, the source_port and switch_id
++ *	are invalid.
 + */
-+static void vsc73xx_port_stp_state_set(struct dsa_switch *ds, int port,
-+				       u8 state)
-+{
-+	struct vsc73xx *vsc = ds->priv;
-+	u32 val;
-+
-+	val = (state == BR_STATE_BLOCKING || state == BR_STATE_DISABLED) ?
-+	      0 : BIT(port);
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-+			    VSC73XX_RECVMASK, BIT(port), val);
-+
-+	val = (state == BR_STATE_LEARNING || state == BR_STATE_FORWARDING) ?
-+	      BIT(port) : 0;
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-+			    VSC73XX_LEARNMASK, BIT(port), val);
-+
-+	/* CPU Port should always forward packets when user ports are forwarding
-+	 * so let's configure it from other ports only.
-+	 */
-+	if (port != CPU_PORT)
-+		vsc73xx_refresh_fwd_map(ds, port, state);
-+}
-+
- static const struct dsa_switch_ops vsc73xx_ds_ops = {
- 	.get_tag_protocol = vsc73xx_get_tag_protocol,
- 	.setup = vsc73xx_setup,
-@@ -1051,6 +1124,7 @@ static const struct dsa_switch_ops vsc73xx_ds_ops = {
- 	.port_disable = vsc73xx_port_disable,
- 	.port_change_mtu = vsc73xx_change_mtu,
- 	.port_max_mtu = vsc73xx_get_max_mtu,
-+	.port_stp_state_set = vsc73xx_port_stp_state_set,
- 	.phylink_get_caps = vsc73xx_phylink_get_caps,
- };
+ void dsa_8021q_rcv(struct sk_buff *skb, int *source_port, int *switch_id,
+ 		   int *vbid)
+ {
++	int tmp_source_port, tmp_switch_id, tmp_vbid;
+ 	u16 vid, tci;
  
+ 	if (skb_vlan_tag_present(skb)) {
+@@ -513,11 +525,25 @@ void dsa_8021q_rcv(struct sk_buff *skb, int *source_port, int *switch_id,
+ 
+ 	vid = tci & VLAN_VID_MASK;
+ 
+-	*source_port = dsa_8021q_rx_source_port(vid);
+-	*switch_id = dsa_8021q_rx_switch_id(vid);
++	tmp_source_port = dsa_8021q_rx_source_port(vid);
++	tmp_switch_id = dsa_8021q_rx_switch_id(vid);
++	tmp_vbid = dsa_tag_8021q_rx_vbid(vid);
++
++	/* Precise source port information is unknown when receiving from a
++	 * VLAN-unaware bridging domain, and tmp_source_port and tmp_switch_id
++	 * are zeroes in this case.
++	 *
++	 * Preserve the source information from hardware-specific mechanisms,
++	 * if available. This allows us to not overwrite a valid source port
++	 * and switch ID with less precise values.
++	 */
++	if (tmp_vbid == 0 && *source_port == -1)
++		*source_port = tmp_source_port;
++	if (tmp_vbid == 0 && *switch_id == -1)
++		*switch_id = tmp_switch_id;
+ 
+ 	if (vbid)
+-		*vbid = dsa_tag_8021q_rx_vbid(vid);
++		*vbid = tmp_vbid;
+ 
+ 	skb->priority = (tci & VLAN_PRIO_MASK) >> VLAN_PRIO_SHIFT;
+ }
+diff --git a/net/dsa/tag_sja1105.c b/net/dsa/tag_sja1105.c
+index 1aba1d05c27a..48886d4b7e3e 100644
+--- a/net/dsa/tag_sja1105.c
++++ b/net/dsa/tag_sja1105.c
+@@ -524,30 +524,13 @@ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
+ 	/* Normal data plane traffic and link-local frames are tagged with
+ 	 * a tag_8021q VLAN which we have to strip
+ 	 */
+-	if (sja1105_skb_has_tag_8021q(skb)) {
+-		int tmp_source_port = -1, tmp_switch_id = -1;
+-
+-		sja1105_vlan_rcv(skb, &tmp_source_port, &tmp_switch_id, &vbid,
+-				 &vid);
+-		/* Preserve the source information from the INCL_SRCPT option,
+-		 * if available. This allows us to not overwrite a valid source
+-		 * port and switch ID with zeroes when receiving link-local
+-		 * frames from a VLAN-unaware bridged port (non-zero vbid) or a
+-		 * VLAN-aware bridged port (non-zero vid). Furthermore, the
+-		 * tag_8021q source port information is only of trust when the
+-		 * vbid is 0 (precise port). Otherwise, tmp_source_port and
+-		 * tmp_switch_id will be zeroes.
+-		 */
+-		if (vbid == 0 && source_port == -1)
+-			source_port = tmp_source_port;
+-		if (vbid == 0 && switch_id == -1)
+-			switch_id = tmp_switch_id;
+-	} else if (source_port == -1 && switch_id == -1) {
++	if (sja1105_skb_has_tag_8021q(skb))
++		sja1105_vlan_rcv(skb, &source_port, &switch_id, &vbid, &vid);
++	else if (source_port == -1 && switch_id == -1)
+ 		/* Packets with no source information have no chance of
+ 		 * getting accepted, drop them straight away.
+ 		 */
+ 		return NULL;
+-	}
+ 
+ 	if (source_port != -1 && switch_id != -1)
+ 		skb->dev = dsa_conduit_find_user(netdev, switch_id, source_port);
 -- 
 2.34.1
 
