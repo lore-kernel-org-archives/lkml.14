@@ -1,152 +1,99 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2116CDC1
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735166CDCC;
+	Mon, 25 Mar 2024 17:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711387401; cv=none; b=R8XLrmVrEwhwg/pB2Dhp+GW1zAv9btvmeOsgEq6DSywV9LvCU9ExRlOlVFMNw2TYqgkeTA4jxKBNbFw9gLmDyBFmgM1Qvsw9zyimLdr9pQtwPJxraxKSmM5oD7yvF65/KuAYTTsOMXT2Vyq46+tMKHoNYaQY0QS2pjOVvwjOlTU=
+	t=1711387404; cv=none; b=GkXciYHRrv1Sqq2nKK42MOGBbOuYds5ZtOiGygl8SK+NBrQNHzFD1U304qzM1XW7huswDUSht9aI0M5HlHRLkm9nLrNUrfrPFhl7/X/fjovfdNDMq2qGnrMHkgHdbK0lLEZvHweuwK+QR/93dNvol//1Xn+i9DxoK06XQByt+Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711387401; c=relaxed/simple;
-	bh=DxVhH848FmR2TSa91xhlWwh+14W5DPhDbCXuE/y8z8E=;
-	h=Message-ID:From:To:Cc:Subject:MIME-Version:Content-Type:Date; b=AwF17MvjVvRNyH9Ji1Z9v4gySL9U/oyiglub1xuqtINfvY48VPurgVkukgkc9oglRai3os/WXon4zYiDv+umzhQK8AN2dm7PhtbciBngGIWEUQ6Yjtcx+W3HIUlFGIIKyZqBeVhnkv1mTVAtdEkYfaHGYWgZoFTJkem08hT9FSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q3ZMblpm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WIxZA1MC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1711387404; c=relaxed/simple;
+	bh=1v8JTa2zwLY//oKs5JI1dBbv595ztN7DvLPvVEJBkpo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hMqvBNmlcFPGR9f4+fHmW3CUfN+DCBO03jk8cnkHSPaCzniFoXYzA0HV+xbjV0AdQtb6E99hPBL2nq6yGwBsPBCJNNEfRgriPDq2mdeZw+o/lpR2E0bB5IdbpcuZL5nRqW5V0UThgTjlU8MZBSXcSzjaTwtfIDhRGzx1nSQjIfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=H0iseS6v; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q3ZMblpm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WIxZA1MC"
-Message-ID: <20240325172048.548199937@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711387398;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=khJqvECZCsi8ilTDOqh8jVnha+7AH+jfFZfLReHQck8=;
-	b=Q3ZMblpmLnGorufIZqKPf0/QTem7G8jyHBTaLUkSc11QMifM/BJndOeJcx04dWhmzDEA/o
-	VmphSHFkI2fL83k8Cxt0oqMbdWHotbEgv+JLiHSsQr+5NWMwqtKjxAOhaMkhtah5ckq7yB
-	ft6ikx2dNxI84b1wDtbrTA7CNbI+9XAWgOER3JMP0D1xVFjBpGRST6HRWXS1lrwLQqijmc
-	TZSuenP5PqTrnUbtuqIHACdVvC8mZehWZEM4d5DO3A54y4YA711+c9/HTZCnHvqGI7Mt7l
-	3Sg+7NOzzepQjRRatiyrATTgvm6dFex7Yg+RrSCXMC8/1L+EUSi9/QyOSClTpA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711387398;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=khJqvECZCsi8ilTDOqh8jVnha+7AH+jfFZfLReHQck8=;
-	b=WIxZA1MC4OYzSlXy5xk49lUw+04SAmW+M7uH7X024CLvMj4ZSECW+gidisUfW+FSz5nnVC
-	fkQrcYMfSjpmE5DA==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>,
- Ingo Molnar <mingo@kernel.org>,
- John Stultz <jstultz@google.com>
-Subject: [patch 1/1] MAINTAINERS: Add co-maintainers for time[rs]
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="H0iseS6v"
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4V3KX44rJvzlgVnN;
+	Mon, 25 Mar 2024 17:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:references:content-language:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1711387390; x=1713979391; bh=Fv7kCUT2BWY6M9OW2MD8hESk
+	Xk9W04pTKWY7feKrcos=; b=H0iseS6vqhPg02EIP/7y4FKrmC142fEYuF4FWSqO
+	ohcF4zANaSNf7Rx6TmIXcT1aMsdHTuIuH7MiUEEipMqk/ezAOAO+gMaJItvTluep
+	Cc2W2D+VUaDZYOgUEHtfxjXsXMNDlHaZ3VA6QYtN0dRY8Me0Aj5V4oLG5+H62YHl
+	90A0d96tyOIzqBzCwAs0RrEbXZH9KszAIqNnIXtbp/R97cf4F2d20EvcmSnPr455
+	a43uNRWr7ATSRTZuanQ5SJdFJY4tkrnnd3qyRygoPWFxdBXQKQYT4CvhDVU4qwDx
+	0q53ruY9j445njY1bAp7dRyVJOfySxMyZxv2hHlTdH32XQ==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id i0PMQCDUazuH; Mon, 25 Mar 2024 17:23:10 +0000 (UTC)
+Received: from [100.96.154.173] (unknown [104.132.1.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4V3KWw2sLbzlgTGW;
+	Mon, 25 Mar 2024 17:23:08 +0000 (UTC)
+Message-ID: <787fe4b7-a5af-4cd1-a7e8-8b9bad3be7d9@acm.org>
+Date: Mon, 25 Mar 2024 10:23:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 25 Mar 2024 18:23:17 +0100 (CET)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/2] Introduce per-task io utilization boost
+Content-Language: en-US
+To: Christian Loehle <christian.loehle@arm.com>,
+ Qais Yousef <qyousef@layalina.io>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org,
+ juri.lelli@redhat.com, mingo@redhat.com, rafael@kernel.org,
+ dietmar.eggemann@arm.com, vschneid@redhat.com, vincent.guittot@linaro.org,
+ Johannes.Thumshirn@wdc.com, adrian.hunter@intel.com, ulf.hansson@linaro.org,
+ andres@anarazel.de, asml.silence@gmail.com, linux-pm@vger.kernel.org,
+ linux-block@vger.kernel.org, io-uring@vger.kernel.org,
+ linux-mmc@vger.kernel.org
+References: <20240304201625.100619-1-christian.loehle@arm.com>
+ <86f0af00-8765-4481-9245-1819fb2c6379@acm.org>
+ <0dc6a839-2922-40ac-8854-2884196da9b9@arm.com>
+ <c5b7fc1f-f233-4d25-952b-539607c2a0cc@acm.org>
+ <2784c093-eea1-4b73-87da-1a45f14013c8@arm.com>
+ <20240321123935.zqscwi2aom7lfhts@airbuntu>
+ <1ff973fc-66a4-446e-8590-ec655c686c90@arm.com>
+ <2ed2dadc-bdc4-4a21-8aca-a2aac0c6479a@acm.org>
+ <de1eba3c-2453-4c5c-bd80-dd7d7b33f60d@arm.com>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <de1eba3c-2453-4c5c-bd80-dd7d7b33f60d@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Anna-Maria and Frederic are working in this area for years. Volunteer them
-into co-maintainer roles.
+On 3/25/24 05:06, Christian Loehle wrote:
+> On 21/03/2024 19:52, Bart Van Assche wrote:
+>> On 3/21/24 10:57, Christian Loehle wrote:
+>>> In the long-term it looks like for UFS the problem will disappear as we are
+>>> expected to get one queue/hardirq per CPU (as Bart mentioned), on NVMe that
+>>> is already the case.
+>>
+>> Why the focus on storage controllers with a single completion interrupt?
+>> It probably won't take long (one year?) until all new high-end
+>> smartphones may have support for multiple completion interrupts.
+> 
+> Apart from going to "This patch shows significant performance improvements on
+> hardware that runs mainline today" to "This patch will have significant
+> performance improvements on devices running mainline in a couple years"
+> nothing in particular.
 
-While at it bring the file lists up to date.
+That doesn't make sense to me. Smartphones with UFSHCI 4.0 controllers
+are available from multiple vendors. See also 
+https://en.wikipedia.org/wiki/Universal_Flash_Storage. See also
+https://www.gsmarena.com/samsung_galaxy_s24-12773.php.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
----
- MAINTAINERS |   35 +++++++++++++++++++++++++++--------
- 1 file changed, 27 insertions(+), 8 deletions(-)
-
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9653,7 +9653,9 @@ L:	linux-input@vger.kernel.org
- S:	Maintained
- F:	drivers/hid/hid-logitech-hidpp.c
- 
--HIGH-RESOLUTION TIMERS, CLOCKEVENTS
-+HIGH-RESOLUTION TIMERS, TIMER WHEEL, CLOCKEVENTS
-+M:	Anna-Maria Behnsen <anna-maria@linutronix.de>
-+M:	Frederic Weisbecker <frederic@kernel.org>
- M:	Thomas Gleixner <tglx@linutronix.de>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-@@ -9661,9 +9663,13 @@ T:	git git://git.kernel.org/pub/scm/linu
- F:	Documentation/timers/
- F:	include/linux/clockchips.h
- F:	include/linux/hrtimer.h
-+F:	include/linux/timer.h
- F:	kernel/time/clockevents.c
- F:	kernel/time/hrtimer.c
--F:	kernel/time/timer_*.c
-+F:	kernel/time/timer.c
-+F:	kernel/time/timer_list.c
-+F:	kernel/time/timer_migration.*
-+F:	tools/testing/selftests/timers/
- 
- HIGH-SPEED SCC DRIVER FOR AX.25
- L:	linux-hams@vger.kernel.org
-@@ -15627,9 +15633,10 @@ F:	drivers/misc/nsm.c
- F:	include/uapi/linux/nsm.h
- 
- NOHZ, DYNTICKS SUPPORT
-+M:	Anna-Maria Behnsen <anna-maria@linutronix.de>
- M:	Frederic Weisbecker <frederic@kernel.org>
--M:	Thomas Gleixner <tglx@linutronix.de>
- M:	Ingo Molnar <mingo@kernel.org>
-+M:	Thomas Gleixner <tglx@linutronix.de>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/nohz
-@@ -17590,15 +17597,20 @@ F:	drivers/pnp/
- F:	include/linux/pnp.h
- 
- POSIX CLOCKS and TIMERS
-+M:	Anna-Maria Behnsen <anna-maria@linutronix.de>
-+M:	Frederic Weisbecker <frederic@kernel.org>
- M:	Thomas Gleixner <tglx@linutronix.de>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
- F:	fs/timerfd.c
- F:	include/linux/time_namespace.h
--F:	include/linux/timer*
-+F:	include/linux/timerfd.h
-+F:	include/uapi/linux/time.h
-+F:	include/uapi/linux/timerfd.h
- F:	include/trace/events/timer*
--F:	kernel/time/*timer*
-+F:	kernel/time/itimer.c
-+F:	kernel/time/posix-*
- F:	kernel/time/namespace.c
- 
- POWER MANAGEMENT CORE
-@@ -22268,13 +22280,20 @@ S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
- F:	include/linux/clocksource.h
- F:	include/linux/time.h
-+F:	include/linux/timekeeper_internal.h
-+F:	include/linux/timekeeping.h
- F:	include/linux/timex.h
- F:	include/uapi/linux/time.h
- F:	include/uapi/linux/timex.h
- F:	kernel/time/alarmtimer.c
--F:	kernel/time/clocksource.c
--F:	kernel/time/ntp.c
--F:	kernel/time/time*.c
-+F:	kernel/time/clocksource*
-+F:	kernel/time/ntp*
-+F:	kernel/time/time.c
-+F:	kernel/time/timeconst.bc
-+F:	kernel/time/timeconv.c
-+F:	kernel/time/timecounter.c
-+F:	kernel/time/timekeeping*
-+F:	kernel/time/time_test.c
- F:	tools/testing/selftests/timers/
- 
- TIPC NETWORK LAYER
-
+Bart.
