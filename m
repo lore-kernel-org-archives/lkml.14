@@ -1,184 +1,195 @@
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11011008.outbound.protection.outlook.com [52.101.229.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987EE159908;
-	Mon, 25 Mar 2024 09:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711359592; cv=fail; b=S6Epe7J50Q9Lxah6r8kT6eB7iM8/PfRnNYBa/U0xj4fBecWjdg0hpHs6HkXAUoJ5iNQfUUzwb/meHww/aUdGvHFVYfOcw4y1ui+Np/ZiaEkzkpjZM67NBEwvpAoT5ZZCSICtX+bb20MWhk2pnaUtPtnwsXBd3qoaU0VPncN2WzI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711359592; c=relaxed/simple;
-	bh=NKoCewhFDb9p1kzJZvNGH48/nT40iUtHwijbMM5HHUU=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=nX5vWh8ye2nZi5c1gTzJYnEpYJXIpKmzv2K5BuIp8HjscG+GDE9udYR6P7vnDz3W2IFY8O5lxEPFIx6UCda2F543+1/ouMce2lkhQ9k9EfXN9UUZKhD5AgAdTnh6R8G7MpY3QkQw1IlMdLiEH+uS07C1RdvfGeoLTsDjlow27bo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alpsalpine.com; spf=pass smtp.mailfrom=alpsalpine.com; dkim=pass (2048-bit key) header.d=alpsalpine.com header.i=@alpsalpine.com header.b=IU7E83Qo; arc=fail smtp.client-ip=52.101.229.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alpsalpine.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpsalpine.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8075176023
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711359649; cv=none; b=NV3TI0T+WYrHETx4zXcV/wXugc/788A8rHRZdbz2+p7dfn/Psz6UnkImtHVBiULVRMM5eU3y+rjVuzC6OIX+9s4WIL3ANObjWdq4fuZeBXczF91gD9HlaRCXnCjEaW6x5xfK2lwwS9kntk8k6ME4sHu+5OGj3F8YxOVU7Jt1ubo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711359649; c=relaxed/simple;
+	bh=k/kvwbqjuI6Biup2Czt4MRAGfiEuJJwavDIry0t7w5c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ETNNIgQlG3VDaehG2uJCqpmdLAhimQX3JUM0zfq/RNSB9P9RTd5SknKAE7KPn+46GVlxhOtMjNdVV6QB6oatoOlC06h1+7dqhijAuwNjkxToleIB0rVPtFKiY0Y9/zTD/Vu+wDggB2O8QBuIedgELKhDcAP5pkw97pl2XyDLDnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kNbIrp1B; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alpsalpine.com header.i=@alpsalpine.com header.b="IU7E83Qo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lGWbUQV8avbX6ZLiY3VvmsU4wlI1/w+1VCj/3s6nPXzXsAN26aaZjA6gjcZQhL07Bl67h4/YDJNW/UDm87Jys+Y8GmgUB7gVE+H68TAr0WDSMqtxbo0nS3Umx+o/21smCErwJ8A2OM+n2PDQmAxK1VWuc0nYZXyoIvDEC+TMA2Vzaf6WWXtDONIw/RSbVCCSwDerQHrwK+SLJVW8HPRM6RCz7PIkH5l6RguKDDVE+RK++UMjPDf9SwvDrZn/gchQq8LMZDPUSum6UtgPpz6nuGaQWj1ecsbKT81n6khJk8uqc6uS1Sg3RSEB7SElu1CewjHNOUZHLQhuhuRtUX708g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/CgqwnR4FMrQhyKZFpU5rMlvVotSXk9FY3BG6sbl8Gs=;
- b=N53Jd7jLocW+m7RPuubLB71amtmgnrkBSfdwSebhSjlbgfSQ0BYNt7KB7BiFAVXsE9cx/TdIrGAAYgfXDzpWDSJV9Vnx6tb6Zpeo/DPf+PPjdvaTiCqx398AI6papmKBtgmVgH0D+yaM0JgXohWpoc2MCp8cYAmCu2U+EEr132h/oPFVPeHEs2ndAfg+Ng6BhznSiogCTSsB3cQsAM1dDhlb7ynwOaC2vc3LdSjSGaiE+BzjueD86G1pR9udpkB4yt9C/xG9LSNuJ99U3Sb30B9cH8fKSryvkPLzz3GkbobLT0mQlsV+cZTWaGWfpyTkfGHvK6Hi6AooOx5tNxuRSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=alpsalpine.com; dmarc=pass action=none
- header.from=alpsalpine.com; dkim=pass header.d=alpsalpine.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpsalpine.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/CgqwnR4FMrQhyKZFpU5rMlvVotSXk9FY3BG6sbl8Gs=;
- b=IU7E83QoDY98aQ98sJCU7b7iU5Ln1n94pbJfDQ87oXxfq2ojk/K2nWPaYXKAm34mo3ULpeO0xRSebABB3O0Bhqkiyl3weTE7uL/5fTfRLxGUj7z5FkwTTSov9UhMnC9O5bs8xlucUuOmDa3zID69YFkDXJoAmYfnjKo0kOHrz/UWAabB+JaR1wTPFcPuHIUVUtiOGUaDbIhvTKYv4UhSqBUJwOg2gGgOAD/hG/1XkDos12ofsw7yD9MAz2h7uShOmHdZ15RZc3ZsJsoN3LTCHU4jkj2FJcIhPWBayXsLH0GbY/CdFmCDPxBCobkf8z9dfNCz9+c/nos8+xkbpo0Wfg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=alpsalpine.com;
-Received: from TYCPR01MB10778.jpnprd01.prod.outlook.com
- (2603:1096:400:296::14) by TYAPR01MB5449.jpnprd01.prod.outlook.com
- (2603:1096:404:8038::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
- 2024 09:39:47 +0000
-Received: from TYCPR01MB10778.jpnprd01.prod.outlook.com
- ([fe80::e9e3:6314:b225:94ce]) by TYCPR01MB10778.jpnprd01.prod.outlook.com
- ([fe80::e9e3:6314:b225:94ce%7]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
- 09:39:47 +0000
-From: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
-To: balbi@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Norihiko.Hama@alpsalpine.com
-Subject: [PATCH] usb: gadget: f_ncm: Fix UAF ncm object at re-bind after usb ep transport error
-Date: Mon, 25 Mar 2024 18:45:43 +0900
-Message-Id: <20240325094543.5362-1-Norihiko.Hama@alpsalpine.com>
-X-Mailer: git-send-email 2.17.1
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYAPR01CA0042.jpnprd01.prod.outlook.com
- (2603:1096:404:28::30) To TYCPR01MB10778.jpnprd01.prod.outlook.com
- (2603:1096:400:296::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kNbIrp1B"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a4644bde1d4so549431766b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711359646; x=1711964446; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pWb0tkOtTuLiN7G14PNBlPOOupfOoAoEKqcNpPczYPU=;
+        b=kNbIrp1BFBssP3quaFLNHjy77OhxL5ceqzOC9dmrsVmE4fTj3Pw1D8ELMWr25Phafm
+         bvPqspS97t+z9iv2tiaXGiB+Xy0Q3bAiGiyRxpph7ZPtEwxuXqEHpFUIFjUQgTZPhBn2
+         fhXe10IijG+07dMlgKaJhDqjURzKCsdyAc3z/daL1T8IOCAINGGC6sVDGS1N5Wx8ZmIm
+         6RR+N9yhtg4pWRvioPGsaCzt62m/OIMVDRIklsfajRyRRoQIfIL8rA4h51phcF1Tn20e
+         yMeSLAfrdWoXpAIFuYkLpeFj0OHgbSf1d79wrkyvY27FRyo7ALWwKG3+iu1vARZOTHvY
+         +F8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711359646; x=1711964446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pWb0tkOtTuLiN7G14PNBlPOOupfOoAoEKqcNpPczYPU=;
+        b=TOim3DqdRPzxDgDLCKhvPIHBkIrmJQgnIs77bO/dy0kJj3n7WxFnPXd+M15ukHVcB3
+         wMCH96u5cw4zyxLhA1Oq98//OnGLp8ylTlIO3zL7P54AxcTvKPcn/axuEJf6JPMhMCUs
+         r6xVCrmzRp15TdgbRo/rq5MmBe5loMIpAP/EKTOebl177w8/2aUwhsoj3hsZDMO6R7Lp
+         AIvYiWAFPoJ2LvKqytX72rLzLvAiYqsZDamtD8MOtlQYRHDT6sFCbRBkGU2ryMueFD3j
+         h2o6wQeobA6hoUN6h3u1PIKbww9AG+GBRW2GKYtz4epnk5y5HBTXPpKOSME3J4I8cPIE
+         lb1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXhAMk6+NqgQseF6TUWAtA0jw0X6xw6nF0FpL9bu4NsaTDwexUYVwIJkX3jVP3xVYEOIpMHDO3caL93ptx26uWZL21l3RXoo6GGHa5M
+X-Gm-Message-State: AOJu0Yxw1lIiqNglSPtBadWHnhExjNu5+q43V7DB6L8EbkQWtiI2awMg
+	hzN6GfzF5voKmEb6dwFbrfyVbkgvs9+9wtkZGzzHGyGswZpCsVmdiSUDZogd0k8k2bqhNop60c5
+	TefoWRGozv2GgbSz0yHWj2p9CWvs6mR8Mw8a5
+X-Google-Smtp-Source: AGHT+IEtlmX9IKU2k8X3a1hYN0MJCPSuOw+XaYGopOCUJ55JbRETnjldqTB1OByt1d/JtBkryLPJzQYYGn9eqeZ6m1k=
+X-Received: by 2002:a17:906:dfcf:b0:a46:9ae2:1927 with SMTP id
+ jt15-20020a170906dfcf00b00a469ae21927mr4464655ejc.67.1711359645679; Mon, 25
+ Mar 2024 02:40:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCPR01MB10778:EE_|TYAPR01MB5449:EE_
-X-MS-Office365-Filtering-Correlation-Id: cbfd038c-729f-42c3-b9a0-08dc4caf8295
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	NJ2y3g18ze4MNWBlKrm3xw1WXAbnIDRdC6dTnI4JR9wEicZ9Rvx+9IEVK+s3uot14C5MuyNhUEwLwdzxHxnP2iW/N2W57Wmm2n/A61JyxnAaXwcysYN3mE6sKS2MUQ0HnrOi1tGKV75gJiBZ0y8iay8dMrCgp61bqvGu4bMx2eRthSUV2v9j9/3YpGW9L7OPXtRrP/lv6npAg4FI0lkn8W2wmW94bsR8XPWRlUBWcCIP+E+dQCF3jK3yjcfgy4Ma3uDSH/yPNN+DOiPfg2xWIMQvmpXxQOxKRhVG9ugFcKymHlXJmbPn0mPUI5TqbYi4WI/zOisvBFO6i6zX9twSI4FyeF1iR0g4t8HGSksQjKagqNGsUAT7/0cjSw6iuoDIwZ7tjpKNkbT4KVEUmrHMksYUsVarq+9hegz/4yj5aCFkDzckkjNghGBfrrKO+ANuacuvUK+Mm44YYolf3iKFX9pHrJcpK66JJ1Po/LgdKIjAdbYs1fhDSWkGxcIcslLOP/BMqo8A0nh5sB11VU5PfOk3qsELp3Tmz57dNcK5LS0xJ0181n/mRfDIG+uqh0Ob1/kG+li1MHSZrYdNYu2zAOfE4yN2v6tgy2wuQBmdGtrpMbs2USiG3KkAjCqcDA1yDGQAavFpm9G96nRHTHyIZ+L8RA4bB1SlamhjV6AXTZoViXiHUCJFu1GiyvJFCos/ww+uDIB4ecxjGWjUH1nedg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10778.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(52116005)(1800799015)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?I+iSX7+d9sLN19CWRF05QkS5qRKqQjxDxTNC/eUsjYkXrqECeuVWvrJGiaDB?=
- =?us-ascii?Q?0k2hUBRc6SCnHvgaaa6LC6TuW2i5NPQiX6TwRyPNkLKTu1aY68/3VTWwZgUx?=
- =?us-ascii?Q?P5lxvS+Vqf0qGPmo+HtZ2KOS+ndMAP84jvHdXAsW01ZwHnV/qaEIUn32z6Jd?=
- =?us-ascii?Q?5OHsIERbBX0Li1lkpLiNY43YvaezPIQLOeJMsbwgh+YD6uo5jS4PhJJhbGLu?=
- =?us-ascii?Q?lkEfb91wvactPqgzIbvYYNfo6jOllvNVnAB3/tQ/hCujK+QogRqZ+JqOvhuW?=
- =?us-ascii?Q?L5t8e0T94nPihw6M9KWS5armNGDijQGCqAGuWmz00CDJ8dpoPrIeASezuJGW?=
- =?us-ascii?Q?/4FBBBIzCJKbeG8aGM74KAHsj4JKsHhOHtO+SJ8/NAA9Q/VbNABcEzbc4DsJ?=
- =?us-ascii?Q?2oE+WPa4liRT4njZpbt/x0TlUDsvzhR3b05duVSMS+qy9Hj1UU5BdZ9WtSm1?=
- =?us-ascii?Q?8Xi7HRsHaySsxQLStk9SCXdkPZci6r12Hzzkhs51DvIDME+rGZpEMPmPHFq8?=
- =?us-ascii?Q?6osdNFTvMSLGxFY09EnFQUykJLyxCQm4b7n507yZQbC6cXzzzI+AS9ag5yd7?=
- =?us-ascii?Q?wJjLsyiRaVR3rWBxSl+RiHsGRdmiPQpbqkfK8r2jbm6WQ9EJZATMMglp4dba?=
- =?us-ascii?Q?aDFjNzDtt2+pLL6FX0/Uq1w8WTkDlVl0das+l/KySgOiA4tpLKCMJNjw5jCe?=
- =?us-ascii?Q?WZg8Kbo1YzL+CIUr1mAgcKcCJZTwNwzBLPSwFmDwEABTcn9xJBigjlMEZaSE?=
- =?us-ascii?Q?Ds6O92XdSMF1AUDQSqFm7GvedGQTaM/0RWvMCyEu2G0Zpozxv3IrUn7j++Rq?=
- =?us-ascii?Q?Ui8KyBKZlL5EqZEVKtfh1aNdt34XK2hyPyvniYIVMKTANgwV/W/1g6MyHJ5a?=
- =?us-ascii?Q?xx0CuSE7G2gWyr8Yz48i2BfQSfmeKvdp7pl2+7UslPULJ0sjqBFFCdO/cACu?=
- =?us-ascii?Q?ZuU+rARBMndFf77MEb5nvScmFT2nq4AMmoiX72iSYnwMUyTnZyh3cARMa0tB?=
- =?us-ascii?Q?EnzLTeHm4aOTh7TFzhlx+kIVOdAkqdqhu1BOzqukl7cCl9AM9mloKa1lK/q1?=
- =?us-ascii?Q?CjH7DRsrhbY69OE83fIZvh0cImN75w0+zAmsfDAy/vfbw4M0hrYHXVv9MGUr?=
- =?us-ascii?Q?HEZ3/rAlqrVLpj83L4MDvp6obgLlbDkDzDDZBISktpd9JvaFiqCq0CcOUuMN?=
- =?us-ascii?Q?WcqOt8vHM9DtahK0Uw3TsjTmQjGf6zT01Hpbvz4Gz39cYJjDkgX7rTBxEuMA?=
- =?us-ascii?Q?cfFrDUzE575UEQt1vVElauIIaWbUQxwwrfHIxVYN5ayxzhSY4z7bnZXP4Ngx?=
- =?us-ascii?Q?9Lk9AZg+nP/JUc33ezoDp127Xwt8obNI4VyoJnH8oHJ8AdfO48a4L4KYE+ud?=
- =?us-ascii?Q?SdMfRNowYlol3Iv/uRuObrPm5ehxwNdUUCJYuMOVCb8dhPKMt0b2mFLW3eZv?=
- =?us-ascii?Q?l+dlUDgfbEdFVIp/DvAA08ntCLoedwfJYuEuwfbSWViJLNimpbC+sKhPjCOe?=
- =?us-ascii?Q?EXFlDMnAfxTUrxeSE2bMtjk6O6JoPVtYS+lKj/vRkgzZvPnsCu/ciA552y6z?=
- =?us-ascii?Q?hEQQFcV605SlZvTJcw1wFHFqvbIzL1aPP+SH3y3v?=
-X-OriginatorOrg: alpsalpine.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbfd038c-729f-42c3-b9a0-08dc4caf8295
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10778.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 09:39:47.5162
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 57e76998-77bd-4b82-a424-198f46eb2254
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eyLIuWQNECadacJG5/TjjM9aXLP0S6vNZeSiNFFMo0LmMyGnujTDUmxCF3gXV7HucoX608CaG3qe1JMH352XGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5449
+References: <20240324210447.956973-1-hannes@cmpxchg.org> <CAJD7tkaWQAV=X1pzYG=VkWe7Ue9ZFbjt9uQ5m1NJujtLspWJTA@mail.gmail.com>
+ <CAGsJ_4yeBmNsMGXEWwC+1Hs5zJUP+becq4wG+6CpU7V1=EOvhg@mail.gmail.com>
+ <CAJD7tka5K69q20bxTsBk38JC7mdPr3UsxXpsnggDO_iQA=qxug@mail.gmail.com>
+ <1e7ce417-b9dd-4d62-9f54-0adf1ccdae35@linux.dev> <CAJD7tkYc3oFho5eEkS1zmr_+CC-Ag1HucUTyAy2RJbEb4SqRoQ@mail.gmail.com>
+ <d556ec84-da6a-4486-a68e-5982baf46879@linux.dev>
+In-Reply-To: <d556ec84-da6a-4486-a68e-5982baf46879@linux.dev>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Mon, 25 Mar 2024 02:40:09 -0700
+Message-ID: <CAJD7tkbNWeoNnkB7Q1z9-XdrE1L4_2okdjFGvLjnuwoXT9XmwA@mail.gmail.com>
+Subject: Re: [PATCH] mm: zswap: fix data loss on SWP_SYNCHRONOUS_IO devices
+To: Chengming Zhou <chengming.zhou@linux.dev>
+Cc: Barry Song <21cnbao@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Zhongkun He <hezhongkun.hzk@bytedance.com>, 
+	Chengming Zhou <zhouchengming@bytedance.com>, Chris Li <chrisl@kernel.org>, 
+	Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Kairui Song <kasong@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When ncm function is working and then stop usb0 interface for link down,
-eth_stop() is called. At this piont, accidentally if usb transport error
-should happen in usb_ep_enable(), 'in_ep' and/or 'out_ep' may not be enabled.
+On Mon, Mar 25, 2024 at 2:22=E2=80=AFAM Chengming Zhou <chengming.zhou@linu=
+x.dev> wrote:
+>
+> On 2024/3/25 16:38, Yosry Ahmed wrote:
+> > On Mon, Mar 25, 2024 at 12:33=E2=80=AFAM Chengming Zhou
+> > <chengming.zhou@linux.dev> wrote:
+> >>
+> >> On 2024/3/25 15:06, Yosry Ahmed wrote:
+> >>> On Sun, Mar 24, 2024 at 9:54=E2=80=AFPM Barry Song <21cnbao@gmail.com=
+> wrote:
+> >>>>
+> >>>> On Mon, Mar 25, 2024 at 10:23=E2=80=AFAM Yosry Ahmed <yosryahmed@goo=
+gle.com> wrote:
+> >>>>>
+> >>>>> On Sun, Mar 24, 2024 at 2:04=E2=80=AFPM Johannes Weiner <hannes@cmp=
+xchg.org> wrote:
+> >>>>>>
+> >>>>>> Zhongkun He reports data corruption when combining zswap with zram=
+.
+> >>>>>>
+> >>>>>> The issue is the exclusive loads we're doing in zswap. They assume
+> >>>>>> that all reads are going into the swapcache, which can assume
+> >>>>>> authoritative ownership of the data and so the zswap copy can go.
+> >>>>>>
+> >>>>>> However, zram files are marked SWP_SYNCHRONOUS_IO, and faults will=
+ try
+> >>>>>> to bypass the swapcache. This results in an optimistic read of the
+> >>>>>> swap data into a page that will be dismissed if the fault fails du=
+e to
+> >>>>>> races. In this case, zswap mustn't drop its authoritative copy.
+> >>>>>>
+> >>>>>> Link: https://lore.kernel.org/all/CACSyD1N+dUvsu8=3DzV9P691B9bVq33=
+erwOXNTmEaUbi9DrDeJzw@mail.gmail.com/
+> >>>>>> Reported-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+> >>>>>> Fixes: b9c91c43412f ("mm: zswap: support exclusive loads")
+> >>>>>> Cc: stable@vger.kernel.org      [6.5+]
+> >>>>>> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> >>>>>> Tested-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+> >>>>
+> >>>> Acked-by: Barry Song <baohua@kernel.org>
+> >>>>
+> >>>>>
+> >>>>> Do we also want to mention somewhere (commit log or comment) that
+> >>>>> keeping the entry in the tree is fine because we are still protecte=
+d
+> >>>>> from concurrent loads/invalidations/writeback by swapcache_prepare(=
+)
+> >>>>> setting SWAP_HAS_CACHE or so?
+> >>>>
+> >>>> It seems that Kairui's patch comprehensively addresses the issue at =
+hand.
+> >>>> Johannes's solution, on the other hand, appears to align zswap behav=
+ior
+> >>>> more closely with that of a traditional swap device, only releasing =
+an entry
+> >>>> when the corresponding swap slot is freed, particularly in the sync-=
+io case.
+> >>>
+> >>> It actually worked out quite well that Kairui's fix landed shortly
+> >>> before this bug was reported, as this fix wouldn't have been possible
+> >>> without it as far as I can tell.
+> >>>
+> >>>>
+> >>>> Johannes' patch has inspired me to consider whether zRAM could achie=
+ve
+> >>>> a comparable outcome by immediately releasing objects in swap cache
+> >>>> scenarios.  When I have the opportunity, I plan to experiment with z=
+RAM.
+> >>>
+> >>> That would be interesting. I am curious if it would be as
+> >>> straightforward in zram to just mark the folio as dirty in this case
+> >>> like zswap does, given its implementation as a block device.
+> >>>
+> >>
+> >> This makes me wonder who is responsible for marking folio dirty in thi=
+s swapcache
+> >> bypass case? Should we call folio_mark_dirty() after the swap_read_fol=
+io()?
+> >
+> > In shrink_folio_list(), we try to add anonymous folios to the
+> > swapcache if they are not there before checking if they are dirty.
+> > add_to_swap() calls folio_mark_dirty(), so this should take care of
+>
+> Right, thanks for your clarification, so should be no problem here.
+> Although it was a fix just for MADV_FREE case.
+>
+> > it. There is an interesting comment there though. It says that PTE
+> > should be dirty, so unmapping the folio should have already marked it
+> > as dirty by the time we are adding it to the swapcache, except for the
+> > MADV_FREE case.
+>
+> It seems to say the folio will be dirtied when unmap later, supposing the
+> PTE is dirty.
 
-After that, ncm_disable() is called to disable for ncm unbind
-but gether_disconnect() is never called since 'in_ep' is not enabled.
+Oh yeah it could mean that the folio will be dirted later.
 
-As the result, ncm object is released in ncm unbind
-but 'dev->port_usb' associated to 'ncm->port' is not NULL.
+>
+> >
+> > However, I think we actually unmap the folio after we add it to the
+> > swapcache in shrink_folio_list(). Also, I don't immediately see why
+> > the PTE would be dirty. In do_swap_page(), making the PTE dirty seems
+>
+> If all anon pages on LRU list are faulted by write, it should be true.
+> We could just use the zero page if faulted by read, right?
 
-And when ncm bind again to recover netdev, ncm object is reallocated
-but usb0 interface is already associated to previous released ncm object.
+This applies for the initial fault that creates the folio, but this is
+a swap fault. It could be a read fault and in that case we still need
+to make the folio dirty because it's not in the swapcache and we need
+to write it out if it's reclaimed, right?
 
-Therefore, once usb0 interface is up and eth_start_xmit() is called,
-released ncm object is dereferrenced and it might cause use-after-free memory.
-
-[function unlink via configfs]
-usb0: eth_stop dev->port_usb=ffffff9b179c3200
---> error happens in usb_ep_enable().
-NCM: ncm_disable: ncm=ffffff9b179c3200
---> no gether_disconnect() since ncm->port.in_ep->enabled is false.
-NCM: ncm_unbind: ncm unbind ncm=ffffff9b179c3200
-NCM: ncm_free: ncm free ncm=ffffff9b179c3200   <-- released ncm
-
-[function link via configfs]
-NCM: ncm_alloc: ncm alloc ncm=ffffff9ac4f8a000
-NCM: ncm_bind: ncm bind ncm=ffffff9ac4f8a000
-NCM: ncm_set_alt: ncm=ffffff9ac4f8a000 alt=0
-usb0: eth_open dev->port_usb=ffffff9b179c3200  <-- previous released ncm
-usb0: eth_start dev->port_usb=ffffff9b179c3200 <--
-
-Unable to handle kernel paging request at virtual address dead00000000014f
-
-This patch addresses the issue by checking if 'ncm->netdev' is not NULL at
-ncm_disable() to call gether_disconnect() to deassociate 'dev->port_usb'.
-It's more reasonable to check 'ncm->netdev' to call gether_connect/disconnect
-rather than check 'ncm->port.in_ep->enabled' since it might not be enabled
-but the gether connection might be established.
-
-Signed-off-by: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
----
- drivers/usb/gadget/function/f_ncm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/function/f_ncm.c b/drivers/usb/gadget/function/f_ncm.c
-index bd095ae569ed..23960cd16463 100644
---- a/drivers/usb/gadget/function/f_ncm.c
-+++ b/drivers/usb/gadget/function/f_ncm.c
-@@ -888,7 +888,7 @@ static int ncm_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
- 		if (alt > 1)
- 			goto fail;
- 
--		if (ncm->port.in_ep->enabled) {
-+		if (ncm->netdev) {
- 			DBG(cdev, "reset ncm\n");
- 			ncm->netdev = NULL;
- 			gether_disconnect(&ncm->port);
-@@ -1365,7 +1365,7 @@ static void ncm_disable(struct usb_function *f)
- 
- 	DBG(cdev, "ncm deactivated\n");
- 
--	if (ncm->port.in_ep->enabled) {
-+	if (ncm->netdev) {
- 		ncm->netdev = NULL;
- 		gether_disconnect(&ncm->port);
- 	}
--- 
-2.17.1
-
+>
+> > to be conditional on the fault being a write fault, but I didn't look
+> > thoroughly, maybe I missed it. It is also possible that the comment is
+> > just outdated.
+>
+> Yeah, dirty is only marked on write fault.
+>
+> Thanks.
