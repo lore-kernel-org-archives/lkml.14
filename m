@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E14153566;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D2B153561;
 	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711332789; cv=none; b=gO5tC6JN+wkEVuRI3CJP48UneLeo9zqcd44CBJSoRxZhNc4KS2OKorqIA/fatwS0rDcfQkHG01cTpTbgcFgmBQq45PlfVMQh/5uYX1CWX/bWNqhuLG/qEG8PfGdOKrT1Xh5qtTPtzHgxndzL64JDvH8ILZIlixVaanCWplnLIeY=
+	t=1711332788; cv=none; b=pEH790EPPJR/0E7CSx+MIQkmPVvy49THZU9eZIm1nJmH7INi1fquh8RMzRoHnDbEzyNldUWQG4oVGLPhrlbDlaYD8o4poL/y4zwTjqC5LtzX1PuvJyMs35VueOaLebrgN5baZtksnwt78+bCJaCreYFIYroadiKw3b64aJL20Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711332789; c=relaxed/simple;
-	bh=MZnsBg6kd6EgY31Xfo3r2efSeJzcGFTikmm5cMaNdW8=;
+	s=arc-20240116; t=1711332788; c=relaxed/simple;
+	bh=evMOFmZK484xlLF3mbfZYs94akT76sZvcDHwhEbS+nM=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=EZZxESDDL9+eUBelZRcxe9MC7Jf5VmCgcEI5d+ukLoEr/wM+DlbvWVFuCvuim5dZFJnFyzqjaeYh80nbUKIoMWcCLfI3eE5z5bVLfXPJKKynOLUIi5c+iyHU4jn901QV+g/Wx0fSyV3cA3EV4jvH8rOnZ0UTuf5pPP7fjpfWivE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHuXb0gn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=QDwAIi7aMC/h0DNeqkxdBzfYyqijNCG4LSExgM0k3Ng28A2HBTTQyywHUhaojN/ThkELHAsCmt79sezciEFxK7M+pK3m3fbnjKm2MztRy7W7jy/Gn78wkdBs/zh8FDXj4JprsQXuHQVUjk8MxfYIi68zUOIf8MrIH6Qikib9T+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsuO+u6Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHuXb0gn"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 88787C43330;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsuO+u6Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8D975C43141;
 	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711332787;
-	bh=MZnsBg6kd6EgY31Xfo3r2efSeJzcGFTikmm5cMaNdW8=;
+	bh=evMOFmZK484xlLF3mbfZYs94akT76sZvcDHwhEbS+nM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=UHuXb0gn8ME3oLxnbcGZw/hvAvm3EfiLqfib6Xdv5Zb9+y4gxhJF5pue6Uu+KGrkV
-	 wXj6cQaBf21G9A0P9TPtlgvH7OsdTGBel/cD8PMOCPbw+rulqlxU20f6ccfU2L12Mf
-	 IAcy1muYwbg+hNeSWoTP2aBkN9V/jZhCB2zlhRfGXTOFlUNQ87UmlKUNfwCW0WC37C
-	 NER5RJ9cL1s1lpb4sDf9G214uD1PTr1ZWuSASQyOw4WVhDJJXj1WfulxJOVHqeZY64
-	 +KxcCr9qVM6E8jnp+xggnuN214zxq8BH8knav36O4YF7PjJARdTUZdGx+31qDt0+8O
-	 N7gbuMRdReg4w==
+	b=PsuO+u6Q0XR0u82SlNdTexPTnY51mzkSycxKfVdeetqtiRstJ6lwIwPwJtmqDz+TI
+	 Cjb7XZel1TyhfwzeNc0W1Y3SlcraM7r2QYRyKYPm+wn6YigjZy0UCEalsNYqJxlKEY
+	 XpyHDtV9f/8UbZJGpuNB4grES3cNXTnU05+QgV/nViPG7cZhCzVlXBXWtG03N6CX98
+	 mVigrxyNtq/RfkyQzbn7G/NtO66TDhRJowV5WHctInoeIY2u+0/5qh7etAsYTngH8F
+	 SxdWxK703ADDfzfwRBuPDzE6OOm0iFjja3ZuwgD4SOKusrY2ymUizC/WoYdpraV587
+	 ThutESjB6XNMQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6CD16D2D0E5;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 75B2FD2D0E4;
 	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,49 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4 0/4] Allow coreboot modules to autoload and enable cbmem
- in the arm64 defconfig
+Subject: Re: [PATCH v2 0/2] platform/chrome: typec: xHCI DbC
 From: patchwork-bot+chrome-platform@kernel.org
 Message-Id: 
- <171133278744.9916.4500686862665628115.git-patchwork-notify@kernel.org>
+ <171133278747.9916.12140929449356804470.git-patchwork-notify@kernel.org>
 Date: Mon, 25 Mar 2024 02:13:07 +0000
-References: <20240212-coreboot-mod-defconfig-v4-0-d14172676f6d@collabora.com>
-In-Reply-To: <20240212-coreboot-mod-defconfig-v4-0-d14172676f6d@collabora.com>
-To: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado_=3Cnfraprado=40collabora=2Ecom?=@ci.codeaurora.org,
-	=?utf-8?q?=3E?=@ci.codeaurora.org
-Cc: tzungbi@kernel.org, arnd@arndb.de, briannorris@chromium.org,
- jwerner@chromium.org, masahiroy@kernel.org, nathan@kernel.org,
- nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
- angelogioacchino.delregno@collabora.com, andriy.shevchenko@linux.intel.com,
- gregkh@linuxfoundation.org, kernel@collabora.com,
- chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240213130018.3029991-1-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20240213130018.3029991-1-heikki.krogerus@linux.intel.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: pmalani@chromium.org, gregkh@linuxfoundation.org, bleung@chromium.org,
+ tzungbi@kernel.org, groeck@chromium.org, hadrosaur@google.com,
+ mathias.nyman@intel.com, rajaram.regupathy@intel.com,
+ ssradjacoumar@google.com, samjaco@google.com, uday.m.bhat@intel.com,
+ linux-usb@vger.kernel.org, chrome-platform@lists.linux.dev,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This series was applied to chrome-platform/linux.git (for-next)
-by Tzung-Bi Shih <tzungbi@kernel.org>:
+by Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
 
-On Mon, 12 Feb 2024 09:50:04 -0500 you wrote:
-> This series adds the missing pieces to the coreboot bus and the module
-> alias generation to allow coreboot modules to be automatically loaded
-> when matching devices are detected.
+On Tue, 13 Feb 2024 15:00:16 +0200 you wrote:
+> Hi,
 > 
-> The configs for cbmem coreboot entries are then enabled in the arm64
-> defconfig, as modules, to allow reading logs from coreboot on arm64
-> Chromebooks, which is useful for debugging the boot process.
+> Changed in v2:
+> 
+> The quirk is now wrapped inside an ugly ifdef CONFIG_ACPI :(
+> I don't have better ideas better ideas for this I'm afraid.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v4,1/4] firmware: coreboot: Generate modalias uevent for devices
-    https://git.kernel.org/chrome-platform/c/c2b28f6806d2
-  - [v4,2/4] firmware: coreboot: Generate aliases for coreboot modules
-    https://git.kernel.org/chrome-platform/c/f1cebae1dbf8
-  - [v4,3/4] firmware: coreboot: Replace tag with id table in driver struct
-    https://git.kernel.org/chrome-platform/c/8a0a62941a04
-  - [v4,4/4] arm64: defconfig: Enable support for cbmem entries in the coreboot table
-    (no matching commit)
+  - [v2,1/2] usb: roles: Link the switch to its connector
+    https://git.kernel.org/chrome-platform/c/9a270ec7bfb0
+  - [v2,2/2] platform/chrome: cros_ec_typec: Make sure the USB role switch has PLD
+    https://git.kernel.org/chrome-platform/c/56403220577b
 
 You are awesome, thank you!
 -- 
