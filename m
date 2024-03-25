@@ -1,145 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD55214D2AC
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D8615444D
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711363588; cv=none; b=Q1RBZ0olFbiF470CyrFJ5xjhPwRGboUO3aqzEEvHwc6zR1rkf2vJUKz1suMtCOgjN360ddNXlW8b6W0nkqB5VTTqnLnrKK9vBKFNrtBCUrXs5JhLSzvggm8/Szdc43JUAc29gym9zlD0/jk5i69iGCh1goWWHuUOLOUJ0+2UAK8=
+	t=1711363536; cv=none; b=RupYY/g5hZ7/HmnYZaU1TzjN6WjUuxzt8/UAMDoS5cM/1iju0sbDrVGl2pZQ8xVSSJVlW0ndVH9gjDBZELhf6uypPIe6n4qgb+uuYtztYljUQnKup7zwjOahqhV7pdtef6m/t4C+aS5h6MxGyYaa5vf+Kl0DH5dUlRJSqM1Lcy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711363588; c=relaxed/simple;
-	bh=JRxUQLSehBM2TNxu0nNZermgpC+ysXDiyFSy6vNNmbY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YkHTh5ObTyCOl0xxzd1Z5mI/faRugT40CcCGC/HLAD+eI1L2gHrEgGowJtLfyI8VezV53ADRgNkprlbLqn6U2Rf1srL8I60RT9Y4Y3uT9hIUto4V1mumRYyGd8IcFmlj1Sr4Jxp5ntQv4lSZ2V6sz3tYiwtedDZidE8IbNFE5NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lxRv//7i; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	s=arc-20240116; t=1711363536; c=relaxed/simple;
+	bh=xFssiSj+B3KNV/TbO9JFeIfvLkCfQkNPPPwZSEnIQqc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XF70Vk7KysbFj69bLuJq1NqtucksXi8yoimFrWnXMNewkeX8rFLcHb5LkpuxPIUxqtW2eSGngb5vXuEafyyFsdxudcOE0UlJcw91chmU65jQJ679gZ/9Kig8OjbAytgIslki6PWqeRWQBHg9G8CJnTLgYCdpUZXEgbcXMx2pt3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl-com.20230601.gappssmtp.com header.i=@futuring-girl-com.20230601.gappssmtp.com header.b=cuc1QpGR; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=futuring-girl.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lxRv//7i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711363587; x=1742899587;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=JRxUQLSehBM2TNxu0nNZermgpC+ysXDiyFSy6vNNmbY=;
-  b=lxRv//7iIgl/n6U+5MOHF0QpcHc63EM29VybthQLLPiDy6U2bkUvISYA
-   VIGEn39MBorYgxrOdJt+8xeijnD4ct174SCTqq9O4D/mPH59XSyeZng0t
-   PIKirmDiQTUAfOLy9lHlQPBwK8SFF5q4evExR3Q5cknWjJD/DOPifrVNF
-   M7CV+coJzRPm0MvZTAVR4t6dLqlwlQGl6gAJ+n6+YTjZAEkKuK00m4kIy
-   VPhMubgVtU4nkqpfU/6HFowRCwpaC/Dc5Mw7JKNVAQWr7uuV7sPMfdFvk
-   QR8Y1MwwFQjkG8X6mDSpGJPFc6xrD0Z6wAn94H11RVwtZqeaSWhypd0RL
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6562007"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="6562007"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 03:46:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="937070185"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="937070185"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2024 03:46:11 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 028C8524; Mon, 25 Mar 2024 12:46:10 +0200 (EET)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@intel.com
-Cc: sathyanarayanan.kuppuswamy@linux.intel.com,
-	hpa@zytor.com,
-	seanjc@google.com,
-	elena.reshetova@intel.com,
-	rick.p.edgecombe@intel.com,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 4/4] x86/tdx: Enable ENUM_TOPOLOGY
-Date: Mon, 25 Mar 2024 12:46:07 +0200
-Message-ID: <20240325104607.2653307-5-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240325104607.2653307-1-kirill.shutemov@linux.intel.com>
-References: <20240325104607.2653307-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=futuring-girl-com.20230601.gappssmtp.com header.i=@futuring-girl-com.20230601.gappssmtp.com header.b="cuc1QpGR"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5cddfe0cb64so1662270a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=futuring-girl-com.20230601.gappssmtp.com; s=20230601; t=1711363534; x=1711968334; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i5cMpRTj9+xACED6ZIv7TiLSV250W68WovhxSeO3KTs=;
+        b=cuc1QpGRC/xDtWsJ65VoyBozBo9WkqwnUt5HqH7IFGgOcZ5NhBPR9Heopyewf8TCat
+         oRUzoDTt09FQ22LKMzYwFjPLCryLLR6+0KrgkVipgSPAeDPNevdna2iZ3UC8tag+vqqt
+         xTRp2Nz1NT4E10kyd//PjTr1B7r9HKROr9Ex7p3zWQba7yh/wZIbLmDEYIrBwBocDOyG
+         E+3T+U0T/OnWAW+Oex1Vofg06I+K1jHcwnr3hzehYRAZ0vo58+uigfnURsQYNP9V4viU
+         RIIZ2wg1TxfAqwn7hFlF69AOBWKvh8Ed3r+9fqTp77kxxgOPyEZOz2R2m/lpZMcwa308
+         d09g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711363534; x=1711968334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i5cMpRTj9+xACED6ZIv7TiLSV250W68WovhxSeO3KTs=;
+        b=gkbLNNsWpvEp5KnmWO2unuAVV3gCbFHnq2y6ydksqiYRKfAuxyMX56Y5rdDU1w3aM7
+         hBefjDXXf/8X59gvOyiojbnMEHkDoAk+gXjdXnYeXKtMwjRbOGfi0rDmTzFFT5XkPJYa
+         G8rPpipfi+yXjX1rvr0Gyft/BzI35KNM/N7YlSo42/96IWLlbQsfomZL/zvhP73ZEdnt
+         WHlh5/ND70GJxGacpPYgf3oXiN8oppgHsbtqWmXCVkd++8D5GR+An/qIMsFZt0GNzcqq
+         69skZo9Pj9HyMu4MRnroBrDjefgVTlBOt1uo0ZAHUbJAcdso35tX5zj8FrOrp+ir7ds6
+         GI0Q==
+X-Gm-Message-State: AOJu0YwXIFzBzwVK1N+GHx6z7EvLG0Mb0B9rWZkRd4frL7j1YZHkE1i1
+	a9Ov9+rYj2bN/QWhFf+j5DEZgcN1SIsQEMkdO87kI8vFRKUSKEYBU96/lpJuF53XlTIxPfOxfYE
+	F5JFRhR45pjVRFLyG6HaEXROGANl144PXOnltfg==
+X-Google-Smtp-Source: AGHT+IGCBrbXDBwydAl/u/1jRtQ2p43hCT7EuFJ5ky+hUizJPwTTHeqXK1hV1/7I97X3IB5keFT0dPkbz8CL9C+BouU=
+X-Received: by 2002:a17:90a:e608:b0:29b:3106:7f24 with SMTP id
+ j8-20020a17090ae60800b0029b31067f24mr4321213pjy.37.1711363534117; Mon, 25 Mar
+ 2024 03:45:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240324230116.1348576-1-sashal@kernel.org>
+In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
+From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+Date: Mon, 25 Mar 2024 19:45:23 +0900
+Message-ID: <CAKL4bV47RJMAxTMJPkfHNQm+ikWCMEYg_NBfB+e0_6_7=+3fVw@mail.gmail.com>
+Subject: Re: [PATCH 6.6 000/638] 6.6.23-rc1 review
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	florian.fainelli@broadcom.com, pavel@denx.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-TDX 1.0 defines baseline behaviour of TDX guest platform. In TDX 1.0
-generates a #VE when accessing topology-related CPUID leafs (0xB and
-0x1F) and the X2APIC_APICID MSR. The kernel returns all zeros on CPUID
-topology. Any complications will cause problems.
+Hi Sasha
 
-The ENUM_TOPOLOGY feature allows the VMM to provide topology
-information to the guest. Enabling the feature eliminates
-topology-related #VEs: the TDX module virtualizes accesses to
-the CPUID leafs and the MSR.
+On Mon, Mar 25, 2024 at 2:34=E2=80=AFPM Sasha Levin <sashal@kernel.org> wro=
+te:
+>
+>
+> This is the start of the stable review cycle for the 6.6.23 release.
+> There are 638 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Tue Mar 26 11:01:10 PM UTC 2024.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git/patch/?id=3Dlinux-6.6.y&id2=3Dv6.6.22
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> Thanks,
+> Sasha
 
-Enable ENUM_TOPOLOGY if it is available.
+6.6.23-rc1 tested.
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/coco/tdx/tdx.c           | 19 +++++++++++++++++++
- arch/x86/include/asm/shared/tdx.h |  3 +++
- 2 files changed, 22 insertions(+)
+Build successfully completed.
+Boot successfully completed.
+No dmesg regressions.
+Video output normal.
+Sound output normal.
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 860bfdd5a11d..b2d969432a22 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -289,6 +289,25 @@ static void tdx_setup(u64 *cc_mask)
- 		else
- 			tdx_panic(msg);
- 	}
-+
-+	/*
-+	 * TDX 1.0 generates a #VE when accessing topology-related CPUID leafs
-+	 * (0xB and 0x1F) and the X2APIC_APICID MSR. The kernel returns all
-+	 * zeros on CPUID #VEs. In practice, this means that the kernel can only
-+	 * boot with a plain topology. Any complications will cause problems.
-+	 *
-+	 * The ENUM_TOPOLOGY feature allows the VMM to provide topology
-+	 * information to the guest in a safe manner. Enabling the feature
-+	 * eliminates topology-related #VEs: the TDX module virtualizes
-+	 * accesses to the CPUID leafs and the MSR.
-+	 *
-+	 * Enable ENUM_TOPOLOGY if it is available.
-+	 */
-+	if ((features & TDX_FEATURES0_ENUM_TOPOLOGY) &&
-+	    tdg_vm_rd(TDCS_TOPOLOGY_ENUM_CONFIGURED)) {
-+		if (!tdcs_ctls_set(TD_CTLS_ENUM_TOPOLOGY))
-+			pr_warn("Failed to enable ENUM_TOPOLOGY\n");
-+	}
- }
- 
- /*
-diff --git a/arch/x86/include/asm/shared/tdx.h b/arch/x86/include/asm/shared/tdx.h
-index 29a61c72e4dd..2964c506b241 100644
---- a/arch/x86/include/asm/shared/tdx.h
-+++ b/arch/x86/include/asm/shared/tdx.h
-@@ -27,15 +27,18 @@
- #define TDCS_CONFIG_FLAGS		0x1110000300000016
- #define TDCS_TD_CTLS			0x1110000300000017
- #define TDCS_NOTIFY_ENABLES		0x9100000000000010
-+#define TDCS_TOPOLOGY_ENUM_CONFIGURED	0x9100000000000019
- 
- /* TDCS_TDX_FEATURES0 bits */
- #define TDX_FEATURES0_PENDING_EPT_VIOLATION_V2	BIT_ULL(16)
-+#define TDX_FEATURES0_ENUM_TOPOLOGY		BIT_ULL(20)
- 
- /* TDCS_CONFIG_FLAGS bits */
- #define TDCS_CONFIG_FLEXIBLE_PENDING_VE	BIT_ULL(1)
- 
- /* TDCS_TD_CTLS bits */
- #define TD_CTLS_PENDING_VE_DISABLE	BIT_ULL(0)
-+#define TD_CTLS_ENUM_TOPOLOGY		BIT_ULL(1)
- 
- /* TDX hypercall Leaf IDs */
- #define TDVMCALL_MAP_GPA		0x10001
--- 
-2.43.0
+Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
 
+[    0.000000] Linux version 6.6.23-rc1rv
+(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 13.2.1 20230801, GNU ld (GNU
+Binutils) 2.42.0) #1 SMP PREEMPT_DYNAMIC Mon Mar 25 19:23:42 JST 2024
+
+Thanks
+
+Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
