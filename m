@@ -1,114 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B0915AAC3
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D4F13F450;
+	Mon, 25 Mar 2024 11:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711365099; cv=none; b=LK+YItdSVq3taq9Te/+Q7cjR0jzR9JXuMRvLjnA3kcG6iJYVEmApMwKqPtL3hFnPG5Bj1MSJj+TjOXlwSFepOszx1fBg8JM9Eb0PtrOM7k2VexkobfiLtq61UaIGjmIVQU8SSGY/p78APiqxM0BfhODlgGe8csp+vVF4dwyDTHc=
+	t=1711365163; cv=none; b=mVYUx60RKaO7UITmNt9mPeXLmYy6OXinyOYotDsQIPXRQvoAmDTEDkYp96Agy5LMS++kJJ/xG3Zv6/Oad7VZxTKpuNmrrbV4C9sEISAq3nclWkBttfT13ilnw76Z45tUnleBypaaGu0vlenGW0t8TXKmcVHpwZiPXc62Pao1Wws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711365099; c=relaxed/simple;
-	bh=akb0Xkda4VBBWXx+01f2VRfBJMybL/xPYRcZVbT0RVE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lWUHx+b4uwhDZlZQ8MABRy6KAVUm+UtJrSYSMYx5lu+3pGYsAPGjen+QjPwS0J6teK5qSEdSowgshiOH3cIjg9VB69JZSBAa/30hzoCx56LYRurgR8yUSqSkiiWZQ/exoROhTecAh1tSp4lvNCXevr7z+cj6g628sicNlnS1yYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/stS8ao; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711365163; c=relaxed/simple;
+	bh=/nLbfNN0ipKFWk82Fr2MEYp8hRp7jP/GzVTL6jLAI2c=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=MTc6PKFldv6jOgK8iUDpfimEQwNkJsCmTzyKjYM5W2OemrYbuVr0LSEppozG7tK+R9tItHILYc5OUN0ICHFIoj2Cn3YNZZJSRuIzbNPa6lFIivUMiJvUV44aY7HkP24wPXdZ1oOgFDp88FcrY2ynU9/cJEsQnMpqV4CRRq1BNKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ufjKNn5a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zXRMY86j; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/stS8ao"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2FD3C433C7;
-	Mon, 25 Mar 2024 11:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711365098;
-	bh=akb0Xkda4VBBWXx+01f2VRfBJMybL/xPYRcZVbT0RVE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=O/stS8ao4dr5RdcoD4k0KOBnLcHUDvYt9Cuu2EZpewlYVEZxvx9z4k8CvwcBT2TFV
-	 wQ7s73BYayarwRGmiEEV0Q7zmZEF2mz7SsMZ56BJ4U+rj6vn6Zrb/p0xk2a4kK1l6d
-	 uILbXVAsRM3oiigJ7PbdxTyCz6OhpUS82NkAYnI6zbEJcnirMHz4D6v5XsdP6I45qn
-	 MMbcvz8ZmhSFY3jITAaxki2mLXOPk9ZksLkX+shs97VsKcn/jOWmji9arhuUMOTKTd
-	 nKJNf6sIB0WC/GwHFLm53hBvkXQww/NCiKiM8I8B68GZllVWRXZ3nJM4GplivGrgVH
-	 5XoDP6nHfcSEQ==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v3 RESEND] riscv: select ARCH_HAS_FAST_MULTIPLIER
-Date: Mon, 25 Mar 2024 18:58:23 +0800
-Message-ID: <20240325105823.1483-1-jszhang@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ufjKNn5a";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zXRMY86j"
+Date: Mon, 25 Mar 2024 11:12:37 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1711365158;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vRmVAtwJTzTwGTVTKkZMZKpyrGK3ZS86YzTVXgqpH5w=;
+	b=ufjKNn5aUQ/mTt/Che6qPAWzE9Y4We9NjtZeQl5ZHYr8fup/EVEGR33So/E/AAc0dZOght
+	+NsTBoi7KODfBLb4aDDk7r9Ol60pfaJJtuG5sZoYzOyhNZzJjsrWnOChcIYpdlTlSt5WX5
+	eCWMt5yNG+XsoLPexfH2wQDmk+ZvK2HwlEJ6UleosDsL3NoAyZJDzWMoFuzot8g/0GF+EY
+	JYVSbx3EmDWOwr5AXNrhZFqjtCAQrSCTMfNwHuaEMX86TmnwXgZLI/Z2SNPs4/lkN3UA/B
+	hYtZonH9KzYfI4ETdQ4+vqY7VF4MT6MyPz2DdlQkYlJ1VdJMsFziP21UiFo+4g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1711365158;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vRmVAtwJTzTwGTVTKkZMZKpyrGK3ZS86YzTVXgqpH5w=;
+	b=zXRMY86jspY49RJ+YT0zrEm68OWdowijsutkVjOszvPFfzuY1RDWz3sABfZgt/EuQTXl1i
+	dY70fZBqg0iIE1CQ==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/percpu] x86/percpu: Do not use this_cpu_read_stable_8() for
+ 32-bit targets
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Ard Biesheuvel <ardb@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240324212014.310189-1-ubizjak@gmail.com>
+References: <20240324212014.310189-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <171136515796.10875.14770508158283664685.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Currently, riscv linux requires at least IMA, so all platforms have a
-multiplier. And I assume the 'mul' efficiency is comparable or better
-than a sequence of five or so register-dependent arithmetic
-instructions. Select ARCH_HAS_FAST_MULTIPLIER to get slightly nicer
-codegen. Refer to commit f9b4192923fa ("[PATCH] bitops: hweight()
-speedup") for more details.
+The following commit has been merged into the x86/percpu branch of tip:
 
-In a simple benchmark test calling hweight64() in a loop, it got:
-about 14% performance improvement on JH7110, tested on Milkv Mars.
+Commit-ID:     b90169b42a6f49ff2fe2e4d4ed0bbcf17fb8f1bf
+Gitweb:        https://git.kernel.org/tip/b90169b42a6f49ff2fe2e4d4ed0bbcf17fb8f1bf
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Sun, 24 Mar 2024 22:19:45 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 25 Mar 2024 12:03:45 +01:00
 
-about 23% performance improvement on TH1520 and SG2042, tested on
-Sipeed LPI4A and SG2042 platform.
+x86/percpu: Do not use this_cpu_read_stable_8() for 32-bit targets
 
-a slight performance drop on CV1800B, tested on milkv duo. Among all
-riscv platforms in my hands, this is the only one which sees a slight
-performance drop. It means the 'mul' isn't quick enough. However, the
-situation exists on x86 too, for example, P4 doesn't have fast
-integer multiplies as said in the above commit, x86 also selects
-ARCH_HAS_FAST_MULTIPLIER. So let's select ARCH_HAS_FAST_MULTIPLIER
-which can benefit almost riscv platforms.
+this_cpu_read_stable() macro uses __pcpu_size_call_return()
+that unconditionally calls this_cpu_read_stable_8() also for
+32-bit targets. This usage is ivalid as it will result in the
+generation of 64-bit MOVQ instruction on 32-bit targets via
+percpu_stable_op() macro.
 
-Samuel also provided some performance numbers:
-On Unmatched: 20% speedup for __sw_hweight32 and 30% speedup for
-__sw_hweight64.
-On D1: 8% speedup for __sw_hweight32 and 8% slowdown for
-__sw_hweight64.
+Since there is no generic support for this_cpu_read_stable_8() for
+32-bit targets, the patch defines this_cpu_read_stable_8() to
+BUILD_BUG() when CONFIG_X86_64 is not defined. This way, we are
+sure that this_cpu_read_stable_8() won't actually be used for
+32-bit targets, but it is still defined to prevent build failure.
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
-Tested-by: Samuel Holland <samuel.holland@sifive.com>
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Link: https://lore.kernel.org/r/20240324212014.310189-1-ubizjak@gmail.com
 ---
- arch/riscv/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/percpu.h | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-Hi Palmer,
-
-Similar as the pgprot_nx patch, this patch missed two merge window too.
-Feel free to ask me questions if there's something need to be done from
-my side.
-
-Thanks
-
-since v2:
- - rebase on v6.8-rc1
- - collect Reviewed-by and Tested-by tag
-
-since v1:
- - fix typo in commit msg
- - add some performance numbers provided by Samuel
- - collect Reviewed-by and Tested-by tag
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index be09c8836d56..aba42b2bf660 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -23,6 +23,7 @@ config RISCV
- 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
- 	select ARCH_HAS_DEBUG_VM_PGTABLE
- 	select ARCH_HAS_DEBUG_WX
-+	select ARCH_HAS_FAST_MULTIPLIER
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_HAS_GIGANTIC_PAGE
--- 
-2.43.0
-
+diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+index f6ddbaa..1f6404e 100644
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -423,10 +423,6 @@ do {									\
+  * actually per-thread variables implemented as per-CPU variables and
+  * thus stable for the duration of the respective task.
+  */
+-#define this_cpu_read_stable_1(pcp)	percpu_stable_op(1, "mov", pcp)
+-#define this_cpu_read_stable_2(pcp)	percpu_stable_op(2, "mov", pcp)
+-#define this_cpu_read_stable_4(pcp)	percpu_stable_op(4, "mov", pcp)
+-#define this_cpu_read_stable_8(pcp)	percpu_stable_op(8, "mov", pcp)
+ #define this_cpu_read_stable(pcp)	__pcpu_size_call_return(this_cpu_read_stable_, pcp)
+ 
+ #ifdef CONFIG_USE_X86_SEG_SUPPORT
+@@ -495,6 +491,10 @@ do {									\
+ #define this_cpu_read_const(pcp)	({ BUILD_BUG(); (typeof(pcp))0; })
+ #endif /* CONFIG_USE_X86_SEG_SUPPORT */
+ 
++#define this_cpu_read_stable_1(pcp)	percpu_stable_op(1, "mov", pcp)
++#define this_cpu_read_stable_2(pcp)	percpu_stable_op(2, "mov", pcp)
++#define this_cpu_read_stable_4(pcp)	percpu_stable_op(4, "mov", pcp)
++
+ #define raw_cpu_add_1(pcp, val)		percpu_add_op(1, , (pcp), val)
+ #define raw_cpu_add_2(pcp, val)		percpu_add_op(2, , (pcp), val)
+ #define raw_cpu_add_4(pcp, val)		percpu_add_op(4, , (pcp), val)
+@@ -546,6 +546,8 @@ do {									\
+  * 32 bit must fall back to generic operations.
+  */
+ #ifdef CONFIG_X86_64
++#define this_cpu_read_stable_8(pcp)	percpu_stable_op(8, "mov", pcp)
++
+ #define raw_cpu_add_8(pcp, val)			percpu_add_op(8, , (pcp), val)
+ #define raw_cpu_and_8(pcp, val)			percpu_to_op(8, , "and", (pcp), val)
+ #define raw_cpu_or_8(pcp, val)			percpu_to_op(8, , "or", (pcp), val)
+@@ -561,6 +563,9 @@ do {									\
+ #define this_cpu_xchg_8(pcp, nval)		this_percpu_xchg_op(pcp, nval)
+ #define this_cpu_cmpxchg_8(pcp, oval, nval)	percpu_cmpxchg_op(8, volatile, pcp, oval, nval)
+ #define this_cpu_try_cmpxchg_8(pcp, ovalp, nval)	percpu_try_cmpxchg_op(8, volatile, pcp, ovalp, nval)
++#else
++/* There is no generic 64 bit read stable operation for 32 bit targets. */
++#define this_cpu_read_stable_8(pcp)    ({ BUILD_BUG(); (typeof(pcp))0; })
+ #endif
+ 
+ static __always_inline bool x86_this_cpu_constant_test_bit(unsigned int nr,
