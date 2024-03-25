@@ -1,213 +1,167 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12olkn2065.outbound.protection.outlook.com [40.92.21.65])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E21839E7
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 22:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.21.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2D879DB9
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 22:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711405662; cv=fail; b=KKROGFR117JJxYEtD+h6TyHhxwfA3TpT6A8T3NgC/CMtLeHfUUii7xuNSnA2YkMyWIfLaI918ad80HfTRjajgtE1iHydiZ8vKMqtVGju6b0mZu1IsA7Vq/Lz8JhZhURa3F7kTbPLAAs0PhCHVDfefSF/sX9cKtl0Gg67JqAWhD0=
+	t=1711405665; cv=fail; b=qHLNSDb1FYhNEkAp4jE+Ul8GEVuy8ruKMYhSCVsIenPnl1xo1+vdR+q5K4wqmYXwCn87Gz8145OL4nK47A0MDJhs9LbhLbdoWPkaFryLgPqxfpXmyIEyI8pMrZMqW5EogTabTNIhnZnjinxR3RFwUye0v3+p+JjJNiB6zDZVJSI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711405662; c=relaxed/simple;
-	bh=hibP0OhKNOHLEwnCp9cYZS8tVHfEKGtes0S/u2sLqH0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=kx5b2rTCesFhphCNJR2ZYhMOuloPK1I/MX7pcMrg7sCMjipi2L5YW6Mgzzhe5HeRAUeaqz/Y4K5NzCtoeVTvl36flg/J3Vrc4cuw3LKgm5HaL4wlTRRteTorrwWo+cwywaYGjKhIAMg9RmazUPXa4oxL6myMaVV9kJXMnYbDND4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=C+2KUOGg; arc=fail smtp.client-ip=40.92.21.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	s=arc-20240116; t=1711405665; c=relaxed/simple;
+	bh=DGGY+b1Ik7ExH648RwoVZml0FpCXCoSzYz63F3dGB8U=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OiEMryXHkEtnpndInLyx3H6o5v4SOliWwaQzbvFWKKKEwz1Bm1MG2l6soO/x0ohiUSF5TiNaiD1UbITpmgZwXkdt4LTqKDbl5g6OtEl3K4yj47v57KwZIlD84PWG/Q4qF00vDlijKwWnmmo4q5xZJhb2uzmuoEsv1UDCIuZARxI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GkaW2C2X; arc=fail smtp.client-ip=40.107.236.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="C+2KUOGg"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GkaW2C2X"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MBNBQ9A7CoubCC2eU7aLUzm8KYo4sPjKu51mxFb8tylmZ54WOdOWs2psI2zEwg4dYMv9h93MpVuAxArcp4rVCnJg2GDOs6ZSUvbCA8BioJ9mEnuFPjo0z8lKkAE1X6EYR7VQI4GnZjr/9BvCFc2aJVcizLv+u/gzGX4WfZdCKwGb8wfD4pJCfwJB5zmJU4VXh0qWwE+GhiGw+uEsL3uNrOTJTNVmqAcLrSuroxG18VTIumgB134qC7XxyRue73ad9yP5x06D3uvmAAkutlOT295RoKwTW3jS3uYZ9/TdD0Jybgn9m02umxeqGMIYzUlLcEIn2cd/Aqgbf8hHRnDuYw==
+ b=Wbofx6DfP7gg+GnKEwAZ8PmmWXC92JLxFe7eWTM6q4va4m9cyMWIYk5h1E32u4lrrFDjwL9+1O8QW9jSeuRrhOwLPp4/7Ili1budCWzjdhkkBF3MOmTK/vlM5w4IzNpXMC1Qe70eqBTC1Gt24039O8GqFSULUOy9jm0APLJNoBzsrKzeeT04K9kCksebOryKkfT+p5yUUANYpfWkKV7tabhBkofX3BzWV4ZZBd12upMjQk4VeR/Xl4PSuk105KrRaYPpWrFa60SqHiYxp6GJCS01T2s4FXMSNHzeinAjGKcoBoYrwbhHa4IxLNRKgXb8mE7DGKH9HF3lCud0hucwgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wAdAfsRGmJPlIWoczI02TsvI1DYvEMapRse2xhCRzGo=;
- b=MPNkBmGLYvmHXVk+takj9Uj8GrnuO56yZ427kL9NgmgwdaSRswIqxJQL+Zk0ZTQpbwCfpfthFaU4iIV4JFqWuQqvOSvIIifOWKTixQwzC5COVb30ERKRYM5YP8f6eZP/3TwiZdQXkbIlIEDWpPb35kNPhNBiau52SM79N2tM1v3tN2JzIXLgghrDeDw3F606sO4PRlBd9d7yNiS/P6bvJd/+5/+cOLxX0PTb3nJ8WuYDYVt0wT++13n0/tr71qtf/t1BqcxfzU9nCiHF7+6iY+TXxxJTo4c+fa6ETkOP50eOQyiYI1UqfubVsmk69DO0OFq89oT78uDkFo3egGjoQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=DUFekUHq3ri6fK8WX25LSjrtTNUyC2BaVsA3y2IVSSs=;
+ b=PbacovLkcaF0rWEpDa/eAZ3iwkLXAl0zBv3R6pJMQI8gY1prkXBeMlWRDup/UT2q+4OpZN/rBjwAf5588xrLBE0BsSi0NePiYP3+HdDLrb4BLtVo5vft/VREjb9R0bpjncC+jsN5pvWnKtv5i0rUNN3xhN3TVDdJsZGSnpFMyjQzAombZC57NKU3apXRLUsTz0TxEEgmHbWR3P2f3S1Kn0KugW8t8bbiaRsFfq9QbZMgmAeQ9uS52oS3k3NBm9rC4tG6EjgHUCK5fMIJLeRBVQhS7PeWSQ3G3rnmwVo+RHjSicAcaVBZDLP1gjPs4VxLwqmbUYwfLxlB8UAwm2WCbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wAdAfsRGmJPlIWoczI02TsvI1DYvEMapRse2xhCRzGo=;
- b=C+2KUOGg37GhBcvWTBpLv7wqZuLB7NIRNqTpPIRYX9jktAXvHbiblbSgUjf9TU7yDU8y/qvVFjJ8ACTI2KQSGAFq1DdHkK9HxM5MigFxrds8GgiBYIuOtYyleOEhtFcRmepzpdVC7G6Bi+EitCKpqChGVFzYi3VVGQVpo626WyUIXIbxJlyDflsh0zlXQQoYjU9tdD0dXszazcZ8R09O04UIk8KjwbaJwquHE9hbSAdRqL8Z4IMQQSbWteqCYpDwbcNUDIzVOYwSm28K4wv5GPVL/enxFzXExNvKyhVr1cmt8wP5lFNCDBFwheZL1jny+AXrZx05vktGzQMWvmg/pA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA1PR02MB8557.namprd02.prod.outlook.com (2603:10b6:806:1f8::14) with
+ bh=DUFekUHq3ri6fK8WX25LSjrtTNUyC2BaVsA3y2IVSSs=;
+ b=GkaW2C2Xxv1z3AjLtNPo4CL7F+Mq+/FRY/foYrTahsS0MeSjn8S2zczdqXIznwNTNCZ3p149ExxSWNHv/IQVh0dA0bixgjlLiIgIQQf3LVCq9+nQuMKLyYX0b24l5IQdWKNByaLHH0ohR8ug5sFQfYbOt+1K/GxIuiKZqZuGQAY=
+Received: from BYAPR08CA0014.namprd08.prod.outlook.com (2603:10b6:a03:100::27)
+ by MW3PR12MB4378.namprd12.prod.outlook.com (2603:10b6:303:52::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
- 2024 22:27:37 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::1276:e87b:ae1:a596]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::1276:e87b:ae1:a596%5]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
- 22:27:37 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Xi Ruoyao <xry111@xry111.site>, Dave Hansen <dave.hansen@linux.intel.com>
-CC: Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-	"x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] x86/mm: Don't disable INVLPG if "incomplete Global
- INVLPG flushes" is fixed by microcode
-Thread-Topic: [PATCH v3] x86/mm: Don't disable INVLPG if "incomplete Global
- INVLPG flushes" is fixed by microcode
-Thread-Index: AQHafvtoA+0/e6KloUSoqoP9U8FJHLFJBtDQ
-Date: Mon, 25 Mar 2024 22:27:37 +0000
-Message-ID:
- <SN6PR02MB4157C6837815BDB62EB9ED91D4362@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240325212818.125053-1-xry111@xry111.site>
-In-Reply-To: <20240325212818.125053-1-xry111@xry111.site>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [WZzX2ApVjAx3IF+OMonfKLqh1LQmXTJi]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA1PR02MB8557:EE_
-x-ms-office365-filtering-correlation-id: 0749a7fd-db1a-4745-5a1f-08dc4d1ac65b
-x-ms-exchange-slblob-mailprops:
- WaIXnCbdHrNLYEJ5HghreUmTctoVX046w9EfOeOTF0wdNOjo7vac7MMs7IE8VGBUlx7U2IUxJhMoV+SmLFa/jgkBXkUOJB5gYNXyZoPl0BFIrT4I3OOioc7peHFS5GrICoCTRoD1/ekM+IDHyRw0sPZ0bB+pmoepX3l0SsU7cjGUncGJ0jfnLEVEIr8vr7SKwBy5XnOaNXqQkHRTRh5K06WmnWEkkRXRaxIhmRb3fohwo1pJdZZ1rjTe8ua7ZU5yyiM2ecUWqabqWkyzoYKfJelXAyR0hGQhgKIOPcwkj3dEdur1/Q8V2Rjh4d2kEnZvjRoEXzKXv1XDlIUaR6dxiHkJbPejHSFbDXoMN5UOoJLfSvMgqp+O6wapx0tP/WK+rwHxpDfdSNOomIbhbAjWzWV+6bTBwsHOHY52GUkx78UdNcm8aiIBjEb7Py9dpV7+qFlvuGfBpcNfbmGsvOomtiCiX1cTYQ5rsFEnzyyIWskSk/yxwS1nfhw3ybjUg4R19ItAqssfgu7hL/iBZLY5hSydyg/755N4pik6xRMFi0Z/AZWsHS/22gkuGHeKMGz7TXNwoqMn1oLaXwEIYgb5IcFK8s4lJGqYZnNZD0VzPReVLMkAbvBscCrZW02SsN+XoZEBj8TLFgpouhKpUBwl8rYAWbHWcrXyTRnTtqZY/Qz9bzO9emBGCT8eznmRICo9R5L0x0jyscntRX7jD6+Nh5U6KSUbC2IvKfJ3oPJzjFGb42PxrbfA0j2htT4DOf+tBhzgZDbPxNs=
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- JNo0iCgeDxkkaiG30dpDLU3JFBI0rt2YEqxWpmjJrsK9LqTmkMnSqs0uG8koMFZIxXA/uLDGaiaRzunr4JGdAFIDCD8+V3rSaQlaVKin/GNoOmOIPycXmdoxkL3xijg7+whK622U/EPzppPqSbD7nQJtFvsOiTsrvvgwEW24lH/SIkN7kjmyrtWmpb++uIsNGYYG42+5Rno1vdkBn+7ZXrjEJDytBiM7pIc4CAuqZq0jYofh8Ad5aajpuv4ehn1i7Gh6BvdRKDuaUOo58Wd/RPMN9g8I0xLk67fD5J66gJhm5TV3jCi469z6euRcAw4NmTY3AqhABgvryo31FY5zGCajQQiyD6a2Xnz3S+YPVjFiQ2g+zqc3aIiSFiiorvsFdFToQzb0y6QPu4frxLv/ZoBUZOqYaKaiLtagiqu+XGIIzsQ+1mjNF2nQuwaAHkVAzpQDPCnQNmd2EpyaXj0bClcirHYgK9+IP3qM9ayIjen0aMukIbFYlkbSEzqsXNmruXHTV+D8TGRHpYPMU7pmnz/9IxLQWWqDfV4ZHQ6K735K+DGHo1JLaYgexUOhgVMc
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?re6VW2oz+luO9/VcmuAuch3KmNrcWieTGi2zNnqVv+AuK3g9jUNRWfb/Algy?=
- =?us-ascii?Q?s4jJdExPU2YgM/ORWFm5KHJMLUdf6GDDsyIBR+0g/tJsryfLxEIsP8CEUJxH?=
- =?us-ascii?Q?+FO6+jxRtAsCeufPzMTtyqgY1BkBgScCs86HDh0cnXqt0xefxNZSTY+LlVT4?=
- =?us-ascii?Q?cw9FAEQtWT7jE0wR6DBGCj8pv9mECEUcTYvNSo4jM+Rq8e19NUvTJewNPCR7?=
- =?us-ascii?Q?IhELyzY8N9CcxjHd0f3gfxS/TJuUErdnWdwxams8X9hI3iwdgFanFyxnfUHC?=
- =?us-ascii?Q?pefK+hQ6JZVyoChqgcIMd3rrU3QON0wYaRCq7fjmM8Tp7vaEi0+W2vwjoix/?=
- =?us-ascii?Q?XXLmBiCi7xGKk6R1Ly0UAifuMnsLgODJ8LQ3f3gzLxOizq0xo2A+dgePCi63?=
- =?us-ascii?Q?15neXP26w8w5Mrpyiznc3dAZPnOQ46ZW8sGMZkbfOlouVkXGBY2DgSmdzUZQ?=
- =?us-ascii?Q?Cg4TasOH3nlCU1ssJ2V2P+W1lA9nUW1N1eFFXvTrugR9dBmKeS2yGbKUpCSH?=
- =?us-ascii?Q?K79rZFvvZnK5bqyh0l/dd6xOZXUaoc0vS1mvbFuUt/YT9tPxIVI2/3Wjfxmx?=
- =?us-ascii?Q?pWUlP5fTkK/Ijh7ImOscl4hc22AOdOc0op0MqYNmF7T63/gqemktpUsVrmvt?=
- =?us-ascii?Q?/zefz5GHuXkmKX5q69MgDJOKJTWavhUJ6aBYJJUTJu63UzYQX0Rzd+byP2Hw?=
- =?us-ascii?Q?7pKrEF0BIo5tkkU9fp5b5gCHx32kby/QEqD2VFSC3AFdH/zS0dZjYqXgjz9k?=
- =?us-ascii?Q?gnGAwmXfuPER9y8VE2hJNw5+lKtR1/G7cBwWGy89rxSsfu3cyYCQ8vbtytXA?=
- =?us-ascii?Q?xZam0AxAwdfxaIOScZfCkKM30//K5sdycI0ValfFRRAF8lMmgjh2DoSA63QG?=
- =?us-ascii?Q?hUrPQ1dUvFdORdCdNXlSoanSTd62+hRLoRhFQCBXBzMyT7ZHLFQA0kUe6Wik?=
- =?us-ascii?Q?l/asxRjE62W3BDjJ/cFGf6+l9Za+Gov5gLE0GXXerWjLIfCXsa33Thso5TZJ?=
- =?us-ascii?Q?1rLaMqvAvg/ub29PLiQiZyIbB3fKA88iRy1IcF0ETQfOkVb+t2SpRud5crY6?=
- =?us-ascii?Q?RH/HjuyNk0uGSWNW00WpLtwQLvKC3WEYwn/PZFId/zwwCy0O5lSi1zpIWaNU?=
- =?us-ascii?Q?XM0eX53YpbyRoJAj/aGDdaoQ6oSN61ZhFp4b1sl+wB+27Y5BvbbkqBHdMXnf?=
- =?us-ascii?Q?Gvqv3sMgrK7txB0E6xgOcAGX+IAlCQFqDZ5FEg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Mon, 25 Mar
+ 2024 22:27:41 +0000
+Received: from SJ1PEPF00001CE0.namprd05.prod.outlook.com
+ (2603:10b6:a03:100:cafe::bf) by BYAPR08CA0014.outlook.office365.com
+ (2603:10b6:a03:100::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.13 via Frontend
+ Transport; Mon, 25 Mar 2024 22:27:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CE0.mail.protection.outlook.com (10.167.242.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7409.10 via Frontend Transport; Mon, 25 Mar 2024 22:27:41 +0000
+Received: from tlendack-t1.amdoffice.net (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 25 Mar 2024 17:27:40 -0500
+From: Tom Lendacky <thomas.lendacky@amd.com>
+To: <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+	<linux-coco@lists.linux.dev>, <svsm-devel@coconut-svsm.dev>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, "Peter
+ Zijlstra" <peterz@infradead.org>, Dan Williams <dan.j.williams@intel.com>,
+	Michael Roth <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>
+Subject: [PATCH v3 08/14] x86/sev: Provide guest VMPL level to userspace
+Date: Mon, 25 Mar 2024 17:26:27 -0500
+Message-ID: <b50936fc4dc0ca96773e2dab9582fb0d760424e7.1711405593.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <cover.1711405593.git.thomas.lendacky@amd.com>
+References: <cover.1711405593.git.thomas.lendacky@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0749a7fd-db1a-4745-5a1f-08dc4d1ac65b
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2024 22:27:37.1631
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE0:EE_|MW3PR12MB4378:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22961b62-8807-4b65-c0ef-08dc4d1ac8d5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	G3b0Xlvsz8J3p2ZW05hcY797clPm1oiqeauQEHO8/EbTgBD0ft09Eyly6jTiV05uuCATrrJF1W3cin9XrTIeUz9hWnIqo8VLJiQyj5i1jSXwbHu72JwQroY0YE4+pU20Gkmns2IIVtcZlMwkmm1Kd30q53SB+EC+dP1G6DdSp8/agi9H82qvYWcpiMGTg0gBCeaF+pZTXK3k+FOratwLy7W07GEigjkfDsrJFFirCL4Gx5WuHoFfn5UCyG9/Fh36zmBWNdVn4Km4AQHE3g2bdjK/R55sz49DwHrbJ6tV1F0QMojKQMegv7/EvQ1L8y3s6czlw6FJkvq+T1ko8iYRRVUuKPE7oAvvycMlmcDgdSyrRZCzgNYT3byOXnuh9ajiWUzE2Hy6qOAkF3iliSHbAInApWC7mgAISTfzp5zhjd6569Yv7vj7/cN+dPMj38vM5O4CqpERkn4eOLpGmN8nCejNwYaal42QNH3Sjpb2PYPO0yMY5q/1asOD5T+6GfIJQietTAkQSvGdfjPYPt4AEQkDWsQoVjaL/HCGdq8x5EF9vAJ2CmNXQsR6DZsoF9SH9Vy0usnTCgp4BbzxbPSxDsNa89XzLWV+Lh6JN6e6k1TbLRJQvTv4EM5LKwj22J9wUcGrjyl0rFz1z6We4bxyXSljX3BDvte6cmNdKjKv0Ij3mmsqvU9A8iogIAvpKmqMqPNgb1B5wOvw+pvu6R4JutwF9ceAzHEqHNrMVLRVFbTpk0NlBHTfAKCDS+RmGcbk
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 22:27:41.2614
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB8557
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22961b62-8807-4b65-c0ef-08dc4d1ac8d5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE0.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4378
 
-From: Xi Ruoyao <xry111@xry111.site> Sent: Monday, March 25, 2024 2:28 PM
->=20
-> Per the "Processor Specification Update" documentations referred by the
-> intel-microcode-20240312 release note, this microcode release has fixed
-> the issue for all affected models.
->=20
-> So don't disable INVLPG if the microcode is new enough.
->=20
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->  arch/x86/mm/init.c | 37 +++++++++++++++++++++++++------------
->  1 file changed, 25 insertions(+), 12 deletions(-)
->=20
-> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-> index 679893ea5e68..1a7d6a61a4cb 100644
-> --- a/arch/x86/mm/init.c
-> +++ b/arch/x86/mm/init.c
-> @@ -261,33 +261,46 @@ static void __init probe_page_size_mask(void)
->  	}
->  }
->=20
-> -#define INTEL_MATCH(_model) { .vendor  =3D X86_VENDOR_INTEL,	\
-> -			      .family  =3D 6,			\
-> -			      .model =3D _model,			\
-> -			    }
-> +#define INTEL_MATCH(_model, _fixed_microcode)	\
-> +    { .vendor		=3D X86_VENDOR_INTEL,	\
-> +      .family		=3D 6,			\
-> +      .model		=3D _model,		\
-> +      .driver_data	=3D _fixed_microcode,	\
-> +    }
-> +
->  /*
->   * INVLPG may not properly flush Global entries
-> - * on these CPUs when PCIDs are enabled.
-> + * on these CPUs when PCIDs are enabled and the
-> + * microcode is not updated to fix the issue.
->   */
->  static const struct x86_cpu_id invlpg_miss_ids[] =3D {
-> -	INTEL_MATCH(INTEL_FAM6_ALDERLAKE   ),
-> -	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L ),
-> -	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT ),
-> -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE  ),
-> -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P),
-> -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S),
-> +	INTEL_MATCH(INTEL_FAM6_ALDERLAKE,	0x34),
-> +	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L,	0x432),
-> +	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT,	0x15),
-> +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE,	0x122),
-> +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P,	0x4121),
-> +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S,	0x34),
->  	{}
->  };
->=20
->  static void setup_pcid(void)
->  {
-> +	const struct x86_cpu_id *invlpg_miss_match;
-> +
->  	if (!IS_ENABLED(CONFIG_X86_64))
->  		return;
->=20
->  	if (!boot_cpu_has(X86_FEATURE_PCID))
->  		return;
->=20
-> -	if (x86_match_cpu(invlpg_miss_ids)) {
-> +	invlpg_miss_match =3D x86_match_cpu(invlpg_miss_ids);
-> +
-> +	/* The hypervisor may lie about the microcode revision, conservatively
-> +	 * consider the microcode not updated.
-> +	 */
+Requesting an attestation report from userspace involves providing the
+VMPL level for the report. Currently any value from 0-3 is valid because
+Linux enforces running at VMPL0.
 
-Nit:  Except in the "net" subtree, the proper format for multi-line comment=
-s
-is this:
+When an SVSM is present, though, Linux will not be running at VMPL0 and
+only VMPL values starting at the VMPL level Linux is running at to 3 are
+valid. In order to allow userspace to determine the minimum VMPL value
+that can be supplied to an attestation report, create a sysfs entry that
+can be used to retrieve the current VMPL level of Linux.
 
-	/*
-	 * The hypervisor may lie about the microcode revision, conservatively
-	 * consider the microcode not updated.
-	 */
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+---
+ arch/x86/kernel/sev.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-> +	if (invlpg_miss_match &&
-> +	    (boot_cpu_has (X86_FEATURE_HYPERVISOR) ||
-> +	     invlpg_miss_match->driver_data > boot_cpu_data.microcode)) {
->  		pr_info("Incomplete global flushes, disabling PCID");
->  		setup_clear_cpu_cap(X86_FEATURE_PCID);
->  		return;
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index 7f399ea87a3c..b027b00e315d 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -2527,3 +2527,40 @@ void __init snp_remap_svsm_ca(void)
+ 	/* Update the CAA to a proper kernel address */
+ 	boot_svsm_caa = &boot_svsm_ca_page;
+ }
++
++static ssize_t vmpl_show(struct kobject *kobj,
++			 struct kobj_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "%d\n", vmpl);
++}
++
++static struct kobj_attribute vmpl_attr = __ATTR_RO(vmpl);
++
++static struct attribute *vmpl_attrs[] = {
++	&vmpl_attr.attr,
++	NULL
++};
++
++static struct attribute_group sev_attr_group = {
++	.attrs = vmpl_attrs,
++};
++
++static int __init sev_sysfs_init(void)
++{
++	struct kobject *sev_kobj;
++	int ret;
++
++	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
++		return -ENODEV;
++
++	sev_kobj = kobject_create_and_add("sev", kernel_kobj);
++	if (!sev_kobj)
++		return -ENOMEM;
++
++	ret = sysfs_create_group(sev_kobj, &sev_attr_group);
++	if (ret)
++		kobject_put(sev_kobj);
++
++	return ret;
++}
++arch_initcall(sev_sysfs_init);
+-- 
+2.43.2
 
-Modulo the nit above,
-
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-
-I'm good with this. Losing PCID has definite performance impact,
-but I lean toward being conservative when we can't verify the
-microcode version.
-
-I'd also be interested in other perspectives.  :-)
-
-Michael
