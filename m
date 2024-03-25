@@ -1,325 +1,338 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199C713E040
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924874691;
+	Mon, 25 Mar 2024 17:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711386863; cv=none; b=TEQDtR5g2Ti2xmWFYLRsGPUaEEkdpl0Mspf0OK4MhSvr8fdU0hKZsBkJmUftjhoCEhWIlV+umxThBnPCPUJ0K5/NWdgkC3DGRBgNy1cWywZCBZkhKGCd5SCJmxvj0PZ3fxUiSH9S11dQZkDXRJLiCSXCLh9nL8UxTiS9GMZMexw=
+	t=1711386957; cv=none; b=Ysj5cHrtqCQL6kgD4wjyOTvtPewq1Ly9mVoOwIu0LWw21K9ra0vuvgcL37nKfExzuhjXeRMz3rYK+iQ7Tjg9nUgdHn1afr81Kn/wBfqHxFw8/OIXYGqVdLNJC5xSYndpFuJxKliWM/+Xl8Pz7tI+7077yw+1fhsfelvs7czp6uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711386863; c=relaxed/simple;
-	bh=iPw0XrxbGujTBmrqCR3womr127ESmPQ9iYgG7xlX2ek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nQi3PcM0/GXN9aHOeKTMQdQn2zI7IGbYW56Tqf71vFnbHG82fQtVHV2F1xeePjbRcAVA0itSMWuJuwpiPH2rQnT3JVaav62KRjlAyl1DPrr+qjNnc24H3ULCgE5sC4ZQ2BYv7zrYCpgAD5yXzIeQRjmAdg13OMww394U9j+Exc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L9PMTRzo; arc=none smtp.client-ip=209.85.210.171
+	s=arc-20240116; t=1711386957; c=relaxed/simple;
+	bh=j8p3im1FoDBv1nShbdEtREoAUJDqe3kxTZ7MnLlwcnA=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IsV6WDe4LrVsSmu9cdOCIZ8rXokVx4qpf3n8rGIemyCGFLqrrTCqXpcqnE6cazMF4kJHNk/gQulTiXwQ6YJZP8lXK2UCyBpvzZ9w5r8LhegCjIfSxCZ9RqQNDcL/dkXBfmu0vzd4iE2G/E8diuj0wAWPxjtONXecK5AxQiG2xmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bjo0NWyx; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L9PMTRzo"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e6c0098328so3054255b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:14:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjo0NWyx"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-341b01dbebbso3323228f8f.0;
+        Mon, 25 Mar 2024 10:15:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711386861; x=1711991661; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bxkVFzSJVoLggCSIdplAlTRqteX3zHBKMrMrFYGST98=;
-        b=L9PMTRzoDJZN3HSwEq+F8FTMEIFQ8bq011jjck3UWbdMWvbKZ1bwEnR+LKRcuRxvcn
-         nRu60PfgSgtwU8iYf4Bk6jYt8ZI/JAQTR0hQERuEzgtb2U+wQY6L90XagPRjx/OM70VX
-         MhSjLt4gb8NRbbqyRVqxOMGKakqxbHDGIvHW8XjOA2wTeC3fpcrJNl7trZNWZLTjiOwD
-         uYx+AmgPsut+lUHc2fuijfPCyIssJrjEn1pk/KxdsqOSFeYik1OTqlGZQvgyCFHGrWUG
-         NzPfJQSUoMJBpSuHcskn3aHmUEJ7FnV9XuKUg+H/a3W4aWZ4oh/HXPpOyqyY//GqDdMM
-         kruQ==
+        d=gmail.com; s=20230601; t=1711386954; x=1711991754; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3JcP9Ixxq7VYfRSOZNRDlURNxIkwxj5RGFVViXNJk14=;
+        b=bjo0NWyxH7q85db171Isa93Z+W5dY1tz4V/cYiYSzTGAA3NYU2Fa1/+cXTu9uv93g1
+         +idwvP9IYCWqJBZPNSBcBTsZzzm+TrTMeseFhtgfiBv/BD7SBxmRR0aKzOQnaO68nD0G
+         LHj92c8unzYh1o5HREl8IEB8ToYEpwzL1gmRWarV3XYAtSWI+iAx1+v3r6clnH9Ppmcx
+         zkvL49m41/dYnQuIjbh0JY9YcutI3O/3ePxOZWDNAC9OBt1IhJDMVnfLPnkXIjfNrRRk
+         3kD5b1OhbiJgD51Bn832LDtEczgseXbz+pkIIiq7lOS/cw0vZwVcPIOHZQv9FZgnp2jv
+         NULA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711386861; x=1711991661;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bxkVFzSJVoLggCSIdplAlTRqteX3zHBKMrMrFYGST98=;
-        b=k5ANQDIAI7APOaABOKfWuG7jTuPD8CiT6UKgcexaHKDg0OIKVCMUGLpw8WbL9tjun+
-         7hpv3bCyZuzrWPhiMk0wiRp5FL9Q1tPyoioJx7SBZmHS/yXVcYrkQt5TmAF0n7/MV7Mu
-         lu/SeMnamZf1mbBgabZIsoAineliu71kCp7FcQ4csUrRn/3iKylLhDrP47Su3aE/1Nt/
-         KPtsusm6flT2maq8c3bcx3CZLj7tP0IFkb9V3s9moQ6FzHtQCvZ7CuAflBg0EUiS96WE
-         NQxWYnOLJ/PKEqOevog7igDIcEjAtvILZrJAsdpqM83OYn/8sxkCPs4clbRRehj3sKw3
-         NOOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUk7YKmDzLleu82jRSi3h/+ug6ZevKyNnMF2HKxnE+s+PM9z5QQR5QYaOK6TddoAhc2lI02e146GeLVjFsbtHHY1/Xbc9ytgTp0Lqam
-X-Gm-Message-State: AOJu0Yzr6NOXQehdZfFakvL8kuEnu1wrd5JjYfWQ9BGd/wGjqIp50cIz
-	z1bkEPUuVoaGMVgLGqa6ZdNnChOvYqs1KhHAN7blKdHq2EY+6y3P
-X-Google-Smtp-Source: AGHT+IHqt40rBnvxQlAYOk3f3IH9W03fIAB5lQLk0ER2F//3YE3Sl2ab/cKHdSL/dz1j/62/GlTTNw==
-X-Received: by 2002:a05:6a00:399f:b0:6e6:8b59:1bad with SMTP id fi31-20020a056a00399f00b006e68b591badmr8163470pfb.25.1711386860921;
-        Mon, 25 Mar 2024 10:14:20 -0700 (PDT)
-Received: from KASONG-MB2.tencent.com ([115.171.40.106])
-        by smtp.gmail.com with ESMTPSA id r16-20020a63d910000000b005dc5129ba9dsm6001812pgg.72.2024.03.25.10.14.18
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 25 Mar 2024 10:14:20 -0700 (PDT)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH v2 4/4] mm/filemap: optimize filemap folio adding
-Date: Tue, 26 Mar 2024 01:14:05 +0800
-Message-ID: <20240325171405.99971-5-ryncsn@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240325171405.99971-1-ryncsn@gmail.com>
-References: <20240325171405.99971-1-ryncsn@gmail.com>
-Reply-To: Kairui Song <kasong@tencent.com>
+        d=1e100.net; s=20230601; t=1711386954; x=1711991754;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:to:from:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3JcP9Ixxq7VYfRSOZNRDlURNxIkwxj5RGFVViXNJk14=;
+        b=HSoIzDT7x4pXNfpxXhBOp3EyZP9bFzSP/LsGGXp+yxVoAbzW52GNN+lnVKoOuR0kyL
+         kQM42SEVDkb/2PH5ipx26DJWg0QSraPhyVbSIjOG+B/Kji8RUREAaIGgvsB9Q4zQQ9vA
+         MRArvuLoo/2iqgpXS5XVMPM+ViqKw09XehrdbeyvzT5rwu42Wxt1naACfbYXtoCYmJ9i
+         ql6m8bwxMIomAxmBHoFML+VGIX2mRap7OUBjGBlcEzkiROv+I1FssQWYD4Q4Md1wU9ql
+         LgUyO5hryw2zpcYFCYZgE1UqLcB3T4CC5ORtgAk6WtVSkjReVdAWj1Szki0tjMhdEW1W
+         I07w==
+X-Forwarded-Encrypted: i=1; AJvYcCVLWvTwHRaZKgFPBixliisSuz2bRprHJB1kd7LObVA4yewAfy1zg67fz39V8FKcSmHyQZlIN7dJul7fWZnY4ZNIix8bf1KS1CelEQbvsKUzY7D5s6kZ+zJF6kH3N+p0yq9u
+X-Gm-Message-State: AOJu0YweyDK+bl/0pKBhSUudTXyw9koD8gQoF14hTNhRbue5qt0Cvb2U
+	06/n5+1p6IzoVXiNvKqW9twCPidEmEEirg1uQZwnJWm/loO1imh3
+X-Google-Smtp-Source: AGHT+IE42lV8EQMw1EFXIiTWcsfY5Tdd8VoYbW7AxgP48DLUyoyJH4apdN/DLdWNdOb2U1bUlQzVqw==
+X-Received: by 2002:a5d:4fc2:0:b0:33f:84a1:7eb8 with SMTP id h2-20020a5d4fc2000000b0033f84a17eb8mr6124207wrw.1.1711386953673;
+        Mon, 25 Mar 2024 10:15:53 -0700 (PDT)
+Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
+        by smtp.gmail.com with ESMTPSA id x3-20020adfcc03000000b0033e41e1ad93sm9908955wrh.57.2024.03.25.10.15.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2024 10:15:53 -0700 (PDT)
+From: Puranjay Mohan <puranjay12@gmail.com>
+To: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, "Eduard
+ Zingerman" <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, "KP
+ Singh" <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Luke Nelson
+ <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, bpf@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Pu Lehui
+ <pulehui@huaweicloud.com>
+Subject: Re: [PATCH bpf-next v2 1/2] bpf,riscv: Implement PROBE_MEM32 pseudo
+ instructions
+In-Reply-To: <875xxafe33.fsf@all.your.base.are.belong.to.us>
+References: <20240325155434.65589-1-puranjay12@gmail.com>
+ <20240325155434.65589-2-puranjay12@gmail.com>
+ <875xxafe33.fsf@all.your.base.are.belong.to.us>
+Date: Mon, 25 Mar 2024 17:15:51 +0000
+Message-ID: <mb61ple66mdvc.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Kairui Song <kasong@tencent.com>
+Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
 
-Instead of doing multiple tree walks, do one optimism range check
-with lock hold, and exit if raced with another insertion. If a shadow
-exists, check it with a new xas_get_order helper before releasing the
-lock to avoid redundant tree walks for getting its order.
+> Puranjay Mohan <puranjay12@gmail.com> writes:
+>
+>> Add support for [LDX | STX | ST], PROBE_MEM32, [B | H | W | DW]
+>> instructions.  They are similar to PROBE_MEM instructions with the
+>> following differences:
+>> - PROBE_MEM32 supports store.
+>> - PROBE_MEM32 relies on the verifier to clear upper 32-bit of the
+>>   src/dst register
+>> - PROBE_MEM32 adds 64-bit kern_vm_start address (which is stored in S7
+>>   in the prologue). Due to bpf_arena constructions such S7 + reg +
+>>   off16 access is guaranteed to be within arena virtual range, so no
+>>   address check at run-time.
+>> - S7 is a free callee-saved register, so it is used to store kern_vm_sta=
+rt
+>> - PROBE_MEM32 allows STX and ST. If they fault the store is a nop. When
+>>   LDX faults the destination register is zeroed.
+>>
+>> To support these on riscv, we do tmp =3D S7 + src/dst reg and then use
+>> tmp2 as the new src/dst register. This allows us to reuse most of the
+>> code for normal [LDX | STX | ST].
+>
+> Cool to see the RV BPF JIT keeping up with x86 features! ;-) Nice work!
 
-Drop the lock and do the allocation only if a split is needed.
+It is my self proclaimed duty to make sure that all 64-bit JITs have
+feature parity. :D
 
-In the best case, it only need to walk the tree once. If it needs
-to alloc and split, 3 walks are issued (One for first ranged
-conflict check and order retrieving, one for the second check after
-allocation, one for the insert after split).
+>
+> A couple of minor comments below.
+>
+>> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+>> ---
+>>  arch/riscv/net/bpf_jit.h        |   1 +
+>>  arch/riscv/net/bpf_jit_comp64.c | 193 +++++++++++++++++++++++++++++++-
+>>  arch/riscv/net/bpf_jit_core.c   |   1 +
+>>  3 files changed, 192 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/riscv/net/bpf_jit.h b/arch/riscv/net/bpf_jit.h
+>> index f4b6b3b9edda..8a47da08dd9c 100644
+>> --- a/arch/riscv/net/bpf_jit.h
+>> +++ b/arch/riscv/net/bpf_jit.h
+>> @@ -81,6 +81,7 @@ struct rv_jit_context {
+>>  	int nexentries;
+>>  	unsigned long flags;
+>>  	int stack_size;
+>> +	u64 arena_vm_start;
+>>  };
+>>=20=20
+>>  /* Convert from ninsns to bytes. */
+>> diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_co=
+mp64.c
+>> index 1adf2f39ce59..0c0588e327af 100644
+>> --- a/arch/riscv/net/bpf_jit_comp64.c
+>> +++ b/arch/riscv/net/bpf_jit_comp64.c
+>> @@ -255,6 +255,10 @@ static void __build_epilogue(bool is_tail_call, str=
+uct rv_jit_context *ctx)
+>>  		emit_ld(RV_REG_S6, store_offset, RV_REG_SP, ctx);
+>>  		store_offset -=3D 8;
+>>  	}
+>> +	if (ctx->arena_vm_start) {
+>> +		emit_ld(RV_REG_S7, store_offset, RV_REG_SP, ctx);
+>> +		store_offset -=3D 8;
+>> +	}
+>>=20=20
+>>  	emit_addi(RV_REG_SP, RV_REG_SP, stack_adjust, ctx);
+>>  	/* Set return value. */
+>> @@ -548,6 +552,7 @@ static void emit_atomic(u8 rd, u8 rs, s16 off, s32 i=
+mm, bool is64,
+>>=20=20
+>>  #define BPF_FIXUP_OFFSET_MASK   GENMASK(26, 0)
+>>  #define BPF_FIXUP_REG_MASK      GENMASK(31, 27)
+>> +#define DONT_CLEAR		17	/* RV_REG_A7 unused in pt_regmap */
+>
+> Hmm, so this is just a a sentinel node, right? Isn't it more robust to
+> use, say REG_ZERO which will never be used? Maybe REG_DONT_CLEAR_MARKER
+> or smth, so it's obvious how it's used?
 
-Testing with 4K pages, in an 8G cgroup, with 16G brd as block device:
+Yes, I agree, RV_REG_ZERO would be the best thing to use here.
 
-  echo 3 > /proc/sys/vm/drop_caches
+>
+>
+>>  bool ex_handler_bpf(const struct exception_table_entry *ex,
+>>  		    struct pt_regs *regs)
+>> @@ -555,7 +560,8 @@ bool ex_handler_bpf(const struct exception_table_ent=
+ry *ex,
+>>  	off_t offset =3D FIELD_GET(BPF_FIXUP_OFFSET_MASK, ex->fixup);
+>>  	int regs_offset =3D FIELD_GET(BPF_FIXUP_REG_MASK, ex->fixup);
+>>=20=20
+>> -	*(unsigned long *)((void *)regs + pt_regmap[regs_offset]) =3D 0;
+>> +	if (regs_offset !=3D DONT_CLEAR)
+>> +		*(unsigned long *)((void *)regs + pt_regmap[regs_offset]) =3D 0;
+>>  	regs->epc =3D (unsigned long)&ex->fixup - offset;
+>>=20=20
+>>  	return true;
+>> @@ -572,7 +578,8 @@ static int add_exception_handler(const struct bpf_in=
+sn *insn,
+>>  	off_t fixup_offset;
+>>=20=20
+>>  	if (!ctx->insns || !ctx->ro_insns || !ctx->prog->aux->extable ||
+>> -	    (BPF_MODE(insn->code) !=3D BPF_PROBE_MEM && BPF_MODE(insn->code) !=
+=3D BPF_PROBE_MEMSX))
+>> +	    (BPF_MODE(insn->code) !=3D BPF_PROBE_MEM && BPF_MODE(insn->code) !=
+=3D BPF_PROBE_MEMSX &&
+>> +	     BPF_MODE(insn->code) !=3D BPF_PROBE_MEM32))
+>>  		return 0;
+>>=20=20
+>>  	if (WARN_ON_ONCE(ctx->nexentries >=3D ctx->prog->aux->num_exentries))
+>> @@ -622,6 +629,9 @@ static int add_exception_handler(const struct bpf_in=
+sn *insn,
+>>=20=20
+>>  	ex->insn =3D ins_offset;
+>>=20=20
+>> +	if (BPF_CLASS(insn->code) !=3D BPF_LDX)
+>> +		dst_reg =3D DONT_CLEAR;
+>> +
+>
+> Instead of having a side-effect, and passing a dummy dst_reg for the
+> probe_mem32, just explicitly add DONT_CLEAR when calling
+> add_exception_handler(). It's more obvious to me at least.
 
-  fio -name=cached --numjobs=16 --filename=/mnt/test.img \
-    --buffered=1 --ioengine=mmap --rw=randread --time_based \
-    --ramp_time=30s --runtime=5m --group_reporting
+Sure, will do that in the next version.
 
-Before:
-bw (  MiB/s): min= 1027, max= 3520, per=100.00%, avg=2445.02, stdev=18.90, samples=8691
-iops        : min=263001, max=901288, avg=625924.36, stdev=4837.28, samples=8691
+>
+>>  	ex->fixup =3D FIELD_PREP(BPF_FIXUP_OFFSET_MASK, fixup_offset) |
+>>  		FIELD_PREP(BPF_FIXUP_REG_MASK, dst_reg);
+>>  	ex->type =3D EX_TYPE_BPF;
+>> @@ -1063,7 +1073,7 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn,=
+ struct rv_jit_context *ctx,
+>>  		    BPF_CLASS(insn->code) =3D=3D BPF_JMP;
+>>  	int s, e, rvoff, ret, i =3D insn - ctx->prog->insnsi;
+>>  	struct bpf_prog_aux *aux =3D ctx->prog->aux;
+>> -	u8 rd =3D -1, rs =3D -1, code =3D insn->code;
+>> +	u8 rd =3D -1, rs =3D -1, code =3D insn->code, reg_arena_vm_start =3D R=
+V_REG_S7;
+>>  	s16 off =3D insn->off;
+>>  	s32 imm =3D insn->imm;
+>>=20=20
+>> @@ -1539,6 +1549,11 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn=
+, struct rv_jit_context *ctx,
+>>  	case BPF_LDX | BPF_PROBE_MEMSX | BPF_B:
+>>  	case BPF_LDX | BPF_PROBE_MEMSX | BPF_H:
+>>  	case BPF_LDX | BPF_PROBE_MEMSX | BPF_W:
+>> +	/* LDX | PROBE_MEM32: dst =3D *(unsigned size *)(src + S7 + off)*/
+>> +	case BPF_LDX | BPF_PROBE_MEM32 | BPF_B:
+>> +	case BPF_LDX | BPF_PROBE_MEM32 | BPF_H:
+>> +	case BPF_LDX | BPF_PROBE_MEM32 | BPF_W:
+>> +	case BPF_LDX | BPF_PROBE_MEM32 | BPF_DW:
+>>  	{
+>>  		int insn_len, insns_start;
+>>  		bool sign_ext;
+>> @@ -1546,6 +1561,11 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn=
+, struct rv_jit_context *ctx,
+>>  		sign_ext =3D BPF_MODE(insn->code) =3D=3D BPF_MEMSX ||
+>>  			   BPF_MODE(insn->code) =3D=3D BPF_PROBE_MEMSX;
+>>=20=20
+>> +		if (BPF_MODE(insn->code) =3D=3D BPF_PROBE_MEM32) {
+>> +			emit_add(RV_REG_T2, rs, reg_arena_vm_start, ctx);
+>> +			rs =3D RV_REG_T2;
+>> +		}
+>> +
+>>  		switch (BPF_SIZE(code)) {
+>>  		case BPF_B:
+>>  			if (is_12b_int(off)) {
+>> @@ -1682,6 +1702,87 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn=
+, struct rv_jit_context *ctx,
+>>  		emit_sd(RV_REG_T2, 0, RV_REG_T1, ctx);
+>>  		break;
+>>=20=20
+>> +	case BPF_ST | BPF_PROBE_MEM32 | BPF_B:
+>> +	case BPF_ST | BPF_PROBE_MEM32 | BPF_H:
+>> +	case BPF_ST | BPF_PROBE_MEM32 | BPF_W:
+>> +	case BPF_ST | BPF_PROBE_MEM32 | BPF_DW:
+>> +	{
+>> +		int insn_len, insns_start;
+>> +
+>> +		emit_add(RV_REG_T3, rd, reg_arena_vm_start, ctx);
+>> +		rd =3D RV_REG_T3;
+>> +
+>> +		/* Load imm to a register then store it */
+>> +		emit_imm(RV_REG_T1, imm, ctx);
+>> +
+>> +		switch (BPF_SIZE(code)) {
+>> +		case BPF_B:
+>> +			if (is_12b_int(off)) {
+>> +				insns_start =3D ctx->ninsns;
+>> +				emit(rv_sb(rd, off, RV_REG_T1), ctx);
+>> +				insn_len =3D ctx->ninsns - insns_start;
+>> +				break;
+>> +			}
+>> +
+>> +			emit_imm(RV_REG_T2, off, ctx);
+>> +			emit_add(RV_REG_T2, RV_REG_T2, rd, ctx);
+>> +			insns_start =3D ctx->ninsns;
+>> +			emit(rv_sb(RV_REG_T2, 0, RV_REG_T1), ctx);
+>> +			insn_len =3D ctx->ninsns - insns_start;
+>> +
+>> +			break;
+>> +
+>> +		case BPF_H:
+>> +			if (is_12b_int(off)) {
+>> +				insns_start =3D ctx->ninsns;
+>> +				emit(rv_sh(rd, off, RV_REG_T1), ctx);
+>> +				insn_len =3D ctx->ninsns - insns_start;
+>> +				break;
+>> +			}
+>> +
+>> +			emit_imm(RV_REG_T2, off, ctx);
+>> +			emit_add(RV_REG_T2, RV_REG_T2, rd, ctx);
+>> +			insns_start =3D ctx->ninsns;
+>> +			emit(rv_sh(RV_REG_T2, 0, RV_REG_T1), ctx);
+>> +			insn_len =3D ctx->ninsns - insns_start;
+>> +			break;
+>> +		case BPF_W:
+>> +			if (is_12b_int(off)) {
+>> +				insns_start =3D ctx->ninsns;
+>> +				emit_sw(rd, off, RV_REG_T1, ctx);
+>> +				insn_len =3D ctx->ninsns - insns_start;
+>> +				break;
+>> +			}
+>> +
+>> +			emit_imm(RV_REG_T2, off, ctx);
+>> +			emit_add(RV_REG_T2, RV_REG_T2, rd, ctx);
+>> +			insns_start =3D ctx->ninsns;
+>> +			emit_sw(RV_REG_T2, 0, RV_REG_T1, ctx);
+>> +			insn_len =3D ctx->ninsns - insns_start;
+>> +			break;
+>> +		case BPF_DW:
+>> +			if (is_12b_int(off)) {
+>> +				insns_start =3D ctx->ninsns;
+>> +				emit_sd(rd, off, RV_REG_T1, ctx);
+>> +				insn_len =3D ctx->ninsns - insns_start;
+>> +				break;
+>> +			}
+>> +
+>> +			emit_imm(RV_REG_T2, off, ctx);
+>> +			emit_add(RV_REG_T2, RV_REG_T2, rd, ctx);
+>> +			insns_start =3D ctx->ninsns;
+>> +			emit_sd(RV_REG_T2, 0, RV_REG_T1, ctx);
+>> +			insn_len =3D ctx->ninsns - insns_start;
+>> +			break;
+>> +		}
+>
+> A lot of similar code, with emit of different sizes. Possible to move
+> move out to a function, and wrap the emits? The main loop is hard read
+> already!
 
-After (+7.3%):
-bw (  MiB/s): min=  493, max= 3947, per=100.00%, avg=2625.56, stdev=25.74, samples=8651
-iops        : min=126454, max=1010681, avg=672142.61, stdev=6590.48, samples=8651
+I thought about this as well. My plan is to refactor the whole thing in a
+seperate patch. I did not do it with this feature as it will cause a lot
+of unrelated code churn.
 
-Test result with THP (do a THP randread then switch to 4K page in hope it
-issues a lot of splitting):
-
-  echo 3 > /proc/sys/vm/drop_caches
-
-  fio -name=cached --numjobs=16 --filename=/mnt/test.img \
-      --buffered=1 --ioengine=mmap -thp=1 --readonly \
-      --rw=randread --time_based --ramp_time=30s --runtime=10m \
-      --group_reporting
-
-  fio -name=cached --numjobs=16 --filename=/mnt/test.img \
-      --buffered=1 --ioengine=mmap \
-      --rw=randread --time_based --runtime=5s --group_reporting
-
-Before:
-bw (  KiB/s): min= 4141, max=14202, per=100.00%, avg=7935.51, stdev=96.85, samples=18976
-iops        : min= 1029, max= 3548, avg=1979.52, stdev=24.23, samples=18976·
-
-READ: bw=4545B/s (4545B/s), 4545B/s-4545B/s (4545B/s-4545B/s), io=64.0KiB (65.5kB), run=14419-14419msec
-
-After (+12.5%):
-bw (  KiB/s): min= 4611, max=15370, per=100.00%, avg=8928.74, stdev=105.17, samples=19146
-iops        : min= 1151, max= 3842, avg=2231.27, stdev=26.29, samples=19146
-
-READ: bw=4635B/s (4635B/s), 4635B/s-4635B/s (4635B/s-4635B/s), io=64.0KiB (65.5kB), run=14137-14137msec
-
-The performance is better for both 4K (+7.5%) and THP (+12.5%) cached read.
-
-Signed-off-by: Kairui Song <kasong@tencent.com>
----
- lib/test_xarray.c | 57 +++++++++++++++++++++++++++++++++++++++++++++++
- mm/filemap.c      | 56 +++++++++++++++++++++++++++++++++-------------
- 2 files changed, 98 insertions(+), 15 deletions(-)
-
-diff --git a/lib/test_xarray.c b/lib/test_xarray.c
-index 26e28b65d60a..f0e02a1ee3d5 100644
---- a/lib/test_xarray.c
-+++ b/lib/test_xarray.c
-@@ -2015,6 +2015,62 @@ static noinline void check_xas_get_order(struct xarray *xa)
- 	}
- }
- 
-+static noinline void check_xas_conflict_get_order(struct xarray *xa)
-+{
-+	XA_STATE(xas, xa, 0);
-+
-+	void *entry;
-+	int only_once;
-+	unsigned int max_order = IS_ENABLED(CONFIG_XARRAY_MULTI) ? 20 : 1;
-+	unsigned int order;
-+	unsigned long i, j, k;
-+
-+	for (order = 0; order < max_order; order++) {
-+		for (i = 0; i < 10; i++) {
-+			xas_set_order(&xas, i << order, order);
-+			do {
-+				xas_lock(&xas);
-+				xas_store(&xas, xa_mk_value(i));
-+				xas_unlock(&xas);
-+			} while (xas_nomem(&xas, GFP_KERNEL));
-+
-+			/*
-+			 * Ensure xas_get_order works with xas_for_each_conflict.
-+			 */
-+			j = i << order;
-+			for (k = 0; k < order; k++) {
-+				only_once = 0;
-+				xas_lock(&xas);
-+				xas_set_order(&xas, j + (1 << k), k);
-+				xas_for_each_conflict(&xas, entry) {
-+					XA_BUG_ON(xa, entry != xa_mk_value(i));
-+					XA_BUG_ON(xa, xas_get_order(&xas) != order);
-+					only_once++;
-+				}
-+				XA_BUG_ON(xa, only_once != 1);
-+				xas_unlock(&xas);
-+			}
-+
-+			if (order < max_order - 1) {
-+				only_once = 0;
-+				xas_lock(&xas);
-+				xas_set_order(&xas, (i & ~1UL) << order, order + 1);
-+				xas_for_each_conflict(&xas, entry) {
-+					XA_BUG_ON(xa, entry != xa_mk_value(i));
-+					XA_BUG_ON(xa, xas_get_order(&xas) != order);
-+					only_once++;
-+				}
-+				XA_BUG_ON(xa, only_once != 1);
-+				xas_unlock(&xas);
-+			}
-+
-+			xas_set_order(&xas, i << order, order);
-+			xas_store(&xas, NULL);
-+		}
-+	}
-+}
-+
-+
- static noinline void check_destroy(struct xarray *xa)
- {
- 	unsigned long index;
-@@ -2067,6 +2123,7 @@ static int xarray_checks(void)
- 	check_multi_store_advanced(&array);
- 	check_get_order(&array);
- 	check_xas_get_order(&array);
-+	check_xas_conflict_get_order(&array);
- 	check_xa_alloc();
- 	check_find(&array);
- 	check_find_entry(&array);
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 6bbec8783793..90b86f22a9df 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -852,7 +852,9 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 		struct folio *folio, pgoff_t index, gfp_t gfp, void **shadowp)
- {
- 	XA_STATE(xas, &mapping->i_pages, index);
--	bool huge = folio_test_hugetlb(folio);
-+	void *alloced_shadow = NULL;
-+	int alloced_order = 0;
-+	bool huge;
- 	long nr;
- 
- 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
-@@ -861,6 +863,7 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 
- 	VM_BUG_ON_FOLIO(index & (folio_nr_pages(folio) - 1), folio);
- 	xas_set_order(&xas, index, folio_order(folio));
-+	huge = folio_test_hugetlb(folio);
- 	nr = folio_nr_pages(folio);
- 
- 	gfp &= GFP_RECLAIM_MASK;
-@@ -868,16 +871,10 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 	folio->mapping = mapping;
- 	folio->index = xas.xa_index;
- 
--	do {
--		unsigned int order = xa_get_order(xas.xa, xas.xa_index);
-+	for (;;) {
-+		int order = -1, split_order = 0;
- 		void *entry, *old = NULL;
- 
--		if (order > folio_order(folio)) {
--			xas_split_alloc(&xas, xa_load(xas.xa, xas.xa_index),
--					order, gfp);
--			if (xas_error(&xas))
--				goto error;
--		}
- 		xas_lock_irq(&xas);
- 		xas_for_each_conflict(&xas, entry) {
- 			old = entry;
-@@ -885,19 +882,33 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 				xas_set_err(&xas, -EEXIST);
- 				goto unlock;
- 			}
-+			/*
-+			 * If a larger entry exists,
-+			 * it will be the first and only entry iterated.
-+			 */
-+			if (order == -1)
-+				order = xas_get_order(&xas);
-+		}
-+
-+		/* entry may have changed before we re-acquire the lock */
-+		if (alloced_order && (old != alloced_shadow || order != alloced_order)) {
-+			xas_destroy(&xas);
-+			alloced_order = 0;
- 		}
- 
- 		if (old) {
--			if (shadowp)
--				*shadowp = old;
--			/* entry may have been split before we acquired lock */
--			order = xa_get_order(xas.xa, xas.xa_index);
--			if (order > folio_order(folio)) {
-+			if (order > 0 && order > folio_order(folio)) {
- 				/* How to handle large swap entries? */
- 				BUG_ON(shmem_mapping(mapping));
-+				if (!alloced_order) {
-+					split_order = order;
-+					goto unlock;
-+				}
- 				xas_split(&xas, old, order);
- 				xas_reset(&xas);
- 			}
-+			if (shadowp)
-+				*shadowp = old;
- 		}
- 
- 		xas_store(&xas, folio);
-@@ -913,9 +924,24 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 				__lruvec_stat_mod_folio(folio,
- 						NR_FILE_THPS, nr);
- 		}
-+
- unlock:
- 		xas_unlock_irq(&xas);
--	} while (xas_nomem(&xas, gfp));
-+
-+		/* split needed, alloc here and retry. */
-+		if (split_order) {
-+			xas_split_alloc(&xas, old, split_order, gfp);
-+			if (xas_error(&xas))
-+				goto error;
-+			alloced_shadow = old;
-+			alloced_order = split_order;
-+			xas_reset(&xas);
-+			continue;
-+		}
-+
-+		if (!xas_nomem(&xas, gfp))
-+			break;
-+	}
- 
- 	if (xas_error(&xas))
- 		goto error;
--- 
-2.43.0
-
+Thanks,
+Puranjay
