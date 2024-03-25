@@ -1,121 +1,170 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C09E1B5B1
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7757316D;
+	Mon, 25 Mar 2024 17:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711389174; cv=none; b=QsDINjneOb/A1mcGfri+H+TkC3Bu0zo9HYrf9PAUB8ajRev2psKJ20mFKV/Y+zWeZi1A9mr4XOUJ6IJX8XuQKfWUiyTpiPnuIyMaGOoZk5VxJV0ZE0lT/SLi+3Q9E7J+oUr3EjzBZ4k0FgUE/w2QLL5CRBnfktoZa72ZLbrTSes=
+	t=1711389178; cv=none; b=fiSbPfuHu7mnkKKibi5PSwc/4EW69FBMuYNGLdsffM7KPxdy90OL89dPua4Eho/JpHntM1D8rPF0xm41L4BU9ZfDCkWODwzWH9ynfmx7XZYLYaLx0gtokmxkvYwUagtyGHeI8xHaYkRXkkVJEBNgjfM+GYNuvFIFGXAEfH4rxtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711389174; c=relaxed/simple;
-	bh=+e0it607tIg+b2rZM2w/eJragbno58DdtfRWyRwQ1f8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hDQ9O21jncp0CQ/RofJwSHPnNAqBTv6GJA4+d74ulvLRrKYA89ZcHXLgM6WNGRqzCGft1BMW6y0jfZl3jFb6zu2YTAdLV1GkUK6hFKwVzD1xZuFrb/xaN+7ooSXYTYEHdn16Il9Xkp6Nc7y18C4p0yuSiNynldnDU6uWKkMBzBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b7hxQi1+; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1711389178; c=relaxed/simple;
+	bh=VOccJ8b4F3FXwu0VomVq1foVe5FqXJomPjb+iB5b73s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fp72Ylo/oPBGRwhBW3phHW6IPEtCDuwdk+agY3d8XmlhCi6O3kF/FXmT7JR+4wBguarCo/60xR1IQzKRyWcHTX2t6w07RQeuJJKU6Umj7udhXuk221xmtx+Qwn3fijiNceQ3O3Ao7pbMbEkD6D0/RY4r5nijF26ihc3IH2itqww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SMLdE8Nh; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7hxQi1+"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5d8b519e438so2636475a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:52:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMLdE8Nh"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e6ee9e3cffso3160916b3a.1;
+        Mon, 25 Mar 2024 10:52:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711389172; x=1711993972; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gdkP92/Ym8fhO2N2bPQUMgG774O7zzPSnF71mNNVTm0=;
-        b=b7hxQi1+pT3OUZA3vRwEG/g2gYiJhsm218O2adxZLKK1TQr6Vyfo21yrxPwa7tAFWz
-         emlran3GBdtzQyr2VJSfOP7eGyYnD0vOG0OXZuIiNHqR6BF4KnyoAHvw2kmUubFY/6OA
-         i13yMMAygWgbSuwS2QdWZHbPnFTJ4Y3E6G6JeiXRoKcwICYtVYc3L67iP8DmG6xxZzBg
-         WQA9ZRAigbzatRh98c5+zSoNTJ5h24GqrIY+ZVsrZR26iK+wArWNIrglCi0vWuHi9wdi
-         DAEvDEuV7M95irFBmcyGsf6VW+p04Esis+IaDrRMhleeryC3fOMKN0Gb1EA1vnAfC7I7
-         jzYw==
+        d=gmail.com; s=20230601; t=1711389175; x=1711993975; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=XNSADZIa55EnhS6o0yIL3ifpTu+GjUejKXDxEmLThHE=;
+        b=SMLdE8NhIvS+23/6Ri6e6rdzSwgwu2ycsoDk5lDGQRGURaJu5cYQcP+2EjwCRUYeb2
+         wGweWJsxo2A9fKbb+6RpI1gm2i9Ll1wBBJcQX4hoMQPjhnVs6eQHch5uLbT6NRkeULNy
+         W6OGx2oPSewur/f4TvTbmNCaDD+o/gAicBhvAAv+8U099zp7a77vs3myPhDJv3Ehcgg5
+         a8W6MpxsloS67xWWk0rVDI4tFwRdjooGIEuNvBmdY+hFWLc+sEW0f7Jih7WBDtJaP56v
+         bmzB6PQ2cTPF1MmXnyTng3FOarpsbRUCagneumu5wE8OpaAt417pJf7kSYHcf5MM/xdm
+         YZ7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711389173; x=1711993973;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1711389175; x=1711993975;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gdkP92/Ym8fhO2N2bPQUMgG774O7zzPSnF71mNNVTm0=;
-        b=UXhAX8ABxCzKDEDZNLaThpwMQqTYopBdOUROT3tg0TxJIqg6SS4l4RLjVs84zNjlX7
-         xVHXyw7HtC00AY1JvMFYyeWKhSpfVEb6Xef6wMAtHRIzhEPxZ0c2P6lgQq04RQ5P/I9x
-         CbTEEbiCB0WE7aWdvEyIdKuhjMVe1G1+0FjIxpOqQqjGi514KfHZ5ZKkW1bZRXRsqYuP
-         g0kFHSpD4pKndvIQmELMOQdfzqHkq32brhYNfycXVIOM/V4mT6keDox71QSQvd5sC0mn
-         JDaw8Az6pXaa7++Wd9g7xrCQp8xN0sV2lLPzPnHi6rvi977szfXGAN++SmM2h03infOD
-         /YiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXcQuHOfeRlYb/BW2XKg1T6xSHhVs50tBDkxGf3CaEW9cUERzKqWqQtAtCZUGICIUULp/WfeSyBGyJPvpMTkZLEHhDmYRdW/MD0qZwp
-X-Gm-Message-State: AOJu0YwjS82FEPeQTe+QeS6ivx7CHKEf2uFyYe7MsJfls+bv4Lh1Fd5W
-	O5as4zPANFSqkvQF9PuRvoKfTwC7Mdtf0RlYVdExB6LDUZm/9h9/kWZR/ZhajlU=
-X-Google-Smtp-Source: AGHT+IH7l6Nr3jgLuzR+uEEpfWCStVS9T4WpcYVGab+dpXtZY5JWh6SKJ3eaUaCdiYBw58Jmk6rK9A==
-X-Received: by 2002:a17:90a:e542:b0:29f:ce37:50d8 with SMTP id ei2-20020a17090ae54200b0029fce3750d8mr5423211pjb.17.1711389172525;
-        Mon, 25 Mar 2024 10:52:52 -0700 (PDT)
-Received: from ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx ([103.6.158.65])
-        by smtp.gmail.com with ESMTPSA id e1-20020a17090a9a8100b0029e077a9fe6sm10348086pjp.27.2024.03.25.10.52.50
+        bh=XNSADZIa55EnhS6o0yIL3ifpTu+GjUejKXDxEmLThHE=;
+        b=pTOmskKrO1h0mgcGLJvQt8/IHGLF3LSeMLJWMMmD9Wc6ZuE46w3NpB+GEDctLWwLj9
+         Wl3I0jJ5A7aEBPjkYXyLQgbn/dfmhm6Q+VJBjanYdRPG9uUAzfiI3t4V4TC68YvNW/os
+         0+aCVKZ5U1LuUocaQGBJoNEdjmnQcO1a3JdG804tXRP9Tw++S1SoWvb2+J1P0+OTdhwi
+         NlOlTl5E5p/WrWnzTty1SYnPc9//MumF31MlKUMPo3ZZBeBUYoLqkHuTNjhAP4bn5IMs
+         z9FSx2Vb/vPKFiG0zpIi1Jpq2AVOXF48JpWfG8GGCJEQkLgjoBF8plEQCOoxdd1nZEnt
+         Ny8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUKJUIL4B6OFUGp438YAZhGqW3a8Ccq+nTu+Z0rkTNkdoZB7XxNXgCexfTqVursAWlfZpYzdJp4DFmEtmZfN2YDKZ9VCaGSR11DCKq0lpwQE7xgguIoWJM123rQQEpgUO3uR+cmrRXccF5kDCfRKyWH/jcTOKWZ93/MBOP1bhe1gzJA4wQnaVZJ6UxVLu+y6p2BGm8OV5w1uMQmDkvwfkZ64IA9M9Lt7kzBZS+X812WUoNNSHpthZACLZp9+kKNGL1TigbCcu4sXdRZaMKrIvins0bLmL+RqsHfiGEA/vJQAauoIsLbhZbbPmQh7z+oug==
+X-Gm-Message-State: AOJu0Yx+1f1tqoAf2v28Y3okPnVCpeNchqGfAGpD/pRkukccziO7HuLf
+	6hCfIewTZnvBH8lvsAk1HqNdcYZ+C6FElfKb+qCpvhDUXiSbvmsxblKSciuu
+X-Google-Smtp-Source: AGHT+IGIDWtPHdUbX+7LWIxScptU3Z3k9sozN35URR01B7XvfxcUzrh1Z1HYjZAKi2mO+Me8ITFPPw==
+X-Received: by 2002:a05:6a20:6a0e:b0:1a3:c4ba:a453 with SMTP id p14-20020a056a206a0e00b001a3c4baa453mr6509702pzk.7.1711389175417;
+        Mon, 25 Mar 2024 10:52:55 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id dr18-20020a056a020fd200b005cd835182c5sm5239787pgb.79.2024.03.25.10.52.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 10:52:52 -0700 (PDT)
-Date: Mon, 25 Mar 2024 23:22:47 +0530
-From: Ayush Tiwari <ayushtiw0110@gmail.com>
-To: Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Cc: outreachy@lists.linux.dev
-Subject: [PATCH v4 3/3] staging: rtl8712: rename backupTKIPCountermeasure to
- backup_TKIP_countermeasure
-Message-ID: <3fd64e6671d3f86c49fd8c6ba9ef64c4f0e0b75e.1711388443.git.ayushtiw0110@gmail.com>
-References: <cover.1711388443.git.ayushtiw0110@gmail.com>
+        Mon, 25 Mar 2024 10:52:53 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+To: linux-kselftest@vger.kernel.org
+Cc: David Airlie <airlied@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org,
+	kunit-dev@googlegroups.com,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v2 00/14] Add support for suppressing warning backtraces
+Date: Mon, 25 Mar 2024 10:52:34 -0700
+Message-Id: <20240325175248.1499046-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1711388443.git.ayushtiw0110@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Rename variable backupTKIPCountermeasure to backup_TKIP_countermeasure
-to address checkpatch warning 'Avoid Camelcase' and to ensure
-adherence to coding style guidelines.
+Some unit tests intentionally trigger warning backtraces by passing bad
+parameters to kernel API functions. Such unit tests typically check the
+return value from such calls, not the existence of the warning backtrace.
 
-Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
----
+Such intentionally generated warning backtraces are neither desirable
+nor useful for a number of reasons.
+- They can result in overlooked real problems.
+- A warning that suddenly starts to show up in unit tests needs to be
+  investigated and has to be marked to be ignored, for example by
+  adjusting filter scripts. Such filters are ad-hoc because there is
+  no real standard format for warnings. On top of that, such filter
+  scripts would require constant maintenance.
 
-Changes in v4: No change
-Changes in v3: No change
-Changes in v2: No change
+One option to address problem would be to add messages such as "expected
+warning backtraces start / end here" to the kernel log.  However, that
+would again require filter scripts, it might result in missing real
+problematic warning backtraces triggered while the test is running, and
+the irrelevant backtrace(s) would still clog the kernel log.
 
- drivers/staging/rtl8712/mlme_linux.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Solve the problem by providing a means to identify and suppress specific
+warning backtraces while executing test code. Support suppressing multiple
+backtraces while at the same time limiting changes to generic code to the
+absolute minimum. Architecture specific changes are kept at minimum by
+retaining function names only if both CONFIG_DEBUG_BUGVERBOSE and
+CONFIG_KUNIT are enabled.
 
-diff --git a/drivers/staging/rtl8712/mlme_linux.c b/drivers/staging/rtl8712/mlme_linux.c
-index ac8196d24ce0..436816d14cdf 100644
---- a/drivers/staging/rtl8712/mlme_linux.c
-+++ b/drivers/staging/rtl8712/mlme_linux.c
-@@ -88,7 +88,7 @@ static struct RT_PMKID_LIST backup_PMKID_list[NUM_PMKID_CACHE];
- void r8712_os_indicate_disconnect(struct _adapter *adapter)
- {
- 	u8 backup_PMKID_index = 0;
--	u8 backupTKIPCountermeasure = 0x00;
-+	u8 backup_TKIP_countermeasure = 0x00;
- 
- 	r8712_indicate_wx_disassoc_event(adapter);
- 	netif_carrier_off(adapter->pnetdev);
-@@ -103,7 +103,7 @@ void r8712_os_indicate_disconnect(struct _adapter *adapter)
- 		       &adapter->securitypriv.PMKIDList[0],
- 		       sizeof(struct RT_PMKID_LIST) * NUM_PMKID_CACHE);
- 		backup_PMKID_index = adapter->securitypriv.PMKIDIndex;
--		backupTKIPCountermeasure =
-+		backup_TKIP_countermeasure =
- 			adapter->securitypriv.btkip_countermeasure;
- 		memset((unsigned char *)&adapter->securitypriv, 0,
- 		       sizeof(struct security_priv));
-@@ -117,7 +117,7 @@ void r8712_os_indicate_disconnect(struct _adapter *adapter)
- 		       sizeof(struct RT_PMKID_LIST) * NUM_PMKID_CACHE);
- 		adapter->securitypriv.PMKIDIndex = backup_PMKID_index;
- 		adapter->securitypriv.btkip_countermeasure =
--					 backupTKIPCountermeasure;
-+					 backup_TKIP_countermeasure;
- 	} else { /*reset values in securitypriv*/
- 		struct security_priv *sec_priv = &adapter->securitypriv;
- 
--- 
-2.40.1
+The first patch of the series introduces the necessary infrastructure.
+The second patch introduces support for counting suppressed backtraces.
+This capability is used in patch three to implement unit tests.
+Patch four documents the new API.
+The next two patches add support for suppressing backtraces in drm_rect
+and dev_addr_lists unit tests. These patches are intended to serve as
+examples for the use of the functionality introduced with this series.
+The remaining patches implement the necessary changes for all
+architectures with GENERIC_BUG support.
 
+With CONFIG_KUNIT enabled, image size increase with this series applied is
+approximately 1%. The image size increase (and with it the functionality
+introduced by this series) can be avoided by disabling
+CONFIG_KUNIT_SUPPRESS_BACKTRACE.
+
+This series is based on the RFC patch and subsequent discussion at
+https://patchwork.kernel.org/project/linux-kselftest/patch/02546e59-1afe-4b08-ba81-d94f3b691c9a@moroto.mountain/
+and offers a more comprehensive solution of the problem discussed there.
+
+Design note:
+  Function pointers are only added to the __bug_table section if both
+  CONFIG_KUNIT_SUPPRESS_BACKTRACE and CONFIG_DEBUG_BUGVERBOSE are enabled
+  to avoid image size increases if CONFIG_KUNIT is disabled. There would be
+  some benefits to adding those pointers all the time (reduced complexity,
+  ability to display function names in BUG/WARNING messages). That change,
+  if desired, can be made later.
+
+Checkpatch note:
+  Remaining checkpatch errors and warnings were deliberately ignored.
+  Some are triggered by matching coding style or by comments interpreted
+  as code, others by assembler macros which are disliked by checkpatch.
+  Suggestions for improvements are welcome.
+
+Changes since RFC:
+- Introduced CONFIG_KUNIT_SUPPRESS_BACKTRACE
+- Minor cleanups and bug fixes
+- Added support for all affected architectures
+- Added support for counting suppressed warnings
+- Added unit tests using those counters
+- Added patch to suppress warning backtraces in dev_addr_lists tests
+
+Changes since v1:
+- Rebased to v6.9-rc1
+- Added Tested-by:, Acked-by:, and Reviewed-by: tags
+  [I retained those tags since there have been no functional changes]
+- Introduced KUNIT_SUPPRESS_BACKTRACE configuration option, enabled by
+  default.
