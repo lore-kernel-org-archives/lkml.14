@@ -1,218 +1,175 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862954A2D
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 18:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711391749; cv=none; b=iigdfDqNQKS9JKyhGgx9X5BiSGdSMVQA3HwXF5pPcu1ys8rlQlZ27gMFLU+QYPYwM3VHijBe1vO+8fberlBwEcTZgjrHLWIMIV3sK3i+2jA8thE2uAhBhxnZnF0c9H9hXSqXxriBF4gSCdTe32dZPHYI9HdRUXyVMvoCktt7+io=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711391749; c=relaxed/simple;
-	bh=h0yilnZ51BaEqGj5t3UHWGeuntB/GTqaVwYDJFg8lM0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qaPHD/wdc40eX4h4bigWJC1wO6TGNOEkVrCEHIWk282aAIqThWpXDU4IoHAumaBViGFTJqldI/4Z4j//i/lVkB0r4GZR/KCKfrzA6w9h8rNIL/HvN7CiuAlvW9aX40PCU+HIZaZVyaRm1o1d+FZBuE50wBkfu+2WMS6lEUZvaQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rGd1qetv; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24983DABE2
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 18:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711391809; cv=fail; b=TUe4VYCh5Nr2yKiQaSX26QBIyBASwidyp7Y/gc6TqC9oT/eXsvzQogZCs1Ysm8ShEQjUfbqfcT49mHIYH2V4JALZ46SyyFaAZ/VxsbEsytXt64V2HJpmoakxPR2X3wi7tp3JI4t0jQEDww0lk4If/2MbFL557TtjCMsQaWh7NFs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711391809; c=relaxed/simple;
+	bh=t5BhucRgln/qf25RR/77tpYQa+YfRxS5v/H3VHiZZLs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uUgoVYJwPlWMx+mTDmQLYFgnpAbekUy3w8FO1Kjls0vjQ+tTd/qF/qoW0DR20pBOsFG3A0O2LP577QcUU++AguRmewxRFvadQ2IGwrHLf70dFnV961QEfdDSh6NS47KPWBVFonO5VS9xbpR/uw73NaDCETesQl9IBeKBU4NiSNk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uc5occMq; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rGd1qetv"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a47385a4379so495483766b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711391746; x=1711996546; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VnaO12DYPd96KK0ZxyUCj9krmBaYuVzmySYDUn5xLRY=;
-        b=rGd1qetv55U0qhS2zkCYGtiAr0WqGVBv7A6yL04lXUvlDSyJbk7HBPmuDfBQKXjAKL
-         M8z3vPA/puXX3FtQ2mnLh9SjOas+kxuFEHSAD+ldhJyOvmZZ72z3NZyH/wpTZj0mPaOx
-         QoFWtRRlW1d4NPptl50n0r3oQAEDPlV7OFX/OlvX9UzxCvbXJ0lv0zh3q9FoBDIc0VKn
-         /+12IhHIYbiBiHxX7+/c2VIYusPNhmkuhaYdm8ztBBxw5iIPGLKaS4yHdUYds9fODrq4
-         pwCO5cb6ejJqAwyfFCe6wnfGs7CzrQU/PepgToMcjLJENM+6DZIXS8jUhkVCqzyANRVy
-         YiaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711391746; x=1711996546;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VnaO12DYPd96KK0ZxyUCj9krmBaYuVzmySYDUn5xLRY=;
-        b=X1hA3syUQ0fr6+ngzY0fCyLS/1gcNOMIkPbawlKTxJ81sau2nlNWe5G+dbFsORHyty
-         0xiHrkv9mWXVdId8IKgq/UZsIefqM907GXZexJDn+fbkuBRMqDqPfPJNicKbjT1QTe74
-         Ji88q87QIpPUPwSId/VvU9YGklJloQtKWhDMD4tvtYRO174jQfeM9Om9U7IVqI1ywqgS
-         DjhljjMgiehEvfGoQib27jvevNuHkJZSbzO9b9YLsWhOeQKnKSfU0oGSJPiLOd9iExlV
-         XMZ3RBm9iRPADa5KXzcbtT23DzZGUfqRC1i/CGuDCOSYo3djFKVVy+5y6MLwqv0ULW90
-         hX6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUYl2i7Rgaw2ZiI3OFWItmlvYVO8dDWSCW+BYm4MulwJvSbIEQS8I/qEZs1GgLpCpP5oq3b1/Fx+c+6qe3muMUK1Qwpj/jCKOulb3PI
-X-Gm-Message-State: AOJu0YzUXd1sxCS0Bxyu7ObUW83wx7VOGoMZe5WuOJv6BDgmNb0U/8hW
-	px67Ukx9bBQ8ACQZpKdN5V6eVDQ/Lc3yfgE9gdk2/TIpJ0/y6qT1MPx4WRgfBuXnBNaFa66MjlL
-	3id35yc2lRg+7VVBmBCd7GL93KInlGk6coQ/yCuRSLZIaEt6WoWTs
-X-Google-Smtp-Source: AGHT+IEG4khKur4No7fwruiwfnOnyHPfaZKYoeBWu8Ce3T4gznyAzpX/p3EocHUe/K7sGfTaoxu9DnIVdLzkNo5JMRA=
-X-Received: by 2002:a17:907:9722:b0:a47:48d7:d393 with SMTP id
- jg34-20020a170907972200b00a4748d7d393mr6682243ejc.33.1711391745531; Mon, 25
- Mar 2024 11:35:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uc5occMq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711391806; x=1742927806;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=t5BhucRgln/qf25RR/77tpYQa+YfRxS5v/H3VHiZZLs=;
+  b=Uc5occMqR6SHblB5YTSRRsB07umUVDV1Zq8ePK9Se7i0znsYUhhM/luV
+   uFiGp55ZPgD6WtPeXFxatq3MuNh4iVYUMP0qY69pO9ItHRIKPIIFg4riP
+   sOhPc2Kizsd3CU7GLREuf/y/xJRaPCHs57KFYT6lq5V/fkDLgWe+keTUP
+   EgvfltkvSEokxEw/vAQNciCcpis9QwstFd6+PFVFHVUrOrvwUlADBvEZa
+   J1gigl/7RAq4YhhF5fWSPdddh4nFKnfri6wYJDzk3li+0bvJgc7RmWGb3
+   5+GSSu5ilUlZAlwKszaehyd1vX+/IuoXGBWKgU3x+bOjHbc2X2PKv8DCb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="7009060"
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="7009060"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 11:36:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="46701079"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Mar 2024 11:36:46 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 25 Mar 2024 11:36:45 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 25 Mar 2024 11:36:45 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 25 Mar 2024 11:36:45 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 25 Mar 2024 11:36:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SmezvEIg3tCE858kRxm0VBNkuqxNGF86HwkKL0OWbk8vU30kf+hzoIhE3N7BKnSVgGePpe7nCEHYqLvf6PIQsjZRx6fCCKM7PijML8Cs+sBC7f3RrYKlcVhfnSkp89X9xmCn5q9rLZKr7TUdpofa5mFUWsRA0iwx7vOAes18WYNKlczPR7H86kxzzlRK19YeMuFPG1e1jmAwMgfKcy4xNpX5M1deEoGAXJE3vecD8XwMpOSS87AZTule92KH+Eh0hPInwUPSB7R3FrUWe0+OVgfmButAC3LaicATqmAGWcSNry+q8Lg3iwmcD+UTAYV3ZMdVTOfzUOEyOfqZwjESWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t5BhucRgln/qf25RR/77tpYQa+YfRxS5v/H3VHiZZLs=;
+ b=kSy51PjxA0HnrSpw6PgbpEI7mMdV8xo8wm3jd50VJlUwABvmQSnxFim4t5wQP1gGponB2MLumLEdt+PfiLHTxt3g9b6+9+ixqNBmXbvkfi4LK8ctDq7TDQqUPQO9wwFJ5cmnhYJu1ah7UEtapzGwl5lZ21/TacSrtfSIA18742yFyL8fjg6i6rSzTIcNb+Mi7ua+L6FUpdcyNnI0Ylqkg8+2VJ7Kf6ZJFS9l6gxUq1Wa0lAejtuXorky4NjzxfbqAdRus+AXAGeZJV7AiBHDEvSr5ohxy/oezqyv/9KVIdh+UdKRRP7XlBcowlZL0sQBYQdIb5qu6rOdBpt0+LOXGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM4PR11MB8179.namprd11.prod.outlook.com (2603:10b6:8:18e::22)
+ by SJ0PR11MB6768.namprd11.prod.outlook.com (2603:10b6:a03:47f::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
+ 2024 18:36:41 +0000
+Received: from DM4PR11MB8179.namprd11.prod.outlook.com
+ ([fe80::c563:8fb8:d95:71ac]) by DM4PR11MB8179.namprd11.prod.outlook.com
+ ([fe80::c563:8fb8:d95:71ac%5]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
+ 18:36:41 +0000
+From: "Souza, Jose" <jose.souza@intel.com>
+To: "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+	"johannes@sipsolutions.net" <johannes@sipsolutions.net>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: "Vivi, Rodrigo" <rodrigo.vivi@intel.com>, "quic_mojha@quicinc.com"
+	<quic_mojha@quicinc.com>, "Cavitt, Jonathan" <jonathan.cavitt@intel.com>
+Subject: Re: [PATCH v3 1/4] devcoredump: Add dev_coredump_put()
+Thread-Topic: [PATCH v3 1/4] devcoredump: Add dev_coredump_put()
+Thread-Index: AQHabkHCwrYydZ1LA0ergAesrf2yc7FIy+uAgAAeTwA=
+Date: Mon, 25 Mar 2024 18:36:41 +0000
+Message-ID: <2bab25ec4edd587442a3c14505760d47fa649636.camel@intel.com>
+References: <20240304143905.52740-1-jose.souza@intel.com>
+	 <4aa1f6ae3ac72a5eb3303740242d53d46a338d6b.camel@sipsolutions.net>
+In-Reply-To: <4aa1f6ae3ac72a5eb3303740242d53d46a338d6b.camel@sipsolutions.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR11MB8179:EE_|SJ0PR11MB6768:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jD4MQ13Mho4ttP7KPuFYsmVFPi/qrmLmeagmjhpF4xA/p/aHflR/SA7R8EjwZI+gzOdeNjsHCxKixabtMta1lmF18G2EgarGiFoju4ExM/9ykBw5JaMiTv+sfcjW8ppHZhHCMVNwr8MGGBVzPyzVpccW4CRMAtfpVAa0fiicEStUZoTWfl3TocCYRNb34TQNbELjt3i3FyI+1XkLqIKUuMx1wL/QwyC9ASSMcSXWRP1hLeMR/Lj7t9420BqtffoAxyMbqJ3zZpySIZChLxEu1dSwrNFn6BPWJ/STzvxCP+8aT5HO146zU3c//99P8+1M4zXZ0Ef9hXTFdq0Noxtt44E41MwiZfzlEEzUrciqJMZsBdDmAmnC9ZPzayhkVl6gzAU+mMxdl2r2HoYJ5CDeF+9+DQfquShlXTtlU+ngIxfcDe1sffci2iXVqZQdKbabM0SCfWWCsbF4vq6XOgLhg0vhwzJ5D+P2DlHJipRYVMu6yuRtt421fpMN8Kv7LGbQNVHYZLY90R7vNziFMQhOWFLMxVGxxqae/Eji82IinuBAGELaD6QhGl9maBtBnJp016+96QSieb0Po8QteSq+5zjoWBDYILLHaUJvxvPG4L8vAdgNHd909zNzBJ3ACywU8GnlZQDLdTnXrn2cA8Y9jaGNXMDVkpjDIvEgYjSIRqs=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB8179.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RmU4Und5bDJZeHE0RXkvNzY3RUpTaG9QV3dQRWMvRTg1R1dFSkp6dTBpNThx?=
+ =?utf-8?B?ZGlBMjFpempSZTZ0ekcwZXE1dWJlSHd5UkFXRGZWWUc5TmhtTHZ6ejJuOS83?=
+ =?utf-8?B?cFNyOUZNOEx0L1Y0MlcyVmxEZnBKU3lTR2pUeCthWEttOFg5dGVLMWhmVW5Y?=
+ =?utf-8?B?SkhlOUJuUWhUL3NUYjVRVmVuTHF4OVRSRVhlbE9EOHNkYnJDNHJ5bkE5SXhV?=
+ =?utf-8?B?R2tLb1hmWEw4MlIwVFovV3E0bjVGZ2ppejBHMkROREFnamtrWU5VMnRhRE1w?=
+ =?utf-8?B?Z1lZTmUvUEdKRjZEaTcvN3hTL2ZMZmdMM2dWSFRHQVNFa1c0Qk1uM2JFWFBQ?=
+ =?utf-8?B?UnEvOXFMazVVcVNtazI2cGkvZE9VcVFWS0swVEtWb1FNVFpCS2JxSkM5cTgw?=
+ =?utf-8?B?c0gyeGEyWWtCdk54V25zYkZTSEw3TFhGdzN1eW5pTE1VTjRQa21JeXMrSm00?=
+ =?utf-8?B?YUJZd3NJOTBRbjB6TEZHUTNMbEMycjl2aTNMZVNGY29MeThXR3h2eTZQWDZw?=
+ =?utf-8?B?bGZPYzN0RjdOVit3NWcxaG8wRjhGY2M0SkFTdzNnU1YzVEJaUWNNcytsZEFM?=
+ =?utf-8?B?NnpRbEtnNko2V0ZpUERHeXJHK3VmcXE1eUl6OFlraGllcW94TXpiOXd4dHNG?=
+ =?utf-8?B?VkZkL1YyS0RPMjUzZjRZQit6dHlUb1dVQUdkNE1MRGJ2citLV2ppRkdkOVZ2?=
+ =?utf-8?B?Y0FTU2E2Y3FVbCtGVEh2NU9PT3pRVmZxa2tsMkR0cG1MQkZVRkhYNCs3Wld5?=
+ =?utf-8?B?bDJ1VkpudDVCR1lTb2pTT3RRczc3b1I4Zk1jbUZ6VGdBQ3pIQ05BSmJkK2xz?=
+ =?utf-8?B?dHJyU211VDFpNWMrVHpRSGZySmhmQW9SeGhhTGdsR3NRZzJhRXdjaDhka0hw?=
+ =?utf-8?B?VVFjVGtzSFUvRm85Y1lHdmxUaFBUN3haUW0zMmZ5UFFrZi84RVUzN1JJN0Ur?=
+ =?utf-8?B?Q2dOQU9wdEVwdEJITkhNNnJBdHJBUFZrRUNTSnZpZXZEY3VDNHN4ZnUvVmZU?=
+ =?utf-8?B?UFlkd3FsZWNOejJpa1FXa0hKVjh0eWE4Si9GTk42RnpnTnhOZ1IyZE5zMHZt?=
+ =?utf-8?B?R1RFVExFUDFSSDVFaWxWYitqRkw2ckdXK3A5QWsrM2RXSzczdTFjSEJjTlBs?=
+ =?utf-8?B?VHVqcVBDcU5XTlFrNk1aMFVkSXFxM1NENi8zSzZUbHJIR2RYQzlYQmtsYkJx?=
+ =?utf-8?B?b2dYOXI3R0NsVm5DbXFXK2Y4dUVYbmVpOEFyczk2dlQ5NjYwNEViTFdMSFBD?=
+ =?utf-8?B?bkwxc012TUpkd3RwNnM3VFV1RWYvZXJSZ05LMUdIRVBIVy9uRzZxYkFEclY0?=
+ =?utf-8?B?YnpXMWoyVEhmN3VZSVJOTTg0UGtQRnZZNXY3OEF1S2hDUXRLbFdvNDJwU2Ny?=
+ =?utf-8?B?Q2RPV1JheGlzSEZ2aUd5STZsUjdyRFczV2hjTzIxcDVsdkZEZURjU3k2NkZp?=
+ =?utf-8?B?bU1KQU1BOVErRkNaV0Z1Q2RuTi9JRUk1Ui8vVUo4bmMwaWoxemc1ai9lbU95?=
+ =?utf-8?B?NTFxOFUrTUZZNmdTNUg3TGZsTzNyV0dnODZRbzRhKzdGdStGYnlHYko0Sm5x?=
+ =?utf-8?B?WWdZSFVEUFhrT1FvUituc1VadVI3ZTFneVhtNC8xMm1uL0VLdjZhSjhIdkU0?=
+ =?utf-8?B?aVFPZUdJaFpmR3o4VXFpemlmMnlMWE13eWxtVGlsTnZpM3FtMnlKOUtCN2Fi?=
+ =?utf-8?B?NC9HSFNnR2s4c1pITWQ2NExYam5Ib0JoY2pDY1R3bTl0M3RGbXBjL3pzOVZ4?=
+ =?utf-8?B?cnFMUjR5b3QyVUhjc2hNekprbXRSdFVZcVkxeDJlU1hYTTZZRG4vMEZqMVpH?=
+ =?utf-8?B?QXNIN3hTY2RTQUVHWFQxWEJRQWsvYys0K2lKdkhsQnV0a1R6T3Y0cVcxL3kr?=
+ =?utf-8?B?TDcxYlI1Qko5cVQ4ekZEcFlkc0pKKzlOZFhaNkNsb28zVkRYdlllUmVhSTdK?=
+ =?utf-8?B?QktDTDl0bVdFSDlvQW1WWWZoTlQvTEhZSVR6ZDhkTGJWUzkxaGtiR28yOGVM?=
+ =?utf-8?B?S05qY0Z5QU9lT3dzU0NrTzBzbm15akUwLzR3RmI1dVJwQ1ZyYWU0UFdMdHAr?=
+ =?utf-8?B?eGZHcHZlVEVMcy9aU2t4TFVuc3pGVWg5dXRFTkNoZFZWVWJVeXZqQ0xpMzR0?=
+ =?utf-8?B?OS9xV2lPc0JnYmVmbDVyM0IwdFpYSWFoRGdpMTNMMGw5VXB1ZjNqUjlTSkNE?=
+ =?utf-8?B?S3c9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C0CC3E3E733D964784135974B08B453A@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324210447.956973-1-hannes@cmpxchg.org> <CAJD7tkaWQAV=X1pzYG=VkWe7Ue9ZFbjt9uQ5m1NJujtLspWJTA@mail.gmail.com>
- <CAGsJ_4yeBmNsMGXEWwC+1Hs5zJUP+becq4wG+6CpU7V1=EOvhg@mail.gmail.com>
- <CAJD7tka5K69q20bxTsBk38JC7mdPr3UsxXpsnggDO_iQA=qxug@mail.gmail.com>
- <1e7ce417-b9dd-4d62-9f54-0adf1ccdae35@linux.dev> <CAJD7tkYc3oFho5eEkS1zmr_+CC-Ag1HucUTyAy2RJbEb4SqRoQ@mail.gmail.com>
- <d556ec84-da6a-4486-a68e-5982baf46879@linux.dev> <CAJD7tkbNWeoNnkB7Q1z9-XdrE1L4_2okdjFGvLjnuwoXT9XmwA@mail.gmail.com>
- <339639f3-4334-44a8-a811-d20b3c578f74@linux.dev>
-In-Reply-To: <339639f3-4334-44a8-a811-d20b3c578f74@linux.dev>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 25 Mar 2024 11:35:06 -0700
-Message-ID: <CAJD7tkZ=fsBi_t5Hcauty_3YKraJUmGA24tSvz8LjRd=Ao--2w@mail.gmail.com>
-Subject: Re: [PATCH] mm: zswap: fix data loss on SWP_SYNCHRONOUS_IO devices
-To: Chengming Zhou <chengming.zhou@linux.dev>
-Cc: Barry Song <21cnbao@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Zhongkun He <hezhongkun.hzk@bytedance.com>, 
-	Chengming Zhou <zhouchengming@bytedance.com>, Chris Li <chrisl@kernel.org>, 
-	Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Kairui Song <kasong@tencent.com>, Minchan Kim <minchan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB8179.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: afec47cd-b676-498c-0f71-08dc4cfa839c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2024 18:36:41.2887
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /ByW/P7/yrbIV5KTu4sThw41xFk7MsdvfOGlZiYQgVsq7GGd/q2x/IeY2KKIz5X7LTCl+UPjfJzoxnrpYwEwnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB6768
+X-OriginatorOrg: intel.com
 
-On Mon, Mar 25, 2024 at 2:46=E2=80=AFAM Chengming Zhou <chengming.zhou@linu=
-x.dev> wrote:
->
-> On 2024/3/25 17:40, Yosry Ahmed wrote:
-> > On Mon, Mar 25, 2024 at 2:22=E2=80=AFAM Chengming Zhou <chengming.zhou@=
-linux.dev> wrote:
-> >>
-> >> On 2024/3/25 16:38, Yosry Ahmed wrote:
-> >>> On Mon, Mar 25, 2024 at 12:33=E2=80=AFAM Chengming Zhou
-> >>> <chengming.zhou@linux.dev> wrote:
-> >>>>
-> >>>> On 2024/3/25 15:06, Yosry Ahmed wrote:
-> >>>>> On Sun, Mar 24, 2024 at 9:54=E2=80=AFPM Barry Song <21cnbao@gmail.c=
-om> wrote:
-> >>>>>>
-> >>>>>> On Mon, Mar 25, 2024 at 10:23=E2=80=AFAM Yosry Ahmed <yosryahmed@g=
-oogle.com> wrote:
-> >>>>>>>
-> >>>>>>> On Sun, Mar 24, 2024 at 2:04=E2=80=AFPM Johannes Weiner <hannes@c=
-mpxchg.org> wrote:
-> >>>>>>>>
-> >>>>>>>> Zhongkun He reports data corruption when combining zswap with zr=
-am.
-> >>>>>>>>
-> >>>>>>>> The issue is the exclusive loads we're doing in zswap. They assu=
-me
-> >>>>>>>> that all reads are going into the swapcache, which can assume
-> >>>>>>>> authoritative ownership of the data and so the zswap copy can go=
-.
-> >>>>>>>>
-> >>>>>>>> However, zram files are marked SWP_SYNCHRONOUS_IO, and faults wi=
-ll try
-> >>>>>>>> to bypass the swapcache. This results in an optimistic read of t=
-he
-> >>>>>>>> swap data into a page that will be dismissed if the fault fails =
-due to
-> >>>>>>>> races. In this case, zswap mustn't drop its authoritative copy.
-> >>>>>>>>
-> >>>>>>>> Link: https://lore.kernel.org/all/CACSyD1N+dUvsu8=3DzV9P691B9bVq=
-33erwOXNTmEaUbi9DrDeJzw@mail.gmail.com/
-> >>>>>>>> Reported-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
-> >>>>>>>> Fixes: b9c91c43412f ("mm: zswap: support exclusive loads")
-> >>>>>>>> Cc: stable@vger.kernel.org      [6.5+]
-> >>>>>>>> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> >>>>>>>> Tested-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
-> >>>>>>
-> >>>>>> Acked-by: Barry Song <baohua@kernel.org>
-> >>>>>>
-> >>>>>>>
-> >>>>>>> Do we also want to mention somewhere (commit log or comment) that
-> >>>>>>> keeping the entry in the tree is fine because we are still protec=
-ted
-> >>>>>>> from concurrent loads/invalidations/writeback by swapcache_prepar=
-e()
-> >>>>>>> setting SWAP_HAS_CACHE or so?
-> >>>>>>
-> >>>>>> It seems that Kairui's patch comprehensively addresses the issue a=
-t hand.
-> >>>>>> Johannes's solution, on the other hand, appears to align zswap beh=
-avior
-> >>>>>> more closely with that of a traditional swap device, only releasin=
-g an entry
-> >>>>>> when the corresponding swap slot is freed, particularly in the syn=
-c-io case.
-> >>>>>
-> >>>>> It actually worked out quite well that Kairui's fix landed shortly
-> >>>>> before this bug was reported, as this fix wouldn't have been possib=
-le
-> >>>>> without it as far as I can tell.
-> >>>>>
-> >>>>>>
-> >>>>>> Johannes' patch has inspired me to consider whether zRAM could ach=
-ieve
-> >>>>>> a comparable outcome by immediately releasing objects in swap cach=
-e
-> >>>>>> scenarios.  When I have the opportunity, I plan to experiment with=
- zRAM.
-> >>>>>
-> >>>>> That would be interesting. I am curious if it would be as
-> >>>>> straightforward in zram to just mark the folio as dirty in this cas=
-e
-> >>>>> like zswap does, given its implementation as a block device.
-> >>>>>
-> >>>>
-> >>>> This makes me wonder who is responsible for marking folio dirty in t=
-his swapcache
-> >>>> bypass case? Should we call folio_mark_dirty() after the swap_read_f=
-olio()?
-> >>>
-> >>> In shrink_folio_list(), we try to add anonymous folios to the
-> >>> swapcache if they are not there before checking if they are dirty.
-> >>> add_to_swap() calls folio_mark_dirty(), so this should take care of
-> >>
-> >> Right, thanks for your clarification, so should be no problem here.
-> >> Although it was a fix just for MADV_FREE case.
-> >>
-> >>> it. There is an interesting comment there though. It says that PTE
-> >>> should be dirty, so unmapping the folio should have already marked it
-> >>> as dirty by the time we are adding it to the swapcache, except for th=
-e
-> >>> MADV_FREE case.
-> >>
-> >> It seems to say the folio will be dirtied when unmap later, supposing =
-the
-> >> PTE is dirty.
-> >
-> > Oh yeah it could mean that the folio will be dirted later.
-> >
-> >>
-> >>>
-> >>> However, I think we actually unmap the folio after we add it to the
-> >>> swapcache in shrink_folio_list(). Also, I don't immediately see why
-> >>> the PTE would be dirty. In do_swap_page(), making the PTE dirty seems
-> >>
-> >> If all anon pages on LRU list are faulted by write, it should be true.
-> >> We could just use the zero page if faulted by read, right?
-> >
-> > This applies for the initial fault that creates the folio, but this is
-> > a swap fault. It could be a read fault and in that case we still need
-> > to make the folio dirty because it's not in the swapcache and we need
-> > to write it out if it's reclaimed, right?
->
-> Yes, IMHO I think it should be marked as dirty here.
->
-> But it should be no problem with that unconditional folio_mark_dirty()
-> in add_to_swap(). Not sure if there are other issues.
-
-I don't believe there are any issues now. Dirtying the folio in
-add_to_swap() was introduced before SWP_SYNCHRONOUS_IO, so I guess
-things have always worked.
-
-I think we should update the comment there though to mention that
-dirtying the folio is also needed for this case (not just MADV_FREE),
-or dirty the PTE during the fault. Otherwise, if someone is making
-MADV_FREE changes they could end up breaking SWP_SYNCHRONOUS_IO
-faults.
-
-Adding Minchan here in case he can confirm that we in fact rely on
-add_to_swap()->folio_mark_dirty() for SWP_SYNCHRONOUS_IO to work as
-intended.
+T24gTW9uLCAyMDI0LTAzLTI1IGF0IDE3OjQ4ICswMTAwLCBKb2hhbm5lcyBCZXJnIHdyb3RlOg0K
+PiBPbiBNb24sIDIwMjQtMDMtMDQgYXQgMDY6MzkgLTA4MDAsIEpvc8OpIFJvYmVydG8gZGUgU291
+emEgd3JvdGU6DQo+ID4gSXQgaXMgdXNlZnVsIGZvciBtb2R1bGVzIHRoYXQgZG8gbm90IHdhbnQg
+dG8ga2VlcCBjb3JlZHVtcCBhdmFpbGFibGUNCj4gPiBhZnRlciBpdHMgdW5sb2FkLg0KPiANCj4g
+V2h5IG5vdCB0aG91Z2g/IE1heWJlIGlmIHRoaXMgaXMgYSBjb21tb24gY2FzZSB3ZSBzaG91bGQg
+aGF2ZSBkZXZtXy4uLg0KPiBjb3JlZHVtcCBmdW5jdGlvbnM/IER1bm5vLg0KPiANCj4gQW55d2F5
+LCBJJ20gZmluZSB3aXRoIHRoaXMsIGV2ZW4gdGhvdWdoIEknZCBsaWtlIHRvIHNlZSBhIGJpdCBt
+b3JlDQo+IGRpc2N1c3Npb24gdGhhbiAiZG8gbm90IHdhbnQiLiBDb2RlIGxvb2tzIGdvb2QuDQo+
+IA0KPiBSZXZpZXdlZC1ieTogSm9oYW5uZXMgQmVyZyA8am9oYW5uZXNAc2lwc29sdXRpb25zLm5l
+dD4NCg0KVGhhbmsgeW91LCBjYW4geW91IHBsZWFzZSBhZGQgdGhpcyBwYXRjaCB0byB5b3VyIG5l
+eHQgcHVsbCByZXF1ZXN0PyBPciBzaG91bGQgdXMgYWRkIGl0IHRvIHRoZSBuZXh0IGRybS9pbnRl
+bC1kcm0gcHVsbCByZXF1ZXN0Pw0KDQpBZ2FpbiB0aGFuayB5b3UsIGp1c3QgdGhpcyBwYXRjaCB3
+aWxsIGFscmVhZHkgdW5ibG9jayBzb21lIHdvcmsgZm9yIHVzLg0KDQo+IA0KPiBqb2hhbm5lcw0K
+DQo=
