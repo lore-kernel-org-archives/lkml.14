@@ -1,106 +1,126 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AB2F13A876;
-	Mon, 25 Mar 2024 01:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC7613A242;
+	Mon, 25 Mar 2024 01:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711331690; cv=none; b=RvsZZ8E7mAyk7FKX1S1x0t7h7Zoy6vt5UciTJJctc/WESmayMRUd9Zr/RjTqMOShYlGB2Z0Ip/E64gwQrGTY8y29vvtSPJeA4TsjpX9vNrfJDwA3Ch0XnyOfXkqvB2aoIRfIdcQsNE46spIQMJnZjnCnGOaCkAfIwSgNgckniLY=
+	t=1711331579; cv=none; b=DRtSFwQoXrqHndxpCAFnYezieUlTZw/RH4D7RGBahnnNijG0OHZk8+iJznheXH0TjCgYfPzk0JxHkicyuBlQm1FOAp3ngSnBIOU65MIAJYFtTXZFdvW3kFdzNNlZLR1zWYk0o6eR8vdzm0QAohST2GZfMlNoN7H4eZ3VxZGOO10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711331690; c=relaxed/simple;
-	bh=XiiSClFiZHKRTyOnVAxVECc0GJmJXRzHs1zn5XKzvWU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=HGoGdtJBGLoCBNxYGz/QgCz+DFAWKv0oWDD/GKp1wdulnQ+vTnmbu0VBtCqDTl/zyXGbdtfcP72LpgqZiaiSvocPSmRjIWu4m/bLzKaJGBWyqZv7NxnNxtbsdKuHzNkISKp5MVhJU9YJHCnzjLFUTnpaoD6rg6tZjNn5JD5yUFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8Cxmehe2QBm4YEdAA--.49942S3;
-	Mon, 25 Mar 2024 09:54:38 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXs1c2QBmRWZmAA--.599S3;
-	Mon, 25 Mar 2024 09:54:36 +0800 (CST)
-Subject: Re: [PATCH V3] irqchip/loongson-pch-pic: Update interrupt
- registration policy
-To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
- jiaxun.yang@flygoat.com
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- Baoqi Zhang <zhangbaoqi@loongson.cn>, Biao Dong <dongbiao@loongson.cn>
-References: <20240319124629.23925-1-zhangtianyang@loongson.cn>
- <878r2di3ak.ffs@tglx> <648e7f23-a2e0-ce8f-7c52-3bcda262de86@loongson.cn>
- <8734sghfya.ffs@tglx>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <7418ece8-111a-cb29-0320-e8bc08e2d7f8@loongson.cn>
-Date: Mon, 25 Mar 2024 09:54:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1711331579; c=relaxed/simple;
+	bh=9CybAqVXI7wUwrPLIFH1g82uXiok2SJVjKmOvPbOZC4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lcjdbNhGiCUgZCaWZbx0H9Uc5xE4RKoJUyy77Co/9RVtVbWBYRin4MnkPwBkuMP6NNlrSm9t0LMw2QoPk0QaW4OFjWYIA6uALZvQ5wPWM8axAQf4MfMPEDhq/uVsr0va9G/HwifLfEUvGwmopxCpFXD93DCDT1NGvfZlkYtOhE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bDuph30O; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bDuph30O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 543A7C433C7;
+	Mon, 25 Mar 2024 01:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711331579;
+	bh=9CybAqVXI7wUwrPLIFH1g82uXiok2SJVjKmOvPbOZC4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bDuph30OW6lhh6J2GJ+ojf8/x2ql2EXUcrdFEYl4+4QRhmydWKkaSljhzyItvonPi
+	 P7Uk9BVWJ8tXyPJpYZRBTqzE42lWotMY1D51Bwhc0s6/LncBbe+sjzezUUYlYlOMZA
+	 gZGtyxcBRDxRg3D/obG4k50GRncXj/3MmTisyz2Bg065Kd12LiYJZ8qtEpsdTUEmLt
+	 WU3008QY8ND1qxpv2AGoylcXFRJ1tLDeNZMTkSLrhlUu8f+2MpVG0GfRnvjmFMel7J
+	 fXYJ0fydnqeGouPSqsxIfoRnkYESIbNQW8Bb0fJEz8vROEU6r+VFQuotwT9mlckPaF
+	 ElJLrve/eqASQ==
+Date: Mon, 25 Mar 2024 10:52:55 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ye Bin <yebin10@huawei.com>
+Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 0/5] support '%pd' and '%pD' for print file name
+Message-Id: <20240325105255.8b93f2c9673e08f4dec182ea@kernel.org>
+In-Reply-To: <20240322064308.284457-1-yebin10@huawei.com>
+References: <20240322064308.284457-1-yebin10@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <8734sghfya.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8BxXs1c2QBmRWZmAA--.599S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7GrWDZF4xAw1rGr13Cw1kXrc_yoW8JF1Up3
-	ykKa17Grn7GryfKw10qrs7tFWSvr93A3WrJ3s5Gw1DC3y5WFyFqF42qF4Y9as5XrZYy3Wj
-	qa1Y9ry5u34DZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UU
-	UUU==
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi, Thomas
+On Fri, 22 Mar 2024 14:43:03 +0800
+Ye Bin <yebin10@huawei.com> wrote:
 
-在 2024/3/24 上午4:05, Thomas Gleixner 写道:
-> Tianyang!
->
-> On Fri, Mar 22 2024 at 18:14, Tianyang Zhang wrote:
->
-> Please do not top-post. See the 'Top-posting' chapter in:
-> https://people.kernel.org/tglx/notes-about-netiquette
-Sorry, I will carefully read the document
->> Regarding "WHY", my understanding is that a convincing reason is needed
->> to explain the necessity of this patch.
-> Yes.
->
->> If so, can the last paragraph "This will be more conducive to fully
->> utilizing existing vectors to support more devices."
->>
->> be considered a simple explanation?
-> Kinda, but ideally you describe it in a way that there is context for
-> the reader. Like this:
->
->    The fixed mapping between the LS7A interrupt source and the HT
->    interrupt vector prevents the utilization of the full interrupt vector
->    space which limits the number of devices in a system
->
->    Replace the fixed mapping with a dynamic mapping which allocates a
->    vector when an interrupt source is set up. This avoids that unused
->    sources prevent vectors from being used for other devices.
->
-> See?
-Thank you for your demonstration. I will make the modifications 
-according to the requirements
->
-> Thanks,
->
->          tglx
+> During fault locating, the file name needs to be printed based on the
+> dentry/file address. The offset needs to be calculated each time, which
+> is troublesome. Similar to printk, kprobe supports printing file names
+> for dentry/file addresses.
+> 
+
+Hi Ye,
+
+Thanks for update! There is a nit comment but basically OK.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
+> Diff v8 vs v7:
+> 1. Add detail change log for patch[1-2];
+> 
+> Diff v7 vs v6:
+> 1. Squash [1/8] to [3/8] patches into 1 patch;
+> 2. Split readme_msg[] into each patch;
+> 
+> Diff v6 vs v5:
+> 1. Add const for 'bufsize' in PATCH [1];
+> 2. Move PATCH 'tracing/probes: support '%pd/%pD' type for fprobe' after
+> PATCH "tracing/probes: support '%pd' type for print struct dentry's name".
+> 3. Add requires '"%pd/%pD":README' for testcase.
+> 
+> Diff v5 vs v4:
+> 1. Use glob_match() instead of str_has_suffix(), so remove the first patch;
+> 2. Allocate buffer from heap for expand dentry;
+> 3. Support "%pd/%pD" print type for fprobe;
+> 4. Use $arg1 instead of origin register in test case;
+> 5. Add test case for fprobe;
+> 
+> Diff v4 vs v3:
+> 1. Use "argv[i][idx + 3] == 'd'" instead of "argv[i][strlen(argv[i]) - 1] == 'd'"
+> to judge print format in PATCH[4/7];
+> 
+> Diff v3 vs v2:
+> 1. Return the index of where the suffix was found in str_has_suffix();
+> 
+> Diff v2 vs v1:
+> 1. Use "%pd/%pD" print format instead of "pd/pD" print format;
+> 2. Add "%pd/%pD" in README;
+> 3. Expand "%pd/%pD" argument before parameter parsing;
+> 4. Add more detail information in ftrace documentation;
+> 5. Add test cases for new print format in selftests/ftrace;
+> 
+> 
+> Ye Bin (5):
+>   tracing/probes: support '%pd' type for print struct dentry's name
+>   tracing/probes: support '%pD' type for print struct file's name
+>   Documentation: tracing: add new type '%pd' and '%pD' for kprobe
+>   selftests/ftrace: add kprobe test cases for VFS type "%pd" and "%pD"
+>   selftests/ftrace: add fprobe test cases for VFS type "%pd" and "%pD"
+> 
+>  Documentation/trace/kprobetrace.rst           |  8 ++-
+>  kernel/trace/trace.c                          |  2 +-
+>  kernel/trace/trace_fprobe.c                   |  6 ++
+>  kernel/trace/trace_kprobe.c                   |  6 ++
+>  kernel/trace/trace_probe.c                    | 63 +++++++++++++++++++
+>  kernel/trace/trace_probe.h                    |  2 +
+>  .../ftrace/test.d/dynevent/fprobe_args_vfs.tc | 40 ++++++++++++
+>  .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 40 ++++++++++++
+>  8 files changed, 164 insertions(+), 3 deletions(-)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+> 
+> -- 
+> 2.31.1
+> 
+> 
 
 
-Thanks again
-
-             Tianyang
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
