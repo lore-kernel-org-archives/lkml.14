@@ -1,125 +1,167 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C8A1494BD
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BD4149C73
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711363131; cv=none; b=dB2Zb7BS+51w6SupLfRkJGGGITaCTCJ5jO9LaBPJwVyzPeiHq15R5xfwo2CEhY7XMfp4UKebJOgw2DSytRgORgkV1EJF9KcvM74EfDs2cDXmhY8j2cZ6BGCrTuM6iOWIpc8+fc6StB1NpTJ7Fn2/Ea2TVnI1gOgZI7mNHBIljUY=
+	t=1711363213; cv=none; b=hYaCD0iZiq+tQjiNOE6I+Dig5h/gEyLOz7qGTajc5Zk+SKCznvkx2Ktlv5Oj1Ke7pRBMXUs0lvyEFYpDqcYFTJw00kq4xEiLkFo9Tont+ullg9thHIKjGmHAjjenkpy0M4V7ZZQxLPdMa5CsFURndXBfxTJOMDKk2Ea31TmE75c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711363131; c=relaxed/simple;
-	bh=Fh3nwgtB4/hNAKuOMOxNy2Pkpo90LJkx49Wz4JF1YMc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tCoXZumQQBsFKC3LKIlEr9siS5wl76C8OngBWj8UBzcrFpdoAO5XftLjXTj1Kbo0y/mTzrFfGje1JuCGKmnZ1n8CaDvqGGP1xTAKfg6Xk2OEpwwggICWe2EZnPCxZ8+b4MKdAmJldvvoOBxbv9tbBJ3Kca8ege4OJFJUZ7X54sA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JL5F/GnD; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711363213; c=relaxed/simple;
+	bh=hh1ZFNCawXsWZU17nvbUwHOUKoxz/TVwWlfNy5iz5SE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=A74MOMiFZdi4BX88yPFvsIzu8FMg9QvZJhabGXn1+DvtGhvysB1CyGvXvn8bxG7NuN548wdHh1EC8ocE8YKMV71bhviCetrPL1vO8u+yVZfO/gu8tAjzVFMVv76r8mE286F5sDcGCNYVTuYgrZYrvdYZJIAaHt4qp103h5jGgJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iCMpHjJt; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JL5F/GnD"
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-7e057fb0b69so1276428241.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:38:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711363128; x=1711967928; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6g5n0zDO/k+zn99LgqTberBsE1ninTPL1fai4wdNt1g=;
-        b=JL5F/GnDAQzdejdXTwVt5UTEEl5Dx2SFXl+2iPs9A9gYx+IPij6hXyFbu/3UAJVw80
-         NNTrJWicWlrz+uMvJwM1jux/23UUG2ktUgRPLHCM2PWCWJcsz0ssDluMDVAgHwyHmnFS
-         Nz8nf9VnrarbQzviKYDZ00nZiTbNpsH2Vbx1EDQ+mHklNDy4cM6h+aC168KEReuTDXtp
-         yIvmpbhttaKxmNdv0AxxGtEonJcTeuzyg7qkeZY0xL8PaPbfqLHGifXJq6F20dHlkVfV
-         KtYTgLfY3fsoVs1WIT/NHzYvq6CgOKhcFih9mmOnN8IKYgouy+0Zrm+kBGVkLRxApRAz
-         Yo7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711363128; x=1711967928;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6g5n0zDO/k+zn99LgqTberBsE1ninTPL1fai4wdNt1g=;
-        b=vrvaqKHCNHPUTrhGSNvzNGktjPicHB3niLeYxdDcUTiY5y8OyXXIbdaGG9YDbu+OOn
-         7Vztb/lyP/7ZuJjg1pvlOw4aE78LJRcXp03rrX/2WUHrmvJ5Z1ySsMCr0AxcoG/QCy1b
-         UTeAZ6pMC0GilLKCpf+5++gcOPqLLf5Vbs/eNr1hSN42Yx3dQ9bRnlr2mf1oP7W4qn5a
-         A4QeC6li3fJBWOfialMDrD8HLjNl1z/xsk5U41/a55yoh3waaOZbPGIAaKHwIozodcRP
-         P2Ppnu8rGO7lNDuotdl1nJgPw88duUw1pqMGDhVod7vu7XvFPB7V8Izfla0ux0CY7afa
-         jOaA==
-X-Gm-Message-State: AOJu0YxXaKF8W90zotBiX2jVPuyXRj+Im4VgPQ+RiqQARGr9UCx8gJhe
-	WjPgTv+PqBnU7c451ZNBcQ4gcWxztuQD5hC4p2CVQmi2bt6s70ucZQI0oHnJmkZMF99cUyfJDLB
-	BmeoPEBMedwEC5YQPg6f2u4REmxTD/7bfDYGzRA==
-X-Google-Smtp-Source: AGHT+IFJxYGwWNIHi6Lbmtdb4kZhXP5ioGaL2mD6ZgHA/n4sgaK7bl1N67pI8OeJhoqvDzhTfAxKbvKvX0om/kjbOgc=
-X-Received: by 2002:a05:6102:3549:b0:472:d517:24e1 with SMTP id
- e9-20020a056102354900b00472d51724e1mr4887720vss.29.1711363128587; Mon, 25 Mar
- 2024 03:38:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iCMpHjJt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711363212; x=1742899212;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=hh1ZFNCawXsWZU17nvbUwHOUKoxz/TVwWlfNy5iz5SE=;
+  b=iCMpHjJt9k/zIHI+gIDcz7kbOLtQzhLNXGHnFGhXTvsUKdh8UM9hEBTP
+   EJAQHzfhZnMqKmqHVKksI6VYSENECpHZXROeSy89RecQtB6h/TizYAPr+
+   IFAUwOUfOdJKk5lPx8L7gBqRU4lw77IzHwaiYuKj2SGpVVydJKBTQ95gi
+   V8heSUaStmVN2f0+kiolcStmGsyLOxrB++Bj+q8WH/AgCeU8P1bEB1nZj
+   dMJrzQ1fU0v3tazcg+Q8oNNeGEdAR3rwv2G2uJDXqFwWwoopHXhj2ZRMM
+   UTZkNlePsQDUwUhtWN3Pq8PYh3Dt2hPyoVcE9G+JiCJwXgHM+o4zaEV/k
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6561300"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="6561300"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 03:40:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="937070129"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="937070129"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2024 03:40:05 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 082DB524; Mon, 25 Mar 2024 12:40:05 +0200 (EET)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv9 04/17] cpu/hotplug, x86/acpi: Disable CPU offlining for ACPI MADT wakeup
+Date: Mon, 25 Mar 2024 12:38:58 +0200
+Message-ID: <20240325103911.2651793-5-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
+References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324224720.1345309-1-sashal@kernel.org>
-In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 25 Mar 2024 16:08:37 +0530
-Message-ID: <CA+G9fYtBKCPVmRETNpo3OdQbky-XiY6RDQ+Pc2b4Yj1yLe_e0g@mail.gmail.com>
-Subject: Re: [PATCH 6.7 000/713] 6.7.11-rc1 review
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
-	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
-	florian.fainelli@broadcom.com, pavel@denx.de, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 25 Mar 2024 at 04:17, Sasha Levin <sashal@kernel.org> wrote:
->
->
-> This is the start of the stable review cycle for the 6.7.11 release.
-> There are 713 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Tue Mar 26 10:47:13 PM UTC 2024.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.7.y&id2=v6.7.10
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
-> and the diffstat can be found below.
->
-> Thanks,
-> Sasha
+ACPI MADT doesn't allow to offline CPU after it got woke up.
 
-The 32-bit architecture boot failed on stable rc 6.8 and 6.7 branches.
+Currently CPU hotplug is prevented based on the confidential computing
+attribute which is set for Intel TDX. But TDX is not the only possible
+user of the wake up method.
 
-Boot details,
- - linux-stable-rc-linux-6.8.y - arm X15, qemu-arm and qemu-i386 - Boot failed
- - linux-stable-rc-linux-6.7.y - arm X15, qemu-arm and qemu-i386 - Boot failed
+Disable CPU offlining on ACPI MADT wakeup enumeration.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/coco/core.c               |  1 -
+ arch/x86/kernel/acpi/madt_wakeup.c |  3 +++
+ include/linux/cc_platform.h        | 10 ----------
+ kernel/cpu.c                       |  3 +--
+ 4 files changed, 4 insertions(+), 13 deletions(-)
 
-The bisection is in progress to investigate this problem.
-Serial console logs printing as "Starting kernel ..."  that's all.
+diff --git a/arch/x86/coco/core.c b/arch/x86/coco/core.c
+index d07be9d05cd0..19614302e0c4 100644
+--- a/arch/x86/coco/core.c
++++ b/arch/x86/coco/core.c
+@@ -20,7 +20,6 @@ static bool noinstr intel_cc_platform_has(enum cc_attr attr)
+ {
+ 	switch (attr) {
+ 	case CC_ATTR_GUEST_UNROLL_STRING_IO:
+-	case CC_ATTR_HOTPLUG_DISABLED:
+ 	case CC_ATTR_GUEST_MEM_ENCRYPT:
+ 	case CC_ATTR_MEM_ENCRYPT:
+ 		return true;
+diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+index cf79ea6f3007..d222be8d7a07 100644
+--- a/arch/x86/kernel/acpi/madt_wakeup.c
++++ b/arch/x86/kernel/acpi/madt_wakeup.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ #include <linux/acpi.h>
++#include <linux/cpu.h>
+ #include <linux/io.h>
+ #include <asm/apic.h>
+ #include <asm/barrier.h>
+@@ -76,6 +77,8 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+ 
+ 	acpi_mp_wake_mailbox_paddr = mp_wake->base_address;
+ 
++	cpu_hotplug_disable_offlining();
++
+ 	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+ 
+ 	return 0;
+diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
+index cb0d6cd1c12f..d08dd65b5c43 100644
+--- a/include/linux/cc_platform.h
++++ b/include/linux/cc_platform.h
+@@ -80,16 +80,6 @@ enum cc_attr {
+ 	 * using AMD SEV-SNP features.
+ 	 */
+ 	CC_ATTR_GUEST_SEV_SNP,
+-
+-	/**
+-	 * @CC_ATTR_HOTPLUG_DISABLED: Hotplug is not supported or disabled.
+-	 *
+-	 * The platform/OS is running as a guest/virtual machine does not
+-	 * support CPU hotplug feature.
+-	 *
+-	 * Examples include TDX Guest.
+-	 */
+-	CC_ATTR_HOTPLUG_DISABLED,
+ };
+ 
+ #ifdef CONFIG_ARCH_HAS_CC_PLATFORM
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 08860baa6ce0..a70767aee9d0 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1528,8 +1528,7 @@ static int cpu_down_maps_locked(unsigned int cpu, enum cpuhp_state target)
+ 	 * If the platform does not support hotplug, report it explicitly to
+ 	 * differentiate it from a transient offlining failure.
+ 	 */
+-	if (cc_platform_has(CC_ATTR_HOTPLUG_DISABLED) ||
+-	    cpu_hotplug_offline_disabled)
++	if (cpu_hotplug_offline_disabled)
+ 		return -EOPNOTSUPP;
+ 	if (cpu_hotplug_disabled)
+ 		return -EBUSY;
+-- 
+2.43.0
 
-
-Steps to reproduce:
--------
-tuxrun --runtime podman --device qemu-armv7 --boot-args rw --kernel
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2e9fapDKuhiDqLpezalPml1QIf3/zImage
---rootfs https://storage.tuxboot.com/debian/bookworm/armhf/rootfs.ext4.xz
---modules https://storage.tuxsuite.com/public/linaro/lkft/builds/2e9fapDKuhiDqLpezalPml1QIf3/modules.tar.xz
---parameters SKIPFILE=skipfile-lkft.yaml --image
-docker.io/linaro/tuxrun-dispatcher:v0.66.0 --tests rcutorture
---timeouts boot=30
-
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.7.y/build/v6.7.10-713-g6f0681544906/testrun/23140347/suite/boot/test/gcc-13-lkftconfig-rcutorture/history/
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.7.y/build/v6.7.10-713-g6f0681544906/testrun/23141457/suite/boot/test/gcc-13-lkftconfig-rcutorture/details/
- - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2e9fc0JdR6N9yOjnYWnO9druaJK
-
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.8.y/build/v6.8.1-715-gb0f6de60d946/testrun/23138873/suite/boot/test/gcc-13-lkftconfig-rcutorture/history/
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.8.y/build/v6.8.1-715-gb0f6de60d946/testrun/23138873/suite/boot/test/gcc-13-lkftconfig-rcutorture/details/
- - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2e9dH67vQBvX6giHu5ymUEpe2H4
-
---
-Linaro LKFT
-https://lkft.linaro.org
