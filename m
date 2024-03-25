@@ -1,161 +1,116 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DAF184418;
-	Mon, 25 Mar 2024 09:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFB282D68
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711359887; cv=none; b=c3odYcjSX00BI1p94uxcXmo548tLpvwy9wmHVXI1sY3KRT5K8JxBNIhCPDJErD4Y7QIRMtJqfqpgWjbt1JC9DikWEBoQ7XXKhI/GDwmKKNdoGVDcwJudnZPD9vph3Hy3BhfUSwzaQLY4bmITcKO3Y8Wx/HO41PSkI6jTrz6xDEY=
+	t=1711360124; cv=none; b=CDDEWYXmNB8mHjfteCr0H6goG8eJGfnt1SruXGuG+bYmG+KSOHlBLVrHEbOGSL9z/KT4foQ3TzU7erJOGj4vVZOFyMzx1e5ipdJVpf1kMgLSN6UGe0e0zARrlRCgoUtsneE3MjkPINFGqoV9DQEDWIMGbZ/88NRx808Gm2xyAPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711359887; c=relaxed/simple;
-	bh=dVAYdGBq2nlf8m9m7k04u7V6y/IdKZueMG04GsJ80TI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K6l9APm3Jnl6XmZb2dq/g+6Zdmo9vuglp0gjZQAreljqKk8h18Pv7StlV9iLyjg1SbZ6dkjp7n2n6WBBMoke7XkewSeUVJx5LIkW0XghqW5xSxQspR7lgm6LdhszOFetEZcB+HzyPaQdO0fuLDqYpFyjCd+lug5Z7tz2o7mrNvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=wWRh8sbX; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1711360124; c=relaxed/simple;
+	bh=z7nQ+fuXBBJwghbwTKA/0pe69mO2YVrSsG63TX2xrh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eR49JOdsBC4zbNIbLmZtgsncyjOnc+Ym3TRzCM7JKXWYjJOy6AEdVw3j1eeqfvON+Rq0Kqamg+vgxHBMM9ZiWUp7faYu0sjKALb/sBAqR5A+3mxdUG2BKTRnRjkadErdSL+Uyj08OHzEvDnVRulJHVrM5X3pqMwUxyn44R0asBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d5QAGzkc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="wWRh8sbX"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42P8fHpK027449;
-	Mon, 25 Mar 2024 10:44:07 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=TumpbS5vUWGOFAnUTrFiTwigoWxOBILory3Y1hvCVq0=; b=wW
-	Rh8sbXOSa0HCm1qDw2GTdinczGE4iRNoMKzZ7d+eb5UHjHsJiN0qP3Fr/Xvk53Iz
-	J+wNsoVqGlJYXOJz7xjFeEjIAxCLMac/W5bzILa06kMAzLXmbCI6ULLXkNOG14TE
-	owDV+JjBKXjFxbj06eSZgJ01Pco8aFl8ESMtwmKfEcwqMYto19eY7vlMUfdaPixj
-	zwgosJVIMzgCbGeBt5aQ8ZbhVzMiKMaaTvLUAcsuUSaUVrGiaDFua2GLwyoyFg1i
-	ATP2pzEQGPqaqX5OongDIvdKSsYYrkgQYbiZAvJ0IQioenTg4gAJo0aE4qB3bHKQ
-	Dbjj1sRZMBV3mg6hdrcA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3x29h5mfw9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 10:44:07 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6089F4002D;
-	Mon, 25 Mar 2024 10:43:58 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 94129216EF9;
-	Mon, 25 Mar 2024 10:42:44 +0100 (CET)
-Received: from localhost (10.201.21.128) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 25 Mar
- 2024 10:42:44 +0100
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 2/2] dt-bindings: net: dwmac: Document STM32 property st,ext-phyclk
-Date: Mon, 25 Mar 2024 10:42:18 +0100
-Message-ID: <20240325094218.56934-3-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240325094218.56934-1-christophe.roullier@foss.st.com>
-References: <20240325094218.56934-1-christophe.roullier@foss.st.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d5QAGzkc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711360121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BzvHsR0swPhNezye8rUpRIe+AmkradciiszFVdBH2qI=;
+	b=d5QAGzkcFVgfNPW1CO0oLPlhmxGApS7hScJ1cLqq6shPh9CB1aGymZAPlr5DzlZwPD5+xp
+	Gq5w9Iph9qjmesRKdP5Xe57/g8T80D7rcjalpl3kRP7o2ljlY/77P9AcXHokfr03tzhcfG
+	PdcgfvMh0EcJg3d8jU5382ubAFA9ES8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-81-sGBrjBOZPjWGzkRUL_JyGQ-1; Mon,
+ 25 Mar 2024 05:48:36 -0400
+X-MC-Unique: sGBrjBOZPjWGzkRUL_JyGQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9B0273C0BE29;
+	Mon, 25 Mar 2024 09:48:35 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.12])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4782E112131D;
+	Mon, 25 Mar 2024 09:48:25 +0000 (UTC)
+Date: Mon, 25 Mar 2024 17:48:18 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev, akpm@linux-foundation.org,
+	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
+	viro@zeniv.linux.org.uk
+Subject: Re: [PATCH linux-next v3 02/14] crash: split vmcoreinfo exporting
+ code out from crash_core.c
+Message-ID: <ZgFIYuYULrgF1tFG@MiWiFi-R3L-srv>
+References: <20240124051254.67105-1-bhe@redhat.com>
+ <20240124051254.67105-3-bhe@redhat.com>
+ <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_07,2024-03-21_02,2023-05-22_02
+In-Reply-To: <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-The Linux kernel dwmac-stm32 driver currently supports three DT
-properties used to configure whether PHY clock are generated by
-the MAC or supplied to the MAC from the PHY.
+On 03/25/24 at 09:24am, Geert Uytterhoeven wrote:
+> Hi Baoquan,
+> 
+> On Wed, Jan 24, 2024 at 6:13 AM Baoquan He <bhe@redhat.com> wrote:
+> > Now move the relevant codes into separate files:
+> > kernel/crash_reserve.c, include/linux/crash_reserve.h.
+> >
+> > And add config item CRASH_RESERVE to control its enabling.
+> >
+> > And also update the old ifdeffery of CONFIG_CRASH_CORE, including of
+> > <linux/crash_core.h> and config item dependency on CRASH_CORE
+> > accordingly.
+> >
+> > And also do renaming as follows:
+> >  - arch/xxx/kernel/{crash_core.c => vmcore_info.c}
+> > because they are only related to vmcoreinfo exporting on x86, arm64,
+> > riscv.
+> >
+> > And also Remove config item CRASH_CORE, and rely on CONFIG_KEXEC_CORE to
+> > decide if build in crash_core.c.
+> >
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> > v2->v3:
+> > - There's conflict when rebasing to linux-next in kernel/crash_core.c
+> >   because of below commits from Uladzislau:
+> >   commit 699d9351822e ("mm: vmalloc: Fix a warning in the crash_save_vmcoreinfo_init()")
+> >   commit 5f4c0c1e2a51 (:mm/vmalloc: remove vmap_area_list")
+> 
+> Thanks for your patch, which is now commit 443cbaf9e2fdbef7
+> ("crash: split vmcoreinfo exporting code out from
+> crash_core.c") in v6.9-rc1.
+> 
+> After this, there are still two references left to CRASH_CORE:
+> 
+>   1. Documentation/admin-guide/kdump/kdump.rst:
+> 
+>          Subsequently, CRASH_CORE is selected by KEXEC_CORE::
+> 
+>   2. arch/loongarch/Kconfig
+> 
+>          config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+>              def_bool CRASH_CORE
 
-Originally there were two properties, st,eth-clk-sel and
-st,eth-ref-clk-sel, each used to configure MAC clocking in
-different bus mode and for different MAC clock frequency.
-Since it is possible to determine the MAC 'eth-ck' clock
-frequency from the clock subsystem and PHY bus mode from
-the 'phy-mode' property, two disparate DT properties are
-no longer required to configure MAC clocking.
-
-Linux kernel commit
-1bb694e20839 ("net: ethernet: stmmac: simplify phy modes management for stm32")
-introduced a third, unified, property st,ext-phyclk. This property
-covers both use cases of st,eth-clk-sel and st,eth-ref-clk-sel DT
-properties, as well as a new use case for 25 MHz clock generated
-by the MAC.
-
-The third property st,ext-phyclk is so far undocumented,
-document it.
-
-Below table summarizes the clock requirement and clock sources for
-supported PHY interface modes.
- __________________________________________________________________________
-|PHY_MODE | Normal | PHY wo crystal|   PHY wo crystal   |No 125Mhz from PHY|
-|         |        |      25MHz    |        50MHz       |                  |
-
----------------------------------------------------------------------------
-|  MII    |    -   |     eth-ck    |        n/a         |       n/a        |
-|         |        | st,ext-phyclk |                    |                  |
-
----------------------------------------------------------------------------
-|  GMII   |    -   |     eth-ck    |        n/a         |       n/a        |
-|         |        | st,ext-phyclk |                    |                  |
-
----------------------------------------------------------------------------
-| RGMII   |    -   |     eth-ck    |        n/a         |      eth-ck      |
-|         |        | st,ext-phyclk |                    | st,eth-clk-sel or|
-|         |        |               |                    | st,ext-phyclk    |
-
----------------------------------------------------------------------------
-| RMII    |    -   |     eth-ck    |      eth-ck        |       n/a        |
-|         |        | st,ext-phyclk | st,eth-ref-clk-sel |                  |
-|         |        |               | or st,ext-phyclk   |                  |
-
----------------------------------------------------------------------------
-
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
----
- Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-index 80937b28fa046..529665d4fc911 100644
---- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-@@ -85,6 +85,13 @@ properties:
-   phy-supply:
-     description: PHY regulator
- 
-+  st,ext-phyclk:
-+    description:
-+      set this property in RMII mode when you have PHY without crystal 50MHz and want to
-+      select RCC clock instead of ETH_REF_CLK. OR in RGMII mode when you want to select
-+      RCC clock instead of ETH_CLK125.
-+    type: boolean
-+
-   st,eth-clk-sel:
-     description:
-       set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
--- 
-2.25.1
+Sure, will post patch to clean them up. Thanks a lot.
 
