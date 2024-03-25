@@ -1,168 +1,328 @@
-Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [80.241.59.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2566180A9D;
-	Mon, 25 Mar 2024 08:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.59.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8B54501F
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711354678; cv=none; b=orltkfsepUc2ao2XAM2UuamiGeciUvw0UYCaS/mjFMg+ukm4WjBGrj2BO2ufnEftGwzribU+UgrVC5EWuUHnQc7zLzr3AGXwqEJsiOQ20AUc0vHCLPs78iYoqgqnzaSo2Zi+Ol3b371/nQObK+9DZy+YLm49N6SUbthJhNuO1Kw=
+	t=1711354432; cv=none; b=n4XBcSfoF8VEmPnBAQ2IdH3cokAJVaDxl3eb3JjMPvRKr5Dcl1Gx+8Wms/ob553nDMa1veI68JOHL8ksuKXvAyz24x4oLTuOFG5UFXfFTnRa5H3A4494iamqw5R8uJvbW0yplN2FqAjO+7/Xgr0PJs77s98mVG/ifq8nZtVND7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711354678; c=relaxed/simple;
-	bh=K5U+cs+US6PiUstJ6PPMTAHeJ9ZJdg/fnjJHc+bJpIs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nvz5sOBKvHMO47TEWs0VtrSMSiQ9RMwEypASfxMtF7+o4duhJ5aG7l2oXlCPnvFFkCYXxkpRXFoHXBg3vIosUBzPAOBnH8oB8Qr+dRr0ZCGSZVzu8UZGVNpy9VlV6D23Do/r43i+2S0b/U1YjoOPrTakNAt7hH9x/TeryN6rW+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=80.241.59.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4V35C525S3z9sTP;
-	Mon, 25 Mar 2024 09:07:45 +0100 (CET)
-Message-ID: <7da930c8-d6d1-47e3-b346-b0e9e75edb54@denx.de>
-Date: Mon, 25 Mar 2024 09:07:43 +0100
+	s=arc-20240116; t=1711354432; c=relaxed/simple;
+	bh=cx8c+k/KenvncNQO9MPUhik6kvuy5g0Pk5xmkTqsb38=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pzWAKBu7B86oMg7blEQTaMuTdu2ac8IF8YqWOdyZJWzCa3JVLi+fCggOhFOTMOL2bXL5oP8xJRFKUPFUN5KfYrgCCJ2bBtySRm5JDuLBsrlgZgOY+hlpV3IPOKJ/YEI+1K3a1EfP2O7xZIzKrmw0n2zGouWukoUu/ULvpvp03hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cPtt1NxG; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cPtt1NxG"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56b8e4f38a2so5183571a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 01:13:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711354427; x=1711959227; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DhXWU9LA3T0RxQdB87MsBwVWbw2Pg7nCtgEYH/YmzjQ=;
+        b=cPtt1NxGHniVLRK/jV70lUbkTFPEtRW75TrCgG+0ODmBDL1/ZdrMAcmmxCnMiVx7kW
+         Dnr4bMwPhZ0s0sS0+YwIf8isFktVfdE6JAFtYS6aayFaeUa+w/ZmX4AO3mr+AK9Fu9uD
+         tvVgHMjqkPnrQ8YPZSglxhZthm6rguhb1JOvZrhqNrRS8UTtEW4UkrSJBGHuePeSVTWs
+         VT95jSFc7MwBHwh0lATmiH+UVHZlilf0K/MiZSQtYzRHg3tia+PuNrmqFOcSFwKJ7gDw
+         L/uEEZDkQ7lmU3It8mzd61+pyNMrvO16/9OuNpXlEPveVUSKuqDJG0CU+r8ABM7EERyu
+         bFeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711354427; x=1711959227;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DhXWU9LA3T0RxQdB87MsBwVWbw2Pg7nCtgEYH/YmzjQ=;
+        b=vXUCSjve1E1WSdGLgfy6dJg2B0xxlCRI2tJ2YAOe9FOoDEo1Cy1wixBksgmqWCmSIH
+         HoUyqtPSPZPzIOWn6gVQPeaHKUIE+YhHcMedeqC/AwFPjzPkIJ9lnTFb6oLvQdqUyMl3
+         MM2fOfxOeLofnSWiY/z561Kka6HYmt3JgC8vTpO6ghm0sABycKAKuPvMqlLFPo8V1bWJ
+         TTg50basz9dnQ3iC1v4D2VrFdLtxoLLmqHiNiRt1IqulxrzuIn3gjdoVPhUW83MKbeN0
+         VY4Qq/V6hQ//oJjb+27Dj37N3puYRet8fDhMedxQxT9lIsj2Fa0QcoGwiL0urUT4w5bv
+         /g1g==
+X-Gm-Message-State: AOJu0YyKPXHW07PN0suiOANe+rrzmgUwEsQ0P4igLOdRRIaNVCkDLNuD
+	eJhMKuigYq8AuDDrakWqmXXcu9etYpiQjh4pLhlpT/kBhgKiHli7OryeAuzcL9ws6jSBjMpRRY5
+	W
+X-Google-Smtp-Source: AGHT+IH9IzSEIibSx/cUg3GgoaiZtJ5TnwurXFuYszQrutP1U/mFc422e2ipla6NDZj535YIzmdoYQ==
+X-Received: by 2002:a17:906:1ec9:b0:a46:62c0:659f with SMTP id m9-20020a1709061ec900b00a4662c0659fmr3720752ejj.70.1711354427102;
+        Mon, 25 Mar 2024 01:13:47 -0700 (PDT)
+Received: from rayden.urgonet (h-217-31-164-171.A175.priv.bahnhof.se. [217.31.164.171])
+        by smtp.gmail.com with ESMTPSA id dk5-20020a170907940500b00a4750b2e0f0sm1607036ejc.164.2024.03.25.01.13.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 01:13:46 -0700 (PDT)
+From: Jens Wiklander <jens.wiklander@linaro.org>
+To: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Marc Bonnici <marc.bonnici@arm.com>,
+	Olivier Deprez <Olivier.Deprez@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bertrand Marquis <Bertrand.Marquis@arm.com>,
+	Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH v2] firmware: arm_ffa: support running as a guest in a vm
+Date: Mon, 25 Mar 2024 09:13:35 +0100
+Message-Id: <20240325081335.2326979-1-jens.wiklander@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 37/64] i2c: mt7621: reword according to newest
- specification
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org
-Cc: Andi Shyti <andi.shyti@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
- <20240322132619.6389-38-wsa+renesas@sang-engineering.com>
-Content-Language: en-US
-From: Stefan Roese <sr@denx.de>
-In-Reply-To: <20240322132619.6389-38-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 3/22/24 14:25, Wolfram Sang wrote:
-> Match the wording of this driver wrt. the newest I2C v7, SMBus 3.2, I3C
-> specifications and replace "master/slave" with more appropriate terms.
-> They are also more specific because we distinguish now between a remote
-> entity ("client") and a local one ("target").
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Add support for running the driver in a guest to a hypervisor. The main
+difference is introducing notification pending interrupt and that
+FFA_NOTIFICATION_BITMAP_CREATE doesn't need to be called.
 
-Reviewed-by: Stefan Roese <sr@denx.de>
+The guest may need to use a notification pending interrupt instead of or
+in addition to the schedule receiver interrupt.
+FFA_FEAT_NOTIFICATION_PENDING_INT gives the interrupt the hypervisor has
+chosen to notify its guest of pending notifications.
+
+Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+---
+Hi,
+
+I've tested this with Xen with as hypervisor (Xen patches to be posted) and
+the NPI handler delivers notifications as expected using
+FFA_NOTIFICATION_GET. I've also tested without a hypervisor to see that the
+SRI handler still works as expected.
 
 Thanks,
-Stefan
+Jens
 
-> ---
->   drivers/i2c/busses/i2c-mt7621.c | 22 +++++++++++-----------
->   1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-mt7621.c b/drivers/i2c/busses/i2c-mt7621.c
-> index 81d46169bc1f..c567a2cf4a90 100644
-> --- a/drivers/i2c/busses/i2c-mt7621.c
-> +++ b/drivers/i2c/busses/i2c-mt7621.c
-> @@ -117,26 +117,26 @@ static int mtk_i2c_check_ack(struct mtk_i2c *i2c, u32 expected)
->   	return ((ack & ack_expected) == ack_expected) ? 0 : -ENXIO;
->   }
->   
-> -static int mtk_i2c_master_start(struct mtk_i2c *i2c)
-> +static int mtk_i2c_host_start(struct mtk_i2c *i2c)
->   {
->   	iowrite32(SM0CTL1_START | SM0CTL1_TRI, i2c->base + REG_SM0CTL1_REG);
->   	return mtk_i2c_wait_idle(i2c);
->   }
->   
-> -static int mtk_i2c_master_stop(struct mtk_i2c *i2c)
-> +static int mtk_i2c_host_stop(struct mtk_i2c *i2c)
->   {
->   	iowrite32(SM0CTL1_STOP | SM0CTL1_TRI, i2c->base + REG_SM0CTL1_REG);
->   	return mtk_i2c_wait_idle(i2c);
->   }
->   
-> -static int mtk_i2c_master_cmd(struct mtk_i2c *i2c, u32 cmd, int page_len)
-> +static int mtk_i2c_host_cmd(struct mtk_i2c *i2c, u32 cmd, int page_len)
->   {
->   	iowrite32(cmd | SM0CTL1_TRI | SM0CTL1_PGLEN(page_len),
->   		  i2c->base + REG_SM0CTL1_REG);
->   	return mtk_i2c_wait_idle(i2c);
->   }
->   
-> -static int mtk_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
-> +static int mtk_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
->   			       int num)
->   {
->   	struct mtk_i2c *i2c;
-> @@ -157,7 +157,7 @@ static int mtk_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
->   			goto err_timeout;
->   
->   		/* start sequence */
-> -		ret = mtk_i2c_master_start(i2c);
-> +		ret = mtk_i2c_host_start(i2c);
->   		if (ret)
->   			goto err_timeout;
->   
-> @@ -169,14 +169,14 @@ static int mtk_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
->   			if (pmsg->flags & I2C_M_RD)
->   				addr |= 1;
->   			iowrite32(addr, i2c->base + REG_SM0D0_REG);
-> -			ret = mtk_i2c_master_cmd(i2c, SM0CTL1_WRITE, 2);
-> +			ret = mtk_i2c_host_cmd(i2c, SM0CTL1_WRITE, 2);
->   			if (ret)
->   				goto err_timeout;
->   		} else {
->   			/* 7 bits address */
->   			addr = i2c_8bit_addr_from_msg(pmsg);
->   			iowrite32(addr, i2c->base + REG_SM0D0_REG);
-> -			ret = mtk_i2c_master_cmd(i2c, SM0CTL1_WRITE, 1);
-> +			ret = mtk_i2c_host_cmd(i2c, SM0CTL1_WRITE, 1);
->   			if (ret)
->   				goto err_timeout;
->   		}
-> @@ -202,7 +202,7 @@ static int mtk_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
->   				cmd = SM0CTL1_WRITE;
->   			}
->   
-> -			ret = mtk_i2c_master_cmd(i2c, cmd, page_len);
-> +			ret = mtk_i2c_host_cmd(i2c, cmd, page_len);
->   			if (ret)
->   				goto err_timeout;
->   
-> @@ -222,7 +222,7 @@ static int mtk_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
->   		}
->   	}
->   
-> -	ret = mtk_i2c_master_stop(i2c);
-> +	ret = mtk_i2c_host_stop(i2c);
->   	if (ret)
->   		goto err_timeout;
->   
-> @@ -230,7 +230,7 @@ static int mtk_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
->   	return i;
->   
->   err_ack:
-> -	ret = mtk_i2c_master_stop(i2c);
-> +	ret = mtk_i2c_host_stop(i2c);
->   	if (ret)
->   		goto err_timeout;
->   	return -ENXIO;
-> @@ -247,7 +247,7 @@ static u32 mtk_i2c_func(struct i2c_adapter *a)
->   }
->   
->   static const struct i2c_algorithm mtk_i2c_algo = {
-> -	.master_xfer	= mtk_i2c_master_xfer,
-> +	.xfer	= mtk_i2c_xfer,
->   	.functionality	= mtk_i2c_func,
->   };
->   
+v1->v2:
+* Adds a Notification Pending Interrupt handler to retrieve notifications
+  using for the interrupted CPU.
+* The original Schedule Receiver Interrupt handler is initialized in parallel
+  depending on whether FFA_FEAT_SCHEDULE_RECEIVER_INT is available.
 
-Viele Grüße,
-Stefan Roese
+ drivers/firmware/arm_ffa/driver.c | 117 +++++++++++++++++++++---------
+ 1 file changed, 82 insertions(+), 35 deletions(-)
 
+diff --git a/drivers/firmware/arm_ffa/driver.c b/drivers/firmware/arm_ffa/driver.c
+index f2556a8e9401..9732f0066c70 100644
+--- a/drivers/firmware/arm_ffa/driver.c
++++ b/drivers/firmware/arm_ffa/driver.c
+@@ -101,11 +101,12 @@ struct ffa_drv_info {
+ 	bool bitmap_created;
+ 	bool notif_enabled;
+ 	unsigned int sched_recv_irq;
++	unsigned int notif_pend_irq;
+ 	unsigned int cpuhp_state;
+ 	struct ffa_pcpu_irq __percpu *irq_pcpu;
+ 	struct workqueue_struct *notif_pcpu_wq;
+ 	struct work_struct notif_pcpu_work;
+-	struct work_struct irq_work;
++	struct work_struct sched_recv_irq_work;
+ 	struct xarray partition_info;
+ 	DECLARE_HASHTABLE(notifier_hash, ilog2(FFA_MAX_NOTIFICATIONS));
+ 	struct mutex notify_lock; /* lock to protect notifier hashtable  */
+@@ -1291,12 +1292,23 @@ static void ffa_partitions_cleanup(void)
+ #define FFA_FEAT_SCHEDULE_RECEIVER_INT		(2)
+ #define FFA_FEAT_MANAGED_EXIT_INT		(3)
+ 
+-static irqreturn_t irq_handler(int irq, void *irq_data)
++static irqreturn_t sched_recv_irq_handler(int irq, void *irq_data)
+ {
+ 	struct ffa_pcpu_irq *pcpu = irq_data;
+ 	struct ffa_drv_info *info = pcpu->info;
+ 
+-	queue_work(info->notif_pcpu_wq, &info->irq_work);
++	queue_work(info->notif_pcpu_wq, &info->sched_recv_irq_work);
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t notif_pend_irq_handler(int irq, void *irq_data)
++{
++	struct ffa_pcpu_irq *pcpu = irq_data;
++	struct ffa_drv_info *info = pcpu->info;
++
++	queue_work_on(smp_processor_id(), info->notif_pcpu_wq,
++		      &info->notif_pcpu_work);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -1306,15 +1318,16 @@ static void ffa_sched_recv_irq_work_fn(struct work_struct *work)
+ 	ffa_notification_info_get();
+ }
+ 
+-static int ffa_sched_recv_irq_map(void)
++static int ffa_irq_map(u32 id)
+ {
+-	int ret, irq, sr_intid;
++	int ret, irq, intid;
+ 
+-	/* The returned sr_intid is assumed to be SGI donated to NS world */
+-	ret = ffa_features(FFA_FEAT_SCHEDULE_RECEIVER_INT, 0, &sr_intid, NULL);
++	/* The returned intid is assumed to be SGI donated to NS world */
++	ret = ffa_features(id, 0, &intid, NULL);
+ 	if (ret < 0) {
++		pr_err("Failed to retrieve FF-A id %u interrupt\n", id);
+ 		if (ret != -EOPNOTSUPP)
+-			pr_err("Failed to retrieve scheduler Rx interrupt\n");
++			pr_err("Failed to retrieve FF-A id %u interrupt\n", id);
+ 		return ret;
+ 	}
+ 
+@@ -1329,12 +1342,12 @@ static int ffa_sched_recv_irq_map(void)
+ 
+ 		oirq.np = gic;
+ 		oirq.args_count = 1;
+-		oirq.args[0] = sr_intid;
++		oirq.args[0] = intid;
+ 		irq = irq_create_of_mapping(&oirq);
+ 		of_node_put(gic);
+ #ifdef CONFIG_ACPI
+ 	} else {
+-		irq = acpi_register_gsi(NULL, sr_intid, ACPI_EDGE_SENSITIVE,
++		irq = acpi_register_gsi(NULL, intid, ACPI_EDGE_SENSITIVE,
+ 					ACPI_ACTIVE_HIGH);
+ #endif
+ 	}
+@@ -1355,15 +1368,29 @@ static void ffa_sched_recv_irq_unmap(void)
+ 	}
+ }
+ 
++static void ffa_notif_pend_irq_unmap(void)
++{
++	if (drv_info->notif_pend_irq) {
++		irq_dispose_mapping(drv_info->notif_pend_irq);
++		drv_info->notif_pend_irq = 0;
++	}
++}
++
+ static int ffa_cpuhp_pcpu_irq_enable(unsigned int cpu)
+ {
+-	enable_percpu_irq(drv_info->sched_recv_irq, IRQ_TYPE_NONE);
++	if (drv_info->sched_recv_irq)
++		enable_percpu_irq(drv_info->sched_recv_irq, IRQ_TYPE_NONE);
++	if (drv_info->notif_pend_irq)
++		enable_percpu_irq(drv_info->notif_pend_irq, IRQ_TYPE_NONE);
+ 	return 0;
+ }
+ 
+ static int ffa_cpuhp_pcpu_irq_disable(unsigned int cpu)
+ {
+-	disable_percpu_irq(drv_info->sched_recv_irq);
++	if (drv_info->sched_recv_irq)
++		disable_percpu_irq(drv_info->sched_recv_irq);
++	if (drv_info->notif_pend_irq)
++		disable_percpu_irq(drv_info->notif_pend_irq);
+ 	return 0;
+ }
+ 
+@@ -1382,13 +1409,16 @@ static void ffa_uninit_pcpu_irq(void)
+ 	if (drv_info->sched_recv_irq)
+ 		free_percpu_irq(drv_info->sched_recv_irq, drv_info->irq_pcpu);
+ 
++	if (drv_info->notif_pend_irq)
++		free_percpu_irq(drv_info->notif_pend_irq, drv_info->irq_pcpu);
++
+ 	if (drv_info->irq_pcpu) {
+ 		free_percpu(drv_info->irq_pcpu);
+ 		drv_info->irq_pcpu = NULL;
+ 	}
+ }
+ 
+-static int ffa_init_pcpu_irq(unsigned int irq)
++static int ffa_init_pcpu_irq(void)
+ {
+ 	struct ffa_pcpu_irq __percpu *irq_pcpu;
+ 	int ret, cpu;
+@@ -1402,13 +1432,29 @@ static int ffa_init_pcpu_irq(unsigned int irq)
+ 
+ 	drv_info->irq_pcpu = irq_pcpu;
+ 
+-	ret = request_percpu_irq(irq, irq_handler, "ARM-FFA", irq_pcpu);
+-	if (ret) {
+-		pr_err("Error registering notification IRQ %d: %d\n", irq, ret);
+-		return ret;
++	if (drv_info->sched_recv_irq) {
++		ret = request_percpu_irq(drv_info->sched_recv_irq,
++					 sched_recv_irq_handler,
++					 "ARM-FFA-SR", irq_pcpu);
++		if (ret) {
++			pr_err("Error registering schedule receiver nIRQ %d: %d\n",
++			       drv_info->sched_recv_irq, ret);
++			return ret;
++		}
++	}
++
++	if (drv_info->notif_pend_irq) {
++		ret = request_percpu_irq(drv_info->notif_pend_irq,
++					 notif_pend_irq_handler,
++					 "ARM-FFA-NP", irq_pcpu);
++		if (ret) {
++			pr_err("Error registering notification pendig nIRQ %d: %d\n",
++			       drv_info->notif_pend_irq, ret);
++			return ret;
++		}
+ 	}
+ 
+-	INIT_WORK(&drv_info->irq_work, ffa_sched_recv_irq_work_fn);
++	INIT_WORK(&drv_info->sched_recv_irq_work, ffa_sched_recv_irq_work_fn);
+ 	INIT_WORK(&drv_info->notif_pcpu_work, notif_pcpu_irq_work_fn);
+ 	drv_info->notif_pcpu_wq = create_workqueue("ffa_pcpu_irq_notification");
+ 	if (!drv_info->notif_pcpu_wq)
+@@ -1429,6 +1475,7 @@ static void ffa_notifications_cleanup(void)
+ {
+ 	ffa_uninit_pcpu_irq();
+ 	ffa_sched_recv_irq_unmap();
++	ffa_notif_pend_irq_unmap();
+ 
+ 	if (drv_info->bitmap_created) {
+ 		ffa_notification_bitmap_destroy();
+@@ -1439,30 +1486,30 @@ static void ffa_notifications_cleanup(void)
+ 
+ static void ffa_notifications_setup(void)
+ {
+-	int ret, irq;
++	int ret;
+ 
+ 	ret = ffa_features(FFA_NOTIFICATION_BITMAP_CREATE, 0, NULL, NULL);
+-	if (ret) {
+-		pr_info("Notifications not supported, continuing with it ..\n");
+-		return;
++	if (!ret) {
++		ret = ffa_notification_bitmap_create();
++		if (ret) {
++			pr_info("Notification bitmap create error %d\n", ret);
++			return;
++		}
++		drv_info->bitmap_created = true;
+ 	}
+ 
+-	ret = ffa_notification_bitmap_create();
+-	if (ret) {
+-		pr_info("Notification bitmap create error %d\n", ret);
+-		return;
+-	}
+-	drv_info->bitmap_created = true;
++	ret = ffa_irq_map(FFA_FEAT_SCHEDULE_RECEIVER_INT);
++	if (ret > 0)
++		drv_info->sched_recv_irq = ret;
+ 
+-	irq = ffa_sched_recv_irq_map();
+-	if (irq <= 0) {
+-		ret = irq;
+-		goto cleanup;
+-	}
++	ret = ffa_irq_map(FFA_FEAT_NOTIFICATION_PENDING_INT);
++	if (ret > 0)
++		drv_info->notif_pend_irq = ret;
+ 
+-	drv_info->sched_recv_irq = irq;
++	if (!drv_info->sched_recv_irq && !drv_info->notif_pend_irq)
++		goto cleanup;
+ 
+-	ret = ffa_init_pcpu_irq(irq);
++	ret = ffa_init_pcpu_irq();
+ 	if (ret)
+ 		goto cleanup;
+ 
 -- 
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de
+2.34.1
+
