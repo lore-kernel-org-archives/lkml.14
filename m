@@ -1,111 +1,121 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABDF5A4D3;
-	Mon, 25 Mar 2024 21:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3D86F525
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 21:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711403804; cv=none; b=Q18Tkmkfo1UjmHsd93HcR2aFnnMudK9qijMHO0QfFOFKRXdIJFAIODIw/r9lrv56mz3C58RRk9ECz0lJNDl2/bDndXWTFLUcORasU7/c+YjGJKjyFej5grNIdDwfH2HO9mkiVr7o8YRoe7TmU+3jaRcECA/qMI/Wb75sqbtc3zE=
+	t=1711403820; cv=none; b=FX8kT1OcpkZgroiXvLdqxBsXcctE8FGRVSDqzHbDtIvCgsz/az5PTPOMNRm6R+D5lX4P9BsUxFanHET2imbhL6KYTRRwNDMqZsOHdJWaNZUSit7DNw6n7cFj3qbNlWtjd4jGR4aQ7cUVhRvRc5wpbIgEU4uQOKJg3muqAPq5PXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711403804; c=relaxed/simple;
-	bh=xSuiLJKJgLrr21rIadSu5fyq8t/EMn4wKpn41CCECRI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M9tKwhdJF5opyaEwsB1qzzVTE1Ml/4u7LXzmRmgh94hMYwlhCC5OtqN7+OQtEyuN1V81WvMIhlW5lvL94Obqg5+tdPix9vSrrkQt5kDOBk+f1Xx47uPmggcopKH8qqiyfmSY9y9OFuzbofjLX89qqKJSmdeFAjqh1K0cas6R5A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=P/3B1GTf; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1711403820; c=relaxed/simple;
+	bh=yULUuFpaQi4mHiQRsxtWHLwt0K5+xxOrBTrFegQ3W+E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n9+GGqRx9dWrgugq/qpqpGUQFllAWo5zWVMGSXLhQiXwjMHOSviBeaPJV3iCqumTlqNX4yu70WjHHdDUEhLutAbSolU1jrox+DmuFX+rkRe3N+tl9kI0hvyd2TODZKC77bDX5o3mwND7TY9eZ6Ui4lLTq2j3nfEuwJX3k42u/qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OmCdKPSK; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="P/3B1GTf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=jgurfofczvevtg3jg4ynhn3lsy.protonmail; t=1711403799; x=1711662999;
-	bh=Dz6q83jJ87/t3Ux+v9A/Asnbjs+qqD36qRD+CLPZW0Y=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=P/3B1GTfjq/JZeCR+3RvCiPu+ikuPAfj44GV/OZk4fqTuOlH1BBZ6wflegTV8HuxD
-	 aA0m26FIZxUVVCEQAtwnXs4IjCGNFhcJH1p/DanHmXgOG0sgq8mLud99heF1aN62dI
-	 hxFLj7t7DcH/2XSsmwdILsy3hrAWQLOFe8Hj7/xIiUFrNwacHBUPS7QQ8ok+D2Baqo
-	 9SsPj6ZHxElQGGbDOdZlNPWxdMUcCh9BLpH9kB7KRVgG0QZ3iOwPU9xGIkTidsNZXv
-	 IRHP5BmupgS2U8DuSxie0CsdToFZkWYBNidzQ8DBHCikYW9uprHFLDDUHQNzN1aO2C
-	 YCOwjPyIJUcRQ==
-Date: Mon, 25 Mar 2024 21:56:30 +0000
-To: Wedson Almeida Filho <wedsonaf@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, linux-kernel@vger.kernel.org, Wedson Almeida Filho <walmeida@microsoft.com>
-Subject: Re: [PATCH 01/10] rust: kernel: move `allocator` module under `alloc`
-Message-ID: <-uzW9xCfocYgSqqwoHB8D6k5CKhc5Rxnrmjq9N8XmTTNVZI3CYHIK9uigpGprs7EDYHWkALopDuv7e9w_FVfZW-9iGh3VlV9WpuSAKAWhFc=@proton.me>
-In-Reply-To: <20240325195418.166013-2-wedsonaf@gmail.com>
-References: <20240325195418.166013-1-wedsonaf@gmail.com> <20240325195418.166013-2-wedsonaf@gmail.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OmCdKPSK"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5f034b4dcecso2439748a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 14:56:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711403818; x=1712008618; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UR7sFSEYjP8BO01JVRD78Toou7R7NTsnLZcSYy9yMLk=;
+        b=OmCdKPSK50QeT2a9kcn82Gl3bMDJ1m+IhSg8ywsH66zN+u8/XOUGmDBDhmKpqqmYFe
+         6a3JvCumtCUIL9yKAIMDT8/kO5edOZR9k0ZGvoxUo4m3AxIPUbkQmVu3dltoi+Q5gl3I
+         z8nLWvYEE3vN1YyWr1nY/f9JJ3FOezvm68CRM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711403818; x=1712008618;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UR7sFSEYjP8BO01JVRD78Toou7R7NTsnLZcSYy9yMLk=;
+        b=YVG7wERpJO+WxANg5hUEwLOzDKHTPW6aabsjD2GinvYQkMPq79s5VWEUudDYUqh+MK
+         fzitR0y6ieOUP3nD7VRni8rI6UopbrnJ1LblaCbT6rssKwS3aVZYARX9LmolXionBWF4
+         xev777aSQitgYEDsFXj3ea3VUr4BOqADYVABlIR0OX/JRGMBdP1L6k2u4RDB6zF1fE3G
+         bsGmcyopF+d0PU2JGxICiKfcB89PeYVfvEJqIe9vtQSxjBcFwkBXwjS/08wh01WqHp4A
+         pAdPDrFnl2zq5Z9kbYVr5qj3cfWPUn6SKapxip0g0Tn2diqHameoMyv/qlHMN5nu3yma
+         Ychw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBKJzjMWUnpxk5GnfqlUG7bzhjJbufARQYu6q/RU78YBoEzYaJwlx/6P+B3nZBsHpq5RlF614L4jhp8t5JiBSwLz10UyvmJQqimgfh
+X-Gm-Message-State: AOJu0YxXt0UVDd6yy0XY3kba50PmlgHWyGQOLbb707FN11vh9/Csxc6C
+	iCADvIrkgh+yd6yrtmOXTEO1hEeh+3D1HXh34lHpUfCon/vr5pjg01bslLBRIGmA+eshAoljufk
+	=
+X-Google-Smtp-Source: AGHT+IFvvymI/+nAjVhwHLdNpVFDRLNACuh+o6MvjynK0XJWPebIEwChaIwn4LWdWp8KHSfw+SjCnQ==
+X-Received: by 2002:a17:902:ec8f:b0:1e0:73d:9172 with SMTP id x15-20020a170902ec8f00b001e0073d9172mr10772950plg.23.1711403817749;
+        Mon, 25 Mar 2024 14:56:57 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:f21b:7dde:93cc:b987])
+        by smtp.gmail.com with ESMTPSA id n6-20020a170902e54600b001def0897284sm5207866plf.76.2024.03.25.14.56.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 14:56:57 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Pin-yen Lin <treapking@chromium.org>,
+	Prahlad Kilambi <prahladk@google.com>,
+	Hsin-Yi Wang <hsinyi@chromium.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	David Airlie <airlied@gmail.com>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] drm-panel: Don't make failures quite so fatal
+Date: Mon, 25 Mar 2024 14:56:24 -0700
+Message-ID: <20240325215631.3804796-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On 25.03.24 20:54, Wedson Almeida Filho wrote:> From: Wedson Almeida Filho =
-<walmeida@microsoft.com>
->=20
-> We will add more to the `alloc` module in subsequent patches (e.g.,
-> allocation flags and extension traits).
->=20
-> Signed-off-by: Wedson Almeida Filho <walmeida@microsoft.com>
 
-One nit below, but feel free to add:
+This patch series is born out of the observation that after several
+Chromebooks transitioned over to the generic "edp-panel" compatible
+string that we received a number of in-the-field reports of the
+primary graphics device for the Chromebook not coming up.
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+The current belief is that these Chromebooks are actually suffering
+from a true hardware failure and the panel is either fully
+disconnected or it has some type of intermittent connection. While we
+can't solve that problem, digging showed that we actually dealt with
+this situation better _before_ switching to the generic "edp-panel"
+compatible string.
 
-> ---
->   rust/kernel/alloc.rs                 | 7 +++++++
->   rust/kernel/{ =3D> alloc}/allocator.rs | 0
->   rust/kernel/lib.rs                   | 4 +---
->   3 files changed, 8 insertions(+), 3 deletions(-)
->   create mode 100644 rust/kernel/alloc.rs
->   rename rust/kernel/{ =3D> alloc}/allocator.rs (100%)
->=20
-> diff --git a/rust/kernel/alloc.rs b/rust/kernel/alloc.rs
-> new file mode 100644
-> index 000000000000..ccd4149932c3
-> --- /dev/null
-> +++ b/rust/kernel/alloc.rs
-> @@ -0,0 +1,7 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Allocation support.
+Before switching to "edp-panel", devices using eDP would finish their
+probe and would actually not show any failure until you tried to turn
+the panel on. That was a _good_ thing. The component model used by
+many DRM devices means that if the panel doesn't finish probing that
+the rest of the DRM device doesn't probe. In turn, that means that any
+other display adapters (like ones that would allow hooking up an
+external display) don't probe. The end result was that a device with a
+broken panel that could have continued to be a useful computer by
+hooking up an external display became e-waste.
 
-I think 'Extensions to the `alloc` crate.' fits better.
+I won't say that this series is the most elegant/wonderful thing in
+the world. Ideally we could fail the probe of the panel and still use
+the external display. That's a pretty serious re-design, though. DRM
+devices work like they do with the component model because of some of
+their inherent complexities.
 
---=20
-Cheers,
-Benno
 
-> +
-> +#[cfg(not(test))]
-> +#[cfg(not(testlib))]
-> +mod allocator;
-> diff --git a/rust/kernel/allocator.rs b/rust/kernel/alloc/allocator.rs
-> similarity index 100%
-> rename from rust/kernel/allocator.rs
-> rename to rust/kernel/alloc/allocator.rs
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index be68d5e567b1..51f30e55bd00 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -28,9 +28,7 @@
->   // Allow proc-macros to refer to `::kernel` inside the `kernel` crate (=
-this crate).
->   extern crate self as kernel;
->=20
-> -#[cfg(not(test))]
-> -#[cfg(not(testlib))]
-> -mod allocator;
-> +pub mod alloc;
->   mod build_assert;
->   pub mod error;
->   pub mod init;
-> --
-> 2.34.1
-> 
+Douglas Anderson (3):
+  drm/panel-edp: Abstract out function to set conservative timings
+  drm/panel-edp: If we fail to powerup/get EDID, use conservative
+    timings
+  drm-panel: If drm_panel_dp_aux_backlight() fails, don't fail panel
+    probe
+
+ drivers/gpu/drm/panel/panel-edp.c             | 60 +++++++++++--------
+ .../gpu/drm/panel/panel-samsung-atna33xc20.c  |  9 ++-
+ 2 files changed, 41 insertions(+), 28 deletions(-)
+
+-- 
+2.44.0.396.g6e790dbe36-goog
+
