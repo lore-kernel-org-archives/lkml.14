@@ -1,142 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0117D1EB3F
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 512BF6FE35;
+	Mon, 25 Mar 2024 12:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711370852; cv=none; b=tXxjc4xz57At340f3LnIPMgeomY0Prnl4u6LGMIthxO7KbUZLU/2MDi64+qjvkhKHjF7+glwn9QEO+QtMjIPw21h+y/kaAB0RY9LOBoD8fF8n6xI/aPLWBR/rPZnxHP2Rbn1yTLQfvUzQebv4n+Y0HkFfhAhPgLorobjJGHQ/Jc=
+	t=1711370870; cv=none; b=of6RwFe2g2u4GzLMaw9F9XmGFTfoKuVA+iU9yp35wBiGzBEhHyNvrJ5IJmjxSbONDfBsNcKRBOPNwkmDMG+YsAVl3F3+bgnok3tTJdbNGKVYuWV5/hu00eCT0Jnr6REVIrkLUQkBZCiOuSFyxvFRONNbak437312chPly4jePr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711370852; c=relaxed/simple;
-	bh=9Nhu/W85iNh7LeLfmZogdX0bx42XcCNVxCMQuel1Iqo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=AnxoQBR1/xR1KQrTZzoWlZTCYTp6xMcOhcvCxQ+b6z6o390jJboHl4CST7K7/+OMmemqNk3AJZ91QNW1T9zbvgn7N7UdE7pdwcKc57Ix3YPQ8yFkrPnVIoG3wiwQQk4AKg/TM1L7VCkX8WHDe5BE/E6pxmsGDDXbFYopP2LKUqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C29CeIVl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C29CeIVl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711370849;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qo6+PxOnmyBa4a2d7NdsfVWnqRVFLZqh5ghWLkNm1aU=;
-	b=C29CeIVleSDWlM+Zp1g2AdJM9RhtjqsHGNQjikqQCxd1x1zdF/sGOQi/cnjGDMXK8c4Q4c
-	zoPqWmg0cUxpWWpNGYbHRrqUQwSoKuQgnFEyjNNxGWubuT7MBC1H5l8MDWo1zNFjTmNAvA
-	83JnVGxyasFFBhCnVAYNk2Do/MWk4/M=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-421-YRDUow39PNO7s5cYg_RlNw-1; Mon, 25 Mar 2024 08:47:28 -0400
-X-MC-Unique: YRDUow39PNO7s5cYg_RlNw-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d298d601adso30649141fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:47:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711370847; x=1711975647;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qo6+PxOnmyBa4a2d7NdsfVWnqRVFLZqh5ghWLkNm1aU=;
-        b=uDVwecrNQDdbe5OscJXyy2olUXj8e8MlvrswWeJ0IFYWFAcJN5y/0tXdW+wSR5OA9r
-         Su28PxRrxwr/La0YrbIH+iIHjfYGvFERvQ0VTEZGPGaxVjx8GmFz5c3tPXzjvvIueTXy
-         lf/Jo+LvUSR8QHsVy6A9AANGC//0mOU1xnZeLzU6GHnutIElrexWVwKNqy7U5msr1YL6
-         VzwrFtU5e9pDp3l6vhHNt0vKzNB8LKnABIv4/MEQWT+Fi0xRYURjRJTjR0wSwBCE818q
-         cO78R5CHsJYIMmA07YTG4A8nrUnTU7DU2Qo6RWN3hsOy66LaK/QbROW38riRZGSEelHh
-         4jHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZJJiCPB7ByvxONR+/u3q8UDoB3fNz8GdHHoZ5V5EgkUx7i8XCpPCVx5jpSoNjODCVJbRa5+4ytvlFhcMbKmS/NGWwnxR0tN0rlURP
-X-Gm-Message-State: AOJu0YzpHiq1ugRRx4oyQT9Axrcxy+uJK0VQPwlngushf7B8U0BPcjx1
-	bUxcCJOV2qLKLMA6a+8rJS+sGam0xYUg5PlXTvzwu6Yk6sR8Be5Z+wBKTu3KXSCYcstOOcV3ZmH
-	WKNce53rPCpGF7GsJ+fa2rh6egPlkXdA2GMfCza+lOp1vH1idHv8RMZzuxkzCTA==
-X-Received: by 2002:a2e:7816:0:b0:2d6:8ce2:87d5 with SMTP id t22-20020a2e7816000000b002d68ce287d5mr4502431ljc.18.1711370846884;
-        Mon, 25 Mar 2024 05:47:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGudUqzGUS7EwXIrkaH4nLD+XpgO1q7KDTuI18MwEVbgqHHvixPHZxneJHRWAGETOYG1zB9AA==
-X-Received: by 2002:a2e:7816:0:b0:2d6:8ce2:87d5 with SMTP id t22-20020a2e7816000000b002d68ce287d5mr4502415ljc.18.1711370846465;
-        Mon, 25 Mar 2024 05:47:26 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c738:b400:6a82:1eac:2b5:8fca? (p200300cbc738b4006a821eac02b58fca.dip0.t-ipconnect.de. [2003:cb:c738:b400:6a82:1eac:2b5:8fca])
-        by smtp.gmail.com with ESMTPSA id j1-20020adff001000000b0033e7e9c8657sm9406873wro.45.2024.03.25.05.47.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 05:47:26 -0700 (PDT)
-Message-ID: <2aba5fdf-7a9a-4a9a-bea2-b0d816a6aa19@redhat.com>
-Date: Mon, 25 Mar 2024 13:47:25 +0100
+	s=arc-20240116; t=1711370870; c=relaxed/simple;
+	bh=u0GK0R5ubC3Dy+GhijKCcQ6Q7lOTGHT40M8EgXw9RRA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZWd4zulHzlqK3FTVpSvdJC49sdgv84vxAsABm8xA43ROrLq+aIcHEXWPMdbJ164ZS2VMYJYQ4UPd5uq9vtq50pCPBRcoVHZVVqVhC2bN8tJVwFaKHVm+wWxKJ7KsSM9By7mB6C8LH3/MHsHdWgGUwo4YqqQcxvuXRxYAXKP5v7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4V3CPF2xGzz1vxgl;
+	Mon, 25 Mar 2024 20:46:57 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
+	by mail.maildlp.com (Postfix) with ESMTPS id D868C1400D4;
+	Mon, 25 Mar 2024 20:47:45 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.2) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 25 Mar 2024 20:47:45 +0800
+From: Jijie Shao <shaojijie@huawei.com>
+To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <michal.kubiak@intel.com>, <rkannoth@marvell.com>,
+	<jiri@resnulli.us>
+CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
+	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH V4 net 0/3] There are some bugfix for the HNS3 ethernet driver
+Date: Mon, 25 Mar 2024 20:43:08 +0800
+Message-ID: <20240325124311.1866197-1-shaojijie@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/14] transfer page to folio in KSM
-Content-Language: en-US
-To: alexs@kernel.org, Matthew Wilcox <willy@infradead.org>,
- Andrea Arcangeli <aarcange@redhat.com>,
- Izik Eidus <izik.eidus@ravellosystems.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, ryncsn@gmail.com
-References: <20240325124904.398913-1-alexs@kernel.org>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240325124904.398913-1-alexs@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
 
-On 25.03.24 13:48, alexs@kernel.org wrote:
-> From: "Alex Shi (tencent)" <alexs@kernel.org>
-> 
-> This is the first part of page to folio transfer on KSM. Since only
-> single page could be stored in KSM, we could safely transfer stable tree
-> pages to folios.
+There are some bugfix for the HNS3 ethernet driver
 
-You should slow down a bit with new versions.
+---
+changeLog:
+v3 -> v4:
+  - Fixed an unclear sentence in commit log, suggested by Michal Kubiak
+  - Used devl_lock to disallow reload to race with initialization, suggested by Jiri Pirko
+  v3: https://lore.kernel.org/all/20240318132948.3624333-1-shaojijie@huawei.com/
+v2 -> v3:
+  - Fixed a syntax error in commit log, suggested by Ratheesh Kannoth
+  v2: https://lore.kernel.org/all/20240316111057.277591-1-shaojijie@huawei.com/
+v1 -> v2:
+  - Fixed some syntax errors in commit log and comments, suggested by Michal Kubiak
+  - Optimized the code by using a flag, suggested by Michal Kubiak
+  v1: https://lore.kernel.org/all/20240315100748.2913882-1-shaojijie@huawei.com/
+---
+
+Jian Shen (1):
+  net: hns3: mark unexcuted loopback test result as UNEXECUTED
+
+Jie Wang (1):
+  net: hns3: fix index limit to support all queue stats
+
+Yonglong Liu (1):
+  net: hns3: fix kernel crash when devlink reload during pf
+    initialization
+
+ .../hns3/hns3_common/hclge_comm_tqp_stats.c   |  2 +-
+ .../ethernet/hisilicon/hns3/hns3_ethtool.c    | 19 +++++++++++++++++--
+ .../hisilicon/hns3/hns3pf/hclge_main.c        |  4 ++++
+ 3 files changed, 22 insertions(+), 3 deletions(-)
 
 -- 
-Cheers,
-
-David / dhildenb
+2.30.0
 
