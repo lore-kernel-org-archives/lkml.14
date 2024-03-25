@@ -1,35 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097FC15356C;
-	Mon, 25 Mar 2024 02:13:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EB5155380
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711332790; cv=none; b=jVBnxpX49cN53ksGbxAH34RQQzRFjp2bHX7y1wFjrssuMxGtGg2Xo1EWhl1hKK906cMaHOgQH63TlqWxqVfRdK40gO5rlUcCbnXd3Yxy/uqFr7WNdU6xUXSin4TTtkDGCpSIz3SaQEgY7G7j31C9lW4yJskqga2ujM2Z0YNF6og=
+	t=1711333084; cv=none; b=TOnKeX4gp0R/La9jmPPAu1GuGYm7x1wv9VSGd30gRYoycKKaVCNqyrCPOXWoVqW/XSppBVd+ZMa4gY53qi47JstAj+kBSlWF2qowXmO5VUYdfR/BGB2Oe+kKE6oblz5kiaP9hGNevS4EEq2r2Bq+B2l95Gh/Vr7J+WkI2GnVfCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711332790; c=relaxed/simple;
-	bh=Wy330H3trj8pdgbhnMuyekSalmsh0eVWfbLRwGAh9LU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Ull0JtnucKa2183Jq27mgTwFNpdSQ5MQtJ/hYxPG7fsVMvfgD2NsEZhDGXDOIRUMJgXanZwzRJm83y2H6yaR/a+AvORFWdC+PLop9koKC2GCRCGF482580gPONFfIncz0CzSBxeuIanT6WUaHbXZYHtbFyBhPlzYQevs/WQlx3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bkbd0C7V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711333084; c=relaxed/simple;
+	bh=NoQ/9ZnQSMX+2qUfsoDT6WHWT7bNrCxUqTCcoTOjF7I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kTC8wkqoBhwxoTDTK8CrMMMuTe+/eL4exR8z13/OJ50rsEzP/kEEimRIr0lyPnjDGJyjaUXlbOeNG4ry9QQOfGO104mW1Hfq3DXHYc6fOQQ6GWp04T29kxU/BohieG3O0v1bizA9kCgE5fNXy4dmly1/e9LwHPClkdK2l2c5/Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jXGaNuht; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bkbd0C7V"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B8614C4160D;
-	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711332787;
-	bh=Wy330H3trj8pdgbhnMuyekSalmsh0eVWfbLRwGAh9LU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=bkbd0C7VeJ8DftvdWXOjMfgVpf4Ohocoqw0ZxAiKb33mwEqLrlMHETx7IG73XNLZh
-	 FZfwXXciq+Jw+r9zYPkb1J5dTi6hvNd2fcLoNBle64+OqmwChVdnfXr7sH3n5pWj8p
-	 wvWTIE+BnYJbmKbISaz8l5is9lhZfkOk6B19XDmcm6T6HENCpNgcN46Bz7UkZ3plPz
-	 U333j+0bjOk+8sDrI6h+b4Tzts96ETQ0l5/QUqK2S5TwPEvwOk1KTwSoTLbXU2yz8o
-	 9SomN7gt3rkyCIWCZdWs7NnDDq2vqXu+mCUr6yz+FtKsNEZZSt7W+QyRjspxn2DncL
-	 D6nJQz79EpBcA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AA071D2D0E8;
-	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jXGaNuht"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711333082; x=1742869082;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NoQ/9ZnQSMX+2qUfsoDT6WHWT7bNrCxUqTCcoTOjF7I=;
+  b=jXGaNuhtIwxuHc6OPE4usGi46q8kyhk7MIgQ5sktGbgcjSVIe02wNTOS
+   jHy5dtOdo3dGcY8LVMyoer1IuWVmyL1BdmyfQ1ur8yVliCWXhPXZ7OWND
+   +ly+9py+SZ6eZLO3GG6Glv9d1skenwpKeGTPC8o+tUaxh+k8FWo2Edb3X
+   3F0PszUx6DTaP2Firh/t9hufBMSVcERj+y3oUO/Q+2zINUuSgf8PnCZmT
+   2WsvQVEmzVVleQ5ZmPrzFANK7WRH1a0wmdAuPgrCJGN1cl5oluudl2edM
+   smA4Nm5wi1x58iR+xS7Fz1vBgQlpv2U2B2DEj8d75yQwDqojrdLfTgB2W
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="9271305"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="9271305"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 19:18:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="15353886"
+Received: from allen-box.sh.intel.com ([10.239.159.127])
+  by orviesa010.jf.intel.com with ESMTP; 24 Mar 2024 19:17:57 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Tina Zhang <tina.zhang@intel.com>,
+	Yi Liu <yi.l.liu@intel.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 00/12] Consolidate domain cache invalidation
+Date: Mon, 25 Mar 2024 10:16:53 +0800
+Message-Id: <20240325021705.249769-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,46 +60,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4 0/3] Introduce EC-based watchdog
-From: patchwork-bot+chrome-platform@kernel.org
-Message-Id: 
- <171133278769.9916.8679825842016990961.git-patchwork-notify@kernel.org>
-Date: Mon, 25 Mar 2024 02:13:07 +0000
-References: <20240126095721.782782-1-lma@chromium.org>
-In-Reply-To: <20240126095721.782782-1-lma@chromium.org>
-To: =?utf-8?q?=C5=81ukasz_Majczak_=3Clma=40chromium=2Eorg=3E?=@ci.codeaurora.org
-Cc: gwendal@chromium.org, tzungbi@kernel.org, biernacki@google.com,
- wim@linux-watchdog.org, lee@kernel.org, bleung@chromium.org,
- groeck@chromium.org, krzk@kernel.org, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
 
-Hello:
+The IOMMU hardware cache needs to be invalidated whenever the mappings
+in the domain are changed. Currently, domain cache invalidation is
+scattered across different places, causing several issues:
 
-This series was applied to chrome-platform/linux.git (for-next)
-by Lee Jones <lee@kernel.org>:
+- IOMMU IOTLB Invalidation: This is done by iterating through the domain
+  IDs of each domain using the following code:
 
-On Fri, 26 Jan 2024 09:57:18 +0000 you wrote:
-> Chromeos devices are equipped with the embedded controller (EC)
-> that can be used as a watchdog. The following patches
-> updates the structures and definitions required to
-> communicate with EC-based watchdog and implements the
-> driver itself.
-> 
-> V1:https://patchwork.kernel.org/project/linux-watchdog/patch/20240117102450.4080839-1-lma@chromium.org/
-> V2:https://patchwork.kernel.org/project/linux-watchdog/list/?series=817925
-> V3:https://patchwork.kernel.org/project/linux-watchdog/list/?series=818036
-> 
-> [...]
+        xa_for_each(&dmar_domain->iommu_array, i, info)
+                iommu_flush_iotlb_psi(info->iommu, dmar_domain,
+                                      start_pfn, nrpages,
+                                      list_empty(&gather->freelist), 0);
 
-Here is the summary with links:
-  - [v4,1/3] platform/chrome: Update binary interface for EC-based watchdog
-    https://git.kernel.org/chrome-platform/c/4d2ff655fb85
-  - [v4,2/3] watchdog: Add ChromeOS EC-based watchdog driver
-    https://git.kernel.org/chrome-platform/c/843dac4d3687
+  This code could theoretically cause a use-after-free problem because
+  there's no lock to protect the "info" pointer within the loop.
 
-You are awesome, thank you!
+- Inconsistent Invalidation Methods: Different domain types implement
+  their own cache invalidation methods, making the code difficult to
+  maintain. For example, the DMA domain, SVA domain, and nested domain
+  have similar cache invalidation code scattered across different files.
+
+- SVA Domain Inconsistency: The SVA domain implementation uses a
+  completely different data structure to track attached devices compared
+  to other domains. This creates unnecessary differences and, even
+  worse, leads to duplicate IOTLB invalidation when an SVA domain is
+  attached to devices belonging to different IOMMU domains.
+
+- Nested Domain Dependency: The special overlap between a nested domain
+  and its parent domain requires a dedicated parent_domain_flush()
+  helper function to be called everywhere the parent domain's mapping
+  changes.
+
+- Limited Debugging Support: There are currently no debugging aids
+  available for domain cache invalidation.
+
+By consolidating domain cache invalidation into a common location, we
+can address the issues mentioned above and improve the code's
+maintainability and debuggability.
+
+Jason Gunthorpe (1):
+  iommu: Add ops->domain_alloc_sva()
+
+Lu Baolu (11):
+  iommu/vt-d: Add cache tag assignment interface
+  iommu/vt-d: Add cache tag invalidation helpers
+  iommu/vt-d: Add trace events for cache tag interface
+  iommu/vt-d: Use cache_tag_flush_all() in flush_iotlb_all
+  iommu/vt-d: Use cache_tag_flush_range() in tlb_sync
+  iommu/vt-d: Use cache_tag_flush_cm_range() in iotlb_sync_map
+  iommu/vt-d: Cleanup use of iommu_flush_iotlb_psi()
+  iommu/vt-d: Use cache_tag_flush_range() in cache_invalidate_user
+  iommu/vt-d: Use cache helpers in arch_invalidate_secondary_tlbs
+  iommu/vt-d: Retire intel_svm_dev
+  iommu/vt-d: Retire struct intel_svm
+
+ include/linux/iommu.h        |   3 +
+ drivers/iommu/intel/iommu.h  |  66 +++---
+ drivers/iommu/intel/trace.h  |  97 +++++++++
+ drivers/iommu/intel/cache.c  | 389 +++++++++++++++++++++++++++++++++++
+ drivers/iommu/intel/iommu.c  | 294 ++++----------------------
+ drivers/iommu/intel/nested.c |  71 ++-----
+ drivers/iommu/intel/svm.c    | 279 ++++++-------------------
+ drivers/iommu/iommu-sva.c    |  16 +-
+ drivers/iommu/intel/Makefile |   2 +-
+ 9 files changed, 660 insertions(+), 557 deletions(-)
+ create mode 100644 drivers/iommu/intel/cache.c
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.34.1
 
