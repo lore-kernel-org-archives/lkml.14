@@ -1,108 +1,165 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90DC128823
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B7C131E4E
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711356478; cv=none; b=H8nCKnyLk8nvGWmunb35ei9FJZQgBGIlsU2tCY8YCb8dQLgd6KMOXSW9oopuh+H4qK85BWXJOLBq4aN8yuTb1u87+sKBXDS+q/I9v71NkFm3ErY5CEyGuTSGPhNtx/+2Vcz9miX9xxEFHiB8PL4+4t1HgDCDoTrw3gM6lnHxalM=
+	t=1711356669; cv=none; b=to7Ky1teOPv96w7OQVQ/i6OnheJLbyx7e8MY6Zl4tlhzDccwZCf4XztngM4JdYLIBI024kBGpA8+KKfBz5LxOSrk8H2tNNVtXuA6cw1rT+++hp5uwBnIcVR83o1BBEhdpKRrjxVCUFX8Fd7qljI526DzdjX0XtAgP8lmjSVR5K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711356478; c=relaxed/simple;
-	bh=oSJ//K8ol+P+P3Zji9tpLkFEeZi6qEgFOq9Ft7w2m3A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PdX8vZayKtMiNtj2XHAObdra+ZcWpnS/FEZsOcpRheuhIuf8CUaXPxOT90078WPK4ssJYvliz4VlvyHNEEFBkUHx7mZvapdTqx9OhTpSjtqZaLNiF3MTQuHGIEJNw9ZyzZk8wEoPqZp49WKtxdRj4k5XBrZR+KjqOnn8FIONMwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=Q/c+0jDa; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1711356669; c=relaxed/simple;
+	bh=QJW0SCNPKaC1Rh0SylbldNlW4PUZWKkzqcy7KYQ0WEw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BxRR5SfAZiZIVTW0K+dU6H1w7K6m7W2fcY6kHCqh4EO2VQl2ApTSp6H7u/beHVLdkZ+rPB7MX2FFOFQQjlKPQye8P8yH6ct5o8DyCYqoeWXfBK0pzlb3b5VZLPpUEs1gSFdymMMjS2TUvbIe/OAmZr/vPmHt7MvCXxoXzdgIb30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XfwZd6ES; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AyQURhGX; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XfwZd6ES; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AyQURhGX; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="Q/c+0jDa"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-366a4bcb2a8so19657785ab.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 01:47:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1711356476; x=1711961276; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ms4jkXPSE9adqqhEBzf7IdCmvUVjO/xSfy0M32pByFw=;
-        b=Q/c+0jDaGgQYCMEOJaTdZoj++p3BlqBXR11KnFZ0rESNwTqD5gRxO0dnbBMOzKIB+F
-         nqTMiUY24noqpvp77sa5QBpo+fzo0ROtsUO6mc7vHwY27+L7PCsLVNgWDgL6ElI5Q87G
-         oi2PfBuXcUGRJEzpspjlbTBgjXDeVqqPl5FRiJEDxmUxwSBpzfqAPTi1b6kLDcMBnXon
-         kk5aKPiszi6EDTZtaT449yERNirSjYdh3HD8pGgfhIKXRC4SYZdJOF8r4PPfUtUsKpDR
-         /UZXbqq3tv0HpoZVaNrfFMuQZ9d78lZ9HP6LRAWR5nhzvhjsclkkr2jSXHxhSjbQ/zru
-         cNLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711356476; x=1711961276;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ms4jkXPSE9adqqhEBzf7IdCmvUVjO/xSfy0M32pByFw=;
-        b=g7uFoPnGbLDOK2Y3Z1B1fo0YLKVepcFYR9bdJrxe2reNXNMqw2jkWVnHdLhUxCeF0Q
-         TDvtLo88FlYX66dO/119i5dwv8pkVy/8zoJ4M4cQmDs+OQQpgOvs/53/1eJUiGCjD/2K
-         6ostt1SfI9Y9y+ucwL039+xizVbTz/SC+LF6fCV5lbxSt0Bw2numefmDVLa3WiQtBE88
-         ojUVgpyS6HbZAVLQKX+dagt+ScJZA7ozaaEKPIxBSJTS1IEaqVuAI4zC8wVDzfcEjQeA
-         52R6toJMXIcb8fqi+EF9BQhMqBbqBFlpTopTmSO+w5d4HC33dXoqdyCKvr4jAJKOVVnS
-         sVvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXDTTVf65YVwmNAiDrgxZIXV8eIVsR4LLtK2CIcNZUucTeZQe3kp/JGH/DliuekER0pBITNSUwlraAeo8FM1qOS+Mpzg45ieiOXPiSy
-X-Gm-Message-State: AOJu0YzCZcqyP9Lkk+x2wTD0/AUOHxd3H9bQheZOFMwoVyfaFWXO5nSg
-	1Ce7wSKC7Sq+4rYigK1mxJmFyizD5r9ywvnsEaBjDNg2woMiCoNZzm1++kgaFY3OxUSmEp3ecBd
-	QI1j9gMehrFSMdXCvqwHNY1Su4Bfy5Yt5kEaDZA==
-X-Google-Smtp-Source: AGHT+IGSCwvEljJGbfYn9wLE/b5/75aeMuRrUiY3C9t/Q3AwACOXzG/3thuOXyzf1ItEA8Vd59vdH4gk5NwdYae+Ems=
-X-Received: by 2002:a92:d744:0:b0:366:ab6f:f63 with SMTP id
- e4-20020a92d744000000b00366ab6f0f63mr6709994ilq.3.1711356475818; Mon, 25 Mar
- 2024 01:47:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XfwZd6ES";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AyQURhGX";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XfwZd6ES";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AyQURhGX"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1EDF05C448;
+	Mon, 25 Mar 2024 08:51:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711356665; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=65tAr47dWAJ3vDg3RDQQXn3Wlhxz3JMVH3FznVwyuS0=;
+	b=XfwZd6ESRlzz8rn2k7LpZFxVOZYoymS2+Sw0/ywCCj2CLpcpj9Ja8dBAE5pwVnsaf6FNkO
+	/QZskaDbxzGbZyUlGenuK/XlXb06Vmki5v8dSd7A4RI7T6qZIG6pVxI+igVyCpgoMWomcG
+	TkQpLlFLYT+rIbCflsSMukhpJEJ+EaU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711356665;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=65tAr47dWAJ3vDg3RDQQXn3Wlhxz3JMVH3FznVwyuS0=;
+	b=AyQURhGXMQnXHcFKu3ysJ9uI11JaQ2d3DnqWF2PG7GDn0GaSGmAtCjFMeJOqTkIryW3S+m
+	rrdyp7Ni/BWq3yAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711356665; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=65tAr47dWAJ3vDg3RDQQXn3Wlhxz3JMVH3FznVwyuS0=;
+	b=XfwZd6ESRlzz8rn2k7LpZFxVOZYoymS2+Sw0/ywCCj2CLpcpj9Ja8dBAE5pwVnsaf6FNkO
+	/QZskaDbxzGbZyUlGenuK/XlXb06Vmki5v8dSd7A4RI7T6qZIG6pVxI+igVyCpgoMWomcG
+	TkQpLlFLYT+rIbCflsSMukhpJEJ+EaU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711356665;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=65tAr47dWAJ3vDg3RDQQXn3Wlhxz3JMVH3FznVwyuS0=;
+	b=AyQURhGXMQnXHcFKu3ysJ9uI11JaQ2d3DnqWF2PG7GDn0GaSGmAtCjFMeJOqTkIryW3S+m
+	rrdyp7Ni/BWq3yAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 052E513503;
+	Mon, 25 Mar 2024 08:51:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id g//rAPk6AWb3JQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 25 Mar 2024 08:51:05 +0000
+Message-ID: <e523193d-c4f5-488b-955c-366a0bf15b9f@suse.cz>
+Date: Mon, 25 Mar 2024 09:51:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240315092914.2431214-1-colin.i.king@gmail.com>
-In-Reply-To: <20240315092914.2431214-1-colin.i.king@gmail.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Mon, 25 Mar 2024 14:17:44 +0530
-Message-ID: <CAAhSdy2b1nUO5u0cM2uMcow931UX0Q=o_OY_YLQ5+oK499PX+w@mail.gmail.com>
-Subject: Re: [PATCH][next] RISC-V: KVM: Remove second semicolon
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm/slub: mark racy accesses on slab->slabs
+Content-Language: en-US
+To: Chengming Zhou <chengming.zhou@linux.dev>, linke li <lilinke99@qq.com>
+Cc: xujianhao01@gmail.com, Christoph Lameter <cl@linux.com>,
+ Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <tencent_909E215498A54E4E100E456A92A7F13DAD06@qq.com>
+ <8b146695-4ff5-4f9a-ab64-6cbed4168f98@suse.cz>
+ <a5141311-38bf-421e-9058-6c278840fb97@linux.dev>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <a5141311-38bf-421e-9058-6c278840fb97@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -2.05
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.05 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	 TO_DN_SOME(0.00)[];
+	 DWL_DNSWL_BLOCKED(0.00)[suse.cz:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FREEMAIL_TO(0.00)[linux.dev,qq.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-2.05)[95.32%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com,qq.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.cz:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[gmail.com,linux.com,kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,kvack.org,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=XfwZd6ES;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=AyQURhGX
+X-Rspamd-Queue-Id: 1EDF05C448
 
-On Fri, Mar 15, 2024 at 2:59=E2=80=AFPM Colin Ian King <colin.i.king@gmail.=
-com> wrote:
->
-> There is a statement with two semicolons. Remove the second one, it
-> is redundant.
->
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+On 3/25/24 9:49 AM, Chengming Zhou wrote:
+> On 2024/3/25 16:48, Vlastimil Babka wrote:
+>> On 3/21/24 4:48 AM, linke li wrote:
+>>> The reads of slab->slabs are racy because it may be changed by
+>>> put_cpu_partial concurrently. In slabs_cpu_partial_show() and 
+>>> show_slab_objects(), slab->slabs is only used for showing information.
+>>>
+>>> Data-racy reads from shared variables that are used only for diagnostic
+>>> purposes should typically use data_race(), since it is normally not a
+>>> problem if the values are off by a little.
+>>>
+>>> This patch is aimed at reducing the number of benign races reported by
+>>> KCSAN in order to focus future debugging effort on harmful races.
+>>>
+>>> Signed-off-by: linke li <lilinke99@qq.com>
+>>> Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+>> 
+>> Chengming provided feedback to v1 but not offered a Reviewed-by: AFAICS? Or
+>> maybe will offer it now? :)
+> 
+> Ah, right.
+> 
+> Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
 
-Queued this patch for Linux-6.9 fixes.
+Thanks, added to slab/for-6.10/cleanup
 
-Thanks,
-Anup
-
-> ---
->  arch/riscv/kvm/vcpu_onereg.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/kvm/vcpu_onereg.c b/arch/riscv/kvm/vcpu_onereg.c
-> index f4a6124d25c9..994adc26db4b 100644
-> --- a/arch/riscv/kvm/vcpu_onereg.c
-> +++ b/arch/riscv/kvm/vcpu_onereg.c
-> @@ -986,7 +986,7 @@ static int copy_isa_ext_reg_indices(const struct kvm_=
-vcpu *vcpu,
->
->  static inline unsigned long num_isa_ext_regs(const struct kvm_vcpu *vcpu=
-)
->  {
-> -       return copy_isa_ext_reg_indices(vcpu, NULL);;
-> +       return copy_isa_ext_reg_indices(vcpu, NULL);
->  }
->
->  static int copy_sbi_ext_reg_indices(struct kvm_vcpu *vcpu, u64 __user *u=
-indices)
-> --
-> 2.39.2
->
