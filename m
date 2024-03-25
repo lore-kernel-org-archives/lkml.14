@@ -1,90 +1,93 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1B51C36
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227AD4A1C
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711369700; cv=none; b=on7OPA2cCGvzUPuotqZ2yF/Yj974UmxoVq8HL9Quo08x48AFwkGU6a17flXJcNA/azu6grxIInsVT4b8xJkYd9oRi8sIiFAy3l4a+yixIZqKfcM5iNh0n9B00JGNjQbylN0iVMV3UGVke+zeoY0ANoJMZLIXahb7zBR5dPuUNwY=
+	t=1711369738; cv=none; b=AisfkUWI8YtBGgArtBd439niSXLCb2EJ+fmqZ9ulFvVmDL26i0R369ioAan6NYED+sIligTMWCqlIeg+DOZOROskgWGx5Laglg9evmbuvGXtEdqnFltE9hh/y2OqRdQJ84x8NXa4OMp34xMzeo2C40/2iTYokQ78+50R22ako14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711369700; c=relaxed/simple;
-	bh=pVQ4C4YTtp5rFp83Ly0FdisDcQMQ7N/FhVjm3Tit5BM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BoHdPIIc9aqDhHhyerGS++0L6GCwvEZ0NIfAfJDmfxoz3pjU5tFx69cjACFpm90z+ox1CAFpkJ5jnVHiKmGzscbC8XxpOo+9M269Hi+d9qov+X0EpOB3WUxTuKARPLUp3Kdp2A8BX2FaO42bLlLph6QhGz6zdOz7kcUSgoX4uHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4V3BzT12sGz4f3jq6
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 20:28:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 2669B1A0B61
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 20:28:09 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.26])
-	by APP1 (Coremail) with SMTP id cCh0CgAX6RHXbQFmlg4nIA--.47806S4;
-	Mon, 25 Mar 2024 20:28:08 +0800 (CST)
-From: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
-To: cl@linux.com,
-	penberg@kernel.org,
-	rientjes@google.com,
-	iamjoonsoo.kim@lge.com,
-	akpm@linux-foundation.org,
-	vbabka@suse.cz,
-	roman.gushchin@linux.dev,
-	42.hyeyoo@gmail.com
-Cc: linux-mm@kvack.org,
+	s=arc-20240116; t=1711369738; c=relaxed/simple;
+	bh=4aRjekFogW63NJ/saTB+Ui/q79quDnGwh6aOvA8UlGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lJhsnEQVCTpfOnRCBuLDWCWJ+CkpGma+SIQoCcAl7N/mHKN+ZFe0oYMcQz+qpwC0Ipg8tZBK1PLfreB7Pb/7CR0T/KUOJw0aon3TPObTqB7YZLU8M8bxhkJHPaXiIdp1wR985c3LJ/nWoZYkl+eU6mr6ODeb22Q0/z+hdLSDrrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jgtWZHH7; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jgtWZHH7"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56c01c2e124so1831197a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:28:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711369735; x=1711974535; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=A5iWcf+JZDsLUFR0I0zIhJdqU2WN9xV+AKxo3kNhvLA=;
+        b=jgtWZHH7nDoerjn69NmX0BZjvDmsFo4vMArMzfEe+CapBtGe8ECN3nGpo5j7AW8f43
+         uWkiMTZ8x1CXeM1yEKN54krdYRAbQra2mR6zxOM7HaIzd5ElXxpg60N2S387OWLUMEa6
+         oiv5KHv1id5XRbVKDTz/npHR0lGlrZ4DoueV846r431fK4EB1AD3pG8K2ZoCtRtve2O/
+         bf/paXkOVLX1n9+r1oXffqAt71EybqtIUjWfU5f/+x7Z9IVZqmWoBX71JQNd9m97gO5b
+         2v7vPwl37fv9pH87QvoatNa5Rh3a5GHTiyzdvwSS3ppgO3WhR3F5yBwuzgFPBsKeB7oC
+         GfxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711369735; x=1711974535;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A5iWcf+JZDsLUFR0I0zIhJdqU2WN9xV+AKxo3kNhvLA=;
+        b=IeXTYUi7WmcNJ8V3WtwG24CvERFu91mGiT+hPmTtTptksW6h3+gc404gHRyL1Fblog
+         ACh2FQqhR3vn8yXzSru1AE4Nxp71YdnMohWvA1qxRxd69nl4SXJQrVpnEJOolBYhYIYb
+         pKaWzq4Ed3G4qvEcU8UqjOLu7Ev9wLsZj5yopfnII5wkTYnevJeTcUh6X8pSTKI8WRpu
+         7cEokPZm1UOzWWxc6Dr4DqViFNLF1a1+HkeIzipXoaUmEHAux/BGWoa9WVS1A7uEVwG6
+         qbtblKByJUuWwLB7/hLUg9v+7IJa26mU6hzcko3hIakfF38cp1uBZVkZ52kc0i9FpCt/
+         zQUA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzqO9pV+St2AUGpMlpMPAV96TNhK45EYGg4XFxxQ/bUig2jQrth3dch7JdGS9gwWP0Ku1jqPD8w9N/NtQDLn3FnkU8P3IVKro40apz
+X-Gm-Message-State: AOJu0Yy7L68ycjaBqrX5lu2vmd05LwbQ5dKPEUkXZIHSrA6jgZq0Tife
+	0HimycQUQCcqmmfKOkb8JYM45ToKB1vqIKwWM6Gd1Umouo5S3HRZXOT1+7zLc8g=
+X-Google-Smtp-Source: AGHT+IFkj0j2GhlW2pPV439N3QcOLRTQjACpF7mNQ6hJa8q6n1DRrMckbturzaEhq4tBC0AGpYFO0w==
+X-Received: by 2002:a17:907:6d0b:b0:a49:7078:582a with SMTP id sa11-20020a1709076d0b00b00a497078582amr2657317ejc.35.1711369735408;
+        Mon, 25 Mar 2024 05:28:55 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id e10-20020a170906504a00b00a4735e440e1sm2994822ejk.97.2024.03.25.05.28.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 05:28:54 -0700 (PDT)
+Date: Mon, 25 Mar 2024 15:28:50 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: coolrrsh@gmail.com
+Cc: slongerbeam@gmail.com, p.zabel@pengutronix.de, mchehab@kernel.org,
+	gregkh@linuxfoundation.org, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	linux-imx@nxp.com, linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	xiujianfeng@huawei.com
-Subject: [PATCH -next] mm/slub: correct comment in do_slab_free()
-Date: Mon, 25 Mar 2024 12:22:17 +0000
-Message-Id: <20240325122217.273978-1-xiujianfeng@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] staging: media: remove duplicates
+Message-ID: <f11e0f7d-3521-4f6b-b38f-2e6f3cc59674@moroto.mountain>
+References: <20240325033427.4708-1-coolrrsh@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX6RHXbQFmlg4nIA--.47806S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrZF43GrWDtw1fZFyUCF43trb_yoWxCFX_C3
-	W8XFWxZw18AFn7KrZ8AFs7XrnIkw4kWryYkF4fC345Jw17trWkJws7Wr1fArW8ZrW7t3s8
-	CanF9rZI9rsF9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
-	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
-	kEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY
-	0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
-	CF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-	aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
-X-CM-SenderInfo: x0lxyxpdqiv03j6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325033427.4708-1-coolrrsh@gmail.com>
 
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
+On Mon, Mar 25, 2024 at 09:04:27AM +0530, coolrrsh@gmail.com wrote:
+> From: Rajeshwar R Shinde <coolrrsh@gmail.com>
+> 
+> The kernel configuration VIDEO_DEV is defined twice in Kconfig.
+> Thus, the redundant code is removed.
+> 
+> Signed-off-by: Rajeshwar R Shinde <coolrrsh@gmail.com>
+> 
+> ---
+> v1->v2
+> modified the subject and commit message
+           ^^^^^^^^^^^
+You forgot to modify the subject.
 
-slab_alloc_node() should be __slab_alloc_node().
-
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- mm/slub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index 7b68a3451eb9..33ac769a69b9 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4446,7 +4446,7 @@ static __always_inline void do_slab_free(struct kmem_cache *s,
- 	c = raw_cpu_ptr(s->cpu_slab);
- 	tid = READ_ONCE(c->tid);
- 
--	/* Same with comment on barrier() in slab_alloc_node() */
-+	/* Same with comment on barrier() in __slab_alloc_node() */
- 	barrier();
- 
- 	if (unlikely(slab != c->slab)) {
--- 
-2.34.1
+regards,
+dan carpenter
 
