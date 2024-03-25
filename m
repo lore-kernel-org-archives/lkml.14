@@ -1,162 +1,105 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1224113CC56;
-	Mon, 25 Mar 2024 14:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C77913D254
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 14:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711378144; cv=none; b=MJEpVelmxaUPz6Mj7pwPDixvQEDqG/0QvGE5l2E9I/Gk6BowJCNrdz9Gqt5u9+wbCBfhcI7xHQ/IQuZR7e2j6a8NEETKhq0NejLyjCmaW79Fr/XfIEajbMR1VKXDSrznBc1x15TbowuogvIJ+6cb+grQgl5r+Pro6eQR3mfvxIw=
+	t=1711378228; cv=none; b=OQnNgWjVN+LvuZ3cK+jK1IVVzH6QHF2f1TNCytLSwSet/mR/MEK1VaaAbRDZR2uBnMR4tqQ1/tylwdNbmcd/maodayKh6ZUGsuEajl7u5ez5jrciKMl83NzW2C4pJfooUmWn6Cwi5jx6BE0rvFSk9eI3PQ42ZJ4sbcI4Dv6acRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711378144; c=relaxed/simple;
-	bh=IuU2/7ewmGvoGLx3m/MQEnHlk5Ob0Q4OW6aJ2yIFh0A=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y6vDj6POIfsak6lRRimul1mJ66kLpfOETsdgXkhQ29orD6MaWNe+6OzIIsd6aewTxOum4DP+1ydt4r3W4S9gLkhiXOIn0VhQ3AFqfeVMcJPvW802+j1sqTCr5yFIE0r4zTZY58nb7U46WpfkM+84Qf1RXBTk9ntxsMEbQnAat54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V3G565Bc4z6K6Xy;
-	Mon, 25 Mar 2024 22:48:10 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 574001400D5;
-	Mon, 25 Mar 2024 22:48:58 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 25 Mar
- 2024 14:48:57 +0000
-Date: Mon, 25 Mar 2024 14:48:57 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-CC: Jonathan Cameron <jic23@kernel.org>, <lars@metafoo.de>,
-	<Michael.Hennerich@analog.com>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <eraretuya@gmail.com>
-Subject: Re: [PATCH v3 4/6] iio: accel: adxl345: Remove single info
- instances
-Message-ID: <20240325144857.000017fb@Huawei.com>
-In-Reply-To: <CAFXKEHZWArvErzeoaO+jMrrA7AuQ4izJioNW_wWTza-bLXV22A@mail.gmail.com>
-References: <20240323122030.21800-1-l.rubusch@gmail.com>
-	<20240323122030.21800-5-l.rubusch@gmail.com>
-	<20240324133536.01067770@jic23-huawei>
-	<CAFXKEHZWArvErzeoaO+jMrrA7AuQ4izJioNW_wWTza-bLXV22A@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1711378228; c=relaxed/simple;
+	bh=bzGkhh3857LfO//R8Cc3xM+Sm0Pu0LcZVZpGpS79/9U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LDpvwccsWzcTJJ2Pfm1X0rCOFAqikXWbKHpsVrTsIG/NHFjdkF2R3bLnRqLgnvqH3LOWWEjMYdzn/gXBYgYnMrzuoTRhg6yK++ahBBeNJzovOzAfQ+bK4yv89WKxNghuQvZcdXDOSa2/2n+2dXrOzCpZdJDDHz4mjqMg279HJNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=W2gaYCIG; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W2gaYCIG"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-229a90b7aa9so2041293fac.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:50:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711378225; x=1711983025; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HiJIJJs/fXvTyCDSSNBDGHDw2J3EG4BtX2teiiFjae0=;
+        b=W2gaYCIGNnCQvWLmUv7VdKQ4w9GjZaQ4/4apOsJMbIWRsmtzRHCNVLCerGfSc53Q7W
+         dWZJJQukVWNVYlNTbiuXBMgDKsAzi801kDG79DRg4StubaWNySl1aquooJVwppQwGISr
+         V5XU5gripwuSe4PpeD52JJk++ZjMY4NAvYcHw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711378225; x=1711983025;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HiJIJJs/fXvTyCDSSNBDGHDw2J3EG4BtX2teiiFjae0=;
+        b=RJ3rjp7NVrl9Sj1o3o926hqq/8x60NPkcx00qy2Q9XjyWQ+uEAQXpYURboimQ9xqY3
+         zXuKUxScp2+eeBxC7yHhTf7TOoi0VM/kgy3sk1poXIJZrFwRtM/kFCo9qzMhGRv2ZTl3
+         s9+lVBCgz1QNGYIoSekQZ2HuAiXYaehrad2a3PABPVLNW70/pRjjbB1y3tceTtwEz2rI
+         2vmfI7PHG4M6tNeeIuDLtaEm1QMUDivIh/ATmNR+jJIS9mCSJWZp3PLeUi0y6dLkKkYS
+         NOuO1HcVV4DXVCzf6uPUXrLoOqYuDLqBvc2QRY/ykBh7qOh7DjJfV+7ff6VbYOrzufR2
+         JllQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAWOzbzfSjS5GD0BVhGIJvtviPqry9lGyt1Vrgp9cl9L/QW7l+iJnZRXSb6kFgGztBixvGLhAE3FZtDPFkDonblmV7zwyMzTnR/rKm
+X-Gm-Message-State: AOJu0YyIm9uctq6h3nqUUxmOxZllBFMkOL1Ezg2knqFwPbQSSHjpVbfG
+	v8MmW4nDkE/XXyomy7j9OEWS5Mg4HpVeT0bb3/+HP6HSj3bez+ZtWtrcvP6Stg==
+X-Google-Smtp-Source: AGHT+IFi6H6aHLQfI8VFi0WO8ICSYFmiwIeOfLPtxErl0UIG07TzmLmgVZ3n0y6H5EShjbVyMwmPSQ==
+X-Received: by 2002:a05:6870:1641:b0:229:e41e:a6b0 with SMTP id c1-20020a056870164100b00229e41ea6b0mr7401259oae.47.1711378225403;
+        Mon, 25 Mar 2024 07:50:25 -0700 (PDT)
+Received: from denia.c.googlers.com (188.173.86.34.bc.googleusercontent.com. [34.86.173.188])
+        by smtp.gmail.com with ESMTPSA id eq17-20020a05622a5e1100b004313f54aaa9sm2491449qtb.5.2024.03.25.07.50.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 07:50:25 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 25 Mar 2024 14:50:23 +0000
+Subject: [PATCH v3 1/3] staging: media: tegra-video: Fix
+ -Wmaybe-unitialized warn in gcc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240325-gcc-arm-warnings-v3-1-81b8c10dc18a@chromium.org>
+References: <20240325-gcc-arm-warnings-v3-0-81b8c10dc18a@chromium.org>
+In-Reply-To: <20240325-gcc-arm-warnings-v3-0-81b8c10dc18a@chromium.org>
+To: Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Sowjanya Komatineni <skomatineni@nvidia.com>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, linux-tegra@vger.kernel.org, 
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.12.4
 
-On Sun, 24 Mar 2024 20:06:51 +0100
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+Make sure that tegra20_vi_get_input_formats always assign a value for
+yuv_input_format.
 
-> On Sun, Mar 24, 2024 at 2:35=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
-g> wrote:
-> >
-> > On Sat, 23 Mar 2024 12:20:28 +0000
-> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> > =20
-> > > Add a common array adxl3x5_chip_info and an enum for
-> > > indexing. This allows to remove local redundantly
-> > > initialized code in the bus specific modules.
-> > >
-> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> > > ---
-> > >  drivers/iio/accel/adxl345.h      |  7 +++++++
-> > >  drivers/iio/accel/adxl345_core.c | 12 ++++++++++++
-> > >  drivers/iio/accel/adxl345_i2c.c  | 20 +++++---------------
-> > >  drivers/iio/accel/adxl345_spi.c  | 20 +++++---------------
-> > >  4 files changed, 29 insertions(+), 30 deletions(-)
-> > >
-> > > diff --git a/drivers/iio/accel/adxl345.h b/drivers/iio/accel/adxl345.h
-> > > index 6b84a2cee..de6b1767d 100644
-> > > --- a/drivers/iio/accel/adxl345.h
-> > > +++ b/drivers/iio/accel/adxl345.h
-> > > @@ -26,11 +26,18 @@
-> > >   */
-> > >  #define ADXL375_USCALE       480000
-> > >
-> > > +enum adxl345_device_type {
-> > > +     ADXL345,
-> > > +     ADXL375,
-> > > +};
-> > > +
-> > >  struct adxl345_chip_info {
-> > >       const char *name;
-> > >       int uscale;
-> > >  };
-> > >
-> > > +extern const struct adxl345_chip_info adxl3x5_chip_info[];
-> > > +
-> > >  int adxl345_core_probe(struct device *dev, struct regmap *regmap,
-> > >                      int (*setup)(struct device*, struct regmap*));
-> > >
-> > > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adx=
-l345_core.c
-> > > index 33424edca..e3718d0dd 100644
-> > > --- a/drivers/iio/accel/adxl345_core.c
-> > > +++ b/drivers/iio/accel/adxl345_core.c
-> > > @@ -62,6 +62,18 @@ struct adxl345_data {
-> > >               BIT(IIO_CHAN_INFO_SAMP_FREQ),                          =
- \
-> > >  }
-> > >
-> > > +const struct adxl345_chip_info adxl3x5_chip_info[] =3D {
-> > > +     [ADXL345] =3D {
-> > > +             .name =3D "adxl345",
-> > > +             .uscale =3D ADXL345_USCALE,
-> > > +     },
-> > > +     [ADXL375] =3D {
-> > > +             .name =3D "adxl375",
-> > > +             .uscale =3D ADXL375_USCALE,
-> > > +     },
-> > > +};
-> > > +EXPORT_SYMBOL_NS_GPL(adxl3x5_chip_info, IIO_ADXL345); =20
-> >
-> > There is little advantage here form using an array.  I'd just have
-> > two exported structures.   Then the name alone is enough in the
-> > id tables.  And probably no need for the enum definition.
-> >
-> > This use of arrays is an old pattern that makes little sense if the
-> > IDs have no actual meaning and you aren't supporting lots of different
-> > parts.  For 2 parts I'd argue definitely not worth it.
-> > =20
->=20
-> Agree. I see your point. I drop the info array enum patch.
->=20
-> (...)
->=20
-> Btw. may I ask another question: The adxl345/75 driver is doing the
-> configuration
-> inside the probe(). Other Analog drivers moved that out into a
-> xxx_setup() and call
-> this function in the probe(). In general, is it better to keep all
-> inside  the probe() or
-> separate? I mean, the probe is still quite short, and reading through
-> severl call
-> hierarchies feels a bit "sparghetti". On the other side I can see a
-> certain idea of
-> separation of functionality: dedicated chip configuration. Would you
-> mind to give
-> me a small statement/opinion on this please?
+Fix:
+drivers/staging/media/tegra-video/tegra20.c:624:72: warning: ‘yuv_input_format’ may be used uninitialized [-Wmaybe-uninitialized]
 
-I'd based it on code complexity.
-If it's one call (and error handling) to do it then inline makes sense.
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+ drivers/staging/media/tegra-video/tegra20.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-If it's  lots of lines, a separate function make sense.
+diff --git a/drivers/staging/media/tegra-video/tegra20.c b/drivers/staging/media/tegra-video/tegra20.c
+index c25286772603c..630e2ff987a37 100644
+--- a/drivers/staging/media/tegra-video/tegra20.c
++++ b/drivers/staging/media/tegra-video/tegra20.c
+@@ -164,6 +164,7 @@ static void tegra20_vi_get_input_formats(struct tegra_vi_channel *chan,
+ 	unsigned int input_mbus_code = chan->fmtinfo->code;
+ 
+ 	(*main_input_format) = VI_INPUT_INPUT_FORMAT_YUV422;
++	(*yuv_input_format) = VI_INPUT_YUV_INPUT_FORMAT_UYVY;
+ 
+ 	switch (input_mbus_code) {
+ 	case MEDIA_BUS_FMT_UYVY8_2X8:
 
-Where the boundary between the two lies is subjective so I tend to
-just go with whatever an author prefers.  Note that I'm not keen
-to see the noise of refactors if the code lies in this gray area?
-
-Jonathan
-
-
->=20
+-- 
+2.44.0.396.g6e790dbe36-goog
 
