@@ -1,132 +1,160 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8636156641
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F01E15573D
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711356141; cv=none; b=GG3LQX+sB4pcJ829vSCiNhWtxvzfnPWHvVmSAMJCwCNKn1N4OZ4DPdeOv5hixBsTDIZ8ib+tnkEPPaYabNJpTbNlejRWtiTenD2wSL7CXQe9ylaqMmbTbQR7eufC6zA017b6WSPZHxyDzha5Lit31y1tcfjvF7gvTJQwIQFaBBs=
+	t=1711355967; cv=none; b=IdApYwognTKZ78GBe0LuOUTKEeijBqX7Vl1rJ4iM8zroktoOGPwBdVa/Qf8iTx8D9+4o/QqCmSd4V8wU1XLEQe+OpqLf7ZQ2AfvsmH+qWerTqz3t5RcpMleXS7nGnMT2ITeEfsa4vn97eK0qw84K453/u4TpJMEinim3cXoYsC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711356141; c=relaxed/simple;
-	bh=AK4VerFKWg7/PO+KQ1ODIGaCGy63YMq9Bb+ygRxtKGg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WLH3wNUD+GUgw9AEUI3CAq9to7eHXkeRTMfDZDA9d14raUnTx38/5J+B2SenUNn0x5j9C6hnZQRRp5bKyGANQ0wSau33s/IQSQh5f/hNjDBNFPaQxY3wlI8dVZRTXdm4p6DyKDjRQIAQ2i0bWbeEaSc/naPkE9SWbIE8omFwGaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4V35vt2zF2z1h3Zl;
-	Mon, 25 Mar 2024 16:39:38 +0800 (CST)
-Received: from dggpemd200001.china.huawei.com (unknown [7.185.36.224])
-	by mail.maildlp.com (Postfix) with ESMTPS id EA34E1402CA;
-	Mon, 25 Mar 2024 16:42:15 +0800 (CST)
-Received: from [10.174.178.209] (10.174.178.209) by
- dggpemd200001.china.huawei.com (7.185.36.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 25 Mar 2024 16:42:15 +0800
-Message-ID: <60aef4db-27f4-8be3-74bb-3efaee92b7d5@huawei.com>
-Date: Mon, 25 Mar 2024 16:42:15 +0800
+	s=arc-20240116; t=1711355967; c=relaxed/simple;
+	bh=BAC+WVMO1tGwo33xnug+/2dC0AeTsQNT40RAmXUK4xw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hsYETpqs/wf3wrMnfjh6MEBCwVXn67kzIzoGc3uWgfDmBsA+izSbaFNlOlynbX+cNpKFts/OZzoRst6VyRv3CiknvHQr+lHHCwpXDnD9rktYmo+kKTIODNqQcwcwyi2sien75TSrwKKZYGbuknlWZJ3O7ZBkSgE5ULKezKiui6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AejJBxrw; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AejJBxrw"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a4a3a5e47baso49078366b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 01:39:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711355964; x=1711960764; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y0kZP691y+X37CeRc5a1b81NRGe9/CqFEZLGS/IX9lU=;
+        b=AejJBxrwlY9xMNHTAWsRBde6Bh81IF2usY9qx0V3mmk8vL/V34nE6lnKoSJdXIp1T/
+         WgtWI0hemmrxb/yD/niOZYOKa9+dP+dyX+qr3830Pzm0S6PEs2MS3pHL8ivcyVEcvuEU
+         Ekt4A3LEdbHD/KDOTzwMJ6P9XxsSgx67YHb0N0SELG/hddkSaSfZPFlDevctAWRzCm5A
+         F96wL6X0Ean8jJkPGPBZrADj1KtXnt5qBV5RzbxFdlcFsWdRz1vykxw637MQFH18w1gv
+         kq/Ghm/QUfA5U7Nc1ZsSoFOQUgunIcAxhhUTjeGNq4OO6/byjloGPn9LPWkRs9VTCn6w
+         /yTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711355964; x=1711960764;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y0kZP691y+X37CeRc5a1b81NRGe9/CqFEZLGS/IX9lU=;
+        b=VvdnppPV0iHGUfWZkeplDoWaf8RIciZmJviFjAzXN5Y2JUefTfyTxJFCdsqsNGC/Qk
+         lHraQ+yFkEtlIb60UXlWtzR1ZDaTUOIhyADp2D02ssOH3+vzjYF5ypVhoPFXKn0WKnMs
+         v8On67hoTPwg8QinUEn9W1vsBjYQMKItczysPC7RX+NfRhjyvTR1J5rW7twnHYcPxDH6
+         oXayiT47nvhIp34xx7FerRw0Kxf3gEg6nF3vHPwjRlUm2Be/hf/ym0iAKqbooq861Xey
+         FJrJUC3Mndos2Qh0faq4ED2r7WaZDXc0nlbQsrAu5iFVfq+KXRTLB/uS7xibc+Evj30i
+         V7Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvCbe8UxpBv13Ox3gPI9IhWLvcHi2pns16H3cjDtBSlmah0QJA0+rx4eyjN10iwItJPPXflIPQQXNxQOfyG8fr3xAw06bug8Ar5SD5
+X-Gm-Message-State: AOJu0YxWjVAQ63PfJc6hGWywEYBVeL0iEyrid+mlEWwO2Vk2azdDwSvU
+	aLmG6vzaBndEQGD9/G95vgaEO9e9Eko+Xkoe1WvRp0Rwp7raFNp4HuJpG8L2jakqlObadyI7MBD
+	yLpnMrINmQVFdFuZwylpf3QWUsBMlfaB9nZmX
+X-Google-Smtp-Source: AGHT+IFgl4zrYBmL1mnbXRObDbHIPSKGVSR/6CfTP061t6LzL7AucWLMmH83VFZD1AhGOhS3BZxguvOWKzC2W1yUwAk=
+X-Received: by 2002:a17:906:c109:b0:a47:6bd4:cbd9 with SMTP id
+ do9-20020a170906c10900b00a476bd4cbd9mr2433483ejc.52.1711355964219; Mon, 25
+ Mar 2024 01:39:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] ubifs: fix incorrect UBIFS_DFS_DIR_LEN macro definition
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: <richard@nod.at>, <miquel.raynal@bootlin.com>, <vigneshr@ti.com>,
-	<ada@thorsis.com>, <error27@gmail.com>, <Artem.Bityutskiy@nokia.com>,
-	<linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<chengzhihao1@huawei.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
-References: <20240324120333.3837837-1-wangzhaolong1@huawei.com>
- <bade7524-2b8f-449a-a29e-cafd11359504@moroto.mountain>
-From: ZhaoLong Wang <wangzhaolong1@huawei.com>
-In-Reply-To: <bade7524-2b8f-449a-a29e-cafd11359504@moroto.mountain>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemd200001.china.huawei.com (7.185.36.224)
+References: <20240324210447.956973-1-hannes@cmpxchg.org> <CAJD7tkaWQAV=X1pzYG=VkWe7Ue9ZFbjt9uQ5m1NJujtLspWJTA@mail.gmail.com>
+ <CAGsJ_4yeBmNsMGXEWwC+1Hs5zJUP+becq4wG+6CpU7V1=EOvhg@mail.gmail.com>
+ <CAJD7tka5K69q20bxTsBk38JC7mdPr3UsxXpsnggDO_iQA=qxug@mail.gmail.com> <1e7ce417-b9dd-4d62-9f54-0adf1ccdae35@linux.dev>
+In-Reply-To: <1e7ce417-b9dd-4d62-9f54-0adf1ccdae35@linux.dev>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Mon, 25 Mar 2024 01:38:47 -0700
+Message-ID: <CAJD7tkYc3oFho5eEkS1zmr_+CC-Ag1HucUTyAy2RJbEb4SqRoQ@mail.gmail.com>
+Subject: Re: [PATCH] mm: zswap: fix data loss on SWP_SYNCHRONOUS_IO devices
+To: Chengming Zhou <chengming.zhou@linux.dev>
+Cc: Barry Song <21cnbao@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Zhongkun He <hezhongkun.hzk@bytedance.com>, 
+	Chengming Zhou <zhouchengming@bytedance.com>, Chris Li <chrisl@kernel.org>, 
+	Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Kairui Song <kasong@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Mar 25, 2024 at 12:33=E2=80=AFAM Chengming Zhou
+<chengming.zhou@linux.dev> wrote:
+>
+> On 2024/3/25 15:06, Yosry Ahmed wrote:
+> > On Sun, Mar 24, 2024 at 9:54=E2=80=AFPM Barry Song <21cnbao@gmail.com> =
+wrote:
+> >>
+> >> On Mon, Mar 25, 2024 at 10:23=E2=80=AFAM Yosry Ahmed <yosryahmed@googl=
+e.com> wrote:
+> >>>
+> >>> On Sun, Mar 24, 2024 at 2:04=E2=80=AFPM Johannes Weiner <hannes@cmpxc=
+hg.org> wrote:
+> >>>>
+> >>>> Zhongkun He reports data corruption when combining zswap with zram.
+> >>>>
+> >>>> The issue is the exclusive loads we're doing in zswap. They assume
+> >>>> that all reads are going into the swapcache, which can assume
+> >>>> authoritative ownership of the data and so the zswap copy can go.
+> >>>>
+> >>>> However, zram files are marked SWP_SYNCHRONOUS_IO, and faults will t=
+ry
+> >>>> to bypass the swapcache. This results in an optimistic read of the
+> >>>> swap data into a page that will be dismissed if the fault fails due =
+to
+> >>>> races. In this case, zswap mustn't drop its authoritative copy.
+> >>>>
+> >>>> Link: https://lore.kernel.org/all/CACSyD1N+dUvsu8=3DzV9P691B9bVq33er=
+wOXNTmEaUbi9DrDeJzw@mail.gmail.com/
+> >>>> Reported-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+> >>>> Fixes: b9c91c43412f ("mm: zswap: support exclusive loads")
+> >>>> Cc: stable@vger.kernel.org      [6.5+]
+> >>>> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> >>>> Tested-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+> >>
+> >> Acked-by: Barry Song <baohua@kernel.org>
+> >>
+> >>>
+> >>> Do we also want to mention somewhere (commit log or comment) that
+> >>> keeping the entry in the tree is fine because we are still protected
+> >>> from concurrent loads/invalidations/writeback by swapcache_prepare()
+> >>> setting SWAP_HAS_CACHE or so?
+> >>
+> >> It seems that Kairui's patch comprehensively addresses the issue at ha=
+nd.
+> >> Johannes's solution, on the other hand, appears to align zswap behavio=
+r
+> >> more closely with that of a traditional swap device, only releasing an=
+ entry
+> >> when the corresponding swap slot is freed, particularly in the sync-io=
+ case.
+> >
+> > It actually worked out quite well that Kairui's fix landed shortly
+> > before this bug was reported, as this fix wouldn't have been possible
+> > without it as far as I can tell.
+> >
+> >>
+> >> Johannes' patch has inspired me to consider whether zRAM could achieve
+> >> a comparable outcome by immediately releasing objects in swap cache
+> >> scenarios.  When I have the opportunity, I plan to experiment with zRA=
+M.
+> >
+> > That would be interesting. I am curious if it would be as
+> > straightforward in zram to just mark the folio as dirty in this case
+> > like zswap does, given its implementation as a block device.
+> >
+>
+> This makes me wonder who is responsible for marking folio dirty in this s=
+wapcache
+> bypass case? Should we call folio_mark_dirty() after the swap_read_folio(=
+)?
 
-Thank you for your detailed comments and suggestions.
+In shrink_folio_list(), we try to add anonymous folios to the
+swapcache if they are not there before checking if they are dirty.
+add_to_swap() calls folio_mark_dirty(), so this should take care of
+it. There is an interesting comment there though. It says that PTE
+should be dirty, so unmapping the folio should have already marked it
+as dirty by the time we are adding it to the swapcache, except for the
+MADV_FREE case.
 
- > On Sun, Mar 24, 2024 at 08:03:33PM +0800, ZhaoLong Wang wrote:
- >> The UBIFS_DFS_DIR_LEN macro, which defines the maximum length of the 
-UBIFS
- >> debugfs directory name, is incorrectly calculated. The current 
-formula is
- >> (3 + 1 + 2*2 + 1), which assumes that both UBI device number and 
-volume ID
- >> are limited to 2 characters. However, UBI device number ranges from 0 to
- >> 37 (2 characters), and volume ID ranges from 0 to 127 (up to 3 
-characters).
- >>
- >> This incorrect definition leads to a buffer overflow issue when the 
-device
- >> number is 31 and volume ID is 127, causing the dbg_debugfs_init_fs() 
-function
- >> to return prematurely without creating debugfs directory in the 
-stable branch
- >> linux-5.10.y.
- >
- > This commit message is very confusing because you are talking about
- > 5.10 and the current kernel.  Only talk about the issues in the current
- > kernel.  Later when we're backporting patches then we can discuss
- > issues in the old kernels.  (You will need to re-write the commit
- > message and resend).
- >
-
-You're right, I shouldn't have mentioned the 5.10 kernel issue in the
-commit message. I'll rewrite the commit message to focus only on code
-improvements for the current kernel.
-
- >>
- >> A previous attempt to fix this issue in commit be076fdf8369 ("ubifs: fix
- >> snprintf() checking") by modifying the snprintf return value check 
-range is
- >> insufficient. It avoids the premature function return but does not 
-address
- >> the root cause of the problem. If the buffer length is inadequate, 
-snprintf
- >> will truncate the output string, resulting in incorrect directory names
- >> during filesystem debugging.
- >
- > Heh, my commit message said that my patch did not affect runtime but I
- > don't know what I was thinking when I wrote that. :P  I guess I saw
- > UBI_DFS_DIR_NAME but didn't notice it had some %d format strings in it.
- >
- > I think the calculations were wrong, yes, and the comments that explain
- > them were wrong, yes.  However, I think that the original code worked.
- >
- > -    n = snprintf(d->dfs_dir_name, UBI_DFS_DIR_LEN + 1, UBI_DFS_DIR_NAME,
- >                                        ^^^^^^^^^^^^^^^^^^^
- > The + 1 was added by mistake, however, 9 + 1 = 10, so in the end the
- > math errors cancel each other out.
- >
- > +    n = snprintf(d->dfs_dir_name, UBI_DFS_DIR_LEN, UBI_DFS_DIR_NAME,
- >                                        ^^^^^^^^^^^^^^^
- > This is also 10.
- >
- >                ubi->ubi_num);
- > -    if (n > UBI_DFS_DIR_LEN) {
- > +    if (n >= UBI_DFS_DIR_LEN) {
- >
- > n > 9 and n >= 10 are the same.
- >
- > So I think this is a nice clean up, but I don't think it changes
- > runtime.  We should backport my patch to 5.10.
-
-I also agree with you that the original code, while having incorrect
-calculations and comments, still works due to the mathematical errors
-canceling out. I'll acknowledge this in the revised commit message.
-
-As for the suggestion to backport your patch to 5.10, I'm all for it.
-This will help fix the problem in the old kernel.
-
-Thanks again for the feedback. I'll prepare an updated patch and resend
-it as soon as possible.
-
-Best regards,
-ZhaoLong Wang
+However, I think we actually unmap the folio after we add it to the
+swapcache in shrink_folio_list(). Also, I don't immediately see why
+the PTE would be dirty. In do_swap_page(), making the PTE dirty seems
+to be conditional on the fault being a write fault, but I didn't look
+thoroughly, maybe I missed it. It is also possible that the comment is
+just outdated.
