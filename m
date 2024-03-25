@@ -1,451 +1,190 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB1516A1CA
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 14:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7484317B;
+	Mon, 25 Mar 2024 14:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711377291; cv=none; b=Us8Ch7WLQqycQhx+3c9L2r+jbcCuMTa6T2XUQQK1Lvs9BYm6ns5BprreBzxKl8G6HpFAqg+2Jy0P+iHmBS7nAdfbZckIzq+OoxNduCvMWYdJ5LQbqwGiBizCALGSgmCK/L/ozg9YDU+MOt2nVQ1jOFI7nI0wfg4QK/7nsiLS5fI=
+	t=1711377355; cv=none; b=MZ/Z3+9VyiXxmRmNUcgXrKU+8VxTA9liEsu2SPiGfU5H3rbo/sim3mWwuWSDB6YxIa7aalT0TyUj9N49HqNsKqwb+baUBLWQ86U3T11hqOXMHhYhVVPJqSsC5G4O2MK9kvlf8APSniAjKUQufAxOy8Y3+7Mpr8DTsnkcKO/WBRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711377291; c=relaxed/simple;
-	bh=bAVxlwWFU7BAIaGmmbo2wyQ6tfxAVuynUWQganhKuac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jqt+OJc0UxPtWrfvAi1wB3bTzShFVXhY1eFCYS1uoMUtM5e0KtB4t+Bj5MSKGcPMeOLCfqwWzoZQQL/3NlEFMJ93y/cm30eJF594oNe+qYaW6qcIDL1ba1mB6w4qJUvDjYw2g+XjV7Q8uBcwy7gGPq5hMZQ20hyjkmhzaXOQQ4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=EnhGXdcv; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1711377355; c=relaxed/simple;
+	bh=an7bqbwd3dY5kDiijgoOPRJOOMJxM2nrHUHfTXZHSt8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Qys6w/D49gRH+IwVK58UCqIHl943u5FL7/lZNlaTtqictSAXoBpLcHLbpICgh/3Teg/99IgeGmpnRK8nDrXksOqSNq3vJUuzCnYp9S14Og4V14lBLslXSFSvoF3OO63M7pJJRdQQ1DkWG7cjNCqd4boWyMd1TqkEusxqj1XKcT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=r6Hadb3M; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="EnhGXdcv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=yxec70M6Owd9Eet/5to7veN0GIlFa4kpXrA8JW7agGE=; b=EnhGXdcvH7HJXqrsmXjTITohYC
-	9ay5GOTcM5FtgIeFSzHSEgShP3UjFFNM/U6xWNW6JnxedbRNx597nzf1XbYeSlNkqqtMSslGiZBbR
-	rIPopUjnUwXvdV6qG4MsNc+PrbsBiOYTN/DW6zSkw8nvcnukisAqrPcoVHEn8XzxtdjBUhlFkUWmn
-	FlqTkEz4jxPQJ73e1jXbxFbpqkDQZ9YOKUcsMLoJSlrxeVSnlJheNDxaN5rs9xBGBDY34iWJxyYsw
-	IuwGNxCPlkPm6WludJ3FxL0S117HKeWlIN1HzVDbk6OFlGiHV2TgxuN2LPS9Ehs7L1R2SJm9JbDnp
-	AFGZ8ZdA==;
-Received: from [177.34.169.255] (helo=[192.168.0.139])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1rolP7-00F60I-DZ; Mon, 25 Mar 2024 15:34:26 +0100
-Message-ID: <89748cd9-286b-4b07-b96b-5167e4b22cd2@igalia.com>
-Date: Mon, 25 Mar 2024 11:34:17 -0300
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r6Hadb3M"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42PEZHj4096694;
+	Mon, 25 Mar 2024 09:35:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1711377318;
+	bh=7VEN6CcVqpXAQcxkPxLacRLhJ2Mwhs7ycVWHGNp2PWc=;
+	h=From:To:CC:Subject:Date;
+	b=r6Hadb3Mzd9RT7DjjHyHu87dy1VsmLa829oiL2IZjr4Z6GD37k4Idfho3+wcSYnIT
+	 Mkz4nce/E1S4QFxxOxT0hdVG7hTLrWqdSD/umeoeHPfhwIeyXu+CbFvg85w+AE25di
+	 aTWH12SA2j/I3tfIKBaRjvfdvCfN/mEehrYQhuWA=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42PEZHtG011013
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 25 Mar 2024 09:35:17 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 25
+ Mar 2024 09:35:17 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 25 Mar 2024 09:35:17 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42PEZHLf123147;
+	Mon, 25 Mar 2024 09:35:17 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Tero Kristo <kristo@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Nishanth Menon <nm@ti.com>
+CC: Robert Nelson <robertcnelson@gmail.com>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        Shengyu Qu <wiagn233@outlook.com>,
+        Sukrut Bellary <sukrut.bellary@linux.com>,
+        Javier Martinez Canillas
+	<javierm@redhat.com>,
+        Bill Mills <bill.mills@linaro.org>
+Subject: [PATCH V2] arm64: dts: ti: k3-am625-beagleplay: Use mmc-pwrseq for wl18xx enable
+Date: Mon, 25 Mar 2024 09:35:10 -0500
+Message-ID: <20240325143511.2144768-1-nm@ti.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 14/16] drm/vkms: Create KUnit tests for YUV conversions
-To: Louis Chauvet <louis.chauvet@bootlin.com>,
- Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
- Melissa Wen <melissa.srw@gmail.com>,
- Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
- Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
- thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com,
- nicolejadeyee@google.com
-References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
- <20240313-yuv-v5-14-e610cbd03f52@bootlin.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-Autocrypt: addr=mcanal@igalia.com; keydata=
- xjMEZIsaeRYJKwYBBAHaRw8BAQdAGU6aY8oojw61KS5rGGMrlcilFqR6p6ID45IZ6ovX0h3N
- H01haXJhIENhbmFsIDxtY2FuYWxAaWdhbGlhLmNvbT7CjwQTFggANxYhBDMCqFtIvFKVRJZQ
- hDSPnHLaGFVuBQJkixp5BQkFo5qAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQNI+cctoYVW5u
- GAEAwpaC5rI3wD8zqETKwGVoXd6+AbmGfZuVD40xepy7z/8BAM5w95/oyPsHUqOsg/xUTlNp
- rlbhA+WWoaOXA3XgR+wCzjgEZIsaeRIKKwYBBAGXVQEFAQEHQGoOK0jgh0IorMAacx6WUUWb
- s3RLiJYWUU6iNrk5wWUbAwEIB8J+BBgWCAAmFiEEMwKoW0i8UpVEllCENI+cctoYVW4FAmSL
- GnkFCQWjmoACGwwACgkQNI+cctoYVW6cqwD/Q9R98msvkhgRvi18fzUPFDwwogn+F+gQJJ6o
- pwpgFkAA/R2zOfla3IT6G3SBoV5ucdpdCpnIXFpQLbmfHK7dXsAC
-In-Reply-To: <20240313-yuv-v5-14-e610cbd03f52@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Organization: Texas Instruments, Inc.
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 3/13/24 14:45, Louis Chauvet wrote:
-> From: Arthur Grillo <arthurgrillo@riseup.net>
-> 
-> Create KUnit tests to test the conversion between YUV and RGB. Test each
-> conversion and range combination with some common colors.
-> 
-> The code used to compute the expected result can be found in comment.
-> 
-> Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
-> [Louis Chauvet:
-> - fix minor formating issues (whitespace, double line)
-> - change expected alpha from 0x0000 to 0xffff
-> - adapt to the new get_conversion_matrix usage
-> - apply the changes from Arthur
-> - move struct pixel_yuv_u8 to the test itself]
+From: Sukrut Bellary <sukrut.bellary@linux.com>
 
-Again, a Co-developed-by tag might be more proper.
+BeaglePlay SBC[1] has Texas Instrument's WL18xx WiFi chipset[2].
 
-> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> ---
->   drivers/gpu/drm/vkms/Kconfig                  |  15 ++
->   drivers/gpu/drm/vkms/Makefile                 |   1 +
->   drivers/gpu/drm/vkms/tests/.kunitconfig       |   4 +
->   drivers/gpu/drm/vkms/tests/Makefile           |   3 +
->   drivers/gpu/drm/vkms/tests/vkms_format_test.c | 230 ++++++++++++++++++++++++++
->   drivers/gpu/drm/vkms/vkms_formats.c           |   7 +-
->   drivers/gpu/drm/vkms/vkms_formats.h           |   4 +
->   7 files changed, 262 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vkms/Kconfig b/drivers/gpu/drm/vkms/Kconfig
-> index b9ecdebecb0b..9b0e1940c14f 100644
-> --- a/drivers/gpu/drm/vkms/Kconfig
-> +++ b/drivers/gpu/drm/vkms/Kconfig
-> @@ -13,3 +13,18 @@ config DRM_VKMS
->   	  a VKMS.
->   
->   	  If M is selected the module will be called vkms.
-> +
-> +config DRM_VKMS_KUNIT_TESTS
-> +	tristate "Tests for VKMS" if !KUNIT_ALL_TESTS
+Currently, WLAN_EN is configured as regulator and regulator-always-on.
+However, the timing and wlan_en sequencing is not correctly modelled.
 
-"KUnit tests for VKMS"
+This causes the sdio access to fail during runtime-pm power operations
+saving or during system suspend/resume/hibernation/freeze operations.
+This is because the WLAN_EN line is not deasserted to low '0' to power
+down the WiFi. So during restore, the WiFi driver tries to load the FW
+without following correct power sequence. WLAN_EN => '1'/assert (high)
+to power-up the chipset.
 
-> +	depends on DRM_VKMS && KUNIT
-> +	default KUNIT_ALL_TESTS
-> +	help
-> +	  This builds unit tests for VKMS. This option is not useful for
-> +	  distributions or general kernels, but only for kernel
-> +	  developers working on VKMS.
-> +
-> +	  For more information on KUnit and unit tests in general,
-> +	  please refer to the KUnit documentation in
-> +	  Documentation/dev-tools/kunit/.
-> +
-> +	  If in doubt, say "N".
-> \ No newline at end of file
-> diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
-> index 1b28a6a32948..8d3e46dde635 100644
-> --- a/drivers/gpu/drm/vkms/Makefile
-> +++ b/drivers/gpu/drm/vkms/Makefile
-> @@ -9,3 +9,4 @@ vkms-y := \
->   	vkms_writeback.o
->   
->   obj-$(CONFIG_DRM_VKMS) += vkms.o
-> +obj-$(CONFIG_DRM_VKMS_KUNIT_TESTS) += tests/
-> diff --git a/drivers/gpu/drm/vkms/tests/.kunitconfig b/drivers/gpu/drm/vkms/tests/.kunitconfig
-> new file mode 100644
-> index 000000000000..70e378228cbd
-> --- /dev/null
-> +++ b/drivers/gpu/drm/vkms/tests/.kunitconfig
-> @@ -0,0 +1,4 @@
-> +CONFIG_KUNIT=y
-> +CONFIG_DRM=y
-> +CONFIG_DRM_VKMS=y
-> +CONFIG_DRM_VKMS_KUNIT_TESTS=y
-> diff --git a/drivers/gpu/drm/vkms/tests/Makefile b/drivers/gpu/drm/vkms/tests/Makefile
-> new file mode 100644
-> index 000000000000..2d1df668569e
-> --- /dev/null
-> +++ b/drivers/gpu/drm/vkms/tests/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +obj-$(CONFIG_DRM_VKMS_KUNIT_TESTS) += vkms_format_test.o
-> diff --git a/drivers/gpu/drm/vkms/tests/vkms_format_test.c b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
-> new file mode 100644
-> index 000000000000..0954d606e44a
-> --- /dev/null
-> +++ b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
-> @@ -0,0 +1,230 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +
-> +#include <kunit/test.h>
-> +
-> +#include <drm/drm_fixed.h>
-> +#include <drm/drm_fourcc.h>
-> +#include <drm/drm_print.h>
-> +
-> +#include "../../drm_crtc_internal.h"
-> +
-> +#include "../vkms_drv.h"
-> +#include "../vkms_formats.h"
-> +
-> +#define TEST_BUFF_SIZE 50
-> +
-> +struct pixel_yuv_u8 {
-> +	u8 y, u, v;
-> +};
-> +
-> +struct yuv_u8_to_argb_u16_case {
-> +	enum drm_color_encoding encoding;
-> +	enum drm_color_range range;
-> +	size_t n_colors;
-> +	struct format_pair {
-> +		char *name;
-> +		struct pixel_yuv_u8 yuv;
-> +		struct pixel_argb_u16 argb;
-> +	} colors[TEST_BUFF_SIZE];
-> +};
-> +
-> +/*
-> + * The YUV color representation were acquired via the colour python framework.
-> + * Below are the function calls used for generating each case.
-> + *
-> + * for more information got to the docs:
+Use mmc-pwrseq-simple to drive TI's WiFi (WL18xx) chipset enable
+'WLAN_EN'. mmc-pwrseq-simple provides power sequence flexibility with
+support for post power-on and power-off delays.
 
-s/for/For
+Typical log signature that indicates this bug is:
+wl1271_sdio mmc2:0001:2: sdio write failed (-110)
 
-> + * https://colour.readthedocs.io/en/master/generated/colour.RGB_to_YCbCr.html
-> + */
-> +static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
-> +	/*
-> +	 * colour.RGB_to_YCbCr(<rgb color in 16 bit form>,
-> +	 *                     K=colour.WEIGHTS_YCBCR["ITU-R BT.601"],
-> +	 *                     in_bits = 16,
-> +	 *                     in_legal = False,
-> +	 *                     in_int = True,
-> +	 *                     out_bits = 8,
-> +	 *                     out_legal = False,
-> +	 *                     out_int = True)
-> +	 */
+Followed by possibly a kernel warning (depending on firmware present):
+WARNING: CPU: 1 PID: 45 at drivers/net/wireless/ti/wlcore/sdio.c:123 wl12xx_sdio_raw_write+0xe4/0x168 [wlcore_sdio]
 
-I feel that this Python code is kind of poluting the test cases.
+[1] https://www.beagleboard.org/boards/beagleplay
+[2] https://www.ti.com/lit/ds/symlink/wl1807mod.pdf
 
-> +	{
-> +		.encoding = DRM_COLOR_YCBCR_BT601,
-> +		.range = DRM_COLOR_YCBCR_FULL_RANGE,
-> +		.n_colors = 6,
-> +		.colors = {
-> +			{ "white", { 0xff, 0x80, 0x80 }, { 0xffff, 0xffff, 0xffff, 0xffff }},
-> +			{ "gray",  { 0x80, 0x80, 0x80 }, { 0xffff, 0x8080, 0x8080, 0x8080 }},
-> +			{ "black", { 0x00, 0x80, 0x80 }, { 0xffff, 0x0000, 0x0000, 0x0000 }},
-> +			{ "red",   { 0x4c, 0x55, 0xff }, { 0xffff, 0xffff, 0x0000, 0x0000 }},
-> +			{ "green", { 0x96, 0x2c, 0x15 }, { 0xffff, 0x0000, 0xffff, 0x0000 }},
-> +			{ "blue",  { 0x1d, 0xff, 0x6b }, { 0xffff, 0x0000, 0x0000, 0xffff }},
-> +		},
-> +	},
-> +	/*
-> +	 * colour.RGB_to_YCbCr(<rgb color in 16 bit form>,
-> +	 *                     K=colour.WEIGHTS_YCBCR["ITU-R BT.601"],
-> +	 *                     in_bits = 16,
-> +	 *                     in_legal = False,
-> +	 *                     in_int = True,
-> +	 *                     out_bits = 8,
-> +	 *                     out_legal = True,
-> +	 *                     out_int = True)
-> +	 */
-> +	{
-> +		.encoding = DRM_COLOR_YCBCR_BT601,
-> +		.range = DRM_COLOR_YCBCR_LIMITED_RANGE,
-> +		.n_colors = 6,
-> +		.colors = {
-> +			{ "white", { 0xeb, 0x80, 0x80 }, { 0xffff, 0xffff, 0xffff, 0xffff }},
-> +			{ "gray",  { 0x7e, 0x80, 0x80 }, { 0xffff, 0x8080, 0x8080, 0x8080 }},
-> +			{ "black", { 0x10, 0x80, 0x80 }, { 0xffff, 0x0000, 0x0000, 0x0000 }},
-> +			{ "red",   { 0x51, 0x5a, 0xf0 }, { 0xffff, 0xffff, 0x0000, 0x0000 }},
-> +			{ "green", { 0x91, 0x36, 0x22 }, { 0xffff, 0x0000, 0xffff, 0x0000 }},
-> +			{ "blue",  { 0x29, 0xf0, 0x6e }, { 0xffff, 0x0000, 0x0000, 0xffff }},
-> +		},
-> +	},
-> +	/*
-> +	 * colour.RGB_to_YCbCr(<rgb color in 16 bit form>,
-> +	 *                     K=colour.WEIGHTS_YCBCR["ITU-R BT.709"],
-> +	 *                     in_bits = 16,
-> +	 *                     in_legal = False,
-> +	 *                     in_int = True,
-> +	 *                     out_bits = 8,
-> +	 *                     out_legal = False,
-> +	 *                     out_int = True)
-> +	 */
-> +	{
-> +		.encoding = DRM_COLOR_YCBCR_BT709,
-> +		.range = DRM_COLOR_YCBCR_FULL_RANGE,
-> +		.n_colors = 4,
-> +		.colors = {
-> +			{ "white", { 0xff, 0x80, 0x80 }, { 0xffff, 0xffff, 0xffff, 0xffff }},
-> +			{ "gray",  { 0x80, 0x80, 0x80 }, { 0xffff, 0x8080, 0x8080, 0x8080 }},
-> +			{ "black", { 0x00, 0x80, 0x80 }, { 0xffff, 0x0000, 0x0000, 0x0000 }},
-> +			{ "red",   { 0x36, 0x63, 0xff }, { 0xffff, 0xffff, 0x0000, 0x0000 }},
-> +			{ "green", { 0xb6, 0x1e, 0x0c }, { 0xffff, 0x0000, 0xffff, 0x0000 }},
-> +			{ "blue",  { 0x12, 0xff, 0x74 }, { 0xffff, 0x0000, 0x0000, 0xffff }},
-> +		},
-> +	},
-> +	/*
-> +	 * colour.RGB_to_YCbCr(<rgb color in 16 bit form>,
-> +	 *                     K=colour.WEIGHTS_YCBCR["ITU-R BT.709"],
-> +	 *                     in_bits = 16,
-> +	 *                     int_legal = False,
-> +	 *                     in_int = True,
-> +	 *                     out_bits = 8,
-> +	 *                     out_legal = True,
-> +	 *                     out_int = True)
-> +	 */
-> +	{
-> +		.encoding = DRM_COLOR_YCBCR_BT709,
-> +		.range = DRM_COLOR_YCBCR_LIMITED_RANGE,
-> +		.n_colors = 4,
-> +		.colors = {
-> +			{ "white", { 0xeb, 0x80, 0x80 }, { 0xffff, 0xffff, 0xffff, 0xffff }},
-> +			{ "gray",  { 0x7e, 0x80, 0x80 }, { 0xffff, 0x8080, 0x8080, 0x8080 }},
-> +			{ "black", { 0x10, 0x80, 0x80 }, { 0xffff, 0x0000, 0x0000, 0x0000 }},
-> +			{ "red",   { 0x3f, 0x66, 0xf0 }, { 0xffff, 0xffff, 0x0000, 0x0000 }},
-> +			{ "green", { 0xad, 0x2a, 0x1a }, { 0xffff, 0x0000, 0xffff, 0x0000 }},
-> +			{ "blue",  { 0x20, 0xf0, 0x76 }, { 0xffff, 0x0000, 0x0000, 0xffff }},
-> +		},
-> +	},
-> +	/*
-> +	 * colour.RGB_to_YCbCr(<rgb color in 16 bit form>,
-> +	 *                     K=colour.WEIGHTS_YCBCR["ITU-R BT.2020"],
-> +	 *                     in_bits = 16,
-> +	 *                     in_legal = False,
-> +	 *                     in_int = True,
-> +	 *                     out_bits = 8,
-> +	 *                     out_legal = False,
-> +	 *                     out_int = True)
-> +	 */
-> +	{
-> +		.encoding = DRM_COLOR_YCBCR_BT2020,
-> +		.range = DRM_COLOR_YCBCR_FULL_RANGE,
-> +		.n_colors = 4,
-> +		.colors = {
-> +			{ "white", { 0xff, 0x80, 0x80 }, { 0xffff, 0xffff, 0xffff, 0xffff }},
-> +			{ "gray",  { 0x80, 0x80, 0x80 }, { 0xffff, 0x8080, 0x8080, 0x8080 }},
-> +			{ "black", { 0x00, 0x80, 0x80 }, { 0xffff, 0x0000, 0x0000, 0x0000 }},
-> +			{ "red",   { 0x43, 0x5c, 0xff }, { 0xffff, 0xffff, 0x0000, 0x0000 }},
-> +			{ "green", { 0xad, 0x24, 0x0b }, { 0xffff, 0x0000, 0xffff, 0x0000 }},
-> +			{ "blue",  { 0x0f, 0xff, 0x76 }, { 0xffff, 0x0000, 0x0000, 0xffff }},
-> +		},
-> +	},
-> +	/*
-> +	 * colour.RGB_to_YCbCr(<rgb color in 16 bit form>,
-> +	 *                     K=colour.WEIGHTS_YCBCR["ITU-R BT.2020"],
-> +	 *                     in_bits = 16,
-> +	 *                     in_legal = False,
-> +	 *                     in_int = True,
-> +	 *                     out_bits = 8,
-> +	 *                     out_legal = True,
-> +	 *                     out_int = True)
-> +	 */
-> +	{
-> +		.encoding = DRM_COLOR_YCBCR_BT2020,
-> +		.range = DRM_COLOR_YCBCR_LIMITED_RANGE,
-> +		.n_colors = 4,
-> +		.colors = {
-> +			{ "white", { 0xeb, 0x80, 0x80 }, { 0xffff, 0xffff, 0xffff, 0xffff }},
-> +			{ "gray",  { 0x7e, 0x80, 0x80 }, { 0xffff, 0x8080, 0x8080, 0x8080 }},
-> +			{ "black", { 0x10, 0x80, 0x80 }, { 0xffff, 0x0000, 0x0000, 0x0000 }},
-> +			{ "red",   { 0x4a, 0x61, 0xf0 }, { 0xffff, 0xffff, 0x0000, 0x0000 }},
-> +			{ "green", { 0xa4, 0x2f, 0x19 }, { 0xffff, 0x0000, 0xffff, 0x0000 }},
-> +			{ "blue",  { 0x1d, 0xf0, 0x77 }, { 0xffff, 0x0000, 0x0000, 0xffff }},
-> +		},
-> +	},
-> +};
-> +
-> +static void vkms_format_test_yuv_u8_to_argb_u16(struct kunit *test)
-> +{
-> +	const struct yuv_u8_to_argb_u16_case *param = test->param_value;
-> +	struct pixel_argb_u16 argb;
-> +
-> +	for (size_t i = 0; i < param->n_colors; i++) {
-> +		const struct format_pair *color = &param->colors[i];
-> +
-> +		struct conversion_matrix *matrix = get_conversion_matrix_to_argb_u16
-> +			(DRM_FORMAT_NV12, param->encoding, param->range);
-> +
-> +		argb = argb_u16_from_yuv888(color->yuv.y, color->yuv.u, color->yuv.v, matrix);
-> +
-> +		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.a, color->argb.a), 257,
-> +				    "On the A channel of the color %s expected 0x%04x, got 0x%04x",
-> +				    color->name, color->argb.a, argb.a);
-> +		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.r, color->argb.r), 257,
-> +				    "On the R channel of the color %s expected 0x%04x, got 0x%04x",
-> +				    color->name, color->argb.r, argb.r);
-> +		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.g, color->argb.g), 257,
-> +				    "On the G channel of the color %s expected 0x%04x, got 0x%04x",
-> +				    color->name, color->argb.g, argb.g);
-> +		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.b, color->argb.b), 257,
-> +				    "On the B channel of the color %s expected 0x%04x, got 0x%04x",
-> +				    color->name, color->argb.b, argb.b);
-> +	}
-> +}
-> +
-> +static void vkms_format_test_yuv_u8_to_argb_u16_case_desc(struct yuv_u8_to_argb_u16_case *t,
-> +							  char *desc)
-> +{
-> +	snprintf(desc, KUNIT_PARAM_DESC_SIZE, "%s - %s",
-> +		 drm_get_color_encoding_name(t->encoding), drm_get_color_range_name(t->range));
-> +}
-> +
-> +KUNIT_ARRAY_PARAM(yuv_u8_to_argb_u16, yuv_u8_to_argb_u16_cases,
-> +		  vkms_format_test_yuv_u8_to_argb_u16_case_desc
-> +);
-> +
-> +static struct kunit_case vkms_format_test_cases[] = {
-> +	KUNIT_CASE_PARAM(vkms_format_test_yuv_u8_to_argb_u16, yuv_u8_to_argb_u16_gen_params),
-> +	{}
-> +};
-> +
-> +static struct kunit_suite vkms_format_test_suite = {
-> +	.name = "vkms-format",
-> +	.test_cases = vkms_format_test_cases,
-> +};
-> +
-> +kunit_test_suite(vkms_format_test_suite);
-> +
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-> index edbf4b321b91..863fc91d6d48 100644
-> --- a/drivers/gpu/drm/vkms/vkms_formats.c
-> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-> @@ -7,6 +7,8 @@
->   #include <drm/drm_rect.h>
->   #include <drm/drm_fixed.h>
->   
-> +#include <kunit/visibility.h>
-> +
->   #include "vkms_formats.h"
->   
->   /**
-> @@ -199,8 +201,8 @@ static struct pixel_argb_u16 argb_u16_from_RGB565(const u16 *pixel)
->   	return out_pixel;
->   }
->   
-> -static struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
-> -						  struct conversion_matrix *matrix)
-> +VISIBLE_IF_KUNIT struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
-> +							    struct conversion_matrix *matrix)
->   {
->   	u8 r, g, b;
->   	s64 fp_y, fp_cb, fp_cr;
-> @@ -234,6 +236,7 @@ static struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
->   
->   	return argb_u16_from_u8888(255, r, g, b);
->   }
-> +EXPORT_SYMBOL_IF_KUNIT(argb_u16_from_yuv888);
->   
->   /*
->    * The following functions are read_line function for each pixel format supported by VKMS.
-> diff --git a/drivers/gpu/drm/vkms/vkms_formats.h b/drivers/gpu/drm/vkms/vkms_formats.h
-> index e1d324764b17..21e66a0cac16 100644
-> --- a/drivers/gpu/drm/vkms/vkms_formats.h
-> +++ b/drivers/gpu/drm/vkms/vkms_formats.h
-> @@ -13,4 +13,8 @@ struct conversion_matrix *
->   get_conversion_matrix_to_argb_u16(u32 format, enum drm_color_encoding encoding,
->   				  enum drm_color_range range);
->   
-> +#if IS_ENABLED(CONFIG_KUNIT)
+Fixes: f5a731f0787f ("arm64: dts: ti: Add k3-am625-beagleplay")
+Suggested-by: Shengyu Qu <wiagn233@outlook.com>
+Signed-off-by: Sukrut Bellary <sukrut.bellary@linux.com>
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+Picking this patch up since Sukrut was not able to refresh the patch in
+the list and it does'nt make much sense to hold off this critical fixup.
 
-What about the CONFIG_DRM_EXPORT_FOR_TESTS?
+Boot log:
+https://gist.github.com/nmenon/a34abd03a6aaf84a39ffa569df248285
+(includes defconfig change to make iwd work)
 
-Best Regards,
-- Maíra
+Changes Since v1:
+* Update the power-on-time to 10ms (same as used in:
+	arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+	arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+  )
+* Add in-code documentation pointing at timing diagram for the values
+  used.
+* Fixup fail log and commit message and make it generic to indicate
+  various other usecases of failure.
+* Re-test on v6.9-rc1
 
-> +struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr, struct conversion_matrix *matrix);
-> +#endif
-> +
->   #endif /* _VKMS_FORMATS_H_ */
-> 
+V1: https://lore.kernel.org/all/20231213213219.566369-1-sukrut.bellary@linux.com/
+
+ .../arm64/boot/dts/ti/k3-am625-beagleplay.dts | 27 +++++++++----------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+index a34e0df2ab86..ffc613543968 100644
+--- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
++++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+@@ -82,6 +82,17 @@ wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9db00000 {
+ 		};
+ 	};
+ 
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_en_pins_default>;
++		/* Interal power on time(Figure 8-3) * 2 */
++		post-power-on-delay-ms = <10>;
++		/* Re-enable time(Figure 8-2) + 20uS */
++		power-off-delay-us = <80>;
++		reset-gpios = <&main_gpio0 38 GPIO_ACTIVE_LOW>;
++	};
++
+ 	vsys_5v0: regulator-1 {
+ 		bootph-all;
+ 		compatible = "regulator-fixed";
+@@ -104,20 +115,6 @@ vdd_3v3: regulator-2 {
+ 		regulator-boot-on;
+ 	};
+ 
+-	wlan_en: regulator-3 {
+-		/* OUTPUT of SN74AVC2T244DQMR */
+-		compatible = "regulator-fixed";
+-		regulator-name = "wlan_en";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-		enable-active-high;
+-		regulator-always-on;
+-		vin-supply = <&vdd_3v3>;
+-		gpio = <&main_gpio0 38 GPIO_ACTIVE_HIGH>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&wifi_en_pins_default>;
+-	};
+-
+ 	vdd_3v3_sd: regulator-4 {
+ 		/* output of TPS22918DBVR-U21 */
+ 		bootph-all;
+@@ -839,13 +836,13 @@ &sdhci1 {
+ };
+ 
+ &sdhci2 {
+-	vmmc-supply = <&wlan_en>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&wifi_pins_default>, <&wifi_32k_clk>;
+ 	non-removable;
+ 	ti,fails-without-test-cd;
+ 	cap-power-off-card;
+ 	keep-power-in-suspend;
++	mmc-pwrseq = <&sdio_pwrseq>;
+ 	assigned-clocks = <&k3_clks 157 158>;
+ 	assigned-clock-parents = <&k3_clks 157 160>;
+ 	#address-cells = <1>;
+
+base-commit: 4cece764965020c22cff7665b18a012006359095
+-- 
+2.43.0
+
