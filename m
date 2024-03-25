@@ -1,37 +1,61 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2098938DFB
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443194AECC;
+	Mon, 25 Mar 2024 12:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711371373; cv=none; b=jtYY09LvFrWDV9xYyUF/uVV/MzHOTR73zZBc6zGODaIwdmjLASZcjpAmH+zOMD20DmErUIu8kMcoPvircnjQIjPUqa1jHVqd2za6fjzrElCpOxSjDOf91idijGCA2uEYmsIc4eAmP6zLc8ebUuoHlVf3YwhfpmfxBuBHMIMstv4=
+	t=1711371423; cv=none; b=MXWXo6kuF/xqdy0OPMwr4IvuGJXsHL+fvM36cUzWsjsnMSLOWS66cMxe9SDG4DJ8P8DKYGO5L7Has8LiizWMvhfyC4/I37LzwgnQcJ6k8dBHpADQ34b72sSjhcbTF6HDCm39j/HRBafkZ3J8fxpINLT6k8SQsNU61Z4UuXL1wGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711371373; c=relaxed/simple;
-	bh=5OAhuWAh6c1XxTM2gZOtkNUeQHR9OqCW/nJQI7SqgHU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rvn5oJrvqduAn6usA9lc4inTEYZGy8Tzm7rzGIuAWxwPRbS2HQmnvamjmHJo/ewlYUh6gOxmsjDvHgTTaPcZoFoL+37TwCUJB7cpqNl/ORA+bJ1SrEaTAw3U3w5ycFFGnSix/tgbeHX+ir7xgyDYy12eIpgmT6cavFA9PY11TKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4V3CXp6Dmgz1h3lV;
-	Mon, 25 Mar 2024 20:53:30 +0800 (CST)
-Received: from dggpemd200001.china.huawei.com (unknown [7.185.36.224])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8CB151A0172;
-	Mon, 25 Mar 2024 20:56:08 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by dggpemd200001.china.huawei.com
- (7.185.36.224) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Mon, 25 Mar
- 2024 20:56:07 +0800
-From: ZhaoLong Wang <wangzhaolong1@huawei.com>
-To: <richard@nod.at>, <miquel.raynal@bootlin.com>, <vigneshr@ti.com>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<chengzhihao1@huawei.com>, <wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>
-Subject: [PATCH V2] ubifs: correct UBIFS_DFS_DIR_LEN macro definition and improve code clarity
-Date: Mon, 25 Mar 2024 20:57:13 +0800
-Message-ID: <20240325125713.95035-1-wangzhaolong1@huawei.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1711371423; c=relaxed/simple;
+	bh=+iI5RpOodzmJXIcv8TNfNZngHxLuBoKhh3Wx6e3sdys=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DkyUfBzk+NnfyGZPFzzGuIylnG63YNURRpQEq2X1JH58kd01eOWZ+0QHYKq/Vu0rFb7QhF5jbRhWESEs2t3beQizkLYjhWU+ZNgQKDNz/59e8v/JbJSPnscSRET5u7+spDJneI0jVuRW9tJlnQWFrT7F8eLVuMH5MXhAHc5cu78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=N7eaOxf4; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="N7eaOxf4"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42P3wbgD000927;
+	Mon, 25 Mar 2024 07:56:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PODMain02222019; bh=sQ1IUPXI8DEMkqDZPY9mFbPrpEApJsB5PFIBxvjEGNc=; b=
+	N7eaOxf480SJu+PUGWS4WHBidiP8jZrGo7QufJqC2+aLovHdrlzZ08LpGetzsITh
+	Ubj+nmXVlzuBwYqZIODsyCwkfNy/wblZgaMA2YGk4FYH+wmMdD/7ez7xYbzBYDto
+	NGvlh8rUZOQE1T+8Kg5ezTOA4JKnlynmXQAJXRsuyd3LYhFJn61sddG7+sh9Y1KR
+	fRfAfqqYTpUGXFtt4FEn6iOKa8NOizjxmG/K9rHQjBO0UtA7rXoJJKx/xrN7Ydlm
+	1kNxAbpsgQz/Lmb/BZyWMFYyz7hdnVnG13jeGaa0aHCB/dpteYf9BGFMxyVbC0hy
+	LD6QjQR9mVRt/pL7wHmkYg==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3x1vfyba74-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 07:56:54 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 25 Mar
+ 2024 12:56:50 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4
+ via Frontend Transport; Mon, 25 Mar 2024 12:56:50 +0000
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 44560820246;
+	Mon, 25 Mar 2024 12:56:50 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: <broonie@kernel.org>, <tiwai@suse.com>
+CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        "Richard
+ Fitzgerald" <rf@opensource.cirrus.com>
+Subject: [PATCH 1/3] ALSA: control: Introduce snd_ctl_find_id_mixer_locked()
+Date: Mon, 25 Mar 2024 12:56:48 +0000
+Message-ID: <20240325125650.213913-2-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240325125650.213913-1-rf@opensource.cirrus.com>
+References: <20240325125650.213913-1-rf@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,166 +64,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemd200001.china.huawei.com (7.185.36.224)
+X-Proofpoint-ORIG-GUID: zvRcc3bWjsKiSj91QulndMz5h0W2HEg6
+X-Proofpoint-GUID: zvRcc3bWjsKiSj91QulndMz5h0W2HEg6
+X-Proofpoint-Spam-Reason: safe
 
-The UBIFS_DFS_DIR_LEN macro, which defines the maximum length of the UBIFS
-debugfs directory name, has an incorrect formula and misleading comments.
-The current formula is (3 + 1 + 2*2 + 1), which assumes that both UBI device
-number and volume ID are limited to 2 characters. However, UBI device number
-ranges from 0 to 37 (2 characters), and volume ID ranges from 0 to 127 (up
-to 3 characters).
+Adds wrapper function snd_ctl_find_id_mixer_locked(). This is
+identical to snd_ctl_find_id_mixer() except that it can be called
+from code that is already holding controls_rwsem.
 
-Although the current code works due to the cancellation of mathematical
-errors (9 + 1 = 10, which matches the correct UBIFS_DFS_DIR_LEN value), it
-can lead to confusion and potential issues in the future.
-
-This patch aims to improve the code clarity and maintainability by making
-the following changes:
-
-1. Corrects the UBIFS_DFS_DIR_LEN macro definition to (3 + 1 + 2 + 3 + 1),
-   accommodating the maximum lengths of both UBI device number and volume ID,
-   plus the separators and null terminator.
-2. Updates the snprintf calls to use UBIFS_DFS_DIR_LEN instead of
-   UBIFS_DFS_DIR_LEN + 1, removing the unnecessary +1.
-3. Modifies the error checks to compare against UBIFS_DFS_DIR_LEN using >=
-   instead of >, aligning with the corrected macro definition.
-4. Removes the redundant +1 in the dfs_dir_name array definitions in ubi.h
-   and debug.h.
-5. Renames the duplicated UBIFS_DFS_DIR_LEN and UBIFS_DFS_DIR_NAME macros in
-   the sysfs-related code (sysfs.c and ubifs.h) to UBIFS_SYSFS_DIR_LEN and
-   UBIFS_SYSFS_DIR_NAME, respectively, to differentiate their usage from the
-   debugfs constants.
-
-While these changes do not affect the runtime behavior, they make the code
-more readable, maintainable, and less prone to future errors.
-
-Signed-off-by: ZhaoLong Wang <wangzhaolong1@huawei.com>
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 ---
- drivers/mtd/ubi/debug.c | 4 ++--
- drivers/mtd/ubi/ubi.h   | 2 +-
- fs/ubifs/debug.c        | 4 ++--
- fs/ubifs/debug.h        | 7 ++++---
- fs/ubifs/sysfs.c        | 6 +++---
- fs/ubifs/ubifs.h        | 7 ++++---
- 6 files changed, 16 insertions(+), 14 deletions(-)
+ include/sound/control.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/mtd/ubi/debug.c b/drivers/mtd/ubi/debug.c
-index d57f52bd2ff3..9ec3b8b6a0aa 100644
---- a/drivers/mtd/ubi/debug.c
-+++ b/drivers/mtd/ubi/debug.c
-@@ -598,9 +598,9 @@ int ubi_debugfs_init_dev(struct ubi_device *ubi)
- 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
- 		return 0;
+diff --git a/include/sound/control.h b/include/sound/control.h
+index 9a4f4f7138da..c1659036c4a7 100644
+--- a/include/sound/control.h
++++ b/include/sound/control.h
+@@ -167,6 +167,29 @@ snd_ctl_find_id_mixer(struct snd_card *card, const char *name)
+ 	return snd_ctl_find_id(card, &id);
+ }
  
--	n = snprintf(d->dfs_dir_name, UBI_DFS_DIR_LEN + 1, UBI_DFS_DIR_NAME,
-+	n = snprintf(d->dfs_dir_name, UBI_DFS_DIR_LEN, UBI_DFS_DIR_NAME,
- 		     ubi->ubi_num);
--	if (n > UBI_DFS_DIR_LEN) {
-+	if (n >= UBI_DFS_DIR_LEN) {
- 		/* The array size is too small */
- 		return -EINVAL;
- 	}
-diff --git a/drivers/mtd/ubi/ubi.h b/drivers/mtd/ubi/ubi.h
-index 32009a24869e..da4e53ef5b0a 100644
---- a/drivers/mtd/ubi/ubi.h
-+++ b/drivers/mtd/ubi/ubi.h
-@@ -420,7 +420,7 @@ struct ubi_debug_info {
- 	unsigned int power_cut_min;
- 	unsigned int power_cut_max;
- 	unsigned int emulate_failures;
--	char dfs_dir_name[UBI_DFS_DIR_LEN + 1];
-+	char dfs_dir_name[UBI_DFS_DIR_LEN];
- 	struct dentry *dfs_dir;
- 	struct dentry *dfs_chk_gen;
- 	struct dentry *dfs_chk_io;
-diff --git a/fs/ubifs/debug.c b/fs/ubifs/debug.c
-index ac77ac1fd73e..d91cec93d968 100644
---- a/fs/ubifs/debug.c
-+++ b/fs/ubifs/debug.c
-@@ -2827,9 +2827,9 @@ void dbg_debugfs_init_fs(struct ubifs_info *c)
- 	const char *fname;
- 	struct ubifs_debug_info *d = c->dbg;
++/**
++ * snd_ctl_find_id_mixer_locked - find the control instance with the given name string
++ * @card: the card instance
++ * @name: the name string
++ *
++ * Finds the control instance with the given name and
++ * @SNDRV_CTL_ELEM_IFACE_MIXER. Other fields are set to zero.
++ *
++ * This is merely a wrapper to snd_ctl_find_id_locked().
++ * The caller must down card->controls_rwsem before calling this function.
++ *
++ * Return: The pointer of the instance if found, or %NULL if not.
++ */
++static inline struct snd_kcontrol *
++snd_ctl_find_id_mixer_locked(struct snd_card *card, const char *name)
++{
++	struct snd_ctl_elem_id id = {};
++
++	id.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
++	strscpy(id.name, name, sizeof(id.name));
++	return snd_ctl_find_id_locked(card, &id);
++}
++
+ int snd_ctl_create(struct snd_card *card);
  
--	n = snprintf(d->dfs_dir_name, UBIFS_DFS_DIR_LEN + 1, UBIFS_DFS_DIR_NAME,
-+	n = snprintf(d->dfs_dir_name, UBIFS_DFS_DIR_LEN, UBIFS_DFS_DIR_NAME,
- 		     c->vi.ubi_num, c->vi.vol_id);
--	if (n > UBIFS_DFS_DIR_LEN) {
-+	if (n >= UBIFS_DFS_DIR_LEN) {
- 		/* The array size is too small */
- 		return;
- 	}
-diff --git a/fs/ubifs/debug.h b/fs/ubifs/debug.h
-index ed966108da80..d425861e6b82 100644
---- a/fs/ubifs/debug.h
-+++ b/fs/ubifs/debug.h
-@@ -19,10 +19,11 @@ typedef int (*dbg_znode_callback)(struct ubifs_info *c,
- 
- /*
-  * The UBIFS debugfs directory name pattern and maximum name length (3 for "ubi"
-- * + 1 for "_" and plus 2x2 for 2 UBI numbers and 1 for the trailing zero byte.
-+ * + 1 for "_" and 2 for UBI device numbers and 3 for volume number and 1 for
-+ * the trailing zero byte.
-  */
- #define UBIFS_DFS_DIR_NAME "ubi%d_%d"
--#define UBIFS_DFS_DIR_LEN  (3 + 1 + 2*2 + 1)
-+#define UBIFS_DFS_DIR_LEN  (3 + 1 + 2 + 3 + 1)
- 
- /**
-  * ubifs_debug_info - per-FS debugging information.
-@@ -103,7 +104,7 @@ struct ubifs_debug_info {
- 	unsigned int chk_fs:1;
- 	unsigned int tst_rcvry:1;
- 
--	char dfs_dir_name[UBIFS_DFS_DIR_LEN + 1];
-+	char dfs_dir_name[UBIFS_DFS_DIR_LEN];
- 	struct dentry *dfs_dir;
- 	struct dentry *dfs_dump_lprops;
- 	struct dentry *dfs_dump_budg;
-diff --git a/fs/ubifs/sysfs.c b/fs/ubifs/sysfs.c
-index 1c958148bb87..7b30aac42ac5 100644
---- a/fs/ubifs/sysfs.c
-+++ b/fs/ubifs/sysfs.c
-@@ -91,17 +91,17 @@ static struct kset ubifs_kset = {
- int ubifs_sysfs_register(struct ubifs_info *c)
- {
- 	int ret, n;
--	char dfs_dir_name[UBIFS_DFS_DIR_LEN+1];
-+	char dfs_dir_name[UBIFS_SYSFS_DIR_LEN];
- 
- 	c->stats = kzalloc(sizeof(struct ubifs_stats_info), GFP_KERNEL);
- 	if (!c->stats) {
- 		ret = -ENOMEM;
- 		goto out_last;
- 	}
--	n = snprintf(dfs_dir_name, UBIFS_DFS_DIR_LEN + 1, UBIFS_DFS_DIR_NAME,
-+	n = snprintf(dfs_dir_name, UBIFS_SYSFS_DIR_LEN, UBIFS_SYSFS_DIR_NAME,
- 		     c->vi.ubi_num, c->vi.vol_id);
- 
--	if (n > UBIFS_DFS_DIR_LEN) {
-+	if (n >= UBIFS_SYSFS_DIR_LEN) {
- 		/* The array size is too small */
- 		ret = -EINVAL;
- 		goto out_free;
-diff --git a/fs/ubifs/ubifs.h b/fs/ubifs/ubifs.h
-index 1f3ea879d93a..549e147c5ce5 100644
---- a/fs/ubifs/ubifs.h
-+++ b/fs/ubifs/ubifs.h
-@@ -159,10 +159,11 @@
- 
- /*
-  * The UBIFS sysfs directory name pattern and maximum name length (3 for "ubi"
-- * + 1 for "_" and plus 2x2 for 2 UBI numbers and 1 for the trailing zero byte.
-+ * + 1 for "_" and 2 for UBI device numbers and 3 for volume number and 1 for
-+ * the trailing zero byte.
-  */
--#define UBIFS_DFS_DIR_NAME "ubi%d_%d"
--#define UBIFS_DFS_DIR_LEN  (3 + 1 + 2*2 + 1)
-+#define UBIFS_SYSFS_DIR_NAME "ubi%d_%d"
-+#define UBIFS_SYSFS_DIR_LEN  (3 + 1 + 2 + 3 + 1)
- 
- /*
-  * Lockdep classes for UBIFS inode @ui_mutex.
+ int snd_ctl_register_ioctl(snd_kctl_ioctl_func_t fcn);
 -- 
-2.31.1
+2.39.2
 
