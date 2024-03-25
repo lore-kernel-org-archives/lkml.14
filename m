@@ -1,89 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECCE180A78;
-	Mon, 25 Mar 2024 07:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF2C184419
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711350623; cv=none; b=kVZJKjbMBS8sNFJkQEgmUd0lUDKnGa4UBUB08Z9RDZO6FLJlszvMiJrVWuR4JuWgFBhj+TYu2Pbp7Yt8HDljzK2U5qe307pRSvtZwKAuo6qhcoU6MzNVS0w0GyoZBOFJQ8qHLHaEBSBAgiK9IcQejYUm4RO7EPn4v6mjNUfGkao=
+	t=1711350921; cv=none; b=h3EkhkM0k3SSy0BsPpWrHATrz9e6F/fAJHu1bQmezBNmjNJkbSelMmWgQGOlHLLMcuD10ES/FtBkYvUZhSB6W6Qbl8ZxQ4227NzaoP2tjxsfnfTlWSfAi/ER71PPpCGa42KNFUrotD7pOarJa9bPz8oh4snP2Zx1mHKFjF8xDps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711350623; c=relaxed/simple;
-	bh=KkLQLoLOHolnVwU8WzSUkFWnSdadyJIAw3FOxFvQh5c=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uw2Aakfb2GoRzdFERBi/bnPTIXsTDlbrsRzOfCKT3IlZ5B5IcVXWs41gqhxO67OotiP3gbDG0mY4ppCx7UntTgj09JvSjEi2JSj6bM33LnoeMy/iKuBGmqhfh3ZY3gyS/ysYC9cYbOdq1o8qnHxOzTXlrW3FLvjYLURAi7W5OPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WnXLI8pa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711350921; c=relaxed/simple;
+	bh=+OyKK7IkvwEV/w7UMcTxO7cG4x4rvzI12pOx3LK8JQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l8qAYSl7m2Edp3etXwrHLXo1oxsdDNlxGFlMa2DTipuSaWvxDbwc57lNvtzYlfxm+vE0yea6FS5AClY9sWeFoPFE7U+Sj350QmG4wU8OKc13anXIoZZeOwlxW283QvZnWs3SgIeytDML+i6ZPRRyPwBUewhiRbWTChtYtk9iG7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ro+EHill; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WnXLI8pa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FB97C433F1;
-	Mon, 25 Mar 2024 07:10:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711350623;
-	bh=KkLQLoLOHolnVwU8WzSUkFWnSdadyJIAw3FOxFvQh5c=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=WnXLI8pazLuu8axfdUP1IUDKa+RGXhWtWmcxs54ikyJPWIpc+81UsGWhXdeGDLvLF
-	 8qOtQ6J1lQEj8938H0XWdiIFr1EhRAKRMQzCbm5Mn12Sx6JOE0cOBb9/P6+jB5ygba
-	 +IOeVIycq1/Sv4/dfBJtXPmgou7mcUQ/WjtmiZtUxbsgX79dj5XyRUvNSMUBLBHtBD
-	 o546ne5y7WyugumesDAlsD01LrVePgBChnNIJ01brLjYysfEmNbMAObaI/cbHE2Jwk
-	 Yf77pF523lr2Q0DNmJ1yispgGK2EYSE/HbS05Oku1NCI1ut792ODF98EPEVARAlVQn
-	 NoZ/Q9X5+5GGg==
-From: Damien Le Moal <dlemoal@kernel.org>
-To: linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
-	linux-scsi@vger.kernel.org,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	linux-sound@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org,
-	ntb@lists.linux.dev,
-	Lee Jones <lee@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	amd-gfx@lists.freedesktop.org,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-rdma@vger.kernel.org,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 09/28] mfd: intel-lpss-pci: Use PCI_IRQ_INTX
-Date: Mon, 25 Mar 2024 16:09:20 +0900
-Message-ID: <20240325070944.3600338-10-dlemoal@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240325070944.3600338-1-dlemoal@kernel.org>
-References: <20240325070944.3600338-1-dlemoal@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ro+EHill"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a4702457ccbso513679566b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 00:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711350918; x=1711955718; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OxdjCTpMFkU2iy+O7js4KexQH/nrED/NHR9zVi08e94=;
+        b=Ro+EHillAS5+CDQHhQK4soZHh7bpfFrTib9LvmTZVs8Ly2G1rUmmcohhmIZlBMvaHK
+         c4Kb/5XrxeJf0TW5VTppJN6JhiEW94jA+Gs9A09YpbmJbCkfGZWLDbP8xFZkDFWoqClN
+         98Aq2zLtar/buAvu92upr0lEPLhuTrptxcgWMn2YuD62uFrXn/+AcwOI68P921sxAJj8
+         1Vlif5PkCVs4x0VxJLtdPzohIorlDlcMCjYAWUzoNlkSI4cl1s7yHyKu6h9Iz8KPhIip
+         Gfw1glFi/5TfOHSUu4wk6uLexNLSif9U/yPvcZXE6x8nU/8SrTaN8u73b+YmBnIcrMkR
+         /TbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711350918; x=1711955718;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OxdjCTpMFkU2iy+O7js4KexQH/nrED/NHR9zVi08e94=;
+        b=miY72I2LK9ZferqPS6IT6MYLn4jO3We1+TRssJlKYOLvd1pfiRkPCppKobaoYimyGR
+         qf4RIr9bTalv3Zxz1Jj91tzB6H8HIYu2STtG8gm16ynFkzMrgLtOzd77/IzDrNjw5X+O
+         +2Cs3aUuL/PT01g8fzbJ+Mb5yH8RTkFi0n4Wx5WCjbZr0ImCGgwhSR4AL9gJYPSqgwPB
+         grrEB+wDtpFqIgRHkrxjZ6QfZlW30rR2/8t6kVjPmK5dy2E+i7l8NODzCOLOJBM1wUBJ
+         eWU2VK4nsB+OCNKOoi1I9NjpC+U4IXrtKUlFRDvCCk5rmw9U23dVD+2ldyCpVxZBnLcv
+         uOPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtX4Nm2BxETxYFMwzLTlSSHWaum6plcVOiNX8WrO/WMIlfp2Gz9Rsiz+IFytetrNGIsQz+5d2Amah6F/TbENquQjAb5TMRrLbq9Eoh
+X-Gm-Message-State: AOJu0Yxfcsud8j2PvFdLE5dUGFh47+0aECivO/WOd/ksVn6r4xMR24zP
+	A2rOqYvOuBVUrGsXTYQoDPNHbp03i+WR0T7OQa0pHw0FzmIFmGU0UZMaxDfKuXw=
+X-Google-Smtp-Source: AGHT+IEABScS/uWpH8mLPgka5W2OjNZXv8LwGqs+ViqHFZf7wcLBOPPQPWhOE5l5IRTB8EdwF1y6ig==
+X-Received: by 2002:a17:906:1d04:b0:a47:34c8:900b with SMTP id n4-20020a1709061d0400b00a4734c8900bmr3993917ejh.0.1711350917368;
+        Mon, 25 Mar 2024 00:15:17 -0700 (PDT)
+Received: from [192.168.2.107] ([79.115.63.252])
+        by smtp.gmail.com with ESMTPSA id lv16-20020a170906bc9000b00a464f709687sm2723321ejb.59.2024.03.25.00.15.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 00:15:16 -0700 (PDT)
+Message-ID: <20deadca-48e2-4359-ae6e-82e44651a2e6@linaro.org>
+Date: Mon, 25 Mar 2024 07:15:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] clk: samsung: exynos850: fix propagation of SPI IPCLK
+ rate
+To: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: =?UTF-8?B?6rmA7J6s7JuQL0pBRVdPTiBLSU0=?= <jaewon02.kim@samsung.com>,
+ krzysztof.kozlowski@linaro.org, s.nawrocki@samsung.com,
+ cw00.choi@samsung.com, alim.akhtar@samsung.com, mturquette@baylibre.com,
+ sboyd@kernel.org, peter.griffin@linaro.org, andre.draszik@linaro.org,
+ linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ willmcvicker@google.com, kernel-team@android.com
+References: <20240229122021.1901785-1-tudor.ambarus@linaro.org>
+ <20240229122021.1901785-5-tudor.ambarus@linaro.org>
+ <CAPLW+4=jSr6ZsB7XekXsiUBm0SmVpVFnqpgjViuF3=HpT4gRAg@mail.gmail.com>
+ <867158d7-0d98-4058-9c2e-6b573ec68516@linaro.org>
+ <CAPLW+4=nRjRPdu80Y3izifxQDNUaJymU3di0hGErm1dHry3EfQ@mail.gmail.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <CAPLW+4=nRjRPdu80Y3izifxQDNUaJymU3di0hGErm1dHry3EfQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Use the macro PCI_IRQ_INTX instead of the deprecated PCI_IRQ_LEGACY
-macro.
 
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
----
- drivers/mfd/intel-lpss-pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index 8c00e0c695c5..9f4782bdbf4b 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -54,7 +54,7 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
- 	if (ret)
- 		return ret;
- 
--	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_LEGACY);
-+	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_INTX);
- 	if (ret < 0)
- 		return ret;
- 
--- 
-2.44.0
+On 3/22/24 18:09, Sam Protsenko wrote:
+> Yes, please leave Exynos850 out of it, if possible. 
 
+Sure, Sam, thanks for the feedback!
+
+Cheers,
+ta
