@@ -1,99 +1,64 @@
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735166CDCC;
-	Mon, 25 Mar 2024 17:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F251A535AC;
+	Mon, 25 Mar 2024 17:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711387404; cv=none; b=GkXciYHRrv1Sqq2nKK42MOGBbOuYds5ZtOiGygl8SK+NBrQNHzFD1U304qzM1XW7huswDUSht9aI0M5HlHRLkm9nLrNUrfrPFhl7/X/fjovfdNDMq2qGnrMHkgHdbK0lLEZvHweuwK+QR/93dNvol//1Xn+i9DxoK06XQByt+Zc=
+	t=1711387414; cv=none; b=ZaJrg4ub6T08FRwCTzjEXAfRbfVMvTEv+oACVGgYfLn7yID4k/qdlVKdNBfQc1mtMnl4NKreD9laVWHNmMfnNqYSRFQx2VtlhFFOhvld1wruAKaYXZMSJRQziGok//taMBFFsZ6BGL5w2MBj3KPgdq3FXDrmtmXV2OJqduAWHTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711387404; c=relaxed/simple;
-	bh=1v8JTa2zwLY//oKs5JI1dBbv595ztN7DvLPvVEJBkpo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hMqvBNmlcFPGR9f4+fHmW3CUfN+DCBO03jk8cnkHSPaCzniFoXYzA0HV+xbjV0AdQtb6E99hPBL2nq6yGwBsPBCJNNEfRgriPDq2mdeZw+o/lpR2E0bB5IdbpcuZL5nRqW5V0UThgTjlU8MZBSXcSzjaTwtfIDhRGzx1nSQjIfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=H0iseS6v; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1711387414; c=relaxed/simple;
+	bh=tYPxAtJOADxLj4QV0nuo2ems//1Fri3Ot9KeWJ93tHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NTEr4I/BBifq2Gc+oNsbA9sVFDuZOiv4LgqU2aWomd2SSH1vhVTwUn9eAAlsITorMYzQts5Lr7aAqfkGJBjDFZMPH0GD2C6Do/ZqY9Q6bcA2+oGIzMPF0WqXnL1JP6BfUPF25cUco5aa5MD8UTAAm0Lkox/ZCDmw9nUX5flhQcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=a88I9ZD/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="H0iseS6v"
-Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4V3KX44rJvzlgVnN;
-	Mon, 25 Mar 2024 17:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:references:content-language:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1711387390; x=1713979391; bh=Fv7kCUT2BWY6M9OW2MD8hESk
-	Xk9W04pTKWY7feKrcos=; b=H0iseS6vqhPg02EIP/7y4FKrmC142fEYuF4FWSqO
-	ohcF4zANaSNf7Rx6TmIXcT1aMsdHTuIuH7MiUEEipMqk/ezAOAO+gMaJItvTluep
-	Cc2W2D+VUaDZYOgUEHtfxjXsXMNDlHaZ3VA6QYtN0dRY8Me0Aj5V4oLG5+H62YHl
-	90A0d96tyOIzqBzCwAs0RrEbXZH9KszAIqNnIXtbp/R97cf4F2d20EvcmSnPr455
-	a43uNRWr7ATSRTZuanQ5SJdFJY4tkrnnd3qyRygoPWFxdBXQKQYT4CvhDVU4qwDx
-	0q53ruY9j445njY1bAp7dRyVJOfySxMyZxv2hHlTdH32XQ==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id i0PMQCDUazuH; Mon, 25 Mar 2024 17:23:10 +0000 (UTC)
-Received: from [100.96.154.173] (unknown [104.132.1.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4V3KWw2sLbzlgTGW;
-	Mon, 25 Mar 2024 17:23:08 +0000 (UTC)
-Message-ID: <787fe4b7-a5af-4cd1-a7e8-8b9bad3be7d9@acm.org>
-Date: Mon, 25 Mar 2024 10:23:07 -0700
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="a88I9ZD/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15323C433F1;
+	Mon, 25 Mar 2024 17:23:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711387413;
+	bh=tYPxAtJOADxLj4QV0nuo2ems//1Fri3Ot9KeWJ93tHk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a88I9ZD/UJHEUfwccZEZnly5tZYiQdBj5jooq/l3+q+QS4Tfcechmm+Vpexcw949Y
+	 t5cn7r4PRkuV5O15T2wp8LVcugyiVbVwIkbwNR+qD6sBIZxgu8GUFhBkDQt8e4qmmj
+	 kYTmPaSr1yJcAxqTIEDJzCi9LjFxwIvJrydWjsRE=
+Date: Mon, 25 Mar 2024 18:23:30 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Ayush Tiwari <ayushtiw0110@gmail.com>
+Cc: Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
+Subject: Re: [PATCH v3 0/3] Trivial code cleanup patches
+Message-ID: <2024032552-ardently-colonial-8502@gregkh>
+References: <cover.1710965653.git.ayushtiw0110@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] Introduce per-task io utilization boost
-Content-Language: en-US
-To: Christian Loehle <christian.loehle@arm.com>,
- Qais Yousef <qyousef@layalina.io>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org,
- juri.lelli@redhat.com, mingo@redhat.com, rafael@kernel.org,
- dietmar.eggemann@arm.com, vschneid@redhat.com, vincent.guittot@linaro.org,
- Johannes.Thumshirn@wdc.com, adrian.hunter@intel.com, ulf.hansson@linaro.org,
- andres@anarazel.de, asml.silence@gmail.com, linux-pm@vger.kernel.org,
- linux-block@vger.kernel.org, io-uring@vger.kernel.org,
- linux-mmc@vger.kernel.org
-References: <20240304201625.100619-1-christian.loehle@arm.com>
- <86f0af00-8765-4481-9245-1819fb2c6379@acm.org>
- <0dc6a839-2922-40ac-8854-2884196da9b9@arm.com>
- <c5b7fc1f-f233-4d25-952b-539607c2a0cc@acm.org>
- <2784c093-eea1-4b73-87da-1a45f14013c8@arm.com>
- <20240321123935.zqscwi2aom7lfhts@airbuntu>
- <1ff973fc-66a4-446e-8590-ec655c686c90@arm.com>
- <2ed2dadc-bdc4-4a21-8aca-a2aac0c6479a@acm.org>
- <de1eba3c-2453-4c5c-bd80-dd7d7b33f60d@arm.com>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <de1eba3c-2453-4c5c-bd80-dd7d7b33f60d@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1710965653.git.ayushtiw0110@gmail.com>
 
-On 3/25/24 05:06, Christian Loehle wrote:
-> On 21/03/2024 19:52, Bart Van Assche wrote:
->> On 3/21/24 10:57, Christian Loehle wrote:
->>> In the long-term it looks like for UFS the problem will disappear as we are
->>> expected to get one queue/hardirq per CPU (as Bart mentioned), on NVMe that
->>> is already the case.
->>
->> Why the focus on storage controllers with a single completion interrupt?
->> It probably won't take long (one year?) until all new high-end
->> smartphones may have support for multiple completion interrupts.
+On Thu, Mar 21, 2024 at 02:44:51AM +0530, Ayush Tiwari wrote:
+> Address different kinds of checkpatch complains for the rtl8712 module
+> to ensure adherence to coding style guidelines.
 > 
-> Apart from going to "This patch shows significant performance improvements on
-> hardware that runs mainline today" to "This patch will have significant
-> performance improvements on devices running mainline in a couple years"
-> nothing in particular.
+> Changes in v3: Fixed issues about backupPMKIDList and verified with
+> CONFIG_WERROR set and built the kernel.
+> 
+> Changes in v2: Checked any possible reuse of backup_PMKID_list
+> manually and rebuilt, rebooted the kernel and loaded the driver
+> with modprobe.
 
-That doesn't make sense to me. Smartphones with UFSHCI 4.0 controllers
-are available from multiple vendors. See also 
-https://en.wikipedia.org/wiki/Universal_Flash_Storage. See also
-https://www.gsmarena.com/samsung_galaxy_s24-12773.php.
+The subject line for this 0/3 email does not give us a hint as to what
+these changes are for.  Please resend the next version with something
+like:
+	staging: rtl8712: .....
 
-Bart.
+so that we know what to expect.
+
+thanks,
+
+greg k-h
