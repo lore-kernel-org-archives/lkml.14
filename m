@@ -1,207 +1,274 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50B9481B9;
-	Mon, 25 Mar 2024 14:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A08129E8B
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 14:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711375939; cv=none; b=jxTfu+uXD0FcHmQcq62I546fJEATRQ4rTNTglK7rpHVlQ9qTJVGKHyLNfFP9PGBnbldPzg/8CQ/o8UrXYrsfNTyYup+rDl67Fg7qVATSZ+MkiMhgFtzEN6rK1t8jWaBi4nFQzuvhdnbfFRQ+I9iiFuWEdWuTlGoU/yaTZ1vfl5E=
+	t=1711376004; cv=none; b=gzltSgQ1/s09PfVuY4hIGzWsNZFW6FkcGGVyUTywEtcoJe2k3nYGqu3SewSkzE+5Fk9pFyU/bQXW7/FcHNSriBXZg17NQXWL6Bjn6AHidJ3Dm8wToA/hTVY3A/mP6uEHV65/HHTOKS6o9N0akn4bunKlaC85VfxHXRoM3Pp8J+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711375939; c=relaxed/simple;
-	bh=TzG/5JvXxF0JUHmaB2rBPKjBsvYfGQMLsovDtlcFUi0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BppaJcXSKNRPEdAgSUbW/CeVZz3setdzq9b2VicsW1WIUUT5j3joIDnT4+7rlrpTWSAJ0r59YjH7sxpnA4jAYm07RCnLJf2xG9ZGOkmIXvfKae+Thy+YbIDqgFeDlAGPAZ6uyjAoVYL+z/403aBJ293vAWSFu9aOJgRpGWavO7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nVnVBm2I; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oF+aZ73H; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yMGnLxgl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5ueDDsZj; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1711376004; c=relaxed/simple;
+	bh=glAvtWW4x6uWkQgOynyaLO0XCJ5Wt8dqjtHIjr8nwUU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VWhmUScxAS73F3dGJMH8VgamJDai3YqDal3rBJF+g77rbEMd6BWMMTs+5sKIufLI9MyOq78pHOQfmVUQUuSZVo4X8+pc7L2aoJXOLJJAihRAav9PUMCVFoVQVrciez8+qppvOuzFjeIOMMsZFL+NYTIsaIEeY/pkwpDq3xQSLF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SGYFccrp; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nVnVBm2I";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oF+aZ73H";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yMGnLxgl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5ueDDsZj"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C3BAB5C780;
-	Mon, 25 Mar 2024 14:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711375934;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ItTJVT5nAX87K/Z5OvY7omTInh/1LcJz1dpUI80klZk=;
-	b=nVnVBm2I4wmWVWtmOkflWOnei47LnzrZAZ7/Bxk9nmjN+rsjMsF4KcKrAQxAJtO6jA2cKd
-	wolQ4BmWEoSSY6LM3+AhiEgRTlHPxV2gh2a+E9XzM/qPetSj6ZT9HVk3jdO5+p78jTONDv
-	/dPoai3xWdk1nLJBH4oMpaJVajyM5G4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711375934;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ItTJVT5nAX87K/Z5OvY7omTInh/1LcJz1dpUI80klZk=;
-	b=oF+aZ73H8BmSMuL0jjB/nCOTIl8faY1i0GG4RUFj7ys9Iv8lLH2dp4pXpNQRl7CuzkKY7F
-	7CI4qLo4CS9SFHAg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711375933;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ItTJVT5nAX87K/Z5OvY7omTInh/1LcJz1dpUI80klZk=;
-	b=yMGnLxgla1G+PnAsNeIHM5sA7XO7oDbhMFE4OxE2uobyUjWSiJWtkFz8gZaGC6dlnxosAa
-	rTvCsXVndoLb2G597bUNfLYaR18R6Atw5YVLS+8raop19WhF6GS/gQYmU4rXouj/+iMAC3
-	JiCnWh0zkrUC58k5M9ySi+5fcac1Frc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711375933;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ItTJVT5nAX87K/Z5OvY7omTInh/1LcJz1dpUI80klZk=;
-	b=5ueDDsZjNlN/UJGUxihSjpSxT4CTGP/UjOTdcUuwUwh+/FpQD2Z3AEIu45vYJPVwu2j6+P
-	eEPTT8hoHfYaxWAw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id A184A13A71;
-	Mon, 25 Mar 2024 14:12:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id UNYQJz2GAWYyKQAAn2gu4w
-	(envelope-from <dsterba@suse.cz>); Mon, 25 Mar 2024 14:12:13 +0000
-Date: Mon, 25 Mar 2024 15:04:52 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Tavian Barnes <tavianator@tavianator.com>
-Cc: linux-btrfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-	Qu Wenruo <wqu@suse.com>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: Fix race in read_extent_buffer_pages()
-Message-ID: <20240325140452.GM14596@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <1ca6e688950ee82b1526bb3098852af99b75e6ba.1710551459.git.tavianator@tavianator.com>
- <20240322192108.GK14596@twin.jikos.cz>
- <CABg4E-n=iWjM3K0dvrrwQ9BOEiqTawJ4YUVL6RPWaq2DT2AKvQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SGYFccrp"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-22195b3a8fbso3265780fac.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:13:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711376001; x=1711980801; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l6LSkWu1zEpya3hK2FUeUI36TyXKSztZPzjsG0MOd64=;
+        b=SGYFccrpa1o4XcN7YX4OI2XbYEX4LrdvMb6ajkUyTQ+KoWmhncGMIIUCOmarvSxP68
+         +ihM7Z5ZSbVS5BYrs957ZrYfyFimthAVnPfEFplp1nuP7vMxMJnwFPLPVv3OYxxUAC/L
+         V+v0ek1HgbzZKQGhb7mtq0EUcoUSphFRs08iY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711376001; x=1711980801;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l6LSkWu1zEpya3hK2FUeUI36TyXKSztZPzjsG0MOd64=;
+        b=qRv8Y2Q+YDRsjtK/lnEhIlx3eiAmIVJBtXXDG5ReYoSIrLwWuvaSoQzr7lRr9IgN9Z
+         +ZgZNm9I1DpqhIWNtzk+O9jq+qTHvtA2o955JEnau5EKyHzAk1UrjegZL4HuTkrBeXxg
+         5BMRXrUy+kOPI1GzObCIg3AHPDsCWHDpj/+uLoegWjgvmxFxmBss7BcqLqWxSYM0E1ld
+         0HmqwSLTCuXa4UN96ViA/JOGbTn1XLDRLBf81v+A0kgkZmvBV82qPPzk+0+ZStbAtbYv
+         73gos3NXw3e70pnDUuYZ0dIjSXYFa04OpAr99m0tCP7Oc3sywkwFMRQtq0wtQsOm69GM
+         P+7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUX1oAMIttNFyc9IvFL7a/rxBSXX1xQjAPHyIQce2y2Zv6ZUC88r5E6mWBzzoz/gBxZfFDKhBVreGhC9ewLEctD71bzBvrNETnQEz9C
+X-Gm-Message-State: AOJu0Yz/claKYDW5k1d8oznZBQ/vLNKl05PgWIlil7/Pc1PZq51XuElk
+	//B38G3baOl473OAZ7ZVi662GRJSyPyJEfDlY4oe1I26BevGVj1ZlX+5J6BwLENrZbd7/ZI+I1t
+	yGQ==
+X-Google-Smtp-Source: AGHT+IHUttZpIY8+WgvzfbE58lHFqCPqm/kZFMEc1YB3ibJ6GIr8LuM8hzrCeG4kyL6KAbkhQChXCg==
+X-Received: by 2002:a05:6870:7190:b0:22a:5154:b58c with SMTP id d16-20020a056870719000b0022a5154b58cmr11360oah.26.1711376001383;
+        Mon, 25 Mar 2024 07:13:21 -0700 (PDT)
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com. [209.85.210.41])
+        by smtp.gmail.com with ESMTPSA id mm9-20020a0568700e8900b0022a185fa4fesm1270995oab.21.2024.03.25.07.13.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 07:13:20 -0700 (PDT)
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e6d089f603so911939a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:13:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWn6LdXOZog2sjXULhy+2YmbiBlo/4gxaf5Zg3ZsrDuxh6W5PBtXFM875u4/9ESV0jHor0CRi2tr33p7ov31OSDiPGGV9JxHmiSRznP
+X-Received: by 2002:a05:6830:4426:b0:6e6:e19e:3f1 with SMTP id
+ q38-20020a056830442600b006e6e19e03f1mr1089961otv.35.1711375999889; Mon, 25
+ Mar 2024 07:13:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABg4E-n=iWjM3K0dvrrwQ9BOEiqTawJ4YUVL6RPWaq2DT2AKvQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -3.51
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 NEURAL_HAM_LONG(-0.30)[-0.297];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 MX_GOOD(-0.01)[];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=yMGnLxgl;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=5ueDDsZj
-X-Rspamd-Queue-Id: C3BAB5C780
+References: <20240323-resend-hwtimestamp-v10-0-b08e590d97c7@chromium.org>
+ <12403186.O9o76ZdvQC@natalenko.name> <CANiDSCuma7aGxq7T2uYMgn_JEW223LdR4as83UT2Aj3QmVu4ig@mail.gmail.com>
+ <5764213.DvuYhMxLoT@natalenko.name>
+In-Reply-To: <5764213.DvuYhMxLoT@natalenko.name>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 25 Mar 2024 15:13:03 +0100
+X-Gmail-Original-Message-ID: <CANiDSCvAY8wYZi6QTrjq_ehu4qsHCrq_dTqZQV2=KUCuP+aZYg@mail.gmail.com>
+Message-ID: <CANiDSCvAY8wYZi6QTrjq_ehu4qsHCrq_dTqZQV2=KUCuP+aZYg@mail.gmail.com>
+Subject: Re: [PATCH v10 3/6] media: uvcvideo: Quirk for invalid dev_sof in
+ Logitech C922
+To: Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "hn.chen" <hn.chen@sunplusit.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, Sergey Senozhatsky <senozhatsky@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 22, 2024 at 06:50:07PM -0400, Tavian Barnes wrote:
-> On Fri, Mar 22, 2024 at 3:28 PM David Sterba <dsterba@suse.cz> wrote:
-> > On Fri, Mar 15, 2024 at 09:14:29PM -0400, Tavian Barnes wrote:
-> > > To prevent concurrent reads for the same extent buffer,
-> > > read_extent_buffer_pages() performs these checks:
-> > >
-> > >     /* (1) */
-> > >     if (test_bit(EXTENT_BUFFER_UPTODATE, &eb->bflags))
-> > >         return 0;
-> > >
-> > >     /* (2) */
-> > >     if (test_and_set_bit(EXTENT_BUFFER_READING, &eb->bflags))
-> > >         goto done;
-> > >
-> > > At this point, it seems safe to start the actual read operation. Once
-> > > that completes, end_bbio_meta_read() does
-> > >
-> > >     /* (3) */
-> > >     set_extent_buffer_uptodate(eb);
-> > >
-> > >     /* (4) */
-> > >     clear_bit(EXTENT_BUFFER_READING, &eb->bflags);
-> > >
-> > > Normally, this is enough to ensure only one read happens, and all other
-> > > callers wait for it to finish before returning.  Unfortunately, there is
-> > > a racey interleaving:
-> > >
-> > >     Thread A | Thread B | Thread C
-> > >     ---------+----------+---------
-> > >        (1)   |          |
-> > >              |    (1)   |
-> > >        (2)   |          |
-> > >        (3)   |          |
-> > >        (4)   |          |
-> > >              |    (2)   |
-> > >              |          |    (1)
-> > >
-> > > When this happens, thread B kicks of an unnecessary read. Worse, thread
-> > > C will see UPTODATE set and return immediately, while the read from
-> > > thread B is still in progress.  This race could result in tree-checker
-> > > errors like this as the extent buffer is concurrently modified:
-> > >
-> > >     BTRFS critical (device dm-0): corrupted node, root=256
-> > >     block=8550954455682405139 owner mismatch, have 11858205567642294356
-> > >     expect [256, 18446744073709551360]
-> > >
-> > > Fix it by testing UPTODATE again after setting the READING bit, and if
-> > > it's been set, skip the unnecessary read.
-> > >
-> > > Fixes: d7172f52e993 ("btrfs: use per-buffer locking for extent_buffer reading")
-> > > Link: https://lore.kernel.org/linux-btrfs/CAHk-=whNdMaN9ntZ47XRKP6DBes2E5w7fi-0U3H2+PS18p+Pzw@mail.gmail.com/
-> > > Link: https://lore.kernel.org/linux-btrfs/f51a6d5d7432455a6a858d51b49ecac183e0bbc9.1706312914.git.wqu@suse.com/
-> > > Link: https://lore.kernel.org/linux-btrfs/c7241ea4-fcc6-48d2-98c8-b5ea790d6c89@gmx.com/
-> > > Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
+Hi Oleksandr
+
+That looks good :) !
+
+On Mon, 25 Mar 2024 at 13:51, Oleksandr Natalenko
+<oleksandr@natalenko.name> wrote:
+>
+> On pond=C4=9Bl=C3=AD 25. b=C5=99ezna 2024 10:25:51, CET Ricardo Ribalda w=
+rote:
+> > Hi Oleksandr
 > >
-> > Thank you very much for taking the time to debug the issue and for the
-> > fix. It is a rare occurrence that a tough bug is followed by a fix from
-> > the same person (outside of the developer group) and is certainly
-> > appreciated.
-> 
-> Thank you!
-> 
-> Sorry to nitpick, but the paragraph you added to the commit message
-> [1] has a typo:
-> 
-> > There are reports from tree-checker that detects corrupted nodes,
-> > without any obvious pattern so possibly an overwrite in memory.
-> > After some debugging it turns out there's a race when reading an extent
-> > buffer the uptodate status is can be missed.
-> 
-> s/is can/can/
+> > On Mon, 25 Mar 2024 at 10:23, Oleksandr Natalenko
+> > <oleksandr@natalenko.name> wrote:
+> > >
+> > > Hello.
+> > >
+> > > On pond=C4=9Bl=C3=AD 25. b=C5=99ezna 2024 8:52:57, CET Ricardo Ribald=
+a wrote:
+> > > > Hi Oleksandr
+> > > >
+> > > > On Sat, 23 Mar 2024 at 13:16, Oleksandr Natalenko
+> > > > <oleksandr@natalenko.name> wrote:
+> > > >
+> > > > >
+> > > > > How do I check whether C920 (046d:082d) is affected too? I have g=
+ot one, I can run tests on it as long as those will not blow the webcam up.
+> > > > >
+> > > > > Thanks.
+> > > > >
+> > > >
+> > > > First of all you need to enable the hwtimestamps in the driver. You
+> > > > could do that with
+> > > >
+> > > > ```
+> > > > rmmod uvcvideo; modprobe uvcvideo hwtimestamps=3D1
+> > > > ```
+> > >
+> > > ```
+> > > $ cat /sys/module/uvcvideo/parameters/hwtimestamps
+> > > 1
+> > > ```
+> > >
+> > > > Then capture some frames with yavta
+> > > > ```
+> > > > yavta -c /dev/video0
+> > > > ```
+> > > >
+> > > > After around 5 seconds all the frames should have a stable fps, the
+> > > > fps is not stable then your camera is affected with this bug.
+> > >
+> > > ```
+> > > $ ./yavta -c /dev/video1
+> > > Device /dev/video1 opened.
+> > > Device `HD Pro Webcam C920' on `usb-0000:0f:00.3-3.4' (driver 'uvcvid=
+eo') supports video, capture, without mplanes.
+> > > Video format: MJPEG (47504a4d) 1920x1080 (stride 0) field none buffer=
+ size 4147200
+> > > =E2=80=A6
+> > > 100 (4) [-] none 100 200717 B 212.919114 213.079004 33.727 fps ts mon=
+o/SoE
+> > > 101 (5) [-] none 101 200889 B 213.003703 213.114996 11.822 fps ts mon=
+o/SoE
+> > > 102 (6) [-] none 102 200926 B 213.035571 213.146999 31.379 fps ts mon=
+o/SoE
+> > > 103 (7) [-] none 103 200839 B 213.067424 213.179003 31.394 fps ts mon=
+o/SoE
+> > > 104 (0) [-] none 104 200692 B 213.293180 213.214991 4.430 fps ts mono=
+/SoE
+> > > 105 (1) [-] none 105 200937 B 213.322374 213.247001 34.254 fps ts mon=
+o/SoE
+> > > 106 (2) [-] none 106 201013 B 213.352228 213.279005 33.496 fps ts mon=
+o/SoE
+> > > =E2=80=A6
+> > > 168 (0) [-] none 168 200914 B 215.183707 215.347066 33.676 fps ts mon=
+o/SoE
+> > > 169 (1) [-] none 169 201141 B 215.271693 215.379066 11.365 fps ts mon=
+o/SoE
+> > > 170 (2) [-] none 170 201005 B 215.303449 215.415057 31.490 fps ts mon=
+o/SoE
+> > > 171 (3) [-] none 171 201195 B 215.335295 215.447062 31.401 fps ts mon=
+o/SoE
+> > > 172 (4) [-] none 172 200933 B 215.557731 215.479072 4.496 fps ts mono=
+/SoE
+> > > 173 (5) [-] none 173 200973 B 215.587033 215.515063 34.127 fps ts mon=
+o/SoE
+> > > 174 (6) [-] none 174 200698 B 215.616811 215.547063 33.582 fps ts mon=
+o/SoE
+> > > 175 (7) [-] none 175 201290 B 215.646196 215.579075 34.031 fps ts mon=
+o/SoE
+> > > 176 (0) [-] none 176 200807 B 215.675857 215.615073 33.714 fps ts mon=
+o/SoE
+> > > =E2=80=A6
+> > > ```
+> > >
+> > > Does the above mean the webcam is affected?
+> >
+> > Looks like it.... could you try applying this patch and run with
+> >
+> > rmmod uvcvideo; modprobe uvcvideo hwtimestamps=3D1 quirks=3D0x4000
+> >
+> > to see if that fixes it for you?
+>
+> On top of v6.8, I've applied the whole v10, and also applied the followin=
+g change instead of providing `quirks=3D`:
 
-I will fix that, thanks.
+Could you send the patch to the ML, so Laurent can apply it on top of my se=
+t?
+
+You could add the result of the experiment to the commit message
+
+With those changes
+
+Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+
+Thanks!
+
+>
+> ```
+> commit 884a61751d979ee9974c08a71c72e88e73bdd87e
+> Author: Oleksandr Natalenko <oleksandr@natalenko.name>
+> Date:   Mon Mar 25 10:28:00 2024 +0100
+>
+>     media: uvcvideo: Quirk for invalid dev_sof in Logitech C920
+>
+>     Signed-off-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+>
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/u=
+vc_driver.c
+> index 723e6d5680c2e..444d7089885ea 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -2573,7 +2573,8 @@ static const struct usb_device_id uvc_ids[] =3D {
+>           .bInterfaceClass      =3D USB_CLASS_VIDEO,
+>           .bInterfaceSubClass   =3D 1,
+>           .bInterfaceProtocol   =3D 0,
+> -         .driver_info          =3D UVC_INFO_QUIRK(UVC_QUIRK_RESTORE_CTRL=
+S_ON_INIT) },
+> +         .driver_info          =3D UVC_INFO_QUIRK(UVC_QUIRK_RESTORE_CTRL=
+S_ON_INIT
+> +                                              | UVC_QUIRK_INVALID_DEVICE=
+_SOF) },
+>         /* Logitech HD Pro Webcam C922 */
+>         { .match_flags          =3D USB_DEVICE_ID_MATCH_DEVICE
+>                                 | USB_DEVICE_ID_MATCH_INT_INFO,
+>
+> ```
+>
+> Now I see this:
+>
+> ```
+> 154 (2) [-] none 154 192417 B 42.199823 42.207788 27.779 fps ts mono/SoE
+> 155 (3) [-] none 155 192040 B 42.231834 42.239791 31.239 fps ts mono/SoE
+> 156 (4) [-] none 156 192213 B 42.263823 42.271822 31.261 fps ts mono/SoE
+> 157 (5) [-] none 157 191981 B 42.299824 42.303827 27.777 fps ts mono/SoE
+> 158 (6) [-] none 158 191953 B 42.331835 42.339811 31.239 fps ts mono/SoE
+> 159 (7) [-] none 159 191904 B 42.363824 42.371813 31.261 fps ts mono/SoE
+> 160 (0) [-] none 160 192210 B 42.399834 42.407801 27.770 fps ts mono/SoE
+> 161 (1) [-] none 161 192235 B 42.431824 42.439806 31.260 fps ts mono/SoE
+> ```
+>
+> without dips in FPS.
+>
+> What do you think?
+>
+> >
+> > Thanks!
+> >
+> > >
+> > > Thank you.
+> > >
+> > > >
+> > > >
+> > > > Thanks!
+> > > >
+> > >
+> > >
+> > > --
+> > > Oleksandr Natalenko (post-factum)
+> >
+> >
+> >
+> >
+>
+>
+> --
+> Oleksandr Natalenko (post-factum)
+
+
+
+--=20
+Ricardo Ribalda
