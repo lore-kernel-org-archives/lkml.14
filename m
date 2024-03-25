@@ -1,98 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80819460;
-	Mon, 25 Mar 2024 18:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAEEBE4D;
+	Mon, 25 Mar 2024 18:38:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711391833; cv=none; b=SozFsytfoCRZHzDfljpnpvKKk6DzRWnJZy1mKIMtQ83kwYCpiNhQhaPYlNtUrhKvuqna5t6PK1yRY2upe1JzIFp8Kmj5g6qkpPEwVHAf1uEHuWv/SOE61AOmU7HSPLRiTiox96xcRtYWmiR4GQCVPaViIPaR9/MX1wHHp6J1q1o=
+	t=1711391880; cv=none; b=iNLz8vUStuCxBhK7DX7760ywhx9NMKgoxaP0Iqvi7+kEHI/Bha4Oi62bCQUrGSeoVV9FX5MDhsB1bSra8VVpwI25bDq69ZLGERpy5Sl2tJnPa4azNmXznwa8h7xsJ/EeuyFPQbddKVBIH4iyhOKyIxV6kFdnMB+4QTk8Z1oDaCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711391833; c=relaxed/simple;
-	bh=ozLed1RgSofEW/JhzPbh4DFYa4pZ4WP0p3K+tacDuL4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PypFyY3PtOqODSdITABIthncOYPQOtRmwsRoeZ9fLAD+kWPwKxJAq0+OQhdcwttZCdNm2OODCsbK3qMXHXIjvxnV3L9viniK4AP0TrggcAnJPaafyVGQrknC3QDrM75e/ZOU/jMKcUisVNeK86LhMOVW4KYYJRC1Oa7llPSXM0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eLzT+WEg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711391880; c=relaxed/simple;
+	bh=NZ8ILajyJZp/6r5YApASYz0CQF3HAtXJb6AdZAZRbOo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=NuJjoZBjw8NPk+zsdVOiSxqO+Lw+dm0Wd3ELYP2pnkJtey8tBOBaZh/jq1iTbtRVM0IB1ywvJvuH41HRalIPpR15adUtE74gvXJ2mfaBLUCxCbVvkHw4sA21YBTk3vqhTrtuhNFZrboGNj0wrZueqBOMeUeX96zQ7Nh4ox91Few=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGOCOCHp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eLzT+WEg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6EFEC433F1;
-	Mon, 25 Mar 2024 18:37:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711391833;
-	bh=ozLed1RgSofEW/JhzPbh4DFYa4pZ4WP0p3K+tacDuL4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eLzT+WEgcFPrHqlwu8yvATEVwVaCuzHiW2benJYKJGo+cuEwq0Ralk2U6j87c8HYi
-	 1i0hVGHlBbV9Qw9OhV8bop+B5MI5+Bt59k1PD8wSS0WHysuKTaulfTZnU51IXcOz1S
-	 32+uNpXoVf8BQGmYU36Yjy2crV2COr/auNTvgQJk=
-Date: Mon, 25 Mar 2024 19:37:10 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>,
-	Sonal Santan <sonal.santan@amd.com>,
-	Stefano Stabellini <stefano.stabellini@xilinx.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Nuno Sa <nuno.sa@analog.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] driver core: Introduce device_link_wait_removal()
-Message-ID: <2024032548-rope-improper-4f67@gregkh>
-References: <20240325152140.198219-1-herve.codina@bootlin.com>
- <20240325152140.198219-2-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGOCOCHp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0425C433F1;
+	Mon, 25 Mar 2024 18:37:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711391880;
+	bh=NZ8ILajyJZp/6r5YApASYz0CQF3HAtXJb6AdZAZRbOo=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=UGOCOCHpMLkpa5Zvpv7VOcuZ7OqMfLSKGY85IkyeCkgXdaBN3pemZspl5hbiqRYa2
+	 OEFMiZh8+aPVRnzje21rJKhYJMuQY/z8vSI7LaqDQUbcaOgh+eH5JHGnJ0reer69nn
+	 y58IyiOAX423nM+ROQA2AN4TBX0pokhb/Q3dtsiHXpb5NfMfqrvX1wakxqwkOCfHdU
+	 hE3a+bXeXfcEvGI8z/luv61oCEO/e2U9/A8i0zTz/QAAAxnaq0e/iKEynVu+AAdG1E
+	 mu416QkmS6HZ2+VYNv5kWqg5RXCmfxR375M2l3DPWLjoL8U/t7H8XpTqynCN7iVeAu
+	 oKX2/6VvQK8Xw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325152140.198219-2-herve.codina@bootlin.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 25 Mar 2024 20:37:55 +0200
+Message-Id: <D031SE4QN1CG.18GY6AS20QF1J@kernel.org>
+To: "Masami Hiramatsu" <mhiramat@kernel.org>
+Cc: <linux-riscv@lists.infradead.org>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
+ Ou" <aou@eecs.berkeley.edu>, <linux-kernel@vger.kernel.org>, "Naveen N .
+ Rao" <naveen.n.rao@linux.ibm.com>, "Anil S Keshavamurthy"
+ <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
+ <linux-trace-kernel@vger.kernel.org>, "Calvin Owens"
+ <jcalvinowens@gmail.com>
+Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240323232908.13261-1-jarkko@kernel.org>
+ <20240325115632.04e37297491cadfbbf382767@kernel.org>
+In-Reply-To: <20240325115632.04e37297491cadfbbf382767@kernel.org>
 
-On Mon, Mar 25, 2024 at 04:21:25PM +0100, Herve Codina wrote:
-> The commit 80dd33cf72d1 ("drivers: base: Fix device link removal")
-> introduces a workqueue to release the consumer and supplier devices used
-> in the devlink.
-> In the job queued, devices are release and in turn, when all the
-> references to these devices are dropped, the release function of the
-> device itself is called.
-> 
-> Nothing is present to provide some synchronisation with this workqueue
-> in order to ensure that all ongoing releasing operations are done and
-> so, some other operations can be started safely.
-> 
-> For instance, in the following sequence:
->   1) of_platform_depopulate()
->   2) of_overlay_remove()
-> 
-> During the step 1, devices are released and related devlinks are removed
-> (jobs pushed in the workqueue).
-> During the step 2, OF nodes are destroyed but, without any
-> synchronisation with devlink removal jobs, of_overlay_remove() can raise
-> warnings related to missing of_node_put():
->   ERROR: memory leak, expected refcount 1 instead of 2
-> 
-> Indeed, the missing of_node_put() call is going to be done, too late,
-> from the workqueue job execution.
-> 
-> Introduce device_link_wait_removal() to offer a way to synchronize
-> operations waiting for the end of devlink removals (i.e. end of
-> workqueue jobs).
-> Also, as a flushing operation is done on the workqueue, the workqueue
-> used is moved from a system-wide workqueue to a local one.
-> 
-> Cc: stable@vger.kernel.org
+On Mon Mar 25, 2024 at 4:56 AM EET, Masami Hiramatsu (Google) wrote:
+> Hi Jarkko,
+>
+> On Sun, 24 Mar 2024 01:29:08 +0200
+> Jarkko Sakkinen <jarkko@kernel.org> wrote:
+>
+> > Tracing with kprobes while running a monolithic kernel is currently
+> > impossible due the kernel module allocator dependency.
+> >=20
+> > Address the issue by allowing architectures to implement module_alloc()
+> > and module_memfree() independent of the module subsystem. An arch tree
+> > can signal this by setting HAVE_KPROBES_ALLOC in its Kconfig file.
+> >=20
+> > Realize the feature on RISC-V by separating allocator to module_alloc.c
+> > and implementing module_memfree().
+>
+> Even though, this involves changes in arch-independent part. So it should
+> be solved by generic way. Did you checked Calvin's thread?
+>
+> https://lore.kernel.org/all/cover.1709676663.git.jcalvinowens@gmail.com/
 
-Why is this for stable?  You are just adding a new api, no one is using
-it.
+Nope, has not been in my radar but for sure will check it.
 
-Or if they are, you didn't send me that patch...
+I don't mind making this more generic. The  point of this version was to
+put focus on single architecture and do as little as possible how the
+code works right now so that it is easier to give feedback on direction.
 
-greg k-h
+> I think, we'd better to introduce `alloc_execmem()`,
+> CONFIG_HAVE_ALLOC_EXECMEM and CONFIG_ALLOC_EXECMEM at first
+>
+>   config HAVE_ALLOC_EXECMEM
+> 	bool
+>
+>   config ALLOC_EXECMEM
+> 	bool "Executable trampline memory allocation"
+> 	depends on MODULES || HAVE_ALLOC_EXECMEM
+
+Right so this is logically the same as I have just with ALLOC_EXECMEM
+added to cover both MODULES and HAVE_ALLOC_EXECMEM (which is essentially
+the same as HAVE_ALLOC_KPROBES just with a different name).
+
+Not at all against this. I think this factor more understandable
+structuring, just "peer checking" that I understand what I'm reading :-)
+
+> And define fallback macro to module_alloc() like this.
+>
+> #ifndef CONFIG_HAVE_ALLOC_EXECMEM
+> #define alloc_execmem(size, gfp)	module_alloc(size)
+> #endif
+>
+> Then, introduce a new dependency to kprobes
+>
+>   config KPROBES
+>   	bool "Kprobes"
+> 	select ALLOC_EXECMEM
+
+
+OK I think this is good but now I see actually two logical chunks of
+work becuse this select changes how KPROBES kconfig option works. It
+has previously required to manually select MODULES first.
+
+So I'll "select MODULES" as separate patch to keep all logical changes
+transparent...
+
+>
+> and update kprobes to use alloc_execmem and remove module related
+> code from it.
+>
+> You also should consider using IS_ENABLED(CONFIG_MODULE) in the code to
+> avoid using #ifdefs.
+>
+> Finally, you can add RISCV implementation patch of HAVE_ALLOC_EXECMEM in =
+the
+> next patch.
+
+OK, I think the suggestions are sane and not that much drift what I have
+now so works for me.
+
+> Thank you,
+
+BR, Jarkko
