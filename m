@@ -1,124 +1,96 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DAB3DABE3;
-	Mon, 25 Mar 2024 17:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D361D69B
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711386083; cv=none; b=nXNEZ4lTf9I2gpcQ195cRmIUjEzBpmC0D774Fx6Hji+v7+nZW5sem+2UqSINuRGKG0yhtWzY55thWHynPkAx5rr/UYwB5kkRyeFuMMVQC8Q1Slsdl+0sqba3Egwv0MwsXYhPLPvMMETWaFO4VxcMQ+PVZBkIv/+PoBo0kPcoeRY=
+	t=1711386135; cv=none; b=EeIQJMES4LeS9zNlaSkGSfIWsDGa1+aR1vsBLEL0rsk79JeocMyucnXAvXGdrY3IihW0bgu4gaGRE1mtbx/U8zB6MCQp6AemEy1jiu+cMtis4tVkxLBjJZYATTTJi1mHgX5ybq7Uwmw8Kc/y4y0P/oQqWiJF6TV82CnJK8LGFo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711386083; c=relaxed/simple;
-	bh=J65GG3qBBSnWUcbMSJgEcFyXxA8qwEWeK8c+V32sdPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d9Chsd0UrPvGzGH0czMXJFWksk34hyApTc8VzsDMGjHFWyWokSrfrEhmzW1ogfVT6czPl242BdGwdkKsJRDkTQARzXApSHL1uLlcuDRzt9a9il3JhGcndkqEj0Ooay4vSLyDS0bheUqh9ozl6bXj1f3evBa6JH8cwu/kvcyuOBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HVnyuDHn; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1711386135; c=relaxed/simple;
+	bh=m7fd1//5IrrtHgWOoWmDIMhE55eFKjHMazQpwfZnFEo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UHRrgtRUj1AS8IyG6cr2rmxM8fTF5C6f/CqrpqlPN5cT1XPfrLslk5+Ngml3B15Iinrfjv7MXkNx4hUDSrsYSZC1faOHR16Ed34YoAhFwa9tds7PuH1yHN7ozX5IriUtpRqxr771E8FT4yCUwmT7QVtBM3ET46ArlheL0l3YWzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j4TDEOJp; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HVnyuDHn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1711386079;
-	bh=J65GG3qBBSnWUcbMSJgEcFyXxA8qwEWeK8c+V32sdPk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HVnyuDHnc+yeAIvf6f4BgaiUKTqwveBDuAHewSzDfehGNtTWgFvi9HHkYe4poG3d2
-	 aMk3M2gVgAH0oOWxeJaYHmdmK4/xNzs9Z20IPWiq4V/mBtEMQx1D2RDT043Uq42W0M
-	 fiBpin06pwJv0c7BSdI9LDnlr8vHFPJf8eO04IWMSM/z8iO/i1HqkgLfN5STnoXdH6
-	 y+Zs2t6cv5vjfog2PSPj279F4ofNvIPbLalnwUYHavrI29Zp2NaOzQDu2tN+4vr5AY
-	 nk/NOMZPm6H5R/GUxpzFejsuonOVIQY/EglTHfsmPycijd+FSXvVGjtwEBTVEQAVjO
-	 sIayP/IXBvgbQ==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D353837820E1;
-	Mon, 25 Mar 2024 17:01:18 +0000 (UTC)
-Date: Mon, 25 Mar 2024 18:01:17 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org,
- Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com
-Subject: Re: [PATCH v1 3/4] arm64: dts: rockchip: rk3588-rock5b: Enable GPU
-Message-ID: <20240325180117.39d72749@collabora.com>
-In-Reply-To: <a6uu7b3y7d4nirxbplc5cj4oeuyblx2grpvvldeovofhx3tnqc@dlse3vixhpws>
-References: <20240325153850.189128-1-sebastian.reichel@collabora.com>
-	<20240325153850.189128-4-sebastian.reichel@collabora.com>
-	<20240325164441.1dab4018@collabora.com>
-	<a6uu7b3y7d4nirxbplc5cj4oeuyblx2grpvvldeovofhx3tnqc@dlse3vixhpws>
-Organization: Collabora
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j4TDEOJp"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dffa5e3f2dso28390065ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711386133; x=1711990933; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vah2WWF295ZE3+NJIAmiLCanZHCiZpOAIq/DGlaX/m0=;
+        b=j4TDEOJpgZPlK1iGd3bAtEv718O0qwIIWD4PsFVpNJB5j16SDAU/485RxdV/Xel6LN
+         Yj2+QVTww+LvWAdVDPgwgNWNdAQvROp4BWt062JSFXiubP/mszpAN1sJNmQnYJengAoa
+         qypBq9dfIOajy48eUpaYQn+FIJlnnVIeKRRx1HMMdZ+BUqCY1HiI5kZ9njgi9abEEaT0
+         5Y9jJXLnuff5QbeBIBXLfLu95anTWBcIkdmE7BLatuxwF761nKB92e+OfgYd72jHRjlS
+         ZgiRtNV3TOnZrrSRveA3WQQIKokMknFL8fgdmqUiIZ/ILdgIz50Y4I3b8UfrDDMcxIMd
+         DBdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711386133; x=1711990933;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vah2WWF295ZE3+NJIAmiLCanZHCiZpOAIq/DGlaX/m0=;
+        b=VravE2Pi3O+V7pYGr4aYayvPIFfRxb3ZgV14QL7+NWjCXDJaaapFAF3OqhziyY88Rk
+         FiSbfIgz0/coaD1Kt2ycbWCjyIeylIKhMf2nDUh+u219XQHD+27wD66oZeln/ZpEeLvh
+         exbuLC2jouPdnGBeys0Zn12i9E2agffXz1RIZM41y/gpRiedE69t5lbSXNn6lPHMD7d0
+         YNMVcvNc8ucQYdNRxHWHacLzQDuvquX19EeDj0BIq9Vb4EIVIIMuUzi/qrGvrREE03P1
+         OutliiO47uZIyA+/mr2m341UgbaXZmA9w2mrNMj7dWouuHieQNy/7dJq7UyP2FzEhM4k
+         8aJA==
+X-Forwarded-Encrypted: i=1; AJvYcCXC4BdTNFzAn1wxPdEuZ0vJ/yXzNZtkehQ7Mj978bowUEoU8JoYSYL0MoOgbUDdE85zWiky2CTBubRu+2nzloayBU+EM6nSbhabrwIq
+X-Gm-Message-State: AOJu0Yw34xY16mS70Muq43kU1rX6dJdHcavOUCHmoI6JCK1aa/yAl4k8
+	+CaEsW/Mxnc8PVyolGIy32DrXw0ZLHyLO/+56XwfIECKZtsU5Pnrdbr2LjZUCbs=
+X-Google-Smtp-Source: AGHT+IFJQtr9KLesreEA+rN5I4oDbq/kaNwSDF9SvVqoxxKVyxbnhcLw/w3S4d4CON2KX2+9wkYT0g==
+X-Received: by 2002:a17:902:eb8d:b0:1e0:115c:e03c with SMTP id q13-20020a170902eb8d00b001e0115ce03cmr7194945plg.53.1711386133516;
+        Mon, 25 Mar 2024 10:02:13 -0700 (PDT)
+Received: from [192.168.0.102] ([176.61.106.68])
+        by smtp.gmail.com with ESMTPSA id p2-20020a170902780200b001deeac592absm4983213pll.180.2024.03.25.10.02.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 10:02:13 -0700 (PDT)
+Message-ID: <3bac1efe-ad49-4d13-8a50-0726b568a9d6@linaro.org>
+Date: Mon, 25 Mar 2024 17:02:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: qcom: Fix x1e80100 camcc
+ power-domain declaration
+To: Rob Herring <robh@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Abel Vesa <abel.vesa@linaro.org>, Rajendra Nayak <quic_rjendra@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240313-linux-next-camcc-fixes-v2-0-9426da94ae37@linaro.org>
+ <20240313-linux-next-camcc-fixes-v2-1-9426da94ae37@linaro.org>
+ <20240315151613.GA1256230-robh@kernel.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240315151613.GA1256230-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Mon, 25 Mar 2024 16:58:47 +0100
-Sebastian Reichel <sebastian.reichel@collabora.com> wrote:
+On 15/03/2024 15:16, Rob Herring wrote:
+> Add new entries onto the end of existing ones. IOW, MMCX should always
+> be 1st. Then you can move the descriptions to the top level and just put
+> minItems or maxItems as appropriate here.
 
-> Hi,
-> 
-> On Mon, Mar 25, 2024 at 04:44:41PM +0100, Boris Brezillon wrote:
-> > On Mon, 25 Mar 2024 16:37:20 +0100
-> > Sebastian Reichel <sebastian.reichel@collabora.com> wrote:
-> >   
-> > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > 
-> > > Enable the Mali GPU in the Rock 5B.
-> > > 
-> > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>  
-> > 
-> > I don't remember writing this patch ;-), maybe I screwed authorship at
-> > some point, dunno.  
-> 
-> mh, I cherry-picked the DT patches from your branch before
-> cleaning them up.
+So for the CAMCC MXC should be switched on first per spec but, TBH I 
+don't think that's a real dependency that matters.
 
-Yep,  I probably wrote this patch and asked someone else to test. I
-couldn't find any traces of this patch where I'm not flagged as the
-author in any of my local branches.
+I can probably make this change with no functional impact.
 
-> 
-> > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > > ---
-> > >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> > > index 1fe8b2a0ed75..096ee7a98b89 100644
-> > > --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> > > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> > > @@ -180,6 +180,11 @@ &cpu_l3 {
-> > >  	cpu-supply = <&vdd_cpu_lit_s0>;
-> > >  };
-> > >  
-> > > +&gpu {
-> > > +	mali-supply = <&vdd_gpu_s0>;
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > >  &i2c0 {
-> > >  	pinctrl-names = "default";
-> > >  	pinctrl-0 = <&i2c0m2_xfer>;
-> > > @@ -470,6 +475,7 @@ rk806_dvs3_null: dvs3-null-pins {
-> > >  
-> > >  		regulators {
-> > >  			vdd_gpu_s0: vdd_gpu_mem_s0: dcdc-reg1 {
-> > > +				regulator-always-on;  
-> > 
-> > Hm, should we mention why the regulator is always on here?  
-> 
-> In case of the EVB1 it's needed because the generic coupler driver
-> cannot handle regulators that are not always on.
-
-Ah, okay. I thought I added that for a different reason.
-
-> I'm not sure why
-> it was added for the Rock 5B. I will check if it works without that
-> flag.
+---
+bod
