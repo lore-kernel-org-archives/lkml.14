@@ -1,186 +1,120 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2088.outbound.protection.outlook.com [40.107.220.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4456D13D526
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 13:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711373313; cv=fail; b=Xv9vrJr47FBvTmhk+Axx6n7JyJc9ckJSqozVym0MoaJmLqd2XCt2x79R9oQMR0QnHOAHy57xTrHUq3dgKmveRvEKLIaoOSKmuZiz14JdbBxvLOvUcegsQvGkH71fQwBfNGG+hlaI3tF2/W3FuIl9C/oZx+JMumedVx3eOGFUEgg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711373313; c=relaxed/simple;
-	bh=ogoUMXO90XIUOv2BxHxhQBwjX1ZolmiNcs7tcRdX0Co=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nTg5aiU82vLpJwZ3fQT4hMipFeNMm3CYJeVivD5qHMG6HorqwEgHmjO/vy2Q9MbXyJvpuUfA/I+voGRQqze4Gym8AeEQ+wkUH40YEOKjajcdytDA0dr1uMXJ3tvsG8aGmv8LBdbJGOiHt0jvVuVF0qapYftxgaddAgr+6DyXW3w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SYvtx7Pn; arc=fail smtp.client-ip=40.107.220.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96DB3DAC18;
+	Mon, 25 Mar 2024 13:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711373415; cv=none; b=aa8f3ibiDyOtoT6f78/j7mZOaEqxxTXZFGSOahdvAj8QQiF8U6vEhxN1ZMM92z4DwofYDuCkTzkzUhjF2UvvAy5fhgEA9FxUkJufanHbwxw9WuuJobXN5YEdTD741e3k07RJWTucdRWWslq57UTqDO/r9iRSGUiPxnB7bHkHHJM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711373415; c=relaxed/simple;
+	bh=hrZPseZ/aDtrhN7KU2wrYjtCnetz/cj9YzDAAtIWeAs=;
+	h=Content-Type:Mime-Version:Date:Message-Id:Subject:From:To:
+	 References:In-Reply-To; b=jifvBOyXk49jy7ElEIZLEbFOlMS8I1Q9fJvlA0W1ABeCxxQpQflX12UwyIAgRAa1rRX4Ya9UflxAa5+QWPtLuSpTJZcK926sXA4ANjrdguN8uviHjxsMK/oLJvxuuFQwatSB8cavNJCCrwxLd6MtsY68gPh43GfheZdKdKcSRyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YDkKtaQm; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SYvtx7Pn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kDonj8lwTO28/Abb91vCBHkcPBtkW0UTBtLHlligdEwi0s4MCvhMjO/TpWEL68XP76VfU7tUPCzqebSWRICSobdc+6srjMIxXhswArhHmOgucOsOul78v+fD1uZwsfMCbsaBwnhntacBr+LijPWDIKI8FLA09BiKfDK7FRpN6BXjgXazMeIAXFO5CWi9dGUQMTqtwsU/99BBjRRxJ4F/Rfh/wrdbKUH2tEUYsCJX7KEMUait4kQNYsV/FFO/ld3Q44QnjBcx+O66kRGwePvNYnDkUlc+1BSFYW9CHoNgMKyy/DJwTHFLCG2Fc5ZdtinYGom3DHW1JRWhXQkIRaPZHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M8RzvTUPE3KdTikn0a0slWcTcHZOLCNSjIWKJWWfFtM=;
- b=Honl5LGO5U5ZVMO7S3Db1wUm6/VTVrUs5/P/KwAP7776dOedm2XEUVwEUuGz5RgVlHn28UMpz7HaCd4JxOkIdY/VumhGDFnvegDn58wCD9lOQrjEDvnlLIhNesHUNehjPnJ9isgpchG8CZfGB13O0i8qe52W3P2kiPzVZredkZuNPne6+LcFeyAJyHV4fPmpoMaN60q7yYwBPSnMlHF70cEPbOHigPnuifSCgKJPUHNAQ84mCGyji9EtD8CD7ncTYzwoRebdY0keO9tMCvAg4KQU8iD3j7W36XZDhcitNMgA7o67/+YndnkOVSa/WqvDvtqYQwy/XdL3uP897VafCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M8RzvTUPE3KdTikn0a0slWcTcHZOLCNSjIWKJWWfFtM=;
- b=SYvtx7PnYEbAvAeD1sfPKG0/62VgXQ+iMx2rggVqy7n2nQ8zM3/oyzK8alytv4l//rOlYw0mqwoTcf/dONbP4c8piI3fAdupe2C8+J9/OC9BOrxw1IB7YWFFXyHtP3bhW9sYruB8jKICyWqpRAbGlBC8xMv/ro77gNclkrxHD66ilimh/1ynJZ4SoHR2aEyuuOFvDH9ZVGcVJ/ajRIY22nLpUD1q4lu2R0qY9KAeNdsIBcUSAjcP9tcqPkAQgckSnk9leB+YG0opEMXdSnJrRMNqL1vHyZXtLusP1kr2MkoJR3dRR5F2JFHwG4FEMIPCCwJTJlLGg9SeBMhxRsbvwQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
- PH0PR12MB7983.namprd12.prod.outlook.com (2603:10b6:510:28e::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.31; Mon, 25 Mar 2024 13:28:26 +0000
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::dc5c:2cf1:d5f5:9753]) by DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::dc5c:2cf1:d5f5:9753%6]) with mapi id 15.20.7409.031; Mon, 25 Mar 2024
- 13:28:19 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
- David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH] huge_memory.c: document huge page splitting rules more
- thoroughly
-Date: Mon, 25 Mar 2024 09:28:17 -0400
-X-Mailer: MailMate (1.14r6028)
-Message-ID: <B9A3BBFA-5DE2-4C72-9CB0-38086001577F@nvidia.com>
-In-Reply-To: <20240325044452.217463-1-jhubbard@nvidia.com>
-References: <20240325044452.217463-1-jhubbard@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YDkKtaQm"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56c12c73ed8so1193505a12.2;
+        Mon, 25 Mar 2024 06:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711373412; x=1711978212; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:message-id:date:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XD4ew/GHYtcG3hjg8Rw1ArwLrYnutWTTiSTIVtBubr0=;
+        b=YDkKtaQmGy7niTGGqp51Rf6fC1UU0yEGoFzp2lNEQ/kw6Cx5aD8asXH0rqsuXJI4nC
+         f350IdRXVgFbTxT4/elt+1gBw1HcBQP7qNULPVWD3khOw13WoXpYkzKAXMuSTCHCuw0T
+         JNkyXqmN6k8DJ0K4WCzeJaWmOxEGaMuoTS0i4SOPim36lsix6oW3gEwu0CzNJEqB4PRK
+         ecqAPAS3liVd3zW4nhkcOuera+3VNPvEmSpO+WHHrBgVkhsohSea6+Ru27Z7wQCkqypF
+         DXBEjBI8OME5OPWXqVhYSDyU5WsP3KEt4H8G1Xhue92VnLlN2q3R8ssPScpPfkwvvCqq
+         8XHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711373412; x=1711978212;
+        h=in-reply-to:references:to:from:subject:message-id:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XD4ew/GHYtcG3hjg8Rw1ArwLrYnutWTTiSTIVtBubr0=;
+        b=A5+KgNBC2uXzYJ87tux29hu0xmu2JsFcn0X2EdJFT108svZDPUy0ghHLdedTpg0w9A
+         vxo+1WEMIIQhVGtHgNZMEtqMZRul4Jls9lqVld2KhCn2FguVhBFtE9IhVVMV1kvFcnC6
+         S7JM8jeeB9E/h2iz0j0iUXnaQP8xN++5R8588dXuAZAYMj4aM2OGAogHhKB2QLWribUY
+         5N4W9LBvkiTiudht2kYhTePGj97C6u+ENQCKhdzQbytSAL7MnUQvrk6ynzYWBeElZsrb
+         AZb7CPPgqG3KxVYIj004Yk/y0sQq4IAYVsSsdpeYTHAncW33Cqfr1SJcDMUfQT3Rk0Fy
+         ojAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXmLgNL0FqZvLs2uN4TsoTT3KC0GsYfSsU0QIdYmLmH81xSzSj84aIUF4C0tBnJ6XJsU4NQjCvVPdliFtpos8lXhz8l++42pimicPfTp8WhIplU2zuO0Ob1ul5+1zOEYWVCZEgIxCZeqQfUAoqYrJC3F3TvYiQNrs8fbJ57+enTq0vLPI=
+X-Gm-Message-State: AOJu0YzAs1zn//L7hRPiOu869pfPx6TAJfDzEyMSll/J0vAOAqyRTYCf
+	r0fZ8y69LIKBSPGFooqbipI2mCnoMfPubio4rQaQ5DczDHDZKQihnNo1snak
+X-Google-Smtp-Source: AGHT+IHMpffUHcFawHydrS+vWRoqBc9bV74qfpHVrxOZK745LGlf96m7BGzz87O4DVTYDVSUiI4XGw==
+X-Received: by 2002:a17:907:f84:b0:a48:7cbd:8b24 with SMTP id kb4-20020a1709070f8400b00a487cbd8b24mr2311144ejc.17.1711373411541;
+        Mon, 25 Mar 2024 06:30:11 -0700 (PDT)
+Received: from localhost (p200300e41f162000f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f16:2000:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id c27-20020a170906171b00b00a44936527b5sm3064853eje.99.2024.03.25.06.30.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 06:30:10 -0700 (PDT)
 Content-Type: multipart/signed;
- boundary="=_MailMate_DDAFBCDB-A1D1-423F-969B-5B792FD518AB_=";
- micalg=pgp-sha512; protocol="application/pgp-signature"
-X-ClientProxiedBy: MN2PR15CA0023.namprd15.prod.outlook.com
- (2603:10b6:208:1b4::36) To DS7PR12MB5744.namprd12.prod.outlook.com
- (2603:10b6:8:73::18)
+ boundary=55f459f7e54beefef07011c1d824c0093225f2bd4123168eb5e41c29c511;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|PH0PR12MB7983:EE_
-X-MS-Office365-Filtering-Correlation-Id: acdbe4ef-8203-4c4b-bb16-08dc4ccf6fcb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	fvcizw9KfvIvGtQf0a5QV42o2CPToD0dmFrptrL9bu2Q/EUjMCOYYXC5FOol8Own6Dm6gUKT67ox511ICSVkSEtwkQM87drKq+/Pv5H0igHAeFtJLb8DRIrsbdvJ+RPSzfVDMomyP4QZ9uBkvDkqd2MyRHbiaDYAvLj+SI+mLEOX4cmBMtKKzo58y+h55KmdA0qFpeTlnrBNZJEbCBNv2fa3BH/WvVKRh0XFQEI8njR5/UHksIW4vT5j/qr9SutfgALFRjnEJ0J7qpzJQ4NuY5p/bkqOopqmnQHPPkygmRfeOT7BUxpRtq31n1cm4MGFjlxtwKh5Ai4+I4LBpcNPqoOSNtxVNRbnmEdVG3KYPIy9GFW7d9npnKxq/HHVuVL6EkO936WPjEdZsfaGq78NAKx9XpfsCA8q4NQaUG0+H6cHGDyAGY1eesgVq+xPB8Mr2U3WqVX1/my90dvTMDLMu7kE/oc8eOlujHgQW6KQIN6oZl99OTNpqm7DrGph9IPeX+U+nWZdaHtmrvKJiHBjFB/h0aY+KyGrk+FJAPjdwYy/HCxQlgPArUMHIq5pyF+lT3Dig2PrFgSeiF6wOS1W87JQO16TcNQcdb1jcR2LJ/ewBjeq+bhDhoLkevZU+7nEA+VXn8blDRZBl1um/F5FTCLKAeiLL2cNdNfr4dxsuqI=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/npDiC7tFk9If5xSrZ4c7ObCOXHifMSQp5NYm1KC2L15haJrOpYngAvlFqA+?=
- =?us-ascii?Q?n7Enufc5zEbHuluOTR2EdYrPSB1TOnLNQwlUfKZYfvusYzb8cYrMgzRFkM6N?=
- =?us-ascii?Q?OorhcPUIK7hMdtYRWqPG7TpYtsWdtfQ8B9FMIaWzdwUtm9wMgc40p91Nzwt5?=
- =?us-ascii?Q?a4CsSqkpCoLRFOw5MwAic6NOJhhEwbjVz8gxb1uWpfeZw50/ab36mEXHIHX5?=
- =?us-ascii?Q?24M56IYP5sPlcFrXuB32t16FCXysFBFSVWPTLjI4ol1ukP7Bp2v7Qtq1MZ/P?=
- =?us-ascii?Q?TCgVhLs+mbpSfBrtMbe+ArUL1xjmqcGkOTczwOQdhgFVvw6yXT+78Wis8+Lo?=
- =?us-ascii?Q?p8yphSfqTF7VAqQZb/Sibv8YXqmtBxChnQ4wcK3lgY/ES3L8WAVP6YcNItuY?=
- =?us-ascii?Q?kii4OmNhWWFhbgYxh9igBKH/ikCpFRikMbjKD6tBO6THF/V3YiFupjH78jmt?=
- =?us-ascii?Q?TbSuoFc1hLaP33rIw0XnmO8ezjVLICSSj2L9SperKMBVtVolMMaMlzoOU8v0?=
- =?us-ascii?Q?PzETDVYnIMGBumwdLEXEDUKOSh4rYPYauWw54XtXsT565+7JXgW/hxe6hBXP?=
- =?us-ascii?Q?o0kfSZCrpJhUmsae7fGrOflJk3Oea4cPv7yKuaGM91Et0gJLmHk6pQb+Oqo1?=
- =?us-ascii?Q?l4eMxAX5I9wWiKc7GaKEHmq4AvD/xQkRRNh4wOa0zo5HqsZesz+7Dm+TPhC+?=
- =?us-ascii?Q?NSDXV4/UG7p15V23YFeDjl2c6F5iQ4iy0JKQp/LWdvtKEl0p9g5pyFC2qbFY?=
- =?us-ascii?Q?pfwGWDczQ/1cbNjYNUk5jqm0CM5VcjZLHpAW41ZsifVl6niC8SG8bjpJ65l0?=
- =?us-ascii?Q?XX2qwmZ3Nm2dCpSPLD/y+s/SCFdt2vFGeW4rHdVjzFUzIFu04HbqiU1lEqjT?=
- =?us-ascii?Q?EEy58X3BTnSeVY9+GbvBIfqePE0RvmjQciOezGwmKVw6c5wY9Ov4FbVHqB/j?=
- =?us-ascii?Q?dWt13hCV2QE04VKsP+ewTvOhYrCRELLCvS9JWp78CPfmYZUqCnCzxktHu6yf?=
- =?us-ascii?Q?93vi22MIAnYO1TMP1Qc/7ogNoYddGA3VyqCH8H2zu4lKg2JrlrKP3ulRA+Sk?=
- =?us-ascii?Q?FBRtsessJpI127tEFITncDKl5AgOsBlzQ2UbJf9WeT0/+f3lkeaS+fQVM1uF?=
- =?us-ascii?Q?8NZyleFUoLYH5LbU2QgXKb0pTB9y928Sq+En/+v1l06C3ckfgH9bBjBb1wBV?=
- =?us-ascii?Q?VjaEomhdMZp8WdrvvCYA1IxWicQeXJYo8RWlLG3dBdrZybKiRLnU3Fg19xzj?=
- =?us-ascii?Q?on1f9xDgRlkm9Fte2uhHIs0b/OUdYScARU/3fjeLROhWFDv+G4P9499nNGIY?=
- =?us-ascii?Q?Qrk3Y2b0/w68HsCX+MpiY/m84OLQ6I+DDWbh9jSMGcP9tv8j90xcI+oY1mP3?=
- =?us-ascii?Q?/XmBxeQfHO5Hz/C1mjflaynNoMs2Fc85qtO1RUOjnwWES1qNFwezgl2zEQB0?=
- =?us-ascii?Q?nPTjr/hiSuSrB+rZ1nhhDsxnX/X8n1sP4qC4jcohm+gioc3Mv6ZNnA3FVPV4?=
- =?us-ascii?Q?BVauc1E70aghrvCfJwhdkdno3bY2tLwpIU3NQL7jGVeI4Z2b8WV0xTJvmkWU?=
- =?us-ascii?Q?FV450HNH/Asap4eDKC8=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: acdbe4ef-8203-4c4b-bb16-08dc4ccf6fcb
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 13:28:19.8433
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GSc8y8CGEUSCl8SYfLmD7awEWaegucs26EqBn57NJyBu/pJIwppkchJNkrxDqs9u
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7983
+Mime-Version: 1.0
+Date: Mon, 25 Mar 2024 14:30:10 +0100
+Message-Id: <D02V8R59Y6I3.13XIQDA5L6QCK@gmail.com>
+Subject: Re: [PATCH v2 RESEND] dmaengine: tegra186: Fix residual calculation
+From: "Thierry Reding" <thierry.reding@gmail.com>
+To: "Akhil R" <akhilrajeev@nvidia.com>, <ldewangan@nvidia.com>,
+ <jonathanh@nvidia.com>, <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+ <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
+References: <20240315124411.17582-1-akhilrajeev@nvidia.com>
+In-Reply-To: <20240315124411.17582-1-akhilrajeev@nvidia.com>
 
---=_MailMate_DDAFBCDB-A1D1-423F-969B-5B792FD518AB_=
-Content-Type: text/plain
+--55f459f7e54beefef07011c1d824c0093225f2bd4123168eb5e41c29c511
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On 25 Mar 2024, at 0:44, John Hubbard wrote:
-
-> 1. Add information about the behavior of huge page splitting, with
->    respect to page/folio refcounts, and gup/pup pins.
+On Fri Mar 15, 2024 at 1:44 PM CET, Akhil R wrote:
+> The existing residual calculation returns an incorrect value when
+> bytes_xfer =3D=3D bytes_req. This scenario occurs particularly with drive=
+rs
+> like UART where DMA is scheduled for maximum number of bytes and is
+> terminated when the bytes inflow stops. At higher baud rates, it could
+> request the tx_status while there is no bytes left to transfer. This will
+> lead to incorrect residual being set. Hence return residual as '0' when
+> bytes transferred equals to the bytes requested.
 >
-> 2. Update and clarify the existing documentation, to compensate for the=
-
->    ravages of time and code change.
->
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Zi Yan <ziy@nvidia.com>
->
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> Fixes: ee17028009d4 ("dmaengine: tegra: Add tegra gpcdma driver")
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 > ---
+> v1->v2:
+> * corrected typo - s/exisiting/existing/
 >
-> Hi David, Matthew, Zi,
->
-> This is a follow up from our short email thread of a week ago [1].
->
-> Zi, I've inflicted some minor violence upon your original wording, and
-> moved it into a Prerequisites section (item 4).
->
->
-> [1] https://lore.kernel.org/all/d9c06bec-805f-4d53-9f91-6b8ad29fcb6b@re=
-dhat.com/
->
-> thanks,
-> John Hubbard
-> NVIDIA
->
->  mm/huge_memory.c | 42 +++++++++++++++++++++++++++---------------
->  1 file changed, 27 insertions(+), 15 deletions(-)
->
-LGTM. Thanks. Reviewed-by: Zi Yan <ziy@nvidia.com>
+>  drivers/dma/tegra186-gpc-dma.c | 3 +++
+>  1 file changed, 3 insertions(+)
 
---
-Best Regards,
-Yan, Zi
+Acked-by: Thierry Reding <treding@nvidia.com>
 
---=_MailMate_DDAFBCDB-A1D1-423F-969B-5B792FD518AB_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename=signature.asc
-Content-Type: application/pgp-signature; name=signature.asc
+--55f459f7e54beefef07011c1d824c0093225f2bd4123168eb5e41c29c511
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmYBe/IPHHppeUBudmlk
-aWEuY29tAAoJEOJ/noEUByhUA9AQAIVyi8yvBYVeUpP/o7g+C3moGAD8TrXR/Qyn
-s6LDdahfGD+03ev9hUh6VbyO8xSMF339WZq6+tcEoBAvLt0NFH5F43W3qgZ35kr2
-lw6CH8nYljHlk/YYTZ6Iq/sv2P2k4kYF9raIYD1uL817MHXDCIPEEzXNINzZPWtE
-G397IrfUJKyvDX8Vqi9DQhO62q5Btj5lzfnM1km1htS8kU408+D9OriSVR7L9IfK
-MJNHJUoK3HtoaeS0DCGFUaBzKYHmM+1TLFIEe7ZJPmLtGtdWEerlA20keL4RiBY9
-yHJ/MXEqgUvJvhci/lxiuD5Vhn7xP5XRVCj4jh8updQkocp7bM2XcAzhIhl7wDtc
-jWU6esVHyefrty0yE8sKf5ov+EvvwuyEB4wXaQ40c2LH5J+RtIlc0ovNAmZOOR2+
-KA4vVIxkFZlifoEB7VMy7ZMxqNsZjflk37Rf1tVtBvMozjZT1HISI7pWC202Lv/9
-5KxUy4bZQexhsbea7ZL95Lzl/0CyvBrYLQk7KdTH0CY2QIBtiBeYMzsLb9/O7Woz
-THF2LyMzT6F3TzcsxooUZuDp/ZiugHxOMQ4mCVT27KyjB1fUhnSKa9wOK084BuK7
-A2ciKx6QpQynhVRcWlQdY6waJU1uV5ZYzcpiPS5ynHlx5uHfMz6DNJy41NzrrxBP
-qZNjDLnX
-=WX2j
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmYBfGIACgkQ3SOs138+
+s6FBeg//RL9qtORpLwtTvaMi2BCM4joMkUMECQ4qDz4nES1pm+wqVl0w+l7VpTJf
+j7DrpS1DkUBYSA4cEnkqzrdbrWwT1iSOZNiIrVVjrg7YYdIifacKHDWodCK712Ri
+xb3mENbUy6Ljj4rOAIe8D1t7IF1ufUBFAdikQLMYaPOGy2Oqe58VslwwTgneFMp1
+ca/v2altcEQ/POZJypoJC+zQoJPMMoNezg1RRt6NAiaD51862o66doKHBmHzBGFH
+BS3kcs5jf1tbn3R7ZSK0qmyFP0aiWOVHivRFABR6yGaI5gz0AP6QsVQYLCYrfJEo
+3e80vIn4VQEXdYNPT6rmJF7PFqnjPbse0bHJYY/ltlwVYCgJX40JX0J2hgRVGKxN
+XctliKSlQ23HR3aZpaATYwIUHwyKoRSjowzeVF0ZuoDX+ZkWkuml7cqChvbwh5Pm
+tWqGw4E9oKY+n9sXEm1d3J4dVEhby/vY67nCHDOD9Lj0xRy/C9di6t8AiHayZiY8
+WboA1JCbJ5GcNn1eCoI6YJ35Hn3J5Il6d3O+QfTOqzRSckVNLgfuCATnaiRwdAwe
+CY6NwH2+T1eNYIZ2KsIKS3G9Ilq8XH1/yMdhV0+dagm93/WHvKvHpy2V1Iedk2XH
+tX9HjGDLEnqs5Oc1iNdRJoVIVorCu/3yAICONU2coMSNWgaG7pw=
+=Heur
 -----END PGP SIGNATURE-----
 
---=_MailMate_DDAFBCDB-A1D1-423F-969B-5B792FD518AB_=--
+--55f459f7e54beefef07011c1d824c0093225f2bd4123168eb5e41c29c511--
