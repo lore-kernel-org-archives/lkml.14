@@ -1,94 +1,147 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA237158879;
-	Mon, 25 Mar 2024 09:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A072D1581ED
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711358761; cv=none; b=rMMRjEk5cHDRx5yXEL8ZdOCr0n4tivRFjlYGGAaWWiDaRiuAtMGlNvlATYYsq3XvSKgG2Amj+NK6OWw3oo8bFJWmdkFt5CzuZTcs7gq/gonOsy62KoFUcHrYRHXXK8PyWkkESs+tyy0atGDT3SaGrIJL+iw4uO4UWJxdiEI3ggI=
+	t=1711358568; cv=none; b=Oo+EFK0wlwU9PVfnSDyLti0sokILRMrGYikYYbutWE4x/HExKP6atTIQa3R3d7AtZQm6J7wa41TmF6xoxOjRMB/rdSWfh507+5+tXUBFXuzUSiFm9Uwkx609JgkvBUKQblQFNik92noo4IB14MVvNVowFaacKAJLyhp7ObstMDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711358761; c=relaxed/simple;
-	bh=GKTtPowYB770kpGGywqSA4TpQAlQog2LM2yqoXhx+HM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dBaetX0+nRapp+Ht9vs3St6EMHVmVYlZBCb89PMKKFbcAuWZgw7fKTCRKxCF7TCdb8NuCRfx8dyIQ+zrx2Ghl1WO3DSbXxl0jQXtYdOnl4dRbILAdG7wxXJg1hHkMLY7nd+v4TITh/hy48Eyi/Ij43Grjjx4RaPOh0m98dQvBz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XbJf+UDs; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711358568; c=relaxed/simple;
+	bh=NUq6l92k3z6+MavqfTyLMHgevvGnDis+wYiPtoA46pA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e2Fk9QoBHSzdKPI6E3pPZTdtBW1wpDsBnzDuEXirSf34j89MY0KXRfIUXRGopQCGoi/eciHbe43nIcUWgkxc0v9hCNTbpSguhBUoUriq3fS7K9Tzkz99d0oFGVRY2Aw+SGGvUAftoqkDblYCkrfWZvMTq1uLDspjjgXoXQcXQdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iUaRKlNS; arc=none smtp.client-ip=91.218.175.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbJf+UDs"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso2793183a12.3;
-        Mon, 25 Mar 2024 02:25:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711358759; x=1711963559; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GKTtPowYB770kpGGywqSA4TpQAlQog2LM2yqoXhx+HM=;
-        b=XbJf+UDs4KEGPQ//BECuqJcpIUp/kAYT2qAo2KQK/x4H1mIuDjQ1qWojBP0Jzmvddm
-         PfpnDD8X7D/G0uayqpd/+uyO/dTSrTWCThOz4fnROHs+3xOHKTNlggKxA0PRSKDK3TUJ
-         iPJugbLNeNi5VIeGgTyMjjkwA3CXhrcjsGIWDDqF3HMrT4hH0GvewX0dX4BA0SyCXlhH
-         kspGQtAUIkXgeEDCr+2M4uJTiAxVs0WTJ6pi12rV+//rC0xAg+qrV5juEHesfju0uaKH
-         v01/hzQo01B+fcW4WIV2jxEcnvz6yjZfmqPN3sdFjaNx3VfjpIoLIyYpeojxbpjNDB8O
-         DqYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711358759; x=1711963559;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GKTtPowYB770kpGGywqSA4TpQAlQog2LM2yqoXhx+HM=;
-        b=Pl9eXDzdtuRSX8HkWlmHaAmdrJWXonoQFJagMQcGnUXxw4RSZ+ofTlwwaXYxFIzAfN
-         JI3GDOQRDLN2ySHRTaSkZc6WrCXkXGlgiiwH29cDOqYpJEudN06QDjlexQsnsLs7yYw6
-         0VJEBLFn+pNmS4QmeXeEAGRPwolrZAmEfc40sYi9URKuECu3u48CuhkvT/AiCmCzwyLB
-         wJ69AmgXNPIFXaC6MbCT4ipTM/0pjeOlSv2GHr3C4fyALI9kexupeoX80ZZfRdocuq/R
-         754ohff45GJI8uGq7NyH79hNfvhJthAEUwWmMFMHwxDDPQZeFOtEKgjBSeO3fwadbkIT
-         Cheg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqRu4EUjAQgJ0DvtBwxDBhBPIsBby+gXVPHVQlTDucwxaAolQgS3/OGqHROvnt+kOOSnleyO3jnND2+dT77oRHt8FhtNCKjBOdK0Fj8kw2l9MdtLtWIaNq/3tcWsLICzvn4khD8SgeR4i9C4yIgRfpXsVeaS1DVQ9c1NojmzX36g==
-X-Gm-Message-State: AOJu0Yw7XHZXKM5xkgBgnX89ignaA+gVg9V7r16NOpbbWgsyoZw/ugig
-	O4MNyKp5ry2AGlv0HHtu2QNKyORDFhjjKlacmrnz9UBskTVuJ2m6tWdB0zt9
-X-Google-Smtp-Source: AGHT+IFTzxSRhBJUEYas4N5Fxt9ePU+dtAkFsdTMD85txraTNS0VOVkE+acPU3zRPtGSh1GTsBIjaA==
-X-Received: by 2002:a05:6a20:6a0e:b0:1a3:c3e0:518c with SMTP id p14-20020a056a206a0e00b001a3c3e0518cmr3928099pzk.52.1711358759119;
-        Mon, 25 Mar 2024 02:25:59 -0700 (PDT)
-Received: from rigel (110-175-159-48.tpgi.com.au. [110.175.159.48])
-        by smtp.gmail.com with ESMTPSA id qa14-20020a17090b4fce00b002a04f430937sm3706044pjb.43.2024.03.25.02.25.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 02:25:58 -0700 (PDT)
-Date: Mon, 25 Mar 2024 17:25:52 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
-	stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3] gpio: cdev: sanitize the label before requesting the
- interrupt
-Message-ID: <20240325092552.GA75236@rigel>
-References: <20240325090242.14281-1-brgl@bgdev.pl>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iUaRKlNS"
+Message-ID: <d556ec84-da6a-4486-a68e-5982baf46879@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711358563;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eOlZm0+5XlJcPzDimS2ld8aXFCHL2fRhCLxa+S5e368=;
+	b=iUaRKlNSkeZqVpQBNnWAM8JvB4mvcqL9WsD9sTLOx62VlXRPwbRfz0wOYGYQyTqbsBg6jG
+	FhFVtjvuIJFv/Q3a2J6GxDPC79M19bffV9YEN8L54jK8O5kXK6O55bKVjmnHxZPvt8zzb3
+	KYbBB6abu5qZhUZueEtLBSOgsxnzI3c=
+Date: Mon, 25 Mar 2024 17:22:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325090242.14281-1-brgl@bgdev.pl>
+Subject: Re: [PATCH] mm: zswap: fix data loss on SWP_SYNCHRONOUS_IO devices
+Content-Language: en-US
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Barry Song <21cnbao@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Zhongkun He <hezhongkun.hzk@bytedance.com>,
+ Chengming Zhou <zhouchengming@bytedance.com>, Chris Li <chrisl@kernel.org>,
+ Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Kairui Song <kasong@tencent.com>
+References: <20240324210447.956973-1-hannes@cmpxchg.org>
+ <CAJD7tkaWQAV=X1pzYG=VkWe7Ue9ZFbjt9uQ5m1NJujtLspWJTA@mail.gmail.com>
+ <CAGsJ_4yeBmNsMGXEWwC+1Hs5zJUP+becq4wG+6CpU7V1=EOvhg@mail.gmail.com>
+ <CAJD7tka5K69q20bxTsBk38JC7mdPr3UsxXpsnggDO_iQA=qxug@mail.gmail.com>
+ <1e7ce417-b9dd-4d62-9f54-0adf1ccdae35@linux.dev>
+ <CAJD7tkYc3oFho5eEkS1zmr_+CC-Ag1HucUTyAy2RJbEb4SqRoQ@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <CAJD7tkYc3oFho5eEkS1zmr_+CC-Ag1HucUTyAy2RJbEb4SqRoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 25, 2024 at 10:02:42AM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> When an interrupt is requested, a procfs directory is created under
-> "/proc/irq/<irqnum>/<label>" where <label> is the string passed to one of
-> the request_irq() variants.
->
-> What follows is that the string must not contain the "/" character or
-> the procfs mkdir operation will fail. We don't have such constraints for
-> GPIO consumer labels which are used verbatim as interrupt labels for
-> GPIO irqs. We must therefore sanitize the consumer string before
-> requesting the interrupt.
->
-> Let's replace all "/" with ":".
->
+On 2024/3/25 16:38, Yosry Ahmed wrote:
+> On Mon, Mar 25, 2024 at 12:33 AM Chengming Zhou
+> <chengming.zhou@linux.dev> wrote:
+>>
+>> On 2024/3/25 15:06, Yosry Ahmed wrote:
+>>> On Sun, Mar 24, 2024 at 9:54 PM Barry Song <21cnbao@gmail.com> wrote:
+>>>>
+>>>> On Mon, Mar 25, 2024 at 10:23 AM Yosry Ahmed <yosryahmed@google.com> wrote:
+>>>>>
+>>>>> On Sun, Mar 24, 2024 at 2:04 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>>>>>>
+>>>>>> Zhongkun He reports data corruption when combining zswap with zram.
+>>>>>>
+>>>>>> The issue is the exclusive loads we're doing in zswap. They assume
+>>>>>> that all reads are going into the swapcache, which can assume
+>>>>>> authoritative ownership of the data and so the zswap copy can go.
+>>>>>>
+>>>>>> However, zram files are marked SWP_SYNCHRONOUS_IO, and faults will try
+>>>>>> to bypass the swapcache. This results in an optimistic read of the
+>>>>>> swap data into a page that will be dismissed if the fault fails due to
+>>>>>> races. In this case, zswap mustn't drop its authoritative copy.
+>>>>>>
+>>>>>> Link: https://lore.kernel.org/all/CACSyD1N+dUvsu8=zV9P691B9bVq33erwOXNTmEaUbi9DrDeJzw@mail.gmail.com/
+>>>>>> Reported-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+>>>>>> Fixes: b9c91c43412f ("mm: zswap: support exclusive loads")
+>>>>>> Cc: stable@vger.kernel.org      [6.5+]
+>>>>>> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+>>>>>> Tested-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+>>>>
+>>>> Acked-by: Barry Song <baohua@kernel.org>
+>>>>
+>>>>>
+>>>>> Do we also want to mention somewhere (commit log or comment) that
+>>>>> keeping the entry in the tree is fine because we are still protected
+>>>>> from concurrent loads/invalidations/writeback by swapcache_prepare()
+>>>>> setting SWAP_HAS_CACHE or so?
+>>>>
+>>>> It seems that Kairui's patch comprehensively addresses the issue at hand.
+>>>> Johannes's solution, on the other hand, appears to align zswap behavior
+>>>> more closely with that of a traditional swap device, only releasing an entry
+>>>> when the corresponding swap slot is freed, particularly in the sync-io case.
+>>>
+>>> It actually worked out quite well that Kairui's fix landed shortly
+>>> before this bug was reported, as this fix wouldn't have been possible
+>>> without it as far as I can tell.
+>>>
+>>>>
+>>>> Johannes' patch has inspired me to consider whether zRAM could achieve
+>>>> a comparable outcome by immediately releasing objects in swap cache
+>>>> scenarios.  When I have the opportunity, I plan to experiment with zRAM.
+>>>
+>>> That would be interesting. I am curious if it would be as
+>>> straightforward in zram to just mark the folio as dirty in this case
+>>> like zswap does, given its implementation as a block device.
+>>>
+>>
+>> This makes me wonder who is responsible for marking folio dirty in this swapcache
+>> bypass case? Should we call folio_mark_dirty() after the swap_read_folio()?
+> 
+> In shrink_folio_list(), we try to add anonymous folios to the
+> swapcache if they are not there before checking if they are dirty.
+> add_to_swap() calls folio_mark_dirty(), so this should take care of
 
-Looks good to me.
+Right, thanks for your clarification, so should be no problem here.
+Although it was a fix just for MADV_FREE case.
 
-Reviewed-by: Kent Gibson <warthog618@gmail.com>
+> it. There is an interesting comment there though. It says that PTE
+> should be dirty, so unmapping the folio should have already marked it
+> as dirty by the time we are adding it to the swapcache, except for the
+> MADV_FREE case.
 
+It seems to say the folio will be dirtied when unmap later, supposing the
+PTE is dirty.
+
+> 
+> However, I think we actually unmap the folio after we add it to the
+> swapcache in shrink_folio_list(). Also, I don't immediately see why
+> the PTE would be dirty. In do_swap_page(), making the PTE dirty seems
+
+If all anon pages on LRU list are faulted by write, it should be true.
+We could just use the zero page if faulted by read, right?
+
+> to be conditional on the fault being a write fault, but I didn't look
+> thoroughly, maybe I missed it. It is also possible that the comment is
+> just outdated.
+
+Yeah, dirty is only marked on write fault.
+
+Thanks.
