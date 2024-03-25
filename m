@@ -1,115 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from silver.cherry.relay.mailchannels.net (silver.cherry.relay.mailchannels.net [23.83.223.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AB41292EA;
-	Mon, 25 Mar 2024 22:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711405805; cv=none; b=a1xp7dvjsN7Eh+5wi/XYgB9TU7WcgKKG9xk4Y4xbsR+vEdQ4jv49uye4qr6jKMUI32vQA6kPN3tkvtS1TLVZnjQlPI/MSB8diWkXXpIGK0A7c8oK2gd4Yjs9lmN/nW+GPiqNk7RW0b1EwfMBH2kcy8pdXNyhYoOuAbsx/ZpPhXs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711405805; c=relaxed/simple;
-	bh=4AJOQf5vgvqX5cAii8ibKLW+VtEtnKWwBG0U8INKPUk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MJKg21rWLotSTwDJsfGVTDMkJr3543yJYzFqr0h7YTifWsWi2eQOuOwOHjhyFNKhEy2YbTeeebhkGPuOrgFr9pcW2cX+qB6ZDkvZT5JMdY0kNpoZ9V5alJw9up3b5PfkhDNb5yDBGzzuKCwAeCOsWEWC0Z+AGYZm2zritpKSgD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hGczMVKU; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDC6763EE;
+	Mon, 25 Mar 2024 22:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.166
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711405918; cv=pass; b=pbP//WzOn/B48LWJ6VST3zCyiY375/FN0jSyEoqdBnfKJGHnPDT1nHaOaz+er6wtHwtYGZWUPh3Zhuqpzl66eJzp606bwbjQoxdnOv4T8SQ/Ha/wL8L/ehabA86KMKCNnRyrP/QEk7NVny93PLTNNui9uZ7YhuLqIeXq7mvUyV8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711405918; c=relaxed/simple;
+	bh=2klrCOGU3u+3RDtQus/+ny8XUXjCLoWlje16CaT227M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=avjQnRh238F7ngFnCyDaGw/WDSPCZxTuQvjkGRrw9++cjEnWJ15lw4RampBWCm+pQwdUnmjXqhz92Dbwp4in2etotCtXL+gVpzOiv44QSHyWGkG1Mga6zNcaHDmNMc/JSf+4RIWqrIK6NediDGkJZPclnpQKJ08qgdyYvhHrXso=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=XI5ZRsC1; arc=pass smtp.client-ip=23.83.223.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hGczMVKU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA65DC43394;
-	Mon, 25 Mar 2024 22:30:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711405805;
-	bh=4AJOQf5vgvqX5cAii8ibKLW+VtEtnKWwBG0U8INKPUk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hGczMVKUkELSV29AyRnwTX8hePyzeb2qCzy6G4mjg61tAQG1npyzMJ83lMum8liUr
-	 +S5FJejZQADYnJOttLOrD59NH6dqgcRIy9xr1dd9vqusmN/6NXPJMgcj96ECn+LxMr
-	 XukBPnXyDvoUbfsjRVKMPa6M+8HZK+tA1DvWCEVxF5pJx5+hCWl9kBU+O2qpXoTdOf
-	 8nF+Z+h2sDJXUj8J8iloxoW9iMkHgXVvatM+iujOAD8Hktn0ay8QIuz2YeMWcvKrXp
-	 q3x+UNRas8WznH3e0LmXZNwbQtsynz7GKRZISSv3AazXVPEGSKCTRCu0uNvL5A1fVk
-	 sW4I0FoCUhZEQ==
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Konstantin Khlebnikov <khlebnikov@openvz.org>,
-	Zheng Yan <zheng.z.yan@intel.com>,
-	Sasha Neftin <sasha.neftin@intel.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 3/3] igc: Remove redundant runtime resume for ethtool ops
-Date: Mon, 25 Mar 2024 17:29:51 -0500
-Message-Id: <20240325222951.1460656-4-helgaas@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240325222951.1460656-1-helgaas@kernel.org>
-References: <20240325222951.1460656-1-helgaas@kernel.org>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="XI5ZRsC1"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id E75C76C3523;
+	Mon, 25 Mar 2024 22:26:26 +0000 (UTC)
+Received: from pdx1-sub0-mail-a262.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 3C2C16C38BD;
+	Mon, 25 Mar 2024 22:26:26 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1711405586; a=rsa-sha256;
+	cv=none;
+	b=YQA9zDOSngd6sHY5S60GgMJ7Ym131iPm4G1ZymSNXBY0JJhQ6n35cKp8hCRza4XYkRhbsJ
+	eVOTjYoR+TYMMoIaY9SXQ4cAS1x6df+BTpIslcVc1xU2yYKoDcOwh7mcgGWUavb4VW2/zC
+	gTDFlWNbt6GJCwkSyl20RGICexQQ4qAgn47Rj9anezIIEcRIv/U+eVasabpW5GWnWiYY19
+	7D70NPhDgiiOC277ztnx81lkgnWUYDVBlSaVKoOGtS8W9LwNE484/w7FFdsrH4ZRvBzCRn
+	Hpt4vwjdEY0ZrAOwpKdR1QPADM5qHyNUHoAoBMKZPC0TAGQfSTnGA0U1JgX79g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1711405586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=5syhqyGKayQD79m3bj55ZP0GtVHOmxoOvlT2cxDiOlA=;
+	b=2UmD3JWvU4wahOIOdhkx0DmXt8FK+NO/h7XMMb+R2z+PXNtk4/7Zx4SAfmrxv/3PKzBRQO
+	8ql9HEg0aJr5vQN6N71jxCYkIo01z1IpFyD3X+ATG3cUGxCdxUOPzVPSID64YVfLt7nezn
+	E+86ErgPFuCNbjPc6DXCPR05syWVOKxsoBGVAdKtLs1nrD5zWpBb0lKs5jIQ2AJcZ8fYge
+	HK/ZAHAEs/xnyhZt1GxZ8lkhn+e+Zwq8RZWdowK86lgD94NaJ0So43WtHYw2PhBQIrWThH
+	ToOK8OChrEygKyscGDw7WB8NdwCUoVTV20JlMGaCaDYDUhPP3MEwen36Qbge7w==
+ARC-Authentication-Results: i=1;
+	rspamd-6c65898bb7-xrm8z;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Eight-Vacuous: 26d43d7f28717ef5_1711405586586_1544570442
+X-MC-Loop-Signature: 1711405586585:3795176681
+X-MC-Ingress-Time: 1711405586585
+Received: from pdx1-sub0-mail-a262.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.203.156 (trex/6.9.2);
+	Mon, 25 Mar 2024 22:26:26 +0000
+Received: from offworld (unknown [108.175.208.151])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a262.dreamhost.com (Postfix) with ESMTPSA id 4V3SFs15d6zN1;
+	Mon, 25 Mar 2024 15:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1711405586;
+	bh=5syhqyGKayQD79m3bj55ZP0GtVHOmxoOvlT2cxDiOlA=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=XI5ZRsC1S8FPlpQm7y4WKFVbzXHiVRN17R7zjz9dewK2tJ26c8Yosq+jRGgMIm/lk
+	 9IMZRIomOK2OPFiYdfkmb8sgL9uDRScWcvxvs5C1AbcJ2P1zt2AaVW6TirhgFtAbwI
+	 NnxGmqWISIZuZDM3lRZHcRoSdedW1vemdaGtG5B8W+KQUNAiTrC7ObgDiPKo4G0QiU
+	 vNctyiCS4vd7E9vmc2xEdtueyOtqgUcuIlLt0h5Z5+b1aTafzhjwMwP3JkKk6FkBs8
+	 q9X85d+1VgEHggYk7EIZ0Ah5oN1LtbtYCKgV85yfqlAz/WLBhj2Z8Rz7aa3xw5epNQ
+	 APJNIwMquGQWQ==
+Date: Mon, 25 Mar 2024 15:26:21 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Navneet Singh <navneet.singh@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/26] cxl/pci: Delay event buffer allocation
+Message-ID: <7zwoy5okwoow3tnjjs5tfpsabbbflbagqjm7z2la7ekguxlhvk@gxm5vmaiqovp>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-11-b7b00d623625@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240324-dcd-type2-upstream-v1-11-b7b00d623625@intel.com>
+User-Agent: NeoMutt/20231221
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Sun, 24 Mar 2024, Ira Weiny wrote:
 
-8c5ad0dae93c ("igc: Add ethtool support") added ethtool_ops.begin() and
-.complete(), which used pm_runtime_get_sync() to resume suspended devices
-before any ethtool_ops callback and allow suspend after it completed.
+>The event buffer does not need to be allocated if something has failed
+>in setting up event irq's.
+>
+>In prep for adjusting event configuration for DCD events move the buffer
+>allocation to the end of the event configuration.
 
-Subsequently, f32a21376573 ("ethtool: runtime-resume netdev parent before
-ethtool ioctl ops") added pm_runtime_get_sync() in the dev_ethtool() path,
-so the device is resumed before any ethtool_ops callback even if the driver
-didn't supply a .begin() callback.
+The above could be removed and just picked up independet of dcd.
 
-Remove the .begin() and .complete() callbacks, which are now redundant
-because dev_ethtool() already resumes the device.
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/net/ethernet/intel/igc/igc_ethtool.c | 17 -----------------
- 1 file changed, 17 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/igc/igc_ethtool.c b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-index 1a64f1ca6ca8..f2c4f1966bb0 100644
---- a/drivers/net/ethernet/intel/igc/igc_ethtool.c
-+++ b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-@@ -1711,21 +1711,6 @@ static int igc_ethtool_set_eee(struct net_device *netdev,
- 	return 0;
- }
- 
--static int igc_ethtool_begin(struct net_device *netdev)
--{
--	struct igc_adapter *adapter = netdev_priv(netdev);
--
--	pm_runtime_get_sync(&adapter->pdev->dev);
--	return 0;
--}
--
--static void igc_ethtool_complete(struct net_device *netdev)
--{
--	struct igc_adapter *adapter = netdev_priv(netdev);
--
--	pm_runtime_put(&adapter->pdev->dev);
--}
--
- static int igc_ethtool_get_link_ksettings(struct net_device *netdev,
- 					  struct ethtool_link_ksettings *cmd)
- {
-@@ -2025,8 +2010,6 @@ static const struct ethtool_ops igc_ethtool_ops = {
- 	.set_priv_flags		= igc_ethtool_set_priv_flags,
- 	.get_eee		= igc_ethtool_get_eee,
- 	.set_eee		= igc_ethtool_set_eee,
--	.begin			= igc_ethtool_begin,
--	.complete		= igc_ethtool_complete,
- 	.get_link_ksettings	= igc_ethtool_get_link_ksettings,
- 	.set_link_ksettings	= igc_ethtool_set_link_ksettings,
- 	.self_test		= igc_ethtool_diag_test,
--- 
-2.34.1
-
+>
+>Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>---
+> drivers/cxl/pci.c | 8 ++++----
+> 1 file changed, 4 insertions(+), 4 deletions(-)
+>
+>diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>index cedd9b05f129..ccaf4ad26a4f 100644
+>--- a/drivers/cxl/pci.c
+>+++ b/drivers/cxl/pci.c
+>@@ -756,10 +756,6 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+>		return 0;
+>	}
+>
+>-	rc = cxl_mem_alloc_event_buf(mds);
+>-	if (rc)
+>-		return rc;
+>-
+>	rc = cxl_event_get_int_policy(mds, &policy);
+>	if (rc)
+>		return rc;
+>@@ -777,6 +773,10 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+>	if (rc)
+>		return rc;
+>
+>+	rc = cxl_mem_alloc_event_buf(mds);
+>+	if (rc)
+>+		return rc;
+>+
+>	rc = cxl_event_irqsetup(mds, &policy);
+>	if (rc)
+>		return rc;
+>
+>--
+>2.44.0
+>
