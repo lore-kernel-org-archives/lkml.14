@@ -1,218 +1,156 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84114185221
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFB24CE1B
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711342910; cv=none; b=FgIkKhNDq8pIZg03K8NbRia6pbAY4xTOMHPjON1l8PDjk7LPO5/Swi8TPCMtvjUbphcdVLUJrKGr42OYrOueP85xRu7mDDBoTgrfsjMiSHsRs/tdvtp7MAQsrRXxm065CZ8d2mix7piLVd5F7MA8rRz1GYu0WgJ/zAaFyp8QJ+c=
+	t=1711344282; cv=none; b=ROpR+W9hdQus5055qeFXWydIM3OqbDy8kY3yzw7g6v3P+wmNARytoG1oqGZQHwzrx8XpFC0Al+B3TF28HB44m04YuFek931kO1hsnKjbcKilRUUAChq3Tn9Dx1buRIDXDIxJJGWqOBYQCBtAQGcm2l+3Dvh9VGwOzErcdcHfIj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711342910; c=relaxed/simple;
-	bh=7hT4rajj0x8vmFtp0XR/XBXh2yzvt8Zqa1DIIBtVNOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mglkRyCOBJZFZcmzjPHL1P+j1NDVA7IRkGul3FjKyGckan2MfttUUhml27AH113FCNHZ8EDUILJ3hna55t5Cc228NGMSBMDZAyUHan+31JXrl+oq4ABeXqNB5XQS6GTGV8n0SoybgHQ/FtSsJiY/M/m3sPMxOlFoLoLZrwDuzoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SJUnY1PO; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1711344282; c=relaxed/simple;
+	bh=+I8XMdQ4NHe9kmLh9aD9Qoh7nAryb/Cqbe0MGF3wVrI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pfcz9w3b3WJOVVNGuzyQjnq02DYZNWfSVHpj6mL8Ef57hp/fYYwbycaXOy7EH6At6CQZcs8Ux1mf7qR2ed89EScC+tFSSE2t01bC8fWEqUBOZuiig9cfJ2HBUmhe6C/Va9j71ITdECLjwLdn0PA6OqXSRKFOq3m6oXZ2I+CJrzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=exjU2ECM; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SJUnY1PO"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42P3cDQR000437;
-	Mon, 25 Mar 2024 05:00:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=N2k9wSgo9UX01/19bcUNfkgoAa0/3oF73J+1H/ePw/I=;
- b=SJUnY1POALicvQsMTys6mELXiORyOS09CCF6slIYipE2NVttlwxLCFsmxgfkzMqCgAlO
- 2f+HeWG5o/yaUFGqHlgn/2yj8BlgQN/ZbGLbWmmorVsqhrrzpoI4YOQpHsq//Gd0B0fp
- 20Ak9RZQkRR9FiDwSy0jkRo/kgS8IL5cEmASM4pEb/cGEUDAsC2lZSwGUyJ1wNY0ARb1
- hIPgoSB96BFMgdoZgDWVS2JDB1SnMFmlUBQpSATJCH+iWODGipFVKVncKTKq4I5kPEZ5
- 93OdNQ8p0+UTAJYeRhEbO/uQVzhCgqQ05AbWEHYx3xH9t7UoEbaxEkW/hevwt70Q2xqM Yg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2h6t1fak-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:00:45 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42P50iY3023005;
-	Mon, 25 Mar 2024 05:00:44 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2h6t1faj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:00:44 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42P4JnVh016410;
-	Mon, 25 Mar 2024 05:00:43 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x29dtq6dw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:00:43 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42P50ebo24707822
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 25 Mar 2024 05:00:42 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 898B958067;
-	Mon, 25 Mar 2024 05:00:40 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EDF4E58077;
-	Mon, 25 Mar 2024 05:00:33 +0000 (GMT)
-Received: from [9.109.245.191] (unknown [9.109.245.191])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 25 Mar 2024 05:00:33 +0000 (GMT)
-Message-ID: <29936a4b-95c3-4592-8eae-7d4741e4a51f@linux.ibm.com>
-Date: Mon, 25 Mar 2024 10:30:32 +0530
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="exjU2ECM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=WkG50pNPcUCBXYHBUiw48oCBdPvRGtbIEGmeVzsnW+I=; b=exjU2ECMqvCwhEIpfCbFQl7mqU
+	QIYI1V5XtOEjgqkFKArMY61SBe5KyJNsqWRosKKt8h3y+ZxH9p3gb/WxyFakoslFQ/spqtKGYWOnw
+	7nYh1QiCHphBgQ258s09BI6ZqpvSTJO81Q1BW7SL4BYYOC3reEfBLvgoex7pA9iNYIyFsTTbpf4HG
+	3anWsTE6uD+EHH1OYIcVKeDp15zTOHrxhRJmb8wTHl1ixdNi4UE3Tn784vxSkvwFxoAqufeRpcDbg
+	5mpg1UGlIojow7a3CKm0HonG3HfBnG2NZq8TwYQL3icKtEl08w0t5Jqhbhd2RO3Zf5lt6xw9HA15P
+	EYTQAujw==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rocp0-0000000FkWy-0660;
+	Mon, 25 Mar 2024 05:24:34 +0000
+Date: Mon, 25 Mar 2024 05:24:33 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+	Vishal Moola <vishal.moola@gmail.com>,
+	Peter Collingbourne <pcc@google.com>
+Subject: Re: [RFC] mm: page-flags.h: remove the bias against tail pages
+Message-ID: <ZgEKkd9nc9rdfzCK@casper.infradead.org>
+References: <20240325045519.222458-1-jhubbard@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] mm/numa_balancing:Allow migrate on protnone
- reference with MPOL_PREFERRED_MANY policy
-Content-Language: en-US
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Aneesh Kumar <aneesh.kumar@kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Feng Tang <feng.tang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Rik van Riel <riel@surriel.com>, Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hugh Dickins <hughd@google.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Suren Baghdasaryan <surenb@google.com>
-References: <cover.1711002865.git.donettom@linux.ibm.com>
- <b1599085e1d2f3e48dc71c7991283b8aaa0fe00c.1711002865.git.donettom@linux.ibm.com>
- <87h6gyr7jf.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <e65b4e89-e8a9-475d-abc7-c63db8af435e@linux.ibm.com>
- <875xxbqb51.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Donet Tom <donettom@linux.ibm.com>
-In-Reply-To: <875xxbqb51.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: E2dXiDVVREiPB9wvERfQdEXSxnh3LQXD
-X-Proofpoint-ORIG-GUID: oMUQTqu-LlmdFFm-_qnRf5hDuc3QCurp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_02,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 malwarescore=0 adultscore=0 suspectscore=0
- clxscore=1015 phishscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403250026
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325045519.222458-1-jhubbard@nvidia.com>
 
+On Sun, Mar 24, 2024 at 09:55:19PM -0700, John Hubbard wrote:
+> commit 1d798ca3f1643 ("mm: make compound_head() robust") added
+> page->compound_head and the associated "unlikely" check for a tail page
+> in compound_head():
+> 
+> 	if (unlikely(head & 1))
+> 		return (struct page *) (head - 1);
+> 	return page;
+> 
+> That worked nicely in 2015. However, in the 8.5 years since then, things
+> have changed: folios and huge pages are heavily used, with more uses
+> coming. See for example the various THP enhancements being proposed. And
+> hugetlbfs remains alive and well. And large folios are being plumbed
+> into everything.
+> 
+> With that in mind, remove the "unlikely" attribute when checking for a
+> tail page in compound_head(), and let normal CPU branch prediction do
+> what it may.
 
-On 3/25/24 08:18, Huang, Ying wrote:
-> Donet Tom <donettom@linux.ibm.com> writes:
->
->> On 3/22/24 14:02, Huang, Ying wrote:
->>> Donet Tom <donettom@linux.ibm.com> writes:
->>>
->>>> commit bda420b98505 ("numa balancing: migrate on fault among multiple bound
->>>> nodes") added support for migrate on protnone reference with MPOL_BIND
->>>> memory policy. This allowed numa fault migration when the executing node
->>>> is part of the policy mask for MPOL_BIND. This patch extends migration
->>>> support to MPOL_PREFERRED_MANY policy.
->>>>
->>>> Currently, we cannot specify MPOL_PREFERRED_MANY with the mempolicy flag
->>>> MPOL_F_NUMA_BALANCING. This causes issues when we want to use
->>>> NUMA_BALANCING_MEMORY_TIERING. To effectively use the slow memory tier,
->>>> the kernel should not allocate pages from the slower memory tier via
->>>> allocation control zonelist fallback. Instead, we should move cold pages
->>>> from the faster memory node via memory demotion. For a page allocation,
->>>> kswapd is only woken up after we try to allocate pages from all nodes in
->>>> the allocation zone list. This implies that, without using memory
->>>> policies, we will end up allocating hot pages in the slower memory tier.
->>>>
->>>> MPOL_PREFERRED_MANY was added by commit b27abaccf8e8 ("mm/mempolicy: add
->>>> MPOL_PREFERRED_MANY for multiple preferred nodes") to allow better
->>>> allocation control when we have memory tiers in the system. With
->>>> MPOL_PREFERRED_MANY, the user can use a policy node mask consisting only
->>>> of faster memory nodes. When we fail to allocate pages from the faster
->>>> memory node, kswapd would be woken up, allowing demotion of cold pages
->>>> to slower memory nodes.
->>>>
->>>> With the current kernel, such usage of memory policies implies we can't
->>>> do page promotion from a slower memory tier to a faster memory tier
->>>> using numa fault. This patch fixes this issue.
->>>>
->>>> For MPOL_PREFERRED_MANY, if the executing node is in the policy node
->>>> mask, we allow numa migration to the executing nodes. If the executing
->>>> node is not in the policy node mask, we do not allow numa migration.
->>> Can we provide more information about this?  I suggest to use an
->>> example, for instance, pages may be distributed among multiple sockets
->>> unexpectedly.
->> Thank you for your suggestion. However, this commit message explains all the scenarios.
-> Yes.  The commit message is correct and covers many cases.  What I
-> suggested is to describe why we do that?  An examples can not covers all
-> possibility, but it is easy to be understood.  For example, something as
-> below?
->
-> For example, on a 2-sockets system, there are N0, N1, N2 in socket 0, N3
-> in socket 1.  N0, N1, N3 have fast memory and CPU, while N2 has slow
-> memory and no CPU.  For a workload, we may use MPOL_PREFERRED_MANY with
-> nodemask with N0 and N1 set because the workload runs on CPUs of socket
-> 0 at most times.  Then, even if the workload runs on CPUs of N3
-> occasionally, we will not try to migrate the workload pages from N2 to
-> N3 because users may want to avoid cross-socket access as much as
-> possible in the long term.
+> Is this reasonable? I haven't gone out and gathered test data, because
+> the original patch to create this just assumed that compound pages were
+> uncommon, and so now it's time to stop making that assumption. I think
+> that's sufficient reasoning here to leave out the compiler hint, right?
 
-Thank you. I will change the commit message and post V4.
+It's complicated.  On the one hand, it's "more likely" because there are
+more tail pages than there are head pages or order-0 pages.  On the
+other hand, a _lot_ of the time we call compound_head(), it's done with
+a non-tail page because we tend to pass around head pages (eg,
+pmd_page() on hugetlbfs, or looking up a folio in the page cache and
+passing &folio->page to some function that's not yet converted.
 
-Thanks
-Donet Tom
+On the third hand, does the compiler really do much with the annotation?
 
->
->> For example, Consider a system with 3 numa nodes (N0,N1 and N6).
->> N0 and N1 are tier1 DRAM nodes  and N6 is tier 2 PMEM node.
->>
->> Scenario 1: The process is executing on N1,
->>              If the executing node is in the policy node mask,
->>              Curr Loc Pages - The numa node where page present(folio node)
->> ==================================================================================
->> Process      Policy          Curr Loc Pages                 Observations
->> -----------------------------------------------------------------------------------
->> N1           N0 N1 N6              N0                   Pages Migrated from N0 to N1
->> N1           N0 N1 N6              N6                   Pages Migrated from N6 to N1
->> N1           N0 N1                 N1                   Pages Migrated from N1 to N6
-> Pages are not Migrating ?
->
->> N1           N0 N1                 N6                   Pages Migrated from N6 to N1
->> ------------------------------------------------------------------------------------
->> Scenario 2:  The process is executing on N1,
->>               If the executing node is NOT in the policy node mask,
->>               Curr Loc Pages - The numa node where page present(folio node)
->> ===================================================================================
->> Process       Policy       Curr Loc Pages       Observations
->> -----------------------------------------------------------------------------------
->> N1            N0 N6             N0              Pages are not Migrating
->> N1            N0 N6             N6              Pages are not migration,
->> N1            N0                N0              Pages are not Migrating
->> ------------------------------------------------------------------------------------
->>
->> Scenario 3: The process is executing on N1,
->>              If the executing node and folio nodes are  NOT in the policy node mask,
->>              Curr Loc Pages - The numa node where page present (folio node)
->> ====================================================================================
->> Thread    Policy       Curr Loc Pages           Observations
->> ------------------------------------------------------------------------------------
->> N1          N0               N6                 Pages are not Migrating
->> N1          N6               N0                 Pages are not Migrating
->> ------------------------------------------------------------------------------------
->>
->> We can conclude that even if the pages are distributed among multiple sockets,
->> if the executing node is in the policy node mask, we allow numa migration to the
->> executing nodes. If the executing node is not in the policy node mask,
->> we do not allow numa migration.
->>
-> [snip]
->
-> --
-> Best Regards,
-> Huang, Ying
+Before your patch:
+
+    27d6:       a8 01                   test   $0x1,%al
+    27d8:       75 02                   jne    27dc <clear_refs_pte_range+0x9c>
+    27da:       eb 59                   jmp    2835 <clear_refs_pte_range+0xf5>
+    27dc:       49 8b 44 24 08          mov    0x8(%r12),%rax
+    27e1:       a8 01                   test   $0x1,%al
+    27e3:       75 6f                   jne    2854 <clear_refs_pte_range+0x114>
+    27e5:       eb 73                   jmp    285a <clear_refs_pte_range+0x11a>
+
+With your patch:
+
+    1ee6:       a8 01                   test   $0x1,%al
+    1ee8:       75 02                   jne    1eec <clear_refs_pte_range+0x9c>
+    1eea:       eb 5f                   jmp    1f4b <clear_refs_pte_range+0xfb>
+    1eec:       49 8b 44 24 08          mov    0x8(%r12),%rax
+    1ef1:       a8 01                   test   $0x1,%al
+    1ef3:       75 50                   jne    1f45 <clear_refs_pte_range+0xf5>
+    1ef5:       eb 6c                   jmp    1f63 <clear_refs_pte_range+0x113>
+
+Looks pretty much the same.  bloat-o-meter says:
+
+$ ./scripts/bloat-o-meter before.o after.o
+add/remove: 0/0 grow/shrink: 2/4 up/down: 32/-48 (-16)
+Function                                     old     new   delta
+gather_stats.constprop                       730     753     +23
+smaps_hugetlb_range                          635     644      +9
+smaps_page_accumulate                        342     338      -4
+clear_refs_pte_range                         339     328     -11
+pagemap_hugetlb_range                        422     407     -15
+smaps_pte_range                             1406    1388     -18
+Total: Before=20066, After=20050, chg -0.08%
+
+(I was looking at clear_refs_pte_range above).  This seems marginal.
+The benefits of removing a call to compound_head are much less
+ambiguous:
+
+$ ./scripts/bloat-o-meter before.o .build/fs/proc/task_mmu.o
+add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-101 (-101)
+Function                                     old     new   delta
+clear_refs_pte_range                         339     238    -101
+Total: Before=20066, After=19965, chg -0.50%
+
+I'd describe that as replacing four calls to compound_head() with two:
+
+-               page = pmd_page(*pmd);
++               folio = page_folio(pmd_page(*pmd));
+
+                /* Clear accessed and referenced bits. */
+                pmdp_test_and_clear_young(vma, addr, pmd);
+-               test_and_clear_page_young(page);
+-               ClearPageReferenced(page);
++               folio_test_clear_young(folio);
++               folio_clear_referenced(folio);
+...
+-               page = vm_normal_page(vma, addr, ptent);
+-               if (!page)
++               folio = vm_normal_folio(vma, addr, ptent);
++               if (!folio)
+                        continue;
+
+                /* Clear accessed and referenced bits. */
+                ptep_test_and_clear_young(vma, addr, pte);
+-               test_and_clear_page_young(page);
+-               ClearPageReferenced(page);
++               folio_test_clear_young(folio);
++               folio_clear_referenced(folio);
+
+I'm not saying this patch is necessarily wrong, I just think it's
+"not proven".
