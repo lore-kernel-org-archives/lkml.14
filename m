@@ -1,138 +1,125 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB531C2AC
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 19:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691B843AD2
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 19:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711395645; cv=none; b=ChpTLMzjcpW/5CMSO9VLPwgW5S03DWKhiRLOiOKkc8SOlflOzWDJ8ARN7cSaudrUBZF29yLgmRJZdal4BDKMLwJUfs60aWOYWbT9E1am6v613UBpBi3fPM3N6WxImMqbVG2FEP2LVQ/OcreoTxT1Q2r5t9jvEy/A0SvX+IEwDCE=
+	t=1711395659; cv=none; b=H1EWjy/8Opcm8VgfHrbQuRMgAjAq5qIrm543BkJ8PTSXGiTHQcR0O+lNNt9IdCtTyyakCtQBhGVmM6OACjOPzH/IxHqgfEHI4rBDGlI5w2lFSxp/2xcK7D8skWRWBSJDR91IfaQNohqkjqYWyJ08LOPAodxMn7ha5VyVuHwuhnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711395645; c=relaxed/simple;
-	bh=6zCujOYaTCPgwFb4TRVnXKAm1KvhcyIh/4UUj9uy3D4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I9yZU4maaN7pEYb/TA7iINbx/EmKFSj84L6zvknrbKj29k4DImH9+6yaDlOePeu5MpGfUT0i56NLoRGtbOv9FQP801T0jQJy215xj8kP//uOmCr96uLcvXlkYY8pHDEf7/GSI3BNSgEFHy4wknxxpz+cdpkYFfMQOI2d/RRP4o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ffR0YzS1; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1711395659; c=relaxed/simple;
+	bh=O3T2ZVnqYmBb98eatEjFmoz6lFq5rPVIXrRZI114ot4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TI1DNJrmGvNUvSEgHMSnx66B2K9SkJNPRvosW9RaWsMxg3MTQCmCJWfm5bGMxPdAhytf9+0EoQVE+zPxPPMBsAfUkDAyPck3mNQyTn30kg3irbGnMeyC9aTF809iIiEp4Nxt5aSZZJaDujCaMGi4eP78xLjE6tIJfRZMCKDvQXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=B1nzWHQz; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ffR0YzS1"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5a56a5f597dso267625eaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:40:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711395640; x=1712000440; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cu4UkxchV2M53KPLFlI+CnD5WRrZCvujRJAKi+5DJjo=;
-        b=ffR0YzS1uosNzzpBcwXyiaIDDNdN5tL4pf3uzGyl1CZ0v9GjtVO6ogBcktRqwyopID
-         aNtUENOXQj+1UBsVfpRcMIx0G3cKU88GtcHHqQjjxuksUcFz0IT87ITgOvEo5TXMktcf
-         /IYJYXLPb/lt8ZoU47RSGwppitfmHDouBF03zHJGcAIOUoXm7oWdXFPtDmSyb1k77wzp
-         GvXUqZFJwjHOYUMTn4KCHAPRI7rvfisu320f2eef1hsHL0cjrSVf8UtcKEgvGtIyoBXk
-         2z78sokDpfaRn6D2sgJwIc6Kyn6nsQXfhH97CHcQ/xgVQyjKdG19ULzJZwGAuYKmicBL
-         DqIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711395640; x=1712000440;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cu4UkxchV2M53KPLFlI+CnD5WRrZCvujRJAKi+5DJjo=;
-        b=Vhto07R2ZHn0fHWRaC2iYQflUNtE8hJt0uyVZbA5QkJtkwNEjCHQsCIWiYUabAKhQA
-         QU6+WgNzZ7kj7ADNVqNODOFIFyJPAmK3kqSqv7mSheJrBpOg0iJbrj8dCrowBolhZCap
-         lSoacparXsazSGIdzMF16mj0ZzlnKx5bqlH8SjgyEw9UiZnh0NVnkaW4ZELtKnPAV422
-         ZQULjFkmeVOQuCaiyYUJukujP6yqRhsFTQBJ0f6desi8IpuAsk1DdcbkPFnMA2lYB2Xy
-         CfjdxQlauOWpLtU5uQUnqNVpNHvX8pnwf4TYbfRhF+Qq3oe2+G7DObc6hD4SihgEDvTt
-         kXGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUuLW2taKGT5PDrC9M3jAYKKD1JkKkvq07hwtdVVF525btHWt6cGCE4jYPJn1V7Nc//giXNZwiHRSIIwjwj1Q4+INhk56E9zyqvEOw
-X-Gm-Message-State: AOJu0Yxh2a5zOcXbPLUWD5mSA/zaky3mDUZccaJXQ6de9iIaIsMxAdOl
-	IGJfXP5RslwUPCcGnHg96i2sorZ4izYTJj+eurkCAc+2w4RZgWfx19GEou9yztU=
-X-Google-Smtp-Source: AGHT+IGw7NPFevROk+cVlQFzRhkKFe8w6rJLeHSWp9/RPJSgWlvH8NmK4IghYVHNVG1/nnOuFvYSVw==
-X-Received: by 2002:a05:6870:6125:b0:222:3792:d968 with SMTP id s37-20020a056870612500b002223792d968mr8679490oae.4.1711395640637;
-        Mon, 25 Mar 2024 12:40:40 -0700 (PDT)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id bx22-20020a056830601600b006e6d4cffa31sm617068otb.51.2024.03.25.12.40.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 12:40:40 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v3] iio: adc: ad7944: simplify adi,spi-mode property parsing
-Date: Mon, 25 Mar 2024 14:40:36 -0500
-Message-ID: <20240325-ad7944-cleanups-v3-1-3a19120cdd06@baylibre.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="B1nzWHQz"
+Date: Mon, 25 Mar 2024 15:40:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711395655;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P/ulXyWKqkzXiOH+Zl+aph4Lwf/XKPejosEhROqYyvU=;
+	b=B1nzWHQz4fk8V3rHqtSVsCx9Y8hVkRHvgrE6Bvb1g36Mh6Av3cmyu8EN7JqrqT14Ci/PLQ
+	N/Hhc46Z68FolOA4BiuHuB+K2LrNr1oASp+HeKbGSrjxoqKtfXzyhSY6z9DQcdp7ihUPY/
+	L5b8cDpzsUZYaoK4mu7IQW4sc2pYXC8=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Kees Cook <keescook@chromium.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>, 
+	Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, 
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>, Xiu Jianfeng <xiujianfeng@huawei.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Jann Horn <jannh@google.com>, 
+	Matteo Rizzo <matteorizzo@google.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 4/9] slab: Introduce kmem_buckets_create()
+Message-ID: <eppzf5gil6izcn6nnvzgzukagdikqnfxdvziga7ipnpl5eeern@i7jfzslklsu6>
+References: <20240305100933.it.923-kees@kernel.org>
+ <20240305101026.694758-4-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240305101026.694758-4-keescook@chromium.org>
+X-Migadu-Flow: FLOW_OUT
 
-This simplifies the adi,spi-mode property parsing by using
-device_property_match_property_string() instead of two separate
-functions. Also, the error return value is now more informative
-in cases where there was a problem parsing the property.
+On Tue, Mar 05, 2024 at 02:10:20AM -0800, Kees Cook wrote:
+> Dedicated caches are available For fixed size allocations via
+> kmem_cache_alloc(), but for dynamically sized allocations there is only
+> the global kmalloc API's set of buckets available. This means it isn't
+> possible to separate specific sets of dynamically sized allocations into
+> a separate collection of caches.
+> 
+> This leads to a use-after-free exploitation weakness in the Linux
+> kernel since many heap memory spraying/grooming attacks depend on using
+> userspace-controllable dynamically sized allocations to collide with
+> fixed size allocations that end up in same cache.
+> 
+> While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+> against these kinds of "type confusion" attacks, including for fixed
+> same-size heap objects, we can create a complementary deterministic
+> defense for dynamically sized allocations.
+> 
+> In order to isolate user-controllable sized allocations from system
+> allocations, introduce kmem_buckets_create(), which behaves like
+> kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
+> which behaves like kmem_cache_alloc().)
+> 
+> Allows for confining allocations to a dedicated set of sized caches
+> (which have the same layout as the kmalloc caches).
+> 
+> This can also be used in the future once codetag allocation annotations
+> exist to implement per-caller allocation cache isolation[1] even for
+> dynamic allocations.
+> 
+> Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Cc: linux-mm@kvack.org
+> ---
+>  include/linux/slab.h |  5 +++
+>  mm/slab_common.c     | 72 ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 77 insertions(+)
+> 
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index f26ac9a6ef9f..058d0e3cd181 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -493,6 +493,11 @@ void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
+>  			   gfp_t gfpflags) __assume_slab_alignment __malloc;
+>  void kmem_cache_free(struct kmem_cache *s, void *objp);
+>  
+> +kmem_buckets *kmem_buckets_create(const char *name, unsigned int align,
+> +				  slab_flags_t flags,
+> +				  unsigned int useroffset, unsigned int usersize,
+> +				  void (*ctor)(void *));
 
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
-Changes in v3:
-- Fix "a problem" in commit message.
-- Remove nested if to save a few lines.
-- Link to v2: https://lore.kernel.org/r/20240319-ad7944-cleanups-v2-1-50e77269351b@baylibre.com
+I'd prefer an API that initialized an object over one that allocates it
+- that is, prefer
 
-Changes in v2:
-- Reorder error path to avoid else statement
-- Link to v1: https://lore.kernel.org/r/20240318-ad7944-cleanups-v1-1-0cbb0349a14f@baylibre.com
----
- drivers/iio/adc/ad7944.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+kmem_buckets_init(kmem_buckets *bucekts, ...)
 
-diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
-index d5ec6b5a41c7..9aa3e98cd75c 100644
---- a/drivers/iio/adc/ad7944.c
-+++ b/drivers/iio/adc/ad7944.c
-@@ -366,7 +366,6 @@ static int ad7944_probe(struct spi_device *spi)
- 	struct ad7944_adc *adc;
- 	bool have_refin = false;
- 	struct regulator *ref;
--	const char *str_val;
- 	int ret;
- 
- 	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc));
-@@ -382,17 +381,17 @@ static int ad7944_probe(struct spi_device *spi)
- 
- 	adc->timing_spec = chip_info->timing_spec;
- 
--	if (device_property_read_string(dev, "adi,spi-mode", &str_val) == 0) {
--		ret = sysfs_match_string(ad7944_spi_modes, str_val);
--		if (ret < 0)
--			return dev_err_probe(dev, -EINVAL,
--					     "unsupported adi,spi-mode\n");
--
--		adc->spi_mode = ret;
--	} else {
--		/* absence of adi,spi-mode property means default mode */
-+	ret = device_property_match_property_string(dev, "adi,spi-mode",
-+						    ad7944_spi_modes,
-+						    ARRAY_SIZE(ad7944_spi_modes));
-+	/* absence of adi,spi-mode property means default mode */
-+	if (ret == -EINVAL)
- 		adc->spi_mode = AD7944_SPI_MODE_DEFAULT;
--	}
-+	else if (ret < 0)
-+		return dev_err_probe(dev, ret,
-+				     "getting adi,spi-mode property failed\n");
-+	else
-+		adc->spi_mode = ret;
- 
- 	if (adc->spi_mode == AD7944_SPI_MODE_CHAIN)
- 		return dev_err_probe(dev, -EINVAL,
+by forcing it to be separately allocated, you're adding a pointer deref
+to every access.
 
----
-base-commit: 1446d8ef48196409f811c25071b2cc510a49fc60
-change-id: 20240318-ad7944-cleanups-9f95a7c598b6
+That would also allow for kmem_buckets to be lazily initialized, which
+would play nicely declaring the kmem_buckets in the alloc_hooks() macro.
+
+I'm curious what all the arguments to kmem_buckets_create() are needed
+for, if this is supposed to be a replacement for kmalloc() users.
