@@ -1,40 +1,40 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619937319F;
-	Mon, 25 Mar 2024 07:06:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651E917C651;
+	Mon, 25 Mar 2024 07:05:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711350404; cv=none; b=o4Eeob5Z+IMjaGjxGyY+iK6LdZbwO+wrB6H/SBNepBPPEnjQ3rTuJqW7mTmoIDmy8ngXzoFwJX4EBGn5F7JOM51B2I5znb2ElgpTjCwCxAJNBWTpmHQITF24VSDfpIHcCmIZYRCY9MlaY8hxQ2NISh0tXTxViwAAJDJjnvUN9TM=
+	t=1711350339; cv=none; b=DrXpxwQRYrIInIPqFn2FO2GYKMWyGlPukrBzLa6E3EXuelRZZA71t8p/Nz6RPp1i1wKO4mz9nmV+XRsmp2YniJFoSxXjyoaHpXI6/by9/mhcHhdEkFPUBN+nOyW60mYrAPfZM91mjw2dFnPJkL/BUcY91Wv/bQ7bpTkX2ex1j9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711350404; c=relaxed/simple;
-	bh=2BI+P40kX8mCNe18wq2erATH2487oY9xn8frIy2QuAY=;
+	s=arc-20240116; t=1711350339; c=relaxed/simple;
+	bh=aV94Ji2ZXvUe/v3dnC1nGjcx9RZkSBb/WS70H4w3QRk=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=MuT+YYKiHIvxgZPVtvlAeuhWR2uJGWB2LF8siTRyN5Tt55dSsk21Qd63WwjK11F6zz9PgAWMVNGZEFN8UqBPgwFAY3QglL2C+OkZZwifDveH9e8IW9kIju3fFmIqvFiqRl2bYW+hObQGoLshmByKrfVQZDxei6uido78/DbEec8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=j22xJ/w6; arc=none smtp.client-ip=46.235.227.194
+	 In-Reply-To:Content-Type; b=YPV0C61FwQ4aegxaZBdDmzD+NxFPJvm6/v+URruiXLhIySToWMwMOLan66g8g6qc1V2SxPsZAoTqwQD5578EyM6GdEFedO9F2K55NQJalGKG0PjExYM3cnu00fs0oy0ilDVXn+ORfhZ0w15JULVqux2oZnKb08+3g/Qji5/zUCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=c1hCJXVT; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="j22xJ/w6"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="c1hCJXVT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1711350400;
-	bh=2BI+P40kX8mCNe18wq2erATH2487oY9xn8frIy2QuAY=;
+	s=mail; t=1711350335;
+	bh=aV94Ji2ZXvUe/v3dnC1nGjcx9RZkSBb/WS70H4w3QRk=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=j22xJ/w676BIdvmye1gkOBURBDit3tPNtdL2O6CbIZ0Wqm1JX5xZ96yz7/DKqz1Z/
-	 MGiMSZdVvO/4aO66fShJrOMoy4yvVnms7+90f9GavTydIJ4wvZqAJgeDrVS1bg9/K1
-	 vWpMTV8PwnlojLL/wHGL7bncTDrfBuulQVYeKEIlo8kMFtJYiFN64k+SbsIXHpUMaj
-	 sa1ATVHWT6R1uLT+DnIRg9X4Q1+pmJa8wULt6c4ZOiKh/UXpXeHI84LD1b2Sli9dlD
-	 Ja3C/K4HrQ54Uvgl+ezdS1EwAQuiTOo+iBrjt0YyiJUp6S2SeMIVWsSH5YbJ0+z7Qe
-	 eAeLkYXDtPsMw==
+	b=c1hCJXVTp75LBY4vdUrg+GI/kT30EH6drgVYeJe9tk2SfwipE4+I2il5a/MUps2L2
+	 STlyzxVmSdfN5raHZtPa35Wqm/mzVcYpKIQS43AtZwK9y1P/OP89OiBC1Yt6+7mges
+	 PpbmDwjzB1Bm0RndoBjZMP7GGMhhx+kKVeDjllzQfMXmep+LIybMJ0BSa62U3nzS7X
+	 sHPokQQOE32DjquR/G3eGOojb6Edm2IzMgDrzDI7/oxlbx1xDufJaDxZYOekbT3cLN
+	 zeSFBS3LSwJu3yu3EUEcOD2PGc/k8uJEJpHW90tP17dnN3tndfS0Twrn+Y8pZTkWxw
+	 trKOpKKTF9yJg==
 Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 43BC3378148F;
-	Mon, 25 Mar 2024 07:06:37 +0000 (UTC)
-Message-ID: <3c3b8d18-7f52-4914-8a1e-8e32b4dd8b20@collabora.com>
-Date: Mon, 25 Mar 2024 12:07:13 +0500
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5BCDE378148F;
+	Mon, 25 Mar 2024 07:05:29 +0000 (UTC)
+Message-ID: <b8c1b47e-941e-41fc-a3a6-8f68beccae83@collabora.com>
+Date: Mon, 25 Mar 2024 12:06:04 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,101 +43,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: x86: conform test to TAP format output
+ kernel-janitors@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: dw_mmc: remove unneeded assignment
 Content-Language: en-US
-To: Shuah Khan <shuah@kernel.org>
-References: <20240307183708.2857513-1-usama.anjum@collabora.com>
+To: Jaehoon Chung <jh80.chung@samsung.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ tianshuliang <tianshuliang@hisilicon.com>, Shawn Guo <shawn.guo@linaro.org>,
+ Jiancheng Xue <xuejiancheng@hisilicon.com>,
+ Shawn Lin <shawn.lin@rock-chips.com>
+References: <20240307145013.2721326-1-usama.anjum@collabora.com>
 From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240307183708.2857513-1-usama.anjum@collabora.com>
+In-Reply-To: <20240307145013.2721326-1-usama.anjum@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Soft reminder
 
-On 3/7/24 11:37 PM, Muhammad Usama Anjum wrote:
-> Conform the layout, informational and status messages to TAP. No
-> functional change is intended other than the layout of output messages.
+On 3/7/24 7:50 PM, Muhammad Usama Anjum wrote:
+> The err is being set to 0 and replaced every time after this
+> assignment. Remove this assignment as it is extraneous.
 > 
+> Fixes: e382ab741252 ("mmc: dw_mmc: add support for hi3798cv200 specific extensions of dw-mshc")
 > Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 > ---
->  tools/testing/selftests/x86/vdso_restorer.c | 29 +++++++++------------
->  1 file changed, 12 insertions(+), 17 deletions(-)
+>  drivers/mmc/host/dw_mmc-hi3798cv200.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/tools/testing/selftests/x86/vdso_restorer.c b/tools/testing/selftests/x86/vdso_restorer.c
-> index fe99f24341554..f621167424a9c 100644
-> --- a/tools/testing/selftests/x86/vdso_restorer.c
-> +++ b/tools/testing/selftests/x86/vdso_restorer.c
-> @@ -21,6 +21,7 @@
->  #include <unistd.h>
->  #include <syscall.h>
->  #include <sys/syscall.h>
-> +#include "../kselftest.h"
+> diff --git a/drivers/mmc/host/dw_mmc-hi3798cv200.c b/drivers/mmc/host/dw_mmc-hi3798cv200.c
+> index 61923a5183693..6099756e59b3c 100644
+> --- a/drivers/mmc/host/dw_mmc-hi3798cv200.c
+> +++ b/drivers/mmc/host/dw_mmc-hi3798cv200.c
+> @@ -87,7 +87,6 @@ static int dw_mci_hi3798cv200_execute_tuning(struct dw_mci_slot *slot,
+>  			goto tuning_out;
 >  
->  /* Open-code this -- the headers are too messy to easily use them. */
->  struct real_sigaction {
-> @@ -44,17 +45,19 @@ static void handler_without_siginfo(int sig)
->  
->  int main()
->  {
-> -	int nerrs = 0;
->  	struct real_sigaction sa;
->  
-> +	ksft_print_header();
-> +	ksft_set_plan(2);
-> +
->  	void *vdso = dlopen("linux-vdso.so.1",
->  			    RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
->  	if (!vdso)
->  		vdso = dlopen("linux-gate.so.1",
->  			      RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
->  	if (!vdso) {
-> -		printf("[SKIP]\tFailed to find vDSO.  Tests are not expected to work.\n");
-> -		return 0;
-> +		ksft_print_msg("[SKIP]\tFailed to find vDSO. Tests are not expected to work.\n");
-> +		return KSFT_SKIP;
+>  		prev_err = err;
+> -		err = 0;
 >  	}
 >  
->  	memset(&sa, 0, sizeof(sa));
-> @@ -62,21 +65,16 @@ int main()
->  	sa.flags = SA_SIGINFO;
->  	sa.restorer = NULL;	/* request kernel-provided restorer */
->  
-> -	printf("[RUN]\tRaise a signal, SA_SIGINFO, sa.restorer == NULL\n");
-> +	ksft_print_msg("Raise a signal, SA_SIGINFO, sa.restorer == NULL\n");
->  
->  	if (syscall(SYS_rt_sigaction, SIGUSR1, &sa, NULL, 8) != 0)
->  		err(1, "raw rt_sigaction syscall");
->  
->  	raise(SIGUSR1);
->  
-> -	if (handler_called) {
-> -		printf("[OK]\tSA_SIGINFO handler returned successfully\n");
-> -	} else {
-> -		printf("[FAIL]\tSA_SIGINFO handler was not called\n");
-> -		nerrs++;
-> -	}
-> +	ksft_test_result(handler_called, "SA_SIGINFO handler returned\n");
->  
-> -	printf("[RUN]\tRaise a signal, !SA_SIGINFO, sa.restorer == NULL\n");
-> +	ksft_print_msg("Raise a signal, !SA_SIGINFO, sa.restorer == NULL\n");
->  
->  	sa.flags = 0;
->  	sa.handler = handler_without_siginfo;
-> @@ -86,10 +84,7 @@ int main()
->  
->  	raise(SIGUSR1);
->  
-> -	if (handler_called) {
-> -		printf("[OK]\t!SA_SIGINFO handler returned successfully\n");
-> -	} else {
-> -		printf("[FAIL]\t!SA_SIGINFO handler was not called\n");
-> -		nerrs++;
-> -	}
-> +	ksft_test_result(handler_called, "SA_SIGINFO handler returned\n");
-> +
-> +	ksft_finished();
->  }
+>  tuning_out:
 
 -- 
 BR,
