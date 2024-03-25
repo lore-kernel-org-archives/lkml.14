@@ -1,108 +1,117 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B976CDD6
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 13:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2B8131722
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 13:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711374458; cv=none; b=W1fvY2n2CWfyYW2sSZgx4MQ+hyz9GYyX3ryFGbhM+i9XvtMrIdOgGme6GNyxIom7i8pYenI7SptBeMq3r243FsL0Ii9ZElTHJqgygr9GzS6hNQYiP0wKq2d6dSJPlklAhUnJD/38vnhPCZa3NTRQWwAEbpmvV93hGtVz+n1jhmo=
+	t=1711374474; cv=none; b=qx3lD9lOkkANMXpBSwKooN9ymC4V/TK5B0Y5MpXbAh5dx/EPQYvpqkfDzi+6uLNmTKbfRmVjwK73ocGT8ylrWVL8ArWsRsP5hyJyDQ+mD66dotNPxua681wnCrGbuNBDKCHc4xMbchzx7hV2CX7V6hk2B0UV6GAbNa+HktVUfP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711374458; c=relaxed/simple;
-	bh=SuIRM/3Q6w7TaZkKYsx/rzdQjJe9T75LpZogkG5lMpk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d0tLv64oxk+1N2yq8573/3JiYUVNRrCd/dutSpHuWQ7xeuVmQZ5oWwpHq3Uj7ksIq9GEi/MJqnNvjzNzzdr/qwJH6Tr8nmyajPgXNKb5NoVVwyR0Emh7Vv+PqL77XtYfi10K9rFYmlXgntK8d8LOiHEYT06NMGnD2zyvMfmE9xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hnnR4KZK; arc=none smtp.client-ip=209.85.221.46
+	s=arc-20240116; t=1711374474; c=relaxed/simple;
+	bh=nMf1WG+zD/X74g08b7umYWJmp6JqbGTrUZ6iLiTrD9U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ap79RY9SA0swBT5q7F3ErjY5Q7sbvKgrBiGd/9PLaHYIMgoidsuSErGCxDO9y/1WB5naPHpIB72uOlkYWtgpY+oxtFMH4np3p1PDc770b4rA5Ed1Zbk48M31itN9DRkJz/DF4vLLkr7Ql3drPN5+oV4n+gHT2GAFPoy++SJ3YGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nWrJzki3; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hnnR4KZK"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33ececeb19eso2856633f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 06:47:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nWrJzki3"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d4a8bddc21so59794941fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 06:47:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711374455; x=1711979255; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ak1tU1hAMrwRs+LPSBUwIgy4Aqmw1ipgIVU8IK0CaAk=;
-        b=hnnR4KZKGmHRorXH8S4KGSwsp1MNYyxNTnSJFbArZ0Udh7blkQ0NmCKyrbQjN7Lb3V
-         4lxqNWqPlVSa5mcDZQXTs0CRVA3/GCVpoY3yWHI/e62FJ5qKz+YjBaH78lhym6/0xM1o
-         Tp1vecAGxqPAoudAARS0QEFHQncQS2w0iFhgEsiC6SqcRKr67z/wW3Uk0xJ3AjyBzIxe
-         pMhR6PZbHWCddJO7W8kCj4K3gGSjhBlWxwuxgbpgITPuIoF1J/ACzP/5Q8x3PzG5ra4H
-         +lSmbDL41Z/bSeo/2L7wWOGIxbDxjSmnUnDT5Oy7TV4OWy2J9zBoUu0rmhDXbTIG6INv
-         Rf3A==
+        d=linaro.org; s=google; t=1711374471; x=1711979271; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7eTxGOGhr0BwiGOYsGylgWeWRP59BGZREX+842aBrQI=;
+        b=nWrJzki3PpjzV2XMqOM1/iLjBeo404ltQ5TRONm7OweDuTthCh4H/n/MswRB4SPzRD
+         rci9mCBTKFle13nwyNqQka4oEZrAg4tyUwVa0pjDes1HesUghFLfEB64VemtAb+9IyRf
+         +/newokc81kJ0rLocVZ5ZM23u6zRDc+4BcwDKNTIjlnbpRSrEbQDchcL7rpO6XLS6GCW
+         mU6WEVt1M5mNpq5kGrIFTToGFyiBZIO7bO10ioGoxxEyFhme9xWAtdH2+b0VlCCFRsF8
+         s4kQxE/WeHcBiYpZqvHjcMOAaszGnCzrT/E3DzYCX+PLYLsYVTwnOeZEOPQ3LbOgnksc
+         I06g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711374455; x=1711979255;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ak1tU1hAMrwRs+LPSBUwIgy4Aqmw1ipgIVU8IK0CaAk=;
-        b=IYWVqGdXgI6K0ZILbofvqDW527PGtgPfQQBZESMkDbQVqr+QKz39lweUqAwbahBsoy
-         rESgpOV7fwg7GI8DynArO/SGOLalSCUOTHIy6D4KRbl7Fr9LyuRUaTA89xMzRkYLQZHM
-         vr3GbC4KXGdHu5CQCNvlNDEm0x3K8PbuAQXtzhUEHoVJCacmUG5RyMvvxrDZanFs+uFd
-         M2RLlFOgcEpZeX6btbjhQ4DTSPzu6/MkmQFWm2pDmsl9zVz4zaYoaSs0ljzsFQiMN4eL
-         5sX1fd9iwy5DxJnM0b5m4zI+DSJdpvIW75VDuB51KZtJ3huLrttWljKUPAI1/rJKiq8G
-         8zuw==
-X-Gm-Message-State: AOJu0Yx0iThl1oXsOWbV5IWl4VGsPapIwIl1rdrzwmqrP1o8FG/fFfOH
-	CdHvY99jwSClXQLk2nXfr49glUJR0ZUdgdTAx2AS8n9c4qda9X9q/auINEpOKLU=
-X-Google-Smtp-Source: AGHT+IF7KdIGQlqGnlG2Se4SlU0THQwzSCPNQgRzsRuSHRDL4SNJc7TBiOopCAeuLAKnQhCBUsp9Tw==
-X-Received: by 2002:a05:6000:4c9:b0:33e:c070:686c with SMTP id h9-20020a05600004c900b0033ec070686cmr4717780wri.45.1711374454950;
-        Mon, 25 Mar 2024 06:47:34 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id e7-20020a5d5947000000b0033f20497d4asm9590291wri.5.2024.03.25.06.47.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 06:47:34 -0700 (PDT)
-Message-ID: <1f028df8-435a-43cb-b776-0c2141f1c374@linaro.org>
-Date: Mon, 25 Mar 2024 14:47:34 +0100
+        d=1e100.net; s=20230601; t=1711374471; x=1711979271;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7eTxGOGhr0BwiGOYsGylgWeWRP59BGZREX+842aBrQI=;
+        b=HFw/lvJsNvErK3ITv1pA9eK/mlYZVMSPsXTQBSQiYAHOszWuM/s4BNj60DIMcJgMsk
+         2TjooZCWFdSCYJEEUMRznbtEZSPSvO4TAMU+qUOF3fJ0XijbbxVYbz92sy1rZGQmTX1r
+         Q2tfJM3AkKQZTEbZE6sX2QYC7J4K1ifORjjyuUEH8fUA5/m370fA6UrEtJT5sfXgQDWm
+         HSwss6aD9SpfDQG19O4js1RY2Md3ytXT2Nv/U+0Ec9t/vKy9uWTC0Ias0S9DQjKfnyak
+         dFHNuKgxlSLr7iC0wDJLzw+wRcqRTWV3r+kJTsEJLfcLkB7q4MoZPo4ycmH0pVIeaegI
+         vH5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWce56zcgV7NO3SO9UAmQJ/zqh7t/teeQC+6e5nHJcKunLAIJ4LFG8zD75lu3B/Du0p2wLyEg5rLKiSrhwM946TpG+Ljt8CiJ1Qoy1s
+X-Gm-Message-State: AOJu0Yzx8+gNTc03F2FvFDQnjavLHKO6f94AqjEO2bykq8dGkG7eOV2b
+	4CB0NaqxeU0gNQmWUruWm8kOeWlDg99OoNXgHYHbQBAEwI5b5D9r5y2ZagxSOYw=
+X-Google-Smtp-Source: AGHT+IEjpCeqjy8Ax2vgLqRidCnvcSUNUBRVQXWSbQ+VZmOCXPqkhCRVZmJuq0F+SPXH99Pwwo4nEA==
+X-Received: by 2002:a2e:9a90:0:b0:2d4:1700:34a2 with SMTP id p16-20020a2e9a90000000b002d4170034a2mr4915678lji.33.1711374470954;
+        Mon, 25 Mar 2024 06:47:50 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id x1-20020a2e8381000000b002d2697570fcsm1453340ljg.93.2024.03.25.06.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 06:47:50 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 25 Mar 2024 15:46:52 +0200
+Subject: [PATCH] arm64: configs: enable REGULATOR_QCOM_USB_VBUS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] thermal: More separation between the core and
- drivers
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-References: <2331888.ElGaqSPkdT@kreacher>
- <42ffcfb8-33fd-4ea5-bfac-fa8c78cd1cd4@linaro.org>
- <2273843.iZASKD2KPV@kreacher>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <2273843.iZASKD2KPV@kreacher>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240325-arm64-config-usb-vbus-v1-1-d14601f81d08@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAEuAAWYC/x3MMQ6AIAxA0auYzjZBBAavYhwUC3YQDY3GhHh3i
+ eMb/i8glJkEhqZAppuFj1TRtQ34bU6RkNdq0Eob1WuLc96dQX+kwBEvWfBeLkGvSFlr1tCRg9q
+ emQI//3ec3vcDxqP3vGcAAAA=
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=957;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=nMf1WG+zD/X74g08b7umYWJmp6JqbGTrUZ6iLiTrD9U=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmAYCGwlQyHmR1G36XbSiu1u78FxQKD2Xza8LEh
+ clmh8fI7QGJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZgGAhgAKCRCLPIo+Aiko
+ 1aCXCACpcfddrwnCyW2l1Qv6Yg0wybUus9mtQFofCGUpEbce1TyN01D4OsSr3TE39g+q/bJ+Qs9
+ ODy+Q/37E/WZFd+PmYCrSDTi+K5k6DIIMPLJsC97q8ysP27CSoj7wspIVFjvP5bkJ5z/Cp9/8oR
+ Vhmz1doHOv/+egVcw4ZGT0I2ObjOW4hvSOc0yFdQclLTJXIb+ULEtui3TvEmCs4uw52ZoB1d0Ya
+ yd3NrHqUGe/LHa8CefNKU5x1AD5eBD+lhYf7wmJYNp3dkv18gzaEZULPbs31IptUOCz+tX/DkuR
+ nNjiGhI2kxR44CJ4eT+sK3UlTtpHOd0vuyAm5S4yJ4wuxZua
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On 25/03/2024 14:39, Rafael J. Wysocki wrote:
-> Hi Daniel,
-> 
-> On Monday, March 25, 2024 2:33:27 PM CET Daniel Lezcano wrote:
->>
->> Hi Rafael,
->>
->> thank you for this series.
->>
->> It has been reported a regression with commit cf3986f8c01d3. I'm
->> investigating and confirming it. If it is the case a revert may impact
->> this series.
-> 
-> Sure.
-> 
-> Can you please give me a pointer to a BZ or e-mail thread where this is
-> being handled?
+Enable the VBUS regulator used on Qualcomm platforms (RB1, RB2, RB5) to
+supply VBUS voltage to the USB-C connector.
 
-That has been reported to me directly. In a moment, I'll start a thread
+Reported-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 6c45a465a071..a86e94aea63e 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -772,6 +772,7 @@ CONFIG_REGULATOR_PWM=y
+ CONFIG_REGULATOR_QCOM_RPMH=y
+ CONFIG_REGULATOR_QCOM_SMD_RPM=y
+ CONFIG_REGULATOR_QCOM_SPMI=y
++CONFIG_REGULATOR_QCOM_USB_VBUS=m
+ CONFIG_REGULATOR_RAA215300=y
+ CONFIG_REGULATOR_RK808=y
+ CONFIG_REGULATOR_S2MPS11=y
 
+---
+base-commit: 13ee4a7161b6fd938aef6688ff43b163f6d83e37
+change-id: 20240325-arm64-config-usb-vbus-c0e0554df1e6
+
+Best regards,
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
