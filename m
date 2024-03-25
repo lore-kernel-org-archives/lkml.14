@@ -1,96 +1,135 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DDE6BB45
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899EF6D1B0;
+	Mon, 25 Mar 2024 17:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711386039; cv=none; b=Dr0CvfG2bypTszAiyupV15D4j9xqoh+YT1waeeFPKmXQv5ABwj6w+jEd4/EvIA7p/IZD/f4F3V6l3Z/iqip6i0jS9WfJrMxrueI8fWyq6+SKCcnTxiOVcZ/aAC8p51jXYJkTdgu+TRT6A/183iHobHtAx3TPIL+8V9TWy1BiG00=
+	t=1711386065; cv=none; b=KbYWIIBRVu9oel/Ty1I/g+dpLb1ioDLYXmgpk+FG3Uonu9gH+F9lSOgwHyRpTdzuIwOsWPlEmsqBsCU6aWyV1z44RYYHirzMU8UlVRz0H0K4l7pQKWF4Mt2PalzA2V0VcJlS9Los6wi+gZvpjQtAH2hzmPgzlitGQlVAxtiZlFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711386039; c=relaxed/simple;
-	bh=7zx8nMq8KGqHj7jDtWixIxCbZWOIEZBEwuQCfPP3n30=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=s6Yo9JvDXTdxHYTsZ64nWKNXItdOaSdy+yKdc8knxEILwarHW9BD39FHyaX3dD1PwwksI3WdzZ7IrWRk27pXC2RW4LDFyo59dgyZEPhYLycomsFWIqfaKVJiXHQ0+SBzhW7vhccnyQ3Ixyw9naDpw1XJct6ayqtsIX869w7h4Ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=rREXc2X4; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1711386065; c=relaxed/simple;
+	bh=Lci6nEV6lFRNgmbj/19OAFVfKuyN4Cyp2jW6qAIWwrw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZBUKmdiiFk0B7tqIVRbZSx3P3VCXuKiRWqgkomn7gPQujAS0ZE7ldo//NGlL5PwGSz0uuU6n8/UfacixmWHt21Z2jFRRJiE8nyZJXVOjeH5ldTV9Ndw24YtL/XOsoSBCiOVfrvZyHh/idIAQPZoEN1EgtUJPovIPLR8iccFWnAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVz2Sfb3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="rREXc2X4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=OmH/+e2Fjmgqpw97wDc7uUt4UReDSV3J7Dkv6kUBSXM=;
-	t=1711386037; x=1712595637; b=rREXc2X4l+vWTMd0xUXBhNSly5LuUTXec7JPC2ZX1znBfw+
-	w8AAm73k1iwC1h6HIcj7CNt/SnvbzyKUhNYGNMvpHY83+XnramRhvxWksnlf3cKCFbdCDPou2DGYs
-	9XsIyzHFK+fwy5hi08Qbncfdiv8M4v5IHhWQV13lmYv0LrXT8MoENooEoqaNFdfnzk0zLMIMoFB+0
-	bfdPQfVMx2a4pn5Fof84//S+l/7GCgjneuu+gL2DSDwdBwKR4vFLOvgK4eqLqU0iGaX3owa9v5cri
-	lH0sCQRlIrXdHsb3lm1y8TMSGuf1FFaFfcWJXL59yRoljSrCYpa3pK9vF3OAEtkw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1rongX-0000000Dy0B-3sYf;
-	Mon, 25 Mar 2024 18:00:34 +0100
-Message-ID: <50c40ce746f1497cbc36ad82d6d0d3ca3ac28547.camel@sipsolutions.net>
-Subject: Re: [PATCH v3 2/4] devcoredump: Add dev_coredumpm_timeout()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: =?ISO-8859-1?Q?Jos=E9?= Roberto de Souza <jose.souza@intel.com>, 
-	linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>, Mukesh Ojha
- <quic_mojha@quicinc.com>,  Jonathan Cavitt <jonathan.cavitt@intel.com>,
- Lucas De Marchi <lucas.demarchi@intel.com>
-Date: Mon, 25 Mar 2024 18:00:32 +0100
-In-Reply-To: <20240304143905.52740-2-jose.souza@intel.com>
-References: <20240304143905.52740-1-jose.souza@intel.com>
-	 <20240304143905.52740-2-jose.souza@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVz2Sfb3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B52F5C433F1;
+	Mon, 25 Mar 2024 17:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711386065;
+	bh=Lci6nEV6lFRNgmbj/19OAFVfKuyN4Cyp2jW6qAIWwrw=;
+	h=From:Date:Subject:To:Cc:From;
+	b=gVz2Sfb3dxNAPIRfEUU4KRbK+JBb+s401KhAbTDA+73+4XwqDdv3Do8557ra+Xl9h
+	 XqbewdaTKW2o9M7vVNS4ZtB3EP7Cm2Ki+2kmQ18daSyzzsrF4e2lVWaRkO6ycSKQfx
+	 9X8UJuQP84WIilg6liE4exqQQU++5+ZkgBV5BIaTBzvAiwfXVPERG1UcxUJksWflpR
+	 csT+PHXCmn2CkOnIEAj53DtpcxTQLIbu8RkykAkhFm7u6MS9l3N83LLXwMThjHl5Av
+	 pioNKHrNtAv2fkz3bOxVLI1JLh1WXp5miBpDo1qBurccsbHSvPvEE84uG4o8R9Gu+v
+	 8AnVbpSZLdbfg==
+From: Mark Brown <broonie@kernel.org>
+Date: Mon, 25 Mar 2024 17:00:57 +0000
+Subject: [PATCH v2] gpiolib: Add stubs for GPIO lookup functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240325-gpiolib-find-by-fwnode-stub-v2-1-c843288cb01f@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAMmtAWYC/43NQQ6CMBCF4auQWTumHcQYV96DsKAwhYmkJS2ih
+ PTuVk7g8nuL/+0QOQhHuBc7BF4lincZdCqgG1s3MEqfDaTookoiHGbxkxi04no0G9q38z1jXF4
+ Gq2tlqb2RUdxBLsyBrXyOet1kjxIXH7bjbNW/9b/uqlGjqlrVMTNpKh9PDo6nsw8DNCmlL3bZc
+ zHHAAAA
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2883; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=Lci6nEV6lFRNgmbj/19OAFVfKuyN4Cyp2jW6qAIWwrw=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmAa3OAuQV7uRj36Qg09JExspAdtoyMZZkLpqLiguh
+ CtqGMmGJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZgGtzgAKCRAk1otyXVSH0J97B/
+ 9NmR2soPhHawJZpBXD0I7oRYHT7pNiK04Fo0Slr1PJsarihwQGN6LAzJaQyN10KjOOnsZGKtlyc0s8
+ ao+jEn/EKLJkyyU2MarGVmBHqf99hFzsCfuHOKttezItn8zgD3dhWgDkQSeDXTj9MU5XDxTrtU1nOW
+ pmQEKVExhoTboKZgBt1TDTE1NLbYZw/A/K/P8f8Ehi9vbHNHycoDs+72/Xy5qfI7sPfG5sy9WnolDp
+ 4+QVD5V02PrfdDzSFcJy3FWcvnEXL3eBOdooz/nIONJwiIU93+QhuhH/RqK+1/qhI4+ET26/nDY61i
+ AU9q23NKtVl59n0F0deXobBDNAojBm
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Mon, 2024-03-04 at 06:39 -0800, Jos=C3=A9 Roberto de Souza wrote:
-> Add function to set a custom coredump timeout.
->=20
-> Current 5-minute timeout may be too short for users to search and
-> understand what needs to be done to capture coredump to report bugs.
+The gpio_device_find_by_() functions do not have stubs which means that if
+they are referenced from code with an optiona dependency on gpiolib then
+the code will fail to link. Add stubs for lookups via fwnode and label. I
+have not added a stub for plain gpio_device_find() since it seems harder to
+see a use case for that which does not depend on gpiolib.
 
-> + */
-> +static inline void dev_coredumpm(struct device *dev, struct module *owne=
-r,
-> +				 void *data, size_t datalen, gfp_t gfp,
-> +				 ssize_t (*read)(char *buffer, loff_t offset, size_t count,
-> +						 void *data, size_t datalen),
-> +				void (*free)(void *data))
+With the addition of the GPIO reset controller (which lacks a gpiolib
+dependency) to the arm64 defconfig this is causing build breaks for arm64
+virtconfig in -next:
 
-nit: looks like you missed a space on the 'free' line
+aarch64-linux-gnu-ld: drivers/reset/core.o: in function `__reset_add_reset_gpio_lookup':
+ /build/stage/linux/drivers/reset/core.c:861:(.text+0xccc): undefined reference to `gpio_device_find_by_fwnode'
 
-I don't think we'll actually _solve_ the discussion of whether or not
-this makes sense.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v2:
+- Rebase onto v6.9-rc1.
+- Link to v1: https://lore.kernel.org/r/20240322-gpiolib-find-by-fwnode-stub-v1-1-05a0ceee2123@kernel.org
+---
+ include/linux/gpio/driver.h | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-I still think it's a bad idea to hang on to the dumps in core kernel
-memory since they can be big (I would've said ath12k is big with 55MB,
-but Rodrigo said graphics could be up to 2GB!), without being able to
-page it out, etc. That's just a waste of memory, for what I don't think
-is even a good reason.
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index dc75f802e284..f8617eaf08ba 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -646,8 +646,6 @@ int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc,
+ struct gpio_device *gpio_device_find(const void *data,
+ 				int (*match)(struct gpio_chip *gc,
+ 					     const void *data));
+-struct gpio_device *gpio_device_find_by_label(const char *label);
+-struct gpio_device *gpio_device_find_by_fwnode(const struct fwnode_handle *fwnode);
+ 
+ struct gpio_device *gpio_device_get(struct gpio_device *gdev);
+ void gpio_device_put(struct gpio_device *gdev);
+@@ -814,6 +812,9 @@ struct gpio_device *gpiod_to_gpio_device(struct gpio_desc *desc);
+ int gpio_device_get_base(struct gpio_device *gdev);
+ const char *gpio_device_get_label(struct gpio_device *gdev);
+ 
++struct gpio_device *gpio_device_find_by_label(const char *label);
++struct gpio_device *gpio_device_find_by_fwnode(const struct fwnode_handle *fwnode);
++
+ #else /* CONFIG_GPIOLIB */
+ 
+ #include <asm/bug.h>
+@@ -843,6 +844,18 @@ static inline const char *gpio_device_get_label(struct gpio_device *gdev)
+ 	return NULL;
+ }
+ 
++static inline struct gpio_device *gpio_device_find_by_label(const char *label)
++{
++	WARN_ON(1);
++	return NULL;
++}
++
++static inline struct gpio_device *gpio_device_find_by_fwnode(const struct fwnode_handle *fwnode)
++{
++	WARN_ON(1);
++	return NULL;
++}
++
+ static inline int gpiochip_lock_as_irq(struct gpio_chip *gc,
+ 				       unsigned int offset)
+ {
 
-So dunno.
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240322-gpiolib-find-by-fwnode-stub-565f2a82b0ec
 
-However, I also don't like to exercise any power that I might randomly
-hold just because I happened to write the code in the first place... And
-if you want to shoot yourselves in the foot with any of this, should I
-really disagree? I feel I've voiced my objections enough, and Lucas has
-also tried to find ways of making a userspace implementation work for
-you.
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
-I'd perhaps argue that the documentation for the functions should be
-more opinionated and actually recommend against using a large timeout
-(like you want) for all these reasons, but other than that, the code
-looks fine to me.
-
-johannes
