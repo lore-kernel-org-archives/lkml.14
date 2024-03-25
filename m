@@ -1,105 +1,118 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9204C637
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 20:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4605612E47;
+	Mon, 25 Mar 2024 20:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711397675; cv=none; b=u7ZQP3AdMprOv9PigQSoZoqlERgYE3h5flAynmbxXKHoGYPgHG1LjIGB+zIEcZVhoC7zxSQ0am4rlrfN5vuwfkIKsVYRDWs7prR7v3JU146Ypebd/mhp9RJb5Rjdk2N05uSzA4B1q4CRWs+1ZzNkdOszcvvN6bzjxU8iAKrxYM8=
+	t=1711397687; cv=none; b=pUvyQoW6zYQ6UZWJ4I/z/M5MenpJvloWiBc3gh6WO6J70wW4qpsn/kTLvAY+LqlLPq3ePDbZP2HwDwXk3fdITfCz/+MM/OC5tNTGqtPO0QTdMexE+jZYs0qM+RCJKlrttjiyfZ3B2toLhPyblpr9X4Rvki66wOrS0nCMOdm4/Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711397675; c=relaxed/simple;
-	bh=y/Copnmio+r4JHJn7cH1SHr0SKFHmhJFbDXHchbZThs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X/vey5XF6im0g1IeWHkbysCeHYvtvX/gLUu9Z/5rP3Bzl8aAuzRgue/BrqIvF2+VEqdvDi8l4BAuyfPq1EtZUEFeSEKuFusNibvKbSEahbTcR6Ml15bLMQ2X2EhGfR3ZvTpC8CZ300okpEY+Lq2yTugVp1b1NM7H2IHmLgMs7uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=iuCw32tm; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1711397687; c=relaxed/simple;
+	bh=zVzMdPH5x8S0kvUHOTov9W0NIu59GLtknLzc50ShHxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SyjcNThBY9C3h30q3WnGBr+LxIfqzXbHX45EKjO/L6VO0xR0XcGPC2moFYh+cQQq2WW0/6xFmuFa0xIifiFD7XSahyWsvaP7gH5zOUKnpNHxNl+v7dTc038uDj/Nfu3MRKp4v4GEIfn/ZdB9qObJmdtbDAxQYR/A+Xr8GXY6cTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrtE7cN0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="iuCw32tm"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d6dda3adb9so11226971fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 13:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711397671; x=1712002471; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y/Copnmio+r4JHJn7cH1SHr0SKFHmhJFbDXHchbZThs=;
-        b=iuCw32tmWhnvpIewveu6AYiYQem76Mvuok28exwJhKuuVd9PPE3un09zFyzpvWdRCI
-         TZAgsWjtKBs9iUKm9xLnRdpCeXrwLHmzTQ12WFULfOw+pLRcf7IpcXjAmu1DzvQqeWJa
-         s8H0kNyJtbA4e3VwLQPNXDk32TUumk7eYDBv/2xA0aYs71xBTurLoZfCp838PSBMSuTv
-         Oo5XXzKCJ5hoknalahHv1ODni1grES9CSg6/6j+6Tx8jrdqkaynTSv7IwSTKM0eowuw2
-         aGtWqxcOV8O7XK07cWN8s+HEZF58qR1/aQAeA65XXbZSlyXcWWJaH/snXMGk23zF4h/w
-         x6kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711397671; x=1712002471;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y/Copnmio+r4JHJn7cH1SHr0SKFHmhJFbDXHchbZThs=;
-        b=NXzVj+NEm2j0f7Kb6IJNNg3VHDkxaWe7O/ySKhWmibkUO8izWg/+Fw5c7QjX7xnbiP
-         qVVg5KtED5ThtP51PozmzHnhzbDQo/ZUtpVh8SFW+b0sbwVqrFQnlQ/q3LEV9gn62K2S
-         C5ySykau0+UoZymBpU9rOWXcH7vdOVfYMF7cU34xcxij+1njqwO7mtHx4cD9ewSsS6n+
-         6P6UqrLSo7jmXBfsGKlT/d967YipLRUgrxH0xsfhjnHr33o9D52ffggmItH5OI/jMbnI
-         LhTpQYdD2aDb4LfgnN1XMzKsTthFpi1DVnrf4iuUp3JihFVzC1KS77ku1JVAVn13Oie/
-         6UZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjS/P/Y3KkPyZVUk8vGNBGnL0XGoEnU/Xt3GfltMoaEQzICY4NCtfgTLNabbicY/5E8WqsXKw9xBTWaeUJrCQPdSjR8fna2h7MWd7N
-X-Gm-Message-State: AOJu0YzvoE7ZwaClDbGhvX7ytYs79CwG87c6wQuUG6jDA2iLDc6hm22G
-	Z572DSmP+DoOvsbdZTvi+CAzkKWq7UqnmGnZyhn5Ph3y8fpTX/9eMFUBk6OlTg9eKkl5gwRHhcS
-	aDGQks/VyO873SB9aZjdjbrP8uTV+NHMVR8KIOQ==
-X-Google-Smtp-Source: AGHT+IFxfzGP4GDD9D61DOApZnzJcZ5mRVakIzo2HcSyu+da0kxkxSHBt5x0XHbve5H0YnB5oZP4U6ETJVrQilfX3uE=
-X-Received: by 2002:a05:651c:b0f:b0:2d6:a2cd:bb8c with SMTP id
- b15-20020a05651c0b0f00b002d6a2cdbb8cmr657809ljr.10.1711397670501; Mon, 25 Mar
- 2024 13:14:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZrtE7cN0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA11AC433C7;
+	Mon, 25 Mar 2024 20:14:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711397686;
+	bh=zVzMdPH5x8S0kvUHOTov9W0NIu59GLtknLzc50ShHxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZrtE7cN0Onv431Oxd3DmFgzn+O3PToH8vmAvSNGMNV6O2Q0oAGNjTJQeZXS4BDQzX
+	 nJpbglY646QwSUDaR6Qw6vnJupO5JnJnWsbIpiyThMaEcv3p/e4+UUzv9L5C8kgIwP
+	 QRRDCadDwOjueWAnOfKCH+SxuMxhn3G8TBgPPityvuSpnPTz1fRoaUfSvJ/j97iRGn
+	 52dDC2ZvgRkp4hLFf1gyKcFm0RI5fyDArYiV0ZvnuC/+Ce/v9huRzqFMj0GETjl6De
+	 A/w4mXqQ301fosRKGQeqK04OdiqM7kiElzRZmvj9LcrnkQuY91KX7uQR3VrAyqdOIH
+	 CBfYZGSvybvow==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1roqic-000000004Wt-420I;
+	Mon, 25 Mar 2024 21:14:55 +0100
+Date: Mon, 25 Mar 2024 21:14:54 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
+ exists in DT"
+Message-ID: <ZgHbPo57UKUxK7G8@hovoldconsulting.com>
+References: <20240314084412.1127-1-johan+linaro@kernel.org>
+ <CABBYNZJV1htg46Gyu=7_iUWdukM+rHLitsLjxmWWYFGXty3tVw@mail.gmail.com>
+ <ZfMStHjwtCT1SW3z@hovoldconsulting.com>
+ <964131ff-293d-47d1-8119-a389fa21f385@leemhuis.info>
+ <CABBYNZJ0ukd_8=SFzy8CEwgP7hV5unodca0NZ2zDZh+jPJsEFQ@mail.gmail.com>
+ <ZgGzWWV4Lh2Nal--@hovoldconsulting.com>
+ <CABBYNZJaXUhu1A+NyVT-TAJw49zcV6TMdGeVy2F+AVKWBOVC-g@mail.gmail.com>
+ <ZgHVFjAZ1uqEiUa2@hovoldconsulting.com>
+ <CABBYNZJUVhNKVD=s+=eYJ1q+j1W8rVSRqM4bKPbxT=TKrnZdoQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319-adding-new-ad738x-driver-v5-0-ce7df004ceb3@baylibre.com>
- <20240319-adding-new-ad738x-driver-v5-4-ce7df004ceb3@baylibre.com>
- <20240324130135.35f4b0eb@jic23-huawei> <CAMknhBGmM7yt1JR1tW4SS5RLGpN9PtnMrf0WvZ-bhU-gSv3YUQ@mail.gmail.com>
- <20240325200625.5a07cec4@jic23-huawei>
-In-Reply-To: <20240325200625.5a07cec4@jic23-huawei>
-From: David Lechner <dlechner@baylibre.com>
-Date: Mon, 25 Mar 2024 15:14:19 -0500
-Message-ID: <CAMknhBHNhL62A8KY3vnNqQm+c+5M-0=w3qAWN=54FxYGjicUQw@mail.gmail.com>
-Subject: Re: [PATCH v5 4/7] iio: adc: ad7380: add support for
- pseudo-differential parts
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Julien Stephan <jstephan@baylibre.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABBYNZJUVhNKVD=s+=eYJ1q+j1W8rVSRqM4bKPbxT=TKrnZdoQ@mail.gmail.com>
 
-On Mon, Mar 25, 2024 at 3:06=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
+On Mon, Mar 25, 2024 at 04:07:03PM -0400, Luiz Augusto von Dentz wrote:
+> On Mon, Mar 25, 2024 at 3:48 PM Johan Hovold <johan@kernel.org> wrote:
+> > On Mon, Mar 25, 2024 at 03:39:03PM -0400, Luiz Augusto von Dentz wrote:
+> > > On Mon, Mar 25, 2024 at 1:24 PM Johan Hovold <johan@kernel.org> wrote:
+> > > > On Mon, Mar 25, 2024 at 01:10:13PM -0400, Luiz Augusto von Dentz wrote:
 > >
-> > But given that this is a common pattern in many IIO drivers, maybe we
-> > make a devm_regulator_get_enable_get_voltage()? This would return the
-> > voltage on success or an error code. (If the regulator subsystem
-> > doesn't want this maybe we could have
-> > devm_iio_regulator_get_enable_get_voltage()).
+> > > > > I guess the following is the latest version:
+> > > > >
+> > > > > https://patchwork.kernel.org/project/bluetooth/list/?series=836664
+> > > > >
+> > > > > Or are you working on a v5?
+> > > >
+> > > > This patch (revert) fixes a separate issue than the series you link to
+> > > > above, but it is also a prerequisite for that series.
+> > > >
+> > > > v4 is indeed the latest version, and it has been acked by Rob and Bjorn
+> > > > so you can take it all through the Bluetooth tree. Just remember to
+> > > > apply this patch (the revert) first.
+> > >
+> > > Doesn't seem to apply cleanly:
+> > >
+> > > Applying: Bluetooth: qca: fix device-address endianness
+> > > error: patch failed: drivers/bluetooth/hci_qca.c:1904
+> > > error: drivers/bluetooth/hci_qca.c: patch does not apply
+> > > Patch failed at 0004 Bluetooth: qca: fix device-address endianness
 > >
-> > If the dev_err_probe() calls were included in
-> > devm_regulator_get_enable_get_voltage(), then the 10+ lines of code
-> > here and in many other drivers to get the regulator, enable it, add
-> > the reset action and get the voltage could be reduced to 3 lines.
->
-> I like this proposal a lot. RFC, so it's visible outside the depths
-> of this thread?
+> > Did you apply this patch (the revert) before trying to apply the series?
+> 
+> Probably needs rebasing:
+> 
+> Applying: Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in DT"
+> error: drivers/bluetooth/hci_qca.c: does not match index
+> Patch failed at 0001 Revert "Bluetooth: hci_qca: Set BDA quirk bit if
+> fwnode exists in DT"
 
-Yes, I can send an RFC separately so it doesn't hold up this patch/series.
+I just verified that it applies cleanly to 6.9-rc1.
 
-> Particularly good as it will keep the regulator opaque in the same
-> fashion as devm_regulator_get_enabled()
->
-> As you say, we have a 'lot' of instances of this (quick grep
-> suggests > 50 in IIO alone and smaller numbers elsewhere).
->
+	$ git checkout tmp v6.9-rc1
+	$ b4 am -sl ZgHVFjAZ1uqEiUa2@hovoldconsulting.com
+	...
+	$ git am ./20240314_johan_linaro_revert_bluetooth_hci_qca_set_bda_quirk_bit_if_fwnode_exists_in_dt.mbx
+	Applying: Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in DT"
+	$ b4 am -sl 20240320075554.8178-2-johan+linaro@kernel.org
+	...
+	$ git am ./v4_20240320_johan_linaro_bluetooth_qca_fix_device_address_endianness.mbx
+	Applying: dt-bindings: bluetooth: add 'qcom,local-bd-address-broken'
+	Applying: arm64: dts: qcom: sc7180-trogdor: mark bluetooth address as broken
+	Applying: Bluetooth: add quirk for broken address properties
+	Applying: Bluetooth: qca: fix device-address endianness
+
+Do you have anything else in your tree which may interfere? What tree is
+that exactly?
+
+Johan
