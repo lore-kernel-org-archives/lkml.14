@@ -1,118 +1,80 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC61713BAD7
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18DAF10A39;
+	Mon, 25 Mar 2024 17:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711386972; cv=none; b=CAsDeisYbKUMoe/5zYJwgsyRz5yDkz28vmHpZTGHTivev8FkB/EV3ZxNQDaVQ9G0DeohPb98suiJKRtGYK6FrlATbZuOnZi7Lx2uOY4rli3Q9EgCVQXB62R+6df3S/3Lkozgl3+u6Zr5cI1qh5UOX0DGMbSB983PmQL3Cj2ERNY=
+	t=1711387090; cv=none; b=ReB++ml/h346P2l5wP/NC1/anbip/VqzQUsF09Ch7fylY2srwfrOBAy9KN+3xvLC6otPAmbnC7KuQifJc5lEW5IYtdD0CPY6H6CRLlqg6O6zXhkmjVP1IBAeVhFWdNirYvf7Avg0wVSiKbSb4I+nJMnFcbzOYnaghMKOn3Fgilc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711386972; c=relaxed/simple;
-	bh=5z7JWgRm+prE8c9r61qKqkGGuVaMbLVUWLsiDunLhpA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WMdLMNDRLtjzimvMIxNnxwZU4g541AHSKFsND0VytT79GQdMjTS62JzX9SBtsgiByjmxfhgIv5oUmp5whHtgcAxKlZZPQO3EuBqH7HP+pnmnivA3qvn/cEk6f486RO8P86dqdI2pdBhpbGQk5rm4RjYgWgYQkFwCS2cKA3kJSfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PX/58+xC; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711387090; c=relaxed/simple;
+	bh=KpkhGTOu+U8kzPp6yqXmWrljw/u7Nr3n1qroNyfHO2I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VDGrD998gthdPoJoDcSHoAQl60gTrqN9BLn1INFFHXQ9Trp2/mhH+C2emZdiU0ewrumjT38hWuwSQ4U7vFui+CW4nOaQhLH5ohUFc08hIZo8NQMO68UmS4jajUlqzk668G1Tef9AkTZ+rwNiKUA96ZpimJPIlWMzLU5HOL2O/M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cgc56BgI; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PX/58+xC"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3c3ceeb2d04so563618b6e.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:16:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711386967; x=1711991767; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5z7JWgRm+prE8c9r61qKqkGGuVaMbLVUWLsiDunLhpA=;
-        b=PX/58+xC1fNRI6lc5d432WfiXaq3h0SrIUmAt1aLuSIX0ZTRrBKPdx6mM99YRu7etI
-         x6K40p2FcwKvIJhXQlKsFEJsXKfXz9tzNWLBjSYjjgHVNTvMcCLfkikVdcczozM/YlAU
-         PP8DJdVYH/Tfq3/z8HH5a5hbfrU2+B4REx7Ks=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711386967; x=1711991767;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5z7JWgRm+prE8c9r61qKqkGGuVaMbLVUWLsiDunLhpA=;
-        b=dhUiYwUikCFgMGQTiHwf8GGSn4To+qKvD0pVT+Pj+UAb4nnL3GLocicRo4B9RqcrUa
-         rlkaVecRLSygDyQmnb/yDU9YPR0aSiBpWAT/Y0+l4xmef/DnY/O0k2JQuUu4KZEdxBQi
-         FwA9P9MA8Sb8zS658WVwslrUsEFTQkXcFQbwQdD935Q8+vU/fD1MV4b3JWNwgOfx+XG+
-         u96O7cr3yyeFsAiGjXv94z0tqpy0ASqJBDLBdN+4r4fCVzjyk5MPyj3WWiB54CUF5HxE
-         CRZUTy5z8RfdxsGvs2jSMXTyDJE3ZA97BXcZx6ZE5QQuMclhwmV/tnfz7QL8OtTZBrLf
-         YKGA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHxKQirAbfxh6shrbLeXK2kriIrKqFZdmQAeOQ53RrIhAXIngQYL7tU9WRObjZjSU0dxGI6VHJGmmsVOUqWdtyDtvMen0R7g85scMJ
-X-Gm-Message-State: AOJu0Yxgf1PIOwu0leKDA9K7M172B3oJ64R3EjG15qwA/owJpLIbZiQ5
-	GsJeSewufolXP36hhJzdJ9u55cTJNgwGHAPpL+gKVkh3B796vaOaUWGGZvS18uvgWwSrCqNPgcY
-	=
-X-Google-Smtp-Source: AGHT+IHt0uCP1uxFT41AgPIV8sv3zAT91T7zEUw7XKih3D5k1U48qocC3QwhSk0va+LU2nGEeMnGcA==
-X-Received: by 2002:a05:6808:13ce:b0:3c3:c12e:c13e with SMTP id d14-20020a05680813ce00b003c3c12ec13emr522105oiw.43.1711386967660;
-        Mon, 25 Mar 2024 10:16:07 -0700 (PDT)
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com. [209.85.160.174])
-        by smtp.gmail.com with ESMTPSA id ph16-20020a0562144a5000b006967ba7f1adsm2753940qvb.96.2024.03.25.10.16.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 10:16:07 -0700 (PDT)
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-430d3fcc511so8971cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:16:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV/vATWsrV6Dj+qp4MtF2Ba/EXAQQak+riTV3ED0+0De+h+N0N3HVBeya4++zEuktMRrOWxwdBKT1kd/UAcSGGTDPkF8B4lrDSQal5q
-X-Received: by 2002:a05:622a:2a06:b0:431:baa:825 with SMTP id
- hc6-20020a05622a2a0600b004310baa0825mr1246888qtb.25.1711386965873; Mon, 25
- Mar 2024 10:16:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cgc56BgI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711387090; x=1742923090;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=KpkhGTOu+U8kzPp6yqXmWrljw/u7Nr3n1qroNyfHO2I=;
+  b=Cgc56BgIqxEhpMF6SYTdment1XlTTa88Gi7HUGQav0zH/6k2DG6nDHdG
+   v4q7OJSk6Vi8Jfnqh2zffaq5qp2ZDW5dUAvj+ejYNzYSP4BSbEHRs/n3K
+   tK/4swAKrLsrRsBBhangEQv5lc9Tt+pjWRtUV+dy4uGguuxbDiH/42aIP
+   jQr2y7+6ZnLSDWilQOQcaFTgAmLzq4CbGVjzrs3LeF82SLk7u3MZ+Xf+d
+   aHyG3aLvR4L9QAllSQ0zfVlDfFL8MYQqK9aZeH0iZ3agZiDQmbclyO2X5
+   mGBkADfax84/gTtBPKJSOU2xIaYZ9HED+MbNV75iHOFjssaxPL8hJKION
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="17546538"
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="17546538"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 10:18:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="937070690"
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="937070690"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2024 10:18:06 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 9546D524; Mon, 25 Mar 2024 19:18:05 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 0/2] gpiolib: Fix/update messaging
+Date: Mon, 25 Mar 2024 19:16:24 +0200
+Message-ID: <20240325171804.3375280-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325054403.592298-1-sboyd@kernel.org> <20240325054403.592298-5-sboyd@kernel.org>
- <CAD=FV=Ws-LYcpiitibPBPRhqrbS8rTo_7xtPPw2kA+qBzybOxQ@mail.gmail.com> <42ae624ca2289fb82e00f3ac8938d05e.sboyd@kernel.org>
-In-Reply-To: <42ae624ca2289fb82e00f3ac8938d05e.sboyd@kernel.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 25 Mar 2024 10:15:50 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XcHdEiMf8Z228sT=ChvjJs8Ujw6q8Hcf4b588ocwJHiQ@mail.gmail.com>
-Message-ID: <CAD=FV=XcHdEiMf8Z228sT=ChvjJs8Ujw6q8Hcf4b588ocwJHiQ@mail.gmail.com>
-Subject: Re: [PATCH 4/5] clk: Get runtime PM before walking tree during disable_unused
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, patches@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Fix scary '(null)' in the messages and move to dev_err() in one case.
 
-On Mon, Mar 25, 2024 at 10:06=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> wr=
-ote:
->
-> > > +/*
-> > > + * Call clk_pm_runtime_get() on all runtime PM enabled clks in the c=
-lk tree so
-> > > + * that disabling unused clks avoids a deadlock where a device is ru=
-ntime PM
-> > > + * resuming/suspending and the runtime PM callback is trying to grab=
- the
-> > > + * prepare_lock for something like clk_prepare_enable() while
-> > > + * clk_disable_unused_subtree() holds the prepare_lock and is trying=
- to runtime
-> > > + * PM resume/suspend the device as well.
-> > > + */
-> > > +static int clk_pm_runtime_get_all(void)
-> >
-> > nit: It'd be nice if this documented that it acquired / held the lock.
-> > Could be in comments, or, might as well use the syntax like this (I
-> > think):
-> >
-> > __acquires(&clk_rpm_list_lock);
-> >
-> > ...similar with the put function.
->
-> I had that but removed it because on the error path we drop the lock and
-> sparse complains. I don't know how to signal that the lock is held
-> unless an error happens, but I'm a little out of date on sparse now.
+v4:
+- combined 20240320165930.1182653-1-andriy.shevchenko@linux.intel.com
+  and 20240322073725.3338266-1-peng.fan@oss.nxp.com (Bart)
 
-I'd settle for something in the comments then? Maybe tagged with "Context:"=
- ?
+Andy Shevchenko (1):
+  gpiolib: Fix debug messaging in gpiod_find_and_request()
 
-Thanks!
+Peng Fan (1):
+  gpiolib: use dev_err() when gpiod_configure_flags failed
 
--Doug
+ drivers/gpio/gpiolib.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
+
+-- 
+2.43.0.rc1.1.gbec44491f096
+
