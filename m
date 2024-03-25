@@ -1,70 +1,70 @@
 Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2441487F4;
-	Mon, 25 Mar 2024 05:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B601487FE;
+	Mon, 25 Mar 2024 05:50:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711345813; cv=none; b=q8DpVZd5mgIISx9CtE7ZlzO3rd+R41ecXFldbVYJzwui8A61IkDuv6I4FiYIXSixrqfuY82PiX/Z0obvtLorRjWYEVFm6gAEy6936Kz3JmMcBrQc4EFmy6g3xG3L6C+AgcfKtjHm7pj9Pq/KX5EhW1KhGdPuRA2W3dc0mrJrG+g=
+	t=1711345826; cv=none; b=DyPiZVgu880AV9lRWigYJloSWbfZSPM0VGQuH48DcjSqQ131BNGEtILI3vl7nPRGKfhpQbjdXtZMLHHgUlh0rQQK/1UjxDPyhOTR+vuNaZR4Zfw3TAeQkqfbzoztQzZ0Dvyvf2EqtkQCDk/lA4Mh+ut2X9bg4VzcZvd1JkYF1RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711345813; c=relaxed/simple;
-	bh=4jL1KWXjYiXny0h+Nb8iTu6zptXy96mU9So4SIu2+78=;
+	s=arc-20240116; t=1711345826; c=relaxed/simple;
+	bh=H0XXl2nd4p7lkG53n8fVjt+PQ+8UAhbKACuzm1iveiw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AJBmcbc4KAe37fQU26ZGj4xDwqMn8Pm0mSVe7QZjR0TGbVk7z8JnTurk4w4CYWsCm4fRLiedncIp3gkU0LPLQNoh4xkRaplwrllRJQsSwNj1cxffftZmf8t+v/dwNGXMXFJS5CJb+YwJW+SX7IODo+jxsHaeZH4AFWm39SjWpgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=BKJyUdA9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Cx3bKixn; arc=none smtp.client-ip=103.168.172.150
+	 MIME-Version; b=k+gWcsHDQqp28jkUEyMRPGXjzmpmTr3gEXw2qY4rC2Gn73oTHzC/unE4/zABsBwFbqTbW9aOid10mNxlOMP+Kap2bnGnaJBIYXWt+j+NE0IyIFyjwufvuM4/DiDLZM2GpO+Rsb/aIyGynG87Rxg+IJA3grn1S3ybl9RGBkXjFoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=hlvo5M1v; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qh9mhyJF; arc=none smtp.client-ip=103.168.172.150
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="BKJyUdA9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Cx3bKixn"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 9C7C313800F3;
-	Mon, 25 Mar 2024 01:50:10 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="hlvo5M1v";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qh9mhyJF"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id AC48113800F3;
+	Mon, 25 Mar 2024 01:50:23 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Mon, 25 Mar 2024 01:50:10 -0400
+  by compute5.internal (MEProxy); Mon, 25 Mar 2024 01:50:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1711345810; x=
-	1711432210; bh=0Bh+6YXJNCLRuMqGyD0SersId0d+g+aFk1/fEt3iF3I=; b=B
-	KJyUdA9Fky93RqSejG38eS4pz5NRQhjJcZYszN4RHsU5/Elns7iedbvCuNH49hxu
-	mL9+nEedahi3EBZbLXaplV2JVok6zF5fehCZPjGfSjnmyygIPfsem2hCMlc1Ots0
-	ZwmY5ZmdE5qOUGYD3phDsLF3WuGeCkoj46hEls7aH3Ve/pDmo86vfOJeXgrPFifZ
-	owB+noqh6R57SksWACHGnEPnDJU5cYzIPOgPPOMS/kbxzTDZqTNk9t57E0L/Z4q8
-	qZ1W++rzpzvr4KZCMaYNjag6v/Loo0SRxeZT8Yhuz2FtTqUK7tRfCkBNssnPtj83
-	chBvMA6pq2q2C1uNczEQQ==
+	:reply-to:subject:subject:to:to; s=fm3; t=1711345823; x=
+	1711432223; bh=IIk1CZbCz3Dnvbmp1NYtis5LnvpXyEWO8o6T/E3NbVo=; b=h
+	lvo5M1v/76OOBRHqXmKyqXgxmS8S6XrXfhAAA2LhIF1sC7gmTYUdC7DLchMopTv9
+	VWce9A1kNs7FqmyA0JDFxrvtZKJ8iHo/Iym/2uc592lyu3qsEXkiu40MNU8nMh4C
+	UZDW3P3e43uLSFHzBbUc89VXOEoFR6rRqJ8nDbhjk1WRAqce2ELD7oiQU7LYPL3N
+	ReHZnCrH4DakYZiZhuXKNOaxvt0nCBW3fWOJqd/vv0UQpKT7sr/QzOdyGemAjnNe
+	68/Zz5pxGCvJAmfXNRTkZAWEukFzK6m9GQkZHW/F4RNvF65PS+Frq/x7ZeOLAGK7
+	2WNoTeum8j/ZCmqN2JhQw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711345810; x=
-	1711432210; bh=0Bh+6YXJNCLRuMqGyD0SersId0d+g+aFk1/fEt3iF3I=; b=C
-	x3bKixnkaveIUB0fbqzayQ+IS5r93S+ef1c2L1TG70xFXj5hWYgep6qtHwWmj0d9
-	KlV3p8GG3Ww2IARz0lRL4kVSweCm9Cy144DVSi6z90Qo1TYrbcpaiIwPBikJMyVt
-	pheXay9ouw+Io8afRSotLzuZ445ruB4Le0lqDEGjQcEMI2SAVnHMDBfxvcH4b2Mu
-	Fw+DOmZFx7wAn4oweT0aHu5ONSfkcE8KtNIDKnBGp5MMvZghhMVhvhkiNRZAEDOg
-	lf39KyGGPYw6IJMtxgwPYKdr3lrSDruq72Yoq8oj3WNzyZqyVmXEqsQbiKo7cNS5
-	bmOXOKnJDLtE96d43J3CA==
-X-ME-Sender: <xms:khABZrFKdmIfRH_g7zpFsKq92QS6xNU1av-6J6l4HY3mJ0BMA0qefA>
-    <xme:khABZoXvmtS71jh6EASDTgJn3rE8blrXe9PJWZEyGNU54JqnAq1aPzsaQ_fv-vCRB
-    qa2zi1QMeFOs4u08WY>
-X-ME-Received: <xmr:khABZtLRJdUFH1KrNvwCtvbXPFDTIzPO_OOfqrvWLms-d5QRWPmKRKkUS2pB>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711345823; x=
+	1711432223; bh=IIk1CZbCz3Dnvbmp1NYtis5LnvpXyEWO8o6T/E3NbVo=; b=Q
+	h9mhyJFzHFbMOATIlq4qnNdCFiPOt4eS18VevlCjAvWiMrpzqqS6QBtYPesaQ9hT
+	xftZddFCxUzqeMLG7Wby/fyPRFzay79FPn4AD06f/tdZVK98ihbFiMAoibEFkTOe
+	4/UUi3yEEuG8IppvwhTIMuZhtdrSJ6yZFCcf1QmQj1XGiOwfoYwP+i43wGZHX21T
+	OPCya59KGAX2I3519Bd69D2h786LHbcNDj5/rWKPAY42tOP2biXB0K+9+LlRnNpv
+	IL9UeYMsC98UaUTbnoXlt58jdog4ykINP13fobNA91OwH1QKP+TpkPzURrLUxQzW
+	4elVTcFu0yYtBOOjCw2Ww==
+X-ME-Sender: <xms:nxABZgsHnoxomLEpPl9R3Ujp0vDV_S8lsLZ-rrW36yWBDjc5Uigu6A>
+    <xme:nxABZtf9til8DQIm3Iq4BADI-1W3YLaKGoWFCKszAIM4cCeWRVHSIVIs9LRZ2EFCQ
+    FtXOWdiWNMclpEZKP0>
+X-ME-Received: <xmr:nxABZryWjZadstuLgdiPCQvSdbuc3NCBMxPjCiSWv4I0fQBKl4bz9Q7tTBtk>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtkedgledtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
     ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
     jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
-    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgeptden
+    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgepuden
     ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:khABZpFuGIq4Esq02oIi2apuvDnz4IGDBKa3UnD75cqoybBQCk8vWg>
-    <xmx:khABZhUerafxdBKMHYrV8O5tL4nhhPh-4ep4RCWMWcx-6mY_0xtXrA>
-    <xmx:khABZkNJ_1-6Eu7vlh_qAnXuq4h-vJy52oL5X-OmAL1hKqSQ_QwElg>
-    <xmx:khABZg315VGtzopLvYGOm7w5MQKqKrzEiFzEkYR6DuzVkjefBXaQsQ>
-    <xmx:khABZjK-P9BagwWHK0FEx1uHAQ2vcBIKLQgKw281Si7R6mYCnFIvmg>
+X-ME-Proxy: <xmx:nxABZjOC6ZHixCUCUgnMiJ5ZB3rbJLocR3YCUGjGs0FLXM2orFGBLA>
+    <xmx:nxABZg8GrmiHHROu4JYqc8XZ5phlhNGN_N_h5gf_Ru-rDuG0bHY-AA>
+    <xmx:nxABZrWqRAQLcwgxZUvZXpFN2dyMjIlzHkQ7oL3eGKkWkd6iPsKc7Q>
+    <xmx:nxABZpfeFEreP-BfK1VFqr2XEvMQ6s55QLk_0zbxweHtAUrmYkPd-Q>
+    <xmx:nxABZgxFl-yFHIZS5aHNAxVgcLibTQEKAaT9XN0-LGRIQk1PlGwtQQ>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 25 Mar 2024 01:50:07 -0400 (EDT)
+ 25 Mar 2024 01:50:20 -0400 (EDT)
 From: "Luke D. Jones" <luke@ljones.dev>
 To: hdegoede@redhat.com
 Cc: corentin.chary@gmail.com,
@@ -72,9 +72,9 @@ Cc: corentin.chary@gmail.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH 1/9] platform/x86: asus-wmi: add support for 2024 ROG Mini-LED
-Date: Mon, 25 Mar 2024 18:49:30 +1300
-Message-ID: <20240325054938.489732-2-luke@ljones.dev>
+Subject: [PATCH 5/9] platform/x86: asus-wmi: store a min default for ppt options
+Date: Mon, 25 Mar 2024 18:49:34 +1300
+Message-ID: <20240325054938.489732-6-luke@ljones.dev>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240325054938.489732-1-luke@ljones.dev>
 References: <20240325054938.489732-1-luke@ljones.dev>
@@ -86,174 +86,259 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Support the 2024 mini-led backlight and adjust the related functions
-to select the relevant dev-id. Also add `available_mini_led_mode` to the
-platform sysfs since the available mini-led levels can be different.
+Laptops with any of the ppt or nv tunables default to the minimum setting
+on boot so we can safely assume a stored value is correct.
+
+This patch adds storing of those values in the local struct, and enables
+reading of those values back. To prevent creating a series of byte holes
+in the struct the "<name>_available" bool is removed and
+`asus_sysfs_is_visible()` uses the `ASUS_WMI_DEVID_<name>` directly.
 
 Signed-off-by: Luke D. Jones <luke@ljones.dev>
 ---
- .../ABI/testing/sysfs-platform-asus-wmi       |  8 ++
- drivers/platform/x86/asus-wmi.c               | 74 +++++++++++++++++--
- include/linux/platform_data/x86/asus-wmi.h    |  1 +
- 3 files changed, 76 insertions(+), 7 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 127 +++++++++++++++++++++++++-------
+ 1 file changed, 99 insertions(+), 28 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-index 8a7e25bde085..61a745d2476f 100644
---- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-+++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-@@ -126,6 +126,14 @@ Description:
- 		Change the mini-LED mode:
- 			* 0 - Single-zone,
- 			* 1 - Multi-zone
-+			* 2 - Multi-zone strong (available on newer generation mini-led)
-+
-+What:		/sys/devices/platform/<platform>/available_mini_led_mode
-+Date:		Jun 2023
-+KernelVersion:	6.10
-+Contact:	"Luke Jones" <luke@ljones.dev>
-+Description:
-+		List the available mini-led modes.
- 
- What:		/sys/devices/platform/<platform>/ppt_pl1_spl
- Date:		Jun 2023
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 18be35fdb381..54ce0fb26f42 100644
+index 6cac9c3eb8b2..1e369b673a72 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -297,6 +297,7 @@ struct asus_wmi {
+@@ -271,13 +271,13 @@ struct asus_wmi {
+ 	u32 gpu_mux_dev;
  
- 	bool panel_overdrive_available;
- 	bool mini_led_mode_available;
-+	u32 mini_led_dev_id;
+ 	/* Tunables provided by ASUS for gaming laptops */
+-	bool ppt_pl2_sppt_available;
+-	bool ppt_pl1_spl_available;
+-	bool ppt_apu_sppt_available;
+-	bool ppt_plat_sppt_available;
+-	bool ppt_fppt_available;
+-	bool nv_dyn_boost_available;
+-	bool nv_temp_tgt_available;
++	u32 ppt_pl2_sppt;
++	u32 ppt_pl1_spl;
++	u32 ppt_apu_sppt;
++	u32 ppt_platform_sppt;
++	u32 ppt_fppt;
++	u32 nv_dynamic_boost;
++	u32 nv_temp_target;
  
- 	struct hotplug_slot hotplug_slot;
- 	struct mutex hotplug_lock;
-@@ -2109,10 +2110,27 @@ static ssize_t mini_led_mode_show(struct device *dev,
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	int result;
+ 	bool kbd_rgb_mode_available;
+ 	u32 kbd_rgb_dev;
+@@ -1021,11 +1021,21 @@ static ssize_t ppt_pl2_sppt_store(struct device *dev,
+ 		return -EIO;
+ 	}
  
--	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_MINI_LED_MODE);
--	if (result < 0)
--		return result;
-+	result = asus_wmi_get_devstate_simple(asus, asus->mini_led_dev_id);
++	asus->ppt_pl2_sppt = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl2_sppt");
  
-+	/* Remap the mode values to match previous generation mini-led.
-+	 * Some BIOSes return -19 instead of 2, which is "mini-LED off", this
-+	 * appears to be a  BIOS bug.
-+	 */
-+	if (asus->mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2) {
-+		switch (result) {
-+		case 0:
-+			result = 1;
-+			break;
-+		case 1:
-+			result = 2;
-+			break;
-+		case 2:
-+		case -19:
-+			result = 0;
-+		}
-+	} else if (result < 0) {
-+		return result;
-+	}
- 	return sysfs_emit(buf, "%d\n", result);
+ 	return count;
  }
- 
-@@ -2129,11 +2147,28 @@ static ssize_t mini_led_mode_store(struct device *dev,
- 	if (result)
- 		return result;
- 
--	if (mode > 1)
-+	if (mode > 1 && asus->mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE)
- 		return -EINVAL;
-+	if (mode > 2 && asus->mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2)
-+		return -EINVAL;
-+	/*
-+	 * Remap the mode values so expected behaviour is the same as the last
-+	 * generation of mini-LED
-+	 */
-+	if (asus->mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2) {
-+		switch (mode) {
-+		case 0:
-+			mode = 2;
-+			break;
-+		case 1:
-+			mode = 0;
-+			break;
-+		case 2:
-+			mode = 1;
-+		}
-+	}
- 
--	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_MINI_LED_MODE, mode, &result);
--
-+	err = asus_wmi_set_devstate(asus->mini_led_dev_id, mode, &result);
- 	if (err) {
- 		pr_warn("Failed to set mini-LED: %d\n", err);
- 		return err;
-@@ -2150,6 +2185,23 @@ static ssize_t mini_led_mode_store(struct device *dev,
- }
- static DEVICE_ATTR_RW(mini_led_mode);
- 
-+static ssize_t available_mini_led_mode_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
+-static DEVICE_ATTR_WO(ppt_pl2_sppt);
++
++static ssize_t ppt_pl2_sppt_show(struct device *dev,
++				       struct device_attribute *attr,
++				       char *buf)
 +{
 +	struct asus_wmi *asus = dev_get_drvdata(dev);
 +
-+	switch (asus->mini_led_dev_id) {
-+	case ASUS_WMI_DEVID_MINI_LED_MODE:
-+		return sysfs_emit(buf, "0 1\n");
-+	case ASUS_WMI_DEVID_MINI_LED_MODE2:
-+		return sysfs_emit(buf, "0 1 2\n");
-+	}
-+
-+	return sysfs_emit(buf, "0\n");
++	return sysfs_emit(buf, "%d\n", asus->ppt_pl2_sppt);
 +}
-+
-+static DEVICE_ATTR_RO(available_mini_led_mode);
-+
- /* Quirks *********************************************************************/
++static DEVICE_ATTR_RW(ppt_pl2_sppt);
  
- static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
-@@ -4174,6 +4226,7 @@ static struct attribute *platform_attributes[] = {
- 	&dev_attr_nv_temp_target.attr,
- 	&dev_attr_panel_od.attr,
- 	&dev_attr_mini_led_mode.attr,
-+	&dev_attr_available_mini_led_mode.attr,
- 	NULL
- };
+ /* Tunable: PPT, Intel=PL1, AMD=SPL ******************************************/
+ static ssize_t ppt_pl1_spl_store(struct device *dev,
+@@ -1055,11 +1065,20 @@ static ssize_t ppt_pl1_spl_store(struct device *dev,
+ 		return -EIO;
+ 	}
  
-@@ -4496,10 +4549,17 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	asus->nv_dyn_boost_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_DYN_BOOST);
- 	asus->nv_temp_tgt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_THERM_TARGET);
++	asus->ppt_pl1_spl = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl1_spl");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(ppt_pl1_spl);
++static ssize_t ppt_pl1_spl_show(struct device *dev,
++				 struct device_attribute *attr,
++				 char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->ppt_pl1_spl);
++}
++static DEVICE_ATTR_RW(ppt_pl1_spl);
+ 
+ /* Tunable: PPT APU FPPT ******************************************************/
+ static ssize_t ppt_fppt_store(struct device *dev,
+@@ -1089,11 +1108,21 @@ static ssize_t ppt_fppt_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->ppt_fppt = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_fpu_sppt");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(ppt_fppt);
++
++static ssize_t ppt_fppt_show(struct device *dev,
++				struct device_attribute *attr,
++				char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->ppt_fppt);
++}
++static DEVICE_ATTR_RW(ppt_fppt);
+ 
+ /* Tunable: PPT APU SPPT *****************************************************/
+ static ssize_t ppt_apu_sppt_store(struct device *dev,
+@@ -1123,11 +1152,21 @@ static ssize_t ppt_apu_sppt_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->ppt_apu_sppt = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_apu_sppt");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(ppt_apu_sppt);
++
++static ssize_t ppt_apu_sppt_show(struct device *dev,
++			     struct device_attribute *attr,
++			     char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->ppt_apu_sppt);
++}
++static DEVICE_ATTR_RW(ppt_apu_sppt);
+ 
+ /* Tunable: PPT platform SPPT ************************************************/
+ static ssize_t ppt_platform_sppt_store(struct device *dev,
+@@ -1157,11 +1196,21 @@ static ssize_t ppt_platform_sppt_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->ppt_platform_sppt = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_platform_sppt");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(ppt_platform_sppt);
++
++static ssize_t ppt_platform_sppt_show(struct device *dev,
++				 struct device_attribute *attr,
++				 char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->ppt_platform_sppt);
++}
++static DEVICE_ATTR_RW(ppt_platform_sppt);
+ 
+ /* Tunable: NVIDIA dynamic boost *********************************************/
+ static ssize_t nv_dynamic_boost_store(struct device *dev,
+@@ -1191,11 +1240,21 @@ static ssize_t nv_dynamic_boost_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->nv_dynamic_boost = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "nv_dynamic_boost");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(nv_dynamic_boost);
++
++static ssize_t nv_dynamic_boost_show(struct device *dev,
++				      struct device_attribute *attr,
++				      char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->nv_dynamic_boost);
++}
++static DEVICE_ATTR_RW(nv_dynamic_boost);
+ 
+ /* Tunable: NVIDIA temperature target ****************************************/
+ static ssize_t nv_temp_target_store(struct device *dev,
+@@ -1225,11 +1284,21 @@ static ssize_t nv_temp_target_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->nv_temp_target = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "nv_temp_target");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(nv_temp_target);
++
++static ssize_t nv_temp_target_show(struct device *dev,
++				     struct device_attribute *attr,
++				     char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->nv_temp_target);
++}
++static DEVICE_ATTR_RW(nv_temp_target);
+ 
+ /* Battery ********************************************************************/
+ 
+@@ -4315,19 +4384,19 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 	else if (attr == &dev_attr_throttle_thermal_policy.attr)
+ 		ok = asus->throttle_thermal_policy_available;
+ 	else if (attr == &dev_attr_ppt_pl2_sppt.attr)
+-		ok = asus->ppt_pl2_sppt_available;
++		devid = ASUS_WMI_DEVID_PPT_PL2_SPPT;
+ 	else if (attr == &dev_attr_ppt_pl1_spl.attr)
+-		ok = asus->ppt_pl1_spl_available;
++		devid = ASUS_WMI_DEVID_PPT_PL1_SPL;
+ 	else if (attr == &dev_attr_ppt_fppt.attr)
+-		ok = asus->ppt_fppt_available;
++		devid = ASUS_WMI_DEVID_PPT_FPPT;
+ 	else if (attr == &dev_attr_ppt_apu_sppt.attr)
+-		ok = asus->ppt_apu_sppt_available;
++		devid = ASUS_WMI_DEVID_PPT_APU_SPPT;
+ 	else if (attr == &dev_attr_ppt_platform_sppt.attr)
+-		ok = asus->ppt_plat_sppt_available;
++		devid = ASUS_WMI_DEVID_PPT_PLAT_SPPT;
+ 	else if (attr == &dev_attr_nv_dynamic_boost.attr)
+-		ok = asus->nv_dyn_boost_available;
++		devid = ASUS_WMI_DEVID_NV_DYN_BOOST;
+ 	else if (attr == &dev_attr_nv_temp_target.attr)
+-		ok = asus->nv_temp_tgt_available;
++		devid = ASUS_WMI_DEVID_NV_THERM_TARGET;
+ 	else if (attr == &dev_attr_boot_sound.attr)
+ 		devid = ASUS_WMI_DEVID_BOOT_SOUND;
+ 	else if (attr == &dev_attr_panel_od.attr)
+@@ -4588,18 +4657,20 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (err)
+ 		goto fail_platform;
+ 
++	/* ensure defaults for tunables */
++	asus->ppt_pl2_sppt = 5;
++	asus->ppt_pl1_spl = 5;
++	asus->ppt_apu_sppt = 5;
++	asus->ppt_platform_sppt = 5;
++	asus->ppt_fppt = 5;
++	asus->nv_dynamic_boost = 5;
++	asus->nv_temp_target = 75;
++
+ 	asus->charge_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CHARGE_MODE);
+ 	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
+ 	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
+ 	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
+ 	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
+-	asus->ppt_pl2_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL2_SPPT);
+-	asus->ppt_pl1_spl_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL1_SPL);
+-	asus->ppt_fppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_FPPT);
+-	asus->ppt_apu_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_APU_SPPT);
+-	asus->ppt_plat_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PLAT_SPPT);
+-	asus->nv_dyn_boost_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_DYN_BOOST);
+-	asus->nv_temp_tgt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_THERM_TARGET);
  	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
--	asus->mini_led_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE);
  	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
  						&& dmi_match(DMI_BOARD_NAME, "RC71L");
- 
-+	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE)) {
-+		asus->mini_led_mode_available = true;
-+		asus->mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
-+	} else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE2)) {
-+		asus->mini_led_mode_available = true;
-+		asus->mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE2;
-+	}
-+
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index ab1c7deff118..9cadce10ad9a 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -71,6 +71,7 @@
- #define ASUS_WMI_DEVID_LID_FLIP		0x00060062
- #define ASUS_WMI_DEVID_LID_FLIP_ROG	0x00060077
- #define ASUS_WMI_DEVID_MINI_LED_MODE	0x0005001E
-+#define ASUS_WMI_DEVID_MINI_LED_MODE2	0x0005002E
- 
- /* Storage */
- #define ASUS_WMI_DEVID_CARDREADER	0x00080013
 -- 
 2.44.0
 
