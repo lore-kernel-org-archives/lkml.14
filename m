@@ -1,139 +1,99 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612321B7CD9;
-	Mon, 25 Mar 2024 11:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BDC1B7F48
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711364617; cv=none; b=uiv4qjvwQTgUF5viGmF8et2W6b8RV/zUHZ+cTbcnEnApQdSvk7qvKaoGoZ7W5t9bo/qSkdwXIG9Lzp6J8v2SxYTzGkt8nszJoeHyu9VnV69gh8LmK+TjLbTLFY7/ZH1AD9jdCcikRnm4d1Ju6VZ/NRz7Ry3ropPN6DLr6CYp0zk=
+	t=1711364724; cv=none; b=N9tLiwqUSAqQDE0GrbjaDA0+z49VHpgxuFzdbGSzI4bdi3UAQswUSV76jigYAg63jj2aGKWg9HXY/4LSU7YY9ILW8ArUGVw2iKLWLp90N3Qib7xWmkFJLa2BMhjhSEEHWZFxljphSJTWWny6iyjBEiN9zDfCpBvLgCEh3fsYq8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711364617; c=relaxed/simple;
-	bh=Eska4gaH7kO1mPbE3Fmc4Y9tclS/elERBgLO1sr4MYA=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=nU8/rYk6jNeyTyyhjuZJc/rXo+RcFZE8Kq0o+7RvU7XCCo0jTxJbv7yBS7B/PlbVlzN4ufe4BlAMNVwFPsfG+DlN3FoGGNHvCs1sEvkecKh2YWK1K49p3sGQhjELvDGD+4vKfgp8uc2V7TZuL6bXz1JkcC+t++1txDqCLl9wr/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=utTqlRIX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PU+dUrX3; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1711364724; c=relaxed/simple;
+	bh=Y2nmC+14ezRMy2mustue2MVUzVXwhFpv6ampXT6eUHg=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qe/DJQAu+O1/ysFWxlhGPIg7e0e/Zka/k4gf0vEglenXUKzXYD47u2wORmtwzKZo86PVkxGEOT9L6rc9WlsesWMPZCCi45hW5pa2XpeoRWpJXialrlwBWze4hI9hiRXCe2h2PcFSKnhaWJQjK9UWeerCnDrVyYU6ugFWVE15en4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xOj+/INo; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="utTqlRIX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PU+dUrX3"
-Date: Mon, 25 Mar 2024 11:03:33 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711364614;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=avsc0Gio3l+bltvTrTbtMSukfJximpMb/2ZTG9DBt70=;
-	b=utTqlRIXEPHZxjkZ3YpURtaytf0cTNdBSa2MmTIUAciUKYcoTrxZRaflVZ1y4O1mzaYT9P
-	3Ns6vF4THDq9drshQuSE583YeQMqmowfde/XHqEWq3tR81SB+CdLeAm0ierDCPS9AnWIGE
-	hY/whtm3Hpw1NKkNrYOWQEhjIC9BjnPKD9BFPVQyFoEzV2LKruGfjgmkpoov5EMR30TC8P
-	73GoFzQ3An708wsUD9VmVyT/BJzjT7n+R3Yibj0Sj9fjZaZD1XUSuKYhW8RIqLd75gwLTd
-	eqb24gk0dvpobqTUUeyTi6h1t3m6mK+Dj6NieqR9XcZnO4HZNZbnO4lv1PnDKg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711364614;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=avsc0Gio3l+bltvTrTbtMSukfJximpMb/2ZTG9DBt70=;
-	b=PU+dUrX3N2SOgNmOZAr28PIRULIT34Sn1R1sl7QguwroulxykUDCaYPsF690/bNQhQ2cRo
-	d5KuwwBoaFbAk3BQ==
-From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] Revert "x86/mm/ident_map: Use gbpages only where
- full GB page should be mapped."
-Cc: Ingo Molnar <mingo@kernel.org>,  <stable@vger.kernel.org>,
- Russ Anderson <rja@hpe.com>, Steve Wahl <steve.wahl@hpe.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xOj+/INo"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-41489d59523so4036765e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711364720; x=1711969520; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wsjoNh+K8kiEw/9D4H6Eni8rIjOxLmAIKVvEa2HpqNg=;
+        b=xOj+/INoYkyS4CfUNaK387Z4RrUDm/SPaTVARPxeFGeiizHmt8LbuK7UJ2rOEJV2R5
+         DsxC+BBv2ffiw22F7BqLSwEAANP/zmu7NUtuRRXdijV+8c4Ur7C+92x7tS4lNIb/vc26
+         76S+w8+/WhEJrAbIpZ90U2fCmdlLLRtxEFXvhxIg3SddXWnYLusdBxijD83aLa57TNS9
+         7SbYtlc6qo1AdCjznK7LhVUy7eWY3DXd9vM8wX1RhgJFCgw+bwIGhSuiQ3GlTp9j0x7d
+         n44gfqyHZQ22d2dbeZ6IIm+nDchUQnAxr1+2TV7KmmRBWk3hXfeDjhjouFi42r9TrJnH
+         Y4qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711364720; x=1711969520;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wsjoNh+K8kiEw/9D4H6Eni8rIjOxLmAIKVvEa2HpqNg=;
+        b=hZYo9ecxR0yzGvYLV/uX1m7TY2D/8v3Dm5TFAcADg2WhJHrRmkhILip7T+S6dqqHWG
+         rjzl5W+IullnKb0Y08tgOVgRzK6zQa8fM3frxiOCeVqBrl8/TSBAmRyLpsWeUWv0Vbgu
+         l6FYhCbPhSfttM9DmIguzCAIubtjTSa4WLKlMNrpY0CPQ1e+kKY4qRTK5gmCISGFvUOB
+         jO1FISZK+9lkQQQDkOaUodbpxtYJnXjIU+20hxNcToap+Nk8cZfsdQCtgzgz2MWofh39
+         BGZb4rNScyrVtyf+QGsUOwTekmP66ZV5ec3puxSci31rF/V+e/4Yhvbhahc0WyCWSKhv
+         cfwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZ9LX7oNxh8Q0iMBJ6uEMjuOfQq572mVTseeiUUcOWHxnCn/HorT3PFEotIsHMl2OxCtSSB6MpC7UYEsk38XVIzFgCefkU+6azZOxI
+X-Gm-Message-State: AOJu0YzkliAfu0yTGAsT84KkfioLE1AWAymSFFDS/LhkQssn3Imv44MX
+	UrNnoo6PQb1RfLHsbOXdQ0cTnNGIxfhmW6vFIfJ+nQ8t2rK3fKotXobSPXUvKaY=
+X-Google-Smtp-Source: AGHT+IFf2BzSEVIyACoTBERhcHBMEiFMPo7KU1PU5LY5EETHIWOeFxhfF8SpIWBWaQEdNiEhHW38zw==
+X-Received: by 2002:a05:600c:1389:b0:414:64d3:f33f with SMTP id u9-20020a05600c138900b0041464d3f33fmr4665364wmf.23.1711364720697;
+        Mon, 25 Mar 2024 04:05:20 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.222.44])
+        by smtp.gmail.com with ESMTPSA id gw8-20020a05600c850800b004146dd6bfe2sm8053538wmb.47.2024.03.25.04.05.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 04:05:20 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Brad Larson <blarson@amd.com>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] arm64: dts: amd: use capital "OR" for multiple licenses in SPDX
+Date: Mon, 25 Mar 2024 12:05:15 +0100
+Message-Id: <171136466537.36729.48377468659514562.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240208105314.129095-1-krzysztof.kozlowski@linaro.org>
+References: <20240208105314.129095-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171136461366.10875.14490329545340375710.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     c567f2948f57bdc03ed03403ae0234085f376b7d
-Gitweb:        https://git.kernel.org/tip/c567f2948f57bdc03ed03403ae0234085f376b7d
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Mon, 25 Mar 2024 11:47:51 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 25 Mar 2024 11:54:35 +01:00
+On Thu, 08 Feb 2024 11:53:14 +0100, Krzysztof Kozlowski wrote:
+> Documentation/process/license-rules.rst and checkpatch expect the SPDX
+> identifier syntax for multiple licenses to use capital "OR".  Correct it
+> to keep consistent format and avoid copy-paste issues.
+> 
+> 
 
-Revert "x86/mm/ident_map: Use gbpages only where full GB page should be mapped."
+Applied, thanks!
 
-This reverts commit d794734c9bbfe22f86686dc2909c25f5ffe1a572.
+This was waiting on the lists for some time and no one picked it up, so... let
+me know if I should drop it from my tree.
 
-While the original change tries to fix a bug, it also unintentionally broke
-existing systems, see the regressions reported at:
+[1/1] arm64: dts: amd: use capital "OR" for multiple licenses in SPDX
+      https://git.kernel.org/krzk/linux-dt/c/0ee41698e633d5d370fad06284cfa9b693937499
 
-  https://lore.kernel.org/all/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
-
-Since d794734c9bbf was also marked for -stable, let's back it out before
-causing more damage.
-
-Note that due to another upstream change the revert was not 100% automatic:
-
-  0a845e0f6348 mm/treewide: replace pud_large() with pud_leaf()
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Cc: Russ Anderson <rja@hpe.com>
-Cc: Steve Wahl <steve.wahl@hpe.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/all/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
-Fixes: d794734c9bbf ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
----
- arch/x86/mm/ident_map.c | 23 +++++------------------
- 1 file changed, 5 insertions(+), 18 deletions(-)
-
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index a204a33..968d700 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -26,31 +26,18 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
- 	for (; addr < end; addr = next) {
- 		pud_t *pud = pud_page + pud_index(addr);
- 		pmd_t *pmd;
--		bool use_gbpage;
- 
- 		next = (addr & PUD_MASK) + PUD_SIZE;
- 		if (next > end)
- 			next = end;
- 
--		/* if this is already a gbpage, this portion is already mapped */
--		if (pud_leaf(*pud))
--			continue;
--
--		/* Is using a gbpage allowed? */
--		use_gbpage = info->direct_gbpages;
--
--		/* Don't use gbpage if it maps more than the requested region. */
--		/* at the begining: */
--		use_gbpage &= ((addr & ~PUD_MASK) == 0);
--		/* ... or at the end: */
--		use_gbpage &= ((next & ~PUD_MASK) == 0);
--
--		/* Never overwrite existing mappings */
--		use_gbpage &= !pud_present(*pud);
--
--		if (use_gbpage) {
-+		if (info->direct_gbpages) {
- 			pud_t pudval;
- 
-+			if (pud_present(*pud))
-+				continue;
-+
-+			addr &= PUD_MASK;
- 			pudval = __pud((addr - info->offset) | info->page_flag);
- 			set_pud(pud, pudval);
- 			continue;
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
