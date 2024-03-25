@@ -1,121 +1,75 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6889224DB;
-	Mon, 25 Mar 2024 10:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EC112A147
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711362064; cv=none; b=eYXrBFauFp3MkQPF0qDceQSnHcCPysLGIfjV3OuNCEIDzIx+4wtYin/y6cJ8eFP/5lhEShafWbzSp+R4UO7ArHT4K7hDLUxsx67ju8Y4a6I6hwGTAOtNyzkpzwqlrzjw5UXbWyS5okX53K0zCgIlN5rT5kwUiTCUvladbnRbJec=
+	t=1711362069; cv=none; b=Kys6w6iS9aT6WFZozoST4iLuO+kcf1SqAxT8vTjBVHBAM8bt0tSPv0RDksuGj587TkHI4KAK7hyRBqANkfBT4c/qfc71FwgArdWSvnVrLJPpgGw9alExykGYYDXYLK/pcvtpU6QN8pxRR+OS/UZyhGoKXHi5WI3RGMqh14iAv0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711362064; c=relaxed/simple;
-	bh=fcnh9KN2bWNwKxwz0u8fBtorPz/wfJtgWjD0gXneYto=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OSJMJMCVPeWgNhd7jzfwwHCP1qoH2eVDkvC0WINim9FQ8HOT0gnksHuQPaVoIZxpafaBWj1x7FVahEwcPYu6hBjkHP7+BGfFQmqMeNXCz0sXHQ+92Mi7LaYWuWuFP7uspstm437rJgeK+w6BzrEprkLepyHJNjpDhF5W7qaUwoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BX+gcc2Z; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711362069; c=relaxed/simple;
+	bh=ukM/PmOSEhPCGm07GAprsYA0zMF2NT+TMuGk6HOCLFA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NyrCS7mgs6kaFj25rpmwWSpJAI5FVHCkJYQ/9tJVSehjmuxNZGgHOPk/XSD0PmqBcSQmyjIpHCIwZhbWCs4cfaoQ3zy4gBhMnvmBN4HFoeEYf9deeqG53lEE6NY+m56UTYVSXz5tczHzMEHkZDhBuD7g/zYdZW28vfh90foK5Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DzcHDIlI; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BX+gcc2Z"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42P9TTFd019743;
-	Mon, 25 Mar 2024 10:20:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=IcffQD5
-	r/DCrkWeuEoMCS5WgcaSsE7f+GLTUFJRqYog=; b=BX+gcc2ZxDLZ1lJ6qKK9u1M
-	oYXXjd0vyyjvaANhdsZiNKfsPuVhJAMnGknLDAH3Z7fnpjii1AboPm3U/KZGxvnX
-	GZuR5gSYA17Rso/9/aj8h3Cs61wtRgMp/fX63cSvM/Pa1VtATZzUKv7dRPDPsBFT
-	qLjh7FlsjZvHDOb6Ivy4HVtjo9jFKLZ/OqtYKLScx0SWDTVJmzbNbtPHoZd5dWZ9
-	VWwpQQz10dxifi8CJCrlQBkSRuTJVFw/WzRr3agzJOh6MyFCMv4ZKtQuYmxVUdpX
-	F6A7rOXm7xav6G9CnQrLN+cwcWfa9y+wYKKoZHUr1dUjefC6pXw1pHjpqUpVc1A=
-	=
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x2yrurwdn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 10:20:57 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42PAKuYx030905
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 10:20:56 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 25 Mar 2024 03:20:51 -0700
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <djakov@kernel.org>, <quic_anusha@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>
-CC: Varadarajan Narayanan <quic_varada@quicinc.com>
-Subject: [PATCH v2 0/4] Add interconnect driver for IPQ9574 SoC
-Date: Mon, 25 Mar 2024 15:50:32 +0530
-Message-ID: <20240325102036.95484-1-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DzcHDIlI"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 450D81BF20C;
+	Mon, 25 Mar 2024 10:20:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1711362059;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M4tr6jXQo2B5No46bghO0NGB40nWqUW2K62Prsk80Uc=;
+	b=DzcHDIlIwgk7EUTx5YG/SrQySAXw0X1+RbEVKalYXWFpidoRWeP7FtH5UXIiCqfOeEaQD1
+	DgLu3bzV46BP9GyU5tj2WD+XuZfNIea/ZwHw5+pXlu1qNtYcOb/kc3gf33jLdHN37p3S4G
+	Zf05loldfDABtbc+j55AUMOB+9MmQrv3jgqQ4Y94sk9QHhgsgQSEhhfngNfQsahW5YOAHo
+	lp48eIl4o/dWpmcxL8M6DGf0k72HjsUYZN6tgZV2bwxqQQhjw2t7ttiInYMorOBiyGlbp4
+	IkUV3dB3DWWRc2L/yVtZfxzRILJ9kIynFeZNqoQ14yx5uLYqrP6IZqhT7gEr9A==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Maxim Korotkov <korotkov.maxim.s@gmail.com>,
+	Boris Brezillon <bbrezillon@kernel.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Hector Palacios <hector.palacios@digi.com>,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: Re: [PATCH] mtd: rawnand: hynix: fixed typo
+Date: Mon, 25 Mar 2024 11:20:57 +0100
+Message-Id: <20240325102057.262963-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240313102721.1991299-1-korotkov.maxim.s@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-linux-mtd-patch-notification: thanks
+X-linux-mtd-patch-commit: b'6819db94e1cd3ce24a432f3616cd563ed0c4eaba'
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: A7_2uxPqxX1NkPPuf_jbPdHk9eI1Olpn
-X-Proofpoint-GUID: A7_2uxPqxX1NkPPuf_jbPdHk9eI1Olpn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_08,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- mlxlogscore=999 mlxscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 phishscore=0 malwarescore=0 bulkscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
- definitions=main-2403250057
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-MSM platforms manage NoC related clocks and scaling from RPM.
-However, in IPQ SoCs, RPM is not involved in managing NoC
-related clocks and there is no NoC scaling.
+On Wed, 2024-03-13 at 10:27:20 UTC, Maxim Korotkov wrote:
+> The function hynix_nand_rr_init() should probably return an error code.
+> Judging by the usage, it seems that the return code is passed up 
+> the call stack.
+> Right now, it always returns 0 and the function hynix_nand_cleanup()
+> in hynix_nand_init() has never been called.
+> 
+> Found by RASU JSC and Linux Verification Center (linuxtesting.org)
+> 
+> Fixes: 626994e07480 ("mtd: nand: hynix: Add read-retry support for 1x nm MLC NANDs")
+> 
+> Signed-off-by: Maxim Korotkov <korotkov.maxim.s@gmail.com>
 
-However, there is a requirement to enable some NoC interface
-clocks for the accessing the peripherals present in the
-system. Hence add a minimalistic interconnect driver that
-establishes a path from the processor/memory to those peripherals
-and vice versa.
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
----
-v2:
-qcom,ipq9574.h
-	Fix license identifier
-	Rename macros
-qcom,ipq9574-gcc.yaml
-	Include interconnect-cells
-gcc-ipq9574.c
-	Update commit log
-	Remove IS_ENABLED(CONFIG_INTERCONNECT) and auto select it from Kconfig
-ipq9574.dtsi
-	Moved to separate patch
-	Include interconnect-cells to clock controller node
-drivers/clk/qcom/Kconfig:
-	Auto select CONFIG_INTERCONNECT & CONFIG_INTERCONNECT_CLK
-
-Varadarajan Narayanan (4):
-  dt-bindings: clock: Add interconnect-cells
-  dt-bindings: interconnect: Add Qualcomm IPQ9574 support
-  clk: qcom: add IPQ9574 interconnect clocks support
-  arm64: dts: qcom: ipq9574: Add icc provider ability to gcc
-
- .../bindings/clock/qcom,ipq9574-gcc.yaml      |  3 +
- arch/arm64/boot/dts/qcom/ipq9574.dtsi         |  2 +
- drivers/clk/qcom/Kconfig                      |  2 +
- drivers/clk/qcom/gcc-ipq9574.c                | 65 ++++++++++++++++++-
- .../dt-bindings/interconnect/qcom,ipq9574.h   | 62 ++++++++++++++++++
- 5 files changed, 133 insertions(+), 1 deletion(-)
- create mode 100644 include/dt-bindings/interconnect/qcom,ipq9574.h
-
--- 
-2.34.1
-
+Miquel
