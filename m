@@ -1,106 +1,187 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24EB1190662;
-	Mon, 25 Mar 2024 09:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498B018E0E4;
+	Mon, 25 Mar 2024 09:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711360774; cv=none; b=aqejty3mno75wRRfoIFu4q3LAJUBdczId40YJgz9JimecFvIXvFLXopvCN8KV28XGqUipL7jY6KgrBoJodvyRCCWK1KfObdF98UzsbzFYO1xqZl3nVzhOfiiU5P0pvONcgnpJluf43XQruNNJHaaoMVMLwi+1wd5kB93oG51ZxI=
+	t=1711360736; cv=none; b=psLAYzFt3wkJr9IfXigVM1P5tPYXmmtpA9R4oxNx/7+gqQBBAt4r3s/J7aPmyxmiA8DNeW+w71KdgMG1+2W6XSEGC5iOmAET8iQ6BTxYOlIq1/VwY7zc24MDyseDizLInUNKMKYYiiGkO8eAPJWBnAilih6UojV06o4ABx5Pxb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711360774; c=relaxed/simple;
-	bh=V71GOfQZeCnRv0gdv6EbVgKYTEs080nwBndJyVfUGUA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S322nT/HNdSM977VHsAjKQBhXdTiD3iRRag2RNpi6bdwyNkziygrOCVhYzDlRGJFKpokM0vbtS/1OtldbZstdPDqxLbtNM3JPXoDKxQMUP9cCi+PQ+jmdLOKXy2JGufiH77MPQabw6GjqL1oEnAJDW5IgKPhzwcsH9dSYpxFU0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=n0gWS2ha; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1711360736; c=relaxed/simple;
+	bh=ugri9IdhvbgQiiHtwIt5j6DpjMT2Yzmc1v7CVG2wUZ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f6dtJp4sHKO51rIZxp+BS+93YFM/VUQ8sxvzF0ykxh7JkGbEYul2mPXlh/dyD1+kJzgYQu9e6dAlbZtO+ziqn7HIiZtDG6DlOB3m8iGmfPJCtI4R5GijKD2JmLYWZjG4+SVnK1MQgu5MTXWVG+ReU0UkjjgN+6H+HNNNlaMi8PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eOdHQFDX; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="n0gWS2ha"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42P8eGmA028115;
-	Mon, 25 Mar 2024 10:44:07 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=selector1; bh=ffbGzpk
-	ISaeUbR7jR83UhYzV507/spEZuEB2LJi1r+s=; b=n0gWS2ha/eKuYFCL9oX5EIw
-	Bg1NzsCkqiDc38Ee7IZOEEquoBhLx1EaZb9TR8oJrEoGFxG/It5WfZz8u4gIrBIO
-	zCtpuleSZQiiAGVo7tjql9EqoFb7EVWKk8eZG0vQnWWXY50LgRMo1DlPUfCzbV3u
-	FZnJVzhzWgLHwvN92OKahVOhJMGsbxXgcPfLGUiq4HtPDQcdsjtk/3Bb4STstH7f
-	8FNTkLl0qR9CxiphXXpbYDeCP1xRe2d0gifbzRQB9fPaV/xY86jZstEQujuWN8St
-	h/unnqrnwyUHPSOHcs7VixG+EUBQjojj/2ZK1kzGZlCcHEGA5W6LjgWiREkkMqw=
-	=
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3x1n3977fn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 10:44:07 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6101240045;
-	Mon, 25 Mar 2024 10:43:58 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8A8F3216EF3;
-	Mon, 25 Mar 2024 10:42:43 +0100 (CET)
-Received: from localhost (10.201.21.128) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 25 Mar
- 2024 10:42:42 +0100
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 0/2] Add properties in dwmac-stm32 documentation
-Date: Mon, 25 Mar 2024 10:42:16 +0100
-Message-ID: <20240325094218.56934-1-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eOdHQFDX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711360734; x=1742896734;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ugri9IdhvbgQiiHtwIt5j6DpjMT2Yzmc1v7CVG2wUZ4=;
+  b=eOdHQFDXog4groP9nRZdrc8aNErbnvUgXYXySMs4X/MPK/zcjL5mNWvJ
+   MM9jFWSQJt4xl0B+dOUcQuE3mVIYLo6RxoAJqEg29QhRQ46Wfyd04wzCt
+   zjQP78GDFbmkD69Bsm3gfGIiysptVItdkf1nIXuAnB4OmTi2QP6ZiEW0b
+   Q9OB5jtTPVbNcgpS2+zCx1VE53DN6GBo+ssgIRmFiYlrm6LZ0qhj3gwdR
+   8bsp8fknD2x92OOdOYMte0i6WiRP5ZOKOU88uks0lad6afeEMjWO7qocj
+   BZDgC29ABv9E8vamfnUMA9nvRo5ZyT7+MpE1+VhhCXVji0ebCm5WCskou
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="17495130"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="17495130"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 02:58:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="15969992"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.0.234]) ([10.238.0.234])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 02:58:50 -0700
+Message-ID: <ba217de2-cdcb-4f50-80cc-c61a0e8255b2@linux.intel.com>
+Date: Mon, 25 Mar 2024 17:58:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_07,2024-03-21_02,2023-05-22_02
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 038/130] KVM: TDX: create/destroy VM structure
+To: isaku.yamahata@intel.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+ erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+ Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+ chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
+ Sean Christopherson <sean.j.christopherson@intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <7a508f88e8c8b5199da85b7a9959882ddf390796.1708933498.git.isaku.yamahata@intel.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <7a508f88e8c8b5199da85b7a9959882ddf390796.1708933498.git.isaku.yamahata@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Introduce 2 new properties in dwmac-stm32 documentation
 
- - phy-supply: to manage PHY regulator.
- - st,ext-phyclk: is present since 2020 in driver so need to explain
-   it and avoid dtbs check issue : views/kernel/upstream/net-next/arch/arm/boot/dts/st/stm32mp157c-dk2.dtb: 
-ethernet@5800a000: Unevaluated properties are not allowed 
-('st,ext-phyclk' was unexpected)
-   Furthermore this property will be use in upstream of MP13 dwmac glue. (next step)
 
-V2: - Drop deprecated: property for st,eth-clk-sel and st,eth-ref-clk-sel
-V3: - Rework commit message
+On 2/26/2024 4:25 PM, isaku.yamahata@intel.com wrote:
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
+>
+> As the first step to create TDX guest, create/destroy VM struct.  Assign
+> TDX private Host Key ID (HKID) to the TDX guest for memory encryption and
+> allocate extra pages for the TDX guest. On destruction, free allocated
+> pages, and HKID.
+>
+> Before tearing down private page tables, TDX requires some resources of the
+> guest TD to be destroyed (i.e. HKID must have been reclaimed, etc).  Add
+> mmu notifier release callback
 
-Christophe Roullier (2):
-  dt-bindings: net: add phy-supply property for stm32
-  dt-bindings: net: dwmac: Document STM32 property st,ext-phyclk
+It seems not accurate to say "Add mmu notifier release callback", since the
+interface has already been there. This patch extends the cache flush 
+function,
+i.e, kvm_flush_shadow_all() to do TDX specific thing.
 
- Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> before tearing down private page tables for
+> it.
+>
+> Add vm_free() of kvm_x86_ops hook at the end of kvm_arch_destroy_vm()
+> because some per-VM TDX resources, e.g. TDR, need to be freed after other
+> TDX resources, e.g. HKID, were freed.
+>
+> Co-developed-by: Kai Huang <kai.huang@intel.com>
+> Signed-off-by: Kai Huang <kai.huang@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+>
+> ---
+> v19:
+> - fix check error code of TDH.PHYMEM.PAGE.RECLAIM. RCX and TDR.
+>
+> v18:
+> - Use TDH.SYS.RD() instead of struct tdsysinfo_struct.
+> - Rename tdx_reclaim_td_page() to tdx_reclaim_control_page()
+> - return -EAGAIN on TDX_RND_NO_ENTROPY of TDH.MNG.CREATE(), TDH.MNG.ADDCX()
+> - fix comment to remove extra the.
+> - use true instead of 1 for boolean.
+> - remove an extra white line.
+>
+> v16:
+> - Simplified tdx_reclaim_page()
+> - Reorganize the locking of tdx_release_hkid(), and use smp_call_mask()
+>    instead of smp_call_on_cpu() to hold spinlock to race with invalidation
+>    on releasing guest memfd
+>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> ---
+>   arch/x86/include/asm/kvm-x86-ops.h |   2 +
+>   arch/x86/include/asm/kvm_host.h    |   2 +
+>   arch/x86/kvm/Kconfig               |   3 +-
+>   arch/x86/kvm/mmu/mmu.c             |   7 +
+>   arch/x86/kvm/vmx/main.c            |  26 +-
+>   arch/x86/kvm/vmx/tdx.c             | 475 ++++++++++++++++++++++++++++-
+>   arch/x86/kvm/vmx/tdx.h             |   6 +-
+>   arch/x86/kvm/vmx/x86_ops.h         |   6 +
+>   arch/x86/kvm/x86.c                 |   1 +
+>   9 files changed, 520 insertions(+), 8 deletions(-)
+>
+[...]
+> +
+> +static void tdx_clear_page(unsigned long page_pa)
+> +{
+> +	const void *zero_page = (const void *) __va(page_to_phys(ZERO_PAGE(0)));
+> +	void *page = __va(page_pa);
+> +	unsigned long i;
+> +
+> +	/*
+> +	 * When re-assign one page from old keyid to a new keyid, MOVDIR64B is
+> +	 * required to clear/write the page with new keyid to prevent integrity
+> +	 * error when read on the page with new keyid.
+> +	 *
+> +	 * clflush doesn't flush cache with HKID set.  The cache line could be
+> +	 * poisoned (even without MKTME-i), clear the poison bit.
+> +	 */
+> +	for (i = 0; i < PAGE_SIZE; i += 64)
+> +		movdir64b(page + i, zero_page);
+> +	/*
+> +	 * MOVDIR64B store uses WC buffer.  Prevent following memory reads
+> +	 * from seeing potentially poisoned cache.
+> +	 */
+> +	__mb();
 
--- 
-2.25.1
+Is __wmb() sufficient for this case?
+
+> +}
+> +
+[...]
+
+> +
+> +static int tdx_do_tdh_mng_key_config(void *param)
+> +{
+> +	hpa_t *tdr_p = param;
+> +	u64 err;
+> +
+> +	do {
+> +		err = tdh_mng_key_config(*tdr_p);
+> +
+> +		/*
+> +		 * If it failed to generate a random key, retry it because this
+> +		 * is typically caused by an entropy error of the CPU's random
+
+Here you say "typically", is there other cause and is it safe to loop on 
+retry?
+
+> +		 * number generator.
+> +		 */
+> +	} while (err == TDX_KEY_GENERATION_FAILED);
+> +
+> +	if (WARN_ON_ONCE(err)) {
+> +		pr_tdx_error(TDH_MNG_KEY_CONFIG, err, NULL);
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+[...]
 
