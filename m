@@ -1,121 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100681BAC21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D311BAC22
 	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711365231; cv=none; b=RzodYVjXy9a2NxqPduficj+tDheoHhYu1OOZLFEgaYcS7Ik1UQXW/0/VFxEyj5rA3iaI8UBLyDMWTD2nCytSy8krZ/1SHgwnv5oJony+vsREQotEXex7xxzQ6YOrbwc33rsp0VNi3lykQONzt4gIAO+XbdV+UiULwk3JYrGHbbw=
+	t=1711365232; cv=none; b=jpop8K7ZEDVMHKPat5ceJTXfDXaDTHReMZladFcX8xd8QVQrxk231ysdaSNvDl9xHv1mJUa8AR2nD3/NVI2jBck+WY0JWEZik4OTixSa6zlUvhcxsSsFhLNnHs2d81d+Qba80Hasdt1IkHi8JgBW+cDhWLH2HAQ44TNRh7DR15U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711365231; c=relaxed/simple;
-	bh=sf6mJcuyNikMRdduR4UQlk6A2RQlNed9frvcHXQotOo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ht293Pexmbq+B2s8BTwurXu1EPQQJOKzMKyJmTkupTTPAI538Ncnxbnz4nbVf59xK/QW8bWfSmJAUJxqSg4rqLlJAbl/dkEC+cw+GZb/Ht9Lk3muDdnJY3pEpyj4V3nKpHIH8bXEvEw7cIRJUZ4MDIpr+ekskszWKxk6mh3vKt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/hKpDDf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711365232; c=relaxed/simple;
+	bh=CsnJnRPcWog1AhZph4odR/X3hPqH8uWzUIUQNePou5k=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Epnwn1NZX+OluCO443rByE+DHKs3wRE22iZfUn/L0pR/NjxqnT87x2w8536o43TlOCttjYkTvTepLJV57jcYfP6Ll0YfNV58vIa7xjW8gvLrn+yzOX58wTeX+aNrNiIUqbzX0oAW0RclGC/HZJtiyz/b/qkabr2NOJdAyQvN2VA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i2mYiWv7; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/hKpDDf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 655F0C433C7;
-	Mon, 25 Mar 2024 11:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711365230;
-	bh=sf6mJcuyNikMRdduR4UQlk6A2RQlNed9frvcHXQotOo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=b/hKpDDf2yVvm7N4rbZtQBjtnrHFpaBGU1tuIUV3FJrPb+AzjmE8ksDN3KwvvZBNK
-	 rpjeuG8OYc0tAjZWSaqBai301lcOAGUOb/kKtkvvSapOkRqniavt6XXBfwCv1efMWW
-	 zj/z0cvYEh87mR18EsFoD55kJ9kevJuUwm3r5UE5Wf7MACpyuBGPPZVxWuoHbcxHUZ
-	 b9BCFopMO010/aVJYK9pSef+Kmzb4vH3wjCyhp5vKCME7LO/esuThbCG+utkHfeY5w
-	 kdhDdrMCQdzr/6xCYMEdrWaES2E3qT6DttCFSDEgSs+jXE2HQJ56+GvLALTekJkiiG
-	 RItNXxDm++hKA==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v3 RESEND] riscv: mm: still create swiotlb buffer for kmalloc() bouncing if required
-Date: Mon, 25 Mar 2024 19:00:36 +0800
-Message-ID: <20240325110036.1564-1-jszhang@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i2mYiWv7"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a45f257b81fso487269266b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:13:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711365228; x=1711970028; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xoyYuiUZGUFC3ha/4x22ZxwHLgySLn4r64un5f+TeAU=;
+        b=i2mYiWv7cGRlMGxP3I4QE5gnhZNZUP0UJfpHR2g/YnKgMCcQaHgfxA/5bJamrE8mYy
+         bfxvVSIBbkxvKiHJHdJ83niAW1Cjj+VBGyyg4tBVpGmCk0LInEgDqgCI7EczP3Jf202T
+         GTQJY3GeVv/FXNNk3WA+sHenv2Y77/ATnUh+0kJSA6u1cXGIEN6JFASiZk4KuaIrxkiL
+         x9IUh95qMo3OnBhosiXKm2akPg5gmQa333iMUtKVaU4O3jsnymM62PRCcp9LeIGmoRVZ
+         pcdLxSe0rcxrLSfyLIpZLf/j+HppWBvT2hQZOkaCp+fL2YKCQcbhlBKwpZpjR+mdTO+U
+         oOdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711365228; x=1711970028;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xoyYuiUZGUFC3ha/4x22ZxwHLgySLn4r64un5f+TeAU=;
+        b=Aw365T7EqZkBS80afjt9cIECh6386oAnOA1+xtO/PB3zkN/IcKH8VRWWRlhFmuIXE1
+         mWeReVutIWFSKw9EVKXzdzhCNDZHBpBWZoPrqGzTpaZf3IH1JdzA9dlRvM+h1yf7AZoy
+         eJGtt+0HCdNzlw73uqwp0M3jNaqcpgvEvEMRTOMfzpb3BgqasdWX2dWWYlm1fB/X0RdG
+         h8rIO8vEYwls97LC6HHFvXoAmpB86fL57nKTTDHxnTncCwk+rNm20vkuTXan3oceIWzP
+         mooHfid8t8hAXH1TCYHF4MxLexxK6A50V22R1Tlu3Md+nBvXc11P3RPPyhagFDSVsksz
+         DEnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUjsLHuvbX1ZXRcBqtN8Ekghvyd1yr3k2AfMhgPXVxSiSflljcrRbDlzmisGYgVmXU8Mv0K8qgmBmGGwdtiagjqwHrDA146iaIRXLQ
+X-Gm-Message-State: AOJu0YxlYVP5rD3smKQZip448ZQwvTmL2FupIUmV8r/lVKC2tualU6b1
+	NDCPt66r6Ptn2CFRK7pEiJI2dA2iME03wCSDogMuDV+j7kxVOZnD3gXm/INUV6Q=
+X-Google-Smtp-Source: AGHT+IEUex17Jst2eGsMe98Iuo5t4cMBsMavpCzi4l2n3luenkHwWGs8eKyJbj2V1ryUNtTHXaDLJg==
+X-Received: by 2002:a17:907:7288:b0:a4a:3955:460e with SMTP id dt8-20020a170907728800b00a4a3955460emr1569675ejc.58.1711365228518;
+        Mon, 25 Mar 2024 04:13:48 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.222.44])
+        by smtp.gmail.com with ESMTPSA id m21-20020a17090679d500b00a4739efd7cesm2965936ejo.60.2024.03.25.04.13.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 04:13:48 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: krzysztof.kozlowski+dt@linaro.org, robh@kernel.org, conor+dt@kernel.org, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: alim.akhtar@samsung.com, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, broonie@kernel.org, andi.shyti@kernel.org, 
+ semen.protsenko@linaro.org, kernel-team@android.com, 
+ willmcvicker@google.com, andre.draszik@linaro.org, peter.griffin@linaro.org
+In-Reply-To: <20240216140449.2564625-1-tudor.ambarus@linaro.org>
+References: <20240216140449.2564625-1-tudor.ambarus@linaro.org>
+Subject: Re: [PATCH v2 0/7] ARM: dts: samsung: specify the SPI FIFO depth
+Message-Id: <171136522717.38881.15348393587552800276.b4-ty@linaro.org>
+Date: Mon, 25 Mar 2024 12:13:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-After commit f51f7a0fc2f4 ("riscv: enable DMA_BOUNCE_UNALIGNED_KMALLOC
-for !dma_coherent"), for non-coherent platforms with less than 4GB
-memory, we rely on users to pass "swiotlb=mmnn,force" kernel parameters
-to enable DMA bouncing for unaligned kmalloc() buffers. Now let's go
-further: If no bouncing needed for ZONE_DMA, let kernel automatically
-allocate 1MB swiotlb buffer per 1GB of RAM for kmalloc() bouncing on
-non-coherent platforms, so that no need to pass "swiotlb=mmnn,force"
-any more.
 
-The math of "1MB swiotlb buffer per 1GB of RAM for kmalloc() bouncing"
-is taken from arm64. Users can still force smaller swiotlb buffer by
-passing "swiotlb=mmnn".
+On Fri, 16 Feb 2024 14:04:42 +0000, Tudor Ambarus wrote:
+> Bindings patch sent but not yet integrated:
+> https://lore.kernel.org/linux-spi/20240216070555.2483977-2-tudor.ambarus@linaro.org/
+> 
+> Up to now the SPI alias was used as an index into an array defined in
+> the SPI driver to determine the SPI FIFO depth. Drop the dependency on
+> the SPI alias and specify the SPI FIFO depth directly into the SPI node.
+> 
+> [...]
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
-since v2:
- - rebase on v6.8-rc1
- - collect Reviewed-by tag
+Applied, thanks!
 
-since v1
- - fix build error if CONFIG_RISCV_DMA_NONCOHERENT=n
+[1/7] ARM: dts: samsung: exynos3250: specify the SPI FIFO depth
+      https://git.kernel.org/krzk/linux/c/43dc9f88ff4db5c932cfb35cfe4bfeff25ed60e2
+[2/7] ARM: dts: samsung: exynos4: specify the SPI FIFO depth
+      https://git.kernel.org/krzk/linux/c/f743fedc881b38a62ee47d752e59ab1ddb247052
+[3/7] ARM: dts: samsung: exynos5250: specify the SPI FIFO depth
+      https://git.kernel.org/krzk/linux/c/a0f87a269f660cb41c2b38041183e3e31c69818d
+[4/7] ARM: dts: samsung: exynos5420: specify the SPI FIFO depth
+      https://git.kernel.org/krzk/linux/c/cc8e49917ca8a3a939d303a7103b9d30ed7d0873
+[5/7] ARM: dts: samsung: exynos5433: specify the SPI FIFO depth
+      https://git.kernel.org/krzk/linux/c/65993c76e64a2fa71ffd05ce260f553d1b3e904f
+[6/7] ARM: dts: samsung: exynosautov9: specify the SPI FIFO depth
+      https://git.kernel.org/krzk/linux/c/b115751fddaf31a0367c19bf080dddcb928a109a
+[7/7] ARM: dts: samsung: s5pv210: specify the SPI FIFO depth
+      https://git.kernel.org/krzk/linux/c/d2c81a9b6acc9ad6fa1a97bf21939adad1882dfa
 
- arch/riscv/include/asm/cache.h |  2 +-
- arch/riscv/mm/init.c           | 16 +++++++++++++++-
- 2 files changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/arch/riscv/include/asm/cache.h b/arch/riscv/include/asm/cache.h
-index 2174fe7bac9a..570e9d8acad1 100644
---- a/arch/riscv/include/asm/cache.h
-+++ b/arch/riscv/include/asm/cache.h
-@@ -26,8 +26,8 @@
- 
- #ifndef __ASSEMBLY__
- 
--#ifdef CONFIG_RISCV_DMA_NONCOHERENT
- extern int dma_cache_alignment;
-+#ifdef CONFIG_RISCV_DMA_NONCOHERENT
- #define dma_get_cache_alignment dma_get_cache_alignment
- static inline int dma_get_cache_alignment(void)
- {
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index fe8e159394d8..ac5e7f64c05c 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -161,11 +161,25 @@ static void print_vm_layout(void) { }
- 
- void __init mem_init(void)
- {
-+	bool swiotlb = max_pfn > PFN_DOWN(dma32_phys_limit);
- #ifdef CONFIG_FLATMEM
- 	BUG_ON(!mem_map);
- #endif /* CONFIG_FLATMEM */
- 
--	swiotlb_init(max_pfn > PFN_DOWN(dma32_phys_limit), SWIOTLB_VERBOSE);
-+	if (IS_ENABLED(CONFIG_DMA_BOUNCE_UNALIGNED_KMALLOC) && !swiotlb &&
-+	    dma_cache_alignment != 1) {
-+		/*
-+		 * If no bouncing needed for ZONE_DMA, allocate 1MB swiotlb
-+		 * buffer per 1GB of RAM for kmalloc() bouncing on
-+		 * non-coherent platforms.
-+		 */
-+		unsigned long size =
-+			DIV_ROUND_UP(memblock_phys_mem_size(), 1024);
-+		swiotlb_adjust_size(min(swiotlb_size_or_default(), size));
-+		swiotlb = true;
-+	}
-+
-+	swiotlb_init(swiotlb, SWIOTLB_VERBOSE);
- 	memblock_free_all();
- 
- 	print_vm_layout();
+Best regards,
 -- 
-2.43.0
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
