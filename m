@@ -1,215 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A1C5D724;
-	Mon, 25 Mar 2024 23:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757FF82D63
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 23:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711408261; cv=none; b=lY4s6wDggVFwqWYblQzEe73Ls+HOevf6fBvsHkNC3X4f37/WcgDW0qLV9Iaj0KmJiG1omyNHV7qxXUuScAUEgz2mf/FpDf7mKb8PkHwd2++0BPCG3azVe4pCLfWtOcGI85OBupji/VcrcCgSPWlDZ8y43tvNt7lsctyfyMHVzx8=
+	t=1711408366; cv=none; b=Tt4Jy3tbYd9hy+Yc7XtyBh7E6ckC9tvokM9hZ83jD7wc4aqIZrxnRuN6RL2fGzdalWNnvNoOhBFc2T7b8xQAFy+2GGQXWldMBaZW1oINCJ82zOfmfpwcCElcqIv1KIO3Ylk0iLZv1VZtcUOA9sCYXNdAzkSNFhKoFJTgBEzaYto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711408261; c=relaxed/simple;
-	bh=5YbssXuI5sizABD/TiI1n66N2UT1fqlvepprQiYSV2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AXhACy58kk/xwYvq7dSe6grJso+dMC0zans57mcdE2LehlnZwU8MYtHM7WbgR2jIZUN2QBjIriul2D3CofQj8W+v7TuGS6R88jvcXXzfkT2BqGGefOy0rHPLBwImdgAQT3GCH2eQqR3+mVOPeRg4CSBck/RwqVqC3dP7L0TEYJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=crm2MU/b; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711408366; c=relaxed/simple;
+	bh=0ryjR25W+4XYUKpxRIFpQkdPipPiaotlUMMEk/7gGno=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gpeHJI2GpD6/R9XJraiG/cneAUGB2+aM12DuNiJ64ZfZZqyCtEwHoPZJzs+vHU24NbiT3L/c4q/g42+i/hqM/7Y3aQ43Eck7mR571rPnaRXklM6R9KQH02vyRqpYG4G6zbmfLa/9gN7Svr6MYvzITyxKhIlRtvIngcWmz7jAGdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ObzTlQBw; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="crm2MU/b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711408259; x=1742944259;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=5YbssXuI5sizABD/TiI1n66N2UT1fqlvepprQiYSV2E=;
-  b=crm2MU/bMOsKg4iJ0NJIEvVPWNC6uDKlFEXrU09QSG7U7rlgQGp/miKd
-   XtUtaEdiL+SyVLHgoSVqix6llY1RMr5cTZadc0O7sd7voISwHpW/Tf4dR
-   W62+s75ppyYQSoOcoYkbaL7ymIXR4GnMnxrinE+X3E5r9FdU8TzlTSZrY
-   wyucZaxxEBXZ+mzK0B0dhyb6Gs6lJZu+lA4elyXfgOxS10JvXQnD2kT9n
-   wPsWGIHRxOsTGSHUHn+CSDhAvx0Kk06lst/nDfZyQx82EuLSfz8ii0Ycp
-   eoBhMNfXerGAi6ddUHfEunaFGPtzXRJd4rEO5y8WN+RCJck7PtrSCB6D2
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6551758"
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="6551758"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 16:10:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="20453313"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 16:10:59 -0700
-Date: Mon, 25 Mar 2024 16:10:58 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "Yamahata, Isaku" <isaku.yamahata@intel.com>,
-	"Zhang, Tina" <tina.zhang@intel.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"Chen, Bo2" <chen.bo@intel.com>,
-	"sagis@google.com" <sagis@google.com>,
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>,
-	"sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-	"Yuan, Hang" <hang.yuan@intel.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH v19 059/130] KVM: x86/tdp_mmu: Don't zap private pages
- for unsupported cases
-Message-ID: <20240325231058.GP2357401@ls.amr.corp.intel.com>
-References: <1ed955a44cd81738b498fe52823766622d8ad57f.1708933498.git.isaku.yamahata@intel.com>
- <618614fa6c62a232d95da55546137251e1847f48.camel@intel.com>
- <20240319235654.GC1994522@ls.amr.corp.intel.com>
- <1c2283aab681bd882111d14e8e71b4b35549e345.camel@intel.com>
- <f63d19a8fe6d14186aecc8fcf777284879441ef6.camel@intel.com>
- <20240321225910.GU1994522@ls.amr.corp.intel.com>
- <96fcb59cd53ece2c0d269f39c424d087876b3c73.camel@intel.com>
- <20240325190525.GG2357401@ls.amr.corp.intel.com>
- <5917c0ee26cf2bb82a4ff14d35e46c219b40a13f.camel@intel.com>
- <20240325221836.GO2357401@ls.amr.corp.intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ObzTlQBw"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7e0fa900784so658377241.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:12:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711408361; x=1712013161; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4RlYH6izUM2rxtwt/YBr2HvwCdCxPPIhithRJ0Si7KE=;
+        b=ObzTlQBwFxd45+sLPhM7w1jHyIvBf+F/07X9CzFtpzfjMTi7IQXXU5BNcfG/12BjS0
+         6Mol1mJSf5wwROpxhtKtN2NkGlb3hvv5ifZ8HQHDAaQreO0PUutz9bQphw7U3VbL6oeF
+         KBWwcL7GtIQebqEam4+pnQOt7mo6LSJlw2pmw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711408361; x=1712013161;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4RlYH6izUM2rxtwt/YBr2HvwCdCxPPIhithRJ0Si7KE=;
+        b=T2A1/W/6oxqpYuwN10Jz1Ep/QkHetu4XGhMxCOVcqgWb6GJcj46MrHtF+z7QZkli7X
+         /a136lpjoYAHp3HB/aA/cZqcDNeZLZZXkZIcf5jXYYgWG94wApo/oIGQk7vi8gftYs0I
+         BdmxV4ga+nkVX74SIbNt31Y/dHzR+WT3IQ3A5HqW0jXaNIOm4qxCGhYm+tIWWHksRtGp
+         2qFOHTKvU1nCiLx86X/FgcI9LnyqrGlvepC7ue7Yojta11WKU28sd6Su2+o+3sxyhs8i
+         ovf+j1RwHnSNsS9pasoS0zhev1nm3GRDCHsMWuv1Z4JNPwrYMFeLqc7tKFz4fjIl7T/E
+         9/jg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwchwgBe/ZcS1f42WoamKrZ29ZPef2o++Fn1hb8iQvmzCvgN0r9YvQCLVtMDhRS8PawZ4h5T8N0MjBFYJYrdabaAkt9DKw9U/bRvUE
+X-Gm-Message-State: AOJu0Yx8bd1CQYuUybEagOt/QB0VghBh+0N9QPKYlOv6wWO9Jz6imPkU
+	38Y3P2zXlY02LgjEQoeBHdIJLO9u6DEdqP8sp+VhBCSUYi63NGfxu2cfVAtrlhXaHPIbp0t/twI
+	=
+X-Google-Smtp-Source: AGHT+IGaWhGC7xF4oJWWb6eGN0CwC9fztCSSYmpJeQOh0cbLvGYGUtlb0vqsoHzFQq1AUKCxhZzPHQ==
+X-Received: by 2002:a05:6122:d21:b0:4c0:254f:75d5 with SMTP id az33-20020a0561220d2100b004c0254f75d5mr6903159vkb.10.1711408361088;
+        Mon, 25 Mar 2024 16:12:41 -0700 (PDT)
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com. [209.85.160.182])
+        by smtp.gmail.com with ESMTPSA id r10-20020a056214212a00b00690c9256676sm4594373qvc.49.2024.03.25.16.12.39
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 16:12:40 -0700 (PDT)
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-428405a0205so65631cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:12:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW2PgRm9L3i7MpZC1hVG9+CeSSdyqHJ+HBZFBG2epB9UQEqGBmLcCqDXkj3FS6GhOpWIHnJW7us1aNhyI3eMHTB9f7ZbUjoQNj7XG5b
+X-Received: by 2002:a05:622a:6101:b0:430:b590:e88c with SMTP id
+ hg1-20020a05622a610100b00430b590e88cmr43919qtb.6.1711408359196; Mon, 25 Mar
+ 2024 16:12:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240325221836.GO2357401@ls.amr.corp.intel.com>
+References: <20240325105452.529921-1-lma@chromium.org>
+In-Reply-To: <20240325105452.529921-1-lma@chromium.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 25 Mar 2024 16:12:22 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VHps2d4dqLXCqE=hNMbk4pxeN607nFA0nEkd7chNAr3A@mail.gmail.com>
+Message-ID: <CAD=FV=VHps2d4dqLXCqE=hNMbk4pxeN607nFA0nEkd7chNAr3A@mail.gmail.com>
+Subject: Re: [PATCH] HID: i2c-hid: wait for i2c touchpad deep-sleep to
+ power-up transition
+To: Lukasz Majczak <lma@chromium.org>
+Cc: Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dtor@chromium.org>, 
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Maxime Ripard <mripard@kernel.org>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
+	Johan Hovold <johan+linaro@kernel.org>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Radoslaw Biernacki <rad@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 25, 2024 at 03:18:36PM -0700,
-Isaku Yamahata <isaku.yamahata@intel.com> wrote:
+Hi,
 
-> On Mon, Mar 25, 2024 at 07:55:04PM +0000,
-> "Edgecombe, Rick P" <rick.p.edgecombe@intel.com> wrote:
-> 
-> > On Mon, 2024-03-25 at 12:05 -0700, Isaku Yamahata wrote:
-> > > Right, the guest has to accept it on VE.  If the unmap was intentional by guest,
-> > > that's fine.  The unmap is unintentional (with vMTRR), the guest doesn't expect
-> > > VE with the GPA.
-> > > 
-> > > 
-> > > > But, I guess we should punt to userspace is the guest tries to use
-> > > > MTRRs, not that userspace can handle it happening in a TD...  But it
-> > > > seems cleaner and safer then skipping zapping some pages inside the
-> > > > zapping code.
-> > > > 
-> > > > I'm still not sure if I understand the intention and constraints fully.
-> > > > So please correct. This (the skipping the zapping for some operations)
-> > > > is a theoretical correctness issue right? It doesn't resolve a TD
-> > > > crash?
-> > > 
-> > > For lapic, it's safe guard. Because TDX KVM disables APICv with
-> > > APICV_INHIBIT_REASON_TDX, apicv won't call kvm_zap_gfn_range().
-> > Ah, I see it:
-> > https://lore.kernel.org/lkml/38e2f8a77e89301534d82325946eb74db3e47815.1708933498.git.isaku.yamahata@intel.com/
-> > 
-> > Then it seems a warning would be more appropriate if we are worried there might be a way to still
-> > call it. If we are confident it can't, then we can just ignore this case.
-> > 
-> > > 
-> > > For MTRR, the purpose is to make the guest boot (without the guest kernel
-> > > command line like clearcpuid=mtrr) .
-> > > If we can assume the guest won't touch MTRR registers somehow, KVM can return an
-> > > error to TDG.VP.VMCALL<RDMSR, WRMSR>(MTRR registers). So it doesn't call
-> > > kvm_zap_gfn_range(). Or we can use KVM_EXIT_X86_{RDMSR, WRMSR} as you suggested.
-> > 
-> > My understanding is that Sean prefers to exit to userspace when KVM can't handle something, versus
-> > making up behavior that keeps known guests alive. So I would think we should change this patch to
-> > only be about not using the zapping roots optimization. Then a separate patch should exit to
-> > userspace on attempt to use MTRRs. And we ignore the APIC one.
-> > 
-> > This is trying to guess what maintainers would want here. I'm less sure what Paolo prefers.
-> 
-> When we hit KVM_MSR_FILTER, the current implementation ignores it and makes it
-> error to guest.  Surely we should make it KVM_EXIT_X86_{RDMSR, WRMSR}, instead.
-> It's aligns with the existing implementation(default VM and SW-protected) and
-> more flexible.
+On Mon, Mar 25, 2024 at 3:55=E2=80=AFAM Lukasz Majczak <lma@chromium.org> w=
+rote:
+>
+> This patch extends the early bailout for probing procedure introduced in
+> commit: b3a81b6c4fc6730ac49e20d789a93c0faabafc98, in order to cover devic=
+es
 
-Something like this for "112/130 KVM: TDX: Handle TDX PV rdmsr/wrmsr hypercall"
-Compile only tested at this point.
+nit: checkpatch should have yelled at you saying that you should
+specify a commit in the format:
 
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index f891de30a2dd..4d9ae5743e24 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1388,31 +1388,67 @@ static int tdx_emulate_mmio(struct kvm_vcpu *vcpu)
- 	return 1;
- }
- 
-+static int tdx_complete_rdmsr(struct kvm_vcpu *vcpu)
-+{
-+	if (vcpu->run->msr.error)
-+		tdvmcall_set_return_code(vcpu, TDVMCALL_INVALID_OPERAND);
-+	else {
-+		tdvmcall_set_return_code(vcpu, TDVMCALL_SUCCESS);
-+		tdvmcall_set_return_val(vcpu, vcpu->run->msr.data);
-+	}
-+	return 1;
-+}
-+
- static int tdx_emulate_rdmsr(struct kvm_vcpu *vcpu)
- {
- 	u32 index = tdvmcall_a0_read(vcpu);
- 	u64 data;
- 
--	if (!kvm_msr_allowed(vcpu, index, KVM_MSR_FILTER_READ) ||
--	    kvm_get_msr(vcpu, index, &data)) {
-+	if (!kvm_msr_allowed(vcpu, index, KVM_MSR_FILTER_READ)) {
-+		trace_kvm_msr_read_ex(index);
-+		tdvmcall_set_return_code(vcpu, TDVMCALL_INVALID_OPERAND);
-+		return kvm_msr_user_space(vcpu, index, KVM_EXIT_X86_RDMSR, 0,
-+					  tdx_complete_rdmsr,
-+					  KVM_MSR_RET_FILTERED);
-+	}
-+
-+	if (kvm_get_msr(vcpu, index, &data)) {
- 		trace_kvm_msr_read_ex(index);
- 		tdvmcall_set_return_code(vcpu, TDVMCALL_INVALID_OPERAND);
- 		return 1;
- 	}
--	trace_kvm_msr_read(index, data);
- 
-+	trace_kvm_msr_read(index, data);
- 	tdvmcall_set_return_code(vcpu, TDVMCALL_SUCCESS);
- 	tdvmcall_set_return_val(vcpu, data);
- 	return 1;
- }
- 
-+static int tdx_complete_wrmsr(struct kvm_vcpu *vcpu)
-+{
-+	if (vcpu->run->msr.error)
-+		tdvmcall_set_return_code(vcpu, TDVMCALL_INVALID_OPERAND);
-+	else
-+		tdvmcall_set_return_code(vcpu, TDVMCALL_SUCCESS);
-+	return 1;
-+}
-+
- static int tdx_emulate_wrmsr(struct kvm_vcpu *vcpu)
- {
- 	u32 index = tdvmcall_a0_read(vcpu);
- 	u64 data = tdvmcall_a1_read(vcpu);
- 
--	if (!kvm_msr_allowed(vcpu, index, KVM_MSR_FILTER_WRITE) ||
--	    kvm_set_msr(vcpu, index, data)) {
-+	if (!kvm_msr_allowed(vcpu, index, KVM_MSR_FILTER_WRITE)) {
-+		trace_kvm_msr_write_ex(index, data);
-+		tdvmcall_set_return_code(vcpu, TDVMCALL_INVALID_OPERAND);
-+		if (kvm_msr_user_space(vcpu, index, KVM_EXIT_X86_WRMSR, data,
-+				       tdx_complete_wrmsr,
-+				       KVM_MSR_RET_FILTERED))
-+			return 1;
-+		return 0;
-+	}
-+
-+	if (kvm_set_msr(vcpu, index, data)) {
- 		trace_kvm_msr_write_ex(index, data);
- 		tdvmcall_set_return_code(vcpu, TDVMCALL_INVALID_OPERAND);
- 		return 1;
+commit b3a81b6c4fc6 ("HID: i2c-hid: check if device is there before
+really probing")
+
+Please fix and make sure that you're running checkpatch.
 
 
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+> based on STM microcontrollers. For touchpads based on STM uC,
+> the probe sequence needs to take into account the increased response time
+> for i2c transaction if the device already entered a deep power state.
+> STM specify the wakeup time as 400us between positive strobe of
+> the clock line. Deep sleep is controlled by Touchpad FW,
+> though some devices enter it pretty early to conserve power
+> in case of lack of activity on the i2c bus.
+> Failing to follow this requirement will result in touchpad device not bei=
+ng
+> detected due initial transaction being dropped by STM i2c slave controlle=
+r.
+> By adding additional try, first transaction will wake up the touchpad
+> STM controller, and the second will produce proper detection response.
+>
+> Signed-off-by: Lukasz Majczak <lma@chromium.org>
+> Signed-off-by: Radoslaw Biernacki <rad@chromium.org>
+
+nit: I believe your sign off should be last. It's also unclear why two
+signoffs. Did Radoslaw author it and you changed it? ...or was it
+Co-Developed-by, or ...? You'll probably need to adjust your tags a
+bit depending on the answers.
+
+
+> ---
+>  drivers/hid/i2c-hid/i2c-hid-core.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+
+Overall comment on this patch: I know that this is based on a patch
+we've been carrying downstream in ChromeOS for years and some folks
+considered it not upstreamable because it's too hacky. My $0.02 is
+that, while it's ugly, this is needed to support real hardware that
+was shipped. There's zero chance we can fix the hardware, a .00001%
+chance that we could convince someone to update the firmware on the
+i2c-hid device, and a .01% chance that we could convince people to try
+to figure out a workaround by adding something to the main AP firmware
+on this device. As I understand it, nobody has come up with a better
+kernel workaround than this patch.
+
+To me it doesn't seem terrible to have this retry here and it's not a
+huge penalty for other i2c-hid users. ...so personally I'm in favor of
+the idea of this landing. If I was a consumer and had one of the
+affected Chromebooks I'd personally rather upstream have the support
+for it.
+
+
+> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c=
+-hid-core.c
+> index 2df1ab3c31cc..69af0fad4f41 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+> @@ -1013,9 +1013,15 @@ static int __i2c_hid_core_probe(struct i2c_hid *ih=
+id)
+>         struct i2c_client *client =3D ihid->client;
+>         struct hid_device *hid =3D ihid->hid;
+>         int ret;
+> +       int tries =3D 2;
+> +
+> +       do {
+> +               /* Make sure there is something at this address */
+> +               ret =3D i2c_smbus_read_byte(client);
+> +               if (tries > 0 && ret < 0)
+> +                       usleep_range(400, 400);
+
+Having both ends of the usleep be 400 is iffy. In this case it's at
+probe time so I wonder if udelay() is better? If not, maybe give at
+least _some_ margin?
+
+
+> +       } while (tries-- > 0 && ret < 0);
+
+I'm not a huge fan of having to check "tries" and "ret" twice.
+Personally I'd rather see a "while (true)" loop and test the condition
+once to break out. AKA:
+
+while (true) {
+  ret =3D i2c_...
+  tries--;
+  if (tries =3D=3D 0 || ret >=3D 0)
+    break;
+  udelay(400);
+}
+
+...if you feel very strongly about the way you have coded it, though,
+I won't stand in your way.
+
+Pretty much all my comments are just nits and, since I'm not the
+maintainer here, my opinion is just an opinion. I'd wait at least a
+little while for the maintainers to comment before posting v2. I'm
+happy to give a Reviewed-by tag when some of the nits are fixed.
+
+-Doug
