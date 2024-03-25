@@ -1,181 +1,98 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88491BB756;
-	Mon, 25 Mar 2024 11:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AEEF15B559
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711365481; cv=none; b=lXXlgoU0ZtroVf98LV9oY5nMAI54zWGq8OSveZIfP4R/cWfiY2KkWaGHO9wlkglhtryl12yEjoLj5+lwCld88VAuJFDr0kE3PGRkJ+uO12Hbx2EenfVMGjw/tnNcCjFIfvt9ZzmtGBYSHPOdx41XAkYn6mV0nkO4mo5L/Col+Cw=
+	t=1711365680; cv=none; b=Fi0LIbNNXkv4hq1Fyqsp419t7Ok3pDhEftilb/TsVe3bsJfl0CB1xCLCH506zCGzSVK2zGhxKcjoGBPZZwRgEF0W+VWW1gm8GDO/bwUJ2DkakbyAZ9uutKr/B/AoBf8DdEsdOInTFYNMmOtEyOr/TXtc+Z7p2kv9dc09dnN9UIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711365481; c=relaxed/simple;
-	bh=lTVg3fc6MdE/fo1cwqrDYHPkWi51KMLwn/j+U7Nw9ZA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=un7set2OnJ/pTzC21eX13ISCu2lR6Y9kfCRCRdrRrz1tZd35dnzByPHNXZPXHKnCMe/8Q58m16O/bqhoywrgji6a+IxEO6Z/YLGtNffBvM6vkA99bdYpVwEG1oQiM9oOe1ByH/fLciRkYcloF21rfN6FXfmFA/Vh7G1tStlvhWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=1/2Y4Lmm; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1711365680; c=relaxed/simple;
+	bh=xudEe2YJTvWsBm8CpDg5lmI/tLcexD8Blm3Xdr2w+mc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B0WaxQItRMWYGTJ6PShkOjBR7d+BIdbsY4Cng463cc5fsCEE4wUnIknI1xRNVxaEriFfVMtKSighFzKnXoCOLZYrxNXTbggbvVwJiJE8KCcrkt+huDBI81vTBaasHRPd44L48fWzh5thEgnAw4KX9hw7Cs+D2guypy+OQ6Izfr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=a32WMOuD; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="1/2Y4Lmm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=0I8AaUTcrQp55wpf5askd+06931BKAoEDY7FD5BFLeQ=; t=1711365479;
-	x=1711797479; b=1/2Y4LmmZD2hQLf8n1wMhik4twLS9AWFxSYWazx+REOmDC9QWupPl4IxynzMH
-	QZpe8z2NdoxMyS38mF6NcTBYRa9ICN9CdV6K2cBYeii+AdkWR3iKKM2a0QgVnt05ddhb1JhhXH/ZJ
-	Hd8IVdxk6KRazNibW/PkWjma6pbGaNPnG9DKG6ZOIcaI+TpwULoIdy4P5JyrTzJHNO0mfmPxKj/TF
-	4NhXSiDf3Ta+cS7ladp0w9pJXA6ojpRp/+V0k0f80H2ClDWPQdhC66DRl/F2nnrBDtussunVDzEmX
-	nw2Q2/8rthNnuiHkUQLV4rXbgE29mP3Kw+tEL9O8n4G0eMq9Vw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1roiKy-0002OP-Mb; Mon, 25 Mar 2024 12:17:56 +0100
-Message-ID: <c89f9cc6-9676-46a4-8f8e-01d8dbf41aa8@leemhuis.info>
-Date: Mon, 25 Mar 2024 12:17:56 +0100
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="a32WMOuD"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a44665605f3so482475366b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1711365676; x=1711970476; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0c+XedPdeNuNXfU5mtLEzBWBIzV1dWjxq7xb3M/FhvM=;
+        b=a32WMOuDNG1J+K0+ytDniSg1jyeS8/N31C2c3T3jacOJYKcl3nZGpfPZgVB0ooFZxQ
+         ZKUtEDAIv8oJ0BQ9tx7Z3Dsb0IPFGBcSwPBpk0W7tTQrfrFYOgmRueY6wMlRYk1f77B5
+         L1LEQwta/ITK7LqJpJ+0nwzRFOff6DGga+z1I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711365676; x=1711970476;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0c+XedPdeNuNXfU5mtLEzBWBIzV1dWjxq7xb3M/FhvM=;
+        b=mHCXkVWlRsBwqrSvPvSpCAw+QApIbgbPMW/LeunOe585aeMzKPWtXbLqz0sfBWBgRh
+         PRt4yaI0bss8jYU992xsr3T1dMrUmYKbbUFlNgwYItdUp/snXKu0J2I9mbMTJeL/wbyf
+         vTDiqC4RP81bEJEZRgd1uiXc+f2ucCS3QS7plWNWOTBxZvV2+u5thSl3x1r/EDYEty89
+         NKVT5/1c6mSQA/utqEmK5vS3DTc3vIX18FpD5DWXCHuCuc65+zleJniZOHCuQi1O8Or7
+         gL9ubsKdH+k1fdrdQh6R/Bb8K6yweZ7Xadk4DV551eFFiVadSlGrwtd7BkdsBBHKE/+P
+         0Kng==
+X-Forwarded-Encrypted: i=1; AJvYcCU4wBBYZcV72tWP1rR8NFN/1gLlllc4JIgj1eUkwxEuFyz6kF0Q15rF7s9OzJZr7JKMe7U5A+B6Vhuom1jaKBGOQhRgz56qrLywWgfm
+X-Gm-Message-State: AOJu0YyBZLbkFPKReSgPTMqP9pFpYm+xYFoftqALxMhtzqa514mDwOSy
+	yY+GZ9twbe3AvgTz7o5eHIoET8XKUAhklEoo7+eo2ba1GT6x/mdEOWBl11F59AYGD1MkrSH2LIA
+	AVHEUX/FNVJ4oY5WGsvsfabTDdo/U8oB7KkjrUdmtJ7xNicEz
+X-Google-Smtp-Source: AGHT+IEHgtn80L49Skt3CEF+hTXCA3FdVG+hC9lS8i92+yyLZZ9XMCkOBIMmlhGWRtndIytDvEiwFaWaIbgkiRj6zl8=
+X-Received: by 2002:a17:906:b109:b0:a46:d978:bf02 with SMTP id
+ u9-20020a170906b10900b00a46d978bf02mr3970124ejy.34.1711365675733; Mon, 25 Mar
+ 2024 04:21:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.8 119/715] libbpf: Add bpf_token_create() API
-Content-Language: en-US, de-DE
-To: Jiri Slaby <jirislaby@kernel.org>, Sasha Levin <sashal@kernel.org>,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>
-References: <20240324223455.1342824-1-sashal@kernel.org>
- <20240324223455.1342824-120-sashal@kernel.org>
- <e35cc021-7f17-479c-bd7c-ea6df836a04b@kernel.org>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <e35cc021-7f17-479c-bd7c-ea6df836a04b@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1711365479;ae128cdd;
-X-HE-SMSGID: 1roiKy-0002OP-Mb
+References: <CABOYnLyevJeravW=QrH0JUPYEcDN160aZFb7kwndm-J2rmz0HQ@mail.gmail.com>
+ <CAJfpegu8qTARQBftZSaiif0E6dbRcbBvZvW7dQf8sf_ymoogCA@mail.gmail.com>
+ <c58a8dc8-5346-4247-9a0a-8b1be286e779@redhat.com> <CAJfpegt3UCsMmxd0taOY11Uaw5U=eS1fE5dn0wZX3HF0oy8-oQ@mail.gmail.com>
+ <620f68b0-4fe0-4e3e-856a-dedb4bcdf3a7@redhat.com> <CAJfpegub5Ny9kyX+dDbRwx7kd6ZdxtOeQ9RTK8n=LGGSzA9iOQ@mail.gmail.com>
+ <463612f2-5590-4fb3-8273-0d64c3fd3684@redhat.com> <a6632384-c186-4640-8b48-f40d6c4f7d1d@redhat.com>
+ <dd3e28b3-647c-4657-9c3f-9778bb046799@redhat.com> <b40eb0b7-7362-4d19-95b3-e06435e6e09c@redhat.com>
+In-Reply-To: <b40eb0b7-7362-4d19-95b3-e06435e6e09c@redhat.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 25 Mar 2024 12:21:04 +0100
+Message-ID: <CAJfpegtssacBQuV0J2cEFYOJQvg-p10thsMEq2W87SEonqLnkg@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel paging request in fuse_copy_do
+To: David Hildenbrand <david@redhat.com>
+Cc: xingwei lee <xrivendell7@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, samsun1006219@gmail.com, 
+	syzkaller-bugs@googlegroups.com, linux-mm <linux-mm@kvack.org>, 
+	Mike Rapoport <rppt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-A quick "me too" from my side below:
+On Fri, 22 Mar 2024 at 22:56, David Hildenbrand <david@redhat.com> wrote:
 
-On 25.03.24 06:40, Jiri Slaby wrote:
-> On 24. 03. 24, 23:24, Sasha Levin wrote:
->> From: Andrii Nakryiko <andrii@kernel.org>
->>
->> [ Upstream commit 639ecd7d6247c48a0175f5b458b648f5d4b6dc34 ]
->>
->> Add low-level wrapper API for BPF_TOKEN_CREATE command in bpf() syscall.
->>
->> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
->> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
->> Link:
->> https://lore.kernel.org/bpf/20240124022127.2379740-13-andrii@kernel.org
->> Stable-dep-of: c81a8ab196b5 ("libbpf: Add btf__new_split() API that
->> was declared but not implemented")
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> ---
->>   tools/lib/bpf/bpf.c      | 17 +++++++++++++++++
->>   tools/lib/bpf/bpf.h      | 24 ++++++++++++++++++++++++
->>   tools/lib/bpf/libbpf.map |  1 +
->>   3 files changed, 42 insertions(+)
->>
->> diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
->> index 9dc9625651dcf..d4019928a8646 100644
->> --- a/tools/lib/bpf/bpf.c
->> +++ b/tools/lib/bpf/bpf.c
->> @@ -1287,3 +1287,20 @@ int bpf_prog_bind_map(int prog_fd, int map_fd,
->>       ret = sys_bpf(BPF_PROG_BIND_MAP, &attr, attr_sz);
->>       return libbpf_err_errno(ret);
->>   }
->> +
->> +int bpf_token_create(int bpffs_fd, struct bpf_token_create_opts *opts)
->> +{
->> +    const size_t attr_sz = offsetofend(union bpf_attr, token_create);
->> +    union bpf_attr attr;
->> +    int fd;
->> +
->> +    if (!OPTS_VALID(opts, bpf_token_create_opts))
->> +        return libbpf_err(-EINVAL);
->> +
->> +    memset(&attr, 0, attr_sz);
->> +    attr.token_create.bpffs_fd = bpffs_fd;
->> +    attr.token_create.flags = OPTS_GET(opts, flags, 0);
-> 
-> With openSUSE config [1], I see:
-> bpf.c:1293:60: error: ‘union bpf_attr’ has no member named
-> ‘token_create’; did you mean ‘iter_create’?
-> bpf.c:1293:60: error: ‘union bpf_attr’ has no member named
-> ‘token_create’; did you mean ‘iter_create’?
-> bpf.c:1301:14: error: ‘union bpf_attr’ has no member named
-> ‘token_create’; did you mean ‘iter_create’?
-> bpf.c:1302:14: error: ‘union bpf_attr’ has no member named
-> ‘token_create’; did you mean ‘iter_create’?
-> 
-> 
-> [1]
-> https://github.com/openSUSE/kernel-source/blob/master/config/x86_64/default
-> 
->> +    fd = sys_bpf_fd(BPF_TOKEN_CREATE, &attr, attr_sz);
-> 
-> And:
-> 
-> bpf.c:1304:25: error: ‘BPF_TOKEN_CREATE’ undeclared (first use in this
-> function); did you mean ‘BPF_ITER_CREATE’?
-> 
-> They are added by:
-> commit 35f96de04127d332a5c5e8a155d31f452f88c76d
-> Author: Andrii Nakryiko <andrii@kernel.org>
-> Date:   Tue Jan 23 18:21:00 2024 -0800
-> 
->     bpf: Introduce BPF token object
-> 
-> 
-> But if you should take it or drop this all, I don't know...
+>  From 85558a46d9f249f26bd77dd3b18d14f248464845 Mon Sep 17 00:00:00 2001
+> From: David Hildenbrand <david@redhat.com>
+> Date: Fri, 22 Mar 2024 22:45:36 +0100
+> Subject: [PATCH] mm/secretmem: fix GUP-fast succeeding on secretmem folios
+>
+> folio_is_secretmem() states that secretmem folios cannot be LRU folios:
+> so we may only exit early if we find an LRU folio. Yet, we exit early if
+> we find a folio that is not a secretmem folio.
+>
+> Consequently, folio_is_secretmem() fails to detect secretmem folios and,
+> therefore, we can succeed in grabbing a secretmem folio during GUP-fast,
+> crashing the kernel when we later try reading/writing to the folio, because
+> the folio has been unmapped from the directmap.
+>
+> Reported-by: xingwei lee <xrivendell7@gmail.com>
+> Reported-by: yue sun <samsun1006219@gmail.com>
+> Debugged-by: Miklos Szeredi <miklos@szeredi.hu>
+> Fixes: 1507f51255c9 ("mm: introduce memfd_secret system call to create "secret" memory areas")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-I ran into the same problems while building 6.8.2-rc1 for Fedora using
-the Fedora 39 config and its RPM spec file (with minor modifications):
+Verified that it's no longer crashing with the reproducers.
 
-https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/stable-rc/fedora-39-x86_64/07210895-stablerc-stablerc-releases/builder-live.log.gz
-
-Ciao, Thorsten
+Tested-by: Miklos Szeredi <mszeredi@redhat.com>
