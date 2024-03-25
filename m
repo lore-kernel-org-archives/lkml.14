@@ -1,231 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps-vb.mhejs.net (vps-vb.mhejs.net [37.28.154.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FCE15F415
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A8815F406
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.28.154.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711370773; cv=none; b=l/GbINHMTjmqMOI5K/6jNeca7y96O+Chj2NC2NtJckvuVu4whntPythlzM8/uFcgyL9gHO3171R0eLgD8udXUBgMJK94gzwjsR2oQEHXxCSIwtb46b8v6MWDZY7+vgaWk87Kw3j7zOQz+DI/PHE1mLaiijSWvwmEg8w+M0+2qlI=
+	t=1711370777; cv=none; b=ukMMExJNfK0DbR2QLMe1tu0wsWNtNcW/yUEouNHG699BnJDNg1jM1jvf/u7YeGJrSoX7U/09TyVKplioHZtdsRH2lqrVN79yiaELbVQbeHdCNW5i5HQZW3ZwbuO61n+itqmS+PRWE+XRlV2K55CgDmb0vVBC+gg7S7QmhLYmD9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711370773; c=relaxed/simple;
-	bh=2lgvFI0wNn9RTCMEzEWib7Gn+j7luBL+Jg2E4ycFUf0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SWgE9qdurynx6NPs/pfwFQ5ZIdQCf9NUIMjv4tT2vtOd65vnepJ2PSHxyA05XLET7JzMJ0hyVnr7R6IRD3aSYfgyrahnNJbDQLczeY6L3Q1Cyq/fGiH1VadpKEiYS5IMPCMiE0bw2ZmlblRutMmzDKY0eRV65qiC3hhm2rh1uI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dz0MergX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dz0MergX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40281C43390;
-	Mon, 25 Mar 2024 12:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711370773;
-	bh=2lgvFI0wNn9RTCMEzEWib7Gn+j7luBL+Jg2E4ycFUf0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dz0MergXwbNpE5qypVG9l++oEAh9GgKrjYVi2WZATBEUMf/h2vvKvfWuuN2rYay9Q
-	 mvBr0LRQln4jeWSRsqlLU8WM7vzf95ttjzjXBJIPtHyIR8fB+mcbA6L6yjQILNW13E
-	 EGLVB0l5Zlthhdi3jucQwfl7boWT3sAKrIJNV9XNKm1YRkYBe9NGv019lOFQyoxQuA
-	 1IBBuXPnLgXvLTeau3NR1///K8RNQnj6GrTVhWQbmN6pYAV+qwXdZ2HD5AKz62NVjT
-	 KcjwNL2irL8wTYaKKGnUMzndCBL9R0lq+wEpVRtUACFl77GcxTnbkuJk6hE9dx6Hwk
-	 JDbfAotIewksw==
-From: alexs@kernel.org
-To: Matthew Wilcox <willy@infradead.org>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Izik Eidus <izik.eidus@ravellosystems.com>,
-	david@redhat.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	ryncsn@gmail.com
-Cc: "Alex Shi (tencent)" <alexs@kernel.org>,
-	Hugh Dickins <hughd@google.com>,
-	Chris Wright <chrisw@sous-sol.org>
-Subject: [PATCH v3 10/14] mm/ksm: Convert stable_tree_search to use folio
-Date: Mon, 25 Mar 2024 20:48:57 +0800
-Message-ID: <20240325124904.398913-11-alexs@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240325124904.398913-1-alexs@kernel.org>
-References: <20240325124904.398913-1-alexs@kernel.org>
+	s=arc-20240116; t=1711370777; c=relaxed/simple;
+	bh=2k4F1nQWeCCo4oPFNKDQJU2HDXCryI+vJYqFmBLbAf8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WNm6+VdZdGjLf1HZCVUMn9NA4OUzNCr2Bn+MmhtqQof7NcF9SWLGkATP1uBt5CViB0cLK6pjT+W473mKL6W+AEkEEipzLti/BahMSzyjE29uM+d5tRsOty3YDRHXBqyR+1tEU5oaiu+voBZnmRfMrL5PJimjHHfhW2PwlQ1Dz68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=maciej.szmigiero.name; arc=none smtp.client-ip=37.28.154.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maciej.szmigiero.name
+Received: from MUA
+	by vps-vb.mhejs.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.94.2)
+	(envelope-from <mail@maciej.szmigiero.name>)
+	id 1rojiG-0002Uk-Ci; Mon, 25 Mar 2024 13:46:04 +0100
+Message-ID: <cfcdae85-8ebd-4723-a15c-8010e6d20d0f@maciej.szmigiero.name>
+Date: Mon, 25 Mar 2024 13:45:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -v2] x86/CPU/AMD: Improve the erratum 1386 workaround
+Content-Language: en-US, pl-PL
+To: Borislav Petkov <bp@alien8.de>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>, X86 ML <x86@kernel.org>
+References: <20240321120548.22687-1-bp@alien8.de>
+ <20240321120548.22687-2-bp@alien8.de>
+ <79125c93-285c-43f8-ac05-87c34c99e6bb@maciej.szmigiero.name>
+ <20240324200525.GBZgCHhYFsBj12PrKv@fat_crate.local>
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+In-Reply-To: <20240324200525.GBZgCHhYFsBj12PrKv@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: "Alex Shi (tencent)" <alexs@kernel.org>
+On 24.03.2024 21:05, Borislav Petkov wrote:
+> On Thu, Mar 21, 2024 at 04:21:39PM +0100, Maciej S. Szmigiero wrote:
+>> On 21.03.2024 13:05, Borislav Petkov wrote:
+>>> From: "Borislav Petkov (AMD)" <bp@alien8.de>
+>>>
+>>> Disable XSAVES only on machines which haven't loaded the microcode
+>>> revision containing the erratum fix.
+>>>
+>>> This will come in handy when running archaic OSes as guests. OSes whose
+>>> brilliant programmers thought that CPUID is overrated and one should not
+>>> query it but use features directly, ala shoot first, ask questions
+>>> later... but only if you're alive after the shooting.
+>>>
+>>> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+>>> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+>>> Cc: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
+>>> ---
+>>
+>> Tested-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
+> 
+> Yeah, thanks but still not good enough. Turns out we already have the
+> min microcode revision testing functionality so there's no need for me
+> to reinvent the wheel.
+> 
+> No harm no foul, tho, the stuff in those two previous patches I will use
+> in the microcode loader soon for simplifying the loading.
+> 
+> Here's one *final* variant, I promise! :-)
+> 
+> Sorry about that.
 
-Although, the func may pass a tail page to check its contents, but only
-single page exist in KSM stable tree, so we still can use folio in
-stable_tree_search() to save a few compound_head calls.
+No problem, it happens :)
 
-Signed-off-by: Alex Shi (tencent) <alexs@kernel.org>
-Cc: Izik Eidus <izik.eidus@ravellosystems.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Chris Wright <chrisw@sous-sol.org>
----
- mm/ksm.c | 58 +++++++++++++++++++++++++++++---------------------------
- 1 file changed, 30 insertions(+), 28 deletions(-)
+> ---
+> From: "Borislav Petkov (AMD)" <bp@alien8.de>
+> Date: Sun, 24 Mar 2024 20:51:35 +0100
+> Subject: [PATCH -v2] x86/CPU/AMD: Improve the erratum 1386 workaround
+> 
+> Disable XSAVES only on machines which haven't loaded the microcode
+> revision containing the erratum fix.
+> 
+> This will come in handy when running archaic OSes as guests. OSes whose
+> brilliant programmers thought that CPUID is overrated and one should not
+> query it but use features directly, ala shoot first, ask questions
+> later... but only if you're alive after the shooting.
+> 
+> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
+> ---
 
-diff --git a/mm/ksm.c b/mm/ksm.c
-index c2afe2f926db..e92445f29685 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -1828,7 +1828,7 @@ static __always_inline void *chain(struct ksm_stable_node **s_n_d,
-  * This function returns the stable tree node of identical content if found,
-  * NULL otherwise.
-  */
--static struct page *stable_tree_search(struct page *page)
-+static void *stable_tree_search(struct page *page)
- {
- 	int nid;
- 	struct rb_root *root;
-@@ -1836,28 +1836,30 @@ static struct page *stable_tree_search(struct page *page)
- 	struct rb_node *parent;
- 	struct ksm_stable_node *stable_node, *stable_node_dup, *stable_node_any;
- 	struct ksm_stable_node *page_node;
-+	struct folio *folio;
- 
--	page_node = page_stable_node(page);
-+	folio = page_folio(page);
-+	page_node = folio_stable_node(folio);
- 	if (page_node && page_node->head != &migrate_nodes) {
- 		/* ksm page forked */
--		get_page(page);
--		return page;
-+		folio_get(folio);
-+		return folio;
- 	}
- 
--	nid = get_kpfn_nid(page_to_pfn(page));
-+	nid = get_kpfn_nid(folio_pfn(folio));
- 	root = root_stable_tree + nid;
- again:
- 	new = &root->rb_node;
- 	parent = NULL;
- 
- 	while (*new) {
--		struct page *tree_page;
-+		struct folio *tree_folio;
- 		int ret;
- 
- 		cond_resched();
- 		stable_node = rb_entry(*new, struct ksm_stable_node, node);
- 		stable_node_any = NULL;
--		tree_page = chain_prune(&stable_node_dup, &stable_node,	root);
-+		tree_folio = chain_prune(&stable_node_dup, &stable_node, root);
- 		/*
- 		 * NOTE: stable_node may have been freed by
- 		 * chain_prune() if the returned stable_node_dup is
-@@ -1891,11 +1893,11 @@ static struct page *stable_tree_search(struct page *page)
- 			 * write protected at all times. Any will work
- 			 * fine to continue the walk.
- 			 */
--			tree_page = get_ksm_page(stable_node_any,
--						 GET_KSM_PAGE_NOLOCK);
-+			tree_folio = ksm_get_folio(stable_node_any,
-+						   GET_KSM_PAGE_NOLOCK);
- 		}
- 		VM_BUG_ON(!stable_node_dup ^ !!stable_node_any);
--		if (!tree_page) {
-+		if (!tree_folio) {
- 			/*
- 			 * If we walked over a stale stable_node,
- 			 * get_ksm_page() will call rb_erase() and it
-@@ -1908,8 +1910,8 @@ static struct page *stable_tree_search(struct page *page)
- 			goto again;
- 		}
- 
--		ret = memcmp_pages(page, tree_page);
--		put_page(tree_page);
-+		ret = memcmp_pages(page, &tree_folio->page);
-+		folio_put(tree_folio);
- 
- 		parent = *new;
- 		if (ret < 0)
-@@ -1952,26 +1954,26 @@ static struct page *stable_tree_search(struct page *page)
- 			 * It would be more elegant to return stable_node
- 			 * than kpage, but that involves more changes.
- 			 */
--			tree_page = get_ksm_page(stable_node_dup,
--						 GET_KSM_PAGE_TRYLOCK);
-+			tree_folio = ksm_get_folio(stable_node_dup,
-+						   GET_KSM_PAGE_TRYLOCK);
- 
--			if (PTR_ERR(tree_page) == -EBUSY)
-+			if (PTR_ERR(tree_folio) == -EBUSY)
- 				return ERR_PTR(-EBUSY);
- 
--			if (unlikely(!tree_page))
-+			if (unlikely(!tree_folio))
- 				/*
- 				 * The tree may have been rebalanced,
- 				 * so re-evaluate parent and new.
- 				 */
- 				goto again;
--			unlock_page(tree_page);
-+			folio_unlock(tree_folio);
- 
- 			if (get_kpfn_nid(stable_node_dup->kpfn) !=
- 			    NUMA(stable_node_dup->nid)) {
--				put_page(tree_page);
-+				folio_put(tree_folio);
- 				goto replace;
- 			}
--			return tree_page;
-+			return tree_folio;
- 		}
- 	}
- 
-@@ -1984,8 +1986,8 @@ static struct page *stable_tree_search(struct page *page)
- 	rb_insert_color(&page_node->node, root);
- out:
- 	if (is_page_sharing_candidate(page_node)) {
--		get_page(page);
--		return page;
-+		folio_get(folio);
-+		return folio;
- 	} else
- 		return NULL;
- 
-@@ -2010,12 +2012,12 @@ static struct page *stable_tree_search(struct page *page)
- 					&page_node->node,
- 					root);
- 			if (is_page_sharing_candidate(page_node))
--				get_page(page);
-+				folio_get(folio);
- 			else
--				page = NULL;
-+				folio = NULL;
- 		} else {
- 			rb_erase(&stable_node_dup->node, root);
--			page = NULL;
-+			folio = NULL;
- 		}
- 	} else {
- 		VM_BUG_ON(!is_stable_node_chain(stable_node));
-@@ -2026,16 +2028,16 @@ static struct page *stable_tree_search(struct page *page)
- 			DO_NUMA(page_node->nid = nid);
- 			stable_node_chain_add_dup(page_node, stable_node);
- 			if (is_page_sharing_candidate(page_node))
--				get_page(page);
-+				folio_get(folio);
- 			else
--				page = NULL;
-+				folio = NULL;
- 		} else {
--			page = NULL;
-+			folio = NULL;
- 		}
- 	}
- 	stable_node_dup->head = &migrate_nodes;
- 	list_add(&stable_node_dup->list, stable_node_dup->head);
--	return page;
-+	return folio;
- 
- chain_append:
- 	/* stable_node_dup could be null if it reached the limit */
--- 
-2.43.0
+I have tested the updated patch now, including negative test by
+increasing the required microcode version by 10, and can confirm that
+this version works properly too.
+
+Thanks,
+Maciej
 
