@@ -1,240 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1C7224FB;
-	Mon, 25 Mar 2024 20:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2517910940;
+	Mon, 25 Mar 2024 20:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711396886; cv=none; b=jOBLCcbRVcltwr7645tKi0rJ9DstfNPuqJJZXw62U11J1dYhL3g+yPBWlNgqKVz79G6AJW+tH6gXTVHaRzPkdx9tVmixLCDuflCnV8NWBwYsXvd5fbfhR9M0JSazUw+e96tDTjJMLKloSs7lmhzIzpRH6t0n6az0jRpKm3EsqHc=
+	t=1711396931; cv=none; b=GDuww+WIdeVZaf+RRJq+1MzimsImPC+qMi3XrbbQCl+ahA3dxMu/wp7asXxEMzfAQgHvgyex7Teo95Rn5Ln4Eoanrm8OV408OEQyGGlXtWFgtXkk5fNaxnRr8miEHj9wu6uadx2yrmshdwKpd4XJJ4vw34tyZn7iwCMQei7PAJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711396886; c=relaxed/simple;
-	bh=PzK6PkwyR4PuLMrgS8c3IKNuEVta0emqQ29NV/exg8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oUQ2sV4j3JFCCE7qHTe6dvJ84mZJcHtbw8rIdKTYYZDcNUespDnco/7RcSuKllhd9d58a1XL4i09Ty4UAnUFJZwGL1F8gcmg8NjLky9uCJrD5KyuJFzL01arZ/7avTSKXfhNoDPFoWduSc+8rR17ICSX/vUHXFpAbkQmYs3BniU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L7ilTwVD; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711396931; c=relaxed/simple;
+	bh=009pprbVflcZ0sjcpaw6nGfyrhZrOZSY1rzqbZbtUH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bhtPaGVT51tBHSRW2G/RfMBwzq44p0BaJ4Q4Yrre6BVAqWlWJgFZq1+eH/pKoLS/BIOLE37ldGDv3LqZqloEk74z5ozutGFyyV6cOl+RxSZnxvzQgEVyG6M6Nd2m3qKkzoAmrDuYdniD+semq4KsBOWx/fXfhqQkveyrPNYX9yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=RlmY6apG; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L7ilTwVD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711396884; x=1742932884;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=PzK6PkwyR4PuLMrgS8c3IKNuEVta0emqQ29NV/exg8o=;
-  b=L7ilTwVDX4BwWxU+832zX7bipRnRTjxMryb01g7sNeTNe0jTcdQtmVjS
-   RkJm49y0qFxkvrHsNn1T0g/+XGn07eui1OXNODz2O3UzqDkUrslh5zQx6
-   H/6eLz6HtNBIRNRKoXnoMlblhR0dKm1XKbDJ+rrklZVNgDU/HjCPEmMdl
-   TS0wanL7E+sG26vCv+PcK2f9eJtBDEfykJ4YJocauIgkM14XtOk9QTV8M
-   6JL2NzF0dhNdbVoeH5OqYkx9IJc8Ank7TMfUFGmk7wlLHRSky8B/Ujrsr
-   CLZCPB+VvTHZlztYp3OX8etcGcvWzi8LxwvzsVY6Ezun7DWUntAZBbp+S
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="7017540"
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="7017540"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 13:01:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="38843069"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 13:01:22 -0700
-Date: Mon, 25 Mar 2024 13:01:22 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>,
-	"Zhang, Tina" <tina.zhang@intel.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"Yuan, Hang" <hang.yuan@intel.com>,
-	"Huang, Kai" <kai.huang@intel.com>, "Chen, Bo2" <chen.bo@intel.com>,
-	"sagis@google.com" <sagis@google.com>,
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 062/130] KVM: x86/tdp_mmu: Support TDX private
- mapping for TDP MMU
-Message-ID: <20240325200122.GH2357401@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <fc97847d04f2b469d8f4cfceee84c7ef055ab1ac.1708933498.git.isaku.yamahata@intel.com>
- <7b76900a42b4044cbbcb0c42922c935562993d1e.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="RlmY6apG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1711396893; x=1712001693; i=w_armin@gmx.de;
+	bh=I7xdYF/K+6S61x6pD/eYYW1ufs3VInyCcEDUxWcOQZQ=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=RlmY6apG2Pb0OAvZG97KfZITfyEUbxyWkDN6yzT6UC1uHHcMAfk/C0z7qf34Z6IJ
+	 3f36f3d2Y8VDy4jP72bGIgr+hFWISLj+YKystPhB20iMmgMbN1l8nwAKKP5hfCBt9
+	 pb5SvZoOXzngv2GqAFD6RyBOKZnCbEVqI/QCFJFh6c2orCDf0XPbYMSGTJ0obkGpc
+	 BjjBE5bs0GLfdw0ekCWZHgcCD0RAhkbDZVtCH5xDzDwneGP/AeVhqurRcBxwHkWle
+	 uXUxEg7Ke3YMIj5EHVsbF6RvJY6gsO+X+cDleGBhWdxRPgTgYmKuPmdxvYVhmZ79I
+	 Np/LI9KtE5qfHAu1fA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MEV3I-1s4o110054-00G4zt; Mon, 25
+ Mar 2024 21:01:33 +0100
+Message-ID: <b9a8c258-94d4-4c09-8211-31466cdfca7b@gmx.de>
+Date: Mon, 25 Mar 2024 21:01:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7b76900a42b4044cbbcb0c42922c935562993d1e.camel@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] platform/x86: Add ACPI quickstart button driver
+To: Hans de Goede <hdegoede@redhat.com>, dennisn@dennisn.mooo.com,
+ lkml@vorpal.se, ilpo.jarvinen@linux.intel.com
+Cc: coproscefalo@gmail.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240131111641.4418-1-W_Armin@gmx.de>
+ <c1b08bbb-ad57-4f41-9b7b-40a6aeb3da9b@redhat.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <c1b08bbb-ad57-4f41-9b7b-40a6aeb3da9b@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:GNHzVl4jHoqeqTOsszHiSw52oCyqw/C/vlRxqHgdwjDAjPDs19P
+ /MPCkFMgseVRFtemXk1xrUSknCB2LyWPGgDhZOwq2tqupfjhYCxeQzEOohUSsW+OiZ9Sg6q
+ adiRdVx+vzotKo4oxJa4ZPt7quInqcF5fAFDWxv24BE0F2VHWLDPMxOBPfVZtQlFaD4C0hx
+ cH5u/vqufpaPLeCmXT30Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:VVggtnWfhlA=;9csI6wvmgHmZnfVAKKe4OyBqGX3
+ 0ode2c97zmCcRXW5YuU/Z849v4ExT57EQ2vj3HfCr+335zgKxeC2XHReIGJl3dFHuFdcIUthi
+ 5b3KvE9MPuBuoOTxVLE2ImoGuPOQ8rDpihfbkjsNqCNXehIGCxIUPKcuCIA1eXvgsEgAvDKNu
+ nojdA/dXy7JWqD8hbCB3vYpUfxCBAx7CthM4ITmO40cu/P8jjyKS71VgqbsnzJ6EFhTP6TEH0
+ iHndBleszoLd+KzcUlzWqYEp7GL4bhVnL8PU8ENyA1Q29GFmEoIK+fWP0zYzLl4DHe3ICoyp6
+ r+2K3bozDVdV+t+Ak6RD0pYLG2sB10vPVeL8cV4ianloIJBhoGLOFEktwCoVSMFH4/obnztZT
+ L7hkmhBsJ2lWQ4n/zY0wXQfOlgZedbpdg2SsRYtg3YKV9NdjtdI+87moBzV19KUA1a8c6iOjo
+ JQUo95a/GQncumRCOlxsLX8/iQvThhwVDORJuVwItfrcWdwWZ1bFjsa8ByIubF10TCzSC7O+y
+ lF3dB/jPxto2KjFxXeM5JFQ91njVoeWpX+6UoR0sCX+Wk8IDKEw/TA1XOVWWJdcQFsoizocB5
+ F6XPhG57zyvlLiO7tcsUk2sc5nyf3oSqOHfwTUvBnEzXazcZAAs0RjmyeIdF1HVryxP2aRbHY
+ YLie+y4aFM6IHwPjneC496zqCf2MVlAJr4BUCzO4E83kAtSHVAWnbGWFecgtWhvzIkDBTW8gX
+ IK9b5GomVkJc+th7n1XmydOEOSO9+NJF5YwnMIkW7BjoxizVsN1EnReyWuCtElQbCIRe+gVLr
+ aPw0dhqI/fZgFBr8F2vUrKyAVkGBISEU6OP0z43cY5pzc=
 
-On Sat, Mar 23, 2024 at 11:39:07PM +0000,
-"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> wrote:
+Am 24.03.24 um 15:55 schrieb Hans de Goede:
 
-> On Mon, 2024-02-26 at 00:26 -0800, isaku.yamahata@intel.com wrote:
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > index efd3fda1c177..bc0767c884f7 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -468,6 +468,7 @@ struct kvm_mmu {
-> >         int (*sync_spte)(struct kvm_vcpu *vcpu,
-> >                          struct kvm_mmu_page *sp, int i);
-> >         struct kvm_mmu_root_info root;
-> > +       hpa_t private_root_hpa;
-> 
-> Per the conversation about consistent naming between private, shared and mirror: I wonder if this
-> should be named these with mirror instead of private. Like:
->   hpa_t mirror_root_hpa;
-> 
-> Since the actual private root is not tracked by KVM.
+> Hi Armin and Arvid,
+>
+> On 1/31/24 12:16 PM, Armin Wolf wrote:
+>> This patch series adds support for the ACPI PNP0C32 device as
+>> proposed in 2022 by Arvid Norlander. The first patch adds support
+>> for the device itself, while the second patch was taken from the
+>> original series.
+>>
+>> Both patches are compile-tested only.
+> Armin, thank you for creating a new cleaned up driver for the
+> quickstart button support.
+>
+> I have managed to get my hands on a Toshiba Portege Z830 and
+> I have successfully tested this series. That is this makes
+> the 2 quickstart application and the toggle-touchpad button
+> work when the system is running normally.
+>
+> Neither the quickstart buttons, nor the touchpad-toggle button
+> which also uses the PNP0C32 interface, work to wakeup
+> the system from sleep though.
+>
+> I've also review both patches and they look good to me:
+>
+> Tested-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
+> So I plan to merge this series into pdx86/for-next once
+> 6.9-rc1 is out.
+>
+> Regards,
+>
+> Hans
+>
+Hi,
 
-It's  mirrored only without direct associated Secure EPT page.  The association
-is implicit, a part of TDCS pages.
+great to hear that the driver works. Can you send me the output of "acpidump" on this machine?
+Maybe the quickstart buttons have no wake capabilities?
 
+Thanks,
+Armin Wolf
 
-> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > index 30c86e858ae4..0e0321ad9ca2 100644
-> > --- a/arch/x86/kvm/mmu/mmu.c
-> > +++ b/arch/x86/kvm/mmu/mmu.c
-> > @@ -3717,7 +3717,12 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
-> >                 goto out_unlock;
-> >  
-> >         if (tdp_mmu_enabled) {
-> > -               root = kvm_tdp_mmu_get_vcpu_root_hpa(vcpu);
-> > +               if (kvm_gfn_shared_mask(vcpu->kvm) &&
-> > +                   !VALID_PAGE(mmu->private_root_hpa)) {
-> > +                       root = kvm_tdp_mmu_get_vcpu_root_hpa(vcpu, true);
-> > +                       mmu->private_root_hpa = root;
-> > +               }
-> > +               root = kvm_tdp_mmu_get_vcpu_root_hpa(vcpu, false);
-> >                 mmu->root.hpa = root;
-> 
-> This has changed now, due to rebase on,
-> https://lore.kernel.org/lkml/20240111020048.844847-1-seanjc@google.com/
-> 
-> ...to this:
-> -       if (tdp_mmu_enabled)
-> -               return kvm_tdp_mmu_alloc_root(vcpu);
-> +       if (tdp_mmu_enabled) {
-> +               if (kvm_gfn_shared_mask(vcpu->kvm) &&
-> +                   !VALID_PAGE(mmu->private_root_hpa)) {
-> +                       r = kvm_tdp_mmu_alloc_root(vcpu, true);
-> +                       if (r)
-> +                               return r;
-> +               }
-> +               return kvm_tdp_mmu_alloc_root(vcpu, false);
-> +       }
-> 
-> I don't see why the !VALID_PAGE(mmu->private_root_hpa) check is needed.
-> kvm_tdp_mmu_get_vcpu_root_hpa() already has logic to prevent allocating multiple roots with the same
-> role.
-
-Historically we needed it.  We don't need it now. We can drop it.
-
-
-> Also, kvm_tdp_mmu_alloc_root() never returns non-zero, even though mmu_alloc_direct_roots() does.
-> Probably today when there is one caller it makes mmu_alloc_direct_roots() cleaner to just have it
-> return the always zero value from kvm_tdp_mmu_alloc_root(). Now that there are two calls, I think we
-> should refactor kvm_tdp_mmu_alloc_root() to return void, and have kvm_tdp_mmu_alloc_root() return 0
-> manually in this case.
-> 
-> Or maybe instead change it back to returning an hpa_t and then kvm_tdp_mmu_alloc_root() can lose the
-> "if (private)" logic at the end too.
-
-Probably we can make void kvm_tdp_mmu_alloc_root() instead of returning always
-zero as clean up.
-
-
-> >         } else if (shadow_root_level >= PT64_ROOT_4LEVEL) {
-> >                 root = mmu_alloc_root(vcpu, 0, 0, shadow_root_level);
-> > @@ -4627,7 +4632,7 @@ int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
-> >         if (kvm_mmu_honors_guest_mtrrs(vcpu->kvm)) {
-> >                 for ( ; fault->max_level > PG_LEVEL_4K; --fault->max_level) {
-> >                         int page_num = KVM_PAGES_PER_HPAGE(fault->max_level);
-> > -                       gfn_t base = gfn_round_for_level(fault->gfn,
-> > +                       gfn_t base = gfn_round_for_level(gpa_to_gfn(fault->addr),
-> >                                                          fault->max_level);
-> >  
-> >                         if (kvm_mtrr_check_gfn_range_consistency(vcpu, base, page_num))
-> > @@ -4662,6 +4667,7 @@ int kvm_mmu_map_tdp_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code,
-> >         };
-> >  
-> >         WARN_ON_ONCE(!vcpu->arch.mmu->root_role.direct);
-> > +       fault.gfn = gpa_to_gfn(fault.addr) & ~kvm_gfn_shared_mask(vcpu->kvm);
-> >         fault.slot = kvm_vcpu_gfn_to_memslot(vcpu, fault.gfn);
-> >  
-> >         r = mmu_topup_memory_caches(vcpu, false);
-> > @@ -6166,6 +6172,7 @@ static int __kvm_mmu_create(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu)
-> >  
-> >         mmu->root.hpa = INVALID_PAGE;
-> >         mmu->root.pgd = 0;
-> > +       mmu->private_root_hpa = INVALID_PAGE;
-> >         for (i = 0; i < KVM_MMU_NUM_PREV_ROOTS; i++)
-> >                 mmu->prev_roots[i] = KVM_MMU_ROOT_INFO_INVALID;
-> >  
-> > @@ -7211,6 +7218,12 @@ int kvm_mmu_vendor_module_init(void)
-> >  void kvm_mmu_destroy(struct kvm_vcpu *vcpu)
-> >  {
-> >         kvm_mmu_unload(vcpu);
-> > +       if (tdp_mmu_enabled) {
-> > +               write_lock(&vcpu->kvm->mmu_lock);
-> > +               mmu_free_root_page(vcpu->kvm, &vcpu->arch.mmu->private_root_hpa,
-> > +                               NULL);
-> > +               write_unlock(&vcpu->kvm->mmu_lock);
-> 
-> What is the reason for the special treatment of private_root_hpa here? The rest of the roots are
-> freed in kvm_mmu_unload(). I think it is because we don't want the mirror to get freed during
-> kvm_mmu_reset_context()?
-
-It reflects that we don't free Secure-EPT pages during runtime, and free them
-when destroying the guest.
-
-
-> 
-> Oof. For the sake of trying to justify the code, I'm trying to keep track of the pros and cons of
-> treating the mirror/private root like a normal one with just a different role bit.
-> 
-> The whole “list of roots” thing seems to date from the shadow paging, where there is is critical to
-> keep multiple cached shared roots of different CPU modes of the same shadowed page tables. Today
-> with non-nested TDP, AFAICT, the only different root is for SMM. I guess since the machinery for
-> managing multiple roots in a list already exists it makes sense to use it for both.
-> 
-> For TDX there are also only two, but the difference is, things need to be done in special ways for
-> the two roots. You end up with a bunch of loops (for_each_*tdp_mmu_root(), etc) that essentially
-> process a list of two different roots, but with inner logic tortured to work for the peculiarities
-> of both private and shared. An easier to read alternative could be to open code both cases.
-> 
-> I guess the major benefit is to keep one set of logic for shadow paging, normal TDP and TDX, but it
-> makes the logic a bit difficult to follow for TDX compared to looking at it from the normal guest
-> perspective. So I wonder if making special versions of the TDX root traversing operations might make
-> the code a little easier to follow. I’m not advocating for it at this point, just still working on
-> an opinion. Is there any history around this design point?
-
-The original desire to keep the modification contained, and not introduce a
-function for population and zap.  With the open coding, do you want something
-like the followings?  We can try it and compare the outcome.
-
-For zapping
-  if (private) {
-     __for_each_tdp_mmu_root_yield_safe_private()
-       private case
-  } else {
-     __for_each_tdp_mmu_root_yield_safe()
-        shared case
-  }
-
-For fault,
-kvm_tdp_mmu_map()
-  if (private) {
-    tdp_mmu_for_each_pte_private(iter, mmu, raw_gfn, raw_gfn + 1)
-      private case
-  } else {
-    tdp_mmu_for_each_pte_private(iter, mmu, raw_gfn, raw_gfn + 1)
-      shared case
-  }
-
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+>> Armin Wolf (1):
+>>    platform/x86: Add ACPI quickstart button (PNP0C32) driver
+>>
+>> Arvid Norlander (1):
+>>    platform/x86: toshiba_acpi: Add quirk for buttons on Z830
+>>
+>>   MAINTAINERS                         |   6 +
+>>   drivers/platform/x86/Kconfig        |  13 ++
+>>   drivers/platform/x86/Makefile       |   3 +
+>>   drivers/platform/x86/quickstart.c   | 225 ++++++++++++++++++++++++++++
+>>   drivers/platform/x86/toshiba_acpi.c |  36 ++++-
+>>   5 files changed, 280 insertions(+), 3 deletions(-)
+>>   create mode 100644 drivers/platform/x86/quickstart.c
+>>
+>> --
+>> 2.39.2
+>>
+>>
+>
