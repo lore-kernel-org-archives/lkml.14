@@ -1,152 +1,169 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2136.outbound.protection.outlook.com [40.107.117.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88DB139561
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.136
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711364119; cv=fail; b=XstBHSDwI0LTlZ9wvnfeRNMG0XKdNq8EO9JiiA+ryQFljlahJ+n7/99Gu07AzSoGx6Sbs0j8WcMOIyHU8wEHiqganr78XuGxcLtlY6zuR+cnT0nuRgDiTZCziEfoPKwooJ96pjxl0X1/oFG+0cGsTNcyw2MQgXJ2kOkuCN4wAs4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711364119; c=relaxed/simple;
-	bh=uwLAFG3YtlQs8DzdJy7AVwMYReJK/uIC2RWLXRef93s=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=CZx/o15TiAuqf9X3WwZjsExxU6Tz2oaf9wQ+/AKsqVV2hVE98SWKjFy+NdpVNY9a/2ATGa4Y0Ons8AlAQr4wWi5x703jiMmYZV6OSLqDQIpmfMbBN9opnJyInHmGIqnsDpcpY4KpSfTLr/DFJ3fpDpDGJ+0PsLLtwEkci14k4Mw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jaguarmicro.com; spf=pass smtp.mailfrom=jaguarmicro.com; dkim=pass (2048-bit key) header.d=jaguarmicro.com header.i=@jaguarmicro.com header.b=ajmH/3hz; arc=fail smtp.client-ip=40.107.117.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jaguarmicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jaguarmicro.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0820914BF97;
+	Mon, 25 Mar 2024 10:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711364322; cv=none; b=t3Wq9upd2PPGHVM8vA4rI1Bd1HsbT+oS9PUw5qR17e06+fRZd4U+iqqtyHWUq6egVqeENafPIjp/MyB/NwloAnKTqEyR4Q4T5evLR6Cz8Muhbop7rb+Eu6Eall8WcMZOUnG04sd6FhZ/O214cgc5v0bFLss0nTvh6kXJiWx9MqM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711364322; c=relaxed/simple;
+	bh=KOl3fjKmkNBn73D7bHh47Hngc4sPCCxK4raJUwi0xSU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hnIvMXP2aSspG4zLfCN17WSrZ5uj4QnavsI+7dcE/qVK4xaQBBkMotOJlXYDOCgR0jMLiEVgTocmZcNkPYMBNe9fd59vD35mRiyucMUteCcBsvv23U1dDBrJdW/T/MuG9QYRF5MX8uSz+tuVE2u5YAhWCPfy2/ct71K8FynII/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkPU4QO3; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jaguarmicro.com header.i=@jaguarmicro.com header.b="ajmH/3hz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZhQYOAKNOrXK0rc0gMC78ZzIQjzTnh+r++ctJJKlc4Iugx2FAGFxX876yExUUSzc/JFOJ5oDBI18vo/X/xfpRoRdsfEikfNqlAKXKaAcecoUa3cxgJAaduErhLW6uyYpDv9nGZ3T8LCfrBABlPLF80fNX+yhB5GKY1vnyvYaapt5SUTrcfmBQB1QqslnAzdZFywneS6vHuUEeKD7CKT8B3XNFf43sVMSJC835pN/mN2EABgJrLhqUBNbfdkrlMJfONtCcYK+BD0OK8oWTgOSPDeHF1arMdx2sLbndRSgTEnRlkH0uoejT2byScA25okNQLO9CAjFyQh22+2A/Hq3pQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tG7VTbd0cEGa9QCWFI9+pgRa/zqNboFBoSDZAj5VLGQ=;
- b=MN1NeFjdsZxwBWjrq595FkFYKYe5UA/5jhdiX4xMkoNKGwKDCVGvyQu2YaARbFJO6euHLrcQ2d/0KaJyze4nCYyJxNeOcG/WdT7JJ7iFwwVcgUmTDw6FaUY/f6YcPpmBlrJYbG/jb8Cmfwh+CQL435Py9sG09OKE6lsSaUJPqAWNnq7wAIVuN/e7C6pwR6+yJS16Cs27PlZSj/NGAM1eGGDA+LSJmlqcKWe7u4PH/hZlIDhF84Sxr5b4yVy65J3GMOMTPg7i3xN+Nei+jFst2u04NqmbxC/uE6HDU2RrJ5dlEnZQSL1L9mNc7lCfEaOPPZEMirOwOpeXW0gkfwzOjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=jaguarmicro.com; dmarc=pass action=none
- header.from=jaguarmicro.com; dkim=pass header.d=jaguarmicro.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaguarmicro.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tG7VTbd0cEGa9QCWFI9+pgRa/zqNboFBoSDZAj5VLGQ=;
- b=ajmH/3hzt8gmRvDjwbdbMAI0waOJV7inCkggvML8IMcT6uZ1a9UUHc4A1kQLcEjfKbuSt9JTdnP0MjTELoFGXT8OxffgzYr+iLDQYkLnMav1xGLnAp7n9ldn6hwD0amlmRfMY/HWuNJiCI3MIlIZZNukJhKrLGG2mSJ4bazBjXKWU0ZE98aQF73/3eokaiN45CLybm9rAK2j0RlJ2GtXCFv8CztFXweXP4Eg41wEXSvPBsTJpjyuTpYAm198tMIlAqwGUIEZ3GjCDHI3AdQy4tl0kxGHTrkCmXaWM2Jz4CbXdNS8lM4oJgzf7msaM9q8chlsBkifFHZyD1pXp27C8w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=jaguarmicro.com;
-Received: from SEYPR06MB6756.apcprd06.prod.outlook.com (2603:1096:101:165::11)
- by PUZPR06MB6224.apcprd06.prod.outlook.com (2603:1096:301:116::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
- 2024 10:55:09 +0000
-Received: from SEYPR06MB6756.apcprd06.prod.outlook.com
- ([fe80::ce49:84ce:23db:8b8]) by SEYPR06MB6756.apcprd06.prod.outlook.com
- ([fe80::ce49:84ce:23db:8b8%6]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
- 10:55:09 +0000
-From: "gavin.liu" <gavin.liu@jaguarmicro.com>
-To: jasowang@redhat.com,
-	mst@redhat.com
-Cc: xuanzhuo@linux.alibaba.com,
-	virtualization@lists.linux.dev,
-	yuxue.liu@jaguarmicro.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] vp_vdpa: Fix return value check vp_vdpa_request_irq
-Date: Mon, 25 Mar 2024 18:54:47 +0800
-Message-Id: <20240325105448.235-1-gavin.liu@jaguarmicro.com>
-X-Mailer: git-send-email 2.33.0.windows.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SGXP274CA0017.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::29)
- To SEYPR06MB6756.apcprd06.prod.outlook.com (2603:1096:101:165::11)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkPU4QO3"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a467d8efe78so495891366b.3;
+        Mon, 25 Mar 2024 03:58:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711364319; x=1711969119; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IFyAUkPSCFS9rx+BPpS2MocSw/duTbvD8tK+fGjRRKA=;
+        b=GkPU4QO3eN8PICTkrFbEe2tjUyfhnyyvRR9xxzYdIXKPM9MyN1hLn2ZQwKVOpDuFtP
+         B+BUvAstZOPSBZnRRLF800S/TgcLscAwPxTZZeIGp+WsXrHIgHXgDiAk5/MHSol0pGe+
+         f5VfcGSlDOLrRmfY9jqwHli3Uc4lz4OjtNAw0QenZJAun2lXeoRzyNPaeLB7qzzyJpVc
+         NtFQEjqStAG7vAEQlNAy55dFqM2cxAO1SZi1jEfPe1hjWJCubMRqv51VMNpUkC6lPnOS
+         krTWjI2h8fx8Nde2AXwzwRUgFm5ZlDsO9HCDrGj3Cc2RKT9YIFzxN2J7MzOCinmTeY/s
+         Orrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711364319; x=1711969119;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IFyAUkPSCFS9rx+BPpS2MocSw/duTbvD8tK+fGjRRKA=;
+        b=RKkdRMspMRgIJoKABjUFr3Nsqc/2tsBSQT3R0wkc7B7XqGFEEsnG9tZ4wMv5VsQone
+         gRcLO1yKKPIn6UCZb2XU+A8D03pQv7VB8UkTLGTF4E6cdeFYHqsAHtDZVjoSbVsJFEnF
+         iP+KWRIYoUqPdn1dkEJEIbGwGiMw3ysfTCOBgTqsRSXfzC6OdKA2hwmtkLwRdFvAfFPp
+         aeGRu3GvuojeHr+JW16ZiLYai2deAN/Xd93q/edAOSiVd3q0FUu8NPhrXJ7qXmYKdE4U
+         CepzpEy4UwZiZakDA401FoxeR7rmTkKG8tEEqKsp96pokhrjIzrdhNAtKakhuBl3LSat
+         AI8A==
+X-Forwarded-Encrypted: i=1; AJvYcCXssZknM9e3tcZOZZdWQgl9fR8uHVf5378URu6XHujOeMusukB7CwJU+sMO1hV+SX3xthD1qgzxDpVGxLrIvYH0EUGRDtQjpW9ifr5ofwcLG2j/czYJ8lcT2YJgLf3g6BnEAPCB
+X-Gm-Message-State: AOJu0YzMdBWgUXJ+DbYD+caFUSKP0pZsVhfxrr5cceqSMMu9TaWidAU/
+	6U5hSkMYJXPBkk63ftR8MS0q9UIEQe1grk0IKHIy9NpwvVOUfiHa
+X-Google-Smtp-Source: AGHT+IHaYK99BIa4wj7eYaaTUgTDCna6WcFoy3laXXi8gDSJTAh3vFVwhkcfuR8wbtoJ0Qmaqk+T8w==
+X-Received: by 2002:a17:906:90b:b0:a47:3573:b7a3 with SMTP id i11-20020a170906090b00b00a473573b7a3mr4951792ejd.11.1711364318809;
+        Mon, 25 Mar 2024 03:58:38 -0700 (PDT)
+Received: from gmail.com (1F2EF63C.nat.pool.telekom.hu. [31.46.246.60])
+        by smtp.gmail.com with ESMTPSA id ao20-20020a170907359400b00a4a393518b6sm709103ejc.158.2024.03.25.03.58.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 03:58:38 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Mon, 25 Mar 2024 11:58:35 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Russ Anderson <rja@hpe.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
+	Eric Hagberg <ehagberg@gmail.com>,
+	Simon Horman <horms@verge.net.au>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
+	Dimitri Sivanich <sivanich@hpe.com>
+Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
+ except on UV platform.
+Message-ID: <ZgFY24QT7470ZGnV@gmail.com>
+References: <20240322162135.3984233-1-steve.wahl@hpe.com>
+ <ZgABC1oQ9YJW6Bw3@gmail.com>
+ <20240325020334.GA10309@hpe.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEYPR06MB6756:EE_|PUZPR06MB6224:EE_
-X-MS-Office365-Filtering-Correlation-Id: dd3be308-a907-4deb-4c72-08dc4cba09a0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	r/TvFwV47lGwADZYOy1byU5Z/LegKcHX8VIvq3UdH3up5E3pvgItlLJ2L4U5uvBAy+5YXfLLtfRbJZ0Rfc56h0YVERwiW8fFkIdlQPNM9KfV8w8yHOjvVroPwaMXjcsySNGNtNWXQBa7pdQC0FKRTPtHgvV5fjOdanuzp4q0e4zp62S8gAgFZdtfAaGy5uNsAaZQj1d1usQuWEnjZHFtcmR33HEt5sROzMn/8mAUPT8BNZ6SdYP77F+IiVV7Mk4HZWX34/le/LdKFGxz8ZwrP8GcA4RWGo9o6Q6Va8GuEsyOYDXOhiX6NpEdfEDGJ8N2B56BuPH0DdSTB2cM2IBmySzGM02WbVA9mtv/dbcacVrXjefsYqv3pCvjcXtjXTys9smwWvmOPE3N/0wDADt4Tnxlx29zx9G7TpW3nMqevl2jNfe33O/HGCeU884dE6MZtEmv2VJnqGE5ttE7KP7qBheK3mLx1ZGttEfrcS/F2+oojhMXb5UjGRnuBPjr9uLO3wwZ/9m+MGuQP80E2aC6Tu6mwKJSLxhr7iiYeLGBo6kZaUJuvrQyQ+lrlpdW6aO9++UVXV5vy23Wd9GJd43cTYk7Z3pqprZ61+O1+txaDYWn8AdVjFLoLOD6/528C25nNWtWRMua4n492PB4S4j3cjwhIup5TUl8tTSmrIiepMM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB6756.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(1800799015)(366007)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?y6KI6QsVXoVIKaryFxdpuEgpDoN47pP4nZTm/UC140NNJdG2VEy0gXCNLaa9?=
- =?us-ascii?Q?GXpjSDkFR+bituhEx7IFB5B+TZKI5U9sVqoQzOSYwX4a/UCyJFNPR00cYpQm?=
- =?us-ascii?Q?3nLluokkLalcUZlG5QEugLLWGH3kVWJywc2HTUUMyqTJ7AYwm7C6BWDZJrNS?=
- =?us-ascii?Q?rZ3SrEGHjqyXhUAhooP+t5lYJO6qKTPfKjDAkERkAk+Ci6qNwVbQlOC4ok6V?=
- =?us-ascii?Q?NSvb+7t8sz3TaqaMw4bMf67B+yGCB9AxwYSP0+LETj3dJle4XmfnfH0pbc6+?=
- =?us-ascii?Q?6p7TrSxYXb5Gqg7dQ+7SeJVA0KWEl7fMfC9cu8LLsr9gYukpRQd6r0XssAfW?=
- =?us-ascii?Q?HJuB7rlxxCdqK0FczS6q/KOGDBE3oIin+nOVAK1VueM9ooOomw7OZmk4P/4p?=
- =?us-ascii?Q?g3b+q+le7+ACsSD4p2tksoedkSz7RuZVWkxcd/I1Nxtl1k8ASxazhkqZ4Tqd?=
- =?us-ascii?Q?S0dSJm6LL5fHk76cfGWTi4hvcOuWX6NNxG/ranA9sB1PDxDvkXKwd7IXh3Ja?=
- =?us-ascii?Q?l9kKq2/4zbrdy9QSBW2ePjvN4W+4l3uE5ETSdnzJUHuO/VlvBiEOog0gdfIz?=
- =?us-ascii?Q?GSjGlG+5gXg3XQamRrzeH81m5D6W2MODoINR00YuCK4Xow595z40F0cmKqnp?=
- =?us-ascii?Q?K+1lNd4gaJQ9+slEUv/57BtY9mMVbyVw0Y3eazjZZimhiZeBeTKxRIrZN6lW?=
- =?us-ascii?Q?SrijJS6GLJvgGGgdsc3QWRy5VrXVWcRFGSgrPCQOcrtUNo5zxENuFL608BrG?=
- =?us-ascii?Q?GMwoLY5d38mWatmGt2uA0h0LRJPO/U1rb4DBFgP4TwWEExLPhkmEZtnDFPXk?=
- =?us-ascii?Q?jlwovPCVXjTlho9JnqKPDo9Abmxi2K7FxFuS+yfQSsM9M7ivuqgTGMW67KeG?=
- =?us-ascii?Q?rGTc6a8qxcpXbS54dpZLcrNfZVZQPwgjws3BobgJlcE0CNXxxPiisVJWpfDE?=
- =?us-ascii?Q?wHhtObnhKcu1bTfzD9pjXi7JtiVGogWSUoilkfbSDZ9k3IQhKE3bpM72OpQV?=
- =?us-ascii?Q?lYmsnwXrveQsmHFMo1X5r4YJMFP9ARdTTmRdaAcyc7HyV0tiQ1voapY0kXEZ?=
- =?us-ascii?Q?tGb0lmbgl5JiO0rCJajtn1kTgZU/HAeJHv9cFy/IQrRX9XiMtGT/4edlaJPu?=
- =?us-ascii?Q?rdyd3WzyVgViNrHwm3mPYkjTUgL4qeFfU1hcRG6qR6DxTSL15WHbs+5YVcnp?=
- =?us-ascii?Q?yM1T4VOr/NBm9BNNiAnOpsmV61QoKng6viiiIcSwF5SKMjyk0amW9la9jHCt?=
- =?us-ascii?Q?GxsJ9sXGm+hNZwifXbr9D5ihNMTJGJ/c20wrxJYoC9bepJ+fq+BoBcQuaNVD?=
- =?us-ascii?Q?hN8JsNHxr+t/969cUlxXiRLZ0oqKr5ncUAdsG4MA3MpS6m4+6U9PtmbL6Yl5?=
- =?us-ascii?Q?N2ujNvtpfCNhGmNOm10BQpHbsvwmyUWKIlW/RVJXksuvy2pk8AWE9dDTugzN?=
- =?us-ascii?Q?9ji3AVRw2pxVcomyaHbmokiHuTueVXf0kfaoxuIINWvIGHkQWRop/8BF8lXn?=
- =?us-ascii?Q?21lIjb0H+sU6ZRfJS19a3VERaUV11ClJTV4UUIyxdZJSi+DSZqhF8Z8C+r/c?=
- =?us-ascii?Q?yKlpO3Ug7paxFU2MBUAzX3x5GfRXyR0zbbA717uN5d5jQQJDm2CcfzJrsxMd?=
- =?us-ascii?Q?Jw=3D=3D?=
-X-OriginatorOrg: jaguarmicro.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd3be308-a907-4deb-4c72-08dc4cba09a0
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB6756.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 10:55:09.1516
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 1e45a5c2-d3e1-46b3-a0e6-c5ebf6d8ba7b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O6x+UGY19wMo6saDZBHNV2ge66NrrtFkTr7LPZ2mVheONcnSKLP3pQx4HJkuYx53pcdj5EavX4jy9yinBNkU0UfBcQ8ed/wRj+YImLX7YsA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB6224
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325020334.GA10309@hpe.com>
 
-From: Yuxue Liu <yuxue.liu@jaguarmicro.com>
 
-In the vp_vdpa_set_status function, when setting the device status to
-VIRTIO_CONFIG_S_DRIVER_OK, the vp_vdpa_request_irq function may fail.
-In such cases, the device status should not be set to DRIVER_OK. Add
-exception printing to remind the user.
+* Russ Anderson <rja@hpe.com> wrote:
 
-Signed-off-by: Yuxue Liu <yuxue.liu@jaguarmicro.com>
----
+> On Sun, Mar 24, 2024 at 11:31:39AM +0100, Ingo Molnar wrote:
+> > 
+> > * Steve Wahl <steve.wahl@hpe.com> wrote:
+> > 
+> > > Some systems have ACPI tables that don't include everything that needs
+> > > to be mapped for a successful kexec.  These systems rely on identity
+> > > maps that include the full gigabyte surrounding any smaller region
+> > > requested for kexec success.  Without this, they fail to kexec and end
+> > > up doing a full firmware reboot.
+> > > 
+> > > So, reduce the use of GB pages only on systems where this is known to
+> > > be necessary (specifically, UV systems).
+> > > 
+> > > Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> > > Fixes: d794734c9bbf ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
+> > > Reported-by: Pavin Joseph <me@pavinjoseph.com>
+> > 
+> > Sigh, why was d794734c9bbf marked for a -stable backport? The commit 
+> > never explains ...
+> 
+> I will try to explain, since Steve is offline.  That commit fixes a
+> legitimate bug where more address range is mapped (1G) than the
+> requested address range.
 
-V1 -> V2: Remove redundant printouts
-V1: https://lore.kernel.org/all/20240315102857.1803-1-gavin.liu@jaguarmicro.com/
+If a change regresses on certain machines then it's not a bug fix anymore, 
+it's a regression. End of story.
 
----
- drivers/vdpa/virtio_pci/vp_vdpa.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+>  The fix avoids the issue of cpu speculativly
+> loading beyond the requested range, which inludes specutalive loads
+> from reserved memory.  That is why it was marked for -stable.
 
-diff --git a/drivers/vdpa/virtio_pci/vp_vdpa.c b/drivers/vdpa/virtio_pci/vp_vdpa.c
-index df5f4a3bccb5..4caca0517cad 100644
---- a/drivers/vdpa/virtio_pci/vp_vdpa.c
-+++ b/drivers/vdpa/virtio_pci/vp_vdpa.c
-@@ -216,7 +216,10 @@ static void vp_vdpa_set_status(struct vdpa_device *vdpa, u8 status)
- 
- 	if (status & VIRTIO_CONFIG_S_DRIVER_OK &&
- 	    !(s & VIRTIO_CONFIG_S_DRIVER_OK)) {
--		vp_vdpa_request_irq(vp_vdpa);
-+		if (vp_vdpa_request_irq(vp_vdpa)) {
-+			WARN_ON(1);
-+			return;
-+		}
- 	}
- 
- 	vp_modern_set_status(mdev, status);
--- 
-2.43.0
+And this regression is why more complicated fixes in this area should not 
+be forwarded to -stable before it's been merged upstream and exposed a bit 
+more. Please keep that in mind for future iterations.
 
+> > If it's broken, it should be reverted - instead of trying to partially 
+> > revert and then maybe break some other systems.
+> 
+> Three people reported that mapping only the correct address range
+> caused problems on their platforms.  https://lore.kernel.org/all/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
+> Steve and several people helped debug the issue.  The commit itself
+> looks correct but the correct behavior causes some side effect on
+> a few platforms.
+
+That's all fine and the effort is much appreciated - but we should not try 
+to whitewash a regression: if there's a couple of reports in such a short 
+time already, then the regression is significant.
+
+Anyway, I've reverted this in tip:x86/urgent:
+
+  c567f2948f57 Revert "x86/mm/ident_map: Use gbpages only where full GB page should be mapped."
+
+we can iterate from there again. Please post future patches against that 
+tree.
+
+Note that this is just the regular development process: regressions happen, 
+and this is how we handle them a lot of the time in this area - we back out 
+the breakage, then try again.
+
+> Some memory ends up not being mapped, but it is not clear if it is due to 
+> some other bug, such as bios not accurately providing the right memory 
+> map or some other kernel code path did not map what it should.  The 1G 
+> mapping covers up that type issue.
+> 
+> Steve's second patch was to not break those platforms while leaving the 
+> fix on the platform detected the original mapping problem (UV platform).
+> 
+> > When there's boot breakage with new patches, we back out the bad patch 
+> > and re-try in 99.9% of the cases.
+> 
+> Steve can certainly merge his two patches and resubmit, to replace the 
+> reverted original patch.  He should be on in the morning to speak for 
+> himself.
+
+Thank you!
+
+	Ingo
