@@ -1,121 +1,189 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFD941A85;
-	Mon, 25 Mar 2024 17:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C2E54756
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711387549; cv=none; b=Zye1U0jJy/9HvEHL7gdfJWGKCYaWU1nXk2Mz2hPImbq72EQJCvgXPwCn8UKakjL8GGHXO82R19D1spD/e8klbDNrPl8XJ8/XtRqErLys8TujTMykv7NkseG+tFjFcg+qsrYNh4jV4vOB9iw++16371t84bAA+61VBBFfN0rY/mg=
+	t=1711387611; cv=none; b=kv/+7Nfe5SzDYdAkRnRfK/M3P05EExCWjNr8FL2+bG5CekCcTg/ca5hyhIdFw+uZrWnhu07uW687dk+sbIvHIPALe6BCgm0hdK8756bQlBs+NxiTYq2sA9FW1NJMgHyzV3rCZhwMhxKLtCMP7T9xN0MjfVyUio4lOfahXMqb/I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711387549; c=relaxed/simple;
-	bh=nD6YpLKIKyKX/YCgn48Bw5AnmNM9aAFjepz6Uc1FLsg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HCdcrE2PwoIKOXci2BGCaZzxDvsJfESYkZ6eKWJ1cFvL/G+NzoYxaFZYPTbwewTeDxNQho9oltV7sXdn6yz2zAOdNTOIonGIqHiIB9GhburUAt1RiQ4XpjKBhdiH/NSJIEVBo28ljsiyIppNYVWCgipGNSip4Hm9rFUd8yk4/Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CtYmhioa; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711387611; c=relaxed/simple;
+	bh=FWDizHwRbtcUVJzobSiCgNS3VDD3O/7xE3wAvattHIM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WoPU6qeRXxuPmDR87jQW9N9O6GcJ2Rwx5MJ3fnIKX8FABwh8oV/Ky4c1Q7SHVqH0B4xyjhdMfUD7TJRoYcIbfLkqVMOu75Wve7zAHGJlhu9beCZo58zU34weFtavSMjdMD9s7R+IFzSZk1QQAuziTOkJ+yBjdgTludq2VKCUuQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aBNLEp5W; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CtYmhioa"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1deffa23bb9so34413995ad.2;
-        Mon, 25 Mar 2024 10:25:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711387547; x=1711992347; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0oXjJdG3y0f1e4IsMhRsRfdRWQRoTf6NEQ0J4KitWFc=;
-        b=CtYmhioabJ++KhhbMIRwEZ4t6+ij9zWxVCBDvQOMvpX+VSMaSIMYmGnXwGKiOmUGlo
-         WqKkIaZLD+HUQ33m0qXJrUiFr/T5nkpaHWJNDACssGQrXEd+FQ/QAVoQhJtTWRoTmBWr
-         Z23KyPkQLGqU0snmQiUlZ4PViSHrlbORG+eyoyp6nXNs9O2UGqEDz1JL8t/0P+hSQilD
-         C9gfZcARP0mrs1k+xbH7b0YfKVpJ1EVHuMij1EuiZV+WPGbX98y6udT9FU000EUaDaIz
-         HgBkjaAfxphtAhIRS0sLFyQL1zKsfq0/RWdWpoaPiEZXExEhMGrksX6CBZ2JwD2XwCDl
-         E0pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711387547; x=1711992347;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0oXjJdG3y0f1e4IsMhRsRfdRWQRoTf6NEQ0J4KitWFc=;
-        b=Ch2z6NhV/KORjauTNtA34EA1/WtxckZJf/hJHnOxoJYSNnImr1ChfIjIRu8KGkD57s
-         uNKKh7+V+eyl7hnyGfKXz0ca9RVejQ5leVWla2Gm87UtXOnUI1RcWXqLqZ4yjQshJ8Hm
-         LqJM9tOY+AXbMExMoRdz+wnupfUlEnjSOEGjTWoRnS8p76oTTn7PTpYokInDjtgZtIf9
-         NaBPSipdCTpp9rHVZqWa4HiZyYOXr+13v+vhHrC41qrCduwV5hX6ACIlgRcyYd9e2Ze+
-         Nkw/FD82dzjrNSFgYbffirX1qwZgmBwrf93zM3K5raIU8858ilz/OX9hO3mkDPGFZA/R
-         9QVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWDWdGbw+Lyj2KQ8/pflMDDkyt3uaK/sv75K8IfPiOG1E8dveEcMQLEDRZ+5OkLUQDLMsuITEdaV+RjmsfS9VORwqvZi91wXaAoW7Objn938aVyOY3d3HMy9n0nJF7AvZ0
-X-Gm-Message-State: AOJu0YxrAS78xVtuWMReoEKYqD89L841wthN9bljr5FoKVlsBFImBiBk
-	mLelcCHQbaqRCCD0DknbyxThQTU1QRt2cUVALjpvWlhZpD2CBJLP4n+IF0JmRYNJyA1h5LgQLyo
-	vYjHn4Vac8ws1A/qMoePRVtm8Y78=
-X-Google-Smtp-Source: AGHT+IF8bTjfMse3lUz7pNVDa0X5Q9LzATh/o0DmJjx4kBFyMsHQQS9w9NS3df5X75Qm/+KgG8xG2BMO1d5YqAWLd3M=
-X-Received: by 2002:a17:902:c115:b0:1e0:58e:88a8 with SMTP id
- 21-20020a170902c11500b001e0058e88a8mr9460071pli.52.1711387547251; Mon, 25 Mar
- 2024 10:25:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aBNLEp5W"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42PHQL12061966;
+	Mon, 25 Mar 2024 12:26:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1711387581;
+	bh=u2R75byDJ62cMgKm2V1bDaB3tq9bjRG3tOWnOwtsXzc=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=aBNLEp5Wzf03RkEY1T66D4gpVGTtK8LdgGzBe9h8yOx18a92ruvv+30kgia40L0rT
+	 v+9/9VLpMJvh8+J1b0pdUSlxseUrsqy5Nvw9mwqXqTHaF46tdU+PWP1NJlDI6Yc2/D
+	 flZek70rkE0G27NBspllT+jOs/9IujN5P1m8vmLU=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42PHQL8K094182
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 25 Mar 2024 12:26:21 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 25
+ Mar 2024 12:26:20 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 25 Mar 2024 12:26:21 -0500
+Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42PHQK81042985;
+	Mon, 25 Mar 2024 12:26:20 -0500
+From: Andrew Davis <afd@ti.com>
+To: Russell King <linux@armlinux.org.uk>, Baruch Siach <baruch@tkos.co.il>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Davis <afd@ti.com>
+Subject: [PATCH v2 2/3] ARM: mach-lpc18xx: Rework support and directory structure
+Date: Mon, 25 Mar 2024 12:26:18 -0500
+Message-ID: <20240325172619.113661-2-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240325172619.113661-1-afd@ti.com>
+References: <20240325172619.113661-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325154737.3754820-1-chen.dylane@gmail.com>
-In-Reply-To: <20240325154737.3754820-1-chen.dylane@gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 25 Mar 2024 10:25:34 -0700
-Message-ID: <CAEf4Bzag72gYXWJ2+mPnWaysyTK0OC3NjnasxNsb+N0NxXY2fw@mail.gmail.com>
-Subject: Re: [RFC PATCH] libbpf: Add bpf_program__set_section_name api
-To: Tao Chen <chen.dylane@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Mon, Mar 25, 2024 at 8:48=E2=80=AFAM Tao Chen <chen.dylane@gmail.com> wr=
-ote:
->
-> The new api can be used to reset the function we want to trace in
-> runtime. So we need not to change the code again when we just do
-> minor changes to the trace function in kprobe or other ebpf event
-> type. We can replace the old section with new section passed in via
-> parameter. Maybe the following scenario we can use the api:
->
-> 1. solve "*.isra.o" issue caused by compiler in new kernel
-> obj =3D offcputime_bpf__open();
-> bpf_program__set_section_name(*(obj->skeleton->obj),
-> "kprobe/finish_task_switch", "kprobe/finish_task_switch.isra.0");
->
-> 2. dynamic adjustment for trace function offset
-> obj =3D offcputime_bpf__open();
-> bpf_program__set_section_name(*(obj->skeleton->obj),
-> "kprobe/finish_task_switch+23", "kprobe/finish_task_switch+45");
->
-> Signed-off-by: Tao Chen <chen.dylane@gmail.com>
-> ---
->  tools/lib/bpf/libbpf.c   | 24 ++++++++++++++++++++++++
->  tools/lib/bpf/libbpf.h   |  2 ++
->  tools/lib/bpf/libbpf.map |  1 +
->  3 files changed, 27 insertions(+)
->
+Having a platform need a mach-* directory should be seen as a negative,
+it means the platform needs special non-standard handling. ARM64 support
+does not allow mach-* directories at all. While we may not get to that
+given all the non-standard architectures we support, we should still try
+to get as close as we can and reduce the number of mach directories.
 
-This is a wrong approach. SEC() is immutable and serves as a hint to
-libbpf on program type and possibly some attach parameters. But after
-that libbpf allows to override all of them though APIs like
-bpf_program__set_type() and others. Attach APIs always allow to
-specify all the target parameters, including kprobe function name and
-so on.
+The mach-lpc18xx/ directory and files, provides just one "feature":
+having the kernel print the machine name if the DTB does not also contain
+a "model" string (which they always do). To reduce the number of mach-*
+directories let's do without that feature and remove this directory.
 
-Please check all of the libbpf APIs in libbpf.h.
+Note the fallback machine has a default l2c_aux_mask value set to ~0,
+which is different than the value of 0 used when none is provided. This
+is safe here as this platform does not use an l2x0 cache controller.
 
-pw-bot: cr
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
 
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 96ff1aa4bf6a..94f32e845c61 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -8576,6 +8576,30 @@ const char *bpf_program__section_name(const struct=
- bpf_program *prog)
->         return prog->sec_name;
->  }
->
+Changes from v1:
+ - Updated commit desc with l2c_aux_mask info
+ - Rebased on v6.9-rc1
 
-[...]
+ arch/arm/Kconfig                 | 11 -----------
+ arch/arm/Kconfig.platforms       | 11 +++++++++++
+ arch/arm/Makefile                |  1 -
+ arch/arm/mach-lpc18xx/Makefile   |  2 --
+ arch/arm/mach-lpc18xx/board-dt.c | 19 -------------------
+ 5 files changed, 11 insertions(+), 33 deletions(-)
+ delete mode 100644 arch/arm/mach-lpc18xx/Makefile
+ delete mode 100644 arch/arm/mach-lpc18xx/board-dt.c
+
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 9f55fd24c163a..66a16ee1ed8f1 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -459,17 +459,6 @@ source "arch/arm/mach-vt8500/Kconfig"
+ source "arch/arm/mach-zynq/Kconfig"
+ 
+ # ARMv7-M architecture
+-config ARCH_LPC18XX
+-	bool "NXP LPC18xx/LPC43xx"
+-	depends on ARM_SINGLE_ARMV7M
+-	select ARCH_HAS_RESET_CONTROLLER
+-	select ARM_AMBA
+-	select CLKSRC_LPC32XX
+-	select PINCTRL
+-	help
+-	  Support for NXP's LPC18xx Cortex-M3 and LPC43xx Cortex-M4
+-	  high performance microcontrollers.
+-
+ config ARCH_MPS2
+ 	bool "ARM MPS2 platform"
+ 	depends on ARM_SINGLE_ARMV7M
+diff --git a/arch/arm/Kconfig.platforms b/arch/arm/Kconfig.platforms
+index 5c19c1f2cff61..29fbed968d361 100644
+--- a/arch/arm/Kconfig.platforms
++++ b/arch/arm/Kconfig.platforms
+@@ -112,6 +112,17 @@ config ARCH_HPE_GXP
+ 
+ endif
+ 
++config ARCH_LPC18XX
++	bool "NXP LPC18xx/LPC43xx"
++	depends on ARM_SINGLE_ARMV7M
++	select ARCH_HAS_RESET_CONTROLLER
++	select ARM_AMBA
++	select CLKSRC_LPC32XX
++	select PINCTRL
++	help
++	  Support for NXP's LPC18xx Cortex-M3 and LPC43xx Cortex-M4
++	  high performance microcontrollers.
++
+ menuconfig ARCH_MOXART
+ 	bool "MOXA ART SoC"
+ 	depends on ARCH_MULTI_V4
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 131778fbc6827..8da36594c2f3f 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -184,7 +184,6 @@ machine-$(CONFIG_ARCH_HIGHBANK)		+= highbank
+ machine-$(CONFIG_ARCH_HISI)		+= hisi
+ machine-$(CONFIG_ARCH_IXP4XX)		+= ixp4xx
+ machine-$(CONFIG_ARCH_KEYSTONE)		+= keystone
+-machine-$(CONFIG_ARCH_LPC18XX)		+= lpc18xx
+ machine-$(CONFIG_ARCH_LPC32XX)		+= lpc32xx
+ machine-$(CONFIG_ARCH_MESON)		+= meson
+ machine-$(CONFIG_ARCH_MMP)		+= mmp
+diff --git a/arch/arm/mach-lpc18xx/Makefile b/arch/arm/mach-lpc18xx/Makefile
+deleted file mode 100644
+index c80d80c199d37..0000000000000
+--- a/arch/arm/mach-lpc18xx/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-obj-y += board-dt.o
+diff --git a/arch/arm/mach-lpc18xx/board-dt.c b/arch/arm/mach-lpc18xx/board-dt.c
+deleted file mode 100644
+index 4729eb83401ae..0000000000000
+--- a/arch/arm/mach-lpc18xx/board-dt.c
++++ /dev/null
+@@ -1,19 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Device Tree board file for NXP LPC18xx/43xx
+- *
+- * Copyright (C) 2015 Joachim Eastwood <manabian@gmail.com>
+- */
+-
+-#include <asm/mach/arch.h>
+-
+-static const char *const lpc18xx_43xx_compat[] __initconst = {
+-	"nxp,lpc1850",
+-	"nxp,lpc4350",
+-	"nxp,lpc4370",
+-	NULL
+-};
+-
+-DT_MACHINE_START(LPC18XXDT, "NXP LPC18xx/43xx (Device Tree)")
+-	.dt_compat = lpc18xx_43xx_compat,
+-MACHINE_END
+-- 
+2.39.2
+
