@@ -1,43 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3EA140361
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3001BA68B;
+	Mon, 25 Mar 2024 11:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711364891; cv=none; b=j3YAGjhSfIxOVvYHcvchfjrkKn2GvuSq84yfbkn52addtxqLt65aMZ9bVSdJiJo4x0ZLxmAkAdEdDMcPIw2lBIsZjpWGmNEhbGmUM89Nbft72K4FUvYoIkCklzrgtZffwBWTAYvXe+Wn7YHWiMj2cV1+Cywn8PtBCGxe9a2YynQ=
+	t=1711365029; cv=none; b=I5yUBbyF5k/Rt5FzfOlJqDtXk0qTo8ggStUMa3FKBFfG3T3eS9TuJ2ToH+bwVB4w7HcOqGxGDltrwjv8tW+Am8kocpBa9g8mwu4vEUwzAfBzLBpFNmZfdcdeYAJOdoHEIuaQJEXZ9E5ixGLsFJRfkeJuTgjod8Wgp0MwJQeai3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711364891; c=relaxed/simple;
-	bh=mK+a5fKSHAosIJ1vD42jVSju6aNIvU/ovsSMpFBzTcY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=abNl8W7Ol4W9kndd/p+xuSG+J8cohKCNw3M8Z92zfSSDOhxUS5y5wiQk51c1LcFRvzKw2Xfsj3fPpIk/h9qv95V9L1SpLS/ox5Hm1OpAomsjZf+x7ur1od84UM2+SvIHOQetv3Jx6Hz5Q+40d1ZFqo7UxxzqyMgLbQvJDM6hYzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTNU6iQC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711365029; c=relaxed/simple;
+	bh=NgOnL1mRyt3iDu7+ZEL6Xng2LeHcYmj6Fkapt5D4cmg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=mL2q2GJlXBt2FMOtr9Qs5kGPKL9VlGjOwm02yNyzPojXT8uYO/meTnijPgKBYbiBMpacHHnuHG1tumjyHEIOGVJZ+LRCyCFUePEHLwSEQMWAYum/9BkWbUIVGfLzNdHZgX6d7GhlgHFIpYocG89dRZAibVi951O0yKq02LRjxcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1ULB8lf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTNU6iQC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1EE0C433F1;
-	Mon, 25 Mar 2024 11:08:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1ULB8lf"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 33212C433F1;
+	Mon, 25 Mar 2024 11:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711364891;
-	bh=mK+a5fKSHAosIJ1vD42jVSju6aNIvU/ovsSMpFBzTcY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XTNU6iQCNHH0nf4EJwPkJQJ4Y7Q2vDWDhLL4ldDBVvtm7CAZBiEHtbrfLEdZTw386
-	 zyDHEF8tzhEyizMK2ln7iZU/WOs3UxnTQ1X9DnCIU5uCtVt2LgFAysBHsTxpvLG8Y5
-	 gZwi1hKkG4TYngUyw67VhKn5NA4kB/uC8/HGJG96dxHFKYoEhYdkTXNCdtldoEO+YF
-	 0s0g5nCKiXvoUZXW/r+1hYRavWDKohfetk+wXYa4/FNmukCVygZYHvsn11XBBp7wQ/
-	 rArulJehFnEQSPpcNIiXQVdjGkGfmhv3UluA3E3QpnndGANNxikA/BLpvuPsJHYeOU
-	 sE161vCVQg7Sw==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2 RESEND] riscv: mm: implement pgprot_nx
-Date: Mon, 25 Mar 2024 18:54:56 +0800
-Message-ID: <20240325105456.1338-1-jszhang@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1711365028;
+	bh=NgOnL1mRyt3iDu7+ZEL6Xng2LeHcYmj6Fkapt5D4cmg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=c1ULB8lfM8A6XDYAUs2TOqysJkA4Gv+JnScDhP4Ig2LWopwsvnY2XZxXoCQ1cpM++
+	 R7QE3vD3DxURSAPNobA4g+8tan87sJvXZRJ4jQRAbCJmjrz23xbCrD9n+YqfJGhSe4
+	 /mdJ3j64inUahKMCOyZzwNpm4yrwfGY5WaZN4o+uds4Lc+iY/pAmfXdr7rllhtyyi3
+	 5SMSPKMjNCwCVzoMM2IHnUHa/Hv5fAUzOaATu0N0KeB5DPubXiPBSBH3VFPP4ha91V
+	 12EgahOI5jFQ7FnRmeZXBakjpi6sqbZpcuxyIq6nxs1JwizhF+gFzCrNCmzaUybvyJ
+	 NZNyAFbMXFDig==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2282FD2D0EE;
+	Mon, 25 Mar 2024 11:10:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,51 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v1] mlxbf_gige: stop PHY during open() error paths
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171136502813.18794.12152488546311342790.git-patchwork-notify@kernel.org>
+Date: Mon, 25 Mar 2024 11:10:28 +0000
+References: <20240320193117.3232-1-davthompson@nvidia.com>
+In-Reply-To: <20240320193117.3232-1-davthompson@nvidia.com>
+To: David Thompson <davthompson@nvidia.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, u.kleine-koenig@pengutronix.de, leon@kernel.org,
+ asmaa@nvidia.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-commit cca98e9f8b5e ("mm: enforce that vmap can't map pages
-executable") enforces the W^X protection by not allowing remapping
-existing pages as executable. Add riscv bits so that riscv can benefit
-the same protection.
+Hello:
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
-Tested-by: Samuel Holland <samuel.holland@sifive.com>
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Hi Palmer,
+On Wed, 20 Mar 2024 15:31:17 -0400 you wrote:
+> The mlxbf_gige_open() routine starts the PHY as part of normal
+> initialization.  The mlxbf_gige_open() routine must stop the
+> PHY during its error paths.
+> 
+> Fixes: f92e1869d74e ("Add Mellanox BlueField Gigabit Ethernet driver")
+> Signed-off-by: David Thompson <davthompson@nvidia.com>
+> Reviewed-by: Asmaa Mnebhi <asmaa@nvidia.com>
+> 
+> [...]
 
-This patch missed two merge window, I.E 6.8-rc1 and 6.9-rc1,
-I'm not sure whether there's something to be done from my side.
+Here is the summary with links:
+  - [net,v1] mlxbf_gige: stop PHY during open() error paths
+    https://git.kernel.org/netdev/net/c/d6c30c5a168f
 
-Thanks in advance
-
-since v1:
- - rebase on v6.8-rc1
- - collect Reviewed-by and Tested-by tag
-
-
- arch/riscv/include/asm/pgtable.h | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 97fcde30e247..9f8ea0e33eb1 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -593,6 +593,12 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
- 	return ptep_test_and_clear_young(vma, address, ptep);
- }
- 
-+#define pgprot_nx pgprot_nx
-+static inline pgprot_t pgprot_nx(pgprot_t _prot)
-+{
-+	return __pgprot(pgprot_val(_prot) & ~_PAGE_EXEC);
-+}
-+
- #define pgprot_noncached pgprot_noncached
- static inline pgprot_t pgprot_noncached(pgprot_t _prot)
- {
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
