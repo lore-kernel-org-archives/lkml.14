@@ -1,97 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A730487AE
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5867B50A75
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711387746; cv=none; b=G0UDWbCXsJhsst/Rg2sG+mYQUwlhO1EiFLQvt129iHpaIPkthtJrjjWyiQfK0Uyocg18prpt5lS8/Qc8AkTHLeFwKWAMxPH/MVjQx4AT6MdpYvwEz4iVCWdFEgzbgMLNtF0SX+/mxNhVgIMAOvc0lbksvRnyL1MH4Hm5TMo9VxE=
+	t=1711387814; cv=none; b=pbjPniVFTiq7n8b6RA+RZF+BvAclLnxJx/f/69gWnjK2ol9gV9pwcWVifiu4468w7MkFq5siKEIA91O2ORYpTJrMIP3gz1ayPXcIULE9lv3jejhAOr6Dpd5WcNNXQ/a1iBw9rNfUJcdCGJ3XlzAXFsjZAKYe/zz3YIzVXQ1u5sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711387746; c=relaxed/simple;
-	bh=AJt1U9vTruj17U/R5Stf0nTDii3e+Z/CWmJMiKxifSc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Vle6ymo39zSlbLbovgEXUR2HF8Alxh3M6GiHB++UB+81JF4cLB+Xccm79vWAZNiSWKyPAeavXLdPtU6QJBWqp1KN5IzTPfgGRywT2MMHx3xrVO2bVkvWV3by6c7LinwiVBa+SXqrC8juLfajooL0lEHzQ6eFdK9MMRG+n9pO6Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D6f93+Zw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ADqaJtST; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1711387814; c=relaxed/simple;
+	bh=C1gj64oqzU8K3xQSmB11kUUJwdYaoF7IoZAlc1H4pL8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rs3SJRKxWXnivzMi9TD5H7aVb98kcJcS1GnUiudhiO+keeVPUEAMGOymH5GL4BvCwZiTuLx5GznRaotWDq0TK8bPrXUcQV+V3O/AW/ZI4YxIntPbvT6qKrRjXxmsBn19yvE/vN4cgIjioJeo5xZ2xN8YHPkEmiCDIGy66uSAZgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O7gp0UkC; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D6f93+Zw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ADqaJtST"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711387743;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DK75XUtlMLk9/6ARSoFxcVcx+16IzV8AtSC+x6vyvg0=;
-	b=D6f93+ZwVXOucjhz90HFPRG8UrmlmLHw5luAhexA228uzsatRdCZEo6Cf0rgIb3vIf4Yv5
-	WBn4yUi8Vs53n1nP2RcYibCv+Ry9Lz56+lIzphC8B1gp+QICHV0oXc+P0gpn4PfZM8ZL/j
-	Opsz07yxMw4nNK1+fGJa+XNfvb3C2s6kSoCK329vxCJBdVBPAesaYWUJleFB6NAAbWwviI
-	QdqOt5MXbqv3MplJ5ZaQ5hw4BdX6wbibi4eWU9oAXMxw/T8jiN2VFIIjeHgA0g5e0NNuaU
-	5sN2nDBcIOa/9Rk60SYId7qHKjaJEMY4wtq1mtTlfo+qKqiYTxNPLAXNdy/3aw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711387743;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DK75XUtlMLk9/6ARSoFxcVcx+16IzV8AtSC+x6vyvg0=;
-	b=ADqaJtSTgua0QpmlQ9S4WNkb+UhTfDqmg9pUgccPc2/fxJseO/HvWkPVtOMfNJ7AGF035A
-	VdvNBAQgh8+vNcCQ==
-To: Jason Gunthorpe <jgg@ziepe.ca>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>, Bixuan Cui
- <cuibixuan@huawei.com>, linux-arm-kernel@lists.infradead.org,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Peng Fan
- <peng.fan@nxp.com>
-Subject: Re: [PATCH 3/3] iommu/arm-smmu-v3: support suspend/resume
-In-Reply-To: <20240325134848.GA8419@ziepe.ca>
-References: <20240324-smmu-v3-v1-0-11bc96e156a5@nxp.com>
- <20240324-smmu-v3-v1-3-11bc96e156a5@nxp.com>
- <20240325134848.GA8419@ziepe.ca>
-Date: Mon, 25 Mar 2024 18:29:03 +0100
-Message-ID: <87bk72fcf4.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O7gp0UkC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711387813; x=1742923813;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=C1gj64oqzU8K3xQSmB11kUUJwdYaoF7IoZAlc1H4pL8=;
+  b=O7gp0UkC0kiYFhu28f3AaDxqcUHgm3zGjdpjh67XrC1X8tg7Bqa2P94X
+   Y8tiQY+MxecEOxWCN+lZAFDvMC8DPPBaqBlFrRbTbMNmnjz34lhDKslgG
+   TcAWDrxVoxwlYMxJiyjMDVabAPUwCJri6GR2s/Wt97sqp4myXYXFZTMyq
+   CAT8+isnopR+trwaWsi7mwohjAhRhmNNcQpv4GoImRhgK4Zg9Qv1np5MU
+   kVRg6p6RJKvewS1jHAgIBgW2EIBfFsrfrynVdRzlWQqfx/LD2n4yIyBJ4
+   VXCd7vL1lk7XE997Zn8kb0HdX9KeDgSxFKu1RGp8N/fB7G/yrfug11izs
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="10200887"
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="10200887"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 10:30:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="827784775"
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="827784775"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by orsmga001.jf.intel.com with SMTP; 25 Mar 2024 10:30:07 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 25 Mar 2024 19:30:06 +0200
+Date: Mon, 25 Mar 2024 19:30:06 +0200
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	intel-gfx@lists.freedesktop.org,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: Re: BUG: sleeping function called from invalid context at
+ drivers/gpu/drm/i915/gem/i915_gem_pages.c:526
+Message-ID: <ZgG0niB5wBxkWBkR@intel.com>
+References: <20240227100342.GAZd2zfmYcPS_SndtO@fat_crate.local>
+ <87jzmqjir5.fsf@intel.com>
+ <20240227105356.GBZd2_RL9hjC_LupZB@fat_crate.local>
+ <87h6hujhrz.fsf@intel.com>
+ <20240325163342.GEZgGnZpROSN4euuLb@fat_crate.local>
+ <ZgGsVBnpme-syWCG@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZgGsVBnpme-syWCG@intel.com>
+X-Patchwork-Hint: comment
 
-On Mon, Mar 25 2024 at 10:48, Jason Gunthorpe wrote:
-> On Sun, Mar 24, 2024 at 08:29:00PM +0800, Peng Fan (OSS) wrote:
->> +static void arm_smmu_resume_unique_irqs(struct arm_smmu_device *smmu)
->> +{
->> +	struct device *dev = smmu->dev;
->> +	struct msi_desc *desc;
->> +	struct msi_msg msg;
->> +
->> +	if (!dev->msi.domain)
->> +		return;
->> +
->> +	desc = irq_get_msi_desc(smmu->evtq.q.irq);
->> +	if (desc) {
->> +		get_cached_msi_msg(smmu->evtq.q.irq, &msg);
->> +		arm_smmu_write_msi_msg(desc, &msg);
->> +	}
->> +
->> +	desc = irq_get_msi_desc(smmu->gerr_irq);
->> +	if (desc) {
->> +		get_cached_msi_msg(smmu->gerr_irq, &msg);
->> +		arm_smmu_write_msi_msg(desc, &msg);
->> +	}
->> +
->> +	if (smmu->features & ARM_SMMU_FEAT_PRI) {
->> +		desc = irq_get_msi_desc(smmu->priq.q.irq);
->> +		if (desc) {
->> +			get_cached_msi_msg(smmu->priq.q.irq, &msg);
->> +			arm_smmu_write_msi_msg(desc, &msg);
->> +		}
->> +	}
->> +}
->
-> I wonder if this should be done instead by converting the driver away
-> from platform MSI to the new MSI mechanism?
+On Mon, Mar 25, 2024 at 06:54:44PM +0200, Ville Syrjälä wrote:
+> On Mon, Mar 25, 2024 at 05:33:42PM +0100, Borislav Petkov wrote:
+> > On Tue, Feb 27, 2024 at 12:58:08PM +0200, Jani Nikula wrote:
+> > > Let's see what Ville says, but in the end bisection might be the
+> > > quickest way to find the regression. Though I understand it can be
+> > > tedious for you personally.
+> > 
+> > That still fires with 6.-9-rc1. Does Ville have any suggestions or
+> > should I bisect?
+> 
+> Sorry, completely missed this. The culprit is going to be
+> commit 1de63528e728 ("drm/i915: Perform vblank evasion around legacy
+> cursor updates")
 
-There is work in progress for that. Should come around in the next
-weeks.
+Hmm. Actually should be commit 0225a90981c8 ("drm/i915: Make
+cursor plane registers unlocked") already.
+
+Apprently I had CONFIG_DEBUG_ATOMIC_SLEEP=n in my config
+for most of my old machines.
+
+-- 
+Ville Syrjälä
+Intel
