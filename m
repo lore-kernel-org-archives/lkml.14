@@ -1,131 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27EB1BAA4B
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63C5145B21;
+	Mon, 25 Mar 2024 11:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711365200; cv=none; b=cfRNpC8+M4mdW5mQSYglHA96it9i4mQlpvg8nH9x3Jm5em5BmmJjFhWY2h9cukuS9xIPgyH9Dww1fycA6vjm7E2j7CNO45OZPHnbGW6Q0COR8wvh6zeD1jxswGpUKIuUvoe1/FxJfLnu/K4WqluPi/v+gEL+4cUxX9pDnPMkD2M=
+	t=1711365454; cv=none; b=XqETfuTrNjSya53HMMihs3NQlO7Cfdd35iS7vSc5bsf2AeX/aIljM4+Wk7rYEiwzh6rNCp3DHUoJ/TAjSdr9MmFb6XMQvTpBb1u2o8ymG1U28i03OWQCsGdEWmkSywrRoqA3/MFtk0xENapUWyw+5+HuDLR/1mo+dTlEfYTlN2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711365200; c=relaxed/simple;
-	bh=Hsa/4RMLo7slhwDozooCgxr8Rhe6jK9MdW6Cr2Tbkbo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gAlLWBlw90hVyTvZnUVqDRoBG72jBnqIUntrUKxCC+I4oWcro+xO8TSN7rY2VkGGQJCqSbuv3J2EAFNAw8nVeSU7DiEdhCMj4iVq3fo1e/qfPSyIKrwjtm5FRX2I08Mcf02TZqoRMzSF98oXBWGtACOnYweLnMAUMLBIEpljaXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i6ljovrx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711365454; c=relaxed/simple;
+	bh=WrEa33cBZx15hEBju/7B9wRVX0eMhydoPuVy5Q1YmdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OeB0XAoTjYlgVGebOC2rhuhlBM7Y1W9DtceesGcmreuJ2rBkl412oKk9oKMIQK9UoANEdJnhP6gN/DjOQ+18bta11TXlQiXTOAuzQnhv46f8Bdaat+GQwixsjLtPhBRqfrimzehdKf3sBPDibGqXwsiHwhNfsb2RA05iaLW7gvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Z6Yzd1cB; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i6ljovrx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711365195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QAPHGbxlJ6k982EnibWHBxa9+vZqkzt4vbnevEyQxDY=;
-	b=i6ljovrxAAxtvJII+5FvBck2e+Y+YtGgrYqG7qg0wLeKvICjtKddxa94WSc045W+j5P67U
-	0GSPJYHBf1FupyAeHXOrIVlDAGU2R3BAjBQroPUBnv8F6uE+j1qu/D7GyecBcb/Ry2G38+
-	tGjgXqYK2YW2BQBhQ3E7rxvsTuk/veY=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-97-ZTyh1gzYMUSxzMHOKwnvLw-1; Mon, 25 Mar 2024 07:13:14 -0400
-X-MC-Unique: ZTyh1gzYMUSxzMHOKwnvLw-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-56c0d3517deso652296a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:13:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711365193; x=1711969993;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QAPHGbxlJ6k982EnibWHBxa9+vZqkzt4vbnevEyQxDY=;
-        b=Q+Kpl418cQPdEi6XCJ4yRKy7YQvulo5IJW7WE+rGZEVvjzHk/WaDMacWNM3k5MHuyq
-         d7HjVqPBlQWwRWAcOi4B4XBqqRaqePboWPUUf+ubm4yST0Dp0WZBmUPvxrOWImfg/QI/
-         4geRpX+FNP7zSWEfL2UJ+lWus1B7zfD7mKuByfUnPQYfnWL/qAahMxGbFbtKCTEld8vt
-         svDBq+l02Iqjk5aSOWIAYoNPa2jo68L71RJ2UNwq9jXlWD3qL1KHhXoxqCn/g7jR8Eej
-         Abu8Hthl+0GdKitT9yC1xvIRGwk6s8zj5Fqtkw7kQHFu3e1zpoSM2lOiMRPidgPwbg1v
-         44og==
-X-Forwarded-Encrypted: i=1; AJvYcCWNl/5tYXUZ6cRrbDIWliTAvvhE2YsHVdsQS7huxvF5LDwBWzMoClIYWmFylEfA5Xn7s83Ef9k/5CPhYz03YBKWvu3W/o5BBGHO8xLJ
-X-Gm-Message-State: AOJu0YzVaP3DlGXftORc9IzENZ8QyjLQ5nw/H41siBZWLHgIoeU7gW6P
-	QHgVA2zA2DiwRDKq2Qee7UuBkr5Ls2yN9fJybnVtDfA6zfmdYyMQct1R+3SA7aR3fpDGv8Gg7W1
-	4HMTa7ZMAW1fxSYsHx9QFnn6/f1SA9oMN6u7PlZ9F6/Z+F1C3UlNw77O1sUanVA==
-X-Received: by 2002:a50:8753:0:b0:568:aced:e5a0 with SMTP id 19-20020a508753000000b00568acede5a0mr5705680edv.14.1711365193413;
-        Mon, 25 Mar 2024 04:13:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHDFlIpB/lK3v3cbB5QOQ7Bbg8iNxhFwokSKMspks8TaBGXgxvtbwZi1GudHYxQskJStFdo7A==
-X-Received: by 2002:a50:8753:0:b0:568:aced:e5a0 with SMTP id 19-20020a508753000000b00568acede5a0mr5705672edv.14.1711365193137;
-        Mon, 25 Mar 2024 04:13:13 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id fi24-20020a056402551800b0056bfa6ad5eesm2530825edb.91.2024.03.25.04.13.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 04:13:12 -0700 (PDT)
-Message-ID: <f677cad0-4387-4a79-b7bb-f7b0676e5418@redhat.com>
-Date: Mon, 25 Mar 2024 12:13:11 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Z6Yzd1cB"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PABpYj018665;
+	Mon, 25 Mar 2024 11:17:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=gnlObX30DW5far9dp1Z99mKsThU4aayO+Gtb5tKOmSI=;
+ b=Z6Yzd1cBtfCsA+QXnMdad8suUWDjqfS6kHIuWJHefO4QmTufqbLsVMMKn+g3dTk69wQ0
+ 1JRBa36VohbinjvUr69kB9bxqMX2lXO9YgiMTOfjPz0Fjx9Z5gdI9gZ3Y5BmjH/RSJzX
+ mk4fmWuchs4dO3zZkWzIHqMH0ZPTHHv5KSTOvSdvQoYZXa0P+mCfXbVYGdYoxS5KKbUl
+ ulj0k9se7l0i6KNxCvi2CDizfnA81CCuEBQ7EXZginqQirQrwijhrmdDK1cVgk+AQTo7
+ KY60o1/FReCzxVlL4ABo7R3S1yBnC0E8JnmyG4RzWHjoF7Swvk/9jww5cU05/7OERkoa uQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2g8f26c9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 11:16:59 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42PBGxxW020737;
+	Mon, 25 Mar 2024 11:16:59 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2g8f26c6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 11:16:59 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42PAUVRs016605;
+	Mon, 25 Mar 2024 11:16:58 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x29dts0yv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 11:16:58 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42PBGrdd49414524
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 25 Mar 2024 11:16:55 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EFB6D20049;
+	Mon, 25 Mar 2024 11:16:52 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0819120040;
+	Mon, 25 Mar 2024 11:16:52 +0000 (GMT)
+Received: from osiris (unknown [9.171.70.91])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 25 Mar 2024 11:16:51 +0000 (GMT)
+Date: Mon, 25 Mar 2024 12:16:50 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dave Chinner <david@fromorbit.com>, Guenter Roeck <linux@roeck-us.net>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 1/1] mm: vmalloc: Bail out early in find_vmap_area() if
+ vmap is not init
+Message-ID: <20240325111650.16056-A-hca@linux.ibm.com>
+References: <20240323141544.4150-1-urezki@gmail.com>
+ <ZgC38GfEZYpYGUU9@infradead.org>
+ <20240325093959.9453-B-hca@linux.ibm.com>
+ <ZgFNVtp3EsJRaSN0@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/28] platform: intel_ips: Use PCI_IRQ_INTX
-Content-Language: en-US, nl
-To: Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>,
- Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
- linux-scsi@vger.kernel.org, "Martin K . Petersen"
- <martin.petersen@oracle.com>, Jaroslav Kysela <perex@perex.cz>,
- linux-sound@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- linux-serial@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- ntb@lists.linux.dev, Lee Jones <lee@kernel.org>,
- David Airlie <airlied@gmail.com>, amd-gfx@lists.freedesktop.org,
- Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240325070944.3600338-1-dlemoal@kernel.org>
- <20240325070944.3600338-8-dlemoal@kernel.org>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240325070944.3600338-8-dlemoal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgFNVtp3EsJRaSN0@MiWiFi-R3L-srv>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: EjOA8Cp1wiUgikrGT4ebHRtCz_cnePdL
+X-Proofpoint-ORIG-GUID: KiB6oDil0a2tliOO39RSi9iLVP9OPhLD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_08,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 mlxlogscore=475 spamscore=0 impostorscore=0 adultscore=0
+ bulkscore=0 suspectscore=0 malwarescore=0 mlxscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403250062
 
-Hi,
-
-On 3/25/24 8:09 AM, Damien Le Moal wrote:
-> Use the macro PCI_IRQ_INTX instead of the deprecated PCI_IRQ_LEGACY
-> macro.
+On Mon, Mar 25, 2024 at 06:09:26PM +0800, Baoquan He wrote:
+> On 03/25/24 at 10:39am, Heiko Carstens wrote:
+> > On Sun, Mar 24, 2024 at 04:32:00PM -0700, Christoph Hellwig wrote:
+> > > On Sat, Mar 23, 2024 at 03:15:44PM +0100, Uladzislau Rezki (Sony) wrote:
+> ......snip
+> > > I guess this is ok as an urgend bandaid to get s390 booting again,
+> > > but calling find_vmap_area before the vmap area is initialized
+> > > seems an actual issue in the s390 mm init code.
+> > > 
+> > > Adding the s390 maintainers to see if they have and idea how this could
+> > > get fixed in a better way.
+> > 
+> > I'm going to push the patch below to the s390 git tree later. This is not a
+> > piece of art, but I wanted to avoid to externalize vmalloc's vmap_initialized,
+> > or come up with some s390 specific change_page_attr_alias_early() variant where
+> > sooner or later nobody remembers what "early" means.
+> > 
+> > So this seems to be "good enough".
+...
+> > Add a slab_is_available() check to change_page_attr_alias() in order to
+> > avoid early calls into vmalloc code. slab_is_available() is not exactly
+> > what is needed, but there is currently no other way to tell if the vmalloc
+> > code is initialized or not, and there is no reason to expose
+> > e.g. vmap_initialized from vmalloc to achieve the same.
 > 
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> If so, I would rather add a vmalloc_is_available() to achieve the same.
+> The added code and the code comment definitely will confuse people and
+> make people to dig why.
 
-Thanks, patch looks good to me, feel free to merge
-this through whatever tree is convenient (or let me
-know if you want me to pick up just this one patch
-from the series).
+So after having given this a bit more thought I think Uladzislau's patch is
+probably the best way to address this.
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
+It seems to be better that the vmalloc code would just do the right thing,
+regardless how early it is called, instead of adding yet another
+subsystem_xyz_is_available() call.
 
-Regards,
-
-Hans
-
-
-
-
-> ---
->  drivers/platform/x86/intel_ips.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-> index ba38649cc142..73ec4460a151 100644
-> --- a/drivers/platform/x86/intel_ips.c
-> +++ b/drivers/platform/x86/intel_ips.c
-> @@ -1505,7 +1505,7 @@ static int ips_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  	 * IRQ handler for ME interaction
->  	 * Note: don't use MSI here as the PCH has bugs.
->  	 */
-> -	ret = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_LEGACY);
-> +	ret = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_INTX);
->  	if (ret < 0)
->  		return ret;
->  
-
+Alternatively this could be addressed in s390 code with some sort of
+"early" calls, but as already stated, sooner or later nobody would remember
+what "early" means, and even if that would be remembered: would that
+restriction still be valid?
