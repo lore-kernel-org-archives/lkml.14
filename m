@@ -1,87 +1,82 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD04F5CDE7;
-	Mon, 25 Mar 2024 15:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E657054279
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 15:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711379212; cv=none; b=qpChTm7ivPjC7XwelIS662MpAjqkgdV1CaJ/mPs9yEqKhbomQRyIWxP6NZO+sPklCJvcJV9PSsUoHtos2z1IfLHQ8W8clZukgMFZd8RIwqHts2I7LRpby5maBzUJBG+kmAH0ug9iUFqLl1/C9HhxUDWomIowCr1wBd3Dd3y9SxU=
+	t=1711379267; cv=none; b=updZgs+Q8IhYZsnxETCWqYEjTB9uwLj9I7/GoTxPOylomXB/YFyMVd+qeYc73PKRqGTL5ys6dkCdgTVPz9yoZEQ1jy6WTpF4IEl7tQqBUSSz4hJl544G0SAeGxl+DwGPAoYt4wzp4mZw+8etPYNjxehSk/JU8t3k2Od/ysmU6u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711379212; c=relaxed/simple;
-	bh=5BTm+AGtRn0RP7HkBKn2D2EUDTxHWeNLkYOLk56BiQI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ko9Ddc391Z09uL1gg1rjmfq542MGg7d+mkImJxyxk5nrPUgtkkjFNT2xO3GqdPaUR/Zb2VyFimU5Ft0eI7Sz0JolPc2joMHVvxLtJcqVftQvbvqvc/dQZ8+D8i5kyPA5oiM8mHOSCOy8JxzOvMzuVt3GIWsSZVgwZ74F44xfZew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K/zf+7yE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Uto49Jc5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1711379267; c=relaxed/simple;
+	bh=6+wM/5Eml0jJjXbueM68ZzKT44rHBgaiZRCLtSh/Yuo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FUfIAfNTrAsrJB9HH9RXWk2ars/hJmxFbkiYSikBq9oLrwv6kaQjuWvvWfbPqUyFa+UqbZtrZ6kwb9J9lRMjNCkg5D41aR6GU+xQiMk6XmEKF4dKvUOyDWYUNN0WY2ObaPY0QSrJiPKZakGRB+uSPhDsJlJH6hkjc0IevnT8bUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HyKVrXbA; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K/zf+7yE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Uto49Jc5"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711379202;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UY2viGttd52QxBSAE5FTUmjPJkhh6vniD/bPyOg5248=;
-	b=K/zf+7yEttbmmljaw/cQWo9WAyKD9MR79Gt9zl4U9jYzGLa+bxe0UpmzKnUUp3jKz9/Mpd
-	dHTm8hc6jnBwM59WgNaWv7Mufdv8DRyEh7JgwhYw8JOKNg6jR5E41pZm6C0AbRkbuvltFF
-	pDJ6Rq/LPDtJ6VkntoKm9XVySGq+qeiHHORJcrNg3/F0q1MyVqcdnRdeu1yFO8bKQA84sz
-	yoQcdYiOmqLNlUoSGFK2GN+hQZBCYMfZyfJ7Q1B/0lcLJ9hDxegaSwlw4r3enAXkTNgUuY
-	mNOYYCEdmPkner/XQjmcle5QEpNKAkTMhvn6v77X8GBX8Yu3vAVM9ee4Z3fBTg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711379202;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UY2viGttd52QxBSAE5FTUmjPJkhh6vniD/bPyOg5248=;
-	b=Uto49Jc52SeDUanLBSWBcfzXubKk4aZAk6vJBB2cIRUYRwuQ36qNXfGvVvNphTCt1DMPO1
-	Nzp+d7ahvuFMFyDg==
-To: Nipun Gupta <nipun.gupta@amd.com>, alex.williamson@redhat.com,
- gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: maz@kernel.org, git@amd.com, harpreet.anand@amd.com,
- pieter.jansen-van-vuuren@amd.com, nikhil.agarwal@amd.com,
- michal.simek@amd.com, abhijit.gangurde@amd.com, srivatsa@csail.mit.edu,
- Nipun Gupta <nipun.gupta@amd.com>
-Subject: Re: [PATCH v4 1/2] genirq/msi: add wrapper msi allocation API and
- export msi functions
-In-Reply-To: <20240305043040.224127-1-nipun.gupta@amd.com>
-References: <20240305043040.224127-1-nipun.gupta@amd.com>
-Date: Mon, 25 Mar 2024 16:06:42 +0100
-Message-ID: <87edbyfj0d.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HyKVrXbA"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d46dd5f222so55030891fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711379264; x=1711984064; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6+wM/5Eml0jJjXbueM68ZzKT44rHBgaiZRCLtSh/Yuo=;
+        b=HyKVrXbAJgia2qR6aWAERV8S7eWY4GME5+3qgZENTj1xEl3lwVxlHgU9KSmRBaQZ52
+         vBOIk2P5KeSd2OBBaTXoHv0wleHCrpVsVdtO3ofFpsLpVMLOwlQvG1qs8G9gK0utvyqn
+         L1y788i6AU2L92D68kTLsutNK8VTHjjgp1qtcchMHttp6DVVYy64K4pBGttr9wwV6QtQ
+         unJXEVk54HBM27b9ZCgeRDXYeZquH0s/Di527OTl8evAWXOjOp+ZZVkoPSnWHvxnFELp
+         NYMMlqnsZnFGK9fGdDW76LxuFTFsRmvKu2md7U3UFPNdEPrubSCPY2szuFkVwsbdSgCE
+         MP9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711379264; x=1711984064;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6+wM/5Eml0jJjXbueM68ZzKT44rHBgaiZRCLtSh/Yuo=;
+        b=LQeqSP0gplnTHhWinzKFmXT3vJGexEPn7X5njjvPkcjgSWR6sBWVh+H3/WAPYNr9ql
+         jxtKGo2LKrXRo3lIpJXzGaKSuL+bkqcB/t8ereZX1jPluiWkyA3nQG0AyeGcFcC/PvyO
+         CLa6CSTCzsxA+xXn7DmsiVaCRB3A5h+Ixjqg46F+YFl4x+CmTUFvfdjXlJ4rzLnLquCU
+         iZtoIRIqFAfxlK7C8pTAQ0IRHUam/0h94yySMGGlbx3jxtCPKCBc0CSsXtSo+4cjxIb7
+         Xs5/iyoB43/rqUGTCBiAAIbpev9wmtZAOP7TRRZDMdMYdeo6tZR/rA0znUv0w1PRqYaf
+         Qn3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWpoiWfAKUNwvXtc6qrDVdPL8IrIYk2HTcDX9v4Ma6PWlQJ2KQTkB432TdFpsgdnbTjOur4mUnQpePHf4PEjkpqWtYCvK7+S171MDdG
+X-Gm-Message-State: AOJu0YyXKUNLngejX4wvokATI/yJNAkRI1tmyrPN5LMlf3qWSTp3iES6
+	yXxhaDrQRHZVduyUfd4FDX7Q8P9W2HNedikz2TT0qozEYhVlifkfwoph9wHjctMlBEEmjBgpNAX
+	5vx/PUL10cZxNkFO6KbBKiy2MBw+jFFz23LSVRdG/45cEBZ3m
+X-Google-Smtp-Source: AGHT+IF/D4oCFYlUK7HSZAQYxwcFlwbDpWsdJDLKuSRu3iGVi4RXC64dlOM7/dvQhbaOtDEjTxQoWt3Cd5SxBlG6+sA=
+X-Received: by 2002:a2e:2a82:0:b0:2d4:5d44:fe1d with SMTP id
+ q124-20020a2e2a82000000b002d45d44fe1dmr4553062ljq.52.1711379264142; Mon, 25
+ Mar 2024 08:07:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com> <20240322132619.6389-16-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20240322132619.6389-16-wsa+renesas@sang-engineering.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 25 Mar 2024 16:07:33 +0100
+Message-ID: <CAMRc=Mf8xywzkF0cMHRC_AJeEozUhT31-gNpdT=FSmAZ+JQg8w@mail.gmail.com>
+Subject: Re: [PATCH 15/64] i2c: davinci: reword according to newest specification
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-i2c@vger.kernel.org, Andi Shyti <andi.shyti@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 05 2024 at 10:00, Nipun Gupta wrote:
+On Fri, Mar 22, 2024 at 2:26=E2=80=AFPM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> Match the wording of this driver wrt. the newest I2C v7, SMBus 3.2, I3C
+> specifications and replace "master/slave" with more appropriate terms.
+> They are also more specific because we distinguish now between a remote
+> entity ("client") and a local one ("target").
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
 
-  Subject: genirq/msi: Add MSI allocation helper and export MSI functions
-
-> MSI functions can be for allocation and free can be directly
-> used by the device drivers without any wrapper provided by
-> bus drivers. So export these MSI functions.
-
-s/can be for/for/ otherwise the sentence dos not make sense.
-
-> Also, add a wrapper API to allocate MSIs providing only the
-> number of IRQ's rather than range for simpler driver usage.
-
-s/IRQ's/interrupts/ 
-
-> Signed-off-by: Nipun Gupta <nipun.gupta@amd.com>
-
-Other than that:
-
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-
-Alex, feel free to pick this up with the nitpicks resolved and route it
-through your tree together with the VFIO driver.
-
-Thanks,
-
-        tglx
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
