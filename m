@@ -1,137 +1,149 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715301C5AB4;
-	Mon, 25 Mar 2024 11:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B5616ABF1
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711366314; cv=none; b=CcGcfBNXZEPVSW2cuSIK7kZDf82s8ozXHylbLqfR7zbf9jd304kU7eK1WSU+z5It7k1nucWhbmwxaw625k+VJ9T38kGHezKyrh/d0JcnFMAknaObmQVsetfNSeO2L0gPc9aoXB4w6rV2v/nqRZ9Xn6n+oy7UegI3KMazZkenS78=
+	t=1711366414; cv=none; b=bHoJOBrEtsMXeAUO1QPTXyRFZsApvsJRlWXBbgm+Uu4gUKgoeGMFdhSrNEGKMwezfbyySGvA48x/36GJtxoCpeMRKMWiSlMcTTATFvTOcy67NUJDXkG6xFZwOuKA1YUpP0XjMSHjSo1lSsP2ljW83tagqQZ4XcIrFlPiAYfbInU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711366314; c=relaxed/simple;
-	bh=DtND/2TH2HecycIPvl0bQ7o+Uh9mDNNleYg4w3UFX/k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g7uU1IBeHCX2jW7pklwwTTiqENgMyAQzT98yz6caDnqxgvC3vdvaCRdfEc94RlCapPMFf/DviJgWF7bQZENDFhi4yG5SPht78HG1Zex/isXRm+FOBnFFa6Tw7Wfe44SH09E6WWzj5qS0k+iiRcFSxFdIJZXS1sVSOCjkSRaiAwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=hAZBgus+; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1711366414; c=relaxed/simple;
+	bh=ElIwG6psa/J4635YmK5pkDzO7EjX+/RBo0kQUz9jl0M=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=sKreW6YuMxONxGMPwLhedvOgJj5Au+sM745Z3qkoNDNlA3lc0JrhQDOm0OIiHRu78RB84K1y8rl6pI6JuaUYXnv3/040bNv5Yg0LNpxzDKGs+2zwtkBFZ5r/8FCuKcfFLr+K87ze0aGsGG6dMWOeMrVLm8IM/X5OhbfByWqiFms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cWp42Zi2; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="hAZBgus+"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42P4qkf5007553;
-	Mon, 25 Mar 2024 06:31:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=s1A3sEsy8QLu47lwBUxBo7IgUoNvvzU56aJ+ojynQBQ=; b=
-	hAZBgus++QqTo91R9+0lwTstUiNyOi68eSTlbEwJ7N6eDQmI5a6jJFEw/jbACMDp
-	AC1UircWKayQcyELCh5g7VxvEJCdx9QrlPQdIoixJxiWcEGtsrD+/N8WexPjMto3
-	55OxtVVFaHcIVW2qZvq/pMJcuQPO1cRzna7wADtGYKS1PfGks8y3eCowhGCt4S4L
-	nwN47QQ1hOmYc/FXMPO/BbBnU4wMUXF3ksU5aoiZAvqg9NTXhvoGJrag4mXmRY9F
-	a9+rqCKhnB0nb0MswYZWNFAq05ZTxvsPIBvs2oqFQR2vwLezO6p6d0P7Y8tLZcTM
-	s7/wJgV0kMdnsb917/JhNg==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3x1vfyb6v0-3
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cWp42Zi2"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PARjem021184;
+	Mon, 25 Mar 2024 11:33:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=jXWX8mwJBS3pmxEX7wnapQBypJUxG/fCxgLjHBdv+Tw=;
+ b=cWp42Zi2mFDJ4WsHQVRiB3LOVdC1LOcTrgF0DP1w/tBXQ2xSjaXj+v3AhgpMrXVmBuEy
+ ltMCelaDY24P4UW2NW8TfvZ3yjMM8ZRw71uM1Y3TXu7ZNqJtK3mtrtFc/1oydC0nVrbG
+ A+PbgnAerxyfCpI3bG+EEWWyHixjeC7B7os4KSge2VCt5KchrQzvY8HSEebKiTfygd9y
+ Io8YlNEv5Ed/pKBTgVdFXzS/LbE7ExPT2IUGg7OU8vjh+AaS5HtWaWBFcGNhozk/Itjz
+ xuXnsYL9ODI50hgDNV8uw7QALCSvJa05YwQAhVPG96dm7H9xjic/iBOCNY2f10ZWlzg8 Cw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x37hd83pt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 06:31:31 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 25 Mar
- 2024 11:31:27 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.4 via Frontend Transport; Mon, 25 Mar 2024 11:31:27 +0000
-Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 41DBA82024D;
-	Mon, 25 Mar 2024 11:31:27 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <broonie@kernel.org>, <tiwai@suse.com>
-CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Simon
- Trimmer" <simont@opensource.cirrus.com>,
-        Richard Fitzgerald
-	<rf@opensource.cirrus.com>
-Subject: [PATCH 2/5] ASoC: wm_adsp: Use cs_dsp_coeff_lock_and_[read|write]_ctrl()
-Date: Mon, 25 Mar 2024 11:31:24 +0000
-Message-ID: <20240325113127.112783-3-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240325113127.112783-1-rf@opensource.cirrus.com>
-References: <20240325113127.112783-1-rf@opensource.cirrus.com>
+	Mon, 25 Mar 2024 11:33:17 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42PBXHip022393;
+	Mon, 25 Mar 2024 11:33:17 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x37hd83pm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 11:33:17 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42PBAaZg012991;
+	Mon, 25 Mar 2024 11:33:16 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x29t08yfp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 11:33:16 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42PBXDJc44302652
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 25 Mar 2024 11:33:15 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5805D5806B;
+	Mon, 25 Mar 2024 11:33:13 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5916E58057;
+	Mon, 25 Mar 2024 11:33:11 +0000 (GMT)
+Received: from [9.195.43.175] (unknown [9.195.43.175])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 25 Mar 2024 11:33:11 +0000 (GMT)
+Message-ID: <3c92c18b-6a19-4477-9972-1219c29b3d71@linux.ibm.com>
+Date: Mon, 25 Mar 2024 17:03:10 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] sched: Minor changes for rd->overload access
+To: Ingo Molnar <mingo@kernel.org>
+Cc: peterz@infradead.org, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        qyousef@layalina.io, linux-kernel@vger.kernel.org, vschneid@redhat.com
+References: <20240325054505.201995-1-sshegde@linux.ibm.com>
+ <ZgFTtAOw39tIyfzR@gmail.com>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <ZgFTtAOw39tIyfzR@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: vGoJulDxx4BD7hWdjfuqKVZ0zkpa4uwL
+X-Proofpoint-GUID: RszKkONAwqbIIyRBcORzEMPjq9FoTwiA
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: A9SwOO9lWnUqNlKhK1VT9Lw8RetoN_Fj
-X-Proofpoint-GUID: A9SwOO9lWnUqNlKhK1VT9Lw8RetoN_Fj
-X-Proofpoint-Spam-Reason: safe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_08,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
+ malwarescore=0 suspectscore=0 clxscore=1015 mlxscore=0 mlxlogscore=697
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403250064
 
-From: Simon Trimmer <simont@opensource.cirrus.com>
 
-Using the cs_dsp_coeff_lock_and_[read|write]_ctrl() wrappers tidies
-the calling functions as it does not need to manage the DSP pwr_lock.
 
-Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
----
- sound/soc/codecs/wm_adsp.c | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+On 3/25/24 4:06 PM, Ingo Molnar wrote:
+> 
+> * Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
+> 
+>> v2 -> v3:
+>> - Wrapped check for value change inside ser_rd_overload_status
+>>   as suggested by Qais.
+>> - Added reviewed-by tags.
+>>
+>> v1 -> v2:
+>> - dropped Fixes tag.
+>> - Added one of the perf probes in the changelog for reference.
+>> - Added reviewed-by tags.
+>>
+>> tl;dr
+>> When running workloads in large systems, it was observed that access to
+>> rd->overload was taking time. It would be better to check the value
+>> before updating since value changes less often. Patch 1/2 does that.
+>> With patch updates happen only if necessary. CPU Bus traffic reduced a
+>> bit. No significant gains in workload performance.
+> 
+> Could you please post this against the latest scheduler tree, ie. tip:sched/core?
+> 
+> Thanks,
+> 
+> 	Ingo
 
-diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
-index 7d5c096e06cd..8e366902ee4e 100644
---- a/sound/soc/codecs/wm_adsp.c
-+++ b/sound/soc/codecs/wm_adsp.c
-@@ -403,13 +403,8 @@ static int wm_coeff_put(struct snd_kcontrol *kctl,
- 	struct wm_coeff_ctl *ctl = bytes_ext_to_ctl(bytes_ext);
- 	struct cs_dsp_coeff_ctl *cs_ctl = ctl->cs_ctl;
- 	char *p = ucontrol->value.bytes.data;
--	int ret = 0;
--
--	mutex_lock(&cs_ctl->dsp->pwr_lock);
--	ret = cs_dsp_coeff_write_ctrl(cs_ctl, 0, p, cs_ctl->len);
--	mutex_unlock(&cs_ctl->dsp->pwr_lock);
- 
--	return ret;
-+	return cs_dsp_coeff_lock_and_write_ctrl(cs_ctl, 0, p, cs_ctl->len);
- }
- 
- static int wm_coeff_tlv_put(struct snd_kcontrol *kctl,
-@@ -426,13 +421,11 @@ static int wm_coeff_tlv_put(struct snd_kcontrol *kctl,
- 	if (!scratch)
- 		return -ENOMEM;
- 
--	if (copy_from_user(scratch, bytes, size)) {
-+	if (copy_from_user(scratch, bytes, size))
- 		ret = -EFAULT;
--	} else {
--		mutex_lock(&cs_ctl->dsp->pwr_lock);
--		ret = cs_dsp_coeff_write_ctrl(cs_ctl, 0, scratch, size);
--		mutex_unlock(&cs_ctl->dsp->pwr_lock);
--	}
-+	else
-+		ret = cs_dsp_coeff_lock_and_write_ctrl(cs_ctl, 0, scratch, size);
-+
- 	vfree(scratch);
- 
- 	return ret;
-@@ -474,13 +467,8 @@ static int wm_coeff_get(struct snd_kcontrol *kctl,
- 	struct wm_coeff_ctl *ctl = bytes_ext_to_ctl(bytes_ext);
- 	struct cs_dsp_coeff_ctl *cs_ctl = ctl->cs_ctl;
- 	char *p = ucontrol->value.bytes.data;
--	int ret;
- 
--	mutex_lock(&cs_ctl->dsp->pwr_lock);
--	ret = cs_dsp_coeff_read_ctrl(cs_ctl, 0, p, cs_ctl->len);
--	mutex_unlock(&cs_ctl->dsp->pwr_lock);
--
--	return ret;
-+	return cs_dsp_coeff_lock_and_read_ctrl(cs_ctl, 0, p, cs_ctl->len);
- }
- 
- static int wm_coeff_tlv_get(struct snd_kcontrol *kctl,
--- 
-2.39.2
+Hi Ingo. I had mentioned the same in cover letter. Sorry if I didn't 
+mention it in the correct place. 
+
+*These patches depend on below to be applied first*
+https://lore.kernel.org/all/20240307085725.444486-1-sshegde@linux.ibm.com/
+
+After that the above patch would apply. I kept the dependency since these are in similar 
+code area. Can we please consider the above patch as well? Is there any other change that needs 
+to be done? 
+
+On tip
+1043c003415b (HEAD -> master) sched/fair: Use helper functions to access rd->overload
+3049bc16643d sched/fair: Check rd->overload value before update
+436d634f2cad sched/fair: Combine EAS check with overutilized access
+379aa2cd62e0 sched/fair: Use helper function to access rd->overutilized
+19bfeb2d565e sched/fair: Add EAS checks before updating overutilized
+71706005072c (origin/master, origin/HEAD) Merge branch into tip/master: 'x86/shstk'
+
+
+fa63c2c111ea (HEAD -> sched/core) sched/fair: Use helper functions to access rd->overload
+9bef486d044b sched/fair: Check rd->overload value before update
+21f90cae75c8 sched/fair: Combine EAS check with overutilized access
+e835f1fa3654 sched/fair: Use helper function to access rd->overutilized
+ddf390f9449d sched/fair: Add EAS checks before updating overutilized
+58eeb2d79b54 (origin/sched/core) sched/fair: Don't double balance_interval for migrate_misfit
 
