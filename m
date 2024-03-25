@@ -1,158 +1,106 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6801292C1
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46EE1AF8CD;
+	Mon, 25 Mar 2024 10:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711362078; cv=none; b=mkn1WmthCn493pijKfOWaHqLVhueE9Fgx1X8dn7Ni1EYCgjuoUkjtQi5InYm5J+eS4DvXC0/3V/gbWwaPHfmxUKYMXmGbJAmQaFh0Phv/6CLmvxw6XZVEVwTeUbMFC2+81EFbK2Qcy9hGI00rl9o+o5UGxo/IvPTw2qpAztXCy0=
+	t=1711362081; cv=none; b=Z9aFkYAY7yUGpvuiq6bWY6t3Nxg0EV3XrMSfPr6VTUo/KSPWsw6pWB25udUm5bWrWxOVM3h78h3GcXi/J+gj8zeuBZykv+Jht7B0cpS0aYcXrb0q1JzimAYuLo7qauxyoTKRnmDBLmCp/oDU7ep8C7jyfhTjj5sizrc9hdS4xFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711362078; c=relaxed/simple;
-	bh=8oHCVzt5yIb74wmNUTV10DqPItz7YPxCF7swqVQr49U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MLPkxFuuvzeguligD8qv7sEkPyjDpPXOgHee4ToU7F0ynP1ndfv1wlZ9EA5JqNUcyTdoWWkRtCvpUYT4/3rGGvClqOeDF2avAfOUw8JbKeX/iU7D1+u0X1dU6F3JPCAWFavsQ5BdNxkTq6ZJWbapCcVnC/zmdo9nJIz7BlNc5iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=aedx3Los; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1711362081; c=relaxed/simple;
+	bh=rmUgwPKnMZ2SbbQ5ys8ICa8KHER4uzmMmTU4uQ5RE+4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NYLzVCejGWazMYh9CHysFgvpRa1oAMJbgCnomXItLUgbE7cpAGTAGZjnO6l9eBzBq6dtfACGR4gr6F/Kt2Hx2nxe5ybbfSPs5XsSkv+N2DFpXzh2/jolKi5O3tNC16XYLEcK+bDzOZtzLmDJP9z58duN6UVB+SNM8q0xM9GjlEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gx91C27I; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="aedx3Los"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1711362074;
-	bh=8oHCVzt5yIb74wmNUTV10DqPItz7YPxCF7swqVQr49U=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=aedx3LosWnycWhoUKUQxWcO43FLghyNrBU94sTqD/bVbqnIBu2geV+Lcc/rHZahmh
-	 isBB2Ab7IWqvIVUXqlfC0Mu+YFX7wk1NRG4Uj3jGHdJ5BIQfH1IaWTJBnl4IFxGnwE
-	 QODllf9B7qaP4bg6uvCSRA/i8tHf/zMqaQ1IZc/g=
-Received: from [IPv6:240e:358:11fe:a000:dc73:854d:832e:8] (unknown [IPv6:240e:358:11fe:a000:dc73:854d:832e:8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 7BCDF66EE2;
-	Mon, 25 Mar 2024 06:21:09 -0400 (EDT)
-Message-ID: <c8dfca5f964701ce614d364ed7b18fa930aa2f61.camel@xry111.site>
-Subject: Re: [PATCH v2] x86/mm: Don't disable INVLPG if "incomplete Global
- INVLPG flushes" is fixed by microcode
-From: Xi Ruoyao <xry111@xry111.site>
-To: Michael Kelley <mhklinux@outlook.com>, Dave Hansen
-	 <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>,  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin"
- <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dexuan Cui
- <decui@microsoft.com>
-Date: Mon, 25 Mar 2024 18:21:04 +0800
-In-Reply-To: <SN6PR02MB41576028614CB7FE9A11EBEBD4362@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240324190503.116160-1-xry111@xry111.site>
-	 <SN6PR02MB41576028614CB7FE9A11EBEBD4362@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0 
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gx91C27I"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42P8U5iI028809;
+	Mon, 25 Mar 2024 10:21:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=MsW3qmcuSM3EjW5j4LiZgKtFk2Tzr6aqmZqv+GdO7wU=; b=gx
+	91C27IrhyP/dGlC9t8iO8QAkHeoa1xEQ3rmtYpUtBDeqcvh/OqObTa1K7m0Aoaq6
+	0StJf6PR9JlBWUnLlUEWW62zsPjTQeTCh4Z7r9nPIxetwSnTyVCn81njLS6zDdV0
+	NBNpOFmIcH4HDW2yNgegK55qoO+p30X7zBQ/NRBMSp6ySQYrUlbB28vfZV+kK7Iq
+	2SCRR+7jcUprSDLQ25gM4W8hFTnhLU231lT6PQ4cKMxwI2gquN1BAnXN7NCZH9c7
+	naE4y3sZu3eXyGo6QjeQBw9fW9t44qAUyCNIF6/GGN5O+BEeko6q1cn+W2h27Me2
+	1L08C6x6qSltMBgTF6BA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x34dqge2f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 10:21:02 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42PAL17x030979
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 10:21:01 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 25 Mar 2024 03:20:56 -0700
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <djakov@kernel.org>, <quic_anusha@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>
+CC: Varadarajan Narayanan <quic_varada@quicinc.com>
+Subject: [PATCH v2 1/4] dt-bindings: clock: Add interconnect-cells
+Date: Mon, 25 Mar 2024 15:50:33 +0530
+Message-ID: <20240325102036.95484-2-quic_varada@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240325102036.95484-1-quic_varada@quicinc.com>
+References: <20240325102036.95484-1-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 7EhsKU-ofCHWDine0EAnAjN4uZOT8TRs
+X-Proofpoint-GUID: 7EhsKU-ofCHWDine0EAnAjN4uZOT8TRs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_07,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 mlxlogscore=999 impostorscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403250056
 
-On Mon, 2024-03-25 at 04:57 +0000, Michael Kelley wrote:
-> From: Xi Ruoyao <xry111@xry111.site> Sent: Sunday, March 24, 2024 12:05 P=
-M
-> >=20
-> > Per the "Processor Specification Update" documentations referred by the
-> > intel-microcode-20240312 release note, this microcode release has fixed
-> > the issue for all affected models.
-> >=20
-> > So don't disable INVLPG if the microcode is new enough.
-> >=20
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> > ---
-> > =C2=A0arch/x86/mm/init.c | 32 ++++++++++++++++++++------------
-> > =C2=A01 file changed, 20 insertions(+), 12 deletions(-)
-> >=20
-> > diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-> > index 679893ea5e68..c52be4e66e44 100644
-> > --- a/arch/x86/mm/init.c
-> > +++ b/arch/x86/mm/init.c
-> > @@ -261,33 +261,41 @@ static void __init probe_page_size_mask(void)
-> > =C2=A0	}
-> > =C2=A0}
-> >=20
-> > -#define INTEL_MATCH(_model) { .vendor=C2=A0 =3D X86_VENDOR_INTEL,	\
-> > -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .family=C2=A0 =3D 6,			\
-> > -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .model =3D _model,			\
-> > -			=C2=A0=C2=A0=C2=A0 }
-> > +#define INTEL_MATCH(_model, _fixed_microcode)	\
-> > +=C2=A0=C2=A0=C2=A0 { .vendor		=3D X86_VENDOR_INTEL,	\
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .family		=3D 6,			\
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .model		=3D _model,		\
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .driver_data	=3D _fixed_microcode,	\
-> > +=C2=A0=C2=A0=C2=A0 }
-> > +
-> > =C2=A0/*
-> > =C2=A0 * INVLPG may not properly flush Global entries
-> > - * on these CPUs when PCIDs are enabled.
-> > + * on these CPUs when PCIDs are enabled and the
-> > + * microcode is not updated to fix the issue.
-> > =C2=A0 */
-> > =C2=A0static const struct x86_cpu_id invlpg_miss_ids[] =3D {
-> > -	INTEL_MATCH(INTEL_FAM6_ALDERLAKE=C2=A0=C2=A0 ),
-> > -	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L ),
-> > -	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT ),
-> > -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE=C2=A0 ),
-> > -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P),
-> > -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S),
-> > +	INTEL_MATCH(INTEL_FAM6_ALDERLAKE,	0x34),
-> > +	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L,	0x432),
-> > +	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT,	0x15),
-> > +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE,	0x122),
-> > +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P,	0x4121),
-> > +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S,	0x34),
-> > =C2=A0	{}
-> > =C2=A0};
-> >=20
-> > =C2=A0static void setup_pcid(void)
-> > =C2=A0{
-> > +	const struct x86_cpu_id *invlpg_miss_match;
-> > +
-> > =C2=A0	if (!IS_ENABLED(CONFIG_X86_64))
-> > =C2=A0		return;
-> >=20
-> > =C2=A0	if (!boot_cpu_has(X86_FEATURE_PCID))
-> > =C2=A0		return;
-> >=20
-> > -	if (x86_match_cpu(invlpg_miss_ids)) {
-> > +	invlpg_miss_match =3D x86_match_cpu(invlpg_miss_ids);
-> > +	if (invlpg_miss_match &&
-> > +	=C2=A0=C2=A0=C2=A0 invlpg_miss_match->driver_data > boot_cpu_data.mic=
-rocode) {
-> > =C2=A0		pr_info("Incomplete global flushes, disabling PCID");
-> > =C2=A0		setup_clear_cpu_cap(X86_FEATURE_PCID);
-> > =C2=A0		return;
->=20
-> As noted in similar places where microcode versions are
-> checked, hypervisors often lie to guests about microcode versions.
-> For example, see comments in bad_spectre_microcode().=C2=A0 I
-> know Hyper-V guests always see the microcode version as
-> 0xFFFFFFFF (max u32 value).=C2=A0 So in a Hyper-V guest the above
-> code will always leave PCID enabled.
->=20
-> Maybe the above should have a check for running on a
-> hypervisor and always disable PCID without checking the
-> microcode version.=C2=A0 That's the safe approach, though there are
-> other similar cases like bad_spectre_microcode() that take
-> the unsafe approach when running as a guest.=C2=A0 I don't know
-> what's best here .....
+Add interconnect-cells to clock provider so that it can be
+used as icc provider
 
-Then generally maybe we should set boot_cpu_data.microcode to 0 if a
-hypervisor is detected?  Or checking against hypervisors at every place
-where we check the microcode revision will be nasty.
+Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+---
+ Documentation/devicetree/bindings/clock/qcom,ipq9574-gcc.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-And I'd prefer they say 0 instead if 0xffffffffu if they must lie about
-the microcode revision.
+diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq9574-gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq9574-gcc.yaml
+index 944a0ea79cd6..824781cbdf34 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,ipq9574-gcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,ipq9574-gcc.yaml
+@@ -33,6 +33,9 @@ properties:
+       - description: PCIE30 PHY3 pipe clock source
+       - description: USB3 PHY pipe clock source
+ 
++  '#interconnect-cells':
++    const: 1
++
+ required:
+   - compatible
+   - clocks
+-- 
+2.34.1
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
