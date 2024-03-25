@@ -1,126 +1,175 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A7918D898;
-	Mon, 25 Mar 2024 08:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F6614EC54;
+	Mon, 25 Mar 2024 08:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711354792; cv=none; b=g6eb0Sj4S07C87VpqepsyAVoyyR0BUWvAGrZFa4BUej4CR6YIwi7nDSkLUkSQXtSOcJBeH5y0z38/TUzdx7cocDXkdYQ40QjwTWp5SprSqQxgaJfTkoW1ZnVyO0k09NfSqnMUy6eDL/01DHgHts4Ngg1Ex1wNEla1CROAaSi9AA=
+	t=1711354870; cv=none; b=chM1ELC1b8iagtou/z4VYUpOQzIqSM6eYowq7zQMm4PkOvfVHDIYFnE6iaTab8y7XKhsYCrAEWazu28WDpZcZVWbC0bMNSpp8ac5Z3Jm7s14zLs/6dCZelP0Mr8Asif4N2oNYaxiB7aMM121vJneaM060xH3vxSj3T+txE466ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711354792; c=relaxed/simple;
-	bh=lIpUYQJtPvS3BxEqA7zTq9KBEkYJ5PSk/erw1/XkCf4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dTkDwm5dheZsp+spExsWtZqYmO8gKkZm53Xtd+0ORmG3lJq56mKQNI2rWW2dKbXVsZRZLAIv2BejGUjIjKHdlS1py7Q6RV8mVv14ZDNVw0Cqo/eKakDwU0HXUFMZQnPTAOAR0766XQOGUdJSo6GD7Pm3bt2nS4VZwUrYVmAhrA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBkduOB3; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711354870; c=relaxed/simple;
+	bh=Do5RGFON79BZo5EODGYKbFfems4SE+esrkAYSwRAjn8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aWhL8dPYr1W/8w+6zJXa/10m1m/zFbJiooGicny58eZqnnKrUTXY+c1zix+/oGQoBpz0Sa9ND87Fd04wPReQxkUeo9RK0BioJxZK2WdW7uAtaMQzrQp1APISVn44OLA1poKwZYqE4aZ59OByBvA2p/BX/LtFjZQ9UQDuOYeJJZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xzZ18pVo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gZ60F7px; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xzZ18pVo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gZ60F7px; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBkduOB3"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d4a901e284so80715921fa.1;
-        Mon, 25 Mar 2024 01:19:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711354789; x=1711959589; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zyaog/ojigT48JKNMU9i5w4rtbwucwfAGNUHLnrxdoA=;
-        b=HBkduOB3ndsNh8nfO3+gLVUtX2QPdXU2AypbHIJsWdmeO7R6UlSLw/C90CDFWF8IYv
-         nAP2gEbqDc4Hp7JbdAU5HYY8OSKywqEG0K9RDVqX3mh2edPQ28s3ilj0rb2kr2l/FxiW
-         bGxDpee69beInRLjC9V100QhNRHGklhcEDsfawVCHIXBj/gsdAgBqejoBdWYYhnNW9FN
-         cHbH1Z4W/Fe4SbUodGN8r7FKZ43NMHuUM30NlB71dDVbnN0doNFf2QscZ5DpnDBzNVjK
-         lqdUZkNtPI8x9fZG+TxslN26h2IheoJaTh0RDDVik8zsiQdOl27/HpqrBD9vMaGgI4hi
-         /O/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711354789; x=1711959589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zyaog/ojigT48JKNMU9i5w4rtbwucwfAGNUHLnrxdoA=;
-        b=h5pjVDGS7a3pshpTnJ5dZYrI14qcFR6zo/gCj9GiikOXry/5kDo2oZYUBDa/TFdjHu
-         uVI/W3ckdGwLWdMz4vDq0QAimj+HbxYXGZxUjZ7XZV8W2qgMo352oyKyIkv3I+5cZgwO
-         DFMz89BKwRt2lY5KQzBApJXrQt1hk+JKFgoNFYCpE7eUHqEJnp01Lq/9m0WyjCC1tMjZ
-         k48gxo9vYuHg2aRR+KwVjUjwhTwzTkaZEbUCDHjsBzCsZ2nwArtbflW6vq9zDeMEUIuQ
-         JZcDbAo9xomr1OM4M49pXn7zREMC76DOZwmjRLGU3fcmpSEJVwwuTOwffnrKPnhlpW0l
-         8kcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpLHyp+Gu8SgQIXUBrINAXyfj4c9q9i450Jpl59ph4zjArfgb3SnpisAMWU7O8gjbdnwXOxoPmgkbmenXKdYLNgasL2ZyGbiJ7qIxK
-X-Gm-Message-State: AOJu0YyaP/PnRn6W3nVg8owOC6FiSYglKbrq7LxyHvnw/D+rfSMUFC2o
-	jp/qvK+sS1+LDDHXcUYXOBQCHDLB3dXoSTpJIJJ45YNTPJ2YSAL3XCQ2iTT8PSObNrqczy+SRIp
-	pz9BEw5/sQRsHSyLMHJ9qaJS0KjQJl/Tlfr4=
-X-Google-Smtp-Source: AGHT+IERKZc9n0PabjTyQJRPIveAjnM6cvGj82VJT164+gkS1jNiwYxhEiYn3QgUTnfemm4WlRTNSptza4XrgKro6II=
-X-Received: by 2002:a2e:9048:0:b0:2d4:6cde:fbe3 with SMTP id
- n8-20020a2e9048000000b002d46cdefbe3mr4579558ljg.24.1711354788449; Mon, 25 Mar
- 2024 01:19:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xzZ18pVo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gZ60F7px";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xzZ18pVo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gZ60F7px"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6BA7E5C3FD;
+	Mon, 25 Mar 2024 08:21:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711354865; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RpfJF9YPIRTCVRvpa1RnbtB6JDDMaGcncw0S5jxMQ5g=;
+	b=xzZ18pVoNkcF9rE1+uQav0CXPCZ1fnp5OwpTyQzRJKpYVRcJ5ksdPyTtmXPcnNvCGunX74
+	+Ymxs2/P0Q5ICCBS3XzORaiE7Pyrq4EJaVNvHXqH/gE6xfH7KQC3Vg7uodykwLbwLkl5kC
+	hgbwFOkKrKavXvlqdQ5YuwMgdH6fizc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711354865;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RpfJF9YPIRTCVRvpa1RnbtB6JDDMaGcncw0S5jxMQ5g=;
+	b=gZ60F7pxpMO8PzBei7Wx46WtPwjT9p0rwP2eVPLiBRxRa8C9BJkGM++P6tOOzeJbxBuRNq
+	tk7W2E5JqQDAdpCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711354865; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RpfJF9YPIRTCVRvpa1RnbtB6JDDMaGcncw0S5jxMQ5g=;
+	b=xzZ18pVoNkcF9rE1+uQav0CXPCZ1fnp5OwpTyQzRJKpYVRcJ5ksdPyTtmXPcnNvCGunX74
+	+Ymxs2/P0Q5ICCBS3XzORaiE7Pyrq4EJaVNvHXqH/gE6xfH7KQC3Vg7uodykwLbwLkl5kC
+	hgbwFOkKrKavXvlqdQ5YuwMgdH6fizc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711354865;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RpfJF9YPIRTCVRvpa1RnbtB6JDDMaGcncw0S5jxMQ5g=;
+	b=gZ60F7pxpMO8PzBei7Wx46WtPwjT9p0rwP2eVPLiBRxRa8C9BJkGM++P6tOOzeJbxBuRNq
+	tk7W2E5JqQDAdpCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4105413503;
+	Mon, 25 Mar 2024 08:21:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id tjxMD/EzAWZdHgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 25 Mar 2024 08:21:05 +0000
+From: Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH v2 0/2] memcg_kmem hooks refactoring
+Date: Mon, 25 Mar 2024 09:20:31 +0100
+Message-Id: <20240325-slab-memcg-v2-0-900a458233a6@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325024628.101296-1-yang.lee@linux.alibaba.com>
-In-Reply-To: <20240325024628.101296-1-yang.lee@linux.alibaba.com>
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Date: Mon, 25 Mar 2024 17:19:31 +0900
-Message-ID: <CAKFNMon5w_AfJmdey-XY+wWK+yCqj9PuHVeJf4qa2TMNv_iPsg@mail.gmail.com>
-Subject: Re: [PATCH -next 2/3 v2] fs: Add kernel-doc comments to nilfs_btree_convert_and_insert()
-To: Yang Li <yang.lee@linux.alibaba.com>
-Cc: linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM8zAWYC/03Myw6CMBCF4Vchs7amTKFSV76HYVHqCE3kko42K
+ um7W3Hj8j/J+VZgCp4YjsUKgaJnP085cFeAG+zUk/CX3IASK4loBN9sJ0YaXS8s6U4dGuMMVpA
+ PS6Crf27Yuc09eL7P4bXZsfyuP0bJ8p+JpZBC1UZhYytdG33iB9PevaFNKX0Aet5RfaIAAAA=
+To: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, Kees Cook <kees@kernel.org>, 
+ Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Roman Gushchin <roman.gushchin@linux.dev>, 
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+ Michal Hocko <mhocko@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Shakeel Butt <shakeel.butt@linux.dev>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ Vlastimil Babka <vbabka@suse.cz>, Chengming Zhou <chengming.zhou@linux.dev>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1147; i=vbabka@suse.cz;
+ h=from:subject:message-id; bh=Do5RGFON79BZo5EODGYKbFfems4SE+esrkAYSwRAjn8=;
+ b=owEBbQGS/pANAwAIAbvgsHXSRYiaAcsmYgBmATPZX3NtjLD+0T3mwtrWkT3/UFdtMA8OxHXmv
+ 8xLDTlJutGJATMEAAEIAB0WIQR7u8hBFZkjSJZITfG74LB10kWImgUCZgEz2QAKCRC74LB10kWI
+ mo/GB/0aRHVq8/FkwfqNxC442Q7bc8rhp0GrFMU27CQMBmm8mkvvB8z14B7XXk8P64wJhQgq477
+ 5jA+T8c/SiwvK3HSBiLgH5ZLnkzT7pjw0xkH453d5+biJCaGaPOnekC39H+7oRVMTNfYNLppHag
+ x5ChJ1NkXKo8XTVutsY9ZYjPLD6vW9B0JOAcm08F6z5AYslOYk92Hc1F6jADx4rPv+m8kGSB6SW
+ VfuPvE1fBxDCMcvApyARzetmpzJiZ8NGCrLl8E6a0B6jAzZiWQLndm2vxQ96Ccopp8vV8b6Zgme
+ LWKuSW7YvMAvSWiJleKgvpfJQk9aXAduDBtHMqYYVqc2/JcV
+X-Developer-Key: i=vbabka@suse.cz; a=openpgp;
+ fpr=A940D434992C2E8E99103D50224FA7E7CC82A664
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: 0.19
+X-Spamd-Result: default: False [0.19 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 BAYES_HAM(-0.01)[48.92%];
+	 R_RATELIMIT(0.00)[to_ip_from(RL8ogcagzi1y561i1mcnzpnkwh)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[25];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
+	 FREEMAIL_TO(0.00)[linux-foundation.org,kernel.org,oracle.com,linux.com,google.com,lge.com,linux.dev,gmail.com,cmpxchg.org,zeniv.linux.org.uk,suse.cz];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-On Mon, Mar 25, 2024 at 11:46=E2=80=AFAM Yang Li wrote:
->
-> This commit adds kernel-doc style comments with complete parameter
-> descriptions for the function nilfs_btree_convert_and_insert.
->
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
-> ---
->  fs/nilfs2/btree.c | 22 +++++++++++++++-------
->  1 file changed, 15 insertions(+), 7 deletions(-)
->
-> diff --git a/fs/nilfs2/btree.c b/fs/nilfs2/btree.c
-> index 65659fa0372e..de38012fd87c 100644
-> --- a/fs/nilfs2/btree.c
-> +++ b/fs/nilfs2/btree.c
-> @@ -1857,13 +1857,21 @@ nilfs_btree_commit_convert_and_insert(struct nilf=
-s_bmap *btree,
->  }
->
->  /**
-> - * nilfs_btree_convert_and_insert -
-> - * @bmap:
-> - * @key:
-> - * @ptr:
-> - * @keys:
-> - * @ptrs:
-> - * @n:
-> + * nilfs_btree_convert_and_insert - Convert and insert entries into a B-=
-tree
-> + * @btree: NILFS B-tree structure
-> + * @key: Key of the new entry to be inserted
-> + * @ptr: Pointer (block number) associated with the key to be inserted
-> + * @keys: Array of keys to be inserted in addition to @key
-> + * @ptrs: Array of pointers associated with @keys
-> + * @n: Number of keys and pointers in @keys and @ptrs
-> + *
-> + * This function is used to insert a new entry specified by @key and @pt=
-r, along
-> + * with additional entries specified by @keys and @ptrs arrays, into a N=
-ILFS B-tree.
-> + * It prepares the necessary changes by allocating the required blocks a=
-nd any
-> + * necessary intermediate nodes. It converts configurations from other f=
-orms of block
-> + * mapping (the one that currently exists is direct mapping) to a B-tree=
-.
-> + *
-> + * Return: 0 on success or a negative error code on failure.
->   */
->  int nilfs_btree_convert_and_insert(struct nilfs_bmap *btree,
->                                    __u64 key, __u64 ptr,
-> --
-> 2.20.1.7.g153144c
->
+Hi,
 
-Thank you for the revised version.  I'll take this one.
+this is v2 of the memcg_kmem hooks refactoring (RFC/v1 link at the end).
+This just rebases the refactoring patches 1 and 2 so they can start to
+be exposed to -next and other work on can base on that.  I'm not
+including the kmem_cache_charge() patch here until we have a more
+finished user than my previous unfinished attempt.
 
-Ryusuke Konishi
+Vlastimil
+
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+Changes in v2:
+- rebase to v6.9-rc1
+- add reviewed-by's to patches 1+2
+- drop patches 3+4 (kmem_cache_charge() and usage in vfs)
+- Link to v1: https://lore.kernel.org/r/20240301-slab-memcg-v1-0-359328a46596@suse.cz
+
+---
+Vlastimil Babka (2):
+      mm, slab: move memcg charging to post-alloc hook
+      mm, slab: move slab_memcg hooks to mm/memcontrol.c
+
+ mm/memcontrol.c |  90 +++++++++++++++++++++++++
+ mm/slab.h       |  10 +++
+ mm/slub.c       | 202 +++++++++++---------------------------------------------
+ 3 files changed, 138 insertions(+), 164 deletions(-)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240229-slab-memcg-ae6b3789c924
+
+Best regards,
+-- 
+Vlastimil Babka <vbabka@suse.cz>
+
