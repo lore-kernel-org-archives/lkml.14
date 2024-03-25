@@ -1,117 +1,97 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FCD131BB8
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D3B61B7F6C;
+	Mon, 25 Mar 2024 11:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711364496; cv=none; b=V61aN6VTZOhRHOR67hEp4M/SfwPfVrK8fU0XJgS4T4KuTVv1xr12/pbw+OQ+G7l4IEqsO1G1q8juze5GZGXh8hrTgFLQKIUXPEXD9Tehjbpk7pPw2tp9jZVUCEO25CDx2BXMYrZ3zU+c8tt2SPMN1oswW2HNad+CsN/cCr4Xnm0=
+	t=1711364827; cv=none; b=YWbFiC2oqB3ZkbsJCdV1w6ODbk69jyu3P/CsppTqDTVUz5Qj1xHI+/0nZM+/2TBMljead5J6FTYx5bjQF8MaVevRgr8CBzAx4K9Kic8nIuoiAcsuczcYmH1qOcHPXPYiNgnjLiCZITOQH5OExDCpbi90777sZM8XV0DMfcXXAvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711364496; c=relaxed/simple;
-	bh=w+tFws1Bi1xV3hntGpTyALeY+3d+ukcMl4+G4jlt5Zc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ERAaqYV15Te8yDZ6UR4NBRexKY7yI3dsOjJZw5Sw2wZtFgiNhr8UC+Lov+HQFW39E9vnSi36XHOGqnUe1Oc4Ws7FBV2gcLpifoMJ7RhUFht9KPAQQ3FkQ3ZNhJ7rYjieje24+6T9epEi7B5J7Co37J3g6gLgbPd9KMbF8tSM39Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GNQmhMTm; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNQmhMTm"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56c0d1bddc1so1018069a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711364492; x=1711969292; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zToQ2s3VZ1f9ao1pi2MnYEMv2dwpUwcL76sBj0wUmpc=;
-        b=GNQmhMTm3SDKGbKL0NDUCTWaoxlTgYWa1r1FQGkpHxLgS2eULuUNyXHPf1fRwna42c
-         SBGJYqoMN0Qju9isQbLxvOJQAAIbgIcRTSmlZNpZsTOaXf2edilFl0n1waMte4b6zZYP
-         zhJqwsBJd+SiytEkZ5NOkK8BpcE6lIRaPsqWokJGS5o0Tt1+V99wL+rr+Jbrcg8b8V/v
-         5pMmjr9Dg9skE4/QcLIneKQrm45XeQbRKXpYfY8ugzB83PrGwmh0Ykys5p+/33CB1ISW
-         wBdtv1Xf+U7XkIhlXubDNe/s2MmX8iSBi+B5bqihs3XHUAt+6v9u4puVyO/pz1wvGAb5
-         3Jog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711364492; x=1711969292;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zToQ2s3VZ1f9ao1pi2MnYEMv2dwpUwcL76sBj0wUmpc=;
-        b=fn1SaLhY4Qe8cP9cVHwX4sZ/2YORaJLuBnD5TbTjAnmgmrWmbRxBwyymw52O0wXjWF
-         peVI7nWs2OEFylmm2iWQVHwimsw2m66uU1WagRlIGDuTlkBm9tsmZEjEmsodu4CkYjOe
-         tFTtA26StSqxi4V8l+GePxv1JYLzSztPMIoSN32TRJdPecwzCynMGpCZBpQ0JmVZJEA/
-         k/VvKdwJIj8NNzQzE+bXKhAcScz2+12bTVLA3Y76pCwO3eCGYs6s7fmbM0wUqwAFAYoX
-         fju+6dseX8+kR/eAtTYsHM1h2yBCmtNuaMcokmFNDAd0oGfu5gMJiMxdLIKq5IwLH0D+
-         X8Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwvraVBd2NsQJGpCYmgoQDPZiYhQ2jFO3zi3iVFqbvY2V6Ounce7T0Hokx+pqXx8HJLNLedxkbwMpeubzwiAlrM+wZ9c3JQ3+NJMQ2
-X-Gm-Message-State: AOJu0YxkFxARpRrPzr05i6RVEOwk2R/8aOdlv7LCWzTM4dH76RSt2weu
-	oYzSeNelFse+SC9xBVU1UX3iKcuHzh9ZpoxGVDCl/IbkXQTaP9MU75EFDJSe7aN4Ng==
-X-Google-Smtp-Source: AGHT+IHiPDCwvlzf2VtcAn3yr7PW/gRpWwYiJT0EbMof00PUJPWFxJ95qrebJTL4OYsS3Upd4MXIow==
-X-Received: by 2002:a50:9341:0:b0:566:e3c7:921f with SMTP id n1-20020a509341000000b00566e3c7921fmr5580729eda.22.1711364491654;
-        Mon, 25 Mar 2024 04:01:31 -0700 (PDT)
-Received: from fedora.iskraemeco.si ([193.77.86.250])
-        by smtp.gmail.com with ESMTPSA id y17-20020aa7c251000000b00569a2f698d7sm2891787edo.49.2024.03.25.04.01.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 04:01:31 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	kernel test robot <oliver.sang@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	Denys Vlasenko <dvlasenk@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH] x86/percpu: Disable named address spaces for KCSAN
-Date: Mon, 25 Mar 2024 12:01:09 +0100
-Message-ID: <20240325110128.615933-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1711364827; c=relaxed/simple;
+	bh=CZzaEGr7+ippkmG7UO/ZJeYSrGVNTB6Im466Vs/2dlc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=TP4LGEfOPtt0MN+lblZ1CwvLaoeBgJHAMaEirLdT/cfKoO/O7gG6ZqjE/ly2izMp2mnyb2EQVtKX/9LAldwhs9pa/DKyFsBdLeUgG2XSdTbS7F87INwHDX0+i4Bhxt9xJwLq0JpyjshOP/4KlG+l1h27rLBS9bHY8eeretdLLOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72CDD1FB;
+	Mon, 25 Mar 2024 04:07:38 -0700 (PDT)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D452C3F67D;
+	Mon, 25 Mar 2024 04:07:02 -0700 (PDT)
+Message-ID: <f3a1325b-4126-42d7-b777-9b511279251f@arm.com>
+Date: Mon, 25 Mar 2024 11:07:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND 1/2] dt-bindings: arm: qcom,coresight-tpda: drop
+ redundant type from ports
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Mao Jinlong <quic_jinlmao@quicinc.com>,
+ Tao Zhang <quic_taozha@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240325104007.30723-1-krzysztof.kozlowski@linaro.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240325104007.30723-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
--fsanitize=thread (KCSAN) is at the moment incompatible
-with named address spaces in a similar way as KASAN -
-see GCC PR sanitizer/111736:
+Hi Krzysztof
 
-  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=111736
+On 25/03/2024 10:40, Krzysztof Kozlowski wrote:
+> "in-ports" and "out-ports" are defined by graph schema, so defining its
+> type is redundant.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-The patch disables named address spaces with KCSAN.
+Both patches look good to me. How would you like to pull this ? I could
+queue them for v6.10 via coresight tree.
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+If you would like to take them,
 
-Closes: https://lore.kernel.org/oe-lkp/202403251658.8e92a8bc-lkp@intel.com
----
- arch/x86/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 39886bab943a..4fff6ed46e90 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2439,6 +2439,8 @@ config USE_X86_SEG_SUPPORT
- 	# with named address spaces - see GCC PR sanitizer/111736.
- 	#
- 	depends on !KASAN
-+	# -fsanitize=thread (KCSAN) is also incompatible.
-+	depends on !KCSAN
- 
- config CC_HAS_SLS
- 	def_bool $(cc-option,-mharden-sls=all)
--- 
-2.44.0
+Suzuki
+
+> 
+
+> ---
+> 
+> No changes, but patches were split from previous set. First patch in
+> previouis series was being discussed, so let's just make these accepted.
+> 
+> v1: https://lore.kernel.org/all/20231206115332.22712-1-krzysztof.kozlowski@linaro.org/
+> ---
+>   Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
+> index ea3c5db6b52d..7fbd855a66a0 100644
+> --- a/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
+> +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
+> @@ -66,13 +66,11 @@ properties:
+>         - const: apb_pclk
+>   
+>     in-ports:
+> -    type: object
+>       description: |
+>         Input connections from TPDM to TPDA
+>       $ref: /schemas/graph.yaml#/properties/ports
+>   
+>     out-ports:
+> -    type: object
+>       description: |
+>         Output connections from the TPDA to legacy CoreSight trace bus.
+>       $ref: /schemas/graph.yaml#/properties/ports
 
