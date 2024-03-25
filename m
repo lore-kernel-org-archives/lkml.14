@@ -1,126 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC7613A242;
-	Mon, 25 Mar 2024 01:52:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC32149C6F;
+	Mon, 25 Mar 2024 01:54:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711331579; cv=none; b=DRtSFwQoXrqHndxpCAFnYezieUlTZw/RH4D7RGBahnnNijG0OHZk8+iJznheXH0TjCgYfPzk0JxHkicyuBlQm1FOAp3ngSnBIOU65MIAJYFtTXZFdvW3kFdzNNlZLR1zWYk0o6eR8vdzm0QAohST2GZfMlNoN7H4eZ3VxZGOO10=
+	t=1711331664; cv=none; b=GJotvEpMU2t96ExlDP3QYkgti/oue1B5/XZ2/OAaIXFHBOg1K26ltNX9kzVIaC/PnayRyFTRu4YN4f21q8FdTbC9asELWe8D6wb/XNMMmEug7fnwPJGVoT5EkY2oD+cMj3e1Xyxxr/P3JU9ZaKKy5lFZlvUtn2KgsaoMl5MvKZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711331579; c=relaxed/simple;
-	bh=9CybAqVXI7wUwrPLIFH1g82uXiok2SJVjKmOvPbOZC4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lcjdbNhGiCUgZCaWZbx0H9Uc5xE4RKoJUyy77Co/9RVtVbWBYRin4MnkPwBkuMP6NNlrSm9t0LMw2QoPk0QaW4OFjWYIA6uALZvQ5wPWM8axAQf4MfMPEDhq/uVsr0va9G/HwifLfEUvGwmopxCpFXD93DCDT1NGvfZlkYtOhE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bDuph30O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711331664; c=relaxed/simple;
+	bh=6oSruhpUUM/JsOE/DmTpdI2vwwDBrgPZ0a067ebg71g=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=BXavgyVIwbI0XKt1bmIkdF8F+g0tHgU1gEza/QMi5atTyUN40Y2UP4Zw6q60v2jdLAevl79doPcqwa3mWV37MQAFut45u2PH4gdHOaD5f3a/3JCcsD95+91BVI6QTqL08yDZxgNdIsE1jv1Y6zYz+VCooluQ5p0gBwpWn7T7MgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5v5+h49; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bDuph30O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 543A7C433C7;
-	Mon, 25 Mar 2024 01:52:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5v5+h49"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B6E65C3278A;
+	Mon, 25 Mar 2024 01:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711331579;
-	bh=9CybAqVXI7wUwrPLIFH1g82uXiok2SJVjKmOvPbOZC4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bDuph30OW6lhh6J2GJ+ojf8/x2ql2EXUcrdFEYl4+4QRhmydWKkaSljhzyItvonPi
-	 P7Uk9BVWJ8tXyPJpYZRBTqzE42lWotMY1D51Bwhc0s6/LncBbe+sjzezUUYlYlOMZA
-	 gZGtyxcBRDxRg3D/obG4k50GRncXj/3MmTisyz2Bg065Kd12LiYJZ8qtEpsdTUEmLt
-	 WU3008QY8ND1qxpv2AGoylcXFRJ1tLDeNZMTkSLrhlUu8f+2MpVG0GfRnvjmFMel7J
-	 fXYJ0fydnqeGouPSqsxIfoRnkYESIbNQW8Bb0fJEz8vROEU6r+VFQuotwT9mlckPaF
-	 ElJLrve/eqASQ==
-Date: Mon, 25 Mar 2024 10:52:55 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 0/5] support '%pd' and '%pD' for print file name
-Message-Id: <20240325105255.8b93f2c9673e08f4dec182ea@kernel.org>
-In-Reply-To: <20240322064308.284457-1-yebin10@huawei.com>
-References: <20240322064308.284457-1-yebin10@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1711331662;
+	bh=6oSruhpUUM/JsOE/DmTpdI2vwwDBrgPZ0a067ebg71g=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=H5v5+h49ENxYpO4Qx7Bxhx6rXvKE1uOYwWRPMuOMKAAAGjbVLOwiVpxBUGFp5tgD0
+	 bRdst26F9hDjh7YUZUwWr0x2cAfYNRnj+dxtl/ne6glopIwxX+aoKUy6CJcxbWbaUd
+	 MNr0+9gadKcBt3ZsPaHE1sxCHjuCpj1s5bpqLzxDj5YOy3Dta1gaLkaSqBQAzpz4LX
+	 MIdCzDsNSrkQbOQKie0yC9qHiPkAzdY9UedzZ5MflJ7Du/7ighdOEZfL1lo9oLnp14
+	 irlDyqzxpGP8P9NN8Jv7v8MMGYjdEJEFqvc3HShkoC9g70mAo7FfNU3xI07MtYbvbK
+	 tzSw6JGLkISEA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A9007D2D0E0;
+	Mon, 25 Mar 2024 01:54:22 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] treewide,
+ serdev: change receive_buf() return type to size_t
+From: patchwork-bot+chrome-platform@kernel.org
+Message-Id: 
+ <171133166268.9916.3624245768126440750.git-patchwork-notify@kernel.org>
+Date: Mon, 25 Mar 2024 01:54:22 +0000
+References: <20240122180551.34429-1-francesco@dolcini.it>
+In-Reply-To: <20240122180551.34429-1-francesco@dolcini.it>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org,
+ linux-bluetooth@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ greybus-dev@lists.linaro.org, linux-iio@vger.kernel.org,
+ netdev@vger.kernel.org, chrome-platform@lists.linux.dev,
+ platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-sound@vger.kernel.org, francesco.dolcini@toradex.com,
+ luiz.dentz@gmail.com, johan@kernel.org, elder@kernel.org, jic23@kernel.org,
+ lee@kernel.org, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+ davem@davemloft.net, krzysztof.kozlowski@linaro.org, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, bleung@chromium.org, tzungbi@kernel.org,
+ robh@kernel.org, Jonathan.Cameron@huawei.com
 
-On Fri, 22 Mar 2024 14:43:03 +0800
-Ye Bin <yebin10@huawei.com> wrote:
+Hello:
 
-> During fault locating, the file name needs to be printed based on the
-> dentry/file address. The offset needs to be calculated each time, which
-> is troublesome. Similar to printk, kprobe supports printing file names
-> for dentry/file addresses.
-> 
+This patch was applied to chrome-platform/linux.git (for-kernelci)
+by Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
 
-Hi Ye,
+On Mon, 22 Jan 2024 19:05:51 +0100 you wrote:
+> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+> 
+> receive_buf() is called from ttyport_receive_buf() that expects values
+> ">= 0" from serdev_controller_receive_buf(), change its return type from
+> ssize_t to size_t.
+> 
+> The need for this clean-up was noticed while fixing a warning, see
+> commit 94d053942544 ("Bluetooth: btnxpuart: fix recv_buf() return value").
+> Changing the callback prototype to return an unsigned seems the best way
+> to document the API and ensure that is properly used.
+> 
+> [...]
 
-Thanks for update! There is a nit comment but basically OK.
+Here is the summary with links:
+  - [v2] treewide, serdev: change receive_buf() return type to size_t
+    https://git.kernel.org/chrome-platform/c/fed99212acae
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> Diff v8 vs v7:
-> 1. Add detail change log for patch[1-2];
-> 
-> Diff v7 vs v6:
-> 1. Squash [1/8] to [3/8] patches into 1 patch;
-> 2. Split readme_msg[] into each patch;
-> 
-> Diff v6 vs v5:
-> 1. Add const for 'bufsize' in PATCH [1];
-> 2. Move PATCH 'tracing/probes: support '%pd/%pD' type for fprobe' after
-> PATCH "tracing/probes: support '%pd' type for print struct dentry's name".
-> 3. Add requires '"%pd/%pD":README' for testcase.
-> 
-> Diff v5 vs v4:
-> 1. Use glob_match() instead of str_has_suffix(), so remove the first patch;
-> 2. Allocate buffer from heap for expand dentry;
-> 3. Support "%pd/%pD" print type for fprobe;
-> 4. Use $arg1 instead of origin register in test case;
-> 5. Add test case for fprobe;
-> 
-> Diff v4 vs v3:
-> 1. Use "argv[i][idx + 3] == 'd'" instead of "argv[i][strlen(argv[i]) - 1] == 'd'"
-> to judge print format in PATCH[4/7];
-> 
-> Diff v3 vs v2:
-> 1. Return the index of where the suffix was found in str_has_suffix();
-> 
-> Diff v2 vs v1:
-> 1. Use "%pd/%pD" print format instead of "pd/pD" print format;
-> 2. Add "%pd/%pD" in README;
-> 3. Expand "%pd/%pD" argument before parameter parsing;
-> 4. Add more detail information in ftrace documentation;
-> 5. Add test cases for new print format in selftests/ftrace;
-> 
-> 
-> Ye Bin (5):
->   tracing/probes: support '%pd' type for print struct dentry's name
->   tracing/probes: support '%pD' type for print struct file's name
->   Documentation: tracing: add new type '%pd' and '%pD' for kprobe
->   selftests/ftrace: add kprobe test cases for VFS type "%pd" and "%pD"
->   selftests/ftrace: add fprobe test cases for VFS type "%pd" and "%pD"
-> 
->  Documentation/trace/kprobetrace.rst           |  8 ++-
->  kernel/trace/trace.c                          |  2 +-
->  kernel/trace/trace_fprobe.c                   |  6 ++
->  kernel/trace/trace_kprobe.c                   |  6 ++
->  kernel/trace/trace_probe.c                    | 63 +++++++++++++++++++
->  kernel/trace/trace_probe.h                    |  2 +
->  .../ftrace/test.d/dynevent/fprobe_args_vfs.tc | 40 ++++++++++++
->  .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 40 ++++++++++++
->  8 files changed, 164 insertions(+), 3 deletions(-)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
->  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> 
-> -- 
-> 2.31.1
-> 
-> 
-
-
+You are awesome, thank you!
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
