@@ -1,47 +1,68 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780AA9461;
-	Mon, 25 Mar 2024 19:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199F01B969;
+	Mon, 25 Mar 2024 19:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711394166; cv=none; b=t/0bw7BV9+OCUnbj/GpKLu6Wa5dTXi5aGhFCiTn2Wsx8LUP4rKBBKo+qUocFDFfD5OlFgfxmeZwdTV1JbEmBB43jbU7PUKs5dL+18SW9nR+ekgijwVMM5p+yhLrKU3VWs4mW/LMJPjYkyJctETLJyWL9RkcL9x+jjf8vFRfuzhI=
+	t=1711394180; cv=none; b=jB0JxxoSxlHKxksYx+UIUZpej4Uk+WPCQYJWJ0vWHgEDNIQ0vCzxZyg0Bqe6BmClOzIFJSa74GgF5Nv1FXeAzET+8Dx1tVOtnDlgYHBvJWboC7uOmsrY3XLVxMXH4V63YcfBnjvUWzaGXVQeG3AMICfbTSXqi0uHl0YFmL0eFMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711394166; c=relaxed/simple;
-	bh=l8mYrO7LA7D7hbrR36TT9zl2GYA+uskKnO6cZSSL8pE=;
+	s=arc-20240116; t=1711394180; c=relaxed/simple;
+	bh=FBaCIU/QKc8O+jfVz9mAPjwwXcmEgyAfdz0ZkQYLWtA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RFMvZrTF9lKngr+2ia3HmwKXlBpdbE1eyf7sYvsWOg6wUSv6HHOLAKpAaCedCvJczwAkCCH56ARb1APeefAzyZJnlsbNQ7soxWJlYU+s7/v2A/xSIyTi3OJ75puVKwpmGaX7ihQfK0AH7E9Nc2vkr1c5ksLvr8wKsVkjacsHxMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SJro86af; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=dZ5a5sOFlY3J7DjpXD2xbKwT8RJTSVEg5Z0Hho7u/OCSkTz9/JpSzb2v7ToFs0k68gl6lmgt6EpLKUejMQm0WXGlvdlS9wGcoI9XqBP2khQqDvKwGs4FipTi3oAorgFtMwftYRdhNy3jcHAVRHlHbn55exDqcpbhIwx+8wnhbE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=ezkCU3ng; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SJro86af"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=eTY9tWsMxZ2K3aQkEZJpivPTdRpw7VkLZH41dnj2hEQ=; b=SJro86afQ01NTvzMF0k9zFPIAC
-	/zDtpbnYDk4Wq8eoVWQaQ+LHAzjV04+AV+k/5bl0HtvL37X6+HOgXTl4f3F+dzJCDkKas5fqqVl0D
-	OMtxfNkM+XfKVaSeT+mrUxjjNtMrfSrzvNvUaL0TuIhy2sO6l8OwwcR+LAt6SwywwbLxtL9ewACEx
-	uBLMVJ3hO0GN0KjqBmNMJYXQcHAf2j39ql2S9LHSNM+DRKd1SLPHiQbXabKxZGdLoqIjqUn0YTvMn
-	BySYDpMd0Wl43aynAvcRrRb6x4Rz7tskCiTSaueKWv95Ne79I399pH+ZOXra7Hi7/7U83/uekccK3
-	szsgYAQA==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ropnb-0000000H9QS-2aiZ;
-	Mon, 25 Mar 2024 19:15:59 +0000
-Date: Mon, 25 Mar 2024 19:15:59 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	gost.dev@samsung.com, chandan.babu@oracle.com, hare@suse.de,
-	mcgrof@kernel.org, djwong@kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, david@fromorbit.com,
-	akpm@linux-foundation.org, Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH v3 10/11] xfs: make the calculation generic in
- xfs_sb_validate_fsb_count()
-Message-ID: <ZgHNb3Led05RXRd2@casper.infradead.org>
-References: <20240313170253.2324812-1-kernel@pankajraghav.com>
- <20240313170253.2324812-11-kernel@pankajraghav.com>
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="ezkCU3ng"
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PIKWEu028215;
+	Mon, 25 Mar 2024 19:15:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pps0720; bh=HsQQaVfK6Od0VFK+iLeSTloVRjxn4J5cRsMR9GNjL5Q=;
+ b=ezkCU3ngbQ9G2X2YqGUN7zk/YPzed/Sukghzz0rB5wnK9vb0kgsQG188wdzRPG3fLUKK
+ 4Vml6FKsYgnL4lw+SsxKCGf+pX2+u2rNlwd+pO85fB7gVMI43Wb4DG9H+7T/HFPfxstT
+ eayEVc7nzsDryTHuWb5hSUx7qdkF7QZwpc+NCkwdLDiD6Y2yEn5R2rl3TnxoAZWdsgnK
+ 7D5hwBt91E75/p3sX5hEK8xNgd7MLD5m1ZXNvGfRbdJzDdX4HyXjflbfSxL+N36SxVel
+ PPbhmkUYKmt/mkWVBhCnwM8IfhM71ZhBFCBPOplDIUj2cOOj5g8hBlirmNDQ0svFQAFh Jg== 
+Received: from p1lg14881.it.hpe.com ([16.230.97.202])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3x36k1vr67-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 19:15:35 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id 3C4C2805EBA;
+	Mon, 25 Mar 2024 19:15:34 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id F0F9D80163C;
+	Mon, 25 Mar 2024 19:15:29 +0000 (UTC)
+Date: Mon, 25 Mar 2024 14:15:27 -0500
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Linux regressions mailing list <regressions@lists.linux.dev>,
+        Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
+        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
+        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
+        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>
+Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
+ except on UV platform.
+Message-ID: <ZgHNT1bYV8KNRr1G@swahl-home.5wahls.com>
+References: <20240322162135.3984233-1-steve.wahl@hpe.com>
+ <8cc9e238-fa70-402f-9990-f7e391b367a9@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,45 +71,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240313170253.2324812-11-kernel@pankajraghav.com>
+In-Reply-To: <8cc9e238-fa70-402f-9990-f7e391b367a9@intel.com>
+X-Proofpoint-ORIG-GUID: 1J9A2RlA4nbSnn1VN6TCvYxRifonpGVY
+X-Proofpoint-GUID: 1J9A2RlA4nbSnn1VN6TCvYxRifonpGVY
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_18,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0 priorityscore=1501
+ impostorscore=0 clxscore=1015 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403250115
 
-On Wed, Mar 13, 2024 at 06:02:52PM +0100, Pankaj Raghav (Samsung) wrote:
-> From: Pankaj Raghav <p.raghav@samsung.com>
+I understand the original has been reverted, and that my way forward
+is likely to combine the original patch and the fix into a combined
+patch (possibly a set).  I still think some of this conversation will
+be valuable to creation of that patch, so continuing to reply.  More
+below.
+
+On Fri, Mar 22, 2024 at 04:29:27PM -0700, Dave Hansen wrote:
+> On 3/22/24 09:21, Steve Wahl wrote:
+> > Some systems have ACPI tables that don't include everything that needs
+> > to be mapped for a successful kexec.  These systems rely on identity
+> > maps that include the full gigabyte surrounding any smaller region
+> > requested for kexec success.  Without this, they fail to kexec and end
+> > up doing a full firmware reboot.
 > 
-> Instead of assuming that PAGE_SHIFT is always higher than the blocklog,
-> make the calculation generic so that page cache count can be calculated
-> correctly for LBS.
+> I'm still missing something here.  Which ACPI tables are we talking
+> about?  What don't they map?  I normally don't think of ACPI _tables_ as
+> "mapping" things.
+
+I'm refering to the memory areas that are mapped in machine_kexec_64.c
+in the function map_acpi_tables.  These appear to be e820 table
+entries that have a type of E820_TYPE_ACPI which the kernel marks as
+IORES_DESC_ACPI_TABLES, or a type of E820_TYPE_NVS that the kernel
+marks as IORES_DESC_ACPI_NV_STORAGE.
+
+The name of the function that maps them is why I refer to them as ACPI
+tables.  Sorry if that is inaccurate.
+
+> It seems like there's a theory that some ACPI table isn't mapped, but
+> looking through the discussion so far I don't see a smoking gun.
+
+I think I'm saying more that the ACPI table doesn't list everything
+that needs to be mapped, not that the table itself isn't mapped.  Not
+sure if that changes your picture or not.
+
+My debuging exchanges with Pavin showed that the regions mapped within
+the map_acpi_tables function were the ones that left uncovered holes
+in the identity map if you don't overshoot what's requested by using
+full gbpages for everything.
+
+For his system only, I manually added hardcoded regions corresponding
+to the holes that got left by using 2M pages instead of GB pages, and
+kexec succeeded.
+
+Having the list of holes-not-covered (IIRC, four of them), I could
+have persued which particular holes cause kexec to fail, but I did not
+because I couldn't think of a way to make use of that information.
+Even knowing which additional addresses need coverage for this
+particular machine, I have no way of knowing what is in those regions,
+nor how to generalize to what is needed on other machines.
+
+> Let's say the kernel has a bug and the kernel was actively not
+> mapping something that it should have mapped.  The oversized 1GB
+> mappings made the bug harder to hit.  If that's the case, we'll just
+> be adding a hack which papers over the bug instead of fixing it
+> properly.
+
+I hope you agree that by reverting, we have now papered over that bug,
+just in a different way.
+
+If a patch that leaves this papered over except for UV systems won't
+be acceptable -- that's what I intend to do, just combining my two
+patches -- please let me know what my way forward should be.
+
+> I'm kind of leaning to say that we should just revert d794734c9bbf and
+> have the UV folks go back to the nogbpages until we get this properly
+> sorted.
+
+Being larger memory systems (for example, 32 socket Sapphire Rapids
+systems with a full set of RAM on each socket), UV probably suffers
+the most from having an extra 4K per GiB to create the identity map.
+
+> > @@ -10,6 +10,7 @@ struct x86_mapping_info {
+> >  	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
+> >  	unsigned long offset;		 /* ident mapping offset */
+> >  	bool direct_gbpages;		 /* PUD level 1GB page support */
+> > +	bool direct_gbpages_always;	 /* use 1GB pages exclusively */
+> >  	unsigned long kernpg_flag;	 /* kernel pagetable flag override */
+> >  };
 > 
-> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-> ---
->  fs/xfs/xfs_mount.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+> But let's at least talk about this patch in case we decide to go forward
+> with it.  We've really got two things:
 > 
-> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-> index aabb25dc3efa..9cf800586da7 100644
-> --- a/fs/xfs/xfs_mount.c
-> +++ b/fs/xfs/xfs_mount.c
-> @@ -133,9 +133,16 @@ xfs_sb_validate_fsb_count(
->  {
->  	ASSERT(PAGE_SHIFT >= sbp->sb_blocklog);
+> 1. Can the system use gbpages in the first place?
+> 2. Do the gbpages need to be exact (UV) or sloppy (everything else)?
+> 
+> I wouldn't refer to this at all as "always" use gbpages.  It's really a
+> be-sloppy-and-paper-over-bugs mode.  They might be kernel bugs or
+> firmware bugs, but they're bugs _somewhere_ right?
 
-but ... you're still asserting that PAGE_SHIFT is larger than blocklog.
-Shouldn't you delete that assertion?
+Do you have a concise suggestion of what you'd call it?  I could use
+*_sloppy if you'd like, but I don't care much for the way that
+reads.
 
->  	ASSERT(sbp->sb_blocklog >= BBSHIFT);
-> +	uint64_t max_index;
-> +	uint64_t max_bytes;
-> +
-> +	if (check_shl_overflow(nblocks, sbp->sb_blocklog, &max_bytes))
-> +		return -EFBIG;
->  
->  	/* Limited by ULONG_MAX of page cache index */
-> -	if (nblocks >> (PAGE_SHIFT - sbp->sb_blocklog) > ULONG_MAX)
-> +	max_index = max_bytes >> PAGE_SHIFT;
-> +
-> +	if (max_index > ULONG_MAX)
->  		return -EFBIG;
+Thanks for your time,
 
-This kind of depends on the implementation details of the page cache.
-We have MAX_LFS_FILESIZE to abstract that; maybe that should be used
-here?
+--> Steve Wahl
+-- 
+Steve Wahl, Hewlett Packard Enterprise
