@@ -1,200 +1,218 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12olkn2081.outbound.protection.outlook.com [40.92.23.81])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E075A184314
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.23.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711342658; cv=fail; b=MeoRigq7ymAgGOyJbdPRfs5qXcsjC2lB2an4dxQpL22fs1+pNl1NlUWCL9GlUZU6MFe2zu3GH+pnR2hplm/tqSgodPMOCpr+bf2mzzjUwtHIVZVjYlP/FPHAC8HmjHLnb0MxQ/PAzFqNmLmX7EadS/Jw7HpqLUYupYUEr3FY4rU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711342658; c=relaxed/simple;
-	bh=1k3wVFtz29d0fWU4fH80BM/8+ONfj3slbQZhXoGpUts=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OMo1aB7Qsah5zYTKlconF5hA2uwQpGV9YDjQXucsUoH9XPQtdevLGECvJ4u2P4KzQQLmGK7O5oZrWOBidl+yCPrFFoiZ3yS5ISYUqGQ8sMoeOjF6gsGgVLkrmWFrUgJ+fKVIhHvb3cxyE/jE+qkLHMWXo0IijYGZXw+KHuOxbZ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=FX7aTEzf; arc=fail smtp.client-ip=40.92.23.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941AD82C71
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711342996; cv=none; b=Tx3DmZlBg6pfjBLowsQv4jtyouHgG4N874una/59TVbM1abGa3fNhfUCq+a86E/ekfDW/4XKgTMCDVziX4eXAc48BEAusxwqyoNlCcvfk5/PIc2IUY7AM2x4tu805CFh1SJFjsUbH3NOZi1fri62t/kmsUrsPqJnZXOTSRRfmg0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711342996; c=relaxed/simple;
+	bh=bzcb9J1zOIuRE+mdB4zKLyWN6R25h6DJb00PiUbZ5EU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YQDj/Zuc2PRf03FUpe2zaKYx3F5zoZK2HEBDWIvvyfwl5aJwDrVl9nRrQ6A51yRyL7oiCAuFxXdryzWiL+eyb/jDHGkMwW0+t3KTwi8ASHcD4vdVHkbPUDF0BpjBGgJnscm60lwK5cxXiVljEVN6n2p6NfmmRnH2HLUf6zpQQx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eFwZh5Zu; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="FX7aTEzf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J1ExpinpKsQf1HjbykRaahg9GUE/6yH+rWyWmfHJceC2vtINGabHIQgBaJ5AYm99bKwGbs6WkBfVv/LiF3xVxBy6hd8SbylvK2xzL3MSzkUeeeJ5NIF0edz1qPzWagJXAR88/gBPPo7c4MW1HYEh/BT2pFVgJmWshGBmOCbNtoLP8YKljAmPCOLAyZ1EN+oykY7eVfhl7pUnvYZPQolIGxcn7oIO7XsfGHGxUZ3AcfIfpQtbjY4z86smCmhkZxqYK/NYuv4iiw4EUmdW0JG8e/kgNNoRcoqV3hHTX63srqT6PI/j7TVE2oljuUPAfag53CeDUtQ76BTnxPRTC3ecOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LcAQiQgGT6ica+l+OkEkLmid0en38ZhYoGtvmnd3Yio=;
- b=VauJvt8cNUa324kuU5+vACnBLcJYpSViFVBweDVcQx8NoUecU6cYjcmDolVIFsybXh7GxTeTXfcwVEdtwh3dUtp9GS0wCXgJWpeURDVU2/fziB4gWfkZIWl59DfhoyHF1tLAx4jvNsNZDfwth3bbX/GRASE1KGVmKnOgZ58H3BNrvq3jz1oDl+0n7IcTo9HJHF1GhYQh0JCeIIiiEXzjI2lvktRbbYg4WGwWkTaqdDxnBxsybGXCz5vCIaaNYJ7UEnzSqIoaVNaexKi8F7cWLGFW/qIolEwoPmQ0HX1UhQbvkCp6b7hDNR1nWLBIwyTWTWwTwLZhfNZpiHlSzPaTfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LcAQiQgGT6ica+l+OkEkLmid0en38ZhYoGtvmnd3Yio=;
- b=FX7aTEzfzkIsJ5QrapqVkKZweFbhurpubPAKKwEBe1zAnni0PegsleWrmoR2ygzdHkgbjb2YQ3h/6XMU6sSb11/bvLf115Rdr7DDFpBCq0bYaj/JcrKJoe9lJaIRKj9sDZz3MHdveV4R/Kko+ak75XObNImoBs0GYmK8D4uGRGEwcBI56pkvJ/vLLjnFbLDog3HEr3MFQGeiB427jnu1G27Ii4BLBgPljLDxSwgzjjYy6cEWZ47un10DkGg3TpSWRr3Cnd32Ro/nKezSyCHNxon88uNJLQ+Kfz6hy6KsbH0kz/fHrSbn9/S9F/4R91srv72RsS58htAk/EaAjTSDDA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH0PR02MB7301.namprd02.prod.outlook.com (2603:10b6:510:1b::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
- 2024 04:57:34 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::1276:e87b:ae1:a596]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::1276:e87b:ae1:a596%5]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
- 04:57:34 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Xi Ruoyao <xry111@xry111.site>, Dave Hansen <dave.hansen@linux.intel.com>
-CC: Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-	"x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATCH v2] x86/mm: Don't disable INVLPG if "incomplete Global
- INVLPG flushes" is fixed by microcode
-Thread-Topic: [PATCH v2] x86/mm: Don't disable INVLPG if "incomplete Global
- INVLPG flushes" is fixed by microcode
-Thread-Index: AQHafh5br9v5ziibjkOOzawG3mO/srFH4YWA
-Date: Mon, 25 Mar 2024 04:57:33 +0000
-Message-ID:
- <SN6PR02MB41576028614CB7FE9A11EBEBD4362@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240324190503.116160-1-xry111@xry111.site>
-In-Reply-To: <20240324190503.116160-1-xry111@xry111.site>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [f9i3nEO713lBcX6mekaaLDOcsTNH6wwx]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB7301:EE_
-x-ms-office365-filtering-correlation-id: 722fa4a4-5f39-4f44-1fad-08dc4c88156f
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- ODZKuFZlxcNJkbPJLsl7zoIQ2s72TbVVEM9r9bqMb6tIxYflO/LPqbocWqQLL5olKmmBf40n982hTVb7DQfINgrMBVJHzG/wcdoZUMT8Wr56mv33+zY6Ez48xxs/w+VNctjZ1kW9U5oxi6kbFlKCx1YUuUKmJhCrLfAgqxDmkmA/ofL27QJWEZ5R88ZZqAHdMcQO5DuqaDb6HffoVmeZYljCFEs9GovIUI8Laz2kuP6EgM2yWkFpaQ7YsxqH1jaradjd4I2ays8IbG2OssklL67rNS6HxXcXiJG1LPCGhEQJvUJiNGKFCLZIvvO0R8s/IYzxXtMauNJxzySlwUb3+Dc7QJ8OdqeFWsrCI+W/dlyT+/mFGzw185xL+eF8BGDREapP+T3F0nIDNH32tRPouRtvnZB2nsOTktHBb3w2ba+Y3RmxuMAndoDYV4taGOCiWk/invvu3XAP1Fo0WMlzRf0ZMsKXau4fHaytPr8K60OR2i7H8z5vxy2IMMez0fMKwcz5M/UH8PT3oM4GGAFqT5oHQnQRWK9OX9RRudZmw+7AmUNCwikadJ3ze/QdFDNW
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?3Qf6+0DWtLWbLIQBEqJrJWXeilJECvT4HRA7gEyDkhiFIos8zVtjcw2Kfk5k?=
- =?us-ascii?Q?JH6sVwez0INUO2rbL739OfVIjZQnhazL0YOo14qKIo0bDrRJfG6UuKoLhlJv?=
- =?us-ascii?Q?v0soYDD7d8xxoaBNCKi7AeXaXf7ZbR/zY9iHsdwvwNJ6/J3sm4cCDwO2Z0z7?=
- =?us-ascii?Q?GsokiujFZxCi1ubJJv0rKO1dRg2OqDKD52zGu3afvEmw8Um/i/XuFMsp5liG?=
- =?us-ascii?Q?VEh3aZf1mHLfnJjWHqFn2pvZDwK1KVOoWIeEK0HbD8kr5/IzjcBSBz5ns1AT?=
- =?us-ascii?Q?lnrtubyVqHv+AeJWZTPAur67acDbftwkqeot17/SiaOrJlnlKjMv3vKeVlm3?=
- =?us-ascii?Q?L3mxRN7JLrA+sh8gSt9Kf46EV2NghG6qsX7paIpu3pClLu3kEPWGQogHevxl?=
- =?us-ascii?Q?y+Oo3P4QM+wvXCNGuNfASk5eHih3wBho0pZXrhehUZUVz/LweaG7S3kjSLWJ?=
- =?us-ascii?Q?MduhPlMmd7P/LSLMXut8ATRtxzzNVOKEeg9SNfhMAIfNYTdH5aGFi5LUOwRh?=
- =?us-ascii?Q?5/aOsNXp6LdEDve5hjt61GKZWkNky03Uwu+Fh8ZRuq4/m7SF26O4NPpQYVDK?=
- =?us-ascii?Q?jVY1phGxGKWLlKV7wjbiiYHtzS6ptAlCVeOn3MaSmvnJTMhYn3Us4mFmZX7R?=
- =?us-ascii?Q?q1pBlQ16UHJM/+8hotiVqfiQ3DFA4yehWtvYiDd+nnHce9X74jRk0nyb1/tv?=
- =?us-ascii?Q?w8gMvLZi0d/DobaIYYjeOoJF68z4EjKExvJ58BoJiNWo70Jf9w79AnORy7Gl?=
- =?us-ascii?Q?UGp+sr0fQOv0YpaO0dT/YgwwEFD3EhSnw/FS/U33a+N6CC2vZ06Ro+1RvBfn?=
- =?us-ascii?Q?S7gFnmKZYACbu2+4UsIVGWxJkOym68n6vVYh+L0C3oOHsslFOkUDakDyj1IG?=
- =?us-ascii?Q?JeahU8yvZk5o74+SNFD+ntDvR+kGJbfxqCHOJ+3jLzSDtyL9itQEkaQYLPh/?=
- =?us-ascii?Q?a3gPBPgbpLW/kGs0oRy7uMxdXbLw80mPBrYKigKrO9cxXxwHVjCYDBTFKip4?=
- =?us-ascii?Q?rybd1et57PxW9M5PwikAwjB71vllhNwKuDvb36tWq6hoqYYappTMr+ZX3GV9?=
- =?us-ascii?Q?IxNulrpONePRM+Ghg1go7lsn1R5s99GmO3jTLcTLgRevHUI8KK+9KO5pqvCZ?=
- =?us-ascii?Q?6/OO6LPVqd3PFsYbECJ63312xgfz6R+qW4Xj7LvVz35pTa1PSfchbH61VWyg?=
- =?us-ascii?Q?XiJd3ZzZzC+DSUc4RE4LfsebWqpZPrJ9Ne3aaw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eFwZh5Zu"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42P4jXjk000871;
+	Mon, 25 Mar 2024 05:02:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=qgEOJHHINd6gVGciNHxGiBy5AgfGlWmbQJemalMcRNo=;
+ b=eFwZh5ZuO9jpVW8ovfjsaNj9hGOMHZcC6XrLUtUU+OYtpMDxEUspH5ItkdKc0jnoJlqb
+ lz8ZbqIx/gLW7quDO6mILVVkp797WzmGhtHLk8oTeqyZ9bynd6CtXCH64GnFMhfLWbVy
+ johlwWIAwoD+CXyjlFRlC5bhWFM/AuwkX97qOX7B6GaOC2tCQyTSQMZfvYn5yKmBPrgd
+ xqTVHofgEdJwaIV7IN/OSmkIutd000dFjCErD1H99EZWTFYKR7UGqPDhObK5B+BD7IXD
+ iFaOil008VTAt/quS+Ec4ZHAjGSJuskwN9MiSVcQsnhUYhYqnG3kfvnjJwTlesMUpEGo wg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2h6t1feg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 05:02:30 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42P52TvA027023;
+	Mon, 25 Mar 2024 05:02:29 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2h6t1fef-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 05:02:29 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42P4JnWZ016410;
+	Mon, 25 Mar 2024 05:02:28 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x29dtq6u7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 05:02:28 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42P52Qi527460312
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 25 Mar 2024 05:02:28 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0ACF258079;
+	Mon, 25 Mar 2024 05:02:26 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6B0B45807D;
+	Mon, 25 Mar 2024 05:02:19 +0000 (GMT)
+Received: from [9.109.245.191] (unknown [9.109.245.191])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 25 Mar 2024 05:02:19 +0000 (GMT)
+Message-ID: <61054afa-9f18-45f1-987d-e6f242012096@linux.ibm.com>
+Date: Mon, 25 Mar 2024 10:32:18 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 722fa4a4-5f39-4f44-1fad-08dc4c88156f
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2024 04:57:33.8268
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7301
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] mm/numa_balancing:Allow migrate on protnone
+ reference with MPOL_PREFERRED_MANY policy
+Content-Language: en-US
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Aneesh Kumar <aneesh.kumar@kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mel Gorman <mgorman@suse.de>, Feng Tang <feng.tang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Rik van Riel <riel@surriel.com>, Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hugh Dickins <hughd@google.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Suren Baghdasaryan <surenb@google.com>
+References: <cover.1711002865.git.donettom@linux.ibm.com>
+ <b1599085e1d2f3e48dc71c7991283b8aaa0fe00c.1711002865.git.donettom@linux.ibm.com>
+ <87h6gyr7jf.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <e65b4e89-e8a9-475d-abc7-c63db8af435e@linux.ibm.com>
+ <875xxbqb51.fsf@yhuang6-desk2.ccr.corp.intel.com>
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <875xxbqb51.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: bJuITvuynOeSBj7ytHw3NgXcX9j_qAd2
+X-Proofpoint-ORIG-GUID: u5B-9gb0OMzVfbP0MrJAZF2rGbuMzj1H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_02,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 suspectscore=0
+ clxscore=1015 phishscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0
+ mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403250026
 
-From: Xi Ruoyao <xry111@xry111.site> Sent: Sunday, March 24, 2024 12:05 PM
->=20
-> Per the "Processor Specification Update" documentations referred by the
-> intel-microcode-20240312 release note, this microcode release has fixed
-> the issue for all affected models.
->=20
-> So don't disable INVLPG if the microcode is new enough.
->=20
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->  arch/x86/mm/init.c | 32 ++++++++++++++++++++------------
->  1 file changed, 20 insertions(+), 12 deletions(-)
->=20
-> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-> index 679893ea5e68..c52be4e66e44 100644
-> --- a/arch/x86/mm/init.c
-> +++ b/arch/x86/mm/init.c
-> @@ -261,33 +261,41 @@ static void __init probe_page_size_mask(void)
->  	}
->  }
->=20
-> -#define INTEL_MATCH(_model) { .vendor  =3D X86_VENDOR_INTEL,	\
-> -			      .family  =3D 6,			\
-> -			      .model =3D _model,			\
-> -			    }
-> +#define INTEL_MATCH(_model, _fixed_microcode)	\
-> +    { .vendor		=3D X86_VENDOR_INTEL,	\
-> +      .family		=3D 6,			\
-> +      .model		=3D _model,		\
-> +      .driver_data	=3D _fixed_microcode,	\
-> +    }
-> +
->  /*
->   * INVLPG may not properly flush Global entries
-> - * on these CPUs when PCIDs are enabled.
-> + * on these CPUs when PCIDs are enabled and the
-> + * microcode is not updated to fix the issue.
->   */
->  static const struct x86_cpu_id invlpg_miss_ids[] =3D {
-> -	INTEL_MATCH(INTEL_FAM6_ALDERLAKE   ),
-> -	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L ),
-> -	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT ),
-> -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE  ),
-> -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P),
-> -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S),
-> +	INTEL_MATCH(INTEL_FAM6_ALDERLAKE,	0x34),
-> +	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L,	0x432),
-> +	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT,	0x15),
-> +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE,	0x122),
-> +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P,	0x4121),
-> +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S,	0x34),
->  	{}
->  };
->=20
->  static void setup_pcid(void)
->  {
-> +	const struct x86_cpu_id *invlpg_miss_match;
-> +
->  	if (!IS_ENABLED(CONFIG_X86_64))
->  		return;
->=20
->  	if (!boot_cpu_has(X86_FEATURE_PCID))
->  		return;
->=20
-> -	if (x86_match_cpu(invlpg_miss_ids)) {
-> +	invlpg_miss_match =3D x86_match_cpu(invlpg_miss_ids);
-> +	if (invlpg_miss_match &&
-> +	    invlpg_miss_match->driver_data > boot_cpu_data.microcode) {
->  		pr_info("Incomplete global flushes, disabling PCID");
->  		setup_clear_cpu_cap(X86_FEATURE_PCID);
->  		return;
 
-As noted in similar places where microcode versions are
-checked, hypervisors often lie to guests about microcode versions.
-For example, see comments in bad_spectre_microcode().  I
-know Hyper-V guests always see the microcode version as
-0xFFFFFFFF (max u32 value).  So in a Hyper-V guest the above
-code will always leave PCID enabled.
+On 3/25/24 08:18, Huang, Ying wrote:
+> Donet Tom <donettom@linux.ibm.com> writes:
+>
+>> On 3/22/24 14:02, Huang, Ying wrote:
+>>> Donet Tom <donettom@linux.ibm.com> writes:
+>>>
+>>>> commit bda420b98505 ("numa balancing: migrate on fault among multiple bound
+>>>> nodes") added support for migrate on protnone reference with MPOL_BIND
+>>>> memory policy. This allowed numa fault migration when the executing node
+>>>> is part of the policy mask for MPOL_BIND. This patch extends migration
+>>>> support to MPOL_PREFERRED_MANY policy.
+>>>>
+>>>> Currently, we cannot specify MPOL_PREFERRED_MANY with the mempolicy flag
+>>>> MPOL_F_NUMA_BALANCING. This causes issues when we want to use
+>>>> NUMA_BALANCING_MEMORY_TIERING. To effectively use the slow memory tier,
+>>>> the kernel should not allocate pages from the slower memory tier via
+>>>> allocation control zonelist fallback. Instead, we should move cold pages
+>>>> from the faster memory node via memory demotion. For a page allocation,
+>>>> kswapd is only woken up after we try to allocate pages from all nodes in
+>>>> the allocation zone list. This implies that, without using memory
+>>>> policies, we will end up allocating hot pages in the slower memory tier.
+>>>>
+>>>> MPOL_PREFERRED_MANY was added by commit b27abaccf8e8 ("mm/mempolicy: add
+>>>> MPOL_PREFERRED_MANY for multiple preferred nodes") to allow better
+>>>> allocation control when we have memory tiers in the system. With
+>>>> MPOL_PREFERRED_MANY, the user can use a policy node mask consisting only
+>>>> of faster memory nodes. When we fail to allocate pages from the faster
+>>>> memory node, kswapd would be woken up, allowing demotion of cold pages
+>>>> to slower memory nodes.
+>>>>
+>>>> With the current kernel, such usage of memory policies implies we can't
+>>>> do page promotion from a slower memory tier to a faster memory tier
+>>>> using numa fault. This patch fixes this issue.
+>>>>
+>>>> For MPOL_PREFERRED_MANY, if the executing node is in the policy node
+>>>> mask, we allow numa migration to the executing nodes. If the executing
+>>>> node is not in the policy node mask, we do not allow numa migration.
+>>> Can we provide more information about this?  I suggest to use an
+>>> example, for instance, pages may be distributed among multiple sockets
+>>> unexpectedly.
+>> Thank you for your suggestion. However, this commit message explains all the scenarios.
+> Yes.  The commit message is correct and covers many cases.  What I
+> suggested is to describe why we do that?  An examples can not covers all
+> possibility, but it is easy to be understood.  For example, something as
+> below?
+>
+> For example, on a 2-sockets system, there are N0, N1, N2 in socket 0, N3
+> in socket 1.  N0, N1, N3 have fast memory and CPU, while N2 has slow
+> memory and no CPU.  For a workload, we may use MPOL_PREFERRED_MANY with
+> nodemask with N0 and N1 set because the workload runs on CPUs of socket
+> 0 at most times.  Then, even if the workload runs on CPUs of N3
+> occasionally, we will not try to migrate the workload pages from N2 to
+> N3 because users may want to avoid cross-socket access as much as
+> possible in the long term.
+>
+>> For example, Consider a system with 3 numa nodes (N0,N1 and N6).
+>> N0 and N1 are tier1 DRAM nodes  and N6 is tier 2 PMEM node.
+>>
+>> Scenario 1: The process is executing on N1,
+>>              If the executing node is in the policy node mask,
+>>              Curr Loc Pages - The numa node where page present(folio node)
+>> ==================================================================================
+>> Process      Policy          Curr Loc Pages                 Observations
+>> -----------------------------------------------------------------------------------
+>> N1           N0 N1 N6              N0                   Pages Migrated from N0 to N1
+>> N1           N0 N1 N6              N6                   Pages Migrated from N6 to N1
+>> N1           N0 N1                 N1                   Pages Migrated from N1 to N6
+> Pages are not Migrating ?
 
-Maybe the above should have a check for running on a
-hypervisor and always disable PCID without checking the
-microcode version.  That's the safe approach, though there are
-other similar cases like bad_spectre_microcode() that take
-the unsafe approach when running as a guest.  I don't know
-what's best here .....
+Sorry .This is a mistake. In this case Pages are not migrating.
 
-Michael
+Thanks
+Donet.
+
+>
+>> N1           N0 N1                 N6                   Pages Migrated from N6 to N1
+>> ------------------------------------------------------------------------------------
+>> Scenario 2:  The process is executing on N1,
+>>               If the executing node is NOT in the policy node mask,
+>>               Curr Loc Pages - The numa node where page present(folio node)
+>> ===================================================================================
+>> Process       Policy       Curr Loc Pages       Observations
+>> -----------------------------------------------------------------------------------
+>> N1            N0 N6             N0              Pages are not Migrating
+>> N1            N0 N6             N6              Pages are not migration,
+>> N1            N0                N0              Pages are not Migrating
+>> ------------------------------------------------------------------------------------
+>>
+>> Scenario 3: The process is executing on N1,
+>>              If the executing node and folio nodes are  NOT in the policy node mask,
+>>              Curr Loc Pages - The numa node where page present (folio node)
+>> ====================================================================================
+>> Thread    Policy       Curr Loc Pages           Observations
+>> ------------------------------------------------------------------------------------
+>> N1          N0               N6                 Pages are not Migrating
+>> N1          N6               N0                 Pages are not Migrating
+>> ------------------------------------------------------------------------------------
+>>
+>> We can conclude that even if the pages are distributed among multiple sockets,
+>> if the executing node is in the policy node mask, we allow numa migration to the
+>> executing nodes. If the executing node is not in the policy node mask,
+>> we do not allow numa migration.
+>>
+> [snip]
+>
+> --
+> Best Regards,
+> Huang, Ying
