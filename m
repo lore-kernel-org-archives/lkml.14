@@ -1,190 +1,152 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE0B4779D
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 13:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E7C47A52;
+	Mon, 25 Mar 2024 13:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711372435; cv=none; b=VPJt+umiakwHKnU1sk96ZEp680K23pRbGM9KMsb6CWTzBqpEYELYo7gR/ejbVADJIooFzsdE2UrABDuoKXoPxlfp4hE+7D4vRhnfVMQrqV2raFSvbSaolhfVKX+pWfrIIbAPpVjgIQTiUnmAi9+BocCVtpQkpul8v+Af1yrPjLQ=
+	t=1711372467; cv=none; b=gh0TodPxIfll/3J9hTGlscRFym4uAY0/lr1x6Ugzw/AQCO/+LlueUv+O06K6Hc+8KDYhVOR5bKP8c70JNUPe3JYVowSmrtfZ2dryokq+ZuykTfbfR7+jA9KZjew5Rvcj9JCeKORxFE0Xdmf2RpJw8+gdh3cnrMF4szyL6JmPq1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711372435; c=relaxed/simple;
-	bh=HHojtjcoZd6Q92y03PdxY4XWhtuABkdvaPBeZKDCoIU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LDRoYtFJOjQy/jZ+iddrwp/kRHSQ0M5Ui1k1aPodmwLjnHKyx0Uldwoy/JJ0HQ36X3tW2EHV+J8iU7P1JJn/srXwMCOt57zoB1ZzY6E1CM6DqaLVHkxkKF7ugCXxsEg0qPsJ931NTS3z5Tb1Nfx94Z6FvUGcTWXQSRk2nZ+Oxx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=i4Ze7Gi9; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1711372467; c=relaxed/simple;
+	bh=paNEJwhjSuKW21GSgQhTXiZKf5ZqX9Zxj5ICBM/xyCM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=V+uWIadURHsqpvz4H1P7oBBkmB1LRTWYJoRKLCUnqcl0wL2NswINjob1ydZL2HvnzFRK/quFYjJN+OUK9uPMkzNz/bNybnwb82FjZWwkibEXaUG6XSgv1D8rkZ3fZqSK0JXsTkNMXs6DSIYUiauA8n2tXTZyxCamyPvh4LWLOz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RjyVlKlw; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="i4Ze7Gi9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=GcBGVLj2NcFTwaJ3wGR3716q37F9N27/ERujNnx/sdk=; b=i4Ze7Gi9i97w6QoI5KITzD7bbf
-	1BNC5gzeTHM7hUDOI/4sd5ungwm8OX6/I5VU5k0sff1cBRttPd1z+z3E1LIl3Zn7NhTscAQv5Tv9K
-	vn3GZFzf2zud+QXY7lx9R45jJ4t/LgR9/M+lS3I7u9B55iYCdOlxrnRUn+F+s4PxWM3FGhyBoPn9y
-	5vZ2x/I8pkWM+5LWUT5Nd1/N5zCBPsa6ql5SNsdFvjPRobUbcpINzNgDDlv+gydCBbcSANonctgTU
-	LZF/nxZRL1oDSrqyg8PRKSFrnPWJMtRT1kG+KmQqDajupDI1kL6DqD1Uy4ZH1ExZxG+anRUTpC6w4
-	5cay/iPQ==;
-Received: from [177.34.169.255] (helo=[192.168.0.139])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1rok8U-00F4Ot-3f; Mon, 25 Mar 2024 14:13:10 +0100
-Message-ID: <780d7dfb-3a91-4cd7-95a7-528877c9ad33@igalia.com>
-Date: Mon, 25 Mar 2024 10:13:01 -0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RjyVlKlw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711372465; x=1742908465;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=paNEJwhjSuKW21GSgQhTXiZKf5ZqX9Zxj5ICBM/xyCM=;
+  b=RjyVlKlwufgsYqCYHNBzmoV4kUZt9BYKaEMMCxcshrcHUHLtrsvISYBP
+   ILYlRsX0OB2RsBK8Thc3gkE8+32yhlm/c2TL4l309eByHTtetYlZ8CFkc
+   +HU0EKNDaT8/7mK+XMTGG3PA5jfwHY63npcMS11rlVQpybb5JIF8oPzoS
+   9CC4rfxUfbEHT6eDg2GpTj6aQIzBOVRBL3lPr5ZrfwABxOT+aBgQyz5CD
+   Vhu0XLMQO1/89gZl3WuD2USB2MbZleJfd5Y0ZG3xU3cfSFmf6ujwPR80n
+   2GFwWadkIGr/aenrTLUCoPnU5EzMJGgedKj/zs5oMhEKRp09Uf1rqnEoo
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6268136"
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="6268136"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 06:14:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="20148591"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.19])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 06:14:22 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 25 Mar 2024 15:14:16 +0200 (EET)
+To: Reinette Chatre <reinette.chatre@intel.com>
+cc: linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
+    Babu Moger <babu.moger@amd.com>, 
+    =?ISO-8859-15?Q?Maciej_Wiecz=F3r-Retman?= <maciej.wieczor-retman@intel.com>, 
+    Fenghua Yu <fenghua.yu@intel.com>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 11/13] selftests/resctrl: Convert ctrlgrp & mongrp to
+ pointers
+In-Reply-To: <8964b621-657d-4f9c-aeb0-3d3ed8c62c3f@intel.com>
+Message-ID: <32c9f2ca-a483-97f3-25d1-8e16e2fdf042@linux.intel.com>
+References: <20240311135230.7007-1-ilpo.jarvinen@linux.intel.com> <20240311135230.7007-12-ilpo.jarvinen@linux.intel.com> <578d0b55-c51a-49d1-8f54-989215a3a4b8@intel.com> <93e4f096-47df-9eba-095f-e8a8c3cd04f5@linux.intel.com>
+ <8964b621-657d-4f9c-aeb0-3d3ed8c62c3f@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/16] drm/vkms: Code formatting
-To: Louis Chauvet <louis.chauvet@bootlin.com>,
- Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
- Melissa Wen <melissa.srw@gmail.com>,
- Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
- Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
- thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com,
- nicolejadeyee@google.com
-References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
- <20240313-yuv-v5-1-e610cbd03f52@bootlin.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-Autocrypt: addr=mcanal@igalia.com; keydata=
- xjMEZIsaeRYJKwYBBAHaRw8BAQdAGU6aY8oojw61KS5rGGMrlcilFqR6p6ID45IZ6ovX0h3N
- H01haXJhIENhbmFsIDxtY2FuYWxAaWdhbGlhLmNvbT7CjwQTFggANxYhBDMCqFtIvFKVRJZQ
- hDSPnHLaGFVuBQJkixp5BQkFo5qAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQNI+cctoYVW5u
- GAEAwpaC5rI3wD8zqETKwGVoXd6+AbmGfZuVD40xepy7z/8BAM5w95/oyPsHUqOsg/xUTlNp
- rlbhA+WWoaOXA3XgR+wCzjgEZIsaeRIKKwYBBAGXVQEFAQEHQGoOK0jgh0IorMAacx6WUUWb
- s3RLiJYWUU6iNrk5wWUbAwEIB8J+BBgWCAAmFiEEMwKoW0i8UpVEllCENI+cctoYVW4FAmSL
- GnkFCQWjmoACGwwACgkQNI+cctoYVW6cqwD/Q9R98msvkhgRvi18fzUPFDwwogn+F+gQJJ6o
- pwpgFkAA/R2zOfla3IT6G3SBoV5ucdpdCpnIXFpQLbmfHK7dXsAC
-In-Reply-To: <20240313-yuv-v5-1-e610cbd03f52@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-152287454-1711372456=:1020"
 
-On 3/13/24 14:44, Louis Chauvet wrote:
-> Few no-op changes to remove double spaces and fix wrong alignments.
-> 
-> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Reviewed-by: Maíra Canal <mcanal@igalia.com>
+--8323328-152287454-1711372456=:1020
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Best Regards,
-- Maíra
+On Fri, 22 Mar 2024, Reinette Chatre wrote:
+> On 3/22/2024 5:30 AM, Ilpo J=C3=A4rvinen wrote:
+> > On Wed, 20 Mar 2024, Reinette Chatre wrote:
+> >> On 3/11/2024 6:52 AM, Ilpo J=C3=A4rvinen wrote:
+> >>> The struct resctrl_val_param has control and monitor groups as char
+> >>> arrays but they are not supposed to be mutated within resctrl_val().
+> >>>
+> >>> Convert the ctrlgrp and mongrp char array within resctrl_val_param to
+> >>> plain const char pointers and adjust the strlen() based checks to
+> >>> check NULL instead.
+> >>>
+> >>> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> >>> ---
+> >>>  tools/testing/selftests/resctrl/resctrl.h   | 4 ++--
+> >>>  tools/testing/selftests/resctrl/resctrlfs.c | 8 ++++----
+> >>>  2 files changed, 6 insertions(+), 6 deletions(-)
+> >>>
+> >>> diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testin=
+g/selftests/resctrl/resctrl.h
+> >>> index 52769b075233..54e5bce4c698 100644
+> >>> --- a/tools/testing/selftests/resctrl/resctrl.h
+> >>> +++ b/tools/testing/selftests/resctrl/resctrl.h
+> >>> @@ -89,8 +89,8 @@ struct resctrl_test {
+> >>>   */
+> >>>  struct resctrl_val_param {
+> >>>  =09char=09=09*resctrl_val;
+> >>> -=09char=09=09ctrlgrp[64];
+> >>> -=09char=09=09mongrp[64];
+> >>> +=09const char=09*ctrlgrp;
+> >>> +=09const char=09*mongrp;
+> >>>  =09char=09=09filename[64];
+> >>>  =09unsigned long=09mask;
+> >>>  =09int=09=09num_of_runs;
+> >>> diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/test=
+ing/selftests/resctrl/resctrlfs.c
+> >>> index 79cf1c593106..dbe0cc6d74fa 100644
+> >>> --- a/tools/testing/selftests/resctrl/resctrlfs.c
+> >>> +++ b/tools/testing/selftests/resctrl/resctrlfs.c
+> >>> @@ -469,7 +469,7 @@ static int create_grp(const char *grp_name, char =
+*grp, const char *parent_grp)
+> >>>  =09 * length of grp_name =3D=3D 0, it means, user wants to use root =
+con_mon
+> >>>  =09 * grp, so do nothing
+> >>>  =09 */
+> >>
+> >> Could you please confirm that the comments are still accurate?
+> >=20
+> > It's not, I missed it.
+> >=20
+> >>> -=09if (strlen(grp_name) =3D=3D 0)
+> >>> +=09if (!grp_name)
+> >>>  =09=09return 0;
+> >=20
+> > But now when looking into the surrounding code, to me it looks the corr=
+ect=20
+> > action here is to remove the comment and return -1 instead of 0. It mak=
+es
+> > this just an internal sanity check that grp_name is provided by the=20
+> > caller.
+> >=20
+>=20
+> hmmm ... this should not be an error because the caller is not required
+> to provide grp_name. Not providing grp_name has a specific meaning
+> of this operating on the CON_MON group and a failure would break flows
+> operating on the CON_MON group.
 
-> ---
->   drivers/gpu/drm/vkms/vkms_composer.c | 10 +++++-----
->   drivers/gpu/drm/vkms/vkms_crtc.c     |  6 ++----
->   drivers/gpu/drm/vkms/vkms_drv.c      |  3 +--
->   drivers/gpu/drm/vkms/vkms_plane.c    |  8 ++++----
->   4 files changed, 12 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-> index e7441b227b3c..c6d9b4a65809 100644
-> --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> @@ -96,7 +96,7 @@ static u16 lerp_u16(u16 a, u16 b, s64 t)
->   	s64 a_fp = drm_int2fixp(a);
->   	s64 b_fp = drm_int2fixp(b);
->   
-> -	s64 delta = drm_fixp_mul(b_fp - a_fp,  t);
-> +	s64 delta = drm_fixp_mul(b_fp - a_fp, t);
->   
->   	return drm_fixp2int(a_fp + delta);
->   }
-> @@ -302,8 +302,8 @@ static int compose_active_planes(struct vkms_writeback_job *active_wb,
->   void vkms_composer_worker(struct work_struct *work)
->   {
->   	struct vkms_crtc_state *crtc_state = container_of(work,
-> -						struct vkms_crtc_state,
-> -						composer_work);
-> +							  struct vkms_crtc_state,
-> +							  composer_work);
->   	struct drm_crtc *crtc = crtc_state->base.crtc;
->   	struct vkms_writeback_job *active_wb = crtc_state->active_writeback;
->   	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
-> @@ -328,7 +328,7 @@ void vkms_composer_worker(struct work_struct *work)
->   		crtc_state->gamma_lut.base = (struct drm_color_lut *)crtc->state->gamma_lut->data;
->   		crtc_state->gamma_lut.lut_length =
->   			crtc->state->gamma_lut->length / sizeof(struct drm_color_lut);
-> -		max_lut_index_fp = drm_int2fixp(crtc_state->gamma_lut.lut_length  - 1);
-> +		max_lut_index_fp = drm_int2fixp(crtc_state->gamma_lut.lut_length - 1);
->   		crtc_state->gamma_lut.channel_value2index_ratio = drm_fixp_div(max_lut_index_fp,
->   									       u16_max_fp);
->   
-> @@ -367,7 +367,7 @@ void vkms_composer_worker(struct work_struct *work)
->   		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
->   }
->   
-> -static const char * const pipe_crc_sources[] = {"auto"};
-> +static const char *const pipe_crc_sources[] = { "auto" };
->   
->   const char *const *vkms_get_crc_sources(struct drm_crtc *crtc,
->   					size_t *count)
-> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-> index 61e500b8c9da..7586ae2e1dd3 100644
-> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
-> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-> @@ -191,8 +191,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
->   		return ret;
->   
->   	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
-> -		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,
-> -								  plane);
-> +		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state, plane);
->   		WARN_ON(!plane_state);
->   
->   		if (!plane_state->visible)
-> @@ -208,8 +207,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
->   
->   	i = 0;
->   	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
-> -		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,
-> -								  plane);
-> +		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state, plane);
->   
->   		if (!plane_state->visible)
->   			continue;
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-> index dd0af086e7fa..83e6c9b9ff46 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.c
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> @@ -81,8 +81,7 @@ static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
->   	drm_atomic_helper_wait_for_flip_done(dev, old_state);
->   
->   	for_each_old_crtc_in_state(old_state, crtc, old_crtc_state, i) {
-> -		struct vkms_crtc_state *vkms_state =
-> -			to_vkms_crtc_state(old_crtc_state);
-> +		struct vkms_crtc_state *vkms_state = to_vkms_crtc_state(old_crtc_state);
->   
->   		flush_work(&vkms_state->composer_work);
->   	}
-> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-> index e5c625ab8e3e..5a8d295e65f2 100644
-> --- a/drivers/gpu/drm/vkms/vkms_plane.c
-> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-> @@ -117,10 +117,10 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
->   	memcpy(&frame_info->map, &shadow_plane_state->data, sizeof(frame_info->map));
->   	drm_framebuffer_get(frame_info->fb);
->   	frame_info->rotation = drm_rotation_simplify(new_state->rotation, DRM_MODE_ROTATE_0 |
-> -						     DRM_MODE_ROTATE_90 |
-> -						     DRM_MODE_ROTATE_270 |
-> -						     DRM_MODE_REFLECT_X |
-> -						     DRM_MODE_REFLECT_Y);
-> +									  DRM_MODE_ROTATE_90 |
-> +									  DRM_MODE_ROTATE_270 |
-> +									  DRM_MODE_REFLECT_X |
-> +									  DRM_MODE_REFLECT_Y);
->   
->   	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
->   			drm_rect_height(&frame_info->rotated), frame_info->rotation);
-> 
+write_bm_pid_to_resctrl() checks for non-NULL mongrp before it calls into=
+=20
+create_grp() so with current code, I don't think it changes anything. And=
+=20
+param->ctrlgrp is always non-NULL too so I don't think the return ever=20
+triggers with the current codebase.
+
+However, I was more talking from API point of view. It feels more natural=
+=20
+for "create group" function to return error if the caller is inconsistent
+with itself by asking to create a group but doesn't want to create a=20
+group.
+
+--=20
+ i.
+
+--8323328-152287454-1711372456=:1020--
