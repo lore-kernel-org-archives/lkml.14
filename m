@@ -1,102 +1,99 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172B915B971
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEAB1EB2A;
+	Mon, 25 Mar 2024 09:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711357906; cv=none; b=L9AkZHu3ajwVz8OWt38Vkz2Jpcjtdyb6KleHp6RhKTjHzpQPCJD3aVetq2OM6XIH2J3dE/GG0rvfp9wcYcHV0D3+UU8UokVZmpTGB3bujbtEyiqfm/vPQ6ZtMh3swRhG4ZnV/1V66TXxFztqvznpI/wDS24djHIzpsoyxj2dnxo=
+	t=1711358595; cv=none; b=LZNuvjoUVpQksM2IUDFNgh1ANmRd/ir+i1a6VQ1KTpxHrq/1oLG43X5yfrAn7I4txRQ+t5mluB/kIfYLzJ4OOaGBagcIkJ1YtbalUPYLUQc+3AR/uUFyg6noyUUEjNgzNQn0tvXBr3I2sg7JmXh+30dgCq1ywF/MVpM7zcVTEJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711357906; c=relaxed/simple;
-	bh=3IyQ0IHUZedUd4BUZemr8PwrT1edFjZ7/8DR77OpHPo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JniBBv70nD/sc2BjMyx/6RTWZKHV9FWGNeOnlDmL19c4bGn11GE9x23pg4HTE1g+CY8TCUCWNO8cX4znJzH2XhUCZ1GcfpG83v9Mbh68pU3sT2J5NAuMbFV6jcgwP20eBd3/zVZSEmmF7HcREWhdjbSopydPnvyLx5HOuo8jTic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dBaMxLRU; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711358595; c=relaxed/simple;
+	bh=+Rntwbb4YW9HjwZqjkH2HwaBZOT1e6Wg4co+NigZDyo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C4aYrSy4js/LbnrDM+YX414UpM9QoWrJTac/K8BFjlbo9LwVsOu+BxHRRcB1hTsdqurnNL+vX1DOo8rpFwjad+jpGyKOdkani4ggupYAfeBkAls4P9CdsMcsR1aHTMpnXRkbcxJvltSjxKfJmJKpinm24pfeswbYWX9OXD+yJyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kp8pD+1Q; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dBaMxLRU"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-515a68d45faso1362098e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:11:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711357903; x=1711962703; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RoF9SKtcQIDNK7kNazTEQf3Z7HNt40P18vhcuuLiprE=;
-        b=dBaMxLRUhAxqUsFozVzhlMzEUymdFHCE/FgMhvC4G/aoNxZG6EiLmIDh0LZ6XH3mH9
-         d+nr3RZESJtW2oz6tWOM5yI9kAkRzI7uzvZgZQgz3tEL0UNnS542KzIRg8Tdqgc/IHHU
-         Phzvi+C//lYWijy45XIEfk162SpfIPfG/8HncoJNk+XCC92yxxXu4WrNTIfyiiK6lXcn
-         ynLXu4xz5CyB67Vd17uEzrZkEgjlVbi5Ob04WUa9p4/VUBi9nD2cHrMQgL+v5HTejmUS
-         9qLiJSW3hpTXYIBmlEZHw0RaREjqRLd5HJfa5tlAhfnfB5bSDzyYJ1NjSv+vikY1UnTY
-         KUrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711357903; x=1711962703;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RoF9SKtcQIDNK7kNazTEQf3Z7HNt40P18vhcuuLiprE=;
-        b=ZtRKk7xzfxGRjvDJsSQZTGRhqy7fLPgfYzn7Z8ktF+sDiP9+awrQNUjeVoaiu1E9w+
-         DT4ijjpf7WPaciJ2RRUPksGoxxwUxrl8KJCgVO/wv2hXYPNlHmLToDn829pNQj+F/5Lx
-         bPboEdt+rqPhgeUGMzXywzw9fpAFbYZH67/vENosjqXOKOso94Q/PR1HBNoH/mlaADYd
-         xzshYYmSi2bdmu9vB7msrm+tFT2Qcwd1MO/XFf0RhZd/NDkGi9Prq+gcqSwBhaBG/crP
-         pvjZiBsd/H8tzFKc0CHrKB/bojjS7NA22mDy1WkB0tuy4seloqTws96WNPxb2gTaP7I3
-         NoEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXcau1ZEg5zHav8NefbqpZ2qEnrkgwPudHm2XLOLZJ7y5yBfntfOCGHCKixXoSw8tswQvR1gFJCsILBT8bG0iJ7BKPHr94Lw54CbzuT
-X-Gm-Message-State: AOJu0Yx4CqLOTiaMBuBK5QnknrKUOYjI0/93UEMookTysPGFyxPhnh2T
-	QZUcaJtO0rAQbjDxSvNxjRGJhzeLIh9SqHxGwH8J/JstZ43n6hNsSTgUWQI3c6k=
-X-Google-Smtp-Source: AGHT+IEyPfn3dgbloCj+TwQHEGcc6B6s6dmgZhFHmd8I5jGWzU+1BzuI3rvwBpuZn9wcIqv58h4rqg==
-X-Received: by 2002:ac2:4643:0:b0:513:4705:a4f3 with SMTP id s3-20020ac24643000000b005134705a4f3mr4317389lfo.65.1711357903118;
-        Mon, 25 Mar 2024 02:11:43 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id t15-20020a5d690f000000b0033e95bf4796sm8947000wru.27.2024.03.25.02.11.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 02:11:42 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH] docs: dt-bindings: add missing address/size-cells to example
-Date: Mon, 25 Mar 2024 10:11:39 +0100
-Message-Id: <20240325091139.18602-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kp8pD+1Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711358594; x=1742894594;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+Rntwbb4YW9HjwZqjkH2HwaBZOT1e6Wg4co+NigZDyo=;
+  b=Kp8pD+1QQVc0bxOc72i6QGVpMyLh0TmLJxawJlcCptezf77RdMbY3DBy
+   6WVLHwKt4X3t11e+wJHm7b3jdtplysF3rF32oCGla3JwA3hcg9jTQWB7g
+   J/2csaferj9H+KDHhRwDqk4H56toy2tapXjTrhCMM6yvSi2FuyU7ogrcs
+   NVZ8wirrJ4cTld/bPTAMUBheZS851J26K0gNz1OnF5fTpFvXk4pXoV6hZ
+   BQo03AFMVPcbz4ipAOKtI7gJLKL+eElgdbskTo52eG+gFvDnc5Plt7lTt
+   Wy4oun4vDQXDe9P95JgAFnl8sJztKTZoUeRX2nCd87I5XBhy6vAgUrM6V
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6533060"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="6533060"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 02:23:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="914837483"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="914837483"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 02:23:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rogXr-0000000Fvfn-1Ds7;
+	Mon, 25 Mar 2024 11:23:07 +0200
+Date: Mon, 25 Mar 2024 11:23:07 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	kernel test robot <lkp@intel.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] net: wan: framer: Add missing static inline qualifiers
+Message-ID: <ZgFCe39GJEARc9g4@smile.fi.intel.com>
+References: <20240325082505.29385-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325082505.29385-1-herve.codina@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Complete the example of recommended order of properties by adding
-missing address/size-cells.  They are not necessary to illustrate the
-style, but lack of them us bit really correct DTS code which might
-confuse readers.
+On Mon, Mar 25, 2024 at 09:25:05AM +0100, Herve Codina wrote:
+> Compilation with CONFIG_GENERIC_FRAMER disabled lead to the following
+> warnings:
+>   framer.h:184:16: warning: no previous prototype for function 'framer_get' [-Wmissing-prototypes]
+>   184 | struct framer *framer_get(struct device *dev, const char *con_id)
+>   framer.h:184:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+>   184 | struct framer *framer_get(struct device *dev, const char *con_id)
+>   framer.h:189:6: warning: no previous prototype for function 'framer_put' [-Wmissing-prototypes]
+>   189 | void framer_put(struct device *dev, struct framer *framer)
+>   framer.h:189:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+>   189 | void framer_put(struct device *dev, struct framer *framer)
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Always try to minimize the warnings/backtraces/etc to the point. In this case
+it's enough to have:
 
----
+  warning: no previous prototype for function 'framer_get' [-Wmissing-prototypes]
+  warning: no previous prototype for function 'framer_put' [-Wmissing-prototypes]
 
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- Documentation/devicetree/bindings/dts-coding-style.rst | 2 ++
- 1 file changed, 2 insertions(+)
+> Add missing 'static inline' qualifiers for these functions.
 
-diff --git a/Documentation/devicetree/bindings/dts-coding-style.rst b/Documentation/devicetree/bindings/dts-coding-style.rst
-index a9bdd2b59dca..8a68331075a0 100644
---- a/Documentation/devicetree/bindings/dts-coding-style.rst
-+++ b/Documentation/devicetree/bindings/dts-coding-style.rst
-@@ -144,6 +144,8 @@ Example::
- 		#dma-cells = <1>;
- 		clocks = <&clock_controller 0>, <&clock_controller 1>;
- 		clock-names = "bus", "host";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
- 		vendor,custom-property = <2>;
- 		status = "disabled";
- 
+Code wise looks good,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
