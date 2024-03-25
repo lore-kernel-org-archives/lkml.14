@@ -1,114 +1,113 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD76413C3D2;
-	Mon, 25 Mar 2024 09:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D15184431;
+	Mon, 25 Mar 2024 09:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711360515; cv=none; b=hbjakyH73x2G5SrjnrVC7sWzROXA4Z9jjmPdeqmQVDTglO/74rG87VM0+usz2njTKa3XmHrchp4KT85bJQe4ZhSFBrxOUyxwF9ZmsuRzf486pGv7oSOF2E5AkmpGhCUsgZKNIuTFCPaqsFj6x01zPVwO98lXKLS4d8cCfyoDy70=
+	t=1711359887; cv=none; b=fExYX4enrNDGj81ELJSJ/SrxyQcwc3Fsgqow0oFXJOyJaFpCzJYW/thjpw8wr/WDinPlwvRNaHLyRBmQP8GRc8L2hjDXHihujJAMoAwGv4pk01/3p218sya0nYJilG0KvQcGfS94Ey8evYQkcJShDxLVN04ICybEd3iAFM1lJOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711360515; c=relaxed/simple;
-	bh=Sjjpd0e5L6/6IHS3PxHBjSD0ESGeyO/POIt+kwNDIDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ns7brd0bbsuLI6+7uol537W06QARUnWoLplsTc65OCnJfYYVqn3W3ST1hHBBifk476WEGKLHFyq6RrOCMnG7hWF4kZn3e8MswFV+b00QC1PIYk8KCatDM9uO8iYDopib/pwhmXX1HwkZbFfKZ0Z8ali8oEHxcIjcxORr/WSGNzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KzJNPFYJ; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711359887; c=relaxed/simple;
+	bh=WLANAWtK+kltLWAp09rwz3rT8nwKydISAtfzrzERU+4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IBCITTcaiRGQYR+sZcD8YL7tv35/At2NFt3SgZlESXCA+LFgFnsrvFQoFb6QLdZCw/mJ3+aV6n1Ldzux9vou0tRvb1cXrZ/Elqy48zDdBRHhZejCyWbvi/GKJ+cVwLke4rMK+MJCfT8jB54s3b6+WsUd55gwx6/syhrjkeNUTDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=zC02mC/l; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzJNPFYJ"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dde26f7e1dso29248805ad.1;
-        Mon, 25 Mar 2024 02:55:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711360513; x=1711965313; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/wUCky1hR6lYs2+y+tVEc6I8rhJ8fPBV7+LaM66mMDQ=;
-        b=KzJNPFYJJYp5rkaN7lIi9RSQXwbWCWuC/zkze+8luKnjEiL8LIsbCgjSFYkroL2u46
-         rZo7YS/zCZzdRUEvkJxhqBgDp4dZh/FqgfkpWpiseUsKPOctTGDQFB2xEvb3DNM+b5Ja
-         dSjYXz9GvGq4CbHr5AXl7WbhdZRwVJgvYYvVxwGVa+CqMTIWTj8ywQDimncR5rMxAmRY
-         cFw7yXkX8KPHcnVbrq29cQMOSUcWtB31g29GXQ6gK1B9UUx6OyIOnO2/pC1emXIxWNEJ
-         IRckgKj79J6MlapH5NvehgeWV+6bBdOG/HglTWxMdK5VxAc/vnXWUU8aij2OuBVJWHjr
-         Kvyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711360513; x=1711965313;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/wUCky1hR6lYs2+y+tVEc6I8rhJ8fPBV7+LaM66mMDQ=;
-        b=gQYgQEhRVAkcfCljrOnAFoAGMZSu5NQUE9R4ZEQWhp56nC3VZqQ9jD44DXFv5I/24S
-         crNDv7UsLVj3FxIX/zI55YxgqoKBL9fyiWjWlpB9jZH7+mSgzTWERtUrxpR349iKYT8V
-         rmAdGb6R7fvlG8tm3elD2mR2Hs7QxaY9YQJ7O87jzH06H0jjl5xpWVVq84WOczEXWpb9
-         YTMA3Ovkg6FqGhhhpCC83mVkkpSSlqnmqLqlRjIU5nzrV3LghyuwpNq4n7aXVmWIPuNQ
-         l3Oz2ewTbeK8JMBJXtH9h6ehrMTomVYV2uHZ3jlpMfIXQ7Eiz3CzHZ7PfMT6ef99rXfN
-         F3VA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcYwxTrByvTkc3L1LygGnh6BvsoLDnGxWP9w18sH4bQh13wrtVytXju7Dxl4MsF5D7hKk9q3laUpWZXx4WZxtIqhWYVmwQD5Vs+h5+ESlOyZ/6pkUW0sJENWxSAcOr2Le8GJto
-X-Gm-Message-State: AOJu0YzX9DlGcuQyACzsKbN3o/WeMctPfRMA4SKi+bUvpvHFSPKKSmVd
-	sJhiy1dCLENKg2G7J7NpLSYoHdTycZ6t9TQgdCnaei132IxxvgHhzNKDVHTvS5g=
-X-Google-Smtp-Source: AGHT+IGK0FJmKHRVnk2WArpCghu8kTZcuRCabePkI7qYLmNOFrIBc1MK4b0Vh5g1H/diRuqn/Arq8g==
-X-Received: by 2002:a17:903:22cb:b0:1e0:26ac:8234 with SMTP id y11-20020a17090322cb00b001e026ac8234mr7355496plg.18.1711360512998;
-        Mon, 25 Mar 2024 02:55:12 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id f6-20020a170902684600b001d8f81ecea1sm4430360pln.172.2024.03.25.02.55.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 02:55:12 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 0813818469084; Mon, 25 Mar 2024 16:55:08 +0700 (WIB)
-Date: Mon, 25 Mar 2024 16:55:08 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, florian.fainelli@broadcom.com,
-	pavel@denx.de
-Subject: Re: [PATCH 6.8 000/715] 6.8.2-rc1 review
-Message-ID: <ZgFJ_H2HHwTGFg8Z@archie.me>
-References: <20240324223455.1342824-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="zC02mC/l"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42P8DJeW003218;
+	Mon, 25 Mar 2024 10:44:07 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=i8siADNRHhW+zwunZPKxpBLNdWU5Ljbute+iXFO1D8w=; b=zC
+	02mC/lbZoceBF8CLGog3ZHWkoFQWrNX9jO5HYMO5TMgZbtevVwemn0wm/QW7byIj
+	8mHDAaQUUvQz5ETcHzMGuWkODC7W6zZ78jkTt4d/re1jJokV9/TULNL+y6bfXmf8
+	JxXt2KZW8d/Waf22jYr9rNuHJjdmXIl6pWZw2GgIurZvv1cfwPHyNnKHuNBibvpb
+	7HQcoqn/sFxiUbNPKow0pMpdd67J50KDqd9rHX8Jk/cdZiL1DaeU1mMOFQdLOB2G
+	1x1cwQLiALpYc3YsjRQlEjp5SxJ1GgYWznqspJoG8LNEF3dBNxIKQSUqynhrBQOW
+	UusdAYTcEnNM4/N6txLA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3x1qa2y6f8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 10:44:07 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 60F8D40044;
+	Mon, 25 Mar 2024 10:43:58 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5F37C216EF8;
+	Mon, 25 Mar 2024 10:42:44 +0100 (CET)
+Received: from localhost (10.201.21.128) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 25 Mar
+ 2024 10:42:43 +0100
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 1/2] dt-bindings: net: add phy-supply property for stm32
+Date: Mon, 25 Mar 2024 10:42:17 +0100
+Message-ID: <20240325094218.56934-2-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240325094218.56934-1-christophe.roullier@foss.st.com>
+References: <20240325094218.56934-1-christophe.roullier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VgRQLFnf84aRFWUP"
-Content-Disposition: inline
-In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_07,2024-03-21_02,2023-05-22_02
 
+Phandle to a regulator that provides power to the PHY. This
+regulator will be managed during the PHY power on/off sequence.
 
---VgRQLFnf84aRFWUP
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+---
+ Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On Sun, Mar 24, 2024 at 06:22:59PM -0400, Sasha Levin wrote:
->=20
-> This is the start of the stable review cycle for the 6.8.2 release.
-> There are 715 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Tue Mar 26 10:34:31 PM UTC 2024.
-> Anything received after that time might be too late.
->=20
+diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+index fc8c96b08d7dc..80937b28fa046 100644
+--- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+@@ -82,6 +82,9 @@ properties:
+       Should be phandle/offset pair. The phandle to the syscon node which
+       encompases the glue register, and the offset of the control register
+ 
++  phy-supply:
++    description: PHY regulator
++
+   st,eth-clk-sel:
+     description:
+       set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
+-- 
+2.25.1
 
-Successfully compiled and installed the kernel on my computer (Acer
-Aspire E15, Intel Core i3 Haswell). No noticeable regressions.
-
-Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---VgRQLFnf84aRFWUP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZgFJ9wAKCRD2uYlJVVFO
-o5hLAQDTxIxJU4ZwdJI9EJfYJohft0xL6TnU/2LW1jeq6UpBhQEA/Da8+KyolhU9
-Q1G0vcUfFJBTbT2e/b/zHZ9mrbjBkQo=
-=oyZa
------END PGP SIGNATURE-----
-
---VgRQLFnf84aRFWUP--
