@@ -1,54 +1,56 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBB112FF7C;
-	Mon, 25 Mar 2024 10:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA9512FB36
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711361939; cv=none; b=E85MTCn7G3q52uZNtzqr9hMpCRkWKTAMN814TZ9Ty//wrWtcoyi1Kgy3A12YyQgIdz2DLBzM2E4xG7rANzi6gaAasFwQBf1CCjIwFSYDnaxcsbiQmHg/ncLQXG++ogi4kVVNr3HAwOKSx7//juoh1J+CIOJpyoUntrZUW8GzvoQ=
+	t=1711361925; cv=none; b=b/fHcpQsDvJrObNnoStAkAX9KGE2ec6jU+9WoAusbzINes4MRGvWWTA3Pm7tZmTgr3y15kX/QHRYbDZrlGooZf303TSufiv7U8GRrdMcCE1slDvhIGEPCXsiuLQqF5mWzfNAS5+vTjVgSm5Y2iUm6AZG7IamWbeajsvqbJvHTUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711361939; c=relaxed/simple;
-	bh=PwgsFa5XA28r6N/luTZ5/joQDm3rKoAZilaYfT7S4vU=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nbXF7ZGcE/7rCcyp6n8of862Nk6USluBtU3i62KXzczAjS0AfBdEOvF45m3cudZMuRGDKgJPR2IbmFcmyt9YW3h2143GAZwry4yyHoLRO5XouN3YC7Mc0/YV6zj7vIyOvp6UJ0u72DLCPMKnAz/PZpKEszQApOwdd2Mj8TAwJJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kg16ByBE; arc=none smtp.client-ip=217.70.183.196
+	s=arc-20240116; t=1711361925; c=relaxed/simple;
+	bh=LXFbNseSlqWcAujIdt1RG39RSAi31ms+4VYhM8+xmdU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uL96/LnbTxIcZqygYtYllq7WqEQM9nLoQhQ/N7tm1LlGkCsaS5nunYgSqrpuKVKQeaeLQQ0PCA+ahJfXT8y9F0D3kGvY3OF1c1f8Fdftfe9ffYT6b6g/oo/ciLerIoZeHE4TXSCcALlbdsrBQJrJmukJYMxs82TZ6i+Be0I5PE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dWD8RPs0; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kg16ByBE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3F607E0004;
-	Mon, 25 Mar 2024 10:18:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dWD8RPs0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CEDD06000D;
+	Mon, 25 Mar 2024 10:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711361929;
+	t=1711361919;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WbqeBpH+1QqX5M3BkHKBHii3KNtrStCGIe/gU4War+M=;
-	b=kg16ByBE+hTjI5M1VNC9tw5XGgrSRTyhUOsnX6FW+GRN5E8xg0DVVMdVUNxYKM+ZlZxDSX
-	ArfOPFUhppEDSpXnyZoEpeCfVZHHzLcyVuWtAZZsDkuMxCA3KQsSyzcNRg93ePpCqKRTdS
-	oz2UFUCRjBQlKmwQywTiO9rP1scFmZitYTxgIA8vta4fJs1+v3tEWM7d7fxmHYmZoCK8a9
-	jPEllFSh+USSEFdrM71O/lGUL7z5bmjWVIZHOUFVK3YsySEZw1XE+vOIeZVkM8csTZJV+j
-	XcIJeo9sf3d08eJ9PFDaJHG9sqSRRI3RhKY2TXqZQaeExGZfQYpwXoARcx9w0g==
+	bh=HpKxnGuq4NGSS31UqPNZH4kFPyky5wJE4aY0gNyw2nI=;
+	b=dWD8RPs0pMCGzjjHxXqZvCvws7CodSuZGLD7A8aVgTcOZkd/pahag5M9XiL9Rqh9Z0QQfM
+	aN9dRYgDpLjnCtAGKrDZbAvnSQxy7yYleSGz0iqj2+/1mIoEOmPwtH9j77O86h5aaOHWgl
+	jXsrnjp590kJ5uO2f7oYdbSbBo6lzvuswaWm9QY0haB5k/6iVjid9XV2+FuFkeU7O5NZ3l
+	OfUSkox+Zg/Hv8uR/X0lIoUgLxO8+G8aTi3rjcu2sYsmPHZWCYF74GB32yH0WRCVjgaOMK
+	qTNZfbCb9WGaLhMXuCCf2IHfUEGdRTYJvT+FOG9rd9UThG39nNWnj4zvx1EyTA==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
+To: William Zhang <william.zhang@broadcom.com>,
+	Linux MTD List <linux-mtd@lists.infradead.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+	joel.peshkin@broadcom.com,
+	f.fainelli@gmail.com,
+	dregan@mail.com,
+	kamal.dasu@broadcom.com,
+	kursad.oney@broadcom.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	linux-kernel@vger.kernel.org,
 	Vignesh Raghavendra <vigneshr@ti.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	linux-mtd@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: mtd: Add Samsung S5Pv210 OneNAND
-Date: Mon, 25 Mar 2024 11:18:47 +0100
-Message-Id: <20240325101847.262460-1-miquel.raynal@bootlin.com>
+	Brian Norris <computersforpeace@gmail.com>,
+	Richard Weinberger <richard@nod.at>,
+	David Regan <dregan@broadcom.com>
+Subject: Re: [PATCH] mtd: rawnand: brcmnand: Fix data access violation for STB chip
+Date: Mon, 25 Mar 2024 11:18:38 +0100
+Message-Id: <20240325101838.262387-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240313184317.18466-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240320222623.35604-1-william.zhang@broadcom.com>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,17 +59,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'26729dbb53ac575635ef96ece0442165efa9613f'
+X-linux-mtd-patch-commit: b'4053caf60bb349ab9ea9e36ee30c64681b696198'
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Wed, 2024-03-13 at 18:43:17 UTC, Krzysztof Kozlowski wrote:
-> Document binding for Samsung S5Pv210 SoC OneNAND controller used already
-> in S5Pv210 DTS.
+On Wed, 2024-03-20 at 22:26:22 UTC, William Zhang wrote:
+> Florian reported the following kernel NULL pointer dereference issue on
+> a BCM7250 board:
+> [    2.829744] Unable to handle kernel NULL pointer dereference at virtual address 0000000c when read
+> [    2.838740] [0000000c] *pgd=80000000004003, *pmd=00000000
+> [    2.844178] Internal error: Oops: 206 [#1] SMP ARM
+> [    2.848990] Modules linked in:
+> [    2.852061] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.8.0-next-20240305-gd95fcdf4961d #66
+> [    2.860436] Hardware name: Broadcom STB (Flattened Device Tree)
+> [    2.866371] PC is at brcmnand_read_by_pio+0x180/0x278
+> [    2.871449] LR is at __wait_for_common+0x9c/0x1b0
+> [    2.876178] pc : [<c094b6cc>]    lr : [<c0e66310>]    psr: 60000053
+> [    2.882460] sp : f0811a80  ip : 00000012  fp : 00000000
+> [    2.887699] r10: 00000000  r9 : 00000000  r8 : c3790000
+> [    2.892936] r7 : 00000000  r6 : 00000000  r5 : c35db440  r4 : ffe00000
+> [    2.899479] r3 : f15cb814  r2 : 00000000  r1 : 00000000  r0 : 00000000
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> The issue only happens when dma mode is disabled or not supported on STB
+> chip. The pio mode transfer calls brcmnand_read_data_bus function which
+> dereferences ctrl->soc->read_data_bus. But the soc member in STB chip is
+> NULL hence triggers the access violation. The function needs to check
+> the soc pointer first.
+> 
+> Fixes: 546e42599120 ("mtd: rawnand: brcmnand: Add BCMBCA read data bus interface")
+> 
+> Reported-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Signed-off-by: William Zhang <william.zhang@broadcom.com>
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/next, thanks.
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/fixes, thanks.
 
 Miquel
