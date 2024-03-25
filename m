@@ -1,70 +1,66 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E90045972
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 19:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850263399F
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 19:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711395762; cv=none; b=YL4Rc9GjtYlYF/DhNPW5XP774eInZoLwTqziWOB4yUabeJ8//cGAeyZvWE4qKBQHWMlrxuzCvvToSi4uPqnEDVghrwjrQL21SwO2wS/KjOrxAR2K1pCECQaoDs6b76PJU8LLWQ+GmxXNDQ1QSurylUUidwpoScoGlRtAgtoumxQ=
+	t=1711395779; cv=none; b=hM8Qq3Ig/xo+L1y4iYy7MYq4aN8LACUrVExQ40lHukuCg8YFB2waJhBFxbIfo0QQ6QzXsRhOLCPggg0VDNpuh97sDG5/nbRcTeejc3PzN42kOcGa4/zhwOHw+45lCJOweFwby7nuvXXXE7ZnjfcRJDOBZsFC8p8w7+XWkTNii6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711395762; c=relaxed/simple;
-	bh=iR4RWM9SW15Ytpe+zLkScY//gHwgLlOIGaQIIcnl9hw=;
+	s=arc-20240116; t=1711395779; c=relaxed/simple;
+	bh=clBK7WyFrTer33UcCZksOAeIE0Ht+WdYbjn6omkCaZg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a904aYKQnvEiBbbLQ9ym16pDD/V3eIrvdEZrahe5iJ05z9sA0zXDtx1acu+7IA0LWQIQ5dqpSzqDtjRAoFc1WpA8docoFJUPazO1+0BmB71I8EC9GJtypt8RTB1CZGu22qrcNVJdPlcCa2Ttk1CWD+DOWPq9JMoj7eIWorWkhys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ih6wb6o4; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=KIRoGLEgjPfYPsnPLi5icXcuNGdFI/sm/LMILMWvKGHBBiFiB0Wb+NS05Ko5ZbjGBCEp5qvP1pMUW9h4NaCcVq3Xv17N0JmwWV9JI9AQmxKmPSGgIQOEcq9SZRKayUNtZ7U9IjKswiocXuj52ruJtJA+x+9w7JdsPj/j/V4Ogs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cxCTXOh8; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ih6wb6o4"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso4943688a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:42:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cxCTXOh8"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso3228228a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:42:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711395759; x=1712000559; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711395777; x=1712000577; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KuzOZKWfexqxW20YM2/HIeua9/M06pZ/a0UxyioS85Q=;
-        b=ih6wb6o4s5yhwKkXv0+wXl9+wjtl592HUj8MUkwbJYKsvqRqj42Ks9CVsKZmDkRAZu
-         YvRQ1tqKyoWKB2gn9fMOtul3avux0yJi1/D+h7VmZ3LAylYSsXfwIuJAYecXgTas2W+r
-         G+8ZYSPJOqUxWLuyD8vvITh9x5nr2DIVDF2qrXHSbfQjmTypWIj9NIkpS9Cshe3LKFup
-         b/p0V/sKF3TxkaIW3/4PAKqAwdeTD0geX/he9vz91Syl3ok6c5nqjRQJn6PSCnLgfUm1
-         fXlOhoXIQJ299PDDskHXuQosxx9bKInQr1iUoHKxAbV7UPrOy7hpcV6RSSBIdfO9TgC+
-         ljzQ==
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/GNuMW47+QhhyncApcMkdyIFe1uqQGtbO15QL9ZbpIE=;
+        b=cxCTXOh82apf606ipnrgCYiquC9a7mNgKBWRNUx637KKKI8w21qOZFGexP+ubSjdSJ
+         8XQ+6Q9b91M2kT6h6PV2f5lM7qTfGWM8lP2ea1pwyFI0lg6H42/9DULDUdpf2nY87f6/
+         mASO6J8o1dCxSI24fyEMnFxxJ5k9Wq6TvOS+BnKWsbzpj7JmPBwScybV2jhtU5f85xDZ
+         Bxj91SyLP462aggxtjCMp2YM/llVUzY/izKzl58BkMZIhc+CJrTEHv+v7eZthZu1evMp
+         fs2bkyB2eXkaf8bWiIgfYB8jN7aEBIYezCY7KFEmn09LLvu3IZXSb1j7U9ghlgvJLmpR
+         3guA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711395759; x=1712000559;
+        d=1e100.net; s=20230601; t=1711395777; x=1712000577;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KuzOZKWfexqxW20YM2/HIeua9/M06pZ/a0UxyioS85Q=;
-        b=acFFCz1uMvUDXBHKtvrZ/tR0xZ3QGh9BlszGgJAiaru4e1NIMmdSCrYyC3IbAaEpjI
-         j7wRm3SAsDys/+pp/N9lbN5krzKT9FqewDelV/QRrbsb/6dNO9W6WZtlmauiHxZPqi6E
-         7lxeQIFyaQY4kJKfplzCGUtyXfCYXnSdwcXXOFg+sao9dHt9OkopfSES9KZUqbM6x6sh
-         ho1mF6CxLkZiLevFNXJrPvdq9LTQl1KgLBz5JuxsYFB+XptgAeBhUkfjuCPB6OVwvg6s
-         NdF66DI/bd9YQoj8KWtKhVlsIVCW2GtaEdl4QoOXpb0OeUdN8CCwKFw7vyxMp1kF6Ngb
-         7mTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrr836xjqSxk8+L3rkE30gj1pzNAeB9EI/QQ95E3llZAIBmRrRvXJPCDZs26U6aM4K7E3YGbz8NTEfNhGpkR0fxCDXi6GPbDAXie7R
-X-Gm-Message-State: AOJu0YyMMrGlw6vEYQ5V8I6ombbwPXz34+HnHtEHf6rIW6rNxoRWgbE/
-	jDTjXxoR7reyLYslhU4CjSaOGX2ncm8TObxMSxI31vHajNlHodj6Z5yVp496rPY=
-X-Google-Smtp-Source: AGHT+IHJIy9p7akZElmhV942HZMfhlm4dCbkmPK86uIB7i5F9c7KRMFn/SQ4Eba22ZuVgffwIIA3og==
-X-Received: by 2002:a50:c357:0:b0:56c:1884:90cb with SMTP id q23-20020a50c357000000b0056c188490cbmr1784534edb.5.1711395759202;
-        Mon, 25 Mar 2024 12:42:39 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id cn28-20020a0564020cbc00b0056bf2e2c898sm3307359edb.1.2024.03.25.12.42.38
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/GNuMW47+QhhyncApcMkdyIFe1uqQGtbO15QL9ZbpIE=;
+        b=Eo9EDf6adtNsuwBBttcZfI5bDuB9WvF0UeP7tgfcbZuw042Pe3MlqSP7dOPn2zidTp
+         9cVNowKHO/TFMwY4LV+0o8bpC2PYGLsdi5LB2Le57L2jglPujgscD7OVBOXsBwXgitHz
+         WjKA9gqDfTm48qFgkl/SQUzyhQu368T4hlHNrWa0DLIOP31LnzwXqLNfBNNAEUx3Dchk
+         n2YjY4HMyEfi6slkBnoRgJej73UsjgC3cbyfhY2BA+sb90kfdDENfsHqSIMvglYN5T22
+         yDExT83xrmBw7bZaFv73whqxz2Nm4shCwXakrFL37V7WIlFS1VNSR06kCId3gj8UL4kf
+         iIEg==
+X-Forwarded-Encrypted: i=1; AJvYcCXscZHjxmxjnaCELw0TAgrqnMbt2oTdcWRL5+HXkW2FHr0SMqQt4W1AuIAFNFarL/MJMLOt9vKGTpyiZjbux7Y5c+61x1/WkF06Xq99
+X-Gm-Message-State: AOJu0YxgVEpBK1erBzoOD1CLuqcqYqK3OksysQ005iTrEhRYl++v7fDC
+	VFlPB7xRsKZeO2zQ8iCjACVf4dzLvsdhF1YYCaAZt/ZYuYh8xw0Y
+X-Google-Smtp-Source: AGHT+IGkI4tSgVn02uvMhd2KQNOdBj6qxyLhLLwWYxO6BM36ivtP6lrVG2lIDV8L+3zcaXhWHsaRvA==
+X-Received: by 2002:a17:902:d542:b0:1dc:ce6e:bf06 with SMTP id z2-20020a170902d54200b001dcce6ebf06mr11844953plf.0.1711395776757;
+        Mon, 25 Mar 2024 12:42:56 -0700 (PDT)
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id m12-20020a170902bb8c00b001e0449adfaesm5057733pls.191.2024.03.25.12.42.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 12:42:38 -0700 (PDT)
-Date: Mon, 25 Mar 2024 22:42:35 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Prasad Pandit <ppandit@redhat.com>, florian.fainelli@broadcom.com,
-	bcm-kernel-feedback-list@broadcom.com,
-	linux-arm-kernel@lists.infradead.org, rjui@broadcom.com,
-	sbranden@broadcom.com, linux-staging@lists.linux.dev,
-	linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Prasad Pandit <pjp@fedoraproject.org>
-Subject: Re: [PATCH v3] staging: bcm2835-audio: add terminating new line to
- Kconfig
-Message-ID: <201b6c82-1ebf-4dc2-9221-4fc87d1dd565@moroto.mountain>
-References: <20240313114126.1418453-1-ppandit@redhat.com>
- <2024032540-scrubbed-reluctant-8860@gregkh>
+        Mon, 25 Mar 2024 12:42:56 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 25 Mar 2024 09:42:55 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Allen Pais <apais@linux.microsoft.com>
+Cc: jiangshanlai@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] kernel: Introduce enable_and_queue_work() convenience
+ function
+Message-ID: <ZgHTvwIerkcRem2s@slm.duckdns.org>
+References: <20240325180201.6027-1-apais@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,38 +69,93 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2024032540-scrubbed-reluctant-8860@gregkh>
+In-Reply-To: <20240325180201.6027-1-apais@linux.microsoft.com>
 
-On Mon, Mar 25, 2024 at 07:04:15PM +0100, Greg KH wrote:
-> On Wed, Mar 13, 2024 at 05:11:26PM +0530, Prasad Pandit wrote:
-> > From: Prasad Pandit <pjp@fedoraproject.org>
-> > 
-> > Add terminating new line to the Kconfig file. It helps
-> > Kconfig parsers to read file without error.
-> 
-> What in-tree parser has a problem with this file as-is?  If it's an
-> out-of-tree parser, that's different, and the tool should be fixed, no
-> need to touch the kernel files for no good reason.
+Hello,
 
-It's annoying to cat a file when it doesn't have a newline on the end...
+The function comment felt a bit too verbose. I applied the following
+compacted version to wq/for-6.10 which hopefully still contains all the
+necessary information. Please let me know if you disagree.
 
-dcarpenter@moroto:~/progs/kernel/trees$ cat -n drivers/staging/vc04_services/bcm2835-audio/Kconfig
-     1  # SPDX-License-Identifier: GPL-2.0
-     2  config SND_BCM2835
-     3          tristate "BCM2835 Audio"
-     4          depends on (ARCH_BCM2835 || COMPILE_TEST) && SND
-     5          select SND_PCM
-     6          select BCM2835_VCHIQ if HAS_DMA
-     7          help
-     8            Say Y or M if you want to support BCM2835 built in audio.
-     9            This driver handles both 3.5mm and HDMI audio, by leveraging
-    10            the VCHIQ messaging interface between the kernel and the firmware
-    11            running on VideoCore.dcarpenter@moroto:~/progs/kernel/trees$
-                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Thanks.
 
-So you could resend with that as a justification.  But, yeah, it's a
-good idea to fix the tool as well.
+--- 8< ----
+From 474a549ff4c989427a14fdab851e562c8a63fe24 Mon Sep 17 00:00:00 2001
+From: Allen Pais <apais@linux.microsoft.com>
+Date: Mon, 25 Mar 2024 18:02:01 +0000
+Subject: [PATCH] workqueue: Introduce enable_and_queue_work() convenience
+ function
 
-regards,
-dan carpenter
+The enable_and_queue_work() function is introduced to streamline
+the process of enabling and queuing a work item on a specific
+workqueue. This function combines the functionalities of
+enable_work() and queue_work() in a single call, providing a
+concise and convenient API for enabling and queuing work items.
+
+The function accepts a target workqueue and a work item as parameters.
+It first attempts to enable the work item using enable_work(). A successful
+enable operation means that the work item was previously disabled
+and is now marked as eligible for execution. If the enable operation
+is successful, the work item is then queued on the specified workqueue
+using queue_work(). The function returns true if the work item was
+successfully enabled and queued, and false otherwise.
+
+Note: This function may lead to unnecessary spurious wake-ups in cases
+where the work item is expected to be dormant but enable/disable are called
+frequently. Spurious wake-ups refer to the condition where worker threads
+are woken up without actual work to be done. Callers should be aware of
+this behavior and may need to employ additional synchronization mechanisms
+to avoid these overheads if such wake-ups are not desired.
+
+This addition aims to enhance code readability and maintainability by
+providing a unified interface for the common use case of enabling and
+queuing work items on a workqueue.
+
+tj: Made the function comment more compact.
+
+Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+---
+ include/linux/workqueue.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+index bfcf8d38f4b1..2df1188c0f96 100644
+--- a/include/linux/workqueue.h
++++ b/include/linux/workqueue.h
+@@ -682,6 +682,32 @@ static inline bool schedule_work(struct work_struct *work)
+ 	return queue_work(system_wq, work);
+ }
+ 
++/**
++ * enable_and_queue_work - Enable and queue a work item on a specific workqueue
++ * @wq: The target workqueue
++ * @work: The work item to be enabled and queued
++ *
++ * This function combines the operations of enable_work() and queue_work(),
++ * providing a convenient way to enable and queue a work item in a single call.
++ * It invokes enable_work() on @work and then queues it if the disable depth
++ * reached 0. Returns %true if the disable depth reached 0 and @work is queued,
++ * and %false otherwise.
++ *
++ * Note that @work is always queued when disable depth reaches zero. If the
++ * desired behavior is queueing only if certain events took place while @work is
++ * disabled, the user should implement the necessary state tracking and perform
++ * explicit conditional queueing after enable_work().
++ */
++static inline bool enable_and_queue_work(struct workqueue_struct *wq,
++					 struct work_struct *work)
++{
++	if (enable_work(work)) {
++		queue_work(wq, work);
++		return true;
++	}
++	return false;
++}
++
+ /*
+  * Detect attempt to flush system-wide workqueues at compile time when possible.
+  * Warn attempt to flush system-wide workqueues at runtime.
+-- 
+2.44.0
 
