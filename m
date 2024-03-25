@@ -1,107 +1,174 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B226C224DB;
-	Mon, 25 Mar 2024 19:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AF54654D;
+	Mon, 25 Mar 2024 19:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711396466; cv=none; b=IGk6lOxxqdOEmQ2770ShU/Ncbd4Msd8VrLXoztLNswHlw8G8O/1GZ8itGsVhy3RZLZ9MuIqVbFnxXXVDJvKyFZIHVEhMZv2INJc3Z5vyYvZ471zmtdQFIGQgDrCoZoQoHDQ8wsGw5Yo9w//5fRjHFjtdJNNdBpjGM+HUpIRtb2w=
+	t=1711396488; cv=none; b=ijti8HpfAuwXZEBxN52b+d+5UqcbxYftjaSYoyl6Wveq1ITW2XgFJyJe+ZaC5Bx/a9eZoCuLJPQ2b4yMLASlvg+DXQZGWab9LDl9K5bg4lMRaW/djvoKtG734ggpLxFeJvD/mDdchYy2xpDuVGUePqttlLW17Bnvl9DLS3Hzrw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711396466; c=relaxed/simple;
-	bh=Hy2D4JJqgBzY08cEDq6AeRjSKFZX+A9Y1A28xMMdobI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T0KMKLpyYA9iN6zduEoj9+eSx1QCfjbm1uVPSaAvO8MnwdBvLyZ7CQ+dhzzQNi3cOT6nRXeC7n/1gqOHX/1kPDRMtN590PoahF7/eo4hd1KOH7JRGA+oZtjuPbFCvBr6v7DMexvK7gCWbileVobyVKaP8L/LHP0nFGwLoXpSzmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=jGiLYVk0; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1711396488; c=relaxed/simple;
+	bh=PDJS0LCKHcVBTSHdWND99CZ76nchhOVLaj+dCz8+awU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uNkl6Je4PUkzz37M7T6iCmTX3uLxuwxpdpwUZsSJt3jjsjkaxsQSaNe/+rtyT/QHBy3QEYadhM7LtJJEEtPxezZP7V8zwnn0hxvxVdmIrdBtlmZPxz5eEW2CM7aH2e5EXqr6J8UAQ0b8TLRjvK5UjlmEhw8Ydha32/hyvwqy700=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WXAPgAvf; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="jGiLYVk0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=btW7kQnjDmUmvNE23NH4vh6GdFNyilpMQ7GM8BLzUxo=; b=jGiLYVk075whzTFEz9PjZ7Cig8
-	Dvb2S2yw90zt5tTY3q69uUjfk13fVEeAeZy1pXgZMT6w+Q5JMTI1zPmBfjTg/XaofApLcyBbQWSA8
-	BVET1D7c4X+8z5pg3MGJFvycQpgEsTHkjWmAxVURxIEiLuE61OO/mGHw5mB83tIXQq6zVNLxQzY6O
-	108aP6tkrjQnM3o9HBiEWi/+76kphM7w1dxx2b2m/lyNq2iOY5/+tcIoZ4A7OORJ4iNEQVsGWuQgh
-	XmlRUNi1ntn7Rp02pLQ7n1w0SR257tR1VSpJeo9oZQwwutFSlXs7ZEetTdicVH7o0BYiSTmq15WmM
-	fdUEKH7g==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1roqOb-00GXMi-0K;
-	Mon, 25 Mar 2024 19:54:13 +0000
-Date: Mon, 25 Mar 2024 19:54:13 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Steve French <smfrench@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	CIFS <linux-cifs@vger.kernel.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Christian Brauner <christian@brauner.io>,
-	Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
-	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>
-Subject: Re: kernel crash in mknod
-Message-ID: <20240325195413.GW538574@ZenIV>
-References: <CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com>
- <20240324054636.GT538574@ZenIV>
- <3441a4a1140944f5b418b70f557bca72@huawei.com>
- <20240325-beugen-kraftvoll-1390fd52d59c@brauner>
- <CAH2r5muL4NEwLxq_qnPOCTHunLB_vmDA-1jJ152POwBv+aTcXg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXAPgAvf"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e704078860so3321196b3a.0;
+        Mon, 25 Mar 2024 12:54:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711396485; x=1712001285; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TKGh+mBJ4bSqQkNDxYsl6/3gDdvQ9dd9H+apbAhd0cg=;
+        b=WXAPgAvfdwvM8MCCwCr2PT3f1Ax5nw9BCwhdLZLHVhYQgLSzpRPZlmIz21W6sFUT0A
+         H0Z+Zvw/dix0uUgEGIQtEcwAl926rw595kg58/2aWr+BJnzlhICyVUQioR2QGIdQ1zf/
+         jXLTZuD9INyYXZ6z3P7xfsjFWWGISoVUMNP7ithspbCgwkLwFrC4n0gQqbQKNFbbZyOE
+         rf8YVZTXdswWz2FBkgTGpF43SIgRdxoe8aV0H8ngD3sW23ZM4qzjRptouDVqAUXdyyvN
+         ++bNEi6eluKurnZ7yMsAqRYj72wj75k/NW7pf7+iKgD87vR9CULCnmhhTtX/CZd9YkBA
+         kQfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711396485; x=1712001285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TKGh+mBJ4bSqQkNDxYsl6/3gDdvQ9dd9H+apbAhd0cg=;
+        b=kzeo8xSBKu7eaveYOQERoIMDlxvRQ6nIk/555Ig4qAKLfy+1zbRkBBayo22xsNiSxL
+         vcLyfYvBd+54cjNrb50aHJUajs6De0g+6rb04mWuv5NShpEwFcvaSa5kwsq25WjUoVwk
+         cGgVqFOeqX4GvKH5m+OaifpaZhOrTvG8TKsnl0VfOFaRkbZQFjWe6ZzSGrJG+XrYoGcr
+         hfL/78tAJUUjwwcnoe1QoHQB4wmNAQwvZ2bhzCDUrB6EwaK1yA6Q/p4VSU11Nk7PJRck
+         drPbxVH1wyc4fRSva401+HYeyBsivchUApMcjW+Jkfudzj78QL1BDMFWduNeMr6TnKE2
+         BghA==
+X-Forwarded-Encrypted: i=1; AJvYcCUmDSS3g2yXnKdpfywfjn/DR+jwK4j8O5tDcA9YLS1Sh/yU5/G5WqZvddE46Kb5PPU6UkGRdcTGmVlDPS6B4SYYqP2+Cq4teT6oUHZp
+X-Gm-Message-State: AOJu0YwQQKmoEG3/LFoHZIKghcdFqK6DEbVhe1eeBD29+xPNC0ojFJat
+	lZPKRf5a/u8Go6tsoHFF8C9+T3a0nB/pxitLy/iMlttiKGtuNuBpkAjgN0WF
+X-Google-Smtp-Source: AGHT+IENhWGbwBxi2k1Je3D+EGHuHF2yKXZPWGntwgjaXQahs1ZLLIScPpEVGH+NO1qhHy9E5t4ohw==
+X-Received: by 2002:a05:6a21:3945:b0:1a3:d406:4344 with SMTP id ac5-20020a056a21394500b001a3d4064344mr773058pzc.32.1711396484747;
+        Mon, 25 Mar 2024 12:54:44 -0700 (PDT)
+Received: from wedsonaf-dev.home.lan ([189.124.190.154])
+        by smtp.googlemail.com with ESMTPSA id q1-20020a170902dac100b001e06c1eee22sm5099585plx.74.2024.03.25.12.54.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 12:54:44 -0700 (PDT)
+From: Wedson Almeida Filho <wedsonaf@gmail.com>
+To: rust-for-linux@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	linux-kernel@vger.kernel.org,
+	Wedson Almeida Filho <walmeida@microsoft.com>
+Subject: [PATCH 00/10] Allocation APIs
+Date: Mon, 25 Mar 2024 16:54:08 -0300
+Message-Id: <20240325195418.166013-1-wedsonaf@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH2r5muL4NEwLxq_qnPOCTHunLB_vmDA-1jJ152POwBv+aTcXg@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 25, 2024 at 11:26:59AM -0500, Steve French wrote:
+From: Wedson Almeida Filho <walmeida@microsoft.com>
 
-> A loosely related question.  Do I need to change cifs.ko to return the
-> pointer to inode on mknod now?  dentry->inode is NULL in the case of mknod
-> from cifs.ko (and presumably some other fs as Al noted), unlike mkdir and
-> create where it is filled in.   Is there a perf advantage in filling in the
-> dentry->inode in the mknod path in the fs or better to leave it as is?  Is
-> there a good example to borrow from on this?
+Revamp how we use the `alloc` crate.
 
-AFAICS, that case in in CIFS is the only instance of ->mknod() that does this
-"skip lookups, just unhash and return 0" at the moment.
+We currently have a fork of the crate with changes to `Vec`; other
+changes have been upstreamed (to the Rust project). This series removes
+the fork and exposes all the functionality as extension traits.
 
-What's more, it really had been broken all along for one important case -
-AF_UNIX bind(2) with address (== socket pathname) being on the filesystem
-in question.
+Additionally, it also introduces allocation flag parameters to all
+functions that may result in allocations (e.g., `Box::new`, `Arc::new`,
+`Vec::push`, etc.) without the `try_` prefix -- the names are available
+because we build `alloc` with `no_global_oom_handling`.
 
-Options:
-	1) make vfs_mknod() callers aware of the possibility, have the ones
-that care do lookup in case when return value is 0 and dentry is unhashed.
-That's similar to what we do for vfs_mkdir().  No changes needed for CIFS
-or fs/namei.c (i.e. do_mknodat()), unix_bind() definitely needs a change,
-ecryptfs can stay as-is, overlayfs just needs to stop complaining when it sees
-that situation, nfsd might or might not need a change - hadn't checked yet.
-In that case we document ->mknod() as "may unhash and return 0 if it wants
-to save a lookup".
-	2) make vfs_mknod() check for that case and have it call ->lookup()
-if it sees that.  I don't see any benefits to that, TBH - no performance
-benefits anywhere and no real simplification for ->mknod() instances.  It
-does avoid the need to change anything in CIFS, though.
-	3) require ->mknod() instances to make dentry positive on success.
-CIFS needs a fix, documentation gets updated to explicitly require that.
-AFAICS, nothing else would need to be touched, except possibly adding
-a warning in vfs_mknod() to catch violation of that rule.
+Lastly, the series also removes our reliance on the `allocator_api`
+unstable feature.
 
-Note that cifs_sfu_make_node() is the only case in CIFS where that happens -
-other codepaths (both in cifs_make_node() and in smb2_make_node()) will
-instantiate.  How painful would it be for cifs_sfu_make_node()?
-AFAICS, you do open/sync_write/close there; would it be hard to do
-an eqiuvalent of fstat and set the inode up?  No need to reread the
-file contents (as cifs_sfu_type() does), and you do have full path
-anyway, so it's less work than for full ->lookup() even if you need
-a path-based protocol operations...
+Long term, we still want to make such functionality available in
+upstream Rust, but this allows us to make progress now and reduces our
+maintainance burden.
 
-Does that thing have an equivalent of fstat() that would return the
-metadata of opened file?
+In summary:
+1. Removes `alloc` fork
+2. Removes use of `allocator_api` unstable feature
+3. Introduces flags (e.g., GFP_KERNEL, GFP_ATOMIC) when allocating
+
+Wedson Almeida Filho (10):
+  rust: kernel: move `allocator` module under `alloc`
+  rust: alloc: introduce the `VecExt` trait
+  kbuild: use the upstream `alloc` crate
+  rust: alloc: remove our fork of the `alloc` crate
+  rust: alloc: introduce allocation flags
+  rust: alloc: introduce the `BoxExt` trait
+  rust: alloc: update `VecExt` to take allocation flags
+  rust: sync: update `Arc` and `UniqueArc` to take allocation flags
+  rust: init: update `init` module to take allocation flags
+  rust: kernel: remove usage of `allocator_api` unstable feature
+
+ rust/Makefile                        |   16 +-
+ rust/alloc/README.md                 |   36 -
+ rust/alloc/alloc.rs                  |  452 ----
+ rust/alloc/boxed.rs                  | 2463 -----------------
+ rust/alloc/collections/mod.rs        |  160 --
+ rust/alloc/lib.rs                    |  288 --
+ rust/alloc/raw_vec.rs                |  611 -----
+ rust/alloc/slice.rs                  |  890 -------
+ rust/alloc/vec/drain.rs              |  255 --
+ rust/alloc/vec/extract_if.rs         |  115 -
+ rust/alloc/vec/into_iter.rs          |  454 ----
+ rust/alloc/vec/is_zero.rs            |  204 --
+ rust/alloc/vec/mod.rs                | 3683 --------------------------
+ rust/alloc/vec/partial_eq.rs         |   49 -
+ rust/alloc/vec/set_len_on_drop.rs    |   35 -
+ rust/alloc/vec/spec_extend.rs        |  119 -
+ rust/bindings/bindings_helper.h      |    3 +
+ rust/kernel/alloc.rs                 |   68 +
+ rust/kernel/{ => alloc}/allocator.rs |    6 +-
+ rust/kernel/alloc/boxext.rs          |   60 +
+ rust/kernel/alloc/vecext.rs          |  120 +
+ rust/kernel/error.rs                 |   13 +-
+ rust/kernel/init.rs                  |   57 +-
+ rust/kernel/lib.rs                   |    5 +-
+ rust/kernel/prelude.rs               |    2 +
+ rust/kernel/str.rs                   |    6 +-
+ rust/kernel/sync/arc.rs              |   44 +-
+ rust/kernel/sync/condvar.rs          |    2 +-
+ rust/kernel/sync/lock/mutex.rs       |    2 +-
+ rust/kernel/sync/lock/spinlock.rs    |    2 +-
+ rust/kernel/types.rs                 |    4 +-
+ rust/kernel/workqueue.rs             |   14 +-
+ samples/rust/rust_minimal.rs         |    6 +-
+ samples/rust/rust_print.rs           |    4 +-
+ scripts/generate_rust_analyzer.py    |    2 +-
+ 35 files changed, 340 insertions(+), 9910 deletions(-)
+ delete mode 100644 rust/alloc/README.md
+ delete mode 100644 rust/alloc/alloc.rs
+ delete mode 100644 rust/alloc/boxed.rs
+ delete mode 100644 rust/alloc/collections/mod.rs
+ delete mode 100644 rust/alloc/lib.rs
+ delete mode 100644 rust/alloc/raw_vec.rs
+ delete mode 100644 rust/alloc/slice.rs
+ delete mode 100644 rust/alloc/vec/drain.rs
+ delete mode 100644 rust/alloc/vec/extract_if.rs
+ delete mode 100644 rust/alloc/vec/into_iter.rs
+ delete mode 100644 rust/alloc/vec/is_zero.rs
+ delete mode 100644 rust/alloc/vec/mod.rs
+ delete mode 100644 rust/alloc/vec/partial_eq.rs
+ delete mode 100644 rust/alloc/vec/set_len_on_drop.rs
+ delete mode 100644 rust/alloc/vec/spec_extend.rs
+ create mode 100644 rust/kernel/alloc.rs
+ rename rust/kernel/{ => alloc}/allocator.rs (96%)
+ create mode 100644 rust/kernel/alloc/boxext.rs
+ create mode 100644 rust/kernel/alloc/vecext.rs
+
+
+base-commit: 768409cff6cc89fe1194da880537a09857b6e4db
+-- 
+2.34.1
+
