@@ -1,158 +1,99 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0728016F829
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE6F13B58D
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711362979; cv=none; b=Zpup5fijx6Pl7U++5OsWFWrGYcoICnSNe51zyQLdYLtIbGNSLzlPgWDGYeWh4BPio41MejYYyYBuAqbdPvmfObP755BlN5O3Oam7/qhq/iR02Xs6UlQxaeHKisA1070zC+pNxG0icm6TqRpAFY2S0uD42JD3QlEjx9MqlVaZp0I=
+	t=1711363003; cv=none; b=HUOOxJpSvfGLtNDFcuThXAGVI+JdcjlG7ePf5zmiYghLtcJ1wHa0RWd2Qw0TxAl9maNVTTwWK96r8s1UNyzaaK5ZoKIcXiAh/CNNu18oDzP+9w2lgbwbIRrxTCqmVtzASB4nfKCf7MLC8u9o86UHT6wwjMDu+0bcy1kHug0znL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711362979; c=relaxed/simple;
-	bh=jqvU3Y2sBVXpLMRkDMJYk9Nm5Kg4ldvtAjFdlImDn3k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SzSdEO9O5kJSK0qbNRrctsfbGS2Lxx6pl8GQe9b4RonC4KUAwbDs+b5lcWbOfJukD2RvUkLgpg9/3vaM99DOVwyds01uVCSsdAEvsG8/tvrXbef4P7CVQXtzj42MhRq0G5nsxkC7ovvBv0HmFqsOszEeyw4wf+hXVtlQLzqZtOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oyyvSCR4; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711363003; c=relaxed/simple;
+	bh=YdAGvLHgaCqu4Jw0vs2raNroBxAXX1REtXxAcoS0g+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cPgxxaHYBx0pIL+OZUXp19cjYb+EXmNm2GTACJa1zntsT6JTEH0s54H8Z5rJXcSC8m1OgTVsw4j3gVtM85Ws7y3/wMQ18vD8KUMnFHQ1msqcJ5kFVc/nmD16ZJoUBWjPqYRh0qfdL794En/3060+5lCzTzcQQwX67EE9vWfOFDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRgqPuxZ; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oyyvSCR4"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a465ddc2c09so231969266b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:36:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRgqPuxZ"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a4a34516955so101964166b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:36:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711362974; x=1711967774; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9sOPezhldmxSnr8OT7bAHjF4t98n/YFRx58g6GLuW1s=;
-        b=oyyvSCR4onxuZ5WG3yDM3NZKytDqtmFRVbIBEHpGrgxbLccCUF+vAoFQgcKlehRMT4
-         6Xx7dsnoSY6AjQhQ50nS7vG92eynCwz0r2yskCLi75Dh5gTQzUwZ/pcEZo/F+p7k20Qa
-         PubTvMCGTobjcqOWjWNddyO7eP4dEcrnI+eNFKNyIixxxTxbXWAEFJ5XmpXRomDW80ol
-         ubeLYROG/gf99pUY8diaxrn7uB/Klz4oxya5L2u91yh2FC1diujmh39SJS/Hb4mTN6m+
-         BO1TIlHe8Yd7FjfDJjiu5X01bBaexh1T9Dt2U7OJcWxQ46uT/IHTZbXMcHQPr53D83Gn
-         V6Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711362974; x=1711967774;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1711363000; x=1711967800; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9sOPezhldmxSnr8OT7bAHjF4t98n/YFRx58g6GLuW1s=;
-        b=sfuZLjK44YI0Ulo/cQUMIWMOLKgDhpi7bQR88vRq+92YZUSQy1dlus46Yf7vWOqOwq
-         GiJy7O3Gtft5iVU2TmQuDACx6VA+00UogfzhnXtroje2eSvqqb/WmgXLNTdCfIrdtVyv
-         NyB1mCj/tiB2I0Uw7dtf53wsJq6GTfrAVR4T3MLc0Wk09UCf/KWr3iUMu2ko3aEMKbhb
-         9FmSSIsM2EEd4XkEm4H0psg+o+pSLokjgejWVK8pNYr+YsAidwrVH12w97DL2q8EPoWl
-         U+MrPJvoGfJ4mWh7esNyGUTGxuPZaEOL0Gjw7iwlxaVH630FV472s9bnJNB0jHk0Sd/k
-         1UgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWc1/BRSJKzEuHdPgVsgTsBVUzX9ZJKyL4DMeOVliE8zJAKD986514oOlZ7H8NT4nOZBBqJSey5vf3JEdLDI1kcedpVBjGrEHEEKBKb
-X-Gm-Message-State: AOJu0YzJNsKxzj0f1KJ9kfLpdxc8+DcAbPm8eki8Zv+SoUFT3vYRWWdV
-	qLe6BRU9lKCvS6beymuHX1he0Jwvzl0u35FP1SBkPRpEcvsQnl6MhV4PEBCRPn4=
-X-Google-Smtp-Source: AGHT+IGxM8s228b1XWbE+SeGTrM1fDdyMya66yBrGFVuE7WBvD2ok2jlRcn2B1rUDQ1HBTx/Bvze3Q==
-X-Received: by 2002:a50:9e44:0:b0:568:d19e:7ab0 with SMTP id z62-20020a509e44000000b00568d19e7ab0mr5606866ede.36.1711362974289;
-        Mon, 25 Mar 2024 03:36:14 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id dm28-20020a05640222dc00b0056b7ed75a46sm2827319edb.27.2024.03.25.03.36.12
+        bh=yoLFByqv9SuKcb48SqGjXzMZ/gFLFOWm84zGVd1qysA=;
+        b=lRgqPuxZZAM08nUApBbz4DYLHqBcSAzSd7iCjg2hoixB09E7MyXwfv+W4w84gWKpZN
+         oDZ+KAbKrRxQX69nmj9lxKZ3zNtRqSMqJqCUMuF4+/w28VCLu0dBafBnDXEQ6EzDjyZD
+         XN7NgFEP7doiEWo9Hi+Imngq2RUevZNbi16K++arq2ajF5DqRq+Xtzpgk6xG4BED57p7
+         aed3Nd1LPJnp02cxda/HBqf9HT6NzbeuGny1NBytQtFASuW5PM/aJH5b7V70AHw9r8vY
+         yE8cjNPyxidGsSBIc072IOpmhuxQLIJxRjCzbuq4J0ot71Y0Fga0BBsq1DXPcXGKcuW+
+         pr8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711363000; x=1711967800;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yoLFByqv9SuKcb48SqGjXzMZ/gFLFOWm84zGVd1qysA=;
+        b=vxm997gIP2YEYsX9fL9TYwnGPvaffzB3IxhzbYWRoYWCcqrpql8td12U3GENhMUVyL
+         lkaK710mY7aMJtMe/DsXeoWQ85FeGh6nAfZF6gnjwPxYK5PqGYNHa3grrhZxyO44M65u
+         g2GpMAFTufUYfNeEjZ0jTzemhpBFbWASTADSjzrb1yVWcP70otSN4Yac/DLa+SFXLLdx
+         qqGBbuBISrgMnjK3Z3weRyZ4I0/PVKN4m4lZ/90KDxh3bD1nbrtj4IM5uszNiZ6S/qOM
+         Q2bRMipD5iJUBwArKpXiIdjLXmH0lgcJiBiyFC/tK8Zs39706zvEqvr+sSulbN8tZ9LT
+         65JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVj83+kKpOy0nbpDoIrdWRbG8fYXZqNR+M45CeRYnS9/DL0KrkCZdVViBny8ggoWXUZSh7yBON2pc9N5QPWJoGfkvk7/dCFCIPHae0B
+X-Gm-Message-State: AOJu0Yz2QpW4Q4Bt4oosAtCALEBzRFmxNk3rHfpJ4eja5IC7fWIwruxz
+	IeZ0Oqlr5gyTxMFeJP/MQnOzgbNryfBbIHpd/cmDxGSzbrlFbXtP
+X-Google-Smtp-Source: AGHT+IGZjtDw+CT5fwdF/rhf2TA5KqwCAZIY76ngtATg4psvxNZfS1W//CP5fRFQ2RjsvdULEbz2vw==
+X-Received: by 2002:a17:906:fc0d:b0:a46:4d16:439b with SMTP id ov13-20020a170906fc0d00b00a464d16439bmr4344370ejb.43.1711362999349;
+        Mon, 25 Mar 2024 03:36:39 -0700 (PDT)
+Received: from gmail.com (1F2EF63C.nat.pool.telekom.hu. [31.46.246.60])
+        by smtp.gmail.com with ESMTPSA id p2-20020a1709060e8200b00a46cddf1efbsm2927821ejf.29.2024.03.25.03.36.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 03:36:13 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jianhua Lu <lujianhua000@gmail.com>,
-	Del Regno <angelogioacchino.delregno@somainline.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Rob Herring <robh@kernel.org>
-Subject: [RESEND PATCH v4 1/3] dt-bindings: display: panel: add common dual-link schema
-Date: Mon, 25 Mar 2024 11:36:09 +0100
-Message-Id: <20240325103611.28240-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        Mon, 25 Mar 2024 03:36:38 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Mon, 25 Mar 2024 11:36:36 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: peterz@infradead.org, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, qyousef@layalina.io,
+	linux-kernel@vger.kernel.org, vschneid@redhat.com
+Subject: Re: [PATCH v3 0/2] sched: Minor changes for rd->overload access
+Message-ID: <ZgFTtAOw39tIyfzR@gmail.com>
+References: <20240325054505.201995-1-sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325054505.201995-1-sshegde@linux.ibm.com>
 
-Add schema with common properties shared among dual-link panel ICs.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
+* Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
 
-Changes since v3:
-1. Re-phrase description of binding and ports (Laurent)
-v3: https://lore.kernel.org/all/20230823081500.84005-1-krzysztof.kozlowski@linaro.org/
+> v2 -> v3:
+> - Wrapped check for value change inside ser_rd_overload_status
+>   as suggested by Qais.
+> - Added reviewed-by tags.
+> 
+> v1 -> v2:
+> - dropped Fixes tag.
+> - Added one of the perf probes in the changelog for reference.
+> - Added reviewed-by tags.
+> 
+> tl;dr
+> When running workloads in large systems, it was observed that access to
+> rd->overload was taking time. It would be better to check the value
+> before updating since value changes less often. Patch 1/2 does that.
+> With patch updates happen only if necessary. CPU Bus traffic reduced a
+> bit. No significant gains in workload performance.
 
-Changes since v2:
-1. New Patch
-v2: https://lore.kernel.org/all/20230502120036.47165-1-krzysztof.kozlowski@linaro.org/
-v1: https://lore.kernel.org/all/20230416153929.356330-1-krzysztof.kozlowski@linaro.org/
----
- .../display/panel/panel-common-dual.yaml      | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/panel-common-dual.yaml
+Could you please post this against the latest scheduler tree, ie. tip:sched/core?
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-common-dual.yaml b/Documentation/devicetree/bindings/display/panel/panel-common-dual.yaml
-new file mode 100644
-index 000000000000..cc7ea3c35c77
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/panel-common-dual.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/panel-common-dual.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common Properties for Dual-Link Display Panels
-+
-+maintainers:
-+  - Thierry Reding <thierry.reding@gmail.com>
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-+
-+description:
-+  Properties common for Panel IC supporting dual link panels.  Devices might
-+  support also single link.
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    additionalProperties: false
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: First link
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: Second link
-+
-+      "#address-cells": true
-+      "#size-cells": true
-+
-+    required:
-+      - port@0
-+
-+# Single-panel setups are still allowed.
-+oneOf:
-+  - required:
-+      - ports
-+  - required:
-+      - port
-+
-+additionalProperties: true
--- 
-2.34.1
+Thanks,
 
+	Ingo
