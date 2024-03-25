@@ -1,153 +1,88 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0842C1292C4
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E9214AD1C
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711343547; cv=none; b=n05JkIxIRrv7dK9EFel6kTQ9hcYoeBzKru2RLz/5szculwTxi36JT0c7WbwwUDFtIQjdHeoGIkkPdTLNr3XsKPlMpCL3+2ZBDf23cAarHUPp98VUhjwOuVArV/N1ZeZdT9+qeIbl/F/YlMBYB9G8HNJbKuRmio7SOd6V/CpSzhw=
+	t=1711345962; cv=none; b=VtW9JzfAEYYIGLTc4cEEJTXrr8ymUGBg6mhKh9YbUJrCpz6UFnctGz5qgVSUGcnKpgKTYvbKkdD/V5bsMQK1X1/v//uPBBUxHp54iXzWQ7upFjpMlwK4gylzwCc8RnU0ypxBQCEAFkLR/spyuj9A4/lE8cERTkAwcXCFpkeRBcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711343547; c=relaxed/simple;
-	bh=vNoEyKnp0XNLjr8zfpvmBh18zHPMtXvwf6EdNq+m0Qw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jFWrVXHEp4gs/V9yBrIU6Uqb4R5UefXkqVIhKOizcdUXhKh9lKivwy+PMpsKdY/pdVVUSiM4HlxILhOR+J54Eh+zeHYvmpcMoPpeaG+O8x9G2fyhU2nH/VrnfnRK/l1qrxihbnkZ7dpucI5Xo8SG8W0KU1VW3TlXNkDjbyWvi34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RtSmV9og; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1711345962; c=relaxed/simple;
+	bh=Ca+XvmlXKeGYPksLbW1qY3T/nyJfcNvs3uDjLng276o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UQ325qgiy+u2nc9tZZiVb2zuwGZ5wvb47K+VjA/ttRZHntZ8k+moTGyJ3eIPNbtioqiNVmyh2SNiGwkxuLF7N3C1FweC+aTJUKNEuumlkv78pJnJvGw4RlWfyMg9rH6x8cgWPIZYHf+4GSwcRME3MK29Raikz1J2/K9qyKJyz7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rvgUnoWh; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RtSmV9og"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42P4x8C4014876;
-	Mon, 25 Mar 2024 05:12:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=sy1iP2H7Z6mMOmvoxKSAWOB06oq7j8GbeRiGtH9T2Zw=;
- b=RtSmV9ognkyJm/vll7hI78vccArMZ0Qk0xW7kgYZcZO7vkwqZPq0+KrVkW1jEP1re9TG
- DvPOosbrG1lb8TGwog/vDI+XChwE5jsKFmCnngJVyupYFqJSkTDy06olNStcTdVImN8s
- 6qgaGwLhJLB56DKrWSD3QeUECwboQBKvZraI2+Led965thtSdDdeptBRFtWXgl9sr0ch
- bGjgt1f9jCOKT7lgo1qae7h5rYHuCqwXYRRI/k9miy2FMGHj0noLa8sIiK0tx1rMrQ4+
- RiZzm+r8G0haGpIt85SU03NGyc3a4W5Dak3mAFTNEYbK0YQW8kaVw8mgUlRq/p5ciGL8 vw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2vxr0g16-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:12:13 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42P5CDwN003802;
-	Mon, 25 Mar 2024 05:12:13 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2vxr0g12-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:12:13 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42P4WWCI016409;
-	Mon, 25 Mar 2024 05:12:12 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x29dtq89d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 05:12:12 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42P5C9nr24904246
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 25 Mar 2024 05:12:11 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 848E458056;
-	Mon, 25 Mar 2024 05:12:09 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1DC5B58052;
-	Mon, 25 Mar 2024 05:12:07 +0000 (GMT)
-Received: from [9.124.31.56] (unknown [9.124.31.56])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 25 Mar 2024 05:12:06 +0000 (GMT)
-Message-ID: <59224c52-1864-4920-8bac-9da308d257db@linux.ibm.com>
-Date: Mon, 25 Mar 2024 10:42:05 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rvgUnoWh"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a46a7208eedso541120866b.0
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 22:52:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711345959; x=1711950759; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KQMqHnlXbBG6D/HNGUsVRBxdn6P40gz4MCzg880daGs=;
+        b=rvgUnoWhnl62wMVlwyoUIZisp+Axa53VGkZvIX1W6RnLIgeWac+y1GzIO5azdgH6MN
+         T3hh0xzSaOUYvFAupoK6Ve0WfG4eXNEVuH7tjHtJCvNzLqsOlgEWytn+fharD36oqAux
+         8w+EZjluNppFVQO/qZMvjCdKNTcpQRq8XXZK3HE8PZrYG9gSyArmH35NQK4NH1W1MBWz
+         vYelHQk+CeFBWxWhRe4+h88ielVSHOLcQPZDH5gTPc8euQ49CQFsm+wK8aO9E0k3qHBt
+         aWF/OLjyyvn/USogRJo8zsLjb7auH39WJ8fH8sd5fUTlVhC7hUcUT3R0tcxSK+n9DOJh
+         fu1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711345959; x=1711950759;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KQMqHnlXbBG6D/HNGUsVRBxdn6P40gz4MCzg880daGs=;
+        b=mtnO3PxTCqz6k6iZUhsTRlYL1sR5Cfg0KGIn4LO9npA4DW5zyHeyRT8kX0N5AbCCOG
+         btc2yg0YHJmHKpxTJzbt4oFjm2oBi3W8ps/VjZZuJPMLSMstsMJXPy+tseUTJfGiS+Rc
+         ZXFiU4pU02CvHa6qW11GkCnlmZ/GljWpGGTqE0iixug1J9z2mTSSF8Y5xXiLQuCII3EP
+         1HpuDydFiPorrZAZf30RoPw6Ezq6Cv0STw2Cr4zPAPpV5NjSHv3eRXC4WdZ0FUsBYejm
+         MHGZC0bJ8qayVI2NFcQ95N3WzOhSQX/uqCu89yMBRhBfWhZMx+uLn62dQUDcyzefaBc5
+         iFbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXMhQ+exHCq00BlihRDiyMtBKdbHRKM6VpTn040nUDh8VXGRnO6m8aUnbVA2jy+2DvuHqeoGTuelsgr5Or4pBk0nLXgkqu0Gvd/Ty1
+X-Gm-Message-State: AOJu0Yzn0ft5xhhEvYshZrj4NHGiaHKPc/rRg/qacoDjviZ8aLFOltAI
+	vL2P/8GWCZbuoeKbJXzPAGUW0l9WEJG+S2AO7YSNAcJYki/AcCCSVaQ5HkMAVj0=
+X-Google-Smtp-Source: AGHT+IE+RzKFPbfOR436dI+w5MSweWdPphLKMDQVzXF5JvnyobxPPFXdyQ/VwDYCB4hZSUuYQrE7NQ==
+X-Received: by 2002:a17:906:a28a:b0:a46:8d93:6c4d with SMTP id i10-20020a170906a28a00b00a468d936c4dmr3137486ejz.25.1711345958573;
+        Sun, 24 Mar 2024 22:52:38 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id v22-20020a1709061dd600b00a466fccbe96sm2644067ejh.122.2024.03.24.22.52.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Mar 2024 22:52:38 -0700 (PDT)
+Date: Mon, 25 Mar 2024 08:52:34 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Shahar Avidar <ikobh7@gmail.com>
+Cc: gregkh@linuxfoundation.org, elder@linaro.org,
+	andriy.shevchenko@linux.intel.com, robh@kernel.org,
+	parthiban.veerasooran@microchip.com, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] staging: pi433: Reduce N_PI433_MINORS to conform
+ with N_SPI_MINORS.
+Message-ID: <662306a0-1544-4f16-81cc-68324a0c3172@moroto.mountain>
+References: <20240324093201.793485-1-ikobh7@gmail.com>
+ <20240324093201.793485-3-ikobh7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] sched/fair: Use helper functions to access
- rd->overload
-To: Qais Yousef <qyousef@layalina.io>
-Cc: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, linux-kernel@vger.kernel.org,
-        vschneid@redhat.com, qperret@google.com
-References: <20240322141632.28654-1-sshegde@linux.ibm.com>
- <20240322141632.28654-3-sshegde@linux.ibm.com>
- <20240324011620.f3mmywh44htvlb5m@airbuntu>
-Content-Language: en-US
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-In-Reply-To: <20240324011620.f3mmywh44htvlb5m@airbuntu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: FKqsdZJVIGDZrd7MNagkz52Fii323nvt
-X-Proofpoint-GUID: eJ9BfbFP_vdRx9wKz1EleH_Up7cgWi7F
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_02,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- impostorscore=0 bulkscore=0 adultscore=0 suspectscore=0 spamscore=0
- malwarescore=0 phishscore=0 priorityscore=1501 clxscore=1011
- mlxlogscore=780 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403250027
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240324093201.793485-3-ikobh7@gmail.com>
 
-
-
-On 3/24/24 6:46 AM, Qais Yousef wrote:
-> On 03/22/24 19:46, Shrikanth Hegde wrote:
-
->>
->>  	if (!env->sd->parent) {
->>  		/* update overload indicator if we are at root domain */
->> -		if (READ_ONCE(env->dst_rq->rd->overload) != (sg_status & SG_OVERLOAD))
->> -			WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
->> +		if (is_rd_overloaded(env->dst_rq->rd) != (sg_status & SG_OVERLOAD))
->> +			set_rd_overload_status(env->dst_rq->rd,
->> +					       sg_status & SG_OVERLOAD);
-> 
-> A bit picky, but..
-> 
-> Wouldn't it be better to encapsulate the check of whether we're writing a new
-> value inside set_rd_overload_status()? Only write if it the value changed and
-> all future users wouldn't care then.
-> 
-> I think no need to wrap the line too.
+On Sun, Mar 24, 2024 at 11:32:00AM +0200, Shahar Avidar wrote:
+> The driver can't actually support 2^20 devices.
+> Current RasPis GPIO pins can actually support only 1 device.
+> Other or future platforms might support more.
 > 
 
-Yes. Makes sense all the places do the check and update, can be wrapped. 
-I will send out v3.  
+Why are you doing this?  Is it just a clean up or does it have some
+effect on runtime?  And if it does have an effect on runtime, what does
+that look like to the user?  This all needs to be in the commit message.
 
->>
->>  		/* Update over-utilization (tipping point, U >= 0) indicator */
->>  		set_rd_overutilized_status(env->dst_rq->rd,
->> @@ -12344,7 +12345,7 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
->>  	rcu_read_lock();
->>  	sd = rcu_dereference_check_sched_domain(this_rq->sd);
->>
->> -	if (!READ_ONCE(this_rq->rd->overload) ||
->> +	if (!is_rd_overloaded(this_rq->rd) ||
->>  	    (sd && this_rq->avg_idle < sd->max_newidle_lb_cost)) {
->>
->>  		if (sd)
->> @@ -2518,8 +2528,8 @@ static inline void add_nr_running(struct rq *rq, unsigned count)
->>
->>  #ifdef CONFIG_SMP
->>  	if (prev_nr < 2 && rq->nr_running >= 2) {
->> -		if (!READ_ONCE(rq->rd->overload))
->> -			WRITE_ONCE(rq->rd->overload, 1);
->> +		if (!is_rd_overloaded(rq->rd))
->> +			set_rd_overload_status(rq->rd, 1);
-> 
-> While at it, could you write SG_OVERLOAD instead of 1? 
-Done.  
-> 
-> Both patches LGTM otherwise
-> 
-> Reviewed-by: Qais Yousef <qyousef@layalina.io>
-> 
-> 
-
+regards,
+dan carpenter
 
