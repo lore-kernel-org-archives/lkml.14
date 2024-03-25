@@ -1,414 +1,312 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8895B5DD
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 23:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD1683CA4;
+	Mon, 25 Mar 2024 23:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711409855; cv=none; b=DyT2faPz5C4UWNE4jQL/v3DfP0e1AQFYgdi2XEYidXeiqJ6a9hwZg58WUm+RMByMB8jF8PJxjnAwGJtWkWnHcfJmueFOsKC+bAvOoNLEeawT/+DYlUCMjwqeRrm+78k93sHZoku+au/Hq4xMYt8aLurgSqFZ7Hhcj9iCVojX/u0=
+	t=1711410116; cv=none; b=pkP+/YNRpRzCpHS88CFL8yyfjOJNiy7FX6ZqWp8x4FUiJeNO/H493ysrYpxizdiptzssUrekcutgC4qhExBNzNLhP+eq7VXmdniDdEMdnHzEjvW/cme46FZEiUyQ9zHaDFVih1Pc+HinE6EZ0FFDcASwkFIC7ZxSwzWObzGAW+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711409855; c=relaxed/simple;
-	bh=fsjkodhL8grV1QBLXNjixrtYC9NfJF+MMKlB8IzvKL4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=thg9X6nrIZ3qUmkPQhvnVnZZavu/EKPil9ilEZWIc5I+Xh9t4SmS6smrFWcKmeCJPObqloMoQBAIwD0t3kaJMwaI8BFSrRys4RXtyncOPXNFrSvpWPbzDkk/19JcwhuqT+ZWvR/89r62TVIIJ9A+B5q5knVeJ99eS8z+PTRvaEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=m8DVe7LG; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711410116; c=relaxed/simple;
+	bh=8wtoXalC0rIot47YssKWI4aZamE8d7fHGPD58F/CrCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b1G6++0yGpt6apDDc2VM5SpbQshmBl5T8bxWfjQ6Sha4iLek+ujW/RF6q6VMNl0C6yCUfiE22neQrRPYAznllFMfbmh4vnFg5sHDBUaDo+iPzusf0rRIcxoxVurDprOBl9dCtbgJk0m8V9uc0+b2ZjfNQdzg/qWv+ZgG3IYngTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GdTVfaWx; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m8DVe7LG"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1dee5daa236so36432335ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:37:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GdTVfaWx"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6918781a913so41496086d6.3;
+        Mon, 25 Mar 2024 16:41:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711409853; x=1712014653; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8ca/Lt827hCMDYh5dE02lZPJJvXokhyEjRY2l8MfDd8=;
-        b=m8DVe7LGiDkeJ1E63JSE5J4+pFOWLubczw2JwKPAgdenudXRagsNZJn7BkBEexNOVl
-         NHXbAiUq9+Dj6w3GjQdLdnpwO7sDhOse/o+c9RuyUp5MjrPGRUphinUCqlKIpuUkx3Bx
-         NMXcysqWMYDLZqPuMTklDvmI8I1Z2tVM3JX/Y=
+        d=gmail.com; s=20230601; t=1711410114; x=1712014914; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yJGcRjWxujI/xbMJS+9v8/3RkR6IQk/HoBXdHo4IvJM=;
+        b=GdTVfaWx01v07Aj+NJLr/jCNIbxMwTiQDERbcKPCzJTvlh8P8cTiREqLh1TBlRZ5p9
+         tuHXJQ464OnGuonwqg6Kraj2HMFIGU2zky24yZRecrX1ARv+rXgTVI5eusA/a3qj6Xzv
+         ujNzTZLl0r49pPTCe4JeVvN1zUUKwbkp4NhpbaURlCTiHYvE18s1ein4kduWGUqYnYrW
+         ItjKLRrHknI2BqwN24Kpjn5roAj95JHf7FuOhvvcVdar0/Ea7vE+lvMelTE9prsZELQu
+         DjwPF+YAPmyyFmmC3mB1Fr7WaB4pYz5CHpELiAd2/AOSI8TON5/lY9vYampe2YCcQJ+S
+         MmIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711409853; x=1712014653;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711410114; x=1712014914;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8ca/Lt827hCMDYh5dE02lZPJJvXokhyEjRY2l8MfDd8=;
-        b=PpCu8PAMhQoEvRMy3zNCSOapfwA3cqRVE4P2gGo809rfdzC/avghlIVJ8T4alyVHGQ
-         dMcqLK31QH5QEvZBNF16LULSnuM6k1r0VCAx8v8eSlrZEYG2/NeF2PqL72OrUUdDWaCK
-         ZY3lOClIg4jUD/9Hq2EeMfUuAqxcwuUY1NqSShYFPN8MsDqnnNbHyglMndTfXh3MUXPo
-         gRnNBBBe5V8WgntyqI/bE4KsqAfBf2hj+tQAlydSwSi58Dg+UmtzeEmAoRLCTROHAy3z
-         vk7O9fcPXC/xAWBoGc6zroZyCkUrMl1iCKI75ItGzr6849bwb5ot3XK1bDC6AyGlI1fS
-         M4Fw==
-X-Gm-Message-State: AOJu0Yxk4h9wIDUD9fp3lMby6UZAoS0+4m5tWS0W8B+FKhWucvtZqsqk
-	KV+thPji8+VEcYqjruvr+fGz9K/3327JFQ8K1x++0JTORdwhk7Rgu3KVCaA5sA==
-X-Google-Smtp-Source: AGHT+IFnJl6qjFmX9WZ3KeYDZtbolk+5wf36SUlZwdNoAbfHuV/X+Hz5oY5Wk0k6WeTdFPuA0mcoAA==
-X-Received: by 2002:a17:903:32d0:b0:1e0:ac80:5709 with SMTP id i16-20020a17090332d000b001e0ac805709mr10039412plr.48.1711409852808;
-        Mon, 25 Mar 2024 16:37:32 -0700 (PDT)
-Received: from pholla1.c.googlers.com (210.73.125.34.bc.googleusercontent.com. [34.125.73.210])
-        by smtp.gmail.com with ESMTPSA id c14-20020a170903234e00b001e0e2fde71fsm526533plh.9.2024.03.25.16.37.32
+        bh=yJGcRjWxujI/xbMJS+9v8/3RkR6IQk/HoBXdHo4IvJM=;
+        b=vKcvzpza6QAjMCQSgw7FNjFjurH12FfqX5qYJpb80BiyVsKvz7AFuW5FjChJS+j2kc
+         DQMAlEnHiMamtbBWFfogvkmJUvZPPQPeVs19W1hVr8EVUDEMb5Uv4EhQcYoAQevJTBlr
+         7MfaubmTxxUmij3urmhXvxqniMvPEh20oJfmS/gNCg2SVtxrdhj5X+Wna/UoxW8iU9sJ
+         MCmPjRc4aqtSOE1+PNalR6JobKhyK8BSOjWKNM93HMwSxFVzG/QSAgvqiSueDTNxGAtI
+         qxdZKEzoOn1COEjPJ3x9sRLx4eHxGRsUnPeQUb147mKHJ57VldsbHGzNhwqt3E3TSdxM
+         pH6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWdy5TZ43fy34ytk5f72NJVqmlyxwteS6HMC4VqAB5fR8zcbWYoSnIZUUq6PpH7pgMLpqxcs6elx9g8dhnqvQaCsIH+05O5X7Jtrju/mxcRf4/f7cqvGmm+Fl9IlzfSNwY623eMKA3Fa0gYZUkgAPvZdkELo8ECeRnOdBurfW+XliL9mBZO36RYl7ha7d2JovqgoiQwWZjC34xM1g2pAC2oCALlx0xGvA==
+X-Gm-Message-State: AOJu0Yw9Pnf0cyMAw0UO0P/Z1azKUdxixA9V3ykQdPR9ZJtwCvP01nIg
+	TduYvnEOrmJYGJ4dtIddaxXF0Hz5Nwy8e7qj478YxyB97j8h1HWx
+X-Google-Smtp-Source: AGHT+IEdPU4dTEy2JZqf6+fOq13iZJz6jJM2/V2qB77B0kCBgeR/Ks/8yVDV8iurZcon/ktLSAu9Dw==
+X-Received: by 2002:a05:6214:20e7:b0:696:89f6:28d5 with SMTP id 7-20020a05621420e700b0069689f628d5mr5443333qvk.50.1711410113750;
+        Mon, 25 Mar 2024 16:41:53 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id pn16-20020a056214131000b00690afbf56d5sm4549850qvb.66.2024.03.25.16.41.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 16:37:32 -0700 (PDT)
-From: Pavan Holla <pholla@chromium.org>
-Date: Mon, 25 Mar 2024 23:37:30 +0000
-Subject: [PATCH 3/3] platform/chrome: cros_ec_ucsi: Implement UCSI PDC
- driver
+        Mon, 25 Mar 2024 16:41:53 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 0DD1A1200032;
+	Mon, 25 Mar 2024 19:41:52 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Mon, 25 Mar 2024 19:41:52 -0400
+X-ME-Sender: <xms:vwsCZvsaCSxos8n79rZkAnGlOLB2T3k0UOcwZUN8am2ifjKvkR6qAQ>
+    <xme:vwsCZgcbeL9ZUoKDC84FCXvXT50zsbQLmYIZwAELH26czQlsmNuaRuvnuhqqBwu7R
+    ghIgUv7_CmxngQjkg>
+X-ME-Received: <xmr:vwsCZiwkQGJyk9mLCVEH4OO83Fe-KY7HEZ9mTurW_zD-zL8662W1ASrrCIw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudduvddgudefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeevvdejffefgeffhfelffeikeeigeehjeekgfefudeugfejfefhteekvedu
+    teelhfenucffohhmrghinheprhhushhtqdhlrghnghdrohhrghdpiihulhhiphgthhgrth
+    drtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtd
+    eigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehf
+    ihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:vwsCZuNaQjsRCLUNW8IaAff0EyoUoWu_fUrBqrZKEsNReL9iHs8kFg>
+    <xmx:vwsCZv9ocLjBkeOeNf-GDgorBHdbW30PbcdI4nVzT3zrOUogmMhSIA>
+    <xmx:vwsCZuVqLPTJVJhxer93DncKKWLfZcU7ABwCONtY-6l6fztq-LpCKA>
+    <xmx:vwsCZgfTrHJpR_1BcTK--XiAOr8c5rkvIZZWJeQfLZMXK4ijfwf-RQ>
+    <xmx:wAsCZl4i7_IgwVOE5CIKAS825amAtXL6LwfmgSXfqwER1O_snhWyF99VBEV0nCdF>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 25 Mar 2024 19:41:50 -0400 (EDT)
+Date: Mon, 25 Mar 2024 16:41:19 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Philipp Stanner <pstanner@redhat.com>,	rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,	linux-arch@vger.kernel.org,
+ llvm@lists.linux.dev,	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nicholas Piggin <npiggin@gmail.com>,	David Howells <dhowells@redhat.com>,
+	Jade Alglave <j.alglave@ucl.ac.uk>,	Luc Maranget <luc.maranget@inria.fr>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Akira Yokosawa <akiyks@gmail.com>,	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,	kent.overstreet@gmail.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, elver@google.com,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,	Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [WIP 0/3] Memory model and atomic API in Rust
+Message-ID: <ZgILn_Uy5nSodrcY@boqun-archlinux>
+References: <CAHk-=whkQk=zq5XiMcaU3xj4v69+jyoP-y6Sywhq-TvxSSvfEA@mail.gmail.com>
+ <c51227c9a4103ad1de43fc3cda5396b1196c31d7.camel@redhat.com>
+ <CAHk-=wjP1i014DGPKTsAC6TpByC3xeNHDjVA4E4gsnzUgJBYBQ@mail.gmail.com>
+ <bu3seu56hfozsvgpdqjarbdkqo3lsjfc4lhluk5oj456xmrjc7@lfbbjxuf4rpv>
+ <CAHk-=wgLGWBXvNODAkzkVHEj7zrrnTq_hzMft62nKNkaL89ZGQ@mail.gmail.com>
+ <gewmacbbjxwsn4h54w2jfvbiq5iwr2zdm56pc3pv3rctxyd4lt@sqqa544ezmez>
+ <ZgHuioMM1cAWNDiX@boqun-archlinux>
+ <jyijwrrzzhlsrffj37xj4sskipxqbxfewydnb3yzgybjobj6tg@cbv5y7znhm3n>
+ <ZgH86EUON30lUk6m@boqun-archlinux>
+ <qo6z3j2h32rzwr6bcnkrrw7irdqwakgymcf2jodnq5nz3simwq@tqydlv4mctrv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240325-public-ucsi-h-v1-3-7c7e888edc0a@chromium.org>
-References: <20240325-public-ucsi-h-v1-0-7c7e888edc0a@chromium.org>
-In-Reply-To: <20240325-public-ucsi-h-v1-0-7c7e888edc0a@chromium.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
- Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, 
- Pavan Holla <pholla@chromium.org>
-X-Mailer: b4 0.12.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <qo6z3j2h32rzwr6bcnkrrw7irdqwakgymcf2jodnq5nz3simwq@tqydlv4mctrv>
 
-Implementation of transport driver for UCSI. This driver will be used
-if the ChromeOS EC implements a PPM.
+On Mon, Mar 25, 2024 at 07:02:12PM -0400, Kent Overstreet wrote:
+> On Mon, Mar 25, 2024 at 03:38:32PM -0700, Boqun Feng wrote:
+> > On Mon, Mar 25, 2024 at 06:09:19PM -0400, Kent Overstreet wrote:
+> > > On Mon, Mar 25, 2024 at 02:37:14PM -0700, Boqun Feng wrote:
+> > > > On Mon, Mar 25, 2024 at 05:14:41PM -0400, Kent Overstreet wrote:
+> > > > > On Mon, Mar 25, 2024 at 12:44:34PM -0700, Linus Torvalds wrote:
+> > > > > > On Mon, 25 Mar 2024 at 11:59, Kent Overstreet <kent.overstreet@linux.dev> wrote:
+> > > > > > >
+> > > > > > > To be fair, "volatile" dates from an era when we didn't have the haziest
+> > > > > > > understanding of what a working memory model for C would look like or
+> > > > > > > why we'd even want one.
+> > > > > > 
+> > > > > > I don't disagree, but I find it very depressing that now that we *do*
+> > > > > > know about memory models etc, the C++ memory model basically doubled
+> > > > > > down on the same "object" model.
+> > > > > > 
+> > > > > > > The way the kernel uses volatile in e.g. READ_ONCE() is fully in line
+> > > > > > > with modern thinking, just done with the tools available at the time. A
+> > > > > > > more modern version would be just
+> > > > > > >
+> > > > > > > __atomic_load_n(ptr, __ATOMIC_RELAXED)
+> > > > 
+> > > > Note that Rust does have something similiar:
+> > > > 
+> > > > 	https://doc.rust-lang.org/std/ptr/fn.read_volatile.html
+> > > > 
+> > > > 	pub unsafe fn read_volatile<T>(src: *const T) -> T
+> > > > 
+> > > > (and also write_volatile()). So they made a good design putting the
+> > > > volatile on the accesses rather than the type. However, per the current
+> > > > Rust memory model these two primitives will be UB when data races happen
+> > > > :-(
+> > > > 
+> > > > I mean, sure, if I use read_volatile() on an enum (whose valid values
+> > > > are only 0, 1, 2), and I get a value 3, and the compiler says "you have
+> > > > a logic bug and I refuse to compile the program correctly", I'm OK. But
+> > > > if I use read_volatile() to read something like a u32, and I know it's
+> > > > racy so my program actually handle that, I don't know any sane compiler
+> > > > would miss-compile, so I don't know why that has to be a UB.
+> > > 
+> > > Well, if T is too big to read/write atomically then you'll get torn
+> > > reads, including potentially a bit representation that is not a valid T.
+> > > 
+> > > Which is why the normal read_volatile<> or Volatile<> should disallow
+> > > that.
+> > > 
+> > 
+> > Well, why a racy read_volatile<> is UB on a T who is valid for all bit
+> > representations is what I was complaining about ;-)
+> 
+> yeah, that should not be considered UB; that should be an easy fix. Are
+> you talking to Rust compiler people about this stuff? I've been meaning
 
-Signed-off-by: Pavan Holla <pholla@chromium.org>
----
- drivers/platform/chrome/Kconfig                |  14 ++
- drivers/platform/chrome/Makefile               |   1 +
- drivers/platform/chrome/cros_ec_ucsi.c         | 247 +++++++++++++++++++++++++
- include/linux/platform_data/cros_ec_commands.h |  19 ++
- 4 files changed, 281 insertions(+)
+Here you go:
 
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 7a83346bfa53..67ab79a6815b 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -238,6 +238,20 @@ config CROS_EC_TYPEC
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called cros-ec-typec.
- 
-+config CROS_EC_UCSI
-+	tristate "UCSI Driver for ChromeOS EC"
-+	depends on MFD_CROS_EC_DEV
-+	depends on CROS_USBPD_NOTIFY
-+	depends on TYPEC_UCSI
-+	depends on !EXTCON_TCSS_CROS_EC
-+	default MFD_CROS_EC_DEV
-+	help
-+	  This driver enables UCSI support for a ChromeOS EC. The EC is
-+	  expected to implement a PPM.
-+
-+	  To compile the driver as a module, choose M here: the module
-+	  will be called cros_ec_ucsi.
-+
- config CROS_HPS_I2C
- 	tristate "ChromeOS HPS device"
- 	depends on HID && I2C && PM
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index 2dcc6ccc2302..85964e165a70 100644
---- a/drivers/platform/chrome/Makefile
-+++ b/drivers/platform/chrome/Makefile
-@@ -19,6 +19,7 @@ obj-$(CONFIG_CROS_EC_UART)		+= cros_ec_uart.o
- cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_mec.o
- cros-ec-typec-objs			:= cros_ec_typec.o cros_typec_vdm.o
- obj-$(CONFIG_CROS_EC_TYPEC)		+= cros-ec-typec.o
-+obj-$(CONFIG_CROS_EC_UCSI)		+= cros_ec_ucsi.o
- obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
- obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
- obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
-diff --git a/drivers/platform/chrome/cros_ec_ucsi.c b/drivers/platform/chrome/cros_ec_ucsi.c
-new file mode 100644
-index 000000000000..9fee300a3d93
---- /dev/null
-+++ b/drivers/platform/chrome/cros_ec_ucsi.c
-@@ -0,0 +1,247 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * UCSI driver for ChromeOS EC
-+ *
-+ * Copyright 2024 Google LLC.
-+ */
-+
-+#include <linux/container_of.h>
-+#include <linux/dev_printk.h>
-+#include <linux/module.h>
-+#include <linux/platform_data/cros_ec_commands.h>
-+#include <linux/platform_data/cros_usbpd_notify.h>
-+#include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/usb/ucsi.h>
-+#include <linux/wait.h>
-+
-+#define DRV_NAME "cros-ec-ucsi"
-+
-+#define MAX_EC_DATA_SIZE 256
-+#define WRITE_TMO_MS 500
-+
-+#define COMMAND_PENDING 1
-+#define ACK_PENDING     2
-+
-+#define UCSI_COMMAND(_cmd_) ((_cmd_) & 0xff)
-+#define UCSI_ACK_CC_CI 0x04
-+
-+struct cros_ucsi_data {
-+	struct device *dev;
-+	struct ucsi *ucsi;
-+
-+	struct cros_ec_device *ec;
-+	struct notifier_block nb;
-+	struct work_struct work;
-+
-+	struct completion complete;
-+	unsigned long flags;
-+};
-+
-+static int cros_ucsi_read(struct ucsi *ucsi, unsigned int offset, void *val,
-+			  size_t val_len)
-+{
-+	struct cros_ucsi_data *udata = ucsi_get_drvdata(ucsi);
-+	struct ec_params_ucsi_ppm_get req = {
-+		.offset = offset,
-+		.size = val_len,
-+	};
-+	int ret;
-+
-+	if (val_len > MAX_EC_DATA_SIZE) {
-+		dev_err(udata->dev, "Can't read %zu bytes. Too big.", val_len);
-+		return -EINVAL;
-+	}
-+
-+	ret = cros_ec_cmd(udata->ec, 0, EC_CMD_UCSI_PPM_GET,
-+			  &req, sizeof(req), val, val_len);
-+	if (ret < 0) {
-+		dev_warn(udata->dev, "Failed to send EC message UCSI_PPM_GET: error=%d", ret);
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int cros_ucsi_async_write(struct ucsi *ucsi, unsigned int offset,
-+				 const void *val, size_t val_len)
-+{
-+	struct cros_ucsi_data *udata = ucsi_get_drvdata(ucsi);
-+	uint8_t ec_buffer[MAX_EC_DATA_SIZE + sizeof(struct ec_params_ucsi_ppm_set)];
-+	struct ec_params_ucsi_ppm_set *req = (struct ec_params_ucsi_ppm_set *)ec_buffer;
-+	int ret = 0;
-+
-+	if (val_len > MAX_EC_DATA_SIZE) {
-+		dev_err(udata->dev, "Can't write %zu bytes. Too big.", val_len);
-+		return -EINVAL;
-+	}
-+
-+	memset(req, 0, sizeof(ec_buffer));
-+	req->offset = offset;
-+	memcpy(req->data, val, val_len);
-+	ret = cros_ec_cmd(udata->ec, 0, EC_CMD_UCSI_PPM_SET,
-+			  req, sizeof(struct ec_params_ucsi_ppm_set) + val_len, NULL, 0);
-+
-+	if (ret < 0) {
-+		dev_warn(udata->dev, "Failed to send EC message UCSI_PPM_SET: error=%d", ret);
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int cros_ucsi_sync_write(struct ucsi *ucsi, unsigned int offset,
-+				const void *val, size_t val_len)
-+{
-+	struct cros_ucsi_data *udata = ucsi_get_drvdata(ucsi);
-+	bool ack = UCSI_COMMAND(*(u64 *)val) == UCSI_ACK_CC_CI;
-+	int ret;
-+
-+	if (ack)
-+		set_bit(ACK_PENDING, &udata->flags);
-+	else
-+		set_bit(COMMAND_PENDING, &udata->flags);
-+
-+	ret = cros_ucsi_async_write(ucsi, offset, val, val_len);
-+	if (ret)
-+		goto out;
-+
-+	if (!wait_for_completion_timeout(&udata->complete, WRITE_TMO_MS))
-+		ret = -ETIMEDOUT;
-+
-+out:
-+	if (ack)
-+		clear_bit(ACK_PENDING, &udata->flags);
-+	else
-+		clear_bit(COMMAND_PENDING, &udata->flags);
-+	return ret;
-+}
-+
-+struct ucsi_operations cros_ucsi_ops = {
-+	.read = cros_ucsi_read,
-+	.async_write = cros_ucsi_async_write,
-+	.sync_write = cros_ucsi_sync_write,
-+};
-+
-+static void cros_ucsi_work(struct work_struct *work)
-+{
-+	struct cros_ucsi_data *udata = container_of(work, struct cros_ucsi_data, work);
-+	u32 cci;
-+	int ret;
-+
-+	ret = cros_ucsi_read(udata->ucsi, UCSI_CCI, &cci, sizeof(cci));
-+	if (ret)
-+		return;
-+
-+	if (UCSI_CCI_CONNECTOR(cci))
-+		ucsi_connector_change(udata->ucsi, UCSI_CCI_CONNECTOR(cci));
-+
-+	if (cci & UCSI_CCI_ACK_COMPLETE && test_bit(ACK_PENDING, &udata->flags))
-+		complete(&udata->complete);
-+	if (cci & UCSI_CCI_COMMAND_COMPLETE &&
-+	    test_bit(COMMAND_PENDING, &udata->flags))
-+		complete(&udata->complete);
-+}
-+
-+static int cros_ucsi_event(struct notifier_block *nb,
-+			   unsigned long host_event, void *_notify)
-+{
-+	struct cros_ucsi_data *udata = container_of(nb, struct cros_ucsi_data, nb);
-+
-+	if (!(host_event & PD_EVENT_PPM))
-+		return NOTIFY_OK;
-+
-+	dev_dbg(udata->dev, "UCSI notification received");
-+	flush_work(&udata->work);
-+	schedule_work(&udata->work);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int cros_ucsi_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cros_ucsi_data *udata;
-+	int ret;
-+
-+	udata = devm_kzalloc(dev, sizeof(*udata), GFP_KERNEL);
-+	if (!udata)
-+		return -ENOMEM;
-+
-+	udata->dev = dev;
-+
-+	udata->ec = ((struct cros_ec_dev *) dev_get_drvdata(pdev->dev.parent))->ec_dev;
-+	if (!udata->ec) {
-+		dev_err(dev, "couldn't find parent EC device\n");
-+		return -ENODEV;
-+	}
-+
-+	platform_set_drvdata(pdev, udata);
-+
-+	INIT_WORK(&udata->work, cros_ucsi_work);
-+	init_completion(&udata->complete);
-+
-+	udata->ucsi = ucsi_create(udata->dev, &cros_ucsi_ops);
-+	if (IS_ERR(udata->ucsi)) {
-+		dev_err(dev, "failed to allocate UCSI instance\n");
-+		return PTR_ERR(udata->ucsi);
-+	}
-+
-+	ucsi_set_drvdata(udata->ucsi, udata);
-+
-+	ret = ucsi_register(udata->ucsi);
-+	if (ret) {
-+		ucsi_destroy(udata->ucsi);
-+		udata->ucsi = NULL;
-+		return ret;
-+	}
-+
-+	udata->nb.notifier_call = cros_ucsi_event;
-+	ret = cros_usbpd_register_notify(&udata->nb);
-+	return ret;
-+}
-+
-+static int cros_ucsi_remove(struct platform_device *dev)
-+{
-+	struct cros_ucsi_data *udata = platform_get_drvdata(dev);
-+
-+	if (udata->ucsi) {
-+		ucsi_unregister(udata->ucsi);
-+		ucsi_destroy(udata->ucsi);
-+		udata->ucsi = NULL;
-+	}
-+	return 0;
-+}
-+
-+static int cros_ucsi_suspend(struct device *dev)
-+{
-+	struct cros_ucsi_data *udata = dev_get_drvdata(dev);
-+
-+	cancel_work_sync(&udata->work);
-+
-+	return 0;
-+}
-+
-+static int cros_ucsi_resume(struct device *dev)
-+{
-+	struct cros_ucsi_data *udata = dev_get_drvdata(dev);
-+
-+	return ucsi_resume(udata->ucsi);
-+}
-+
-+static SIMPLE_DEV_PM_OPS(cros_ucsi_pm_ops, cros_ucsi_suspend,
-+			 cros_ucsi_resume);
-+
-+static struct platform_driver cros_ucsi_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+		.pm = &cros_ucsi_pm_ops,
-+	},
-+	.probe = cros_ucsi_probe,
-+	.remove = cros_ucsi_remove,
-+};
-+
-+module_platform_driver(cros_ucsi_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("UCSI driver for ChromeOS EC.");
-+MODULE_ALIAS("platform:" DRV_NAME);
-diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-index ecc47d5fe239..39f6f54bbe4c 100644
---- a/include/linux/platform_data/cros_ec_commands.h
-+++ b/include/linux/platform_data/cros_ec_commands.h
-@@ -4933,6 +4933,7 @@ struct ec_response_pd_status {
- #define PD_EVENT_POWER_CHANGE      BIT(1)
- #define PD_EVENT_IDENTITY_RECEIVED BIT(2)
- #define PD_EVENT_DATA_SWAP         BIT(3)
-+#define PD_EVENT_PPM               BIT(5)
- struct ec_response_host_event_status {
- 	uint32_t status;      /* PD MCU host event status */
- } __ec_align4;
-@@ -5994,6 +5995,24 @@ struct ec_response_typec_vdm_response {
- 
- #undef VDO_MAX_SIZE
- 
-+/*
-+ * Read/write interface for UCSI OPM <-> PPM communication.
-+ */
-+#define EC_CMD_UCSI_PPM_SET 0x0140
-+
-+/* The data size is stored in the host command protocol header. */
-+struct ec_params_ucsi_ppm_set {
-+	uint16_t offset;
-+	uint8_t data[];
-+} __ec_align2;
-+
-+#define EC_CMD_UCSI_PPM_GET 0x0141
-+
-+struct ec_params_ucsi_ppm_get {
-+	uint16_t offset;
-+	uint8_t size;
-+} __ec_align2;
-+
- /*****************************************************************************/
- /* The command range 0x200-0x2FF is reserved for Rotor. */
- 
+	https://rust-lang.zulipchat.com/#narrow/stream/136281-t-opsem/topic/UB.20caused.20by.20races.20on.20.60.7Bread.2Cwrite.7D_volatile.60/near/399343771	
 
--- 
-2.44.0.396.g6e790dbe36-goog
+but maybe instead of Rust, LLVM is the best one to talk with on this.
+Because my take from the communication with Rust folks is more like
+"it's more up to LLVM on this".
 
+> to make my own contacts there, but - sadly, busy as hell.
+> 
+> > > > > where T is any type that fits in a machine word, and the only operations
+> > > > > it supports are get(), set(), xchg() and cmpxchG().
+> > > > > 
+> > > > > You DO NOT want it to be possible to transparantly use Volatile<T> in
+> > > > > place of a regular T - in exactly the same way as an atomic_t can't be
+> > > > > used in place of a regular integer.
+> > > > 
+> > > > Yes, this is useful. But no it's not that useful, how could you use that
+> > > > to read another CPU's stack during some debug functions in a way you
+> > > > know it's racy?
+> > > 
+> > > That's a pretty difficult thing to do, because you don't know the
+> > > _layout_ of the other CPU's stack, and even if you do it's going to be
+> > > changing underneath you without locking.
+> > > 
+> > 
+> > It's a debug function, I don't care whether the data is accurate, I just
+> > want to get much information as possible.
+> 
+> yeah, if you just want the typical backtrace functionality where you're
+> just looking for instruction pointers - that's perfectly
+> straightforward.
+> 
+> > This kinda of usage, along
+> > with cases where the alorigthms are racy themselves are the primary
+> > reasons of volatile _accesses_ instead of volatile _types_. For example,
+> > you want to read ahead of a counter protected by a lock:
+> > 
+> > 	if (unlikely(READ_ONCE(cnt))) {
+> > 		spin_lock(lock);
+> > 		int c = cnt; // update of the cnt is protected by a lock.
+> > 		...
+> > 	}
+> > 
+> > because you want to skip the case where cnt == 0 in a hotpath, and you
+> > know someone is going to check this again in some slowpath, so
+> > inaccurate data doesn't matter.
+> 
+> That's an interesting one because in Rust cnt is "inside" the lock, you
+> can't access it at all without taking the lock - and usually that's
+> exactly right.
+> 
+
+(Now you mention that, once I was trying to construct a deadlock case
+with some Rust code, but I couldn't since the locks are naturally
+hierarchical because of the types, therefore it's impossible to reverse
+the lock ordering. Yes, you still can have deadlocks in Rust, but that
+hierarchial type trees really help a lot).
+
+> So to allow this we'd annotate in the type definition (with an
+> attribute) which fields we allow read access to without the lock, then
+> with some proc macro wizardry we'd get accessors that we can call without
+> the lock held.
+> 
+
+Right, that's field projection:
+
+	https://internals.rust-lang.org/t/pre-rfc-field-projection/17383	
+
+> So that probably wouldn't be a Volatile<T> thing, that'd be coupled with
+> the lock implementation because that's where the accessors would hang
+> off of and they'd internally probably just use mem::volatile_read().
+> 
+
+So we can play the type game as deep as we can, and I'm sure it'll be
+helpful, but in the same time, having a reasonable
+{read,write}_volatile() semantics on UB and races is also what we need.
+
+> > > So the races thare are equivalent to a bad mem::transmute(), and that is
+> > > very much UB.
+> > > 
+> > > For a more typical usage of volatile, consider a ringbuffer with one
+> > > thread producing and another thread consuming. Then you've got head and
+> > > tail pointers, each written by one thread and read by another.
+> > > 
+> > > You don't need any locking, just memory barriers and
+> > > READ_ONCE()/WRITE_ONCE() to update the head and tail pointers. If you
+> > > were writing this in Rust today the easy way would be an atomic integer,
+> > > but that's not really correct - you're not doing atomic operations
+> > > (locked arithmetic), just volatile reads and writes.
+> > > 
+> > 
+> > Confused, I don't see how Volatile<T> is better than just atomic in this
+> > case, since atomc_load() and atomic_store() are also not locked in any
+> > memory model if lockless implementation is available.
+> 
+> It certainly compiles to the same code, yeah. But Volatile<T> really is
+> the more primitive/generic concept, Atomic<T> is a specialization.
+> 
+> > > Volatile<T> would be Send and Sync, just like atomic integers. You don't
+> > > need locking if you're just working with single values that are small
+> > > enough for the machine to read/write atomically.
+> > 
+> > So to me Volatile<T> can help in the cases where we know some memory is
+> > "external", for example a MMIO address, or ringbuffer between guests and
+> > hypervisor. But it doesn't really fix the missing functionality here:
+> > allow generating a plain "mov" instruction on x86 for example on _any
+> > valid memory_, and programmers can take care of the result.
+> 
+> You're talking about going completely outside the type system, though.
+> There is a need for that, but it's very rare and something we really
+> want to discourage. Usually, even with volatile access, you do know the
+
+Hey, in memory ordering model areas, we are supposed to work on these
+rare cases ;-) These are building blocks for high level synchronization
+constructions, so I'm entitled to complain ;-) But yes, to your point,
+type system can help a lot, however, there are still cases we need to
+roll our own.
+
+Regard,
+Boqun
+
+> type - and even if you don't, you have to treat it as _something_ so
+> Volatile<ulong> is probably as good as anything.
