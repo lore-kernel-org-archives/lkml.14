@@ -1,97 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF956DCE8
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711370750; cv=none; b=mS07L1bnnf/BvE/LeLzTEO4w4zoOv0tZ0EUfKRflqbbkoCGGj6GCf6B6ZCxca5SzG12Mw87RHYFc3d5qAZR4iKxj0co2eHsJlLdOEtoOKG8xfTCK04t63QfRM03qNkEHSliqh4BfW5wURg9zC8o3EhFvbM0lDds0xQXpU7HWRK8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711370750; c=relaxed/simple;
-	bh=u2CpON+ylVsyq590GuxgPX8aACtNcQ54tsZFdjhyaWs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Swd9LtkCYUiGlFkoWysT+oUfWLbOcLjYTiluVD5eMhSYNbku3UUxKb9utONjtXddk3kz2qffDhH3sG8GHOkI1nsie9cq5OFscexiNu2NwgKcT2yfT4PVWW9qbzUynuJpTFz9mHcp8u1280E7ylAiRkhHIusjD7ALySMgO9qWops=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVV1IaWV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVV1IaWV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3302FC43394;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9286D1A1;
 	Mon, 25 Mar 2024 12:45:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711370750;
-	bh=u2CpON+ylVsyq590GuxgPX8aACtNcQ54tsZFdjhyaWs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eVV1IaWV9vRcxYwQUums5xqSP5Wq1JaDlgBpGgCe+m6yPpVz9ksbPoP0pmrHEZuu0
-	 v6WWcfakc0/tzBGby00uzvkxjcOBYM6cHLDbWRpFTq94slZHx4TcMPDwKpMzYzzNz0
-	 BMidSuGaNRhfTXfWCVNvqoZqUh4twz18njVGGXwvDUBvTVjq/UvN6fFPsMhX3Vrt7z
-	 aY3IAz2QpBy1FzTmFMmrd3Uzk8u+vLRLScq0kqqqEtzy66GpBwBQSuYmEXIScNvKzt
-	 52cbGX7TGYSEhHydw6YfGvD4iY7cColqeIklQDrrLO+owD9mzzFk40BeiXE0DAfH40
-	 jkgADT0ieNvdw==
-From: alexs@kernel.org
-To: Matthew Wilcox <willy@infradead.org>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Izik Eidus <izik.eidus@ravellosystems.com>,
-	david@redhat.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	ryncsn@gmail.com
-Cc: "Alex Shi (tencent)" <alexs@kernel.org>,
-	Hugh Dickins <hughd@google.com>,
-	Chris Wright <chrisw@sous-sol.org>
-Subject: [PATCH v3 02/14] mm/ksm: use folio in remove_rmap_item_from_tree
-Date: Mon, 25 Mar 2024 20:48:49 +0800
-Message-ID: <20240325124904.398913-3-alexs@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240325124904.398913-1-alexs@kernel.org>
-References: <20240325124904.398913-1-alexs@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711370751; cv=none; b=uQA71A45mlnkFNRWwzFI/1MkaMht+gOlAkLDAkx2YJuM5Bfd636QoKUYq9gJL6JvmTKv13yHbyF+kbc/K47m9pjGuHsmoSbXTYH47hc49/pR2F9fWROEv8vbheZOTAnOxocw4cbPSaftWzRTlog8B1CiD9q1UkanEZImkjpKaxQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711370751; c=relaxed/simple;
+	bh=ZziF1wRZF7EhrN6ygPWhxE5dY6tJWM2rg/5wYnZVgck=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bt1v7k9RHtuz0Rc1n4piwagIBPkllwmb5+ydjrjL0b7Nfz4VoBtPXDCJziISpAczX06A63WOb0geZDIDuLJbME6T8zjQXNwUH+qUwgMz82a2m0STAA8Xa8R+kKM+5L8rvdLLrKq8lJAIwZRyAWsji94m2XHKq5cfdL0rBOpsUwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gOWraMsf; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gOWraMsf"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 83341E000B;
+	Mon, 25 Mar 2024 12:45:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1711370746;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZziF1wRZF7EhrN6ygPWhxE5dY6tJWM2rg/5wYnZVgck=;
+	b=gOWraMsfaOyNY3BvmuvwWgpgqmuqW0qlq15nInyFvgo05o8t7OSVPL5gUyKNLnvPExr/L5
+	MlA90aWdO7REc9rMhwPApqU03oBt7bMyuEa8Pg6QGvQPCbizl4Peuys4axsyd6Ve8b7f/j
+	Uajthkay40AWaJDc8b1KUTKS++S4sQzC5AYSmSoTa52q8FuN4AXhgh9asuQK+KQg6S1fnV
+	nRSqyHGF2SpiDVAHRSvedzrOO1adgmwG7zZttvB0OfOkdCxcRKVzIeL905Izs+fAcuuPmM
+	Hfdcga0inTk+xSuAT/zJP5R+UHCRV4pikPz7PxIHdoUDLIqzILiam7ok3rVIdQ==
+Date: Mon, 25 Mar 2024 13:45:37 +0100
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Elad Nachman <enachman@marvell.com>, Taras Chornyi
+ <taras.chornyi@plvision.eu>, "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
+ <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+ "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+ "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+ "przemyslaw.kitszel@intel.com" <przemyslaw.kitszel@intel.com>,
+ "dkirjanov@suse.de" <dkirjanov@suse.de>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH v2 0/5] Fix prestera driver fail to probe
+ twice
+Message-ID: <20240325134537.1cc7560e@kmaincent-XPS-13-7390>
+In-Reply-To: <6dae31dc-8c4f-4b8d-80e4-120619119326@lunn.ch>
+References: <20240320172008.2989693-1-enachman@marvell.com>
+	<4104387a-d7b5-4029-b822-060ef478c6e3@lunn.ch>
+	<BN9PR18MB42517F8E84C8C18078E45C37DB322@BN9PR18MB4251.namprd18.prod.outlook.com>
+	<89a01616-57c2-4338-b469-695bdc731dee@lunn.ch>
+	<BL1PR18MB42488523A5E05291EA57D0AEDB372@BL1PR18MB4248.namprd18.prod.outlook.com>
+	<6dae31dc-8c4f-4b8d-80e4-120619119326@lunn.ch>
+Organization: bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-From: "Alex Shi (tencent)" <alexs@kernel.org>
+On Sun, 24 Mar 2024 16:25:28 +0100
+Andrew Lunn <andrew@lunn.ch> wrote:
 
-To save 2 compound_head calls.
+> > > > Originally, the pain point for Kory was the rmmod + insmod re-probi=
+ng
+> > > > failure, Which is only fixed by the first two commits, so I see lit=
+tle
+> > > > point in submitting 3-5 alone, Without fixing Kory's problem. =20
+> > >=20
+> > > I thought Kory's problem was actually EPROBE_DEFER? The resources nee=
+ded
+> > > for the PoE are not available, so probing the switch needs to happen =
+again
+> > > later, when PoE can get the resources it needs. =20
+> >=20
+> > No, the PoE is the general high level application where he noted the
+> > problem. There is no PoE code nor special PoE resources in the Prestera
+> > driver. =20
+>=20
+> So here is K=C3=B6ry email:
+>=20
+> https://lore.kernel.org/netdev/20240208101005.29e8c7f3@kmaincent-XPS-13-7=
+390/T/#mb898bb2a4bf07776d79f1a19b6a8420716ecb4a3
+>=20
+> I don't see why the prestera needs to be involved in PoE itself. It is
+> just a MAC. PoE happens much lower down in the network stack. Same as
+> Prestera uses phylink, it does not need to know about the PHYs or the
+> SFP modules, phylink manages them, not prestera.
 
-Signed-off-by: Alex Shi (tencent) <alexs@kernel.org>
-Cc: Izik Eidus <izik.eidus@ravellosystems.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Chris Wright <chrisw@sous-sol.org>
----
- mm/ksm.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Prestera is indeed not directly involved in PoE. I wrote a hack to be able =
+to
+get the PoE ports control, for testing my PoE patch series.
 
-diff --git a/mm/ksm.c b/mm/ksm.c
-index ac080235b002..ea3dabf71e47 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -1006,16 +1006,16 @@ static void remove_rmap_item_from_tree(struct ksm_rmap_item *rmap_item)
- {
- 	if (rmap_item->address & STABLE_FLAG) {
- 		struct ksm_stable_node *stable_node;
--		struct page *page;
-+		struct folio *folio;
- 
- 		stable_node = rmap_item->head;
--		page = get_ksm_page(stable_node, GET_KSM_PAGE_LOCK);
--		if (!page)
-+		folio = ksm_get_folio(stable_node, GET_KSM_PAGE_LOCK);
-+		if (!folio)
- 			goto out;
- 
- 		hlist_del(&rmap_item->hlist);
--		unlock_page(page);
--		put_page(page);
-+		folio_unlock(folio);
-+		folio_put(folio);
- 
- 		if (!hlist_empty(&stable_node->hlist))
- 			ksm_pages_sharing--;
--- 
-2.43.0
+The aim in the future will be to add RJ45 port abstraction.
+The Prestera will get the port abstraction which will get the PoE ports con=
+trol.
+The prestera driver then might receive an EPROBE_DEFER from it.
 
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
