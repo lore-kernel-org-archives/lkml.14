@@ -1,123 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mail-m32123.qiye.163.com (mail-m32123.qiye.163.com [220.197.32.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FBD13C68B
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110E413C66E;
+	Mon, 25 Mar 2024 03:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711336729; cv=none; b=I8zMWpwHPJ5yvlooJBIFJDR/DX7nNEP2AXoE+FQz8F58K7jXvSWtx2GPOTbNNtTOp7yW6f/9A9JT9NPeiGmRqEg1ST7JDtiy+XKpApkaSY46bFZtLX/XyDEriSghooX6CDFHp4JgDEV0Y2hjmsuYhNxOBOcrZPIXl5ewrRjhsoA=
+	t=1711336626; cv=none; b=a+uaW4ebEYZ62snPgvGV5ZUKDT8TWaQEz+bB79JGbyOdI2f9AqI2iEmS1hg5vIroWr4zQeM5kne3RoxpQCTesAKWkf3Tib897beEIK2E5EfgxX5UhCLxB3r31nGJQTXhdvS5FN+ifXyWgb1YME3wuGPmyzRVedPQlJLQc1H7+U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711336729; c=relaxed/simple;
-	bh=WvY/llrOOyyGpZRAhKAzslr8m+fAoMpt2YTsv1kupJQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MK2F4rPdhFqic9ICIZAGj7q/Iv9X7fm1uYcorAMrAxpkCFAkoTB/uLfhppWmG3FlBJE8AF5jY5aO5G3cLII4L00b8TPrC74mpgz2gxb7FEAL7xPFSoCPUjAVD1B/VN+JyoGx7sbYNnj/k43D3npGCkL0EWn42IXuqjFLDGipp4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SvhgNyGU; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711336626; c=relaxed/simple;
+	bh=IV+b5GbhTAg4OFsAhpQ2bmvejJAJKfMTsfB5GnpgPsg=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Grbs1gTImPG5E/7ze6qTYyMjzO+sE3Rwg4mLYDedntQm9EbNF8I3olIJ83Q3IGkW4J6+PrSRdutq/YNFjjwoEoTSptxs5gNTjrAoamvYiPCwpqeCvAaFhTcscZT9prb3QCdlidc0eSw9GJmiXA8bGXpHaEd1dQSCCdTp0/01xhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=XJu3axtJ; arc=none smtp.client-ip=220.197.32.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SvhgNyGU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711336728; x=1742872728;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=WvY/llrOOyyGpZRAhKAzslr8m+fAoMpt2YTsv1kupJQ=;
-  b=SvhgNyGUE1mrAHQdOXI/FSN99fz6u4y1bIoIZowf4IDsDLmWJBy164ga
-   r2SqLzIEMdNff+Mul73XcZjC1c2jMTpCl5bsoMYrqj0Xj4LfTjg5EQlyL
-   558ww55JO2K6PpW3KoJHSNhGQy8VHhYoIWfrO6hG9ha/IYbMc8TMfA7fE
-   uU0QQZrpzGrbV3rU+EgR+FLT6xSfsPXwJl8EQCbSnv5Nd+PF/YFPTbkqr
-   oj4QNzIbaor5/zWS8YNj+P08Tf6ExucL23Q2eWdBsqAlGfwL3VS+rNABo
-   MbL9+VaVC7V8ndY8w4IsFo+XX2jKooQkrjO3QKoHoa8w+SAdJKarkoEWu
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6427282"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="6427282"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 20:18:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="46606514"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 20:18:45 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Akira Yokosawa <akiyks@gmail.com>,  linux-kernel@vger.kernel.org,
-  linux-mm@kvack.org,  ryan.roberts@arm.com,  chrisl@kernel.org
-Subject: Re: Can you help us on memory barrier usage? (was Re: [PATCH v4
- 4/6] mm: swap: Allow storage of all mTHP orders)
-In-Reply-To: <766cfb68-f82a-4163-9dc1-5f4483fa5a7a@paulmck-laptop> (Paul
-	E. McKenney's message of "Sun, 24 Mar 2024 17:01:36 -0700")
-References: <87r0g3q9cz.fsf_-_@yhuang6-desk2.ccr.corp.intel.com>
-	<c56eae89-9559-4b1d-8249-d23281e466b4@gmail.com>
-	<766cfb68-f82a-4163-9dc1-5f4483fa5a7a@paulmck-laptop>
-Date: Mon, 25 Mar 2024 11:16:51 +0800
-Message-ID: <87r0fzova4.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="XJu3axtJ"
+DKIM-Signature: a=rsa-sha256;
+	b=XJu3axtJuclKjDhrBiJnfTTZK1beWCElLQpLCJ5C0A3Z0UK70ZnF8fBg/PxSPLRmYBjnhK46XOcecJ909nhrPk7cH0/VXPmKLQkfPqn+7Sd4sSBwjETQv+zBG8HK26ljiVGSAkoO5dAJ4UrFFFHDKIx49wyPdl2wXJrFJ2rE8p4=;
+	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=jMh34jf4s6vSoWqvWlOz1uTF/jW64ljn7FLzVGPFfxU=;
+	h=date:mime-version:subject:message-id:from;
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 8C1707C0373;
+	Mon, 25 Mar 2024 10:38:10 +0800 (CST)
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
+To: heiko@sntech.de,
+	vkoul@kernel.org
+Cc: linux-rockchip@lists.infradead.org,
+	Sugar Zhang <sugar.zhang@rock-chips.com>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dmaengine: Add support for audio interleaved transfer
+Date: Mon, 25 Mar 2024 10:37:49 +0800
+Message-Id: <20240325103731.v1.1.I502ea9c86c8403dc5b1f38abf40be8b6ee13c1dc@changeid>
+X-Mailer: git-send-email 2.7.4
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUtLQ1ZNTkJOQ0JMSENOTkpVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a8e7378f5c309d2kunm8c1707c0373
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MDo6SBw*NDMLHg04HAscSjQd
+	MRkKCT9VSlVKTEpKSEhPSUJKTU5CVTMWGhIXVQgOHBoJVQETGhUcOwkUGBBWGBMSCwhVGBQWRVlX
+	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBSkJLTTcG
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
 
-"Paul E. McKenney" <paulmck@kernel.org> writes:
+This patch add support for interleaved transfer which used
+for interleaved audio or 2d video data transfer.
 
-> On Sat, Mar 23, 2024 at 11:11:09AM +0900, Akira Yokosawa wrote:
->> [Use Paul's reachable address in CC;
->>  trimmed CC list, keeping only those who have responded so far.]
->> 
->> Hello Huang,
->> Let me chime in.
->> 
->> On Fri, 22 Mar 2024 06:19:52 -0700, Huang, Ying wrote:
->> > Hi, Paul,
->> > 
->> > Can you help us on WRITE_ONCE()/READ_ONCE()/barrier() usage as follows?
->> > For some example kernel code as follows,
->> > 
->> > "
->> > unsigned char x[16];
->> > 
->> > void writer(void)
->> > {
->> >         memset(x, 1, sizeof(x));
->> >         /* To make memset() take effect ASAP */
->> >         barrier();
->> > }
->> > 
->> > unsigned char reader(int n)
->> > {
->> >         return READ_ONCE(x[n]);
->> > }
->> > "
->> > 
->> > where, writer() and reader() may be called on 2 CPUs without any lock.
->> > It's acceptable for reader() to read the written value a little later.
->
-> What are your consistency requirements?  For but one example, if reader(3)
-> gives the new value, is it OK for a later call to reader(2) to give the
-> old value?
+for audio situation, we add 'nump' for number of period frames.
 
-writer() will be called with a lock held (sorry, my previous words
-aren't correct here).  After the racy checking in reader(), we will
-acquire the lock and check "x[n]" again to confirm.  And, there are no
-dependencies between different "n".  All in all, we can accept almost
-all races between writer() and reader().
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+---
 
-My question is, if there are some operations between writer() and
-unlocking in its caller, whether does barrier() in writer() make any
-sense?  Make write instructions appear a little earlier in compiled
-code?  Mark the memory may be read racy?  Or doesn't make sense at all?
+ include/linux/dmaengine.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> Until we know what your requirements are, it is hard to say whether the
-> above code meets those requirements.  In the meantime, I can imagine
-> requirements that it meets and others that it does not.
->
-> Also, Akira's points below are quite important.
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 752dbde..5263cde 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -144,6 +144,7 @@ struct data_chunk {
+  *		Otherwise, destination is filled contiguously (icg ignored).
+  *		Ignored if dst_inc is false.
+  * @numf: Number of frames in this template.
++ * @nump: Number of period frames in this template.
+  * @frame_size: Number of chunks in a frame i.e, size of sgl[].
+  * @sgl: Array of {chunk,icg} pairs that make up a frame.
+  */
+@@ -156,6 +157,7 @@ struct dma_interleaved_template {
+ 	bool src_sgl;
+ 	bool dst_sgl;
+ 	size_t numf;
++	size_t nump;
+ 	size_t frame_size;
+ 	struct data_chunk sgl[];
+ };
+-- 
+2.7.4
 
-Replied for his email.
-
---
-Best Regards,
-Huang, Ying
