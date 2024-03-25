@@ -1,98 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242B016192B
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0117D1EB3F
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711370785; cv=none; b=gFZ8GGXFygCrTtAUagbfjODgncS0ErwC+cI/OIrFcLmsw2cNnJwse3o11r1JzACtMXILMHUTo10GTtNDSif7VUnFfT0xnqXXyMw7welQN8R1VeKZlFbcU54k01SbfXldc2TGc44KPjVenJbUh3TnaABrHNHTL4yuY5KEoNcHgzE=
+	t=1711370852; cv=none; b=tXxjc4xz57At340f3LnIPMgeomY0Prnl4u6LGMIthxO7KbUZLU/2MDi64+qjvkhKHjF7+glwn9QEO+QtMjIPw21h+y/kaAB0RY9LOBoD8fF8n6xI/aPLWBR/rPZnxHP2Rbn1yTLQfvUzQebv4n+Y0HkFfhAhPgLorobjJGHQ/Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711370785; c=relaxed/simple;
-	bh=S+tu/Us/naajLYwRUmTRqpD4Xo/mrCDuxEPxhqR6e8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nkQ7/pIBtX5oOuptRPOEkpuqhfFk2RJxp7JmwVpeaFkJLH6L6/kiVCt9I1a7o+8ZL1DQ+1SUJtJSJZsx40/Vj6iuOwiEUEwzF2u7cM4PEWKxr4aIp8H1bGWZFjdY+LGsjF+3ULgu77a9fn5/W+9yfbE3hAGKeRnbZkBMFSKUiBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YvNscglB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711370852; c=relaxed/simple;
+	bh=9Nhu/W85iNh7LeLfmZogdX0bx42XcCNVxCMQuel1Iqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=AnxoQBR1/xR1KQrTZzoWlZTCYTp6xMcOhcvCxQ+b6z6o390jJboHl4CST7K7/+OMmemqNk3AJZ91QNW1T9zbvgn7N7UdE7pdwcKc57Ix3YPQ8yFkrPnVIoG3wiwQQk4AKg/TM1L7VCkX8WHDe5BE/E6pxmsGDDXbFYopP2LKUqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C29CeIVl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YvNscglB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9A90C43390;
-	Mon, 25 Mar 2024 12:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711370785;
-	bh=S+tu/Us/naajLYwRUmTRqpD4Xo/mrCDuxEPxhqR6e8U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YvNscglBOtArFIziHJISGyWfpSQgvEjzi2V85RJigyMkJAUyjE4z1ReQJ/PIJSSXK
-	 fnB7wj6WL/CVS9I7Oeg6UH7+80lg/zNhOGX+YNQlKNlh2LmFzlLW7BkoYIvYvEpQds
-	 Uccm1d6RduJh5VK4zvtMgDW9YJKv7K8+0fskz7o1dBrAFz2AGE2B6pjndW+KT6PwEw
-	 UTFfg2NyGuFyG20oDXmM0LrLWcuLmLpRPAIPk7dUgiYvCpFV515hW6hEWgKf8Mo1B0
-	 WrSjM/A2arN5eRndkDsjXZTbtHZX7K7WUe9EhnDP6M7JmGydKPrrRDCRq+Tpo236Co
-	 Q3B8ZPqKqhPBg==
-From: alexs@kernel.org
-To: Matthew Wilcox <willy@infradead.org>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Izik Eidus <izik.eidus@ravellosystems.com>,
-	david@redhat.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	ryncsn@gmail.com
-Cc: "Alex Shi (tencent)" <alexs@kernel.org>,
-	Hugh Dickins <hughd@google.com>,
-	Chris Wright <chrisw@sous-sol.org>
-Subject: [PATCH v3 14/14] mm/ksm: remove set_page_stable_node
-Date: Mon, 25 Mar 2024 20:49:01 +0800
-Message-ID: <20240325124904.398913-15-alexs@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240325124904.398913-1-alexs@kernel.org>
-References: <20240325124904.398913-1-alexs@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C29CeIVl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711370849;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=qo6+PxOnmyBa4a2d7NdsfVWnqRVFLZqh5ghWLkNm1aU=;
+	b=C29CeIVleSDWlM+Zp1g2AdJM9RhtjqsHGNQjikqQCxd1x1zdF/sGOQi/cnjGDMXK8c4Q4c
+	zoPqWmg0cUxpWWpNGYbHRrqUQwSoKuQgnFEyjNNxGWubuT7MBC1H5l8MDWo1zNFjTmNAvA
+	83JnVGxyasFFBhCnVAYNk2Do/MWk4/M=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-421-YRDUow39PNO7s5cYg_RlNw-1; Mon, 25 Mar 2024 08:47:28 -0400
+X-MC-Unique: YRDUow39PNO7s5cYg_RlNw-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d298d601adso30649141fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:47:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711370847; x=1711975647;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qo6+PxOnmyBa4a2d7NdsfVWnqRVFLZqh5ghWLkNm1aU=;
+        b=uDVwecrNQDdbe5OscJXyy2olUXj8e8MlvrswWeJ0IFYWFAcJN5y/0tXdW+wSR5OA9r
+         Su28PxRrxwr/La0YrbIH+iIHjfYGvFERvQ0VTEZGPGaxVjx8GmFz5c3tPXzjvvIueTXy
+         lf/Jo+LvUSR8QHsVy6A9AANGC//0mOU1xnZeLzU6GHnutIElrexWVwKNqy7U5msr1YL6
+         VzwrFtU5e9pDp3l6vhHNt0vKzNB8LKnABIv4/MEQWT+Fi0xRYURjRJTjR0wSwBCE818q
+         cO78R5CHsJYIMmA07YTG4A8nrUnTU7DU2Qo6RWN3hsOy66LaK/QbROW38riRZGSEelHh
+         4jHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZJJiCPB7ByvxONR+/u3q8UDoB3fNz8GdHHoZ5V5EgkUx7i8XCpPCVx5jpSoNjODCVJbRa5+4ytvlFhcMbKmS/NGWwnxR0tN0rlURP
+X-Gm-Message-State: AOJu0YzpHiq1ugRRx4oyQT9Axrcxy+uJK0VQPwlngushf7B8U0BPcjx1
+	bUxcCJOV2qLKLMA6a+8rJS+sGam0xYUg5PlXTvzwu6Yk6sR8Be5Z+wBKTu3KXSCYcstOOcV3ZmH
+	WKNce53rPCpGF7GsJ+fa2rh6egPlkXdA2GMfCza+lOp1vH1idHv8RMZzuxkzCTA==
+X-Received: by 2002:a2e:7816:0:b0:2d6:8ce2:87d5 with SMTP id t22-20020a2e7816000000b002d68ce287d5mr4502431ljc.18.1711370846884;
+        Mon, 25 Mar 2024 05:47:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGudUqzGUS7EwXIrkaH4nLD+XpgO1q7KDTuI18MwEVbgqHHvixPHZxneJHRWAGETOYG1zB9AA==
+X-Received: by 2002:a2e:7816:0:b0:2d6:8ce2:87d5 with SMTP id t22-20020a2e7816000000b002d68ce287d5mr4502415ljc.18.1711370846465;
+        Mon, 25 Mar 2024 05:47:26 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c738:b400:6a82:1eac:2b5:8fca? (p200300cbc738b4006a821eac02b58fca.dip0.t-ipconnect.de. [2003:cb:c738:b400:6a82:1eac:2b5:8fca])
+        by smtp.gmail.com with ESMTPSA id j1-20020adff001000000b0033e7e9c8657sm9406873wro.45.2024.03.25.05.47.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 05:47:26 -0700 (PDT)
+Message-ID: <2aba5fdf-7a9a-4a9a-bea2-b0d816a6aa19@redhat.com>
+Date: Mon, 25 Mar 2024 13:47:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/14] transfer page to folio in KSM
+Content-Language: en-US
+To: alexs@kernel.org, Matthew Wilcox <willy@infradead.org>,
+ Andrea Arcangeli <aarcange@redhat.com>,
+ Izik Eidus <izik.eidus@ravellosystems.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, ryncsn@gmail.com
+References: <20240325124904.398913-1-alexs@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240325124904.398913-1-alexs@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: "Alex Shi (tencent)" <alexs@kernel.org>
+On 25.03.24 13:48, alexs@kernel.org wrote:
+> From: "Alex Shi (tencent)" <alexs@kernel.org>
+> 
+> This is the first part of page to folio transfer on KSM. Since only
+> single page could be stored in KSM, we could safely transfer stable tree
+> pages to folios.
 
-Remove the func since all caller are gone. Also remove the
-VM_BUG_ON_PAGE() because it's not applicable for a folio.
+You should slow down a bit with new versions.
 
-Signed-off-by: Alex Shi (tencent) <alexs@kernel.org>
-To: linux-kernel@vger.kernel.org
-To: linux-mm@kvack.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Izik Eidus <izik.eidus@ravellosystems.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Chris Wright <chrisw@sous-sol.org>
----
- mm/ksm.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/mm/ksm.c b/mm/ksm.c
-index d7c4cc4a0cc1..136909f0c5d5 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -1094,17 +1094,10 @@ static inline struct ksm_stable_node *page_stable_node(struct page *page)
- 	return folio_stable_node(page_folio(page));
- }
- 
--static inline void set_page_stable_node(struct page *page,
--					struct ksm_stable_node *stable_node)
--{
--	VM_BUG_ON_PAGE(PageAnon(page) && PageAnonExclusive(page), page);
--	page->mapping = (void *)((unsigned long)stable_node | PAGE_MAPPING_KSM);
--}
--
- static inline void folio_set_stable_node(struct folio *folio,
- 					 struct ksm_stable_node *stable_node)
- {
--	set_page_stable_node(&folio->page, stable_node);
-+	folio->mapping = (void *)((unsigned long)stable_node | PAGE_MAPPING_KSM);
- }
- 
- #ifdef CONFIG_SYSFS
 -- 
-2.43.0
+Cheers,
+
+David / dhildenb
 
