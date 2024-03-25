@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE61180606;
-	Mon, 25 Mar 2024 18:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4324839E1;
+	Mon, 25 Mar 2024 18:42:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711392127; cv=none; b=XPJL3kTHJ1QCTanV4Ib5CCQ/hRdAtzNwp3QtAYH4lonXk5DhmyuajumDksFzYkhGveGktJbIMVQqO9wkQfKLN4QFUu0EgYRja9ejmdqSwvSFGm5KJOdQ/vW9+quG5L9rmgiiB8BoZ6HsuQoqyk9b2TJ6Ubknre7zA0Q1YmQnbuo=
+	t=1711392129; cv=none; b=bjcb0DmLIAm78cJGspaJ8Sw03C0CdrrrHLtXcS0Xh8zsgIMZgTqb55776DtHaK6Yct+C+EEHlh/glYz3szBUXzzQ8JgjBmmjYhSdEKj8loImupwBDXs5puXZwoRd0zv8Kvcu/zrxeOFQwNxoUpqiQmZZFK/iOTkWM8iRIQKTsSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711392127; c=relaxed/simple;
-	bh=onaeBFADTWFzOVhM/6B/QEw4squGRUq4bVkj4JHF800=;
+	s=arc-20240116; t=1711392129; c=relaxed/simple;
+	bh=0vGqEsBz6kkNYMQIbmmcvc1xkmF5mwH8qDi9HlBTkJs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I5Dp0QPFcFr4yCn/e2vgjXT3tnapJQ5ia1z9GBli7FflHxKoTz3jv1Tuo6iDQQqTZ3ObUWZtXzX6bDBaOGhQbVAMJYJRdTpVd4M78XhBmErYs5Or0Gm9y6/fWemmPgkw270PQKxGsc8WaU3YWIM3LcgdQ4cfN+kou/lV4TZ+2FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jxx7Yn6f; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MLIyiGu+lYz9dfaRAhDu/Ifruw774jZ/x4GdbLYA5A6voExYSzzaREebBaWPvlABtAaiQMl2SEIbyjHgG4++9AmcDOV733cvCBRwFFFx5rgKhlzkMot9eLZSLPIPurX30koUEsQHR5CPGOaMAfW66Af+Grcj7wB63Di9UAwADXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixlys0Fv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jxx7Yn6f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05BC7C43390;
-	Mon, 25 Mar 2024 18:42:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixlys0Fv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18283C433F1;
+	Mon, 25 Mar 2024 18:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711392127;
-	bh=onaeBFADTWFzOVhM/6B/QEw4squGRUq4bVkj4JHF800=;
+	s=k20201202; t=1711392128;
+	bh=0vGqEsBz6kkNYMQIbmmcvc1xkmF5mwH8qDi9HlBTkJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Jxx7Yn6f/cCx9ADdM8gdrESUSJzfJ5yfUPe6uOY0+pU8x1g2EGhAqSwxaTs6AtE7n
-	 qh1ytg94dDA4/hxm0hccmOF5lPivxZF3on2HRvVYDnHOhJE77hufAZXfPvqpJLQimw
-	 CmOp23v6C6qCBHhCS48us7x1XAvK9rsdKyweNzhGTmHGHs4a9/ZhzKOSw7zcjX3voY
-	 QlRg9RKIWcX3Bnw/c+A5HHWZVTsDvMbQD53MqRTRdJ8OImcBxZVaUBagi26SUKze8t
-	 tDMp65TZaUcbzho1Nx8JgWdKv3VzFoY7PjK0lGncva2yzRExn1uTHxo7nrAN8pni3+
-	 ewTySS50JcF0A==
+	b=ixlys0FvPCjjjZBr1Qs/lEGMZqYVEM+XiVzLoQ7H5oI72By/NxK2ZcTz0CU8Ch15l
+	 +K4lW0o/ay78ArqVnDSDhDh++clj3uJ2vjjcXt5SC82Y7J/m+jdXZyZuehSWA+t9ki
+	 6mRXTPJW4w1oX6ONyVYBE4xSFXKWCW+lWcvabLstDowPzZrUw1f12U0MSVGbAvIszp
+	 iALYaGNhutZ6ullydsOxkWsK13m1TAaOzsRiJdOiGXprNc/HqQOGCEX5xue3X/tyDn
+	 wCrhnpUICngyLiGIrywWLEx/Eiq4VBuYgJn2tzfmOKI3ieU1Er70wP8FwqUveBLBqE
+	 uCE3An6XRbqZA==
 From: Stephen Boyd <sboyd@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>
@@ -33,10 +33,11 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-clk@vger.kernel.org,
 	patches@lists.linux.dev,
 	linux-arm-msm@vger.kernel.org,
+	Taniya Das <quic_tdas@quicinc.com>,
 	Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v2 3/5] clk: Initialize struct clk_core kref earlier
-Date: Mon, 25 Mar 2024 11:41:57 -0700
-Message-ID: <20240325184204.745706-4-sboyd@kernel.org>
+Subject: [PATCH v2 5/5] clk: Get runtime PM before walking tree for clk_summary
+Date: Mon, 25 Mar 2024 11:41:59 -0700
+Message-ID: <20240325184204.745706-6-sboyd@kernel.org>
 X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
 In-Reply-To: <20240325184204.745706-1-sboyd@kernel.org>
 References: <20240325184204.745706-1-sboyd@kernel.org>
@@ -48,89 +49,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Initialize this kref once we allocate memory for the struct clk_core so
-that we can reuse the release function to free any memory associated
-with the structure. This mostly consolidates code, but also clarifies
-that the kref lifetime exists once the container structure (struct
-clk_core) is allocated instead of leaving it in a half-baked state for
-most of __clk_core_init().
+Similar to the previous commit, we should make sure that all devices are
+runtime resumed before printing the clk_summary through debugfs. Failure
+to do so would result in a deadlock if the thread is resuming a device
+to print clk state and that device is also runtime resuming in another
+thread, e.g the screen is turning on and the display driver is starting
+up. We remove the calls to clk_pm_runtime_{get,put}() in this path
+because they're superfluous now that we know the devices are runtime
+resumed. This also squashes a bug where the return value of
+clk_pm_runtime_get() wasn't checked, leading to an RPM count underflow
+on error paths.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Fixes: 1bb294a7981c ("clk: Enable/Disable runtime PM for clk_summary")
+Cc: Taniya Das <quic_tdas@quicinc.com>
+Cc: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/clk.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ drivers/clk/clk.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 9fc522c26de8..ee80b21f2824 100644
+index c69de47afaba..3539675ea846 100644
 --- a/drivers/clk/clk.c
 +++ b/drivers/clk/clk.c
-@@ -3959,8 +3959,6 @@ static int __clk_core_init(struct clk_core *core)
- 	}
- 
- 	clk_core_reparent_orphans_nolock();
--
--	kref_init(&core->ref);
- out:
- 	clk_pm_runtime_put(core);
- unlock:
-@@ -4189,6 +4187,16 @@ static void clk_core_free_parent_map(struct clk_core *core)
- 	kfree(core->parents);
- }
- 
-+/* Free memory allocated for a struct clk_core */
-+static void __clk_release(struct kref *ref)
-+{
-+	struct clk_core *core = container_of(ref, struct clk_core, ref);
-+
-+	clk_core_free_parent_map(core);
-+	kfree_const(core->name);
-+	kfree(core);
-+}
-+
- static struct clk *
- __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
+@@ -3318,9 +3318,7 @@ static void clk_summary_show_subtree(struct seq_file *s, struct clk_core *c,
  {
-@@ -4209,6 +4217,8 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
- 		goto fail_out;
+ 	struct clk_core *child;
+ 
+-	clk_pm_runtime_get(c);
+ 	clk_summary_show_one(s, c, level);
+-	clk_pm_runtime_put(c);
+ 
+ 	hlist_for_each_entry(child, &c->children, child_node)
+ 		clk_summary_show_subtree(s, child, level + 1);
+@@ -3330,11 +3328,15 @@ static int clk_summary_show(struct seq_file *s, void *data)
+ {
+ 	struct clk_core *c;
+ 	struct hlist_head **lists = s->private;
++	int ret;
+ 
+ 	seq_puts(s, "                                 enable  prepare  protect                                duty  hardware                            connection\n");
+ 	seq_puts(s, "   clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id\n");
+ 	seq_puts(s, "---------------------------------------------------------------------------------------------------------------------------------------------\n");
+ 
++	ret = clk_pm_runtime_get_all();
++	if (ret)
++		return ret;
+ 
+ 	clk_prepare_lock();
+ 
+@@ -3343,6 +3345,7 @@ static int clk_summary_show(struct seq_file *s, void *data)
+ 			clk_summary_show_subtree(s, c, 0);
+ 
+ 	clk_prepare_unlock();
++	clk_pm_runtime_put_all();
+ 
+ 	return 0;
+ }
+@@ -3390,8 +3393,14 @@ static int clk_dump_show(struct seq_file *s, void *data)
+ 	struct clk_core *c;
+ 	bool first_node = true;
+ 	struct hlist_head **lists = s->private;
++	int ret;
++
++	ret = clk_pm_runtime_get_all();
++	if (ret)
++		return ret;
+ 
+ 	seq_putc(s, '{');
++
+ 	clk_prepare_lock();
+ 
+ 	for (; *lists; lists++) {
+@@ -3404,6 +3413,7 @@ static int clk_dump_show(struct seq_file *s, void *data)
  	}
  
-+	kref_init(&core->ref);
-+
- 	core->name = kstrdup_const(init->name, GFP_KERNEL);
- 	if (!core->name) {
- 		ret = -ENOMEM;
-@@ -4263,12 +4273,10 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
- 	hw->clk = NULL;
+ 	clk_prepare_unlock();
++	clk_pm_runtime_put_all();
  
- fail_create_clk:
--	clk_core_free_parent_map(core);
- fail_parents:
- fail_ops:
--	kfree_const(core->name);
- fail_name:
--	kfree(core);
-+	kref_put(&core->ref, __clk_release);
- fail_out:
- 	return ERR_PTR(ret);
- }
-@@ -4348,16 +4356,6 @@ int of_clk_hw_register(struct device_node *node, struct clk_hw *hw)
- }
- EXPORT_SYMBOL_GPL(of_clk_hw_register);
- 
--/* Free memory allocated for a clock. */
--static void __clk_release(struct kref *ref)
--{
--	struct clk_core *core = container_of(ref, struct clk_core, ref);
--
--	clk_core_free_parent_map(core);
--	kfree_const(core->name);
--	kfree(core);
--}
--
- /*
-  * Empty clk_ops for unregistered clocks. These are used temporarily
-  * after clk_unregister() was called on a clock and until last clock
+ 	seq_puts(s, "}\n");
+ 	return 0;
 -- 
 https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
 https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
