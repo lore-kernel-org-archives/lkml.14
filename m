@@ -1,102 +1,68 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EE3413C3DD;
-	Mon, 25 Mar 2024 09:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33951802CD;
+	Mon, 25 Mar 2024 09:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711358921; cv=none; b=suxOWMR4ArOnB5zJaMLSXdENcu7K6O8wOfdj4LXXN+4i8etSnqT1lgsxbWme9jmkmsxQJfn9K8WKl3xFcR7M00RyiGoSkeP6j+izUWnRoYzTUbPVkNxV0Nbemn4kTizoCImyb/wKLBMytkjuRV4fO2wdOHb7G5uspmwwsvsgvfw=
+	t=1711358967; cv=none; b=J9vkPFupGrZVA0vMz8IZP5e4FQTo3B/etgTjR6foGzT6cHucRAS7iAOlBL+N6FkQXoA3imlCWmDXsxjJqmiO97j1qqwRBiThYmgNjG6OEaMIr8v929ALsCj08rw/UY8fgzK3lLcaLmNpSAcGL3puUhWKDPyb4YC25r/LGMb/WkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711358921; c=relaxed/simple;
-	bh=wx+ZNiYpSOHdOgttIJ+LyxuucfRoYfBTMykVd7YTQMM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tag8lv+owGf88SrMZeX9F9TsSfK3z7Om1i3AyHo7hGeMfYKlGe9LwxlyI4nh481iVMHRCTkLRX5JeIF8GzWwNAkVVlTNAu42hWfuoLbu40adU57+/Wvs5NhwjlQYiC7B7ERnriKhhUeZfCSbOJkOAlPGkx1PG3PTOylLO6NcUxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58E351FB;
-	Mon, 25 Mar 2024 02:29:12 -0700 (PDT)
-Received: from e120937-lin.. (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42C483F64C;
-	Mon, 25 Mar 2024 02:28:37 -0700 (PDT)
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org
-Cc: sudeep.holla@arm.com,
-	cristian.marussi@arm.com,
-	jassisinghbrar@gmail.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org
-Subject: [PATCH 0/2] Add initial ARM MHUv3 mailbox support
-Date: Mon, 25 Mar 2024 09:28:06 +0000
-Message-Id: <20240325092808.117510-1-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1711358967; c=relaxed/simple;
+	bh=L7eRB9UE0AFTLtUcx3jXW/Lcf4eB7MvnxSvfFx8sbKc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fjwStrHAjW/Nh6DuDYRL1t7IPkhOx2kwaG87EfCBOU1NJ3rU2lw9J+Nnc0/J0OofcyZFa6MaJDgGYdU3+aSAglJNiPXXjuUY1y/wEkuYRsFZ9lfvN+PYc1hqld5eppeUiAxTQreDwycFjr+XS1JqR/VX9Foqii08ABYNA570Eds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWDbW2pi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWDbW2pi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6C0C43390;
+	Mon, 25 Mar 2024 09:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711358967;
+	bh=L7eRB9UE0AFTLtUcx3jXW/Lcf4eB7MvnxSvfFx8sbKc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TWDbW2piXNm8EWyiTv6cIJJ696JM3raBRT5+utcMQKVm8Z6M5g/RaMxR0BlnouZsE
+	 cMBGuGUbbBBFr1MsYpQakLxXFl3Zn4rD5af0uYM0eA3njAy1JT4PcttX+13sDyfoDI
+	 V31OdwOR1kM38GF/onFRpViFko6v1fHMMeAQ7GmHSZ5kwR6/ZbsgNCdt5W086XBpKc
+	 lzd6ONim4fzMmtxarTRTs9onIAn/N+yKFCHIPhehj91C+tCUvAs49sOdFAIanOTFVF
+	 DQxF3GHNfVIdMAAnyLmemYBo3DFtF8r95VMu7hmNJAjBo76g3feZiltOT1CLNNfZov
+	 2Nuc2MWdjvMGg==
+Message-ID: <1a7ec34d-b126-4193-9e0c-bbdfe4e7126f@kernel.org>
+Date: Mon, 25 Mar 2024 18:29:24 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] dt-bindings: ata: imx-pata: Convert to dtschema
+Content-Language: en-US
+To: Animesh Agarwal <animeshagarwal28@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
+ linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240320090733.96828-1-animeshagarwal28@gmail.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20240320090733.96828-1-animeshagarwal28@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 3/20/24 18:07, Animesh Agarwal wrote:
+> Convert the imx-pata bindings to DT schema.
+> Add missing fsl,imx31-pata and fsl,imx51-pata compatibles during
+> conversion, because they are already being used in existing DTS.
+> 
+> Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
 
-This series adds support for the new ARM Message Handling Unit v3 mailbox
-controller [1].
-
-The ARM MHUv3 can optionally support various extensions, enabling the
-usage of different transport protocols.
-
-Patch [2/2] adds a platform driver which, as of now, provides support only
-for the Doorbell extension using the combined interrupt.
-
-On the other side, bindings in [1/2] are introduced for all the extensions
-described by the specification, as long as they are of interest to an
-entity running from Normal world, like Linux: as such, Doorbell, FIFO and
-FastChannel extensions are documented.
-
-In these regards, note that the ARM MHUv3 controller can optionally
-implement a considerable number of interrupts to express a great deal of
-events and many of such interrupts are defined as being per-channel: with
-the total maximum amount of possibly implemented channels across all
-extensions being 1216 (1024+128+64), it would mean *a lot* of
-interrupt-names to enumerate in the bindings.
-
-So, since, I could not find a proper yaml/DT way to just define and verify
-interrupt-names as:
-
-	my_interrupt-<N> with <N> in [0, N] range
-
-the binding as of now only introduces interrupt-names for a mere 4-channels
-in the range (0,3) for each per-channel interrupt type: the idea is to
-leave open the possibility to add more to this list of numbered items only
-when (and if) new real HW appears that effectively needs more than four
-channels. (like AMBA, where the maximum number of IRQ was progressively
-increased when needed, AFAIU); any suggestion on how to better express
-this, is very much welcome.
-
-Based on v6.9-rc1, tested on ARM TCS23 [2]
-(TCS23 reference SW stack is still to be made fully publicly available)
-
-Thanks,
-Cristian
-
-[1]: https://developer.arm.com/documentation/aes0072/aa/?lang=en
-[2]: https://community.arm.com/arm-community-blogs/b/tools-software-ides-blog/posts/total-compute-solutions-platform-software-stack-and-fvp
-
-Cristian Marussi (2):
-  dt-bindings: mailbox: arm,mhuv3: Add bindings
-  mailbox: arm_mhuv3: Add driver
-
- .../bindings/mailbox/arm,mhuv3.yaml           |  239 ++++
- MAINTAINERS                                   |    9 +
- drivers/mailbox/Kconfig                       |   11 +
- drivers/mailbox/Makefile                      |    2 +
- drivers/mailbox/arm_mhuv3.c                   | 1061 +++++++++++++++++
- 5 files changed, 1322 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml
- create mode 100644 drivers/mailbox/arm_mhuv3.c
+Applied to for-6.10. Thanks !
 
 -- 
-2.34.1
+Damien Le Moal
+Western Digital Research
 
