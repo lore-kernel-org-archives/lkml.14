@@ -1,94 +1,97 @@
-Received: from vorpal.se (vorpal.se [151.236.221.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3566B6EB68;
-	Mon, 25 Mar 2024 21:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=151.236.221.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DD059B52;
+	Mon, 25 Mar 2024 21:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711403109; cv=none; b=k+vQyNlUpTRkWaJ+ZK8/u0H5e6G6QbIUZI2f/4seXe1glJFnEtXv2PUzAtpKJT8vNl7CZnkAVnuMDBcELRhz3ppG804h6mz7fcFIm76gzXzpOz+iHv1EjtF5J1dKOA2YGPDrLSQtgrSnPKntS8O9JoVWroq8/sjGXzbH62U26Ik=
+	t=1711403171; cv=none; b=pf1Wjknr0u2XK8aMG+JBKqC6Xg8Po/OLZmPboS/dDnAVS/K2/V1nsJAyCVUKUfjnZVvprP1JLmBPgSrXmFk97gdPSpcXSLZlHOesSnRT45i7bzIPeg6RRwwtanY7DMN9rwexbMiQmHKJaPHft5P+flIKCAcgkgYN2YITOFUHeU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711403109; c=relaxed/simple;
-	bh=O24uEwJnaH8otP+xRGNd5TRmIAI75Ih4SIuvlsrr2CE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eDzQwI0Ir/Scv1pauAyrmS0wKsFhZk+v54BIwvPBL/TNxDWKURvCUjmN9S3oZ2FKkLseimNKNZKnXHeVKEotbW+SS2M5e5AczgHPBr+qOwnNcuihaG3B+M8+xz70aByY1R/Ye0tx1YeMYcFbZbUjeKcwzHRN7GL/QTjuSTQ1pDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vorpal.se; spf=pass smtp.mailfrom=vorpal.se; dkim=pass (2048-bit key) header.d=vorpal.se header.i=@vorpal.se header.b=WVzsLXEs; arc=none smtp.client-ip=151.236.221.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vorpal.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vorpal.se
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vorpal.se header.i=@vorpal.se header.b="WVzsLXEs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
-	t=1711402623; bh=O24uEwJnaH8otP+xRGNd5TRmIAI75Ih4SIuvlsrr2CE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WVzsLXEsMVqe4Cv1FAnE0FQFjEsFcV2o+2DSsIHGanFcDrpSXZzpUijex9Ok5telR
-	 EVRenBHO8MFE1uBsMHXL3YtVZR8SbWWUuywFqTG6eZZw/+R0l4rWbcFbD5RmdpQcer
-	 r6MifNRRfb0dUFd1haIdSCu8IbdseuKigjZgEdrhZOkp9nze8KNErNtyUhUIsk+VAo
-	 y/9Td1YrFVoNBymN0nNnySoXX5UjFBAhKxpQnTkFP3GMZNbJxKqa9JEAtrBaAJimll
-	 0mO7Z1wsXeGDkfeKmnpOiI8kQ4kDFbSN3cGxl5Uq1zWU9Kh2pyL5LGegZjqQqGHvpz
-	 /MBoKmtis4r/g==
-Received: by vorpal.se (Postfix) with ESMTPSA id A519E140F6;
-	Mon, 25 Mar 2024 21:37:02 +0000 (UTC)
-Message-ID: <fb97f97e-c6d0-4584-813b-5b81facc4325@vorpal.se>
-Date: Mon, 25 Mar 2024 22:37:01 +0100
+	s=arc-20240116; t=1711403171; c=relaxed/simple;
+	bh=E354mpbtl7kB5B4qPT1fMZPDLn9W0lVPSKhkrego21I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZGZz1HdZN0lnc+Z0jw1wXuDQjS7AHtIXWhqByDZ4L+2Clfo3xcv7Uxg9UxES0wBNH8cvMC2CABW8o4xk+n2hBOxFkwp7e/mGPRxFMFssh65QCm2VANpuFm/xT1Zz0NO9hKeCdhV8WPgguVykQB3UA8OaOFQGw2Q1MLo0/epfb/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B3D0C433F1;
+	Mon, 25 Mar 2024 21:46:10 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id 9F6BA106074E; Mon, 25 Mar 2024 22:46:07 +0100 (CET)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 0/3] Convert MIPI HSI DT bindings to YAML
+Date: Mon, 25 Mar 2024 22:45:26 +0100
+Message-Id: <20240325-hsi-dt-binding-v1-0-88e8e97c3aae@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] platform/x86: Add ACPI quickstart button driver
-To: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240131111641.4418-1-W_Armin@gmx.de>
- <c1b08bbb-ad57-4f41-9b7b-40a6aeb3da9b@redhat.com>
-Content-Language: en-US
-From: Arvid Norlander <lkml@vorpal.se>
-In-Reply-To: <c1b08bbb-ad57-4f41-9b7b-40a6aeb3da9b@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHbwAWYC/x3MPQqAMAxA4atIZgP90Q5eRRyqiW2WKq2IIL27x
+ fEb3nuhcBYuMHUvZL6lyJEadN/BFn0KjELNYJQZlDUjxiJIF66SSFJAP5Jzhi05paFFZ+Zdnn8
+ 4L7V+ubWWK2AAAAA=
+To: Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, 
+ linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1417;
+ i=sebastian.reichel@collabora.com; h=from:subject:message-id;
+ bh=E354mpbtl7kB5B4qPT1fMZPDLn9W0lVPSKhkrego21I=;
+ b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBmAfCYhr4JPtRZI9EAxNbkBGBIU58nfKmG25qAd
+ z/QFgY6yr+JAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCZgHwmAAKCRDY7tfzyDv6
+ mrb4D/44btPAOUN0pSUAJF4d7iQ2w4CbsYI8nS9gZ2sh3Ume3mFxrQ/HmQr252gorf8Ph0KJz1/
+ erKejy7NjTZqn9Iw4gjRpo122m0NCUN0p28hmAijlWfjfsVbgdyEKPN3xUg55qBaspKAXYQsLtc
+ p63IImKGOjwbiKWCBxopJJxm8N8VaMoM7zD8a0JKwnjq8IsG+sKPsvWN6YpZhOTQV0v1I1vcohP
+ MobEiIO/DmjWaWLGtSvR1BdVxJ6LbnZoYqWcMq9Q9IbzV/orGTwavEskBFr7ipBzEjjOM6Mzhdz
+ nkbVd4NcYAo4dHrFxjVLjv08TaVetrRYcfqwSLtUrXdL9iKSX5mXQ6890uL61ex0wyOG0+f+ebi
+ Z5EkEuevbJrng3NXRry00rsJD3+DdmfV254QU3xAeMsQRZnKM2otfQXonTcvhi+h4wWq3XjJyq+
+ d9n/1AiPnQWwRf9+APxY2jXNH9OQf8CT6JcgDa/3hRxkGxss1r6RD25zfyOr43pxUhGy2SWDLW4
+ LQCmoTitq/BuZ5tMGEkdl3aLxDJoGodUjO3OepyVtfQ6CIapsIU9roUHlpSAhBqrHnOZy87Frhe
+ JRKZ6bNGUbR8ziqb6xr6tZ5UYJK+GrOJRCl2LDlfE5XkFFKxPrTkfDUtTH1txQa6WqMdqhIr2Pj
+ L/cyRLH6/5RK2gQ==
+X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
+ fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-On 2024-03-24 15:55, Hans de Goede wrote:
-> Hi Armin and Arvid,
-> 
-> On 1/31/24 12:16 PM, Armin Wolf wrote:
->> This patch series adds support for the ACPI PNP0C32 device as
->> proposed in 2022 by Arvid Norlander. The first patch adds support
->> for the device itself, while the second patch was taken from the
->> original series.
->>
->> Both patches are compile-tested only.
-> 
-> Armin, thank you for creating a new cleaned up driver for the
-> quickstart button support.
-> 
-> I have managed to get my hands on a Toshiba Portege Z830 and
-> I have successfully tested this series. That is this makes
-> the 2 quickstart application and the toggle-touchpad button
-> work when the system is running normally.
+Hi,
 
-That is some dedication! Sorry for completely dropping the ball on this,
-real life happened and I had to prioritise. My beginning "carreer" as a
-kernel developer was one of the things that ended up getting cut.
+This converts all MIPI HSI subystem DT bindings to YAML.
+I ran the following tests:
 
-I'm going to do a quick bug report while I'm writing an email here. I
-noticed on my Z830 that the readouts of the charge control thresholds
-didn't seem to work when I last tested it. Setting worked just fine, but
-reading it always returns 100%. Didn't get around to debugging this, but I
-assume it a simple error.
+1. Check binding files
+   make -j$(nproc) dt_binding_check DT_SCHEMA_FILES=/hsi/
+2. Check OMAP3 and nokia-modem DT
+   make -j$(nproc) CHECK_DTBS=y ti/omap/omap3-n900.dtb ti/omap/omap3-n950.dtb ti/omap/omap3-n9.dtb
+3. Check OMAP4 DT (OMAP4 HSI is not used upstream, so one is enough)
+   make -j$(nproc) CHECK_DTBS=y ti/omap/omap4-droid4-xt894.dtb
 
-Also my Z830 have developed a whole horizontal line of stuck red pixels
-across the middle of the screen, so it seems quite unlikely I'll use it
-much more or even keep it long term.
+FWIW I noticed a lots of warnings for OMAP3 & OMAP4, but
+none related to HSI/SSI.
 
-> Neither the quickstart buttons, nor the touchpad-toggle button
-> which also uses the PNP0C32 interface, work to wakeup
-> the system from sleep though.
+Greetings,
 
-This is probably a limitation of the hardware. Though there are IIRC some
-BIOS options for what should wake the laptop from power-off, including any
-keyboard press whatsoever. (Fun fact: The Toshiba ACPI interface allows
-changing these BIOS settings from the OS, though you would have to do it by
-hand from user space currently as it is not exposed in the driver.)
+-- Sebastian
+
+---
+Sebastian Reichel (3):
+      dt-bindings: hsi: hsi-client: convert to YAML
+      dt-bindings: hsi: nokia-modem: convert to YAML
+      dt-bindings: hsi: omap-ssi: convert to YAML
+
+ .../devicetree/bindings/hsi/client-devices.txt     |  44 -----
+ .../devicetree/bindings/hsi/hsi-client.yaml        |  84 +++++++++
+ .../devicetree/bindings/hsi/nokia-modem.txt        |  59 -------
+ .../devicetree/bindings/hsi/nokia-modem.yaml       | 101 +++++++++++
+ Documentation/devicetree/bindings/hsi/omap-ssi.txt | 102 -----------
+ .../devicetree/bindings/hsi/ti,omap-ssi.yaml       | 196 +++++++++++++++++++++
+ 6 files changed, 381 insertions(+), 205 deletions(-)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240325-hsi-dt-binding-a5d662e3d601
 
 Best regards,
-Arvid Norlander
+-- 
+Sebastian Reichel <sebastian.reichel@collabora.com>
+
